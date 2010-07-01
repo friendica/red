@@ -1,0 +1,421 @@
+
+body { 
+	background: #EEEEEE;
+	font-family: verdana, sans-serif;
+	font-size: 1.0em;
+	margin-left: 10px;
+}
+
+img.photo {
+	border: 1px solid #AAAAAA;
+	padding: 5px;
+	background: #FFFFFF;
+}
+
+aside {
+	position: absolute;
+	left: 0px;
+	top: 60px;
+	right: 250px;
+	width: 250px;
+	margin-left: 20px;
+	margin-right: 0px;
+	font-size: 0.9em;
+}
+section {
+	position: absolute;
+	left: 270px;
+	top: 60px;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+h1 {
+	font-size: 1.6em;
+}
+
+nav {
+	position: absolute;
+	top: 0px;
+	height: 30px;
+	left: 0px;
+	right: 0px;
+	margin-top: 20px;
+}
+
+footer {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	margin: 20px 20px 20px 20px;
+}
+.fn {
+	font-size: 1.4em;
+	margin-bottom: 10px;
+	line-height: 1.5;
+}
+
+.powered {
+	font-size: 0.6em;
+}
+.error-message {
+	color: #FF0000;
+	font-size: 1.1em;
+	border: 1px solid #FF8888;
+	background-color: #FFEEEE;
+	padding: 10px;
+}
+.nav-link {
+	float: right;
+	margin-left: 0px;
+	margin-right: 10px;
+	padding: 5px;
+	border: 1px solid black;
+	background: #DDDDFF;
+	font-size: 0.7em;
+	font-weight: bold;
+	
+}
+
+.nav-commlink {
+	float: left;
+	margin-left: 10px;
+	margin-right: 0px;
+	padding: 5px;
+	border: 1px solid black;
+	background: #DDDDFF;
+	font-size: 0.7em;
+	font-weight: bold;
+}
+#nav-end {
+	clear: both;
+}
+
+.login-extra-links {
+	font-size: 0.7em;
+}
+
+#profile-extra-links {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+#label-register-name, #label-register-email {
+	float: left;
+	width: 350px;
+	margin-top: 10px;
+}
+
+#register-name, #register-email {
+	float: left;
+	margin-top: 10px;
+}
+
+#register-name-wrapper, #register-email-wrapper, #register-submit-wrapper {
+	clear: both;
+}
+
+#register-submit-button {
+	margin-top: 10px;
+	margin-left: 350px;
+}
+
+#label-login-name, #label-login-password, #login-extra-filler {
+	float: left;
+	width: 150px;
+	margin-bottom: 20px;
+}
+
+
+#login-name, #login-password {
+	float: left;
+	width: 150px;
+}
+
+#register-link, #lost-password-link {
+	float: left;
+	font-size: 0.7em;
+	margin-right: 15px;
+}
+
+#login-name-end, #login-password-end, #login-extra-end, #login-submit-end {
+	clear: both;
+}
+
+#login-submit-button {
+	margin-top: 10px;
+	margin-left: 150px;
+}
+
+input#dfrn-url {
+	float: left;
+	background: url(silho.gif) no-repeat;
+	background-position: 4px center;
+	font-size: 15px;
+	padding-left: 24px;
+	height: 24px;
+	background-color: #FFFFFF;
+	color: #000000;
+	margin-bottom: 20px;
+}
+
+#dfrn-url-label {
+	float: left;
+	width: 250px;
+}
+
+#dfrn-request-url-end {
+	clear: both;
+}
+
+#knowyouyes, #knowyouno {
+	float: left;
+}
+
+#dfrn-request-knowyou-yes-wrapper, #dfrn-request-knowyou-no-wrapper {
+
+	float: none;
+}
+#dfrn-request-knowyou-yes-label, #dfrn-request-knowyou-no-label {
+	float: left;
+	width: 75px;
+	margin-left: 50px;
+	margin-bottom: 7px;
+}
+#dfrn-request-knowyou-break, #dfrn-request-knowyou-end {
+	clear: both;
+
+}
+
+#dfrn-request-message-wrapper {
+	margin-bottom: 50px;
+}
+#dfrn-request-submit-wrapper {
+	clear: both;
+	margin-left: 50px;
+}
+
+#dfrn-request-info-wrapper {
+	margin-left: 50px;
+}
+
+#settings-username-end, #settings-email-end, #settings-nick-end, #settings-timezone-end, #settings-password-end, #settings-confirm-end {
+	margin-bottom: 5px;
+	clear: both;
+}
+
+#settings-username-label, #settings-email-label, #settings-nick-label, #settings-timezone-label, #settings-password-label, #settings-confirm-label {
+	float: left;
+	width: 200px;
+}
+
+#settings-username, #settings-email, #settings-nick, #timezone-select, #settings-password, #settings-confirm {
+	float: left;
+	margin-bottom: 20px;
+}
+
+#settings-nick-desc {
+	width: 500px;
+}
+
+#settings-nick {
+	margin-bottom: 50px;
+}
+
+#cropimage-wrapper, #cropimage-preview-wrapper {
+	float: left;
+	padding: 30px;
+}
+
+#crop-image-form {
+	margin-top: 30px;
+	clear: both;
+}
+
+.intro-fullname {
+	font-size: 1.1em;
+	font-weight: bold;
+
+}
+.intro-desc {
+	margin-bottom: 20px;
+}
+
+.intro-note {
+	padding: 10px;
+}
+
+.intro-end {
+	padding: 30px;
+}
+
+.intro-approve-form, .intro-form {
+	float: left;
+}
+.intro-submit-approve, .intro-submit-ignore {
+	margin-right: 20px;
+}
+.intro-top {
+	width: 500px;
+	margin-bottom: 30px;
+}
+.intro-end {
+	clear: both;
+	margin-bottom: 30px;
+}
+#profile-edit-default-desc {
+	color: #FF0000;
+	border: 1px solid #FF8888;
+	background-color: #FFEEEE;
+	padding: 7px;
+
+
+}
+
+
+#profile-edit-profile-name-label,
+#profile-edit-name-label,
+#profile-edit-gender-label,
+#profile-edit-address-label,
+#profile-edit-locality-label,
+#profile-edit-region-label,
+#profile-edit-postal-code-label,
+#profile-edit-country-name-label,
+#profile-edit-marital-label,
+#profile-edit-homepage-label {
+	float: left;
+	width: 175px;
+}
+
+#profile-edit-profile-name,
+#profile-edit-name,
+#gender-select,
+#profile-edit-address,
+#profile-edit-locality,
+#profile-edit-region,
+#profile-edit-postal-code,
+#profile-edit-country-name,
+#marital-select,
+#profile-in-dir-yes,
+#profile-in-dir-no {
+	float: left;
+	margin-bottom: 20px;
+}
+
+#profile-in-dir-yes-label, #profile-in-dir-no-label {
+	margin-left: 125px;
+	float: left;
+	width: 50px;
+}
+
+#profile-edit-homepage {
+	float: left;
+	margin-bottom: 35px;
+}
+
+#profile-edit-profile-name-end,
+#profile-edit-name-end,
+#profile-edit-gender-end,
+#profile-edit-address-end,
+#profile-edit-locality-end,
+#profile-edit-region-end,
+#profile-edit-postal-code-end,
+#profile-edit-country-name-end,
+#profile-edit-marital-end,
+#profile-edit-homepage-end,
+#profile-in-dir-break, 
+#profile-in-dir-end {
+	clear: both;
+}
+
+#gender-select, #marital-select {
+ width: 145px;
+}
+
+#profile-edit-profile-name-wrapper .required {
+	color: #FF0000;
+	float: left;
+}
+
+
+.contact-entry-photo img {
+	border: none;
+}
+
+.contact-entry-edit-links img {
+	border: none;
+	margin-right: 15px;
+}
+
+.wall-item-photo-wrapper {
+	margin-top: 20px;
+	width: 100px;
+	float: left;
+}
+.wall-item-wrapper {
+	margin-top: 30px;
+	float: left;
+}
+
+.wall-item-wrapper-end {
+	clear: both;
+}
+.wall-item-name-link {
+	font-weight: bold;
+	text-decoration: none;
+	color: #3172BD;
+}
+.wall-item-photo {
+	border: none;
+}
+
+#profile-jot-submit-wrapper {
+	margin-top: 15px;
+}
+#profile-jot-end {
+	margin-bottom: 30px;
+}
+#about-jot-submit-wrapper {
+	margin-top: 15px;
+}
+#about-jot-end {
+	margin-bottom: 30px;
+}
+#contacts-main {
+	margin-bottom: 30px;
+}
+
+#profile-listing-new-link-wrapper {
+	margin-bottom: 30px;
+}
+
+.profile-listing-edit-buttons-wrapper {
+/*	float: left;*/
+	clear: both;
+}
+.profile-listing-photo-edit-link {
+	float: left;
+	width: 125px;
+}
+.profile-listing-end {
+	clear: both;
+}
+.profile-listing-edit-buttons-wrapper img{
+	border: none;
+	margin-right: 20px;
+}
+.profile-listing {
+	margin-top: 25px;
+}
+.profile-listing-name {
+	float: left;
+	margin-top: 10px;
+}
+.fortune {
+	margin-top: 50px;
+	color: #3172BD;
+	font-weight: bold;
+	margin-bottom: 20px;
+}

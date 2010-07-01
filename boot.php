@@ -1,0 +1,302 @@
+<?php
+
+set_time_limit(0);
+
+define('EOL', '<br />');
+
+define('REGISTER_CLOSED',  0);
+define('REGISTER_APPROVE', 1);
+define('REGISTER_OPEN',    2);
+
+
+if(! class_exists('App')) {
+class App {
+
+	public  $module_loaded = false;
+	public  $config;
+	public  $page;
+	public  $profile;
+	public  $user;
+	public  $content;
+	public  $error = false;
+	public  $cmd;
+	public  $argv;
+	public  $argc;
+	public  $module;
+
+	private $scheme;
+	private $hostname;
+	private $path;
+	private $db;
+
+	function __construct() {
+
+		$this->config = array();
+		$this->page = array();
+
+		$this->scheme = ((isset($_SERVER['HTTPS']) 
+				&& ($_SERVER['HTTPS']))	?  'https' : 'http' );
+		$this->hostname = str_replace('www.','',
+				$_SERVER['SERVER_NAME']);
+		set_include_path("include/$this->hostname" 
+				. PATH_SEPARATOR . 'include' 
+				. PATH_SEPARATOR . '.' );
+
+                if(substr($_SERVER['QUERY_STRING'],0,2) == "q=")
+			$_SERVER['QUERY_STRING'] = substr($_SERVER['QUERY_STRING'],2);
+//		$this->cmd = trim($_SERVER['QUERY_STRING'],'/');
+		$this->cmd = trim($_GET['q'],'/');
+
+		$this->argv = explode('/',$this->cmd);
+		$this->argc = count($this->argv);
+		if((array_key_exists('0',$this->argv)) && strlen($this->argv[0])) {
+			$this->module = $this->argv[0];
+		}
+		else {
+			$this->module = 'home';
+		}
+	}
+
+	function get_baseurl($ssl = false) {
+		
+		return (($ssl) ? 'https' : $this->scheme) . "://" . $this->hostname
+			. ((isset($this->path) && strlen($this->path)) 
+			? '/' . $this->path : '' );
+	}
+
+	function set_path($p) {
+		$this->path = ltrim(trim($p),'/');
+	} 
+
+	function init_pagehead() {
+		if(file_exists("view/head.tpl"))
+			$s = file_get_contents("view/head.tpl");
+		$this->page['htmlhead'] = replace_macros($s,array('$baseurl' => $this->get_baseurl()));
+	}
+
+}}
+
+
+if(! function_exists('x')) {
+function x($s,$k = NULL) {
+	if($k != NULL) {
+		if((is_array($s)) && (array_key_exists($k,$s))) {
+			if($s[$k])
+				return (int) 1;
+			return (int) 0;
+		}
+		return false;
+	}
+	else {		
+		if(isset($s)) {
+			if($s) {
+				return (int) 1;
+			}
+			return (int) 0;
+		}
+		return false;
+	}
+}}
+
+if(! function_exists('system_unavailable')) {
+function system_unavailable() {
+	include('system_unavailable.php');
+	killme();
+}}
+
+if(! function_exists('replace_macros')) {  
+function replace_macros($s,$r) {
+
+	$search = array();
+	$replace = array();
+
+	if(is_array($r) && count($r)) {
+		foreach ($r as $k => $v ) {
+			$search[] =  $k;
+			$replace[] = $v;
+		}
+	}
+	return str_replace($search,$replace,$s);
+}}
+
+
+
+if(! function_exists('fetch_url')) {
+function fetch_url($url,$binary = false) {
+	$ch = curl_init($url);
+	if(! $ch) return false;
+
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+	curl_setopt($ch, CURLOPT_FOLLOWLOCATION,true);
+	curl_setopt($ch, CURLOPT_MAXREDIRS,8);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+	if($binary)
+		curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
+
+	$s = curl_exec($ch);
+	curl_close($ch);
+	return($s);
+}}
+
+
+if(! function_exists('post_url')) {
+function post_url($url,$params) {
+	$ch = curl_init($url);
+	if(! $ch) return false;
+
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+	curl_setopt($ch, CURLOPT_FOLLOWLOCATION,true);
+	curl_setopt($ch, CURLOPT_MAXREDIRS,8);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+	curl_setopt($ch, CURLOPT_POST,1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
+
+	$s = curl_exec($ch);
+	curl_close($ch);
+	return($s);
+}}
+
+
+if(! function_exists('random_string')) {
+function random_string() {
+	return(hash('sha256',uniqid(rand(),true)));
+}}
+
+if(! function_exists('notags')) {
+function notags($string) {
+	// protect against :<> with high-bit set
+	return(str_replace(array("<",">","\xBA","\xBC","\xBE"), array('[',']','','',''), $string));
+}}
+
+// The PHP built-in tag escape function has traditionally been buggy
+if(! function_exists('escape_tags')) {
+function escape_tags($string) {
+	return(str_replace(array("<",">","&"), array('&lt;','&gt;','&amp;'), $string));
+}}
+
+if(! function_exists('login')) {
+function login($register = false) {
+	$o = "";
+	$register_html = (($register) ? file_get_contents("view/register-link.tpl") : "");
+
+
+	if(x($_SESSION,'authenticated')) {
+		$o = file_get_contents("view/logout.tpl");
+	}
+	else {
+		$o = file_get_contents("view/login.tpl");
+
+		$o = replace_macros($o,array('$register_html' => $register_html ));
+	}
+	return $o;
+}}
+
+
+if(! function_exists('autoname')) {
+function autoname($len) {
+
+	$vowels = array('a','a','ai','au','e','e','e','ee','ea','i','ie','o','ou','u'); 
+	if(mt_rand(0,5) == 4)
+		$vowels[] = 'y';
+
+	$cons = array(
+			'b','bl','br',
+			'c','ch','cl','cr',
+			'd','dr',
+			'f','fl','fr',
+			'g','gh','gl','gr',
+			'h',
+			'j',
+			'k','kh','kl','kr',
+			'l',
+			'm',
+			'n',
+			'p','ph','pl','pr',
+			'qu',
+			'r','rh',
+			's','sc','sh','sm','sp','st',
+			't','th','tr',
+			'v',
+			'w','wh',
+			'x',
+			'z','zh'
+			);
+
+	$midcons = array('ck','ct','gn','ld','lf','lm','lt','mb','mm', 'mn','mp',
+				'nd','ng','nk','nt','rn','rp','rt');
+
+	$noend = array('bl', 'br', 'cl','cr','dr','fl','fr','gl','gr',
+				'kh', 'kl','kr','mn','pl','pr','rh','tr','qu','wh');
+
+	$start = mt_rand(0,2);
+  	if($start == 0)
+    		$table = $vowels;
+  	else
+    		$table = $cons;
+
+	$word = '';
+
+	for ($x = 0; $x < $len; $x ++) {
+  		$r = mt_rand(0,count($table) - 1);
+  		$word .= $table[$r];
+  
+  		if($table == $vowels)
+    			$table = array_merge($cons,$midcons);
+  		else
+    			$table = $vowels;
+
+	}
+
+	$word = substr($word,0,$len);
+
+	foreach($noend as $noe) {
+  		if((strlen($word) > 2) && (substr($word,-2) == $noe)) {
+    			$word = substr($word,0,-1);
+    			break;
+  		}
+	}
+	if(substr($word,-1) == 'q')
+		$word = substr($word,0,-1);    
+	return $word;
+}}
+
+if(! function_exists('killme')) {
+function killme() {
+	session_write_close();
+	exit;
+}}
+
+if(! function_exists('goaway')) {
+function goaway($s) {
+	header("Location: $s");
+	killme();
+}}
+
+
+if(! function_exists('xml_status')) {
+function xml_status($st) {
+	header( "Content-type: text/xml");
+	echo '<?xml version="1.0" encoding="UTF-8"?>'."\r\n";
+	echo "<result><status>$st</status></result>\r\n";
+	killme();
+}}
+
+if(! function_exists('local_user')) {
+function local_user() {
+	if((x($_SESSION,'authenticated')) && (x($_SESSION,'uid')))
+		return $_SESSION['uid'];
+	return false;
+}}
+
+if(! function_exists('remote_user')) {
+function remote_user() {
+	if((x($_SESSION,'authenticated')) && (x($_SESSION,'cid')))
+		return $_SESSION['cid'];
+	return false;
+}}
+
+function footer(&$a) {
+
+	$s = fetch_url("http://fortunemod.com/cookie.php?equal=1");
+	$a->page['content'] .= "<div class=\"fortune\" >$s</div>"; 
+}

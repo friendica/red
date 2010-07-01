@@ -1,0 +1,24 @@
+<?php
+
+if(! function_exists('home_init')) {
+function home_init(&$a) {
+
+	if(x($_SESSION,'authenticated') && (x($_SESSION,'uid'))) {
+		if($a->user['nickname'])
+			goaway( $a->get_baseurl() . "/profile/" . $a->user['nickname'] );
+		else
+			goaway( $a->get_baseurl() . "/profile/" . $_SESSION['uid'] );
+	}
+}}
+
+
+if(! function_exists('home_content')) {
+function home_content(&$a) {
+
+	$a->page['footer'] .= "<div class=\"powered\" >Powered by <a href=\"http://dfrn.org\" name=\"DFRN.org\" >DFRN</a></div>";
+	$o .= '<h1>Welcome' . ((x($a->config,'sitename')) ? " to {$a->config['sitename']}" : "" ) . '</h1>';
+	$o .= login(1);
+	return $o;
+
+	
+}} 

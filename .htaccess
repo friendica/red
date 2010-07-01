@@ -1,0 +1,13 @@
+
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+  RewriteEngine on
+  
+  # Rewrite current-style URLs of the form 'index.php?q=x'.
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
+
+</IfModule>
+
