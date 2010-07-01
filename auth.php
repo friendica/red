@@ -1,6 +1,6 @@
 <?php
 
-
+// login/logout 
 
 if((x($_SESSION,'authenticated')) && (! ($_POST['auth-params'] == 'login'))) {
 	if($_POST['auth-params'] == 'logout' || $a->module == "logout") {
