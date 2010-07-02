@@ -151,11 +151,11 @@ footer {
 
 input#dfrn-url {
 	float: left;
-	background: url(silho.gif) no-repeat;
-	background-position: 4px center;
-	font-size: 15px;
-	padding-left: 24px;
-	height: 24px;
+	background: url(dfrn.gif) no-repeat;
+	background-position: 2px center;
+	font-size: 17px;
+	padding-left: 21px;
+	height: 21px;
 	background-color: #FFFFFF;
 	color: #000000;
 	margin-bottom: 20px;
