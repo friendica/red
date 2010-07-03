@@ -95,6 +95,10 @@ function contacts_content(&$a) {
 	$r = q("SELECT * FROM `contact` WHERE `uid` = %d",
 		intval($_SESSION['uid']));
 
+define ( 'DIRECTION_IN',   0);
+define ( 'DIRECTION_OUT',  1);
+define ( 'DIRECTION_BOTH', 2);
+
 	if(count($r)) {
 
 		$tpl = file_get_contents("view/contact_template.tpl");
@@ -102,11 +106,32 @@ function contacts_content(&$a) {
 		foreach($r as $rr) {
 			if($rr['self'])
 				continue;
+			$direction = '';
+			if(strlen($rr['dfrn-id'])) {
+				if(strlen($rr['ret-id'])) {
+					$direction = DIRECTION_BOTH;
+					$dir_icon = 'images/lrarrow.gif';
+					$alt_text = 'Mutual Friendship';
+				}
+				else {
+					$direction = DIRECTION_OUT;
+					$dir_icon = 'images/rarrow.gif';
+					$alt_text = 'You are a fan of';
+				}
+			}
+			else {
+				$direction = DIRECTION_IN;
+				$dir_icon = 'images/larrow.gif';
+				$alt_text = 'is a fan of yours';
+			}
+
 			$o .= replace_macros($tpl, array(
 				'$id' => $rr['id'],
+				'$alt_text' => $alt_text,
+				'$dir_icon' => $dir_icon,
 				'$thumb' => $rr['thumb'], 
 				'$name' => $rr['name'],
-				'$url' => $rr['url']
+				'$url' => (($direction != DIRECTION_IN) ? "redir/{$rr['id']}" : $rr['url'] )
 			));
 		}
 	}

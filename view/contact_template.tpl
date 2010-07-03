@@ -1,5 +1,6 @@
 
 <div class="contact-entry-wrapper" id="contact-entry-wrapper-$id" >
+<img class="contact-entry-direction-icon" src="$dir_icon" alt="$alt_text" title="$alt_text" />
 <div class="contact-entry-photo" id="contact-entry-photo-$id" >
 	<a href="$url" title="Visit $name's profile" /><img src="$thumb" alt="$name" ></a>
 </div>
