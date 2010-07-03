@@ -91,13 +91,24 @@ function contacts_content(&$a) {
 		'$hide_text' => ((strlen($sql_extra)) ? 'Show Blocked Connections' : 'Hide Blocked Connections')
 	)); 
 
+	switch($sort_type) {
+		case DIRECTION_BOTH :
+			$sql_extra = " AND `dfrn-id` != '' AND `ret-id` != '' ";
+			break;
+		case DIRECTION_IN :
+			$sql_extra = " AND `dfrn-id` != '' AND `ret-id` = '' ";
+			break;
+		case DIRECTION_OUT :
+			$sql_extra = " AND `dfrn-id` = '' AND `ret-id` != '' ";
+			break;
+		case DIRECTION_ANY :
+		default:
+			$sql_extra = '';
+			break;
+	}
 
-	$r = q("SELECT * FROM `contact` WHERE `uid` = %d",
+	$r = q("SELECT * FROM `contact` WHERE `uid` = %d $sql_extra",
 		intval($_SESSION['uid']));
-
-define ( 'DIRECTION_IN',   0);
-define ( 'DIRECTION_OUT',  1);
-define ( 'DIRECTION_BOTH', 2);
 
 	if(count($r)) {
 

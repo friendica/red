@@ -2,12 +2,16 @@
 
 set_time_limit(0);
 
-define('EOL', '<br />');
+define('EOL', "<br />\r\n");
 
 define('REGISTER_CLOSED',  0);
 define('REGISTER_APPROVE', 1);
 define('REGISTER_OPEN',    2);
 
+define ( 'DIRECTION_ANY',  0);
+define ( 'DIRECTION_IN',   1);
+define ( 'DIRECTION_OUT',  2);
+define ( 'DIRECTION_BOTH', 3);
 
 if(! class_exists('App')) {
 class App {
