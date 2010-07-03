@@ -12,7 +12,7 @@ function item_post(&$a) {
 	$parent = ((x($_POST,'parent')) ? intval($_POST['parent']) : 0);
 	$profile_uid = ((x($_POST,'profile_uid')) ? intval($_POST['profile_uid']) : 0);
 	if(! can_write_wall($a,$profile_uid)) {
-		$_SESSION['sysmsg'] .= "Permission denied." . EOL;
+		notice("Permission denied." . EOL) ;
 		return;
 	}
 
