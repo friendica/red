@@ -300,3 +300,10 @@ function footer(&$a) {
 	$s = fetch_url("http://fortunemod.com/cookie.php?equal=1");
 	$a->page['content'] .= "<div class=\"fortune\" >$s</div>"; 
 }
+
+if(! function_exists('notice')) {
+function notice($s) {
+
+	$_SESSION['sysmsg'] .= $s;
+
+}}
