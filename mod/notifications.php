@@ -28,7 +28,7 @@ function notifications_post(&$a) {
 			return;
 		}
 		if($_POST['submit'] == 'Discard') {
-			$r = q("DELETE `intro` WHERE `id` = %d LIMIT 1", intval($intro_id));	
+			$r = q("DELETE FROM `intro` WHERE `id` = %d LIMIT 1", intval($intro_id));	
 			$r = q("DELETE `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1", 
 				intval($request_id),
 				intval($_SESSION['uid']));

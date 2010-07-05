@@ -52,7 +52,7 @@ function contacts_post(&$a) {
 				}
 			}
 			if($intval($contact_id))
-				q("DELETE * FROM `item` WHERE `contact-id` = %d ",
+				q("DELETE FROM `item` WHERE `contact-id` = %d LIMIT 1",
 					intval($contact_id)
 				);
 

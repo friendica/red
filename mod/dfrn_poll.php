@@ -46,7 +46,7 @@ function dfrn_poll_init(&$a) {
 
 	if((x($type)) && ($type == 'profile-check')) {
 
-		q("DELETE FROM `expire` WHERE `expire` < " . time());
+		q("DELETE FROM `profile_check` WHERE `expire` < " . intval(time()));
 		$r = q("SELECT * FROM `profile_check` WHERE `dfrn_id` = '%s' ORDER BY `expire` DESC",
 			dbesc($dfrn_id));
 		if(count($r))
