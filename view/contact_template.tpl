@@ -1,17 +1,23 @@
 
 <div class="contact-entry-wrapper" id="contact-entry-wrapper-$id" >
-<img class="contact-entry-direction-icon" src="$dir_icon" alt="$alt_text" title="$alt_text" />
-<div class="contact-entry-photo" id="contact-entry-photo-$id" >
-	<a href="$url" title="Visit $name's profile" /><img src="$thumb" alt="$name" ></a>
-</div>
-<div class="contact-entry-name" id="contact-entry-name-$id" >$name</div>
-</div>
-<div class="contact-entry-edit-links" >
-<a href="contacts/$id/edit" class="contact-entry-edit-link" ><img src="images/b_edit.gif" alt="Edit contact" title="Edit contact" /></a>
-<a href="contacts/$id/block" class="contact-edit-block-link" ><img src="images/b_block.gif" alt="Block contact" title="Block contact"/></a>
-<a href="contacts/$id/drop" class="contact-entry-block-link"><img src="images/b_drop.gif" alt="Delete contact" title="Delete contact"/></a>
-</div>
-<div class="contact-entry-end" ></div>
+	<div class="contact-entry-photo-wrapper" >
+		<img class="contact-entry-direction-icon" src="$dir_icon" alt="$alt_text" title="$alt_text" />
+		<div class="contact-entry-photo" id="contact-entry-photo-$id" >
+			<a href="$url" title="Visit $name's profile" /><img src="$thumb" alt="$name" /></a>
+		</div>
+		<div class="contact-entry-photo-end" ></div>
+	</div>
+	<div class="contact-entry-nav-wrapper"
+		<div class="contact-entry-name" id="contact-entry-name-$id" >$name</div>
 
+		<div class="contact-entry-break"></div>
+
+		<div class="contact-entry-edit-links" >
+			<a href="contacts/$id" class="contact-entry-edit-link" ><img src="images/b_edit.gif" alt="Edit contact" title="Edit contact" /></a>
+		</div>
+		<div class="contact-entry-nav-end"></div>
+	</div>
+	<div class="contact-entry-end" ></div>
+</div>
 
 <hr />

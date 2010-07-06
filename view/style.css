@@ -340,14 +340,48 @@ input#dfrn-url {
 	float: left;
 }
 
-
+#contacts-main {
+	margin-bottom: 20px;
+}
+.contact-entry-photo-wrapper {
+	float: left;
+}
+.contact-entry-direction-icon {
+	margin-top: 24px;
+	float: left;
+}
 .contact-entry-photo img {
 	border: none;
 }
-
+.contact-entry-photo-end {
+	clear: both;
+}
+.contact-entry-edit-links {
+	float: left;
+	margin-top: 10px;
+}
+.contact-entry-name {
+	float: left;
+}
+.contact-entry-nav-wrapper {
+	float: left;
+	margin-left: 10px;
+}
+.contact-entry-nav-end {
+	clear: both;
+}
+.contact-entry-break {
+	clear: both;
+}
 .contact-entry-edit-links img {
 	border: none;
 	margin-right: 15px;
+}
+.contact-entry-photo {
+	float: left;
+}
+.contact-entry-end {
+	clear: both;
 }
 
 .wall-item-photo-wrapper {
@@ -399,9 +433,11 @@ input#dfrn-url {
 #profile-listing-new-link-wrapper {
 	margin-bottom: 30px;
 }
+.profile-listing-photo-wrapper {
+	float: left;
+}
 
 .profile-listing-edit-buttons-wrapper {
-/*	float: left;*/
 	clear: both;
 }
 .profile-listing-photo-edit-link {

@@ -1,12 +1,12 @@
 <?php
 
 
-function select_contact_profile($current) {
+function contact_profile_assign($current) {
 
 	$o = '';
-	$o .= "<select id=\"contact_profile_selector\" name=\"profile_id\" />";
+	$o .= "<select id=\"contact_profile_selector\" name=\"profile_assign\" />";
 
-	$r = q("SELECT `id` FROM `profile` WHERE `uid` = %d",
+	$r = q("SELECT `profile-name` FROM `profile` WHERE `uid` = %d",
                         intval($_SESSION['uid']));
 
 	if(count($r)) {

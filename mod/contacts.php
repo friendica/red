@@ -80,7 +80,44 @@ function contacts_content(&$a) {
 		return;
 	}
 
-	if(($a->argc2 == 2) && ($a->argv[1] == 'all'))
+
+
+
+	if(($a->argc == 2) && intval($a->argv[1])) {
+
+		$contact_id = intval($a->argv[1]);
+		$r = q("SELECT * FROM `contact` WHERE `uid` = %d and `id` = %d LIMIT 1",
+			$_SESSION['uid'],
+			intval($contact_id)
+		);
+		if(! count($r)) {
+			notice("Contact not found.");
+			return;
+		}
+
+		require_once('view/contact_selectors.php');
+
+		$tpl = file_get_contents("view/contact_edit.tpl");
+
+		$o .= replace_macros($tpl,array(
+			'$profile_select' => contact_profile_assign($r[0]['profile-id']),
+			'$contact_id' => $r[0]['id'],
+			'$blocked' => $r[0]['blocked'],
+			'$rating' => $r[0]['rating'],
+			'$reason' => $r[0]['reason'],
+	//		'$groups' => group_selector(),
+			'$photo' => $r[0]['photo'],
+			'$name' => $r[0]['name'],
+			'$dir_icon' => $dir_icon,
+			'$alt_text' => $alt_text
+
+		));
+
+		return $o;
+
+	}
+
+	if(($a->argc == 2) && ($a->argv[1] == 'all'))
 		$sql_extra = '';
 	else
 		$sql_extra = " AND `blocked` = 0 ";

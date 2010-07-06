@@ -58,7 +58,7 @@ function item_post(&$a) {
 				intval($post_id));
 		}
 	}
-	goaway($a->get_baseurl() . "/profile/$uid");
+	goaway($a->get_baseurl() . "/profile/$profile_uid");
 
 
 

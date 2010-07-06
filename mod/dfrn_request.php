@@ -187,7 +187,7 @@ function dfrn_request_post(&$a) {
 		if(is_array($contact_record)) {
 			// There is a contact record but no issued-id, so this
 			// is a reciprocal introduction from a known contact
-			$r = q("UPDATE `contact` SET `issued-id` = '%s', `ret-blocked` = 1 WHERE `id` = %d LIMIT 1",
+			$r = q("UPDATE `contact` SET `issued-id` = '%s' WHERE `id` = %d LIMIT 1",
 				dbesc($issued_id),
 				intval($contact_record['id'])
 			);

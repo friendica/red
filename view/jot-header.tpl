@@ -5,7 +5,8 @@
 
 tinyMCE.init({
 	theme : "advanced",
-	mode : "textareas",
+	mode : "specific_textareas",
+	editor_selector: "profile-jot-text",
 	plugins : "bbcode",
 	theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,forecolor",
 	theme_advanced_buttons2 : "",

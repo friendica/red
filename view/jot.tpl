@@ -7,7 +7,7 @@ What's on your mind?
 <input type="hidden" name="type" value="jot" />
 <input type="hidden" name="profile_uid" value="$profile_uid" />
 
-<textarea rows="5" cols="64" id="profile-jot-text" name="body" ></textarea>
+<textarea rows="5" cols="64" class="profile-jot-text" id="profile-jot-text" name="body" ></textarea>
 
 </div>
 <div id="profile-jot-submit-wrapper" >

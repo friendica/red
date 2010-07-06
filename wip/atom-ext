@@ -1,0 +1,45 @@
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:foaf="http://xmlns.com/foaf/0.1"
+      xml:base="http://www.example.org">
+  ...
+  <author>
+    <name>James M Snell</name>
+    <foaf:homepage rdf:resource="/blog" />
+    <foaf:img rdf:resource="/mypic.png" />  
+  </author>
+  <contributor>
+    <name>Jane Doe</name>
+    <foaf:homepage rdf:resource="/janesblog" />
+    <foaf:image rdf:resource="/janespic.png" />
+  </contributor>
+  ...
+</feed>
+
+
+
+
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xml:base="http://www.example.org/">
+  <id>http://www.example.org/pictures</id>
+  <title>My Picture Gallery</title>
+  <updated>2005-07-15T12:00:00Z</updated>
+  <author>
+    <name>James M Snell</name>
+  </author>
+  <entry>
+     <id>http://www.example.org/entries/1</id>
+     <title>Trip to San Francisco</title>
+     <link href="/entries/1" />
+     <updated>2005-07-15T12:00:00Z</updated>
+     <summary>A picture of my hotel room in San Francisco</summary>
+     <content type="image/png" src="/mypng1.png" />
+  </entry>
+  <entry>
+    <id>http://www.example.org/entries/2</id>
+    <title>My new car</title>
+    <link href="/entries/2" />
+    <updated>2005-07-15T12:00:00Z</updated>
+    <summary>A picture of my new car</summary>
+    <content type="image/png" src="/mypng2.png" />
+  </entry>
+</feed>
