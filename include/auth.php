@@ -8,6 +8,7 @@ if((x($_SESSION,'authenticated')) && (! ($_POST['auth-params'] == 'login'))) {
 		unset($_SESSION['uid']);
 		unset($_SESSION['visitor_id']);
 		unset($_SESSION['administrator']);
+		unset($_SESSION['cid']);
 		$_SESSION['sysmsg'] = "Logged out." . EOL;
 		goaway($a->get_baseurl());
 	}
@@ -21,6 +22,12 @@ if((x($_SESSION,'authenticated')) && (! ($_POST['auth-params'] == 'login'))) {
 		if(strlen($a->user['timezone']))
 			date_default_timezone_set($a->user['timezone']);
 
+		$r = q("SELECT * FROM `contact` WHERE `uid` = %s AND `self` = 1 LIMIT 1",
+			intval($_SESSION['uid']));
+		if(count($r)) {
+			$a->cid = $r[0]['id'];
+			$_SESSION['cid'] = $a->cid;
+		}
 	}
 }
 else {
@@ -28,6 +35,7 @@ else {
 	unset($_SESSION['uid']);
 	unset($_SESSION['visitor_id']);
 	unset($_SESSION['administrator']);
+	unset($_SESSION['cid']);
 	$encrypted = hash('whirlpool',trim($_POST['password']));
 
 	if((x($_POST,'auth-params')) && $_POST['auth-params'] == 'login') {
@@ -51,6 +59,14 @@ else {
 		$a->user = $r[0];
 		if(strlen($a->user['timezone']))
 			date_default_timezone_set($a->user['timezone']);
+
+		$r = q("SELECT * FROM `contact` WHERE `uid` = %s AND `self` = 1 LIMIT 1",
+			intval($_SESSION['uid']));
+		if(count($r)) {
+			$a->cid = $r[0]['id'];
+			$_SESSION['cid'] = $a->cid;
+		}
+
 
 	}
 }

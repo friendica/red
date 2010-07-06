@@ -166,7 +166,7 @@ function dfrn_confirm_post(&$a) {
                 	$res = mail($r[0]['email'],"Introduction accepted at {$a->config['sitename']}",
 				$email_tpl,"From: Administrator@{$_SERVER[SERVER_NAME]}");
 			if(!$res) {
-				$_SESSION['sysmsg'] .= "Email notification failed." . EOL;
+				notice( "Email notification failed." . EOL );
 			}
 			xml_status(0); // Success
 
@@ -182,12 +182,12 @@ function dfrn_confirm_post(&$a) {
 	}
 	else {
 
-	// We are processing a local confirmation initiated on this system by our user to an external introduction.
+		// We are processing a local confirmation initiated on this system by our user to an external introduction.
 
 		$uid = $_SESSION['uid'];
 
 		if(! $uid) {
-			$_SESSION['sysmsg'] = 'Unauthorised.';
+			notice("Permission denied." . EOL );
 			return;
 		}	
 	
@@ -223,7 +223,7 @@ function dfrn_confirm_post(&$a) {
 		$pubkey = openssl_pkey_get_details($res);
 		$public_key = $pubkey["key"];
 
-		$r = q("UPDATE `contact` SET `pubkey` = '%s', `prvkey` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+		$r = q("UPDATE `contact` SET `issued-pubkey` = '%s', `prvkey` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			dbesc($public_key),
 			dbesc($private_key),
 			intval($contact_id),

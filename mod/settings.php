@@ -119,6 +119,18 @@ function settings_post(&$a) {
 		// FIXME - set to un-verified, blocked and redirect to logout
 
 	}
+	if($nick_changed) {
+		$r = q ("UPDATE `profile` SET `url` = '%s', `request` = '%s', `notify` = '%s', `poll` = '%s', `confirm` = '%s'
+			WHERE `uid` = %d AND `self` = 1 LIMIT 1",
+			dbesc( $a->get_baseurl() . '/profile/' . $nick ),
+			dbesc( $a->get_baseurl() . '/dfrn_request/' . $nick ),
+			dbesc( $a->get_baseurl() . '/dfrn_notify/' . $nick ),
+			dbesc( $a->get_baseurl() . '/dfrn_poll/' . $nick ),
+			dbesc( $a->get_baseurl() . '/dfrn_confirm/' . $nick ),
+			intval($_SESSION['uid'])
+		);
+	}
+
 
 	// Refresh the content display with new data
 

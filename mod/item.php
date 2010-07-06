@@ -23,7 +23,7 @@ function item_post(&$a) {
 			intval($_SESSION['uid']));
 		if(count($r))
 			$contact_id = $r[0]['id'];
-	
+	}	
 	if($_POST['type'] == 'jot') {
 
 		do {
@@ -34,6 +34,7 @@ function item_post(&$a) {
 			if(count($r))
 				$dups = true;
 		} while($dups == true);
+
 
 		$r = q("INSERT INTO `item` (`uid`,`type`,`contact-id`,`created`,`edited`,`hash`,`body`)
 			VALUES( %d, '%s', %d, '%s', '%s', '%s', '%s' )",

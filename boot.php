@@ -21,6 +21,7 @@ class App {
 	public  $page;
 	public  $profile;
 	public  $user;
+	public  $cid;
 	public  $content;
 	public  $error = false;
 	public  $cmd;

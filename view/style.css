@@ -111,9 +111,10 @@ footer {
 #register-name, #register-email {
 	float: left;
 	margin-top: 10px;
+	width: 150px;
 }
 
-#register-name-wrapper, #register-email-wrapper, #register-submit-wrapper {
+#register-name-end, #register-email-end, #register-submit-end {
 	clear: both;
 }
 
@@ -370,6 +371,14 @@ input#dfrn-url {
 .wall-item-photo {
 	border: none;
 }
+
+.comment-edit {
+	font-size: 0.8em;
+	cursor: pointer;
+	color: #3172BD;
+	margin-top: 15px;
+}
+
 
 #profile-jot-submit-wrapper {
 	margin-top: 15px;

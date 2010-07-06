@@ -64,15 +64,22 @@ function profile_init(&$a) {
 		$a->page['htmlhead'] .= "<link rel=\"dfrn-{$dfrn}\" href=\"".$a->get_baseurl()."/dfrn_{$dfrn}/{$which}\" />\r\n";
 }
 
-function item_display($item,$template) {
+function item_display(&$a, $item,$template,$comment) {
+
+
+	$profile_url = $item['url'];
+
+	if(local_user() && ($item['contact-uid'] == $_SESSION['uid']) && (strlen($item['dfrn-id'])) && (! $item['self'] ))
+		$profile_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 
 	$o .= replace_macros($template,array(
 		'$id' => $item['item_id'],
-		'$profile_url' => $item['url'],
+		'$profile_url' => $profile_url,
 		'$name' => $item['name'],
 		'$thumb' => $item['thumb'],
 		'$body' => bbcode($item['body']),
-		'$ago' => relative_date($item['created'])
+		'$ago' => relative_date($item['created']),
+		'$comment' => $comment
 	));
 
 
@@ -87,6 +94,17 @@ function profile_content(&$a) {
 	require_once('include/security.php');
 
 //	$tpl = file_get_contents('view/profile_tabs.tpl');
+
+
+	if(remote_user())
+		$contact_id = $_SESSION['visitor_id'];
+	if(local_user()) {
+		$r = q("SELECT `id` FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
+			$_SESSION['uid']
+		);
+		if(count($r))
+			$contact_id = $r[0]['id'];
+	}
 
 
 	if(can_write_wall($a,$a->profile['profile_uid'])) {
@@ -111,7 +129,8 @@ function profile_content(&$a) {
 
 		// Add comments. 
 
-		$r = q("SELECT `item`.*, `contact`.`name`, `contact`.`photo`, `contact`.`thumb`, `contact`.`id` AS `cid`
+		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, `contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`, `contact`.`id` AS `cid`,
+			`contact`.`uid` AS `contact-uid`
 			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 			WHERE `item`.`uid` = %d AND `item`.`visible` = 1
 			AND `contact`.`blocked` = 0
@@ -121,11 +140,23 @@ function profile_content(&$a) {
 			intval($a->profile['uid'])
 		);
 
+		$template = file_get_contents('view/comment_item.tpl');
+
+
+
+
 		$tpl = file_get_contents('view/wall_item.tpl');
 
 		if(count($r)) {
 			foreach($r as $rr) {
-				$o .= item_display($rr,$tpl);
+				$comment = replace_macros($template,array(
+					'$id' => $rr['item_id'],
+					'$profile_uid' =>  $a->profile['profile_uid']
+				));
+
+
+
+				$o .= item_display($a,$rr,$tpl,$comment);
 			}
 		}
 	}

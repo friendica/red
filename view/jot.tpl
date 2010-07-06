@@ -15,4 +15,5 @@ What's on your mind?
 
 </div>
 <div id="profile-jot-end"></div>
+</form>
 </div>

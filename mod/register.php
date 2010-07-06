@@ -114,7 +114,8 @@ function register_post(&$a) {
 			dbesc($username),
 			dbesc($a->get_baseurl() . '/images/default-profile.jpg'),
 			dbesc($a->get_baseurl() . '/images/default-profile-sm.jpg')
-			);
+
+		);
 		if($r === false) {
 			$_SESSION['sysmsg'] .= "An error occurred creating your default profile. Please try again." . EOL ;
 			// Start fresh next time.
@@ -122,13 +123,20 @@ function register_post(&$a) {
 				intval($newuid));
 			return;
 		}
-		$r = q("INSERT INTO `contact` ( `uid`, `created`, `self`, `name`, `photo`, `thumb`, `blocked` )
-			VALUES ( %d, '%s', 1, '%s', '%s', '%s', 0 ) ",
+		$r = q("INSERT INTO `contact` ( `uid`, `created`, `self`, `name`, `photo`, `thumb`, `blocked`, `url`,
+			`request`, `notify`, `poll`, `confirm` )
+			VALUES ( %d, '%s', 1, '%s', '%s', '%s', 0, '%s', '%s', '%s', '%s', '%s' ) ",
 			intval($newuid),
 			datetime_convert(),
 			dbesc($username),
 			dbesc($a->get_baseurl() . '/images/default-profile.jpg'),
-			dbesc($a->get_baseurl() . '/images/default-profile-sm.jpg') 
+			dbesc($a->get_baseurl() . '/images/default-profile-sm.jpg'), 
+			dbesc($a->get_baseurl() . '/profile/' . intval($newuid)),
+			dbesc($a->get_baseurl() . '/dfrn_request/' . intval($newuid)),
+			dbesc($a->get_baseurl() . '/dfrn_notify/' . intval($newuid)),
+			dbesc($a->get_baseurl() . '/dfrn_poll/' . intval($newuid)),
+			dbesc($a->get_baseurl() . '/dfrn_confirm/' . intval($newuid))
+
 		);
 
 

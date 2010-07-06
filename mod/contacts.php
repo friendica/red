@@ -93,13 +93,13 @@ function contacts_content(&$a) {
 
 	switch($sort_type) {
 		case DIRECTION_BOTH :
-			$sql_extra = " AND `dfrn-id` != '' AND `ret-id` != '' ";
+			$sql_extra = " AND `dfrn-id` != '' AND `issued-id` != '' ";
 			break;
 		case DIRECTION_IN :
-			$sql_extra = " AND `dfrn-id` != '' AND `ret-id` = '' ";
+			$sql_extra = " AND `dfrn-id` = '' AND `issued-id` != '' ";
 			break;
 		case DIRECTION_OUT :
-			$sql_extra = " AND `dfrn-id` = '' AND `ret-id` != '' ";
+			$sql_extra = " AND `dfrn-id` != '' AND `issued-id` = '' ";
 			break;
 		case DIRECTION_ANY :
 		default:
@@ -118,22 +118,22 @@ function contacts_content(&$a) {
 			if($rr['self'])
 				continue;
 			$direction = '';
-			if(strlen($rr['dfrn-id'])) {
-				if(strlen($rr['ret-id'])) {
+			if(strlen($rr['issued-id'])) {
+				if(strlen($rr['dfrn-id'])) {
 					$direction = DIRECTION_BOTH;
 					$dir_icon = 'images/lrarrow.gif';
 					$alt_text = 'Mutual Friendship';
 				}
 				else {
-					$direction = DIRECTION_OUT;
-					$dir_icon = 'images/rarrow.gif';
-					$alt_text = 'You are a fan of';
+					$direction = DIRECTION_IN;
+					$dir_icon = 'images/larrow.gif';
+					$alt_text = 'is a fan of yours';
 				}
 			}
 			else {
-				$direction = DIRECTION_IN;
-				$dir_icon = 'images/larrow.gif';
-				$alt_text = 'is a fan of yours';
+				$direction = DIRECTION_OUT;
+				$dir_icon = 'images/rarrow.gif';
+				$alt_text = 'you are a fan of';
 			}
 
 			$o .= replace_macros($tpl, array(
