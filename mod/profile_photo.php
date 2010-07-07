@@ -88,9 +88,19 @@ function profile_photo_post(&$a) {
 			$r = q("UPDATE `profile` SET `photo` = '%s', `thumb` = '%s' WHERE `id` = %d LIMIT 1",
 				dbesc($a->get_baseurl() . '/photo/' . $image_id . '-4.jpg'),
 				dbesc($a->get_baseurl() . '/photo/' . $image_id . '-5.jpg'),
-				intval($profile_id));
-			if($r === NULL)
+				intval($profile_id)
+			);
+			if($r === false)
 				$_SESSION['sysmsg'] .= "Failed to add image to profile." . EOL;
+// We should really only do this if requested, or if it is the default profile. The contact
+//table images are used in coversations. 
+			$r = q("UPDATE `contact` SET `photo` = '%s', `thumb` = '%s' WHERE `uid` = %d AND `self` = 1 LIMIT 1",
+				dbesc($a->get_baseurl() . '/photo/' . $image_id . '-4.jpg'),
+                                dbesc($a->get_baseurl() . '/photo/' . $image_id . '-5.jpg'),
+				intval($_SESSION['uid'])
+			);
+			if($r ===false)
+				notice("Failed to add photo to contact table." .EOL );
 
 		}
 		goaway($a->get_baseurl() . '/profiles');

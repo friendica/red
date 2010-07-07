@@ -14,4 +14,5 @@ Write something
 
 </div>
 <div id="sidenote-end"></div>
+</form>
 </div>

@@ -58,10 +58,10 @@ function item_post(&$a) {
 				intval($post_id));
 		}
 
-		require('notifier.php');
+//		require('notifier.php');
 
 
-		notifier(&$a,$post_id,$parent);
+//		notifier($a,$post_id,$parent);
 
 	}
 	goaway($a->get_baseurl() . "/profile/$profile_uid");

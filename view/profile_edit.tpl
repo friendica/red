@@ -18,7 +18,7 @@ $default
 <div id="profile-edit-name-end"></div>
 
 <div id="profile-edit-gender-wrapper" >
-<label id="profile-edit-gender-label" for="profile-edit-" >Your Gender: </label>
+<label id="profile-edit-gender-label" for="gender-select" >Your Gender: </label>
 $gender
 </div>
 <div id="profile-edit-gender-end"></div>
