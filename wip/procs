@@ -1,0 +1,9 @@
+You could use proc_open for this:
+
+proc_close(proc_open ("./script.php &", array(), $foo));
+
+The empty array for the output specs prevents opening any pipes to the new
+process, so proc_open doesn't wait for the execution of script.php to
+finish - the last parameter is just there because it has to be.
+proc_close() closes the process immediately, so your PHP script doesn't
+stop.
