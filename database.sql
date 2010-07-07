@@ -2,9 +2,6 @@
 -- version 2.11.9.4
 -- http://www.phpmyadmin.net
 --
--- Generation Time: Jul 02, 2010 at 05:22 PM
--- Server version: 5.1.39
--- PHP Version: 5.2.13
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
@@ -14,6 +11,20 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `challenge`
+--
+
+CREATE TABLE IF NOT EXISTS `challenge` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `challenge` char(255) NOT NULL,
+  `dfrn-id` char(255) NOT NULL,
+  `expire` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
@@ -33,6 +44,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `issued-id` char(255) NOT NULL,
   `dfrn-id` char(255) NOT NULL,
   `url` char(255) NOT NULL,
+  `issued-pubkey` char(255) NOT NULL,
   `pubkey` text NOT NULL,
   `prvkey` text NOT NULL,
   `request` text NOT NULL,
@@ -40,16 +52,16 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `poll` text NOT NULL,
   `confirm` text NOT NULL,
   `aes_allow` tinyint(1) NOT NULL DEFAULT '0',
+  `ret-aes` tinyint(1) NOT NULL DEFAULT '0',
   `ret-id` char(255) NOT NULL,
   `ret-pubkey` text NOT NULL,
   `priority` tinyint(3) NOT NULL,
   `blocked` tinyint(1) NOT NULL DEFAULT '1',
-  `visible` tinyint(1) NOT NULL DEFAULT '0',
   `rating` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0-5 reputation, 0 unknown, 1 call police, 5 inscrutable',
   `reason` text NOT NULL COMMENT 'why a rating was given - will help friends decide to make friends or not',
   `profile-id` int(11) NOT NULL DEFAULT '0' COMMENT 'which profile to display - 0 is public default',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=100 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=109 ;
 
 -- --------------------------------------------------------
 
@@ -95,7 +107,7 @@ CREATE TABLE IF NOT EXISTS `intro` (
   `blocked` tinyint(1) NOT NULL DEFAULT '1',
   `ignore` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=59 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=64 ;
 
 -- --------------------------------------------------------
 
@@ -128,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `commented` (`commented`),
   FULLTEXT KEY `body` (`body`),
   FULLTEXT KEY `title` (`title`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=15 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
 
 -- --------------------------------------------------------
 
@@ -154,7 +166,7 @@ CREATE TABLE IF NOT EXISTS `photo` (
   `deny_uid` mediumtext NOT NULL,
   `deny_gid` mediumtext NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=83 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=95 ;
 
 -- --------------------------------------------------------
 
@@ -183,7 +195,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `thumb` char(255) NOT NULL,
   `publish` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
 
 -- --------------------------------------------------------
 
@@ -197,7 +209,7 @@ CREATE TABLE IF NOT EXISTS `profile_check` (
   `dfrn_id` char(255) NOT NULL,
   `expire` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
 
 -- --------------------------------------------------------
 
@@ -213,7 +225,7 @@ CREATE TABLE IF NOT EXISTS `session` (
   PRIMARY KEY (`id`),
   KEY `sid` (`sid`),
   KEY `expire` (`expire`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=23 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=31 ;
 
 -- --------------------------------------------------------
 
@@ -233,4 +245,4 @@ CREATE TABLE IF NOT EXISTS `user` (
   `verified` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `blocked` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`uid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
