@@ -58,10 +58,12 @@ function profile_init(&$a) {
 	}
 
 	profile_load($a,$which);
+	$a->page['htmlhead'] .= "<meta name=\"dfrn-template\" content=\"" . $a->get_baseurl() . "/profile/%s" . "\" />\r\n";
 	
 	$dfrn_pages = array('request', 'confirm', 'notify', 'poll');
 	foreach($dfrn_pages as $dfrn)
 		$a->page['htmlhead'] .= "<link rel=\"dfrn-{$dfrn}\" href=\"".$a->get_baseurl()."/dfrn_{$dfrn}/{$which}\" />\r\n";
+
 }
 
 function item_display(&$a, $item,$template,$comment) {

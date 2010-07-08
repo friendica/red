@@ -312,3 +312,48 @@ function notice($s) {
 	$_SESSION['sysmsg'] .= $s;
 
 }}
+
+
+if(! function_exists('xmlify')) {
+function xmlify($str) {
+	$buffer = '';
+	
+	for($x = 0; $x < strlen($str); $x ++) {
+		$char = $str[$x];
+        
+		switch( $char ) {
+
+			case "\r" :
+				break;
+			case "&" :
+				$buffer .= '&amp;';
+				break;
+			case "'" :
+				$buffer .= '&apos;';
+				break;
+
+			case "\"" :
+				$buffer .= '&quot;';
+				break;
+			case '<' :
+				$buffer .= '&lt;';
+				break;
+			case '>' :
+				$buffer .= '&gt;';
+				break;
+			case "\n" :
+				$buffer .= ' ';
+				break;
+			default :
+				$buffer .= $char;
+				break;
+		}	
+	}
+	$buffer = trim($buffer);
+	return($buffer);
+}}
+
+
+function hex2bin($s) {
+	return(pack("H*",$s));
+}

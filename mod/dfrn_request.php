@@ -166,6 +166,15 @@ function dfrn_request_post(&$a) {
 			return;
 		}
 
+		if(strstr($url,'@')) {
+			$username = substr($url,0,strpos($url,'@'));
+			$hostname = substr($url,strpos($url,'@') + 1);
+			require_once('Scrape.php');
+
+			$parms = scrape_meta('http://' . $url);
+			if((x($parms,'dfrn-template')) && strstr($parms['dfrn-template'],'%s'))
+				$url = sprintf($parms['dfrn-template'],$username);
+		}
 
 		$ret = q("SELECT * FROM `contact` WHERE `uid` = %d AND `url` = '%s' LIMIT 1", 
 			intval($uid),

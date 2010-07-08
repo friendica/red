@@ -9,6 +9,8 @@ function home_init(&$a) {
 		else
 			goaway( $a->get_baseurl() . "/profile/" . $_SESSION['uid'] );
 	}
+	$a->page['htmlhead'] .= "<meta name=\"dfrn-template\" content=\"" . $a->get_baseurl() . "/profile/%s" . "\" />\r\n";
+ 
 }}
 
 

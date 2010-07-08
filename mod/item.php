@@ -58,8 +58,8 @@ function item_post(&$a) {
 				intval($post_id));
 		}
 
-
-		proc_close(proc_open("php include/notifier.php $post_id > notify.log &",
+		$url = bin2hex($a->get_baseurl());
+		proc_close(proc_open("php include/notifier.php $url $post_id > notify.log &",
 			array(),$foo));
 
 //		notifier($a,$post_id,$parent);

@@ -76,5 +76,29 @@ function validate_dfrn($a) {
 	return $errors;
 }}
 
+if(! function_exists('scrape_meta')) {
+function scrape_meta($url) {
 
+	$ret = array();
+	$s = fetch_url($url);
 
+	if(! $s) 
+		return $ret;
+
+	$dom = HTML5_Parser::parse($s);
+
+	if(! $dom)
+		return $ret;
+
+	$items = $dom->getElementsByTagName('meta');
+
+	// get DFRN link elements
+
+	foreach($items as $item) {
+		$x = $item->getAttribute('name');
+		if(substr($x,0,5) == "dfrn-")
+			$ret[$x] = $item->getAttribute('content');
+	}
+
+	return $ret;
+}}
