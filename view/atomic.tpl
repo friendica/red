@@ -17,6 +17,6 @@
      <link href="$link" />
      <updated>$updated</updated>
      <summary>$summary</summary>
-     <content type="text/plain" ></content>
+     <content type="text/plain" >$content</content>
   </entry>
 </feed>
