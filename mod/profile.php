@@ -149,12 +149,15 @@ function profile_content(&$a) {
 
 		if(count($r)) {
 			foreach($r as $rr) {
-				$comment = replace_macros($template,array(
-					'$id' => $rr['item_id'],
-					'$profile_uid' =>  $a->profile['profile_uid']
-				));
-
-
+				if(can_write_wall($a,$a->profile['profile_uid'])) {
+					$comment = replace_macros($template,array(
+						'$id' => $rr['item_id'],
+						'$profile_uid' =>  $a->profile['profile_uid']
+					));
+				}
+				else {
+					$comment = '';
+				}
 
 				$o .= item_display($a,$rr,$tpl,$comment);
 			}
