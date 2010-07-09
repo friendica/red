@@ -15,16 +15,28 @@ require_once("datetime.php");
 // FIXME - generalise for other content, probably create a notify queue in 
 // the db with type and recipient list
 
-if(($argc != 3) || (! intval($argv[2])))
+if($argc < 3)
 	exit;
 
-	$baseurl = trim(pack("H*" , $argv[1]));
+	$baseurl = trim(hex2bin($argv[1]));
 
-	$item_id = $argv[2];
+	$cmd = $argv[2];
+
+	switch($cmd) {
+
+		default:
+			$item_id = intval($argv[3]);
+			if(! $item_id)
+				killme();
+			break;
+	}
+
 
 	$is_parent = false;
 
 	$recipients = array();
+
+	// fetch requested item
 
 	$r = q("SELECT `item`.*,  `contact`.*,`item`.`id` AS `item_id` FROM `item` LEFT JOIN `contact` ON `item`.`contact-id` = `contact`.`id` 
 		WHERE `item`.`id` = %d LIMIT 1",

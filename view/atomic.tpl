@@ -1,5 +1,8 @@
 <feed xmlns="http://www.w3.org/2005/Atom"
-      xmlns:foaf="http://xmlns.com/foaf/0.1" >
+      xmlns:foaf="http://xmlns.com/foaf/0.1" 
+      xmlns:thr="http://purl.org/syndication/thread/1.0"
+      xmlns:at="http://purl.org/atompub/tombstones/1.0"
+>
   <id>$feed_id</id>
   <title>$feed_title</title>
   <updated>$feed_updated</updated>

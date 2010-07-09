@@ -24,6 +24,9 @@ function item_post(&$a) {
 		if(count($r))
 			$contact_id = $r[0]['id'];
 	}	
+
+	$notify_type = (($parent) ? 'comment-new' : 'wall-new' );
+
 	if($_POST['type'] == 'jot') {
 
 		do {
@@ -59,10 +62,9 @@ function item_post(&$a) {
 		}
 
 		$url = bin2hex($a->get_baseurl());
-		proc_close(proc_open("php include/notifier.php $url $post_id > notify.log &",
-			array(),$foo));
 
-//		notifier($a,$post_id,$parent);
+		proc_close(proc_open("php include/notifier.php $url $notify_type $post_id > notify.log &",
+			array(),$foo));
 
 	}
 	goaway($a->get_baseurl() . "/profile/$profile_uid");
