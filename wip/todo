@@ -1,0 +1,70 @@
+
+profile photo to self contact page? - resolve profile photo inconsistency
+	pre-load profile photos and use in conversations instead of contact photos
+	ensure correct photo is pushed with notify/poll
+
+contact editor
+
+	profile selector
+	block
+	block photo
+	remove
+	reputation
+
+publish to directory
+
+directory page
+
+groups
+
+permissions
+
+pager
+
+comment fetch
+
+photos/albums/ java uploader
+
+item delete
+
+item edit
+
+dfrn_poll - import items
+
+local/remote indicator
+
+side/text
+
+interests/music/tv/etc.
+	country state select
+
+notififier abstraction
+
+emails and offline notifications
+
+registration workflow
+
+admin approved registration (requires admin)
+
+atom elements
+
+	thread
+	tombstone
+	activity
+
+email
+
+chat
+
+plugin api
+
+theme api
+
+ajax
+
+image/link inline ajax
+
+local data performance improvements
+
+product registration/protection
+
