@@ -1,7 +1,11 @@
 
 profile photo to self contact page? - resolve profile photo inconsistency
 	pre-load profile photos and use in conversations instead of contact photos
-	ensure correct photo is pushed with notify/poll
+	(done for profile owner)
+
+	ensure correct photo is pushed with notify/poll and used in wall/wall comments/posts
+	use photo hash to notify of changes?
+
 
 contact editor
 
@@ -14,6 +18,8 @@ contact editor
 publish to directory
 
 directory page
+
+publish to external directory
 
 anonymous nav links
 

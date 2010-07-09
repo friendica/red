@@ -74,11 +74,14 @@ function item_display(&$a, $item,$template,$comment) {
 	if(local_user() && ($item['contact-uid'] == $_SESSION['uid']) && (strlen($item['dfrn-id'])) && (! $item['self'] ))
 		$profile_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 
+	$photo = (($item['self']) ? $a->profile['photo'] : $item['photo']);
+	$thumb = (($item['self']) ? $a->profile['thumb'] : $item['thumb']);
+
 	$o .= replace_macros($template,array(
 		'$id' => $item['item_id'],
 		'$profile_url' => $profile_url,
 		'$name' => $item['name'],
-		'$thumb' => $item['thumb'],
+		'$thumb' => $thumb,
 		'$body' => bbcode($item['body']),
 		'$ago' => relative_date($item['created']),
 		'$comment' => $comment
