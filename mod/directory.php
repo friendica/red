@@ -8,10 +8,10 @@ function directory_content(&$a) {
 
 	$o .= replace_macros($tpl);
 
-	$r = q("SELECT * FORM `profile` WHERE `default` = 1 AND `publish` = 1");
+	$r = q("SELECT * FROM `profile` WHERE `default` = 1 AND `publish` = 1");
 	if(count($r)) {
 
-		$tpl = file_get_contents('view/directory_item);
+		$tpl = file_get_contents('view/directory_item');
 
 		foreach($r as $rr) {
 
