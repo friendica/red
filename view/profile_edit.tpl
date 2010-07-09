@@ -3,7 +3,7 @@
 $default
 
 <div id="profile-edit-wrapper" >
-<form id="profile-edit-form" action="profiles/$profile_id" method="post" >
+<form id="profile-edit-form" name="form1" action="profiles/$profile_id" method="post" >
 
 <div id="profile-edit-profile-name-wrapper" >
 <label id="profile-edit-profile-name-label" for="profile-edit-profile-name" >Profile Name: </label>
@@ -36,11 +36,6 @@ $gender
 </div>
 <div id="profile-edit-locality-end"></div>
 
-<div id="profile-edit-region-wrapper" >
-<label id="profile-edit-region-label" for="profile-edit-region" >Region/State: </label>
-<input type="text size="32" name="region" id="profile-edit-region" value="$region" />
-</div>
-<div id="profile-edit-region-end"></div>
 
 <div id="profile-edit-postal-code-wrapper" >
 <label id="profile-edit-postal-code-label" for="profile-edit-postal-code" >Postal/Zip Code: </label>
@@ -49,10 +44,25 @@ $gender
 <div id="profile-edit-postal-code-end"></div>
 
 <div id="profile-edit-country-name-wrapper" >
+<input type="hidden" name="txtSelectedCountry" value="" >
+
 <label id="profile-edit-country-name-label" for="profile-edit-country-name" >Country: </label>
-<input type="text size="32" name="country_name" id="profile-edit-country-name" value="$country_name" />
+<select name="country_name" id="profile-edit-country-name" onChange="Fill_States('$region');">
+<option selected="selected" >$country_name</option>
+<option>temp</option>
+</select>
 </div>
 <div id="profile-edit-country-name-end"></div>
+
+<div id="profile-edit-region-wrapper" >
+<input type="hidden" name="txtSelectedState" value="" >
+<label id="profile-edit-region-label" for="profile-edit-region" >Region/State: </label>
+<select name="region" id="profile-edit-region" onChange="Update_Globals();" >
+<option selected="selected" >$region</option>
+<option>temp</option>
+</select>
+</div>
+<div id="profile-edit-region-end"></div>
 
 
 <div id="profile-edit-marital-wrapper" >
@@ -89,3 +99,4 @@ Tell us about yourself.
 
 </form>
 </div>
+<script type="text/javascript">Fill_Country('$country_name');Fill_States('$region');</script>

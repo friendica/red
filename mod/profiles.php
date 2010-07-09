@@ -156,6 +156,7 @@ function profiles_content(&$a) {
 
 
 		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
+		$a->page['htmlhead'] .= "<script type=\"text/javascript\" src=\"include/country.js\" ></script>";
 	
 //		$a->page['aside'] = file_get_contents('view/sidenote.tpl');	
 		$is_default = (($r[0]['is-default']) ? 1 : 0);
