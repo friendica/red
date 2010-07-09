@@ -11,11 +11,15 @@ function directory_content(&$a) {
 	$r = q("SELECT * FROM `profile` WHERE `default` = 1 AND `publish` = 1");
 	if(count($r)) {
 
-		$tpl = file_get_contents('view/directory_item');
+		$tpl = file_get_contents('view/directory_item.tpl');
 
 		foreach($r as $rr) {
 
-			$o .= directory_block($a,$rr,$tpl);
+			$o .= expand_macros($tpl,array(
+
+
+
+			));
 
 		}
 	}
