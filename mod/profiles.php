@@ -151,6 +151,8 @@ function profiles_content(&$a) {
 		$r1[0]['publish'] = 0;	
 		$r1[0]['profile-name'] = dbesc($name);
 
+		dbesc_array($r1[0]);
+
 		$r2 = q("INSERT INTO `profile` (`" 
 			. implode("`, `", array_keys($r1[0])) 
 			. "`) VALUES ('" 
