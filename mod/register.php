@@ -22,10 +22,10 @@ function register_post(&$a) {
 	default:
 	case REGISTER_CLOSED:
 		if((! x($_SESSION,'authenticated') && (! x($_SESSION,'administrator')))) {
-			$_SESSION['sysmsg'] .= "Permission denied." . EOL;
+			notice( "Permission denied." . EOL );
 			return;
 		}
-		$blocked = 0;
+		$blocked = 1;
 		$verified = 0;
 		break;
 	}
@@ -36,7 +36,7 @@ function register_post(&$a) {
 		$email =notags(trim($_POST['email']));
 
 	if((! x($username)) || (! x($email))) {
-		$_SESSION['sysmsg'] .= "Please enter the required information.". EOL;
+		notice( "Please enter the required information.". EOL );
 		return;
 	}
 
@@ -53,9 +53,9 @@ function register_post(&$a) {
 		dbesc($email)
 		);
 	if($r !== false && count($r))
-		$err .= " This email address is already registered." . EOL;
+		$err .= " This email address is already registered.";
 	if(strlen($err)) {
-		$_SESSION['sysmsg'] .= $err;
+		notice( $err . EOL );
 		return;
 	}
 
@@ -101,7 +101,7 @@ function register_post(&$a) {
 			$newuid = intval($r[0]['uid']);
 	}
 	else {
-		$_SESSION['sysmsg'] .= "An error occurred during registration. Please try again." . EOL;
+		notice( "An error occurred during registration. Please try again." . EOL );
 		return;
 	} 		
 
@@ -117,7 +117,7 @@ function register_post(&$a) {
 
 		);
 		if($r === false) {
-			$_SESSION['sysmsg'] .= "An error occurred creating your default profile. Please try again." . EOL ;
+			notice( "An error occurred creating your default profile. Please try again." . EOL );
 			// Start fresh next time.
 			$r = q("DELETE FROM `user` WHERE `uid` = %d",
 				intval($newuid));
@@ -157,11 +157,11 @@ function register_post(&$a) {
 	}
 
 	if($res) {
-		$_SESSION['sysmsg'] .= "Registration successful. Please check your email for further instructions." . EOL ;
+		notice( "Registration successful. Please check your email for further instructions." . EOL ) ;
 		goaway($a->get_baseurl());
 	}
 	else {
-		$_SESSION['sysmsg'] .= "Failed to send email message. Here is the message that failed. $email_tpl " . EOL;
+		notice( "Failed to send email message. Here is the message that failed. $email_tpl " . EOL );
 	}
 	
 	return;
