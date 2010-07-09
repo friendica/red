@@ -1,5 +1,7 @@
 <h1>Edit Profile Details</h1>
 
+<div id="profile-edit-clone-link-wrapper" ><a href="profiles/clone/$profile_id" id="profile-edit-clone-link" title="Create a new profile using these settings">Clone this profile</a></div>
+
 $default
 
 <div id="profile-edit-wrapper" >

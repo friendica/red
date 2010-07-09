@@ -131,6 +131,46 @@ function profiles_content(&$a) {
 		goaway($a->get_baseurl() . '/profiles');
 	}		 
 
+	if(($a->argc > 2) && ($a->argv[1] == 'clone')) {
+
+		$r0 = q("SELECT `id` FROM `profile` WHERE `uid` = %d",
+			intval($_SESSION['uid']));
+		$num_profiles = count($r0);
+
+		$name = "Profile-" . ($num_profiles + 1);
+		$r1 = q("SELECT * FROM `profile` WHERE `uid` = %d AND `id` = %d LIMIT 1",
+			intval($_SESSION['uid']),
+			intval($a->argv[2])
+		);
+		if(! count($r1)) {
+			notice("Profile unavailable to clone." . EOL);
+			return;
+		}
+		unset($r1[0]['id']);
+		$r1[0]['is-default'] = 0;
+		$r1[0]['publish'] = 0;	
+		$r1[0]['profile-name'] = dbesc($name);
+
+		$r2 = q("INSERT INTO `profile` (`" 
+			. implode("`, `", array_keys($r1[0])) 
+			. "`) VALUES ('" 
+			. implode("', '", array_values($r1[0])) 
+			. "')" );
+
+		$r3 = q("SELECT `id` FROM `profile` WHERE `uid` = %d AND `profile-name` = '%s' LIMIT 1",
+			intval($_SESSION['uid']),
+			dbesc($name)
+		);
+		$_SESSION['sysmsg'] .= "New profile created." . EOL;
+		if(count($r3) == 1)
+			goaway($a->get_baseurl() . '/profiles/' . $r3[0]['id']);
+	goaway($a->get_baseurl() . '/profiles');
+	return; // NOTREACHED
+	}		 
+
+
+
+
 
 	if(intval($a->argv[1])) {
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",

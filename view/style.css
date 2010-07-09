@@ -274,7 +274,10 @@ input#dfrn-url {
 
 
 }
-
+#profile-edit-clone-link-wrapper {
+	margin-left: 50px;
+	margin-bottom: 20px;
+}
 
 #profile-edit-profile-name-label,
 #profile-edit-name-label,
