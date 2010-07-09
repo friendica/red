@@ -6,6 +6,7 @@ profile photo to self contact page? - resolve profile photo inconsistency
 	ensure correct photo is pushed with notify/poll and used in wall/wall comments/posts
 	use photo hash to notify of changes?
 
+remove hidden vars country/state selector
 
 contact editor
 
