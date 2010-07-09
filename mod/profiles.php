@@ -10,8 +10,6 @@ function profiles_post(&$a) {
 
 	// todo - delete... ensure that all contacts using the to-be-deleted profile are moved to the default. 		
 
-
-
 	if(($a->argc > 1) && ($a->argv[1] != "new") && intval($a->argv[1])) {
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($a->argv[1]),
@@ -21,6 +19,7 @@ function profiles_post(&$a) {
 			$_SESSION['sysmsg'] .= "Profile not found." . EOL;
 			return;
 		}
+		$is_default = (($r[0]['is-default']) ? 1 : 0);
 
 		$profile_name = notags(trim($_POST['profile_name']));
 		if(! strlen($profile_name)) {
@@ -38,7 +37,8 @@ function profiles_post(&$a) {
 		$marital = notags(trim(implode(', ',$_POST['marital'])));
 		$homepage = notags(trim($_POST['homepage']));
 		$about = str_replace(array('<','>','&'),array('&lt;','&gt;','&amp;'),trim($_POST['about']));
-
+		if(x($_POST,'profile_in_directory'))
+			$publish = (($_POST['profile_in_directory'] == 1) ? 1: 0);
 		if(! in_array($gender,array('','Male','Female','Other')))
 			$gender = '';
 
@@ -72,6 +72,20 @@ function profiles_post(&$a) {
 
 		if($r)
 			$_SESSION['sysmsg'] .= "Profile updated." . EOL;
+
+
+		if($is_default) {
+			$r = q("UPDATE `profile` 
+			SET `publish` = %d
+			WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			intval($publish),
+			intval($a->argv[1]),
+			intval($_SESSION['uid'])
+
+			);
+		}
+
+
 	}
 
 
@@ -134,7 +148,12 @@ function profiles_content(&$a) {
 		require_once('view/profile_selectors.php');
 
 		$tpl = file_get_contents('view/jot-header.tpl');
-		$profile_in_dir = file_get_contents("view/profile-in-directory.tpl");
+		$opt_tpl = file_get_contents("view/profile-in-directory.tpl");
+		$profile_in_dir = replace_macros($opt_tpl,array(
+			'$yes_selected' => (($r[0]['publish']) ? " checked=\"checked\" " : ""),
+			'$no_selected' => (($r[0]['publish'] == 0) ? " checked=\"checked\" " : "")
+		));
+
 
 		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
 	

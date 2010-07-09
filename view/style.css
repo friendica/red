@@ -464,3 +464,14 @@ input#dfrn-url {
 	font-weight: bold;
 	margin-bottom: 20px;
 }
+
+
+.directory-end {
+	clear: both;
+}
+
+.directory-item {
+	float: left;
+	width: 225px;
+}
+
