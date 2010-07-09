@@ -19,7 +19,9 @@
 	<?php } ?>
 
 	<div id="profile-extra-links">
+
 	<a id="dfrn-request-link" href="dfrn_request/<?php echo $profile['uid']; ?>">Introductions</a>
+
 	</div>
 
 	<?php if ( (strlen($profile['address'])) 

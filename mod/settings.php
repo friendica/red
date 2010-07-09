@@ -163,6 +163,8 @@ function settings_content(&$a) {
 
 	$nickname_block = replace_macros($nickname_block,array(
 		'$nickname' => $nickname,
+		'$uid' => $_SESSION['uid'],
+		'$basepath' => substr($a->get_baseurl(),strpos($a->get_baseurl(),'://') + 3), 
 		'$baseurl' => $a->get_baseurl()));	
 
 	$o = file_get_contents('view/settings.tpl');
