@@ -472,9 +472,22 @@ input#dfrn-url {
 .directory-end {
 	clear: both;
 }
-
+.directory-name {
+	text-align: center;
+}
+.directory-photo {
+	margin-left: 25px;
+}
+.directory-details {
+	font-size: 0.7em;
+	text-align: center;
+	margin-left: 5px;
+	margin-right: 5px;
+}
 .directory-item {
 	float: left;
 	width: 225px;
+	height: 260px;
+	overflow: auto;
 }
 
