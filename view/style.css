@@ -500,3 +500,25 @@ input#dfrn-url {
 #directory-search-end {
 	clear: both;
 }
+
+.pager {
+  padding: 10px;
+  text-align: center;
+  font-size: 1.0em;
+}
+
+
+.pager_first,
+.pager_last,
+.pager_prev,
+.pager_next,
+.pager_n {
+  border: 1px solid black;
+  background: #EEE;
+  padding: 4px;
+}
+.pager_current {
+  border: 1px solid black;
+  background: #E33;
+  padding: 4px;
+}

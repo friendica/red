@@ -1,8 +1,10 @@
 <?php
-
+function directory_init(&$a) {
+	$a->set_pager_itemspage(60);
+}
 
 function directory_content(&$a) {
-
+dbg(2);
 	$search = ((x($_GET,'search')) ? notags(trim($_GET['search'])) : '');
 
 	$tpl .= file_get_contents('view/directory_header.tpl');
@@ -16,7 +18,17 @@ function directory_content(&$a) {
 		$search = dbesc($search);
 	$sql_extra = ((strlen($search)) ? " AND MATCH (`profile`.`name`, `user`.`nickname`, `locality`,`region`,`country-name`,`gender`,`marital`,`sexual`,`about`,`romance`,`employer`,`school`) AGAINST ('$search' IN BOOLEAN MODE) " : "");
 
-	$r = q("SELECT `profile`.*, `profile`.`uid` AS `profile_uid`, `user`.`nickname`, `user`.`timezone` FROM `profile` LEFT JOIN `user` ON `user`.`uid` = `profile`.`uid` WHERE `is-default` = 1 AND `publish` = 1 $sql_extra ORDER BY `name` ASC");
+
+	$r = q("SELECT COUNT(*) AS `total` FROM `profile` LEFT JOIN `user` ON `user`.`uid` = `profile`.`uid` WHERE `is-default` = 1 AND `publish` = 1 AND `user`.`blocked` = 0 $sql_extra ");
+	if(count($r))
+		$a->set_pager_total($r[0]['total']);
+
+
+
+	$r = q("SELECT `profile`.*, `profile`.`uid` AS `profile_uid`, `user`.`nickname`, `user`.`timezone` FROM `profile` LEFT JOIN `user` ON `user`.`uid` = `profile`.`uid` WHERE `is-default` = 1 AND `publish` = 1 AND `user`.`blocked` = 0 $sql_extra ORDER BY `name` ASC LIMIT %d , %d ",
+		intval($a->pager['start']),
+		intval($a->pager['itemspage'])
+	);
 	if(count($r)) {
 
 		$tpl = file_get_contents('view/directory_item.tpl');
@@ -62,6 +74,8 @@ function directory_content(&$a) {
 
 		}
 		$o .= "<div class=\"directory-end\" ></div>\r\n";
+		$o .= paginate($a);
+
 	}
 	else
 		notice("No entries (some entries may be hidden).");

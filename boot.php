@@ -28,7 +28,7 @@ class App {
 	public  $argv;
 	public  $argc;
 	public  $module;
-
+	public  $pager;
 	private $scheme;
 	private $hostname;
 	private $path;
@@ -38,6 +38,7 @@ class App {
 
 		$this->config = array();
 		$this->page = array();
+		$this->pager= array();
 
 		$this->scheme = ((isset($_SERVER['HTTPS']) 
 				&& ($_SERVER['HTTPS']))	?  'https' : 'http' );
@@ -49,8 +50,8 @@ class App {
 
                 if(substr($_SERVER['QUERY_STRING'],0,2) == "q=")
 			$_SERVER['QUERY_STRING'] = substr($_SERVER['QUERY_STRING'],2);
-//		$this->cmd = trim($_SERVER['QUERY_STRING'],'/');
 		$this->cmd = trim($_GET['q'],'/');
+
 
 		$this->argv = explode('/',$this->cmd);
 		$this->argc = count($this->argv);
@@ -60,6 +61,10 @@ class App {
 		else {
 			$this->module = 'home';
 		}
+		$this->pager['page'] = ((x($_GET,'page')) ? $_GET['page'] : 1);
+		$this->pager['itemspage'] = 50;
+		$this->pager['start'] = ($this->pager['page'] * $this->pager['itemspage']) - $this->pager['itemspage'];
+		$this->pager['total'] = 0;
 	}
 
 	function get_baseurl($ssl = false) {
@@ -71,6 +76,15 @@ class App {
 
 	function set_path($p) {
 		$this->path = ltrim(trim($p),'/');
+	} 
+
+	function set_pager_total($n) {
+		$this->pager['total'] = intval($n);
+	}
+	function set_pager_itemspage($n) {
+		$this->pager['itemspage'] = intval($n);
+		$this->pager['start'] = ($this->pager['page'] * $this->pager['itemspage']) - $this->pager['itemspage'];
+
 	} 
 
 	function init_pagehead() {
@@ -358,3 +372,54 @@ function hex2bin($s) {
 	return(pack("H*",$s));
 }
 
+
+function paginate(&$a) {
+	$o = '';
+	$stripped = ereg_replace("(&page=[0-9]*)","",$_SERVER['QUERY_STRING']);
+	$stripped = str_replace('q=','',$stripped);
+	$stripped = trim($stripped,'/');
+	$url = $a->get_baseurl() . '/' . $stripped;
+
+
+	  if($a->pager['total'] > $a->pager['itemspage']) {
+		$o .= '<div class="pager">';
+    		if($a->pager['page'] != 1)
+			$o .= '<span class="pager_prev">'."<a href=\"$url".'&page='.($a->pager['page'] - 1).'">prev</a></span> ';
+
+		$o .=  "<span class=\"pager_first\"><a href=\"$url"."&page=1\">first</a></span> ";
+
+    		$numpages = $a->pager['total'] / $a->pager['itemspage'];
+
+		$numstart = 1;
+    		$numstop = $numpages;
+
+    		if($numpages > 14) {
+      			$numstart = (($pagenum > 7) ? ($pagenum - 7) : 1);
+      			$numstop = (($pagenum > ($numpages - 7)) ? $numpages : ($numstart + 14));
+    		}
+   
+		for($i = $numstart; $i <= $numstop; $i++){
+      			if($i == $pagenum)
+				$o .= '<span class="pager_current">'.(($i < 10) ? '&nbsp;'.$i : $i);
+			else
+				$o .= "<span class=\"pager_n\"><a href=\"$url"."&page=$i\">".(($i < 10) ? '&nbsp;'.$i : $i)."</a>";
+			$o .= '</span> ';
+		}
+
+		if(($a->pager['total'] % $a->pager['itemspage']) != 0) {
+			if($i == $a->pager['page'])
+				$o .= '<span class="pager_current">'.(($i < 10) ? '&nbsp;'.$i : $i);
+			else
+				$o .= "<span class=\"pager_n\"><a href=\"$url"."&page=$i\">".(($i < 10) ? '&nbsp;'.$i : $i)."</a>";
+			$o .= '</span> ';
+		}
+
+		$lastpage = (($numpages > intval($numpages)) ? intval($numpages)+1 : $numpages);
+		$o .= "<span class=\"pager_last\"><a href=\"$url"."&page=$lastpage\">last</a></span> ";
+
+    		if(($a->pager['total'] - ($a->pager['itemspage'] * $a->pager['page'])) > 0)
+			$o .= '<span class="pager_next">'."<a href=\"$url"."&page=".($a->pager['page'] + 1).'">next</a></span>';
+		$o .= '</div>'."\r\n";
+	}
+	return $o;
+}
