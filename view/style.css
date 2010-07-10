@@ -513,12 +513,21 @@ input#dfrn-url {
 .pager_prev,
 .pager_next,
 .pager_n {
-  border: 1px solid black;
-  background: #EEE;
-  padding: 4px;
+	border: 1px solid black;
+	background: #EEE;
+	padding: 4px;
 }
+
+.pager_first a,
+.pager_last a,
+.pager_prev a,
+.pager_next a,
+.pager_n a {
+	text-decoration: none;
+}
+
 .pager_current {
   border: 1px solid black;
-  background: #E33;
+  background: #FFCCCC;
   padding: 4px;
 }

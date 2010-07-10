@@ -4,7 +4,7 @@ function directory_init(&$a) {
 }
 
 function directory_content(&$a) {
-dbg(2);
+
 	$search = ((x($_GET,'search')) ? notags(trim($_GET['search'])) : '');
 
 	$tpl .= file_get_contents('view/directory_header.tpl');

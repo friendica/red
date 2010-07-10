@@ -399,7 +399,7 @@ function paginate(&$a) {
     		}
    
 		for($i = $numstart; $i <= $numstop; $i++){
-      			if($i == $pagenum)
+      			if($i == $a->pager['page'])
 				$o .= '<span class="pager_current">'.(($i < 10) ? '&nbsp;'.$i : $i);
 			else
 				$o .= "<span class=\"pager_n\"><a href=\"$url"."&page=$i\">".(($i < 10) ? '&nbsp;'.$i : $i)."</a>";
