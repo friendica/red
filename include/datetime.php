@@ -115,7 +115,8 @@ function relative_date($posted_date) {
     	$diff -= $minutes*60;
     	$seconds = $diff;
 
-
+	if($months > 2)
+		return(datetime_convert('UTC',date_default_timezone_get(),$posted_date,'\o\n Y-m-d \a\t H:i:s'));
     if ($months>0) {
         // over a month old,
         return 'over a month ago';
@@ -142,4 +143,23 @@ function relative_date($posted_date) {
     }
     // show relative date and add proper verbiage
     return $relative_date.' ago';
+}
+
+function age($dob,$owner_tz = '',$viewer_tz = '') {
+	if(strlen($dob) != 10)
+		return 0;
+	if(! $owner_tz)
+		$owner_tz = date_default_timezone_get();
+	if(! $viewer_tz)
+		$viewer_tz = date_default_timezone_get();
+
+	$birthdate = datetime_convert('UTC',$owner_tz,$dob . ' 00:00:00+00:00','Y-m-d');
+	list($year,$month,$day) = explode("-",$birthdate);
+	$year_diff  = datetime_convert('UTC',$viewer_tz,'now','Y') - $year;
+	$curr_month = datetime_convert('UTC',$viewer_tz,'now','m');
+	$curr_day   = datetime_convert('UTC',$viewer_tz,'now','d');
+
+	if(($curr_month < $month) || (($curr_month == $month) && ($curr_day < $day)))
+		$year_diff--;
+	return $year_diff;
 }

@@ -491,3 +491,12 @@ input#dfrn-url {
 	overflow: auto;
 }
 
+#directory-search-wrapper {
+	float: right;
+	margin-right: 20px;
+	margin-bottom: 50px;
+}
+
+#directory-search-end {
+	clear: both;
+}

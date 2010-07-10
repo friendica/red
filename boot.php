@@ -357,3 +357,4 @@ function xmlify($str) {
 function hex2bin($s) {
 	return(pack("H*",$s));
 }
+

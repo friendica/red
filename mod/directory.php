@@ -3,14 +3,20 @@
 
 function directory_content(&$a) {
 
+	$search = ((x($_GET,'search')) ? notags(trim($_GET['search'])) : '');
 
 	$tpl .= file_get_contents('view/directory_header.tpl');
 
 	$o .= replace_macros($tpl, array(
+		'$search' => $search
 
 	));
 
-	$r = q("SELECT `profile`.*, `profile`.`uid` AS `profile_uid`, `user`.`nickname` FROM `profile` LEFT JOIN `user` ON `user`.`uid` = `profile`.`uid` WHERE `is-default` = 1 AND `publish` = 1 ORDER BY `name` ASC");
+	if($search)
+		$search = dbesc($search);
+	$sql_extra = ((strlen($search)) ? " AND MATCH (`profile`.`name`, `user`.`nickname`, `locality`,`region`,`country-name`,`gender`,`marital`,`sexual`,`about`,`romance`,`employer`,`school`) AGAINST ('$search' IN BOOLEAN MODE) " : "");
+
+	$r = q("SELECT `profile`.*, `profile`.`uid` AS `profile_uid`, `user`.`nickname`, `user`.`timezone` FROM `profile` LEFT JOIN `user` ON `user`.`uid` = `profile`.`uid` WHERE `is-default` = 1 AND `publish` = 1 $sql_extra ORDER BY `name` ASC");
 	if(count($r)) {
 
 		$tpl = file_get_contents('view/directory_item.tpl');
@@ -36,8 +42,10 @@ function directory_content(&$a) {
 					$details .= ', ';
 				$details .= $rr['country-name'];
 			}
-			if(strlen($rr['dob']))
-				$details .= '<br />Age: ' ; // . calculate age($rr['dob'])) ;
+			if(strlen($rr['dob'])) {
+				if(($years = age($rr['dob'],$rr['timezone'],'')) != 0)
+					$details .= "<br />Age: $years" ; 
+			}
 			if(strlen($rr['gender']))
 				$details .= '<br />Gender: ' . $rr['gender'];
 
