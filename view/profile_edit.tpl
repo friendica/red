@@ -25,6 +25,13 @@ $gender
 </div>
 <div id="profile-edit-gender-end"></div>
 
+<div id="profile-edit-dob-wrapper" >
+<p id="birthday-description">Leave year blank to suppress age.</p>
+<label id="profile-edit-dob-label" for="dob-select" >Birthday: </label>
+<div id="profile-edit-dob" >
+$dob
+</div>
+<div id="profile-edit-dob-end"></div>
 
 <div id="profile-edit-address-wrapper" >
 <label id="profile-edit-address-label" for="profile-edit-address" >Street Address: </label>
@@ -72,6 +79,14 @@ $gender
 $marital
 </div>
 <div id="profile-edit-marital-end"></div>
+
+<div id="profile-edit-sexual-wrapper" >
+<label id="profile-edit-sexual-label" for="sexual-select" >Sexual Preference: </label>
+$sexual
+</div>
+<div id="profile-edit-sexual-end"></div>
+
+
 
 <div id="profile-edit-homepage-wrapper" >
 <label id="profile-edit-homepage-label" for="profile-edit-homepage" >Homepage URL: </label>

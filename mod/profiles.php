@@ -189,7 +189,7 @@ function profiles_content(&$a) {
 
 		require_once('view/profile_selectors.php');
 
-		$tpl = file_get_contents('view/jot-header.tpl');
+		$tpl = file_get_contents('view/profed_head.tpl');
 		$opt_tpl = file_get_contents("view/profile-in-directory.tpl");
 		$profile_in_dir = replace_macros($opt_tpl,array(
 			'$yes_selected' => (($r[0]['publish']) ? " checked=\"checked\" " : ""),
@@ -199,8 +199,11 @@ function profiles_content(&$a) {
 
 		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
 		$a->page['htmlhead'] .= "<script type=\"text/javascript\" src=\"include/country.js\" ></script>";
+
+
+
 	
-//		$a->page['aside'] = file_get_contents('view/sidenote.tpl');	
+
 		$is_default = (($r[0]['is-default']) ? 1 : 0);
 		$tpl = file_get_contents("view/profile_edit.tpl");
 		$o .= replace_macros($tpl,array(
@@ -209,7 +212,8 @@ function profiles_content(&$a) {
 			'$profile_name' => $r[0]['profile-name'],
 			'$default' => (($is_default) ? "<p id=\"profile-edit-default-desc\">This is your <strong>public</strong> profile.</p>" : ""),
 			'$name' => $r[0]['name'],
-			'$dob' => $r[0]['dob'],
+			'$dob' => dob($r[0]['dob']),
+			'$hide_birth' => (($r[0]['dob_hide']) ? " checked=\"checked\" " : ""),
 			'$address' => $r[0]['address'],
 			'$locality' => $r[0]['locality'],
 			'$region' => $r[0]['region'],
@@ -218,6 +222,7 @@ function profiles_content(&$a) {
 			'$age' => $r[0]['age'],
 			'$gender' => gender_selector($r[0]['gender']),
 			'$marital' => marital_selector($r[0]['marital']),
+			'$sexual' => sexpref_selector($r[0]['sexual']),
 			'$about' => $r[0]['about'],
 			'$homepage' => $r[0]['homepage'],
 			'$profile_in_dir' => (($is_default) ? $profile_in_dir : '')

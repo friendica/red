@@ -2,9 +2,21 @@
 
 
 function gender_selector($current="",$suffix="") {
-	$select = array('','Male','Female','Other');
+	$select = array('','Male', 'Female', 'Transsexual', 'Hermaphrodite', 'Neuter', 'Other', 'Undecided');
 
 	$o .= "<select name=\"gender$suffix\" id=\"gender-select$suffix\" size=\"1\" >";
+	foreach($select as $selection) {
+		$selected = (($selection == $current) ? ' selected="selected" ' : '');
+		$o .= "<option value=\"$selection\" $selected >$selection</option>";
+	}
+	$o .= '</select>';
+	return $o;
+}	
+
+function sexpref_selector($current="",$suffix="") {
+	$select = array('','Males', 'Females', 'Bisexual', 'Autosexual', 'Abstinent', 'Virgin', 'Nonsexual');
+
+	$o .= "<select name=\"sexual$suffix\" id=\"sexual-select$suffix\" size=\"1\" >";
 	foreach($select as $selection) {
 		$selected = (($selection == $current) ? ' selected="selected" ' : '');
 		$o .= "<option value=\"$selection\" $selected >$selection</option>";

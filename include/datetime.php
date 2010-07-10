@@ -60,7 +60,12 @@ function datetime_convert($from = 'UTC', $to = 'UTC', $s = 'now', $fmt = "Y-m-d 
   return($d->format($fmt));
 }}
 
-
+function dob($dob) {
+	list($year,$month,$day) = sscanf($dob,'%4d-%2d-%2d');
+	$y = datetime_convert('UTC',date_default_timezone_get(),'now','Y');
+	$o = datesel('',1920,$y,true,$year,$month,$day);
+	return $o;
+}
 
 if(! function_exists('datesel')) {
 function datesel($pre,$ymin,$ymax,$allow_blank,$y,$m,$d) {
@@ -68,25 +73,27 @@ function datesel($pre,$ymin,$ymax,$allow_blank,$y,$m,$d) {
 	$o = '';
 	$o .= "<select name=\"{$pre}year\" class=\"{$pre}year\" size=\"1\">";
 	if($allow_blank) {
-		$sel = (($y == '') ? " selected=\"selected\" " : "");
-		$o .= "<option value=\"\" $sel></option>";
+		$sel = (($y == '0000') ? " selected=\"selected\" " : "");
+		$o .= "<option value=\"0000\" $sel ></option>";
 	}
 
-	for($x = $ymin; $x <= $ymax; $x ++) {
+	for($x = $ymax; $x >= $ymin; $x --) {
 		$sel = (($x == $y) ? " selected=\"selected\" " : "");
 		$o .= "<option value=\"$x\" $sel>$x</option>";
 	}
   
-	$o .= "</select>-<select name=\"{$pre}month\" class=\"{$pre}month\" size=\"1\">";
-	for($x = 1; $x <= 12; $x ++) {
+	$o .= "</select> <select name=\"{$pre}month\" class=\"{$pre}month\" size=\"1\">";
+	for($x = 0; $x <= 12; $x ++) {
 		$sel = (($x == $m) ? " selected=\"selected\" " : "");
-		$o .= "<option value=\"$x\" $sel>$x</option>";
+		$y = (($x) ? $x : '');
+		$o .= "<option value=\"$x\" $sel>$y</option>";
 	}
 
-	$o .= "</select>-<select name=\"{$pre}day\" class=\"{$pre}day\" size=\"1\">";
-	for($x = 1; $x <= 31; $x ++) {
+	$o .= "</select> <select name=\"{$pre}day\" class=\"{$pre}day\" size=\"1\">";
+	for($x = 0; $x <= 31; $x ++) {
 		$sel = (($x == $d) ? " selected=\"selected\" " : "");
-		$o .= "<option value=\"$x\" $sel>$x</option>";
+		$y = (($x) ? $x : '');
+		$o .= "<option value=\"$x\" $sel>$y</option>";
 	}
 
 	$o .= "</select>";

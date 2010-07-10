@@ -17,3 +17,8 @@ ADD `work` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `roman
 ALTER TABLE `profile` ADD `employer` CHAR( 255 ) NOT NULL AFTER `work` ,
 ADD `school` CHAR( 255 ) NOT NULL AFTER `employer` ;
 ALTER TABLE `profile` ADD `summary` CHAR( 255 ) NOT NULL AFTER `about` ;
+
+ALTER TABLE `profile` ADD `dob_hide` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `dob` ;
+
+ALTER TABLE `profile` DROP `age`;
+ ALTER TABLE `profile` DROP `dob_hide`  ;  
