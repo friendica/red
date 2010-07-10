@@ -190,7 +190,9 @@ function notags($string) {
 // The PHP built-in tag escape function has traditionally been buggy
 if(! function_exists('escape_tags')) {
 function escape_tags($string) {
-	return(str_replace(array("<",">","&"), array('&lt;','&gt;','&amp;'), $string));
+	return(str_replace(
+		array('&', '"', "'", '<', '>'), 
+		array('&amp;', '&quot;', '&apos;', '&lt;', '&gt;'), $string));
 }}
 
 if(! function_exists('login')) {

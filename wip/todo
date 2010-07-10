@@ -17,7 +17,7 @@ contact editor
 	reputation
 
 
-profile advanced details submit, display
+profile advanced details display
 
 publish to external directory
 
@@ -44,8 +44,6 @@ local/remote indicator
 
 side/text
 
-interests/music/tv/etc.
-	country state select
 
 notififier abstraction
 

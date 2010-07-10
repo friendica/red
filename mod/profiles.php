@@ -7,9 +7,6 @@ function profiles_post(&$a) {
 		$_SESSION['sysmsg'] .= "Unauthorised." . EOL;
 		return;
 	}
-
-	// todo - delete... ensure that all contacts using the to-be-deleted profile are moved to the default. 		
-
 	if(($a->argc > 1) && ($a->argv[1] != "new") && intval($a->argv[1])) {
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($a->argv[1]),
@@ -27,6 +24,20 @@ function profiles_post(&$a) {
 			return;
 		}
 	
+		$year = intval($_POST['year']);
+		if($year < 1900 || $year > 2100 || $year < 0)
+			$year = 0;
+		$month = intval($_POST['month']);
+			if(($month > 12) || ($month < 0))
+				$month = 0;
+		$mtab = array(0,31,29,31,30,31,30,31,31,30,31,30,31);
+		$day = intval($_POST['day']);
+			if(($day > $mtab[$month]) || ($day < 0))
+				$day = 0;
+		$dob = '0000-00-00';
+		$dob = sprintf('%04d-%02d-%02d',$year,$month,$day);
+
+			
 		$name = notags(trim($_POST['name']));
 		$gender = notags(trim($_POST['gender']));
 		$address = notags(trim($_POST['address']));
@@ -35,8 +46,21 @@ function profiles_post(&$a) {
 		$postal_code = notags(trim($_POST['postal_code']));
 		$country_name = notags(trim($_POST['country_name']));
 		$marital = notags(trim(implode(', ',$_POST['marital'])));
+		$sexual = notags(trim($_POST['sexual']));
 		$homepage = notags(trim($_POST['homepage']));
-		$about = str_replace(array('<','>','&'),array('&lt;','&gt;','&amp;'),trim($_POST['about']));
+		$politic = notags(trim($_POST['politic']));
+		$religion = notags(trim($_POST['religion']));
+
+		$about = escape_tags(trim($_POST['about']));
+		$interest = escape_tags(trim($_POST['interest']));
+		$contact = escape_tags(trim($_POST['contact']));
+		$music = escape_tags(trim($_POST['music']));
+		$book = escape_tags(trim($_POST['book']));
+		$tv = escape_tags(trim($_POST['tv']));
+		$film = escape_tags(trim($_POST['film']));
+		$romance = escape_tags(trim($_POST['romance']));
+		$work = escape_tags(trim($_POST['work']));
+		$education = escape_tags(trim($_POST['education']));
 		if(x($_POST,'profile_in_directory'))
 			$publish = (($_POST['profile_in_directory'] == 1) ? 1: 0);
 		if(! in_array($gender,array('','Male','Female','Other')))
@@ -46,26 +70,52 @@ function profiles_post(&$a) {
 			SET `profile-name` = '%s',
 			`name` = '%s',
 			`gender` = '%s',
+			`dob` = '%s',
 			`address` = '%s',
 			`locality` = '%s',
 			`region` = '%s',
 			`postal-code` = '%s',
 			`country-name` = '%s',
 			`marital` = '%s',
+			`sexual` = '%s',
 			`homepage` = '%s',
-			`about` = '%s'
+			`politic` = '%s',
+			`religion` = '%s',
+			`about` = '%s',
+			`interest` = '%s',
+			`contact` = '%s',
+			`music` = '%s',
+			`book` = '%s',
+			`tv` = '%s',
+			`film` = '%s',
+			`romance` = '%s',
+			`work` = '%s',
+			`education` = '%s'
 			WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			dbesc($profile_name),
 			dbesc($name),
 			dbesc($gender),
+			dbesc($dob),
 			dbesc($address),
 			dbesc($locality),
 			dbesc($region),
 			dbesc($postal_code),
 			dbesc($country_name),
 			dbesc($marital),
+			dbesc($sexual),
 			dbesc($homepage),
+			dbesc($politic),
+			dbesc($religion),
 			dbesc($about),
+			dbesc($interest),
+			dbesc($contact),
+			dbesc($music),
+			dbesc($book),
+			dbesc($tv),
+			dbesc($film),
+			dbesc($romance),
+			dbesc($work),
+			dbesc($education),
 			intval($a->argv[1]),
 			intval($_SESSION['uid'])
 		);
@@ -100,6 +150,38 @@ function profiles_content(&$a) {
 		$_SESSION['sysmsg'] .= "Unauthorised." . EOL;
 		return;
 	}
+
+	if(($a->argc > 2) && ($a->argv[1] == "drop") && intval($a->argv[2])) {
+		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d AND `is-default` = 0 LIMIT 1",
+			intval($a->argv[2]),
+			intval($_SESSION['uid'])
+		);
+		if(! count($r)) {
+			$_SESSION['sysmsg'] .= "Profile not found." . EOL;
+			goaway($a->get_baseurl() . '/profiles');
+			return; // NOTREACHED
+		}
+
+		// move every contact using this profile as their default to the user default
+
+		$r = q("UPDATE `contact` SET `profile-id` = (SELECT `profile`.`id` AS `profile-id` FROM `profile` WHERE `profile`.`is-default` = 1 AND `profile`.`uid` = %d LIMIT 1) WHERE `profile-id` = %d AND `uid` = %d ",
+			intval($_SESSION['uid']),
+			intval($a->argv[2]),
+			intval($_SESSION['uid'])
+		);
+		$r = q("DELETE FROM `profile` WHERE `id` = %d LIMIT 1",
+			intval($a->argv[2])
+		);
+		if($r)
+			notice("Profile deleted." . EOL);
+
+		goaway($a->get_baseurl() . '/profiles');
+		return; // NOTREACHED
+	}
+
+
+
+
 
 	if(($a->argc > 1) && ($a->argv[1] == 'new')) {
 
@@ -219,7 +301,7 @@ function profiles_content(&$a) {
 			'$region' => $r[0]['region'],
 			'$postal_code' => $r[0]['postal-code'],
 			'$country_name' => $r[0]['country-name'],
-			'$age' => $r[0]['age'],
+			'$age' => ((intval($r[0]['dob'])) ? '(Age: '. age($r[0]['dob'],$a->user['timezone'],$a->user['timezone']) . ')' : ''),
 			'$gender' => gender_selector($r[0]['gender']),
 			'$marital' => marital_selector($r[0]['marital']),
 			'$sexual' => sexpref_selector($r[0]['sexual']),

@@ -26,9 +26,9 @@ $gender
 <div id="profile-edit-gender-end"></div>
 
 <div id="profile-edit-dob-wrapper" >
-<label id="profile-edit-dob-label" for="dob-select" >Birthday: </label>
+<label id="profile-edit-dob-label" for="dob-select" >Birthday (y/m/d): </label>
 <div id="profile-edit-dob" >
-$dob
+$dob $age
 </div>
 <div id="profile-edit-dob-end"></div>
 
@@ -126,7 +126,7 @@ $profile_in_dir
 
 <div id="about-jot-wrapper" >
 <p id="about-jot-desc" >
-Tell us about yourself. 
+Tell us about yourself... 
 </p>
 
 <textarea rows="10" cols="72" id="profile-jot-text" name="about" >$about</textarea>
@@ -138,7 +138,7 @@ Tell us about yourself.
 
 <div id="interest-jot-wrapper" >
 <p id="interest-jot-desc" >
-Hobbies/Interests. 
+Hobbies/Interests 
 </p>
 
 <textarea rows="10" cols="72" id="interest-jot-text" name="interest" >$interest</textarea>
@@ -150,7 +150,7 @@ Hobbies/Interests.
 
 <div id="contact-jot-wrapper" >
 <p id="contact-jot-desc" >
-Contact information. 
+Contact information and Social Networks 
 </p>
 
 <textarea rows="10" cols="72" id="contact-jot-text" name="contact" >$contact</textarea>
@@ -168,7 +168,7 @@ Contact information.
 
 <div id="music-jot-wrapper" >
 <p id="music-jot-desc" >
-Musical interests. 
+Musical interests 
 </p>
 
 <textarea rows="10" cols="72" id="music-jot-text" name="music" >$music</textarea>
@@ -179,7 +179,7 @@ Musical interests.
 
 <div id="book-jot-wrapper" >
 <p id="book-jot-desc" >
-Books, literature. 
+Books, literature 
 </p>
 
 <textarea rows="10" cols="72" id="book-jot-text" name="book" >$book</textarea>
@@ -192,7 +192,7 @@ Books, literature.
 
 <div id="tv-jot-wrapper" >
 <p id="tv-jot-desc" >
-Television. 
+Television 
 </p>
 
 <textarea rows="10" cols="72" id="tv-jot-text" name="tv" >$tv</textarea>
@@ -205,7 +205,7 @@ Television.
 
 <div id="film-jot-wrapper" >
 <p id="film-jot-desc" >
-Film/dance/culture/entertainment. 
+Film/dance/culture/entertainment 
 </p>
 
 <textarea rows="10" cols="72" id="film-jot-text" name="film" >$film</textarea>
@@ -223,7 +223,7 @@ Film/dance/culture/entertainment.
 
 <div id="romance-jot-wrapper" >
 <p id="romance-jot-desc" >
-Love/romance. 
+Love/romance 
 </p>
 
 <textarea rows="10" cols="72" id="romance-jot-text" name="romance" >$romance</textarea>
@@ -236,7 +236,7 @@ Love/romance.
 
 <div id="work-jot-wrapper" >
 <p id="work-jot-desc" >
-Work/employment. 
+Work/employment 
 </p>
 
 <textarea rows="10" cols="72" id="work-jot-text" name="work" >$work</textarea>
@@ -249,7 +249,7 @@ Work/employment.
 
 <div id="education-jot-wrapper" >
 <p id="education-jot-desc" >
-School/education. 
+School/education 
 </p>
 
 <textarea rows="10" cols="72" id="education-jot-text" name="education" >$education</textarea>
