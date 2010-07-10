@@ -22,3 +22,7 @@ ALTER TABLE `profile` ADD `dob_hide` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `do
 
 ALTER TABLE `profile` DROP `age`;
  ALTER TABLE `profile` DROP `dob_hide`  ;  
+ ALTER TABLE `profile` CHANGE `school` `education` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL  ;
+ ALTER TABLE `profile` DROP `employer`  ;
+
+ALTER TABLE `profile` ADD `contact` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `education` ;

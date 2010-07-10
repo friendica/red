@@ -9,13 +9,13 @@ $default
 
 <div id="profile-edit-profile-name-wrapper" >
 <label id="profile-edit-profile-name-label" for="profile-edit-profile-name" >Profile Name: </label>
-<input type="text size="32" name="profile_name" id="profile-edit-profile-name" value="$profile_name" /><div class="required">*</div>
+<input type="text" size="32" name="profile_name" id="profile-edit-profile-name" value="$profile_name" /><div class="required">*</div>
 </div>
 <div id="profile-edit-profile-name-end"></div>
 
 <div id="profile-edit-name-wrapper" >
 <label id="profile-edit-name-label" for="profile-edit-name" >Your Full Name: </label>
-<input type="text size="32" name="name" id="profile-edit-name" value="$name" />
+<input type="text" size="32" name="name" id="profile-edit-name" value="$name" />
 </div>
 <div id="profile-edit-name-end"></div>
 
@@ -26,29 +26,34 @@ $gender
 <div id="profile-edit-gender-end"></div>
 
 <div id="profile-edit-dob-wrapper" >
-<p id="birthday-description">Leave year blank to suppress age.</p>
 <label id="profile-edit-dob-label" for="dob-select" >Birthday: </label>
 <div id="profile-edit-dob" >
 $dob
 </div>
 <div id="profile-edit-dob-end"></div>
 
+<div class="profile-edit-submit-wrapper" >
+<input type="submit" name="submit" class="profile-edit-submit-button" value="Submit" />
+</div>
+<div class="profile-edit-submit-end"></div>
+
+
 <div id="profile-edit-address-wrapper" >
 <label id="profile-edit-address-label" for="profile-edit-address" >Street Address: </label>
-<input type="text size="32" name="address" id="profile-edit-address" value="$address" />
+<input type="text" size="32" name="address" id="profile-edit-address" value="$address" />
 </div>
 <div id="profile-edit-address-end"></div>
 
 <div id="profile-edit-locality-wrapper" >
 <label id="profile-edit-locality-label" for="profile-edit-locality" >Locality/City: </label>
-<input type="text size="32" name="locality" id="profile-edit-locality" value="$locality" />
+<input type="text" size="32" name="locality" id="profile-edit-locality" value="$locality" />
 </div>
 <div id="profile-edit-locality-end"></div>
 
 
 <div id="profile-edit-postal-code-wrapper" >
 <label id="profile-edit-postal-code-label" for="profile-edit-postal-code" >Postal/Zip Code: </label>
-<input type="text size="32" name="postal_code" id="profile-edit-postal-code" value="$postal_code" />
+<input type="text" size="32" name="postal_code" id="profile-edit-postal-code" value="$postal_code" />
 </div>
 <div id="profile-edit-postal-code-end"></div>
 
@@ -73,6 +78,10 @@ $dob
 </div>
 <div id="profile-edit-region-end"></div>
 
+<div class="profile-edit-submit-wrapper" >
+<input type="submit" name="submit" class="profile-edit-submit-button" value="Submit" />
+</div>
+<div class="profile-edit-submit-end"></div>
 
 <div id="profile-edit-marital-wrapper" >
 <label id="profile-edit-marital-label" for="profile-edit-marital" >Marital Status: </label>
@@ -90,28 +99,171 @@ $sexual
 
 <div id="profile-edit-homepage-wrapper" >
 <label id="profile-edit-homepage-label" for="profile-edit-homepage" >Homepage URL: </label>
-<input type="text size="32" name="homepage" id="profile-edit-homepage" value="$homepage" />
+<input type="text" size="32" name="homepage" id="profile-edit-homepage" value="$homepage" />
 </div>
 <div id="profile-edit-homepage-end"></div>
 
+<div id="profile-edit-politic-wrapper" >
+<label id="profile-edit-politic-label" for="profile-edit-politic" >Political Views: </label>
+<input type="text" size="32" name="politic" id="profile-edit-politic" value="$politic" />
+</div>
+<div id="profile-edit-politic-end"></div>
+
+<div id="profile-edit-religion-wrapper" >
+<label id="profile-edit-religion-label" for="profile-edit-religion" >Religion: </label>
+<input type="text" size="32" name="religion" id="profile-edit-religion" value="$religion" />
+</div>
+<div id="profile-edit-religion-end"></div>
+
+
 $profile_in_dir
+
+
+<div class="profile-edit-submit-wrapper" >
+<input type="submit" name="submit" class="profile-edit-submit-button" value="Submit" />
+</div>
+<div class="profile-edit-submit-end"></div>
 
 <div id="about-jot-wrapper" >
 <p id="about-jot-desc" >
 Tell us about yourself. 
 </p>
 
-<textarea rows="13" cols="72" id="profile-jot-text" name="about" >$about</textarea>
+<textarea rows="10" cols="72" id="profile-jot-text" name="about" >$about</textarea>
 
 </div>
 <div id="about-jot-end"></div>
 </div>
 
 
-<div id="profile-edit-submit-wrapper" >
-<input type="submit" name="submit" id="profile-edit-submit-button" value="Submit" />
+<div id="interest-jot-wrapper" >
+<p id="interest-jot-desc" >
+Hobbies/Interests. 
+</p>
+
+<textarea rows="10" cols="72" id="interest-jot-text" name="interest" >$interest</textarea>
+
 </div>
-<div id="profile-edit-submit-end"></div>
+<div id="interest-jot-end"></div>
+</div>
+
+
+<div id="contact-jot-wrapper" >
+<p id="contact-jot-desc" >
+Contact information. 
+</p>
+
+<textarea rows="10" cols="72" id="contact-jot-text" name="contact" >$contact</textarea>
+
+</div>
+<div id="contact-jot-end"></div>
+</div>
+
+
+<div class="profile-edit-submit-wrapper" >
+<input type="submit" name="submit" class="profile-edit-submit-button" value="Submit" />
+</div>
+<div class="profile-edit-submit-end"></div>
+
+
+<div id="music-jot-wrapper" >
+<p id="music-jot-desc" >
+Musical interests. 
+</p>
+
+<textarea rows="10" cols="72" id="music-jot-text" name="music" >$music</textarea>
+
+</div>
+<div id="music-jot-end"></div>
+</div>
+
+<div id="book-jot-wrapper" >
+<p id="book-jot-desc" >
+Books, literature. 
+</p>
+
+<textarea rows="10" cols="72" id="book-jot-text" name="book" >$book</textarea>
+
+</div>
+<div id="book-jot-end"></div>
+</div>
+
+
+
+<div id="tv-jot-wrapper" >
+<p id="tv-jot-desc" >
+Television. 
+</p>
+
+<textarea rows="10" cols="72" id="tv-jot-text" name="tv" >$tv</textarea>
+
+</div>
+<div id="tv-jot-end"></div>
+</div>
+
+
+
+<div id="film-jot-wrapper" >
+<p id="film-jot-desc" >
+Film/dance/culture/entertainment. 
+</p>
+
+<textarea rows="10" cols="72" id="film-jot-text" name="film" >$film</textarea>
+
+</div>
+<div id="film-jot-end"></div>
+</div>
+
+
+<div class="profile-edit-submit-wrapper" >
+<input type="submit" name="submit" class="profile-edit-submit-button" value="Submit" />
+</div>
+<div class="profile-edit-submit-end"></div>
+
+
+<div id="romance-jot-wrapper" >
+<p id="romance-jot-desc" >
+Love/romance. 
+</p>
+
+<textarea rows="10" cols="72" id="romance-jot-text" name="romance" >$romance</textarea>
+
+</div>
+<div id="romance-jot-end"></div>
+</div>
+
+
+
+<div id="work-jot-wrapper" >
+<p id="work-jot-desc" >
+Work/employment. 
+</p>
+
+<textarea rows="10" cols="72" id="work-jot-text" name="work" >$work</textarea>
+
+</div>
+<div id="work-jot-end"></div>
+</div>
+
+
+
+<div id="education-jot-wrapper" >
+<p id="education-jot-desc" >
+School/education. 
+</p>
+
+<textarea rows="10" cols="72" id="education-jot-text" name="education" >$education</textarea>
+
+</div>
+<div id="education-jot-end"></div>
+</div>
+
+
+
+<div class="profile-edit-submit-wrapper" >
+<input type="submit" name="submit" class="profile-edit-submit-button" value="Submit" />
+</div>
+<div class="profile-edit-submit-end"></div>
 
 
 </form>

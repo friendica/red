@@ -225,6 +225,17 @@ function profiles_content(&$a) {
 			'$sexual' => sexpref_selector($r[0]['sexual']),
 			'$about' => $r[0]['about'],
 			'$homepage' => $r[0]['homepage'],
+			'$politic' => $r[0]['politic'],
+			'$religion' => $r[0]['religion'],
+			'$music' => $r[0]['music'],
+			'$book' => $r[0]['book'],
+			'$tv' => $r[0]['tv'],
+			'$film' => $r[0]['film'],
+			'$interest' => $r[0]['interest'],
+			'$romance' => $r[0]['romance'],
+			'$work' => $r[0]['work'],
+			'$education' => $r[0]['education'],
+			'$contact' => $r[0]['contact'],
 			'$profile_in_dir' => (($is_default) ? $profile_in_dir : '')
 		));
 

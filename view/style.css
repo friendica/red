@@ -278,11 +278,11 @@ input#dfrn-url {
 	margin-left: 50px;
 	margin-bottom: 20px;
 }
-#profile-edit-dob-hide-label {
-	margin-left: 20px;
-	width: 150px;
-}
 
+.profile-edit-submit-wrapper {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
 
 #profile-edit-profile-name-label,
 #profile-edit-name-label,
@@ -295,6 +295,8 @@ input#dfrn-url {
 #profile-edit-country-name-label,
 #profile-edit-marital-label,
 #profile-edit-sexual-label,
+#profile-edit-politic-label,
+#profile-edit-religion-label,
 #profile-edit-homepage-label {
 	float: left;
 	width: 175px;
@@ -311,6 +313,8 @@ input#dfrn-url {
 #profile-edit-country-name,
 #marital-select,
 #sexual-select,
+#profile-edit-politic,
+#profile-edit-religion,
 #profile-in-dir-yes,
 #profile-in-dir-no {
 	float: left;
@@ -339,14 +343,16 @@ input#dfrn-url {
 #profile-edit-country-name-end,
 #profile-edit-marital-end,
 #profile-edit-sexual-end,
+#profile-edit-politic-end,
+#profile-edit-religion-end,
 #profile-edit-homepage-end,
 #profile-in-dir-break, 
 #profile-in-dir-end {
 	clear: both;
 }
 
-#gender-select, #marital-select {
- width: 145px;
+#gender-select, #marital-select, #sexual-select {
+	width: 220px;
 }
 
 #profile-edit-profile-name-wrapper .required {
