@@ -548,3 +548,106 @@ input#dfrn-url {
   background: #FFCCCC;
   padding: 4px;
 }
+
+
+#advanced-profile-name-wrapper,
+#advanced-profile-gender-wrapper,
+#advanced-profile-dob-wrapper,
+#advanced-profile-age-wrapper,
+#advanced-profile-marital-wrapper,
+#advanced-profile-sexual-wrapper,
+#advanced-profile-homepage-wrapper,
+#advanced-profile-politic-wrapper,
+#advanced-profile-religion-wrapper,
+#advanced-profile-about-wrapper,
+#advanced-profile-interest-wrapper,
+#advanced-profile-contact-wrapper,
+#advanced-profile-music-wrapper,
+#advanced-profile-book-wrapper,
+#advanced-profile-tv-wrapper,
+#advanced-profile-film-wrapper,
+#advanced-profile-romance-wrapper,
+#advanced-profile-work-wrapper,
+#advanced-profile-education-wrapper {
+	margin-top: 20px;
+}
+
+#advanced-profile-name-text,
+#advanced-profile-gender-text,
+#advanced-profile-dob-text,
+#advanced-profile-age-text,
+#advanced-profile-marital-text,
+#advanced-profile-sexual-text,
+#advanced-profile-homepage-text,
+#advanced-profile-politic-text,
+#advanced-profile-religion-text,
+#advanced-profile-about-text,
+#advanced-profile-interest-text,
+#advanced-profile-contact-text,
+#advanced-profile-music-text,
+#advanced-profile-book-text,
+#advanced-profile-tv-text,
+#advanced-profile-film-text,
+#advanced-profile-romance-text,
+#advanced-profile-work-text,
+#advanced-profile-education-text {
+	width: 250px;
+	float: left;
+}
+
+#advanced-profile-name-end,
+#advanced-profile-gender-end,
+#advanced-profile-dob-end,
+#advanced-profile-age-end,
+#advanced-profile-marital-end,
+#advanced-profile-sexual-end,
+#advanced-profile-homepage-end,
+#advanced-profile-politic-end,
+#advanced-profile-religion-end {
+	clear: both;
+}
+
+#advanced-profile-about-end,
+#advanced-profile-interest-end,
+#advanced-profile-contact-end,
+#advanced-profile-music-end,
+#advanced-profile-book-end,
+#advanced-profile-tv-end,
+#advanced-profile-film-end,
+#advanced-profile-romance-end,
+#advanced-profile-work-end,
+#advanced-profile-education-end {
+
+
+}
+
+#advanced-profile-name,
+#advanced-profile-gender,
+#advanced-profile-dob,
+#advanced-profile-age,
+#advanced-profile-marital,
+#advanced-profile-sexual,
+#advanced-profile-homepage,
+#advanced-profile-politic,
+#advanced-profile-religion {
+	float: left;
+
+}
+
+
+#advanced-profile-about,
+#advanced-profile-interest,
+#advanced-profile-contact,
+#advanced-profile-music,
+#advanced-profile-book,
+#advanced-profile-tv,
+#advanced-profile-film,
+#advanced-profile-romance,
+#advanced-profile-work,
+#advanced-profile-education {
+	margin-top: 10px;
+	margin-left: 50px;
+	margin-right: 20px;
+	padding: 10px;
+	border: 1px solid #CCCCCC;
+}

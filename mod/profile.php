@@ -98,6 +98,11 @@ function profile_content(&$a) {
 	require_once("include/bbcode.php");
 	require_once('include/security.php');
 
+	$tab = 'posts';
+
+	if(x($_GET,'tab'))
+		$tab = notags(trim($_GET['tab']));
+
 //	$tpl = file_get_contents('view/profile_tabs.tpl');
 
 
@@ -111,7 +116,12 @@ function profile_content(&$a) {
 			$contact_id = $r[0]['id'];
 	}
 
+	if($tab == 'profile') {
 
+		require_once('view/profile_advanced.php');
+
+		return $o;
+	}
 	if(can_write_wall($a,$a->profile['profile_uid'])) {
 		$tpl = file_get_contents('view/jot-header.tpl');
 	
