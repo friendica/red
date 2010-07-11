@@ -2,13 +2,13 @@
 
 
 function group_add($uid,$name) {
-
+dbg(2);
 	$ret = false;
 	if(x($uid) && x($name)) {
 		$r = group_byname($uid,$name); // check for dups
 		if($r !== false) 
 			return true;
-		$r = q("INSERT INTO `group` ( `uid`', `name` )
+		$r = q("INSERT INTO `group` ( `uid`, `name` )
 			VALUES( %d, '%s' ) ",
 			intval($uid),
 			dbesc($name)
@@ -120,8 +120,9 @@ $o .= <<< EOT
 </div>
 
 <div id="sidebar-group-list">
-<ul id="sidebar-group-ul">
-<li class="sidebar-group-li"><a href="contacts">Everybody</a></li>
+	<ul id="sidebar-group-ul">
+	<li class="sidebar-group-li" ><a href="contacts">Everybody</a></li>
+
 EOT;
 
 	$r = q("SELECT * FROM `group` WHERE `uid` = %d",
@@ -129,9 +130,9 @@ EOT;
 	);
 	if(count($r)) {
 		foreach($r as $rr)
-			$o .= "<li class=\"sidebar-group-li\"><a href=\"group/{$rr['id']}\">{$rr['name']}</li>";
+			$o .= "	<li class=\"sidebar-group-li\"><a href=\"group/{$rr['id']}\">{$rr['name']}</a></li>\r\n";
 	}
-	$o .= '</ul></div></div>';	
+	$o .= "	</ul>\r\n	</div>\r\n</div>";	
 
 	return $o;
 }
