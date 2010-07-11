@@ -11,6 +11,8 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
+--
+--
 
 -- --------------------------------------------------------
 
@@ -24,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `challenge` (
   `dfrn-id` char(255) NOT NULL,
   `expire` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -61,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `reason` text NOT NULL COMMENT 'why a rating was given - will help friends decide to make friends or not',
   `profile-id` int(11) NOT NULL DEFAULT '0' COMMENT 'which profile to display - 0 is public default',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -74,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `group` (
   `uid` int(10) unsigned NOT NULL,
   `name` char(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -88,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `group_member` (
   `gid` int(10) unsigned NOT NULL,
   `contact-id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -107,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `intro` (
   `blocked` tinyint(1) NOT NULL DEFAULT '1',
   `ignore` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -121,6 +123,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `type` char(255) NOT NULL,
   `resource-id` char(255) NOT NULL,
   `contact-id` int(10) unsigned NOT NULL DEFAULT '0',
+  `remote-id` char(255) NOT NULL,
   `created` datetime NOT NULL,
   `edited` datetime NOT NULL,
   `commented` datetime NOT NULL,
@@ -129,6 +132,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `title` char(255) NOT NULL,
   `body` text NOT NULL,
   `visible` tinyint(1) NOT NULL DEFAULT '0',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `allow_uid` mediumtext NOT NULL,
   `allow_gid` mediumtext NOT NULL,
   `deny_uid` mediumtext NOT NULL,
@@ -140,7 +144,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `commented` (`commented`),
   FULLTEXT KEY `body` (`body`),
   FULLTEXT KEY `title` (`title`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -166,7 +170,7 @@ CREATE TABLE IF NOT EXISTS `photo` (
   `deny_uid` mediumtext NOT NULL,
   `deny_gid` mediumtext NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -179,23 +183,36 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `uid` int(11) NOT NULL,
   `profile-name` char(255) NOT NULL,
   `is-default` tinyint(1) NOT NULL DEFAULT '0',
+  `hide-friends` tinyint(1) NOT NULL DEFAULT '0',
   `name` char(255) NOT NULL,
-  `dob` char(32) NOT NULL,
+  `dob` char(32) NOT NULL DEFAULT '0000-00-00',
   `address` char(255) NOT NULL,
   `locality` char(255) NOT NULL,
   `region` char(255) NOT NULL,
   `postal-code` char(32) NOT NULL,
   `country-name` char(255) NOT NULL,
-  `age` tinyint(3) NOT NULL,
   `gender` char(8) NOT NULL,
   `marital` char(255) NOT NULL,
+  `sexual` char(255) NOT NULL,
+  `politic` char(255) NOT NULL,
+  `religion` char(255) NOT NULL,
   `about` text NOT NULL,
+  `summary` char(255) NOT NULL,
+  `music` text NOT NULL,
+  `book` text NOT NULL,
+  `tv` text NOT NULL,
+  `film` text NOT NULL,
+  `interest` text NOT NULL,
+  `romance` text NOT NULL,
+  `work` text NOT NULL,
+  `education` text NOT NULL,
+  `contact` text NOT NULL,
   `homepage` char(255) NOT NULL,
   `photo` char(255) NOT NULL,
   `thumb` char(255) NOT NULL,
   `publish` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -209,7 +226,7 @@ CREATE TABLE IF NOT EXISTS `profile_check` (
   `dfrn_id` char(255) NOT NULL,
   `expire` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -225,7 +242,7 @@ CREATE TABLE IF NOT EXISTS `session` (
   PRIMARY KEY (`id`),
   KEY `sid` (`sid`),
   KEY `expire` (`expire`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -245,4 +262,4 @@ CREATE TABLE IF NOT EXISTS `user` (
   `verified` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `blocked` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`uid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
