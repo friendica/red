@@ -176,7 +176,8 @@ function contacts_content(&$a) {
 			'$photo' => $r[0]['photo'],
 			'$name' => $r[0]['name'],
 			'$dir_icon' => $dir_icon,
-			'$alt_text' => $alt_text
+			'$alt_text' => $alt_text,
+			'$url' => (($direction != DIRECTION_IN) ? "redir/{$r[0]['id']}" : $r[0]['url'] )
 
 		));
 

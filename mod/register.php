@@ -175,6 +175,11 @@ function register_post(&$a) {
 if(! function_exists('register_content')) {
 function register_content(&$a) {
 
+	if($a->config['register_policy'] == REGISTER_CLOSED) {
+		notice("Permission denied." . EOL);
+		return;
+	}
+
 	$o = file_get_contents("view/register.tpl");
 	$o = replace_macros($o, array('$registertext' =>((x($a->config,'register_text'))? $a->config['register_text'] : "" )));
 	return $o;
