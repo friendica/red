@@ -153,7 +153,7 @@ function relative_date($posted_date) {
 }
 
 function age($dob,$owner_tz = '',$viewer_tz = '') {
-	if(strlen($dob) != 10)
+	if(! intval($dob))
 		return 0;
 	if(! $owner_tz)
 		$owner_tz = date_default_timezone_get();
