@@ -735,3 +735,17 @@ input#dfrn-url {
 	background-color: #FFEEEE;
 	padding: 10px;
 }
+
+.profile-tabs {
+	float: left;
+	padding:3px;
+	margin-right: 5px;
+	border: 1px solid #888888;
+}
+.profile-tabs a {
+	text-decoration: none;
+}
+
+#profile-tabs-end {
+	clear: both;
+}

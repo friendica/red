@@ -103,7 +103,11 @@ function profile_content(&$a) {
 	if(x($_GET,'tab'))
 		$tab = notags(trim($_GET['tab']));
 
-//	$tpl = file_get_contents('view/profile_tabs.tpl');
+	$tpl = file_get_contents('view/profile_tabs.tpl');
+
+	$o .= replace_macros($tpl,array(
+		'$url' => $a->get_baseurl() . '/' . $a->cmd
+	));
 
 
 	if(remote_user())
