@@ -739,6 +739,7 @@ input#dfrn-url {
 .profile-tabs {
 	float: left;
 	padding:3px;
+	margin-top: 10px;
 	margin-right: 5px;
 	border: 1px solid #888888;
 	font-size: 0.8em;
