@@ -1,0 +1,26 @@
+Installation guide
+
+The following notes apply to pre-alpha releases. Some manual installation is required at this time. 
+
+
+1. Requirements
+	- Apache with mod-rewrite enabled and "Options All" so you can use a local .htaccess file
+	- PHP > 5.1. The later the better. You'll need 5.3 for full openssl encryption support
+	- PHP command line access with register_argc_argv set to true in the php.ini file
+	- Mysql 5.x
+
+2. Edit htconfig.php and change system settings. Rename to .htconfig.php
+
+3. Import database.sql into your database with mysql command line or via phpmyadmin
+
+4. Import updates.sql to catch any late-breaking devel changes
+
+5. Put this directory into the root of your web server document area.
+	- To use a subdir of your main site, set the 
+	config variable $a->path to the relative subdir
+	For example to use http://example.com/test - 
+	set $a->path to 'test'.
+
+6. Navigate to your site with a web browser and register an account.
+
+
