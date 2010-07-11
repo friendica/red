@@ -29,11 +29,11 @@
 		|| (strlen($profile['region'])) 
 		|| (strlen($profile['postal-code'])) 
 		|| (strlen($profile['country-name']))) { ?>
-		<div class="location">Location:
+		<span class="location">Location:
 			<div class="adr">
 				<div class="street-address"><?php if(strlen($profile['address'])) echo $profile['address']; ?></div>
-				<div class="city-state-zip"><span class="locality"><?php echo $profile['locality']; ?></span><?php if(strlen($profile['region'])) echo ', '; ?><span class="region"><?php echo $profile['region'] ?></span><?php if(strlen($profile['postal-code'])) { ?> <span class="postal-code"><?php echo $profile['postal-code']; ?></span><?php } ?></div>
-				<div class="country-name"><?php echo $profile['country-name']; ?></div>
+				<span class="city-state-zip"><span class="locality"><?php echo $profile['locality']; ?></span><?php if(strlen($profile['locality'])) echo ', '; ?><span class="region"><?php echo $profile['region'] ?></span><?php if(strlen($profile['postal-code'])) { ?> <span class="postal-code"><?php echo $profile['postal-code']; ?></span><?php } ?></span>
+				<span class="country-name"><?php echo $profile['country-name']; ?></span>
 			</div>
 		</div>
 

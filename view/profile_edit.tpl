@@ -58,8 +58,6 @@ $dob $age
 <div id="profile-edit-postal-code-end"></div>
 
 <div id="profile-edit-country-name-wrapper" >
-<input type="hidden" name="txtSelectedCountry" value="" >
-
 <label id="profile-edit-country-name-label" for="profile-edit-country-name" >Country: </label>
 <select name="country_name" id="profile-edit-country-name" onChange="Fill_States('$region');">
 <option selected="selected" >$country_name</option>
@@ -69,7 +67,6 @@ $dob $age
 <div id="profile-edit-country-name-end"></div>
 
 <div id="profile-edit-region-wrapper" >
-<input type="hidden" name="txtSelectedState" value="" >
 <label id="profile-edit-region-label" for="profile-edit-region" >Region/State: </label>
 <select name="region" id="profile-edit-region" onChange="Update_Globals();" >
 <option selected="selected" >$region</option>

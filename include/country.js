@@ -428,39 +428,9 @@ function Fill_Country(current) {
 	return;
 }
 
-function updSelectState(lngState) {
-	if (gLngSelectedCountry>0) {
-
-		document.form1.txtSelectedState.value = lngState+1;
-
-	}
-}
-
-/*
- * gArCountryInfo matrix holds the following information:
- * (0) Country name
- * (1) Name length
- * (2) Number of states
- * (3) Max state length
- */
 function Update_Globals() {
 	gLngSelectedCountry=parseInt(document.form1.country_name.selectedIndex);
 	gLngSelectedState=parseInt(document.form1.region.selectedIndex);
-	document.form1.txtSelectedCountry.value=gLngSelectedCountry;
-	document.form1.txtSelectedState.value=gLngSelectedState+1;
-	
-	// working
-//	document.form1.txtCountry.value=
-//		document.form1.country_name.options[gLngSelectedCountry].text;
-//	if (document.form1.txtSelectedState.value<=0) {
-//		document.form1.txtState.value="";
-//	}
-//	else {
-//		document.form1.txtState.value=
-//			document.form1.region.options[gLngSelectedState].text;
-//	}
-	
-
 	return;
 }
 
