@@ -28,7 +28,7 @@ $blocked
 <form action="contacts/$contact_id" method="post" >
 <input type="hidden" name="contact_id" value="$contact_id">
 
-<div class="contact-edit-profile-select-text">
+<div id="contact-edit-profile-select-text">
 <h4>Profile Visibility</h4>
 <p>Please choose the profile you would like to display to $name - when he/she connects securely to your profile page.
 </p> 

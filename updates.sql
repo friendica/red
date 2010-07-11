@@ -26,3 +26,4 @@ ALTER TABLE `profile` DROP `age`;
  ALTER TABLE `profile` DROP `employer`  ;
 
 ALTER TABLE `profile` ADD `contact` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `education` ;
+ALTER TABLE `profile` ADD `hide-friends` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `is-default` ;

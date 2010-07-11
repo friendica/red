@@ -25,7 +25,7 @@ function group_rmv($uid,$name) {
 		$r = q("SELECT * FROM `group` WHERE `uid` = %d AND `name` = '%s' LIMIT 1",
 			intval($uid),
 			dbesc($name)
-		}
+		);
 		if(count($r))
 			$group_id = $r[0]['id'];
 		if(! $group_id)
@@ -102,4 +102,36 @@ function group_add_member($uid,$name,$member) {
 			intval($member)
 	);
 	return $r;
+}
+
+
+
+function group_side() {
+
+	if(! local_user())
+		return;
+$o .= <<< EOT
+
+<div id="group-sidebar">
+<h3>Groups</h3>
+
+<div id="sidebar-new-group">
+<a href="group/new">Create a new group</a>
+</div>
+
+<div id="sidebar-group-list">
+<ul id="sidebar-group-ul">
+<li class="sidebar-group-li"><a href="contacts">Everybody</a></li>
+EOT;
+
+	$r = q("SELECT * FROM `group` WHERE `uid` = %d",
+		intval($_SESSION['uid'])
+	);
+	if(count($r)) {
+		foreach($r as $rr)
+			$o .= "<li class=\"sidebar-group-li\"><a href=\"group/{$rr['id']}\">{$rr['name']}</li>";
+	}
+	$o .= '</ul></div></div>';	
+
+	return $o;
 }

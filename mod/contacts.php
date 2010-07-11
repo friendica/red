@@ -1,6 +1,8 @@
 <?php
-function edit_contact(&$a,$contact_id) {
 
+function contacts_init(&$a) {
+	require_once('include/group.php');
+	$a->page['aside'] .= group_side();
 }
 
 function contacts_post(&$a) {
@@ -12,8 +14,7 @@ function contacts_post(&$a) {
 	$contact_id = intval($a->argv[1]);
 	if(! $contact_id)
 		return;
-dbg(2);
-print_r($_POST);
+
 	$orig_record = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		intval($contact_id),
 		intval($_SESSION['uid'])
@@ -60,22 +61,12 @@ print_r($_POST);
 
 
 
-
-
-
-
-
-
-
-
 function contacts_content(&$a) {
 
 	if(! local_user()) {
 		$_SESSION['sysmsg'] .= "Permission denied." . EOL;
 		return;
 	}
-
-
 
 	if($a->argc == 3) {
 

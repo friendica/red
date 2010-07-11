@@ -278,6 +278,12 @@ function profiles_content(&$a) {
 			'$no_selected' => (($r[0]['publish'] == 0) ? " checked=\"checked\" " : "")
 		));
 
+		$opt_tpl = file_get_contents("view/profile-hide-friends.tpl");
+		$hide_friends = replace_macros($opt_tpl,array(
+			'$yes_selected' => (($r[0]['hide-friends']) ? " checked=\"checked\" " : ""),
+			'$no_selected' => (($r[0]['hide-friends'] == 0) ? " checked=\"checked\" " : "")
+		));
+
 
 		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
 		$a->page['htmlhead'] .= "<script type=\"text/javascript\" src=\"include/country.js\" ></script>";
@@ -295,7 +301,7 @@ function profiles_content(&$a) {
 			'$default' => (($is_default) ? "<p id=\"profile-edit-default-desc\">This is your <strong>public</strong> profile.<br />It <strong>may</strong> be visible to anybody using the internet.</p>" : ""),
 			'$name' => $r[0]['name'],
 			'$dob' => dob($r[0]['dob']),
-			'$hide_birth' => (($r[0]['dob_hide']) ? " checked=\"checked\" " : ""),
+			'$hide_friends' => $hide_friends,
 			'$address' => $r[0]['address'],
 			'$locality' => $r[0]['locality'],
 			'$region' => $r[0]['region'],

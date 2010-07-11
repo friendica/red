@@ -316,12 +316,17 @@ input#dfrn-url {
 #profile-edit-politic,
 #profile-edit-religion,
 #profile-in-dir-yes,
-#profile-in-dir-no {
+#profile-in-dir-no,
+#hide-friends-yes,
+#hide-friends-no {
 	float: left;
 	margin-bottom: 20px;
 }
 
-#profile-in-dir-yes-label, #profile-in-dir-no-label {
+#profile-in-dir-yes-label, 
+#profile-in-dir-no-label,
+#hide-friends-yes-label,
+#hide-friends-no-label {
 	margin-left: 125px;
 	float: left;
 	width: 50px;
@@ -347,9 +352,15 @@ input#dfrn-url {
 #profile-edit-religion-end,
 #profile-edit-homepage-end,
 #profile-in-dir-break, 
-#profile-in-dir-end {
+#profile-in-dir-end,
+#hide-friends-break,
+#hide-friends-end {
 	clear: both;
 }
+
+
+
+
 
 #gender-select, #marital-select, #sexual-select {
 	width: 220px;
@@ -663,7 +674,9 @@ input#dfrn-url {
 	margin-left: 30px;
 }
 
-
+#contact-edit-photo-wrapper {
+	margin-bottom: 20px;
+}
 #contact-edit-links img {
 	margin-left: 20px;
 	border: none;
