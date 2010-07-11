@@ -63,8 +63,6 @@ function profiles_post(&$a) {
 		$education = escape_tags(trim($_POST['education']));
 		if(x($_POST,'profile_in_directory'))
 			$publish = (($_POST['profile_in_directory'] == 1) ? 1: 0);
-		if(! in_array($gender,array('','Male','Female','Other')))
-			$gender = '';
 
 		$r = q("UPDATE `profile` 
 			SET `profile-name` = '%s',

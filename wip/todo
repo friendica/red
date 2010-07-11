@@ -14,7 +14,6 @@ profile "you name it" field
 
 profile display restrict/check access
 
-publish to external directory
 
 groups
 
@@ -62,6 +61,8 @@ theme api
 ajax
 
 image/link inline ajax
+
+publish to external directory
 
 local data performance improvements
 
