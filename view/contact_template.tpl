@@ -7,7 +7,7 @@
 		</div>
 		<div class="contact-entry-photo-end" ></div>
 	</div>
-	<div class="contact-entry-nav-wrapper"
+	<div class="contact-entry-nav-wrapper" >
 		<div class="contact-entry-name" id="contact-entry-name-$id" >$name</div>
 
 		<div class="contact-entry-break"></div>

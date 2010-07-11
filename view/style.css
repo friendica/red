@@ -369,6 +369,7 @@ input#dfrn-url {
 .contact-entry-direction-icon {
 	margin-top: 24px;
 	float: left;
+	margin-right: 2px;
 }
 .contact-entry-photo img {
 	border: none;
@@ -650,4 +651,74 @@ input#dfrn-url {
 	margin-right: 20px;
 	padding: 10px;
 	border: 1px solid #CCCCCC;
+}
+
+#contact-edit-wrapper {
+	margin-top: 50px;
+}
+
+#contact-edit-banner-name {
+	font-size: 1.4em;
+	font-weight: bold;
+	margin-left: 30px;
+}
+
+
+#contact-edit-links img {
+	margin-left: 20px;
+	border: none;
+}
+
+#contact-edit-direction-icon {
+	float: left;
+	margin-top: 70px;
+	margin-right: 2px;
+}
+
+#contact-edit-photo {
+	float: left;
+}
+
+#contact-edit-photo-end {
+	clear: both;
+}
+
+#contact-edit-photo-wrapper {
+	float: left;
+}
+
+#contact-edit-nav-wrapper {
+	float: left;
+}
+
+#contact-edit-end {
+	clear: both;
+}
+
+#contact-profile-selector {
+	width: 175px;
+	margin-left: 175px;
+}
+
+#contact-reputation-selector {
+	margin-left: 175px;
+}
+
+#contact-edit-rating-text {
+	margin-left: 175px;
+}
+
+.contact-edit-submit {
+	margin-top: 20px;
+	margin-left: 50px;
+}
+
+#block-message {
+	margin-top: 20px;
+	width: 180px;
+	color: #FF0000;
+	font-size: 1.1em;
+	border: 1px solid #FF8888;
+	background-color: #FFEEEE;
+	padding: 10px;
 }

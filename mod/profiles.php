@@ -292,7 +292,7 @@ function profiles_content(&$a) {
 			'$baseurl' => $a->get_baseurl(),
 			'$profile_id' => $r[0]['id'],
 			'$profile_name' => $r[0]['profile-name'],
-			'$default' => (($is_default) ? "<p id=\"profile-edit-default-desc\">This is your <strong>public</strong> profile.</p>" : ""),
+			'$default' => (($is_default) ? "<p id=\"profile-edit-default-desc\">This is your <strong>public</strong> profile.<br />It <strong>may</strong> be visible to anybody using the internet.</p>" : ""),
 			'$name' => $r[0]['name'],
 			'$dob' => dob($r[0]['dob']),
 			'$hide_birth' => (($r[0]['dob_hide']) ? " checked=\"checked\" " : ""),
