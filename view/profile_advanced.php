@@ -34,10 +34,13 @@ $o .= <<< EOT
 <div id="advanced-profile-dob-wrapper" >
 <div id="advanced-profile-dob-text">Birthday:</div>
 EOT;
+
+// If no year, add an arbitrary one so just we can parse the month and day.
+
 $o .= '<div id="advanced-profile-dob">' 
 	. ((intval($a->profile['dob'])) 
 		? datetime_convert('UTC',date_default_timezone_get(),$a->profile['dob'],'j F, Y')
-		: datetime_convert('UTC',date_default_timezone_get(),substr($a->profile['dob'],6),'j F')) 
+		: datetime_convert('UTC',date_default_timezone_get(),'2001-' . substr($a->profile['dob'],6),'j F')) 
 	. "</div>\r\n</div>";
 
 $o .= '<div id="advanced-profile-dob-end"></div>';

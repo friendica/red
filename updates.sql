@@ -1,5 +1,5 @@
 
-|ALTER TABLE `item` ADD `remote-id` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `contact-id` ;
+-- ALTER TABLE `item` ADD `remote-id` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `contact-id` ;
 
 ALTER TABLE `profile` ADD `politic` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `marital` ,
 ADD `religion` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `politic` ;
