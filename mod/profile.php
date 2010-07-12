@@ -216,16 +216,17 @@ dbg(2);
 
 	$tpl = file_get_contents('view/wall_item.tpl');
 	if(count($r)) {
-		foreach($r as $rr) {
+		for($x = 0; $x < count($r); $x ++) {
+			$rr = $r[$x];
+			$comment = '';
 			if(can_write_wall($a,$a->profile['profile_uid'])) {
-				$comment = replace_macros($template,array(
-					'$id' => $rr['item_id'],
-					'$parent' => $rr['parent'],
-					'$profile_uid' =>  $a->profile['profile_uid']
-				));
-			}
-			else {
-				$comment = '';
+				if((($x + 1) < count($r)) && ($r[$x+1]['parent'] != $rr['parent'])) {
+					$comment = replace_macros($template,array(
+						'$id' => $rr['item_id'],
+						'$parent' => $rr['parent'],
+						'$profile_uid' =>  $a->profile['profile_uid']
+					));
+				}
 			}
 			$o .= item_display($a,$rr,$tpl,$comment);
 		}

@@ -7,6 +7,14 @@
       document.getElementById(theID).style.display = "block" 
     } 
   }
+
   function openMenu(theID) {
       document.getElementById(theID).style.display = "block" 
   }
+
+  function closeMenu(theID) {
+      document.getElementById(theID).style.display = "none" 
+  }
+
+
+
