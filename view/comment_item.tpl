@@ -4,7 +4,7 @@
 	<form class="comment-edit-form" id="comment-edit-form-$id" action="item" method="post" >
 		<input type="hidden" name="type" value="jot" />
 		<input type="hidden" name="profile_uid" value="$profile_uid" />
-		<input type="hidden" name="parent" value="$id" />
+		<input type="hidden" name="parent" value="$parent" />
 		<textarea rows="3" cols="40" id="comment-edit-text-$id" name="body" ></textarea>
 
 

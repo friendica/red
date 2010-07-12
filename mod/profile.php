@@ -84,6 +84,7 @@ function item_display(&$a, $item,$template,$comment) {
 		'$thumb' => $thumb,
 		'$body' => bbcode($item['body']),
 		'$ago' => relative_date($item['created']),
+		'$indent' => (($item['parent'] != $item['item_id']) ? 'comment-' : ''),
 		'$comment' => $comment
 	));
 
@@ -92,11 +93,12 @@ function item_display(&$a, $item,$template,$comment) {
 }
 
 
-
 function profile_content(&$a) {
 
 	require_once("include/bbcode.php");
 	require_once('include/security.php');
+
+	$groups = array();
 
 	$tab = 'posts';
 
@@ -110,8 +112,10 @@ function profile_content(&$a) {
 	));
 
 
-	if(remote_user())
+	if(remote_user()) {
 		$contact_id = $_SESSION['visitor_id'];
+		$groups = init_groups_visitor($contact_id);
+	}
 	if(local_user()) {
 		$r = q("SELECT `id` FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
 			$_SESSION['uid']
@@ -139,49 +143,95 @@ function profile_content(&$a) {
 	}
 
 
-	if($a->profile['is-default']) {
+dbg(2);
 
-		// TODO left join with contact which will carry names and photos. (done)Store local users in contact as well as user.(done)
-		// Alter registration and settings 
-		// and profile to update contact table when names and  photos change.  
-		// work on item_display and can_write_wall
+	// TODO 
+	// Alter registration and settings 
+	// and profile to update contact table when names and  photos change.  
+	// work on item_display and can_write_wall
 
-		// Add comments. 
+	// Add comments. 
 
-		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, `contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`, `contact`.`id` AS `cid`,
-			`contact`.`uid` AS `contact-uid`
-			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-			WHERE `item`.`uid` = %d AND `item`.`visible` = 1
-			AND `contact`.`blocked` = 0
-			AND `allow_uid` = '' AND `allow_gid` = '' AND `deny_uid` = '' AND `deny_gid` = ''
-			GROUP BY `item`.`parent`, `item`.`id`
-			ORDER BY `created` DESC LIMIT 0,30 ",
-			intval($a->profile['uid'])
+	// default - anonymous user
+
+	$sql_extra = " AND `allow_cid` = '' AND `allow_gid` = '' AND `deny_cid` = '' AND `deny_gid` = '' ";
+
+	// Profile owner - everything is visible
+
+	if(local_user() && ($_SESSION['uid'] == $a->profile['profile_uid']))
+		$sql_extra = ''; 
+
+	// authenticated visitor - here lie dragons
+
+	elseif(remote_user()) {
+		$gs = '<<>>'; // should be impossible to match
+		if(count($groups)) {
+			foreach($groups as $g)
+				$gs .= '|<' . dbesc($g) . '>';
+		} 
+		$sql_extra = sprintf(
+			" AND ( `allow_cid` = '' OR `allow_cid` REGEXP '<%d>' ) 
+			AND ( `deny_cid` = '' OR  NOT `deny_cid` REGEXP '<%d>' ) 
+			AND ( `allow_gid` = '' OR `allow_gid` REGEXP '%s' )
+			AND ( `deny_gid` = '' OR NOT `deny_gid` REGEXP '%s') ",
+
+			intval($visitor_id),
+			intval($visitor_id),
+			$gs,
+			$gs
 		);
+	}
 
-		$template = file_get_contents('view/comment_item.tpl');
+	$r = q("SELECT COUNT(*) AS `total`
+		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
+		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+		AND `contact`.`blocked` = 0 
+		$sql_extra ",
+		intval($a->profile['uid'])
+
+	);
+
+	if(count($r))
+		$a->set_pager_total($r[0]['total']);
 
 
+	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
+		`contact`.`name`, `contact`.`photo`, `contact`.`url`, 
+		`contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`, 
+		`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
+		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
+		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+		AND `contact`.`blocked` = 0 
+		$sql_extra
+		ORDER BY `parent` DESC, `id` ASC LIMIT %d ,%d ",
+		intval($a->profile['uid']),
+		intval($a->pager['start']),
+		intval($a->pager['itemspage'])
+
+	);
 
 
-		$tpl = file_get_contents('view/wall_item.tpl');
+	$template = file_get_contents('view/comment_item.tpl');
 
-		if(count($r)) {
-			foreach($r as $rr) {
-				if(can_write_wall($a,$a->profile['profile_uid'])) {
-					$comment = replace_macros($template,array(
-						'$id' => $rr['item_id'],
-						'$profile_uid' =>  $a->profile['profile_uid']
-					));
-				}
-				else {
-					$comment = '';
-				}
 
-				$o .= item_display($a,$rr,$tpl,$comment);
+	$tpl = file_get_contents('view/wall_item.tpl');
+	if(count($r)) {
+		foreach($r as $rr) {
+			if(can_write_wall($a,$a->profile['profile_uid'])) {
+				$comment = replace_macros($template,array(
+					'$id' => $rr['item_id'],
+					'$parent' => $rr['parent'],
+					'$profile_uid' =>  $a->profile['profile_uid']
+				));
 			}
+			else {
+				$comment = '';
+			}
+			$o .= item_display($a,$rr,$tpl,$comment);
 		}
 	}
+
+	$o .= paginate($a);
 
 	return $o;
 

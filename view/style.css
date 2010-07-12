@@ -416,6 +416,10 @@ input#dfrn-url {
 	clear: both;
 }
 
+.wall-item-comment-outside-wrapper {
+	margin-left: 50px;
+}
+
 .wall-item-photo-wrapper {
 	margin-top: 20px;
 	width: 100px;
