@@ -65,12 +65,12 @@ function notifications_content(&$a) {
 		'$hide_url' => ((strlen($sql_extra)) ? 'notifications/all' : 'notifications' ),
 		'$hide_text' => ((strlen($sql_extra)) ? 'Show Ignored Requests' : 'Hide Ignored Requests')
 	)); 
-dbg(2);
+
 	$r = q("SELECT `intro`.`id` AS `intro-id`, `intro`.*, `contact`.* 
 		FROM `intro` LEFT JOIN `contact` ON `intro`.`contact-id` = `contact`.`id`
 		WHERE `intro`.`uid` = %d $sql_extra AND `intro`.`blocked` = 0 ",
 			intval($_SESSION['uid']));
-dbg(0);
+
 	if(($r !== false) && (count($r))) {
 
 

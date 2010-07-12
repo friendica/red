@@ -11,9 +11,16 @@ function item_post(&$a) {
 	$uid = $_SESSION['uid'];
 	$parent = ((x($_POST,'parent')) ? intval($_POST['parent']) : 0);
 	$profile_uid = ((x($_POST,'profile_uid')) ? intval($_POST['profile_uid']) : 0);
+
 	if(! can_write_wall($a,$profile_uid)) {
 		notice("Permission denied." . EOL) ;
 		return;
+	}
+
+	$body = escape_tags(trim($_POST['body']));
+	if(! strlen($body)) {
+		notice("Empty post discarded." . EOL );
+		goaway($a->get_baseurl() . "/profile/$profile_uid");
 	}
 
 	if((x($_SESSION,'visitor_id')) && (intval($_SESSION['visitor_id'])))
@@ -53,9 +60,16 @@ function item_post(&$a) {
 			dbesc($hash));
 		if(count($r)) {
 			$post_id = $r[0]['id'];
-			if(! $parent)
+			if($parent) {
+				$r = q("UPDATE `item` SET `last-child` = 0 WHERE `parent` = %d ",
+					intval($parent)
+				);
+			}
+			else {
 				$parent = $post_id;
-			$r = q("UPDATE `item` SET `parent` = %d, `visible` = 1
+			}
+
+			$r = q("UPDATE `item` SET `parent` = %d, `last-child` = 1, `visible` = 1
 				WHERE `id` = %d LIMIT 1",
 				intval($parent),
 				intval($post_id));

@@ -98,6 +98,7 @@ function profile_content(&$a) {
 	require_once("include/bbcode.php");
 	require_once('include/security.php');
 
+	$a->page['htmlhead'] .= '<script type="text/javascript" src="include/jquery.js" ></script>';
 	$groups = array();
 
 	$tab = 'posts';
@@ -142,8 +143,6 @@ function profile_content(&$a) {
 		));
 	}
 
-
-dbg(2);
 
 	// TODO 
 	// Alter registration and settings 
@@ -216,11 +215,10 @@ dbg(2);
 
 	$tpl = file_get_contents('view/wall_item.tpl');
 	if(count($r)) {
-		for($x = 0; $x < count($r); $x ++) {
-			$rr = $r[$x];
+		foreach($r as $rr) {
 			$comment = '';
 			if(can_write_wall($a,$a->profile['profile_uid'])) {
-				if((($x + 1) < count($r)) && ($r[$x+1]['parent'] != $rr['parent'])) {
+				if($rr['last-child']) {
 					$comment = replace_macros($template,array(
 						'$id' => $rr['item_id'],
 						'$parent' => $rr['parent'],

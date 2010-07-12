@@ -16,5 +16,18 @@
       document.getElementById(theID).style.display = "none" 
   }
 
-
+	function commentOpen(obj,id) {
+		if(obj.value == 'Comment') {
+			obj.value = '';
+			obj.className = "comment-edit-text-full";
+			openMenu("comment-edit-submit-wrapper-" + id);
+		}
+	}
+	function commentClose(obj,id) {
+		if(obj.value == '') {
+			obj.value = 'Comment';
+			obj.className="comment-edit-text-empty";
+			closeMenu("comment-edit-submit-wrapper-" + id);
+		}
+	}
 

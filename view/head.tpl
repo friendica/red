@@ -5,4 +5,5 @@
 <!--[if IE]>
 <script type="text/javascript" src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
+<script type="text/javascript" src="$baseurl/include/jquery.js" ></script>
 <script type="text/javascript" src="$baseurl/include/main.js" ></script>

@@ -442,11 +442,9 @@ input#dfrn-url {
 	border: none;
 }
 
-.comment-edit {
-	font-size: 0.8em;
-	cursor: pointer;
-	color: #3172BD;
+.comment-edit-wrapper {
 	margin-top: 15px;
+	margin-left: 100px;
 }
 
 
@@ -756,4 +754,16 @@ input#dfrn-url {
 
 #profile-tabs-end {
 	clear: both;
+}
+
+.comment-edit-text-empty {
+	color: gray;
+	height: 30px;
+	width: 175px;
+}
+
+.comment-edit-text-full {
+	color: black;
+	height: 150px;
+	width: 350px;
 }

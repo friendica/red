@@ -8,10 +8,11 @@
 <span class="wall-item-body" id="wall-item-body-$id" >$body</span>
 <div class="wall-item-ago"  id="wall-item-ago-$id">$ago</div>
 
+</div>
+<div class="wall-item-wrapper-end"></div>
 <div class="wall-item-comment-separator"></div>
 $comment
 </div>
-<div class="wall-item-wrapper-end"></div>
-</div>
+
 <div class="wall-item-$indentoutside-wrapper-end" ></div>
 
