@@ -833,6 +833,41 @@ input#dfrn-url {
 	clear: both;
 }
 
+#group-edit-name-label {
+	float: left;
+	width: 175px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+#group-edit-name {
+	float: left;
+	width: 225px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+#group-edit-name-wrapper {
+
+
+}
+
+
+#group_members_select_label {
+	display: block;
+	float: left;
+	width: 175px;
+}
+
 .group_members_select {
-	width: 200px;
+	float: left;
+	width: 230px;
+	overflow: auto;
+}
+
+#group_members_select_end {
+	clear: both;
+}	
+#group-edit-name-end {
+	clear: both;
 }

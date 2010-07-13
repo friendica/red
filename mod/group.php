@@ -1,6 +1,8 @@
 <?php
 
-
+function validate_members(&$item) {
+	$item = intval($item);
+}
 
 function group_init(&$a) {
 	require_once('include/group.php');
@@ -31,7 +33,42 @@ function group_post(&$a) {
 //		goaway($a->get_baseurl() . '/group');
 		return; // NOTREACHED
 	}
-
+	if(($a->argc == 2) && (intval($a->argv[1]))) {
+		$r = q("SELECT * FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			intval($a->argv[1]),
+			intval($_SESSION['uid'])
+		);
+		if(! count($r)) {
+			notice("Group not found." . EOL );
+			goaway($a->get_baseurl() . '/contacts');
+		}
+		$group = $r[0];
+		$groupname = notags(trim($_POST['groupname']));
+		if((strlen($groupname))  && ($groupname != $group['name'])) {
+			$r = q("UPDATE `group` SET `name` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
+				dbesc($groupname),
+				intval($_SESSION['uid']),
+				intval($group['id'])
+			);
+		}
+		$members = $_POST['group_members_select'];
+		array_walk($members,'validate_members');
+		$r = q("DELETE FROM `group_member` WHERE `gid` = %d AND `uid` = %d",
+			intval($a->argv[1]),
+			intval($_SESSION['uid'])
+		);
+		if(count($members)) {
+			foreach($members as $member) {
+				$r = q("INSERT INTO `group_member` ( `uid`, `gid`, `contact-id`)
+					VALUES ( %d, %d, %d )",
+					intval($_SESSION['uid']),
+					intval($group['id']),
+					intval($member)
+				);
+			}
+		}
+	}
+	
 }
 
 function group_content(&$a) {

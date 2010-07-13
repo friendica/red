@@ -7,19 +7,15 @@ profile photo to self contact page? - resolve profile photo inconsistency
 	use photo hash to notify of changes?
 
 
-no ACL block for visitors wall-wall !!
-
 contact editor
 	block photo
 
 profile "you name it" field
 
 
-groups
+group - delete, theme
 
-permissions
-
-pager - items and photos
+pager - photos
 
 photos/albums/ java uploader
 
