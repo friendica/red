@@ -13,6 +13,20 @@ function item_post(&$a) {
 
 	$uid = $_SESSION['uid'];
 	$parent = ((x($_POST,'parent')) ? intval($_POST['parent']) : 0);
+
+	$parent_item = null;
+
+	if($parent) {
+		$r = q("SELECT * FROM `item` WHERE `id` = %d LIMIT 1",
+			intval($parent)
+		);
+		if(! count($r)) {
+			notice("Unable to locate original post." . EOL);
+			goaway($a->get_baseurl() . "/profile/$profile_uid");
+		}
+		$parent_item = $r[0];
+	}
+
 	$profile_uid = ((x($_POST,'profile_uid')) ? intval($_POST['profile_uid']) : 0);
 
 	if(! can_write_wall($a,$profile_uid)) {
@@ -99,9 +113,24 @@ function item_post(&$a) {
 			dbesc($hash));
 		if(count($r)) {
 			$post_id = $r[0]['id'];
+
 			if($parent) {
+
+				// This item is the last leaf and gets the comment box, clear any ancestors
 				$r = q("UPDATE `item` SET `last-child` = 0 WHERE `parent` = %d ",
 					intval($parent)
+				);
+
+				// Inherit ACL's from the parent item.
+				// TODO merge with subsequent UPDATE operation and save a db write 
+
+				$r = q("UPDATE `item` SET `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s'
+					WHERE `id` = %d LIMIT 1",
+					intval($parent_item['allow_cid']),
+					intval($parent_item['allow_gid']),
+					intval($parent_item['deny_cid']),
+					intval($parent_item['deny_gid']),
+					intval($post_id)
 				);
 			}
 			else {

@@ -36,7 +36,7 @@ if($argc < 3)
 
 	$recipients = array();
 
-	// fetch requested item
+	// fetch requested item(s)
 
 	$r = q("SELECT `item`.*,  `contact`.*,`item`.`id` AS `item_id` FROM `item` LEFT JOIN `contact` ON `item`.`contact-id` = `contact`.`id` 
 		WHERE `item`.`id` = %d LIMIT 1",
