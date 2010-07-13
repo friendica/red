@@ -1,11 +1,11 @@
 <?php
 
 
-function group_select($selname,$selclass,$preselected = false) {
+function group_select($selname,$selclass,$preselected = false,$size = 4) {
 
 	$o = '';
 
-	$o .= "<select name=\"{$selname}[]\" class=\"$selclass\" multiple=\"multiple\" size=\"4\" />\r\n";
+	$o .= "<select name=\"{$selname}[]\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" />\r\n";
 
 	$r = q("SELECT * FROM `group` WHERE `uid` = %d ORDER BY `name` ASC",
 		$_SESSION['uid']
@@ -30,11 +30,11 @@ function group_select($selname,$selclass,$preselected = false) {
 
 
 
-function contact_select($selname,$selclass,$preselected = false) {
+function contact_select($selname,$selclass,$preselected = false,$size = 4) {
 
 	$o = '';
 
-	$o .= "<select name=\"{$selname}[]\" class=\"$selclass\" multiple=\"multiple\" size=\"4\" />\r\n";
+	$o .= "<select name=\"{$selname}[]\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" />\r\n";
 
 	$r = q("SELECT `id`, `name` FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 ORDER BY `name` ASC ",
 		$_SESSION['uid']

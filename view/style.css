@@ -832,3 +832,7 @@ input#dfrn-url {
 #acl-wrapper-end {
 	clear: both;
 }
+
+.group_members_select {
+	width: 200px;
+}
