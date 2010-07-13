@@ -5,7 +5,7 @@ function sanitise_acl(&$item) {
 }
 
 function item_post(&$a) {
-
+dbg(2);
 	if((! local_user()) && (! remote_user()))
 		return;
 
@@ -126,10 +126,10 @@ function item_post(&$a) {
 
 				$r = q("UPDATE `item` SET `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s'
 					WHERE `id` = %d LIMIT 1",
-					intval($parent_item['allow_cid']),
-					intval($parent_item['allow_gid']),
-					intval($parent_item['deny_cid']),
-					intval($parent_item['deny_gid']),
+					dbesc($parent_item['allow_cid']),
+					dbesc($parent_item['allow_gid']),
+					dbesc($parent_item['deny_cid']),
+					dbesc($parent_item['deny_gid']),
 					intval($post_id)
 				);
 			}
@@ -149,7 +149,7 @@ function item_post(&$a) {
 			array(),$foo));
 
 	}
-	goaway($a->get_baseurl() . "/profile/$profile_uid");
+//	goaway($a->get_baseurl() . "/profile/$profile_uid");
 
 
 
