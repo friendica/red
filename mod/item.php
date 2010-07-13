@@ -1,12 +1,7 @@
 <?php
 
-function sanitise_intacl(&$item) {
-	$item = '<' . intval(notags(trim($item))) . '>';
-}
-
-
 function sanitise_acl(&$item) {
-	$item = '<' . notags(trim($item)) . '>';
+	$item = '<' . intval(notags(trim($item))) . '>';
 }
 
 function item_post(&$a) {
@@ -35,7 +30,7 @@ function item_post(&$a) {
 	$str_contact_allow = '';
 	$contact_allow = $_POST['contact_allow'];
 	if(is_array($contact_allow)) {
-		array_walk($contact_allow,'sanitise_intacl');
+		array_walk($contact_allow,'sanitise_acl');
 		$str_contact_allow = implode('',$contact_allow);
 	}
 
@@ -49,7 +44,7 @@ function item_post(&$a) {
 	$str_contact_deny = '';
 	$contact_deny = $_POST['contact_deny'];
 	if(is_array($contact_deny)) {
-		array_walk($contact_deny,'sanitise_intacl');
+		array_walk($contact_deny,'sanitise_acl');
 		$str_contact_deny = implode('',$contact_deny);
 	}
 

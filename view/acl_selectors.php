@@ -13,12 +13,12 @@ function group_select($selname,$selclass,$preselected = false) {
 
 	if(count($r)) {
 		foreach($r as $rr) {
-			if((is_array($preselected)) && in_array($rr['name'], $preselected))
+			if((is_array($preselected)) && in_array($rr['id'], $preselected))
 				$selected = " selected=\"selected\" ";
 			else
 				$selected = '';
 
-			$o .= "<option value=\"{$rr['name']}\" $selected >{$rr['name']}</option>\r\n";
+			$o .= "<option value=\"{$rr['id']}\" $selected >{$rr['name']}</option>\r\n";
 		}
 	
 	}

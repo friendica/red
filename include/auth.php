@@ -71,23 +71,21 @@ else {
 	}
 }
 
-// Returns an array of group names this contact is a member of.
-// Since contact-id's are unique and each "belongs" to a given user uid,
-// this array will only contain group names related to the uid of this
+// Returns an array of group id's this contact is a member of.
+// This array will only contain group id's related to the uid of this
 // DFRN contact. They are *not* neccessarily unique across the entire site. 
 
 
 if(! function_exists('init_groups_visitor')) {
 function init_groups_visitor($contact_id) {
 	$groups = array();
-	$r = q("SELECT `group_member`.`gid`, `group`.`name` 
-		FROM `group_member` LEFT JOIN `group` ON `group_member`.`gid` = `group`.`id` 
-		WHERE `group_member`.`contact-id` = %d ",
+	$r = q("SELECT `gid` FROM `group_member` 
+		WHERE `contact-id` = %d ",
 		intval($contact_id)
 	);
 	if(count($r)) {
 		foreach($r as $rr)
-			$groups[] = $rr['name'];
+			$groups[] = $rr['gid'];
 	}
 	return $groups;
 }}

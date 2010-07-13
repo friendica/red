@@ -170,7 +170,7 @@ function profile_content(&$a) {
 		$gs = '<<>>'; // should be impossible to match
 		if(count($groups)) {
 			foreach($groups as $g)
-				$gs .= '|<' . dbesc($g) . '>';
+				$gs .= '|<' . intval($g) . '>';
 		} 
 		$sql_extra = sprintf(
 			" AND ( `allow_cid` = '' OR `allow_cid` REGEXP '<%d>' ) 
@@ -180,8 +180,8 @@ function profile_content(&$a) {
 
 			intval($_SESSION['visitor_id']),
 			intval($_SESSION['visitor_id']),
-			$gs,
-			$gs
+			dbesc($gs),
+			dbesc($gs)
 		);
 	}
 
