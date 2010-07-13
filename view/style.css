@@ -538,13 +538,12 @@ input#dfrn-url {
 }
 
 #directory-search-wrapper {
-	float: right;
+	margin-left: 350px;
 	margin-right: 20px;
 	margin-bottom: 50px;
 }
 
 #directory-search-end {
-	clear: both;
 }
 
 .pager {
