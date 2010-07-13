@@ -6,7 +6,7 @@ function validate_members(&$item) {
 
 function group_init(&$a) {
 	require_once('include/group.php');
-	$a->page['aside'] .= group_side();
+	$a->page['aside'] = group_side();
 
 }
 
@@ -30,7 +30,7 @@ function group_post(&$a) {
 		}
 		else
 			notice("Could not create group." . EOL );	
-//		goaway($a->get_baseurl() . '/group');
+		goaway($a->get_baseurl() . '/group');
 		return; // NOTREACHED
 	}
 	if(($a->argc == 2) && (intval($a->argv[1]))) {
@@ -50,6 +50,8 @@ function group_post(&$a) {
 				intval($_SESSION['uid']),
 				intval($group['id'])
 			);
+			if($r)
+				notice("Group name changed." . EOL );
 		}
 		$members = $_POST['group_members_select'];
 		array_walk($members,'validate_members');
@@ -57,6 +59,7 @@ function group_post(&$a) {
 			intval($a->argv[1]),
 			intval($_SESSION['uid'])
 		);
+		$result = true;
 		if(count($members)) {
 			foreach($members as $member) {
 				$r = q("INSERT INTO `group_member` ( `uid`, `gid`, `contact-id`)
@@ -65,8 +68,13 @@ function group_post(&$a) {
 					intval($group['id']),
 					intval($member)
 				);
+				if(! $r)
+					$result = false;
 			}
 		}
+		if($result)
+			notice("Membership list updated." . EOL);
+	$a->page['aside'] = group_side();
 	}
 	
 }

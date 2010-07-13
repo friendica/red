@@ -7,13 +7,13 @@ profile photo to self contact page? - resolve profile photo inconsistency
 	use photo hash to notify of changes?
 
 
-contact editor
-	block photo
+>>>>>>>>contact editor
+>>>>>>>>	block photo
 
-profile "you name it" field
+>>>>>>>>profile "you name it" field
 
 
-group - delete, theme
+group - delete (keep id in acl lists to prvent them from breaking security)
 
 pager - photos
 
@@ -21,13 +21,13 @@ photos/albums/ java uploader
 
 item delete
 
-item edit
+>>>>>>>>item edit
 
 dfrn_poll - import items
 
-local/remote indicator
+>>>>>>>>local/remote indicator
 
-side/text
+>>>>>>>>side/text
 
 
 notififier abstraction
@@ -48,9 +48,9 @@ email
 
 chat
 
-plugin api
+>>>>>>>>plugin api
 
-theme api
+>>>>>>>>theme api
 
 ajax
 
