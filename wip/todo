@@ -12,16 +12,12 @@ contact editor
 
 profile "you name it" field
 
-profile display restrict/check access
-
 
 groups
 
 permissions
 
 pager - items and photos
-
-comment fetch
 
 photos/albums/ java uploader
 

@@ -135,10 +135,14 @@ function profile_content(&$a) {
 		$tpl = file_get_contents('view/jot-header.tpl');
 	
 		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
+		require_once('view/acl_selectors.php');
 
 		$tpl = file_get_contents("view/jot.tpl");
+
 		$o .= replace_macros($tpl,array(
 			'$baseurl' => $a->get_baseurl(),
+			'$lockstate' => 'unlock',
+			'$acl' => populate_acl(),
 			'$profile_uid' => $a->profile['profile_uid']
 		));
 	}

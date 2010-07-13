@@ -12,7 +12,8 @@ What's on your mind?
 </div>
 <div id="profile-jot-submit-wrapper" >
 <input type="submit" id="profile-jot-submit" name="submit" value="Submit" />
-
+	<div id="profile-jot-perms" class="profile-jot-perms" ><img src="images/$lockstate_icon.gif" alt="Permission Settings" title="Permission Settings" onClick="openClose('profile-jot-acl-wrapper');" /><div id="profile-jot-acl-wrapper" style="display: none;" >$acl</div>
+	</div>
 </div>
 <div id="profile-jot-end"></div>
 </form>

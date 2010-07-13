@@ -451,7 +451,18 @@ input#dfrn-url {
 #profile-jot-submit-wrapper {
 	margin-top: 15px;
 }
+
+#profile-jot-submit {
+	float: left;
+}
+
+#profile-jot-perms {
+	float: left;
+	margin-left: 350px;
+}
+
 #profile-jot-end {
+	clear: both;
 	margin-bottom: 30px;
 }
 #about-jot-submit-wrapper {
@@ -767,3 +778,5 @@ input#dfrn-url {
 	height: 150px;
 	width: 350px;
 }
+
+
