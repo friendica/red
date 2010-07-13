@@ -461,6 +461,10 @@ input#dfrn-url {
 	margin-left: 350px;
 }
 
+#profile-jot-perms-end {
+	clear: both;
+}
+
 #profile-jot-end {
 	clear: both;
 	margin-bottom: 30px;
@@ -780,3 +784,50 @@ input#dfrn-url {
 }
 
 
+#acl-allow-group-label, 
+#acl-allow-contact-label,
+#acl-deny-group-label,
+#acl-deny-contact-label {
+	display: block;
+}
+
+#acl-permit-text,
+#acl-deny-text {
+	margin-top: 10px;
+}
+
+#acl-allow-group-label,
+#acl-allow-contact-label,
+#acl-deny-group-label,
+#acl-deny-contact-label {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+
+#group_allow_wrapper, 
+#group_deny_wrapper {
+	float: left;
+	width: 100px;
+	margin-right: 10px;
+}
+
+#contact_allow_wrapper,
+#contact_deny_wrapper {
+	float: left;
+	width: 150px;
+	margin-right: 10px;
+}
+
+#acl-allow-end,
+#acl-deny-end {
+	clear: both;
+}
+#acl-permit-outer-wrapper,
+#acl-deny-outer-wrapper {
+	float: left;
+}
+
+#acl-wrapper-end {
+	clear: both;
+}
