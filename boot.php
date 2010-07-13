@@ -192,7 +192,7 @@ if(! function_exists('escape_tags')) {
 function escape_tags($string) {
 	return(str_replace(
 		array('&', '"', "'", '<', '>'), 
-		array('&amp;', '&quot;', '&apos;', '&lt;', '&gt;'), $string));
+		array('&amp;', '&quot;', '&#39;', '&lt;', '&gt;'), $string));
 }}
 
 if(! function_exists('login')) {

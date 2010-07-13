@@ -774,12 +774,14 @@ input#dfrn-url {
 	color: gray;
 	height: 30px;
 	width: 175px;
+	overflow: auto;
 }
 
 .comment-edit-text-full {
 	color: black;
 	height: 150px;
 	width: 350px;
+	overflow: auto;
 }
 
 
