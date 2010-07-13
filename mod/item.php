@@ -1,5 +1,13 @@
 <?php
 
+function sanitise_intacl(&$item) {
+	$item = '<' . intval(notags(trim($item))) . '>';
+}
+
+
+function sanitise_acl(&$item) {
+	$item = '<' . notags(trim($item)) . '>';
+}
 
 function item_post(&$a) {
 
@@ -16,8 +24,38 @@ function item_post(&$a) {
 		notice("Permission denied." . EOL) ;
 		return;
 	}
+	
+	$str_group_allow = '';
+	$group_allow = $_POST['group_allow'];
+	if(is_array($group_allow)) {
+		array_walk($group_allow,'sanitise_acl');
+		$str_group_allow = implode('',$group_allow);
+	}
+
+	$str_contact_allow = '';
+	$contact_allow = $_POST['contact_allow'];
+	if(is_array($contact_allow)) {
+		array_walk($contact_allow,'sanitise_intacl');
+		$str_contact_allow = implode('',$contact_allow);
+	}
+
+	$str_group_deny = '';
+	$group_deny = $_POST['group_deny'];
+	if(is_array($group_deny)) {
+		array_walk($group_deny,'sanitise_acl');
+		$str_group_deny = implode('',$group_deny);
+	}
+
+	$str_contact_deny = '';
+	$contact_deny = $_POST['contact_deny'];
+	if(is_array($contact_deny)) {
+		array_walk($contact_deny,'sanitise_intacl');
+		$str_contact_deny = implode('',$contact_deny);
+	}
+
 
 	$body = escape_tags(trim($_POST['body']));
+
 	if(! strlen($body)) {
 		notice("Empty post discarded." . EOL );
 		goaway($a->get_baseurl() . "/profile/$profile_uid");
@@ -46,15 +84,21 @@ function item_post(&$a) {
 		} while($dups == true);
 
 
-		$r = q("INSERT INTO `item` (`uid`,`type`,`contact-id`,`created`,`edited`,`hash`,`body`)
-			VALUES( %d, '%s', %d, '%s', '%s', '%s', '%s' )",
+		$r = q("INSERT INTO `item` (`uid`,`type`,`contact-id`,`created`,`edited`,`hash`,`body`,
+			`allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
+			VALUES( %d, '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 			intval($profile_uid),
 			"jot",
 			intval($contact_id),
 			datetime_convert(),
 			datetime_convert(),
 			dbesc($hash),
-			dbesc(escape_tags(trim($_POST['body'])))
+			dbesc(escape_tags(trim($_POST['body']))),
+			dbesc($str_contact_allow),
+			dbesc($str_group_allow),
+			dbesc($str_contact_deny),
+			dbesc($str_group_deny)
+
 		);
 		$r = q("SELECT `id` FROM `item` WHERE `hash` = '%s' LIMIT 1",
 			dbesc($hash));

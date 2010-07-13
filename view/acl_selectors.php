@@ -7,16 +7,17 @@ function group_select($selname,$selclass,$preselected = false) {
 
 	$o .= "<select name=\"{$selname}[]\" class=\"$selclass\" multiple=\"multiple\" size=\"4\" />\r\n";
 
-	$r = q("SELECT * FROM `group` WHERE `uid` = %d",
+	$r = q("SELECT * FROM `group` WHERE `uid` = %d ORDER BY `name` ASC",
 		$_SESSION['uid']
 	);
 
 	if(count($r)) {
 		foreach($r as $rr) {
-			if((is_array($preselected)) && $in_array($rr['name'], $preselected))
+			if((is_array($preselected)) && in_array($rr['name'], $preselected))
 				$selected = " selected=\"selected\" ";
 			else
 				$selected = '';
+
 			$o .= "<option value=\"{$rr['name']}\" $selected >{$rr['name']}</option>\r\n";
 		}
 	
@@ -35,17 +36,17 @@ function contact_select($selname,$selclass,$preselected = false) {
 
 	$o .= "<select name=\"{$selname}[]\" class=\"$selclass\" multiple=\"multiple\" size=\"4\" />\r\n";
 
-	$r = q("SELECT `name` FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 ",
+	$r = q("SELECT `id`, `name` FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 ORDER BY `name` ASC ",
 		$_SESSION['uid']
 	);
 
 	if(count($r)) {
 		foreach($r as $rr) {
-			if((is_array($preselected)) && $in_array($rr['name'], $preselected))
+			if((is_array($preselected)) && in_array($rr['id'], $preselected))
 				$selected = " selected=\"selected\" ";
 			else
 				$selected = '';
-			$o .= "<option value=\"{$rr['name']}\" $selected >{$rr['name']}</option>\r\n";
+			$o .= "<option value=\"{$rr['id']}\" $selected >{$rr['name']}</option>\r\n";
 		}
 	
 	}

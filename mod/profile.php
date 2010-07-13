@@ -141,8 +141,9 @@ function profile_content(&$a) {
 
 		$o .= replace_macros($tpl,array(
 			'$baseurl' => $a->get_baseurl(),
+			'$visitor' => (($_SESSION['uid'] == $a->profile['profile_uid']) ? 'block' : 'none'),
 			'$lockstate' => 'unlock',
-			'$acl' => populate_acl(),
+			'$acl' => (($_SESSION['uid'] == $a->profile['profile_uid']) ? populate_acl() : ''),
 			'$profile_uid' => $a->profile['profile_uid']
 		));
 	}
@@ -165,7 +166,6 @@ function profile_content(&$a) {
 		$sql_extra = ''; 
 
 	// authenticated visitor - here lie dragons
-
 	elseif(remote_user()) {
 		$gs = '<<>>'; // should be impossible to match
 		if(count($groups)) {
@@ -178,8 +178,8 @@ function profile_content(&$a) {
 			AND ( `allow_gid` = '' OR `allow_gid` REGEXP '%s' )
 			AND ( `deny_gid` = '' OR NOT `deny_gid` REGEXP '%s') ",
 
-			intval($visitor_id),
-			intval($visitor_id),
+			intval($_SESSION['visitor_id']),
+			intval($_SESSION['visitor_id']),
 			$gs,
 			$gs
 		);

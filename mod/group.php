@@ -4,6 +4,7 @@
 
 function group_init(&$a) {
 	require_once('include/group.php');
+	$a->page['aside'] .= group_side();
 
 }
 
@@ -46,11 +47,33 @@ function group_content(&$a) {
 
 		));
 
-
-
-
 	}
 		
+dbg(2);
+	if(($a->argc == 2) && (intval($a->argv[1]))) {
+		require_once('view/acl_selectors.php');
+		$r = q("SELECT * FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			intval($a->argv[1]),
+			intval($_SESSION['uid'])
+		);
+		if(! count($r)) {
+			notice("Group not found." . EOL );
+			goaway($a->get_baseurl() . '/contacts');
+		}
+		$ret = group_get_members($r[0]['id']);
+		$preselected = array();
+		if(count($ret))	{
+			foreach($ret as $p)
+				$preselected[] = $p['id'];
+		}
+		$sel = contact_select('group_members_select','group_members_select',$preselected);
+	$o .= $sel;	
+	}
+
+
+
+
+
 	return $o;
 
 }

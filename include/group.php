@@ -2,7 +2,7 @@
 
 
 function group_add($uid,$name) {
-dbg(2);
+
 	$ret = false;
 	if(x($uid) && x($name)) {
 		$r = group_byname($uid,$name); // check for dups
@@ -102,6 +102,21 @@ function group_add_member($uid,$name,$member) {
 			intval($member)
 	);
 	return $r;
+}
+
+function group_get_members($gid) {
+	$ret = array();
+	if(intval($gid)) {
+		$r = q("SELECT `group_member`.`contact-id`, `contact`.* FROM `group_member` 
+			LEFT JOIN `contact` ON `contact`.`id` = `group_member`.`contact-id` 
+			WHERE `gid` = %d AND `group_member`.`uid` = %d",
+			intval($gid),
+			intval($_SESSION['uid'])
+		);
+		if(count($r))
+			$ret = $r;
+	}
+	return $ret;
 }
 
 
