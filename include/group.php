@@ -151,3 +151,16 @@ EOT;
 
 	return $o;
 }
+
+function expand_groups($a) {
+	if(! (is_array($a) && count($a)))
+		return array();
+	$groups = implode(',', $a);
+	$groups = dbesc($groups);
+	$r = q("SELECT `contact-id` FROM `group_member` WHERE `gid` IN ( $groups )");
+	$ret = array();
+	if(count($r))
+		foreach($r as $rr)
+			$ret[] = $rr['contact-id'];
+	return $ret;
+}

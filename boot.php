@@ -425,3 +425,15 @@ function paginate(&$a) {
 	}
 	return $o;
 }
+
+function expand_acl($s) {
+
+	if(strlen($s)) {
+		$a = explode('<',$s);
+		for($x = 0; $x < count($a); $x ++) {
+			$a[$x] = intval(str_replace(array('<','>'),array('',''),$a[$x]));
+		}
+		return $a;
+	}
+	return array();
+}		

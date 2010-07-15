@@ -5,7 +5,7 @@ function sanitise_acl(&$item) {
 }
 
 function item_post(&$a) {
-dbg(2);
+
 	if((! local_user()) && (! remote_user()))
 		return;
 
@@ -149,7 +149,7 @@ dbg(2);
 			array(),$foo));
 
 	}
-//	goaway($a->get_baseurl() . "/profile/$profile_uid");
+	goaway($a->get_baseurl() . "/profile/$profile_uid");
 
 
 

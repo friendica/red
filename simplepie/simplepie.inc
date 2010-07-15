@@ -2431,6 +2431,7 @@ class SimplePie
 			$name = null;
 			$uri = null;
 			$email = null;
+			$avatar = null;
 			if (isset($author['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data']))
 			{
 				$name = $this->sanitize($author['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data'], SIMPLEPIE_CONSTRUCT_TEXT);
@@ -2443,9 +2444,13 @@ class SimplePie
 			{
 				$email = $this->sanitize($author['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['email'][0]['data'], SIMPLEPIE_CONSTRUCT_TEXT);
 			}
-			if ($name !== null || $email !== null || $uri !== null)
+			if (isset($author['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]['data']))
 			{
-				$authors[] =& new $this->author_class($name, $uri, $email);
+				$avatar = $this->sanitize($$author['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]['data'], SIMPLEPIE_CONSTRUCT_IRI, $this->get_base($author['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]));
+			}
+			if ($name !== null || $email !== null || $uri !== null || $avatar !== null)
+			{
+				$authors[] =& new $this->author_class($name, $uri, $email, $avatar);
 			}
 		}
 		if ($author = $this->get_channel_tags(SIMPLEPIE_NAMESPACE_ATOM_03, 'author'))
@@ -3475,6 +3480,7 @@ class SimplePie_Item
 			$name = null;
 			$uri = null;
 			$email = null;
+			$avatar = null;
 			if (isset($author['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data']))
 			{
 				$name = $this->sanitize($author['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data'], SIMPLEPIE_CONSTRUCT_TEXT);
@@ -3487,9 +3493,14 @@ class SimplePie_Item
 			{
 				$email = $this->sanitize($author['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['email'][0]['data'], SIMPLEPIE_CONSTRUCT_TEXT);
 			}
-			if ($name !== null || $email !== null || $uri !== null)
+			if (isset($author['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]['data']))
 			{
-				$authors[] =& new $this->feed->author_class($name, $uri, $email);
+				$avatar = $this->sanitize($author['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]['data'], SIMPLEPIE_CONSTRUCT_IRI, $this->get_base($author['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]));
+			}
+			if ($name !== null || $email !== null || $uri !== null || $avatar !== null)
+			{
+				$authors[] =& new $this->feed->author_class($name, $uri, $email, $avatar);
+
 			}
 		}
 		if ($author = $this->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_03, 'author'))
@@ -5897,6 +5908,7 @@ class SimplePie_Source
 			$name = null;
 			$uri = null;
 			$email = null;
+			$avatar = null;
 			if (isset($author['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data']))
 			{
 				$name = $this->sanitize($author['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data'], SIMPLEPIE_CONSTRUCT_TEXT);
@@ -5909,9 +5921,13 @@ class SimplePie_Source
 			{
 				$email = $this->sanitize($author['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['email'][0]['data'], SIMPLEPIE_CONSTRUCT_TEXT);
 			}
-			if ($name !== null || $email !== null || $uri !== null)
 			{
-				$authors[] =& new $this->item->feed->author_class($name, $uri, $email);
+				$avatar = $this->sanitize($author['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]['data'], SIMPLEPIE_CONSTRUCT_IRI, $this->get_base($author['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]));
+			}
+			if ($name !== null || $email !== null || $uri !== null || $avatar !== null)
+			{
+				$authors[] =& new $this->item->feed->author_class($name, $uri, $email, $avatar);
+
 			}
 		}
 		if ($author = $this->get_source_tags(SIMPLEPIE_NAMESPACE_ATOM_03, 'author'))
@@ -6283,13 +6299,15 @@ class SimplePie_Author
 	var $name;
 	var $link;
 	var $email;
+	var $avatar;
 
 	// Constructor, used to input the data
-	function SimplePie_Author($name = null, $link = null, $email = null)
+	function SimplePie_Author($name = null, $link = null, $email = null, $avatar = null)
 	{
 		$this->name = $name;
 		$this->link = $link;
 		$this->email = $email;
+		$this->avatar = $avatar;
 	}
 
 	function __toString()
@@ -6333,6 +6351,20 @@ class SimplePie_Author
 			return null;
 		}
 	}
+
+	function get_avatar()
+	{
+		if ($this->avatar !== null)
+		{
+			return $this->avatar;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+
 }
 
 class SimplePie_Category

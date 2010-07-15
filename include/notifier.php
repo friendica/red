@@ -32,79 +32,161 @@ if($argc < 3)
 	}
 
 
-	$is_parent = false;
-
 	$recipients = array();
 
-	// fetch requested item(s)
+	// find ancestors
 
-	$r = q("SELECT `item`.*,  `contact`.*,`item`.`id` AS `item_id` FROM `item` LEFT JOIN `contact` ON `item`.`contact-id` = `contact`.`id` 
-		WHERE `item`.`id` = %d LIMIT 1",
+	$r = q("SELECT `parent`, `uid`, `edited` FROM `item` WHERE `id` = %d LIMIT 1",
 		intval($item_id)
 	);
 	if(! count($r))
 		killme();
 
-	$item = $r[0];
+	$parent = $r[0]['parent'];
+	$uid = $r[0]['uid'];
+	$updated = $r[0]['edited'];
 
-	$recipients[] = $item['contact-id'];
+	$items = q("SELECT * FROM `item` WHERE `parent` = %d ORDER BY `id` ASC",
+		intval($parent)
+	);
 
-	if($item['parent'] == $item['id']) {
-		$is_parent = true;
+	if(! count($items))
+		killme();
+
+	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
+		intval($uid)
+	);
+
+	if(count($r))
+		$owner = $r[0];
+	else
+		killme();
+
+
+	require_once('include/group.php');
+
+	$parent = $items[0];
+
+	if(strlen($parent['remote-id'])) {
+		$followup = true;
+		$conversant_str = dbesc($parent['contact-id']);
 	}
 	else {
-		$r = q("SELECT * FROM `item` WHERE `id` = %d LIMIT 1",
-			intval($item['parent'])
-		);
-		if(count($r))
-			$parent = $r[0];
-	}
+		$followup = false;
 
-	if(is_array($parent))
-		$recipients[] = $parent['contact-id'];
+		$allow_people = expand_acl($parent['allow_cid']);
+		$allow_groups = expand_groups(expand_acl($parent['allow_gid']));
+		$deny_people = expand_acl($parent['deny_cid']);
+		$deny_groups = expand_groups(expand_acl($parent['deny_gid']));
 
-	$r = q("SELECT `contact-id` FROM `item` WHERE `hash` = '%s' AND `id` != %d AND `id` != %d",
-		dbesc($item['hash']),
-		intval($item['id']),
-		intval($item['parent'])
-	);
-	if(count($r)) {
-		foreach($r as $rr) {
-			if($rr['contact-id'] != $item['contact-id'])
-				$recipients[] = $rr['contact-id'];
+		$conversants = array();
+
+		foreach($items as $item) {
+			$recipients[] = $item['contact-id'];
+			$conversants[] = $item['contact-id'];
 		}
+
+		$conversants = array_unique($conversants,SORT_NUMERIC);
+
+
+		$recipients = array_unique(array_merge($recipients,$allow_people,$allow_groups),SORT_NUMERIC);
+		$deny = array_unique(array_merge($deny_people,$deny_groups),SORT_NUMERIC);
+		$recipients = array_diff($recipients,$deny);
+	
+		$conversant_str = dbesc(implode(', ',$conversants));
 	}
 
-	$tpl = file_get_contents('view/atomic.tpl');
+	$r = q("SELECT * FROM `contact` WHERE `id` IN ( $conversant_str ) ");
 
-	// FIXME should dump the entire conversation
+	if( ! count($r))
+		killme();
 
-	$atom = replace_macros($tpl, array(
-		'$feed_id' => xmlify($baseurl),
-		'$feed_title' => xmlify('Wall Item'),
-		'$feed_updated' => xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00' ,'Y-m-d\Th:i:s\Z')) ,
-		'$name' => xmlify($item['name']),
-		'$profile_page' => xmlify($item['url']),
-		'$thumb' => xmlify($item['thumb']),
-		'$item_id' => xmlify($item['hash'] . '-' . $item['id']),
-		'$title' => xmlify(''),
-		'$link' => xmlify($baseurl . '/item/' . $item['id']),
-		'$updated' => xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00' ,'Y-m-d\Th:i:s\Z')),
-		'$summary' => xmlify(''),
-		'$content' => xmlify($item['body'])
+	$contacts = $r;
+
+
+	$feed_template = file_get_contents('view/atom_feed.tpl');
+	$tomb_template = file_get_contents('view/atom_tomb.tpl');
+	$item_template = file_get_contents('view/atom_item.tpl');
+	$cmnt_template = file_get_contents('view/atom_cmnt.tpl');
+
+	$atom = '';
+
+
+	$atom .= replace_macros($feed_template, array(
+			'$feed_id' => xmlify($baseurl),
+			'$feed_title' => xmlify($owner['name']),
+			'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', $updated . '+00:00' , 'Y-m-d\Th:i:s\Z')) ,
+			'$name' => xmlify($owner['name']),
+			'$profile_page' => xmlify($owner['url']),
+			'$thumb' => xmlify($owner['thumb'])
 	));
 
-print_r($atom);
-	// atomify
+	if($followup) {
+		$atom .= replace_macros($cmnt_template, array(
+			'$name' => xmlify($contact['name']),
+			'$profile_page' => xmlify($contact['url']),
+			'$thumb' => xmlify($contact['thumb']),
+			'$item_id' => xmlify("urn:X-dfrn:{$item['hash']}"),
+			'$title' => xmlify($item['title']),
+			'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\Th:i:s\Z')),
+			'$content' =>xmlify($item['body']),
+			'$parent_id' => xmlify("{$items[0]['remote-id']}")
+		));
+	}
+	else {
+		foreach($items as $item) {
+			if($item['deleted']) {
+				$atom .= replace_macros($tomb_template, array(
+					'$id' => xmlify("urn:X-dfrn:{$item['hash']}"),
+					'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\Th:i:s\Z'))
+				));
+			}
+			else {
+				foreach($contacts as $contact) {
+					if($item['contact-id'] == $contact['id']) {
+						if($item['parent'] == $item['id']) {
+							$atom .= replace_macros($item_template, array(
+								'$name' => xmlify($contact['name']),
+								'$profile_page' => xmlify($contact['url']),
+								'$thumb' => xmlify($contact['thumb']),
+								'$item_id' => xmlify("urn:X-dfrn:{$item['hash']}"),
+								'$title' => xmlify($item['title']),
+								'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\Th:i:s\Z')),
+								'$content' =>xmlify($item['body'])
+							));
+						}
+						else {
+							$atom .= replace_macros($cmnt_template, array(
+								'$name' => xmlify($contact['name']),
+								'$profile_page' => xmlify($contact['url']),
+								'$thumb' => xmlify($contact['thumb']),
+								'$item_id' => xmlify("urn:X-dfrn:{$item['hash']}"),
+								'$title' => xmlify($item['title']),
+								'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\Th:i:s\Z')),
+								'$content' =>xmlify($item['body']),
+								'$parent_id' => xmlify("urn:X-dfrn:{$items[0]['hash']}")
+							));
+						}
+					}
+				}
+			}
+		}
+	}
+	$atom .= "</feed>";
 
-	// expand list of recipients
+print_r($atom);
+
 
 dbg(3);
 
 
-	$recipients = array_unique($recipients);
+
 print_r($recipients);
-	$recip_str = implode(', ', $recipients);
+
+	if($followup)
+		$recip_str = $parent['contact-id'];
+	else
+		$recip_str = implode(', ', $recipients);
 
 	$r = q("SELECT * FROM `contact` WHERE `id` IN ( %s ) ",
 		dbesc($recip_str)
@@ -149,9 +231,9 @@ echo "pubkey:" . $rr['pubkey'] . "\r\n";
 		$postvars['data'] = $atom;
 
 print_r($postvars);
-		$xml = fetch_url($url,$postvars);
+		$xml = post_url($url,$postvars);
 
-				
+print_r($xml);				
 	}
 
 	killme();

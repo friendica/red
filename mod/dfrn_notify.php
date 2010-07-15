@@ -1,6 +1,6 @@
 <?php
 
-
+require_once('simplepie/simplepie.inc');
 
 
 
@@ -22,11 +22,21 @@ function dfrn_notify_post(&$a) {
 		dbesc($challenge)
 	);
 
+	$feed = new SimplePie();
+	$feed->set_raw_data($data);
+	$feed->init();
+
+	echo "Feed title:" . $feed->get_title();
+
+	foreach ($feed->get_items() as $item) {
+
+			echo $item->get_permalink();
+			echo $item->get_content();
+	
+	}
 
 
-
-
-
+	killme();
 
 }
 
