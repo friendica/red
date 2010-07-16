@@ -131,8 +131,8 @@ function dbesc_array_cb(&$item, $key) {
 
 
 if(! function_exists('dbesc_array')) {
-function dbesc_array(&$a) {
-	if(is_array($a) && count($a)) {
-		array_walk($a,'dbesc_array_cb');
+function dbesc_array(&$arr) {
+	if(is_array($arr) && count($arr)) {
+		array_walk($arr,'dbesc_array_cb');
 	}
 }}		

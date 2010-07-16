@@ -115,10 +115,10 @@ if($argc < 3)
 	$atom .= replace_macros($feed_template, array(
 			'$feed_id' => xmlify($baseurl),
 			'$feed_title' => xmlify($owner['name']),
-			'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', $updated . '+00:00' , 'Y-m-d\Th:i:s\Z')) ,
+			'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', $updated . '+00:00' , 'Y-m-d\TH:i:s\Z')) ,
 			'$name' => xmlify($owner['name']),
 			'$profile_page' => xmlify($owner['url']),
-			'$thumb' => xmlify($owner['thumb'])
+			'$photo' => xmlify($owner['photo'])
 	));
 
 	if($followup) {
@@ -126,19 +126,21 @@ if($argc < 3)
 			'$name' => xmlify($contact['name']),
 			'$profile_page' => xmlify($contact['url']),
 			'$thumb' => xmlify($contact['thumb']),
-			'$item_id' => xmlify("urn:X-dfrn:{$item['hash']}"),
+			'$item_id' => xmlify("urn:X-dfrn:$baseurl:{$owner['uid']}:{$item['hash']}"),
 			'$title' => xmlify($item['title']),
-			'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\Th:i:s\Z')),
+			'$published' => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
+			'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
 			'$content' =>xmlify($item['body']),
-			'$parent_id' => xmlify("{$items[0]['remote-id']}")
+			'$parent_id' => xmlify("{$items[0]['remote-id']}"),
+			'$comment_allow' => 0
 		));
 	}
 	else {
 		foreach($items as $item) {
 			if($item['deleted']) {
 				$atom .= replace_macros($tomb_template, array(
-					'$id' => xmlify("urn:X-dfrn:{$item['hash']}"),
-					'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\Th:i:s\Z'))
+					'$id' => xmlify("urn:X-dfrn:$baseurl:{$owner['uid']}:{$item['hash']}"),
+					'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z'))
 				));
 			}
 			else {
@@ -149,10 +151,12 @@ if($argc < 3)
 								'$name' => xmlify($contact['name']),
 								'$profile_page' => xmlify($contact['url']),
 								'$thumb' => xmlify($contact['thumb']),
-								'$item_id' => xmlify("urn:X-dfrn:{$item['hash']}"),
-								'$title' => xmlify($item['title']),
-								'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\Th:i:s\Z')),
-								'$content' =>xmlify($item['body'])
+								'$item_id' => xmlify("urn:X-dfrn:$baseurl:{$owner['uid']}:{$item['hash']}"),
+								'$title' => xmlify($contact['name']),
+								'$published' => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
+								'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
+								'$content' =>xmlify($item['body']),
+								'$comment_allow' => (($item['last-child'] && strlen($contact['dfrn-id'] && (! $contact['blocked']))) ? 1 : 0)
 							));
 						}
 						else {
@@ -160,11 +164,14 @@ if($argc < 3)
 								'$name' => xmlify($contact['name']),
 								'$profile_page' => xmlify($contact['url']),
 								'$thumb' => xmlify($contact['thumb']),
-								'$item_id' => xmlify("urn:X-dfrn:{$item['hash']}"),
+								'$item_id' => xmlify("urn:X-dfrn:$baseurl:{$owner['uid']}:{$item['hash']}"),
 								'$title' => xmlify($item['title']),
-								'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\Th:i:s\Z')),
+								'$published' => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
+
+								'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
 								'$content' =>xmlify($item['body']),
-								'$parent_id' => xmlify("urn:X-dfrn:{$items[0]['hash']}")
+								'$parent_id' => xmlify("urn:X-dfrn:$baseurl:{$owner['uid']}:{$items[0]['hash']}"),
+								'$comment_allow' => (($item['last-child']) ? 1 : 0)
 							));
 						}
 					}
@@ -172,7 +179,11 @@ if($argc < 3)
 			}
 		}
 	}
-	$atom .= "</feed>";
+	$atom .= "</feed>\r\n";
+
+	// create a separate feed with comments disabled and send to those who can't respond. 
+
+	$atom_nowrite = str_replace('<dfrn:comment-allow>1</dfrn:comment-allow>','<dfrn:comment-allow>0</dfrn:comment-allow>',$atom);
 
 print_r($atom);
 
@@ -228,7 +239,10 @@ echo "pubkey:" . $rr['pubkey'] . "\r\n";
 
 		openssl_public_decrypt($challenge,$postvars['challenge'],$rr['pubkey']);
 
-		$postvars['data'] = $atom;
+		if(strlen($rr['dfrn-id']) && (! $rr['blocked']))
+			$postvars['data'] = $atom;
+		else
+			$postvars['data'] = $atom_nowrite;
 
 print_r($postvars);
 		$xml = post_url($url,$postvars);
