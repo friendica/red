@@ -4,6 +4,11 @@
 			<uri>$profile_page</uri>
 			<dfrn:avatar>$thumb</dfrn:avatar>
 		</author>
+		<dfrn:owner>
+			<dfrn:name>$owner_name</dfrn:name>
+			<dfrn:uri>$owner_profile_page</dfrn:uri>
+			<dfrn:avatar>$owner_thumb</dfrn:avatar>
+		</dfrn:owner>
 
 		<id>$item_id</id>
 		<title>$title</title>

@@ -8,3 +8,7 @@ alter table `item` insert `remote-id` char( 255 ) character set utf-8 collate ut
 ALTER TABLE `item` ADD `remote-name` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `remote-id` ,
 ADD `remote-link` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `remote-name` ,
 ADD `remote-avatar` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `remote-link` ;
+
+ALTER TABLE `item` ADD `owner-name` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `contact-id` ,
+ADD `owner-link` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `owner-name` ,
+ADD `owner-avatar` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `owner-link` ;

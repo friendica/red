@@ -43,18 +43,21 @@ function profile_load(&$a,$uid,$profile = 0) {
 
 function profile_init(&$a) {
 
-	if($_SESSION['authenticated']) {
-
-		// choose which page to show (could be remote auth)
-
-	}
-
 	if($a->argc > 1)
 		$which = $a->argv[1];
 	else {
 		$_SESSION['sysmsg'] .= "No profile" . EOL ;
 		$a->error = 404;
 		return;
+	}
+
+	if(($remote_user) && ($a->argc > 2) && ($a->argv[2] == 'visit'))
+		$_SESSION['is_visitor'] = 1;
+	else {
+		unset($_SESSION['is_visitor']);
+		unset($_SESSION['visitor_id']);
+		if(! $_SESSION['uid'])
+			unset($_SESSION['authenticated']);
 	}
 
 	profile_load($a,$which);
@@ -79,9 +82,9 @@ function item_display(&$a, $item,$template,$comment) {
 
 	$o .= replace_macros($template,array(
 		'$id' => $item['item_id'],
-		'$profile_url' => $profile_url,
-		'$name' => $item['name'],
-		'$thumb' => $thumb,
+		'$profile_url' => ((strlen($item['remote-link'])) ? $item['remote-link'] : $profile_url),
+		'$name' => ((strlen($item['remote-name'])) ? $item['remote-name'] : $item['name']),
+		'$thumb' => ((strlen($item['remote-avatar'])) ? $item['remote-avatar'] : $thumb),
 		'$body' => bbcode($item['body']),
 		'$ago' => relative_date($item['created']),
 		'$indent' => (($item['parent'] != $item['item_id']) ? 'comment-' : ''),
@@ -196,7 +199,7 @@ function profile_content(&$a) {
 
 	if(count($r))
 		$a->set_pager_total($r[0]['total']);
-
+dbg(2);
 
 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 		`contact`.`name`, `contact`.`photo`, `contact`.`url`, 

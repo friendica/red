@@ -39,7 +39,7 @@ function dfrn_poll_init(&$a) {
 				}
 			}
 			$profile = ((strlen($r[0]['nickname'])) ? $r[0]['nickname'] : $r[0]['uid']);
-			goaway($a->get_baseurl() . "/profile/$profile");
+			goaway($a->get_baseurl() . "/profile/$profile/visit");
 		}
 		goaway($a->get_baseurl());
 	}
