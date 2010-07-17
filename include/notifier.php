@@ -170,7 +170,6 @@ if($argc < 3)
 								'$item_id' => xmlify("urn:X-dfrn:$baseurl:{$owner['uid']}:{$item['hash']}"),
 								'$title' => xmlify($item['title']),
 								'$published' => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
-
 								'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
 								'$content' =>xmlify($item['body']),
 								'$parent_id' => xmlify("urn:X-dfrn:$baseurl:{$owner['uid']}:{$items[0]['hash']}"),
@@ -184,18 +183,10 @@ if($argc < 3)
 	}
 	$atom .= "</feed>\r\n";
 
-	// create a separate feed with comments disabled and send to those who can't respond. 
+	// create a clone of this feed but with comments disabled to send to those who can't respond. 
 
 	$atom_nowrite = str_replace('<dfrn:comment-allow>1</dfrn:comment-allow>','<dfrn:comment-allow>0</dfrn:comment-allow>',$atom);
 
-print_r($atom);
-
-
-dbg(3);
-
-
-
-print_r($recipients);
 
 	if($followup)
 		$recip_str = $parent['contact-id'];
@@ -217,17 +208,13 @@ print_r($recipients);
 		if(! strlen($rr['dfrn-id']))
 			continue;
 		$url = $rr['notify'] . '?dfrn_id=' . $rr['dfrn-id'];
-print_r($url);
-		$xml = fetch_url($url);
-echo $xml;
 
-print_r($xml);
+		$xml = fetch_url($url);
+
 		if(! $xml)
 			continue;
 
 		$res = simplexml_load_string($xml);
-print_r($res);
-var_dump($res);
 
 		if((intval($res->status) != 0) || (! strlen($res->challenge)) || ($res->dfrn_id != $rr['dfrn-id']))
 			continue;
@@ -236,9 +223,6 @@ var_dump($res);
 
 		$postvars['dfrn_id'] = $rr['dfrn-id'];
 		$challenge = hex2bin($res->challenge);
-echo "dfrn-id:" . $res->dfrn_id . "\r\n";
-echo "challenge:" . $res->challenge . "\r\n";
-echo "pubkey:" . $rr['pubkey'] . "\r\n";
 
 		openssl_public_decrypt($challenge,$postvars['challenge'],$rr['pubkey']);
 
@@ -247,10 +231,9 @@ echo "pubkey:" . $rr['pubkey'] . "\r\n";
 		else
 			$postvars['data'] = $atom_nowrite;
 
-print_r($postvars);
+
 		$xml = post_url($url,$postvars);
 
-print_r($xml);				
 	}
 
 	killme();

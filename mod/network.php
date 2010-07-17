@@ -13,13 +13,13 @@ function network_content(&$a) {
 
 	require_once("include/bbcode.php");
 
-
 	$contact_id = $a->cid;
 
 
 	$tpl = file_get_contents('view/jot-header.tpl');
 	
 	$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
+
 	require_once('view/acl_selectors.php');
 
 	$tpl = file_get_contents("view/jot.tpl");
@@ -34,12 +34,6 @@ function network_content(&$a) {
 	));
 
 
-	// TODO 
-	// Alter registration and settings 
-	// and profile to update contact table when names and  photos change.  
-	// work on item_display and can_write_wall
-
-
 	$sql_extra = ''; 
 
 
@@ -49,12 +43,10 @@ function network_content(&$a) {
 		AND `contact`.`blocked` = 0 
 		$sql_extra ",
 		intval($_SESSION['uid'])
-
 	);
 
 	if(count($r))
 		$a->set_pager_total($r[0]['total']);
-dbg(2);
 
 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 		`contact`.`name`, `contact`.`photo`, `contact`.`url`, 
@@ -68,12 +60,10 @@ dbg(2);
 		intval($_SESSION['uid']),
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
-
 	);
 
 
 	$cmnt_tpl = file_get_contents('view/comment_item.tpl');
-
 
 	$tpl = file_get_contents('view/wall_item.tpl');
 	$wallwall = file_get_contents('view/wallwall_item.tpl');
@@ -85,8 +75,17 @@ dbg(2);
 			$template = $tpl;
 			$commentww = '';
 
+			$profile_url = $item['url'];
+			$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
+
+
+			// Top-level wall post not written by the wall owner (wall-to-wall)
+			// First figure out who owns it. 
+
 			if(($item['parent'] == $item['item_id']) && (! $item['self'])) {
+				
 				if($item['type'] == 'wall') {
+					// I do. Put me on the left of the wall-to-wall notice.
 					$owner_url = $a->contact['url'];
 					$owner_photo = $a->contact['thumb'];
 					$owner_name = $a->contact['name'];
@@ -94,11 +93,16 @@ dbg(2);
 					$commentww = 'ww';	
 				}
 				if($item['type'] == 'remote' && ($item['owner-link'] != $item['remote-link'])) {
+					// Could be anybody. 
 					$owner_url = $item['owner-link'];
 					$owner_photo = $item['owner-avatar'];
 					$owner_name = $item['owner-name'];
 					$template = $wallwall;
-					$commentww = 'ww';	
+					$commentww = 'ww';
+					// If it is our contact, use a friendly redirect link
+					if($item['owner-link'] == $item['url'])
+						$owner_url = $redirect_url;
+
 				}
 			}
 
@@ -112,18 +116,29 @@ dbg(2);
 			}
 
 	
-			$profile_url = $item['url'];
-
 			if(($item['contact-uid'] == $_SESSION['uid']) && (strlen($item['dfrn-id'])) && (! $item['self'] ))
-				$profile_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
+				$profile_url = $redirect_url;
 
 			$photo = $item['photo'];
 			$thumb = $item['thumb'];
 
+			// Post was remotely authored.
+
 			$profile_name = ((strlen($item['remote-name'])) ? $item['remote-name'] : $item['name']);
-			$profile_link = ((strlen($item['remote-link'])) ? $item['remote-link'] : $profile_url);
 			$profile_avatar = ((strlen($item['remote-avatar'])) ? $item['remote-avatar'] : $thumb);
 
+			$profile_link = $profile_url;
+
+			// Can we use our special contact URL for this author? 
+
+			if(strlen($item['remote-link'])) {
+				if($item['remote-link'] == $item['url'])
+					$profile_link = $redirect_url;
+				else
+					$profile_link = $item['remote-link'];
+			}
+
+			// Build the HTML
 
 			$o .= replace_macros($template,array(
 				'$id' => $item['item_id'],
@@ -138,13 +153,8 @@ dbg(2);
 				'$owner_name' => $owner_name,
 				'$comment' => $comment
 			));
-
 		}
 	}
-
 	$o .= paginate($a);
-
 	return $o;
-
-
 }

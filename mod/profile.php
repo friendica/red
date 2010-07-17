@@ -27,7 +27,7 @@ function profile_load(&$a,$uid,$profile = 0) {
 	);
 
 	if(($r === false) || (! count($r))) {
-		$_SESSION['sysmsg'] .= "No profile" . EOL ;
+		notice("No profile" . EOL );
 		$a->error = 404;
 		return;
 	}
@@ -46,7 +46,7 @@ function profile_init(&$a) {
 	if($a->argc > 1)
 		$which = $a->argv[1];
 	else {
-		$_SESSION['sysmsg'] .= "No profile" . EOL ;
+		notice("No profile" . EOL );
 		$a->error = 404;
 		return;
 	}
@@ -75,7 +75,6 @@ function profile_content(&$a) {
 	require_once("include/bbcode.php");
 	require_once('include/security.php');
 
-	$a->page['htmlhead'] .= '<script type="text/javascript" src="include/jquery.js" ></script>';
 	$groups = array();
 
 	$tab = 'posts';
@@ -95,19 +94,14 @@ function profile_content(&$a) {
 		$groups = init_groups_visitor($contact_id);
 	}
 	if(local_user()) {
-		$r = q("SELECT `id` FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
-			$_SESSION['uid']
-		);
-		if(count($r))
-			$contact_id = $r[0]['id'];
+		$contact_id = $_SESSION['cid'];
 	}
 
 	if($tab == 'profile') {
-
 		require_once('view/profile_advanced.php');
-
 		return $o;
 	}
+
 	if(can_write_wall($a,$a->profile['profile_uid'])) {
 		$tpl = file_get_contents('view/jot-header.tpl');
 	
@@ -127,14 +121,9 @@ function profile_content(&$a) {
 	}
 
 
-	// TODO 
-	// Alter registration and settings 
-	// and profile to update contact table when names and  photos change.  
-	// work on item_display and can_write_wall
+	// TODO alter registration and settings and profile to update contact table when names and  photos change.  
 
-	// Add comments. 
-
-	// default - anonymous user
+	// default permissions - anonymous user
 
 	$sql_extra = " AND `allow_cid` = '' AND `allow_gid` = '' AND `deny_cid` = '' AND `deny_gid` = '' ";
 
@@ -166,7 +155,7 @@ function profile_content(&$a) {
 	$r = q("SELECT COUNT(*) AS `total`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-		AND `contact`.`blocked` = 0 
+		AND `item`.`type` != 'remote' AND `contact`.`blocked` = 0 
 		$sql_extra ",
 		intval($a->profile['uid'])
 
@@ -174,7 +163,7 @@ function profile_content(&$a) {
 
 	if(count($r))
 		$a->set_pager_total($r[0]['total']);
-dbg(2);
+
 
 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 		`contact`.`name`, `contact`.`photo`, `contact`.`url`, 
@@ -195,40 +184,22 @@ dbg(2);
 	$cmnt_tpl = file_get_contents('view/comment_item.tpl');
 
 	$tpl = file_get_contents('view/wall_item.tpl');
-	$wallwall = file_get_contents('view/wallwall_item.tpl');
 
 
 	if(count($r)) {
 		foreach($r as $item) {
 			$comment = '';
 			$template = $tpl;
-			$commentww = '';
-			if(($item['parent'] == $item['item_id']) && (! $item['self'])) {
-				if($item['type'] == 'wall') {
-					$owner_url = $a->contact['url'];
-					$owner_photo = $a->contact['thumb'];
-					$owner_name = $a->contact['name'];
-					$template = $wallwall;
-					$commentww = 'ww';	
-				}
-				if($item['type'] == 'remote' && ($item['owner-link'] != $item['remote-link'])) {
-					$owner_url = $item['owner-link'];
-					$owner_photo = $item['owner-avatar'];
-					$owner_name = $item['owner-name'];
-					$template = $wallwall;
-					$commentww = 'ww';	
-				}
-			}
-
-
-
+			
+			$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
+			
 			if(can_write_wall($a,$a->profile['profile_uid'])) {
 				if($item['last-child']) {
 					$comment = replace_macros($cmnt_tpl,array(
 						'$id' => $item['item_id'],
 						'$parent' => $item['parent'],
 						'$profile_uid' =>  $a->profile['profile_uid'],
-						'$ww' => $commentww
+						'$ww' => ''
 					));
 				}
 			}
@@ -236,47 +207,40 @@ dbg(2);
 
 			$profile_url = $item['url'];
 
+			// This is my profile but I'm not the author of this post/comment. If it's somebody that's a fan or mutual friend,
+			// I can go directly to their profile as an authenticated guest.
+
 			if(local_user() && ($item['contact-uid'] == $_SESSION['uid']) && (strlen($item['dfrn-id'])) && (! $item['self'] ))
-				$profile_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
+				$profile_url = $redirect_url;
+
+			// FIXME tryng to solve the mishmash of profile photos. 
 
 		//	$photo = (($item['self']) ? $a->profile['photo'] : $item['photo']);
 		//	$thumb = (($item['self']) ? $a->profile['thumb'] : $item['thumb']);
 	
+
+			// We received this post via a remote feed. It's either a wall-to-wall or a remote comment. The author is
+			// known to us and is reflected in the contact-id for this item. We can use the contact url or redirect rather than 
+			// use the link in the feed. This is different than on the network page where we may not know the author.
+ 
 			$profile_name = ((strlen($item['remote-name'])) ? $item['remote-name'] : $item['name']);
-			$profile_link = ((strlen($item['remote-link'])) ? $item['remote-link'] : $profile_url);
 			$profile_avatar = ((strlen($item['remote-avatar'])) ? $item['remote-avatar'] : $item['thumb']);
-
-
+			$profile_link = $profile_url;
 
 			$o .= replace_macros($template,array(
-			'$id' => $item['item_id'],
-			'$profile_url' => $profile_link,
-			'$name' => $profile_name,
-			'$thumb' => $profile_avatar,
-			'$body' => bbcode($item['body']),
-			'$ago' => relative_date($item['created']),
-			'$indent' => (($item['parent'] != $item['item_id']) ? 'comment-' : ''),
-			'$owner_url' => $owner_url,
-			'$owner_photo' => $owner_photo,
-			'$owner_name' => $owner_name,
-			'$comment' => $comment
-		));
-
-
-
-
-
-
-
-
-
-
+				'$id' => $item['item_id'],
+				'$profile_url' => $profile_link,
+				'$name' => $profile_name,
+				'$thumb' => $profile_avatar,
+				'$body' => bbcode($item['body']),
+				'$ago' => relative_date($item['created']),
+				'$indent' => (($item['parent'] != $item['item_id']) ? 'comment-' : ''),
+				'$comment' => $comment
+			));
 		}
 	}
 
 	$o .= paginate($a);
 
 	return $o;
-
-
 }

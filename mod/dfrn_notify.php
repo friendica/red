@@ -45,7 +45,7 @@ function get_atom_elements($item) {
 
 }
 
-function post_remote($arr) {
+function post_remote($a,$arr) {
 
 	$arr['hash'] = random_string();
 	$arr['type'] = 'remote';
@@ -55,11 +55,10 @@ function post_remote($arr) {
 	$arr['owner-name'] = notags(trim($arr['owner-name']));
 	$arr['owner-link'] = notags(trim($arr['owner-link']));
 	$arr['owner-avatar'] = notags(trim($arr['owner-avatar']));
-// must pass $a
-//	if(! strlen($arr['remote-avatar']))
-//		$arr['remote-avatar'] = $a->get_baseurl() . '/images/default-profile-sm.jpg';
-//	if(! strlen($arr['owner-avatar']))
-//		$arr['owner-avatar'] = $a->get_baseurl() . '/images/default-profile-sm.jpg';
+	if(! strlen($arr['remote-avatar']))
+		$arr['remote-avatar'] = $a->get_baseurl() . '/images/default-profile-sm.jpg';
+	if(! strlen($arr['owner-avatar']))
+		$arr['owner-avatar'] = $a->get_baseurl() . '/images/default-profile-sm.jpg';
 	$arr['created'] = datetime_convert('UTC','UTC',$arr['created'],'Y-m-d H:i:s');
 	$arr['edited'] = datetime_convert('UTC','UTC',$arr['edited'],'Y-m-d H:i:s');
 	$arr['title'] = notags(trim($arr['title']));
@@ -68,9 +67,17 @@ function post_remote($arr) {
 	$arr['visible'] = 1;
 	$arr['deleted'] = 0;
 
-	$parent = $arr['parent_urn'];
+	$local_parent = false;
 
-	unset($arr['parent_urn']);
+	if(isset($arr['parent_hash'])) {
+		$local_parent = true;
+		$parent = $arr['parent_hash'];
+		unset($arr['parent_hash']);
+	}
+	else {
+		$parent = $arr['parent_urn'];
+		unset($arr['parent_urn']);
+	}
 
 	$parent_id = 0;
 
@@ -82,11 +89,18 @@ function post_remote($arr) {
 			. implode("', '", array_values($arr)) 
 			. "')" );
 
-
-	$r = q("SELECT `id` FROM `item` WHERE `remote-id` = '%s' AND `uid` = %d LIMIT 1",
-		dbesc($parent),
-		intval($arr['uid'])
-	);
+	if($local_parent) {
+		$r = q("SELECT `id` FROM `item` WHERE `hash` = '%s' AND `uid` = %d LIMIT 1",
+			dbesc($parent),
+			intval($arr['uid'])
+		);
+	}
+	else {
+		$r = q("SELECT `id` FROM `item` WHERE `remote-id` = '%s' AND `uid` = %d LIMIT 1",
+			dbesc($parent),
+			intval($arr['uid'])
+		);
+	}
 	if(count($r))
 		$parent_id = $r[0]['id'];
 	
@@ -103,10 +117,11 @@ function post_remote($arr) {
 		intval($current_post)
 	);
 
+	return $current_post;
 }
 
 function dfrn_notify_post(&$a) {
-dbg(3);
+
 	$dfrn_id = notags(trim($_POST['dfrn_id']));
 	$challenge = notags(trim($_POST['challenge']));
 	$data = $_POST['data'];
@@ -160,8 +175,21 @@ dbg(3);
 
 
 		if($is_reply) {
-			if($x == ($total_items - 1)) {
+			if($feed->get_item_quantity() == 1) {
 				// remote reply to our post. Import and then notify everybody else.
+				$datarray = get_atom_elements($item);
+				$urn = explode(':',$parent_urn);
+				$datarray['parent_hash'] = $urn[4];
+				$datarray['uid'] = $importer['uid'];
+				$datarray['contact-id'] = $importer['id'];
+				$r = post_remote($a,$datarray);
+
+				$url = bin2hex($a->get_baseurl());
+
+				proc_close(proc_open("php include/notifier.php $url $notify_type $r > notify.log &", array(),$foo));
+
+				return;
+
 			}
 			else {
 				// regular comment that is part of this total conversation. Have we seen it? If not, import it.
@@ -186,7 +214,7 @@ dbg(3);
 				$datarray['parent_urn'] = $parent_urn;
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $importer['id'];
-				$r = post_remote($datarray);
+				$r = post_remote($a,$datarray);
 				continue;
 			}
 		}
@@ -214,7 +242,7 @@ dbg(3);
 			$datarray['parent_urn'] = $item_id;
 			$datarray['uid'] = $importer['uid'];
 			$datarray['contact-id'] = $importer['id'];
-			$r = post_remote($datarray);
+			$r = post_remote($a,$datarray);
 			continue;
 
 		}
