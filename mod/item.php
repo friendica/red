@@ -22,7 +22,7 @@ function item_post(&$a) {
 		);
 		if(! count($r)) {
 			notice("Unable to locate original post." . EOL);
-			goaway($a->get_baseurl() . "/profile/$profile_uid");
+			goaway($a->get_baseurl() . "/" . $_POST['return'] );
 		}
 		$parent_item = $r[0];
 	}
@@ -67,23 +67,32 @@ function item_post(&$a) {
 
 	if(! strlen($body)) {
 		notice("Empty post discarded." . EOL );
-		goaway($a->get_baseurl() . "/profile/$profile_uid");
+		goaway($a->get_baseurl() . "/" . $_POST['return'] );
+
 	}
 
+	// get contact info for poster
 	if((x($_SESSION,'visitor_id')) && (intval($_SESSION['visitor_id'])))
 		$contact_id = $_SESSION['visitor_id'];
 	else {
 		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
 			intval($_SESSION['uid']));
-		if(count($r)) {
-			$contact_record = $r[0];
+		if(count($r))
 			$contact_id = $r[0]['id'];
-		}
-	}	
+	}
+
+	// get contact info for owner
+	
+	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
+		intval($profile_uid)
+	);
+	if(count($r))
+		$contact_record = $r[0];
+
 
 	$notify_type = (($parent) ? 'comment-new' : 'wall-new' );
 
-	if($_POST['type'] == 'jot') {
+	if(($_POST['type'] == 'wall') || ($_POST['type'] == 'wall-comment')) {
 
 		do {
 			$dups = false;
@@ -99,7 +108,7 @@ function item_post(&$a) {
 			`allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
 			VALUES( %d, '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 			intval($profile_uid),
-			"jot",
+			dbesc($_POST['type']),
 			intval($contact_id),
 			dbesc($contact_record['name']),
 			dbesc($contact_record['url']),
@@ -154,12 +163,6 @@ function item_post(&$a) {
 			array(),$foo));
 
 	}
-	goaway($a->get_baseurl() . "/profile/$profile_uid");
-
-
-
-
-
-
-
+	goaway($a->get_baseurl() . "/" . $_POST['return'] );
+	return; // NOTREACHED
 }

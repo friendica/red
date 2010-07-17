@@ -32,13 +32,13 @@ function get_atom_elements($item) {
 	if($rawedited)
 		$res['edited'] = $rawcreated[0]['data'];
 
-	$rawowner = $item->get_item_tags('http://purl.org/macgirvin/dfrn/1.0", 'owner');
+	$rawowner = $item->get_item_tags('http://purl.org/macgirvin/dfrn/1.0', 'owner');
 	if($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['name'][0]['data'])
-		$res['owner-name'] = rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['name'][0]['data'];
+		$res['owner-name'] = $rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['name'][0]['data'];
 	if($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['uri'][0]['data'])
-		$res['owner-link'] = rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['uri'][0]['data'];
+		$res['owner-link'] = $rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['uri'][0]['data'];
 	if($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]['data'])
-		$res['owner-avatar'] = rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]['data'];
+		$res['owner-avatar'] = $rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]['data'];
 
 
 	return $res;
@@ -55,10 +55,11 @@ function post_remote($arr) {
 	$arr['owner-name'] = notags(trim($arr['owner-name']));
 	$arr['owner-link'] = notags(trim($arr['owner-link']));
 	$arr['owner-avatar'] = notags(trim($arr['owner-avatar']));
-	if(! strlen($arr['remote-avatar']))
-		$arr['remote-avatar'] = $a->get_baseurl() . '/images/default-profile-sm.jpg';
-	if(! strlen($arr['owner-avatar']))
-		$arr['owner-avatar'] = $a->get_baseurl() . '/images/default-profile-sm.jpg';
+// must pass $a
+//	if(! strlen($arr['remote-avatar']))
+//		$arr['remote-avatar'] = $a->get_baseurl() . '/images/default-profile-sm.jpg';
+//	if(! strlen($arr['owner-avatar']))
+//		$arr['owner-avatar'] = $a->get_baseurl() . '/images/default-profile-sm.jpg';
 	$arr['created'] = datetime_convert('UTC','UTC',$arr['created'],'Y-m-d H:i:s');
 	$arr['edited'] = datetime_convert('UTC','UTC',$arr['edited'],'Y-m-d H:i:s');
 	$arr['title'] = notags(trim($arr['title']));

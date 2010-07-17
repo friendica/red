@@ -25,6 +25,7 @@ function network_content(&$a) {
 	$tpl = file_get_contents("view/jot.tpl");
 
 	$o .= replace_macros($tpl,array(
+		'$return_path' => $a->cmd,
 		'$baseurl' => $a->get_baseurl(),
 		'$visitor' => 'block',
 		'$lockstate' => 'unlock',
@@ -37,8 +38,6 @@ function network_content(&$a) {
 	// Alter registration and settings 
 	// and profile to update contact table when names and  photos change.  
 	// work on item_display and can_write_wall
-
-	// Add comments. 
 
 
 	$sql_extra = ''; 
@@ -80,19 +79,38 @@ dbg(2);
 	$wallwall = file_get_contents('view/wallwall_item.tpl');
 
 	if(count($r)) {
-		foreach($r as $rr) {
-			$comment = '';
+		foreach($r as $item) {
 
-			if($rr['last-child']) {
+			$comment = '';
+			$template = $tpl;
+			$commentww = '';
+
+			if(($item['parent'] == $item['item_id']) && (! $item['self'])) {
+				if($item['type'] == 'wall') {
+					$owner_url = $a->contact['url'];
+					$owner_photo = $a->contact['thumb'];
+					$owner_name = $a->contact['name'];
+					$template = $wallwall;
+					$commentww = 'ww';	
+				}
+				if($item['type'] == 'remote' && ($item['owner-link'] != $item['remote-link'])) {
+					$owner_url = $item['owner-link'];
+					$owner_photo = $item['owner-avatar'];
+					$owner_name = $item['owner-name'];
+					$template = $wallwall;
+					$commentww = 'ww';	
+				}
+			}
+
+			if($item['last-child']) {
 				$comment = replace_macros($cmnt_tpl,array(
-					'$id' => $rr['item_id'],
-					'$parent' => $rr['parent'],
-					'$profile_uid' =>  $_SESSION['uid']
+					'$id' => $item['item_id'],
+					'$parent' => $item['parent'],
+					'$profile_uid' =>  $_SESSION['uid'],
+					'$ww' => $commentww
 				));
 			}
 
-			$item = $rr;
-			$template = $tpl;
 	
 			$profile_url = $item['url'];
 
@@ -101,17 +119,11 @@ dbg(2);
 
 			$photo = $item['photo'];
 			$thumb = $item['thumb'];
-	
+
 			$profile_name = ((strlen($item['remote-name'])) ? $item['remote-name'] : $item['name']);
 			$profile_link = ((strlen($item['remote-link'])) ? $item['remote-link'] : $profile_url);
 			$profile_avatar = ((strlen($item['remote-avatar'])) ? $item['remote-avatar'] : $thumb);
 
-			if(($item['parent'] == $item['item_id']) && (! $item['self'])) {
-				$template = $wallwall;			// FIXME also if remote owner
-				$owner_url = $a->contact['url'];
-				$owner_photo = $a->contact['thumb'];
-				$owner_name = $a->contact['name'];
-			}
 
 			$o .= replace_macros($template,array(
 				'$id' => $item['item_id'],

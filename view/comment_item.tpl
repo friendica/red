@@ -1,8 +1,8 @@
 
 
-<div class="comment-edit-wrapper" id="comment-edit-wrapper-$id" style="display: block;">
+<div class="comment-$wwedit-wrapper" id="comment-edit-wrapper-$id" style="display: block;">
 	<form class="comment-edit-form" id="comment-edit-form-$id" action="item" method="post" >
-		<input type="hidden" name="type" value="jot" />
+		<input type="hidden" name="type" value="wall-comment" />
 		<input type="hidden" name="profile_uid" value="$profile_uid" />
 		<input type="hidden" name="parent" value="$parent" />
 

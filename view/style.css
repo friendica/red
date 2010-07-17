@@ -435,6 +435,11 @@ input#dfrn-url {
 	float: left;
 }
 
+.wall-item-ago {
+	color: #888888;
+	font-size: 0.8em;
+}
+
 .wall-item-wrapper-end {
 	clear: both;
 }
@@ -450,6 +455,11 @@ input#dfrn-url {
 .comment-edit-wrapper {
 	margin-top: 15px;
 	margin-left: 100px;
+}
+
+.comment-wwedit-wrapper {
+	margin-top: 15px;
+	margin-left: 250px;
 }
 
 
