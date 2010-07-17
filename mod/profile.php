@@ -79,12 +79,21 @@ function item_display(&$a, $item,$template,$comment) {
 
 	$photo = (($item['self']) ? $a->profile['photo'] : $item['photo']);
 	$thumb = (($item['self']) ? $a->profile['thumb'] : $item['thumb']);
+	
+	$profile_name = ((strlen($item['remote-name'])) ? $item['remote-name'] : $item['name']);
+	$profile_link = ((strlen($item['remote-link'])) ? $item['remote-link'] : $profile_url);
+	$profile_avatar = ((strlen($item['remote-avatar'])) ? $item['remote-avatar'] : $thumb);
+
+//	if(! $item['owner-link']) {
+//		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1".
+
+
 
 	$o .= replace_macros($template,array(
 		'$id' => $item['item_id'],
-		'$profile_url' => ((strlen($item['remote-link'])) ? $item['remote-link'] : $profile_url),
-		'$name' => ((strlen($item['remote-name'])) ? $item['remote-name'] : $item['name']),
-		'$thumb' => ((strlen($item['remote-avatar'])) ? $item['remote-avatar'] : $thumb),
+		'$profile_url' => $profile_link,
+		'$name' => $profile_name,
+		'$thumb' => $profile_avatar,
 		'$body' => bbcode($item['body']),
 		'$ago' => relative_date($item['created']),
 		'$indent' => (($item['parent'] != $item['item_id']) ? 'comment-' : ''),

@@ -22,6 +22,7 @@ class App {
 	public  $profile;
 	public  $user;
 	public  $cid;
+	public  $contact;
 	public  $content;
 	public  $error = false;
 	public  $cmd;

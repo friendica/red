@@ -425,6 +425,11 @@ input#dfrn-url {
 	width: 100px;
 	float: left;
 }
+.wall-item-arrowphoto-wrapper {
+	margin-top: 40px;
+	margin-right: 20px;
+	float: left;
+}
 .wall-item-wrapper {
 	margin-top: 30px;
 	float: left;

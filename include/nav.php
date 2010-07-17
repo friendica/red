@@ -23,6 +23,8 @@
 		$a->page['nav'] .= "<a id=\"nav-contacts-link\" class=\"nav-link\" href=\"contacts\">Contacts</a>\r\n";
 
 		$a->page['nav'] .= "<a id=\"nav-home-link\" class=\"nav-link\" href=\"profile/{$_SESSION['uid']}\">Home</a>\r\n";
+
+		$a->page['nav'] .= "<a id=\"nav-network-link\" class=\"nav-link\" href=\"network\">Network</a>\r\n";
 		
 	}
 

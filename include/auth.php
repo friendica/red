@@ -26,6 +26,7 @@ if((x($_SESSION,'authenticated')) && (! ($_POST['auth-params'] == 'login'))) {
 		$r = q("SELECT * FROM `contact` WHERE `uid` = %s AND `self` = 1 LIMIT 1",
 			intval($_SESSION['uid']));
 		if(count($r)) {
+			$a->contact = $r[0];
 			$a->cid = $r[0]['id'];
 			$_SESSION['cid'] = $a->cid;
 		}

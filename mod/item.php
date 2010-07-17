@@ -73,10 +73,12 @@ function item_post(&$a) {
 	if((x($_SESSION,'visitor_id')) && (intval($_SESSION['visitor_id'])))
 		$contact_id = $_SESSION['visitor_id'];
 	else {
-		$r = q("SELECT `id` FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
+		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
 			intval($_SESSION['uid']));
-		if(count($r))
+		if(count($r)) {
+			$contact_record = $r[0];
 			$contact_id = $r[0]['id'];
+		}
 	}	
 
 	$notify_type = (($parent) ? 'comment-new' : 'wall-new' );
@@ -93,12 +95,15 @@ function item_post(&$a) {
 		} while($dups == true);
 
 
-		$r = q("INSERT INTO `item` (`uid`,`type`,`contact-id`,`created`,`edited`,`hash`,`body`,
+		$r = q("INSERT INTO `item` (`uid`,`type`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, `created`,`edited`,`hash`,`body`,
 			`allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
-			VALUES( %d, '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+			VALUES( %d, '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 			intval($profile_uid),
 			"jot",
 			intval($contact_id),
+			dbesc($contact_record['name']),
+			dbesc($contact_record['url']),
+			dbesc($contact_record['thumb']),
 			datetime_convert(),
 			datetime_convert(),
 			dbesc($hash),
