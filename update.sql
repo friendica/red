@@ -14,3 +14,8 @@ ADD `owner-link` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL
 ADD `owner-avatar` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `owner-link` ;
 
 ALTER TABLE `user` ADD `pwdreset` CHAR( 255 ) NOT NULL AFTER `blocked` ;
+
+ ALTER TABLE `challenge` ADD `cmd` CHAR( 255 ) NOT NULL AFTER `expire` ,
+ADD `url` CHAR( 255 ) NOT NULL AFTER `cmd` ,
+ADD `last_update` CHAR( 255 ) NOT NULL AFTER `url` ;
+

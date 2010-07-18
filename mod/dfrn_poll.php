@@ -55,4 +55,112 @@ function dfrn_poll_init(&$a) {
 		return; // NOTREACHED
 	}
 
+
+	if($dfrn_id != '*') {
+		// initial communication from external contact
+		$hash = random_string();
+
+		$status = 0;
+
+		$r = q("DELETE FROM `challenge` WHERE `expire` < " . intval(time()));
+
+		$r = q("INSERT INTO `challenge` ( `challenge`, `dfrn-id`, `expire` , `type`, `last_update` )
+			VALUES( '%s', '%s', '%s', '%s', '%s' ) ",
+			dbesc($hash),
+			dbesc(notags(trim($_GET['dfrn_id']))),
+			intval(time() + 60 ),
+			dbesc($type),
+			dbesc($last_update)
+		);
+
+		$r = q("SELECT * FROM `contact` WHERE `issued-id` = '%s' AND `blocked` = 0 LIMIT 1",
+			dbesc($_GET['dfrn_id']));
+		if((! count($r)) || (! strlen($r[0]['prvkey'])))
+			$status = 1;
+
+		$challenge = '';
+
+		openssl_private_encrypt($hash,$challenge,$r[0]['prvkey']);
+		$challenge = bin2hex($challenge);
+		echo '<?xml version="1.0" encoding="UTF-8"?><dfrn_poll><status>' .$status . '</status><dfrn_id>' . $_GET['dfrn_id'] . '</dfrn_id>'
+			. '<challenge>' . $challenge . '</challenge></dfrn_poll>' . "\r\n" ;
+		session_write_close();
+		exit;		
+	}
+}
+
+
+
+function dfrn_poll_post(&$a) {
+
+	$dfrn_id = notags(trim($_POST['dfrn_id']));
+	$challenge = notags(trim($_POST['challenge']));
+	$url = $_POST['url'];
+	$r = q("SELECT * FROM `challenge` WHERE `dfrn-id` = '%s' AND `challenge` = '%s' LIMIT 1",
+		dbesc($dfrn_id),
+		dbesc($challenge)
+	);
+	if(! count($r))
+		xml_status(3);
+
+	$type = $r[0]['type'];
+	$last_update = $r[0]['last_update'];
+
+	$r = q("DELETE FROM `challenge` WHERE `dfrn-id` = '%s' AND `challenge` = '%s' LIMIT 1",
+		dbesc($dfrn_id),
+		dbesc($challenge)
+	);
+
+
+	$r = q("SELECT * FROM `contact` WHERE `issued-id` = '%s' LIMIT 1",
+		dbesc($dfrn_id)
+	);
+	if(! count($r))
+		xml_status(3);
+
+	$owner_uid = $r[0]['uid'];
+	$contact_id = $r[0]['id']; 
+
+
+	if($type == 'reputation' && strlen($url)) {
+		$r = q("SELECT * FROM `contact` WHERE `url` = '%s' AND `uid` = %d LIMIT 1",
+			dbesc($url),
+			intval($owner_uid)
+		);
+		$reputation = 0;
+		$text = '';
+
+		if(count($r)) {
+			$reputation = $r[0]['rating'];
+			$text = $r[0]['reason'];
+
+			if($r[0]['id'] == $contact_id) {	// inquiring about own reputation not allowed
+				$reputation = 0;
+				$text = '';
+			}
+		}
+
+		echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+		<reputation>
+			<url>$url</url>
+			<rating>$reputation</rating>
+			<description>$text</description>
+		</reputation>
+		";
+		killme();
+		return; // NOTREACHED
+	}
+
+
+
+}
+
+
+
+
+function dfrn_poll_content(&$a) {
+
+
+
+
 }
