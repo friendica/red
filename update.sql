@@ -13,4 +13,4 @@ ALTER TABLE `item` ADD `owner-name` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_
 ADD `owner-link` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `owner-name` ,
 ADD `owner-avatar` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `owner-link` ;
 
-ALTER TABLE `item` ADD `remote-parent` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `parent` ;
+ALTER TABLE `user` ADD `pwdreset` CHAR( 255 ) NOT NULL AFTER `blocked` ;

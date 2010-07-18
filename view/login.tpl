@@ -14,7 +14,7 @@
 <div id="login-extra-links">
 	<div id="login-extra-filler">&nbsp;</div>
 	$register_html
-        <a href="lost-password" name="Lost your password?" id="lost-password-link" >Password Reset</a>
+        <a href="lostpass" title="Lost your password?" id="lost-password-link" >Password Reset</a>
 </div>
 <div id="login-extra-end"></div>
 <div id="login-submit-wrapper" >
