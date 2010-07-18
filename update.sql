@@ -12,3 +12,5 @@ ADD `remote-avatar` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT N
 ALTER TABLE `item` ADD `owner-name` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `contact-id` ,
 ADD `owner-link` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `owner-name` ,
 ADD `owner-avatar` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `owner-link` ;
+
+ALTER TABLE `item` ADD `remote-parent` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `parent` ;

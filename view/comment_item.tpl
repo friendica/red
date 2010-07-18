@@ -5,6 +5,7 @@
 		<input type="hidden" name="type" value="wall-comment" />
 		<input type="hidden" name="profile_uid" value="$profile_uid" />
 		<input type="hidden" name="parent" value="$parent" />
+		<input type="hidden" name="return" value="$return_path" />
 
 		<textarea id="comment-edit-text-$id" class="comment-edit-text-empty" name="body" onFocus="commentOpen(this,$id);" onBlur="commentClose(this,$id);" >Comment</textarea>
 

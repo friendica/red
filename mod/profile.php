@@ -196,6 +196,7 @@ function profile_content(&$a) {
 			if(can_write_wall($a,$a->profile['profile_uid'])) {
 				if($item['last-child']) {
 					$comment = replace_macros($cmnt_tpl,array(
+						'$return_path' => $a->cmd,
 						'$id' => $item['item_id'],
 						'$parent' => $item['parent'],
 						'$profile_uid' =>  $a->profile['profile_uid'],

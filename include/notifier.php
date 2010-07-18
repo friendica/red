@@ -1,5 +1,6 @@
 <?php
 
+print_r($argv);
 require_once("boot.php");
 
 $a = new App;
@@ -11,10 +12,7 @@ $db = new dba($db_host, $db_user, $db_pass, $db_data, $install);
 
 require_once("session.php");
 require_once("datetime.php");
-
-// FIXME - generalise for other content, probably create a notify queue in 
-// the db with type and recipient list
-
+dbg(3);
 if($argc < 3)
 	exit;
 
@@ -122,18 +120,22 @@ if($argc < 3)
 	));
 
 	if($followup) {
-		$atom .= replace_macros($cmnt_template, array(
-			'$name' => xmlify($contact['name']),
-			'$profile_page' => xmlify($contact['url']),
-			'$thumb' => xmlify($contact['thumb']),
-			'$item_id' => xmlify("urn:X-dfrn:$baseurl:{$owner['uid']}:{$item['hash']}"),
-			'$title' => xmlify($item['title']),
-			'$published' => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
-			'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
-			'$content' =>xmlify($item['body']),
-			'$parent_id' => xmlify("{$items[0]['remote-id']}"),
-			'$comment_allow' => 0
-		));
+		foreach($items as $item) {
+			if($item['id'] == $item_id) {
+				$atom .= replace_macros($cmnt_template, array(
+					'$name' => xmlify($owner['name']),
+					'$profile_page' => xmlify($owner['url']),
+					'$thumb' => xmlify($owner['thumb']),
+					'$item_id' => xmlify("urn:X-dfrn:$baseurl:{$owner['uid']}:{$item['hash']}"),
+					'$title' => xmlify($item['title']),
+					'$published' => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
+					'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
+					'$content' =>xmlify($item['body']),
+					'$parent_id' => xmlify("{$items[0]['remote-id']}"),
+					'$comment_allow' => 0
+				));
+			}
+		}
 	}
 	else {
 		foreach($items as $item) {
@@ -154,7 +156,7 @@ if($argc < 3)
 								'$owner_name' => xmlify($item['owner-name']),
 								'$owner_profile_page' => xmlify($item['owner-link']),
 								'$owner_thumb' => xmlify($item['owner-avatar']),
-								'$item_id' => xmlify("urn:X-dfrn:$baseurl:{$owner['uid']}:{$item['hash']}"),
+								'$item_id' => xmlify(((strlen($item['remote-id'])) ? $item['remote-id'] : "urn:X-dfrn:$baseurl:{$owner['uid']}:{$item['hash']}")),
 								'$title' => xmlify($contact['name']),
 								'$published' => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
 								'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
@@ -167,7 +169,7 @@ if($argc < 3)
 								'$name' => xmlify($contact['name']),
 								'$profile_page' => xmlify($contact['url']),
 								'$thumb' => xmlify($contact['thumb']),
-								'$item_id' => xmlify("urn:X-dfrn:$baseurl:{$owner['uid']}:{$item['hash']}"),
+								'$item_id' => xmlify(((strlen($item['remote-id'])) ? $item['remote-id'] : "urn:X-dfrn:$baseurl:{$owner['uid']}:{$item['hash']}")),
 								'$title' => xmlify($item['title']),
 								'$published' => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
 								'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
@@ -193,6 +195,7 @@ if($argc < 3)
 	else
 		$recip_str = implode(', ', $recipients);
 
+
 	$r = q("SELECT * FROM `contact` WHERE `id` IN ( %s ) ",
 		dbesc($recip_str)
 	);
@@ -202,6 +205,8 @@ if($argc < 3)
 	// delivery loop
 
 	foreach($r as $rr) {
+
+echo "In delivery loop:";
 		if($rr['self'])
 			continue;
 
@@ -230,9 +235,11 @@ if($argc < 3)
 			$postvars['data'] = $atom;
 		else
 			$postvars['data'] = $atom_nowrite;
-
+echo "URL:" . $url;
+echo "POSTVARS:" . print_r($postvars);
 
 		$xml = post_url($url,$postvars);
+echo "XML response:" . $xml;
 
 	}
 

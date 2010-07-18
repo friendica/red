@@ -72,8 +72,10 @@ function item_post(&$a) {
 	}
 
 	// get contact info for poster
-	if((x($_SESSION,'visitor_id')) && (intval($_SESSION['visitor_id'])))
+
+	if((x($_SESSION,'visitor_id')) && (intval($_SESSION['visitor_id']))) {
 		$contact_id = $_SESSION['visitor_id'];
+	}
 	else {
 		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
 			intval($_SESSION['uid']));
@@ -104,15 +106,16 @@ function item_post(&$a) {
 		} while($dups == true);
 
 
-		$r = q("INSERT INTO `item` (`uid`,`type`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, `created`,`edited`,`hash`,`body`,
+		$r = q("INSERT INTO `item` (`uid`,`type`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, `remote-id`, `created`,`edited`,`hash`,`body`,
 			`allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
-			VALUES( %d, '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+			VALUES( %d, '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 			intval($profile_uid),
 			dbesc($_POST['type']),
 			intval($contact_id),
 			dbesc($contact_record['name']),
 			dbesc($contact_record['url']),
 			dbesc($contact_record['thumb']),
+			dbesc("urn:X-dfrn:" . $a->get_baseurl() . ':' . intval($profile_uid) . ':' . $hash),
 			datetime_convert(),
 			datetime_convert(),
 			dbesc($hash),
@@ -159,7 +162,7 @@ function item_post(&$a) {
 
 		$url = bin2hex($a->get_baseurl());
 
-		proc_close(proc_open("php include/notifier.php $url $notify_type $post_id > notify.log &",
+		proc_close(proc_open("php include/notifier.php \"$url\" \"$notify_type\" \"$post_id\" > notify.log &",
 			array(),$foo));
 
 	}

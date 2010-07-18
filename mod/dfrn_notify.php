@@ -8,12 +8,12 @@ function get_atom_elements($item) {
 	$res = array();
 
 	$author = $item->get_author();
-	$res['remote-name'] = $author->get_name();
-	$res['remote-link'] = $author->get_link();
-	$res['remote-avatar'] = $author->get_avatar();
-	$res['remote-id'] = $item->get_id();
-	$res['title'] = $item->get_title();
-	$res['body'] = $item->get_content();
+	$res['remote-name'] = unxmlify($author->get_name());
+	$res['remote-link'] = unxmlify($author->get_link());
+	$res['remote-avatar'] = unxmlify($author->get_avatar());
+	$res['remote-id'] = unxmlify($item->get_id());
+	$res['title'] = unxmlify($item->get_title());
+	$res['body'] = unxmlify($item->get_content());
 
 	if(strlen($res['body']) > 100000)
 		$res['body'] = substr($res['body'],0,10000) . "\r\n[Extremely large post truncated.]\r\n"  ;
@@ -26,19 +26,19 @@ function get_atom_elements($item) {
 
 	$rawcreated = $item->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'published');
 	if($rawcreated)
-		$res['created'] = $rawcreated[0]['data'];
+		$res['created'] = unxmlify($rawcreated[0]['data']);
 
 	$rawedited = $item->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'updated');
 	if($rawedited)
-		$res['edited'] = $rawcreated[0]['data'];
+		$res['edited'] = unxmlify($rawcreated[0]['data']);
 
 	$rawowner = $item->get_item_tags('http://purl.org/macgirvin/dfrn/1.0', 'owner');
 	if($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['name'][0]['data'])
-		$res['owner-name'] = $rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['name'][0]['data'];
+		$res['owner-name'] = unxmlify($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['name'][0]['data']);
 	if($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['uri'][0]['data'])
-		$res['owner-link'] = $rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['uri'][0]['data'];
+		$res['owner-link'] = unxmlify($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['uri'][0]['data']);
 	if($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]['data'])
-		$res['owner-avatar'] = $rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]['data'];
+		$res['owner-avatar'] = unxmlify($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]['data']);
 
 
 	return $res;
@@ -48,7 +48,8 @@ function get_atom_elements($item) {
 function post_remote($a,$arr) {
 
 	$arr['hash'] = random_string();
-	$arr['type'] = 'remote';
+	if(! x($arr,'type'))
+		$arr['type'] = 'remote';
 	$arr['remote-name'] = notags(trim($arr['remote-name']));
 	$arr['remote-link'] = notags(trim($arr['remote-link']));
 	$arr['remote-avatar'] = notags(trim($arr['remote-avatar']));
@@ -82,7 +83,7 @@ function post_remote($a,$arr) {
 	$parent_id = 0;
 
 	dbesc_array($arr);
-
+dbg(3);
 	$r = q("INSERT INTO `item` (`" 
 			. implode("`, `", array_keys($arr)) 
 			. "`) VALUES ('" 
@@ -121,7 +122,7 @@ function post_remote($a,$arr) {
 }
 
 function dfrn_notify_post(&$a) {
-
+dbg(3);
 	$dfrn_id = notags(trim($_POST['dfrn_id']));
 	$challenge = notags(trim($_POST['challenge']));
 	$data = $_POST['data'];
@@ -179,15 +180,32 @@ function dfrn_notify_post(&$a) {
 				// remote reply to our post. Import and then notify everybody else.
 				$datarray = get_atom_elements($item);
 				$urn = explode(':',$parent_urn);
-				$datarray['parent_hash'] = $urn[4];
+				$datarray['type'] = 'remote-comment';
+				$datarray['parent_hash'] = $urn[5];
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $importer['id'];
-				$r = post_remote($a,$datarray);
+				$posted_id = post_remote($a,$datarray);
+
+				$r = q("SELECT `parent` FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+					intval($posted_id),
+					intval($importer['uid'])
+				);
+				if(count($r)) {
+					$r1 = q("UPDATE `item` SET `last-child` = 0 WHERE `uid` = %d AND `parent` = %d",
+						intval($importer['uid']),
+						intval($r[0]['parent'])
+					);
+				}
+				$r2 = q("UPDATE `item` SET `last-child` = 1 WHERE `uid` = %d AND `id` = %d LIMIT 1",
+						intval($importer['uid']),
+						intval($posted_id)
+				);
 
 				$url = bin2hex($a->get_baseurl());
 
-				proc_close(proc_open("php include/notifier.php $url $notify_type $r > notify.log &", array(),$foo));
+				proc_close(proc_open("php include/notifier.php $url comment-import $posted_id > remote-notify.log &", array(),$foo));
 
+				xml_status(0);
 				return;
 
 			}
@@ -196,16 +214,18 @@ function dfrn_notify_post(&$a) {
 
 				$item_id = $item->get_id();
 
-				$r = q("SELECT `uid`, `last-child` FROM `item` WHERE `remote-id` = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT `uid`, `last-child`, `edited` FROM `item` WHERE `remote-id` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['uid'])
 				);
+				// FIXME update content if 'updated' changes
 				if(count($r)) {
 					$allow = $item->get_item_tags('http://purl.org/macgirvin/dfrn/1.0','comment-allow');
 					if($allow && $allow[0]['data'] != $r[0]['last-child']) {
 						$r = q("UPDATE `item` SET `last-child` = %d WHERE `remote-id` = '%s' AND `uid` = %d LIMIT 1",
 							intval($allow[0]['data']),
-							dbesc($item_id)
+							dbesc($item_id),
+							intval($importer['uid'])
 						);
 					}
 					continue;
@@ -222,7 +242,7 @@ function dfrn_notify_post(&$a) {
 			// Head post of a conversation. Have we seen it? If not, import it.
 
 			$item_id = $item->get_id();
-			$r = q("SELECT `uid` FROM `item` WHERE `remote-id` = '%s' AND `uid` = %d LIMIT 1",
+			$r = q("SELECT `uid`, `last-child`, `edited` FROM `item` WHERE `remote-id` = '%s' AND `uid` = %d LIMIT 1",
 				dbesc($item_id),
 				intval($importer['uid'])
 			);
@@ -231,7 +251,8 @@ function dfrn_notify_post(&$a) {
 				if($allow && $allow[0]['data'] != $r[0]['last-child']) {
 					$r = q("UPDATE `item` SET `last-child` = %d WHERE `remote-id` = '%s' AND `uid` = %d LIMIT 1",
 						intval($allow[0]['data']),
-						dbesc($item_id)
+						dbesc($item_id),
+						intval($importer['uid'])
 					);
 				}
 				continue;
@@ -249,7 +270,7 @@ function dfrn_notify_post(&$a) {
 	
 	}
 
-
+	xml_status(0);
 	killme();
 
 }

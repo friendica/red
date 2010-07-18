@@ -370,6 +370,11 @@ function xmlify($str) {
 	return($buffer);
 }}
 
+function unxmlify($s) {
+	$ret = str_replace('&amp;','&', $s);
+	$ret = str_replace(array('&lt;','&gt;','&quot;','&apos;'),array('<','>','"',"'"),$ret);
+	return $ret;	
+}
 
 function hex2bin($s) {
 	return(pack("H*",$s));

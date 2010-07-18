@@ -108,6 +108,7 @@ function network_content(&$a) {
 
 			if($item['last-child']) {
 				$comment = replace_macros($cmnt_tpl,array(
+					'$return_path' => $a->cmd,
 					'$id' => $item['item_id'],
 					'$parent' => $item['parent'],
 					'$profile_uid' =>  $_SESSION['uid'],
