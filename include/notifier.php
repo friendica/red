@@ -65,7 +65,7 @@ if($argc < 3)
 
 	$parent = $items[0];
 
-	if(strlen($parent['remote-id'])) {
+	if((strlen($parent['remote-id'])) && ($parent['type'] == 'remote')) {
 		$followup = true;
 		$conversant_str = dbesc($parent['contact-id']);
 	}
