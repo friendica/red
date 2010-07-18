@@ -1,5 +1,6 @@
 <?php
 
+require_once('include/items.php');
 
 function dfrn_poll_init(&$a) {
 
@@ -15,6 +16,12 @@ function dfrn_poll_init(&$a) {
 	if(! x($dfrn_id))
 		return;
 
+
+	if(($dfrn_id == '*') && ($a->argc > 1) && (intval($a->argv[1]))) {
+		$o = get_feed_for($a,'*', $a->argv[1],$last_update);
+		echo $o;
+		killme();
+	}
 
 	if((x($type)) && ($type == 'profile')) {
 
@@ -101,7 +108,7 @@ function dfrn_poll_post(&$a) {
 		dbesc($challenge)
 	);
 	if(! count($r))
-		xml_status(3);
+		killme();
 
 	$type = $r[0]['type'];
 	$last_update = $r[0]['last_update'];
@@ -116,7 +123,7 @@ function dfrn_poll_post(&$a) {
 		dbesc($dfrn_id)
 	);
 	if(! count($r))
-		xml_status(3);
+		killme();
 
 	$owner_uid = $r[0]['uid'];
 	$contact_id = $r[0]['id']; 
@@ -150,17 +157,15 @@ function dfrn_poll_post(&$a) {
 		killme();
 		return; // NOTREACHED
 	}
+	else {
 
+		$o = get_feed_for($a,$dfrn_id, $a->argv[1], $last_update);
+		echo $o;
+		killme();
 
-
+	}
 }
 
 
 
 
-function dfrn_poll_content(&$a) {
-
-
-
-
-}

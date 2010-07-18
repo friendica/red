@@ -19,3 +19,4 @@ ALTER TABLE `user` ADD `pwdreset` CHAR( 255 ) NOT NULL AFTER `blocked` ;
 ADD `url` CHAR( 255 ) NOT NULL AFTER `cmd` ,
 ADD `last_update` CHAR( 255 ) NOT NULL AFTER `url` ;
 
+ALTER TABLE `contact` ADD `last-update` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `ret-pubkey` ;
