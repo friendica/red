@@ -30,6 +30,7 @@ class App {
 	public  $argc;
 	public  $module;
 	public  $pager;
+
 	private $scheme;
 	private $hostname;
 	private $path;
@@ -83,6 +84,13 @@ class App {
 		$this->baseurl = $url;
 	}
 
+	function get_hostname() {
+		return $this->hostname;
+	}
+
+	function set_hostname($h) {
+		$this->hostname = $h;
+	}
 
 	function set_path($p) {
 		$this->path = ltrim(trim($p),'/');
@@ -306,7 +314,7 @@ function goaway($s) {
 
 if(! function_exists('xml_status')) {
 function xml_status($st) {
-	header( "Content-type: text/xml");
+	header( "Content-type: text/xml" );
 	echo '<?xml version="1.0" encoding="UTF-8"?>'."\r\n";
 	echo "<result><status>$st</status></result>\r\n";
 	killme();

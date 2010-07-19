@@ -12,11 +12,12 @@ $db = new dba($db_host, $db_user, $db_pass, $db_data, $install);
 
 require_once("session.php");
 require_once("datetime.php");
-dbg(3);
+
 if($argc < 3)
 	exit;
 
-	$baseurl = trim(hex2bin($argv[1]));
+	$baseurl = $argv[1]);
+	$a->set_baseurl($argv[1]);
 
 	$cmd = $argv[2];
 
@@ -65,7 +66,8 @@ if($argc < 3)
 
 	$parent = $items[0];
 
-	if((strlen($parent['remote-id'])) && ($parent['type'] == 'remote')) {
+	if($parent['type'] == 'remote') {
+		// local followup to remote post
 		$followup = true;
 		$conversant_str = dbesc($parent['contact-id']);
 	}
@@ -94,7 +96,7 @@ if($argc < 3)
 		$conversant_str = dbesc(implode(', ',$conversants));
 	}
 
-	$r = q("SELECT * FROM `contact` WHERE `id` IN ( $conversant_str ) ");
+	$r = q("SELECT * FROM `contact` WHERE `id` IN ( $conversant_str ) AND `blocked` = 0 ");
 
 	if( ! count($r))
 		killme();
@@ -111,9 +113,10 @@ if($argc < 3)
 
 
 	$atom .= replace_macros($feed_template, array(
-			'$feed_id' => xmlify($baseurl),
+			'$feed_id' => xmlify($a->get_baseurl()),
 			'$feed_title' => xmlify($owner['name']),
-			'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', $updated . '+00:00' , 'Y-m-d\TH:i:s\Z')) ,
+			'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', 
+				$updated . '+00:00' , 'Y-m-d\TH:i:s\Z')) ,
 			'$name' => xmlify($owner['name']),
 			'$profile_page' => xmlify($owner['url']),
 			'$photo' => xmlify($owner['photo'])
@@ -126,12 +129,14 @@ if($argc < 3)
 					'$name' => xmlify($owner['name']),
 					'$profile_page' => xmlify($owner['url']),
 					'$thumb' => xmlify($owner['thumb']),
-					'$item_id' => xmlify("urn:X-dfrn:$baseurl:{$owner['uid']}:{$item['hash']}"),
+					'$item_id' => xmlify($item['uri']),
 					'$title' => xmlify($item['title']),
-					'$published' => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
-					'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
+					'$published' => xmlify(datetime_convert('UTC', 'UTC', 
+						$item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
+					'$updated' => xmlify(datetime_convert('UTC', 'UTC', 
+						$item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
 					'$content' =>xmlify($item['body']),
-					'$parent_id' => xmlify("{$items[0]['remote-id']}"),
+					'$parent_id' => xmlify($item['parent-uri']),
 					'$comment_allow' => 0
 				));
 			}
@@ -141,8 +146,9 @@ if($argc < 3)
 		foreach($items as $item) {
 			if($item['deleted']) {
 				$atom .= replace_macros($tomb_template, array(
-					'$id' => xmlify("urn:X-dfrn:$baseurl:{$owner['uid']}:{$item['hash']}"),
-					'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z'))
+					'$id' => xmlify($item['uri']),
+					'$updated' => xmlify(datetime_convert('UTC', 'UTC', 
+						$item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z'))
 				));
 			}
 			else {
@@ -156,12 +162,14 @@ if($argc < 3)
 								'$owner_name' => xmlify($item['owner-name']),
 								'$owner_profile_page' => xmlify($item['owner-link']),
 								'$owner_thumb' => xmlify($item['owner-avatar']),
-								'$item_id' => xmlify(((strlen($item['remote-id'])) ? $item['remote-id'] : "urn:X-dfrn:$baseurl:{$owner['uid']}:{$item['hash']}")),
+								'$item_id' => xmlify($item['uri']),
 								'$title' => xmlify($contact['name']),
-								'$published' => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
-								'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
+								'$published' => xmlify(datetime_convert('UTC', 'UTC', 
+									$item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
+								'$updated' => xmlify(datetime_convert('UTC', 'UTC', 
+									$item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
 								'$content' =>xmlify($item['body']),
-								'$comment_allow' => (($item['last-child'] && strlen($contact['dfrn-id'] && (! $contact['blocked']))) ? 1 : 0)
+								'$comment_allow' => (($item['last-child'] && strlen($contact['dfrn-id'])) ? 1 : 0)
 							));
 						}
 						else {
@@ -169,12 +177,14 @@ if($argc < 3)
 								'$name' => xmlify($contact['name']),
 								'$profile_page' => xmlify($contact['url']),
 								'$thumb' => xmlify($contact['thumb']),
-								'$item_id' => xmlify(((strlen($item['remote-id'])) ? $item['remote-id'] : "urn:X-dfrn:$baseurl:{$owner['uid']}:{$item['hash']}")),
+								'$item_id' => xmlify($item['uri']),
 								'$title' => xmlify($item['title']),
-								'$published' => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
-								'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
+								'$published' => xmlify(datetime_convert('UTC', 'UTC', 
+									$item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
+								'$updated' => xmlify(datetime_convert('UTC', 'UTC', 
+									$item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
 								'$content' =>xmlify($item['body']),
-								'$parent_id' => xmlify("urn:X-dfrn:$baseurl:{$owner['uid']}:{$items[0]['hash']}"),
+								'$parent_id' => xmlify($item['parent-uri']),
 								'$comment_allow' => (($item['last-child']) ? 1 : 0)
 							));
 						}
@@ -187,7 +197,7 @@ if($argc < 3)
 
 	// create a clone of this feed but with comments disabled to send to those who can't respond. 
 
-	$atom_nowrite = str_replace('<dfrn:comment-allow>1</dfrn:comment-allow>','<dfrn:comment-allow>0</dfrn:comment-allow>',$atom);
+	$atom_nowrite = str_replace('<dfrn:comment-allow>1','<dfrn:comment-allow>0',$atom);
 
 
 	if($followup)
@@ -206,7 +216,6 @@ if($argc < 3)
 
 	foreach($r as $rr) {
 
-echo "In delivery loop:";
 		if($rr['self'])
 			continue;
 
@@ -235,11 +244,8 @@ echo "In delivery loop:";
 			$postvars['data'] = $atom;
 		else
 			$postvars['data'] = $atom_nowrite;
-echo "URL:" . $url;
-echo "POSTVARS:" . print_r($postvars);
 
-		$xml = post_url($url,$postvars);
-echo "XML response:" . $xml;
+		$xml = post_url($rr['notify'],$postvars);
 
 	}
 

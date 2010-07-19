@@ -54,7 +54,7 @@ dbg(3);
 		$rawthread = $item->get_item_tags("http://purl.org/syndication/thread/1.0",'in-reply-to');
 		if(isset($rawthread[0]['attribs']['']['ref'])) {
 			$is_reply = true;
-			$parent_urn = $rawthread[0]['attribs']['']['ref'];
+			$parent_uri = $rawthread[0]['attribs']['']['ref'];
 		}
 
 
@@ -64,7 +64,7 @@ dbg(3);
 				$datarray = get_atom_elements($item);
 				$urn = explode(':',$parent_urn);
 				$datarray['type'] = 'remote-comment';
-				$datarray['parent_hash'] = $urn[5];
+				$datarray['parent-uri'] = $parent_uri;
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $importer['id'];
 				$posted_id = post_remote($a,$datarray);
@@ -84,7 +84,7 @@ dbg(3);
 						intval($posted_id)
 				);
 
-				$url = bin2hex($a->get_baseurl());
+				$url = $a->get_baseurl();
 
 				proc_close(proc_open("php include/notifier.php $url comment-import $posted_id > remote-notify.log &", array(),$foo));
 
@@ -97,7 +97,7 @@ dbg(3);
 
 				$item_id = $item->get_id();
 
-				$r = q("SELECT `uid`, `last-child`, `edited` FROM `item` WHERE `remote-id` = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT `uid`, `last-child`, `edited` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['uid'])
 				);
@@ -105,7 +105,7 @@ dbg(3);
 				if(count($r)) {
 					$allow = $item->get_item_tags('http://purl.org/macgirvin/dfrn/1.0','comment-allow');
 					if($allow && $allow[0]['data'] != $r[0]['last-child']) {
-						$r = q("UPDATE `item` SET `last-child` = %d WHERE `remote-id` = '%s' AND `uid` = %d LIMIT 1",
+						$r = q("UPDATE `item` SET `last-child` = %d WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							intval($allow[0]['data']),
 							dbesc($item_id),
 							intval($importer['uid'])
@@ -114,7 +114,7 @@ dbg(3);
 					continue;
 				}
 				$datarray = get_atom_elements($item);
-				$datarray['parent_urn'] = $parent_urn;
+				$datarray['parent-uri'] = $parent_uri;
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $importer['id'];
 				$r = post_remote($a,$datarray);
@@ -125,14 +125,14 @@ dbg(3);
 			// Head post of a conversation. Have we seen it? If not, import it.
 
 			$item_id = $item->get_id();
-			$r = q("SELECT `uid`, `last-child`, `edited` FROM `item` WHERE `remote-id` = '%s' AND `uid` = %d LIMIT 1",
+			$r = q("SELECT `uid`, `last-child`, `edited` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 				dbesc($item_id),
 				intval($importer['uid'])
 			);
 			if(count($r)) {
 				$allow = $item->get_item_tags('http://purl.org/macgirvin/dfrn/1.0','comment-allow');
 				if($allow && $allow[0]['data'] != $r[0]['last-child']) {
-					$r = q("UPDATE `item` SET `last-child` = %d WHERE `remote-id` = '%s' AND `uid` = %d LIMIT 1",
+					$r = q("UPDATE `item` SET `last-child` = %d WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 						intval($allow[0]['data']),
 						dbesc($item_id),
 						intval($importer['uid'])
@@ -143,7 +143,7 @@ dbg(3);
 
 
 			$datarray = get_atom_elements($item);
-			$datarray['parent_urn'] = $item_id;
+			$datarray['parent-uri'] = $item['uri']
 			$datarray['uid'] = $importer['uid'];
 			$datarray['contact-id'] = $importer['id'];
 			$r = post_remote($a,$datarray);

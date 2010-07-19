@@ -89,7 +89,7 @@ echo "Length:" . strlen($xml) . "\r\n";
 			$rawthread = $item->get_item_tags("http://purl.org/syndication/thread/1.0",'in-reply-to');
 			if(isset($rawthread[0]['attribs']['']['ref'])) {
 				$is_reply = true;
-				$parent_urn = $rawthread[0]['attribs']['']['ref'];
+				$parent_uri = $rawthread[0]['attribs']['']['ref'];
 			}
 
 
@@ -99,7 +99,7 @@ echo "Length:" . strlen($xml) . "\r\n";
 
 				$item_id = $item->get_id();
 
-				$r = q("SELECT `uid`, `last-child`, `edited` FROM `item` WHERE `remote-id` = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT `uid`, `last-child`, `edited` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['uid'])
 				);
@@ -107,7 +107,7 @@ echo "Length:" . strlen($xml) . "\r\n";
 				if(count($r)) {
 					$allow = $item->get_item_tags('http://purl.org/macgirvin/dfrn/1.0','comment-allow');
 					if($allow && $allow[0]['data'] != $r[0]['last-child']) {
-						$r = q("UPDATE `item` SET `last-child` = %d WHERE `remote-id` = '%s' AND `uid` = %d LIMIT 1",
+						$r = q("UPDATE `item` SET `last-child` = %d WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							intval($allow[0]['data']),
 							dbesc($item_id),
 							intval($importer['uid'])
@@ -116,7 +116,7 @@ echo "Length:" . strlen($xml) . "\r\n";
 					continue;
 				}
 				$datarray = get_atom_elements($item);
-				$datarray['parent_urn'] = $parent_urn;
+				$datarray['parent-uri'] = $parent_uri;
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $importer['id'];
 				$r = post_remote($a,$datarray);
@@ -127,14 +127,14 @@ echo "Length:" . strlen($xml) . "\r\n";
 				// Head post of a conversation. Have we seen it? If not, import it.
 
 				$item_id = $item->get_id();
-				$r = q("SELECT `uid`, `last-child`, `edited` FROM `item` WHERE `remote-id` = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT `uid`, `last-child`, `edited` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['uid'])
 				);
 				if(count($r)) {
 					$allow = $item->get_item_tags('http://purl.org/macgirvin/dfrn/1.0','comment-allow');
 					if($allow && $allow[0]['data'] != $r[0]['last-child']) {
-						$r = q("UPDATE `item` SET `last-child` = %d WHERE `remote-id` = '%s' AND `uid` = %d LIMIT 1",
+						$r = q("UPDATE `item` SET `last-child` = %d WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							intval($allow[0]['data']),
 							dbesc($item_id),
 							intval($importer['uid'])
@@ -144,7 +144,7 @@ echo "Length:" . strlen($xml) . "\r\n";
 				}
 
 				$datarray = get_atom_elements($item);
-				$datarray['parent_urn'] = $item_id;
+				$datarray['parent-uri'] = $item_id;
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $importer['id'];
 				$r = post_remote($a,$datarray);

@@ -99,26 +99,28 @@ function item_post(&$a) {
 		do {
 			$dups = false;
 			$hash = random_string();
-			$r = q("SELECT `id` FROM `item` WHERE `hash` = '%s' LIMIT 1",
-			dbesc($hash));
+
+			$uri = "urn:X-dfrn:" . $a->get_hostname() . ':' . $profile_uid . ':' . $hash;
+
+			$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
+			dbesc($uri));
 			if(count($r))
 				$dups = true;
 		} while($dups == true);
 
 
-		$r = q("INSERT INTO `item` (`uid`,`type`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, `remote-id`, `created`,`edited`,`hash`,`body`,
-			`allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
-			VALUES( %d, '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+		$r = q("INSERT INTO `item` (`uid`,`type`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, `created`,
+			`edited`, `uri`, `body`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
+			VALUES( %d, '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 			intval($profile_uid),
 			dbesc($_POST['type']),
 			intval($contact_id),
 			dbesc($contact_record['name']),
 			dbesc($contact_record['url']),
 			dbesc($contact_record['thumb']),
-			dbesc("urn:X-dfrn:" . $a->get_baseurl() . ':' . intval($profile_uid) . ':' . $hash),
 			datetime_convert(),
 			datetime_convert(),
-			dbesc($hash),
+			dbesc($uri),
 			dbesc(escape_tags(trim($_POST['body']))),
 			dbesc($str_contact_allow),
 			dbesc($str_group_allow),
@@ -126,8 +128,8 @@ function item_post(&$a) {
 			dbesc($str_group_deny)
 
 		);
-		$r = q("SELECT `id` FROM `item` WHERE `hash` = '%s' LIMIT 1",
-			dbesc($hash));
+		$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
+			dbesc($uri));
 		if(count($r)) {
 			$post_id = $r[0]['id'];
 
@@ -154,13 +156,15 @@ function item_post(&$a) {
 				$parent = $post_id;
 			}
 
-			$r = q("UPDATE `item` SET `parent` = %d, `last-child` = 1, `visible` = 1
+			$r = q("UPDATE `item` SET `parent` = %d, `parent-uri` = '%s', `last-child` = 1, `visible` = 1
 				WHERE `id` = %d LIMIT 1",
 				intval($parent),
-				intval($post_id));
+				dbesc(($parent == $post_id) ? $uri : $parent_item['uri']),
+				intval($post_id)
+			);
 		}
 
-		$url = bin2hex($a->get_baseurl());
+		$url = $a->get_baseurl();
 
 		proc_close(proc_open("php include/notifier.php \"$url\" \"$notify_type\" \"$post_id\" > notify.log &",
 			array(),$foo));

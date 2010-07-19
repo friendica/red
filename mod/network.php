@@ -92,7 +92,7 @@ function network_content(&$a) {
 					$template = $wallwall;
 					$commentww = 'ww';	
 				}
-				if($item['type'] == 'remote' && ($item['owner-link'] != $item['remote-link'])) {
+				if($item['type'] == 'remote' && ($item['owner-link'] != $item['author-link'])) {
 					// Could be anybody. 
 					$owner_url = $item['owner-link'];
 					$owner_photo = $item['owner-avatar'];
@@ -125,18 +125,18 @@ function network_content(&$a) {
 
 			// Post was remotely authored.
 
-			$profile_name = ((strlen($item['remote-name'])) ? $item['remote-name'] : $item['name']);
-			$profile_avatar = ((strlen($item['remote-avatar'])) ? $item['remote-avatar'] : $thumb);
+			$profile_name = ((strlen($item['author-name'])) ? $item['author-name'] : $item['name']);
+			$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $thumb);
 
 			$profile_link = $profile_url;
 
 			// Can we use our special contact URL for this author? 
 
-			if(strlen($item['remote-link'])) {
-				if($item['remote-link'] == $item['url'])
+			if(strlen($item['author-link'])) {
+				if($item['author-link'] == $item['url'])
 					$profile_link = $redirect_url;
 				else
-					$profile_link = $item['remote-link'];
+					$profile_link = $item['author-link'];
 			}
 
 			// Build the HTML

@@ -141,9 +141,9 @@ function profile_content(&$a) {
 		} 
 		$sql_extra = sprintf(
 			" AND ( `allow_cid` = '' OR `allow_cid` REGEXP '<%d>' ) 
-			AND ( `deny_cid` = '' OR  NOT `deny_cid` REGEXP '<%d>' ) 
-			AND ( `allow_gid` = '' OR `allow_gid` REGEXP '%s' )
-			AND ( `deny_gid` = '' OR NOT `deny_gid` REGEXP '%s') ",
+			  AND ( `deny_cid`  = '' OR  NOT `deny_cid` REGEXP '<%d>' ) 
+			  AND ( `allow_gid` = '' OR `allow_gid` REGEXP '%s' )
+			  AND ( `deny_gid`  = '' OR NOT `deny_gid` REGEXP '%s') ",
 
 			intval($_SESSION['visitor_id']),
 			intval($_SESSION['visitor_id']),
@@ -224,8 +224,8 @@ function profile_content(&$a) {
 			// known to us and is reflected in the contact-id for this item. We can use the contact url or redirect rather than 
 			// use the link in the feed. This is different than on the network page where we may not know the author.
  
-			$profile_name = ((strlen($item['remote-name'])) ? $item['remote-name'] : $item['name']);
-			$profile_avatar = ((strlen($item['remote-avatar'])) ? $item['remote-avatar'] : $item['thumb']);
+			$profile_name = ((strlen($item['author-name'])) ? $item['author-name'] : $item['name']);
+			$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $item['thumb']);
 			$profile_link = $profile_url;
 
 			$o .= replace_macros($template,array(
