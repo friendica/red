@@ -23,12 +23,20 @@ if((x($_SESSION,'authenticated')) && (! ($_POST['auth-params'] == 'login'))) {
 		if(strlen($a->user['timezone']))
 			date_default_timezone_set($a->user['timezone']);
 
+		if(x($a->user,'nickname'))
+			$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $r[0]['nickname'];
+		else
+			$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $r[0]['uid'];
+
+
+
 		$r = q("SELECT * FROM `contact` WHERE `uid` = %s AND `self` = 1 LIMIT 1",
 			intval($_SESSION['uid']));
 		if(count($r)) {
 			$a->contact = $r[0];
 			$a->cid = $r[0]['id'];
 			$_SESSION['cid'] = $a->cid;
+
 		}
 	}
 }

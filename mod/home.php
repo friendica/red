@@ -19,7 +19,7 @@ function home_content(&$a) {
 
 	$a->page['footer'] .= "<div class=\"powered\" >Powered by <a href=\"http://dfrn.org\" name=\"DFRN.org\" >DFRN</a></div>";
 	$o .= '<h1>Welcome' . ((x($a->config,'sitename')) ? " to {$a->config['sitename']}" : "" ) . '</h1>';
-	$o .= login(($a->config['register_html'] == REGISTER_CLOSED) ? 0 : 1);
+	$o .= login(($a->config['register_policy'] == REGISTER_CLOSED) ? 0 : 1);
 	return $o;
 
 	

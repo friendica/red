@@ -15,8 +15,8 @@ require_once("datetime.php");
 
 if($argc < 3)
 	exit;
-
-	$baseurl = $argv[1]);
+dbg(3);
+	$baseurl = $argv[1];
 	$a->set_baseurl($argv[1]);
 
 	$cmd = $argv[2];
@@ -224,7 +224,7 @@ if($argc < 3)
 		$url = $rr['notify'] . '?dfrn_id=' . $rr['dfrn-id'];
 
 		$xml = fetch_url($url);
-
+echo $xml;
 		if(! $xml)
 			continue;
 
@@ -246,7 +246,7 @@ if($argc < 3)
 			$postvars['data'] = $atom_nowrite;
 
 		$xml = post_url($rr['notify'],$postvars);
-
+echo $xml;
 	}
 
 	killme();

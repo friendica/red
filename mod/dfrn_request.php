@@ -39,7 +39,6 @@ function dfrn_request_post(&$a) {
 		// to confirm the request. We've done so and clicked submit,
 		// which brings us here.
 
-
 		$dfrn_url = notags(trim($_POST['dfrn_url']));
 		$aes_allow = (((x($_POST,'aes_allow')) && ($_POST['aes_allow'] == 1)) ? 1 : 0);
 		$confirm_key = ((x($_POST,'confirm_key')) ? $_POST['confirm_key'] : "");
@@ -48,7 +47,7 @@ function dfrn_request_post(&$a) {
 	
 		if(x($dfrn_url)) {
 
-			$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `dfrn-url` = '%s' LIMIT 1",
+			$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `url` = '%s' LIMIT 1",
 				intval($_SESSION['uid']),
 				dbesc($dfrn_url)
 			);
@@ -88,7 +87,7 @@ function dfrn_request_post(&$a) {
 					if($invalid) {
 						notice( $invalid . ' required DFRN parameter' 
 							. (($invalid == 1) ? " was " : "s were " )
-							. "not found at the given URL" . EOL );
+							. "not found at the given URL" . EOL . print_r($parms,true)) ;
 						return;
 					}
 				}
@@ -220,7 +219,7 @@ function dfrn_request_post(&$a) {
 				if($invalid) {
 					notice( $invalid . ' required DFRN parameter' 
 						. (($invalid == 1) ? " was " : "s were " )
-						. "not found at the given URL" . EOL) ;
+						. "not found at the given URL" . EOL . print_r($parms,true)) ;
 
 					return;
 				}

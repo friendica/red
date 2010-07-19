@@ -118,7 +118,7 @@ echo "Length:" . strlen($xml) . "\r\n";
 				$datarray = get_atom_elements($item);
 				$datarray['parent-uri'] = $parent_uri;
 				$datarray['uid'] = $importer['uid'];
-				$datarray['contact-id'] = $importer['id'];
+				$datarray['contact-id'] = $contact['id'];
 				$r = post_remote($a,$datarray);
 				continue;
 			}
@@ -146,7 +146,7 @@ echo "Length:" . strlen($xml) . "\r\n";
 				$datarray = get_atom_elements($item);
 				$datarray['parent-uri'] = $item_id;
 				$datarray['uid'] = $importer['uid'];
-				$datarray['contact-id'] = $importer['id'];
+				$datarray['contact-id'] = $contact['id'];
 				$r = post_remote($a,$datarray);
 				continue;
 

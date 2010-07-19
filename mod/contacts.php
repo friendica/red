@@ -184,7 +184,7 @@ function contacts_content(&$a) {
 		return $o;
 
 	}
-
+dbg(2);
 	if(($a->argc == 2) && ($a->argv[1] == 'all'))
 		$sql_extra = '';
 	else
@@ -198,21 +198,21 @@ function contacts_content(&$a) {
 
 	switch($sort_type) {
 		case DIRECTION_BOTH :
-			$sql_extra = " AND `dfrn-id` != '' AND `issued-id` != '' ";
+			$sql_extra2 = " AND `dfrn-id` != '' AND `issued-id` != '' ";
 			break;
 		case DIRECTION_IN :
-			$sql_extra = " AND `dfrn-id` = '' AND `issued-id` != '' ";
+			$sql_extra2 = " AND `dfrn-id` = '' AND `issued-id` != '' ";
 			break;
 		case DIRECTION_OUT :
-			$sql_extra = " AND `dfrn-id` != '' AND `issued-id` = '' ";
+			$sql_extra2 = " AND `dfrn-id` != '' AND `issued-id` = '' ";
 			break;
 		case DIRECTION_ANY :
 		default:
-			$sql_extra = '';
+			$sql_extra2 = '';
 			break;
 	}
 
-	$r = q("SELECT * FROM `contact` WHERE `uid` = %d $sql_extra",
+	$r = q("SELECT * FROM `contact` WHERE `uid` = %d $sql_extra $sql_extra2 ",
 		intval($_SESSION['uid']));
 
 	if(count($r)) {
