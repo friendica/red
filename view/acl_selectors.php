@@ -36,7 +36,9 @@ function contact_select($selname,$selclass,$preselected = false,$size = 4) {
 
 	$o .= "<select name=\"{$selname}[]\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" />\r\n";
 
-	$r = q("SELECT `id`, `name` FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 ORDER BY `name` ASC ",
+	$r = q("SELECT `id`, `name` FROM `contact` 
+		WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 
+		ORDER BY `name` ASC ",
 		$_SESSION['uid']
 	);
 

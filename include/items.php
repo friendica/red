@@ -63,7 +63,7 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 		`contact`.`id` AS `contact-id`, `contact`.`uid` AS `contact-uid`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-		AND `item`.`type` != 'remote' AND `contact`.`blocked` = 0 
+		AND `item`.`type` != 'remote' AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 		AND `item`.`edited` > '%s'
 		$sql_extra
 		ORDER BY `parent` ASC, `created` ASC LIMIT 0, 300",
@@ -114,7 +114,7 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 					'$published' => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
 					'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
 					'$content' =>xmlify($item['body']),
-					'$comment_allow' => (($item['last-child'] && strlen($contact['dfrn-id'] && (! $contact['blocked']))) ? 1 : 0)
+					'$comment_allow' => (($item['last-child'] && strlen($contact['dfrn-id'])) ? 1 : 0)
 				));
 			}
 			else {

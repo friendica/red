@@ -136,7 +136,7 @@ function dfrn_confirm_post(&$a) {
 				$thumb = $a->get_baseurl() . '/images/default-profile-sm.jpg';
 			}
 
-			$r = q("UPDATE `contact` SET `photo` = '%s', `thumb` = '%s', `blocked` = 0 WHERE `id` = %d LIMIT 1",
+			$r = q("UPDATE `contact` SET `photo` = '%s', `thumb` = '%s', `blocked` = 0, `pending` = 0 WHERE `id` = %d LIMIT 1",
 				dbesc($photo),
 				dbesc($thumb),
 				intval($dfrn_record)
@@ -361,7 +361,7 @@ function dfrn_confirm_post(&$a) {
 			$thumb = $a->get_baseurl() . '/images/default-profile-sm.jpg';
 		}
 
-		$r = q("UPDATE `contact` SET `photo` = '%s', `thumb` = '%s', `blocked` = 0 WHERE `id` = %d LIMIT 1",
+		$r = q("UPDATE `contact` SET `photo` = '%s', `thumb` = '%s', `blocked` = 0, `pending` = 0 WHERE `id` = %d LIMIT 1",
 			dbesc($photo),
 			dbesc($thumb),
 			intval($contact_id)

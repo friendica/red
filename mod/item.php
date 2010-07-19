@@ -5,7 +5,7 @@ function sanitise_acl(&$item) {
 }
 
 function item_post(&$a) {
-dbg(3);
+
 	if((! local_user()) && (! remote_user()))
 		return;
 
@@ -170,6 +170,6 @@ dbg(3);
 			array(),$foo));
 
 	}
-//	goaway($a->get_baseurl() . "/" . $_POST['return'] );
+	goaway($a->get_baseurl() . "/" . $_POST['return'] );
 	return; // NOTREACHED
 }

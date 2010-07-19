@@ -205,12 +205,10 @@ function notags($string) {
 	return(str_replace(array("<",">","\xBA","\xBC","\xBE"), array('[',']','','',''), $string));
 }}
 
-// The PHP built-in tag escape function has traditionally been buggy
 if(! function_exists('escape_tags')) {
 function escape_tags($string) {
-	return(str_replace(
-		array('&', '"', "'", '<', '>'), 
-		array('&amp;', '&quot;', '&#39;', '&lt;', '&gt;'), $string));
+
+	return(htmlspecialchars($string));
 }}
 
 if(! function_exists('login')) {

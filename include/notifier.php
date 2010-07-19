@@ -96,7 +96,7 @@ dbg(3);
 		$conversant_str = dbesc(implode(', ',$conversants));
 	}
 
-	$r = q("SELECT * FROM `contact` WHERE `id` IN ( $conversant_str ) AND `blocked` = 0 ");
+	$r = q("SELECT * FROM `contact` WHERE `id` IN ( $conversant_str ) AND `blocked` = 0 AND `pending` = 0");
 
 	if( ! count($r))
 		killme();

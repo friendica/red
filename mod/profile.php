@@ -155,7 +155,7 @@ function profile_content(&$a) {
 	$r = q("SELECT COUNT(*) AS `total`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-		AND `item`.`type` != 'remote' AND `contact`.`blocked` = 0 
+		AND `item`.`type` != 'remote' AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
 		$sql_extra ",
 		intval($a->profile['uid'])
 
@@ -171,7 +171,7 @@ function profile_content(&$a) {
 		`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-		AND `item`.`type` != 'remote' AND `contact`.`blocked` = 0 
+		AND `item`.`type` != 'remote' AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 		$sql_extra
 		ORDER BY `parent` DESC, `id` ASC LIMIT %d ,%d ",
 		intval($a->profile['uid']),

@@ -165,7 +165,7 @@ function dfrn_poll_content(&$a) {
 			dbesc($last_update)
 		);
 
-		$r = q("SELECT * FROM `contact` WHERE `issued-id` = '%s' AND `blocked` = 0 LIMIT 1",
+		$r = q("SELECT * FROM `contact` WHERE `issued-id` = '%s' AND `blocked` = 0 AND `pending` = 0 LIMIT 1",
 			dbesc($_GET['dfrn_id']));
 		if((! count($r)) || (! strlen($r[0]['prvkey'])))
 			$status = 1;

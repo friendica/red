@@ -143,7 +143,7 @@ dbg(3);
 
 
 			$datarray = get_atom_elements($item);
-			$datarray['parent-uri'] = $item['uri']
+			$datarray['parent-uri'] = $item_id;
 			$datarray['uid'] = $importer['uid'];
 			$datarray['contact-id'] = $importer['id'];
 			$r = post_remote($a,$datarray);
@@ -176,7 +176,7 @@ function dfrn_notify_content(&$a) {
 			intval(time() + 60 )
 		);
 
-		$r = q("SELECT * FROM `contact` WHERE `issued-id` = '%s' AND `blocked` = 0 LIMIT 1",
+		$r = q("SELECT * FROM `contact` WHERE `issued-id` = '%s' AND `blocked` = 0 AND `pending` = 0 LIMIT 1",
 			dbesc($_GET['dfrn_id']));
 		if((! count($r)) || (! strlen($r[0]['prvkey'])))
 			$status = 1;

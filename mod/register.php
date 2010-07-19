@@ -123,9 +123,9 @@ function register_post(&$a) {
 				intval($newuid));
 			return;
 		}
-		$r = q("INSERT INTO `contact` ( `uid`, `created`, `self`, `name`, `photo`, `thumb`, `blocked`, `url`,
+		$r = q("INSERT INTO `contact` ( `uid`, `created`, `self`, `name`, `photo`, `thumb`, `blocked`, `pending`, `url`,
 			`request`, `notify`, `poll`, `confirm` )
-			VALUES ( %d, '%s', 1, '%s', '%s', '%s', 0, '%s', '%s', '%s', '%s', '%s' ) ",
+			VALUES ( %d, '%s', 1, '%s', '%s', '%s', 0, 0, '%s', '%s', '%s', '%s', '%s' ) ",
 			intval($newuid),
 			datetime_convert(),
 			dbesc($username),

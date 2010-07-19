@@ -119,7 +119,7 @@ function contacts_content(&$a) {
 						$p['id']);
 				}
 			}
-			if($intval($contact_id))
+			if(intval($contact_id))
 				q("DELETE FROM `item` WHERE `contact-id` = %d LIMIT 1",
 					intval($contact_id)
 				);
@@ -184,7 +184,7 @@ function contacts_content(&$a) {
 		return $o;
 
 	}
-dbg(2);
+
 	if(($a->argc == 2) && ($a->argv[1] == 'all'))
 		$sql_extra = '';
 	else
@@ -212,7 +212,7 @@ dbg(2);
 			break;
 	}
 
-	$r = q("SELECT * FROM `contact` WHERE `uid` = %d $sql_extra $sql_extra2 ",
+	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `pending` = 0 $sql_extra $sql_extra2 ",
 		intval($_SESSION['uid']));
 
 	if(count($r)) {
