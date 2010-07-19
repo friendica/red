@@ -56,7 +56,7 @@ function network_content(&$a) {
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
 		AND `contact`.`blocked` = 0 
 		$sql_extra
-		ORDER BY `parent` DESC, `id` ASC LIMIT %d ,%d ",
+		ORDER BY `parent` DESC, `created` ASC LIMIT %d ,%d ",
 		intval($_SESSION['uid']),
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])

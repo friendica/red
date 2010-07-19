@@ -7,6 +7,14 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 
 	$sql_extra = " AND `allow_cid` = '' AND `allow_gid` = '' AND `deny_cid` = '' AND `deny_gid` = '' ";
 
+	if(strlen($owner_id) && ! intval($owner_id)) {
+		$r = q("SELECT `uid` FROM `user` WHERE `nickname` = '%s' LIMIT 1",
+			dbesc($owner_id)
+		);
+		if(count($r))
+			$owner_id = $r[0]['uid'];
+	}
+
 	$r = q("SELECT * FROM `contact` WHERE `self` = 1 AND `uid` = %d LIMIT 1",
 		intval($owner_id)
 	);
@@ -38,8 +46,8 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 			AND ( `allow_gid` = '' OR `allow_gid` REGEXP '%s' )
 			AND ( `deny_gid` = '' OR NOT `deny_gid` REGEXP '%s') ",
 
-			intval($_SESSION['visitor_id']),
-			intval($_SESSION['visitor_id']),
+			intval($contact['id']),
+			intval($contact['id']),
 			dbesc($gs),
 			dbesc($gs)
 		);
@@ -58,7 +66,7 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 		AND `item`.`type` != 'remote' AND `contact`.`blocked` = 0 
 		AND `item`.`edited` > '%s'
 		$sql_extra
-		ORDER BY `parent` DESC, `id` ASC LIMIT 0, 300",
+		ORDER BY `parent` ASC, `created` ASC LIMIT 0, 300",
 		intval($owner_id),
 		dbesc($check_date)
 	);
@@ -87,7 +95,7 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 	foreach($items as $item) {
 		if($item['deleted']) {
 			$atom .= replace_macros($tomb_template, array(
-				'$id' => xmlify(((strlen($item['remote-id'])) ? $item['remote-id'] : "urn:X-dfrn:$baseurl:{$owner['uid']}:{$item['hash']}")),
+				'$id' => xmlify(((strlen($item['remote-id'])) ? $item['remote-id'] : "urn:X-dfrn:" . $a->get_baseurl() . ":{$owner['uid']}:{$item['hash']}")),
 				'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z'))
 			));
 		}
@@ -101,7 +109,7 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 					'$owner_name' => xmlify($item['owner-name']),
 					'$owner_profile_page' => xmlify($item['owner-link']),
 					'$owner_thumb' => xmlify($item['owner-avatar']),
-					'$item_id' => xmlify(((strlen($item['remote-id'])) ? $item['remote-id'] : "urn:X-dfrn:$baseurl:{$owner['uid']}:{$item['hash']}")),
+					'$item_id' => xmlify(((strlen($item['remote-id'])) ? $item['remote-id'] : "urn:X-dfrn:" . $a->get_baseurl() . ":{$owner['uid']}:{$item['hash']}")),
 					'$title' => xmlify($item['name']),
 					'$published' => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
 					'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
@@ -114,20 +122,141 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 					'$name' => xmlify($item['name']),
 					'$profile_page' => xmlify($item['url']),
 					'$thumb' => xmlify($item['thumb']),
-					'$item_id' => xmlify(((strlen($item['remote-id'])) ? $item['remote-id'] : "urn:X-dfrn:$baseurl:{$owner['uid']}:{$item['hash']}")),
+					'$item_id' => xmlify(((strlen($item['remote-id'])) ? $item['remote-id'] : "urn:X-dfrn:" . $a->get_baseurl() . ":{$owner['uid']}:{$item['hash']}")),
 					'$title' => xmlify($item['title']),
 					'$published' => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
 					'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
 					'$content' =>xmlify($item['body']),
-					'$parent_id' => xmlify("urn:X-dfrn:$baseurl:{$owner['uid']}:{$items[0]['hash']}"),
+
+														//	......this is wrong!!!!
+					'$parent_id' => xmlify("urn:X-dfrn:" . $a->get_baseurl() . ":{$owner['uid']}:{$items[0]['hash']}"),
 					'$comment_allow' => (($item['last-child']) ? 1 : 0)
 				));
 			}
 		}
 	}
 
-
 	$atom .= "</feed>\r\n";
 
 	return $atom;
 } 
+
+
+
+
+function get_atom_elements($item) {
+
+	$res = array();
+
+	$author = $item->get_author();
+	$res['remote-name'] = unxmlify($author->get_name());
+	$res['remote-link'] = unxmlify($author->get_link());
+	$res['remote-avatar'] = unxmlify($author->get_avatar());
+	$res['remote-id'] = unxmlify($item->get_id());
+	$res['title'] = unxmlify($item->get_title());
+	$res['body'] = unxmlify($item->get_content());
+
+	$maxlen = get_max_import_size();
+	if($maxlen && (strlen($res['body']) > $maxlen))
+		$res['body'] = substr($res['body'],0, $maxlen);
+
+	$allow = $item->get_item_tags('http://purl.org/macgirvin/dfrn/1.0','comment-allow');
+	if($allow && $allow[0]['data'] == 1)
+		$res['last-child'] = 1;
+	else
+		$res['last-child'] = 0;
+
+	$rawcreated = $item->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'published');
+	if($rawcreated)
+		$res['created'] = unxmlify($rawcreated[0]['data']);
+
+	$rawedited = $item->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'updated');
+	if($rawedited)
+		$res['edited'] = unxmlify($rawcreated[0]['data']);
+
+	$rawowner = $item->get_item_tags('http://purl.org/macgirvin/dfrn/1.0', 'owner');
+	if($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['name'][0]['data'])
+		$res['owner-name'] = unxmlify($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['name'][0]['data']);
+	if($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['uri'][0]['data'])
+		$res['owner-link'] = unxmlify($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['uri'][0]['data']);
+	if($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]['data'])
+		$res['owner-avatar'] = unxmlify($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]['data']);
+
+	return $res;
+}
+
+function post_remote($a,$arr) {
+
+	$arr['hash'] = random_string();
+	if(! x($arr,'type'))
+		$arr['type'] = 'remote';
+	$arr['remote-name'] = notags(trim($arr['remote-name']));
+	$arr['remote-link'] = notags(trim($arr['remote-link']));
+	$arr['remote-avatar'] = notags(trim($arr['remote-avatar']));
+	$arr['owner-name'] = notags(trim($arr['owner-name']));
+	$arr['owner-link'] = notags(trim($arr['owner-link']));
+	$arr['owner-avatar'] = notags(trim($arr['owner-avatar']));
+	if(! strlen($arr['remote-avatar']))
+		$arr['remote-avatar'] = $a->get_baseurl() . '/images/default-profile-sm.jpg';
+	if(! strlen($arr['owner-avatar']))
+		$arr['owner-avatar'] = $a->get_baseurl() . '/images/default-profile-sm.jpg';
+	$arr['created'] = datetime_convert('UTC','UTC',$arr['created'],'Y-m-d H:i:s');
+	$arr['edited'] = datetime_convert('UTC','UTC',$arr['edited'],'Y-m-d H:i:s');
+	$arr['title'] = notags(trim($arr['title']));
+	$arr['body'] = escape_tags(trim($arr['body']));
+	$arr['last-child'] = intval($arr['last-child']);
+	$arr['visible'] = 1;
+	$arr['deleted'] = 0;
+
+	$local_parent = false;
+
+	if(isset($arr['parent_hash'])) {
+		$local_parent = true;
+		$parent = $arr['parent_hash'];
+		unset($arr['parent_hash']);
+	}
+	else {
+		$parent = $arr['parent_urn'];
+		unset($arr['parent_urn']);
+	}
+
+	$parent_id = 0;
+
+	dbesc_array($arr);
+dbg(3);
+	$r = q("INSERT INTO `item` (`" 
+			. implode("`, `", array_keys($arr)) 
+			. "`) VALUES ('" 
+			. implode("', '", array_values($arr)) 
+			. "')" );
+
+	if($local_parent) {
+		$r = q("SELECT `id` FROM `item` WHERE `hash` = '%s' AND `uid` = %d LIMIT 1",
+			dbesc($parent),
+			intval($arr['uid'])
+		);
+	}
+	else {
+		$r = q("SELECT `id` FROM `item` WHERE `remote-id` = '%s' AND `uid` = %d LIMIT 1",
+			dbesc($parent),
+			intval($arr['uid'])
+		);
+	}
+	if(count($r))
+		$parent_id = $r[0]['id'];
+	
+
+	$r = q("SELECT `id` FROM `item` WHERE `remote-id` = '%s' AND `uid` = %d LIMIT 1",
+		$arr['remote-id'],
+		intval($arr['uid'])
+	);
+	if(count($r))
+		$current_post = $r[0]['id'];
+
+	$r = q("UPDATE `item` SET `parent` = %d WHERE `id` = %d LIMIT 1",
+		intval($parent_id),
+		intval($current_post)
+	);
+
+	return $current_post;
+}

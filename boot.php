@@ -33,6 +33,7 @@ class App {
 	private $scheme;
 	private $hostname;
 	private $path;
+	private $baseurl;
 	private $db;
 
 	function __construct() {
@@ -69,11 +70,19 @@ class App {
 	}
 
 	function get_baseurl($ssl = false) {
-		
-		return (($ssl) ? 'https' : $this->scheme) . "://" . $this->hostname
+		if(strlen($this->baseurl))
+			return $this->baseurl;
+
+		$this->baseurl = (($ssl) ? 'https' : $this->scheme) . "://" . $this->hostname
 			. ((isset($this->path) && strlen($this->path)) 
 			? '/' . $this->path : '' );
+		return $this->baseurl;
 	}
+
+	function set_baseurl($url) {
+		$this->baseurl = $url;
+	}
+
 
 	function set_path($p) {
 		$this->path = ltrim(trim($p),'/');
@@ -330,6 +339,11 @@ function notice($s) {
 
 }}
 
+if(! function_exists('get_max_import_size')) {
+function get_max_import_size() {
+	global $a;
+	return ((x($a->config,'max_import_size')) ? $a->config['max_import_size'] : 0 );
+}}
 
 if(! function_exists('xmlify')) {
 function xmlify($str) {

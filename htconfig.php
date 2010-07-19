@@ -22,3 +22,8 @@ $a->config['sitename'] = "DFRN developer";
 // first before you close it.
 
 $a->config['register_policy'] = REGISTER_OPEN;
+
+
+// Maximum size of an imported message, 0 is unlimited.
+
+$a->config['max_import_size'] = 10000;

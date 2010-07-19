@@ -1,125 +1,8 @@
 <?php
 
 require_once('simplepie/simplepie.inc');
+require_once('include/items.php');
 
-
-function get_atom_elements($item) {
-
-	$res = array();
-
-	$author = $item->get_author();
-	$res['remote-name'] = unxmlify($author->get_name());
-	$res['remote-link'] = unxmlify($author->get_link());
-	$res['remote-avatar'] = unxmlify($author->get_avatar());
-	$res['remote-id'] = unxmlify($item->get_id());
-	$res['title'] = unxmlify($item->get_title());
-	$res['body'] = unxmlify($item->get_content());
-
-	if(strlen($res['body']) > 100000)
-		$res['body'] = substr($res['body'],0,10000) . "\r\n[Extremely large post truncated.]\r\n"  ;
-
-	$allow = $item->get_item_tags('http://purl.org/macgirvin/dfrn/1.0','comment-allow');
-	if($allow && $allow[0]['data'] == 1)
-		$res['last-child'] = 1;
-	else
-		$res['last-child'] = 0;
-
-	$rawcreated = $item->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'published');
-	if($rawcreated)
-		$res['created'] = unxmlify($rawcreated[0]['data']);
-
-	$rawedited = $item->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'updated');
-	if($rawedited)
-		$res['edited'] = unxmlify($rawcreated[0]['data']);
-
-	$rawowner = $item->get_item_tags('http://purl.org/macgirvin/dfrn/1.0', 'owner');
-	if($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['name'][0]['data'])
-		$res['owner-name'] = unxmlify($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['name'][0]['data']);
-	if($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['uri'][0]['data'])
-		$res['owner-link'] = unxmlify($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['uri'][0]['data']);
-	if($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]['data'])
-		$res['owner-avatar'] = unxmlify($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]['data']);
-
-
-	return $res;
-
-}
-
-function post_remote($a,$arr) {
-
-	$arr['hash'] = random_string();
-	if(! x($arr,'type'))
-		$arr['type'] = 'remote';
-	$arr['remote-name'] = notags(trim($arr['remote-name']));
-	$arr['remote-link'] = notags(trim($arr['remote-link']));
-	$arr['remote-avatar'] = notags(trim($arr['remote-avatar']));
-	$arr['owner-name'] = notags(trim($arr['owner-name']));
-	$arr['owner-link'] = notags(trim($arr['owner-link']));
-	$arr['owner-avatar'] = notags(trim($arr['owner-avatar']));
-	if(! strlen($arr['remote-avatar']))
-		$arr['remote-avatar'] = $a->get_baseurl() . '/images/default-profile-sm.jpg';
-	if(! strlen($arr['owner-avatar']))
-		$arr['owner-avatar'] = $a->get_baseurl() . '/images/default-profile-sm.jpg';
-	$arr['created'] = datetime_convert('UTC','UTC',$arr['created'],'Y-m-d H:i:s');
-	$arr['edited'] = datetime_convert('UTC','UTC',$arr['edited'],'Y-m-d H:i:s');
-	$arr['title'] = notags(trim($arr['title']));
-	$arr['body'] = escape_tags(trim($arr['body']));
-	$arr['last-child'] = intval($arr['last-child']);
-	$arr['visible'] = 1;
-	$arr['deleted'] = 0;
-
-	$local_parent = false;
-
-	if(isset($arr['parent_hash'])) {
-		$local_parent = true;
-		$parent = $arr['parent_hash'];
-		unset($arr['parent_hash']);
-	}
-	else {
-		$parent = $arr['parent_urn'];
-		unset($arr['parent_urn']);
-	}
-
-	$parent_id = 0;
-
-	dbesc_array($arr);
-dbg(3);
-	$r = q("INSERT INTO `item` (`" 
-			. implode("`, `", array_keys($arr)) 
-			. "`) VALUES ('" 
-			. implode("', '", array_values($arr)) 
-			. "')" );
-
-	if($local_parent) {
-		$r = q("SELECT `id` FROM `item` WHERE `hash` = '%s' AND `uid` = %d LIMIT 1",
-			dbesc($parent),
-			intval($arr['uid'])
-		);
-	}
-	else {
-		$r = q("SELECT `id` FROM `item` WHERE `remote-id` = '%s' AND `uid` = %d LIMIT 1",
-			dbesc($parent),
-			intval($arr['uid'])
-		);
-	}
-	if(count($r))
-		$parent_id = $r[0]['id'];
-	
-
-	$r = q("SELECT `id` FROM `item` WHERE `remote-id` = '%s' AND `uid` = %d LIMIT 1",
-		$arr['remote-id'],
-		intval($arr['uid'])
-	);
-	if(count($r))
-		$current_post = $r[0]['id'];
-
-	$r = q("UPDATE `item` SET `parent` = %d WHERE `id` = %d LIMIT 1",
-		intval($parent_id),
-		intval($current_post)
-	);
-
-	return $current_post;
-}
 
 function dfrn_notify_post(&$a) {
 dbg(3);
@@ -274,14 +157,6 @@ dbg(3);
 	killme();
 
 }
-
-
-
-
-
-
-
-
 
 
 function dfrn_notify_content(&$a) {
