@@ -11,8 +11,6 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
---
---
 
 -- --------------------------------------------------------
 
@@ -25,6 +23,8 @@ CREATE TABLE IF NOT EXISTS `challenge` (
   `challenge` char(255) NOT NULL,
   `dfrn-id` char(255) NOT NULL,
   `expire` int(11) NOT NULL,
+  `type` char(255) NOT NULL,
+  `last_update` char(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -57,8 +57,10 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `ret-aes` tinyint(1) NOT NULL DEFAULT '0',
   `ret-id` char(255) NOT NULL,
   `ret-pubkey` text NOT NULL,
+  `last-update` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `priority` tinyint(3) NOT NULL,
   `blocked` tinyint(1) NOT NULL DEFAULT '1',
+  `pending` tinyint(1) NOT NULL DEFAULT '1',
   `rating` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0-5 reputation, 0 unknown, 1 call police, 5 inscrutable',
   `reason` text NOT NULL COMMENT 'why a rating was given - will help friends decide to make friends or not',
   `profile-id` int(11) NOT NULL DEFAULT '0' COMMENT 'which profile to display - 0 is public default',
@@ -76,7 +78,7 @@ CREATE TABLE IF NOT EXISTS `group` (
   `uid` int(10) unsigned NOT NULL,
   `name` char(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -90,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `group_member` (
   `gid` int(10) unsigned NOT NULL,
   `contact-id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -119,31 +121,51 @@ CREATE TABLE IF NOT EXISTS `intro` (
 
 CREATE TABLE IF NOT EXISTS `item` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uri` char(255) CHARACTER SET ascii NOT NULL,
   `uid` int(10) unsigned NOT NULL DEFAULT '0',
-  `type` char(255) NOT NULL,
-  `resource-id` char(255) NOT NULL,
   `contact-id` int(10) unsigned NOT NULL DEFAULT '0',
-  `remote-id` char(255) NOT NULL,
+  `type` char(255) NOT NULL,
+  `parent` int(10) unsigned NOT NULL DEFAULT '0',
+  `parent-uri` char(255) CHARACTER SET ascii NOT NULL,
   `created` datetime NOT NULL,
   `edited` datetime NOT NULL,
-  `commented` datetime NOT NULL,
-  `hash` char(255) NOT NULL,
-  `parent` int(10) unsigned NOT NULL DEFAULT '0',
+  `owner-name` char(255) NOT NULL,
+  `owner-link` char(255) NOT NULL,
+  `owner-avatar` char(255) NOT NULL,
+  `author-name` char(255) NOT NULL,
+  `author-link` char(255) NOT NULL,
+  `author-avatar` char(255) NOT NULL,
   `title` char(255) NOT NULL,
   `body` text NOT NULL,
-  `visible` tinyint(1) NOT NULL DEFAULT '0',
-  `deleted` tinyint(1) NOT NULL DEFAULT '0',
-  `allow_uid` mediumtext NOT NULL,
+  `resource-id` char(255) NOT NULL,
+  `allow_cid` mediumtext NOT NULL,
   `allow_gid` mediumtext NOT NULL,
-  `deny_uid` mediumtext NOT NULL,
+  `deny_cid` mediumtext NOT NULL,
   `deny_gid` mediumtext NOT NULL,
+  `visible` tinyint(1) NOT NULL DEFAULT '0',
+  `unseen` tinyint(1) NOT NULL DEFAULT '1',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
+  `last-child` tinyint(1) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `created` (`created`),
-  KEY `guid` (`hash`),
+  KEY `uri` (`uri`),
+  KEY `uid` (`uid`),
+  KEY `contact-id` (`contact-id`),
   KEY `type` (`type`),
-  KEY `commented` (`commented`),
+  KEY `parent` (`parent`),
+  KEY `parent-uri` (`parent-uri`),
+  KEY `created` (`created`),
+  KEY `edited` (`edited`),
+  KEY `visible` (`visible`),
+  KEY `deleted` (`deleted`),
+  KEY `last-child` (`last-child`),
+  KEY `unseen` (`unseen`),
+  KEY `unseen_2` (`unseen`),
+  FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `body` (`body`),
-  FULLTEXT KEY `title` (`title`)
+  FULLTEXT KEY `allow_cid` (`allow_cid`),
+  FULLTEXT KEY `allow_gid` (`allow_gid`),
+  FULLTEXT KEY `deny_cid` (`deny_cid`),
+  FULLTEXT KEY `deny_gid` (`deny_gid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -165,6 +187,7 @@ CREATE TABLE IF NOT EXISTS `photo` (
   `width` smallint(6) NOT NULL,
   `data` mediumblob NOT NULL,
   `scale` tinyint(3) NOT NULL,
+  `profile` tinyint(1) NOT NULL DEFAULT '0',
   `allow_uid` mediumtext NOT NULL,
   `allow_gid` mediumtext NOT NULL,
   `deny_uid` mediumtext NOT NULL,
@@ -261,5 +284,6 @@ CREATE TABLE IF NOT EXISTS `user` (
   `prvkey` text NOT NULL,
   `verified` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `blocked` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `pwdreset` char(255) NOT NULL,
   PRIMARY KEY (`uid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
