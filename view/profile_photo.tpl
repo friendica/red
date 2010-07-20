@@ -1,6 +1,6 @@
 <h1>Upload Profile Photo</h1>
 
-<form enctype="multipart/form-data" action="profile_photo/$profile_id" method="post">
+<form enctype="multipart/form-data" action="profile_photo" method="post">
 
 <div id="profile-photo-upload-wrapper">
 <label id="profile-photo-upload-label" for="profile-photo-upload">Upload File: </label>

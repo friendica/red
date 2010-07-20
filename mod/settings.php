@@ -53,13 +53,10 @@ function settings_post(&$a) {
 
 	$username = notags(trim($_POST['username']));
 	$email = notags(trim($_POST['email']));
-	if(x($_POST,'nick'))
-		$nick = notags(trim($_POST['nick']));
 	$timezone = notags(trim($_POST['timezone']));
 
 	$username_changed = false;
 	$email_changed = false;
-	$nick_changed = false;
 	$zone_changed = false;
 	$err = '';
 
@@ -81,19 +78,6 @@ function settings_post(&$a) {
 	        if($r !== NULL && count($r))
         	        $err .= " This email address is already registered." . EOL;
 	}
-	if((x($nick)) && ($nick != $a->user['nickname'])) {
-		$nick_changed = true;
-		if(! preg_match("/^[a-zA-Z][a-zA-Z0-9\-\_]*$/",$nick))
-			$err .= " Nickname must start with a letter and contain only contain letters, numbers, dashes, and underscore.";
-		$r = q("SELECT `uid` FROM `user`
-                	WHERE `nickname` = '%s' LIMIT 1",
-                	dbesc($nick)
-                	);
-	        if($r !== NULL && count($r))
-        	        $err .= " Nickname is already registered. Try another." . EOL;
-	}
-	else
-		$nick = $a->user['nickname'];
 
         if(strlen($err)) {
                 $_SESSION['sysmsg'] .= $err . EOL;
@@ -104,11 +88,10 @@ function settings_post(&$a) {
 		if(strlen($timezone))
 			date_default_timezone_set($timezone);
 	}
-	if($email_changed || $username_changed || $nick_changed || $zone_changed ) {
-		$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `nickname` = '%s', `timezone` = '%s'  WHERE `uid` = %d LIMIT 1",
+	if($email_changed || $username_changed || $zone_changed ) {
+		$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `timezone` = '%s'  WHERE `uid` = %d LIMIT 1",
 			dbesc($username),
 			dbesc($email),
-			dbesc($nick),
 			dbesc($timezone),
 			intval($_SESSION['uid']));
 		if($r)
@@ -118,17 +101,6 @@ function settings_post(&$a) {
 
 		// FIXME - set to un-verified, blocked and redirect to logout
 
-	}
-	if($nick_changed) {
-		$r = q ("UPDATE `profile` SET `url` = '%s', `request` = '%s', `notify` = '%s', `poll` = '%s', `confirm` = '%s'
-			WHERE `uid` = %d AND `self` = 1 LIMIT 1",
-			dbesc( $a->get_baseurl() . '/profile/' . $nick ),
-			dbesc( $a->get_baseurl() . '/dfrn_request/' . $nick ),
-			dbesc( $a->get_baseurl() . '/dfrn_notify/' . $nick ),
-			dbesc( $a->get_baseurl() . '/dfrn_poll/' . $nick ),
-			dbesc( $a->get_baseurl() . '/dfrn_confirm/' . $nick ),
-			intval($_SESSION['uid'])
-		);
 	}
 
 

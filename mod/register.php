@@ -32,10 +32,12 @@ function register_post(&$a) {
 
 	if(x($_POST,'username'))
 		$username = notags(trim($_POST['username']));
+	if(x($_POST['nickname']))
+		$nickname = notags(trim($_POST['nickname']));
 	if(x($_POST,'email'))
-		$email =notags(trim($_POST['email']));
+		$email = notags(trim($_POST['email']));
 
-	if((! x($username)) || (! x($email))) {
+	if((! x($username)) || (! x($email)) || (! x($nickname))) {
 		notice( "Please enter the required information.". EOL );
 		return;
 	}
@@ -43,17 +45,28 @@ function register_post(&$a) {
 	$err = '';
 
 	if(!eregi('[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\.[A-Za-z]{2,6}',$email))
-		$err .= " Not valid email.";
-	if(strlen($username) > 40)
+		$err .= " Not a valid email address.";
+	if(strlen($username) > 48)
 		$err .= " Please use a shorter name.";
 	if(strlen($username) < 3)
 		$err .= " Name too short.";
 	$r = q("SELECT `uid` FROM `user` 
 		WHERE `email` = '%s' LIMIT 1",
 		dbesc($email)
-		);
+	);
+
 	if($r !== false && count($r))
-		$err .= " This email address is already registered.";
+		$err .= " This email address is already registered on this system.";
+
+	if(! preg_match("/^[a-zA-Z][a-zA-Z0-9\-\_]*$/",$nickname))
+		$err .= " Nickname <strong>must</strong> start with a letter and contain only letters, numbers, dashes, or underscore.";
+	$r = q("SELECT `uid` FROM `user`
+               	WHERE `nickname` = '%s' LIMIT 1",
+               	dbesc($nickname)
+	);
+	if(count($r))
+		$err .= " Nickname is already registered. Please choose another." . EOL;
+
 	if(strlen($err)) {
 		notice( $err . EOL );
 		return;
@@ -79,12 +92,13 @@ function register_post(&$a) {
 	$pkey = openssl_pkey_get_details($res);
 	$pubkey = $pkey["key"];
 
-	$r = q("INSERT INTO `user` ( `username`, `password`, `email`,
+	$r = q("INSERT INTO `user` ( `username`, `password`, `email`, `nickname`,
 		`pubkey`, `prvkey`, `verified`, `blocked` )
-		VALUES ( '%s', '%s', '%s', '%s', '%s', %d, %d )",
+		VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', %d, %d )",
 		dbesc($username),
 		dbesc($new_password_encoded),
 		dbesc($email),
+		dbesc($nickname),
 		dbesc($pubkey),
 		dbesc($prvkey),
 		intval($verified),
@@ -105,15 +119,15 @@ function register_post(&$a) {
 		return;
 	} 		
 
-	if(x($newuid) !== NULL) {
+	if(x($newuid) !== false) {
 		$r = q("INSERT INTO `profile` ( `uid`, `profile-name`, `is-default`, `name`, `photo`, `thumb` )
 			VALUES ( %d, '%s', %d, '%s', '%s', '%s' ) ",
 			intval($newuid),
 			'default',
 			1,
 			dbesc($username),
-			dbesc($a->get_baseurl() . '/images/default-profile.jpg'),
-			dbesc($a->get_baseurl() . '/images/default-profile-sm.jpg')
+			dbesc($a->get_baseurl() . "/photo/profile/{$newuid}.jpg"),
+			dbesc($a->get_baseurl() . "/photo/avatar/{$newuid}.jpg")
 
 		);
 		if($r === false) {
@@ -129,13 +143,13 @@ function register_post(&$a) {
 			intval($newuid),
 			datetime_convert(),
 			dbesc($username),
-			dbesc($a->get_baseurl() . '/images/default-profile.jpg'),
-			dbesc($a->get_baseurl() . '/images/default-profile-sm.jpg'), 
-			dbesc($a->get_baseurl() . '/profile/' . intval($newuid)),
-			dbesc($a->get_baseurl() . '/dfrn_request/' . intval($newuid)),
-			dbesc($a->get_baseurl() . '/dfrn_notify/' . intval($newuid)),
-			dbesc($a->get_baseurl() . '/dfrn_poll/' . intval($newuid)),
-			dbesc($a->get_baseurl() . '/dfrn_confirm/' . intval($newuid))
+			dbesc($a->get_baseurl() . "/photo/profile/{$newuid}.jpg"),
+			dbesc($a->get_baseurl() . "/photo/avatar/{$newuid}.jpg"),
+			dbesc($a->get_baseurl() . "/profile/$nickname"),
+			dbesc($a->get_baseurl() . "/dfrn_request/$nickname"),
+			dbesc($a->get_baseurl() . "/dfrn_notify/$nickname"),
+			dbesc($a->get_baseurl() . "/dfrn_poll/$nickname"),
+			dbesc($a->get_baseurl() . "/dfrn_confirm/$nickname")
 
 		);
 
@@ -181,7 +195,10 @@ function register_content(&$a) {
 	}
 
 	$o = file_get_contents("view/register.tpl");
-	$o = replace_macros($o, array('$registertext' =>((x($a->config,'register_text'))? $a->config['register_text'] : "" )));
+	$o = replace_macros($o, array(
+		'$registertext' =>((x($a->config,'register_text'))? $a->config['register_text'] : "" ),
+		'$sitename' => $a->get_hostname()
+	));
 	return $o;
 
 }}

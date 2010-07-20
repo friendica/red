@@ -75,19 +75,19 @@ function dfrn_request_post(&$a) {
 				$parms = scrape_dfrn($dfrn_url);
 
 				if(! count($parms)) {
-					notice( 'URL is not valid or does not contain profile information.' . EOL );
+					notice( 'Profile location is not valid or does not contain profile information.' . EOL );
 					return;
 				}
 				else {
 					if(! x($parms,'fn'))
-						notice( 'Warning: DFRN profile has no identifiable owner name.' . EOL );
+						notice( 'Warning: profile location has no identifiable owner name.' . EOL );
 					if(! x($parms,'photo'))
-						notice( 'Warning: DFRN profile has no profile photo.' . EOL );
+						notice( 'Warning: profile location has no profile photo.' . EOL );
 					$invalid = validate_dfrn($parms);		
 					if($invalid) {
-						notice( $invalid . ' required DFRN parameter' 
+						notice( $invalid . ' required parameter' 
 							. (($invalid == 1) ? " was " : "s were " )
-							. "not found at the given URL" . EOL . print_r($parms,true)) ;
+							. "not found at the given location." . EOL ) ;
 						return;
 					}
 				}
@@ -145,10 +145,8 @@ function dfrn_request_post(&$a) {
 	// If our user confirms the request, a record of it will need to exist on the 
 	// originator's site in order for the confirmation process to complete.. 
 
-	if($a->profile['nickname'])
-		$tailname = $a->profile['nickname'];
-	else
-		$tailname = $a->profile['uid'];
+
+	$tailname = $a->profile['nickname'];
 
 	$uid = $a->profile['uid'];
 
@@ -170,9 +168,26 @@ function dfrn_request_post(&$a) {
 			$hostname = substr($url,strpos($url,'@') + 1);
 			require_once('Scrape.php');
 
-			$parms = scrape_meta('http://' . $url);
-			if((x($parms,'dfrn-template')) && strstr($parms['dfrn-template'],'%s'))
+		
+			$parms = scrape_meta('https://' . $url);
+			if((x($parms,'dfrn-template')) && strstr($parms['dfrn-template'],'%s')) {
 				$url = sprintf($parms['dfrn-template'],$username);
+			}
+			else {
+				$parms = scrape_meta('http://' . $url);
+				if((x($parms,'dfrn-template')) && strstr($parms['dfrn-template'],'%s')) {
+					$url = sprintf($parms['dfrn-template'],$username);
+				}
+				else {
+					$url = '';
+				}
+			}
+
+		}
+
+		if(! strlen($url)) {
+			notice("Unable to resolve your name at the provided location." . EOL);			
+			return;
 		}
 
 		$ret = q("SELECT * FROM `contact` WHERE `uid` = %d AND `url` = '%s' LIMIT 1", 
@@ -207,19 +222,19 @@ function dfrn_request_post(&$a) {
 			$parms = scrape_dfrn($url);
 
 			if(! count($parms)) {
-				notice( 'URL is not valid or does not contain profile information.' . EOL );
+				notice( 'Profile location is not valid or does not contain profile information.' . EOL );
 				killme();
 			}
 			else {
 				if(! x($parms,'fn'))
-					notice( 'Warning: DFRN profile has no identifiable owner name.' . EOL );
+					notice( 'Warning: profile location has no identifiable owner name.' . EOL );
 				if(! x($parms,'photo'))
-					notice( 'Warning: DFRN profile has no profile photo.' . EOL );
+					notice( 'Warning: profile location has no profile photo.' . EOL );
 				$invalid = validate_dfrn($parms);		
 				if($invalid) {
-					notice( $invalid . ' required DFRN parameter' 
+					notice( $invalid . ' required parameter' 
 						. (($invalid == 1) ? " was " : "s were " )
-						. "not found at the given URL" . EOL . print_r($parms,true)) ;
+						. "not found at the given location." . EOL ) ;
 
 					return;
 				}

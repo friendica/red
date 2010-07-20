@@ -4,7 +4,7 @@
 function profiles_post(&$a) {
 
 	if(! local_user()) {
-		$_SESSION['sysmsg'] .= "Unauthorised." . EOL;
+		notice( "Permission denied." . EOL);
 		return;
 	}
 	if(($a->argc > 1) && ($a->argv[1] != "new") && intval($a->argv[1])) {
@@ -251,9 +251,6 @@ function profiles_content(&$a) {
 	}		 
 
 
-
-
-
 	if(intval($a->argv[1])) {
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($a->argv[1]),
@@ -265,7 +262,7 @@ function profiles_content(&$a) {
 		}
 
 		require_once('mod/profile.php');
-		profile_load($a,$_SESSION['uid'],$r[0]['id']);
+		profile_load($a,$a->user['nickname'],$r[0]['id']);
 
 		require_once('view/profile_selectors.php');
 
@@ -293,6 +290,7 @@ function profiles_content(&$a) {
 		$is_default = (($r[0]['is-default']) ? 1 : 0);
 		$tpl = file_get_contents("view/profile_edit.tpl");
 		$o .= replace_macros($tpl,array(
+			'$disabled' => (($is_default) ? 'onclick="return false;" style="color: #BBBBFF;"' : ''),
 			'$baseurl' => $a->get_baseurl(),
 			'$profile_id' => $r[0]['id'],
 			'$profile_name' => $r[0]['profile-name'],

@@ -2,6 +2,10 @@
 
 <div id="profile-edit-clone-link-wrapper" ><a href="profiles/clone/$profile_id" id="profile-edit-clone-link" title="Create a new profile using these settings">Clone this profile</a></div>
 
+<div id="profile-edit-drop-link-wrapper" ><a href="profiles/drop/$profile_id" id="profile-edit-drop-link" title="Delete this profile" $disabled >Delete this profile</a></div>
+
+<div id="profile-edit-links-end"></div>
+
 $default
 
 <div id="profile-edit-wrapper" >

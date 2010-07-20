@@ -39,9 +39,10 @@ Please adjust the image cropping for optimum viewing.
 
 </script>
 
-<form action="profile_photo/$profile_id/$resource" id="crop-image-form" method="post" />
+<form action="profile_photo/$resource" id="crop-image-form" method="post" />
 
 <input type="hidden" name="imagename" value="$hash" />
+<input type="hidden" name="cropfinal" value="1" />
 <input type="hidden" name="xstart" id="x1" />
 <input type="hidden" name="ystart" id="y1" />
 <input type="hidden" name="xfinal" id="x2" />

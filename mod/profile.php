@@ -1,11 +1,7 @@
 <?php
 
 if(! function_exists('profile_load')) {
-function profile_load(&$a,$uid,$profile = 0) {
-
-	$sql_extra = (($uid) && (intval($uid)) 
-		? " WHERE `user`.`uid` = " . intval($uid) 
-		: " WHERE `user`.`nickname` = '" . dbesc($uid) . "' " ); 
+function profile_load(&$a, $username, $profile = 0) {
 
 	if(remote_user()) {
 		$r = q("SELECT `profile-id` FROM `contact` WHERE `id` = %d LIMIT 1",
@@ -23,7 +19,8 @@ function profile_load(&$a,$uid,$profile = 0) {
 
 	$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `user`.* FROM `profile` 
 		LEFT JOIN `user` ON `profile`.`uid` = `user`.`uid`
-		$sql_extra $sql_which LIMIT 1"
+		WHERE `user`.`nickname` = '%s' $sql_which LIMIT 1",
+		dbesc($username)
 	);
 
 	if(($r === false) || (! count($r))) {
