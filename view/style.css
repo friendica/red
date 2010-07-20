@@ -77,6 +77,22 @@ footer {
 	
 }
 
+.nav-ajax-left {
+	margin-left: 1px;
+	float: left;
+	font-size: 0.6em;
+	font-weight: bold;
+	color: #FF0000;
+}
+
+.nav-ajax-right {
+	margin-left: 1px;
+	float: right;
+	font-size: 0.6em;
+	font-weight: bold;
+	color: #FF0000;
+}
+
 .nav-commlink {
 	float: left;
 	margin-left: 10px;
@@ -597,6 +613,11 @@ input#dfrn-url {
 #directory-search-end {
 }
 
+.directory-photo-img {
+	border: none;
+}
+
+
 .pager {
   padding: 10px;
   text-align: center;
@@ -835,6 +856,9 @@ input#dfrn-url {
 	overflow: auto;
 }
 
+#group-new-submit-wrapper {
+	margin-top: 30px;
+}
 
 #acl-allow-group-label, 
 #acl-allow-contact-label,

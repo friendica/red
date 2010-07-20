@@ -15,6 +15,11 @@ function network_content(&$a) {
 
 	$contact_id = $a->cid;
 
+	$r = q("UPDATE `item` SET `unseen` = 0 
+		WHERE `unseen` = 1 AND `uid` = %d",
+		intval($_SESSION['uid'])
+	);
+
 
 	$tpl = file_get_contents('view/jot-header.tpl');
 	

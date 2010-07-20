@@ -5,7 +5,7 @@ require_once('include/items.php');
 
 
 function dfrn_notify_post(&$a) {
-dbg(3);
+
 	$dfrn_id = notags(trim($_POST['dfrn_id']));
 	$challenge = notags(trim($_POST['challenge']));
 	$data = $_POST['data'];

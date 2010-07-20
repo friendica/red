@@ -30,7 +30,7 @@ $blocked
 
 <div id="contact-edit-profile-select-text">
 <h4>Profile Visibility</h4>
-<p>Please choose the profile you would like to display to $name - when he/she connects securely to your profile page.
+<p>Please choose the profile you would like to display to $name when viewing your profile securely.
 </p> 
 </div>
 $profile_select

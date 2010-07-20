@@ -4,17 +4,17 @@ require_once("Photo.php");
 
 function profile_photo_init(&$a) {
 
-	if((! local_user()) {
+	if(! local_user()) {
 		return;
 	}
 	require_once("mod/profile.php");
-	profile_load($a,$_SESSION['uid']);
+	profile_load($a,$a->user['nickname']);
 }
 
 
 function profile_photo_post(&$a) {
 
-        if((! local_user()) {
+        if(! local_user()) {
                 notice ( "Permission denied." . EOL );
                 return;
         }
@@ -63,7 +63,7 @@ function profile_photo_post(&$a) {
 				dbesc($base_image['filename']),
 				intval($im->getHeight()),
 				intval($im->getWidth()),
-				dbesc($im->imageString()
+				dbesc($im->imageString())
 			);
 
 			if($r === false)
@@ -81,7 +81,7 @@ function profile_photo_post(&$a) {
 				dbesc($base_image['filename']),
 				intval($im->getHeight()),
 				intval($im->getWidth()),
-				dbesc($im->imageString()
+				dbesc($im->imageString())
 			);
 			
 			if($r === false)
@@ -89,10 +89,10 @@ function profile_photo_post(&$a) {
 
 			// Unset the profile photo flag from any other photos I own
 
-			$r = q("UPDATE `photo` SET `profile` = 0 WHERE `profile` = 1 AND `resource-id` != '%s' AND `uid` = %d"
+			$r = q("UPDATE `photo` SET `profile` = 0 WHERE `profile` = 1 AND `resource-id` != '%s' AND `uid` = %d",
 				dbesc($base_image['resource-id']),
 				intval($_SESSION['uid'])
-			)
+			);
 
 		}
 		goaway($a->get_baseurl() . '/profiles');
@@ -160,7 +160,7 @@ function profile_photo_post(&$a) {
 			dbesc(basename($filename)),
 			intval($ph->getHeight()),
 			intval($ph->getWidth()),
-			dbesc($ph->imageString()
+			dbesc($ph->imageString())
 		);
 		if($r === false)
 			notice("Image size reduction (640) failed." . EOL );

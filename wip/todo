@@ -1,12 +1,5 @@
 
-profile photo to self contact page? - resolve profile photo inconsistency
-	pre-load profile photos and use in conversations instead of contact photos
-	(done for profile owner)
-
-	ensure correct photo is pushed with notify/poll and used in wall/wall comments/posts
-	use photo hash to notify of changes?
-
-
+finish one world photo resolution (update timestamps in atom feeds)
 >>>>>>>>contact editor
 >>>>>>>>	block photo
 
@@ -40,7 +33,6 @@ admin approved registration (requires admin)
 
 atom elements
 
-	thread
 	tombstone
 	activity
 

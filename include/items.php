@@ -207,7 +207,7 @@ function post_remote($a,$arr) {
 	$parent_id = 0;
 
 	dbesc_array($arr);
-dbg(3);
+//dbg(3);
 	$r = q("INSERT INTO `item` (`" 
 			. implode("`, `", array_keys($arr)) 
 			. "`) VALUES ('" 

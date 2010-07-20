@@ -9,7 +9,7 @@
 <script type="text/javascript" src="$baseurl/include/main.js" ></script>
 
 <script type="text/javascript">
-//	$(document).ready(function() { setTimeout(NavUpdate,10 * 1000); });
+	$(document).ready(function() { NavUpdate(); });
 
 function NavUpdate()
 	{
@@ -17,10 +17,20 @@ function NavUpdate()
 			{
 			$(data).find('result').each(function() {
 				var net = $(this).find('net').text();
-			alert(net);
+				if(net == 0) { net = ''; }
+				$('#net-update').html(net);
+				var home = $(this).find('home').text();
+				if(home == 0) { home = ''; }
+				$('#home-update').html(home);
+				var mail = $(this).find('mail').text();
+				if(mail == 0) { mail = ''; }
+				$('#mail-update').html(mail);
+				var intro = $(this).find('intro').text();
+				if(intro == 0) { intro = ''; }
+				$('#notify-update').html(intro);
 			});
 		}) ;
-		setTimeout(NavUpdate,10 * 1000);
+		setTimeout(NavUpdate,30000);
 	}
 </script>
 

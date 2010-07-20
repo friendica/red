@@ -126,8 +126,17 @@ function profile_content(&$a) {
 
 	// Profile owner - everything is visible
 
-	if(local_user() && ($_SESSION['uid'] == $a->profile['profile_uid']))
+	if(local_user() && ($_SESSION['uid'] == $a->profile['profile_uid'])) {
 		$sql_extra = ''; 
+		
+		// Oh - while we're here... reset the Unseen messages
+
+		$r = q("UPDATE `item` SET `unseen` = 0 
+			WHERE `type` != 'remote' AND `unseen` = 1 AND `uid` = %d",
+			intval($_SESSION['uid'])
+		);
+
+	}
 
 	// authenticated visitor - here lie dragons
 	elseif(remote_user()) {

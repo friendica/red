@@ -88,11 +88,11 @@ function contacts_content(&$a) {
 		}
 
 
-		$photo = str_replace('-4.jpg', '' , $r[0]['photo']);
-		$photos = q("SELECT `id` FROM `photo` WHERE `resource-id` = '%s' AND `uid` = %d",
-				dbesc($photo),
-				intval($_SESSION['uid'])
-		);
+//		$photo = str_replace('-4.jpg', '' , $r[0]['photo']);
+//		$photos = q("SELECT `id` FROM `photo` WHERE `resource-id` = '%s' AND `uid` = %d",
+//				dbesc($photo),
+//				intval($_SESSION['uid'])
+//		);
 	
 		if($cmd == 'block') {
 			$blocked = (($orig_record[0]['blocked']) ? 0 : 1);
@@ -113,12 +113,14 @@ function contacts_content(&$a) {
 			$r = q("DELETE FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval($contact_id),
 				intval($_SESSION['uid']));
-			if(count($photos)) {
-				foreach($photos as $p) {
-					q("DELETE FROM `photos` WHERE `id` = %d LIMIT 1",
-						$p['id']);
-				}
-			}
+
+//			if(count($photos)) {
+//				foreach($photos as $p) {
+//					q("DELETE FROM `photos` WHERE `id` = %d LIMIT 1",
+//						$p['id']);
+//				}
+//			}
+
 			if(intval($contact_id))
 				q("DELETE FROM `item` WHERE `contact-id` = %d LIMIT 1",
 					intval($contact_id)
