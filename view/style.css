@@ -210,6 +210,10 @@ input#dfrn-url {
 	margin-left: 50px;
 }
 
+#settings-nick-wrapper {
+	margin-bottom: 30px;
+}
+
 #settings-username-end, #settings-email-end, #settings-nick-end, #settings-timezone-end, #settings-password-end, #settings-confirm-end {
 	margin-bottom: 5px;
 	clear: both;

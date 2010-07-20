@@ -1,5 +1,8 @@
 <h1>Account Settings</h1>
 
+$nickname_block
+
+
 <form action="settings" id="settings-form" method="post" >
 
 <div id="settings-username-wrapper" >
@@ -14,7 +17,6 @@
 </div>
 <div id="settings-email-end" ></div>
 
-$nickname_block
 
 
 <div id="settings-timezone-wrapper" >

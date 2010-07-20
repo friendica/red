@@ -3,20 +3,20 @@
 
 function settings_init(&$a) {
 
-	if((! x($_SESSION,'authenticated')) && (x($_SESSION,'uid'))) {
-		$_SESSION['sysmsg'] .= "Permission denied." . EOL;
+	if(! local_user()) {
+		notice("Permission denied." . EOL);
 		$a->error = 404;
 		return;
 	}
 	require_once("mod/profile.php");
-	profile_load($a,$_SESSION['uid']);
+	profile_load($a,$a->user['nickname']);
 }
 
 
 function settings_post(&$a) {
 
-	if((! x($_SESSION['authenticated'])) && (! (x($_SESSION,'uid')))) {
-		$_SESSION['sysmsg'] .= "Permission denied." . EOL;
+	if(! local_user()) {
+		notice( "Permission denied." . EOL);
 		return;
 	}
 	if(count($a->user) && x($a->user,'uid') && $a->user['uid'] != $_SESSION['uid']) {
@@ -128,15 +128,26 @@ function settings_content(&$a) {
 	$timezone = $a->user['timezone'];
 
 
-	if(x($nickname))
-		$nickname_block = file_get_contents("view/settings_nick_set.tpl");
-	else
-		$nickname_block = file_get_contents("view/settings_nick_unset.tpl");
+
+	$nickname_block = file_get_contents("view/settings_nick_set.tpl");
+	
+
+	$nickname_subdir = '';
+	if(strlen($a->get_path())) {
+		$subdir_tpl = file_get_contents('view/settings_nick_subdir.tpl');
+		$nickname_subdir = replace_macros($subdir_tpl, array(
+			'$baseurl' => $a->get_baseurl(),
+			'$nickname' => $nickname,
+			'$hostname' => $a->get_hostname()
+		));
+	}
+
 
 	$nickname_block = replace_macros($nickname_block,array(
 		'$nickname' => $nickname,
 		'$uid' => $_SESSION['uid'],
-		'$basepath' => substr($a->get_baseurl(),strpos($a->get_baseurl(),'://') + 3), 
+		'$subdir' => $nickname_subdir,
+		'$basepath' => $a->get_hostname(),
 		'$baseurl' => $a->get_baseurl()));	
 
 	$o = file_get_contents('view/settings.tpl');

@@ -96,9 +96,14 @@ class App {
 		$this->path = ltrim(trim($p),'/');
 	} 
 
+	function get_path() {
+		return $this->path;
+	}
+
 	function set_pager_total($n) {
 		$this->pager['total'] = intval($n);
 	}
+
 	function set_pager_itemspage($n) {
 		$this->pager['itemspage'] = intval($n);
 		$this->pager['start'] = ($this->pager['page'] * $this->pager['itemspage']) - $this->pager['itemspage'];

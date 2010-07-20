@@ -7,3 +7,20 @@
 <![endif]-->
 <script type="text/javascript" src="$baseurl/include/jquery.js" ></script>
 <script type="text/javascript" src="$baseurl/include/main.js" ></script>
+
+<script type="text/javascript">
+//	$(document).ready(function() { setTimeout(NavUpdate,10 * 1000); });
+
+function NavUpdate()
+	{
+		$.get("ping",function(data)
+			{
+			$(data).find('result').each(function() {
+				var net = $(this).find('net').text();
+			alert(net);
+			});
+		}) ;
+		setTimeout(NavUpdate,10 * 1000);
+	}
+</script>
+

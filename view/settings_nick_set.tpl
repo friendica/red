@@ -1,10 +1,10 @@
 
 <div id="settings-nick-wrapper" >
 <p id="settings-nickname-desc">
-Your nickname cannot be changed. It is set to <strong>$nickname</strong>.<br />
-Your profile is located at <strong>'$baseurl/profile/$nickname'</strong>,<br />
-and you may use this as your profile URL when communicating with other<br />
-sites or simply <strong>'$nickname@$basepath'</strong>.
+Your site nickname is <strong>$nickname</strong> and cannot be changed.<br />
+Your profile locator is <strong>'$nickname@$basepath'</strong>.
 </p>
+$subdir
+
 </div>
 <div id="settings-nick-end" ></div>

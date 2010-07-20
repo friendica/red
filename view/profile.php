@@ -20,7 +20,7 @@
 
 	<div id="profile-extra-links">
 
-	<a id="dfrn-request-link" href="dfrn_request/<?php echo $profile['uid']; ?>">Introductions</a>
+	<a id="dfrn-request-link" href="dfrn_request/<?php echo $profile['nickname']; ?>">Introductions</a>
 
 	</div>
 

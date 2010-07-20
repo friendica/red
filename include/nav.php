@@ -12,7 +12,8 @@
 		$a->page['nav'] .= "<a id=\"nav-notify-link\" class=\"nav-commlink\" href=\"notifications\">Notifications</a>\r\n";
 
 		$a->page['nav'] .= "<a id=\"nav-messages-link\" class=\"nav-commlink\" href=\"Messages\">Messages</a>\r\n";
-
+		
+		$a->page['nav'] .= "<div id=\"nav-notify\" class=\"nav-notify\"></div>\r\n";
 
 		$a->page['nav'] .= "<a id=\"nav-logout-link\" class=\"nav-link\" href=\"logout\">Logout</a>\r\n";
 
@@ -22,7 +23,7 @@
 
 		$a->page['nav'] .= "<a id=\"nav-contacts-link\" class=\"nav-link\" href=\"contacts\">Contacts</a>\r\n";
 
-		$a->page['nav'] .= "<a id=\"nav-home-link\" class=\"nav-link\" href=\"profile/{$_SESSION['uid']}\">Home</a>\r\n";
+		$a->page['nav'] .= "<a id=\"nav-home-link\" class=\"nav-link\" href=\"profile/{$a->user['nickname']}\">Home</a>\r\n";
 
 		$a->page['nav'] .= "<a id=\"nav-network-link\" class=\"nav-link\" href=\"network\">Network</a>\r\n";
 		
