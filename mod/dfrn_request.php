@@ -368,7 +368,7 @@ function dfrn_request_content(&$a) {
 
 
 	$o = file_get_contents("view/dfrn_request.tpl");
-	$o = replace_macros($o,array('$uid' => $a->user['nickname']));
+	$o = replace_macros($o,array('$uid' => $a->argv[2]));
 	return $o;
 	}
 }}
