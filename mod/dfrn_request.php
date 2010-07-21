@@ -33,7 +33,7 @@ function dfrn_request_post(&$a) {
 	// callback to local site after remote request and local confirm
 
 	if((x($_POST,'localconfirm')) && ($_POST['localconfirm'] == 1) 
-		&& local_user() && ($_SESSION['uid'] == $a->argv[1]) && (x($_POST,'dfrn_url'))) {
+		&& local_user() && ($a->user['nickname'] == $a->argv[1]) && (x($_POST,'dfrn_url'))) {
 
 		// We are the requestor, and we've been sent back to our own site
 		// to confirm the request. We've done so and clicked submit,
@@ -136,6 +136,9 @@ function dfrn_request_post(&$a) {
 		notice( "Unrecoverable protocol error." . EOL );
 		goaway($a->get_baseurl());
 	}
+	// extra safety
+	if($_POST['localconfirm'])
+		return;
 
 
 	// we are operating as a remote site and an introduction was requested of us.
