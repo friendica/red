@@ -349,6 +349,7 @@ function dfrn_request_content(&$a) {
 			'$confirm_key' => $confirm_key,
 			'$username' => $a->user['username'], 
 			'$uid' => $_SESSION['uid'],
+			'$nickname' => $a->user['nickname'],
 			'dfrn_rawurl' => $_GET['dfrn_url']
 			));
 		return $o;
