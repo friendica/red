@@ -6,7 +6,7 @@ You may introduce yourself to this member if you have a valid profile locator<br
 on the <a href="http://dfrn.org">Distributed Friends and Relations Network (DFRN)</a>.
 </p>
 
-<form action="dfrn_request/$uid" method="post" />
+<form action="dfrn_request/$nickname" method="post" />
 
 <div id="dfrn-request-url-wrapper" >
 	<label id="dfrn-url-label" for="dfrn-url" >Your profile location:</label>

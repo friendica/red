@@ -13,6 +13,15 @@ define ( 'DIRECTION_IN',   1);
 define ( 'DIRECTION_OUT',  2);
 define ( 'DIRECTION_BOTH', 3);
 
+define ( 'NOTIFY_INTRO',   0x0001 );
+define ( 'NOTIFY_CONFIRM', 0x0002 );
+define ( 'NOTIFY_WALL',    0x0004 );
+define ( 'NOTIFY_COMMENT', 0x0008 );
+define ( 'NOTIFY_MAIL',    0x0010 );
+
+
+
+
 if(! class_exists('App')) {
 class App {
 

@@ -3,11 +3,6 @@
 if(! function_exists('dfrn_request_init')) {
 function dfrn_request_init(&$a) {
 
-	if($_SESSION['authenticated']) {
-		// choose which page to show (could be remote auth)
-
-	}
-
 	if($a->argc > 1)
 		$which = $a->argv[1];
 
@@ -30,127 +25,145 @@ function dfrn_request_post(&$a) {
 	} 
 
 
-	// callback to local site after remote request and local confirm
+	// We've introduced ourself to another cell, then have been returned to our own cell
+	// to confirm the request, and then we've clicked submit (perhaps after logging in). 
+	// That brings us here:
 
-	if((x($_POST,'localconfirm')) && ($_POST['localconfirm'] == 1) 
-		&& local_user() && ($a->user['nickname'] == $a->argv[1]) && (x($_POST,'dfrn_url'))) {
+	if((x($_POST,'localconfirm')) && ($_POST['localconfirm'] == 1)) {
 
-		// We are the requestor, and we've been sent back to our own site
-		// to confirm the request. We've done so and clicked submit,
-		// which brings us here.
+		// Ensure this is a valid request
+ 
+		if(local_user() && ($a->user['nickname'] == $a->argv[1]) && (x($_POST,'dfrn_url'))) {
 
-		$dfrn_url = notags(trim($_POST['dfrn_url']));
-		$aes_allow = (((x($_POST,'aes_allow')) && ($_POST['aes_allow'] == 1)) ? 1 : 0);
-		$confirm_key = ((x($_POST,'confirm_key')) ? $_POST['confirm_key'] : "");
 
-		$contact_record = null;
+			$dfrn_url = notags(trim($_POST['dfrn_url']));
+			$aes_allow = (((x($_POST,'aes_allow')) && ($_POST['aes_allow'] == 1)) ? 1 : 0);
+			$confirm_key = ((x($_POST,'confirm_key')) ? $_POST['confirm_key'] : "");
+
+			$contact_record = null;
 	
-		if(x($dfrn_url)) {
-
-			$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `url` = '%s' LIMIT 1",
-				intval($_SESSION['uid']),
-				dbesc($dfrn_url)
-			);
+			if(x($dfrn_url)) {
 	
-			if(count($r)) {
-				if(strlen($r[0]['dfrn-id'])) {
-					notice("This introduction has already been accepted." . EOL );
-					return;
-				}
-				else
-					$contact_record = $r[0];
-			}
-	
-			if(is_array($contact_record)) {
-				$r = q("UPDATE `contact` SET `ret-aes` = %d WHERE `id` = %d LIMIT 1",
-					intval($aes_allow),
-					intval($contact_record['id'])
+				$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `url` = '%s' LIMIT 1",
+					intval($_SESSION['uid']),
+					dbesc($dfrn_url)
 				);
-			}
-			else {
-
-				require_once('Scrape.php');
-
-
-				$parms = scrape_dfrn($dfrn_url);
-
-				if(! count($parms)) {
-					notice( 'Profile location is not valid or does not contain profile information.' . EOL );
-					return;
-				}
-				else {
-					if(! x($parms,'fn'))
-						notice( 'Warning: profile location has no identifiable owner name.' . EOL );
-					if(! x($parms,'photo'))
-						notice( 'Warning: profile location has no profile photo.' . EOL );
-					$invalid = validate_dfrn($parms);		
-					if($invalid) {
-						notice( $invalid . ' required parameter' 
-							. (($invalid == 1) ? " was " : "s were " )
-							. "not found at the given location." . EOL ) ;
+	
+				if(count($r)) {
+					if(strlen($r[0]['dfrn-id'])) {
+						notice("This introduction has already been accepted." . EOL );
 						return;
 					}
+					else
+						$contact_record = $r[0];
+				}
+	
+				if(is_array($contact_record)) {
+					$r = q("UPDATE `contact` SET `ret-aes` = %d WHERE `id` = %d LIMIT 1",
+						intval($aes_allow),
+						intval($contact_record['id'])
+					);
+				}
+				else {
+	
+					require_once('Scrape.php');
+	
+	
+					$parms = scrape_dfrn($dfrn_url);
+	
+					if(! count($parms)) {
+						notice( 'Profile location is not valid or does not contain profile information.' . EOL );
+						return;
+					}
+					else {
+						if(! x($parms,'fn'))
+							notice( 'Warning: profile location has no identifiable owner name.' . EOL );
+						if(! x($parms,'photo'))
+							notice( 'Warning: profile location has no profile photo.' . EOL );
+						$invalid = validate_dfrn($parms);		
+						if($invalid) {
+							notice( $invalid . ' required parameter' 
+								. (($invalid == 1) ? " was " : "s were " )
+								. "not found at the given location." . EOL ) ;
+							return;
+						}
+					}
+
+
+
+					$dfrn_request = $parms['dfrn-request'];
+
+					dbesc_array($parms);
+
+
+					$r = q("INSERT INTO `contact` ( `uid`, `created`,`url`, `name`, `photo`, `site-pubkey`,
+						`request`, `confirm`, `notify`, `poll`, `aes_allow`) 
+						VALUES ( %d, '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', %d)",
+						intval($_SESSION['uid']),
+						datetime_convert(),
+						dbesc($dfrn_url),
+						$parms['fn'],
+						$parms['photo'],
+						$parms['key'],
+						$parms['dfrn-request'],
+						$parms['dfrn-confirm'],
+						$parms['dfrn-notify'],
+						$parms['dfrn-poll'],
+						intval($aes_allow)
+					);
 				}
 
+				if($r) {
+					notice( "Introduction complete." . EOL);
+				}
 
+				// Allow the blocked remote notification to complete
 
-				$dfrn_request = $parms['dfrn-request'];
+				if(is_array($contact_record))
+					$dfrn_request = $contact_record['request'];
 
-				dbesc_array($parms);
+				if(strlen($dfrn_request) && strlen($confirm_key))
+					$s = fetch_url($dfrn_request . '?confirm_key=' . $confirm_key);
+					// ignore reply
+				goaway($dfrn_url);
+				return; // NOTREACHED
 
-
-				$r = q("INSERT INTO `contact` ( `uid`, `created`,`url`, `name`, `photo`, `site-pubkey`,
-					`request`, `confirm`, `notify`, `poll`, `aes_allow`) 
-					VALUES ( %d, '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', %d)",
-					intval($_SESSION['uid']),
-					datetime_convert(),
-					dbesc($dfrn_url),
-					$parms['fn'],
-					$parms['photo'],
-					$parms['key'],
-					$parms['dfrn-request'],
-					$parms['dfrn-confirm'],
-					$parms['dfrn-notify'],
-					$parms['dfrn-poll'],
-					intval($aes_allow)
-				);
 			}
-
-			if($r) {
-				notice( "Introduction complete." . EOL);
-			}
-
-			// Allow the blocked remote notification to complete
-
-			if(is_array($contact_record))
-				$dfrn_request = $contact_record['request'];
-
-			if(strlen($dfrn_request) && strlen($confirm_key))
-				$s = fetch_url($dfrn_request . '?confirm_key=' . $confirm_key);
-				// ignore reply
-			goaway($dfrn_url);
-			// NOTREACHED
 
 		}
- 		// invalid DFRN-url
+
+ 		// invalid/bogus request
+
 		notice( "Unrecoverable protocol error." . EOL );
 		goaway($a->get_baseurl());
+		return; // NOTREACHED
 	}
-	// extra safety
-	if($_POST['localconfirm'])
-		return;
 
+	// Otherwise:
 
-	// we are operating as a remote site and an introduction was requested of us.
+	// We are the requestee. A person from a remote cell has made an introduction 
+	// on our profile web page and clicked submit. We will use their DFRN-URL to 
+	// figure out how to contact their cell.  
+
 	// Scrape the originating DFRN-URL for everything we need. Create a contact record
 	// and an introduction to show our user next time he/she logs in.
-	// Finally redirect back to the originator so that their site can record the request.
-	// If our user confirms the request, a record of it will need to exist on the 
-	// originator's site in order for the confirmation process to complete.. 
+	// Finally redirect back to the requestor so that their site can record the request.
+	// If our user (the requestee) later confirms this request, a record of it will need 
+	// to exist on the requestor's cell in order for the confirmation process to complete.. 
 
+	// It's possible that neither the requestor or the requestee are logged in at the moment,
+	// and the requestor does not yet have any credentials to the requestee profile.
 
-	$tailname = $a->profile['nickname'];
+	// Who is the requestee? We've already loaded their profile which means their nickname should be
+	// in $a->argv[1] and we should have their complete info in $a->profile.
 
+	if(! (is_array($a->profile) && count($a->profile))) {
+		notice("Profile unavailable." . EOL);
+		return;
+	}
+
+	$nickname = $a->profile['nickname'];
+	$notify_flags = $a->profile['notify-flags'];
 	$uid = $a->profile['uid'];
 
 	$contact_record = null;
@@ -165,6 +178,8 @@ function dfrn_request_post(&$a) {
 			notice( "Invalid URL" . EOL );
 			return;
 		}
+
+		// Is this an email-style DFRN locator?
 
 		if(strstr($url,'@')) {
 			$username = substr($url,0,strpos($url,'@'));
@@ -297,22 +312,26 @@ function dfrn_request_post(&$a) {
 			);
 		}
 	
-		// TODO: send an email notification if our user wants one
+
+		// This notice will only be seen by the requestor if  the requestor and requestee are on the same server.
 
 		if(! $failed) 
 			notice( "Your introduction has been sent." . EOL );
 
 		// "Homecoming" - send the requestor back to their site to record the introduction.
 
-		$dfrn_url = bin2hex($a->get_baseurl() . "/profile/$tailname");
+		$dfrn_url = bin2hex($a->get_baseurl() . "/profile/$nickname");
 		$aes_allow = ((function_exists('openssl_encrypt')) ? 1 : 0);
 
 		goaway($parms['dfrn-request'] . "?dfrn_url=$dfrn_url" . '&confirm_key=' . $hash . (($aes_allow) ? "&aes_allow=1" : ""));
-		// NOTREACHED
+		return; // NOTREACHED
 
 	}
 	return;
 }}
+
+
+
 
 if(! function_exists('dfrn_request_content')) {
 function dfrn_request_content(&$a) {
@@ -337,12 +356,12 @@ function dfrn_request_content(&$a) {
 		// Edge case, but can easily happen in the wild. This person is authenticated, 
 		// but not as the person who needs to deal with this request.
 
-		if (($_SESSION['uid'] != $a->argv[1]) && ($a->user['nickname'] != $a->argv[1])) {
+		if ($a->user['nickname'] != $a->argv[1]) {
 			notice( "Incorrect identity currently logged in. Please login to <strong>this</strong> profile." . EOL);
 			return login();
 		}
 
-		$dfrn_url = notags(trim(pack("H*" , $_GET['dfrn_url'])));
+		$dfrn_url = notags(trim(hex2bin($_GET['dfrn_url'])));
 		$aes_allow = (((x($_GET,'aes_allow')) && ($_GET['aes_allow'] == 1)) ? 1 : 0);
 		$confirm_key = (x($_GET,'confirm_key') ? $_GET['confirm_key'] : "");
 		$o .= file_get_contents("view/dfrn_req_confirm.tpl");
@@ -358,21 +377,53 @@ function dfrn_request_content(&$a) {
 		return $o;
 
 	}
-	else {
-		// we are the requestee and it is now safe to send our user their introduction
-		if((x($_GET,'confirm_key')) && strlen($_GET['confirm_key'])) {
+	elseif((x($_GET,'confirm_key')) && strlen($_GET['confirm_key'])) { 
+
+		// we are the requestee and it is now safe to send our user their introduction,
+		// We could just unblock it, but first we have to jump through a few hoops to 
+		// send an email, or even to find out if we need to send an email. 
+
+		$intro = q("SELECT * FROM `intro` WHERE `hash` = '%s' LIMIT 1",
+			dbesc($_GET['confirm_key'])
+		);
+
+		if(count($intro)) {
+
+			$r = q("SELECT `contact`.*, `user`.* FROM `contact` LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid`
+				WHERE `contact`.`id` = %d LIMIT 1",
+				intval($intro[0]['contact-id'])
+			);
+			if(count($r)) {
+
+				if($r[0]['notify-flags'] & NOTIFY_INTRO) {
+					$email_tpl = file_get_contents('view/request_notify_eml.tpl');
+					$email = replace_macros($email_tpl, array(
+						'$requestor' => ((strlen(stripslashes($r[0]['name']))) ? stripslashes($r[0]['name']) : '[Name Withheld]'),
+						'$url' => stripslashes($r[0]['url']),
+						'$myname' => $r[0]['username'],
+						'$siteurl' => $a->get_baseurl(),
+						'$sitename' => $a->config['sitename']
+					));
+					$res = mail($r[0]['email'],"Introduction received at {$a->config['sitename']}",$email,"From: Administrator@{$_SERVER[SERVER_NAME]}");
+					// This is a redundant notification - no point throwing errors if it fails.
+				}
+			}
+
 			$r = q("UPDATE `intro` SET `blocked` = 0 WHERE `hash` = '%s' LIMIT 1",
 				dbesc($_GET['confirm_key'])
 			);
-			killme();
+
 		}
-
-
-	// Outside request. Display our user's introduction form. 
-
-
-	$o = file_get_contents("view/dfrn_request.tpl");
-	$o = replace_macros($o,array('$uid' => $a->argv[1]));
-	return $o;
+		killme();
+		return; // NOTREACHED
 	}
+	else {
+
+		// Normal web request. Display our user's introduction form. 
+
+		$o = file_get_contents("view/dfrn_request.tpl");
+		$o = replace_macros($o,array('$nickname' => $a->argv[1]));
+		return $o;
+	}
+	return; // Somebody is fishing.
 }}
