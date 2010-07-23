@@ -5,8 +5,8 @@ require_once('Photo.php');
 function wall_upload_post(&$a) {
 
         if(! local_user()) {
-                notice ( "Permission denied." . EOL );
-                return;
+                echo ( "Permission denied." . EOL );
+                killme();
         }
 
 	$src      = $_FILES['userfile']['tmp_name'];
@@ -17,9 +17,9 @@ function wall_upload_post(&$a) {
 	$ph = new Photo($imagedata);
 
 	if(! ($image = $ph->getImage())) {
-		notice("Unable to process image." . EOL);
+		echo ("Unable to process image." . EOL);
 		@unlink($src);
-		return;
+		killme();
 	}
 
 	@unlink($src);
@@ -43,10 +43,10 @@ function wall_upload_post(&$a) {
 		intval($height),
 		intval($width),
 		dbesc($str_image));
-	if($r)
-		notice("Image uploaded successfully." . EOL);
-	else
-		notice("Image upload failed." . EOL);
+	if(! $r) {
+		echo ("Image upload failed." . EOL);
+		killme();
+	}
 
 	if($width > 640 || $height > 640) {
 		$ph->scaleImage(640);
@@ -63,9 +63,7 @@ function wall_upload_post(&$a) {
 			intval($ph->getWidth()),
 			dbesc($ph->imageString())
 		);
-		if($r === false)
-			notice("Image size reduction (640) failed." . EOL );
-		else
+		if($r) 
 			$smallest = 1;
 	}
 
@@ -84,9 +82,7 @@ function wall_upload_post(&$a) {
 			intval($ph->getWidth()),
 			dbesc($ph->imageString())
 		);
-		if($r === false)
-			notice("Image size reduction (320) failed." . EOL );
-		else
+		if($r)
 			$smallest = 2;
 	}
 
