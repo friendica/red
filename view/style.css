@@ -919,6 +919,9 @@ input#dfrn-url {
 }
 #acl-permit-outer-wrapper,
 #acl-deny-outer-wrapper {
+	padding: 10px;
+	margin-top: 10px;
+	border: 2px solid #BBBBBB;
 	float: left;
 }
 
