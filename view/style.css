@@ -512,10 +512,19 @@ input#dfrn-url {
 #profile-jot-submit {
 	float: left;
 }
+#profile-upload-wrapper {
+	float: left;
+	margin-left: 50px;
+}
+
+#profile-link-wrapper {
+	float: left;
+	margin-left: 20px;
+}
 
 #profile-jot-perms {
 	float: left;
-	margin-left: 350px;
+	margin-left: 280px;
 }
 
 #profile-jot-perms-end {
