@@ -73,6 +73,10 @@ class App {
 		else {
 			$this->module = 'home';
 		}
+
+		if($this->cmd == '.well-known/host-meta')
+			require_once('include/hostxrd.php');
+
 		$this->pager['page'] = ((x($_GET,'page')) ? $_GET['page'] : 1);
 		$this->pager['itemspage'] = 50;
 		$this->pager['start'] = ($this->pager['page'] * $this->pager['itemspage']) - $this->pager['itemspage'];
