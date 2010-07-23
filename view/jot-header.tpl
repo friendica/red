@@ -27,14 +27,26 @@ tinyMCE.init({
 		var uploader = new window.AjaxUpload(
 			'wall-image-upload',
 			{ action: 'wall_upload',
-			name: 'userfile',
-			onComplete: function(file,response) {
-				tinyMCE.execCommand('mceInsertRawHTML',false,response);
-			}				 
+				name: 'userfile',
+				onSubmit: function(file,ext) { $('#profile-rotator').show(); },
+				onComplete: function(file,response) {
+					tinyMCE.execCommand('mceInsertRawHTML',false,response);
+					$('#profile-rotator').hide();
+				}				 
 			}
 		);
 
 	});
+
+
+	function jotGetLink() {
+		reply = prompt("Please enter a link URL:");
+		$('#profile-rotator').show();
+		$.get('parse_url?url=' + reply, function(data) {
+			tinyMCE.execCommand('mceInsertRawHTML',false,data);
+			$('#profile-rotator').hide();
+		});
+	}
 
 
 </script>

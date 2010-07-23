@@ -493,6 +493,11 @@ input#dfrn-url {
 .wall-item-photo {
 	border: none;
 }
+.wall-item-body {
+	float: left;
+	margin-top: 30px;
+	margin-left: 10px;
+}
 
 .comment-edit-wrapper {
 	margin-top: 15px;
@@ -517,6 +522,10 @@ input#dfrn-url {
 	margin-left: 50px;
 }
 
+#profile-rotator {
+	float: left;
+	margin-left: 50px;
+}
 #profile-link-wrapper {
 	float: left;
 	margin-left: 20px;
@@ -524,7 +533,7 @@ input#dfrn-url {
 
 #profile-jot-perms {
 	float: left;
-	margin-left: 280px;
+	margin-left: 250px;
 }
 
 #profile-jot-perms-end {
