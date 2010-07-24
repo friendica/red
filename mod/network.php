@@ -6,7 +6,7 @@ function network_init(&$a) {
 }
 
 
-function network_content(&$a) {
+function network_content(&$a, $update = false) {
 
 	if(! local_user())
 		return;
@@ -15,31 +15,36 @@ function network_content(&$a) {
 
 	$contact_id = $a->cid;
 
+
+	if(! $update) {
+
+
+		$tpl = file_get_contents('view/jot-header.tpl');
+	
+		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
+
+		require_once('view/acl_selectors.php');
+
+		$tpl = file_get_contents("view/jot.tpl");
+
+		$o .= replace_macros($tpl,array(
+			'$return_path' => $a->cmd,
+			'$baseurl' => $a->get_baseurl(),
+			'$visitor' => 'block',
+			'$lockstate' => 'unlock',
+			'$acl' => populate_acl(),
+			'$profile_uid' => $_SESSION['uid']
+		));
+
+
+		$o .= '<div id="live-network"></div>' . "\r\n";
+	}
+
 	$r = q("UPDATE `item` SET `unseen` = 0 
 		WHERE `unseen` = 1 AND `uid` = %d",
 		intval($_SESSION['uid'])
 	);
 
-
-	$tpl = file_get_contents('view/jot-header.tpl');
-	
-	$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
-
-	require_once('view/acl_selectors.php');
-
-	$tpl = file_get_contents("view/jot.tpl");
-
-	$o .= replace_macros($tpl,array(
-		'$return_path' => $a->cmd,
-		'$baseurl' => $a->get_baseurl(),
-		'$visitor' => 'block',
-		'$lockstate' => 'unlock',
-		'$acl' => populate_acl(),
-		'$profile_uid' => $_SESSION['uid']
-	));
-
-
-	$o .= '<div id="live-network"></div>' . "\r\n";
 
 
 	$sql_extra = ''; 
@@ -164,6 +169,9 @@ function network_content(&$a) {
 			));
 		}
 	}
-	$o .= paginate($a);
+
+	if(! $update)
+		$o .= paginate($a);
+
 	return $o;
 }

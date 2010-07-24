@@ -67,7 +67,7 @@ function profile_init(&$a) {
 }
 
 
-function profile_content(&$a) {
+function profile_content(&$a, $update = false) {
 
 	require_once("include/bbcode.php");
 	require_once('include/security.php');
@@ -76,14 +76,7 @@ function profile_content(&$a) {
 
 	$tab = 'posts';
 
-	if(x($_GET,'tab'))
-		$tab = notags(trim($_GET['tab']));
 
-	$tpl = file_get_contents('view/profile_tabs.tpl');
-
-	$o .= replace_macros($tpl,array(
-		'$url' => $a->get_baseurl() . '/' . $a->cmd
-	));
 
 
 	if(remote_user()) {
@@ -94,32 +87,49 @@ function profile_content(&$a) {
 		$contact_id = $_SESSION['cid'];
 	}
 
-	if($tab == 'profile') {
-		require_once('view/profile_advanced.php');
-		return $o;
+	if($update) {
+		if(! local_user())
+			return '';
+		$a->profile['uid'] = $_SESSION['uid'];
 	}
 
-	if(can_write_wall($a,$a->profile['profile_uid'])) {
-		$tpl = file_get_contents('view/jot-header.tpl');
-	
-		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
-		require_once('view/acl_selectors.php');
+	else {
+		if(x($_GET,'tab'))
+			$tab = notags(trim($_GET['tab']));
 
-		$tpl = file_get_contents("view/jot.tpl");
+		$tpl = file_get_contents('view/profile_tabs.tpl');
 
 		$o .= replace_macros($tpl,array(
-			'$baseurl' => $a->get_baseurl(),
-			'$return_path' => $a->cmd,
-			'$visitor' => (($_SESSION['uid'] == $a->profile['profile_uid']) ? 'block' : 'none'),
-			'$lockstate' => 'unlock',
-			'$acl' => (($_SESSION['uid'] == $a->profile['profile_uid']) ? populate_acl() : ''),
-			'$profile_uid' => $a->profile['profile_uid']
+			'$url' => $a->get_baseurl() . '/' . $a->cmd
 		));
+
+
+		if($tab == 'profile') {
+			require_once('view/profile_advanced.php');
+			return $o;
+		}
+
+		if(can_write_wall($a,$a->profile['profile_uid'])) {
+			$tpl = file_get_contents('view/jot-header.tpl');
+	
+			$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
+			require_once('view/acl_selectors.php');
+
+			$tpl = file_get_contents("view/jot.tpl");
+
+			$o .= replace_macros($tpl,array(
+				'$baseurl' => $a->get_baseurl(),
+				'$return_path' => $a->cmd,
+				'$visitor' => (($_SESSION['uid'] == $a->profile['profile_uid']) ? 'block' : 'none'),
+				'$lockstate' => 'unlock',
+				'$acl' => (($_SESSION['uid'] == $a->profile['profile_uid']) ? populate_acl() : ''),
+				'$profile_uid' => $a->profile['profile_uid']
+			));
+		}
+
+		if($tab == 'posts' && (! $a->pager['start']))
+			$o .= '<div id="live-profile"></div>' . "\r\n";
 	}
-
-	if($tab == 'posts' && (! $a->pager['start']))
-		$o .= '<div id="live-profile"></div>' . "\r\n";
-
 
 	// TODO alter registration and settings and profile to update contact table when names and  photos change.  
 
@@ -129,7 +139,7 @@ function profile_content(&$a) {
 
 	// Profile owner - everything is visible
 
-	if(local_user() && ($_SESSION['uid'] == $a->profile['profile_uid'])) {
+	if(local_user() && ($_SESSION['uid'] == $a->profile['uid'])) {
 		$sql_extra = ''; 
 		
 		// Oh - while we're here... reset the Unseen messages
@@ -250,6 +260,10 @@ function profile_content(&$a) {
 		}
 	}
 
+	if($update) {
+		return $o;
+	}
+		
 	$o .= paginate($a);
 
 	return $o;

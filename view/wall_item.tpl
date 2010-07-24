@@ -13,5 +13,5 @@
 $comment
 </div>
 
-<div class="wall-item-$indentoutside-wrapper-end" ></div>
+<div class="wall-item-outside-wrapper-end$indent" ></div>
 
