@@ -153,7 +153,7 @@ function network_content(&$a) {
 				'$thumb' => $profile_avatar,
 				'$body' => bbcode($item['body']),
 				'$ago' => relative_date($item['created']),
-				'$indent' => (($item['parent'] != $item['item_id']) ? 'comment-' : ''),
+				'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
 				'$owner_url' => $owner_url,
 				'$owner_photo' => $owner_photo,
 				'$owner_name' => $owner_name,

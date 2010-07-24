@@ -241,7 +241,7 @@ function profile_content(&$a) {
 				'$thumb' => $profile_avatar,
 				'$body' => bbcode($item['body']),
 				'$ago' => relative_date($item['created']),
-				'$indent' => (($item['parent'] != $item['item_id']) ? 'comment-' : ''),
+				'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
 				'$comment' => $comment
 			));
 		}

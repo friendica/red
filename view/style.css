@@ -458,7 +458,7 @@ input#dfrn-url {
 	clear: both;
 }
 
-.wall-item-comment-outside-wrapper {
+.wall-item-outside-wrapper.comment {
 	margin-left: 50px;
 }
 
