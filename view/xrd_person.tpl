@@ -4,8 +4,8 @@
     <Subject>$accturi</Subject>
     <Alias>$profile_url</Alias>
  
-    <Link rel='http://portablecontacts.net/spec/1.0'
-          href='http://example.com/api/people/' />
+    <Link rel='http://purl.org/macgirvin/dfrn/1.0'
+          href='$profile_url' />
     <Link rel='http://webfinger.net/rel/profile-page'
           type='text/html'
           href='$profile_url' />
