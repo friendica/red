@@ -11,6 +11,8 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
+--
+--
 
 -- --------------------------------------------------------
 
@@ -171,6 +173,30 @@ CREATE TABLE IF NOT EXISTS `item` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `mail`
+--
+
+CREATE TABLE IF NOT EXISTS `mail` (
+  `id` int(10) unsigned NOT NULL,
+  `uid` int(10) unsigned NOT NULL,
+  `from-name` char(255) NOT NULL,
+  `from-photo` char(255) NOT NULL,
+  `from-url` char(255) NOT NULL,
+  `contact-id` char(255) NOT NULL,
+  `title` char(255) NOT NULL,
+  `body` text NOT NULL,
+  `delivered` tinyint(1) NOT NULL,
+  `seen` tinyint(1) NOT NULL,
+  `replied` tinyint(1) NOT NULL,
+  `uri` char(255) NOT NULL,
+  `parent-uri` char(255) NOT NULL,
+  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `photo`
 --
 
@@ -284,6 +310,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `prvkey` text NOT NULL,
   `verified` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `blocked` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `notify-flags` int(11) unsigned NOT NULL DEFAULT '65535',
   `pwdreset` char(255) NOT NULL,
   PRIMARY KEY (`uid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
