@@ -50,6 +50,43 @@ tinyMCE.init({
 		}
 	}
 
+	var src = null;
+
+	$(document).ready(function() {
+		if($('#live-network').length) { src = 'net';  setTimeout(liveUpdate, 30000); }
+		if($('#live-profile').length) { src = 'wall'; setTimeout(liveUpdate, 30000); }
+	});
+
+	function liveUpdate() {
+		if(src == null) { return; }
+		if($('.comment-edit-text-full').length) {
+			setTimeout(liveUpdate, 30000);
+			return;
+		}
+
+//		$.get("live_update",function(data)
+//			{
+//			$(data).find('result').each(function() {
+//				var net = $(this).find('net').text();
+//				if(net == 0) { net = ''; }
+//				$('#net-update').html(net);
+//				var home = $(this).find('home').text();
+//				if(home == 0) { home = ''; }
+//				$('#home-update').html(home);
+//				var mail = $(this).find('mail').text();
+//				if(mail == 0) { mail = ''; }
+//				$('#mail-update').html(mail);
+//				var intro = $(this).find('intro').text();
+//				if(intro == 0) { intro = ''; }
+//				$('#notify-update').html(intro);
+//			});
+//		}) ;
+
+		setTimeout(liveUpdate,30000);
+	}
+			
+
+
 
 </script>
 

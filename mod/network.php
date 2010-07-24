@@ -39,6 +39,9 @@ function network_content(&$a) {
 	));
 
 
+	$o .= '<div id="live-network"></div>' . "\r\n";
+
+
 	$sql_extra = ''; 
 
 

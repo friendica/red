@@ -117,6 +117,9 @@ function profile_content(&$a) {
 		));
 	}
 
+	if($tab == 'posts' && (! $a->pager['start']))
+		$o .= '<div id="live-profile"></div>' . "\r\n";
+
 
 	// TODO alter registration and settings and profile to update contact table when names and  photos change.  
 
