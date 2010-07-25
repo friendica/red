@@ -2,7 +2,8 @@
 
 
 function network_init(&$a) {
-
+	require_once('include/group.php');
+	$a->page['aside'] .= group_side('network','network');
 }
 
 
@@ -15,9 +16,12 @@ function network_content(&$a, $update = false) {
 
 	$contact_id = $a->cid;
 
+	$group = 0;
 
 	if(! $update) {
-
+			// pull out the group here because the updater might have different args
+		if($a->argc > 1)
+			$group = intval($a->argv[1]);
 
 		$tpl = file_get_contents('view/jot-header.tpl');
 	
@@ -37,18 +41,52 @@ function network_content(&$a, $update = false) {
 		));
 
 
-		$o .= '<div id="live-network"></div>' . "\r\n";
+		// The special div is needed for liveUpdate to kick in for this page.
+		// We only launch liveUpdate if you are on the front page, you aren't
+		// filtering by group and also you aren't writing a comment (the last
+		// criteria is discovered in javascript).
+
+		if($a->pager['start'] == 0 && $a->argc == 1)
+			$o .= '<div id="live-network"></div>' . "\r\n";
 	}
 
+	// We aren't going to try and figure out at the item, group, and page level 
+	// which items you've seen and which you haven't. You're looking at some
+	// subset of items, so just mark everything seen. 
+	
 	$r = q("UPDATE `item` SET `unseen` = 0 
 		WHERE `unseen` = 1 AND `uid` = %d",
 		intval($_SESSION['uid'])
 	);
 
+	// We don't have to deal with ACL's on this page. You're looking at everything
+	// that belongs to you, hence you can see all of it. We will filter by group if
+	// desired. 
 
+	// TODO: Perhaps we should limit the group filter to those with the group in the ACL,
+	// rather than just the contact-id of the post.
+	// Otherwise we're not showing complete conversations, unless all the conversants
+	// happen to be in the group.
 
 	$sql_extra = ''; 
 
+	if($group) {
+		$r = q("SELECT `id` FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			intval($group),
+			intval($_SESSION['uid'])
+		);
+		if(! count($r)) {
+			notice("No such group");
+			goaway($a->get_baseurl() . '/network');
+			return; // NOTREACHED
+		}
+
+		$contacts = expand_groups(array($group));
+		$contacts[] = $_SESSION['cid'];
+		$contact_str = implode(',',$contacts);
+		$sql_extra = dbesc(" AND `contact`.`id` IN ( $contact_str ) ");
+
+	}
 
 	$r = q("SELECT COUNT(*) AS `total`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`

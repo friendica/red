@@ -121,7 +121,7 @@ function group_get_members($gid) {
 
 
 
-function group_side() {
+function group_side($every="contacts",$each="group") {
 
 	if(! local_user())
 		return;
@@ -136,7 +136,7 @@ $o .= <<< EOT
 
 <div id="sidebar-group-list">
 	<ul id="sidebar-group-ul">
-	<li class="sidebar-group-li" ><a href="contacts">Everybody</a></li>
+	<li class="sidebar-group-li" ><a href="$every">Everybody</a></li>
 
 EOT;
 
@@ -145,7 +145,7 @@ EOT;
 	);
 	if(count($r)) {
 		foreach($r as $rr)
-			$o .= "	<li class=\"sidebar-group-li\"><a href=\"group/{$rr['id']}\">{$rr['name']}</a></li>\r\n";
+			$o .= "	<li class=\"sidebar-group-li\"><a href=\"$each/{$rr['id']}\">{$rr['name']}</a></li>\r\n";
 	}
 	$o .= "	</ul>\r\n	</div>\r\n</div>";	
 
