@@ -1,3 +1,4 @@
+
 <script language="javascript" type="text/javascript"
           src="$baseurl/tinymce/jscripts/tiny_mce/tiny_mce_src.js"></script>
           <script language="javascript" type="text/javascript">
@@ -50,41 +51,6 @@ tinyMCE.init({
 		}
 	}
 
-	var src = null;
-
-	$(document).ready(function() {
-		if($('#live-network').length) { src = 'network';  setTimeout(liveUpdate, 30000); }
-		if($('#live-profile').length) { src = 'profile';  setTimeout(liveUpdate, 30000); }
-	});
-
-	function liveUpdate() {
-		if(src == null) { return; }
-		if($('.comment-edit-text-full').length) {
-			setTimeout(liveUpdate, 30000);
-			return;
-		}
-
-//		$.get('update_' + src,function(data)
-//			{
-//			$(data).find('#wall-item-outside-wrapper').each(function() {
-//				var net = $(this).find('net').text();
-//				if(net == 0) { net = ''; }
-//				$('#net-update').html(net);
-//				var home = $(this).find('home').text();
-//				if(home == 0) { home = ''; }
-//				$('#home-update').html(home);
-//				var mail = $(this).find('mail').text();
-//				if(mail == 0) { mail = ''; }
-//				$('#mail-update').html(mail);
-//				var intro = $(this).find('intro').text();
-//				if(intro == 0) { intro = ''; }
-//				$('#notify-update').html(intro);
-//			});
-//		}) ;
-
-		setTimeout(liveUpdate,30000);
-	}
-			
 
 
 

@@ -9,12 +9,24 @@
 <script type="text/javascript" src="$baseurl/include/main.js" ></script>
 
 <script type="text/javascript">
-	$(document).ready(function() { NavUpdate(); });
 
-function NavUpdate()
-	{
-		$.get("ping",function(data)
-			{
+	var src = null;
+	var prev = null;
+	var livetime = null;
+	var msie = false;
+
+	$(document).ready(function() {
+		$.ajaxSetup({cache: false});
+		msie = $.browser.msie ;
+ 		NavUpdate(); 
+	});
+
+	function NavUpdate() {
+
+		if($('#live-network').length) { src = 'network'; liveUpdate(); }
+		if($('#live-profile').length) { src = 'profile'; liveUpdate(); }
+
+		$.get("ping",function(data) {
 			$(data).find('result').each(function() {
 				var net = $(this).find('net').text();
 				if(net == 0) { net = ''; }
@@ -31,6 +43,29 @@ function NavUpdate()
 			});
 		}) ;
 		setTimeout(NavUpdate,30000);
+
 	}
+
+	function liveUpdate() {
+		if(src == null) { return; }
+		if($('.comment-edit-text-full').length) {
+			livetime = setTimeout(liveUpdate, 10000);
+			return;
+		}
+		prev = 'live-' + src;
+
+		$.get('update_' + src + '?msie=' + ((msie) ? 1 : 0),function(data) {
+			$('.wall-item-outside-wrapper',data).each(function() {
+				var ident = $(this).attr('id');
+				if($('#' + ident).length == 0) {
+					$('#' + prev).after($(this));
+				}
+				else { $('#' + ident).replaceWith($(this)); }
+				prev = ident; 
+			});
+		});
+
+	}
+
 </script>
 

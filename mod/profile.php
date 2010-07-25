@@ -212,13 +212,18 @@ function profile_content(&$a, $update = false) {
 			
 			$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 			
-			if(can_write_wall($a,$a->profile['profile_uid'])) {
+			if($update)
+				$return_url = $_SESSION['return_url'];
+			else
+				$return_url = $_SESSION['return_url'] = $a->cmd;
+
+			if(can_write_wall($a,$a->profile['uid'])) {
 				if($item['last-child']) {
 					$comment = replace_macros($cmnt_tpl,array(
-						'$return_path' => $a->cmd,
+						'$return_path' => $_SESSION['return_url'],
 						'$id' => $item['item_id'],
 						'$parent' => $item['parent'],
-						'$profile_uid' =>  $a->profile['profile_uid'],
+						'$profile_uid' =>  $a->profile['uid'],
 						'$ww' => ''
 					));
 				}

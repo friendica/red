@@ -119,9 +119,15 @@ function network_content(&$a, $update = false) {
 				}
 			}
 
+			if($update)
+				$return_url = $_SESSION['return_url'];
+			else
+				$return_url = $_SESSION['return_url'] = $a->cmd;
+
+
 			if($item['last-child']) {
 				$comment = replace_macros($cmnt_tpl,array(
-					'$return_path' => $a->cmd,
+					'$return_path' => $_SESSION['return_url'],
 					'$id' => $item['item_id'],
 					'$parent' => $item['parent'],
 					'$profile_uid' =>  $_SESSION['uid'],
