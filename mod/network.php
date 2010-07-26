@@ -23,6 +23,8 @@ function network_content(&$a, $update = false) {
 		if($a->argc > 1)
 			$group = intval($a->argv[1]);
 
+		$_SESSION['return_url'] = $a->cmd;
+
 		$tpl = file_get_contents('view/jot-header.tpl');
 	
 		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
