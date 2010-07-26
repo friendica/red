@@ -63,7 +63,7 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 		`contact`.`id` AS `contact-id`, `contact`.`uid` AS `contact-uid`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-		AND `item`.`type` != 'remote' AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+		AND NOT `item`.`type` IN ( 'remote', 'net-comment') AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 		AND `item`.`edited` > '%s'
 		$sql_extra
 		ORDER BY `parent` ASC, `created` ASC LIMIT 0, 300",

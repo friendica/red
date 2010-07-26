@@ -15,7 +15,7 @@ require_once("datetime.php");
 
 if($argc < 3)
 	exit;
-dbg(3);
+//dbg(3);
 	$baseurl = $argv[1];
 	$a->set_baseurl($argv[1]);
 

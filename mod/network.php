@@ -166,12 +166,17 @@ function network_content(&$a, $update = false) {
 			if($item['last-child']) {
 				$comment = replace_macros($cmnt_tpl,array(
 					'$return_path' => $_SESSION['return_url'],
+					'$type' => 'net-comment',
 					'$id' => $item['item_id'],
 					'$parent' => $item['parent'],
 					'$profile_uid' =>  $_SESSION['uid'],
 					'$ww' => $commentww
 				));
 			}
+
+
+			$drop = replace_macros(file_get_contents('view/wall_item_drop.tpl'), array('$id' => $item['id']));
+
 
 	
 			if(($item['contact-uid'] == $_SESSION['uid']) && (strlen($item['dfrn-id'])) && (! $item['self'] ))
@@ -209,6 +214,7 @@ function network_content(&$a, $update = false) {
 				'$owner_url' => $owner_url,
 				'$owner_photo' => $owner_photo,
 				'$owner_name' => $owner_name,
+				'$drop' => $drop,
 				'$comment' => $comment
 			));
 		}

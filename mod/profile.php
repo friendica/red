@@ -79,6 +79,7 @@ function profile_content(&$a, $update = false) {
 
 
 
+
 	if(remote_user()) {
 		$contact_id = $_SESSION['visitor_id'];
 		$groups = init_groups_visitor($contact_id);
@@ -88,9 +89,23 @@ function profile_content(&$a, $update = false) {
 	}
 
 	if($update) {
-		if(! local_user())
-			return '';
-		$a->profile['uid'] = $_SESSION['uid'];
+		// Ensure we've got a profile owner if updating.
+		if(remote_user()) {
+			$r = q("SELECT `uid` FROM `contact` WHERE `id` = %d LIMIT 1",
+				intval($_SESSION['visitor_id'])
+			);
+			if(count($r))
+				$a->profile['uid'] = $r[0]['uid'];
+			else
+				killme();
+		}
+		elseif(local_user()) {
+			$a->profile['uid'] = $_SESSION['uid'];
+		}
+		else {
+			killme();
+			return; // NOTREACHED
+		}
 	}
 
 	else {
@@ -174,7 +189,7 @@ function profile_content(&$a, $update = false) {
 	$r = q("SELECT COUNT(*) AS `total`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-		AND `item`.`type` != 'remote' AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
+		AND NOT `item`.`type` IN ( 'remote', 'net-comment') AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
 		$sql_extra ",
 		intval($a->profile['uid'])
 
@@ -190,7 +205,7 @@ function profile_content(&$a, $update = false) {
 		`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-		AND `item`.`type` != 'remote' AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+		AND NOT `item`.`type` IN ( 'remote', 'net-comment') AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 		$sql_extra
 		ORDER BY `parent` DESC, `id` ASC LIMIT %d ,%d ",
 		intval($a->profile['uid']),
@@ -217,10 +232,12 @@ function profile_content(&$a, $update = false) {
 			else
 				$return_url = $_SESSION['return_url'] = $a->cmd;
 
+
 			if(can_write_wall($a,$a->profile['uid'])) {
 				if($item['last-child']) {
 					$comment = replace_macros($cmnt_tpl,array(
 						'$return_path' => $_SESSION['return_url'],
+						'$type' => 'wall-comment',
 						'$id' => $item['item_id'],
 						'$parent' => $item['parent'],
 						'$profile_uid' =>  $a->profile['uid'],
@@ -252,6 +269,14 @@ function profile_content(&$a, $update = false) {
 			$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $item['thumb']);
 			$profile_link = $profile_url;
 
+			$drop = '';
+
+			if(($item['contact-id'] == $_SESSION['visitor_id']) || ($item['uid'] == $_SESSION['uid']))
+				$drop = replace_macros(file_get_contents('view/wall_item_drop.tpl'), array('$id' => $item['id']));
+
+
+
+
 			$o .= replace_macros($template,array(
 				'$id' => $item['item_id'],
 				'$profile_url' => $profile_link,
@@ -260,6 +285,7 @@ function profile_content(&$a, $update = false) {
 				'$body' => bbcode($item['body']),
 				'$ago' => relative_date($item['created']),
 				'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
+				'$drop' => $drop,
 				'$comment' => $comment
 			));
 		}

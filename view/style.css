@@ -482,6 +482,17 @@ input#dfrn-url {
 	font-size: 0.8em;
 }
 
+.wall-item-delete-wrapper {
+	float: left;
+	margin-top: 10px;
+	margin-left: 50px;
+}
+
+.wall-item-delete-icon {
+	border: none;
+}
+
+
 .wall-item-wrapper-end {
 	clear: both;
 }

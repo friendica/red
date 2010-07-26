@@ -19,6 +19,14 @@
 		$.ajaxSetup({cache: false});
 		msie = $.browser.msie ;
  		NavUpdate(); 
+
+//		$('.wall-item-delete-icon').hover(function() {
+//			$(this).attr("src",$(this).attr("src").replace('hide',''));
+//		},function() {
+//			$(this).attr("src",$(this).attr("src").replace('','hide'));
+//		});
+
+
 	});
 
 	function NavUpdate() {
@@ -57,7 +65,7 @@
 		$.get('update_' + src + '?msie=' + ((msie) ? 1 : 0),function(data) {
 			$('.wall-item-outside-wrapper',data).each(function() {
 				var ident = $(this).attr('id');
-				if($('#' + ident).length == 0) {
+				if($('#' + ident).length == 0) { 
 					$('#' + prev).after($(this));
 				}
 				else { $('#' + ident).replaceWith($(this)); }
@@ -65,6 +73,10 @@
 			});
 		});
 
+	}
+
+	function confirmDelete() { 
+		return confirm("Delete this item?");
 	}
 
 </script>

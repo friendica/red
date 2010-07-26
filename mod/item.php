@@ -91,10 +91,16 @@ function item_post(&$a) {
 	if(count($r))
 		$contact_record = $r[0];
 
+	$post_type == notags(trim($_POST['type']));
+
+	if($post_type == 'net-comment') {
+		if($parent_item !== null && $parent_item['type'] != 'remote')		
+			$post_type = 'wall-comment';
+	}
 
 	$notify_type = (($parent) ? 'comment-new' : 'wall-new' );
 
-	if(($_POST['type'] == 'wall') || ($_POST['type'] == 'wall-comment')) {
+	if(($_POST['type'] == 'wall') || ($_POST['type'] == 'wall-comment') || ($_POST['type'] == 'net-comment')) {
 
 		do {
 			$dups = false;
