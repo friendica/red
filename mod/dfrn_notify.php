@@ -39,13 +39,41 @@ function dfrn_notify_post(&$a) {
 
 	foreach($feed->get_items() as $item) {
 
+		$deleted = false;
+
 		$rawdelete = $item->get_item_tags("http://purl.org/atompub/tombstones/1.0", 'deleted-entry');
-		print_r($rawdelete);
+		if(isset($rawdelete[0]['attribs']['']['ref'])) {
+			$uri = $rawthread[0]['attribs']['']['ref'];
+			$deleted = true;
+			if(isset($rawdelete[0]['attribs']['']['when'])) {
+				$when = $rawthread[0]['attribs']['']['when'];
+				$when = datetime_convert('UTC','UTC', $when, 'Y-m-d H:i:s');
+			}
+			else
+				$when = datetime_convert('UTC','UTC','now','Y-m-d H:i:s');
+		}
 		if($deleted) {
-			// pick out ref and when from attribs
-			// check hasn't happened already, verify ownership and then process it
-
-
+			$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+				dbesc($uri),
+				intval($importer['uid'])
+			);
+			if(count($r)) {
+				if($r[0]['uri'] == $r[0]['parent-uri']) {
+					$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s'
+						WHERE `parent-uri` = '%s'"
+						dbesc($when),
+						dbesc($r[0]['uri'])
+					);
+				}
+				else {
+					$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s' 
+						WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						dbesc($when),
+						dbesc($uri),
+						intval($importer['uid'])
+					);
+				}
+			}	
 			continue;
 		}
 
