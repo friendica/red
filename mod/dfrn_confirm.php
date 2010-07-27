@@ -368,8 +368,11 @@ function dfrn_confirm_post(&$a) {
 		);
 		if($r === false)
 			$_SESSION['sysmsg'] .= "Unable to set contact photo info." . EOL;
+
+		goaway($a->get_baseurl() . '/contacts/' . intval($contact_id));
+		return;  //NOTREACHED
+
 	}
 
-	goaway($a->get_baseurl() . '/contacts/' . intval($contact_id));
-	return;  //NOTREACHED
+	return;
 }
