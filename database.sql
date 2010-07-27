@@ -208,6 +208,7 @@ CREATE TABLE IF NOT EXISTS `photo` (
   `edited` datetime NOT NULL,
   `title` char(255) NOT NULL,
   `desc` text NOT NULL,
+  `album` char(255) NOT NULL,
   `filename` char(255) NOT NULL,
   `height` smallint(6) NOT NULL,
   `width` smallint(6) NOT NULL,
