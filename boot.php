@@ -39,6 +39,7 @@ class App {
 	public  $argc;
 	public  $module;
 	public  $pager;
+	public  $strings;   
 
 	private $scheme;
 	private $hostname;
@@ -175,6 +176,19 @@ function replace_macros($s,$r) {
 }}
 
 
+function load_translation_table($lang) {
+	global $a;
+
+}
+
+
+function t($s) {
+	global $a;
+
+	if($a->strings[$s])
+		return $a->strings[$s];
+	return $s;
+}
 
 if(! function_exists('fetch_url')) {
 function fetch_url($url,$binary = false) {
@@ -430,9 +444,9 @@ function paginate(&$a) {
 	  if($a->pager['total'] > $a->pager['itemspage']) {
 		$o .= '<div class="pager">';
     		if($a->pager['page'] != 1)
-			$o .= '<span class="pager_prev">'."<a href=\"$url".'&page='.($a->pager['page'] - 1).'">prev</a></span> ';
+			$o .= '<span class="pager_prev">'."<a href=\"$url".'&page='.($a->pager['page'] - 1).'">' . t('prev') . '</a></span> ';
 
-		$o .=  "<span class=\"pager_first\"><a href=\"$url"."&page=1\">first</a></span> ";
+		$o .=  "<span class=\"pager_first\"><a href=\"$url"."&page=1\">" . t('first') . "</a></span> ";
 
     		$numpages = $a->pager['total'] / $a->pager['itemspage'];
 
@@ -461,10 +475,10 @@ function paginate(&$a) {
 		}
 
 		$lastpage = (($numpages > intval($numpages)) ? intval($numpages)+1 : $numpages);
-		$o .= "<span class=\"pager_last\"><a href=\"$url"."&page=$lastpage\">last</a></span> ";
+		$o .= "<span class=\"pager_last\"><a href=\"$url"."&page=$lastpage\">" . t('last') . "</a></span> ";
 
     		if(($a->pager['total'] - ($a->pager['itemspage'] * $a->pager['page'])) > 0)
-			$o .= '<span class="pager_next">'."<a href=\"$url"."&page=".($a->pager['page'] + 1).'">next</a></span>';
+			$o .= '<span class="pager_next">'."<a href=\"$url"."&page=".($a->pager['page'] + 1).'">' . t('next') . '</a></span>';
 		$o .= '</div>'."\r\n";
 	}
 	return $o;
@@ -481,3 +495,5 @@ function expand_acl($s) {
 	}
 	return array();
 }		
+
+

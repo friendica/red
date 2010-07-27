@@ -10,7 +10,7 @@ if((x($_SESSION,'authenticated')) && (! ($_POST['auth-params'] == 'login'))) {
 		unset($_SESSION['is_visitor']);
 		unset($_SESSION['administrator']);
 		unset($_SESSION['cid']);
-		$_SESSION['sysmsg'] = "Logged out." . EOL;
+		$_SESSION['sysmsg'] = t("Logged out.") . EOL;
 		goaway($a->get_baseurl());
 	}
 	if(x($_SESSION,'uid')) {
@@ -50,7 +50,7 @@ else {
 			dbesc(trim($_POST['login-name'])),
 			dbesc($encrypted));
 		if(($r === false) || (! count($r))) {
-			$_SESSION['sysmsg'] = 'Login failed.' . EOL ;
+			$_SESSION['sysmsg'] = t('Login failed.') . EOL ;
 			goaway($a->get_baseurl());
   		}
 		$_SESSION['uid'] = $r[0]['uid'];
@@ -58,7 +58,7 @@ else {
 		$_SESSION['authenticated'] = 1;
 		$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $r[0]['nickname'];
 
-		$_SESSION['sysmsg'] = "Welcome back " . $r[0]['username'] . EOL;
+		$_SESSION['sysmsg'] = t("Welcome back ") . $r[0]['username'] . EOL;
 		$a->user = $r[0];
 		if(strlen($a->user['timezone']))
 			date_default_timezone_set($a->user['timezone']);

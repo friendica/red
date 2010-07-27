@@ -1,8 +1,7 @@
-
 <?php
 
 if(x($_SESSION['uid'])) {
-		$a->page['nav'] .= "<a id=\"nav-logout-link\" class=\"nav-link\" href=\"logout\">Logout</a>\r\n";
+		$a->page['nav'] .= "<a id=\"nav-logout-link\" class=\"nav-link\" href=\"logout\">" . t('Logout') . "</a>\r\n";
 }
 
 	$a->page['nav'] .= "<span id=\"nav-link-wrapper\" >\r\n";
