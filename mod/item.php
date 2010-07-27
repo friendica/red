@@ -13,36 +13,6 @@ function item_post(&$a) {
 
 	$uid = $_SESSION['uid'];
 
-	if(($a->argc == 3) && ($a->argv[1] == 'drop') && intval($a->argv[2])) {
-		$r = q("SELECT * FROM `item` WHERE `id` = %d LIMIT 1",
-			intval($argv[2])
-		);
-		if(! count($r)) {
-			notice("Permission denied." . EOL);
-			goway($a->get_baseurl() . $_SESSION['return_url']);
-		}
-		$item = $r[0];
-		if(($_SESSION['visitor_id'] == $item['contact-id']) || ($_SESSION['uid'] == $item['uid'])) {
-		$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s' WHERE `id` = %d LIMIT 1",
-			dbesc(datetime_convert()),
-			intval($item['id'])
-		);
-		if($item['uri'] == $item['parent-uri']) {
-			$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s' WHERE `parent-uri` = '%s',
-				dbesc(datetime_convert()),
-				dbesc($item['parent-uri'])
-			);
-		}
-
-		$url = $a->get_baseurl();
-		$drop_id = intval($item['id'])l
-
-		proc_close(proc_open("php include/notifier.php \"$url\" \"$drop" \"$drop_id\" > notify.log &",
-			array(),$foo));
-
-		goway($a->get_baseurl() . $_SESSION['return_url']);
-
-	}
 
 	$parent = ((x($_POST,'parent')) ? intval($_POST['parent']) : 0);
 
@@ -210,4 +180,68 @@ function item_post(&$a) {
 	}
 	goaway($a->get_baseurl() . "/" . $_POST['return'] );
 	return; // NOTREACHED
+}
+
+function item_content(&$a) {
+
+	if((! local_user()) && (! remote_user()))
+		return;
+
+	require_once('include/security.php');
+
+	$uid = $_SESSION['uid'];
+
+	if(($a->argc == 3) && ($a->argv[1] == 'drop') && intval($a->argv[2])) {
+
+		// locate item to be deleted
+
+		$r = q("SELECT * FROM `item` WHERE `id` = %d LIMIT 1",
+			intval($a->argv[2])
+		);
+
+		if(! count($r)) {
+			notice("Item not found." . EOL);
+			goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
+		}
+		$item = $r[0];
+
+		// check if logged in user is either the author or owner of this item
+
+		if(($_SESSION['visitor_id'] == $item['contact-id']) || ($_SESSION['uid'] == $item['uid'])) {
+
+			// delete the item
+
+			$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s' WHERE `id` = %d LIMIT 1",
+				dbesc(datetime_convert()),
+				intval($item['id'])
+			);
+
+			// If it's the parent of a comment thread, kill all the kids
+
+			if($item['uri'] == $item['parent-uri']) {
+				$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s' 
+					WHERE `parent-uri` = '%s' AND `uid` = %d ",
+					dbesc(datetime_convert()),
+					dbesc($item['parent-uri']),
+					intval($item['uid'])
+				);
+			}
+
+			$url = $a->get_baseurl();
+			$drop_id = intval($item['id']);
+
+			// send the notification upstream/downstream as the case may be
+
+			proc_close(proc_open("php include/notifier.php \"$url\" \"drop\" \"$drop_id\" > notify.log &",
+				array(),$foo));
+
+			goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
+			return; //NOTREACHED
+		}
+		else {
+			notice("Permission denied." . EOL);
+			goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
+			return; //NOTREACHED
+		}
+	}
 }

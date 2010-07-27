@@ -219,6 +219,10 @@ function profile_content(&$a, $update = false) {
 
 	$tpl = file_get_contents('view/wall_item.tpl');
 
+	if($update)
+		$return_url = $_SESSION['return_url'];
+	else
+		$return_url = $_SESSION['return_url'] = $a->cmd;
 
 	if(count($r)) {
 		foreach($r as $item) {
@@ -227,10 +231,6 @@ function profile_content(&$a, $update = false) {
 			
 			$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 			
-			if($update)
-				$return_url = $_SESSION['return_url'];
-			else
-				$return_url = $_SESSION['return_url'] = $a->cmd;
 
 
 			if(can_write_wall($a,$a->profile['uid'])) {

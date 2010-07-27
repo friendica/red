@@ -483,9 +483,13 @@ input#dfrn-url {
 }
 
 .wall-item-delete-wrapper {
-	float: left;
-	margin-top: 10px;
-	margin-left: 50px;
+	float: right;
+	margin-top: 20px;
+	margin-right: 50px;
+}
+
+.wall-item-delete-end {
+	clear: both;
 }
 
 .wall-item-delete-icon {
@@ -506,6 +510,7 @@ input#dfrn-url {
 }
 .wall-item-body {
 	float: left;
+	width: 450px;
 	margin-top: 30px;
 	margin-left: 10px;
 }

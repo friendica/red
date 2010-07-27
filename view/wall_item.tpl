@@ -6,9 +6,9 @@
 <div class="wall-item-wrapper" id="wall-item-wrapper-$id" >
 <a href="$profile_url" title="View $name's profile" class="wall-item-name-link"><span class="wall-item-name" id="wall-item-name-$id" >$name</span></a>
 <div class="wall-item-ago"  id="wall-item-ago-$id">$ago</div>
-$drop
 </div>
 <div class="wall-item-body" id="wall-item-body-$id" >$body</div>
+$drop
 <div class="wall-item-wrapper-end"></div>
 <div class="wall-item-comment-separator"></div>
 $comment

@@ -20,11 +20,6 @@
 		msie = $.browser.msie ;
  		NavUpdate(); 
 
-//		$('.wall-item-delete-icon').hover(function() {
-//			$(this).attr("src",$(this).attr("src").replace('hide',''));
-//		},function() {
-//			$(this).attr("src",$(this).attr("src").replace('','hide'));
-//		});
 
 
 	});
@@ -78,6 +73,19 @@
 	function confirmDelete() { 
 		return confirm("Delete this item?");
 	}
+
+	function imgbright(node) {
+		$(node).attr("src",$(node).attr("src").replace('hide','show'));
+	}
+
+	function imgdull(node) {
+		$(node).attr("src",$(node).attr("src").replace('show','hide'));
+	}
+
+
+
+
+
 
 </script>
 
