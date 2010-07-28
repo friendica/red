@@ -5,7 +5,7 @@ require_once('include/items.php');
 
 
 function dfrn_notify_post(&$a) {
-
+dbg(3);
 	$dfrn_id = notags(trim($_POST['dfrn_id']));
 	$challenge = notags(trim($_POST['challenge']));
 	$data = $_POST['data'];
@@ -26,10 +26,19 @@ function dfrn_notify_post(&$a) {
 	$r = q("SELECT `id`, `uid` FROM `contact` WHERE `issued-id` = '%s' LIMIT 1",
 		dbesc($dfrn_id)
 	);
-	if(! count($r))
+	if(! count($r)) {
 		xml_status(3);
+		return; //NOTREACHED
+	}
 
+	// We aren't really interested in anything this person has to say. But be polite and make them 
+	// think we're listening intently by acknowledging receipt of their communications - which we quietly ignore.
 
+	if($r[0]['readonly']) {
+		xml_status(0);
+		return; //NOTREACHED
+	}
+		
 	$importer = $r[0];
 
 	$feed = new SimplePie();
@@ -60,7 +69,7 @@ function dfrn_notify_post(&$a) {
 			if(count($r)) {
 				if($r[0]['uri'] == $r[0]['parent-uri']) {
 					$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s'
-						WHERE `parent-uri` = '%s'"
+						WHERE `parent-uri` = '%s'",
 						dbesc($when),
 						dbesc($r[0]['uri'])
 					);

@@ -15,7 +15,7 @@ require_once("datetime.php");
 
 if($argc < 3)
 	exit;
-//dbg(3);
+dbg(3);
 	$baseurl = $argv[1];
 	$a->set_baseurl($argv[1]);
 
@@ -215,12 +215,14 @@ if($argc < 3)
 	// delivery loop
 
 	foreach($r as $rr) {
-
 		if($rr['self'])
 			continue;
 
 		if(! strlen($rr['dfrn-id']))
 			continue;
+
+
+
 		$url = $rr['notify'] . '?dfrn_id=' . $rr['dfrn-id'];
 
 		$xml = fetch_url($url);
@@ -240,7 +242,7 @@ echo $xml;
 
 		openssl_public_decrypt($challenge,$postvars['challenge'],$rr['pubkey']);
 
-		if(strlen($rr['dfrn-id']) && (! $rr['blocked']))
+		if(strlen($rr['dfrn-id']) && (! ($rr['blocked']) || ($rr['readonly'])))
 			$postvars['data'] = $atom;
 		else
 			$postvars['data'] = $atom_nowrite;

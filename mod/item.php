@@ -96,8 +96,12 @@ function item_post(&$a) {
 	$post_type == notags(trim($_POST['type']));
 
 	if($post_type == 'net-comment') {
-		if($parent_item !== null && $parent_item['type'] != 'remote')		
-			$post_type = 'wall-comment';
+		if($parent_item !== null) {
+			if($parent_item['type'] == 'remote')
+				$post_type = 'remote-comment';
+			else		
+				$post_type = 'wall-comment';
+		}
 	}
 
 	$notify_type = (($parent) ? 'comment-new' : 'wall-new' );

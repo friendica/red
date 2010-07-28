@@ -36,7 +36,7 @@ function contacts_post(&$a) {
 			intval($_SESSION['uid'])
 		);
 		if(! count($r)) {
-			notice("Cannot locate selected profile." . EOL);
+			notice( t('Could not locate selected profile.') . EOL);
 			return;
 		}
 	}
@@ -55,9 +55,9 @@ function contacts_post(&$a) {
 		intval($_SESSION['uid'])
 	);
 	if($r)
-		notice("Contact updated." . EOL);
+		notice( t('Contact updated.') . EOL);
 	else
-		notice("Failed to update contact record." . EOL);
+		notice( t('Failed to update contact record.') . EOL);
 	return;
 
 }
@@ -67,7 +67,7 @@ function contacts_post(&$a) {
 function contacts_content(&$a) {
 
 	if(! local_user()) {
-		$_SESSION['sysmsg'] .= "Permission denied." . EOL;
+		notice( t('Permission denied.') . EOL);
 		return;
 	}
 
@@ -85,7 +85,7 @@ function contacts_content(&$a) {
 		);
 
 		if(! count($orig_record)) {
-			notice("Could not access contact record." . EOL);
+			notice( t('Could not access contact record.') . EOL);
 			goaway($a->get_baseurl() . '/contacts');
 			return; // NOTREACHED
 		}
@@ -105,7 +105,22 @@ function contacts_content(&$a) {
 					intval($_SESSION['uid'])
 			);
 			if($r) {
-				$msg = "Contact has been " . (($blocked) ? '' : 'un') . "blocked." . EOL ;
+				$msg = t('Contact has been ') . (($blocked) ? t('blocked') : t('unblocked')) . EOL ;
+				notice($msg);
+			}
+			goaway($a->get_baseurl() ."/contacts/$contact_id");
+			return; // NOTREACHED
+		}
+
+		if($cmd == 'ignore') {
+			$readonly = (($orig_record[0]['readonly']) ? 0 : 1);
+			$r = q("UPDATE `contact` SET `readonly` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
+					intval($readonly),
+					intval($contact_id),
+					intval($_SESSION['uid'])
+			);
+			if($r) {
+				$msg = t('Contact has been ') . (($readonly) ? t('ignored') : t('unignored')) . EOL ;
 				notice($msg);
 			}
 			goaway($a->get_baseurl() ."/contacts/$contact_id");
@@ -143,7 +158,7 @@ function contacts_content(&$a) {
 			intval($contact_id)
 		);
 		if(! count($r)) {
-			notice("Contact not found.");
+			notice( t('Contact not found.') . EOL);
 			return;
 		}
 
@@ -156,25 +171,26 @@ function contacts_content(&$a) {
 			if(strlen($r[0]['dfrn-id'])) {
 				$direction = DIRECTION_BOTH;
 				$dir_icon = 'images/lrarrow.gif';
-				$alt_text = 'Mutual Friendship';
+				$alt_text = t('Mutual Friendship');
 			}
 			else {
 				$direction = DIRECTION_IN;
 				$dir_icon = 'images/larrow.gif';
-				$alt_text = 'is a fan of yours';
+				$alt_text = t('is a fan of yours');
 			}
 		}
 		else {
 			$direction = DIRECTION_OUT;
 			$dir_icon = 'images/rarrow.gif';
-			$alt_text = 'you are a fan of';
+			$alt_text = t('you are a fan of');
 		}
 
 		$o .= replace_macros($tpl,array(
 			'$profile_select' => contact_profile_assign($r[0]['profile-id']),
 			'$contact_id' => $r[0]['id'],
-			'$block_text' => (($r[0]['blocked']) ? 'Unblock this contact' : 'Block this contact' ),
-			'$blocked' => (($r[0]['blocked']) ? '<div id="block-message">Currently blocked</div>' : ''),
+			'$block_text' => (($r[0]['blocked']) ? t('Unblock this contact') : t('Block this contact') ),
+			'$ignore_text' => (($r[0]['readonly']) ? t('Unignore this contact') : t('Ignore this contact') ),
+			'$blocked' => (($r[0]['blocked']) ? '<div id="block-message">' . t('Currently blocked') . '</div>' : ''),
 			'$rating' => contact_reputation($r[0]['rating']),
 			'$reason' => $r[0]['reason'],
 			'$groups' => '', // group_selector(),
@@ -198,7 +214,7 @@ function contacts_content(&$a) {
 	$tpl = file_get_contents("view/contacts-top.tpl");
 	$o .= replace_macros($tpl,array(
 		'$hide_url' => ((strlen($sql_extra)) ? 'contacts/all' : 'contacts' ),
-		'$hide_text' => ((strlen($sql_extra)) ? 'Show Blocked Connections' : 'Hide Blocked Connections')
+		'$hide_text' => ((strlen($sql_extra)) ? t('Show Blocked Connections') : t('Hide Blocked Connections'))
 	)); 
 
 	switch($sort_type) {
@@ -232,18 +248,18 @@ function contacts_content(&$a) {
 				if(strlen($rr['dfrn-id'])) {
 					$direction = DIRECTION_BOTH;
 					$dir_icon = 'images/lrarrow.gif';
-					$alt_text = 'Mutual Friendship';
+					$alt_text = t('Mutual Friendship');
 				}
 				else {
 					$direction = DIRECTION_IN;
 					$dir_icon = 'images/larrow.gif';
-					$alt_text = 'is a fan of yours';
+					$alt_text = t('is a fan of yours');
 				}
 			}
 			else {
 				$direction = DIRECTION_OUT;
 				$dir_icon = 'images/rarrow.gif';
-				$alt_text = 'you are a fan of';
+				$alt_text = t('you are a fan of');
 			}
 
 			$o .= replace_macros($tpl, array(

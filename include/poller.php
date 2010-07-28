@@ -95,7 +95,7 @@ echo "Length:" . strlen($xml) . "\r\n";
 				if(count($r)) {
 					if($r[0]['uri'] == $r[0]['parent-uri']) {
 						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s'
-							WHERE `parent-uri` = '%s'"
+							WHERE `parent-uri` = '%s'",
 							dbesc($when),
 							dbesc($r[0]['uri'])
 						);

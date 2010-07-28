@@ -62,6 +62,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `last-update` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `priority` tinyint(3) NOT NULL,
   `blocked` tinyint(1) NOT NULL DEFAULT '1',
+  `readonly` tinyint(1) NOT NULL DEFAULT '0',
   `pending` tinyint(1) NOT NULL DEFAULT '1',
   `rating` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0-5 reputation, 0 unknown, 1 call police, 5 inscrutable',
   `reason` text NOT NULL COMMENT 'why a rating was given - will help friends decide to make friends or not',

@@ -17,6 +17,7 @@
 
 		<div id="contact-edit-links" >
 			<a href="contacts/$contact_id/block" id="contact-edit-block-link" ><img src="images/b_block.gif" alt="Block/Unblock contact" title="$block_text"/></a>
+			<a href="contacts/$contact_id/ignore" id="contact-edit-ignore-link" ><img src="images/no.gif" alt="Ignore contact" title="$ignore_text"/></a>
 			<a href="contacts/$contact_id/drop" id="contact-edit-drop-link" onclick="return confirmDelete();" ><img src="images/b_drophide.gif" alt="Delete contact" title="Delete contact" onmouseover="imgbright(this);" onmouseout="imgdull(this);" /></a>
 		</div>
 		<div id="contact-edit-nav-end"></div>
