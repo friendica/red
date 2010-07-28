@@ -22,7 +22,7 @@ if(x($_SESSION['uid'])) {
 		$a->page['nav'] .= '<a id="nav-notify-link" class="nav-commlink" href="notifications">' . t('Notifications') 
 			. '</a><span id="notify-update" class="nav-ajax-left"></span>' . "\r\n";
 
-		$a->page['nav'] .= '<a id="nav-messages-link" class="nav-commlink" href="messages">' . t('Messages') 
+		$a->page['nav'] .= '<a id="nav-messages-link" class="nav-commlink" href="message">' . t('Messages') 
 			. '</a><span id="mail-update" class="nav-ajax-left"></span>' . "\r\n";
 		
 
