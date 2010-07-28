@@ -20,7 +20,7 @@ if($argc < 2)
 
 	$a->set_baseurl($argv[1]);
 
-	$contacts = q("SELECT * FROM `contact` WHERE `dfrn-id` != '' AND `self` = 0 ORDER BY RAND()");
+	$contacts = q("SELECT * FROM `contact` WHERE `dfrn-id` != '' AND `self` = 0 AND `blocked` = 0 AND `readonly` = 0 ORDER BY RAND()");
 
 	if(! count($contacts))
 		killme();
