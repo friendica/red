@@ -3,6 +3,9 @@
 function contacts_init(&$a) {
 	require_once('include/group.php');
 	$a->page['aside'] .= group_side();
+
+	if($a->config['register_policy'] != REGISTER_CLOSED)
+		$a->page['aside'] .= '<div class="side-invite-link-wrapper" id="side-invite-link-wrapper" ><a href="invite" class="side-invite-link" id="side-invite-link">' . t("Invite Friends") . '</a></div>';
 }
 
 function contacts_post(&$a) {

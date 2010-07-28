@@ -76,10 +76,14 @@
 
 	function imgbright(node) {
 		$(node).attr("src",$(node).attr("src").replace('hide','show'));
+		$(node).css('width',24);
+		$(node).css('height',24);
 	}
 
 	function imgdull(node) {
 		$(node).attr("src",$(node).attr("src").replace('show','hide'));
+		$(node).css('width',16);
+		$(node).css('height',16);
 	}
 
 

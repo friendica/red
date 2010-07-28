@@ -125,18 +125,22 @@ function group_side($every="contacts",$each="group") {
 
 	if(! local_user())
 		return;
+
+$createtext = t('Create a new group');
+$linktext= t('Everybody');
+
 $o .= <<< EOT
 
 <div id="group-sidebar">
 <h3>Groups</h3>
 
 <div id="sidebar-new-group">
-<a href="group/new">Create a new group</a>
+<a href="group/new">$createtext</a>
 </div>
 
 <div id="sidebar-group-list">
 	<ul id="sidebar-group-ul">
-	<li class="sidebar-group-li" ><a href="$every">Everybody</a></li>
+	<li class="sidebar-group-li" ><a href="$every" >$linktext</a></li>
 
 EOT;
 

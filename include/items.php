@@ -110,7 +110,7 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 					'$owner_profile_page' => xmlify($item['owner-link']),
 					'$owner_thumb' => xmlify($item['owner-avatar']),
 					'$item_id' => xmlify($item['uri']),
-					'$title' => xmlify($item['name']),
+					'$title' => xmlify($item['title']),
 					'$published' => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
 					'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
 					'$content' =>xmlify($item['body']),

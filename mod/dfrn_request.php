@@ -51,7 +51,7 @@ function dfrn_request_post(&$a) {
 	
 				if(count($r)) {
 					if(strlen($r[0]['dfrn-id'])) {
-						notice("This introduction has already been accepted." . EOL );
+						notice( t("This introduction has already been accepted.") . EOL );
 						return;
 					}
 					else
@@ -72,19 +72,19 @@ function dfrn_request_post(&$a) {
 					$parms = scrape_dfrn($dfrn_url);
 	
 					if(! count($parms)) {
-						notice( 'Profile location is not valid or does not contain profile information.' . EOL );
+						notice( t('Profile location is not valid or does not contain profile information.') . EOL );
 						return;
 					}
 					else {
 						if(! x($parms,'fn'))
-							notice( 'Warning: profile location has no identifiable owner name.' . EOL );
+							notice( t('Warning: profile location has no identifiable owner name.') . EOL );
 						if(! x($parms,'photo'))
-							notice( 'Warning: profile location has no profile photo.' . EOL );
+							notice( t('Warning: profile location has no profile photo.') . EOL );
 						$invalid = validate_dfrn($parms);		
 						if($invalid) {
-							notice( $invalid . ' required parameter' 
-								. (($invalid == 1) ? " was " : "s were " )
-								. "not found at the given location." . EOL ) ;
+							notice( $invalid . t(' required parameter') 
+								. (($invalid == 1) ? t(" was ") : t("s were ") )
+								. t("not found at the given location.") . EOL ) ;
 							return;
 						}
 					}
@@ -114,7 +114,7 @@ function dfrn_request_post(&$a) {
 				}
 
 				if($r) {
-					notice( "Introduction complete." . EOL);
+					notice( t("Introduction complete.") . EOL);
 				}
 
 				// Allow the blocked remote notification to complete
@@ -134,7 +134,7 @@ function dfrn_request_post(&$a) {
 
  		// invalid/bogus request
 
-		notice( "Unrecoverable protocol error." . EOL );
+		notice( t("Unrecoverable protocol error.") . EOL );
 		goaway($a->get_baseurl());
 		return; // NOTREACHED
 	}
@@ -158,7 +158,7 @@ function dfrn_request_post(&$a) {
 	// in $a->argv[1] and we should have their complete info in $a->profile.
 
 	if(! (is_array($a->profile) && count($a->profile))) {
-		notice("Profile unavailable." . EOL);
+		notice(t("Profile unavailable.") . EOL);
 		return;
 	}
 
@@ -175,7 +175,7 @@ function dfrn_request_post(&$a) {
 
 		$url = trim($_POST['dfrn_url']);
 		if(! strlen($url)) {
-			notice( "Invalid URL" . EOL );
+			notice( t("Invalid locator") . EOL );
 			return;
 		}
 
@@ -204,7 +204,7 @@ function dfrn_request_post(&$a) {
 		}
 
 		if(! strlen($url)) {
-			notice("Unable to resolve your name at the provided location." . EOL);			
+			notice(t("Unable to resolve your name at the provided location.") . EOL);			
 			return;
 		}
 
@@ -215,7 +215,7 @@ function dfrn_request_post(&$a) {
 
 		if(count($ret)) {
 			if(strlen($ret[0]['issued-id'])) {
-				notice( 'You have already introduced yourself here.' . EOL );
+				notice( t('You have already introduced yourself here.') . EOL );
 				return;
 			}
 			else {
@@ -240,19 +240,19 @@ function dfrn_request_post(&$a) {
 			$parms = scrape_dfrn($url);
 
 			if(! count($parms)) {
-				notice( 'Profile location is not valid or does not contain profile information.' . EOL );
+				notice( t('Profile location is not valid or does not contain profile information.') . EOL );
 				killme();
 			}
 			else {
 				if(! x($parms,'fn'))
-					notice( 'Warning: profile location has no identifiable owner name.' . EOL );
+					notice( t('Warning: profile location has no identifiable owner name.') . EOL );
 				if(! x($parms,'photo'))
-					notice( 'Warning: profile location has no profile photo.' . EOL );
+					notice( t('Warning: profile location has no profile photo.') . EOL );
 				$invalid = validate_dfrn($parms);		
 				if($invalid) {
-					notice( $invalid . ' required parameter' 
-						. (($invalid == 1) ? " was " : "s were " )
-						. "not found at the given location." . EOL ) ;
+					notice( $invalid . t(' required parameter') 
+						. (($invalid == 1) ? t(" was ") : t("s were ") )
+						. t("not found at the given location.") . EOL ) ;
 
 					return;
 				}
@@ -316,7 +316,7 @@ function dfrn_request_post(&$a) {
 		// This notice will only be seen by the requestor if  the requestor and requestee are on the same server.
 
 		if(! $failed) 
-			notice( "Your introduction has been sent." . EOL );
+			notice( t("Your introduction has been sent.") . EOL );
 
 		// "Homecoming" - send the requestor back to their site to record the introduction.
 
@@ -349,7 +349,7 @@ function dfrn_request_content(&$a) {
 	if(x($_GET,'dfrn_url')) {
 
 		if(! local_user()) {
-			notice( "Please login to confirm introduction." . EOL );
+			notice( t("Please login to confirm introduction.") . EOL );
 			return login();
 		}
 
@@ -357,7 +357,7 @@ function dfrn_request_content(&$a) {
 		// but not as the person who needs to deal with this request.
 
 		if ($a->user['nickname'] != $a->argv[1]) {
-			notice( "Incorrect identity currently logged in. Please login to <strong>this</strong> profile." . EOL);
+			notice( t("Incorrect identity currently logged in. Please login to <strong>this</strong> profile.") . EOL);
 			return login();
 		}
 
@@ -398,13 +398,13 @@ function dfrn_request_content(&$a) {
 				if($r[0]['notify-flags'] & NOTIFY_INTRO) {
 					$email_tpl = file_get_contents('view/request_notify_eml.tpl');
 					$email = replace_macros($email_tpl, array(
-						'$requestor' => ((strlen(stripslashes($r[0]['name']))) ? stripslashes($r[0]['name']) : '[Name Withheld]'),
+						'$requestor' => ((strlen(stripslashes($r[0]['name']))) ? stripslashes($r[0]['name']) : t('[Name Withheld]')),
 						'$url' => stripslashes($r[0]['url']),
 						'$myname' => $r[0]['username'],
 						'$siteurl' => $a->get_baseurl(),
 						'$sitename' => $a->config['sitename']
 					));
-					$res = mail($r[0]['email'],"Introduction received at {$a->config['sitename']}",$email,"From: Administrator@{$_SERVER[SERVER_NAME]}");
+					$res = mail($r[0]['email'],t("Introduction received at ") . $a->config['sitename'],$email,t('From: Administrator@') . $_SERVER[SERVER_NAME] );
 					// This is a redundant notification - no point throwing errors if it fails.
 				}
 			}
@@ -425,5 +425,6 @@ function dfrn_request_content(&$a) {
 		$o = replace_macros($o,array('$nickname' => $a->argv[1]));
 		return $o;
 	}
+
 	return; // Somebody is fishing.
 }}

@@ -28,6 +28,7 @@ section {
 	top: 60px;
 	margin-left: 20px;
 	margin-right: 20px;
+	right: 0px;
 }
 h1 {
 	font-size: 1.6em;
@@ -458,6 +459,10 @@ input#dfrn-url {
 	clear: both;
 }
 
+.wall-item-outside-wrapper {
+	margin-top: 10px;
+}
+
 .wall-item-outside-wrapper.comment {
 	margin-left: 50px;
 }
@@ -508,11 +513,22 @@ input#dfrn-url {
 .wall-item-photo {
 	border: none;
 }
+.wall-item-content {
+	float: left;
+	width: 450px;
+	margin-left: 10px;
+}
+
+.wall-item-title {
+	float: left;
+	font-weight: bold;
+	width: 450px;
+}
+
 .wall-item-body {
 	float: left;
 	width: 450px;
 	margin-top: 30px;
-	margin-left: 10px;
 }
 
 .comment-edit-wrapper {

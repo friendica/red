@@ -210,6 +210,7 @@ function network_content(&$a, $update = false) {
 				'$profile_url' => $profile_link,
 				'$name' => $profile_name,
 				'$thumb' => $profile_avatar,
+				'$title' => $item['title'],
 				'$body' => bbcode($item['body']),
 				'$ago' => relative_date($item['created']),
 				'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),

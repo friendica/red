@@ -9,19 +9,17 @@ function dfrn_confirm_post(&$a) {
 
 	if(x($_POST,'source_url')) {
 
-	// We are processing an external confirmation to an introduction created by our user.
+		// We are processing an external confirmation to an introduction created by our user.
 
 		$public_key = $_POST['public_key'];
 		$dfrn_id = $_POST['dfrn_id'];
 		$source_url = $_POST['source_url'];
 		$aes_key = $_POST['aes_key'];
 
-		if(intval($node)) 
-			$r = q("SELECT * FROM `user` WHERE `uid` = %d LIMIT 1",
-				intval($node));
-		else
-			$r = q("SELECT * FROM `user` WHERE `nickname` = '%s' LIMIT 1",
-				dbesc($node));
+		// Find our user's account
+
+		$r = q("SELECT * FROM `user` WHERE `nickname` = '%s' LIMIT 1",
+			dbesc($node));
 
 		if(! count($r)) {
 			xml_status(3); // failure
@@ -31,6 +29,8 @@ function dfrn_confirm_post(&$a) {
 		$local_uid = $r[0]['uid'];
 
 		$decrypted_source_url = "";
+
+		// verify everything
 
 		openssl_private_decrypt($source_url,$decrypted_source_url,$my_prvkey);
 
@@ -105,6 +105,7 @@ function dfrn_confirm_post(&$a) {
 					);
 					if($r === false)
 						$photo_failure = true;
+					
 					$img->scaleImage(80);
 					$r =  q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`,
                                                 `height`, `width`, `data`, `scale` )
@@ -142,7 +143,7 @@ function dfrn_confirm_post(&$a) {
 				intval($dfrn_record)
 			);
 			if($r === false)
-				$_SESSION['sysmsg'] .= "Unable to set contact photo info." . EOL;
+				notice( t("Unable to set contact photo info.") . EOL);
 
 			// Otherwise everything seems to have worked and we are almost done. Yay!
 			// Send an email notification
@@ -150,32 +151,33 @@ function dfrn_confirm_post(&$a) {
 			$r = q("SELECT * FROM `contact` LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid`
 				WHERE `contact`.`id` = %d LIMIT 1",
 				intval($dfrn_record));
-			
-			$tpl = file_get_contents('view/intro_complete_eml.tpl');
-			
-			$email_tpl = replace_macros($tpl, array(
-                                '$sitename' => $a->config['sitename'],
-                                '$siteurl' =>  $a->get_baseurl(),
-                                '$username' => $r[0]['username'],
-                                '$email' => $r[0]['email'],
-				'$fn' => $r[0]['name'],
-				'$dfrn_url' => $r[0]['url'],
-                                '$uid' => $newuid ));
+			if((count($r)) && ($r[0]['notify-flags'] & NOTIFY_CONFIRM)) {
 
-
-                	$res = mail($r[0]['email'],"Introduction accepted at {$a->config['sitename']}",
-				$email_tpl,"From: Administrator@{$_SERVER[SERVER_NAME]}");
-			if(!$res) {
-				notice( "Email notification failed." . EOL );
+				$tpl = file_get_contents('view/intro_complete_eml.tpl');
+			
+				$email_tpl = replace_macros($tpl, array(
+					'$sitename' => $a->config['sitename'],
+					'$siteurl' =>  $a->get_baseurl(),
+					'$username' => $r[0]['username'],
+					'$email' => $r[0]['email'],
+					'$fn' => $r[0]['name'],
+					'$dfrn_url' => $r[0]['url'],
+					'$uid' => $newuid )
+				);
+	
+				$res = mail($r[0]['email'], t("Introduction accepted at ") . $a->config['sitename'],
+					$email_tpl,t("From: Administrator@") . $_SERVER[SERVER_NAME] );
+				if(!$res) {
+					notice( t("Email notification failed.") . EOL );
+				}
 			}
 			xml_status(0); // Success
 
 			return; // NOTREACHED
-
 		}
-		else
+		else {
 			xml_status(2);	// Hopefully temporary problem that can be retried.
-
+		}
 		return; // NOTREACHED
 
 	////////////////////// End of this scenario ///////////////////////////////////////////////
@@ -187,7 +189,7 @@ function dfrn_confirm_post(&$a) {
 		$uid = $_SESSION['uid'];
 
 		if(! $uid) {
-			notice("Permission denied." . EOL );
+			notice(t("Permission denied.") . EOL );
 			return;
 		}	
 	
@@ -200,7 +202,7 @@ function dfrn_confirm_post(&$a) {
 				);
 
 		if((! $r) || (! count($r))) {
-			$_SESSION['sysmsg'] = 'Node does not exist.' . EOL ;
+			notice( t('Node does not exist.') . EOL );
 			return;
 		}
 
@@ -228,7 +230,7 @@ function dfrn_confirm_post(&$a) {
 			dbesc($private_key),
 			intval($contact_id),
 			intval($uid) 
-			);
+		);
 
 
 		$params = array();
@@ -262,7 +264,7 @@ function dfrn_confirm_post(&$a) {
 		$status = (int) $xml->status;
 		switch($status) {
 			case 0:
-				$_SESSION['sysmsg'] .= "Confirmation completed successfully" . EOL;
+				notice( t("Confirmation completed successfully") . EOL);
 				break;
 			case 1:
 
@@ -276,12 +278,12 @@ function dfrn_confirm_post(&$a) {
 				);
 
 			case 2:
-				$_SESSION['sysmsg'] .= "Temporary failure. Please wait and try again." . EOL;
+				notice( t("Temporary failure. Please wait and try again.") . EOL);
 				break;
 
 
 			case 3:
-				$_SESSION['sysmsg'] .= "Introduction failed or was revoked. Cannot complete." . EOL;
+				notice( t("Introduction failed or was revoked. Cannot complete.") . EOL);
 				break;
 		}
 
@@ -367,7 +369,7 @@ function dfrn_confirm_post(&$a) {
 			intval($contact_id)
 		);
 		if($r === false)
-			$_SESSION['sysmsg'] .= "Unable to set contact photo info." . EOL;
+			notice( t("Unable to set contact photo info.") . EOL);
 
 		goaway($a->get_baseurl() . '/contacts/' . intval($contact_id));
 		return;  //NOTREACHED

@@ -64,7 +64,7 @@ function item_post(&$a) {
 		$str_contact_deny = implode('',$contact_deny);
 	}
 
-
+	$title = notags(trim($_POST['title']));
 	$body = escape_tags(trim($_POST['body']));
 
 	if(! strlen($body)) {
@@ -118,8 +118,8 @@ function item_post(&$a) {
 
 
 		$r = q("INSERT INTO `item` (`uid`,`type`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, `created`,
-			`edited`, `uri`, `body`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
-			VALUES( %d, '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+			`edited`, `uri`, `title`, `body`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
+			VALUES( %d, '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 			intval($profile_uid),
 			dbesc($_POST['type']),
 			intval($contact_id),
@@ -129,7 +129,8 @@ function item_post(&$a) {
 			datetime_convert(),
 			datetime_convert(),
 			dbesc($uri),
-			dbesc(escape_tags(trim($_POST['body']))),
+			dbesc($title),
+			dbesc($body),
 			dbesc($str_contact_allow),
 			dbesc($str_group_allow),
 			dbesc($str_contact_deny),
