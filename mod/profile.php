@@ -77,8 +77,9 @@ function profile_content(&$a, $update = false) {
 	$tab = 'posts';
 
 
-
-
+	if(! $update) {
+		$_SESSION['profile_uid'] = $a->profile['uid'];
+	}
 
 	if(remote_user()) {
 		$contact_id = $_SESSION['visitor_id'];
@@ -90,22 +91,7 @@ function profile_content(&$a, $update = false) {
 
 	if($update) {
 		// Ensure we've got a profile owner if updating.
-		if(remote_user()) {
-			$r = q("SELECT `uid` FROM `contact` WHERE `id` = %d LIMIT 1",
-				intval($_SESSION['visitor_id'])
-			);
-			if(count($r))
-				$a->profile['uid'] = $r[0]['uid'];
-			else
-				killme();
-		}
-		elseif(local_user()) {
-			$a->profile['uid'] = $_SESSION['uid'];
-		}
-		else {
-			killme();
-			return; // NOTREACHED
-		}
+		$a->profile['profile_uid'] = $_SESSION['profile_uid'];
 	}
 
 	else {
