@@ -17,12 +17,16 @@ $default_timezone = 'Australia/Sydney';
 
 $a->config['sitename'] = "DFRN developer";
 
-// At the present time you can have REGISTER_OPEN
-// or REGISTER_CLOSED. But register your personal account 
-// first before you close it.
+// Your choices are REGISTER_OPEN, REGISTER_APPROVE, or REGISTER_CLOSED.
+// Be certain to create your own personal account before setting 
+// REGISTER_CLOSED. 'register_text' (if set) will be displayed prominently on 
+// the registration page. REGISTER_APPROVE requires you set 'admin_email'
+// to the email address of an already registered person who can authorise
+// and/or approve/deny the request.
 
 $a->config['register_policy'] = REGISTER_OPEN;
-
+$a->config['register_text'] = '';
+$a->config['admin_email'] = '';
 
 // Maximum size of an imported message, 0 is unlimited.
 
