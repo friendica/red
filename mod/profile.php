@@ -57,7 +57,12 @@ function profile_init(&$a) {
 			unset($_SESSION['authenticated']);
 	}
 
-	profile_load($a,$which);
+	$profile = 0;
+	if((local_user()) && ($a->argc > 2) && ($a->argv[2] == 'view')) {
+		$which = $a->user['nickname'];
+		$profile = $a->argv[1];		
+	}
+	profile_load($a,$which,$profile);
 	$a->page['htmlhead'] .= "<meta name=\"dfrn-template\" content=\"" . $a->get_baseurl() . "/profile/%s" . "\" />\r\n";
 	
 	$dfrn_pages = array('request', 'confirm', 'notify', 'poll');

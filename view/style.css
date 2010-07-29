@@ -300,8 +300,17 @@ input#dfrn-url {
 	list-style-type: none;
 }
 
+
 #profile-extra-links li {
 	margin-top: 5px;
+}
+
+#profile-edit-links ul {
+	list-style-type: none;
+}
+
+#profile-edit-links li {
+	margin-top: 10px;
 }
 
 .view-contact-wrapper {

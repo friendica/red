@@ -1,8 +1,14 @@
 <h1>Edit Profile Details</h1>
 
-<div id="profile-edit-clone-link-wrapper" ><a href="profiles/clone/$profile_id" id="profile-edit-clone-link" title="Create a new profile using these settings">Clone this profile</a></div>
+<div id="profile-edit-links">
+<ul>
+<li><a href="profile/$profile_id/view" id="profile-edit-view-link" title="View this profile">View this profile</a></li>
+<li><a href="profiles/clone/$profile_id" id="profile-edit-clone-link" title="Create a new profile using these settings">Clone this profile</a></li>
+<li></li>
+<li><a href="profiles/drop/$profile_id" id="profile-edit-drop-link" title="Delete this profile" $disabled >Delete this profile</a></li>
 
-<div id="profile-edit-drop-link-wrapper" ><a href="profiles/drop/$profile_id" id="profile-edit-drop-link" title="Delete this profile" $disabled >Delete this profile</a></div>
+</ul>
+</div>
 
 <div id="profile-edit-links-end"></div>
 
@@ -35,6 +41,8 @@ $gender
 $dob $age
 </div>
 <div id="profile-edit-dob-end"></div>
+
+$profile_in_dir
 
 $hide_friends
 
@@ -117,10 +125,6 @@ $sexual
 <input type="text" size="32" name="religion" id="profile-edit-religion" value="$religion" />
 </div>
 <div id="profile-edit-religion-end"></div>
-
-
-$profile_in_dir
-
 
 <div class="profile-edit-submit-wrapper" >
 <input type="submit" name="submit" class="profile-edit-submit-button" value="Submit" />
