@@ -191,6 +191,7 @@ function contacts_content(&$a) {
 			'$block_text' => (($r[0]['blocked']) ? t('Unblock this contact') : t('Block this contact') ),
 			'$ignore_text' => (($r[0]['readonly']) ? t('Unignore this contact') : t('Ignore this contact') ),
 			'$blocked' => (($r[0]['blocked']) ? '<div id="block-message">' . t('Currently blocked') . '</div>' : ''),
+			'$ignored' => (($r[0]['readonly']) ? '<div id="ignore-message">' . t('Currently ignored') . '</div>' : ''),
 			'$rating' => contact_reputation($r[0]['rating']),
 			'$reason' => $r[0]['reason'],
 			'$groups' => '', // group_selector(),
@@ -263,6 +264,8 @@ function contacts_content(&$a) {
 			}
 
 			$o .= replace_macros($tpl, array(
+				'$img_hover' => t('Visit ') . $rr['name'] . t('\'s profile'),
+				'$edit_hover' => t('Edit contact'),
 				'$id' => $rr['id'],
 				'$alt_text' => $alt_text,
 				'$dir_icon' => $dir_icon,
@@ -271,6 +274,7 @@ function contacts_content(&$a) {
 				'$url' => (($direction != DIRECTION_IN) ? "redir/{$rr['id']}" : $rr['url'] )
 			));
 		}
+		$o .= '<div id="contact-edit-end"></div>';
 	}
 	return $o;
 }

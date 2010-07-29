@@ -27,6 +27,7 @@
 	<div id="contact-edit-end" ></div>
 
 $blocked
+$ignored
 
 <form action="contacts/$contact_id" method="post" >
 <input type="hidden" name="contact_id" value="$contact_id">

@@ -437,37 +437,37 @@ input#dfrn-url {
 #contacts-main {
 	margin-bottom: 20px;
 }
-.contact-entry-photo-wrapper {
+
+.contact-entry-wrapper {
 	float: left;
+	width: 180px;
 }
+
 .contact-entry-direction-icon {
 	margin-top: 24px;
-	float: left;
 	margin-right: 2px;
 }
+
 .contact-entry-photo img {
 	border: none;
 }
 .contact-entry-photo-end {
 	clear: both;
 }
-.contact-entry-edit-links {
-	float: left;
-	margin-top: 10px;
-}
 .contact-entry-name {
 	float: left;
+	margin-left: 30px;
+}
+.contact-entry-edit-links {
+	margin-top: 6px;
+	margin-left: 10px;
+	width: 16px;
 }
 .contact-entry-nav-wrapper {
 	float: left;
 	margin-left: 10px;
 }
-.contact-entry-nav-end {
-	clear: both;
-}
-.contact-entry-break {
-	clear: both;
-}
+
 .contact-entry-edit-links img {
 	border: none;
 	margin-right: 15px;
@@ -476,6 +476,14 @@ input#dfrn-url {
 	float: left;
 }
 .contact-entry-end {
+	clear: both;
+}
+/*
+.contact-entry-nav-end {
+	clear: both;
+}
+*/
+#contact-edit-end {
 	clear: both;
 }
 
@@ -900,7 +908,7 @@ input#dfrn-url {
 	margin-left: 50px;
 }
 
-#block-message {
+#block-message, #ignore-message {
 	margin-top: 20px;
 	width: 180px;
 	color: #FF0000;
