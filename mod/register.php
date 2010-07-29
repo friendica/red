@@ -14,9 +14,9 @@ function register_post(&$a) {
 		$verified = 1;
 		break;
 
-	case REGISTER_VERIFY:
+	case REGISTER_APPROVE:
 		$blocked = 1;
-		$verify = 0;
+		$verified = 0;
 		break;
 
 	default:
@@ -168,14 +168,48 @@ function register_post(&$a) {
 
 		$res = mail($email,"Registration details for {$a->config['sitename']}",$email_tpl,"From: Administrator@{$_SERVER[SERVER_NAME]}");
 
-	}
 
-	if($res) {
-		notice( "Registration successful. Please check your email for further instructions." . EOL ) ;
-		goaway($a->get_baseurl());
+		if($res) {
+			notice( "Registration successful. Please check your email for further instructions." . EOL ) ;
+			goaway($a->get_baseurl());
+		}
+		else {
+			notice( "Failed to send email message. Here is the message that failed. $email_tpl " . EOL );
+		}
 	}
-	else {
-		notice( "Failed to send email message. Here is the message that failed. $email_tpl " . EOL );
+	elseif($a->config['register_policy'] == REGISTER_APPROVE) {
+		if(! strlen($a->config['admin_email'])) {
+			notice( t('Your registration can not be processed.') . EOL);
+			goaway($a->get_baseurl());
+		}
+
+		$hash = random_string();
+		$r = q("INSERT INTO `register` ( `hash`, `created`, `uid`, `password` ) VALUES ( '%s', '%s', %d, '%s' ) ",
+			dbesc($hash),
+			dbesc(datetime_convert()),
+			intval($newuid),
+			dbesc($new_password)
+		);
+
+		$email_tpl = file_get_contents("view/register_verify_eml.tpl");
+		$email_tpl = replace_macros($email_tpl, array(
+				'$sitename' => $a->config['sitename'],
+				'$siteurl' =>  $a->get_baseurl(),
+				'$username' => $username,
+				'$email' => $email,
+				'$password' => $new_password,
+				'$uid' => $newuid,
+				'$hash' => $hash
+		 ));
+
+		$res = mail($a->config['admin_email'],"Registration request at {$a->config['sitename']}",
+			$email_tpl,"From: Administrator@{$_SERVER[SERVER_NAME]}");
+
+		if($res) {
+			notice( "Your registration is pending approval by the site owner." . EOL ) ;
+			goaway($a->get_baseurl());
+		}
+
 	}
 	
 	return;
