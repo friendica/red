@@ -19,8 +19,11 @@
 	<?php } ?>
 
 	<div id="profile-extra-links">
+	<ul>
+	<li><a id="dfrn-request-link" href="dfrn_request/<?php echo $profile['nickname']; ?>">Introductions</a></li>
+	<?php if(! $profile['hide-friends']) echo '<li><a id="viewcontacts-link" href="viewcontacts/' . $profile['nickname'] . '">View Contacts</a></li>'; ?>
 
-	<a id="dfrn-request-link" href="dfrn_request/<?php echo $profile['nickname']; ?>">Introductions</a>
+	</ul>
 
 	</div>
 

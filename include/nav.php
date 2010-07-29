@@ -6,9 +6,12 @@ if(x($_SESSION['uid'])) {
 
 	$a->page['nav'] .= "<span id=\"nav-link-wrapper\" >\r\n";
 
-	if(($a->module != 'home') && (! (x($_SESSION['uid']))))
+	if(($a->module != 'home') && (! (local_user()))) 
 		$a->page['nav'] .= '<a id="nav-home-link" class="nav-commlink" href="">' . t('Home') . "</a>\r\n";
-	
+	if(($a->config['register_policy'] == REGISTER_OPEN) && (! local_user()) && (! remote_user()))
+		$a->page['nav'] .= '<a id="nav-register-link" class="nav-commlink" href="register" >' 
+			. t('Register Now (it\'s FREE)') . "</a>\r\n";
+
 	$a->page['nav'] .= '<a id="nav-directory-link" class="nav-link" href="directory">' . t('Site Directory') . "</a>\r\n";
 
 	if(x($_SESSION,'uid')) {
