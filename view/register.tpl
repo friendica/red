@@ -1,7 +1,7 @@
 <h3>Registration</h3>
 
 <form action="register" method="post" >
-	$registertext
+	<div class="error-message">$registertext</div>
 	<div id="register-name-wrapper" >
 		<label for="register-name" id="label-register-name" >Your Full Name (e.g. Joe Smith): </label>
 		<input type="text" maxlength="60" size="32" name="username" id="register-name" value="" >
