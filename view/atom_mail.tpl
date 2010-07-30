@@ -2,9 +2,9 @@
 <dfrn:mail>
 
 	<dfrn:sender>
-		<dfrn:name>$owner_name</dfrn:name>
-		<dfrn:uri>$owner_profile_page</dfrn:uri>
-		<dfrn:avatar>$owner_thumb</dfrn:avatar>
+		<dfrn:name>$name</dfrn:name>
+		<dfrn:uri>$profile_page</dfrn:uri>
+		<dfrn:avatar>$thumb</dfrn:avatar>
 	</dfrn:sender>
 
 	<dfrn:id>$item_id</dfrn:id>

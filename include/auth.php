@@ -46,7 +46,7 @@ else {
 
 	if((x($_POST,'auth-params')) && $_POST['auth-params'] == 'login') {
 		$r = q("SELECT * FROM `user` 
-			WHERE `email` = '%s' AND `password` = '%s' LIMIT 1",
+			WHERE `email` = '%s' AND `password` = '%s' AND `blocked` = 0 AND `verified` = 1 LIMIT 1",
 			dbesc(trim($_POST['login-name'])),
 			dbesc($encrypted));
 		if(($r === false) || (! count($r))) {

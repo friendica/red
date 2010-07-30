@@ -19,7 +19,7 @@ define ( 'NOTIFY_WALL',    0x0004 );
 define ( 'NOTIFY_COMMENT', 0x0008 );
 define ( 'NOTIFY_MAIL',    0x0010 );
 
-
+define ( 'NAMESPACE_DFRN' , 'http://purl.org/macgirvin/dfrn/1.0' ); 
 
 
 if(! class_exists('App')) {

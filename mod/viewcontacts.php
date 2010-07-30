@@ -22,7 +22,7 @@ function viewcontacts_content(&$a) {
 		intval($a->profile['uid'])
 	);
 	if(count($r))
-		$a->pager['totalitems'] = $r[0]['total'];
+		$a->set_pager_total($r[0]['total']);
 
 	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `blocked` = 0 AND `pending` = 0 ORDER BY `name` ASC LIMIT %d , %d ",
 		intval($a->profile['uid']),

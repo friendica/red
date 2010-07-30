@@ -1052,3 +1052,26 @@ input#dfrn-url {
 #group-edit-name-end {
 	clear: both;
 }
+
+#prvmail-to-label, #prvmail-subject-label, #prvmail-message-label {
+	margin-bottom: 10px;
+	margin-top: 20px;
+}
+
+#prvmail-submit {
+	float: left;
+	margin-top: 10px;
+	margin-right: 30px;
+}
+#prvmail-upload-wrapper,
+#prvmail-link-wrapper,
+#prvmail-rotator-wrapper {
+	float: left;
+	margin-top: 10px;
+	margin-right: 10px;
+	width: 24px;
+}
+
+#prvmail-end {
+	clear: both;
+}

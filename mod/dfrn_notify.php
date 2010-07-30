@@ -46,6 +46,37 @@ dbg(3);
 	$feed->enable_order_by_date(false);
 	$feed->init();
 
+	$ismail = false;
+
+	$rawmail = $feed->get_feed_tags( NAMESPACE_DFRN, 'mail' );
+	if(isset($rawmail[0]['child'][NAMESPACE_DFRN])) {
+		$ismail = true;
+		$base = $rawmail[0]['child'][NAMESPACE_DFRN];
+
+		$msg = array();
+		$msg['uid'] = $importer['uid'];
+		$msg['from-name'] = notags(unxmlify($base['sender'][0]['child'][NAMESPACE_DFRN]['name'][0]['data']));
+		$msg['from-photo'] = notags(unxmlify($base['sender'][0]['child'][NAMESPACE_DFRN]['avatar'][0]['data']));
+		$msg['from-url'] = notags(unxmlify($base['sender'][0]['child'][NAMESPACE_DFRN]['avatar'][0]['data']));
+		$msg['contact-id'] = $importer['id'];
+		$msg['title'] = notags(unxmlify($base['subject'][0]['data']));
+		$msg['body'] = escape_tags(unxmlify($base['content'][0]['data']));
+		$msg['delivered'] = 1;
+		$msg['seen'] = 0;
+		$msg['replied'] = 0;
+		$msg['uri'] = notags(unxmlify($base['id'][0]['data']));
+		$msg['parent-uri'] = notags(unxmlify($base['in-reply-to'][0]['data']));
+		$msg['created'] = datetime_convert(notags(unxmlify('UTC','UTC',$base['sentdate'][0]['data'])));
+
+		$r = q("INSERT INTO `mail` (`" . implode("`, `", array_keys($msg)) 
+			. "`) VALUES ('" . implode("', '", array_values($msg)) . "')" );
+
+		// send email notification if requested.
+
+		xml_status(0);
+		return;
+	}	
+
 	foreach($feed->get_items() as $item) {
 
 		$deleted = false;

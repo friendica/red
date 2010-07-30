@@ -178,7 +178,7 @@ CREATE TABLE IF NOT EXISTS `item` (
 --
 
 CREATE TABLE IF NOT EXISTS `mail` (
-  `id` int(10) unsigned NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(10) unsigned NOT NULL,
   `from-name` char(255) NOT NULL,
   `from-photo` char(255) NOT NULL,
@@ -314,6 +314,10 @@ CREATE TABLE IF NOT EXISTS `user` (
   `blocked` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `notify-flags` int(11) unsigned NOT NULL DEFAULT '65535',
   `pwdreset` char(255) NOT NULL,
+  `allow_cid` mediumtext NOT NULL,
+  `allow_gid` mediumtext NOT NULL,
+  `deny_cid` mediumtext NOT NULL,
+  `deny_gid` mediumtext NOT NULL,
   PRIMARY KEY (`uid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 

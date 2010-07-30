@@ -234,6 +234,12 @@ function contacts_content(&$a) {
 			break;
 	}
 
+	$r = q("SELECT COUNT(*) AS `total` FROM `contact` 
+		WHERE `uid` = %d AND `pending` = 0 $sql_extra $sql_extra2 ",
+		intval($_SESSION['uid']));
+	if(count($r))
+		$a->set_pager_total($r[0]['total']);
+
 	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `pending` = 0 $sql_extra $sql_extra2 ",
 		intval($_SESSION['uid']));
 
@@ -275,6 +281,8 @@ function contacts_content(&$a) {
 			));
 		}
 		$o .= '<div id="contact-edit-end"></div>';
+		$o .= paginate($a);
+
 	}
 	return $o;
 }

@@ -23,6 +23,7 @@ dbg(3);
 
 	switch($cmd) {
 
+		case 'mail':
 		default:
 			$item_id = intval($argv[3]);
 			if(! $item_id)
@@ -33,24 +34,38 @@ dbg(3);
 
 	$recipients = array();
 
-	// find ancestors
+	if($cmd == 'mail') {
 
-	$r = q("SELECT `parent`, `uid`, `edited` FROM `item` WHERE `id` = %d LIMIT 1",
-		intval($item_id)
-	);
-	if(! count($r))
-		killme();
+		$message = q("SELECT * FROM `mail` WHERE `id` = %d LIMIT 1",
+				intval($item_id)
+		);
+		if(! count($message))
+			killme();
+		$uid = $message[0]['uid'];
+		$recipients[] = $message[0]['contact-id'];
+		$item = $message[0];
 
-	$parent = $r[0]['parent'];
-	$uid = $r[0]['uid'];
-	$updated = $r[0]['edited'];
+	}
+	else {
+		// find ancestors
 
-	$items = q("SELECT * FROM `item` WHERE `parent` = %d ORDER BY `id` ASC",
-		intval($parent)
-	);
+		$r = q("SELECT `parent`, `uid`, `edited` FROM `item` WHERE `id` = %d LIMIT 1",
+			intval($item_id)
+		);
+		if(! count($r))
+			killme();
 
-	if(! count($items))
-		killme();
+		$parent = $r[0]['parent'];
+		$uid = $r[0]['uid'];
+		$updated = $r[0]['edited'];
+
+		$items = q("SELECT * FROM `item` WHERE `parent` = %d ORDER BY `id` ASC",
+			intval($parent)
+		);
+
+		if(! count($items))
+			killme();
+	}
 
 	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
 		intval($uid)
@@ -61,53 +76,56 @@ dbg(3);
 	else
 		killme();
 
+	if($cmd != 'mail') {
 
-	require_once('include/group.php');
+		require_once('include/group.php');
 
-	$parent = $items[0];
+		$parent = $items[0];
 
-	if($parent['type'] == 'remote') {
-		// local followup to remote post
-		$followup = true;
-		$conversant_str = dbesc($parent['contact-id']);
-	}
-	else {
-		$followup = false;
+		if($parent['type'] == 'remote') {
+			// local followup to remote post
+			$followup = true;
+			$conversant_str = dbesc($parent['contact-id']);
+		}
+		else {
+			$followup = false;
 
-		$allow_people = expand_acl($parent['allow_cid']);
-		$allow_groups = expand_groups(expand_acl($parent['allow_gid']));
-		$deny_people = expand_acl($parent['deny_cid']);
-		$deny_groups = expand_groups(expand_acl($parent['deny_gid']));
+			$allow_people = expand_acl($parent['allow_cid']);
+			$allow_groups = expand_groups(expand_acl($parent['allow_gid']));
+			$deny_people = expand_acl($parent['deny_cid']);
+			$deny_groups = expand_groups(expand_acl($parent['deny_gid']));
 
-		$conversants = array();
+			$conversants = array();
 
-		foreach($items as $item) {
-			$recipients[] = $item['contact-id'];
-			$conversants[] = $item['contact-id'];
+			foreach($items as $item) {
+				$recipients[] = $item['contact-id'];
+				$conversants[] = $item['contact-id'];
+			}
+
+			$conversants = array_unique($conversants,SORT_NUMERIC);
+
+
+			$recipients = array_unique(array_merge($recipients,$allow_people,$allow_groups),SORT_NUMERIC);
+			$deny = array_unique(array_merge($deny_people,$deny_groups),SORT_NUMERIC);
+			$recipients = array_diff($recipients,$deny);
+	
+			$conversant_str = dbesc(implode(', ',$conversants));
 		}
 
-		$conversants = array_unique($conversants,SORT_NUMERIC);
+		$r = q("SELECT * FROM `contact` WHERE `id` IN ( $conversant_str ) AND `blocked` = 0 AND `pending` = 0");
 
+		if( ! count($r))
+			killme();
 
-		$recipients = array_unique(array_merge($recipients,$allow_people,$allow_groups),SORT_NUMERIC);
-		$deny = array_unique(array_merge($deny_people,$deny_groups),SORT_NUMERIC);
-		$recipients = array_diff($recipients,$deny);
-	
-		$conversant_str = dbesc(implode(', ',$conversants));
+		$contacts = $r;
+
+		$tomb_template = file_get_contents('view/atom_tomb.tpl');
+		$item_template = file_get_contents('view/atom_item.tpl');
+		$cmnt_template = file_get_contents('view/atom_cmnt.tpl');
 	}
 
-	$r = q("SELECT * FROM `contact` WHERE `id` IN ( $conversant_str ) AND `blocked` = 0 AND `pending` = 0");
-
-	if( ! count($r))
-		killme();
-
-	$contacts = $r;
-
-
 	$feed_template = file_get_contents('view/atom_feed.tpl');
-	$tomb_template = file_get_contents('view/atom_tomb.tpl');
-	$item_template = file_get_contents('view/atom_item.tpl');
-	$cmnt_template = file_get_contents('view/atom_cmnt.tpl');
+	$mail_template = file_get_contents('view/atom_mail.tpl');
 
 	$atom = '';
 
@@ -122,71 +140,88 @@ dbg(3);
 			'$photo' => xmlify($owner['photo'])
 	));
 
-	if($followup) {
-		foreach($items as $item) {
-			if($item['id'] == $item_id) {
-				$atom .= replace_macros($cmnt_template, array(
-					'$name' => xmlify($owner['name']),
-					'$profile_page' => xmlify($owner['url']),
-					'$thumb' => xmlify($owner['thumb']),
-					'$item_id' => xmlify($item['uri']),
-					'$title' => xmlify($item['title']),
-					'$published' => xmlify(datetime_convert('UTC', 'UTC', 
-						$item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
-					'$updated' => xmlify(datetime_convert('UTC', 'UTC', 
-						$item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
-					'$content' =>xmlify($item['body']),
-					'$parent_id' => xmlify($item['parent-uri']),
-					'$comment_allow' => 0
-				));
-			}
-		}
+	if($cmd == 'mail') {
+		$atom .= replace_macros($mail_template, array(
+			'$name' => xmlify($owner['name']),
+			'$profile_page' => xmlify($owner['url']),
+			'$thumb' => xmlify($owner['thumb']),
+			'$item_id' => xmlify($item['uri']),
+			'$subject' => xmlify($item['title']),
+			'$created' => xmlify(datetime_convert('UTC', 'UTC', 
+				$item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
+			'$content' =>xmlify($item['body']),
+			'$parent_id' => xmlify($item['parent-uri'])
+
+		));
 	}
 	else {
-		foreach($items as $item) {
-			if($item['deleted']) {
-				$atom .= replace_macros($tomb_template, array(
-					'$id' => xmlify($item['uri']),
-					'$updated' => xmlify(datetime_convert('UTC', 'UTC', 
-						$item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z'))
-				));
+
+		if($followup) {
+			foreach($items as $item) {
+				if($item['id'] == $item_id) {
+					$atom .= replace_macros($cmnt_template, array(
+						'$name' => xmlify($owner['name']),
+						'$profile_page' => xmlify($owner['url']),
+						'$thumb' => xmlify($owner['thumb']),
+						'$item_id' => xmlify($item['uri']),
+						'$title' => xmlify($item['title']),
+						'$published' => xmlify(datetime_convert('UTC', 'UTC', 
+							$item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
+						'$updated' => xmlify(datetime_convert('UTC', 'UTC', 
+							$item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
+						'$content' =>xmlify($item['body']),
+						'$parent_id' => xmlify($item['parent-uri']),
+						'$comment_allow' => 0
+					));
+				}
 			}
-			else {
-				foreach($contacts as $contact) {
-					if($item['contact-id'] == $contact['id']) {
-						if($item['parent'] == $item['id']) {
-							$atom .= replace_macros($item_template, array(
-								'$name' => xmlify($contact['name']),
-								'$profile_page' => xmlify($contact['url']),
-								'$thumb' => xmlify($contact['thumb']),
-								'$owner_name' => xmlify($item['owner-name']),
-								'$owner_profile_page' => xmlify($item['owner-link']),
-								'$owner_thumb' => xmlify($item['owner-avatar']),
-								'$item_id' => xmlify($item['uri']),
-								'$title' => xmlify($item['title']),
-								'$published' => xmlify(datetime_convert('UTC', 'UTC', 
-									$item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
-								'$updated' => xmlify(datetime_convert('UTC', 'UTC', 
-									$item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
-								'$content' =>xmlify($item['body']),
-								'$comment_allow' => (($item['last-child'] && strlen($contact['dfrn-id'])) ? 1 : 0)
-							));
-						}
-						else {
-							$atom .= replace_macros($cmnt_template, array(
-								'$name' => xmlify($contact['name']),
-								'$profile_page' => xmlify($contact['url']),
-								'$thumb' => xmlify($contact['thumb']),
-								'$item_id' => xmlify($item['uri']),
-								'$title' => xmlify($item['title']),
-								'$published' => xmlify(datetime_convert('UTC', 'UTC', 
-									$item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
-								'$updated' => xmlify(datetime_convert('UTC', 'UTC', 
-									$item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
-								'$content' =>xmlify($item['body']),
-								'$parent_id' => xmlify($item['parent-uri']),
-								'$comment_allow' => (($item['last-child']) ? 1 : 0)
-							));
+		}
+		else {
+			foreach($items as $item) {
+				if($item['deleted']) {
+					$atom .= replace_macros($tomb_template, array(
+						'$id' => xmlify($item['uri']),
+						'$updated' => xmlify(datetime_convert('UTC', 'UTC', 
+							$item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z'))
+					));
+				}
+				else {
+					foreach($contacts as $contact) {
+						if($item['contact-id'] == $contact['id']) {
+							if($item['parent'] == $item['id']) {
+								$atom .= replace_macros($item_template, array(
+									'$name' => xmlify($contact['name']),
+									'$profile_page' => xmlify($contact['url']),
+									'$thumb' => xmlify($contact['thumb']),
+									'$owner_name' => xmlify($item['owner-name']),
+									'$owner_profile_page' => xmlify($item['owner-link']),
+									'$owner_thumb' => xmlify($item['owner-avatar']),
+									'$item_id' => xmlify($item['uri']),
+									'$title' => xmlify($item['title']),
+									'$published' => xmlify(datetime_convert('UTC', 'UTC', 
+										$item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
+									'$updated' => xmlify(datetime_convert('UTC', 'UTC', 
+										$item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
+									'$content' =>xmlify($item['body']),
+									'$comment_allow' => (($item['last-child'] && strlen($contact['dfrn-id'])) ? 1 : 0)
+								));
+							}
+							else {
+								$atom .= replace_macros($cmnt_template, array(
+									'$name' => xmlify($contact['name']),
+									'$profile_page' => xmlify($contact['url']),
+									'$thumb' => xmlify($contact['thumb']),
+									'$item_id' => xmlify($item['uri']),
+									'$title' => xmlify($item['title']),
+									'$published' => xmlify(datetime_convert('UTC', 'UTC', 
+										$item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
+									'$updated' => xmlify(datetime_convert('UTC', 'UTC', 
+										$item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
+									'$content' =>xmlify($item['body']),
+									'$parent_id' => xmlify($item['parent-uri']),
+									'$comment_allow' => (($item['last-child']) ? 1 : 0)
+								));
+							}
 						}
 					}
 				}
@@ -194,7 +229,7 @@ dbg(3);
 		}
 	}
 	$atom .= "</feed>\r\n";
-
+echo $atom;
 	// create a clone of this feed but with comments disabled to send to those who can't respond. 
 
 	$atom_nowrite = str_replace('<dfrn:comment-allow>1','<dfrn:comment-allow>0',$atom);
@@ -242,13 +277,30 @@ echo $xml;
 
 		openssl_public_decrypt($challenge,$postvars['challenge'],$rr['pubkey']);
 
-		if(strlen($rr['dfrn-id']) && (! ($rr['blocked']) || ($rr['readonly'])))
+		if($cmd == 'mail') {
 			$postvars['data'] = $atom;
-		else
+		}
+		elseif(strlen($rr['dfrn-id']) && (! ($rr['blocked']) || ($rr['readonly']))) {
+			$postvars['data'] = $atom;
+		}
+		else {
 			$postvars['data'] = $atom_nowrite;
+		}
 
 		$xml = post_url($rr['notify'],$postvars);
 echo $xml;
+
+		$res = simplexml_load_string($xml);
+
+		// Currently there is no retry attempt for failed mail delivery.
+		// We need to handle this in the UI, report the non-deliverables and try again
+ 
+		if(($cmd == 'mail) && (intval($res->status) == 0)) {
+
+			$r = q("UPDATE `mail` SET `delivered` = 1 WHERE `id` = %d LIMIT 1",
+				intval($item_id)
+			);
+		}
 	}
 
 	killme();

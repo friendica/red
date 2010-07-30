@@ -116,11 +116,12 @@ function settings_post(&$a) {
 if(! function_exists('settings_content')) {
 function settings_content(&$a) {
 
-	if((! x($_SESSION['authenticated'])) && (! (x($_SESSION,'uid')))) {
-		$_SESSION['sysmsg'] .= "Permission denied." . EOL;
+	if(! local_user()) {
+		notice( t('Permission denied.') . EOL );
 		return;
 	}
 
+	require_once('view/acl_selectors.php');
 
 	$username = $a->user['username'];
 	$email    = $a->user['email'];
@@ -159,8 +160,9 @@ function settings_content(&$a) {
 		'$email' => $email,
 		'$nickname_block' => $nickname_block,
 		'$timezone' => $timezone,
-		'$zoneselect' => select_timezone($timezone)
-		));
+		'$zoneselect' => select_timezone($timezone),
+		'$acl_select' => populate_acl()
+	));
 
 	return $o;
 
