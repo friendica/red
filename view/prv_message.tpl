@@ -4,11 +4,13 @@
 <div id="prvmail-wrapper" >
 <form id="prvmail-form" action="message" method="post" >
 
+$parent
+
 <div id="prvmail-to-label">$to</div>
 $select
 
 <div id="prvmail-subject-label">$subject</div>
-<input type="text" size="64" maxlength="255" id="prvmail-subject" name="subject" />
+<input type="text" size="64" maxlength="255" id="prvmail-subject" name="subject" value="$subjtxt" $readonly />
 
 <div id="prvmail-message-label">$yourmessage</div>
 <textarea rows="8" cols="72" class="prvmail-text" id="prvmail-text" name="body" ></textarea>
