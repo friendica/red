@@ -196,7 +196,7 @@ function message_content(&$a) {
 		);
 		if(! count($r)) {
 			notice( t('No messages.') . EOL);
-			return;
+			return $o;
 		}
 
 		$tpl = file_get_contents('view/mail_list.tpl');
@@ -238,7 +238,7 @@ function message_content(&$a) {
 		}
 		if(! count($messages)) {
 			notice( t('Message not available.') . EOL );
-			return;
+			return $o;
 		}
 
 		$r = q("UPDATE `mail` SET `seen` = 1 WHERE `parent-uri` = '%s' AND `uid` = %d",
