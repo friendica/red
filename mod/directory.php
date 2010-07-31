@@ -40,6 +40,7 @@ function directory_content(&$a) {
 
 		foreach($r as $rr) {
 
+
 			$profile_link = $a->get_baseurl() . '/profile/' . ((strlen($rr['nickname'])) ? $rr['nickname'] : $rr['profile_uid']);
 			$details = '';
 			if(strlen($rr['locality']))

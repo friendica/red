@@ -17,7 +17,7 @@ function home_init(&$a) {
 if(! function_exists('home_content')) {
 function home_content(&$a) {
 
-	$a->page['footer'] .= "<div class=\"powered\" >Powered by <a href=\"http://dfrn.org\" name=\"DFRN.org\" >DFRN</a></div>";
+	$a->page['footer'] .= "<div class=\"powered\" >Powered by <a href=\"http://mistpark.com\" name=\"Mistpark\" >Mistpark</a></div>";
 	$o .= '<h1>Welcome' . ((x($a->config,'sitename')) ? " to {$a->config['sitename']}" : "" ) . '</h1>';
 	$o .= login(($a->config['register_policy'] == REGISTER_CLOSED) ? 0 : 1);
 	return $o;

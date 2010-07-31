@@ -1,6 +1,20 @@
 
+a, a:visited {
+	color: #4444FF;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #0000FF;
+	text-decoration: underline;
+}
+img {
+	border: none;
+}
+
 body { 
-	background: #EEEEEE;
+	background: #FEFEFE;
+	color: #444444;
 	font-family: verdana, sans-serif;
 	font-size: 1.0em;
 	margin-left: 10px;
@@ -71,10 +85,13 @@ footer {
 	margin-left: 0px;
 	margin-right: 10px;
 	padding: 5px;
-	border: 1px solid black;
-	background: #DDDDFF;
+	border: 1px solid #AAAAAA;
+	background: #F8F8F8;
 	font-size: 0.7em;
 	font-weight: bold;
+	-moz-box-shadow: 5px 5px 5px #888;
+	-webkit-box-shadow: 5px 5px 5px #888;
+	box-shadow: 5px 5px 5px #888;
 	
 }
 
@@ -99,10 +116,14 @@ footer {
 	margin-left: 10px;
 	margin-right: 0px;
 	padding: 5px;
-	border: 1px solid black;
-	background: #DDDDFF;
+	border: 1px solid #AAAAAA;
+	background: #F8F8F8;
 	font-size: 0.7em;
 	font-weight: bold;
+	-moz-box-shadow: 5px 5px 5px #888;
+	-webkit-box-shadow: 5px 5px 5px #888;
+	box-shadow: 5px 5px 5px #888;
+
 }
 #nav-end {
 	clear: both;
@@ -502,10 +523,13 @@ input#dfrn-url {
 
 .wall-item-outside-wrapper.comment {
 	margin-left: 50px;
+	background: #F7F7F7;
 }
 
 .wall-item-photo-wrapper {
-	margin-top: 20px;
+	margin-top: 10px;
+	margin-left: 10px;
+	margin-bottom: 10px;
 	width: 100px;
 	float: left;
 }
@@ -663,7 +687,7 @@ input#dfrn-url {
 }
 .fortune {
 	margin-top: 50px;
-	color: #3172BD;
+	color: #4444FF;
 	font-weight: bold;
 	margin-bottom: 20px;
 }
@@ -936,9 +960,10 @@ input#dfrn-url {
 	border: 1px solid #888888;
 	font-size: 0.8em;
 	font-weight: bold;
-}
-.profile-tabs a {
-	text-decoration: none;
+	-moz-box-shadow: 5px 5px 5px #888;
+	-webkit-box-shadow: 5px 5px 5px #888;
+	box-shadow: 5px 5px 5px #888;
+
 }
 
 #profile-tabs-end {
@@ -950,6 +975,7 @@ input#dfrn-url {
 	height: 30px;
 	width: 175px;
 	overflow: auto;
+	margin-bottom: 10px;
 }
 
 .comment-edit-text-full {
@@ -1150,3 +1176,10 @@ input#dfrn-url {
 .message-links li {
 	margin-top: 10px;
 }
+
+#sidebar-group-list ul {
+	list-style-type: none;
+}
+
+#sidebar-group-list li {
+	margin-top: 10px;
