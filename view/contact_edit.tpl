@@ -23,6 +23,11 @@
 			<a href="contacts/$contact_id/drop" id="contact-edit-drop-link" onclick="return confirmDelete();" ><img src="images/b_drophide.gif" alt="Delete contact" title="Delete contact" onmouseover="imgbright(this);" onmouseout="imgdull(this);" /></a>
 		</div>
 		<div id="contact-edit-nav-end"></div>
+		<div id="contact-edit-poll-wrapper">
+			<div id="contact-edit-last-update-text">Last updated: <span id="contact-edit-last-updated">$last_update</span</div>
+			<div id="contact-edit-poll-text">Update public posts: </div>
+			$poll_interval
+		</div>
 	</div>
 	<div id="contact-edit-end" ></div>
 

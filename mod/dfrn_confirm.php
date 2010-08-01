@@ -91,10 +91,11 @@ function dfrn_confirm_post(&$a) {
 					
 					$hash = hash('md5',uniqid(mt_rand(),true));
 
-					$r = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`,
+					$r = q("INSERT INTO `photo` ( `uid`, `contact-id`, `resource-id`, `created`, `edited`, `filename`,
                                 		`height`, `width`, `data`, `scale` )
-                                		VALUES ( %d, '%s', '%s', '%s', '%s', %d, %d, '%s', 4 )",
+                                		VALUES ( %d, %d, '%s', '%s', '%s', '%s', %d, %d, '%s', 4 )",
 						intval($local_uid),
+						intval($dfrn_record),
                                 		dbesc($hash),
                                 		datetime_convert(),
                                 		datetime_convert(),
@@ -107,10 +108,11 @@ function dfrn_confirm_post(&$a) {
 						$photo_failure = true;
 					
 					$img->scaleImage(80);
-					$r =  q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`,
+					$r =  q("INSERT INTO `photo` ( `uid`, `contact-id`, `resource-id`, `created`, `edited`, `filename`,
                                                 `height`, `width`, `data`, `scale` )
-                                                VALUES ( %d, '%s', '%s', '%s', '%s', %d, %d, '%s', 5 )",
+                                                VALUES ( %d, %d, '%s', '%s', '%s', '%s', %d, %d, '%s', 5 )",
                                                 intval($local_uid),
+						intval($dfrn_record),
                                                 dbesc($hash),
                                                 datetime_convert(),
                                                 datetime_convert(),

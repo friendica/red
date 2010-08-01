@@ -204,6 +204,7 @@ CREATE TABLE IF NOT EXISTS `mail` (
 CREATE TABLE IF NOT EXISTS `photo` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(10) unsigned NOT NULL,
+  `contact-id` int(10) unsigned NOT NULL,
   `resource-id` char(255) NOT NULL,
   `created` datetime NOT NULL,
   `edited` datetime NOT NULL,

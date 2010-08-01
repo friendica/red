@@ -26,12 +26,12 @@ function contact_reputation($current) {
 	$o .= "<select id=\"contact-reputation-selector\" name=\"reputation\" />\r\n";
 
 	$rep = array(
-		0 => "Unknown | Not categorised",
-		1 => "Block immediately",
-		2 => "Shady, spammer, self-marketer",
-		3 => "Known to me, but no opinion",
-		4 => "OK, probably harmless",
-		5 => "Reputable, has my trust"
+		0 => t('Unknown | Not categorised'),
+		1 => t('Block immediately'),
+		2 => t('Shady, spammer, self-marketer'),
+		3 => t('Known to me, but no opinion'),
+		4 => t('OK, probably harmless'),
+		5 => t('Reputable, has my trust')
 	);
 
 	foreach($rep as $k => $v) {
@@ -43,4 +43,24 @@ function contact_reputation($current) {
 }
 
 
+function contact_poll_interval($current) {
 
+	$o = '';
+	$o .= '<select id="contact-poll-interval" name="poll" />' . "\r\n";
+
+	$rep = array(
+		0 => t('Frequently'),
+		1 => t('Hourly'),
+		2 => t('Twice daily'),
+		3 => t('Daily'),
+		4 => t('Weekly'),
+		5 => t('Monthly')
+	);
+
+	foreach($rep as $k => $v) {
+		$selected = (($k == $current) ? " selected=\"selected\" " : "");
+		$o .= "<option value=\"$k\" $selected >$v</option>\r\n";
+	}
+	$o .= "</select>\r\n";
+	return $o;
+}

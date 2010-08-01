@@ -16,7 +16,7 @@ body {
 	background: #FEFEFE;
 	color: #444444;
 	font-family: "Lucida Grande", Tahoma, sans-serif;
-	letter-spacing: 1px;
+/*	letter-spacing: 1px; */
 /*	font-family: verdana, sans-serif; */
 	font-size: 90%;
 	margin-left: 10px;
@@ -878,6 +878,14 @@ input#dfrn-url {
 	font-size: 1.4em;
 	font-weight: bold;
 	margin-left: 30px;
+}
+
+#contact-edit-poll-wrapper {
+	margin-left: 50px;
+	margin-top: 30px;
+}
+#contact-edit-poll-text {
+	margin-bottom: 10px;
 }
 
 #contact-edit-photo-wrapper {

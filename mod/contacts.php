@@ -40,15 +40,20 @@ function contacts_post(&$a) {
 			return;
 		}
 	}
+	$priority = intval($_POST['priority']);
+	if($priority > 5 || $priority < 0)
+		$priority = 0;
+
 	$rating = intval($_POST['reputation']);
 	if($rating > 5 || $rating < 0)
 		$rating = 0;
 
 	$reason = notags(trim($_POST['reason']));
 
-	$r = q("UPDATE `contact` SET `profile-id` = %d, `rating` = %d, `reason` = '%s'
+	$r = q("UPDATE `contact` SET `profile-id` = %d, `priority` = %d , `rating` = %d, `reason` = '%s'
 		WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		intval($profile_id),
+		intval($priority),
 		intval($rating),
 		dbesc($reason),
 		intval($contact_id),
@@ -91,12 +96,6 @@ function contacts_content(&$a) {
 		}
 
 
-//		$photo = str_replace('-4.jpg', '' , $r[0]['photo']);
-//		$photos = q("SELECT `id` FROM `photo` WHERE `resource-id` = '%s' AND `uid` = %d",
-//				dbesc($photo),
-//				intval($_SESSION['uid'])
-//		);
-	
 		if($cmd == 'block') {
 			$blocked = (($orig_record[0]['blocked']) ? 0 : 1);
 			$r = q("UPDATE `contact` SET `blocked` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -130,19 +129,18 @@ function contacts_content(&$a) {
 		if($cmd == 'drop') {
 			$r = q("DELETE FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval($contact_id),
-				intval($_SESSION['uid']));
+				intval($_SESSION['uid'])
+			);
 
-//			if(count($photos)) {
-//				foreach($photos as $p) {
-//					q("DELETE FROM `photos` WHERE `id` = %d LIMIT 1",
-//						$p['id']);
-//				}
-//			}
-
-			if(intval($contact_id))
-				q("DELETE FROM `item` WHERE `contact-id` = %d LIMIT 1",
-					intval($contact_id)
-				);
+			q("DELETE FROM `item` WHERE `contact-id` = %d AND `uid` = %d ",
+					intval($contact_id),
+					intval($_SESSION['uid'])
+			);
+			q("DELETE FROM `photo` WHERE `contact-id` = %d AND `uid` = %d ",
+ 
+					intval($contact_id),
+					intval($_SESSION['uid'])
+			);
 	
 			notice("Contact has been removed." . EOL );
 			goaway($a->get_baseurl() . '/contacts');
@@ -186,6 +184,10 @@ function contacts_content(&$a) {
 		}
 
 		$o .= replace_macros($tpl,array(
+			'$poll_interval' => contact_poll_interval($r[0]['priority']),
+			'$last_update' => (($r[0]['last-update'] == '0000-00-00 00:00:00') 
+				? t('Never') 
+				: datetime_convert('UTC',date_default_timezone_get(),$r[0]['last-update'],'D, j M Y, G:i A')),
 			'$profile_select' => contact_profile_assign($r[0]['profile-id']),
 			'$contact_id' => $r[0]['id'],
 			'$block_text' => (($r[0]['blocked']) ? t('Unblock this contact') : t('Block this contact') ),

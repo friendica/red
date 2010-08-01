@@ -17,7 +17,7 @@ require_once('include/items.php');
 
 if($argc < 2)
 	exit;
-
+dbg(3);
 	$a->set_baseurl($argv[1]);
 
 	$contacts = q("SELECT * FROM `contact` WHERE `dfrn-id` != '' AND `self` = 0 AND `blocked` = 0 AND `readonly` = 0 ORDER BY RAND()");
@@ -26,6 +26,39 @@ if($argc < 2)
 		killme();
 
 	foreach($contacts as $contact) {
+
+		if($contact['priority']) {
+
+			$update = false;
+			$t = $contact['last-update'];
+
+			switch ($contact['priority']) {
+				case 5:
+					if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', t . " + 1 month"))
+						$update = true;
+					break;					
+				case 4:
+					if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', t . " + 1 week"))
+						$update = true;
+					break;
+				case 3:
+					if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', t . " + 1 day"))
+						$update = true;
+					break;
+				case 2:
+					if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', t . " + 12 hour"))
+						$update = true;
+					break;
+				case 1:
+				default:
+					if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', t . " + 1 hour"))
+						$update = true;
+					break;
+			}
+			if(! $update)
+				continue;
+		}
+
 
 		$importer_uid = $contact['uid'];
 
@@ -44,7 +77,8 @@ if($argc < 2)
 		$url = $contact['poll'] . '?dfrn_id=' . $contact['dfrn-id'] . '&type=data&last_update=' . $last_update ;
 
 		$xml = fetch_url($url);
-
+echo "URL: " . $url;
+echo "XML: " . $xml;
 		if(! $xml)
 			continue;
 
@@ -61,11 +95,18 @@ if($argc < 2)
 		openssl_public_decrypt($challenge,$postvars['challenge'],$contact['pubkey']);
 
 		$xml = post_url($contact['poll'],$postvars);
-		if(! strlen($xml))
-			continue;
 
 echo "XML response:" . $xml . "\r\n";
 echo "Length:" . strlen($xml) . "\r\n";
+
+		if(! strlen($xml)) {
+			// an empty response may mean there's nothing new - record the fact that we checked
+			$r = q("UPDATE `contact` SET `last-update` = '%s' WHERE `id` = %d LIMIT 1",
+				dbesc(datetime_convert()),
+				intval($contact['id'])
+			);
+			continue;
+		}
 
 		$feed = new SimplePie();
 		$feed->set_raw_data($xml);
