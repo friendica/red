@@ -4,6 +4,7 @@
  * Licensed under the MIT license ( http://valums.com/mit-license/ )
  * Thanks to Gary Haran, David Mark, Corey Burns and others for contributions. 
  */
+
 (function () {
     /* global window */
     /* jslint browser: true, devel: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true */
@@ -354,7 +355,7 @@
             var input = document.createElement("input");
             input.setAttribute('type', 'file');
             input.setAttribute('name', this._settings.name);
-            
+
             addStyles(input, {
                 'position' : 'absolute',
                 // in Opera only 'browse' button

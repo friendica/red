@@ -34,12 +34,14 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 		$contact = $r[0];
 		$groups = init_groups_visitor($contact['id']);
 
-
-		$gs = '<<>>'; // should be impossible to match
 		if(count($groups)) {
-			foreach($groups as $g)
-				$gs .= '|<' . intval($g) . '>';
-		} 
+			for($x = 0; $x < count($groups); $x ++) 
+				$groups[$x] = '<' . intval($groups[$x]) . '>' ;
+			$gs = implode('|', $groups);
+		}
+		else
+			$gs = '<<>>' ; // Impossible to match 
+
 		$sql_extra = sprintf(
 			" AND ( `allow_cid` = '' OR `allow_cid` REGEXP '<%d>' ) 
 			AND ( `deny_cid` = '' OR  NOT `deny_cid` REGEXP '<%d>' ) 
@@ -158,7 +160,7 @@ function get_atom_elements($item) {
 	if($maxlen && (strlen($res['body']) > $maxlen))
 		$res['body'] = substr($res['body'],0, $maxlen);
 
-	$allow = $item->get_item_tags('http://purl.org/macgirvin/dfrn/1.0','comment-allow');
+	$allow = $item->get_item_tags(NAMESPACE_DFRN,'comment-allow');
 	if($allow && $allow[0]['data'] == 1)
 		$res['last-child'] = 1;
 	else
@@ -172,13 +174,13 @@ function get_atom_elements($item) {
 	if($rawedited)
 		$res['edited'] = unxmlify($rawcreated[0]['data']);
 
-	$rawowner = $item->get_item_tags('http://purl.org/macgirvin/dfrn/1.0', 'owner');
-	if($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['name'][0]['data'])
-		$res['owner-name'] = unxmlify($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['name'][0]['data']);
-	if($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['uri'][0]['data'])
-		$res['owner-link'] = unxmlify($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['uri'][0]['data']);
-	if($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]['data'])
-		$res['owner-avatar'] = unxmlify($rawowner[0]['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]['data']);
+	$rawowner = $item->get_item_tags(NAMESPACE_DFRN, 'owner');
+	if($rawowner[0]['child'][NAMESPACE_DFRN]['name'][0]['data'])
+		$res['owner-name'] = unxmlify($rawowner[0]['child'][NAMESPACE_DFRN]['name'][0]['data']);
+	if($rawowner[0]['child'][NAMESPACE_DFRN]['uri'][0]['data'])
+		$res['owner-link'] = unxmlify($rawowner[0]['child'][NAMESPACE_DFRN]['uri'][0]['data']);
+	if($rawowner[0]['child'][NAMESPACE_DFRN]['avatar'][0]['data'])
+		$res['owner-avatar'] = unxmlify($rawowner[0]['child'][NAMESPACE_DFRN]['avatar'][0]['data']);
 
 	return $res;
 }

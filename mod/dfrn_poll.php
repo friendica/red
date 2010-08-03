@@ -19,7 +19,7 @@ function dfrn_poll_init(&$a) {
 		return;
 
 
-	if(($dfrn_id == '*') && ($a->argc > 1) && (intval($a->argv[1]))) {
+	if(($dfrn_id == '*') && ($a->argc > 1)) {
 		$o = get_feed_for($a,'*', $a->argv[1],$last_update);
 		echo $o;
 		killme();

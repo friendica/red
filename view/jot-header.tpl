@@ -1,7 +1,6 @@
 
-<script language="javascript" type="text/javascript"
-          src="$baseurl/tinymce/jscripts/tiny_mce/tiny_mce_src.js"></script>
-          <script language="javascript" type="text/javascript">
+<script language="javascript" type="text/javascript" src="$baseurl/tinymce/jscripts/tiny_mce/tiny_mce_src.js"></script>
+<script language="javascript" type="text/javascript">
 
 tinyMCE.init({
 	theme : "advanced",
@@ -18,6 +17,7 @@ tinyMCE.init({
 	entity_encoding : "raw",
 	add_unload_trigger : false,
 	remove_linebreaks : false,
+	convert_urls: false,
 	content_css: "$baseurl/view/custom_tinymce.css"
 });
 
@@ -31,14 +31,13 @@ tinyMCE.init({
 				name: 'userfile',
 				onSubmit: function(file,ext) { $('#profile-rotator').show(); },
 				onComplete: function(file,response) {
-					tinyMCE.execCommand('mceInsertRawHTML',false,response);
+alert(response);					tinyMCE.execCommand('mceInsertRawHTML',false,response);
 					$('#profile-rotator').hide();
 				}				 
 			}
 		);
 
 	});
-
 
 	function jotGetLink() {
 		reply = prompt("Please enter a link URL:");
@@ -51,18 +50,24 @@ tinyMCE.init({
 		}
 	}
 
+	function linkdropper(event) {
+		var linkFound = event.dataTransfer.types.contains("text/uri-list");
+		if(linkFound)
+			event.preventDefault();
+	}
 
-
+	function linkdrop(event) {
+		var reply = event.dataTransfer.getData("text/uri-list");
+		event.target.textContent = reply;
+		event.preventDefault();
+		if(reply && reply.length) {
+			$('#profile-rotator').show();
+			$.get('parse_url?url=' + reply, function(data) {
+				tinyMCE.execCommand('mceInsertRawHTML',false,data);
+				$('#profile-rotator').hide();
+			});
+		}
+	}
 
 </script>
 
-<!--
-
-	relative_urls: false,
-        document_base_url : "$baseurl/",
-         external_image_list_url : "$baseurl/include/imagelist-js.php",
-         content_css : "$baseurl/view/tiny.css"
-
-});
-</script>
--->

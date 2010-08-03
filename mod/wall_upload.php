@@ -9,6 +9,9 @@ function wall_upload_post(&$a) {
                 killme();
         }
 
+	if(! x($_FILES,'userfile'))
+		killme();
+
 	$src      = $_FILES['userfile']['tmp_name'];
 	$filename = basename($_FILES['userfile']['name']);
 	$filesize = intval($_FILES['userfile']['size']);
@@ -87,8 +90,8 @@ function wall_upload_post(&$a) {
 	}
 
 	$basename = basename($filename);
+	echo  "<br /><br /><img src=\"".$a->get_baseurl(). "/photo/{$hash}-{$smallest}.jpg\" alt=\"$basename\" /><br /><br />";
 
-	echo "<img src=\"".$a->get_baseurl(). "/photo/{$hash}-{$smallest}.jpg\" alt=\"$basename\" />";
 	killme();
-
+	return; // NOTREACHED
 }
