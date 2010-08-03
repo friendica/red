@@ -91,15 +91,15 @@ function dfrn_confirm_post(&$a) {
 					
 					$hash = hash('md5',uniqid(mt_rand(),true));
 
-					$r = q("INSERT INTO `photo` ( `uid`, `contact-id`, `resource-id`, `created`, `edited`, `filename`,
-                                		`height`, `width`, `data`, `scale` )
-                                		VALUES ( %d, %d, '%s', '%s', '%s', '%s', %d, %d, '%s', 4 )",
+					$r = q("INSERT INTO `photo` ( `uid`, `contact-id`, `resource-id`, `created`, `edited`, `filename`, `album`, `height`, `width`, `data`, `scale` )
+                                		VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', 4 )",
 						intval($local_uid),
 						intval($dfrn_record),
                                 		dbesc($hash),
                                 		datetime_convert(),
                                 		datetime_convert(),
                                 		dbesc(basename($r[0]['photo'])),
+						dbesc( t('Contact Photos') ),
                                 		intval($img->getHeight()),
 						intval($img->getWidth()),
 						dbesc($img->imageString())
@@ -108,25 +108,24 @@ function dfrn_confirm_post(&$a) {
 						$photo_failure = true;
 					
 					$img->scaleImage(80);
-					$r =  q("INSERT INTO `photo` ( `uid`, `contact-id`, `resource-id`, `created`, `edited`, `filename`,
-                                                `height`, `width`, `data`, `scale` )
-                                                VALUES ( %d, %d, '%s', '%s', '%s', '%s', %d, %d, '%s', 5 )",
-                                                intval($local_uid),
+					$r =  q("INSERT INTO `photo` ( `uid`, `contact-id`, `resource-id`, `created`, `edited`, `filename`, `album`, `height`, `width`, `data`, `scale` )
+						VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', 5 )",
+						intval($local_uid),
 						intval($dfrn_record),
-                                                dbesc($hash),
-                                                datetime_convert(),
-                                                datetime_convert(),
-                                                dbesc(basename($r[0]['photo'])),
-                                                intval($img->getHeight()),
-                                                intval($img->getWidth()),
-                                                dbesc($img->imageString())
-                                        );
+						dbesc($hash),
+						datetime_convert(),
+						datetime_convert(),
+						dbesc(basename($r[0]['photo'])),
+						dbesc( t('Contact Photos')),
+						intval($img->getHeight()),
+						intval($img->getWidth()),
+						dbesc($img->imageString())
+					);
 					if($r === false)
 						$photo_failure = true;
 
 					$photo = $a->get_baseurl() . '/photo/' . $hash . '-4.jpg';
-					$thumb = $a->get_baseurl() . '/photo/' . $hash . '-5.jpg';
-					
+					$thumb = $a->get_baseurl() . '/photo/' . $hash . '-5.jpg';	
 				}
 				else
 					$photo_failure = true;
@@ -320,39 +319,38 @@ function dfrn_confirm_post(&$a) {
 					
 				$hash = hash('md5',uniqid(mt_rand(),true));
 
-				$r = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`,
-                               		`height`, `width`, `data`, `scale` )
-                               		VALUES ( %d, '%s', '%s', '%s', '%s', %d, %d, '%s', 4 )",
+				$r = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, `album`, `height`, `width`, `data`, `scale` )
+                               		VALUES ( %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', 4 )",
 					intval($local_uid),
-                               		dbesc($hash),
-                               		datetime_convert(),
-                               		datetime_convert(),
-                               		dbesc(basename($r[0]['photo'])),
-                               		intval($img->getHeight()),
+					dbesc($hash),
+					datetime_convert(),
+					datetime_convert(),
+					dbesc(basename($r[0]['photo'])),
+					dbesc( t('Contact Photos') ),
+					intval($img->getHeight()),
 					intval($img->getWidth()),
 					dbesc($img->imageString())
 				);
 				if($r === false)
 					$photo_failure = true;
 				$img->scaleImage(80);
-				$r =  q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`,
-					`height`, `width`, `data`, `scale` )
-                                         VALUES ( %d, '%s', '%s', '%s', '%s', %d, %d, '%s', 5 )",
-                                         intval($local_uid),
-                                         dbesc($hash),
-                                         datetime_convert(),
-                                         datetime_convert(),
-                                         dbesc(basename($r[0]['photo'])),
-                                         intval($img->getHeight()),
-                                         intval($img->getWidth()),
-                                         dbesc($img->imageString())
-                                );
+				$r =  q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, `album`, `height`, `width`, `data`, `scale` )
+					VALUES ( %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', 5 )",
+					intval($local_uid),
+					dbesc($hash),
+					datetime_convert(),
+					datetime_convert(),
+					dbesc(basename($r[0]['photo'])),
+					dbesc( t('Contact Photos') ),
+					intval($img->getHeight()),
+					intval($img->getWidth()),
+					dbesc($img->imageString())
+				);
 				if($r === false)
 					$photo_failure = true;
 
 				$photo = $a->get_baseurl() . '/photo/' . $hash . '-4.jpg';
 				$thumb = $a->get_baseurl() . '/photo/' . $hash . '-5.jpg';
-					
 			}
 			else
 				$photo_failure = true;
@@ -371,7 +369,7 @@ function dfrn_confirm_post(&$a) {
 			intval($contact_id)
 		);
 		if($r === false)
-			notice( t("Unable to set contact photo info.") . EOL);
+			notice( t('Unable to set contact photo.') . EOL);
 
 		goaway($a->get_baseurl() . '/contacts/' . intval($contact_id));
 		return;  //NOTREACHED

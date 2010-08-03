@@ -54,14 +54,15 @@ function wall_upload_post(&$a) {
 	if($width > 640 || $height > 640) {
 		$ph->scaleImage(640);
 
-		$r = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, 
+		$r = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, `album`,
 			`height`, `width`, `data`, `scale` )
-			VALUES ( %d, '%s', '%s', '%s', '%s', %d, %d, '%s', 1 )",
+			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', 1 )",
 			intval($_SESSION['uid']),
 			dbesc($hash),
 			datetime_convert(),
 			datetime_convert(),
 			dbesc(basename($filename)),
+			dbesc( t('Wall Photos') ),
 			intval($ph->getHeight()),
 			intval($ph->getWidth()),
 			dbesc($ph->imageString())
@@ -73,14 +74,15 @@ function wall_upload_post(&$a) {
 	if($width > 320 || $height > 320) {
 		$ph->scaleImage(320);
 
-		$r = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, 
+		$r = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, `album`,
 			`height`, `width`, `data`, `scale` )
-			VALUES ( %d, '%s', '%s', '%s', '%s', %d, %d, '%s', 2 )",
+			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', 2 )",
 			intval($_SESSION['uid']),
 			dbesc($hash),
 			datetime_convert(),
 			datetime_convert(),
 			dbesc(basename($filename)),
+			dbesc( t('Wall Photos') ),
 			intval($ph->getHeight()),
 			intval($ph->getWidth()),
 			dbesc($ph->imageString())

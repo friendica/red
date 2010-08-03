@@ -7,15 +7,17 @@ function profile_photo_init(&$a) {
 	if(! local_user()) {
 		return;
 	}
+
 	require_once("mod/profile.php");
 	profile_load($a,$a->user['nickname']);
+
 }
 
 
 function profile_photo_post(&$a) {
 
         if(! local_user()) {
-                notice ( "Permission denied." . EOL );
+                notice ( t('Permission denied.') . EOL );
                 return;
         }
 
@@ -24,7 +26,7 @@ function profile_photo_post(&$a) {
 		// phase 2 - we have finished cropping
 
 		if($a->argc != 2) {
-			notice( "Image uploaded but image cropping failed." . EOL );
+			notice( t('Image uploaded but image cropping failed.') . EOL );
 			return;
 		}
 
@@ -53,39 +55,41 @@ function profile_photo_post(&$a) {
 			$im = new Photo($base_image['data']);
 			$im->cropImage(175,$srcX,$srcY,$srcW,$srcH);
 
-			$ret = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, 
+			$ret = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, `album`, 
 				`height`, `width`, `data`, `scale`, `profile` )
-				VALUES ( %d, '%s', '%s', '%s', '%s', %d, %d, '%s', 4, 1 )",
+				VALUES ( %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', 4, 1 )",
 				intval($_SESSION['uid']),
 				dbesc($base_image['resource-id']),
 				datetime_convert(),
 				datetime_convert(),
 				dbesc($base_image['filename']),
+				dbesc( t('Profile Photos') ),
 				intval($im->getHeight()),
 				intval($im->getWidth()),
 				dbesc($im->imageString())
 			);
 
 			if($r === false)
-				notice ("Image size reduction (175) failed." . EOL );
+				notice ( t('Image size reduction (175) failed.') . EOL );
 
 			$im->scaleImage(80);
 
-			$ret = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, 
+			$ret = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, `album`,
 				`height`, `width`, `data`, `scale`, `profile` )
-				VALUES ( %d, '%s', '%s', '%s', '%s', %d, %d, '%s', 5, 1 )",
+				VALUES ( %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', 5, 1 )",
 				intval($_SESSION['uid']),
 				dbesc($base_image['resource-id']),
 				datetime_convert(),
 				datetime_convert(),
 				dbesc($base_image['filename']),
+				dbesc( t('Profile Photos') ),
 				intval($im->getHeight()),
 				intval($im->getWidth()),
 				dbesc($im->imageString())
 			);
 			
 			if($r === false)
-				notice("Image size reduction (80) failed." . EOL);
+				notice( t('Image size reduction (80) failed.') . EOL );
 
 			// Unset the profile photo flag from any other photos I own
 
@@ -107,7 +111,7 @@ function profile_photo_post(&$a) {
 	$ph = new Photo($imagedata);
 
 	if(! ($image = $ph->getImage())) {
-		notice("Unable to process image." . EOL);
+		notice( t('Unable to process image.') . EOL );
 		@unlink($src);
 		return;
 	}
@@ -128,21 +132,22 @@ function profile_photo_post(&$a) {
 	$str_image = $ph->imageString();
 	$smallest = 0;
 
-	$r = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, 
+	$r = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, `album`, 
 		`height`, `width`, `data`, `scale` )
-		VALUES ( %d, '%s', '%s', '%s', '%s', %d, %d, '%s', 0 )",
+		VALUES ( %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', 0 )",
 		intval($_SESSION['uid']),
 		dbesc($hash),
 		datetime_convert(),
 		datetime_convert(),
 		dbesc(basename($filename)),
+		dbesc( t('Profile Photos') ),
 		intval($height),
 		intval($width),
 		dbesc($str_image));
 	if($r)
-		notice("Image uploaded successfully." . EOL);
+		notice( t('Image uploaded successfully.') . EOL );
 	else
-		notice("Image upload failed." . EOL);
+		notice( t('Image upload failed.') . EOL );
 
 	if($width > 640 || $height > 640) {
 		$ph->scaleImage(640);
@@ -150,20 +155,21 @@ function profile_photo_post(&$a) {
 		$width = $ph->getWidth();
 		$height = $ph->getHeight();
 
-		$r = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, 
+		$r = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, `album`,
 			`height`, `width`, `data`, `scale` )
-			VALUES ( %d, '%s', '%s', '%s', '%s', %d, %d, '%s', 1 )",
+			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', 1 )",
 			intval($_SESSION['uid']),
 			dbesc($hash),
 			datetime_convert(),
 			datetime_convert(),
 			dbesc(basename($filename)),
+			dbesc( t('Profile Photos') ),
 			intval($ph->getHeight()),
 			intval($ph->getWidth()),
 			dbesc($ph->imageString())
 		);
 		if($r === false)
-			notice("Image size reduction (640) failed." . EOL );
+			notice( t('Image size reduction (640) failed.') . EOL );
 		else
 			$smallest = 1;
 	}
@@ -179,7 +185,7 @@ if(! function_exists('profile_photo_content')) {
 function profile_photo_content(&$a) {
 
 	if(! local_user()) {
-		notice("Permission denied." . EOL );
+		notice( t('Permission denied.') . EOL );
 		return;
 	}
 
