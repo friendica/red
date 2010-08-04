@@ -22,7 +22,7 @@ function register_post(&$a) {
 	default:
 	case REGISTER_CLOSED:
 		if((! x($_SESSION,'authenticated') && (! x($_SESSION,'administrator')))) {
-			notice( "Permission denied." . EOL );
+			notice( t('Permission denied.') . EOL );
 			return;
 		}
 		$blocked = 1;
@@ -38,34 +38,34 @@ function register_post(&$a) {
 		$email = notags(trim($_POST['email']));
 
 	if((! x($username)) || (! x($email)) || (! x($nickname))) {
-		notice( "Please enter the required information.". EOL );
+		notice( t('Please enter the required information.') . EOL );
 		return;
 	}
 
 	$err = '';
 
 	if(!eregi('[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\.[A-Za-z]{2,6}',$email))
-		$err .= " Not a valid email address.";
+		$err .= t(' Not a valid email address.');
 	if(strlen($username) > 48)
-		$err .= " Please use a shorter name.";
+		$err .= t(' Please use a shorter name.');
 	if(strlen($username) < 3)
-		$err .= " Name too short.";
+		$err .= t(' Name too short.');
 	$r = q("SELECT `uid` FROM `user` 
 		WHERE `email` = '%s' LIMIT 1",
 		dbesc($email)
 	);
 
 	if($r !== false && count($r))
-		$err .= " This email address is already registered on this system.";
+		$err .= t(' Your email address is already registered on this system.') ;
 
 	if(! preg_match("/^[a-zA-Z][a-zA-Z0-9\-\_]*$/",$nickname))
-		$err .= " Nickname <strong>must</strong> start with a letter and contain only letters, numbers, dashes, or underscore.";
+		$err .= t(' Nickname <strong>must</strong> start with a letter and contain only letters, numbers, dashes, or underscore.') ;
 	$r = q("SELECT `uid` FROM `user`
                	WHERE `nickname` = '%s' LIMIT 1",
                	dbesc($nickname)
 	);
 	if(count($r))
-		$err .= " Nickname is already registered. Please choose another." . EOL;
+		$err .= t(' Nickname is already registered. Please choose another.');
 
 	if(strlen($err)) {
 		notice( $err . EOL );
@@ -115,7 +115,7 @@ function register_post(&$a) {
 			$newuid = intval($r[0]['uid']);
 	}
 	else {
-		notice( "An error occurred during registration. Please try again." . EOL );
+		notice( t('An error occurred during registration. Please try again.') . EOL );
 		return;
 	} 		
 
@@ -131,7 +131,7 @@ function register_post(&$a) {
 
 		);
 		if($r === false) {
-			notice( "An error occurred creating your default profile. Please try again." . EOL );
+			notice( t('An error occurred creating your default profile. Please try again.') . EOL );
 			// Start fresh next time.
 			$r = q("DELETE FROM `user` WHERE `uid` = %d",
 				intval($newuid));
@@ -166,15 +166,16 @@ function register_post(&$a) {
 				'$password' => $new_password,
 				'$uid' => $newuid ));
 
-		$res = mail($email,"Registration details for {$a->config['sitename']}",$email_tpl,"From: Administrator@{$_SERVER[SERVER_NAME]}");
+		$res = mail($email, t('Registration details for ') . $a->config['sitename'],
+			$email_tpl, 'From: ' . t('Administrator@') . $_SERVER[SERVER_NAME]);
 
 
 		if($res) {
-			notice( "Registration successful. Please check your email for further instructions." . EOL ) ;
+			notice( t('Registration successful. Please check your email for further instructions.') . EOL ) ;
 			goaway($a->get_baseurl());
 		}
 		else {
-			notice( "Failed to send email message. Here is the message that failed. $email_tpl " . EOL );
+			notice( t('Failed to send email message. Here is the message that failed.') . $email_tpl . EOL );
 		}
 	}
 	elseif($a->config['register_policy'] == REGISTER_APPROVE) {
@@ -202,11 +203,11 @@ function register_post(&$a) {
 				'$hash' => $hash
 		 ));
 
-		$res = mail($a->config['admin_email'],"Registration request at {$a->config['sitename']}",
-			$email_tpl,"From: Administrator@{$_SERVER[SERVER_NAME]}");
+		$res = mail($a->config['admin_email'], t('Registration request at ') . $a->config['sitename'],
+			$email_tpl,'From: ' .  t('Administrator@') . $_SERVER[SERVER_NAME]);
 
 		if($res) {
-			notice( "Your registration is pending approval by the site owner." . EOL ) ;
+			notice( t('Your registration is pending approval by the site owner.') . EOL ) ;
 			goaway($a->get_baseurl());
 		}
 
