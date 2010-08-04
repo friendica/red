@@ -12,6 +12,10 @@ img {
 	border: none;
 }
 
+#sysmsg {
+	width: 600px;
+}
+
 body { 
 	background: #FEFEFE;
 	color: #444444;

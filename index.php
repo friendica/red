@@ -36,9 +36,7 @@ if(strlen($a->module)) {
 		$a->module_loaded = true;
 	}
 	else {
-	// TODO
-	// search builtin function module table, else
-	//      return 403, 404, etc. Right now unresolved pages return blank.
+		notice( t('Page not found' ) . EOL);
 	}
 }
 
@@ -85,7 +83,7 @@ if($a->module_loaded) {
 // report anything important happening
 	
 if(x($_SESSION,'sysmsg')) {
-	$a->page['content'] = "<div class=\"error-message\">{$_SESSION['sysmsg']}</div>\r\n"
+	$a->page['content'] = "<div id=\"sysmsg\" class=\"error-message\">{$_SESSION['sysmsg']}</div>\r\n"
 		. $a->page['content'];
 	unset($_SESSION['sysmsg']);
 }
