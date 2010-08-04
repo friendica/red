@@ -33,6 +33,7 @@ class App {
 	public  $cid;
 	public  $contact;
 	public  $content;
+	public  $data;
 	public  $error = false;
 	public  $cmd;
 	public  $argv;
