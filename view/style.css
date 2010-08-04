@@ -1,6 +1,6 @@
 
 a, a:visited {
-	color: #4444FF;
+	color: #8888FF;
 	text-decoration: none;
 }
 
@@ -26,6 +26,13 @@ img.photo {
 	border: 1px solid #AAAAAA;
 	padding: 5px;
 	background: #FFFFFF;
+}
+
+#logo {
+	font-size: 300%;
+	color: #A8A8A8;
+	font-weight: bold;
+	margin-left: 280px;
 }
 
 aside {
@@ -81,6 +88,13 @@ footer {
 	border: 1px solid #FF8888;
 	background-color: #FFEEEE;
 	padding: 10px;
+	-moz-box-shadow: 5px 5px 5px #888888;
+	-webkit-box-shadow: 5px 5px 5px #888888;
+	box-shadow: 5px 5px 5px #888888;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=135, Color='#888888')";
+	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=135, Color='#888888');
+
+
 }
 .nav-link {
 	float: right;

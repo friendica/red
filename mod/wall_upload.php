@@ -35,7 +35,7 @@ function wall_upload_post(&$a) {
 	$str_image = $ph->imageString();
 	$smallest = 0;
 
-	$r = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, 
+	$r = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, `album`,
 		`height`, `width`, `data`, `scale` )
 		VALUES ( %d, '%s', '%s', '%s', '%s', %d, %d, '%s', 0 )",
 		intval($_SESSION['uid']),
@@ -43,6 +43,7 @@ function wall_upload_post(&$a) {
 		datetime_convert(),
 		datetime_convert(),
 		dbesc(basename($filename)),
+		dbesc( t('Wall Photos')),
 		intval($height),
 		intval($width),
 		dbesc($str_image));
