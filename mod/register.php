@@ -230,7 +230,9 @@ function register_content(&$a) {
 
 	$o = file_get_contents("view/register.tpl");
 	$o = replace_macros($o, array(
-		'$registertext' =>((x($a->config,'register_text'))? $a->config['register_text'] : "" ),
+		'$registertext' =>((x($a->config,'register_text'))
+			? '<div class="error-message">' . $a->config['register_text'] . '</div>'
+			: "" ),
 		'$sitename' => $a->get_hostname()
 	));
 	return $o;

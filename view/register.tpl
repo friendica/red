@@ -1,7 +1,9 @@
 <h3>Registration</h3>
 
 <form action="register" method="post" >
-	<div class="error-message">$registertext</div>
+
+	$registertext
+
 	<div id="register-name-wrapper" >
 		<label for="register-name" id="label-register-name" >Your Full Name (e.g. Joe Smith): </label>
 		<input type="text" maxlength="60" size="32" name="username" id="register-name" value="" >
@@ -16,8 +18,8 @@
 	<div id="register-email-end" ></div>
 
 	<p id="register-nickname-desc" >
-	You will use a unique nickname to identify yourself in our social network. This must begin with a text character.
-	Your profile identifier will then be '<strong>nickname@$sitename</strong>'.
+	Choose a profile nickname. This must begin with a text character.
+	Your global profile locator will then be '<strong>nickname@$sitename</strong>'.
 	</p>
 	<div id="register-nickname-wrapper" >
 		<label for="register-nickname" id="label-register-nickname" >Choose a nickname: </label>
