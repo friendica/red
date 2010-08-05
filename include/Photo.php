@@ -167,5 +167,32 @@ class Photo {
 	}
 
 
+
+	public function store($uid, $cid, $rid, $filename, $album, $scale, $profile = 0) {
+
+		$r = q("INSERT INTO `photo`
+			( `uid`, `contact-id`, `resource-id`, `created`, `edited`, `filename`, `album`, `height`, `width`, `data`, `scale`, `profile` )
+			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d )",
+			intval($uid),
+			intval($cid),
+			dbesc($rid),
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
+			dbesc(basename($filename)),
+			dbesc($album),
+                	intval($this->height),
+                	intval($this->width),
+                	dbesc($this->imageString()),
+			intval($scale),
+			intval($profile)
+		);
+		return $r;
+	}
+
+
+
+
+
 }}
+
 

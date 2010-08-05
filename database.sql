@@ -217,9 +217,9 @@ CREATE TABLE IF NOT EXISTS `photo` (
   `data` mediumblob NOT NULL,
   `scale` tinyint(3) NOT NULL,
   `profile` tinyint(1) NOT NULL DEFAULT '0',
-  `allow_uid` mediumtext NOT NULL,
+  `allow_cid` mediumtext NOT NULL,
   `allow_gid` mediumtext NOT NULL,
-  `deny_uid` mediumtext NOT NULL,
+  `deny_cid` mediumtext NOT NULL,
   `deny_gid` mediumtext NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;

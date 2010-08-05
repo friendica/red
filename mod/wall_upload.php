@@ -5,7 +5,7 @@ require_once('Photo.php');
 function wall_upload_post(&$a) {
 
         if(! local_user()) {
-                echo ( "Permission denied." . EOL );
+                echo ( t('Permission denied.') . EOL );
                 killme();
         }
 
@@ -20,7 +20,7 @@ function wall_upload_post(&$a) {
 	$ph = new Photo($imagedata);
 
 	if(! ($image = $ph->getImage())) {
-		echo ("Unable to process image." . EOL);
+		echo ( t('Unable to process image.') . EOL);
 		@unlink($src);
 		killme();
 	}
@@ -32,62 +32,25 @@ function wall_upload_post(&$a) {
 
 	$hash = hash('md5',uniqid(mt_rand(),true));
 	
-	$str_image = $ph->imageString();
 	$smallest = 0;
 
-	$r = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, `album`,
-		`height`, `width`, `data`, `scale` )
-		VALUES ( %d, '%s', '%s', '%s', '%s', %d, %d, '%s', 0 )",
-		intval($_SESSION['uid']),
-		dbesc($hash),
-		datetime_convert(),
-		datetime_convert(),
-		dbesc(basename($filename)),
-		dbesc( t('Wall Photos')),
-		intval($height),
-		intval($width),
-		dbesc($str_image));
+	$r = $ph->store($_SESSION['uid'], 0, $hash, $filename, t('Wall Photos'), 0 );
+
 	if(! $r) {
-		echo ("Image upload failed." . EOL);
+		echo ( t('Image upload failed.') . EOL);
 		killme();
 	}
 
 	if($width > 640 || $height > 640) {
 		$ph->scaleImage(640);
-
-		$r = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, `album`,
-			`height`, `width`, `data`, `scale` )
-			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', 1 )",
-			intval($_SESSION['uid']),
-			dbesc($hash),
-			datetime_convert(),
-			datetime_convert(),
-			dbesc(basename($filename)),
-			dbesc( t('Wall Photos') ),
-			intval($ph->getHeight()),
-			intval($ph->getWidth()),
-			dbesc($ph->imageString())
-		);
+		$r = $ph->store($_SESSION['uid'], 0, $hash, $filename, t('Wall Photos'), 1 );
 		if($r) 
 			$smallest = 1;
 	}
 
 	if($width > 320 || $height > 320) {
 		$ph->scaleImage(320);
-
-		$r = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, `album`,
-			`height`, `width`, `data`, `scale` )
-			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', 2 )",
-			intval($_SESSION['uid']),
-			dbesc($hash),
-			datetime_convert(),
-			datetime_convert(),
-			dbesc(basename($filename)),
-			dbesc( t('Wall Photos') ),
-			intval($ph->getHeight()),
-			intval($ph->getWidth()),
-			dbesc($ph->imageString())
-		);
+		$r = $ph->store($_SESSION['uid'], 0, $hash, $filename, t('Wall Photos'), 2 );
 		if($r)
 			$smallest = 2;
 	}

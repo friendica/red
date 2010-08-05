@@ -42,7 +42,7 @@ function profile_photo_post(&$a) {
 		$srcY = $_POST['ystart'];
 		$srcW = $_POST['xfinal'] - $srcX;
 		$srcH = $_POST['yfinal'] - $srcY;
-
+//dbg(3);
 		$r = q("SELECT * FROM `photo` WHERE `resource-id` = '%s' AND `uid` = %d AND `scale` = %d LIMIT 1",
 			dbesc($image_id),
 			dbesc($_SESSION['uid']),
@@ -55,38 +55,14 @@ function profile_photo_post(&$a) {
 			$im = new Photo($base_image['data']);
 			$im->cropImage(175,$srcX,$srcY,$srcW,$srcH);
 
-			$ret = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, `album`, 
-				`height`, `width`, `data`, `scale`, `profile` )
-				VALUES ( %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', 4, 1 )",
-				intval($_SESSION['uid']),
-				dbesc($base_image['resource-id']),
-				datetime_convert(),
-				datetime_convert(),
-				dbesc($base_image['filename']),
-				dbesc( t('Profile Photos') ),
-				intval($im->getHeight()),
-				intval($im->getWidth()),
-				dbesc($im->imageString())
-			);
+			$r = $im->store($_SESSION['uid'], 0, $base_image['resource-id'],$base_image['filename'], t('Profile Photos'), 4, 1);
 
 			if($r === false)
 				notice ( t('Image size reduction (175) failed.') . EOL );
 
 			$im->scaleImage(80);
 
-			$ret = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, `album`,
-				`height`, `width`, `data`, `scale`, `profile` )
-				VALUES ( %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', 5, 1 )",
-				intval($_SESSION['uid']),
-				dbesc($base_image['resource-id']),
-				datetime_convert(),
-				datetime_convert(),
-				dbesc($base_image['filename']),
-				dbesc( t('Profile Photos') ),
-				intval($im->getHeight()),
-				intval($im->getWidth()),
-				dbesc($im->imageString())
-			);
+			$r = $im->store($_SESSION['uid'], 0, $base_image['resource-id'],$base_image['filename'], t('Profile Photos'), 5, 1);
 			
 			if($r === false)
 				notice( t('Image size reduction (80) failed.') . EOL );
@@ -129,21 +105,11 @@ function profile_photo_post(&$a) {
 
 	$hash = hash('md5',uniqid(mt_rand(),true));
 	
-	$str_image = $ph->imageString();
+
 	$smallest = 0;
 
-	$r = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, `album`, 
-		`height`, `width`, `data`, `scale` )
-		VALUES ( %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', 0 )",
-		intval($_SESSION['uid']),
-		dbesc($hash),
-		datetime_convert(),
-		datetime_convert(),
-		dbesc(basename($filename)),
-		dbesc( t('Profile Photos') ),
-		intval($height),
-		intval($width),
-		dbesc($str_image));
+	$r = $ph->store($_SESSION['uid'], 0 , $hash, $filename, t('Profile Photos'), 0 );	
+
 	if($r)
 		notice( t('Image uploaded successfully.') . EOL );
 	else
@@ -151,23 +117,8 @@ function profile_photo_post(&$a) {
 
 	if($width > 640 || $height > 640) {
 		$ph->scaleImage(640);
-		$str_image = $ph->imageString();
-		$width = $ph->getWidth();
-		$height = $ph->getHeight();
+		$r = $ph->store($_SESSION['uid'], 0 , $hash, $filename, t('Profile Photos'), 1 );	
 
-		$r = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, `album`,
-			`height`, `width`, `data`, `scale` )
-			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', 1 )",
-			intval($_SESSION['uid']),
-			dbesc($hash),
-			datetime_convert(),
-			datetime_convert(),
-			dbesc(basename($filename)),
-			dbesc( t('Profile Photos') ),
-			intval($ph->getHeight()),
-			intval($ph->getWidth()),
-			dbesc($ph->imageString())
-		);
 		if($r === false)
 			notice( t('Image size reduction (640) failed.') . EOL );
 		else

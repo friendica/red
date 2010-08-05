@@ -91,36 +91,14 @@ function dfrn_confirm_post(&$a) {
 					
 					$hash = hash('md5',uniqid(mt_rand(),true));
 
-					$r = q("INSERT INTO `photo` ( `uid`, `contact-id`, `resource-id`, `created`, `edited`, `filename`, `album`, `height`, `width`, `data`, `scale` )
-                                		VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', 4 )",
-						intval($local_uid),
-						intval($dfrn_record),
-                                		dbesc($hash),
-                                		datetime_convert(),
-                                		datetime_convert(),
-                                		dbesc(basename($r[0]['photo'])),
-						dbesc( t('Contact Photos') ),
-                                		intval($img->getHeight()),
-						intval($img->getWidth()),
-						dbesc($img->imageString())
-					);
+					$r = $img->store($local_uid, $dfrn_record, $hash, $filename, t('Contact Photos') , 4);
+
 					if($r === false)
 						$photo_failure = true;
 					
 					$img->scaleImage(80);
-					$r =  q("INSERT INTO `photo` ( `uid`, `contact-id`, `resource-id`, `created`, `edited`, `filename`, `album`, `height`, `width`, `data`, `scale` )
-						VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', 5 )",
-						intval($local_uid),
-						intval($dfrn_record),
-						dbesc($hash),
-						datetime_convert(),
-						datetime_convert(),
-						dbesc(basename($r[0]['photo'])),
-						dbesc( t('Contact Photos')),
-						intval($img->getHeight()),
-						intval($img->getWidth()),
-						dbesc($img->imageString())
-					);
+					$r = $img->store($local_uid, $dfrn_record, $hash, $filename, t('Contact Photos') , 5);
+
 					if($r === false)
 						$photo_failure = true;
 
@@ -190,7 +168,7 @@ function dfrn_confirm_post(&$a) {
 		$uid = $_SESSION['uid'];
 
 		if(! $uid) {
-			notice(t("Permission denied.") . EOL );
+			notice( t("Permission denied.") . EOL );
 			return;
 		}	
 	
@@ -319,33 +297,14 @@ function dfrn_confirm_post(&$a) {
 					
 				$hash = hash('md5',uniqid(mt_rand(),true));
 
-				$r = q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, `album`, `height`, `width`, `data`, `scale` )
-                               		VALUES ( %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', 4 )",
-					intval($local_uid),
-					dbesc($hash),
-					datetime_convert(),
-					datetime_convert(),
-					dbesc(basename($r[0]['photo'])),
-					dbesc( t('Contact Photos') ),
-					intval($img->getHeight()),
-					intval($img->getWidth()),
-					dbesc($img->imageString())
-				);
+				$r = $img->store($local_uid, $contact_id, $hash, $filename, t('Contact Photos'), 4 );
+
 				if($r === false)
 					$photo_failure = true;
 				$img->scaleImage(80);
-				$r =  q("INSERT INTO `photo` ( `uid`, `resource-id`, `created`, `edited`, `filename`, `album`, `height`, `width`, `data`, `scale` )
-					VALUES ( %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', 5 )",
-					intval($local_uid),
-					dbesc($hash),
-					datetime_convert(),
-					datetime_convert(),
-					dbesc(basename($r[0]['photo'])),
-					dbesc( t('Contact Photos') ),
-					intval($img->getHeight()),
-					intval($img->getWidth()),
-					dbesc($img->imageString())
-				);
+
+				$r = $img->store($local_uid, $contact_id, $hash, $filename, t('Contact Photos'), 5 );
+
 				if($r === false)
 					$photo_failure = true;
 

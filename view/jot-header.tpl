@@ -31,7 +31,7 @@ tinyMCE.init({
 				name: 'userfile',
 				onSubmit: function(file,ext) { $('#profile-rotator').show(); },
 				onComplete: function(file,response) {
-alert(response);					tinyMCE.execCommand('mceInsertRawHTML',false,response);
+					tinyMCE.execCommand('mceInsertRawHTML',false,response);
 					$('#profile-rotator').hide();
 				}				 
 			}

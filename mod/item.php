@@ -23,7 +23,7 @@ function item_post(&$a) {
 			intval($parent)
 		);
 		if(! count($r)) {
-			notice("Unable to locate original post." . EOL);
+			notice( t('Unable to locate original post.') . EOL);
 			goaway($a->get_baseurl() . "/" . $_POST['return'] );
 		}
 		$parent_item = $r[0];
@@ -68,7 +68,7 @@ function item_post(&$a) {
 	$body = escape_tags(trim($_POST['body']));
 
 	if(! strlen($body)) {
-		notice("Empty post discarded." . EOL );
+		notice( t('Empty post discarded.') . EOL );
 		goaway($a->get_baseurl() . "/" . $_POST['return'] );
 
 	}
@@ -221,6 +221,19 @@ function item_content(&$a) {
 				intval($item['id'])
 			);
 
+			// If item is a link to a photo resource, nuke all the associated photos 
+			// (visitors will not have photo resources)
+			// This only applies to photos uploaded from the photos page. Photos inserted into a post do not
+			// generate a resource-id and therefore aren't intimately linked to the item. 
+
+			if(strlen($item['resource-id'])) {
+				$q("DELETE FROM `photo` WHERE `resource-id` = '%s' AND `uid` = %d ",
+					dbesc($item['resource-id']),
+					intval($item['uid'])
+				);
+				// ignore the result
+			}
+
 			// If it's the parent of a comment thread, kill all the kids
 
 			if($item['uri'] == $item['parent-uri']) {
@@ -230,6 +243,7 @@ function item_content(&$a) {
 					dbesc($item['parent-uri']),
 					intval($item['uid'])
 				);
+				// ignore the result
 			}
 
 			$url = $a->get_baseurl();
