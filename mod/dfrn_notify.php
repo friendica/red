@@ -253,7 +253,14 @@ function dfrn_notify_content(&$a) {
 
 		openssl_private_encrypt($hash,$challenge,$r[0]['prvkey']);
 		$challenge = bin2hex($challenge);
-		echo '<?xml version="1.0" encoding="UTF-8"?><dfrn_notify><status>' .$status . '</status><dfrn_id>' . $_GET['dfrn_id'] . '</dfrn_id>'
+
+		$encrypted_id = '';
+		$id_str = $_GET['dfrn_id'] . '.' . mt_rand(1000,9999);
+
+		openssl_private_encrypt($id_str,$encrypted_id,$r[0]['prvkey']);
+		$encrypted_id = bin2hex($encrypted_id);
+
+		echo '<?xml version="1.0" encoding="UTF-8"?><dfrn_notify><status>' .$status . '</status><dfrn_id>' . $encrypted_id . '</dfrn_id>'
 			. '<challenge>' . $challenge . '</challenge></dfrn_notify>' . "\r\n" ;
 		session_write_close();
 		exit;

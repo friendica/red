@@ -6,7 +6,7 @@ function regmod_content(&$a) {
 
 	if(! local_user()) {
 		notice( t('Please login.') . EOL);
-		$o = login(($a->config['register_policy'] == REGISTER_CLOSED) ? 0 : 1);
+		$o .= '<br /><br />' . login(($a->config['register_policy'] == REGISTER_CLOSED) ? 0 : 1);
 		return $o;
 	}
 

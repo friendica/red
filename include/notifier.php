@@ -267,12 +267,22 @@ echo $xml;
 
 		$res = simplexml_load_string($xml);
 
-		if((intval($res->status) != 0) || (! strlen($res->challenge)) || ($res->dfrn_id != $rr['dfrn-id']))
+		if((intval($res->status) != 0) || (! strlen($res->challenge)) || (! strlen($res->dfrn_id)))
 			continue;
 
 		$postvars = array();
+		$sent_dfrn_id = hex2bin($res->dfrn_id);
+
+		$final_dfrn_id = '';
+		openssl_public_decrypt($sent_dfrn_id,$final_dfrn_id,$rr['pubkey']);
+		$final_dfrn_id = substr($final_dfrn_id, 0, strpos($final_dfrn_id, '.'));
+		if($final_dfrn_id != $rr['dfrn-id']) {
+			// did not decode properly - cannot trust this site 
+			continue;
+		}
 
 		$postvars['dfrn_id'] = $rr['dfrn-id'];
+
 		$challenge = hex2bin($res->challenge);
 
 		openssl_public_decrypt($challenge,$postvars['challenge'],$rr['pubkey']);
@@ -295,7 +305,7 @@ echo $xml;
 		// Currently there is no retry attempt for failed mail delivery.
 		// We need to handle this in the UI, report the non-deliverables and try again
  
-		if(($cmd == 'mail) && (intval($res->status) == 0)) {
+		if(($cmd == 'mail') && (intval($res->status) == 0)) {
 
 			$r = q("UPDATE `mail` SET `delivered` = 1 WHERE `id` = %d LIMIT 1",
 				intval($item_id)

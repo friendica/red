@@ -84,10 +84,20 @@ echo "XML: " . $xml;
 
 		$res = simplexml_load_string($xml);
 
-		if((intval($res->status) != 0) || (! strlen($res->challenge)) || ($res->dfrn_id != $contact['dfrn-id']))
+		if((intval($res->status) != 0) || (! strlen($res->challenge)) || (! strlen($res->dfrn_id)))
 			continue;
 
 		$postvars = array();
+
+		$sent_dfrn_id = hex2bin($res->dfrn_id);
+
+		$final_dfrn_id = '';
+		openssl_public_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['pubkey']);
+		$final_dfrn_id = substr($final_dfrn_id, 0, strpos($final_dfrn_id, '.'));
+		if($final_dfrn_id != $contact['dfrn-id']) {
+			// did not decode properly - cannot trust this site 
+			continue;
+		}
 
 		$postvars['dfrn_id'] = $contact['dfrn-id'];
 		$challenge = hex2bin($res->challenge);
