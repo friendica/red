@@ -297,13 +297,13 @@ function dfrn_confirm_post(&$a) {
 					
 				$hash = hash('md5',uniqid(mt_rand(),true));
 
-				$r = $img->store($local_uid, $contact_id, $hash, $filename, t('Contact Photos'), 4 );
+				$r = $img->store($uid, $contact_id, $hash, $filename, t('Contact Photos'), 4 );
 
 				if($r === false)
 					$photo_failure = true;
 				$img->scaleImage(80);
 
-				$r = $img->store($local_uid, $contact_id, $hash, $filename, t('Contact Photos'), 5 );
+				$r = $img->store($uid, $contact_id, $hash, $filename, t('Contact Photos'), 5 );
 
 				if($r === false)
 					$photo_failure = true;
