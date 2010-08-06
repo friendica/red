@@ -1,5 +1,6 @@
 
 Options -Indexes
+AddType application/x-java-archive .jar
 
 <IfModule mod_rewrite.c>
   RewriteEngine on

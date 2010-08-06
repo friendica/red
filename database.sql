@@ -40,9 +40,9 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL COMMENT 'owner uid',
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `self` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'boolean 1 == info for local UID, primarily name and photo to use in item displays.',
+  `self` tinyint(1) NOT NULL DEFAULT '0',
   `name` char(255) NOT NULL,
-  `photo` text NOT NULL COMMENT 'remote photo URL initially until approved',
+  `photo` text NOT NULL, 
   `thumb` text NOT NULL,
   `site-pubkey` text NOT NULL,
   `issued-id` char(255) NOT NULL,
@@ -64,9 +64,9 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `blocked` tinyint(1) NOT NULL DEFAULT '1',
   `readonly` tinyint(1) NOT NULL DEFAULT '0',
   `pending` tinyint(1) NOT NULL DEFAULT '1',
-  `rating` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0-5 reputation, 0 unknown, 1 call police, 5 inscrutable',
-  `reason` text NOT NULL COMMENT 'why a rating was given - will help friends decide to make friends or not',
-  `profile-id` int(11) NOT NULL DEFAULT '0' COMMENT 'which profile to display - 0 is public default',
+  `rating` tinyint(1) NOT NULL DEFAULT '0',
+  `reason` text NOT NULL,
+  `profile-id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -141,6 +141,8 @@ CREATE TABLE IF NOT EXISTS `item` (
   `title` char(255) NOT NULL,
   `body` text NOT NULL,
   `resource-id` char(255) NOT NULL,
+  `like` mediumtext NOT NULL,
+  `tag` mediumtext NOT NULL,
   `allow_cid` mediumtext NOT NULL,
   `allow_gid` mediumtext NOT NULL,
   `deny_cid` mediumtext NOT NULL,

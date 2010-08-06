@@ -1218,3 +1218,63 @@ input#dfrn-url {
 
 #sidebar-group-list li {
 	margin-top: 10px;
+}
+
+.photo-album-image-wrapper {
+	float: left;
+	margin-top: 15px;
+	height: 350px;
+	width: 350px;
+}
+
+#photo-album-end {
+	clear: both;
+}
+
+.photo-top-image-wrapper {
+	float: left;
+	margin-top: 15px;
+	height: 350px;
+	width: 350px;
+}
+
+#photo-top-end {
+	clear: both;
+}
+
+#photo-top-links {
+	margin-bottom: 30px;
+	margin-left: 30px;
+}
+
+#photos-upload-newalbum-div {
+	float: left;
+	width: 175px;
+}
+#photos-upload-existing-album-text {
+	float: left;
+	width: 175px;
+}
+#photos-upload-newalbum {
+	float: left;
+}
+#photos-upload-album-select {
+	float: left;
+}
+#photos-upload-new-end, #photos-upload-exist-end {
+	clear: both;
+}
+#photos-upload-exist-end {
+	margin-bottom: 15px;
+}
+#photos-upload-submit {
+	margin-top: 15px;
+}
+
+#photos_upload_applet_wrapper {
+	margin-bottom: 15px;
+}
+
+#photos-upload-no-java-message {
+	margin-bottom: 15px;
+}

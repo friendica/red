@@ -106,7 +106,8 @@ function profile_content(&$a, $update = false) {
 		$tpl = file_get_contents('view/profile_tabs.tpl');
 
 		$o .= replace_macros($tpl,array(
-			'$url' => $a->get_baseurl() . '/' . $a->cmd
+			'$url' => $a->get_baseurl() . '/' . $a->cmd,
+			'$phototab' => $a->get_baseurl() . '/photos/' . $a->profile['nickname']
 		));
 
 
