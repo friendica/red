@@ -345,23 +345,27 @@ function photos_content(&$a) {
 
 	if($datatype == 'image') {
 
+		require_once('security.php');
+		require_once('bbcode.php');
+
 		// fetch item containing image, then comments
-		$r = q("SELECT * FROM `photo` WHERE `uid` = %d AND `resource-id` = '%s' 
+
+		$ph = q("SELECT * FROM `photo` WHERE `uid` = %d AND `resource-id` = '%s' 
 			$sql_extra ORDER BY `scale` ASC ",
 			intval($a->data['user']['uid']),
 			dbesc($datum)
 		);
 
-		if(! count($r)) {
+		if(! count($ph)) {
 			notice( t('Photo not available') . EOL );
 			return;
 		}
 
-		if(count($r) == 1)
-			$hires = $lores = $r[0];
-		if(count($r) > 1) {
-			$hires = $r[0];
-			$lores = $r[1];
+		if(count($ph) == 1)
+			$hires = $lores = $ph[0];
+		if(count($ph) > 1) {
+			$hires = $ph[0];
+			$lores = $ph[1];
 		}
 
 		$o .= '<a href="' . $a->get_baseurl() . '/photo/' 
@@ -369,7 +373,130 @@ function photos_content(&$a) {
 			. t('View Full Size') . '" ><img src="' . $a->get_baseurl() . '/photo/' 
 			. $lores['resource-id'] . '-' . $lores['scale'] . '.jpg' . '" /></a>';
 
+		// Do we have an item for this photo?
 
+		$i1 = q("SELECT * FROM `item` WHERE `resource-id` = '%s' $sql_extra LIMIT 1",
+			dbesc($datum)
+		);
+		if(count($i1)) {
+//dbg(2);
+			$r = q("SELECT COUNT(*) AS `total`
+				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
+				WHERE `parent-uri` = '%s' AND `uri` != '%s' AND `item`.`deleted` = 0
+				AND NOT `item`.`type` IN ( 'remote', 'net-comment') 
+				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
+				$sql_extra ",
+				dbesc($i1[0]['uri']),
+				dbesc($i1[0]['uri'])
+
+			);
+
+			if(count($r))
+				$a->set_pager_total($r[0]['total']);
+
+
+			$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
+				`contact`.`name`, `contact`.`photo`, `contact`.`url`, 
+				`contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`, 
+				`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
+				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
+				WHERE `parent-uri` = '%s' AND `uri` != '%s' AND `item`.`deleted` = 0
+				AND NOT `item`.`type` IN ( 'remote', 'net-comment') 
+				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+				$sql_extra
+				ORDER BY `parent` DESC, `id` ASC LIMIT %d ,%d ",
+				dbesc($i1[0]['uri']),
+				dbesc($i1[0]['uri']),
+				intval($a->pager['start']),
+				intval($a->pager['itemspage'])
+
+			);
+
+//			require_once('view/acl_selectors.php');
+
+			$o .= '<div id="photo-caption" >' . $ph['desc'] . '</div>';
+
+			if(strlen($i1[0]['tag'])) {
+				// parse tags and add links	
+				$o .= '<div id="in-this-photo-text">' . t('In this photo: ') . '</div>';
+				$o .= '<div id="in-this-photo">' . $i1[0]['tag'] . '</div>';
+			}
+
+			// pull out how many people like the photo
+
+			$cmnt_tpl = file_get_contents('view/comment_item.tpl');
+			$tpl = file_get_contents('view/photo_item.tpl');
+			$return_url = $a->cmd;
+
+			if(can_write_wall($a,$a->data['user']['uid'])) {
+				if($i1[0]['last-child']) {
+					$o .= replace_macros($cmnt_tpl,array(
+						'$return_path' => $return_url,
+						'$type' => 'wall-comment',
+						'$id' => $i1[0]['id'],
+						'$parent' => $i1[0]['id'],
+						'$profile_uid' =>  $a->data['user']['uid'],
+						'$ww' => ''
+					));
+				}
+			}
+
+
+			// display comments
+			if(count($r)) {
+				foreach($r as $item) {
+					$comment = '';
+					$template = $tpl;
+			
+					$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
+			
+					if(can_write_wall($a,$a->data['user']['uid'])) {
+						if($item['last-child']) {
+							$comment = replace_macros($cmnt_tpl,array(
+								'$return_path' => $return_url,
+								'$type' => 'wall-comment',
+								'$id' => $item['item_id'],
+								'$parent' => $item['parent'],
+								'$profile_uid' =>  $a->data['user']['uid'],
+								'$ww' => ''
+							));
+						}
+					}
+
+					$profile_url = $item['url'];
+
+
+					if(local_user() && ($item['contact-uid'] == $_SESSION['uid']) && (strlen($item['dfrn-id'])) && (! $item['self'] ))
+						$profile_url = $redirect_url;
+
+ 
+					$profile_name = ((strlen($item['author-name'])) ? $item['author-name'] : $item['name']);
+					$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $item['thumb']);
+					$profile_link = $profile_url;
+
+					$drop = '';
+
+					if(($item['contact-id'] == $_SESSION['visitor_id']) || ($item['uid'] == $_SESSION['uid']))
+						$drop = replace_macros(file_get_contents('view/wall_item_drop.tpl'), array('$id' => $item['id']));
+
+
+					$o .= replace_macros($template,array(
+						'$id' => $item['item_id'],
+						'$profile_url' => $profile_link,
+						'$name' => $profile_name,
+						'$thumb' => $profile_avatar,
+						'$title' => $item['title'],
+						'$body' => bbcode($item['body']),
+						'$ago' => relative_date($item['created']),
+						'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
+						'$drop' => $drop,
+						'$comment' => $comment
+					));
+				}
+			}
+
+			$o .= paginate($a);
+		}
 		return $o;
 	}
 

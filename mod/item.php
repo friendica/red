@@ -175,6 +175,13 @@ function item_post(&$a) {
 				dbesc(($parent == $post_id) ? $uri : $parent_item['uri']),
 				intval($post_id)
 			);
+			// photo comments turn the corresponding item visible to the profile wall
+			if(! $parent_item['visible']) {
+				$r = q("UPDATE `item` SET `visible = 1 WHERE `id` = %d LIMIT 1",
+					intval($parent_item['id'])
+				);
+			}
+
 		}
 
 		$url = $a->get_baseurl();
