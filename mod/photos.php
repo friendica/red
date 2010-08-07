@@ -1,6 +1,7 @@
 <?php
 
 require_once('Photo.php');
+require_once('view/acl_selectors.php');
 
 function photos_init(&$a) {
 
@@ -74,6 +75,35 @@ function photos_post(&$a) {
 			$album = datetime_convert('UTC',date_default_timezone_get(),'now', 'Y');
 	}
 
+	$str_group_allow = '';
+	$group_allow = $_POST['group_allow'];
+	if(is_array($group_allow)) {
+		array_walk($group_allow,'sanitise_acl');
+		$str_group_allow = implode('',$group_allow);
+	}
+
+	$str_contact_allow = '';
+	$contact_allow = $_POST['contact_allow'];
+	if(is_array($contact_allow)) {
+		array_walk($contact_allow,'sanitise_acl');
+		$str_contact_allow = implode('',$contact_allow);
+	}
+
+	$str_group_deny = '';
+	$group_deny = $_POST['group_deny'];
+	if(is_array($group_deny)) {
+		array_walk($group_deny,'sanitise_acl');
+		$str_group_deny = implode('',$group_deny);
+	}
+
+	$str_contact_deny = '';
+	$contact_deny = $_POST['contact_deny'];
+	if(is_array($contact_deny)) {
+		array_walk($contact_deny,'sanitise_acl');
+		$str_contact_deny = implode('',$contact_deny);
+	}
+
+
 	$src      = $_FILES['userfile']['tmp_name'];
 	$filename = basename($_FILES['userfile']['name']);
 	$filesize = intval($_FILES['userfile']['size']);
@@ -96,7 +126,7 @@ function photos_post(&$a) {
 
 	$photo_hash = hash('md5',uniqid(mt_rand(),true));
 	
-	$r = $ph->store($_SESSION['uid'], 0, $photo_hash, $filename, $album, 0 );
+	$r = $ph->store($_SESSION['uid'], 0, $photo_hash, $filename, $album, 0 , 0, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny);
 
 	if(! $r) {
 		notice( t('Image upload failed.') . EOL );
@@ -105,13 +135,13 @@ function photos_post(&$a) {
 
 	if($width > 640 || $height > 640) {
 		$ph->scaleImage(640);
-		$ph->store($_SESSION['uid'], 0, $photo_hash, $filename, $album, 1 );
+		$ph->store($_SESSION['uid'], 0, $photo_hash, $filename, $album, 1, 0, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny);
 		$smallest = 1;
 	}
 
 	if($width > 320 || $height > 320) {
 		$ph->scaleImage(320);
-		$ph->store($_SESSION['uid'], 0, $photo_hash, $filename, $album, 2 );
+		$ph->store($_SESSION['uid'], 0, $photo_hash, $filename, $album, 2, 0, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny);
 		$smallest = 2;
 	}
 	
@@ -292,6 +322,8 @@ function photos_content(&$a) {
 			'$existalbumtext' => t('or existing album name: '),
 			'$filestext' => t('Select files to upload: '),
 			'$albumselect' => $albumselect,
+			'$permissions' => t('Permissions'),
+			'$aclselect' => populate_acl(),
 			'$archive' => $a->get_baseurl() . '/jumploader_z.jar',
 			'$nojava' => t('Use the following controls only if the Java uploader (above) fails to launch.'),
 			'$uploadurl' => $a->get_baseurl() . '/photos',
@@ -348,7 +380,7 @@ function photos_content(&$a) {
 		require_once('security.php');
 		require_once('bbcode.php');
 
-		// fetch item containing image, then comments
+		// fetch image, item containing image, then comments
 
 		$ph = q("SELECT * FROM `photo` WHERE `uid` = %d AND `resource-id` = '%s' 
 			$sql_extra ORDER BY `scale` ASC ",
@@ -421,14 +453,20 @@ function photos_content(&$a) {
 
 			);
 
-//			require_once('view/acl_selectors.php');
 
-			$o .= '<div id="photo-caption" >' . $ph['desc'] . '</div>';
+			$o .= '<div id="photo-caption" >' . $ph[0]['desc'] . '</div>';
 
 			if(strlen($i1[0]['tag'])) {
 				// parse tags and add links	
 				$o .= '<div id="in-this-photo-text">' . t('In this photo: ') . '</div>';
 				$o .= '<div id="in-this-photo">' . $i1[0]['tag'] . '</div>';
+			}
+
+			if($cmd == 'edit') {
+				$edit_tpl = file_get_contents('view/photo_edit.tpl');
+				$o .= replace_macros($edit_tpl, array(
+					'$id' => $ph[0]['id']
+				));
 			}
 
 			// pull out how many people like the photo

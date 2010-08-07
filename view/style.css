@@ -1309,3 +1309,20 @@ input#dfrn-url {
 #profile-jot-banner-end {
 	clear: both;
 }
+
+#photos-upload-select-files-text {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+#photos-upload-perms-menu, #photos-upload-perms-menu:visited {
+	color: #8888FF;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+#photos-upload-perms-menu:hover {
+	color: #0000FF;
+	text-decoration: underline;
+	cursor: pointer;
+}

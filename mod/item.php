@@ -1,9 +1,5 @@
 <?php
 
-function sanitise_acl(&$item) {
-	$item = '<' . intval(notags(trim($item))) . '>';
-}
-
 function item_post(&$a) {
 
 	if((! local_user()) && (! remote_user()))

@@ -168,11 +168,12 @@ class Photo {
 
 
 
-	public function store($uid, $cid, $rid, $filename, $album, $scale, $profile = 0) {
+	public function store($uid, $cid, $rid, $filename, $album, $scale, 
+		$profile = 0, $allow_cid = '', $allow_gid = '', $deny_cid = '', $deny_gid = '') {
 
 		$r = q("INSERT INTO `photo`
-			( `uid`, `contact-id`, `resource-id`, `created`, `edited`, `filename`, `album`, `height`, `width`, `data`, `scale`, `profile` )
-			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d )",
+			( `uid`, `contact-id`, `resource-id`, `created`, `edited`, `filename`, `album`, `height`, `width`, `data`, `scale`, `profile`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid` )
+			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, '%s', '%s', '%s', '%s' )",
 			intval($uid),
 			intval($cid),
 			dbesc($rid),
@@ -184,7 +185,11 @@ class Photo {
                 	intval($this->width),
                 	dbesc($this->imageString()),
 			intval($scale),
-			intval($profile)
+			intval($profile),
+			dbesc($allow_cid),
+			dbesc($allow_gid),
+			dbesc($deny_cid),
+			dbesc($deny_gid)
 		);
 		return $r;
 	}

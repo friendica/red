@@ -498,3 +498,6 @@ function expand_acl($s) {
 }		
 
 
+function sanitise_acl(&$item) {
+	$item = '<' . intval(notags(trim($item))) . '>';
+}

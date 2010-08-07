@@ -13,6 +13,16 @@
 	</div>
 	<div id="photos-upload-exist-end"></div>
 
+
+	<div id="photos-upload-perms" class="photos-upload-perms" ><div id="photos-upload-perms-menu" onClick="openClose('photos-upload-permissions-wrapper');" />$permissions</div>
+	<div id="photos-upload-perms-end"></div>
+
+	<div id="photos-upload-permissions-wrapper" style="display: none;" >
+	
+		$aclselect
+
+	</div>
+
 	<div id="photos-upload-select-files-text">$filestext</div>
 
 	<div id="photos_upload_applet_wrapper">
