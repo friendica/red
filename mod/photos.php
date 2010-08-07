@@ -316,7 +316,7 @@ function photos_content(&$a) {
 
 
 		$r = q("SELECT `resource-id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
-			$sql_extra GROUP BY `resource-id` LIMIT %d , %d",
+			$sql_extra GROUP BY `resource-id` ORDER BY `created` DESC LIMIT %d , %d",
 			intval($a->data['user']['uid']),
 			dbesc($album),
 			intval($a->pager['start']),
@@ -364,10 +364,19 @@ function photos_content(&$a) {
 		if(count($ph) == 1)
 			$hires = $lores = $ph[0];
 		if(count($ph) > 1) {
+			if($ph[1]['scale'] == 2) {
+				// original is 640 or less, we can display it directly
+				$hires = $lores = $ph[0];
+			}
+			else {
 			$hires = $ph[0];
 			$lores = $ph[1];
+			}
 		}
 
+		
+		$o .= '<h3>' . '<a href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/album/' . bin2hex($ph[0]['album']) . '">' . $ph[0]['album'] . '</a></h3>';
+ 
 		$o .= '<a href="' . $a->get_baseurl() . '/photo/' 
 			. $hires['resource-id'] . '-' . $hires['scale'] . '.jpg" title="' 
 			. t('View Full Size') . '" ><img src="' . $a->get_baseurl() . '/photo/' 
