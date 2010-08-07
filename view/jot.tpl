@@ -1,8 +1,10 @@
 
 <div id="profile-jot-wrapper" >
-<p id="profile-jot-desc" >
-What's on your mind?
-</p>
+<div id="profile-jot-banner-wrapper">
+	<div id="profile-jot-desc" >What's on your mind?</div>
+	<div id="character-counter" class="grey"></div>
+</div>
+<div id="profile-jot-banner-end"></div>
 <form id="profile-jot-form" action="item" method="post" >
 <input type="hidden" name="type" value="wall" />
 <input type="hidden" name="profile_uid" value="$profile_uid" />

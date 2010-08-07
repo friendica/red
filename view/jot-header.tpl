@@ -18,7 +18,31 @@ tinyMCE.init({
 	add_unload_trigger : false,
 	remove_linebreaks : false,
 	convert_urls: false,
-	content_css: "$baseurl/view/custom_tinymce.css"
+	content_css: "$baseurl/view/custom_tinymce.css",
+	     //Character count
+	theme_advanced_path : false,
+	setup : function(ed) {
+		ed.onKeyUp.add(function(ed, e) {
+			var txt = tinyMCE.activeEditor.getContent();
+			var text = txt.length;
+			if(txt.length <= 140) {
+				$('#character-counter').removeClass('red');
+				$('#character-counter').removeClass('orange');
+				$('#character-counter').addClass('grey');
+			}
+			if((txt.length > 140) && (txt .length <= 420)) {
+				$('#character-counter').removeClass('grey');
+				$('#character-counter').removeClass('red');
+				$('#character-counter').addClass('orange');
+			}
+			if(txt.length > 420) {
+				$('#character-counter').removeClass('grey');
+				$('#character-counter').removeClass('orange');
+				$('#character-counter').addClass('red');
+			}
+			$('#character-counter').text(text);
+    		});
+     	}
 });
 
 </script>
