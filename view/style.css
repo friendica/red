@@ -39,6 +39,11 @@ img.photo {
 	margin-left: 280px;
 }
 
+.heart {
+	color: #FF0000;
+	font-size: 120%;
+}
+
 aside {
 	position: absolute;
 	left: 0px;

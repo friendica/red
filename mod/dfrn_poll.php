@@ -6,6 +6,8 @@ require_once('include/auth.php');
 
 function dfrn_poll_init(&$a) {
 
+	$dfrn_id = '';
+
 	if(x($_GET,'dfrn_id'))
 		$dfrn_id = $a->config['dfrn_poll_dfrn_id'] = $_GET['dfrn_id'];
 	if(x($_GET,'type'))
@@ -13,13 +15,7 @@ function dfrn_poll_init(&$a) {
 	if(x($_GET,'last_update'))
 		$last_update = $a->config['dfrn_poll_last_update'] = $_GET['last_update'];
 
-
-
-	if(! x($dfrn_id))
-		return;
-
-
-	if(($dfrn_id == '*') && ($a->argc > 1)) {
+	if(($dfrn_id == '') && ($a->argc > 1)) {
 		$o = get_feed_for($a,'*', $a->argv[1],$last_update);
 		echo $o;
 		killme();
@@ -140,6 +136,10 @@ function dfrn_poll_post(&$a) {
 
 function dfrn_poll_content(&$a) {
 
+
+	$dfrn_id = '';
+	$type = 'data';
+
 	if(x($_GET,'dfrn_id'))
 		$dfrn_id = $a->config['dfrn_poll_dfrn_id'] = $_GET['dfrn_id'];
 	if(x($_GET,'type'))
@@ -148,7 +148,7 @@ function dfrn_poll_content(&$a) {
 		$last_update = $a->config['dfrn_poll_last_update'] = $_GET['last_update'];
 
 
-	if($dfrn_id != '*') {
+	if($dfrn_id != '') {
 		// initial communication from external contact
 		$hash = random_string();
 

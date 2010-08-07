@@ -53,7 +53,7 @@
 </div>
 <?php } ?>
 <?php if(strlen($profile['marital'])) { ?>
-<div class="marital"><span class="marital-label">Status: </span><span class="marital-text"><?php echo $profile['marital']; ?></span></div>
+<div class="marital"><span class="marital-label"><span class="heart">&hearts;</span> Status: </span><span class="marital-text"><?php echo $profile['marital']; ?></span></div>
 <?php } ?>
 <?php if(strlen($profile['url'])) { ?>
 <div class="homepage"><span class="homepage-label">Status: </span><span class="homepage-url"><?php echo $profile['homepage']; ?></span></div>
