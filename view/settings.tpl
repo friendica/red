@@ -25,6 +25,20 @@ $zoneselect
 </div>
 <div id="settings-timezone-end" ></div>
 
+<div id="settings-default-perms" class="settings-default-perms" >
+	<div id="settings-default-perms-menu" onClick="openClose('settings-default-perms-select');" />$permissions</div>
+	<div id="settings-default-perms-menu-end"></div>
+
+	<div id="settings-default-perms-select" style="display: none;" >
+	
+		$aclselect
+
+	</div>
+</div>
+<div id="settings-default-perms-end"></div>
+
+
+
 <div id="settings-password-wrapper" >
 <p id="settings-password-desc" >
 Leave password fields blank unless changing
@@ -39,6 +53,10 @@ Leave password fields blank unless changing
 <input type="password" id="settings-confirm" name="confirm" ></input>
 </div>
 <div id="settings-confirm-end" ></div>
+
+
+
+
 
 
 <div id="settings-submit-wrapper" >

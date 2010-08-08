@@ -123,13 +123,16 @@ function profile_content(&$a, $update = false) {
 			require_once('view/acl_selectors.php');
 
 			$tpl = file_get_contents("view/jot.tpl");
-
+			if(is_array($a->user) && ((strlen($a->user['allow_cid'])) || (strlen($a->user['allow_gid'])) || (strlen($a->user['deny_cid'])) || (strlen($a->user['deny_gid']))))
+				$lockstate = 'lock';
+			else
+				$lockstate = 'unlock';
 			$o .= replace_macros($tpl,array(
 				'$baseurl' => $a->get_baseurl(),
 				'$return_path' => $a->cmd,
 				'$visitor' => (($_SESSION['uid'] == $a->profile['profile_uid']) ? 'block' : 'none'),
-				'$lockstate' => 'unlock',
-				'$acl' => (($_SESSION['uid'] == $a->profile['profile_uid']) ? populate_acl() : ''),
+				'$lockstate' => $lockstate,
+				'$acl' => (($_SESSION['uid'] == $a->profile['profile_uid']) ? populate_acl($a->user) : ''),
 				'$profile_uid' => $a->profile['profile_uid']
 			));
 		}

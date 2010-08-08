@@ -38,7 +38,7 @@ function network_content(&$a, $update = false) {
 			'$baseurl' => $a->get_baseurl(),
 			'$visitor' => 'block',
 			'$lockstate' => 'unlock',
-			'$acl' => populate_acl(),
+			'$acl' => populate_acl($a->user),
 			'$profile_uid' => $_SESSION['uid']
 		));
 

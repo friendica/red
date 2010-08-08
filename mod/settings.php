@@ -15,12 +15,13 @@ function settings_init(&$a) {
 
 function settings_post(&$a) {
 
+
 	if(! local_user()) {
-		notice( "Permission denied." . EOL);
+		notice( t('Permission denied.') . EOL);
 		return;
 	}
 	if(count($a->user) && x($a->user,'uid') && $a->user['uid'] != $_SESSION['uid']) {
-		$_SESSION['sysmsg'] .= "Permission denied." . EOL;
+		notice( t('Permission denied.') . EOL);
 		return;
 	}
 	if((x($_POST,'password')) || (x($_POST,'confirm'))) {
@@ -30,12 +31,12 @@ function settings_post(&$a) {
 
 		$err = false;
 		if($newpass != $confirm ) {
-			$_SESSION['sysmsg'] .= "Passwords do not match. Password unchanged." . EOL;
+			notice( t('Passwords do not match. Password unchanged.') . EOL);
 			$err = true;
 		}
 
 		if((! x($newpass)) || (! x($confirm))) {
-			$_SESSION['sysmsg'] .= "Empty passwords are not allowed. Password unchanged." . EOL;
+			notice( t('Empty passwords are not allowed. Password unchanged.') . EOL);
 			$err = true;
 		}
 
@@ -45,9 +46,9 @@ function settings_post(&$a) {
 				dbesc($password),
 				intval($_SESSION['uid']));
 			if($r)
-				$_SESSION['sysmsg'] .= "Password changed." . EOL;
+				notice( t('Password changed.') . EOL);
 			else
-				$_SESSION['sysmsg'] .= "Password update failed. Please try again." . EOL;
+				notice( t('Password update failed. Please try again.') . EOL);
 		}
 	}
 
@@ -63,24 +64,24 @@ function settings_post(&$a) {
 	if($username != $a->user['username']) {
 		$username_changed = true;
         	if(strlen($username) > 40)
-                	$err .= " Please use a shorter name.";
+                	$err .= t(' Please use a shorter name.');
         	if(strlen($username) < 3)
-                	$err .= " Name too short.";
+                	$err .= t(' Name too short.');
 	}
 	if($email != $a->user['email']) {
 		$email_changed = true;
         	if(!eregi('[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\.[A-Za-z]{2,6}',$email))
-                	$err .= " Not valid email.";
+                	$err .= t(' Not valid email.');
         	$r = q("SELECT `uid` FROM `user`
                 	WHERE `email` = '%s' LIMIT 1",
                 	dbesc($email)
                 	);
 	        if($r !== NULL && count($r))
-        	        $err .= " This email address is already registered." . EOL;
+        	        $err .= t(' This email address is already registered.');
 	}
 
         if(strlen($err)) {
-                $_SESSION['sysmsg'] .= $err . EOL;
+                notice($err . EOL);
                 return;
         }
 	if($timezone != $a->user['timezone']) {
@@ -88,15 +89,50 @@ function settings_post(&$a) {
 		if(strlen($timezone))
 			date_default_timezone_set($timezone);
 	}
-	if($email_changed || $username_changed || $zone_changed ) {
-		$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `timezone` = '%s'  WHERE `uid` = %d LIMIT 1",
+
+	$str_group_allow = '';
+	$group_allow = $_POST['group_allow'];
+	if(is_array($group_allow)) {
+		array_walk($group_allow,'sanitise_acl');
+		$str_group_allow = implode('',$group_allow);
+	}
+
+	$str_contact_allow = '';
+	$contact_allow = $_POST['contact_allow'];
+	if(is_array($contact_allow)) {
+		array_walk($contact_allow,'sanitise_acl');
+		$str_contact_allow = implode('',$contact_allow);
+	}
+
+	$str_group_deny = '';
+	$group_deny = $_POST['group_deny'];
+	if(is_array($group_deny)) {
+		array_walk($group_deny,'sanitise_acl');
+		$str_group_deny = implode('',$group_deny);
+	}
+
+	$str_contact_deny = '';
+	$contact_deny = $_POST['contact_deny'];
+	if(is_array($contact_deny)) {
+		array_walk($contact_deny,'sanitise_acl');
+		$str_contact_deny = implode('',$contact_deny);
+	}
+
+
+
+	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s' WHERE `uid` = %d LIMIT 1",
 			dbesc($username),
 			dbesc($email),
 			dbesc($timezone),
-			intval($_SESSION['uid']));
-		if($r)
-			$_SESSION['sysmsg'] .= "Settings updated." . EOL;
-	}
+			dbesc($str_contact_allow),
+			dbesc($str_group_allow),
+			dbesc($str_contact_deny),
+			dbesc($str_group_deny),
+			intval($_SESSION['uid'])
+	);
+	if($r)
+		notice( t('Settings updated.') . EOL);
+
 	if($email_changed && $a->config['register_policy'] == REGISTER_VERIFY) {
 
 		// FIXME - set to un-verified, blocked and redirect to logout
@@ -161,7 +197,8 @@ function settings_content(&$a) {
 		'$nickname_block' => $nickname_block,
 		'$timezone' => $timezone,
 		'$zoneselect' => select_timezone($timezone),
-		'$acl_select' => populate_acl()
+		'$permissions' => t('Default Post Permissions'),
+		'$aclselect' => populate_acl($a->user)
 	));
 
 	return $o;

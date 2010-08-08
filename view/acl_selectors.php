@@ -69,8 +69,28 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 	return $o;
 }
 
+function fixacl(&$item) {
+	$item = intval(str_replace(array('<','>'),array('',''),$item));
+}
 
-function populate_acl() {
+function populate_acl($user = null) {
+
+	$allow_cid = $allow_gid = $deny_cid = $deny_gid = false;
+
+	if(is_array($user)) {
+		$allow_cid = ((strlen($user['allow_cid'])) 
+			? explode('><', $user['allow_cid']) : array() );
+		$allow_gid = ((strlen($user['allow_gid']))
+			? explode('><', $user['allow_gid']) : array() );
+		$deny_cid  = ((strlen($user['deny_cid']))
+			? explode('><', $user['deny_cid']) : array() );
+		$deny_gid  = ((strlen($user['deny_gid']))
+			? explode('><', $user['deny_gid']) : array() );
+		array_walk($allow_cid,'fixacl');
+		array_walk($allow_gid,'fixacl');
+		array_walk($deny_cid,'fixacl');
+		array_walk($deny_gid,'fixacl');
+	}
 
 	$o = '';
 	$o .= '<div id="acl-wrapper">';
@@ -80,11 +100,11 @@ function populate_acl() {
 	$o .= '<div id="acl-permit-wrapper">';
 	$o .= '<div id="group_allow_wrapper">';
 	$o .= '<label id="acl-allow-group-label" for="group_allow" >' . t('Groups') . '</label>';
-	$o .= group_select('group_allow','group_allow');
+	$o .= group_select('group_allow','group_allow',$allow_gid);
 	$o .= '</div>';
 	$o .= '<div id="contact_allow_wrapper">';
 	$o .= '<label id="acl-allow-contact-label" for="contact_allow" >' . t('Contacts') . '</label>';
-	$o .= contact_select('contact_allow','contact_allow');
+	$o .= contact_select('contact_allow','contact_allow',$allow_cid);
 	$o .= '</div>';
 	$o .= '</div>' . "\r\n";
 	$o .= '<div id="acl-allow-end"></div>' . "\r\n";
@@ -95,11 +115,11 @@ function populate_acl() {
 	$o .= '<div id="acl-deny-wrapper">';
 	$o .= '<div id="group_deny_wrapper" >';
 	$o .= '<label id="acl-deny-group-label" for="group_deny" >' . t('Groups') . '</label>';
-	$o .= group_select('group_deny','group_deny');
+	$o .= group_select('group_deny','group_deny', $deny_gid);
 	$o .= '</div>';
 	$o .= '<div id="contact_deny_wrapper" >';
 	$o .= '<label id="acl-deny-contact-label" for="contact_deny" >' . t('Contacts') . '</label>';
-	$o .= contact_select('contact_deny','contact_deny');
+	$o .= contact_select('contact_deny','contact_deny', $deny_cid);
 	$o .= '</div>';
 	$o .= '</div>' . "\r\n";
 	$o .= '<div id="acl-deny-end"></div>' . "\r\n";

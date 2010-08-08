@@ -1326,3 +1326,16 @@ input#dfrn-url {
 	text-decoration: underline;
 	cursor: pointer;
 }
+#settings-default-perms-menu, #settings-default-perms-menu:visited {
+	color: #8888FF;
+	text-decoration: none;
+	cursor: pointer;
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+#settings-default-perms-menu:hover {
+	color: #0000FF;
+	text-decoration: underline;
+	cursor: pointer;
+}
