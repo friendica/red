@@ -43,8 +43,8 @@ if(strlen($a->module)) {
 // invoke module functions
 // Important: Modules normally do not emit content, unless you need it for debugging.
 // The module_init, module_post, and module_afterpost functions process URL parameters and POST processing.
-// The module_content function returns content text to this function where it is included on the page.
-// Modules emitting XML/Atom, etc. should do so in the _init function and promptly exit.
+// The module_content function returns content text to this file where it is included on the page.
+// Modules emitting XML/Atom, etc. should do so idirectly and promptly exit before the HTML page can be rendered.
 // "Most" HTML resides in the view directory as text templates with macro substitution. 
 // They look like HTML with PHP variables but only a couple pass through the PHP processor - those with .php extensions.
 // The macro substitution is defined per page for the .tpl files. 

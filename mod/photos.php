@@ -51,6 +51,29 @@ function photos_post(&$a) {
                 killme();
         }
 
+	if(($a->argc > 1) && (x($_POST,'desc') !== false)) {
+		$desc = notags(trim($_POST['desc']));
+		$tags = notags(trim($_POST['tags']));
+		$item_id = intval($_POST['item_id']);
+		$id = $a->argv[1];
+
+		$r = q("UPDATE `photo` SET `desc` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			dbesc($desc),
+			intval($id),
+			intval($_SESSION['uid'])
+		);
+		$r = q("UPDATE `item` SET `tag` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			dbesc($tags),
+			intval($item_id),
+			intval($_SESSION['uid'])
+		);
+
+		goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
+		return; // NOTREACHED
+	}
+
+
+
 	$r = q("SELECT * FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` WHERE `user`.`uid` = %d AND `self` = 1 LIMIT 1",
 		intval($_SESSION['uid'])
 	);
@@ -409,10 +432,16 @@ function photos_content(&$a) {
 		
 		$o .= '<h3>' . '<a href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/album/' . bin2hex($ph[0]['album']) . '">' . $ph[0]['album'] . '</a></h3>';
  
+		if(local_user() && ($ph[0]['uid'] == $_SESSION['uid'])) {
+			$o .= '<div id="photo-edit-link-wrap" ><a id="photo-edit-link" href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $datum . '/edit' . '">' . t('Edit photo') . '</a></div>';
+		}
+
+
 		$o .= '<a href="' . $a->get_baseurl() . '/photo/' 
 			. $hires['resource-id'] . '-' . $hires['scale'] . '.jpg" title="' 
 			. t('View Full Size') . '" ><img src="' . $a->get_baseurl() . '/photo/' 
 			. $lores['resource-id'] . '-' . $lores['scale'] . '.jpg' . '" /></a>';
+
 
 		// Do we have an item for this photo?
 
@@ -465,7 +494,14 @@ function photos_content(&$a) {
 			if($cmd == 'edit') {
 				$edit_tpl = file_get_contents('view/photo_edit.tpl');
 				$o .= replace_macros($edit_tpl, array(
-					'$id' => $ph[0]['id']
+					'$id' => $ph[0]['id'],
+					'$capt_label' => t('Caption'),
+					'$caption' => $ph[0]['desc'],
+					'$tag_label' => t('Tags'),
+					'$tags' => $i1[0]['tag'],
+					'$item_id' => $i1[0]['id'],
+					'$submit' => t('Submit') 
+
 				));
 			}
 

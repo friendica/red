@@ -28,6 +28,6 @@ $a->config['register_policy'] = REGISTER_OPEN;
 $a->config['register_text'] = '';
 $a->config['admin_email'] = '';
 
-// Maximum size of an imported message, 0 is unlimited.
+// Maximum size of an imported message, 0 is unlimited (but our database 'text' element is limited to 65535).
 
 $a->config['max_import_size'] = 10000;

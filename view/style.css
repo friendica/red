@@ -1339,3 +1339,33 @@ input#dfrn-url {
 	text-decoration: underline;
 	cursor: pointer;
 }
+
+#photo-edit-caption-label, #photo-edit-tags-label {
+	float: left; 
+	width: 150px;
+}
+#photo-edit-caption, #photo-edit-tags-textarea {
+	float: left;
+}
+
+#photo-edit-caption-end, #photo-edit-tags-end {
+	clear: both;
+}
+
+#photo-caption {
+	font-size: 110%;
+	font-weight: bold;
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+#in-this-photo-text {
+	color: #0000FF;
+	margin-left: 30px;
+}	
+
+#in-this-photo {
+	margin-left: 60px;
+	margin-top: 10px;
+	margin-bottom: 20px;
+}

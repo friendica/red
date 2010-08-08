@@ -187,7 +187,7 @@ function contacts_content(&$a) {
 			'$poll_interval' => contact_poll_interval($r[0]['priority']),
 			'$last_update' => (($r[0]['last-update'] == '0000-00-00 00:00:00') 
 				? t('Never') 
-				: datetime_convert('UTC',date_default_timezone_get(),$r[0]['last-update'],'D, j M Y, G:i A')),
+				: datetime_convert('UTC',date_default_timezone_get(),$r[0]['last-update'],'D, j M Y, g:i A')),
 			'$profile_select' => contact_profile_assign($r[0]['profile-id']),
 			'$contact_id' => $r[0]['id'],
 			'$block_text' => (($r[0]['blocked']) ? t('Unblock this contact') : t('Block this contact') ),
