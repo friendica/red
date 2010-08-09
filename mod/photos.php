@@ -51,17 +51,208 @@ function photos_post(&$a) {
                 killme();
         }
 
+
+
+	$r = q("SELECT * FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
+		WHERE `user`.`uid` = %d AND `self` = 1 LIMIT 1",
+		intval($_SESSION['uid'])
+	);
+
+	$contact_record = $r[0];	
+
+
+	if(($a->argc > 2) && ($a->argv[1] == 'album')) {
+		$album = hex2bin($a->argv[2]);
+
+		if($album == t('Profile Photos') || $album == t('Contact Photos')) {
+			goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
+			return; // NOTREACHED
+		}
+
+		$r = q("SELECT count(*) FROM `photo` WHERE `album` = '%s' AND `uid` = %d",
+			dbesc($album),
+			intval($_SESSION['uid'])
+		);
+		if(! count($r)) {
+			notice( t('Album not found.') . EOL);
+			goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
+			return; // NOTREACHED
+		}
+
+		$newalbum = notags(trim($_POST['albumname']));
+		if($newalbum != $album) {
+			q("UPDATE `photo` SET `album` = '%s' WHERE `album` = '%s' AND `uid` = %d",
+				dbesc($newalbum),
+				dbesc($album),
+				intval($_SESSION['uid'])
+			);
+			$newurl = str_replace(bin2hex($album),bin2hex($newalbum),$_SESSION['photo_return']);
+			goaway($a->get_baseurl() . '/' . $newurl);
+			return; // NOTREACHED
+		}
+
+		if($_POST['dropalbum'] == t('Delete Album')) {
+
+			$res = array();
+			$r = q("SELECT distinct(`resource-id`) as `rid` FROM `photo` WHERE `uid` = %d AND `album` = '%s'",
+				intval($_SESSION['uid']),
+				dbesc($album)
+			);
+			if(count($r)) {
+				foreach($r as $rr) {
+					$res[] = "'" . dbesc($rr['rid']) . "'" ;
+				}
+			}
+			else {
+				goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
+				return; // NOTREACHED
+			}
+			$str_res = implode(',', $res);
+
+			q("DELETE FROM `photo` WHERE `resource-id` IN ( $str_res ) AND `uid` = %d",
+				intval($_SESSION['uid'])
+			);
+			$r = q("SELECT `parent-uri` FROM `item` WHERE `resource-id` IN ( $str_res ) AND `uid` = %d",
+				intval($_SESSION['uid'])
+			);
+			if(count($r)) {
+				foreach($r as $rr) {
+					q("UPDATE `item` SET `deleted` = 1 WHERE `parent-uri` = '%s' AND `uid` = %d",
+						dbesc($rr['parent-uri']),
+						intval($_SESSION['uid'])
+					);
+
+					$url = $a->get_baseurl();
+					$drop_id = intval($rr['id']);
+
+					// send the notification upstream/downstream as the case may be
+
+					if($rr['visible'])
+						proc_close(proc_open("php include/notifier.php \"$url\" \"drop\" \"$drop_id\" ",
+							array(),$foo));
+
+				}
+			}
+		}
+		goaway($a->get_baseurl() . '/photos/' . $a->data['user']['uid']);
+		return; // NOTREACHED
+	}
+
+	if(($a->argc > 1) && (x($_POST,'delete')) && ($_POST['delete'] == t('Delete Photo'))) {
+		$r = q("SELECT `id` FROM `photo` WHERE `uid` = %d AND `resource-id` = '%s' LIMIT 1",
+			intval($_SESSION['uid']),
+			dbesc($a->argv[1])
+		);
+		if(count($r)) {
+			q("DELETE FROM `photo` WHERE `uid` = %d AND `resource-id` = '%s'",
+				intval($_SESSION['uid']),
+				dbesc($r[0]['resource-id'])
+			);
+			$i = q("SELECT * FROM `item` WHERE `resource-id` = '%s' AND `uid` = %d LIMIT 1",
+				dbesc($r[0]['resource-id']),
+				intval($_SESSION['uid'])
+			);
+			if(count($i)) {
+				q("UPDATE `item` SET `deleted` = 1 WHERE `parent-uri` = '%s' AND `uid` = %d",
+					dbesc($i[0]['uri']),
+					intval($_SESSION['uid'])
+				);
+
+				$url = $a->get_baseurl();
+				$drop_id = intval($i[0]['id']);
+
+				// send the notification upstream/downstream as the case may be
+
+				if($i[0]['visible'])
+					proc_close(proc_open("php include/notifier.php \"$url\" \"drop\" \"$drop_id\" ",
+						array(),$foo));
+			}
+		}
+
+		goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
+		return; // NOTREACHED
+	}
+
+
+
 	if(($a->argc > 1) && (x($_POST,'desc') !== false)) {
 		$desc = notags(trim($_POST['desc']));
 		$tags = notags(trim($_POST['tags']));
 		$item_id = intval($_POST['item_id']);
-		$id = $a->argv[1];
+		$resource_id = $a->argv[1];
 
-		$r = q("UPDATE `photo` SET `desc` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			dbesc($desc),
-			intval($id),
+		$p = q("SELECT * FROM `photo` WHERE `resource-id` = '%s' AND `uid` = %d ORDER BY `scale` DESC",
+			dbesc($resource_id),
 			intval($_SESSION['uid'])
 		);
+		if(count($r)) {
+			$r = q("UPDATE `photo` SET `desc` = '%s' WHERE `resource-id` = '%s' AND `uid` = %d",
+				dbesc($desc),
+				dbesc($resource_id),
+				intval($_SESSION['uid'])
+			);
+		}
+		if(! $item_id) {
+
+			$title = '';
+			$basename = basename($filename);
+
+			// Create item container
+
+			$body = '[url=' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $p[0]['resource-id'] . ']' 
+				. '[img]' . $a->get_baseurl() . '/photo/' . $p[0]['resource-id'] . '-' . $p[0]['scale'] . '.jpg' . '[/img]' 
+				. '[/url]';
+
+			do {
+				$dups = false;
+				$item_hash = random_string();
+
+				$uri = "urn:X-dfrn:" . $a->get_hostname() . ':' . $_SESSION['uid'] .  ':' . $item_hash;
+
+				$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
+				dbesc($uri));
+				if(count($r))
+					$dups = true;
+			} while($dups == true);
+
+
+			$r = q("INSERT INTO `item` (`uid`, `type`, `resource-id`, `contact-id`,
+				`owner-name`,`owner-link`,`owner-avatar`, `created`,
+				`edited`, `uri`, `parent-uri`, `title`, `body`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
+				VALUES( %d, '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+				intval($_SESSION['uid']),
+				dbesc('photo'),
+				dbesc($p[0]['resource-id']),			
+				intval($contact_record['id']),
+				dbesc($contact_record['name']),
+				dbesc($contact_record['url']),
+				dbesc($contact_record['thumb']),
+				datetime_convert(),
+				datetime_convert(),
+				dbesc($uri),
+				dbesc($uri),
+				dbesc($title),
+				dbesc($body),
+				dbesc($p[0]['allow_cid']),
+				dbesc($p[0]['allow_gid']),
+				dbesc($p[0]['deny_cid']),
+				dbesc($p[0]['deny_gid'])
+
+			);
+			if($r) {
+	
+				$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
+					dbesc($uri)
+				);
+				if(count($r))
+					$item_id = $r[0]['id'];
+					q("UPDATE `item` SET `parent` = %d, `last-child` = 1 WHERE `id` = %d LIMIT 1",
+					intval($r[0]['id']),
+					intval($r[0]['id'])
+				);
+			}
+		}
+
 		$r = q("UPDATE `item` SET `tag` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			dbesc($tags),
 			intval($item_id),
@@ -74,11 +265,6 @@ function photos_post(&$a) {
 
 
 
-	$r = q("SELECT * FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` WHERE `user`.`uid` = %d AND `self` = 1 LIMIT 1",
-		intval($_SESSION['uid'])
-	);
-
-	$contact_record = $r[0];	
 
 	if(! x($_FILES,'userfile'))
 		killme();
@@ -97,6 +283,15 @@ function photos_post(&$a) {
 		else
 			$album = datetime_convert('UTC',date_default_timezone_get(),'now', 'Y');
 	}
+
+	$r = q("SELECT * FROM `photo` WHERE `album` = '%s' AND `uid` = %d",
+		dbesc($album),
+		intval($_SESSION['uid'])
+	);
+	if((! count($r)) || ($album == t('Profile Photos')))
+		$visible = 1;
+	else
+		$visibile = 0;
 
 	$str_group_allow = '';
 	$group_allow = $_POST['group_allow'];
@@ -176,56 +371,53 @@ function photos_post(&$a) {
 		. '[img]' . $a->get_baseurl() . "/photo/{$photo_hash}-{$smallest}.jpg" . '[/img]' 
 		. '[/url]';
 
-			do {
-			$dups = false;
-			$item_hash = random_string();
+	do {
+		$dups = false;
+		$item_hash = random_string();
 
-			$uri = "urn:X-dfrn:" . $a->get_hostname() . ':' . $profile_uid . ':' . $item_hash;
+		$uri = "urn:X-dfrn:" . $a->get_hostname() . ':' . $profile_uid . ':' . $item_hash;
 
-			$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
-			dbesc($uri));
-			if(count($r))
-				$dups = true;
-		} while($dups == true);
+		$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
+		dbesc($uri));
+		if(count($r))
+			$dups = true;
+	} while($dups == true);
 
 
-		$r = q("INSERT INTO `item` (`uid`, `type`, `resource-id`, `contact-id`,`owner-name`,`owner-link`,`owner-avatar`, `created`,
-			`edited`, `uri`, `parent-uri`, `title`, `body`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
-			VALUES( %d, '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
-			intval($_SESSION['uid']),
-			dbesc('photo'),
-			dbesc($photo_hash),			
-			intval($contact_record['id']),
-			dbesc($contact_record['name']),
-			dbesc($contact_record['url']),
-			dbesc($contact_record['thumb']),
-			datetime_convert(),
-			datetime_convert(),
-			dbesc($uri),
-			dbesc($uri),
-			dbesc($title),
-			dbesc($body),
-			dbesc($str_contact_allow),
-			dbesc($str_group_allow),
-			dbesc($str_contact_deny),
-			dbesc($str_group_deny)
+	$r = q("INSERT INTO `item` (`uid`, `type`, `resource-id`, `contact-id`,`owner-name`,`owner-link`,`owner-avatar`, `created`,
+		`edited`, `uri`, `parent-uri`, `title`, `body`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `visible`)
+		VALUES( %d, '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d )",
+		intval($_SESSION['uid']),
+		dbesc('photo'),
+		dbesc($photo_hash),			
+		intval($contact_record['id']),
+		dbesc($contact_record['name']),
+		dbesc($contact_record['url']),
+		dbesc($contact_record['thumb']),
+		datetime_convert(),
+		datetime_convert(),
+		dbesc($uri),
+		dbesc($uri),
+		dbesc($title),
+		dbesc($body),
+		dbesc($str_contact_allow),
+		dbesc($str_group_allow),
+		dbesc($str_contact_deny),
+		dbesc($str_group_deny),
+		intval($visible)
+	);
+	if($r) {
 
+		$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
+			dbesc($uri)
 		);
-		if($r) {
-
-			$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
-				dbesc($uri)
-			);
-			if(count($r))
-				q("UPDATE `item` SET `parent` = %d, `last-child` = 1 WHERE `id` = %d LIMIT 1",
-				intval($r[0]['id']),
-				intval($r[0]['id'])
-			);
+		if(count($r))
+			q("UPDATE `item` SET `parent` = %d, `last-child` = 1 WHERE `id` = %d LIMIT 1",
+			intval($r[0]['id']),
+			intval($r[0]['id'])
+		);
 	
-		}
-
-	// if album has no featured photo, promote one.
-
+	}
 
 	if(! $java_upload) {
 		goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
@@ -246,10 +438,9 @@ function photos_content(&$a) {
 	// photos/name/upload
 	// photos/name/album/xxxxx
 	// photos/name/album/xxxxx/edit
-	// photos/name/album/xxxxx/drop
 	// photos/name/image/xxxxx
 	// photos/name/image/xxxxx/edit
-	// photos/name/image/xxxxx/drop
+
 
 	if(! x($a->data,'user')) {
 		notice( t('No photos selected') . EOL );
@@ -379,7 +570,30 @@ function photos_content(&$a) {
 		);
 
 		$o .= '<h3>' . $album . '</h3>';
-
+		
+		if($cmd == 'edit') {		
+			if(($album != t('Profile Photos')) && ($album != t('Contact Photos'))) {
+				if(local_user() && ($_SESSION['uid'] == $a->data['user']['uid'])) {
+					$edit_tpl = file_get_contents('view/album_edit.tpl');
+					$o .= replace_macros($edit_tpl,array(
+						'$nametext' => t('New album name: '),
+						'$album' => $album,
+						'$hexalbum' => bin2hex($album),
+						'$submit' => t('Submit'),
+						'$dropsubmit' => t('Delete Album')
+					));
+				}
+			}
+		}
+		else {
+			if(($album != t('Profile Photos')) && ($album != t('Contact Photos'))) {
+				if(local_user() && ($_SESSION['uid'] == $a->data['user']['uid'])) {
+					$o .= '<div id="album-edit-link"><a href="'. $a->get_baseurl() . '/photos/' 
+						. $a->data['user']['nickname'] . '/album/' . bin2hex($album) . '/edit' . '">' 
+						. t('Edit Album') . '</a></div>';
+ 				}
+			}
+		}
 		$tpl = file_get_contents('view/photo_album.tpl');
 		if(count($r))
 			foreach($r as $rr) {
@@ -481,30 +695,33 @@ function photos_content(&$a) {
 				intval($a->pager['itemspage'])
 
 			);
+		}
 
+		$o .= '<div id="photo-caption" >' . $ph[0]['desc'] . '</div>';
 
-			$o .= '<div id="photo-caption" >' . $ph[0]['desc'] . '</div>';
+		if(count($i1) && strlen($i1[0]['tag'])) {
+			// parse tags and add links	
+			$o .= '<div id="in-this-photo-text">' . t('In this photo: ') . '</div>';
+			$o .= '<div id="in-this-photo">' . $i1[0]['tag'] . '</div>';
+		}
 
-			if(strlen($i1[0]['tag'])) {
-				// parse tags and add links	
-				$o .= '<div id="in-this-photo-text">' . t('In this photo: ') . '</div>';
-				$o .= '<div id="in-this-photo">' . $i1[0]['tag'] . '</div>';
-			}
+		if($cmd == 'edit') {
+			$edit_tpl = file_get_contents('view/photo_edit.tpl');
+			$o .= replace_macros($edit_tpl, array(
+				'$id' => $ph[0]['id'],
+				'$resource_id' => $ph[0]['resource-id'],
+				'$capt_label' => t('Caption'),
+				'$caption' => $ph[0]['desc'],
+				'$tag_label' => t('Tags'),
+				'$tags' => $i1[0]['tag'],
+				'$item_id' => ((count($i1)) ? $i1[0]['id'] : 0),
+				'$submit' => t('Submit'),
+				'$delete' => t('Delete Photo')
 
-			if($cmd == 'edit') {
-				$edit_tpl = file_get_contents('view/photo_edit.tpl');
-				$o .= replace_macros($edit_tpl, array(
-					'$id' => $ph[0]['id'],
-					'$capt_label' => t('Caption'),
-					'$caption' => $ph[0]['desc'],
-					'$tag_label' => t('Tags'),
-					'$tags' => $i1[0]['tag'],
-					'$item_id' => $i1[0]['id'],
-					'$submit' => t('Submit') 
+			));
+		}
 
-				));
-			}
-
+		if(count($i1)) {
 			// pull out how many people like the photo
 
 			$cmnt_tpl = file_get_contents('view/comment_item.tpl');

@@ -284,6 +284,7 @@ function profile_content(&$a, $update = false) {
 				'$drop' => $drop,
 				'$comment' => $comment
 			));
+			
 		}
 	}
 

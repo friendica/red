@@ -1346,12 +1346,16 @@ input#dfrn-url {
 }
 #photo-edit-caption, #photo-edit-tags-textarea {
 	float: left;
+	margin-bottom: 15px;
 }
 
 #photo-edit-caption-end, #photo-edit-tags-end {
 	clear: both;
 }
 
+#photo-edit-delete-button {
+	margin-left: 200px;
+}
 #photo-caption {
 	font-size: 110%;
 	font-weight: bold;
@@ -1369,3 +1373,13 @@ input#dfrn-url {
 	margin-top: 10px;
 	margin-bottom: 20px;
 }
+
+#photo-album-edit-submit, #photo-album-edit-drop {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+#photo-album-edit-drop {
+	margin-left: 200px;
+}
+

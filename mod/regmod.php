@@ -25,31 +25,32 @@ function regmod_content(&$a) {
 	if(! count($register))
 		killme();
 
+	$user = q("SELECT * FROM `user` WHERE `uid` = %d LIMIT 1",
+		intval($register[0]['uid'])
+	);
+
 	if($cmd == 'deny') {
 
 		$r = q("DELETE FROM `user` WHERE `uid` = %d LIMIT 1",
 			intval($register[0]['uid'])
 		);
-		$r = q("DELETE FROM `contact` WHERE `uid` = %d",
+		$r = q("DELETE FROM `contact` WHERE `uid` = %d LIMIT 1",
 			intval($register[0]['uid'])
 		); 
-		$r = q("DELETE FROM `profile` WHERE `uid` = %d",
+		$r = q("DELETE FROM `profile` WHERE `uid` = %d LIMIT 1",
 			intval($register[0]['uid'])
 		); 
 
 		$r = q("DELETE FROM `register` WHERE `hash` = '%s' LIMIT 1",
 			dbesc($register[0]['hash'])
 		);
-		notice( t('Registration revoked.') . EOL);
+		notice( t('Registration revoked for ') . $user[0]['username'] . EOL);
 		return;
 
 	}
 
 	if($cmd == 'allow') {
 
-		$user = q("SELECT * FROM `user` WHERE `uid` = %d LIMIT 1",
-			intval($register[0]['uid'])
-		);
 		if(! count($user))
 			killme();
 
@@ -75,11 +76,9 @@ function regmod_content(&$a) {
 		$res = mail($user[0]['email'], t('Registration details for '). $a->config['sitename'],
 			$email_tpl,'From: ' . t('Administrator@') . $_SERVER[SERVER_NAME] );
 
-
 		if($res) {
 			notice( t('Account approved.') . EOL );
 			return;
 		}
-
 	}
 }
