@@ -36,6 +36,7 @@ if(strlen($a->module)) {
 		$a->module_loaded = true;
 	}
 	else {
+		header($_SERVER["SERVER_PROTOCOL"] . ' 404 ' . t('Not Found'));
 		notice( t('Page not found' ) . EOL);
 	}
 }
@@ -87,6 +88,11 @@ if(x($_SESSION,'sysmsg')) {
 		. $a->page['content'];
 	unset($_SESSION['sysmsg']);
 }
+
+if(stristr($_SESSION['sysmsg'], t('Permission denied'))) {
+	header($_SERVER["SERVER_PROTOCOL"] . ' 403 ' . t('Permission denied.'));
+}
+
 
 // Feel free to comment out this line on production sites.
 $a->page['content'] .= $debug_text;

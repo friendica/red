@@ -2432,6 +2432,10 @@ class SimplePie
 			$uri = null;
 			$email = null;
 			$avatar = null;
+			$name_date = null;
+			$uri_date = null;
+			$avatar_date = null;
+
 			if (isset($author['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data']))
 			{
 				$name = $this->sanitize($author['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data'], SIMPLEPIE_CONSTRUCT_TEXT);
@@ -2446,11 +2450,24 @@ class SimplePie
 			}
 			if (isset($author['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]['data']))
 			{
-				$avatar = $this->sanitize($$author['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]['data'], SIMPLEPIE_CONSTRUCT_IRI, $this->get_base($author['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]));
+				$avatar = $this->sanitize($author['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]['data'], SIMPLEPIE_CONSTRUCT_IRI, $this->get_base($author['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]));
 			}
-			if ($name !== null || $email !== null || $uri !== null || $avatar !== null)
+			if (isset($author['child']['http://purl.org/macgirvin/dfrn/1.0']['name-updated'][0]['data']))
 			{
-				$authors[] = new $this->author_class($name, $uri, $email, $avatar);
+				$name_date = $author['child']['http://purl.org/macgirvin/dfrn/1.0']['name-updated'][0]['data'];
+			}
+			if (isset($author['child']['http://purl.org/macgirvin/dfrn/1.0']['uri-updated'][0]['data']))
+			{
+				$uri_date = $author['child']['http://purl.org/macgirvin/dfrn/1.0']['uri-updated'][0]['data'];
+			}
+			if (isset($author['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar-updated'][0]['data']))
+			{
+				$avatar_date = $author['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar-updated'][0]['data'];
+			}
+
+			if ($name !== null || $email !== null || $uri !== null || $avatar !== null || $name_date !== null || $uri_date !== null || $avatar_date !== null )
+			{
+				$authors[] = new $this->author_class($name, $uri, $email, $avatar, $name_date, $uri_date, $avatar_date);
 			}
 		}
 		if ($author = $this->get_channel_tags(SIMPLEPIE_NAMESPACE_ATOM_03, 'author'))
@@ -3481,6 +3498,9 @@ class SimplePie_Item
 			$uri = null;
 			$email = null;
 			$avatar = null;
+			$name_date = null;
+			$uri_date = null;
+			$avatar_date = null;
 			if (isset($author['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data']))
 			{
 				$name = $this->sanitize($author['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data'], SIMPLEPIE_CONSTRUCT_TEXT);
@@ -3497,10 +3517,22 @@ class SimplePie_Item
 			{
 				$avatar = $this->sanitize($author['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]['data'], SIMPLEPIE_CONSTRUCT_IRI, $this->get_base($author['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]));
 			}
-			if ($name !== null || $email !== null || $uri !== null || $avatar !== null)
+			if (isset($author['child']['http://purl.org/macgirvin/dfrn/1.0']['name-updated'][0]['data']))
 			{
-				$authors[] = new $this->feed->author_class($name, $uri, $email, $avatar);
+				$name_date = $author['child']['http://purl.org/macgirvin/dfrn/1.0']['name-updated'][0]['data'];
+			}
+			if (isset($author['child']['http://purl.org/macgirvin/dfrn/1.0']['uri-updated'][0]['data']))
+			{
+				$uri_date = $author['child']['http://purl.org/macgirvin/dfrn/1.0']['uri-updated'][0]['data'];
+			}
+			if (isset($author['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar-updated'][0]['data']))
+			{
+				$avatar_date = $author['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar-updated'][0]['data'];
+			}
 
+			if ($name !== null || $email !== null || $uri !== null || $avatar !== null || $name_date !== null || $uri_date !== null || $avatar_date !== null )
+			{
+				$authors[] = new $this->feed->author_class($name, $uri, $email, $avatar, $name_date, $uri_date, $avatar_date);
 			}
 		}
 		if ($author = $this->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_03, 'author'))
@@ -5909,6 +5941,10 @@ class SimplePie_Source
 			$uri = null;
 			$email = null;
 			$avatar = null;
+			$name_date = null;
+			$uri_date = null;
+			$avatar_date = null;
+
 			if (isset($author['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data']))
 			{
 				$name = $this->sanitize($author['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data'], SIMPLEPIE_CONSTRUCT_TEXT);
@@ -5921,13 +5957,26 @@ class SimplePie_Source
 			{
 				$email = $this->sanitize($author['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['email'][0]['data'], SIMPLEPIE_CONSTRUCT_TEXT);
 			}
+			if (isset($author['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]['data']))
 			{
 				$avatar = $this->sanitize($author['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]['data'], SIMPLEPIE_CONSTRUCT_IRI, $this->get_base($author['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar'][0]));
 			}
-			if ($name !== null || $email !== null || $uri !== null || $avatar !== null)
+			if (isset($author['child']['http://purl.org/macgirvin/dfrn/1.0']['name-updated'][0]['data']))
 			{
-				$authors[] = new $this->item->feed->author_class($name, $uri, $email, $avatar);
+				$name_date = $author['child']['http://purl.org/macgirvin/dfrn/1.0']['name-updated'][0]['data'];
+			}
+			if (isset($author['child']['http://purl.org/macgirvin/dfrn/1.0']['uri-updated'][0]['data']))
+			{
+				$uri_date = $author['child']['http://purl.org/macgirvin/dfrn/1.0']['uri-updated'][0]['data'];
+			}
+			if (isset($author['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar-updated'][0]['data']))
+			{
+				$avatar_date = $author['child']['http://purl.org/macgirvin/dfrn/1.0']['avatar-updated'][0]['data'];
+			}
 
+			if ($name !== null || $email !== null || $uri !== null || $avatar !== null || $name_date !== null || $uri_date !== null || $avatar_date !== null )
+			{
+				$authors[] = new $this->item->feed->author_class($name, $uri, $email, $avatar, $name_date, $uri_date, $avatar_date);
 			}
 		}
 		if ($author = $this->get_source_tags(SIMPLEPIE_NAMESPACE_ATOM_03, 'author'))
@@ -6300,14 +6349,20 @@ class SimplePie_Author
 	var $link;
 	var $email;
 	var $avatar;
+	var $name_date;
+	var $uri_date;
+	var $avatar_date;
 
 	// Constructor, used to input the data
-	function SimplePie_Author($name = null, $link = null, $email = null, $avatar = null)
+	function SimplePie_Author($name = null, $link = null, $email = null, $avatar = null, $name_date = null, $uri_date = null, $avatar_date = null)
 	{
 		$this->name = $name;
 		$this->link = $link;
 		$this->email = $email;
 		$this->avatar = $avatar;
+		$this->name_date = $name_date;
+		$this->uri_date = $uri_date;
+		$this->avatar_date = $avatar_date;
 	}
 
 	function __toString()
@@ -6357,6 +6412,40 @@ class SimplePie_Author
 		if ($this->avatar !== null)
 		{
 			return $this->avatar;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	function get_name_date()
+	{
+		if ($this->name_date !== null)
+		{
+			return $this->name_date;
+		}
+		else
+		{
+			return null;
+		}
+	}
+	function get_uri_date()
+	{
+		if ($this->uri_date !== null)
+		{
+			return $this->uri_date;
+		}
+		else
+		{
+			return null;
+		}
+	}
+	function get_avatar_date()
+	{
+		if ($this->avatar_date !== null)
+		{
+			return $this->avatar_date;
 		}
 		else
 		{

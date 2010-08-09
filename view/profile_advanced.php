@@ -60,7 +60,7 @@ EOT;
 if($a->profile['marital']) {
 $o .= <<< EOT
 <div id="advanced-profile-marital-wrapper" >
-<div id="advanced-profile-marital-text">Status:</div>
+<div id="advanced-profile-marital-text"><span class="heart">&hearts;</span> Status:</div>
 <div id="advanced-profile-marital">{$a->profile['marital']}</div>
 </div>
 <div id="advanced-profile-marital-end"></div>
@@ -90,7 +90,7 @@ EOT;
 if($a->profile['politic']) {
 $o .= <<< EOT
 <div id="advanced-profile-politic-wrapper" >
-<div id="advanced-profile-politic-text">Political Leaning:</div>
+<div id="advanced-profile-politic-text">Political Views:</div>
 <div id="advanced-profile-politic">{$a->profile['politic']}</div>
 </div>
 <div id="advanced-profile-politic-end"></div>
@@ -121,7 +121,7 @@ EOT;
 if($txt = bbcode($a->profile['interest'])) {
 $o .= <<< EOT
 <div id="advanced-profile-interest-wrapper" >
-<div id="advanced-profile-interest-text">Interests/Hobbies:</div>
+<div id="advanced-profile-interest-text">Hobbies/Interests:</div>
 <br />
 <div id="advanced-profile-interest">$txt</div>
 </div>
@@ -132,7 +132,7 @@ EOT;
 if($txt = bbcode($a->profile['contact'])) {
 $o .= <<< EOT
 <div id="advanced-profile-contact-wrapper" >
-<div id="advanced-profile-contact-text">Contact:</div>
+<div id="advanced-profile-contact-text">Contact information and Social Networks:</div>
 <br />
 <div id="advanced-profile-contact">$txt</div>
 </div>
@@ -143,7 +143,7 @@ EOT;
 if($txt = bbcode($a->profile['music'])) {
 $o .= <<< EOT
 <div id="advanced-profile-music-wrapper" >
-<div id="advanced-profile-music-text">Music:</div>
+<div id="advanced-profile-music-text">Musical interests:</div>
 <br />
 <div id="advanced-profile-music">$txt</div>
 </div>
@@ -154,7 +154,7 @@ EOT;
 if($txt = bbcode($a->profile['book'])) {
 $o .= <<< EOT
 <div id="advanced-profile-book-wrapper" >
-<div id="advanced-profile-book-text">Books:</div>
+<div id="advanced-profile-book-text">Books, literature:</div>
 <br />
 <div id="advanced-profile-book">$txt</div>
 </div>
@@ -176,7 +176,7 @@ EOT;
 if($txt = bbcode($a->profile['film'])) {
 $o .= <<< EOT
 <div id="advanced-profile-film-wrapper" >
-<div id="advanced-profile-film-text">Film:</div>
+<div id="advanced-profile-film-text">Film/dance/culture/entertainment:</div>
 <br />
 <div id="advanced-profile-film">$txt</div>
 </div>
@@ -187,7 +187,7 @@ EOT;
 if($txt = bbcode($a->profile['romance'])) {
 $o .= <<< EOT
 <div id="advanced-profile-romance-wrapper" >
-<div id="advanced-profile-romance-text">Romance:</div>
+<div id="advanced-profile-romance-text">Love/romance:</div>
 <br />
 <div id="advanced-profile-romance">$txt</div>
 </div>
@@ -198,7 +198,7 @@ EOT;
 if($txt = bbcode($a->profile['work'])) {
 $o .= <<< EOT
 <div id="advanced-profile-work-wrapper" >
-<div id="advanced-profile-work-text">work:</div>
+<div id="advanced-profile-work-text">Work/employment:</div>
 <br />
 <div id="advanced-profile-work">$txt</div>
 </div>
@@ -209,7 +209,7 @@ EOT;
 if($txt = bbcode($a->profile['education'])) {
 $o .= <<< EOT
 <div id="advanced-profile-education-wrapper" >
-<div id="advanced-profile-education-text">Education:</div>
+<div id="advanced-profile-education-text">School/education:</div>
 <br />
 <div id="advanced-profile-education">$txt</div>
 </div>

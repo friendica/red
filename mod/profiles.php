@@ -7,16 +7,19 @@ function profiles_post(&$a) {
 		notice( "Permission denied." . EOL);
 		return;
 	}
+
+	$namechanged = false;
+
 	if(($a->argc > 1) && ($a->argv[1] != "new") && intval($a->argv[1])) {
-		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+		$orig = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($a->argv[1]),
 			intval($_SESSION['uid'])
 		);
-		if(! count($r)) {
+		if(! count($orig)) {
 			$_SESSION['sysmsg'] .= "Profile not found." . EOL;
 			return;
 		}
-		$is_default = (($r[0]['is-default']) ? 1 : 0);
+		$is_default = (($orig[0]['is-default']) ? 1 : 0);
 
 		$profile_name = notags(trim($_POST['profile_name']));
 		if(! strlen($profile_name)) {
@@ -39,6 +42,10 @@ function profiles_post(&$a) {
 
 			
 		$name = notags(trim($_POST['name']));
+
+		if($orig[0]['name'] != $name)
+			$namechanged = true;
+
 		$gender = notags(trim($_POST['gender']));
 		$address = notags(trim($_POST['address']));
 		$locality = notags(trim($_POST['locality']));
@@ -132,7 +139,12 @@ function profiles_post(&$a) {
 
 			);
 		}
-
+		if($namechanged && $is_default) {
+			$r = q("UPDATE `contact` SET `name-date` = '%s' WHERE `self` = 1 AND `uid` = %d LIMIT 1",
+				dbesc(datetime_convert()),
+				intval($_SESSION['uid'])
+			);
+		}
 
 	}
 

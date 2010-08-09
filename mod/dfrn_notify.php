@@ -47,6 +47,9 @@ function dfrn_notify_post(&$a) {
 	$feed->init();
 
 	$ismail = false;
+	$photo_time = $feed->get_feed_tags( NAMESPACE_DFRN, 'icon-updated');
+	if($photo_time)
+		$avatar_update = $photo_time[0]['data'];
 
 	$rawmail = $feed->get_feed_tags( NAMESPACE_DFRN, 'mail' );
 	if(isset($rawmail[0]['child'][NAMESPACE_DFRN])) {
@@ -57,7 +60,7 @@ function dfrn_notify_post(&$a) {
 		$msg['uid'] = $importer['uid'];
 		$msg['from-name'] = notags(unxmlify($base['sender'][0]['child'][NAMESPACE_DFRN]['name'][0]['data']));
 		$msg['from-photo'] = notags(unxmlify($base['sender'][0]['child'][NAMESPACE_DFRN]['avatar'][0]['data']));
-		$msg['from-url'] = notags(unxmlify($base['sender'][0]['child'][NAMESPACE_DFRN]['avatar'][0]['data']));
+		$msg['from-url'] = notags(unxmlify($base['sender'][0]['child'][NAMESPACE_DFRN]['uri'][0]['data']));
 		$msg['contact-id'] = $importer['id'];
 		$msg['title'] = notags(unxmlify($base['subject'][0]['data']));
 		$msg['body'] = escape_tags(unxmlify($base['content'][0]['data']));

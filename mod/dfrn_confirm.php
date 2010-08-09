@@ -116,9 +116,12 @@ function dfrn_confirm_post(&$a) {
 				$thumb = $a->get_baseurl() . '/images/default-profile-sm.jpg';
 			}
 
-			$r = q("UPDATE `contact` SET `photo` = '%s', `thumb` = '%s', `blocked` = 0, `pending` = 0 WHERE `id` = %d LIMIT 1",
+			$r = q("UPDATE `contact` SET `photo` = '%s', `thumb` = '%s', `name-date` = '%s', `uri-date` = '%s', `avatar-date` = '%s', `blocked` = 0, `pending` = 0 WHERE `id` = %d LIMIT 1",
 				dbesc($photo),
 				dbesc($thumb),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert()),
 				intval($dfrn_record)
 			);
 			if($r === false)
@@ -322,9 +325,12 @@ function dfrn_confirm_post(&$a) {
 			$thumb = $a->get_baseurl() . '/images/default-profile-sm.jpg';
 		}
 
-		$r = q("UPDATE `contact` SET `photo` = '%s', `thumb` = '%s', `blocked` = 0, `pending` = 0 WHERE `id` = %d LIMIT 1",
+		$r = q("UPDATE `contact` SET `photo` = '%s', `thumb` = '%s', `name-date` = '%s', `uri-date` = '%s', `avatar-date` = '%s', `blocked` = 0, `pending` = 0 WHERE `id` = %d LIMIT 1",
 			dbesc($photo),
 			dbesc($thumb),
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
 			intval($contact_id)
 		);
 		if($r === false)

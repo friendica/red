@@ -375,7 +375,7 @@ function photos_post(&$a) {
 		$dups = false;
 		$item_hash = random_string();
 
-		$uri = "urn:X-dfrn:" . $a->get_hostname() . ':' . $profile_uid . ':' . $item_hash;
+		$uri = "urn:X-dfrn:" . $a->get_hostname() . ':' . $_SESSION['uid'] . ':' . $item_hash;
 
 		$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
 		dbesc($uri));

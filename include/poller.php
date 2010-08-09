@@ -123,6 +123,51 @@ echo "Length:" . strlen($xml) . "\r\n";
 		$feed->enable_order_by_date(false);
 		$feed->init();
 
+		$photo_rawupdate = $feed->get_feed_tags(NAMESPACE_DFRN,'icon-updated');
+		if($photo_rawupdate) {
+			$photo_timestamp = datetime_convert('UTC','UTC',$photo_rawupdate[0]['data']);
+			$photo_url = $feed->get_image_url();
+			if(strlen($photo_url) && $photo_timestamp > $contact['avatar-date']) {
+
+				require_once("Photo.php");
+
+				$photo_failure = false;
+
+				$r = q("SELECT `resource-id` FROM `photo` WHERE `contact-id` = %d AND `uid` = %d LIMIT 1",
+					intval($contact['id']),
+					intval($contact['uid'])
+				);
+				if(count($r)) {
+					$resource_id = $r[0]['resource-id'];
+					$img_str = fetch_url($photo_url,true);
+					$img = new Photo($img_str);
+					if($img) {
+						q("DELETE FROM `photo` WHERE `resource-id` = '%s' AND contact-id` = %d AND `uid` = %d",
+							dbesc($resource_id),
+							intval($contact['id']),
+							intval($contact['uid'])
+						);
+
+						$img->scaleImageSquare(175);
+					
+						$hash = $resource_id;
+
+						$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), t('Contact Photos') , 4);
+					
+						$img->scaleImage(80);
+						$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), t('Contact Photos') , 5);
+						if($r)
+							q("UPDATE `contact` SET `avatar-date` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
+								dbesc(datetime_convert()),
+								intval($contact['uid']),
+								intval($contact['id'])
+							);
+					}
+				}
+			}
+		}
+
+		
 		foreach($feed->get_items() as $item) {
 
 			$deleted = false;
@@ -145,14 +190,16 @@ echo "Length:" . strlen($xml) . "\r\n";
 				);
 				if(count($r)) {
 					if($r[0]['uri'] == $r[0]['parent-uri']) {
-						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s'
+						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s',
+							`body` = '', `title` = ''
 							WHERE `parent-uri` = '%s'",
 							dbesc($when),
 							dbesc($r[0]['uri'])
 						);
 					}
 					else {
-						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s' 
+						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s',
+							`body` = '', `title` = '' 
 							WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($when),
 							dbesc($uri),

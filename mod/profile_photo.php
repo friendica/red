@@ -74,6 +74,11 @@ function profile_photo_post(&$a) {
 				intval($_SESSION['uid'])
 			);
 
+			$r = q("UPDATE `contact` SET `avatar-date` = '%s' WHERE `self` = 1 AND `uid` = %d LIMIT 1",
+				dbesc(datetime_convert()),
+				intval($_SESSION['uid'])
+			);
+
 		}
 		goaway($a->get_baseurl() . '/profiles');
 		return; // NOTREACHED

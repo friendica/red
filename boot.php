@@ -177,19 +177,20 @@ function replace_macros($s,$r) {
 }}
 
 
+if(! function_exists('load_translation_table')) {
 function load_translation_table($lang) {
 	global $a;
 
-}
+}}
 
-
+if(! function_exists('t')) {
 function t($s) {
 	global $a;
 
 	if($a->strings[$s])
 		return $a->strings[$s];
 	return $s;
-}
+}}
 
 if(! function_exists('fetch_url')) {
 function fetch_url($url,$binary = false) {
@@ -423,17 +424,20 @@ function xmlify($str) {
 	return($buffer);
 }}
 
+if(! function_exists('unxmlify')) {
 function unxmlify($s) {
 	$ret = str_replace('&amp;','&', $s);
 	$ret = str_replace(array('&lt;','&gt;','&quot;','&apos;'),array('<','>','"',"'"),$ret);
 	return $ret;	
-}
+}}
 
+if(! function_exists('hex2bin')) {
 function hex2bin($s) {
 	return(pack("H*",$s));
-}
+}}
 
 
+if(! function_exists('paginate')) {
 function paginate(&$a) {
 	$o = '';
 	$stripped = ereg_replace("(&page=[0-9]*)","",$_SERVER['QUERY_STRING']);
@@ -483,8 +487,9 @@ function paginate(&$a) {
 		$o .= '</div>'."\r\n";
 	}
 	return $o;
-}
+}}
 
+if(! function_exists('expand_acl')) {
 function expand_acl($s) {
 
 	if(strlen($s)) {
@@ -495,9 +500,9 @@ function expand_acl($s) {
 		return $a;
 	}
 	return array();
-}		
+}}		
 
-
+if(! function_exists('sanitise_acl')) {
 function sanitise_acl(&$item) {
 	$item = '<' . intval(notags(trim($item))) . '>';
-}
+}}

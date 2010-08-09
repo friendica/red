@@ -61,6 +61,7 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 
 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 		`contact`.`name`, `contact`.`photo`, `contact`.`url`, 
+		`contact`.`name-date`, `contact`.`uri-date`, `contact`.`avatar-date`,
 		`contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`, 
 		`contact`.`id` AS `contact-id`, `contact`.`uid` AS `contact-uid`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
@@ -91,7 +92,12 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 			'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', $updated . '+00:00' , 'Y-m-d\TH:i:s\Z')) ,
 			'$name' => xmlify($owner['name']),
 			'$profile_page' => xmlify($owner['url']),
-			'$photo' => xmlify($owner['photo'])
+			'$photo' => xmlify($owner['photo']),
+			'$picdate' => xmlify(datetime_convert('UTC','UTC',$owner['avatar-date'] . '+00:00' , 'Y-m-d\TH:i:s\Z')) ,
+			'$uridate' => xmlify(datetime_convert('UTC','UTC',$owner['uri-date'] . '+00:00' , 'Y-m-d\TH:i:s\Z')) ,
+			'$namdate' => xmlify(datetime_convert('UTC','UTC',$owner['name-date'] . '+00:00' , 'Y-m-d\TH:i:s\Z')) ,
+
+
 	));
 
 	foreach($items as $item) {

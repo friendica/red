@@ -138,8 +138,8 @@ function register_post(&$a) {
 			return;
 		}
 		$r = q("INSERT INTO `contact` ( `uid`, `created`, `self`, `name`, `photo`, `thumb`, `blocked`, `pending`, `url`,
-			`request`, `notify`, `poll`, `confirm` )
-			VALUES ( %d, '%s', 1, '%s', '%s', '%s', 0, 0, '%s', '%s', '%s', '%s', '%s' ) ",
+			`request`, `notify`, `poll`, `confirm`, `name-date`, `uri-date`, `avatar-date` )
+			VALUES ( %d, '%s', 1, '%s', '%s', '%s', 0, 0, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 			intval($newuid),
 			datetime_convert(),
 			dbesc($username),
@@ -149,8 +149,10 @@ function register_post(&$a) {
 			dbesc($a->get_baseurl() . "/dfrn_request/$nickname"),
 			dbesc($a->get_baseurl() . "/dfrn_notify/$nickname"),
 			dbesc($a->get_baseurl() . "/dfrn_poll/$nickname"),
-			dbesc($a->get_baseurl() . "/dfrn_confirm/$nickname")
-
+			dbesc($a->get_baseurl() . "/dfrn_confirm/$nickname"),
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert())
 		);
 
 
