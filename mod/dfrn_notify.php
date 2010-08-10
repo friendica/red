@@ -23,7 +23,7 @@ function dfrn_notify_post(&$a) {
 
 	// find the local user who owns this relationship.
 
-	$r = q("SELECT `id`, `uid` FROM `contact` WHERE `issued-id` = '%s' LIMIT 1",
+	$r = q("SELECT * FROM `contact` WHERE `issued-id` = '%s' LIMIT 1",
 		dbesc($dfrn_id)
 	);
 	if(! count($r)) {
@@ -47,9 +47,6 @@ function dfrn_notify_post(&$a) {
 	$feed->init();
 
 	$ismail = false;
-	$photo_time = $feed->get_feed_tags( NAMESPACE_DFRN, 'icon-updated');
-	if($photo_time)
-		$avatar_update = $photo_time[0]['data'];
 
 	$rawmail = $feed->get_feed_tags( NAMESPACE_DFRN, 'mail' );
 	if(isset($rawmail[0]['child'][NAMESPACE_DFRN])) {
@@ -75,6 +72,29 @@ function dfrn_notify_post(&$a) {
 			. "`) VALUES ('" . implode("', '", array_values($msg)) . "')" );
 
 		// send email notification if requested.
+		$r = q("SELECT * FROM `user` WHERE `uid` = %d LIMIT 1",
+			intval($importer['uid'])
+		);
+		require_once('bbcode.php');
+		if((count($r)) && ($r[0]['notify_flags'] & NOTIFY_MAIL)) {
+			$tpl = file_get_contents('view/mail_received_eml.tpl');			
+			$email_tpl = replace_macros($tpl, array(
+				'$sitename' => $a->config['sitename'],
+				'$siteurl' =>  $a->get_baseurl(),
+				'$username' => $r[0]['username'],
+				'$email' => $r[0]['email'],
+				'$from' => $msg['from-name'],
+				'$fn' => $r[0]['name'],
+				'$title' => $msg['title'],
+				'$body' => strip_tags(bbcode($msg['body']))
+			);
+	
+			$res = mail($r[0]['email'], t("New mail received at ") . $a->config['sitename'],
+				$email_tpl,t("From: Administrator@") . $_SERVER[SERVER_NAME] );
+			if(!$res) {
+				notice( t("Email notification failed.") . EOL );
+			}
+		}
 
 		xml_status(0);
 		return;

@@ -504,5 +504,8 @@ function expand_acl($s) {
 
 if(! function_exists('sanitise_acl')) {
 function sanitise_acl(&$item) {
-	$item = '<' . intval(notags(trim($item))) . '>';
+	if(intval($item))
+		$item = '<' . intval(notags(trim($item))) . '>';
+	else
+		unset($item);
 }}

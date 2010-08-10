@@ -283,7 +283,7 @@ function dfrn_request_post(&$a) {
 			// find the contact record we just created
 			if($r) {	
 				$r = q("SELECT `id` FROM `contact` 
-					WHERE `uid` = '%s' AND `url` = '%s' AND `issued-id` = '%s' LIMIT 1",
+					WHERE `uid` = %d AND `url` = '%s' AND `issued-id` = '%s' LIMIT 1",
 					intval($uid),
 					$parms['url'],
 					$parms['issued-id']

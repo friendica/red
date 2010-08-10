@@ -52,7 +52,11 @@ function profiles_post(&$a) {
 		$region = notags(trim($_POST['region']));
 		$postal_code = notags(trim($_POST['postal_code']));
 		$country_name = notags(trim($_POST['country_name']));
+
 		$marital = notags(trim(implode(', ',$_POST['marital'])));
+		if($marital != $orig[0]['marital'])
+			$maritalchanged = true;
+
 		$sexual = notags(trim($_POST['sexual']));
 		$homepage = notags(trim($_POST['homepage']));
 		$politic = notags(trim($_POST['politic']));

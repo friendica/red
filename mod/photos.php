@@ -128,13 +128,13 @@ function photos_post(&$a) {
 					// send the notification upstream/downstream as the case may be
 
 					if($rr['visible'])
-						proc_close(proc_open("php include/notifier.php \"$url\" \"drop\" \"$drop_id\" ",
+						proc_close(proc_open("php include/notifier.php \"$url\" \"drop\" \"$drop_id\" & ",
 							array(),$foo));
 
 				}
 			}
 		}
-		goaway($a->get_baseurl() . '/photos/' . $a->data['user']['uid']);
+		goaway($a->get_baseurl() . '/photos/' . $a->data['user']['nickname']);
 		return; // NOTREACHED
 	}
 
@@ -164,7 +164,7 @@ function photos_post(&$a) {
 				// send the notification upstream/downstream as the case may be
 
 				if($i[0]['visible'])
-					proc_close(proc_open("php include/notifier.php \"$url\" \"drop\" \"$drop_id\" ",
+					proc_close(proc_open("php include/notifier.php \"$url\" \"drop\" \"$drop_id\" & ",
 						array(),$foo));
 			}
 		}

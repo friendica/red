@@ -142,7 +142,7 @@ function contacts_content(&$a) {
 					intval($_SESSION['uid'])
 			);
 	
-			notice("Contact has been removed." . EOL );
+			notice( t('Contact has been removed.') . EOL );
 			goaway($a->get_baseurl() . '/contacts');
 			return; // NOTREACHED
 		}
