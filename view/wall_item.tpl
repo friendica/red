@@ -15,7 +15,9 @@
 	$drop
 	<div class="wall-item-wrapper-end"></div>
 	<div class="wall-item-comment-separator"></div>
+	<div class="wall-item-comment-wrapper" >
 	$comment
+	</div>
 </div>
 
 <div class="wall-item-outside-wrapper-end$indent" ></div>
