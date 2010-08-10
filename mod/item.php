@@ -102,90 +102,84 @@ function item_post(&$a) {
 
 	$notify_type = (($parent) ? 'comment-new' : 'wall-new' );
 
-	if(($_POST['type'] == 'wall') || ($_POST['type'] == 'wall-comment') || ($_POST['type'] == 'net-comment')) {
+	do {
+		$dups = false;
+		$hash = random_string();
 
-		do {
-			$dups = false;
-			$hash = random_string();
+		$uri = "urn:X-dfrn:" . $a->get_hostname() . ':' . $profile_uid . ':' . $hash;
 
-			$uri = "urn:X-dfrn:" . $a->get_hostname() . ':' . $profile_uid . ':' . $hash;
-
-			$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
-			dbesc($uri));
-			if(count($r))
-				$dups = true;
-		} while($dups == true);
-
-
-		$r = q("INSERT INTO `item` (`uid`,`type`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, `created`,
-			`edited`, `uri`, `title`, `body`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
-			VALUES( %d, '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
-			intval($profile_uid),
-			dbesc($_POST['type']),
-			intval($contact_id),
-			dbesc($contact_record['name']),
-			dbesc($contact_record['url']),
-			dbesc($contact_record['thumb']),
-			datetime_convert(),
-			datetime_convert(),
-			dbesc($uri),
-			dbesc($title),
-			dbesc($body),
-			dbesc($str_contact_allow),
-			dbesc($str_group_allow),
-			dbesc($str_contact_deny),
-			dbesc($str_group_deny)
-
-		);
 		$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
 			dbesc($uri));
-		if(count($r)) {
-			$post_id = $r[0]['id'];
+		if(count($r))
+			$dups = true;
+	} while($dups == true);
 
-			if($parent) {
 
-				// This item is the last leaf and gets the comment box, clear any ancestors
-				$r = q("UPDATE `item` SET `last-child` = 0 WHERE `parent` = %d ",
-					intval($parent)
-				);
+	$r = q("INSERT INTO `item` (`uid`,`type`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, `created`,
+		`edited`, `uri`, `title`, `body`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
+		VALUES( %d, '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+		intval($profile_uid),
+		dbesc($post_type),
+		intval($contact_id),
+		dbesc($contact_record['name']),
+		dbesc($contact_record['url']),
+		dbesc($contact_record['thumb']),
+		datetime_convert(),
+		datetime_convert(),
+		dbesc($uri),
+		dbesc($title),
+		dbesc($body),
+		dbesc($str_contact_allow),
+		dbesc($str_group_allow),
+		dbesc($str_contact_deny),
+		dbesc($str_group_deny)
+	);
+	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
+		dbesc($uri));
+	if(count($r)) {
+		$post_id = $r[0]['id'];
 
-				// Inherit ACL's from the parent item.
-				// TODO merge with subsequent UPDATE operation and save a db write 
+		if($parent) {
 
-				$r = q("UPDATE `item` SET `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s'
-					WHERE `id` = %d LIMIT 1",
-					dbesc($parent_item['allow_cid']),
-					dbesc($parent_item['allow_gid']),
-					dbesc($parent_item['deny_cid']),
-					dbesc($parent_item['deny_gid']),
-					intval($post_id)
-				);
-			}
-			else {
-				$parent = $post_id;
-			}
+			// This item is the last leaf and gets the comment box, clear any ancestors
+			$r = q("UPDATE `item` SET `last-child` = 0 WHERE `parent` = %d ",
+				intval($parent)
+			);
 
-			$r = q("UPDATE `item` SET `parent` = %d, `parent-uri` = '%s', `last-child` = 1, `visible` = 1
+			// Inherit ACL's from the parent item.
+			// TODO merge with subsequent UPDATE operation and save a db write 
+
+			$r = q("UPDATE `item` SET `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s'
 				WHERE `id` = %d LIMIT 1",
-				intval($parent),
-				dbesc(($parent == $post_id) ? $uri : $parent_item['uri']),
+				dbesc($parent_item['allow_cid']),
+				dbesc($parent_item['allow_gid']),
+				dbesc($parent_item['deny_cid']),
+				dbesc($parent_item['deny_gid']),
 				intval($post_id)
 			);
-			// photo comments turn the corresponding item visible to the profile wall
-			if(! $parent_item['visible']) {
-				$r = q("UPDATE `item` SET `visible = 1 WHERE `id` = %d LIMIT 1",
-					intval($parent_item['id'])
-				);
-			}
-
+		}
+		else {
+			$parent = $post_id;
 		}
 
-		$url = $a->get_baseurl();
-
-		proc_close(proc_open("php include/notifier.php \"$url\" \"$notify_type\" \"$post_id\" > notify.log &",
-			array(),$foo));
-
+		$r = q("UPDATE `item` SET `parent` = %d, `parent-uri` = '%s', `last-child` = 1, `visible` = 1
+			WHERE `id` = %d LIMIT 1",
+			intval($parent),
+			dbesc(($parent == $post_id) ? $uri : $parent_item['uri']),
+			intval($post_id)
+		);
+		// photo comments turn the corresponding item visible to the profile wall
+		if(! $parent_item['visible']) {
+			$r = q("UPDATE `item` SET `visible = 1 WHERE `id` = %d LIMIT 1",
+				intval($parent_item['id'])
+			);
+		}
 	}
+	$url = $a->get_baseurl();
+
+	proc_close(proc_open("php include/notifier.php \"$url\" \"$notify_type\" \"$post_id\" > notify.log &",
+		array(),$foo));
+
 	goaway($a->get_baseurl() . "/" . $_POST['return'] );
 	return; // NOTREACHED
 }
