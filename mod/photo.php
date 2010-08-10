@@ -112,9 +112,8 @@ function photo_init(&$a) {
 	}
 
         header("Content-type: image/jpeg");
-	header('Expires: ' . datetime_convert('UTC','UTC', 'now + 30 minutes', 'D, d M Y H:i:s' . ' GMT'));
-	header('Expires: ' . datetime_convert('UTC','UTC', 'now + 30 minutes', 'D, d M Y H:i:s' . ' GMT'));
-	header("Cache-Control: max-age=3600, must-revalidate");
+	header('Expires: ' . datetime_convert('UTC','UTC', 'now + 3 months', 'D, d M Y H:i:s' . ' GMT'));
+//	header("Cache-Control: max-age=36000, only-if-cached");
         echo $data;
 	killme();
 	return; //NOTREACHED

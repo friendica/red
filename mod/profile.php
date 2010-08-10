@@ -63,6 +63,8 @@ function profile_init(&$a) {
 		$profile = $a->argv[1];		
 	}
 	profile_load($a,$which,$profile);
+        $a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . $a->get_baseurl() . '/dfrn_poll/' . $which .'" />';
+
 	$a->page['htmlhead'] .= "<meta name=\"dfrn-template\" content=\"" . $a->get_baseurl() . "/profile/%s" . "\" />\r\n";
 	
 	$dfrn_pages = array('request', 'confirm', 'notify', 'poll');
