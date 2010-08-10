@@ -54,7 +54,7 @@ function message_post(&$a) {
 		dbesc($subject),
 		dbesc($body),
 		0,
-		0,
+		1,
 		0,
 		dbesc($uri),
 		dbesc($replyto),
@@ -144,7 +144,7 @@ function message_content(&$a) {
 
 	if(($a->argc > 1) && ($a->argv[1] == 'new')) {
 		
-		$tpl = file_get_contents('view/jot-header.tpl');
+		$tpl = file_get_contents('view/msg-header.tpl');
 	
 		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
 
@@ -248,7 +248,7 @@ function message_content(&$a) {
 
 		require_once("include/bbcode.php");
 
-		$tpl = file_get_contents('view/jot-header.tpl');
+		$tpl = file_get_contents('view/msg-header.tpl');
 	
 		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
 

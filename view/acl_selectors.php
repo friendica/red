@@ -46,7 +46,7 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 		$o .= "<select name=\"{$selname}[]\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" />\r\n";
 	}
 
-	$r = q("SELECT `id`, `name` FROM `contact` 
+	$r = q("SELECT `id`, `name`, `url` FROM `contact` 
 		WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 
 		$sql_extra
 		ORDER BY `name` ASC ",
@@ -59,7 +59,7 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 				$selected = " selected=\"selected\" ";
 			else
 				$selected = '';
-			$o .= "<option value=\"{$rr['id']}\" $selected >{$rr['name']}</option>\r\n";
+			$o .= "<option value=\"{$rr['id']}\" $selected  title=\"{$rr['url']}\" >{$rr['name']}</option>\r\n";
 		}
 	
 	}
