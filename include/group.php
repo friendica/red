@@ -38,7 +38,7 @@ function group_rmv($uid,$name) {
 		);
 
 		// remove group
-		$r = q("DELETE FROM `group` WHERE `uid` = %d AND `id` = %d LIMIT 1",
+		$r = q("UPDATE GROUP SET `deleted` = 1 WHERE `uid` = %d AND `id` = %d LIMIT 1",
 			intval($uid),
 			dbesc($name)
 		);
@@ -46,7 +46,6 @@ function group_rmv($uid,$name) {
 		$ret = $r;
 
 	}
-	// TODO!! remove this group from all content ACL's !!
 
 	return $ret;
 }
@@ -144,7 +143,7 @@ $o .= <<< EOT
 
 EOT;
 
-	$r = q("SELECT * FROM `group` WHERE `uid` = %d",
+	$r = q("SELECT * FROM `group` WHERE `deleted` = 0 AND `uid` = %d",
 		intval($_SESSION['uid'])
 	);
 	if(count($r)) {

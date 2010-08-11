@@ -1,0 +1,1 @@
+<div class="group-delete-wrapper" id="group-delete-wrapper-$id" ><a href="group/drop/$id" onclick="return confirmDelete();" ><img src="images/b_drophide.gif" alt="$delete" title="$delete" id="group-delete-icon-$id" class="group-delete-icon" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a></div><div class="group-delete-end"></div>

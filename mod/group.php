@@ -15,7 +15,7 @@ function group_init(&$a) {
 function group_post(&$a) {
 
 	if(! local_user()) {
-		notice("Access denied." . EOL);
+		notice( t('Permission denied.') . EOL);
 		return;
 	}
 
@@ -23,13 +23,13 @@ function group_post(&$a) {
 		$name = notags(trim($_POST['groupname']));
 		$r = group_add($_SESSION['uid'],$name);
 		if($r) {
-			notice("Group created." . EOL );
+			notice( t('Group created.') . EOL );
 			$r = group_byname($_SESSION['uid'],$name);
 			if($r)
 				goaway($a->get_baseurl() . '/group/' . $r);
 		}
 		else
-			notice("Could not create group." . EOL );	
+			notice( t('Could not create group.') . EOL );	
 		goaway($a->get_baseurl() . '/group');
 		return; // NOTREACHED
 	}
@@ -39,7 +39,7 @@ function group_post(&$a) {
 			intval($_SESSION['uid'])
 		);
 		if(! count($r)) {
-			notice("Group not found." . EOL );
+			notice( t('Group not found.') . EOL );
 			goaway($a->get_baseurl() . '/contacts');
 		}
 		$group = $r[0];
@@ -51,7 +51,7 @@ function group_post(&$a) {
 				intval($group['id'])
 			);
 			if($r)
-				notice("Group name changed." . EOL );
+				notice( t('Group name changed.') . EOL );
 		}
 		$members = $_POST['group_members_select'];
 		array_walk($members,'validate_members');
@@ -73,7 +73,7 @@ function group_post(&$a) {
 			}
 		}
 		if($result)
-			notice("Membership list updated." . EOL);
+			notice( t('Membership list updated.') . EOL);
 	$a->page['aside'] = group_side();
 	}
 	
@@ -82,7 +82,7 @@ function group_post(&$a) {
 function group_content(&$a) {
 
 	if(! local_user()) {
-		notice("Access denied." . EOL);
+		notice( t('Permission denied') . EOL);
 		return;
 	}
 
@@ -94,7 +94,22 @@ function group_content(&$a) {
 
 	}
 		
-
+	if(($a->argc == 3) && ($a->argv[1] == 'drop')) {
+		if(intval($argv[2])) {
+			$r = q("SELECT `name` FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+				intval($argv[2]),
+				intval($_SESSION['uid'])
+			);
+			if(count($r)) 
+				$result = group_rmv($_SESSION['uid'],$r[0]['name']);
+			if($result)
+				notice( t('Group removed.') . EOL);
+			else
+				notice( t('Unable to remove group.') . EOL);
+		}
+		goaway($a->get_baseurl() . '/group');
+		return; // NOTREACHED
+	}
 
 
 	if(($a->argc == 2) && (intval($a->argv[1]))) {
@@ -104,7 +119,7 @@ function group_content(&$a) {
 			intval($_SESSION['uid'])
 		);
 		if(! count($r)) {
-			notice("Group not found." . EOL );
+			notice( t("Group not found.") . EOL );
 			goaway($a->get_baseurl() . '/contacts');
 		}
 		$group = $r[0];
@@ -115,10 +130,17 @@ function group_content(&$a) {
 				$preselected[] = $p['id'];
 		}
 
+		$drop_tpl = file_get_contents('view/group_drop.tpl');
+		$drop_txt = replace_macros($drop_tpl, array(
+			'$id' => $group['id'],
+			'$delete' => t('Delete')
+		));
+
 		$tpl = file_get_contents('view/group_edit.tpl');
 		$o .= replace_macros($tpl, array(
 			'$gid' => $group['id'],
 			'$name' => $group['name'],
+			'$drop' => $drop_txt,
 			'$selector' => contact_select('group_members_select','group_members_select',$preselected,25)
 		));
 

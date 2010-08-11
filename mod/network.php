@@ -73,7 +73,7 @@ function network_content(&$a, $update = false) {
 	$sql_extra = ''; 
 
 	if($group) {
-		$r = q("SELECT `id` FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+		$r = q("SELECT `name`, `id` FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($group),
 			intval($_SESSION['uid'])
 		);
@@ -87,6 +87,7 @@ function network_content(&$a, $update = false) {
 		$contacts[] = $_SESSION['cid'];
 		$contact_str = implode(',',$contacts);
 		$sql_extra = dbesc(" AND `contact`.`id` IN ( $contact_str ) ");
+                $o = '<h4>' . t('Group: ') . $r[0]['name'] . '</h4>' . $o;
 
 	}
 

@@ -13,6 +13,7 @@
 $selector
 
 </div>
+$drop
 <div id="group_members_select_end"></div>
 <div id="group-edit-submit-wrapper" >
 <input type="submit" name="submit" value="Submit" >
