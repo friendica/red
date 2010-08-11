@@ -15,7 +15,7 @@ function dfrn_poll_init(&$a) {
 	if(x($_GET,'last_update'))
 		$last_update = $a->config['dfrn_poll_last_update'] = $_GET['last_update'];
 
-	if(($dfrn_id == '') && ($a->argc > 1)) {
+	if(($dfrn_id == '') && (! x($_POST,'dfrn_id')) && ($a->argc > 1)) {
 		$o = get_feed_for($a,'*', $a->argv[1],$last_update);
 		echo $o;
 		killme();

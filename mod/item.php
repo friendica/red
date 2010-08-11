@@ -89,7 +89,7 @@ function item_post(&$a) {
 	if(count($r))
 		$contact_record = $r[0];
 
-	$post_type == notags(trim($_POST['type']));
+	$post_type = notags(trim($_POST['type']));
 
 	if($post_type == 'net-comment') {
 		if($parent_item !== null) {
@@ -170,7 +170,7 @@ function item_post(&$a) {
 		);
 		// photo comments turn the corresponding item visible to the profile wall
 		if(! $parent_item['visible']) {
-			$r = q("UPDATE `item` SET `visible = 1 WHERE `id` = %d LIMIT 1",
+			$r = q("UPDATE `item` SET `visible` = 1 WHERE `id` = %d LIMIT 1",
 				intval($parent_item['id'])
 			);
 		}

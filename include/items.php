@@ -93,6 +93,7 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 			'$name' => xmlify($owner['name']),
 			'$profile_page' => xmlify($owner['url']),
 			'$photo' => xmlify($owner['photo']),
+			'$thumb' => xmlify($owner['thumb']),
 			'$picdate' => xmlify(datetime_convert('UTC','UTC',$owner['avatar-date'] . '+00:00' , 'Y-m-d\TH:i:s\Z')) ,
 			'$uridate' => xmlify(datetime_convert('UTC','UTC',$owner['uri-date'] . '+00:00' , 'Y-m-d\TH:i:s\Z')) ,
 			'$namdate' => xmlify(datetime_convert('UTC','UTC',$owner['name-date'] . '+00:00' , 'Y-m-d\TH:i:s\Z')) ,

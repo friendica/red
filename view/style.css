@@ -547,11 +547,11 @@ input#dfrn-url {
 	clear: both;
 }
 
-.wall-item-outside-wrapper {
+.wall-item-content-wrapper {
 	margin-top: 10px;
 }
 
-.wall-item-outside-wrapper.comment {
+.wall-item-content-wrapper.comment {
 	margin-left: 50px;
 	background: #F7F7F7;
 }
@@ -624,14 +624,35 @@ input#dfrn-url {
 
 .comment-edit-wrapper {
 	margin-top: 15px;
-	margin-left: 100px;
+	background: #F7F7F7;
+	margin-left: 50px;
 }
 
 .comment-wwedit-wrapper {
 	margin-top: 15px;
+	background: #F7F7F7;
 	margin-left: 250px;
 }
 
+.comment-edit-photo {
+	margin-top: 10px;
+	margin-left: 10px;
+	margin-bottom: 10px;
+	width: 100px;
+	float: left;
+}
+.comment-edit-text-empty, .comment-edit-text-full {
+	float: left;
+	margin-top: 40px;
+}
+.comment-edit-text-end {
+	clear: both;
+}
+
+.comment-edit-submit {
+	margin-left: 110px;
+	margin-top: 10px;
+}
 
 #profile-jot-submit-wrapper {
 	margin-top: 15px;

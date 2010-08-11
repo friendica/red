@@ -67,8 +67,14 @@
 					$('#' + prev).after($(this));
 				}
 				else { 
+
 					$('#' + ident + ' ' + '.wall-item-ago').replaceWith($(this).find('.wall-item-ago')); 
 					$('#' + ident + ' ' + '.wall-item-comment-wrapper').replaceWith($(this).find('.wall-item-comment-wrapper'));
+                                        $('#' + ident + ' ' + '.my-comment-photo').each(function() {
+                                                $(this).attr('src',$(this).attr('dst'));
+                                        });
+
+
 				}
 				prev = ident; 
 			});
