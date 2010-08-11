@@ -65,10 +65,6 @@ function network_content(&$a, $update = false) {
 	// that belongs to you, hence you can see all of it. We will filter by group if
 	// desired. 
 
-	// TODO: Perhaps we should limit the group filter to those with the group in the ACL,
-	// rather than just the contact-id of the post.
-	// Otherwise we're not showing complete conversations, unless all the conversants
-	// happen to be in the group.
 
 	$sql_extra = ''; 
 
@@ -78,14 +74,16 @@ function network_content(&$a, $update = false) {
 			intval($_SESSION['uid'])
 		);
 		if(! count($r)) {
-			notice("No such group");
+			notice( t('No such group') . EOL );
 			goaway($a->get_baseurl() . '/network');
 			return; // NOTREACHED
 		}
 
 		$contacts = expand_groups(array($group));
-		$contacts[] = $_SESSION['cid'];
 		$contact_str = implode(',',$contacts);
+                $sql_extra = dbesc(" AND `item`.`parent` IN 
+			( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `contact-id` IN ( $contact_str )) ");
+ 
 		$sql_extra = dbesc(" AND `contact`.`id` IN ( $contact_str ) ");
                 $o = '<h4>' . t('Group: ') . $r[0]['name'] . '</h4>' . $o;
 
