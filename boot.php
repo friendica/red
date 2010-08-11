@@ -97,6 +97,7 @@ class App {
 
 	function set_baseurl($url) {
 		$this->baseurl = $url;
+		$this->hostname = basename($url);
 	}
 
 	function get_hostname() {
