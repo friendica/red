@@ -44,12 +44,22 @@ function register_post(&$a) {
 
 	$err = '';
 
+	// TODO fix some of these regex's for int'l/utf-8.
+
 	if(!eregi('[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\.[A-Za-z]{2,6}',$email))
 		$err .= t(' Not a valid email address.');
 	if(strlen($username) > 48)
 		$err .= t(' Please use a shorter name.');
 	if(strlen($username) < 3)
 		$err .= t(' Name too short.');
+
+	// I don't really like having this rule, but it cuts down
+	// on the number of auto-registrations by Russian spammers
+
+	if(! preg_match("/^[a-zA-Z]* [a-zA-Z]*$/",$username))
+		$err .= t(' That doesn\'t appear to be your full name.');
+
+
 	$r = q("SELECT `uid` FROM `user` 
 		WHERE `email` = '%s' LIMIT 1",
 		dbesc($email)
