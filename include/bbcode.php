@@ -59,38 +59,11 @@
             $Text = preg_replace("(\[font=(.+?)\](.+?)\[\/font\])","<span style=\"font-family: $1;\">$2</span>",$Text);
 
             // Declare the format for [code] layout
-            $CodeLayout = '<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td class="quotecodeheader"> Code:</td>
-                                </tr>
-                                <tr>
-                                    <td class="codebody">$1</td>
-                                </tr>
-                           </table>';
+            $CodeLayout = '<code>$1</code>';
             // Check for [code] text
             $Text = preg_replace("/\[code\](.+?)\[\/code\]/is","$CodeLayout", $Text);
-            // Declare the format for [php] layout
-            $phpLayout = '<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td class="quotecodeheader"> Code:</td>
-                                </tr>
-                                <tr>
-                                    <td class="codebody">$1</td>
-                                </tr>
-                           </table>';
-            // Check for [php] text
-            $Text = preg_replace("/\[php\](.+?)\[\/php\]/is",$phpLayout, $Text);
-
             // Declare the format for [quote] layout
-            $QuoteLayout = '<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td class="quotecodeheader"> Quote:</td>
-                                </tr>
-                                <tr>
-                                    <td class="quotebody">$1</td>
-                                </tr>
-                           </table>';
-                     
+            $QuoteLayout = '<blockquote>$1</blockquote>';                     
             // Check for [quote] text
             $Text = preg_replace("/\[quote\](.+?)\[\/quote\]/is","$QuoteLayout", $Text);
          

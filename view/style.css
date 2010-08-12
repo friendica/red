@@ -16,6 +16,21 @@ img {
 	width: 600px;
 }
 
+code {
+	font-family: monospace;
+	white-space: pre;
+	display: block;
+	overflow: auto;
+	border: 1;
+	background: #000000;
+	color: #44FF44;
+	padding: 10px;
+}
+
+blockquote:before {
+	content: '>> ';
+}
+
 body { 
 	background: #FEFEFE;
 	color: #444444;

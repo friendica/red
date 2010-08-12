@@ -8,10 +8,12 @@
  * Contributing: http://tinymce.moxiecode.com/contributing
  */
 
+/* Macgirvin Aug-2010 changed from punbb to dfrn dialect */
+
 (function() {
 	tinymce.create('tinymce.plugins.BBCodePlugin', {
 		init : function(ed, url) {
-			var t = this, dialect = ed.getParam('bbcode_dialect', 'punbb').toLowerCase();
+			var t = this, dialect = ed.getParam('bbcode_dialect', 'dfrn').toLowerCase();
 
 			ed.onBeforeSetContent.add(function(ed, o) {
 				o.content = t['_' + dialect + '_bbcode2html'](o.content);
@@ -38,8 +40,8 @@
 
 		// Private methods
 
-		// HTML -> BBCode in PunBB dialect
-		_punbb_html2bbcode : function(s) {
+		// HTML -> BBCode in DFRN dialect
+		_dfrn_html2bbcode : function(s) {
 			s = tinymce.trim(s);
 
 			function rep(re, str) {
@@ -48,23 +50,10 @@
 
 			// example: <strong> to [b]
 			rep(/<a.*?href=\"(.*?)\".*?>(.*?)<\/a>/gi,"[url=$1]$2[/url]");
-			rep(/<font.*?color=\"(.*?)\".*?class=\"codeStyle\".*?>(.*?)<\/font>/gi,"[code][color=$1]$2[/color][/code]");
-			rep(/<font.*?color=\"(.*?)\".*?class=\"quoteStyle\".*?>(.*?)<\/font>/gi,"[quote][color=$1]$2[/color][/quote]");
-			rep(/<font.*?class=\"codeStyle\".*?color=\"(.*?)\".*?>(.*?)<\/font>/gi,"[code][color=$1]$2[/color][/code]");
-			rep(/<font.*?class=\"quoteStyle\".*?color=\"(.*?)\".*?>(.*?)<\/font>/gi,"[quote][color=$1]$2[/color][/quote]");
-			rep(/<span style=\"color: ?(.*?);\">(.*?)<\/span>/gi,"[color=$1]$2[/color]");
-			rep(/<font.*?color=\"(.*?)\".*?>(.*?)<\/font>/gi,"[color=$1]$2[/color]");
 			rep(/<span style=\"font-size:(.*?);\">(.*?)<\/span>/gi,"[size=$1]$2[/size]");
 			rep(/<font>(.*?)<\/font>/gi,"$1");
 			rep(/<img.*?src=\"(.*?)\".*?\/>/gi,"[img]$1[/img]");
-			rep(/<span class=\"codeStyle\">(.*?)<\/span>/gi,"[code]$1[/code]");
-			rep(/<span class=\"quoteStyle\">(.*?)<\/span>/gi,"[quote]$1[/quote]");
-			rep(/<strong class=\"codeStyle\">(.*?)<\/strong>/gi,"[code][b]$1[/b][/code]");
-			rep(/<strong class=\"quoteStyle\">(.*?)<\/strong>/gi,"[quote][b]$1[/b][/quote]");
-			rep(/<em class=\"codeStyle\">(.*?)<\/em>/gi,"[code][i]$1[/i][/code]");
-			rep(/<em class=\"quoteStyle\">(.*?)<\/em>/gi,"[quote][i]$1[/i][/quote]");
-			rep(/<u class=\"codeStyle\">(.*?)<\/u>/gi,"[code][u]$1[/u][/code]");
-			rep(/<u class=\"quoteStyle\">(.*?)<\/u>/gi,"[quote][u]$1[/u][/quote]");
+			rep(/<code>(.*?)<\/code>/gi,"[code]$1[/code]");
 			rep(/<\/(strong|b)>/gi,"[/b]");
 			rep(/<(strong|b)>/gi,"[b]");
 			rep(/<\/(em|i)>/gi,"[/i]");
@@ -88,8 +77,8 @@
 			return s; 
 		},
 
-		// BBCode -> HTML from PunBB dialect
-		_punbb_bbcode2html : function(s) {
+		// BBCode -> HTML from DFRN dialect
+		_dfrn_bbcode2html : function(s) {
 			s = tinymce.trim(s);
 
 			function rep(re, str) {
@@ -108,8 +97,8 @@
 			rep(/\[url\](.*?)\[\/url\]/gi,"<a href=\"$1\">$1</a>");
 			rep(/\[img\](.*?)\[\/img\]/gi,"<img src=\"$1\" />");
 			rep(/\[color=(.*?)\](.*?)\[\/color\]/gi,"<font color=\"$1\">$2</font>");
-			rep(/\[code\](.*?)\[\/code\]/gi,"<span class=\"codeStyle\">$1</span>&nbsp;");
-			rep(/\[quote.*?\](.*?)\[\/quote\]/gi,"<span class=\"quoteStyle\">$1</span>&nbsp;");
+			rep(/\[code\](.*?)\[\/code\]/gi,"<code>$1</code>");
+			rep(/\[quote.*?\](.*?)\[\/quote\]/gi,"<blockquote>$1</blockquote>");
 
 			return s; 
 		}
