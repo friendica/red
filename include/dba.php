@@ -65,11 +65,9 @@ class dba {
 		}
     
 		if($this->debug == 2)
-			$debug_text .= print_r($r, true). EOL;
-//			$debug_text .= quoted_printable_encode(print_r($r, true). EOL);
+			$debug_text .= printable(print_r($r, true). EOL);
 		elseif($this->debug == 3)
-			echo print_r($r, true) . EOL ;
-//			echo quoted_printable_encode(print_r($r, true) . EOL) ;
+			echo printable(print_r($r, true) . EOL) ;
 
 		return($r);
 	}
@@ -85,6 +83,12 @@ class dba {
 	function __destruct() {
 		@$this->db->close();
 	}
+}}
+
+if(! function_exists('printable')) {
+function printable($s) {
+	$s = preg_replace("~([\x01-\x08\x0E-\x0F\x10-\x1F\x7F-\xFF])~",".", $s);
+	return(escape_tags(str_replace("\x00",'.',$s)));
 }}
 
 // Procedural functions
