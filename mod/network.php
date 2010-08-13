@@ -65,8 +65,7 @@ function network_content(&$a, $update = false) {
 	// that belongs to you, hence you can see all of it. We will filter by group if
 	// desired. 
 
-
-	$sql_extra = ''; 
+	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `type` IN ('wall', 'photo', 'remote' )) ";
 
 	if($group) {
 		$r = q("SELECT `name`, `id` FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -81,7 +80,7 @@ function network_content(&$a, $update = false) {
 
 		$contacts = expand_groups(array($group));
 		$contact_str = implode(',',$contacts);
-                $sql_extra = dbesc(" AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `contact-id` IN ( $contact_str )) ");
+                $sql_extra = dbesc(" AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `type` IN ('wall', 'photo', 'remote') AND `contact-id` IN ( $contact_str )) ");
  
                 $o = '<h4>' . t('Group: ') . $r[0]['name'] . '</h4>' . $o;
 
