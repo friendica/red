@@ -186,7 +186,8 @@ function profile_content(&$a, $update = false) {
 	$r = q("SELECT COUNT(*) AS `total`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-		AND NOT `item`.`type` IN ( 'remote', 'net-comment') AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
+		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
+		AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `type` != 'remote')
 		$sql_extra ",
 		intval($a->profile['uid'])
 
@@ -195,14 +196,14 @@ function profile_content(&$a, $update = false) {
 	if(count($r))
 		$a->set_pager_total($r[0]['total']);
 
-
 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 		`contact`.`name`, `contact`.`photo`, `contact`.`url`, 
 		`contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`, 
 		`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-		AND NOT `item`.`type` IN ( 'remote', 'net-comment') AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+		AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `type` != 'remote')
 		$sql_extra
 		ORDER BY `parent` DESC, `id` ASC LIMIT %d ,%d ",
 		intval($a->profile['uid']),
