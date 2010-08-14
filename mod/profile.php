@@ -91,9 +91,16 @@ function profile_content(&$a, $update = false) {
 	if(remote_user()) {
 		$contact_id = $_SESSION['visitor_id'];
 		$groups = init_groups_visitor($contact_id);
+		$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			intval($contact_id),
+			intval($a->profile['uid'])
+		);
+		if(count($r))
+			$contact = $r[0];
 	}
 	if(local_user()) {
 		$contact_id = $_SESSION['cid'];
+		$contact = $a->contact;
 	}
 
 	if($update) {
@@ -239,9 +246,9 @@ function profile_content(&$a, $update = false) {
 						'$id' => $item['item_id'],
 						'$parent' => $item['parent'],
 						'$profile_uid' =>  $a->profile['uid'],
-						'$mylink' => $a->contact['url'],
+						'$mylink' => $contact['url'],
 						'$mytitle' => t('Me'),
-						'$myphoto' => $a->contact['thumb'],
+						'$myphoto' => $contact['thumb'],
 						'$ww' => ''
 					));
 				}

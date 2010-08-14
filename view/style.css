@@ -298,21 +298,55 @@ input#dfrn-url {
 	margin-bottom: 30px;
 }
 
-#settings-username-end, #settings-email-end, #settings-nick-end, #settings-timezone-end, #settings-password-end, #settings-confirm-end {
+#settings-username-end, 
+#settings-email-end, 
+#settings-nick-end, 
+#settings-timezone-end, 
+#settings-password-end, 
+#settings-confirm-end,
+#notify1-end,
+#notify2-end,
+#notify3-end,
+#notify4-end,
+#notify5-end {
 	margin-bottom: 5px;
 	clear: both;
 }
 
-#settings-username-label, #settings-email-label, #settings-nick-label, #settings-timezone-label, #settings-password-label, #settings-confirm-label {
+#settings-username-label, 
+#settings-email-label, 
+#settings-nick-label, 
+#settings-timezone-label, 
+#settings-password-label, 
+#settings-confirm-label,
+#settings-label-notify1,
+#settings-label-notify2,
+#settings-label-notify3,
+#settings-label-notify4,
+#settings-label-notify5 {
 	float: left;
 	width: 200px;
 }
 
-#settings-username, #settings-email, #settings-nick, #timezone-select, #settings-password, #settings-confirm {
+#settings-username, 
+#settings-email, 
+#settings-nick, 
+#timezone-select, 
+#settings-password, 
+#settings-confirm,
+#notify1,
+#notify2,
+#notify3,
+#notify4,
+#notify5 {
 	float: left;
 	margin-bottom: 20px;
 }
 
+#settings-notify-desc {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
 #settings-nick-desc {
 	width: 500px;
 }

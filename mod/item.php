@@ -27,11 +27,21 @@ function item_post(&$a) {
 
 	$profile_uid = ((x($_POST,'profile_uid')) ? intval($_POST['profile_uid']) : 0);
 
+
 	if(! can_write_wall($a,$profile_uid)) {
 		notice("Permission denied." . EOL) ;
 		return;
 	}
+
+	$user = null;
+
+	$r = q("SELECT * FROM `user` WHERE `uid` = %d LIMIT 1",
+		intval($profile_uid)
+	);
+	if(count($r))
+		$user = $r[0];
 	
+
 	$str_group_allow = '';
 	$group_allow = $_POST['group_allow'];
 	if(is_array($group_allow)) {
@@ -71,23 +81,38 @@ function item_post(&$a) {
 
 	// get contact info for poster
 
-	if((x($_SESSION,'visitor_id')) && (intval($_SESSION['visitor_id']))) {
-		$contact_id = $_SESSION['visitor_id'];
+	$author = null;
+
+	if(($_SESSION['uid']) && ($_SESSION['uid'] == $profile_uid)) {
+		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
+			intval($_SESSION['uid'])
+		);
 	}
 	else {
-		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
-			intval($_SESSION['uid']));
-		if(count($r))
-			$contact_id = $r[0]['id'];
+		if((x($_SESSION,'visitor_id')) && (intval($_SESSION['visitor_id']))) {
+			$r = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
+				intval($_SESSION['visitor_id'])
+			);
+		}
+	}
+
+	if(count($r)) {
+		$author = $r[0];
+		$contact_id = $author['id'];
 	}
 
 	// get contact info for owner
 	
-	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
-		intval($profile_uid)
-	);
-	if(count($r))
-		$contact_record = $r[0];
+	if($profile_uid == $_SESSION['uid']) {
+		$contact_record = $author;
+	}
+	else {
+		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
+			intval($profile_uid)
+		);
+		if(count($r))
+			$contact_record = $r[0];
+	}
 
 	$post_type = notags(trim($_POST['type']));
 
@@ -115,15 +140,19 @@ function item_post(&$a) {
 	} while($dups == true);
 
 
-	$r = q("INSERT INTO `item` (`uid`,`type`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, `created`,
+	$r = q("INSERT INTO `item` (`uid`,`type`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
+		`author-name`, `author-link`, `author-avatar`, `created`,
 		`edited`, `uri`, `title`, `body`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
-		VALUES( %d, '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+		VALUES( %d, '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 		intval($profile_uid),
 		dbesc($post_type),
 		intval($contact_id),
 		dbesc($contact_record['name']),
 		dbesc($contact_record['url']),
 		dbesc($contact_record['thumb']),
+		dbesc($author['name']),
+		dbesc($author['url']),
+		dbesc($author['thumb']),
 		datetime_convert(),
 		datetime_convert(),
 		dbesc($uri),
@@ -157,9 +186,43 @@ function item_post(&$a) {
 				dbesc($parent_item['deny_gid']),
 				intval($post_id)
 			);
+
+			if(($user['notify-flags'] & NOTIFY_COMMENT) && ($contact_record != $author)) {
+				require_once('bbcode.php');
+				$from = $author['name'];
+				$tpl = file_get_contents('view/cmnt_received_eml.tpl');			
+				$email_tpl = replace_macros($tpl, array(
+					'$sitename' => $a->config['sitename'],
+					'$siteurl' =>  $a->get_baseurl(),
+					'$username' => $user['username'],
+					'$email' => $user['email'],
+					'$from' => $from,
+					'$body' => strip_tags(bbcode($body))
+				));
+
+				$res = mail($user['email'], $from . t(" commented on your item at ") . $a->config['sitename'],
+					$email_tpl,t("From: Administrator@") . $a->get_hostname() );
+			}
 		}
 		else {
 			$parent = $post_id;
+
+			if(($user['notify-flags'] & NOTIFY_WALL) && ($contact_record != $author)) {
+				require_once('bbcode.php');
+				$from = $author['name'];
+				$tpl = file_get_contents('view/wall_received_eml.tpl');			
+				$email_tpl = replace_macros($tpl, array(
+					'$sitename' => $a->config['sitename'],
+					'$siteurl' =>  $a->get_baseurl(),
+					'$username' => $user['username'],
+					'$email' => $user['email'],
+					'$from' => $from,
+					'$body' => strip_tags(bbcode($body))
+				));
+
+				$res = mail($user['email'], $from . t(" posted on your profile wall at ") . $a->config['sitename'],
+					$email_tpl,t("From: Administrator@") . $a->get_hostname() );
+			}
 		}
 
 		$r = q("UPDATE `item` SET `parent` = %d, `parent-uri` = '%s', `last-child` = 1, `visible` = 1
@@ -202,7 +265,7 @@ function item_content(&$a) {
 		);
 
 		if(! count($r)) {
-			notice("Item not found." . EOL);
+			notice( t('Item not found.') . EOL);
 			goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
 		}
 		$item = $r[0];
@@ -255,7 +318,7 @@ function item_content(&$a) {
 			return; //NOTREACHED
 		}
 		else {
-			notice("Permission denied." . EOL);
+			notice( t('Permission denied.') . EOL);
 			goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
 			return; //NOTREACHED
 		}

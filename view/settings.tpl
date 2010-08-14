@@ -37,7 +37,25 @@ $zoneselect
 </div>
 <div id="settings-default-perms-end"></div>
 
-
+<div id="settings-notify-wrapper">
+<div id="settings-notify-desc">Send me a notification email when: </div>
+<label for="notify1" id="settings-label-notify1">I receive an introduction</label>
+<input id="notify1" type="checkbox" $sel_notify1 name="notify1" value="1" />
+<div id="notify1-end"></div>
+<label for="notify2" id="settings-label-notify2">My introductions are confirmed</label>
+<input id="notify2" type="checkbox" $sel_notify2 name="notify2" value="2" />
+<div id="notify2-end"></div>
+<label for="notify3" id="settings-label-notify3">Someone writes on my profile wall</label>
+<input id="notify3" type="checkbox" $sel_notify3 name="notify3" value="4" />
+<div id="notify3-end"></div>
+<label for="notify4" id="settings-label-notify4">Someone writes a followup comment</label>
+<input id="notify4" type="checkbox" $sel_notify4 name="notify4" value="8" />
+<div id="notify4-end"></div>
+<label for="notify5" id="settings-label-notify5">I receive a private message</label>
+<input id="notify5" type="checkbox" $sel_notify5 name="notify5" value="16" />
+<div id="notify5-end"></div>
+</div>
+<div id="settings=notify-end"></div>
 
 <div id="settings-password-wrapper" >
 <p id="settings-password-desc" >

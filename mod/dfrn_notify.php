@@ -23,7 +23,7 @@ function dfrn_notify_post(&$a) {
 
 	// find the local user who owns this relationship.
 
-	$r = q("SELECT * FROM `contact` WHERE `issued-id` = '%s' LIMIT 1",
+	$r = q("SELECT `contact`.*, `contact`.`uid` AS `importer_uid`, `user`.* FROM `contact` LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid` WHERE `issued-id` = '%s' LIMIT 1",
 		dbesc($dfrn_id)
 	);
 	if(! count($r)) {
@@ -54,7 +54,7 @@ function dfrn_notify_post(&$a) {
 		$base = $rawmail[0]['child'][NAMESPACE_DFRN];
 
 		$msg = array();
-		$msg['uid'] = $importer['uid'];
+		$msg['uid'] = $importer['importer_uid'];
 		$msg['from-name'] = notags(unxmlify($base['sender'][0]['child'][NAMESPACE_DFRN]['name'][0]['data']));
 		$msg['from-photo'] = notags(unxmlify($base['sender'][0]['child'][NAMESPACE_DFRN]['avatar'][0]['data']));
 		$msg['from-url'] = notags(unxmlify($base['sender'][0]['child'][NAMESPACE_DFRN]['uri'][0]['data']));
@@ -74,24 +74,21 @@ function dfrn_notify_post(&$a) {
 			. "`) VALUES ('" . implode("', '", array_values($msg)) . "')" );
 
 		// send email notification if requested.
-		$r = q("SELECT * FROM `user` WHERE `uid` = %d LIMIT 1",
-			intval($importer['uid'])
-		);
+
 		require_once('bbcode.php');
-		if((count($r)) && ($r[0]['notify-flags'] & NOTIFY_MAIL)) {
+		if($importer['notify-flags'] & NOTIFY_MAIL) {
 			$tpl = file_get_contents('view/mail_received_eml.tpl');			
 			$email_tpl = replace_macros($tpl, array(
 				'$sitename' => $a->config['sitename'],
 				'$siteurl' =>  $a->get_baseurl(),
-				'$username' => $r[0]['username'],
-				'$email' => $r[0]['email'],
+				'$username' => $importer['username'],
+				'$email' => $importer['email'],
 				'$from' => $msg['from-name'],
-				'$fn' => $r[0]['name'],
 				'$title' => $msg['title'],
 				'$body' => strip_tags(bbcode($msg['body']))
 			));
 
-			$res = mail($r[0]['email'], t("New mail received at ") . $a->config['sitename'],
+			$res = mail($importer['email'], t("New mail received at ") . $a->config['sitename'],
 				$email_tpl,t("From: Administrator@") . $a->get_hostname() );
 		}
 		xml_status(0);
@@ -116,7 +113,7 @@ function dfrn_notify_post(&$a) {
 		if($deleted) {
 			$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 				dbesc($uri),
-				intval($importer['uid'])
+				intval($importer['importer_uid'])
 			);
 			if(count($r)) {
 				if($r[0]['uri'] == $r[0]['parent-uri']) {
@@ -131,7 +128,7 @@ function dfrn_notify_post(&$a) {
 						WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 						dbesc($when),
 						dbesc($uri),
-						intval($importer['uid'])
+						intval($importer['importer_uid'])
 					);
 				}
 			}	
@@ -151,32 +148,48 @@ function dfrn_notify_post(&$a) {
 			if($feed->get_item_quantity() == 1) {
 				// remote reply to our post. Import and then notify everybody else.
 				$datarray = get_atom_elements($item);
-				$urn = explode(':',$parent_urn);
 				$datarray['type'] = 'remote-comment';
 				$datarray['parent-uri'] = $parent_uri;
-				$datarray['uid'] = $importer['uid'];
+				$datarray['uid'] = $importer['importer_uid'];
 				$datarray['contact-id'] = $importer['id'];
 				$posted_id = post_remote($a,$datarray);
 
 				$r = q("SELECT `parent` FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 					intval($posted_id),
-					intval($importer['uid'])
+					intval($importer['importer_uid'])
 				);
 				if(count($r)) {
 					$r1 = q("UPDATE `item` SET `last-child` = 0 WHERE `uid` = %d AND `parent` = %d",
-						intval($importer['uid']),
+						intval($importer['importer_uid']),
 						intval($r[0]['parent'])
 					);
 				}
 				$r2 = q("UPDATE `item` SET `last-child` = 1 WHERE `uid` = %d AND `id` = %d LIMIT 1",
-						intval($importer['uid']),
+						intval($importer['importer_uid']),
 						intval($posted_id)
 				);
 
 				$url = $a->get_baseurl();
 
-				proc_close(proc_open("php include/notifier.php $url comment-import $posted_id > remote-notify.log &", array(),$foo));
+				proc_close(proc_open("php include/notifier.php $url comment-import $posted_id > remote-notify.log &", 
+					array(),$foo));
 
+				if(($importer['notify-flags'] & NOTIFY_COMMENT) && (! $importer['self'])) {
+					require_once('bbcode.php');
+					$from = stripslashes($datarray['author-name']);
+					$tpl = file_get_contents('view/cmnt_received_eml.tpl');			
+					$email_tpl = replace_macros($tpl, array(
+						'$sitename' => $a->config['sitename'],
+						'$siteurl' =>  $a->get_baseurl(),
+						'$username' => $importer['username'],
+						'$email' => $importer['email'],
+						'$from' => $from,
+						'$body' => strip_tags(bbcode(stripslashes($datarray['body'])))
+					));
+
+					$res = mail($importer['email'], $from . t(" commented on your item at ") . $a->config['sitename'],
+						$email_tpl,t("From: Administrator@") . $a->get_hostname() );
+				}
 				xml_status(0);
 				return;
 
@@ -188,25 +201,56 @@ function dfrn_notify_post(&$a) {
 
 				$r = q("SELECT `uid`, `last-child`, `edited` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
-					intval($importer['uid'])
+					intval($importer['importer_uid'])
 				);
 				// FIXME update content if 'updated' changes
 				if(count($r)) {
-					$allow = $item->get_item_tags('http://purl.org/macgirvin/dfrn/1.0','comment-allow');
+					$allow = $item->get_item_tags( NAMESPACE_DFRN, 'comment-allow');
 					if($allow && $allow[0]['data'] != $r[0]['last-child']) {
 						$r = q("UPDATE `item` SET `last-child` = %d WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							intval($allow[0]['data']),
 							dbesc($item_id),
-							intval($importer['uid'])
+							intval($importer['importer_uid'])
 						);
 					}
 					continue;
 				}
 				$datarray = get_atom_elements($item);
 				$datarray['parent-uri'] = $parent_uri;
-				$datarray['uid'] = $importer['uid'];
+				$datarray['uid'] = $importer['importer_uid'];
 				$datarray['contact-id'] = $importer['id'];
 				$r = post_remote($a,$datarray);
+
+				// find out if our user is involved in this conversation and wants to be notified.
+			
+				if($importer['notify-flags'] & NOTIFY_COMMENT) {
+
+					$myconv = q("SELECT `author-link` FROM `item` WHERE `parent-uri` = '%s'",
+						dbesc($parent_uri)
+					);
+					if(count($myconv)) {
+						foreach($myconv as $conv) {
+							if($conv['author-link'] != $importer['url'])
+								continue;
+							require_once('bbcode.php');
+							$from = stripslashes($datarray['author-name']);
+							$tpl = file_get_contents('view/cmnt_received_eml.tpl');			
+							$email_tpl = replace_macros($tpl, array(
+								'$sitename' => $a->config['sitename'],
+								'$siteurl' =>  $a->get_baseurl(),
+								'$username' => $importer['username'],
+								'$email' => $importer['email'],
+								'$from' => $from,
+								'$body' => strip_tags(bbcode(stripslashes($datarray['body'])))
+							));
+
+							$res = mail($importer['email'], $from . t(" commented on an item at ") 
+								. $a->config['sitename'],
+								$email_tpl,t("From: Administrator@") . $a->get_hostname() );
+							break;
+						}
+					}
+				}
 				continue;
 			}
 		}
@@ -216,15 +260,15 @@ function dfrn_notify_post(&$a) {
 			$item_id = $item->get_id();
 			$r = q("SELECT `uid`, `last-child`, `edited` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 				dbesc($item_id),
-				intval($importer['uid'])
+				intval($importer['importer_uid'])
 			);
 			if(count($r)) {
-				$allow = $item->get_item_tags('http://purl.org/macgirvin/dfrn/1.0','comment-allow');
+				$allow = $item->get_item_tags( NAMESPACE_DFRN, 'comment-allow');
 				if($allow && $allow[0]['data'] != $r[0]['last-child']) {
 					$r = q("UPDATE `item` SET `last-child` = %d WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 						intval($allow[0]['data']),
 						dbesc($item_id),
-						intval($importer['uid'])
+						intval($importer['importer_uid'])
 					);
 				}
 				continue;
@@ -233,7 +277,7 @@ function dfrn_notify_post(&$a) {
 
 			$datarray = get_atom_elements($item);
 			$datarray['parent-uri'] = $item_id;
-			$datarray['uid'] = $importer['uid'];
+			$datarray['uid'] = $importer['importer_uid'];
 			$datarray['contact-id'] = $importer['id'];
 			$r = post_remote($a,$datarray);
 			continue;
@@ -281,8 +325,7 @@ function dfrn_notify_content(&$a) {
 		openssl_private_encrypt($id_str,$encrypted_id,$r[0]['prvkey']);
 		$encrypted_id = bin2hex($encrypted_id);
 
-		echo '<?xml version="1.0" encoding="UTF-8"?><dfrn_notify><status>' .$status . '</status><dfrn_id>' . $encrypted_id . '</dfrn_id>'
-			. '<challenge>' . $challenge . '</challenge></dfrn_notify>' . "\r\n" ;
+		echo '<?xml version="1.0" encoding="UTF-8"?><dfrn_notify><status>' .$status . '</status><dfrn_id>' . $encrypted_id . '</dfrn_id>' . '<challenge>' . $challenge . '</challenge></dfrn_notify>' . "\r\n" ;
 		session_write_close();
 		exit;
 		

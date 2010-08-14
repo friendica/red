@@ -96,8 +96,7 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 			'$thumb' => xmlify($owner['thumb']),
 			'$picdate' => xmlify(datetime_convert('UTC','UTC',$owner['avatar-date'] . '+00:00' , 'Y-m-d\TH:i:s\Z')) ,
 			'$uridate' => xmlify(datetime_convert('UTC','UTC',$owner['uri-date'] . '+00:00' , 'Y-m-d\TH:i:s\Z')) ,
-			'$namdate' => xmlify(datetime_convert('UTC','UTC',$owner['name-date'] . '+00:00' , 'Y-m-d\TH:i:s\Z')) ,
-
+			'$namdate' => xmlify(datetime_convert('UTC','UTC',$owner['name-date'] . '+00:00' , 'Y-m-d\TH:i:s\Z')) 
 
 	));
 
@@ -109,7 +108,6 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 			));
 		}
 		else {
-
 			if($item['parent'] == $item['id']) {
 				$atom .= replace_macros($item_template, array(
 					'$name' => xmlify($item['name']),
@@ -143,8 +141,7 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 		}
 	}
 
-	$atom .= "</feed>\r\n";
-
+	$atom .= '</feed>' . "\r\n";
 	return $atom;
 } 
 

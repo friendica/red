@@ -56,6 +56,19 @@ function settings_post(&$a) {
 	$email = notags(trim($_POST['email']));
 	$timezone = notags(trim($_POST['timezone']));
 
+	$notify = 0;
+
+	if($_POST['notify1'])
+		$notify += intval($_POST['notify1']);
+	if($_POST['notify2'])
+		$notify += intval($_POST['notify2']);
+	if($_POST['notify3'])
+		$notify += intval($_POST['notify3']);
+	if($_POST['notify4'])
+		$notify += intval($_POST['notify4']);
+	if($_POST['notify5'])
+		$notify += intval($_POST['notify5']);
+
 	$username_changed = false;
 	$email_changed = false;
 	$zone_changed = false;
@@ -120,7 +133,7 @@ function settings_post(&$a) {
 
 
 
-	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s' WHERE `uid` = %d LIMIT 1",
+	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d  WHERE `uid` = %d LIMIT 1",
 			dbesc($username),
 			dbesc($email),
 			dbesc($timezone),
@@ -128,6 +141,7 @@ function settings_post(&$a) {
 			dbesc($str_group_allow),
 			dbesc($str_contact_deny),
 			dbesc($str_group_deny),
+			intval($notify),
 			intval($_SESSION['uid'])
 	);
 	if($r)
@@ -163,7 +177,7 @@ function settings_content(&$a) {
 	$email    = $a->user['email'];
 	$nickname = $a->user['nickname'];
 	$timezone = $a->user['timezone'];
-
+	$notify   = $a->user['notify-flags'];
 
 
 	$nickname_block = file_get_contents("view/settings_nick_set.tpl");
@@ -198,7 +212,12 @@ function settings_content(&$a) {
 		'$timezone' => $timezone,
 		'$zoneselect' => select_timezone($timezone),
 		'$permissions' => t('Default Post Permissions'),
-		'$aclselect' => populate_acl($a->user)
+		'$aclselect' => populate_acl($a->user),
+		'$sel_notify1' => (($notify & NOTIFY_INTRO)   ? ' checked="checked" ' : ''),
+		'$sel_notify2' => (($notify & NOTIFY_CONFIRM) ? ' checked="checked" ' : ''),
+		'$sel_notify3' => (($notify & NOTIFY_WALL)    ? ' checked="checked" ' : ''),
+		'$sel_notify4' => (($notify & NOTIFY_COMMENT) ? ' checked="checked" ' : ''),
+		'$sel_notify5' => (($notify & NOTIFY_MAIL)    ? ' checked="checked" ' : '')
 	));
 
 	return $o;
