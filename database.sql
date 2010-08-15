@@ -32,6 +32,17 @@ CREATE TABLE IF NOT EXISTS `challenge` (
 
 -- --------------------------------------------------------
 
+CREATE TABLE IF NOT EXISTS `config` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `cat` char(255) NOT NULL,
+  `k` char(255) NOT NULL,
+  `v` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MYISAM DEFAULT CHARSET=utf8;
+
+
+
+
 --
 -- Table structure for table `contact`
 --

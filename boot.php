@@ -2,11 +2,13 @@
 
 set_time_limit(0);
 
-define('EOL', "<br />\r\n");
+define ( 'BUILD_ID' , 1000 );
 
-define('REGISTER_CLOSED',  0);
-define('REGISTER_APPROVE', 1);
-define('REGISTER_OPEN',    2);
+define ( 'EOL', "<br />\r\n");
+
+define ( 'REGISTER_CLOSED',  0);
+define ( 'REGISTER_APPROVE', 1);
+define ( 'REGISTER_OPEN',    2);
 
 define ( 'DIRECTION_ANY',  0);
 define ( 'DIRECTION_IN',   1);
@@ -161,6 +163,25 @@ function system_unavailable() {
 	include('system_unavailable.php');
 	killme();
 }}
+
+
+if(! function_exists('check_config')) {
+function check_config(&$a) {
+	$r = q("SELECT * FROM `config` WHERE `cat` = 'system' AND `k` IN ('url','build')");
+	if(! count($r)) {
+		q("INSERT INTO `config` (`cat`,`k`,`v`) VALUES ( 'system', 'url', '%s' )",
+			dbesc($a->get_baseurl())
+		);
+		q("INSERT INTO `config` (`cat`,`k`,`v`) VALUES ( 'system', 'build', '%s' )",
+			dbesc(BUILD_ID)
+		);
+	}
+
+
+
+}}
+
+
 
 if(! function_exists('replace_macros')) {  
 function replace_macros($s,$r) {

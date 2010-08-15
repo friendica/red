@@ -29,6 +29,8 @@ if((x($_SESSION,'authenticated')) || (x($_POST['auth-params'])))
 
 if($install)
 	$a->module = 'install';
+else
+	check_config($a);
 
 if(strlen($a->module)) {
 	if(file_exists("mod/{$a->module}.php")) {
