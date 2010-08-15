@@ -88,7 +88,10 @@ class dba {
 if(! function_exists('printable')) {
 function printable($s) {
 	$s = preg_replace("~([\x01-\x08\x0E-\x0F\x10-\x1F\x7F-\xFF])~",".", $s);
-	return(escape_tags(str_replace("\x00",'.',$s)));
+	$s = str_replace("\x00",'.',$s);
+	if(x($_SERVER,'SERVER_NAME'))
+		$s = escape_tags($s);
+	return $s;
 }}
 
 // Procedural functions
