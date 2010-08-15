@@ -175,10 +175,31 @@ function check_config(&$a) {
 		q("INSERT INTO `config` (`cat`,`k`,`v`) VALUES ( 'system', 'build', '%s' )",
 			dbesc(BUILD_ID)
 		);
+		return;
 	}
+	foreach($r as $rr) {
+		if($rr['k'] == 'build') {
+			$stored = intval($rr['v']);
+			$current = intval(BUILD_ID);
+			if(($stored < $current) && file_exists('update.php')) {
 
+				// We're reporting a different version than what is currently installed.
+				// Run any existing update scripts to bring the database up to current.
 
-
+				require_once('update.php');
+				for($x = $stored; $x <= $current; $x ++) {
+					if(function_exists('update_' . $x)) {
+						$func = 'update_' . $x;
+						$func($a);
+					}
+				}
+				q("UPDATE `config` SET `v` = '%s' WHERE `cat` = 'system' AND `k` = 'build' LIMIT 1",
+					dbesc(BUILD_ID)
+				);
+			}
+		}
+	}
+	return;
 }}
 
 
