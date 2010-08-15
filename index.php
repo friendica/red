@@ -80,7 +80,6 @@ if($a->module_loaded) {
       		$a->page['content'] .= $func($a);
 	}
 
-	footer($a);
 }
 
 // report anything important happening
