@@ -159,6 +159,8 @@ CREATE TABLE IF NOT EXISTS `item` (
   `like` mediumtext NOT NULL,
   `dislike` mediumtext NOT NULL,
   `tag` mediumtext NOT NULL,
+  `location` char(255) NOT NULL,
+  `coord` char(255) NOT NULL,
   `allow_cid` mediumtext NOT NULL,
   `allow_gid` mediumtext NOT NULL,
   `deny_cid` mediumtext NOT NULL,
