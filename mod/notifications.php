@@ -27,7 +27,7 @@ function notifications_post(&$a) {
 			notice( t('Invalid request identifier.') . EOL);
 			return;
 		}
-		if($_POST['submit'] == t('Discard'() {
+		if($_POST['submit'] == t('Discard')) {
 			$r = q("DELETE FROM `intro` WHERE `id` = %d LIMIT 1", intval($intro_id));	
 			$r = q("DELETE `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1", 
 				intval($request_id),

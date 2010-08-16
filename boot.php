@@ -167,36 +167,31 @@ function system_unavailable() {
 
 if(! function_exists('check_config')) {
 function check_config(&$a) {
-	$r = q("SELECT * FROM `config` WHERE `cat` = 'system' AND `k` IN ('url','build')");
-	if(! count($r)) {
-		q("INSERT INTO `config` (`cat`,`k`,`v`) VALUES ( 'system', 'url', '%s' )",
-			dbesc($a->get_baseurl())
-		);
-		q("INSERT INTO `config` (`cat`,`k`,`v`) VALUES ( 'system', 'build', '%s' )",
-			dbesc(BUILD_ID)
-		);
-		return;
-	}
-	foreach($r as $rr) {
-		if($rr['k'] == 'build') {
-			$stored = intval($rr['v']);
-			$current = intval(BUILD_ID);
-			if(($stored < $current) && file_exists('update.php')) {
 
-				// We're reporting a different version than what is currently installed.
-				// Run any existing update scripts to bring the database up to current.
+	$build = get_config('system','build');
+	if(! x($build))
+		$build = set_config('system','build',BUILD_ID);
 
-				require_once('update.php');
-				for($x = $stored; $x <= $current; $x ++) {
-					if(function_exists('update_' . $x)) {
-						$func = 'update_' . $x;
-						$func($a);
-					}
+	$url = get_config('system','url');
+	if(! x($url))
+		$url = set_config('system','url',$a->get_baseurl());
+
+	if($build != BUILD_ID) {
+		$stored = intval($build);
+		$current = intval(BUILD_ID);
+		if(($stored < $current) && file_exists('update.php')) {
+
+			// We're reporting a different version than what is currently installed.
+			// Run any existing update scripts to bring the database up to current.
+
+			require_once('update.php');
+			for($x = $stored; $x <= $current; $x ++) {
+				if(function_exists('update_' . $x)) {
+					$func = 'update_' . $x;
+					$func($a);
 				}
-				q("UPDATE `config` SET `v` = '%s' WHERE `cat` = 'system' AND `k` = 'build' LIMIT 1",
-					dbesc(BUILD_ID)
-				);
 			}
+			set_config('system','build', BUILD_ID);
 		}
 	}
 	return;
@@ -545,4 +540,37 @@ function sanitise_acl(&$item) {
 		$item = '<' . intval(notags(trim($item))) . '>';
 	else
 		unset($item);
+}}
+
+if(! function_exists('get_config')) {
+function get_config($family,$key) {
+	$ret = q("SELECT `v` FROM `config` WHERE `cat` = '%s' AND `k` = '%s' LIMIT 1",
+		dbesc($family),
+		dbesc($key)
+	);
+	if(count($ret))
+		return $ret[0]['v'];
+	return false;
+}}
+
+if(! function_exists('set_config')) {
+function set_config($family,$key,$value) {
+	if(get_config($family,$key) === false) {
+		$ret = q("INSERT INTO `config` ( `cat`, `k`, `v` ) VALUES ( '%s', '%s', '%s' ) ",
+			dbesc($family),
+			dbesc($key),
+			dbesc($value)
+		);
+		if($ret) 
+			return $value;
+		return $ret;
+	}
+	$ret = q("SUPDATE `config` SET `v` = '%s' WHERE `cat` = '%s' AND `k` = '%s' LIMIT 1",
+		dbesc($value),
+		dbesc($family),
+		dbesc($key)
+	);
+	if($ret)
+		return $value;
+	return $ret;
 }}
