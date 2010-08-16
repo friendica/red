@@ -328,6 +328,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `nickname` char(255) NOT NULL,
   `email` char(255) NOT NULL,
   `timezone` char(128) NOT NULL,
+  `theme` char(255) NOT NULL,
   `pubkey` text NOT NULL,
   `prvkey` text NOT NULL,
   `verified` tinyint(1) unsigned NOT NULL DEFAULT '0',

@@ -26,6 +26,7 @@ $a->init_pagehead();
 
 session_start();
 
+
 if((x($_SESSION,'authenticated')) || (x($_POST['auth-params'])))
 	require("auth.php");
 
@@ -106,12 +107,18 @@ $a->page['content'] .= $debug_text;
 if($a->module != 'install')
 	require_once("nav.php");
 
+$a->page['htmlhead'] = replace_macros($a->page['htmlhead'], array(
+	'$stylesheet' => $a->get_baseurl() . '/view/theme/'
+		. ((x($_SESSION,'theme')) ? $_SESSION['theme'] : 'default')
+		. '/style.css'
+	));
+
 $page    = $a->page;
 $profile = $a->profile;
 
 header("Content-type: text/html; charset=utf-8");
+
 $template = "view/" 
-	. ((x($a->page,'theme')) ? $a->page['theme'] . '/' : "" ) 
 	. ((x($a->page,'template')) ? $a->page['template'] : 'default' ) 
 	. ".php";
 

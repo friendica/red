@@ -10,6 +10,7 @@ if((x($_SESSION,'authenticated')) && (! ($_POST['auth-params'] == 'login'))) {
 		unset($_SESSION['is_visitor']);
 		unset($_SESSION['administrator']);
 		unset($_SESSION['cid']);
+		unset($_SESSION['theme']);
 		notice( t('Logged out.') . EOL);
 		goaway($a->get_baseurl());
 	}
@@ -20,6 +21,7 @@ if((x($_SESSION,'authenticated')) && (! ($_POST['auth-params'] == 'login'))) {
 			goaway($a->get_baseurl());
 		}
 		$a->user = $r[0];
+		$_SESSION['theme'] = $a->user['theme'];
 		if(strlen($a->user['timezone']))
 			date_default_timezone_set($a->user['timezone']);
 
@@ -54,7 +56,7 @@ else {
 			goaway($a->get_baseurl());
   		}
 		$_SESSION['uid'] = $r[0]['uid'];
-		$_SESSION['admin'] = $r[0]['admin'];
+		$_SESSION['theme'] = $r[0]['theme'];
 		$_SESSION['authenticated'] = 1;
 		$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $r[0]['nickname'];
 

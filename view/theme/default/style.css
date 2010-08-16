@@ -301,7 +301,8 @@ input#dfrn-url {
 #settings-username-end, 
 #settings-email-end, 
 #settings-nick-end, 
-#settings-timezone-end, 
+#settings-timezone-end,
+#settings-theme-end, 
 #settings-password-end, 
 #settings-confirm-end,
 #notify1-end,
@@ -317,6 +318,7 @@ input#dfrn-url {
 #settings-email-label, 
 #settings-nick-label, 
 #settings-timezone-label, 
+#settings-theme-label,
 #settings-password-label, 
 #settings-confirm-label,
 #settings-label-notify1,
@@ -332,6 +334,7 @@ input#dfrn-url {
 #settings-email, 
 #settings-nick, 
 #timezone-select, 
+#theme-select,
 #settings-password, 
 #settings-confirm,
 #notify1,
@@ -343,6 +346,14 @@ input#dfrn-url {
 	margin-bottom: 20px;
 }
 
+#settings-theme-label {
+	margin-top: 20px;
+}
+
+#theme-select {
+	margin-top: 20px;
+	width: 207px;
+}
 #settings-notify-desc {
 	margin-top: 20px;
 	margin-bottom: 20px;

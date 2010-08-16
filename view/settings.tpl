@@ -25,6 +25,12 @@ $zoneselect
 </div>
 <div id="settings-timezone-end" ></div>
 
+<div id="settings-theme-select">
+<label id="settings-theme-label" for="theme-select" >Display Theme: </label>
+$theme
+</div>
+<div id="settings-theme-end"></div>
+
 <div id="settings-default-perms" class="settings-default-perms" >
 	<div id="settings-default-perms-menu" onClick="openClose('settings-default-perms-select');" />$permissions</div>
 	<div id="settings-default-perms-menu-end"></div>

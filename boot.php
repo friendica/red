@@ -131,7 +131,9 @@ class App {
 	function init_pagehead() {
 		if(file_exists("view/head.tpl"))
 			$s = file_get_contents("view/head.tpl");
-		$this->page['htmlhead'] = replace_macros($s,array('$baseurl' => $this->get_baseurl()));
+		$this->page['htmlhead'] = replace_macros($s,array(
+			'$baseurl' => $this->get_baseurl()
+		));
 	}
 
 }}

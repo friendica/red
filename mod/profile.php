@@ -34,6 +34,7 @@ function profile_load(&$a, $username, $profile = 0) {
 	$a->page['template'] = 'profile';
 
 	$a->page['title'] = $a->profile['name'];
+	$_SESSION['theme'] = $a->profile['theme'];
 
 	return;
 }}
