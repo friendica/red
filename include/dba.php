@@ -20,6 +20,10 @@ class dba {
 			system_unavailable();    
 	}
 
+	public function getdb() {
+		return $this->db;
+	}
+
 	public function q($sql) {
 		global $debug_text;
 		

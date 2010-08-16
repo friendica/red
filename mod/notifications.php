@@ -2,11 +2,11 @@
 
 function notifications_post(&$a) {
 
-	if((! x($_SESSION,'authenticated')) || (! (x($_SESSION,'uid')))) {
+	if(! local_user()) {
 		goaway($a->get_baseurl());
 	}
 	
-	$request_id = (($a->argc > 1) ? $a->argv[0] : 0);
+	$request_id = (($a->argc > 1) ? $a->argv[1] : 0);
 	
 	if($request_id == "all")
 		return;
@@ -24,17 +24,17 @@ function notifications_post(&$a) {
 			$intro_id = $r[0]['id'];
 		}
 		else {
-			$_SESSION['sysmsg'] .= "Invalid request identifier." . EOL;
+			notice( t('Invalid request identifier.') . EOL);
 			return;
 		}
-		if($_POST['submit'] == 'Discard') {
+		if($_POST['submit'] == t('Discard'() {
 			$r = q("DELETE FROM `intro` WHERE `id` = %d LIMIT 1", intval($intro_id));	
 			$r = q("DELETE `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1", 
 				intval($request_id),
 				intval($_SESSION['uid']));
 			return;
 		}
-		if($_POST['submit'] == 'Ignore') {
+		if($_POST['submit'] == t('Ignore')) {
 			$r = q("UPDATE `intro` SET `ignore` = 1 WHERE `id` = %d LIMIT 1",
 				intval($intro_id));
 			return;
@@ -48,11 +48,12 @@ function notifications_post(&$a) {
 
 function notifications_content(&$a) {
 
-	$o = '';
-
-	if((! x($_SESSION,'authenticated')) || (! (x($_SESSION,'uid')))) {
+	if(! local_user()) {
+		notice( t('Permission denied.') . EOL);
 		goaway($a->get_baseurl());
 	}
+
+	$o = '';
 
 	if(($a->argc > 1) && ($a->argv[1] == 'all'))
 		$sql_extra = '';
@@ -63,7 +64,7 @@ function notifications_content(&$a) {
 	$tpl = file_get_contents('view/intros-top.tpl');
 	$o .= replace_macros($tpl,array(
 		'$hide_url' => ((strlen($sql_extra)) ? 'notifications/all' : 'notifications' ),
-		'$hide_text' => ((strlen($sql_extra)) ? 'Show Ignored Requests' : 'Hide Ignored Requests')
+		'$hide_text' => ((strlen($sql_extra)) ? t('Show Ignored Requests') : t('Hide Ignored Requests'))
 	)); 
 
 	$r = q("SELECT `intro`.`id` AS `intro-id`, `intro`.*, `contact`.* 
@@ -85,14 +86,14 @@ function notifications_content(&$a) {
 				'$contact-id' => $rr['contact-id'],
 				'$photo' => ((x($rr,'photo')) ? $rr['photo'] : "images/default-profile.jpg"),
 				'$fullname' => $rr['name'],
-				'$knowyou' => (($rr['knowyou']) ? 'yes' : 'no'),
+				'$knowyou' => (($rr['knowyou']) ? t('yes') : t('no')),
 				'$url' => $rr['url'],
 				'$note' => $rr['note']
 			));
 		}
 	}
 	else
-		$_SESSION['sysmsg'] .= "No notifications." . EOL;
+		notice( t('No notifications.') . EOL);
 
 	return $o;
 }

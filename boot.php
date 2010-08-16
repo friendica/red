@@ -43,10 +43,10 @@ class App {
 	public  $module;
 	public  $pager;
 	public  $strings;   
+	public  $path;
 
 	private $scheme;
 	private $hostname;
-	private $path;
 	private $baseurl;
 	private $db;
 

@@ -68,9 +68,10 @@ function message_post(&$a) {
 		$post_id = $r[0]['id'];
 
 	$url = $a->get_baseurl();
-
+	$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
+	
 	if($post_id) {
-		proc_close(proc_open("php include/notifier.php \"$url\" \"mail\" \"$post_id\" > mail.log &",
+		proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"$url\" \"mail\" \"$post_id\" &",
 			array(),$foo));
 		notice( t('Message sent.') . EOL );
 	}
@@ -135,7 +136,9 @@ function message_content(&$a) {
 	if(($a->argc > 2) && ($a->argv[1] == 'redeliver') && intval($a->argv[2])) {
 		$url = $a->get_baseurl();
 		$post_id = intval($a->argv[2]);
-		proc_close(proc_open("php include/notifier.php \"$url\" \"mail\" \"$post_id\" > mail.log &",
+		$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
+
+		proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"$url\" \"mail\" \"$post_id\" &",
 			array(),$foo));
 		goaway($a->get_baseurl() . '/message' );
 	}

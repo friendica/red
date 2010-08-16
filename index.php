@@ -15,7 +15,9 @@ require_once("dba.php");
 $db = new dba($db_host, $db_user, $db_pass, $db_data, $install);
 	unset($db_host, $db_user, $db_pass, $db_data);
 
-require_once("session.php");
+if(! $install)
+	require_once("session.php");
+
 require_once("datetime.php");
 
 date_default_timezone_set(($default_timezone) ? $default_timezone : 'UTC');
@@ -101,7 +103,8 @@ $a->page['content'] .= $debug_text;
 // build page
 
 // Navigation (menu) template
-require_once("nav.php");
+if($a->module != 'install')
+	require_once("nav.php");
 
 $page    = $a->page;
 $profile = $a->profile;

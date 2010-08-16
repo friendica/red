@@ -124,11 +124,12 @@ function photos_post(&$a) {
 
 					$url = $a->get_baseurl();
 					$drop_id = intval($rr['id']);
+					$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 
 					// send the notification upstream/downstream as the case may be
 
 					if($rr['visible'])
-						proc_close(proc_open("php include/notifier.php \"$url\" \"drop\" \"$drop_id\" & ",
+						proc_close(proc_open("\"php_path\" \"include/notifier.php\" \"$url\" \"drop\" \"$drop_id\" & ",
 							array(),$foo));
 
 				}
@@ -160,11 +161,12 @@ function photos_post(&$a) {
 
 				$url = $a->get_baseurl();
 				$drop_id = intval($i[0]['id']);
-
+				$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
+				
 				// send the notification upstream/downstream as the case may be
 
 				if($i[0]['visible'])
-					proc_close(proc_open("php include/notifier.php \"$url\" \"drop\" \"$drop_id\" & ",
+					proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"$url\" \"drop\" \"$drop_id\" & ",
 						array(),$foo));
 			}
 		}

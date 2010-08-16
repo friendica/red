@@ -34,7 +34,7 @@ function dfrn_poll_init(&$a) {
 				if((int) $xml->status == 1) {
 					$_SESSION['authenticated'] = 1;
 					$_SESSION['visitor_id'] = $r[0]['id'];
-					$_SESSION['sysmsg'] .= "Hi {$r[0]['name']}" . EOL;
+					notice( t('Hi ') . $r[0]['name'] . EOL);
 					// Visitors get 1 day session.
 					$session_id = session_id();
 					$expire = time() + 86400;

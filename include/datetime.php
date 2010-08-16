@@ -8,8 +8,8 @@ function timezone_cmp($a, $b) {
 	}
 	if(strstr($a,'/')) return -1;
 	if(strstr($b,'/')) return  1;
-	if ($a == $b) return 0;
-	return ($a < $b) ? -1 : 1;
+	if ( t($a) == t($b)) return 0;
+	return ( t($a) < t($b)) ? -1 : 1;
 }}
 
 
@@ -29,7 +29,7 @@ function select_timezone($current = 'America/Los_Angeles') {
 				if($continent != '')
 					$o .= '</optgroup>';
 				$continent = $ex[0];
-				$o .= "<optgroup label=\"$continent\">";
+				$o .= '<optgroup label="' . t($continent) . '">';
 			}
 			if(count($ex) > 2)
 				$city = substr($value,strpos($value,'/')+1);
@@ -41,10 +41,10 @@ function select_timezone($current = 'America/Los_Angeles') {
 			if($continent != 'Miscellaneous') {
 				$o .= '</optgroup>';
 				$continent = 'Miscellaneous';
-				$o .= "<optgroup label=\"$continent\">";	
+				$o .= '<optgroup label="' . t($continent) . '">';	
 			}
 		}
-		$city = str_replace('_', ' ', $city);
+		$city = str_replace('_', ' ',  t($city));
 		$selected = (($value == $current) ? " selected=\"selected\" " : "");
 		$o .= "<option value=\"$value\" $selected >$city</option>";
 	}    
@@ -101,56 +101,36 @@ function datesel($pre,$ymin,$ymax,$allow_blank,$y,$m,$d) {
 }}
 
 
-// TODO rewrite this buggy sucker
+if(! function_exists('relative_date')) {
 function relative_date($posted_date) {
 
 	$localtime = datetime_convert('UTC',date_default_timezone_get(),$posted_date); 
+
+	$abs = strtotime($localtime);
+	$etime = time() - $abs;
     
-	$in_seconds = strtotime($localtime);
-
-    	$diff = time() - $in_seconds;
+	if ($etime < 1) {
+		return t('less than a second ago');
+	}
     
-	$months = floor($diff/2592000);
-    	$diff -= $months*2419200;
-    	$weeks = floor($diff/604800);
-    	$diff -= $weeks*604800;
-    	$days = floor($diff/86400);
-    	$diff -= $days*86400;
-    	$hours = floor($diff/3600);
-    	$diff -= $hours*3600;
-    	$minutes = floor($diff/60);
-    	$diff -= $minutes*60;
-    	$seconds = $diff;
-
-	if($months > 2)
-		return(datetime_convert('UTC',date_default_timezone_get(),$posted_date,'\o\n Y-m-d \a\t H:i:s'));
-    if ($months>0) {
-        // over a month old,
-        return 'over a month ago';
-    } else {
-        if ($weeks>0) {
-            // weeks and days
-            $relative_date .= ($relative_date?', ':'').$weeks.' week'.($weeks!=1 ?'s':'');
-
-        } elseif ($days>0) {
-            // days and hours
-            $relative_date .= ($relative_date?', ':'').$days.' day'.($days!=1?'s':'');
-
-        } elseif ($hours>0) {
-            // hours and minutes
-            $relative_date .= ($relative_date?', ':'').$hours.' hour'.($hours!=1?'s':'');
-
-        } elseif ($minutes>0) {
-            // minutes only
-            $relative_date .= ($relative_date?', ':'').$minutes.' minute'.($minutes!=1?'s':'');
-        } else {
-            // seconds only
-            $relative_date .= ($relative_date?', ':'').$seconds.' second'.($seconds!=1?'s':'');
+	$a = array( 12 * 30 * 24 * 60 * 60  =>  array( t('year'),   t('years')),
+		    30 * 24 * 60 * 60       =>  array( t('month'),  t('months')),
+		    7  * 24 * 60 * 60       =>  array( t('week'),   t('weeks')),
+		    24 * 60 * 60            =>  array( t('day'),    t('days')),
+		    60 * 60                 =>  array( t('hour'),   t('hours')),
+		    60                      =>  array( t('minute'), t('minutes')),
+		    1                       =>  array( t('second'), t('seconds'))
+	);
+    
+	foreach ($a as $secs => $str) {
+	$d = $etime / $secs;
+	if ($d >= 1) {
+		$r = round($d);
+		return $r . ' ' . (($r == 1) ? $str[0] : $str[1]) . t(' ago');
         }
     }
-    // show relative date and add proper verbiage
-    return $relative_date.' ago';
-}
+}}
+
 
 function age($dob,$owner_tz = '',$viewer_tz = '') {
 	if(! intval($dob))
