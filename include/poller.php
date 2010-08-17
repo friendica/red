@@ -15,10 +15,9 @@ require_once('datetime.php');
 require_once('simplepie/simplepie.inc');
 require_once('include/items.php');
 
-if($argc < 2)
-	exit;
-dbg(3);
-	$a->set_baseurl($argv[1]);
+
+
+	$a->set_baseurl(get_config('system','url'));
 
 	$contacts = q("SELECT * FROM `contact` WHERE `dfrn-id` != '' AND `self` = 0 AND `blocked` = 0 AND `readonly` = 0 ORDER BY RAND()");
 

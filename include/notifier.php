@@ -1,6 +1,7 @@
 <?php
 
-print_r($argv);
+$debugging = false;
+
 require_once("boot.php");
 
 $a = new App;
@@ -13,19 +14,21 @@ $db = new dba($db_host, $db_user, $db_pass, $db_data, $install);
 require_once("session.php");
 require_once("datetime.php");
 
-if($argc < 3)
+if($argc < 2)
 	exit;
-dbg(3);
+
+	$a->set_baseurl(get_config('system',url'));
+
 	$baseurl = $argv[1];
 	$a->set_baseurl($argv[1]);
 
-	$cmd = $argv[2];
+	$cmd = $argv[1];
 
 	switch($cmd) {
 
 		case 'mail':
 		default:
-			$item_id = intval($argv[3]);
+			$item_id = intval($argv[2]);
 			if(! $item_id)
 				killme();
 			break;
@@ -233,7 +236,10 @@ dbg(3);
 		}
 	}
 	$atom .= "</feed>\r\n";
-echo $atom;
+
+	if($debugging)
+		echo $atom;
+
 	// create a clone of this feed but with comments disabled to send to those who can't respond. 
 
 	$atom_nowrite = str_replace('<dfrn:comment-allow>1','<dfrn:comment-allow>0',$atom);
@@ -265,7 +271,10 @@ echo $atom;
 		$url = $rr['notify'] . '?dfrn_id=' . $rr['dfrn-id'];
 
 		$xml = fetch_url($url);
-echo $xml;
+
+		if($debugging)
+			echo $xml;
+
 		if(! $xml)
 			continue;
 
@@ -302,7 +311,9 @@ echo $xml;
 		}
 
 		$xml = post_url($rr['notify'],$postvars);
-echo $xml;
+
+		if($debugging)
+			echo $xml;
 
 		$res = simplexml_load_string($xml);
 
