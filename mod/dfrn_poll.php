@@ -167,20 +167,22 @@ function dfrn_poll_content(&$a) {
 
 		$r = q("SELECT * FROM `contact` WHERE `issued-id` = '%s' AND `blocked` = 0 AND `pending` = 0 LIMIT 1",
 			dbesc($_GET['dfrn_id']));
-		if((! count($r)) || (! strlen($r[0]['prvkey'])))
-			$status = 1;
+		if((count($r)) && (strlen($r[0]['prvkey']))) {
 
-		$challenge = '';
+			$challenge = '';
 
-		openssl_private_encrypt($hash,$challenge,$r[0]['prvkey']);
-		$challenge = bin2hex($challenge);
+			openssl_private_encrypt($hash,$challenge,$r[0]['prvkey']);
+			$challenge = bin2hex($challenge);
 
-		$encrypted_id = '';
-		$id_str = $_GET['dfrn_id'] . '.' . mt_rand(1000,9999);
+			$encrypted_id = '';
+			$id_str = $_GET['dfrn_id'] . '.' . mt_rand(1000,9999);
 
-		openssl_private_encrypt($id_str,$encrypted_id,$r[0]['prvkey']);
-		$encrypted_id = bin2hex($encrypted_id);
-
+			openssl_private_encrypt($id_str,$encrypted_id,$r[0]['prvkey']);
+			$encrypted_id = bin2hex($encrypted_id);
+		}
+		else {
+			$status = 1;  // key not found
+		}
 
 		echo '<?xml version="1.0" encoding="UTF-8"?><dfrn_poll><status>' .$status . '</status><dfrn_id>' . $encrypted_id . '</dfrn_id>'
 			. '<challenge>' . $challenge . '</challenge></dfrn_poll>' . "\r\n" ;

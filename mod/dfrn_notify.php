@@ -26,19 +26,12 @@ function dfrn_notify_post(&$a) {
 	$r = q("SELECT `contact`.*, `contact`.`uid` AS `importer_uid`, `user`.* FROM `contact` LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid` WHERE `issued-id` = '%s' LIMIT 1",
 		dbesc($dfrn_id)
 	);
+
 	if(! count($r)) {
 		xml_status(3);
 		return; //NOTREACHED
 	}
 
-	// We aren't really interested in anything this person has to say. But be polite and make them 
-	// think we're listening intently by acknowledging receipt of their communications - which we quietly ignore.
-
-	if($r[0]['readonly']) {
-		xml_status(0);
-		return; //NOTREACHED
-	}
-		
 	$importer = $r[0];
 
 	$feed = new SimplePie();
@@ -50,6 +43,14 @@ function dfrn_notify_post(&$a) {
 
 	$rawmail = $feed->get_feed_tags( NAMESPACE_DFRN, 'mail' );
 	if(isset($rawmail[0]['child'][NAMESPACE_DFRN])) {
+
+		if($importer['readonly']) {
+			// We aren't receiving email from this person. But we will quietly ignore them
+			// rather than a blatant "go away" message.
+			xml_status(0);
+			return; //NOTREACHED
+		}
+
 		$ismail = true;
 		$base = $rawmail[0]['child'][NAMESPACE_DFRN];
 
@@ -94,6 +95,12 @@ function dfrn_notify_post(&$a) {
 		xml_status(0);
 		return; // NOTREACHED
 	}	
+
+	if($importer['readonly']) {
+
+		xml_status(0);
+		return; // NOTREACHED
+	}
 
 	foreach($feed->get_items() as $item) {
 
