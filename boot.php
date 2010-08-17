@@ -10,10 +10,10 @@ define ( 'REGISTER_CLOSED',  0);
 define ( 'REGISTER_APPROVE', 1);
 define ( 'REGISTER_OPEN',    2);
 
-define ( 'DIRECTION_ANY',  0);
-define ( 'DIRECTION_IN',   1);
-define ( 'DIRECTION_OUT',  2);
-define ( 'DIRECTION_BOTH', 3);
+define ( 'DIRECTION_NONE', 0);			// No relationship
+define ( 'DIRECTION_IN',   1);			// VIP e.g. has FAN
+define ( 'DIRECTION_OUT',  2);			// FAN to a VIP
+define ( 'DIRECTION_BOTH', 3);			// Mutual Friends
 
 define ( 'NOTIFY_INTRO',   0x0001 );
 define ( 'NOTIFY_CONFIRM', 0x0002 );

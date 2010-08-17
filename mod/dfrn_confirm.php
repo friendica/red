@@ -44,6 +44,8 @@ function dfrn_confirm_post(&$a) {
 			xml_status(3); 
 		}
 
+		$relation = $r[0]['rel'];
+
 		// Decrypt all this stuff we just received
 
 		$foreign_pubkey = $ret[0]['site-pubkey'];
@@ -116,9 +118,10 @@ function dfrn_confirm_post(&$a) {
 				$thumb = $a->get_baseurl() . '/images/default-profile-sm.jpg';
 			}
 
-			$r = q("UPDATE `contact` SET `photo` = '%s', `thumb` = '%s', `name-date` = '%s', `uri-date` = '%s', `avatar-date` = '%s', `blocked` = 0, `pending` = 0 WHERE `id` = %d LIMIT 1",
+			$r = q("UPDATE `contact` SET `photo` = '%s', `thumb` = '%s', `rel` = %d, `name-date` = '%s', `uri-date` = '%s', `avatar-date` = '%s', `blocked` = 0, `pending` = 0 `network` = 'dfrn' WHERE `id` = %d LIMIT 1",
 				dbesc($photo),
 				dbesc($thumb),
+				intval(($relation == DIRECTION_IN) ? DIRECTION_BOTH: DIRECTION_OUT),
 				dbesc(datetime_convert()),
 				dbesc(datetime_convert()),
 				dbesc(datetime_convert()),
@@ -189,6 +192,7 @@ function dfrn_confirm_post(&$a) {
 		}
 
 		$contact_id = $r[0]['id'];
+		$relation = $r[0]['rel'];
 		$site_pubkey = $r[0]['site-pubkey'];
 		$dfrn_confirm = $r[0]['confirm'];
 		$aes_allow = $r[0]['aes_allow'];
@@ -325,9 +329,10 @@ function dfrn_confirm_post(&$a) {
 			$thumb = $a->get_baseurl() . '/images/default-profile-sm.jpg';
 		}
 
-		$r = q("UPDATE `contact` SET `photo` = '%s', `thumb` = '%s', `name-date` = '%s', `uri-date` = '%s', `avatar-date` = '%s', `blocked` = 0, `pending` = 0 WHERE `id` = %d LIMIT 1",
+		$r = q("UPDATE `contact` SET `photo` = '%s', `thumb` = '%s', `rel` = %d, `name-date` = '%s', `uri-date` = '%s', `avatar-date` = '%s', `blocked` = 0, `pending` = 0 `network` = 'dfrn' WHERE `id` = %d LIMIT 1",
 			dbesc($photo),
 			dbesc($thumb),
+			intval(($relation == DIRECTION_OUT) ? DIRECTION_BOTH: DIRECTION_IN),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),

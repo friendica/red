@@ -230,7 +230,7 @@ function contacts_content(&$a) {
 		case DIRECTION_OUT :
 			$sql_extra2 = " AND `dfrn-id` != '' AND `issued-id` = '' ";
 			break;
-		case DIRECTION_ANY :
+		case DIRECTION_NONE :
 		default:
 			$sql_extra2 = '';
 			break;
