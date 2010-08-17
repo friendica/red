@@ -118,7 +118,7 @@ function dfrn_confirm_post(&$a) {
 				$thumb = $a->get_baseurl() . '/images/default-profile-sm.jpg';
 			}
 
-			$r = q("UPDATE `contact` SET `photo` = '%s', `thumb` = '%s', `rel` = %d, `name-date` = '%s', `uri-date` = '%s', `avatar-date` = '%s', `blocked` = 0, `pending` = 0 `network` = 'dfrn' WHERE `id` = %d LIMIT 1",
+			$r = q("UPDATE `contact` SET `photo` = '%s', `thumb` = '%s', `rel` = %d, `name-date` = '%s', `uri-date` = '%s', `avatar-date` = '%s', `blocked` = 0, `pending` = 0, `network` = 'dfrn' WHERE `id` = %d LIMIT 1",
 				dbesc($photo),
 				dbesc($thumb),
 				intval(($relation == DIRECTION_IN) ? DIRECTION_BOTH: DIRECTION_OUT),
@@ -329,7 +329,7 @@ function dfrn_confirm_post(&$a) {
 			$thumb = $a->get_baseurl() . '/images/default-profile-sm.jpg';
 		}
 
-		$r = q("UPDATE `contact` SET `photo` = '%s', `thumb` = '%s', `rel` = %d, `name-date` = '%s', `uri-date` = '%s', `avatar-date` = '%s', `blocked` = 0, `pending` = 0 `network` = 'dfrn' WHERE `id` = %d LIMIT 1",
+		$r = q("UPDATE `contact` SET `photo` = '%s', `thumb` = '%s', `rel` = %d, `name-date` = '%s', `uri-date` = '%s', `avatar-date` = '%s', `blocked` = 0, `pending` = 0, `network` = 'dfrn' WHERE `id` = %d LIMIT 1",
 			dbesc($photo),
 			dbesc($thumb),
 			intval(($relation == DIRECTION_OUT) ? DIRECTION_BOTH: DIRECTION_IN),
