@@ -16,7 +16,7 @@ function install_post(&$a) {
 
 	$db = new dba($dbhost, $dbuser, $dbpass, $dbdata, $true);
 
-	if(! $db->getdb()) {
+	if(mysqli_connect_errno()) {
 		notice( t('Could not connect to database.') . EOL);
 		return;
 	}

@@ -46,7 +46,7 @@ class dba {
 			else
 				$mesg = $result->num_rows.' results' . EOL;
         
-			$str =  'SQL = ' . $sql . EOL . 'SQL returned ' . $mesg . EOL;
+			$str =  'SQL = ' . printable($sql) . EOL . 'SQL returned ' . $mesg . EOL;
 
 			switch($this->debug) {
 				case 3:

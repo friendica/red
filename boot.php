@@ -241,6 +241,14 @@ function fetch_url($url,$binary = false) {
 	curl_setopt($ch, CURLOPT_FOLLOWLOCATION,true);
 	curl_setopt($ch, CURLOPT_MAXREDIRS,8);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+	$prx = get_config('system','proxy');
+	if(strlen($prx)) {
+		curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
+		curl_setopt($ch, CURLOPT_PROXY, $prx);
+		$prxusr = get_config('system','proxyuser');
+		if(strlen($prxusr))
+			curl_setopt($ch, CURLOPT_PROXYUSERPWD, $prxusr);
+	}
 	if($binary)
 		curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
 
@@ -261,6 +269,14 @@ function post_url($url,$params) {
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 	curl_setopt($ch, CURLOPT_POST,1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
+	$prx = get_config('system','proxy');
+	if(strlen($prx)) {
+		curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
+		curl_setopt($ch, CURLOPT_PROXY, $prx);
+		$prxusr = get_config('system','proxyuser');
+		if(strlen($prxusr))
+			curl_setopt($ch, CURLOPT_PROXYUSERPWD, $prxusr);
+	}
 
 	$s = curl_exec($ch);
 	curl_close($ch);
