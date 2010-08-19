@@ -579,11 +579,12 @@ function load_config($family) {
 
 
 if(! function_exists('get_config')) {
-function get_config($family,$key) {
+function get_config($family, $key, $instore = false) {
 	global $a;
-	if(isset($a->config[$family][$key]))
-		return $a->config[$family][$key];
-
+	if(! $instore) {
+		if(isset($a->config[$family][$key]))
+			return $a->config[$family][$key];
+	}
 	$ret = q("SELECT `v` FROM `config` WHERE `cat` = '%s' AND `k` = '%s' LIMIT 1",
 		dbesc($family),
 		dbesc($key)
@@ -601,7 +602,7 @@ function set_config($family,$key,$value) {
 	global $a;
 	$a->config[$family][$key] = $value;
 
-	if(get_config($family,$key) === false) {
+	if(get_config($family,$key,true) === false) {
 		$ret = q("INSERT INTO `config` ( `cat`, `k`, `v` ) VALUES ( '%s', '%s', '%s' ) ",
 			dbesc($family),
 			dbesc($key),
@@ -611,7 +612,7 @@ function set_config($family,$key,$value) {
 			return $value;
 		return $ret;
 	}
-	$ret = q("SUPDATE `config` SET `v` = '%s' WHERE `cat` = '%s' AND `k` = '%s' LIMIT 1",
+	$ret = q("UPDATE `config` SET `v` = '%s' WHERE `cat` = '%s' AND `k` = '%s' LIMIT 1",
 		dbesc($value),
 		dbesc($family),
 		dbesc($key)
