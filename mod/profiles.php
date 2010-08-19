@@ -53,7 +53,7 @@ function profiles_post(&$a) {
 		$postal_code = notags(trim($_POST['postal_code']));
 		$country_name = notags(trim($_POST['country_name']));
 
-		$marital = notags(trim(implode(', ',$_POST['marital'])));
+		$marital = notags(trim($_POST['marital']));
 		if($marital != $orig[0]['marital'])
 			$maritalchanged = true;
 
