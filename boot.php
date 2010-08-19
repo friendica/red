@@ -170,6 +170,8 @@ function system_unavailable() {
 if(! function_exists('check_config')) {
 function check_config(&$a) {
 
+	load_config('system');
+
 	$build = get_config('system','build');
 	if(! x($build))
 		$build = set_config('system','build',BUILD_ID);
@@ -560,19 +562,45 @@ function sanitise_acl(&$item) {
 		unset($item);
 }}
 
+if(! function_exists('load_config')) {
+function load_config($family) {
+	global $a;
+	$r = q("SELECT * FROM `config` WHERE `cat` = '%s'",
+		dbesc($family)
+	);
+	if(count($r)) {
+		foreach($r as $rr) {
+			$k = $rr['k'];
+			$a->config[$family][$k] = $rr['v'];
+		}
+	}
+}}
+
+
+
 if(! function_exists('get_config')) {
 function get_config($family,$key) {
+	global $a;
+	if(isset($a->config[$family][$key]))
+		return $a->config[$family][$key];
+
 	$ret = q("SELECT `v` FROM `config` WHERE `cat` = '%s' AND `k` = '%s' LIMIT 1",
 		dbesc($family),
 		dbesc($key)
 	);
-	if(count($ret))
+	if(count($ret)) {
+		$a->config[$family][$key] = $ret[0]['v'];
 		return $ret[0]['v'];
+	}
 	return false;
 }}
 
 if(! function_exists('set_config')) {
 function set_config($family,$key,$value) {
+
+	global $a;
+	$a->config[$family][$key] = $value;
+
 	if(get_config($family,$key) === false) {
 		$ret = q("INSERT INTO `config` ( `cat`, `k`, `v` ) VALUES ( '%s', '%s', '%s' ) ",
 			dbesc($family),

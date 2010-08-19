@@ -25,7 +25,7 @@ function dfrn_poll_init(&$a) {
 
 		$r = q("SELECT `contact`.*, `user`.`nickname` 
 			FROM `contact` LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid`
-			WHERE `issued-id` = '%s' LIMIT 1",
+			WHERE `dfrn-id` = '%s' LIMIT 1",
 			dbesc($dfrn_id));
 		if(count($r)) {
 			$s = fetch_url($r[0]['poll'] . '?dfrn_id=' . $dfrn_id . '&type=profile-check');

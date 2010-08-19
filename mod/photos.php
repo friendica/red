@@ -766,10 +766,9 @@ function photos_content(&$a) {
 
 					$profile_url = $item['url'];
 
-
-					if(local_user() && ($item['contact-uid'] == $_SESSION['uid']) && (strlen($item['dfrn-id'])) && (! $item['self'] ))
+					if(local_user() && ($item['contact-uid'] == $_SESSION['uid']) 
+						&& ($item['rel'] == DIRECTION_IN || $item['rel'] == DIRECTION_BOTH) && (! $item['self'] ))
 						$profile_url = $redirect_url;
-
  
 					$profile_name = ((strlen($item['author-name'])) ? $item['author-name'] : $item['name']);
 					$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $item['thumb']);

@@ -42,3 +42,7 @@ $a->config['max_import_size'] = 65535;
 // Location of PHP command line processor
 
 $a->config['php_path'] = '$phpath';
+
+// Location of global directory submission page.
+
+$a->config['system']['directory_submit_url'] = 'http://dir.dfrn.org/submit';

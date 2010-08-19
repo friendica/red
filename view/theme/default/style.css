@@ -501,6 +501,8 @@ input#dfrn-url {
 #profile-edit-religion,
 #profile-in-dir-yes,
 #profile-in-dir-no,
+#profile-in-netdir-yes,
+#profile-in-netdir-no,
 #hide-friends-yes,
 #hide-friends-no {
 	float: left;
@@ -509,6 +511,8 @@ input#dfrn-url {
 
 #profile-in-dir-yes-label, 
 #profile-in-dir-no-label,
+#profile-in-netdir-yes-label, 
+#profile-in-netdir-no-label,
 #hide-friends-yes-label,
 #hide-friends-no-label {
 	margin-left: 125px;
@@ -537,6 +541,8 @@ input#dfrn-url {
 #profile-edit-homepage-end,
 #profile-in-dir-break, 
 #profile-in-dir-end,
+#profile-in-netdir-break, 
+#profile-in-netdir-end,
 #hide-friends-break,
 #hide-friends-end {
 	clear: both;
@@ -829,7 +835,7 @@ input#dfrn-url {
 }
 
 #directory-search-wrapper {
-	margin-left: 350px;
+	margin-top: 20px;
 	margin-right: 20px;
 	margin-bottom: 50px;
 }

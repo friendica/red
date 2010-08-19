@@ -264,7 +264,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `region` char(255) NOT NULL,
   `postal-code` char(32) NOT NULL,
   `country-name` char(255) NOT NULL,
-  `gender` char(8) NOT NULL,
+  `gender` char(32) NOT NULL,
   `marital` char(255) NOT NULL,
   `sexual` char(255) NOT NULL,
   `politic` char(255) NOT NULL,
@@ -284,6 +284,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `photo` char(255) NOT NULL,
   `thumb` char(255) NOT NULL,
   `publish` tinyint(1) NOT NULL DEFAULT '0',
+  `net-publish` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 

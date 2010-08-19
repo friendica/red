@@ -12,7 +12,7 @@ if(x($_SESSION['uid'])) {
 		$a->page['nav'] .= '<a id="nav-register-link" class="nav-commlink" href="register" >' 
 			. t('Register') . "</a>\r\n";
 
-	$a->page['nav'] .= '<a id="nav-directory-link" class="nav-link" href="directory">' . t('Site Directory') . "</a>\r\n";
+	$a->page['nav'] .= '<a id="nav-directory-link" class="nav-link" href="directory">' . t('Directory') . "</a>\r\n";
 
 	if(x($_SESSION,'uid')) {
 

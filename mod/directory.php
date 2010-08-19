@@ -9,6 +9,8 @@ function directory_content(&$a) {
 
 	$tpl .= file_get_contents('view/directory_header.tpl');
 
+	
+
 	$o .= replace_macros($tpl, array(
 		'$search' => $search,
 		'$finding' => (strlen($search) ? '<h4>' . t('Finding: ') . "'" . $search . "'" . '</h4>' : "")

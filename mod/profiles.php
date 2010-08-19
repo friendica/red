@@ -4,7 +4,7 @@
 function profiles_post(&$a) {
 
 	if(! local_user()) {
-		notice( "Permission denied." . EOL);
+		notice( t('Permission denied.') . EOL);
 		return;
 	}
 
@@ -16,14 +16,14 @@ function profiles_post(&$a) {
 			intval($_SESSION['uid'])
 		);
 		if(! count($orig)) {
-			$_SESSION['sysmsg'] .= "Profile not found." . EOL;
+			notice( t('Profile not found.') . EOL);
 			return;
 		}
 		$is_default = (($orig[0]['is-default']) ? 1 : 0);
 
 		$profile_name = notags(trim($_POST['profile_name']));
 		if(! strlen($profile_name)) {
-			$a->$_SESSION['sysmsg'] .= "Profile Name is required." . EOL;
+			notify( t('Profile Name is required.') . EOL);
 			return;
 		}
 	
@@ -74,6 +74,9 @@ function profiles_post(&$a) {
 		$education = escape_tags(trim($_POST['education']));
 		if(x($_POST,'profile_in_directory'))
 			$publish = (($_POST['profile_in_directory'] == 1) ? 1: 0);
+		if(x($_POST,'profile_in_netdirectory'))
+			$net_publish = (($_POST['profile_in_netdirectory'] == 1) ? 1: 0);
+
 
 		$r = q("UPDATE `profile` 
 			SET `profile-name` = '%s',
@@ -130,14 +133,15 @@ function profiles_post(&$a) {
 		);
 
 		if($r)
-			$_SESSION['sysmsg'] .= "Profile updated." . EOL;
+			notice( t('Profile updated.') . EOL);
 
 
 		if($is_default) {
 			$r = q("UPDATE `profile` 
-			SET `publish` = %d
+			SET `publish` = %d, `net-publish` = %d
 			WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($publish),
+			intval($net_publish),
 			intval($a->argv[1]),
 			intval($_SESSION['uid'])
 
@@ -149,11 +153,15 @@ function profiles_post(&$a) {
 				intval($_SESSION['uid'])
 			);
 		}
-
+		if($is_default) {
+			// Update global directory in background
+			$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
+			$url = $_SESSION['my_url'];
+			if($url && strlen(get_config('system','directory_submit_url')))
+				proc_close(proc_open("\"$php_path\" \"include/directory.php\" \"$url\" &",
+					array(),$foo));
+		}
 	}
-
-
-
 }
 
 
@@ -161,7 +169,7 @@ function profiles_post(&$a) {
 
 function profiles_content(&$a) {
 	if(! local_user()) {
-		$_SESSION['sysmsg'] .= "Unauthorised." . EOL;
+		notice( t('Permission denied.') . EOL);
 		return;
 	}
 
@@ -171,7 +179,7 @@ function profiles_content(&$a) {
 			intval($_SESSION['uid'])
 		);
 		if(! count($r)) {
-			$_SESSION['sysmsg'] .= "Profile not found." . EOL;
+			notice( t('Profile not found.') . EOL);
 			goaway($a->get_baseurl() . '/profiles');
 			return; // NOTREACHED
 		}
@@ -187,7 +195,7 @@ function profiles_content(&$a) {
 			intval($a->argv[2])
 		);
 		if($r)
-			notice("Profile deleted." . EOL);
+			notice( t('Profile deleted.') . EOL);
 
 		goaway($a->get_baseurl() . '/profiles');
 		return; // NOTREACHED
@@ -203,7 +211,7 @@ function profiles_content(&$a) {
 			intval($_SESSION['uid']));
 		$num_profiles = count($r0);
 
-		$name = "Profile-" . ($num_profiles + 1);
+		$name = t('Profile-') . ($num_profiles + 1);
 
 		$r1 = q("SELECT `name`, `photo`, `thumb` FROM `profile` WHERE `uid` = %d AND `is-default` = 1 LIMIT 1",
 			intval($_SESSION['uid']));
@@ -221,7 +229,7 @@ function profiles_content(&$a) {
 			intval($_SESSION['uid']),
 			dbesc($name)
 		);
-		$_SESSION['sysmsg'] .= "New profile created." . EOL;
+		notice( t('New profile created.') . EOL);
 		if(count($r3) == 1)
 			goaway($a->get_baseurl() . '/profiles/' . $r3[0]['id']);
 		goaway($a->get_baseurl() . '/profiles');
@@ -233,13 +241,13 @@ function profiles_content(&$a) {
 			intval($_SESSION['uid']));
 		$num_profiles = count($r0);
 
-		$name = "Profile-" . ($num_profiles + 1);
+		$name = t('Profile-') . ($num_profiles + 1);
 		$r1 = q("SELECT * FROM `profile` WHERE `uid` = %d AND `id` = %d LIMIT 1",
 			intval($_SESSION['uid']),
 			intval($a->argv[2])
 		);
 		if(! count($r1)) {
-			notice("Profile unavailable to clone." . EOL);
+			notice( t('Profile unavailable to clone.') . EOL);
 			return;
 		}
 		unset($r1[0]['id']);
@@ -259,7 +267,7 @@ function profiles_content(&$a) {
 			intval($_SESSION['uid']),
 			dbesc($name)
 		);
-		$_SESSION['sysmsg'] .= "New profile created." . EOL;
+		notice( t('New profile created.') . EOL);
 		if(count($r3) == 1)
 			goaway($a->get_baseurl() . '/profiles/' . $r3[0]['id']);
 	goaway($a->get_baseurl() . '/profiles');
@@ -273,7 +281,7 @@ function profiles_content(&$a) {
 			intval($_SESSION['uid'])
 		);
 		if(! count($r)) {
-			$_SESSION['sysmsg'] .= "Profile not found." . EOL;
+			notice( t('Profile not found.') . EOL);
 			return;
 		}
 
@@ -288,6 +296,18 @@ function profiles_content(&$a) {
 			'$yes_selected' => (($r[0]['publish']) ? " checked=\"checked\" " : ""),
 			'$no_selected' => (($r[0]['publish'] == 0) ? " checked=\"checked\" " : "")
 		));
+
+		if(strlen(get_config('system','directory_submit_url'))) {
+			$opt_tpl = file_get_contents("view/profile-in-netdir.tpl");
+
+			$profile_in_net_dir = replace_macros($opt_tpl,array(
+				'$yes_selected' => (($r[0]['net-publish']) ? " checked=\"checked\" " : ""),
+				'$no_selected' => (($r[0]['net-publish'] == 0) ? " checked=\"checked\" " : "")
+			));
+		}
+		else
+			$profile_in_net_dir = '';
+
 
 		$opt_tpl = file_get_contents("view/profile-hide-friends.tpl");
 		$hide_friends = replace_macros($opt_tpl,array(
@@ -310,7 +330,7 @@ function profiles_content(&$a) {
 			'$baseurl' => $a->get_baseurl(),
 			'$profile_id' => $r[0]['id'],
 			'$profile_name' => $r[0]['profile-name'],
-			'$default' => (($is_default) ? "<p id=\"profile-edit-default-desc\">This is your <strong>public</strong> profile.<br />It <strong>may</strong> be visible to anybody using the internet.</p>" : ""),
+			'$default' => (($is_default) ? '<p id="profile-edit-default-desc">' . t('This is your <strong>public</strong> profile.<br />It <strong>may</strong> be visible to anybody using the internet.') . '</p>' : ""),
 			'$name' => $r[0]['name'],
 			'$dob' => dob($r[0]['dob']),
 			'$hide_friends' => $hide_friends,
@@ -319,7 +339,7 @@ function profiles_content(&$a) {
 			'$region' => $r[0]['region'],
 			'$postal_code' => $r[0]['postal-code'],
 			'$country_name' => $r[0]['country-name'],
-			'$age' => ((intval($r[0]['dob'])) ? '(Age: '. age($r[0]['dob'],$a->user['timezone'],$a->user['timezone']) . ')' : ''),
+			'$age' => ((intval($r[0]['dob'])) ? '(' . t('Age: ') . age($r[0]['dob'],$a->user['timezone'],$a->user['timezone']) . ')' : ''),
 			'$gender' => gender_selector($r[0]['gender']),
 			'$marital' => marital_selector($r[0]['marital']),
 			'$sexual' => sexpref_selector($r[0]['sexual']),
@@ -336,7 +356,8 @@ function profiles_content(&$a) {
 			'$work' => $r[0]['work'],
 			'$education' => $r[0]['education'],
 			'$contact' => $r[0]['contact'],
-			'$profile_in_dir' => (($is_default) ? $profile_in_dir : '')
+			'$profile_in_dir' => (($is_default) ? $profile_in_dir : ''),
+			'$profile_in_net_dir' => (($is_default) ? $profile_in_net_dir : '')
 		));
 
 		return $o;

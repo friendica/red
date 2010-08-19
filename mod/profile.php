@@ -64,9 +64,11 @@ function profile_init(&$a) {
 		$profile = $a->argv[1];		
 	}
 	profile_load($a,$which,$profile);
-        $a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . $a->get_baseurl() . '/dfrn_poll/' . $which .'" />';
+        $a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . $a->get_baseurl() . '/dfrn_poll/' . $which .'" />' . "\r\n" ;
 
-	$a->page['htmlhead'] .= "<meta name=\"dfrn-template\" content=\"" . $a->get_baseurl() . "/profile/%s" . "\" />\r\n";
+        $a->page['htmlhead'] .= '<meta name="dfrn-template" content="' . $a->get_baseurl() . "/profile/%s" . '" />' . "\r\n" ;
+        $a->page['htmlhead'] .= '<meta name="dfrn-global-visibility" content="' . (($a->profile['net-publish']) ? 'true' : 'false') . '" />' . "\r\n" ;
+  
 	
 	$dfrn_pages = array('request', 'confirm', 'notify', 'poll');
 	foreach($dfrn_pages as $dfrn)
@@ -99,9 +101,11 @@ function profile_content(&$a, $update = false) {
 		if(count($r))
 			$contact = $r[0];
 	}
-	if(local_user()) {
-		$contact_id = $_SESSION['cid'];
-		$contact = $a->contact;
+	else {
+		if(local_user()) {
+			$contact_id = $_SESSION['cid'];
+			$contact = $a->contact;
+		}
 	}
 
 	if($update) {
@@ -261,7 +265,8 @@ function profile_content(&$a, $update = false) {
 			// This is my profile but I'm not the author of this post/comment. If it's somebody that's a fan or mutual friend,
 			// I can go directly to their profile as an authenticated guest.
 
-			if(local_user() && ($item['contact-uid'] == $_SESSION['uid']) && (strlen($item['dfrn-id'])) && (! $item['self'] ))
+			if(local_user() && ($item['contact-uid'] == $_SESSION['uid']) 
+				&& ($item['rel'] == DIRECTION_IN || $item['rel'] == DIRECTION_BOTH) && (! $item['self'] ))
 				$profile_url = $redirect_url;
 
 			// FIXME tryng to solve the mishmash of profile photos. 
@@ -294,6 +299,7 @@ function profile_content(&$a, $update = false) {
 				'$title' => $item['title'],
 				'$body' => bbcode($item['body']),
 				'$ago' => relative_date($item['created']),
+				'$location' => (($item['location']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : ''),
 				'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
 				'$drop' => $drop,
 				'$comment' => $comment

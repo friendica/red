@@ -8,7 +8,7 @@
 
 	@include(".htconfig.php");
 	require_once("dba.php");
-	$db = new dba($db_host, $db_user, $db_pass, $db_data, $install);
+	$db = new dba($db_host, $db_user, $db_pass, $db_data);
 		unset($db_host, $db_user, $db_pass, $db_data);
 
 	require_once("session.php");

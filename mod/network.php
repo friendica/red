@@ -148,7 +148,8 @@ function network_content(&$a, $update = false) {
 					$template = $wallwall;
 					$commentww = 'ww';
 					// If it is our contact, use a friendly redirect link
-					if($item['owner-link'] == $item['url'])
+					if(($item['owner-link'] == $item['url']) && ($item['rel'] == DIRECTION_IN || $item['rel'] == DIRECTION_BOTH))
+						$owner_url = $redirect_url;
 						$owner_url = $redirect_url;
 
 				}
@@ -179,7 +180,7 @@ function network_content(&$a, $update = false) {
 
 
 	
-			if(($item['contact-uid'] == $_SESSION['uid']) && (strlen($item['dfrn-id'])) && (! $item['self'] ))
+			if(($item['contact-uid'] == $_SESSION['uid']) && ($item['rel] == DIRECTION_IN || $item['rel'] == DIRECTION_BOTH) && (! $item['self'] ))
 				$profile_url = $redirect_url;
 
 			$photo = $item['photo'];
@@ -211,6 +212,7 @@ function network_content(&$a, $update = false) {
 				'$title' => $item['title'],
 				'$body' => bbcode($item['body']),
 				'$ago' => relative_date($item['created']),
+				'$location' => (($item['location']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : ''),
 				'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
 				'$owner_url' => $owner_url,
 				'$owner_photo' => $owner_photo,

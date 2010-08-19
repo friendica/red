@@ -8,6 +8,7 @@
 		<div class="wall-item-wrapper" id="wall-item-wrapper-$id" >
 			<a href="$profile_url" title="View $name's profile" class="wall-item-name-link"><span class="wall-item-name" id="wall-item-name-$id" >$name</span></a>
 			<div class="wall-item-ago"  id="wall-item-ago-$id">$ago</div>
+			<div class="wall-item-location" id="wall-item-location-$id">$location</div>
 		</div>
 		<div class="wall-item-content" id="wall-item-content-$id" >
 			<div class="wall-item-title" id="wall-item-title-$id">$title</div>
