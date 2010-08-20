@@ -1,5 +1,5 @@
 <p id="profile-in-directory">
-Publish this profile in site directory? 
+Publish your default profile in site directory? 
 </p>
 
 		<div id="profile-in-dir-yes-wrapper">
