@@ -664,7 +664,7 @@ function photos_content(&$a) {
 			dbesc($datum)
 		);
 		if(count($i1)) {
-//dbg(2);
+
 			$r = q("SELECT COUNT(*) AS `total`
 				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 				WHERE `parent-uri` = '%s' AND `uri` != '%s' AND `item`.`deleted` = 0

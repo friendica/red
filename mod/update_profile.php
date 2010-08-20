@@ -16,7 +16,6 @@ function update_profile_content(&$a) {
         // The only ones we need to fetch are those for new page additions, which we'll discover
         // on the client side and then swap the image back.
 
-
         $text = profile_content($a,true);
         $pattern = "/<img([^>]*) src=\"([^\"]*)\"/";
         $replace = "<img\${1} dst=\"\${2}\"";

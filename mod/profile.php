@@ -51,12 +51,12 @@ function profile_init(&$a) {
 
 	if((remote_user()) && ($a->argc > 2) && ($a->argv[2] == 'visit'))
 		$_SESSION['is_visitor'] = 1;
-	else {
-		unset($_SESSION['is_visitor']);
-		unset($_SESSION['visitor_id']);
-		if(! $_SESSION['uid'])
-			unset($_SESSION['authenticated']);
-	}
+//	else {
+//		unset($_SESSION['is_visitor']);
+//		unset($_SESSION['visitor_id']);
+//		if(! $_SESSION['uid'])
+//			unset($_SESSION['authenticated']);
+//	}
 
 	$profile = 0;
 	if((local_user()) && ($a->argc > 2) && ($a->argv[2] == 'view')) {
@@ -87,33 +87,39 @@ function profile_content(&$a, $update = false) {
 	$tab = 'posts';
 
 
-	if(! $update) {
+	if($update) {
+		// Ensure we've got a profile owner if updating.
+		$a->profile['profile_uid'] = $_SESSION['profile_uid'];
+	}
+	else {
+		// set the uid so we can pick it up during update
 		$_SESSION['profile_uid'] = $a->profile['uid'];
 	}
+
+	$contact = null;
+	$remote_contact = false;
 
 	if(remote_user()) {
 		$contact_id = $_SESSION['visitor_id'];
 		$groups = init_groups_visitor($contact_id);
 		$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($contact_id),
-			intval($a->profile['uid'])
+			intval($a->profile['profile_uid'])
 		);
-		if(count($r))
+		if(count($r)) {
 			$contact = $r[0];
+			$remote_contact = true;
+		}
 	}
-	else {
+
+	if(! $remote_contact) {
 		if(local_user()) {
 			$contact_id = $_SESSION['cid'];
 			$contact = $a->contact;
 		}
 	}
 
-	if($update) {
-		// Ensure we've got a profile owner if updating.
-		$a->profile['profile_uid'] = $_SESSION['profile_uid'];
-	}
-
-	else {
+	if(! $update) {
 		if(x($_GET,'tab'))
 			$tab = notags(trim($_GET['tab']));
 
@@ -161,6 +167,9 @@ function profile_content(&$a, $update = false) {
 
 	$sql_extra = " AND `allow_cid` = '' AND `allow_gid` = '' AND `deny_cid` = '' AND `deny_gid` = '' ";
 
+
+
+
 	// Profile owner - everything is visible
 
 	if(local_user() && ($_SESSION['uid'] == $a->profile['uid'])) {
@@ -176,7 +185,10 @@ function profile_content(&$a, $update = false) {
 	}
 
 	// authenticated visitor - here lie dragons
-	elseif(remote_user()) {
+	// If $remotecontact is true, we know that not only is this a remotely authenticated
+	// person, but that it is *our* contact, which is important in multi-user mode.
+
+	elseif($remote_contact) {
 		$gs = '<<>>'; // should be impossible to match
 		if(count($groups)) {
 			foreach($groups as $g)
@@ -201,7 +213,7 @@ function profile_content(&$a, $update = false) {
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
 		AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `type` != 'remote')
 		$sql_extra ",
-		intval($a->profile['uid'])
+		intval($a->profile['profile_uid'])
 
 	);
 
@@ -218,7 +230,7 @@ function profile_content(&$a, $update = false) {
 		AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `type` != 'remote')
 		$sql_extra
 		ORDER BY `parent` DESC, `id` ASC LIMIT %d ,%d ",
-		intval($a->profile['uid']),
+		intval($a->profile['profile_uid']),
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
 
@@ -242,15 +254,14 @@ function profile_content(&$a, $update = false) {
 			$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 			
 
-
-			if(can_write_wall($a,$a->profile['uid'])) {
+			if(can_write_wall($a,$a->profile['profile_uid'])) {
 				if($item['last-child']) {
 					$comment = replace_macros($cmnt_tpl,array(
 						'$return_path' => $_SESSION['return_url'],
 						'$type' => 'wall-comment',
 						'$id' => $item['item_id'],
 						'$parent' => $item['parent'],
-						'$profile_uid' =>  $a->profile['uid'],
+						'$profile_uid' =>  $a->profile['profile_uid'],
 						'$mylink' => $contact['url'],
 						'$mytitle' => t('Me'),
 						'$myphoto' => $contact['thumb'],
@@ -268,11 +279,6 @@ function profile_content(&$a, $update = false) {
 			if(local_user() && ($item['contact-uid'] == $_SESSION['uid']) 
 				&& ($item['rel'] == DIRECTION_IN || $item['rel'] == DIRECTION_BOTH) && (! $item['self'] ))
 				$profile_url = $redirect_url;
-
-			// FIXME tryng to solve the mishmash of profile photos. 
-
-		//	$photo = (($item['self']) ? $a->profile['photo'] : $item['photo']);
-		//	$thumb = (($item['self']) ? $a->profile['thumb'] : $item['thumb']);
 	
 
 			// We received this post via a remote feed. It's either a wall-to-wall or a remote comment. The author is
@@ -287,8 +293,6 @@ function profile_content(&$a, $update = false) {
 
 			if(($item['contact-id'] == $_SESSION['visitor_id']) || ($item['uid'] == $_SESSION['uid']))
 				$drop = replace_macros(file_get_contents('view/wall_item_drop.tpl'), array('$id' => $item['id']));
-
-
 
 
 			$o .= replace_macros($template,array(
