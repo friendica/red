@@ -33,11 +33,9 @@ blockquote:before {
 }
 
 body { 
-	background: #FEFEFE;
+	background: #DDDDDD;
 	color: #444444;
 	font-family: "Lucida Grande", Tahoma, sans-serif;
-/*	letter-spacing: 1px; */
-/*	font-family: verdana, sans-serif; */
 	font-size: 90%;
 	margin-left: 10px;
 }
@@ -113,14 +111,8 @@ footer {
 	border: 1px solid #FF8888;
 	background-color: #FFEEEE;
 	padding: 10px;
-	-moz-box-shadow: 5px 5px 5px #888888;
-	-webkit-box-shadow: 5px 5px 5px #888888;
-	box-shadow: 5px 5px 5px #888888;
-	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=135, Color='#888888')";
-	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=135, Color='#888888');
-
-
 }
+
 .nav-link {
 	float: right;
 	margin-left: 0px;
@@ -130,11 +122,6 @@ footer {
 	background: #F4F4F4;
 	font-size: 90%;
 	font-weight: bold;
-	-moz-box-shadow: 5px 5px 5px #888888;
-	-webkit-box-shadow: 5px 5px 5px #888888;
-	box-shadow: 5px 5px 5px #888888;
-	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=135, Color='#888888')";
-	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=135, Color='#888888');
 }
 
 
@@ -164,13 +151,8 @@ footer {
 	font-size: 90%;
 	font-weight: bold;
 	text-decoration: none;
-	-moz-box-shadow: 5px 5px 5px #888888;
-	-webkit-box-shadow: 5px 5px 5px #888888;
-	box-shadow: 5px 5px 5px #888888;
-	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=135, Color='#888888')";
-	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=135, Color='#888888');
-
 }
+
 #nav-end {
 	clear: both;
 }
@@ -434,16 +416,13 @@ input#dfrn-url {
 #view-contact-end {
 	clear: both;
 }
-
-
 #profile-edit-default-desc {
 	color: #FF0000;
 	border: 1px solid #FF8888;
 	background-color: #FFEEEE;
 	padding: 7px;
-
-
 }
+
 #profile-edit-clone-link-wrapper {
 	float: left;
 	margin-left: 50px;
@@ -453,7 +432,6 @@ input#dfrn-url {
 
 #profile-edit-drop-link-wrapper {
 	float: left;
-	
 }
 
 #profile-edit-links-end {
@@ -606,11 +584,7 @@ input#dfrn-url {
 .contact-entry-end {
 	clear: both;
 }
-/*
-.contact-entry-nav-end {
-	clear: both;
-}
-*/
+
 #contact-edit-end {
 	clear: both;
 }
@@ -621,7 +595,7 @@ input#dfrn-url {
 
 .wall-item-content-wrapper.comment {
 	margin-left: 50px;
-	background: #F7F7F7;
+	background: #CCCCCC;
 }
 
 .wall-item-photo-wrapper {
@@ -692,13 +666,13 @@ input#dfrn-url {
 
 .comment-edit-wrapper {
 	margin-top: 15px;
-	background: #F7F7F7;
+	background: #CCCCCC;
 	margin-left: 50px;
 }
 
 .comment-wwedit-wrapper {
 	margin-top: 15px;
-	background: #F7F7F7;
+	background: #CCCCCC;
 	margin-left: 250px;
 }
 
@@ -1088,11 +1062,6 @@ input#dfrn-url {
 	background: #F4F4F4;
 	font-size: 0.8em;
 	font-weight: bold;
-	-moz-box-shadow: 5px 5px 5px #888888;
-	-webkit-box-shadow: 5px 5px 5px #888888;
-	box-shadow: 5px 5px 5px #888888;
-	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=135, Color='#888888')";
-	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=135, Color='#888888');
 }
 
 #profile-tabs-end {

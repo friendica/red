@@ -1,0 +1,32 @@
+@import url('../default/style.css');
+
+body { 
+	background: #000000;
+	color: #FF0000;
+}
+
+.nav-link {
+	color: #FF0000;
+	background: #888888;
+}
+
+.nav-commlink {
+	color: #FF0000;
+	background: #888888;
+}
+
+.profile-tabs {
+	color: #FF0000;
+	background: #888888;
+
+}
+
+a, a:visited {
+	color: #444444;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #FF0000;
+	text-decoration: underline;
+}
