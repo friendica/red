@@ -24,9 +24,9 @@ function settings_post(&$a) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
-	if((x($_POST,'password')) || (x($_POST,'confirm'))) {
+	if((x($_POST,'npassword')) || (x($_POST,'confirm'))) {
 
-		$newpass = trim($_POST['password']);
+		$newpass = trim($_POST['npassword']);
 		$confirm = trim($_POST['confirm']);
 
 		$err = false;

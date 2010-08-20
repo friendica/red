@@ -74,7 +74,7 @@ $profile_in_net_dir
 Leave password fields blank unless changing
 </p>
 <label id="settings-password-label" for="settings-password" >New Password: </label>
-<input type="password" id="settings-password" name="password" ></input>
+<input type="password" id="settings-password" name="npassword" ></input>
 </div>
 <div id="settings-password-end" ></div>
 
