@@ -180,7 +180,7 @@ function network_content(&$a, $update = false) {
 
 
 	
-			if(($item['contact-uid'] == $_SESSION['uid']) && ($item['rel] == DIRECTION_IN || $item['rel'] == DIRECTION_BOTH) && (! $item['self'] ))
+			if(($item['contact-uid'] == $_SESSION['uid']) && ($item['rel'] == DIRECTION_IN || $item['rel'] == DIRECTION_BOTH) && (! $item['self'] ))
 				$profile_url = $redirect_url;
 
 			$photo = $item['photo'];
