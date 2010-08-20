@@ -42,10 +42,6 @@ $dob $age
 </div>
 <div id="profile-edit-dob-end"></div>
 
-$profile_in_dir
-
-$profile_in_net_dir
-
 $hide_friends
 
 <div class="profile-edit-submit-wrapper" >

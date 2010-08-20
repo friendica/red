@@ -31,6 +31,12 @@ $theme
 </div>
 <div id="settings-theme-end"></div>
 
+<input type="hidden" name="visibility" value="$visibility" />
+
+$profile_in_dir
+
+$profile_in_net_dir
+
 <div id="settings-default-perms" class="settings-default-perms" >
 	<div id="settings-default-perms-menu" onClick="openClose('settings-default-perms-select');" />$permissions</div>
 	<div id="settings-default-perms-menu-end"></div>

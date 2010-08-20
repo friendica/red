@@ -1,5 +1,5 @@
 <p id="profile-in-directory">
-Publish this profile in global social directory? 
+Publish your default profile in global social directory? 
 </p>
 
 		<div id="profile-in-netdir-yes-wrapper">

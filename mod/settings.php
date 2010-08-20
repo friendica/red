@@ -57,6 +57,10 @@ function settings_post(&$a) {
 	$email = notags(trim($_POST['email']));
 	$timezone = notags(trim($_POST['timezone']));
 
+	$publish = (($_POST['profile_in_directory'] == 1) ? 1: 0);
+	$net_publish = (($_POST['profile_in_netdirectory'] == 1) ? 1: 0);
+	$old_visibility = ((intval($_POST['visibility']) == 1) ? 1 : 0);
+
 	$notify = 0;
 
 	if($_POST['notify1'])
@@ -146,6 +150,24 @@ function settings_post(&$a) {
 	);
 	if($r)
 		notice( t('Settings updated.') . EOL);
+
+	$r = q("UPDATE `profile` 
+		SET `publish` = %d, `net-publish` = %d
+		WHERE `is-default` = 1 AND `uid` = %d LIMIT 1",
+		intval($publish),
+		intval($net_publish),
+		intval($_SESSION['uid'])
+	);
+
+	if($old_visibility != $net_publish) {
+		// Update global directory in background
+		$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
+		$url = $_SESSION['my_url'];
+		if($url && strlen(get_config('system','directory_submit_url')))
+			proc_close(proc_open("\"$php_path\" \"include/directory.php\" \"$url\" &",
+				array(),$foo));
+	}
+
 	$_SESSION['theme'] = $theme;
 	if($email_changed && $a->config['register_policy'] == REGISTER_VERIFY) {
 
@@ -167,6 +189,12 @@ function settings_content(&$a) {
 
 	require_once('view/acl_selectors.php');
 
+	$p = q("SELECT * FROM `profile` WHERE `is-default` = 1 AND `uid` = %d LIMIT 1",
+		intval($_SESSION['uid'])
+	);
+	if(count($p))
+		$profile = $p[0];
+
 	$username = $a->user['username'];
 	$email    = $a->user['email'];
 	$nickname = $a->user['nickname'];
@@ -175,6 +203,28 @@ function settings_content(&$a) {
 
 	if(! strlen($a->user['timezone']))
 		$timezone = date_default_timezone_get();
+
+
+	$opt_tpl = file_get_contents("view/profile-in-directory.tpl");
+	$profile_in_dir = replace_macros($opt_tpl,array(
+		'$yes_selected' => (($profile['publish']) ? " checked=\"checked\" " : ""),
+		'$no_selected' => (($profile['publish'] == 0) ? " checked=\"checked\" " : "")
+	));
+
+	if(strlen(get_config('system','directory_submit_url'))) {
+		$opt_tpl = file_get_contents("view/profile-in-netdir.tpl");
+
+		$profile_in_net_dir = replace_macros($opt_tpl,array(
+			'$yes_selected' => (($profile['net-publish']) ? " checked=\"checked\" " : ""),
+			'$no_selected' => (($profile['net-publish'] == 0) ? " checked=\"checked\" " : "")
+		));
+	}
+	else
+		$profile_in_net_dir = '';
+
+
+
+
 
 	$nickname_block = file_get_contents("view/settings_nick_set.tpl");
 	
@@ -219,7 +269,10 @@ function settings_content(&$a) {
 		'$nickname_block' => $nickname_block,
 		'$timezone' => $timezone,
 		'$zoneselect' => select_timezone($timezone),
+		'$profile_in_dir' => $profile_in_dir,
+		'$profile_in_net_dir' => $profile_in_net_dir,
 		'$permissions' => t('Default Post Permissions'),
+		'$visibility' => $profile['net-publish'],
 		'$aclselect' => populate_acl($a->user),
 		'$sel_notify1' => (($notify & NOTIFY_INTRO)   ? ' checked="checked" ' : ''),
 		'$sel_notify2' => (($notify & NOTIFY_CONFIRM) ? ' checked="checked" ' : ''),
