@@ -716,6 +716,10 @@ input#dfrn-url {
 	float: left;
 	margin-left: 20px;
 }
+#profile-youtube-wrapper {
+	float: left;
+	margin-left: 20px;
+}
 
 #profile-jot-perms {
 	float: left;

@@ -21,6 +21,9 @@
 	<div id="profile-link-wrapper" style="display: $visitor;" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);" >
 		<img id="profile-link" src="images/link-icon.gif" alt="Insert web link" title="Insert web link" ondragenter="return linkdropper(event);" ondragover="return linkdropper(event);" ondrop="linkdrop(event);" onclick="jotGetLink();" />
 	</div> 
+	<div id="profile-youtube-wrapper" style="display: $visitor;" >
+		<img id="profile-video" src="images/youtube_icon.gif" alt="Insert YouTube video" title="Insert YouTube video" onclick="jotGetVideo();" />
+	</div> 
 	<div id="profile-rotator-wrapper" style="display: $visitor;" >
 		<img id="profile-rotator" src="images/rotator.gif" alt="Please wait" title="Please wait" style="display: none;" />
 	</div> 

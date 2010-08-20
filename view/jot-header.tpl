@@ -73,6 +73,13 @@ tinyMCE.init({
 		}
 	}
 
+	function jotGetVideo() {
+		reply = prompt("Please enter a YouTube link:");
+		if(reply && reply.length) {
+			tinyMCE.execCommand('mceInsertRawHTML',false,'[youtube]' + reply + '[/youtube]');
+		}
+	}
+
 	function linkdropper(event) {
 		var linkFound = event.dataTransfer.types.contains("text/uri-list");
 		if(linkFound)
