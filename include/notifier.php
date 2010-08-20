@@ -176,7 +176,7 @@
 							$item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
 						'$updated' => xmlify(datetime_convert('UTC', 'UTC', 
 							$item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
-						'$content' =>xmlify($item['body']),
+						'$content' => xmlify($item['body']),
 						'$parent_id' => xmlify($item['parent-uri']),
 						'$comment_allow' => 0
 					));
@@ -209,6 +209,7 @@
 										$item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
 									'$updated' => xmlify(datetime_convert('UTC', 'UTC', 
 										$item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
+									'$location' => xmlify($item['location']),
 									'$content' =>xmlify($item['body']),
 									'$comment_allow' => (($item['last-child'] && strlen($contact['dfrn-id'])) ? 1 : 0)
 								));

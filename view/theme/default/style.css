@@ -720,10 +720,14 @@ input#dfrn-url {
 	float: left;
 	margin-left: 20px;
 }
+#profile-location-wrapper {
+	float: left;
+	margin-left: 20px;
+}
 
 #profile-jot-perms {
 	float: left;
-	margin-left: 250px;
+	margin-left: 200px;
 }
 
 #profile-jot-perms-end {

@@ -9,6 +9,7 @@
 <input type="hidden" name="type" value="wall" />
 <input type="hidden" name="profile_uid" value="$profile_uid" />
 <input type="hidden" name="return" value="$return_path" />
+<input type="hidden" name="location" id="jot-location" value="" />
 
 <textarea rows="5" cols="64" class="profile-jot-text" id="profile-jot-text" name="body" ></textarea>
 
@@ -23,6 +24,9 @@
 	</div> 
 	<div id="profile-youtube-wrapper" style="display: $visitor;" >
 		<img id="profile-video" src="images/youtube_icon.gif" alt="Insert YouTube video" title="Insert YouTube video" onclick="jotGetVideo();" />
+	</div> 
+	<div id="profile-location-wrapper" style="display: $visitor;" >
+		<img id="profile-location" src="images/globe.gif" alt="Set your location" title="Set your lcoation" onclick="jotGetLocation();" />
 	</div> 
 	<div id="profile-rotator-wrapper" style="display: $visitor;" >
 		<img id="profile-rotator" src="images/rotator.gif" alt="Please wait" title="Please wait" style="display: none;" />

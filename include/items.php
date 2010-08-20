@@ -120,7 +120,8 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 					'$title' => xmlify($item['title']),
 					'$published' => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
 					'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
-					'$content' =>xmlify($item['body']),
+					'$location' => xmlify($item['location']),
+					'$content' => xmlify($item['body']),
 					'$comment_allow' => (($item['last-child'] && strlen($contact['dfrn-id'])) ? 1 : 0)
 				));
 			}
@@ -174,6 +175,11 @@ function get_atom_elements($item) {
 	if($rawcreated)
 		$res['created'] = unxmlify($rawcreated[0]['data']);
 
+	$rawlocation = $item->get_item_tags('http://activitystrea.ms/spec/1.0/', 'place');
+	if($rawlocation)
+		$res['location'] = unxmlify($rawlocation[0]['data']);
+
+
 	$rawedited = $item->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'updated');
 	if($rawedited)
 		$res['edited'] = unxmlify($rawcreated[0]['data']);
@@ -204,6 +210,7 @@ function post_remote($a,$arr) {
 	$arr['created'] = datetime_convert('UTC','UTC',$arr['created'],'Y-m-d H:i:s');
 	$arr['edited'] = datetime_convert('UTC','UTC',$arr['edited'],'Y-m-d H:i:s');
 	$arr['title'] = notags(trim($arr['title']));
+	$arr['location'] = notags(trim($arr['location']));
 	$arr['body'] = escape_tags(trim($arr['body']));
 	$arr['last-child'] = intval($arr['last-child']);
 	$arr['visible'] = 1;
@@ -213,7 +220,7 @@ function post_remote($a,$arr) {
 	$parent_id = 0;
 
 	dbesc_array($arr);
-//dbg(3);
+
 	$r = q("INSERT INTO `item` (`" 
 			. implode("`, `", array_keys($arr)) 
 			. "`) VALUES ('" 

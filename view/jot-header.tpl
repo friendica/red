@@ -80,6 +80,14 @@ tinyMCE.init({
 		}
 	}
 
+	function jotGetLocation() {
+		reply = prompt("Where are you right now?");
+		if(reply && reply.length) {
+			$('#jot-location').val(reply);
+		}
+	}
+
+
 	function linkdropper(event) {
 		var linkFound = event.dataTransfer.types.contains("text/uri-list");
 		if(linkFound)

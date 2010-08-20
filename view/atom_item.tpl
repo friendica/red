@@ -15,5 +15,6 @@
 		<published>$published</published>
 		<updated>$updated</updated>
 		<content>$content</content>
+		<as:place>$location</as:place>
 		<dfrn:comment-allow>$comment_allow</dfrn:comment-allow>
 	</entry>
