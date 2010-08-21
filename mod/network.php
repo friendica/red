@@ -36,6 +36,7 @@ function network_content(&$a, $update = false) {
 		$o .= replace_macros($tpl,array(
 			'$return_path' => $a->cmd,
 			'$baseurl' => $a->get_baseurl(),
+			'$defloc' => $a->user['default-location'],
 			'$visitor' => 'block',
 			'$lockstate' => 'unlock',
 			'$acl' => populate_acl($a->user),

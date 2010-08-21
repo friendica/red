@@ -25,6 +25,13 @@ $zoneselect
 </div>
 <div id="settings-timezone-end" ></div>
 
+<div id="settings-defloc-wrapper" >
+<label id="settings-defloc-label" for="settings-defloc" >Default Post Location: </label>
+<input type="text" name="defloc" id="settings-defloc" value="$defloc" />
+</div>
+<div id="settings-defloc-end" ></div>
+
+
 <div id="settings-theme-select">
 <label id="settings-theme-label" for="theme-select" >Display Theme: </label>
 $theme

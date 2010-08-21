@@ -81,7 +81,7 @@ tinyMCE.init({
 	}
 
 	function jotGetLocation() {
-		reply = prompt("Where are you right now?");
+		reply = prompt("Where are you right now?", $('#jot-location').val());
 		if(reply && reply.length) {
 			$('#jot-location').val(reply);
 		}

@@ -9,7 +9,7 @@
 <input type="hidden" name="type" value="wall" />
 <input type="hidden" name="profile_uid" value="$profile_uid" />
 <input type="hidden" name="return" value="$return_path" />
-<input type="hidden" name="location" id="jot-location" value="" />
+<input type="hidden" name="location" id="jot-location" value="$defloc" />
 
 <textarea rows="5" cols="64" class="profile-jot-text" id="profile-jot-text" name="body" ></textarea>
 

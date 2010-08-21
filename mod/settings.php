@@ -56,6 +56,7 @@ function settings_post(&$a) {
 	$username = notags(trim($_POST['username']));
 	$email = notags(trim($_POST['email']));
 	$timezone = notags(trim($_POST['timezone']));
+	$defloc = notags(trim($_POST['defloc']));
 
 	$publish = (($_POST['profile_in_directory'] == 1) ? 1: 0);
 	$net_publish = (($_POST['profile_in_netdirectory'] == 1) ? 1: 0);
@@ -136,7 +137,7 @@ function settings_post(&$a) {
 		$str_contact_deny = implode('',$contact_deny);
 	}
 
-	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `theme` = '%s'  WHERE `uid` = %d LIMIT 1",
+	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `default-location` = '%s', `theme` = '%s'  WHERE `uid` = %d LIMIT 1",
 			dbesc($username),
 			dbesc($email),
 			dbesc($timezone),
@@ -145,6 +146,7 @@ function settings_post(&$a) {
 			dbesc($str_contact_deny),
 			dbesc($str_group_deny),
 			intval($notify),
+			dbesc($defloc),
 			dbesc($theme),
 			intval($_SESSION['uid'])
 	);
@@ -200,6 +202,7 @@ function settings_content(&$a) {
 	$nickname = $a->user['nickname'];
 	$timezone = $a->user['timezone'];
 	$notify   = $a->user['notify-flags'];
+	$defloc   = $a->user['default-location'];
 
 	if(! strlen($a->user['timezone']))
 		$timezone = date_default_timezone_get();
@@ -269,6 +272,7 @@ function settings_content(&$a) {
 		'$nickname_block' => $nickname_block,
 		'$timezone' => $timezone,
 		'$zoneselect' => select_timezone($timezone),
+		'$defloc' => $defloc,
 		'$profile_in_dir' => $profile_in_dir,
 		'$profile_in_net_dir' => $profile_in_net_dir,
 		'$permissions' => t('Default Post Permissions'),
