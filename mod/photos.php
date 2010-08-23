@@ -117,7 +117,8 @@ function photos_post(&$a) {
 			);
 			if(count($r)) {
 				foreach($r as $rr) {
-					q("UPDATE `item` SET `deleted` = 1 WHERE `parent-uri` = '%s' AND `uid` = %d",
+					q("UPDATE `item` SET `deleted` = 1, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d",
+						dbesc(datetime_convert()),
 						dbesc($rr['parent-uri']),
 						intval($_SESSION['uid'])
 					);
@@ -153,7 +154,9 @@ function photos_post(&$a) {
 				intval($_SESSION['uid'])
 			);
 			if(count($i)) {
-				q("UPDATE `item` SET `deleted` = 1 WHERE `parent-uri` = '%s' AND `uid` = %d",
+				q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d",
+					dbesc(datetime_convert()),
+					dbesc(datetime_convert()),
 					dbesc($i[0]['uri']),
 					intval($_SESSION['uid'])
 				);
@@ -219,8 +222,8 @@ function photos_post(&$a) {
 
 			$r = q("INSERT INTO `item` (`uid`, `type`, `resource-id`, `contact-id`,
 				`owner-name`,`owner-link`,`owner-avatar`, `created`,
-				`edited`, `uri`, `parent-uri`, `title`, `body`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
-				VALUES( %d, '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+				`edited`, `changed`, `uri`, `parent-uri`, `title`, `body`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
+				VALUES( %d, '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 				intval($_SESSION['uid']),
 				dbesc('photo'),
 				dbesc($p[0]['resource-id']),			
@@ -228,8 +231,9 @@ function photos_post(&$a) {
 				dbesc($contact_record['name']),
 				dbesc($contact_record['url']),
 				dbesc($contact_record['thumb']),
-				datetime_convert(),
-				datetime_convert(),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert()),
 				dbesc($uri),
 				dbesc($uri),
 				dbesc($title),
@@ -254,8 +258,10 @@ function photos_post(&$a) {
 			}
 		}
 
-		$r = q("UPDATE `item` SET `tag` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+		$r = q("UPDATE `item` SET `tag` = '%s', `edited` = '%s', `changed` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			dbesc($tags),
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
 			intval($item_id),
 			intval($_SESSION['uid'])
 		);
@@ -386,8 +392,8 @@ function photos_post(&$a) {
 
 
 	$r = q("INSERT INTO `item` (`uid`, `type`, `resource-id`, `contact-id`,`owner-name`,`owner-link`,`owner-avatar`, `created`,
-		`edited`, `uri`, `parent-uri`, `title`, `body`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `visible`)
-		VALUES( %d, '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d )",
+		`edited`, `changed`, `uri`, `parent-uri`, `title`, `body`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `visible`)
+		VALUES( %d, '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d )",
 		intval($_SESSION['uid']),
 		dbesc('photo'),
 		dbesc($photo_hash),			
@@ -395,8 +401,9 @@ function photos_post(&$a) {
 		dbesc($contact_record['name']),
 		dbesc($contact_record['url']),
 		dbesc($contact_record['thumb']),
-		datetime_convert(),
-		datetime_convert(),
+		dbesc(datetime_convert()),
+		dbesc(datetime_convert()),
+		dbesc(datetime_convert()),
 		dbesc($uri),
 		dbesc($uri),
 		dbesc($title),

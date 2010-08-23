@@ -67,10 +67,11 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 
 		AND NOT `item`.`type` IN ( 'remote', 'net-comment' ) AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-		AND `item`.`edited` > '%s'
+		AND ( `item`.`edited` > '%s' OR `item`.`changed` > '%s' )
 		$sql_extra
 		ORDER BY `parent` ASC, `created` ASC LIMIT 0, 300",
 		intval($owner_id),
+		dbesc($check_date),
 		dbesc($check_date)
 	);
 	if(! count($r))
@@ -209,6 +210,7 @@ function post_remote($a,$arr) {
 	$arr['owner-avatar'] = notags(trim($arr['owner-avatar']));
 	$arr['created'] = datetime_convert('UTC','UTC',$arr['created'],'Y-m-d H:i:s');
 	$arr['edited'] = datetime_convert('UTC','UTC',$arr['edited'],'Y-m-d H:i:s');
+	$arr['changed'] = datetime_convert();
 	$arr['title'] = notags(trim($arr['title']));
 	$arr['location'] = notags(trim($arr['location']));
 	$arr['body'] = escape_tags(trim($arr['body']));

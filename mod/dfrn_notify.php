@@ -68,7 +68,7 @@ function dfrn_notify_post(&$a) {
 		$msg['uri'] = notags(unxmlify($base['id'][0]['data']));
 		$msg['parent-uri'] = notags(unxmlify($base['in-reply-to'][0]['data']));
 		$msg['created'] = datetime_convert(notags(unxmlify('UTC','UTC',$base['sentdate'][0]['data'])));
-
+		
 		dbesc_array($msg);
 
 		$r = q("INSERT INTO `mail` (`" . implode("`, `", array_keys($msg)) 
@@ -124,16 +124,18 @@ function dfrn_notify_post(&$a) {
 			);
 			if(count($r)) {
 				if($r[0]['uri'] == $r[0]['parent-uri']) {
-					$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s'
+					$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s'
 						WHERE `parent-uri` = '%s'",
 						dbesc($when),
+						dbesc(datetime_convert()),
 						dbesc($r[0]['uri'])
 					);
 				}
 				else {
-					$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s' 
+					$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s' 
 						WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 						dbesc($when),
+						dbesc(datetime_convert()),
 						dbesc($uri),
 						intval($importer['importer_uid'])
 					);
@@ -166,12 +168,14 @@ function dfrn_notify_post(&$a) {
 					intval($importer['importer_uid'])
 				);
 				if(count($r)) {
-					$r1 = q("UPDATE `item` SET `last-child` = 0 WHERE `uid` = %d AND `parent` = %d",
+					$r1 = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `uid` = %d AND `parent` = %d",
+						dbesc(datetime_convert()),
 						intval($importer['importer_uid']),
 						intval($r[0]['parent'])
 					);
 				}
-				$r2 = q("UPDATE `item` SET `last-child` = 1 WHERE `uid` = %d AND `id` = %d LIMIT 1",
+				$r2 = q("UPDATE `item` SET `last-child` = 1, `changed` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
+						dbesc(datetime_convert()),
 						intval($importer['importer_uid']),
 						intval($posted_id)
 				);
@@ -214,8 +218,9 @@ function dfrn_notify_post(&$a) {
 				if(count($r)) {
 					$allow = $item->get_item_tags( NAMESPACE_DFRN, 'comment-allow');
 					if($allow && $allow[0]['data'] != $r[0]['last-child']) {
-						$r = q("UPDATE `item` SET `last-child` = %d WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						$r = q("UPDATE `item` SET `last-child` = %d, `changed` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							intval($allow[0]['data']),
+							dbesc(datetime_convert()),
 							dbesc($item_id),
 							intval($importer['importer_uid'])
 						);
@@ -272,8 +277,9 @@ function dfrn_notify_post(&$a) {
 			if(count($r)) {
 				$allow = $item->get_item_tags( NAMESPACE_DFRN, 'comment-allow');
 				if($allow && $allow[0]['data'] != $r[0]['last-child']) {
-					$r = q("UPDATE `item` SET `last-child` = %d WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+					$r = q("UPDATE `item` SET `last-child` = %d, `changed` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 						intval($allow[0]['data']),
+						dbesc(datetime_convert()),
 						dbesc($item_id),
 						intval($importer['importer_uid'])
 					);

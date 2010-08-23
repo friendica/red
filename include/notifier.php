@@ -17,7 +17,7 @@
 	if($argc < 3)
 		exit;
 
-	$a->set_baseurl(get_config('system',url'));
+	$a->set_baseurl(get_config('system','url'));
 
 	$baseurl = $argv[1];
 	$a->set_baseurl($argv[1]);
@@ -34,6 +34,8 @@
 			break;
 	}
 
+	if($debugging)
+		dbg(3);
 
 	$recipients = array();
 

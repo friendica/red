@@ -191,18 +191,20 @@ echo "Length:" . strlen($xml) . "\r\n";
 				);
 				if(count($r)) {
 					if($r[0]['uri'] == $r[0]['parent-uri']) {
-						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s',
+						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s',
 							`body` = '', `title` = ''
 							WHERE `parent-uri` = '%s'",
 							dbesc($when),
+							dbesc(datetime_convert()),
 							dbesc($r[0]['uri'])
 						);
 					}
 					else {
-						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s',
+						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s',
 							`body` = '', `title` = '' 
 							WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($when),
+							dbesc(datetime_convert()),
 							dbesc($uri),
 							intval($importer['uid'])
 						);
@@ -233,13 +235,20 @@ echo "Length:" . strlen($xml) . "\r\n";
 				);
 				// FIXME update content if 'updated' changes
 				if(count($r)) {
-					$allow = $item->get_item_tags('http://purl.org/macgirvin/dfrn/1.0','comment-allow');
+					$allow = $item->get_item_tags( NAMESPACE_DFRN, 'comment-allow');
 					if($allow && $allow[0]['data'] != $r[0]['last-child']) {
-						$r = q("UPDATE `item` SET `last-child` = %d WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						$r = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s'",
+							dbesc(datetime_convert()),
+							dbesc($parent_uri)
+						);
+						$r = q("UPDATE `item` SET `last-child` = %d , `changed` = '%s'  WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							intval($allow[0]['data']),
+							dbesc(datetime_convert()),
 							dbesc($item_id),
 							intval($importer['uid'])
 						);
+
+
 					}
 					continue;
 				}
@@ -260,10 +269,11 @@ echo "Length:" . strlen($xml) . "\r\n";
 					intval($importer['uid'])
 				);
 				if(count($r)) {
-					$allow = $item->get_item_tags('http://purl.org/macgirvin/dfrn/1.0','comment-allow');
+					$allow = $item->get_item_tags( NAMESPACE_DFRN, 'comment-allow');
 					if($allow && $allow[0]['data'] != $r[0]['last-child']) {
-						$r = q("UPDATE `item` SET `last-child` = %d WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						$r = q("UPDATE `item` SET `last-child` = %d , `changed` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							intval($allow[0]['data']),
+							dbesc(datetime_convert()),
 							dbesc($item_id),
 							intval($importer['uid'])
 						);

@@ -149,6 +149,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `parent-uri` char(255) CHARACTER SET ascii NOT NULL,
   `created` datetime NOT NULL,
   `edited` datetime NOT NULL,
+  `changed` datetime NOT NULL,
   `owner-name` char(255) NOT NULL,
   `owner-link` char(255) NOT NULL,
   `owner-avatar` char(255) NOT NULL,

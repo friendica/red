@@ -143,8 +143,8 @@ function item_post(&$a) {
 
 	$r = q("INSERT INTO `item` (`uid`,`type`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`,
-		`edited`, `uri`, `title`, `body`, `location`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
-		VALUES( %d, '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+		`edited`, `changed`, `uri`, `title`, `body`, `location`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
+		VALUES( %d, '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 		intval($profile_uid),
 		dbesc($post_type),
 		intval($contact_id),
@@ -154,8 +154,9 @@ function item_post(&$a) {
 		dbesc($author['name']),
 		dbesc($author['url']),
 		dbesc($author['thumb']),
-		datetime_convert(),
-		datetime_convert(),
+		dbesc(datetime_convert()),
+		dbesc(datetime_convert()),
+		dbesc(datetime_convert()),
 		dbesc($uri),
 		dbesc($title),
 		dbesc($body),
@@ -173,7 +174,8 @@ function item_post(&$a) {
 		if($parent) {
 
 			// This item is the last leaf and gets the comment box, clear any ancestors
-			$r = q("UPDATE `item` SET `last-child` = 0 WHERE `parent` = %d ",
+			$r = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent` = %d ",
+				dbesc(datetime_convert()),
 				intval($parent)
 			);
 
@@ -227,10 +229,11 @@ function item_post(&$a) {
 			}
 		}
 
-		$r = q("UPDATE `item` SET `parent` = %d, `parent-uri` = '%s', `last-child` = 1, `visible` = 1
+		$r = q("UPDATE `item` SET `parent` = %d, `parent-uri` = '%s', `changed` = '%s', `last-child` = 1, `visible` = 1
 			WHERE `id` = %d LIMIT 1",
 			intval($parent),
 			dbesc(($parent == $post_id) ? $uri : $parent_item['uri']),
+			dbesc(datetime_convert()),
 			intval($post_id)
 		);
 		// photo comments turn the corresponding item visible to the profile wall
@@ -279,7 +282,8 @@ function item_content(&$a) {
 
 			// delete the item
 
-			$r = q("UPDATE `item` SET `deleted` = 1, `body` = '', `edited` = '%s' WHERE `id` = %d LIMIT 1",
+			$r = q("UPDATE `item` SET `deleted` = 1, `body` = '', `edited` = '%s', `changed` = '%s' WHERE `id` = %d LIMIT 1",
+				dbesc(datetime_convert()),
 				dbesc(datetime_convert()),
 				intval($item['id'])
 			);
@@ -300,8 +304,9 @@ function item_content(&$a) {
 			// If it's the parent of a comment thread, kill all the kids
 
 			if($item['uri'] == $item['parent-uri']) {
-				$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `body` = '' 
+				$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s', `body` = '' 
 					WHERE `parent-uri` = '%s' AND `uid` = %d ",
+					dbesc(datetime_convert()),
 					dbesc(datetime_convert()),
 					dbesc($item['parent-uri']),
 					intval($item['uid'])
