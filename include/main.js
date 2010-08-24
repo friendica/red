@@ -35,14 +35,23 @@
 	var prev = null;
 	var livetime = null;
 	var msie = false;
+	var stopped = false;
 
 	$(document).ready(function() {
 		$.ajaxSetup({cache: false});
 		msie = $.browser.msie ;
  		NavUpdate(); 
-
-
-
+		// Allow folks to stop the ajax page updates with the pause/break key
+		$(document).keypress(function(event) {
+			if(event.keyCode == '19') {
+				event.preventDefault();
+				if(stopped == false)
+					stopped = true;
+				else {
+					stopped = false;
+				}
+			}
+		});					
 	});
 
 	function NavUpdate() {
@@ -50,28 +59,30 @@
 		if($('#live-network').length) { src = 'network'; liveUpdate(); }
 		if($('#live-profile').length) { src = 'profile'; liveUpdate(); }
 
-		$.get("ping",function(data) {
-			$(data).find('result').each(function() {
-				var net = $(this).find('net').text();
-				if(net == 0) { net = ''; }
-				$('#net-update').html(net);
-				var home = $(this).find('home').text();
-				if(home == 0) { home = ''; }
-				$('#home-update').html(home);
-				var mail = $(this).find('mail').text();
-				if(mail == 0) { mail = ''; }
-				$('#mail-update').html(mail);
-				var intro = $(this).find('intro').text();
-				if(intro == 0) { intro = ''; }
-				$('#notify-update').html(intro);
-			});
-		}) ;
+		if(! stopped) {
+			$.get("ping",function(data) {
+				$(data).find('result').each(function() {
+					var net = $(this).find('net').text();
+					if(net == 0) { net = ''; }
+					$('#net-update').html(net);
+					var home = $(this).find('home').text();
+					if(home == 0) { home = ''; }
+					$('#home-update').html(home);
+					var mail = $(this).find('mail').text();
+					if(mail == 0) { mail = ''; }
+					$('#mail-update').html(mail);
+					var intro = $(this).find('intro').text();
+					if(intro == 0) { intro = ''; }
+					$('#notify-update').html(intro);
+				});
+			}) ;
+		}
 		setTimeout(NavUpdate,30000);
 
 	}
 
 	function liveUpdate() {
-		if(src == null) { return; }
+		if((src == null) || (stopped)) { return; }
 		if($('.comment-edit-text-full').length) {
 			livetime = setTimeout(liveUpdate, 10000);
 			return;
