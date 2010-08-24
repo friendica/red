@@ -176,7 +176,7 @@ function get_atom_elements($item) {
 	if($rawcreated)
 		$res['created'] = unxmlify($rawcreated[0]['data']);
 
-	$rawlocation = $item->get_item_tags('http://activitystrea.ms/spec/1.0/', 'place');
+	$rawlocation = $item->get_item_tags(NAMESPACE_DFRN, 'location');
 	if($rawlocation)
 		$res['location'] = unxmlify($rawlocation[0]['data']);
 
