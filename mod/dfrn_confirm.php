@@ -3,7 +3,7 @@
 
 
 function dfrn_confirm_post(&$a) {
-	
+
 	if($a->argc > 1)
 		$node = $a->argv[1];
 
