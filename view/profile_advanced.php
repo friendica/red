@@ -29,7 +29,7 @@ $o .= <<< EOT
 EOT;
 }
 
-if($a->profile['dob']) {
+if(($a->profile['dob']) && ($a->profile['dob'] != '0000-00-00 00:00:00')) {
 $o .= <<< EOT
 <div id="advanced-profile-dob-wrapper" >
 <div id="advanced-profile-dob-text">Birthday:</div>
