@@ -313,7 +313,23 @@ function item_content(&$a) {
 				);
 				// ignore the result
 			}
-
+			else {
+				// ensure that last-child is set in case the comment that had it just got wiped.
+				q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d ",
+					dbesc(datetime_convert()),
+					dbesc($item['parent-uri']),
+					intval($item['uid'])
+				);
+				// who is the last child now? 
+				$r = q("SELECT `id` FROM `item` WHERE `parent-uri` = '%s' AND `type` != 'activity' AND `deleted` = 0 ORDER BY `edited` DESC LIMIT 1",
+					dbesc($item['parent-uri'])
+				);
+				if(count($r)) {
+					q("UPDATE `item` SET `last-child` = 1 WHERE `id` = %d LIMIT 1",
+						intval($r[0]['id'])
+					);
+				}	
+			}
 			$drop_id = intval($item['id']);
 			$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 			
