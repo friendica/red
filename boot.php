@@ -2,7 +2,7 @@
 
 set_time_limit(0);
 
-define ( 'BUILD_ID' , 1000 );
+define ( 'BUILD_ID' , 1001 );
 
 define ( 'EOL', "<br />\r\n");
 
@@ -22,7 +22,7 @@ define ( 'NOTIFY_COMMENT', 0x0008 );
 define ( 'NOTIFY_MAIL',    0x0010 );
 
 define ( 'NAMESPACE_DFRN' , 'http://purl.org/macgirvin/dfrn/1.0' ); 
-
+define ( 'NAMESPACE_ACTIVITY', 'http://activitystrea.ms/schema/1.0/' );
 
 if(! class_exists('App')) {
 class App {
@@ -189,7 +189,7 @@ function check_config(&$a) {
 			// Run any existing update scripts to bring the database up to current.
 
 			require_once('update.php');
-			for($x = $stored; $x <= $current; $x ++) {
+			for($x = $stored; $x < $current; $x ++) {
 				if(function_exists('update_' . $x)) {
 					$func = 'update_' . $x;
 					$func($a);
@@ -577,9 +577,9 @@ function load_config($family) {
 }}
 
 
-
 if(! function_exists('get_config')) {
 function get_config($family, $key, $instore = false) {
+
 	global $a;
 	if(! $instore) {
 		if(isset($a->config[$family][$key]))
@@ -620,4 +620,97 @@ function set_config($family,$key,$value) {
 	if($ret)
 		return $value;
 	return $ret;
+}}
+
+if(! function_exists('convert_xml_element_to_array')) {
+function convert_xml_element_to_array($xml_element, &$recursion_depth=0) {
+
+        // If we're getting too deep, bail out
+        if ($recursion_depth > 512) {
+                return(null);
+        }
+
+        if (!is_string($xml_element) &&
+        !is_array($xml_element) &&
+        (get_class($xml_element) == 'SimpleXMLElement')) {
+                $xml_element_copy = $xml_element;
+                $xml_element = get_object_vars($xml_element);
+        }
+
+        if (is_array($xml_element)) {
+                $result_array = array();
+                if (count($xml_element) <= 0) {
+                        return (trim(strval($xml_element_copy)));
+                }
+
+                foreach($xml_element as $key=>$value) {
+
+                        $recursion_depth++;
+                        $result_array[strtolower($key)] =
+                convert_xml_element_to_array($value, $recursion_depth);
+                        $recursion_depth--;
+                }
+                if ($recursion_depth == 0) {
+                        $temp_array = $result_array;
+                        $result_array = array(
+                                strtolower($xml_element_copy->getName()) => $temp_array,
+                        );
+                }
+
+                return ($result_array);
+
+        } else {
+                return (trim(strval($xml_element)));
+        }
+}}
+
+
+if(! function_exists('webfinger')) {
+function webfinger($s) {
+	if(! strstr($s,'@'))
+		return $s;
+	$host = substr($s,strpos($s,'@') + 1);
+	$url = 'http://' . $host . '/.well-known/host-meta' ;
+	$xml = fetch_url($url);
+	if (! $xml)
+		return '';
+	$h = simplexml_load_string($xml);
+	$arr = convert_xml_element_to_array($h);
+
+	if(! isset($arr['xrd']['link']))
+		return '';
+
+	$link = $arr['xrd']['link'];
+	if(! isset($link[0]))
+		$links = array($link);
+	else
+		$links = $link;
+
+	foreach($links as $link)
+		if($link['@attributes']['rel'] && $link['@attributes']['rel'] == 'lrdd')
+			$tpl = $link['@attributes']['template'];
+	if((empty($tpl)) || (! strpos($tpl, '{uri}')))
+		return '';
+
+	$pxrd = str_replace('{uri}', urlencode('acct://'.$s), $tpl);
+
+	$xml = fetch_url($pxrd);
+	if (! $xml)
+		return '';
+	$h = simplexml_load_string($xml);
+	$arr = convert_xml_element_to_array($h);
+
+	if(! isset($arr['xrd']['link']))
+		return '';
+
+	$link = $arr['xrd']['link'];
+	if(! isset($link[0]))
+		$links = array($link);
+	else
+		$links = $link;
+
+	foreach($links as $link)
+		if($link['@attributes']['rel'] == NAMESPACE_DFRN)
+			return $link['@attributes']['href'];
+	return '';
 }}
