@@ -3,8 +3,11 @@
 
 function xrd_content(&$a) {
 
-	$uri = notags(trim($_GET['uri']));
+	$uri = urldecode(notags(trim($_GET['uri'])));
 	$local = str_replace('acct:', '', $uri);
+	if(substr($local,0,2) == '//')
+		$local = substr($local,2);
+
 	$name = substr($local,0,strpos($local,'@'));
 
 	$r = q("SELECT * FROM `user` WHERE `nickname` = '%s' LIMIT 1",
