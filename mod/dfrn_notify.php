@@ -23,7 +23,10 @@ function dfrn_notify_post(&$a) {
 
 	// find the local user who owns this relationship.
 
-	$r = q("SELECT `contact`.*, `contact`.`uid` AS `importer_uid`, `user`.* FROM `contact` LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid` WHERE `issued-id` = '%s' LIMIT 1",
+	$r = q("SELECT `contact`.*, `contact`.`uid` AS `importer_uid`, `user`.* FROM `contact` 
+		LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid` 
+		WHERE ( `issued-id` = '%s' OR ( `duplex` = 1 AND `dfrn-id` = '%s' )) LIMIT 1",
+		dbesc($dfrn_id),
 		dbesc($dfrn_id)
 	);
 
@@ -341,20 +344,28 @@ function dfrn_notify_content(&$a) {
 			intval(time() + 60 )
 		);
 
-		$r = q("SELECT * FROM `contact` WHERE `issued-id` = '%s' AND `blocked` = 0 AND `pending` = 0 LIMIT 1",
-			dbesc($_GET['dfrn_id']));
-		if((! count($r)) || (! strlen($r[0]['prvkey'])))
+		$r = q("SELECT * FROM `contact` WHERE ( `issued-id` = '%s' OR ( `duplex` = 1 AND `dfrn-id` = '%s'))
+			AND `blocked` = 0 AND `pending` = 0 LIMIT 1",
+			dbesc($_GET['dfrn_id']),
+			dbesc($_GET['dfrn_id'])
+		);
+		if(! count($r))
 			$status = 1;
 
 		$challenge = '';
-
-		openssl_private_encrypt($hash,$challenge,$r[0]['prvkey']);
-		$challenge = bin2hex($challenge);
-
 		$encrypted_id = '';
 		$id_str = $_GET['dfrn_id'] . '.' . mt_rand(1000,9999);
 
-		openssl_private_encrypt($id_str,$encrypted_id,$r[0]['prvkey']);
+		if($r[0]['duplex']) {
+			openssl_public_encrypt($hash,$challenge,$r[0]['pubkey']);
+			openssl_public_encrypt($id_str,$encrypted_id,$r[0]['pubkey']);
+		}
+		else {
+			openssl_private_encrypt($hash,$challenge,$r[0]['prvkey']);
+			openssl_private_encrypt($id_str,$encrypted_id,$r[0]['prvkey']);
+		}
+
+		$challenge    = bin2hex($challenge);
 		$encrypted_id = bin2hex($encrypted_id);
 
 		echo '<?xml version="1.0" encoding="UTF-8"?><dfrn_notify><status>' .$status . '</status><dfrn_id>' . $encrypted_id . '</dfrn_id>' . '<challenge>' . $challenge . '</challenge></dfrn_notify>' . "\r\n" ;

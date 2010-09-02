@@ -266,12 +266,12 @@
 		if($rr['self'])
 			continue;
 
-		if(! strlen($rr['dfrn-id']))
+		if((! strlen($rr['dfrn-id'])) || ($rr['duplex'] && ! strlen($rr['issued-id'])))
 			continue;
 
+		$idtosend = (($rr['duplex']) ? $rr['issued-id'] : $rr['dfrn-id']);
 
-
-		$url = $rr['notify'] . '?dfrn_id=' . $rr['dfrn-id'];
+		$url = $rr['notify'] . '?dfrn_id=' . $idtosend;
 
 		$xml = fetch_url($url);
 
@@ -288,25 +288,31 @@
 
 		$postvars = array();
 		$sent_dfrn_id = hex2bin($res->dfrn_id);
-
+		$challenge = hex2bin($res->challenge);
 		$final_dfrn_id = '';
-		openssl_public_decrypt($sent_dfrn_id,$final_dfrn_id,$rr['pubkey']);
+
+		if($rr['duplex']) {
+			openssl_private_decrypt($sent_dfrn_id,$final_dfrn_id,$rr['prvkey']);
+			openssl_private_decrypt($challenge,$postvars['challenge'],$rr['prvkey']);
+		}
+		else {
+			openssl_public_decrypt($sent_dfrn_id,$final_dfrn_id,$rr['pubkey']);
+			openssl_public_decrypt($challenge,$postvars['challenge'],$rr['pubkey']);
+		}
+
 		$final_dfrn_id = substr($final_dfrn_id, 0, strpos($final_dfrn_id, '.'));
-		if($final_dfrn_id != $rr['dfrn-id']) {
+		if(($final_dfrn_id != $rr['dfrn-id']) || (($rr['duplex']) && ($final_dfrn_id != $rr['issued-id']))) {
 			// did not decode properly - cannot trust this site 
 			continue;
 		}
 
-		$postvars['dfrn_id'] = $rr['dfrn-id'];
-
-		$challenge = hex2bin($res->challenge);
-
-		openssl_public_decrypt($challenge,$postvars['challenge'],$rr['pubkey']);
+		$postvars['dfrn_id'] = (($duplex) ? $rr['issued-id'] : $rr['dfrn-id']);
 
 		if($cmd == 'mail') {
 			$postvars['data'] = $atom;
 		}
-		elseif(strlen($rr['dfrn-id']) && (! ($rr['blocked']) || ($rr['readonly']))) {
+		elseif(((strlen($rr['dfrn-id'])) || (($rr['duplex']) && (strlen($rr['issued-id'])))) 
+			&& (! ($rr['blocked']) || ($rr['readonly']))) {
 			$postvars['data'] = $atom;
 		}
 		else {

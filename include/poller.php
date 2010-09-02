@@ -1,27 +1,25 @@
 <?php
 
 
-require_once('boot.php');
+	require_once('boot.php');
 
-$a = new App;
+	$a = new App;
 
-@include('.htconfig.php');
-require_once('dba.php');
-$db = new dba($db_host, $db_user, $db_pass, $db_data);
-	unset($db_host, $db_user, $db_pass, $db_data);
+	@include('.htconfig.php');
+	require_once('dba.php');
+	$db = new dba($db_host, $db_user, $db_pass, $db_data);
+		unset($db_host, $db_user, $db_pass, $db_data);
 
-require_once('session.php');
-require_once('datetime.php');
-require_once('simplepie/simplepie.inc');
-require_once('include/items.php');
-
-
+	require_once('session.php');
+	require_once('datetime.php');
+	require_once('simplepie/simplepie.inc');
+	require_once('include/items.php');
 
 	$a->set_baseurl(get_config('system','url'));
 
 	$contacts = q("SELECT * FROM `contact` 
-		WHERE `dfrn-id` != '' AND `self` = 0 AND `blocked` = 0 
-		AND `readonly` = 0 ORDER BY RAND()");
+		WHERE ( `dfrn-id` != '' OR (`issued-id` != '' AND `duplex` = 1)) 
+		AND `self` = 0 AND `blocked` = 0 AND `readonly` = 0 ORDER BY RAND()");
 
 	if(! count($contacts))
 		killme();
@@ -75,11 +73,15 @@ require_once('include/items.php');
 			? datetime_convert('UTC','UTC','now - 30 days','Y-m-d\TH:i:s\Z')
 			: datetime_convert('UTC','UTC',$contact['last-update'],'Y-m-d\TH:i:s\Z'));
 
-		$url = $contact['poll'] . '?dfrn_id=' . $contact['dfrn-id'] . '&type=data&last_update=' . $last_update ;
+		$idtosend = (($contact['duplex']) ? $contact['issued-id'] : $contact['dfrn-id']);
+
+		$url = $contact['poll'] . '?dfrn_id=' . $idtosend . '&type=data&last_update=' . $last_update ;
 
 		$xml = fetch_url($url);
+
 echo "URL: " . $url;
 echo "XML: " . $xml;
+
 		if(! $xml)
 			continue;
 
@@ -91,19 +93,28 @@ echo "XML: " . $xml;
 		$postvars = array();
 
 		$sent_dfrn_id = hex2bin($res->dfrn_id);
+		$challenge    = hex2bin($res->challenge);
 
 		$final_dfrn_id = '';
-		openssl_public_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['pubkey']);
+
+		if($contact['duplex']) {
+			openssl_private_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['prvkey']);
+			openssl_private_decrypt($challenge,$postvars['challenge'],$contact['prvkey']);
+
+		}
+		else {
+			openssl_public_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['pubkey']);
+			openssl_public_decrypt($challenge,$postvars['challenge'],$contact['pubkey']);
+		}
+
 		$final_dfrn_id = substr($final_dfrn_id, 0, strpos($final_dfrn_id, '.'));
-		if($final_dfrn_id != $contact['dfrn-id']) {
+		if(($final_dfrn_id != $contact['dfrn-id']) 
+			|| (($contact['duplex']) && ($final_dfrn_id != $contact['issued-id']))) {
 			// did not decode properly - cannot trust this site 
 			continue;
 		}
 
-		$postvars['dfrn_id'] = $contact['dfrn-id'];
-		$challenge = hex2bin($res->challenge);
-
-		openssl_public_decrypt($challenge,$postvars['challenge'],$contact['pubkey']);
+		$postvars['dfrn_id'] = (($contact['duplex']) ? $contact['issued-id'] : $contact['dfrn-id']);
 
 		$xml = post_url($contact['poll'],$postvars);
 

@@ -25,8 +25,11 @@ function dfrn_poll_init(&$a) {
 
 		$r = q("SELECT `contact`.*, `user`.`nickname` 
 			FROM `contact` LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid`
-			WHERE `dfrn-id` = '%s' LIMIT 1",
-			dbesc($dfrn_id));
+			WHERE ( `dfrn-id` = '%s' OR ( `issued-id` = '%s' AND `duplex `= 1 )) LIMIT 1",
+			dbesc($dfrn_id),
+			dbesc($dfrn_id)
+		);
+
 		if(count($r)) {
 			$s = fetch_url($r[0]['poll'] . '?dfrn_id=' . $dfrn_id . '&type=profile-check');
 			if(strlen($s)) {
@@ -87,9 +90,11 @@ function dfrn_poll_post(&$a) {
 	);
 
 
-	$r = q("SELECT * FROM `contact` WHERE `issued-id` = '%s' LIMIT 1",
+	$r = q("SELECT * FROM `contact` WHERE ( `issued-id` = '%s' OR ( `dfrn-id` = '%s' AND `duplex` = 1 )) LIMIT 1",
+		dbesc($dfrn_id),
 		dbesc($dfrn_id)
 	);
+
 	if(! count($r))
 		killme();
 
@@ -165,23 +170,32 @@ function dfrn_poll_content(&$a) {
 			dbesc($last_update)
 		);
 
-		$r = q("SELECT * FROM `contact` WHERE `issued-id` = '%s' AND `blocked` = 0 AND `pending` = 0 LIMIT 1",
-			dbesc($_GET['dfrn_id']));
-		if((count($r)) && (strlen($r[0]['prvkey']))) {
+		$r = q("SELECT * FROM `contact` WHERE ( `issued-id` = '%s' OR ( `dfrn-id` = '%s' AND `duplex` = 1 )) 
+			AND `blocked` = 0 AND `pending` = 0 LIMIT 1",
+			dbesc($_GET['dfrn_id']),
+			dbesc($_GET['dfrn_id'])
+		);
+		if(count($r)) {
 
 			$challenge = '';
-
-			openssl_private_encrypt($hash,$challenge,$r[0]['prvkey']);
-			$challenge = bin2hex($challenge);
-
 			$encrypted_id = '';
 			$id_str = $_GET['dfrn_id'] . '.' . mt_rand(1000,9999);
 
-			openssl_private_encrypt($id_str,$encrypted_id,$r[0]['prvkey']);
+
+			if($r[0]['duplex']) {
+				openssl_public_encrypt($hash,$challenge,$r[0]['pubkey']);
+				openssl_public_encrypt($id_str,$encrypted_id,$r[0]['pubkey']);
+			}
+			else {
+				openssl_private_encrypt($hash,$challenge,$r[0]['prvkey']);
+				openssl_private_encrypt($id_str,$encrypted_id,$r[0]['prvkey']);
+			}
+
+			$challenge = bin2hex($challenge);
 			$encrypted_id = bin2hex($encrypted_id);
 		}
 		else {
-			$status = 1;  // key not found
+			$status = 1;
 		}
 
 		echo '<?xml version="1.0" encoding="UTF-8"?><dfrn_poll><status>' .$status . '</status><dfrn_id>' . $encrypted_id . '</dfrn_id>'
@@ -189,11 +203,6 @@ function dfrn_poll_content(&$a) {
 		session_write_close();
 		exit;		
 	}
-
-
-
-
-
 }
 
 
