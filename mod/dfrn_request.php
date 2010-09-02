@@ -158,7 +158,7 @@ function dfrn_request_post(&$a) {
 	// in $a->argv[1] and we should have their complete info in $a->profile.
 
 	if(! (is_array($a->profile) && count($a->profile))) {
-		notice(t("Profile unavailable.") . EOL);
+		notice( t('Profile unavailable.') . EOL);
 		return;
 	}
 
@@ -179,29 +179,9 @@ function dfrn_request_post(&$a) {
 			return;
 		}
 
-		// Is this an email-style DFRN locator?
+		// Canonicalise email-style profile locator
 
-		if(strstr($url,'@')) {
-			$username = substr($url,0,strpos($url,'@'));
-			$hostname = substr($url,strpos($url,'@') + 1);
-			require_once('Scrape.php');
-
-		
-			$parms = scrape_meta('https://' . $url);
-			if((x($parms,'dfrn-template')) && strstr($parms['dfrn-template'],'%s')) {
-				$url = sprintf($parms['dfrn-template'],$username);
-			}
-			else {
-				$parms = scrape_meta('http://' . $url);
-				if((x($parms,'dfrn-template')) && strstr($parms['dfrn-template'],'%s')) {
-					$url = sprintf($parms['dfrn-template'],$username);
-				}
-				else {
-					$url = '';
-				}
-			}
-
-		}
+		$url = webfinger($url);
 
 		if(! strlen($url)) {
 			notice( t("Unable to resolve your name at the provided location.") . EOL);			
@@ -306,7 +286,7 @@ function dfrn_request_post(&$a) {
 				intval($uid),
 				intval($contact_record['id']),
 				((x($_POST,'knowyou') && ($_POST['knowyou'] == 1)) ? 1 : 0),
-				dbesc(trim($_POST['dfrn-request-message'])),
+				dbesc(notags(trim($_POST['dfrn-request-message']))),
 				dbesc($hash),
 				dbesc(datetime_convert())
 			);
@@ -404,7 +384,10 @@ function dfrn_request_content(&$a) {
 						'$siteurl' => $a->get_baseurl(),
 						'$sitename' => $a->config['sitename']
 					));
-					$res = mail($r[0]['email'],t("Introduction received at ") . $a->config['sitename'],$email,t('From: Administrator@') . $_SERVER[SERVER_NAME] );
+					$res = mail($r[0]['email'], 
+						t("Introduction received at ") . $a->config['sitename'],
+						$email,
+						t('From: Administrator@') . $_SERVER[SERVER_NAME] );
 					// This is a redundant notification - no point throwing errors if it fails.
 				}
 			}
