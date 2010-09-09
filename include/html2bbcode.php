@@ -17,8 +17,8 @@ $htmltags = array(
                         '/\<strong\>(.*?)\<\/strong\>/is',
                         '/\<a href=\"(.*?)\"(.*?)\>(.*?)\<\/a\>/is',
 			'/\<code\>(.*?)\<\/code\>/is',
-			'/\<font color=(.*?)\>(.*?)\<\/font\>',
-			'/\<font color=\"(.*?)\"\>(.*?)\<\/font\>',
+			'/\<font color=(.*?)\>(.*?)\<\/font\>/is',
+			'/\<font color=\"(.*?)\"\>(.*?)\<\/font\>/is',
 			'/\<blockquote\>(.*?)\<\/blockquote\>/is',
 
                         );
