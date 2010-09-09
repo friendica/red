@@ -35,7 +35,7 @@ $bbtags = array(
                         '\n',
                         '[b]$1[/b]',
                         '[url=$1]$3[/url]',
-			'[code]$1[/code],
+			'[code]$1[/code]',
 			'[color="$1"]$2[/color]',
 			'[color="$1"]$2[/color]',
 			'[quote]$1[/quote]',
