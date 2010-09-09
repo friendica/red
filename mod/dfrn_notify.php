@@ -129,10 +129,11 @@ function dfrn_notify_post(&$a) {
 				$item = $r[0];
 				if($item['uri'] == $item['parent-uri']) {
 					$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s'
-						WHERE `parent-uri` = '%s'",
+						WHERE `parent-uri` = '%s' AND `uid` = %d",
 						dbesc($when),
 						dbesc(datetime_convert()),
-						dbesc($item['uri'])
+						dbesc($item['uri']),
+						intval($importer['importer_uid'])
 					);
 				}
 				else {
@@ -151,9 +152,10 @@ function dfrn_notify_post(&$a) {
 							intval($item['uid'])
 						);
 						// who is the last child now? 
-						$r = q("SELECT `id` FROM `item` WHERE `parent-uri` = '%s' AND `type` != 'activity' AND `deleted` = 0 
+						$r = q("SELECT `id` FROM `item` WHERE `parent-uri` = '%s' AND `type` != 'activity' AND `deleted` = 0 AND `uid` = %d
 							ORDER BY `edited` DESC LIMIT 1",
-								dbesc($item['parent-uri'])
+								dbesc($item['parent-uri']),
+								intval($importer['importer_uid'])
 						);
 						if(count($r)) {
 							q("UPDATE `item` SET `last-child` = 1 WHERE `id` = %d LIMIT 1",
@@ -261,8 +263,9 @@ function dfrn_notify_post(&$a) {
 			
 				if($importer['notify-flags'] & NOTIFY_COMMENT) {
 
-					$myconv = q("SELECT `author-link` FROM `item` WHERE `parent-uri` = '%s'",
-						dbesc($parent_uri)
+					$myconv = q("SELECT `author-link` FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d",
+						dbesc($parent_uri),
+						intval($importer['importer_uid'])
 					);
 					if(count($myconv)) {
 						foreach($myconv as $conv) {

@@ -162,6 +162,12 @@
 	}
 	else {
 
+		require_once('include/items.php');
+
+		$verb = construct_verb($item);
+		$actobj = construct_activity($item);
+
+
 		if($followup) {
 			foreach($items as $item) {
 				if($item['id'] == $item_id) {
@@ -175,6 +181,10 @@
 							$item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
 						'$updated' => xmlify(datetime_convert('UTC', 'UTC', 
 							$item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
+						'$location' => xmlify($item['location']),
+						'$type' => 'text',
+						'$verb' => xmlify($verb),
+						'$actobj' => $actobj,
 						'$content' => xmlify($item['body']),
 						'$parent_id' => xmlify($item['parent-uri']),
 						'$comment_allow' => 0
@@ -209,6 +219,9 @@
 									'$updated' => xmlify(datetime_convert('UTC', 'UTC', 
 										$item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
 									'$location' => xmlify($item['location']),
+									'$type' => 'text',
+									'$verb' => xmlify($verb),
+									'$actobj' => $actobj,
 									'$content' =>xmlify($item['body']),
 									'$comment_allow' => (($item['last-child'] && strlen($contact['dfrn-id'])) ? 1 : 0)
 								));
@@ -225,6 +238,10 @@
 									'$updated' => xmlify(datetime_convert('UTC', 'UTC', 
 										$item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
 									'$content' =>xmlify($item['body']),
+									'$location' =>xmlify($item['location']),
+									'$type' => 'text',
+									'$verb' => xmlify($verb),
+									'$actobj' => $actobj,
 									'$parent_id' => xmlify($item['parent-uri']),
 									'$comment_allow' => (($item['last-child']) ? 1 : 0)
 								));

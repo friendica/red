@@ -287,8 +287,9 @@ function item_content(&$a) {
 					intval($item['uid'])
 				);
 				// who is the last child now? 
-				$r = q("SELECT `id` FROM `item` WHERE `parent-uri` = '%s' AND `type` != 'activity' AND `deleted` = 0 ORDER BY `edited` DESC LIMIT 1",
-					dbesc($item['parent-uri'])
+				$r = q("SELECT `id` FROM `item` WHERE `parent-uri` = '%s' AND `type` != 'activity' AND `deleted` = 0 AND `uid` = %d ORDER BY `edited` DESC LIMIT 1",
+					dbesc($item['parent-uri']),
+					intval($item['uid'])
 				);
 				if(count($r)) {
 					q("UPDATE `item` SET `last-child` = 1 WHERE `id` = %d LIMIT 1",

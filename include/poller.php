@@ -1,5 +1,6 @@
 <?php
 
+	$debugging = true;
 
 	require_once('boot.php');
 
@@ -70,6 +71,8 @@
 			continue;
 
 		$importer = $r[0];
+
+echo "IMPORTER: {$importer['name']}";
 
 		$last_update = (($contact['last-update'] == '0000-00-00 00:00:00') 
 			? datetime_convert('UTC','UTC','now - 30 days','Y-m-d\TH:i:s\Z')
@@ -212,10 +215,11 @@ echo "Length:" . strlen($xml) . "\r\n";
 					if($item['uri'] == $item['parent-uri']) {
 						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s',
 							`body` = '', `title` = ''
-							WHERE `parent-uri` = '%s'",
+							WHERE `parent-uri` = '%s' AND `uid` = %d",
 							dbesc($when),
 							dbesc(datetime_convert()),
-							dbesc($item['uri'])
+							dbesc($item['uri']),
+							intval($importer['uid'])
 						);
 					}
 					else {
@@ -235,9 +239,10 @@ echo "Length:" . strlen($xml) . "\r\n";
 								intval($item['uid'])
 							);
 							// who is the last child now? 
-							$r = q("SELECT `id` FROM `item` WHERE `parent-uri` = '%s' AND `type` != 'activity' AND `deleted` = 0 
+							$r = q("SELECT `id` FROM `item` WHERE `parent-uri` = '%s' AND `type` != 'activity' AND `deleted` = 0 AND `uid` = %d 
 								ORDER BY `edited` DESC LIMIT 1",
-									dbesc($item['parent-uri'])
+									dbesc($item['parent-uri']),
+									intval($importer['uid'])
 							);
 							if(count($r)) {
 								q("UPDATE `item` SET `last-child` = 1 WHERE `id` = %d LIMIT 1",
@@ -274,9 +279,10 @@ echo "Length:" . strlen($xml) . "\r\n";
 				if(count($r)) {
 					$allow = $item->get_item_tags( NAMESPACE_DFRN, 'comment-allow');
 					if($allow && $allow[0]['data'] != $r[0]['last-child']) {
-						$r = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s'",
+						$r = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d",
 							dbesc(datetime_convert()),
-							dbesc($parent_uri)
+							dbesc($parent_uri),
+							intval($importer['uid'])
 						);
 						$r = q("UPDATE `item` SET `last-child` = %d , `changed` = '%s'  WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							intval($allow[0]['data']),
