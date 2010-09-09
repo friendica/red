@@ -10,7 +10,9 @@ function redir_init(&$a) {
 	if(! count($r))
 		goaway($a->get_baseurl());
 
-	$dfrn_id = (($r[0]['duplex']) ? $r[0]['dfrn-id'] : $r[0]['issued-id']);
+	$dfrn_id = $r[0]['issued-id'];
+	if((! $dfrn_id) && ($r[0]['duplex']))
+		$dfrn_id = $r[0]['dfrn-id'];
 
 	q("INSERT INTO `profile_check` ( `uid`, `dfrn_id`, `expire`)
 		VALUES( %d, '%s', %d )",
@@ -19,6 +21,5 @@ function redir_init(&$a) {
 		intval(time() + 45));
 	goaway ($r[0]['poll'] . '?dfrn_id=' . $dfrn_id . '&type=profile');
 
-	
 	
 }

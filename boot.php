@@ -5,6 +5,7 @@ set_time_limit(0);
 define ( 'BUILD_ID' , 1001 );
 
 define ( 'EOL', "<br />\r\n");
+define ( 'ATOM_TIME',  'Y-m-d\TH:i:s\Z' );
 
 define ( 'REGISTER_CLOSED',  0);
 define ( 'REGISTER_APPROVE', 1);
@@ -15,6 +16,10 @@ define ( 'DIRECTION_IN',   1);			// VIP e.g. has FAN
 define ( 'DIRECTION_OUT',  2);			// FAN to a VIP
 define ( 'DIRECTION_BOTH', 3);			// Mutual Friends
 
+define ( 'REL_VIP',        1);
+define ( 'REL_FAN',        2);
+define ( 'REL_BUD',        3);
+
 define ( 'NOTIFY_INTRO',   0x0001 );
 define ( 'NOTIFY_CONFIRM', 0x0002 );
 define ( 'NOTIFY_WALL',    0x0004 );
@@ -22,6 +27,8 @@ define ( 'NOTIFY_COMMENT', 0x0008 );
 define ( 'NOTIFY_MAIL',    0x0010 );
 
 define ( 'NAMESPACE_DFRN' ,      'http://purl.org/macgirvin/dfrn/1.0' ); 
+define ( 'NAMESPACE_THREAD' ,    'http://purl.org/syndication/thread/1.0' );
+define ( 'NAMESPACE_TOMB' ,      'http://purl.org/atompub/tombstones/1.0' );
 define ( 'NAMESPACE_ACTIVITY',   'http://activitystrea.ms/spec/1.0/' );
 define ( 'NAMESPACE_ACTIVITY_SCHEMA', 'http://activitystrea.ms/schema/1.0/');
 define ( 'ACTIVITY_LIKE',        NAMESPACE_ACTIVITY_SCHEMA . 'like' );
@@ -37,8 +44,7 @@ define ( 'ACTIVITY_OBJ_P_PHOTO', NAMESPACE_ACTIVITY_SCHEMA . 'profile-photo' );
 define ( 'ACTIVITY_OBJ_ALBUM',   NAMESPACE_ACTIVITY_SCHEMA . 'photo-album' );
 
 
-define ( 'ACTIVITY_OBJ_HEART',    NAMESPACE_DFRN     . '/heart' );
-
+define ( 'ACTIVITY_OBJ_HEART',   NAMESPACE_DFRN     . '/heart' );
 
 
 if(! class_exists('App')) {

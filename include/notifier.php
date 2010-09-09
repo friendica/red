@@ -69,7 +69,9 @@
 			killme();
 	}
 
-	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
+	$r = q("SELECT `contact`.*, `user`.`nickname` 
+		FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
+		WHERE `contact`.`uid` = %d AND `contact`.`self` = 1 LIMIT 1",
 		intval($uid)
 	);
 
@@ -133,31 +135,28 @@
 
 
 	$atom .= replace_macros($feed_template, array(
-			'$feed_id' => xmlify($a->get_baseurl()),
-			'$feed_title' => xmlify($owner['name']),
-			'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', 
-				$updated . '+00:00' , 'Y-m-d\TH:i:s\Z')) ,
-			'$name' => xmlify($owner['name']),
+			'$feed_id'      => xmlify($a->get_baseurl() . '/profile/' . $owner['nickname'] ),
+			'$feed_title'   => xmlify($owner['name']),
+			'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', $updated . '+00:00' , ATOM_TIME)) ,
+			'$name'         => xmlify($owner['name']),
 			'$profile_page' => xmlify($owner['url']),
-			'$photo' => xmlify($owner['photo']),
-			'$thumb' => xmlify($owner['thumb']),
-			'$picdate' => xmlify(datetime_convert('UTC','UTC',$owner['avatar-date'] . '+00:00' , 'Y-m-d\TH:i:s\Z')) ,
-			'$uridate' => xmlify(datetime_convert('UTC','UTC',$owner['uri-date'] . '+00:00' , 'Y-m-d\TH:i:s\Z')) ,
-			'$namdate' => xmlify(datetime_convert('UTC','UTC',$owner['name-date'] . '+00:00' , 'Y-m-d\TH:i:s\Z'))
+			'$photo'        => xmlify($owner['photo']),
+			'$thumb'        => xmlify($owner['thumb']),
+			'$picdate'      => xmlify(datetime_convert('UTC','UTC',$owner['avatar-date'] . '+00:00' , ATOM_TIME)) ,
+			'$uridate'      => xmlify(datetime_convert('UTC','UTC',$owner['uri-date']    . '+00:00' , ATOM_TIME)) ,
+			'$namdate'      => xmlify(datetime_convert('UTC','UTC',$owner['name-date']   . '+00:00' , ATOM_TIME))
 	));
 
 	if($cmd == 'mail') {
 		$atom .= replace_macros($mail_template, array(
-			'$name' => xmlify($owner['name']),
+			'$name'         => xmlify($owner['name']),
 			'$profile_page' => xmlify($owner['url']),
-			'$thumb' => xmlify($owner['thumb']),
-			'$item_id' => xmlify($item['uri']),
-			'$subject' => xmlify($item['title']),
-			'$created' => xmlify(datetime_convert('UTC', 'UTC', 
-				$item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
-			'$content' =>xmlify($item['body']),
-			'$parent_id' => xmlify($item['parent-uri'])
-
+			'$thumb'        => xmlify($owner['thumb']),
+			'$item_id'      => xmlify($item['uri']),
+			'$subject'      => xmlify($item['title']),
+			'$created'      => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , ATOM_TIME)),
+			'$content'      => xmlify($item['body']),
+			'$parent_id'    => xmlify($item['parent-uri'])
 		));
 	}
 	else {
@@ -172,22 +171,23 @@
 			foreach($items as $item) {
 				if($item['id'] == $item_id) {
 					$atom .= replace_macros($cmnt_template, array(
-						'$name' => xmlify($owner['name']),
-						'$profile_page' => xmlify($owner['url']),
-						'$thumb' => xmlify($owner['thumb']),
-						'$item_id' => xmlify($item['uri']),
-						'$title' => xmlify($item['title']),
-						'$published' => xmlify(datetime_convert('UTC', 'UTC', 
-							$item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
-						'$updated' => xmlify(datetime_convert('UTC', 'UTC', 
-							$item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
-						'$location' => xmlify($item['location']),
-						'$type' => 'text',
-						'$verb' => xmlify($verb),
-						'$actobj' => $actobj,
-						'$content' => xmlify($item['body']),
-						'$parent_id' => xmlify($item['parent-uri']),
-						'$comment_allow' => 0
+						'$name'               => xmlify($owner['name']),
+						'$profile_page'       => xmlify($owner['url']),
+						'$thumb'              => xmlify($owner['thumb']),
+						'$owner_name'         => xmlify($item['owner-name']),
+						'$owner_profile_page' => xmlify($item['owner-link']),
+						'$owner_thumb'        => xmlify($item['owner-avatar']),
+						'$item_id'            => xmlify($item['uri']),
+						'$title'              => xmlify($item['title']),
+						'$published'          => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , ATOM_TIME)),
+						'$updated'            => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , ATOM_TIME)),
+						'$location'           => xmlify($item['location']),
+						'$type'               => 'text',
+						'$verb'               => xmlify($verb),
+						'$actobj'             => $actobj,
+						'$content'            => xmlify($item['body']),
+						'$parent_id'          => xmlify($item['parent-uri']),
+						'$comment_allow'      => 0
 					));
 				}
 			}
@@ -197,8 +197,7 @@
 				if($item['deleted']) {
 					$atom .= replace_macros($tomb_template, array(
 						'$id' => xmlify($item['uri']),
-						'$updated' => xmlify(datetime_convert('UTC', 'UTC', 
-							$item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z'))
+						'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , ATOM_TIME))
 					));
 				}
 				else {
@@ -206,43 +205,39 @@
 						if($item['contact-id'] == $contact['id']) {
 							if($item['parent'] == $item['id']) {
 								$atom .= replace_macros($item_template, array(
-									'$name' => xmlify($contact['name']),
-									'$profile_page' => xmlify($contact['url']),
-									'$thumb' => xmlify($contact['thumb']),
-									'$owner_name' => xmlify($item['owner-name']),
+									'$name'               => xmlify($contact['name']),
+									'$profile_page'       => xmlify($contact['url']),
+									'$thumb'              => xmlify($contact['thumb']),
+									'$owner_name'         => xmlify($item['owner-name']),
 									'$owner_profile_page' => xmlify($item['owner-link']),
-									'$owner_thumb' => xmlify($item['owner-avatar']),
-									'$item_id' => xmlify($item['uri']),
-									'$title' => xmlify($item['title']),
-									'$published' => xmlify(datetime_convert('UTC', 'UTC', 
-										$item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
-									'$updated' => xmlify(datetime_convert('UTC', 'UTC', 
-										$item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
-									'$location' => xmlify($item['location']),
-									'$type' => 'text',
-									'$verb' => xmlify($verb),
-									'$actobj' => $actobj,
-									'$content' =>xmlify($item['body']),
-									'$comment_allow' => (($item['last-child'] && strlen($contact['dfrn-id'])) ? 1 : 0)
+									'$owner_thumb'        => xmlify($item['owner-avatar']),
+									'$item_id'            => xmlify($item['uri']),
+									'$title'              => xmlify($item['title']),
+									'$published'          => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , ATOM_TIME)),
+									'$updated'            => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , ATOM_TIME)),
+									'$location'           => xmlify($item['location']),
+									'$type'               => 'text',
+									'$verb'               => xmlify($verb),
+									'$actobj'             => $actobj,
+									'$content'            => xmlify($item['body']),
+									'$comment_allow'      => (($item['last-child'] && ($contact['rel']) && ($contact['rel'] != REL_FAN)) ? 1 : 0)
 								));
 							}
 							else {
 								$atom .= replace_macros($cmnt_template, array(
-									'$name' => xmlify($contact['name']),
-									'$profile_page' => xmlify($contact['url']),
-									'$thumb' => xmlify($contact['thumb']),
-									'$item_id' => xmlify($item['uri']),
-									'$title' => xmlify($item['title']),
-									'$published' => xmlify(datetime_convert('UTC', 'UTC', 
-										$item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
-									'$updated' => xmlify(datetime_convert('UTC', 'UTC', 
-										$item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
-									'$content' =>xmlify($item['body']),
-									'$location' =>xmlify($item['location']),
-									'$type' => 'text',
-									'$verb' => xmlify($verb),
-									'$actobj' => $actobj,
-									'$parent_id' => xmlify($item['parent-uri']),
+									'$name'          => xmlify($contact['name']),
+									'$profile_page'  => xmlify($contact['url']),
+									'$thumb'         => xmlify($contact['thumb']),
+									'$item_id'       => xmlify($item['uri']),
+									'$title'         => xmlify($item['title']),
+									'$published'     => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , ATOM_TIME)),
+									'$updated'       => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , ATOM_TIME)),
+									'$content'       => xmlify($item['body']),
+									'$location'      => xmlify($item['location']),
+									'$type'          => 'text',
+									'$verb'          => xmlify($verb),
+									'$actobj'        => $actobj,
+									'$parent_id'     => xmlify($item['parent-uri']),
 									'$comment_allow' => (($item['last-child']) ? 1 : 0)
 								));
 							}
@@ -300,9 +295,11 @@
 		if((intval($res->status) != 0) || (! strlen($res->challenge)) || (! strlen($res->dfrn_id)))
 			continue;
 
-		$postvars = array();
+		$postvars     = array();
+
 		$sent_dfrn_id = hex2bin($res->dfrn_id);
-		$challenge = hex2bin($res->challenge);
+		$challenge    = hex2bin($res->challenge);
+
 		$final_dfrn_id = '';
 
 		if($rr['duplex'] && strlen($rr['prvkey'])) {
@@ -322,7 +319,7 @@
 
 		$postvars['dfrn_id'] = $idtosend;
 
-		if((($rr['rel'] == DIRECTION_OUT) || ($rr['rel'] == DIRECTION_BOTH)) && (! $rr['blocked']) && (! $rr['readonly'])) {
+		if(($rr['rel']) && ($rr['rel'] != REL_FAN) && (! $rr['blocked']) && (! $rr['readonly'])) {
 			$postvars['data'] = $atom;
 		}
 		else {

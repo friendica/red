@@ -97,17 +97,16 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update) {
 
 
 	$atom .= replace_macros($feed_template, array(
-			'$feed_id' => xmlify($a->get_baseurl() . '/profile/' . $owner_nick),
-			'$feed_title' => xmlify($owner['name']),
-			'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', $updated . '+00:00' , 'Y-m-d\TH:i:s\Z')) ,
-			'$name' => xmlify($owner['name']),
+			'$feed_id'      => xmlify($a->get_baseurl() . '/profile/' . $owner_nick),
+			'$feed_title'   => xmlify($owner['name']),
+			'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', $updated . '+00:00' , ATOM_TIME)) ,
+			'$name'         => xmlify($owner['name']),
 			'$profile_page' => xmlify($owner['url']),
-			'$photo' => xmlify($owner['photo']),
-			'$thumb' => xmlify($owner['thumb']),
-			'$picdate' => xmlify(datetime_convert('UTC','UTC',$owner['avatar-date'] . '+00:00' , 'Y-m-d\TH:i:s\Z')) ,
-			'$uridate' => xmlify(datetime_convert('UTC','UTC',$owner['uri-date']    . '+00:00' , 'Y-m-d\TH:i:s\Z')) ,
-			'$namdate' => xmlify(datetime_convert('UTC','UTC',$owner['name-date']   . '+00:00' , 'Y-m-d\TH:i:s\Z')) 
-
+			'$photo'        => xmlify($owner['photo']),
+			'$thumb'        => xmlify($owner['thumb']),
+			'$picdate'      => xmlify(datetime_convert('UTC','UTC',$owner['avatar-date'] . '+00:00' , ATOM_TIME)) ,
+			'$uridate'      => xmlify(datetime_convert('UTC','UTC',$owner['uri-date']    . '+00:00' , ATOM_TIME)) ,
+			'$namdate'      => xmlify(datetime_convert('UTC','UTC',$owner['name-date']   . '+00:00' , ATOM_TIME)) 
 	));
 
 	
@@ -126,7 +125,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update) {
 		if($item['deleted']) {
 			$atom .= replace_macros($tomb_template, array(
 				'$id' => xmlify($item['uri']),
-				'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z'))
+				'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , ATOM_TIME))
 			));
 		}
 		else {
@@ -143,14 +142,14 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update) {
 					'$owner_thumb' => xmlify($item['owner-avatar']),
 					'$item_id' => xmlify($item['uri']),
 					'$title' => xmlify($item['title']),
-					'$published' => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
-					'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
+					'$published' => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , ATOM_TIME)),
+					'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , ATOM_TIME)),
 					'$location' => xmlify($item['location']),
 					'$type' => $type,
 					'$content' => xmlify($item['body']),
 					'$verb' => xmlify($verb),
 					'$actobj' => $actobj,  // do not xmlify
-					'$comment_allow' => (($item['last-child'] && strlen($contact['dfrn-id'])) ? 1 : 0)
+					'$comment_allow' => ((($item['last-child']) && ($contact['rel']) && ($contact['rel'] != REL_FAN)) ? 1 : 0)
 				));
 			}
 			else {
@@ -160,8 +159,8 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update) {
 					'$thumb' => xmlify($item['thumb']),
 					'$item_id' => xmlify($item['uri']),
 					'$title' => xmlify($item['title']),
-					'$published' => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
-					'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
+					'$published' => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , ATOM_TIME)),
+					'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , ATOM_TIME)),
 					'$type' => $type,
 					'$content' =>xmlify($item['body']),
 					'$verb' => xmlify($verb),

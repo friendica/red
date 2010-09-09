@@ -92,8 +92,8 @@ function dfrn_notify_post(&$a) {
 				'$body' => strip_tags(bbcode($msg['body']))
 			));
 
-			$res = mail($importer['email'], t("New mail received at ") . $a->config['sitename'],
-				$email_tpl,t("From: Administrator@") . $a->get_hostname() );
+			$res = mail($importer['email'], t('New mail received at ') . $a->config['sitename'],
+				$email_tpl, 'From: ' . t('Administrator') . '@' . $a->get_hostname() );
 		}
 		xml_status(0);
 		return; // NOTREACHED
@@ -109,7 +109,7 @@ function dfrn_notify_post(&$a) {
 
 		$deleted = false;
 
-		$rawdelete = $item->get_item_tags("http://purl.org/atompub/tombstones/1.0", 'deleted-entry');
+		$rawdelete = $item->get_item_tags( NAMESPACE_TOMB , 'deleted-entry');
 		if(isset($rawdelete[0]['attribs']['']['ref'])) {
 			$uri = $rawthread[0]['attribs']['']['ref'];
 			$deleted = true;
@@ -170,7 +170,7 @@ function dfrn_notify_post(&$a) {
 
 		$is_reply = false;		
 		$item_id = $item->get_id();
-		$rawthread = $item->get_item_tags("http://purl.org/syndication/thread/1.0",'in-reply-to');
+		$rawthread = $item->get_item_tags( NAMESPACE_THREAD, 'in-reply-to');
 		if(isset($rawthread[0]['attribs']['']['ref'])) {
 			$is_reply = true;
 			$parent_uri = $rawthread[0]['attribs']['']['ref'];
