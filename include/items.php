@@ -233,7 +233,6 @@ function get_atom_elements($item) {
 	// html.
 
 
-echo "test1" . $res['body'];
 	if(strpos($res['body'],'<')) {
 
 		$res['body'] = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
@@ -249,10 +248,10 @@ echo "test1" . $res['body'];
 		$purifier = new HTMLPurifier($config);
 		$res['body'] = $purifier->purify($res['body']);
 	}
-echo "test2" . $res['body'];
+
 	
 	$res['body'] = html2bbcode($res['body']);
-echo "test3" . $res['body'];
+
 
 	$allow = $item->get_item_tags(NAMESPACE_DFRN,'comment-allow');
 	if($allow && $allow[0]['data'] == 1)
