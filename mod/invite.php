@@ -32,9 +32,7 @@ function invite_post(&$a) {
 
 	}
 	notice( $total . t(' messages sent.') . EOL);
-
-
-
+	return;
 }
 
 
@@ -58,6 +56,4 @@ function invite_content(&$a) {
 	));
 
 	return $o;
-
-
 }

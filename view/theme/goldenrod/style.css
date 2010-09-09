@@ -1,0 +1,58 @@
+@import url('../default/style.css');
+
+body { 
+	background: #FFDDAA;
+	color: #444444;
+}
+
+.nav-link {
+	color: #444444;
+	background: #FFCC55;
+}
+
+.nav-commlink {
+	color: #444444;
+	background: #FFCC55;
+}
+
+.profile-tabs {
+	color: #444444;
+	background: #FFCC55;
+
+}
+
+a, a:visited {
+	color: #8888FF;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #0000FF;
+	text-decoration: underline;
+}
+.wall-item-content-wrapper.comment {
+	background: #FFCC55;
+}
+
+.comment-edit-wrapper {
+	background: #FFCC55;
+}
+
+.comment-wwedit-wrapper {
+	background: #FFCC55;
+}
+
+#photos-upload-perms-menu, #photos-upload-perms-menu:visited {
+	color: #8888FF;
+}
+
+#photos-upload-perms-menu:hover {
+	color: #0000FF;
+}
+#settings-default-perms-menu, #settings-default-perms-menu:visited {
+	color: #8888FF;
+}
+
+#settings-default-perms-menu:hover {
+	color: #0000FF;
+}

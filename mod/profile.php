@@ -24,7 +24,7 @@ function profile_load(&$a, $username, $profile = 0) {
 	);
 
 	if(($r === false) || (! count($r))) {
-		notice("No profile" . EOL );
+		notice( t('No profile') . EOL );
 		$a->error = 404;
 		return;
 	}
@@ -44,19 +44,10 @@ function profile_init(&$a) {
 	if($a->argc > 1)
 		$which = $a->argv[1];
 	else {
-		notice("No profile" . EOL );
+		notice( t('No profile') . EOL );
 		$a->error = 404;
 		return;
 	}
-
-	if((remote_user()) && ($a->argc > 2) && ($a->argv[2] == 'visit'))
-		$_SESSION['is_visitor'] = 1;
-//	else {
-//		unset($_SESSION['is_visitor']);
-//		unset($_SESSION['visitor_id']);
-//		if(! $_SESSION['uid'])
-//			unset($_SESSION['authenticated']);
-//	}
 
 	$profile = 0;
 	if((local_user()) && ($a->argc > 2) && ($a->argv[2] == 'view')) {
@@ -173,7 +164,7 @@ function profile_content(&$a, $update = false) {
 
 	// Profile owner - everything is visible
 
-	if(local_user() && ($_SESSION['uid'] == $a->profile['uid'])) {
+	if(local_user() && ($_SESSION['uid'] == $a->profile['profile_uid'])) {
 		$sql_extra = ''; 
 		
 		// Oh - while we're here... reset the Unseen messages

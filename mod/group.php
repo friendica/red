@@ -5,9 +5,10 @@ function validate_members(&$item) {
 }
 
 function group_init(&$a) {
-	require_once('include/group.php');
-	$a->page['aside'] = group_side();
-
+	if(local_user()) {
+		require_once('include/group.php');
+		$a->page['aside'] = group_side();
+	}
 }
 
 
@@ -21,10 +22,10 @@ function group_post(&$a) {
 
 	if(($a->argc == 2) && ($a->argv[1] == 'new')) {
 		$name = notags(trim($_POST['groupname']));
-		$r = group_add($_SESSION['uid'],$name);
+		$r = group_add(get_uid(),$name);
 		if($r) {
 			notice( t('Group created.') . EOL );
-			$r = group_byname($_SESSION['uid'],$name);
+			$r = group_byname(get_uid(),$name);
 			if($r)
 				goaway($a->get_baseurl() . '/group/' . $r);
 		}
@@ -36,18 +37,19 @@ function group_post(&$a) {
 	if(($a->argc == 2) && (intval($a->argv[1]))) {
 		$r = q("SELECT * FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($a->argv[1]),
-			intval($_SESSION['uid'])
+			intval(get_uid())
 		);
 		if(! count($r)) {
 			notice( t('Group not found.') . EOL );
 			goaway($a->get_baseurl() . '/contacts');
+			return; // NOTREACHED
 		}
 		$group = $r[0];
 		$groupname = notags(trim($_POST['groupname']));
 		if((strlen($groupname))  && ($groupname != $group['name'])) {
 			$r = q("UPDATE `group` SET `name` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
 				dbesc($groupname),
-				intval($_SESSION['uid']),
+				intval(get_uid()),
 				intval($group['id'])
 			);
 			if($r)
@@ -57,14 +59,14 @@ function group_post(&$a) {
 		array_walk($members,'validate_members');
 		$r = q("DELETE FROM `group_member` WHERE `gid` = %d AND `uid` = %d",
 			intval($a->argv[1]),
-			intval($_SESSION['uid'])
+			intval(get_uid())
 		);
 		$result = true;
 		if(count($members)) {
 			foreach($members as $member) {
 				$r = q("INSERT INTO `group_member` ( `uid`, `gid`, `contact-id`)
 					VALUES ( %d, %d, %d )",
-					intval($_SESSION['uid']),
+					intval(get_uid()),
 					intval($group['id']),
 					intval($member)
 				);
@@ -74,9 +76,9 @@ function group_post(&$a) {
 		}
 		if($result)
 			notice( t('Membership list updated.') . EOL);
-	$a->page['aside'] = group_side();
+		$a->page['aside'] = group_side();
 	}
-	
+	return;	
 }
 
 function group_content(&$a) {
@@ -88,20 +90,18 @@ function group_content(&$a) {
 
 	if(($a->argc == 2) && ($a->argv[1] == 'new')) {
 		$tpl = file_get_contents('view/group_new.tpl');
-		$o .= replace_macros($tpl,array(
-
-		));
-
+		$o .= replace_macros($tpl,array());
+		return $o;
 	}
 
 	if(($a->argc == 3) && ($a->argv[1] == 'drop')) {
 		if(intval($a->argv[2])) {
 			$r = q("SELECT `name` FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval($a->argv[2]),
-				intval($_SESSION['uid'])
+				intval(get_uid())
 			);
 			if(count($r)) 
-				$result = group_rmv($_SESSION['uid'],$r[0]['name']);
+				$result = group_rmv(get_uid(),$r[0]['name']);
 			if($result)
 				notice( t('Group removed.') . EOL);
 			else
@@ -116,10 +116,10 @@ function group_content(&$a) {
 		require_once('view/acl_selectors.php');
 		$r = q("SELECT * FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($a->argv[1]),
-			intval($_SESSION['uid'])
+			intval(get_uid())
 		);
 		if(! count($r)) {
-			notice( t("Group not found.") . EOL );
+			notice( t('Group not found.') . EOL );
 			goaway($a->get_baseurl() . '/contacts');
 		}
 		$group = $r[0];
@@ -145,11 +145,6 @@ function group_content(&$a) {
 		));
 
 	}
-
-
-
-
-
 	return $o;
 
 }

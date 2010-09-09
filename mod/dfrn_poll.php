@@ -14,6 +14,8 @@ function dfrn_poll_init(&$a) {
 		$type = $a->config['dfrn_poll_type'] = $_GET['type'];
 	if(x($_GET,'last_update'))
 		$last_update = $a->config['dfrn_poll_last_update'] = $_GET['last_update'];
+	$dfrn_version    = ((x($_GET,'dfrn_version'))    ? $_GET['dfrn_version']    : '1.0');
+	$destination_url = ((x($_GET,'destination_url')) ? $_GET['destination_url'] : '');
 
 	if(($dfrn_id == '') && (! x($_POST,'dfrn_id')) && ($a->argc > 1)) {
 		$o = get_feed_for($a,'*', $a->argv[1],$last_update);
@@ -25,7 +27,7 @@ function dfrn_poll_init(&$a) {
 
 		$r = q("SELECT `contact`.*, `user`.`nickname` 
 			FROM `contact` LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid`
-			WHERE ( `dfrn-id` = '%s' OR ( `issued-id` = '%s' AND `duplex `= 1 )) LIMIT 1",
+			WHERE ( `dfrn-id` = '%s' OR ( `issued-id` = '%s' AND `duplex` = 1 )) LIMIT 1",
 			dbesc($dfrn_id),
 			dbesc($dfrn_id)
 		);
@@ -46,10 +48,11 @@ function dfrn_poll_init(&$a) {
 						dbesc($session_id)); 
 				}
 			}
-			$profile = ((strlen($r[0]['nickname'])) ? $r[0]['nickname'] : $r[0]['uid']);
-			goaway($a->get_baseurl() . "/profile/$profile/visit");
+			$profile = $r[0]['nickname'];
+			goaway((strlen($destination_url)) ? $destination_url : $a->get_baseurl() . '/profile/' . $profile);
 		}
 		goaway($a->get_baseurl());
+
 	}
 
 	if((x($type)) && ($type == 'profile-check')) {
@@ -57,8 +60,10 @@ function dfrn_poll_init(&$a) {
 		q("DELETE FROM `profile_check` WHERE `expire` < " . intval(time()));
 		$r = q("SELECT * FROM `profile_check` WHERE `dfrn_id` = '%s' ORDER BY `expire` DESC",
 			dbesc($dfrn_id));
-		if(count($r))
+		if(count($r)) {
 			xml_status(1);
+			return; // NOTREACHED
+		}
 		xml_status(0);
 		return; // NOTREACHED
 	}
@@ -182,7 +187,7 @@ function dfrn_poll_content(&$a) {
 			$id_str = $_GET['dfrn_id'] . '.' . mt_rand(1000,9999);
 
 
-			if($r[0]['duplex']) {
+			if($r[0]['duplex'] && strlen($r[0]['pubkey'])) {
 				openssl_public_encrypt($hash,$challenge,$r[0]['pubkey']);
 				openssl_public_encrypt($id_str,$encrypted_id,$r[0]['pubkey']);
 			}
@@ -198,7 +203,7 @@ function dfrn_poll_content(&$a) {
 			$status = 1;
 		}
 
-		echo '<?xml version="1.0" encoding="UTF-8"?><dfrn_poll><status>' .$status . '</status><dfrn_id>' . $encrypted_id . '</dfrn_id>'
+		echo '<?xml version="1.0" encoding="UTF-8"?><dfrn_poll><status>' .$status . '</status><dfrn_version>2.0</dfrn_version><dfrn_id>' . $encrypted_id . '</dfrn_id>'
 			. '<challenge>' . $challenge . '</challenge></dfrn_poll>' . "\r\n" ;
 		session_write_close();
 		exit;		

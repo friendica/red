@@ -15,6 +15,8 @@
 	require_once('simplepie/simplepie.inc');
 	require_once('include/items.php');
 
+	require_once('include/Contact.php');
+
 	$a->set_baseurl(get_config('system','url'));
 
 	$contacts = q("SELECT * FROM `contact` 
@@ -73,7 +75,7 @@
 			? datetime_convert('UTC','UTC','now - 30 days','Y-m-d\TH:i:s\Z')
 			: datetime_convert('UTC','UTC',$contact['last-update'],'Y-m-d\TH:i:s\Z'));
 
-		$idtosend = (($contact['duplex']) ? $contact['issued-id'] : $contact['dfrn-id']);
+		$idtosend = (($contact['dfrn-id']) ? $contact['dfrn-id'] : $contact['issued-id']);
 
 		$url = $contact['poll'] . '?dfrn_id=' . $idtosend . '&type=data&last_update=' . $last_update ;
 
@@ -87,8 +89,14 @@ echo "XML: " . $xml;
 
 		$res = simplexml_load_string($xml);
 
+		if(intval($res->status) == 1)
+			mark_for_death($contact);
+
 		if((intval($res->status) != 0) || (! strlen($res->challenge)) || (! strlen($res->dfrn_id)))
 			continue;
+
+		if($contact['term-date'] != '0000-00-00 00:00:00')
+			unmark_for_death($contact);
 
 		$postvars = array();
 
@@ -97,7 +105,7 @@ echo "XML: " . $xml;
 
 		$final_dfrn_id = '';
 
-		if($contact['duplex']) {
+		if(($contact['duplex']) && strlen($contact['prvkey'])) {
 			openssl_private_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['prvkey']);
 			openssl_private_decrypt($challenge,$postvars['challenge'],$contact['prvkey']);
 
@@ -108,13 +116,12 @@ echo "XML: " . $xml;
 		}
 
 		$final_dfrn_id = substr($final_dfrn_id, 0, strpos($final_dfrn_id, '.'));
-		if(($final_dfrn_id != $contact['dfrn-id']) 
-			|| (($contact['duplex']) && ($final_dfrn_id != $contact['issued-id']))) {
+		if($final_dfrn_id != $idtosend)
 			// did not decode properly - cannot trust this site 
 			continue;
 		}
 
-		$postvars['dfrn_id'] = (($contact['duplex']) ? $contact['issued-id'] : $contact['dfrn-id']);
+		$postvars['dfrn_id'] = $idtosend;
 
 		$xml = post_url($contact['poll'],$postvars);
 

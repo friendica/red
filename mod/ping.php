@@ -9,26 +9,26 @@ function ping_init(&$a) {
 
 	$r = q("SELECT COUNT(*) AS `total` FROM `item` 
 		WHERE `unseen` = 1 AND `visible` = 1 AND `deleted` = 0 AND `uid` = %d",
-		intval($_SESSION['uid'])
+		intval(get_uid())
 	);
 	$network = $r[0]['total'];
 
 	$r = q("SELECT COUNT(*) AS `total` FROM `item` 
 		WHERE `unseen` = 1 AND `visible` = 1 AND `deleted` = 0 AND `uid` = %d AND `type` != 'remote' ",
-		intval($_SESSION['uid'])
+		intval(get_uid())
 	);
 	$home = $r[0]['total'];
 
 	$r = q("SELECT COUNT(*) AS `total` FROM `intro` 
 		WHERE `uid` = %d  AND `blocked` = 0 AND `ignore` = 0 ",
-		intval($_SESSION['uid'])
+		intval(get_uid())
 	);
 	$intro = $r[0]['total'];
 
 	$myurl = $a->get_baseurl() . '/profile/' . $user['nickname'] ;
 	$r = q("SELECT COUNT(*) AS `total` FROM `mail`
 		WHERE `uid` = %d AND `seen` = 0 AND `from-url` != '%s' ",
-		intval($_SESSION['uid']),
+		intval(get_uid()),
 		dbesc($myurl)
 	);
 

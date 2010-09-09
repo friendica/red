@@ -1,18 +1,27 @@
 <?php
 
 
-function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
+function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update) {
+
+	require_once('bbcode.php');
 
 	// default permissions - anonymous user
 
-	$sql_extra = " AND `allow_cid` = '' AND `allow_gid` = '' AND `deny_cid` = '' AND `deny_gid` = '' ";
+	$sql_extra = " 
+		AND `allow_cid` = '' 
+		AND `allow_gid` = '' 
+		AND `deny_cid`  = '' 
+		AND `deny_gid`  = '' 
+	";
 
 	if(strlen($owner_id) && ! intval($owner_id)) {
-		$r = q("SELECT `uid` FROM `user` WHERE `nickname` = '%s' LIMIT 1",
+		$r = q("SELECT `uid`, `nickname` FROM `user` WHERE `nickname` = '%s' LIMIT 1",
 			dbesc($owner_id)
 		);
-		if(count($r))
+		if(count($r)) {
 			$owner_id = $r[0]['uid'];
+			$owner_nick = $r[0]['nickname'];
+		}
 	}
 
 	$r = q("SELECT * FROM `contact` WHERE `self` = 1 AND `uid` = %d LIMIT 1",
@@ -42,12 +51,12 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 		else
 			$gs = '<<>>' ; // Impossible to match 
 
-		$sql_extra = sprintf(
-			" AND ( `allow_cid` = '' OR `allow_cid` REGEXP '<%d>' ) 
-			AND ( `deny_cid` = '' OR  NOT `deny_cid` REGEXP '<%d>' ) 
-			AND ( `allow_gid` = '' OR `allow_gid` REGEXP '%s' )
-			AND ( `deny_gid` = '' OR NOT `deny_gid` REGEXP '%s') ",
-
+		$sql_extra = sprintf(" 
+			AND ( `allow_cid` = '' OR     `allow_cid` REGEXP '<%d>' ) 
+			AND ( `deny_cid`  = '' OR NOT `deny_cid`  REGEXP '<%d>' ) 
+			AND ( `allow_gid` = '' OR     `allow_gid` REGEXP '%s' )
+			AND ( `deny_gid`  = '' OR NOT `deny_gid`  REGEXP '%s') 
+		",
 			intval($contact['id']),
 			intval($contact['id']),
 			dbesc($gs),
@@ -88,7 +97,7 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 
 
 	$atom .= replace_macros($feed_template, array(
-			'$feed_id' => xmlify($a->get_baseurl()),
+			'$feed_id' => xmlify($a->get_baseurl() . '/profile/' . $owner_nick),
 			'$feed_title' => xmlify($owner['name']),
 			'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', $updated . '+00:00' , 'Y-m-d\TH:i:s\Z')) ,
 			'$name' => xmlify($owner['name']),
@@ -96,12 +105,24 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 			'$photo' => xmlify($owner['photo']),
 			'$thumb' => xmlify($owner['thumb']),
 			'$picdate' => xmlify(datetime_convert('UTC','UTC',$owner['avatar-date'] . '+00:00' , 'Y-m-d\TH:i:s\Z')) ,
-			'$uridate' => xmlify(datetime_convert('UTC','UTC',$owner['uri-date'] . '+00:00' , 'Y-m-d\TH:i:s\Z')) ,
-			'$namdate' => xmlify(datetime_convert('UTC','UTC',$owner['name-date'] . '+00:00' , 'Y-m-d\TH:i:s\Z')) 
+			'$uridate' => xmlify(datetime_convert('UTC','UTC',$owner['uri-date']    . '+00:00' , 'Y-m-d\TH:i:s\Z')) ,
+			'$namdate' => xmlify(datetime_convert('UTC','UTC',$owner['name-date']   . '+00:00' , 'Y-m-d\TH:i:s\Z')) 
 
 	));
 
+	
 	foreach($items as $item) {
+
+		// public feeds get html, our own nodes use bbcode
+
+		if($dfrn_id == '*') {
+			$item['body'] = bbcode($item['body']);
+			$type = 'html';
+		}
+		else {
+			$type = 'text';
+		}
+
 		if($item['deleted']) {
 			$atom .= replace_macros($tomb_template, array(
 				'$id' => xmlify($item['uri']),
@@ -109,6 +130,9 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 			));
 		}
 		else {
+			$verb = construct_verb($item);
+			$actobj = construct_activity($item);
+
 			if($item['parent'] == $item['id']) {
 				$atom .= replace_macros($item_template, array(
 					'$name' => xmlify($item['name']),
@@ -122,7 +146,10 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 					'$published' => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
 					'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
 					'$location' => xmlify($item['location']),
+					'$type' => $type,
 					'$content' => xmlify($item['body']),
+					'$verb' => xmlify($verb),
+					'$actobj' => $actobj,  // do not xmlify
 					'$comment_allow' => (($item['last-child'] && strlen($contact['dfrn-id'])) ? 1 : 0)
 				));
 			}
@@ -135,7 +162,10 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 					'$title' => xmlify($item['title']),
 					'$published' => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
 					'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , 'Y-m-d\TH:i:s\Z')),
+					'$type' => $type,
 					'$content' =>xmlify($item['body']),
+					'$verb' => xmlify($verb),
+					'$actobj' => $actobj, // do not xmlify
 					'$parent_id' => xmlify($item['parent-uri']),
 					'$comment_allow' => (($item['last-child']) ? 1 : 0)
 				));
@@ -145,6 +175,22 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 
 	$atom .= '</feed>' . "\r\n";
 	return $atom;
+}
+
+
+function construct_verb($item) {
+	if($item['verb'])
+		return $item['verb'];
+	return ACTIVITY_POST;
+}
+
+function construct_activity($item) {
+
+	if($item['type'] == 'activity') {
+
+
+	}
+	return '';
 } 
 
 
@@ -152,12 +198,22 @@ function get_feed_for(&$a,$dfrn_id,$owner_id,$last_update) {
 
 function get_atom_elements($item) {
 
+	require_once('library/HTMLPurifier.auto.php');
+	require_once('include/html2bbcode.php');
+
 	$res = array();
+
+	$raw_author = $item->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'author');
+	if($raw_author) {
+		if($raw_author[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'][0]['attribs']['']['rel'] == 'photo')
+		$res['author-avatar'] = unxmlify($raw_author[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'][0]['attribs']['']['href']);
+	}
 
 	$author = $item->get_author();
 	$res['author-name'] = unxmlify($author->get_name());
 	$res['author-link'] = unxmlify($author->get_link());
-	$res['author-avatar'] = unxmlify($author->get_avatar());
+	if(! $res['author-avatar'])
+		$res['author-avatar'] = unxmlify($author->get_avatar());
 	$res['uri'] = unxmlify($item->get_id());
 	$res['title'] = unxmlify($item->get_title());
 	$res['body'] = unxmlify($item->get_content());
@@ -165,6 +221,36 @@ function get_atom_elements($item) {
 	$maxlen = get_max_import_size();
 	if($maxlen && (strlen($res['body']) > $maxlen))
 		$res['body'] = substr($res['body'],0, $maxlen);
+
+	// It isn't certain at this point whether our content is plaintext or html and we'd be foolish to trust 
+	// the content type. Our own network only emits text normally, though it might have been converted to 
+	// html if we used a pubsubhubbub transport. But if we see even one html open tag in our text, we will
+	// have to assume it is all html and needs to be purified.
+
+	// It doesn't matter all that much security wise - because before this content is used anywhere, we are 
+	// going to escape any tags we find regardless, but this lets us import a limited subset of html from 
+	// the wild, by sanitising it and converting supported tags to bbcode before we rip out any remaining 
+	// html.
+
+
+
+	if(strpos($res['body'],'<')) {
+
+		$res['body'] = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
+			'[youtube]$1[/youtube]', $res['body']);
+
+		$config = HTMLPurifier_Config::createDefault();
+		$config->set('Core.DefinitionCache', null);
+
+		// we shouldn't need a whitelist, because the bbcode converter
+		// will strip out any unsupported tags.
+		// $config->set('HTML.Allowed', 'p,b,a[href],i'); 
+
+		$purifier = new HTMLPurifier($config);
+		$res['body'] = $purifier->purify($res['body']);
+	}
+	
+	$res['body'] = html2bbcode($res['body']);
 
 	$allow = $item->get_item_tags(NAMESPACE_DFRN,'comment-allow');
 	if($allow && $allow[0]['data'] == 1)
@@ -186,18 +272,37 @@ function get_atom_elements($item) {
 		$res['edited'] = unxmlify($rawcreated[0]['data']);
 
 	$rawowner = $item->get_item_tags(NAMESPACE_DFRN, 'owner');
-	if($rawowner[0]['child'][NAMESPACE_DFRN]['name'][0]['data'])
+	if($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data'])
+		$res['owner-name'] = unxmlify($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data']);
+	elseif($rawowner[0]['child'][NAMESPACE_DFRN]['name'][0]['data'])
 		$res['owner-name'] = unxmlify($rawowner[0]['child'][NAMESPACE_DFRN]['name'][0]['data']);
-	if($rawowner[0]['child'][NAMESPACE_DFRN]['uri'][0]['data'])
+	if($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['uri'][0]['data'])
+		$res['owner-link'] = unxmlify($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['uri'][0]['data']);
+	elseif($rawowner[0]['child'][NAMESPACE_DFRN]['uri'][0]['data'])
 		$res['owner-link'] = unxmlify($rawowner[0]['child'][NAMESPACE_DFRN]['uri'][0]['data']);
-	if($rawowner[0]['child'][NAMESPACE_DFRN]['avatar'][0]['data'])
+
+	if($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'][0]['attribs']['']['rel'] == 'photo')
+		$res['owner-avatar'] = unxmlify($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'][0]['attribs']['']['href']);
+	elseif($rawowner[0]['child'][NAMESPACE_DFRN]['avatar'][0]['data'])
 		$res['owner-avatar'] = unxmlify($rawowner[0]['child'][NAMESPACE_DFRN]['avatar'][0]['data']);
+
+	$rawverb = $item->get_item_tags(NAMESPACE_ACTIVITY, 'verb');
+	// select between supported verbs
+	if($rawverb)
+		$res['verb'] = unxmlify($rawverb[0]['data']);
+
+	$rawobj = $item->get_item_tags(NAMESPACE_ACTIVITY, 'object');
+	if($rawobj) {
+		$res['object-type'] = $rawobj[0]['object-type'][0]['data'];
+		$res['object'] = $rawobj[0];
+	}
 
 	return $res;
 }
 
 function post_remote($a,$arr) {
 
+//print_r($arr);
 
 	if(! x($arr,'type'))
 		$arr['type'] = 'remote';
@@ -218,8 +323,12 @@ function post_remote($a,$arr) {
 	$arr['visible'] = 1;
 	$arr['deleted'] = 0;
 	$arr['parent-uri'] = notags(trim($arr['parent-uri']));
+	$arr['verb'] = notags(trim($arr['verb']));
+	$arr['object-type'] = notags(trim($arr['object-type']));
+	$arr['object'] = trim($arr['object']);
 
 	$parent_id = 0;
+	$parent_missing = false;
 
 	dbesc_array($arr);
 
@@ -237,15 +346,28 @@ function post_remote($a,$arr) {
 	if(count($r))
 		$parent_id = $r[0]['id'];
 	else {
-		// if parent is missing, what do we do?
+		$parent_missing = true;
 	}
 
 	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
-		$arr['uri'],
+		$arr['uri'],           // already dbesc'd
 		intval($arr['uid'])
 	);
 	if(count($r))
 		$current_post = $r[0]['id'];
+	else
+		return 0;
+
+	if($parent_missing) {
+
+		// perhaps the parent was deleted, but in any case, this thread is dead
+		// and unfortunately our brand new item now has to be destroyed
+
+		q("DELETE FROM `item` WHERE `id` = %d LIMIT 1",
+			intval($current_post)
+		);
+		return 0;
+	}
 
 	$r = q("UPDATE `item` SET `parent` = %d WHERE `id` = %d LIMIT 1",
 		intval($parent_id),

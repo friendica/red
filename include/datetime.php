@@ -55,9 +55,20 @@ function select_timezone($current = 'America/Los_Angeles') {
 
 if(! function_exists('datetime_convert')) {
 function datetime_convert($from = 'UTC', $to = 'UTC', $s = 'now', $fmt = "Y-m-d H:i:s") {
-  $d = new DateTime($s, new DateTimeZone($from));
-  $d->setTimeZone(new DateTimeZone($to));
-  return($d->format($fmt));
+
+	// Slight hackish adjustment so that 'zero' datetime actually returns what is intended
+        // otherwise we end up with -0001-11-30 ...
+	// add 32 days so that we at least get year 00, and then hack around the fact that 
+        // months and days always start with 1. 
+
+	if(substr($s,0,10) == '0000-00-00') {
+		$d = new DateTime($s . ' + 32 days', new DateTimeZone('UTC'));
+		return str_replace('1','0',$d->format($fmt));
+	}
+
+	$d = new DateTime($s, new DateTimeZone($from));
+	$d->setTimeZone(new DateTimeZone($to));
+	return($d->format($fmt));
 }}
 
 function dob($dob) {

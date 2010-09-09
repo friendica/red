@@ -1,5 +1,7 @@
 <?php
 
+require_once('include/Contact.php');
+
 function contacts_init(&$a) {
 	require_once('include/group.php');
 	$a->page['aside'] .= group_side();
@@ -9,7 +11,6 @@ function contacts_init(&$a) {
 }
 
 function contacts_post(&$a) {
-
 	
 	if(! local_user())
 		return;
@@ -20,11 +21,11 @@ function contacts_post(&$a) {
 
 	$orig_record = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		intval($contact_id),
-		intval($_SESSION['uid'])
+		intval(get_uid())
 	);
 
 	if(! count($orig_record)) {
-		notice("Could not access contact record." . EOL);
+		notice( t('Could not access contact record.') . EOL);
 		goaway($a->get_baseurl() . '/contacts');
 		return; // NOTREACHED
 	}
@@ -33,7 +34,7 @@ function contacts_post(&$a) {
 	if($profile_id) {
 		$r = q("SELECT `id` FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($profile_id),
-			intval($_SESSION['uid'])
+			intval(get_uid())
 		);
 		if(! count($r)) {
 			notice( t('Could not locate selected profile.') . EOL);
@@ -57,7 +58,7 @@ function contacts_post(&$a) {
 		intval($rating),
 		dbesc($reason),
 		intval($contact_id),
-		intval($_SESSION['uid'])
+		intval(get_uid())
 	);
 	if($r)
 		notice( t('Contact updated.') . EOL);
@@ -86,7 +87,7 @@ function contacts_content(&$a) {
 
 		$orig_record = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($contact_id),
-			intval($_SESSION['uid'])
+			intval(get_uid())
 		);
 
 		if(! count($orig_record)) {
@@ -101,13 +102,12 @@ function contacts_content(&$a) {
 			$r = q("UPDATE `contact` SET `blocked` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
 					intval($blocked),
 					intval($contact_id),
-					intval($_SESSION['uid'])
+					intval(get_uid())
 			);
 			if($r) {
-				$msg = t('Contact has been ') . (($blocked) ? t('blocked') : t('unblocked')) . EOL ;
-				notice($msg);
+				notice( t('Contact has been ') . (($blocked) ? t('blocked') : t('unblocked')) . EOL );
 			}
-			goaway($a->get_baseurl() ."/contacts/$contact_id");
+			goaway($a->get_baseurl() . '/contacts/' . $contact_id);
 			return; // NOTREACHED
 		}
 
@@ -116,32 +116,17 @@ function contacts_content(&$a) {
 			$r = q("UPDATE `contact` SET `readonly` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
 					intval($readonly),
 					intval($contact_id),
-					intval($_SESSION['uid'])
+					intval(get_uid())
 			);
 			if($r) {
-				$msg = t('Contact has been ') . (($readonly) ? t('ignored') : t('unignored')) . EOL ;
-				notice($msg);
+				notice( t('Contact has been ') . (($readonly) ? t('ignored') : t('unignored')) . EOL );
 			}
-			goaway($a->get_baseurl() ."/contacts/$contact_id");
+			goaway($a->get_baseurl() . '/contacts/' . $contact_id);
 			return; // NOTREACHED
 		}
 
 		if($cmd == 'drop') {
-			$r = q("DELETE FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-				intval($contact_id),
-				intval($_SESSION['uid'])
-			);
-
-			q("DELETE FROM `item` WHERE `contact-id` = %d AND `uid` = %d ",
-					intval($contact_id),
-					intval($_SESSION['uid'])
-			);
-			q("DELETE FROM `photo` WHERE `contact-id` = %d AND `uid` = %d ",
- 
-					intval($contact_id),
-					intval($_SESSION['uid'])
-			);
-	
+			contact_remove($contact_id);
 			notice( t('Contact has been removed.') . EOL );
 			goaway($a->get_baseurl() . '/contacts');
 			return; // NOTREACHED
@@ -152,7 +137,7 @@ function contacts_content(&$a) {
 
 		$contact_id = intval($a->argv[1]);
 		$r = q("SELECT * FROM `contact` WHERE `uid` = %d and `id` = %d LIMIT 1",
-			$_SESSION['uid'],
+			intval(get_uid()),
 			intval($contact_id)
 		);
 		if(! count($r)) {
@@ -164,23 +149,22 @@ function contacts_content(&$a) {
 
 		$tpl = file_get_contents("view/contact_edit.tpl");
 
-		$direction = '';
-		if(strlen($r[0]['issued-id'])) {
-			if(strlen($r[0]['dfrn-id'])) {
-				$direction = DIRECTION_BOTH;
+		switch($r[0]['rel']) {
+			case DIRECTION_BOTH:
 				$dir_icon = 'images/lrarrow.gif';
 				$alt_text = t('Mutual Friendship');
-			}
-			else {
-				$direction = DIRECTION_IN;
+				break;
+			case DIRECTION_IN;
 				$dir_icon = 'images/larrow.gif';
 				$alt_text = t('is a fan of yours');
-			}
-		}
-		else {
-			$direction = DIRECTION_OUT;
-			$dir_icon = 'images/rarrow.gif';
-			$alt_text = t('you are a fan of');
+				break;
+	
+			case DIRECTION_OUT;
+				$dir_icon = 'images/rarrow.gif';
+				$alt_text = t('you are a fan of');
+				break;
+			default:
+				break;
 		}
 
 		$o .= replace_macros($tpl,array(
@@ -201,7 +185,7 @@ function contacts_content(&$a) {
 			'$name' => $r[0]['name'],
 			'$dir_icon' => $dir_icon,
 			'$alt_text' => $alt_text,
-			'$url' => (($direction != DIRECTION_OUT) ? "redir/{$r[0]['id']}" : $r[0]['url'] )
+			'$url' => (($r[0]['rel'] != DIRECTION_OUT) ? "redir/{$r[0]['id']}" : $r[0]['url'] )
 
 		));
 
@@ -269,23 +253,22 @@ function contacts_content(&$a) {
 		foreach($r as $rr) {
 			if($rr['self'])
 				continue;
-			$direction = '';
-			if(strlen($rr['issued-id'])) {
-				if(strlen($rr['dfrn-id'])) {
-					$direction = DIRECTION_BOTH;
+
+			switch($rr['rel']) {
+				case DIRECTION_BOTH:
 					$dir_icon = 'images/lrarrow.gif';
 					$alt_text = t('Mutual Friendship');
-				}
-				else {
-					$direction = DIRECTION_IN;
+					break;
+				case  DIRECTION_IN;
 					$dir_icon = 'images/larrow.gif';
 					$alt_text = t('is a fan of yours');
-				}
-			}
-			else {
-				$direction = DIRECTION_OUT;
-				$dir_icon = 'images/rarrow.gif';
-				$alt_text = t('you are a fan of');
+					break;
+				case DIRECTION_OUT;
+					$dir_icon = 'images/rarrow.gif';
+					$alt_text = t('you are a fan of');
+					break;
+				default:
+					break;
 			}
 
 			$o .= replace_macros($tpl, array(
@@ -296,7 +279,7 @@ function contacts_content(&$a) {
 				'$dir_icon' => $dir_icon,
 				'$thumb' => $rr['thumb'], 
 				'$name' => $rr['name'],
-				'$url' => (($direction != DIRECTION_OUT) ? "redir/{$rr['id']}" : $rr['url'] )
+				'$url' => (($rr['rel'] != DIRECTION_OUT) ? "redir/{$rr['id']}" : $rr['url'] )
 			));
 		}
 		$o .= '<div id="contact-edit-end"></div>';

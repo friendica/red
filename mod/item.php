@@ -29,7 +29,7 @@ function item_post(&$a) {
 
 
 	if(! can_write_wall($a,$profile_uid)) {
-		notice("Permission denied." . EOL) ;
+		notice( t('Permission denied.') . EOL) ;
 		return;
 	}
 
@@ -42,37 +42,14 @@ function item_post(&$a) {
 		$user = $r[0];
 	
 
-	$str_group_allow = '';
-	$group_allow = $_POST['group_allow'];
-	if(is_array($group_allow)) {
-		array_walk($group_allow,'sanitise_acl');
-		$str_group_allow = implode('',$group_allow);
-	}
+	$str_group_allow   = perms2str($_POST['group_allow']);
+	$str_contact_allow = perms2str($_POST['contact_allow']);
+	$str_group_deny    = perms2str($_POST['group_deny']);
+	$str_contact_deny  = perms2str($_POST['contact_deny']);
 
-	$str_contact_allow = '';
-	$contact_allow = $_POST['contact_allow'];
-	if(is_array($contact_allow)) {
-		array_walk($contact_allow,'sanitise_acl');
-		$str_contact_allow = implode('',$contact_allow);
-	}
-
-	$str_group_deny = '';
-	$group_deny = $_POST['group_deny'];
-	if(is_array($group_deny)) {
-		array_walk($group_deny,'sanitise_acl');
-		$str_group_deny = implode('',$group_deny);
-	}
-
-	$str_contact_deny = '';
-	$contact_deny = $_POST['contact_deny'];
-	if(is_array($contact_deny)) {
-		array_walk($contact_deny,'sanitise_acl');
-		$str_contact_deny = implode('',$contact_deny);
-	}
-
-	$title = notags(trim($_POST['title']));
-	$body = escape_tags(trim($_POST['body']));
-	$location = notags(trim($_POST['location']));
+	$title             = notags(trim($_POST['title']));
+	$body              = escape_tags(trim($_POST['body']));
+	$location          = notags(trim($_POST['location']));
 
 	if(! strlen($body)) {
 		notice( t('Empty post discarded.') . EOL );
@@ -128,18 +105,7 @@ function item_post(&$a) {
 
 	$notify_type = (($parent) ? 'comment-new' : 'wall-new' );
 
-	do {
-		$dups = false;
-		$hash = random_string();
-
-		$uri = "urn:X-dfrn:" . $a->get_hostname() . ':' . $profile_uid . ':' . $hash;
-
-		$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
-			dbesc($uri));
-		if(count($r))
-			$dups = true;
-	} while($dups == true);
-
+	$uri = item_new_uri($a->get_hostname(),$profile_uid);
 
 	$r = q("INSERT INTO `item` (`uid`,`type`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`,
@@ -246,7 +212,7 @@ function item_post(&$a) {
 
 	$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 
-	proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"$notify_type\" \"$post_id\" &",
+	proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"$notify_type\" \"$post_id\" > notify.out &",
 		array(),$foo));
 
 	goaway($a->get_baseurl() . "/" . $_POST['return'] );
@@ -335,7 +301,7 @@ function item_content(&$a) {
 			
 			// send the notification upstream/downstream as the case may be
 
-			proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" &",
+			proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" > drop.out &",
 				array(), $foo));
 
 			goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);

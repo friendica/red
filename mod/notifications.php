@@ -17,7 +17,7 @@ function notifications_post(&$a) {
 			WHERE `request-id` = %d 
 			AND `uid` = %d LIMIT 1",
 				intval($request_id),
-				intval($_SESSION['uid'])
+				intval(get_uid())
 		);
 	
 		if(count($r)) {
@@ -28,10 +28,13 @@ function notifications_post(&$a) {
 			return;
 		}
 		if($_POST['submit'] == t('Discard')) {
-			$r = q("DELETE FROM `intro` WHERE `id` = %d LIMIT 1", intval($intro_id));	
-			$r = q("DELETE `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1", 
+			$r = q("DELETE FROM `intro` WHERE `id` = %d LIMIT 1", 
+				intval($intro_id)
+			);	
+			$r = q("DELETE FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1", 
 				intval($request_id),
-				intval($_SESSION['uid']));
+				intval(get_uid())
+			);
 			return;
 		}
 		if($_POST['submit'] == t('Ignore')) {

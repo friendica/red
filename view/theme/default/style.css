@@ -383,16 +383,37 @@ input#dfrn-url {
 	padding: 30px;
 }
 
-.intro-approve-form, .intro-form {
+.intro-form {
 	float: left;
+}
+.intro-approve-form {
+	clear: both;
+}
+.intro-approve-as-friend-end {
+	clear: both;
 }
 .intro-submit-approve, .intro-submit-ignore {
 	margin-right: 20px;
 }
-.intro-top {
-	width: 500px;
-	margin-bottom: 30px;
+.intro-approve-as-friend-label, .intro-approve-as-fan-label {
+	float: left;
+	width: 100px;
+	margin-left: 20px;
 }
+.intro-approve-as-friend, .intro-approve-as-fan {
+	float: left;
+}
+.intro-form-end {
+	clear: both;
+}
+.intro-approve-as-friend-desc {
+	margin-top: 15px;
+}
+.intro-approve-as-end {
+	clear: both;
+	margin-bottom: 10px;
+}
+
 .intro-end {
 	clear: both;
 	margin-bottom: 30px;

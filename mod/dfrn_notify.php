@@ -185,43 +185,45 @@ function dfrn_notify_post(&$a) {
 				$datarray['contact-id'] = $importer['id'];
 				$posted_id = post_remote($a,$datarray);
 
-				$r = q("SELECT `parent` FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-					intval($posted_id),
-					intval($importer['importer_uid'])
-				);
-				if(count($r)) {
-					$r1 = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `uid` = %d AND `parent` = %d",
-						dbesc(datetime_convert()),
-						intval($importer['importer_uid']),
-						intval($r[0]['parent'])
+				if($posted_id) {
+					$r = q("SELECT `parent` FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+						intval($posted_id),
+						intval($importer['importer_uid'])
 					);
-				}
-				$r2 = q("UPDATE `item` SET `last-child` = 1, `changed` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
-						dbesc(datetime_convert()),
-						intval($importer['importer_uid']),
-						intval($posted_id)
-				);
+					if(count($r)) {
+						$r1 = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `uid` = %d AND `parent` = %d",
+							dbesc(datetime_convert()),
+							intval($importer['importer_uid']),
+							intval($r[0]['parent'])
+						);
+					}
+					$r2 = q("UPDATE `item` SET `last-child` = 1, `changed` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
+							dbesc(datetime_convert()),
+							intval($importer['importer_uid']),
+							intval($posted_id)
+					);
 
-				$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
+					$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 
-				proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"comment-import\" \"$posted_id\" &", 
-					array(),$foo));
+					proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"comment-import\" \"$posted_id\" &", 
+						array(),$foo));
 
-				if(($importer['notify-flags'] & NOTIFY_COMMENT) && (! $importer['self'])) {
-					require_once('bbcode.php');
-					$from = stripslashes($datarray['author-name']);
-					$tpl = file_get_contents('view/cmnt_received_eml.tpl');			
-					$email_tpl = replace_macros($tpl, array(
-						'$sitename' => $a->config['sitename'],
-						'$siteurl' =>  $a->get_baseurl(),
-						'$username' => $importer['username'],
-						'$email' => $importer['email'],
-						'$from' => $from,
+					if(($importer['notify-flags'] & NOTIFY_COMMENT) && (! $importer['self'])) {
+						require_once('bbcode.php');
+						$from = stripslashes($datarray['author-name']);
+						$tpl = file_get_contents('view/cmnt_received_eml.tpl');			
+						$email_tpl = replace_macros($tpl, array(
+							'$sitename' => $a->config['sitename'],
+							'$siteurl' =>  $a->get_baseurl(),
+							'$username' => $importer['username'],
+							'$email' => $importer['email'],
+							'$from' => $from,
 						'$body' => strip_tags(bbcode(stripslashes($datarray['body'])))
-					));
+						));
 
-					$res = mail($importer['email'], $from . t(" commented on your item at ") . $a->config['sitename'],
-						$email_tpl,t("From: Administrator@") . $a->get_hostname() );
+						$res = mail($importer['email'], $from . t(" commented on your item at ") . $a->config['sitename'],
+							$email_tpl,t("From: Administrator@") . $a->get_hostname() );
+					}
 				}
 				xml_status(0);
 				return;
@@ -356,7 +358,7 @@ function dfrn_notify_content(&$a) {
 		$encrypted_id = '';
 		$id_str = $_GET['dfrn_id'] . '.' . mt_rand(1000,9999);
 
-		if($r[0]['duplex']) {
+		if(($r[0]['duplex']) && strlen($r[0]['pubkey'])) {
 			openssl_public_encrypt($hash,$challenge,$r[0]['pubkey']);
 			openssl_public_encrypt($id_str,$encrypted_id,$r[0]['pubkey']);
 		}
@@ -368,7 +370,7 @@ function dfrn_notify_content(&$a) {
 		$challenge    = bin2hex($challenge);
 		$encrypted_id = bin2hex($encrypted_id);
 
-		echo '<?xml version="1.0" encoding="UTF-8"?><dfrn_notify><status>' .$status . '</status><dfrn_id>' . $encrypted_id . '</dfrn_id>' . '<challenge>' . $challenge . '</challenge></dfrn_notify>' . "\r\n" ;
+		echo '<?xml version="1.0" encoding="UTF-8"?><dfrn_notify><status>' .$status . '</status><dfrn_version>2.0</dfrn_version><dfrn_id>' . $encrypted_id . '</dfrn_id>' . '<challenge>' . $challenge . '</challenge></dfrn_notify>' . "\r\n" ;
 		session_write_close();
 		exit;
 		

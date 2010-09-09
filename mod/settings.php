@@ -2,25 +2,20 @@
 
 
 function settings_init(&$a) {
-
-	if(! local_user()) {
-		notice("Permission denied." . EOL);
-		$a->error = 404;
-		return;
+	if(local_user()) {
+		require_once("mod/profile.php");
+		profile_load($a,$a->user['nickname']);
 	}
-	require_once("mod/profile.php");
-	profile_load($a,$a->user['nickname']);
 }
 
 
 function settings_post(&$a) {
 
-
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
-	if(count($a->user) && x($a->user,'uid') && $a->user['uid'] != $_SESSION['uid']) {
+	if(count($a->user) && x($a->user,'uid') && $a->user['uid'] != get_uid()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
@@ -44,7 +39,7 @@ function settings_post(&$a) {
 			$password = hash('whirlpool',$newpass);
 			$r = q("UPDATE `user` SET `password` = '%s' WHERE `uid` = %d LIMIT 1",
 				dbesc($password),
-				intval($_SESSION['uid']));
+				intval(get_uid());
 			if($r)
 				notice( t('Password changed.') . EOL);
 			else
@@ -52,15 +47,15 @@ function settings_post(&$a) {
 		}
 	}
 
-	$theme = notags(trim($_POST['theme']));
-	$username = notags(trim($_POST['username']));
-	$email = notags(trim($_POST['email']));
-	$timezone = notags(trim($_POST['timezone']));
-	$defloc = notags(trim($_POST['defloc']));
+	$theme            = notags(trim($_POST['theme']));
+	$username         = notags(trim($_POST['username']));
+	$email            = notags(trim($_POST['email']));
+	$timezone         = notags(trim($_POST['timezone']));
+	$defloc           = notags(trim($_POST['defloc']));
 
-	$publish = (($_POST['profile_in_directory'] == 1) ? 1: 0);
-	$net_publish = (($_POST['profile_in_netdirectory'] == 1) ? 1: 0);
-	$old_visibility = ((intval($_POST['visibility']) == 1) ? 1 : 0);
+	$publish          = (($_POST['profile_in_directory'] == 1) ? 1: 0);
+	$net_publish      = (($_POST['profile_in_netdirectory'] == 1) ? 1: 0);
+	$old_visibility   = ((intval($_POST['visibility']) == 1) ? 1 : 0);
 
 	$notify = 0;
 
@@ -75,13 +70,11 @@ function settings_post(&$a) {
 	if($_POST['notify5'])
 		$notify += intval($_POST['notify5']);
 
-	$username_changed = false;
 	$email_changed = false;
-	$zone_changed = false;
+
 	$err = '';
 
 	if($username != $a->user['username']) {
-		$username_changed = true;
         	if(strlen($username) > 40)
                 	$err .= t(' Please use a shorter name.');
         	if(strlen($username) < 3)
@@ -104,38 +97,15 @@ function settings_post(&$a) {
                 return;
         }
 	if($timezone != $a->user['timezone']) {
-		$zone_changed = true;
 		if(strlen($timezone))
 			date_default_timezone_set($timezone);
 	}
 
-	$str_group_allow = '';
-	$group_allow = $_POST['group_allow'];
-	if(is_array($group_allow)) {
-		array_walk($group_allow,'sanitise_acl');
-		$str_group_allow = implode('',$group_allow);
-	}
 
-	$str_contact_allow = '';
-	$contact_allow = $_POST['contact_allow'];
-	if(is_array($contact_allow)) {
-		array_walk($contact_allow,'sanitise_acl');
-		$str_contact_allow = implode('',$contact_allow);
-	}
-
-	$str_group_deny = '';
-	$group_deny = $_POST['group_deny'];
-	if(is_array($group_deny)) {
-		array_walk($group_deny,'sanitise_acl');
-		$str_group_deny = implode('',$group_deny);
-	}
-
-	$str_contact_deny = '';
-	$contact_deny = $_POST['contact_deny'];
-	if(is_array($contact_deny)) {
-		array_walk($contact_deny,'sanitise_acl');
-		$str_contact_deny = implode('',$contact_deny);
-	}
+	$str_group_allow   = perms2str($_POST['group_allow']);
+	$str_contact_allow = perms2str($_POST['contact_allow']);
+	$str_group_deny    = perms2str($_POST['group_deny']);
+	$str_contact_deny  = perms2str($_POST['contact_deny']);
 
 	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `default-location` = '%s', `theme` = '%s'  WHERE `uid` = %d LIMIT 1",
 			dbesc($username),
@@ -148,7 +118,7 @@ function settings_post(&$a) {
 			intval($notify),
 			dbesc($defloc),
 			dbesc($theme),
-			intval($_SESSION['uid'])
+			intval(get_uid())
 	);
 	if($r)
 		notice( t('Settings updated.') . EOL);
@@ -158,7 +128,7 @@ function settings_post(&$a) {
 		WHERE `is-default` = 1 AND `uid` = %d LIMIT 1",
 		intval($publish),
 		intval($net_publish),
-		intval($_SESSION['uid'])
+		intval(get_uid())
 	);
 
 	if($old_visibility != $net_publish) {
@@ -178,6 +148,7 @@ function settings_post(&$a) {
 	}
 
 	goaway($a->get_baseurl() . '/settings' );
+	return; // NOTREACHED
 }
 		
 
@@ -210,28 +181,23 @@ function settings_content(&$a) {
 
 	$opt_tpl = file_get_contents("view/profile-in-directory.tpl");
 	$profile_in_dir = replace_macros($opt_tpl,array(
-		'$yes_selected' => (($profile['publish']) ? " checked=\"checked\" " : ""),
-		'$no_selected' => (($profile['publish'] == 0) ? " checked=\"checked\" " : "")
+		'$yes_selected' => (($profile['publish'])      ? " checked=\"checked\" " : ""),
+		'$no_selected'  => (($profile['publish'] == 0) ? " checked=\"checked\" " : "")
 	));
 
 	if(strlen(get_config('system','directory_submit_url'))) {
 		$opt_tpl = file_get_contents("view/profile-in-netdir.tpl");
 
 		$profile_in_net_dir = replace_macros($opt_tpl,array(
-			'$yes_selected' => (($profile['net-publish']) ? " checked=\"checked\" " : ""),
-			'$no_selected' => (($profile['net-publish'] == 0) ? " checked=\"checked\" " : "")
+			'$yes_selected' => (($profile['net-publish'])      ? " checked=\"checked\" " : ""),
+			'$no_selected'  => (($profile['net-publish'] == 0) ? " checked=\"checked\" " : "")
 		));
 	}
 	else
 		$profile_in_net_dir = '';
 
-
-
-
-
 	$nickname_block = file_get_contents("view/settings_nick_set.tpl");
 	
-
 	$nickname_subdir = '';
 	if(strlen($a->get_path())) {
 		$subdir_tpl = file_get_contents('view/settings_nick_subdir.tpl');
