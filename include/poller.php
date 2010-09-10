@@ -72,7 +72,8 @@
 
 		$importer = $r[0];
 
-echo "IMPORTER: {$importer['name']}";
+		if($debugging)
+			echo "IMPORTER: {$importer['name']}";
 
 		$last_update = (($contact['last-update'] == '0000-00-00 00:00:00') 
 			? datetime_convert('UTC','UTC','now - 30 days','Y-m-d\TH:i:s\Z')
@@ -84,8 +85,10 @@ echo "IMPORTER: {$importer['name']}";
 
 		$xml = fetch_url($url);
 
-echo "URL: " . $url;
-echo "XML: " . $xml;
+		if($debugging) {
+			echo "URL: " . $url . "\r\n";
+			echo "XML: " . $xml . "\r\n";
+		}
 
 		if(! $xml)
 			continue;
@@ -128,8 +131,10 @@ echo "XML: " . $xml;
 
 		$xml = post_url($contact['poll'],$postvars);
 
-echo "XML response:" . $xml . "\r\n";
-echo "Length:" . strlen($xml) . "\r\n";
+		if($debugging) {
+			echo "XML response:" . $xml . "\r\n";
+			echo "Length:" . strlen($xml) . "\r\n";
+		}
 
 		if(! strlen($xml)) {
 			// an empty response may mean there's nothing new - record the fact that we checked
@@ -145,56 +150,85 @@ echo "Length:" . strlen($xml) . "\r\n";
 		$feed->enable_order_by_date(false);
 		$feed->init();
 
-		$photo_rawupdate = $feed->get_feed_tags(NAMESPACE_DFRN,'icon-updated');
-		if($photo_rawupdate) {
-			$photo_timestamp = datetime_convert('UTC','UTC',$photo_rawupdate[0]['data']);
-			$photo_url = $feed->get_image_url();
-			if(strlen($photo_url) && $photo_timestamp > $contact['avatar-date']) {
+		// Check at the feed level for updated contact name and/or photo
 
-				require_once("Photo.php");
+		$name_updated  = '';
+		$new_name = '';
+		$photo_timestamp = '';
+		$photo_url = '';
 
-				$photo_failure = false;
+		$rawtags = $feed->get_feed_tags( SIMPLEPIE_NAMESPACE_ATOM_10, author);
+		if($rawtags) {
+			$elems = $rawtags[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10];
+			if($elems['name'][0]['attribs'][NAMESPACE_DFRN]['updated']) {
+				$name_updated = $elems['name'][0]['attribs'][NAMESPACE_DFRN]['updated'];
+				$new_name = $elems['name'][0]['data'];
+			} 
+			if(($elems['link'][0]['attribs']['']['rel'] == 'photo') && ($elems['link'][0]['attribs'][NAMESPACE_DFRN]['updated'])) {
+				$photo_timestamp = datetime_convert('UTC','UTC',$elems['link'][0]['attribs'][NAMESPACE_DFRN]['updated']);
+				$photo_url = $elems['link'][0]['attribs']['']['href'];
+			}
+		}
+		if(! $photo_timestamp) {
+			$photo_rawupdate = $feed->get_feed_tags(NAMESPACE_DFRN,'icon-updated');
+			if($photo_rawupdate) {
+				$photo_timestamp = datetime_convert('UTC','UTC',$photo_rawupdate[0]['data']);
+				$photo_url = $feed->get_image_url();
+			}
+		}
+		if(($photo_timestamp) && (strlen($photo_url)) && ($photo_timestamp > $contact['avatar-date'])) {
 
-				$r = q("SELECT `resource-id` FROM `photo` WHERE `contact-id` = %d AND `uid` = %d LIMIT 1",
-					intval($contact['id']),
-					intval($contact['uid'])
-				);
-				if(count($r)) {
-					$resource_id = $r[0]['resource-id'];
-					$img_str = fetch_url($photo_url,true);
-					$img = new Photo($img_str);
-					if($img) {
-						q("DELETE FROM `photo` WHERE `resource-id` = '%s' AND contact-id` = %d AND `uid` = %d",
-							dbesc($resource_id),
-							intval($contact['id']),
-							intval($contact['uid'])
+			require_once("Photo.php");
+			$photo_failure = false;
+
+			$r = q("SELECT `resource-id` FROM `photo` WHERE `contact-id` = %d AND `uid` = %d LIMIT 1",
+				intval($contact['id']),
+				intval($contact['uid'])
+			);
+			if(count($r)) {
+				$resource_id = $r[0]['resource-id'];
+				$img_str = fetch_url($photo_url,true);
+				$img = new Photo($img_str);
+				if($img) {
+					q("DELETE FROM `photo` WHERE `resource-id` = '%s' AND contact-id` = %d AND `uid` = %d",
+						dbesc($resource_id),
+						intval($contact['id']),
+						intval($contact['uid'])
+					);
+
+					$img->scaleImageSquare(175);
+				
+					$hash = $resource_id;
+					$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), t('Contact Photos') , 4);
+					
+					$img->scaleImage(80);
+					$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), t('Contact Photos') , 5);
+					if($r)
+						q("UPDATE `contact` SET `avatar-date` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
+							dbesc(datetime_convert()),
+							intval($contact['uid']),
+							intval($contact['id'])
 						);
-
-						$img->scaleImageSquare(175);
-					
-						$hash = $resource_id;
-
-						$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), t('Contact Photos') , 4);
-					
-						$img->scaleImage(80);
-						$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), t('Contact Photos') , 5);
-						if($r)
-							q("UPDATE `contact` SET `avatar-date` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
-								dbesc(datetime_convert()),
-								intval($contact['uid']),
-								intval($contact['id'])
-							);
-					}
 				}
 			}
 		}
 
+		if(($name_updated) && (strlen($new_name)) && ($name_updated > $contact['name-date'])) {
+			q("UPDATE `contact` SET `name` = '%s', `name-date` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
+				dbesc(notags(trim($new_name))),
+				dbesc(datetime_convert()),
+				intval($contact['uid']),
+				intval($contact['id'])
+			);
+		}
+
+		// Now process the feed
 		
 		foreach($feed->get_items() as $item) {
 
 			$deleted = false;
 
-			$rawdelete = $item->get_item_tags("http://purl.org/atompub/tombstones/1.0", 'deleted-entry');
+			$rawdelete = $item->get_item_tags( NAMESPACE_TOMB, 'deleted-entry');
 			if(isset($rawdelete[0]['attribs']['']['ref'])) {
 				$uri = $rawthread[0]['attribs']['']['ref'];
 				$deleted = true;
@@ -258,7 +292,7 @@ echo "Length:" . strlen($xml) . "\r\n";
 
 			$is_reply = false;		
 			$item_id = $item->get_id();
-			$rawthread = $item->get_item_tags("http://purl.org/syndication/thread/1.0",'in-reply-to');
+			$rawthread = $item->get_item_tags( NAMESPACE_THREAD,'in-reply-to');
 			if(isset($rawthread[0]['attribs']['']['ref'])) {
 				$is_reply = true;
 				$parent_uri = $rawthread[0]['attribs']['']['ref'];
