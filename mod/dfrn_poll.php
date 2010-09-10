@@ -34,7 +34,13 @@ function dfrn_poll_init(&$a) {
 		
 		if(count($r)) {
 			foreach($r as $rr) {
-				if(local_user() && ($rr['uid'] == get_uid())) 
+
+				// On a multi-user site, the query above *may* have returned two results.
+				// One of those could be the logged-in user who is now visiting "this" cell,
+				// as both share the dfrn_id. We will skip that entry if it unfortunately 
+				// happens to come up first. 
+
+				if(local_user() && ($rr['uid'] == get_uid()))
 					continue;
 
 				$s = fetch_url($rr['poll'] . '?dfrn_id=' . $dfrn_id . '&type=profile-check');
