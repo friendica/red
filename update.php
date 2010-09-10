@@ -16,4 +16,5 @@ function update_1000() {
 
 function update_1001() {
 	q("ALTER TABLE `item` ADD `wall` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `type` ");
+	q("ALTER TABLE `item` ADD INDEX ( `wall` )");  
 }
