@@ -27,29 +27,35 @@ function dfrn_poll_init(&$a) {
 
 		$r = q("SELECT `contact`.*, `user`.`nickname` 
 			FROM `contact` LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid`
-			WHERE ( `dfrn-id` = '%s' OR ( `issued-id` = '%s' AND `duplex` = 1 )) LIMIT 1",
+			WHERE ( `dfrn-id` = '%s' OR ( `issued-id` = '%s' AND `duplex` = 1 )) ",
 			dbesc($dfrn_id),
 			dbesc($dfrn_id)
 		);
-
+		
 		if(count($r)) {
-			$s = fetch_url($r[0]['poll'] . '?dfrn_id=' . $dfrn_id . '&type=profile-check');
-			if(strlen($s)) {
-				$xml = simplexml_load_string($s);
-				if((int) $xml->status == 1) {
-					$_SESSION['authenticated'] = 1;
-					$_SESSION['visitor_id'] = $r[0]['id'];
-					notice( t('Hi ') . $r[0]['name'] . EOL);
-					// Visitors get 1 day session.
-					$session_id = session_id();
-					$expire = time() + 86400;
-					q("UPDATE `session` SET `expire` = '%s' WHERE `sid` = '%s' LIMIT 1",
-						dbesc($expire),
-						dbesc($session_id)); 
+			foreach($r as $rr) {
+				if(local_user() && ($rr['uid'] == get_uid())) 
+					continue;
+
+				$s = fetch_url($rr['poll'] . '?dfrn_id=' . $dfrn_id . '&type=profile-check');
+				if(strlen($s)) {
+					$xml = simplexml_load_string($s);
+					if((int) $xml->status == 1) {
+						$_SESSION['authenticated'] = 1;
+						$_SESSION['visitor_id'] = $rr['id'];
+						notice( t('Hi ') . $rr['name'] . EOL);
+						// Visitors get 1 day session.
+						$session_id = session_id();
+						$expire = time() + 86400;
+						q("UPDATE `session` SET `expire` = '%s' WHERE `sid` = '%s' LIMIT 1",
+							dbesc($expire),
+							dbesc($session_id)
+						); 
+					}
 				}
+				$profile = $rr['nickname'];
+				goaway((strlen($destination_url)) ? $destination_url : $a->get_baseurl() . '/profile/' . $profile);
 			}
-			$profile = $r[0]['nickname'];
-			goaway((strlen($destination_url)) ? $destination_url : $a->get_baseurl() . '/profile/' . $profile);
 		}
 		goaway($a->get_baseurl());
 

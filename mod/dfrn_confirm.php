@@ -370,7 +370,8 @@ function dfrn_confirm_post(&$a) {
 			`uri-date` = '%s', 
 			`avatar-date` = '%s', 
 			`blocked` = 0, 
-			`pending` = 0, 
+			`pending` = 0,
+			`duplex` = %d,
 			`network` = 'dfrn' WHERE `id` = %d LIMIT 1
 		",
 			dbesc($photo),
@@ -379,6 +380,7 @@ function dfrn_confirm_post(&$a) {
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
+			intval($duplex),
 			intval($contact_id)
 		);
 		if($r === false)
