@@ -1,6 +1,6 @@
 <?php
 
-function update_1001() {
+function update_1000() {
 
 	q("ALTER TABLE `item` DROP `like`, DROP `dislike` ");
 
@@ -12,4 +12,8 @@ function update_1001() {
 	q("ALTER TABLE `contact` ADD `duplex` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `rel` ");
  	q("ALTER TABLE `contact` CHANGE `issued-pubkey` `issued-pubkey` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL");  
 	q("ALTER TABLE `contact` ADD `term-date` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `avatar-date`");
+}
+
+function update_1001() {
+	q("ALTER TABLE `item` ADD `wall` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `type` ");
 }
