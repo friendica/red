@@ -34,8 +34,10 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update) {
 
 	if($dfrn_id != '*') {
 
-		$r = q("SELECT * FROM `contact` WHERE `issued-id` = '%s' LIMIT 1",
-			dbesc($dfrn_id)
+		$r = q("SELECT * FROM `contact` WHERE ( `issued-id` = '%s' OR ( `duplex` = 1 AND `dfrn-id` = '%s' )) AND `uid` = %d LIMIT 1",
+			dbesc($dfrn_id),
+			dbesc($dfrn_id),
+			intval($owner_id)
 		);
 		if(! count($r))
 			return false;
@@ -124,7 +126,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update) {
 
 		if($item['deleted']) {
 			$atom .= replace_macros($tomb_template, array(
-				'$id' => xmlify($item['uri']),
+				'$id'      => xmlify($item['uri']),
 				'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , ATOM_TIME))
 			));
 		}
@@ -134,38 +136,38 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update) {
 
 			if($item['parent'] == $item['id']) {
 				$atom .= replace_macros($item_template, array(
-					'$name' => xmlify($item['name']),
-					'$profile_page' => xmlify($item['url']),
-					'$thumb' => xmlify($item['thumb']),
-					'$owner_name' => xmlify($item['owner-name']),
+					'$name'               => xmlify($item['name']),
+					'$profile_page'       => xmlify($item['url']),
+					'$thumb'              => xmlify($item['thumb']),
+					'$owner_name'         => xmlify($item['owner-name']),
 					'$owner_profile_page' => xmlify($item['owner-link']),
-					'$owner_thumb' => xmlify($item['owner-avatar']),
-					'$item_id' => xmlify($item['uri']),
-					'$title' => xmlify($item['title']),
-					'$published' => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , ATOM_TIME)),
-					'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , ATOM_TIME)),
-					'$location' => xmlify($item['location']),
-					'$type' => $type,
-					'$content' => xmlify($item['body']),
-					'$verb' => xmlify($verb),
-					'$actobj' => $actobj,  // do not xmlify
-					'$comment_allow' => ((($item['last-child']) && ($contact['rel']) && ($contact['rel'] != REL_FAN)) ? 1 : 0)
+					'$owner_thumb'        => xmlify($item['owner-avatar']),
+					'$item_id'            => xmlify($item['uri']),
+					'$title'              => xmlify($item['title']),
+					'$published'          => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , ATOM_TIME)),
+					'$updated'            => xmlify(datetime_convert('UTC', 'UTC', $item['edited']  . '+00:00' , ATOM_TIME)),
+					'$location'           => xmlify($item['location']),
+					'$type'               => $type,
+					'$content'            => xmlify($item['body']),
+					'$verb'               => xmlify($verb),
+					'$actobj'             => $actobj,  // do not xmlify
+					'$comment_allow'      => ((($item['last-child']) && ($contact['rel']) && ($contact['rel'] != REL_FAN)) ? 1 : 0)
 				));
 			}
 			else {
 				$atom .= replace_macros($cmnt_template, array(
-					'$name' => xmlify($item['name']),
-					'$profile_page' => xmlify($item['url']),
-					'$thumb' => xmlify($item['thumb']),
-					'$item_id' => xmlify($item['uri']),
-					'$title' => xmlify($item['title']),
-					'$published' => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , ATOM_TIME)),
-					'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , ATOM_TIME)),
-					'$type' => $type,
-					'$content' =>xmlify($item['body']),
-					'$verb' => xmlify($verb),
-					'$actobj' => $actobj, // do not xmlify
-					'$parent_id' => xmlify($item['parent-uri']),
+					'$name'          => xmlify($item['name']),
+					'$profile_page'  => xmlify($item['url']),
+					'$thumb'         => xmlify($item['thumb']),
+					'$item_id'       => xmlify($item['uri']),
+					'$title'         => xmlify($item['title']),
+					'$published'     => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , ATOM_TIME)),
+					'$updated'       => xmlify(datetime_convert('UTC', 'UTC', $item['edited']  . '+00:00' , ATOM_TIME)),
+					'$type'          => $type,
+					'$content'       => xmlify($item['body']),
+					'$verb'          => xmlify($verb),
+					'$actobj'        => $actobj, // do not xmlify
+					'$parent_id'     => xmlify($item['parent-uri']),
 					'$comment_allow' => (($item['last-child']) ? 1 : 0)
 				));
 			}
