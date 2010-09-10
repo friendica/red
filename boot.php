@@ -26,12 +26,16 @@ define ( 'NOTIFY_WALL',    0x0004 );
 define ( 'NOTIFY_COMMENT', 0x0008 );
 define ( 'NOTIFY_MAIL',    0x0010 );
 
-define ( 'NAMESPACE_DFRN' ,      'http://purl.org/macgirvin/dfrn/1.0' ); 
-define ( 'NAMESPACE_THREAD' ,    'http://purl.org/syndication/thread/1.0' );
-define ( 'NAMESPACE_TOMB' ,      'http://purl.org/atompub/tombstones/1.0' );
-define ( 'NAMESPACE_ACTIVITY',   'http://activitystrea.ms/spec/1.0/' );
+define ( 'NAMESPACE_DFRN' ,           'http://purl.org/macgirvin/dfrn/1.0' ); 
+define ( 'NAMESPACE_THREAD' ,         'http://purl.org/syndication/thread/1.0' );
+define ( 'NAMESPACE_TOMB' ,           'http://purl.org/atompub/tombstones/1.0' );
+define ( 'NAMESPACE_ACTIVITY',        'http://activitystrea.ms/spec/1.0/' );
 define ( 'NAMESPACE_ACTIVITY_SCHEMA', 'http://activitystrea.ms/schema/1.0/');
+
 define ( 'ACTIVITY_LIKE',        NAMESPACE_ACTIVITY_SCHEMA . 'like' );
+define ( 'ACTIVITY_DISLIKE'      NAMESPACE_DFRN            . '/dislike' );
+define ( 'ACTIVITY_OBJ_HEART',   NAMESPACE_DFRN            . '/heart' );
+
 define ( 'ACTIVITY_FRIEND',      NAMESPACE_ACTIVITY_SCHEMA . 'make-friend' );
 define ( 'ACTIVITY_POST',        NAMESPACE_ACTIVITY_SCHEMA . 'post' );
 define ( 'ACTIVITY_UPDATE',      NAMESPACE_ACTIVITY_SCHEMA . 'update' );
@@ -44,7 +48,6 @@ define ( 'ACTIVITY_OBJ_P_PHOTO', NAMESPACE_ACTIVITY_SCHEMA . 'profile-photo' );
 define ( 'ACTIVITY_OBJ_ALBUM',   NAMESPACE_ACTIVITY_SCHEMA . 'photo-album' );
 
 
-define ( 'ACTIVITY_OBJ_HEART',   NAMESPACE_DFRN     . '/heart' );
 
 
 if(! class_exists('App')) {
