@@ -182,6 +182,7 @@ function dfrn_notify_post(&$a) {
 				// remote reply to our post. Import and then notify everybody else.
 				$datarray = get_atom_elements($item);
 				$datarray['type'] = 'remote-comment';
+				$datarray['wall'] = 1;
 				$datarray['parent-uri'] = $parent_uri;
 				$datarray['uid'] = $importer['importer_uid'];
 				$datarray['contact-id'] = $importer['id'];

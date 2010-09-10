@@ -306,6 +306,7 @@ function post_remote($a,$arr) {
 
 	if(! x($arr,'type'))
 		$arr['type'] = 'remote';
+	$arr['wall'] = ((intval($arr['wall'])) ? 1 : 0);
 	$arr['uri'] = notags(trim($arr['uri']));
 	$arr['author-name'] = notags(trim($arr['author-name']));
 	$arr['author-link'] = notags(trim($arr['author-link']));

@@ -96,23 +96,30 @@ function item_post(&$a) {
 
 	if($post_type == 'net-comment') {
 		if($parent_item !== null) {
-			if($parent_item['type'] == 'remote')
+			if($parent_item['type'] == 'remote') {
 				$post_type = 'remote-comment';
-			else		
+			} 
+			else {		
 				$post_type = 'wall-comment';
+			}
 		}
 	}
 
+	$wall = 0;
+	if($post_type == 'wall' || $post_type == 'wall-comment')
+		$wall = 1;
+ 
 	$notify_type = (($parent) ? 'comment-new' : 'wall-new' );
 
 	$uri = item_new_uri($a->get_hostname(),$profile_uid);
 
-	$r = q("INSERT INTO `item` (`uid`,`type`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
+	$r = q("INSERT INTO `item` (`uid`,`type`,`wall`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`,
 		`edited`, `changed`, `uri`, `title`, `body`, `location`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
 		VALUES( %d, '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 		intval($profile_uid),
 		dbesc($post_type),
+		intval($wall),
 		intval($contact_id),
 		dbesc($contact_record['name']),
 		dbesc($contact_record['url']),
