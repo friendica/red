@@ -66,6 +66,11 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update) {
 		);
 	}
 
+	if($dfrn_id == '' || $dfrn_id == '*')
+		$sort = 'DESC';
+	else
+		$sort = 'ASC';
+
 	if(! strlen($last_update))
 		$last_update = 'now - 30 days';
 	$check_date = datetime_convert('UTC','UTC',$last_update,'Y-m-d H:i:s');
@@ -80,10 +85,11 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update) {
 		AND NOT `item`.`type` IN ( 'remote', 'net-comment' ) AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 		AND ( `item`.`edited` > '%s' OR `item`.`changed` > '%s' )
 		$sql_extra
-		ORDER BY `parent` ASC, `created` ASC LIMIT 0, 300",
+		ORDER BY `parent` %s, `created` ASC LIMIT 0, 300",
 		intval($owner_id),
 		dbesc($check_date),
-		dbesc($check_date)
+		dbesc($check_date),
+		dbesc($sort)
 	);
 	if(! count($r))
 		killme();
