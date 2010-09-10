@@ -112,18 +112,21 @@ function item_post(&$a) {
 
 	if(! strlen($verb))
 		$verb = ACTIVITY_POST ;
+
+	$gravity = (($parent) ? 6 : 0 );
  
 	$notify_type = (($parent) ? 'comment-new' : 'wall-new' );
 
 	$uri = item_new_uri($a->get_hostname(),$profile_uid);
 
-	$r = q("INSERT INTO `item` (`uid`,`type`,`wall`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
+	$r = q("INSERT INTO `item` (`uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`,
 		`edited`, `changed`, `uri`, `title`, `body`, `location`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
-		VALUES( %d, '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 		intval($profile_uid),
 		dbesc($post_type),
 		intval($wall),
+		intval($gravity),
 		intval($contact_id),
 		dbesc($contact_record['name']),
 		dbesc($contact_record['url']),

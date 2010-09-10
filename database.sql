@@ -146,6 +146,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `contact-id` int(10) unsigned NOT NULL DEFAULT '0',
   `type` char(255) NOT NULL,
   `wall` tinyint(1) NOT NULL DEFAULT '0',
+  `gravity` tinyint(1) NOT NULL DEFAULT '0',
   `parent` int(10) unsigned NOT NULL DEFAULT '0',
   `parent-uri` char(255) CHARACTER SET ascii NOT NULL,
   `created` datetime NOT NULL,

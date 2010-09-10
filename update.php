@@ -18,3 +18,7 @@ function update_1001() {
 	q("ALTER TABLE `item` ADD `wall` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `type` ");
 	q("ALTER TABLE `item` ADD INDEX ( `wall` )");  
 }
+
+function update_1002() {
+	q("ALTER TABLE `item` ADD `gravity` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `wall` ");
+}

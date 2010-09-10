@@ -306,6 +306,14 @@ function post_remote($a,$arr) {
 
 //print_r($arr);
 
+
+	if($arr['gravity'])
+		$arr['gravity = intval($arr['gravity']);
+	elseif($arr['parent-uri'] == $arr['uri'])
+		$arr['gravity'] = 0;
+	else($arr['verb'] == ACTIVITY_POST)
+		$arr['gravity'] = 6;
+
 	if(! x($arr,'type'))
 		$arr['type'] = 'remote';
 	$arr['wall'] = ((intval($arr['wall'])) ? 1 : 0);
