@@ -50,6 +50,7 @@ function item_post(&$a) {
 	$title             = notags(trim($_POST['title']));
 	$body              = escape_tags(trim($_POST['body']));
 	$location          = notags(trim($_POST['location']));
+	$verb              = notags(trim($_POST['verb']));
 
 	if(! strlen($body)) {
 		notice( t('Empty post discarded.') . EOL );
@@ -108,6 +109,9 @@ function item_post(&$a) {
 	$wall = 0;
 	if($post_type == 'wall' || $post_type == 'wall-comment')
 		$wall = 1;
+
+	if(! strlen($verb))
+		$verb = ACTIVITY_POST ;
  
 	$notify_type = (($parent) ? 'comment-new' : 'wall-new' );
 
@@ -115,8 +119,8 @@ function item_post(&$a) {
 
 	$r = q("INSERT INTO `item` (`uid`,`type`,`wall`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`,
-		`edited`, `changed`, `uri`, `title`, `body`, `location`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
-		VALUES( %d, '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+		`edited`, `changed`, `uri`, `title`, `body`, `location`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
+		VALUES( %d, '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 		intval($profile_uid),
 		dbesc($post_type),
 		intval($wall),
@@ -134,6 +138,7 @@ function item_post(&$a) {
 		dbesc($title),
 		dbesc($body),
 		dbesc($location),
+		dbesc($verb),
 		dbesc($str_contact_allow),
 		dbesc($str_group_allow),
 		dbesc($str_contact_deny),
