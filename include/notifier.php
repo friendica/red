@@ -278,9 +278,18 @@
 		if((! strlen($rr['dfrn-id'])) && (! $rr['duplex']))
 			continue;
 
-		$idtosend = (($rr['dfrn-id']) ? $rr['dfrn-id'] : $rr['issued-id']);
+
+		$idtosend = $orig_id = (($rr['dfrn-id']) ? $rr['dfrn-id'] : $rr['issued-id']);
+
+		if($rr['duplex'] && $rr['dfrn-id'])
+			$idtosend = '0:' . $orig_id;
+		if($rr['duplex'] && $rr['issued-id'])
+			$idtosend = '1:' . $orig_id;		
 
 		$url = $rr['notify'] . '?dfrn_id=' . $idtosend;
+
+		if($debugging)
+			echo "URL: $url";
 
 		$xml = fetch_url($url);
 
@@ -312,7 +321,11 @@
 		}
 
 		$final_dfrn_id = substr($final_dfrn_id, 0, strpos($final_dfrn_id, '.'));
-		if($final_dfrn_id != $idtosend) {
+
+		if(strpos($final_dfrn_id,':') == 1)
+			$final_dfrn_id = substr($final_dfrn_id,2);
+
+		if($final_dfrn_id != $orig_id) {
 			// did not decode properly - cannot trust this site 
 			continue;
 		}

@@ -10,10 +10,16 @@ function redir_init(&$a) {
 	if(! count($r))
 		goaway($a->get_baseurl());
 
-	$dfrn_id = $r[0]['issued-id'];
-	if((! $dfrn_id) && ($r[0]['duplex']))
-		$dfrn_id = $r[0]['dfrn-id'];
 
+	$dfrn_id = $orig_id = $r[0]['issued-id'];
+	if($r[0]['duplex'] && $r[0]['issued-id']) {
+		$orig_id = $r[0]['issued-id'];
+		$dfrn_id = '1:' . $orig_id;
+	}
+	if($r[0]['duplex'] && $r[0]['dfrn-id']) {
+		$orig_id = $r[0]['dfrn-id'];
+		$dfrn_id = '0:' . $orig_id;
+	}
 	q("INSERT INTO `profile_check` ( `uid`, `dfrn_id`, `expire`)
 		VALUES( %d, '%s', %d )",
 		intval($_SESSION['uid']),

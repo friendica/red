@@ -9,6 +9,13 @@ function dfrn_notify_post(&$a) {
 	$dfrn_id = notags(trim($_POST['dfrn_id']));
 	$challenge = notags(trim($_POST['challenge']));
 	$data = $_POST['data'];
+
+	$direction = (-1);
+	if(strpos($dfrn_id,':') == 1) {
+		$direction = intval(substr($dfrn_id,0,1));
+		$dfrn_id = substr($dfrn_id,2);
+	}
+
 	$r = q("SELECT * FROM `challenge` WHERE `dfrn-id` = '%s' AND `challenge` = '%s' LIMIT 1",
 		dbesc($dfrn_id),
 		dbesc($challenge)
@@ -23,11 +30,26 @@ function dfrn_notify_post(&$a) {
 
 	// find the local user who owns this relationship.
 
+	$sql_extra = '';
+	switch($direction) {
+		case (-1):
+			$sql_extra = sprintf(" AND `issued-id` = '%s' ", dbesc($dfrn_id));
+			break;
+		case 0:
+			$sql_extra = sprintf(" AND `issued-id` = '%s' AND `duplex` = 1 ", dbesc($dfrn_id));
+			break;
+		case 1:
+			$sql_extra = sprintf(" AND `dfrn-id` = '%s' AND `duplex` = 1 ", dbesc($dfrn_id));
+			break;
+		default:
+			xml_status(3);
+			break; // NOTREACHED
+	}
+		 
+
 	$r = q("SELECT `contact`.*, `contact`.`uid` AS `importer_uid`, `user`.* FROM `contact` 
 		LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid` 
-		WHERE ( `issued-id` = '%s' OR ( `duplex` = 1 AND `dfrn-id` = '%s' )) LIMIT 1",
-		dbesc($dfrn_id),
-		dbesc($dfrn_id)
+		WHERE `contact`.`blocked` = 0 AND `contact`.`pending` = 0 $sql_extra LIMIT 1"
 	);
 
 	if(! count($r)) {
@@ -336,7 +358,18 @@ function dfrn_notify_post(&$a) {
 function dfrn_notify_content(&$a) {
 
 	if(x($_GET,'dfrn_id')) {
-		// initial communication from external contact
+
+		// initial communication from external contact, $direction is their direction.
+		// If this is a duplex communication, ours will be the opposite.
+
+		$dfrn_id = notags(trim($_GET['dfrn_id']));
+
+		$direction = (-1);
+		if(strpos($dfrn_id,':') == 1) {
+			$direction = intval(substr($dfrn_id,0,1));
+			$dfrn_id = substr($dfrn_id,2);
+		}
+
 		$hash = random_string();
 
 		$status = 0;
@@ -346,21 +379,40 @@ function dfrn_notify_content(&$a) {
 		$r = q("INSERT INTO `challenge` ( `challenge`, `dfrn-id`, `expire` )
 			VALUES( '%s', '%s', '%s') ",
 			dbesc($hash),
-			dbesc(notags(trim($_GET['dfrn_id']))),
+			dbesc($dfrn_id),
 			intval(time() + 60 )
 		);
 
-		$r = q("SELECT * FROM `contact` WHERE ( `issued-id` = '%s' OR ( `duplex` = 1 AND `dfrn-id` = '%s'))
-			AND `blocked` = 0 AND `pending` = 0 LIMIT 1",
-			dbesc($_GET['dfrn_id']),
-			dbesc($_GET['dfrn_id'])
-		);
+
+		$sql_extra = '';
+		switch($direction) {
+			case (-1):
+				$sql_extra = sprintf(" AND `issued-id` = '%s' ", dbesc($dfrn_id));
+				$my_id = $dfrn_id;
+				break;
+			case 0:
+				$sql_extra = sprintf(" AND `issued-id` = '%s' AND `duplex` = 1 ", dbesc($dfrn_id));
+				$my_id = '1:' . $dfrn_id;
+				break;
+			case 1:
+				$sql_extra = sprintf(" AND `dfrn-id` = '%s' AND `duplex` = 1 ", dbesc($dfrn_id));
+				$my_id = '0:' . $dfrn_id;
+				break;
+			default:
+				$status = 1;
+				break; // NOTREACHED
+		}
+
+
+
+		$r = q("SELECT * FROM `contact` WHERE `blocked` = 0 AND `pending` = 0 $sql_extra LIMIT 1");
+
 		if(! count($r))
 			$status = 1;
 
 		$challenge = '';
 		$encrypted_id = '';
-		$id_str = $_GET['dfrn_id'] . '.' . mt_rand(1000,9999);
+		$id_str = $my_id . '.' . mt_rand(1000,9999);
 
 		if(($r[0]['duplex']) && strlen($r[0]['pubkey'])) {
 			openssl_public_encrypt($hash,$challenge,$r[0]['pubkey']);

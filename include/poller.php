@@ -79,10 +79,16 @@
 			? datetime_convert('UTC','UTC','now - 30 days','Y-m-d\TH:i:s\Z')
 			: datetime_convert('UTC','UTC',$contact['last-update'],'Y-m-d\TH:i:s\Z'));
 
-		$idtosend = (($contact['dfrn-id']) ? $contact['dfrn-id'] : $contact['issued-id']);
+
+
+		$idtosend = $orig_id = (($contact['dfrn-id']) ? $contact['dfrn-id'] : $contact['issued-id']);
+
+		if(intval($contact['duplex']) && $contact['dfrn-id'])
+			$idtosend = '0:' . $orig_id;
+		if(intval($contact['duplex']) && $contact['issued-id'])
+			$idtosend = '1:' . $orig_id;		
 
 		$url = $contact['poll'] . '?dfrn_id=' . $idtosend . '&type=data&last_update=' . $last_update ;
-
 		$xml = fetch_url($url);
 
 		if($debugging) {
@@ -92,6 +98,8 @@
 
 		if(! $xml)
 			continue;
+
+
 
 		$res = simplexml_load_string($xml);
 
@@ -122,12 +130,19 @@
 		}
 
 		$final_dfrn_id = substr($final_dfrn_id, 0, strpos($final_dfrn_id, '.'));
-		if($final_dfrn_id != $idtosend) {
+
+		if(strpos($final_dfrn_id,':') == 1)
+			$final_dfrn_id = substr($final_dfrn_id,2);
+
+		if($final_dfrn_id != $orig_id) {
+
 			// did not decode properly - cannot trust this site 
 			continue;
 		}
 
 		$postvars['dfrn_id'] = $idtosend;
+
+
 
 		$xml = post_url($contact['poll'],$postvars);
 
