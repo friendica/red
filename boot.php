@@ -782,16 +782,54 @@ function get_uid() {
 }}
 
 if(! function_exists('validate_url')) {
-function validate_url($url) {
+function validate_url(&$url) {
 	if(substr($url,0,4) != 'http')
 		$url = 'http://' . $url;
 	$h = parse_url($url);
 
-	if(! $h)
+	if(! $h) {
 		return false;
-	if(! checkdnsrr($h['host'], 'ANY'))
+	}
+	if(! checkdnsrr($h['host'], 'ANY')) {
 		return false;
+	}
 	return true;
 }}
 
+if(! function_exists('allowed_url')) {
+function allowed_url($url) {
+
+	$h = parse_url($url);
+
+	if(! $h) {
+		return false;
+	}
+
+	$str_allowed = get_config('system','allowed_sites');
+	if(! $str_allowed)
+		return true;
+
+	$found = false;
+
+	$host = strtolower($h['host']);
+
+	// always allow our own site
+
+	if($host == strtolower($_SERVER['SERVER_NAME']))
+		return true;
+
+	$fnmatch = function_exists('fnmatch');
+	$allowed = explode(',',$str_allowed);
+
+	if(count($allowed)) {
+		foreach($allowed as $a) {
+			$pat = strtolower(trim($a));
+			if(($fnmatch && fnmatch($pat,$host)) || ($pat == $host)) {
+				$found = true; 
+				break;
+			}
+		}
+	}
+	return $found;
+}}
 

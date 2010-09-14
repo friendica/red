@@ -134,7 +134,7 @@ function dfrn_request_post(&$a) {
 
  		// invalid/bogus request
 
-		notice( t("Unrecoverable protocol error.") . EOL );
+		notice( t('Unrecoverable protocol error.') . EOL );
 		goaway($a->get_baseurl());
 		return; // NOTREACHED
 	}
@@ -219,7 +219,14 @@ function dfrn_request_post(&$a) {
 				goaway($a->get_baseurl() . '/' . $a->cmd);
 				return; // NOTREACHED
 			}
+
+			if(! allowed_url($url)) {
+				notice( t('Disallowed profile URL.') . EOL);
+				goaway($a->get_baseurl() . '/' . $a->cmd);
+				return; // NOTREACHED
+			}
 			
+
 			require_once('Scrape.php');
 
 			$parms = scrape_dfrn($url);
@@ -301,7 +308,7 @@ function dfrn_request_post(&$a) {
 		// This notice will only be seen by the requestor if  the requestor and requestee are on the same server.
 
 		if(! $failed) 
-			notice( t("Your introduction has been sent.") . EOL );
+			notice( t('Your introduction has been sent.') . EOL );
 
 		// "Homecoming" - send the requestor back to their site to record the introduction.
 
