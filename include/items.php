@@ -308,7 +308,7 @@ function get_atom_elements($item) {
 	return $res;
 }
 
-function post_remote($a,$arr) {
+function item_store($arr) {
 
 //print_r($arr);
 
@@ -330,14 +330,14 @@ function post_remote($a,$arr) {
 	$arr['owner-name'] = notags(trim($arr['owner-name']));
 	$arr['owner-link'] = notags(trim($arr['owner-link']));
 	$arr['owner-avatar'] = notags(trim($arr['owner-avatar']));
-	$arr['created'] = datetime_convert('UTC','UTC',$arr['created'],'Y-m-d H:i:s');
-	$arr['edited'] = datetime_convert('UTC','UTC',$arr['edited'],'Y-m-d H:i:s');
+	$arr['created'] = ((x($arr,'created') !== false) ? datetime_convert('UTC','UTC',$arr['created']) : datetime_convert());
+	$arr['edited']  = ((x($arr,'edited')  !== false) ? datetime_convert('UTC','UTC',$arr['edited'])  : datetime_convert());
 	$arr['changed'] = datetime_convert();
 	$arr['title'] = notags(trim($arr['title']));
 	$arr['location'] = notags(trim($arr['location']));
 	$arr['body'] = escape_tags(trim($arr['body']));
 	$arr['last-child'] = intval($arr['last-child']);
-	$arr['visible'] = 1;
+	$arr['visible'] = ((x($arr,'visible') !== false) ? intval($arr['visible']) : 1);
 	$arr['deleted'] = 0;
 	$arr['parent-uri'] = notags(trim($arr['parent-uri']));
 	$arr['verb'] = notags(trim($arr['verb']));

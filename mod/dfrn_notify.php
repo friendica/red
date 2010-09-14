@@ -208,7 +208,7 @@ function dfrn_notify_post(&$a) {
 				$datarray['parent-uri'] = $parent_uri;
 				$datarray['uid'] = $importer['importer_uid'];
 				$datarray['contact-id'] = $importer['id'];
-				$posted_id = post_remote($a,$datarray);
+				$posted_id = item_store($datarray);
 
 				if($posted_id) {
 					$r = q("SELECT `parent` FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -280,7 +280,7 @@ function dfrn_notify_post(&$a) {
 				$datarray['parent-uri'] = $parent_uri;
 				$datarray['uid'] = $importer['importer_uid'];
 				$datarray['contact-id'] = $importer['id'];
-				$r = post_remote($a,$datarray);
+				$r = item_store($datarray);
 
 				// find out if our user is involved in this conversation and wants to be notified.
 			
@@ -342,7 +342,7 @@ function dfrn_notify_post(&$a) {
 			$datarray['parent-uri'] = $item_id;
 			$datarray['uid'] = $importer['importer_uid'];
 			$datarray['contact-id'] = $importer['id'];
-			$r = post_remote($a,$datarray);
+			$r = item_store($datarray);
 			continue;
 
 		}

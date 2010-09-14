@@ -348,7 +348,7 @@
 				$datarray['parent-uri'] = $parent_uri;
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $contact['id'];
-				$r = post_remote($a,$datarray);
+				$r = item_store($datarray);
 				continue;
 			}
 
@@ -377,7 +377,7 @@
 				$datarray['parent-uri'] = $item_id;
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $contact['id'];
-				$r = post_remote($a,$datarray);
+				$r = item_store($datarray);
 				continue;
 
 			}

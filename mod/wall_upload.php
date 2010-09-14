@@ -30,11 +30,11 @@ function wall_upload_post(&$a) {
 	$width = $ph->getWidth();
 	$height = $ph->getHeight();
 
-	$hash = hash('md5',uniqid(mt_rand(),true));
+	$hash = photo_new_resource();
 	
 	$smallest = 0;
 
-	$r = $ph->store($_SESSION['uid'], 0, $hash, $filename, t('Wall Photos'), 0 );
+	$r = $ph->store(get_uid(), 0, $hash, $filename, t('Wall Photos'), 0 );
 
 	if(! $r) {
 		echo ( t('Image upload failed.') . EOL);
@@ -43,14 +43,14 @@ function wall_upload_post(&$a) {
 
 	if($width > 640 || $height > 640) {
 		$ph->scaleImage(640);
-		$r = $ph->store($_SESSION['uid'], 0, $hash, $filename, t('Wall Photos'), 1 );
+		$r = $ph->store(get_uid(), 0, $hash, $filename, t('Wall Photos'), 1 );
 		if($r) 
 			$smallest = 1;
 	}
 
 	if($width > 320 || $height > 320) {
 		$ph->scaleImage(320);
-		$r = $ph->store($_SESSION['uid'], 0, $hash, $filename, t('Wall Photos'), 2 );
+		$r = $ph->store(get_uid(), 0, $hash, $filename, t('Wall Photos'), 2 );
 		if($r)
 			$smallest = 2;
 	}

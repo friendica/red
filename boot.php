@@ -776,6 +776,23 @@ function item_new_uri($hostname,$uid) {
 	return $uri;
 }}
 
+if(! function_exists('photo_new_resource')) {
+function photo_new_resource() {
+
+	do {
+		$found = false;
+		$resource = hash('md5',uniqid(mt_rand(),true));
+		$r = q("SELECT `id` FROM `photo` WHERE `resource-id` = '%s' LIMIT 1",
+			dbesc($resource)
+		);
+		if(count($r))
+			$found = true;
+	} while($found == true);
+	return $resource;
+}}
+
+
+
 if(! function_exists('get_uid')) {
 function get_uid() {
 	return ((x($_SESSION,'uid')) ? intval($_SESSION['uid']) : 0) ;

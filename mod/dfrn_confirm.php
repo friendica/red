@@ -100,7 +100,7 @@ function dfrn_confirm_post(&$a) {
 
 					$img->scaleImageSquare(175);
 					
-					$hash = hash('md5',uniqid(mt_rand(),true));
+					$hash = photo_new_resource();
 
 					$r = $img->store($local_uid, $dfrn_record, $hash, $filename, t('Contact Photos') , 4);
 
@@ -332,12 +332,13 @@ function dfrn_confirm_post(&$a) {
 
 				$img->scaleImageSquare(175);
 					
-				$hash = hash('md5',uniqid(mt_rand(),true));
+				$hash = photo_new_resource();
 
 				$r = $img->store($uid, $contact_id, $hash, $filename, t('Contact Photos'), 4 );
 
 				if($r === false)
 					$photo_failure = true;
+
 				$img->scaleImage(80);
 
 				$r = $img->store($uid, $contact_id, $hash, $filename, t('Contact Photos'), 5 );

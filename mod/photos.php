@@ -1,6 +1,7 @@
 <?php
 
 require_once('Photo.php');
+require_once('include/items.php');
 require_once('view/acl_selectors.php');
 
 function photos_init(&$a) {
@@ -54,7 +55,7 @@ function photos_post(&$a) {
 
 	$r = q("SELECT `contact`.* `user`.`nickname` FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
 		WHERE `user`.`uid` = %d AND `self` = 1 LIMIT 1",
-		intval($_SESSION['uid'])
+		intval(get_uid())
 	);
 
 	$contact_record = $r[0];	
@@ -70,7 +71,7 @@ function photos_post(&$a) {
 
 		$r = q("SELECT count(*) FROM `photo` WHERE `album` = '%s' AND `uid` = %d",
 			dbesc($album),
-			intval($_SESSION['uid'])
+			intval(get_uid())
 		);
 		if(! count($r)) {
 			notice( t('Album not found.') . EOL);
@@ -83,7 +84,7 @@ function photos_post(&$a) {
 			q("UPDATE `photo` SET `album` = '%s' WHERE `album` = '%s' AND `uid` = %d",
 				dbesc($newalbum),
 				dbesc($album),
-				intval($_SESSION['uid'])
+				intval(get_uid())
 			);
 			$newurl = str_replace(bin2hex($album),bin2hex($newalbum),$_SESSION['photo_return']);
 			goaway($a->get_baseurl() . '/' . $newurl);
@@ -199,52 +200,33 @@ function photos_post(&$a) {
 
 			$title = '';
 			$basename = basename($filename);
-
+			$uri = item_new_uri($a->get_hostname(),get_uid());
 			// Create item container
 
-			$body = '[url=' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $p[0]['resource-id'] . ']' 
-				. '[img]' . $a->get_baseurl() . '/photo/' . $p[0]['resource-id'] . '-' . $p[0]['scale'] . '.jpg' . '[/img]' 
-				. '[/url]';
+			$arr = array();
 
-			$uri = item_new_uri($a->get_hostname(),get_uid());
+			$arr['uid']          = get_uid();
+			$arr['uri']          = $uri;
+			$arr['parent-uri']   = $uri; 
+			$arr['type']         = 'photo';
+			$arr['wall']         = 1;
+			$arr['resource-id']  = $p[0]['resource-id'];
+			$arr['contact-id']   = $contact_record['id'];
+			$arr['owner-name']   = $contact_record['name'];
+			$arr['owner-link']   = $contact_record['url'];
+			$arr['owner-avatar'] = $contact_record['thumb'];
+			$arr['title']        = $title;
+			$arr['allow_cid']    = $p[0]['allow_cid'];
+			$arr['allow_gid']    = $p[0]['allow_gid'];
+			$arr['deny_cid']     = $p[0]['deny_cid'];
+			$arr['deny_gid']     = $p[0]['deny_gid'];
+			$arr['last-child']   = 1;
+			$arr['body']         = '[url=' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $p[0]['resource-id'] . ']' 
+						. '[img]' . $a->get_baseurl() . '/photo/' . $p[0]['resource-id'] . '-' . $p[0]['scale'] . '.jpg' . '[/img]' 
+						. '[/url]';
+		
+			$item_id = item_store($arr);
 
-			$r = q("INSERT INTO `item` (`uid`, `type`, `wall`, `resource-id`, `contact-id`,
-				`owner-name`,`owner-link`,`owner-avatar`, `created`,
-				`edited`, `changed`, `uri`, `parent-uri`, `title`, `body`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
-				VALUES( %d, '%s', %d, '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
-				intval(get_uid()),
-				dbesc('photo'),
-				intval(1),
-				dbesc($p[0]['resource-id']),			
-				intval($contact_record['id']),
-				dbesc($contact_record['name']),
-				dbesc($contact_record['url']),
-				dbesc($contact_record['thumb']),
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert()),
-				dbesc($uri),
-				dbesc($uri),
-				dbesc($title),
-				dbesc($body),
-				dbesc($p[0]['allow_cid']),
-				dbesc($p[0]['allow_gid']),
-				dbesc($p[0]['deny_cid']),
-				dbesc($p[0]['deny_gid'])
-
-			);
-			if($r) {
-	
-				$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
-					dbesc($uri)
-				);
-				if(count($r))
-					$item_id = $r[0]['id'];
-					q("UPDATE `item` SET `parent` = %d, `last-child` = 1 WHERE `id` = %d LIMIT 1",
-					intval($r[0]['id']),
-					intval($r[0]['id'])
-				);
-			}
 		}
 
 		$r = q("UPDATE `item` SET `tag` = '%s', `edited` = '%s', `changed` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -315,8 +297,8 @@ function photos_post(&$a) {
 
 	$smallest = 0;
 
-	$photo_hash = hash('md5',uniqid(mt_rand(),true));
-	
+	$photo_hash = photo_new_resource();
+
 	$r = $ph->store(get_uid(), 0, $photo_hash, $filename, $album, 0 , 0, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny);
 
 	if(! $r) {
@@ -337,51 +319,35 @@ function photos_post(&$a) {
 	}
 	
 	$basename = basename($filename);
+	$uri = item_new_uri($a->get_hostname(), get_uid());
 
 	// Create item container
 
-	$body = '[url=' . $a->get_baseurl() . '/photos/' . $contact_record['nickname'] . '/image/' . $photo_hash . ']' 
-		. '[img]' . $a->get_baseurl() . "/photo/{$photo_hash}-{$smallest}.jpg" . '[/img]' 
-		. '[/url]';
 
-	$uri = item_new_uri($a->get_hostname(), get_uid());
+	$arr = array();
 
-	$r = q("INSERT INTO `item` (`uid`, `type`, `wall`, `resource-id`, `contact-id`,`owner-name`,`owner-link`,`owner-avatar`, `created`,
-		`edited`, `changed`, `uri`, `parent-uri`, `title`, `body`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `visible`)
-		VALUES( %d, '%s', %d, '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d )",
-		intval(get_uid()),
-		dbesc('photo'),
-		intval(1),
-		dbesc($photo_hash),			
-		intval($contact_record['id']),
-		dbesc($contact_record['name']),
-		dbesc($contact_record['url']),
-		dbesc($contact_record['thumb']),
-		dbesc(datetime_convert()),
-		dbesc(datetime_convert()),
-		dbesc(datetime_convert()),
-		dbesc($uri),
-		dbesc($uri),
-		dbesc($title),
-		dbesc($body),
-		dbesc($str_contact_allow),
-		dbesc($str_group_allow),
-		dbesc($str_contact_deny),
-		dbesc($str_group_deny),
-		intval($visible)
-	);
-	if($r) {
+	$arr['uid']          = get_uid();
+	$arr['uri']          = $uri;
+	$arr['parent-uri']   = $uri;
+	$arr['type']         = 'photo';
+	$arr['wall']         = 1;
+	$arr['resource-id']  = $photo_hash;
+	$arr['contact-id']   = $contact_record['id'];
+	$arr['owner-name']   = $contact_record['name'];
+	$arr['owner-link']   = $contact_record['url'];
+	$arr['owner-avatar'] = $contact_record['thumb'];
+	$arr['title']        = $title;
+	$arr['allow_cid']    = $str_contact_allow;
+	$arr['allow_gid']    = $str_group_allow;
+	$arr['deny_cid']     = $str_contact_deny;
+	$arr['deny_gid']     = $str_group_deny;
+	$arr['last-child']   = 1;
+	$arr['visible']      = $visible;
+	$arr['body']         = '[url=' . $a->get_baseurl() . '/photos/' . $contact_record['nickname'] . '/image/' . $photo_hash . ']' 
+				. '[img]' . $a->get_baseurl() . "/photo/{$photo_hash}-{$smallest}.jpg" . '[/img]' 
+				. '[/url]';
 
-		$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
-			dbesc($uri)
-		);
-		if(count($r))
-			q("UPDATE `item` SET `parent` = %d, `last-child` = 1 WHERE `id` = %d LIMIT 1",
-			intval($r[0]['id']),
-			intval($r[0]['id'])
-		);
-	
-	}
+	$item_id = item_store($arr);
 
 	if(! $java_upload) {
 		goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
