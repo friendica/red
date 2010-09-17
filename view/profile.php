@@ -64,6 +64,7 @@
 </aside>
 <section>
 <?php echo $page['content']; ?>
+<div id="page-footer"></div>
 </section>
 <footer>
 <?php echo $page['footer']; ?>

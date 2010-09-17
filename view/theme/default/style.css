@@ -68,6 +68,9 @@ img.photo {
 	font-weight: bold;
 	margin-left: 280px;
 }
+#page-footer {
+	height: 20px;
+}
 
 .heart {
 	color: #FF0000;
