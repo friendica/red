@@ -51,6 +51,7 @@
 			// example: <strong> to [b]
 			rep(/<a.*?href=\"(.*?)\".*?>(.*?)<\/a>/gi,"[url=$1]$2[/url]");
 			rep(/<span style=\"font-size:(.*?);\">(.*?)<\/span>/gi,"[size=$1]$2[/size]");
+			rep(/<span style=\"color:(.*?);\">(.*?)<\/span>/gi,"[color=$1]$2[/color]");
 			rep(/<font>(.*?)<\/font>/gi,"$1");
 			rep(/<img.*?src=\"(.*?)\".*?\/>/gi,"[img]$1[/img]");
 			rep(/<code>(.*?)<\/code>/gi,"[code]$1[/code]");
@@ -96,7 +97,7 @@
 			rep(/\[url=([^\]]+)\](.*?)\[\/url\]/gi,"<a href=\"$1\">$2</a>");
 			rep(/\[url\](.*?)\[\/url\]/gi,"<a href=\"$1\">$1</a>");
 			rep(/\[img\](.*?)\[\/img\]/gi,"<img src=\"$1\" />");
-			rep(/\[color=(.*?)\](.*?)\[\/color\]/gi,"<font color=\"$1\">$2</font>");
+			rep(/\[color=(.*?)\](.*?)\[\/color\]/gi,"<span style=\"color: $1;\">$2</span>");
 			rep(/\[code\](.*?)\[\/code\]/gi,"<code>$1</code>");
 			rep(/\[quote.*?\](.*?)\[\/quote\]/gi,"<blockquote>$1</blockquote>");
 
