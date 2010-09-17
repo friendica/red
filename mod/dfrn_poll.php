@@ -201,7 +201,7 @@ function dfrn_poll_post(&$a) {
 	}
 	else {
 
-		$o = get_feed_for($a,$dfrn_id, $a->argv[1], $last_update);
+		$o = get_feed_for($a,$dfrn_id, $a->argv[1], $last_update, $direction);
 		echo $o;
 		killme();
 

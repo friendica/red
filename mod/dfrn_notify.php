@@ -208,6 +208,10 @@ function dfrn_notify_post(&$a) {
 				$datarray['parent-uri'] = $parent_uri;
 				$datarray['uid'] = $importer['importer_uid'];
 				$datarray['contact-id'] = $importer['id'];
+				if(($datarray['verb'] == ACTIVITY_LIKE) || ($datarray['verb'] == ACTIVITY_DISLIKE)) {
+					$datarray['type'] = 'activity';
+					$datarray['gravity'] = GRAVITY_LIKE;
+				}
 				$posted_id = item_store($datarray);
 
 				if($posted_id) {
@@ -228,26 +232,28 @@ function dfrn_notify_post(&$a) {
 							intval($posted_id)
 					);
 
-					$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
+					if($datarray['type'] == 'remote-comment') {
+						$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 
-					proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"comment-import\" \"$posted_id\" &", 
-						array(),$foo));
+						proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"comment-import\" \"$posted_id\" &", 
+							array(),$foo));
 
-					if(($importer['notify-flags'] & NOTIFY_COMMENT) && (! $importer['self'])) {
-						require_once('bbcode.php');
-						$from = stripslashes($datarray['author-name']);
-						$tpl = file_get_contents('view/cmnt_received_eml.tpl');			
-						$email_tpl = replace_macros($tpl, array(
-							'$sitename' => $a->config['sitename'],
-							'$siteurl' =>  $a->get_baseurl(),
-							'$username' => $importer['username'],
-							'$email' => $importer['email'],
-							'$from' => $from,
-						'$body' => strip_tags(bbcode(stripslashes($datarray['body'])))
-						));
-
-						$res = mail($importer['email'], $from . t(" commented on your item at ") . $a->config['sitename'],
-							$email_tpl,t("From: Administrator@") . $a->get_hostname() );
+						if(($importer['notify-flags'] & NOTIFY_COMMENT) && (! $importer['self'])) {
+							require_once('bbcode.php');
+							$from = stripslashes($datarray['author-name']);
+							$tpl = file_get_contents('view/cmnt_received_eml.tpl');			
+							$email_tpl = replace_macros($tpl, array(
+								'$sitename' => $a->config['sitename'],
+								'$siteurl' =>  $a->get_baseurl(),
+								'$username' => $importer['username'],
+								'$email' => $importer['email'],
+								'$from' => $from,
+							'$body' => strip_tags(bbcode(stripslashes($datarray['body'])))
+							));
+	
+							$res = mail($importer['email'], $from . t(" commented on your item at ") . $a->config['sitename'],
+								$email_tpl,t("From: Administrator@") . $a->get_hostname() );
+						}
 					}
 				}
 				xml_status(0);
@@ -280,11 +286,16 @@ function dfrn_notify_post(&$a) {
 				$datarray['parent-uri'] = $parent_uri;
 				$datarray['uid'] = $importer['importer_uid'];
 				$datarray['contact-id'] = $importer['id'];
+				if(($datarray['verb'] == ACTIVITY_LIKE) || ($datarray['verb'] == ACTIVITY_DISLIKE)) {
+					$datarray['type'] = 'activity';
+					$datarray['gravity'] = GRAVITY_LIKE;
+				}
+
 				$r = item_store($datarray);
 
 				// find out if our user is involved in this conversation and wants to be notified.
 			
-				if($importer['notify-flags'] & NOTIFY_COMMENT) {
+				if(($datarray['type'] != 'activity') && ($importer['notify-flags'] & NOTIFY_COMMENT)) {
 
 					$myconv = q("SELECT `author-link` FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d",
 						dbesc($parent_uri),

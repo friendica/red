@@ -1,9 +1,9 @@
 <?php
 
+require_once('bbcode.php');
 
-function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update) {
+function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 
-	require_once('bbcode.php');
 
 	// default permissions - anonymous user
 
@@ -32,13 +32,31 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update) {
 	else
 		killme();
 
-	if($dfrn_id != '*') {
+	if($dfrn_id && $dfrn_id != '*') {
 
-		$r = q("SELECT * FROM `contact` WHERE ( `issued-id` = '%s' OR ( `duplex` = 1 AND `dfrn-id` = '%s' )) AND `uid` = %d LIMIT 1",
-			dbesc($dfrn_id),
-			dbesc($dfrn_id),
+		$sql_extra = '';
+		switch($direction) {
+			case (-1):
+				$sql_extra = sprintf(" AND `issued-id` = '%s' ", dbesc($dfrn_id));
+				$my_id = $dfrn_id;
+				break;
+			case 0:
+				$sql_extra = sprintf(" AND `issued-id` = '%s' AND `duplex` = 1 ", dbesc($dfrn_id));
+				$my_id = '1:' . $dfrn_id;
+				break;
+			case 1:
+				$sql_extra = sprintf(" AND `dfrn-id` = '%s' AND `duplex` = 1 ", dbesc($dfrn_id));
+				$my_id = '0:' . $dfrn_id;
+				break;
+			default:
+				return false;
+				break; // NOTREACHED
+		}
+
+		$r = q("SELECT * FROM `contact` WHERE `blocked` = 0 AND `pending` = 0 AND `contact`.`uid` = %d $sql_extra LIMIT 1",
 			intval($owner_id)
 		);
+
 		if(! count($r))
 			return false;
 
@@ -82,7 +100,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update) {
 		`contact`.`id` AS `contact-id`, `contact`.`uid` AS `contact-uid`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 
-		AND NOT `item`.`type` IN ( 'remote', 'net-comment' ) AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+		AND `item`.`wall` = 1 AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 		AND ( `item`.`edited` > '%s' OR `item`.`changed` > '%s' )
 		$sql_extra
 		ORDER BY `parent` %s, `created` ASC LIMIT 0, 300",
@@ -193,10 +211,23 @@ function construct_verb($item) {
 
 function construct_activity($item) {
 
-	if($item['type'] == 'activity') {
-
-
+	if($item['object']) {
+		$o = '<as:object>' . "\r\n";
+		$r = @simplexml_load_string($item['object']);
+		if($r->type)
+			$o .= '<as:object-type>' . $r->type . '</as:object-type>' . "\r\n";
+		if($r->id)
+			$o .= '<id>' . $r->id . '</id>' . "\r\n";
+		if($r->link)
+			$o .= '<link rel="alternate" type="text/html" href="' . $r->link . '" />' . "\r\n";
+		if($r->title)
+			$o .= '<title>' . $r->title . '</title>' . "\r\n";
+		if($r->content)
+			$o .= '<content type="html" >' . bbcode($r->content) . '</content>' . "\r\n";
+		$o .= '</as:object>' . "\r\n";
+		return $o;
 	}
+
 	return '';
 } 
 
@@ -300,9 +331,42 @@ function get_atom_elements($item) {
 		$res['verb'] = unxmlify($rawverb[0]['data']);
 
 	$rawobj = $item->get_item_tags(NAMESPACE_ACTIVITY, 'object');
+
+
 	if($rawobj) {
-		$res['object-type'] = $rawobj[0]['object-type'][0]['data'];
-		$res['object'] = $rawobj[0];
+		$res['object'] = '<object>' . "\n";
+		if($rawobj[0]['child'][NAMESPACE_ACTIVITY]['object-type'][0]['data']) {
+			$res['object-type'] = $rawobj[0]['child'][NAMESPACE_ACTIVITY]['object-type'][0]['data'];
+			$res['object'] .= '<type>' . $rawobj[0]['child'][NAMESPACE_ACTIVITY]['object-type'][0]['data'] . '</type>' . "\n";
+		}	
+		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'])
+			$res['object'] .= '<id>' . $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'] . '</id>' . "\n";
+		
+		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'][0]['attribs']['']['rel'] == 'alternate')
+			$res['object'] .= '<link>' . $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'][0]['attribs']['']['href'] . '</link>' . "\n";
+		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'])
+			$res['object'] .= '<title>' . $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'] . '</title>' . "\n";
+		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['content'][0]['data']) {
+			$body = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['content'][0]['data'];
+			if(! $body)
+				$body = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['summary'][0]['data'];
+			if(strpos($body,'<')) {
+
+				$body = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
+					'[youtube]$1[/youtube]', $body);
+
+				$config = HTMLPurifier_Config::createDefault();
+				$config->set('Core.DefinitionCache', null);
+
+				$purifier = new HTMLPurifier($config);
+				$body = $purifier->purify($body);
+			}
+
+			$body = html2bbcode($body);
+			$res['object'] .= '<content>' . $body . '</content>' . "\n";
+		}
+
+		$res['object'] .= '</object>' . "\n";
 	}
 
 	return $res;

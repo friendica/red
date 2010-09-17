@@ -30,6 +30,17 @@ a:hover {
 	color: #0000FF;
 	text-decoration: underline;
 }
+
+.fakelink, .fakelink:visited {
+	color: #8888FF;
+}
+
+.fakelink:hover {
+	color: #0000FF;
+}
+
+
+
 .wall-item-content-wrapper.comment {
 	background: #FFCC55;
 }

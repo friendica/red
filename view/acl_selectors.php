@@ -5,7 +5,7 @@ function group_select($selname,$selclass,$preselected = false,$size = 4) {
 
 	$o = '';
 
-	$o .= "<select name=\"{$selname}[]\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" />\r\n";
+	$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" >\r\n";
 
 	$r = q("SELECT * FROM `group` WHERE `deleted` = 0 AND `uid` = %d ORDER BY `name` ASC",
 		$_SESSION['uid']
@@ -39,11 +39,11 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 
 	if($privmail) {
 		$sql_extra = sprintf(" AND `rel` = %d ", intval(DIRECTION_BOTH));
-		$o .= "<select name=\"$selname\" class=\"$selclass\" size=\"$size\" />\r\n";
+		$o .= "<select name=\"$selname\" id=\"$selclass\" class=\"$selclass\" size=\"$size\" >\r\n";
 	}
 	else {
 		$sql_extra = '';
-		$o .= "<select name=\"{$selname}[]\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" />\r\n";
+		$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" >\r\n";
 	}
 
 	$r = q("SELECT `id`, `name`, `url` FROM `contact` 

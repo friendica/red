@@ -66,7 +66,7 @@ function network_content(&$a, $update = false) {
 	// that belongs to you, hence you can see all of it. We will filter by group if
 	// desired. 
 
-	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `type` IN ('wall', 'photo', 'remote' )) ";
+	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` ) ";
 
 	if($group) {
 		$r = q("SELECT `name`, `id` FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -81,7 +81,7 @@ function network_content(&$a, $update = false) {
 
 		$contacts = expand_groups(array($group));
 		$contact_str = implode(',',$contacts);
-                $sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `type` IN ('wall', 'photo', 'remote') AND `contact-id` IN ( $contact_str )) ";
+                $sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `contact-id` IN ( $contact_str )) ";
                 $o = '<h4>' . t('Group: ') . $r[0]['name'] . '</h4>' . $o;
 
 	}
@@ -98,14 +98,14 @@ function network_content(&$a, $update = false) {
 		$a->set_pager_total($r[0]['total']);
 
 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-		`contact`.`name`, `contact`.`photo`, `contact`.`url`, 
+		`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
 		`contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`, 
 		`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 		$sql_extra
-		ORDER BY `parent` DESC, `created` ASC LIMIT %d ,%d ",
+		ORDER BY `parent` DESC, `gravity` ASC, `created` ASC LIMIT %d ,%d ",
 		intval($_SESSION['uid']),
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
@@ -113,11 +113,36 @@ function network_content(&$a, $update = false) {
 
 
 	$cmnt_tpl = file_get_contents('view/comment_item.tpl');
-
+	$like_tpl = file_get_contents('view/like.tpl');
 	$tpl = file_get_contents('view/wall_item.tpl');
 	$wallwall = file_get_contents('view/wallwall_item.tpl');
 
+	$alike = array();
+	$dlike = array();
+	
 	if(count($r)) {
+		foreach($r as $item) {
+
+			if(($item['verb'] == ACTIVITY_LIKE) && ($item['id'] != $item['parent'])) {
+				$url = $item['url'];
+				if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'])) 
+					$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
+				if(! is_array($alike[$item['parent'] . '-l']))
+					$alike[$item['parent'] . '-l'] = array();
+				$alike[$item['parent']] ++;
+				$alike[$item['parent'] . '-l'][] = '<a href="'. $url . '">' . $item['name'] . '</a>';
+			}
+			if(($item['verb'] == ACTIVITY_DISLIKE) && ($item['id'] != $item['parent'])) {
+				$url = $item['url'];
+				if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'])) 
+					$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
+				if(! is_array($dlike[$item['parent'] . '-l']))
+					$dlike[$item['parent'] . '-l'] = array();
+				$dlike[$item['parent']] ++;
+				$dlike[$item['parent'] . '-l'][] = '<a href="'. $url . '">' . $item['name'] . '</a>';
+			}
+		}
+
 		foreach($r as $item) {
 
 			$comment = '';
@@ -127,12 +152,14 @@ function network_content(&$a, $update = false) {
 			$profile_url = $item['url'];
 			$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 
+			if((($item['verb'] == ACTIVITY_LIKE) || ($item['verb'] == ACTIVITY_DISLIKE)) && ($item['id'] != $item['parent'])) 
+				continue;
 
 			// Top-level wall post not written by the wall owner (wall-to-wall)
 			// First figure out who owns it. 
 
 			if(($item['parent'] == $item['item_id']) && (! $item['self'])) {
-				
+
 				if($item['type'] == 'wall') {
 					// I do. Put me on the left of the wall-to-wall notice.
 					$owner_url = $a->contact['url'];
@@ -149,8 +176,7 @@ function network_content(&$a, $update = false) {
 					$template = $wallwall;
 					$commentww = 'ww';
 					// If it is our contact, use a friendly redirect link
-					if(($item['owner-link'] == $item['url']) && ($item['rel'] == DIRECTION_IN || $item['rel'] == DIRECTION_BOTH))
-						$owner_url = $redirect_url;
+					if(($item['owner-link'] == $item['url']) && ($item['rel'] == REL_VIP || $item['rel'] == REL_BUD))
 						$owner_url = $redirect_url;
 
 				}
@@ -161,6 +187,10 @@ function network_content(&$a, $update = false) {
 			else
 				$return_url = $_SESSION['return_url'] = $a->cmd;
 
+			$likebuttons = '';
+			if($item['id'] == $item['parent']) {
+				$likebuttons = replace_macros($like_tpl,array('$id' => $item['id']));
+			}
 
 			if($item['last-child']) {
 				$comment = replace_macros($cmnt_tpl,array(
@@ -181,7 +211,7 @@ function network_content(&$a, $update = false) {
 
 
 	
-			if(($item['contact-uid'] == $_SESSION['uid']) && ($item['rel'] == DIRECTION_IN || $item['rel'] == DIRECTION_BOTH) && (! $item['self'] ))
+			if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'] ))
 				$profile_url = $redirect_url;
 
 			$photo = $item['photo'];
@@ -203,6 +233,11 @@ function network_content(&$a, $update = false) {
 					$profile_link = $item['author-link'];
 			}
 
+
+			$like    = (($alike[$item['id']]) ? format_like($alike[$item['id']],$alike[$item['id'] . '-l'],'like',$item['id']) : '');
+			$dislike = (($dlike[$item['id']]) ? format_like($dlike[$item['id']],$dlike[$item['id'] . '-l'],'dislike',$item['id']) : '');
+
+
 			// Build the HTML
 
 			$o .= replace_macros($template,array(
@@ -219,6 +254,9 @@ function network_content(&$a, $update = false) {
 				'$owner_photo' => $owner_photo,
 				'$owner_name' => $owner_name,
 				'$drop' => $drop,
+				'$vote' => $likebuttons,
+				'$like' => $like,
+				'$dislike' => $dislike,
 				'$comment' => $comment
 			));
 		}

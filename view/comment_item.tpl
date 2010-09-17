@@ -18,6 +18,6 @@
 			<input type="submit" id="comment-edit-submit-$id" class="comment-edit-submit" name="submit" value="Submit" />
 		</div>
 
-		<div id="comment-edit-end"></div>
+		<div class="comment-edit-end"></div>
 	</form>
 </div>

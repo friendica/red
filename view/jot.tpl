@@ -1,19 +1,19 @@
 
 <div id="profile-jot-wrapper" >
-<div id="profile-jot-banner-wrapper">
-	<div id="profile-jot-desc" >What's on your mind?</div>
-	<div id="character-counter" class="grey"></div>
-</div>
-<div id="profile-jot-banner-end"></div>
-<form id="profile-jot-form" action="item" method="post" >
-<input type="hidden" name="type" value="wall" />
-<input type="hidden" name="profile_uid" value="$profile_uid" />
-<input type="hidden" name="return" value="$return_path" />
-<input type="hidden" name="location" id="jot-location" value="$defloc" />
+	<div id="profile-jot-banner-wrapper">
+		<div id="profile-jot-desc" >What's on your mind?</div>
+		<div id="character-counter" class="grey"></div>
+	</div>
+	<div id="profile-jot-banner-end"></div>
 
-<textarea rows="5" cols="64" class="profile-jot-text" id="profile-jot-text" name="body" ></textarea>
+	<form id="profile-jot-form" action="item" method="post" >
+		<input type="hidden" name="type" value="wall" />
+		<input type="hidden" name="profile_uid" value="$profile_uid" />
+		<input type="hidden" name="return" value="$return_path" />
+		<input type="hidden" name="location" id="jot-location" value="$defloc" />
 
-</div>
+		<textarea rows="5" cols="64" class="profile-jot-text" id="profile-jot-text" name="body" ></textarea>
+
 <div id="profile-jot-submit-wrapper" >
 <input type="submit" id="profile-jot-submit" name="submit" value="Submit" />
 	<div id="profile-upload-wrapper" style="display: $visitor;" >
@@ -35,6 +35,7 @@
 	<div id="profile-jot-perms-end"></div>
 	<div id="profile-jot-acl-wrapper" style="display: none;" >$acl</div>
 </div>
+
 <div id="profile-jot-end"></div>
 </form>
 </div>

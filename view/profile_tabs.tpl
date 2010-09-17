@@ -4,3 +4,4 @@
 	<a href="$url?tab=profile" id="profile-tab-profile-link" class="profile-tabs" >Profile</a>
 	<a href="$phototab" id="profile-tab-photos-link" class="profile-tabs" >Photos</a>
 <div id="profile-tabs-end"></div>
+</div>

@@ -203,7 +203,7 @@ function profile_content(&$a, $update = false) {
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
-		AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `type` != 'remote')
+		AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `wall` = 1 )
 		$sql_extra ",
 		intval($a->profile['profile_uid'])
 
@@ -219,9 +219,9 @@ function profile_content(&$a, $update = false) {
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-		AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `type` != 'remote')
+		AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `wall` = 1 )
 		$sql_extra
-		ORDER BY `parent` DESC, `id` ASC LIMIT %d ,%d ",
+		ORDER BY `parent` DESC, `gravity` ASC, `id` ASC LIMIT %d ,%d ",
 		intval($a->profile['profile_uid']),
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
@@ -231,6 +231,8 @@ function profile_content(&$a, $update = false) {
 
 	$cmnt_tpl = file_get_contents('view/comment_item.tpl');
 
+	$like_tpl = file_get_contents('view/like.tpl');
+
 	$tpl = file_get_contents('view/wall_item.tpl');
 
 	if($update)
@@ -238,15 +240,50 @@ function profile_content(&$a, $update = false) {
 	else
 		$return_url = $_SESSION['return_url'] = $a->cmd;
 
+	$alike = array();
+	$dlike = array();
+
 	if(count($r)) {
+
 		foreach($r as $item) {
+
+			if(($item['verb'] == ACTIVITY_LIKE) && ($item['id'] != $item['parent'])) {
+				$url = $item['url'];
+				if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'])) 
+					$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
+				if(! is_array($alike[$item['parent'] . '-l']))
+					$alike[$item['parent'] . '-l'] = array();
+				$alike[$item['parent']] ++;
+				$alike[$item['parent'] . '-l'][] = '<a href="'. $url . '">' . $item['name'] . '</a>';
+			}
+			if(($item['verb'] == ACTIVITY_DISLIKE) && ($item['id'] != $item['parent'])) {
+				$url = $item['url'];
+				if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'])) 
+					$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
+				if(! is_array($dlike[$item['parent'] . '-l']))
+					$dlike[$item['parent'] . '-l'] = array();
+				$dlike[$item['parent']] ++;
+				$dlike[$item['parent'] . '-l'][] = '<a href="'. $url . '">' . $item['name'] . '</a>';
+			}
+		}
+
+		foreach($r as $item) {
+
+		
 			$comment = '';
+			$likebuttons = '';
+
 			$template = $tpl;
 			
 			$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
-			
+
+			if((($item['verb'] == ACTIVITY_LIKE) || ($item['verb'] == ACTIVITY_DISLIKE)) && ($item['id'] != $item['parent'])) 
+				continue;
 
 			if(can_write_wall($a,$a->profile['profile_uid'])) {
+				if($item['id'] == $item['parent']) {
+					$likebuttons = replace_macros($like_tpl,array('$id' => $item['id']));
+				}
 				if($item['last-child']) {
 					$comment = replace_macros($cmnt_tpl,array(
 						'$return_path' => $_SESSION['return_url'],
@@ -287,6 +324,10 @@ function profile_content(&$a, $update = false) {
 				$drop = replace_macros(file_get_contents('view/wall_item_drop.tpl'), array('$id' => $item['id']));
 
 
+			$like    = (($alike[$item['id']]) ? format_like($alike[$item['id']],$alike[$item['id'] . '-l'],'like',$item['id']) : '');
+			$dislike = (($dlike[$item['id']]) ? format_like($dlike[$item['id']],$dlike[$item['id'] . '-l'],'dislike',$item['id']) : '');
+
+
 			$o .= replace_macros($template,array(
 				'$id' => $item['item_id'],
 				'$profile_url' => $profile_link,
@@ -298,6 +339,9 @@ function profile_content(&$a, $update = false) {
 				'$location' => (($item['location']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : ''),
 				'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
 				'$drop' => $drop,
+				'$like' => $like,
+				'$vote' => $likebuttons,
+				'$dislike' => $dislike,
 				'$comment' => $comment
 			));
 			

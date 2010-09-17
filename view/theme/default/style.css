@@ -8,6 +8,22 @@ a:hover {
 	color: #0000FF;
 	text-decoration: underline;
 }
+
+.fakelink, .fakelink:visited {
+	color: #8888FF;
+	text-decoration: none;
+	cursor: pointer;
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+.fakelink:hover {
+	color: #0000FF;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+
 img {
 	border: none;
 }
@@ -649,6 +665,9 @@ input#dfrn-url {
 	font-size: 0.8em;
 }
 
+.wall-item-like-buttons img {
+	cursor: pointer;
+}
 .wall-item-delete-wrapper {
 	float: right;
 	margin-top: 20px;

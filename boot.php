@@ -47,7 +47,9 @@ define ( 'ACTIVITY_OBJ_PHOTO',   NAMESPACE_ACTIVITY_SCHEMA . 'photo' );
 define ( 'ACTIVITY_OBJ_P_PHOTO', NAMESPACE_ACTIVITY_SCHEMA . 'profile-photo' );
 define ( 'ACTIVITY_OBJ_ALBUM',   NAMESPACE_ACTIVITY_SCHEMA . 'photo-album' );
 
-
+define ( 'GRAVITY_PARENT',       0);
+define ( 'GRAVITY_LIKE',         3);
+define ( 'GRAVITY_COMMENT',      6);
 
 
 if(! class_exists('App')) {
@@ -848,5 +850,26 @@ function allowed_url($url) {
 		}
 	}
 	return $found;
+}}
+
+if(! function_exists('format_like')) {
+function format_like($cnt,$arr,$type,$id) {
+	if($cnt == 1)
+		$o .= $arr[0] . (($type == 'like') ? t(' likes this.') : t(' doesn\'t like this.')) . EOL ;
+	else {
+		$o .= '<span class="fakelink" onclick="openClose(\'' . $type . 'list-' . $id . '\');" >' 
+			. $cnt . ' ' . t('people') . '</span> ' . (($type == 'like') ? t('like this.') : t('don\'t like this.')) . EOL ;
+		$total = count($arr);
+		if($total >= 75)
+			$arr = array_slice($arr,0,74);
+		if($total < 75)
+			$arr[count($arr)-1] = t('and') . ' ' . $arr[count($arr)-1];
+		$str = implode(', ', $arr);
+		if($total >= 75)
+			$str .= t(', and ') . $total - 75 . t(' other people');
+		$str .= (($type == 'like') ? t(' like this.') : t(' don\'t like this.'));
+		$o .= '<div id="' . $type . 'list-' . $id . '" style="display: none;" >' . $str . '</div>';
+	}
+	return $o;
 }}
 

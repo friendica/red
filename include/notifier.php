@@ -13,6 +13,7 @@
 
 	require_once("session.php");
 	require_once("datetime.php");
+	require_once('include/items.php');
 
 	if($argc < 3)
 		exit;
@@ -114,6 +115,8 @@
 			$recipients = array_diff($recipients,$deny);
 	
 			$conversant_str = dbesc(implode(', ',$conversants));
+
+
 		}
 
 		$r = q("SELECT * FROM `contact` WHERE `id` IN ( $conversant_str ) AND `blocked` = 0 AND `pending` = 0");
@@ -161,14 +164,13 @@
 	}
 	else {
 
-		require_once('include/items.php');
-
-		$verb = construct_verb($item);
-		$actobj = construct_activity($item);
-
 
 		if($followup) {
 			foreach($items as $item) {
+
+				$verb = construct_verb($item);
+				$actobj = construct_activity($item);
+
 				if($item['id'] == $item_id) {
 					$atom .= replace_macros($cmnt_template, array(
 						'$name'               => xmlify($owner['name']),
@@ -203,6 +205,10 @@
 				else {
 					foreach($contacts as $contact) {
 						if($item['contact-id'] == $contact['id']) {
+
+							$verb = construct_verb($item);
+							$actobj = construct_activity($item);
+
 							if($item['parent'] == $item['id']) {
 								$atom .= replace_macros($item_template, array(
 									'$name'               => xmlify($contact['name']),
@@ -220,7 +226,7 @@
 									'$verb'               => xmlify($verb),
 									'$actobj'             => $actobj,
 									'$content'            => xmlify($item['body']),
-									'$comment_allow'      => (($item['last-child'] && ($contact['rel']) && ($contact['rel'] != REL_FAN)) ? 1 : 0)
+									'$comment_allow'      => (($item['last-child']) ? 1 : 0)
 								));
 							}
 							else {

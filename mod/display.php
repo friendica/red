@@ -93,7 +93,7 @@ function display_content(&$a) {
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 		AND `item`.`parent` = ( SELECT `parent` FROM `item` WHERE ( `id` = '%s' OR `uri` = '%s' ))
 		$sql_extra
-		ORDER BY `parent` DESC, `id` ASC ",
+		ORDER BY `parent` DESC, `gravity` ASC, `id` ASC ",
 		intval($a->profile['uid']),
 		dbesc($item_id),
 		dbesc($item_id)
@@ -101,19 +101,49 @@ function display_content(&$a) {
 
 
 	$cmnt_tpl = file_get_contents('view/comment_item.tpl');
-
+	$like_tpl = file_get_contents('view/like.tpl');
 	$tpl = file_get_contents('view/wall_item.tpl');
 	$wallwall = file_get_contents('view/wallwall_item.tpl');
 
 	$return_url = $_SESSION['return_url'] = $a->cmd;
 
+	$alike = array();
+	$dlike = array();
+
 	if(count($r)) {
+
+		foreach($r as $item) {
+
+			if(($item['verb'] == ACTIVITY_LIKE) && ($item['id'] != $item['parent'])) {
+				$url = $item['url'];
+				if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'])) 
+					$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
+				if(! is_array($alike[$item['parent'] . '-l']))
+					$alike[$item['parent'] . '-l'] = array();
+				$alike[$item['parent']] ++;
+				$alike[$item['parent'] . '-l'][] = '<a href="'. $url . '">' . $item['name'] . '</a>';
+			}
+			if(($item['verb'] == ACTIVITY_DISLIKE) && ($item['id'] != $item['parent'])) {
+				$url = $item['url'];
+				if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'])) 
+					$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
+				if(! is_array($dlike[$item['parent'] . '-l']))
+					$dlike[$item['parent'] . '-l'] = array();
+				$dlike[$item['parent']] ++;
+				$dlike[$item['parent'] . '-l'][] = '<a href="'. $url . '">' . $item['name'] . '</a>';
+			}
+		}
+
+
+
 		foreach($r as $item) {
 			$comment = '';
 			$template = $tpl;
 			
 			$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 			
+			if((($item['verb'] == ACTIVITY_LIKE) || ($item['verb'] == ACTIVITY_DISLIKE)) && ($item['id'] != $item['parent'])) 
+				continue;
 
 			if(can_write_wall($a,$a->profile['uid'])) {
 				if($item['last-child']) {
@@ -175,6 +205,15 @@ function display_content(&$a) {
 			if(($item['contact-id'] == $_SESSION['visitor_id']) || ($item['uid'] == get_uid()))
 				$drop = replace_macros(file_get_contents('view/wall_item_drop.tpl'), array('$id' => $item['id']));
 
+			$like    = (($alike[$item['id']]) ? format_like($alike[$item['id']],$alike[$item['id'] . '-l'],'like',$item['id']) : '');
+			$dislike = (($dlike[$item['id']]) ? format_like($dlike[$item['id']],$dlike[$item['id'] . '-l'],'dislike',$item['id']) : '');
+
+			$likebuttons = '';
+			if($item['id'] == $item['parent']) {
+				$likebuttons = replace_macros($like_tpl,array('$id' => $item['id']));
+			}
+
+
 
 			$o .= replace_macros($template,array(
 				'$id' => $item['item_id'],
@@ -190,10 +229,32 @@ function display_content(&$a) {
 				'$owner_photo' => $owner_photo,
 				'$owner_name' => $owner_name,
 				'$drop' => $drop,
+				'$vote' => $likebuttons,
+				'$like' => $like,
+				'$dislike' => $dislike,
 				'$comment' => $comment
 			));
 
 		}
 	}
+	else {
+		$r = q("SELECT `id` FROM `item` WHERE `id` = '%s' OR `uri` = '%s' LIMIT 1",
+			dbesc($item_id),
+			dbesc($item_id)
+		);
+		if(count($r)) {
+			if($r[0]['deleted']) {
+				notice( t('Item has been removed.') . EOL );
+			}
+			else {	
+				notice( t('Permission denied.') . EOL ); 
+			}
+		}
+		else {
+			notice( t('Item not found.') . EOL );
+		}
+
+	}
 	return $o;
 }
+

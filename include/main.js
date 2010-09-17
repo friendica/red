@@ -36,6 +36,7 @@
 	var livetime = null;
 	var msie = false;
 	var stopped = false;
+	var timer = null;
 
 	$(document).ready(function() {
 		$.ajaxSetup({cache: false});
@@ -77,12 +78,12 @@
 				});
 			}) ;
 		}
-		setTimeout(NavUpdate,30000);
+		timer = setTimeout(NavUpdate,30000);
 
 	}
 
 	function liveUpdate() {
-		if((src == null) || (stopped)) { return; }
+		if((src == null) || (stopped)) { $('.like-rotator').hide(); return; }
 		if($('.comment-edit-text-full').length) {
 			livetime = setTimeout(liveUpdate, 10000);
 			return;
@@ -102,6 +103,8 @@
 
 					$('#' + ident + ' ' + '.wall-item-ago').replaceWith($(this).find('.wall-item-ago')); 
 					$('#' + ident + ' ' + '.wall-item-comment-wrapper').replaceWith($(this).find('.wall-item-comment-wrapper'));
+					$('#' + ident + ' ' + '.wall-item-like').replaceWith($(this).find('.wall-item-like'));
+					$('#' + ident + ' ' + '.wall-item-dislike').replaceWith($(this).find('.wall-item-dislike'));
                                         $('#' + ident + ' ' + '.my-comment-photo').each(function() {
                                                 $(this).attr('src',$(this).attr('dst'));
                                         });
@@ -110,6 +113,7 @@
 				}
 				prev = ident; 
 			});
+			$('.like-rotator').hide();
 		});
 
 	}
@@ -128,4 +132,21 @@
 		$(node).attr("src",$(node).attr("src").replace('show','hide'));
 		$(node).css('width',16);
 		$(node).css('height',16);
+	}
+
+	// Since ajax is asynchronous, we will give a few seconds for
+	// the first ajax call (setting like/dislike), then run the
+	// updater to pick up any changes and display on the page.
+	// The updater will turn any rotators off when it's done. 
+	// This function will have returned long before any of these
+	// events have completed and therefore there won't be any
+	// visible feedback that anything changed without all this
+	// trickery. This still could cause confusion if the "like" ajax call
+	// is delayed and NavUpdate runs before it completes.
+
+	function dolike(ident,verb) {
+		$('#like-rotator-' + ident.toString()).show();
+		$.get('like/' + ident.toString() + '?verb=' + verb );
+		if(timer) clearTimeout(timer);
+		timer = setTimeout(NavUpdate,3000);
 	}

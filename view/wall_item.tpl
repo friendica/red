@@ -9,6 +9,7 @@
 			<a href="$profile_url" title="View $name's profile" class="wall-item-name-link"><span class="wall-item-name" id="wall-item-name-$id" >$name</span></a>
 			<div class="wall-item-ago"  id="wall-item-ago-$id">$ago</div>
 			<div class="wall-item-location" id="wall-item-location-$id">$location</div>
+			$vote
 		</div>
 		<div class="wall-item-content" id="wall-item-content-$id" >
 			<div class="wall-item-title" id="wall-item-title-$id">$title</div>
@@ -17,7 +18,8 @@
 		$drop
 	</div>
 	<div class="wall-item-wrapper-end"></div>
-
+	<div class="wall-item-like" id="wall-item-like-$id">$like</div>
+	<div class="wall-item-dislike" id="wall-item-dislike-$id">$dislike</div>
 	<div class="wall-item-comment-wrapper" >
 	$comment
 	</div>

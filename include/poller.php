@@ -348,6 +348,11 @@
 				$datarray['parent-uri'] = $parent_uri;
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $contact['id'];
+				if(($datarray['verb'] == ACTIVITY_LIKE) || ($datarray['verb'] == ACTIVITY_DISLIKE)) {
+					$datarray['type'] = 'activity';
+					$datarray['gravity'] = GRAVITY_LIKE;
+				}
+
 				$r = item_store($datarray);
 				continue;
 			}
