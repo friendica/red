@@ -20,9 +20,10 @@ function network_content(&$a, $update = false) {
 
 	if(! $update) {
 			// pull out the group here because the updater might have different args
-		if($a->argc > 1)
+		if($a->argc > 1) {
 			$group = intval($a->argv[1]);
-
+			$group_acl = array('allow_gid' => '<' . $group . '>');
+		}
 		$_SESSION['return_url'] = $a->cmd;
 
 		$tpl = file_get_contents('view/jot-header.tpl');
@@ -32,14 +33,20 @@ function network_content(&$a, $update = false) {
 		require_once('view/acl_selectors.php');
 
 		$tpl = file_get_contents("view/jot.tpl");
+		
+		if(($group) || (is_array($a->user) && ((strlen($a->user['allow_cid'])) || (strlen($a->user['allow_gid'])) || (strlen($a->user['deny_cid'])) || (strlen($a->user['deny_gid'])))))
+				$lockstate = 'lock';
+			else
+				$lockstate = 'unlock';
 
 		$o .= replace_macros($tpl,array(
 			'$return_path' => $a->cmd,
 			'$baseurl' => $a->get_baseurl(),
 			'$defloc' => $a->user['default-location'],
 			'$visitor' => 'block',
-			'$lockstate' => 'unlock',
-			'$acl' => populate_acl($a->user),
+			'$lockstate' => $lockstate,
+			'$acl' => populate_acl(($group) ? $group_acl : $a->user),
+			'$bang' => (($group) ? '!' : ''),
 			'$profile_uid' => $_SESSION['uid']
 		));
 

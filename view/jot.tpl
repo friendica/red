@@ -31,7 +31,7 @@
 	<div id="profile-rotator-wrapper" style="display: $visitor;" >
 		<img id="profile-rotator" src="images/rotator.gif" alt="Please wait" title="Please wait" style="display: none;" />
 	</div> 
-	<div id="profile-jot-perms" class="profile-jot-perms" style="display: $visitor;" ><img src="images/$lockstate_icon.gif" alt="Permission Settings" title="Permission Settings" onClick="openClose('profile-jot-acl-wrapper');" /></div>
+	<div id="profile-jot-perms" class="profile-jot-perms" style="display: $visitor;" ><img src="images/$lockstate_icon.gif" alt="Permission Settings" title="Permission Settings" onClick="openClose('profile-jot-acl-wrapper');" />$bang</div>
 	<div id="profile-jot-perms-end"></div>
 	<div id="profile-jot-acl-wrapper" style="display: none;" >$acl</div>
 </div>

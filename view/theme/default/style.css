@@ -776,6 +776,8 @@ input#dfrn-url {
 #profile-jot-perms {
 	float: left;
 	margin-left: 200px;
+	font-weight: bold;
+	font-size: 1.2em;
 }
 
 #profile-jot-perms-end {

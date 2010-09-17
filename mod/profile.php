@@ -144,6 +144,7 @@ function profile_content(&$a, $update = false) {
 				'$return_path' => $a->cmd,
 				'$visitor' => (($_SESSION['uid'] == $a->profile['profile_uid']) ? 'block' : 'none'),
 				'$lockstate' => $lockstate,
+				'$bang' => '',
 				'$acl' => (($_SESSION['uid'] == $a->profile['profile_uid']) ? populate_acl($a->user) : ''),
 				'$profile_uid' => $a->profile['profile_uid']
 			));
