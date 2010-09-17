@@ -105,12 +105,14 @@
 
 		if(intval($res->status) == 1)
 			mark_for_death($contact);
+		else {
+			if($contact['term-date'] != '0000-00-00 00:00:00')
+				unmark_for_death($contact);
+		}
 
 		if((intval($res->status) != 0) || (! strlen($res->challenge)) || (! strlen($res->dfrn_id)))
 			continue;
 
-		if($contact['term-date'] != '0000-00-00 00:00:00')
-			unmark_for_death($contact);
 
 		$postvars = array();
 

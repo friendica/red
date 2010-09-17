@@ -46,7 +46,7 @@ function mark_for_death($contact) {
 if(! function_exists('unmark_for_death')) {
 function unmark_for_death($contact) {
 	// It's a miracle. Our dead contact has inexplicably come back to life.
-	q("UPDATE `contact` SET `term-date = '%s' WHERE `id` = %d LIMIT 1",
+	q("UPDATE `contact` SET `term-date` = '%s' WHERE `id` = %d LIMIT 1",
 		dbesc('0000-00-00 00:00:00'),
 		intval($contact['id'])
 	);
