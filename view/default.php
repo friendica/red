@@ -8,7 +8,9 @@
 	<header><?php echo $page['header']; ?></header>
 	<nav><?php echo $page['nav']; ?></nav>
 	<aside><?php echo $page['aside']; ?></aside>
-	<section><?php echo $page['content']; ?></section>
+	<section><?php echo $page['content']; ?>
+		<div id="page-footer"></div>
+	</section>
 	<footer><?php echo $page['footer']; ?></footer>
 </body>
 </html>

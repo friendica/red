@@ -10,18 +10,24 @@ function profile_load(&$a, $username, $profile = 0) {
 			$profile = $r[0]['profile-id'];
 	} 
 
+	$r = null;
+
 	if($profile) {
 		$profile_int = intval($profile);
-		$sql_which = " AND `profile`.`id` = $profile_int ";
+		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `user`.* FROM `profile` 
+			LEFT JOIN `user` ON `profile`.`uid` = `user`.`uid`
+			WHERE `user`.`nickname` = '%s' AND `profile`.`id` = %d LIMIT 1",
+			dbesc($username),
+			intval($profile_int)
+		);
 	}
-	else
-		$sql_which = " AND `profile`.`is-default` = 1 "; 
-
-	$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `user`.* FROM `profile` 
-		LEFT JOIN `user` ON `profile`.`uid` = `user`.`uid`
-		WHERE `user`.`nickname` = '%s' $sql_which LIMIT 1",
-		dbesc($username)
-	);
+	if(! count($r)) {	
+		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `user`.* FROM `profile` 
+			LEFT JOIN `user` ON `profile`.`uid` = `user`.`uid`
+			WHERE `user`.`nickname` = '%s' AND `profile`.`is-default` = 1 LIMIT 1",
+			dbesc($username)
+		);
+	}
 
 	if(($r === false) || (! count($r))) {
 		notice( t('No profile') . EOL );
