@@ -19,6 +19,8 @@ function network_content(&$a, $update = false) {
 	$group = 0;
 
 	if(! $update) {
+		$o .= '<script>	$(document).ready(function() { $(\'#nav-network-link\').addClass(\'nav-selected\'); });</script>';
+
 			// pull out the group here because the updater might have different args
 		if($a->argc > 1) {
 			$group = intval($a->argv[1]);

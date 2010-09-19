@@ -4,6 +4,7 @@ function directory_init(&$a) {
 }
 
 function directory_content(&$a) {
+	$o .= '<script>	$(document).ready(function() { $(\'#nav-directory-link\').addClass(\'nav-selected\'); });</script>';
 
 	$search = ((x($_GET,'search')) ? notags(trim($_GET['search'])) : '');
 

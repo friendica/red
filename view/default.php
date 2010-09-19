@@ -6,7 +6,7 @@
 </head>
 <body>
 	<header><?php echo $page['header']; ?></header>
-	<nav><?php echo $page['nav']; ?></nav>
+	<nav><div id="top-margin"></div><?php echo $page['nav']; ?></nav>
 	<aside><?php echo $page['aside']; ?></aside>
 	<section><?php echo $page['content']; ?>
 		<div id="page-footer"></div>

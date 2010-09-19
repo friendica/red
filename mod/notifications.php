@@ -57,6 +57,7 @@ function notifications_content(&$a) {
 	}
 
 	$o = '';
+	$o .= '<script>	$(document).ready(function() { $(\'#nav-notify-link\').addClass(\'nav-selected\'); });</script>';
 
 	if(($a->argc > 1) && ($a->argv[1] == 'all'))
 		$sql_extra = '';

@@ -2,7 +2,7 @@
 
 <div id="profile-edit-links">
 <ul>
-<li><a href="profile/$profile_id/view" id="profile-edit-view-link" title="View this profile">View this profile</a></li>
+<li><a href="profile/$profile_id/view?tab=profile" id="profile-edit-view-link" title="View this profile">View this profile</a></li>
 <li><a href="profiles/clone/$profile_id" id="profile-edit-clone-link" title="Create a new profile using these settings">Clone this profile</a></li>
 <li></li>
 <li><a href="profiles/drop/$profile_id" id="profile-edit-drop-link" title="Delete this profile" $disabled >Delete this profile</a></li>

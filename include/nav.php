@@ -40,3 +40,4 @@ if(x($_SESSION['uid'])) {
 	}
 
 	$a->page['nav'] .= "</span>\r\n<span id=\"nav-end\"></span>\r\n";
+	$a->page['nav'] .= '<span id="banner">mistpark</span>';

@@ -4,29 +4,32 @@ body {
 	background: #000000;
 	color: #FF0000;
 }
+.nav-selected {
+	background: #000000 !important;
+}
 
 .nav-link {
 	color: #FF0000;
-	background: #888888;
+	background: #444444;
 }
 
 .nav-commlink {
 	color: #FF0000;
-	background: #888888;
+	background: #444444;
 }
 
 .profile-tabs {
 	color: #FF0000;
-	background: #888888;
+	background: #444444;
 
 }
 
-a, a:visited {
-	color: #444444;
+a, a:visited, .fakelink, .fakelink:visited {
+	color: #888888;
 	text-decoration: none;
 }
 
-a:hover {
+a:hover, .fakelink:hover {
 	color: #FF0000;
 	text-decoration: underline;
 }

@@ -72,6 +72,7 @@ function contacts_post(&$a) {
 
 function contacts_content(&$a) {
 
+	$o .= '<script>	$(document).ready(function() { $(\'#nav-contacts-link\').addClass(\'nav-selected\'); });</script>';
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
 		return;

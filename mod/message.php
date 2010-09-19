@@ -82,6 +82,7 @@ function message_post(&$a) {
 }
 
 function message_content(&$a) {
+	$o .= '<script>	$(document).ready(function() { $(\'#nav-messages-link\').addClass(\'nav-selected\'); });</script>';
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);

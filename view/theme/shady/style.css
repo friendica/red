@@ -1,27 +1,26 @@
 @import url('../default/style.css');
 
 body { 
-	background: #FFDDAA;
+	background: #DDDDDD;
 	color: #444444;
 }
 
 .nav-link {
 	color: #444444;
-	background: #FFCC55;
+	background: #F4F4F4;
+}
+.nav-selected {
+	background: #DDDDDD !important;
 }
 
 .nav-commlink {
 	color: #444444;
-	background: #FFCC55;
-}
-
-.nav-selected {
-	background: #FFDDAA !important;
+	background: #F4F4F4;
 }
 
 .profile-tabs {
 	color: #444444;
-	background: #FFCC55;
+	background: #F4F4F4;
 
 }
 
@@ -43,18 +42,16 @@ a:hover {
 	color: #0000FF;
 }
 
-
-
 .wall-item-content-wrapper.comment {
-	background: #FFCC55;
+	background: #CCCCCC;
 }
 
 .comment-edit-wrapper {
-	background: #FFCC55;
+	background: #CCCCCC;
 }
 
 .comment-wwedit-wrapper {
-	background: #FFCC55;
+	background: #CCCCCC;
 }
 
 #photos-upload-perms-menu, #photos-upload-perms-menu:visited {

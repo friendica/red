@@ -155,6 +155,7 @@ function settings_post(&$a) {
 
 if(! function_exists('settings_content')) {
 function settings_content(&$a) {
+	$o .= '<script>	$(document).ready(function() { $(\'#nav-settings-link\').addClass(\'nav-selected\'); });</script>';
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL );
@@ -229,9 +230,9 @@ function settings_content(&$a) {
 		'$basepath' => $a->get_hostname(),
 		'$baseurl' => $a->get_baseurl()));	
 
-	$o = file_get_contents('view/settings.tpl');
+	$stpl = file_get_contents('view/settings.tpl');
 
-	$o = replace_macros($o,array(
+	$o .= replace_macros($stpl,array(
 		'$baseurl' => $a->get_baseurl(),
 		'$uid' => $_SESSION['uid'],
 		'$username' => $username,

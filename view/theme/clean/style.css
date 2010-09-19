@@ -1,5 +1,9 @@
 @import url('../default/style.css');
 
+nav {
+	background: #F4F4F4;
+}
+
 body { 
 	background: #FFFFFF;
 	color: #444444;
@@ -8,11 +12,13 @@ body {
 .nav-link {
 	color: #444444;
 	background: #EEE;
+	border: 2px solid #888888;
 }
 
 .nav-commlink {
 	color: #444444;
 	background: #EEE;
+	border: 2px solid #888888;
 }
 
 .profile-tabs {
