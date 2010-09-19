@@ -89,7 +89,8 @@ function profile_content(&$a, $update = false) {
 		$a->profile['profile_uid'] = $_SESSION['profile_uid'];
 	}
 	else {
-		$o .= '<script>	$(document).ready(function() { $(\'#nav-home-link\').addClass(\'nav-selected\'); });</script>';
+		if($a->profile['uid'] == get_uid())		
+			$o .= '<script>	$(document).ready(function() { $(\'#nav-home-link\').addClass(\'nav-selected\'); });</script>';
 		// set the uid so we can pick it up during update
 		$_SESSION['profile_uid'] = $a->profile['uid'];
 	}
