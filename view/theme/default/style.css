@@ -1576,3 +1576,7 @@ input#dfrn-url {
        margin-top: 18px;
        margin-left: 20px;
 }
+
+#dfrn-request-networks {
+	margin-bottom: 30px;
+}

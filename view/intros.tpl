@@ -1,7 +1,7 @@
 
 <div class="intro-wrapper" id="intro-$contact-id" >
 
-<p class="intro-desc">Notification type: Introduction</p>
+<p class="intro-desc">Notification type: Friend/Connect Request</p>
 <div class="intro-fullname" id="intro-fullname-$contact-id" >$fullname</div>
 <a class="intro-url-link" id="intro-url-link-$contact-id" href="$url" ><img id="photo-$contact-id" class="intro-photo" src="$photo" width="175" height=175" name="$fullname" alt="fullname" /></a>
 <div class="intro-knowyou">Presumably known to you? <strong>$knowyou</strong></div>

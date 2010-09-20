@@ -1,15 +1,16 @@
 
-<h1>Personal Introduction</h1>
+<h1>Friend/Connection Request</h1>
 
 <p id="dfrn-request-intro">
-You may introduce yourself to this member if you have a valid profile locator<br />
-on the <a href="http://dfrn.org">Distributed Friends and Relations Network (DFRN)</a>.
+You may request a connection with this member if you have a valid profile address<br />
+on one of the following social networks:<br />
+<ul id="dfrn-request-networks"><li><a href="http://dfrn.org">mistpark/DFRN</a></li></ul>
 </p>
 
 <form action="dfrn_request/$nickname" method="post" />
 
 <div id="dfrn-request-url-wrapper" >
-	<label id="dfrn-url-label" for="dfrn-url" >Your profile location:</label>
+	<label id="dfrn-url-label" for="dfrn-url" >Your profile address:</label>
 	<input type="text" name="dfrn_url" id="dfrn-url" size="32" />
 	<div id="dfrn-request-url-end"></div>
 </div>
