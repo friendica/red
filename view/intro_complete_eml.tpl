@@ -1,28 +1,30 @@
 
 Dear $username,
 
-	An approval was recently processed at $sitename for a personal
-introduction you initiated.
+	I've got good news and bad news... first the good news. 
+'$fn' at '$dfrn_url' has accepted your connection request at
+'$sitename'. 
 
-	You are now connected to '$fn' at '$dfrn_url'. 
+The bad news is that '$fn' did not make you a "full friend", 
+but rather accepted you as a "fan". [Maybe you were expecting this, 
+maybe not.]
 
-Your access privileges to this profile MAY have been elevated. Please
-view their profile from within your $sitename "Contacts" page going 
-forward. Should you visit the URL without going through $sitename,
-you will only see this person's public profile. 
+What this means is that '$fn' can communicate with you at any 
+time and comment on your activities, but your communications to 
+'$fn' may be restricted. In particular, you do NOT have the 
+ability to exchange private mail. You are only able to communicate 
+with '$fn' via your own status updates.
 
-At $sitename, "relationships" are allowed to be one sided. Be advised 
-that your communications with this person may be partially limited 
-if they do not request (and you accept) a reciprocal relationship.
+In the future, '$fn' MAY decide to seek a full connection and make 
+a reciprocal request. If you approve such a request, you will then be 
+considered mutual friends with full communication ability.  
 
-You may now send them directed messages, and you also may have the 
-ability to receive non-public status messages and view otherwise 
-hidden profiles. Should this turn into a mutual relationship you 
-will both have this level of access.
+The network at $sitename allows many types of relationships - 
+as opposed to older social networks where friendship is either 
+"yes" or "no" - with nothing in between. 
 
+$siteurl
 
 Sincerely,
 
 	$sitename Administrator
-
- 

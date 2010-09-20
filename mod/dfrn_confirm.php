@@ -164,7 +164,9 @@ function dfrn_confirm_post(&$a) {
 			);
 			if((count($r)) && ($r[0]['notify-flags'] & NOTIFY_CONFIRM)) {
 
-				$tpl = file_get_contents('view/intro_complete_eml.tpl');
+				$tpl = (($new_relation == $REL_BUD) 
+					? file_get_contents('view/friend_complete_eml.tpl');
+					: file_get_contents('view/intro_complete_eml.tpl'));
 			
 				$email_tpl = replace_macros($tpl, array(
 					'$sitename' => $a->config['sitename'],
@@ -176,7 +178,7 @@ function dfrn_confirm_post(&$a) {
 					'$uid' => $newuid )
 				);
 	
-				$res = mail($r[0]['email'], t("Introduction accepted at ") . $a->config['sitename'],
+				$res = mail($r[0]['email'], t("Connection accepted at ") . $a->config['sitename'],
 					$email_tpl, 'From: ' . t('Administrator') . '@' . $_SERVER[SERVER_NAME] );
 				if(!$res) {
 					notice( t("Email notification failed.") . EOL );
