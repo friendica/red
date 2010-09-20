@@ -1580,3 +1580,9 @@ input#dfrn-url {
 #dfrn-request-networks {
 	margin-bottom: 30px;
 }
+
+#pause {
+  position: fixed;
+  bottom: 5px;
+  right: 5px;
+}

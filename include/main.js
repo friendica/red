@@ -46,10 +46,17 @@
 		$(document).keypress(function(event) {
 			if(event.keyCode == '19') {
 				event.preventDefault();
-				if(stopped == false)
+				if(stopped == false) {
 					stopped = true;
+					$('#pause img').attr('src','images/pause.gif');
+					$('#pause img').css({'border': '1px solid black'});
+
+				}
 				else {
 					stopped = false;
+					$('#pause img').attr('src','');
+					$('#pause img').css({'border': 'none'});
+
 				}
 			}
 		});					
