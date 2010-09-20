@@ -1,7 +1,7 @@
 
 <div id="profile-jot-wrapper" >
 	<div id="profile-jot-banner-wrapper">
-		<div id="profile-jot-desc" >What's on your mind?</div>
+		<div id="profile-jot-desc" >&nbsp;</div>
 		<div id="character-counter" class="grey"></div>
 	</div>
 	<div id="profile-jot-banner-end"></div>
@@ -15,7 +15,7 @@
 		<textarea rows="5" cols="64" class="profile-jot-text" id="profile-jot-text" name="body" ></textarea>
 
 <div id="profile-jot-submit-wrapper" >
-<input type="submit" id="profile-jot-submit" name="submit" value="Submit" />
+<input type="submit" id="profile-jot-submit" name="submit" value="Share" />
 	<div id="profile-upload-wrapper" style="display: $visitor;" >
 		<div id="wall-image-upload-div" ><img id="wall-image-upload" src="images/camera-icon.gif" alt="Upload Photo" title="Upload Photo" /></div>
 	</div> 
