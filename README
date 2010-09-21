@@ -15,8 +15,16 @@ It's your network now. If social networking isn't what you thought it would
 be, help us to make it better.  
 
 A single instance of Mistpark Server supports up to several hundred people 
-using commodity hosting hardware. Also available from Mistpark Labs is 
+using commodity hosting hardware. Each of these people can connect with any 
+other mistpark/DFRN cell anywhere in the world and share photos, links, 
+status updates, whatever. Also available from Mistpark Labs is 
 Mistpark Personal Edition, which supports a single user. 
+
+Every user has unlimited profiles available. There is a "public profile" which 
+can be seen by anybody. Additional profiles may be tailored to specific
+groups or individuals - and shown when a known friend visits your site.
+
+Groups may be setup for closed conversations (like Diaspora's "aspects"). 
 
 Please see http://dfrn.org for more information on the mistpark/DFRN project.
 
