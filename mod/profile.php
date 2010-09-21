@@ -249,6 +249,9 @@ function profile_content(&$a, $update = 0) {
 
 	$tpl = file_get_contents('view/wall_item.tpl');
 
+	$droptpl = file_get_contents('view/wall_item_drop.tpl');
+	$fakedrop = file_get_contents('view/wall_fake_drop.tpl');
+
 	if($update)
 		$return_url = $_SESSION['return_url'];
 	else
@@ -333,9 +336,12 @@ function profile_content(&$a, $update = 0) {
 			$profile_link = $profile_url;
 
 			$drop = '';
+			$dropping = false;
 
 			if(($item['contact-id'] == $_SESSION['visitor_id']) || ($item['uid'] == $_SESSION['uid']))
-				$drop = replace_macros(file_get_contents('view/wall_item_drop.tpl'), array('$id' => $item['id']));
+				$dropping = true;
+
+			$drop = replace_macros((($dropping)? $droptpl : $fakedrop), array('$id' => $item['id']));
 
 
 			$like    = (($alike[$item['id']]) ? format_like($alike[$item['id']],$alike[$item['id'] . '-l'],'like',$item['id']) : '');
