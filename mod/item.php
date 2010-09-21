@@ -227,7 +227,7 @@ function item_post(&$a) {
 
 	$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 
-	proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"$notify_type\" \"$post_id\" > notify.out &",
+	proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"$notify_type\" \"$post_id\" &",
 		array(),$foo));
 
 	goaway($a->get_baseurl() . "/" . $_POST['return'] );
@@ -317,7 +317,7 @@ function item_content(&$a) {
 			
 			// send the notification upstream/downstream as the case may be
 
-			proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" > drop.out &",
+			proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" &",
 				array(), $foo));
 
 			goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);

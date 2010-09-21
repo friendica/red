@@ -1,38 +1,76 @@
-Installation guide
 
-The following notes apply to alpha/beta releases. Some manual installation is 
-required at this time. 
+Mistpark Installation
 
+This is an early release. Some manual installation is required at this time. 
 
 1. Requirements
 	- Apache with mod-rewrite enabled and "Options All" so you can use a 
 local .htaccess file
+
 	- PHP > 5.1. The later the better. You'll need 5.3 for full openssl 
 encryption support
+
 	- PHP *command line* access with register_argc_argv set to true in the 
 php.ini file
+
 	- Mysql 5.x
-	- cron
+
+	- ability to schedule jobs with cron (Linux/Mac) or Scheduled Tasks
+(Windows)
 	
 	[Dreamhost.com offers all of the necessary hosting features at a 
 reasonable price. If your hosting provider doesn't allow Unix shell access, 
 you might have trouble getting everything to work.] 
 
-2. Edit htconfig.php and change system settings. Rename to .htconfig.php
+2. Put this directory into the root of your web server document area.
 
-3. Import database.sql into your database with mysql command line or via phpmyadmin
+	- If you copy the directory tree to your webserver, make sure
+	that you also copy .htaccess - as "dot" files are often hidden 
+	and aren't normally copied.
 
-4. Import updates.sql (if it exists) to catch any late-breaking devel changes
-
-5. Put this directory into the root of your web server document area.
-	- To use a subdir of your main site, set the 
+	- To use a subdirectory of your main domain, set the 
 	config variable $a->path to the relative subdir
 	in .htconfig.php - for example to use http://example.com/test - 
-	set $a->path to 'test'.
+	use
+		$a->path = 'test';
+
+	In this case, you cannot use the web installer. 
+	Skip step 3 and proceed to step 4 - especially steps 4a and 4b.
+
 	- Everything will work much better if you can dedicate a domain 
 	or subdomain so that you don't require an extra server path. 
 
-6. Navigate to your site with a web browser and register an account.
+3. Visit your website with a web browser and follow the instructions. 
 
-7. Set up a cron task to run "php include/poller.php http://my.domain.name" once every 5-10 minutes. 
+4. *If* the automated installation fails for any reason, check the following:
 
+	4a. ".htconfig.php" exists 
+		If not, edit htconfig.php and change system settings. Rename 
+to .htconfig.php
+	4b. Database is populated.
+		If not, import the contents of "database.sql" with phpmyadmin 
+or mysql command line
+
+5. At this point visit your website again, and register your personal account. 
+Registration errors should all be recoverable automatically. 
+If you get any *critical* failure at this point, it generally indicates the
+database was not installed correctly. You might wish to move/rename 
+.htconfig.php to another name and empty (called 'dropping') the database 
+tables, so that you can start fresh.  
+
+6. Set up a cron job or scheduled task to run the poller once every 5-10 
+minutes to pick up the recent "public" postings of your friends. Example:
+
+	cd /base/directory; /path/to/php include/poller.php
+
+Change "/base/directory", and "/path/to/php" as appropriate for your situation.
+
+If you are using a Linux server, run "crontab -e" and add a line like the 
+one shown, substituting for your unique paths and settings:
+
+*/5 * * * *	cd /home/myname/mywebsite; /usr/bin/php include/poller.php
+
+You can generally find the location of PHP by executing "which php". If you 
+have troubles with this section please contact your hosting provider for 
+assistance. Mistpark will not work correctly if you cannot perform this step.
+  

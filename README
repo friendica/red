@@ -1,0 +1,30 @@
+
+Mistpark Server
+Version 2.0 alpha
+
+IMPORTANT: Please see the file INSTALL for system requirements.
+
+Mistpark introduces a new generation of social networks. Mistpark Server
+allows you to interact with other members of the Mistpark community using
+the DFRN (Distributed Friends and Relations Network) protocol. Other networks
+(such as Diaspora, OneSocialWeb, status.net, etc.) will be supported in the 
+future as their products mature and protocol and privacy/rights issues are 
+resolved between these networks. 
+
+It's your network now. If social networking isn't what you thought it would 
+be, help us to make it better.  
+
+A single instance of Mistpark Server supports up to several hundred people 
+using commodity hosting hardware. Also available from Mistpark Labs is 
+Mistpark Personal Edition, which supports a single user. 
+
+Please see http://dfrn.org for more information on the mistpark/DFRN project.
+
+We will be providing a support site specifically for mistpark at 
+http://mistpark.com at a future (unspecified) date. We are still 
+evaluating wiki, forum, and bug-tracking software for use on the project. 
+At the present time, you may contact the author and raise issues via
+the source code repository on github. 
+
+Please support mistpark with a donation.  
+
