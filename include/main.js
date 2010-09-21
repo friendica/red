@@ -37,6 +37,7 @@
 	var msie = false;
 	var stopped = false;
 	var timer = null;
+	var pr = 0;
 
 	$(document).ready(function() {
 		$.ajaxSetup({cache: false});
@@ -64,8 +65,8 @@
 
 	function NavUpdate() {
 
-		if($('#live-network').length) { src = 'network'; liveUpdate(); }
-		if($('#live-profile').length) { src = 'profile'; liveUpdate(); }
+		if($('#live-network').length) { src = 'network'; pr = $('#live-network').attr('profile'); liveUpdate(); }
+		if($('#live-profile').length) { src = 'profile'; pr = $('#live-profile').attr('profile'); liveUpdate(); }
 
 		if(! stopped) {
 			$.get("ping",function(data) {
@@ -97,7 +98,7 @@
 		}
 		prev = 'live-' + src;
 
-		$.get('update_' + src + '?msie=' + ((msie) ? 1 : 0),function(data) {
+		$.get('update_' + src + '?p=' + pr + '&msie=' + ((msie) ? 1 : 0),function(data) {
 			$('.wall-item-outside-wrapper',data).each(function() {
 				var ident = $(this).attr('id');
 				if($('#' + ident).length == 0) { 

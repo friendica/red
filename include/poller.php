@@ -61,7 +61,6 @@
 				continue;
 		}
 
-
 		$importer_uid = $contact['uid'];
 
 		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
@@ -96,15 +95,21 @@
 			echo "XML: " . $xml . "\r\n";
 		}
 
-		if(! $xml)
+		if(! $xml) {
+			// dead connection - might be a transient event, or this might
+			// mean the software was uninstalled or the domain expired. 
+			// Will keep trying for one month.
+			mark_for_death($contact);
 			continue;
-
+		}
 
 
 		$res = simplexml_load_string($xml);
 
-		if(intval($res->status) == 1)
+		if(intval($res->status) == 1) {
+			// we may not be friends anymore. Will keep trying for one month.
 			mark_for_death($contact);
+		}
 		else {
 			if($contact['term-date'] != '0000-00-00 00:00:00')
 				unmark_for_death($contact);
@@ -112,7 +117,6 @@
 
 		if((intval($res->status) != 0) || (! strlen($res->challenge)) || (! strlen($res->dfrn_id)))
 			continue;
-
 
 		$postvars = array();
 
@@ -145,7 +149,6 @@
 		$postvars['dfrn_id'] = $idtosend;
 
 
-
 		$xml = post_url($contact['poll'],$postvars);
 
 		if($debugging) {
@@ -153,14 +156,8 @@
 			echo "Length:" . strlen($xml) . "\r\n";
 		}
 
-		if(! strlen($xml)) {
-			// an empty response may mean there's nothing new - record the fact that we checked
-			$r = q("UPDATE `contact` SET `last-update` = '%s' WHERE `id` = %d LIMIT 1",
-				dbesc(datetime_convert()),
-				intval($contact['id'])
-			);
+		if(! strlen($xml))
 			continue;
-		}
 
 		$feed = new SimplePie();
 		$feed->set_raw_data($xml);
@@ -240,157 +237,156 @@
 		}
 
 		// Now process the feed
-		
-		foreach($feed->get_items() as $item) {
+		if($feed->get_item_quantity()) {		
+			foreach($feed->get_items() as $item) {
 
-			$deleted = false;
+				$deleted = false;
 
-			$rawdelete = $item->get_item_tags( NAMESPACE_TOMB, 'deleted-entry');
-			if(isset($rawdelete[0]['attribs']['']['ref'])) {
-				$uri = $rawthread[0]['attribs']['']['ref'];
-				$deleted = true;
-				if(isset($rawdelete[0]['attribs']['']['when'])) {
-					$when = $rawthread[0]['attribs']['']['when'];
-					$when = datetime_convert('UTC','UTC', $when, 'Y-m-d H:i:s');
-				}
-				else
-					$when = datetime_convert('UTC','UTC','now','Y-m-d H:i:s');
-			}
-			if($deleted) {
-				$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
-					dbesc($uri),
-					intval($importer['uid'])
-				);
-				if(count($r)) {
-					$item = $r[0];
-					if($item['uri'] == $item['parent-uri']) {
-						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s',
-							`body` = '', `title` = ''
-							WHERE `parent-uri` = '%s' AND `uid` = %d",
-							dbesc($when),
-							dbesc(datetime_convert()),
-							dbesc($item['uri']),
-							intval($importer['uid'])
-						);
+				$rawdelete = $item->get_item_tags( NAMESPACE_TOMB, 'deleted-entry');
+				if(isset($rawdelete[0]['attribs']['']['ref'])) {
+					$uri = $rawthread[0]['attribs']['']['ref'];
+					$deleted = true;
+					if(isset($rawdelete[0]['attribs']['']['when'])) {
+						$when = $rawthread[0]['attribs']['']['when'];
+						$when = datetime_convert('UTC','UTC', $when, 'Y-m-d H:i:s');
 					}
-					else {
-						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s',
-							`body` = '', `title` = '' 
-							WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
-							dbesc($when),
-							dbesc(datetime_convert()),
-							dbesc($uri),
-							intval($importer['uid'])
-						);
-						if($item['last-child']) {
-							// ensure that last-child is set in case the comment that had it just got wiped.
-							$q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d ",
+					else
+						$when = datetime_convert('UTC','UTC','now','Y-m-d H:i:s');
+				}
+				if($deleted) {
+					$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						dbesc($uri),
+						intval($importer['uid'])
+					);
+					if(count($r)) {
+						$item = $r[0];
+						if($item['uri'] == $item['parent-uri']) {
+							$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s',
+								`body` = '', `title` = ''
+								WHERE `parent-uri` = '%s' AND `uid` = %d",
+								dbesc($when),
 								dbesc(datetime_convert()),
-								dbesc($item['parent-uri']),
-								intval($item['uid'])
+								dbesc($item['uri']),
+								intval($importer['uid'])
 							);
-							// who is the last child now? 
-							$r = q("SELECT `id` FROM `item` WHERE `parent-uri` = '%s' AND `type` != 'activity' AND `deleted` = 0 AND `uid` = %d 
-								ORDER BY `edited` DESC LIMIT 1",
+						}
+						else {
+							$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s',
+								`body` = '', `title` = '' 
+								WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+								dbesc($when),
+								dbesc(datetime_convert()),
+								dbesc($uri),
+								intval($importer['uid'])
+							);
+							if($item['last-child']) {
+								// ensure that last-child is set in case the comment that had it just got wiped.
+								$q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d ",
+									dbesc(datetime_convert()),
 									dbesc($item['parent-uri']),
-									intval($importer['uid'])
-							);
-							if(count($r)) {
-								q("UPDATE `item` SET `last-child` = 1 WHERE `id` = %d LIMIT 1",
-									intval($r[0]['id'])
+									intval($item['uid'])
 								);
-							}
-						}	
-					}
-				}	
-				continue;
-			}
-
-
-			$is_reply = false;		
-			$item_id = $item->get_id();
-			$rawthread = $item->get_item_tags( NAMESPACE_THREAD,'in-reply-to');
-			if(isset($rawthread[0]['attribs']['']['ref'])) {
-				$is_reply = true;
-				$parent_uri = $rawthread[0]['attribs']['']['ref'];
-			}
-
-
-			if($is_reply) {
-
-				// Have we seen it? If not, import it.
-
-				$item_id = $item->get_id();
-
-				$r = q("SELECT `uid`, `last-child`, `edited` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
-					dbesc($item_id),
-					intval($importer['uid'])
-				);
-				// FIXME update content if 'updated' changes
-				if(count($r)) {
-					$allow = $item->get_item_tags( NAMESPACE_DFRN, 'comment-allow');
-					if($allow && $allow[0]['data'] != $r[0]['last-child']) {
-						$r = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d",
-							dbesc(datetime_convert()),
-							dbesc($parent_uri),
-							intval($importer['uid'])
-						);
-						$r = q("UPDATE `item` SET `last-child` = %d , `changed` = '%s'  WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
-							intval($allow[0]['data']),
-							dbesc(datetime_convert()),
-							dbesc($item_id),
-							intval($importer['uid'])
-						);
-
-
-					}
-					continue;
-				}
-				$datarray = get_atom_elements($item);
-				$datarray['parent-uri'] = $parent_uri;
-				$datarray['uid'] = $importer['uid'];
-				$datarray['contact-id'] = $contact['id'];
-				if(($datarray['verb'] == ACTIVITY_LIKE) || ($datarray['verb'] == ACTIVITY_DISLIKE)) {
-					$datarray['type'] = 'activity';
-					$datarray['gravity'] = GRAVITY_LIKE;
-				}
-
-				$r = item_store($datarray);
-				continue;
-			}
-
-			else {
-				// Head post of a conversation. Have we seen it? If not, import it.
-
-				$item_id = $item->get_id();
-				$r = q("SELECT `uid`, `last-child`, `edited` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
-					dbesc($item_id),
-					intval($importer['uid'])
-				);
-				if(count($r)) {
-					$allow = $item->get_item_tags( NAMESPACE_DFRN, 'comment-allow');
-					if($allow && $allow[0]['data'] != $r[0]['last-child']) {
-						$r = q("UPDATE `item` SET `last-child` = %d , `changed` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
-							intval($allow[0]['data']),
-							dbesc(datetime_convert()),
-							dbesc($item_id),
-							intval($importer['uid'])
-						);
-					}
+								// who is the last child now? 
+								$r = q("SELECT `id` FROM `item` WHERE `parent-uri` = '%s' AND `type` != 'activity' AND `deleted` = 0 AND `uid` = %d 
+									ORDER BY `edited` DESC LIMIT 1",
+										dbesc($item['parent-uri']),
+										intval($importer['uid'])
+								);
+								if(count($r)) {
+									q("UPDATE `item` SET `last-child` = 1 WHERE `id` = %d LIMIT 1",
+										intval($r[0]['id'])
+									);
+								}
+							}	
+						}
+					}	
 					continue;
 				}
 
-				$datarray = get_atom_elements($item);
-				$datarray['parent-uri'] = $item_id;
-				$datarray['uid'] = $importer['uid'];
-				$datarray['contact-id'] = $contact['id'];
-				$r = item_store($datarray);
-				continue;
 
+				$is_reply = false;		
+				$item_id = $item->get_id();
+				$rawthread = $item->get_item_tags( NAMESPACE_THREAD,'in-reply-to');
+				if(isset($rawthread[0]['attribs']['']['ref'])) {
+					$is_reply = true;
+					$parent_uri = $rawthread[0]['attribs']['']['ref'];
+				}
+
+
+				if($is_reply) {
+	
+					// Have we seen it? If not, import it.
+	
+					$item_id = $item->get_id();
+	
+					$r = q("SELECT `uid`, `last-child`, `edited` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						dbesc($item_id),
+						intval($importer['uid'])
+					);
+					// FIXME update content if 'updated' changes
+					if(count($r)) {
+						$allow = $item->get_item_tags( NAMESPACE_DFRN, 'comment-allow');
+						if($allow && $allow[0]['data'] != $r[0]['last-child']) {
+							$r = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d",
+								dbesc(datetime_convert()),
+								dbesc($parent_uri),
+								intval($importer['uid'])
+							);
+							$r = q("UPDATE `item` SET `last-child` = %d , `changed` = '%s'  WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+								intval($allow[0]['data']),
+								dbesc(datetime_convert()),
+								dbesc($item_id),
+								intval($importer['uid'])
+							);
+
+
+						}
+						continue;
+					}
+					$datarray = get_atom_elements($item);
+					$datarray['parent-uri'] = $parent_uri;
+					$datarray['uid'] = $importer['uid'];
+					$datarray['contact-id'] = $contact['id'];
+					if(($datarray['verb'] == ACTIVITY_LIKE) || ($datarray['verb'] == ACTIVITY_DISLIKE)) {
+						$datarray['type'] = 'activity';
+						$datarray['gravity'] = GRAVITY_LIKE;
+					}
+	
+					$r = item_store($datarray);
+					continue;
+				}
+
+				else {
+					// Head post of a conversation. Have we seen it? If not, import it.
+	
+					$item_id = $item->get_id();
+					$r = q("SELECT `uid`, `last-child`, `edited` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						dbesc($item_id),
+						intval($importer['uid'])
+					);
+					if(count($r)) {
+						$allow = $item->get_item_tags( NAMESPACE_DFRN, 'comment-allow');
+						if($allow && $allow[0]['data'] != $r[0]['last-child']) {
+							$r = q("UPDATE `item` SET `last-child` = %d , `changed` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+								intval($allow[0]['data']),
+								dbesc(datetime_convert()),
+								dbesc($item_id),
+								intval($importer['uid'])
+							);
+						}
+						continue;
+					}
+
+					$datarray = get_atom_elements($item);
+					$datarray['parent-uri'] = $item_id;
+					$datarray['uid'] = $importer['uid'];
+					$datarray['contact-id'] = $contact['id'];
+					$r = item_store($datarray);
+					continue;
+	
+				}
 			}
-
 		}
-
 		$r = q("UPDATE `contact` SET `last-update` = '%s' WHERE `id` = %d LIMIT 1",
 			dbesc(datetime_convert()),
 			intval($contact['id'])

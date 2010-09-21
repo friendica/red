@@ -74,7 +74,11 @@ function profile_init(&$a) {
 }
 
 
-function profile_content(&$a, $update = false) {
+function profile_content(&$a, $update = 0) {
+
+
+	file_put_contents('uid.log',"{$_SERVER['QUERY_STRING']} ". session_id() . "\n", FILE_APPEND);
+
 
 	require_once("include/bbcode.php");
 	require_once('include/security.php');
@@ -86,13 +90,11 @@ function profile_content(&$a, $update = false) {
 
 	if($update) {
 		// Ensure we've got a profile owner if updating.
-		$a->profile['profile_uid'] = $_SESSION['profile_uid'];
+		$a->profile['profile_uid'] = $update;
 	}
 	else {
-		if($a->profile['uid'] == get_uid())		
+		if($a->profile['profile_uid'] == get_uid())		
 			$o .= '<script>	$(document).ready(function() { $(\'#nav-home-link\').addClass(\'nav-selected\'); });</script>';
-		// set the uid so we can pick it up during update
-		$_SESSION['profile_uid'] = $a->profile['uid'];
 	}
 
 	$contact = null;
@@ -158,8 +160,11 @@ function profile_content(&$a, $update = false) {
 			));
 		}
 
+		// This is ugly, but we can't pass the profile_uid through the session to the ajax updater,
+		// because browser prefetching might change it on us. We have to deliver it with the page.
+
 		if($tab == 'posts' && (! $a->pager['start']))
-			$o .= '<div id="live-profile"></div>' . "\r\n";
+			$o .= '<div id="live-profile" profile="' . $a->profile['profile_uid'] . '"></div>' . "\r\n";
 	}
 
 	// TODO alter registration and settings and profile to update contact table when names and  photos change.  

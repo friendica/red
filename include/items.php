@@ -91,6 +91,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 
 	if(! strlen($last_update))
 		$last_update = 'now - 30 days';
+
 	$check_date = datetime_convert('UTC','UTC',$last_update,'Y-m-d H:i:s');
 
 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
@@ -109,8 +110,9 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 		dbesc($check_date),
 		dbesc($sort)
 	);
-	if(! count($r))
-		killme();
+
+	// Will check further below if this actually returned results.
+	// We will provide an empty feed in any case.
 
 	$items = $r;
 
@@ -135,7 +137,12 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 			'$namdate'      => xmlify(datetime_convert('UTC','UTC',$owner['name-date']   . '+00:00' , ATOM_TIME)) 
 	));
 
-	
+
+	if(! count($items)) {
+		$atom .= '</feed>' . "\r\n";
+		return $atom;
+	}
+
 	foreach($items as $item) {
 
 		// public feeds get html, our own nodes use bbcode

@@ -89,6 +89,7 @@ $a->page['content'] .= $debug_text;
 $a->page['content'] .= '<div id="pause"><img src="" alt="" /></div>';
 // build page
 
+
 // Navigation (menu) template
 if($a->module != 'install')
 	require_once("nav.php");

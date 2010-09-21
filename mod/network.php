@@ -7,7 +7,7 @@ function network_init(&$a) {
 }
 
 
-function network_content(&$a, $update = false) {
+function network_content(&$a, $update = 0) {
 
 	if(! local_user())
 		return;
@@ -59,7 +59,7 @@ function network_content(&$a, $update = false) {
 		// criteria is discovered in javascript).
 
 		if($a->pager['start'] == 0 && $a->argc == 1)
-			$o .= '<div id="live-network"></div>' . "\r\n";
+			$o .= '<div id="live-network" profile="' . $_SESSION['uid'] . '"></div>' . "\r\n";
 	}
 
 	// We aren't going to try and figure out at the item, group, and page level 

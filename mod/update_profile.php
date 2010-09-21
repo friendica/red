@@ -7,6 +7,8 @@ require_once('mod/profile.php');
 
 function update_profile_content(&$a) {
 
+	$profile_uid = intval($_GET['p']);
+
 	header("Content-type: text/html");
 	echo "<!DOCTYPE html><html><body>\r\n";
 	echo (($_GET['msie'] == 1) ? '<div>' : '<section>');
@@ -16,7 +18,7 @@ function update_profile_content(&$a) {
         // The only ones we need to fetch are those for new page additions, which we'll discover
         // on the client side and then swap the image back.
 
-        $text = profile_content($a,true);
+        $text = profile_content($a,$profile_uid);
         $pattern = "/<img([^>]*) src=\"([^\"]*)\"/";
         $replace = "<img\${1} dst=\"\${2}\"";
         $text = preg_replace($pattern, $replace, $text);
