@@ -86,7 +86,7 @@ if(x($_SESSION,'sysmsg')) {
 
 // Feel free to comment out this line on production sites.
 $a->page['content'] .= $debug_text;
-$a->page['content'] .= '<div id="pause"><img src="" alt="" /></div>';
+$a->page['content'] .= '<div id="pause"></div>';
 // build page
 
 

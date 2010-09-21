@@ -163,8 +163,11 @@ function profile_content(&$a, $update = 0) {
 		// This is ugly, but we can't pass the profile_uid through the session to the ajax updater,
 		// because browser prefetching might change it on us. We have to deliver it with the page.
 
-		if($tab == 'posts' && (! $a->pager['start']))
-			$o .= '<div id="live-profile" profile="' . $a->profile['profile_uid'] . '"></div>' . "\r\n";
+		if($tab == 'posts' && (! $a->pager['start'])) {
+			$o .= '<div id="live-profile"></div>' . "\r\n";
+			$o .= "<script> var profile_uid = " . $a->profile['profile_uid'] . "; </script>\r\n";
+		}
+
 	}
 
 	// TODO alter registration and settings and profile to update contact table when names and  photos change.  

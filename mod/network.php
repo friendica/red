@@ -58,8 +58,11 @@ function network_content(&$a, $update = 0) {
 		// filtering by group and also you aren't writing a comment (the last
 		// criteria is discovered in javascript).
 
-		if($a->pager['start'] == 0 && $a->argc == 1)
-			$o .= '<div id="live-network" profile="' . $_SESSION['uid'] . '"></div>' . "\r\n";
+		if($a->pager['start'] == 0 && $a->argc == 1) {
+			$o .= '<div id="live-network"></div>' . "\r\n";
+			$o .= "<script> var profile_uid = " . $_SESSION['uid'] . "; </script>\r\n";
+		}
+
 	}
 
 	// We aren't going to try and figure out at the item, group, and page level 
