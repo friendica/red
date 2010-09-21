@@ -9,11 +9,11 @@ function dfrn_poll_init(&$a) {
 	$dfrn_id = '';
 
 	if(x($_GET,'dfrn_id'))
-		$dfrn_id = $a->config['dfrn_poll_dfrn_id'] = $_GET['dfrn_id'];
+		$dfrn_id = $_GET['dfrn_id'];
 	if(x($_GET,'type'))
-		$type = $a->config['dfrn_poll_type'] = $_GET['type'];
+		$type = $_GET['type'];
 	if(x($_GET,'last_update'))
-		$last_update = $a->config['dfrn_poll_last_update'] = $_GET['last_update'];
+		$last_update = $_GET['last_update'];
 	$dfrn_version    = ((x($_GET,'dfrn_version'))    ? $_GET['dfrn_version']    : '1.0');
 	$destination_url = ((x($_GET,'destination_url')) ? $_GET['destination_url'] : '');
 
@@ -115,8 +115,8 @@ function dfrn_poll_init(&$a) {
 
 function dfrn_poll_post(&$a) {
 
-	$dfrn_id = notags(trim($_POST['dfrn_id']));
-	$challenge = notags(trim($_POST['challenge']));
+	$dfrn_id = $_POST['dfrn_id'];
+	$challenge = $_POST['challenge'];
 	$url = $_POST['url'];
 
 	$direction = (-1);
@@ -125,10 +125,12 @@ function dfrn_poll_post(&$a) {
 		$dfrn_id = substr($dfrn_id,2);
 	}
 
+
 	$r = q("SELECT * FROM `challenge` WHERE `dfrn-id` = '%s' AND `challenge` = '%s' LIMIT 1",
 		dbesc($dfrn_id),
 		dbesc($challenge)
 	);
+
 	if(! count($r))
 		killme();
 
@@ -200,7 +202,6 @@ function dfrn_poll_post(&$a) {
 		return; // NOTREACHED
 	}
 	else {
-
 		$o = get_feed_for($a,$dfrn_id, $a->argv[1], $last_update, $direction);
 		echo $o;
 		killme();
@@ -215,11 +216,11 @@ function dfrn_poll_content(&$a) {
 	$type = 'data';
 
 	if(x($_GET,'dfrn_id'))
-		$dfrn_id = $a->config['dfrn_poll_dfrn_id'] = $_GET['dfrn_id'];
+		$dfrn_id = $_GET['dfrn_id'];
 	if(x($_GET,'type'))
-		$type = $a->config['dfrn_poll_type'] = $_GET['type'];
+		$type = $_GET['type'];
 	if(x($_GET,'last_update'))
-		$last_update = $a->config['dfrn_poll_last_update'] = $_GET['last_update'];
+		$last_update = $_GET['last_update'];
 
 	$direction = (-1);
 	if(strpos($dfrn_id,':') == 1) {
@@ -239,7 +240,7 @@ function dfrn_poll_content(&$a) {
 		$r = q("INSERT INTO `challenge` ( `challenge`, `dfrn-id`, `expire` , `type`, `last_update` )
 			VALUES( '%s', '%s', '%s', '%s', '%s' ) ",
 			dbesc($hash),
-			dbesc(notags(trim($_GET['dfrn_id']))),
+			dbesc($dfrn_id),
 			intval(time() + 60 ),
 			dbesc($type),
 			dbesc($last_update)
