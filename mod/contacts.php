@@ -218,23 +218,9 @@ function contacts_content(&$a) {
 		$search = dbesc($search.'*');
 	$sql_extra .= ((strlen($search)) ? " AND MATCH `name` AGAINST ('$search' IN BOOLEAN MODE) " : "");
 
+	$sql_extra2 = ((($sort_type > 0) && ($sort_type <= REL_BUD)) ? sprintf(" AND `rel` = %d ",intval($sort_type)) : ''); 
 
-	switch($sort_type) {
-		case REL_BUD :
-			$sql_extra2 = " AND `dfrn-id` != '' AND `issued-id` != '' ";
-			break;
-		case REL_VIP :
-			$sql_extra2 = " AND `dfrn-id` = '' AND `issued-id` != '' ";
-			break;
-		case REL_FAN :
-			$sql_extra2 = " AND `dfrn-id` != '' AND `issued-id` = '' ";
-			break;
-		case 0 :
-		default:
-			$sql_extra2 = '';
-			break;
-	}
-
+	
 	$r = q("SELECT COUNT(*) AS `total` FROM `contact` 
 		WHERE `uid` = %d AND `pending` = 0 $sql_extra $sql_extra2 ",
 		intval($_SESSION['uid']));
