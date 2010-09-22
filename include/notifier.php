@@ -1,6 +1,6 @@
 <?php
 
-	$debugging = true;
+	$debugging = false;
 
 	require_once("boot.php");
 
