@@ -189,7 +189,7 @@ function display_content(&$a) {
 					$template = $wallwall;
 					$commentww = 'ww';
 					// If it is our contact, use a friendly redirect link
-					if(($item['owner-link'] == $item['url']) && ($item['rel'] == DIRECTION_IN || $item['rel'] == DIRECTION_BOTH))
+					if(($item['owner-link'] == $item['url']) && ($item['rel'] == REL_VIP || $item['rel'] == REL_BUD))
 						$owner_url = $redirect_url;
 						$owner_url = $redirect_url;
 

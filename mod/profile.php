@@ -326,7 +326,7 @@ function profile_content(&$a, $update = 0) {
 			// I can go directly to their profile as an authenticated guest.
 
 			if(local_user() && ($item['contact-uid'] == $_SESSION['uid']) 
-				&& ($item['rel'] == DIRECTION_IN || $item['rel'] == DIRECTION_BOTH) && (! $item['self'] ))
+				&& ($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'] ))
 				$profile_url = $redirect_url;
 	
 

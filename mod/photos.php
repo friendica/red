@@ -696,7 +696,7 @@ function photos_content(&$a) {
 					$profile_url = $item['url'];
 
 					if(local_user() && ($item['contact-uid'] == get_uid()) 
-						&& ($item['rel'] == DIRECTION_IN || $item['rel'] == DIRECTION_BOTH) && (! $item['self'] ))
+						&& ($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'] ))
 						$profile_url = $redirect_url;
  
 					$profile_name = ((strlen($item['author-name'])) ? $item['author-name'] : $item['name']);

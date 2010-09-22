@@ -10,8 +10,8 @@ function can_write_wall(&$a,$owner) {
 		AND `readonly` = 0  AND `rel` IN ( %d , %d ) LIMIT 1",
                 intval($owner),
                 intval($_SESSION['visitor_id']),
-		intval(DIRECTION_OUT),
-		intval(DIRECTION_BOTH)
+		intval(REL_VIP),
+		intval(REL_BUD)
         );
         if(count($r))
                 return true;

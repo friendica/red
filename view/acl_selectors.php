@@ -38,7 +38,7 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 	// to one recipient. By default our selector allows multiple selects amongst all contacts.
 
 	if($privmail) {
-		$sql_extra = sprintf(" AND `rel` = %d ", intval(DIRECTION_BOTH));
+		$sql_extra = sprintf(" AND `rel` = %d ", intval(REL_BUD));
 		$o .= "<select name=\"$selname\" id=\"$selclass\" class=\"$selclass\" size=\"$size\" >\r\n";
 	}
 	else {

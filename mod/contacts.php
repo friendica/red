@@ -151,16 +151,16 @@ function contacts_content(&$a) {
 		$tpl = file_get_contents("view/contact_edit.tpl");
 
 		switch($r[0]['rel']) {
-			case DIRECTION_BOTH:
+			case REL_BUD:
 				$dir_icon = 'images/lrarrow.gif';
 				$alt_text = t('Mutual Friendship');
 				break;
-			case DIRECTION_IN;
+			case REL_VIP;
 				$dir_icon = 'images/larrow.gif';
 				$alt_text = t('is a fan of yours');
 				break;
 	
-			case DIRECTION_OUT;
+			case REL_FAN;
 				$dir_icon = 'images/rarrow.gif';
 				$alt_text = t('you are a fan of');
 				break;
@@ -186,7 +186,7 @@ function contacts_content(&$a) {
 			'$name' => $r[0]['name'],
 			'$dir_icon' => $dir_icon,
 			'$alt_text' => $alt_text,
-			'$url' => (($r[0]['rel'] != DIRECTION_OUT) ? "redir/{$r[0]['id']}" : $r[0]['url'] )
+			'$url' => (($r[0]['rel'] != REL_FAN) ? "redir/{$r[0]['id']}" : $r[0]['url'] )
 
 		));
 
@@ -220,16 +220,16 @@ function contacts_content(&$a) {
 
 
 	switch($sort_type) {
-		case DIRECTION_BOTH :
+		case REL_BUD :
 			$sql_extra2 = " AND `dfrn-id` != '' AND `issued-id` != '' ";
 			break;
-		case DIRECTION_IN :
+		case REL_VIP :
 			$sql_extra2 = " AND `dfrn-id` = '' AND `issued-id` != '' ";
 			break;
-		case DIRECTION_OUT :
+		case REL_FAN :
 			$sql_extra2 = " AND `dfrn-id` != '' AND `issued-id` = '' ";
 			break;
-		case DIRECTION_NONE :
+		case 0 :
 		default:
 			$sql_extra2 = '';
 			break;
@@ -256,15 +256,15 @@ function contacts_content(&$a) {
 				continue;
 
 			switch($rr['rel']) {
-				case DIRECTION_BOTH:
+				case REL_BUD:
 					$dir_icon = 'images/lrarrow.gif';
 					$alt_text = t('Mutual Friendship');
 					break;
-				case  DIRECTION_IN;
+				case  REL_VIP;
 					$dir_icon = 'images/larrow.gif';
 					$alt_text = t('is a fan of yours');
 					break;
-				case DIRECTION_OUT;
+				case REL_FAN;
 					$dir_icon = 'images/rarrow.gif';
 					$alt_text = t('you are a fan of');
 					break;
@@ -280,7 +280,7 @@ function contacts_content(&$a) {
 				'$dir_icon' => $dir_icon,
 				'$thumb' => $rr['thumb'], 
 				'$name' => $rr['name'],
-				'$url' => (($rr['rel'] != DIRECTION_OUT) ? "redir/{$rr['id']}" : $rr['url'] )
+				'$url' => (($rr['rel'] != REL_FAN) ? "redir/{$rr['id']}" : $rr['url'] )
 			));
 		}
 		$o .= '<div id="contact-edit-end"></div>';

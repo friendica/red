@@ -127,9 +127,9 @@ function dfrn_confirm_post(&$a) {
 				$thumb = $a->get_baseurl() . '/images/default-profile-sm.jpg';
 			}
 
-			$new_relation = DIRECTION_OUT;
-			if(($relation == DIRECTION_IN) || ($duplex))
-				$new_relation = DIRECTION_BOTH;
+			$new_relation = REL_FAN;
+			if(($relation == REL_VIP) || ($duplex))
+				$new_relation = REL_BUD;
 
 			$r = q("UPDATE `contact` SET 
 				`photo` = '%s', 
@@ -362,9 +362,9 @@ function dfrn_confirm_post(&$a) {
 			$thumb = $a->get_baseurl() . '/images/default-profile-sm.jpg';
 		}
 
-		$new_relation = DIRECTION_IN;
-		if(($relation == DIRECTION_OUT) || ($duplex))
-			$new_relation = DIRECTION_BOTH;
+		$new_relation = REL_VIP;
+		if(($relation == REL_FAN) || ($duplex))
+			$new_relation = REL_BUD;
 
 		$r = q("UPDATE `contact` SET `photo` = '%s', 
 			`thumb` = '%s', 

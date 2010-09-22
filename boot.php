@@ -11,10 +11,7 @@ define ( 'REGISTER_CLOSED',  0);
 define ( 'REGISTER_APPROVE', 1);
 define ( 'REGISTER_OPEN',    2);
 
-define ( 'DIRECTION_NONE', 0);			// No relationship
-define ( 'DIRECTION_IN',   1);			// VIP e.g. has FAN
-define ( 'DIRECTION_OUT',  2);			// FAN to a VIP
-define ( 'DIRECTION_BOTH', 3);			// Mutual Friends
+// relationship types
 
 define ( 'REL_VIP',        1);
 define ( 'REL_FAN',        2);
