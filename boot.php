@@ -848,6 +848,36 @@ function allowed_url($url) {
 	return $found;
 }}
 
+if(! function_exists('allowed_email')) {
+function allowed_email($email) {
+
+
+	$domain = strtolower(substr($email,strpos($email,'@') + 1));
+	if(! $domain)
+		return false;
+
+	$str_allowed = get_config('system','allowed_email');
+	if(! $str_allowed)
+		return true;
+
+	$found = false;
+
+	$fnmatch = function_exists('fnmatch');
+	$allowed = explode(',',$str_allowed);
+
+	if(count($allowed)) {
+		foreach($allowed as $a) {
+			$pat = strtolower(trim($a));
+			if(($fnmatch && fnmatch($pat,$host)) || ($pat == $host)) {
+				$found = true; 
+				break;
+			}
+		}
+	}
+	return $found;
+}}
+
+
 if(! function_exists('format_like')) {
 function format_like($cnt,$arr,$type,$id) {
 	if($cnt == 1)

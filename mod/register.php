@@ -65,6 +65,12 @@ function register_post(&$a) {
 		dbesc($email)
 	);
 
+	if(!eregi('[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\.[A-Za-z]{2,6}',$email))
+                	$err .= t(' Not valid email.');
+
+	if(! allowed_email($email))
+			$err .= t(' Your email domain is not among those allowed on this site.');
+
 	if($r !== false && count($r))
 		$err .= t(' Your email address is already registered on this system.') ;
 
