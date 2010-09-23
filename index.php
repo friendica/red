@@ -102,10 +102,11 @@ $a->page['htmlhead'] = replace_macros($a->page['htmlhead'], array(
 
 $page    = $a->page;
 $profile = $a->profile;
+$lang    = get_config('system','language');
 
 header("Content-type: text/html; charset=utf-8");
 
-$template = "view/" 
+$template = "view/" . (($lang) ? $lang . "/" : "") 
 	. ((x($a->page,'template')) ? $a->page['template'] : 'default' ) 
 	. ".php";
 

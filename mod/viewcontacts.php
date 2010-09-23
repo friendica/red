@@ -34,7 +34,7 @@ function viewcontacts_content(&$a) {
 		return $o;
 	}
 
-	$tpl = file_get_contents("view/viewcontact_template.tpl");
+	$tpl = load_view_file("view/viewcontact_template.tpl");
 
 	foreach($r as $rr) {
 		if($rr['self'])

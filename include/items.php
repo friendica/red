@@ -116,10 +116,10 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 
 	$items = $r;
 
-	$feed_template = file_get_contents('view/atom_feed.tpl');
-	$tomb_template = file_get_contents('view/atom_tomb.tpl');
-	$item_template = file_get_contents('view/atom_item.tpl');
-	$cmnt_template = file_get_contents('view/atom_cmnt.tpl');
+	$feed_template = load_view_file('view/atom_feed.tpl');
+	$tomb_template = load_view_file('view/atom_tomb.tpl');
+	$item_template = load_view_file('view/atom_item.tpl');
+	$cmnt_template = load_view_file('view/atom_cmnt.tpl');
 
 	$atom = '';
 

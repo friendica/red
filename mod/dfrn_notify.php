@@ -103,7 +103,7 @@ function dfrn_notify_post(&$a) {
 
 		require_once('bbcode.php');
 		if($importer['notify-flags'] & NOTIFY_MAIL) {
-			$tpl = file_get_contents('view/mail_received_eml.tpl');			
+			$tpl = load_view_file('view/mail_received_eml.tpl');			
 			$email_tpl = replace_macros($tpl, array(
 				'$sitename' => $a->config['sitename'],
 				'$siteurl' =>  $a->get_baseurl(),
@@ -241,7 +241,7 @@ function dfrn_notify_post(&$a) {
 						if(($importer['notify-flags'] & NOTIFY_COMMENT) && (! $importer['self'])) {
 							require_once('bbcode.php');
 							$from = stripslashes($datarray['author-name']);
-							$tpl = file_get_contents('view/cmnt_received_eml.tpl');			
+							$tpl = load_view_file('view/cmnt_received_eml.tpl');			
 							$email_tpl = replace_macros($tpl, array(
 								'$sitename' => $a->config['sitename'],
 								'$siteurl' =>  $a->get_baseurl(),
@@ -307,7 +307,7 @@ function dfrn_notify_post(&$a) {
 								continue;
 							require_once('bbcode.php');
 							$from = stripslashes($datarray['author-name']);
-							$tpl = file_get_contents('view/cmnt_received_eml.tpl');			
+							$tpl = load_view_file('view/cmnt_received_eml.tpl');			
 							$email_tpl = replace_macros($tpl, array(
 								'$sitename' => $a->config['sitename'],
 								'$siteurl' =>  $a->get_baseurl(),

@@ -8,7 +8,7 @@ function directory_content(&$a) {
 
 	$search = ((x($_GET,'search')) ? notags(trim($_GET['search'])) : '');
 
-	$tpl .= file_get_contents('view/directory_header.tpl');
+	$tpl .= load_view_file('view/directory_header.tpl');
 
 	
 
@@ -34,7 +34,7 @@ function directory_content(&$a) {
 	);
 	if(count($r)) {
 
-		$tpl = file_get_contents('view/directory_item.tpl');
+		$tpl = load_view_file('view/directory_item.tpl');
 
 		if(in_array('small', $a->argv))
 			$photo = 'thumb';

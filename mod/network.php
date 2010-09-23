@@ -28,13 +28,13 @@ function network_content(&$a, $update = 0) {
 		}
 		$_SESSION['return_url'] = $a->cmd;
 
-		$tpl = file_get_contents('view/jot-header.tpl');
+		$tpl = load_view_file('view/jot-header.tpl');
 	
 		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
 
 		require_once('view/acl_selectors.php');
 
-		$tpl = file_get_contents("view/jot.tpl");
+		$tpl = load_view_file("view/jot.tpl");
 		
 		if(($group) || (is_array($a->user) && ((strlen($a->user['allow_cid'])) || (strlen($a->user['allow_gid'])) || (strlen($a->user['deny_cid'])) || (strlen($a->user['deny_gid'])))))
 				$lockstate = 'lock';
@@ -124,10 +124,10 @@ function network_content(&$a, $update = 0) {
 	);
 
 
-	$cmnt_tpl = file_get_contents('view/comment_item.tpl');
-	$like_tpl = file_get_contents('view/like.tpl');
-	$tpl = file_get_contents('view/wall_item.tpl');
-	$wallwall = file_get_contents('view/wallwall_item.tpl');
+	$cmnt_tpl = load_view_file('view/comment_item.tpl');
+	$like_tpl = load_view_file('view/like.tpl');
+	$tpl = load_view_file('view/wall_item.tpl');
+	$wallwall = load_view_file('view/wallwall_item.tpl');
 
 	$alike = array();
 	$dlike = array();
@@ -219,7 +219,7 @@ function network_content(&$a, $update = 0) {
 			}
 
 
-			$drop = replace_macros(file_get_contents('view/wall_item_drop.tpl'), array('$id' => $item['id']));
+			$drop = replace_macros(load_view_file('view/wall_item_drop.tpl'), array('$id' => $item['id']));
 
 
 	

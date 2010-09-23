@@ -124,7 +124,7 @@ function profile_content(&$a, $update = 0) {
 		if(x($_GET,'tab'))
 			$tab = notags(trim($_GET['tab']));
 
-		$tpl = file_get_contents('view/profile_tabs.tpl');
+		$tpl = load_view_file('view/profile_tabs.tpl');
 
 		$o .= replace_macros($tpl,array(
 			'$url' => $a->get_baseurl() . '/' . $a->cmd,
@@ -133,17 +133,21 @@ function profile_content(&$a, $update = 0) {
 
 
 		if($tab == 'profile') {
-			require_once('view/profile_advanced.php');
+			$lang = config_get('system','language');
+			if($lang && file_exists("view/$lang/profile_advanced.php"))
+				require_once("view/$lang/profile_advanced.php");
+			else
+				require_once('view/profile_advanced.php');
 			return $o;
 		}
 
 		if(can_write_wall($a,$a->profile['profile_uid'])) {
-			$tpl = file_get_contents('view/jot-header.tpl');
+			$tpl = load_view_file('view/jot-header.tpl');
 	
 			$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
 			require_once('view/acl_selectors.php');
 
-			$tpl = file_get_contents("view/jot.tpl");
+			$tpl = load_view_file("view/jot.tpl");
 			if(is_array($a->user) && ((strlen($a->user['allow_cid'])) || (strlen($a->user['allow_gid'])) || (strlen($a->user['deny_cid'])) || (strlen($a->user['deny_gid']))))
 				$lockstate = 'lock';
 			else
@@ -246,14 +250,14 @@ function profile_content(&$a, $update = 0) {
 	);
 
 
-	$cmnt_tpl = file_get_contents('view/comment_item.tpl');
+	$cmnt_tpl = load_view_file('view/comment_item.tpl');
 
-	$like_tpl = file_get_contents('view/like.tpl');
+	$like_tpl = load_view_file('view/like.tpl');
 
-	$tpl = file_get_contents('view/wall_item.tpl');
+	$tpl = load_view_file('view/wall_item.tpl');
 
-	$droptpl = file_get_contents('view/wall_item_drop.tpl');
-	$fakedrop = file_get_contents('view/wall_fake_drop.tpl');
+	$droptpl = load_view_file('view/wall_item_drop.tpl');
+	$fakedrop = load_view_file('view/wall_fake_drop.tpl');
 
 	if($update)
 		$return_url = $_SESSION['return_url'];

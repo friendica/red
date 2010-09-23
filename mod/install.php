@@ -23,7 +23,7 @@ function install_post(&$a) {
 	else
 		notice( t('Connected to database.') . EOL);
 
-	$tpl = file_get_contents('view/htconfig.tpl');
+	$tpl = load_view_file('view/htconfig.tpl');
 	$txt = replace_macros($tpl,array(
 		'$dbhost' => $dbhost,
 		'$dbuser' => $dbuser,
@@ -79,7 +79,7 @@ function install_content(&$a) {
 
 	require_once('datetime.php');
 
-	$tpl = file_get_contents('view/install_db.tpl');
+	$tpl = load_view_file('view/install_db.tpl');
 	$o .= replace_macros($tpl, array(
 		'$tzselect' => ((x($_POST,'timezone')) ? select_timezone($_POST['timezone']) : select_timezone()),
 		'$submit' => t('Submit'),

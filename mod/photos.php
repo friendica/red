@@ -458,7 +458,7 @@ function photos_content(&$a) {
 			}
 		}
 		$albumselect .= '</select>';
-		$tpl = file_get_contents('view/photos_upload.tpl');
+		$tpl = load_view_file('view/photos_upload.tpl');
 		$o .= replace_macros($tpl,array(
 			'$pagename' => t('Upload Photos'),
 			'$sessid' => session_id(),
@@ -504,7 +504,7 @@ function photos_content(&$a) {
 		if($cmd == 'edit') {		
 			if(($album != t('Profile Photos')) && ($album != t('Contact Photos'))) {
 				if(local_user() && (get_uid() == $a->data['user']['uid'])) {
-					$edit_tpl = file_get_contents('view/album_edit.tpl');
+					$edit_tpl = load_view_file('view/album_edit.tpl');
 					$o .= replace_macros($edit_tpl,array(
 						'$nametext' => t('New album name: '),
 						'$album' => $album,
@@ -524,7 +524,7 @@ function photos_content(&$a) {
  				}
 			}
 		}
-		$tpl = file_get_contents('view/photo_album.tpl');
+		$tpl = load_view_file('view/photo_album.tpl');
 		if(count($r))
 			foreach($r as $rr) {
 				$o .= replace_macros($tpl,array(
@@ -636,7 +636,7 @@ function photos_content(&$a) {
 		}
 
 		if($cmd == 'edit') {
-			$edit_tpl = file_get_contents('view/photo_edit.tpl');
+			$edit_tpl = load_view_file('view/photo_edit.tpl');
 			$o .= replace_macros($edit_tpl, array(
 				'$id' => $ph[0]['id'],
 				'$resource_id' => $ph[0]['resource-id'],
@@ -654,8 +654,8 @@ function photos_content(&$a) {
 		if(count($i1)) {
 			// pull out how many people like the photo
 
-			$cmnt_tpl = file_get_contents('view/comment_item.tpl');
-			$tpl = file_get_contents('view/photo_item.tpl');
+			$cmnt_tpl = load_view_file('view/comment_item.tpl');
+			$tpl = load_view_file('view/photo_item.tpl');
 			$return_url = $a->cmd;
 
 			if(can_write_wall($a,$a->data['user']['uid'])) {
@@ -706,7 +706,7 @@ function photos_content(&$a) {
 					$drop = '';
 
 					if(($item['contact-id'] == $_SESSION['visitor_id']) || ($item['uid'] == get_uid()))
-						$drop = replace_macros(file_get_contents('view/wall_item_drop.tpl'), array('$id' => $item['id']));
+						$drop = replace_macros(load_view_file('view/wall_item_drop.tpl'), array('$id' => $item['id']));
 
 
 					$o .= replace_macros($template,array(
@@ -755,7 +755,7 @@ function photos_content(&$a) {
 			. $a->data['user']['nickname'] . '/upload' . '">' . t('Upload New Photos') . '</a></div>';
 	}
 
-	$tpl = file_get_contents('view/photo_top.tpl');
+	$tpl = load_view_file('view/photo_top.tpl');
 	if(count($r)) {
 		foreach($r as $rr) {
 			$o .= replace_macros($tpl,array(

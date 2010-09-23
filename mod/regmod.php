@@ -63,7 +63,7 @@ function regmod_content(&$a) {
 			intval($register[0]['uid'])
 		);
 		
-		$email_tpl = file_get_contents("view/register_open_eml.tpl");
+		$email_tpl = load_view_file("view/register_open_eml.tpl");
 		$email_tpl = replace_macros($email_tpl, array(
 				'$sitename' => $a->config['sitename'],
 				'$siteurl' =>  $a->get_baseurl(),

@@ -16,7 +16,7 @@ function xrd_content(&$a) {
 	if(! count($r))
 		killme();
 
-	$tpl = file_get_contents('view/xrd_person.tpl');
+	$tpl = load_view_file('view/xrd_person.tpl');
 
 	$o = replace_macros($tpl, array(
 		'$accturi' => $uri,

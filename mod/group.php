@@ -89,7 +89,7 @@ function group_content(&$a) {
 	}
 
 	if(($a->argc == 2) && ($a->argv[1] == 'new')) {
-		$tpl = file_get_contents('view/group_new.tpl');
+		$tpl = load_view_file('view/group_new.tpl');
 		$o .= replace_macros($tpl,array());
 		return $o;
 	}
@@ -130,13 +130,13 @@ function group_content(&$a) {
 				$preselected[] = $p['id'];
 		}
 
-		$drop_tpl = file_get_contents('view/group_drop.tpl');
+		$drop_tpl = load_view_file('view/group_drop.tpl');
 		$drop_txt = replace_macros($drop_tpl, array(
 			'$id' => $group['id'],
 			'$delete' => t('Delete')
 		));
 
-		$tpl = file_get_contents('view/group_edit.tpl');
+		$tpl = load_view_file('view/group_edit.tpl');
 		$o .= replace_macros($tpl, array(
 			'$gid' => $group['id'],
 			'$name' => $group['name'],

@@ -126,13 +126,13 @@
 
 		$contacts = $r;
 
-		$tomb_template = file_get_contents('view/atom_tomb.tpl');
-		$item_template = file_get_contents('view/atom_item.tpl');
-		$cmnt_template = file_get_contents('view/atom_cmnt.tpl');
+		$tomb_template = load_view_file('view/atom_tomb.tpl');
+		$item_template = load_view_file('view/atom_item.tpl');
+		$cmnt_template = load_view_file('view/atom_cmnt.tpl');
 	}
 
-	$feed_template = file_get_contents('view/atom_feed.tpl');
-	$mail_template = file_get_contents('view/atom_mail.tpl');
+	$feed_template = load_view_file('view/atom_feed.tpl');
+	$mail_template = load_view_file('view/atom_mail.tpl');
 
 	$atom = '';
 

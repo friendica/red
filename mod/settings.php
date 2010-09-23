@@ -181,14 +181,14 @@ function settings_content(&$a) {
 		$timezone = date_default_timezone_get();
 
 
-	$opt_tpl = file_get_contents("view/profile-in-directory.tpl");
+	$opt_tpl = load_view_file("view/profile-in-directory.tpl");
 	$profile_in_dir = replace_macros($opt_tpl,array(
 		'$yes_selected' => (($profile['publish'])      ? " checked=\"checked\" " : ""),
 		'$no_selected'  => (($profile['publish'] == 0) ? " checked=\"checked\" " : "")
 	));
 
 	if(strlen(get_config('system','directory_submit_url'))) {
-		$opt_tpl = file_get_contents("view/profile-in-netdir.tpl");
+		$opt_tpl = load_view_file("view/profile-in-netdir.tpl");
 
 		$profile_in_net_dir = replace_macros($opt_tpl,array(
 			'$yes_selected' => (($profile['net-publish'])      ? " checked=\"checked\" " : ""),
@@ -198,11 +198,11 @@ function settings_content(&$a) {
 	else
 		$profile_in_net_dir = '';
 
-	$nickname_block = file_get_contents("view/settings_nick_set.tpl");
+	$nickname_block = load_view_file("view/settings_nick_set.tpl");
 	
 	$nickname_subdir = '';
 	if(strlen($a->get_path())) {
-		$subdir_tpl = file_get_contents('view/settings_nick_subdir.tpl');
+		$subdir_tpl = load_view_file('view/settings_nick_subdir.tpl');
 		$nickname_subdir = replace_macros($subdir_tpl, array(
 			'$baseurl' => $a->get_baseurl(),
 			'$nickname' => $nickname,
@@ -230,7 +230,7 @@ function settings_content(&$a) {
 		'$basepath' => $a->get_hostname(),
 		'$baseurl' => $a->get_baseurl()));	
 
-	$stpl = file_get_contents('view/settings.tpl');
+	$stpl = load_view_file('view/settings.tpl');
 
 	$o .= replace_macros($stpl,array(
 		'$baseurl' => $a->get_baseurl(),

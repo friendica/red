@@ -281,9 +281,9 @@ function profiles_content(&$a) {
 
 		require_once('view/profile_selectors.php');
 
-		$tpl = file_get_contents('view/profed_head.tpl');
+		$tpl = load_view_file('view/profed_head.tpl');
 
-		$opt_tpl = file_get_contents("view/profile-hide-friends.tpl");
+		$opt_tpl = load_view_file("view/profile-hide-friends.tpl");
 		$hide_friends = replace_macros($opt_tpl,array(
 			'$yes_selected' => (($r[0]['hide-friends']) ? " checked=\"checked\" " : ""),
 			'$no_selected' => (($r[0]['hide-friends'] == 0) ? " checked=\"checked\" " : "")
@@ -298,7 +298,7 @@ function profiles_content(&$a) {
 	
 
 		$is_default = (($r[0]['is-default']) ? 1 : 0);
-		$tpl = file_get_contents("view/profile_edit.tpl");
+		$tpl = load_view_file("view/profile_edit.tpl");
 		$o .= replace_macros($tpl,array(
 			'$disabled' => (($is_default) ? 'onclick="return false;" style="color: #BBBBFF;"' : ''),
 			'$baseurl' => $a->get_baseurl(),
@@ -342,9 +342,9 @@ function profiles_content(&$a) {
 			$_SESSION['uid']);
 		if(count($r)) {
 
-			$o .= file_get_contents('view/profile_listing_header.tpl');
-			$tpl_default = file_get_contents('view/profile_entry_default.tpl');
-			$tpl = file_get_contents('view/profile_entry.tpl');
+			$o .= load_view_file('view/profile_listing_header.tpl');
+			$tpl_default = load_view_file('view/profile_entry_default.tpl');
+			$tpl = load_view_file('view/profile_entry.tpl');
 
 			foreach($r as $rr) {
 				$template = (($rr['is-default']) ? $tpl_default : $tpl);

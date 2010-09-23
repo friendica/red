@@ -100,10 +100,10 @@ function display_content(&$a) {
 	);
 
 
-	$cmnt_tpl = file_get_contents('view/comment_item.tpl');
-	$like_tpl = file_get_contents('view/like.tpl');
-	$tpl = file_get_contents('view/wall_item.tpl');
-	$wallwall = file_get_contents('view/wallwall_item.tpl');
+	$cmnt_tpl = load_view_file('view/comment_item.tpl');
+	$like_tpl = load_view_file('view/like.tpl');
+	$tpl = load_view_file('view/wall_item.tpl');
+	$wallwall = load_view_file('view/wallwall_item.tpl');
 
 	$return_url = $_SESSION['return_url'] = $a->cmd;
 
@@ -203,7 +203,7 @@ function display_content(&$a) {
 			$drop = '';
 
 			if(($item['contact-id'] == $_SESSION['visitor_id']) || ($item['uid'] == get_uid()))
-				$drop = replace_macros(file_get_contents('view/wall_item_drop.tpl'), array('$id' => $item['id']));
+				$drop = replace_macros(load_view_file('view/wall_item_drop.tpl'), array('$id' => $item['id']));
 
 			$like    = (($alike[$item['id']]) ? format_like($alike[$item['id']],$alike[$item['id'] . '-l'],'like',$item['id']) : '');
 			$dislike = (($dlike[$item['id']]) ? format_like($dlike[$item['id']],$dlike[$item['id'] . '-l'],'dislike',$item['id']) : '');

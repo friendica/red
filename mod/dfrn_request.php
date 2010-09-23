@@ -356,7 +356,7 @@ function dfrn_request_content(&$a) {
 		$dfrn_url = notags(trim(hex2bin($_GET['dfrn_url'])));
 		$aes_allow = (((x($_GET,'aes_allow')) && ($_GET['aes_allow'] == 1)) ? 1 : 0);
 		$confirm_key = (x($_GET,'confirm_key') ? $_GET['confirm_key'] : "");
-		$o .= file_get_contents("view/dfrn_req_confirm.tpl");
+		$o .= load_view_file("view/dfrn_req_confirm.tpl");
 		$o  = replace_macros($o,array(
 			'$dfrn_url' => $dfrn_url,
 			'$aes_allow' => (($aes_allow) ? '<input type="hidden" name="aes_allow" value="1" />' : "" ),
@@ -388,7 +388,7 @@ function dfrn_request_content(&$a) {
 			if(count($r)) {
 
 				if($r[0]['notify-flags'] & NOTIFY_INTRO) {
-					$email_tpl = file_get_contents('view/request_notify_eml.tpl');
+					$email_tpl = load_view_file('view/request_notify_eml.tpl');
 					$email = replace_macros($email_tpl, array(
 						'$requestor' => ((strlen(stripslashes($r[0]['name']))) ? stripslashes($r[0]['name']) : t('[Name Withheld]')),
 						'$url' => stripslashes($r[0]['url']),
@@ -416,7 +416,7 @@ function dfrn_request_content(&$a) {
 
 		// Normal web request. Display our user's introduction form. 
 
-		$o = file_get_contents("view/dfrn_request.tpl");
+		$o = load_view_file("view/dfrn_request.tpl");
 		$o = replace_macros($o,array('$nickname' => $a->argv[1]));
 		return $o;
 	}

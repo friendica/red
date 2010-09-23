@@ -148,7 +148,7 @@ function contacts_content(&$a) {
 
 		require_once('view/contact_selectors.php');
 
-		$tpl = file_get_contents("view/contact_edit.tpl");
+		$tpl = load_view_file("view/contact_edit.tpl");
 
 		switch($r[0]['rel']) {
 			case REL_BUD:
@@ -202,7 +202,7 @@ function contacts_content(&$a) {
 
 	$search = ((x($_GET,'search')) ? notags(trim($_GET['search'])) : '');
 
-	$tpl = file_get_contents("view/contacts-top.tpl");
+	$tpl = load_view_file("view/contacts-top.tpl");
 	$o .= replace_macros($tpl,array(
 		'$hide_url' => ((strlen($sql_extra)) ? 'contacts/all' : 'contacts' ),
 		'$hide_text' => ((strlen($sql_extra)) ? t('Show Blocked Connections') : t('Hide Blocked Connections')),
@@ -235,7 +235,7 @@ function contacts_content(&$a) {
 
 	if(count($r)) {
 
-		$tpl = file_get_contents("view/contact_template.tpl");
+		$tpl = load_view_file("view/contact_template.tpl");
 
 		foreach($r as $rr) {
 			if($rr['self'])

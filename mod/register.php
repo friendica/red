@@ -169,7 +169,7 @@ function register_post(&$a) {
 	}
 
 	if( $a->config['register_policy'] == REGISTER_OPEN ) {
-		$email_tpl = file_get_contents("view/register_open_eml.tpl");
+		$email_tpl = load_view_file("view/register_open_eml.tpl");
 		$email_tpl = replace_macros($email_tpl, array(
 				'$sitename' => $a->config['sitename'],
 				'$siteurl' =>  $a->get_baseurl(),
@@ -204,7 +204,7 @@ function register_post(&$a) {
 			dbesc($new_password)
 		);
 
-		$email_tpl = file_get_contents("view/register_verify_eml.tpl");
+		$email_tpl = load_view_file("view/register_verify_eml.tpl");
 		$email_tpl = replace_macros($email_tpl, array(
 				'$sitename' => $a->config['sitename'],
 				'$siteurl' =>  $a->get_baseurl(),
@@ -241,7 +241,7 @@ function register_content(&$a) {
 		return;
 	}
 
-	$o = file_get_contents("view/register.tpl");
+	$o = load_view_file("view/register.tpl");
 	$o = replace_macros($o, array(
 		'$registertext' =>((x($a->config,'register_text'))
 			? '<div class="error-message">' . $a->config['register_text'] . '</div>'

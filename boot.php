@@ -154,9 +154,8 @@ class App {
 	} 
 
 	function init_pagehead() {
-		if(file_exists("view/head.tpl"))
-			$s = file_get_contents("view/head.tpl");
-		$this->page['htmlhead'] = replace_macros($s,array(
+		$tpl = load_view_file("view/head.tpl");
+		$this->page['htmlhead'] = replace_macros($tpl,array(
 			'$baseurl' => $this->get_baseurl()
 		));
 	}
@@ -331,14 +330,14 @@ function escape_tags($string) {
 if(! function_exists('login')) {
 function login($register = false) {
 	$o = "";
-	$register_html = (($register) ? file_get_contents("view/register-link.tpl") : "");
+	$register_html = (($register) ? load_view_file("view/register-link.tpl") : "");
 
 
 	if(x($_SESSION,'authenticated')) {
-		$o = file_get_contents("view/logout.tpl");
+		$o = load_view_file("view/logout.tpl");
 	}
 	else {
-		$o = file_get_contents("view/login.tpl");
+		$o = load_view_file("view/login.tpl");
 
 		$o = replace_macros($o,array('$register_html' => $register_html ));
 	}
@@ -870,3 +869,12 @@ function format_like($cnt,$arr,$type,$id) {
 	return $o;
 }}
 
+if(! function_exists('load_view_file')) {
+function load_view_file($s) {
+	$b = basename($s);
+	$d = dirname($s);
+	$lang = get_config('system','language');
+	if($lang && file_exists("$d/$lang/$b"))
+		return file_get_contents("$d/$lang/$b");
+	return file_get_contents($s);
+}}

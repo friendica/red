@@ -65,7 +65,7 @@ function notifications_content(&$a) {
 		$sql_extra = " AND `ignore` = 0 ";
 
 
-	$tpl = file_get_contents('view/intros-top.tpl');
+	$tpl = load_view_file('view/intros-top.tpl');
 	$o .= replace_macros($tpl,array(
 		'$hide_url' => ((strlen($sql_extra)) ? 'notifications/all' : 'notifications' ),
 		'$hide_text' => ((strlen($sql_extra)) ? t('Show Ignored Requests') : t('Hide Ignored Requests'))
@@ -79,7 +79,7 @@ function notifications_content(&$a) {
 	if(($r !== false) && (count($r))) {
 
 
-		$tpl = file_get_contents("view/intros.tpl");
+		$tpl = load_view_file("view/intros.tpl");
 
 		foreach($r as $rr) {
 
