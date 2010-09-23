@@ -133,7 +133,7 @@ function profile_content(&$a, $update = 0) {
 
 
 		if($tab == 'profile') {
-			$lang = config_get('system','language');
+			$lang = get_config('system','language');
 			if($lang && file_exists("view/$lang/profile_advanced.php"))
 				require_once("view/$lang/profile_advanced.php");
 			else
