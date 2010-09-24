@@ -1,6 +1,6 @@
 <h1>Site Directory</h1>
 
-<ul><li><div id="global-directory-link"><a href="http://dir.dfrn.org">Global Directory</a></div></li></ul>
+$globaldir
 
 $finding
 

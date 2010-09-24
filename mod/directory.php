@@ -10,10 +10,16 @@ function directory_content(&$a) {
 
 	$tpl .= load_view_file('view/directory_header.tpl');
 
-	
+	$globaldir = '';
+	$gdirpath = dirname(get_config('system','directory_submit_url'));
+	if(strlen($gdirpath)) {
+		$globaldir = '<ul><li><div id="global-directory-link"><a href="'
+		. $gdirpath . '">' . t('Global Directory') . '</a></div></li></ul>';
+	}
 
 	$o .= replace_macros($tpl, array(
 		'$search' => $search,
+		'$globaldir' => $globaldir,
 		'$finding' => (strlen($search) ? '<h4>' . t('Finding: ') . "'" . $search . "'" . '</h4>' : "")
 	));
 
