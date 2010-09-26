@@ -40,4 +40,10 @@ if(x($_SESSION['uid'])) {
 	}
 
 	$a->page['nav'] .= "</span>\r\n<span id=\"nav-end\"></span>\r\n";
-	$a->page['nav'] .= '<span id="banner">mistpark</span>';
+
+	$banner = get_config('system','banner');
+
+	if($banner === false)
+		$banner = 'mistpark';
+
+	$a->page['nav'] .= '<span id="banner">' . $banner . '</span>';
