@@ -1,6 +1,5 @@
 <?php
 
-	$debugging = false;
 
 	require_once('boot.php');
 
@@ -17,6 +16,8 @@
 	require_once('include/items.php');
 
 	require_once('include/Contact.php');
+
+	$debugging = get_config('system','debugging');
 
 	$a->set_baseurl(get_config('system','url'));
 

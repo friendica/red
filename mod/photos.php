@@ -125,11 +125,12 @@ function photos_post(&$a) {
 
 					$drop_id = intval($rr['id']);
 					$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
+					$proc_debug = get_config('system','proc_debug');
 
 					// send the notification upstream/downstream as the case may be
 
 					if($rr['visible'])
-						proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" & ",
+						proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" $proc_debug & ",
 							array(),$foo));
 
 				}
@@ -165,10 +166,12 @@ function photos_post(&$a) {
 				$drop_id = intval($i[0]['id']);
 				$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 				
+				$proc_debug = get_config('system','proc_debug']);
+
 				// send the notification upstream/downstream as the case may be
 
 				if($i[0]['visible'])
-					proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" & ",
+					proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" $proc_debug & ",
 						array(),$foo));
 			}
 		}

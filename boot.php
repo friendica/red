@@ -605,10 +605,12 @@ if(! function_exists('get_config')) {
 function get_config($family, $key, $instore = false) {
 
 	global $a;
+
 	if(! $instore) {
 		if(isset($a->config[$family][$key])) {
-			if($a->config[$family][$key] == '!<unset>!')
+			if($a->config[$family][$key] === '!<unset>!') {
 				return false;
+			}
 			return $a->config[$family][$key];
 		}
 	}

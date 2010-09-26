@@ -96,8 +96,9 @@ function like_content(&$a) {
 		);
 
 		$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
+		$proc_debug = get_config('system','proc_debug');
 
-		proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"like\" \"$post_id\" &",
+		proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"like\" \"$post_id\" $proc_debug &",
 			array(),$foo));
 		return;
 	}
@@ -163,8 +164,9 @@ EOT;
 
 
 	$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
+	$proc_debug = get_config('system','proc_debug');
 
-	proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"like\" \"$post_id\" &",
+	proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"like\" \"$post_id\" $proc_debug &",
 		array(),$foo));
 
 	return; // NOTREACHED

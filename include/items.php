@@ -464,3 +464,93 @@ function item_store($arr) {
 
 	return $current_post;
 }
+
+function get_item_contact($item,$contacts) {
+	if(! count($contacts) || (! is_array($item)))
+		return false;
+	foreach($contacts as $contact) {
+		if($contact['id'] == $item['contact-id']) {
+			return $contact;
+			break; // NOTREACHED
+		}
+	}
+	return false;
+}
+
+
+function dfrn_deliver($contact,$atom,$debugging = false) {
+
+
+	if((! strlen($contact['dfrn-id'])) && (! $contact['duplex']))
+		return 3;
+
+	$idtosend = $orig_id = (($contact['dfrn-id']) ? $contact['dfrn-id'] : $contact['issued-id']);
+
+	if($contact['duplex'] && $contact['dfrn-id'])
+		$idtosend = '0:' . $orig_id;
+	if($contact['duplex'] && $contact['issued-id'])
+		$idtosend = '1:' . $orig_id;		
+
+	$url = $contact['notify'] . '?dfrn_id=' . $idtosend;
+
+	if($debugging)
+		echo "URL: $url";
+
+	$xml = fetch_url($url);
+
+	if($debugging)
+		echo $xml;
+
+	if(! $xml)
+		return 3;
+
+	$res = simplexml_load_string($xml);
+
+	if((intval($res->status) != 0) || (! strlen($res->challenge)) || (! strlen($res->dfrn_id)))
+		return (($res->status) ? $res->status : 3);
+
+	$postvars     = array();
+	$sent_dfrn_id = hex2bin($res->dfrn_id);
+	$challenge    = hex2bin($res->challenge);
+
+	$final_dfrn_id = '';
+
+	if($contact['duplex'] && strlen($contact['prvkey'])) {
+		openssl_private_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['prvkey']);
+		openssl_private_decrypt($challenge,$postvars['challenge'],$contact['prvkey']);
+	}
+	else {
+		openssl_public_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['pubkey']);
+		openssl_public_decrypt($challenge,$postvars['challenge'],$contact['pubkey']);
+	}
+
+	$final_dfrn_id = substr($final_dfrn_id, 0, strpos($final_dfrn_id, '.'));
+
+	if(strpos($final_dfrn_id,':') == 1)
+		$final_dfrn_id = substr($final_dfrn_id,2);
+
+	if($final_dfrn_id != $orig_id) {
+		// did not decode properly - cannot trust this site 
+		return 3;
+	}
+
+	$postvars['dfrn_id'] = $idtosend;
+
+
+	if(($contact['rel']) && ($contact['rel'] != REL_FAN) && (! $contact['blocked']) && (! $contact['readonly'])) {
+		$postvars['data'] = $atom;
+	}
+	else {
+		$postvars['data'] = str_replace('<dfrn:comment-allow>1','<dfrn:comment-allow>0',$atom);
+	}
+
+	$xml = post_url($contact['notify'],$postvars);
+
+	if($debugging)
+		echo $xml;
+
+	$res = simplexml_load_string($xml);
+
+	return $res->status;
+ 
+}

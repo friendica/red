@@ -77,9 +77,6 @@ function profile_init(&$a) {
 function profile_content(&$a, $update = 0) {
 
 
-	file_put_contents('uid.log',"{$_SERVER['QUERY_STRING']} ". session_id() . "\n", FILE_APPEND);
-
-
 	require_once("include/bbcode.php");
 	require_once('include/security.php');
 
