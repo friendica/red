@@ -171,11 +171,12 @@ function relative_date($posted_date) {
 // Returns age in years, given a date of birth,
 // the timezone of the person whose date of birth is provided,
 // and the timezone of the person viewing the result.
-// Why? Bear with me. Let's say I live in Mittagong, Australia. My birthday 
-// is on New Year's. You live in San Bruno, California.
+// Why? Bear with me. Let's say I live in Mittagong, Australia, and my 
+// birthday is on New Year's. You live in San Bruno, California.
 // When exactly are you going to see my age increase?
-// A: 5:00 AM Dec 31. That's when I start celebrating, and when 
-// my birthday arrives in your timezone.
+// A: 5:00 AM Dec 31 San Bruno time. That's precisely when I start 
+// celebrating and become a year older. If you wish me happy birthday 
+// on January 1 (San Bruno time), you'll be a day late. 
    
 function age($dob,$owner_tz = '',$viewer_tz = '') {
 	if(! intval($dob))
