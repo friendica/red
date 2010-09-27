@@ -103,11 +103,11 @@ function message_content(&$a) {
 	));
 
 
-	if(($a->argc == 3) && ($a->argv[1] == 'drop' || $a->argv[1] == 'dropconv')) {
+	if(($a->argc == 3) && ($a->argv[1] === 'drop' || $a->argv[1] === 'dropconv')) {
 		if(! intval($a->argv[2]))
 			return;
 		$cmd = $a->argv[1];
-		if($cmd == 'drop') {
+		if($cmd === 'drop') {
 			$r = q("DELETE FROM `mail` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval($a->argv[2]),
 				intval($_SESSION['uid'])
@@ -135,7 +135,7 @@ function message_content(&$a) {
 		}	
 	
 	}
-	if(($a->argc > 2) && ($a->argv[1] == 'redeliver') && intval($a->argv[2])) {
+	if(($a->argc > 2) && ($a->argv[1] === 'redeliver') && intval($a->argv[2])) {
 		$post_id = intval($a->argv[2]);
 		$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 		$proc_debug = get_config('system','proc_debug');
@@ -148,7 +148,7 @@ function message_content(&$a) {
 
 
 
-	if(($a->argc > 1) && ($a->argv[1] == 'new')) {
+	if(($a->argc > 1) && ($a->argv[1] === 'new')) {
 		
 		$tpl = load_view_file('view/msg-header.tpl');
 	
@@ -174,7 +174,7 @@ function message_content(&$a) {
 		return $o;
 	}
 
-	if(($a->argc == 1) || ($a->argc == 2 && $a->argv[1] == 'sent')) {
+	if(($a->argc == 1) || ($a->argc == 2 && $a->argv[1] === 'sent')) {
 
 		$o .= $header;
 		

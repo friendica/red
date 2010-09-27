@@ -75,7 +75,7 @@
 		if($debugging)
 			echo "IMPORTER: {$importer['name']}";
 
-		$last_update = (($contact['last-update'] == '0000-00-00 00:00:00') 
+		$last_update = (($contact['last-update'] === '0000-00-00 00:00:00') 
 			? datetime_convert('UTC','UTC','now - 30 days','Y-m-d\TH:i:s\Z')
 			: datetime_convert('UTC','UTC',$contact['last-update'],'Y-m-d\TH:i:s\Z'));
 
@@ -179,7 +179,7 @@
 				$name_updated = $elems['name'][0]['attribs'][NAMESPACE_DFRN]['updated'];
 				$new_name = $elems['name'][0]['data'];
 			} 
-			if(($elems['link'][0]['attribs']['']['rel'] == 'photo') && ($elems['link'][0]['attribs'][NAMESPACE_DFRN]['updated'])) {
+			if(($elems['link'][0]['attribs']['']['rel'] === 'photo') && ($elems['link'][0]['attribs'][NAMESPACE_DFRN]['updated'])) {
 				$photo_timestamp = datetime_convert('UTC','UTC',$elems['link'][0]['attribs'][NAMESPACE_DFRN]['updated']);
 				$photo_url = $elems['link'][0]['attribs']['']['href'];
 			}

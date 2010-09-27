@@ -215,7 +215,7 @@ function settings_content(&$a) {
 	if($files) {
 		foreach($files as $file) {
 			$f = basename($file);
-			$selected = (($f == $_SESSION['theme']) || ($f == 'default' && (! x($_SESSION,'theme')))
+			$selected = (($f == $_SESSION['theme']) || ($f === 'default' && (! x($_SESSION,'theme')))
 				? ' selected="selected" ' : '' );
 			$theme_selector .= '<option val="' . basename($file) . '"' . $selected . '>' . basename($file) . '</option>';
 		}

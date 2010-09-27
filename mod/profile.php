@@ -56,7 +56,7 @@ function profile_init(&$a) {
 	}
 
 	$profile = 0;
-	if((local_user()) && ($a->argc > 2) && ($a->argv[2] == 'view')) {
+	if((local_user()) && ($a->argc > 2) && ($a->argv[2] === 'view')) {
 		$which = $a->user['nickname'];
 		$profile = $a->argv[1];		
 	}
@@ -129,7 +129,7 @@ function profile_content(&$a, $update = 0) {
 		));
 
 
-		if($tab == 'profile') {
+		if($tab === 'profile') {
 			$lang = get_config('system','language');
 			if($lang && file_exists("view/$lang/profile_advanced.php"))
 				require_once("view/$lang/profile_advanced.php");
@@ -164,7 +164,7 @@ function profile_content(&$a, $update = 0) {
 		// This is ugly, but we can't pass the profile_uid through the session to the ajax updater,
 		// because browser prefetching might change it on us. We have to deliver it with the page.
 
-		if($tab == 'posts' && (! $a->pager['start'])) {
+		if($tab === 'posts' && (! $a->pager['start'])) {
 			$o .= '<div id="live-profile"></div>' . "\r\n";
 			$o .= "<script> var profile_uid = " . $a->profile['profile_uid'] . "; </script>\r\n";
 		}

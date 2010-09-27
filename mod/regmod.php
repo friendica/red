@@ -29,7 +29,7 @@ function regmod_content(&$a) {
 		intval($register[0]['uid'])
 	);
 
-	if($cmd == 'deny') {
+	if($cmd === 'deny') {
 
 		$r = q("DELETE FROM `user` WHERE `uid` = %d LIMIT 1",
 			intval($register[0]['uid'])
@@ -49,7 +49,7 @@ function regmod_content(&$a) {
 
 	}
 
-	if($cmd == 'allow') {
+	if($cmd === 'allow') {
 
 		if(! count($user))
 			killme();

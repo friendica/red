@@ -2,8 +2,8 @@
 
 // login/logout 
 
-if((x($_SESSION,'authenticated')) && (! ($_POST['auth-params'] == 'login'))) {
-	if($_POST['auth-params'] == 'logout' || $a->module == "logout") {
+if((x($_SESSION,'authenticated')) && (! ($_POST['auth-params'] === 'login'))) {
+	if($_POST['auth-params'] === 'logout' || $a->module === 'logout') {
 		unset($_SESSION['authenticated']);
 		unset($_SESSION['uid']);
 		unset($_SESSION['visitor_id']);
@@ -46,7 +46,7 @@ else {
 
 	$encrypted = hash('whirlpool',trim($_POST['password']));
 
-	if((x($_POST,'auth-params')) && $_POST['auth-params'] == 'login') {
+	if((x($_POST,'auth-params')) && $_POST['auth-params'] === 'login') {
 		$r = q("SELECT * FROM `user` 
 			WHERE `email` = '%s' AND `password` = '%s' AND `blocked` = 0 AND `verified` = 1 LIMIT 1",
 			dbesc(trim($_POST['login-name'])),

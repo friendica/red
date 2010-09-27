@@ -26,13 +26,13 @@ function dfrn_poll_init(&$a) {
 		$dfrn_id = substr($dfrn_id,2);
 	}
 
-	if(($dfrn_id == '') && (! x($_POST,'dfrn_id')) && ($a->argc > 1)) {
+	if(($dfrn_id === '') && (! x($_POST,'dfrn_id')) && ($a->argc > 1)) {
 		$o = get_feed_for($a, '*', $a->argv[1],$last_update);
 		echo $o;
 		killme();
 	}
 
-	if((x($type)) && ($type == 'profile')) {
+	if((x($type)) && ($type === 'profile')) {
 
 		$sql_extra = '';
 		switch($direction) {
@@ -85,7 +85,7 @@ function dfrn_poll_init(&$a) {
 
 	}
 
-	if((x($type)) && ($type == 'profile-check')) {
+	if((x($type)) && ($type === 'profile-check')) {
 
 		switch($direction) {
 			case 1:
@@ -173,7 +173,7 @@ function dfrn_poll_post(&$a) {
 	$contact_id = $r[0]['id']; 
 
 
-	if($type == 'reputation' && strlen($url)) {
+	if($type === 'reputation' && strlen($url)) {
 		$r = q("SELECT * FROM `contact` WHERE `url` = '%s' AND `uid` = %d LIMIT 1",
 			dbesc($url),
 			intval($owner_uid)

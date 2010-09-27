@@ -39,7 +39,7 @@
 
 	$recipients = array();
 
-	if($cmd == 'mail') {
+	if($cmd === 'mail') {
 
 		$message = q("SELECT * FROM `mail` WHERE `id` = %d LIMIT 1",
 				intval($item_id)
@@ -89,7 +89,7 @@
 
 		$parent = $items[0];
 
-		if($parent['type'] == 'remote') {
+		if($parent['type'] === 'remote') {
 			// local followup to remote post
 			$followup = true;
 			$conversant_str = dbesc($parent['contact-id']);
@@ -152,7 +152,7 @@
 			'$namdate'      => xmlify(datetime_convert('UTC','UTC',$owner['name-date']   . '+00:00' , ATOM_TIME))
 	));
 
-	if($cmd == 'mail') {
+	if($cmd === 'mail') {
 		$atom .= replace_macros($mail_template, array(
 			'$name'         => xmlify($owner['name']),
 			'$profile_page' => xmlify($owner['url']),
@@ -287,7 +287,7 @@
 				break;
 		}
 
-		if(($cmd == 'mail') && ($deliver_status == 0)) {
+		if(($cmd === 'mail') && ($deliver_status == 0)) {
 			$r = q("UPDATE `mail` SET `delivered` = 1 WHERE `id` = %d LIMIT 1",
 				intval($item_id)
 			);

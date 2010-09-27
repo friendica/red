@@ -84,7 +84,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 		);
 	}
 
-	if($dfrn_id == '' || $dfrn_id == '*')
+	if($dfrn_id === '' || $dfrn_id === '*')
 		$sort = 'DESC';
 	else
 		$sort = 'ASC';
@@ -147,7 +147,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 
 		// public feeds get html, our own nodes use bbcode
 
-		if($dfrn_id == '*') {
+		if($dfrn_id === '*') {
 			$item['body'] = bbcode($item['body']);
 			$type = 'html';
 		}
@@ -250,7 +250,7 @@ function get_atom_elements($item) {
 
 	$raw_author = $item->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'author');
 	if($raw_author) {
-		if($raw_author[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'][0]['attribs']['']['rel'] == 'photo')
+		if($raw_author[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'][0]['attribs']['']['rel'] === 'photo')
 		$res['author-avatar'] = unxmlify($raw_author[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'][0]['attribs']['']['href']);
 	}
 
@@ -327,7 +327,7 @@ function get_atom_elements($item) {
 	elseif($rawowner[0]['child'][NAMESPACE_DFRN]['uri'][0]['data'])
 		$res['owner-link'] = unxmlify($rawowner[0]['child'][NAMESPACE_DFRN]['uri'][0]['data']);
 
-	if($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'][0]['attribs']['']['rel'] == 'photo')
+	if($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'][0]['attribs']['']['rel'] === 'photo')
 		$res['owner-avatar'] = unxmlify($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'][0]['attribs']['']['href']);
 	elseif($rawowner[0]['child'][NAMESPACE_DFRN]['avatar'][0]['data'])
 		$res['owner-avatar'] = unxmlify($rawowner[0]['child'][NAMESPACE_DFRN]['avatar'][0]['data']);
@@ -349,7 +349,7 @@ function get_atom_elements($item) {
 		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'])
 			$res['object'] .= '<id>' . $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'] . '</id>' . "\n";
 		
-		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'][0]['attribs']['']['rel'] == 'alternate')
+		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'][0]['attribs']['']['rel'] === 'alternate')
 			$res['object'] .= '<link>' . $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'][0]['attribs']['']['href'] . '</link>' . "\n";
 		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'])
 			$res['object'] .= '<title>' . $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'] . '</title>' . "\n";

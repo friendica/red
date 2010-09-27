@@ -173,7 +173,7 @@ function display_content(&$a) {
 
 			if(($item['parent'] == $item['item_id']) && (! $item['self'])) {
 				
-				if($item['type'] == 'wall') {
+				if($item['type'] === 'wall') {
 					// I do. Put me on the left of the wall-to-wall notice.
 					$owner_url = $a->contact['url'];
 					$owner_photo = $a->contact['thumb'];
@@ -181,7 +181,7 @@ function display_content(&$a) {
 					$template = $wallwall;
 					$commentww = 'ww';	
 				}
-				if($item['type'] == 'remote' && ($item['owner-link'] != $item['author-link'])) {
+				if($item['type'] === 'remote' && ($item['owner-link'] != $item['author-link'])) {
 					// Could be anybody. 
 					$owner_url = $item['owner-link'];
 					$owner_photo = $item['owner-avatar'];

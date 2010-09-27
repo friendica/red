@@ -121,9 +121,9 @@ function like_content(&$a) {
 		<content>$body</content>
 	</object>
 EOT;
-	if($verb == 'like')
+	if($verb === 'like')
 		$bodyverb = t('likes');
-	if($verb == 'dislike')
+	if($verb === 'dislike')
 		$bodyverb = t('doesn\'t like');
 
 	if(! isset($bodyverb))

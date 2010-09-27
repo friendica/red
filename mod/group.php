@@ -20,7 +20,7 @@ function group_post(&$a) {
 		return;
 	}
 
-	if(($a->argc == 2) && ($a->argv[1] == 'new')) {
+	if(($a->argc == 2) && ($a->argv[1] === 'new')) {
 		$name = notags(trim($_POST['groupname']));
 		$r = group_add(get_uid(),$name);
 		if($r) {
@@ -88,13 +88,13 @@ function group_content(&$a) {
 		return;
 	}
 
-	if(($a->argc == 2) && ($a->argv[1] == 'new')) {
+	if(($a->argc == 2) && ($a->argv[1] === 'new')) {
 		$tpl = load_view_file('view/group_new.tpl');
 		$o .= replace_macros($tpl,array());
 		return $o;
 	}
 
-	if(($a->argc == 3) && ($a->argv[1] == 'drop')) {
+	if(($a->argc == 3) && ($a->argv[1] === 'drop')) {
 		if(intval($a->argv[2])) {
 			$r = q("SELECT `name` FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval($a->argv[2]),

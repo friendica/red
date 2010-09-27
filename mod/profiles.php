@@ -10,7 +10,7 @@ function profiles_post(&$a) {
 
 	$namechanged = false;
 
-	if(($a->argc > 1) && ($a->argv[1] != "new") && intval($a->argv[1])) {
+	if(($a->argc > 1) && ($a->argv[1] !== "new") && intval($a->argv[1])) {
 		$orig = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($a->argv[1]),
 			intval($_SESSION['uid'])
@@ -163,7 +163,7 @@ function profiles_content(&$a) {
 		return;
 	}
 
-	if(($a->argc > 2) && ($a->argv[1] == "drop") && intval($a->argv[2])) {
+	if(($a->argc > 2) && ($a->argv[1] === "drop") && intval($a->argv[2])) {
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d AND `is-default` = 0 AND `self` = 0 LIMIT 1",
 			intval($a->argv[2]),
 			intval($_SESSION['uid'])
@@ -195,7 +195,7 @@ function profiles_content(&$a) {
 
 
 
-	if(($a->argc > 1) && ($a->argv[1] == 'new')) {
+	if(($a->argc > 1) && ($a->argv[1] === 'new')) {
 
 		$r0 = q("SELECT `id` FROM `profile` WHERE `uid` = %d",
 			intval($_SESSION['uid']));
@@ -225,7 +225,7 @@ function profiles_content(&$a) {
 		goaway($a->get_baseurl() . '/profiles');
 	}		 
 
-	if(($a->argc > 2) && ($a->argv[1] == 'clone')) {
+	if(($a->argc > 2) && ($a->argv[1] === 'clone')) {
 
 		$r0 = q("SELECT `id` FROM `profile` WHERE `uid` = %d",
 			intval($_SESSION['uid']));

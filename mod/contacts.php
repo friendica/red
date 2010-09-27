@@ -98,7 +98,7 @@ function contacts_content(&$a) {
 		}
 
 
-		if($cmd == 'block') {
+		if($cmd === 'block') {
 			$blocked = (($orig_record[0]['blocked']) ? 0 : 1);
 			$r = q("UPDATE `contact` SET `blocked` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
 					intval($blocked),
@@ -112,7 +112,7 @@ function contacts_content(&$a) {
 			return; // NOTREACHED
 		}
 
-		if($cmd == 'ignore') {
+		if($cmd === 'ignore') {
 			$readonly = (($orig_record[0]['readonly']) ? 0 : 1);
 			$r = q("UPDATE `contact` SET `readonly` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
 					intval($readonly),
@@ -126,7 +126,7 @@ function contacts_content(&$a) {
 			return; // NOTREACHED
 		}
 
-		if($cmd == 'drop') {
+		if($cmd === 'drop') {
 			contact_remove($contact_id);
 			notice( t('Contact has been removed.') . EOL );
 			goaway($a->get_baseurl() . '/contacts');
@@ -195,7 +195,7 @@ function contacts_content(&$a) {
 	}
 
 
-	if(($a->argc == 2) && ($a->argv[1] == 'all'))
+	if(($a->argc == 2) && ($a->argv[1] === 'all'))
 		$sql_extra = '';
 	else
 		$sql_extra = " AND `blocked` = 0 ";

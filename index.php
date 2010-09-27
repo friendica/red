@@ -53,7 +53,7 @@ if($a->module_loaded) {
 		$func($a);
     	}
 
-	if(($_SERVER['REQUEST_METHOD'] == 'POST') && (! $a->error)
+	if(($_SERVER['REQUEST_METHOD'] === 'POST') && (! $a->error)
 		&& (function_exists($a->module . '_post'))
 		&& (! x($_POST,'auth-params'))) {
 		$func = $a->module . '_post';

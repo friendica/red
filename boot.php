@@ -103,7 +103,7 @@ class App {
 			$this->module = 'home';
 		}
 
-		if($this->cmd == '.well-known/host-meta')
+		if($this->cmd === '.well-known/host-meta')
 			require_once('include/hostxrd.php');
 
 		$this->pager['page'] = ((x($_GET,'page')) ? $_GET['page'] : 1);
@@ -720,7 +720,7 @@ function webfinger($s) {
 		$links = $link;
 
 	foreach($links as $link)
-		if($link['@attributes']['rel'] && $link['@attributes']['rel'] == 'lrdd')
+		if($link['@attributes']['rel'] && $link['@attributes']['rel'] === 'lrdd')
 			$tpl = $link['@attributes']['template'];
 	if((empty($tpl)) || (! strpos($tpl, '{uri}')))
 		return '';
@@ -883,10 +883,10 @@ function allowed_email($email) {
 if(! function_exists('format_like')) {
 function format_like($cnt,$arr,$type,$id) {
 	if($cnt == 1)
-		$o .= $arr[0] . (($type == 'like') ? t(' likes this.') : t(' doesn\'t like this.')) . EOL ;
+		$o .= $arr[0] . (($type === 'like') ? t(' likes this.') : t(' doesn\'t like this.')) . EOL ;
 	else {
 		$o .= '<span class="fakelink" onclick="openClose(\'' . $type . 'list-' . $id . '\');" >' 
-			. $cnt . ' ' . t('people') . '</span> ' . (($type == 'like') ? t('like this.') : t('don\'t like this.')) . EOL ;
+			. $cnt . ' ' . t('people') . '</span> ' . (($type === 'like') ? t('like this.') : t('don\'t like this.')) . EOL ;
 		$total = count($arr);
 		if($total >= 75)
 			$arr = array_slice($arr,0,74);
@@ -895,7 +895,7 @@ function format_like($cnt,$arr,$type,$id) {
 		$str = implode(', ', $arr);
 		if($total >= 75)
 			$str .= t(', and ') . $total - 75 . t(' other people');
-		$str .= (($type == 'like') ? t(' like this.') : t(' don\'t like this.'));
+		$str .= (($type === 'like') ? t(' like this.') : t(' don\'t like this.'));
 		$o .= '<div id="' . $type . 'list-' . $id . '" style="display: none;" >' . $str . '</div>';
 	}
 	return $o;

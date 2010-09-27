@@ -61,7 +61,7 @@ function photos_post(&$a) {
 	$contact_record = $r[0];	
 
 
-	if(($a->argc > 2) && ($a->argv[1] == 'album')) {
+	if(($a->argc > 2) && ($a->argv[1] === 'album')) {
 		$album = hex2bin($a->argv[2]);
 
 		if($album == t('Profile Photos') || $album == t('Contact Photos')) {
@@ -390,7 +390,7 @@ function photos_content(&$a) {
 		$datatype = $a->argv[2];
 		$datum = $a->argv[3];
 	}
-	elseif(($a->argc > 2) && ($a->argv[2] == 'upload'))
+	elseif(($a->argc > 2) && ($a->argv[2] === 'upload'))
 		$datatype = 'upload';
 	else
 		$datatype = 'summary';
@@ -445,7 +445,7 @@ function photos_content(&$a) {
 	//
 
 
-	if($datatype == 'upload') {
+	if($datatype === 'upload') {
 		if( ! (local_user() && (get_uid() == $a->data['user']['uid']))) {
 			notice( t('Permission denied.'));
 			return;
@@ -455,7 +455,7 @@ function photos_content(&$a) {
 		$albumselect .= '<option value="" selected="selected" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>';
 		if(count($a->data['albums'])) {
 			foreach($a->data['albums'] as $album) {
-				if(($album['album'] == '') || ($album['album'] == t('Contact Photos')))
+				if(($album['album'] === '') || ($album['album'] == t('Contact Photos')))
 					continue;
 				$albumselect .= '<option value="' . $album['album'] . '">' . $album['album'] . '</option>';
 			}
@@ -481,7 +481,7 @@ function photos_content(&$a) {
 
 	}
 
-	if($datatype == 'album') {
+	if($datatype === 'album') {
 
 		$album = hex2bin($datum);
 
@@ -504,7 +504,7 @@ function photos_content(&$a) {
 
 		$o .= '<h3>' . $album . '</h3>';
 		
-		if($cmd == 'edit') {		
+		if($cmd === 'edit') {		
 			if(($album != t('Profile Photos')) && ($album != t('Contact Photos'))) {
 				if(local_user() && (get_uid() == $a->data['user']['uid'])) {
 					$edit_tpl = load_view_file('view/album_edit.tpl');
@@ -545,7 +545,7 @@ function photos_content(&$a) {
 	}	
 
 
-	if($datatype == 'image') {
+	if($datatype === 'image') {
 
 		require_once('security.php');
 		require_once('bbcode.php');
@@ -638,7 +638,7 @@ function photos_content(&$a) {
 			$o .= '<div id="in-this-photo">' . $i1[0]['tag'] . '</div>';
 		}
 
-		if($cmd == 'edit') {
+		if($cmd === 'edit') {
 			$edit_tpl = load_view_file('view/photo_edit.tpl');
 			$o .= replace_macros($edit_tpl, array(
 				'$id' => $ph[0]['id'],

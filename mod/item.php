@@ -95,9 +95,9 @@ function item_post(&$a) {
 
 	$post_type = notags(trim($_POST['type']));
 
-	if($post_type == 'net-comment') {
+	if($post_type === 'net-comment') {
 		if($parent_item !== null) {
-			if($parent_item['type'] == 'remote') {
+			if($parent_item['type'] === 'remote') {
 				$post_type = 'remote-comment';
 			} 
 			else {		
@@ -107,7 +107,7 @@ function item_post(&$a) {
 	}
 
 	$wall = 0;
-	if($post_type == 'wall' || $post_type == 'wall-comment')
+	if($post_type === 'wall' || $post_type === 'wall-comment')
 		$wall = 1;
 
 	if(! strlen($verb))
@@ -244,7 +244,7 @@ function item_content(&$a) {
 
 	$uid = $_SESSION['uid'];
 
-	if(($a->argc == 3) && ($a->argv[1] == 'drop') && intval($a->argv[2])) {
+	if(($a->argc == 3) && ($a->argv[1] === 'drop') && intval($a->argv[2])) {
 
 		// locate item to be deleted
 
