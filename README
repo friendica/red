@@ -18,13 +18,21 @@ A single instance of Mistpark Server supports up to several hundred people
 using commodity hosting hardware. Each of these people can connect with any 
 other mistpark/DFRN cell anywhere in the world and share photos, links, 
 status updates, whatever. Also available from Mistpark Labs is 
-Mistpark Personal Edition, which supports a single user. 
+Mistpark Personal Edition, which supports a single user.
+
+Mistpark may also be closed off from the global community and used to support
+social networking amongst corporate, educational, religious, and other private
+communities. This makes it an excellent choice for providing a safe social
+networking environment to young teenagers, as opposed to (for instance)
+Facebook.
 
 Every user has unlimited profiles available. There is a "public profile" which 
 can be seen by anybody. Additional profiles may be tailored to specific
 groups or individuals - and shown when a known friend visits your site.
 
-Groups may be setup for closed conversations (like Diaspora's "aspects"). 
+Groups may be setup for closed conversations (like Diaspora's "aspects"). In 
+this way your conversations with drinking buddies may be kept separate from 
+conversations with co-workers (for instance).  
 
 Please see http://dfrn.org for more information on the mistpark/DFRN project.
 
@@ -32,7 +40,7 @@ We will be providing a support site specifically for mistpark at
 http://mistpark.com at a future (unspecified) date. We are still 
 evaluating wiki, forum, and bug-tracking software for use on the project. 
 At the present time, you may contact the author and raise issues via
-the source code repository on github. 
+the source code repository on github.com. 
 
 Please support mistpark with a donation.  
 
