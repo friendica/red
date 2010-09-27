@@ -8,7 +8,7 @@ function notifications_post(&$a) {
 	
 	$request_id = (($a->argc > 1) ? $a->argv[1] : 0);
 	
-	if($request_id == "all")
+	if($request_id === "all")
 		return;
 
 	if($request_id) {

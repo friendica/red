@@ -567,15 +567,19 @@ function paginate(&$a) {
 
 if(! function_exists('expand_acl')) {
 function expand_acl($s) {
+	// turn string array of angle-bracketed elements into numeric array
+	// e.g. "<1><2><3>" => array(1,2,3);
+	$ret = array();
 
 	if(strlen($s)) {
-		$a = explode('<',$s);
-		for($x = 0; $x < count($a); $x ++) {
-			$a[$x] = intval(str_replace(array('<','>'),array('',''),$a[$x]));
+		$t = str_replace('<','',$s);
+		$a = explode('>',$t);
+		foreach($a as $aa) {
+			if(intval($aa))
+				$ret[] = intval($aa);
 		}
-		return $a;
 	}
-	return array();
+	return $ret;
 }}		
 
 if(! function_exists('sanitise_acl')) {

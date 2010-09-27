@@ -115,7 +115,7 @@
 			$recipients = array_unique(array_merge($recipients,$allow_people,$allow_groups),SORT_NUMERIC);
 			$deny = array_unique(array_merge($deny_people,$deny_groups),SORT_NUMERIC);
 			$recipients = array_diff($recipients,$deny);
-	
+
 			$conversant_str = dbesc(implode(', ',$conversants));
 
 
@@ -253,7 +253,7 @@
 			}
 		}
 	}
-	$atom .= "</feed>\r\n";
+	$atom .= '</feed>' . "\r\n";
 
 	if($debugging)
 		echo $atom;
