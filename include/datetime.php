@@ -1,5 +1,7 @@
 <?php
 
+// two-level sort for timezones.
+
 if(! function_exists('timezone_cmp')) {
 function timezone_cmp($a, $b) {
 	if(strstr($a,'/') && strstr($b,'/')) {
@@ -12,6 +14,7 @@ function timezone_cmp($a, $b) {
 	return ( t($a) < t($b)) ? -1 : 1;
 }}
 
+// emit a timezone selector grouped (primarily) by continent
 
 if(! function_exists('select_timezone')) {
 function select_timezone($current = 'America/Los_Angeles') {
@@ -52,6 +55,11 @@ function select_timezone($current = 'America/Los_Angeles') {
 	return $o;
 }}
 
+// General purpose date parse/convert function.
+// $from = source timezone
+// $to   = dest timezone
+// $s    = some parseable date/time string
+// $fmt  = output format
 
 if(! function_exists('datetime_convert')) {
 function datetime_convert($from = 'UTC', $to = 'UTC', $s = 'now', $fmt = "Y-m-d H:i:s") {
@@ -71,12 +79,24 @@ function datetime_convert($from = 'UTC', $to = 'UTC', $s = 'now', $fmt = "Y-m-d 
 	return($d->format($fmt));
 }}
 
+// wrapper for date selector, tailored for use in birthday fields
+
 function dob($dob) {
 	list($year,$month,$day) = sscanf($dob,'%4d-%2d-%2d');
 	$y = datetime_convert('UTC',date_default_timezone_get(),'now','Y');
 	$o = datesel('',1920,$y,true,$year,$month,$day);
 	return $o;
 }
+
+
+// returns a date selector.
+// $pre         = prefix (if needed) for HTML name and class fields
+// $ymin        = first year shown in selector dropdown
+// $ymax        = last year shown in selector dropdown
+// $allow_blank = allow an empty response on any field
+// $y           = already selected year
+// $m           = already selected month
+// $d           = already selected day
 
 if(! function_exists('datesel')) {
 function datesel($pre,$ymin,$ymax,$allow_blank,$y,$m,$d) {
@@ -111,6 +131,10 @@ function datesel($pre,$ymin,$ymax,$allow_blank,$y,$m,$d) {
 	return $o;
 }}
 
+// implements "3 seconds ago" etc.
+// based on $posted_date, (UTC).
+// Results relative to current timezone
+// Limited to range of timestamps
 
 if(! function_exists('relative_date')) {
 function relative_date($posted_date) {
@@ -143,6 +167,16 @@ function relative_date($posted_date) {
 }}
 
 
+
+// Returns age in years, given a date of birth,
+// the timezone of the person whose date of birth is provided,
+// and the timezone of the person viewing the result.
+// Why? Bear with me. Let's say I live in Mittagong, Australia. My birthday 
+// is on New Year's. You live in San Bruno, California.
+// When exactly are you going to see my age increase?
+// A: 5:00 AM Dec 31. That's when I start celebrating, and when 
+// my birthday arrives in your timezone.
+   
 function age($dob,$owner_tz = '',$viewer_tz = '') {
 	if(! intval($dob))
 		return 0;
