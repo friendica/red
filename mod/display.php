@@ -158,7 +158,7 @@ function display_content(&$a) {
 						'$parent' => $item['parent'],
 						'$profile_uid' =>  $a->profile['uid'],
 						'$mylink' => $contact['url'],
-						'$mytitle' => t('Me'),
+						'$mytitle' => t('This is you'),
 						'$myphoto' => $contact['thumb'],
 						'$ww' => ''
 					));

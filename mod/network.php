@@ -223,7 +223,7 @@ function network_content(&$a, $update = 0) {
 					'$parent' => $item['parent'],
 					'$profile_uid' =>  $_SESSION['uid'],
 					'$mylink' => $a->contact['url'],
-					'$mytitle' => t('Me'),
+					'$mytitle' => t('This is you'),
 					'$myphoto' => $a->contact['thumb'],
 					'$ww' => $commentww
 				));
