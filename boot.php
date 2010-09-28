@@ -49,6 +49,13 @@ define ( 'GRAVITY_LIKE',         3);
 define ( 'GRAVITY_COMMENT',      6);
 
 
+// Our main application structure for the life of this page
+// Primarily deals with the URL that got us here
+// and tries to make some sense of it, and 
+// stores our page contents and config storage
+// and anything else that might need to be passed around 
+// before we spit the page out. 
+
 if(! class_exists('App')) {
 class App {
 
@@ -163,6 +170,12 @@ class App {
 }}
 
 
+// Multi-purpose function to check variable state.
+// Usage: x($var) or $x($array,'key')
+// returns false if variable/key is not set
+// if variable is set, returns 1 if has 'non-zero' value, otherwise returns 0.
+// e.g. x('') or x(0) returns 0;
+
 if(! function_exists('x')) {
 function x($s,$k = NULL) {
 	if($k != NULL) {
@@ -184,12 +197,17 @@ function x($s,$k = NULL) {
 	}
 }}
 
+// called from db initialisation if db is dead.
+
 if(! function_exists('system_unavailable')) {
 function system_unavailable() {
 	include('system_unavailable.php');
 	killme();
 }}
 
+// Primarily involved with database upgrade, but also sets the 
+// base url for use in cmdline programs which don't have
+// $_SERVER variables.
 
 if(! function_exists('check_config')) {
 function check_config(&$a) {
@@ -226,6 +244,11 @@ function check_config(&$a) {
 }}
 
 
+// This is our template processor.
+// $s is the string requiring macro substitution.
+// $r is an array of key value pairs (search => replace)
+// returns substituted string.
+
 
 if(! function_exists('replace_macros')) {  
 function replace_macros($s,$r) {
@@ -243,11 +266,16 @@ function replace_macros($s,$r) {
 }}
 
 
+// load string tranlsation table for alternate language
+// not yet implemented
+
 if(! function_exists('load_translation_table')) {
 function load_translation_table($lang) {
 	global $a;
 
 }}
+
+// translate string if translation exists
 
 if(! function_exists('t')) {
 function t($s) {
@@ -257,6 +285,9 @@ function t($s) {
 		return $a->strings[$s];
 	return $s;
 }}
+
+// curl wrapper. If binary flag is true, return binary
+// results. 
 
 if(! function_exists('fetch_url')) {
 function fetch_url($url,$binary = false) {
@@ -283,6 +314,7 @@ function fetch_url($url,$binary = false) {
 	return($s);
 }}
 
+// post request to $url. $params is an array of post variables.
 
 if(! function_exists('post_url')) {
 function post_url($url,$params) {
@@ -309,11 +341,18 @@ function post_url($url,$params) {
 	return($s);
 }}
 
+// random hash, 64 chars
 
 if(! function_exists('random_string')) {
 function random_string() {
 	return(hash('sha256',uniqid(rand(),true)));
 }}
+
+// This is our primary input filter. The high bit hack only involved some old
+// IE browser, forget which. 
+// Use this on any text input where angle chars are not valid or permitted
+// They will be replaced with safer brackets. This may be filtered further
+// if these are not allowed either.   
 
 if(! function_exists('notags')) {
 function notags($string) {
@@ -321,11 +360,17 @@ function notags($string) {
 	return(str_replace(array("<",">","\xBA","\xBC","\xBE"), array('[',']','','',''), $string));
 }}
 
+// use this on "body" or "content" input where angle chars shouldn't be removed,
+// and allow them to be safely displayed.
+
 if(! function_exists('escape_tags')) {
 function escape_tags($string) {
 
 	return(htmlspecialchars($string));
 }}
+
+// wrapper for adding a login box. If $register == true provide a registration
+// link. This will most always depend on the value of $a->config['register_policy'].
 
 if(! function_exists('login')) {
 function login($register = false) {
@@ -344,6 +389,8 @@ function login($register = false) {
 	return $o;
 }}
 
+// generate a string that's random, but usually pronounceable. 
+// used to generate initial passwords
 
 if(! function_exists('autoname')) {
 function autoname($len) {
@@ -413,11 +460,15 @@ function autoname($len) {
 	return $word;
 }}
 
+// Used to end the current process, after saving session state. 
+
 if(! function_exists('killme')) {
 function killme() {
 	session_write_close();
 	exit;
 }}
+
+// redirect to another URL and terminate this process.
 
 if(! function_exists('goaway')) {
 function goaway($s) {
@@ -425,6 +476,9 @@ function goaway($s) {
 	killme();
 }}
 
+// Generic XML return
+// Outputs a basic XML status structure to STDOUT, with a value variable 
+// of $st and terminates the current process. 
 
 if(! function_exists('xml_status')) {
 function xml_status($st) {
@@ -434,12 +488,16 @@ function xml_status($st) {
 	killme();
 }}
 
+// Returns the uid of locally logged on user or false.
+
 if(! function_exists('local_user')) {
 function local_user() {
 	if((x($_SESSION,'authenticated')) && (x($_SESSION,'uid')))
 		return $_SESSION['uid'];
 	return false;
 }}
+
+// Returns contact id of authenticated site visitor or false
 
 if(! function_exists('remote_user')) {
 function remote_user() {
@@ -448,6 +506,9 @@ function remote_user() {
 	return false;
 }}
 
+// contents of $s are displayed prominently on the page the next time
+// a page is loaded. Usually used for errors or alerts.
+
 if(! function_exists('notice')) {
 function notice($s) {
 
@@ -455,11 +516,17 @@ function notice($s) {
 
 }}
 
+// wrapper around config to limit the text length of an incoming message
+
 if(! function_exists('get_max_import_size')) {
 function get_max_import_size() {
 	global $a;
 	return ((x($a->config,'max_import_size')) ? $a->config['max_import_size'] : 0 );
 }}
+
+
+// escape text ($str) for XML transport
+// returns escaped text.
 
 if(! function_exists('xmlify')) {
 function xmlify($str) {
@@ -500,6 +567,9 @@ function xmlify($str) {
 	return($buffer);
 }}
 
+// undo an xmlify
+// pass xml escaped text ($s), returns unescaped text
+
 if(! function_exists('unxmlify')) {
 function unxmlify($s) {
 	$ret = str_replace('&amp;','&', $s);
@@ -507,11 +577,22 @@ function unxmlify($s) {
 	return $ret;	
 }}
 
+// convenience wrapper, reverse the operation "bin2hex"
+
 if(! function_exists('hex2bin')) {
 function hex2bin($s) {
 	return(pack("H*",$s));
 }}
 
+// Automatic pagination.
+// To use, get the count of total items.
+// Then call $a->set_pager_total($number_items);
+// Optionally call $a->set_pager_itemspage($n) to the number of items to display on each page
+// Then call paginate($a) after the end of the display loop to insert the pager block on the page
+// (assuming there are enough items to paginate).
+// When using with SQL, the setting LIMIT %d, %d => $a->pager['start'],$a->pager['itemspage']
+// will limit the results to the correct items for the current page. 
+// The actual page handling is then accomplished at the application layer. 
 
 if(! function_exists('paginate')) {
 function paginate(&$a) {
@@ -565,6 +646,8 @@ function paginate(&$a) {
 	return $o;
 }}
 
+// Turn user/group ACLs stored as angle bracketed text into arrays
+
 if(! function_exists('expand_acl')) {
 function expand_acl($s) {
 	// turn string array of angle-bracketed elements into numeric array
@@ -582,6 +665,8 @@ function expand_acl($s) {
 	return $ret;
 }}		
 
+// Used to wrap ACL elements in angle brackets for storage 
+
 if(! function_exists('sanitise_acl')) {
 function sanitise_acl(&$item) {
 	if(intval($item))
@@ -589,6 +674,8 @@ function sanitise_acl(&$item) {
 	else
 		unset($item);
 }}
+
+// retrieve a "family" of config variables from database to cached storage
 
 if(! function_exists('load_config')) {
 function load_config($family) {
@@ -604,6 +691,13 @@ function load_config($family) {
 	}
 }}
 
+// get a particular config variable given the family name
+// and key. Returns false if not set.
+// $instore is only used by the set_config function
+// to determine if the key already exists in the DB
+// If a key is found in the DB but doesn't exist in
+// local config cache, pull it into the cache so we don't have
+// to hit the DB again for this item.
 
 if(! function_exists('get_config')) {
 function get_config($family, $key, $instore = false) {
@@ -632,6 +726,10 @@ function get_config($family, $key, $instore = false) {
 	return false;
 }}
 
+// Store a config value ($value) in the category ($family)
+// under the key ($key)
+// Return the value, or false if the database update failed
+
 if(! function_exists('set_config')) {
 function set_config($family,$key,$value) {
 
@@ -657,6 +755,9 @@ function set_config($family,$key,$value) {
 		return $value;
 	return $ret;
 }}
+
+// convert an XML document to a normalised, case-corrected array
+// used by webfinger
 
 if(! function_exists('convert_xml_element_to_array')) {
 function convert_xml_element_to_array($xml_element, &$recursion_depth=0) {
@@ -700,6 +801,11 @@ function convert_xml_element_to_array($xml_element, &$recursion_depth=0) {
         }
 }}
 
+// Given an email style address, perform webfinger lookup and 
+// return the resulting DFRN profile URL.
+// If this isn't an email style address just return $s.
+// Return an empty string if email-style addresses but webfinger fails,
+// or if the resultant personal XRD doesn't contain a DFRN profile.
 
 if(! function_exists('webfinger')) {
 function webfinger($s) {
@@ -752,6 +858,9 @@ function webfinger($s) {
 	return '';
 }}
 
+
+// Convert an ACL array to a storable string
+
 if(! function_exists('perms2str')) {
 function perms2str($p) {
 	$ret = '';
@@ -762,6 +871,9 @@ function perms2str($p) {
 	}
 	return $ret;
 }}
+
+// generate a guaranteed unique (for this domain) item ID for ATOM
+// safe from birthday paradox
 
 if(! function_exists('item_new_uri')) {
 function item_new_uri($hostname,$uid) {
@@ -780,6 +892,9 @@ function item_new_uri($hostname,$uid) {
 	return $uri;
 }}
 
+// Generate a guaranteed unique photo ID.
+// safe from birthday paradox
+
 if(! function_exists('photo_new_resource')) {
 function photo_new_resource() {
 
@@ -796,11 +911,16 @@ function photo_new_resource() {
 }}
 
 
+// Returns logged in user ID
 
 if(! function_exists('get_uid')) {
 function get_uid() {
 	return ((x($_SESSION,'uid')) ? intval($_SESSION['uid']) : 0) ;
 }}
+
+// Take a URL from the wild, prepend http:// if necessary
+// and check DNS to see if it's real
+// return true if it's OK, false if something is wrong with it
 
 if(! function_exists('validate_url')) {
 function validate_url(&$url) {
@@ -816,6 +936,11 @@ function validate_url(&$url) {
 	}
 	return true;
 }}
+
+// Check $url against our list of allowed sites,
+// wildcards allowed. If allowed_sites is unset return true;
+// If url is allowed, return true.
+// otherwise, return false
 
 if(! function_exists('allowed_url')) {
 function allowed_url($url) {
@@ -854,6 +979,11 @@ function allowed_url($url) {
 	return $found;
 }}
 
+// check if email address is allowed to register here.
+// Compare against our list (wildcards allowed).
+// Returns false if not allowed, true if allowed or if
+// allowed list is not configured.
+
 if(! function_exists('allowed_email')) {
 function allowed_email($email) {
 
@@ -883,6 +1013,12 @@ function allowed_email($email) {
 	return $found;
 }}
 
+// Format the like/dislike text for a profile item
+// $cnt = number of people who like/dislike the item
+// $arr = array of pre-linked names of likers/dislikers
+// $type = one of 'like, 'dislike'
+// $id  = item id
+// returns formatted text
 
 if(! function_exists('format_like')) {
 function format_like($cnt,$arr,$type,$id) {
@@ -904,6 +1040,10 @@ function format_like($cnt,$arr,$type,$id) {
 	}
 	return $o;
 }}
+
+
+// wrapper to load a view template, checking for alternate
+// languages before falling back to the default
 
 if(! function_exists('load_view_file')) {
 function load_view_file($s) {
