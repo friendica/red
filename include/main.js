@@ -43,6 +43,7 @@
 		$.ajaxSetup({cache: false});
 		msie = $.browser.msie ;
  		NavUpdate(); 
+		sparkler();
 		// Allow folks to stop the ajax page updates with the pause/break key
 		$(document).keypress(function(event) {
 			if(event.keyCode == '19') {
@@ -58,6 +59,20 @@
 			}
 		});					
 	});
+
+	var spark = false;
+	function sparkler() {
+		if(spark) { 
+			$('.sparkle').css({cursor: 'pointer'});
+			spark = false;
+		}
+		else {
+			$('.sparkle').css({cursor: 'crosshair'});
+			spark = true;
+		}
+		setTimeout(sparkler,500);
+	}
+	
 
 	function NavUpdate() {
 

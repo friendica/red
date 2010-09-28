@@ -252,7 +252,7 @@ function network_content(&$a, $update = 0) {
 			// Can we use our special contact URL for this author? 
 
 			if(strlen($item['author-link'])) {
-				if($item['author-link'] == $item['url']) {
+				if($item['author-link'] == $item['url'] && (! $item['self'])) {
 					$profile_link = $redirect_url;
 					$sparkle = ' sparkle';
 				}
