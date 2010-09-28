@@ -113,24 +113,28 @@ function display_content(&$a) {
 	if(count($r)) {
 
 		foreach($r as $item) {
-
+			$sparkle = '';
 			if(($item['verb'] == ACTIVITY_LIKE) && ($item['id'] != $item['parent'])) {
 				$url = $item['url'];
-				if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'])) 
+				if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'])) {
 					$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
+					$sparkle = ' class="sparkle"';
+				}
 				if(! is_array($alike[$item['parent'] . '-l']))
 					$alike[$item['parent'] . '-l'] = array();
 				$alike[$item['parent']] ++;
-				$alike[$item['parent'] . '-l'][] = '<a href="'. $url . '">' . $item['name'] . '</a>';
+				$alike[$item['parent'] . '-l'][] = '<a href="'. $url . '"' . $sparkle . '>' . $item['name'] . '</a>';
 			}
 			if(($item['verb'] == ACTIVITY_DISLIKE) && ($item['id'] != $item['parent'])) {
 				$url = $item['url'];
-				if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'])) 
+				if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'])) { 
 					$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
+					$sparkle = ' class="sparkle"';
+				}
 				if(! is_array($dlike[$item['parent'] . '-l']))
 					$dlike[$item['parent'] . '-l'] = array();
 				$dlike[$item['parent']] ++;
-				$dlike[$item['parent'] . '-l'][] = '<a href="'. $url . '">' . $item['name'] . '</a>';
+				$dlike[$item['parent'] . '-l'][] = '<a href="'. $url . '"' . $sparkle . '>' . $item['name'] . '</a>';
 			}
 		}
 
@@ -163,13 +167,21 @@ function display_content(&$a) {
 
 
 			$profile_url = $item['url'];
+			$sparkle = '';
 
 
 			$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 
+			if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'] )) {
+				$profile_url = $redirect_url;
+				$sparkle = ' sparkle';
+			}
+
 
 			// Top-level wall post not written by the wall owner (wall-to-wall)
 			// First figure out who owns it. 
+
+			$osparkle = '';
 
 			if(($item['parent'] == $item['item_id']) && (! $item['self'])) {
 				
@@ -189,9 +201,11 @@ function display_content(&$a) {
 					$template = $wallwall;
 					$commentww = 'ww';
 					// If it is our contact, use a friendly redirect link
-					if(($item['owner-link'] == $item['url']) && ($item['rel'] == REL_VIP || $item['rel'] == REL_BUD))
+					if(($item['owner-link'] == $item['url']) && ($item['rel'] == REL_VIP || $item['rel'] == REL_BUD)) {
 						$owner_url = $redirect_url;
-						$owner_url = $redirect_url;
+						$osparkle = ' sparkle';
+					}
+
 
 				}
 			}
@@ -219,6 +233,8 @@ function display_content(&$a) {
 				'$id' => $item['item_id'],
 				'$profile_url' => $profile_link,
 				'$name' => $profile_name,
+				'$sparkle' => $sparkle,
+				'$osparkle' => $osparkle,
 				'$thumb' => $profile_avatar,
 				'$title' => $item['title'],
 				'$body' => bbcode($item['body']),

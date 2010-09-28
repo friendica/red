@@ -13,7 +13,7 @@
 		</div>
 		<div class="contact-entry-nav-end"></div>
 		<div class="contact-entry-photo" id="contact-entry-photo-$id" >
-			<a href="$url" title="$img_hover" /><img src="$thumb" alt="$name" /></a>
+			<a href="$url" title="$img_hover" /><img src="$thumb" $sparkle alt="$name" /></a>
 		</div>
 			
 	</div>

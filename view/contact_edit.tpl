@@ -9,7 +9,7 @@
 	<div id="contact-edit-photo-wrapper" >
 		<img id="contact-edit-direction-icon" src="$dir_icon" alt="$alt_text" title="$alt_text" />
 		<div id="contact-edit-photo" >
-			<a href="$url" title="Visit $name's profile" /><img src="$photo" alt="$name" /></a>
+			<a href="$url" title="Visit $name's profile" /><img src="$photo" $sparkle alt="$name" /></a>
 		</div>
 		<div id="contact-edit-photo-end" ></div>
 	</div>

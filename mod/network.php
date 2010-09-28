@@ -135,23 +135,29 @@ function network_content(&$a, $update = 0) {
 	if(count($r)) {
 		foreach($r as $item) {
 
+			$sparkle = '';
+
 			if(($item['verb'] == ACTIVITY_LIKE) && ($item['id'] != $item['parent'])) {
 				$url = $item['url'];
-				if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'])) 
+				if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'])) { 
 					$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
+					$sparkle = ' class="sparkle"';
+				}
 				if(! is_array($alike[$item['parent'] . '-l']))
 					$alike[$item['parent'] . '-l'] = array();
 				$alike[$item['parent']] ++;
-				$alike[$item['parent'] . '-l'][] = '<a href="'. $url . '">' . $item['name'] . '</a>';
+				$alike[$item['parent'] . '-l'][] = '<a href="'. $url . '"' . $sparkle . '>' . $item['name'] . '</a>';
 			}
 			if(($item['verb'] == ACTIVITY_DISLIKE) && ($item['id'] != $item['parent'])) {
 				$url = $item['url'];
-				if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'])) 
+				if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'])) { 
 					$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
+					$sparkle = ' class="sparkle"';
+				}
 				if(! is_array($dlike[$item['parent'] . '-l']))
 					$dlike[$item['parent'] . '-l'] = array();
 				$dlike[$item['parent']] ++;
-				$dlike[$item['parent'] . '-l'][] = '<a href="'. $url . '">' . $item['name'] . '</a>';
+				$dlike[$item['parent'] . '-l'][] = '<a href="'. $url . '"' . $sparkle . '>' . $item['name'] . '</a>';
 			}
 		}
 
@@ -169,6 +175,8 @@ function network_content(&$a, $update = 0) {
 
 			// Top-level wall post not written by the wall owner (wall-to-wall)
 			// First figure out who owns it. 
+
+			$osparkle = '';
 
 			if(($item['parent'] == $item['item_id']) && (! $item['self'])) {
 
@@ -188,8 +196,11 @@ function network_content(&$a, $update = 0) {
 					$template = $wallwall;
 					$commentww = 'ww';
 					// If it is our contact, use a friendly redirect link
-					if(($item['owner-link'] == $item['url']) && ($item['rel'] == REL_VIP || $item['rel'] == REL_BUD))
+					if(($item['owner-link'] == $item['url']) 
+						&& ($item['rel'] == REL_VIP || $item['rel'] == REL_BUD)) {
 						$owner_url = $redirect_url;
+						$osparkle = ' sparkle';
+					}
 
 				}
 			}
@@ -223,8 +234,10 @@ function network_content(&$a, $update = 0) {
 
 
 	
-			if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'] ))
+			if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'] )) {
 				$profile_url = $redirect_url;
+				$sparkle = ' sparkle';
+			}
 
 			$photo = $item['photo'];
 			$thumb = $item['thumb'];
@@ -239,10 +252,14 @@ function network_content(&$a, $update = 0) {
 			// Can we use our special contact URL for this author? 
 
 			if(strlen($item['author-link'])) {
-				if($item['author-link'] == $item['url'])
+				if($item['author-link'] == $item['url']) {
 					$profile_link = $redirect_url;
-				else
+					$sparkle = ' sparkle';
+				}
+				else {
 					$profile_link = $item['author-link'];
+					$sparkle = '';
+				}
 			}
 
 
@@ -257,6 +274,8 @@ function network_content(&$a, $update = 0) {
 				'$profile_url' => $profile_link,
 				'$name' => $profile_name,
 				'$thumb' => $profile_avatar,
+				'$osparkle' => $osparkle,
+				'$sparkle' => $sparkle,
 				'$title' => $item['title'],
 				'$body' => bbcode($item['body']),
 				'$ago' => relative_date($item['created']),

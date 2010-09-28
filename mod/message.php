@@ -211,6 +211,7 @@ function message_content(&$a) {
 				'$id' => $rr['id'],
 				'$from_name' =>$rr['from-name'],
 				'$from_url' => $a->get_baseurl() . '/redir/' . $rr['contact-id'],
+				'$sparkle' => ' sparkle',
 				'$from_photo' => $rr['from-photo'],
 				'$subject' => (($rr['mailseen']) ? $rr['title'] : '<strong>' . $rr['title'] . '</strong>'),
 				'$delete' => t('Delete conversation'),
@@ -261,11 +262,19 @@ function message_content(&$a) {
 
 		$tpl = load_view_file('view/mail_conv.tpl');
 		foreach($messages as $message) {
+			if($message['from-url'] == $myprofile) {
+				$from_url = $myprofile;
+				$sparkle = '';
+			}
+			else {
+				$from_url = $a->get_baseurl() . '/redir/' . $message['contact-id'];
+				$sparkle = ' sparkle';
+			}
 			$o .= replace_macros($tpl, array(
 				'$id' => $message['id'],
 				'$from_name' =>$message['from-name'],
-				'$from_url' => (($message['from-url'] == $myprofile) 
-					? $myprofile : $a->get_baseurl() . '/redir/' . $message['contact-id']),
+				'$from_url' => $from_url,
+				'$sparkle' => $sparkle,
 				'$from_photo' => $message['from-photo'],
 				'$subject' => $message['title'],
 				'$body' => bbcode($message['body']),

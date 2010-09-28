@@ -268,29 +268,35 @@ function profile_content(&$a, $update = 0) {
 
 		foreach($r as $item) {
 
+			$sparkle = '';
+			
 			if(($item['verb'] == ACTIVITY_LIKE) && ($item['id'] != $item['parent'])) {
 				$url = $item['url'];
-				if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'])) 
+				if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'])) {
 					$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
+					$sparkle = ' class="sparkle" ';
+				}
 				if(! is_array($alike[$item['parent'] . '-l']))
 					$alike[$item['parent'] . '-l'] = array();
 				$alike[$item['parent']] ++;
-				$alike[$item['parent'] . '-l'][] = '<a href="'. $url . '">' . $item['name'] . '</a>';
+				$alike[$item['parent'] . '-l'][] = '<a href="'. $url . '"'. $sparkle .'>' . $item['name'] . '</a>';
 			}
 			if(($item['verb'] == ACTIVITY_DISLIKE) && ($item['id'] != $item['parent'])) {
 				$url = $item['url'];
-				if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'])) 
+				if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'])) { 
 					$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
+					$sparkle = ' class="sparkle" ';
+				}
 				if(! is_array($dlike[$item['parent'] . '-l']))
 					$dlike[$item['parent'] . '-l'] = array();
 				$dlike[$item['parent']] ++;
-				$dlike[$item['parent'] . '-l'][] = '<a href="'. $url . '">' . $item['name'] . '</a>';
+				$dlike[$item['parent'] . '-l'][] = '<a href="'. $url . '"'. $sparkle .'>' . $item['name'] . '</a>';
 			}
 		}
 
 		foreach($r as $item) {
 
-		
+			$sparkle = '';		
 			$comment = '';
 			$likebuttons = '';
 
@@ -313,7 +319,7 @@ function profile_content(&$a, $update = 0) {
 						'$parent' => $item['parent'],
 						'$profile_uid' =>  $a->profile['profile_uid'],
 						'$mylink' => $contact['url'],
-						'$mytitle' => t('Me'),
+						'$mytitle' => t('This is you'),
 						'$myphoto' => $contact['thumb'],
 						'$ww' => ''
 					));
@@ -327,9 +333,12 @@ function profile_content(&$a, $update = 0) {
 			// I can go directly to their profile as an authenticated guest.
 
 			if(local_user() && ($item['contact-uid'] == $_SESSION['uid']) 
-				&& ($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'] ))
+				&& ($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'] )) {
 				$profile_url = $redirect_url;
-	
+				$sparkle = ' sparkle';
+			}
+			else
+				$sparkle = '';
 
 			// We received this post via a remote feed. It's either a wall-to-wall or a remote comment. The author is
 			// known to us and is reflected in the contact-id for this item. We can use the contact url or redirect rather than 
@@ -357,6 +366,7 @@ function profile_content(&$a, $update = 0) {
 				'$profile_url' => $profile_link,
 				'$name' => $profile_name,
 				'$thumb' => $profile_avatar,
+				'$sparkle' => $sparkle,
 				'$title' => $item['title'],
 				'$body' => bbcode($item['body']),
 				'$ago' => relative_date($item['created']),

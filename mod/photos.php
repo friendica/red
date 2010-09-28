@@ -166,7 +166,7 @@ function photos_post(&$a) {
 				$drop_id = intval($i[0]['id']);
 				$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 				
-				$proc_debug = get_config('system','proc_debug']);
+				$proc_debug = get_config('system','proc_debug');
 
 				// send the notification upstream/downstream as the case may be
 
@@ -406,10 +406,31 @@ function photos_content(&$a) {
 
 	$owner_uid = $a->data['user']['uid'];
 
+
+
+	$contact = null;
+	$remote_contact = false;
+
 	if(remote_user()) {
 		$contact_id = $_SESSION['visitor_id'];
 		$groups = init_groups_visitor($contact_id);
+		$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			intval($contact_id),
+			intval($owner_uid)
+		);
+		if(count($r)) {
+			$contact = $r[0];
+			$remote_contact = true;
+		}
 	}
+
+	if(! $remote_contact) {
+		if(local_user()) {
+			$contact_id = $_SESSION['cid'];
+			$contact = $a->contact;
+		}
+	}
+
 
 	// default permissions - anonymous user
 
@@ -669,6 +690,9 @@ function photos_content(&$a) {
 						'$id' => $i1[0]['id'],
 						'$parent' => $i1[0]['id'],
 						'$profile_uid' =>  $a->data['user']['uid'],
+						'$mylink' => $contact['url'],
+						'$mytitle' => t('This is you'),
+						'$myphoto' => $contact['thumb'],
 						'$ww' => ''
 					));
 				}
@@ -691,16 +715,24 @@ function photos_content(&$a) {
 								'$id' => $item['item_id'],
 								'$parent' => $item['parent'],
 								'$profile_uid' =>  $a->data['user']['uid'],
+								'$mylink' => $contact['url'],
+								'$mytitle' => t('This is you'),
+								'$myphoto' => $contact['thumb'],
 								'$ww' => ''
 							));
 						}
 					}
 
-					$profile_url = $item['url'];
 
 					if(local_user() && ($item['contact-uid'] == get_uid()) 
-						&& ($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'] ))
+						&& ($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'] )) {
 						$profile_url = $redirect_url;
+						$sparkle = ' sparkle';
+					}
+					else {
+						$profile_url = $item['url'];
+						$sparkle = '';
+					}
  
 					$profile_name = ((strlen($item['author-name'])) ? $item['author-name'] : $item['name']);
 					$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $item['thumb']);
@@ -717,6 +749,7 @@ function photos_content(&$a) {
 						'$profile_url' => $profile_link,
 						'$name' => $profile_name,
 						'$thumb' => $profile_avatar,
+						'$sparkle' => $sparkle,
 						'$title' => $item['title'],
 						'$body' => bbcode($item['body']),
 						'$ago' => relative_date($item['created']),

@@ -168,6 +168,14 @@ function contacts_content(&$a) {
 				break;
 		}
 
+		if($r[0]['rel'] != REL_FAN) {
+			$url = "redir/{$r[0]['id']}";
+			$sparkle = ' class="sparkle" ';
+		}
+		else { 
+			$url = $r[0]['url'];
+			$sparkle = '';
+		}
 		$o .= replace_macros($tpl,array(
 			'$poll_interval' => contact_poll_interval($r[0]['priority']),
 			'$last_update' => (($r[0]['last-update'] == '0000-00-00 00:00:00') 
@@ -186,7 +194,8 @@ function contacts_content(&$a) {
 			'$name' => $r[0]['name'],
 			'$dir_icon' => $dir_icon,
 			'$alt_text' => $alt_text,
-			'$url' => (($r[0]['rel'] != REL_FAN) ? "redir/{$r[0]['id']}" : $r[0]['url'] )
+			'$sparkle' => $sparkle,
+			'$url' => $url
 
 		));
 
@@ -258,6 +267,16 @@ function contacts_content(&$a) {
 					break;
 			}
 
+			if($rr['rel'] != REL_FAN) {
+				$url = "redir/{$rr['id']}";
+				$sparkle = ' class="sparkle" ';
+			}
+			else { 
+				$url = $rr['url'];
+				$sparkle = '';
+			}
+
+
 			$o .= replace_macros($tpl, array(
 				'$img_hover' => t('Visit ') . $rr['name'] . t('\'s profile'),
 				'$edit_hover' => t('Edit contact'),
@@ -266,7 +285,8 @@ function contacts_content(&$a) {
 				'$dir_icon' => $dir_icon,
 				'$thumb' => $rr['thumb'], 
 				'$name' => $rr['name'],
-				'$url' => (($rr['rel'] != REL_FAN) ? "redir/{$rr['id']}" : $rr['url'] )
+				'$sparkle' => $sparkle,
+				'$url' => $url
 			));
 		}
 		$o .= '<div id="contact-edit-end"></div>';

@@ -1586,3 +1586,7 @@ input#dfrn-url {
   bottom: 5px;
   right: 5px;
 }
+
+.sparkle {
+	cursor: crosshair;
+}
