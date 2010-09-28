@@ -165,7 +165,7 @@ function dfrn_confirm_post(&$a) {
 			if((count($r)) && ($r[0]['notify-flags'] & NOTIFY_CONFIRM)) {
 
 				$tpl = (($new_relation == $REL_BUD) 
-					? load_view_file('view/friend_complete_eml.tpl');
+					? load_view_file('view/friend_complete_eml.tpl')
 					: load_view_file('view/intro_complete_eml.tpl'));
 			
 				$email_tpl = replace_macros($tpl, array(
