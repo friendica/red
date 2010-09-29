@@ -11,6 +11,7 @@
 		</div>
 	
 		<div class="wall-item-wrapper" id="wall-item-wrapper-$id" >
+			$lock
 			<a href="$profile_url" title="View $name's profile" class="wall-item-name-link"><span class="wall-item-name$sparkle" id="wall-item-name-$id" >$name</span></a> to <a href="$owner_url" title="View $owner_name's profile" class="wall-item-name-link"><span class="wall-item-name$osparkle" id="wall-item-ownername-$id">$owner_name</span></a> via Wall-To-Wall:<br />
 			<div class="wall-item-ago"  id="wall-item-ago-$id">$ago</div>
 			<div class="wall-item-location" id="wall-item-location-$id">$location</div>

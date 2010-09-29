@@ -231,7 +231,7 @@ function profile_content(&$a, $update = 0) {
 		$a->set_pager_total($r[0]['total']);
 
 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-		`contact`.`name`, `contact`.`photo`, `contact`.`url`, 
+		`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`, 
 		`contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`, 
 		`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
@@ -307,6 +307,14 @@ function profile_content(&$a, $update = 0) {
 			if((($item['verb'] == ACTIVITY_LIKE) || ($item['verb'] == ACTIVITY_DISLIKE)) && ($item['id'] != $item['parent'])) 
 				continue;
 
+			$lock = (($item['uid'] == get_uid()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
+				|| strlen($item['deny_cid']) || strlen($item['deny_gid']))
+				? '<div class="wall-item-lock"><img src="images/lock_icon.gif" alt="Private Message" /></div>'
+				: '<div class="wall-item-lock"></div>');
+
+
+
+
 			if(can_write_wall($a,$a->profile['profile_uid'])) {
 				if($item['id'] == $item['parent']) {
 					$likebuttons = replace_macros($like_tpl,array('$id' => $item['id']));
@@ -370,6 +378,7 @@ function profile_content(&$a, $update = 0) {
 				'$title' => $item['title'],
 				'$body' => bbcode($item['body']),
 				'$ago' => relative_date($item['created']),
+				'$lock' => $lock,
 				'$location' => (($item['location']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : ''),
 				'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
 				'$drop' => $drop,

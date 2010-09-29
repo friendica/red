@@ -702,8 +702,11 @@ input#dfrn-url {
 	float: left;
 }
 .wall-item-wrapper {
-	margin-top: 30px;
 	float: left;
+}
+.wall-item-lock {
+	height: 20px;
+	margin-top: 10px;
 }
 
 .wall-item-ago {

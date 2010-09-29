@@ -85,7 +85,7 @@ function display_content(&$a) {
 	}
 
 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-		`contact`.`name`, `contact`.`photo`, `contact`.`url`, 
+		`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
 		`contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`, 
 		`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
@@ -148,6 +148,12 @@ function display_content(&$a) {
 			
 			if((($item['verb'] == ACTIVITY_LIKE) || ($item['verb'] == ACTIVITY_DISLIKE)) && ($item['id'] != $item['parent'])) 
 				continue;
+
+			$lock = (($item['uid'] == get_uid()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
+				|| strlen($item['deny_cid']) || strlen($item['deny_gid']))
+				? '<div class="wall-item-lock"><img src="images/lock_icon.gif" alt="Private Message" /></div>'
+				: '<div class="wall-item-lock"></div>');
+
 
 			if(can_write_wall($a,$a->profile['uid'])) {
 				if($item['last-child']) {
@@ -239,6 +245,7 @@ function display_content(&$a) {
 				'$title' => $item['title'],
 				'$body' => bbcode($item['body']),
 				'$ago' => relative_date($item['created']),
+				'$lock' => $lock,
 				'$location' => (($item['location']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : ''),
 				'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
 				'$owner_url' => $owner_url,

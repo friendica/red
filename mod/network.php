@@ -173,6 +173,13 @@ function network_content(&$a, $update = 0) {
 			if((($item['verb'] == ACTIVITY_LIKE) || ($item['verb'] == ACTIVITY_DISLIKE)) && ($item['id'] != $item['parent'])) 
 				continue;
 
+
+			$lock = (($item['uid'] == get_uid()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
+				|| strlen($item['deny_cid']) || strlen($item['deny_gid']))
+				? '<div class="wall-item-lock"><img src="images/lock_icon.gif" alt="Private Message" /></div>'
+				: '<div class="wall-item-lock"></div>');
+
+
 			// Top-level wall post not written by the wall owner (wall-to-wall)
 			// First figure out who owns it. 
 
@@ -279,6 +286,7 @@ function network_content(&$a, $update = 0) {
 				'$title' => $item['title'],
 				'$body' => bbcode($item['body']),
 				'$ago' => relative_date($item['created']),
+				'$lock' => $lock,
 				'$location' => (($item['location']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : ''),
 				'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
 				'$owner_url' => $owner_url,
