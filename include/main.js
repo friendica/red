@@ -16,20 +16,6 @@
       document.getElementById(theID).style.display = "none" 
   }
 
-	function commentOpen(obj,id) {
-		if(obj.value == 'Comment') {
-			obj.value = '';
-			obj.className = "comment-edit-text-full";
-			openMenu("comment-edit-submit-wrapper-" + id);
-		}
-	}
-	function commentClose(obj,id) {
-		if(obj.value == '') {
-			obj.value = 'Comment';
-			obj.className="comment-edit-text-empty";
-			closeMenu("comment-edit-submit-wrapper-" + id);
-		}
-	}
 
 	var src = null;
 	var prev = null;
@@ -135,10 +121,6 @@
 			$('.like-rotator').hide();
 		});
 
-	}
-
-	function confirmDelete() { 
-		return confirm("Delete this item?");
 	}
 
 	function imgbright(node) {
