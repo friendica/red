@@ -426,13 +426,20 @@ function item_store($arr) {
 			. implode("', '", array_values($arr)) 
 			. "')" );
 
-	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+	// find the parent and snarf the item id and ACL's
+
+	$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 		dbesc($arr['parent-uri']),
 		intval($arr['uid'])
 	);
 
-	if(count($r))
+	if(count($r)) {
 		$parent_id = $r[0]['id'];
+		$allow_cid = $r[0]['allow_cid'];
+		$allow_gid = $r[0]['allow_gid'];
+		$deny_cid  = $r[0]['deny_cid'];
+		$deny_gid  = $r[0]['deny_gid'];
+	}
 	else {
 		$parent_missing = true;
 	}
@@ -457,8 +464,15 @@ function item_store($arr) {
 		return 0;
 	}
 
-	$r = q("UPDATE `item` SET `parent` = %d WHERE `id` = %d LIMIT 1",
+	// Set parent id - all of the parent's ACL's are also inherited by this post
+
+	$r = q("UPDATE `item` SET `parent` = %d, `allow_cid` = '%s', `allow_gid` = '%s',
+		`deny_cid` = '%s', `deny_gid` = '%s' WHERE `id` = %d LIMIT 1",
 		intval($parent_id),
+		dbesc($allow_cid),
+		dbesc($allow_gid),
+		dbesc($deny_cid),
+		dbesc($deny_gid),
 		intval($current_post)
 	);
 
