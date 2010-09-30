@@ -493,7 +493,7 @@ function photos_content(&$a) {
 			'$permissions' => t('Permissions'),
 			'$aclselect' => populate_acl($a->user),
 			'$archive' => $a->get_baseurl() . '/jumploader_z.jar',
-			'$nojava' => t('Use the following controls only if the Java uploader (above) fails to launch.'),
+			'$nojava' => t('Use the following controls only if the Java uploader [above] fails to launch.'),
 			'$uploadurl' => $a->get_baseurl() . '/photos',
 			'$submit' => t('Submit')
 		));

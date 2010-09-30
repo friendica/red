@@ -5,8 +5,8 @@
 if(! function_exists('timezone_cmp')) {
 function timezone_cmp($a, $b) {
 	if(strstr($a,'/') && strstr($b,'/')) {
-		if ($a == $b) return 0;
-		return ($a < $b) ? -1 : 1;
+		if ( t($a) == t($b)) return 0;
+		return ( t($a) < t($b)) ? -1 : 1;
 	}
 	if(strstr($a,'/')) return -1;
 	if(strstr($b,'/')) return  1;
@@ -41,9 +41,9 @@ function select_timezone($current = 'America/Los_Angeles') {
 		}
 		else {
 			$city = $ex[0];
-			if($continent != 'Miscellaneous') {
+			if($continent != t('Miscellaneous')) {
 				$o .= '</optgroup>';
-				$continent = 'Miscellaneous';
+				$continent = t('Miscellaneous');
 				$o .= '<optgroup label="' . t($continent) . '">';	
 			}
 		}

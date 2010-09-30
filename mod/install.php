@@ -49,7 +49,7 @@ function install_post(&$a) {
 		$_SESSION['sysmsg'] = '';
 
 		notice( t('Database import succeeded.') . EOL 
-			. t('IMPORTANT: You will need to (manually) setup a scheduled task for the poller.') . EOL 
+			. t('IMPORTANT: You will need to [manually] setup a scheduled task for the poller.') . EOL 
 			. t('Please see the file INSTALL.') . EOL );
 		goaway($a->get_baseurl());
 	}

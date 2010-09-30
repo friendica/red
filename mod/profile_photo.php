@@ -58,14 +58,14 @@ function profile_photo_post(&$a) {
 			$r = $im->store(get_uid(), 0, $base_image['resource-id'],$base_image['filename'], t('Profile Photos'), 4, 1);
 
 			if($r === false)
-				notice ( t('Image size reduction (175) failed.') . EOL );
+				notice ( t('Image size reduction [175] failed.') . EOL );
 
 			$im->scaleImage(80);
 
 			$r = $im->store(get_uid(), 0, $base_image['resource-id'],$base_image['filename'], t('Profile Photos'), 5, 1);
 			
 			if($r === false)
-				notice( t('Image size reduction (80) failed.') . EOL );
+				notice( t('Image size reduction [80] failed.') . EOL );
 
 			// Unset the profile photo flag from any other photos I own
 
@@ -132,7 +132,7 @@ function profile_photo_post(&$a) {
 		$r = $ph->store(get_uid(), 0 , $hash, $filename, t('Profile Photos'), 1 );	
 
 		if($r === false)
-			notice( t('Image size reduction (640) failed.') . EOL );
+			notice( t('Image size reduction [640] failed.') . EOL );
 		else
 			$smallest = 1;
 	}
