@@ -16,6 +16,9 @@ a:hover {
 	margin-top: 15px;
 	margin-bottom: 15px;
 }
+.lockview {
+	cursor: pointer;
+}
 
 .fakelink:hover {
 	color: #0000FF;
@@ -46,6 +49,16 @@ img {
 	top: 12px;
 	left: 42%;
 }
+
+#panel {
+	background-color: ivory;
+	position: absolute;
+	z-index: 2;
+	width: 30%;
+	padding: 25px;
+	border: 1px solid #444;
+}
+
 code {
 	font-family: monospace;
 	white-space: pre;

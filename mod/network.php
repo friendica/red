@@ -173,12 +173,10 @@ function network_content(&$a, $update = 0) {
 			if((($item['verb'] == ACTIVITY_LIKE) || ($item['verb'] == ACTIVITY_DISLIKE)) && ($item['id'] != $item['parent'])) 
 				continue;
 
-
 			$lock = (($item['uid'] == get_uid()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
 				|| strlen($item['deny_cid']) || strlen($item['deny_gid']))
-				? '<div class="wall-item-lock"><img src="images/lock_icon.gif" alt="Private Message" /></div>'
+				? '<div class="wall-item-lock"><img src="images/lock_icon.gif" class="lockview" alt="' . t('Private Message') . '" onclick="lockview(event,' . $item['id'] . ');" /></div>'
 				: '<div class="wall-item-lock"></div>');
-
 
 			// Top-level wall post not written by the wall owner (wall-to-wall)
 			// First figure out who owns it. 

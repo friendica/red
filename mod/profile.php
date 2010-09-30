@@ -309,11 +309,8 @@ function profile_content(&$a, $update = 0) {
 
 			$lock = (($item['uid'] == get_uid()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
 				|| strlen($item['deny_cid']) || strlen($item['deny_gid']))
-				? '<div class="wall-item-lock"><img src="images/lock_icon.gif" alt="Private Message" /></div>'
+				? '<div class="wall-item-lock"><img src="images/lock_icon.gif" class="lockview" alt="' . t('Private Message') . '" onclick="lockview(event,' . $item['id'] . ');" /></div>'
 				: '<div class="wall-item-lock"></div>');
-
-
-
 
 			if(can_write_wall($a,$a->profile['profile_uid'])) {
 				if($item['id'] == $item['parent']) {

@@ -1,5 +1,7 @@
 <?php
 
+$a->page['nav'] .= '<div id="panel" style="display: none;"></div>' ;
+
 if(x($_SESSION['uid'])) {
 		$a->page['nav'] .= '<a id="nav-logout-link" class="nav-link" href="logout">' . t('Logout') . "</a>\r\n";
 }

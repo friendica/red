@@ -135,9 +135,9 @@
 		$(node).css('height',16);
 	}
 
-	// Since ajax is asynchronous, we will give a few seconds for
-	// the first ajax call (setting like/dislike), then run the
-	// updater to pick up any changes and display on the page.
+	// Since our ajax calls are asynchronous, we will give a few 
+	// seconds for the first ajax call (setting like/dislike), then 
+	// run the updater to pick up any changes and display on the page.
 	// The updater will turn any rotators off when it's done. 
 	// This function will have returned long before any of these
 	// events have completed and therefore there won't be any
@@ -151,3 +151,48 @@
 		if(timer) clearTimeout(timer);
 		timer = setTimeout(NavUpdate,3000);
 	}
+
+	function getPosition(e) {
+		e = e || window.event;
+		var cursor = {x:0, y:0};
+		if ( e.pageX > 0 || e.pageY > 0 ) {
+			cursor.x = e.pageX;
+			cursor.y = e.pageY;
+		}
+		else {
+			if( e.clientX > 0 || e.clientY > 0 ) {
+				cursor.x = e.clientX;
+				cursor.y = e.clientY;
+			}
+			else {
+				if( e.x > 0 || e.y > 0 ) {
+					cursor.x = e.x;
+					cursor.y = e.y;
+				}
+			}
+		}
+		return cursor;
+	}
+
+	var lockvisible = false;
+
+	function lockview(event,id) {
+		if(lockvisible) {
+			lockviewhide();
+		}
+		else {
+			lockvisible = true;
+			$.get('lockview/' + id, function(data) {
+				cursor = getPosition(event);
+				$('#panel').html(data);
+				$('#panel').css({ 'left': cursor.x + 5 , 'top': cursor.y + 5});
+				$('#panel').show();
+			});
+		}
+	}
+
+	function lockviewhide() {
+		lockvisible = false;
+		$('#panel').hide();
+	}
+
