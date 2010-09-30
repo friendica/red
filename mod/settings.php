@@ -198,6 +198,12 @@ function settings_content(&$a) {
 	else
 		$profile_in_net_dir = '';
 
+	$invisible = (((! $profile['publish']) && (! $profile['net-publish']))
+		? true : false);
+
+	if($invisible)
+		notice( t('Profile is not published.'));
+
 	$nickname_block = load_view_file("view/settings_nick_set.tpl");
 	
 	$nickname_subdir = '';
