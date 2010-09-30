@@ -83,6 +83,7 @@ $a->strings["Incorrect identity currently logged in. Please login to <strong>thi
 $a->strings['[Name Withheld]'] = '[Name Withheld]';
 $a->strings['Global Directory'] = 'Global Directory';
 $a->strings['Item not found.'] = 'Item not found.';
+$a->strings['Private Message'] = 'Private Message';
 $a->strings['This is you'] = 'This is you';
 $a->strings['Item has been removed.'] = 'Item has been removed.';
 $a->strings['Group created.'] = 'Group created.';
@@ -123,6 +124,7 @@ $a->strings['status'] = 'status';
 $a->strings['likes'] = 'likes';
 $a->strings['doesn\'t like'] = 'doesn\'t like';
 $a->strings['\'s'] = '\'s';
+$a->strings['Visible to:'] = 'Visible to:';
 $a->strings['No recipient selected.'] = 'No recipient selected.';
 $a->strings['Unable to locate contact information.'] = 'Unable to locate contact information.';
 $a->strings['Message sent.'] = 'Message sent.';
