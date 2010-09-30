@@ -153,19 +153,18 @@
 	}
 
 	function getPosition(e) {
-		e = e || window.event;
 		var cursor = {x:0, y:0};
-		if ( e.pageX > 0 || e.pageY > 0 ) {
+		if ( e.pageX || e.pageY  ) {
 			cursor.x = e.pageX;
 			cursor.y = e.pageY;
 		}
 		else {
-			if( e.clientX > 0 || e.clientY > 0 ) {
-				cursor.x = e.clientX;
-				cursor.y = e.clientY;
+			if( e.clientX || e.clientY ) {
+				cursor.x = e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft) - document.documentElement.clientLeft;
+				cursor.y = e.clientY + (document.documentElement.scrollTop  || document.body.scrollTop)  - document.documentElement.clientTop;
 			}
 			else {
-				if( e.x > 0 || e.y > 0 ) {
+				if( e.x || e.y ) {
 					cursor.x = e.x;
 					cursor.y = e.y;
 				}
@@ -177,13 +176,14 @@
 	var lockvisible = false;
 
 	function lockview(event,id) {
+		event = event || window.event;
+		cursor = getPosition(event);
 		if(lockvisible) {
 			lockviewhide();
 		}
 		else {
 			lockvisible = true;
 			$.get('lockview/' + id, function(data) {
-				cursor = getPosition(event);
 				$('#panel').html(data);
 				$('#panel').css({ 'left': cursor.x + 5 , 'top': cursor.y + 5});
 				$('#panel').show();
