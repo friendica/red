@@ -202,7 +202,7 @@ function settings_content(&$a) {
 		? true : false);
 
 	if($invisible)
-		notice( t('Profile is not published.'));
+		notice( t('Profile is not published.') . EOL );
 
 	$nickname_block = load_view_file("view/settings_nick_set.tpl");
 	
