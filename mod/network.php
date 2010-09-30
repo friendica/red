@@ -234,7 +234,6 @@ function network_content(&$a, $update = 0) {
 				));
 			}
 
-
 			$drop = replace_macros(load_view_file('view/wall_item_drop.tpl'), array('$id' => $item['id']));
 
 

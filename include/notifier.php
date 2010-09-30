@@ -188,6 +188,7 @@
 						'$type'               => 'text',
 						'$verb'               => xmlify($verb),
 						'$actobj'             => $actobj,
+						'$alt'                => xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']),
 						'$content'            => xmlify($item['body']),
 						'$parent_id'          => xmlify($item['parent-uri']),
 						'$comment_allow'      => 0
@@ -228,6 +229,7 @@
 							'$verb'               => xmlify($verb),
 							'$actobj'             => $actobj,
 							'$content'            => xmlify($item['body']),
+							'$alt'                => xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']),
 							'$comment_allow'      => (($item['last-child']) ? 1 : 0)
 						));
 					}
@@ -241,6 +243,7 @@
 							'$published'     => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , ATOM_TIME)),
 							'$updated'       => xmlify(datetime_convert('UTC', 'UTC', $item['edited']  . '+00:00' , ATOM_TIME)),
 							'$content'       => xmlify($item['body']),
+							'$alt'           => xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']),
 							'$location'      => xmlify($item['location']),
 							'$type'          => 'text',
 							'$verb'          => xmlify($verb),

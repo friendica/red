@@ -155,6 +155,9 @@ function display_content(&$a) {
 				: '<div class="wall-item-lock"></div>');
 
 			if(can_write_wall($a,$a->profile['uid'])) {
+				if($item['id'] == $item['parent']) {
+					$likebuttons = replace_macros($like_tpl,array('$id' => $item['id']));
+				}
 				if($item['last-child']) {
 					$comment = replace_macros($cmnt_tpl,array(
 						'$return_path' => $_SESSION['return_url'],
@@ -219,19 +222,13 @@ function display_content(&$a) {
 			$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $item['thumb']);
 			$profile_link = $profile_url;
 
-			$drop = '';
-
 			if(($item['contact-id'] == $_SESSION['visitor_id']) || ($item['uid'] == get_uid()))
 				$drop = replace_macros(load_view_file('view/wall_item_drop.tpl'), array('$id' => $item['id']));
+			else 
+				$drop = replace_macros(load_view_file('view/wall_fake_drop.tpl'), array('$id' => $item['id']));
 
 			$like    = (($alike[$item['id']]) ? format_like($alike[$item['id']],$alike[$item['id'] . '-l'],'like',$item['id']) : '');
 			$dislike = (($dlike[$item['id']]) ? format_like($dlike[$item['id']],$dlike[$item['id'] . '-l'],'dislike',$item['id']) : '');
-
-			$likebuttons = '';
-			if($item['id'] == $item['parent']) {
-				$likebuttons = replace_macros($like_tpl,array('$id' => $item['id']));
-			}
-
 
 
 			$o .= replace_macros($template,array(

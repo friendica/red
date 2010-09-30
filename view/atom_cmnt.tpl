@@ -11,6 +11,7 @@
 		<published>$published</published>
 		<updated>$updated</updated>
 		<content type="$type" >$content</content>
+		<link rel="alternate" href="$alt" />
 		<dfrn:comment-allow>$comment_allow</dfrn:comment-allow>
 		<as:verb>$verb</as:verb>
 		$actobj
