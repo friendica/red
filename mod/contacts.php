@@ -41,7 +41,15 @@ function contacts_post(&$a) {
 			return;
 		}
 	}
+
+	$usehub = ((intval($_POST['usehub'])) ? 1 : 0);
+	if($orig_record[0]['usehub'] && (! $usehub)) {
+		// remove hub subscription
+	}
+
 	$priority = intval($_POST['priority']);
+	if($priority == (-1))
+		
 	if($priority > 5 || $priority < 0)
 		$priority = 0;
 
@@ -51,9 +59,10 @@ function contacts_post(&$a) {
 
 	$reason = notags(trim($_POST['reason']));
 
-	$r = q("UPDATE `contact` SET `profile-id` = %d, `priority` = %d , `rating` = %d, `reason` = '%s'
+	$r = q("UPDATE `contact` SET `profile-id` = %d, `usehub` = %d, `priority` = %d , `rating` = %d, `reason` = '%s'
 		WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		intval($profile_id),
+		intval($usehub),
 		intval($priority),
 		intval($rating),
 		dbesc($reason),
@@ -176,8 +185,19 @@ function contacts_content(&$a) {
 			$url = $r[0]['url'];
 			$sparkle = '';
 		}
+
+		$huburl = get_config('system','huburl');
+		if($huburl) {
+			// finish selector
+			$hubenable = '';
+		}
+		else
+			$hubenable = '';
+
+
 		$o .= replace_macros($tpl,array(
 			'$poll_interval' => contact_poll_interval($r[0]['priority']),
+			'$hubenable' => $hubenable,
 			'$last_update' => (($r[0]['last-update'] == '0000-00-00 00:00:00') 
 				? t('Never') 
 				: datetime_convert('UTC',date_default_timezone_get(),$r[0]['last-update'],'D, j M Y, g:i A')),

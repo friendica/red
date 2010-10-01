@@ -33,11 +33,13 @@ function pubsub_init(&$a) {
 
 	if($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-		$hub_mode = notags(trim($_GET['hub.mode']));
-		$hub_topic = notags(trim($_GET['hub.topic']));
-		$hub_challenge = notags(trim($_GET['hub.challenge']));
-		$hub_lease = notags(trim($_GET['hub.lease_seconds']));
-		$hub_verify = notags(trim($_GET['hub.verify_token']));
+		$hub_mode = notags(trim($_GET['hub_mode']));
+		$hub_topic = notags(trim($_GET['hub_topic']));
+		$hub_challenge = notags(trim($_GET['hub_challenge']));
+		$hub_lease = notags(trim($_GET['hub_lease_seconds']));
+		$hub_verify = notags(trim($_GET['hub_verify_token']));
+
+
 
 		$subscribe = (($hub_mode === 'subscribe') ? 1 : 0);
 
@@ -46,6 +48,7 @@ function pubsub_init(&$a) {
 		);
 		if(! count($r))
 			hub_return(false, '');
+
 
 		$owner = $r[0];
 
@@ -82,6 +85,10 @@ function pubsub_post(&$a) {
 
 	$xml = file_get_contents('php://input');
 
+	$debugging = get_config('system','debugging');
+	if($debugging)
+		file_put_contents('pubsub.out',$xml);
+
 	$nick       = (($a->argc > 1) ? notags(trim($a->argv[1])) : '');
 	$contact_id = (($a->argc > 2) ? intval($a->argv[2]) : 0);
 
@@ -103,6 +110,9 @@ function pubsub_post(&$a) {
 	$contact = $r[0];
 
 	$feedhub = '';
+
+	require_once('include/items.php');
+
 	consume_feed($xml,$importer,$contact,$feedhub);
 
 	hub_post_return();

@@ -153,10 +153,12 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 		// public feeds get html, our own nodes use bbcode
 
 		if($dfrn_id === '*') {
+			$allow = (($item['last-child']) ? 1 : 0);
 			$item['body'] = bbcode($item['body']);
 			$type = 'html';
 		}
 		else {
+			$allow = ((($item['last-child']) && ($contact['rel']) && ($contact['rel'] != REL_FAN)) ? 1 : 0);
 			$type = 'text';
 		}
 
@@ -188,7 +190,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 					'$content'            => xmlify($item['body']),
 					'$verb'               => xmlify($verb),
 					'$actobj'             => $actobj,  // do not xmlify
-					'$comment_allow'      => ((($item['last-child']) && ($contact['rel']) && ($contact['rel'] != REL_FAN)) ? 1 : 0)
+					'$comment_allow'      => $allow
 				));
 			}
 			else {
@@ -206,7 +208,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 					'$verb'          => xmlify($verb),
 					'$actobj'        => $actobj, // do not xmlify
 					'$parent_id'     => xmlify($item['parent-uri']),
-					'$comment_allow' => (($item['last-child']) ? 1 : 0)
+					'$comment_allow' => $allow
 				));
 			}
 		}
