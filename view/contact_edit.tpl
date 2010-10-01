@@ -27,7 +27,6 @@
 			<div id="contact-edit-last-update-text">Last updated: <span id="contact-edit-last-updated">$last_update</span</div>
 			<div id="contact-edit-poll-text">Update public posts: </div>
 			$poll_interval
-			$hubenable
 		</div>
 	</div>
 	<div id="contact-edit-end" ></div>
