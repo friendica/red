@@ -104,7 +104,7 @@ function pubsub_post(&$a) {
 
 	consume_feed($xml,$importer,$contact);
 
-	hub_post_return();;
+	hub_post_return();
 
 }
 

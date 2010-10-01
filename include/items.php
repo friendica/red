@@ -123,11 +123,16 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 
 	$atom = '';
 
+	$hub = get_config('system','huburl');
+
+	$hubxml = ((strlen($hub)) ? '<link rel="hub" href="' . xmlify($hub) . '" />' . "\n" : '');
+
 
 	$atom .= replace_macros($feed_template, array(
 			'$feed_id'      => xmlify($a->get_baseurl() . '/profile/' . $owner_nick),
 			'$feed_title'   => xmlify($owner['name']),
 			'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', $updated . '+00:00' , ATOM_TIME)) ,
+			'$hub'          => $hubxml,
 			'$name'         => xmlify($owner['name']),
 			'$profile_page' => xmlify($owner['url']),
 			'$photo'        => xmlify($owner['photo']),

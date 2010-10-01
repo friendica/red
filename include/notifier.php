@@ -83,6 +83,8 @@
 	else
 		killme();
 
+	$hub = get_config('system','huburl');
+
 	if($cmd != 'mail') {
 
 		require_once('include/group.php');
@@ -138,11 +140,14 @@
 
 	$atom = '';
 
+	$hubxml = ((strlen($hub)) ? '<link rel="hub" href="' . xmlify($hub) . '" />' . "\n" : '');
+	
 
 	$atom .= replace_macros($feed_template, array(
 			'$feed_id'      => xmlify($a->get_baseurl() . '/profile/' . $owner['nickname'] ),
 			'$feed_title'   => xmlify($owner['name']),
 			'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', $updated . '+00:00' , ATOM_TIME)) ,
+			'$hub'          => $hubxml,
 			'$name'         => xmlify($owner['name']),
 			'$profile_page' => xmlify($owner['url']),
 			'$photo'        => xmlify($owner['photo']),
@@ -295,6 +300,11 @@
 				intval($item_id)
 			);
 		}
+	}
+
+	if((strlen($hub)) && ($cmd !== 'mail') && (followup == false)) {
+		$params = array('hub.mode' => 'publish', 'hub.url' => $a->get_baseurl() . '/dfrn_poll/' . $owner['nickname'] );
+		post_url($hub,$params);
 	}
 
 	killme();

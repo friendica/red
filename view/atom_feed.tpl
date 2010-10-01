@@ -10,6 +10,7 @@
   <title>$feed_title</title>
   <generator uri="http://mistpark.com" version="2.0">Mistpark</generator>
   <link rel="license" href="http://creativecommons.org/licenses/by/3.0/" />
+  $hub
 
   <updated>$feed_updated</updated>
 
