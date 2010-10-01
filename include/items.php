@@ -827,17 +827,11 @@ function subscribe_to_hub($url,$importer,$contact) {
 	if(! count($r))
 		return;
 
-	$params = array();
-
 	$push_url = get_config('system','url') . '/pubsub/' . $r[0]['nickname'] . '/' . $contact['id'];
 
 	$verify_token = random_string();
 
-	$params['hub.mode'] = 'subscribe';
-	$params['hub.callback'] = urlencode($push_url);
-	$params['hub.topic'] = urlencode($contact['poll']);
-	$params['hub.verify'] = 'async';
-	$params['hub.verify_token'] = $verify_token;
+	$params= 'hub.mode=subscribe&hub.callback=' . urlencode($push_url) . '&hub.topic=' . urlencode($contact['poll']) . '&hub.verify=async&hub.verify_token=' . $verify_token;
 
 	$r = q("UPDATE `contact` SET `hub-verify` = '%s' WHERE `id` = %d LIMIT 1",
 		dbesc($verify_token),

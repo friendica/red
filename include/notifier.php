@@ -303,7 +303,7 @@
 	}
 
 	if((strlen($hub)) && ($cmd !== 'mail') && (followup == false)) {
-		$params = array('hub.mode' => 'publish', 'hub.url' => urlencode($a->get_baseurl() . '/dfrn_poll/' . $owner['nickname'] ));
+		$params = 'hub.mode=publish&hub.url=' . urlencode($a->get_baseurl() . '/dfrn_poll/' . $owner['nickname'] );
 		post_url($hub,$params);
 	}
 
