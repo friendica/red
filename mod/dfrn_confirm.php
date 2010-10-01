@@ -239,8 +239,7 @@ function dfrn_confirm_post(&$a) {
 		$pubkey = openssl_pkey_get_details($res);
 		$public_key = $pubkey["key"];
 
-		$r = q("UPDATE `contact` SET `issued-pubkey` = '%s', `prvkey` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			dbesc($public_key),
+		$r = q("UPDATE `contact` SET `prvkey` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			dbesc($private_key),
 			intval($contact_id),
 			intval($uid) 
