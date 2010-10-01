@@ -39,3 +39,8 @@ $a->config['php_path'] = 'php';
 // Location of global directory submission page. 
 
 $a->config['system']['directory_submit_url'] = 'http://dir.dfrn.org/submit';
+
+// PuSH - aka pubsubhubbub URL. This makes delivery of public posts as fast as private posts
+
+$a->config['system']['huburl'] = 'http://pubsubhubbub.appspot.com';
+
