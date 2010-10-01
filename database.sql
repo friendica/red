@@ -69,6 +69,9 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `confirm` text NOT NULL,
   `aes_allow` tinyint(1) NOT NULL DEFAULT '0',
   `ret-aes` tinyint(1) NOT NULL DEFAULT '0',
+  `usehub` tinyint(1) NOT NULL DEFAULT '0',
+  `subhub` tinyint(1) NOT NULL DEFAULT '0',
+  `hub-verify` char(255) NOT NULL,
   `last-update` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `name-date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `uri-date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -80,7 +83,13 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `rating` tinyint(1) NOT NULL DEFAULT '0',
   `reason` text NOT NULL,
   `profile-id` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `uid` (`uid`),
+  KEY `self` (`self`),
+  KEY `issued-id` (`issued-id`),
+  KEY `dfrn-id` (`dfrn-id`),
+  KEY `blocked` (`blocked`),
+  KEY `readonly` (`readonly`)  
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

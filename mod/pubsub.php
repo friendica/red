@@ -67,7 +67,7 @@ function pubsub_init(&$a) {
 		if(($hub_mode === 'unsubscribe') && (! strlen($hub_verify))) 
 			hub_return(false, '');
 
-		$r = q("UPDATE `contact` SET `usehub` = %d WHERE `id` = %d LIMIT 1",
+		$r = q("UPDATE `contact` SET `subhub` = %d WHERE `id` = %d LIMIT 1",
 			intval($subscribe),
 			intval($contact['id'])
 		);
@@ -93,7 +93,7 @@ function pubsub_post(&$a) {
 
 	$importer = $r[0];
 
-	$r = q("SELECT * FROM `contact` WHERE `usehub` = 1 AND `id` = %d AND `uid` = %d AND `blocked` = 0 LIMIT 1",
+	$r = q("SELECT * FROM `contact` WHERE `subhub` = 1 AND `id` = %d AND `uid` = %d AND `blocked` = 0 LIMIT 1",
 		intval($contact_id),
 		intval($importer['uid'])
 	);
