@@ -161,7 +161,13 @@
 			continue;
 
 
-		consume_feed($xml,$importer,$contact);
+		consume_feed($xml,$importer,$contact,$hub);
+		
+
+		if($contact['usehub'] && strlen($hub)) {
+			subscribe_to_hub($hub,$importer,$contact);
+		}
+
 
 		$r = q("UPDATE `contact` SET `last-update` = '%s' WHERE `id` = %d LIMIT 1",
 			dbesc(datetime_convert()),

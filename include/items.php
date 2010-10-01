@@ -577,7 +577,7 @@ function dfrn_deliver($contact,$atom,$debugging = false) {
 }
 
 
-function consume_feed($xml,$importer,$contact) {
+function consume_feed($xml,$importer,$contact, &$hub) {
 
 	require_once('simplepie/simplepie.inc');
 
@@ -592,6 +592,12 @@ function consume_feed($xml,$importer,$contact) {
 	$new_name = '';
 	$photo_timestamp = '';
 	$photo_url = '';
+
+
+	$foundhub = $feed->get_link(0,'hub');
+
+	if(strlen($foundhub))
+		$hub = $foundhub;
 
 	$rawtags = $feed->get_feed_tags( SIMPLEPIE_NAMESPACE_ATOM_10, 'author');
 	if($rawtags) {
@@ -807,5 +813,38 @@ function consume_feed($xml,$importer,$contact) {
 			}
 		}
 	}
+
+}
+
+
+function subscribe_to_hub($url,$importer,$contact) {
+
+	if(is_array($importer)) {
+		$r = q("SELECT `nickname` FROM `user` WHERE `uid` = %d LIMIT 1",
+			intval($importer['uid'])
+		);
+	}
+	if(! count($r))
+		return;
+
+	$params = array();
+
+	$push_url = get_config('system','url') . '/pubsub/' . $r[0]['nickname'] . '/' . $contact['id'];
+
+	$verify_token = random_string();
+
+	$params['hub.mode'] = 'subscribe';
+	$params['hub.callback'] = urlencode($push_url);
+	$params['hub.topic'] = urlencode($contact['poll']);
+	$params['hub.verify'] = 'async';
+	$params['hub.verify_token'] = $verify_token;
+
+	$r = q("UPDATE `contact` SET `hub-verify` = '%s' WHERE `id` = %d LIMIT 1",
+		dbesc($verify_token),
+		intval($contact['id'])
+	);
+
+	post_url($url,$params);			
+	return;
 
 }

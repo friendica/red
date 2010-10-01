@@ -102,7 +102,8 @@ function pubsub_post(&$a) {
 
 	$contact = $r[0];
 
-	consume_feed($xml,$importer,$contact);
+	$feedhub = '';
+	consume_feed($xml,$importer,$contact,$feedhub);
 
 	hub_post_return();
 
