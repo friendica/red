@@ -60,12 +60,12 @@
 		if(! count($r))
 			killme();
 
-		$parent = $r[0]['parent'];
+		$parent_id = $r[0]['parent'];
 		$uid = $r[0]['uid'];
 		$updated = $r[0]['edited'];
 
 		$items = q("SELECT * FROM `item` WHERE `parent` = %d ORDER BY `id` ASC",
-			intval($parent)
+			intval($parent_id)
 		);
 
 		if(! count($items))
@@ -84,6 +84,8 @@
 		killme();
 
 	$hub = get_config('system','huburl');
+	// If this is a public conversation, notify the feed hub
+	$notify_hub = true;
 
 	if($cmd != 'mail') {
 
@@ -94,10 +96,17 @@
 		if($parent['type'] === 'remote') {
 			// local followup to remote post
 			$followup = true;
+			$notify_hub = false; // not public
 			$conversant_str = dbesc($parent['contact-id']);
 		}
 		else {
 			$followup = false;
+
+			if((strlen($parent['allow_cid'])) 
+				|| (strlen($parent['allow_gid'])) 
+				|| (strlen($parent['deny_cid'])) 
+				|| (strlen($parent['deny_gid'])))
+				$notify_hub = false; // private recipients, not public
 
 			$allow_people = expand_acl($parent['allow_cid']);
 			$allow_groups = expand_groups(expand_acl($parent['allow_gid']));
@@ -158,6 +167,7 @@
 	));
 
 	if($cmd === 'mail') {
+		$notify_hub = false;  // mail is  not public
 		$atom .= replace_macros($mail_template, array(
 			'$name'         => xmlify($owner['name']),
 			'$profile_page' => xmlify($owner['url']),
@@ -302,7 +312,7 @@
 		}
 	}
 
-	if((strlen($hub)) && ($cmd !== 'mail') && ($followup == false)) {
+	if((strlen($hub)) && ($notify_hub)) {
 		$params = 'hub.mode=publish&hub.url=' . urlencode($a->get_baseurl() . '/dfrn_poll/' . $owner['nickname'] );
 		post_url($hub,$params);
 	}
