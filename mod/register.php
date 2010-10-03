@@ -74,7 +74,8 @@ function register_post(&$a) {
 	if($r !== false && count($r))
 		$err .= t(' Your email address is already registered on this system.') ;
 
-	if(! preg_match("/^[a-zA-Z][a-zA-Z0-9\-\_]*$/",$nickname))
+	$nickname = strtolower($nickname);
+	if(! preg_match("/^[a-z][a-z0-9\-\_]*$/",$nickname))
 		$err .= t(' Nickname <strong>must</strong> start with a letter and contain only letters, numbers, dashes, or underscore.') ;
 	$r = q("SELECT `uid` FROM `user`
                	WHERE `nickname` = '%s' LIMIT 1",
