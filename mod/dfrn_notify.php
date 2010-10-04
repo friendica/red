@@ -54,10 +54,24 @@ function dfrn_notify_post(&$a) {
 
 	if(! count($r)) {
 		xml_status(3);
-		return; //NOTREACHED
+		//NOTREACHED
 	}
 
 	$importer = $r[0];
+
+
+	if($importer['readonly']) {
+		// We aren't receiving stuff from this person. But we will quietly ignore them
+		// rather than a blatant "go away" message.
+		xml_status(0);
+		//NOTREACHED
+	}
+
+	// Consume notification feed. This may differ from consuming a public feed in several ways
+	// - might contain email
+	// - might contain remote followup to our message
+	//		- in which case we need to accept it and then notify other conversants
+	// - we may need to send various email notifications
 
 	$feed = new SimplePie();
 	$feed->set_raw_data($data);
@@ -68,13 +82,6 @@ function dfrn_notify_post(&$a) {
 
 	$rawmail = $feed->get_feed_tags( NAMESPACE_DFRN, 'mail' );
 	if(isset($rawmail[0]['child'][NAMESPACE_DFRN])) {
-
-		if($importer['readonly']) {
-			// We aren't receiving email from this person. But we will quietly ignore them
-			// rather than a blatant "go away" message.
-			xml_status(0);
-			return; //NOTREACHED
-		}
 
 		$ismail = true;
 		$base = $rawmail[0]['child'][NAMESPACE_DFRN];
@@ -118,14 +125,8 @@ function dfrn_notify_post(&$a) {
 				$email_tpl, 'From: ' . t('Administrator') . '@' . $a->get_hostname() );
 		}
 		xml_status(0);
-		return; // NOTREACHED
+		// NOTREACHED
 	}	
-
-	if($importer['readonly']) {
-
-		xml_status(0);
-		return; // NOTREACHED
-	}
 
 	foreach($feed->get_items() as $item) {
 
@@ -175,7 +176,7 @@ function dfrn_notify_post(&$a) {
 						);
 						// who is the last child now? 
 						$r = q("SELECT `id` FROM `item` WHERE `parent-uri` = '%s' AND `type` != 'activity' AND `deleted` = 0 AND `uid` = %d
-							ORDER BY `edited` DESC LIMIT 1",
+							ORDER BY `created` DESC LIMIT 1",
 								dbesc($item['parent-uri']),
 								intval($importer['importer_uid'])
 						);
@@ -197,7 +198,6 @@ function dfrn_notify_post(&$a) {
 			$is_reply = true;
 			$parent_uri = $rawthread[0]['attribs']['']['ref'];
 		}
-
 
 		if($is_reply) {
 			if($feed->get_item_quantity() == 1) {
@@ -259,7 +259,7 @@ function dfrn_notify_post(&$a) {
 					}
 				}
 				xml_status(0);
-				return;
+				// NOTREACHED
 
 			}
 			else {
@@ -357,13 +357,11 @@ function dfrn_notify_post(&$a) {
 			$datarray['contact-id'] = $importer['id'];
 			$r = item_store($datarray);
 			continue;
-
 		}
-	
 	}
 
 	xml_status(0);
-	killme();
+	// NOTREACHED
 
 }
 
@@ -416,8 +414,6 @@ function dfrn_notify_content(&$a) {
 				break; // NOTREACHED
 		}
 
-
-
 		$r = q("SELECT * FROM `contact` WHERE `blocked` = 0 AND `pending` = 0 $sql_extra LIMIT 1");
 
 		if(! count($r))
@@ -439,10 +435,8 @@ function dfrn_notify_content(&$a) {
 		$challenge    = bin2hex($challenge);
 		$encrypted_id = bin2hex($encrypted_id);
 
-		echo '<?xml version="1.0" encoding="UTF-8"?><dfrn_notify><status>' .$status . '</status><dfrn_version>2.0</dfrn_version><dfrn_id>' . $encrypted_id . '</dfrn_id>' . '<challenge>' . $challenge . '</challenge></dfrn_notify>' . "\r\n" ;
-		session_write_close();
-		exit;
-		
+		echo '<?xml version="1.0" encoding="UTF-8"?><dfrn_notify><status>' . $status . '</status><dfrn_version>2.0</dfrn_version><dfrn_id>' . $encrypted_id . '</dfrn_id><challenge>' . $challenge . '</challenge></dfrn_notify>' . "\r\n" ;
+		killme();
 	}
 
 }

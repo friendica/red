@@ -718,7 +718,7 @@ function consume_feed($xml,$importer,$contact, &$hub) {
 							);
 							// who is the last child now? 
 							$r = q("SELECT `id` FROM `item` WHERE `parent-uri` = '%s' AND `type` != 'activity' AND `deleted` = 0 AND `uid` = %d 
-								ORDER BY `edited` DESC LIMIT 1",
+								ORDER BY `created` DESC LIMIT 1",
 									dbesc($item['parent-uri']),
 									intval($importer['uid'])
 							);
