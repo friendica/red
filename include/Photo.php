@@ -6,18 +6,25 @@ class Photo {
 	private $image;
 	private $width;
 	private $height;
+	private $valid;
 
 	public function __construct($data) {
+		$this->valid = false;
 		$this->image = @imagecreatefromstring($data);
 		if($this->image !== FALSE) {
 			$this->width  = imagesx($this->image);
 			$this->height = imagesy($this->image);
+			$this->valid  = true;
 		}
 	}
 
 	public function __destruct() {
 		if($this->image)
 			imagedestroy($this->image);
+	}
+
+	public function is_valid() {
+		return $this->valid;
 	}
 
 	public function getWidth() {

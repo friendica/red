@@ -4,10 +4,10 @@ require_once('Photo.php');
 
 function wall_upload_post(&$a) {
 
-        if(! local_user()) {
-                echo ( t('Permission denied.') . EOL );
-                killme();
-        }
+	if(! local_user()) {
+		echo ( t('Permission denied.') . EOL );
+		killme();
+	}
 
 	if(! x($_FILES,'userfile'))
 		killme();
@@ -19,7 +19,7 @@ function wall_upload_post(&$a) {
 	$imagedata = @file_get_contents($src);
 	$ph = new Photo($imagedata);
 
-	if(! ($image = $ph->getImage())) {
+	if(! $ph->is_valid()) {
 		echo ( t('Unable to process image.') . EOL);
 		@unlink($src);
 		killme();

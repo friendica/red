@@ -287,7 +287,7 @@ function photos_post(&$a) {
 	$imagedata = @file_get_contents($src);
 	$ph = new Photo($imagedata);
 
-	if(! ($image = $ph->getImage())) {
+	if(! $ph->is_valid()) {
 		notice( t('Unable to process image.') . EOL );
 		@unlink($src);
 		killme();

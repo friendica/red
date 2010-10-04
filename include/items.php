@@ -633,7 +633,7 @@ function consume_feed($xml,$importer,$contact, &$hub) {
 			$resource_id = $r[0]['resource-id'];
 			$img_str = fetch_url($photo_url,true);
 			$img = new Photo($img_str);
-			if($img) {
+			if($img->is_valid()) {
 				q("DELETE FROM `photo` WHERE `resource-id` = '%s' AND contact-id` = %d AND `uid` = %d",
 					dbesc($resource_id),
 					intval($contact['id']),

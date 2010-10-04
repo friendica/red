@@ -26,7 +26,7 @@ function dfrn_confirm_post(&$a) {
 
 		if(! count($r)) {
 			xml_status(3); // failure
-			return; // NOTREACHED
+			// NOTREACHED
 		}
 
 		$my_prvkey = $r[0]['prvkey'];
@@ -73,7 +73,7 @@ function dfrn_confirm_post(&$a) {
 		);
 		if(count($r)) {
 			xml_status(1); // Birthday paradox - duplicate dfrn-id
-			return; // NOTREACHED
+			// NOTREACHED
 		}
 
 		$r = q("UPDATE `contact` SET `dfrn-id` = '%s', `pubkey` = '%s' WHERE `id` = %d LIMIT 1",
@@ -96,7 +96,7 @@ function dfrn_confirm_post(&$a) {
 				$filename = basename($r[0]['photo']);
 				$img_str = fetch_url($r[0]['photo'],true);
 				$img = new Photo($img_str);
-				if($img) {
+				if($img->is_valid()) {
 
 					$img->scaleImageSquare(175);
 					
@@ -164,7 +164,7 @@ function dfrn_confirm_post(&$a) {
 			);
 			if((count($r)) && ($r[0]['notify-flags'] & NOTIFY_CONFIRM)) {
 
-				$tpl = (($new_relation == $REL_BUD) 
+				$tpl = (($new_relation == REL_BUD) 
 					? load_view_file('view/friend_complete_eml.tpl')
 					: load_view_file('view/intro_complete_eml.tpl'));
 			
@@ -185,7 +185,7 @@ function dfrn_confirm_post(&$a) {
 				}
 			}
 			xml_status(0); // Success
-			return; // NOTREACHED
+			// NOTREACHED
 		}
 		else {
 			xml_status(2);	// Hopefully temporary problem that can be retried.
@@ -201,7 +201,7 @@ function dfrn_confirm_post(&$a) {
 		$uid = get_uid();
 
 		if(! $uid) {
-			notice( t("Permission denied.") . EOL );
+			notice( t('Permission denied.') . EOL );
 			return;
 		}	
 	
@@ -329,7 +329,7 @@ function dfrn_confirm_post(&$a) {
 			$filename = basename($r[0]['photo']);
 			$img_str = fetch_url($r[0]['photo'],true);
 			$img = new Photo($img_str);
-			if($img) {
+			if($img->is_valid()) {
 
 				$img->scaleImageSquare(175);
 					

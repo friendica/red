@@ -298,6 +298,13 @@ function fetch_url($url,$binary = false) {
 	curl_setopt($ch, CURLOPT_FOLLOWLOCATION,true);
 	curl_setopt($ch, CURLOPT_MAXREDIRS,8);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+
+	// by default we will allow self-signed certs
+	// but you can override this
+
+	$check_cert = get_config('system','verifyssl');
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, (($check_cert) ? true : false));
+
 	$prx = get_config('system','proxy');
 	if(strlen($prx)) {
 		curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
@@ -327,6 +334,8 @@ function post_url($url,$params) {
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 	curl_setopt($ch, CURLOPT_POST,1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
+	$check_cert = get_config('system','verifyssl');
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, (($check_cert) ? true : false));
 	$prx = get_config('system','proxy');
 	if(strlen($prx)) {
 		curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);

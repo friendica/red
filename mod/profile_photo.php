@@ -53,39 +53,42 @@ function profile_photo_post(&$a) {
 			$base_image = $r[0];
 
 			$im = new Photo($base_image['data']);
-			$im->cropImage(175,$srcX,$srcY,$srcW,$srcH);
+			if($im->is_valid()) {
+				$im->cropImage(175,$srcX,$srcY,$srcW,$srcH);
 
-			$r = $im->store(get_uid(), 0, $base_image['resource-id'],$base_image['filename'], t('Profile Photos'), 4, 1);
+				$r = $im->store(get_uid(), 0, $base_image['resource-id'],$base_image['filename'], t('Profile Photos'), 4, 1);
 
-			if($r === false)
-				notice ( t('Image size reduction [175] failed.') . EOL );
+				if($r === false)
+					notice ( t('Image size reduction [175] failed.') . EOL );
 
-			$im->scaleImage(80);
+				$im->scaleImage(80);
 
-			$r = $im->store(get_uid(), 0, $base_image['resource-id'],$base_image['filename'], t('Profile Photos'), 5, 1);
+				$r = $im->store(get_uid(), 0, $base_image['resource-id'],$base_image['filename'], t('Profile Photos'), 5, 1);
 			
-			if($r === false)
-				notice( t('Image size reduction [80] failed.') . EOL );
+				if($r === false)
+					notice( t('Image size reduction [80] failed.') . EOL );
 
-			// Unset the profile photo flag from any other photos I own
+				// Unset the profile photo flag from any other photos I own
 
-			$r = q("UPDATE `photo` SET `profile` = 0 WHERE `profile` = 1 AND `resource-id` != '%s' AND `uid` = %d",
-				dbesc($base_image['resource-id']),
-				intval(get_uid())
-			);
+				$r = q("UPDATE `photo` SET `profile` = 0 WHERE `profile` = 1 AND `resource-id` != '%s' AND `uid` = %d",
+					dbesc($base_image['resource-id']),
+					intval(get_uid())
+				);
 
-			$r = q("UPDATE `contact` SET `avatar-date` = '%s' WHERE `self` = 1 AND `uid` = %d LIMIT 1",
-				dbesc(datetime_convert()),
-				intval(get_uid())
-			);
+				$r = q("UPDATE `contact` SET `avatar-date` = '%s' WHERE `self` = 1 AND `uid` = %d LIMIT 1",
+					dbesc(datetime_convert()),
+					intval(get_uid())
+				);
 
-			// Update global directory in background
-			$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
-			$url = $_SESSION['my_url'];
-			if($url && strlen(get_config('system','directory_submit_url')))
-				proc_close(proc_open("\"$php_path\" \"include/directory.php\" \"$url\" &",
-					array(),$foo));
-
+				// Update global directory in background
+				$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
+				$url = $_SESSION['my_url'];
+				if($url && strlen(get_config('system','directory_submit_url')))
+					proc_close(proc_open("\"$php_path\" \"include/directory.php\" \"$url\" &",
+						array(),$foo));
+			}
+			else
+				notice( t('Unable to process image') . EOL);
 		}
 		goaway($a->get_baseurl() . '/profiles');
 		return; // NOTREACHED
@@ -98,7 +101,7 @@ function profile_photo_post(&$a) {
 	$imagedata = @file_get_contents($src);
 	$ph = new Photo($imagedata);
 
-	if(! ($image = $ph->getImage())) {
+	if(! $ph->is_valid()) {
 		notice( t('Unable to process image.') . EOL );
 		@unlink($src);
 		return;
