@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `name-date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `uri-date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `avatar-date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `term-date` datetime NOT NULL DEFAUL '0000-00-00 00:00:00',
+  `term-date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `priority` tinyint(3) NOT NULL,
   `blocked` tinyint(1) NOT NULL DEFAULT '1',
   `readonly` tinyint(1) NOT NULL DEFAULT '0',
