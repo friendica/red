@@ -164,7 +164,7 @@
 		consume_feed($xml,$importer,$contact,$hub);
 		
 
-		if((strlen($hub)) && (contact['rel'] == REL_BUD) && ($contact['priority'] == 0)) {
+		if((strlen($hub)) && ($contact['rel'] == REL_BUD) && ($contact['priority'] == 0)) {
 			subscribe_to_hub($hub,$importer,$contact);
 		}
 
