@@ -248,7 +248,9 @@ function check_config(&$a) {
 // $s is the string requiring macro substitution.
 // $r is an array of key value pairs (search => replace)
 // returns substituted string.
-
+// WARNING: this is pretty basic, and doesn't properly handle search strings that are substrings of each other.
+// For instance if 'test' => "foo" and 'testing' => "bar", testing could become either bar or fooing, 
+// depending on the order in which they were declared in the array.   
 
 if(! function_exists('replace_macros')) {  
 function replace_macros($s,$r) {

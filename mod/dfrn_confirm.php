@@ -270,12 +270,30 @@ function dfrn_confirm_post(&$a) {
 
 		$res = post_url($dfrn_confirm,$params);
 
-// uncomment the following two lines and comment the following xml/status lines
-// to debug the remote confirmation section (when both confirmations 
-// and responses originate on this system)
+		// Try to be robust if the remote site is having difficulty and throwing up
+		// errors of some kind. 
 
-// echo $res;
-// $status = 0;
+		$leading_junk = substr($res,0,strpos($res,'<?xml'));
+
+		$res = substr($res,strpos($res,'<?xml'));
+		if(! strlen($res)) {
+
+				// No XML at all, this exchange is messed up really bad.
+				// We shouldn't proceed, because the xml parser might choke,
+				// and $status is going to be zero, which indicates success.
+				// We can hardly call this a success.  
+
+			notice( t('Response from remote site was not understood.') . EOL);
+			return;
+		}
+
+		if(strlen($leading_junk) && get_config('system','debugging')) {
+
+				// This might be more common. Mixed error text and some XML.
+				// If we're configured for debugging, show the text. Proceed in either case.
+
+			notice( t('Unexpected response from remote site: ') . EOL . $leading_junk . EOL );
+		}
 
 		$xml = simplexml_load_string($res);
 		$status = (int) $xml->status;
@@ -284,9 +302,7 @@ function dfrn_confirm_post(&$a) {
 				notice( t("Confirmation completed successfully") . EOL);
 				break;
 			case 1:
-
 				// birthday paradox - generate new dfrn-id and fall through.
-
 				$new_dfrn_id = random_string();
 				$r = q("UPDATE contact SET `issued-id` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
 					dbesc($new_dfrn_id),
@@ -302,7 +318,7 @@ function dfrn_confirm_post(&$a) {
 			case 3:
 				notice( t("Introduction failed or was revoked. Cannot complete.") . EOL);
 				break;
-		}
+			}
 
 		if(($status == 0 || $status == 3) && ($intro_id)) {
 
@@ -314,6 +330,7 @@ function dfrn_confirm_post(&$a) {
 			);
 			
 		}
+
 		if($status != 0) 
 			return;
 		
