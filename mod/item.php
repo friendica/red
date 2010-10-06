@@ -1,5 +1,12 @@
 <?php
 
+// This is the POST destination for most all locally posted
+// text stuff. This function handles status, wall-to-wall status, 
+// local comments, and remote coments - that are posted on this site 
+// (as opposed to being delivered in a feed).
+// All of these become an "item" which is our basic unit of 
+// information. 
+
 function item_post(&$a) {
 
 	if((! local_user()) && (! remote_user()))
@@ -172,6 +179,7 @@ function item_post(&$a) {
 				intval($post_id)
 			);
 
+			// Send a notification email to the conversation owner, unless the owner is me and I wrote this item
 			if(($user['notify-flags'] & NOTIFY_COMMENT) && ($contact_record != $author)) {
 				require_once('bbcode.php');
 				$from = $author['name'];
@@ -191,6 +199,8 @@ function item_post(&$a) {
 		}
 		else {
 			$parent = $post_id;
+
+			// let me know if somebody did a wall-to-wall post on my profile
 
 			if(($user['notify-flags'] & NOTIFY_WALL) && ($contact_record != $author)) {
 				require_once('bbcode.php');
@@ -217,7 +227,11 @@ function item_post(&$a) {
 			dbesc(datetime_convert()),
 			intval($post_id)
 		);
+
 		// photo comments turn the corresponding item visible to the profile wall
+		// This way we don't see every picture in your new photo album posted to your wall at once.
+		// They will show up as people comment on them.
+
 		if(! $parent_item['visible']) {
 			$r = q("UPDATE `item` SET `visible` = 1 WHERE `id` = %d LIMIT 1",
 				intval($parent_item['id'])
