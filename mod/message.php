@@ -69,7 +69,6 @@ function message_post(&$a) {
 
 	$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 	$proc_debug = get_config('system','proc_debug');
-notice("\"$php_path\" \"include/notifier.php\" \"mail\" \"$post_id\" $proc_debug &");
 	
 	if($post_id) {
 		proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"mail\" \"$post_id\" $proc_debug &",
