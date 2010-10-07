@@ -1,7 +1,15 @@
 <?php
 
-// Set the following for your MySQL installation
+// If automatic system installation fails: 
+
 // Copy or rename this file to .htconfig.php
+
+// Why .htconfig.php? Because it contains sensitive information which could
+// give somebody complete control of your database. Apache's default 
+// configuration denies access to and refuses to serve any file beginning 
+// with .ht
+
+// Then set the following for your MySQL installation
 
 $db_host = 'your.mysqlhost.com';
 $db_user = 'mysqlusername';
@@ -11,18 +19,18 @@ $db_data = 'mysqldatabasename';
 // Choose a legal default timezone. If you are unsure, use "America/Los_Angeles".
 // It can be changed later and only applies to timestamps for anonymous viewers.
 
-$default_timezone = 'Australia/Sydney';
+$default_timezone = 'America/Los_Angeles';
 
 // What is your site name?
 
-$a->config['sitename'] = "DFRN developer";
+$a->config['sitename'] = "Mistpark Social Network";
 
 // Your choices are REGISTER_OPEN, REGISTER_APPROVE, or REGISTER_CLOSED.
 // Be certain to create your own personal account before setting 
 // REGISTER_CLOSED. 'register_text' (if set) will be displayed prominently on 
 // the registration page. REGISTER_APPROVE requires you set 'admin_email'
 // to the email address of an already registered person who can authorise
-// and/or approve/deny the request.
+// and/or approve/deny the request. 
 
 $a->config['register_policy'] = REGISTER_OPEN;
 $a->config['register_text'] = '';
@@ -36,6 +44,7 @@ $a->config['max_import_size'] = 10000;
 
 $a->config['php_path'] = 'php';
 
+// You shouldn't need to change anything else.
 // Location of global directory submission page. 
 
 $a->config['system']['directory_submit_url'] = 'http://dir.dfrn.org/submit';
@@ -43,4 +52,8 @@ $a->config['system']['directory_submit_url'] = 'http://dir.dfrn.org/submit';
 // PuSH - aka pubsubhubbub URL. This makes delivery of public posts as fast as private posts
 
 $a->config['system']['huburl'] = 'http://pubsubhubbub.appspot.com';
+
+// Please see "http://github.com/macgirvin/mistpark/wiki/Hidden-Features-Settings" 
+// for additional settings and options
+
 
