@@ -87,7 +87,7 @@ function pubsub_post(&$a) {
 
 	$debugging = get_config('system','debugging');
 	if($debugging)
-		file_put_contents('pubsub.out',$xml);
+		file_put_contents('pubsub.out',$xml,FILE_APPEND);
 
 	$nick       = (($a->argc > 1) ? notags(trim($a->argv[1])) : '');
 	$contact_id = (($a->argc > 2) ? intval($a->argv[2]) : 0);

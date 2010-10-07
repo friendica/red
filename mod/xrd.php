@@ -21,7 +21,8 @@ function xrd_content(&$a) {
 	$o = replace_macros($tpl, array(
 		'$accturi' => $uri,
 		'$profile_url' => $a->get_baseurl() . '/profile/' . $r[0]['nickname'],
-		'$photo' => $a->get_baseurl() . '/photo/profile/' . $r[0]['uid']
+		'$photo' => $a->get_baseurl() . '/photo/profile/' . $r[0]['uid'],
+		'$salmon' => $a->get_baseurl() . '/salmon/' . $r[0]['nickname'] . '/mention'
 	));
 
 	echo $o;

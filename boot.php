@@ -28,6 +28,7 @@ define ( 'NAMESPACE_THREAD' ,         'http://purl.org/syndication/thread/1.0' )
 define ( 'NAMESPACE_TOMB' ,           'http://purl.org/atompub/tombstones/1.0' );
 define ( 'NAMESPACE_ACTIVITY',        'http://activitystrea.ms/spec/1.0/' );
 define ( 'NAMESPACE_ACTIVITY_SCHEMA', 'http://activitystrea.ms/schema/1.0/');
+define ( 'NAMESPACE_SALMON_ME',       'http://salmon-protocol.org/ns/magic-env');
 
 define ( 'ACTIVITY_LIKE',        NAMESPACE_ACTIVITY_SCHEMA . 'like' );
 define ( 'ACTIVITY_DISLIKE',     NAMESPACE_DFRN            . '/dislike' );

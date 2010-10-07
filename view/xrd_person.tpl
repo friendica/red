@@ -14,4 +14,6 @@
           href='$profile_url' />
     <Link rel='http://webfinger.net/rel/avatar'
           href='$photo' />
+    <Link rel="salmon" href="$salmon" />
+
 </XRD>

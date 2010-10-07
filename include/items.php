@@ -127,12 +127,15 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 
 	$hubxml = ((strlen($hub)) ? '<link rel="hub" href="' . xmlify($hub) . '" />' . "\n" : '');
 
+	$salmon = '<link rel="salmon" href="' . xmlify($a->get_baseurl() . '/salmon/' . $owner_nick) . '" />' . "\n" ; 
+	$salmon = ''; // remove this line when salmon handler is finished
 
 	$atom .= replace_macros($feed_template, array(
 		'$feed_id'      => xmlify($a->get_baseurl() . '/profile/' . $owner_nick),
 		'$feed_title'   => xmlify($owner['name']),
 		'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', $updated . '+00:00' , ATOM_TIME)) ,
 		'$hub'          => $hubxml,
+		'$salmon'       => $salmon,
 		'$name'         => xmlify($owner['name']),
 		'$profile_page' => xmlify($owner['url']),
 		'$photo'        => xmlify($owner['photo']),
