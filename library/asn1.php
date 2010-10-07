@@ -186,7 +186,7 @@ class ASN_BASE {
 			case ASN_BOOLEAN:
 				return new ASN_BOOLEAN((bool)$data);
 			case ASN_INTEGER:
-				return new ASN_INTEGER(accum($data));
+				return new ASN_INTEGER(strtr(base64_encode($data),'+/=','-_,'));
 //				return new ASN_INTEGER(ord($data));
 			case ASN_BIT_STR:
 				return new ASN_BIT_STR(self::parseASNString($data, $level+1, $maxLevels));
@@ -292,12 +292,7 @@ class ASN_BASE {
 
 
 function accum($s) {
-	$len = strlen($s);
-	$result = '';
-	for ($i=0; $i < $len; $i++)  {
-		$cur = substr($s,$i,1);
-		$result .= bin2hex($cur);
-    }
+	$result = strtr(base64_encode($s),'+/=','-_,');
     return $result;
 }
 

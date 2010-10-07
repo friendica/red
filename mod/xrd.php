@@ -22,7 +22,8 @@ function xrd_content(&$a) {
 		'$accturi' => $uri,
 		'$profile_url' => $a->get_baseurl() . '/profile/' . $r[0]['nickname'],
 		'$photo' => $a->get_baseurl() . '/photo/profile/' . $r[0]['uid'],
-		'$salmon' => $a->get_baseurl() . '/salmon/' . $r[0]['nickname'] . '/mention'
+		'$salmon' => $a->get_baseurl() . '/salmon/' . $r[0]['nickname'] . '/mention',
+		'$modexp' => $a->get_baseurl() . '/modexp/' . $r[0]['nickname']
 	));
 
 	echo $o;
