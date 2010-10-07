@@ -57,6 +57,10 @@ class dba {
 					break;
 			}
 		}
+		else {
+			if(($result === false) && (file_exists('dbfail.out')))
+				file_put_contents('dbfail.out', printable($sql) . ' returned false' . "\n", FILE_APPEND);
+		}
 
 		if(($result === true) || ($result === false))
 			return $result;

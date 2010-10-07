@@ -117,8 +117,8 @@ function dfrn_notify_post(&$a) {
 				'$username' => $importer['username'],
 				'$email' => $importer['email'],
 				'$from' => $msg['from-name'],
-				'$title' => $msg['title'],
-				'$body' => strip_tags(bbcode($msg['body']))
+				'$title' => stripslashes($msg['title']),
+				'$body' => strip_tags(bbcode(stripslashes($msg['body'])))
 			));
 
 			$res = mail($importer['email'], t('New mail received at ') . $a->config['sitename'],
