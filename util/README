@@ -10,7 +10,11 @@ tinymce, simplepie, and the HTML parsers.
 
 In order for extract to do its job, every use of the t() translation function 
 must be preceded by one space. The string also can not contain parentheses. If
-parens are required in a string, please use hex escapes.
+parens are required in a string which requires translation, please use hex escapes.
+
+\x28 = (
+\x29 = )
+
 
 strings.php - a recent run of the strings program. This provides output that
 is suitable for direct inclusion in the program once the app has been 
@@ -19,7 +23,14 @@ initialised.
 There are also translatable strings in the various files in the view 
 directory. By setting $lang = 'something' in .htconfig.php, the application 
 will search for view/something/filename prior to the English version in 
-view/filename when loading templates and view files.
+view/filename when loading templates and view files. The translated string table
+should be placed in view/$lang/strings.php for automatic inclusion.
+
+You are not restricted to using known languages. You may also use this to
+translate the software into "pirate", "surfer" or merely to replace certain
+text which you don't care for.  
+
+
 
 
 

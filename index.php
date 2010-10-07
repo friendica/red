@@ -6,11 +6,15 @@ $a = new App;
 
 $debug_text = ''; // Debugging functions should never be used on production systems.
 
-// Setup the database.
+// Setup the language and database.
 
 $install = ((file_exists('.htconfig.php')) ? false : true);
 
 @include(".htconfig.php");
+
+if(x($lang))
+	load_translation_table($lang);
+
 require_once("dba.php");
 $db = new dba($db_host, $db_user, $db_pass, $db_data, $install);
 	unset($db_host, $db_user, $db_pass, $db_data);

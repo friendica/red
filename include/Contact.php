@@ -1,6 +1,27 @@
 <?php
 
 
+// Included here for completeness, but this is a very dangerous operation.
+// It is the caller's responsibility to confirm the requestor's intent and
+// authorisation to do this.
+
+function user_remove($uid) {
+	q("DELETE FROM `contact` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `group` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `group_member` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `intro` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `item` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `mail` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `photo` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `profile` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `profile_check` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `user` WHERE `uid` = %d", intval($uid));
+	if($uid == get_uid()) {
+		unset($_SESSION['authenticated']);
+		unset($_SESSION['uid']);
+		killme();
+	}
+}
 
 
 function contact_remove($id) {

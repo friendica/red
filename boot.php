@@ -169,6 +169,15 @@ class App {
 
 }}
 
+// retrieve the App structure
+// useful in functions which require it but don't get it passed to them
+
+if(! function_exists('get_app')) {
+function get_app() {
+	global $a;
+	return $a;
+}};
+
 
 // Multi-purpose function to check variable state.
 // Usage: x($var) or $x($array,'key')
@@ -269,19 +278,21 @@ function replace_macros($s,$r) {
 
 
 // load string tranlsation table for alternate language
-// not yet implemented
 
 if(! function_exists('load_translation_table')) {
 function load_translation_table($lang) {
 	global $a;
 
+	if(file_exists("view/$lang/strings.php"))
+		include("view/$lang/strings.php");
 }}
 
 // translate string if translation exists
 
 if(! function_exists('t')) {
 function t($s) {
-	global $a;
+	
+	$a = get_app();
 
 	if($a->strings[$s])
 		return $a->strings[$s];
