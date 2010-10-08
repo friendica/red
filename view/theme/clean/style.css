@@ -1,5 +1,43 @@
 @import url('../default/style.css');
 
+footer {
+	background: #CCC;
+}
+
+#banner {
+	color: #444444;
+}
+
+body { 
+	background: #FFFFFF;
+	color: #000000;
+}
+.nav-selected {
+	background: #FFFFFF !important;
+	color: #888888 !important;
+}
+
+input:hover {
+	background-color: #CCCCCC;
+	color: #000000;
+	border: 1px solid #FFFFFF;
+}
+
+input, select {
+	background-color: #FFFFFF;
+	color: #000000;
+}
+.nav-link:hover, .nav-commlink:hover {
+	background: #DDDDDD;
+	color: #0000EE;
+}
+option {
+	background-color: #FFFFFF;
+}
+#page-footer {
+	border: none;
+}
+
 nav {
 	background: #F4F4F4;
 }
@@ -12,13 +50,13 @@ body {
 .nav-link {
 	color: #444444;
 	background: #EEE;
-	border: 2px solid #888888;
+	border: 2px solid #CCCCCC;
 }
 
 .nav-commlink {
 	color: #444444;
 	background: #EEE;
-	border: 2px solid #888888;
+	border: 2px solid #CCCCCC;
 }
 
 .profile-tabs {

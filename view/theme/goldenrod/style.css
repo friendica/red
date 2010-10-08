@@ -1,5 +1,49 @@
 @import url('../default/style.css');
 
+footer {
+	background: #CCC;
+}
+
+#banner {
+	color: #444444;
+}
+
+body { 
+	background: #FFFFFF;
+	color: #000000;
+}
+.nav-selected {
+	background: #FFFFFF !important;
+	color: #888888 !important;
+}
+
+input:hover {
+	background-color: #FFEEBB;
+	color: #000000;
+	border: 1px solid #000000;
+}
+
+input, select {
+	background-color: #FFEEBB;
+	color: #000000;
+}
+.nav-link:hover, .nav-commlink:hover {
+	background: #FFDDAA;
+	color: #0000EE;
+}
+option {
+	background-color: #FFEEBB;
+}
+#page-footer {
+	border: none;
+}
+
+nav {
+	background: #FFEEBB;
+}
+
+
+
 body { 
 	background: #FFDDAA;
 	color: #444444;

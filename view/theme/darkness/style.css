@@ -1,13 +1,39 @@
 @import url('../default/style.css');
 
+nav {
+	background: #CCC;
+}
+footer {
+	background: #CCC;
+}
+#banner {
+	color: #FF0000;
+}
+
 body { 
 	background: #000000;
 	color: #FF0000;
 }
 .nav-selected {
 	background: #000000 !important;
+	color: #888888 !important;
 }
 
+input:hover {
+	background-color: #000000;
+}
+input, select {
+	background-color: #000000;
+	color: #FF0000;
+}
+.nav-link:hover, .nav-commlink:hover {
+	background: #DDDDDD;
+	color: #FF0000;
+}
+
+#page-footer {
+	border: none;
+}
 .nav-link {
 	color: #FF0000;
 	background: #444444;
