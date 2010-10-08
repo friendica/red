@@ -17,8 +17,7 @@ $htmltags = array(
                         '/\<strong\>(.*?)\<\/strong\>/is',
                         '/\<a href=\"(.*?)\"(.*?)\>(.*?)\<\/a\>/is',
 			'/\<code\>(.*?)\<\/code\>/is',
-			'/\<font color=(.*?)\>(.*?)\<\/font\>/is',
-			'/\<font color=\"(.*?)\"\>(.*?)\<\/font\>/is',
+			'/\<span style=\"color:(.*?)\"\>(.*?)\<\/span\>/is',
 			'/\<blockquote\>(.*?)\<\/blockquote\>/is',
 
                         );
@@ -36,7 +35,6 @@ $bbtags = array(
                         '[b]$1[/b]',
                         '[url=$1]$3[/url]',
 			'[code]$1[/code]',
-			'[color="$1"]$2[/color]',
 			'[color="$1"]$2[/color]',
 			'[quote]$1[/quote]',
                         );
