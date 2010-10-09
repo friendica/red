@@ -97,7 +97,9 @@ blockquote:before {
 
 #sysmsg {
 	width: 600px;
+	margin-bottom: 10px;
 }
+
 #top-margin {
 	height: 20px;
 }

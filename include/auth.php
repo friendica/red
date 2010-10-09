@@ -71,8 +71,8 @@ else {
 			$a->cid = $r[0]['id'];
 			$_SESSION['cid'] = $a->cid;
 		}
-
-
+		if(($a->module !== 'home') && isset($_SESSION['return_url']))
+			goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
 	}
 }
 
