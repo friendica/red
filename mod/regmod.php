@@ -4,6 +4,8 @@
 
 function regmod_content(&$a) {
 
+	$_SESSION['return_url'] = $a->cmd;
+
 	if(! local_user()) {
 		notice( t('Please login.') . EOL);
 		$o .= '<br /><br />' . login(($a->config['register_policy'] == REGISTER_CLOSED) ? 0 : 1);
