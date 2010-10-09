@@ -21,8 +21,8 @@ function settings_post(&$a) {
 	}
 	if((x($_POST,'npassword')) || (x($_POST,'confirm'))) {
 
-		$newpass = trim($_POST['npassword']);
-		$confirm = trim($_POST['confirm']);
+		$newpass = $_POST['npassword'];
+		$confirm = $_POST['confirm'];
 
 		$err = false;
 		if($newpass != $confirm ) {
