@@ -19,7 +19,8 @@ body {
 	margin-left: 10px;
 }
 a, a:visited {
-	color: #343639;
+/*	color: #34366A; */
+	color: #15607B;
 	text-decoration: none;
 }
 a:hover {
@@ -71,7 +72,7 @@ blockquote:before {
 }
 
 .fakelink, .fakelink:visited {
-	color: #343639;
+	color: #15607B;
 	text-decoration: none;
 	cursor: pointer;
 	margin-top: 15px;
