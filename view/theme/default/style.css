@@ -1688,6 +1688,6 @@ a.mail-list-link:hover {
 }
 
 .sparkle {
-	cursor: crosshair;
+	cursor: url('lock.cur'), pointer;
 /*	cursor: pointer !important; */
 }
