@@ -57,6 +57,13 @@ code {
 blockquote:before {
 	content: '>> ';
 }
+.nav-login-link {
+	float: right;
+	margin-left: 0px;
+	margin-right: 3px;
+	padding: 3px;
+	font-size: 70%;
+}
 
 /* NOTIFICATION */
 #notification-show-hide-link {

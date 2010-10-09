@@ -2,8 +2,11 @@
 
 $a->page['nav'] .= '<div id="panel" style="display: none;"></div>' ;
 
-if(x($_SESSION['uid'])) {
+if(local_user()) {
 		$a->page['nav'] .= '<a id="nav-logout-link" class="nav-link" href="logout">' . t('Logout') . "</a>\r\n";
+}
+else {
+		$a->page['nav'] .= '<a id="nav-login-link" class="nav-login-link" href="login">' . t('Login') . "</a>\r\n";
 }
 
 	$a->page['nav'] .= "<span id=\"nav-link-wrapper\" >\r\n";
