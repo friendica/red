@@ -160,9 +160,11 @@
 	        left : box.left + 'px',
 	        top : box.top + 'px',
 	        width : from.offsetWidth + 'px',
-	        height : from.offsetHeight + 'px'
+	        height : from.offsetHeight + 'px',
+			cursor : 'pointer'
 	    });        
 	to.title = from.title;
+
     }
 
     /**

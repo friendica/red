@@ -78,6 +78,17 @@ blockquote:before {
 	border: 1px solid #F5F6FB;
 }
 
+#jot-perms-icon, 
+#profile-location, 
+#profile-video, 
+#profile-link, 
+#wall-image-upload,
+#profile-upload-wrapper,
+#wall-image-upload-div,
+.focus {
+	cursor: pointer;
+}
+
 .fakelink, .fakelink:visited {
 	color: #15607B;
 	text-decoration: none;
