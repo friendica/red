@@ -32,6 +32,12 @@ function dfrn_confirm_post(&$a) {
 		$my_prvkey = $r[0]['prvkey'];
 		$local_uid = $r[0]['uid'];
 
+
+		if(! strstr($my_prvkey,'BEGIN RSA PRIVATE KEY')) {
+			$message = t('Our site encryption key is apparently messed up.');
+			xml_status(3,$message);
+		}
+
 		// verify everything
 
 		$decrypted_source_url = "";
@@ -39,7 +45,7 @@ function dfrn_confirm_post(&$a) {
 
 
 		if(! strlen($decrypted_source_url)) {
-			$message = t('empty site URL was provided.');
+			$message = t('Empty site URL was provided or URL could not be decrypted by us.');
 			xml_status(3,$message);
 			// NOTREACHED
 		}
@@ -80,7 +86,7 @@ function dfrn_confirm_post(&$a) {
 			intval($local_uid)
 		);
 		if(count($r)) {
-			$message = t('The ID provided is a duplicate on our system. Please try again.');
+			$message = t('The ID provided by your system is a duplicate on our system. It should work if you try again.');
 			xml_status(1,$message); // Birthday paradox - duplicate dfrn-id
 			// NOTREACHED
 		}
@@ -91,7 +97,7 @@ function dfrn_confirm_post(&$a) {
 			intval($dfrn_record)
 		);
 		if(! count($r)) {
-			$message = t('Unable to set your credentials on our system.');
+			$message = t('Unable to set your contact credentials on our system.');
 			xml_status(3,$message);
 		}
 
@@ -165,7 +171,7 @@ function dfrn_confirm_post(&$a) {
 			intval($dfrn_record)
 		);
 		if($r === false) { // should not happen unless schema is messed up
-			$message = t('Unable to update your contact profile on our system');
+			$message = t('Unable to update your contact profile details on our system');
 			xml_status(3,$message);
 		}
 
