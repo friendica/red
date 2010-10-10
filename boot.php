@@ -500,14 +500,18 @@ function goaway($s) {
 }}
 
 // Generic XML return
-// Outputs a basic XML status structure to STDOUT, with a value variable 
-// of $st and terminates the current process. 
+// Outputs a basic dfrn XML status structure to STDOUT, with a <status> variable 
+// of $st and an optional text <message> of $message and terminates the current process. 
 
 if(! function_exists('xml_status')) {
-function xml_status($st) {
+function xml_status($st, $message = '') {
+
+	if(strlen($message))
+		$xml_message = "\t<message>" . xmlify($message) . "</message>\r\n";
+
 	header( "Content-type: text/xml" );
 	echo '<?xml version="1.0" encoding="UTF-8"?>'."\r\n";
-	echo "<result><status>$st</status></result>\r\n";
+	echo "<result>\r\n\t<status>$st</status>\r\n$xml_message</result>\r\n";
 	killme();
 }}
 

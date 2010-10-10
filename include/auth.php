@@ -3,7 +3,11 @@
 // login/logout 
 
 if((x($_SESSION,'authenticated')) && (! ($_POST['auth-params'] === 'login'))) {
+
 	if($_POST['auth-params'] === 'logout' || $a->module === 'logout') {
+	
+		// process logout request
+
 		unset($_SESSION['authenticated']);
 		unset($_SESSION['uid']);
 		unset($_SESSION['visitor_id']);
@@ -13,18 +17,27 @@ if((x($_SESSION,'authenticated')) && (! ($_POST['auth-params'] === 'login'))) {
 		notice( t('Logged out.') . EOL);
 		goaway($a->get_baseurl());
 	}
+
 	if(x($_SESSION,'uid')) {
+
+		// already logged in user returning
+
 		$r = q("SELECT * FROM `user` WHERE `uid` = %d LIMIT 1",
-			intval($_SESSION['uid']));
-		if($r === NULL || (! count($r))) {
+			intval($_SESSION['uid'])
+		);
+
+		if(! count($r)) {
 			goaway($a->get_baseurl());
 		}
+
+		// initialise user environment
+
 		$a->user = $r[0];
 		$_SESSION['theme'] = $a->user['theme'];
 		if(strlen($a->user['timezone']))
 			date_default_timezone_set($a->user['timezone']);
 
-		$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $r[0]['nickname'];
+		$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
 
 		$r = q("SELECT * FROM `contact` WHERE `uid` = %s AND `self` = 1 LIMIT 1",
 			intval($_SESSION['uid']));
@@ -37,16 +50,21 @@ if((x($_SESSION,'authenticated')) && (! ($_POST['auth-params'] === 'login'))) {
 	}
 }
 else {
+
 	unset($_SESSION['authenticated']);
 	unset($_SESSION['uid']);
 	unset($_SESSION['visitor_id']);
 	unset($_SESSION['administrator']);
 	unset($_SESSION['cid']);
 	unset($_SESSION['theme']);
+	unset($_SESSION['my_url']);
 
 	$encrypted = hash('whirlpool',trim($_POST['password']));
 
 	if((x($_POST,'auth-params')) && $_POST['auth-params'] === 'login') {
+
+		// process login request
+
 		$r = q("SELECT * FROM `user` 
 			WHERE `email` = '%s' AND `password` = '%s' AND `blocked` = 0 AND `verified` = 1 LIMIT 1",
 			dbesc(trim($_POST['login-name'])),

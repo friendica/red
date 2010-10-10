@@ -18,14 +18,14 @@ function dfrn_confirm_post(&$a) {
 		$duplex     = $_POST['duplex'];
 		$version_id = $_POST['dfrn_version'];
 
-
 		// Find our user's account
 
 		$r = q("SELECT * FROM `user` WHERE `nickname` = '%s' LIMIT 1",
 			dbesc($node));
 
 		if(! count($r)) {
-			xml_status(3); // failure
+			$message = t('No user record found for ') . '\'' . $node . '\'';
+			xml_status(3,$message); // failure
 			// NOTREACHED
 		}
 
@@ -38,13 +38,21 @@ function dfrn_confirm_post(&$a) {
 		openssl_private_decrypt($source_url,$decrypted_source_url,$my_prvkey);
 
 
+		if(! strlen($decrypted_source_url)) {
+			$message = t('empty site URL was provided.');
+			xml_status(3,$message);
+			// NOTREACHED
+		}
+
 		$ret = q("SELECT * FROM `contact` WHERE `url` = '%s' AND `uid` = %d LIMIT 1",
 			dbesc($decrypted_source_url),
-			intval($local_uid));
+			intval($local_uid)
+		);
 
 		if(! count($ret)) {
-			// this is either a bogus confirmation or we deleted the original introduction.
-			xml_status(3);
+			// this is either a bogus confirmation (?) or we deleted the original introduction.
+			$message = t('Contact record was not found for you on our site.');
+			xml_status(3,$message);
 			return; // NOTREACHED 
 		}
 
@@ -72,7 +80,8 @@ function dfrn_confirm_post(&$a) {
 			intval($local_uid)
 		);
 		if(count($r)) {
-			xml_status(1); // Birthday paradox - duplicate dfrn-id
+			$message = t('The ID provided is a duplicate on our system. Please try again.');
+			xml_status(1,$message); // Birthday paradox - duplicate dfrn-id
 			// NOTREACHED
 		}
 
@@ -81,115 +90,115 @@ function dfrn_confirm_post(&$a) {
 			dbesc($dfrn_pubkey),
 			intval($dfrn_record)
 		);
-		if($r) {
+		if(! count($r)) {
+			$message = t('Unable to set your credentials on our system.');
+			xml_status(3,$message);
+		}
 
-			// We're good but now we have to scrape the profile photo and send notifications.
+		// We're good but now we have to scrape the profile photo and send notifications.
 
-			require_once("Photo.php");
+		require_once("Photo.php");
 
-			$photo_failure = false;
+		$photo_failure = false;
 
-			$r = q("SELECT `photo` FROM `contact` WHERE `id` = %d LIMIT 1",
-				intval($dfrn_record));
-			if(count($r)) {
+		$r = q("SELECT `photo` FROM `contact` WHERE `id` = %d LIMIT 1",
+			intval($dfrn_record));
+		if(count($r)) {
 
-				$filename = basename($r[0]['photo']);
-				$img_str = fetch_url($r[0]['photo'],true);
-				$img = new Photo($img_str);
-				if($img->is_valid()) {
+			$filename = basename($r[0]['photo']);
+			$img_str = fetch_url($r[0]['photo'],true);
+			$img = new Photo($img_str);
+			if($img->is_valid()) {
 
-					$img->scaleImageSquare(175);
+				$img->scaleImageSquare(175);
 					
-					$hash = photo_new_resource();
+				$hash = photo_new_resource();
 
-					$r = $img->store($local_uid, $dfrn_record, $hash, $filename, t('Contact Photos') , 4);
+				$r = $img->store($local_uid, $dfrn_record, $hash, $filename, t('Contact Photos') , 4);
 
-					if($r === false)
-						$photo_failure = true;
-					
-					$img->scaleImage(80);
-					$r = $img->store($local_uid, $dfrn_record, $hash, $filename, t('Contact Photos') , 5);
-
-					if($r === false)
-						$photo_failure = true;
-
-					$photo = $a->get_baseurl() . '/photo/' . $hash . '-4.jpg';
-					$thumb = $a->get_baseurl() . '/photo/' . $hash . '-5.jpg';	
-				}
-				else
+				if($r === false)
 					$photo_failure = true;
+					
+				$img->scaleImage(80);
+				$r = $img->store($local_uid, $dfrn_record, $hash, $filename, t('Contact Photos') , 5);
+
+				if($r === false)
+					$photo_failure = true;
+
+				$photo = $a->get_baseurl() . '/photo/' . $hash . '-4.jpg';
+				$thumb = $a->get_baseurl() . '/photo/' . $hash . '-5.jpg';	
 			}
 			else
 				$photo_failure = true;
+		}
+		else
+			$photo_failure = true;
 
-			if($photo_failure) {
-				$photo = $a->get_baseurl() . '/images/default-profile.jpg';
-				$thumb = $a->get_baseurl() . '/images/default-profile-sm.jpg';
-			}
+		if($photo_failure) {
+			$photo = $a->get_baseurl() . '/images/default-profile.jpg';
+			$thumb = $a->get_baseurl() . '/images/default-profile-sm.jpg';
+		}
 
-			$new_relation = REL_FAN;
-			if(($relation == REL_VIP) || ($duplex))
-				$new_relation = REL_BUD;
+		$new_relation = REL_FAN;
+		if(($relation == REL_VIP) || ($duplex))
+			$new_relation = REL_BUD;
 
-			$r = q("UPDATE `contact` SET 
-				`photo` = '%s', 
-				`thumb` = '%s', 
-				`rel` = %d, 
-				`name-date` = '%s', 
-				`uri-date` = '%s', 
-				`avatar-date` = '%s', 
-				`blocked` = 0, 
-				`pending` = 0,
-				`duplex` = %d, 
-				`network` = 'dfrn' WHERE `id` = %d LIMIT 1
-			",
-				dbesc($photo),
-				dbesc($thumb),
-				intval($new_relation),
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert()),
-				intval($duplex),
-				intval($dfrn_record)
+		$r = q("UPDATE `contact` SET 
+			`photo` = '%s', 
+			`thumb` = '%s', 
+			`rel` = %d, 
+			`name-date` = '%s', 
+			`uri-date` = '%s', 
+			`avatar-date` = '%s', 
+			`blocked` = 0, 
+			`pending` = 0,
+			`duplex` = %d, 
+			`network` = 'dfrn' WHERE `id` = %d LIMIT 1
+		",
+			dbesc($photo),
+			dbesc($thumb),
+			intval($new_relation),
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
+			intval($duplex),
+			intval($dfrn_record)
+		);
+		if($r === false) { // should not happen unless schema is messed up
+			$message = t('Unable to update your contact profile on our system');
+			xml_status(3,$message);
+		}
+
+		// Otherwise everything seems to have worked and we are almost done. Yay!
+		// Send an email notification
+
+		$r = q("SELECT * FROM `contact` LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid`
+			WHERE `contact`.`id` = %d LIMIT 1",
+			intval($dfrn_record)
+		);
+		if((count($r)) && ($r[0]['notify-flags'] & NOTIFY_CONFIRM)) {
+
+			$tpl = (($new_relation == REL_BUD) 
+				? load_view_file('view/friend_complete_eml.tpl')
+				: load_view_file('view/intro_complete_eml.tpl'));
+		
+			$email_tpl = replace_macros($tpl, array(
+				'$sitename' => $a->config['sitename'],
+				'$siteurl' =>  $a->get_baseurl(),
+				'$username' => $r[0]['username'],
+				'$email' => $r[0]['email'],
+				'$fn' => $r[0]['name'],
+				'$dfrn_url' => $r[0]['url'],
+				'$uid' => $newuid )
 			);
-			if($r === false)
-				notice( t("Unable to set contact photo info.") . EOL);
-
-			// Otherwise everything seems to have worked and we are almost done. Yay!
-			// Send an email notification
-
-			$r = q("SELECT * FROM `contact` LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid`
-				WHERE `contact`.`id` = %d LIMIT 1",
-				intval($dfrn_record)
-			);
-			if((count($r)) && ($r[0]['notify-flags'] & NOTIFY_CONFIRM)) {
-
-				$tpl = (($new_relation == REL_BUD) 
-					? load_view_file('view/friend_complete_eml.tpl')
-					: load_view_file('view/intro_complete_eml.tpl'));
-			
-				$email_tpl = replace_macros($tpl, array(
-					'$sitename' => $a->config['sitename'],
-					'$siteurl' =>  $a->get_baseurl(),
-					'$username' => $r[0]['username'],
-					'$email' => $r[0]['email'],
-					'$fn' => $r[0]['name'],
-					'$dfrn_url' => $r[0]['url'],
-					'$uid' => $newuid )
-				);
 	
-				$res = mail($r[0]['email'], t("Connection accepted at ") . $a->config['sitename'],
-					$email_tpl, 'From: ' . t('Administrator') . '@' . $_SERVER[SERVER_NAME] );
-				if(!$res) {
-					notice( t("Email notification failed.") . EOL );
-				}
+			$res = mail($r[0]['email'], t("Connection accepted at ") . $a->config['sitename'],
+				$email_tpl, 'From: ' . t('Administrator') . '@' . $_SERVER[SERVER_NAME] );
+			if(!$res) {
+				notice( t("Email notification failed.") . EOL );
 			}
-			xml_status(0); // Success
-			// NOTREACHED
 		}
-		else {
-			xml_status(2);	// Hopefully temporary problem that can be retried.
-		}
+		xml_status(0); // Success
 		return; // NOTREACHED
 
 	////////////////////// End of this scenario ///////////////////////////////////////////////
@@ -212,7 +221,7 @@ function dfrn_confirm_post(&$a) {
 		$r = q("SELECT * FROM `contact` WHERE `issued-id` = '%s' AND `uid` = %d LIMIT 1",
 				dbesc($dfrn_id),
 				intval($uid)
-				);
+		);
 
 		if(! count($r)) {
 			notice( t('Node does not exist.') . EOL );
@@ -257,7 +266,9 @@ function dfrn_confirm_post(&$a) {
 		$params['public_key'] = $public_key;
 
 
-		openssl_public_encrypt($_SESSION['my_url'], $params['source_url'], $site_pubkey);
+		$my_url = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
+
+		openssl_public_encrypt($my_url, $params['source_url'], $site_pubkey);
 
 		if($aes_allow && function_exists('openssl_encrypt')) {
 			openssl_public_encrypt($src_aes_key, $params['aes_key'], $site_pubkey);
@@ -297,9 +308,12 @@ function dfrn_confirm_post(&$a) {
 
 		$xml = simplexml_load_string($res);
 		$status = (int) $xml->status;
+		$message = unxmlify($xml->message);
 		switch($status) {
 			case 0:
-				notice( t("Confirmation completed successfully") . EOL);
+				notice( t("Confirmation completed successfully.") . EOL);
+				if(strlen($message))
+					notice( t('Remote site reported: ') . $message . EOL);
 				break;
 			case 1:
 				// birthday paradox - generate new dfrn-id and fall through.
@@ -312,15 +326,19 @@ function dfrn_confirm_post(&$a) {
 
 			case 2:
 				notice( t("Temporary failure. Please wait and try again.") . EOL);
+				if(strlen($message))
+					notice( t('Remote site reported: ') . $message . EOL);
 				break;
 
 
 			case 3:
-				notice( t("Introduction failed or was revoked. Cannot complete.") . EOL);
+				notice( t("Introduction failed or was revoked.") . EOL);
+				if(strlen($message))
+					notice( t('Remote site reported: ') . $message . EOL);
 				break;
 			}
 
-		if(($status == 0 || $status == 3) && ($intro_id)) {
+		if(($status == 0) && ($intro_id)) {
 
 			//delete the notification
 
@@ -334,7 +352,6 @@ function dfrn_confirm_post(&$a) {
 		if($status != 0) 
 			return;
 		
-
 		require_once("Photo.php");
 
 		$photo_failure = false;
