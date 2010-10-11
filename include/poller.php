@@ -30,7 +30,7 @@
 
 	foreach($contacts as $contact) {
 
-		if($contact['priority']) {
+		if($contact['priority'] || $contact['subhub']) {
 
 			$update = false;
 			$t = $contact['last-update'];
@@ -54,6 +54,13 @@
 					break;
 				case 1:
 				default:
+
+							// if pubsub delivery is in effect, poll no more than once every hour.
+							// We shouldn't need to poll at all with pubsub, but the hub isn't 
+							// always the most reliable postmaster... This way we still get the 
+							// messages when the hub goes flaky, just perhaps a bit slower. 
+							// At least it doesn't hurt to get them twice. 
+
 					if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 hour"))
 						$update = true;
 					break;
