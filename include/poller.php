@@ -23,7 +23,7 @@
 
 	$contacts = q("SELECT * FROM `contact` 
 		WHERE ( `dfrn-id` != '' OR (`issued-id` != '' AND `duplex` = 1)) 
-		AND `self` = 0 AND `blocked` = 0 AND `readonly` = 0 AND `subhub` = 0 ORDER BY RAND()");
+		AND `self` = 0 AND `blocked` = 0 AND `readonly` = 0 ORDER BY RAND()");
 
 	if(! count($contacts))
 		killme();
