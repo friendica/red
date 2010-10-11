@@ -234,15 +234,15 @@ function construct_activity($item) {
 		$o = '<as:object>' . "\r\n";
 		$r = @simplexml_load_string($item['object']);
 		if($r->type)
-			$o .= '<as:object-type>' . $r->type . '</as:object-type>' . "\r\n";
+			$o .= '<as:object-type>' . xmlify($r->type) . '</as:object-type>' . "\r\n";
 		if($r->id)
-			$o .= '<id>' . $r->id . '</id>' . "\r\n";
+			$o .= '<id>' . xmlify($r->id) . '</id>' . "\r\n";
 		if($r->link)
-			$o .= '<link rel="alternate" type="text/html" href="' . $r->link . '" />' . "\r\n";
+			$o .= '<link rel="alternate" type="text/html" href="' . xmlify($r->link) . '" />' . "\r\n";
 		if($r->title)
-			$o .= '<title>' . $r->title . '</title>' . "\r\n";
+			$o .= '<title>' . xmlify($r->title) . '</title>' . "\r\n";
 		if($r->content)
-			$o .= '<content type="html" >' . bbcode($r->content) . '</content>' . "\r\n";
+			$o .= '<content type="html" >' . xmlify(bbcode($r->content)) . '</content>' . "\r\n";
 		$o .= '</as:object>' . "\r\n";
 		return $o;
 	}
