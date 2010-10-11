@@ -89,10 +89,6 @@ function dfrn_confirm_post(&$a) {
 		// or later) then we encrypt the personal public key we send them using AES-256-CBC and a 
 		// random key which is encrypted with their site public key.  
 
-		// Note: We can send any of these things as binary blobs because they are being POST'ed.
-		// Any protocol conversations (notify, poll) which perform GET require bin2hex of all the 
-		// binary stuff. 
-
 		$src_aes_key = random_string();
 
 		$result = '';
@@ -292,9 +288,17 @@ function dfrn_confirm_post(&$a) {
 		$public_key = $_POST['public_key'];
 		$dfrn_id    = hex2bin($_POST['dfrn_id']);
 		$source_url = hex2bin($_POST['source_url']);
-		$aes_key    = hex2bin($_POST['aes_key']);
+		$aes_key    = $_POST['aes_key'];
 		$duplex     = $_POST['duplex'];
 		$version_id = $_POST['dfrn_version'];
+
+
+		// If $aes_key is set, both of these items require unpacking from the hex transport encoding.
+
+		if(x($aes_key)) {
+			$aes_key = hex2bin($aes_key);
+			$public_key = hex2bin($public_key);
+		}
 
 		// Find our user's account
 
