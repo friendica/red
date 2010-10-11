@@ -160,8 +160,7 @@
 	        left : box.left + 'px',
 	        top : box.top + 'px',
 	        width : from.offsetWidth + 'px',
-	        height : from.offsetHeight + 'px',
-			cursor : 'pointer'
+	        height : from.offsetHeight + 'px'
 	    });        
 	to.title = from.title;
 
@@ -385,7 +384,9 @@
                 // in Internet Explorer
                 'direction' : 'ltr',
                 //Max zIndex supported by Opera 9.0-9.2
-                'zIndex': 2147483583
+                'zIndex': 2147483583,
+				'cursor' : 'pointer'
+
             });
             
             // Make sure that element opacity exists.

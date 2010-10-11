@@ -98,17 +98,19 @@ function dfrn_confirm_post(&$a) {
 		$result = '';
 		openssl_private_encrypt($dfrn_id,$result,$a->user['prvkey']);
 
-		$params['dfrn_id'] = $result;
+		$params['dfrn_id'] = bin2hex($result);
 		$params['public_key'] = $public_key;
 
 
 		$my_url = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
 
 		openssl_public_encrypt($my_url, $params['source_url'], $site_pubkey);
+		$params['source_url'] = bin2hex($params['source_url']);
 
 		if($aes_allow && function_exists('openssl_encrypt')) {
 			openssl_public_encrypt($src_aes_key, $params['aes_key'], $site_pubkey);
-			$params['public_key'] = openssl_encrypt($public_key,'AES-256-CBC',$src_aes_key);
+			$params['aes_key'] = bin2hex($params['aes_key']);
+			$params['public_key'] = bin2hex(openssl_encrypt($public_key,'AES-256-CBC',$src_aes_key));
 		}
 
 		$params['dfrn_version'] = '2.0';
@@ -288,9 +290,9 @@ function dfrn_confirm_post(&$a) {
 		// We are processing an external confirmation to an introduction created by our user.
 
 		$public_key = $_POST['public_key'];
-		$dfrn_id    = $_POST['dfrn_id'];
-		$source_url = $_POST['source_url'];
-		$aes_key    = $_POST['aes_key'];
+		$dfrn_id    = hex2bin($_POST['dfrn_id']);
+		$source_url = hex2bin($_POST['source_url']);
+		$aes_key    = hex2bin($_POST['aes_key']);
 		$duplex     = $_POST['duplex'];
 		$version_id = $_POST['dfrn_version'];
 

@@ -85,7 +85,7 @@ blockquote:before {
 #wall-image-upload,
 #profile-upload-wrapper,
 #wall-image-upload-div,
-.focus {
+.hover, .focus {
 	cursor: pointer;
 }
 
