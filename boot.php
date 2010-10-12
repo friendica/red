@@ -833,57 +833,89 @@ function convert_xml_element_to_array($xml_element, &$recursion_depth=0) {
 // Return an empty string if email-style addresses but webfinger fails,
 // or if the resultant personal XRD doesn't contain a DFRN profile.
 
-if(! function_exists('webfinger')) {
-function webfinger($s) {
+if(! function_exists('webfinger_dfrn')) {
+function webfinger_dfrn($s) {
 	if(! strstr($s,'@')) {
 		return $s;
 	}
-	$host = substr($s,strpos($s,'@') + 1);
-	$url = 'http://' . $host . '/.well-known/host-meta' ;
-	$xml = fetch_url($url);
-	if (! $xml)
-		return '';
-	$h = simplexml_load_string($xml);
-	$arr = convert_xml_element_to_array($h);
-
-	if(! isset($arr['xrd']['link']))
-		return '';
-
-	$link = $arr['xrd']['link'];
-	if(! isset($link[0]))
-		$links = array($link);
-	else
-		$links = $link;
-
-	foreach($links as $link)
-		if($link['@attributes']['rel'] && $link['@attributes']['rel'] === 'lrdd')
-			$tpl = $link['@attributes']['template'];
-	if((empty($tpl)) || (! strpos($tpl, '{uri}')))
-		return '';
-
-	$pxrd = str_replace('{uri}', urlencode('acct://'.$s), $tpl);
-
-	$xml = fetch_url($pxrd);
-	if (! $xml)
-		return '';
-	$h = simplexml_load_string($xml);
-	$arr = convert_xml_element_to_array($h);
-
-	if(! isset($arr['xrd']['link']))
-		return '';
-
-	$link = $arr['xrd']['link'];
-	if(! isset($link[0]))
-		$links = array($link);
-	else
-		$links = $link;
-
-	foreach($links as $link)
-		if($link['@attributes']['rel'] == NAMESPACE_DFRN)
-			return $link['@attributes']['href'];
+	$links = webfinger($s);
+	if(count($links)) {
+		foreach($links as $link)
+			if($link['@attributes']['rel'] == NAMESPACE_DFRN)
+				return $link['@attributes']['href'];
+	}
 	return '';
 }}
 
+// Given an email style address, perform webfinger lookup and 
+// return the array of link attributes from the personal XRD file.
+// On error/failure return an empty array.
+
+
+if(! function_exists('webfinger')) {
+function webfinger($s) {
+	$host = '';
+	if(strstr($s,'@')) {
+		$host = substr($s,strpos($s,'@') + 1);
+	}
+	if(strlen($host)) {
+		$tpl = fetch_lrdd_template($host);
+		if(strlen($tpl)) {
+			$pxrd = str_replace('{uri}', urlencode('acct://'.$s), $tpl);
+			$links = fetch_xrd_links($pxrd);
+			if(! count($links)) {
+				// try without the double slashes
+				$pxrd = str_replace('{uri}', urlencode('acct:'.$s), $tpl);
+				$links = fetch_xrd_links($pxrd);
+			}
+			return $links;
+		}
+	}
+	return array();
+}}
+
+// Given a host name, locate the LRDD template from that
+// host. Returns the LRDD template or an empty string on
+// error/failure.
+
+if(! function_exists('fetch_lrdd_template')) {
+function fetch_lrdd_template($host) {
+	$tpl = '';
+	$url = 'http://' . $host . '/.well-known/host-meta' ;
+	$links = fetch_xrd_links($url);
+	if(count($links)) {
+		foreach($links as $link)
+			if($link['@attributes']['rel'] && $link['@attributes']['rel'] === 'lrdd')
+				$tpl = $link['@attributes']['template'];
+	}
+	if(! strpos($tpl,'{uri}'))
+		$tpl = '';
+	return $tpl;
+}}
+
+// Given a URL, retrieve the page as an XRD document.
+// Return an array of links.
+// on error/failure return empty array.
+
+if(! function_exists('fetch_xrd_links')) {
+function fetch_xrd_links($url) {
+
+	$xml = fetch_url($url);
+	if (! $xml)
+		return array();
+	$h = simplexml_load_string($xml);
+	$arr = convert_xml_element_to_array($h);
+
+	if(isset($arr['xrd']['link'])) {
+		$link = $arr['xrd']['link'];
+		if(! isset($link[0]))
+			$links = array($link);
+		else
+			$links = $link;
+		return $links;
+	}
+	return array();
+}}
 
 // Convert an ACL array to a storable string
 

@@ -181,7 +181,7 @@ function dfrn_request_post(&$a) {
 
 		// Canonicalise email-style profile locator
 
-		$url = webfinger($url);
+		$url = webfinger_dfrn($url);
 
 		if(! strlen($url)) {
 			notice( t("Unable to resolve your name at the provided location.") . EOL);			
