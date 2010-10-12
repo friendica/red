@@ -41,3 +41,25 @@ function update_1005() {
 		ADD `sprvkey` TEXT NOT NULL AFTER `spubkey`");
 
 }
+
+function update_1006() {
+
+	// create 's' keys for everybody that does not have one
+
+	$r = q("SELECT * FROM `user` WHERE `spubkey` = '' ");
+	if(count($r)) {
+		foreach($r as $rr) {
+			$sres=openssl_pkey_new(array('encrypt_key' => false ));
+			$sprvkey = '';
+			openssl_pkey_export($sres, $sprvkey);
+			$spkey = openssl_pkey_get_details($sres);
+			$spubkey = $spkey["key"];
+			$r = q("UPDATE `user` SET `spubkey` = '%s', `sprvkey` = '%s'
+				WHERE `uid` = %d LIMIT 1",
+				dbesc($spubkey),
+				dbesc($sprvkey),
+				intval($rr['uid'])
+			);
+		}
+	}
+}

@@ -2,7 +2,7 @@
 
 set_time_limit(0);
 
-define ( 'BUILD_ID' , 1006 );
+define ( 'BUILD_ID' , 1007 );
 
 define ( 'EOL', "<br />\r\n");
 define ( 'ATOM_TIME',  'Y-m-d\TH:i:s\Z' );
@@ -236,7 +236,6 @@ function check_config(&$a) {
 		$stored = intval($build);
 		$current = intval(BUILD_ID);
 		if(($stored < $current) && file_exists('update.php')) {
-
 			// We're reporting a different version than what is currently installed.
 			// Run any existing update scripts to bring the database up to current.
 
