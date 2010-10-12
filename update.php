@@ -34,3 +34,10 @@ function update_1003() {
 function update_1004() {
 	q("ALTER TABLE `contact` ADD `subhub` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `usehub`");
 }
+
+function update_1005() {
+
+	q("ALTER TABLE `user` ADD `spubkey` TEXT NOT NULL AFTER `prvkey` ,
+		ADD `sprvkey` TEXT NOT NULL AFTER `spubkey`");
+
+}

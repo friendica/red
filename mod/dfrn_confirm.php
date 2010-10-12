@@ -290,7 +290,7 @@ function dfrn_confirm_post(&$a) {
 		$source_url = hex2bin($_POST['source_url']);
 		$aes_key    = $_POST['aes_key'];
 		$duplex     = $_POST['duplex'];
-		$version_id = $_POST['dfrn_version'];
+		$version_id = (float) $_POST['dfrn_version'];
 
 
 		// If $aes_key is set, both of these items require unpacking from the hex transport encoding.
@@ -483,7 +483,7 @@ function dfrn_confirm_post(&$a) {
 			$res = mail($r[0]['email'], t("Connection accepted at ") . $a->config['sitename'],
 				$email_tpl, 'From: ' . t('Administrator') . '@' . $_SERVER[SERVER_NAME] );
 			if(!$res) {
-				notice( t("Email notification failed.") . EOL );
+				// pointless throwing an error here and confusing the person at the other end of the wire.
 			}
 		}
 		xml_status(0); // Success

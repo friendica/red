@@ -109,15 +109,31 @@ function register_post(&$a) {
 	$pkey = openssl_pkey_get_details($res);
 	$pubkey = $pkey["key"];
 
+	$sres=openssl_pkey_new(array(
+		'encrypt_key' => false ));
+
+	// Get private key
+
+	$sprvkey = '';
+
+	openssl_pkey_export($sres, $sprvkey);
+
+	// Get public key
+
+	$spkey = openssl_pkey_get_details($sres);
+	$spubkey = $spkey["key"];
+
 	$r = q("INSERT INTO `user` ( `username`, `password`, `email`, `nickname`,
-		`pubkey`, `prvkey`, `verified`, `blocked` )
-		VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', %d, %d )",
+		`pubkey`, `prvkey`, `spubkey`, `sprvkey`, `verified`, `blocked` )
+		VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d )",
 		dbesc($username),
 		dbesc($new_password_encoded),
 		dbesc($email),
 		dbesc($nickname),
 		dbesc($pubkey),
 		dbesc($prvkey),
+		dbesc($spubkey),
+		dbesc($sprvkey),
 		intval($verified),
 		intval($blocked)
 		);
