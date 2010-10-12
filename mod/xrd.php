@@ -1,5 +1,6 @@
 <?php
 
+require_once('salmon.php');
 
 function xrd_content(&$a) {
 
@@ -16,6 +17,11 @@ function xrd_content(&$a) {
 	if(! count($r))
 		killme();
 
+	$salmon_key = salmon_key($r[0]['spubkey']);
+
+
+
+
 	$tpl = load_view_file('view/xrd_person.tpl');
 
 	$o = replace_macros($tpl, array(
@@ -23,7 +29,7 @@ function xrd_content(&$a) {
 		'$profile_url' => $a->get_baseurl() . '/profile/' . $r[0]['nickname'],
 		'$photo' => $a->get_baseurl() . '/photo/profile/' . $r[0]['uid'],
 		'$salmon' => $a->get_baseurl() . '/salmon/' . $r[0]['nickname'] . '/mention',
-		'$modexp' => $a->get_baseurl() . '/modexp/' . $r[0]['nickname']
+		'$modexp' => 'data:application/magic-public-key,' . $salmon_key
 	));
 
 	echo $o;

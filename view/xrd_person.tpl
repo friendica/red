@@ -15,8 +15,6 @@
     <Link rel='http://webfinger.net/rel/avatar'
           href='$photo' />
     <Link rel="salmon" href="$salmon" />
-	<Link rel="magic-public-key" 
-		type="application/magic-public-key"
-		href="$modexp" />
+    <Link rel="magic-public-key" href="$modexp" />
  
 </XRD>
