@@ -183,143 +183,175 @@ function dfrn_request_post(&$a) {
 
 		$url = webfinger_dfrn($url);
 
+		if(substr($url,0,5) === 'stat:') {
+			$network = 'stat';
+			$url = substr($url,5);
+		}
+		else {
+			$network = 'dfrn';
+		}
+
 		if(! strlen($url)) {
 			notice( t("Unable to resolve your name at the provided location.") . EOL);			
 			return;
 		}
 
-		$ret = q("SELECT * FROM `contact` WHERE `uid` = %d AND `url` = '%s' LIMIT 1", 
-			intval($uid),
-			dbesc($url)
-		);
 
-		if(count($ret)) {
-			if(strlen($ret[0]['issued-id'])) {
-				notice( t('You have already introduced yourself here.') . EOL );
-				return;
-			}
-			else {
-				$contact_record = $ret[0];
-				$parms = array('dfrn-request' => $ret[0]['request']);
-			}
-		}
-		$issued_id = random_string();
-
-		if(is_array($contact_record)) {
-			// There is a contact record but no issued-id, so this
-			// is a reciprocal introduction from a known contact
-			$r = q("UPDATE `contact` SET `issued-id` = '%s' WHERE `id` = %d LIMIT 1",
-				dbesc($issued_id),
-				intval($contact_record['id'])
+		if($network == 'dfrn') {
+			$ret = q("SELECT * FROM `contact` WHERE `uid` = %d AND `url` = '%s' LIMIT 1", 
+				intval($uid),
+				dbesc($url)
 			);
-		}
-		else {
-			if(! validate_url($url)) {
-				notice( t('Invalid profile URL.') . EOL);
-				goaway($a->get_baseurl() . '/' . $a->cmd);
-				return; // NOTREACHED
-			}
 
-			if(! allowed_url($url)) {
-				notice( t('Disallowed profile URL.') . EOL);
-				goaway($a->get_baseurl() . '/' . $a->cmd);
-				return; // NOTREACHED
-			}
-			
-
-			require_once('Scrape.php');
-
-			$parms = scrape_dfrn($url);
-
-			if(! count($parms)) {
-				notice( t('Profile location is not valid or does not contain profile information.') . EOL );
-				goaway($a->get_baseurl() . '/' . $a->cmd);
-			}
-			else {
-				if(! x($parms,'fn'))
-					notice( t('Warning: profile location has no identifiable owner name.') . EOL );
-				if(! x($parms,'photo'))
-					notice( t('Warning: profile location has no profile photo.') . EOL );
-				$invalid = validate_dfrn($parms);		
-				if($invalid) {
-					notice( $invalid . t(' required parameter') 
-						. (($invalid == 1) ? t(" was ") : t("s were ") )
-						. t("not found at the given location.") . EOL ) ;
-
+			if(count($ret)) {
+				if(strlen($ret[0]['issued-id'])) {
+					notice( t('You have already introduced yourself here.') . EOL );
 					return;
 				}
+				else {
+					$contact_record = $ret[0];
+					$parms = array('dfrn-request' => $ret[0]['request']);
+				}
 			}
+			$issued_id = random_string();
 
-
-			$parms['url'] = $url;
-			$parms['issued-id'] = $issued_id;
-
-
-			dbesc_array($parms);
-			$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `name`, `issued-id`, `photo`, `site-pubkey`,
-				`request`, `confirm`, `notify`, `poll` )
-				VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
-				intval($uid),
-				datetime_convert(),
-				$parms['url'],
-				$parms['fn'],
-				$parms['issued-id'],
-				$parms['photo'],
-				$parms['key'],
-				$parms['dfrn-request'],
-				$parms['dfrn-confirm'],
-				$parms['dfrn-notify'],
-				$parms['dfrn-poll']
-			);
-
-			// find the contact record we just created
-			if($r) {	
-				$r = q("SELECT `id` FROM `contact` 
-					WHERE `uid` = %d AND `url` = '%s' AND `issued-id` = '%s' LIMIT 1",
-					intval($uid),
-					$parms['url'],
-					$parms['issued-id']
+			if(is_array($contact_record)) {
+				// There is a contact record but no issued-id, so this
+				// is a reciprocal introduction from a known contact
+				$r = q("UPDATE `contact` SET `issued-id` = '%s' WHERE `id` = %d LIMIT 1",
+					dbesc($issued_id),
+					intval($contact_record['id'])
 				);
-				if(count($r)) 
-					$contact_record = $r[0];
+			}
+			else {
+				if(! validate_url($url)) {
+					notice( t('Invalid profile URL.') . EOL);
+					goaway($a->get_baseurl() . '/' . $a->cmd);
+					return; // NOTREACHED
+				}
+
+				if(! allowed_url($url)) {
+					notice( t('Disallowed profile URL.') . EOL);
+					goaway($a->get_baseurl() . '/' . $a->cmd);
+					return; // NOTREACHED
+				}
+			
+
+				require_once('Scrape.php');
+
+				$parms = scrape_dfrn($url);
+
+				if(! count($parms)) {
+					notice( t('Profile location is not valid or does not contain profile information.') . EOL );
+					goaway($a->get_baseurl() . '/' . $a->cmd);
+				}
+				else {
+					if(! x($parms,'fn'))
+						notice( t('Warning: profile location has no identifiable owner name.') . EOL );
+					if(! x($parms,'photo'))
+						notice( t('Warning: profile location has no profile photo.') . EOL );
+					$invalid = validate_dfrn($parms);		
+					if($invalid) {
+						notice( $invalid . t(' required parameter') 
+							. (($invalid == 1) ? t(" was ") : t("s were ") )
+							. t("not found at the given location.") . EOL ) ;
+	
+						return;
+					}
+				}
+
+
+				$parms['url'] = $url;
+				$parms['issued-id'] = $issued_id;
+
+
+				dbesc_array($parms);
+				$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `name`, `issued-id`, `photo`, `site-pubkey`,
+					`request`, `confirm`, `notify`, `poll` )
+					VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+					intval($uid),
+					datetime_convert(),
+					$parms['url'],
+					$parms['fn'],
+					$parms['issued-id'],
+					$parms['photo'],
+					$parms['key'],
+					$parms['dfrn-request'],
+					$parms['dfrn-confirm'],
+					$parms['dfrn-notify'],
+					$parms['dfrn-poll']
+				);
+
+				// find the contact record we just created
+				if($r) {	
+					$r = q("SELECT `id` FROM `contact` 
+						WHERE `uid` = %d AND `url` = '%s' AND `issued-id` = '%s' LIMIT 1",
+						intval($uid),
+						$parms['url'],
+						$parms['issued-id']
+					);
+					if(count($r)) 
+						$contact_record = $r[0];
+				}
+	
+			}
+			if($r === false) {
+				notice( t('Failed to update contact record.') . EOL );
+				return;
+			}
+
+			$hash = random_string() . (string) time();   // Generate a confirm_key
+	
+			if(is_array($contact_record)) {
+				$ret = q("INSERT INTO `intro` ( `uid`, `contact-id`, `blocked`, `knowyou`, `note`, `hash`, `datetime`)
+					VALUES ( %d, %d, 1, %d, '%s', '%s', '%s' )",
+					intval($uid),
+					intval($contact_record['id']),
+					((x($_POST,'knowyou') && ($_POST['knowyou'] == 1)) ? 1 : 0),
+					dbesc(notags(trim($_POST['dfrn-request-message']))),
+					dbesc($hash),
+					dbesc(datetime_convert())
+				);
 			}
 	
-		}
-		if($r === false) {
-			notice( t('Failed to update contact record.') . EOL );
-			return;
-		}
 
-		$hash = random_string() . (string) time();   // Generate a confirm_key
+			// This notice will only be seen by the requestor if  the requestor and requestee are on the same server.
 
-		if(is_array($contact_record)) {
-			$ret = q("INSERT INTO `intro` ( `uid`, `contact-id`, `blocked`, `knowyou`, `note`, `hash`, `datetime`)
-				VALUES ( %d, %d, 1, %d, '%s', '%s', '%s' )",
-				intval($uid),
-				intval($contact_record['id']),
-				((x($_POST,'knowyou') && ($_POST['knowyou'] == 1)) ? 1 : 0),
-				dbesc(notags(trim($_POST['dfrn-request-message']))),
-				dbesc($hash),
-				dbesc(datetime_convert())
+			if(! $failed) 
+				notice( t('Your introduction has been sent.') . EOL );
+
+			// "Homecoming" - send the requestor back to their site to record the introduction.
+
+			$dfrn_url = bin2hex($a->get_baseurl() . '/profile/' . $nickname);
+			$aes_allow = ((function_exists('openssl_encrypt')) ? 1 : 0);
+
+			goaway($parms['dfrn-request'] . "?dfrn_url=$dfrn_url" 
+				. '&dfrn_version=' . DFRN_PROTOCOL_VERSION 
+				. '&confirm_key='  . $hash 
+				. (($aes_allow) ? "&aes_allow=1" : "")
 			);
+			// NOTREACHED
+			// END $network === 'dfrn'
 		}
-	
+		elseif($network === 'stat') {
+			
+			/**
+			*
+			* OStatus network
+			* Check contact existence
+			* Try and scrape together enough information to create a contact record, with us as REL_VIP
+			* Substitute our user's feed URL into $url template
+			* Send the subscriber home to subscribe
+			*
+			**/
 
-		// This notice will only be seen by the requestor if  the requestor and requestee are on the same server.
+			$url = str_replace('{uri}', $a->get_baseurl() . '/dfrn_poll/' . $nickname, $url);
+			goaway($url);
+			// NOTREACHED
+			// END $network === 'stat'
+		}
 
-		if(! $failed) 
-			notice( t('Your introduction has been sent.') . EOL );
-
-		// "Homecoming" - send the requestor back to their site to record the introduction.
-
-		$dfrn_url = bin2hex($a->get_baseurl() . '/profile/' . $nickname);
-		$aes_allow = ((function_exists('openssl_encrypt')) ? 1 : 0);
-
-		goaway($parms['dfrn-request'] . "?dfrn_url=$dfrn_url" . '&confirm_key=' . $hash . (($aes_allow) ? "&aes_allow=1" : ""));
-		return; // NOTREACHED
-
-	}
-	return;
+	}	return;
 }}
 
 

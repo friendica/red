@@ -4,7 +4,10 @@
 <p id="dfrn-request-intro">
 You may request a connection with this member if you have a valid profile address<br />
 on one of the following social networks:<br />
-<ul id="dfrn-request-networks"><li><a href="http://dfrn.org">mistpark/DFRN</a></li></ul>
+<ul id="dfrn-request-networks">
+<li><a href="http://dfrn.org">Mistpark/DFRN</a> (fully supported)</li>
+<li><a href="http://ostatus.org">Federation/OStatus/Diaspora/GNU-social</a> (limited - experimental)</li>
+</ul>
 </p>
 
 <form action="dfrn_request/$nickname" method="post" />

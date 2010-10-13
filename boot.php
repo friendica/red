@@ -2,10 +2,11 @@
 
 set_time_limit(0);
 
-define ( 'BUILD_ID' , 1007 );
+define ( 'BUILD_ID',             1007 );
+define ( 'DFRN_PROTOCOL_VERSION', '2.0');
 
-define ( 'EOL', "<br />\r\n");
-define ( 'ATOM_TIME',  'Y-m-d\TH:i:s\Z' );
+define ( 'EOL',                  "<br />\r\n");
+define ( 'ATOM_TIME',            'Y-m-d\TH:i:s\Z' );
 
 define ( 'REGISTER_CLOSED',  0);
 define ( 'REGISTER_APPROVE', 1);
@@ -34,6 +35,7 @@ define ( 'NAMESPACE_TOMB' ,           'http://purl.org/atompub/tombstones/1.0' )
 define ( 'NAMESPACE_ACTIVITY',        'http://activitystrea.ms/spec/1.0/' );
 define ( 'NAMESPACE_ACTIVITY_SCHEMA', 'http://activitystrea.ms/schema/1.0/');
 define ( 'NAMESPACE_SALMON_ME',       'http://salmon-protocol.org/ns/magic-env');
+define ( 'NAMESPACE_OSTATUSSUB',      'http://ostatus.org/schema/1.0/subscribe');
 
 define ( 'ACTIVITY_LIKE',        NAMESPACE_ACTIVITY_SCHEMA . 'like' );
 define ( 'ACTIVITY_DISLIKE',     NAMESPACE_DFRN            . '/dislike' );
@@ -848,6 +850,10 @@ function webfinger_dfrn($s) {
 		foreach($links as $link)
 			if($link['@attributes']['rel'] === NAMESPACE_DFRN)
 				return $link['@attributes']['href'];
+		foreach($links as $link)
+			if($link['@attributes']['rel'] === NAMESPACE_OSTATUSSUB)
+				return 'stat:' . $link['@attributes']['template'];
+		
 	}
 	return '';
 }}
