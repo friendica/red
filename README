@@ -1,26 +1,36 @@
 
 Mistpark Server
-Version 2.0 alpha
+Distributed Social Network
 
 IMPORTANT: Please see the file INSTALL for system requirements.
 
-Mistpark introduces a new generation of social networks. Mistpark Server
-allows you to interact with other members of the Mistpark community using
-the DFRN (Distributed Friends and Relations Network) protocol. Other networks
-(such as Diaspora, OneSocialWeb, status.net, etc.) will be supported in the 
-future as their products mature and protocol and privacy/rights issues are 
-resolved between these networks. 
+Mistpark is a social network without boundaries. Mistpark installations can 
+all link together into a global social network which is free from central 
+control. We are also developing connectors to seamlessly communicate with many 
+other open social networks and providers - GNU-social, Diaspora, Status.net, 
+and even the larger closed services such as Facebook and Twitter.
 
-It's your network now. If social networking isn't what you thought it would 
-be, help us to make it better.  
+Over the coming months, the boundaries between these networks will start to 
+become indistinguishable as they all become part of your social circle.
+
+Your personal thoughts and conversations belong to you - and are shared with 
+those you wish to share them with. 
+
+Period.  
+
+Mistpark is secure and as private as you wish it to be. Privacy settings are 
+straight-forward and simple, because we know that relationships rarely are 
+(straight-forward and simple). Whether you're communicating with drinking 
+buddies or potential employers, you can rest assured that each can only see
+the side of you that you wish to present. 
 
 A single instance of Mistpark Server supports up to several hundred people 
 using commodity hosting hardware. Each of these people can connect with any 
-other mistpark/DFRN cell anywhere in the world and share photos, links, 
-status updates, whatever. Also available from Mistpark Labs is 
-Mistpark Personal Edition, which supports a single person.
+other supported network anywhere in the world and share photos, links, 
+status updates, whatever. 
 
-Mistpark may also be closed off from the global community and used to support
+But maybe you don't want to be connect to the world. That's OK too. Mistpark 
+may also be closed off from the global community and used to support
 social networking amongst corporate, educational, religious, and other private
 communities. This makes it an excellent choice for the social networking needs
 of young teenagers. Their network can grow to global scope as their maturity 
@@ -28,20 +38,21 @@ increases - and can be made available only to their known friends until then.
 
 Every person on Mistpark has unlimited profiles available to them. There is a 
 "public profile" which can be seen by anybody. Additional profiles may be 
-tailored to specific groups or individuals - and shown when a known friend 
-visits your site.
+tailored to specific groups or individuals.
 
-Groups may be setup for closed conversations (like Diaspora's "aspects"). In 
-this way your conversations with drinking buddies may be kept completely 
-separate from conversations with co-workers (for instance).  
+Groups may be setup for closed conversations. In this way your conversations
+with one group of friends is completely isolated from other friends or groups 
+of friends. 
 
-Please see http://dfrn.org for more information on the mistpark/DFRN project.
+Please see http://mistpark.com for more information. 
 
-We will be providing a support site specifically for mistpark at 
-http://mistpark.com at a future (unspecified) date. We are still 
-evaluating wiki, forum, and bug-tracking software for use on the project. 
 At the present time, you may contact the author and raise issues via
 the source code repository on github.com. 
+
+http://github.com/macgirvin/mistpark
+
+It's your network now. If social networking isn't what you thought it would 
+be, help us to make it better.  
 
 Please support mistpark with a donation.  
 
