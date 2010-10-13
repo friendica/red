@@ -517,10 +517,10 @@ function dfrn_deliver($contact,$atom,$debugging = false) {
 	if($contact['duplex'] && $contact['issued-id'])
 		$idtosend = '1:' . $orig_id;		
 
-	$url = $contact['notify'] . '?dfrn_id=' . $idtosend;
+	$url = $contact['notify'] . '?dfrn_id=' . $idtosend . '&dfrn_version=' . DFRN_PROTOCOL_VERSION ;
 
 	if($debugging)
-		echo "URL: $url";
+		echo "URL: $url\n";
 
 	$xml = fetch_url($url);
 
@@ -560,8 +560,8 @@ function dfrn_deliver($contact,$atom,$debugging = false) {
 		return 3;
 	}
 
-	$postvars['dfrn_id'] = $idtosend;
-
+	$postvars['dfrn_id']      = $idtosend;
+	$postvars['dfrn_version'] = DFRN_PROTOCOL_VERSION;
 
 	if(($contact['rel']) && ($contact['rel'] != REL_FAN) && (! $contact['blocked']) && (! $contact['readonly'])) {
 		$postvars['data'] = $atom;

@@ -14,7 +14,7 @@ function dfrn_poll_init(&$a) {
 		$type = $_GET['type'];
 	if(x($_GET,'last_update'))
 		$last_update = $_GET['last_update'];
-	$dfrn_version    = ((x($_GET,'dfrn_version'))    ? $_GET['dfrn_version']    : '1.0');
+	$dfrn_version    = (float) $_GET['dfrn_version'] ;
 	$destination_url = ((x($_GET,'destination_url')) ? $_GET['destination_url'] : '');
 
 
@@ -115,11 +115,12 @@ function dfrn_poll_init(&$a) {
 
 function dfrn_poll_post(&$a) {
 
-	$dfrn_id = $_POST['dfrn_id'];
-	$challenge = $_POST['challenge'];
-	$url = $_POST['url'];
+	$dfrn_id      = $_POST['dfrn_id'];
+	$challenge    = $_POST['challenge'];
+	$url          = $_POST['url'];
+	$dfrn_version = (float) $_POST['dfrn_version'];
 
-	$direction = (-1);
+	$direction    = (-1);
 	if(strpos($dfrn_id,':') == 1) {
 		$direction = intval(substr($dfrn_id,0,1));
 		$dfrn_id = substr($dfrn_id,2);
@@ -199,7 +200,7 @@ function dfrn_poll_post(&$a) {
 		</reputation>
 		";
 		killme();
-		return; // NOTREACHED
+		// NOTREACHED
 	}
 	else {
 		$o = get_feed_for($a,$dfrn_id, $a->argv[1], $last_update, $direction);
@@ -221,6 +222,8 @@ function dfrn_poll_content(&$a) {
 		$type = $_GET['type'];
 	if(x($_GET,'last_update'))
 		$last_update = $_GET['last_update'];
+
+	$dfrn_version = (float) $_GET['dfrn_version'];
 
 	$direction = (-1);
 	if(strpos($dfrn_id,':') == 1) {
@@ -293,11 +296,15 @@ function dfrn_poll_content(&$a) {
 		else {
 			$status = 1;
 		}
-
-		echo '<?xml version="1.0" encoding="UTF-8"?><dfrn_poll><status>' .$status . '</status><dfrn_version>2.0</dfrn_version><dfrn_id>' . $encrypted_id . '</dfrn_id>'
-			. '<challenge>' . $challenge . '</challenge></dfrn_poll>' . "\r\n" ;
-		session_write_close();
-		exit;		
+		header("Content-type: text/xml");
+		echo '<?xml version="1.0" encoding="UTF-8"?>' . "\r\n"
+			. '<dfrn_poll>' . "\r\n"
+			. "\t" . '<status>' .$status . '</status>' . "\r\n"
+			. "\t" . '<dfrn_version>' . DFRN_PROTOCOL_VERSION . '</dfrn_version>' . "\r\n"
+			. "\t" . '<dfrn_id>' . $encrypted_id . '</dfrn_id>' . "\r\n"
+			. "\t" . '<challenge>' . $challenge . '</challenge>' . "\r\n"
+			. '</dfrn_poll>' . "\r\n" ;
+		killme();
 	}
 }
 

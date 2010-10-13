@@ -7,6 +7,7 @@ require_once('include/items.php');
 function dfrn_notify_post(&$a) {
 
 	$dfrn_id = notags(trim($_POST['dfrn_id']));
+	$dfrn_version = (float) $_POST['dfrn_version'];
 	$challenge = notags(trim($_POST['challenge']));
 	$data = $_POST['data'];
 
@@ -374,6 +375,8 @@ function dfrn_notify_content(&$a) {
 		// If this is a duplex communication, ours will be the opposite.
 
 		$dfrn_id = notags(trim($_GET['dfrn_id']));
+		$dfrn_version = (float) $_GET['dfrn_version'];
+
 
 		$direction = (-1);
 		if(strpos($dfrn_id,':') == 1) {
@@ -435,7 +438,16 @@ function dfrn_notify_content(&$a) {
 		$challenge    = bin2hex($challenge);
 		$encrypted_id = bin2hex($encrypted_id);
 
-		echo '<?xml version="1.0" encoding="UTF-8"?><dfrn_notify><status>' . $status . '</status><dfrn_version>2.0</dfrn_version><dfrn_id>' . $encrypted_id . '</dfrn_id><challenge>' . $challenge . '</challenge></dfrn_notify>' . "\r\n" ;
+		header("Content-type: text/xml");
+
+		echo '<?xml version="1.0" encoding="UTF-8"?>' . "\r\n" 
+			. '<dfrn_notify>' . "\r\n"
+			. "\t" . '<status>' . $status . '</status>' . "\r\n"
+			. "\t" . '<dfrn_version>' . DFRN_PROTOCOL_VERSION . '</dfrn_version>' . "\r\n"
+			. "\t" . '<dfrn_id>' . $encrypted_id . '</dfrn_id>' . "\r\n" 
+			. "\t" . '<challenge>' . $challenge . '</challenge>' . "\r\n"
+			. '</dfrn_notify>' . "\r\n" ;
+
 		killme();
 	}
 

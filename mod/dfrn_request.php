@@ -197,7 +197,7 @@ function dfrn_request_post(&$a) {
 		}
 
 
-		if($network == 'dfrn') {
+		if($network === 'dfrn') {
 			$ret = q("SELECT * FROM `contact` WHERE `uid` = %d AND `url` = '%s' LIMIT 1", 
 				intval($uid),
 				dbesc($url)

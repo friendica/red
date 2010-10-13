@@ -109,7 +109,7 @@ function dfrn_confirm_post(&$a) {
 			$params['public_key'] = bin2hex(openssl_encrypt($public_key,'AES-256-CBC',$src_aes_key));
 		}
 
-		$params['dfrn_version'] = '2.0';
+		$params['dfrn_version'] = DFRN_PROTOCOL_VERSION ;
 		if($duplex == 1)
 			$params['duplex'] = 1;
 

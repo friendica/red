@@ -94,12 +94,15 @@
 		if(intval($contact['duplex']) && $contact['issued-id'])
 			$idtosend = '1:' . $orig_id;		
 
-		$url = $contact['poll'] . '?dfrn_id=' . $idtosend . '&type=data&last_update=' . $last_update ;
+		$url = $contact['poll'] . '?dfrn_id=' . $idtosend 
+			. '&dfrn_version=' . DFRN_PROTOCOL_VERSION 
+			. '&type=data&last_update=' . $last_update ;
+
 		$xml = fetch_url($url);
 
 		if($debugging) {
-			echo "URL: " . $url . "\r\n";
-			echo "XML: " . $xml . "\r\n";
+			echo "URL: " . $url . "\n";
+			echo "XML: " . $xml . "\n";
 		}
 
 		if(! $xml) {
@@ -154,7 +157,7 @@
 		}
 
 		$postvars['dfrn_id'] = $idtosend;
-
+		$postvars['dfrn_version'] = DFRN_PROTOCOL_VERSION;
 
 		$xml = post_url($contact['poll'],$postvars);
 
