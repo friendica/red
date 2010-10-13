@@ -2,15 +2,17 @@
 
 set_time_limit(0);
 
-define ( 'BUILD_ID',             1007 );
-define ( 'DFRN_PROTOCOL_VERSION', '2.0');
+define ( 'BUILD_ID',               1007   );
+define ( 'DFRN_PROTOCOL_VERSION',  '2.0'  );
 
-define ( 'EOL',                  "<br />\r\n");
-define ( 'ATOM_TIME',            'Y-m-d\TH:i:s\Z' );
+define ( 'EOL',                    "<br />\r\n"     );
+define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
 
-define ( 'REGISTER_CLOSED',  0);
-define ( 'REGISTER_APPROVE', 1);
-define ( 'REGISTER_OPEN',    2);
+// registration policy
+
+define ( 'REGISTER_CLOSED',        0 );
+define ( 'REGISTER_APPROVE',       1 );
+define ( 'REGISTER_OPEN',          2 );
 
 // relationship types
 
@@ -18,16 +20,20 @@ define ( 'REL_VIP',        1);
 define ( 'REL_FAN',        2);
 define ( 'REL_BUD',        3);
 
-// Maximum number of "people who like (or don't like) this" we will list by name
+// Maximum number of "people who like (or don't like) this" 
+// that we will list by name
 
 define ( 'MAX_LIKERS',    75);
 
+// email notification options
 
 define ( 'NOTIFY_INTRO',   0x0001 );
 define ( 'NOTIFY_CONFIRM', 0x0002 );
 define ( 'NOTIFY_WALL',    0x0004 );
 define ( 'NOTIFY_COMMENT', 0x0008 );
 define ( 'NOTIFY_MAIL',    0x0010 );
+
+// various namespaces we may need to parse
 
 define ( 'NAMESPACE_DFRN' ,           'http://purl.org/macgirvin/dfrn/1.0' ); 
 define ( 'NAMESPACE_THREAD' ,         'http://purl.org/syndication/thread/1.0' );
@@ -36,6 +42,8 @@ define ( 'NAMESPACE_ACTIVITY',        'http://activitystrea.ms/spec/1.0/' );
 define ( 'NAMESPACE_ACTIVITY_SCHEMA', 'http://activitystrea.ms/schema/1.0/');
 define ( 'NAMESPACE_SALMON_ME',       'http://salmon-protocol.org/ns/magic-env');
 define ( 'NAMESPACE_OSTATUSSUB',      'http://ostatus.org/schema/1.0/subscribe');
+
+// activity stream defines
 
 define ( 'ACTIVITY_LIKE',        NAMESPACE_ACTIVITY_SCHEMA . 'like' );
 define ( 'ACTIVITY_DISLIKE',     NAMESPACE_DFRN            . '/dislike' );
@@ -51,6 +59,8 @@ define ( 'ACTIVITY_OBJ_PERSON',  NAMESPACE_ACTIVITY_SCHEMA . 'person' );
 define ( 'ACTIVITY_OBJ_PHOTO',   NAMESPACE_ACTIVITY_SCHEMA . 'photo' );
 define ( 'ACTIVITY_OBJ_P_PHOTO', NAMESPACE_ACTIVITY_SCHEMA . 'profile-photo' );
 define ( 'ACTIVITY_OBJ_ALBUM',   NAMESPACE_ACTIVITY_SCHEMA . 'photo-album' );
+
+// item weight for query ordering
 
 define ( 'GRAVITY_PARENT',       0);
 define ( 'GRAVITY_LIKE',         3);
@@ -284,7 +294,7 @@ function replace_macros($s,$r) {
 }}
 
 
-// load string tranlsation table for alternate language
+// load string translation table for alternate language
 
 if(! function_exists('load_translation_table')) {
 function load_translation_table($lang) {
@@ -314,7 +324,7 @@ function fetch_url($url,$binary = false) {
 	$ch = curl_init($url);
 	if(! $ch) return false;
 
-        curl_setopt($ch, CURLOPT_HEADER, 0);
+	curl_setopt($ch, CURLOPT_HEADER, 0);
 	curl_setopt($ch, CURLOPT_FOLLOWLOCATION,true);
 	curl_setopt($ch, CURLOPT_MAXREDIRS,8);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
@@ -348,7 +358,7 @@ function post_url($url,$params) {
 	$ch = curl_init($url);
 	if(! $ch) return false;
 
-        curl_setopt($ch, CURLOPT_HEADER, 0);
+	curl_setopt($ch, CURLOPT_HEADER, 0);
 	curl_setopt($ch, CURLOPT_FOLLOWLOCATION,true);
 	curl_setopt($ch, CURLOPT_MAXREDIRS,8);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
@@ -400,6 +410,7 @@ function escape_tags($string) {
 
 // wrapper for adding a login box. If $register == true provide a registration
 // link. This will most always depend on the value of $a->config['register_policy'].
+// returns the complete html for inserting into the page
 
 if(! function_exists('login')) {
 function login($register = false) {
@@ -521,7 +532,7 @@ function xml_status($st, $message = '') {
 	killme();
 }}
 
-// Returns the uid of locally logged on user or false.
+// Returns the uid of locally logged in user or false.
 
 if(! function_exists('local_user')) {
 function local_user() {
@@ -835,10 +846,13 @@ function convert_xml_element_to_array($xml_element, &$recursion_depth=0) {
 }}
 
 // Given an email style address, perform webfinger lookup and 
-// return the resulting DFRN profile URL.
+// return the resulting DFRN profile URL, or if no DFRN profile URL
+// is located, returns an OStatus subscription template (prefixed 
+// with the string 'stat:' to identify it as on OStatus template).
 // If this isn't an email style address just return $s.
 // Return an empty string if email-style addresses but webfinger fails,
-// or if the resultant personal XRD doesn't contain a DFRN profile.
+// or if the resultant personal XRD doesn't contain a supported 
+// subscription/friend-request attribute.
 
 if(! function_exists('webfinger_dfrn')) {
 function webfinger_dfrn($s) {
@@ -852,8 +866,7 @@ function webfinger_dfrn($s) {
 				return $link['@attributes']['href'];
 		foreach($links as $link)
 			if($link['@attributes']['rel'] === NAMESPACE_OSTATUSSUB)
-				return 'stat:' . $link['@attributes']['template'];
-		
+				return 'stat:' . $link['@attributes']['template'];		
 	}
 	return '';
 }}
