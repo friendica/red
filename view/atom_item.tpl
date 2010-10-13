@@ -2,12 +2,14 @@
 		<author>
 			<name>$name</name>
 			<uri>$profile_page</uri>
-			<link rel="photo" type="image/jpeg" href="$thumb" />
+			<link rel="photo"  type="image/jpeg" media:width="80" media:height="80" href="$thumb" />
+			<link rel="avatar" type="image/jpeg" media:width="80" media:height="80" href="$thumb" />
 		</author>
 		<dfrn:owner>
 			<name>$owner_name</name>
 			<uri>$owner_profile_page</uri>
-			<link rel="photo" type="image/jpeg" href="$owner_thumb" />
+			<link rel="photo"  type="image/jpeg" media:width="80" media:height="80" href="$owner_thumb" />
+			<link rel="avatar" type="image/jpeg" media:width="80" media:height="80" href="$owner_thumb" />
 		</dfrn:owner>
 
 		<id>$item_id</id>

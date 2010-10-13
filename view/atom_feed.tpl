@@ -18,5 +18,6 @@
   <author>
     <name dfrn:updated="$namdate" >$name</name>
     <uri dfrn:updated="$uridate" >$profile_page</uri>
-    <link rel="photo" type="image/jpeg" dfrn:updated="$picdate" href="$thumb" />
+    <link rel="photo"  type="image/jpeg" dfrn:updated="$picdate" media:width="175" media:height="175" href="$photo" />
+    <link rel="avatar" type="image/jpeg" dfrn:updated="$picdate" media:width="175" media:height="175" href="$photo" />
   </author>
