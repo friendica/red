@@ -80,13 +80,12 @@
 		$importer = $r[0];
 
 		if($debugging)
-			echo "IMPORTER: {$importer['name']}";
+			echo "IMPORTER: {$importer['name']}\n";
 
 		$last_update = (($contact['last-update'] === '0000-00-00 00:00:00') 
-			? datetime_convert('UTC','UTC','now - 30 days','Y-m-d\TH:i:s\Z')
-			: datetime_convert('UTC','UTC',$contact['last-update'],'Y-m-d\TH:i:s\Z'));
-
-
+			? datetime_convert('UTC','UTC','now - 30 days', ATOM_TIME)
+			: datetime_convert('UTC','UTC',$contact['last-update'], ATOM_TIME)
+		);
 
 		$idtosend = $orig_id = (($contact['dfrn-id']) ? $contact['dfrn-id'] : $contact['issued-id']);
 
@@ -160,8 +159,8 @@
 		$xml = post_url($contact['poll'],$postvars);
 
 		if($debugging) {
-			echo "XML response:" . $xml . "\r\n";
-			echo "Length:" . strlen($xml) . "\r\n";
+			echo "XML response:" . $xml . "\n";
+			echo "Length:" . strlen($xml) . "\n";
 		}
 
 		if(! strlen($xml))

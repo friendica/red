@@ -17,6 +17,11 @@ define ( 'REL_VIP',        1);
 define ( 'REL_FAN',        2);
 define ( 'REL_BUD',        3);
 
+// Maximum number of "people who like (or don't like) this" we will list by name
+
+define ( 'MAX_LIKERS',    75);
+
+
 define ( 'NOTIFY_INTRO',   0x0001 );
 define ( 'NOTIFY_CONFIRM', 0x0002 );
 define ( 'NOTIFY_WALL',    0x0004 );
@@ -841,7 +846,7 @@ function webfinger_dfrn($s) {
 	$links = webfinger($s);
 	if(count($links)) {
 		foreach($links as $link)
-			if($link['@attributes']['rel'] == NAMESPACE_DFRN)
+			if($link['@attributes']['rel'] === NAMESPACE_DFRN)
 				return $link['@attributes']['href'];
 	}
 	return '';
@@ -1086,13 +1091,13 @@ function format_like($cnt,$arr,$type,$id) {
 		$o .= '<span class="fakelink" onclick="openClose(\'' . $type . 'list-' . $id . '\');" >' 
 			. $cnt . ' ' . t('people') . '</span> ' . (($type === 'like') ? t('like this.') : t('don\'t like this.')) . EOL ;
 		$total = count($arr);
-		if($total >= 75)
-			$arr = array_slice($arr,0,74);
-		if($total < 75)
+		if($total >= MAX_LIKERS)
+			$arr = array_slice($arr, 0, MAX_LIKERS - 1);
+		if($total < MAX_LIKERS)
 			$arr[count($arr)-1] = t('and') . ' ' . $arr[count($arr)-1];
 		$str = implode(', ', $arr);
-		if($total >= 75)
-			$str .= t(', and ') . $total - 75 . t(' other people');
+		if($total >= MAX_LIKERS)
+			$str .= t(', and ') . $total - MAX_LIKERS . t(' other people');
 		$str .= (($type === 'like') ? t(' like this.') : t(' don\'t like this.'));
 		$o .= '<div id="' . $type . 'list-' . $id . '" style="display: none;" >' . $str . '</div>';
 	}
