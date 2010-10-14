@@ -100,6 +100,8 @@ class App {
 	private $baseurl;
 	private $db;
 
+	private $curl_code;
+
 	function __construct() {
 
 		$this->config = array();
@@ -183,6 +185,14 @@ class App {
 		$this->page['htmlhead'] = replace_macros($tpl,array(
 			'$baseurl' => $this->get_baseurl()
 		));
+	}
+
+	function set_curl_code($code) {
+		$this->curl_code = $code;
+	}
+
+	function get_curl_code() {
+		return $this->curl_code;
 	}
 
 }}
@@ -347,6 +357,9 @@ function fetch_url($url,$binary = false) {
 		curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
 
 	$s = curl_exec($ch);
+	$info = curl_getinfo($ch);
+	$a = get_app();
+	$a->set_curl_code($info['http_code']);
 	curl_close($ch);
 	return($s);
 }}
@@ -376,6 +389,9 @@ function post_url($url,$params) {
 	}
 
 	$s = curl_exec($ch);
+	$info = curl_getinfo($ch);
+	$a = get_app();
+	$a->set_curl_code($info['http_code']);
 	curl_close($ch);
 	return($s);
 }}

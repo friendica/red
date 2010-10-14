@@ -316,6 +316,9 @@
 	if((strlen($hub)) && ($notify_hub)) {
 		$params = 'hub.mode=publish&hub.url=' . urlencode($a->get_baseurl() . '/dfrn_poll/' . $owner['nickname'] );
 		post_url($hub,$params);
+		if($debugging) {
+			file_put_contents('pubsub.out', "\n\n" . "Pinged hub at " . datetime_convert() . "\n" . "Hub returned " . $a->get_curl_code() . "\n\n" , FILE_APPEND);
+		}
 	}
 
 	killme();

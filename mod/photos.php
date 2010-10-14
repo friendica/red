@@ -46,11 +46,10 @@ function photos_init(&$a) {
 function photos_post(&$a) {
 
 
-        if(! local_user()) {
-                notice( t('Permission denied.') . EOL );
-                killme();
-        }
-
+	if(! local_user()) {
+		notice( t('Permission denied.') . EOL );
+		killme();
+	}
 
 
 	$r = q("SELECT `contact`.* `user`.`nickname` FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
