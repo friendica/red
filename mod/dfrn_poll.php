@@ -27,6 +27,7 @@ function dfrn_poll_init(&$a) {
 	}
 
 	if(($dfrn_id === '') && (! x($_POST,'dfrn_id')) && ($a->argc > 1)) {
+		header("Content-type: application/atom+xml");
 		$o = get_feed_for($a, '*', $a->argv[1],$last_update);
 		echo $o;
 		killme();
@@ -203,6 +204,7 @@ function dfrn_poll_post(&$a) {
 		// NOTREACHED
 	}
 	else {
+		header("Content-type: application/atom+xml");
 		$o = get_feed_for($a,$dfrn_id, $a->argv[1], $last_update, $direction);
 		echo $o;
 		killme();
