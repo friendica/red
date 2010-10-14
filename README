@@ -1,14 +1,13 @@
 
-Mistpark Server
-Distributed Social Network
+  Mistpark
+  Distributed Social Network
 
-IMPORTANT: Please see the file INSTALL for system requirements.
 
 Mistpark is a social network without boundaries. Mistpark installations can 
-all link together into a global social network which is free from central 
-control. We are also developing connectors to seamlessly communicate with many 
+link together into a global social network which is free from central 
+control. We are developing connectors to seamlessly communicate with many 
 other open social networks and providers - GNU-social, Diaspora, Status.net, 
-and even the larger closed services such as Facebook and Twitter.
+and even some of the larger closed services such as Facebook and Twitter.
 
 Over the coming months, the boundaries between these networks will start to 
 become indistinguishable as they all become part of your social circle.
@@ -44,12 +43,12 @@ Groups may be created and used for closed conversations. In this way your
 conversations with one group of friends is completely isolated from other 
 friends or groups of friends. 
 
-Please see http://mistpark.com for more information. 
+IMPORTANT: Please see the file INSTALL for system requirements.
 
-At the present time, you may contact the author and raise issues via
-the source code repository on github.com. 
+Visit http://mistpark.com for more information. 
 
-http://github.com/macgirvin/mistpark
+You may also contact the author and raise issues via the source code 
+repository on github -- http://github.com/macgirvin/mistpark
 
 It's your network now. If social networking isn't what you thought it would 
 be, help us to make it better.  
