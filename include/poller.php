@@ -33,6 +33,14 @@
 		if($contact['priority'] || $contact['subhub']) {
 
 			$update = false;
+
+			// We should be getting everything via a hub. But just to be sure, let's check once a day.
+			// This also lets us update our subscription to the hub, and add or replace hubs in case it
+			// changed. 
+
+			if($contact['subhub'])
+				$contact['priority'] = 3;
+
 			$t = $contact['last-update'];
 
 			switch ($contact['priority']) {
@@ -54,13 +62,6 @@
 					break;
 				case 1:
 				default:
-
-							// if pubsub delivery is in effect, poll no more than once every hour.
-							// We shouldn't need to poll at all with pubsub, but the hub isn't 
-							// always the most reliable postmaster... This way we still get the 
-							// messages when the hub goes flaky, just perhaps a bit slower. 
-							// At least it doesn't hurt to get them twice. 
-
 					if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 hour"))
 						$update = true;
 					break;

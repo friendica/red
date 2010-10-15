@@ -104,7 +104,7 @@ function pubsub_post(&$a) {
 
 	$importer = $r[0];
 
-	$r = q("SELECT * FROM `contact` WHERE `subhub` = 1 AND `id` = %d AND `uid` = %d AND `blocked` = 0 LIMIT 1",
+	$r = q("SELECT * FROM `contact` WHERE `subhub` = 1 AND `id` = %d AND `uid` = %d AND `blocked` = 0 AND `readonly` = 0 LIMIT 1",
 		intval($contact_id),
 		intval($importer['uid'])
 	);
