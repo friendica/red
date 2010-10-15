@@ -39,7 +39,10 @@ function pubsub_init(&$a) {
 		$hub_lease = notags(trim($_GET['hub_lease_seconds']));
 		$hub_verify = notags(trim($_GET['hub_verify_token']));
 
-
+		$debugging = get_config('system','debugging');
+		if($debugging) {
+			file_put_contents('pubsub.out', 'Pubsubhubbub subscription called from ' . $_SERVER['REMOTE_ADDR'] . ' at ' . datetime_convert() . "\n" . print_r($_GET,true), FILE_APPEND);
+		}
 
 		$subscribe = (($hub_mode === 'subscribe') ? 1 : 0);
 
@@ -86,8 +89,9 @@ function pubsub_post(&$a) {
 	$xml = file_get_contents('php://input');
 
 	$debugging = get_config('system','debugging');
+	$remote_host = 'Pubsub feed arrived from ' . $_SERVER['REMOTE_ADDR'] . ' at ' . datetime_convert() . "\n\n";
 	if($debugging)
-		file_put_contents('pubsub.out',$xml,FILE_APPEND);
+		file_put_contents('pubsub.out', $remote_host . $xml, FILE_APPEND);
 
 	$nick       = (($a->argc > 1) ? notags(trim($a->argv[1])) : '');
 	$contact_id = (($a->argc > 2) ? intval($a->argv[2]) : 0);

@@ -22,7 +22,7 @@
 	$a->set_baseurl(get_config('system','url'));
 
 	$contacts = q("SELECT * FROM `contact` 
-		WHERE ( `dfrn-id` != '' OR (`issued-id` != '' AND `duplex` = 1)) 
+		WHERE `network` = 'dfrn' AND ( `dfrn-id` != '' OR (`issued-id` != '' AND `duplex` = 1)) 
 		AND `self` = 0 AND `blocked` = 0 AND `readonly` = 0 ORDER BY RAND()");
 
 	if(! count($contacts))
@@ -174,7 +174,15 @@
 		
 
 		if((strlen($hub)) && ($contact['rel'] == REL_BUD) && ($contact['priority'] == 0)) {
-			subscribe_to_hub($hub,$importer,$contact);
+			$hubs = explode(',', $hub);
+			if(count($hubs)) {
+				foreach($hubs as $h) {
+					$h = trim($h);
+					if(! strlen($h))
+						continue;
+					subscribe_to_hub($h,$importer,$contact);
+				}
+			}
 		}
 
 

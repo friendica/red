@@ -149,8 +149,18 @@
 
 	$atom = '';
 
-	$hubxml = ((strlen($hub)) ? '<link rel="hub" href="' . xmlify($hub) . '" />' . "\n" : '');
-	
+	$hubxml = '';
+	if(strlen($hub)) {
+		$hubs = explode(',', $hub);
+		if(count($hubs)) {
+			foreach($hubs as $h) {
+				$h = trim($h);
+				if(! strlen($h))
+					continue;
+				$hubxml .= '<link rel="hub" href="' . xmlify($h) . '" />' . "\n" ;
+			}
+		}
+	}
 
 	$atom .= replace_macros($feed_template, array(
 			'$feed_id'      => xmlify($a->get_baseurl() . '/profile/' . $owner['nickname'] ),
@@ -314,10 +324,21 @@
 	}
 
 	if((strlen($hub)) && ($notify_hub)) {
-		$params = 'hub.mode=publish&hub.url=' . urlencode($a->get_baseurl() . '/dfrn_poll/' . $owner['nickname'] );
-		post_url($hub,$params);
-		if($debugging) {
-			file_put_contents('pubsub.out', "\n\n" . "Pinged hub at " . datetime_convert() . "\n" . "Hub returned " . $a->get_curl_code() . "\n\n" , FILE_APPEND);
+		$hubs = explode(',', $hub);
+		if(count($hubs)) {
+			foreach($hubs as $h) {
+				$h = trim($h);
+				if(! strlen($h))
+					continue;
+				$params = 'hub.mode=publish&hub.url=' . urlencode($a->get_baseurl() . '/dfrn_poll/' . $owner['nickname'] );
+				post_url($h,$params);
+				if($debugging) {
+					file_put_contents('pubsub.out', "\n\n" . "Pinged hub " . $h . ' at ' 
+						. datetime_convert() . "\n" . "Hub returned " . $a->get_curl_code() . "\n\n" , FILE_APPEND);
+				}
+				if(count($hubs) > 1)
+					sleep(7);				// try and avoid multiple hubs responding at precisely the same time
+			}
 		}
 	}
 

@@ -125,7 +125,18 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 
 	$hub = get_config('system','huburl');
 
-	$hubxml = ((strlen($hub)) ? '<link rel="hub" href="' . xmlify($hub) . '" />' . "\n" : '');
+	$hubxml = '';
+	if(strlen($hub)) {
+		$hubs = explode(',', $hub);
+		if(count($hubs)) {
+			foreach($hubs as $h) {
+				$h = trim($h);
+				if(! strlen($h))
+					continue;
+				$hubxml .= '<link rel="hub" href="' . xmlify($h) . '" />' . "\n" ;
+			}
+		}
+	}
 
 	$salmon = '<link rel="salmon" href="' . xmlify($a->get_baseurl() . '/salmon/' . $owner_nick) . '" />' . "\n" ; 
 	$salmon = ''; // remove this line when salmon handler is finished
@@ -599,10 +610,10 @@ function consume_feed($xml,$importer,$contact, &$hub) {
 	$photo_url = '';
 
 
-	$foundhub = $feed->get_link(0,'hub');
+	$hubs = $feed->get_links('hub');
 
-	if(strlen($foundhub))
-		$hub = $foundhub;
+	if(count($hubs))
+		$hub = implode(',', $hubs);
 
 	$rawtags = $feed->get_feed_tags( SIMPLEPIE_NAMESPACE_ATOM_10, 'author');
 	if($rawtags) {
@@ -834,14 +845,18 @@ function subscribe_to_hub($url,$importer,$contact) {
 
 	$push_url = get_config('system','url') . '/pubsub/' . $r[0]['nickname'] . '/' . $contact['id'];
 
-	$verify_token = random_string();
+	// Use a single verify token, even if multiple hubs
+
+	$verify_token = ((strlen($contact['hub-verify'])) ? $contact['hub-verify'] : random_string());
 
 	$params= 'hub.mode=subscribe&hub.callback=' . urlencode($push_url) . '&hub.topic=' . urlencode($contact['poll']) . '&hub.verify=async&hub.verify_token=' . $verify_token;
 
-	$r = q("UPDATE `contact` SET `hub-verify` = '%s' WHERE `id` = %d LIMIT 1",
-		dbesc($verify_token),
-		intval($contact['id'])
-	);
+	if(! strlen($contact['hub-verify'])) {
+		$r = q("UPDATE `contact` SET `hub-verify` = '%s' WHERE `id` = %d LIMIT 1",
+			dbesc($verify_token),
+			intval($contact['id'])
+		);
+	}
 
 	post_url($url,$params);			
 	return;
