@@ -89,7 +89,7 @@ function pubsub_post(&$a) {
 	$xml = file_get_contents('php://input');
 
 	$debugging = get_config('system','debugging');
-	$remote_host = 'Pubsub feed arrived from ' . $_SERVER['REMOTE_ADDR'] . ' at ' . datetime_convert() . "\n\n";
+	$remote_host = 'Pubsub feed arrived from ' . $_SERVER['REMOTE_ADDR'] . ' at ' . datetime_convert() . ' for ' .  $a->cmd . "\n\n";
 	if($debugging)
 		file_put_contents('pubsub.out', $remote_host . $xml, FILE_APPEND);
 
