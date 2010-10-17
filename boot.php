@@ -2,7 +2,7 @@
 
 set_time_limit(0);
 
-define ( 'BUILD_ID',               1007   );
+define ( 'BUILD_ID',               1008   );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.0'  );
 
 define ( 'EOL',                    "<br />\r\n"     );
@@ -19,6 +19,14 @@ define ( 'REGISTER_OPEN',          2 );
 define ( 'REL_VIP',        1);
 define ( 'REL_FAN',        2);
 define ( 'REL_BUD',        3);
+
+
+// page/profile types
+
+define ( 'PAGE_NORMAL',            0 );
+define ( 'PAGE_AUTO_FAN',          1 );
+define ( 'PAGE_AUTO_FAN_RW',       2 );
+define ( 'PAGE_AUTO_BUD',          3 );
 
 // Maximum number of "people who like (or don't like) this" 
 // that we will list by name

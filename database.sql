@@ -351,12 +351,18 @@ CREATE TABLE IF NOT EXISTS `user` (
   `prvkey` text NOT NULL,
   `spubkey` text NOT NULL,
   `sprvkey` text NOT NULL,
-  `verified` tinyint(1) unsigned NOT NULL DEFAULT '0', `blocked`
-  tinyint(1) unsigned NOT NULL DEFAULT '0', `notify-flags` int(11)
-  unsigned NOT NULL DEFAULT '65535', `pwdreset` char(255) NOT NULL,
-  `allow_cid` mediumtext NOT NULL, `allow_gid` mediumtext NOT NULL,
-  `deny_cid` mediumtext NOT NULL, `deny_gid` mediumtext NOT NULL,
-  PRIMARY KEY (`uid`) ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  `verified` tinyint(1) unsigned NOT NULL DEFAULT '0', 
+  `blocked` tinyint(1) unsigned NOT NULL DEFAULT '0', 
+  `notify-flags` int(11) unsigned NOT NULL DEFAULT '65535', 
+  `page-flags` int(11) unsigned NOT NULL DEFAULT '0',
+  `pwdreset` char(255) NOT NULL,
+  `allow_cid` mediumtext NOT NULL, 
+  `allow_gid` mediumtext NOT NULL,
+  `deny_cid` mediumtext NOT NULL, 
+  `deny_gid` mediumtext NOT NULL,
+  PRIMARY KEY (`uid`), 
+  KEY `nickname` (`nickname`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE IF NOT EXISTS `register` (

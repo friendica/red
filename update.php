@@ -63,3 +63,8 @@ function update_1006() {
 		}
 	}
 }
+
+function update_1007() {
+	q("ALTER TABLE `user` ADD `page-flags` INT NOT NULL DEFAULT '0' AFTER `notify-flags`");
+	q("ALTER TABLE `user` ADD INDEX ( `nickname` )");  
+}
