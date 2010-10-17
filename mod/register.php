@@ -59,20 +59,11 @@ function register_post(&$a) {
 	if(! preg_match("/^[a-zA-Z]* [a-zA-Z]*$/",$username))
 		$err .= t(' That doesn\'t appear to be your full name.');
 
-
-	$r = q("SELECT `uid` FROM `user` 
-		WHERE `email` = '%s' LIMIT 1",
-		dbesc($email)
-	);
-
 	if(!eregi('[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\.[A-Za-z]{2,6}',$email))
                 	$err .= t(' Not valid email.');
 
 	if(! allowed_email($email))
 			$err .= t(' Your email domain is not among those allowed on this site.');
-
-	if($r !== false && count($r))
-		$err .= t(' Your email address is already registered on this system.') ;
 
 	$nickname = strtolower($nickname);
 	if(! preg_match("/^[a-z][a-z0-9\-\_]*$/",$nickname))

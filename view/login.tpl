@@ -2,7 +2,7 @@
 <form action="" method="post" >
 <input type="hidden" name="auth-params" value="login" />
 <div id="login-name-wrapper">
-        <label for="login-name" id="label-login-name">Email address: </label>
+        <label for="login-name" id="label-login-name">Username or Email: </label>
         <input type="text" maxlength="60" name="login-name" id="login-name" value="" />
 </div>
 <div id="login-name-end" ></div>

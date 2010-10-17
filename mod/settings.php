@@ -81,27 +81,22 @@ function settings_post(&$a) {
         	if(strlen($username) < 3)
                 	$err .= t(' Name too short.');
 	}
+
 	if($email != $a->user['email']) {
 		$email_changed = true;
         	if(!eregi('[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\.[A-Za-z]{2,6}',$email))
                 	$err .= t(' Not valid email.');
-        	$r = q("SELECT `uid` FROM `user`
-                	WHERE `email` = '%s' LIMIT 1",
-                	dbesc($email)
-                	);
-	        if($r !== NULL && count($r))
-        	        $err .= t(' This email address is already registered.');
 	}
 
-        if(strlen($err)) {
-                notice($err . EOL);
-                return;
-        }
+	if(strlen($err)) {
+		notice($err . EOL);
+		return;
+	}
+
 	if($timezone != $a->user['timezone']) {
 		if(strlen($timezone))
 			date_default_timezone_set($timezone);
 	}
-
 
 	$str_group_allow   = perms2str($_POST['group_allow']);
 	$str_contact_allow = perms2str($_POST['contact_allow']);
@@ -155,6 +150,7 @@ function settings_post(&$a) {
 
 if(! function_exists('settings_content')) {
 function settings_content(&$a) {
+
 	$o .= '<script>	$(document).ready(function() { $(\'#nav-settings-link\').addClass(\'nav-selected\'); });</script>';
 
 	if(! local_user()) {
