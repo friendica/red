@@ -515,10 +515,10 @@ function get_item_contact($item,$contacts) {
 }
 
 
-function dfrn_deliver($contact,$atom,$debugging = false) {
+function dfrn_deliver($owner,$contact,$atom,$debugging = false) {
 
 
-	if((! strlen($contact['dfrn-id'])) && (! $contact['duplex']))
+	if((! strlen($contact['dfrn-id'])) && (! $contact['duplex']) && (! ($owner['page-flags'] == PAGE_COMMUNITY)))
 		return 3;
 
 	$idtosend = $orig_id = (($contact['dfrn-id']) ? $contact['dfrn-id'] : $contact['issued-id']);
@@ -575,6 +575,9 @@ function dfrn_deliver($contact,$atom,$debugging = false) {
 	$postvars['dfrn_version'] = DFRN_PROTOCOL_VERSION;
 
 	if(($contact['rel']) && ($contact['rel'] != REL_FAN) && (! $contact['blocked']) && (! $contact['readonly'])) {
+		$postvars['data'] = $atom;
+	}
+	elseif($owner['page-flags'] == PAGE_COMMUNITY) {
 		$postvars['data'] = $atom;
 	}
 	else {

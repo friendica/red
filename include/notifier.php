@@ -72,7 +72,7 @@
 			killme();
 	}
 
-	$r = q("SELECT `contact`.*, `user`.`nickname` 
+	$r = q("SELECT `contact`.*, `user`.`nickname`, `user`.`page-flags` 
 		FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
 		WHERE `contact`.`uid` = %d AND `contact`.`self` = 1 LIMIT 1",
 		intval($uid)
@@ -128,8 +128,6 @@
 			$recipients = array_diff($recipients,$deny);
 
 			$conversant_str = dbesc(implode(', ',$conversants));
-
-
 		}
 
 		$r = q("SELECT * FROM `contact` WHERE `id` IN ( $conversant_str ) AND `blocked` = 0 AND `pending` = 0");
@@ -310,7 +308,7 @@
 
 		switch($contact['network']) {
 			case 'dfrn':
-				$deliver_status = dfrn_deliver($contact,$atom,$debugging);
+				$deliver_status = dfrn_deliver($owner,$contact,$atom,$debugging);
 				break;
 			default:
 				break;
