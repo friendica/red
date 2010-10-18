@@ -1027,7 +1027,7 @@ function photo_new_resource() {
 
 if(! function_exists('get_uid')) {
 function get_uid() {
-	return ((x($_SESSION,'uid')) ? intval($_SESSION['uid']) : 0) ;
+	return local_user();
 }}
 
 // Take a URL from the wild, prepend http:// if necessary
