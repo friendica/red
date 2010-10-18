@@ -6,7 +6,7 @@ function can_write_wall(&$a,$owner) {
                 return false;
 		$uid = get_uid();
 
-        if(($uid) && ($uid === $owner)) {
+        if(($uid) && ($uid == $owner)) {
                 return true;
 		}
 
