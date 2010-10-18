@@ -17,6 +17,7 @@
           type="text/html"
           href="$profile_url" />
     <Link rel="http://webfinger.net/rel/avatar"
+          type="image/jpeg"
           href="$photo" />
     <Link rel="salmon" 
           href="$salmon" />

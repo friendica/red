@@ -7,7 +7,8 @@ function lostpass_post(&$a) {
 	if(! $email)
 		goaway($a->get_baseurl());
 
-	$r = q("SELECT * FROM `user` WHERE `email` = '%s' LIMIT 1",
+	$r = q("SELECT * FROM `user` WHERE ( `email` = '%s' OR `nickname` = '%s' ) LIMIT 1",
+		dbesc($email),
 		dbesc($email)
 	);
 	if(! count($r))

@@ -28,7 +28,7 @@ function xrd_content(&$a) {
 		'$accturi'     => $uri,
 		'$profile_url' => $a->get_baseurl() . '/profile/'       . $r[0]['nickname'],
 		'$atom'        => $a->get_baseurl() . '/dfrn_poll/'     . $r[0]['nickname'],
-		'$photo'       => $a->get_baseurl() . '/photo/profile/' . $r[0]['uid'],
+		'$photo'       => $a->get_baseurl() . '/photo/profile/' . $r[0]['uid']      . '.jpg',
 		'$salmon'      => $a->get_baseurl() . '/salmon/'        . $r[0]['nickname'],
 		'$salmen'      => $a->get_baseurl() . '/salmon/'        . $r[0]['nickname'] . '/mention',
 		'$modexp'      => 'data:application/magic-public-key,'  . $salmon_key

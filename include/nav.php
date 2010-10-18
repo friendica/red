@@ -27,8 +27,12 @@ else {
 		$a->page['nav'] .= '<a id="nav-home-link" class="nav-commlink" href="profile/' . $a->user['nickname'] . '">' 
 			. t('Home') . '</a><span id="home-update" class="nav-ajax-left"></span>' . "\r\n";
 
-		$a->page['nav'] .= '<a id="nav-notify-link" class="nav-commlink" href="notifications">' . t('Notifications') 
-			. '</a><span id="notify-update" class="nav-ajax-left"></span>' . "\r\n";
+		// only show friend requests for normal pages. Other page types have automatic friendship.
+
+		if($_SESSION['page_flags'] == PAGE_NORMAL) {
+			$a->page['nav'] .= '<a id="nav-notify-link" class="nav-commlink" href="notifications">' . t('Notifications') 
+				. '</a><span id="notify-update" class="nav-ajax-left"></span>' . "\r\n";
+		}
 
 		$a->page['nav'] .= '<a id="nav-messages-link" class="nav-commlink" href="message">' . t('Messages') 
 			. '</a><span id="mail-update" class="nav-ajax-left"></span>' . "\r\n";

@@ -208,11 +208,16 @@ function dfrn_request_post(&$a) {
 					notice( t('You have already introduced yourself here.') . EOL );
 					return;
 				}
+				elseif($ret[0]['rel'] == REL_BUD) {
+					notice( t('Apparently you are already friends with .') . $a->profile['name'] . EOL);
+					return;
+				}
 				else {
 					$contact_record = $ret[0];
 					$parms = array('dfrn-request' => $ret[0]['request']);
 				}
 			}
+
 			$issued_id = random_string();
 
 			if(is_array($contact_record)) {
@@ -314,8 +319,7 @@ function dfrn_request_post(&$a) {
 				);
 			}
 	
-
-			// This notice will only be seen by the requestor if  the requestor and requestee are on the same server.
+			// This notice will only be seen by the requestor if the requestor and requestee are on the same server.
 
 			if(! $failed) 
 				notice( t('Your introduction has been sent.') . EOL );
@@ -417,9 +421,13 @@ function dfrn_request_content(&$a) {
 				WHERE `contact`.`id` = %d LIMIT 1",
 				intval($intro[0]['contact-id'])
 			);
-			if(count($r)) {
 
-				if($r[0]['notify-flags'] & NOTIFY_INTRO) {
+			$auto_confirm = false;
+
+			if(count($r)) {
+				if($r[0]['page-flags'] != PAGE_NORMAL)
+					$auto_confirm = true;				
+				if(($r[0]['notify-flags'] & NOTIFY_INTRO) && (! $auto_confirm)) {
 					$email_tpl = load_view_file('view/request_notify_eml.tpl');
 					$email = replace_macros($email_tpl, array(
 						'$requestor' => ((strlen(stripslashes($r[0]['name']))) ? stripslashes($r[0]['name']) : t('[Name Withheld]')),
@@ -434,12 +442,29 @@ function dfrn_request_content(&$a) {
 						'From: ' . t('Administrator') . '@' . $_SERVER[SERVER_NAME] );
 					// This is a redundant notification - no point throwing errors if it fails.
 				}
+				if($auto_confirm) {
+					require_once('mod/dfrn_confirm.php');
+					$handsfree = array(
+						'uid' => $r[0]['uid'],
+						'node' => $r[0]['nickname'],
+						'dfrn_id' => $r[0]['issued-id'],
+						'intro_id' => $intro[0]['id'],
+						'duplex' => (($r[0]['page-flags'] == PAGE_FREELOVE) ? 1 : 0)
+					);
+					dfrn_confirm_post($a,$handsfree);
+				}
+
 			}
 
-			$r = q("UPDATE `intro` SET `blocked` = 0 WHERE `hash` = '%s' LIMIT 1",
-				dbesc($_GET['confirm_key'])
-			);
+			if(! $auto_confirm) {
 
+				// If we are auto_confirming, this record will have already been nuked
+				// in dfrn_confirm_post()
+
+				$r = q("UPDATE `intro` SET `blocked` = 0 WHERE `hash` = '%s' LIMIT 1",
+					dbesc($_GET['confirm_key'])
+				);
+			}
 		}
 		killme();
 		return; // NOTREACHED

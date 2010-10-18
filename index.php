@@ -88,6 +88,7 @@ if(x($_SESSION,'sysmsg')) {
 	unset($_SESSION['sysmsg']);
 }
 
+
 // Feel free to comment out this line on production sites.
 $a->page['content'] .= $debug_text;
 

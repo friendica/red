@@ -6,7 +6,7 @@ Enter your email address and submit to have your password reset. Then check your
 
 <form action="lostpass" method="post" >
 <div id="login-name-wrapper">
-        <label for="login-name" id="label-login-name">Email address: </label>
+        <label for="login-name" id="label-login-name">Nickname or Email: </label>
         <input type="text" maxlength="60" name="login-name" id="login-name" value="" />
 </div>
 <div id="login-extra-end"></div>

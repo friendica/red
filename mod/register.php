@@ -250,7 +250,13 @@ function register_post(&$a) {
 if(! function_exists('register_content')) {
 function register_content(&$a) {
 
-	if($a->config['register_policy'] == REGISTER_CLOSED) {
+	// logged in users can register others (people/pages/groups)
+	// even with closed registrations, unless specifically prohibited by site policy.
+	// 'block_extended_register' blocks all registrations, period.
+
+	$block = get_config('system','block_extended_register');
+
+	if((($a->config['register_policy'] == REGISTER_CLOSED) && (! getuid())) || ($block)) {
 		notice("Permission denied." . EOL);
 		return;
 	}

@@ -14,6 +14,7 @@ if((x($_SESSION,'authenticated')) && (! ($_POST['auth-params'] === 'login'))) {
 		unset($_SESSION['administrator']);
 		unset($_SESSION['cid']);
 		unset($_SESSION['theme']);
+		unset($_SESSION['page_flags']);
 		notice( t('Logged out.') . EOL);
 		goaway($a->get_baseurl());
 	}
@@ -34,6 +35,7 @@ if((x($_SESSION,'authenticated')) && (! ($_POST['auth-params'] === 'login'))) {
 
 		$a->user = $r[0];
 		$_SESSION['theme'] = $a->user['theme'];
+		$_SESSION['page_flags'] = $a->user['page-flags'];
 		if(strlen($a->user['timezone']))
 			date_default_timezone_set($a->user['timezone']);
 
@@ -58,6 +60,7 @@ else {
 	unset($_SESSION['cid']);
 	unset($_SESSION['theme']);
 	unset($_SESSION['my_url']);
+	unset($_SESSION['page_flags']);
 
 	$encrypted = hash('whirlpool',trim($_POST['password']));
 
@@ -77,6 +80,7 @@ else {
 		$_SESSION['uid'] = $r[0]['uid'];
 		$_SESSION['theme'] = $r[0]['theme'];
 		$_SESSION['authenticated'] = 1;
+		$_SESSION['page_flags'] = $r[0]['page-flags'];
 		$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $r[0]['nickname'];
 
 		notice( t("Welcome back ") . $r[0]['username'] . EOL);

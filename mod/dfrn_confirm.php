@@ -1,31 +1,59 @@
 <?php
 
-// There are two possible entry points. Both are called via POST.
+// There are two possible entry points. 
 
-function dfrn_confirm_post(&$a) {
+function dfrn_confirm_post(&$a,$handsfree = null) {
 
-	if($a->argc > 1)
-		$node = $a->argv[1];
+	if(is_array($handsfree)) {
+
+		// called directly from dfrn_request due to automatic friend acceptance
+		// any $_POST parameters we might need are supplied in the $handsfree array
+
+		$node = $handsfree['node'];
+		$a->interactive = false; // notice() becomes a no-op since nobody is there to see it
+
+	}
+	else {
+		if($a->argc > 1)
+			$node = $a->argv[1];
+	}
 
 		// Main entry point. Our user received a friend request notification (perhaps 
 		// from another site) and clicked 'Accept'. $POST['source_url'] is not set.
-		// They will perform the following:
+		// OR we have been called directly from dfrn_request ($handsfree != null) due to 
+		// this being a page type which supports automatic friend acceptance.
 
 	if(! x($_POST,'source_url')) {
-
-		$uid = get_uid();
+		
+		$uid = ((is_array($handsfree)) ? $handsfree['uid'] : get_uid());
 
 		if(! $uid) {
 			notice( t('Permission denied.') . EOL );
 			return;
 		}	
 
-		// These come from the friend request notification form.
-	
-		$dfrn_id  = ((x($_POST,'dfrn_id')) ? notags(trim($_POST['dfrn_id'])) : "");
-		$intro_id = intval($_POST['intro_id']);
-		$duplex   = intval($_POST['duplex']);
+		$user = q("SELECT * FROM `user` WHERE `uid` = %d LIMIT 1",
+			intval($uid)
+		);
 
+		if(! $user) {
+			notice( t('Profile not found.') . EOL );
+			return;
+		}	
+
+
+		// These come from the friend request notification form or $handsfree reply.
+
+		if(is_array($handsfree)) {
+			$dfrn_id = $handsfree['dfrn_id'];
+			$intro_id = $handsfree['intro_id'];
+			$duplex = $handsfre['duplex'];
+		}
+		else {
+			$dfrn_id  = ((x($_POST,'dfrn_id')) ? notags(trim($_POST['dfrn_id'])) : "");
+			$intro_id = intval($_POST['intro_id']);
+			$duplex   = intval($_POST['duplex']);
+		}
 
 		// The other person will have been issued an ID when they first requested friendship.
 		// Locate their record. At this time, their record will have both pending and blocked set to 1. 
@@ -75,7 +103,6 @@ function dfrn_confirm_post(&$a) {
 			intval($uid) 
 		);
 
-
 		$params = array();
 
 		// Per the protocol document, we will verify both ends by encrypting the dfrn_id with our 
@@ -92,13 +119,13 @@ function dfrn_confirm_post(&$a) {
 		$src_aes_key = random_string();
 
 		$result = '';
-		openssl_private_encrypt($dfrn_id,$result,$a->user['prvkey']);
+		openssl_private_encrypt($dfrn_id,$result,$user[0]['prvkey']);
 
 		$params['dfrn_id'] = bin2hex($result);
 		$params['public_key'] = $public_key;
 
 
-		$my_url = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
+		$my_url = $a->get_baseurl() . '/profile/' . $user[0]['nickname'];
 
 		openssl_public_encrypt($my_url, $params['source_url'], $site_pubkey);
 		$params['source_url'] = bin2hex($params['source_url']);
@@ -266,7 +293,8 @@ function dfrn_confirm_post(&$a) {
 		// Let's send our user to the contact editor in case they want to
 		// do anything special with this new friend.
  
-		goaway($a->get_baseurl() . '/contacts/' . intval($contact_id));
+		if($handsfree === null)
+			goaway($a->get_baseurl() . '/contacts/' . intval($contact_id));
 		return;  //NOTREACHED
 	}
 

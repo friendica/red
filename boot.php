@@ -22,11 +22,16 @@ define ( 'REL_BUD',        3);
 
 
 // page/profile types
+// PAGE_NORMAL is a typical personal profile account
+// PAGE_SOAPBOX automatically approves all friend requests as REL_FAN, (readonly)
+// PAGE_COMMUNITY automatically approves all friend requests as REL_FAN, but with 
+// write access to wall and comments (no email and not included in page owner's ACL lists)
+// PAGE_FREELOVE automatically approves all friend requests as full friends (REL_BUD). 
 
 define ( 'PAGE_NORMAL',            0 );
-define ( 'PAGE_AUTO_FAN',          1 );
-define ( 'PAGE_AUTO_FAN_RW',       2 );
-define ( 'PAGE_AUTO_BUD',          3 );
+define ( 'PAGE_SOAPBOX',           1 );
+define ( 'PAGE_COMMUNITY',         2 );
+define ( 'PAGE_FREELOVE',          3 );
 
 // Maximum number of "people who like (or don't like) this" 
 // that we will list by name
@@ -102,6 +107,7 @@ class App {
 	public  $pager;
 	public  $strings;   
 	public  $path;
+	public  $interactive = true;
 
 	private $scheme;
 	private $hostname;
@@ -579,9 +585,9 @@ function remote_user() {
 
 if(! function_exists('notice')) {
 function notice($s) {
-
-	$_SESSION['sysmsg'] .= $s;
-
+	$a = get_app();
+	if($a->interactive)
+		$_SESSION['sysmsg'] .= $s;
 }}
 
 // wrapper around config to limit the text length of an incoming message
