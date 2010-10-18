@@ -17,7 +17,7 @@ function notifications_post(&$a) {
 			WHERE `request-id` = %d 
 			AND `uid` = %d LIMIT 1",
 				intval($request_id),
-				intval(get_uid())
+				intval(local_user())
 		);
 	
 		if(count($r)) {
@@ -33,7 +33,7 @@ function notifications_post(&$a) {
 			);	
 			$r = q("DELETE FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1", 
 				intval($request_id),
-				intval(get_uid())
+				intval(local_user())
 			);
 			return;
 		}

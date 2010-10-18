@@ -1023,13 +1023,6 @@ function photo_new_resource() {
 }}
 
 
-// Returns logged in user ID
-
-if(! function_exists('get_uid')) {
-function get_uid() {
-	return local_user();
-}}
-
 // Take a URL from the wild, prepend http:// if necessary
 // and check DNS to see if it's real
 // return true if it's OK, false if something is wrong with it

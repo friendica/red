@@ -66,7 +66,7 @@ function like_content(&$a) {
 	}
 
 
-	if((local_user()) && (get_uid() == $owner_uid)) {
+	if((local_user()) && (local_user() == $owner_uid)) {
 		$contact = $owner;
 	}
 	else {

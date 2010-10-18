@@ -90,7 +90,7 @@ function profile_content(&$a, $update = 0) {
 		$a->profile['profile_uid'] = $update;
 	}
 	else {
-		if($a->profile['profile_uid'] == get_uid())		
+		if($a->profile['profile_uid'] == local_user())		
 			$o .= '<script>	$(document).ready(function() { $(\'#nav-home-link\').addClass(\'nav-selected\'); });</script>';
 	}
 
@@ -308,7 +308,7 @@ function profile_content(&$a, $update = 0) {
 			if((($item['verb'] == ACTIVITY_LIKE) || ($item['verb'] == ACTIVITY_DISLIKE)) && ($item['id'] != $item['parent'])) 
 				continue;
 
-			$lock = (($item['uid'] == get_uid()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
+			$lock = (($item['uid'] == local_user()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
 				|| strlen($item['deny_cid']) || strlen($item['deny_gid']))
 				? '<div class="wall-item-lock"><img src="images/lock_icon.gif" class="lockview" alt="' . t('Private Message') . '" onclick="lockview(event,' . $item['id'] . ');" /></div>'
 				: '<div class="wall-item-lock"></div>');

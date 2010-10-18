@@ -57,7 +57,7 @@ function display_content(&$a) {
 
 	// Profile owner - everything is visible
 
-	if(local_user() && (get_uid() == $a->profile['uid'])) {
+	if(local_user() && (local_user() == $a->profile['uid'])) {
 		$sql_extra = ''; 		
 	}
 
@@ -149,7 +149,7 @@ function display_content(&$a) {
 			if((($item['verb'] == ACTIVITY_LIKE) || ($item['verb'] == ACTIVITY_DISLIKE)) && ($item['id'] != $item['parent'])) 
 				continue;
 
-			$lock = (($item['uid'] == get_uid()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
+			$lock = (($item['uid'] == local_user()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
 				|| strlen($item['deny_cid']) || strlen($item['deny_gid']))
 				? '<div class="wall-item-lock"><img src="images/lock_icon.gif" class="lockview" alt="' . t('Private Message') . '" onclick="lockview(event,' . $item['id'] . ');" /></div>'
 				: '<div class="wall-item-lock"></div>');
@@ -222,7 +222,7 @@ function display_content(&$a) {
 			$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $item['thumb']);
 			$profile_link = $profile_url;
 
-			if(($item['contact-id'] == $_SESSION['visitor_id']) || ($item['uid'] == get_uid()))
+			if(($item['contact-id'] == $_SESSION['visitor_id']) || ($item['uid'] == local_user()))
 				$drop = replace_macros(load_view_file('view/wall_item_drop.tpl'), array('$id' => $item['id']));
 			else 
 				$drop = replace_macros(load_view_file('view/wall_fake_drop.tpl'), array('$id' => $item['id']));

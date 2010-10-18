@@ -45,7 +45,7 @@ function dfrn_request_post(&$a) {
 			if(x($dfrn_url)) {
 	
 				$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `url` = '%s' LIMIT 1",
-					intval(get_uid()),
+					intval(local_user()),
 					dbesc($dfrn_url)
 				);
 	
@@ -99,7 +99,7 @@ function dfrn_request_post(&$a) {
 					$r = q("INSERT INTO `contact` ( `uid`, `created`,`url`, `name`, `photo`, `site-pubkey`,
 						`request`, `confirm`, `notify`, `poll`, `aes_allow`) 
 						VALUES ( %d, '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', %d)",
-						intval(get_uid()),
+						intval(local_user()),
 						datetime_convert(),
 						dbesc($dfrn_url),
 						$parms['fn'],

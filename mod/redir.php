@@ -6,7 +6,7 @@ function redir_init(&$a) {
 		goaway($a->get_baseurl());
 	$r = q("SELECT `network`, `issued-id`, `dfrn-id`, `duplex`, `poll` FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		intval($a->argv[1]),
-		intval(get_uid())
+		intval(local_user())
 	);
 	if((! count($r)) || ($r[0]['network'] !== 'dfrn'))
 		goaway($a->get_baseurl());

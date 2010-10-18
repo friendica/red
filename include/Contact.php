@@ -16,7 +16,7 @@ function user_remove($uid) {
 	q("DELETE FROM `profile` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `profile_check` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `user` WHERE `uid` = %d", intval($uid));
-	if($uid == get_uid()) {
+	if($uid == local_user()) {
 		unset($_SESSION['authenticated']);
 		unset($_SESSION['uid']);
 		killme();

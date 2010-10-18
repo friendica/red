@@ -21,7 +21,7 @@ function contacts_post(&$a) {
 
 	$orig_record = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		intval($contact_id),
-		intval(get_uid())
+		intval(local_user())
 	);
 
 	if(! count($orig_record)) {
@@ -34,7 +34,7 @@ function contacts_post(&$a) {
 	if($profile_id) {
 		$r = q("SELECT `id` FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($profile_id),
-			intval(get_uid())
+			intval(local_user())
 		);
 		if(! count($r)) {
 			notice( t('Could not locate selected profile.') . EOL);
@@ -62,7 +62,7 @@ function contacts_post(&$a) {
 		intval($rating),
 		dbesc($reason),
 		intval($contact_id),
-		intval(get_uid())
+		intval(local_user())
 	);
 	if($r)
 		notice( t('Contact updated.') . EOL);
@@ -92,7 +92,7 @@ function contacts_content(&$a) {
 
 		$orig_record = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($contact_id),
-			intval(get_uid())
+			intval(local_user())
 		);
 
 		if(! count($orig_record)) {
@@ -107,7 +107,7 @@ function contacts_content(&$a) {
 			$r = q("UPDATE `contact` SET `blocked` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
 					intval($blocked),
 					intval($contact_id),
-					intval(get_uid())
+					intval(local_user())
 			);
 			if($r) {
 				notice( t('Contact has been ') . (($blocked) ? t('blocked') : t('unblocked')) . EOL );
@@ -121,7 +121,7 @@ function contacts_content(&$a) {
 			$r = q("UPDATE `contact` SET `readonly` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
 					intval($readonly),
 					intval($contact_id),
-					intval(get_uid())
+					intval(local_user())
 			);
 			if($r) {
 				notice( t('Contact has been ') . (($readonly) ? t('ignored') : t('unignored')) . EOL );
@@ -142,7 +142,7 @@ function contacts_content(&$a) {
 
 		$contact_id = intval($a->argv[1]);
 		$r = q("SELECT * FROM `contact` WHERE `uid` = %d and `id` = %d LIMIT 1",
-			intval(get_uid()),
+			intval(local_user()),
 			intval($contact_id)
 		);
 		if(! count($r)) {

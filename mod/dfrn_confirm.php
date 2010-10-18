@@ -25,7 +25,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 
 	if(! x($_POST,'source_url')) {
 		
-		$uid = ((is_array($handsfree)) ? $handsfree['uid'] : get_uid());
+		$uid = ((is_array($handsfree)) ? $handsfree['uid'] : local_user());
 
 		if(! $uid) {
 			notice( t('Permission denied.') . EOL );

@@ -4,7 +4,7 @@ function can_write_wall(&$a,$owner) {
 
         if((! (local_user())) && (! (remote_user())))
                 return false;
-		$uid = get_uid();
+		$uid = local_user();
 
         if(($uid) && ($uid == $owner)) {
                 return true;

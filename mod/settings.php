@@ -15,7 +15,7 @@ function settings_post(&$a) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
-	if(count($a->user) && x($a->user,'uid') && $a->user['uid'] != get_uid()) {
+	if(count($a->user) && x($a->user,'uid') && $a->user['uid'] != local_user()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
@@ -39,7 +39,7 @@ function settings_post(&$a) {
 			$password = hash('whirlpool',$newpass);
 			$r = q("UPDATE `user` SET `password` = '%s' WHERE `uid` = %d LIMIT 1",
 				dbesc($password),
-				intval(get_uid())
+				intval(local_user())
 			);
 			if($r)
 				notice( t('Password changed.') . EOL);
@@ -116,7 +116,7 @@ function settings_post(&$a) {
 			intval($page_flags),
 			dbesc($defloc),
 			dbesc($theme),
-			intval(get_uid())
+			intval(local_user())
 	);
 	if($r)
 		notice( t('Settings updated.') . EOL);
@@ -126,7 +126,7 @@ function settings_post(&$a) {
 		WHERE `is-default` = 1 AND `uid` = %d LIMIT 1",
 		intval($publish),
 		intval($net_publish),
-		intval(get_uid())
+		intval(local_user())
 	);
 
 	if($old_visibility != $net_publish) {
