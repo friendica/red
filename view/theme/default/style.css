@@ -666,7 +666,11 @@ input#dfrn-url {
 #profile-in-netdir-yes,
 #profile-in-netdir-no,
 #hide-friends-yes,
-#hide-friends-no {
+#hide-friends-no,
+#settings-normal,
+#settings-soapbox,
+#settings-community,
+#settings-freelove {
 	float: left;
 	margin-bottom: 20px;
 }
@@ -685,6 +689,20 @@ input#dfrn-url {
 #profile-edit-homepage {
 	float: left;
 	margin-bottom: 35px;
+}
+#settings-normal-label,
+#settings-soapbox-label,
+#settings-community-label,
+#settings-freelove-label {
+	float: left;
+	width: 200px;
+}
+#settings-normal-desc,
+#settings-soapbox-desc,
+#settings-community-desc,
+#settings-freelove-desc {
+	float: left;
+	margin-left: 75px;
 }
 
 #profile-edit-profile-name-end,
@@ -706,7 +724,11 @@ input#dfrn-url {
 #profile-in-netdir-break,
 #profile-in-netdir-end,
 #hide-friends-break,
-#hide-friends-end {
+#hide-friends-end,
+#settings-normal-break,
+#settings-soapbox-break,
+#settings-community-break,
+#settings-freelove-break {
 	clear: both;
 }
 

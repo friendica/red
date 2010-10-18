@@ -57,6 +57,7 @@ function settings_post(&$a) {
 	$publish          = (($_POST['profile_in_directory'] == 1) ? 1: 0);
 	$net_publish      = (($_POST['profile_in_netdirectory'] == 1) ? 1: 0);
 	$old_visibility   = ((intval($_POST['visibility']) == 1) ? 1 : 0);
+	$page_flags       = ((intval($_POST['page-flags'])) ? intval($_POST['page-flags']) : 0);
 
 	$notify = 0;
 
@@ -103,7 +104,7 @@ function settings_post(&$a) {
 	$str_group_deny    = perms2str($_POST['group_deny']);
 	$str_contact_deny  = perms2str($_POST['contact_deny']);
 
-	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `default-location` = '%s', `theme` = '%s'  WHERE `uid` = %d LIMIT 1",
+	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `theme` = '%s'  WHERE `uid` = %d LIMIT 1",
 			dbesc($username),
 			dbesc($email),
 			dbesc($timezone),
@@ -112,6 +113,7 @@ function settings_post(&$a) {
 			dbesc($str_contact_deny),
 			dbesc($str_group_deny),
 			intval($notify),
+			intval($page_flags),
 			dbesc($defloc),
 			dbesc($theme),
 			intval(get_uid())
@@ -176,6 +178,18 @@ function settings_content(&$a) {
 	if(! strlen($a->user['timezone']))
 		$timezone = date_default_timezone_get();
 
+	$pageset_tpl = load_view_file('view/pagetypes.tpl');
+	$pagetype = replace_macros($pageset_tpl,array(
+		'$normal'         => (($profile['page-flags'] == PAGE_NORMAL)      ? " checked=\"checked\" " : ""),
+		'$soapbox'        => (($profile['page-flags'] == PAGE_SOAPBOX)     ? " checked=\"checked\" " : ""),
+		'$community'      => (($profile['page-flags'] == PAGE_COMMUNITY)   ? " checked=\"checked\" " : ""),
+		'$freelove'       => (($profile['page-flags'] == PAGE_FREELOVE)    ? " checked=\"checked\" " : ""),
+		'$page_normal'    => PAGE_NORMAL,
+		'$page_soapbox'   => PAGE_SOAPBOX,
+		'$page_community' => PAGE_COMMUNITY,
+		'$page_freelove'  => PAGE_FREELOVE
+	));
+
 
 	$opt_tpl = load_view_file("view/profile-in-directory.tpl");
 	$profile_in_dir = replace_macros($opt_tpl,array(
@@ -234,6 +248,8 @@ function settings_content(&$a) {
 
 	$stpl = load_view_file('view/settings.tpl');
 
+	$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
+
 	$o .= replace_macros($stpl,array(
 		'$baseurl' => $a->get_baseurl(),
 		'$uid' => $_SESSION['uid'],
@@ -247,13 +263,14 @@ function settings_content(&$a) {
 		'$profile_in_net_dir' => $profile_in_net_dir,
 		'$permissions' => t('Default Post Permissions'),
 		'$visibility' => $profile['net-publish'],
-		'$aclselect' => populate_acl($a->user),
+		'$aclselect' => populate_acl($a->user,$celeb),
 		'$sel_notify1' => (($notify & NOTIFY_INTRO)   ? ' checked="checked" ' : ''),
 		'$sel_notify2' => (($notify & NOTIFY_CONFIRM) ? ' checked="checked" ' : ''),
 		'$sel_notify3' => (($notify & NOTIFY_WALL)    ? ' checked="checked" ' : ''),
 		'$sel_notify4' => (($notify & NOTIFY_COMMENT) ? ' checked="checked" ' : ''),
 		'$sel_notify5' => (($notify & NOTIFY_MAIL)    ? ' checked="checked" ' : ''),
-		'$theme' => $theme_selector
+		'$theme' => $theme_selector,
+		'$pagetype' => $pagetype
 	));
 
 	return $o;

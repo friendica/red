@@ -136,12 +136,14 @@ function group_content(&$a) {
 			'$delete' => t('Delete')
 		));
 
+		$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
+
 		$tpl = load_view_file('view/group_edit.tpl');
 		$o .= replace_macros($tpl, array(
 			'$gid' => $group['id'],
 			'$name' => $group['name'],
 			'$drop' => $drop_txt,
-			'$selector' => contact_select('group_members_select','group_members_select',$preselected,25)
+			'$selector' => contact_select('group_members_select','group_members_select',$preselected,25,false,$celeb)
 		));
 
 	}

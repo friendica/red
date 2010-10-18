@@ -41,13 +41,15 @@ function network_content(&$a, $update = 0) {
 			else
 				$lockstate = 'unlock';
 
+		$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
+
 		$o .= replace_macros($tpl,array(
 			'$return_path' => $a->cmd,
 			'$baseurl' => $a->get_baseurl(),
 			'$defloc' => $a->user['default-location'],
 			'$visitor' => 'block',
 			'$lockstate' => $lockstate,
-			'$acl' => populate_acl(($group) ? $group_acl : $a->user),
+			'$acl' => populate_acl((($group) ? $group_acl : $a->user), $celeb),
 			'$bang' => (($group) ? '!' : ''),
 			'$profile_uid' => $_SESSION['uid']
 		));
@@ -111,7 +113,7 @@ function network_content(&$a, $update = 0) {
 
 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 		`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-		`contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`, 
+		`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`, 
 		`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
@@ -139,7 +141,7 @@ function network_content(&$a, $update = 0) {
 
 			if(($item['verb'] == ACTIVITY_LIKE) && ($item['id'] != $item['parent'])) {
 				$url = $item['url'];
-				if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'])) { 
+				if(($item['network'] === 'dfrn') && (! $item['self'])) { 
 					$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
 					$sparkle = ' class="sparkle"';
 				}
@@ -150,7 +152,7 @@ function network_content(&$a, $update = 0) {
 			}
 			if(($item['verb'] == ACTIVITY_DISLIKE) && ($item['id'] != $item['parent'])) {
 				$url = $item['url'];
-				if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'])) { 
+				if(($item['network'] === 'dfrn') && (! $item['self'])) { 
 					$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
 					$sparkle = ' class="sparkle"';
 				}
@@ -202,7 +204,7 @@ function network_content(&$a, $update = 0) {
 					$commentww = 'ww';
 					// If it is our contact, use a friendly redirect link
 					if(($item['owner-link'] == $item['url']) 
-						&& ($item['rel'] == REL_VIP || $item['rel'] == REL_BUD)) {
+						&& ($item['network'] === 'dfrn')) {
 						$owner_url = $redirect_url;
 						$osparkle = ' sparkle';
 					}
@@ -238,7 +240,7 @@ function network_content(&$a, $update = 0) {
 
 
 	
-			if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'] )) {
+			if(($item['network'] === 'dfrn') && (! $item['self'] )) {
 				$profile_url = $redirect_url;
 				$sparkle = ' sparkle';
 			}

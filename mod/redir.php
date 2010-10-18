@@ -4,14 +4,15 @@ function redir_init(&$a) {
 
 	if((! local_user()) || (! ($a->argc == 2)) || (! intval($a->argv[1])))
 		goaway($a->get_baseurl());
-	$r = q("SELECT `issued-id`, `dfrn-id`, `duplex`, `poll` FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+	$r = q("SELECT `network`, `issued-id`, `dfrn-id`, `duplex`, `poll` FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		intval($a->argv[1]),
-		intval($_SESSION['uid']));
-	if(! count($r))
+		intval(get_uid())
+	);
+	if((! count($r)) || ($r[0]['network'] !== 'dfrn'))
 		goaway($a->get_baseurl());
 
+	$dfrn_id = $orig_id = (($r[0]['issued-id']) ? $r[0]['issued-id'] : $r[0]['dfrn-id']);
 
-	$dfrn_id = $orig_id = $r[0]['issued-id'];
 	if($r[0]['duplex'] && $r[0]['issued-id']) {
 		$orig_id = $r[0]['issued-id'];
 		$dfrn_id = '1:' . $orig_id;

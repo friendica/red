@@ -30,21 +30,24 @@ function group_select($selname,$selclass,$preselected = false,$size = 4) {
 
 
 
-function contact_select($selname, $selclass, $preselected = false, $size = 4, $privmail = false) {
+function contact_select($selname, $selclass, $preselected = false, $size = 4, $privmail = false, $celeb = false) {
 
 	$o = '';
 
 	// When used for private messages, we limit correspondence to mutual friends and the selector
 	// to one recipient. By default our selector allows multiple selects amongst all contacts.
 
-	if($privmail) {
+	$sql_extra = '';
+
+	if($privmail || $celeb) {
 		$sql_extra = sprintf(" AND `rel` = %d ", intval(REL_BUD));
+	}
+
+	if($privmail)
 		$o .= "<select name=\"$selname\" id=\"$selclass\" class=\"$selclass\" size=\"$size\" >\r\n";
-	}
-	else {
-		$sql_extra = '';
+	else 
 		$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" >\r\n";
-	}
+
 
 	$r = q("SELECT `id`, `name`, `url` FROM `contact` 
 		WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 
@@ -73,7 +76,7 @@ function fixacl(&$item) {
 	$item = intval(str_replace(array('<','>'),array('',''),$item));
 }
 
-function populate_acl($user = null) {
+function populate_acl($user = null,$celeb = false) {
 
 	$allow_cid = $allow_gid = $deny_cid = $deny_gid = false;
 
@@ -104,7 +107,7 @@ function populate_acl($user = null) {
 	$o .= '</div>';
 	$o .= '<div id="contact_allow_wrapper">';
 	$o .= '<label id="acl-allow-contact-label" for="contact_allow" >' . t('Contacts') . '</label>';
-	$o .= contact_select('contact_allow','contact_allow',$allow_cid);
+	$o .= contact_select('contact_allow','contact_allow',$allow_cid,4,false,$celeb);
 	$o .= '</div>';
 	$o .= '</div>' . "\r\n";
 	$o .= '<div id="acl-allow-end"></div>' . "\r\n";
@@ -119,7 +122,7 @@ function populate_acl($user = null) {
 	$o .= '</div>';
 	$o .= '<div id="contact_deny_wrapper" >';
 	$o .= '<label id="acl-deny-contact-label" for="contact_deny" >' . t('Contacts') . '</label>';
-	$o .= contact_select('contact_deny','contact_deny', $deny_cid);
+	$o .= contact_select('contact_deny','contact_deny', $deny_cid,4,false, $celeb);
 	$o .= '</div>';
 	$o .= '</div>' . "\r\n";
 	$o .= '<div id="acl-deny-end"></div>' . "\r\n";

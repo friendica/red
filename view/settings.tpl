@@ -5,8 +5,11 @@ $nickname_block
 
 <form action="settings" id="settings-form" method="post" >
 
+
+<h3 class="settings-heading">Basic Settings</h3>
+
 <div id="settings-username-wrapper" >
-<label id="settings-username-label" for="settings-username" >Username: </label>
+<label id="settings-username-label" for="settings-username" >Full Name: </label>
 <input type="text" name="username" id="settings-username" value="$username" />
 </div>
 <div id="settings-username-end" ></div>
@@ -38,6 +41,14 @@ $theme
 </div>
 <div id="settings-theme-end"></div>
 
+<div id="settings-submit-wrapper" >
+<input type="submit" name="submit" id="settings-submit" value="Submit" />
+</div>
+
+
+<h3 class="settings-heading">Privacy Settings</h3>
+
+
 <input type="hidden" name="visibility" value="$visibility" />
 
 $profile_in_dir
@@ -56,25 +67,42 @@ $profile_in_net_dir
 </div>
 <div id="settings-default-perms-end"></div>
 
+<div id="settings-submit-wrapper" >
+<input type="submit" name="submit" id="settings-submit" value="Submit" />
+</div>
+
+
+
+<h3 class="settings-heading">Notification Settings</h3>
+
+
 <div id="settings-notify-wrapper">
-<div id="settings-notify-desc">Send me a notification email when: </div>
-<label for="notify1" id="settings-label-notify1">I receive an introduction</label>
+<div id="settings-notify-desc">Send a notification email when: </div>
+<label for="notify1" id="settings-label-notify1">You receive an introduction</label>
 <input id="notify1" type="checkbox" $sel_notify1 name="notify1" value="1" />
 <div id="notify1-end"></div>
-<label for="notify2" id="settings-label-notify2">My introductions are confirmed</label>
+<label for="notify2" id="settings-label-notify2">Your introductions are confirmed</label>
 <input id="notify2" type="checkbox" $sel_notify2 name="notify2" value="2" />
 <div id="notify2-end"></div>
-<label for="notify3" id="settings-label-notify3">Someone writes on my profile wall</label>
+<label for="notify3" id="settings-label-notify3">Someone writes on your profile wall</label>
 <input id="notify3" type="checkbox" $sel_notify3 name="notify3" value="4" />
 <div id="notify3-end"></div>
 <label for="notify4" id="settings-label-notify4">Someone writes a followup comment</label>
 <input id="notify4" type="checkbox" $sel_notify4 name="notify4" value="8" />
 <div id="notify4-end"></div>
-<label for="notify5" id="settings-label-notify5">I receive a private message</label>
+<label for="notify5" id="settings-label-notify5">You receive a private message</label>
 <input id="notify5" type="checkbox" $sel_notify5 name="notify5" value="16" />
 <div id="notify5-end"></div>
 </div>
 <div id="settings=notify-end"></div>
+
+<div id="settings-submit-wrapper" >
+<input type="submit" name="submit" id="settings-submit" value="Submit" />
+</div>
+
+
+<h3 class="settings-heading">Password Settings</h3>
+
 
 <div id="settings-password-wrapper" >
 <p id="settings-password-desc" >
@@ -92,13 +120,19 @@ Leave password fields blank unless changing
 <div id="settings-confirm-end" ></div>
 
 
+<div id="settings-submit-wrapper" >
+<input type="submit" name="submit" id="settings-submit" value="Submit" />
+</div>
 
 
+<h3 class="settings-heading">Advanced Page Settings</h3>
 
+$pagetype
 
 <div id="settings-submit-wrapper" >
 <input type="submit" name="submit" id="settings-submit" value="Submit" />
 </div>
+
 
 </form>
 

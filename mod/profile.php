@@ -138,6 +138,7 @@ function profile_content(&$a, $update = 0) {
 			return $o;
 		}
 
+		$celeb = ((($a->profile['page-flags'] == PAGE_SOAPBOX) || ($a->profile['page-flags'] == PAGE_COMMUNITY)) ? true : false);
 		if(can_write_wall($a,$a->profile['profile_uid'])) {
 			$tpl = load_view_file('view/jot-header.tpl');
 	
@@ -156,7 +157,7 @@ function profile_content(&$a, $update = 0) {
 				'$visitor' => (($_SESSION['uid'] == $a->profile['profile_uid']) ? 'block' : 'none'),
 				'$lockstate' => $lockstate,
 				'$bang' => '',
-				'$acl' => (($_SESSION['uid'] == $a->profile['profile_uid']) ? populate_acl($a->user) : ''),
+				'$acl' => (($_SESSION['uid'] == $a->profile['profile_uid']) ? populate_acl($a->user, $celeb) : ''),
 				'$profile_uid' => $a->profile['profile_uid']
 			));
 		}
@@ -231,8 +232,8 @@ function profile_content(&$a, $update = 0) {
 		$a->set_pager_total($r[0]['total']);
 
 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-		`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`, 
-		`contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`, 
+		`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`network`, `contact`.`rel`, 
+		`contact`.`thumb`, `contact`.`self`, 
 		`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
@@ -272,7 +273,7 @@ function profile_content(&$a, $update = 0) {
 			
 			if(($item['verb'] == ACTIVITY_LIKE) && ($item['id'] != $item['parent'])) {
 				$url = $item['url'];
-				if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'])) {
+				if(($item['network'] === 'dfrn') && (! $item['self'])) {
 					$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
 					$sparkle = ' class="sparkle" ';
 				}
@@ -283,7 +284,7 @@ function profile_content(&$a, $update = 0) {
 			}
 			if(($item['verb'] == ACTIVITY_DISLIKE) && ($item['id'] != $item['parent'])) {
 				$url = $item['url'];
-				if(($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'])) { 
+				if(($item['network'] === 'dfrn') && (! $item['self'])) { 
 					$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
 					$sparkle = ' class="sparkle" ';
 				}
@@ -338,7 +339,7 @@ function profile_content(&$a, $update = 0) {
 			// I can go directly to their profile as an authenticated guest.
 
 			if(local_user() && ($item['contact-uid'] == $_SESSION['uid']) 
-				&& ($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'] )) {
+				&& ($item['network'] === 'dfrn') && (! $item['self'] )) {
 				$profile_url = $redirect_url;
 				$sparkle = ' sparkle';
 			}

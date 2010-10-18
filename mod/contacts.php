@@ -172,7 +172,7 @@ function contacts_content(&$a) {
 				break;
 		}
 
-		if($r[0]['rel'] != REL_FAN) {
+		if(($r[0]['network'] === 'dfrn') && ($r[0]['rel'])) {
 			$url = "redir/{$r[0]['id']}";
 			$sparkle = ' class="sparkle" ';
 		}
@@ -272,7 +272,7 @@ function contacts_content(&$a) {
 					break;
 			}
 
-			if($rr['rel'] != REL_FAN) {
+			if(($rr['network'] === 'dfrn') && ($rr['rel'])) {
 				$url = "redir/{$rr['id']}";
 				$sparkle = ' class="sparkle" ';
 			}

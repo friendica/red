@@ -480,6 +480,9 @@ function photos_content(&$a) {
 				$albumselect .= '<option value="' . $album['album'] . '">' . $album['album'] . '</option>';
 			}
 		}
+
+		$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
+
 		$albumselect .= '</select>';
 		$tpl = load_view_file('view/photos_upload.tpl');
 		$o .= replace_macros($tpl,array(
@@ -490,7 +493,7 @@ function photos_content(&$a) {
 			'$filestext' => t('Select files to upload: '),
 			'$albumselect' => $albumselect,
 			'$permissions' => t('Permissions'),
-			'$aclselect' => populate_acl($a->user),
+			'$aclselect' => populate_acl($a->user, $celeb),
 			'$archive' => $a->get_baseurl() . '/jumploader_z.jar',
 			'$nojava' => t('Use the following controls only if the Java uploader [above] fails to launch.'),
 			'$uploadurl' => $a->get_baseurl() . '/photos',
@@ -633,8 +636,8 @@ function photos_content(&$a) {
 
 
 			$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-				`contact`.`name`, `contact`.`photo`, `contact`.`url`, 
-				`contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`, 
+				`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`network`, 
+				`contact`.`rel`, `contact`.`thumb`, `contact`.`self`, 
 				`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 				WHERE `parent-uri` = '%s' AND `uri` != '%s' AND `item`.`deleted` = 0
@@ -724,7 +727,7 @@ function photos_content(&$a) {
 
 
 					if(local_user() && ($item['contact-uid'] == get_uid()) 
-						&& ($item['rel'] == REL_VIP || $item['rel'] == REL_BUD) && (! $item['self'] )) {
+						&& ($item['network'] == 'dfrn') && (! $item['self'] )) {
 						$profile_url = $redirect_url;
 						$sparkle = ' sparkle';
 					}

@@ -567,7 +567,7 @@ function xml_status($st, $message = '') {
 if(! function_exists('local_user')) {
 function local_user() {
 	if((x($_SESSION,'authenticated')) && (x($_SESSION,'uid')))
-		return $_SESSION['uid'];
+		return intval($_SESSION['uid']);
 	return false;
 }}
 
@@ -576,7 +576,7 @@ function local_user() {
 if(! function_exists('remote_user')) {
 function remote_user() {
 	if((x($_SESSION,'authenticated')) && (x($_SESSION,'visitor_id')))
-		return $_SESSION['visitor_id'];
+		return intval($_SESSION['visitor_id']);
 	return false;
 }}
 
