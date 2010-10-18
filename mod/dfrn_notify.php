@@ -34,7 +34,7 @@ function dfrn_notify_post(&$a) {
 	$sql_extra = '';
 	switch($direction) {
 		case (-1):
-			$sql_extra = sprintf(" AND `issued-id` = '%s' ", dbesc($dfrn_id));
+			$sql_extra = sprintf(" AND ( `issued-id` = '%s' OR `dfrn-id` = '%s' ) ", dbesc($dfrn_id), dbesc($dfrn_id));
 			break;
 		case 0:
 			$sql_extra = sprintf(" AND `issued-id` = '%s' AND `duplex` = 1 ", dbesc($dfrn_id));
@@ -50,7 +50,9 @@ function dfrn_notify_post(&$a) {
 
 	$r = q("SELECT `contact`.*, `contact`.`uid` AS `importer_uid`, `user`.* FROM `contact` 
 		LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid` 
-		WHERE `contact`.`blocked` = 0 AND `contact`.`pending` = 0 $sql_extra LIMIT 1"
+		WHERE `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
+		AND `user`.`nickname` = '%s' $sql_extra LIMIT 1",
+		dbesc($a->argv[1])
 	);
 
 	if(! count($r)) {
@@ -401,7 +403,7 @@ function dfrn_notify_content(&$a) {
 		$sql_extra = '';
 		switch($direction) {
 			case (-1):
-				$sql_extra = sprintf(" AND `issued-id` = '%s' ", dbesc($dfrn_id));
+				$sql_extra = sprintf(" AND ( `issued-id` = '%s' OR `dfrn-id` = '%s' ) ", dbesc($dfrn_id), dbesc($dfrn_id));
 				$my_id = $dfrn_id;
 				break;
 			case 0:
@@ -417,7 +419,10 @@ function dfrn_notify_content(&$a) {
 				break; // NOTREACHED
 		}
 
-		$r = q("SELECT * FROM `contact` WHERE `blocked` = 0 AND `pending` = 0 $sql_extra LIMIT 1");
+		$r = q("SELECT `contact`.*, `user`.`nickname` FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
+				WHERE `contact`.`blocked` = 0 AND `contact`.`pending` = 0 AND `user`.`nickname` = '%s' $sql_extra LIMIT 1",
+				dbesc($a->argv[1])
+		);
 
 		if(! count($r))
 			$status = 1;
@@ -426,7 +431,7 @@ function dfrn_notify_content(&$a) {
 		$encrypted_id = '';
 		$id_str = $my_id . '.' . mt_rand(1000,9999);
 
-		if(($r[0]['duplex']) && strlen($r[0]['pubkey'])) {
+		if((($r[0]['duplex']) && strlen($r[0]['pubkey'])) || (! strlen($r[0]['prvkey']))) {
 			openssl_public_encrypt($hash,$challenge,$r[0]['pubkey']);
 			openssl_public_encrypt($id_str,$encrypted_id,$r[0]['pubkey']);
 		}

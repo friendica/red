@@ -552,7 +552,9 @@ function dfrn_deliver($owner,$contact,$atom,$debugging = false) {
 
 	$final_dfrn_id = '';
 
-	if($contact['duplex'] && strlen($contact['prvkey'])) {
+
+
+	if(($contact['duplex'] && strlen($contact['prvkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
 		openssl_private_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['prvkey']);
 		openssl_private_decrypt($challenge,$postvars['challenge'],$contact['prvkey']);
 	}
@@ -567,6 +569,8 @@ function dfrn_deliver($owner,$contact,$atom,$debugging = false) {
 		$final_dfrn_id = substr($final_dfrn_id,2);
 
 	if($final_dfrn_id != $orig_id) {
+		if($debugging)
+			echo "Wrong ID - did not decode\n";
 		// did not decode properly - cannot trust this site 
 		return 3;
 	}
@@ -586,8 +590,10 @@ function dfrn_deliver($owner,$contact,$atom,$debugging = false) {
 
 	$xml = post_url($contact['notify'],$postvars);
 
-	if($debugging)
-		echo $xml;
+	if($debugging) {
+		echo "SENDING: " . print_r($postvars,true) . "\n";
+		echo "RECEIVING: " . $xml;
+	}
 
 	$res = simplexml_load_string($xml);
 

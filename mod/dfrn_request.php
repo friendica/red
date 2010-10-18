@@ -472,9 +472,11 @@ function dfrn_request_content(&$a) {
 	else {
 
 		// Normal web request. Display our user's introduction form. 
-
-		$o = load_view_file("view/dfrn_request.tpl");
-		$o = replace_macros($o,array('$nickname' => $a->argv[1]));
+		if($a->profile['page-flags'] == PAGE_NORMAL)
+			$tpl = load_view_file('view/dfrn_request.tpl');
+		else
+			$tpl = load_view_file('view/auto_request.tpl');
+		$o .= replace_macros($tpl,array('$nickname' => $a->argv[1]));
 		return $o;
 	}
 

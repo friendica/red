@@ -180,10 +180,10 @@ function settings_content(&$a) {
 
 	$pageset_tpl = load_view_file('view/pagetypes.tpl');
 	$pagetype = replace_macros($pageset_tpl,array(
-		'$normal'         => (($profile['page-flags'] == PAGE_NORMAL)      ? " checked=\"checked\" " : ""),
-		'$soapbox'        => (($profile['page-flags'] == PAGE_SOAPBOX)     ? " checked=\"checked\" " : ""),
-		'$community'      => (($profile['page-flags'] == PAGE_COMMUNITY)   ? " checked=\"checked\" " : ""),
-		'$freelove'       => (($profile['page-flags'] == PAGE_FREELOVE)    ? " checked=\"checked\" " : ""),
+		'$normal'         => (($a->user['page-flags'] == PAGE_NORMAL)      ? " checked=\"checked\" " : ""),
+		'$soapbox'        => (($a->user['page-flags'] == PAGE_SOAPBOX)     ? " checked=\"checked\" " : ""),
+		'$community'      => (($a->user['page-flags'] == PAGE_COMMUNITY)   ? " checked=\"checked\" " : ""),
+		'$freelove'       => (($a->user['page-flags'] == PAGE_FREELOVE)    ? " checked=\"checked\" " : ""),
 		'$page_normal'    => PAGE_NORMAL,
 		'$page_soapbox'   => PAGE_SOAPBOX,
 		'$page_community' => PAGE_COMMUNITY,
