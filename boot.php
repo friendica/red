@@ -1135,7 +1135,7 @@ function format_like($cnt,$arr,$type,$id) {
 		if($total >= MAX_LIKERS)
 			$str .= t(', and ') . $total - MAX_LIKERS . t(' other people');
 		$str .= (($type === 'like') ? t(' like this.') : t(' don\'t like this.'));
-		$o .= '<div id="' . $type . 'list-' . $id . '" style="display: none;" >' . $str . '</div>';
+		$o .= "\t" . '<div id="' . $type . 'list-' . $id . '" style="display: none;" >' . $str . '</div>';
 	}
 	return $o;
 }}
