@@ -47,7 +47,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		if(is_array($handsfree)) {
 			$dfrn_id = $handsfree['dfrn_id'];
 			$intro_id = $handsfree['intro_id'];
-			$duplex = $handsfre['duplex'];
+			$duplex = $handsfree['duplex'];
 		}
 		else {
 			$dfrn_id  = ((x($_POST,'dfrn_id')) ? notags(trim($_POST['dfrn_id'])) : "");
