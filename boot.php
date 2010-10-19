@@ -122,15 +122,11 @@ class App {
 		$this->page = array();
 		$this->pager= array();
 
-		$this->scheme = ((isset($_SERVER['HTTPS']) 
-				&& ($_SERVER['HTTPS']))	?  'https' : 'http' );
-		$this->hostname = str_replace('www.','',
-				$_SERVER['SERVER_NAME']);
-		set_include_path("include/$this->hostname" 
-				. PATH_SEPARATOR . 'include' 
-				. PATH_SEPARATOR . '.' );
+		$this->scheme = ((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']))	?  'https' : 'http' );
+		$this->hostname = $_SERVER['SERVER_NAME'];
+		set_include_path("include/$this->hostname" . PATH_SEPARATOR . 'include' . PATH_SEPARATOR . '.' );
 
-                if(substr($_SERVER['QUERY_STRING'],0,2) == "q=")
+		if(substr($_SERVER['QUERY_STRING'],0,2) == "q=")
 			$_SERVER['QUERY_STRING'] = substr($_SERVER['QUERY_STRING'],2);
 		$this->cmd = trim($_GET['q'],'/');
 
@@ -157,9 +153,7 @@ class App {
 		if(strlen($this->baseurl))
 			return $this->baseurl;
 
-		$this->baseurl = (($ssl) ? 'https' : $this->scheme) . "://" . $this->hostname
-			. ((isset($this->path) && strlen($this->path)) 
-			? '/' . $this->path : '' );
+		$this->baseurl = (($ssl) ? 'https' : $this->scheme) . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
 		return $this->baseurl;
 	}
 
@@ -177,7 +171,7 @@ class App {
 	}
 
 	function set_path($p) {
-		$this->path = ltrim(trim($p),'/');
+		$this->path = trim(trim($p),'/');
 	} 
 
 	function get_path() {
@@ -1159,3 +1153,5 @@ function load_view_file($s) {
 		return file_get_contents("$d/$lang/$b");
 	return file_get_contents($s);
 }}
+
+

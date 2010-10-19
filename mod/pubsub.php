@@ -83,6 +83,7 @@ function pubsub_init(&$a) {
 	}
 }
 
+require_once('include/security.php');
 
 function pubsub_post(&$a) {
 
