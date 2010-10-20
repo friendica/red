@@ -72,3 +72,7 @@ function update_1007() {
 function update_1008() {
 	q("ALTER TABLE `profile` ADD `with` TEXT NOT NULL AFTER `marital` ");
 }
+
+function update_1009() {
+	q("ALTER TABLE `user` ADD `allow_location` TINYINT( 1 ) NOT NULL AFTER `default-location` ");
+}
