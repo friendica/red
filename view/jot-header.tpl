@@ -118,6 +118,11 @@ tinyMCE.init({
 		}
 	}
 
+	function jotClearLocation() {
+		$('#jot-coord').val('');
+		$('#profile-nolocation-wrapper').hide();
+	}
+
 	$geotag
 
 </script>

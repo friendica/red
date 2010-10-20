@@ -27,7 +27,10 @@
 		<img id="profile-video" src="images/youtube_icon.gif" alt="Insert YouTube video" title="Insert YouTube video" onclick="jotGetVideo();" />
 	</div> 
 	<div id="profile-location-wrapper" style="display: $visitor;" >
-		<img id="profile-location" src="images/globe.gif" alt="Set your location" title="Set your lcoation" onclick="jotGetLocation();" />
+		<img id="profile-location" src="images/globe.gif" alt="Set your location" title="Set your location" onclick="jotGetLocation();" />
+	</div> 
+	<div id="profile-nolocation-wrapper" style="display: none;" >
+		<img id="profile-nolocation" src="images/noglobe.gif" alt="Clear Browser Location" title="Clear Browser Location" onclick="jotClearLocation();" />
 	</div> 
 	<div id="profile-rotator-wrapper" style="display: $visitor;" >
 		<img id="profile-rotator" src="images/rotator.gif" alt="Please wait" title="Please wait" style="display: none;" />

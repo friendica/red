@@ -79,7 +79,8 @@ blockquote:before {
 }
 
 #jot-perms-icon, 
-#profile-location, 
+#profile-location,
+#profile-nolocation, 
 #profile-video, 
 #profile-link, 
 #wall-image-upload,
@@ -940,6 +941,10 @@ input#dfrn-url {
 	margin-left: 20px;
 }
 #profile-location-wrapper {
+	float: left;
+	margin-left: 20px;
+}
+#profile-nolocation-wrapper {
 	float: left;
 	margin-left: 20px;
 }
