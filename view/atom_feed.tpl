@@ -4,7 +4,8 @@
       xmlns:at="http://purl.org/atompub/tombstones/1.0"
       xmlns:media="http://purl.org/syndication/atommedia"
       xmlns:dfrn="http://purl.org/macgirvin/dfrn/1.0" 
-      xmlns:as="http://activitystrea.ms/spec/1.0/" >
+      xmlns:as="http://activitystrea.ms/spec/1.0/"
+      xmlns:georss="http://www.georss.org/georss" >
 
   <id>$feed_id</id>
   <title>$feed_title</title>

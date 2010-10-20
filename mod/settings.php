@@ -54,6 +54,7 @@ function settings_post(&$a) {
 	$timezone         = notags(trim($_POST['timezone']));
 	$defloc           = notags(trim($_POST['defloc']));
 
+	$allow_location   = (($_POST['allow_location'] == 1) ? 1: 0);
 	$publish          = (($_POST['profile_in_directory'] == 1) ? 1: 0);
 	$net_publish      = (($_POST['profile_in_netdirectory'] == 1) ? 1: 0);
 	$old_visibility   = ((intval($_POST['visibility']) == 1) ? 1 : 0);
@@ -104,7 +105,7 @@ function settings_post(&$a) {
 	$str_group_deny    = perms2str($_POST['group_deny']);
 	$str_contact_deny  = perms2str($_POST['contact_deny']);
 
-	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `theme` = '%s'  WHERE `uid` = %d LIMIT 1",
+	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `theme` = '%s'  WHERE `uid` = %d LIMIT 1",
 			dbesc($username),
 			dbesc($email),
 			dbesc($timezone),
@@ -115,6 +116,7 @@ function settings_post(&$a) {
 			intval($notify),
 			intval($page_flags),
 			dbesc($defloc),
+			intval($allow_location),
 			dbesc($theme),
 			intval(local_user())
 	);
@@ -208,6 +210,8 @@ function settings_content(&$a) {
 	else
 		$profile_in_net_dir = '';
 
+	$loc_checked = (($a->user['allow_location'] == 1)      ? " checked=\"checked\" " : "");
+
 	$invisible = (((! $profile['publish']) && (! $profile['net-publish']))
 		? true : false);
 
@@ -259,6 +263,7 @@ function settings_content(&$a) {
 		'$timezone' => $timezone,
 		'$zoneselect' => select_timezone($timezone),
 		'$defloc' => $defloc,
+		'$loc_checked' => $loc_checked,
 		'$profile_in_dir' => $profile_in_dir,
 		'$profile_in_net_dir' => $profile_in_net_dir,
 		'$permissions' => t('Default Post Permissions'),

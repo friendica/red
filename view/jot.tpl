@@ -11,6 +11,7 @@
 		<input type="hidden" name="profile_uid" value="$profile_uid" />
 		<input type="hidden" name="return" value="$return_path" />
 		<input type="hidden" name="location" id="jot-location" value="$defloc" />
+		<input type="hidden" name="coord" id="jot-coord" value="" />
 
 		<textarea rows="5" cols="64" class="profile-jot-text" id="profile-jot-text" name="body" ></textarea>
 

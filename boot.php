@@ -55,6 +55,7 @@ define ( 'NAMESPACE_ACTIVITY',        'http://activitystrea.ms/spec/1.0/' );
 define ( 'NAMESPACE_ACTIVITY_SCHEMA', 'http://activitystrea.ms/schema/1.0/');
 define ( 'NAMESPACE_SALMON_ME',       'http://salmon-protocol.org/ns/magic-env');
 define ( 'NAMESPACE_OSTATUSSUB',      'http://ostatus.org/schema/1.0/subscribe');
+define ( 'NAMESPACE_GEORSS',          'http://www.georss.org/georss');
 
 // activity stream defines
 

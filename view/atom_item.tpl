@@ -19,6 +19,7 @@
 		<content type="$type" >$content</content>
 		<link rel="alternate" href="$alt" />
 		<dfrn:location>$location</dfrn:location>
+		<georss:point>$coord</georss:point>
 		<dfrn:comment-allow>$comment_allow</dfrn:comment-allow>
 		<as:verb>$verb</as:verb>
 		$actobj

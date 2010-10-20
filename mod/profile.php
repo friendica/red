@@ -118,6 +118,8 @@ function profile_content(&$a, $update = 0) {
 		}
 	}
 
+	$is_owner = ((local_user()) && (local_user() == $a->profile['profile_uid']) ? true : false);
+
 	if(! $update) {
 		if(x($_GET,'tab'))
 			$tab = notags(trim($_GET['tab']));
@@ -141,9 +143,17 @@ function profile_content(&$a, $update = 0) {
 
 		$celeb = ((($a->profile['page-flags'] == PAGE_SOAPBOX) || ($a->profile['page-flags'] == PAGE_COMMUNITY)) ? true : false);
 		if(can_write_wall($a,$a->profile['profile_uid'])) {
+
+
+			$geotag = (($is_owner && $a->profile['allow_location']) ? load_view_file('view/jot_geotag.tpl') : '');
+
 			$tpl = load_view_file('view/jot-header.tpl');
 	
-			$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
+			$a->page['htmlhead'] .= replace_macros($tpl, array(
+				'$baseurl' => $a->get_baseurl(),
+				'$geotag'  => $geotag
+			));
+
 			require_once('view/acl_selectors.php');
 
 			$tpl = load_view_file("view/jot.tpl");
@@ -153,12 +163,12 @@ function profile_content(&$a, $update = 0) {
 				$lockstate = 'unlock';
 			$o .= replace_macros($tpl,array(
 				'$baseurl' => $a->get_baseurl(),
-				'$defloc' => (($_SESSION['uid'] == $a->profile['profile_uid']) ? $a->user['default-location'] : ''),
+				'$defloc' => (($is_owner) ? $a->user['default-location'] : ''),
 				'$return_path' => $a->cmd,
-				'$visitor' => (($_SESSION['uid'] == $a->profile['profile_uid']) ? 'block' : 'none'),
+				'$visitor' => (($is_owner) ? 'block' : 'none'),
 				'$lockstate' => $lockstate,
 				'$bang' => '',
-				'$acl' => (($_SESSION['uid'] == $a->profile['profile_uid']) ? populate_acl($a->user, $celeb) : ''),
+				'$acl' => (($is_owner) ? populate_acl($a->user, $celeb) : ''),
 				'$profile_uid' => $a->profile['profile_uid']
 			));
 		}
@@ -173,18 +183,15 @@ function profile_content(&$a, $update = 0) {
 
 	}
 
-	// TODO alter registration and settings and profile to update contact table when names and  photos change.  
+	// Construct permissions
 
 	// default permissions - anonymous user
 
 	$sql_extra = " AND `allow_cid` = '' AND `allow_gid` = '' AND `deny_cid` = '' AND `deny_gid` = '' ";
 
-
-
-
 	// Profile owner - everything is visible
 
-	if(local_user() && ($_SESSION['uid'] == $a->profile['profile_uid'])) {
+	if(is_owner) {
 		$sql_extra = ''; 
 		
 		// Oh - while we're here... reset the Unseen messages
@@ -366,7 +373,14 @@ function profile_content(&$a, $update = 0) {
 
 			$like    = (($alike[$item['id']]) ? format_like($alike[$item['id']],$alike[$item['id'] . '-l'],'like',$item['id']) : '');
 			$dislike = (($dlike[$item['id']]) ? format_like($dlike[$item['id']],$dlike[$item['id'] . '-l'],'dislike',$item['id']) : '');
-
+			$location = (($item['location']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : '');
+			$coord = (($item['coord']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['coord']) . '">' . $item['coord'] . '</a>' : '');
+			if($coord) {
+				if($location)
+					$location .= '<br /><span class="smalltext">(' . $coord . ')</span>';
+				else
+					$location = '<span class="smalltext">' . $coord . '</span>';
+			}
 
 			$o .= replace_macros($template,array(
 				'$id' => $item['item_id'],
@@ -378,7 +392,7 @@ function profile_content(&$a, $update = 0) {
 				'$body' => bbcode($item['body']),
 				'$ago' => relative_date($item['created']),
 				'$lock' => $lock,
-				'$location' => (($item['location']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : ''),
+				'$location' => $location, 
 				'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
 				'$drop' => $drop,
 				'$like' => $like,

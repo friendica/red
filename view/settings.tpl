@@ -34,6 +34,14 @@ $zoneselect
 </div>
 <div id="settings-defloc-end" ></div>
 
+<div id="settings-allowloc-wrapper" >
+<label id="settings-allowloc-label" for="settings-allowloc" >Use Browser Location: </label>
+<input type="checkbox" name="allow_location" id="settings-allowloc" value="1" $loc_checked />
+</div>
+<div id="settings-allowloc-end" ></div>
+
+
+
 
 <div id="settings-theme-select">
 <label id="settings-theme-label" for="theme-select" >Display Theme: </label>

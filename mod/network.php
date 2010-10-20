@@ -28,9 +28,14 @@ function network_content(&$a, $update = 0) {
 		}
 		$_SESSION['return_url'] = $a->cmd;
 
+		$geotag = (($a->user['allow_location']) ? load_view_file('view/jot_geotag.tpl') : '');
+
 		$tpl = load_view_file('view/jot-header.tpl');
 	
-		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
+		$a->page['htmlhead'] .= replace_macros($tpl, array(
+			'$baseurl' => $a->get_baseurl(),
+			'$geotag' => $geotag
+		));
 
 		require_once('view/acl_selectors.php');
 
@@ -272,6 +277,14 @@ function network_content(&$a, $update = 0) {
 			$like    = (($alike[$item['id']]) ? format_like($alike[$item['id']],$alike[$item['id'] . '-l'],'like',$item['id']) : '');
 			$dislike = (($dlike[$item['id']]) ? format_like($dlike[$item['id']],$dlike[$item['id'] . '-l'],'dislike',$item['id']) : '');
 
+			$location = (($item['location']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : '');
+			$coord = (($item['coord']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['coord']) . '">' . $item['coord'] . '</a>' : '');
+			if($coord) {
+				if($location)
+					$location .= '<br /><span class="smalltext">(' . $coord . ')</span>';
+				else
+					$location = '<span class="smalltext">' . $coord . '</span>';
+			}
 
 			// Build the HTML
 
@@ -286,7 +299,7 @@ function network_content(&$a, $update = 0) {
 				'$body' => bbcode($item['body']),
 				'$ago' => relative_date($item['created']),
 				'$lock' => $lock,
-				'$location' => (($item['location']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : ''),
+				'$location' => $location,
 				'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
 				'$owner_url' => $owner_url,
 				'$owner_photo' => $owner_photo,

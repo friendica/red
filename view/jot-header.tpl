@@ -118,6 +118,7 @@ tinyMCE.init({
 		}
 	}
 
+	$geotag
 
 </script>
 

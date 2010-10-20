@@ -199,8 +199,9 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 					'$published'          => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , ATOM_TIME)),
 					'$updated'            => xmlify(datetime_convert('UTC', 'UTC', $item['edited']  . '+00:00' , ATOM_TIME)),
 					'$location'           => xmlify($item['location']),
+					'$coord'              => xmlify($item['coord']),
 					'$type'               => $type,
-					'$alt'           => xmlify($a->get_baseurl() . '/display/' . $owner_nick . '/' . $item['id']),
+					'$alt'                => xmlify($a->get_baseurl() . '/display/' . $owner_nick . '/' . $item['id']),
 					'$content'            => xmlify($item['body']),
 					'$verb'               => xmlify($verb),
 					'$actobj'             => $actobj,  // do not xmlify
@@ -355,6 +356,10 @@ function get_atom_elements($item) {
 	elseif($rawowner[0]['child'][NAMESPACE_DFRN]['avatar'][0]['data'])
 		$res['owner-avatar'] = unxmlify($rawowner[0]['child'][NAMESPACE_DFRN]['avatar'][0]['data']);
 
+	$rawgeo = $item->get_item_tags(NAMESPACE_GEORSS,'point');
+	if($rawgeo)
+		$res['coord'] = unxmlify($rawgeo[0]['data']);
+
 	$rawverb = $item->get_item_tags(NAMESPACE_ACTIVITY, 'verb');
 	// select between supported verbs
 	if($rawverb)
@@ -429,6 +434,7 @@ function item_store($arr) {
 	$arr['changed'] = datetime_convert();
 	$arr['title'] = notags(trim($arr['title']));
 	$arr['location'] = notags(trim($arr['location']));
+	$arr['coord'] = notags(trim($arr['coord']));
 	$arr['body'] = escape_tags(trim($arr['body']));
 	$arr['last-child'] = intval($arr['last-child']);
 	$arr['visible'] = ((x($arr,'visible') !== false) ? intval($arr['visible']) : 1);

@@ -105,7 +105,9 @@ blockquote:before {
 	text-decoration: none;
 	cursor: pointer;
 }
-
+.smalltext {
+	font-size: 0.7em;
+}
 #sysmsg {
 	width: 600px;
 	margin-bottom: 10px;
@@ -439,6 +441,7 @@ input#dfrn-url {
 #settings-email-end,
 #settings-nick-end,
 #settings-defloc-end,
+#settings-allowloc-end,
 #settings-timezone-end,
 #settings-theme-end,
 #settings-password-end,
@@ -456,6 +459,7 @@ input#dfrn-url {
 #settings-email-label,
 #settings-nick-label,
 #settings-defloc-label,
+#settings-allowloc-label,
 #settings-timezone-label,
 #settings-theme-label,
 #settings-password-label,
@@ -473,6 +477,7 @@ input#dfrn-url {
 #settings-email,
 #settings-nick,
 #settings-defloc,
+#settings-allowloc,
 #timezone-select,
 #theme-select,
 #settings-password,

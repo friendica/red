@@ -57,6 +57,7 @@ function item_post(&$a) {
 	$title             = notags(trim($_POST['title']));
 	$body              = escape_tags(trim($_POST['body']));
 	$location          = notags(trim($_POST['location']));
+	$coord             = notags(trim($_POST['coord']));
 	$verb              = notags(trim($_POST['verb']));
 
 	if(! strlen($body)) {
@@ -128,8 +129,8 @@ function item_post(&$a) {
 
 	$r = q("INSERT INTO `item` (`uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`,
-		`edited`, `changed`, `uri`, `title`, `body`, `location`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
-		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+		`edited`, `changed`, `uri`, `title`, `body`, `location`, `coord`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
+		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 		intval($profile_uid),
 		dbesc($post_type),
 		intval($wall),
@@ -148,6 +149,7 @@ function item_post(&$a) {
 		dbesc($title),
 		dbesc($body),
 		dbesc($location),
+		dbesc($coord),
 		dbesc($verb),
 		dbesc($str_contact_allow),
 		dbesc($str_group_allow),
