@@ -63,8 +63,8 @@ $profile_in_dir
 
 $profile_in_net_dir
 
-<div id="settings-default-perms" class="settings-default-perms fakelink" >
-	<div id="settings-default-perms-menu" onClick="openClose('settings-default-perms-select');" >$permissions</div>
+<div id="settings-default-perms" class="settings-default-perms" >
+	<div id="settings-default-perms-menu" class="fakelink" onClick="openClose('settings-default-perms-select');" >$permissions</div>
 	<div id="settings-default-perms-menu-end"></div>
 
 	<div id="settings-default-perms-select" style="display: none;" >
