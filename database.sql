@@ -280,6 +280,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `country-name` char(255) NOT NULL,
   `gender` char(32) NOT NULL,
   `marital` char(255) NOT NULL,
+  `with` text NOT NULL,
   `sexual` char(255) NOT NULL,
   `politic` char(255) NOT NULL,
   `religion` char(255) NOT NULL,
