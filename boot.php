@@ -354,7 +354,7 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 	if(($redirects > 8) || (! $ch)) 
 		return false;
 
-	curl_setopt($ch, CURLOPT_HEADER, false);
+	curl_setopt($ch, CURLOPT_HEADER, true);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 
 	// by default we will allow self-signed certs
@@ -378,6 +378,11 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 
 	$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 	$header = substr($s,0,strpos($s,"\r\n\r\n"));
+	if(stristr($header,'100') && (strlen($header) < 30)) {
+		// 100 Continue has two headers, get the real one
+		$s = substr($s,strlen($header)+4);
+		$header = substr($s,0,strpos($s,"\r\n\r\n"));
+	}
 	if($http_code == 301 || $http_code == 302 || $http_code == 303) {
         $matches = array();
         preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
@@ -394,7 +399,7 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 	$a->set_curl_headers($header);
 
 	curl_close($ch);
-	return($s);
+	return($body);
 }}
 
 // post request to $url. $params is an array of post variables.
@@ -405,7 +410,7 @@ function post_url($url,$params, &$redirects = 0) {
 	if(($redirects > 8) || (! $ch)) 
 		return false;
 
-	curl_setopt($ch, CURLOPT_HEADER, false);
+	curl_setopt($ch, CURLOPT_HEADER, true);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 	curl_setopt($ch, CURLOPT_POST,1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
@@ -425,6 +430,11 @@ function post_url($url,$params, &$redirects = 0) {
 
 	$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 	$header = substr($s,0,strpos($s,"\r\n\r\n"));
+	if(stristr($header,'100') && (strlen($header) < 30)) {
+		// 100 Continue has two headers, get the real one
+		$s = substr($s,strlen($header)+4);
+		$header = substr($s,0,strpos($s,"\r\n\r\n"));
+	}
 	if($http_code == 301 || $http_code == 302 || $http_code == 303) {
         $matches = array();
         preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
@@ -441,7 +451,7 @@ function post_url($url,$params, &$redirects = 0) {
 	$a->set_curl_headers($header);
 
 	curl_close($ch);
-	return($s);
+	return($body);
 }}
 
 // random hash, 64 chars
