@@ -76,3 +76,7 @@ function update_1008() {
 function update_1009() {
 	q("ALTER TABLE `user` ADD `allow_location` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `default-location` ");
 }
+
+function update_1010() {
+	q("ALTER TABLE `contact` ADD `lrdd` CHAR( 255 ) NOT NULL AFTER `url` ");
+}

@@ -139,7 +139,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 	}
 
 	$salmon = '<link rel="salmon" href="' . xmlify($a->get_baseurl() . '/salmon/' . $owner_nick) . '" />' . "\n" ; 
-	$salmon = ''; // remove this line when salmon handler is finished
+//	$salmon = ''; // remove this line when salmon handler is finished
 
 	$atom .= replace_macros($feed_template, array(
 		'$feed_id'      => xmlify($a->get_baseurl() . '/profile/' . $owner_nick),

@@ -2,7 +2,7 @@
 
 set_time_limit(0);
 
-define ( 'BUILD_ID',               1010   );
+define ( 'BUILD_ID',               1011   );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.0'  );
 
 define ( 'EOL',                    "<br />\r\n"     );
@@ -116,6 +116,7 @@ class App {
 	private $db;
 
 	private $curl_code;
+	private $curl_headers;
 
 	function __construct() {
 
@@ -203,6 +204,15 @@ class App {
 	function get_curl_code() {
 		return $this->curl_code;
 	}
+
+	function set_curl_headers($headers) {
+		$this->curl_headers = $headers;
+	}
+
+	function get_curl_headers() {
+		return $this->curl_headers;
+	}
+
 
 }}
 
@@ -339,13 +349,12 @@ function t($s) {
 // results. 
 
 if(! function_exists('fetch_url')) {
-function fetch_url($url,$binary = false) {
+function fetch_url($url,$binary = false, &$redirects = 0) {
 	$ch = curl_init($url);
-	if(! $ch) return false;
+	if(($redirects > 8) || (! $ch)) 
+		return false;
 
-	curl_setopt($ch, CURLOPT_HEADER, 0);
-	curl_setopt($ch, CURLOPT_FOLLOWLOCATION,true);
-	curl_setopt($ch, CURLOPT_MAXREDIRS,8);
+	curl_setopt($ch, CURLOPT_HEADER, true);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 
 	// by default we will allow self-signed certs
@@ -366,26 +375,41 @@ function fetch_url($url,$binary = false) {
 		curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
 
 	$s = curl_exec($ch);
-	$info = curl_getinfo($ch);
+
+	$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	$header = substr($s,0,strpos($s,"\r\n\r\n"));
+	if($http_code == 301 || $http_code == 302 || $http_code == 303) {
+        $matches = array();
+        preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
+        $url = trim(array_pop($matches));
+        $url_parsed = parse_url($url);
+        if (isset($url_parsed)) {
+            $redirects++;
+            return fetch_url($url,$binary,$redirects);
+        }
+    }
 	$a = get_app();
-	$a->set_curl_code($info['http_code']);
+	$a->set_curl_code($http_code);
+	$body = substr($s,strlen($header)+4);
+	$a->set_curl_headers($header);
+
 	curl_close($ch);
-	return($s);
+	return($body);
 }}
 
 // post request to $url. $params is an array of post variables.
 
 if(! function_exists('post_url')) {
-function post_url($url,$params) {
+function post_url($url,$params, &$redirects = 0) {
 	$ch = curl_init($url);
-	if(! $ch) return false;
+	if(($redirects > 8) || (! $ch)) 
+		return false;
 
-	curl_setopt($ch, CURLOPT_HEADER, 0);
-	curl_setopt($ch, CURLOPT_FOLLOWLOCATION,true);
-	curl_setopt($ch, CURLOPT_MAXREDIRS,8);
+	curl_setopt($ch, CURLOPT_HEADER, true);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 	curl_setopt($ch, CURLOPT_POST,1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
+
 	$check_cert = get_config('system','verifyssl');
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, (($check_cert) ? true : false));
 	$prx = get_config('system','proxy');
@@ -398,11 +422,26 @@ function post_url($url,$params) {
 	}
 
 	$s = curl_exec($ch);
-	$info = curl_getinfo($ch);
+
+	$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	$header = substr($s,0,strpos($s,"\r\n\r\n"));
+	if($http_code == 301 || $http_code == 302 || $http_code == 303) {
+        $matches = array();
+        preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
+        $url = trim(array_pop($matches));
+        $url_parsed = parse_url($url);
+        if (isset($url_parsed)) {
+            $redirects++;
+            return post_url($url,$binary,$redirects);
+        }
+    }
 	$a = get_app();
-	$a->set_curl_code($info['http_code']);
+	$a->set_curl_code($http_code);
+	$body = substr($s,strlen($header)+4);
+	$a->set_curl_headers($header);
+
 	curl_close($ch);
-	return($s);
+	return($body);
 }}
 
 // random hash, 64 chars
