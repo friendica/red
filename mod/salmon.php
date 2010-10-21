@@ -1,7 +1,7 @@
 <?php
 
 
-// TODO: pass keyhash to key discovery
+// TODO: 
 // add relevant contacts so they can use this
 
 // There is a lot of debug stuff in here because this is quite a
@@ -68,24 +68,30 @@ function salmon_post(&$a) {
 
 
 	$signature = base64url_decode($base->sig);
+
 	if($debugging)
 		file_put_contents('salmon.out', "\n" . 'Encoded Signature: ' . $base->sig . "\n" , FILE_APPEND);
 
-	// unpack our data element.
+	// unpack the  data
 
-	// strip whitespace
+	// strip whitespace so our data element will return to one big base64 blob
 	$data = str_replace(array(" ","\t","\r","\n"),array("","","",""),$base->data);
+
+	// stash away some other stuff for later
+
 	$type = $base->data[0]->attributes()->type[0];
+	$keyhash = $base->sig[0]->attributes()->keyhash[0];
 	$encoding = $base->encoding;
 	$alg = $base->alg;
 
-	$signed_data = $data;
-	// . '.' . base64url_encode($type) . '.' . base64url_encode($encoding) . '.' . base64url_encode($alg);
-	// decode it
-	$data = base64url_decode($data);
+	// If we're talking to status.net or one of their ilk, they aren't following the magic envelope spec
+	// and only signed the data element. We'll be nice and let them validate anyway. 
 
-	if($debugging)
-		file_put_contents('salmon.out', "\n" . 'Signed data:>>>' . $signed_data . "<<<\n" , FILE_APPEND);
+	$stnet_signed_data = $data;
+	$signed_data = $data  . '.' . base64url_encode($type) . '.' . base64url_encode($encoding) . '.' . base64url_encode($alg);
+
+	// decode the data
+	$data = base64url_decode($data);
 
 	// Remove the xml declaration
 	$data = preg_replace('/\<\?xml[^\?].*\?\>/','',$data);
@@ -128,7 +134,7 @@ function salmon_post(&$a) {
 		salmon_return(500);
 	}
 
-	// Once we have the author URI, go to the web and find their public key
+	// Once we have the author URI, go to the web and try to find their public key
 
 	if($debugging) {
 		file_put_contents('salmon.out', "\n" . 'Fetching key for ' . $author_link . "\n", FILE_APPEND);
@@ -152,6 +158,7 @@ function salmon_post(&$a) {
 
 	$m = base64url_decode($key_info[1]);
 	$e = base64url_decode($key_info[2]);
+
 	if($debugging)
 		file_put_contents('salmon.out',"\n" . print_r($key_info,true) . "\n", FILE_APPEND);
 
@@ -164,8 +171,13 @@ function salmon_post(&$a) {
     $rsa->exponent = new Math_BigInteger($e, 256);
 
 	// We should have everything we need now. Let's see if it verifies.
+	// If it fails with the proper data format, try again using just the data
+	// (e.g. status.net)
 
     $verify = $rsa->verify($signed_data,$signature);
+
+	if(! $verify)
+	    $verify = $rsa->verify($stnet_signed_data,$signature);
 
 	if(! $verify) {
 		if($debugging)
@@ -193,8 +205,10 @@ function salmon_post(&$a) {
 		salmon_return(500);
 	}	
 
-
 	require_once('include/items.php');
+
+	// Placeholder for hub discovery. We shouldn't find any hubs
+	// since we supplied the fake feed header - and it doesn't have any.
 
 	$hub = '';
 

@@ -43,48 +43,48 @@ function get_salmon_key($uri,$keyhash) {
 		$a = get_app();
 		$h = $a->get_curl_headers();
 		if($debugging)
-			file_put_contents('salmon.out', "\n" . 'Fetch key via HTML header: ' . $h . "\n", FILE_APPEND);
+			file_put_contents('salmon.out', "\n" . 'Fetch key via HTTP header: ' . $h . "\n", FILE_APPEND);
 
 		$l = explode("\n",$h);
 		if(count($l)) {
-			foreach($l as $line) {
-				
-				if($debugging)
-					file_put_contents('salmon.out', "\n" . $line . "\n", FILE_APPEND);
+			foreach($l as $line) {				
 				if((stristr($line,'link:')) && preg_match('/<([^>].*)>.*rel\=[\'\"]lrdd[\'\"]/',$line,$matches)) {
 					$link = $matches[1];
 					if($debugging)
-						file_put_contents('salmon.out', "\n" . 'Fetch key via Link from header: ' . $link . "\n", FILE_APPEND);
+						file_put_contents('salmon.out', "\n" . 'Fetch key via HTML Link: ' . $link . "\n", FILE_APPEND);
 					break;
 				}
 			}
 		}
-	}
 
-	if(! isset($link)) {
-		require_once('library/HTML5/Parser.php');
-		$dom = HTML5_Parser::parse($html);
+		if(! isset($link)) {
 
-		if(! $dom)
-			return '';
+			// parse the page of the supplied URL looking for rel links
 
-		$items = $dom->getElementsByTagName('link');
+			require_once('library/HTML5/Parser.php');
+			$dom = HTML5_Parser::parse($html);
 
-		foreach($items as $item) {
-			$x = $item->getAttribute('rel');
-			if($x == "lrdd") {
-				$link = $item->getAttribute('href');
-				if($debugging)
-					file_put_contents('salmon.out', "\n" . 'Fetch key via HTML body' . $link . "\n", FILE_APPEND);
-				break;
+			if(! $dom)
+				return '';
+
+			$items = $dom->getElementsByTagName('link');
+
+			foreach($items as $item) {
+				$x = $item->getAttribute('rel');
+				if($x == "lrdd") {
+					$link = $item->getAttribute('href');
+					if($debugging)
+						file_put_contents('salmon.out', "\n" . 'Fetch key via HTML body' . $link . "\n", FILE_APPEND);
+					break;
+				}
 			}
 		}
+
+		if(! isset($link))
+			return '';
+
+		$arr = fetch_xrd_links($link);
 	}
-
-	if(! isset($link))
-		return '';
-
-	$arr = fetch_xrd_links($link);
 
 	if($arr) {
 		foreach($arr as $a) {
@@ -93,6 +93,13 @@ function get_salmon_key($uri,$keyhash) {
 			}
 		}
 	}
+	else {
+		return '';
+	}
+
+	// We have found at least one key URL
+	// If it's inline, parse it - otherwise get the key
+
 	if(count($ret)) {
 		for($x = 0; $x < count($ret); $x ++) {
 			if(substr($ret[$x],0,5) === 'data:') {
@@ -105,10 +112,18 @@ function get_salmon_key($uri,$keyhash) {
 				$ret[$x] = fetch_url($ret[$x]);
 		}
 	}
+
 	if($debugging)
 		file_put_contents('salmon.out', "\n" . 'Key located: ' . print_r($ret,true) . "\n", FILE_APPEND);
 
 	if(count($ret) == 1) {
+
+		// We only found one one key so we don't care if the hash matches.
+		// If it's the wrong key we'll find out soon enough because 
+		// message verification will fail. This also covers some older 
+		// software which don't supply a keyhash. As long as they only
+		// have one key we'll be right. 
+
 		return $ret[0];
 	}
 	else {
