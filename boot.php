@@ -354,7 +354,7 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 	if(($redirects > 8) || (! $ch)) 
 		return false;
 
-	curl_setopt($ch, CURLOPT_HEADER, true);
+	curl_setopt($ch, CURLOPT_HEADER, false);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 
 	// by default we will allow self-signed certs
@@ -394,7 +394,7 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 	$a->set_curl_headers($header);
 
 	curl_close($ch);
-	return($body);
+	return($s);
 }}
 
 // post request to $url. $params is an array of post variables.
@@ -405,7 +405,7 @@ function post_url($url,$params, &$redirects = 0) {
 	if(($redirects > 8) || (! $ch)) 
 		return false;
 
-	curl_setopt($ch, CURLOPT_HEADER, true);
+	curl_setopt($ch, CURLOPT_HEADER, false);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 	curl_setopt($ch, CURLOPT_POST,1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
@@ -441,7 +441,7 @@ function post_url($url,$params, &$redirects = 0) {
 	$a->set_curl_headers($header);
 
 	curl_close($ch);
-	return($body);
+	return($s);
 }}
 
 // random hash, 64 chars
