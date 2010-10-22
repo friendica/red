@@ -362,13 +362,25 @@ function get_atom_elements($item) {
 	if($rawgeo)
 		$res['coord'] = unxmlify($rawgeo[0]['data']);
 
+	$rawactor = $item->get_item_tags(NAMESPACE_ACTIVITY, 'object');
+	if($rawactor && $rawactor[0]['child'][NAMESPACE_ACTIVITY]['object-type'][0]['data'] === ACTIVITY_OBJ_PERSON) {
+		$base = $rawactor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
+		if($base && count($base)) {
+			foreach($base as $link) {
+				if($link['attribs']['']['rel'] === 'alternate' && (! $res['author-link']))
+					$res['author-link'] = unxmlify($link['attribs']['']['href']);
+				if($link['attribs']['']['rel'] === 'avatar' && (! $res['author-avatar']))
+					$res['author-avatar'] = unxmlify($link['attribs']['']['href']);
+			}
+		}
+	}
+
 	$rawverb = $item->get_item_tags(NAMESPACE_ACTIVITY, 'verb');
 	// select between supported verbs
 	if($rawverb)
 		$res['verb'] = unxmlify($rawverb[0]['data']);
 
 	$rawobj = $item->get_item_tags(NAMESPACE_ACTIVITY, 'object');
-
 
 	if($rawobj) {
 		$res['object'] = '<object>' . "\n";
@@ -610,6 +622,22 @@ function dfrn_deliver($owner,$contact,$atom,$debugging = false) {
 }
 
 
+/*
+ *
+ * consume_feed - process atom feed and update anything/everything we might need to update
+ *
+ * $xml = the (atom) feed to consume - no RSS spoken here, it might partially work since simplepie 
+ *        handles both, but we don't claim it will work well, and are reasonably certain it won't.
+ * $importer = the contact_record (joined to user_record) of the local user who owns this relationship.
+ *             It is this person's stuff that is going to be updated.
+ * $contact =  the person who is sending us stuff. If not set, we MAY be processing a "follow" activity
+ *             from an external network and MAY create an appropriate contact record. Otherwise, we MUST 
+ *             have a contact record.
+ * $hub = should wefind ahub declation in the feed, pass it back to our calling process, who might (or 
+ *        might not) try and subscribe to it.
+ *
+ */
+
 function consume_feed($xml,$importer,$contact, &$hub) {
 
 	require_once('simplepie/simplepie.inc');
@@ -651,7 +679,7 @@ function consume_feed($xml,$importer,$contact, &$hub) {
 			$photo_url = $feed->get_image_url();
 		}
 	}
-	if(($photo_timestamp) && (strlen($photo_url)) && ($photo_timestamp > $contact['avatar-date'])) {
+	if((is_array($contact)) && ($photo_timestamp) && (strlen($photo_url)) && ($photo_timestamp > $contact['avatar-date'])) {
 
 		require_once("Photo.php");
 		$photo_failure = false;
@@ -688,7 +716,7 @@ function consume_feed($xml,$importer,$contact, &$hub) {
 		}
 	}
 
-	if(($name_updated) && (strlen($new_name)) && ($name_updated > $contact['name-date'])) {
+	if((is_array($contact)) && ($name_updated) && (strlen($new_name)) && ($name_updated > $contact['name-date'])) {
 		q("UPDATE `contact` SET `name` = '%s', `name-date` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
 			dbesc(notags(trim($new_name))),
 			dbesc(datetime_convert()),
@@ -714,10 +742,11 @@ function consume_feed($xml,$importer,$contact, &$hub) {
 				else
 					$when = datetime_convert('UTC','UTC','now','Y-m-d H:i:s');
 			}
-			if($deleted) {
-				$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+			if($deleted && is_array($contact)) {
+				$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d AND `contact-id` = %d LIMIT 1",
 					dbesc($uri),
-					intval($importer['uid'])
+					intval($importer['uid']),
+					intval($contact['id'])
 				);
 				if(count($r)) {
 					$item = $r[0];
@@ -774,7 +803,7 @@ function consume_feed($xml,$importer,$contact, &$hub) {
 			}
 
 
-			if($is_reply) {
+			if(($is_reply) && is_array($contact)) {
 	
 				// Have we seen it? If not, import it.
 	
@@ -837,6 +866,16 @@ function consume_feed($xml,$importer,$contact, &$hub) {
 					continue;
 				}
 				$datarray = get_atom_elements($item);
+				if(($datarray['verb'] === ACTIVITY_FOLLOW) && (! is_array($contact))) {
+					new_follower($importer,$datarray);
+					return;
+				}
+				if($datarray['verb'] === ACTIVITY_UNFOLLOW)  {
+					lose_follower($importer,$contact,$datarray);
+					return;
+				}
+				if(! is_array($contact))
+					return;
 				$datarray['parent-uri'] = $item_id;
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $contact['id'];
@@ -846,6 +885,16 @@ function consume_feed($xml,$importer,$contact, &$hub) {
 			}
 		}
 	}
+
+}
+
+function new_follower($importer,$datarray) {
+
+
+}
+
+function lose_follower($importer,$contact,$datarray) {
+
 
 }
 

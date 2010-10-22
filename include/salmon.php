@@ -48,6 +48,7 @@ function get_salmon_key($uri,$keyhash) {
 		$l = explode("\n",$h);
 		if(count($l)) {
 			foreach($l as $line) {				
+				// TODO alter the following regex to support multiple relations (space separated)
 				if((stristr($line,'link:')) && preg_match('/<([^>].*)>.*rel\=[\'\"]lrdd[\'\"]/',$line,$matches)) {
 					$link = $matches[1];
 					if($debugging)
