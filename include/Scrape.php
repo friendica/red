@@ -33,6 +33,11 @@ function scrape_dfrn($url) {
 		$x = $item->getAttribute('rel');
 		if(substr($x,0,5) == "dfrn-")
 			$ret[$x] = $item->getAttribute('href');
+		if($x === 'lrdd') {
+			$decoded = urldecode($item->getAttribute('href'));
+			if(preg_match('/acct:([^@]*)@/',$decoded,$matches))
+				$ret['nick'] = $matches[1];
+		}
 	}
 
 	// Pull out hCard profile elements

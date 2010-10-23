@@ -161,12 +161,13 @@ function register_post(&$a) {
 				intval($newuid));
 			return;
 		}
-		$r = q("INSERT INTO `contact` ( `uid`, `created`, `self`, `name`, `photo`, `thumb`, `blocked`, `pending`, `url`,
+		$r = q("INSERT INTO `contact` ( `uid`, `created`, `self`, `name`, `nick`, `photo`, `thumb`, `blocked`, `pending`, `url`,
 			`request`, `notify`, `poll`, `confirm`, `name-date`, `uri-date`, `avatar-date` )
-			VALUES ( %d, '%s', 1, '%s', '%s', '%s', 0, 0, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
+			VALUES ( %d, '%s', 1, '%s', '%s', '%s', '%s', 0, 0, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 			intval($newuid),
 			datetime_convert(),
 			dbesc($username),
+			dbesc($nickname),
 			dbesc($a->get_baseurl() . "/photo/profile/{$newuid}.jpg"),
 			dbesc($a->get_baseurl() . "/photo/avatar/{$newuid}.jpg"),
 			dbesc($a->get_baseurl() . "/profile/$nickname"),

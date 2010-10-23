@@ -80,3 +80,16 @@ function update_1009() {
 function update_1010() {
 	q("ALTER TABLE `contact` ADD `lrdd` CHAR( 255 ) NOT NULL AFTER `url` ");
 }
+
+function update_1011() {
+	q("ALTER TABLE `contact` ADD `nick` CHAR( 255 ) NOT NULL AFTER `name` ");
+	$r = q("SELECT * FROM `contact` WHERE 1");
+	if(count($r)) {
+		foreach($r as $rr) {
+				q("UPDATE `contact` SET `nick` = '%s' WHERE `id` = %d LIMIT 1",
+					dbesc(basename($rr['url'])),
+					intval($rr['id'])
+				);
+		}
+	}
+}

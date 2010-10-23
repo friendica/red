@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `duplex` tinyint(1) NOT NULL DEFAULT '0',
   `network` char(255) NOT NULL,
   `name` char(255) NOT NULL,
+  `nick` char(255) NOT NULL,
   `photo` text NOT NULL, 
   `thumb` text NOT NULL,
   `site-pubkey` text NOT NULL,

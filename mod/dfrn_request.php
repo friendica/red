@@ -96,13 +96,14 @@ function dfrn_request_post(&$a) {
 					dbesc_array($parms);
 
 
-					$r = q("INSERT INTO `contact` ( `uid`, `created`,`url`, `name`, `photo`, `site-pubkey`,
+					$r = q("INSERT INTO `contact` ( `uid`, `created`,`url`, `name`, `nick`, `photo`, `site-pubkey`,
 						`request`, `confirm`, `notify`, `poll`, `aes_allow`) 
-						VALUES ( %d, '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', %d)",
+						VALUES ( %d, '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d)",
 						intval(local_user()),
 						datetime_convert(),
 						dbesc($dfrn_url),
 						$parms['fn'],
+						$parms['nick'],
 						$parms['photo'],
 						$parms['key'],
 						$parms['dfrn-request'],
@@ -271,13 +272,14 @@ function dfrn_request_post(&$a) {
 
 
 				dbesc_array($parms);
-				$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `name`, `issued-id`, `photo`, `site-pubkey`,
+				$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `name`, `nick`, `issued-id`, `photo`, `site-pubkey`,
 					`request`, `confirm`, `notify`, `poll` )
-					VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+					VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 					intval($uid),
 					datetime_convert(),
 					$parms['url'],
 					$parms['fn'],
+					$parms['nick'],
 					$parms['issued-id'],
 					$parms['photo'],
 					$parms['key'],
