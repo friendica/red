@@ -21,6 +21,7 @@
 
 	$a->set_baseurl(get_config('system','url'));
 
+	// 'stat' clause is a temporary measure until we have federation subscriptions working both directions
 	$contacts = q("SELECT * FROM `contact` 
 		WHERE ( ( `network` = 'dfrn' AND ( `dfrn-id` != '' OR (`issued-id` != '' AND `duplex` = 1)))
 		OR ( `network` = 'stat' AND `poll` != '' ) ) 
@@ -180,7 +181,7 @@
 
 		consume_feed($xml,$importer,$contact,$hub);
 		
-		if((strlen($hub)) && ($contact['rel'] == REL_BUD) && ($contact['priority'] == 0)) {
+		if((strlen($hub)) && (($contact['rel'] == REL_BUD) || (($contact['network'] === 'stat') && (! $contact['readonly']))) && ($contact['priority'] == 0)) {
 			$hubs = explode(',', $hub);
 			if(count($hubs)) {
 				foreach($hubs as $h) {
