@@ -52,10 +52,12 @@ define ( 'NAMESPACE_DFRN' ,           'http://purl.org/macgirvin/dfrn/1.0' );
 define ( 'NAMESPACE_THREAD' ,         'http://purl.org/syndication/thread/1.0' );
 define ( 'NAMESPACE_TOMB' ,           'http://purl.org/atompub/tombstones/1.0' );
 define ( 'NAMESPACE_ACTIVITY',        'http://activitystrea.ms/spec/1.0/' );
-define ( 'NAMESPACE_ACTIVITY_SCHEMA', 'http://activitystrea.ms/schema/1.0/');
-define ( 'NAMESPACE_SALMON_ME',       'http://salmon-protocol.org/ns/magic-env');
-define ( 'NAMESPACE_OSTATUSSUB',      'http://ostatus.org/schema/1.0/subscribe');
-define ( 'NAMESPACE_GEORSS',          'http://www.georss.org/georss');
+define ( 'NAMESPACE_ACTIVITY_SCHEMA', 'http://activitystrea.ms/schema/1.0/' );
+define ( 'NAMESPACE_SALMON_ME',       'http://salmon-protocol.org/ns/magic-env' );
+define ( 'NAMESPACE_OSTATUSSUB',      'http://ostatus.org/schema/1.0/subscribe' );
+define ( 'NAMESPACE_GEORSS',          'http://www.georss.org/georss' );
+define ( 'NAMESPACE_POCO',            'http://portablecontacts.net/spec/1.0' );
+define ( 'NAMESPACE_FEED',            'http://schemas.google.com/g/2010#updates-from' );
 
 // activity stream defines
 
@@ -961,11 +963,11 @@ function webfinger($s) {
 	if(strlen($host)) {
 		$tpl = fetch_lrdd_template($host);
 		if(strlen($tpl)) {
-			$pxrd = str_replace('{uri}', urlencode('acct://'.$s), $tpl);
+			$pxrd = str_replace('{uri}', urlencode('acct:'.$s), $tpl);
 			$links = fetch_xrd_links($pxrd);
 			if(! count($links)) {
-				// try without the double slashes
-				$pxrd = str_replace('{uri}', urlencode('acct:'.$s), $tpl);
+				// try with double slashes
+				$pxrd = str_replace('{uri}', urlencode('acct://'.$s), $tpl);
 				$links = fetch_xrd_links($pxrd);
 			}
 			return $links;
@@ -973,6 +975,54 @@ function webfinger($s) {
 	}
 	return array();
 }}
+
+if(! function_exists('lrdd')) {
+function lrdd($uri) {
+
+	$a = get_app();
+
+	if(strstr($uri,'@')) {	
+		return(webfinger($uri));
+	}
+	else {
+		$html = fetch_url($uri);
+		$headers = $a->get_curl_headers();
+		$lines = explode("\n",$headers);
+		if(count($lines)) {
+			foreach($lines as $line) {				
+				// TODO alter the following regex to support multiple relations (space separated)
+				if((stristr($line,'link:')) && preg_match('/<([^>].*)>.*rel\=[\'\"]lrdd[\'\"]/',$line,$matches)) {
+					$link = $matches[1];
+					break;
+				}
+			}
+		}
+		if(! isset($link)) {
+			// parse the page of the supplied URL looking for rel links
+
+			require_once('library/HTML5/Parser.php');
+			$dom = HTML5_Parser::parse($html);
+
+			if($dom) {
+				$items = $dom->getElementsByTagName('link');
+
+				foreach($items as $item) {
+					$x = $item->getAttribute('rel');
+					if($x == "lrdd") {
+						$link = $item->getAttribute('href');
+						break;
+					}
+				}
+			}
+		}
+
+		if(isset($link))
+			return(fetch_xrd_links($link));
+	}
+	return array();
+}}
+
+
 
 // Given a host name, locate the LRDD template from that
 // host. Returns the LRDD template or an empty string on

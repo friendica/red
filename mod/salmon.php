@@ -195,14 +195,16 @@ function salmon_post(&$a) {
 	*
 	*/
 
-	$r = q("SELECT * FROM `contact` WHERE `network` = 'stat' AND `lrdd` = '%s' AND `uid` = %d LIMIT 1",
+	$r = q("SELECT * FROM `contact` WHERE `network` = 'stat' AND ( `url` = '%s' OR `lrdd` = '%s') AND `uid` = %d 
+		AND `readonly` = 0 LIMIT 1",
+		dbesc($author_link),
 		dbesc($author_link),
 		intval($importer['uid'])
 	);
 	if(! count($r)) {
 		if($debugging)
 			file_put_contents('salmon.out',"\n" . 'Author unknown to us.' . "\n", FILE_APPEND);
-		salmon_return(500);
+
 	}	
 
 	require_once('include/items.php');
@@ -212,7 +214,9 @@ function salmon_post(&$a) {
 
 	$hub = '';
 
-	consume_feed($feedxml,$importer,$r[0],$hub);
+	// consume_feed will only accept a follow activity from this person if there is no contact record.
+
+	consume_feed($feedxml,$importer,((count($r)) ? $r[0] : null),$hub);
 
 	salmon_return(200);
 }

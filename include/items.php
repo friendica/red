@@ -267,27 +267,88 @@ function construct_activity($item) {
 
 
 
-function get_atom_elements($item) {
+function get_atom_elements($feed,$item) {
 
 	require_once('library/HTMLPurifier.auto.php');
 	require_once('include/html2bbcode.php');
 
-	$res = array();
+	$best_photo = array();
 
-	$raw_author = $item->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'author');
-	if($raw_author) {
-		if($raw_author[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'][0]['attribs']['']['rel'] === 'photo')
-		$res['author-avatar'] = unxmlify($raw_author[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'][0]['attribs']['']['href']);
-	}
+	$res = array();
 
 	$author = $item->get_author();
 	$res['author-name'] = unxmlify($author->get_name());
 	$res['author-link'] = unxmlify($author->get_link());
-	if(! $res['author-avatar'])
-		$res['author-avatar'] = unxmlify($author->get_avatar());
 	$res['uri'] = unxmlify($item->get_id());
 	$res['title'] = unxmlify($item->get_title());
 	$res['body'] = unxmlify($item->get_content());
+
+
+	// look for a photo. We should check media size and find the best one,
+	// but for now let's just find any author photo
+
+	$rawauthor = $item->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'author');
+
+	if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
+		$base = $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
+		foreach($base as $link) {
+			if(! $res['author-avatar']) {
+				if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar')
+					$res['author-avatar'] = unxmlify($link['attribs']['']['href']);
+			}
+		}
+	}			
+
+	$rawactor = $item->get_item_tags(NAMESPACE_ACTIVITY, 'actor');
+
+	if($rawactor && $rawactor[0]['child'][NAMESPACE_ACTIVITY]['object-type'][0]['data'] === ACTIVITY_OBJ_PERSON) {
+		$base = $rawactor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
+		if($base && count($base)) {
+			foreach($base as $link) {
+				if($link['attribs']['']['rel'] === 'alternate' && (! $res['author-link']))
+					$res['author-link'] = unxmlify($link['attribs']['']['href']);
+				if(! $res['author-avatar']) {
+					if($link['attribs']['']['rel'] === 'avatar' || $link['attribs']['']['rel'] === 'photo')
+						$res['author-avatar'] = unxmlify($link['attribs']['']['href']);
+				}
+			}
+		}
+	}
+
+	// No photo/profile-link on the item - look at the feed level
+
+	if((! $res['author-link']) || (! $res['author-avatar'])) {
+		$rawauthor = $feed->get_feed_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'author');
+		if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
+			$base = $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
+			foreach($base as $link) {
+				if($link['attribs']['']['rel'] === 'alternate' && (! $res['author-link']))
+					$res['author-link'] = unxmlify($link['attribs']['']['href']);
+				if(! $res['author-avatar']) {
+					if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar')
+						$res['author-avatar'] = unxmlify($link['attribs']['']['href']);
+				}
+			}
+		}			
+
+		$rawactor = $feed->get_feed_tags(NAMESPACE_ACTIVITY, 'subject');
+
+		if($rawactor && $rawactor[0]['child'][NAMESPACE_ACTIVITY]['object-type'][0]['data'] === ACTIVITY_OBJ_PERSON) {
+			$base = $rawactor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
+
+			if($base && count($base)) {
+				foreach($base as $link) {
+					if($link['attribs']['']['rel'] === 'alternate' && (! $res['author-link']))
+						$res['author-link'] = unxmlify($link['attribs']['']['href']);
+					if(! $res['author-avatar']) {
+						if($link['attribs']['']['rel'] === 'avatar' || $link['attribs']['']['rel'] === 'photo')
+							$res['author-avatar'] = unxmlify($link['attribs']['']['href']);
+					}
+				}
+			}
+		}
+	}
+
 
 	$maxlen = get_max_import_size();
 	if($maxlen && (strlen($res['body']) > $maxlen))
@@ -310,7 +371,7 @@ function get_atom_elements($item) {
 			'[youtube]$1[/youtube]', $res['body']);
 
 		$config = HTMLPurifier_Config::createDefault();
-		$config->set('Core.DefinitionCache', null);
+		$config->set('Cache.DefinitionImpl', null);
 
 		// we shouldn't need a whitelist, because the bbcode converter
 		// will strip out any unsupported tags.
@@ -353,27 +414,21 @@ function get_atom_elements($item) {
 	elseif($rawowner[0]['child'][NAMESPACE_DFRN]['uri'][0]['data'])
 		$res['owner-link'] = unxmlify($rawowner[0]['child'][NAMESPACE_DFRN]['uri'][0]['data']);
 
-	if($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'][0]['attribs']['']['rel'] === 'photo')
-		$res['owner-avatar'] = unxmlify($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'][0]['attribs']['']['href']);
-	elseif($rawowner[0]['child'][NAMESPACE_DFRN]['avatar'][0]['data'])
-		$res['owner-avatar'] = unxmlify($rawowner[0]['child'][NAMESPACE_DFRN]['avatar'][0]['data']);
+	if($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
+		$base = $rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
+
+		foreach($base as $link) {
+			if(! $res['owner-avatar']) {
+				if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar')			
+					$res['owner-avatar'] = unxmlify($link['attribs']['']['href']);
+			}
+		}
+	}
 
 	$rawgeo = $item->get_item_tags(NAMESPACE_GEORSS,'point');
 	if($rawgeo)
 		$res['coord'] = unxmlify($rawgeo[0]['data']);
 
-	$rawactor = $item->get_item_tags(NAMESPACE_ACTIVITY, 'object');
-	if($rawactor && $rawactor[0]['child'][NAMESPACE_ACTIVITY]['object-type'][0]['data'] === ACTIVITY_OBJ_PERSON) {
-		$base = $rawactor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
-		if($base && count($base)) {
-			foreach($base as $link) {
-				if($link['attribs']['']['rel'] === 'alternate' && (! $res['author-link']))
-					$res['author-link'] = unxmlify($link['attribs']['']['href']);
-				if($link['attribs']['']['rel'] === 'avatar' && (! $res['author-avatar']))
-					$res['author-avatar'] = unxmlify($link['attribs']['']['href']);
-			}
-		}
-	}
 
 	$rawverb = $item->get_item_tags(NAMESPACE_ACTIVITY, 'verb');
 	// select between supported verbs
@@ -405,7 +460,7 @@ function get_atom_elements($item) {
 					'[youtube]$1[/youtube]', $body);
 
 				$config = HTMLPurifier_Config::createDefault();
-				$config->set('Core.DefinitionCache', null);
+				$config->set('Cache.DefinitionImpl', null);
 
 				$purifier = new HTMLPurifier($config);
 				$body = $purifier->purify($body);
@@ -422,9 +477,6 @@ function get_atom_elements($item) {
 }
 
 function item_store($arr) {
-
-//print_r($arr);
-
 
 	if($arr['gravity'])
 		$arr['gravity'] = intval($arr['gravity']);
@@ -648,6 +700,7 @@ function consume_feed($xml,$importer,$contact, &$hub) {
 	$feed->init();
 
 	// Check at the feed level for updated contact name and/or photo
+	$debugging = get_config('system','debugging');
 
 	$name_updated  = '';
 	$new_name = '';
@@ -832,11 +885,13 @@ function consume_feed($xml,$importer,$contact, &$hub) {
 					}
 					continue;
 				}
-				$datarray = get_atom_elements($item);
+				$datarray = get_atom_elements($feed,$item);
+				if($contact['network'] === 'stat' && strlen($datarray['title']))
+					unset($datarray['title']);
 				$datarray['parent-uri'] = $parent_uri;
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $contact['id'];
-				if(($datarray['verb'] == ACTIVITY_LIKE) || ($datarray['verb'] == ACTIVITY_DISLIKE)) {
+				if(($datarray['verb'] === ACTIVITY_LIKE) || ($datarray['verb'] === ACTIVITY_DISLIKE)) {
 					$datarray['type'] = 'activity';
 					$datarray['gravity'] = GRAVITY_LIKE;
 				}
@@ -865,17 +920,23 @@ function consume_feed($xml,$importer,$contact, &$hub) {
 					}
 					continue;
 				}
-				$datarray = get_atom_elements($item);
-				if(($datarray['verb'] === ACTIVITY_FOLLOW) && (! is_array($contact))) {
-					new_follower($importer,$datarray);
+				$datarray = get_atom_elements($feed,$item);
+
+				if($datarray['verb'] === ACTIVITY_FOLLOW) {
+					if($debugging)
+						file_put_contents('salmon.out',"\n" . 'New follower.' . "\n", FILE_APPEND);
+					new_follower($importer,$contact,$datarray,$item);
 					return;
 				}
 				if($datarray['verb'] === ACTIVITY_UNFOLLOW)  {
-					lose_follower($importer,$contact,$datarray);
+					lose_follower($importer,$contact,$datarray,$item);
 					return;
 				}
 				if(! is_array($contact))
 					return;
+
+				if($contact['network'] === 'stat' && strlen($datarray['title']))
+					unset($datarray['title']);
 				$datarray['parent-uri'] = $item_id;
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $contact['id'];
@@ -888,14 +949,76 @@ function consume_feed($xml,$importer,$contact, &$hub) {
 
 }
 
-function new_follower($importer,$datarray) {
+function new_follower($importer,$contact,$datarray,$item) {
+	$url = notags(trim($datarray['author-link']));
+	$name = notags(trim($datarray['author-name']));
+	$photo = notags(trim($datarray['author-avatar']));
 
+	$rawtag = $item->get_item_tags(NAMESPACE_ACTIVITY,'actor');
+	if($rawtag && $rawtag[0]['child'][NAMESPACE_POCO]['preferredUsername'][0]['data'])
+		$nick = $rawtag[0]['child'][NAMESPACE_POCO]['preferredUsername'][0]['data'];
 
+	if(is_array($contact)) {
+		if($contact['network'] == 'stat' && $contact['rel'] == REL_FAN) {
+			$q("UPDATE `contact` SET `rel` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
+				intval(REL_BUD),
+				intval($contact['id']),
+				intval($importer['uid'])
+			);
+		}
+
+		// send email notification to owner?
+	}
+	else {
+	
+		// create contact record - set to readonly
+
+		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `name`, `nick`, `photo`, `network`, `rel`, 
+			`blocked`, `readonly`, `pending` )
+			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, 0, 1, 1 ) ",
+			intval($importer['uid']),
+			dbesc(datetime_convert()),
+			dbesc($url),
+			dbesc($name),
+			dbesc($nick),
+			dbesc($photo),
+			dbesc('stat'),
+			intval(REL_VIP)
+		);
+		$r = q("SELECT `id` FROM `contact` WHERE `uid` = %d AND `url` = '%s' AND `pending` = 1 AND `rel` = %d LIMIT 1",
+				intval($importer['uid']),
+				dbesc($url),
+				intval(REL_VIP)
+		);
+		if(count($r))
+				$contact_record = $r[0];
+
+		// create notification	
+		$hash = random_string();
+
+		if(is_array($contact_record)) {
+			$ret = q("INSERT INTO `intro` ( `uid`, `contact-id`, `blocked`, `knowyou`, `hash`, `datetime`)
+				VALUES ( %d, %d, 0, 0, '%s', '%s' )",
+				intval($importer['uid']),
+				intval($contact_record['id']),
+				dbesc($hash),
+				dbesc(datetime_convert())
+			);
+		}
+	}
 }
 
-function lose_follower($importer,$contact,$datarray) {
+function lose_follower($importer,$contact,$datarray,$item) {
 
-
+	if($contact['rel'] == REL_BUD) {
+		q("UPDATE `contact` SET `rel` = %d WHERE `id` = %d LIMIT 1",
+			intval(REL_FAN),
+			intval($contact['id'])
+		);
+	}
+	else {
+		contact_remove($contact['id']);
+	}
 }
 
 

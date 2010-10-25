@@ -71,7 +71,7 @@ function notifications_content(&$a) {
 		'$hide_text' => ((strlen($sql_extra)) ? t('Show Ignored Requests') : t('Hide Ignored Requests'))
 	)); 
 
-	$r = q("SELECT `intro`.`id` AS `intro-id`, `intro`.*, `contact`.* 
+	$r = q("SELECT `intro`.`id` AS `intro_id`, `intro`.*, `contact`.* 
 		FROM `intro` LEFT JOIN `contact` ON `intro`.`contact-id` = `contact`.`id`
 		WHERE `intro`.`uid` = %d $sql_extra AND `intro`.`blocked` = 0 ",
 			intval($_SESSION['uid']));
@@ -83,15 +83,36 @@ function notifications_content(&$a) {
 
 		foreach($r as $rr) {
 
+			$friend_selected = (($rr['network'] === 'dfrn') ? ' checked="checked" ' : ' disabled ');
+			$fan_selected = (($rr['network'] === 'stat') ? ' checked="checked" disabled ' : '');
+			$dfrn_tpl = load_view_file('view/netfriend.tpl');
+
+			$knowyou   = '';
+			$dfrn_text = '';
+						
+			if($rr['network'] === 'dfrn') {
+				$knowyou = t('Claims to be known to you: ') . (($rr['knowyou']) ? t('yes') : t('no'));
+
+				$dfrn_text = replace_macros($dfrn_tpl,array(
+					'$intro_id' => $rr['intro_id'],
+					'$friend_selected' => $friend_selected,
+					'$fan_selected' => $fan_selected,
+				));
+			}			
+
+
+
 			$o .= replace_macros($tpl,array(
-				'$intro_id' => $rr['intro-id'],
-				'$dfrn-id' => $rr['issued-id'],
+				'$notify_type' => (($rr['network'] === 'dfrn') ? t('Friend/Connect Request') : t('New Follower')),
+				'$dfrn_text' => $dfrn_text,	
+				'$dfrn_id' => $rr['issued-id'],
 				'$uid' => $_SESSION['uid'],
-				'$contact-id' => $rr['contact-id'],
+				'$intro_id' => $rr['intro_id'],
+				'$contact_id' => $rr['contact-id'],
 				'$photo' => ((x($rr,'photo')) ? $rr['photo'] : "images/default-profile.jpg"),
 				'$fullname' => $rr['name'],
-				'$knowyou' => (($rr['knowyou']) ? t('yes') : t('no')),
 				'$url' => $rr['url'],
+				'$knowyou' => $knowyou,
 				'$note' => $rr['note']
 			));
 		}

@@ -33,61 +33,9 @@ function get_salmon_key($uri,$keyhash) {
 	if($debugging)		
 		file_put_contents('salmon.out', "\n" . 'Fetch key' . "\n", FILE_APPEND);
 
-	if(strstr($uri,'@')) {	
-		$arr = webfinger($uri);
-		if($debugging)
-			file_put_contents('salmon.out', "\n" . 'Fetch key from webfinger' . "\n", FILE_APPEND);
-	}
-	else {
-		$html = fetch_url($uri);
-		$a = get_app();
-		$h = $a->get_curl_headers();
-		if($debugging)
-			file_put_contents('salmon.out', "\n" . 'Fetch key via HTTP header: ' . $h . "\n", FILE_APPEND);
+	$arr = lrdd($uri);
 
-		$l = explode("\n",$h);
-		if(count($l)) {
-			foreach($l as $line) {				
-				// TODO alter the following regex to support multiple relations (space separated)
-				if((stristr($line,'link:')) && preg_match('/<([^>].*)>.*rel\=[\'\"]lrdd[\'\"]/',$line,$matches)) {
-					$link = $matches[1];
-					if($debugging)
-						file_put_contents('salmon.out', "\n" . 'Fetch key via HTML Link: ' . $link . "\n", FILE_APPEND);
-					break;
-				}
-			}
-		}
-
-		if(! isset($link)) {
-
-			// parse the page of the supplied URL looking for rel links
-
-			require_once('library/HTML5/Parser.php');
-			$dom = HTML5_Parser::parse($html);
-
-			if(! $dom)
-				return '';
-
-			$items = $dom->getElementsByTagName('link');
-
-			foreach($items as $item) {
-				$x = $item->getAttribute('rel');
-				if($x == "lrdd") {
-					$link = $item->getAttribute('href');
-					if($debugging)
-						file_put_contents('salmon.out', "\n" . 'Fetch key via HTML body' . $link . "\n", FILE_APPEND);
-					break;
-				}
-			}
-		}
-
-		if(! isset($link))
-			return '';
-
-		$arr = fetch_xrd_links($link);
-	}
-
-	if($arr) {
+	if(is_array($arr)) {
 		foreach($arr as $a) {
 			if($a['@attributes']['rel'] === 'magic-public-key') {
 				$ret[] = $a['@attributes']['href'];
@@ -140,4 +88,60 @@ function get_salmon_key($uri,$keyhash) {
 
 	
 		
-				
+function slapper($owner,$contact,$slap) {
+
+
+	// does contact have a salmon endpoint? 
+
+	if(! strlen($contact['notify']))
+		return;
+
+	// add all namespaces to item
+
+$namespaces = <<< EOT
+<entry xmlns="http://www.w3.org/2005/Atom"
+      xmlns:thr="http://purl.org/syndication/thread/1.0"
+      xmlns:at="http://purl.org/atompub/tombstones/1.0"
+      xmlns:media="http://purl.org/syndication/atommedia"
+      xmlns:dfrn="http://purl.org/macgirvin/dfrn/1.0" 
+      xmlns:as="http://activitystrea.ms/spec/1.0/"
+      xmlns:georss="http://www.georss.org/georss" >
+EOT;
+
+	$slap = str_replace('<entry>',$namespaces,$slap);
+	
+	// create a magic envelope
+
+	$data      = base64url_encode($slap);
+	$data_type = 'application/atom+xml';
+	$encoding  = 'base64url';
+	$algorithm = 'RSA-SHA256';
+	$keyhash   = base64url_encode(hash('sha256',salmon_key($owner['spubkey'])));
+
+	// Setup RSA stuff to PKCS#1 sign the data
+
+	set_include_path(get_include_path() . PATH_SEPARATOR . 'phpsec');
+
+	require_once('phpsec/Crypt/RSA.php');
+
+    $rsa = new CRYPT_RSA();
+    $rsa->signatureMode = CRYPT_RSA_SIGNATURE_PKCS1;
+    $rsa->setHash('sha256');
+	$rsa->loadKey($owner['sprvkey']);
+
+    $signature = $rsa->sign($data);
+
+	$salmon_tpl = load_view_file('view/magicsig.tpl');
+	$salmon = replace_macros($salmon_tpl,array(
+		'$data'      => $data,
+		'$encoding'  => $encoding,
+		'$algorithm' => $algorithm,
+		'$keyhash'   => $keyhash,
+		'$signature' => $signature
+	));
+
+	// slap them 
+	post_url($contact['notify'],$salmon);
+
+	return;
+}

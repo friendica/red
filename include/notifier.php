@@ -87,6 +87,9 @@
 	// If this is a public conversation, notify the feed hub
 	$notify_hub = true;
 
+	// fill this in with a salmon slap if applicable
+	$slap = '';
+
 	if($cmd != 'mail') {
 
 		require_once('include/group.php');
@@ -197,7 +200,7 @@
 				$actobj = construct_activity($item);
 
 				if($item['id'] == $item_id) {
-					$atom .= replace_macros($cmnt_template, array(
+					$slap = replace_macros($cmnt_template, array(
 						'$name'               => xmlify($owner['name']),
 						'$profile_page'       => xmlify($owner['url']),
 						'$thumb'              => xmlify($owner['thumb']),
@@ -220,6 +223,7 @@
 					));
 				}
 			}
+			$atom .= $slap;
 		}
 		else {
 			foreach($items as $item) {
@@ -303,6 +307,8 @@
 
 	// delivery loop
 
+
+
 	foreach($r as $contact) {
 		if($contact['self'])
 			continue;
@@ -314,6 +320,10 @@
 				$deliver_status = dfrn_deliver($owner,$contact,$atom,$debugging);
 				break;
 			default:
+				if($followup) {
+					require_once('include/salmon.php');
+					slapper($owner,$contact,$slap);
+				}
 				break;
 		}
 

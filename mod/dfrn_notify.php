@@ -205,7 +205,7 @@ function dfrn_notify_post(&$a) {
 		if($is_reply) {
 			if($feed->get_item_quantity() == 1) {
 				// remote reply to our post. Import and then notify everybody else.
-				$datarray = get_atom_elements($item);
+				$datarray = get_atom_elements($feed,$item);
 				$datarray['type'] = 'remote-comment';
 				$datarray['wall'] = 1;
 				$datarray['parent-uri'] = $parent_uri;
@@ -287,7 +287,7 @@ function dfrn_notify_post(&$a) {
 					}
 					continue;
 				}
-				$datarray = get_atom_elements($item);
+				$datarray = get_atom_elements($feed,$item);
 				$datarray['parent-uri'] = $parent_uri;
 				$datarray['uid'] = $importer['importer_uid'];
 				$datarray['contact-id'] = $importer['id'];
@@ -354,7 +354,7 @@ function dfrn_notify_post(&$a) {
 			}
 
 
-			$datarray = get_atom_elements($item);
+			$datarray = get_atom_elements($feed,$item);
 			$datarray['parent-uri'] = $item_id;
 			$datarray['uid'] = $importer['importer_uid'];
 			$datarray['contact-id'] = $importer['id'];

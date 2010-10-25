@@ -271,7 +271,6 @@ function contacts_content(&$a) {
 				default:
 					break;
 			}
-
 			if(($rr['network'] === 'dfrn') && ($rr['rel'])) {
 				$url = "redir/{$rr['id']}";
 				$sparkle = ' class="sparkle" ';

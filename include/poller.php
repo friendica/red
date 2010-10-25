@@ -22,7 +22,8 @@
 	$a->set_baseurl(get_config('system','url'));
 
 	$contacts = q("SELECT * FROM `contact` 
-		WHERE `network` = 'dfrn' AND ( `dfrn-id` != '' OR (`issued-id` != '' AND `duplex` = 1)) 
+		WHERE ( ( `network` = 'dfrn' AND ( `dfrn-id` != '' OR (`issued-id` != '' AND `duplex` = 1)))
+		OR ( `network` = 'stat' AND `poll` != '' ) ) 
 		AND `self` = 0 AND `blocked` = 0 AND `readonly` = 0 ORDER BY RAND()");
 
 	if(! count($contacts))
@@ -88,79 +89,86 @@
 			: datetime_convert('UTC','UTC',$contact['last-update'], ATOM_TIME)
 		);
 
-		$idtosend = $orig_id = (($contact['dfrn-id']) ? $contact['dfrn-id'] : $contact['issued-id']);
+		if($contact['network'] === 'dfrn') {
 
-		if(intval($contact['duplex']) && $contact['dfrn-id'])
-			$idtosend = '0:' . $orig_id;
-		if(intval($contact['duplex']) && $contact['issued-id'])
-			$idtosend = '1:' . $orig_id;		
+			$idtosend = $orig_id = (($contact['dfrn-id']) ? $contact['dfrn-id'] : $contact['issued-id']);
 
-		$url = $contact['poll'] . '?dfrn_id=' . $idtosend 
-			. '&dfrn_version=' . DFRN_PROTOCOL_VERSION 
-			. '&type=data&last_update=' . $last_update ;
+			if(intval($contact['duplex']) && $contact['dfrn-id'])
+				$idtosend = '0:' . $orig_id;
+			if(intval($contact['duplex']) && $contact['issued-id'])
+				$idtosend = '1:' . $orig_id;		
 
-		$xml = fetch_url($url);
+			$url = $contact['poll'] . '?dfrn_id=' . $idtosend 
+				. '&dfrn_version=' . DFRN_PROTOCOL_VERSION 
+				. '&type=data&last_update=' . $last_update ;
+	
+			$xml = fetch_url($url);
 
-		if($debugging) {
-			echo "URL: " . $url . "\n";
-			echo "XML: " . $xml . "\n";
-		}
+			if($debugging) {
+				echo "URL: " . $url . "\n";
+				echo "XML: " . $xml . "\n";
+			}
 
-		if(! $xml) {
-			// dead connection - might be a transient event, or this might
-			// mean the software was uninstalled or the domain expired. 
-			// Will keep trying for one month.
-			mark_for_death($contact);
-			continue;
-		}
+			if(! $xml) {
+				// dead connection - might be a transient event, or this might
+				// mean the software was uninstalled or the domain expired. 
+				// Will keep trying for one month.
+				mark_for_death($contact);
+				continue;
+			}
 
 
-		$res = simplexml_load_string($xml);
+			$res = simplexml_load_string($xml);
 
-		if(intval($res->status) == 1) {
-			// we may not be friends anymore. Will keep trying for one month.
-			mark_for_death($contact);
+			if(intval($res->status) == 1) {
+				// we may not be friends anymore. Will keep trying for one month.
+				mark_for_death($contact);
+			}
+			else {
+				if($contact['term-date'] != '0000-00-00 00:00:00')
+					unmark_for_death($contact);
+			}
+
+			if((intval($res->status) != 0) || (! strlen($res->challenge)) || (! strlen($res->dfrn_id)))
+				continue;
+
+			$postvars = array();
+
+			$sent_dfrn_id = hex2bin($res->dfrn_id);
+			$challenge    = hex2bin($res->challenge);
+
+			$final_dfrn_id = '';
+
+			if(($contact['duplex']) && strlen($contact['prvkey'])) {
+				openssl_private_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['prvkey']);
+				openssl_private_decrypt($challenge,$postvars['challenge'],$contact['prvkey']);
+			}
+			else {
+				openssl_public_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['pubkey']);
+				openssl_public_decrypt($challenge,$postvars['challenge'],$contact['pubkey']);
+			}
+
+			$final_dfrn_id = substr($final_dfrn_id, 0, strpos($final_dfrn_id, '.'));
+
+			if(strpos($final_dfrn_id,':') == 1)
+				$final_dfrn_id = substr($final_dfrn_id,2);
+
+			if($final_dfrn_id != $orig_id) {
+
+				// did not decode properly - cannot trust this site 
+				continue;
+			}
+
+			$postvars['dfrn_id'] = $idtosend;
+			$postvars['dfrn_version'] = DFRN_PROTOCOL_VERSION;
+
+			$xml = post_url($contact['poll'],$postvars);
 		}
 		else {
-			if($contact['term-date'] != '0000-00-00 00:00:00')
-				unmark_for_death($contact);
+			// $contact['network'] !== 'dfrn'
+
+			$xml = fetch_url($contact['poll']);
 		}
-
-		if((intval($res->status) != 0) || (! strlen($res->challenge)) || (! strlen($res->dfrn_id)))
-			continue;
-
-		$postvars = array();
-
-		$sent_dfrn_id = hex2bin($res->dfrn_id);
-		$challenge    = hex2bin($res->challenge);
-
-		$final_dfrn_id = '';
-
-		if(($contact['duplex']) && strlen($contact['prvkey'])) {
-			openssl_private_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['prvkey']);
-			openssl_private_decrypt($challenge,$postvars['challenge'],$contact['prvkey']);
-
-		}
-		else {
-			openssl_public_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['pubkey']);
-			openssl_public_decrypt($challenge,$postvars['challenge'],$contact['pubkey']);
-		}
-
-		$final_dfrn_id = substr($final_dfrn_id, 0, strpos($final_dfrn_id, '.'));
-
-		if(strpos($final_dfrn_id,':') == 1)
-			$final_dfrn_id = substr($final_dfrn_id,2);
-
-		if($final_dfrn_id != $orig_id) {
-
-			// did not decode properly - cannot trust this site 
-			continue;
-		}
-
-		$postvars['dfrn_id'] = $idtosend;
-		$postvars['dfrn_version'] = DFRN_PROTOCOL_VERSION;
-
-		$xml = post_url($contact['poll'],$postvars);
 
 		if($debugging) {
 			echo "XML response:" . $xml . "\n";
@@ -170,10 +178,8 @@
 		if(! strlen($xml))
 			continue;
 
-
 		consume_feed($xml,$importer,$contact,$hub);
 		
-
 		if((strlen($hub)) && ($contact['rel'] == REL_BUD) && ($contact['priority'] == 0)) {
 			$hubs = explode(',', $hub);
 			if(count($hubs)) {
@@ -192,7 +198,8 @@
 			intval($contact['id'])
 		);
 
-	}
+		// loop - next contact
+	}  
 		
 	killme();
 

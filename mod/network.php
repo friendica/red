@@ -200,7 +200,7 @@ function network_content(&$a, $update = 0) {
 					$template = $wallwall;
 					$commentww = 'ww';	
 				}
-				if($item['type'] === 'remote' && ($item['owner-link'] != $item['author-link'])) {
+				if(($item['type'] === 'remote') && (strlen($item['owner-link'])) && ($item['owner-link'] != $item['author-link'])) {
 					// Could be anybody. 
 					$owner_url = $item['owner-link'];
 					$owner_photo = $item['owner-avatar'];

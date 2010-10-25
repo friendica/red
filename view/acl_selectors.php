@@ -50,7 +50,7 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 
 
 	$r = q("SELECT `id`, `name`, `url` FROM `contact` 
-		WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 
+		WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 AND `network` = 'dfrn' 
 		$sql_extra
 		ORDER BY `name` ASC ",
 		$_SESSION['uid']
