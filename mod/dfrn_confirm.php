@@ -229,40 +229,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 
 		require_once("Photo.php");
 
-		$photo_failure = false;
-
-		$filename = basename($contact['photo']);
-		$img_str = fetch_url($contact['photo'],true);
-		$img = new Photo($img_str);
-		if($img->is_valid()) {
-
-			$img->scaleImageSquare(175);
-					
-			$hash = photo_new_resource();
-
-			$r = $img->store($uid, $contact_id, $hash, $filename, t('Contact Photos'), 4 );
-
-			if($r === false)
-				$photo_failure = true;
-
-			$img->scaleImage(80);
-
-			$r = $img->store($uid, $contact_id, $hash, $filename, t('Contact Photos'), 5 );
-
-			if($r === false)
-				$photo_failure = true;
-
-			$photo = $a->get_baseurl() . '/photo/' . $hash . '-4.jpg';
-			$thumb = $a->get_baseurl() . '/photo/' . $hash . '-5.jpg';
-		}
-		else
-			$photo_failure = true;
-
-		if($photo_failure) {
-			$photo = $a->get_baseurl() . '/images/default-profile.jpg';
-			$thumb = $a->get_baseurl() . '/images/default-profile-sm.jpg';
-		}
-
+		$photos = import_profile_photo($contact['photo'],$uid,$contact_id);
 
 		if($contact['network'] === 'dfrn') {
 
@@ -281,8 +248,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				`duplex` = %d,
 				`network` = 'dfrn' WHERE `id` = %d LIMIT 1
 			",
-				dbesc($photo),
-				dbesc($thumb),
+				dbesc($photos[0]),
+				dbesc($photos[1]),
 				intval($new_relation),
 				dbesc(datetime_convert()),
 				dbesc(datetime_convert()),
@@ -324,8 +291,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				`pending` = 0
 				WHERE `id` = %d LIMIT 1
 			",
-				dbesc($photo),
-				dbesc($thumb),
+				dbesc($photos[0]),
+				dbesc($photos[1]),
 				dbesc(datetime_convert()),
 				dbesc(datetime_convert()),
 				dbesc(datetime_convert()),
@@ -463,47 +430,19 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 
 		// We're good but now we have to scrape the profile photo and send notifications.
 
-		require_once("Photo.php");
 
-		$photo_failure = false;
 
 		$r = q("SELECT `photo` FROM `contact` WHERE `id` = %d LIMIT 1",
 			intval($dfrn_record));
-		if(count($r)) {
 
-			$filename = basename($r[0]['photo']);
-			$img_str = fetch_url($r[0]['photo'],true);
-			$img = new Photo($img_str);
-			if($img->is_valid()) {
-
-				$img->scaleImageSquare(175);
-					
-				$hash = photo_new_resource();
-
-				$r = $img->store($local_uid, $dfrn_record, $hash, $filename, t('Contact Photos') , 4);
-
-				if($r === false)
-					$photo_failure = true;
-					
-				$img->scaleImage(80);
-				$r = $img->store($local_uid, $dfrn_record, $hash, $filename, t('Contact Photos') , 5);
-
-				if($r === false)
-					$photo_failure = true;
-
-				$photo = $a->get_baseurl() . '/photo/' . $hash . '-4.jpg';
-				$thumb = $a->get_baseurl() . '/photo/' . $hash . '-5.jpg';	
-			}
-			else
-				$photo_failure = true;
-		}
+		if(count($r))
+			$photo = $r[0]['photo'];
 		else
-			$photo_failure = true;
-
-		if($photo_failure) {
 			$photo = $a->get_baseurl() . '/images/default-profile.jpg';
-			$thumb = $a->get_baseurl() . '/images/default-profile-sm.jpg';
-		}
+				
+		require_once("Photo.php");
+
+		$photos = import_profile_photo($photo,$local_uid,$dfrn_record);
 
 		$new_relation = REL_FAN;
 		if(($relation == REL_VIP) || ($duplex))
@@ -521,8 +460,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			`duplex` = %d, 
 			`network` = 'dfrn' WHERE `id` = %d LIMIT 1
 		",
-			dbesc($photo),
-			dbesc($thumb),
+			dbesc($photos[0]),
+			dbesc($photos[1]),
 			intval($new_relation),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),

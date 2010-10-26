@@ -70,15 +70,17 @@ function follow_post(&$a) {
 		$vcard['photo'] = $a->get_baseurl() . '/images/default-profile.jpg' ; 
 
 	// check if we already have a contact
+	// the poll url is more reliable than the profile url, as we may have
+	// indirect links or webfinger links
 
 	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `poll` = '%s' LIMIT 1",
 		intval(local_user()),
 		dbesc($poll)
 	);			
-	if($r) {
+	if(count($r)) {
 		// update contact
 		if($r[0]['rel'] == REL_VIP) {
-			q("UPDATE `contact` SET `rel` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			q("UPDATE `contact` SET `rel` = %d , `readonly` = 0 WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval(REL_BUD),
 				intval($r[0]['id']),
 				intval(local_user())
@@ -117,39 +119,7 @@ function follow_post(&$a) {
 
 	require_once("Photo.php");
 
-	$photo_failure = false;
-
-	$filename = basename($vcard['photo']);
-	$img_str = fetch_url($vcard['photo'],true);
-	$img = new Photo($img_str);
-	if($img->is_valid()) {
-
-		$img->scaleImageSquare(175);
-					
-		$hash = photo_new_resource();
-
-		$r = $img->store(local_user(), $contact_id, $hash, $filename, t('Contact Photos'), 4 );
-
-		if($r === false)
-			$photo_failure = true;
-
-		$img->scaleImage(80);
-
-		$r = $img->store(local_user(), $contact_id, $hash, $filename, t('Contact Photos'), 5 );
-
-		if($r === false)
-			$photo_failure = true;
-
-		$photo = $a->get_baseurl() . '/photo/' . $hash . '-4.jpg';
-		$thumb = $a->get_baseurl() . '/photo/' . $hash . '-5.jpg';
-	}
-	else
-		$photo_failure = true;
-
-	if($photo_failure) {
-		$photo = $a->get_baseurl() . '/images/default-profile.jpg';
-		$thumb = $a->get_baseurl() . '/images/default-profile-sm.jpg';
-	}
+	$photos = import_profile_photo($vcard['photo'],local_user(),$contact_id);
 
 	$r = q("UPDATE `contact` SET `photo` = '%s', 
 			`thumb` = '%s', 
@@ -158,8 +128,8 @@ function follow_post(&$a) {
 			`avatar-date` = '%s'
 			WHERE `id` = %d LIMIT 1
 		",
-			dbesc($photo),
-			dbesc($thumb),
+			dbesc($photos[0]),
+			dbesc($photos[1]),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),

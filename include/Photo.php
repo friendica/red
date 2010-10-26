@@ -208,3 +208,44 @@ class Photo {
 }}
 
 
+function import_profile_photo($photo,$uid,$cid) {
+
+	$a = get_app();
+
+	$photo_failure = false;
+
+	$filename = basename($photo);
+	$img_str = fetch_url($photo,true);
+	$img = new Photo($img_str);
+	if($img->is_valid()) {
+
+		$img->scaleImageSquare(175);
+					
+		$hash = photo_new_resource();
+
+		$r = $img->store($uid, $cid, $hash, $filename, t('Contact Photos'), 4 );
+
+		if($r === false)
+			$photo_failure = true;
+
+		$img->scaleImage(80);
+
+		$r = $img->store($uid, $cid, $hash, $filename, t('Contact Photos'), 5 );
+
+		if($r === false)
+			$photo_failure = true;
+
+		$photo = $a->get_baseurl() . '/photo/' . $hash . '-4.jpg';
+		$thumb = $a->get_baseurl() . '/photo/' . $hash . '-5.jpg';
+	}
+	else
+		$photo_failure = true;
+
+	if($photo_failure) {
+		$photo = $a->get_baseurl() . '/images/default-profile.jpg';
+		$thumb = $a->get_baseurl() . '/images/default-profile-sm.jpg';
+	}
+
+	return(array($photo,$thumb));
+
+}
