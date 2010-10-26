@@ -130,7 +130,13 @@ EOT;
     $rsa->setHash('sha256');
 	$rsa->loadKey($owner['sprvkey']);
 
-    $signature = base64url_encode($rsa->sign($data));
+	// precomputed base64url encoding of data_type, encoding, algorithm concatenated with periods
+
+	$precomputed = '.YXBwbGljYXRpb24vYXRvbSt4bWw=.YmFzZTY0dXJs.UlNBLVNIQTI1Ng==';
+
+	$signature  = base64url_encode($rsa->sign($data . $precomputed));
+
+	$signature2 = base64url_encode($rsa->sign($data));
 
 	$salmon_tpl = load_view_file('view/magicsig.tpl');
 	$salmon = replace_macros($salmon_tpl,array(
@@ -148,7 +154,32 @@ EOT;
 	));
 
 	$a = get_app();
-	echo "CURL returned: " . $a->get_curl_code() . "\n";
+	$return_code = trim($a->get_curl_code);
+
+	// check for success, e.g. 2xx
+
+	if(substr($return_code,0,1) !== '2') {
+
+		// Entirely likely that their salmon implementation is
+		// non-compliant. Let's try once more, this time only signing
+		// the data, without the precomputed blob 
+
+		$salmon = replace_macros($salmon_tpl,array(
+			'$data'      => $data,
+			'$encoding'  => $encoding,
+			'$algorithm' => $algorithm,
+			'$keyhash'   => $keyhash,
+			'$signature' => $signature2
+		));
+
+		// slap them 
+		post_url($contact['notify'],$salmon, array(
+			'Content-type: application/magic-envelope+xml',
+			'Content-length: ' . strlen($salmon)
+		));
+		$return_code = trim($a->get_curl_code);
+	}
  
 	return;
 }
+
