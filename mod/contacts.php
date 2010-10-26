@@ -8,6 +8,14 @@ function contacts_init(&$a) {
 
 	if($a->config['register_policy'] != REGISTER_CLOSED)
 		$a->page['aside'] .= '<div class="side-invite-link-wrapper" id="side-invite-link-wrapper" ><a href="invite" class="side-invite-link" id="side-invite-link">' . t("Invite Friends") . '</a></div>';
+
+	$tpl = load_view_file('view/follow.tpl');
+	$a->page['aside'] .= replace_macros($tpl,array(
+		'$label' => t('Connect/Follow [profile address]'),
+		'$hint' => t('Example: bob@example.com, http://example.com/barbara'),
+		'$follow' => t('Follow')
+	));
+
 }
 
 function contacts_post(&$a) {
@@ -149,6 +157,8 @@ function contacts_content(&$a) {
 			notice( t('Contact not found.') . EOL);
 			return;
 		}
+
+		$_SESSION['return_url'] = $a->get_baseurl() . '/' . $a->cmd;
 
 		require_once('view/contact_selectors.php');
 

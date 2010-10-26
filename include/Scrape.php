@@ -2,15 +2,6 @@
 
 require_once('library/HTML5/Parser.php');
 
-if(! function_exists('attribute_contains')) {
-function attribute_contains($attr,$s) {
-	$a = explode(' ', $attr);
-	if(count($a) && in_array($s,$a))
-		return true;
-	return false;
-}}
-
-
 if(! function_exists('scrape_dfrn')) {
 function scrape_dfrn($url) {
 
@@ -53,7 +44,7 @@ function scrape_dfrn($url) {
 					$ret['photo'] = $x->getAttribute('src');
 				if(attribute_contains($x->getAttribute('class'),'key'))
 					$ret['key'] = $x->textContent;
-        		}
+			}
 		}
 	}
 
@@ -103,6 +94,43 @@ function scrape_meta($url) {
 		$x = $item->getAttribute('name');
 		if(substr($x,0,5) == "dfrn-")
 			$ret[$x] = $item->getAttribute('content');
+	}
+
+	return $ret;
+}}
+
+
+if(! function_exists('scrape_vcard')) {
+function scrape_vcard($url) {
+
+	$ret = array();
+	$s = fetch_url($url);
+
+	if(! $s) 
+		return $ret;
+
+	$dom = HTML5_Parser::parse($s);
+
+	if(! $dom)
+		return $ret;
+
+	// Pull out hCard profile elements
+
+	$items = $dom->getElementsByTagName('*');
+	foreach($items as $item) {
+		if(attribute_contains($item->getAttribute('class'), 'vcard')) {
+			$level2 = $item->getElementsByTagName('*');
+			foreach($level2 as $x) {
+				if(attribute_contains($x->getAttribute('class'),'fn'))
+					$ret['fn'] = $x->textContent;
+				if((attribute_contains($x->getAttribute('class'),'photo'))
+					|| (attribute_contains($x->getAttribute('class'),'avatar')))
+					$ret['photo'] = $x->getAttribute('src');
+				if((attribute_contains($x->getAttribute('class'),'nickname'))
+					|| (attribute_contains($x->getAttribute('class'),'uid')))
+					$ret['nick'] = $x->textContent;
+			}
+		}
 	}
 
 	return $ret;

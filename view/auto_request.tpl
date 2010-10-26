@@ -5,7 +5,7 @@
 Please enter your profile address from one of the following supported social networks:<br />
 <ul id="dfrn-request-networks">
 <li><a href="http://dfrn.org">Mistpark/DFRN</a> (fully supported)</li>
-<li><a href="http://ostatus.org">Federation/OStatus/Diaspora/GNU-social</a> (limited - experimental)</li>
+<li><a href="http://ostatus.org">StatusNet/GNU-social/Federation</a> (limited - experimental)</li>
 </ul>
 </p>
 
@@ -13,7 +13,7 @@ Please enter your profile address from one of the following supported social net
 
 <div id="dfrn-request-url-wrapper" >
 	<label id="dfrn-url-label" for="dfrn-url" >Your profile address:</label>
-	<input type="text" name="dfrn_url" id="dfrn-url" size="32" />
+	<input type="text" name="dfrn_url" id="dfrn-url" size="32" value="$myaddr" />
 	<div id="dfrn-request-url-end"></div>
 </div>
 

@@ -409,7 +409,7 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 // post request to $url. $params is an array of post variables.
 
 if(! function_exists('post_url')) {
-function post_url($url,$params, &$redirects = 0) {
+function post_url($url,$params, $headers = null, &$redirects = 0) {
 	$ch = curl_init($url);
 	if(($redirects > 8) || (! $ch)) 
 		return false;
@@ -418,6 +418,9 @@ function post_url($url,$params, &$redirects = 0) {
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 	curl_setopt($ch, CURLOPT_POST,1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
+
+	if(is_array($headers))
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
 	$check_cert = get_config('system','verifyssl');
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, (($check_cert) ? true : false));
@@ -446,7 +449,7 @@ function post_url($url,$params, &$redirects = 0) {
         $url_parsed = parse_url($url);
         if (isset($url_parsed)) {
             $redirects++;
-            return post_url($url,$binary,$redirects);
+            return post_url($url,$binary,$headers,$redirects);
         }
     }
 	$a = get_app();
@@ -1256,4 +1259,20 @@ function load_view_file($s) {
 	return file_get_contents($s);
 }}
 
+// for html,xml parsing - let's say you've got
+// an attribute foobar="class1 class2 class3"
+// and you want to find out if it contains 'class3'.
+// you can't use a normal sub string search because you
+// might match 'notclass3' and a regex to do the job is 
+// possible but a bit complicated. 
+// pass the attribute string as $attr and the attribute you 
+// are looking for as $s - returns true if found, otherwise false
+
+if(! function_exists('attribute_contains')) {
+function attribute_contains($attr,$s) {
+	$a = explode(' ', $attr);
+	if(count($a) && in_array($s,$a))
+		return true;
+	return false;
+}}
 

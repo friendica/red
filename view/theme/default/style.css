@@ -32,9 +32,12 @@ input, select {
 	border: 1px solid #858585;
 }
 input:hover {
+
 	background-color: #29BBF2;
-	color: #F5F6FB;
-	border: 1px solid #F5F6FB;
+/*	background-color: #49dbFa; */
+	color: black;
+/*	color: #F5F6FB; */
+/*	border: 1px solid #F5F6FB; */
 	cursor: pointer;
 }
 option {
@@ -1548,6 +1551,16 @@ a.mail-list-link:hover {
 
 #sidebar-group-list li {
 	margin-top: 10px;
+}
+
+#side-follow-wrapper {
+	margin-top: 20px;
+}
+#side-follow-url {
+	margin-top: 5px;
+}
+#side-follow-submit {
+	margin-top: 15px;
 }
 
 .photo-album-image-wrapper {

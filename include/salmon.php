@@ -105,7 +105,8 @@ $namespaces = <<< EOT
       xmlns:media="http://purl.org/syndication/atommedia"
       xmlns:dfrn="http://purl.org/macgirvin/dfrn/1.0" 
       xmlns:as="http://activitystrea.ms/spec/1.0/"
-      xmlns:georss="http://www.georss.org/georss" >
+      xmlns:georss="http://www.georss.org/georss" 
+      xmlns:poco="http://portablecontacts.net/spec/1.0" >
 EOT;
 
 	$slap = str_replace('<entry>',$namespaces,$slap);
@@ -129,7 +130,7 @@ EOT;
     $rsa->setHash('sha256');
 	$rsa->loadKey($owner['sprvkey']);
 
-    $signature = $rsa->sign($data);
+    $signature = base64url_encode($rsa->sign($data));
 
 	$salmon_tpl = load_view_file('view/magicsig.tpl');
 	$salmon = replace_macros($salmon_tpl,array(
@@ -141,7 +142,13 @@ EOT;
 	));
 
 	// slap them 
-	post_url($contact['notify'],$salmon);
+	post_url($contact['notify'],$salmon, array(
+		'Content-type: application/magic-envelope+xml',
+		'Content-length: ' . strlen($salmon)
+	));
 
+	$a = get_app();
+	echo "CURL returned: " . $a->get_curl_code() . "\n";
+ 
 	return;
 }

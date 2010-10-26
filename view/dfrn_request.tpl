@@ -6,7 +6,7 @@ You may request a connection with this member if you have a valid profile addres
 on one of the following social networks:<br />
 <ul id="dfrn-request-networks">
 <li><a href="http://dfrn.org">Mistpark/DFRN</a> (fully supported)</li>
-<li><a href="http://ostatus.org">Federation/OStatus/Diaspora/GNU-social</a> (limited - experimental)</li>
+<li><a href="http://ostatus.org">StatusNet/GNU-social/Federation</a> (limited - experimental)</li>
 </ul>
 </p>
 
@@ -14,7 +14,7 @@ on one of the following social networks:<br />
 
 <div id="dfrn-request-url-wrapper" >
 	<label id="dfrn-url-label" for="dfrn-url" >Your profile address:</label>
-	<input type="text" name="dfrn_url" id="dfrn-url" size="32" />
+	<input type="text" name="dfrn_url" id="dfrn-url" size="32" value="$myaddr" />
 	<div id="dfrn-request-url-end"></div>
 </div>
 
@@ -25,7 +25,7 @@ Please answer the following:
 <div id="dfrn-request-info-wrapper" >
 
 <p id="doiknowyou">
-Do I know you?
+Does $name know you?
 </p>
 
 		<div id="dfrn-request-know-yes-wrapper">

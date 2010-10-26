@@ -5,11 +5,16 @@ require_once('salmon.php');
 function xrd_content(&$a) {
 
 	$uri = urldecode(notags(trim($_GET['uri'])));
-	$local = str_replace('acct:', '', $uri);
-	if(substr($local,0,2) == '//')
-		$local = substr($local,2);
 
-	$name = substr($local,0,strpos($local,'@'));
+	if(substr($uri,0,4) === 'http')
+		$name = basename($uri);
+	else {
+		$local = str_replace('acct:', '', $uri);
+		if(substr($local,0,2) == '//')
+			$local = substr($local,2);
+
+		$name = substr($local,0,strpos($local,'@'));
+	}
 
 	$r = q("SELECT * FROM `user` WHERE `nickname` = '%s' LIMIT 1",
 		dbesc($name)
