@@ -195,8 +195,8 @@ function salmon_post(&$a) {
 	*
 	*/
 
-	$r = q("SELECT * FROM `contact` WHERE `network` = 'stat' AND ( `url` = '%s' OR `lrdd` = '%s') AND `uid` = %d 
-		AND `readonly` = 0 LIMIT 1",
+	$r = q("SELECT * FROM `contact` WHERE `network` = 'stat' AND ( `url` = '%s' OR `lrdd` = '%s') 
+		AND `uid` = %d LIMIT 1",
 		dbesc($author_link),
 		dbesc($author_link),
 		intval($importer['uid'])
@@ -206,6 +206,13 @@ function salmon_post(&$a) {
 			file_put_contents('salmon.out',"\n" . 'Author unknown to us.' . "\n", FILE_APPEND);
 
 	}	
+	if((count($r)) && ($r[0]['readonly'])) {
+		if($debugging)
+			file_put_contents('salmon.out',"\n" . 'Ignoring this author.' . "\n", FILE_APPEND);
+		salmon_return(200);
+		// NOTREACHED
+	}
+
 
 	require_once('include/items.php');
 

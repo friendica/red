@@ -136,7 +136,7 @@ EOT;
 
 	$signature  = base64url_encode($rsa->sign($data . $precomputed));
 
-	$signature2 = base64url_encode($rsa->sign($data));
+	$signature2  = base64url_encode($rsa->sign($data));
 
 	$salmon_tpl = load_view_file('view/magicsig.tpl');
 	$salmon = replace_macros($salmon_tpl,array(
@@ -154,7 +154,7 @@ EOT;
 	));
 
 	$a = get_app();
-	$return_code = trim($a->get_curl_code);
+	$return_code = trim($a->get_curl_code());
 
 	// check for success, e.g. 2xx
 
@@ -177,7 +177,8 @@ EOT;
 			'Content-type: application/magic-envelope+xml',
 			'Content-length: ' . strlen($salmon)
 		));
-		$return_code = trim($a->get_curl_code);
+		$return_code = trim($a->get_curl_code());
+
 	}
  
 	return;

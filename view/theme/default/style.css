@@ -1288,14 +1288,21 @@ input#dfrn-url {
 	margin-left: 50px;
 }
 
-#block-message, #ignore-message {
+#block-message, #ignore-message, #profile-edit-insecure {
 	margin-top: 20px;
-	width: 180px;
 	color: #FF0000;
 	font-size: 1.1em;
 	border: 1px solid #FF8888;
 	background-color: #FFEEEE;
 	padding: 10px;
+}
+
+#block-message, #ignore-message {
+	width: 180px;
+}
+
+#profile-edit-insecure {
+	width: 600px;
 }
 
 .profile-tabs {

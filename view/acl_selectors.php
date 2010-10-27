@@ -49,11 +49,11 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 		$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" >\r\n";
 
 
-	$r = q("SELECT `id`, `name`, `url` FROM `contact` 
-		WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 AND `network` = 'dfrn' 
+	$r = q("SELECT `id`, `name`, `url`, `network` FROM `contact` 
+		WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 
 		$sql_extra
 		ORDER BY `name` ASC ",
-		$_SESSION['uid']
+		intval(local_user())
 	);
 
 	if(count($r)) {
@@ -62,7 +62,11 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 				$selected = " selected=\"selected\" ";
 			else
 				$selected = '';
-			$o .= "<option value=\"{$rr['id']}\" $selected  title=\"{$rr['url']}\" >{$rr['name']}</option>\r\n";
+			if($rr['network'] === 'stat')
+				$disabled = ' disabled="true" ' ;
+			else
+				$disabled = '';
+			$o .= "<option value=\"{$rr['id']}\" $selected  $disabled title=\"{$rr['url']}\" >{$rr['name']}</option>\r\n";
 		}
 	
 	}

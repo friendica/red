@@ -196,10 +196,11 @@ function contacts_content(&$a) {
 			'$last_update' => (($r[0]['last-update'] == '0000-00-00 00:00:00') 
 				? t('Never') 
 				: datetime_convert('UTC',date_default_timezone_get(),$r[0]['last-update'],'D, j M Y, g:i A')),
-			'$profile_select' => contact_profile_assign($r[0]['profile-id']),
+			'$profile_select' => contact_profile_assign($r[0]['profile-id'],(($r[0]['network'] !== 'dfrn') ? true : false)),
 			'$contact_id' => $r[0]['id'],
 			'$block_text' => (($r[0]['blocked']) ? t('Unblock this contact') : t('Block this contact') ),
 			'$ignore_text' => (($r[0]['readonly']) ? t('Unignore this contact') : t('Ignore this contact') ),
+			'$insecure' => (($r[0]['network'] === 'dfrn') ? '' : load_view_file('view/insecure_net.tpl')),
 			'$blocked' => (($r[0]['blocked']) ? '<div id="block-message">' . t('Currently blocked') . '</div>' : ''),
 			'$ignored' => (($r[0]['readonly']) ? '<div id="ignore-message">' . t('Currently ignored') . '</div>' : ''),
 			'$rating' => contact_reputation($r[0]['rating']),

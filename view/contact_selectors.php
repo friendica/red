@@ -1,10 +1,13 @@
 <?php
 
 
-function contact_profile_assign($current) {
+function contact_profile_assign($current,$foreign_net) {
 
 	$o = '';
-	$o .= "<select id=\"contact-profile-selector\" name=\"profile-assign\" />\r\n";
+
+	$disabled = (($foreign_net) ? ' disabled="true" ' : '');
+
+	$o .= "<select id=\"contact-profile-selector\" $disabled name=\"profile-assign\" />\r\n";
 
 	$r = q("SELECT `id`, `profile-name` FROM `profile` WHERE `uid` = %d",
                         intval($_SESSION['uid']));

@@ -935,8 +935,12 @@ function consume_feed($xml,$importer,$contact, &$hub) {
 				if(! is_array($contact))
 					return;
 
-				if($contact['network'] === 'stat' && strlen($datarray['title']))
-					unset($datarray['title']);
+				if($contact['network'] === 'stat') {
+					if(strlen($datarray['title']))
+						unset($datarray['title']);
+					if(($contact['rel'] == REL_VIP) || ($contact['rel'] == REL_BUD))
+						$datarray['last-child'] = 1;
+				}
 				$datarray['parent-uri'] = $item_id;
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $contact['id'];
@@ -960,7 +964,7 @@ function new_follower($importer,$contact,$datarray,$item) {
 
 	if(is_array($contact)) {
 		if($contact['network'] == 'stat' && $contact['rel'] == REL_FAN) {
-			$q("UPDATE `contact` SET `rel` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			$r = q("UPDATE `contact` SET `rel` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval(REL_BUD),
 				intval($contact['id']),
 				intval($importer['uid'])
@@ -1010,7 +1014,7 @@ function new_follower($importer,$contact,$datarray,$item) {
 
 function lose_follower($importer,$contact,$datarray,$item) {
 
-	if($contact['rel'] == REL_BUD) {
+	if(($contact['rel'] == REL_BUD) || ($contact['rel'] == REL_FAN)) {
 		q("UPDATE `contact` SET `rel` = %d WHERE `id` = %d LIMIT 1",
 			intval(REL_FAN),
 			intval($contact['id'])

@@ -72,7 +72,7 @@
 			killme();
 	}
 
-	$r = q("SELECT `contact`.*, `user`.`nickname`, `user`.`page-flags` 
+	$r = q("SELECT `contact`.*, `user`.`nickname`, `user`.`sprvkey`, `user`.`spubkey`, `user`.`page-flags` 
 		FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
 		WHERE `contact`.`uid` = %d AND `contact`.`self` = 1 LIMIT 1",
 		intval($uid)

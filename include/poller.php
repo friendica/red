@@ -14,7 +14,6 @@
 	require_once('datetime.php');
 	require_once('simplepie/simplepie.inc');
 	require_once('include/items.php');
-
 	require_once('include/Contact.php');
 
 	$debugging = get_config('system','debugging');

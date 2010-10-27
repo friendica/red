@@ -31,6 +31,7 @@
 	</div>
 	<div id="contact-edit-end" ></div>
 
+$insecure
 $blocked
 $ignored
 
