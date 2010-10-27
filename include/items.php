@@ -301,7 +301,7 @@ function get_atom_elements($feed,$item) {
 
 	$rawactor = $item->get_item_tags(NAMESPACE_ACTIVITY, 'actor');
 
-	if($rawactor && $rawactor[0]['child'][NAMESPACE_ACTIVITY]['object-type'][0]['data'] === ACTIVITY_OBJ_PERSON) {
+	if($rawactor && activity_match($rawactor[0]['child'][NAMESPACE_ACTIVITY]['object-type'][0]['data'],ACTIVITY_OBJ_PERSON)) {
 		$base = $rawactor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
 		if($base && count($base)) {
 			foreach($base as $link) {
@@ -333,7 +333,7 @@ function get_atom_elements($feed,$item) {
 
 		$rawactor = $feed->get_feed_tags(NAMESPACE_ACTIVITY, 'subject');
 
-		if($rawactor && $rawactor[0]['child'][NAMESPACE_ACTIVITY]['object-type'][0]['data'] === ACTIVITY_OBJ_PERSON) {
+		if($rawactor && activity_match($rawactor[0]['child'][NAMESPACE_ACTIVITY]['object-type'][0]['data'],ACTIVITY_OBJ_PERSON)) {
 			$base = $rawactor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
 
 			if($base && count($base)) {
@@ -482,7 +482,7 @@ function item_store($arr) {
 		$arr['gravity'] = intval($arr['gravity']);
 	elseif($arr['parent-uri'] == $arr['uri'])
 		$arr['gravity'] = 0;
-	elseif($arr['verb'] == ACTIVITY_POST)
+	elseif(activity_match($arr['verb'],ACTIVITY_POST))
 		$arr['gravity'] = 6;
 
 	if(! x($arr,'type'))
@@ -891,7 +891,7 @@ function consume_feed($xml,$importer,$contact, &$hub) {
 				$datarray['parent-uri'] = $parent_uri;
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $contact['id'];
-				if(($datarray['verb'] === ACTIVITY_LIKE) || ($datarray['verb'] === ACTIVITY_DISLIKE)) {
+				if((activity_match($datarray['verb'],ACTIVITY_LIKE)) || (activity_match($datarray['verb'],ACTIVITY_DISLIKE))) {
 					$datarray['type'] = 'activity';
 					$datarray['gravity'] = GRAVITY_LIKE;
 				}
@@ -922,12 +922,12 @@ function consume_feed($xml,$importer,$contact, &$hub) {
 				}
 				$datarray = get_atom_elements($feed,$item);
 
-				if($datarray['verb'] === ACTIVITY_FOLLOW) {
+				if(activity_match($datarray['verb'],ACTIVITY_FOLLOW)) {
 					logger('consume-feed: New follower');
 					new_follower($importer,$contact,$datarray,$item);
 					return;
 				}
-				if($datarray['verb'] === ACTIVITY_UNFOLLOW)  {
+				if(activity_match($datarray['verb'],ACTIVITY_UNFOLLOW))  {
 					lose_follower($importer,$contact,$datarray,$item);
 					return;
 				}

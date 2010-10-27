@@ -1288,3 +1288,11 @@ function logger($msg) {
 	@file_put_contents($logfile, datetime_convert() . ':' . session_id() . ' ' . $msg . "\n", FILE_APPEND);
 	return;
 }}
+
+
+if(! function_exists('activity_match')) {
+function activity_match($haystack,$needle) {
+	if(($haystack === $needle) || (($basename($needle) === $haystack) && strstr($needle,NAMESPACE_ACTIVITY_SCHEMA)))
+		return true;
+	return false;
+}}
