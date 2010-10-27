@@ -29,9 +29,7 @@ function base64url_decode($s) {
 function get_salmon_key($uri,$keyhash) {
 	$ret = array();
 
-	$debugging = get_config('system','debugging');
-	if($debugging)		
-		file_put_contents('salmon.out', "\n" . 'Fetch key' . "\n", FILE_APPEND);
+	logger('Fetching salmon key');
 
 	$arr = lrdd($uri);
 
@@ -62,8 +60,8 @@ function get_salmon_key($uri,$keyhash) {
 		}
 	}
 
-	if($debugging)
-		file_put_contents('salmon.out', "\n" . 'Key located: ' . print_r($ret,true) . "\n", FILE_APPEND);
+
+	logger('Key located: ' . print_r($ret,true));
 
 	if(count($ret) == 1) {
 
@@ -90,6 +88,7 @@ function get_salmon_key($uri,$keyhash) {
 		
 function slapper($owner,$contact,$slap) {
 
+	logger('slapper called. Data: ' . $slap);
 
 	// does contact have a salmon endpoint? 
 
@@ -180,7 +179,7 @@ EOT;
 		$return_code = trim($a->get_curl_code());
 
 	}
- 
+	logger('slapper returned ' . $return_code); 
 	return;
 }
 

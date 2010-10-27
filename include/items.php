@@ -923,8 +923,7 @@ function consume_feed($xml,$importer,$contact, &$hub) {
 				$datarray = get_atom_elements($feed,$item);
 
 				if($datarray['verb'] === ACTIVITY_FOLLOW) {
-					if($debugging)
-						file_put_contents('salmon.out',"\n" . 'New follower.' . "\n", FILE_APPEND);
+					logger('consume-feed: New follower');
 					new_follower($importer,$contact,$datarray,$item);
 					return;
 				}

@@ -12,11 +12,12 @@ require_once('simplepie/simplepie.inc');
 
 function salmon_return($val) {
 
-	if($val >= 500)
+	if($val >= 400)
 		$err = 'Error';
 	if($val == 200)
 		$err = 'OK';
-	
+
+	logger('mod-salmon returns ' . $val);	
 	header($_SERVER["SERVER_PROTOCOL"] . ' ' . $val . ' ' . $err);
 	killme();
 
@@ -25,10 +26,8 @@ function salmon_return($val) {
 function salmon_post(&$a) {
 
 	$xml = file_get_contents('php://input');
-	
-	$debugging = get_config('system','debugging');
-	if($debugging)
-		file_put_contents('salmon.out','New Salmon: ' . $xml . "\n",FILE_APPEND);
+
+	logger('mod-salmon: new salmon ' . $xml);
 
 	$nick       = (($a->argc > 1) ? notags(trim($a->argv[1])) : '');
 	$mentions   = (($a->argc > 2 && $a->argv[2] === 'mention') ? true : false);
@@ -45,10 +44,6 @@ function salmon_post(&$a) {
 
 	$dom = simplexml_load_string($xml,'SimpleXMLElement',0,NAMESPACE_SALMON_ME);
 
-
-	if($debugging)
-		file_put_contents('salmon.out', "\n" . print_r($dom,true) . "\n" , FILE_APPEND);
-
 	// figure out where in the DOM tree our data is hiding
 
 	if($dom->provenance->data)
@@ -59,18 +54,14 @@ function salmon_post(&$a) {
 		$base = $dom;
 	
 	if(! $base) {
-		if($debugging)
-			file_put_contents('salmon.out', "\n" . 'Unable to find salmon data in XML' . "\n" , FILE_APPEND);
-		salmon_return(500);
+		logger('mod-salmon: unable to locate salmon data in xml ');
+		salmon_return(400);
 	}
 
 	// Stash the signature away for now. We have to find their key or it won't be good for anything.
 
 
 	$signature = base64url_decode($base->sig);
-
-	if($debugging)
-		file_put_contents('salmon.out', "\n" . 'Encoded Signature: ' . $base->sig . "\n" , FILE_APPEND);
 
 	// unpack the  data
 
@@ -104,9 +95,7 @@ function salmon_post(&$a) {
 
 	$feedxml = $tpl . $base . '</feed>';
 
-	if($debugging) {
-		file_put_contents('salmon.out', 'Processed feed: ' . $feedxml . "\n", FILE_APPEND);
-	}
+	logger('mod-salmon: Processed feed: ' . $feedxml);
 
 	// Now parse it like a normal atom feed to scrape out the author URI
 	
@@ -115,10 +104,7 @@ function salmon_post(&$a) {
     $feed->enable_order_by_date(false);
     $feed->init();
 
-	if($debugging) {
-		file_put_contents('salmon.out', "\n" . 'Feed parsed.' . "\n", FILE_APPEND);
-	}
-
+	logger('mod-salmon: Feed parsed.');
 
 	if($feed->get_item_quantity()) {
 		foreach($feed->get_items() as $item) {
@@ -129,23 +115,20 @@ function salmon_post(&$a) {
 	}
 
 	if(! $author_link) {
-		if($debugging)
-			file_put_contents('salmon.out',"\n" . 'Could not retrieve author URI.' . "\n", FILE_APPEND);
-		salmon_return(500);
+		logger('mod-salmon: Could not retrieve author URI.');
+		salmon_return(400);
 	}
 
 	// Once we have the author URI, go to the web and try to find their public key
 
-	if($debugging) {
-		file_put_contents('salmon.out', "\n" . 'Fetching key for ' . $author_link . "\n", FILE_APPEND);
-	}
+	logger('mod-salmon: Fetching key for ' . $author_link );
+
 
 	$key = get_salmon_key($author_link,$keyhash);
 
 	if(! $key) {
-		if($debugging)
-			file_put_contents('salmon.out',"\n" . 'Could not retrieve author key.' . "\n", FILE_APPEND);
-		salmon_return(500);
+		logger('mod-salmon: Could not retrieve author key.');
+		salmon_return(400);
 	}
 
 	// Setup RSA stuff to verify the signature
@@ -159,8 +142,7 @@ function salmon_post(&$a) {
 	$m = base64url_decode($key_info[1]);
 	$e = base64url_decode($key_info[2]);
 
-	if($debugging)
-		file_put_contents('salmon.out',"\n" . print_r($key_info,true) . "\n", FILE_APPEND);
+	logger('mod-salmon: key details: ' . print_r($key_info,true));
 
     $rsa = new CRYPT_RSA();
     $rsa->signatureMode = CRYPT_RSA_SIGNATURE_PKCS1;
@@ -180,13 +162,11 @@ function salmon_post(&$a) {
 	    $verify = $rsa->verify($stnet_signed_data,$signature);
 
 	if(! $verify) {
-		if($debugging)
-			file_put_contents('salmon.out',"\n" . 'Message did not verify. Discarding.' . "\n", FILE_APPEND);
-		salmon_return(500);
+		logger('mod-salmon: Message did not verify. Discarding.');
+		salmon_return(400);
 	}
 
-	if($debugging)
-		file_put_contents('salmon.out',"\n" . 'Message verified.' . "\n", FILE_APPEND);
+	logger('mod-salmon: Message verified.');
 
 
 	/*
@@ -202,17 +182,13 @@ function salmon_post(&$a) {
 		intval($importer['uid'])
 	);
 	if(! count($r)) {
-		if($debugging)
-			file_put_contents('salmon.out',"\n" . 'Author unknown to us.' . "\n", FILE_APPEND);
-
+		logger('mod-salmon: Author unknown to us.');
 	}	
 	if((count($r)) && ($r[0]['readonly'])) {
-		if($debugging)
-			file_put_contents('salmon.out',"\n" . 'Ignoring this author.' . "\n", FILE_APPEND);
+		logger('mod-salmon: Ignoring this author.');
 		salmon_return(200);
 		// NOTREACHED
 	}
-
 
 	require_once('include/items.php');
 

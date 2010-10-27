@@ -1276,3 +1276,15 @@ function attribute_contains($attr,$s) {
 	return false;
 }}
 
+if(! function_exists('logger')) {
+function logger($msg) {
+
+	$debugging = get_config('system','debugging');
+	$logfile   = get_config('system','logfile');
+
+	if((! $debugging) || (! $logfile))
+		return;
+	
+	@file_put_contents($logfile, datetime_convert() . ':' . session_id() . ' ' . $msg . "\n", FILE_APPEND);
+	return;
+}}

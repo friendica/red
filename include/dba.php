@@ -58,8 +58,11 @@ class dba {
 			}
 		}
 		else {
-			if(($result === false) && (file_exists('dbfail.out')))
-				file_put_contents('dbfail.out', printable($sql) . ' returned false' . "\n", FILE_APPEND);
+			if($result === false) {
+				logger('dba: ' . printable($sql) . ' returned false.');
+				if(file_exists('dbfail.out'))
+					file_put_contents('dbfail.out', printable($sql) . ' returned false' . "\n", FILE_APPEND);
+			}
 		}
 
 		if(($result === true) || ($result === false))
