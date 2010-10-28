@@ -1296,3 +1296,17 @@ function activity_match($haystack,$needle) {
 		return true;
 	return false;
 }}
+
+
+if(! function_exists('get_tags')) {
+function get_tags($s) {
+	if(preg_match_all('/([@#][^ ,.:?\-]*)[ ,.:?\-]/',$s,$match))
+		return $match[1];
+}}
+
+
+if(! function_exists('qp')) {
+function qp($s) {
+return str_replace ("%","=",rawurlencode($s));
+}} 
+

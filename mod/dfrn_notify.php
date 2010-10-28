@@ -111,8 +111,18 @@ function dfrn_notify_post(&$a) {
 
 		// send email notification if requested.
 
+		$body = html_entity
+
 		require_once('bbcode.php');
 		if($importer['notify-flags'] & NOTIFY_MAIL) {
+
+			$body = html_entity_decode(strip_tags(bbcode(stripslashes($msg['body']))),ENT_QUOTES,'UTF-8');
+
+			if(function_exists('quoted_printable_encode'))
+				$body = quoted_printable_encode($body);
+			else
+				$body = qp($body);
+
 			$tpl = load_view_file('view/mail_received_eml.tpl');			
 			$email_tpl = replace_macros($tpl, array(
 				'$sitename' => $a->config['sitename'],
@@ -121,11 +131,15 @@ function dfrn_notify_post(&$a) {
 				'$email' => $importer['email'],
 				'$from' => $msg['from-name'],
 				'$title' => stripslashes($msg['title']),
-				'$body' => strip_tags(bbcode(stripslashes($msg['body'])))
+				'$body' => $body
 			));
 
 			$res = mail($importer['email'], t('New mail received at ') . $a->config['sitename'],
-				$email_tpl, 'From: ' . t('Administrator') . '@' . $a->get_hostname() );
+				$email_tpl, 'From: ' . t('Administrator') . '@' . $a->get_hostname() . "\r\n"
+					. 'MIME-Version: 1.0' . "\r\n"
+					. 'Content-type: text/plain; charset=UTF-8' . "\r\n" 
+					. 'Content-transfer-encoding: quoted-printable' . "\r\n"
+			);
 		}
 		xml_status(0);
 		// NOTREACHED
