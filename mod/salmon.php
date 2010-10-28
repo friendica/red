@@ -14,7 +14,7 @@ function salmon_return($val) {
 
 	if($val >= 400)
 		$err = 'Error';
-	if($val == 200)
+	if($val >= 200 && $val < 300)
 		$err = 'OK';
 
 	logger('mod-salmon returns ' . $val);	
@@ -186,7 +186,7 @@ function salmon_post(&$a) {
 	}	
 	if((count($r)) && ($r[0]['readonly'])) {
 		logger('mod-salmon: Ignoring this author.');
-		salmon_return(200);
+		salmon_return(202);
 		// NOTREACHED
 	}
 
