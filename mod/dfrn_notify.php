@@ -111,8 +111,6 @@ function dfrn_notify_post(&$a) {
 
 		// send email notification if requested.
 
-		$body = html_entity
-
 		require_once('bbcode.php');
 		if($importer['notify-flags'] & NOTIFY_MAIL) {
 
