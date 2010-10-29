@@ -114,6 +114,49 @@ function item_post(&$a) {
 		}
 	}
 
+	$str_tags = '';
+	$tagged = array();
+
+	$tags = get_tags($body);
+
+
+	if($tags) {
+		foreach($tags as $tag) {
+			if(strpos($tag,'@') === 0) {
+				$name = substr($tag,1);
+				if(strpos($name,'@')) {
+
+					$links = @webfinger($name);
+					if(count($links)) {
+						foreach($links as $link) {
+							if($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page')
+                    			$profile = $link['@attributes']['href'];
+							if($link['@attributes']['rel'] === 'salmon')
+                    			$salmon = $link['@attributes']['href'];
+						}
+					}
+				}
+				else {
+					$r = q("SELECT * FROM `contact` WHERE `nick` = '%s' AND `uid` = %d LIMIT 1",
+						dbesc($name),
+						intval($profile_uid)
+					);
+					if(count($r)) {
+						$profile = $r[0]['url'];
+						$salmon = $r[0]['notify'];
+					}
+				}
+				if($profile) {
+					$profile = str_replace(',','%2c',$profile);
+					$body = str_replace($name,'[url=' . $profile . ']' . $name	. '[/url]', $body);
+					if(strlen($str_tags))
+						$str_tags .= ',';
+					$str_tags .= '[url=' . $profile . ']' . $name	. '[/url]';
+				}
+			}
+		}
+	}
+
 	$wall = 0;
 	if($post_type === 'wall' || $post_type === 'wall-comment')
 		$wall = 1;
@@ -345,7 +388,7 @@ function item_content(&$a) {
 		else {
 			notice( t('Permission denied.') . EOL);
 			goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
-			return; //NOTREACHED
+			//NOTREACHED
 		}
 	}
 }

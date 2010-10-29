@@ -1300,8 +1300,17 @@ function activity_match($haystack,$needle) {
 
 if(! function_exists('get_tags')) {
 function get_tags($s) {
-	if(preg_match_all('/([@#][^ ,.:?\-]*)[ ,.:?\-]/',$s,$match))
-		return $match[1];
+	$ret = array();
+	if(preg_match_all('/([@#][^ ,:?]*)[ ,:?]/',$s,$match)) {
+		foreach($match[1] as $match) {
+			if(substr($match,-1,1) === '.')
+				$ret[] = substr($match,0,-1);
+			else
+				$ret[] = $match;
+		}
+	}
+
+	return $ret;
 }}
 
 
