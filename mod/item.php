@@ -137,21 +137,31 @@ function item_post(&$a) {
 					}
 				}
 				else {
-					$r = q("SELECT * FROM `contact` WHERE `nick` = '%s' AND `uid` = %d LIMIT 1",
-						dbesc($name),
-						intval($profile_uid)
-					);
+					$newname = $name;
+					if(strstr($name,'_')) {
+						$newname = str_replace('_',' ',$name);
+						$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `uid` = %d LIMIT 1",
+							dbesc($newname),
+							intval($profile_uid)
+						);
+					}
+					else {
+						$r = q("SELECT * FROM `contact` WHERE `nick` = '%s' AND `uid` = %d LIMIT 1",
+							dbesc($name),
+							intval($profile_uid)
+						);
+					}
 					if(count($r)) {
 						$profile = $r[0]['url'];
-						$salmon = $r[0]['notify'];
+						$salmon  = $r[0]['notify'];
 					}
 				}
 				if($profile) {
-					$body = str_replace($name,'[url=' . $profile . ']' . $name	. '[/url]', $body);
+					$body = str_replace($name,'[url=' . $profile . ']' . $newname	. '[/url]', $body);
 					if(strlen($str_tags))
 						$str_tags .= ',';
 					$profile = str_replace(',','%2c',$profile);
-					$str_tags .= '[url=' . $profile . ']' . $name	. '[/url]';
+					$str_tags .= '[url=' . $profile . ']' . $newname	. '[/url]';
 				}
 			}
 		}
