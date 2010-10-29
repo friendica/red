@@ -147,10 +147,10 @@ function item_post(&$a) {
 					}
 				}
 				if($profile) {
-					$profile = str_replace(',','%2c',$profile);
 					$body = str_replace($name,'[url=' . $profile . ']' . $name	. '[/url]', $body);
 					if(strlen($str_tags))
 						$str_tags .= ',';
+					$profile = str_replace(',','%2c',$profile);
 					$str_tags .= '[url=' . $profile . ']' . $name	. '[/url]';
 				}
 			}

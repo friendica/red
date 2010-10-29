@@ -1298,10 +1298,18 @@ function activity_match($haystack,$needle) {
 }}
 
 
+// Pull out all #hashtags and @person tags from $s;
+// We also get @person@domain.com - which would make 
+// the regex quite complicated as tags can also
+// end a sentence. So we'll run through our results
+// and strip the period from any tags which end with one.
+// Returns array of tags found, or empty array.
+
+
 if(! function_exists('get_tags')) {
 function get_tags($s) {
 	$ret = array();
-	if(preg_match_all('/([@#][^ ,:?]*)[ ,:?]/',$s,$match)) {
+	if(preg_match_all('/([@#][^ ,:?]*)([ ,:?]|$)/',$s,$match)) {
 		foreach($match[1] as $match) {
 			if(substr($match,-1,1) === '.')
 				$ret[] = substr($match,0,-1);
@@ -1313,6 +1321,8 @@ function get_tags($s) {
 	return $ret;
 }}
 
+
+// quick and dirty quoted_printable encoding
 
 if(! function_exists('qp')) {
 function qp($s) {
