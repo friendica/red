@@ -24,7 +24,7 @@ function message_post(&$a) {
 		return;
 	}
 
-	if(! $strlen($subject))
+	if(! strlen($subject))
 		$subject = t('[no subject]');
 
 	$me = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
