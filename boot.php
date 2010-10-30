@@ -129,12 +129,16 @@ class App {
 		$this->pager= array();
 
 		$this->scheme = ((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']))	?  'https' : 'http' );
-		$this->hostname = $_SERVER['SERVER_NAME'];
+
+		if(x($_SERVER,'SERVER_NAME'))
+			$this->hostname = $_SERVER['SERVER_NAME'];
+
 		set_include_path("include/$this->hostname" . PATH_SEPARATOR . 'include' . PATH_SEPARATOR . '.' );
 
-		if(substr($_SERVER['QUERY_STRING'],0,2) == "q=")
+		if((x($_SERVER,'QUERY_STRING')) && substr($_SERVER['QUERY_STRING'],0,2) == "q=")
 			$_SERVER['QUERY_STRING'] = substr($_SERVER['QUERY_STRING'],2);
-		$this->cmd = trim($_GET['q'],'/');
+		if(x($_GET,'q'))
+			$this->cmd = trim($_GET['q'],'/');
 
 
 		$this->argv = explode('/',$this->cmd);
@@ -1226,6 +1230,7 @@ function allowed_email($email) {
 
 if(! function_exists('format_like')) {
 function format_like($cnt,$arr,$type,$id) {
+	$o = '';
 	if($cnt == 1)
 		$o .= $arr[0] . (($type === 'like') ? t(' likes this.') : t(' doesn\'t like this.')) . EOL ;
 	else {

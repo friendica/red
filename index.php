@@ -12,7 +12,7 @@ $install = ((file_exists('.htconfig.php')) ? false : true);
 
 @include(".htconfig.php");
 
-if(x($lang))
+if(isset($lang) && strlen($lang))
 	load_translation_table($lang);
 
 require_once("dba.php");

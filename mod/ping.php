@@ -25,7 +25,7 @@ function ping_init(&$a) {
 	);
 	$intro = $r[0]['total'];
 
-	$myurl = $a->get_baseurl() . '/profile/' . $user['nickname'] ;
+	$myurl = $a->get_baseurl() . '/profile/' . $a->user['nickname'] ;
 	$r = q("SELECT COUNT(*) AS `total` FROM `mail`
 		WHERE `uid` = %d AND `seen` = 0 AND `from-url` != '%s' ",
 		intval(local_user()),

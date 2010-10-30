@@ -85,7 +85,7 @@ function profile_content(&$a, $update = 0) {
 	$groups = array();
 
 	$tab = 'posts';
-
+	$o = '';
 
 	if($update) {
 		// Ensure we've got a profile owner if updating.
@@ -255,7 +255,6 @@ function profile_content(&$a, $update = 0) {
 		intval($a->pager['itemspage'])
 
 	);
-
 
 	$cmnt_tpl = load_view_file('view/comment_item.tpl');
 

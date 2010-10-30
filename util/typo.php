@@ -5,6 +5,11 @@
 
 	include 'boot.php';
 
+	error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+	ini_set('display_errors', '1');
+	ini_set('log_errors','0');
+
+
 	$a = new App();
 
 	$files = glob('mod/*.php');

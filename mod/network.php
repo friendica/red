@@ -173,7 +173,7 @@ function network_content(&$a, $update = 0) {
 			$comment = '';
 			$template = $tpl;
 			$commentww = '';
-
+			$owner_url = $owner_photo = $owner_name = '';
 			$profile_url = $item['url'];
 			$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 

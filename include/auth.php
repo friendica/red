@@ -2,7 +2,7 @@
 
 // login/logout 
 
-if((x($_SESSION,'authenticated')) && (! ($_POST['auth-params'] === 'login'))) {
+if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && (! ($_POST['auth-params'] === 'login'))) {
 
 	if($_POST['auth-params'] === 'logout' || $a->module === 'logout') {
 	
@@ -53,16 +53,19 @@ if((x($_SESSION,'authenticated')) && (! ($_POST['auth-params'] === 'login'))) {
 }
 else {
 
-	unset($_SESSION['authenticated']);
-	unset($_SESSION['uid']);
-	unset($_SESSION['visitor_id']);
-	unset($_SESSION['administrator']);
-	unset($_SESSION['cid']);
-	unset($_SESSION['theme']);
-	unset($_SESSION['my_url']);
-	unset($_SESSION['page_flags']);
+	if(isset($_SESSION)) {
+		unset($_SESSION['authenticated']);
+		unset($_SESSION['uid']);
+		unset($_SESSION['visitor_id']);
+		unset($_SESSION['administrator']);
+		unset($_SESSION['cid']);
+		unset($_SESSION['theme']);
+		unset($_SESSION['my_url']);
+		unset($_SESSION['page_flags']);
+	}
 
-	$encrypted = hash('whirlpool',trim($_POST['password']));
+	if(x($_POST,'password'))
+		$encrypted = hash('whirlpool',trim($_POST['password']));
 
 	if((x($_POST,'auth-params')) && $_POST['auth-params'] === 'login') {
 
