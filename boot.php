@@ -1292,7 +1292,7 @@ function logger($msg) {
 
 if(! function_exists('activity_match')) {
 function activity_match($haystack,$needle) {
-	if(($haystack === $needle) || (($basename($needle) === $haystack) && strstr($needle,NAMESPACE_ACTIVITY_SCHEMA)))
+	if(($haystack === $needle) || ((basename($needle) === $haystack) && strstr($needle,NAMESPACE_ACTIVITY_SCHEMA)))
 		return true;
 	return false;
 }}
