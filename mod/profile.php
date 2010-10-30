@@ -2,7 +2,6 @@
 
 if(! function_exists('profile_load')) {
 function profile_load(&$a, $username, $profile = 0) {
-
 	if(remote_user()) {
 		$r = q("SELECT `profile-id` FROM `contact` WHERE `id` = %d LIMIT 1",
 			intval($_SESSION['visitor_id']));
@@ -193,7 +192,7 @@ function profile_content(&$a, $update = 0) {
 
 	// Profile owner - everything is visible
 
-	if(is_owner) {
+	if($is_owner) {
 		$sql_extra = ''; 
 		
 		// Oh - while we're here... reset the Unseen messages
