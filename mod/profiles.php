@@ -267,7 +267,7 @@ function profiles_content(&$a) {
 	}		 
 
 
-	if(($a->argc > 1 && intval($a->argv[1])) {
+	if(($a->argc > 1) && (intval($a->argv[1]))) {
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($a->argv[1]),
 			intval($_SESSION['uid'])
