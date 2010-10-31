@@ -608,8 +608,7 @@ function goaway($s) {
 if(! function_exists('xml_status')) {
 function xml_status($st, $message = '') {
 
-	if(strlen($message))
-		$xml_message = "\t<message>" . xmlify($message) . "</message>\r\n";
+	$xml_message = ((strlen($message)) ? "\t<message>" . xmlify($message) . "</message>\r\n" : '');
 
 	header( "Content-type: text/xml" );
 	echo '<?xml version="1.0" encoding="UTF-8"?>'."\r\n";
@@ -1333,4 +1332,29 @@ if(! function_exists('qp')) {
 function qp($s) {
 return str_replace ("%","=",rawurlencode($s));
 }} 
+
+
+if(! function_exists('like_puller')) {
+function like_puller($a,$item,&$arr,$mode) {
+
+	$url = '';
+	$sparkle = '';
+	$verb = (($mode === 'like') ? ACTIVITY_LIKE : ACTIVITY_DISLIKE);
+
+	if((activity_match($item['verb'],$verb)) && ($item['id'] != $item['parent'])) {
+		$url = $item['url'];
+		if(($item['network'] === 'dfrn') && (! $item['self'])) {
+			$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
+			$sparkle = ' class="sparkle" ';
+		}
+		if(! ((isset($arr[$item['parent'] . '-l'])) && (is_array($arr[$item['parent'] . '-l']))))
+			$arr[$item['parent'] . '-l'] = array();
+		if(! isset($arr[$item['parent']]))
+			$arr[$item['parent']] = 1;
+		else	
+			$arr[$item['parent']] ++;
+		$arr[$item['parent'] . '-l'][] = '<a href="'. $url . '"'. $sparkle .'>' . $item['name'] . '</a>';
+	}
+	return;
+}}
 

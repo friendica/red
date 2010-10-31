@@ -4,6 +4,8 @@ require_once('include/Contact.php');
 
 function contacts_init(&$a) {
 	require_once('include/group.php');
+	if(! x($a->page,'aside'))
+		$a->page['aside'] = '';
 	$a->page['aside'] .= group_side();
 
 	if($a->config['register_policy'] != REGISTER_CLOSED)
@@ -84,7 +86,11 @@ function contacts_post(&$a) {
 
 function contacts_content(&$a) {
 
+	$sort_type = 0;
+	$o = '';
 	$o .= '<script>	$(document).ready(function() { $(\'#nav-contacts-link\').addClass(\'nav-selected\'); });</script>';
+
+
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
 		return;

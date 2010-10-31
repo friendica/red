@@ -3,6 +3,8 @@
 
 function network_init(&$a) {
 	require_once('include/group.php');
+	if(! x($a->page,'aside'))
+		$a->page['aside'] = '';
 	$a->page['aside'] .= group_side('network','network');
 }
 
@@ -10,7 +12,9 @@ function network_init(&$a) {
 function network_content(&$a, $update = 0) {
 
 	if(! local_user())
-		return;
+		return '';
+
+	$o = '';
 
 	require_once("include/bbcode.php");
 
@@ -140,32 +144,10 @@ function network_content(&$a, $update = 0) {
 	$dlike = array();
 	
 	if(count($r)) {
+
 		foreach($r as $item) {
-
-			$sparkle = '';
-
-			if(($item['verb'] == ACTIVITY_LIKE) && ($item['id'] != $item['parent'])) {
-				$url = $item['url'];
-				if(($item['network'] === 'dfrn') && (! $item['self'])) { 
-					$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
-					$sparkle = ' class="sparkle"';
-				}
-				if(! is_array($alike[$item['parent'] . '-l']))
-					$alike[$item['parent'] . '-l'] = array();
-				$alike[$item['parent']] ++;
-				$alike[$item['parent'] . '-l'][] = '<a href="'. $url . '"' . $sparkle . '>' . $item['name'] . '</a>';
-			}
-			if(($item['verb'] == ACTIVITY_DISLIKE) && ($item['id'] != $item['parent'])) {
-				$url = $item['url'];
-				if(($item['network'] === 'dfrn') && (! $item['self'])) { 
-					$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
-					$sparkle = ' class="sparkle"';
-				}
-				if(! is_array($dlike[$item['parent'] . '-l']))
-					$dlike[$item['parent'] . '-l'] = array();
-				$dlike[$item['parent']] ++;
-				$dlike[$item['parent'] . '-l'][] = '<a href="'. $url . '"' . $sparkle . '>' . $item['name'] . '</a>';
-			}
+			like_puller($a,$item,$alike,'like');
+			like_puller($a,$item,$dlike,'dislike');
 		}
 
 		foreach($r as $item) {
@@ -177,7 +159,7 @@ function network_content(&$a, $update = 0) {
 			$profile_url = $item['url'];
 			$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 
-			if((($item['verb'] == ACTIVITY_LIKE) || ($item['verb'] == ACTIVITY_DISLIKE)) && ($item['id'] != $item['parent'])) 
+			if(((activity_match($item['verb'],ACTIVITY_LIKE)) || (activity_match($item['verb'],ACTIVITY_DISLIKE))) && ($item['id'] != $item['parent']))
 				continue;
 
 			$lock = (($item['uid'] == local_user()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
@@ -274,8 +256,8 @@ function network_content(&$a, $update = 0) {
 			}
 
 
-			$like    = (($alike[$item['id']]) ? format_like($alike[$item['id']],$alike[$item['id'] . '-l'],'like',$item['id']) : '');
-			$dislike = (($dlike[$item['id']]) ? format_like($dlike[$item['id']],$dlike[$item['id'] . '-l'],'dislike',$item['id']) : '');
+			$like    = ((x($alike,$item['id'])) ? format_like($alike[$item['id']],$alike[$item['id'] . '-l'],'like',$item['id']) : '');
+			$dislike = ((x($dlike,$item['id'])) ? format_like($dlike[$item['id']],$dlike[$item['id'] . '-l'],'dislike',$item['id']) : '');
 
 			$location = (($item['location']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : '');
 			$coord = (($item['coord']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['coord']) . '">' . $item['coord'] . '</a>' : '');

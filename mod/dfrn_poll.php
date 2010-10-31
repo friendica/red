@@ -6,16 +6,11 @@ require_once('include/auth.php');
 
 function dfrn_poll_init(&$a) {
 
-	$dfrn_id = '';
-
-	if(x($_GET,'dfrn_id'))
-		$dfrn_id = $_GET['dfrn_id'];
-	if(x($_GET,'type'))
-		$type = $_GET['type'];
-	if(x($_GET,'last_update'))
-		$last_update = $_GET['last_update'];
-	$dfrn_version    = (float) $_GET['dfrn_version'] ;
-	$destination_url = ((x($_GET,'destination_url')) ? $_GET['destination_url'] : '');
+	$dfrn_id         = ((x($_GET,'dfrn_id'))         ? $_GET['dfrn_id']              : '');
+	$type            = ((x($_GET,'type'))            ? $_GET['type']                 : '');
+	$last_update     = ((x($_GET,'last_update'))     ? $_GET['last_update']          : '');
+	$destination_url = ((x($_GET,'destination_url')) ? $_GET['destination_url']      : '');
+	$dfrn_version    = ((x($_GET,'dfrn_version'))    ? (float) $_GET['dfrn_version'] : 0);
 
 
 	$direction = (-1);
@@ -23,7 +18,7 @@ function dfrn_poll_init(&$a) {
 
 	if(strpos($dfrn_id,':') == 1) {
 		$direction = intval(substr($dfrn_id,0,1));
-		$dfrn_id = substr($dfrn_id,2);
+		$dfrn_id   = substr($dfrn_id,2);
 	}
 
 	if(($dfrn_id === '') && (! x($_POST,'dfrn_id')) && ($a->argc > 1)) {
@@ -33,7 +28,7 @@ function dfrn_poll_init(&$a) {
 		killme();
 	}
 
-	if((x($type)) && ($type === 'profile')) {
+	if((isset($type)) && ($type === 'profile')) {
 
 		$sql_extra = '';
 		switch($direction) {
@@ -89,7 +84,7 @@ function dfrn_poll_init(&$a) {
 
 	}
 
-	if((x($type)) && ($type === 'profile-check')) {
+	if((isset($type)) && ($type === 'profile-check')) {
 
 		switch($direction) {
 			case 1:
@@ -119,15 +114,15 @@ function dfrn_poll_init(&$a) {
 
 function dfrn_poll_post(&$a) {
 
-	$dfrn_id      = $_POST['dfrn_id'];
-	$challenge    = $_POST['challenge'];
-	$url          = $_POST['url'];
-	$dfrn_version = (float) $_POST['dfrn_version'];
+	$dfrn_id      = ((x($_POST,'dfrn_id'))      ? $_POST['dfrn_id']              : '');
+	$challenge    = ((x($_POST,'challenge'))    ? $_POST['challenge']            : '');
+	$url          = ((x($_POST,'url'))          ? $_POST['url']                  : '');
+	$dfrn_version = ((x($_POST,'dfrn_version')) ? (float) $_POST['dfrn_version'] : 0);
 
 	$direction    = (-1);
 	if(strpos($dfrn_id,':') == 1) {
 		$direction = intval(substr($dfrn_id,0,1));
-		$dfrn_id = substr($dfrn_id,2);
+		$dfrn_id   = substr($dfrn_id,2);
 	}
 
 

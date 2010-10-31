@@ -155,6 +155,7 @@ function settings_post(&$a) {
 if(! function_exists('settings_content')) {
 function settings_content(&$a) {
 
+	$o = '';
 	$o .= '<script>	$(document).ready(function() { $(\'#nav-settings-link\').addClass(\'nav-selected\'); });</script>';
 
 	if(! local_user()) {

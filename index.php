@@ -31,8 +31,11 @@ $a->init_pagehead();
 session_start();
 
 
-if((x($_SESSION,'authenticated')) || (x($_POST['auth-params'])))
+if((x($_SESSION,'authenticated')) || (x($_POST,'auth-params')))
 	require("auth.php");
+
+if(! x($_SESSION,'sysmsg'))
+	$_SESSION['sysmsg'] = '';
 
 if($install)
 	$a->module = 'install';
@@ -71,7 +74,9 @@ if($a->module_loaded) {
 
 	if((! $a->error) && (function_exists($a->module . '_content'))) {
 		$func = $a->module . '_content';
-      		$a->page['content'] .= $func($a);
+		if(! x($a->page,'content'))
+			$a->page['content'] = '';
+		$a->page['content'] .= $func($a);
 	}
 
 }

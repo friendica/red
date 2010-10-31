@@ -122,11 +122,13 @@ function group_get_members($gid) {
 
 function group_side($every="contacts",$each="group") {
 
-	if(! local_user())
-		return;
+	$o = '';
 
-$createtext = t('Create a new group');
-$linktext= t('Everybody');
+	if(! local_user())
+		return '';
+
+	$createtext = t('Create a new group');
+	$linktext= t('Everybody');
 
 $o .= <<< EOT
 

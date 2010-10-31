@@ -16,7 +16,7 @@ function photo_init(&$a) {
 			return; // NOTREACHED
 	}
 
-	if(x($type)) {
+	if(isset($type)) {
 		switch($type) {
 
 			case 'profile':
@@ -37,7 +37,7 @@ function photo_init(&$a) {
 		if(count($r)) {
 			$data = $r[0]['data'];
 		}
-		if(x($data) === false) {
+		if(! isset($data)) {
 			$data = file_get_contents(($resolution == 5) 
 				? 'images/default-profile-sm.jpg' 
 				: 'images/default-profile.jpg');

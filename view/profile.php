@@ -1,12 +1,12 @@
 <!DOCTYPE html ><?php // This is a perfect example of why I prefer to use template files rather than mixed PHP/HTML ?>
 <html>
 <head>
-  <title><?php echo $page['title']; ?></title>
-  <?php echo $page['htmlhead']; ?>
+  <title><?php if(x($page,'title')) echo $page['title']; ?></title>
+  <?php if(x($page,'htmlhead')) echo $page['htmlhead']; ?>
 </head>
 <body>
-<header><?php echo $page['header']; ?></header>
-<nav><div id="top-margin"></div><?php echo $page['nav']; ?></nav>
+<header><?php if(x($page,'header')) echo $page['header']; ?></header>
+<nav><div id="top-margin"></div><?php if(x($page,'nav')) echo $page['nav']; ?></nav>
 <aside>
 <?php if((is_array($profile)) && count($profile)) { ?>
 <div class="vcard">
@@ -57,17 +57,17 @@
 <?php if(strlen($profile['marital'])) { ?>
 <div class="marital"><span class="marital-label"><span class="heart">&hearts;</span> Status: </span><span class="marital-text"><?php echo $profile['marital']; ?></span></div>
 <?php } ?>
-<?php if(strlen($profile['url'])) { ?>
+<?php if(strlen($profile['homepage'])) { ?>
 <div class="homepage"><span class="homepage-label">Homepage: </span><span class="homepage-url"><?php echo $profile['homepage']; ?></span></div>
 <?php } ?>
-<?php echo $page['aside'] ?>
+<?php if(x($page,'aside')) echo $page['aside'] ?>
 </aside>
 <section>
-<?php echo $page['content']; ?>
+<?php if(x($page,'content')) echo $page['content']; ?>
 <div id="page-footer"></div>
 </section>
 <footer>
-<?php echo $page['footer']; ?>
+<?php if(x($page,'footer')) echo $page['footer']; ?>
 </footer>
 </body>
 </html>

@@ -113,32 +113,9 @@ function display_content(&$a) {
 	if(count($r)) {
 
 		foreach($r as $item) {
-			$sparkle = '';
-			if(($item['verb'] == ACTIVITY_LIKE) && ($item['id'] != $item['parent'])) {
-				$url = $item['url'];
-				if(($item['network'] === 'dfrn') && (! $item['self'])) {
-					$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
-					$sparkle = ' class="sparkle"';
-				}
-				if(! is_array($alike[$item['parent'] . '-l']))
-					$alike[$item['parent'] . '-l'] = array();
-				$alike[$item['parent']] ++;
-				$alike[$item['parent'] . '-l'][] = '<a href="'. $url . '"' . $sparkle . '>' . $item['name'] . '</a>';
-			}
-			if(($item['verb'] == ACTIVITY_DISLIKE) && ($item['id'] != $item['parent'])) {
-				$url = $item['url'];
-				if(($item['network'] === 'dfrn') && (! $item['self'])) { 
-					$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
-					$sparkle = ' class="sparkle"';
-				}
-				if(! is_array($dlike[$item['parent'] . '-l']))
-					$dlike[$item['parent'] . '-l'] = array();
-				$dlike[$item['parent']] ++;
-				$dlike[$item['parent'] . '-l'][] = '<a href="'. $url . '"' . $sparkle . '>' . $item['name'] . '</a>';
-			}
+			like_puller($a,$item,$alike,'like');
+			like_puller($a,$item,$dlike,'dislike');
 		}
-
-
 
 		foreach($r as $item) {
 			$comment = '';
@@ -146,7 +123,8 @@ function display_content(&$a) {
 			
 			$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 			
-			if((($item['verb'] == ACTIVITY_LIKE) || ($item['verb'] == ACTIVITY_DISLIKE)) && ($item['id'] != $item['parent'])) 
+			if(((activity_match($item['verb'],ACTIVITY_LIKE)) || (activity_match($item['verb'],ACTIVITY_DISLIKE))) 
+				&& ($item['id'] != $item['parent']))
 				continue;
 
 			$lock = (($item['uid'] == local_user()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 

@@ -1,17 +1,17 @@
 <!DOCTYPE html >
 <html>
 <head>
-  <title><?php echo $page['title'] ?></title>
-  <?php echo $page['htmlhead'] ?>
+  <title><?php if(x($page,'title')) echo $page['title'] ?></title>
+  <?php if(x($page,'htmlhead')) echo $page['htmlhead'] ?>
 </head>
 <body>
-	<header><?php echo $page['header']; ?></header>
-	<nav><div id="top-margin"></div><?php echo $page['nav']; ?></nav>
-	<aside><?php echo $page['aside']; ?></aside>
-	<section><?php echo $page['content']; ?>
+	<header><?php if(x($page,'header')) echo $page['header']; ?></header>
+	<nav><div id="top-margin"></div><?php if(x($page,'nav')) echo $page['nav']; ?></nav>
+	<aside><?php if(x($page,'aside')) echo $page['aside']; ?></aside>
+	<section><?php if(x($page,'content')) echo $page['content']; ?>
 		<div id="page-footer"></div>
 	</section>
-	<footer><?php echo $page['footer']; ?></footer>
+	<footer><?php if(x($page,'footer')) echo $page['footer']; ?></footer>
 </body>
 </html>
 

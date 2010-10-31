@@ -4,11 +4,12 @@ function directory_init(&$a) {
 }
 
 function directory_content(&$a) {
+	$o = '';
 	$o .= '<script>	$(document).ready(function() { $(\'#nav-directory-link\').addClass(\'nav-selected\'); });</script>';
 
 	$search = ((x($_GET,'search')) ? notags(trim($_GET['search'])) : '');
 
-	$tpl .= load_view_file('view/directory_header.tpl');
+	$tpl = load_view_file('view/directory_header.tpl');
 
 	$globaldir = '';
 	$gdirpath = dirname(get_config('system','directory_submit_url'));

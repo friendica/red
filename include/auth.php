@@ -2,9 +2,9 @@
 
 // login/logout 
 
-if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && (! ($_POST['auth-params'] === 'login'))) {
+if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-params'))) || ($_POST['auth-params'] !== 'login'))) {
 
-	if($_POST['auth-params'] === 'logout' || $a->module === 'logout') {
+	if(((x($_POST,'auth-params')) && ($_POST['auth-params'] === 'logout')) || ($a->module === 'logout')) {
 	
 		// process logout request
 

@@ -86,6 +86,8 @@ function message_post(&$a) {
 }
 
 function message_content(&$a) {
+
+	$o = '';
 	$o .= '<script>	$(document).ready(function() { $(\'#nav-messages-link\').addClass(\'nav-selected\'); });</script>';
 
 	if(! local_user()) {
@@ -156,7 +158,7 @@ function message_content(&$a) {
 	
 		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
 
-		$select .= contact_select('messageto','message-to-select', false, 4, true);
+		$select = contact_select('messageto','message-to-select', false, 4, true);
 		$tpl = load_view_file('view/prv_message.tpl');
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Send Private Message'),

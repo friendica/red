@@ -1,5 +1,8 @@
 <?php
 
+if(! x($a->page,'nav'))
+	$a->page['nav'] = '';
+
 $a->page['nav'] .= '<div id="panel" style="display: none;"></div>' ;
 
 if(local_user()) {
