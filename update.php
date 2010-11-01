@@ -93,3 +93,7 @@ function update_1011() {
 		}
 	}
 }
+
+function update_1012() {
+	q("ALTER TABLE `item` ADD `inform` MEDIUMTEXT NOT NULL AFTER `tag` ");
+}

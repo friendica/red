@@ -587,7 +587,7 @@ function get_item_contact($item,$contacts) {
 }
 
 
-function dfrn_deliver($owner,$contact,$atom,$debugging = false) {
+function dfrn_deliver($owner,$contact,$atom) {
 
 
 	if((! strlen($contact['dfrn-id'])) && (! $contact['duplex']) && (! ($owner['page-flags'] == PAGE_COMMUNITY)))
@@ -602,13 +602,11 @@ function dfrn_deliver($owner,$contact,$atom,$debugging = false) {
 
 	$url = $contact['notify'] . '?dfrn_id=' . $idtosend . '&dfrn_version=' . DFRN_PROTOCOL_VERSION ;
 
-	if($debugging)
-		echo "URL: $url\n";
+	logger('dfrn_deliver: ' . $url);
 
 	$xml = fetch_url($url);
 
-	if($debugging)
-		echo $xml;
+	logger('dfrn_deliver: ' . $xml);
 
 	if(! $xml)
 		return 3;
@@ -641,8 +639,7 @@ function dfrn_deliver($owner,$contact,$atom,$debugging = false) {
 		$final_dfrn_id = substr($final_dfrn_id,2);
 
 	if($final_dfrn_id != $orig_id) {
-		if($debugging)
-			echo "Wrong ID - did not decode\n";
+		logger('dfrn_deliver: wrong dfrn_id.');
 		// did not decode properly - cannot trust this site 
 		return 3;
 	}
@@ -662,10 +659,7 @@ function dfrn_deliver($owner,$contact,$atom,$debugging = false) {
 
 	$xml = post_url($contact['notify'],$postvars);
 
-	if($debugging) {
-		echo "SENDING: " . print_r($postvars,true) . "\n";
-		echo "RECEIVING: " . $xml;
-	}
+	logger('dfrn_deliver: ' . "SENDING: " . print_r($postvars,true) . "\n" . "RECEIVING: " . $xml);
 
 	$res = simplexml_load_string($xml);
 

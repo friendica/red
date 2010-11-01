@@ -163,7 +163,7 @@ function follow_post(&$a) {
 	);
 
 	require_once('include/salmon.php');
-	slapper($r[0],$contact,$slap);
+	slapper($r[0],$contact['notify'],$slap);
 
 	goaway($_SESSION['return_url']);
 	// NOTREACHED

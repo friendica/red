@@ -86,13 +86,13 @@ function get_salmon_key($uri,$keyhash) {
 
 	
 		
-function slapper($owner,$contact,$slap) {
+function slapper($owner,$url,$slap) {
 
 	logger('slapper called. Data: ' . $slap);
 
 	// does contact have a salmon endpoint? 
 
-	if(! strlen($contact['notify']))
+	if(! strlen($url))
 		return;
 
 	// add all namespaces to item
@@ -147,7 +147,7 @@ EOT;
 	));
 
 	// slap them 
-	post_url($contact['notify'],$salmon, array(
+	post_url($url,$salmon, array(
 		'Content-type: application/magic-envelope+xml',
 		'Content-length: ' . strlen($salmon)
 	));
@@ -172,7 +172,7 @@ EOT;
 		));
 
 		// slap them 
-		post_url($contact['notify'],$salmon, array(
+		post_url($url,$salmon, array(
 			'Content-type: application/magic-envelope+xml',
 			'Content-length: ' . strlen($salmon)
 		));

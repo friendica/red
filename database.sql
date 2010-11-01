@@ -176,6 +176,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `object` text NOT NULL,
   `resource-id` char(255) NOT NULL,
   `tag` mediumtext NOT NULL,
+  `inform` mediumtext NOT NULL,
   `location` char(255) NOT NULL,
   `coord` char(255) NOT NULL,
   `allow_cid` mediumtext NOT NULL,

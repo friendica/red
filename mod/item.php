@@ -14,8 +14,7 @@ function item_post(&$a) {
 
 	require_once('include/security.php');
 
-	$uid = $_SESSION['uid'];
-
+	$uid = local_user();
 
 	$parent = ((x($_POST,'parent')) ? intval($_POST['parent']) : 0);
 
@@ -115,7 +114,7 @@ function item_post(&$a) {
 	}
 
 	$str_tags = '';
-	$tagged = array();
+	$inform   = '';
 
 	$tags = get_tags($body);
 
@@ -125,14 +124,17 @@ function item_post(&$a) {
 			if(strpos($tag,'@') === 0) {
 				$name = substr($tag,1);
 				if(strpos($name,'@')) {
-
+					$newname = $name;
 					$links = @webfinger($name);
 					if(count($links)) {
 						foreach($links as $link) {
 							if($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page')
                     			$profile = $link['@attributes']['href'];
-							if($link['@attributes']['rel'] === 'salmon')
-                    			$salmon = $link['@attributes']['href'];
+							if($link['@attributes']['rel'] === 'salmon') {
+								if(strlen($inform))
+									$inform .= ',';
+                    			$inform .= 'url:' . str_replace(',','%2c',$link['@attributes']['href']);
+							}
 						}
 					}
 				}
@@ -153,7 +155,9 @@ function item_post(&$a) {
 					}
 					if(count($r)) {
 						$profile = $r[0]['url'];
-						$salmon  = $r[0]['notify'];
+						if(strlen($inform))
+							$inform .= ',';
+						$inform .= 'cid:' . $r[0]['id'];
 					}
 				}
 				if($profile) {
@@ -181,9 +185,9 @@ function item_post(&$a) {
 	$uri = item_new_uri($a->get_hostname(),$profile_uid);
 
 	$r = q("INSERT INTO `item` (`uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
-		`author-name`, `author-link`, `author-avatar`, `created`,
-		`edited`, `changed`, `uri`, `title`, `body`, `location`, `coord`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
-		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `changed`, `uri`, `title`, `body`, `location`, `coord`, 
+		`tag`, `inform`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
+		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 		intval($profile_uid),
 		dbesc($post_type),
 		intval($wall),
@@ -203,6 +207,8 @@ function item_post(&$a) {
 		dbesc($body),
 		dbesc($location),
 		dbesc($coord),
+		dbesc($str_tags),
+		dbesc($inform),
 		dbesc($verb),
 		dbesc($str_contact_allow),
 		dbesc($str_group_allow),
