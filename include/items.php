@@ -187,6 +187,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 		else {
 			$verb = construct_verb($item);
 			$actobj = construct_activity($item);
+			$mentioned = get_mentions($item);
 
 			if($item['parent'] == $item['id']) {
 				$atom .= replace_macros($item_template, array(
@@ -207,6 +208,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 					'$content'            => xmlify($item['body']),
 					'$verb'               => xmlify($verb),
 					'$actobj'             => $actobj,  // do not xmlify
+					'$mentioned'          => $mentioned,
 					'$comment_allow'      => $allow
 				));
 			}
@@ -224,6 +226,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 					'$alt'           => xmlify($a->get_baseurl() . '/display/' . $owner_nick . '/' . $item['id']),
 					'$verb'          => xmlify($verb),
 					'$actobj'        => $actobj, // do not xmlify
+					'$mentioned'     => $mentioned,
 					'$parent_id'     => xmlify($item['parent-uri']),
 					'$comment_allow' => $allow
 				));

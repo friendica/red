@@ -23,5 +23,6 @@
 		<dfrn:comment-allow>$comment_allow</dfrn:comment-allow>
 		<as:verb>$verb</as:verb>
 		$actobj
+		$mentioned
 
 	</entry>

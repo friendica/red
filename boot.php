@@ -1358,3 +1358,17 @@ function like_puller($a,$item,&$arr,$mode) {
 	return;
 }}
 
+
+function get_mentions($item) {
+	$o = '';
+	if(! strlen($item['tag']))
+		return $o;
+
+	$arr = explode(',',$item['tag']);
+	foreach($arr as $x) {
+		$matches = null;
+		if(preg_match('/@\[url=([^\]]*)\]/',$x,$matches))
+			$o .= "\t\t" . '<link rel="mentioned" href="' . $matches[1] . '" />' . "\r\n";
+	}
+	return $o;
+}

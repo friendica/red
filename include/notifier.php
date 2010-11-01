@@ -213,6 +213,7 @@
 
 				$verb = construct_verb($item);
 				$actobj = construct_activity($item);
+				$mentioned = get_mentions($item);
 
 				if($item['id'] == $item_id) {
 					$slap = replace_macros($cmnt_template, array(
@@ -231,6 +232,7 @@
 						'$type'               => 'html',
 						'$verb'               => xmlify($verb),
 						'$actobj'             => $actobj,
+						'$mentioned'          => $mentioned,
 						'$alt'                => xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']),
 						'$content'            => xmlify(bbcode($item['body'])),
 						'$parent_id'          => xmlify($item['parent-uri']),
@@ -253,6 +255,7 @@
 						'$type'               => 'text',
 						'$verb'               => xmlify($verb),
 						'$actobj'             => $actobj,
+						'$mentioned'          => $mentioned,
 						'$alt'                => xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']),
 						'$content'            => xmlify($item['body']),
 						'$parent_id'          => xmlify($item['parent-uri']),
@@ -283,6 +286,7 @@
 
 					$verb = construct_verb($item);
 					$actobj = construct_activity($item);
+					$mentioned = get_mentions($item);
 
 					if($item['parent'] == $item['id']) {
 						$atom .= replace_macros($item_template, array(
@@ -301,6 +305,7 @@
 							'$type'               => 'text',
 							'$verb'               => xmlify($verb),
 							'$actobj'             => $actobj,
+							'$mentioned'          => $mentioned,
 							'$content'            => xmlify($item['body']),
 							'$alt'                => xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']),
 							'$comment_allow'      => (($item['last-child']) ? 1 : 0)
@@ -321,6 +326,7 @@
 							'$type'               => 'html',
 							'$verb'               => xmlify($verb),
 							'$actobj'             => $actobj,
+							'$mentioned'          => $mentioned,
 							'$content'            => xmlify(bbcode($item['body'])),
 							'$alt'                => xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']),
 							'$comment_allow'      => (($item['last-child']) ? 1 : 0)
@@ -343,6 +349,7 @@
 							'$type'          => 'text',
 							'$verb'          => xmlify($verb),
 							'$actobj'        => $actobj,
+							'$mentioned'     => $mentioned,
 							'$parent_id'     => xmlify($item['parent-uri']),
 							'$comment_allow' => (($item['last-child']) ? 1 : 0)
 						));
@@ -361,6 +368,7 @@
 							'$type'          => 'html',
 							'$verb'          => xmlify($verb),
 							'$actobj'        => $actobj,
+							'$mentioned'     => $mentioned,
 							'$parent_id'     => xmlify($item['parent-uri']),
 							'$comment_allow' => (($item['last-child']) ? 1 : 0)
 						));

@@ -165,7 +165,7 @@ function item_post(&$a) {
 					if(strlen($str_tags))
 						$str_tags .= ',';
 					$profile = str_replace(',','%2c',$profile);
-					$str_tags .= '[url=' . $profile . ']' . $newname	. '[/url]';
+					$str_tags .= '@[url=' . $profile . ']' . $newname	. '[/url]';
 				}
 			}
 		}
