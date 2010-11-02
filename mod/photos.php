@@ -52,11 +52,16 @@ function photos_post(&$a) {
 		killme();
 	}
 
-
-	$r = q("SELECT `contact`.* `user`.`nickname` FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
+	$r = q("SELECT `contact`.*, `user`.`nickname` FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
 		WHERE `user`.`uid` = %d AND `self` = 1 LIMIT 1",
 		intval(local_user())
 	);
+
+	if(! count($r)) {
+		notice( t('Contact information unavailable') . EOL);
+		logger('photos_post: unable to locate contact record for logged in user. uid=' . local_user());
+		killme();
+	}
 
 	$contact_record = $r[0];	
 
@@ -710,11 +715,12 @@ function photos_content(&$a) {
 			$r = q("SELECT COUNT(*) AS `total`
 				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 				WHERE `parent-uri` = '%s' AND `uri` != '%s' AND `item`.`deleted` = 0
-				AND NOT `item`.`type` IN ( 'remote', 'net-comment') 
-				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
+				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+				AND `item`.`uid` = %d 
 				$sql_extra ",
 				dbesc($i1[0]['uri']),
-				dbesc($i1[0]['uri'])
+				dbesc($i1[0]['uri']),
+				intval($i1[0]['uid'])
 
 			);
 
@@ -728,12 +734,13 @@ function photos_content(&$a) {
 				`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 				WHERE `parent-uri` = '%s' AND `uri` != '%s' AND `item`.`deleted` = 0
-				AND NOT `item`.`type` IN ( 'remote', 'net-comment') 
 				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+				AND `item`.`uid` = %d
 				$sql_extra
 				ORDER BY `parent` DESC, `id` ASC LIMIT %d ,%d ",
 				dbesc($i1[0]['uri']),
 				dbesc($i1[0]['uri']),
+				intval($i1[0]['uid']),
 				intval($a->pager['start']),
 				intval($a->pager['itemspage'])
 
@@ -779,6 +786,8 @@ function photos_content(&$a) {
 			$tpl = load_view_file('view/photo_item.tpl');
 			$return_url = $a->cmd;
 
+			$like_tpl = load_view_file('view/like.tpl');
+
 			if(can_write_wall($a,$a->data['user']['uid'])) {
 				if($i1[0]['last-child']) {
 					$o .= replace_macros($cmnt_tpl,array(
@@ -795,16 +804,41 @@ function photos_content(&$a) {
 				}
 			}
 
+			$alike = array();
+			$dlike = array();
 
 			// display comments
 			if(count($r)) {
+
+				foreach($r as $item) {
+					like_puller($a,$item,$alike,'like');
+					like_puller($a,$item,$dlike,'dislike');
+				}
+
+				$likebuttons = '';
+
+				if(can_write_wall($a,$a->data['user']['uid']))
+					$likebuttons = replace_macros($like_tpl,array('$id' => $i1[0]['id']));
+
+	            $like    = ((isset($alike[$i1[0]['id']])) ? format_like($alike[$i1[0]['id']],$alike[$i1[0]['id'] . '-l'],'like',$i1[0]['id']) : '');
+				$dislike = ((isset($dlike[$i1[0]['id']])) ? format_like($dlike[$i1[0]['id']],$dlike[$i1[0]['id'] . '-l'],'dislike',$i1[0]['id']) : '');
+
+				$o .= $likebuttons;
+				$o .= $like;
+				$o .= $dislike;
+
 				foreach($r as $item) {
 					$comment = '';
 					$template = $tpl;
-			
+					$sparkle = '';
+
+					if(((activity_match($item['verb'],ACTIVITY_LIKE)) || (activity_match($item['verb'],ACTIVITY_DISLIKE))) && ($item['id'] != $item['parent']))
+						continue;
+
 					$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 			
 					if(can_write_wall($a,$a->data['user']['uid'])) {
+
 						if($item['last-child']) {
 							$comment = replace_macros($cmnt_tpl,array(
 								'$return_path' => $return_url,
