@@ -3,6 +3,7 @@
 require_once('Photo.php');
 require_once('include/items.php');
 require_once('view/acl_selectors.php');
+require_once('include/bbcode.php');
 
 function photos_init(&$a) {
 
@@ -179,19 +180,18 @@ function photos_post(&$a) {
 		return; // NOTREACHED
 	}
 
+	if(($a->argc > 1) && ((x($_POST,'desc') !== false) || (x($_POST,'newtag') !== false))) {
 
-
-	if(($a->argc > 1) && (x($_POST,'desc') !== false)) {
-		$desc = notags(trim($_POST['desc']));
-		$tags = notags(trim($_POST['tags']));
-		$item_id = intval($_POST['item_id']);
+		$desc        = ((x($_POST,'desc'))    ? notags(trim($_POST['desc']))   : '');
+		$rawtags     = ((x($_POST,'newtag'))  ? notags(trim($_POST['newtag'])) : '');
+		$item_id     = ((x($_POST,'item_id')) ? intval($_POST['item_id'])      : 0);
 		$resource_id = $a->argv[1];
 
 		$p = q("SELECT * FROM `photo` WHERE `resource-id` = '%s' AND `uid` = %d ORDER BY `scale` DESC",
 			dbesc($resource_id),
 			intval(local_user())
 		);
-		if(count($r)) {
+		if((count($p)) && ($p[0]['desc'] !== $desc)) {
 			$r = q("UPDATE `photo` SET `desc` = '%s' WHERE `resource-id` = '%s' AND `uid` = %d",
 				dbesc($desc),
 				dbesc($resource_id),
@@ -200,10 +200,11 @@ function photos_post(&$a) {
 		}
 		if(! $item_id) {
 
+			// Create item container
+
 			$title = '';
 			$basename = basename($filename);
 			$uri = item_new_uri($a->get_hostname(),local_user());
-			// Create item container
 
 			$arr = array();
 
@@ -231,14 +232,100 @@ function photos_post(&$a) {
 
 		}
 
-		$r = q("UPDATE `item` SET `tag` = '%s', `edited` = '%s', `changed` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			dbesc($tags),
-			dbesc(datetime_convert()),
-			dbesc(datetime_convert()),
-			intval($item_id),
-			intval(local_user())
-		);
+		if($item_id) {
+			$r = q("SELECT * FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+				intval($item_id),
+				intval(local_user())
+			);
+		}
+		if(count($r)) {
+			$old_tag    = $r[0]['tag'];
+			$old_inform = $r[0]['inform'];
+		}
 
+		if(strlen($rawtags)) {
+
+			$str_tags = '';
+			$inform   = '';
+
+			// if the new tag doesn't have a namespace specifier (@foo or #foo) give it a hashtag
+
+			$x = substr($rawtags,0,1);
+			if($x !== '@' && $x !== '#')
+				$rawtags = '#' . $rawtags;
+
+			$tags = get_tags($rawtags);
+
+			if(count($tags)) {
+				foreach($tags as $tag) {
+					if(strpos($tag,'@') === 0) {
+						$name = substr($tag,1);
+						if((strpos($name,'@')) || (strpos($name,'http://'))) {
+							$newname = $name;
+							$links = @lrdd($name);
+							if(count($links)) {
+								foreach($links as $link) {
+									if($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page')
+        		            			$profile = $link['@attributes']['href'];
+									if($link['@attributes']['rel'] === 'salmon') {
+										if(strlen($inform))
+											$inform .= ',';
+                    					$inform .= 'url:' . str_replace(',','%2c',$link['@attributes']['href']);
+									}
+								}
+							}
+						}
+						else {
+							$newname = $name;
+							if(strstr($name,'_')) {
+								$newname = str_replace('_',' ',$name);
+								$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `uid` = %d LIMIT 1",
+									dbesc($newname),
+									intval(local_user())
+								);
+							}
+							else {
+								$r = q("SELECT * FROM `contact` WHERE `nick` = '%s' AND `uid` = %d LIMIT 1",
+									dbesc($name),
+									intval(local_user())
+								);
+							}
+							if(count($r)) {
+								$profile = $r[0]['url'];
+								if(strlen($inform))
+									$inform .= ',';
+								$inform .= 'cid:' . $r[0]['id'];
+							}
+						}
+						if($profile) {
+							if(strlen($str_tags))
+								$str_tags .= ',';
+							$profile = str_replace(',','%2c',$profile);
+							$str_tags .= '@[url=' . $profile . ']' . $newname	. '[/url]';
+						}
+					}
+				}
+			}
+
+			$newtag = $old_tag;
+			if(strlen($newtag) && strlen($str_tags)) 
+				$newtag .= ',';
+			$newtag .= $str_tags;
+
+			$newinform = $old_inform;
+			if(strlen($newinform) && strlen($inform))
+				$newinform .= ',';
+			$newinform .= $inform;
+
+			$r = q("UPDATE `item` SET `tag` = '%s', `inform` = '%s', `edited` = '%s', `changed` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+				dbesc($newtag),
+				dbesc($newinform),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert()),
+				intval($item_id),
+				intval(local_user())
+			);
+		}
 		goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
 		return; // NOTREACHED
 	}
@@ -656,9 +743,17 @@ function photos_content(&$a) {
 		$o .= '<div id="photo-caption" >' . $ph[0]['desc'] . '</div>';
 
 		if(count($i1) && strlen($i1[0]['tag'])) {
+			$arr = explode(',',$i1[0]['tag']);
 			// parse tags and add links	
-			$o .= '<div id="in-this-photo-text">' . t('In this photo: ') . '</div>';
-			$o .= '<div id="in-this-photo">' . $i1[0]['tag'] . '</div>';
+			$o .= '<div id="in-this-photo-text">' . t('Tags: ') . '</div>';
+			$o .= '<div id="in-this-photo">';
+			$tag_str = '';
+			foreach($arr as $t) {
+				if(strlen($tag_str))
+					$tag_str .= ', ';
+				$tag_str .= bbcode($t);
+			} 
+			$o .= $tag_str . '</div>';
 		}
 
 		if($cmd === 'edit') {
@@ -668,8 +763,9 @@ function photos_content(&$a) {
 				'$resource_id' => $ph[0]['resource-id'],
 				'$capt_label' => t('Caption'),
 				'$caption' => $ph[0]['desc'],
-				'$tag_label' => t('Tags'),
+				'$tag_label' => t('Add a Tag'),
 				'$tags' => $i1[0]['tag'],
+				'$help_tags' => t('Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping'),
 				'$item_id' => ((count($i1)) ? $i1[0]['id'] : 0),
 				'$submit' => t('Submit'),
 				'$delete' => t('Delete Photo')
@@ -678,7 +774,6 @@ function photos_content(&$a) {
 		}
 
 		if(count($i1)) {
-			// pull out how many people like the photo
 
 			$cmnt_tpl = load_view_file('view/comment_item.tpl');
 			$tpl = load_view_file('view/photo_item.tpl');

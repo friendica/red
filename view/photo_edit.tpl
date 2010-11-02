@@ -8,8 +8,8 @@
 
 	<div id="photo-edit-caption-end"></div>
 
-	<label id="photo-edit-tags-label" for="photo-edit-tags-textarea" >$tag_label</label>
-	<textarea name="tags" id="photo-edit-tags-textarea" rows="3" cols="64" >$tags</textarea>
+	<label id="photo-edit-tags-label" for="photo-edit-newtag" >$tag_label</label>
+	<input name="newtag" id="photo-edit-newtag" size="84" title="$help_tags" type="text" />
 	<div id="photo-edit-tags-end"></div>
 
 	<input id="photo-edit-submit-button" type="submit" name="submit" value="$submit" />

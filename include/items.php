@@ -1023,7 +1023,7 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 
 	$a = get_app();
 
-	$o = "<entry>\r\n";
+	$o = "\r\n\r\n<entry>\r\n";
 
 	if(is_array($author))
 		$o .= atom_author('author',$author['name'],$author['url'],80,80,$author['thumb']);
@@ -1033,7 +1033,7 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 		$o .= atom_author('dfrn:owner',$item['owner-name'],$item['owner-link'],80,80,$item['owner-avatar']);
 
 	if($item['parent'] != $item['id'])
-		$o .= '<thr:in-reply-to ref="' . xmlify($item['parent-uri']) . '" />' . "\r\n";
+		$o .= '<thr:in-reply-to ref="' . xmlify($item['parent-uri']) . '" type="text/html" href="' .  xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']) . '" />' . "\r\n";
 
 	$o .= '<id>' . xmlify($item['uri']) . '</id>' . "\r\n";
 	$o .= '<title>' . xmlify($item['title']) . '</title>' . "\r\n";

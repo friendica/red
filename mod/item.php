@@ -119,13 +119,13 @@ function item_post(&$a) {
 	$tags = get_tags($body);
 
 
-	if($tags) {
+	if(count($tags)) {
 		foreach($tags as $tag) {
 			if(strpos($tag,'@') === 0) {
 				$name = substr($tag,1);
-				if(strpos($name,'@')) {
+				if((strpos($name,'@')) || (strpos($name,'http://'))) {
 					$newname = $name;
-					$links = @webfinger($name);
+					$links = @lrdd($name);
 					if(count($links)) {
 						foreach($links as $link) {
 							if($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page')

@@ -1680,9 +1680,9 @@ a.mail-list-link:hover {
 	float: left;
 	width: 150px;
 }
-#photo-edit-caption, #photo-edit-tags-textarea {
+#photo-edit-caption, #photo-edit-newtag {
 	float: left;
-	margin-bottom: 15px;
+	margin-bottom: 25px;
 }
 
 #photo-edit-caption-end, #photo-edit-tags-end {
@@ -1691,6 +1691,9 @@ a.mail-list-link:hover {
 
 #photo-edit-delete-button {
 	margin-left: 200px;
+}
+#photo-edit-end {
+	margin-bottom: 35px;
 }
 #photo-caption {
 	font-size: 110%;
