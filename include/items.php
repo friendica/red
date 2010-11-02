@@ -27,8 +27,10 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 	$r = q("SELECT * FROM `contact` WHERE `self` = 1 AND `uid` = %d LIMIT 1",
 		intval($owner_id)
 	);
-	if(count($r))
+	if(count($r)) {
 		$owner = $r[0];
+		$owner['nickname'] = $owner_nick;
+	}
 	else
 		killme();
 
@@ -90,7 +92,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 		$sort = 'ASC';
 
 	if(! strlen($last_update))
-		$last_update = 'now - 30 days';
+		$last_update = 'now -30 days';
 
 	$check_date = datetime_convert('UTC','UTC',$last_update,'Y-m-d H:i:s');
 
@@ -117,9 +119,6 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 	$items = $r;
 
 	$feed_template = load_view_file('view/atom_feed.tpl');
-	$tomb_template = load_view_file('view/atom_tomb.tpl');
-	$item_template = load_view_file('view/atom_item.tpl');
-	$cmnt_template = load_view_file('view/atom_cmnt.tpl');
 
 	$atom = '';
 
@@ -169,69 +168,13 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 		// public feeds get html, our own nodes use bbcode
 
 		if($dfrn_id === '*') {
-			$allow = (($item['last-child']) ? 1 : 0);
-			$item['body'] = bbcode($item['body']);
 			$type = 'html';
 		}
 		else {
-			$allow = ((($item['last-child']) && ($contact['rel']) && ($contact['rel'] != REL_FAN)) ? 1 : 0);
 			$type = 'text';
 		}
 
-		if($item['deleted']) {
-			$atom .= replace_macros($tomb_template, array(
-				'$id'      => xmlify($item['uri']),
-				'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , ATOM_TIME))
-			));
-		}
-		else {
-			$verb = construct_verb($item);
-			$actobj = construct_activity($item);
-			$mentioned = get_mentions($item);
-
-			if($item['parent'] == $item['id']) {
-				$atom .= replace_macros($item_template, array(
-					'$name'               => xmlify($item['name']),
-					'$profile_page'       => xmlify($item['url']),
-					'$thumb'              => xmlify($item['thumb']),
-					'$owner_name'         => xmlify($item['owner-name']),
-					'$owner_profile_page' => xmlify($item['owner-link']),
-					'$owner_thumb'        => xmlify($item['owner-avatar']),
-					'$item_id'            => xmlify($item['uri']),
-					'$title'              => xmlify($item['title']),
-					'$published'          => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , ATOM_TIME)),
-					'$updated'            => xmlify(datetime_convert('UTC', 'UTC', $item['edited']  . '+00:00' , ATOM_TIME)),
-					'$location'           => xmlify($item['location']),
-					'$coord'              => xmlify($item['coord']),
-					'$type'               => $type,
-					'$alt'                => xmlify($a->get_baseurl() . '/display/' . $owner_nick . '/' . $item['id']),
-					'$content'            => xmlify($item['body']),
-					'$verb'               => xmlify($verb),
-					'$actobj'             => $actobj,  // do not xmlify
-					'$mentioned'          => $mentioned,
-					'$comment_allow'      => $allow
-				));
-			}
-			else {
-				$atom .= replace_macros($cmnt_template, array(
-					'$name'          => xmlify($item['name']),
-					'$profile_page'  => xmlify($item['url']),
-					'$thumb'         => xmlify($item['thumb']),
-					'$item_id'       => xmlify($item['uri']),
-					'$title'         => xmlify($item['title']),
-					'$published'     => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , ATOM_TIME)),
-					'$updated'       => xmlify(datetime_convert('UTC', 'UTC', $item['edited']  . '+00:00' , ATOM_TIME)),
-					'$type'          => $type,
-					'$content'       => xmlify($item['body']),
-					'$alt'           => xmlify($a->get_baseurl() . '/display/' . $owner_nick . '/' . $item['id']),
-					'$verb'          => xmlify($verb),
-					'$actobj'        => $actobj, // do not xmlify
-					'$mentioned'     => $mentioned,
-					'$parent_id'     => xmlify($item['parent-uri']),
-					'$comment_allow' => $allow
-				));
-			}
-		}
+		$atom .= atom_entry($item,$type,null,$owner,true);
 	}
 
 	$atom .= '</feed>' . "\r\n";
@@ -1051,3 +994,72 @@ function subscribe_to_hub($url,$importer,$contact) {
 	return;
 
 }
+
+
+function atom_author($tag,$name,$uri,$h,$w,$photo) {
+	$o = '';
+	if(! $tag)
+		return $o;
+	$name = xmlify($name);
+	$uri = xmlify($uri);
+	$h = intval($h);
+	$w = intval($w);
+	$photo = xmlify($photo);
+
+
+	$o .= "<$tag>\r\n";
+	$o .= "<name>$name</name>\r\n";
+	$o .= "<uri>$uri</uri>\r\n";
+	$o .= '<link rel="photo"  type="image/jpeg" media:width="' . $w . '" media:height="' . $h . '" href="' . $photo . '" />' . "\r\n";
+	$o .= '<link rel="avatar" type="image/jpeg" media:width="' . $w . '" media:height="' . $h . '" href="' . $photo . '" />' . "\r\n";
+	$o .= "</$tag>\r\n";
+	return $o;
+}
+
+function atom_entry($item,$type,$author,$owner,$comment = false) {
+
+	if($item['deleted'])
+		return '<at:deleted-entry ref="' . xmlify($item['uri']) . '" when="' . xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00',ATOM_TIME)) . '" />' . "\r\n";
+
+	$a = get_app();
+
+	$o = "<entry>\r\n";
+
+	if(is_array($author))
+		$o .= atom_author('author',$author['name'],$author['url'],80,80,$author['thumb']);
+	else
+		$o .= atom_author('author',$item['name'],$item['url'],80,80,$item['thumb']);
+	if(strlen($item['owner-name']))
+		$o .= atom_author('dfrn:owner',$item['owner-name'],$item['owner-link'],80,80,$item['owner-avatar']);
+
+	if($item['parent'] != $item['id'])
+		$o .= '<thr:in-reply-to ref="' . xmlify($item['parent-uri']) . '" />' . "\r\n";
+
+	$o .= '<id>' . xmlify($item['uri']) . '</id>' . "\r\n";
+	$o .= '<title>' . xmlify($item['title']) . '</title>' . "\r\n";
+	$o .= '<published>' . xmlify(datetime_convert('UTC','UTC',$item['created'] . '+00:00',ATOM_TIME)) . '</published>' . "\r\n";
+	$o .= '<updated>' . xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00',ATOM_TIME)) . '</updated>' . "\r\n";
+	$o .= '<content type="' . $type . '" >' . xmlify(($type === 'html') ? bbcode($item['body']) : $item['body']) . '</content>' . "\r\n";
+	$o .= '<link rel="alternate" href="' . xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']) . '" />' . "\r\n";
+	if($comment)
+		$o .= '<dfrn:comment-allow>' . intval($item['last-child']) . '</dfrn:comment-allow>' . "\r\n";
+	if($item['location'])
+		$o .= '<dfrn:location>' . xmlify($item['location']) . '</dfrn:location>' . "\r\n";
+	if($item['coord'])
+		$o .= '<georss:point>' . xmlify($item['coord']) . '</georss:point>' . "\r\n";
+
+	$verb = construct_verb($item);
+	$o .= '<as:verb>' . xmlify($verb) . '</as:verb>' . "\r\n";
+	$actobj = construct_activity($item);
+	if(strlen($actobj))
+		$o .= $actobj;
+
+	$mentioned = get_mentions($item);
+	if($mentioned)
+		$o .= $mentioned;
+	
+	$o .= '</entry>' . "\r\n";
+	
+	return $o;
+}
+	

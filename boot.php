@@ -8,6 +8,14 @@ define ( 'DFRN_PROTOCOL_VERSION',  '2.0'  );
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
 
+// log levels
+
+define ( 'LOGGER_NORMAL',          0 );
+define ( 'LOGGER_TRACE',           1 );
+define ( 'LOGGER_DEBUG',           2 );
+define ( 'LOGGER_DATA',            3 );
+define ( 'LOGGER_ALL',             4 );
+
 // registration policy
 
 define ( 'REGISTER_CLOSED',        0 );
@@ -1281,12 +1289,13 @@ function attribute_contains($attr,$s) {
 }}
 
 if(! function_exists('logger')) {
-function logger($msg) {
+function logger($msg,$level = 0) {
 
 	$debugging = get_config('system','debugging');
+	$loglevel  = intval(get_config('system','loglevel'));
 	$logfile   = get_config('system','logfile');
 
-	if((! $debugging) || (! $logfile))
+	if((! $debugging) || (! $logfile) || ($level > $loglevel))
 		return;
 	
 	@file_put_contents($logfile, datetime_convert() . ':' . session_id() . ' ' . $msg . "\n", FILE_APPEND);

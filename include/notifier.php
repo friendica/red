@@ -84,7 +84,7 @@
 	// If this is a public conversation, notify the feed hub
 	$notify_hub = true;
 
-	// fill this in with a salmon slap if applicable
+	// fill this in with a single salmon slap if applicable
 	$slap = '';
 
 	if($cmd != 'mail') {
@@ -152,10 +152,6 @@
 			killme();
 
 		$contacts = $r;
-
-		$tomb_template = load_view_file('view/atom_tomb.tpl');
-		$item_template = load_view_file('view/atom_item.tpl');
-		$cmnt_template = load_view_file('view/atom_cmnt.tpl');
 	}
 
 	$feed_template = load_view_file('view/atom_feed.tpl');
@@ -210,178 +206,28 @@
 
 		if($followup) {
 			foreach($items as $item) {  // there is only one item
-
-				$verb = construct_verb($item);
-				$actobj = construct_activity($item);
-				$mentioned = get_mentions($item);
-
 				if($item['id'] == $item_id) {
-					$slap = replace_macros($cmnt_template, array(
-						'$name'               => xmlify($owner['name']),
-						'$profile_page'       => xmlify($owner['url']),
-						'$thumb'              => xmlify($owner['thumb']),
-						'$owner_name'         => xmlify($item['owner-name']),
-						'$owner_profile_page' => xmlify($item['owner-link']),
-						'$owner_thumb'        => xmlify($item['owner-avatar']),
-						'$item_id'            => xmlify($item['uri']),
-						'$title'              => xmlify($item['title']),
-						'$published'          => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , ATOM_TIME)),
-						'$updated'            => xmlify(datetime_convert('UTC', 'UTC', $item['edited']  . '+00:00' , ATOM_TIME)),
-						'$location'           => xmlify($item['location']),
-						'$coord'              => xmlify($item['coord']),
-						'$type'               => 'html',
-						'$verb'               => xmlify($verb),
-						'$actobj'             => $actobj,
-						'$mentioned'          => $mentioned,
-						'$alt'                => xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']),
-						'$content'            => xmlify(bbcode($item['body'])),
-						'$parent_id'          => xmlify($item['parent-uri']),
-						'$comment_allow'      => 0
-					));
-
-					$atom .= replace_macros($cmnt_template, array(
-						'$name'               => xmlify($owner['name']),
-						'$profile_page'       => xmlify($owner['url']),
-						'$thumb'              => xmlify($owner['thumb']),
-						'$owner_name'         => xmlify($item['owner-name']),
-						'$owner_profile_page' => xmlify($item['owner-link']),
-						'$owner_thumb'        => xmlify($item['owner-avatar']),
-						'$item_id'            => xmlify($item['uri']),
-						'$title'              => xmlify($item['title']),
-						'$published'          => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , ATOM_TIME)),
-						'$updated'            => xmlify(datetime_convert('UTC', 'UTC', $item['edited']  . '+00:00' , ATOM_TIME)),
-						'$location'           => xmlify($item['location']),
-						'$coord'              => xmlify($item['coord']),
-						'$type'               => 'text',
-						'$verb'               => xmlify($verb),
-						'$actobj'             => $actobj,
-						'$mentioned'          => $mentioned,
-						'$alt'                => xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']),
-						'$content'            => xmlify($item['body']),
-						'$parent_id'          => xmlify($item['parent-uri']),
-						'$comment_allow'      => 0
-					));
-
+					$slap  = atom_entry($item,'html',$owner,$owner,false);
+					$atom .= atom_entry($item,'text',$owner,$owner,false);
 				}
-
-
 			}
 		}
 		else {
 			foreach($items as $item) {
-				if($item['deleted']) {
-					$atom .= replace_macros($tomb_template, array(
-						'$id' => xmlify($item['uri']),
-						'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , ATOM_TIME))
-					));
-					$slaps[] = replace_macros($tomb_template, array(
-						'$id' => xmlify($item['uri']),
-						'$updated' => xmlify(datetime_convert('UTC', 'UTC', $item['edited'] . '+00:00' , ATOM_TIME))
-					));
-				}
-				else {
-					$contact = get_item_contact($item,$contacts);
-					if(! $contact)
-						continue;
+				$contact = get_item_contact($item,$contacts);
+				if(! $contact)
+					continue;
 
-					$verb = construct_verb($item);
-					$actobj = construct_activity($item);
-					$mentioned = get_mentions($item);
-
-					if($item['parent'] == $item['id']) {
-						$atom .= replace_macros($item_template, array(
-							'$name'               => xmlify($contact['name']),
-							'$profile_page'       => xmlify($contact['url']),
-							'$thumb'              => xmlify($contact['thumb']),
-							'$owner_name'         => xmlify($item['owner-name']),
-							'$owner_profile_page' => xmlify($item['owner-link']),
-							'$owner_thumb'        => xmlify($item['owner-avatar']),
-							'$item_id'            => xmlify($item['uri']),
-							'$title'              => xmlify($item['title']),
-							'$published'          => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , ATOM_TIME)),
-							'$updated'            => xmlify(datetime_convert('UTC', 'UTC', $item['edited']  . '+00:00' , ATOM_TIME)),
-							'$location'           => xmlify($item['location']),
-							'$coord'              => xmlify($item['coord']),
-							'$type'               => 'text',
-							'$verb'               => xmlify($verb),
-							'$actobj'             => $actobj,
-							'$mentioned'          => $mentioned,
-							'$content'            => xmlify($item['body']),
-							'$alt'                => xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']),
-							'$comment_allow'      => (($item['last-child']) ? 1 : 0)
-						));
-						$slaps[] = replace_macros($item_template, array(
-							'$name'               => xmlify($contact['name']),
-							'$profile_page'       => xmlify($contact['url']),
-							'$thumb'              => xmlify($contact['thumb']),
-							'$owner_name'         => xmlify($item['owner-name']),
-							'$owner_profile_page' => xmlify($item['owner-link']),
-							'$owner_thumb'        => xmlify($item['owner-avatar']),
-							'$item_id'            => xmlify($item['uri']),
-							'$title'              => xmlify($item['title']),
-							'$published'          => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , ATOM_TIME)),
-							'$updated'            => xmlify(datetime_convert('UTC', 'UTC', $item['edited']  . '+00:00' , ATOM_TIME)),
-							'$location'           => xmlify($item['location']),
-							'$coord'              => xmlify($item['coord']),
-							'$type'               => 'html',
-							'$verb'               => xmlify($verb),
-							'$actobj'             => $actobj,
-							'$mentioned'          => $mentioned,
-							'$content'            => xmlify(bbcode($item['body'])),
-							'$alt'                => xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']),
-							'$comment_allow'      => (($item['last-child']) ? 1 : 0)
-						));
-
-					}
-					else {
-						$atom .= replace_macros($cmnt_template, array(
-							'$name'          => xmlify($contact['name']),
-							'$profile_page'  => xmlify($contact['url']),
-							'$thumb'         => xmlify($contact['thumb']),
-							'$item_id'       => xmlify($item['uri']),
-							'$title'         => xmlify($item['title']),
-							'$published'     => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , ATOM_TIME)),
-							'$updated'       => xmlify(datetime_convert('UTC', 'UTC', $item['edited']  . '+00:00' , ATOM_TIME)),
-							'$content'       => xmlify($item['body']),
-							'$alt'           => xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']),
-							'$location'      => xmlify($item['location']),
-							'$coord'         => xmlify($item['coord']),
-							'$type'          => 'text',
-							'$verb'          => xmlify($verb),
-							'$actobj'        => $actobj,
-							'$mentioned'     => $mentioned,
-							'$parent_id'     => xmlify($item['parent-uri']),
-							'$comment_allow' => (($item['last-child']) ? 1 : 0)
-						));
-						$slaps[] = replace_macros($cmnt_template, array(
-							'$name'          => xmlify($contact['name']),
-							'$profile_page'  => xmlify($contact['url']),
-							'$thumb'         => xmlify($contact['thumb']),
-							'$item_id'       => xmlify($item['uri']),
-							'$title'         => xmlify($item['title']),
-							'$published'     => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , ATOM_TIME)),
-							'$updated'       => xmlify(datetime_convert('UTC', 'UTC', $item['edited']  . '+00:00' , ATOM_TIME)),
-							'$content'       => xmlify(bbcode($item['body'])),
-							'$alt'           => xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']),
-							'$location'      => xmlify($item['location']),
-							'$coord'         => xmlify($item['coord']),
-							'$type'          => 'html',
-							'$verb'          => xmlify($verb),
-							'$actobj'        => $actobj,
-							'$mentioned'     => $mentioned,
-							'$parent_id'     => xmlify($item['parent-uri']),
-							'$comment_allow' => (($item['last-child']) ? 1 : 0)
-						));
-					}
-				}
+				$atom   .= atom_entry($item,'text',$contact,$owner,true);
+				$slaps[] = atom_entry($item,'html',$contact,$owner,true);
 			}
 		}
 	}
 	$atom .= '</feed>' . "\r\n";
 
-	logger('notifier: ' . $atom);
+	logger('notifier: ' . $atom, LOGGER_DATA);
 
-	logger('notifier: slaps: ' . print_r($slaps,true));
+	logger('notifier: slaps: ' . print_r($slaps,true), LOGGER_DATA);
 
 	if($followup)
 		$recip_str = $parent['contact-id'];
@@ -407,8 +253,8 @@
 
 		switch($contact['network']) {
 			case 'dfrn':
+				logger('notifier: dfrndelivery: ' . $contact['name']);
 				$deliver_status = dfrn_deliver($owner,$contact,$atom);
-				logger('notifier: delivery: ' . $contact['name']);
 				break;
 			default:
 				if($followup) {
@@ -420,10 +266,10 @@
 					// a public hub, it's ok to send a salmon
 
 					if(count($slaps) && $notify_hub) {
+						logger('notifier: slapdelivery: ' . $contact['name']);
 						foreach($slaps as $slappy) {
 							slapper($owner,$contact['notify'],$slappy);
 						}
-						logger('notifier: slapdelivery: ' . $contact['name']);
 					}
 				}
 				break;
@@ -441,10 +287,10 @@
 
 	if(count($slaps) && count($url_recipients) && $notify_hub) {
 		foreach($url_recipients as $url) {
+			logger('notifier: urldelivery: ' . $url);
 			foreach($slaps as $slappy) {
 				slapper($owner,$url,$slappy);
 			}
-			logger('notifier: urldelivery: ' . $url);
 		}
 	}
 
