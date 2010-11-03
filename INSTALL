@@ -1,7 +1,5 @@
 
-Mistpark Installation
-
-This is an early release. Some manual installation is required at this time. 
+Friendika Installation
 
 1. Requirements
 	- Apache with mod-rewrite enabled and "Options All" so you can use a 
@@ -72,5 +70,5 @@ one shown, substituting for your unique paths and settings:
 
 You can generally find the location of PHP by executing "which php". If you 
 have troubles with this section please contact your hosting provider for 
-assistance. Mistpark will not work correctly if you cannot perform this step.
+assistance. Friendika will not work correctly if you cannot perform this step.
   

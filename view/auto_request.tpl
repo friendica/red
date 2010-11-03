@@ -4,7 +4,7 @@
 <p id="dfrn-request-intro">
 Please enter your profile address from one of the following supported social networks:<br />
 <ul id="dfrn-request-networks">
-<li><a href="http://dfrn.org">Mistpark/DFRN</a> (fully supported)</li>
+<li><a href="http://dfrn.org">Friendika/Mistpark</a> (fully supported)</li>
 <li><a href="http://ostatus.org">StatusNet/GNU-social/Federation</a> (limited - experimental)</li>
 </ul>
 </p>

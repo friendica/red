@@ -5,7 +5,7 @@
 You may request a connection with this member if you have a valid profile address<br />
 on one of the following social networks:<br />
 <ul id="dfrn-request-networks">
-<li><a href="http://dfrn.org">Mistpark/DFRN</a> (fully supported)</li>
+<li><a href="http://dfrn.org">Friendika/Mistpark</a> (fully supported)</li>
 <li><a href="http://ostatus.org">StatusNet/GNU-social/Federation</a> (limited - experimental)</li>
 </ul>
 </p>

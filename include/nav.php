@@ -56,6 +56,6 @@ else {
 	$banner = get_config('system','banner');
 
 	if($banner === false)
-		$banner = 'mistpark';
+		$banner = 'friendika';
 
 	$a->page['nav'] .= '<span id="banner">' . $banner . '</span>';

@@ -64,7 +64,7 @@ function install_post(&$a) {
 
 function install_content(&$a) {
 
-	notice( t('Welcome to the Mistpark Social Network.') . EOL);
+	notice( t('Welcome to Friendika.') . EOL);
 
 	$o .= check_htconfig();
 	if(strlen($o))

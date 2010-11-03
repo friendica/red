@@ -1,6 +1,6 @@
 <?php
 	// BBcode 2 HTML was written by WAY2WEB.net
-	// Made to work with Mistpark - Mike Macgirvin
+	// Made to work with Mistpark/Friendika - Mike Macgirvin
 
 function bbcode($Text) {
 	// Replace any html brackets with HTML Entities to prevent executing HTML or script

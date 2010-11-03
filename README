@@ -1,5 +1,5 @@
 
-  Mistpark
+  Friendika
   Distributed Social Network
 
 What if there was a social network which was free to use, open source - and 
@@ -11,7 +11,7 @@ selling your private information to advertisers)?
 
 Look no further. 
  
-Mistpark is a social network without boundaries. Mistpark installations can 
+Friendika is a social network without boundaries. Friendika installations can 
 link together into a global social network which is free from central 
 control. We are developing connectors to seamlessly communicate with many 
 other open social networks and providers - GNU-social, Diaspora, Status.net, 
@@ -25,25 +25,25 @@ those you wish to share them with.
 
 Period.  
 
-Mistpark is secure, and as private as you wish it to be. Our privacy settings 
+Friendika is secure, and as private as you wish it to be. Our privacy settings 
 are straight-forward and simple, because we know that relationships rarely are 
 (straight-forward and simple). Whether you're communicating with drinking 
 buddies or potential employers, you can rest assured that each is only able to 
 see the side of you that you wish to present. 
 
-A single instance of Mistpark Server can easily support hundreds of (and up to
+A single instance of Friendika Server can easily support hundreds of (and up to
 several thousand) people using commodity hosting hardware. Each of these 
 people are able to connect with potentially hundreds or thousands of friends 
 and associates on any other supported network anywhere in the world and share 
 photos, links, status updates, etc. 
 
 But maybe you don't want to be connected to the world... That's OK too. 
-Mistpark may also be closed off from the global community and used to support
+Friendika may also be closed off from the global community and used to support
 social networking amongst corporate, educational, religious, and other private
 communities. This makes it an excellent choice for the social networking needs
 of young teenagers and especially k-12 organisations. 
 
-Every person on Mistpark has unlimited profiles available to them. There is a 
+Every person on Friendika has unlimited profiles available to them. There is a 
 "public profile" which can be seen by anybody. Additional profiles may be 
 tailored to specific groups or individuals.
 
@@ -53,7 +53,7 @@ friends or groups of friends.
 
 You may also create interactive band/celebrity pages, special interest groups,
 and even organisational 'soapboxes' - for social communications that require
-the ability to scale to global levels. Mistpark provides for automatic
+the ability to scale to global levels. Friendika provides for automatic
 relationship management in these extreme cases so that you can concentrate on
 your message and public persona - and not worry about being swamped by friend
 requests. You can even maintain private social contact with your closest 
@@ -63,10 +63,3 @@ No other social network offers this ability.
 
 IMPORTANT: Please see the file INSTALL for system requirements.
 
-Visit http://mistpark.com for more information. 
-
-You may also contact the author and raise issues via the source code 
-repository on github -- http://github.com/macgirvin/mistpark
-
-It's your network now. If social networking isn't what you thought it would 
-be, help us to make it better.

@@ -23,7 +23,7 @@ $default_timezone = 'America/Los_Angeles';
 
 // What is your site name?
 
-$a->config['sitename'] = "Mistpark Social Network";
+$a->config['sitename'] = "Friendika Social Network";
 
 // Your choices are REGISTER_OPEN, REGISTER_APPROVE, or REGISTER_CLOSED.
 // Be certain to create your own personal account before setting 
@@ -52,8 +52,4 @@ $a->config['system']['directory_submit_url'] = 'http://dir.dfrn.org/submit';
 // PuSH - aka pubsubhubbub URL. This makes delivery of public posts as fast as private posts
 
 $a->config['system']['huburl'] = 'http://pubsubhubbub.appspot.com';
-
-// Please see "http://github.com/macgirvin/mistpark/wiki/Hidden-Features-Settings" 
-// for additional settings and options
-
 
