@@ -174,6 +174,8 @@ CREATE TABLE IF NOT EXISTS `item` (
   `verb` char(255) NOT NULL,
   `object-type` char(255) NOT NULL,
   `object` text NOT NULL,
+  `target-type` char(255) NOT NULL,
+  `target` text NOT NULL,
   `resource-id` char(255) NOT NULL,
   `tag` mediumtext NOT NULL,
   `inform` mediumtext NOT NULL,

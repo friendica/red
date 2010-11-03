@@ -2,7 +2,7 @@
 
 set_time_limit(0);
 
-define ( 'BUILD_ID',               1013   );
+define ( 'BUILD_ID',               1014   );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.0'  );
 
 define ( 'EOL',                    "<br />\r\n"     );
@@ -61,6 +61,7 @@ define ( 'NAMESPACE_THREAD' ,         'http://purl.org/syndication/thread/1.0' )
 define ( 'NAMESPACE_TOMB' ,           'http://purl.org/atompub/tombstones/1.0' );
 define ( 'NAMESPACE_ACTIVITY',        'http://activitystrea.ms/spec/1.0/' );
 define ( 'NAMESPACE_ACTIVITY_SCHEMA', 'http://activitystrea.ms/schema/1.0/' );
+define ( 'NAMESPACE_MEDIA',           'http://purl.org/syndication/atommedia' );
 define ( 'NAMESPACE_SALMON_ME',       'http://salmon-protocol.org/ns/magic-env' );
 define ( 'NAMESPACE_OSTATUSSUB',      'http://ostatus.org/schema/1.0/subscribe' );
 define ( 'NAMESPACE_GEORSS',          'http://www.georss.org/georss' );

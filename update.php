@@ -97,3 +97,8 @@ function update_1011() {
 function update_1012() {
 	q("ALTER TABLE `item` ADD `inform` MEDIUMTEXT NOT NULL AFTER `tag` ");
 }
+
+function update_1013() {
+	q("ALTER TABLE `item` ADD `target-type` CHAR( 255 ) NOT NULL 
+		AFTER `object` , ADD `target` TEXT NOT NULL AFTER `target-type`");
+} 

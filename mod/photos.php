@@ -259,6 +259,7 @@ function photos_post(&$a) {
 			if($x !== '@' && $x !== '#')
 				$rawtags = '#' . $rawtags;
 
+			$taginfo = array();
 			$tags = get_tags($rawtags);
 
 			if(count($tags)) {
@@ -273,12 +274,14 @@ function photos_post(&$a) {
 									if($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page')
         		            			$profile = $link['@attributes']['href'];
 									if($link['@attributes']['rel'] === 'salmon') {
+										$salmon = '$url:' . str_replace(',','%sc',$link['@attributes']['href']);
 										if(strlen($inform))
 											$inform .= ',';
-                    					$inform .= 'url:' . str_replace(',','%2c',$link['@attributes']['href']);
+                    					$inform .= $salmon;
 									}
 								}
 							}
+							$taginfo[] = array($newname,$profile,$salmon);
 						}
 						else {
 							$newname = $name;
@@ -297,12 +300,14 @@ function photos_post(&$a) {
 							}
 							if(count($r)) {
 								$profile = $r[0]['url'];
+								$notify = 'cid:' . $r[0]['id'];
 								if(strlen($inform))
 									$inform .= ',';
-								$inform .= 'cid:' . $r[0]['id'];
+								$inform .= $notify;
 							}
 						}
 						if($profile) {
+							$taginfo[] = array($newname,$profile,$notify);
 							if(strlen($str_tags))
 								$str_tags .= ',';
 							$profile = str_replace(',','%2c',$profile);
@@ -330,13 +335,36 @@ function photos_post(&$a) {
 				intval($item_id),
 				intval(local_user())
 			);
+
+			if(count($taginfo)) {
+				foreach($taginfo as $tagged) {
+//					$slap = create_photo_tag(local_user(),$item_id, $tagged);
+
+
+//					
+				}
+				// call notifier on new tag activity
+			}
+			
+//				$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
+				
+//				$proc_debug = get_config('system','proc_debug');
+
+				// send the notification upstream/downstream as the case may be
+
+//				if($i[0]['visible'])
+//					proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" $proc_debug & ",
+//						array(),$foo));
+
+
+
 		}
 		goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
 		return; // NOTREACHED
 	}
 
 
-
+	// default post action - upload a photo
 
 	if(! x($_FILES,'userfile'))
 		killme();

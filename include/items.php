@@ -188,7 +188,7 @@ function construct_verb($item) {
 	return ACTIVITY_POST;
 }
 
-function construct_activity($item) {
+function construct_activity_object($item) {
 
 	if($item['object']) {
 		$o = '<as:object>' . "\r\n";
@@ -197,13 +197,43 @@ function construct_activity($item) {
 			$o .= '<as:object-type>' . xmlify($r->type) . '</as:object-type>' . "\r\n";
 		if($r->id)
 			$o .= '<id>' . xmlify($r->id) . '</id>' . "\r\n";
-		if($r->link)
-			$o .= '<link rel="alternate" type="text/html" href="' . xmlify($r->link) . '" />' . "\r\n";
+		if($r->link) {
+			if(substr($r->link,0,1) === '&') 
+				$o .= unxmlify($r->link);
+			else
+				$o .= '<link rel="alternate" type="text/html" href="' . xmlify($r->link) . '" />' . "\r\n";
+		}
 		if($r->title)
 			$o .= '<title>' . xmlify($r->title) . '</title>' . "\r\n";
 		if($r->content)
 			$o .= '<content type="html" >' . xmlify(bbcode($r->content)) . '</content>' . "\r\n";
 		$o .= '</as:object>' . "\r\n";
+		return $o;
+	}
+
+	return '';
+} 
+
+function construct_activity_target($item) {
+
+	if($item['target']) {
+		$o = '<as:target>' . "\r\n";
+		$r = @simplexml_load_string($item['target']);
+		if($r->type)
+			$o .= '<as:object-type>' . xmlify($r->type) . '</as:object-type>' . "\r\n";
+		if($r->id)
+			$o .= '<id>' . xmlify($r->id) . '</id>' . "\r\n";
+		if($r->link) {
+			if(substr($r->link,0,1) === '&') 
+				$o .= unxmlify($r->link);
+			else
+				$o .= '<link rel="alternate" type="text/html" href="' . xmlify($r->link) . '" />' . "\r\n";
+		}
+		if($r->title)
+			$o .= '<title>' . xmlify($r->title) . '</title>' . "\r\n";
+		if($r->content)
+			$o .= '<content type="html" >' . xmlify(bbcode($r->content)) . '</content>' . "\r\n";
+		$o .= '</as:target>' . "\r\n";
 		return $o;
 	}
 
@@ -391,9 +421,8 @@ function get_atom_elements($feed,$item) {
 		}	
 		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'])
 			$res['object'] .= '<id>' . $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'] . '</id>' . "\n";
-		
-		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'][0]['attribs']['']['rel'] === 'alternate')
-			$res['object'] .= '<link>' . $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'][0]['attribs']['']['href'] . '</link>' . "\n";
+		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'])
+			$res['target'] .= '<link>' . encode_rel_links($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) . '</link>' . "\n";
 		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'])
 			$res['object'] .= '<title>' . $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'] . '</title>' . "\n";
 		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['content'][0]['data']) {
@@ -419,7 +448,65 @@ function get_atom_elements($feed,$item) {
 		$res['object'] .= '</object>' . "\n";
 	}
 
+	$rawobj = $item->get_item_tags(NAMESPACE_ACTIVITY, 'target');
+
+	if($rawobj) {
+		$res['target'] = '<target>' . "\n";
+		if($rawobj[0]['child'][NAMESPACE_ACTIVITY]['object-type'][0]['data']) {
+			$res['target'] .= '<type>' . $rawobj[0]['child'][NAMESPACE_ACTIVITY]['object-type'][0]['data'] . '</type>' . "\n";
+		}	
+		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'])
+			$res['target'] .= '<id>' . $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'] . '</id>' . "\n";
+
+		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'])
+			$res['target'] .= '<link>' . encode_rel_links($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) . '</link>' . "\n";
+		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'])
+			$res['target'] .= '<title>' . $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'] . '</title>' . "\n";
+		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['content'][0]['data']) {
+			$body = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['content'][0]['data'];
+			if(! $body)
+				$body = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['summary'][0]['data'];
+			if(strpos($body,'<')) {
+
+				$body = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
+					'[youtube]$1[/youtube]', $body);
+
+				$config = HTMLPurifier_Config::createDefault();
+				$config->set('Cache.DefinitionImpl', null);
+
+				$purifier = new HTMLPurifier($config);
+				$body = $purifier->purify($body);
+			}
+
+			$body = html2bbcode($body);
+			$res['target'] .= '<content>' . $body . '</content>' . "\n";
+		}
+
+		$res['target'] .= '</target>' . "\n";
+	}
+
 	return $res;
+}
+
+function encode_rel_links($links) {
+	$o = '';
+	if(! ((is_array($links)) && (count($links))))
+		return $o;
+	foreach($links as $link) {
+		$o .= '<link ';
+		if($link['attribs']['']['rel'])
+			$o .= 'rel="' . $link['attribs']['']['rel'] . '" ';
+		if($link['attribs']['']['type'])
+			$o .= 'type="' . $link['attribs']['']['type'] . '" ';
+		if($link['attribs']['']['href'])
+			$o .= 'type="' . $link['attribs']['']['href'] . '" ';
+		if($link['attribs'][NAMESPACE_MEDIA]['width'])
+			$o .= 'media:width="' . $link['attribs'][NAMESPACE_MEDIA]['width'] . '" ';
+		if($link['attribs'][NAMESPACE_MEDIA]['height'])
+			$o .= 'media:height="' . $link['attribs'][NAMESPACE_MEDIA]['height'] . '" ';
+		$o .= ' />' . "\n" ;
+	}
+	return xmlify($o);
 }
 
 function item_store($arr) {
@@ -1050,9 +1137,12 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 
 	$verb = construct_verb($item);
 	$o .= '<as:verb>' . xmlify($verb) . '</as:verb>' . "\r\n";
-	$actobj = construct_activity($item);
+	$actobj = construct_activity_object($item);
 	if(strlen($actobj))
 		$o .= $actobj;
+	$actarg = construct_activity_target($item);
+	if(strlen($actarg))
+		$o .= $actarg;
 
 	$mentioned = get_mentions($item);
 	if($mentioned)
