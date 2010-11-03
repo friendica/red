@@ -665,6 +665,7 @@ function photos_content(&$a) {
 		require_once('security.php');
 		require_once('bbcode.php');
 
+		$o = '<div id="live-display"></div>' . "\r\n";
 		// fetch image, item containing image, then comments
 
 		$ph = q("SELECT * FROM `photo` WHERE `uid` = %d AND `resource-id` = '%s' 

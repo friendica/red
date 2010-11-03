@@ -16,7 +16,7 @@
       document.getElementById(theID).style.display = "none" 
   }
 
-
+	
 	var src = null;
 	var prev = null;
 	var livetime = null;
@@ -24,6 +24,7 @@
 	var stopped = false;
 	var timer = null;
 	var pr = 0;
+	var liking = 0;
 
 	$(document).ready(function() {
 		$.ajaxSetup({cache: false});
@@ -49,6 +50,18 @@
 
 		if($('#live-network').length) { src = 'network'; liveUpdate(); }
 		if($('#live-profile').length) { src = 'profile'; liveUpdate(); }
+		if($('#live-display').length) { 
+			if(liking) {
+				liking = 0;
+				window.location.href=window.location.href 
+			}
+		}
+		if($('#live-photos').length)  { 
+			if(liking) {
+				liking = 0;
+				window.location.href=window.location.href 
+			}
+		}
 
 		if(! stopped) {
 			$.get("ping",function(data) {
@@ -135,6 +148,7 @@
 		$.get('like/' + ident.toString() + '?verb=' + verb );
 		if(timer) clearTimeout(timer);
 		timer = setTimeout(NavUpdate,3000);
+		liking = 1;
 	}
 
 	function getPosition(e) {

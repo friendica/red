@@ -3,6 +3,8 @@
 
 function display_content(&$a) {
 
+	$o = '<div id="live-display"></div>' . "\r\n";
+
 	require_once('mod/profile.php');
 	profile_init($a);
 
@@ -100,6 +102,7 @@ function display_content(&$a) {
 	);
 
 
+
 	$cmnt_tpl = load_view_file('view/comment_item.tpl');
 	$like_tpl = load_view_file('view/like.tpl');
 	$tpl = load_view_file('view/wall_item.tpl');
@@ -111,6 +114,13 @@ function display_content(&$a) {
 	$dlike = array();
 
 	if(count($r)) {
+
+		if((local_user()) && (local_user() == $a->profile['uid'])) {
+			q("UPDATE `item` SET `unseen` = 0 
+				WHERE `parent` = %d AND `unseen` = 1",
+				intval($r[0]['parent'])
+			);
+		}
 
 		foreach($r as $item) {
 			like_puller($a,$item,$alike,'like');
