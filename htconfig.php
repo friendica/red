@@ -47,7 +47,7 @@ $a->config['php_path'] = 'php';
 // You shouldn't need to change anything else.
 // Location of global directory submission page. 
 
-$a->config['system']['directory_submit_url'] = 'http://dir.dfrn.org/submit';
+$a->config['system']['directory_submit_url'] = 'http://dir.friendika.com/submit';
 
 // PuSH - aka pubsubhubbub URL. This makes delivery of public posts as fast as private posts
 
