@@ -16,6 +16,7 @@ function like_content(&$a) {
 	if(! $verb)
 		$verb = 'like';
 
+
 	switch($verb) {
 		case 'like':
 			$activity = ACTIVITY_LIKE;
@@ -37,12 +38,16 @@ function like_content(&$a) {
 
 	$item_id = (($a->argc > 1) ? notags(trim($a->argv[1])) : 0);
 
+	logger('like: verb ' . $verb . ' item ' . $item_id);
+
+
 	$r = q("SELECT * FROM `item` WHERE ( `id` = '%s' OR `uri` = '%s') AND `id` = `parent` LIMIT 1",
 		dbesc($item_id),
 		dbesc($item_id)
 	);
 
 	if(! $item_id || (! count($r))) {
+		logger('like: no item ' . $item_id);
 		return;
 	}
 
@@ -62,6 +67,7 @@ function like_content(&$a) {
 		$owner = $r[0];
 
 	if(! $owner) {
+		logger('like: no owner');
 		return;
 	}
 
@@ -107,7 +113,7 @@ function like_content(&$a) {
 
 	$post_type = (($item['resource-id']) ? t('photo') : t('status'));
 	$objtype = (($item['resource-id']) ? ACTIVITY_OBJ_PHOTO : ACTIVITY_OBJ_NOTE ); 
-	$link = $a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id'];
+	$link = xmlify('<link rel="alternate" type="text/html" href="' . $a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id'] . '" />' . "\n") ;
 	$body = $item['body'];
 
 	$obj = <<< EOT
@@ -161,6 +167,13 @@ EOT;
 	$arr['last-child'] = 0;
 
 	$post_id = item_store($arr);	
+
+	if(! $item['visible']) {
+		$r = q("UPDATE `item` SET `visible` = 1 WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			intval($item['id']),
+			intval($owner_uid)
+		);
+	}			
 
 
 	$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
