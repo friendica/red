@@ -852,9 +852,12 @@ function photos_content(&$a) {
 	            $like    = ((isset($alike[$i1[0]['id']])) ? format_like($alike[$i1[0]['id']],$alike[$i1[0]['id'] . '-l'],'like',$i1[0]['id']) : '');
 				$dislike = ((isset($dlike[$i1[0]['id']])) ? format_like($dlike[$i1[0]['id']],$dlike[$i1[0]['id'] . '-l'],'dislike',$i1[0]['id']) : '');
 
+				$o .= '<div id="photo-like-div">';
 				$o .= $likebuttons;
 				$o .= $like;
 				$o .= $dislike;
+				$o .= '</div>';
+
 
 				foreach($r as $item) {
 					$comment = '';
