@@ -128,8 +128,13 @@ function display_content(&$a) {
 		}
 
 		foreach($r as $item) {
-			$comment = '';
+
 			$template = $tpl;
+
+			$comment     = '';
+			$owner_url   = '';
+			$owner_photo = '';
+			$owner_name  = '';
 			
 			$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 			
@@ -215,8 +220,9 @@ function display_content(&$a) {
 			else 
 				$drop = replace_macros(load_view_file('view/wall_fake_drop.tpl'), array('$id' => $item['id']));
 
-			$like    = (($alike[$item['id']]) ? format_like($alike[$item['id']],$alike[$item['id'] . '-l'],'like',$item['id']) : '');
-			$dislike = (($dlike[$item['id']]) ? format_like($dlike[$item['id']],$dlike[$item['id'] . '-l'],'dislike',$item['id']) : '');
+			$like    = ((isset($alike[$item['id']])) ? format_like($alike[$item['id']],$alike[$item['id'] . '-l'],'like',$item['id']) : '');
+			$dislike = ((isset($dlike[$item['id']])) ? format_like($dlike[$item['id']],$dlike[$item['id'] . '-l'],'dislike',$item['id']) : '');
+
 			$location = (($item['location']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : '');
 			$coord = (($item['coord']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['coord']) . '">' . $item['coord'] . '</a>' : '');
 			if($coord) {

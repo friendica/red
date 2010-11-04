@@ -548,6 +548,8 @@ function item_store($arr) {
 
 	dbesc_array($arr);
 
+	logger('item_store: ' . print_r($arr,true), LOGGER_DATA);
+
 	$r = q("INSERT INTO `item` (`" 
 			. implode("`, `", array_keys($arr)) 
 			. "`) VALUES ('" 
@@ -576,12 +578,16 @@ function item_store($arr) {
 		$arr['uri'],           // already dbesc'd
 		intval($arr['uid'])
 	);
-	if(count($r))
+	if(count($r)) {
 		$current_post = $r[0]['id'];
+		logger('item_store: created item ' . $current_post);
+	}
 	else
 		return 0;
 
 	if($parent_missing) {
+
+		logger('item_store: item parent was not found - ignoring item');
 
 		// perhaps the parent was deleted, but in any case, this thread is dead
 		// and unfortunately our brand new item now has to be destroyed

@@ -87,7 +87,7 @@ function pubsub_post(&$a) {
 	$xml = file_get_contents('php://input');
 
 	logger('pubsub: feed arrived from ' . $_SERVER['REMOTE_ADDR'] . ' for ' .  $a->cmd );
-	logger('pubsub: data: ' . $xml, $LOGGER_DATA);
+	logger('pubsub: data: ' . $xml, LOGGER_DATA);
 
 	$nick       = (($a->argc > 1) ? notags(trim($a->argv[1])) : '');
 	$contact_id = (($a->argc > 2) ? intval($a->argv[2]) : 0);

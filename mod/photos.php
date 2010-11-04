@@ -7,6 +7,8 @@ require_once('include/bbcode.php');
 
 function photos_init(&$a) {
 
+	$o = '';
+
 	if($a->argc > 1) {
 		$nick = $a->argv[1];
 		$r = q("SELECT * FROM `user` WHERE `nickname` = '%s' LIMIT 1",
@@ -36,6 +38,9 @@ function photos_init(&$a) {
 			}
 			$o .= '</ul>';
 		}
+
+		if(! x($a->page,'aside'))
+			$a->page['aside'] = '';
 		$a->page['aside'] .= $o;
 	}
 	return;
@@ -213,23 +218,26 @@ function photos_post(&$a) {
 
 			$arr = array();
 
-			$arr['uid']          = local_user();
-			$arr['uri']          = $uri;
-			$arr['parent-uri']   = $uri; 
-			$arr['type']         = 'photo';
-			$arr['wall']         = 1;
-			$arr['resource-id']  = $p[0]['resource-id'];
-			$arr['contact-id']   = $contact_record['id'];
-			$arr['owner-name']   = $contact_record['name'];
-			$arr['owner-link']   = $contact_record['url'];
-			$arr['owner-avatar'] = $contact_record['thumb'];
-			$arr['title']        = $title;
-			$arr['allow_cid']    = $p[0]['allow_cid'];
-			$arr['allow_gid']    = $p[0]['allow_gid'];
-			$arr['deny_cid']     = $p[0]['deny_cid'];
-			$arr['deny_gid']     = $p[0]['deny_gid'];
-			$arr['last-child']   = 1;
-			$arr['body']         = '[url=' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $p[0]['resource-id'] . ']' 
+			$arr['uid']           = local_user();
+			$arr['uri']           = $uri;
+			$arr['parent-uri']    = $uri; 
+			$arr['type']          = 'photo';
+			$arr['wall']          = 1;
+			$arr['resource-id']   = $p[0]['resource-id'];
+			$arr['contact-id']    = $contact_record['id'];
+			$arr['owner-name']    = $contact_record['name'];
+			$arr['owner-link']    = $contact_record['url'];
+			$arr['owner-avatar']  = $contact_record['thumb'];
+			$arr['author-name']   = $contact_record['name'];
+			$arr['author-link']   = $contact_record['url'];
+			$arr['author-avatar'] = $contact_record['thumb'];
+			$arr['title']         = $title;
+			$arr['allow_cid']     = $p[0]['allow_cid'];
+			$arr['allow_gid']     = $p[0]['allow_gid'];
+			$arr['deny_cid']      = $p[0]['deny_cid'];
+			$arr['deny_gid']      = $p[0]['deny_gid'];
+			$arr['last-child']    = 1;
+			$arr['body']          = '[url=' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $p[0]['resource-id'] . ']' 
 						. '[img]' . $a->get_baseurl() . '/photo/' . $p[0]['resource-id'] . '-' . $p[0]['scale'] . '.jpg' . '[/img]' 
 						. '[/url]';
 		
@@ -391,7 +399,7 @@ function photos_post(&$a) {
 	if((! count($r)) || ($album == t('Profile Photos')))
 		$visible = 1;
 	else
-		$visibile = 0;
+		$visible = 0;
 
 
 	$str_group_allow   = perms2str($_POST['group_allow']);
@@ -448,24 +456,27 @@ function photos_post(&$a) {
 
 	$arr = array();
 
-	$arr['uid']          = local_user();
-	$arr['uri']          = $uri;
-	$arr['parent-uri']   = $uri;
-	$arr['type']         = 'photo';
-	$arr['wall']         = 1;
-	$arr['resource-id']  = $photo_hash;
-	$arr['contact-id']   = $contact_record['id'];
-	$arr['owner-name']   = $contact_record['name'];
-	$arr['owner-link']   = $contact_record['url'];
-	$arr['owner-avatar'] = $contact_record['thumb'];
-	$arr['title']        = $title;
-	$arr['allow_cid']    = $str_contact_allow;
-	$arr['allow_gid']    = $str_group_allow;
-	$arr['deny_cid']     = $str_contact_deny;
-	$arr['deny_gid']     = $str_group_deny;
-	$arr['last-child']   = 1;
-	$arr['visible']      = $visible;
-	$arr['body']         = '[url=' . $a->get_baseurl() . '/photos/' . $contact_record['nickname'] . '/image/' . $photo_hash . ']' 
+	$arr['uid']           = local_user();
+	$arr['uri']           = $uri;
+	$arr['parent-uri']    = $uri;
+	$arr['type']          = 'photo';
+	$arr['wall']          = 1;
+	$arr['resource-id']   = $photo_hash;
+	$arr['contact-id']    = $contact_record['id'];
+	$arr['owner-name']    = $contact_record['name'];
+	$arr['owner-link']    = $contact_record['url'];
+	$arr['owner-avatar']  = $contact_record['thumb'];
+	$arr['author-name']   = $contact_record['name'];
+	$arr['author-link']   = $contact_record['url'];
+	$arr['author-avatar'] = $contact_record['thumb'];
+	$arr['title']         = '';
+	$arr['allow_cid']     = $str_contact_allow;
+	$arr['allow_gid']     = $str_group_allow;
+	$arr['deny_cid']      = $str_contact_deny;
+	$arr['deny_gid']      = $str_group_deny;
+	$arr['last-child']    = 1;
+	$arr['visible']       = $visible;
+	$arr['body']          = '[url=' . $a->get_baseurl() . '/photos/' . $contact_record['nickname'] . '/image/' . $photo_hash . ']' 
 				. '[img]' . $a->get_baseurl() . "/photo/{$photo_hash}-{$smallest}.jpg" . '[/img]' 
 				. '[/url]';
 
@@ -637,7 +648,7 @@ function photos_content(&$a) {
 			$a->set_pager_total(count($r));
 
 
-		$r = q("SELECT `resource-id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
+		$r = q("SELECT `resource-id`, `id`, `filename`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
 			$sql_extra GROUP BY `resource-id` ORDER BY `created` DESC LIMIT %d , %d",
 			intval($a->data['user']['uid']),
 			dbesc($album),
@@ -817,6 +828,17 @@ function photos_content(&$a) {
 
 			$like_tpl = load_view_file('view/like.tpl');
 
+			$likebuttons = '';
+
+			if(can_write_wall($a,$a->data['user']['uid']))
+				$likebuttons = replace_macros($like_tpl,array('$id' => $i1[0]['id']));
+
+			if(! count($r)) {
+				$o .= '<div id="photo-like-div">';
+				$o .= $likebuttons;
+				$o .= '</div>';
+			}
+
 			if(can_write_wall($a,$a->data['user']['uid'])) {
 				if($i1[0]['last-child']) {
 					$o .= replace_macros($cmnt_tpl,array(
@@ -843,11 +865,6 @@ function photos_content(&$a) {
 					like_puller($a,$item,$alike,'like');
 					like_puller($a,$item,$dlike,'dislike');
 				}
-
-				$likebuttons = '';
-
-				if(can_write_wall($a,$a->data['user']['uid']))
-					$likebuttons = replace_macros($like_tpl,array('$id' => $i1[0]['id']));
 
 	            $like    = ((isset($alike[$i1[0]['id']])) ? format_like($alike[$i1[0]['id']],$alike[$i1[0]['id'] . '-l'],'like',$i1[0]['id']) : '');
 				$dislike = ((isset($dlike[$i1[0]['id']])) ? format_like($dlike[$i1[0]['id']],$dlike[$i1[0]['id'] . '-l'],'dislike',$i1[0]['id']) : '');
@@ -929,6 +946,7 @@ function photos_content(&$a) {
 	}
 
 	// Default - show recent photos with upload link (if applicable)
+	$o = '';
 
 	$r = q("SELECT `resource-id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` != '%s' 
 		$sql_extra GROUP BY `resource-id`",
@@ -939,7 +957,8 @@ function photos_content(&$a) {
 		$a->set_pager_total(count($r));
 
 
-	$r = q("SELECT `resource-id`, `album`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` != '%s' 
+	$r = q("SELECT `resource-id`, `id`, `filename`, `album`, max(`scale`) AS `scale` FROM `photo` 
+		WHERE `uid` = %d AND `album` != '%s' 
 		$sql_extra GROUP BY `resource-id` ORDER BY `created` DESC LIMIT %d , %d",
 		intval($a->data['user']['uid']),
 		dbesc( t('Contact Photos')),
@@ -964,7 +983,7 @@ function photos_content(&$a) {
 				'$phototitle' => t('View Photo'),
 				'$imgsrc' => $a->get_baseurl() . '/photo/' 
 					. $rr['resource-id'] . '-' . $rr['scale'] . '.jpg',
-				'$albumlink' => $a->get_baseurl . '/photos/' 
+				'$albumlink' => $a->get_baseurl() . '/photos/' 
 					. $a->data['user']['nickname'] . '/album/' . bin2hex($rr['album']),
 				'$albumname' => $rr['album'],
 				'$albumalt' => t('View Album'),
