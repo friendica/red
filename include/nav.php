@@ -55,7 +55,7 @@ else {
 
 	$banner = get_config('system','banner');
 
-	if($banner === false)
-		$banner = 'Friendika';
+	if($banner === false) 
+		$banner = '<span style="color:red;">@</span> Friendika';
 
 	$a->page['nav'] .= '<span id="banner">' . $banner . '</span>';

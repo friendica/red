@@ -121,16 +121,16 @@ blockquote:before {
 	height: 20px;
 }
 #banner {
-	color: #F8FF15;
-	font-size: 1.4em;
+
+	color: #F5F6FB;
+
+	font-family: "lucida sans", verdana, sans;
+	font-size: 1.8em;
+	letter-spacing: 0.08em;
 	font-weight: bold;
 	position: absolute;
-	/*filter:alpha(opacity=50);*/
-	/*-moz-opacity:0.5;*/
-	/*-khtml-opacity: 0.5;*/
-	/*opacity: 0.5;*/
-	top: 12px;
-	left: 38%;
+	top: 10px;
+	left: 40%;
 }
 
 #panel {

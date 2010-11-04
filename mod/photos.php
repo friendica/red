@@ -785,6 +785,13 @@ function photos_content(&$a) {
 				intval($a->pager['itemspage'])
 
 			);
+		
+			if((local_user()) && (local_user() == $i1[0]['uid'])) {
+				q("UPDATE `item` SET `unseen` = 0 WHERE `parent` = %d and `uid` = %d",
+					intval($i1[0]['parent']),
+					intval(local_user())
+				);
+			}
 		}
 
 		$o .= '<div id="photo-caption" >' . $ph[0]['desc'] . '</div>';
@@ -837,21 +844,21 @@ function photos_content(&$a) {
 				$o .= '<div id="photo-like-div">';
 				$o .= $likebuttons;
 				$o .= '</div>';
-			}
 
-			if(can_write_wall($a,$a->data['user']['uid'])) {
-				if($i1[0]['last-child']) {
-					$o .= replace_macros($cmnt_tpl,array(
-						'$return_path' => $return_url,
-						'$type' => 'wall-comment',
-						'$id' => $i1[0]['id'],
-						'$parent' => $i1[0]['id'],
-						'$profile_uid' =>  $a->data['user']['uid'],
-						'$mylink' => $contact['url'],
-						'$mytitle' => t('This is you'),
-						'$myphoto' => $contact['thumb'],
-						'$ww' => ''
-					));
+				if(can_write_wall($a,$a->data['user']['uid'])) {
+					if($i1[0]['last-child']) {
+						$o .= replace_macros($cmnt_tpl,array(
+							'$return_path' => $return_url,
+							'$type' => 'wall-comment',
+							'$id' => $i1[0]['id'],
+							'$parent' => $i1[0]['id'],
+							'$profile_uid' =>  $a->data['user']['uid'],
+							'$mylink' => $contact['url'],
+							'$mytitle' => t('This is you'),
+							'$myphoto' => $contact['thumb'],
+							'$ww' => ''
+						));
+					}
 				}
 			}
 
@@ -874,6 +881,24 @@ function photos_content(&$a) {
 				$o .= $like;
 				$o .= $dislike;
 				$o .= '</div>';
+
+
+
+				if(can_write_wall($a,$a->data['user']['uid'])) {
+					if($i1[0]['last-child']) {
+						$o .= replace_macros($cmnt_tpl,array(
+							'$return_path' => $return_url,
+							'$type' => 'wall-comment',
+							'$id' => $i1[0]['id'],
+							'$parent' => $i1[0]['id'],
+							'$profile_uid' =>  $a->data['user']['uid'],
+							'$mylink' => $contact['url'],
+							'$mytitle' => t('This is you'),
+							'$myphoto' => $contact['thumb'],
+							'$ww' => ''
+						));
+					}
+				}
 
 
 				foreach($r as $item) {
