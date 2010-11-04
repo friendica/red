@@ -422,7 +422,7 @@ function get_atom_elements($feed,$item) {
 		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'])
 			$res['object'] .= '<id>' . $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'] . '</id>' . "\n";
 		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'])
-			$res['target'] .= '<link>' . encode_rel_links($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) . '</link>' . "\n";
+			$res['object'] .= '<link>' . encode_rel_links($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) . '</link>' . "\n";
 		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'])
 			$res['object'] .= '<title>' . $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'] . '</title>' . "\n";
 		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['content'][0]['data']) {

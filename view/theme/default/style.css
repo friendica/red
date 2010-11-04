@@ -47,13 +47,13 @@ img {
 	border: none;
 }
 code {
-	font-family: monospace;
+	font-family: Courier, monospace;
 	white-space: pre;
 	display: block;
 	overflow: auto;
-	border: 1;
-	background: #000000;
-	color: #44FF44;
+	border: 1px solid #444;
+	background: #EEE;
+	color: #444;
 	padding: 10px;
 	margin-top: 20px;
 }
@@ -124,10 +124,10 @@ blockquote:before {
 
 	color: #F5F6FB;
 
-	font-family: "lucida sans", verdana, sans;
+/*	font-family: "lucida sans", verdana, sans; */
 	font-size: 1.8em;
-	letter-spacing: 0.08em;
-	font-weight: bold;
+	letter-spacing: 0.12em;
+/*	font-weight: bold; */
 	position: absolute;
 	top: 10px;
 	left: 40%;
