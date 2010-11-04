@@ -500,9 +500,9 @@ function encode_rel_links($links) {
 			$o .= 'type="' . $link['attribs']['']['type'] . '" ';
 		if($link['attribs']['']['href'])
 			$o .= 'type="' . $link['attribs']['']['href'] . '" ';
-		if($link['attribs'][NAMESPACE_MEDIA]['width'])
+		if( (x($link['attribs'],NAMESPACE_MEDIA)) && $link['attribs'][NAMESPACE_MEDIA]['width'])
 			$o .= 'media:width="' . $link['attribs'][NAMESPACE_MEDIA]['width'] . '" ';
-		if($link['attribs'][NAMESPACE_MEDIA]['height'])
+		if( (x($link['attribs'],NAMESPACE_MEDIA)) && $link['attribs'][NAMESPACE_MEDIA]['height'])
 			$o .= 'media:height="' . $link['attribs'][NAMESPACE_MEDIA]['height'] . '" ';
 		$o .= ' />' . "\n" ;
 	}

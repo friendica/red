@@ -114,7 +114,7 @@ $a->strings['IMPORTANT: You will need to [manually] setup a scheduled task for t
 $a->strings['Please see the file INSTALL.'] = 'Please see the file INSTALL.';
 $a->strings['Database import failed.'] = 'Database import failed.';
 $a->strings['You may need to import the file "database.sql" manually using phpmyadmin or mysql.'] = 'You may need to import the file "database.sql" manually using phpmyadmin or mysql.';
-$a->strings['Welcome to the Mistpark Social Network.'] = 'Welcome to the Mistpark Social Network.';
+$a->strings['Welcome to Friendika.'] = 'Welcome to Friendika.';
 $a->strings['Submit'] = 'Submit';
 $a->strings['Errors encountered creating database tables.'] = 'Errors encountered creating database tables.';
 $a->strings[' : '] = ' : ';
@@ -175,6 +175,7 @@ $a->strings['New Follower'] = 'New Follower';
 $a->strings['No notifications.'] = 'No notifications.';
 $a->strings['Photo Albums'] = 'Photo Albums';
 $a->strings['Contact Photos'] = 'Contact Photos';
+$a->strings['Contact information unavailable'] = 'Contact information unavailable';
 $a->strings['Profile Photos'] = 'Profile Photos';
 $a->strings['Album not found.'] = 'Album not found.';
 $a->strings['Delete Album'] = 'Delete Album';

@@ -105,6 +105,11 @@ $a->page['content'] .=  '<div id="pause"></div>';
 if($a->module != 'install')
 	require_once("nav.php");
 
+// make sure the desired theme exists, though if the default theme doesn't exist we're stuffed.
+
+if((x($_SESSION,'theme')) && (! file_exists('/view/theme/' . $_SESSION['theme'] . '/style.css')))
+	unset($_SESSION['theme']);
+
 $a->page['htmlhead'] = replace_macros($a->page['htmlhead'], array(
 	'$stylesheet' => $a->get_baseurl() . '/view/theme/'
 		. ((x($_SESSION,'theme')) ? $_SESSION['theme'] : 'default')
