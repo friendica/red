@@ -7,7 +7,9 @@ Dear $username,
 $body
 -----
 
-Please login at $siteurl to view or delete the item.
+Please login at $siteurl to view or delete the item:
+
+$display
 
 Thank you,
 	$sitename administrator

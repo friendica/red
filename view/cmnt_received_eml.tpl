@@ -7,7 +7,9 @@ Dear $username,
 $body
 -----
 
-Please login at $siteurl to view the complete conversation.
+Please login at $siteurl to view the complete conversation:
+
+$display
 
 Thank you,
 	$sitename administrator

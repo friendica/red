@@ -262,6 +262,7 @@ function dfrn_notify_post(&$a) {
 								'$siteurl' =>  $a->get_baseurl(),
 								'$username' => $importer['username'],
 								'$email' => $importer['email'],
+								'$display' => $a->get_baseurl() . '/display/' . $posted_id, 
 								'$from' => $from,
 							'$body' => strip_tags(bbcode(stripslashes($datarray['body'])))
 							));
@@ -329,6 +330,7 @@ function dfrn_notify_post(&$a) {
 								'$username' => $importer['username'],
 								'$email' => $importer['email'],
 								'$from' => $from,
+								'$display' => $a->get_baseurl() . '/display' . $r,
 								'$body' => strip_tags(bbcode(stripslashes($datarray['body'])))
 							));
 

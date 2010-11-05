@@ -251,6 +251,7 @@ function item_post(&$a) {
 					'$username' => $user['username'],
 					'$email' => $user['email'],
 					'$from' => $from,
+					'$display' => $a->get_baseurl() . '/display/' . $post_id,
 					'$body' => strip_tags(bbcode($body))
 				));
 
@@ -273,6 +274,7 @@ function item_post(&$a) {
 					'$username' => $user['username'],
 					'$email' => $user['email'],
 					'$from' => $from,
+					'$display' => $a->get_baseurl() . '/display/' . $post_id,
 					'$body' => strip_tags(bbcode($body))
 				));
 
