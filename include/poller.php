@@ -16,9 +16,11 @@
 	require_once('include/items.php');
 	require_once('include/Contact.php');
 
-	$debugging = get_config('system','debugging');
-
 	$a->set_baseurl(get_config('system','url'));
+
+	$force = false;
+	if(($argc > 1) && ($argv[1] == 'force'))
+		$force = true;
 
 	// 'stat' clause is a temporary measure until we have federation subscriptions working both directions
 	$contacts = q("SELECT * FROM `contact` 
@@ -67,7 +69,7 @@
 						$update = true;
 					break;
 			}
-			if(! $update)
+			if((! $update) && (! $force))
 				continue;
 		}
 
@@ -81,8 +83,7 @@
 
 		$importer = $r[0];
 
-		if($debugging)
-			echo "IMPORTER: {$importer['name']}\n";
+		logger("poller: IMPORTER: {$importer['name']}");
 
 		$last_update = (($contact['last-update'] === '0000-00-00 00:00:00') 
 			? datetime_convert('UTC','UTC','now - 30 days', ATOM_TIME)
@@ -104,12 +105,10 @@
 	
 			$xml = fetch_url($url);
 
-			if($debugging) {
-				echo "URL: " . $url . "\n";
-				echo "XML: " . $xml . "\n";
-			}
+			logger('poller: handshake with url ' . $url . ' returns xml: ' . $xml);
 
 			if(! $xml) {
+				logger("poller: $url appears to be dead - marking for death ");
 				// dead connection - might be a transient event, or this might
 				// mean the software was uninstalled or the domain expired. 
 				// Will keep trying for one month.
@@ -121,12 +120,15 @@
 			$res = simplexml_load_string($xml);
 
 			if(intval($res->status) == 1) {
+				logger("poller: $url replied status 1 - marking for death ");
 				// we may not be friends anymore. Will keep trying for one month.
 				mark_for_death($contact);
 			}
 			else {
-				if($contact['term-date'] != '0000-00-00 00:00:00')
+				if($contact['term-date'] != '0000-00-00 00:00:00') {
+					logger("poller: $url back from the dead - removing mark for death");
 					unmark_for_death($contact);
+				}
 			}
 
 			if((intval($res->status) != 0) || (! strlen($res->challenge)) || (! strlen($res->dfrn_id)))
@@ -170,17 +172,15 @@
 			$xml = fetch_url($contact['poll']);
 		}
 
-		if($debugging) {
-			echo "XML response:" . $xml . "\n";
-			echo "Length:" . strlen($xml) . "\n";
-		}
+		logger('poller: received xml : ' . $xml, LOGGER_DATA);
 
 		if(! strlen($xml))
 			continue;
 
 		consume_feed($xml,$importer,$contact,$hub);
-		
-		if((strlen($hub)) && (($contact['rel'] == REL_BUD) || (($contact['network'] === 'stat') && (! $contact['readonly']))) && ($contact['priority'] == 0)) {
+
+		if((strlen($hub)) && (($contact['rel'] == REL_BUD) || (($contact['network'] === 'stat') && (! $contact['readonly'])))) {
+			logger('poller: subscribing to hub(s) : ' . $hubs . ' contact name : ' . $contact['name'] . ' local user : ' . $importer['name']);
 			$hubs = explode(',', $hub);
 			if(count($hubs)) {
 				foreach($hubs as $h) {

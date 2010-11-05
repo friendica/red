@@ -249,10 +249,8 @@ function dfrn_notify_post(&$a) {
 
 					if($datarray['type'] == 'remote-comment') {
 						$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
-						$proc_debug = get_config('system','proc_debug');
 
-
-						proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"comment-import\" \"$posted_id\" $proc_debug &", 
+						proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"comment-import\" \"$posted_id\" &", 
 							array(),$foo));
 
 						if(($importer['notify-flags'] & NOTIFY_COMMENT) && (! $importer['self'])) {

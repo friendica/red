@@ -197,14 +197,14 @@ function construct_activity_object($item) {
 			$o .= '<as:object-type>' . xmlify($r->type) . '</as:object-type>' . "\r\n";
 		if($r->id)
 			$o .= '<id>' . xmlify($r->id) . '</id>' . "\r\n";
+		if($r->title)
+			$o .= '<title>' . xmlify($r->title) . '</title>' . "\r\n";
 		if($r->link) {
-			if(substr($r->link,0,1) === '&') 
-				$o .= unxmlify($r->link);
+			if(substr($r->link,0,1) === '<') 
+				$o .= $r->link;
 			else
 				$o .= '<link rel="alternate" type="text/html" href="' . xmlify($r->link) . '" />' . "\r\n";
 		}
-		if($r->title)
-			$o .= '<title>' . xmlify($r->title) . '</title>' . "\r\n";
 		if($r->content)
 			$o .= '<content type="html" >' . xmlify(bbcode($r->content)) . '</content>' . "\r\n";
 		$o .= '</as:object>' . "\r\n";
@@ -223,14 +223,14 @@ function construct_activity_target($item) {
 			$o .= '<as:object-type>' . xmlify($r->type) . '</as:object-type>' . "\r\n";
 		if($r->id)
 			$o .= '<id>' . xmlify($r->id) . '</id>' . "\r\n";
+		if($r->title)
+			$o .= '<title>' . xmlify($r->title) . '</title>' . "\r\n";
 		if($r->link) {
-			if(substr($r->link,0,1) === '&') 
-				$o .= unxmlify($r->link);
+			if(substr($r->link,0,1) === '<') 
+				$o .= $r->link;
 			else
 				$o .= '<link rel="alternate" type="text/html" href="' . xmlify($r->link) . '" />' . "\r\n";
 		}
-		if($r->title)
-			$o .= '<title>' . xmlify($r->title) . '</title>' . "\r\n";
 		if($r->content)
 			$o .= '<content type="html" >' . xmlify(bbcode($r->content)) . '</content>' . "\r\n";
 		$o .= '</as:target>' . "\r\n";
@@ -1075,6 +1075,8 @@ function subscribe_to_hub($url,$importer,$contact) {
 	$verify_token = ((strlen($contact['hub-verify'])) ? $contact['hub-verify'] : random_string());
 
 	$params= 'hub.mode=subscribe&hub.callback=' . urlencode($push_url) . '&hub.topic=' . urlencode($contact['poll']) . '&hub.verify=async&hub.verify_token=' . $verify_token;
+
+	logger('subscribe_to_hub: subscribing ' . $contact['name'] . ' to hub ' . $url . ' with verifier ' . $verify_token);
 
 	if(! strlen($contact['hub-verify'])) {
 		$r = q("UPDATE `contact` SET `hub-verify` = '%s' WHERE `id` = %d LIMIT 1",

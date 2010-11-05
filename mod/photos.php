@@ -135,12 +135,11 @@ function photos_post(&$a) {
 
 					$drop_id = intval($rr['id']);
 					$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
-					$proc_debug = get_config('system','proc_debug');
 
 					// send the notification upstream/downstream as the case may be
 
 					if($rr['visible'])
-						proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" $proc_debug & ",
+						proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" & ",
 							array(),$foo));
 
 				}
@@ -175,13 +174,9 @@ function photos_post(&$a) {
 				$url = $a->get_baseurl();
 				$drop_id = intval($i[0]['id']);
 				$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
-				
-				$proc_debug = get_config('system','proc_debug');
-
-				// send the notification upstream/downstream as the case may be
 
 				if($i[0]['visible'])
-					proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" $proc_debug & ",
+					proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" & ",
 						array(),$foo));
 			}
 		}
@@ -307,6 +302,7 @@ function photos_post(&$a) {
 								);
 							}
 							if(count($r)) {
+								$newname = $r[0]['name'];
 								$profile = $r[0]['url'];
 								$notify = 'cid:' . $r[0]['id'];
 								if(strlen($inform))
@@ -315,7 +311,10 @@ function photos_post(&$a) {
 							}
 						}
 						if($profile) {
-							$taginfo[] = array($newname,$profile,$notify);
+							if(substr($notify,0,4) === 'cid:')
+								$taginfo[] = array($newname,$profile,$notify,$r[0]);
+							else
+								$taginfo[] = array($newname,$profile,$notify,null);
 							if(strlen($str_tags))
 								$str_tags .= ',';
 							$profile = str_replace(',','%2c',$profile);
@@ -344,27 +343,69 @@ function photos_post(&$a) {
 				intval(local_user())
 			);
 
+			$best = 0;
+			foreach($p as $scales) {
+				if(intval($scales['scale']) == 2) {
+					$best = 2;
+					break;
+				}
+				if(intval($scales['scale']) == 4) {
+					$best = 4;
+					break;
+				}
+			}
+
 			if(count($taginfo)) {
 				foreach($taginfo as $tagged) {
-//					$slap = create_photo_tag(local_user(),$item_id, $tagged);
+		
+					$uri = item_new_uri($a->get_hostname(),local_user());
 
+					$arr = array();
 
-//					
+					$arr['uid']           = local_user();
+					$arr['uri']           = $uri;
+					$arr['parent-uri']    = $uri;
+					$arr['type']          = 'activity';
+					$arr['wall']          = 1;
+					$arr['contact-id']    = $contact_record['id'];
+					$arr['owner-name']    = $contact_record['name'];
+					$arr['owner-link']    = $contact_record['url'];
+					$arr['owner-avatar']  = $contact_record['thumb'];
+					$arr['author-name']   = $contact_record['name'];
+					$arr['author-link']   = $contact_record['url'];
+					$arr['author-avatar'] = $contact_record['thumb'];
+					$arr['title']         = '';
+					$arr['allow_cid']     = $p[0]['allow_cid'];
+					$arr['allow_gid']     = $p[0]['allow_gid'];
+					$arr['deny_cid']      = $p[0]['deny_cid'];
+					$arr['deny_gid']      = $p[0]['deny_gid'];
+					$arr['last-child']    = 1;
+					$arr['visible']       = 1;
+					$arr['verb']          = ACTIVITY_TAG;
+					$arr['object-type']   = ACTIVITY_OBJ_PERSON;
+					$arr['target-type']   = ACTIVITY_OBJ_PHOTO;
+					$arr['inform']        = $tagged[2];
+
+					$arr['body']          = '[url=' . $tagged[1] . ']' . $tagged[0] . '[/url]' . ' ' . t('was tagged in a') . ' ' . '[url=' . $a->get_baseurl() . '/photos/' . $contact_record['nickname'] . '/image/' . $p[0]['resource-id'] . ']' . t('photo') . '[/url]' . ' ' . t('by') . ' ' . '[url=' . $contact_record['url'] . ']' . $contact_record['name'] . '[/url]' ;
+					$arr['body'] .= "\n\n" . '[url=' . $a->get_baseurl() . '/photos/' . $contact_record['nickname'] . '/image/' . $p[0]['resource-id'] . ']' . '[img]' . $a->get_baseurl() . "/photo/" . $p[0]['resource-id'] . '-' . $best . '.jpg' . '[/img][/url]' . "\n" ;
+
+					$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PERSON . '</type><title>' . $tagged[0] . '</title><id>' . $tagged[1] . '/' . $tagged[0] . '</id>';
+					$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $tagged[1] . '" />' . "\n");
+					if($tagged[3])
+						$arr['object'] .= xmlify('<link rel="photo" type="image/jpeg" href="' . $tagged[3]['photo'] . '" />' . "\n");
+					$arr['object'] .= '</link></object>' . "\n";
+
+					$arr['target'] = '<target><type>' . ACTIVITY_OBJ_PHOTO . '</type><title>' . $p[0]['desc'] . '</title><id>'
+						. $a->get_baseurl() . '/photos/' . $contact_record['nickname'] . '/image/' . $p[0]['resource-id'] . '</id>';
+					$arr['target'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $a->get_baseurl() . '/photos/' . $contact_record['nickname'] . '/image/' . $p[0]['resource-id'] . '" />' . "\n" . '<link rel="preview" type="image/jpeg" href="' . $a->get_baseurl() . "/photo/" . $p[0]['resource-id'] . '-' . $best . '.jpg' . '" />') . '</link></target>';
+
+					$item_id = item_store($arr);
+					$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
+					proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"tag\" \"$item_id\" & ",
+						array(),$foo));
 				}
-				// call notifier on new tag activity
+
 			}
-			
-//				$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
-				
-//				$proc_debug = get_config('system','proc_debug');
-
-				// send the notification upstream/downstream as the case may be
-
-//				if($i[0]['visible'])
-//					proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" $proc_debug & ",
-//						array(),$foo));
-
-
 
 		}
 		goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
@@ -747,20 +788,20 @@ function photos_content(&$a) {
 
 		// Do we have an item for this photo?
 
-		$i1 = q("SELECT * FROM `item` WHERE `resource-id` = '%s' $sql_extra LIMIT 1",
+		$linked_items = q("SELECT * FROM `item` WHERE `resource-id` = '%s' $sql_extra LIMIT 1",
 			dbesc($datum)
 		);
-		if(count($i1)) {
-
+		if(count($linked_items)) {
+			$link_item = $linked_items[0];
 			$r = q("SELECT COUNT(*) AS `total`
 				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 				WHERE `parent-uri` = '%s' AND `uri` != '%s' AND `item`.`deleted` = 0
 				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 				AND `item`.`uid` = %d 
 				$sql_extra ",
-				dbesc($i1[0]['uri']),
-				dbesc($i1[0]['uri']),
-				intval($i1[0]['uid'])
+				dbesc($link_item['uri']),
+				dbesc($link_item['uri']),
+				intval($link_item['uid'])
 
 			);
 
@@ -778,17 +819,17 @@ function photos_content(&$a) {
 				AND `item`.`uid` = %d
 				$sql_extra
 				ORDER BY `parent` DESC, `id` ASC LIMIT %d ,%d ",
-				dbesc($i1[0]['uri']),
-				dbesc($i1[0]['uri']),
-				intval($i1[0]['uid']),
+				dbesc($link_item['uri']),
+				dbesc($link_item['uri']),
+				intval($link_item['uid']),
 				intval($a->pager['start']),
 				intval($a->pager['itemspage'])
 
 			);
 		
-			if((local_user()) && (local_user() == $i1[0]['uid'])) {
+			if((local_user()) && (local_user() == $link_item['uid'])) {
 				q("UPDATE `item` SET `unseen` = 0 WHERE `parent` = %d and `uid` = %d",
-					intval($i1[0]['parent']),
+					intval($link_item['parent']),
 					intval(local_user())
 				);
 			}
@@ -796,8 +837,8 @@ function photos_content(&$a) {
 
 		$o .= '<div id="photo-caption" >' . $ph[0]['desc'] . '</div>';
 
-		if(count($i1) && strlen($i1[0]['tag'])) {
-			$arr = explode(',',$i1[0]['tag']);
+		if(count($linked_items) && strlen($link_item['tag'])) {
+			$arr = explode(',',$link_item['tag']);
 			// parse tags and add links	
 			$o .= '<div id="in-this-photo-text">' . t('Tags: ') . '</div>';
 			$o .= '<div id="in-this-photo">';
@@ -810,6 +851,7 @@ function photos_content(&$a) {
 			$o .= $tag_str . '</div>';
 		}
 
+
 		if($cmd === 'edit') {
 			$edit_tpl = load_view_file('view/photo_edit.tpl');
 			$o .= replace_macros($edit_tpl, array(
@@ -818,16 +860,16 @@ function photos_content(&$a) {
 				'$capt_label' => t('Caption'),
 				'$caption' => $ph[0]['desc'],
 				'$tag_label' => t('Add a Tag'),
-				'$tags' => $i1[0]['tag'],
+				'$tags' => $link_item['tag'],
 				'$help_tags' => t('Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping'),
-				'$item_id' => ((count($i1)) ? $i1[0]['id'] : 0),
+				'$item_id' => ((count($linked_items)) ? $link_item['id'] : 0),
 				'$submit' => t('Submit'),
 				'$delete' => t('Delete Photo')
 
 			));
 		}
 
-		if(count($i1)) {
+		if(count($linked_items)) {
 
 			$cmnt_tpl = load_view_file('view/comment_item.tpl');
 			$tpl = load_view_file('view/photo_item.tpl');
@@ -838,7 +880,7 @@ function photos_content(&$a) {
 			$likebuttons = '';
 
 			if(can_write_wall($a,$a->data['user']['uid']))
-				$likebuttons = replace_macros($like_tpl,array('$id' => $i1[0]['id']));
+				$likebuttons = replace_macros($like_tpl,array('$id' => $link_item['id']));
 
 			if(! count($r)) {
 				$o .= '<div id="photo-like-div">';
@@ -846,12 +888,12 @@ function photos_content(&$a) {
 				$o .= '</div>';
 
 				if(can_write_wall($a,$a->data['user']['uid'])) {
-					if($i1[0]['last-child']) {
+					if($link_item['last-child']) {
 						$o .= replace_macros($cmnt_tpl,array(
 							'$return_path' => $return_url,
 							'$type' => 'wall-comment',
-							'$id' => $i1[0]['id'],
-							'$parent' => $i1[0]['id'],
+							'$id' => $link_item['id'],
+							'$parent' => $link_item['id'],
 							'$profile_uid' =>  $a->data['user']['uid'],
 							'$mylink' => $contact['url'],
 							'$mytitle' => t('This is you'),
@@ -873,8 +915,8 @@ function photos_content(&$a) {
 					like_puller($a,$item,$dlike,'dislike');
 				}
 
-	            $like    = ((isset($alike[$i1[0]['id']])) ? format_like($alike[$i1[0]['id']],$alike[$i1[0]['id'] . '-l'],'like',$i1[0]['id']) : '');
-				$dislike = ((isset($dlike[$i1[0]['id']])) ? format_like($dlike[$i1[0]['id']],$dlike[$i1[0]['id'] . '-l'],'dislike',$i1[0]['id']) : '');
+	            $like    = ((isset($alike[$link_item['id']])) ? format_like($alike[$link_item['id']],$alike[$link_item['id'] . '-l'],'like',$link_item['id']) : '');
+				$dislike = ((isset($dlike[$link_item['id']])) ? format_like($dlike[$link_item['id']],$dlike[$link_item['id'] . '-l'],'dislike',$link_item['id']) : '');
 
 				$o .= '<div id="photo-like-div">';
 				$o .= $likebuttons;
@@ -885,12 +927,12 @@ function photos_content(&$a) {
 
 
 				if(can_write_wall($a,$a->data['user']['uid'])) {
-					if($i1[0]['last-child']) {
+					if($link_item['last-child']) {
 						$o .= replace_macros($cmnt_tpl,array(
 							'$return_path' => $return_url,
 							'$type' => 'wall-comment',
-							'$id' => $i1[0]['id'],
-							'$parent' => $i1[0]['id'],
+							'$id' => $link_item['id'],
+							'$parent' => $link_item['id'],
 							'$profile_uid' =>  $a->data['user']['uid'],
 							'$mylink' => $contact['url'],
 							'$mytitle' => t('This is you'),
