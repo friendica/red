@@ -1400,7 +1400,7 @@ function contact_block() {
 		$o .= '<h4 class="contact-h4">' . t('No contacts') . '</h4>';
 		return $o;
 	}
-	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 0 ORDER BY RAND() LIMIT 12",
+	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 0 ORDER BY RAND() LIMIT 24",
 			intval($a->profile['uid'])
 	);
 	if(count($r)) {
