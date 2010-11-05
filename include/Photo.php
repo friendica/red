@@ -235,8 +235,18 @@ function import_profile_photo($photo,$uid,$cid) {
 		if($r === false)
 			$photo_failure = true;
 
+		$img->scaleImage(48);
+
+		$r = $img->store($uid, $cid, $hash, $filename, t('Contact Photos'), 6 );
+
+		if($r === false)
+			$photo_failure = true;
+
+
+
 		$photo = $a->get_baseurl() . '/photo/' . $hash . '-4.jpg';
 		$thumb = $a->get_baseurl() . '/photo/' . $hash . '-5.jpg';
+		$micro = $a->get_baseurl() . '/photo/' . $hash . '-6.jpg';
 	}
 	else
 		$photo_failure = true;
@@ -244,8 +254,9 @@ function import_profile_photo($photo,$uid,$cid) {
 	if($photo_failure) {
 		$photo = $a->get_baseurl() . '/images/default-profile.jpg';
 		$thumb = $a->get_baseurl() . '/images/default-profile-sm.jpg';
+		$micro = $a->get_baseurl() . '/images/default-profile-mm.jpg';
 	}
 
-	return(array($photo,$thumb));
+	return(array($photo,$thumb,$micro));
 
 }

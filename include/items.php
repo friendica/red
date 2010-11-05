@@ -792,6 +792,10 @@ function consume_feed($xml,$importer,$contact, &$hub) {
 				
 				$img->scaleImage(80);
 				$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), t('Contact Photos') , 5);
+
+				$img->scaleImage(48);
+				$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), t('Contact Photos') , 6);
+
 				if($r)
 					q("UPDATE `contact` SET `avatar-date` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
 						dbesc(datetime_convert()),

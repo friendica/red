@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `nick` char(255) NOT NULL,
   `photo` text NOT NULL, 
   `thumb` text NOT NULL,
+  `micro` text NOT NULL,
   `site-pubkey` text NOT NULL,
   `issued-id` char(255) NOT NULL,
   `dfrn-id` char(255) NOT NULL,

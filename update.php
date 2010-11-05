@@ -102,3 +102,31 @@ function update_1013() {
 	q("ALTER TABLE `item` ADD `target-type` CHAR( 255 ) NOT NULL 
 		AFTER `object` , ADD `target` TEXT NOT NULL AFTER `target-type`");
 } 
+
+function update_1014() {
+	require_once('include/Photo.php');
+	q("ALTER TABLE `contact` ADD `micro` TEXT NOT NULL AFTER `thumb` ");
+	$r = q("SELECT * FROM `photo` WHERE `scale` = 4");
+	if(count($r)) {
+		foreach($r as $rr) {
+			$ph = new Photo($rr['data']);
+			if($ph->is_valid()) {
+				$ph->scaleImage(48);
+				$ph->store($rr['uid'],$rr['contact-id'],$rr['resource-id'],$rr['filename'],$rr['album'],6,(($rr['profile']) ? 1 : 0));
+			}
+		}
+	}
+	$r = q("SELECT * FROM `contact` WHERE 1");
+	if(count($r)) {
+		foreach($r as $rr) {		
+			if(stristr($rr['thumb'],'avatar'))
+				q("UPDATE `contact` SET `micro` = '%s' WHERE `id` = %d LIMIT 1",
+					dbesc(str_replace('avatar','micro',$rr['thumb'])),
+					intval($rr['id']));
+			else
+				q("UPDATE `contact` SET `micro` = '%s' WHERE `id` = %d LIMIT 1",
+					dbesc(str_replace('5.jpg','6.jpg',$rr['thumb'])),
+					intval($rr['id']));
+		}
+	}
+}

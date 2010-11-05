@@ -16,15 +16,22 @@ function photo_init(&$a) {
 			return; // NOTREACHED
 	}
 
+	$default = 'images/default-profile.jpg';
+
 	if(isset($type)) {
 		switch($type) {
 
 			case 'profile':
 				$resolution = 4;
 				break;
+			case 'micro':
+				$resolution = 6;
+				$default = 'images/default-profile-mm.jpg';
+				break;
 			case 'avatar':
 			default:
 				$resolution = 5;
+				$default = 'images/default-profile-sm.jpg';
 				break;
 		}
 
@@ -38,9 +45,7 @@ function photo_init(&$a) {
 			$data = $r[0]['data'];
 		}
 		if(! isset($data)) {
-			$data = file_get_contents(($resolution == 5) 
-				? 'images/default-profile-sm.jpg' 
-				: 'images/default-profile.jpg');
+			$data = file_get_contents($default);
 		}
 	}
 	else {

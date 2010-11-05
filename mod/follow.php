@@ -122,7 +122,8 @@ function follow_post(&$a) {
 	$photos = import_profile_photo($vcard['photo'],local_user(),$contact_id);
 
 	$r = q("UPDATE `contact` SET `photo` = '%s', 
-			`thumb` = '%s', 
+			`thumb` = '%s',
+			`micro` = '%s', 
 			`name-date` = '%s', 
 			`uri-date` = '%s', 
 			`avatar-date` = '%s'
@@ -130,6 +131,7 @@ function follow_post(&$a) {
 		",
 			dbesc($photos[0]),
 			dbesc($photos[1]),
+			dbesc($photos[2]),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),

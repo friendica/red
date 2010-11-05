@@ -312,9 +312,9 @@ function photos_post(&$a) {
 						}
 						if($profile) {
 							if(substr($notify,0,4) === 'cid:')
-								$taginfo[] = array($newname,$profile,$notify,$r[0]);
+								$taginfo[] = array($newname,$profile,$notify,$r[0],'@[url=' . str_replace(',','%2c',$profile) . ']' . $newname	. '[/url]');
 							else
-								$taginfo[] = array($newname,$profile,$notify,null);
+								$taginfo[] = array($newname,$profile,$notify,null,$str_tags .= '@[url=' . $profile . ']' . $newname	. '[/url]');
 							if(strlen($str_tags))
 								$str_tags .= ',';
 							$profile = str_replace(',','%2c',$profile);
@@ -384,6 +384,7 @@ function photos_post(&$a) {
 					$arr['verb']          = ACTIVITY_TAG;
 					$arr['object-type']   = ACTIVITY_OBJ_PERSON;
 					$arr['target-type']   = ACTIVITY_OBJ_PHOTO;
+					$arr['tag']           = $tagged[4];
 					$arr['inform']        = $tagged[2];
 
 					$arr['body']          = '[url=' . $tagged[1] . ']' . $tagged[0] . '[/url]' . ' ' . t('was tagged in a') . ' ' . '[url=' . $a->get_baseurl() . '/photos/' . $contact_record['nickname'] . '/image/' . $p[0]['resource-id'] . ']' . t('photo') . '[/url]' . ' ' . t('by') . ' ' . '[url=' . $contact_record['url'] . ']' . $contact_record['name'] . '[/url]' ;

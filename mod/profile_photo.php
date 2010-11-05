@@ -68,6 +68,13 @@ function profile_photo_post(&$a) {
 				if($r === false)
 					notice( t('Image size reduction [80] failed.') . EOL );
 
+				$im->scaleImage(48);
+
+				$r = $im->store(local_user(), 0, $base_image['resource-id'],$base_image['filename'], t('Profile Photos'), 6, 1);
+			
+				if($r === false)
+					notice( t('Image size reduction [48] failed.') . EOL );
+
 				// Unset the profile photo flag from any other photos I own
 
 				$r = q("UPDATE `photo` SET `profile` = 0 WHERE `profile` = 1 AND `resource-id` != '%s' AND `uid` = %d",

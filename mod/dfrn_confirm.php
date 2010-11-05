@@ -238,7 +238,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				$new_relation = REL_BUD;
 
 			$r = q("UPDATE `contact` SET `photo` = '%s', 
-				`thumb` = '%s', 
+				`thumb` = '%s',
+				`micro` = '%s', 
 				`rel` = %d, 
 				`name-date` = '%s', 
 				`uri-date` = '%s', 
@@ -250,6 +251,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			",
 				dbesc($photos[0]),
 				dbesc($photos[1]),
+				dbesc($photos[2]),
 				intval($new_relation),
 				dbesc(datetime_convert()),
 				dbesc(datetime_convert()),
@@ -281,7 +283,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			);
 
 			$r = q("UPDATE `contact` SET `photo` = '%s', 
-				`thumb` = '%s', 
+				`thumb` = '%s',
+				`micro` = '%s', 
 				`name-date` = '%s', 
 				`uri-date` = '%s', 
 				`avatar-date` = '%s', 
@@ -293,6 +296,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			",
 				dbesc($photos[0]),
 				dbesc($photos[1]),
+				dbesc($photos[2]),
 				dbesc(datetime_convert()),
 				dbesc(datetime_convert()),
 				dbesc(datetime_convert()),
