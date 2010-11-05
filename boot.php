@@ -1369,7 +1369,7 @@ function like_puller($a,$item,&$arr,$mode) {
 	return;
 }}
 
-
+if(! function_exists('get_mentions')) {
 function get_mentions($item) {
 	$o = '';
 	if(! strlen($item['tag']))
@@ -1382,4 +1382,48 @@ function get_mentions($item) {
 			$o .= "\t\t" . '<link rel="mentioned" href="' . $matches[1] . '" />' . "\r\n";
 	}
 	return $o;
-}
+}}
+
+if(! function_exists('contact_block')) {
+function contact_block() {
+	$o = '';
+	$a = get_app();
+	if((! is_array($a->profile)) || ($a->profile['hide-friends']))
+		return $o;
+	$r = q("SELECT COUNT(*) AS `total` FROM `contact` WHERE `uid` = %d AND `self` = 0 ",
+			intval($a->profile['uid'])
+	);
+	if(count($r)) {
+		$total = intval($r[0]['total']);
+	}
+	if(! $total) {
+		$o .= '<h4 class="contact-h4">' . t('No contacts') . '</h4>';
+		return $o;
+	}
+	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 0 ORDER BY RAND() LIMIT 12",
+			intval($a->profile['uid'])
+	);
+	if(count($r)) {
+		$o .= '<h4 class="contact-h4">' . $total . ' ' . t('Contacts') . '</h4><div id="contact-block">';
+		foreach($r as $rr) {
+			$redirect_url = $a->get_baseurl() . '/redir/' . $rr['id'];
+			if(local_user() && ($rr['uid'] == local_user())
+				&& ($rr['network'] === 'dfrn')) {
+				$url = $redirect_url;
+				$sparkle = ' sparkle';
+			}
+			else {
+				$url = $rr['url'];
+				$sparkle = '';
+			}
+
+			$o .= '<div class="contact-block-div"><a class="contact-block-link' . $sparkle . '" href="' . $url . '" ><img class="contact-block-img' . $sparkle . '" src="' . $rr['micro'] . '" title="' . $rr['name'] . ' [' . $rr['url'] . ']" alt="' . $rr['name'] . '" /></a></div>' . "\r\n";
+		}
+		$o .= '<div id="contact-block-end"></div>';
+		$o .=  '<div id="viewcontacts"><a id="viewcontacts-link" href="viewcontacts/' . $profile['nickname'] . '">' . t('View Contacts') . '</a></div>';
+		
+	}
+	return $o;
+
+}}
+

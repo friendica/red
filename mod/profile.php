@@ -41,6 +41,10 @@ function profile_load(&$a, $username, $profile = 0) {
 	$a->page['title'] = $a->profile['name'];
 	$_SESSION['theme'] = $a->profile['theme'];
 
+	if(! (x($a->page,'aside')))
+		$a->page['aside'] = '';
+	$a->page['aside'] .= contact_block();
+
 	return;
 }}
 

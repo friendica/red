@@ -23,8 +23,6 @@
 	<?php if($profile['uid'] != $_SESSION['uid']) { ?>
 	<li><a id="dfrn-request-link" href="dfrn_request/<?php echo $profile['nickname']; ?>">Connect</a></li>
 	<?php } ?>
-	<?php if(! $profile['hide-friends']) echo '<li><a id="viewcontacts-link" href="viewcontacts/' . $profile['nickname'] . '">View Contacts</a></li>'; ?>
-
 	</ul>
 
 	</div>

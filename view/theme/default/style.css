@@ -616,6 +616,9 @@ input#dfrn-url {
 #view-contact-end {
 	clear: both;
 }
+#viewcontacts {
+	margin-top: 15px;
+}
 #profile-edit-default-desc {
 	color: #FF0000;
 	border: 1px solid #FF8888;
@@ -1779,4 +1782,16 @@ a.mail-list-link:hover {
 .sparkle {
 	cursor: url('lock.cur'), pointer;
 /*	cursor: pointer !important; */
+}
+
+.contact-block-div {
+	float: left;
+	width: 52px;
+	height: 52px;
+}
+#contact-block-end {
+	clear: both;
+}
+.contact-block-link {
+	float: left;
 }
