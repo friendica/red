@@ -14,7 +14,7 @@
 body {
 	background: #F5F6FB;
 	color: #444444;
-	font-family: "Lucida Grande", Tahoma, sans-serif;
+	font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
 	font-size: 90%;
 	margin-left: 10px;
 }
@@ -123,11 +123,9 @@ blockquote:before {
 #banner {
 
 	color: #F5F6FB;
-
-/*	font-family: "lucida sans", verdana, sans; */
+	font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
 	font-size: 1.8em;
 	letter-spacing: 0.12em;
-/*	font-weight: bold; */
 	position: absolute;
 	top: 10px;
 	left: 40%;

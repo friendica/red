@@ -6,6 +6,7 @@ function html2bbcode($s) {
 
 // Tags to Find
 $htmltags = array(
+						'/\n/is',
                         '/\<b\>(.*?)\<\/b\>/is',
                         '/\<i\>(.*?)\<\/i\>/is',
                         '/\<u\>(.*?)\<\/u\>/is',
@@ -24,6 +25,7 @@ $htmltags = array(
 
 // Replace with
 $bbtags = array(
+						'',
                         '[b]$1[/b]',
                         '[i]$1[/i]',
                         '[u]$1[/u]',
@@ -31,7 +33,7 @@ $bbtags = array(
                         '[*]$1',
                         '[img]$2[/img]',
                         '$2',
-                        '\n',
+                        "\n",
                         '[b]$1[/b]',
                         '[url=$1]$3[/url]',
 			'[code]$1[/code]',

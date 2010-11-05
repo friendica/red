@@ -694,7 +694,7 @@ function xmlify($str) {
 				$buffer .= '&gt;';
 				break;
 			case "\n" :
-				$buffer .= ' ';
+				$buffer .= "\n";
 				break;
 			default :
 				$buffer .= $char;
