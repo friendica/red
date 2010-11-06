@@ -1,7 +1,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <base href="$baseurl" />
 <link rel="stylesheet" type="text/css" href="$stylesheet" media="all" />
-<link rel="shortcut icon" href="$baseurl/images/friendika32.ico">
+<link rel="shortcut icon" href="$baseurl/images/ff-32.jpg">
 
 <!--[if IE]>
 <script type="text/javascript" src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>

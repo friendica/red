@@ -56,6 +56,6 @@ else {
 	$banner = get_config('system','banner');
 
 	if($banner === false) 
-		$banner = '<span style="color:red;">@</span> Friendika';
+		$banner = '<img src="images/ff-32.jpg" alt="logo" /> Friendika';
 
 	$a->page['nav'] .= '<span id="banner">' . $banner . '</span>';

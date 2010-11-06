@@ -5,8 +5,8 @@
 You may request a connection with this member if you have a valid profile address<br />
 on one of the following social networks:<br />
 <ul id="dfrn-request-networks">
-<li><a href="http://dfrn.org">Friendika/Mistpark</a> (fully supported)</li>
-<li><a href="http://ostatus.org">StatusNet/GNU-social/Federation</a> (limited - experimental)</li>
+<li><a href="http://friendika.com" title="Private (secure) network">Friendika</a> <img src="images/lock_icon.gif" alt="Private (secure) network" title="Private (secure) network" /></li>
+<li><a href="http://ostatus.org" title="Public (insecure) network" >StatusNet/Federated Social Web</a> <img src="images/unlock_icon.gif" alt="Public (insecure) network" title="Public (insecure) network"/></li>
 </ul>
 </p>
 
