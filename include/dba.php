@@ -16,7 +16,7 @@ class dba {
 
 	function __construct($server,$user,$pass,$db,$install = false) {
 		$this->db = @new mysqli($server,$user,$pass,$db);
-		if((mysqli_connect_errno()) && (! install))
+		if((mysqli_connect_errno()) && (! $install))
 			system_unavailable();    
 	}
 
