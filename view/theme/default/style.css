@@ -24,7 +24,7 @@ a, a:visited {
 	text-decoration: none;
 }
 a:hover {
-	color: #29BBF2;
+	color: #0CBEFE;
 	text-decoration: none;
 }
 input, select {
@@ -33,7 +33,7 @@ input, select {
 }
 input:hover {
 
-	background-color: #29BBF2;
+	background-color: #0CBEFE;
 /*	background-color: #49dbFa; */
 	color: black;
 /*	color: #F5F6FB; */
@@ -76,7 +76,7 @@ blockquote:before {
 	border: 1px solid #858585;
 }
 #notification-show-hide-link:hover {
-	background-color: #29BBF2;
+	background-color: #0CBEFE;
 	color: #F5F6FB;
 	border: 1px solid #F5F6FB;
 }
@@ -105,7 +105,7 @@ blockquote:before {
 }
 
 .fakelink:hover {
-	color: #29BBF2;
+	color: #0CBEFE;
 	text-decoration: none;
 	cursor: pointer;
 }
@@ -206,7 +206,7 @@ footer {
 	/*margin: 20px 20px 20px 20px;*/
 
 	position: fixed;
-	background-color: #29BBF2;
+	background-color: #0CBEFE;
 	width: 100%;
 	padding: 2px 3%;
 }
@@ -226,7 +226,7 @@ footer {
 	font-weight: bold;
 }
 .powered a:hover {
-	color: #F8FF15;
+	color: #FFC019;
 }
 .error-message {
 	color: #FF0000;
@@ -253,7 +253,7 @@ footer {
  	border-radius-topright: 3px;
 }
 .nav-link:hover {
-	background-color: #29BBF2;
+	background-color: #0CBEFE;
 	color: #F5F6FB;
 }
 
@@ -308,7 +308,7 @@ footer {
  	border-radius-topright: 3px;
 }
 .nav-commlink:hover {
-	background-color: #29BBF2;
+	background-color: #0CBEFE;
 	color: #F5F6FB;
 }
 
@@ -1320,7 +1320,7 @@ input#dfrn-url {
 	border: 1px solid #858585;
 }
 .profile-tabs:hover {
-	background-color: #29BBF2;
+	background-color: #0CBEFE;
 	color: #F5F6FB;
 	border: 1px solid #F5F6FB;
 	/*cursor: pointer;*/
@@ -1548,7 +1548,7 @@ a.mail-list-link:hover {
 	/*display: block;*/
 }
 .message-links a:hover {
-	background-color: #29BBF2;
+	background-color: #0CBEFE;
 	color: #F5F6FB;
 	/*border: 1px solid #F5F6FB;*/
 }

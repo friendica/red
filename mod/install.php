@@ -44,8 +44,11 @@ function install_post(&$a) {
 		// that you'll see the following important notice (which is stored in the session). 
 
 		session_write_close();
+
 		require_once('session.php');
 		session_start();
+		session_regenerate_id();
+
 		$_SESSION['sysmsg'] = '';
 
 		notice( t('Database import succeeded.') . EOL 
@@ -94,12 +97,11 @@ function install_content(&$a) {
 }
 
 function check_php(&$phpath) {
+	$o = '';
 	$phpath = trim(shell_exec('which php'));
 	if(! strlen($phpath)) {
-		$o .= <<< EOT
-Could not find a command line version of PHP in the web server PATH. This is required. Please adjust the configuration file .htconfig.php accordingly.
-
-EOT;
+		$o .= t('Could not find a command line version of PHP in the web server PATH.');
+		$o .= t('This is required. Please adjust the configuration file .htconfig.php accordingly.');
 	}
 	return $o;
 }
@@ -109,16 +111,10 @@ function check_htconfig() {
 	if(((file_exists('.htconfig.php')) && (! is_writable('.htconfig.php')))
 		|| (! is_writable('.'))) {
 
-$o .= <<< EOT
-
-The web installer needs to be able to create a file called ".htconfig.php" in the top folder of 
-your web server. It is unable to do so. This is most often a permission setting, as the web server 
-may not be able to write files in your folder (even if you can).
-
-Please check with your site documentation or support people to see if this situation can be corrected. 
-If not, you may be required to perform a manual installation. Please see the file "INSTALL" for instructions. 
-
-EOT;
+		$o = t('The web installer needs to be able to create a file called ".htconfig.php" in the top folder of your web server and it is unable to do so.');
+		$o .= t('This is most often a permission setting, as the web server may not be able to write files in your folder - even if you can.');
+		$o .= t('Please check with your site documentation or support people to see if this situation can be corrected.');
+		$o .= t('If not, you may be required to perform a manual installation. Please see the file "INSTALL" for instructions.'); 
 	}
 
 return $o;
@@ -126,12 +122,9 @@ return $o;
 
 	
 function manual_config(&$a) {
-$o .= <<< EOT
-The database configuration file ".htconfig.php" could not be written. Please use the enclosed text to create a configuration file in your web server root.
-
-<textarea rows="24" cols="80" >{$a->data}</textarea>
-EOT;
-return $o;
+	$o = t('The database configuration file ".htconfig.php" could not be written. Please use the enclosed text to create a configuration file in your web server root.');
+	$o .= "<textarea rows=\"24\" cols=\"80\" >{$a->data}</textarea>";
+	return $o;
 }
 
 
