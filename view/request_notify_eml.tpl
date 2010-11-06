@@ -1,7 +1,7 @@
 
 Dear $myname,
 
-You have just received a personal introduction at $sitename 
+You have just received a connection request at $sitename 
 
 from '$requestor'.
 

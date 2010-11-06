@@ -1045,6 +1045,26 @@ function new_follower($importer,$contact,$datarray,$item) {
 				dbesc(datetime_convert())
 			);
 		}
+		$r = q("SELECT * FROM `user` WHERE `uid` = %d LIMIT 1",
+			intval($importer['uid'])
+		);
+		if(count($r)) {
+			if(($r[0]['notify-flags'] & NOTIFY_INTRO) && ($r[0]['page-flags'] == PAGE_NORMAL)) {
+				$email_tpl = load_view_file('view/follow_notify_eml.tpl');
+				$email = replace_macros($email_tpl, array(
+					'$requestor' => ((strlen($name)) ? $name : t('[Name Withheld]')),
+					'$url' => $url,
+					'$myname' => $r[0]['username'],
+					'$siteurl' => $a->get_baseurl(),
+					'$sitename' => $a->config['sitename']
+				));
+				$res = mail($r[0]['email'], 
+					t("You have a new follower at ") . $a->config['sitename'],
+					$email,
+					'From: ' . t('Administrator') . '@' . $_SERVER[SERVER_NAME] );
+			
+			}
+		}
 	}
 }
 
