@@ -14,7 +14,7 @@ function notifications_post(&$a) {
 	if($request_id) {
 
 		$r = q("SELECT `id` FROM `intro` 
-			WHERE `request-id` = %d 
+			WHERE `id` = %d 
 			AND `uid` = %d LIMIT 1",
 				intval($request_id),
 				intval(local_user())
