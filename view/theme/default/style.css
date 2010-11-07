@@ -1477,12 +1477,14 @@ input#dfrn-url {
 a.mail-list-link {
 	display: block;
 	padding: 4px 5px;
-	font-weight: bold;
 }
-a.mail-list-link:hover {
-	background-color: #15607B;
-	color: #F5F6FB;
-}
+
+/*
+*a.mail-list-link:hover {
+*	background-color: #15607B;
+*	color: #F5F6FB;
+*}
+*/
 
 .mail-list-outside-wrapper-end {
 	clear: both;
