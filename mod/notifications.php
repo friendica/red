@@ -13,7 +13,7 @@ function notifications_post(&$a) {
 
 	if($request_id) {
 
-		$r = q("SELECT `id` FROM `intro` 
+		$r = q("SELECT * FROM `intro` 
 			WHERE `id` = %d 
 			AND `uid` = %d LIMIT 1",
 				intval($request_id),
@@ -22,6 +22,7 @@ function notifications_post(&$a) {
 	
 		if(count($r)) {
 			$intro_id = $r[0]['id'];
+			$contact_id = $r[0]['contact-id'];
 		}
 		else {
 			notice( t('Invalid request identifier.') . EOL);
@@ -31,8 +32,8 @@ function notifications_post(&$a) {
 			$r = q("DELETE FROM `intro` WHERE `id` = %d LIMIT 1", 
 				intval($intro_id)
 			);	
-			$r = q("DELETE FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1", 
-				intval($request_id),
+			$r = q("DELETE FROM `contact` WHERE `id` = %d AND `uid` = %d AND `self` = 0 LIMIT 1", 
+				intval($contact_id),
 				intval(local_user())
 			);
 			return;
