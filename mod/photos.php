@@ -1050,7 +1050,7 @@ function photos_content(&$a) {
 					. '/image/' . $rr['resource-id'],
 				'$phototitle' => t('View Photo'),
 				'$imgsrc' => $a->get_baseurl() . '/photo/' 
-					. $rr['resource-id'] . '-' . $rr['scale'] . '.jpg',
+					. $rr['resource-id'] . '-' . ((($rr['scale']) == 6) ? 4 : $rr['scale']) . '.jpg',
 				'$albumlink' => $a->get_baseurl() . '/photos/' 
 					. $a->data['user']['nickname'] . '/album/' . bin2hex($rr['album']),
 				'$albumname' => $rr['album'],
