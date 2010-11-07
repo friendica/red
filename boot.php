@@ -1420,7 +1420,7 @@ function contact_block() {
 			$o .= '<div class="contact-block-div"><a class="contact-block-link' . $sparkle . '" href="' . $url . '" ><img class="contact-block-img' . $sparkle . '" src="' . $rr['micro'] . '" title="' . $rr['name'] . ' [' . $rr['url'] . ']" alt="' . $rr['name'] . '" /></a></div>' . "\r\n";
 		}
 		$o .= '</div><div id="contact-block-end"></div>';
-		$o .=  '<div id="viewcontacts"><a id="viewcontacts-link" href="viewcontacts/' . $profile['nickname'] . '">' . t('View Contacts') . '</a></div>';
+		$o .=  '<div id="viewcontacts"><a id="viewcontacts-link" href="viewcontacts/' . $a->profile['nickname'] . '">' . t('View Contacts') . '</a></div>';
 		
 	}
 	return $o;
