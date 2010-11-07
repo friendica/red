@@ -79,8 +79,9 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		$dfrn_confirm = $contact['confirm'];
 		$aes_allow    = $contact['aes_allow'];
 
+		$network = ((strlen($contact['issued-id'])) ? 'dfrn' : 'stat');
 
-		if($contact['network'] === 'dfrn') {
+		if($network === 'dfrn') {
 
 			// Generate a key pair for all further communications with this person.
 			// We have a keypair for every contact, and a site key for unknown people.
@@ -231,7 +232,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 
 		$photos = import_profile_photo($contact['photo'],$uid,$contact_id);
 
-		if($contact['network'] === 'dfrn') {
+		if($network === 'dfrn') {
 
 			$new_relation = REL_VIP;
 			if(($relation == REL_FAN) || ($duplex))
@@ -265,7 +266,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			$notify = '';
 			$poll   = '';
 
-			// $contact['network'] !== 'dfrn'
+			// $network !== 'dfrn'
 
 			$arr = lrdd($contact['url']);
 			if(count($arr)) {
@@ -282,6 +283,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				intval($uid)
 			);
 
+
 			$r = q("UPDATE `contact` SET `photo` = '%s', 
 				`thumb` = '%s',
 				`micro` = '%s', 
@@ -291,7 +293,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				`notify` = '%s',
 				`poll` = '%s',
 				`blocked` = 0, 
-				`pending` = 0
+				`pending` = 0,
+				`network` = 'stat'
 				WHERE `id` = %d LIMIT 1
 			",
 				dbesc($photos[0]),
@@ -455,6 +458,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		$r = q("UPDATE `contact` SET 
 			`photo` = '%s', 
 			`thumb` = '%s', 
+			`micro` = '%s',
 			`rel` = %d, 
 			`name-date` = '%s', 
 			`uri-date` = '%s', 
@@ -466,6 +470,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		",
 			dbesc($photos[0]),
 			dbesc($photos[1]),
+			dbesc($photos[2]),
 			intval($new_relation),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
