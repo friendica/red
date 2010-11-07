@@ -155,6 +155,7 @@ function item_post(&$a) {
 					}
 					if(count($r)) {
 						$profile = $r[0]['url'];
+						$newname = $r[0]['name'];
 						if(strlen($inform))
 							$inform .= ',';
 						$inform .= 'cid:' . $r[0]['id'];
