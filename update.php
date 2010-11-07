@@ -130,3 +130,7 @@ function update_1014() {
 		}
 	}
 }
+
+function update_1015() {
+	q("ALTER TABLE `item` CHANGE `body` `body` mediumtext NOT NULL");
+}
