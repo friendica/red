@@ -507,7 +507,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			);
 	
 			$res = mail($r[0]['email'], t("Connection accepted at ") . $a->config['sitename'],
-				$email_tpl, 'From: ' . t('Administrator') . '@' . $_SERVER[SERVER_NAME] );
+				$email_tpl, 'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] );
 			if(!$res) {
 				// pointless throwing an error here and confusing the person at the other end of the wire.
 			}

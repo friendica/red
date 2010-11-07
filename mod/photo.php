@@ -13,7 +13,7 @@ function photo_init(&$a) {
 		case 1:
 		default:
 			killme();
-			return; // NOTREACHED
+			// NOTREACHED
 	}
 
 	$default = 'images/default-profile.jpg';
@@ -111,15 +111,13 @@ function photo_init(&$a) {
 		}
 	}
 
-	if(x($data) === false) {
+	if(! isset($data)) {
 		killme();
-		return; // NOTREACHED
+		// NOTREACHED
 	}
 
-        header("Content-type: image/jpeg");
-	header('Expires: ' . datetime_convert('UTC','UTC', 'now + 3 months', 'D, d M Y H:i:s' . ' GMT'));
-//	header("Cache-Control: max-age=36000, only-if-cached");
-        echo $data;
+	header("Content-type: image/jpeg");
+	echo $data;
 	killme();
-	return; //NOTREACHED
+	// NOTREACHED
 }

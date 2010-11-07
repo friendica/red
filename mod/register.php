@@ -195,7 +195,7 @@ function register_post(&$a) {
 				'$uid' => $newuid ));
 
 		$res = mail($email, t('Registration details for ') . $a->config['sitename'],
-			$email_tpl, 'From: ' . t('Administrator@') . $_SERVER[SERVER_NAME]);
+			$email_tpl, 'From: ' . t('Administrator@') . $_SERVER['SERVER_NAME']);
 
 
 		if($res) {

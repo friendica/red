@@ -14,10 +14,10 @@ function message_post(&$a) {
 		return;
 	}
 
-	$replyto = notags(trim($_POST['replyto']));
-	$recipient = intval($_POST['messageto']);
-	$subject = notags(trim($_POST['subject']));
-	$body = escape_tags(trim($_POST['body']));
+	$replyto   = ((x($_POST,'replyto'))   ? notags(trim($_POST['replyto']))   : '');
+	$subject   = ((x($_POST,'subject'))   ? notags(trim($_POST['subject']))   : '');
+	$body      = ((x($_POST,'body'))      ? escape_tags(trim($_POST['body'])) : '');
+	$recipient = ((x($_POST,'messageto')) ? intval($_POST['messageto'])       : 0 );
 
 	if(! $recipient) {
 		notice( t('No recipient selected.') . EOL );
@@ -28,11 +28,11 @@ function message_post(&$a) {
 		$subject = t('[no subject]');
 
 	$me = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
-		intval($_SESSION['uid'])
+		intval(local_user())
 	);
 	$contact = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($recipient),
-			intval($_SESSION['uid'])
+			intval(local_user())
 	);
 
 	if(! (count($me) && (count($contact)))) {
@@ -41,7 +41,7 @@ function message_post(&$a) {
 	}
 
 	$hash = random_string();
- 	$uri = 'urn:X-dfrn:' . $a->get_baseurl() . ':' . $_SESSION['uid'] . ':' . $hash ;
+ 	$uri = 'urn:X-dfrn:' . $a->get_baseurl() . ':' . local_user() . ':' . $hash ;
 
 	if(! strlen($replyto))
 		$replyto = $uri;
@@ -49,7 +49,7 @@ function message_post(&$a) {
 	$r = q("INSERT INTO `mail` ( `uid`, `from-name`, `from-photo`, `from-url`, 
 		`contact-id`, `title`, `body`, `delivered`, `seen`, `replied`, `uri`, `parent-uri`, `created`)
 		VALUES ( %d, '%s', '%s', '%s', %d, '%s', '%s', %d, %d, %d, '%s', '%s', '%s' )",
-		intval($_SESSION['uid']),
+		intval(local_user()),
 		dbesc($me[0]['name']),
 		dbesc($me[0]['thumb']),
 		dbesc($me[0]['url']),
@@ -65,7 +65,7 @@ function message_post(&$a) {
 	);
 	$r = q("SELECT * FROM `mail` WHERE `uri` = '%s' and `uid` = %d LIMIT 1",
 		dbesc($uri),
-		intval($_SESSION['uid'])
+		intval(local_user())
 	);
 	if(count($r))
 		$post_id = $r[0]['id'];
@@ -113,7 +113,7 @@ function message_content(&$a) {
 		if($cmd === 'drop') {
 			$r = q("DELETE FROM `mail` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval($a->argv[2]),
-				intval($_SESSION['uid'])
+				intval(local_user())
 			);
 			if($r) {
 				notice( t('Message deleted.') . EOL );
@@ -123,13 +123,13 @@ function message_content(&$a) {
 		else {
 			$r = q("SELECT `parent-uri` FROM `mail` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval($a->argv[2]),
-				intval($_SESSION['uid'])
+				intval(local_user())
 			);
 			if(count($r)) {
 				$parent = $r[0]['parent-uri'];
 				$r = q("DELETE FROM `mail` WHERE `parent-uri` = '%s' AND `uid` = %d ",
 					dbesc($parent),
-					intval($_SESSION['uid'])
+					intval(local_user())
 				);
 				if($r)
 					notice( t('Conversation removed.') . EOL );
@@ -186,7 +186,7 @@ function message_content(&$a) {
 
 		$r = q("SELECT count(*) AS `total` FROM `mail` 
 			WHERE `mail`.`uid` = %d AND `from-url` $eq '%s' GROUP BY `parent-uri` ORDER BY `created` DESC",
-			intval($_SESSION['uid']),
+			intval(local_user()),
 			dbesc($myprofile)
 		);
 		if(count($r))
@@ -196,7 +196,7 @@ function message_content(&$a) {
 			`mail`.* , `contact`.`name`, `contact`.`url`, `contact`.`thumb` 
 			FROM `mail` LEFT JOIN `contact` ON `mail`.`contact-id` = `contact`.`id` 
 			WHERE `mail`.`uid` = %d AND `from-url` $eq '%s' GROUP BY `parent-uri` ORDER BY `created` DESC  LIMIT %d , %d ",
-			intval($_SESSION['uid']),
+			intval(local_user()),
 			dbesc($myprofile),
 			intval($a->pager['start']),
 			intval($a->pager['itemspage'])
@@ -232,7 +232,7 @@ function message_content(&$a) {
 		$r = q("SELECT `mail`.*, `contact`.`name`, `contact`.`url`, `contact`.`thumb` 
 			FROM `mail` LEFT JOIN `contact` ON `mail`.`contact-id` = `contact`.`id` 
 			WHERE `mail`.`uid` = %d AND `mail`.`id` = %d LIMIT 1",
-			intval($_SESSION['uid']),
+			intval(local_user()),
 			intval($a->argv[1])
 		);
 		if(count($r)) { 
@@ -240,7 +240,7 @@ function message_content(&$a) {
 			$messages = q("SELECT `mail`.*, `contact`.`name`, `contact`.`url`, `contact`.`thumb` 
 				FROM `mail` LEFT JOIN `contact` ON `mail`.`contact-id` = `contact`.`id` 
 				WHERE `mail`.`uid` = %d AND `mail`.`parent-uri` = '%s' ORDER BY `mail`.`created` ASC",
-				intval($_SESSION['uid']),
+				intval(local_user()),
 				dbesc($r[0]['parent-uri'])
 			);
 		}
@@ -251,7 +251,7 @@ function message_content(&$a) {
 
 		$r = q("UPDATE `mail` SET `seen` = 1 WHERE `parent-uri` = '%s' AND `uid` = %d",
 			dbesc($r[0]['parent-uri']),
-			intval($_SESSION['uid'])
+			intval(local_user())
 		);
 
 		require_once("include/bbcode.php");

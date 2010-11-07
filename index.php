@@ -89,7 +89,7 @@ if(stristr($_SESSION['sysmsg'], t('Permission denied'))) {
 	
 if(x($_SESSION,'sysmsg')) {
 	$a->page['content'] = "<div id=\"sysmsg\" class=\"error-message\">{$_SESSION['sysmsg']}</div>\r\n"
-		. $a->page['content'];
+		. ((x($a->page,'content')) ? $a->page['content'] : '');
 	unset($_SESSION['sysmsg']);
 }
 
