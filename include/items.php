@@ -1061,7 +1061,7 @@ function new_follower($importer,$contact,$datarray,$item) {
 				$res = mail($r[0]['email'], 
 					t("You have a new follower at ") . $a->config['sitename'],
 					$email,
-					'From: ' . t('Administrator') . '@' . $_SERVER[SERVER_NAME] );
+					'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] );
 			
 			}
 		}

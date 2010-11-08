@@ -15,7 +15,7 @@ function regmod_content(&$a) {
 	if($a->argc != 3)
 		killme();
 
-	$cmd = $a->argv[1];
+	$cmd  = $a->argv[1];
 	$hash = $a->argv[2];
 
 
@@ -76,7 +76,7 @@ function regmod_content(&$a) {
 		));
 
 		$res = mail($user[0]['email'], t('Registration details for '). $a->config['sitename'],
-			$email_tpl,'From: ' . t('Administrator@') . $_SERVER[SERVER_NAME] );
+			$email_tpl,'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] );
 
 		if($res) {
 			notice( t('Account approved.') . EOL );
