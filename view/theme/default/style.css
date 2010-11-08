@@ -1797,3 +1797,19 @@ a.mail-list-link {
 .contact-block-link {
 	float: left;
 }
+
+#tag-remove {
+	margin-bottom: 15px;
+}
+
+#tagrm li {
+	margin-bottom: 10px;
+}
+
+#tagrm-submit, #tagrm-cancel {
+	margin-top: 25px;
+}
+
+#tagrm-cancel {
+	margin-left: 15px;
+}

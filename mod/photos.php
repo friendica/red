@@ -850,6 +850,8 @@ function photos_content(&$a) {
 				$tag_str .= bbcode($t);
 			} 
 			$o .= $tag_str . '</div>';
+			if($cmd === 'edit')
+				$o .= '<div id="tag-remove"><a href="' . $a->get_baseurl() . '/tagrm/' . $link_item['id'] . '">' . t('[Remove any tag]') . '</a></div>';
 		}
 
 
