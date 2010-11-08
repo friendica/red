@@ -1390,7 +1390,7 @@ function contact_block() {
 	$a = get_app();
 	if((! is_array($a->profile)) || ($a->profile['hide-friends']))
 		return $o;
-	$r = q("SELECT COUNT(*) AS `total` FROM `contact` WHERE `uid` = %d AND `self` = 0 ",
+	$r = q("SELECT COUNT(*) AS `total` FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 and `pending` = 0",
 			intval($a->profile['uid'])
 	);
 	if(count($r)) {
