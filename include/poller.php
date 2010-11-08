@@ -180,7 +180,7 @@
 		consume_feed($xml,$importer,$contact,$hub);
 
 		if((strlen($hub)) && (($contact['rel'] == REL_BUD) || (($contact['network'] === 'stat') && (! $contact['readonly'])))) {
-			logger('poller: subscribing to hub(s) : ' . $hubs . ' contact name : ' . $contact['name'] . ' local user : ' . $importer['name']);
+			logger('poller: subscribing to hub(s) : ' . $hub . ' contact name : ' . $contact['name'] . ' local user : ' . $importer['name']);
 			$hubs = explode(',', $hub);
 			if(count($hubs)) {
 				foreach($hubs as $h) {

@@ -753,7 +753,7 @@ function consume_feed($xml,$importer,$contact, &$hub) {
 			$name_updated = $elems['name'][0]['attribs'][NAMESPACE_DFRN]['updated'];
 			$new_name = $elems['name'][0]['data'];
 		} 
-		if(($elems['link'][0]['attribs']['']['rel'] === 'photo') && ($elems['link'][0]['attribs'][NAMESPACE_DFRN]['updated'])) {
+		if((x($elems,'link')) && ($elems['link'][0]['attribs']['']['rel'] === 'photo') && ($elems['link'][0]['attribs'][NAMESPACE_DFRN]['updated'])) {
 			$photo_timestamp = datetime_convert('UTC','UTC',$elems['link'][0]['attribs'][NAMESPACE_DFRN]['updated']);
 			$photo_url = $elems['link'][0]['attribs']['']['href'];
 		}

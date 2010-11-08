@@ -29,15 +29,15 @@ function hub_post_return() {
 function pubsub_init(&$a) {
 
 	$nick       = (($a->argc > 1) ? notags(trim($a->argv[1])) : '');
-	$contact_id = (($a->argc > 2) ? intval($a->argv[2]) : 0);
+	$contact_id = (($a->argc > 2) ? intval($a->argv[2])       : 0 );
 
 	if($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-		$hub_mode = notags(trim($_GET['hub_mode']));
-		$hub_topic = notags(trim($_GET['hub_topic']));
-		$hub_challenge = notags(trim($_GET['hub_challenge']));
-		$hub_lease = notags(trim($_GET['hub_lease_seconds']));
-		$hub_verify = notags(trim($_GET['hub_verify_token']));
+		$hub_mode      = ((x($_GET,'hub_mode'))          ? notags(trim($_GET['hub_mode']))          : '');
+		$hub_topic     = ((x($_GET,'hub_topic'))         ? notags(trim($_GET['hub_topic']))         : '');
+		$hub_challenge = ((x($_GET,'hub_challenge'))     ? notags(trim($_GET['hub_challenge']))     : '');
+		$hub_lease     = ((x($_GET,'hub_lease_seconds')) ? notags(trim($_GET['hub_lease_seconds'])) : '');
+		$hub_verify    = ((x($_GET,'hub_verify_token'))  ? notags(trim($_GET['hub_verify_token']))  : '');
 
 		logger('pubsub: Subscription from' . $_SERVER['REMOTE_ADDR'] . print_r($_GET,true));
 
@@ -75,8 +75,7 @@ function pubsub_init(&$a) {
 			intval($contact['id'])
 		);
 
- 		hub_return(true, $hub_challenge);
-		
+ 		hub_return(true, $hub_challenge);		
 	}
 }
 
@@ -91,7 +90,7 @@ function pubsub_post(&$a) {
 	logger('pubsub: data: ' . $xml, LOGGER_DATA);
 
 	$nick       = (($a->argc > 1) ? notags(trim($a->argv[1])) : '');
-	$contact_id = (($a->argc > 2) ? intval($a->argv[2]) : 0);
+	$contact_id = (($a->argc > 2) ? intval($a->argv[2])       : 0 );
 
 	$r = q("SELECT * FROM `user` WHERE `nickname` = '%s' LIMIT 1",
 		dbesc($nick)
