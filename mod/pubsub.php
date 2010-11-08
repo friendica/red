@@ -113,7 +113,7 @@ function pubsub_post(&$a) {
 
 	require_once('include/items.php');
 
-	consume_feed($xml,$importer,$contact,$feedhub);
+	consume_feed($xml,$importer,$contact,$feedhub,1);
 
 	hub_post_return();
 

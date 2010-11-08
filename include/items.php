@@ -723,13 +723,16 @@ function dfrn_deliver($owner,$contact,$atom) {
  *
  */
 
-function consume_feed($xml,$importer,$contact, &$hub) {
+function consume_feed($xml,$importer,$contact, &$hub, $datedir = 0) {
 
 	require_once('simplepie/simplepie.inc');
 
 	$feed = new SimplePie();
 	$feed->set_raw_data($xml);
-	$feed->enable_order_by_date(false);
+	if($datedir)
+		$feed->enable_order_by_date(true);
+	else
+		$feed->enable_order_by_date(false);
 	$feed->init();
 
 	// Check at the feed level for updated contact name and/or photo
