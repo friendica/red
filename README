@@ -33,7 +33,7 @@ are straight-forward and simple, because we know that relationships rarely are
 buddies or potential employers, you can rest assured that each is only able to 
 see the side of you that you wish to present. 
 
-A single instance of Friendika Server can easily support hundreds of (and up to
+A single instance of Friendika can easily support hundreds of (and up to
 several thousand) people using commodity hosting hardware. Each of these 
 people are able to connect with potentially hundreds or thousands of friends 
 and associates on any other supported network anywhere in the world and share 
@@ -64,4 +64,5 @@ friends and public updates to your hordes of fans - using the same interface.
 No other social network offers this ability.  
 
 IMPORTANT: Please see the file INSTALL for system requirements.
+
 
