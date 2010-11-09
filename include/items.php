@@ -909,25 +909,32 @@ function consume_feed($xml,$importer,$contact, &$hub, $datedir = 0) {
 				// FIXME update content if 'updated' changes
 				if(count($r)) {
 					$allow = $item->get_item_tags( NAMESPACE_DFRN, 'comment-allow');
-					if((($allow) && ($allow[0]['data'] != $r[0]['last-child'])) || ($contact['network'] !== 'dfrn')) {
+					if(($allow) && ($allow[0]['data'] != $r[0]['last-child'])) {
 						$r = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d",
 							dbesc(datetime_convert()),
 							dbesc($parent_uri),
 							intval($importer['uid'])
 						);
 						$r = q("UPDATE `item` SET `last-child` = %d , `changed` = '%s'  WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
-							intval((($allow) ? $allow[0]['data'] : 1)),
+							intval($allow[0]['data']),
 							dbesc(datetime_convert()),
 							dbesc($item_id),
 							intval($importer['uid'])
 						);
-
 					}
 					continue;
 				}
 				$datarray = get_atom_elements($feed,$item);
-				if($contact['network'] === 'stat' && strlen($datarray['title']))
-					unset($datarray['title']);
+				if($contact['network'] === 'stat') {
+					if(strlen($datarray['title']))
+						unset($datarray['title']);
+					$r = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d",
+						dbesc(datetime_convert()),
+						dbesc($parent_uri),
+						intval($importer['uid'])
+					);
+					$datarray['last-child'] = 1;
+				}
 				$datarray['parent-uri'] = $parent_uri;
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $contact['id'];
@@ -977,10 +984,9 @@ function consume_feed($xml,$importer,$contact, &$hub, $datedir = 0) {
 				if($contact['network'] === 'stat') {
 					if(strlen($datarray['title']))
 						unset($datarray['title']);
-//					if(($contact['rel'] == REL_VIP) || ($contact['rel'] == REL_BUD))
-// basically allow comments to/from any OStatus contact, unless blocked by readonly
 					$datarray['last-child'] = 1;
 				}
+
 				$datarray['parent-uri'] = $item_id;
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $contact['id'];
