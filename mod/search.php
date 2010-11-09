@@ -92,12 +92,14 @@ function search_content(&$a) {
 			}
 
 			$drop = replace_macros($droptpl,array('$id' => $item['id']));
+			$lock = '<div class="wall-item-lock"></div>';
 
 			$o .= replace_macros($tpl,array(
 				'$id' => $item['item_id'],
 				'$profile_url' => $profile_link,
 				'$name' => $profile_name,
 				'$sparkle' => $sparkle,
+				'$lock' => $lock,
 				'$thumb' => $profile_avatar,
 				'$title' => $item['title'],
 				'$body' => bbcode($item['body']),
