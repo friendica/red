@@ -355,10 +355,10 @@ function load_translation_table($lang) {
 
 if(! function_exists('t')) {
 function t($s) {
-	
+
 	$a = get_app();
 
-	if($a->strings[$s])
+	if(x($a->strings,$s))
 		return $a->strings[$s];
 	return $s;
 }}
@@ -1425,5 +1425,16 @@ function contact_block() {
 	}
 	return $o;
 
+}}
+
+if(! function_exists('search')) {
+function search($s) {
+	$a = get_app();
+	$o  = '<div id="search-box">';
+	$o .= '<form action="' . $a->get_baseurl() . '/search' . '" method="get" >';
+	$o .= '<input type="text" name="search" id="search-text" value="' . $s .'" />';
+	$o .= '<input type="submit" name="submit" id="search-submit" value="' . t('Search') . '" />'; 
+	$o .= '</form></div>';
+	return $o;
 }}
 

@@ -167,7 +167,7 @@ aside {
 	/*left: 0px;*/
 	/*top: 60px;*/
 	/*right: 250px;*/
-	width: 250px;
+	width: 230px;
 	/*margin-left: 20px;*/
 	/*margin-right: 0px;*/
 	font-size: 0.9em;
@@ -178,7 +178,7 @@ aside {
 }
 section {
 	position: absolute;
-	left: 270px;
+	left: 250px;
 	top: 60px;
 	margin-top: 25px;
 	margin-left: 20px;
@@ -240,10 +240,10 @@ footer {
 	float: right;
 	margin-left: 0px;
 	margin-right: 3px;
-	padding: 5px;
+	padding: 6px;
 	/*border: 2px solid #000000;*/
 	background: #D5D5D5;
-	font-size: 90%;
+	font-size: 80%;
 	font-weight: bold;
 	-moz-border-radius-topleft: 3px;
  	-moz-border-radius-topright: 3px;
@@ -294,10 +294,10 @@ footer {
 	float: left;
 	margin-left: 3px;
 	margin-right: 0px;
-	padding: 5px;
+	padding: 6px;
 	/*border: 2px solid #000000;*/
 	background: #D5D5D5;
-	font-size: 90%;
+	font-size: 80%;
 	font-weight: bold;
 	text-decoration: none;
 	-moz-border-radius-topleft: 3px;
@@ -1812,4 +1812,17 @@ a.mail-list-link {
 
 #tagrm-cancel {
 	margin-left: 15px;
+}
+
+.wall-item-conv {
+	margin-top: 5px;
+	margin-bottom: 25px;
+}
+
+#search-submit {
+	margin-left: 15px;
+}
+
+#search-box {
+	margin-bottom: 25px;
 }

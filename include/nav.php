@@ -1,16 +1,16 @@
 <?php
 
-if(! x($a->page,'nav'))
-	$a->page['nav'] = '';
+	if(! x($a->page,'nav'))
+		$a->page['nav'] = '';
 
-$a->page['nav'] .= '<div id="panel" style="display: none;"></div>' ;
+	$a->page['nav'] .= '<div id="panel" style="display: none;"></div>' ;
 
-if(local_user()) {
+	if(local_user()) {
 		$a->page['nav'] .= '<a id="nav-logout-link" class="nav-link" href="logout">' . t('Logout') . "</a>\r\n";
-}
-else {
+	}
+	else {
 		$a->page['nav'] .= '<a id="nav-login-link" class="nav-login-link" href="login">' . t('Login') . "</a>\r\n";
-}
+	}
 
 	$a->page['nav'] .= "<span id=\"nav-link-wrapper\" >\r\n";
 
@@ -20,6 +20,7 @@ else {
 		$a->page['nav'] .= '<a id="nav-register-link" class="nav-commlink" href="register" >' 
 			. t('Register') . "</a>\r\n";
 
+	$a->page['nav'] .= '<a id="nav-search-link" class="nav-link" href="search">' . t('Search') . "</a>\r\n";
 	$a->page['nav'] .= '<a id="nav-directory-link" class="nav-link" href="directory">' . t('Directory') . "</a>\r\n";
 
 	if(x($_SESSION,'uid')) {
