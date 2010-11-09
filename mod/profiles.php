@@ -249,7 +249,7 @@ function profiles_content(&$a) {
 
 		dbesc_array($r1[0]);
 
-		$r2 = q("INSERT INTO `profile` (`" 
+		$r2 = dbq("INSERT INTO `profile` (`" 
 			. implode("`, `", array_keys($r1[0])) 
 			. "`) VALUES ('" 
 			. implode("', '", array_values($r1[0])) 

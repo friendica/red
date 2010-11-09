@@ -134,6 +134,16 @@ function q($sql) {
 	return $ret;
 }}
 
+// raw db query, no arguments
+
+if(! function_exists('dbq')) { 
+function dbq($sql) {
+
+	global $db;
+	$ret = $db->q($sql);
+	return $ret;
+}}
+
 
 // Caller is responsible for ensuring that any integer arguments to 
 // dbesc_array are actually integers and not malformed strings containing

@@ -550,7 +550,7 @@ function item_store($arr) {
 
 	logger('item_store: ' . print_r($arr,true), LOGGER_DATA);
 
-	$r = q("INSERT INTO `item` (`" 
+	$r = dbq("INSERT INTO `item` (`" 
 			. implode("`, `", array_keys($arr)) 
 			. "`) VALUES ('" 
 			. implode("', '", array_values($arr)) 

@@ -106,7 +106,7 @@ function dfrn_notify_post(&$a) {
 		
 		dbesc_array($msg);
 
-		$r = q("INSERT INTO `mail` (`" . implode("`, `", array_keys($msg)) 
+		$r = dbq("INSERT INTO `mail` (`" . implode("`, `", array_keys($msg)) 
 			. "`) VALUES ('" . implode("', '", array_values($msg)) . "')" );
 
 		// send email notification if requested.
