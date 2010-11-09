@@ -909,14 +909,14 @@ function consume_feed($xml,$importer,$contact, &$hub, $datedir = 0) {
 				// FIXME update content if 'updated' changes
 				if(count($r)) {
 					$allow = $item->get_item_tags( NAMESPACE_DFRN, 'comment-allow');
-					if($allow && $allow[0]['data'] != $r[0]['last-child']) {
+					if((($allow) && ($allow[0]['data'] != $r[0]['last-child'])) || ($contact['network'] !== 'dfrn')) {
 						$r = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d",
 							dbesc(datetime_convert()),
 							dbesc($parent_uri),
 							intval($importer['uid'])
 						);
 						$r = q("UPDATE `item` SET `last-child` = %d , `changed` = '%s'  WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
-							intval($allow[0]['data']),
+							intval((($allow) ? $allow[0]['data'] : 1)),
 							dbesc(datetime_convert()),
 							dbesc($item_id),
 							intval($importer['uid'])
@@ -977,8 +977,9 @@ function consume_feed($xml,$importer,$contact, &$hub, $datedir = 0) {
 				if($contact['network'] === 'stat') {
 					if(strlen($datarray['title']))
 						unset($datarray['title']);
-					if(($contact['rel'] == REL_VIP) || ($contact['rel'] == REL_BUD))
-						$datarray['last-child'] = 1;
+//					if(($contact['rel'] == REL_VIP) || ($contact['rel'] == REL_BUD))
+// basically allow comments to/from any OStatus contact, unless blocked by readonly
+					$datarray['last-child'] = 1;
 				}
 				$datarray['parent-uri'] = $item_id;
 				$datarray['uid'] = $importer['uid'];
