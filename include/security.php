@@ -12,12 +12,13 @@ function can_write_wall(&$a,$owner) {
 
         $r = q("SELECT `contact`.*, `user`.`page-flags` FROM `contact` LEFT JOIN `user` on `user`.`uid` = `contact`.`uid` 
 			WHERE `contact`.`uid` = %d AND `contact`.`id` = %d AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
-			AND `readonly` = 0  AND ( `contact`.`rel` IN ( %d , %d ) OR `user`.`page-flags` = %d ) LIMIT 1",
+			AND `readonly` = 0  AND ( `contact`.`rel` IN ( %d , %d ) OR `user`.`page-flags` = %d OR (`contact`.`network` = 'stat' AND `contact`.rel` = %d)) LIMIT 1",
 			intval($owner),
 			intval($_SESSION['visitor_id']),
 			intval(REL_VIP),
 			intval(REL_BUD),
-			intval(PAGE_COMMUNITY)
+			intval(PAGE_COMMUNITY),
+			intval(REL_FAN)
         );
 
         if(count($r))

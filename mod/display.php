@@ -215,7 +215,7 @@ function display_content(&$a) {
 			$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $item['thumb']);
 			$profile_link = $profile_url;
 
-			if(($item['contact-id'] == $_SESSION['visitor_id']) || ($item['uid'] == local_user()))
+			if(($item['contact-id'] == remote_user()) || ($item['uid'] == local_user()))
 				$drop = replace_macros(load_view_file('view/wall_item_drop.tpl'), array('$id' => $item['id']));
 			else 
 				$drop = replace_macros(load_view_file('view/wall_fake_drop.tpl'), array('$id' => $item['id']));
