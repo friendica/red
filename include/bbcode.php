@@ -12,13 +12,13 @@ function bbcode($Text) {
 	$Text = nl2br($Text);
 
 	// Set up the parameters for a URL search string
-	$URLSearchString = " a-zA-Z0-9\:\/\-\?\&\.\=\_\~\#\'";
+	$URLSearchString = " a-zA-Z0-9\:\/\-\?\&\.\=\_\~\#\'\%";
 	// Set up the parameters for a MAIL search string
 	$MAILSearchString = $URLSearchString . " a-zA-Z0-9\.@";
 
 	// Perform URL Search
-	$Text = preg_replace("/\[url\]([$URLSearchString]*)\[\/url\]/", '<a href="$1" target="_blank">$1</a>', $Text);
-	$Text = preg_replace("(\[url\=([$URLSearchString]*)\](.+?)\[/url\])", '<a href="$1" target="_blank">$2</a>', $Text);
+	$Text = preg_replace("/\[url\]([$URLSearchString]*)\[\/url\]/", '<a href="$1" >$1</a>', $Text);
+	$Text = preg_replace("(\[url\=([$URLSearchString]*)\](.+?)\[/url\])", '<a href="$1" >$2</a>', $Text);
 	//$Text = preg_replace("(\[url\=([$URLSearchString]*)\]([$URLSearchString]*)\[/url\])", '<a href="$1" target="_blank">$2</a>', $Text);
 
 	// Perform MAIL Search
