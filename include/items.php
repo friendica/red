@@ -293,7 +293,7 @@ function get_atom_elements($feed,$item) {
 
 	// No photo/profile-link on the item - look at the feed level
 
-	if((! $res['author-link']) || (! $res['author-avatar'])) {
+	if((! (x($res,'author-link'))) || (! (x($res,'author-avatar')))) {
 		$rawauthor = $feed->get_feed_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'author');
 		if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
 			$base = $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
@@ -316,7 +316,7 @@ function get_atom_elements($feed,$item) {
 				foreach($base as $link) {
 					if($link['attribs']['']['rel'] === 'alternate' && (! $res['author-link']))
 						$res['author-link'] = unxmlify($link['attribs']['']['href']);
-					if(! $res['author-avatar']) {
+					if(! (x($res,'author-avatar'))) {
 						if($link['attribs']['']['rel'] === 'avatar' || $link['attribs']['']['rel'] === 'photo')
 							$res['author-avatar'] = unxmlify($link['attribs']['']['href']);
 					}
@@ -517,31 +517,35 @@ function item_store($arr) {
 		$arr['gravity'] = 0;
 	elseif(activity_match($arr['verb'],ACTIVITY_POST))
 		$arr['gravity'] = 6;
+	else      
+		$arr['gravity'] = 6;   // extensible catchall
 
 	if(! x($arr,'type'))
-		$arr['type'] = 'remote';
-	$arr['wall'] = ((intval($arr['wall'])) ? 1 : 0);
-	$arr['uri'] = notags(trim($arr['uri']));
-	$arr['author-name'] = notags(trim($arr['author-name']));
-	$arr['author-link'] = notags(trim($arr['author-link']));
-	$arr['author-avatar'] = notags(trim($arr['author-avatar']));
-	$arr['owner-name'] = notags(trim($arr['owner-name']));
-	$arr['owner-link'] = notags(trim($arr['owner-link']));
-	$arr['owner-avatar'] = notags(trim($arr['owner-avatar']));
-	$arr['created'] = ((x($arr,'created') !== false) ? datetime_convert('UTC','UTC',$arr['created']) : datetime_convert());
-	$arr['edited']  = ((x($arr,'edited')  !== false) ? datetime_convert('UTC','UTC',$arr['edited'])  : datetime_convert());
-	$arr['changed'] = datetime_convert();
-	$arr['title'] = notags(trim($arr['title']));
-	$arr['location'] = notags(trim($arr['location']));
-	$arr['coord'] = notags(trim($arr['coord']));
-	$arr['body'] = escape_tags(trim($arr['body']));
-	$arr['last-child'] = intval($arr['last-child']);
-	$arr['visible'] = ((x($arr,'visible') !== false) ? intval($arr['visible']) : 1);
-	$arr['deleted'] = 0;
-	$arr['parent-uri'] = notags(trim($arr['parent-uri']));
-	$arr['verb'] = notags(trim($arr['verb']));
-	$arr['object-type'] = notags(trim($arr['object-type']));
-	$arr['object'] = trim($arr['object']);
+		$arr['type']      = 'remote';
+	$arr['wall']          = ((x($arr,'wall'))          ? intval($arr['wall'])                : 0);
+	$arr['uri']           = ((x($arr,'uri'))           ? notags(trim($arr['uri']))           : random_string());
+	$arr['author-name']   = ((x($arr,'author-name'))   ? notags(trim($arr['author-name']))   : '');
+	$arr['author-link']   = ((x($arr,'author-link'))   ? notags(trim($arr['author-link']))   : '');
+	$arr['author-avatar'] = ((x($arr,'author-avatar')) ? notags(trim($arr['author-avatar'])) : '');
+	$arr['owner-name']    = ((x($arr,'owner-name'))    ? notags(trim($arr['owner-name']))    : '');
+	$arr['owner-link']    = ((x($arr,'owner-link'))    ? notags(trim($arr['owner-link']))    : '');
+	$arr['owner-avatar']  = ((x($arr,'owner-avatar'))  ? notags(trim($arr['owner-avatar']))  : '');
+	$arr['created']       = ((x($arr,'created') !== false) ? datetime_convert('UTC','UTC',$arr['created']) : datetime_convert());
+	$arr['edited']        = ((x($arr,'edited')  !== false) ? datetime_convert('UTC','UTC',$arr['edited'])  : datetime_convert());
+	$arr['changed']       = datetime_convert();
+	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
+	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : '');
+	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : '');
+	$arr['body']          = ((x($arr,'body'))          ? escape_tags(trim($arr['body']))     : '');
+	$arr['last-child']    = ((x($arr,'last-child'))    ? intval($arr['last-child'])          : 0 );
+	$arr['visible']       = ((x($arr,'visible') !== false) ? intval($arr['visible'])         : 1 );
+	$arr['deleted']       = 0;
+	$arr['parent-uri']    = ((x($arr,'parent-uri'))    ? notags(trim($arr['parent-uri']))    : '');
+	$arr['verb']          = ((x($arr,'verb'))          ? notags(trim($arr['verb']))          : '');
+	$arr['object-type']   = ((x($arr,'object-type'))   ? notags(trim($arr['object-type']))   : '');
+	$arr['object']        = ((x($arr,'object'))        ? trim($arr['object'])                : '');
+	$arr['target-type']   = ((x($arr,'target-type'))   ? notags(trim($arr['target-type']))   : '');
+	$arr['target']        = ((x($arr,'target'))        ? trim($arr['target'])                : '');
 
 	$parent_id = 0;
 	$parent_missing = false;
@@ -1179,8 +1183,12 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 	$o .= '<link rel="alternate" href="' . xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']) . '" />' . "\r\n";
 	if($comment)
 		$o .= '<dfrn:comment-allow>' . intval($item['last-child']) . '</dfrn:comment-allow>' . "\r\n";
-	if($item['location'])
+
+	if($item['location']) {
 		$o .= '<dfrn:location>' . xmlify($item['location']) . '</dfrn:location>' . "\r\n";
+		$o .= '<poco:address><poco:formatted>' . xmlify($item['location']) . '</poco:formatted></poco:address>' . "\r\n";
+	}
+
 	if($item['coord'])
 		$o .= '<georss:point>' . xmlify($item['coord']) . '</georss:point>' . "\r\n";
 

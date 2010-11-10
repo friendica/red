@@ -6,7 +6,7 @@
       xmlns:dfrn="http://purl.org/macgirvin/dfrn/1.0" 
       xmlns:as="http://activitystrea.ms/spec/1.0/"
       xmlns:georss="http://www.georss.org/georss" 
-      xmlns:poco="http://portablecontacts.net/spec/1.0" >
+      xmlns:poco="http://portablecontacts.net/spec/1.0" > 
 
   <id>$feed_id</id>
   <title>$feed_title</title>
