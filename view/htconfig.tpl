@@ -35,9 +35,13 @@ $a->config['register_policy'] = REGISTER_OPEN;
 $a->config['register_text'] = '';
 $a->config['admin_email'] = '';
 
-// Maximum size of an imported message, 0 is unlimited (but our database 'text' element is limited to 65535).
+// Maximum size of an imported message, 0 is unlimited
 
-$a->config['max_import_size'] = 65535;
+$a->config['max_import_size'] = 10000;
+
+// maximum size of uploaded photos
+
+$a->config['system']['maximagesize'] = 800000;
 
 // Location of PHP command line processor
 
