@@ -15,15 +15,20 @@ Look no further.
  
 Friendika is a social network without boundaries. Friendika installations can 
 link together into a global social network which is free from central 
-control. We are developing connectors to seamlessly communicate with many 
-other open social networks and providers - GNU-social, Diaspora, Status.net, 
-and even some of the larger closed services such as Facebook and Twitter.
+control. Besides the Friendika network [which is privacy enhanced]; you can 
+connect with and communicate with friends on identi.ca, Status.Net and many 
+other sites and social networks *today*. 
+
+We are currently developing connectors to seamlessly communicate with many 
+other open social networks and providers - like Diaspora, GNU-Social,
+OneSocialWeb, and even some of the larger closed services such as Facebook and
+Twitter.
 
 Over the coming months, the boundaries between these networks will start to 
 become indistinguishable as they all become part of your social circle.
 
-Your personal thoughts and conversations belong to you - and are shared with 
-those you wish to share them with. 
+Our core belief is that your personal thoughts and conversations belong to 
+you - and are only meant to be shared with those you wish to share them with. 
 
 Period.  
 
