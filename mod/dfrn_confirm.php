@@ -238,6 +238,9 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			if(($relation == REL_FAN) || ($duplex))
 				$new_relation = REL_BUD;
 
+			if(($relation == REL_FAN) && ($duplex))
+				$duplex = 0;
+
 			$r = q("UPDATE `contact` SET `photo` = '%s', 
 				`thumb` = '%s',
 				`micro` = '%s', 
@@ -454,6 +457,9 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		$new_relation = REL_FAN;
 		if(($relation == REL_VIP) || ($duplex))
 			$new_relation = REL_BUD;
+
+		if(($relation == REL_VIP) && ($duplex))
+			$duplex = 0;
 
 		$r = q("UPDATE `contact` SET 
 			`photo` = '%s', 
