@@ -37,7 +37,7 @@ class dba {
 			$mesg = '';
 
 			if($this->db->errno)
-				$debug_text .=  $this->db->error . EOL;
+				logger('dba: ' . $this->db->error);
 
 			if($result === false)
 				$mesg = 'false';
@@ -48,14 +48,7 @@ class dba {
         
 			$str =  'SQL = ' . printable($sql) . EOL . 'SQL returned ' . $mesg . EOL;
 
-			switch($this->debug) {
-				case 3:
-					echo $str;
-					break;
-				default:
-					$debug_text .= $str;
-					break;
-			}
+			logger('dba: ' . $str );
 		}
 		else {
 			if($result === false) {
@@ -75,11 +68,8 @@ class dba {
 			$result->free_result();
 		}
     
-		if($this->debug == 2)
-			$debug_text .= printable(print_r($r, true). EOL);
-		elseif($this->debug == 3)
-			echo printable(print_r($r, true) . EOL) ;
-
+		if($this->debug)
+			logger('dba: ' . printable(print_r($r, true)), LOGGER_DATA);
 		return($r);
 	}
 

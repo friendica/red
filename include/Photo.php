@@ -175,8 +175,7 @@ class Photo {
 
 
 
-	public function store($uid, $cid, $rid, $filename, $album, $scale, 
-		$profile = 0, $allow_cid = '', $allow_gid = '', $deny_cid = '', $deny_gid = '') {
+	public function store($uid, $cid, $rid, $filename, $album, $scale, $profile = 0, $allow_cid = '', $allow_gid = '', $deny_cid = '', $deny_gid = '') {
 
 		$r = q("INSERT INTO `photo`
 			( `uid`, `contact-id`, `resource-id`, `created`, `edited`, `filename`, `album`, `height`, `width`, `data`, `scale`, `profile`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid` )
@@ -188,9 +187,9 @@ class Photo {
 			dbesc(datetime_convert()),
 			dbesc(basename($filename)),
 			dbesc($album),
-                	intval($this->height),
-                	intval($this->width),
-                	dbesc($this->imageString()),
+			intval($this->height),
+			intval($this->width),
+			dbesc($this->imageString()),
 			intval($scale),
 			intval($profile),
 			dbesc($allow_cid),

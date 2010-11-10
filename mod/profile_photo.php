@@ -42,7 +42,7 @@ function profile_photo_post(&$a) {
 		$srcY = $_POST['ystart'];
 		$srcW = $_POST['xfinal'] - $srcX;
 		$srcH = $_POST['yfinal'] - $srcY;
-//dbg(3);
+
 		$r = q("SELECT * FROM `photo` WHERE `resource-id` = '%s' AND `uid` = %d AND `scale` = %d LIMIT 1",
 			dbesc($image_id),
 			dbesc(local_user()),
@@ -97,6 +97,7 @@ function profile_photo_post(&$a) {
 			else
 				notice( t('Unable to process image') . EOL);
 		}
+
 		goaway($a->get_baseurl() . '/profiles');
 		return; // NOTREACHED
 	}
@@ -104,6 +105,14 @@ function profile_photo_post(&$a) {
 	$src      = $_FILES['userfile']['tmp_name'];
 	$filename = basename($_FILES['userfile']['name']);
 	$filesize = intval($_FILES['userfile']['size']);
+
+	$maximagesize = get_config('system','maximagesize');
+
+	if(($maximagesize) && ($filesize > $maximagesize)) {
+		notice( t('Image exceeds size limit of ') . $maximagesize . EOL);
+		@unlink($src);
+		return;
+	}
 
 	$imagedata = @file_get_contents($src);
 	$ph = new Photo($imagedata);

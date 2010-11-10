@@ -453,6 +453,14 @@ function photos_post(&$a) {
 	$filename          = basename($_FILES['userfile']['name']);
 	$filesize          = intval($_FILES['userfile']['size']);
 
+	$maximagesize = get_config('system','maximagesize');
+
+	if(($maximagesize) && ($filesize > $maximagesize)) {
+		notice( t('Image exceeds size limit of ') . $maximagesize . EOL);
+		@unlink($src);
+		return;
+	}
+
 	$imagedata = @file_get_contents($src);
 	$ph = new Photo($imagedata);
 

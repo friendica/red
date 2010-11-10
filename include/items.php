@@ -761,17 +761,12 @@ function consume_feed($xml,$importer,$contact, &$hub, $datedir = 0) {
 			$photo_url = $elems['link'][0]['attribs']['']['href'];
 		}
 	}
-	if(! $photo_timestamp) {
-		$photo_rawupdate = $feed->get_feed_tags(NAMESPACE_DFRN,'icon-updated');
-		if($photo_rawupdate) {
-			$photo_timestamp = datetime_convert('UTC','UTC',$photo_rawupdate[0]['data']);
-			$photo_url = $feed->get_image_url();
-		}
-	}
-	if((is_array($contact)) && ($photo_timestamp) && (strlen($photo_url)) && ($photo_timestamp > $contact['avatar-date'])) {
 
+	if((is_array($contact)) && ($photo_timestamp) && (strlen($photo_url)) && ($photo_timestamp > $contact['avatar-date'])) {
+		logger('Consume feed: Updating photo for ' . $contact['name']);
 		require_once("Photo.php");
 		$photo_failure = false;
+		$have_photo = false;
 
 		$r = q("SELECT `resource-id` FROM `photo` WHERE `contact-id` = %d AND `uid` = %d LIMIT 1",
 			intval($contact['id']),
@@ -779,33 +774,45 @@ function consume_feed($xml,$importer,$contact, &$hub, $datedir = 0) {
 		);
 		if(count($r)) {
 			$resource_id = $r[0]['resource-id'];
-			$img_str = fetch_url($photo_url,true);
-			$img = new Photo($img_str);
-			if($img->is_valid()) {
-				q("DELETE FROM `photo` WHERE `resource-id` = '%s' AND contact-id` = %d AND `uid` = %d",
+			$have_photo = true;
+		}
+		else {
+			$resource_id = photo_new_resource();
+		}
+			
+		$img_str = fetch_url($photo_url,true);
+		$img = new Photo($img_str);
+		if($img->is_valid()) {
+			if($have_photo) {
+				q("DELETE FROM `photo` WHERE `resource-id` = '%s' AND `contact-id` = %d AND `uid` = %d",
 					dbesc($resource_id),
 					intval($contact['id']),
 					intval($contact['uid'])
 				);
-
-				$img->scaleImageSquare(175);
-				
-				$hash = $resource_id;
-				$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), t('Contact Photos') , 4);
-				
-				$img->scaleImage(80);
-				$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), t('Contact Photos') , 5);
-
-				$img->scaleImage(48);
-				$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), t('Contact Photos') , 6);
-
-				if($r)
-					q("UPDATE `contact` SET `avatar-date` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
-						dbesc(datetime_convert()),
-						intval($contact['uid']),
-						intval($contact['id'])
-					);
 			}
+				
+			$img->scaleImageSquare(175);
+				
+			$hash = $resource_id;
+			$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), t('Contact Photos') , 4);
+				
+			$img->scaleImage(80);
+			$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), t('Contact Photos') , 5);
+
+			$img->scaleImage(48);
+			$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), t('Contact Photos') , 6);
+
+			$a = get_app();
+
+			q("UPDATE `contact` SET `avatar-date` = '%s', `photo` = '%s', `thumb` = '%s', `micro` = '%s'  
+				WHERE `uid` = %d AND `id` = %d LIMIT 1",
+				dbesc(datetime_convert()),
+				dbesc($a->get_baseurl() . '/photo/' . $hash . '-4.jpg'),
+				dbesc($a->get_baseurl() . '/photo/' . $hash . '-5.jpg'),
+				dbesc($a->get_baseurl() . '/photo/' . $hash . '-6.jpg'),
+				intval($contact['uid']),
+				intval($contact['id'])
+			);
 		}
 	}
 

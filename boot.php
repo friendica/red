@@ -954,6 +954,7 @@ function webfinger_dfrn($s) {
 		return $s;
 	}
 	$links = webfinger($s);
+	logger('webfinger_dfrn: ' . $s . ':' . print_r($links,true), LOGGER_DATA);
 	if(count($links)) {
 		foreach($links as $link)
 			if($link['@attributes']['rel'] === NAMESPACE_DFRN)
@@ -978,6 +979,7 @@ function webfinger($s) {
 	}
 	if(strlen($host)) {
 		$tpl = fetch_lrdd_template($host);
+		logger('webfinger: lrdd template: ' . $tpl);
 		if(strlen($tpl)) {
 			$pxrd = str_replace('{uri}', urlencode('acct:'.$s), $tpl);
 			$links = fetch_xrd_links($pxrd);
@@ -1066,9 +1068,12 @@ function fetch_lrdd_template($host) {
 if(! function_exists('fetch_xrd_links')) {
 function fetch_xrd_links($url) {
 
+
 	$xml = fetch_url($url);
 	if (! $xml)
 		return array();
+
+	logger('fetch_xrd_links: ' . $xml, LOGGER_DATA);
 	$h = simplexml_load_string($xml);
 	$arr = convert_xml_element_to_array($h);
 
