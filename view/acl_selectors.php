@@ -62,9 +62,9 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 				$selected = " selected=\"selected\" ";
 			else
 				$selected = '';
-			if($rr['network'] === 'stat')
-				$disabled = ' disabled="true" ' ;
-			else
+//			if($rr['network'] === 'stat')
+//				$disabled = ' disabled="true" ' ;
+//			else
 				$disabled = '';
 			$o .= "<option value=\"{$rr['id']}\" $selected  $disabled title=\"{$rr['url']}\" >{$rr['name']}</option>\r\n";
 		}
