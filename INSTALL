@@ -32,6 +32,7 @@ you might have trouble getting everything to work.]
 	use
 		$a->path = 'test';
 
+	NOTE: This has NOT been fully tested!
 	In this case, you cannot use the web installer. 
 	Skip step 3 and proceed to step 4 - especially steps 4a and 4b.
 
