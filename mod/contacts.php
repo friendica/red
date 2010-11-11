@@ -90,6 +90,7 @@ function contacts_content(&$a) {
 	$o = '';
 	$o .= '<script>	$(document).ready(function() { $(\'#nav-contacts-link\').addClass(\'nav-selected\'); });</script>';
 
+	$_SESSION['return_url'] = $a->get_baseurl() . '/' . $a->cmd;
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
@@ -164,7 +165,6 @@ function contacts_content(&$a) {
 			return;
 		}
 
-		$_SESSION['return_url'] = $a->get_baseurl() . '/' . $a->cmd;
 
 		require_once('view/contact_selectors.php');
 
