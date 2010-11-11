@@ -1,10 +1,15 @@
 <?php
 
 function amcd_content(&$a) {
-header("Content-type: text/json");
+//header("Content-type: text/json");
 echo <<< EOT
 {
-  "methods": {
+  "version":1,
+  "sessionstatus":{
+    "method":"GET",
+    "path":"/session"
+  },
+  "auth-methods": {
     "username-password-form": {
       "connect": {
         "method":"POST",
@@ -12,11 +17,29 @@ echo <<< EOT
         "params": {
           "username":"login-name",
           "password":"password"
-        }
+        },
+        "onsuccess": { "action":"reload" }
       },
       "disconnect": {
         "method":"GET",
-        "path":"/logout"
+        "path":"\/logout"
+      }
+    }
+  }
+  "methods": {
+    "username-password-form": {
+      "connect": {
+        "method":"POST",
+        "path":"\/login",
+        "params": {
+          "username":"login-name",
+          "password":"password"
+        },
+        "onsuccess": { "action":"reload" }
+      },
+      "disconnect": {
+        "method":"GET",
+        "path":"\/logout"
       }
     }
   }

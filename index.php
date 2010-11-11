@@ -30,6 +30,7 @@ $a->init_pagehead();
 
 session_start();
 
+// header('Link: <' . $a->get_baseurl() . '/amcd>; rel="acct-mgmt";');
 
 if((x($_SESSION,'authenticated')) || (x($_POST,'auth-params')) || ($a->module === 'login'))
 	require("auth.php");

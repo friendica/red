@@ -158,8 +158,10 @@ function salmon_post(&$a) {
 
     $verify = $rsa->verify($signed_data,$signature);
 
-	if(! $verify)
+	if(! $verify) {
+		logger('mod-salmon: message did not verify using protocol. Trying statusnet hack.');
 	    $verify = $rsa->verify($stnet_signed_data,$signature);
+    }
 
 	if(! $verify) {
 		logger('mod-salmon: Message did not verify. Discarding.');
