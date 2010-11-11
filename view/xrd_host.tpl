@@ -4,8 +4,8 @@
  
     <hm:Host>$domain</hm:Host>
  
-    <Link rel='lrdd'
-          template='http://$domain/xrd/?uri={uri}'>
-        <Title>Resource Descriptor</Title>
-    </Link>
+    <Link rel='lrdd' template='http://$domain/xrd/?uri={uri}' />
+    <Link rel='acct-mgmt' href='http://$domain/amcd' />
+    <Link rel='http://services.mozilla.com/amcd/0.1' href='http://$domain/amcd' />
+
 </XRD>

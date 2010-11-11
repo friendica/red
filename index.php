@@ -31,8 +31,11 @@ $a->init_pagehead();
 session_start();
 
 
-if((x($_SESSION,'authenticated')) || (x($_POST,'auth-params')))
+if((x($_SESSION,'authenticated')) || (x($_POST,'auth-params')) || ($a->module === 'login'))
 	require("auth.php");
+
+if(! x($_SESSION,'authenticated'))
+	header('X-Account-Management-Status: none');
 
 if(! x($_SESSION,'sysmsg'))
 	$_SESSION['sysmsg'] = '';

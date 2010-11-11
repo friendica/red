@@ -49,6 +49,7 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 			$_SESSION['cid'] = $a->cid;
 
 		}
+		header('X-Account-Management-Status: active; name="' . $a->user['username'] . '"; id="' . $a->user['nickname'] .'"');
 	}
 }
 else {
@@ -98,6 +99,8 @@ else {
 			$a->cid = $r[0]['id'];
 			$_SESSION['cid'] = $a->cid;
 		}
+
+		header('X-Account-Management-Status: active; name="' . $a->user['username'] . '"; id="' . $a->user['nickname'] .'"');
 		if(($a->module !== 'home') && isset($_SESSION['return_url']))
 			goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
 	}
