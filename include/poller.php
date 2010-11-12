@@ -179,6 +179,11 @@
 
 		consume_feed($xml,$importer,$contact,$hub);
 
+		// do it twice. Ensures that children of parents which may be later in the stream aren't tossed
+
+		consume_feed($xml,$importer,$contact,$hub);
+
+
 		if((strlen($hub)) && (($contact['rel'] == REL_BUD) || (($contact['network'] === 'stat') && (! $contact['readonly'])))) {
 			logger('poller: subscribing to hub(s) : ' . $hub . ' contact name : ' . $contact['name'] . ' local user : ' . $importer['name']);
 			$hubs = explode(',', $hub);

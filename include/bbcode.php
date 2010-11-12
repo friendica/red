@@ -17,9 +17,14 @@ function bbcode($Text) {
 	$MAILSearchString = $URLSearchString . " a-zA-Z0-9\.@";
 
 	// Perform URL Search
+
+	$Text = preg_replace("/[^\]\=](http\:\/\/[a-zA-Z0-9\:\/\-\?\&\.\=\_\~\#\'\%]*)/", ' <a href="$1" >$1</a>', $Text);
+	$Text = preg_replace("/[^\]\=](https\:\/\/[a-zA-Z0-9\:\/\-\?\&\.\=\_\~\#\'\%]*)/", ' <a href="$1" >$1</a>', $Text);
+
 	$Text = preg_replace("/\[url\]([$URLSearchString]*)\[\/url\]/", '<a href="$1" >$1</a>', $Text);
 	$Text = preg_replace("(\[url\=([$URLSearchString]*)\](.+?)\[/url\])", '<a href="$1" >$2</a>', $Text);
 	//$Text = preg_replace("(\[url\=([$URLSearchString]*)\]([$URLSearchString]*)\[/url\])", '<a href="$1" target="_blank">$2</a>', $Text);
+
 
 	// Perform MAIL Search
 	$Text = preg_replace("(\[mail\]([$MAILSearchString]*)\[/mail\])", '<a href="mailto:$1">$1</a>', $Text);

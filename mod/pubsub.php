@@ -115,6 +115,10 @@ function pubsub_post(&$a) {
 
 	consume_feed($xml,$importer,$contact,$feedhub,1);
 
+	// do it a second time so that any children find their parents.
+
+	consume_feed($xml,$importer,$contact,$feedhub,1);
+
 	hub_post_return();
 
 }

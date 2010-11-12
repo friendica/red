@@ -546,9 +546,41 @@ function item_store($arr) {
 	$arr['object']        = ((x($arr,'object'))        ? trim($arr['object'])                : '');
 	$arr['target-type']   = ((x($arr,'target-type'))   ? notags(trim($arr['target-type']))   : '');
 	$arr['target']        = ((x($arr,'target'))        ? trim($arr['target'])                : '');
+	$arr['allow_cid']     = ((x($arr,'allow_cid'))     ? trim($arr['allow_cid'])             : '');
+	$arr['allow_gid']     = ((x($arr,'allow_gid'))     ? trim($arr['allow_gid'])             : '');
+	$arr['deny_cid']      = ((x($arr,'deny_cid'))      ? trim($arr['deny_cid'])              : '');
+	$arr['deny_gid']      = ((x($arr,'deny_gid'))      ? trim($arr['deny_gid'])              : '');
 
-	$parent_id = 0;
-	$parent_missing = false;
+
+
+	if($arr['parent-uri'] === $arr['uri']) {
+		$parent_id = 0;
+		$allow_cid = $arr['allow_cid'];
+		$allow_gid = $arr['allow_gid'];
+		$deny_cid  = $arr['deny_cid'];
+		$deny_gid  = $arr['deny_gid'];
+	}
+	else { 
+
+		// find the parent and snarf the item id and ACL's
+
+		$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+			dbesc($arr['parent-uri']),
+			intval($arr['uid'])
+		);
+
+		if(count($r)) {
+			$parent_id = $r[0]['id'];
+			$allow_cid = $r[0]['allow_cid'];
+			$allow_gid = $r[0]['allow_gid'];
+			$deny_cid  = $r[0]['deny_cid'];
+			$deny_gid  = $r[0]['deny_gid'];
+		}
+		else {
+			logger('item_store: item parent was not found - ignoring item');
+			return 0;
+		}
+	}
 
 	dbesc_array($arr);
 
@@ -560,23 +592,7 @@ function item_store($arr) {
 			. implode("', '", array_values($arr)) 
 			. "')" );
 
-	// find the parent and snarf the item id and ACL's
-
-	$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
-		dbesc($arr['parent-uri']),
-		intval($arr['uid'])
-	);
-
-	if(count($r)) {
-		$parent_id = $r[0]['id'];
-		$allow_cid = $r[0]['allow_cid'];
-		$allow_gid = $r[0]['allow_gid'];
-		$deny_cid  = $r[0]['deny_cid'];
-		$deny_gid  = $r[0]['deny_gid'];
-	}
-	else {
-		$parent_missing = true;
-	}
+	// find the item we just created
 
 	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 		$arr['uri'],           // already dbesc'd
@@ -586,23 +602,15 @@ function item_store($arr) {
 		$current_post = $r[0]['id'];
 		logger('item_store: created item ' . $current_post);
 	}
-	else
-		return 0;
-
-	if($parent_missing) {
-
-		logger('item_store: item parent was not found - ignoring item');
-
-		// perhaps the parent was deleted, but in any case, this thread is dead
-		// and unfortunately our brand new item now has to be destroyed
-
-		q("DELETE FROM `item` WHERE `id` = %d LIMIT 1",
-			intval($current_post)
-		);
+	else {
+		logger('item_store: could not locate created item');
 		return 0;
 	}
 
-	// Set parent id - all of the parent's ACL's are also inherited by this post
+	if($arr['parent-uri'] === $arr['uri'])
+		$parent_id = $current_post;
+ 
+	// Set parent id - and also make sure to inherit the parent's ACL's.
 
 	$r = q("UPDATE `item` SET `parent` = %d, `allow_cid` = '%s', `allow_gid` = '%s',
 		`deny_cid` = '%s', `deny_gid` = '%s' WHERE `id` = %d LIMIT 1",
