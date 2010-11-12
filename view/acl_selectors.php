@@ -48,7 +48,6 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 	else 
 		$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" >\r\n";
 
-
 	$r = q("SELECT `id`, `name`, `url`, `network` FROM `contact` 
 		WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 
 		$sql_extra
@@ -62,9 +61,9 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 				$selected = " selected=\"selected\" ";
 			else
 				$selected = '';
-//			if($rr['network'] === 'stat')
-//				$disabled = ' disabled="true" ' ;
-//			else
+			if(($privmail) && ($rr['network'] === 'stat'))
+				$disabled = ' disabled="true" ' ;
+			else
 				$disabled = '';
 			$o .= "<option value=\"{$rr['id']}\" $selected  $disabled title=\"{$rr['url']}\" >{$rr['name']}</option>\r\n";
 		}
