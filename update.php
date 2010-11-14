@@ -134,3 +134,8 @@ function update_1014() {
 function update_1015() {
 	q("ALTER TABLE `item` CHANGE `body` `body` mediumtext NOT NULL");
 }
+
+function update_1016() {
+	q("ALTER TABLE `user` ADD `openid` CHAR( 255 ) NOT NULL AFTER `email` ");
+}
+

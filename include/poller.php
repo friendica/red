@@ -83,7 +83,7 @@
 
 		$importer = $r[0];
 
-		logger("poller: IMPORTER: {$importer['name']}");
+		logger("poller: poll: IMPORTER: {$importer['name']}, CONTACT: {$contact['name']}");
 
 		$last_update = (($contact['last-update'] === '0000-00-00 00:00:00') 
 			? datetime_convert('UTC','UTC','now - 30 days', ATOM_TIME)
@@ -105,7 +105,7 @@
 	
 			$xml = fetch_url($url);
 
-			logger('poller: handshake with url ' . $url . ' returns xml: ' . $xml);
+			logger('poller: handshake with url ' . $url . ' returns xml: ' . $xml, LOGGER_DATA);
 
 			if(! $xml) {
 				logger("poller: $url appears to be dead - marking for death ");

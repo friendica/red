@@ -351,6 +351,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `password` char(255) NOT NULL,
   `nickname` char(255) NOT NULL,
   `email` char(255) NOT NULL,
+  `openid` char(255) NOT NULL,
   `timezone` char(128) NOT NULL,
   `default-location` char(255) NOT NULL,
   `allow_location` tinyint(1) NOT NULL DEFAULT '0',

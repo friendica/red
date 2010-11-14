@@ -2,7 +2,7 @@
 
 set_time_limit(0);
 
-define ( 'BUILD_ID',               1016   );
+define ( 'BUILD_ID',               1017   );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.0'  );
 
 define ( 'EOL',                    "<br />\r\n"     );
@@ -145,7 +145,7 @@ class App {
 
 		set_include_path("include/$this->hostname" . PATH_SEPARATOR . 'include' . PATH_SEPARATOR . '.' );
 
-		if((x($_SERVER,'QUERY_STRING')) && substr($_SERVER['QUERY_STRING'],0,2) == "q=")
+		if((x($_SERVER,'QUERY_STRING')) && substr($_SERVER['QUERY_STRING'],0,2) === "q=")
 			$_SERVER['QUERY_STRING'] = substr($_SERVER['QUERY_STRING'],2);
 		if(x($_GET,'q'))
 			$this->cmd = trim($_GET['q'],'/');
