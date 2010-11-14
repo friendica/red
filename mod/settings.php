@@ -86,8 +86,8 @@ function settings_post(&$a) {
 
 	if($email != $a->user['email']) {
 		$email_changed = true;
-        	if(!eregi('[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\.[A-Za-z]{2,6}',$email))
-                	$err .= t(' Not valid email.');
+        if(! valid_email($email))
+			$err .= t(' Not valid email.');
 	}
 
 	if(strlen($err)) {

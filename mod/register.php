@@ -46,7 +46,7 @@ function register_post(&$a) {
 
 	// TODO fix some of these regex's for int'l/utf-8.
 
-	if(!eregi('[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\.[A-Za-z]{2,6}',$email))
+	if(! valid_email($email))
 		$err .= t(' Not a valid email address.');
 	if(strlen($username) > 48)
 		$err .= t(' Please use a shorter name.');
@@ -55,19 +55,22 @@ function register_post(&$a) {
 
 	// I don't really like having this rule, but it cuts down
 	// on the number of auto-registrations by Russian spammers
+	
+	$no_utf = get_config('system','no_utf');
 
-	if(! preg_match("/^[a-zA-Z]* [a-zA-Z]*$/",$username))
+	$pat = (($no_utf) ? '/^[a-zA-Z]* [a-zA-Z]*$/' : '/^\p{L}* \p{L}*$/u' ); 
+
+	$loose_reg = get_config('system','no_regfullname');
+
+	if((! $loose_reg) && (! preg_match($pat,$username)))
 		$err .= t(' That doesn\'t appear to be your full name.');
-
-	if(!eregi('[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\.[A-Za-z]{2,6}',$email))
-                	$err .= t(' Not valid email.');
 
 	if(! allowed_email($email))
 			$err .= t(' Your email domain is not among those allowed on this site.');
 
 	$nickname = strtolower($nickname);
 	if(! preg_match("/^[a-z][a-z0-9\-\_]*$/",$nickname))
-		$err .= t(' Nickname <strong>must</strong> start with a letter and contain only letters, numbers, dashes, or underscore.') ;
+		$err .= t(' Your "nickname" can only contain "a-z", "0-9", "-", and "_", and must also begin with a letter.');
 	$r = q("SELECT `uid` FROM `user`
                	WHERE `nickname` = '%s' LIMIT 1",
                	dbesc($nickname)

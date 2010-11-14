@@ -736,7 +736,7 @@ function hex2bin($s) {
 if(! function_exists('paginate')) {
 function paginate(&$a) {
 	$o = '';
-	$stripped = ereg_replace("(&page=[0-9]*)","",$_SERVER['QUERY_STRING']);
+	$stripped = preg_replace('/(&page=[0-9]*)/','',$_SERVER['QUERY_STRING']);
 	$stripped = str_replace('q=','',$stripped);
 	$stripped = trim($stripped,'/');
 	$url = $a->get_baseurl() . '/' . $stripped;
@@ -1442,5 +1442,12 @@ function search($s) {
 	$o .= '<input type="submit" name="submit" id="search-submit" value="' . t('Search') . '" />'; 
 	$o .= '</form></div>';
 	return $o;
+}}
+
+if(! function_exists('valid_email')) {
+function valid_email($x){
+	if(preg_match('/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$/',$x))
+		return true;
+	return false;
 }}
 

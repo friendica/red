@@ -17,12 +17,13 @@ function invite_post(&$a) {
 
 		$recip = trim($recip);
 
-		if(!eregi('[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\.[A-Za-z]{2,6}', $recip)) {
-	                notice(  $recip . t(' : ') . t('Not a valid email address.') . EOL);
+		if(! valid_email($recip)) {
+			notice(  $recip . t(' : ') . t('Not a valid email address.') . EOL);
 			continue;
 		}
 
-                $res = mail($recip, t('Please join my network on ') . $a->config['sitename'], $message, "From: " . $a->user['email']);
+		$res = mail($recip, t('Please join my network on ') . $a->config['sitename'], 
+			$message, "From: " . $a->user['email']);
 		if($res) {
 			$total ++;
 		}

@@ -7,8 +7,7 @@ local .htaccess file
 
 	- PHP > 5.1. The later the better. You'll need 5.3 for full openssl 
 encryption support
-
-	- PHP *command line* access with register_argc_argv set to true in the 
+		- PHP *command line* access with register_argc_argv set to true in the 
 php.ini file
 
 	- Mysql 5.x
