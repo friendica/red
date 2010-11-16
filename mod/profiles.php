@@ -280,7 +280,7 @@ function profiles_content(&$a) {
 		require_once('mod/profile.php');
 		profile_load($a,$a->user['nickname'],$r[0]['id']);
 
-		require_once('view/profile_selectors.php');
+		require_once('include/profile_selectors.php');
 
 		$tpl = load_view_file('view/profed_head.tpl');
 

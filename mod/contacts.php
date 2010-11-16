@@ -166,7 +166,7 @@ function contacts_content(&$a) {
 		}
 
 
-		require_once('view/contact_selectors.php');
+		require_once('include/contact_selectors.php');
 
 		$tpl = load_view_file("view/contact_edit.tpl");
 
