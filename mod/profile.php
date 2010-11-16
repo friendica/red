@@ -159,7 +159,7 @@ function profile_content(&$a, $update = 0) {
 				'$geotag'  => $geotag
 			));
 
-			require_once('view/acl_selectors.php');
+			require_once('include/acl_selectors.php');
 
 			$tpl = load_view_file("view/jot.tpl");
 			if(is_array($a->user) && ((strlen($a->user['allow_cid'])) || (strlen($a->user['allow_gid'])) || (strlen($a->user['deny_cid'])) || (strlen($a->user['deny_gid']))))

@@ -1,6 +1,6 @@
 <?php
 
-require_once('view/acl_selectors.php');
+require_once('include/acl_selectors.php');
 
 function message_init(&$a) {
 

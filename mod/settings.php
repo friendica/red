@@ -163,7 +163,7 @@ function settings_content(&$a) {
 		return;
 	}
 
-	require_once('view/acl_selectors.php');
+	require_once('include/acl_selectors.php');
 
 	$p = q("SELECT * FROM `profile` WHERE `is-default` = 1 AND `uid` = %d LIMIT 1",
 		intval($_SESSION['uid'])

@@ -1,8 +1,8 @@
 <?php
 
-require_once('Photo.php');
+require_once('include/Photo.php');
 require_once('include/items.php');
-require_once('view/acl_selectors.php');
+require_once('include/acl_selectors.php');
 require_once('include/bbcode.php');
 
 function photos_init(&$a) {

@@ -41,7 +41,7 @@ function network_content(&$a, $update = 0) {
 			'$geotag' => $geotag
 		));
 
-		require_once('view/acl_selectors.php');
+		require_once('include/acl_selectors.php');
 
 		$tpl = load_view_file("view/jot.tpl");
 		

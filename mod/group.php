@@ -113,7 +113,7 @@ function group_content(&$a) {
 
 
 	if(($a->argc == 2) && (intval($a->argv[1]))) {
-		require_once('view/acl_selectors.php');
+		require_once('include/acl_selectors.php');
 		$r = q("SELECT * FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($a->argv[1]),
 			intval(local_user())
