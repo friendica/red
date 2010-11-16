@@ -317,7 +317,7 @@ function register_content(&$a) {
 		'$registertext' =>((x($a->config,'register_text'))
 			? '<div class="error-message">' . $a->config['register_text'] . '</div>'
 			: "" ),
-		'$namelabel' => t('Your Full Name (e.g. Joe Smith): '),
+		'$namelabel' => t('Your Full Name ' . "\x28" . 'e.g. Joe Smith' . "\x29" . ': '),
 		'$addrlabel' => t('Your Email Address: '),
 		'$nickdesc'  => t('Choose a profile nickname. This must begin with a text character. Your global profile locator will then be \'<strong>nickname@$sitename</strong>\'.'),
 		'$nicklabel' => t('Choose a nickname: '),
