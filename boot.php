@@ -1295,7 +1295,9 @@ function load_view_file($s) {
 	$b = basename($s);
 	$d = dirname($s);
 	$lang = get_config('system','language');
-	if($lang && file_exists("$d/$lang/$b"))
+	if($lang === false)
+		$lang = 'en';
+	if(file_exists("$d/$lang/$b"))
 		return file_get_contents("$d/$lang/$b");
 	return file_get_contents($s);
 }}
