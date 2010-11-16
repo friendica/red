@@ -54,7 +54,7 @@ function install_post(&$a) {
 		notice( t('Database import succeeded.') . EOL 
 			. t('IMPORTANT: You will need to [manually] setup a scheduled task for the poller.') . EOL 
 			. t('Please see the file INSTALL.') . EOL );
-		goaway($a->get_baseurl());
+		goaway($a->get_baseurl() . '/register' );
 	}
 	else {
 		$db = null; // start fresh
