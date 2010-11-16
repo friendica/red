@@ -123,14 +123,18 @@ $a->page['htmlhead'] = replace_macros($a->page['htmlhead'], array(
 $page    = $a->page;
 $profile = $a->profile;
 $lang    = get_config('system','language');
+if($lang === false)
+	$lang = 'en';
 
 header("Content-type: text/html; charset=utf-8");
 
-$template = "view/" . (($lang) ? $lang . "/" : "") 
-	. ((x($a->page,'template')) ? $a->page['template'] : 'default' ) 
-	. ".php";
+$template = 'view/' . $lang . '/' 
+	. ((x($a->page,'template')) ? $a->page['template'] : 'default' ) . '.php';
 
-require_once($template);
+if(file_exists($template))
+	require_once($template);
+else
+	require_once(str_replace($lang . '/', '', $template));
 
 session_write_close();
 exit;

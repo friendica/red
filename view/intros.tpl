@@ -1,7 +1,7 @@
 
 <div class="intro-wrapper" id="intro-$contact_id" >
 
-<p class="intro-desc">Notification type: $notify_type</p>
+<p class="intro-desc">$str_notifytype $notify_type</p>
 <div class="intro-fullname" id="intro-fullname-$contact_id" >$fullname</div>
 <a class="intro-url-link" id="intro-url-link-$contact_id" href="$url" ><img id="photo-$contact_id" class="intro-photo" src="$photo" width="175" height=175" name="$fullname" alt="fullname" /></a>
 <div class="intro-knowyou">$knowyou</div>
@@ -20,7 +20,7 @@
 
 $dfrn_text
 
-<input class="intro-submit-approve" type="submit" name="submit" value="Approve" />
+<input class="intro-submit-approve" type="submit" name="submit" value="$approve" />
 </form>
 </div>
 <div class="intro-end"></div>

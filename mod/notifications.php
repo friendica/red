@@ -104,6 +104,7 @@ function notifications_content(&$a) {
 
 
 			$o .= replace_macros($tpl,array(
+				'$str_notifytype' => t('Notification type: '),
 				'$notify_type' => (($rr['network'] === 'dfrn') ? t('Friend/Connect Request') : t('New Follower')),
 				'$dfrn_text' => $dfrn_text,	
 				'$dfrn_id' => $rr['issued-id'],
@@ -114,6 +115,7 @@ function notifications_content(&$a) {
 				'$fullname' => $rr['name'],
 				'$url' => $rr['url'],
 				'$knowyou' => $knowyou,
+				'$approve' => t('Approve'),
 				'$note' => $rr['note']
 			));
 		}
