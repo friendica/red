@@ -117,13 +117,14 @@ function check_htconfig() {
 		$o .= t('If not, you may be required to perform a manual installation. Please see the file "INSTALL" for instructions.'); 
 	}
 
-return $o;
+	return $o;
 }
 
 	
 function manual_config(&$a) {
+	$data = htmlentities($a->data);
 	$o = t('The database configuration file ".htconfig.php" could not be written. Please use the enclosed text to create a configuration file in your web server root.');
-	$o .= "<textarea rows=\"24\" cols=\"80\" >{$a->data}</textarea>";
+	$o .= "<textarea rows=\"24\" cols=\"80\" >$data</textarea>";
 	return $o;
 }
 
