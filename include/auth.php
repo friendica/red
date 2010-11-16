@@ -28,6 +28,8 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 		);
 
 		if(! count($r)) {
+			unset($_SESSION['authenticated']);
+			unset($_SESSION['uid']);
 			goaway($a->get_baseurl());
 		}
 
