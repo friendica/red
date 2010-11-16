@@ -1160,13 +1160,25 @@ function validate_url(&$url) {
 		$url = 'http://' . $url;
 	$h = parse_url($url);
 
-	if(! $h) {
-		return false;
+	if(($h) && (checkdnsrr($h['host'], 'ANY'))) {
+		return true;
 	}
-	if(! checkdnsrr($h['host'], 'ANY')) {
+	return false;
+}}
+
+// checks that email is an actual resolvable internet address
+
+if(! function_exists('validate_email')) {
+function validate_email($addr) {
+
+	if(! strpos($addr,'@'))
 		return false;
+	$h = substr($addr,strpos($addr,'@') + 1);
+
+	if(($h) && (checkdnsrr($h, 'ANY'))) {
+		return true;
 	}
-	return true;
+	return false;
 }}
 
 // Check $url against our list of allowed sites,

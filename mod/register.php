@@ -65,9 +65,8 @@ function register_post(&$a) {
 	if(! allowed_email($email))
 			$err .= t('Your email domain is not among those allowed on this site.') . EOL;
 
-	if(! valid_email($email))
+	if((! valid_email($email)) || (! validate_email($email)))
 		$err .= t('Not a valid email address.') . EOL;
-
 
 	$nickname = $_POST['nickname'] = strtolower($nickname);
 
