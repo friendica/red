@@ -44,14 +44,11 @@ function register_post(&$a) {
 
 	$err = '';
 
-	// TODO fix some of these regex's for int'l/utf-8.
 
-	if(! valid_email($email))
-		$err .= t(' Not a valid email address.');
 	if(strlen($username) > 48)
-		$err .= t(' Please use a shorter name.');
+		$err .= t('Please use a shorter name.') . EOL;
 	if(strlen($username) < 3)
-		$err .= t(' Name too short.');
+		$err .= t('Name too short.') . EOL;
 
 	// I don't really like having this rule, but it cuts down
 	// on the number of auto-registrations by Russian spammers
@@ -63,23 +60,28 @@ function register_post(&$a) {
 	$loose_reg = get_config('system','no_regfullname');
 
 	if((! $loose_reg) && (! preg_match($pat,$username)))
-		$err .= t(' That doesn\'t appear to be your full name.');
+		$err .= t('That doesn\'t appear to be your full name.') . EOL;
 
 	if(! allowed_email($email))
-			$err .= t(' Your email domain is not among those allowed on this site.');
+			$err .= t('Your email domain is not among those allowed on this site.') . EOL;
 
-	$nickname = strtolower($nickname);
+	if(! valid_email($email))
+		$err .= t('Not a valid email address.') . EOL;
+
+
+	$nickname = $_POST['nickname'] = strtolower($nickname);
+
 	if(! preg_match("/^[a-z][a-z0-9\-\_]*$/",$nickname))
-		$err .= t(' Your "nickname" can only contain "a-z", "0-9", "-", and "_", and must also begin with a letter.');
+		$err .= t('Your "nickname" can only contain "a-z", "0-9", "-", and "_", and must also begin with a letter.') . EOL;
 	$r = q("SELECT `uid` FROM `user`
                	WHERE `nickname` = '%s' LIMIT 1",
                	dbesc($nickname)
 	);
 	if(count($r))
-		$err .= t(' Nickname is already registered. Please choose another.');
+		$err .= t('Nickname is already registered. Please choose another.') . EOL;
 
 	if(strlen($err)) {
-		notice( $err . EOL );
+		notice( $err );
 		return;
 	}
 
@@ -306,12 +308,25 @@ function register_content(&$a) {
 		return;
 	}
 
+	$username = ((x($_POST,'username')) ? $_POST['username'] : ((x($_GET,'username')) ? $_GET['username'] : ''));
+	$email    = ((x($_POST,'email'))    ? $_POST['email']    : ((x($_GET,'email'))    ? $_GET['email']    : ''));
+	$nickname = ((x($_POST,'nickname')) ? $_POST['nickname'] : ((x($_GET,'nickname')) ? $_GET['nickname'] : ''));
+
 	$o = load_view_file("view/register.tpl");
 	$o = replace_macros($o, array(
+		'$regtitle'  => t('Registration'),
 		'$registertext' =>((x($a->config,'register_text'))
 			? '<div class="error-message">' . $a->config['register_text'] . '</div>'
 			: "" ),
-		'$sitename' => $a->get_hostname()
+		'$namelabel' => t('Your Full Name (e.g. Joe Smith): '),
+		'$addrlabel' => t('Your Email Address: '),
+		'$nickdesc'  => t('Choose a profile nickname. This must begin with a text character. Your global profile locator will then be \'<strong>nickname@$sitename</strong>\'.'),
+		'$nicklabel' => t('Choose a nickname: '),
+		'$regbutt'   => t('Register'),
+		'$username'  => $username,
+		'$email'     => $email,
+		'$nickname'  => $nickname,
+		'$sitename'  => $a->get_hostname()
 	));
 	return $o;
 
