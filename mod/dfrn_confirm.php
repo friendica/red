@@ -419,8 +419,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		}
 
 		$r = q("SELECT * FROM `contact` WHERE `dfrn-id` = '%s' LIMIT 1",
-			dbesc($decrypted_dfrn_id),
-			intval($local_uid)
+			dbesc($decrypted_dfrn_id)
 		);
 		if(count($r)) {
 			$message = t('The ID provided by your system is a duplicate on our system. It should work if you try again.');

@@ -9,6 +9,7 @@ local .htaccess file
 encryption support
 		- PHP *command line* access with register_argc_argv set to true in the 
 php.ini file
+		- curl, gd, and openssl extensions
 
 	- Mysql 5.x
 
