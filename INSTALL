@@ -33,30 +33,32 @@ you might have trouble getting everything to work.]
 
 	NOTE: This has NOT been fully tested!
 	In this case, you cannot use the web installer. 
-	Skip step 3 and proceed to step 4 - especially steps 4a and 4b.
+	Skip step 4 and proceed to step 5 - especially steps 5a and 5b.
 
 	- Everything will work much better if you can dedicate a domain 
 	or subdomain so that you don't require an extra server path. 
 
-3. Visit your website with a web browser and follow the instructions. 
+3. Create an empty database and note the access details (hostname, username, password, database name).
 
-4. *If* the automated installation fails for any reason, check the following:
+4. Visit your website with a web browser and follow the instructions. 
 
-	4a. ".htconfig.php" exists 
+5. *If* the automated installation fails for any reason, check the following:
+
+	5a. ".htconfig.php" exists 
 		If not, edit htconfig.php and change system settings. Rename 
 to .htconfig.php
-	4b. Database is populated.
+	5b. Database is populated.
 		If not, import the contents of "database.sql" with phpmyadmin 
 or mysql command line
 
-5. At this point visit your website again, and register your personal account. 
+6. At this point visit your website again, and register your personal account. 
 Registration errors should all be recoverable automatically. 
 If you get any *critical* failure at this point, it generally indicates the
 database was not installed correctly. You might wish to move/rename 
 .htconfig.php to another name and empty (called 'dropping') the database 
 tables, so that you can start fresh.  
 
-6. Set up a cron job or scheduled task to run the poller once every 5-10 
+7. Set up a cron job or scheduled task to run the poller once every 5-10 
 minutes to pick up the recent "public" postings of your friends. Example:
 
 	cd /base/directory; /path/to/php include/poller.php
