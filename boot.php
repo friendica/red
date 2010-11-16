@@ -376,6 +376,11 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 	curl_setopt($ch, CURLOPT_HEADER, true);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 
+
+	$curl_time = intval(get_config('system','curl_timeout'));
+	if($curl_time)
+		curl_setopt($ch, CURLOPT_TIMEOUT, $curl_time);
+
 	// by default we will allow self-signed certs
 	// but you can override this
 
@@ -433,6 +438,10 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 	curl_setopt($ch, CURLOPT_POST,1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
+
+	$curl_time = intval(get_config('system','curl_timeout'));
+	if($curl_time)
+		curl_setopt($ch, CURLOPT_TIMEOUT, $curl_time);
 
 	if(is_array($headers))
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -1449,5 +1458,20 @@ function valid_email($x){
 	if(preg_match('/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$/',$x))
 		return true;
 	return false;
+}}
+
+
+if(! function_exists('gravatar_img')) {
+function gravatar_img($email) {
+	$size = 175;
+	$opt = 'identicon';   // psuedo-random geometric pattern if not found
+	$rating = 'pg';
+	$hash = md5(trim(strtolower($email)));
+	
+	$url = 'http://www.gravatar.com/avatar/' . $hash . '.jpg' 
+		. '?s=' . $size . '&d=' . $opt . '&r=' . $rating;
+
+	logger('gravatar: ' . $email . ' ' . $url);
+	return $url;
 }}
 

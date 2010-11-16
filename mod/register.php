@@ -187,6 +187,46 @@ function register_post(&$a) {
 
 	}
 
+	require_once('include/Photo.php');
+
+	$photo = gravatar_img($email);
+	$photo_failure = false;
+
+	$filename = basename($photo);
+	$img_str = fetch_url($photo,true);
+	$img = new Photo($img_str);
+	if($img->is_valid()) {
+
+		$img->scaleImageSquare(175);
+					
+		$hash = photo_new_resource();
+
+		$r = $img->store($newuid, 0, $hash, $filename, t('Profile Photos'), 4 );
+
+		if($r === false)
+			$photo_failure = true;
+
+		$img->scaleImage(80);
+
+		$r = $img->store($newuid, 0, $hash, $filename, t('Profile Photos'), 5 );
+
+		if($r === false)
+			$photo_failure = true;
+
+		$img->scaleImage(48);
+
+		$r = $img->store($newuid, 0, $hash, $filename, t('Profile Photos'), 6 );
+
+		if($r === false)
+			$photo_failure = true;
+
+		if(! $photo_failure) {
+			q("UPDATE `photo` SET `profile` = 1 WHERE `resource-id` = '%s' ",
+				dbesc($hash)
+			);
+		}
+	}
+
 	if( $a->config['register_policy'] == REGISTER_OPEN ) {
 		$email_tpl = load_view_file("view/register_open_eml.tpl");
 		$email_tpl = replace_macros($email_tpl, array(
