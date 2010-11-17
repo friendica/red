@@ -69,7 +69,16 @@ else {
 
 	if(x($_POST,'password'))
 		$encrypted = hash('whirlpool',trim($_POST['password']));
-
+	else {
+		if((x($_POST,'auth-params')) && $_POST['auth-params'] === 'login') {
+			require_once('library/openid.php');
+			$openid = new LightOpenID;
+			$openid->identity = trim($_POST['login-name']);
+			$a = get_app();
+			$openid->returnUrl = $a->get_baseurl() . '/openid'; 
+			goaway($openid->authUrl());	
+		}
+	}
 	if((x($_POST,'auth-params')) && $_POST['auth-params'] === 'login') {
 
 		// process login request

@@ -198,7 +198,14 @@ function contacts_content(&$a) {
 		}
 
 		$o .= replace_macros($tpl,array(
+			'$header' => t('Contact Editor'),
+			'$visit' => t('Visit $name's profile'),
+			'$blockunblock' => t('Block/Unblock contact'),
+			'$ignorecont' => t('Ignore contact'),
+			'$delete' => t('Delete contact'),
 			'$poll_interval' => contact_poll_interval($r[0]['priority']),
+			'$lastupdtext' => t('Last updated: '),
+			'$updpub' => t('Update public posts: '),
 			'$last_update' => (($r[0]['last-update'] == '0000-00-00 00:00:00') 
 				? t('Never') 
 				: datetime_convert('UTC',date_default_timezone_get(),$r[0]['last-update'],'D, j M Y, g:i A')),
@@ -235,6 +242,7 @@ function contacts_content(&$a) {
 
 	$tpl = load_view_file("view/contacts-top.tpl");
 	$o .= replace_macros($tpl,array(
+		'$header' => t('Contacts'),
 		'$hide_url' => ((strlen($sql_extra)) ? 'contacts/all' : 'contacts' ),
 		'$hide_text' => ((strlen($sql_extra)) ? t('Show Blocked Connections') : t('Hide Blocked Connections')),
 		'$search' => $search,
