@@ -199,7 +199,7 @@ function contacts_content(&$a) {
 
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Contact Editor'),
-			'$visit' => t('Visit $name's profile'),
+			'$visit' => t('Visit $name\'s profile'),
 			'$blockunblock' => t('Block/Unblock contact'),
 			'$ignorecont' => t('Ignore contact'),
 			'$delete' => t('Delete contact'),
