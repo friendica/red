@@ -124,6 +124,9 @@ function item_post(&$a) {
 			if(strpos($tag,'#') === 0) {
 				$basetag = substr($tag,1);
 				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?search=' . urlencode($basetag) . ']' . $basetag . '[/url]',$body);
+				if(strlen($str_tags))
+					$str_tags .= ',';
+				$str_tags .= '#[url=' . $a->get_baseurl() . '/search?search=' . urlencode($basetag) . ']' . $basetag . '[/url]';
 				continue;
 			}
 			if(strpos($tag,'@') === 0) {
@@ -168,9 +171,9 @@ function item_post(&$a) {
 				}
 				if($profile) {
 					$body = str_replace($name,'[url=' . $profile . ']' . $newname	. '[/url]', $body);
+					$profile = str_replace(',','%2c',$profile);
 					if(strlen($str_tags))
 						$str_tags .= ',';
-					$profile = str_replace(',','%2c',$profile);
 					$str_tags .= '@[url=' . $profile . ']' . $newname	. '[/url]';
 				}
 			}
