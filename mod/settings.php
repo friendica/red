@@ -48,29 +48,30 @@ function settings_post(&$a) {
 		}
 	}
 
-	$theme            = notags(trim($_POST['theme']));
-	$username         = notags(trim($_POST['username']));
-	$email            = notags(trim($_POST['email']));
-	$timezone         = notags(trim($_POST['timezone']));
-	$defloc           = notags(trim($_POST['defloc']));
+	$theme            = ((x($_POST,'theme'))      ? notags(trim($_POST['theme']))        : '');
+	$username         = ((x($_POST,'username'))   ? notags(trim($_POST['username']))     : '');
+	$email            = ((x($_POST,'email'))      ? notags(trim($_POST['email']))        : '');
+	$timezone         = ((x($_POST,'timezone'))   ? notags(trim($_POST['timezone']))     : '');
+	$defloc           = ((x($_POST,'defloc'))     ? notags(trim($_POST['defloc']))       : '');
+	$openid           = ((x($_POST,'openid_url')) ? notags(trim($_POST['openid_url']))   : '');
 
-	$allow_location   = (($_POST['allow_location'] == 1) ? 1: 0);
-	$publish          = (($_POST['profile_in_directory'] == 1) ? 1: 0);
-	$net_publish      = (($_POST['profile_in_netdirectory'] == 1) ? 1: 0);
-	$old_visibility   = ((intval($_POST['visibility']) == 1) ? 1 : 0);
-	$page_flags       = ((intval($_POST['page-flags'])) ? intval($_POST['page-flags']) : 0);
+	$allow_location   = (((x($_POST,'allow_location')) && (intval($_POST['allow_location']) == 1)) ? 1: 0);
+	$publish          = (((x($_POST,'profile_in_directory')) && (intval($_POST['profile_in_directory']) == 1)) ? 1: 0);
+	$net_publish      = (((x($_POST,'profile_in_netdirectory')) && (intval($_POST['profile_in_netdirectory']) == 1)) ? 1: 0);
+	$old_visibility   = (((x($_POST,'visibility')) && (intval($_POST['visibility']) == 1)) ? 1 : 0);
+	$page_flags       = (((x($_POST,'page-flags')) && (intval($_POST['page-flags']))) ? intval($_POST['page-flags']) : 0);
 
 	$notify = 0;
 
-	if($_POST['notify1'])
+	if(x($_POST,'notify1'))
 		$notify += intval($_POST['notify1']);
-	if($_POST['notify2'])
+	if(x($_POST,'notify2'))
 		$notify += intval($_POST['notify2']);
-	if($_POST['notify3'])
+	if(x($_POST,'notify3'))
 		$notify += intval($_POST['notify3']);
-	if($_POST['notify4'])
+	if(x($_POST,'notify4'))
 		$notify += intval($_POST['notify4']);
-	if($_POST['notify5'])
+	if(x($_POST,'notify5'))
 		$notify += intval($_POST['notify5']);
 
 	$email_changed = false;
@@ -105,9 +106,10 @@ function settings_post(&$a) {
 	$str_group_deny    = perms2str($_POST['group_deny']);
 	$str_contact_deny  = perms2str($_POST['contact_deny']);
 
-	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `theme` = '%s'  WHERE `uid` = %d LIMIT 1",
+	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `theme` = '%s'  WHERE `uid` = %d LIMIT 1",
 			dbesc($username),
 			dbesc($email),
+			dbesc($openid),
 			dbesc($timezone),
 			dbesc($str_contact_allow),
 			dbesc($str_group_allow),
@@ -166,7 +168,7 @@ function settings_content(&$a) {
 	require_once('include/acl_selectors.php');
 
 	$p = q("SELECT * FROM `profile` WHERE `is-default` = 1 AND `uid` = %d LIMIT 1",
-		intval($_SESSION['uid'])
+		intval(local_user())
 	);
 	if(count($p))
 		$profile = $p[0];
@@ -177,6 +179,7 @@ function settings_content(&$a) {
 	$timezone = $a->user['timezone'];
 	$notify   = $a->user['notify-flags'];
 	$defloc   = $a->user['default-location'];
+	$openid   = $a->user['openid'];
 
 	if(! strlen($a->user['timezone']))
 		$timezone = date_default_timezone_get();
@@ -246,7 +249,7 @@ function settings_content(&$a) {
 
 	$nickname_block = replace_macros($nickname_block,array(
 		'$nickname' => $nickname,
-		'$uid' => $_SESSION['uid'],
+		'$uid' => local_user(),
 		'$subdir' => $nickname_subdir,
 		'$basepath' => $a->get_hostname(),
 		'$baseurl' => $a->get_baseurl()));	
@@ -257,8 +260,9 @@ function settings_content(&$a) {
 
 	$o .= replace_macros($stpl,array(
 		'$baseurl' => $a->get_baseurl(),
-		'$uid' => $_SESSION['uid'],
+		'$uid' => local_user(),
 		'$username' => $username,
+		'$openid' => $openid,
 		'$email' => $email,
 		'$nickname_block' => $nickname_block,
 		'$timezone' => $timezone,

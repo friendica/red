@@ -40,6 +40,14 @@ input:hover {
 /*	border: 1px solid #F5F6FB; */
 	cursor: pointer;
 }
+
+.openid {
+   background-color: #ECECEC !important;
+   background: url(login-bg.gif) no-repeat;
+   background-position: 0 50%;
+   padding-left: 18px;
+}
+
 option {
 	background-color: #ECD6D2;
 }
@@ -448,6 +456,7 @@ input#dfrn-url {
 #settings-theme-end,
 #settings-password-end,
 #settings-confirm-end,
+#settings-openid-end,
 #notify1-end,
 #notify2-end,
 #notify3-end,
@@ -466,6 +475,7 @@ input#dfrn-url {
 #settings-theme-label,
 #settings-password-label,
 #settings-confirm-label,
+#settings-openid-label,
 #settings-label-notify1,
 #settings-label-notify2,
 #settings-label-notify3,
@@ -484,6 +494,7 @@ input#dfrn-url {
 #theme-select,
 #settings-password,
 #settings-confirm,
+#settings-openid,
 #notify1,
 #notify2,
 #notify3,
@@ -501,6 +512,7 @@ input#dfrn-url {
 #settings-defloc {
 	margin-top: 20px;
 }
+
 
 #theme-select {
 	margin-top: 20px;

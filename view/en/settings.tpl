@@ -117,15 +117,21 @@ $profile_in_net_dir
 Leave password fields blank unless changing
 </p>
 <label id="settings-password-label" for="settings-password" >New Password: </label>
-<input type="password" id="settings-password" name="npassword" ></input>
+<input type="password" id="settings-password" name="npassword" />
 </div>
 <div id="settings-password-end" ></div>
 
 <div id="settings-confirm-wrapper" >
 <label id="settings-confirm-label" for="settings-confirm" >Confirm: </label>
-<input type="password" id="settings-confirm" name="confirm" ></input>
+<input type="password" id="settings-confirm" name="confirm" />
 </div>
 <div id="settings-confirm-end" ></div>
+
+<div id="settings-openid-wrapper" >
+<label id="settings-openid-label" for="settings-openid" >(optional) OpenID: </label>
+<input type="text" id="settings-openid" class="openid" name="openid_url" value="$openid" />
+</div>
+<div id="settings-openid-end" ></div>
 
 
 <div id="settings-submit-wrapper" >
