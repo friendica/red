@@ -122,6 +122,8 @@ function check_php(&$phpath) {
 }
 
 function check_funcs() {
+	if((function_exists('apache_get_modules')) && (! in_array('mod_rewrite',apache_get_modules())))
+		notice( t('Error: Apache webserver mod-rewrite module is required but not installed.') . EOL);
 	if(! function_exists('curl_init')) 
 		notice( t('Error: libCURL PHP module required but not installed.') . EOL);
 	if(! function_exists('imagecreatefromjpeg')) 
@@ -130,6 +132,8 @@ function check_funcs() {
 		notice( t('Error: openssl PHP module required but not installed.') . EOL);	
 	if(! function_exists('mysqli_connect')) 
 		notice( t('Error: mysqli PHP module required but not installed.') . EOL);	
+	if((x($_SESSION,'sysmsg')) && strlen($_SESSION['sysmsg']))
+		notice( t('Please see the file "INSTALL".') . EOL);
 }
 
 
