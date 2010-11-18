@@ -17,11 +17,21 @@ function install_post(&$a) {
 	$db = new dba($dbhost, $dbuser, $dbpass, $dbdata, $true);
 
 	if(mysqli_connect_errno()) {
-		notice( t('Could not connect to database.') . EOL);
-		return;
+		$db = new dba($dbhost, $dbuser, $dbpass, '', true);
+		if(! mysql_connect_errno()) {
+			$r = q("CREATE DATABASE '%s'",
+					dbesc($dbdata)
+			);
+			if($r) 
+				$db = new dba($dbhost, $dbuser, $dbpass, $dbdata, $true);
+		}
+		if(mysqli_connect_errno()) {
+			notice( t('Could not create/connect to database.') . EOL);
+			return;
+		}
 	}
-	else
-		notice( t('Connected to database.') . EOL);
+
+	notice( t('Connected to database.') . EOL);
 
 	$tpl = load_view_file('view/htconfig.tpl');
 	$txt = replace_macros($tpl,array(
@@ -67,7 +77,12 @@ function install_post(&$a) {
 
 function install_content(&$a) {
 
+	$o = '';
+
 	notice( t('Welcome to Friendika.') . EOL);
+
+
+	check_funcs();
 
 	$o .= check_htconfig();
 	if(strlen($o))
@@ -105,6 +120,18 @@ function check_php(&$phpath) {
 	}
 	return $o;
 }
+
+function check_funcs() {
+	if(! function_exists('curl_init')) 
+		notice( t('Error: libCURL PHP module required but not installed.') . EOL);
+	if(! function_exists('imagecreatefromjpeg')) 
+		notice( t('Error: GD graphics PHP module with JPEG support required but not installed.') . EOL);
+	if(! function_exists('openssl_public_encrypt')) 
+		notice( t('Error: openssl PHP module required but not installed.') . EOL);	
+	if(! function_exists('mysqli_connect')) 
+		notice( t('Error: mysqli PHP module required but not installed.') . EOL);	
+}
+
 
 function check_htconfig() {
 

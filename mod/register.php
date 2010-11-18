@@ -205,9 +205,11 @@ function register_post(&$a) {
 
 	}
 
-	require_once('include/Photo.php');
-    $nograv = get_config('system','no_gravatar');
-	if(! $nograv) {
+	$use_gravatar = ((get_config('system','no_gravatar')) ? false : true);
+	if($use_gravatar) {
+
+		require_once('include/Photo.php');
+
 		$photo = gravatar_img($email);
 		$photo_failure = false;
 
@@ -246,6 +248,7 @@ function register_post(&$a) {
 			}
 		}
 	}
+
 	if( $a->config['register_policy'] == REGISTER_OPEN ) {
 		$email_tpl = load_view_file("view/register_open_eml.tpl");
 		$email_tpl = replace_macros($email_tpl, array(
@@ -302,7 +305,6 @@ function register_post(&$a) {
 		}
 
 	}
-	
 	return;
 }}
 
