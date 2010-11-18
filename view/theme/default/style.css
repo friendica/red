@@ -507,7 +507,6 @@ input#dfrn-url {
 #theme-select,
 #settings-password,
 #settings-confirm,
-#settings-openid,
 #notify1,
 #notify2,
 #notify3,
@@ -516,6 +515,14 @@ input#dfrn-url {
 	float: left;
 	margin-bottom: 20px;
 }
+
+#settings-openid {
+	float: left;
+	margin-bottom: 20px;
+	width: 127px;
+}
+	
+
 
 #settings-theme-label,
 #settings-defloc-label {
