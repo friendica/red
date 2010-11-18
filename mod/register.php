@@ -36,8 +36,24 @@ function register_post(&$a) {
 		$nickname = notags(trim($_POST['nickname']));
 	if(x($_POST,'email'))
 		$email = notags(trim($_POST['email']));
+	if(x($_POST,'openid_url'))
+		$openid_url = notags(trim($_POST['openid_url']));
+
 
 	if((! x($username)) || (! x($email)) || (! x($nickname))) {
+		if($openid_url) {
+			$_SESSION['register'] = 1;
+			$_SESSION['openid'] = $openid_url;
+			require_once('library/openid.php');
+			$openid = new LightOpenID;
+			$openid->identity = $openid_url;
+			$openid->returnUrl = $a->get_baseurl() . '/openid'; 
+			$openid->required = array('namePerson/friendly', 'contact/email', 'namePerson');
+			$openid->optional = array('namePerson/first');
+			goaway($openid->authUrl());
+			// NOTREACHED	
+		}
+
 		notice( t('Please enter the required information.') . EOL );
 		return;
 	}
@@ -118,12 +134,13 @@ function register_post(&$a) {
 	$spkey = openssl_pkey_get_details($sres);
 	$spubkey = $spkey["key"];
 
-	$r = q("INSERT INTO `user` ( `username`, `password`, `email`, `nickname`,
+	$r = q("INSERT INTO `user` ( `username`, `password`, `email`, `openid`, `nickname`,
 		`pubkey`, `prvkey`, `spubkey`, `sprvkey`, `verified`, `blocked` )
-		VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d )",
+		VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d )",
 		dbesc($username),
 		dbesc($new_password_encoded),
 		dbesc($email),
+		dbesc($openid_url),
 		dbesc($nickname),
 		dbesc($pubkey),
 		dbesc($prvkey),
@@ -307,9 +324,10 @@ function register_content(&$a) {
 		return;
 	}
 
-	$username = ((x($_POST,'username')) ? $_POST['username'] : ((x($_GET,'username')) ? $_GET['username'] : ''));
-	$email    = ((x($_POST,'email'))    ? $_POST['email']    : ((x($_GET,'email'))    ? $_GET['email']    : ''));
-	$nickname = ((x($_POST,'nickname')) ? $_POST['nickname'] : ((x($_GET,'nickname')) ? $_GET['nickname'] : ''));
+	$username     = ((x($_POST,'username'))     ? $_POST['username']     : ((x($_GET,'username'))     ? $_GET['username'] : ''));
+	$email        = ((x($_POST,'email'))        ? $_POST['email']        : ((x($_GET,'email'))        ? $_GET['email']    : ''));
+	$openid_url   = ((x($_POST,'openid_url'))   ? $_POST['openid_url']   : ((x($_GET,'openid_url'))   ? $_GET['openid_url']   : ''));
+	$nickname     = ((x($_POST,'nickname'))     ? $_POST['nickname']     : ((x($_GET,'nickname'))     ? $_GET['nickname'] : ''));
 
 	$o = load_view_file("view/register.tpl");
 	$o = replace_macros($o, array(
@@ -317,6 +335,10 @@ function register_content(&$a) {
 		'$registertext' =>((x($a->config,'register_text'))
 			? '<div class="error-message">' . $a->config['register_text'] . '</div>'
 			: "" ),
+		'$fillwith'  => t('You may ' . "\x28" . 'optionally' . "\x29" . ' fill in this form via OpenID by supplying your OpenID and clicking ') . "'" . t('Register') . "'",
+		'$fillext'   => t('If you are not familiar with OpenID, please leave that field blank and fill in the rest of the items.'),
+		'$oidlabel'  => t('Your OpenID ' . "\x28" . 'optional' . "\x29" . ': '),
+		'$openid'    => $openid_url,
 		'$namelabel' => t('Your Full Name ' . "\x28" . 'e.g. Joe Smith' . "\x29" . ': '),
 		'$addrlabel' => t('Your Email Address: '),
 		'$nickdesc'  => t('Choose a profile nickname. This must begin with a text character. Your global profile locator will then be \'<strong>nickname@$sitename</strong>\'.'),

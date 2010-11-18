@@ -47,6 +47,9 @@ input:hover {
    background-position: 0 50%;
    padding-left: 18px;
 }
+.openid:hover {
+	background-color: #0CBEFE !important;
+}
 
 option {
 	background-color: #ECD6D2;
@@ -334,8 +337,11 @@ footer {
 	margin-left: 20px;
 	margin-right: 20px;
 }
+#register-fill-ext {
+	margin-bottom: 25px;
+}
 
-#label-register-name, #label-register-email, #label-register-nickname {
+#label-register-name, #label-register-email, #label-register-nickname, #label-register-openid {
 	float: left;
 	width: 350px;
 	margin-top: 10px;
@@ -347,9 +353,16 @@ footer {
 	width: 150px;
 }
 
-#register-name-end, #register-email-end, #register-nickname-end, #register-submit-end {
+#register-openid {
+	float: left;
+	margin-top: 10px;
+	width: 130px;
+}
+
+#register-name-end, #register-email-end, #register-nickname-end, #register-submit-end, #register-openid-end {
 	clear: both;
 }
+
 #register-nickname-desc {
 	margin-top: 30px;
 	width: 650px;

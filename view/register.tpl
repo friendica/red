@@ -4,6 +4,17 @@
 
 	$registertext
 
+
+	<p id="register-fill-desc">$fillwith</p>
+	<p id="register-fill-ext">$fillext</p>
+
+	<div id="register-openid-wrapper" >
+		<label for="register-openid" id="label-register-openid" >$oidlabel</label>
+		<input type="text" maxlength="60" size="32" name="openid_url" class="openid" id="register-openid" value="$openid" >
+	</div>
+	<div id="register-openid-end" ></div>
+
+
 	<div id="register-name-wrapper" >
 		<label for="register-name" id="label-register-name" >$namelabel</label>
 		<input type="text" maxlength="60" size="32" name="username" id="register-name" value="$username" >

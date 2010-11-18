@@ -11,6 +11,37 @@ function openid_content(&$a) {
 
 		if($openid->validate()) {
 
+			if(x($_SESSION,'register')) {
+				unset($_SESSION['register']);
+				$args = '';
+				$attr = $openid->getAttributes();
+				if(is_array($attr) && count($attr)) {
+					foreach($attr as $k => $v) {
+						if($k === 'namePerson/friendly')
+							$nick = notags(trim($v));
+						if($k === 'namePerson/first')
+							$first = notags(trim($v));
+						if($k === 'namePerson')
+							$args .= '&username=' . notags(trim($v));
+						if($k === 'contact/email')
+							$args .= '&email=' . notags(trim($v));
+					}
+				}
+				if($nick)
+					$args .= '&nickname=' . $nick;
+				elseif($first)
+					$args .= '&nickname=' . $first;
+
+				$args .= '&openid_url=' . notags(trim($_SESSION['openid']));
+				if($a->config['register_policy'] != REGISTER_CLOSED)
+					goaway($a->get_baseurl() . '/register' . $args);
+				else
+					goaway($a->get_baseurl());
+
+				// NOTREACHED
+			} 
+
+
 			$r = q("SELECT * FROM `user` WHERE `openid` = '%s' AND `blocked` = 0 AND `verified` = 1 LIMIT 1",
 				dbesc($_SESSION['openid'])
 			);
