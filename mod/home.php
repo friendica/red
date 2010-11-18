@@ -20,6 +20,7 @@ function home_content(&$a) {
 	$o .= '<h1>Welcome' . ((x($a->config,'sitename')) ? " to {$a->config['sitename']}" : "" ) . '</h1>';
 	if(file_exists('home.html'))
 		$o .= file_get_contents('home.html');
+
 	$o .= login(($a->config['register_policy'] == REGISTER_CLOSED) ? 0 : 1);
 	return $o;
 

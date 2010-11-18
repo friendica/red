@@ -2,12 +2,12 @@
 <form action="" method="post" >
 <input type="hidden" name="auth-params" value="login" />
 <div id="login-name-wrapper">
-        <label for="login-name" id="label-login-name">Nickname or Email: </label>
-        <input type="text" maxlength="60" name="login-name" id="login-name" value="" />
+        <label for="login-name" id="label-login-name">Nickname/Email/OpenID: </label>
+        <input type="text" maxlength="60" name="openid_url" class="openid" id="login-name" value="" />
 </div>
 <div id="login-name-end" ></div>
 <div id="login-password-wrapper">
-        <label for="login-password" id="label-login-password">Password: </label>
+        <label for="login-password" id="label-login-password">Password (if not OpenID): </label>
         <input type="password" maxlength="60" name="password" id="login-password" value="" />
 </div>
 <div id="login-password-end"></div>

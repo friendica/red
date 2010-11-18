@@ -379,19 +379,24 @@ footer {
 
 #label-login-name, #label-login-password, #login-extra-filler {
 	float: left;
-	width: 150px;
+	width: 200px;
 	margin-bottom: 20px;
 }
 
 
-#login-name, #login-password {
+#login-password {
+	float: left;
+	width: 170px;
+}
+
+#login-name {
 	float: left;
 	width: 150px;
 }
 
 #register-link, #lost-password-link {
 	float: left;
-	font-size: 0.7em;
+	font-size: 80%;
 	margin-right: 15px;
 }
 
@@ -400,8 +405,8 @@ footer {
 }
 
 #login-submit-button {
-	margin-top: 10px;
-	margin-left: 150px;
+/*	margin-top: 10px; */
+	margin-left: 200px;
 }
 
 input#dfrn-url {

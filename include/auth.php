@@ -70,26 +70,53 @@ else {
 	if((x($_POST,'password')) && strlen($_POST['password']))
 		$encrypted = hash('whirlpool',trim($_POST['password']));
 	else {
-		if((x($_POST,'login-name')) && strlen($_POST['login-name'])) {
-			$openid_url = trim($_POST['login-name']);
-			$r = q("SELECT `uid` FROM `user` WHERE `openid` = '%s' LIMIT 1",
-				dbesc($openid_url)
-			);
-			if(count($r)) {
-				require_once('library/openid.php');
-				$openid = new LightOpenID;
-				$openid->identity = $openid_url;
-				$_SESSION['openid'] = $openid_url;
-				$a = get_app();
-				$openid->returnUrl = $a->get_baseurl() . '/openid'; 
-				goaway($openid->authUrl());
-				// NOTREACHED	
-			}
-			else {
+		if((x($_POST,'openid_url')) && strlen($_POST['openid_url'])) {
+
+			$openid_url = trim($_POST['openid_url']);
+
+			// validate_url alters the calling parameter
+
+			$temp_string = $openid_url;
+
+			// if it's an email address or doesn't resolve to a URL, fail.
+
+			if((strpos($temp_string,'@')) || (! validate_url($temp_string))) {
 				$a = get_app();
 				notice( t('Login failed.') . EOL);
 				goaway($a->get_baseurl());
 				// NOTREACHED
+			}
+
+			// Otherwise it's probably an openid.
+
+			require_once('library/openid.php');
+			$openid = new LightOpenID;
+			$openid->identity = $openid_url;
+			$_SESSION['openid'] = $openid_url;
+			$a = get_app();
+			$openid->returnUrl = $a->get_baseurl() . '/openid'; 
+
+			$r = q("SELECT `uid` FROM `user` WHERE `openid` = '%s' LIMIT 1",
+				dbesc($openid_url)
+			);
+			if(count($r)) { 
+				// existing account
+				goaway($openid->authUrl());
+				// NOTREACHED	
+			}
+			else {
+				if($a->config['register_policy'] == REGISTER_CLOSED) {
+					$a = get_app();
+					notice( t('Login failed.') . EOL);
+					goaway($a->get_baseurl());
+					// NOTREACHED
+				}
+				// new account
+				$_SESSION['register'] = 1;
+				$openid->required = array('namePerson/friendly', 'contact/email', 'namePerson');
+				$openid->optional = array('namePerson/first');
+				goaway($openid->authUrl());
+				// NOTREACHED	
 			}
 		}
 	}
@@ -99,8 +126,8 @@ else {
 
 		$r = q("SELECT * FROM `user` 
 			WHERE ( `email` = '%s' OR `nickname` = '%s' ) AND `password` = '%s' AND `blocked` = 0 AND `verified` = 1 LIMIT 1",
-			dbesc(trim($_POST['login-name'])),
-			dbesc(trim($_POST['login-name'])),
+			dbesc(trim($_POST['openid_url'])),
+			dbesc(trim($_POST['openid_url'])),
 			dbesc($encrypted));
 		if(($r === false) || (! count($r))) {
 			notice( t('Login failed.') . EOL );
