@@ -67,16 +67,30 @@ else {
 		unset($_SESSION['page_flags']);
 	}
 
-	if(x($_POST,'password'))
+	if((x($_POST,'password')) && strlen($_POST['password']))
 		$encrypted = hash('whirlpool',trim($_POST['password']));
 	else {
-		if((x($_POST,'auth-params')) && $_POST['auth-params'] === 'login') {
-			require_once('library/openid.php');
-			$openid = new LightOpenID;
-			$openid->identity = trim($_POST['login-name']);
-			$a = get_app();
-			$openid->returnUrl = $a->get_baseurl() . '/openid'; 
-			goaway($openid->authUrl());	
+		if((x($_POST,'login-name')) && strlen($_POST['login-name'])) {
+			$openid_url = trim($_POST['login-name']);
+			$r = q("SELECT `uid` FROM `user` WHERE `openid` = '%s' LIMIT 1",
+				dbesc($openid_url)
+			);
+			if(count($r)) {
+				require_once('library/openid.php');
+				$openid = new LightOpenID;
+				$openid->identity = $openid_url;
+				$_SESSION['openid'] = $openid_url;
+				$a = get_app();
+				$openid->returnUrl = $a->get_baseurl() . '/openid'; 
+				goaway($openid->authUrl());
+				// NOTREACHED	
+			}
+			else {
+				$a = get_app();
+				notice( t('Login failed.') . EOL);
+				goaway($a->get_baseurl());
+				// NOTREACHED
+			}
 		}
 	}
 	if((x($_POST,'auth-params')) && $_POST['auth-params'] === 'login') {
