@@ -630,6 +630,9 @@ function xml_status($st, $message = '') {
 
 	$xml_message = ((strlen($message)) ? "\t<message>" . xmlify($message) . "</message>\r\n" : '');
 
+	if($st)
+		logger('xml_status returning non_zero: ' . $st . " message=" . $message);
+
 	header( "Content-type: text/xml" );
 	echo '<?xml version="1.0" encoding="UTF-8"?>'."\r\n";
 	echo "<result>\r\n\t<status>$st</status>\r\n$xml_message</result>\r\n";
