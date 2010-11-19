@@ -49,6 +49,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			$dfrn_id = $handsfree['dfrn_id'];
 			$intro_id = $handsfree['intro_id'];
 			$duplex = $handsfree['duplex'];
+			logger('dfrn_confirm: Confirm in handsfree mode');
 		}
 		else {
 			$dfrn_id  = ((x($_POST,'dfrn_id')) ? notags(trim($_POST['dfrn_id'])) : "");
@@ -57,7 +58,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			$cid      = intval($_POST['contact_id']);
 		}
 
-		logger('dfrn_confirm: Confirming request for dfrn_id ' . $dfrn_id);
+		logger('dfrn_confirm: Confirming request for dfrn_id (issued) ' . $dfrn_id);
+
 
 		// The other person will have been issued an ID when they first requested friendship.
 		// Locate their record. At this time, their record will have both pending and blocked set to 1. 
@@ -355,7 +357,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		$aes_key    = $_POST['aes_key'];
 		$duplex     = $_POST['duplex'];
 		$version_id = (float) $_POST['dfrn_version'];
-
+	
+		logger('dfrn_confirm: requestee contacted: ' . $node);
 
 		logger('dfrn_confirm: request: POST=' . print_r($_POST,true), LOGGER_DATA);
 
@@ -503,6 +506,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 
 		// Otherwise everything seems to have worked and we are almost done. Yay!
 		// Send an email notification
+
+		logger('dfrn_confirm: request: info updated');
 
 		$r = q("SELECT * FROM `contact` LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid`
 			WHERE `contact`.`id` = %d LIMIT 1",
