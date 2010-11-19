@@ -131,15 +131,25 @@ blockquote:before {
 #top-margin {
 	height: 20px;
 }
-#banner {
 
+#logo-img {
+	margin-top: 3px;
+
+}
+
+#logo-text {
+	font-family: "gill sans MT bold", "lucida grande",tahoma,verdana,arial,sans-serif;
+	margin-left: 3px;
+	vertical-align: top;
+}
+
+#banner {
 	color: #F5F6FB;
 	font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
-	font-size: 1.8em;
-	letter-spacing: 0.12em;
+	font-size: 2.0em;
 	position: absolute;
-	top: 10px;
-	left: 40%;
+	top: 5px;
+	left: 39%;
 }
 
 #panel {
@@ -391,7 +401,7 @@ footer {
 
 #login-name {
 	float: left;
-	width: 150px;
+	width: 153px;
 }
 
 #register-link, #lost-password-link {
