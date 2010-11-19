@@ -2,6 +2,7 @@
 
 // There are two possible entry points. 
 
+
 function dfrn_confirm_post(&$a,$handsfree = null) {
 
 	if(is_array($handsfree)) {
@@ -55,6 +56,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			$duplex   = intval($_POST['duplex']);
 			$cid      = intval($_POST['contact_id']);
 		}
+
+		logger('dfrn_confirm: Confirming request for dfrn_id ' . $dfrn_id);
 
 		// The other person will have been issued an ID when they first requested friendship.
 		// Locate their record. At this time, their record will have both pending and blocked set to 1. 
@@ -148,9 +151,13 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			if($duplex == 1)
 				$params['duplex'] = 1;
 
+			logger('dfrn_confirm: Confirm: posted data: ' . print_r($params,true), LOGGER_DATA);
+
 			// POST all this stuff to the other site.
 
 			$res = post_url($dfrn_confirm,$params);
+
+			logger('dfrn_confirm: Confirm: received data: ' . $res, LOGGER_DATA);
 
 			// Now figure out what they responded. Try to be robust if the remote site is 
 			// having difficulty and throwing up errors of some kind. 
@@ -231,6 +238,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		require_once("Photo.php");
 
 		$photos = import_profile_photo($contact['photo'],$uid,$contact_id);
+		
+		logger('dfrn_confirm: confirm - imported photos');
 
 		if($network === 'dfrn') {
 
@@ -348,6 +357,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		$version_id = (float) $_POST['dfrn_version'];
 
 
+		logger('dfrn_confirm: request: POST=' . print_r($_POST,true), LOGGER_DATA);
+
 		// If $aes_key is set, both of these items require unpacking from the hex transport encoding.
 
 		if(x($aes_key)) {
@@ -452,6 +463,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		require_once("Photo.php");
 
 		$photos = import_profile_photo($photo,$local_uid,$dfrn_record);
+
+		logger('dfrn_confirm: request - photos imported');
 
 		$new_relation = REL_FAN;
 		if(($relation == REL_VIP) || ($duplex))
