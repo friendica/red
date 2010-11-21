@@ -257,7 +257,7 @@
 				$deliver_status = dfrn_deliver($owner,$contact,$atom);
 				break;
 			default:
-				if($followup) {
+				if($followup && $contact['notify']) {
 					slapper($owner,$contact['notify'],$slap);
 				}
 				else {
@@ -268,7 +268,9 @@
 					if(count($slaps) && $notify_hub) {
 						logger('notifier: slapdelivery: ' . $contact['name']);
 						foreach($slaps as $slappy) {
-							slapper($owner,$contact['notify'],$slappy);
+							if($contact['notify']) {
+								slapper($owner,$contact['notify'],$slappy);
+							}
 						}
 					}
 				}
@@ -289,7 +291,9 @@
 		foreach($url_recipients as $url) {
 			logger('notifier: urldelivery: ' . $url);
 			foreach($slaps as $slappy) {
-				slapper($owner,$url,$slappy);
+				if($url) {
+					slapper($owner,$url,$slappy);
+				}
 			}
 		}
 	}

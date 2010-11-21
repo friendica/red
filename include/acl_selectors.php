@@ -40,7 +40,7 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 	$sql_extra = '';
 
 	if($privmail || $celeb) {
-		$sql_extra = sprintf(" AND `rel` = %d ", intval(REL_BUD));
+		$sql_extra .= sprintf(" AND `rel` = %d ", intval(REL_BUD));
 	}
 
 	if($privmail)
@@ -49,7 +49,7 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 		$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" >\r\n";
 
 	$r = q("SELECT `id`, `name`, `url`, `network` FROM `contact` 
-		WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 
+		WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 AND `notify` != ''
 		$sql_extra
 		ORDER BY `name` ASC ",
 		intval(local_user())

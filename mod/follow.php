@@ -50,6 +50,14 @@ function follow_post(&$a) {
 
 	if($hcard) {
 		$vcard = scrape_vcard($hcard);
+
+		// Google doesn't use absolute url in profile photos
+
+		if((x($vcard,'photo')) && substr($vcard['photo'],0,1) == '/') {
+			$h = parse_url($hcard);
+			if($h)
+				$vcard['photo'] = $h['scheme'] . '://' . $h['host'] . $vcard['photo'];
+		}
 	}
 
 	if(! $profile)
@@ -61,10 +69,16 @@ function follow_post(&$a) {
 		if(x($vcard,'nick'))
 			$vcard['fn'] = $vcard['nick'];
 
-	if(! ((x($vcard['fn'])) && ($poll) && ($notify) && ($profile))) {
+	logger('follow: poll=' . $poll . ' notify=' . $notify . ' profile=' . $profile . ' vcard=' . print_r($vcard,true));
+	
+	if(! ((x($vcard['fn'])) && ($poll) && ($profile))) {
 		notice( t('The profile address specified does not provide adequate information.') . EOL);
 		goaway($_SESSION['return_url']);
-	} 
+	}
+
+	if(! $notify) {
+		notice( t('Limited profile. This person will be unable to receive direct/personal notifications from you.') . EOL);
+	}
 
 	if(! x($vcard,'photo'))
 		$vcard['photo'] = $a->get_baseurl() . '/images/default-profile.jpg' ; 
@@ -77,6 +91,7 @@ function follow_post(&$a) {
 		intval(local_user()),
 		dbesc($poll)
 	);			
+
 	if(count($r)) {
 		// update contact
 		if($r[0]['rel'] == REL_VIP) {
@@ -104,10 +119,12 @@ function follow_post(&$a) {
 			intval(REL_FAN)
 		);
 	}
+
 	$r = q("SELECT * FROM `contact` WHERE `url` = '%s' AND `uid` = %d LIMIT 1",
 		dbesc($profile),
 		intval(local_user())
 	);
+
 	if(! count($r)) {
 		notice( t('Unable to retrieve contact information.') . EOL);
 		goaway($_SESSION['return_url']);
