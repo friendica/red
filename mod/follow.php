@@ -181,8 +181,11 @@ function follow_post(&$a) {
 			intval(local_user())
 	);
 
-	require_once('include/salmon.php');
-	slapper($r[0],$contact['notify'],$slap);
+
+	if((x($contact,'notify')) && (strlen($contact['notify']))) {
+		require_once('include/salmon.php');
+		slapper($r[0],$contact['notify'],$slap);
+	}
 
 	goaway($_SESSION['return_url']);
 	// NOTREACHED
