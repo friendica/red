@@ -107,7 +107,7 @@ function search_content(&$a) {
 				'$body' => bbcode($item['body']),
 				'$ago' => relative_date($item['created']),
 				'$location' => $location,
-				'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
+				'$indent' => '',
 				'$owner_url' => $owner_url,
 				'$owner_photo' => $owner_photo,
 				'$owner_name' => $owner_name,
