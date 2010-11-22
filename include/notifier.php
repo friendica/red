@@ -258,7 +258,13 @@
 
 				if($deliver_status == (-1)) {
 					// queue message for redelivery
-
+					q("INSERT INTO `queue` ( `cid`, `created`, `last`, `content`)
+						VALUES ( %d, '%s', '%s', '%s') ",
+						intval($contact['id']),
+						dbesc(datetime_convert()),
+						dbesc(datetime_convert()),
+						dbesc($atom)
+					);
 				}
 
 				break;
@@ -269,6 +275,13 @@
 
 					if($deliver_status == (-1)) {
 						// queue message for redelivery
+						q("INSERT INTO `queue` ( `cid`, `created`, `last`, `content`)
+							VALUES ( %d, '%s', '%s', '%s') ",
+							intval($contact['id']),
+							dbesc(datetime_convert()),
+							dbesc(datetime_convert()),
+							dbesc($slap)
+						);
 
 					}
 
@@ -286,9 +299,13 @@
 								$deliver_status = slapper($owner,$contact['notify'],$slappy);
 								if($deliver_status == (-1)) {
 									// queue message for redelivery
-									// if not already in queue
-									// else if deliver_status ok and queued, remove from queue
-									
+									q("INSERT INTO `queue` ( `cid`, `created`, `last`, `content`)
+										VALUES ( %d, '%s', '%s', '%s') ",
+										intval($contact['id']),
+										dbesc(datetime_convert()),
+										dbesc(datetime_convert()),
+										dbesc($slappy)
+									);								
 								}
 							}
 						}
@@ -314,6 +331,7 @@
 			foreach($slaps as $slappy) {
 				if($url) {
 					$deliver_status = slapper($owner,$url,$slappy);
+					// TODO: redeliver/queue these items on failure, though there is no contact record
 				}
 			}
 		}

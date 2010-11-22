@@ -45,7 +45,7 @@ function remove_queue_item($id) {
 		q("DELETE FROM `queue` WHERE `created` < UTC_TIMESTAMP() - INTERVAL 3 DAY");
 	}
 		
-	$r = q("SELECT `id` FROM `queue` WHERE 1 ");
+	$r = q("SELECT `id` FROM `queue` WHERE `last` < UTC_TIMESTAMP() - INTERVAL 15 MINUTE ");
 
 	if(! count($r))
 		killme();
