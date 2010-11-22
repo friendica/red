@@ -382,3 +382,29 @@ CREATE TABLE IF NOT EXISTS `register` (
   `password` CHAR(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE = MYISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `clients` (
+`client_id` VARCHAR( 20 ) NOT NULL ,
+`pw` VARCHAR( 20 ) NOT NULL ,
+`redirect_uri` VARCHAR( 200 ) NOT NULL ,
+PRIMARY KEY ( `client_id` )
+) ENGINE = MYISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `tokens` (
+`id` VARCHAR( 40 ) NOT NULL ,
+`client_id` VARCHAR( 20 ) NOT NULL ,
+`expires` INT NOT NULL ,
+`scope` VARCHAR( 200 ) NOT NULL ,
+PRIMARY KEY ( `id` )
+) ENGINE = MYISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `auth_codes` (
+`id` VARCHAR( 40 ) NOT NULL ,
+`client_id` VARCHAR( 20 ) NOT NULL ,
+`redirect_uri` VARCHAR( 200 ) NOT NULL ,
+`expires` INT NOT NULL ,
+`scope` VARCHAR( 250 ) NOT NULL ,
+PRIMARY KEY ( `id` )
+) ENGINE = MYISAM DEFAULT CHARSET=utf8;
+
