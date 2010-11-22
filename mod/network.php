@@ -156,7 +156,9 @@ function network_content(&$a, $update = 0) {
 			$template = $tpl;
 			$commentww = '';
 			$owner_url = $owner_photo = $owner_name = '';
+
 			$profile_url = $item['url'];
+
 			$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 
 			if(((activity_match($item['verb'],ACTIVITY_LIKE)) || (activity_match($item['verb'],ACTIVITY_DISLIKE))) && ($item['id'] != $item['parent']))
@@ -237,8 +239,10 @@ function network_content(&$a, $update = 0) {
 
 			// Post was remotely authored.
 
-			$profile_name = ((strlen($item['author-name'])) ? $item['author-name'] : $item['name']);
-			$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $thumb);
+			if((x($item,'author-link')) && ($item['url'] !== $item['author-link'])) { 
+				$profile_name   = ((strlen($item['author-name'])) ? $item['author-name'] : $item['name']);
+				$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $thumb);
+			}
 
 			$profile_link = $profile_url;
 

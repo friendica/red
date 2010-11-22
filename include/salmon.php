@@ -19,10 +19,35 @@ function salmon_key($pubkey) {
 
 
 function base64url_encode($s) {
-	return strtr(base64_encode($s),'+/','-_');
+	$s = strtr(base64_encode($s),'+/','-_');
+/*
+ *  // placeholder for un-padded base64url_encode 
+ *  // per latest salmon rev
+ *
+ *  $s = str_replace('=','',$s);
+ *
+ */
+	return $s;
 }
 
 function base64url_decode($s) {
+
+/*
+ *  // Placeholder for new rev of salmon which strips base64 padding.
+ *  // PHP base64_decode handles the un-padded input without requiring this step
+ *  // Uncomment if you find you need it.
+ *
+ *	$l = strlen($s);
+ *	if(! strpos($s,'=')) {
+ *		$m = $l % 4;
+ *		if($m == 2)
+ *			$s .= '==';
+ *		if($m == 3)
+ *			$s .= '=';
+ *	}
+ *
+ */
+
 	return base64_decode(strtr($s,'-_','+/'));
 }
 
