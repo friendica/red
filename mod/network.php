@@ -239,10 +239,11 @@ function network_content(&$a, $update = 0) {
 
 			// Post was remotely authored.
 
-//			if((x($item,'author-link')) && ($item['url'] !== $item['author-link'])) { 
-				$profile_name   = ((strlen($item['author-name'])) ? $item['author-name'] : $item['name']);
-				$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $thumb);
-//			}
+			$diff_author = (($item['url'] !== $item['author-link']) ? true : false);
+
+			$profile_name   = (((strlen($item['author-name']))   && $diff_author) ? $item['author-name']   : $item['name']);
+			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $thumb);
+
 
 			$profile_link = $profile_url;
 

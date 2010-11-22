@@ -211,8 +211,11 @@ function display_content(&$a) {
 				}
 			}
 
-			$profile_name = ((strlen($item['author-name'])) ? $item['author-name'] : $item['name']);
-			$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $item['thumb']);
+			$diff_author = (($item['url'] !== $item['author-link']) ? true : false);
+
+			$profile_name   = (((strlen($item['author-name']))   && $diff_author) ? $item['author-name']   : $item['name']);
+			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $thumb);
+
 			$profile_link = $profile_url;
 
 			if(($item['contact-id'] == remote_user()) || ($item['uid'] == local_user()))
