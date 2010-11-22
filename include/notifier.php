@@ -255,10 +255,24 @@
 			case 'dfrn':
 				logger('notifier: dfrndelivery: ' . $contact['name']);
 				$deliver_status = dfrn_deliver($owner,$contact,$atom);
+
+				if($deliver_status == (-1)) {
+					// queue message for redelivery
+
+				}
+
 				break;
 			default:
 				if($followup && $contact['notify']) {
-					slapper($owner,$contact['notify'],$slap);
+					logger('notifier: slapdelivery: ' . $contact['name']);
+					$deliver_status = slapper($owner,$contact['notify'],$slap);
+
+					if($deliver_status == (-1)) {
+						// queue message for redelivery
+
+					}
+
+
 				}
 				else {
 
@@ -269,13 +283,20 @@
 						logger('notifier: slapdelivery: ' . $contact['name']);
 						foreach($slaps as $slappy) {
 							if($contact['notify']) {
-								slapper($owner,$contact['notify'],$slappy);
+								$deliver_status = slapper($owner,$contact['notify'],$slappy);
+								if($deliver_status == (-1)) {
+									// queue message for redelivery
+									// if not already in queue
+									// else if deliver_status ok and queued, remove from queue
+									
+								}
 							}
 						}
 					}
 				}
 				break;
 		}
+
 
 		if(($cmd === 'mail') && ($deliver_status == 0)) {
 			$r = q("UPDATE `mail` SET `delivered` = 1 WHERE `id` = %d LIMIT 1",
@@ -292,7 +313,7 @@
 			logger('notifier: urldelivery: ' . $url);
 			foreach($slaps as $slappy) {
 				if($url) {
-					slapper($owner,$url,$slappy);
+					$deliver_status = slapper($owner,$url,$slappy);
 				}
 			}
 		}

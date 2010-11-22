@@ -205,6 +205,8 @@ EOT;
 
 	}
 	logger('slapper returned ' . $return_code); 
-	return;
+	if(! $return_code)
+		return(-1);
+	return ((substr($return_code,0,1) === '2') ? 0 : 1);
 }
 

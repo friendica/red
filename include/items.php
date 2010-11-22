@@ -710,7 +710,10 @@ function dfrn_deliver($owner,$contact,$atom) {
 
 	$xml = post_url($contact['notify'],$postvars);
 
-	logger('dfrn_deliver: ' . "SENDING: " . print_r($postvars,true) . "\n" . "RECEIVING: " . $xml);
+	logger('dfrn_deliver: ' . "SENDING: " . print_r($postvars,true) . "\n" . "RECEIVING: " . $xml, LOGGER_DATA);
+
+	if(! strlen($xml))
+		return(-1);
 
 	$res = simplexml_load_string($xml);
 

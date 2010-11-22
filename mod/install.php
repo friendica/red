@@ -173,6 +173,6 @@ function load_database($db) {
 				$errors ++;
 			}
 		}
-        }
+	}
 	return $errors;
 }

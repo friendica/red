@@ -2,7 +2,7 @@
 
 set_time_limit(0);
 
-define ( 'BUILD_ID',               1018   );
+define ( 'BUILD_ID',               1019   );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.0'  );
 
 define ( 'EOL',                    "<br />\r\n"     );
@@ -378,8 +378,7 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 
 
 	$curl_time = intval(get_config('system','curl_timeout'));
-	if($curl_time)
-		curl_setopt($ch, CURLOPT_TIMEOUT, $curl_time);
+	curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
 
 	// by default we will allow self-signed certs
 	// but you can override this
@@ -400,7 +399,7 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 
 	$s = curl_exec($ch);
 
-	$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	$http_code = intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
 	$header = substr($s,0,strpos($s,"\r\n\r\n"));
 	if(stristr($header,'100') && (strlen($header) < 30)) {
 		// 100 Continue has two headers, get the real one
@@ -440,8 +439,7 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
 	curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
 
 	$curl_time = intval(get_config('system','curl_timeout'));
-	if($curl_time)
-		curl_setopt($ch, CURLOPT_TIMEOUT, $curl_time);
+	curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
 
 	if(is_array($headers))
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -459,7 +457,7 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
 
 	$s = curl_exec($ch);
 
-	$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	$http_code = intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
 	$header = substr($s,0,strpos($s,"\r\n\r\n"));
 	if(stristr($header,'100') && (strlen($header) < 30)) {
 		// 100 Continue has two headers, get the real one

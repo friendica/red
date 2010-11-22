@@ -167,3 +167,12 @@ PRIMARY KEY ( `id` )
 
 }
 
+function update_1018() {
+	q("CREATE TABLE IF NOT EXISTS `queue` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`cid` INT NOT NULL ,
+`created` DATETIME NOT NULL ,
+`last` DATETIME NOT NULL ,
+`content` MEDIUMTEXT NOT NULL
+) ENGINE = MYISAM DEFAULT CHARSET=utf8 ");
+}
