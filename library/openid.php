@@ -348,8 +348,8 @@ class LightOpenID
                     }
 
                     if (isset($headers['content-type'])
-                        && strpos($headers['content-type'], 'application/xrds+xml') !== false
-                    ) {
+                        && ((strpos($headers['content-type'], 'application/xrds+xml') !== false
+                    ) || (strpos($headers['content-type'], 'text/xml') !== false))) {
                         # Found an XRDS document, now let's find the server, and optionally delegate.
                         $content = $this->request($url, 'GET');
 
@@ -375,7 +375,7 @@ class LightOpenID
                                 $server = $server[1];
                                 if (isset($delegate[2])) $this->identity = trim($delegate[2]);
                                 $this->version = 2;
-
+logger('Server: ' . $server);
                                 $this->server = $server;
                                 return $server;
                             }
@@ -419,7 +419,7 @@ class LightOpenID
             }
 
             if (!$content) $content = $this->request($url, 'GET');
-
+logger('openid' . $content);
             # At this point, the YADIS Discovery has failed, so we'll switch
             # to openid2 HTML discovery, then fallback to openid 1.1 discovery.
             $server   = $this->htmlTag($content, 'link', 'rel', 'openid2.provider', 'href');
