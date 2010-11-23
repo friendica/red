@@ -182,7 +182,9 @@ EOT;
 
 	// check for success, e.g. 2xx
 
-	if(($return_code >= 200) && ($return_code < 300)) {
+	if($return_code > 299) {
+
+		logger('slapper: compliant salmon failed. Falling back to status.net hack');
 
 		// Entirely likely that their salmon implementation is
 		// non-compliant. Let's try once more, this time only signing

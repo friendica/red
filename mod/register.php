@@ -49,7 +49,7 @@ function register_post(&$a) {
 			$openid->identity = $openid_url;
 			$openid->returnUrl = $a->get_baseurl() . '/openid'; 
 			$openid->required = array('namePerson/friendly', 'contact/email', 'namePerson');
-			$openid->optional = array('namePerson/first');
+			$openid->optional = array('namePerson/first','media/image/aspect11');
 			goaway($openid->authUrl());
 			// NOTREACHED	
 		}
