@@ -21,8 +21,10 @@ function dfrn_notify_post(&$a) {
 		dbesc($dfrn_id),
 		dbesc($challenge)
 	);
-	if(! count($r))
+	if(! count($r)) {
+		logger('dfrn_notify: could not match challenge to dfrn_id ' . $dfrn_id);
 		xml_status(3);
+	}
 
 	$r = q("DELETE FROM `challenge` WHERE `dfrn-id` = '%s' AND `challenge` = '%s' LIMIT 1",
 		dbesc($dfrn_id),
@@ -56,16 +58,20 @@ function dfrn_notify_post(&$a) {
 	);
 
 	if(! count($r)) {
+		logger('dfrn_notify: contact not found for dfrn_id ' . $dfrn_id);
 		xml_status(3);
 		//NOTREACHED
 	}
 
 	$importer = $r[0];
 
+	logger('dfrn_notify: received notify from ' . $importer['name'] . ' for ' . $importer['username']);
+	logger('dfrn_notify: data: ' . $data, LOGGER_DATA);
 
 	if($importer['readonly']) {
 		// We aren't receiving stuff from this person. But we will quietly ignore them
 		// rather than a blatant "go away" message.
+		logger('dfrn_notify: ignoring');
 		xml_status(0);
 		//NOTREACHED
 	}
@@ -85,6 +91,8 @@ function dfrn_notify_post(&$a) {
 
 	$rawmail = $feed->get_feed_tags( NAMESPACE_DFRN, 'mail' );
 	if(isset($rawmail[0]['child'][NAMESPACE_DFRN])) {
+
+		logger('dfrn_notify: private message received');
 
 		$ismail = true;
 		$base = $rawmail[0]['child'][NAMESPACE_DFRN];
@@ -391,6 +399,7 @@ function dfrn_notify_content(&$a) {
 		$dfrn_id = notags(trim($_GET['dfrn_id']));
 		$dfrn_version = (float) $_GET['dfrn_version'];
 
+		logger('dfrn_notify: new notification dfrn_id=' . $dfrn_id);
 
 		$direction = (-1);
 		if(strpos($dfrn_id,':') == 1) {
