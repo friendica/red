@@ -25,12 +25,21 @@ function openid_content(&$a) {
 							$args .= '&username=' . notags(trim($v));
 						if($k === 'contact/email')
 							$args .= '&email=' . notags(trim($v));
+						if($k === 'media/image/aspect11')
+							$photosq = bin2hex(trim($v));
+						if($k === 'media/image/default')
+							$photo = bin2hex(trim($v));
 					}
 				}
 				if($nick)
 					$args .= '&nickname=' . $nick;
 				elseif($first)
 					$args .= '&nickname=' . $first;
+
+				if($photosq)
+					$args .= '&photo=' . $photosq;
+				elseif($photo)
+					$args .= '&photo=' . $photo;
 
 				$args .= '&openid_url=' . notags(trim($_SESSION['openid']));
 				if($a->config['register_policy'] != REGISTER_CLOSED)

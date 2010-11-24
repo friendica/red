@@ -39,6 +39,8 @@ function register_post(&$a) {
 	if(x($_POST,'openid_url'))
 		$openid_url = notags(trim($_POST['openid_url']));
 
+	$photo = ((x($_POST,'photo')) ? notags(trim($_POST['photo'])) : '');
+
 
 	if((! x($username)) || (! x($email)) || (! x($nickname))) {
 		if($openid_url) {
@@ -49,7 +51,7 @@ function register_post(&$a) {
 			$openid->identity = $openid_url;
 			$openid->returnUrl = $a->get_baseurl() . '/openid'; 
 			$openid->required = array('namePerson/friendly', 'contact/email', 'namePerson');
-			$openid->optional = array('namePerson/first','media/image/aspect11');
+			$openid->optional = array('namePerson/first','media/image/aspect11','media/image/default');
 			goaway($openid->authUrl());
 			// NOTREACHED	
 		}
@@ -206,11 +208,16 @@ function register_post(&$a) {
 	}
 
 	$use_gravatar = ((get_config('system','no_gravatar')) ? false : true);
-	if($use_gravatar) {
+
+	// if we have an openid photo use it. 
+	// otherwise unless it is disabled, use gravatar
+
+	if($use_gravatar || strlen($photo)) {
 
 		require_once('include/Photo.php');
 
-		$photo = gravatar_img($email);
+		if(($use_gravatar) && (! strlen($photo))) 
+			$photo = gravatar_img($email);
 		$photo_failure = false;
 
 		$filename = basename($photo);
@@ -327,10 +334,11 @@ function register_content(&$a) {
 		return;
 	}
 
-	$username     = ((x($_POST,'username'))     ? $_POST['username']     : ((x($_GET,'username'))     ? $_GET['username'] : ''));
-	$email        = ((x($_POST,'email'))        ? $_POST['email']        : ((x($_GET,'email'))        ? $_GET['email']    : ''));
-	$openid_url   = ((x($_POST,'openid_url'))   ? $_POST['openid_url']   : ((x($_GET,'openid_url'))   ? $_GET['openid_url']   : ''));
-	$nickname     = ((x($_POST,'nickname'))     ? $_POST['nickname']     : ((x($_GET,'nickname'))     ? $_GET['nickname'] : ''));
+	$username     = ((x($_POST,'username'))     ? $_POST['username']     : ((x($_GET,'username'))     ? $_GET['username']              : ''));
+	$email        = ((x($_POST,'email'))        ? $_POST['email']        : ((x($_GET,'email'))        ? $_GET['email']                 : ''));
+	$openid_url   = ((x($_POST,'openid_url'))   ? $_POST['openid_url']   : ((x($_GET,'openid_url'))   ? $_GET['openid_url']            : ''));
+	$nickname     = ((x($_POST,'nickname'))     ? $_POST['nickname']     : ((x($_GET,'nickname'))     ? $_GET['nickname']              : ''));
+	$photo        = ((x($_POST,'photo'))        ? $_POST['photo']        : ((x($_GET,'photo'))        ? hex2bin($_GET['photo'])        : ''));
 
 	$o = load_view_file("view/register.tpl");
 	$o = replace_macros($o, array(
@@ -346,6 +354,7 @@ function register_content(&$a) {
 		'$addrlabel' => t('Your Email Address: '),
 		'$nickdesc'  => t('Choose a profile nickname. This must begin with a text character. Your global profile locator will then be \'<strong>nickname@$sitename</strong>\'.'),
 		'$nicklabel' => t('Choose a nickname: '),
+		'$photo'     => $photo,
 		'$regbutt'   => t('Register'),
 		'$username'  => $username,
 		'$email'     => $email,

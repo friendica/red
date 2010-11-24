@@ -2,6 +2,8 @@
 
 <form action="register" method="post" >
 
+	<input type="hidden" name="photo" value="$photo" />
+
 	$registertext
 
 

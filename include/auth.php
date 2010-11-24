@@ -114,7 +114,7 @@ else {
 				// new account
 				$_SESSION['register'] = 1;
 				$openid->required = array('namePerson/friendly', 'contact/email', 'namePerson');
-				$openid->optional = array('namePerson/first','media/image/aspect11');
+				$openid->optional = array('namePerson/first','media/image/aspect11','media/image/default');
 				goaway($openid->authUrl());
 				// NOTREACHED	
 			}
