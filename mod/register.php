@@ -113,6 +113,11 @@ function register_post(&$a) {
 
 	// Get private key
 
+	if(empty($res)) {
+		notice( t('SERIOUS ERROR: Generation of security keys failed.') . EOL);
+		return;
+	}
+
 	$prvkey = '';
 
 	openssl_pkey_export($res, $prvkey);
