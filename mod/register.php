@@ -107,7 +107,7 @@ function register_post(&$a) {
 	$new_password_encoded = hash('whirlpool',$new_password);
 
 	$res=openssl_pkey_new(array(
-		'digest_alg' => 'whirlpool',
+		'digest_alg' => 'sha1',
 		'private_key_bits' => 4096,
 		'encrypt_key' => false ));
 
