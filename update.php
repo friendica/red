@@ -176,3 +176,8 @@ function update_1018() {
 `content` MEDIUMTEXT NOT NULL
 ) ENGINE = MYISAM DEFAULT CHARSET=utf8 ");
 }
+
+function update_1019() {
+	q("ALTER TABLE `mail` DROP `delivered`");
+//	leaving open for more updates as this isn't critical enough to roll the build number
+}

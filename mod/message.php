@@ -47,8 +47,8 @@ function message_post(&$a) {
 		$replyto = $uri;
 
 	$r = q("INSERT INTO `mail` ( `uid`, `from-name`, `from-photo`, `from-url`, 
-		`contact-id`, `title`, `body`, `delivered`, `seen`, `replied`, `uri`, `parent-uri`, `created`)
-		VALUES ( %d, '%s', '%s', '%s', %d, '%s', '%s', %d, %d, %d, '%s', '%s', '%s' )",
+		`contact-id`, `title`, `body`, `seen`, `replied`, `uri`, `parent-uri`, `created`)
+		VALUES ( %d, '%s', '%s', '%s', %d, '%s', '%s', %d, %d, '%s', '%s', '%s' )",
 		intval(local_user()),
 		dbesc($me[0]['name']),
 		dbesc($me[0]['thumb']),
@@ -56,7 +56,6 @@ function message_post(&$a) {
 		intval($recipient),
 		dbesc($subject),
 		dbesc($body),
-		0,
 		1,
 		0,
 		dbesc($uri),
@@ -138,16 +137,6 @@ function message_content(&$a) {
 		}	
 	
 	}
-	if(($a->argc > 2) && ($a->argv[1] === 'redeliver') && intval($a->argv[2])) {
-		$post_id = intval($a->argv[2]);
-		$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
-
-		proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"mail\" \"$post_id\" & ",
-			array(),$foo));
-		goaway($a->get_baseurl() . '/message' );
-	}
-
-
 
 	if(($a->argc > 1) && ($a->argv[1] === 'new')) {
 		

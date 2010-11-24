@@ -313,14 +313,6 @@
 				}
 				break;
 		}
-
-
-		if(($cmd === 'mail') && ($deliver_status == 0)) {
-			$r = q("UPDATE `mail` SET `delivered` = 1 WHERE `id` = %d LIMIT 1",
-				intval($item_id)
-			);
-		}
-
 	}
 		
 	// send additional slaps to mentioned remote tags (@foo@example.com)

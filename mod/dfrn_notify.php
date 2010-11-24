@@ -105,7 +105,6 @@ function dfrn_notify_post(&$a) {
 		$msg['contact-id'] = $importer['id'];
 		$msg['title'] = notags(unxmlify($base['subject'][0]['data']));
 		$msg['body'] = escape_tags(unxmlify($base['content'][0]['data']));
-		$msg['delivered'] = 1;
 		$msg['seen'] = 0;
 		$msg['replied'] = 0;
 		$msg['uri'] = notags(unxmlify($base['id'][0]['data']));
