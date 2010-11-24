@@ -21,7 +21,7 @@
 
 		// run queue delivery process in the background
 
-		$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
+		$php_path = ((x($a->config,'php_path') && strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 		proc_close(proc_open("\"$php_path\" \"include/queue.php\" &", array(), $foo));
 
 

@@ -146,6 +146,31 @@ function contacts_content(&$a) {
 		}
 
 		if($cmd === 'drop') {
+
+			// create an unfollow slap
+
+			if($orig_record[0]['network'] === 'stat') {
+				$tpl = load_view_file('view/follow_slap.tpl');
+				$slap = replace_macros($tpl, array(
+					'$name' => $a->user['username'],
+					'$profile_page' => $a->get_baseurl() . '/profile/' . $a->user['nickname'],
+					'$photo' => $a->contact['photo'],
+					'$thumb' => $a->contact['thumb'],
+					'$published' => datetime_convert('UTC','UTC', 'now', ATOM_TIME),
+					'$item_id' => 'urn:X-dfrn:' . $a->get_hostname() . ':unfollow:' . random_string(),
+					'$title' => '',
+					'$type' => 'text',
+					'$content' => t('stopped following'),
+					'$nick' => $a->user['nickname'],
+					'$verb' => ACTIVITY_UNFOLLOW
+				));
+
+				if((x($orig_record[0],'notify')) && (strlen($orig_record[0]['notify']))) {
+					require_once('include/salmon.php');
+					slapper($a->user,$orig_record[0]['notify'],$slap);
+				}
+			}
+
 			contact_remove($contact_id);
 			notice( t('Contact has been removed.') . EOL );
 			goaway($a->get_baseurl() . '/contacts');
