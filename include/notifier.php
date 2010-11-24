@@ -266,7 +266,6 @@
 						dbesc($atom)
 					);
 				}
-
 				break;
 			default:
 				if($followup && $contact['notify']) {

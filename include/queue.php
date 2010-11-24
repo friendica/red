@@ -62,7 +62,7 @@ function remove_queue_item($id) {
 			continue;
 
 		$c = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
-			intval($q_item['cid'])
+			intval($qi[0]['cid'])
 		);
 		if(! count($c)) {
 			remove_queue_item($q_item['id']);
