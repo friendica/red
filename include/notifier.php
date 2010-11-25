@@ -259,7 +259,10 @@
 				logger('notifier: dfrndelivery: ' . $contact['name']);
 				$deliver_status = dfrn_deliver($owner,$contact,$atom);
 
+				logger('notifier: dfrn_delivery returns ' . $deliver_status);
+
 				if($deliver_status == (-1)) {
+					logger('notifier: delivery failed: queuing message');
 					// queue message for redelivery
 					q("INSERT INTO `queue` ( `cid`, `created`, `last`, `content`)
 						VALUES ( %d, '%s', '%s', '%s') ",
