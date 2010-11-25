@@ -13,7 +13,7 @@ function profiles_post(&$a) {
 	if(($a->argc > 1) && ($a->argv[1] !== "new") && intval($a->argv[1])) {
 		$orig = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($a->argv[1]),
-			intval($_SESSION['uid'])
+			intval(local_user())
 		);
 		if(! count($orig)) {
 			notice( t('Profile not found.') . EOL);
@@ -138,7 +138,7 @@ function profiles_post(&$a) {
 		if($namechanged && $is_default) {
 			$r = q("UPDATE `contact` SET `name-date` = '%s' WHERE `self` = 1 AND `uid` = %d LIMIT 1",
 				dbesc(datetime_convert()),
-				intval($_SESSION['uid'])
+				intval(local_user())
 			);
 		}
 
@@ -159,6 +159,7 @@ function profiles_post(&$a) {
 function profiles_content(&$a) {
 	$o = '';
 	$o .= '<script>	$(document).ready(function() { $(\'#nav-profiles-link\').addClass(\'nav-selected\'); });</script>';
+
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
 		return;
@@ -167,7 +168,7 @@ function profiles_content(&$a) {
 	if(($a->argc > 2) && ($a->argv[1] === "drop") && intval($a->argv[2])) {
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d AND `is-default` = 0 AND `self` = 0 LIMIT 1",
 			intval($a->argv[2]),
-			intval($_SESSION['uid'])
+			intval(local_user())
 		);
 		if(! count($r)) {
 			notice( t('Profile not found.') . EOL);
@@ -178,9 +179,9 @@ function profiles_content(&$a) {
 		// move every contact using this profile as their default to the user default
 
 		$r = q("UPDATE `contact` SET `profile-id` = (SELECT `profile`.`id` AS `profile-id` FROM `profile` WHERE `profile`.`is-default` = 1 AND `profile`.`uid` = %d LIMIT 1) WHERE `profile-id` = %d AND `uid` = %d ",
-			intval($_SESSION['uid']),
+			intval(local_user()),
 			intval($a->argv[2]),
-			intval($_SESSION['uid'])
+			intval(local_user())
 		);
 		$r = q("DELETE FROM `profile` WHERE `id` = %d LIMIT 1",
 			intval($a->argv[2])
@@ -199,17 +200,17 @@ function profiles_content(&$a) {
 	if(($a->argc > 1) && ($a->argv[1] === 'new')) {
 
 		$r0 = q("SELECT `id` FROM `profile` WHERE `uid` = %d",
-			intval($_SESSION['uid']));
+			intval(local_user()));
 		$num_profiles = count($r0);
 
 		$name = t('Profile-') . ($num_profiles + 1);
 
 		$r1 = q("SELECT `name`, `photo`, `thumb` FROM `profile` WHERE `uid` = %d AND `is-default` = 1 LIMIT 1",
-			intval($_SESSION['uid']));
+			intval(local_user()));
 		
 		$r2 = q("INSERT INTO `profile` (`uid` , `profile-name` , `name`, `photo`, `thumb`)
 			VALUES ( %d, '%s', '%s', '%s', '%s' )",
-			intval($_SESSION['uid']),
+			intval(local_user()),
 			dbesc($name),
 			dbesc($r1[0]['name']),
 			dbesc($r1[0]['photo']),
@@ -217,7 +218,7 @@ function profiles_content(&$a) {
 		);
 
 		$r3 = q("SELECT `id` FROM `profile` WHERE `uid` = %d AND `profile-name` = '%s' LIMIT 1",
-			intval($_SESSION['uid']),
+			intval(local_user()),
 			dbesc($name)
 		);
 		notice( t('New profile created.') . EOL);
@@ -229,12 +230,12 @@ function profiles_content(&$a) {
 	if(($a->argc > 2) && ($a->argv[1] === 'clone')) {
 
 		$r0 = q("SELECT `id` FROM `profile` WHERE `uid` = %d",
-			intval($_SESSION['uid']));
+			intval(local_user()));
 		$num_profiles = count($r0);
 
 		$name = t('Profile-') . ($num_profiles + 1);
 		$r1 = q("SELECT * FROM `profile` WHERE `uid` = %d AND `id` = %d LIMIT 1",
-			intval($_SESSION['uid']),
+			intval(local_user()),
 			intval($a->argv[2])
 		);
 		if(! count($r1)) {
@@ -256,7 +257,7 @@ function profiles_content(&$a) {
 			. "')" );
 
 		$r3 = q("SELECT `id` FROM `profile` WHERE `uid` = %d AND `profile-name` = '%s' LIMIT 1",
-			intval($_SESSION['uid']),
+			intval(local_user()),
 			dbesc($name)
 		);
 		notice( t('New profile created.') . EOL);
@@ -270,7 +271,7 @@ function profiles_content(&$a) {
 	if(($a->argc > 1) && (intval($a->argv[1]))) {
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($a->argv[1]),
-			intval($_SESSION['uid'])
+			intval(local_user())
 		);
 		if(! count($r)) {
 			notice( t('Profile not found.') . EOL);
@@ -340,7 +341,7 @@ function profiles_content(&$a) {
 	else {
 
 		$r = q("SELECT * FROM `profile` WHERE `uid` = %d",
-			$_SESSION['uid']);
+			local_user());
 		if(count($r)) {
 
 			$o .= load_view_file('view/profile_listing_header.tpl');
