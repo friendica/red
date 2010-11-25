@@ -228,6 +228,7 @@ function item_post(&$a) {
 		dbesc($uri));
 	if(count($r)) {
 		$post_id = $r[0]['id'];
+		logger('mod_item: saved item ' . $post_id);
 
 		if($parent) {
 
@@ -312,6 +313,8 @@ function item_post(&$a) {
 	}
 
 	$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
+
+	logger('mod_item: notifier invoked: ' . "\"$php_path\" \"include/notifier.php\" \"$notify_type\" \"$post_id\" &");
 
 	proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"$notify_type\" \"$post_id\" &",
 		array(),$foo));

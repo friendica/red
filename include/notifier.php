@@ -20,6 +20,8 @@
 
 	$a->set_baseurl(get_config('system','url'));
 
+	logger('notifier: invoked: ' . print_r($argv,true));
+
 	$cmd = $argv[1];
 
 	switch($cmd) {
@@ -207,6 +209,7 @@
 		if($followup) {
 			foreach($items as $item) {  // there is only one item
 				if($item['id'] == $item_id) {
+					logger('notifier: followup: item: ' . print_r($item,true), LOGGER_DATA);
 					$slap  = atom_entry($item,'html',$owner,$owner,false);
 					$atom .= atom_entry($item,'text',$owner,$owner,false);
 				}
