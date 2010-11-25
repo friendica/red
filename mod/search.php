@@ -117,6 +117,9 @@ function search_content(&$a) {
 
 		}
 	}
+
+	$o .= paginate($a);
+
 	return $o;
 }
 

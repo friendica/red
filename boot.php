@@ -1375,8 +1375,10 @@ function get_tags($s) {
 	$ret = array();
 	if(preg_match_all('/([@#][^ ,:?]*)([ ,:?]|$)/',$s,$match)) {
 		foreach($match[1] as $match) {
-			if(strstr($match,"]"))
+			if(strstr($match,"]")) {
+				// we might be inside a bbcode color tag - leave it alone
 				continue;
+			}
 			if(substr($match,-1,1) === '.')
 				$ret[] = substr($match,0,-1);
 			else
