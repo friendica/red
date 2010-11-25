@@ -95,7 +95,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			// worried about key leakage than anybody cracking it.  
 
 			$res = openssl_pkey_new(array(
-				'digest_alg' => 'whirlpool',
+				'digest_alg' => 'sha1',
 				'private_key_bits' => 4096,
 				'encrypt_key' => false )
 			);
