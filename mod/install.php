@@ -95,6 +95,9 @@ function install_content(&$a) {
 
 	$o .= check_php($phpath);
 
+	$o .= check_keys();
+
+
 	require_once('datetime.php');
 
 	$tpl = load_view_file('view/install_db.tpl');
@@ -115,11 +118,43 @@ function check_php(&$phpath) {
 	$o = '';
 	$phpath = trim(shell_exec('which php'));
 	if(! strlen($phpath)) {
-		$o .= t('Could not find a command line version of PHP in the web server PATH.');
-		$o .= t('This is required. Please adjust the configuration file .htconfig.php accordingly.');
+		$o .= t('Could not find a command line version of PHP in the web server PATH.') . EOL;
+		$o .= t('This is required. Please adjust the configuration file .htconfig.php accordingly.') . EOL;
+	}
+	if(strlen($phpath)) {
+		$str = autoname(8);
+		$cmd = "$phpath testargs.php $str";
+		$result = trim(shell_exec($cmd));
+		if($result != $str) {
+			$o .= t('The command line version of PHP on your system does not have "register_argc_argv" enabled.') . EOL;
+			$o .= t('This is required for message delivery to work.') . EOL;
+		}
 	}
 	return $o;
+
 }
+
+function check_keys() {
+
+	$o = '';
+
+	$res = false;
+
+	if(function_exists('openssl_pkey_new')) 
+		$res=openssl_pkey_new(array(
+		'digest_alg' => 'sha1',
+		'private_key_bits' => 4096,
+		'encrypt_key' => false ));
+
+	// Get private key
+
+	if(! $res)
+		$o .=  t('Error: the "openssl_pkey_new" function on this system is not able to generate encryption keys') . EOL;
+
+	return $o;
+
+}
+
 
 function check_funcs() {
 	if((function_exists('apache_get_modules')) && (! in_array('mod_rewrite',apache_get_modules())))
