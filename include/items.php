@@ -674,7 +674,6 @@ function dfrn_deliver($owner,$contact,$atom) {
 	$final_dfrn_id = '';
 
 
-
 	if(($contact['duplex'] && strlen($contact['prvkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
 		openssl_private_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['prvkey']);
 		openssl_private_decrypt($challenge,$postvars['challenge'],$contact['prvkey']);

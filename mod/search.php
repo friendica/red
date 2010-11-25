@@ -7,7 +7,7 @@ function search_content(&$a) {
 
 	$o .= '<h3>' . t('Search') . '</h3>';
 
-	$search = ((x($_GET,'search')) ? $_GET['search'] : '');
+	$search = ((x($_GET,'search')) ? rawurldecode($_GET['search']) : '');
 
 	$o .= search($search);
 

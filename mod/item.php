@@ -122,11 +122,11 @@ function item_post(&$a) {
 	if(count($tags)) {
 		foreach($tags as $tag) {
 			if(strpos($tag,'#') === 0) {
-				$basetag = substr($tag,1);
-				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?search=' . urlencode($basetag) . ']' . $basetag . '[/url]',$body);
+				$basetag = str_replace('_',' ',substr($tag,1));
+				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
 				if(strlen($str_tags))
 					$str_tags .= ',';
-				$str_tags .= '#[url=' . $a->get_baseurl() . '/search?search=' . urlencode($basetag) . ']' . $basetag . '[/url]';
+				$str_tags .= '#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]';
 				continue;
 			}
 			if(strpos($tag,'@') === 0) {
