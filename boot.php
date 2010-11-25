@@ -416,6 +416,8 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 	if($binary)
 		curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
 
+	$a->set_curl_code(0);
+
 	$s = curl_exec($ch);
 
 	$http_code = intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
@@ -473,6 +475,8 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
 		if(strlen($prxusr))
 			curl_setopt($ch, CURLOPT_PROXYUSERPWD, $prxusr);
 	}
+
+	$a->set_curl_code(0);
 
 	$s = curl_exec($ch);
 

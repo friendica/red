@@ -536,7 +536,6 @@ function item_store($arr) {
 	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
 	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : '');
 	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : '');
-	$arr['body']          = ((x($arr,'body'))          ? escape_tags(trim($arr['body']))     : '');
 	$arr['last-child']    = ((x($arr,'last-child'))    ? intval($arr['last-child'])          : 0 );
 	$arr['visible']       = ((x($arr,'visible') !== false) ? intval($arr['visible'])         : 1 );
 	$arr['deleted']       = 0;
@@ -550,6 +549,13 @@ function item_store($arr) {
 	$arr['allow_gid']     = ((x($arr,'allow_gid'))     ? trim($arr['allow_gid'])             : '');
 	$arr['deny_cid']      = ((x($arr,'deny_cid'))      ? trim($arr['deny_cid'])              : '');
 	$arr['deny_gid']      = ((x($arr,'deny_gid'))      ? trim($arr['deny_gid'])              : '');
+	$arr['body']          = ((x($arr,'body'))          ? escape_tags(trim($arr['body']))     : '');
+
+	// The content body has been through a lot of filtering and transport escaping by now. 
+	// We don't want to skip any filters, however a side effect of all this filtering 
+	// is that ampersands will have been double encoded. 
+
+	$arr['body']          = str_replace('&amp;amp;','&amp;',$arr['body']);
 
 
 
@@ -640,6 +646,7 @@ function get_item_contact($item,$contacts) {
 
 function dfrn_deliver($owner,$contact,$atom) {
 
+	$a = get_app();
 
 	if((! strlen($contact['dfrn-id'])) && (! $contact['duplex']) && (! ($owner['page-flags'] == PAGE_COMMUNITY)))
 		return 3;
@@ -656,6 +663,10 @@ function dfrn_deliver($owner,$contact,$atom) {
 	logger('dfrn_deliver: ' . $url);
 
 	$xml = fetch_url($url);
+
+	$curl_stat = $a->get_curl_code();
+	if(! $curl_stat)
+		return(-1); // timed out
 
 	logger('dfrn_deliver: ' . $xml);
 
@@ -711,8 +722,9 @@ function dfrn_deliver($owner,$contact,$atom) {
 
 	logger('dfrn_deliver: ' . "SENDING: " . print_r($postvars,true) . "\n" . "RECEIVING: " . $xml, LOGGER_DATA);
 
-	if(! strlen($xml))
-		return(-1);
+	$curl_stat = $a->get_curl_code();
+	if((! $curl_stat) || (! strlen($xml)))
+		return(-1); // timed out
 
 	$res = simplexml_load_string($xml);
 

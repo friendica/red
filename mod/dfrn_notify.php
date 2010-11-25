@@ -149,6 +149,8 @@ function dfrn_notify_post(&$a) {
 		xml_status(0);
 		// NOTREACHED
 	}	
+	
+	logger('dfrn_notify: feed item count = ' . $feed->get_item_quantity());
 
 	foreach($feed->get_items() as $item) {
 
@@ -223,6 +225,7 @@ function dfrn_notify_post(&$a) {
 
 		if($is_reply) {
 			if($feed->get_item_quantity() == 1) {
+				logger('dfrn_notify: received remote comment');
 				// remote reply to our post. Import and then notify everybody else.
 				$datarray = get_atom_elements($feed,$item);
 				$datarray['type'] = 'remote-comment';
@@ -254,29 +257,27 @@ function dfrn_notify_post(&$a) {
 							intval($posted_id)
 					);
 
-					if($datarray['type'] == 'remote-comment') {
-						$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
+					$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 
-						proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"comment-import\" \"$posted_id\" &", 
-							array(),$foo));
+					proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"comment-import\" \"$posted_id\" &", 
+						array(),$foo));
 
-						if(($importer['notify-flags'] & NOTIFY_COMMENT) && (! $importer['self'])) {
-							require_once('bbcode.php');
-							$from = stripslashes($datarray['author-name']);
-							$tpl = load_view_file('view/cmnt_received_eml.tpl');			
-							$email_tpl = replace_macros($tpl, array(
-								'$sitename' => $a->config['sitename'],
-								'$siteurl' =>  $a->get_baseurl(),
-								'$username' => $importer['username'],
-								'$email' => $importer['email'],
-								'$display' => $a->get_baseurl() . '/display/' . $posted_id, 
-								'$from' => $from,
+					if(($importer['notify-flags'] & NOTIFY_COMMENT) && (! $importer['self'])) {
+						require_once('bbcode.php');
+						$from = stripslashes($datarray['author-name']);
+						$tpl = load_view_file('view/cmnt_received_eml.tpl');			
+						$email_tpl = replace_macros($tpl, array(
+							'$sitename' => $a->config['sitename'],
+							'$siteurl' =>  $a->get_baseurl(),
+							'$username' => $importer['username'],
+							'$email' => $importer['email'],
+							'$display' => $a->get_baseurl() . '/display/' . $posted_id, 
+							'$from' => $from,
 							'$body' => strip_tags(bbcode(stripslashes($datarray['body'])))
-							));
+						));
 	
-							$res = mail($importer['email'], $from . t(" commented on your item at ") . $a->config['sitename'],
-								$email_tpl,t("From: Administrator@") . $a->get_hostname() );
-						}
+						$res = mail($importer['email'], $from . t(" commented on your item at ") . $a->config['sitename'],
+							$email_tpl,t("From: Administrator@") . $a->get_hostname() );
 					}
 				}
 				xml_status(0);
