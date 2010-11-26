@@ -338,7 +338,7 @@ function dfrn_notify_post(&$a) {
 								'$username' => $importer['username'],
 								'$email' => $importer['email'],
 								'$from' => $from,
-								'$display' => $a->get_baseurl() . '/display' . $r,
+								'$display' => $a->get_baseurl() . '/display/' . $r,
 								'$body' => strip_tags(bbcode(stripslashes($datarray['body'])))
 							));
 
