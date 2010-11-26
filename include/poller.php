@@ -121,6 +121,14 @@
 				// mean the software was uninstalled or the domain expired. 
 				// Will keep trying for one month.
 				mark_for_death($contact);
+
+				// set the last-update so we don't keep polling
+
+				$r = q("UPDATE `contact` SET `last-update` = '%s' WHERE `id` = %d LIMIT 1",
+					dbesc(datetime_convert()),
+					intval($contact['id'])
+				);
+
 				continue;
 			}
 
@@ -129,7 +137,15 @@
 
 			if(intval($res->status) == 1) {
 				logger("poller: $url replied status 1 - marking for death ");
+
 				// we may not be friends anymore. Will keep trying for one month.
+				// set the last-update so we don't keep polling
+
+				$r = q("UPDATE `contact` SET `last-update` = '%s' WHERE `id` = %d LIMIT 1",
+					dbesc(datetime_convert()),
+					intval($contact['id'])
+				);
+
 				mark_for_death($contact);
 			}
 			else {

@@ -39,7 +39,8 @@ function pubsub_init(&$a) {
 		$hub_lease     = ((x($_GET,'hub_lease_seconds')) ? notags(trim($_GET['hub_lease_seconds'])) : '');
 		$hub_verify    = ((x($_GET,'hub_verify_token'))  ? notags(trim($_GET['hub_verify_token']))  : '');
 
-		logger('pubsub: Subscription from' . $_SERVER['REMOTE_ADDR'] . print_r($_GET,true));
+		logger('pubsub: Subscription from ' . $_SERVER['REMOTE_ADDR']);
+		logger('pubsub: data: ' . print_r($_GET,true), LOGGER_DATA);
 
 		$subscribe = (($hub_mode === 'subscribe') ? 1 : 0);
 
