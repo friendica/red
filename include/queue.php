@@ -33,6 +33,8 @@ function remove_queue_item($id) {
 
 	$a->set_baseurl(get_config('system','url'));
 
+	$deadguys = array();
+
 	logger('queue: start');
 
 	$r = q("SELECT `queue`.*, `contact`.`name`, `contact`.`uid` FROM `queue` 
@@ -69,6 +71,12 @@ function remove_queue_item($id) {
 			remove_queue_item($q_item['id']);
 			continue;
 		}
+		if(in_array($c[0]['notify'],$deadguys)) {
+				logger('queue: skipping known dead url: ' . $c[0]['notify']);
+				update_queue_time($q_item['id']);
+				continue;
+		}
+
 		$u = q("SELECT * FROM `user` WHERE `uid` = %d LIMIT 1",
 			intval($c[0]['uid'])
 		);
@@ -88,11 +96,13 @@ function remove_queue_item($id) {
 				logger('queue: dfrndelivery: item ' . $q_item['id'] . ' for ' . $contact['name']);
 				$deliver_status = dfrn_deliver($owner,$contact,$data);
 
-				if($deliver_status == (-1))
+				if($deliver_status == (-1)) {
 					update_queue_time($q_item['id']);
-				else
+					$deadguys[] = $contact['notify'];
+				}
+				else {
 					remove_queue_item($q_item['id']);
-
+				}
 				break;
 			default:
 				if($contact['notify']) {
