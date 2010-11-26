@@ -423,8 +423,6 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 
 	$s = curl_exec($ch);
 
-//	logger('Curl ' . curl_getinfo($ch,CURLINFO_HTTP_CODE));
-
 	$http_code = intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
 	$header = substr($s,0,strpos($s,"\r\n\r\n"));
 	if(stristr($header,'100') && (strlen($header) < 30)) {
