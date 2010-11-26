@@ -49,7 +49,7 @@ function dfrn_poll_init(&$a) {
 				break; // NOTREACHED
 		}
 
-		$r = q("SELECT `contact`.*, `user`.`nickname` 
+		$r = q("SELECT `contact`.*, `user`.`username`, `user`.`nickname` 
 			FROM `contact` LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid`
 			WHERE `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
 			AND `user`.`nickname` = '%s' $sql_extra LIMIT 1",
@@ -67,7 +67,7 @@ function dfrn_poll_init(&$a) {
 				if((int) $xml->status == 1) {
 					$_SESSION['authenticated'] = 1;
 					$_SESSION['visitor_id'] = $r[0]['id'];
-					notice( t('Hi ') . $r[0]['name'] . EOL);
+					notice( $r[0]['username'] . t(' welcomes ') . $r[0]['name'] . EOL);
 					// Visitors get 1 day session.
 					$session_id = session_id();
 					$expire = time() + 86400;
