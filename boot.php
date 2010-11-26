@@ -388,6 +388,9 @@ function t($s) {
 
 if(! function_exists('fetch_url')) {
 function fetch_url($url,$binary = false, &$redirects = 0) {
+
+	$a = get_app();
+
 	$ch = curl_init($url);
 	if(($redirects > 8) || (! $ch)) 
 		return false;
@@ -420,6 +423,8 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 
 	$s = curl_exec($ch);
 
+//	logger('Curl ' . curl_getinfo($ch,CURLINFO_HTTP_CODE));
+
 	$http_code = intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
 	$header = substr($s,0,strpos($s,"\r\n\r\n"));
 	if(stristr($header,'100') && (strlen($header) < 30)) {
@@ -437,7 +442,6 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
             return fetch_url($url,$binary,$redirects);
         }
     }
-	$a = get_app();
 	$a->set_curl_code($http_code);
 	$body = substr($s,strlen($header)+4);
 	$a->set_curl_headers($header);
@@ -450,6 +454,7 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 
 if(! function_exists('post_url')) {
 function post_url($url,$params, $headers = null, &$redirects = 0) {
+	$a = get_app();
 	$ch = curl_init($url);
 	if(($redirects > 8) || (! $ch)) 
 		return false;
@@ -497,7 +502,6 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
             return post_url($url,$binary,$headers,$redirects);
         }
     }
-	$a = get_app();
 	$a->set_curl_code($http_code);
 	$body = substr($s,strlen($header)+4);
 	$a->set_curl_headers($header);
