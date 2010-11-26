@@ -271,12 +271,12 @@ function dfrn_notify_post(&$a) {
 							'$siteurl' =>  $a->get_baseurl(),
 							'$username' => $importer['username'],
 							'$email' => $importer['email'],
-							'$display' => $a->get_baseurl() . '/display/' . $posted_id, 
+							'$display' => $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id, 
 							'$from' => $from,
 							'$body' => strip_tags(bbcode(stripslashes($datarray['body'])))
 						));
 	
-						$res = mail($importer['email'], $from . t(" commented on your item at ") . $a->config['sitename'],
+						$res = mail($importer['email'], $from . t(" commented on an item at ") . $a->config['sitename'],
 							$email_tpl,t("From: Administrator@") . $a->get_hostname() );
 					}
 				}
