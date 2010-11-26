@@ -33,6 +33,7 @@ function remove_queue_item($id) {
 
 	$a->set_baseurl(get_config('system','url'));
 
+	logger('queue: start');
 
 	$r = q("SELECT `queue`.*, `contact`.`name`, `contact`.`uid` FROM `queue` 
 		LEFT JOIN `contact` ON `queue`.`cid` = `contact`.`id` 

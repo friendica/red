@@ -18,6 +18,7 @@
 
 	$a->set_baseurl(get_config('system','url'));
 
+	logger('poller: start');
 
 	// run queue delivery process in the background
 
