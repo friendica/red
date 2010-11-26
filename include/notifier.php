@@ -138,11 +138,11 @@
 
 			logger('notifier: url_recipients' . print_r($url_recipients,true));
 
-			$conversants = array_unique($conversants,SORT_NUMERIC);
+			$conversants = array_unique($conversants);
 
 
-			$recipients = array_unique(array_merge($recipients,$allow_people,$allow_groups),SORT_NUMERIC);
-			$deny = array_unique(array_merge($deny_people,$deny_groups),SORT_NUMERIC);
+			$recipients = array_unique(array_merge($recipients,$allow_people,$allow_groups));
+			$deny = array_unique(array_merge($deny_people,$deny_groups));
 			$recipients = array_diff($recipients,$deny);
 
 			$conversant_str = dbesc(implode(', ',$conversants));
