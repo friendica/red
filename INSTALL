@@ -1,6 +1,18 @@
 
 Friendika Installation
 
+We've tried very hard to ensure that Friendika will run on commodity hosting 
+platforms - such as those used to host Wordpress blogs and Drupal websites. 
+But be aware that Friendika is more than a simple web application. It is a 
+complex communications system which more closely resembles an email server 
+than a web server. For reliability and performance, messages are delivered in
+the background and are queued for later delivery when sites are down. This
+kind of functionality requires a bit more of the host system than the typical
+blog. Not every PHP/MySQL hosting provider will be able to support Friendika. 
+Many will. But please review the requirements and confirm these with your 
+hosting provider prior to installation.
+
+
 1. Requirements
 	- Apache with mod-rewrite enabled and "Options All" so you can use a 
 local .htaccess file
@@ -9,46 +21,39 @@ local .htaccess file
 encryption support
 		- PHP *command line* access with register_argc_argv set to true in the 
 php.ini file
-		- curl, gd, and openssl extensions
+		- curl, gd, mysql, and openssl extensions
 
 	- Mysql 5.x
 
 	- ability to schedule jobs with cron (Linux/Mac) or Scheduled Tasks
 (Windows)
-	
+
+	- At this time we require the installation to be at the top level of a 
+domain or sub-domain (without an extra path). This requirement may change in
+the future.
+
 	[Dreamhost.com offers all of the necessary hosting features at a 
 reasonable price. If your hosting provider doesn't allow Unix shell access, 
 you might have trouble getting everything to work.] 
 
-2. Put this directory into the root of your web server document area.
+2. Unpack the Friendika files into the root of your web server document area.
 
 	- If you copy the directory tree to your webserver, make sure
 	that you also copy .htaccess - as "dot" files are often hidden 
 	and aren't normally copied.
 
-	- To use a subdirectory of your main domain, set the 
-	config variable $a->path to the relative subdir
-	in .htconfig.php - for example to use http://example.com/test - 
-	use
-		$a->path = 'test';
+3. Create an empty database and note the access details (hostname, username, 
+password, database name).
 
-	NOTE: This has NOT been fully tested!
-	In this case, you cannot use the web installer. 
-	Skip step 4 and proceed to step 5 - especially steps 5a and 5b.
-
-	- Everything will work much better if you can dedicate a domain 
-	or subdomain so that you don't require an extra server path. 
-
-3. Create an empty database and note the access details (hostname, username, password, database name).
-
-4. Visit your website with a web browser and follow the instructions. 
+4. Visit your website with a web browser and follow the instructions. Please 
+note any error messages and correct these before continuing.
 
 5. *If* the automated installation fails for any reason, check the following:
 
-	5a. ".htconfig.php" exists 
+	- ".htconfig.php" exists 
 		If not, edit htconfig.php and change system settings. Rename 
 to .htconfig.php
-	5b. Database is populated.
+	-  Database is populated.
 		If not, import the contents of "database.sql" with phpmyadmin 
 or mysql command line
 
@@ -69,7 +74,7 @@ Change "/base/directory", and "/path/to/php" as appropriate for your situation.
 If you are using a Linux server, run "crontab -e" and add a line like the 
 one shown, substituting for your unique paths and settings:
 
-*/5 * * * *	cd /home/myname/mywebsite; /usr/bin/php include/poller.php
+*/10 * * * *	cd /home/myname/mywebsite; /usr/bin/php include/poller.php
 
 You can generally find the location of PHP by executing "which php". If you 
 have troubles with this section please contact your hosting provider for 
