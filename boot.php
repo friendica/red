@@ -1379,7 +1379,7 @@ function activity_match($haystack,$needle) {
 if(! function_exists('get_tags')) {
 function get_tags($s) {
 	$ret = array();
-	if(preg_match_all('/([@#][^ ,:?]*)([ ,:?]|$)/',$s,$match)) {
+	if(preg_match_all('/([@#][^ \x0D\x0A,:?]*)([ \x0D\x0A,:?]|$)/',$s,$match)) {
 		foreach($match[1] as $match) {
 			if(strstr($match,"]")) {
 				// we might be inside a bbcode color tag - leave it alone

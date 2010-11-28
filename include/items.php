@@ -762,7 +762,6 @@ function consume_feed($xml,$importer,$contact, &$hub, $datedir = 0) {
 	$feed->init();
 
 	// Check at the feed level for updated contact name and/or photo
-	$debugging = get_config('system','debugging');
 
 	$name_updated  = '';
 	$new_name = '';
