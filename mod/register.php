@@ -345,15 +345,31 @@ function register_content(&$a) {
 	$nickname     = ((x($_POST,'nickname'))     ? $_POST['nickname']     : ((x($_GET,'nickname'))     ? $_GET['nickname']              : ''));
 	$photo        = ((x($_POST,'photo'))        ? $_POST['photo']        : ((x($_GET,'photo'))        ? hex2bin($_GET['photo'])        : ''));
 
+	$noid = get_config('system','no_openid');
+
+	if($noid) {
+		$oidhtml = '';
+		$fillwith = '';
+		$fillext = '';
+		$oidlabel = '';
+	}
+	else {
+		$oidhtml = '<label for="register-openid" id="label-register-openid" >$oidlabel</label><input type="text" maxlength="60" size="32" name="openid_url" class="openid" id="register-openid" value="$openid" >';
+		$fillwith = t("You may \x28optionally\x29 fill in this form via OpenID by supplying your OpenID and clicking 'Register'.");
+		$fillext =  t('If you are not familiar with OpenID, please leave that field blank and fill in the rest of the items.');
+		$oidlabel = t("Your OpenID \x28optional\x29: ");
+	}
+
 	$o = load_view_file("view/register.tpl");
 	$o = replace_macros($o, array(
+		'$oidhtml' => $oidhtml,
 		'$regtitle'  => t('Registration'),
 		'$registertext' =>((x($a->config,'register_text'))
 			? '<div class="error-message">' . $a->config['register_text'] . '</div>'
 			: "" ),
-		'$fillwith'  => t('You may ' . "\x28" . 'optionally' . "\x29" . ' fill in this form via OpenID by supplying your OpenID and clicking ') . "'" . t('Register') . "'",
-		'$fillext'   => t('If you are not familiar with OpenID, please leave that field blank and fill in the rest of the items.'),
-		'$oidlabel'  => t('Your OpenID ' . "\x28" . 'optional' . "\x29" . ': '),
+		'$fillwith'  => $fillwith,
+		'$fillext'   => $fillext,
+		'$oidlabel'  => $oidlabel,
 		'$openid'    => $openid_url,
 		'$namelabel' => t('Your Full Name ' . "\x28" . 'e.g. Joe Smith' . "\x29" . ': '),
 		'$addrlabel' => t('Your Email Address: '),

@@ -128,8 +128,7 @@ Leave password fields blank unless changing
 <div id="settings-confirm-end" ></div>
 
 <div id="settings-openid-wrapper" >
-<label id="settings-openid-label" for="settings-openid" >OpenID: </label>
-<input type="text" id="settings-openid" class="openid" name="openid_url" value="$openid" />&nbsp;(Optional) Allow this OpenID to login to this account.
+	$oidhtml
 </div>
 <div id="settings-openid-end" ></div>
 

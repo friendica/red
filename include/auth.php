@@ -72,6 +72,8 @@ else {
 	else {
 		if((x($_POST,'openid_url')) && strlen($_POST['openid_url'])) {
 
+			$noid = get_config('system','no_openid');
+
 			$openid_url = trim($_POST['openid_url']);
 
 			// validate_url alters the calling parameter
@@ -80,7 +82,7 @@ else {
 
 			// if it's an email address or doesn't resolve to a URL, fail.
 
-			if((strpos($temp_string,'@')) || (! validate_url($temp_string))) {
+			if(($noid) || (strpos($temp_string,'@')) || (! validate_url($temp_string))) {
 				$a = get_app();
 				notice( t('Login failed.') . EOL);
 				goaway($a->get_baseurl());

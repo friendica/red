@@ -196,6 +196,17 @@ function settings_content(&$a) {
 		'$page_freelove'  => PAGE_FREELOVE
 	));
 
+	$noid = get_config('system','no_openid');
+
+	if($noid) {
+		$oidhtml = '';
+	}
+	else {
+		$oidhtml = '<label id="settings-openid-label" for="settings-openid" >' . t('OpenID: ') . '</label><input type="text" id="settings-openid" class="openid" name="openid_url" value="$openid" />' . t("&nbsp;\x28Optional\x29 Allow this OpenID to login to this account.");
+	}
+
+
+
 
 	$opt_tpl = load_view_file("view/profile-in-directory.tpl");
 	$profile_in_dir = replace_macros($opt_tpl,array(
@@ -260,6 +271,7 @@ function settings_content(&$a) {
 
 	$o .= replace_macros($stpl,array(
 		'$baseurl' => $a->get_baseurl(),
+		'$oidhtml' => $oidhtml,
 		'$uid' => local_user(),
 		'$username' => $username,
 		'$openid' => $openid,

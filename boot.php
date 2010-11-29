@@ -545,15 +545,40 @@ function login($register = false) {
 	$o = "";
 	$register_html = (($register) ? load_view_file("view/register-link.tpl") : "");
 
-
-	if(x($_SESSION,'authenticated')) {
-		$o = load_view_file("view/logout.tpl");
+	$noid = get_config('system','no_openid');
+	if($noid) {
+		$classname = 'no-openid';
+		$namelabel = t('Nickname or Email address: ');
+		$passlabel = t('Password: ');
+		$login     = t('Login');
 	}
 	else {
-		$o = load_view_file("view/login.tpl");
-
-		$o = replace_macros($o,array('$register_html' => $register_html ));
+		$classname = 'openid';
+		$namelabel = t('Nickname/Email/OpenID: ');
+		$passlabel = t("Password \x28if not OpenID\x29: ");
+		$login     = t('Login');
 	}
+	$lostpass = t('Forgot your password?');
+	$lostlink = t('Password Reset');
+
+	if(x($_SESSION,'authenticated')) {
+		$tpl = load_view_file("view/logout.tpl");
+	}
+	else {
+		$tpl = load_view_file("view/login.tpl");
+
+	}
+	
+	$o = replace_macros($tpl,array(
+		'$register_html' => $register_html, 
+		'$classname' => $classname,
+		'$namelabel' => $namelabel,
+		'$passlabel' => $passlabel,
+		'$login' => $login,
+		'$lostpass' => $lostpass,
+		'$lostlink' => $lostlink 
+	));
+
 	return $o;
 }}
 

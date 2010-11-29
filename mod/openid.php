@@ -6,6 +6,10 @@ require_once('library/openid.php');
 
 function openid_content(&$a) {
 
+	$noid = get_config('system','no_openid');
+	if($noid)
+		goaway($a->get_baseurl());
+
 	if((x($_GET,'openid_mode')) && (x($_SESSION,'openid'))) {
 		$openid = new LightOpenID;
 
