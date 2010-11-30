@@ -1,6 +1,21 @@
 <?php
 
+
+function nuke_session() {
+	unset($_SESSION['authenticated']);
+	unset($_SESSION['uid']);
+	unset($_SESSION['visitor_id']);
+	unset($_SESSION['administrator']);
+	unset($_SESSION['cid']);
+	unset($_SESSION['theme']);
+	unset($_SESSION['page_flags']);
+}
+
+
 // login/logout 
+
+
+
 
 if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-params'))) || ($_POST['auth-params'] !== 'login'))) {
 
@@ -8,13 +23,7 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 	
 		// process logout request
 
-		unset($_SESSION['authenticated']);
-		unset($_SESSION['uid']);
-		unset($_SESSION['visitor_id']);
-		unset($_SESSION['administrator']);
-		unset($_SESSION['cid']);
-		unset($_SESSION['theme']);
-		unset($_SESSION['page_flags']);
+		nuke_session();
 		notice( t('Logged out.') . EOL);
 		goaway($a->get_baseurl());
 	}
@@ -23,13 +32,19 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 
 		// already logged in user returning
 
+		$check = get_config('system','paranoia');
+		// extra paranoia - if the IP changed, log them out
+		if($check && ($_SESSION['addr'] != $_SERVER['REMOTE_ADDR'])) {
+			nuke_session();
+			goaway($a->get_baseurl());
+		}
+
 		$r = q("SELECT * FROM `user` WHERE `uid` = %d LIMIT 1",
 			intval($_SESSION['uid'])
 		);
 
 		if(! count($r)) {
-			unset($_SESSION['authenticated']);
-			unset($_SESSION['uid']);
+			nuke_session();
 			goaway($a->get_baseurl());
 		}
 
@@ -57,14 +72,7 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 else {
 
 	if(isset($_SESSION)) {
-		unset($_SESSION['authenticated']);
-		unset($_SESSION['uid']);
-		unset($_SESSION['visitor_id']);
-		unset($_SESSION['administrator']);
-		unset($_SESSION['cid']);
-		unset($_SESSION['theme']);
-		unset($_SESSION['my_url']);
-		unset($_SESSION['page_flags']);
+		nuke_session();
 	}
 
 	if((x($_POST,'password')) && strlen($_POST['password']))
@@ -140,6 +148,7 @@ else {
 		$_SESSION['authenticated'] = 1;
 		$_SESSION['page_flags'] = $r[0]['page-flags'];
 		$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $r[0]['nickname'];
+		$_SESSION['addr'] = $_SERVER['REMOTE_ADDR'];
 
 		notice( t("Welcome back ") . $r[0]['username'] . EOL);
 		$a->user = $r[0];
