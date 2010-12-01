@@ -483,12 +483,21 @@ function dfrn_notify_content(&$a) {
 		$challenge    = bin2hex($challenge);
 		$encrypted_id = bin2hex($encrypted_id);
 
+		$rino = ((function_exists('mcrypt_encrypt')) ? 1 : 0);
+
+		$rino_enable = get_config('system','rino_encrypt');
+
+		if(! $rino_enable)
+			$rino = 0;
+
+
 		header("Content-type: text/xml");
 
 		echo '<?xml version="1.0" encoding="UTF-8"?>' . "\r\n" 
 			. '<dfrn_notify>' . "\r\n"
 			. "\t" . '<status>' . $status . '</status>' . "\r\n"
 			. "\t" . '<dfrn_version>' . DFRN_PROTOCOL_VERSION . '</dfrn_version>' . "\r\n"
+			. "\t" . '<rino>' . $rino . '</rino>' . "\r\n" 
 			. "\t" . '<dfrn_id>' . $encrypted_id . '</dfrn_id>' . "\r\n" 
 			. "\t" . '<challenge>' . $challenge . '</challenge>' . "\r\n"
 			. '</dfrn_notify>' . "\r\n" ;

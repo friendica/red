@@ -726,7 +726,7 @@ function dfrn_deliver($owner,$contact,$atom) {
 		$postvars['data'] = str_replace('<dfrn:comment-allow>1','<dfrn:comment-allow>0',$atom);
 	}
 
-	if($rino && rino_allowed) {
+	if($rino && $rino_allowed) {
 		$key = substr(random_string(),0,16);
 		$data = bin2hex(aes_encrypt($postvars['data'],$key));
 		$postvars['data'] = $data;
@@ -772,7 +772,7 @@ function dfrn_deliver($owner,$contact,$atom) {
  * $contact =  the person who is sending us stuff. If not set, we MAY be processing a "follow" activity
  *             from an external network and MAY create an appropriate contact record. Otherwise, we MUST 
  *             have a contact record.
- * $hub = should wefind ahub declation in the feed, pass it back to our calling process, who might (or 
+ * $hub = should we find a hub declation in the feed, pass it back to our calling process, who might (or 
  *        might not) try and subscribe to it.
  *
  */
