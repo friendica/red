@@ -6,10 +6,11 @@ require_once('include/items.php');
 
 function dfrn_notify_post(&$a) {
 
-	$dfrn_id = notags(trim($_POST['dfrn_id']));
-	$dfrn_version = (float) $_POST['dfrn_version'];
-	$challenge = notags(trim($_POST['challenge']));
-	$data = $_POST['data'];
+	$dfrn_id      = ((x($_POST,'dfrn_id'))      ? notags(trim($_POST['dfrn_id']))   : '');
+	$dfrn_version = ((x($_POST,'dfrn_version')) ? (float) $_POST['dfrn_version']    : 2.0);
+	$challenge    = ((x($_POST,'challenge'))    ? notags(trim($_POST['challenge'])) : '');
+	$data         = ((x($_POST,'data'))         ? $_POST['data']                    : '');
+	$key          = ((x($_POST,'key'))          ? $_POST['key']                     : '');
 
 	$direction = (-1);
 	if(strpos($dfrn_id,':') == 1) {
@@ -50,7 +51,8 @@ function dfrn_notify_post(&$a) {
 	}
 		 
 
-	$r = q("SELECT `contact`.*, `contact`.`uid` AS `importer_uid`, `user`.* FROM `contact` 
+	$r = q("SELECT `contact`.*, `contact`.`uid` AS `importer_uid`, 
+		`contact`.`pubkey` AS `cpubkey`, `contact`.`prvkey` AS `cprvkey`, `user`.* FROM `contact` 
 		LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid` 
 		WHERE `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
 		AND `user`.`nickname` = '%s' $sql_extra LIMIT 1",
@@ -74,6 +76,23 @@ function dfrn_notify_post(&$a) {
 		logger('dfrn_notify: ignoring');
 		xml_status(0);
 		//NOTREACHED
+	}
+
+	if(strlen($key)) {
+		$rawkey = hex2bin(trim($key));
+		logger('rino: md5 raw key: ' . md5($rawkey));
+		$final_key = '';
+
+		if((($importer['duplex']) && strlen($importer['cpubkey'])) || (! strlen($importer['cprvkey']))) {
+			openssl_public_decrypt($rawkey,$final_key,$importer['cpubkey']);
+		}
+		else {
+			openssl_private_decrypt($rawkey,$final_key,$importer['cprvkey']);
+		}
+
+		logger('rino: received key : ' . $final_key);
+		$data = aes_decrypt(hex2bin($data),$final_key);
+		logger('rino: decrypted data: ' . $data, LOGGER_DATA);
 	}
 
 	// Consume notification feed. This may differ from consuming a public feed in several ways

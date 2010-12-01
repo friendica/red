@@ -658,7 +658,14 @@ function dfrn_deliver($owner,$contact,$atom) {
 	if($contact['duplex'] && $contact['issued-id'])
 		$idtosend = '1:' . $orig_id;		
 
-	$url = $contact['notify'] . '?dfrn_id=' . $idtosend . '&dfrn_version=' . DFRN_PROTOCOL_VERSION ;
+	$rino = ((function_exists('mcrypt_encrypt')) ? 1 : 0);
+
+	$rino_enable = get_config('system','rino_encrypt');
+
+	if(! $rino_enable)
+		$rino = 0;
+
+	$url = $contact['notify'] . '?dfrn_id=' . $idtosend . '&dfrn_version=' . DFRN_PROTOCOL_VERSION . (($rino) ? '&rino=1' : '');
 
 	logger('dfrn_deliver: ' . $url);
 
@@ -681,6 +688,7 @@ function dfrn_deliver($owner,$contact,$atom) {
 	$postvars     = array();
 	$sent_dfrn_id = hex2bin($res->dfrn_id);
 	$challenge    = hex2bin($res->challenge);
+	$rino_allowed = ((intval($res->rino) === 1) ? 1 : 0);
 
 	$final_dfrn_id = '';
 
@@ -718,9 +726,29 @@ function dfrn_deliver($owner,$contact,$atom) {
 		$postvars['data'] = str_replace('<dfrn:comment-allow>1','<dfrn:comment-allow>0',$atom);
 	}
 
+	if($rino && rino_allowed) {
+		$key = substr(random_string(),0,16);
+		$data = bin2hex(aes_encrypt($postvars['data'],$key));
+		$postvars['data'] = $data;
+		logger('rino: sent key = ' . $key);	
+
+		if(($contact['duplex'] && strlen($contact['prvkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
+			openssl_private_encrypt($key,$postvars['key'],$contact['prvkey']);
+		}
+		else {
+			openssl_public_encrypt($key,$postvars['key'],$contact['pubkey']);
+		}
+
+		logger('md5 rawkey ' . md5($postvars['key']));
+
+		$postvars['key'] = bin2hex($postvars['key']);
+	}
+
+	logger('dfrn_deliver: ' . "SENDING: " . print_r($postvars,true), LOGGER_DATA);
+
 	$xml = post_url($contact['notify'],$postvars);
 
-	logger('dfrn_deliver: ' . "SENDING: " . print_r($postvars,true) . "\n" . "RECEIVING: " . $xml, LOGGER_DATA);
+	logger('dfrn_deliver: ' . "RECEIVED: " . $xml, LOGGER_DATA);
 
 	$curl_stat = $a->get_curl_code();
 	if((! $curl_stat) || (! strlen($xml)))
