@@ -56,7 +56,7 @@
 <div class="marital"><span class="marital-label"><span class="heart">&hearts;</span> Status: </span><span class="marital-text"><?php echo $profile['marital']; ?></span></div>
 <?php } ?>
 <?php if(strlen($profile['homepage'])) { ?>
-<div class="homepage"><span class="homepage-label">Homepage: </span><span class="homepage-url"><?php echo $profile['homepage']; ?></span></div>
+<div class="homepage"><span class="homepage-label">Homepage: </span><span class="homepage-url"><?php echo linkify($profile['homepage']); ?></span></div>
 <?php } ?>
 <?php if(x($page,'aside')) echo $page['aside'] ?>
 </aside>
