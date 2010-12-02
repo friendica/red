@@ -116,7 +116,10 @@ function notifications_content(&$a) {
 				'$url' => $rr['url'],
 				'$knowyou' => $knowyou,
 				'$approve' => t('Approve'),
-				'$note' => $rr['note']
+				'$note' => $rr['note'],
+				'$ignore' => t('Ignore'),
+				'$discard' => t('Discard')
+
 			));
 		}
 	}
