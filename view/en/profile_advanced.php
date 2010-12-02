@@ -78,10 +78,11 @@ EOT;
 }
 
 if($a->profile['homepage']) {
+	$homepage = linkify($a->profile['homepage']);
 $o .= <<< EOT
 <div id="advanced-profile-homepage-wrapper" >
 <div id="advanced-profile-homepage-text">Homepage:</div>
-<div id="advanced-profile-homepage">{$a->profile['homepage']}</div>
+<div id="advanced-profile-homepage">$homepage</div>
 </div>
 <div id="advanced-profile-homepage-end"></div>
 EOT;
