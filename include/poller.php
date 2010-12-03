@@ -115,6 +115,7 @@
 
 			logger('poller: handshake with url ' . $url . ' returns xml: ' . $xml, LOGGER_DATA);
 
+
 			if(! $xml) {
 				logger("poller: $url appears to be dead - marking for death ");
 				// dead connection - might be a transient event, or this might
@@ -129,6 +130,15 @@
 					intval($contact['id'])
 				);
 
+				continue;
+			}
+
+			if(! strstr($xml,'<?xml')) {
+				logger('poller: response from ' . $url . ' did not contain XML.');
+				$r = q("UPDATE `contact` SET `last-update` = '%s' WHERE `id` = %d LIMIT 1",
+					dbesc(datetime_convert()),
+					intval($contact['id'])
+				);
 				continue;
 			}
 
