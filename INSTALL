@@ -28,9 +28,9 @@ php.ini file
 	- ability to schedule jobs with cron (Linux/Mac) or Scheduled Tasks
 (Windows)
 
-	- At this time we require the installation to be at the top level of a 
-domain or sub-domain (without an extra path). This requirement may change in
-the future.
+	- Installation into a top-level domain or sub-domain (without a 
+directory/path component in the URL) is preferred. Directory paths will
+not be as convenient to use and have not been thoroughly tested.  
 
 	[Dreamhost.com offers all of the necessary hosting features at a 
 reasonable price. If your hosting provider doesn't allow Unix shell access, 
