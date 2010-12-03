@@ -8,13 +8,13 @@ Site Location:	$siteurl
 Login Name:	$email
 Password:	$password
 
-You may change your password from your account settings page after logging in.
+You may change your password from your account "Settings" page after logging 
+in.
 
 Please take a few moments to review the other account settings on that page. 
 By default your account is private and hidden (invisible to other people). 
-You might wish to change this. Then please "introduce" yourself to others in 
-the network that you desire to communicate with. This gives them permission 
-to talk to you. 
+You might wish to change this by publishing your profile - so that it appears 
+in a directory and other people can find you. 
 
 
 Thank you and welcome to $sitename.
