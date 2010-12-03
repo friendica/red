@@ -245,6 +245,7 @@ function dfrn_notify_post(&$a) {
 		if($is_reply) {
 			if($feed->get_item_quantity() == 1) {
 				logger('dfrn_notify: received remote comment');
+				$is_like = false;
 				// remote reply to our post. Import and then notify everybody else.
 				$datarray = get_atom_elements($feed,$item);
 				$datarray['type'] = 'remote-comment';
@@ -253,12 +254,14 @@ function dfrn_notify_post(&$a) {
 				$datarray['uid'] = $importer['importer_uid'];
 				$datarray['contact-id'] = $importer['id'];
 				if(($datarray['verb'] == ACTIVITY_LIKE) || ($datarray['verb'] == ACTIVITY_DISLIKE)) {
+					$is_like = true;
 					$datarray['type'] = 'activity';
 					$datarray['gravity'] = GRAVITY_LIKE;
+					$datarray['last-child'] = 0;
 				}
 				$posted_id = item_store($datarray);
 
-				if($posted_id) {
+				if(($posted_id) && (! $is_like)) {
 					$r = q("SELECT `parent` FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 						intval($posted_id),
 						intval($importer['importer_uid'])
@@ -299,6 +302,9 @@ function dfrn_notify_post(&$a) {
 							$email_tpl,t("From: Administrator@") . $a->get_hostname() );
 					}
 				}
+
+				// TODO send notification mail about like/dislike, but we need a new notify pref for this
+
 				xml_status(0);
 				// NOTREACHED
 
