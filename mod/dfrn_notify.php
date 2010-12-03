@@ -261,30 +261,32 @@ function dfrn_notify_post(&$a) {
 				}
 				$posted_id = item_store($datarray);
 
-				if(($posted_id) && (! $is_like)) {
-					$r = q("SELECT `parent` FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-						intval($posted_id),
-						intval($importer['importer_uid'])
-					);
-					if(count($r)) {
-						$r1 = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `uid` = %d AND `parent` = %d",
-							dbesc(datetime_convert()),
-							intval($importer['importer_uid']),
-							intval($r[0]['parent'])
+				if($posted_id) {
+					if(! $is_like) {
+						$r = q("SELECT `parent` FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+							intval($posted_id),
+							intval($importer['importer_uid'])
+						);
+						if(count($r)) {
+							$r1 = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `uid` = %d AND `parent` = %d",
+								dbesc(datetime_convert()),
+								intval($importer['importer_uid']),
+								intval($r[0]['parent'])
+							);
+						}
+						$r2 = q("UPDATE `item` SET `last-child` = 1, `changed` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
+								dbesc(datetime_convert()),
+								intval($importer['importer_uid']),
+								intval($posted_id)
 						);
 					}
-					$r2 = q("UPDATE `item` SET `last-child` = 1, `changed` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
-							dbesc(datetime_convert()),
-							intval($importer['importer_uid']),
-							intval($posted_id)
-					);
 
 					$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 
 					proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"comment-import\" \"$posted_id\" &", 
 						array(),$foo));
 
-					if(($importer['notify-flags'] & NOTIFY_COMMENT) && (! $importer['self'])) {
+					if((! $is_like) && ($importer['notify-flags'] & NOTIFY_COMMENT) && (! $importer['self'])) {
 						require_once('bbcode.php');
 						$from = stripslashes($datarray['author-name']);
 						$tpl = load_view_file('view/cmnt_received_eml.tpl');			
@@ -298,12 +300,10 @@ function dfrn_notify_post(&$a) {
 							'$body' => strip_tags(bbcode(stripslashes($datarray['body'])))
 						));
 	
-						$res = mail($importer['email'], $from . t(" commented on an item at ") . $a->config['sitename'],
-							$email_tpl,t("From: Administrator@") . $a->get_hostname() );
+						$res = mail($importer['email'], $from . t(' commented on an item at ') . $a->config['sitename'],
+							$email_tpl, "From: " . t('Administrator') . '@' . $a->get_hostname() );
 					}
 				}
-
-				// TODO send notification mail about like/dislike, but we need a new notify pref for this
 
 				xml_status(0);
 				// NOTREACHED
