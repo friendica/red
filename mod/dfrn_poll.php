@@ -10,6 +10,7 @@ function dfrn_poll_init(&$a) {
 	$type            = ((x($_GET,'type'))            ? $_GET['type']                 : '');
 	$last_update     = ((x($_GET,'last_update'))     ? $_GET['last_update']          : '');
 	$destination_url = ((x($_GET,'destination_url')) ? $_GET['destination_url']      : '');
+	$sec             = ((x($_GET,'sec'))             ? intval($_GET['sec'])          : 0);
 	$dfrn_version    = ((x($_GET,'dfrn_version'))    ? (float) $_GET['dfrn_version'] : 0);
 
 
@@ -212,18 +213,11 @@ function dfrn_poll_post(&$a) {
 
 function dfrn_poll_content(&$a) {
 
-
-	$dfrn_id = '';
-	$type = 'data';
-
-	if(x($_GET,'dfrn_id'))
-		$dfrn_id = $_GET['dfrn_id'];
-	if(x($_GET,'type'))
-		$type = $_GET['type'];
-	if(x($_GET,'last_update'))
-		$last_update = $_GET['last_update'];
-
-	$dfrn_version = (float) $_GET['dfrn_version'];
+	$dfrn_id      = ((x($_GET,'dfrn_id'))      ? $_GET['dfrn_id']              : '');
+	$type         = ((x($_GET,'type'))         ? $_GET['type']                 : 'data');
+	$last_update  = ((x($_GET,'last_update'))  ? $_GET['last_update']          : '');
+	$dfrn_version = ((x($_GET,'dfrn_version')) ? (float) $_GET['dfrn_version'] : 2.0);
+	$sec          = ((x($_GET,'sec'))          ? intval($_GET['sec'])          : 0);
 
 	$direction = (-1);
 	if(strpos($dfrn_id,':') == 1) {
@@ -249,7 +243,6 @@ function dfrn_poll_content(&$a) {
 			dbesc($last_update)
 		);
 
-
 		$sql_extra = '';
 		switch($direction) {
 			case (-1):
@@ -268,9 +261,6 @@ function dfrn_poll_content(&$a) {
 				goaway($a->get_baseurl());
 				break; // NOTREACHED
 		}
-
-
-
 
 		$r = q("SELECT * FROM `contact` WHERE `blocked` = 0 AND `pending` = 0 $sql_extra LIMIT 1");
 
@@ -296,10 +286,11 @@ function dfrn_poll_content(&$a) {
 		else {
 			$status = 1;
 		}
+
 		header("Content-type: text/xml");
 		echo '<?xml version="1.0" encoding="UTF-8"?>' . "\r\n"
 			. '<dfrn_poll>' . "\r\n"
-			. "\t" . '<status>' .$status . '</status>' . "\r\n"
+			. "\t" . '<status>' . $status . '</status>' . "\r\n"
 			. "\t" . '<dfrn_version>' . DFRN_PROTOCOL_VERSION . '</dfrn_version>' . "\r\n"
 			. "\t" . '<dfrn_id>' . $encrypted_id . '</dfrn_id>' . "\r\n"
 			. "\t" . '<challenge>' . $challenge . '</challenge>' . "\r\n"

@@ -27,6 +27,6 @@ function redir_init(&$a) {
 		dbesc($dfrn_id),
 		intval(time() + 45));
 	goaway ($r[0]['poll'] . '?dfrn_id=' . $dfrn_id 
-		. '&dfrn_version=' . DFRN_PROTOCOL_VERSION . '&type=profile');
+		. '&dfrn_version=' . DFRN_PROTOCOL_VERSION . '&type=profile&sec=1');
 	
 }
