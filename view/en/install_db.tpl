@@ -6,7 +6,7 @@
 In order to install Friendika we need to know how to contact your database. Please contact your hosting provider or site administrator if you have questions about these settings. The database you specify below must already exist. If it does not, please create it before continuing. 
 </p>
 
-<form id="install-form" action="install" method="post">
+<form id="install-form" action="$baseurl/install" method="post">
 
 <input type="hidden" name="phpath" value="$phpath" />
 

@@ -169,6 +169,9 @@ class App {
 		if(x($_GET,'q'))
 			$this->cmd = trim($_GET['q'],'/');
 
+		$path = trim(dirname($_SERVER['SCRIPT_NAME']),'/');
+		if(isset($path) && strlen($path) && ($path != $this->path))
+			$this->path = $path;
 
 		$this->argv = explode('/',$this->cmd);
 		$this->argc = count($this->argv);
@@ -231,7 +234,7 @@ class App {
 	function init_pagehead() {
 		$tpl = load_view_file("view/head.tpl");
 		$this->page['htmlhead'] = replace_macros($tpl,array(
-			'$baseurl' => $this->get_baseurl()
+			'$baseurl' => $this->get_baseurl() . '/'
 		));
 	}
 

@@ -5,6 +5,7 @@ function install_post(&$a) {
 
 	global $db;
 
+	$urlpath = $a->get_path();
 	$dbhost = notags(trim($_POST['dbhost']));
 	$dbuser = notags(trim($_POST['dbuser']));
 	$dbpass = notags(trim($_POST['dbpass']));
@@ -40,6 +41,7 @@ function install_post(&$a) {
 		'$dbpass' => $dbpass,
 		'$dbdata' => $dbdata,
 		'$timezone' => $timezone,
+		'$urlpath' => $urlpath,
 		'$phpath' => $phpath
 	));
 	$result = file_put_contents('.htconfig.php', $txt);
@@ -102,6 +104,7 @@ function install_content(&$a) {
 
 	$tpl = load_view_file('view/install_db.tpl');
 	$o .= replace_macros($tpl, array(
+		'$baseurl' => $a->get_baseurl(),
 		'$tzselect' => ((x($_POST,'timezone')) ? select_timezone($_POST['timezone']) : select_timezone()),
 		'$submit' => t('Submit'),
 		'$dbhost' => ((x($_POST,'dbhost')) ? notags(trim($_POST['dbhost'])) : 'localhost'),

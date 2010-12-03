@@ -13,7 +13,7 @@ $db_data = '$dbdata';
 // For instance if your URL is 'http://example.com/directory/subdirectory',
 // set $a->path to 'directory/subdirectory'. 
 
-$a->path = '';
+$a->path = '$urlpath';
  
 // Choose a legal default timezone. If you are unsure, use "America/Los_Angeles".
 // It can be changed later and only applies to timestamps for anonymous viewers.
