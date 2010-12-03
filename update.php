@@ -179,5 +179,7 @@ function update_1018() {
 
 function update_1019() {
 	q("ALTER TABLE `mail` DROP `delivered`");
-//	leaving open for more updates as this isn't critical enough to roll the build number
+	q("ALTER TABLE `profile` ADD `showwith` TINYINT(1) NOT NULL DEFAULT '0' AFTER `marital` ");
+
 }
+
