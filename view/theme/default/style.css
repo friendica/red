@@ -757,6 +757,11 @@ input#dfrn-url {
 	width: 50px;
 }
 
+#profile-edit-with-label {
+	width: 175px;
+	margin-left: 20px;
+}
+
 #profile-edit-homepage {
 	float: left;
 	margin-bottom: 35px;
@@ -1253,6 +1258,11 @@ input#dfrn-url {
 	margin-right: 20px;
 	padding: 10px;
 	border: 1px solid #CCCCCC;
+}
+
+#advanced-profile-with {
+	float: left;
+	margin-left: 15px;
 }
 
 #contact-edit-wrapper {

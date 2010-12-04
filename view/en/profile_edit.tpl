@@ -96,6 +96,8 @@ $hide_friends
 <label id="profile-edit-marital-label" for="profile-edit-marital" >Marital Status: </label>
 $marital
 </div>
+<label id="profile-edit-with-label" for="profile-edit-with" > Who: (if applicable) </label>
+<input type="text" size="32" name="with" id="profile-edit-with" value="$with" />
 <div id="profile-edit-marital-end"></div>
 
 <div id="profile-edit-sexual-wrapper" >

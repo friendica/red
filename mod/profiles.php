@@ -57,6 +57,53 @@ function profiles_post(&$a) {
 		if($marital != $orig[0]['marital'])
 			$maritalchanged = true;
 
+		$with = ((x($_POST,'with')) ? notags(trim($_POST['with'])) : '');
+
+		// linkify the relationship target if applicable
+
+		if(strlen($with)) {
+			if($with != strip_tags($orig[0]['with'])) {
+				$prf = '';
+				$lookup = $with;
+				if((strpos($lookup,'@')) || (strpos($lookup,'http://'))) {
+					$newname = $lookup;
+					$links = @lrdd($lookup);
+					if(count($links)) {
+						foreach($links as $link) {
+							if($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page') {
+            	       			$prf = $link['@attributes']['href'];
+							}
+						}
+					}
+				}
+				else {
+					$newname = $lookup;
+					if(strstr($lookup,' ')) {
+						$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `uid` = %d LIMIT 1",
+							dbesc($newname),
+							intval(local_user())
+						);
+					}
+					else {
+						$r = q("SELECT * FROM `contact` WHERE `nick` = '%s' AND `uid` = %d LIMIT 1",
+							dbesc($lookup),
+							intval(local_user())
+						);
+					}
+					if(count($r)) {
+						$prf = $r[0]['url'];
+						$newname = $r[0]['name'];
+					}
+				}
+	
+				if($prf) {
+					$with = str_replace($lookup,'<a href="' . $prf . '">' . $newname	. '</a>', $with);
+				}
+			}
+			else
+				$with = $orig[0]['with'];
+		}
+
 		$sexual = notags(trim($_POST['sexual']));
 		$homepage = notags(trim($_POST['homepage']));
 		$politic = notags(trim($_POST['politic']));
@@ -86,6 +133,7 @@ function profiles_post(&$a) {
 			`postal-code` = '%s',
 			`country-name` = '%s',
 			`marital` = '%s',
+			`with` = '%s',
 			`sexual` = '%s',
 			`homepage` = '%s',
 			`politic` = '%s',
@@ -112,6 +160,7 @@ function profiles_post(&$a) {
 			dbesc($postal_code),
 			dbesc($country_name),
 			dbesc($marital),
+			dbesc($with),
 			dbesc($sexual),
 			dbesc($homepage),
 			dbesc($politic),
@@ -296,9 +345,6 @@ function profiles_content(&$a) {
 		$a->page['htmlhead'] .= "<script type=\"text/javascript\" src=\"include/country.js\" ></script>";
 
 
-
-	
-
 		$is_default = (($r[0]['is-default']) ? 1 : 0);
 		$tpl = load_view_file("view/profile_edit.tpl");
 		$o .= replace_macros($tpl,array(
@@ -318,6 +364,7 @@ function profiles_content(&$a) {
 			'$age' => ((intval($r[0]['dob'])) ? '(' . t('Age: ') . age($r[0]['dob'],$a->user['timezone'],$a->user['timezone']) . ')' : ''),
 			'$gender' => gender_selector($r[0]['gender']),
 			'$marital' => marital_selector($r[0]['marital']),
+			'$with' => strip_tags($r[0]['with']),
 			'$sexual' => sexpref_selector($r[0]['sexual']),
 			'$about' => $r[0]['about'],
 			'$homepage' => $r[0]['homepage'],
@@ -335,8 +382,6 @@ function profiles_content(&$a) {
 		));
 
 		return $o;
-
-
 	}
 	else {
 
