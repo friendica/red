@@ -62,7 +62,11 @@ $o .= <<< EOT
 <div id="advanced-profile-marital-wrapper" >
 <div id="advanced-profile-marital-text"><span class="heart">&hearts;</span> Status:</div>
 <div id="advanced-profile-marital">{$a->profile['marital']}</div>
-<div id="advanced-profile-with">({$a->profile['with']})</div>
+EOT;
+
+if($a->profile['with'])
+	$o .= "<div id=\"advanced-profile-with\">({$a->profile['with']})</div>";
+$o .= <<< EOT
 </div>
 <div id="advanced-profile-marital-end"></div>
 EOT;
