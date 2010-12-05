@@ -553,9 +553,14 @@ function item_store($arr) {
 
 	// The content body has been through a lot of filtering and transport escaping by now. 
 	// We don't want to skip any filters, however a side effect of all this filtering 
-	// is that ampersands will have been double encoded. 
+	// is that ampersands and <> may have been double encoded, depending on which filter chain
+	// they came through. 
 
-	$arr['body']          = str_replace('&amp;amp;','&amp;',$arr['body']);
+	$arr['body']          = str_replace(
+								array('&amp;amp;','&amp;gt;','&amp;lt;'),
+								array('&amp;'    ,'&gt;'    ,'&lt;'),
+								$arr['body']
+							);
 
 
 
@@ -576,6 +581,16 @@ function item_store($arr) {
 		);
 
 		if(count($r)) {
+
+			// is the new message multi-level threaded?
+			// even though we don't support it now, preserve the info
+			// and re-attach to the conversation parent.
+
+			if($r[0]['uri'] != $r[0]['parent-uri']) {
+				$arr['thr-parent'] = $arr['parent-uri'];
+				$arr['parent-uri'] = $r[0]['parent-uri'];
+			}
+
 			$parent_id = $r[0]['id'];
 			$allow_cid = $r[0]['allow_cid'];
 			$allow_gid = $r[0]['allow_gid'];

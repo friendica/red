@@ -180,6 +180,9 @@ function update_1018() {
 function update_1019() {
 	q("ALTER TABLE `mail` DROP `delivered`");
 	q("ALTER TABLE `profile` ADD `showwith` TINYINT(1) NOT NULL DEFAULT '0' AFTER `marital` ");
-
 }
 
+function update_1020() {
+	q("ALTER TABLE `profile` DROP `showwith`");
+	q("ALTER TABLE `item` ADD `thr-parent` CHAR( 255 ) NOT NULL AFTER `parent-uri` ");
+}
