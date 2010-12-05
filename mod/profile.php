@@ -338,12 +338,17 @@ function profile_content(&$a, $update = 0) {
 			else
 				$sparkle = '';
 
-			// We received this post via a remote feed. It's either a wall-to-wall or a remote comment. The author is
-			// known to us and is reflected in the contact-id for this item. We can use the contact url or redirect rather than 
-			// use the link in the feed. This is different than on the network page where we may not know the author.
- 
-			$profile_name = ((strlen($item['author-name'])) ? $item['author-name'] : $item['name']);
-			$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $item['thumb']);
+			// We would prefer to use our own avatar link for this item because the one in the author-avatar might reference a 
+			// remote site (which could be down). We will use author-avatar if we haven't got something stored locally.
+			// We use this same logic block in mod/network.php to determine it this is a third party post and we don't have any 
+			// local contact info at all. In this module you should never encounter a third-party author, but we still will do
+			// the right thing if you ever do. 
+
+			$diff_author = (($item['url'] !== $item['author-link']) ? true : false);
+
+			$profile_name   = (((strlen($item['author-name']))   && $diff_author) ? $item['author-name']   : $item['name']);
+			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $item['thumb']);
+
 			$profile_link = $profile_url;
 
 			$drop = '';
