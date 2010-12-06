@@ -54,7 +54,7 @@ tinyMCE.init({
 	$(document).ready(function() {
 		var uploader = new window.AjaxUpload(
 			'prvmail-upload',
-			{ action: 'wall_upload',
+			{ action: 'wall_upload/$nickname',
 				name: 'userfile',
 				onSubmit: function(file,ext) { $('#profile-rotator').show(); },
 				onComplete: function(file,response) {

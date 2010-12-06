@@ -202,7 +202,7 @@ function message_content(&$a) {
 				'$from_name' =>$rr['from-name'],
 				'$from_url' => $a->get_baseurl() . '/redir/' . $rr['contact-id'],
 				'$sparkle' => ' sparkle',
-				'$from_photo' => $rr['from-photo'],
+				'$from_photo' => $rr['thumb'],
 				'$subject' => (($rr['mailseen']) ? $rr['title'] : '<strong>' . $rr['title'] . '</strong>'),
 				'$delete' => t('Delete conversation'),
 				'$body' => $rr['body'],
@@ -247,7 +247,10 @@ function message_content(&$a) {
 
 		$tpl = load_view_file('view/msg-header.tpl');
 	
-		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
+		$a->page['htmlhead'] .= replace_macros($tpl, array(
+			'$nickname' => $a->user['nickname'],
+			'$baseurl' => $a->get_baseurl()
+		));
 
 
 		$tpl = load_view_file('view/mail_conv.tpl');
