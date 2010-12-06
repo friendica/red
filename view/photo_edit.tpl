@@ -1,5 +1,5 @@
 
-<form action="photos/$resource_id" method="post" id="photo_edit_form" >
+<form action="photos/$nickname/$resource_id" method="post" id="photo_edit_form" >
 
 	<input type="hidden" name="item_id" value="$item_id" />
 

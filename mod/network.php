@@ -38,7 +38,8 @@ function network_content(&$a, $update = 0) {
 	
 		$a->page['htmlhead'] .= replace_macros($tpl, array(
 			'$baseurl' => $a->get_baseurl(),
-			'$geotag' => $geotag
+			'$geotag' => $geotag,
+			'$nickname' => $a->user['nickname']
 		));
 
 		require_once('include/acl_selectors.php');

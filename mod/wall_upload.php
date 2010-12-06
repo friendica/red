@@ -4,8 +4,41 @@ require_once('Photo.php');
 
 function wall_upload_post(&$a) {
 
-	if(! local_user()) {
-		echo ( t('Permission denied.') . EOL );
+	if($a->argc > 1) {
+		$nick = $a->argv[1];
+		$r = q("SELECT * FROM `user` WHERE `nickname` = '%s' AND `blocked` = 0 LIMIT 1",
+			dbesc($nick)
+		);
+		if(! count($r))
+			return;
+
+	}
+	else
+		return;
+
+	$can_post  = false;
+	$visitor   = 0;
+
+	$page_owner_uid = $r[0]['uid'];
+	$community_page = (($r[0]['page-flags'] == PAGE_COMMUNITY) ? true : false);
+
+	if((local_user()) && (local_user() == $page_owner_uid))
+		$can_post = true;
+	else {
+		if($community_page && remote_user()) {
+			$r = q("SELECT `uid` FROM `contact` WHERE `blocked` = 0 AND `pending` = 0 AND `id` = %d AND `uid` = %d LIMIT 1",
+				intval(remote_user()),
+				intval($page_owner_uid)
+			);
+			if(count($r)) {
+				$can_post = true;
+				$visitor = remote_user();
+			}
+		}
+	}
+
+	if(! $can_post) {
+		notice( t('Permission denied.') . EOL );
 		killme();
 	}
 
@@ -15,6 +48,14 @@ function wall_upload_post(&$a) {
 	$src      = $_FILES['userfile']['tmp_name'];
 	$filename = basename($_FILES['userfile']['name']);
 	$filesize = intval($_FILES['userfile']['size']);
+
+	$maximagesize = get_config('system','maximagesize');
+
+	if(($maximagesize) && ($filesize > $maximagesize)) {
+		notice( t('Image exceeds size limit of ') . $maximagesize . EOL);
+		@unlink($src);
+		return;
+	}
 
 	$imagedata = @file_get_contents($src);
 	$ph = new Photo($imagedata);
@@ -34,7 +75,7 @@ function wall_upload_post(&$a) {
 	
 	$smallest = 0;
 
-	$r = $ph->store(local_user(), 0, $hash, $filename, t('Wall Photos'), 0 );
+	$r = $ph->store($page_owner_uid, $visitor, $hash, $filename, t('Wall Photos'), 0 );
 
 	if(! $r) {
 		echo ( t('Image upload failed.') . EOL);
@@ -43,14 +84,14 @@ function wall_upload_post(&$a) {
 
 	if($width > 640 || $height > 640) {
 		$ph->scaleImage(640);
-		$r = $ph->store(local_user(), 0, $hash, $filename, t('Wall Photos'), 1 );
+		$r = $ph->store($page_owner_uid, $visitor, $hash, $filename, t('Wall Photos'), 1 );
 		if($r) 
 			$smallest = 1;
 	}
 
 	if($width > 320 || $height > 320) {
 		$ph->scaleImage(320);
-		$r = $ph->store(local_user(), 0, $hash, $filename, t('Wall Photos'), 2 );
+		$r = $ph->store($page_owner_uid, $visitor, $hash, $filename, t('Wall Photos'), 2 );
 		if($r)
 			$smallest = 2;
 	}

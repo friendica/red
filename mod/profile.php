@@ -82,7 +82,6 @@ function profile_init(&$a) {
 
 function profile_content(&$a, $update = 0) {
 
-
 	require_once("include/bbcode.php");
 	require_once('include/security.php');
 
@@ -124,6 +123,7 @@ function profile_content(&$a, $update = 0) {
 	}
 
 	$is_owner = ((local_user()) && (local_user() == $a->profile['profile_uid']) ? true : false);
+	
 
 	if(! $update) {
 		if(x($_GET,'tab'))
@@ -148,22 +148,27 @@ function profile_content(&$a, $update = 0) {
 			return $o;
 		}
 
+		$commpage = (($a->profile['page-flags'] == PAGE_COMMUNITY) ? true : false);
+		$commvisitor = (($commpage && $remote_contact == true) ? true : false);
+
 		$celeb = ((($a->profile['page-flags'] == PAGE_SOAPBOX) || ($a->profile['page-flags'] == PAGE_COMMUNITY)) ? true : false);
+
 		if(can_write_wall($a,$a->profile['profile_uid'])) {
 
-
-			$geotag = (($is_owner && $a->profile['allow_location']) ? load_view_file('view/jot_geotag.tpl') : '');
+			$geotag = ((($is_owner || $commvisitor) && $a->profile['allow_location']) ? load_view_file('view/jot_geotag.tpl') : '');
 
 			$tpl = load_view_file('view/jot-header.tpl');
 	
 			$a->page['htmlhead'] .= replace_macros($tpl, array(
 				'$baseurl' => $a->get_baseurl(),
-				'$geotag'  => $geotag
+				'$geotag'  => $geotag,
+				'$nickname' => $a->profile['nickname']
 			));
 
 			require_once('include/acl_selectors.php');
 
-			$tpl = load_view_file("view/jot.tpl");
+			$tpl = load_view_file('view/jot.tpl');
+
 			if(is_array($a->user) && ((strlen($a->user['allow_cid'])) || (strlen($a->user['allow_gid'])) || (strlen($a->user['deny_cid'])) || (strlen($a->user['deny_gid']))))
 				$lockstate = 'lock';
 			else
@@ -172,7 +177,7 @@ function profile_content(&$a, $update = 0) {
 				'$baseurl' => $a->get_baseurl(),
 				'$defloc' => (($is_owner) ? $a->user['default-location'] : ''),
 				'$return_path' => $a->cmd,
-				'$visitor' => (($is_owner) ? 'block' : 'none'),
+				'$visitor' => (($is_owner || $commvisitor) ? 'block' : 'none'),
 				'$lockstate' => $lockstate,
 				'$bang' => '',
 				'$acl' => (($is_owner) ? populate_acl($a->user, $celeb) : ''),

@@ -1,5 +1,5 @@
 <h3>$pagename</h3>
-<form action="photos" enctype="multipart/form-data" method="post" name="photos-upload-form" id="photos-upload-form" >
+<form action="photos/$nickname" enctype="multipart/form-data" method="post" name="photos-upload-form" id="photos-upload-form" >
 	<div id="photos-upload-new-wrapper" >
 		<div id="photos-upload-newalbum-div">
 			<label id="photos-upload-newalbum-text" for="photos-upload-newalbum" >$newalbum</label>
