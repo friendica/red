@@ -34,6 +34,9 @@ function contact_remove($id) {
 	q("DELETE FROM `photo` WHERE `contact-id` = %d ",
 		intval($id)
 	);
+	q("DELETE FROM `mail` WHERE `contact-id` = %d ",
+		intval($id)
+	);
 }
 
 
