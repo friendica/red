@@ -57,3 +57,10 @@ $a->config['system']['directory_submit_url'] = 'http://dir.friendika.com/submit'
 
 $a->config['system']['huburl'] = 'http://pubsubhubbub.appspot.com';
 
+// Server-to-server private message encryption (RINO) is allowed by default. 
+// Encryption will only be provided if this setting is true and the
+// PHP mcrypt extension is installed on both systems 
+
+$a->config['system']['rino_encrypt'] = true;
+
+ 
