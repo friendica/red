@@ -518,16 +518,29 @@ function random_string() {
 	return(hash('sha256',uniqid(rand(),true)));
 }}
 
-// This is our primary input filter. The high bit hack only involved some old
-// IE browser, forget which. 
-// Use this on any text input where angle chars are not valid or permitted
-// They will be replaced with safer brackets. This may be filtered further
-// if these are not allowed either.   
+/**
+ * This is our primary input filter. 
+ *
+ * The high bit hack only involved some old IE browser, forget which (IE5/Mac?)
+ * that had an XSS attack vector due to stripping the high-bit on an 8-bit character
+ * after cleansing, and angle chars with the high bit set could get through as markup.
+ * 
+ * This is now disabled because it was interfering with some legitimate unicode sequences 
+ * and hopefully there aren't a lot of those browsers left. 
+ *
+ * Use this on any text input where angle chars are not valid or permitted
+ * They will be replaced with safer brackets. This may be filtered further
+ * if these are not allowed either.   
+ *
+ */
 
 if(! function_exists('notags')) {
 function notags($string) {
-	// protect against :<> with high-bit set
-	return(str_replace(array("<",">","\xBA","\xBC","\xBE"), array('[',']','','',''), $string));
+
+	return(str_replace(array("<",">"), array('[',']'), $string));
+
+//  High-bit filter no longer used
+//	return(str_replace(array("<",">","\xBA","\xBC","\xBE"), array('[',']','','',''), $string));
 }}
 
 // use this on "body" or "content" input where angle chars shouldn't be removed,
