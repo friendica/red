@@ -30,17 +30,12 @@ function register_post(&$a) {
 		break;
 	}
 
-	if(x($_POST,'username'))
-		$username = notags(trim($_POST['username']));
-	if(x($_POST['nickname']))
-		$nickname = notags(trim($_POST['nickname']));
-	if(x($_POST,'email'))
-		$email = notags(trim($_POST['email']));
-	if(x($_POST,'openid_url'))
-		$openid_url = notags(trim($_POST['openid_url']));
 
-	$photo = ((x($_POST,'photo')) ? notags(trim($_POST['photo'])) : '');
-
+	$username   = ((x($_POST,'username'))   ? notags(trim($_POST['username']))   : '');
+	$nickname   = ((x($_POST,'nickname'))   ? notags(trim($_POST['nickname']))   : '');
+	$email      = ((x($_POST,'email'))      ? notags(trim($_POST['email']))      : '');
+	$openid_url = ((x($_POST,'openid_url')) ? notags(trim($_POST['openid_url'])) : '');
+	$photo      = ((x($_POST,'photo'))      ? notags(trim($_POST['photo']))      : '');
 
 	if((! x($username)) || (! x($email)) || (! x($nickname))) {
 		if($openid_url) {
@@ -71,14 +66,15 @@ function register_post(&$a) {
 	// I don't really like having this rule, but it cuts down
 	// on the number of auto-registrations by Russian spammers
 	
-//	$no_utf = get_config('system','no_utf');
+	//  Using preg_match was completely unreliable, due to mixed UTF-8 regex support
+	//	$no_utf = get_config('system','no_utf');
+	//	$pat = (($no_utf) ? '/^[a-zA-Z]* [a-zA-Z]*$/' : '/^\p{L}* \p{L}*$/u' ); 
 
-//	$pat = (($no_utf) ? '/^[a-zA-Z]* [a-zA-Z]*$/' : '/^\p{L}* \p{L}*$/u' ); 
-
-//	$loose_reg = get_config('system','no_regfullname');
-
-//	if((! $loose_reg) && (! preg_match($pat,$username)))
-//		$err .= t('That doesn\'t appear to be your full name.') . EOL;
+	// So now we are just looking for a space in the full name. 
+	
+	$loose_reg = get_config('system','no_regfullname');
+	if((! $loose_reg) && (! strpos($username,' ')))
+		$err .= t("That doesn\'t appear to be your full \x28First Last\x29 name.") . EOL;
 
 	if(! allowed_email($email))
 			$err .= t('Your email domain is not among those allowed on this site.') . EOL;
