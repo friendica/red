@@ -29,7 +29,7 @@ function parse_url_content(&$a) {
 
 	if($items) {
 		foreach($items as $item) {
-			$title = $item->textContent;
+			$title = trim($item->textContent);
 			break;
 		}
 	}
