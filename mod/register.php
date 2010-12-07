@@ -71,14 +71,14 @@ function register_post(&$a) {
 	// I don't really like having this rule, but it cuts down
 	// on the number of auto-registrations by Russian spammers
 	
-	$no_utf = get_config('system','no_utf');
+//	$no_utf = get_config('system','no_utf');
 
-	$pat = (($no_utf) ? '/^[a-zA-Z]* [a-zA-Z]*$/' : '/^\p{L}* \p{L}*$/u' ); 
+//	$pat = (($no_utf) ? '/^[a-zA-Z]* [a-zA-Z]*$/' : '/^\p{L}* \p{L}*$/u' ); 
 
-	$loose_reg = get_config('system','no_regfullname');
+//	$loose_reg = get_config('system','no_regfullname');
 
-	if((! $loose_reg) && (! preg_match($pat,$username)))
-		$err .= t('That doesn\'t appear to be your full name.') . EOL;
+//	if((! $loose_reg) && (! preg_match($pat,$username)))
+//		$err .= t('That doesn\'t appear to be your full name.') . EOL;
 
 	if(! allowed_email($email))
 			$err .= t('Your email domain is not among those allowed on this site.') . EOL;
