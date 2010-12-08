@@ -1,12 +1,15 @@
 <?php
 
-// MySQL database class
-//
-// For debugging, insert 'dbg(x);' anywhere in the program flow.
-// x = 1: display db success/failure following content
-// x = 2: display full queries following content
-// x = 3: display full queries using echo; which will mess up display
-//        really bad but will return output in stubborn cases.
+/**
+ *
+ * MySQL database class
+ *
+ * For debugging, insert 'dbg(1);' anywhere in the program flow.
+ * dbg(0); will turn it off. Logging is performed at LOGGER_DATA level.
+ * When logging, all binary info is converted to text and html entities are escaped so that 
+ * the debugging stream is safe to view within both terminals and web pages.
+ *
+ */
  
 if(! class_exists('dba')) { 
 class dba {
@@ -51,6 +54,13 @@ class dba {
 			logger('dba: ' . $str );
 		}
 		else {
+
+			/*
+			 * If dbfail.out exists, we will write any failed calls directly to it,
+			 * regardless of any logging that may or may nor be in effect.
+			 * These usually indicate SQL syntax errors that need to be resolved.
+			 */
+
 			if($result === false) {
 				logger('dba: ' . printable($sql) . ' returned false.');
 				if(file_exists('dbfail.out'))
