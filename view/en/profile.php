@@ -48,7 +48,7 @@
 	<?php } ?>
 
 	<?php if(strlen($profile['pubkey'])) { ?>
-		<div class="key" style="display: none"><?php echo $profile['pubkey']; ?></div>
+		<div class="key" style="display: none;"><?php echo $profile['pubkey']; ?></div>
 	<?php } ?>
 </div>
 <?php } ?>

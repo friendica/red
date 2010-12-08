@@ -186,3 +186,10 @@ function update_1020() {
 	q("ALTER TABLE `profile` DROP `showwith`");
 	q("ALTER TABLE `item` ADD `thr-parent` CHAR( 255 ) NOT NULL AFTER `parent-uri` ");
 }
+
+function update_1021() {
+	q("ALTER TABLE `profile_check` ADD `sec` CHAR( 255 ) NOT NULL AFTER `dfrn_id` ");
+	q("ALTER TABLE `profile_check` ADD `cid` INT(10) unsigned  NOT NULL DEFAULT '0' AFTER `uid`");
+	q("ALTER TABLE `item` ADD `private` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `deny_gid` ");
+}
+

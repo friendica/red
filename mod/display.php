@@ -142,8 +142,8 @@ function display_content(&$a) {
 				&& ($item['id'] != $item['parent']))
 				continue;
 
-			$lock = (($item['uid'] == local_user()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
-				|| strlen($item['deny_cid']) || strlen($item['deny_gid']))
+			$lock = ((($item['private']) || (($item['uid'] == local_user()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
+				|| strlen($item['deny_cid']) || strlen($item['deny_gid']))))
 				? '<div class="wall-item-lock"><img src="images/lock_icon.gif" class="lockview" alt="' . t('Private Message') . '" onclick="lockview(event,' . $item['id'] . ');" /></div>'
 				: '<div class="wall-item-lock"></div>');
 
@@ -235,6 +235,12 @@ function display_content(&$a) {
 					$location = '<span class="smalltext">' . $coord . '</span>';
 			}
 
+			$indent = (($item['parent'] != $item['item_id']) ? ' comment' : '');
+
+			if(strcmp(datetime_convert('UTC','UTC',$item['created']),datetime_convert('UTC','UTC','now - 12 hours')) > 0)
+				$indent .= ' shiny'; 
+
+
 			$o .= replace_macros($template,array(
 				'$id' => $item['item_id'],
 				'$profile_url' => $profile_link,
@@ -247,7 +253,7 @@ function display_content(&$a) {
 				'$ago' => relative_date($item['created']),
 				'$lock' => $lock,
 				'$location' => $location,
-				'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
+				'$indent' => $indent,
 				'$owner_url' => $owner_url,
 				'$owner_photo' => $owner_photo,
 				'$owner_name' => $owner_name,

@@ -644,7 +644,7 @@ function photos_content(&$a) {
 	$owner_uid = $a->data['user']['uid'];
 
 	$community_page = (($a->data['user']['page-flags'] == PAGE_COMMUNITY) ? true : false);
-dbg(1);
+
 	if((local_user()) && (local_user() == $owner_uid))
 		$can_post = true;
 	else {

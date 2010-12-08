@@ -187,6 +187,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `allow_gid` mediumtext NOT NULL,
   `deny_cid` mediumtext NOT NULL,
   `deny_gid` mediumtext NOT NULL,
+  `private` tinyint(1) NOT NULL DEFAULT '0',
   `visible` tinyint(1) NOT NULL DEFAULT '0',
   `unseen` tinyint(1) NOT NULL DEFAULT '1',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
@@ -319,7 +320,9 @@ CREATE TABLE IF NOT EXISTS `profile` (
 CREATE TABLE IF NOT EXISTS `profile_check` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(10) unsigned NOT NULL,
+  `cid` int(10) unsigned NOT NULL,
   `dfrn_id` char(255) NOT NULL,
+  `sec` char(255) NOT NULL,
   `expire` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;

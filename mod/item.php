@@ -53,6 +53,8 @@ function item_post(&$a) {
 	$str_group_deny    = perms2str($_POST['group_deny']);
 	$str_contact_deny  = perms2str($_POST['contact_deny']);
 
+	$private = ((strlen($str_group_allow) || strlen($str_contact_allow) || strlen($str_group_deny) || strlen($str_contact_deny)) ? 1 : 0);
+
 	$title             = notags(trim($_POST['title']));
 	$body              = escape_tags(trim($_POST['body']));
 	$location          = notags(trim($_POST['location']));
@@ -195,8 +197,8 @@ function item_post(&$a) {
 
 	$r = q("INSERT INTO `item` (`uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `changed`, `uri`, `title`, `body`, `location`, `coord`, 
-		`tag`, `inform`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`)
-		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+		`tag`, `inform`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private` )
+		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d )",
 		intval($profile_uid),
 		dbesc($post_type),
 		intval($wall),
@@ -222,7 +224,8 @@ function item_post(&$a) {
 		dbesc($str_contact_allow),
 		dbesc($str_group_allow),
 		dbesc($str_contact_deny),
-		dbesc($str_group_deny)
+		dbesc($str_group_deny),
+		intval($private)
 	);
 	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
 		dbesc($uri));
@@ -241,12 +244,13 @@ function item_post(&$a) {
 			// Inherit ACL's from the parent item.
 			// TODO merge with subsequent UPDATE operation and save a db write 
 
-			$r = q("UPDATE `item` SET `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s'
+			$r = q("UPDATE `item` SET `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `private` = %d
 				WHERE `id` = %d LIMIT 1",
 				dbesc($parent_item['allow_cid']),
 				dbesc($parent_item['allow_gid']),
 				dbesc($parent_item['deny_cid']),
 				dbesc($parent_item['deny_gid']),
+				intval($parent_item['private']),
 				intval($post_id)
 			);
 

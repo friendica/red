@@ -12,8 +12,12 @@ $install = ((file_exists('.htconfig.php')) ? false : true);
 
 @include(".htconfig.php");
 
-if(isset($lang) && strlen($lang))
-	load_translation_table($lang);
+// get language setting directly from system variables, bypassing get_config()
+// as database may not yet be configured.
+
+$lang = ((isset($a->config['system']['language'])) ? $a->config['system']['language'] : 'en');
+	
+load_translation_table($lang);
 
 require_once("dba.php");
 $db = new dba($db_host, $db_user, $db_pass, $db_data, $install);
@@ -122,9 +126,6 @@ $a->page['htmlhead'] = replace_macros($a->page['htmlhead'], array(
 
 $page    = $a->page;
 $profile = $a->profile;
-$lang    = get_config('system','language');
-if($lang === false)
-	$lang = 'en';
 
 header("Content-type: text/html; charset=utf-8");
 

@@ -4,10 +4,13 @@ function redir_init(&$a) {
 
 	if((! local_user()) || (! ($a->argc == 2)) || (! intval($a->argv[1])))
 		goaway($a->get_baseurl());
+	$cid = $a->argv[1];
+
 	$r = q("SELECT `network`, `issued-id`, `dfrn-id`, `duplex`, `poll` FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-		intval($a->argv[1]),
+		intval($cid),
 		intval(local_user())
 	);
+
 	if((! count($r)) || ($r[0]['network'] !== 'dfrn'))
 		goaway($a->get_baseurl());
 
@@ -21,12 +24,20 @@ function redir_init(&$a) {
 		$orig_id = $r[0]['dfrn-id'];
 		$dfrn_id = '0:' . $orig_id;
 	}
-	q("INSERT INTO `profile_check` ( `uid`, `dfrn_id`, `expire`)
-		VALUES( %d, '%s', %d )",
-		intval($_SESSION['uid']),
+
+	$sec = random_string();
+
+	q("INSERT INTO `profile_check` ( `uid`, `cid`, `dfrn_id`, `sec`, `expire`)
+		VALUES( %d, %s, '%s', '%s', %d )",
+		intval(local_user()),
+		intval($cid),
 		dbesc($dfrn_id),
-		intval(time() + 45));
+		dbesc($sec),
+		intval(time() + 45)
+	);
+
 	goaway ($r[0]['poll'] . '?dfrn_id=' . $dfrn_id 
-		. '&dfrn_version=' . DFRN_PROTOCOL_VERSION . '&type=profile&sec=1');
+//		. '&dfrn_version=' . DFRN_PROTOCOL_VERSION . '&type=profile');
+		. '&dfrn_version=' . DFRN_PROTOCOL_VERSION . '&type=profile&sec=' . $sec);
 	
 }

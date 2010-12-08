@@ -165,10 +165,12 @@ function network_content(&$a, $update = 0) {
 			if(((activity_match($item['verb'],ACTIVITY_LIKE)) || (activity_match($item['verb'],ACTIVITY_DISLIKE))) && ($item['id'] != $item['parent']))
 				continue;
 
-			$lock = (($item['uid'] == local_user()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
-				|| strlen($item['deny_cid']) || strlen($item['deny_gid']))
+
+			$lock = ((($item['private']) || (($item['uid'] == local_user()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
+				|| strlen($item['deny_cid']) || strlen($item['deny_gid']))))
 				? '<div class="wall-item-lock"><img src="images/lock_icon.gif" class="lockview" alt="' . t('Private Message') . '" onclick="lockview(event,' . $item['id'] . ');" /></div>'
 				: '<div class="wall-item-lock"></div>');
+
 
 			// Top-level wall post not written by the wall owner (wall-to-wall)
 			// First figure out who owns it. 
@@ -274,6 +276,12 @@ function network_content(&$a, $update = 0) {
 					$location = '<span class="smalltext">' . $coord . '</span>';
 			}
 
+			$indent = (($item['parent'] != $item['item_id']) ? ' comment' : '');
+
+			if(strcmp(datetime_convert('UTC','UTC',$item['created']),datetime_convert('UTC','UTC','now - 12 hours')) > 0)
+				$indent .= ' shiny'; 
+
+
 			// Build the HTML
 
 			$o .= replace_macros($template,array(
@@ -288,7 +296,7 @@ function network_content(&$a, $update = 0) {
 				'$ago' => relative_date($item['created']),
 				'$lock' => $lock,
 				'$location' => $location,
-				'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
+				'$indent' => $indent,
 				'$owner_url' => $owner_url,
 				'$owner_photo' => $owner_photo,
 				'$owner_name' => $owner_name,
