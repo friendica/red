@@ -142,8 +142,8 @@ function display_content(&$a) {
 				&& ($item['id'] != $item['parent']))
 				continue;
 
-			$lock = (($item['uid'] == local_user()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
-				|| strlen($item['deny_cid']) || strlen($item['deny_gid']))
+			$lock = ((($item['private']) || (($item['uid'] == local_user()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
+				|| strlen($item['deny_cid']) || strlen($item['deny_gid']))))
 				? '<div class="wall-item-lock"><img src="images/lock_icon.gif" class="lockview" alt="' . t('Private Message') . '" onclick="lockview(event,' . $item['id'] . ');" /></div>'
 				: '<div class="wall-item-lock"></div>');
 

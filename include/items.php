@@ -367,6 +367,12 @@ function get_atom_elements($feed,$item) {
 	else
 		$res['last-child'] = 0;
 
+	$private = $item->get_item_tags(NAMESPACE_DFRN,'private');
+	if($private && $private[0]['data'] == 1)
+		$res['private'] = 1;
+	else
+		$res['private'] = 0;
+
 	$rawcreated = $item->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'published');
 	if($rawcreated)
 		$res['created'] = unxmlify($rawcreated[0]['data']);
@@ -549,6 +555,7 @@ function item_store($arr) {
 	$arr['allow_gid']     = ((x($arr,'allow_gid'))     ? trim($arr['allow_gid'])             : '');
 	$arr['deny_cid']      = ((x($arr,'deny_cid'))      ? trim($arr['deny_cid'])              : '');
 	$arr['deny_gid']      = ((x($arr,'deny_gid'))      ? trim($arr['deny_gid'])              : '');
+	$arr['private']       = ((x($arr,'private'))       ? intval($arr['private'])             : 0 );
 	$arr['body']          = ((x($arr,'body'))          ? escape_tags(trim($arr['body']))     : '');
 
 	// The content body has been through a lot of filtering and transport escaping by now. 
@@ -631,15 +638,21 @@ function item_store($arr) {
 	if($arr['parent-uri'] === $arr['uri'])
 		$parent_id = $current_post;
  
+	if(strlen($allow_cid) || strlen($allow_gid) || strlen($deny_cid) || strlen($deny_gid))
+		$private = 1;
+	else
+		$private = $arr['private']; 
+
 	// Set parent id - and also make sure to inherit the parent's ACL's.
 
 	$r = q("UPDATE `item` SET `parent` = %d, `allow_cid` = '%s', `allow_gid` = '%s',
-		`deny_cid` = '%s', `deny_gid` = '%s' WHERE `id` = %d LIMIT 1",
+		`deny_cid` = '%s', `deny_gid` = '%s', `private` = %d WHERE `id` = %d LIMIT 1",
 		intval($parent_id),
 		dbesc($allow_cid),
 		dbesc($allow_gid),
 		dbesc($deny_cid),
 		dbesc($deny_gid),
+		intval($private),
 		intval($current_post)
 	);
 
@@ -1255,6 +1268,9 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 
 	if($item['coord'])
 		$o .= '<georss:point>' . xmlify($item['coord']) . '</georss:point>' . "\r\n";
+
+	if(($item['private']) || strlen($item['allow_cid']) || strlen($item['allow_gid']) || strlen($item['deny_cid']) || strlen($item['deny_gid']))
+		$o .= '<dfrn:private>1</dfrn:private>' . "\r\n";
 
 	$verb = construct_verb($item);
 	$o .= '<as:verb>' . xmlify($verb) . '</as:verb>' . "\r\n";
