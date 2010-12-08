@@ -71,6 +71,11 @@ code {
 blockquote:before {
 	content: '>> ';
 }
+
+.shiny {
+	border-color: orange !important;
+}
+
 .nav-login-link {
 	float: right;
 	margin-left: 0px;

@@ -376,6 +376,11 @@ function profile_content(&$a, $update = 0) {
 					$location = '<span class="smalltext">' . $coord . '</span>';
 			}
 
+			$indent = (($item['parent'] != $item['item_id']) ? ' comment' : '');
+
+			if(strcmp(datetime_convert('UTC','UTC',$item['created']),datetime_convert('UTC','UTC','now - 12 hours')) > 0)
+				$indent .= ' shiny'; 
+
 			$o .= replace_macros($template,array(
 				'$id' => $item['item_id'],
 				'$profile_url' => $profile_link,
@@ -387,7 +392,7 @@ function profile_content(&$a, $update = 0) {
 				'$ago' => relative_date($item['created']),
 				'$lock' => $lock,
 				'$location' => $location, 
-				'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
+				'$indent' => $indent, 
 				'$drop' => $drop,
 				'$like' => $like,
 				'$vote' => $likebuttons,
