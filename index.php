@@ -1,27 +1,65 @@
 <?php
 
-require_once("boot.php");
+/**
+ *
+ * Friendika
+ *
+ */
+
+/**
+ *
+ * bootstrap the application
+ *
+ */
+
+require_once('boot.php');
 
 $a = new App;
 
-$debug_text = ''; // Debugging functions should never be used on production systems.
-
-// Setup the language and database.
+/**
+ *
+ * Load the configuration file which contains our DB credentials.
+ * Ignore errors. If the file doesn't exist, we are running in installation mode.
+ *
+ */
 
 $install = ((file_exists('.htconfig.php')) ? false : true);
 
 @include(".htconfig.php");
 
-// get language setting directly from system variables, bypassing get_config()
-// as database may not yet be configured.
+/**
+ *
+ * Get the language setting directly from system variables, bypassing get_config()
+ * as database may not yet be configured.
+ *
+ */
 
 $lang = ((isset($a->config['system']['language'])) ? $a->config['system']['language'] : 'en');
 	
 load_translation_table($lang);
 
+/**
+ *
+ * Try to open the database;
+ *
+ */
+
 require_once("dba.php");
 $db = new dba($db_host, $db_user, $db_pass, $db_data, $install);
         unset($db_host, $db_user, $db_pass, $db_data);
+
+
+/**
+ *
+ * Important stuff we always need to do.
+ * Initialise authentication and  date and time. 
+ * Create the HTML head for the page, even if we may not use it (xml, etc.)
+ * The order of these may be important so use caution if you think they're all
+ * intertwingled with no logical order and decide to sort it out. Some of the
+ * dependencies have changed, but at least at one time in the recent past - the 
+ * order was critical to everything working properly
+ *
+ */
 
 if(! $install)
 	require_once("session.php");
@@ -34,6 +72,17 @@ $a->init_pagehead();
 
 session_start();
 
+/**
+ *
+ * For Mozilla auth manager - still needs sorting, and this might conflict with LRDD header.
+ * Apache/PHP lumps the Link: headers into one - and other services might not be able to parse it
+ * this way. There's a PHP flag to link the headers because by default this will over-write any other 
+ * link header. 
+ *
+ * What we really need to do is output the raw headers ourselves so we can keep them separate.
+ *
+ */
+ 
 // header('Link: <' . $a->get_baseurl() . '/amcd>; rel="acct-mgmt";');
 
 if((x($_SESSION,'authenticated')) || (x($_POST,'auth-params')) || ($a->module === 'login'))
@@ -45,10 +94,33 @@ if(! x($_SESSION,'authenticated'))
 if(! x($_SESSION,'sysmsg'))
 	$_SESSION['sysmsg'] = '';
 
+/*
+ * check_config() is responible for running update scripts. These automatically 
+ * update the DB schema whenever  we push a new one out. 
+ */
+
+
 if($install)
 	$a->module = 'install';
 else
 	check_config($a);
+
+
+/**
+ *
+ * We have already parsed the server path into $->argc and $a->argv
+ *
+ * $a->argv[0] is our module name. We will load the file mod/{$a->argv[0]}.php
+ * and use it for handling our URL request.
+ * The module file contains a few functions that we call in various circumstances
+ * and in the following order:
+ * 
+ * "module"_init
+ * "module"_post (only if there are $_POST variables)
+ * "module"_afterpost
+ * "module"_content - the string return of this function contains our page body
+ *
+ */
 
 if(strlen($a->module)) {
 	if(file_exists("mod/{$a->module}.php")) {
@@ -66,7 +138,7 @@ if($a->module_loaded) {
 	if(function_exists($a->module . '_init')) {
 		$func = $a->module . '_init';
 		$func($a);
-    	}
+	}
 
 	if(($_SERVER['REQUEST_METHOD'] === 'POST') && (! $a->error)
 		&& (function_exists($a->module . '_post'))
@@ -93,7 +165,11 @@ if(stristr($_SESSION['sysmsg'], t('Permission denied'))) {
 	header($_SERVER["SERVER_PROTOCOL"] . ' 403 ' . t('Permission denied.'));
 }
 
-// report anything important happening
+/**
+ *
+ * Report anything which needs to be communicated in the notification area (before the main body)
+ *
+ */
 	
 if(x($_SESSION,'sysmsg')) {
 	$a->page['content'] = "<div id=\"sysmsg\" class=\"error-message\">{$_SESSION['sysmsg']}</div>\r\n"
@@ -101,19 +177,30 @@ if(x($_SESSION,'sysmsg')) {
 	unset($_SESSION['sysmsg']);
 }
 
-
-// Feel free to comment out this line on production sites.
-$a->page['content'] .= $debug_text;
+/**
+ *
+ * Add a place for the pause/resume Ajax indicator
+ *
+ */
 
 $a->page['content'] .=  '<div id="pause"></div>';
-// build page
 
 
-// Navigation (menu) template
+/**
+ *
+ * Add the navigation (menu) template
+ *
+ */
+
 if($a->module != 'install')
 	require_once("nav.php");
 
-// make sure the desired theme exists, though if the default theme doesn't exist we're stuffed.
+/**
+ *
+ * Build the page - now that we have all the components
+ * Make sure the desired theme exists, though if the default theme doesn't exist we're stuffed.
+ *
+ */
 
 if((x($_SESSION,'theme')) && (! file_exists('view/theme/' . $_SESSION['theme'] . '/style.css')))
 	unset($_SESSION['theme']);

@@ -1,14 +1,28 @@
 <?php
 
-// There are two possible entry points. 
-
+/*
+ * Module: dfrn_confirm
+ * Purpose: Friendship acceptance for DFRN contacts
+ *
+ * There are two possible entry points and three scenarios.
+ *
+ *   1. A form was submitted by our user approving a friendship that originated elsewhere.
+ *      This may also be called from dfrn_request to automatically approve a friendship.
+ *
+ *   2. We may be the target or other side of the conversation to scenario 1, and will 
+ *      interact with that process on our own user's behalf.
+ *   
+ */
 
 function dfrn_confirm_post(&$a,$handsfree = null) {
 
 	if(is_array($handsfree)) {
 
-		// called directly from dfrn_request due to automatic friend acceptance
-		// any $_POST parameters we may require are supplied in the $handsfree array
+		/**
+		 * We were called directly from dfrn_request due to automatic friend acceptance.
+		 * Any $_POST parameters we may require are supplied in the $handsfree array.
+		 *
+		 */
 
 		$node = $handsfree['node'];
 		$a->interactive = false; // notice() becomes a no-op since nobody is there to see it
@@ -19,10 +33,17 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			$node = $a->argv[1];
 	}
 
-		// Main entry point. Our user received a friend request notification (perhaps 
-		// from another site) and clicked 'Approve'. $POST['source_url'] is not set.
-		// OR we have been called directly from dfrn_request ($handsfree != null) due to 
-		// this being a page type which supports automatic friend acceptance.
+		/**
+		 *
+		 * Main entry point. Scenario 1. Our user received a friend request notification (perhaps 
+		 * from another site) and clicked 'Approve'. 
+		 * $POST['source_url'] is not set. If it is, it indicates Scenario 2.
+		 *
+		 * We may also have been called directly from dfrn_request ($handsfree != null) due to 
+		 * this being a page type which supports automatic friend acceptance. That is also Scenario 1
+		 * since we are operating on behalf of our registered user to approve a friendship.
+		 *
+		 */
 
 	if(! x($_POST,'source_url')) {
 
@@ -43,35 +64,53 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		}	
 
 
-		// These come from either the friend request notification form or $handsfree array.
+		// These data elements may come from either the friend request notification form or $handsfree array.
 
 		if(is_array($handsfree)) {
-			$dfrn_id = $handsfree['dfrn_id'];
-			$intro_id = $handsfree['intro_id'];
-			$duplex = $handsfree['duplex'];
 			logger('dfrn_confirm: Confirm in handsfree mode');
+			$dfrn_id   = $handsfree['dfrn_id'];
+			$intro_id  = $handsfree['intro_id'];
+			$duplex    = $handsfree['duplex'];
 		}
 		else {
-			$dfrn_id  = ((x($_POST,'dfrn_id')) ? notags(trim($_POST['dfrn_id'])) : "");
-			$intro_id = intval($_POST['intro_id']);
-			$duplex   = intval($_POST['duplex']);
-			$cid      = intval($_POST['contact_id']);
+			$dfrn_id  = ((x($_POST,'dfrn_id'))    ? notags(trim($_POST['dfrn_id'])) : "");
+			$intro_id = ((x($_POST,'intro_id'))   ? intval($_POST['intro_id'])      : 0 );
+			$duplex   = ((x($_POST,'duplex'))     ? intval($_POST['duplex'])        : 0 );
+			$cid      = ((x($_POST,'contact_id')) ? intval($_POST['contact_id'])    : 0 );
 		}
 
+		/**
+		 *
+		 * Ensure that dfrn_id has precedence when we go to find the contact record.
+		 * We only want to search based on contact id if there is no dfrn_id, 
+		 * e.g. for OStatus network followers.
+		 *
+		 */
+
+		if(strlen($dfrn_id))
+			$cid = 0;
+
 		logger('dfrn_confirm: Confirming request for dfrn_id (issued) ' . $dfrn_id);
+		if($cid)
+			logger('dfrn_confirm: Confirming follower with contact_id: ' . $cid);
 
 
-		// The other person will have been issued an ID when they first requested friendship.
-		// Locate their record. At this time, their record will have both pending and blocked set to 1. 
-		// There won't be any dfrn_id if this is a network follower, so use the contact_id instead.
+		/**
+		 *
+		 * The other person will have been issued an ID when they first requested friendship.
+		 * Locate their record. At this time, their record will have both pending and blocked set to 1. 
+		 * There won't be any dfrn_id if this is a network follower, so use the contact_id instead.
+		 *
+		 */
 
 		$r = q("SELECT * FROM `contact` WHERE ( ( `issued-id` != '' AND `issued-id` = '%s' ) OR ( `id` = %d AND `id` != 0 ) ) AND `uid` = %d LIMIT 1",
-				dbesc($dfrn_id),
-				intval($cid),
-				intval($uid)
+			dbesc($dfrn_id),
+			intval($cid),
+			intval($uid)
 		);
 
 		if(! count($r)) {
+			logger('dfrn_confirm: Contact not found in DB.'); 
 			notice( t('Contact not found.') . EOL );
 			return;
 		}
@@ -88,18 +127,21 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 
 		if($network === 'dfrn') {
 
-			// Generate a key pair for all further communications with this person.
-			// We have a keypair for every contact, and a site key for unknown people.
-			// This provides a means to carry on relationships with other people if 
-			// any single key is compromised. It is a robust key. We're much more 
-			// worried about key leakage than anybody cracking it.  
+			/**
+			 *
+			 * Generate a key pair for all further communications with this person.
+			 * We have a keypair for every contact, and a site key for unknown people.
+			 * This provides a means to carry on relationships with other people if 
+			 * any single key is compromised. It is a robust key. We're much more 
+			 * worried about key leakage than anybody cracking it.  
+			 *
+			 */
 
 			$res = openssl_pkey_new(array(
 				'digest_alg' => 'sha1',
 				'private_key_bits' => 4096,
 				'encrypt_key' => false )
 			);
-
 
 			$private_key = '';
 
@@ -118,16 +160,20 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 
 			$params = array();
 
-			// Per the protocol document, we will verify both ends by encrypting the dfrn_id with our 
-			// site private key (person on the other end can decrypt it with our site public key).
-			// Then encrypt our profile URL with the other person's site public key. They can decrypt
-			// it with their site private key. If the decryption on the other end fails for either
-			// item, it indicates tampering or key failure on at least one site and we will not be 
-			// able to provide a secure communication pathway.
-
-			// If other site is willing to accept full encryption, (aes_allow is 1 AND we have php5.3 
-			// or later) then we encrypt the personal public key we send them using AES-256-CBC and a 
-			// random key which is encrypted with their site public key.  
+			/**
+			 *
+			 * Per the DFRN protocol, we will verify both ends by encrypting the dfrn_id with our 
+			 * site private key (person on the other end can decrypt it with our site public key).
+			 * Then encrypt our profile URL with the other person's site public key. They can decrypt
+			 * it with their site private key. If the decryption on the other end fails for either
+			 * item, it indicates tampering or key failure on at least one site and we will not be 
+			 * able to provide a secure communication pathway.
+			 *
+			 * If other site is willing to accept full encryption, (aes_allow is 1 AND we have php5.3 
+			 * or later) then we encrypt the personal public key we send them using AES-256-CBC and a 
+			 * random key which is encrypted with their site public key.  
+			 *
+			 */
 
 			$src_aes_key = random_string();
 
@@ -153,7 +199,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			if($duplex == 1)
 				$params['duplex'] = 1;
 
-			logger('dfrn_confirm: Confirm: posted data: ' . print_r($params,true), LOGGER_DATA);
+			logger('dfrn_confirm: Confirm: posting data to ' . $dfrn_confirm . ': ' . print_r($params,true), LOGGER_DATA);
 
 			// POST all this stuff to the other site.
 
@@ -233,9 +279,16 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				return;
 		}
 
-		// We have now established a relationship with the other site.
-		// Let's make our own personal copy of their profile photo so we don't have
-		// to always load it from their site.
+
+		/*
+		 *
+		 * We have now established a relationship with the other site.
+		 * Let's make our own personal copy of their profile photo so we don't have
+		 * to always load it from their site.
+		 *
+		 * We will also update the contact record with the nature and scope of the relationship.
+		 *
+		 */
 
 		require_once("Photo.php");
 
@@ -276,11 +329,10 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			);
 		}
 		else {  
+			// $network !== 'dfrn'
 
 			$notify = '';
 			$poll   = '';
-
-			// $network !== 'dfrn'
 
 			$arr = lrdd($contact['url']);
 			if(count($arr)) {
@@ -332,31 +384,33 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 
 		if($handsfree === null)
 			goaway($a->get_baseurl() . '/contacts/' . intval($contact_id));
-		return;  //NOTREACHED
-
+		else
+			return;  
+		//NOTREACHED
 	}
 
-
-
-	// End of first scenario. [Local confirmation of remote friend request].
-
-
-
-	// Begin scenario two. This is the remote response to the above scenario.
-	// This will take place on the site that originally initiated the friend request.
-	// In the section above where the confirming party makes a POST and 
-	// retrieves xml status information, they are communicating with the following code.
+	/**
+	 *
+	 *
+	 * End of Scenario 1. [Local confirmation of remote friend request].
+	 *
+	 * Begin Scenario 2. This is the remote response to the above scenario.
+	 * This will take place on the site that originally initiated the friend request.
+	 * In the section above where the confirming party makes a POST and 
+	 * retrieves xml status information, they are communicating with the following code.
+	 *
+	 */
 
 	if(x($_POST,'source_url')) {
 
 		// We are processing an external confirmation to an introduction created by our user.
 
-		$public_key = $_POST['public_key'];
-		$dfrn_id    = hex2bin($_POST['dfrn_id']);
-		$source_url = hex2bin($_POST['source_url']);
-		$aes_key    = $_POST['aes_key'];
-		$duplex     = $_POST['duplex'];
-		$version_id = (float) $_POST['dfrn_version'];
+		$public_key = ((x($_POST,'public_key'))   ? $_POST['public_key']           : '');
+		$dfrn_id    = ((x($_POST,'dfrn_id'))      ? hex2bin($_POST['dfrn_id'])     : '');
+		$source_url = ((x($_POST,'source_url'))   ? hex2bin($_POST['source_url'])  : '');
+		$aes_key    = ((x($_POST,'aes_key'))      ? $_POST['aes_key']              : '');
+		$duplex     = ((x($_POST,'duplex'))       ? intval($_POST['duplex'])       : 0 );
+		$version_id = ((x($_POST,'dfrn_version')) ? (float) $_POST['dfrn_version'] : 2.0);
 	
 		logger('dfrn_confirm: requestee contacted: ' . $node);
 
