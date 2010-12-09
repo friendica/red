@@ -1590,3 +1590,24 @@ function linkify($s) {
 	$s = preg_replace("/(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\.\=\_\~\#\'\%]*)/", ' <a href="$1" >$1</a>', $s);
 	return($s);
 }}
+
+if(! function_exists('smilies')) {
+function smilies($s) {
+	$a = get_app();
+
+	return str_replace(
+	array( ':-)', ';-)', ':-(', ':(', ':-P', ':-"', ':-x', ':-X', ':-D', '8-|', '8-O'),
+	array(
+		'<img src="' . $a->get_baseurl() . '/images/smiley-smile.gif" alt=":-)" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-wink.gif" alt=";-)" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-frown.gif" alt=":-(" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-frown.gif" alt=":(" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-tongue-out.gif" alt=":-P" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-\"" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-x" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-X" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-laughing.gif" alt=":-D" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-|" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-O" />'
+	), $s);
+}}

@@ -249,7 +249,7 @@ function display_content(&$a) {
 				'$osparkle' => $osparkle,
 				'$thumb' => $profile_avatar,
 				'$title' => $item['title'],
-				'$body' => bbcode($item['body']),
+				'$body' => smilies(bbcode($item['body'])),
 				'$ago' => relative_date($item['created']),
 				'$lock' => $lock,
 				'$location' => $location,
