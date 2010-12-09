@@ -201,7 +201,15 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 
 			logger('dfrn_confirm: Confirm: posting data to ' . $dfrn_confirm . ': ' . print_r($params,true), LOGGER_DATA);
 
-			// POST all this stuff to the other site.
+			/**
+			 *
+			 * POST all this stuff to the other site.
+			 * Temporarily raise the network timeout to 120 seconds because the default 60
+			 * doesn't always give the other side quite enough time to decrypt everything.
+			 *
+			 */
+
+			$a->config['system']['curl_timeout'] = 120;
 
 			$res = post_url($dfrn_confirm,$params);
 
