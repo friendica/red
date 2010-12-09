@@ -424,7 +424,10 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 
 	$a->set_curl_code(0);
 
-	$s = curl_exec($ch);
+	// don't let curl abort the entire application
+	// if it throws any errors.
+
+	$s = @curl_exec($ch);
 
 	$http_code = intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
 	$header = substr($s,0,strpos($s,"\r\n\r\n"));
@@ -484,7 +487,10 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
 
 	$a->set_curl_code(0);
 
-	$s = curl_exec($ch);
+	// don't let curl abort the entire application
+	// if it throws any errors.
+
+	$s = @curl_exec($ch);
 
 	$http_code = intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
 	$header = substr($s,0,strpos($s,"\r\n\r\n"));
