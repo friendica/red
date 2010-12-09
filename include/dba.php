@@ -28,7 +28,6 @@ class dba {
 	}
 
 	public function q($sql) {
-		global $debug_text;
 		
 		if(! $this->db )
 			return false;
