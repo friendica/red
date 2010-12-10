@@ -1,15 +1,22 @@
 <?php
 
+/**
+ * module: invite.php
+ *
+ * send email invitations to join social network
+ *
+ */
 
 function invite_post(&$a) {
+
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
 
 
-	$recips = explode("\n",$_POST['recipients']);
-	$message = $_POST['message'];
+	$recips  = ((x($_POST,'recipients')) ? explode("\n",$_POST['recipients']) : array());
+	$message = ((x($_POST,'message'))    ? notags(trim($_POST['message']))    : '');
 
 	$total = 0;
 
@@ -38,6 +45,7 @@ function invite_post(&$a) {
 
 
 function invite_content(&$a) {
+
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
 		return;
@@ -51,7 +59,7 @@ function invite_content(&$a) {
 		'$msg_text' => t('Your message:'),
 		'$default_message' => t('Please join my social network on ') . $a->config['sitename'] . t("\r\n") . t("\r\n")
 			. t('To accept this invitation, please visit:') . t("\r\n") . t("\r\n") . $a->get_baseurl()
-			. t("\r\n") . t("\r\n") . t('Once you have registered, please make an introduction via my profile page at:') 
+			. t("\r\n") . t("\r\n") . t('Once you have registered, please connect with me via my profile page at:') 
 			. t("\r\n") . t("\r\n") . $a->get_baseurl() . '/profile/' . $a->user['nickname'] ,
 		'$submit' => t('Submit')
 	));

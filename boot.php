@@ -8,7 +8,9 @@ define ( 'DFRN_PROTOCOL_VERSION',  '2.0'  );
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
 
-// log levels
+/**
+ * log levels
+ */
 
 define ( 'LOGGER_NORMAL',          0 );
 define ( 'LOGGER_TRACE',           1 );
@@ -16,37 +18,49 @@ define ( 'LOGGER_DEBUG',           2 );
 define ( 'LOGGER_DATA',            3 );
 define ( 'LOGGER_ALL',             4 );
 
-// registration policy
+/**
+ * registration policies
+ */
 
 define ( 'REGISTER_CLOSED',        0 );
 define ( 'REGISTER_APPROVE',       1 );
 define ( 'REGISTER_OPEN',          2 );
 
-// relationship types
+/**
+ * relationship types
+ */
 
 define ( 'REL_VIP',        1);
 define ( 'REL_FAN',        2);
 define ( 'REL_BUD',        3);
 
 
-// page/profile types
-// PAGE_NORMAL is a typical personal profile account
-// PAGE_SOAPBOX automatically approves all friend requests as REL_FAN, (readonly)
-// PAGE_COMMUNITY automatically approves all friend requests as REL_FAN, but with 
-// write access to wall and comments (no email and not included in page owner's ACL lists)
-// PAGE_FREELOVE automatically approves all friend requests as full friends (REL_BUD). 
+/**
+ *
+ * page/profile types
+ *
+ * PAGE_NORMAL is a typical personal profile account
+ * PAGE_SOAPBOX automatically approves all friend requests as REL_FAN, (readonly)
+ * PAGE_COMMUNITY automatically approves all friend requests as REL_FAN, but with 
+ *      write access to wall and comments (no email and not included in page owner's ACL lists)
+ * PAGE_FREELOVE automatically approves all friend requests as full friends (REL_BUD). 
+ *
+ */
 
 define ( 'PAGE_NORMAL',            0 );
 define ( 'PAGE_SOAPBOX',           1 );
 define ( 'PAGE_COMMUNITY',         2 );
 define ( 'PAGE_FREELOVE',          3 );
 
-// Maximum number of "people who like (or don't like) this" 
-// that we will list by name
+/**
+ * Maximum number of "people who like (or don't like) this"  that we will list by name
+ */
 
 define ( 'MAX_LIKERS',    75);
 
-// email notification options
+/**
+ * email notification options
+ */
 
 define ( 'NOTIFY_INTRO',   0x0001 );
 define ( 'NOTIFY_CONFIRM', 0x0002 );
@@ -54,7 +68,9 @@ define ( 'NOTIFY_WALL',    0x0004 );
 define ( 'NOTIFY_COMMENT', 0x0008 );
 define ( 'NOTIFY_MAIL',    0x0010 );
 
-// various namespaces we may need to parse
+/**
+ * various namespaces we may need to parse
+ */
 
 define ( 'NAMESPACE_DFRN' ,           'http://purl.org/macgirvin/dfrn/1.0' ); 
 define ( 'NAMESPACE_THREAD' ,         'http://purl.org/syndication/thread/1.0' );
@@ -68,7 +84,9 @@ define ( 'NAMESPACE_GEORSS',          'http://www.georss.org/georss' );
 define ( 'NAMESPACE_POCO',            'http://portablecontacts.net/spec/1.0' );
 define ( 'NAMESPACE_FEED',            'http://schemas.google.com/g/2010#updates-from' );
 
-// activity stream defines
+/**
+ * activity stream defines
+ */
 
 define ( 'ACTIVITY_LIKE',        NAMESPACE_ACTIVITY_SCHEMA . 'like' );
 define ( 'ACTIVITY_DISLIKE',     NAMESPACE_DFRN            . '/dislike' );
@@ -88,14 +106,21 @@ define ( 'ACTIVITY_OBJ_PHOTO',   NAMESPACE_ACTIVITY_SCHEMA . 'photo' );
 define ( 'ACTIVITY_OBJ_P_PHOTO', NAMESPACE_ACTIVITY_SCHEMA . 'profile-photo' );
 define ( 'ACTIVITY_OBJ_ALBUM',   NAMESPACE_ACTIVITY_SCHEMA . 'photo-album' );
 
-// item weight for query ordering
+/**
+ * item weight for query ordering
+ */
 
 define ( 'GRAVITY_PARENT',       0);
 define ( 'GRAVITY_LIKE',         3);
 define ( 'GRAVITY_COMMENT',      6);
 
-// Please disable magic_quotes_gpc so we don't have to do this.
-// See http://php.net/manual/en/security.magicquotes.disabling.php
+/**
+ *
+ * Reverse the effect of magic_quotes_gpc if it is enabled.
+ * Please disable magic_quotes_gpc so we don't have to do this.
+ * See http://php.net/manual/en/security.magicquotes.disabling.php
+ *
+ */
 
 if (get_magic_quotes_gpc()) {
     $process = array(&$_GET, &$_POST, &$_COOKIE, &$_REQUEST);
@@ -114,12 +139,18 @@ if (get_magic_quotes_gpc()) {
 }
 
 
-// Our main application structure for the life of this page
-// Primarily deals with the URL that got us here
-// and tries to make some sense of it, and 
-// stores our page contents and config storage
-// and anything else that might need to be passed around 
-// before we spit the page out. 
+/**
+ *
+ * class: App
+ *
+ * Our main application structure for the life of this page
+ * Primarily deals with the URL that got us here
+ * and tries to make some sense of it, and 
+ * stores our page contents and config storage
+ * and anything else that might need to be passed around 
+ * before we spit the page out. 
+ *
+ */
 
 if(! class_exists('App')) {
 class App {
