@@ -1,7 +1,11 @@
 <?php
 
-// This page is fetched via ajax to update the profile page with
-// new content while you are viewing it.
+/**
+ * Module: update_profile
+ * Purpose: AJAX synchronisation of profile page
+ *
+ */
+
 
 require_once('mod/profile.php');
 
@@ -11,19 +15,34 @@ function update_profile_content(&$a) {
 
 	header("Content-type: text/html");
 	echo "<!DOCTYPE html><html><body>\r\n";
+
+	/**
+	 * We can remove this hack once Internet Explorer recognises HTML5 natively
+	 */
+
 	echo (($_GET['msie'] == 1) ? '<div>' : '<section>');
 
-        // Grab the page inner contents, but move any image src attributes to another attribute name.
-        // Some browsers will prefetch all the images for the page even if we don't need them.
-        // The only ones we need to fetch are those for new page additions, which we'll discover
-        // on the client side and then swap the image back.
+	/**
+	 *
+	 * Grab the page inner contents by calling the content function from the profile module directly, 
+	 * but move any image src attributes to another attribute name. This is because 
+	 * some browsers will prefetch all the images for the page even if we don't need them.
+	 * The only ones we need to fetch are those for new page additions, which we'll discover
+	 * on the client side and then swap the image back.
+	 *
+	 */
 
-        $text = profile_content($a,$profile_uid);
-        $pattern = "/<img([^>]*) src=\"([^\"]*)\"/";
-        $replace = "<img\${1} dst=\"\${2}\"";
-        $text = preg_replace($pattern, $replace, $text);
+	$text = profile_content($a,$profile_uid);
 
-        echo str_replace("\t",'       ',$text);
+	$pattern = "/<img([^>]*) src=\"([^\"]*)\"/";
+	$replace = "<img\${1} dst=\"\${2}\"";
+	$text = preg_replace($pattern, $replace, $text);
+
+	/**
+	 * reportedly some versions of MSIE don't handle tabs in XMLHttpRequest documents very well
+	 */
+
+	echo str_replace("\t",'       ',$text);
 	echo (($_GET['msie'] == 1) ? '</div>' : '</section>');
 	echo "</body></html>\r\n";
 	killme();
