@@ -8,7 +8,6 @@ function profile_photo_init(&$a) {
 		return;
 	}
 
-	require_once("mod/profile.php");
 	profile_load($a,$a->user['nickname']);
 
 }

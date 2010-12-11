@@ -3,7 +3,6 @@
 
 function settings_init(&$a) {
 	if(local_user()) {
-		require_once("mod/profile.php");
 		profile_load($a,$a->user['nickname']);
 	}
 }

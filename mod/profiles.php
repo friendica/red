@@ -327,7 +327,6 @@ function profiles_content(&$a) {
 			return;
 		}
 
-		require_once('mod/profile.php');
 		profile_load($a,$a->user['nickname'],$r[0]['id']);
 
 		require_once('include/profile_selectors.php');

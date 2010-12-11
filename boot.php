@@ -7,7 +7,8 @@ define ( 'DFRN_PROTOCOL_VERSION',  '2.0'  );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
-
+define ( 'DOWN_ARROW',             '&#x21e9;'       );
+         
 /**
  * log levels
  */
@@ -1678,4 +1679,74 @@ function smilies($s) {
 		'<img src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-|" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-O" />'
 	), $s);
+}}
+
+
+/**
+ *
+ * Function : profile_load
+ * @parameter App    $a
+ * @parameter string $nickname
+ * @parameter int    $profile
+ *
+ * Summary: Loads a profile into the page sidebar. 
+ * The function requires a writeable copy of the main App structure, and the nickname
+ * of a registered local account.
+ *
+ * If the viewer is an authenticated remote viewer, the profile displayed is the
+ * one that has been configured for his/her viewing in the Contact manager.
+ * Passing a non-zero profile ID can also allow a preview of a selected profile
+ * by the owner.
+ *
+ * Profile information is placed in the App structure for later retrieval.
+ * Honours the owner's chosen theme for display. 
+ *
+ */
+
+if(! function_exists('profile_load')) {
+function profile_load(&$a, $nickname, $profile = 0) {
+	if(remote_user()) {
+		$r = q("SELECT `profile-id` FROM `contact` WHERE `id` = %d LIMIT 1",
+			intval($_SESSION['visitor_id']));
+		if(count($r))
+			$profile = $r[0]['profile-id'];
+	} 
+
+	$r = null;
+
+	if($profile) {
+		$profile_int = intval($profile);
+		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `user`.* FROM `profile` 
+			LEFT JOIN `user` ON `profile`.`uid` = `user`.`uid`
+			WHERE `user`.`nickname` = '%s' AND `profile`.`id` = %d LIMIT 1",
+			dbesc($nickname),
+			intval($profile_int)
+		);
+	}
+	if(! count($r)) {	
+		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `user`.* FROM `profile` 
+			LEFT JOIN `user` ON `profile`.`uid` = `user`.`uid`
+			WHERE `user`.`nickname` = '%s' AND `profile`.`is-default` = 1 LIMIT 1",
+			dbesc($nickname)
+		);
+	}
+
+	if(($r === false) || (! count($r))) {
+		notice( t('No profile') . EOL );
+		$a->error = 404;
+		return;
+	}
+
+	$a->profile = $r[0];
+
+	$a->page['template'] = 'profile';
+
+	$a->page['title'] = $a->profile['name'];
+	$_SESSION['theme'] = $a->profile['theme'];
+
+	if(! (x($a->page,'aside')))
+		$a->page['aside'] = '';
+	$a->page['aside'] .= contact_block();
+
+	return;
 }}
