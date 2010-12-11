@@ -200,9 +200,30 @@ class App {
 		if(x($_GET,'q'))
 			$this->cmd = trim($_GET['q'],'/');
 
+		/** 
+		 * Figure out if we are running at the top of a domain
+		 * or in a sub-directory and adjust accordingly
+		 */
+
 		$path = trim(dirname($_SERVER['SCRIPT_NAME']),'/');
 		if(isset($path) && strlen($path) && ($path != $this->path))
 			$this->path = $path;
+
+
+		/**
+		 *
+		 * Break the URL path into C style argc/argv style arguments for our
+		 * modules. Given "http://example.com/module/arg1/arg2", $this->argc
+		 * will be 3 (integer) and $this->argv will contain:
+		 *   [0] => 'module'
+		 *   [1] => 'arg1'
+		 *   [2] => 'arg2'
+		 *
+		 *
+		 * There will always be one argument. If provided a naked domain
+		 * URL, $this->argv[0] is set to "home".
+		 *
+		 */
 
 		$this->argv = explode('/',$this->cmd);
 		$this->argc = count($this->argv);
@@ -213,9 +234,19 @@ class App {
 			$this->module = 'home';
 		}
 
+		/**
+		 * Special handling for the webfinger/lrdd host XRD file
+		 * Just spit out the contents and exit.
+		 */
+
 		if($this->cmd === '.well-known/host-meta')
 			require_once('include/hostxrd.php');
 
+
+		/**
+		 * See if there is any page number information, and initialise 
+		 * pagination
+		 */
 
 		$this->pager['page'] = ((x($_GET,'page')) ? $_GET['page'] : 1);
 		$this->pager['itemspage'] = 50;
