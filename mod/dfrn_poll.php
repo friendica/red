@@ -353,6 +353,8 @@ function dfrn_poll_content(&$a) {
 		}
 		else {
 			$status = 1;
+			$challenge = '';
+			$encrypted_id = '';
 		}
 
 		if(($type === 'profile') && (strlen($sec))) {

@@ -1,53 +1,5 @@
 <?php
 
-if(! function_exists('profile_load')) {
-function profile_load(&$a, $username, $profile = 0) {
-	if(remote_user()) {
-		$r = q("SELECT `profile-id` FROM `contact` WHERE `id` = %d LIMIT 1",
-			intval($_SESSION['visitor_id']));
-		if(count($r))
-			$profile = $r[0]['profile-id'];
-	} 
-
-	$r = null;
-
-	if($profile) {
-		$profile_int = intval($profile);
-		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `user`.* FROM `profile` 
-			LEFT JOIN `user` ON `profile`.`uid` = `user`.`uid`
-			WHERE `user`.`nickname` = '%s' AND `profile`.`id` = %d LIMIT 1",
-			dbesc($username),
-			intval($profile_int)
-		);
-	}
-	if(! count($r)) {	
-		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `user`.* FROM `profile` 
-			LEFT JOIN `user` ON `profile`.`uid` = `user`.`uid`
-			WHERE `user`.`nickname` = '%s' AND `profile`.`is-default` = 1 LIMIT 1",
-			dbesc($username)
-		);
-	}
-
-	if(($r === false) || (! count($r))) {
-		notice( t('No profile') . EOL );
-		$a->error = 404;
-		return;
-	}
-
-	$a->profile = $r[0];
-
-	$a->page['template'] = 'profile';
-
-	$a->page['title'] = $a->profile['name'];
-	$_SESSION['theme'] = $a->profile['theme'];
-
-	if(! (x($a->page,'aside')))
-		$a->page['aside'] = '';
-	$a->page['aside'] .= contact_block();
-
-	return;
-}}
-
 function profile_init(&$a) {
 
 	if($a->argc > 1)

@@ -80,7 +80,7 @@ function bbcode($Text) {
 
 	// Youtube extensions
         $Text = preg_replace("/\[youtube\]http:\/\/www.youtube.com\/watch\?v\=(.+?)\[\/youtube\]/",'[youtube]$1[/youtube]',$Text); 
-	$Text = preg_replace("/\[youtube\](.+?)\[\/youtube\]/", '<object width="425" height="350"><param name="movie" value="http://www.youtube.com/v/$1"></param><!--[if IE]><embed src="http://www.youtube.com/v/$1" type="application/x-shockwave-flash" width="425" height="350" /><![endif]--></object>', $Text);
+	$Text = preg_replace("/\[youtube\](.+?)\[\/youtube\]/", '<object width="425" height="350" type="application/x-shockwave-flash" data="http://www.youtube.com/v/$1" ><param name="movie" value="http://www.youtube.com/v/$1"></param><!--[if IE]><embed src="http://www.youtube.com/v/$1" type="application/x-shockwave-flash" width="425" height="350" /><![endif]--></object>', $Text);
 
 	return $Text;
 }

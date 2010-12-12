@@ -5,7 +5,6 @@ function display_content(&$a) {
 
 	$o = '<div id="live-display"></div>' . "\r\n";
 
-	require_once('mod/profile.php');
 	profile_init($a);
 
 	$item_id = (($a->argc > 2) ? intval($a->argv[2]) : 0);

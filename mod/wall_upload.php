@@ -19,8 +19,9 @@ function wall_upload_post(&$a) {
 	$can_post  = false;
 	$visitor   = 0;
 
-	$page_owner_uid = $r[0]['uid'];
-	$community_page = (($r[0]['page-flags'] == PAGE_COMMUNITY) ? true : false);
+	$page_owner_uid   = $r[0]['uid'];
+	$page_owner_nick  = $r[0]['nickname'];
+	$community_page   = (($r[0]['page-flags'] == PAGE_COMMUNITY) ? true : false);
 
 	if((local_user()) && (local_user() == $page_owner_uid))
 		$can_post = true;
@@ -97,7 +98,7 @@ function wall_upload_post(&$a) {
 	}
 
 	$basename = basename($filename);
-	echo  "<br /><br /><img src=\"".$a->get_baseurl(). "/photo/{$hash}-{$smallest}.jpg\" alt=\"$basename\" /><br /><br />";
+	echo  '<br /><br /><a href="' . $a->get_baseurl() . '/photos/' . $page_owner_nick . '/image/' . $hash . '" ><img src="' . $a->get_baseurl() . "/photo/{$hash}-{$smallest}.jpg\" alt=\"$basename\" /></a><br /><br />";
 
 	killme();
 	return; // NOTREACHED

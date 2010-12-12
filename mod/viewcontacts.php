@@ -2,7 +2,6 @@
 
 function viewcontacts_init(&$a) {
 
-	require_once("mod/profile.php");
 	profile_load($a,$a->argv[1]);
 
 }

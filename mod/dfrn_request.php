@@ -6,7 +6,6 @@ function dfrn_request_init(&$a) {
 	if($a->argc > 1)
 		$which = $a->argv[1];
 
-	require_once('mod/profile.php');
 	profile_init($a,$which);
 
 	return;

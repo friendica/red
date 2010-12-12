@@ -7,8 +7,11 @@ define ( 'DFRN_PROTOCOL_VERSION',  '2.0'  );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
-
-// log levels
+define ( 'DOWN_ARROW',             '&#x21e9;'       );
+         
+/**
+ * log levels
+ */
 
 define ( 'LOGGER_NORMAL',          0 );
 define ( 'LOGGER_TRACE',           1 );
@@ -16,37 +19,49 @@ define ( 'LOGGER_DEBUG',           2 );
 define ( 'LOGGER_DATA',            3 );
 define ( 'LOGGER_ALL',             4 );
 
-// registration policy
+/**
+ * registration policies
+ */
 
 define ( 'REGISTER_CLOSED',        0 );
 define ( 'REGISTER_APPROVE',       1 );
 define ( 'REGISTER_OPEN',          2 );
 
-// relationship types
+/**
+ * relationship types
+ */
 
 define ( 'REL_VIP',        1);
 define ( 'REL_FAN',        2);
 define ( 'REL_BUD',        3);
 
 
-// page/profile types
-// PAGE_NORMAL is a typical personal profile account
-// PAGE_SOAPBOX automatically approves all friend requests as REL_FAN, (readonly)
-// PAGE_COMMUNITY automatically approves all friend requests as REL_FAN, but with 
-// write access to wall and comments (no email and not included in page owner's ACL lists)
-// PAGE_FREELOVE automatically approves all friend requests as full friends (REL_BUD). 
+/**
+ *
+ * page/profile types
+ *
+ * PAGE_NORMAL is a typical personal profile account
+ * PAGE_SOAPBOX automatically approves all friend requests as REL_FAN, (readonly)
+ * PAGE_COMMUNITY automatically approves all friend requests as REL_FAN, but with 
+ *      write access to wall and comments (no email and not included in page owner's ACL lists)
+ * PAGE_FREELOVE automatically approves all friend requests as full friends (REL_BUD). 
+ *
+ */
 
 define ( 'PAGE_NORMAL',            0 );
 define ( 'PAGE_SOAPBOX',           1 );
 define ( 'PAGE_COMMUNITY',         2 );
 define ( 'PAGE_FREELOVE',          3 );
 
-// Maximum number of "people who like (or don't like) this" 
-// that we will list by name
+/**
+ * Maximum number of "people who like (or don't like) this"  that we will list by name
+ */
 
 define ( 'MAX_LIKERS',    75);
 
-// email notification options
+/**
+ * email notification options
+ */
 
 define ( 'NOTIFY_INTRO',   0x0001 );
 define ( 'NOTIFY_CONFIRM', 0x0002 );
@@ -54,7 +69,9 @@ define ( 'NOTIFY_WALL',    0x0004 );
 define ( 'NOTIFY_COMMENT', 0x0008 );
 define ( 'NOTIFY_MAIL',    0x0010 );
 
-// various namespaces we may need to parse
+/**
+ * various namespaces we may need to parse
+ */
 
 define ( 'NAMESPACE_DFRN' ,           'http://purl.org/macgirvin/dfrn/1.0' ); 
 define ( 'NAMESPACE_THREAD' ,         'http://purl.org/syndication/thread/1.0' );
@@ -68,7 +85,9 @@ define ( 'NAMESPACE_GEORSS',          'http://www.georss.org/georss' );
 define ( 'NAMESPACE_POCO',            'http://portablecontacts.net/spec/1.0' );
 define ( 'NAMESPACE_FEED',            'http://schemas.google.com/g/2010#updates-from' );
 
-// activity stream defines
+/**
+ * activity stream defines
+ */
 
 define ( 'ACTIVITY_LIKE',        NAMESPACE_ACTIVITY_SCHEMA . 'like' );
 define ( 'ACTIVITY_DISLIKE',     NAMESPACE_DFRN            . '/dislike' );
@@ -88,14 +107,21 @@ define ( 'ACTIVITY_OBJ_PHOTO',   NAMESPACE_ACTIVITY_SCHEMA . 'photo' );
 define ( 'ACTIVITY_OBJ_P_PHOTO', NAMESPACE_ACTIVITY_SCHEMA . 'profile-photo' );
 define ( 'ACTIVITY_OBJ_ALBUM',   NAMESPACE_ACTIVITY_SCHEMA . 'photo-album' );
 
-// item weight for query ordering
+/**
+ * item weight for query ordering
+ */
 
 define ( 'GRAVITY_PARENT',       0);
 define ( 'GRAVITY_LIKE',         3);
 define ( 'GRAVITY_COMMENT',      6);
 
-// Please disable magic_quotes_gpc so we don't have to do this.
-// See http://php.net/manual/en/security.magicquotes.disabling.php
+/**
+ *
+ * Reverse the effect of magic_quotes_gpc if it is enabled.
+ * Please disable magic_quotes_gpc so we don't have to do this.
+ * See http://php.net/manual/en/security.magicquotes.disabling.php
+ *
+ */
 
 if (get_magic_quotes_gpc()) {
     $process = array(&$_GET, &$_POST, &$_COOKIE, &$_REQUEST);
@@ -114,12 +140,18 @@ if (get_magic_quotes_gpc()) {
 }
 
 
-// Our main application structure for the life of this page
-// Primarily deals with the URL that got us here
-// and tries to make some sense of it, and 
-// stores our page contents and config storage
-// and anything else that might need to be passed around 
-// before we spit the page out. 
+/**
+ *
+ * class: App
+ *
+ * Our main application structure for the life of this page
+ * Primarily deals with the URL that got us here
+ * and tries to make some sense of it, and 
+ * stores our page contents and config storage
+ * and anything else that might need to be passed around 
+ * before we spit the page out. 
+ *
+ */
 
 if(! class_exists('App')) {
 class App {
@@ -169,9 +201,30 @@ class App {
 		if(x($_GET,'q'))
 			$this->cmd = trim($_GET['q'],'/');
 
+		/** 
+		 * Figure out if we are running at the top of a domain
+		 * or in a sub-directory and adjust accordingly
+		 */
+
 		$path = trim(dirname($_SERVER['SCRIPT_NAME']),'/');
 		if(isset($path) && strlen($path) && ($path != $this->path))
 			$this->path = $path;
+
+
+		/**
+		 *
+		 * Break the URL path into C style argc/argv style arguments for our
+		 * modules. Given "http://example.com/module/arg1/arg2", $this->argc
+		 * will be 3 (integer) and $this->argv will contain:
+		 *   [0] => 'module'
+		 *   [1] => 'arg1'
+		 *   [2] => 'arg2'
+		 *
+		 *
+		 * There will always be one argument. If provided a naked domain
+		 * URL, $this->argv[0] is set to "home".
+		 *
+		 */
 
 		$this->argv = explode('/',$this->cmd);
 		$this->argc = count($this->argv);
@@ -182,9 +235,19 @@ class App {
 			$this->module = 'home';
 		}
 
+		/**
+		 * Special handling for the webfinger/lrdd host XRD file
+		 * Just spit out the contents and exit.
+		 */
+
 		if($this->cmd === '.well-known/host-meta')
 			require_once('include/hostxrd.php');
 
+
+		/**
+		 * See if there is any page number information, and initialise 
+		 * pagination
+		 */
 
 		$this->pager['page'] = ((x($_GET,'page')) ? $_GET['page'] : 1);
 		$this->pager['itemspage'] = 50;
@@ -424,7 +487,10 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 
 	$a->set_curl_code(0);
 
-	$s = curl_exec($ch);
+	// don't let curl abort the entire application
+	// if it throws any errors.
+
+	$s = @curl_exec($ch);
 
 	$http_code = intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
 	$header = substr($s,0,strpos($s,"\r\n\r\n"));
@@ -484,7 +550,10 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
 
 	$a->set_curl_code(0);
 
-	$s = curl_exec($ch);
+	// don't let curl abort the entire application
+	// if it throws any errors.
+
+	$s = @curl_exec($ch);
 
 	$http_code = intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
 	$header = substr($s,0,strpos($s,"\r\n\r\n"));
@@ -1610,4 +1679,74 @@ function smilies($s) {
 		'<img src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-|" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-O" />'
 	), $s);
+}}
+
+
+/**
+ *
+ * Function : profile_load
+ * @parameter App    $a
+ * @parameter string $nickname
+ * @parameter int    $profile
+ *
+ * Summary: Loads a profile into the page sidebar. 
+ * The function requires a writeable copy of the main App structure, and the nickname
+ * of a registered local account.
+ *
+ * If the viewer is an authenticated remote viewer, the profile displayed is the
+ * one that has been configured for his/her viewing in the Contact manager.
+ * Passing a non-zero profile ID can also allow a preview of a selected profile
+ * by the owner.
+ *
+ * Profile information is placed in the App structure for later retrieval.
+ * Honours the owner's chosen theme for display. 
+ *
+ */
+
+if(! function_exists('profile_load')) {
+function profile_load(&$a, $nickname, $profile = 0) {
+	if(remote_user()) {
+		$r = q("SELECT `profile-id` FROM `contact` WHERE `id` = %d LIMIT 1",
+			intval($_SESSION['visitor_id']));
+		if(count($r))
+			$profile = $r[0]['profile-id'];
+	} 
+
+	$r = null;
+
+	if($profile) {
+		$profile_int = intval($profile);
+		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `user`.* FROM `profile` 
+			LEFT JOIN `user` ON `profile`.`uid` = `user`.`uid`
+			WHERE `user`.`nickname` = '%s' AND `profile`.`id` = %d LIMIT 1",
+			dbesc($nickname),
+			intval($profile_int)
+		);
+	}
+	if(! count($r)) {	
+		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `user`.* FROM `profile` 
+			LEFT JOIN `user` ON `profile`.`uid` = `user`.`uid`
+			WHERE `user`.`nickname` = '%s' AND `profile`.`is-default` = 1 LIMIT 1",
+			dbesc($nickname)
+		);
+	}
+
+	if(($r === false) || (! count($r))) {
+		notice( t('No profile') . EOL );
+		$a->error = 404;
+		return;
+	}
+
+	$a->profile = $r[0];
+
+	$a->page['template'] = 'profile';
+
+	$a->page['title'] = $a->profile['name'];
+	$_SESSION['theme'] = $a->profile['theme'];
+
+	if(! (x($a->page,'aside')))
+		$a->page['aside'] = '';
+	$a->page['aside'] .= contact_block();
+
+	return;
 }}
