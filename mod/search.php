@@ -1,13 +1,22 @@
 <?php
 
 
+function search_post(&$a) {
+	if(x($_POST,'search'))
+		$a->data['search'] = $_POST['search'];
+}
+
+
 function search_content(&$a) {
 
 	$o = '<div id="live-search"></div>' . "\r\n";
 
 	$o .= '<h3>' . t('Search') . '</h3>';
 
-	$search = ((x($_GET,'search')) ? rawurldecode($_GET['search']) : '');
+	if(x($a->data,'search'))
+		$search = notags(trim($a->data['search']));
+	else
+		$search = ((x($_GET,'search')) ? notags(trim(rawurldecode($_GET['search']))) : '');
 
 	$o .= search($search);
 

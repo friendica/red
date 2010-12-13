@@ -3,11 +3,22 @@ function directory_init(&$a) {
 	$a->set_pager_itemspage(60);
 }
 
+
+function directory_post(&$a) {
+	if(x($_POST,'search'))
+		$a->data['search'] = $_POST['search'];
+}
+
+
+
 function directory_content(&$a) {
 	$o = '';
 	$o .= '<script>	$(document).ready(function() { $(\'#nav-directory-link\').addClass(\'nav-selected\'); });</script>';
 
-	$search = ((x($_GET,'search')) ? notags(trim($_GET['search'])) : '');
+	if(x($a->data,'search'))
+		$search = notags(trim($a->data['search']));
+	else
+		$search = ((x($_GET,'search')) ? notags(trim($_GET['search'])) : '');
 
 	$tpl = load_view_file('view/directory_header.tpl');
 
