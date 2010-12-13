@@ -178,10 +178,13 @@ img.photo {
 	font-weight: bold;
 	margin-left: 280px;
 }
-#page-footer {
-	height: 20px;
-/*	border-bottom: 3px dashed #15607B; */
-}
+
+/*
+ * #page-footer {
+ *	height: 20px;
+ *
+ * }
+ */
 
 .heart {
 	color: #FF0000;
@@ -224,18 +227,16 @@ nav {
 	background: #15607B;
 }
 
-footer {
-	/*position: absolute;*/
-	left: 0px;
-	/*right: 0px;*/
-	bottom: 0px;
-	/*margin: 20px 20px 20px 20px;*/
-
-	position: fixed;
-	background-color: #0CBEFE;
-	width: 100%;
-	padding: 2px 3%;
-}
+/*
+ * footer {
+ *	left: 0px;
+ *	bottom: 0px;
+ *	position: fixed;
+ *	background-color: #0CBEFE;
+ *	width: 100%;
+ *	padding: 2px 3%;
+ * }
+ */
 
 .fn {
 	font-size: 1.4em;

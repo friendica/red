@@ -120,6 +120,9 @@ else
  * "module"_afterpost
  * "module"_content - the string return of this function contains our page body
  *
+ * Modules which emit other serialisations besides HTML (XML,JSON, etc.) should do 
+ * so within the module init and/or post functions and then invoke killme() to terminate
+ * further processing.
  */
 
 if(strlen($a->module)) {
@@ -193,7 +196,7 @@ $a->page['content'] .=  '<div id="pause"></div>';
  */
 
 if($a->module != 'install')
-	require_once("nav.php");
+	require_once('nav.php');
 
 /**
  *

@@ -5,7 +5,8 @@ function display_content(&$a) {
 
 	$o = '<div id="live-display"></div>' . "\r\n";
 
-	profile_init($a);
+	$nick = (($a->argc > 1) ? $a->argv[1] : '');
+	profile_load($a,$nick);
 
 	$item_id = (($a->argc > 2) ? intval($a->argv[2]) : 0);
 

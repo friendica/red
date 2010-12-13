@@ -6,7 +6,7 @@ function dfrn_request_init(&$a) {
 	if($a->argc > 1)
 		$which = $a->argv[1];
 
-	profile_init($a,$which);
+	profile_load($a,$which);
 
 	return;
 }}
