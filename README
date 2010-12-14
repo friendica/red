@@ -43,9 +43,11 @@ are straight-forward and simple, because we know that relationships rarely are
 (straight-forward and simple). Whether you're communicating with drinking 
 buddies or potential employers, you can rest assured that each is only able to 
 see the side of you that you wish to present. If you send a private message to 
-your aunt Mary, we encrypt it with military grade encryption. Other social 
-networks talk about privacy and offering a feature-rich social networking 
-alternative, but Friendika delivers. Time and time again.   
+your aunt Mary, we encrypt it with military grade encryption.
+
+Other social network projects talk about privacy and offering a feature-rich 
+social networking alternative, but all they can deliver is vapour and vague 
+promises. Friendika delivers the goods. Time and time again.   
 
 A single instance of Friendika can easily support hundreds of (and up to
 several thousand) people using commodity hosting hardware. Each of these 
