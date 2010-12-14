@@ -18,7 +18,7 @@ and *not* require a central organisation to provide servers (in exchange for
 selling your private information to advertisers)?
 
 Look no further. 
- 
+
 Friendika is a social network without boundaries. Friendika installations can 
 link together into a global social network which is free from central 
 control. Besides the Friendika network [which is privacy enhanced]; you can 
@@ -42,7 +42,10 @@ Friendika is secure, and as private as you wish it to be. Our privacy settings
 are straight-forward and simple, because we know that relationships rarely are 
 (straight-forward and simple). Whether you're communicating with drinking 
 buddies or potential employers, you can rest assured that each is only able to 
-see the side of you that you wish to present. 
+see the side of you that you wish to present. If you send a private message to 
+your aunt Mary, we encrypt it with military grade encryption. Other social 
+networks talk about privacy and offering a feature-rich social networking 
+alternative, but Friendika delivers. Time and time again.   
 
 A single instance of Friendika can easily support hundreds of (and up to
 several thousand) people using commodity hosting hardware. Each of these 
