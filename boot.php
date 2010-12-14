@@ -2,7 +2,7 @@
 
 set_time_limit(0);
 
-define ( 'BUILD_ID',               1022   );
+define ( 'BUILD_ID',               1023   );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.0'  );
 
 define ( 'EOL',                    "<br />\r\n"     );
@@ -157,6 +157,7 @@ if(! class_exists('App')) {
 class App {
 
 	public  $module_loaded = false;
+	public  $query_string;
 	public  $config;
 	public  $page;
 	public  $profile;
@@ -189,6 +190,8 @@ class App {
 		$this->page = array();
 		$this->pager= array();
 
+		$this->query_string = '';
+
 		$this->scheme = ((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']))	?  'https' : 'http' );
 
 		if(x($_SERVER,'SERVER_NAME'))
@@ -197,7 +200,7 @@ class App {
 		set_include_path("include/$this->hostname" . PATH_SEPARATOR . 'include' . PATH_SEPARATOR . '.' );
 
 		if((x($_SERVER,'QUERY_STRING')) && substr($_SERVER['QUERY_STRING'],0,2) === "q=")
-			$_SERVER['QUERY_STRING'] = substr($_SERVER['QUERY_STRING'],2);
+			$this->query_string = substr($_SERVER['QUERY_STRING'],2);
 		if(x($_GET,'q'))
 			$this->cmd = trim($_GET['q'],'/');
 
@@ -881,7 +884,7 @@ function hex2bin($s) {
 if(! function_exists('paginate')) {
 function paginate(&$a) {
 	$o = '';
-	$stripped = preg_replace('/(&page=[0-9]*)/','',$_SERVER['QUERY_STRING']);
+	$stripped = preg_replace('/(&page=[0-9]*)/','',$a->query_string);
 	$stripped = str_replace('q=','',$stripped);
 	$stripped = trim($stripped,'/');
 	$url = $a->get_baseurl() . '/' . $stripped;
@@ -1039,6 +1042,96 @@ function set_config($family,$key,$value) {
 		return $value;
 	return $ret;
 }}
+
+
+if(! function_exists('get_pconfig')) {
+function get_pconfig($uid,$family, $key, $instore = false) {
+
+	global $a;
+
+	if(! $instore) {
+		if(isset($a->config[$uid][$family][$key])) {
+			if($a->config[$uid][$family][$key] === '!<unset>!') {
+				return false;
+			}
+			return $a->config[$uid][$family][$key];
+		}
+	}
+	$ret = q("SELECT `v` FROM `pconfig` WHERE `uid` = %d AND `cat` = '%s' AND `k` = '%s' LIMIT 1",
+		intval($uid),
+		dbesc($family),
+		dbesc($key)
+	);
+	if(count($ret)) {
+		$a->config[$uid][$family][$key] = $ret[0]['v'];
+		return $ret[0]['v'];
+	}
+	else {
+		$a->config[$uid][$family][$key] = '!<unset>!';
+	}
+	return false;
+}}
+
+if(! function_exists('del_config')) {
+function del_config($family,$key) {
+
+	global $a;
+	if(x($a->config[$family],$key))
+		unset($a->config[$family][$key]);
+	$ret = q("DELETE FROM `config` WHERE `cat` = '%s' AND `k` = '%s' LIMIT 1",
+		dbesc($cat),
+		dbesc($key)
+	);
+	return $ret;
+}}
+
+
+
+// Same as above functions except these are for personal config storage and take an
+// additional $uid argument.
+
+if(! function_exists('set_pconfig')) {
+function set_pconfig($uid,$family,$key,$value) {
+
+	global $a;
+	$a->config[$uid][$family][$key] = $value;
+
+	if(get_pconfig($uid,$family,$key,true) === false) {
+		$ret = q("INSERT INTO `pconfig` ( `uid`, `cat`, `k`, `v` ) VALUES ( %d, '%s', '%s', '%s' ) ",
+			intval($uid),
+			dbesc($family),
+			dbesc($key),
+			dbesc($value)
+		);
+		if($ret) 
+			return $value;
+		return $ret;
+	}
+	$ret = q("UPDATE `pconfig` SET `v` = '%s' WHERE `uid` = %d AND `cat` = '%s' AND `k` = '%s' LIMIT 1",
+		intval($uid),
+		dbesc($value),
+		dbesc($family),
+		dbesc($key)
+	);
+	if($ret)
+		return $value;
+	return $ret;
+}}
+
+if(! function_exists('del_pconfig')) {
+function del_pconfig($uid,$family,$key) {
+
+	global $a;
+	if(x($a->config[$uid][$family],$key))
+		unset($a->config[$uid][$family][$key]);
+	$ret = q("DELETE FROM `pconfig` WHERE `uid` = %d AND `cat` = '%s' AND `k` = '%s' LIMIT 1",
+		intval($uid),
+		dbesc($cat),
+		dbesc($key)
+	);
+	return $ret;
+}}
+
 
 // convert an XML document to a normalised, case-corrected array
 // used by webfinger
@@ -1654,11 +1747,33 @@ function aes_encrypt($val,$ky)
     return mcrypt_encrypt($enc, $key, $val, $mode, mcrypt_create_iv( mcrypt_get_iv_size($enc, $mode), MCRYPT_DEV_URANDOM));
 }} 
 
+
+/**
+ *
+ * Function: linkify
+ *
+ * Replace naked text hyperlink with HTML formatted hyperlink
+ *
+ */
+
 if(! function_exists('linkify')) {
 function linkify($s) {
 	$s = preg_replace("/(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\.\=\_\~\#\'\%]*)/", ' <a href="$1" >$1</a>', $s);
 	return($s);
 }}
+
+
+/**
+ * 
+ * Function: smilies
+ *
+ * Description:
+ * Replaces text emoticons with graphical images
+ *
+ * @Parameter: string $s
+ *
+ * Returns string
+ */
 
 if(! function_exists('smilies')) {
 function smilies($s) {
@@ -1739,14 +1854,95 @@ function profile_load(&$a, $nickname, $profile = 0) {
 
 	$a->profile = $r[0];
 
-	$a->page['template'] = 'profile';
 
 	$a->page['title'] = $a->profile['name'];
 	$_SESSION['theme'] = $a->profile['theme'];
 
 	if(! (x($a->page,'aside')))
 		$a->page['aside'] = '';
+
+	$a->page['aside'] .= profile_sidebar($a->profile);
 	$a->page['aside'] .= contact_block();
 
 	return;
+}}
+
+
+/**
+ *
+ * Function: profile_sidebar
+ *
+ * Formats a profile for display in the sidebar.
+ * It is very difficult to templatise the HTML completely
+ * because of all the conditional logic.
+ *
+ * @parameter: array $profile
+ *
+ * Returns HTML string stuitable for sidebar inclusion
+ * Exceptions: Returns empty string if passed $profile is wrong type or not populated
+ *
+ */
+
+
+if(! function_exists('profile_sidebar')) {
+function profile_sidebar($profile) {
+
+	$o = '';
+	$location = '';
+	$address = false;
+
+	if((! is_array($profile)) && (! count($profile)))
+		return $o;
+
+	$fullname = '<div class="fn">' . $profile['name'] . '</div>';
+
+	$tabs = '';
+
+	$photo = '<div id="profile=photo-wrapper"><img class="photo" src="' . $profile['photo'] . '" alt="' . $profile['name'] . '" /></div>';
+
+	$connect = (($profile['uid'] != local_user()) ? '<li><a id="dfrn-request-link" href="dfrn_request/' . $profile['nickname'] . '">' . t('Connect') . '</a></li>' : '');
+ 
+	if((x($profile,'address') == 1) 
+		|| (x($profile,'locality') == 1) 
+		|| (x($profile,'region') == 1) 
+		|| (x($profile,'postal-code') == 1) 
+		|| (x($profile,'country-name') == 1))
+		$address = true;
+
+	if($address) {
+		$location .= '<div class="location"><span class="location-label">' . t('Location:') . '</span> <div class="adr">';
+		$location .= ((x($profile,'address') == 1) ? '<div class="street-address">' . $profile['address'] . '</div>' : '');
+		$location .= (((x($profile,'locality') == 1) || (x($profile,'region') == 1) || (x($profile,'postal-code') == 1)) 
+			? '<span class="city-state-zip"><span class="locality">' . $profile['locality'] . '</span>' 
+			. ((x($profile['locality']) == 1) ? t(', ') : '') 
+			. '<span class="region">' . $profile['region'] . '</span>'
+			. ' <span class="postal-code">' . $profile['postal-code'] . '</span></span>' : '');
+		$location .= ((x($profile,'country-name') == 1) ? ' <span class="country-name">' . $profile['country-name'] . '</span>' : '');  
+		$location .= '</div></div><div class="profile-clear"></div>';
+
+	}
+
+	$gender = ((x($profile,'gender') == 1) ? '<div class="mf"><span class="gender-label">' . t('Gender:') . '</span> <span class="x-gender">' . $profile['gender'] . '</span></div><div class="profile-clear"></div>' : '');
+
+	$pubkey = ((x($profile,'key') == 1) ? '<div class="key" style="display:none;">' . $profile['pubkey'] . '</div>' : '');
+
+	$marital = ((x($profile,'marital') == 1) ? '<div class="marital"><span class="marital-label"><span class="heart">&hearts;</span> ' . t('Status:') . ' </span><span class="marital-text">' . $profile['marital'] . '</span></div></div><div class="profile-clear"></div>' : '');
+
+	$homepage = ((x($profile,'homepage') == 1) ? '<div class="homepage"><span class="homepage-label">' . t('Homepage:') . ' </span><span class="homepage-url">' . linkify($profile['homepage']) . '</span></div></div><div class="profile-clear"></div>' : '');
+
+	$tpl = load_view_file('view/profile_vcard.tpl');
+
+	$o .= replace_macros($tpl, array(
+		'$fullname' => $fullname,
+		'$tabs'     => $tabs,
+		'$photo'    => $photo,
+		'$connect'  => $connect,		
+		'$location' => $location,
+		'$gender'   => $gender,
+		'$pubkey'   => $pubkey,
+		'$marital'  => $marital,
+		'$homepage' => $homepage
+	));
+
+	return $o;
 }}
