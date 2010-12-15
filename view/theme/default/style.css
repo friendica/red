@@ -188,7 +188,7 @@ img.photo {
 
 .heart {
 	color: #FF0000;
-	font-size: 120%;
+	font-size: 100%;
 }
 
 aside {
@@ -1893,4 +1893,21 @@ a.mail-list-link {
 
 #search-box {
 	margin-bottom: 25px;
+}
+
+.location-label, .gender-label, .marital-label, .homepage-label {
+	float: left;
+	text-align: right;
+	display: block;
+	width: 65px;
+}
+
+.adr, .x-gender, .marital-text, .homepage-url {
+	float: left;
+	display: block;
+	margin-left: 8px;
+}
+
+.profile-clear {
+	clear: both;
 }

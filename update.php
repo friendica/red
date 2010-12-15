@@ -228,3 +228,12 @@ function update_1021() {
 	q("ALTER TABLE `item` ADD `private` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `deny_gid` ");
 }
 
+function update_1022() {
+	q("CREATE TABLE `pconfig` (
+		`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+		`uid` INT NOT NULL DEFAULT '0',
+		`cat` CHAR( 255 ) NOT NULL ,
+		`k` CHAR( 255 ) NOT NULL ,
+		`v` MEDIUMTEXT NOT NULL
+		) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci ");
+}

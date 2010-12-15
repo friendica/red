@@ -131,6 +131,7 @@ if(strlen($a->module)) {
 		$a->module_loaded = true;
 	}
 	else {
+		logger('index.php: page not found: ' . $_SERVER['REQUEST_URI'] . ' QUERY: ' . $_SERVER['QUERY_STRING'], LOGGER_DEBUG);
 		header($_SERVER["SERVER_PROTOCOL"] . ' 404 ' . t('Not Found'));
 		notice( t('Page not found.' ) . EOL);
 	}
