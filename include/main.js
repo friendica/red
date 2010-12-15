@@ -25,6 +25,7 @@
 	var timer = null;
 	var pr = 0;
 	var liking = 0;
+	var in_progress = false;
 
 	$(document).ready(function() {
 		$.ajaxSetup({cache: false});
@@ -87,13 +88,15 @@
 
 	function liveUpdate() {
 		if((src == null) || (stopped) || (! profile_uid)) { $('.like-rotator').hide(); return; }
-		if($('.comment-edit-text-full').length) {
+		if(($('.comment-edit-text-full').length) || (in_progress)) {
 			livetime = setTimeout(liveUpdate, 10000);
 			return;
 		}
 		prev = 'live-' + src;
 
+		in_progress = true;
 		$.get('update_' + src + '?p=' + profile_uid + '&msie=' + ((msie) ? 1 : 0),function(data) {
+			in_progress = false;
 			$('.wall-item-outside-wrapper',data).each(function() {
 				var ident = $(this).attr('id');
 				if($('#' + ident).length == 0) { 
