@@ -1,5 +1,14 @@
 <?php
 
+/**
+ *
+ * Module: dfrn_request
+ *
+ * Purpose: Handles communication associated with the issuance of
+ * friend requests.
+ *
+ */
+
 if(! function_exists('dfrn_request_init')) {
 function dfrn_request_init(&$a) {
 
@@ -7,10 +16,25 @@ function dfrn_request_init(&$a) {
 		$which = $a->argv[1];
 
 	profile_load($a,$which);
-
 	return;
 }}
 
+
+/**
+ * Function: dfrn_request_post
+ *
+ * Purpose:
+ * Handles multiple scenarios.
+ *
+ * Scenario 1:
+ * Clicking 'submit' on a friend request page.
+ *
+ * Scenario 2:
+ * Following Scenario 1, we are brought back to our home site
+ * in order to link our friend request with our own server cell.
+ * After logging in, we click 'submit' to approve the linkage.
+ *
+ */
 
 if(! function_exists('dfrn_request_post')) {
 function dfrn_request_post(&$a) {
@@ -24,24 +48,34 @@ function dfrn_request_post(&$a) {
 	} 
 
 
-	// We've introduced ourself to another cell, then have been returned to our own cell
-	// to confirm the request, and then we've clicked submit (perhaps after logging in). 
-	// That brings us here:
+	/**
+	 *
+	 * Scenario 2: We've introduced ourself to another cell, then have been returned to our own cell
+	 * to confirm the request, and then we've clicked submit (perhaps after logging in). 
+	 * That brings us here:
+	 *
+	 */
 
 	if((x($_POST,'localconfirm')) && ($_POST['localconfirm'] == 1)) {
 
-		// Ensure this is a valid request
- 
+		/**
+		 * Ensure this is a valid request
+		 */
+
 		if(local_user() && ($a->user['nickname'] == $a->argv[1]) && (x($_POST,'dfrn_url'))) {
 
 
-			$dfrn_url = notags(trim($_POST['dfrn_url']));
-			$aes_allow = (((x($_POST,'aes_allow')) && ($_POST['aes_allow'] == 1)) ? 1 : 0);
+			$dfrn_url    = notags(trim($_POST['dfrn_url']));
+			$aes_allow   = (((x($_POST,'aes_allow')) && ($_POST['aes_allow'] == 1)) ? 1 : 0);
 			$confirm_key = ((x($_POST,'confirm_key')) ? $_POST['confirm_key'] : "");
 
 			$contact_record = null;
 	
 			if(x($dfrn_url)) {
+
+				/**
+				 * Lookup the contact based on their URL (which is the only unique thing we have at the moment)
+				 */
 	
 				$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `url` = '%s' AND `self` = 0 LIMIT 1",
 					intval(local_user()),
@@ -50,6 +84,11 @@ function dfrn_request_post(&$a) {
 	
 				if(count($r)) {
 					if(strlen($r[0]['dfrn-id'])) {
+
+						/**
+						 * We don't need to be here. It has already happened.
+						 */
+
 						notice( t("This introduction has already been accepted.") . EOL );
 						return;
 					}
@@ -65,8 +104,11 @@ function dfrn_request_post(&$a) {
 				}
 				else {
 	
+					/**
+					 * Scrape the other site's profile page to pick up the dfrn links, key, fn, and photo
+					 */
+
 					require_once('Scrape.php');
-	
 	
 					$parms = scrape_dfrn($dfrn_url);
 	
@@ -88,12 +130,17 @@ function dfrn_request_post(&$a) {
 						}
 					}
 
-
-
 					$dfrn_request = $parms['dfrn-request'];
+
+                    /********* Escape the entire array ********/
 
 					dbesc_array($parms);
 
+					/******************************************/
+
+					/**
+					 * Create a contact record on our site for the other person
+					 */
 
 					$r = q("INSERT INTO `contact` ( `uid`, `created`,`url`, `name`, `nick`, `photo`, `site-pubkey`,
 						`request`, `confirm`, `notify`, `poll`, `aes_allow`) 
@@ -117,14 +164,18 @@ function dfrn_request_post(&$a) {
 					notice( t("Introduction complete.") . EOL);
 				}
 
-				// Allow the blocked remote notification to complete
+				/**
+				 * Allow the blocked remote notification to complete
+				 */
 
 				if(is_array($contact_record))
 					$dfrn_request = $contact_record['request'];
 
 				if(strlen($dfrn_request) && strlen($confirm_key))
 					$s = fetch_url($dfrn_request . '?confirm_key=' . $confirm_key);
-					// ignore reply
+				
+				// (ignore reply, nothing we can do it failed)
+
 				goaway($dfrn_url);
 				return; // NOTREACHED
 
@@ -139,23 +190,27 @@ function dfrn_request_post(&$a) {
 		return; // NOTREACHED
 	}
 
-	// Otherwise:
-
-	// We are the requestee. A person from a remote cell has made an introduction 
-	// on our profile web page and clicked submit. We will use their DFRN-URL to 
-	// figure out how to contact their cell.  
-
-	// Scrape the originating DFRN-URL for everything we need. Create a contact record
-	// and an introduction to show our user next time he/she logs in.
-	// Finally redirect back to the requestor so that their site can record the request.
-	// If our user (the requestee) later confirms this request, a record of it will need 
-	// to exist on the requestor's cell in order for the confirmation process to complete.. 
-
-	// It's possible that neither the requestor or the requestee are logged in at the moment,
-	// and the requestor does not yet have any credentials to the requestee profile.
-
-	// Who is the requestee? We've already loaded their profile which means their nickname should be
-	// in $a->argv[1] and we should have their complete info in $a->profile.
+	/**
+	 * Otherwise:
+	 * 
+	 * Scenario 1:
+	 * We are the requestee. A person from a remote cell has made an introduction 
+	 * on our profile web page and clicked submit. We will use their DFRN-URL to 
+	 * figure out how to contact their cell.  
+	 *
+	 * Scrape the originating DFRN-URL for everything we need. Create a contact record
+	 * and an introduction to show our user next time he/she logs in.
+	 * Finally redirect back to the requestor so that their site can record the request.
+	 * If our user (the requestee) later confirms this request, a record of it will need 
+	 * to exist on the requestor's cell in order for the confirmation process to complete.. 
+	 *
+	 * It's possible that neither the requestor or the requestee are logged in at the moment,
+	 * and the requestor does not yet have any credentials to the requestee profile.
+	 *
+	 * Who is the requestee? We've already loaded their profile which means their nickname should be
+	 * in $a->argv[1] and we should have their complete info in $a->profile.
+	 *
+	 */
 
 	if(! (is_array($a->profile) && count($a->profile))) {
 		notice( t('Profile unavailable.') . EOL);
@@ -343,14 +398,14 @@ function dfrn_request_post(&$a) {
 		elseif($network === 'stat') {
 			
 			/**
-			*
-			* OStatus network
-			* Check contact existence
-			* Try and scrape together enough information to create a contact record, with us as REL_VIP
-			* Substitute our user's feed URL into $url template
-			* Send the subscriber home to subscribe
-			*
-			**/
+			 *
+			 * OStatus network
+			 * Check contact existence
+			 * Try and scrape together enough information to create a contact record, with us as REL_VIP
+			 * Substitute our user's feed URL into $url template
+			 * Send the subscriber home to subscribe
+			 *
+			 */
 
 			$url = str_replace('{uri}', $a->get_baseurl() . '/dfrn_poll/' . $nickname, $url);
 			goaway($url);
