@@ -535,6 +535,20 @@ function dfrn_request_content(&$a) {
 		else
 			$tpl = load_view_file('view/auto_request.tpl');
 		$o .= replace_macros($tpl,array(
+			'$header' => t('Friend/Connection Request'),
+			'$pls_answer' => t('Please answer the following:'),
+			'$does_know' => t('Does $name know you?'),
+			'$yes' => t('Yes'),
+			'$no' => t('No'),
+			'$add_note' => t('Add a personal note:'),
+			'$page_desc' => t('Please enter your profile address from one of the following supported social networks:'),
+			'$friendika' => t('Friendika'),
+			'$statusnet' => t('StatusNet/Federated Social Web'),
+			'$private_net' => t("Private \x28secure\x29 network"),
+			'$public_net' => t("Public \x28insecure\x29 network"),
+			'$your_address' => t('Your profile address:'),
+			'$submit' => t('Submit Request'),
+			'$cancel' => t('Cancel'),
 			'$nickname' => $a->argv[1],
 			'$name' => $a->profile['name'],
 			'$myaddr' => $myaddr
