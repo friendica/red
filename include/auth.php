@@ -162,6 +162,10 @@ else {
 			$a->cid = $r[0]['id'];
 			$_SESSION['cid'] = $a->cid;
 		}
+		q("UPDATE `user` SET `login_date` = '%s' WHERE `uid` = %d LIMIT 1",
+			dbesc(datetime_convert()),
+			intval($_SESSION['uid'])
+		);
 
 		header('X-Account-Management-Status: active; name="' . $a->user['username'] . '"; id="' . $a->user['nickname'] .'"');
 		if(($a->module !== 'home') && isset($_SESSION['return_url']))

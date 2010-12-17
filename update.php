@@ -237,3 +237,9 @@ function update_1022() {
 		`v` MEDIUMTEXT NOT NULL
 		) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci ");
 }
+
+function update_1023() {
+	q("ALTER TABLE `user` ADD `register_date` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `timezone` ,
+	ADD `login_date` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `register_date` ");
+}
+

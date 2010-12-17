@@ -357,6 +357,8 @@ CREATE TABLE IF NOT EXISTS `user` (
   `email` char(255) NOT NULL,
   `openid` char(255) NOT NULL,
   `timezone` char(128) NOT NULL,
+  `register_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `login_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `default-location` char(255) NOT NULL,
   `allow_location` tinyint(1) NOT NULL DEFAULT '0',
   `theme` char(255) NOT NULL,

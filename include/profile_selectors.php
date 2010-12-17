@@ -3,7 +3,7 @@
 
 function gender_selector($current="",$suffix="") {
 	$o = '';
-	$select = array('', t('Male'), t('Female'), t('Mostly Male'), t('Mostly Female'), t('Transgender'), t('Intersex'), t('Transsexual'), t('Hermaphrodite'), t('Currently Male'), t('Currently Female'), t('Neuter'), t('Non-specific'), t('Other'), t('Undecided'));
+	$select = array('', t('Male'), t('Female'), t('Currently Male'), t('Currently Female'), t('Mostly Male'), t('Mostly Female'), t('Transgender'), t('Intersex'), t('Transsexual'), t('Hermaphrodite'), t('Neuter'), t('Non-specific'), t('Other'), t('Undecided'));
 
 	$o .= "<select name=\"gender$suffix\" id=\"gender-select$suffix\" size=\"1\" >";
 	foreach($select as $selection) {
