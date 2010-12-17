@@ -2,7 +2,7 @@
 
 set_time_limit(0);
 
-define ( 'BUILD_ID',               1023   );
+define ( 'BUILD_ID',               1024   );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.0'  );
 
 define ( 'EOL',                    "<br />\r\n"     );
