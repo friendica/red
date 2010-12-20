@@ -6,6 +6,8 @@ function parse_url_content(&$a) {
 
 	$url = trim($_GET['url']);
 
+	$text = null;
+
 	$template = "<a href=\"%s\" >%s</a>%s";
 
 	if($url) 
@@ -34,15 +36,38 @@ function parse_url_content(&$a) {
 		}
 	}
 
-	$items = $dom->getElementsByTagName('p');
-	if($items) {
-		foreach($items as $item) {
-			$text = $item->textContent;
-			$text = strip_tags($text);
-			if(strlen($text) < 100)
-				continue;
-			$text = substr($text,0,250) . '...' ;
-			break;
+
+	$divs = $dom->getElementsByTagName('div');
+	if($divs) {
+		foreach($divs as $div) {
+			$class = $div->getAttribute('class');
+			if($class && stristr($class,'article')) {
+				$items = $div->getElementsByTagName('p');
+				if($items) {
+					foreach($items as $item) {
+						$text = $item->textContent;
+						$text = strip_tags($text);
+						if(strlen($text) < 100)
+							continue;
+						$text = substr($text,0,250) . '...' ;
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	if(! $text) {
+		$items = $dom->getElementsByTagName('p');
+		if($items) {
+			foreach($items as $item) {
+				$text = $item->textContent;
+				$text = strip_tags($text);
+				if(strlen($text) < 100)
+					continue;
+				$text = substr($text,0,250) . '...' ;
+				break;
+			}
 		}
 	}
 
