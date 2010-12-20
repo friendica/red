@@ -1924,7 +1924,7 @@ function profile_sidebar($profile) {
 
 	$gender = ((x($profile,'gender') == 1) ? '<div class="mf"><span class="gender-label">' . t('Gender:') . '</span> <span class="x-gender">' . $profile['gender'] . '</span></div><div class="profile-clear"></div>' : '');
 
-	$pubkey = ((x($profile,'key') == 1) ? '<div class="key" style="display:none;">' . $profile['pubkey'] . '</div>' : '');
+	$pubkey = ((x($profile,'pubkey') == 1) ? '<div class="key" style="display:none;">' . $profile['pubkey'] . '</div>' : '');
 
 	$marital = ((x($profile,'marital') == 1) ? '<div class="marital"><span class="marital-label"><span class="heart">&hearts;</span> ' . t('Status:') . ' </span><span class="marital-text">' . $profile['marital'] . '</span></div></div><div class="profile-clear"></div>' : '');
 
