@@ -292,6 +292,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `sexual` char(255) NOT NULL,
   `politic` char(255) NOT NULL,
   `religion` char(255) NOT NULL,
+  `keywords` text NOT NULL,
   `about` text NOT NULL,
   `summary` char(255) NOT NULL,
   `music` text NOT NULL,

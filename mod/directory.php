@@ -37,7 +37,7 @@ function directory_content(&$a) {
 
 	if($search)
 		$search = dbesc($search);
-	$sql_extra = ((strlen($search)) ? " AND MATCH (`profile`.`name`, `user`.`nickname`, `locality`,`region`,`country-name`,`gender`,`marital`,`sexual`,`about`,`romance`,`work`,`education`) AGAINST ('$search' IN BOOLEAN MODE) " : "");
+	$sql_extra = ((strlen($search)) ? " AND MATCH (`profile`.`name`, `user`.`nickname`, `locality`,`region`,`country-name`,`gender`,`marital`,`sexual`,`about`,`romance`,`work`,`education`,`keywords` ) AGAINST ('$search' IN BOOLEAN MODE) " : "");
 
 
 	$r = q("SELECT COUNT(*) AS `total` FROM `profile` LEFT JOIN `user` ON `user`.`uid` = `profile`.`uid` WHERE `is-default` = 1 AND `publish` = 1 AND `user`.`blocked` = 0 $sql_extra ");

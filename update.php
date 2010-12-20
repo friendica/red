@@ -243,3 +243,7 @@ function update_1023() {
 	ADD `login_date` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `register_date` ");
 }
 
+function update_1024() {
+	q("ALTER TABLE `profile` ADD `keywords` TEXT NOT NULL AFTER `religion` ");
+}
+
