@@ -18,7 +18,7 @@ function directory_content(&$a) {
 	if(x($a->data,'search'))
 		$search = notags(trim($a->data['search']));
 	else
-		$search = ((x($_GET,'search')) ? notags(trim($_GET['search'])) : '');
+		$search = ((x($_GET,'search')) ? notags(trim(rawurldecode($_GET['search']))) : '');
 
 	$tpl = load_view_file('view/directory_header.tpl');
 
