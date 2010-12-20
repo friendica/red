@@ -496,6 +496,7 @@ input#dfrn-url {
 #settings-password-end,
 #settings-confirm-end,
 #settings-openid-end,
+#settings-maxreq-end,
 #notify1-end,
 #notify2-end,
 #notify3-end,
@@ -515,6 +516,7 @@ input#dfrn-url {
 #settings-password-label,
 #settings-confirm-label,
 #settings-openid-label,
+#settings-maxreq-label,
 #settings-label-notify1,
 #settings-label-notify2,
 #settings-label-notify3,
@@ -533,6 +535,7 @@ input#dfrn-url {
 #theme-select,
 #settings-password,
 #settings-confirm,
+#settings-maxreq,
 #notify1,
 #notify2,
 #notify3,
@@ -548,7 +551,10 @@ input#dfrn-url {
 	width: 127px;
 }
 	
-
+#settings-maxreq-desc {
+	float: left;
+	margin-left: 20px;
+}
 
 #settings-theme-label,
 #settings-defloc-label {

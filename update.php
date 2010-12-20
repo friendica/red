@@ -247,3 +247,7 @@ function update_1024() {
 	q("ALTER TABLE `profile` ADD `keywords` TEXT NOT NULL AFTER `religion` ");
 }
 
+function update_1025() {
+	q("ALTER TABLE `user` ADD `maxreq` int(11) NOT NULL DEFAULT '10' AFTER `pwdreset` ");
+}
+

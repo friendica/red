@@ -59,9 +59,21 @@ $theme
 
 <input type="hidden" name="visibility" value="$visibility" />
 
+<div id="settings-maxreq-wrapper">
+<label id="settings-maxreq-label" for="settings-maxreq" >Maximum Friend Requests/Day</label>
+<input id="settings-maxreq" name="maxreq" value="$maxreq" />
+<div id="settings-maxreq-desc">(to prevent spam abuse)</div>
+</div>
+<div id="settings-maxreq-end"></div>
+
+
+
+
 $profile_in_dir
 
 $profile_in_net_dir
+
+
 
 <div id="settings-default-perms" class="settings-default-perms" >
 	<div id="settings-default-perms-menu" class="fakelink" onClick="openClose('settings-default-perms-select');" >$permissions</div>

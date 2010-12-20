@@ -217,16 +217,33 @@ function dfrn_request_post(&$a) {
 		return;
 	}
 
-	$nickname = $a->profile['nickname'];
-	$notify_flags = $a->profile['notify-flags'];
-	$uid = $a->profile['uid'];
-
+	$nickname       = $a->profile['nickname'];
+	$notify_flags   = $a->profile['notify-flags'];
+	$uid            = $a->profile['uid'];
+	$maxreq         = intval($a->profile['maxreq']);
 	$contact_record = null;
-	$failed = false;
-	$parms = null;
+	$failed         = false;
+	$parms          = null;
 
 
 	if( x($_POST,'dfrn_url')) {
+
+		/**
+		 * Block friend request spam
+		 */
+
+		if($maxreq) {
+			$r = q("SELECT * FROM `intro` WHERE `datetime` > '%s' AND `uid` = %d",
+				dbesc(datetime_convert('UTC','UTC','now - 24 hours')),
+				intval($uid)
+			);
+			if(count($r) > $maxreq) {
+				notice( $a->profile['name'] . t(' has received too many connection requests today.') . EOL);
+				notice( t('Spam protection measures have been invoked.') . EOL);
+				notice( t('Friends are advised to please try again in 24 hours.') . EOL);
+				return;
+			} 
+		}
 
 		$url = trim($_POST['dfrn_url']);
 		if(! strlen($url)) {
