@@ -54,7 +54,7 @@ $theme
 </div>
 
 
-<h3 class="settings-heading">Privacy Settings</h3>
+<h3 class="settings-heading">Security and Privacy Settings</h3>
 
 
 <input type="hidden" name="visibility" value="$visibility" />
