@@ -2,7 +2,7 @@
 
 set_time_limit(0);
 
-define ( 'BUILD_ID',               1024   );
+define ( 'BUILD_ID',               1027   );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.0'  );
 
 define ( 'EOL',                    "<br />\r\n"     );
@@ -174,7 +174,9 @@ class App {
 	public  $pager;
 	public  $strings;   
 	public  $path;
+	public  $hooks;
 	public  $interactive = true;
+
 
 	private $scheme;
 	private $hostname;
@@ -1924,7 +1926,7 @@ function profile_sidebar($profile) {
 
 	$gender = ((x($profile,'gender') == 1) ? '<div class="mf"><span class="gender-label">' . t('Gender:') . '</span> <span class="x-gender">' . $profile['gender'] . '</span></div><div class="profile-clear"></div>' : '');
 
-	$pubkey = ((x($profile,'key') == 1) ? '<div class="key" style="display:none;">' . $profile['pubkey'] . '</div>' : '');
+	$pubkey = ((x($profile,'pubkey') == 1) ? '<div class="key" style="display:none;">' . $profile['pubkey'] . '</div>' : '');
 
 	$marital = ((x($profile,'marital') == 1) ? '<div class="marital"><span class="marital-label"><span class="heart">&hearts;</span> ' . t('Status:') . ' </span><span class="marital-text">' . $profile['marital'] . '</span></div></div><div class="profile-clear"></div>' : '');
 
@@ -1946,3 +1948,57 @@ function profile_sidebar($profile) {
 
 	return $o;
 }}
+
+
+if(! function_exists('register_hook')) {
+function register_hook($hook,$file,$function) {
+
+	$r = q("INSERT INTO `hook` (`hook`, `file`, `function`) VALUES ( '%s', '%s', '%s' ) ",
+		dbesc($hook),
+		dbesc($file),
+		dbesc($function)
+	);
+	return $r;
+}}
+
+if(! function_exists('unregister_hook')) {
+function unregister_hook($hook,$file,$function) {
+
+	$r = q("DELETE FROM `hook` WHERE `hook` = '%s' AND `file` = '%s' AND `function` = '%s' LIMIT 1",
+		dbesc($hook),
+		dbesc($file),
+		dbesc($function)
+	);
+	return $r;
+}}
+
+
+if(! function_exists('load_hooks')) {
+function load_hooks() {
+	$a = get_app();
+	$r = q("SELECT * FROM `hook` WHERE 1");
+	if(count($r)) {
+		foreach($r as $rr) {
+			$a->hooks[] = array($rr['hook'], $rr['file'], $rr['function']);
+		}
+	}
+}}
+
+
+if(! function_exists('call_hooks')) {
+function call_hooks($name, $data = null) {
+	$a = get_app();
+
+	if(count($a->hooks)) {
+		foreach($a->hooks as $hook) {
+			if($hook[0] === $name) {
+				@require_once($hook[1]);
+				if(function_exists($hook[2])) {
+					$func = $hook[2];
+					$func($a,$data);
+				}
+			}
+		}
+	}
+}}
+

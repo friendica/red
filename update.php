@@ -243,3 +243,21 @@ function update_1023() {
 	ADD `login_date` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `register_date` ");
 }
 
+function update_1024() {
+	q("ALTER TABLE `profile` ADD `keywords` TEXT NOT NULL AFTER `religion` ");
+}
+
+function update_1025() {
+	q("ALTER TABLE `user` ADD `maxreq` int(11) NOT NULL DEFAULT '10' AFTER `pwdreset` ");
+}
+
+function update_1026() {
+	q("CREATE TABLE IF NOT EXISTS `hook` (
+	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`hook` CHAR( 255 ) NOT NULL ,
+	`file` CHAR( 255 ) NOT NULL ,
+	`function` CHAR( 255 ) NOT NULL
+	) ENGINE = MYISAM DEFAULT CHARSET=utf8 ");
+}
+
+

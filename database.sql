@@ -292,6 +292,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `sexual` char(255) NOT NULL,
   `politic` char(255) NOT NULL,
   `religion` char(255) NOT NULL,
+  `keywords` text NOT NULL,
   `about` text NOT NULL,
   `summary` char(255) NOT NULL,
   `music` text NOT NULL,
@@ -371,6 +372,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `notify-flags` int(11) unsigned NOT NULL DEFAULT '65535', 
   `page-flags` int(11) unsigned NOT NULL DEFAULT '0',
   `pwdreset` char(255) NOT NULL,
+  `maxreq` int(11) NOT NULL DEFAULT '10',
   `allow_cid` mediumtext NOT NULL, 
   `allow_gid` mediumtext NOT NULL,
   `deny_cid` mediumtext NOT NULL, 
@@ -428,6 +430,14 @@ CREATE TABLE IF NOT EXISTS `pconfig` (
 `cat` CHAR( 255 ) NOT NULL ,
 `k` CHAR( 255 ) NOT NULL ,
 `v` MEDIUMTEXT NOT NULL
+) ENGINE = MYISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `hook` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`hook` CHAR( 255 ) NOT NULL ,
+`file` CHAR( 255 ) NOT NULL ,
+`function` CHAR( 255 ) NOT NULL
 ) ENGINE = MYISAM DEFAULT CHARSET=utf8;
 
 

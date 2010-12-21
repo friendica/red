@@ -16,7 +16,7 @@ function gender_selector($current="",$suffix="") {
 
 function sexpref_selector($current="",$suffix="") {
 	$o = '';
-	$select = array('', t('Males'), t('Females'), t('No Preference'), t('Bisexual'), t('Autosexual'), t('Abstinent'), t('Virgin'), t('Deviant'), t('Fetish'), t('Oodles'), t('Nonsexual'));
+	$select = array('', t('Males'), t('Females'), t('Gay'), t('Lesbian'), t('No Preference'), t('Bisexual'), t('Autosexual'), t('Abstinent'), t('Virgin'), t('Deviant'), t('Fetish'), t('Oodles'), t('Nonsexual'));
 
 	$o .= "<select name=\"sexual$suffix\" id=\"sexual-select$suffix\" size=\"1\" >";
 	foreach($select as $selection) {

@@ -55,6 +55,17 @@ function item_post(&$a) {
 
 	$private = ((strlen($str_group_allow) || strlen($str_contact_allow) || strlen($str_group_deny) || strlen($str_contact_deny)) ? 1 : 0);
 
+	if(($parent_item) && 
+		(($parent_item['private']) 
+			|| strlen($parent_item['allow_cid']) 
+			|| strlen($parent_item['allow_gid']) 
+			|| strlen($parent_item['deny_cid']) 
+			|| strlen($parent_item['deny_gid'])
+		)
+	) {
+		$private = 1;
+	}
+
 	$title             = notags(trim($_POST['title']));
 	$body              = escape_tags(trim($_POST['body']));
 	$location          = notags(trim($_POST['location']));
@@ -242,7 +253,6 @@ function item_post(&$a) {
 			);
 
 			// Inherit ACL's from the parent item.
-			// TODO merge with subsequent UPDATE operation and save a db write 
 
 			$r = q("UPDATE `item` SET `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `private` = %d
 				WHERE `id` = %d LIMIT 1",
@@ -327,7 +337,7 @@ function item_post(&$a) {
 	 * Post to Facebook stream
 	 */
 
-	if((local_user()) && (local_user() == $profile_uid)) {
+	if((local_user()) && (local_user() == $profile_uid) && (! $private)) {
 		$appid  = get_config('system', 'facebook_appid'  );
 		$secret = get_config('system', 'facebook_secret' );
 		if($appid && $secret) {

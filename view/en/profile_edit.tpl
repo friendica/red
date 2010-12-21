@@ -40,6 +40,7 @@ $gender
 <div id="profile-edit-dob" >
 $dob $age
 </div>
+</div>
 <div id="profile-edit-dob-end"></div>
 
 $hide_friends
@@ -93,7 +94,7 @@ $hide_friends
 <div class="profile-edit-submit-end"></div>
 
 <div id="profile-edit-marital-wrapper" >
-<label id="profile-edit-marital-label" for="profile-edit-marital" >Marital Status: </label>
+<label id="profile-edit-marital-label" for="profile-edit-marital" ><span class="heart">&hearts;</span> (Marital) Status: </label>
 $marital
 </div>
 <label id="profile-edit-with-label" for="profile-edit-with" > Who: (if applicable) </label>
@@ -125,6 +126,13 @@ $sexual
 <input type="text" size="32" name="religion" id="profile-edit-religion" value="$religion" />
 </div>
 <div id="profile-edit-religion-end"></div>
+
+<div id="profile-edit-keywords-wrapper" >
+<label id="profile-edit-keywords-label" for="profile-edit-keywords" >Keywords: </label>
+<input type="text" size="32" name="keywords" id="profile-edit-keywords" title="Example: fishing photography software" value="$keywords" />
+</div><div id="profile-edit-keywords-desc">(Used for searching public profiles, never shown to others)</div>
+<div id="profile-edit-keywords-end"></div>
+
 
 <div class="profile-edit-submit-wrapper" >
 <input type="submit" name="submit" class="profile-edit-submit-button" value="Submit" />
