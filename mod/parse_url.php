@@ -2,6 +2,7 @@
 
 require_once('library/HTML5/Parser.php');
 
+
 function parse_url_content(&$a) {
 
 	$url = trim($_GET['url']);
@@ -16,13 +17,13 @@ function parse_url_content(&$a) {
 		echo '';
 		killme();
 	}
-	
+
 	if(! $s) {
 		echo sprintf($template,$url,$url,'');
 		killme();
 	}
 
-	$dom = HTML5_Parser::parse($s);
+	$dom = @HTML5_Parser::parse($s);
 
 	if(! $dom)
 		return $ret;

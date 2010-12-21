@@ -251,3 +251,13 @@ function update_1025() {
 	q("ALTER TABLE `user` ADD `maxreq` int(11) NOT NULL DEFAULT '10' AFTER `pwdreset` ");
 }
 
+function update_1026() {
+	q("CREATE TABLE IF NOT EXISTS `hook` (
+	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`hook` CHAR( 255 ) NOT NULL ,
+	`file` CHAR( 255 ) NOT NULL ,
+	`function` CHAR( 255 ) NOT NULL
+	) ENGINE = MYISAM DEFAULT CHARSET=utf8 ");
+}
+
+
