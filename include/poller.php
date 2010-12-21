@@ -43,16 +43,30 @@
 
 		if($contact['priority'] || $contact['subhub']) {
 
-			$update = false;
-
-			// We should be getting everything via a hub. But just to be sure, let's check once a day.
-			// This also lets us update our subscription to the hub, and add or replace hubs in case it
-			// changed. 
-
-			if($contact['subhub'])
-				$contact['priority'] = 3;
+			$hub_update = true;
+			$update     = false;
 
 			$t = $contact['last-update'];
+
+			// We should be getting everything via a hub. But just to be sure, let's check once a day.
+			// (You can make this more or less frequent if desired by setting 'pushpoll_frequency' appropriately)
+			// This also lets us update our subscription to the hub, and add or replace hubs in case it
+			// changed. We will only update hubs once a day, regardless of 'pushpoll_frequency'. 
+
+
+			if($contact['subhub']) {
+				$interval = get_config('system','pushpoll_frequency');
+				$contact['priority'] = (($interval !== false) ? intval($interval) : 3);
+				$hub_update = false;
+
+				if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 day"))
+						$hub_update = true;
+			}
+
+
+			/**
+			 * Based on $contact['priority'], should we poll this site now? Or later?
+			 */			
 
 			switch ($contact['priority']) {
 				case 5:
@@ -218,7 +232,8 @@
 		consume_feed($xml,$importer,$contact,$hub);
 
 
-		if((strlen($hub)) && (($contact['rel'] == REL_BUD) || (($contact['network'] === 'stat') && (! $contact['readonly'])))) {
+		if((strlen($hub)) && ($hub_update) 
+			&& (($contact['rel'] == REL_BUD) || (($contact['network'] === 'stat') && (! $contact['readonly'])))) {
 			logger('poller: subscribing to hub(s) : ' . $hub . ' contact name : ' . $contact['name'] . ' local user : ' . $importer['name']);
 			$hubs = explode(',', $hub);
 			if(count($hubs)) {
