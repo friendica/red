@@ -151,9 +151,10 @@ function check_keys() {
 
 	// Get private key
 
-	if(! $res)
-		$o .=  t('Error: the "openssl_pkey_new" function on this system is not able to generate encryption keys') . EOL;
-
+	if(! $res) {
+		$o .= t('Error: the "openssl_pkey_new" function on this system is not able to generate encryption keys') . EOL;
+		$o .= t('If running under Windows, please see "http://www.php.net/manual/en/openssl.installation.php".') . EOL;
+	}
 	return $o;
 
 }
