@@ -81,8 +81,10 @@ function item_post(&$a) {
 	// get contact info for poster
 
 	$author = null;
+	$self   = false;
 
 	if(($_SESSION['uid']) && ($_SESSION['uid'] == $profile_uid)) {
+		$self = true;
 		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
 			intval($_SESSION['uid'])
 		);
@@ -206,40 +208,82 @@ function item_post(&$a) {
 
 	$uri = item_new_uri($a->get_hostname(),$profile_uid);
 
+	$datarray = array();
+	$datarray['uid']           = $profile_uid;
+	$datarray['type']          = $post_type;
+	$datarray['wall']          = $wall;
+	$datarray['gravity']       = $gravity;
+	$datarray['contact-id']    = $contact_id;
+	$datarray['owner-name']    = $contact_record['name'];
+	$datarray['owner-link']    = $contact_record['url'];
+	$datarray['owner-avatar']  = $contact_record['thumb'];
+	$datarray['author-name']   = $author['name'];
+	$datarray['author-link']   = $author['url'];
+	$datarray['author-avatar'] = $author['thumb'];
+	$datarray['created']       = datetime_convert();
+	$datarray['edited']        = datetime_convert();
+	$datarray['changed']       = datetime_convert();
+	$datarray['uri']           = $uri;
+	$datarray['title']         = $title;
+	$datarray['body']          = $body;
+	$datarray['location']      = $location;
+	$datarray['coord']         = $coord;
+	$datarray['tag']           = $str_tags;
+	$datarray['inform']        = $inform;
+	$datarray['verb']          = $verb;
+	$datarray['allow_cid']     = $str_contact_allow;
+	$datarray['allow_gid']     = $str_group_allow;
+	$datarray['deny_cid']      = $str_contact_deny;
+	$datarray['deny_gid']      = $str_group_deny;
+	$datarray['private']       = $private;
+
+	/**
+	 * These fields are for the convenience of plugins...
+	 * 'self' if true indicates the owner is posting on their own wall
+	 * If parent is 0 it is a top-level post.
+	 */
+
+	$datarray['parent']        = $parent;
+	$datarray['self']          = $self;
+
+
+	call_hooks('post_local',$datarray);
+
 	$r = q("INSERT INTO `item` (`uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `changed`, `uri`, `title`, `body`, `location`, `coord`, 
 		`tag`, `inform`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private` )
 		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d )",
-		intval($profile_uid),
-		dbesc($post_type),
-		intval($wall),
-		intval($gravity),
-		intval($contact_id),
-		dbesc($contact_record['name']),
-		dbesc($contact_record['url']),
-		dbesc($contact_record['thumb']),
-		dbesc($author['name']),
-		dbesc($author['url']),
-		dbesc($author['thumb']),
-		dbesc(datetime_convert()),
-		dbesc(datetime_convert()),
-		dbesc(datetime_convert()),
-		dbesc($uri),
-		dbesc($title),
-		dbesc($body),
-		dbesc($location),
-		dbesc($coord),
-		dbesc($str_tags),
-		dbesc($inform),
-		dbesc($verb),
-		dbesc($str_contact_allow),
-		dbesc($str_group_allow),
-		dbesc($str_contact_deny),
-		dbesc($str_group_deny),
-		intval($private)
+		intval($datarray['uid']),
+		dbesc($datarray['type']),
+		intval($datarray['wall']),
+		intval($datarray['gravity']),
+		intval($datarray['contact-id']),
+		dbesc($datarray['owner-name']),
+		dbesc($datarray['owner-link']),
+		dbesc($datarray['owner-avatar']),
+		dbesc($datarray['author-name']),
+		dbesc($datarray['author-link']),
+		dbesc($datarray['author-avatar']),
+		dbesc($datarray['created']),
+		dbesc($datarray['edited']),
+		dbesc($datarray['changed']),
+		dbesc($datarray['uri']),
+		dbesc($datarray['title']),
+		dbesc($datarray['body']),
+		dbesc($datarray['location']),
+		dbesc($datarray['coord']),
+		dbesc($datarray['tag']),
+		dbesc($datarray['inform']),
+		dbesc($datarray['verb']),
+		dbesc($datarray['allow_cid']),
+		dbesc($datarray['allow_gid']),
+		dbesc($datarray['deny_cid']),
+		dbesc($datarray['deny_gid']),
+		intval($datarray['private'])
 	);
+
 	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
-		dbesc($uri));
+		dbesc($datarray['uri']));
 	if(count($r)) {
 		$post_id = $r[0]['id'];
 		logger('mod_item: saved item ' . $post_id);
@@ -276,7 +320,7 @@ function item_post(&$a) {
 					'$email' => $user['email'],
 					'$from' => $from,
 					'$display' => $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
-					'$body' => strip_tags(bbcode($body))
+					'$body' => strip_tags(bbcode($datarray['body']))
 				));
 
 				$res = mail($user['email'], $from . t(" commented on your item at ") . $a->config['sitename'],
@@ -299,7 +343,7 @@ function item_post(&$a) {
 					'$email' => $user['email'],
 					'$from' => $from,
 					'$display' => $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
-					'$body' => strip_tags(bbcode($body))
+					'$body' => strip_tags(bbcode($datarray['body']))
 				));
 
 				$res = mail($user['email'], $from . t(" posted on your profile wall at ") . $a->config['sitename'],
@@ -352,7 +396,7 @@ function item_post(&$a) {
 					'cookie' => true
 				));			
 				try {
-					$statusUpdate = $facebook->api('/me/feed', 'post', array('message'=> bbcode($body), 'cb' => ''));
+					$statusUpdate = $facebook->api('/me/feed', 'post', array('message'=> bbcode($datarray['body']), 'cb' => ''));
 				} 
 				catch (FacebookApiException $e) {
 					notice( t('Facebook status update failed.') . EOL);

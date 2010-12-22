@@ -182,7 +182,7 @@ function follow_post(&$a) {
 	);
 
 
-	if((x($contact,'notify')) && (strlen($contact['notify']))) {
+	if((count($r)) && (x($contact,'notify')) && (strlen($contact['notify']))) {
 		require_once('include/salmon.php');
 		slapper($r[0],$contact['notify'],$slap);
 	}

@@ -2,7 +2,7 @@
 
 set_time_limit(0);
 
-define ( 'BUILD_ID',               1027   );
+define ( 'BUILD_ID',               1028   );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.0'  );
 
 define ( 'EOL',                    "<br />\r\n"     );
@@ -35,6 +35,13 @@ define ( 'REL_VIP',        1);
 define ( 'REL_FAN',        2);
 define ( 'REL_BUD',        3);
 
+/**
+ * Hook array order
+ */
+ 
+define ( 'HOOK_HOOK',      0);
+define ( 'HOOK_FILE',      1);
+define ( 'HOOK_FUNCTION',  2);
 
 /**
  *
@@ -372,7 +379,8 @@ function system_unavailable() {
 
 // Primarily involved with database upgrade, but also sets the 
 // base url for use in cmdline programs which don't have
-// $_SERVER variables.
+// $_SERVER variables, and synchronising the state of installed plugins.
+
 
 if(! function_exists('check_config')) {
 function check_config(&$a) {
@@ -404,6 +412,65 @@ function check_config(&$a) {
 			set_config('system','build', BUILD_ID);
 		}
 	}
+
+	/**
+	 *
+	 * Synchronise plugins:
+	 *
+	 * $a->config['system']['addon'] contains a comma-separated list of names
+	 * of plugins/addons which are used on this system. 
+	 * Go through the database list of already installed addons, and if we have
+	 * an entry, but it isn't in the config list, call the uninstall procedure
+	 * and mark it uninstalled in the database (for now we'll remove it).
+	 * Then go through the config list and if we have a plugin that isn't installed,
+	 * call the install procedure and add it to the database.
+	 *
+	 */
+
+	$r = q("SELECT * FROM `addon` WHERE `installed` = 1");
+	if(count($r))
+		$installed = $r;
+
+	$plugins = get_config('system','addon');
+	$plugins_arr = array();
+
+	if($plugins)
+		$plugins_arr = explode(',',str_replace(' ', '',$plugins));
+
+	$installed_arr = array();
+	foreach($installed as $i) {
+		if(! in_array($i['name'],$plugins_arr)) {
+			logger("Addons: uninstalling " . $i['name']);
+			q("DELETE FROM `addon` WHERE `id` = %d LIMIT 1",
+				intval($i['id'])
+			);
+
+			@include_once('addon/' . $i['name'] . '/' . $i['name'] . '.php');
+			if(function_exists($i['name'] . '_uninstall')) {
+				$func = $i['name'] . '_uninstall';
+				$func();
+			}
+		}
+		else
+			$installed_arr[] = $i['name'];
+	}
+
+	if(count($plugins_arr)) {
+		foreach($plugins_arr as $p) {
+			if(! in_array($p,$installed_arr)) {
+				logger("Addons: installing " . $p);
+				@include_once('addon/' . $p . '/' . $p . '.php');
+				if(function_exists($p . '_install')) {
+					$func = $p . '_install';
+					$func();
+					$r = q("INSERT INTO `addon` (`name`, `installed`) VALUES ( '%s', 1 ) ",
+						dbesc($p)
+					);
+				}
+			}
+		}
+	}
+
 	return;
 }}
 
@@ -1991,10 +2058,10 @@ function call_hooks($name, $data = null) {
 
 	if(count($a->hooks)) {
 		foreach($a->hooks as $hook) {
-			if($hook[0] === $name) {
-				@require_once($hook[1]);
-				if(function_exists($hook[2])) {
-					$func = $hook[2];
+			if($hook[HOOK_HOOK] === $name) {
+				@include_once($hook[HOOK_FILE]);
+				if(function_exists($hook[HOOK_FUNCTION])) {
+					$func = $hook[HOOK_FUNCTION];
 					$func($a,$data);
 				}
 			}

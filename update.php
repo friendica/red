@@ -261,3 +261,12 @@ function update_1026() {
 }
 
 
+function update_1027() {
+	q("CREATE TABLE IF NOT EXISTS `addon` (
+	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`name` CHAR( 255 ) NOT NULL ,
+	`version` CHAR( 255 ) NOT NULL ,
+	`installed` TINYINT( 1 ) NOT NULL DEFAULT '0' 
+	) ENGINE = MYISAM DEFAULT CHARSET=utf8 ");
+}
+
