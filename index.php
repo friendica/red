@@ -61,8 +61,10 @@ $db = new dba($db_host, $db_user, $db_pass, $db_data, $install);
  *
  */
 
-if(! $install)
+if(! $install) {
 	require_once("session.php");
+	load_hooks();
+}
 
 require_once("datetime.php");
 
