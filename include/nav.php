@@ -58,7 +58,7 @@
 
 
 	if($banner === false) 
-		$banner .= '<a href="http://friendika.com"><img id="logo-img" src="images/ff-32.jpg" alt="logo" /></a><span id="logo-text">Friendika</span>';
+		$banner .= '<a href="http://friendika.com"><img id="logo-img" src="images/ff-32.jpg" alt="logo" /></a><span id="logo-text"><a href="http://friendika.com">Friendika</a></span>';
 
 
 	$a->page['nav'] .= '<span id="banner">' . $banner . '</span>';

@@ -148,6 +148,14 @@ blockquote:before {
 	vertical-align: top;
 }
 
+#logo-text a, #logo-text a:hover, #logo-text a:visited {
+	color: #F5F6FB;
+	font-family: "gill sans MT bold", "lucida grande",tahoma,verdana,arial,sans-serif;
+	margin-left: 3px;
+	vertical-align: top;
+}
+
+
 #banner {
 	color: #F5F6FB;
 	font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
