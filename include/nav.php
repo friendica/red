@@ -5,6 +5,7 @@
 
 	$a->page['nav'] .= '<div id="panel" style="display: none;"></div>' ;
 
+	$a->page['nav'] .= '<div id="site-location">' . substr($a->get_baseurl(),strpos($a->get_baseurl(),'//') + 2 ) . '</div>';
 	if(local_user()) {
 		$a->page['nav'] .= '<a id="nav-logout-link" class="nav-link" href="logout">' . t('Logout') . "</a>\r\n";
 	}

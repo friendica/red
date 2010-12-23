@@ -72,6 +72,14 @@ blockquote:before {
 	content: '>> ';
 }
 
+#site-location {
+	position: absolute;
+	right: 5px;
+	top: 3px;
+	color: white;
+	font-size: 60%;
+}
+
 .shiny {
 	border-color: orange !important;
 }
