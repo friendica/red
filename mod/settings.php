@@ -109,7 +109,17 @@ function settings_post(&$a) {
 	$str_group_deny    = perms2str($_POST['group_deny']);
 	$str_contact_deny  = perms2str($_POST['contact_deny']);
 
-	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `theme` = '%s', `maxreq` = %d  WHERE `uid` = %d LIMIT 1",
+	$openidserver = $a->user['openidserver'];
+
+	if($openid != $a->user['openid']) {
+		logger('updating openidserver');
+		require_once('library/openid.php');
+		$open_id_obj = new LightOpenID;
+		$open_id_obj->identity = $openid;
+		$openidserver = $open_id_obj->discover($open_id_obj->identity);
+	}
+
+	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `theme` = '%s', `maxreq` = %d, `openidserver` = '%s'  WHERE `uid` = %d LIMIT 1",
 			dbesc($username),
 			dbesc($email),
 			dbesc($openid),
@@ -124,6 +134,7 @@ function settings_post(&$a) {
 			intval($allow_location),
 			dbesc($theme),
 			intval($maxreq),
+			dbesc($openidserver),
 			intval(local_user())
 	);
 	if($r)
@@ -301,7 +312,9 @@ function settings_content(&$a) {
 		'$pagetype' => $pagetype
 	));
 
-	call_hooks('settings_page',$o);
+	call_hooks('settings_form',$o);
+
+	$o .= '</form>' . "\r\n";
 
 	return $o;
 

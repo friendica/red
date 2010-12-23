@@ -377,6 +377,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `allow_gid` mediumtext NOT NULL,
   `deny_cid` mediumtext NOT NULL, 
   `deny_gid` mediumtext NOT NULL,
+  `openidserver` text NOT NULL,
   PRIMARY KEY (`uid`), 
   KEY `nickname` (`nickname`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

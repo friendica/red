@@ -432,6 +432,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $contact['url'] . '" />' . "\n");
 				$arr['object'] .= xmlify('<link rel="photo" type="image/jpeg" href="' . $contact['thumb'] . '" />' . "\n");
 				$arr['object'] .= '</link></object>' . "\n";
+				$arr['last-child'] = 1;
 
 				$i = item_store($arr);
 

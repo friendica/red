@@ -4,6 +4,7 @@ $a->strings['Page not found.' ] = 'Page not found.' ;
 $a->strings['Permission denied'] = 'Permission denied';
 $a->strings['Permission denied.'] = 'Permission denied.';
 $a->strings['Nickname or Email address: '] = 'Nickname or Email address: ';
+$a->strings['Welcome to '] = 'Welcome to ';
 $a->strings['Password: '] = 'Password: ';
 $a->strings['Login'] = 'Login';
 $a->strings['Nickname/Email/OpenID: '] = 'Nickname/Email/OpenID: ';
