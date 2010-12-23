@@ -19,7 +19,7 @@ function home_content(&$a) {
  *		$a->page['footer'] = '';
  *	$a->page['footer'] .= "<div class=\"powered\" >Powered by <a href=\"http://friendika.com\" title=\"friendika\" >friendika</a></div>";
  */
-	$o .= '<h1>Welcome' . ((x($a->config,'sitename')) ? " to {$a->config['sitename']}" : "" ) . '</h1>';
+	$o .= '<h1>' . ((x($a->config,'sitename')) ? t("Welcome to ").$a->config['sitename'] : "" ) . '</h1>';
 	if(file_exists('home.html'))
  		$o .= file_get_contents('home.html');
 
