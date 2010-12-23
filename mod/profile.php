@@ -18,6 +18,31 @@ function profile_init(&$a) {
 
 	profile_load($a,$which,$profile);
 
+	if (!get_config('system','no_openid') && $a->profile['openid']!=""){
+		if (!isset($a->profile['openidserver'])){
+			die('friendika user table must be updated. `openidserver` field is missing');
+		}
+		if ($a->profile['openidserver']==''){
+			require_once('library/openid.php');
+			$openid = new LightOpenID;
+			$openid->identity = $a->profile['openid'];
+			$a->profile['openidserver'] = $openid->discover($openid->identity);
+
+			q("UPDATE `user` SET `openidserver` = '%s' WHERE `uid` = %d LIMIT 1",
+				dbesc($a->profile['openidserver']),
+				intval($a->profile['uid'])
+			);
+		}
+		
+		
+		$a->page['htmlhead'] .= '<link rel="openid.server" href="'.$a->profile['openidserver'].'" />'. "\r\n";
+		$a->page['htmlhead'] .= '<link rel="openid.delegate" href="'.$a->profile['openid'].'" />'. "\r\n";
+		    
+
+	}
+
+	
+
 	$a->page['htmlhead'] .= '<meta name="dfrn-global-visibility" content="' . (($a->profile['net-publish']) ? 'true' : 'false') . '" />' . "\r\n" ;
 	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . $a->get_baseurl() . '/dfrn_poll/' . $which .'" />' . "\r\n" ;
 	$uri = urlencode('acct:' . $a->profile['nickname'] . '@' . $a->get_hostname() . (($a->path) ? '/' . $a->path : ''));
