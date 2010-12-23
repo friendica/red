@@ -430,6 +430,8 @@ function check_config(&$a) {
 	$r = q("SELECT * FROM `addon` WHERE `installed` = 1");
 	if(count($r))
 		$installed = $r;
+	else
+		$installed = array();
 
 	$plugins = get_config('system','addon');
 	$plugins_arr = array();
@@ -438,21 +440,24 @@ function check_config(&$a) {
 		$plugins_arr = explode(',',str_replace(' ', '',$plugins));
 
 	$installed_arr = array();
-	foreach($installed as $i) {
-		if(! in_array($i['name'],$plugins_arr)) {
-			logger("Addons: uninstalling " . $i['name']);
-			q("DELETE FROM `addon` WHERE `id` = %d LIMIT 1",
-				intval($i['id'])
-			);
 
-			@include_once('addon/' . $i['name'] . '/' . $i['name'] . '.php');
-			if(function_exists($i['name'] . '_uninstall')) {
-				$func = $i['name'] . '_uninstall';
-				$func();
+	if(count($installed)) {
+		foreach($installed as $i) {
+			if(! in_array($i['name'],$plugins_arr)) {
+				logger("Addons: uninstalling " . $i['name']);
+				q("DELETE FROM `addon` WHERE `id` = %d LIMIT 1",
+					intval($i['id'])
+				);
+
+				@include_once('addon/' . $i['name'] . '/' . $i['name'] . '.php');
+				if(function_exists($i['name'] . '_uninstall')) {
+					$func = $i['name'] . '_uninstall';
+					$func();
+				}
 			}
+			else
+				$installed_arr[] = $i['name'];
 		}
-		else
-			$installed_arr[] = $i['name'];
 	}
 
 	if(count($plugins_arr)) {
