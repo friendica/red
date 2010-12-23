@@ -386,7 +386,63 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		if($r === false)
 				notice( t('Unable to set contact photo.') . EOL);
 
+		// reload contact info
 
+		$r = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
+			intval($contact_id)
+		);
+		if(count($r))
+			$contact = $r[0];
+		else
+			$contact = null;
+
+		// Send a new friend post if we are allowed to...
+
+		$r = q("SELECT `hide-friends` FROM `profile` WHERE `uid` = %d AND `is-default` = 1 LIMIT 1",
+			intval($uid)
+		);
+		if((count($r)) && ($r[0]['hide-friends'] == 0) && (is_array($contact)) &&  isset($new_relation) && ($new_relation == REL_BUD)) {
+
+			require_once('include/items.php');
+
+			$self = q("SELECT * FROM `contact` WHERE `self` = 1 AND `uid` = %d LIMIT 1",
+				intval($uid)
+			);
+
+			if(count($self)) {
+
+				$arr = array();
+				$arr['uri'] = $arr['parent-uri'] = item_new_uri($a->get_hostname(), $uid); 
+				$arr['uid'] = $uid;
+				$arr['contact-id'] = $self[0]['id'];
+				$arr['wall'] = 1;
+				$arr['type'] = 'wall';
+				$arr['gravity'] = 0;
+				$arr['author-name'] = $arr['owner-name'] = $self[0]['name'];
+				$arr['author-link'] = $arr['owner-link'] = $self[0]['url'];
+				$arr['author-avatar'] = $arr['owner-avatar'] = $self[0]['thumb'];
+				$arr['verb'] = ACTIVITY_FRIEND;
+				$arr['object-type'] = ACTIVITY_OBJ_PERSON;
+				$arr['body'] = '[url=' . $self[0]['url'] . ']' . $self[0]['name'] . '[/url] ' . t('is now friends with')
+					. ' [url=' . $contact['url'] . ']' . $contact['name'] . '[/url]' . "\n\n\n" 
+					. ' [url=' . $contact['url'] . ']' . '[img]' . $contact['thumb'] . '[/img][/url]';
+
+				$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PERSON . '</type><title>' . $contact['name'] . '</title>'
+					. '<id>' . $contact['url'] . '/' . $contact['name'] . '</id>';
+				$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $contact['url'] . '" />' . "\n");
+				$arr['object'] .= xmlify('<link rel="photo" type="image/jpeg" href="' . $contact['thumb'] . '" />' . "\n");
+				$arr['object'] .= '</link></object>' . "\n";
+
+				$i = item_store($arr);
+
+				$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
+
+			    proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"activity\" \"$i\" &",
+        		array(),$foo));
+
+			}
+
+		}
 		// Let's send our user to the contact editor in case they want to
 		// do anything special with this new friend.
 
