@@ -5,6 +5,7 @@
 
 	$a->page['nav'] .= '<div id="panel" style="display: none;"></div>' ;
 
+	$a->page['nav'] .= '<div id="site-location">' . substr($a->get_baseurl(),strpos($a->get_baseurl(),'//') + 2 ) . '</div>';
 	if(local_user()) {
 		$a->page['nav'] .= '<a id="nav-logout-link" class="nav-link" href="logout">' . t('Logout') . "</a>\r\n";
 	}
@@ -58,7 +59,7 @@
 
 
 	if($banner === false) 
-		$banner .= '<a href="http://friendika.com"><img id="logo-img" src="images/ff-32.jpg" alt="logo" /></a><span id="logo-text">Friendika</span>';
+		$banner .= '<a href="http://friendika.com"><img id="logo-img" src="images/ff-32.jpg" alt="logo" /></a><span id="logo-text"><a href="http://friendika.com">Friendika</a></span>';
 
 
 	$a->page['nav'] .= '<span id="banner">' . $banner . '</span>';

@@ -610,6 +610,8 @@ function item_store($arr) {
 		}
 	}
 
+	call_hooks('post_remote',$arr);
+
 	dbesc_array($arr);
 
 	logger('item_store: ' . print_r($arr,true), LOGGER_DATA);

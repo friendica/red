@@ -444,7 +444,6 @@ function dfrn_request_content(&$a) {
 	if(($a->argc != 2) || (! count($a->profile)))
 		return "";
 
-	$a->page['template'] = 'profile';
 
 	// "Homecoming". Make sure we're logged in to this site as the correct user. Then offer a confirm button
 	// to send us to the post section to record the introduction.

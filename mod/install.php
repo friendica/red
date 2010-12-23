@@ -15,7 +15,7 @@ function install_post(&$a) {
 
 	require_once("dba.php");
 
-	$db = new dba($dbhost, $dbuser, $dbpass, $dbdata, $true);
+	$db = new dba($dbhost, $dbuser, $dbpass, $dbdata, true);
 
 	if(mysqli_connect_errno()) {
 		$db = new dba($dbhost, $dbuser, $dbpass, '', true);
@@ -24,7 +24,7 @@ function install_post(&$a) {
 					dbesc($dbdata)
 			);
 			if($r) 
-				$db = new dba($dbhost, $dbuser, $dbpass, $dbdata, $true);
+				$db = new dba($dbhost, $dbuser, $dbpass, $dbdata, true);
 		}
 		if(mysqli_connect_errno()) {
 			notice( t('Could not create/connect to database.') . EOL);
@@ -65,14 +65,14 @@ function install_post(&$a) {
 
 		notice( t('Database import succeeded.') . EOL 
 			. t('IMPORTANT: You will need to [manually] setup a scheduled task for the poller.') . EOL 
-			. t('Please see the file INSTALL.') . EOL );
+			. t('Please see the file "INSTALL.txt".') . EOL );
 		goaway($a->get_baseurl() . '/register' );
 	}
 	else {
 		$db = null; // start fresh
 		notice( t('Database import failed.') . EOL
 			. t('You may need to import the file "database.sql" manually using phpmyadmin or mysql.') . EOL
-			. t('Please see the file INSTALL.') . EOL );
+			. t('Please see the file "INSTALL.txt".') . EOL );
 	}
 }
 
@@ -151,9 +151,10 @@ function check_keys() {
 
 	// Get private key
 
-	if(! $res)
-		$o .=  t('Error: the "openssl_pkey_new" function on this system is not able to generate encryption keys') . EOL;
-
+	if(! $res) {
+		$o .= t('Error: the "openssl_pkey_new" function on this system is not able to generate encryption keys') . EOL;
+		$o .= t('If running under Windows, please see "http://www.php.net/manual/en/openssl.installation.php".') . EOL;
+	}
 	return $o;
 
 }
@@ -171,7 +172,7 @@ function check_funcs() {
 	if(! function_exists('mysqli_connect')) 
 		notice( t('Error: mysqli PHP module required but not installed.') . EOL);	
 	if((x($_SESSION,'sysmsg')) && strlen($_SESSION['sysmsg']))
-		notice( t('Please see the file "INSTALL".') . EOL);
+		notice( t('Please see the file "INSTALL.txt".') . EOL);
 }
 
 
@@ -183,7 +184,7 @@ function check_htconfig() {
 		$o = t('The web installer needs to be able to create a file called ".htconfig.php" in the top folder of your web server and it is unable to do so.');
 		$o .= t('This is most often a permission setting, as the web server may not be able to write files in your folder - even if you can.');
 		$o .= t('Please check with your site documentation or support people to see if this situation can be corrected.');
-		$o .= t('If not, you may be required to perform a manual installation. Please see the file "INSTALL" for instructions.'); 
+		$o .= t('If not, you may be required to perform a manual installation. Please see the file "INSTALL.txt" for instructions.'); 
 	}
 
 	return $o;
