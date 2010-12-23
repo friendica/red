@@ -1118,6 +1118,23 @@ function set_config($family,$key,$value) {
 }}
 
 
+if(! function_exists('load_pconfig')) {
+function load_pconfig($uid,$family) {
+	global $a;
+	$r = q("SELECT * FROM `pconfig` WHERE `cat` = '%s' AND `uid` = %d",
+		dbesc($family),
+		intval($uid)
+	);
+	if(count($r)) {
+		foreach($r as $rr) {
+			$k = $rr['k'];
+			$a->config[$uid][$family][$k] = $rr['v'];
+		}
+	}
+}}
+
+
+
 if(! function_exists('get_pconfig')) {
 function get_pconfig($uid,$family, $key, $instore = false) {
 
@@ -1759,6 +1776,8 @@ function contact_block() {
 		$o .=  '<div id="viewcontacts"><a id="viewcontacts-link" href="viewcontacts/' . $a->profile['nickname'] . '">' . t('View Contacts') . '</a></div>';
 		
 	}
+
+	call_hooks('contact_block_end', $o);
 	return $o;
 
 }}
@@ -2017,6 +2036,8 @@ function profile_sidebar($profile) {
 		'$marital'  => $marital,
 		'$homepage' => $homepage
 	));
+
+	call_hooks('profile_sidebar', $o);
 
 	return $o;
 }}

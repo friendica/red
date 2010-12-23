@@ -14,6 +14,9 @@ function settings_post(&$a) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
+
+	call_hooks('settings_post', $_POST);
+
 	if(count($a->user) && x($a->user,'uid') && $a->user['uid'] != local_user()) {
 		notice( t('Permission denied.') . EOL);
 		return;
@@ -298,6 +301,9 @@ function settings_content(&$a) {
 		'$pagetype' => $pagetype
 	));
 
+	call_hooks('settings_page',$o);
+
 	return $o;
 
 }}
+

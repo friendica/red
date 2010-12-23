@@ -97,6 +97,9 @@ function profile_content(&$a, $update = 0) {
 				require_once("view/$profile_lang/profile_advanced.php");
 			else
 				require_once('view/profile_advanced.php');
+
+			call_hooks('profile_advanced',$o);
+
 			return $o;
 		}
 
