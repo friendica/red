@@ -270,3 +270,7 @@ function update_1027() {
 	) ENGINE = MYISAM DEFAULT CHARSET=utf8 ");
 }
 
+function update_1028() {
+	q("ALTER TABLE `user` ADD `openidserver` text NOT NULL AFTER `deny_gid` ");
+}
+

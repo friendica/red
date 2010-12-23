@@ -2,7 +2,7 @@
 
 set_time_limit(0);
 
-define ( 'BUILD_ID',               1028   );
+define ( 'BUILD_ID',               1029   );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.0'  );
 
 define ( 'EOL',                    "<br />\r\n"     );
@@ -211,14 +211,14 @@ class App {
 		if((x($_SERVER,'QUERY_STRING')) && substr($_SERVER['QUERY_STRING'],0,2) === "q=")
 			$this->query_string = substr($_SERVER['QUERY_STRING'],2);
 		if(x($_GET,'q'))
-			$this->cmd = trim($_GET['q'],'/');
+			$this->cmd = trim($_GET['q'],'/\\');
 
 		/** 
 		 * Figure out if we are running at the top of a domain
 		 * or in a sub-directory and adjust accordingly
 		 */
 
-		$path = trim(dirname($_SERVER['SCRIPT_NAME']),'/');
+		$path = trim(dirname($_SERVER['SCRIPT_NAME']),'/\\');
 		if(isset($path) && strlen($path) && ($path != $this->path))
 			$this->path = $path;
 

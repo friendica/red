@@ -159,7 +159,3 @@ $pagetype
 </div>
 
 
-</form>
-
-
-
