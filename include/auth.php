@@ -132,17 +132,38 @@ else {
 	}
 	if((x($_POST,'auth-params')) && $_POST['auth-params'] === 'login') {
 
-		// process login request
 
-		$r = q("SELECT * FROM `user` 
-			WHERE ( `email` = '%s' OR `nickname` = '%s' ) AND `password` = '%s' AND `blocked` = 0 AND `verified` = 1 LIMIT 1",
-			dbesc(trim($_POST['openid_url'])),
-			dbesc(trim($_POST['openid_url'])),
-			dbesc($encrypted));
-		if(($r === false) || (! count($r))) {
-			notice( t('Login failed.') . EOL );
-			goaway($a->get_baseurl());
-  		}
+		$addon_auth = array(
+			'name' => trim($_POST['openid_url']), 
+			'password' => trim($_POST['password']),
+			'authenticated' => 0
+		);
+
+		/**
+		 *
+		 * A plugin indicates successful login by setting 'authenticated' to non-zero value
+		 * Plugins should never set 'authenticated' except to indicate success - as hooks may be chained
+		 * and later plugins should not interfere with an earlier one that succeeded.
+		 *
+		 */
+
+		call_hooks('authenticate', $addon_auth);
+
+		if(! $addon_auth['authenticated']) {
+			// process login request
+
+			$r = q("SELECT * FROM `user` WHERE ( `email` = '%s' OR `nickname` = '%s' ) 
+				AND `password` = '%s' AND `blocked` = 0 AND `verified` = 1 LIMIT 1",
+				dbesc(trim($_POST['openid_url'])),
+				dbesc(trim($_POST['openid_url'])),
+				dbesc($encrypted)
+			);
+			if(($r === false) || (! count($r))) {
+				notice( t('Login failed.') . EOL );
+				goaway($a->get_baseurl());
+  			}
+		}
+
 		$_SESSION['uid'] = $r[0]['uid'];
 		$_SESSION['theme'] = $r[0]['theme'];
 		$_SESSION['authenticated'] = 1;
@@ -166,6 +187,8 @@ else {
 			dbesc(datetime_convert()),
 			intval($_SESSION['uid'])
 		);
+
+		call_hooks('logged_in', $a->user);
 
 		header('X-Account-Management-Status: active; name="' . $a->user['username'] . '"; id="' . $a->user['nickname'] .'"');
 		if(($a->module !== 'home') && isset($_SESSION['return_url']))
