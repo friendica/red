@@ -20,3 +20,7 @@
 	$files = glob('include/*.php');
 	foreach($files as $file)
 		include_once($file);
+
+	$files = glob('addon/*.php');
+	foreach($files as $file)
+		include_once($file);
