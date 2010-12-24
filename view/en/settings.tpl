@@ -49,8 +49,8 @@ $theme
 </div>
 <div id="settings-theme-end"></div>
 
-<div id="settings-submit-wrapper" >
-<input type="submit" name="submit" id="settings-submit" value="Submit" />
+<div class="settings-submit-wrapper" >
+<input type="submit" name="submit" class="settings-submit" value="Submit" />
 </div>
 
 
@@ -87,8 +87,8 @@ $profile_in_net_dir
 </div>
 <div id="settings-default-perms-end"></div>
 
-<div id="settings-submit-wrapper" >
-<input type="submit" name="submit" id="settings-submit" value="Submit" />
+<div class="settings-submit-wrapper" >
+<input type="submit" name="submit" class="settings-submit" value="Submit" />
 </div>
 
 
@@ -116,8 +116,8 @@ $profile_in_net_dir
 </div>
 <div id="settings=notify-end"></div>
 
-<div id="settings-submit-wrapper" >
-<input type="submit" name="submit" id="settings-submit" value="Submit" />
+<div class="settings-submit-wrapper" >
+<input type="submit" name="submit" class="settings-submit" value="Submit" />
 </div>
 
 
@@ -145,8 +145,8 @@ Leave password fields blank unless changing
 <div id="settings-openid-end" ></div>
 
 
-<div id="settings-submit-wrapper" >
-<input type="submit" name="submit" id="settings-submit" value="Submit" />
+<div class="settings-submit-wrapper" >
+<input type="submit" name="submit" class="settings-submit" value="Submit" />
 </div>
 
 
@@ -154,8 +154,8 @@ Leave password fields blank unless changing
 
 $pagetype
 
-<div id="settings-submit-wrapper" >
-<input type="submit" name="submit" id="settings-submit" value="Submit" />
+<div class="settings-submit-wrapper" >
+<input type="submit" name="submit" class="settings-submit" value="Submit" />
 </div>
 
 

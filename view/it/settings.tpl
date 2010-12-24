@@ -49,8 +49,8 @@ $theme
 </div>
 <div id="settings-theme-end"></div>
 
-<div id="settings-submit-wrapper" >
-<input type="submit" name="submit" id="settings-submit" value="Aggiorna" />
+<div class="settings-submit-wrapper" >
+<input type="submit" name="submit" class="settings-submit" value="Aggiorna" />
 </div>
 
 
@@ -87,8 +87,8 @@ $profile_in_net_dir
 </div>
 <div id="settings-default-perms-end"></div>
 
-<div id="settings-submit-wrapper" >
-<input type="submit" name="submit" id="settings-submit" value="Aggiorna" />
+<div class="settings-submit-wrapper" >
+<input type="submit" name="submit" class="settings-submit" value="Aggiorna" />
 </div>
 
 
@@ -116,8 +116,8 @@ $profile_in_net_dir
 </div>
 <div id="settings=notify-end"></div>
 
-<div id="settings-submit-wrapper" >
-<input type="submit" name="submit" id="settings-submit" value="Aggiorna" />
+<div class="settings-submit-wrapper" >
+<input type="submit" name="submit" class="settings-submit" value="Aggiorna" />
 </div>
 
 
@@ -145,8 +145,8 @@ Lascia questi campi in bianco per non effettuare variazioni alla password
 <div id="settings-openid-end" ></div>
 
 
-<div id="settings-submit-wrapper" >
-<input type="submit" name="submit" id="settings-submit" value="Aggiorna" />
+<div class="settings-submit-wrapper" >
+<input type="submit" name="submit" class="settings-submit" value="Aggiorna" />
 </div>
 
 
@@ -154,8 +154,8 @@ Lascia questi campi in bianco per non effettuare variazioni alla password
 
 $pagetype
 
-<div id="settings-submit-wrapper" >
-<input type="submit" name="submit" id="settings-submit" value="Aggiorna" />
+<div class="settings-submit-wrapper" >
+<input type="submit" name="submit" class="settings-submit" value="Aggiorna" />
 </div>
 
 
