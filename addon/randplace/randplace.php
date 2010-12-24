@@ -18,7 +18,7 @@
  * name_install() function, located in 'addon/name/name.php',
  * where 'name' is the name of the addon.
  * If the addon is removed from the configuration list, the 
- * system will call the name_unistall() function.
+ * system will call the name_uninstall() function.
  *
  */
 
