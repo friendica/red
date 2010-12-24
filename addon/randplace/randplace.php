@@ -141,7 +141,7 @@ function randplace_settings_post($a,$post) {
 }
 
 
-/*
+/**
  * Called from the end of the settings form. 
  * Add our own settings info to the page.
  *
@@ -154,19 +154,25 @@ function randplace_settings(&$a,&$s) {
 	if(! local_user())
 		return;
 
+	/* Add our stylesheet so we can match the page layout */
+
 	$a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/randplace/randplace.css' . '" media="all" />' . "\r\n";
+
+	/* Get the current state of our config variable */
 
 	$enabled = get_pconfig(local_user(),'randplace','enable');
 
 	$checked = (($enabled) ? ' checked="checked" ' : '');
 
+	/* Add some HTML to the form */
+
 	$s .= '<h3>' . t('Randplace Settings') . '</h3>';
 	$s .= '<div id="randplace-enable-wrapper">';
-	$s .= '<label id="randplace-enable-label" for="randplace-enable">' . t('Enable Randplace Plugin') . '</label>';
+	$s .= '<label id="randplace-enable-label" for="randplace-checkbox">' . t('Enable Randplace Plugin') . '</label>';
 	$s .= '<input id="randplace-checkbox" type="checkbox" name="randplace" value="1" ' . $checked . '/>';
 	$s .= '</div><div class="clear"></div>';
 
-	// provide another submit button
+	/* provide another submit button */
 
 	$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
 
