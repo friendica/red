@@ -1199,11 +1199,12 @@ function set_pconfig($uid,$family,$key,$value) {
 		return $ret;
 	}
 	$ret = q("UPDATE `pconfig` SET `v` = '%s' WHERE `uid` = %d AND `cat` = '%s' AND `k` = '%s' LIMIT 1",
-		intval($uid),
 		dbesc($value),
+		intval($uid),
 		dbesc($family),
 		dbesc($key)
 	);
+
 	if($ret)
 		return $value;
 	return $ret;
@@ -2046,6 +2047,14 @@ function profile_sidebar($profile) {
 if(! function_exists('register_hook')) {
 function register_hook($hook,$file,$function) {
 
+	$r = q("SELECT FROM `hook` WHERE `hook` = '%s' AND `file` = '%s' AND `function` = '%s' LIMIT 1",
+		dbesc($hook),
+		dbesc($file),
+		dbesc($function)
+	);
+	if(count($r))
+		return true;
+
 	$r = q("INSERT INTO `hook` (`hook`, `file`, `function`) VALUES ( '%s', '%s', '%s' ) ",
 		dbesc($hook),
 		dbesc($file),
@@ -2079,7 +2088,7 @@ function load_hooks() {
 
 
 if(! function_exists('call_hooks')) {
-function call_hooks($name, $data = null) {
+function call_hooks($name, &$data = null) {
 	$a = get_app();
 
 	if(count($a->hooks)) {
