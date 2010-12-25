@@ -1947,3 +1947,8 @@ a.mail-list-link {
 .clear {
 	clear: both;
 }
+
+.cc-license {
+	margin-top: 50px;
+	font-size: 70%;
+}
