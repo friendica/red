@@ -99,18 +99,18 @@ function dfrn_poll_init(&$a) {
 				dbesc($sec)
 			);
 			if(! count($r)) {
-				xml_status(3);
+				xml_status(3, 'No ticket');
 				// NOTREACHED
 			}
 			$orig_id = $r[0]['dfrn_id'];
-			if(strpos(':',$orig_id))
+			if(strpos($orig_id, ':'))
 				$orig_id = substr($orig_id,2);
 
 			$c = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
 				intval($r[0]['cid'])
 			);
 			if(! count($c)) {
-				xml_status(3);
+				xml_status(3, 'No profile');
 			}
 			$contact = $c[0];
 
@@ -134,9 +134,9 @@ function dfrn_poll_init(&$a) {
 				$final_dfrn_id = substr($final_dfrn_id,2);
 
 			if($final_dfrn_id != $orig_id) {
-
+				logger('profile_check: ' . $final_dfrn_id . ' != ' . $orig_id, LOGGER_DEBUG);
 				// did not decode properly - cannot trust this site 
-				xml_status(3);
+				xml_status(3, 'Bad decryption');
 			}
 
 			header("Content-type: text/xml");
