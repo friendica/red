@@ -158,7 +158,12 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 	));
 
 
+	call_hooks('atom_feed', $atom);
+
 	if(! count($items)) {
+
+		call_hooks('atom_feed_end', $atom);
+
 		$atom .= '</feed>' . "\r\n";
 		return $atom;
 	}
@@ -176,6 +181,8 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 
 		$atom .= atom_entry($item,$type,null,$owner,true);
 	}
+
+	call_hooks('atom_feed_end', $atom);
 
 	$atom .= '</feed>' . "\r\n";
 	return $atom;
@@ -490,6 +497,8 @@ function get_atom_elements($feed,$item) {
 
 		$res['target'] .= '</target>' . "\n";
 	}
+
+	call_hooks('parse_atom', array('feed' => $feed, 'item' => $item, 'result' => $res)); 
 
 	return $res;
 }
@@ -1231,6 +1240,9 @@ function atom_author($tag,$name,$uri,$h,$w,$photo) {
 	$o .= "<uri>$uri</uri>\r\n";
 	$o .= '<link rel="photo"  type="image/jpeg" media:width="' . $w . '" media:height="' . $h . '" href="' . $photo . '" />' . "\r\n";
 	$o .= '<link rel="avatar" type="image/jpeg" media:width="' . $w . '" media:height="' . $h . '" href="' . $photo . '" />' . "\r\n";
+
+	call_hooks('atom_author', $o);
+
 	$o .= "</$tag>\r\n";
 	return $o;
 }
@@ -1287,6 +1299,8 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 	if($mentioned)
 		$o .= $mentioned;
 	
+	call_hooks('atom_entry', $o);
+
 	$o .= '</entry>' . "\r\n";
 	
 	return $o;
