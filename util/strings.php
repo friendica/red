@@ -330,6 +330,7 @@ $a->strings[' Not valid email.'] = ' Not valid email.';
 $a->strings['Settings updated.'] = 'Settings updated.';
 $a->strings['Plugin Settings'] = 'Plugin Settings';
 $a->strings['Account Settings'] = 'Account Settings';
+$a->strings['No Plugin settings configured'] = 'No Plugin settings configured';
 $a->strings['OpenID: '] = 'OpenID: ';
 $a->strings["&nbsp;\x28Optional\x29 Allow this OpenID to login to this account."] = "&nbsp;\x28Optional\x29 Allow this OpenID to login to this account.";
 $a->strings['Profile is <strong>not published</strong>.'] = 'Profile is <strong>not published</strong>.';

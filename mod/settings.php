@@ -193,7 +193,7 @@ function settings_content(&$a) {
 
 		$r = q("SELECT * FROM `hook` WHERE `hook` = 'plugin_settings' ");
 		if(! count($r))
-			notice('No Plugin settings configured');
+			notice( t('No Plugin settings configured') . EOL);
 
 		call_hooks('plugin_settings', $o);
 		$o .= '</form>';
