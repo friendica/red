@@ -185,6 +185,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 	call_hooks('atom_feed_end', $atom);
 
 	$atom .= '</feed>' . "\r\n";
+
 	return $atom;
 }
 
@@ -498,7 +499,7 @@ function get_atom_elements($feed,$item) {
 		$res['target'] .= '</target>' . "\n";
 	}
 
-	call_hooks('parse_atom', array('feed' => $feed, 'item' => $item, 'result' => $res)); 
+//	call_hooks('parse_atom', array('feed' => $feed, 'item' => $item, 'result' => $res)); 
 
 	return $res;
 }
