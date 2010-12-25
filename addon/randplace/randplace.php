@@ -37,7 +37,7 @@ function randplace_install() {
 	/**
 	 *
 	 * Then we'll attach into the plugin settings page, and also the 
-	 * settings post hooks so that we can create and update
+	 * settings post hook so that we can create and update
 	 * user preferences.
 	 *
 	 */
@@ -142,7 +142,8 @@ function randplace_settings_post($a,$post) {
 
 
 /**
- * Called from the end of the settings form. 
+ *
+ * Called from the Plugin Setting form. 
  * Add our own settings info to the page.
  *
  */
@@ -154,7 +155,7 @@ function randplace_settings(&$a,&$s) {
 	if(! local_user())
 		return;
 
-	/* Add our stylesheet so we can make our settings look nice */
+	/* Add our stylesheet to the page so we can make our settings look nice */
 
 	$a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/randplace/randplace.css' . '" media="all" />' . "\r\n";
 
