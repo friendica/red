@@ -17,6 +17,9 @@ function settings_post(&$a) {
 
 	call_hooks('settings_post', $_POST);
 
+	if(($a->argc > 1) && ($a->argv[1] == 'addon'))
+		return;
+
 	if(count($a->user) && x($a->user,'uid') && $a->user['uid'] != local_user()) {
 		notice( t('Permission denied.') . EOL);
 		return;
@@ -182,6 +185,21 @@ function settings_content(&$a) {
 		return;
 	}
 
+	if(($a->argc > 1) && ($a->argv[1] === 'addon')) {
+		$o .= '<h1>' . t('Plugin Settings') . '</h1>';
+		$o .= '<div id="account-settings-link"><a href="settings">' . t('Account Settings') . '</a></div>';
+
+		$o .= '<form action="settings/addon" method="post" >';
+
+		$r = q("SELECT * FROM `hook` WHERE `hook` = 'plugin_settings' ");
+		if(! count($r))
+			notice('No Plugin settings configured');
+
+		call_hooks('plugin_settings', $o);
+		$o .= '</form>';
+		return $o;
+	}
+		
 	require_once('include/acl_selectors.php');
 
 	$p = q("SELECT * FROM `profile` WHERE `is-default` = 1 AND `uid` = %d LIMIT 1",

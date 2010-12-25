@@ -357,6 +357,9 @@ function register_content(&$a) {
 		$oidlabel = t("Your OpenID \x28optional\x29: ");
 	}
 
+	$license = t('Shared content is covered by the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> license.');
+
+
 	$o = load_view_file("view/register.tpl");
 	$o = replace_macros($o, array(
 		'$oidhtml' => $oidhtml,
@@ -377,6 +380,7 @@ function register_content(&$a) {
 		'$username'  => $username,
 		'$email'     => $email,
 		'$nickname'  => $nickname,
+		'$license'   => $license,
 		'$sitename'  => $a->get_hostname()
 	));
 	return $o;

@@ -1947,3 +1947,13 @@ a.mail-list-link {
 .clear {
 	clear: both;
 }
+
+.cc-license {
+	margin-top: 50px;
+	font-size: 70%;
+}
+
+
+#plugin-settings-link, #account-settings-link {
+	margin-bottom: 25px;
+}

@@ -1,10 +1,13 @@
 <?php
 
+
+
 require_once('include/items.php');
 require_once('include/auth.php');
 
 
 function dfrn_poll_init(&$a) {
+
 
 	$dfrn_id         = ((x($_GET,'dfrn_id'))         ? $_GET['dfrn_id']              : '');
 	$type            = ((x($_GET,'type'))            ? $_GET['type']                 : 'data');
