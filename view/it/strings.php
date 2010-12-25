@@ -305,7 +305,7 @@ $a->strings['Your registration is pending approval by the site owner.'] = 'La tu
 $a->strings["You may \x28optionally\x29 fill in this form via OpenID by supplying your OpenID and clicking 'Register'."] = "Puoi \x28opzionalmento\x29 riempire questa maschera via OpenID inserendo il tuo OpenID e cliccando 'Registra'."; 
 $a->strings['If you are not familiar with OpenID, please leave that field blank and fill in the rest of the items.'] = 'Se non hai famigliarit&agrave; con OpenID, lascia quel campo in bianco e riempi il resto della maschera.';
 $a->strings["Your OpenID \x28optional\x29: "] = "Il tuo OpenID \x28opzionale\x29: ";
-$a->strings['Shared content is covered by the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> license.'] = 'Contenuto in comune h coperto da licenza <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a>.';
+$a->strings['Shared content is covered by the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> license.'] = 'Contenuto in comune h coperto da licenza <a href="http://creativecommons.org/licenses/by/3.0/deed.it">Creative Commons Attribution 3.0</a>.';
 $a->strings['Registration'] = 'Registrazione';
 $a->strings['Your Full Name ' . "\x28" . 'e.g. Joe Smith' . "\x29" . ': '] = 'Il tuo Nome Completo ' . "\x28" . 'p.e. Mario Rossi' . "\x29" . ': ';
 $a->strings['Your Email Address: '] = 'Il tuo Indirizzo Email: ';
