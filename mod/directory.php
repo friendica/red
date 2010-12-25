@@ -83,7 +83,7 @@ function directory_content(&$a) {
 			if(strlen($rr['gender']))
 				$details .= '<br />Gender: ' . $rr['gender'];
 
-			$o .= replace_macros($tpl,array(
+			$entry = replace_macros($tpl,array(
 				'$id' => $rr['id'],
 				'$profile-link' => $profile_link,
 				'$photo' => $rr[$photo],
@@ -94,7 +94,14 @@ function directory_content(&$a) {
 
 			));
 
+			$arr = array('contact' => $rr, 'entry' => $entry);
+
+			call_hooks('directory_item', $arr);
+
+			$o .= $entry;
+
 		}
+
 		$o .= "<div class=\"directory-end\" ></div>\r\n";
 		$o .= paginate($a);
 
