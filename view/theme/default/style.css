@@ -1952,3 +1952,8 @@ a.mail-list-link {
 	margin-top: 50px;
 	font-size: 70%;
 }
+
+
+#plugin-settings-link, #account-settings-link {
+	margin-bottom: 25px;
+}

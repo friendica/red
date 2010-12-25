@@ -1,5 +1,8 @@
 <h1>Impostazioni account</h1>
 
+<div id="plugin-settings-link"><a href="settings/addon">Impostazioni Plugin</a></div>
+
+
 $nickname_block
 
 

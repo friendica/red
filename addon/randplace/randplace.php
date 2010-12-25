@@ -36,13 +36,13 @@ function randplace_install() {
 
 	/**
 	 *
-	 * Then we'll attach into the settings page, on both the 
-	 * form and post hooks so that we can create and update
+	 * Then we'll attach into the plugin settings page, and also the 
+	 * settings post hooks so that we can create and update
 	 * user preferences.
 	 *
 	 */
 
-	register_hook('settings_form', 'addon/randplace/randplace.php', 'randplace_settings');
+	register_hook('plugin_settings', 'addon/randplace/randplace.php', 'randplace_settings');
 	register_hook('settings_post', 'addon/randplace/randplace.php', 'randplace_settings_post');
 
 	logger("installed randplace");
@@ -60,7 +60,7 @@ function randplace_uninstall() {
 	 */
 
 	unregister_hook('post_local',    'addon/randplace/randplace.php', 'randplace_post_hook');
-	unregister_hook('settings_form', 'addon/randplace/randplace.php', 'randplace_settings');
+	unregister_hook('plugin_settings', 'addon/randplace/randplace.php', 'randplace_settings');
 	unregister_hook('settings_post', 'addon/randplace/randplace.php', 'randplace_settings_post');
 
 
@@ -154,7 +154,7 @@ function randplace_settings(&$a,&$s) {
 	if(! local_user())
 		return;
 
-	/* Add our stylesheet so we can match the page layout */
+	/* Add our stylesheet so we can make our settings look nice */
 
 	$a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/randplace/randplace.css' . '" media="all" />' . "\r\n";
 
@@ -164,7 +164,7 @@ function randplace_settings(&$a,&$s) {
 
 	$checked = (($enabled) ? ' checked="checked" ' : '');
 
-	/* Add some HTML to the form */
+	/* Add some HTML to the existing form */
 
 	$s .= '<h3>' . t('Randplace Settings') . '</h3>';
 	$s .= '<div id="randplace-enable-wrapper">';
@@ -172,7 +172,7 @@ function randplace_settings(&$a,&$s) {
 	$s .= '<input id="randplace-checkbox" type="checkbox" name="randplace" value="1" ' . $checked . '/>';
 	$s .= '</div><div class="clear"></div>';
 
-	/* provide another submit button */
+	/* provide a submit button */
 
 	$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
 

@@ -1,5 +1,7 @@
 <h1>Account Settings</h1>
 
+<div id="plugin-settings-link"><a href="settings/addon">Plugin Settings</a></div>
+
 $nickname_block
 
 

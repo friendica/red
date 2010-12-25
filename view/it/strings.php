@@ -324,6 +324,8 @@ $a->strings[' Please use a shorter name.'] = ' Usa un nome pi&ugrave; corto.';
 $a->strings[' Name too short.'] = ' Nome troppo corto.';
 $a->strings[' Not valid email.'] = ' Email non valida.';
 $a->strings['Settings updated.'] = 'Impostazioni aggiornate.';
+$a->strings['Plugin Settings'] = 'Impostazioni Plugin';
+$a->strings['Account Settings'= = 'Impostazioni Account';
 $a->strings['OpenID: '] = 'OpenID: ';
 $a->strings["&nbsp;\x28Optional\x29 Allow this OpenID to login to this account."] = "&nbsp;\x28Opzionale\x29 Permetti a questo OpenID di accedere a questo account.";
 $a->strings['Profile is <strong>not published</strong>.'] = 'Il profilo <strong>non &egrave; pubblicato</strong>.';

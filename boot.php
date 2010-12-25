@@ -2047,7 +2047,7 @@ function profile_sidebar($profile) {
 if(! function_exists('register_hook')) {
 function register_hook($hook,$file,$function) {
 
-	$r = q("SELECT FROM `hook` WHERE `hook` = '%s' AND `file` = '%s' AND `function` = '%s' LIMIT 1",
+	$r = q("SELECT * FROM `hook` WHERE `hook` = '%s' AND `file` = '%s' AND `function` = '%s' LIMIT 1",
 		dbesc($hook),
 		dbesc($file),
 		dbesc($function)
