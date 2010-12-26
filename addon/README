@@ -94,9 +94,11 @@ Current hooks:
 	$b is the (string) generated HTML of the entry
 		(The profile array details are in $a->profile)
 
-'contact_block_end' - called when displaying the block of contacts/friends on a 
-	profile sidebar
-***	$b is the (string) generated HTML of the contact block
+'contact_block_end' - called when formatting the block of contacts/friends on a 
+	profile sidebar has completed
+	$b is an array
+		'contacts' => contact array of entries
+		'output' => the (string) generated HTML of the contact block
 
 
 *** = subject to change

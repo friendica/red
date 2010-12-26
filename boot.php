@@ -1742,6 +1742,11 @@ if(! function_exists('contact_block')) {
 function contact_block() {
 	$o = '';
 	$a = get_app();
+
+	$shown = get_pconfig($a->profile['uid'],'system','display_friend_count');
+	if(! $shown)
+		$shown = 24;
+
 	if((! is_array($a->profile)) || ($a->profile['hide-friends']))
 		return $o;
 	$r = q("SELECT COUNT(*) AS `total` FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 and `pending` = 0",
@@ -1754,8 +1759,9 @@ function contact_block() {
 		$o .= '<h4 class="contact-h4">' . t('No contacts') . '</h4>';
 		return $o;
 	}
-	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 and `pending` = 0 ORDER BY RAND() LIMIT 24",
-			intval($a->profile['uid'])
+	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 and `pending` = 0 ORDER BY RAND() LIMIT %d",
+			intval($a->profile['uid']),
+			intval($shown)
 	);
 	if(count($r)) {
 		$o .= '<h4 class="contact-h4">' . $total . ' ' . t('Contacts') . '</h4><div id="contact-block">';
@@ -1778,7 +1784,9 @@ function contact_block() {
 		
 	}
 
-	call_hooks('contact_block_end', $o);
+	$arr = array('contacts' => $r, 'output' => $o);
+
+	call_hooks('contact_block_end', $arr);
 	return $o;
 
 }}
