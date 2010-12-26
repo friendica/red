@@ -342,7 +342,7 @@ function profile_content(&$a, $update = 0) {
 			if(strcmp(datetime_convert('UTC','UTC',$item['created']),datetime_convert('UTC','UTC','now - 12 hours')) > 0)
 				$indent .= ' shiny'; 
 
-			$o .= replace_macros($template,array(
+			$tmp_item = replace_macros($template,array(
 				'$id' => $item['item_id'],
 				'$profile_url' => $profile_link,
 				'$name' => $profile_name,
@@ -360,6 +360,11 @@ function profile_content(&$a, $update = 0) {
 				'$dislike' => $dislike,
 				'$comment' => $comment
 			));
+
+			$arr = array('item' => $item, 'output' => $tmp_item);
+			call_hooks('display_item', $arr);
+
+			$o .= $arr['output'];
 			
 		}
 	}
