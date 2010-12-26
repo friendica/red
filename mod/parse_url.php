@@ -11,12 +11,23 @@ function parse_url_content(&$a) {
 
 	$template = "<a href=\"%s\" >%s</a>%s";
 
+
+	$arr = array('url' => $url, 'text' => '');
+
+	call_hooks('parse_link', $arr);
+
+	if(strlen($arr['text'])) {
+		echo $arr['text'];
+		killme();
+	}
+
 	if($url) 
 		$s = fetch_url($url);
 	else {
 		echo '';
 		killme();
 	}
+
 
 	if(! $s) {
 		echo sprintf($template,$url,$url,'');

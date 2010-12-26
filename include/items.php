@@ -499,7 +499,9 @@ function get_atom_elements($feed,$item) {
 		$res['target'] .= '</target>' . "\n";
 	}
 
-//	call_hooks('parse_atom', array('feed' => $feed, 'item' => $item, 'result' => $res)); 
+	$arr = array('feed' => $feed, 'item' => $item, 'result' => $res);
+
+	call_hooks('parse_atom', $arr);
 
 	return $res;
 }
