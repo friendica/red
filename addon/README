@@ -52,6 +52,8 @@ Current hooks:
 		'username' => the supplied username
 		'password' => the supplied password
 		'authenticated' => set this to non-zero to authenticate the user.
+		'user_record' => successful authentication must also return a valid user record from the database
+
 
 'logged_in' - called after a user has successfully logged in.
 	$b contains the $a->user array
