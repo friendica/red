@@ -132,16 +132,18 @@ else {
 	}
 	if((x($_POST,'auth-params')) && $_POST['auth-params'] === 'login') {
 
+		$record = null;
 
 		$addon_auth = array(
-			'name' => trim($_POST['openid_url']), 
+			'username' => trim($_POST['openid_url']), 
 			'password' => trim($_POST['password']),
-			'authenticated' => 0
+			'authenticated' => 0,
+			'user_record' => null
 		);
 
 		/**
 		 *
-		 * A plugin indicates successful login by setting 'authenticated' to non-zero value
+		 * A plugin indicates successful login by setting 'authenticated' to non-zero value and returning a user record
 		 * Plugins should never set 'authenticated' except to indicate success - as hooks may be chained
 		 * and later plugins should not interfere with an earlier one that succeeded.
 		 *
@@ -149,8 +151,12 @@ else {
 
 		call_hooks('authenticate', $addon_auth);
 
-		if(! $addon_auth['authenticated']) {
-			// process login request
+		if(($addon_auth['authenticated']) && (count($addon_auth['user_record']))) {
+			$record = $addon_auth['user_record'];
+		}
+		else {
+
+			// process normal login request
 
 			$r = q("SELECT * FROM `user` WHERE ( `email` = '%s' OR `nickname` = '%s' ) 
 				AND `password` = '%s' AND `blocked` = 0 AND `verified` = 1 LIMIT 1",
@@ -158,21 +164,25 @@ else {
 				dbesc(trim($_POST['openid_url'])),
 				dbesc($encrypted)
 			);
-			if(($r === false) || (! count($r))) {
-				notice( t('Login failed.') . EOL );
-				goaway($a->get_baseurl());
-  			}
+			if(count($r))
+				$record = $r[0];
 		}
 
-		$_SESSION['uid'] = $r[0]['uid'];
-		$_SESSION['theme'] = $r[0]['theme'];
+		if((! $record) || (! count($record))) {
+			logger('authenticate: failed login attempt: ' . trim($_POST['openid_url'])); 
+			notice( t('Login failed.') . EOL );
+			goaway($a->get_baseurl());
+  		}
+
+		$_SESSION['uid'] = $record['uid'];
+		$_SESSION['theme'] = $record['theme'];
 		$_SESSION['authenticated'] = 1;
-		$_SESSION['page_flags'] = $r[0]['page-flags'];
-		$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $r[0]['nickname'];
+		$_SESSION['page_flags'] = $record['page-flags'];
+		$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $record['nickname'];
 		$_SESSION['addr'] = $_SERVER['REMOTE_ADDR'];
 
-		notice( t("Welcome back ") . $r[0]['username'] . EOL);
-		$a->user = $r[0];
+		notice( t("Welcome back ") . $record['username'] . EOL);
+		$a->user = $record;
 		if(strlen($a->user['timezone']))
 			date_default_timezone_set($a->user['timezone']);
 
