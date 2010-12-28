@@ -274,3 +274,6 @@ function update_1028() {
 	q("ALTER TABLE `user` ADD `openidserver` text NOT NULL AFTER `deny_gid` ");
 }
 
+function update_1029() {
+	q("ALTER TABLE `contact` ADD `info` MEDIUMTEXT NOT NULL AFTER `reason` ");
+}

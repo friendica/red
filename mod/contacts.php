@@ -65,12 +65,15 @@ function contacts_post(&$a) {
 
 	$reason = notags(trim($_POST['reason']));
 
-	$r = q("UPDATE `contact` SET `profile-id` = %d, `priority` = %d , `rating` = %d, `reason` = '%s'
+	$info = escape_tags(trim($_POST['info']));
+
+	$r = q("UPDATE `contact` SET `profile-id` = %d, `priority` = %d , `rating` = %d, `reason` = '%s', `info` = '%s'
 		WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		intval($profile_id),
 		intval($priority),
 		intval($rating),
 		dbesc($reason),
+		dbesc($info),
 		intval($contact_id),
 		intval(local_user())
 	);
@@ -190,6 +193,8 @@ function contacts_content(&$a) {
 			return;
 		}
 
+		$tpl = load_view_file('view/contact_head.tpl');
+		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
 
 		require_once('include/contact_selectors.php');
 
@@ -239,6 +244,7 @@ function contacts_content(&$a) {
 			'$block_text' => (($r[0]['blocked']) ? t('Unblock this contact') : t('Block this contact') ),
 			'$ignore_text' => (($r[0]['readonly']) ? t('Unignore this contact') : t('Ignore this contact') ),
 			'$insecure' => (($r[0]['network'] === 'dfrn') ? '' : load_view_file('view/insecure_net.tpl')),
+			'$info' => $r[0]['info'],
 			'$blocked' => (($r[0]['blocked']) ? '<div id="block-message">' . t('Currently blocked') . '</div>' : ''),
 			'$ignored' => (($r[0]['readonly']) ? '<div id="ignore-message">' . t('Currently ignored') . '</div>' : ''),
 			'$rating' => contact_reputation($r[0]['rating']),
