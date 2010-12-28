@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * This module needs a lot of work.
+ *
+ * - setting/storing preferences
+ * - documentation on how to obtain FB API keys for your site 
+ * - ensuring a valid FB login session
+ * - requesting permissions within the FB login session to post on your behalf until permission revoked.
+ *
+ */
+
 
 function facebook_install() {
 	register_hook('post_local_end', 'addon/facebook/facebook.php', 'facebook_post_hook');
@@ -38,7 +48,7 @@ function facebook_post_hook(&$a,&$b) {
 					'cookie' => true
 				));			
 				try {
-					$statusUpdate = $facebook->api('/me/feed', 'post', array('message'=> bbcode($datarray['body']), 'cb' => ''));
+					$statusUpdate = $facebook->api('/me/feed', 'post', array('message'=> bbcode($b['body']), 'cb' => ''));
 				} 
 				catch (FacebookApiException $e) {
 					notice( t('Facebook status update failed.') . EOL);
