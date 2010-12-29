@@ -19,35 +19,44 @@ Facebook.
 
     Friendika is here to rock that boat. 
 
-    Granted, all your friends aren't here. Yet. The people who made fun of you
+    Granted, all your friends aren't here - yet. The people who made fun of you
 in high school (yet curiously wanted to be friends with you now) are still
 "poking" each other and managing their virtual farms and telling you all about
 their virtual gang wars. Would you miss them? 
 
     I wouldn't. 
 
-    You probably have a handful of friends that are truly special. Tell them
-that the world has changed. It's time to move on. 
+    You probably have a handful of friends that are truly special. Tell those
+friends that the world has changed - because it has. It's time to move on. A 
+year ago, if you had left Facebook, there was no place to go - at least a 
+place which offered the same kind of social interaction (and wasn't just
+another huge company trying to make money off of all of your private
+information).
+
+    Today you have options.  
 
     What if there was a social network which provided some of the same
-interaction you've grown to love, *and* was free to use, open source, *and* 
-where your privacy is always under your control?
+interaction you've grown to love, *and* was free to use, *and* was open source,
+*and* where your privacy is always under your control?
  
     And what if this social network could scale to encompass the entire 
 internet, and *not* require a central organisation to provide servers (in 
-exchange for selling your private information to advertisers)?
+exchange for selling your private information - and everything else they can
+find out about you from logging all of your online activities and
+conversations)?
 
     Look no further. 
 
     Friendika is a social network without boundaries, and without ownership. 
 Friendika installations can link together into a global social network which 
-is free from central control. Besides the Friendika network [which is privacy 
-enhanced]; you can also connect with and communicate with friends on identi.ca,
+is free from central control. Besides the Friendika network (which is privacy 
+enhanced); you can also connect with and communicate with friends on identi.ca,
 Status.Net and many other sites and social networks *today*. 
 
-    Welcome to the federated social web. If you choose not to use Friendika, 
-you can choose any of 20-30 other providers of social networking software and
-still be a part of this new social network. This is bigger than Facebook. 
+    Welcome to the federated social web. If you choose not to use Friendika 
+(though we think you'd be foolish not to), you can choose any of 20-30 other
+providers of federated social networking software and still be a part of this
+vast new social network. This is going to be bigger than Facebook. 
 
     Much bigger.  
 
@@ -83,7 +92,7 @@ What are you going to use in the meantime?
     Friendika delivers. We've got an incredibly rich social communications 
 interface you can make use of *right now*.
 
-	And lest you think we're just trying to copy Facebook feature-for-feature,
+    And lest you think we're just trying to copy Facebook feature-for-feature,
 you couldn't be further from the truth. We like the conversational style
 because it feels natural, and that's why Facebook grew to be what it is today. 
 But we're creating something completely different. 
@@ -120,7 +129,20 @@ friends and public updates to your hordes of fans - using the same interface.
 
     No other social network offers this ability.  
 
-	Join us.
+
+    Join us.
+
+	*******************
+    Friendika Demo Site
+    *******************
+
+    http://demo.friendika.com
+
+    *******************
+    Friendika Downloads
+    *******************
+
+    http://github.com/friendika/friendika/tarball/master
 
 
 
