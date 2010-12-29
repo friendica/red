@@ -100,10 +100,11 @@ But we're creating something completely different.
     Something better.
 
     A single instance of Friendika can easily support hundreds of (and up to
-several thousand) people using commodity hosting hardware. Each of these 
-people are able to connect with potentially hundreds or thousands of friends 
-and associates on any other supported network anywhere in the world and share 
-photos, links, status updates, etc. 
+several thousand) people using commodity hosting hardware. You could even run
+Friendika on an old PC in your closet or garage. Each of these people are able
+to connect with potentially hundreds or thousands of friends and associates 
+on any other supported network anywhere in the world and share photos, links,
+status updates, etc. 
 
     But maybe you don't want to be connected to the world... That's OK too. 
 Friendika may also be closed off from the global community and used to support
