@@ -44,6 +44,8 @@ $bbtags = array(
 // Replace $htmltags in $text with $bbtags
 $text = preg_replace ($htmltags, $bbtags, $s);
 
+call_hooks('html2bbcode', $text);
+
 // Strip all other HTML tags
 $text = strip_tags($text);
 return $text;

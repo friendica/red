@@ -107,6 +107,12 @@ Current hooks:
 		'contacts' => contact array of entries
 		'output' => the (string) generated HTML of the contact block
 
+'bbcode' - called during conversion of bbcode to html
+	$b is (string) converted text
+
+'html2bbcode' - called during conversion of html to bbcode (e.g. remote message posting)
+	$b is (string) converted text
+
 
 *** = subject to change
 
