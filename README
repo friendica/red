@@ -79,15 +79,12 @@ rarely are (straight-forward and simple). Whether you're communicating with
 drinking buddies or potential employers, you can rest assured that each is
 only able to see the side of you that you wish to present. If you send a
 private message to your aunt Mary, we will encrypt it with military grade
-encryption. We also won't share it with advertisers.  
+encryption.
 
     Other distributed social network projects talk about privacy and offering
 a feature-rich social networking alternative, but all they can deliver is 
-vapour and vague promises. You've probably heard about the four guys in New
-York and their "Facebook killer". What a disaster that was. Eventually they
-may get it right and release something that actually works (and lets you do 
-something besides drag your friends into categories), but they may not.
-What are you going to use in the meantime?   
+vapour and vague promises. Things like "Private mail will be in the next
+release". 
 
     Friendika delivers. We've got an incredibly rich social communications 
 interface you can make use of *right now*.
@@ -106,8 +103,8 @@ to connect with potentially hundreds or thousands of friends and associates
 on any other supported network anywhere in the world and share photos, links,
 status updates, etc. 
 
-    But maybe you don't want to be connected to the world... That's OK too. 
-Friendika may also be closed off from the global community and used to support
+    But maybe you don't want to be connected to the world... and that's OK 
+too. Friendika may be closed off from the global community and used to support
 social networking amongst corporate, educational, religious, and other private
 communities. This makes it an excellent choice for the social networking needs
 of young teenagers and especially k-12 organisations. 
