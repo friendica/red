@@ -114,6 +114,10 @@ Current hooks:
 	$b is (string) converted text
 
 
+'page_header' - called after building the page navigation section
+	$b is (string) HTML of nav region
+
+
 *** = subject to change
 
 

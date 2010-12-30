@@ -49,7 +49,6 @@
 
 		$a->page['nav'] .= '<a id="nav-contacts-link" class="nav-link" href="contacts">' . t('Contacts') . "</a>\r\n";
 
-
 		
 	}
 
@@ -57,9 +56,10 @@
 
 	$banner = get_config('system','banner');
 
-
 	if($banner === false) 
 		$banner .= '<a href="http://friendika.com"><img id="logo-img" src="images/ff-32.jpg" alt="logo" /></a><span id="logo-text"><a href="http://friendika.com">Friendika</a></span>';
 
 
 	$a->page['nav'] .= '<span id="banner">' . $banner . '</span>';
+
+	call_hooks('page_header', $a->page['nav']);
