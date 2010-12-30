@@ -69,6 +69,11 @@ Current hooks:
 	$b is the item array of the information to be stored in the database
 		{Please note: body contents are bbcode - not HTML)
 
+'post_local_end' - called when a local status post or comment has been stored on the local system
+	$b is the item array of the information which has just been stored in the database
+		{Please note: body contents are bbcode - not HTML)
+
+
 'post_remote' - called when receiving a post from another source. This may also be used
 	to post local activity or system generated messages.
 	$b is the item array of information to be stored in the database and the item

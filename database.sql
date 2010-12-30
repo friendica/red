@@ -87,6 +87,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `pending` tinyint(1) NOT NULL DEFAULT '1',
   `rating` tinyint(1) NOT NULL DEFAULT '0',
   `reason` text NOT NULL,
+  `info` MEDIUMTEXT NOT NULL AFTER `reason`,
   `profile-id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),

@@ -38,6 +38,15 @@ $ignored
 <form action="contacts/$contact_id" method="post" >
 <input type="hidden" name="contact_id" value="$contact_id">
 
+<div id="contact-edit-info-wrapper">
+<h4>Informazioni di contatto / Note</h4>
+<textarea id="contact-edit-info" rows="10" cols="72" name="info" >$info</textarea>
+</div>
+<div id="contact-edit-info-end"></div>
+
+<input class="contact-edit-submit" type="submit" name="submit" value="Aggiorna" />
+
+
 <div id="contact-edit-profile-select-text">
 <h4>Visibilt&agrave; Profiloe</h4>
 <p>Scegli il profilo che vuoi mostrare a $name quando guarda il tuo profilo in modo sicuro.</p> 
