@@ -80,9 +80,9 @@ function bbcode($Text) {
 
 	// html5 video and audio
 
-	$Text = preg_replace("/\[video\](.+?)\[\/video\]/", '<video src="$1" controls="controls" width="425" height="350">$1</video>', $Text);
+	$Text = preg_replace("/\[video\](.+?)\[\/video\]/", '<video src="$1" controls="controls" width="425" height="350"><a href="$1">$1</a></video>', $Text);
 
-	$Text = preg_replace("/\[audio\](.+?)\[\/audio\]/", '<audio src="$1" controls="controls">$1</audio>', $Text);
+	$Text = preg_replace("/\[audio\](.+?)\[\/audio\]/", '<audio src="$1" controls="controls"><a href="$1">$1</a></audio>', $Text);
 
          
 	// [img=widthxheight]image source[/img]
