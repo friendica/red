@@ -24,8 +24,8 @@ function html2bbcode($s) {
 		'/\<code\>(.*?)\<\/code\>/is',
 		'/\<span style=\"color:(.*?)\"\>(.*?)\<\/span\>/is',
 		'/\<blockquote\>(.*?)\<\/blockquote\>/is',
-		'/\<video(.*?) src=\"(.*?)\" (.*?)\>(.*?)\</video>/is',
-		'/\<audio(.*?) src=\"(.*?)\" (.*?)\>(.*?)\</audio>/is',
+		'/\<video(.*?) src=\"(.*?)\" (.*?)\>(.*?)\</video\>/is',
+		'/\<audio(.*?) src=\"(.*?)\" (.*?)\>(.*?)\</audio\>/is',
 
 	);
 
