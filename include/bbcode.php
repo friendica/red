@@ -77,6 +77,13 @@ function bbcode($Text) {
 	// Images
 	// [img]pathtoimage[/img]
 	$Text = preg_replace("/\[img\](.+?)\[\/img\]/", '<img src="$1">', $Text);
+
+	// html5 video and audio
+
+	$Text = preg_replace("/\[video\](.+?)\[\/video\]/", '<video src="$1" controls="controls" width="425" height="350">$1</video>', $Text);
+
+	$Text = preg_replace("/\[audio\](.+?)\[\/audio\]/", '<audio src="$1" controls="controls">$1</audio>', $Text);
+
          
 	// [img=widthxheight]image source[/img]
 	$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.+?)\[\/img\]/", '<img src="$3" height="$2" width="$1">', $Text);
