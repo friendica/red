@@ -39,6 +39,10 @@ function xrd_content(&$a) {
 		'$modexp'      => 'data:application/magic-public-key,'  . $salmon_key
 	));
 
+
+	$arr = array('user' => $r[0], 'xml' => $o);
+	call_hooks('personal_xrd', $arr);
+
 	echo $o;
 	killme();
 
