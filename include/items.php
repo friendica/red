@@ -157,7 +157,6 @@ function get_feed_for(&$a, $dfrn_id, $owner_id, $last_update, $direction = 0) {
 		'$namdate'      => xmlify(datetime_convert('UTC','UTC',$owner['name-date']   . '+00:00' , ATOM_TIME)) 
 	));
 
-
 	call_hooks('atom_feed', $atom);
 
 	if(! count($items)) {

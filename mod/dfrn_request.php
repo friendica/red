@@ -544,12 +544,40 @@ function dfrn_request_content(&$a) {
 		return; // NOTREACHED
 	}
 	else {
-		$myaddr = ((x($_GET,'address')) ? urldecode($_GET['address']) : '');
-		// Normal web request. Display our user's introduction form. 
+
+		/**
+		 * Normal web request. Display our user's introduction form.
+		 */
+ 
+		/**
+		 * Try to auto-fill the profile address
+		 */
+
+		if(local_user()) {
+			if(strlen($a->path)) {
+				$myaddr = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
+			}
+			else {
+				$myaddr = $a->user['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3 );
+			}
+		}
+		else { 
+			$myaddr = ((x($_GET,'address')) ? urldecode($_GET['address']) : '');
+		}
+
+		/**
+		 *
+		 * The auto_request form only has the profile address
+		 * because nobody is going to read the comments and 
+		 * it doesn't matter if they know you or not.
+		 *
+		 */
+
 		if($a->profile['page-flags'] == PAGE_NORMAL)
 			$tpl = load_view_file('view/dfrn_request.tpl');
 		else
 			$tpl = load_view_file('view/auto_request.tpl');
+
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Friend/Connection Request'),
 			'$pls_answer' => t('Please answer the following:'),
