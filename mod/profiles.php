@@ -265,13 +265,14 @@ function profiles_content(&$a) {
 			dbesc($name),
 			dbesc($r1[0]['name']),
 			dbesc($r1[0]['photo']),
-			dbesc($ra[0]['thumb'])
+			dbesc($r1[0]['thumb'])
 		);
 
 		$r3 = q("SELECT `id` FROM `profile` WHERE `uid` = %d AND `profile-name` = '%s' LIMIT 1",
 			intval(local_user()),
 			dbesc($name)
 		);
+
 		notice( t('New profile created.') . EOL);
 		if(count($r3) == 1)
 			goaway($a->get_baseurl() . '/profiles/' . $r3[0]['id']);
