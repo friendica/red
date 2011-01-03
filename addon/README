@@ -124,6 +124,10 @@ Current hooks:
 		'xml' => the complete XML to be output
  
 
+'home_content' - called prior to output home page content, shown to unlogged users
+	$b is (string) HTML of section region
+
+
 *** = subject to change
 
 
