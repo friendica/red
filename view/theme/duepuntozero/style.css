@@ -119,6 +119,7 @@ nav .nav-link {
 	float: right;
 	margin: 0.2em 0em;
 	padding: 0em 0.5em;
+	background-color: transparent !important;
 }
 
 
@@ -151,6 +152,7 @@ aside {
 	background-image: url(border.jpg);
 	background-position: top left;
 	background-repeat: no-repeat;
+	position: absolute;
 }
 
 
@@ -181,6 +183,12 @@ section {
 	float:left;
 	padding: 0.4em;
 	margin-right: 1em;
+}
+
+/* footer */
+footer {
+    display: none;
+
 }
 
 
@@ -922,7 +930,7 @@ input#dfrn-url {
 
 #profile-jot-perms-end {
 	/*clear: left;*/
-	height: 13px;
+	height: 30px;
 }
 
 #profile-jot-end {
@@ -1736,7 +1744,7 @@ a.mail-list-link {
 }
 
 .sparkle {
-	cursor: url('lock.cur'), pointer;
+	cursor: url('../default/lock.cur'), pointer;
 /*	cursor: pointer !important; */
 }
 
