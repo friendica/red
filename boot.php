@@ -1497,7 +1497,7 @@ function validate_email($addr) {
 		return false;
 	$h = substr($addr,strpos($addr,'@') + 1);
 
-	if(($h) && (dns_get_record($h['host'], DNS_A + DNS_CNAME + DNS_PTR + DNS_MX))) {
+	if(($h) && (dns_get_record($h, DNS_A + DNS_CNAME + DNS_PTR + DNS_MX))) {
 		return true;
 	}
 	return false;

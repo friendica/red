@@ -286,6 +286,7 @@ function network_content(&$a, $update = 0) {
 
 			$tmp_item = replace_macros($template,array(
 				'$id' => $item['item_id'],
+				'$title' => t('View $name's profile'),
 				'$profile_url' => $profile_link,
 				'$name' => $profile_name,
 				'$thumb' => $profile_avatar,
