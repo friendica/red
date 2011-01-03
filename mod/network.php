@@ -104,10 +104,15 @@ function network_content(&$a, $update = 0) {
 		}
 
 		$contacts = expand_groups(array($group));
-		$contact_str = implode(',',$contacts);
-                $sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `contact-id` IN ( $contact_str )) ";
-                $o = '<h4>' . t('Group: ') . $r[0]['name'] . '</h4>' . $o;
-
+		if((is_array($contacts)) && count($contacts)) {
+			$contact_str = implode(',',$contacts);
+		}
+		else {
+				$contact_str = ' 0 ';
+				notice( t('Group is empty'));
+		}
+		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `contact-id` IN ( $contact_str )) ";
+		$o = '<h4>' . t('Group: ') . $r[0]['name'] . '</h4>' . $o;
 	}
 
 	$r = q("SELECT COUNT(*) AS `total`
@@ -286,7 +291,7 @@ function network_content(&$a, $update = 0) {
 
 			$tmp_item = replace_macros($template,array(
 				'$id' => $item['item_id'],
-				'$title' => t('View $name's profile'),
+				'$title' => t('View $name\'s profile'),
 				'$profile_url' => $profile_link,
 				'$name' => $profile_name,
 				'$thumb' => $profile_avatar,
