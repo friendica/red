@@ -117,11 +117,15 @@ function settings_post(&$a) {
 	// If openid has changed or if there's an openid but no openidserver, try and discover it.
 
 	if($openid != $a->user['openid'] || (strlen($openid) && (! strlen($openidserver)))) {
-		logger('updating openidserver');
-		require_once('library/openid.php');
-		$open_id_obj = new LightOpenID;
-		$open_id_obj->identity = $openid;
-		$openidserver = $open_id_obj->discover($open_id_obj->identity);
+		if(strlen($openid)) {
+			logger('updating openidserver');
+			require_once('library/openid.php');
+			$open_id_obj = new LightOpenID;
+			$open_id_obj->identity = $openid;
+			$openidserver = $open_id_obj->discover($open_id_obj->identity);
+		}
+		else
+			$openidserver = '';
 	}
 
 	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `theme` = '%s', `maxreq` = %d, `openidserver` = '%s'  WHERE `uid` = %d LIMIT 1",
