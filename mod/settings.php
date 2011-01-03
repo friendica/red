@@ -247,13 +247,16 @@ function settings_content(&$a) {
 	}
 
 
-
-
-	$opt_tpl = load_view_file("view/profile-in-directory.tpl");
-	$profile_in_dir = replace_macros($opt_tpl,array(
-		'$yes_selected' => (($profile['publish'])      ? " checked=\"checked\" " : ""),
-		'$no_selected'  => (($profile['publish'] == 0) ? " checked=\"checked\" " : "")
-	));
+	if(get_config('system','publish_all')) {
+		$profile_in_dir = '<input type="hidden" name="profile_in_directory" value="1" />';
+	}
+	else {
+		$opt_tpl = load_view_file("view/profile-in-directory.tpl");
+		$profile_in_dir = replace_macros($opt_tpl,array(
+			'$yes_selected' => (($profile['publish'])      ? " checked=\"checked\" " : ""),
+			'$no_selected'  => (($profile['publish'] == 0) ? " checked=\"checked\" " : "")
+		));
+	}
 
 	if(strlen(get_config('system','directory_submit_url'))) {
 		$opt_tpl = load_view_file("view/profile-in-netdir.tpl");
