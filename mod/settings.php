@@ -117,11 +117,16 @@ function settings_post(&$a) {
 	// If openid has changed or if there's an openid but no openidserver, try and discover it.
 
 	if($openid != $a->user['openid'] || (strlen($openid) && (! strlen($openidserver)))) {
-		logger('updating openidserver');
-		require_once('library/openid.php');
-		$open_id_obj = new LightOpenID;
-		$open_id_obj->identity = $openid;
-		$openidserver = $open_id_obj->discover($open_id_obj->identity);
+		$tmp_str = $openid;
+		if(strlen($tmp_str) && validate_url($tmp_str)) {
+			logger('updating openidserver');
+			require_once('library/openid.php');
+			$open_id_obj = new LightOpenID;
+			$open_id_obj->identity = $openid;
+			$openidserver = $open_id_obj->discover($open_id_obj->identity);
+		}
+		else
+			$openidserver = '';
 	}
 
 	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `theme` = '%s', `maxreq` = %d, `openidserver` = '%s'  WHERE `uid` = %d LIMIT 1",
@@ -242,13 +247,16 @@ function settings_content(&$a) {
 	}
 
 
-
-
-	$opt_tpl = load_view_file("view/profile-in-directory.tpl");
-	$profile_in_dir = replace_macros($opt_tpl,array(
-		'$yes_selected' => (($profile['publish'])      ? " checked=\"checked\" " : ""),
-		'$no_selected'  => (($profile['publish'] == 0) ? " checked=\"checked\" " : "")
-	));
+	if(get_config('system','publish_all')) {
+		$profile_in_dir = '<input type="hidden" name="profile_in_directory" value="1" />';
+	}
+	else {
+		$opt_tpl = load_view_file("view/profile-in-directory.tpl");
+		$profile_in_dir = replace_macros($opt_tpl,array(
+			'$yes_selected' => (($profile['publish'])      ? " checked=\"checked\" " : ""),
+			'$no_selected'  => (($profile['publish'] == 0) ? " checked=\"checked\" " : "")
+		));
+	}
 
 	if(strlen(get_config('system','directory_submit_url'))) {
 		$opt_tpl = load_view_file("view/profile-in-netdir.tpl");

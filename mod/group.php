@@ -56,13 +56,14 @@ function group_post(&$a) {
 				notice( t('Group name changed.') . EOL );
 		}
 		$members = $_POST['group_members_select'];
-		array_walk($members,'validate_members');
+		if(is_array($members))
+			array_walk($members,'validate_members');
 		$r = q("DELETE FROM `group_member` WHERE `gid` = %d AND `uid` = %d",
 			intval($a->argv[1]),
 			intval(local_user())
 		);
 		$result = true;
-		if(count($members)) {
+		if(is_array($members) && count($members)) {
 			foreach($members as $member) {
 				$r = q("INSERT INTO `group_member` ( `uid`, `gid`, `contact-id`)
 					VALUES ( %d, %d, %d )",

@@ -19,7 +19,7 @@ function install_post(&$a) {
 
 	if(mysqli_connect_errno()) {
 		$db = new dba($dbhost, $dbuser, $dbpass, '', true);
-		if(! mysql_connect_errno()) {
+		if(! mysqli_connect_errno()) {
 			$r = q("CREATE DATABASE '%s'",
 					dbesc($dbdata)
 			);
