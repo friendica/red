@@ -1958,7 +1958,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 	$a->profile = $r[0];
 
 
-	$a->page['title'] = $a->profile['name'] . " @ " . $this->config['sitename'];
+	$a->page['title'] = $a->profile['name'] . " @ " . $a->config['sitename'];
 	$_SESSION['theme'] = $a->profile['theme'];
 
 	if(! (x($a->page,'aside')))
