@@ -127,6 +127,7 @@ else
  * further processing.
  */
 
+
 if(strlen($a->module)) {
 	if(file_exists("mod/{$a->module}.php")) {
 		include("mod/{$a->module}.php");

@@ -123,7 +123,20 @@ function register_post(&$a) {
 	$pkey = openssl_pkey_get_details($res);
 	$pubkey = $pkey["key"];
 
+	/**
+	 *
+	 * Create another keypair for signing/verifying
+	 * salmon protocol messages. We have to use a slightly
+	 * less robust key because this won't be using openssl
+	 * but the phpseclib. Since it is PHP interpreted code
+	 * it is not nearly as efficient, and the larger keys
+	 * will take several minutes each to process.
+	 *
+	 */
+	
 	$sres=openssl_pkey_new(array(
+		'digest_alg' => 'sha1',
+		'private_key_bits' => 512,
 		'encrypt_key' => false ));
 
 	// Get private key

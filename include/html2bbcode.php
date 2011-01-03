@@ -1,50 +1,62 @@
 <?php
 
+/**
+ * html2bbcode
+ */
+
 
 function html2bbcode($s) {
 
+	// Tags to Find
 
-// Tags to Find
-$htmltags = array(
-						'/\n/is',
-                        '/\<b\>(.*?)\<\/b\>/is',
-                        '/\<i\>(.*?)\<\/i\>/is',
-                        '/\<u\>(.*?)\<\/u\>/is',
-                        '/\<ul\>(.*?)\<\/ul\>/is',
-                        '/\<li\>(.*?)\<\/li\>/is',
-                        '/\<img(.*?) src=\"(.*?)\" (.*?)\>/is',
-                        '/\<div(.*?)\>(.*?)\<\/div\>/is',
-                        '/\<br(.*?)\>/is',
-                        '/\<strong\>(.*?)\<\/strong\>/is',
-                        '/\<a href=\"(.*?)\"(.*?)\>(.*?)\<\/a\>/is',
-			'/\<code\>(.*?)\<\/code\>/is',
-			'/\<span style=\"color:(.*?)\"\>(.*?)\<\/span\>/is',
-			'/\<blockquote\>(.*?)\<\/blockquote\>/is',
+	$htmltags = array(
+		'/\n/is',
+		'/\<b\>(.*?)\<\/b\>/is',
+		'/\<i\>(.*?)\<\/i\>/is',
+		'/\<u\>(.*?)\<\/u\>/is',
+		'/\<ul\>(.*?)\<\/ul\>/is',
+		'/\<li\>(.*?)\<\/li\>/is',
+		'/\<img(.*?) src=\"(.*?)\" (.*?)\>/is',
+		'/\<div(.*?)\>(.*?)\<\/div\>/is',
+		'/\<br(.*?)\>/is',
+		'/\<strong\>(.*?)\<\/strong\>/is',
+		'/\<a href=\"(.*?)\"(.*?)\>(.*?)\<\/a\>/is',
+		'/\<code\>(.*?)\<\/code\>/is',
+		'/\<span style=\"color:(.*?)\"\>(.*?)\<\/span\>/is',
+		'/\<blockquote\>(.*?)\<\/blockquote\>/is',
+		'/\<video(.*?) src=\"(.*?)\" (.*?)\>(.*?)\<\/video\>/is',
+		'/\<audio(.*?) src=\"(.*?)\" (.*?)\>(.*?)\<\/audio\>/is',
 
-                        );
+	);
 
-// Replace with
-$bbtags = array(
-						'',
-                        '[b]$1[/b]',
-                        '[i]$1[/i]',
-                        '[u]$1[/u]',
-                        '[list]$1[/list]',
-                        '[*]$1',
-                        '[img]$2[/img]',
-                        '$2',
-                        "\n",
-                        '[b]$1[/b]',
-                        '[url=$1]$3[/url]',
-			'[code]$1[/code]',
-			'[color="$1"]$2[/color]',
-			'[quote]$1[/quote]',
-                        );
+	// Replace with
 
-// Replace $htmltags in $text with $bbtags
-$text = preg_replace ($htmltags, $bbtags, $s);
+	$bbtags = array(
+		'',
+		'[b]$1[/b]',
+		'[i]$1[/i]',
+		'[u]$1[/u]',
+		'[list]$1[/list]',
+		'[*]$1',
+		'[img]$2[/img]',
+		'$2',
+		"\n",
+		'[b]$1[/b]',
+		'[url=$1]$3[/url]',
+		'[code]$1[/code]',
+		'[color="$1"]$2[/color]',
+		'[quote]$1[/quote]',
+		'[video]$1[/video]',
+		'[audio]$1[/audio]',
+	);
 
-// Strip all other HTML tags
-$text = strip_tags($text);
-return $text;
+	// Replace $htmltags in $text with $bbtags
+	$text = preg_replace ($htmltags, $bbtags, $s);
+
+	call_hooks('html2bbcode', $text);
+
+	// Strip all other HTML tags
+	$text = strip_tags($text);
+	return $text;
 }
+

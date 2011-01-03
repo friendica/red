@@ -36,7 +36,7 @@ function facebook_post_hook(&$a,&$b) {
 
 		if($appid && $secret) {
 
-			$fb_post = get_pconfig($local_user(),'facebook','post');
+			$fb_post = get_pconfig(local_user(),'facebook','post');
 
 			if($fb_post) {
 				require_once('library/facebook.php');
@@ -56,5 +56,5 @@ function facebook_post_hook(&$a,&$b) {
 			}
 		}
 	}
-
 }
+

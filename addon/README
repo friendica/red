@@ -107,6 +107,22 @@ Current hooks:
 		'contacts' => contact array of entries
 		'output' => the (string) generated HTML of the contact block
 
+'bbcode' - called during conversion of bbcode to html
+	$b is (string) converted text
+
+'html2bbcode' - called during conversion of html to bbcode (e.g. remote message posting)
+	$b is (string) converted text
+
+
+'page_header' - called after building the page navigation section
+	$b is (string) HTML of nav region
+
+
+'personal_xrd' - called prior to output of personal XRD file.
+	$b is an array
+		'user' => the user record for the person
+		'xml' => the complete XML to be output
+ 
 
 *** = subject to change
 

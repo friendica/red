@@ -1,10 +1,13 @@
 <?php
+
 	// BBcode 2 HTML was written by WAY2WEB.net
-	// Made to work with Mistpark/Friendika - Mike Macgirvin
+	// extended to work with Mistpark/Friendika - Mike Macgirvin
 
 function bbcode($Text) {
+
 	// Replace any html brackets with HTML Entities to prevent executing HTML or script
 	// Don't use strip_tags here because it breaks [url] search by replacing & with amp
+
 	$Text = str_replace("<", "&lt;", $Text);
 	$Text = str_replace(">", "&gt;", $Text);
 
@@ -74,6 +77,13 @@ function bbcode($Text) {
 	// Images
 	// [img]pathtoimage[/img]
 	$Text = preg_replace("/\[img\](.+?)\[\/img\]/", '<img src="$1">', $Text);
+
+	// html5 video and audio
+
+	$Text = preg_replace("/\[video\](.+?)\[\/video\]/", '<video src="$1" controls="controls" width="425" height="350"><a href="$1">$1</a></video>', $Text);
+
+	$Text = preg_replace("/\[audio\](.+?)\[\/audio\]/", '<audio src="$1" controls="controls"><a href="$1">$1</a></audio>', $Text);
+
          
 	// [img=widthxheight]image source[/img]
 	$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.+?)\[\/img\]/", '<img src="$3" height="$2" width="$1">', $Text);
@@ -81,6 +91,8 @@ function bbcode($Text) {
 	// Youtube extensions
         $Text = preg_replace("/\[youtube\]http:\/\/www.youtube.com\/watch\?v\=(.+?)\[\/youtube\]/",'[youtube]$1[/youtube]',$Text); 
 	$Text = preg_replace("/\[youtube\](.+?)\[\/youtube\]/", '<object width="425" height="350" type="application/x-shockwave-flash" data="http://www.youtube.com/v/$1" ><param name="movie" value="http://www.youtube.com/v/$1"></param><!--[if IE]><embed src="http://www.youtube.com/v/$1" type="application/x-shockwave-flash" width="425" height="350" /><![endif]--></object>', $Text);
+
+	call_hooks('bbcode',$Text);
 
 	return $Text;
 }
