@@ -1,6 +1,6 @@
 
 		<div id="settings-normal-wrapper">
-			<label id="settings-normal-label" for="settings-normal">Profile Normale</label>
+			<label id="settings-normal-label" for="settings-normal">Profilo Normale</label>
 			<input type="radio" name="page-flags" id="settings-normal" $normal_selected value="$page_normal" />
 			<span id="settings-normal-desc">Questo account &egrave; un nomale profilo personale</span>
 		</div>

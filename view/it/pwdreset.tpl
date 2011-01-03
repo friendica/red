@@ -4,7 +4,7 @@
 La tua password &egrave; stata resettata come richiesto.
 </p>
 <p>
-La tua nuova password %egrave;
+La tua nuova password &egrave;
 </p>
 <p>
 $newpass

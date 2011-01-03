@@ -1,5 +1,5 @@
 <p id="profile-in-directory">
-Pubblicare il tuo profilo di default nell'elenco sul sisto?
+Pubblicare il tuo profilo di default nell'elenco sul sito?
 </p>
 
 		<div id="profile-in-dir-yes-wrapper">
