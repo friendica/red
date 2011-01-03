@@ -307,6 +307,7 @@ class App {
 	} 
 
 	function init_pagehead() {
+		$this->page['title'] = $this->config['sitename'];
 		$tpl = load_view_file("view/head.tpl");
 		$this->page['htmlhead'] = replace_macros($tpl,array(
 			'$baseurl' => $this->get_baseurl() . '/'
@@ -1957,7 +1958,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 	$a->profile = $r[0];
 
 
-	$a->page['title'] = $a->profile['name'];
+	$a->page['title'] = $a->profile['name'] . " @ " . $this->config['sitename'];
 	$_SESSION['theme'] = $a->profile['theme'];
 
 	if(! (x($a->page,'aside')))
