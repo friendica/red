@@ -225,11 +225,11 @@
 		if(! strlen($xml))
 			continue;
 
-		consume_feed($xml,$importer,$contact,$hub);
+		consume_feed($xml,$importer,$contact,$hub,1);
 
 		// do it twice. Ensures that children of parents which may be later in the stream aren't tossed
 
-		consume_feed($xml,$importer,$contact,$hub);
+		consume_feed($xml,$importer,$contact,$hub,1);
 
 
 		if((strlen($hub)) && ($hub_update) 
