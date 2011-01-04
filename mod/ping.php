@@ -25,6 +25,15 @@ function ping_init(&$a) {
 	);
 	$intro = $r[0]['total'];
 
+	if ($a->config['register_policy'] = REGISTER_APPROVE &&	
+		$a->config['admin_email'] = $a->user['email']){
+			$r = q("SELECT COUNT(*) AS `total` FROM `register`");
+			$register = $r[0]['total'];
+	} else {
+		$register = "0";
+	}
+
+
 	$myurl = $a->get_baseurl() . '/profile/' . $a->user['nickname'] ;
 	$r = q("SELECT COUNT(*) AS `total` FROM `mail`
 		WHERE `uid` = %d AND `seen` = 0 AND `from-url` != '%s' ",
@@ -35,7 +44,7 @@ function ping_init(&$a) {
 	$mail = $r[0]['total'];
 	
 	header("Content-type: text/xml");
-	echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r\n<result><intro>$intro</intro><mail>$mail</mail><net>$network</net><home>$home</home></result>\r\n";
+	echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r\n<result><register>$register</register><intro>$intro</intro><mail>$mail</mail><net>$network</net><home>$home</home></result>\r\n";
 
 	killme();
 }
