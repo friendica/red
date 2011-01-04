@@ -1096,7 +1096,6 @@ if(! function_exists('set_config')) {
 function set_config($family,$key,$value) {
 
 	global $a;
-	$a->config[$family][$key] = $value;
 
 	if(get_config($family,$key,true) === false) {
 		$ret = q("INSERT INTO `config` ( `cat`, `k`, `v` ) VALUES ( '%s', '%s', '%s' ) ",
@@ -1113,6 +1112,9 @@ function set_config($family,$key,$value) {
 		dbesc($family),
 		dbesc($key)
 	);
+
+	$a->config[$family][$key] = $value;
+
 	if($ret)
 		return $value;
 	return $ret;
@@ -1149,11 +1151,13 @@ function get_pconfig($uid,$family, $key, $instore = false) {
 			return $a->config[$uid][$family][$key];
 		}
 	}
+
 	$ret = q("SELECT `v` FROM `pconfig` WHERE `uid` = %d AND `cat` = '%s' AND `k` = '%s' LIMIT 1",
 		intval($uid),
 		dbesc($family),
 		dbesc($key)
 	);
+
 	if(count($ret)) {
 		$a->config[$uid][$family][$key] = $ret[0]['v'];
 		return $ret[0]['v'];
@@ -1186,7 +1190,6 @@ if(! function_exists('set_pconfig')) {
 function set_pconfig($uid,$family,$key,$value) {
 
 	global $a;
-	$a->config[$uid][$family][$key] = $value;
 
 	if(get_pconfig($uid,$family,$key,true) === false) {
 		$ret = q("INSERT INTO `pconfig` ( `uid`, `cat`, `k`, `v` ) VALUES ( %d, '%s', '%s', '%s' ) ",
@@ -1205,6 +1208,8 @@ function set_pconfig($uid,$family,$key,$value) {
 		dbesc($family),
 		dbesc($key)
 	);
+
+	$a->config[$uid][$family][$key] = $value;
 
 	if($ret)
 		return $value;
