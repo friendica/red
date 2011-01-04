@@ -102,7 +102,7 @@ define ( 'ACTIVITY_OBJ_HEART',   NAMESPACE_DFRN            . '/heart' );
 
 define ( 'ACTIVITY_FRIEND',      NAMESPACE_ACTIVITY_SCHEMA . 'make-friend' );
 define ( 'ACTIVITY_FOLLOW',      NAMESPACE_ACTIVITY_SCHEMA . 'follow' );
-define ( 'ACTIVITY_UNFOLLOW',    NAMESPACE_ACTIVITY_SCHEMA . 'unfollow' );
+define ( 'ACTIVITY_UNFOLLOW',    NAMESPACE_ACTIVITY_SCHEMA . 'stop-following' );
 define ( 'ACTIVITY_POST',        NAMESPACE_ACTIVITY_SCHEMA . 'post' );
 define ( 'ACTIVITY_UPDATE',      NAMESPACE_ACTIVITY_SCHEMA . 'update' );
 define ( 'ACTIVITY_TAG',         NAMESPACE_ACTIVITY_SCHEMA . 'tag' );
@@ -307,6 +307,7 @@ class App {
 	} 
 
 	function init_pagehead() {
+		$this->page['title'] = $this->config['sitename'];
 		$tpl = load_view_file("view/head.tpl");
 		$this->page['htmlhead'] = replace_macros($tpl,array(
 			'$baseurl' => $this->get_baseurl() . '/'
@@ -1095,7 +1096,6 @@ if(! function_exists('set_config')) {
 function set_config($family,$key,$value) {
 
 	global $a;
-	$a->config[$family][$key] = $value;
 
 	if(get_config($family,$key,true) === false) {
 		$ret = q("INSERT INTO `config` ( `cat`, `k`, `v` ) VALUES ( '%s', '%s', '%s' ) ",
@@ -1112,6 +1112,9 @@ function set_config($family,$key,$value) {
 		dbesc($family),
 		dbesc($key)
 	);
+
+	$a->config[$family][$key] = $value;
+
 	if($ret)
 		return $value;
 	return $ret;
@@ -1148,11 +1151,13 @@ function get_pconfig($uid,$family, $key, $instore = false) {
 			return $a->config[$uid][$family][$key];
 		}
 	}
+
 	$ret = q("SELECT `v` FROM `pconfig` WHERE `uid` = %d AND `cat` = '%s' AND `k` = '%s' LIMIT 1",
 		intval($uid),
 		dbesc($family),
 		dbesc($key)
 	);
+
 	if(count($ret)) {
 		$a->config[$uid][$family][$key] = $ret[0]['v'];
 		return $ret[0]['v'];
@@ -1185,7 +1190,6 @@ if(! function_exists('set_pconfig')) {
 function set_pconfig($uid,$family,$key,$value) {
 
 	global $a;
-	$a->config[$uid][$family][$key] = $value;
 
 	if(get_pconfig($uid,$family,$key,true) === false) {
 		$ret = q("INSERT INTO `pconfig` ( `uid`, `cat`, `k`, `v` ) VALUES ( %d, '%s', '%s', '%s' ) ",
@@ -1204,6 +1208,8 @@ function set_pconfig($uid,$family,$key,$value) {
 		dbesc($family),
 		dbesc($key)
 	);
+
+	$a->config[$uid][$family][$key] = $value;
 
 	if($ret)
 		return $value;
@@ -1496,7 +1502,7 @@ function validate_email($addr) {
 		return false;
 	$h = substr($addr,strpos($addr,'@') + 1);
 
-	if(($h) && (dns_get_record($h['host'], DNS_A + DNS_CNAME + DNS_PTR + DNS_MX))) {
+	if(($h) && (dns_get_record($h, DNS_A + DNS_CNAME + DNS_PTR + DNS_MX))) {
 		return true;
 	}
 	return false;
@@ -1957,7 +1963,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 	$a->profile = $r[0];
 
 
-	$a->page['title'] = $a->profile['name'];
+	$a->page['title'] = $a->profile['name'] . " @ " . $a->config['sitename'];
 	$_SESSION['theme'] = $a->profile['theme'];
 
 	if(! (x($a->page,'aside')))

@@ -173,7 +173,8 @@ function follow_post(&$a) {
 		'$type' => 'text',
 		'$content' => t('following'),
 		'$nick' => $a->user['nickname'],
-		'$verb' => ACTIVITY_FOLLOW
+		'$verb' => ACTIVITY_FOLLOW,
+		'$ostat_follow' => ''
 	));
 
 	$r = q("SELECT `contact`.*, `user`.* FROM `contact` LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid` 

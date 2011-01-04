@@ -48,7 +48,7 @@ $ignored
 
 
 <div id="contact-edit-profile-select-text">
-<h4>Visibilt&agrave; Profiloe</h4>
+<h4>Visibilt&agrave; Profilo</h4>
 <p>Scegli il profilo che vuoi mostrare a $name quando guarda il tuo profilo in modo sicuro.</p> 
 </div>
 $profile_select

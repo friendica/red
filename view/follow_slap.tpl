@@ -21,4 +21,5 @@
 		<poco:displayName>$name</poco:displayName>
 		</as:actor>
  		<as:verb>$verb</as:verb>
+		$ostat_follow
 	</entry>

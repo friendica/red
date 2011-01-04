@@ -213,13 +213,13 @@ if($a->module != 'install')
  * Make sure the desired theme exists, though if the default theme doesn't exist we're stuffed.
  *
  */
-
+$default_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : 'default');
 if((x($_SESSION,'theme')) && (! file_exists('view/theme/' . $_SESSION['theme'] . '/style.css')))
 	unset($_SESSION['theme']);
 
 $a->page['htmlhead'] = replace_macros($a->page['htmlhead'], array(
 	'$stylesheet' => $a->get_baseurl() . '/view/theme/'
-		. ((x($_SESSION,'theme')) ? $_SESSION['theme'] : 'default')
+		. ((x($_SESSION,'theme')) ? $_SESSION['theme'] : $default_theme)
 		. '/style.css'
 	));
 

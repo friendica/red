@@ -921,7 +921,10 @@ function consume_feed($xml,$importer,$contact, &$hub, $datedir = 0) {
 
 	// Now process the feed
 	if($feed->get_item_quantity()) {		
-		foreach($feed->get_items() as $item) {
+        // in inverse date order
+		if ($datedir)
+			$items = array_reverse($feed->get_items());
+		foreach($items as $item) {
 
 			$deleted = false;
 
