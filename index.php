@@ -173,6 +173,9 @@ if($a->module_loaded) {
 
 }
 
+if(x($_SESSION,'visitor_home'))
+	$a->page['content'] .= '<script>var homebase="' . $_SESSION['visitor_home'] . '" ; </script>';
+
 if(stristr($_SESSION['sysmsg'], t('Permission denied'))) {
 	header($_SERVER["SERVER_PROTOCOL"] . ' 403 ' . t('Permission denied.'));
 }

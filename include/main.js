@@ -44,6 +44,11 @@
 					$('#pause').html('');
 				}
 			}
+			if(event.keyCode == '36') {
+				event.preventDefault();
+				if(homebase)
+					document.location = homebase;
+			}
 		});					
 	});
 

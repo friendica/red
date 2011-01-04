@@ -73,6 +73,7 @@ function dfrn_poll_init(&$a) {
 				if((int) $xml->status == 1) {
 					$_SESSION['authenticated'] = 1;
 					$_SESSION['visitor_id'] = $r[0]['id'];
+					$_SESSION['visitor_home'] = $r[0]['url'];
 					notice( $r[0]['username'] . t(' welcomes ') . $r[0]['name'] . EOL);
 					// Visitors get 1 day session.
 					$session_id = session_id();
@@ -386,6 +387,7 @@ function dfrn_poll_content(&$a) {
 				if(((int) $xml->status == 0) && ($xml->challenge == $hash)  && ($xml->sec == $sec)) {
 					$_SESSION['authenticated'] = 1;
 					$_SESSION['visitor_id'] = $r[0]['id'];
+					$_SESSION['visitor_home'] = $r[0]['url'];
 					notice( $r[0]['username'] . t(' welcomes ') . $r[0]['name'] . EOL);
 					// Visitors get 1 day session.
 					$session_id = session_id();
