@@ -766,9 +766,10 @@ function photos_content(&$a) {
 			intval($owner_uid),
 			dbesc($album)
 		);
-		if(count($r))
+		if(count($r)) {
 			$a->set_pager_total(count($r));
-
+			$a->set_pager_itemspage(20);
+		}
 
 		$r = q("SELECT `resource-id`, `id`, `filename`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
 			$sql_extra GROUP BY `resource-id` ORDER BY `created` DESC LIMIT %d , %d",
@@ -817,6 +818,8 @@ function photos_content(&$a) {
 
 		}
 		$o .= '<div id="photo-album-end"></div>';
+		$o .= paginate($a);
+
 		return $o;
 
 	}	
@@ -1107,9 +1110,10 @@ function photos_content(&$a) {
 		intval($a->data['user']['uid']),
 		dbesc( t('Contact Photos'))
 	);
-	if(count($r))
+	if(count($r)) {
 		$a->set_pager_total(count($r));
-
+		$a->set_pager_itemspage(20);
+	}
 
 	$r = q("SELECT `resource-id`, `id`, `filename`, `album`, max(`scale`) AS `scale` FROM `photo`
 		WHERE `uid` = %d AND `album` != '%s' 
@@ -1147,5 +1151,6 @@ function photos_content(&$a) {
 		}
 		$o .= '<div id="photo-top-end"></div>';
 	}
+	$o .= paginate($a);
 	return $o;
 }
