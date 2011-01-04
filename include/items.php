@@ -420,9 +420,19 @@ function get_atom_elements($feed,$item) {
 
 
 	$rawverb = $item->get_item_tags(NAMESPACE_ACTIVITY, 'verb');
+
 	// select between supported verbs
-	if($rawverb)
+
+	if($rawverb) {
 		$res['verb'] = unxmlify($rawverb[0]['data']);
+	}
+
+	// translate OStatus unfollow to activity streams if it happened to get selected
+		
+	if((x($res,'verb')) && ($res['verb'] === 'http://ostatus.org/schema/1.0/unfollow'))
+		$res['verb'] = ACTIVITY_UNFOLLOW;
+
+		
 
 	$rawobj = $item->get_item_tags(NAMESPACE_ACTIVITY, 'object');
 
