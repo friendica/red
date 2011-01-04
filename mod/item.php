@@ -131,41 +131,40 @@ function item_post(&$a) {
 
 	/**
 	 *
-	 * If a photo was uploaded into the message using the ajax uploader,
-	 * it can be seen by anybody. Set the permissions to match the message.
-	 * Ideally this should be done when the photo was uploaded, but the permissions 
-	 * may not have been set at that time, and passing the permission arrays via 
-	 * javascript to the ajax upload is going to be a challenge.
-	 * This is a compromise. Granted there is a window of time when the photo
-	 * is public. You are welcome to suggest other ways to fix this.
+	 * When a photo was uploaded into the message using the (profile wall) ajax 
+	 * uploader, The permissions are initially set to disallow anybody but the
+	 * owner from seeing it. This is because the permissions may not yet have been
+	 * set for the post. If it's private, the photo permissions should be set
+	 * appropriately. But we didn't know the final permissions on the post until
+	 * now. So now we'll look for links of uploaded messages that are in the
+	 * post and set them to the same permissions as the post itself.
 	 *
 	 */
 
 	$match = null;
 
-	if($private) {
-		if(preg_match_all("/\[img\](.+?)\[\/img\]/",$body,$match)) {
-			$images = $match[1];
-			if(count($images)) {
-				foreach($images as $image) {
-					if(! stristr($image,$a->get_baseurl() . '/photo/'))
-						continue;
-					$image_uri = substr($image,strrpos($image,'/') + 1);
-					$image_uri = substr($image_uri,0, strpos($image_uri,'-'));
-					$r = q("UPDATE `photo` SET `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s'
-						WHERE `resource-id` = '%s' AND `album` = '%s' ",
-						dbesc($str_contact_allow),
-						dbesc($str_group_allow),
-						dbesc($str_contact_deny),
-						dbesc($str_group_deny),
-						dbesc($image_uri),
-						dbesc( t('Wall Photos'))
-					);
-  
-				}
+	if(preg_match_all("/\[img\](.+?)\[\/img\]/",$body,$match)) {
+		$images = $match[1];
+		if(count($images)) {
+			foreach($images as $image) {
+				if(! stristr($image,$a->get_baseurl() . '/photo/'))
+					continue;
+				$image_uri = substr($image,strrpos($image,'/') + 1);
+				$image_uri = substr($image_uri,0, strpos($image_uri,'-'));
+				$r = q("UPDATE `photo` SET `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s'
+					WHERE `resource-id` = '%s' AND `album` = '%s' ",
+					dbesc($str_contact_allow),
+					dbesc($str_group_allow),
+					dbesc($str_contact_deny),
+					dbesc($str_group_deny),
+					dbesc($image_uri),
+					dbesc( t('Wall Photos'))
+				);
+ 
 			}
 		}
 	}
+
 
 
 	/**
