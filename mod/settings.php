@@ -291,10 +291,15 @@ function settings_content(&$a) {
 
 	$theme_selector = '<select name="theme" id="theme-select" >';
 	$files = glob('view/theme/*');
+
+	$default_theme = get_config('system','theme');
+	if(! $default_theme)
+		$default_theme = 'default';
+
 	if($files) {
 		foreach($files as $file) {
 			$f = basename($file);
-			$selected = (($f == $_SESSION['theme']) || ($f === 'default' && (! x($_SESSION,'theme')))
+			$selected = (($f == $_SESSION['theme']) || ($f === $default_theme && (! x($_SESSION,'theme')))
 				? ' selected="selected" ' : '' );
 			$theme_selector .= '<option val="' . basename($file) . '"' . $selected . '>' . basename($file) . '</option>';
 		}
