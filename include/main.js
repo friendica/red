@@ -44,10 +44,11 @@
 					$('#pause').html('');
 				}
 			}
-			if(event.keyCode == '36') {
-				event.preventDefault();
-				if(homebase)
+			if(event.keyCode == '36' && event.shiftKey == true) {
+				if(homebase !== undefined) {
+					event.preventDefault();
 					document.location = homebase;
+				}
 			}
 		});					
 	});
