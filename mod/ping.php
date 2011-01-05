@@ -25,8 +25,8 @@ function ping_init(&$a) {
 	);
 	$intro = $r[0]['total'];
 
-	if ($a->config['register_policy'] = REGISTER_APPROVE &&	
-		$a->config['admin_email'] = $a->user['email']){
+	if ($a->config['register_policy'] == REGISTER_APPROVE &&	
+		$a->config['admin_email'] === $a->user['email']){
 			$r = q("SELECT COUNT(*) AS `total` FROM `register`");
 			$register = $r[0]['total'];
 	} else {
