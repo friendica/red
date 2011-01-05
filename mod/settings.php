@@ -95,6 +95,10 @@ function settings_post(&$a) {
 		$email_changed = true;
         if(! valid_email($email))
 			$err .= t(' Not valid email.');
+		if((x($a->config,'admin_email')) && (strcasecmp($email,$a->config['admin_email']) == 0)) {
+			$err .= t(' Cannot change to that email.');
+			$email = $a->user['email'];
+		}
 	}
 
 	if(strlen($err)) {

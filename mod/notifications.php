@@ -127,7 +127,7 @@ function notifications_content(&$a) {
 		notice( t('No notifications.') . EOL);
 
 	if ($a->config['register_policy'] = REGISTER_APPROVE &&	
-		$a->config['admin_email'] = $a->user['email']){
+		$a->config['admin_email'] === $a->user['email']){
 		$o .= load_view_file('view/registrations-top.tpl');
 		
 		$r = q("SELECT `register`.*, `contact`.`name`, `user`.`email`
