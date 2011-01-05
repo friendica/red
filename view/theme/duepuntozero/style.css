@@ -1826,3 +1826,7 @@ a.mail-list-link {
 /* end from defautlt */
 	
 
+.fn {
+	padding: 0px 0px 5px 0px;
+	font-size: 120%;
+}

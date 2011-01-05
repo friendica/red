@@ -37,8 +37,13 @@ function register_post(&$a) {
 	$openid_url = ((x($_POST,'openid_url')) ? notags(trim($_POST['openid_url'])) : '');
 	$photo      = ((x($_POST,'photo'))      ? notags(trim($_POST['photo']))      : '');
 
+	$tmp_str = $openid_url;
 	if((! x($username)) || (! x($email)) || (! x($nickname))) {
 		if($openid_url) {
+			if(! validate_url($tmp_str)) {
+				notice( t('Invalid OpenID url') . EOL);
+				return;
+			}
 			$_SESSION['register'] = 1;
 			$_SESSION['openid'] = $openid_url;
 			require_once('library/openid.php');
@@ -81,6 +86,12 @@ function register_post(&$a) {
 
 	if((! valid_email($email)) || (! validate_email($email)))
 		$err .= t('Not a valid email address.') . EOL;
+
+	// Disallow somebody creating an account using openid that uses the admin email address,
+	// since openid bypasses email verification.
+
+	if((x($a->config,'admin_email')) && (strcasecmp($email,$a->config['admin_email']) == 0) && strlen($openid_url))
+		$err .= t('Cannot use that email.') . EOL;
 
 	$nickname = $_POST['nickname'] = strtolower($nickname);
 
