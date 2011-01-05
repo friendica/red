@@ -15,15 +15,18 @@ function settings_post(&$a) {
 		return;
 	}
 
-	call_hooks('settings_post', $_POST);
-
-	if(($a->argc > 1) && ($a->argv[1] == 'addon'))
-		return;
-
 	if(count($a->user) && x($a->user,'uid') && $a->user['uid'] != local_user()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
+
+	if(($a->argc > 1) && ($a->argv[1] == 'addon')) {
+		call_hooks('plugin_settings_post', $_POST);
+		return;
+	}
+
+	call_hooks('settings_post', $_POST);
+
 	if((x($_POST,'npassword')) || (x($_POST,'confirm'))) {
 
 		$newpass = $_POST['npassword'];

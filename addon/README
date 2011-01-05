@@ -82,10 +82,13 @@ Current hooks:
 'settings_form' - called when generating the HTML for the user Settings page
 	$b is the (string) HTML of the settings page before the final '</form>' tag.
 
+'settings_post' - called when the Settings pages are submitted.
+	$b is the $_POST array
+
 'plugin_settings' - called when generating the HTML for the addon settings page
 	$b is the (string) HTML of the addon settings page before the final '</form>' tag.
 
-'settings_post' - called when the Settings and Addon Settings pages are submitted.
+'plugin_settings_post' - called when the Addon Settings pages are submitted.
 	$b is the $_POST array
 
 'profile_advanced' - called when the HTML is generated for the 'Advanced profile', 

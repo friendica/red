@@ -43,7 +43,7 @@ function randplace_install() {
 	 */
 
 	register_hook('plugin_settings', 'addon/randplace/randplace.php', 'randplace_settings');
-	register_hook('settings_post', 'addon/randplace/randplace.php', 'randplace_settings_post');
+	register_hook('plugin_settings_post', 'addon/randplace/randplace.php', 'randplace_settings_post');
 
 	logger("installed randplace");
 }
@@ -61,7 +61,7 @@ function randplace_uninstall() {
 
 	unregister_hook('post_local',    'addon/randplace/randplace.php', 'randplace_post_hook');
 	unregister_hook('plugin_settings', 'addon/randplace/randplace.php', 'randplace_settings');
-	unregister_hook('settings_post', 'addon/randplace/randplace.php', 'randplace_settings_post');
+	unregister_hook('plugin_settings_post', 'addon/randplace/randplace.php', 'randplace_settings_post');
 
 
 	logger("removed randplace");
