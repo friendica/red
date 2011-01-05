@@ -183,6 +183,9 @@ elseif(local_user())
 if(isset($homebase))
 	$a->page['content'] .= '<script>var homebase="' . $homebase . '" ; </script>';
 
+// now that we've been through the module content, see if the page reported
+// a permission problem and if so, a 403 response would seem to be in order.
+
 if(stristr($_SESSION['sysmsg'], t('Permission denied'))) {
 	header($_SERVER["SERVER_PROTOCOL"] . ' 403 ' . t('Permission denied.'));
 }

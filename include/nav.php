@@ -15,8 +15,12 @@
 
 	$a->page['nav'] .= "<span id=\"nav-link-wrapper\" >\r\n";
 
+	// This should take you home from a remote profile connection
+
+	$homelink = ((x($_SESSION,'visitor_home')) ? $_SESSION['visitor_home'] : '');
+
 	if(($a->module != 'home') && (! (local_user()))) 
-		$a->page['nav'] .= '<a id="nav-home-link" class="nav-commlink" href="">' . t('Home') . "</a>\r\n";
+		$a->page['nav'] .= '<a id="nav-home-link" class="nav-commlink" href="' . $homelink . '">' . t('Home') . "</a>\r\n";
 	if(($a->config['register_policy'] == REGISTER_OPEN) && (! local_user()) && (! remote_user()))
 		$a->page['nav'] .= '<a id="nav-register-link" class="nav-commlink" href="register" >' 
 			. t('Register') . "</a>\r\n";
