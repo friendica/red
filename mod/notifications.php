@@ -126,5 +126,31 @@ function notifications_content(&$a) {
 	else
 		notice( t('No notifications.') . EOL);
 
+	if ($a->config['register_policy'] = REGISTER_APPROVE &&	
+		$a->config['admin_email'] = $a->user['email']){
+		$o .= load_view_file('view/registrations-top.tpl');
+		
+		$r = q("SELECT `register`.*, `contact`.`name`, `user`.`email`
+				 FROM `register`
+				 LEFT JOIN `contact` ON `register`.`uid` = `contact`.`uid`
+				 LEFT JOIN `user` ON `register`.`uid` = `user`.`uid`;");
+		if(($r !== false) && (count($r))) {
+			$tpl = load_view_file("view/registrations.tpl");
+			foreach($r as $rr) {
+				$o .= "<ul>";
+				$o .= replace_macros($tpl, array(
+					'$fullname' 	=> $rr['name'],
+					'$email'		=> $rr['email'],
+					'$approvelink' 	=> "regmod/allow/".$rr['hash'],
+					'$denylink' 	=> "regmod/deny/".$rr['hash'],
+				));
+				$o .= "</ul>";
+			}
+		}
+		else
+			notice( t('No registrations.') . EOL);
+
+	}
+
 	return $o;
 }

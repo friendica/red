@@ -242,6 +242,7 @@ $a->strings['Friend/Connect Request'] = 'Friend/Connect Request';
 $a->strings['New Follower'] = 'New Follower';
 $a->strings['Approve'] = 'Approve';
 $a->strings['No notifications.'] = 'No notifications.';
+$a->strings['No registrations.'] = 'No registrations.';
 $a->strings['Login failed.'] = 'Login failed.';
 $a->strings["Welcome back "] = "Welcome back ";
 $a->strings['Photo Albums'] = 'Photo Albums';
