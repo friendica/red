@@ -44,10 +44,11 @@
 					$('#pause').html('');
 				}
 			}
-			if(event.keyCode == '36') {
-				event.preventDefault();
-				if(homebase)
+			if(event.keyCode == '36' && event.shiftKey == true) {
+				if(homebase !== undefined) {
+					event.preventDefault();
 					document.location = homebase;
+				}
 			}
 		});					
 	});
@@ -82,8 +83,12 @@
 					if(mail == 0) { mail = ''; }
 					$('#mail-update').html(mail);
 					var intro = $(this).find('intro').text();
+					var register = $(this).find('register').text();
 					if(intro == 0) { intro = ''; }
+					if(register != 0 && intro != '') { intro = intro+'/'+register; }
+					if(register != 0 && intro == '') { intro = '0/'+register; }
 					$('#notify-update').html(intro);
+
 				});
 			}) ;
 		}

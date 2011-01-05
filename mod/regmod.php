@@ -12,6 +12,11 @@ function regmod_content(&$a) {
 		return $o;
 	}
 
+	if((! (x($a->config,'admin_email'))) || ($a->config['admin_email'] !== $a->user['email'])) {
+		notice( t('Permission denied.') . EOL);
+		return '';
+	}
+
 	if($a->argc != 3)
 		killme();
 

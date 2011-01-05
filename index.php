@@ -173,8 +173,15 @@ if($a->module_loaded) {
 
 }
 
+// let javascript take you home
+
 if(x($_SESSION,'visitor_home'))
-	$a->page['content'] .= '<script>var homebase="' . $_SESSION['visitor_home'] . '" ; </script>';
+	$homebase = $_SESSION['visitor_home'];
+elseif(local_user())
+	$homebase = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
+
+if(isset($homebase))
+	$a->page['content'] .= '<script>var homebase="' . $homebase . '" ; </script>';
 
 if(stristr($_SESSION['sysmsg'], t('Permission denied'))) {
 	header($_SERVER["SERVER_PROTOCOL"] . ' 403 ' . t('Permission denied.'));
