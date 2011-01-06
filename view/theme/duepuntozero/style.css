@@ -2,11 +2,24 @@
  * duepuntozero Frindika style
  * Fabio Comuni <fabrix.xm@gmail.com>
  */
- 
+
+@font-face {
+  font-family: FreeSans;
+  font-style: normal;
+  font-weight: bold;
+  src: local('FreeSansBold'), url('FreeSansBold.otf');
+}
+@font-face {
+  font-family: FreeSans;
+  font-style: normal;
+  font-weight: normal;
+  src: local('FreeSans'), url('FreeSans.otf');
+}
+
  
 /* generals */
 body {
-	font-family: helvetica,arial,freesans,clean,sans-serif;
+	font-family: FreeSans, helvetica,arial,clean,sans-serif;
 	font-size: 12px;
 	background-color: #ffffff;
 	background-image: url(head.jpg);
@@ -191,6 +204,12 @@ footer {
 
 }
 
+
+.shiny {
+    background-image: url(shiny.jpg);
+    background-repeat: repeat-x;
+    background-position: left bottom;
+}
 
 /* from defautlt */
 #jot-perms-icon, 
@@ -1829,4 +1848,5 @@ a.mail-list-link {
 .fn {
 	padding: 0px 0px 5px 0px;
 	font-size: 120%;
+	font-weight: bold;
 }
