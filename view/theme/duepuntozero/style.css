@@ -205,6 +205,12 @@ footer {
 }
 
 
+.shiny {
+    background-image: url(shiny.jpg);
+    background-repeat: repeat-x;
+    background-position: left bottom;
+}
+
 /* from defautlt */
 #jot-perms-icon, 
 #profile-location,
