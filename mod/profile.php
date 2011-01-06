@@ -245,7 +245,7 @@ function profile_content(&$a, $update = 0) {
 	$alike = array();
 	$dlike = array();
 
-	if(count($r)) {
+	if($r !== false && count($r)) {
 
 		foreach($r as $item) {
 			like_puller($a,$item,$alike,'like');

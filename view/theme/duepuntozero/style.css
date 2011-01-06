@@ -19,7 +19,7 @@
  
 /* generals */
 body {
-	font-family: FreeSans, helvetica,arial,clean,sans-serif;
+	font-family: /*FreeSans,*/ helvetica,arial,clean,sans-serif;
 	font-size: 12px;
 	background-color: #ffffff;
 	background-image: url(head.jpg);
