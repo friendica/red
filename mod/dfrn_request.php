@@ -256,7 +256,7 @@ function dfrn_request_post(&$a) {
 			FROM `intro` LEFT JOIN `contact` on `intro`.`contact-id` = `contact`.`id`
 			WHERE `intro`.`blocked` = 1 AND `contact`.`self` = 0 AND `intro`.`datetime` < UTC_TIMESTAMP() - INTERVAL 30 MINUTE ");
 		if(count($r)) {
-			foreach($r as ($rr) {
+			foreach($r as $rr) {
 				if(! $rr['rel']) {
 					q("DELETE FROM `contact` WHERE `id` = %d LIMIT 1",
 						intval($rr['cid'])
