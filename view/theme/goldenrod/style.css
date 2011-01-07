@@ -8,6 +8,10 @@ footer {
 	color: #444444;
 }
 
+#logo-text a, #site-location {
+	color: #000000;
+}
+
 body { 
 	background: #FFFFFF;
 	color: #000000;
