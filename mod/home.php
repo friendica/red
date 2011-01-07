@@ -14,11 +14,10 @@ if(! function_exists('home_content')) {
 function home_content(&$a) {
 
 	$o = '';
-/*
- *	if(! (x($a->page,'footer')))
- *		$a->page['footer'] = '';
- *	$a->page['footer'] .= "<div class=\"powered\" >Powered by <a href=\"http://friendika.com\" title=\"friendika\" >friendika</a></div>";
- */
+
+	if(x($_SESSION,'theme'))
+		unset($_SESSION['theme']);
+
 	$o .= '<h1>' . ((x($a->config,'sitename')) ? t("Welcome to ").$a->config['sitename'] : "" ) . '</h1>';
 	if(file_exists('home.html'))
  		$o .= file_get_contents('home.html');

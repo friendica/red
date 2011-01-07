@@ -14,6 +14,8 @@ function directory_post(&$a) {
 function directory_content(&$a) {
 	$o = '';
 	$o .= '<script>	$(document).ready(function() { $(\'#nav-directory-link\').addClass(\'nav-selected\'); });</script>';
+	if(x($_SESSION,'theme'))
+		unset($_SESSION['theme']);
 
 	if(x($a->data,'search'))
 		$search = notags(trim($a->data['search']));
