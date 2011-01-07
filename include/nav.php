@@ -34,7 +34,10 @@
 		$a->page['nav'] .= '<a id="nav-logout-link" class="nav-link" href="logout">' . t('Logout') . "</a>\r\n";
 	}
 	else {
-		$a->page['nav'] .= '<a id="nav-login-link" class="nav-login-link" href="login">' . t('Login') . "</a>\r\n";
+		$a->page['nav'] .= '<a id="nav-login-link" class="nav-login-link';
+		if ($a->module == 'login') { $a->page['nav'] .= ' nav-selected';  }
+
+		$a->page['nav'] .= '" href="login">' . t('Login') . "</a>\r\n";
 	}
 
 	$a->page['nav'] .= "<span id=\"nav-link-wrapper\" >\r\n";
