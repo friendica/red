@@ -26,10 +26,15 @@ input, select {
 	background-color: #000000;
 	color: #FF0000;
 }
-.nav-link:hover, .nav-commlink:hover {
+.nav-link:hover, .nav-commlink:hover, .profile-tabs:hover {
 	background: #DDDDDD;
 	color: #FF0000;
 }
+
+#logo-text a, #logo-text a:visited, #site-location {
+	color: #000000;
+}
+
 
 #page-footer {
 	border: none;
@@ -58,4 +63,9 @@ a, a:visited, .fakelink, .fakelink:visited {
 a:hover, .fakelink:hover {
 	color: #FF0000;
 	text-decoration: underline;
+}
+
+.profile-tabs {
+	color: #FF0000;
+	background: #444444;
 }
