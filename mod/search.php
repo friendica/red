@@ -9,6 +9,9 @@ function search_post(&$a) {
 
 function search_content(&$a) {
 
+	if(x($_SESSION,'theme'))
+		unset($_SESSION['theme']);
+
 	$o = '<div id="live-search"></div>' . "\r\n";
 
 	$o .= '<h3>' . t('Search') . '</h3>';

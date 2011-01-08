@@ -40,6 +40,8 @@ function contacts_post(&$a) {
 		return; // NOTREACHED
 	}
 
+	call_hooks('contact_edit_post', $_POST);
+
 	$profile_id = intval($_POST['profile-assign']);
 	if($profile_id) {
 		$r = q("SELECT `id` FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -260,7 +262,11 @@ function contacts_content(&$a) {
 
 		));
 
-		return $o;
+		$arr = array('contact' => $r[0],'output' => $o);
+
+		call_hooks('contact_edit', $arr);
+
+		return $arr['output'];
 
 	}
 
@@ -350,6 +356,7 @@ function contacts_content(&$a) {
 				'$url' => $url
 			));
 		}
+
 		$o .= '<div id="contact-edit-end"></div>';
 
 	}

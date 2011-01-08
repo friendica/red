@@ -19,7 +19,7 @@
  
 /* generals */
 body {
-	font-family: FreeSans, helvetica,arial,clean,sans-serif;
+	font-family: /*FreeSans,*/ helvetica,arial,clean,sans-serif;
 	font-size: 12px;
 	background-color: #ffffff;
 	background-image: url(head.jpg);
@@ -90,6 +90,7 @@ nav {
 nav #site-location {
 	color: #888a85;
 	font-size: 0.8em;
+	position: absolute;
 }
 
 .error-message {
@@ -103,7 +104,7 @@ nav #site-location {
 
 nav #banner {
 	display: block;
-	float: left;
+    padding-top: 10px;
 	position: absolute;
 }
 nav #banner #logo-text a {
@@ -116,9 +117,11 @@ nav #banner #logo-text a:hover { text-decoration: none; }
 
 
 .nav-commlink, .nav-login-link {
-	margin-top: 52px;
+    display: block;
+    height: 15px;
+	margin-top: 67px;
 	margin-right: 2px;
-	padding: 0.5em 1em;
+	padding: 6px 10px;
 	float: left;
 	bottom: 140px;
 	border: 1px solid #babdb6;
@@ -140,13 +143,14 @@ nav .nav-link {
 	background-color: #ffffff;
 	border-bottom: 1px solid #ffffff;
 	color: #000000 !important;
-	margin-top: 48px;
-	padding-top: 0.8em;
+	margin-top: 64px;
+	padding-top: 6px;
+	padding-bottom: 8px;
 }
 .nav-ajax-left {
 	font-size: 0.8em;
 	float: left;
-	margin-top: 46px;	
+	margin-top: 62px;	
 }
 
 
@@ -830,8 +834,8 @@ input#dfrn-url {
 }
 .wall-item-delete-wrapper {
 	float: right;
-	margin-top: 20px;
-	margin-right: 50px;
+	margin-top: 5px;
+	margin-right: 5px;
 }
 
 .wall-item-delete-end {

@@ -130,6 +130,16 @@ Current hooks:
 'home_content' - called prior to output home page content, shown to unlogged users
 	$b is (string) HTML of section region
 
+'contact_edit' - called when editing contact details on an individual from the Contacts page
+	$b is (array)
+		'contact' => contact record (array) of target contact
+		'output' => the (string) generated HTML of the contact edit page
+
+'contact_edit_post' - called when posting the contact edit page
+	$b is the $_POST array
+
+
+
 
 *** = subject to change
 

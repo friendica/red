@@ -245,6 +245,29 @@ function dfrn_request_post(&$a) {
 			} 
 		}
 
+		/**
+		 *
+		 * Cleanup old introductions that remain blocked. 
+		 * Also remove the contact record, but only if there is no existing relationship
+		 *
+		 */
+
+		$r = q("SELECT `intro`.*, `intro`.`id` AS `iid`, `contact`.`id` AS `cid`, `contact`.`rel` 
+			FROM `intro` LEFT JOIN `contact` on `intro`.`contact-id` = `contact`.`id`
+			WHERE `intro`.`blocked` = 1 AND `contact`.`self` = 0 AND `intro`.`datetime` < UTC_TIMESTAMP() - INTERVAL 30 MINUTE ");
+		if(count($r)) {
+			foreach($r as $rr) {
+				if(! $rr['rel']) {
+					q("DELETE FROM `contact` WHERE `id` = %d LIMIT 1",
+						intval($rr['cid'])
+					);
+				}
+				q("DELETE FROM `intro` WHERE `id` = %d LIMIT 1",
+					intval($rr['iid'])
+				);
+			}
+		}
+
 		$url = trim($_POST['dfrn_url']);
 		if(! strlen($url)) {
 			notice( t("Invalid locator") . EOL );
@@ -452,6 +475,12 @@ function dfrn_request_content(&$a) {
 
 		if(! local_user()) {
 			notice( t("Please login to confirm introduction.") . EOL );
+
+			/* setup the return URL to come back to this page if they use openid */
+
+			$stripped = str_replace('q=','',$a->query_string);
+			$_SESSION['return_url'] = trim($stripped,'/');
+
 			return login();
 		}
 
