@@ -1176,6 +1176,7 @@ function new_follower($importer,$contact,$datarray,$item) {
 		$r = q("SELECT * FROM `user` WHERE `uid` = %d LIMIT 1",
 			intval($importer['uid'])
 		);
+		$a = get_app();
 		if(count($r)) {
 			if(($r[0]['notify-flags'] & NOTIFY_INTRO) && ($r[0]['page-flags'] == PAGE_NORMAL)) {
 				$email_tpl = load_view_file('view/follow_notify_eml.tpl');
