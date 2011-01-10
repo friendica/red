@@ -114,7 +114,10 @@ function dbg($state) {
 if(! function_exists('dbesc')) { 
 function dbesc($str) {
 	global $db;
-	return($db->escape($str));
+	if($db)
+		return($db->escape($str));
+	else
+		return(str_replace("'","\\'",$str));
 }}
 
 
