@@ -64,7 +64,10 @@ $db = new dba($db_host, $db_user, $db_pass, $db_data, $install);
 if(! $install) {
 	require_once("session.php");
 	load_hooks();
+	call_hooks('init_1');
 }
+
+
 
 require_once("datetime.php");
 
@@ -145,6 +148,16 @@ if(strlen($a->module)) {
 	}
 }
 
+/* initialise content region */
+
+if(! x($a->page,'content'))
+	$a->page['content'] = '';
+
+
+/**
+ * Call module functions
+ */
+
 if($a->module_loaded) {
 	$a->page['page_title'] = $a->module;
 	if(function_exists($a->module . '_init')) {
@@ -166,8 +179,6 @@ if($a->module_loaded) {
 
 	if((! $a->error) && (function_exists($a->module . '_content'))) {
 		$func = $a->module . '_content';
-		if(! x($a->page,'content'))
-			$a->page['content'] = '';
 		$a->page['content'] .= $func($a);
 	}
 
@@ -202,6 +213,10 @@ if(x($_SESSION,'sysmsg')) {
 	unset($_SESSION['sysmsg']);
 }
 
+
+call_hooks('page_end', $a->page['content']);
+
+
 /**
  *
  * Add a place for the pause/resume Ajax indicator
@@ -226,6 +241,7 @@ if($a->module != 'install')
  * Make sure the desired theme exists, though if the default theme doesn't exist we're stuffed.
  *
  */
+
 $default_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : 'default');
 if((x($_SESSION,'theme')) && (! file_exists('view/theme/' . $_SESSION['theme'] . '/style.css')))
 	unset($_SESSION['theme']);

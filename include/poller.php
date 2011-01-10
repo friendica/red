@@ -26,7 +26,9 @@
 	proc_close(proc_open("\"$php_path\" \"include/queue.php\" &", array(), $foo));
 
 
+	$hub_update = false;
 	$force = false;
+
 	if(($argc > 1) && ($argv[1] == 'force'))
 		$force = true;
 
