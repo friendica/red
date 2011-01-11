@@ -138,6 +138,12 @@ Current hooks:
 'contact_edit_post' - called when posting the contact edit page
 	$b is the $_POST array
 
+'init_1' - called just after DB has been opened and before session start
+	$b is not used or passed
+
+'page_end' - called after HTML content functions have completed
+    $b is (string) HTML of content div
+
 
 
 
@@ -149,17 +155,17 @@ Current hooks:
 
 Not yet documented:
 
-'atom_feed'
+'atom_feed' ***
 
-'atom_feed_end'
+'atom_feed_end' ***
 
-'parse_atom'
+'parse_atom' ***
 
-'atom_author'
+'atom_author' ***
 
-'atom_entry'
+'atom_entry' ***
 
-'parse_link'
+'parse_link' ***
 
 
 

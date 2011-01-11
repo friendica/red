@@ -46,7 +46,7 @@ class dba {
 			elseif($result === true)
 				$mesg = 'true';
 			else
-				$mesg = $result->num_rows.' results' . EOL;
+				$mesg = $result->num_rows . ' results' . EOL;
         
 			$str =  'SQL = ' . printable($sql) . EOL . 'SQL returned ' . $mesg . EOL;
 
@@ -114,7 +114,10 @@ function dbg($state) {
 if(! function_exists('dbesc')) { 
 function dbesc($str) {
 	global $db;
-	return($db->escape($str));
+	if($db)
+		return($db->escape($str));
+	else
+		return(str_replace("'","\\'",$str));
 }}
 
 
@@ -129,11 +132,29 @@ function q($sql) {
 	global $db;
 	$args = func_get_args();
 	unset($args[0]);
-	$ret = $db->q(vsprintf($sql,$args));
-	return $ret;
+
+	if($db) {
+		$ret = $db->q(vsprintf($sql,$args));
+		return $ret;
+	}
+
+	/**
+	 *
+	 * This will happen occasionally trying to store the 
+	 * session data after abnormal program termination 
+	 *
+	 */
+
+	logger('dba: no database: ' . print_r($args,true));
+	return false; 
+
 }}
 
-// raw db query, no arguments
+/**
+ *
+ * Raw db query, no arguments
+ *
+ */
 
 if(! function_exists('dbq')) { 
 function dbq($sql) {
