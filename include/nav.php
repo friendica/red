@@ -1,11 +1,35 @@
 <?php
 
+	/**
+	 *
+	 * Build page header and site navigation bars
+	 *
+	 */
+
 	if(!(x($a->page,'nav')))
 		$a->page['nav'] = '';
 
+	/**
+	 * Placeholder div for popup panel
+	 */
+
 	$a->page['nav'] .= '<div id="panel" style="display: none;"></div>' ;
 
+	/**
+	 *
+	 * Our network is distributed, and as you visit friends some of the 
+	 * sites look exactly the same - it isn't always easy to know where you are.
+	 * Display the current site location as a navigation aid.
+	 *
+	 */
+
 	$a->page['nav'] .= '<div id="site-location">' . substr($a->get_baseurl(),strpos($a->get_baseurl(),'//') + 2 ) . '</div>';
+
+
+	/**
+	 * Display login or logout
+	 */
+
 	if(local_user()) {
 		$a->page['nav'] .= '<a id="nav-logout-link" class="nav-link" href="logout">' . t('Logout') . "</a>\r\n";
 	}
@@ -15,18 +39,29 @@
 
 	$a->page['nav'] .= "<span id=\"nav-link-wrapper\" >\r\n";
 
-	// This should take you home from a remote profile connection
+	/**
+	 * "Home" should also take you home from an authenticated remote profile connection
+	 */
 
 	$homelink = ((x($_SESSION,'visitor_home')) ? $_SESSION['visitor_home'] : '');
 
 	if(($a->module != 'home') && (! (local_user()))) 
 		$a->page['nav'] .= '<a id="nav-home-link" class="nav-commlink" href="' . $homelink . '">' . t('Home') . "</a>\r\n";
+
+
 	if(($a->config['register_policy'] == REGISTER_OPEN) && (! local_user()) && (! remote_user()))
 		$a->page['nav'] .= '<a id="nav-register-link" class="nav-commlink" href="register" >' 
 			. t('Register') . "</a>\r\n";
 
 	$a->page['nav'] .= '<a id="nav-search-link" class="nav-link" href="search">' . t('Search') . "</a>\r\n";
 	$a->page['nav'] .= '<a id="nav-directory-link" class="nav-link" href="directory">' . t('Directory') . "</a>\r\n";
+
+
+	/**
+	 *
+	 * The following nav links are only show to logged in users
+	 *
+	 */
 
 	if(x($_SESSION,'uid')) {
 
@@ -36,7 +71,7 @@
 		$a->page['nav'] .= '<a id="nav-home-link" class="nav-commlink" href="profile/' . $a->user['nickname'] . '">' 
 			. t('Home') . '</a><span id="home-update" class="nav-ajax-left"></span>' . "\r\n";
 
-		// only show friend requests for normal pages. Other page types have automatic friendship.
+		/* only show friend requests for normal pages. Other page types have automatic friendship. */
 
 		if($_SESSION['page_flags'] == PAGE_NORMAL) {
 			$a->page['nav'] .= '<a id="nav-notify-link" class="nav-commlink" href="notifications">' . t('Notifications') 
@@ -57,6 +92,12 @@
 	}
 
 	$a->page['nav'] .= "</span>\r\n<span id=\"nav-end\"></span>\r\n";
+
+	/**
+	 *
+	 * Provide a banner/logo/whatever
+	 *
+	 */
 
 	$banner = get_config('system','banner');
 
