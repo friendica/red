@@ -452,6 +452,8 @@ function get_atom_elements($feed,$item) {
 			$body = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['content'][0]['data'];
 			if(! $body)
 				$body = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['summary'][0]['data'];
+			// preserve a copy of the original body content in case we later need to parse out any microformat information, e.g. events
+			$res['object'] .= '<orig>' . xmlify($body) . '</orig>' . "\n";
 			if(strpos($body,'<')) {
 
 				$body = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
@@ -489,6 +491,8 @@ function get_atom_elements($feed,$item) {
 			$body = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['content'][0]['data'];
 			if(! $body)
 				$body = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['summary'][0]['data'];
+			// preserve a copy of the original body content in case we later need to parse out any microformat information, e.g. events
+			$res['object'] .= '<orig>' . xmlify($body) . '</orig>' . "\n";
 			if(strpos($body,'<')) {
 
 				$body = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
