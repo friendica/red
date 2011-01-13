@@ -355,7 +355,7 @@ function register_content(&$a) {
 
 	$block = get_config('system','block_extended_register');
 
-	if((($a->config['register_policy'] == REGISTER_CLOSED) && (! getuid())) || ($block)) {
+	if((($a->config['register_policy'] == REGISTER_CLOSED) && (! local_user())) || ($block)) {
 		notice("Permission denied." . EOL);
 		return;
 	}

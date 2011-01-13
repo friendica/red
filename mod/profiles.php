@@ -401,6 +401,7 @@ function profiles_content(&$a) {
 				$o .= replace_macros($template, array(
 					'$photo' => $rr['thumb'],
 					'$id' => $rr['id'],
+					'$alt' => t('Profile Image'),
 					'$profile_name' => $rr['profile-name']
 				));
 			}
