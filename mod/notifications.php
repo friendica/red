@@ -72,6 +72,16 @@ function notifications_content(&$a) {
 		'$hide_text' => ((strlen($sql_extra)) ? t('Show Ignored Requests') : t('Hide Ignored Requests'))
 	)); 
 
+
+	$r = q("SELECT COUNT(*)	AS `total` FROM `intro` 
+		WHERE `intro`.`uid` = %d $sql_extra AND `intro`.`blocked` = 0 ",
+			intval($_SESSION['uid'])
+	);
+	if($r && count($r)) {
+		$a->set_pager_total($r[0]['total']);
+		$a->set_pager_itemspage(20);
+	}
+
 	$r = q("SELECT `intro`.`id` AS `intro_id`, `intro`.*, `contact`.* 
 		FROM `intro` LEFT JOIN `contact` ON `intro`.`contact-id` = `contact`.`id`
 		WHERE `intro`.`uid` = %d $sql_extra AND `intro`.`blocked` = 0 ",
@@ -152,5 +162,6 @@ function notifications_content(&$a) {
 
 	}
 
+	$o .= paginate($a);
 	return $o;
 }

@@ -277,3 +277,27 @@ function update_1028() {
 function update_1029() {
 	q("ALTER TABLE `contact` ADD `info` MEDIUMTEXT NOT NULL AFTER `reason` ");
 }
+
+function update_1030() {
+	q("ALTER TABLE `contact` ADD `bdyear` CHAR( 4 ) NOT NULL COMMENT 'birthday notify flag' AFTER `profile-id` ");
+
+	q("CREATE TABLE IF NOT EXISTS `event` (
+	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`uid` INT NOT NULL ,
+	`cid` INT NOT NULL ,
+	`created` DATETIME NOT NULL ,
+	`edited` DATETIME NOT NULL ,
+	`start` DATETIME NOT NULL ,
+	`finish` DATETIME NOT NULL ,
+	`desc` TEXT NOT NULL ,
+	`location` TEXT NOT NULL ,
+	`type` CHAR( 255 ) NOT NULL ,
+	`adjust` TINYINT( 1 ) NOT NULL DEFAULT '1',
+	`allow_cid` MEDIUMTEXT NOT NULL ,
+	`allow_gid` MEDIUMTEXT NOT NULL ,
+	`deny_cid` MEDIUMTEXT NOT NULL ,
+	`deny_gid` MEDIUMTEXT NOT NULL
+	) ENGINE = MYISAM DEFAULT CHARSET=utf8 ");
+
+
+}
