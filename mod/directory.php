@@ -1,4 +1,5 @@
 <?php
+
 function directory_init(&$a) {
 	$a->set_pager_itemspage(60);
 }
