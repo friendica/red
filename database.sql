@@ -89,6 +89,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `reason` text NOT NULL,
   `info` mediumtext NOT NULL,
   `profile-id` int(11) NOT NULL DEFAULT '0',
+  `bdyear` CHAR( 4 ) NOT NULL COMMENT 'birthday notify flag',
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
   KEY `self` (`self`),
@@ -451,5 +452,22 @@ CREATE TABLE IF NOT EXISTS `addon` (
 ) ENGINE = MYISAM DEFAULT CHARSET=utf8;
 
 
+CREATE TABLE IF NOT EXISTS `event` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`uid` INT NOT NULL ,
+`cid` INT NOT NULL ,
+`created` DATETIME NOT NULL ,
+`edited` DATETIME NOT NULL ,
+`start` DATETIME NOT NULL ,
+`finish` DATETIME NOT NULL ,
+`desc` TEXT NOT NULL ,
+`location` TEXT NOT NULL ,
+`type` CHAR( 255 ) NOT NULL ,
+`adjust` TINYINT( 1 ) NOT NULL DEFAULT '1',
+`allow_cid` MEDIUMTEXT NOT NULL ,
+`allow_gid` MEDIUMTEXT NOT NULL ,
+`deny_cid` MEDIUMTEXT NOT NULL ,
+`deny_gid` MEDIUMTEXT NOT NULL
+) ENGINE = MYISAM DEFAULT CHARSET=utf8;
 
 
