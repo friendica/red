@@ -992,7 +992,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 			 *
 			 */
 			 
-			$bdtext = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]' . t('\'s birthday');
+			$bdtext = t('Birthday:') . ' [url=' . $contact['url'] . ']' . $contact['name'] . '[/url]' ;
 
 
 			$r = q("INSERT INTO `event` (`uid`,`cid`,`created`,`edited`,`start`,`finish`,`desc`,`type`)
