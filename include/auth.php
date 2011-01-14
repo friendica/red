@@ -53,8 +53,11 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 		$a->user = $r[0];
 		$_SESSION['theme'] = $a->user['theme'];
 		$_SESSION['page_flags'] = $a->user['page-flags'];
-		if(strlen($a->user['timezone']))
+
+		if(strlen($a->user['timezone'])) {
 			date_default_timezone_set($a->user['timezone']);
+			$a->timezone = $a->user['timezone'];
+		}
 
 		$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
 
@@ -183,8 +186,11 @@ else {
 
 		notice( t("Welcome back ") . $record['username'] . EOL);
 		$a->user = $record;
-		if(strlen($a->user['timezone']))
+
+		if(strlen($a->user['timezone'])) {
 			date_default_timezone_set($a->user['timezone']);
+			$a->timezone = $a->user['timezone'];
+		}
 
 		$r = q("SELECT * FROM `contact` WHERE `uid` = %s AND `self` = 1 LIMIT 1",
 			intval($_SESSION['uid']));

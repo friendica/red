@@ -72,8 +72,11 @@ function openid_content(&$a) {
 
 			notice( t("Welcome back ") . $r[0]['username'] . EOL);
 			$a->user = $r[0];
-			if(strlen($a->user['timezone']))
+
+			if(strlen($a->user['timezone'])) {
 				date_default_timezone_set($a->user['timezone']);
+				$a->timezone = $a->user['timezone'];
+			}
 
 			$r = q("SELECT * FROM `contact` WHERE `uid` = %s AND `self` = 1 LIMIT 1",
 				intval($_SESSION['uid']));

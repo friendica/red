@@ -71,7 +71,9 @@ if(! $install) {
 
 require_once("datetime.php");
 
-date_default_timezone_set(($default_timezone) ? $default_timezone : 'UTC');
+$a->timezone = (($default_timezone) ? $default_timezone : 'UTC');
+
+date_default_timezone_set($a->timezone);
 
 $a->init_pagehead();
 
