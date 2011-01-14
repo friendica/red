@@ -1,5 +1,6 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <base href="$baseurl" />
+<meta name="generator" content="$generator" />
 <link rel="stylesheet" type="text/css" href="$stylesheet" media="all" />
 <link rel="shortcut icon" href="$baseurl/images/ff-32.jpg">
 
