@@ -182,6 +182,7 @@ class App {
 	public  $strings;   
 	public  $path;
 	public  $hooks;
+	public  $timezone;
 	public  $interactive = true;
 
 
@@ -2116,5 +2117,62 @@ function call_hooks($name, &$data = null) {
 			}
 		}
 	}
+}}
+
+
+if(! function_exists('day_translate')) {
+function day_translate($s) {
+	$ret = str_replace(array('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'),
+		array( t('Monday'), t('Tuesday'), t('Wednesday'), t('Thursday'), t('Friday'), t('Saturday'), t('Sunday')),
+		$s);
+
+	$ret = str_replace(array('January','February','March','April','May','June','July','August','September','October','November','December'),
+		array( t('January'), t('February'), t('March'), t('April'), t('May'), t('June'), t('July'), t('August'), t('September'), t('October'), t('November'), t('December')),
+		$ret);
+
+	return $ret;
+}}
+
+if(! function_exists('get_birthdays')) {
+function get_birthdays() {
+
+	$a = get_app();
+	$o = '';
+
+	if(! local_user())
+		return $o;
+
+	$bd_format = get_config('system','birthday_format');
+	if(! $bd_format)
+		$bd_format = 'g A l F d' ; // 8 AM Friday January 18
+
+	$r = q("SELECT `event`.*, `event`.`id` AS `eid`, `contact`.* FROM `event` 
+		LEFT JOIN `contact` ON `contact`.`id` = `event`.`cid` 
+		WHERE `event`.`uid` = %d AND `type` = 'birthday' AND `start` < '%s' AND `finish` > '%s' 
+		ORDER BY `start` DESC ",
+		intval(local_user()),
+		dbesc(datetime_convert('UTC','UTC','now + 6 days')),
+		dbesc(datetime_convert('UTC','UTC','now'))
+	);
+
+	if($r && count($r)) {
+		$o .= '<div id="birthday-wrapper"><div id="birthday-title">' . t('Birthdays this week:') . '</div>'; 
+		$o .= '<div id="birthday-adjust">' . t("\x28Adjusted for local time\x29") . '</div>';
+		$o .= '<div id="birthday-title-end"></div>';
+
+		foreach($r as $rr) {
+			$now = strtotime('now');
+			$today = (((strtotime($rr['start']) < $now) && (strtotime($rr['finish']) > $now)) ? true : false); 
+
+			$o .= '<div class="birthday-list" id="birthday-' . $rr['eid'] . '"><a class="sparkle" href="' 
+			. $a->get_baseurl() . '/redir/'  . $rr['cid'] . '">' . $rr['name'] . '</a> ' 
+			. day_translate(datetime_convert('UTC', $a->timezone, $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '') ;
+		}
+
+		$o .= '</div>';
+	}
+
+  return $o;
+
 }}
 

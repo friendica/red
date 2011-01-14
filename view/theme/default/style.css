@@ -1957,3 +1957,27 @@ a.mail-list-link {
 #plugin-settings-link, #account-settings-link {
 	margin-bottom: 25px;
 }
+
+
+#birthday-title {
+	float: left;
+	font-weight: bold;	
+}
+
+#birthday-adjust {
+	float: left;
+	font-size: 75%;
+	margin-left: 10px;
+}
+
+#birthday-title-end {
+	clear: both;
+}
+
+.birthday-list {
+	margin-left: 15px;
+}
+
+#birthday-wrapper {
+	margin-bottom: 15px;
+}

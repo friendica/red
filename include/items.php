@@ -872,7 +872,7 @@ function dfrn_deliver($owner,$contact,$atom) {
  *
  */
 
-function consume_feed($xml,$importer,$contact, &$hub, $datedir = 0) {
+function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 
 	require_once('simplepie/simplepie.inc');
 
@@ -890,7 +890,7 @@ function consume_feed($xml,$importer,$contact, &$hub, $datedir = 0) {
 	$new_name = '';
 	$photo_timestamp = '';
 	$photo_url = '';
-
+	$birthday = '';
 
 	$hubs = $feed->get_links('hub');
 
@@ -908,10 +908,14 @@ function consume_feed($xml,$importer,$contact, &$hub, $datedir = 0) {
 			$photo_timestamp = datetime_convert('UTC','UTC',$elems['link'][0]['attribs'][NAMESPACE_DFRN]['updated']);
 			$photo_url = $elems['link'][0]['attribs']['']['href'];
 		}
+
+		if((x($rawtags[0]['child'], NAMESPACE_DFRN)) && (x($rawtags[0]['child'][NAMESPACE_DFRN],'birthday'))) {
+			$birthday = datetime_convert('UTC','UTC', $rawtags[0]['child'][NAMESPACE_DFRN]['birthday'][0]['data']);
+		}
 	}
 
 	if((is_array($contact)) && ($photo_timestamp) && (strlen($photo_url)) && ($photo_timestamp > $contact['avatar-date'])) {
-		logger('Consume feed: Updating photo for ' . $contact['name']);
+		logger('consume_feed: Updating photo for ' . $contact['name']);
 		require_once("Photo.php");
 		$photo_failure = false;
 		$have_photo = false;
@@ -971,6 +975,53 @@ function consume_feed($xml,$importer,$contact, &$hub, $datedir = 0) {
 			intval($contact['uid']),
 			intval($contact['id'])
 		);
+	}
+
+	if(strlen($birthday)) {
+		if(substr($birthday,0,4) != $contact['bdyear']) {
+			logger('consume_feed: updating birthday: ' . $birthday);
+
+			/**
+			 *
+			 * Add new birthday event for this person
+			 *
+			 * $bdtext is just a readable placeholder in case the event is shared
+			 * with others. We will replace it during presentation to our $importer
+			 * to contain a sparkle link and perhaps a photo. 
+			 *
+			 */
+			 
+			$bdtext = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]' . t('\'s birthday');
+
+
+			$r = q("INSERT INTO `event` (`uid`,`cid`,`created`,`edited`,`start`,`finish`,`desc`,`type`)
+				VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s' ) ",
+				intval($contact['uid']),
+			 	intval($contact['id']),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert('UTC','UTC', $birthday)),
+				dbesc(datetime_convert('UTC','UTC', $birthday . ' + 1 day ')),
+				dbesc($bdtext),
+				dbesc('birthday')
+			);
+			
+
+			// update bdyear
+
+			q("UPDATE `contact` SET `bdyear` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
+				dbesc(substr($birthday,0,4)),
+				intval($contact['uid']),
+				intval($contact['id'])
+			);
+
+			// This function is called twice without reloading the contact
+			// Make sure we only create one event. This is why &$contact 
+			// is a reference var in this function
+
+			$contact['bdyear'] = substr($birthday,0,4);
+		}
+
 	}
 
 	// Now process the feed

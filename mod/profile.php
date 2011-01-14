@@ -228,6 +228,10 @@ function profile_content(&$a, $update = 0) {
 
 	);
 
+
+	if($is_owner && ! $update)
+			$o .= get_birthdays();
+
 	$cmnt_tpl = load_view_file('view/comment_item.tpl');
 
 	$like_tpl = load_view_file('view/like.tpl');
