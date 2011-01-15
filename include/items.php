@@ -182,6 +182,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 
 	$atom .= replace_macros($feed_template, array(
+		'$version'      => xmlify(FRIENDIKA_VERSION),
 		'$feed_id'      => xmlify($a->get_baseurl() . '/profile/' . $owner_nick),
 		'$feed_title'   => xmlify($owner['name']),
 		'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', 'now' , ATOM_TIME)) ,
@@ -991,7 +992,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 			 *
 			 */
 			 
-			$bdtext = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]' . t('\'s birthday');
+			$bdtext = t('Birthday:') . ' [url=' . $contact['url'] . ']' . $contact['name'] . '[/url]' ;
 
 
 			$r = q("INSERT INTO `event` (`uid`,`cid`,`created`,`edited`,`start`,`finish`,`desc`,`type`)

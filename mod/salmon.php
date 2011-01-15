@@ -201,7 +201,9 @@ function salmon_post(&$a) {
 
 	// consume_feed will only accept a follow activity from this person if there is no contact record.
 
-	consume_feed($feedxml,$importer,((count($r)) ? $r[0] : null),$hub);
+	$contact_rec = ((count($r)) ? $r[0] : null);
+
+	consume_feed($feedxml,$importer,$contact_rec,$hub);
 
 	salmon_return(200);
 }
