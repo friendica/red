@@ -3,6 +3,7 @@
 set_time_limit(0);
 
 define ( 'BUILD_ID',               1031   );
+define ( 'FRIENDIKA_VERSION',      '2.01.1000' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.0'  );
 
 define ( 'EOL',                    "<br />\r\n"     );
@@ -311,7 +312,8 @@ class App {
 		$this->page['title'] = $this->config['sitename'];
 		$tpl = load_view_file("view/head.tpl");
 		$this->page['htmlhead'] = replace_macros($tpl,array(
-			'$baseurl' => $this->get_baseurl() . '/'
+			'$baseurl' => $this->get_baseurl() . '/',
+			'$generator' => 'Friendika' . ' ' . FRIENDIKA_VERSION
 		));
 	}
 
