@@ -199,7 +199,12 @@ function salmon_post(&$a) {
 
 	$hub = '';
 
-	// consume_feed will only accept a follow activity from this person if there is no contact record.
+	/**
+	 *
+	 * anti-spam measure: consume_feed will accept a follow activity from 
+	 * this person (and nothing else) if there is no existing contact record.
+	 *
+	 */
 
 	$contact_rec = ((count($r)) ? $r[0] : null);
 
