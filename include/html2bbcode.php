@@ -32,7 +32,7 @@ function html2bbcode($s) {
 	// Replace with
 
 	$bbtags = array(
-		'',
+		"\n",
 		'[b]$1[/b]',
 		'[i]$1[/i]',
 		'[u]$1[/u]',

@@ -910,7 +910,6 @@ function xmlify($str) {
 			case "'" :
 				$buffer .= '&apos;';
 				break;
-
 			case "\"" :
 				$buffer .= '&quot;';
 				break;
