@@ -2163,7 +2163,7 @@ function get_birthdays() {
 
 		foreach($r as $rr) {
 			$now = strtotime('now');
-			$today = (((strtotime($rr['start']) < $now) && (strtotime($rr['finish']) > $now)) ? true : false); 
+			$today = (((strtotime($rr['start'] . ' +00:00') < $now) && (strtotime($rr['finish'] . ' +00:00') > $now)) ? true : false); 
 
 			$o .= '<div class="birthday-list" id="birthday-' . $rr['eid'] . '"><a class="sparkle" href="' 
 			. $a->get_baseurl() . '/redir/'  . $rr['cid'] . '">' . $rr['name'] . '</a> ' 
