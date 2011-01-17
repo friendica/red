@@ -181,7 +181,7 @@
 			'$feed_title'   => xmlify($owner['name']),
 			'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', $updated . '+00:00' , ATOM_TIME)) ,
 			'$hub'          => $hubxml,
-			'$salmon'       => '',   // private feed, we don't use salmon here
+			'$salmon'       => '',  // private feed, we don't use salmon here
 			'$name'         => xmlify($owner['name']),
 			'$profile_page' => xmlify($owner['url']),
 			'$photo'        => xmlify($owner['photo']),
