@@ -115,6 +115,10 @@ function network_content(&$a, $update = 0) {
 		$o = '<h4>' . t('Group: ') . $r[0]['name'] . '</h4>' . $o;
 	}
 
+	if((! $group) && (! $update))
+		$o .= get_birthdays();
+
+
 	$r = q("SELECT COUNT(*) AS `total`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
