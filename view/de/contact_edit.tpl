@@ -39,7 +39,7 @@ $ignored
 <input type="hidden" name="contact_id" value="$contact_id">
 
 <div id="contact-edit-info-wrapper">
-<h4>Contact Information / Notes</h4>
+<h4>Kontaktinformation / Notizen</h4>
 <textarea id="contact-edit-info" rows="10" cols="72" name="info" >$info</textarea>
 </div>
 <div id="contact-edit-info-end"></div>
@@ -47,8 +47,9 @@ $ignored
 <input class="contact-edit-submit" type="submit" name="submit" value="Submit" />
 
 <div id="contact-edit-profile-select-text">
-<h4>Profile Visibility</h4>
-<p>Please choose the profile you would like to display to $name when viewing your profile securely.
+<h4>Profil Sichtbarkeit</h4>
+<p>Bitte wähle das Profil, das du $name gezeigt werden soll, wenn er sich dein
+Profil in Friendika betrachtet.
 </p> 
 </div>
 $profile_select
@@ -60,14 +61,17 @@ $profile_select
 <div id="contact-edit-rating-wrapper">
 <h4>Online Reputation</h4>
 <p>
-Occasionally your friends may wish to inquire about this person's online legitimacy. You may help them choose whether or not to interact with this person by providing a 'reputation' to guide them.
+Gelegentlich werden sich deine Freunde nach der online Legitimität dieser
+Person erkundigen. Du kannst ihnen helfen bei der Entscheidung ob sie mit
+dieser Person interagieren wollen indem du den "Ruf" der Person bewertest.
 </p>
 <div id="contact-edit-rating-select-wrapper">
 $rating
 </div>
 <div id="contact-edit-rating-explain">
 <p>
-Please take a moment to elaborate on this selection if you feel it could be helpful to others.
+Bitte numm dir einen Moment um deine Auswahl zu kommentieren wenn du meinst das
+könnte anderen weiter helfen.
 </p>
 <textarea id="contact-edit-rating-text" name="reason" rows="3" cols="64" >$reason</textarea>
 </div>
