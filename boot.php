@@ -2,8 +2,8 @@
 
 set_time_limit(0);
 
-define ( 'BUILD_ID',               1031   );
-define ( 'FRIENDIKA_VERSION',      '2.01.1000' );
+define ( 'BUILD_ID',               1032   );
+define ( 'FRIENDIKA_VERSION',      '2.01.1003' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.0'  );
 
 define ( 'EOL',                    "<br />\r\n"     );
@@ -910,7 +910,6 @@ function xmlify($str) {
 			case "'" :
 				$buffer .= '&apos;';
 				break;
-
 			case "\"" :
 				$buffer .= '&quot;';
 				break;
@@ -946,6 +945,11 @@ function unxmlify($s) {
 
 if(! function_exists('hex2bin')) {
 function hex2bin($s) {
+	if(! ctype_xdigit($s)) {
+		logger('hex2bin: illegal input: ' . print_r(debug_backtrace(), true));
+		return($s);
+	}
+
 	return(pack("H*",$s));
 }}
 
@@ -2164,11 +2168,12 @@ function get_birthdays() {
 
 		foreach($r as $rr) {
 			$now = strtotime('now');
-			$today = (((strtotime($rr['start']) < $now) && (strtotime($rr['finish']) > $now)) ? true : false); 
+			$today = (((strtotime($rr['start'] . ' +00:00') < $now) && (strtotime($rr['finish'] . ' +00:00') > $now)) ? true : false); 
 
 			$o .= '<div class="birthday-list" id="birthday-' . $rr['eid'] . '"><a class="sparkle" href="' 
 			. $a->get_baseurl() . '/redir/'  . $rr['cid'] . '">' . $rr['name'] . '</a> ' 
-			. day_translate(datetime_convert('UTC', $a->timezone, $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '') ;
+			. day_translate(datetime_convert('UTC', $a->timezone, $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '')
+			. '</div>' ;
 		}
 
 		$o .= '</div>';

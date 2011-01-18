@@ -11,6 +11,9 @@ function html2bbcode($s) {
 
 	$htmltags = array(
 		'/\n/is',
+		'/\<pre\>(.*?)\<\/pre\>/is',
+		'/\<p(.*?)\>/is',
+		'/\<\/p\>/is',
 		'/\<b\>(.*?)\<\/b\>/is',
 		'/\<i\>(.*?)\<\/i\>/is',
 		'/\<u\>(.*?)\<\/u\>/is',
@@ -33,6 +36,9 @@ function html2bbcode($s) {
 
 	$bbtags = array(
 		'',
+		'[code]$1[/code]',
+		'',
+		"\n",
 		'[b]$1[/b]',
 		'[i]$1[/i]',
 		'[u]$1[/u]',

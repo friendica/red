@@ -35,6 +35,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 	else
 		killme();
 
+
 	/**
 	 *
 	 * Determine the next birthday, but only if the birthday is published
@@ -380,7 +381,7 @@ function get_atom_elements($feed,$item) {
 
 	// It isn't certain at this point whether our content is plaintext or html and we'd be foolish to trust 
 	// the content type. Our own network only emits text normally, though it might have been converted to 
-	// html if we used a pubsubhubbub transport. But if we see even one html open tag in our text, we will
+	// html if we used a pubsubhubbub transport. But if we see even one html tag in our text, we will
 	// have to assume it is all html and needs to be purified.
 
 	// It doesn't matter all that much security wise - because before this content is used anywhere, we are 
@@ -389,7 +390,7 @@ function get_atom_elements($feed,$item) {
 	// html.
 
 
-	if(strpos($res['body'],'<')) {
+	if((strpos($res['body'],'<')) || (strpos($res['body'],'>'))) {
 
 		$res['body'] = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
 			'[youtube]$1[/youtube]', $res['body']);
@@ -403,11 +404,12 @@ function get_atom_elements($feed,$item) {
 
 		$purifier = new HTMLPurifier($config);
 		$res['body'] = $purifier->purify($res['body']);
+
+		$res['body'] = html2bbcode($res['body']);
 	}
-
+	else
+		$res['body'] = escape_tags($res['body']);
 	
-	$res['body'] = html2bbcode($res['body']);
-
 
 	$allow = $item->get_item_tags(NAMESPACE_DFRN,'comment-allow');
 	if($allow && $allow[0]['data'] == 1)
@@ -495,7 +497,7 @@ function get_atom_elements($feed,$item) {
 				$body = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['summary'][0]['data'];
 			// preserve a copy of the original body content in case we later need to parse out any microformat information, e.g. events
 			$res['object'] .= '<orig>' . xmlify($body) . '</orig>' . "\n";
-			if(strpos($body,'<')) {
+			if((strpos($body,'<')) || (strpos($body,'>'))) {
 
 				$body = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
 					'[youtube]$1[/youtube]', $body);
@@ -505,9 +507,11 @@ function get_atom_elements($feed,$item) {
 
 				$purifier = new HTMLPurifier($config);
 				$body = $purifier->purify($body);
+				$body = html2bbcode($body);
 			}
+			else
+				$body = escape_tags($body);
 
-			$body = html2bbcode($body);
 			$res['object'] .= '<content>' . $body . '</content>' . "\n";
 		}
 
@@ -534,7 +538,7 @@ function get_atom_elements($feed,$item) {
 				$body = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['summary'][0]['data'];
 			// preserve a copy of the original body content in case we later need to parse out any microformat information, e.g. events
 			$res['object'] .= '<orig>' . xmlify($body) . '</orig>' . "\n";
-			if(strpos($body,'<')) {
+			if((strpos($body,'<')) || (strpos($body,'>'))) {
 
 				$body = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
 					'[youtube]$1[/youtube]', $body);
@@ -544,9 +548,11 @@ function get_atom_elements($feed,$item) {
 
 				$purifier = new HTMLPurifier($config);
 				$body = $purifier->purify($body);
+				$body = html2bbcode($body);
 			}
+			else
+				$body = escape_tags($body);
 
-			$body = html2bbcode($body);
 			$res['target'] .= '<content>' . $body . '</content>' . "\n";
 		}
 
@@ -571,7 +577,7 @@ function encode_rel_links($links) {
 		if($link['attribs']['']['type'])
 			$o .= 'type="' . $link['attribs']['']['type'] . '" ';
 		if($link['attribs']['']['href'])
-			$o .= 'type="' . $link['attribs']['']['href'] . '" ';
+			$o .= 'href="' . $link['attribs']['']['href'] . '" ';
 		if( (x($link['attribs'],NAMESPACE_MEDIA)) && $link['attribs'][NAMESPACE_MEDIA]['width'])
 			$o .= 'media:width="' . $link['attribs'][NAMESPACE_MEDIA]['width'] . '" ';
 		if( (x($link['attribs'],NAMESPACE_MEDIA)) && $link['attribs'][NAMESPACE_MEDIA]['height'])
@@ -782,8 +788,8 @@ function dfrn_deliver($owner,$contact,$atom) {
 		return (($res->status) ? $res->status : 3);
 
 	$postvars     = array();
-	$sent_dfrn_id = hex2bin($res->dfrn_id);
-	$challenge    = hex2bin($res->challenge);
+	$sent_dfrn_id = hex2bin((string) $res->dfrn_id);
+	$challenge    = hex2bin((string) $res->challenge);
 	$rino_allowed = ((intval($res->rino) === 1) ? 1 : 0);
 
 	$final_dfrn_id = '';
