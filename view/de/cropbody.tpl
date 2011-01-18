@@ -1,6 +1,7 @@
-<h1>Crop Image</h1>
+<h1>Bild zuschneiden</h1>
 <p id="cropimage-desc">
-Please adjust the image cropping for optimum viewing.
+Zur optimalen Darstellung des Bildes kann es nun auf einen Bereich
+zugeschnitten werden. Bitte wähle diesen Bereich.
 </p>
 <div id="cropimage-wrapper">
 <img src="$image_url" id="croppa" class="imgCrop" alt="" />
