@@ -1,4 +1,4 @@
-<h1>Site Directory</h1>
+<h1>Verzeichnis dieser Seite</h1>
 
 $globaldir
 
