@@ -35,6 +35,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 	else
 		killme();
 
+
 	/**
 	 *
 	 * Determine the next birthday, but only if the birthday is published
@@ -571,7 +572,7 @@ function encode_rel_links($links) {
 		if($link['attribs']['']['type'])
 			$o .= 'type="' . $link['attribs']['']['type'] . '" ';
 		if($link['attribs']['']['href'])
-			$o .= 'type="' . $link['attribs']['']['href'] . '" ';
+			$o .= 'href="' . $link['attribs']['']['href'] . '" ';
 		if( (x($link['attribs'],NAMESPACE_MEDIA)) && $link['attribs'][NAMESPACE_MEDIA]['width'])
 			$o .= 'media:width="' . $link['attribs'][NAMESPACE_MEDIA]['width'] . '" ';
 		if( (x($link['attribs'],NAMESPACE_MEDIA)) && $link['attribs'][NAMESPACE_MEDIA]['height'])
