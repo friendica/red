@@ -1,8 +1,8 @@
 
 <p id="dfrn-request-homecoming" >
-Welcome home $username. 
+Willkommen zu Hause $username. 
 <br />
-Please confirm your introduction to $dfrn_url.
+Bitte bestätige deine Vorstellung bei $dfrn_url.
 
 </p>
 <form id="dfrn-request-homecoming-form" action="dfrn_request/$nickname" method="post"> 
