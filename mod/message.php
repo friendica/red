@@ -270,7 +270,7 @@ function message_content(&$a) {
 				'$sparkle' => $sparkle,
 				'$from_photo' => $message['from-photo'],
 				'$subject' => $message['title'],
-				'$body' => bbcode($message['body']),
+				'$body' => smilies(bbcode($message['body'])),
 				'$delete' => t('Delete message'),
 				'$to_name' => $message['name'],
 				'$date' => datetime_convert('UTC',date_default_timezone_get(),$message['created'],'D, d M Y - g:i A')

@@ -17,7 +17,7 @@ hosting provider prior to installation.
 	- Apache with mod-rewrite enabled and "Options All" so you can use a 
 local .htaccess file
 
-	- PHP > 5.1. The later the better. You'll need 5.3 for encryption of key
+	- PHP 5.2+. The later the better. You'll need 5.3 for encryption of key
 exchange conversations
 encryption support
 		- PHP *command line* access with register_argc_argv set to true in the 
@@ -66,6 +66,12 @@ If you get any *critical* failure at this point, it generally indicates the
 database was not installed correctly. You might wish to move/rename 
 .htconfig.php to another name and empty (called 'dropping') the database 
 tables, so that you can start fresh.  
+
+****************************************************************************
+****************************************************************************
+********          THIS NEXT STEP IS IMPORTANT!!!!                ***********
+****************************************************************************
+****************************************************************************
 
 7. Set up a cron job or scheduled task to run the poller once every 5-10 
 minutes to pick up the recent "public" postings of your friends. Example:

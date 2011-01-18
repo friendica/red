@@ -181,7 +181,7 @@
 			'$feed_title'   => xmlify($owner['name']),
 			'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', $updated . '+00:00' , ATOM_TIME)) ,
 			'$hub'          => $hubxml,
-			'$salmon'       => '',   // private feed, we don't use salmon here
+			'$salmon'       => '',  // private feed, we don't use salmon here
 			'$name'         => xmlify($owner['name']),
 			'$profile_page' => xmlify($owner['url']),
 			'$photo'        => xmlify($owner['photo']),
@@ -207,7 +207,6 @@
 		));
 	}
 	else {
-
 		if($followup) {
 			foreach($items as $item) {  // there is only one item
 				if($item['id'] == $item_id) {
@@ -224,7 +223,13 @@
 					continue;
 
 				$atom   .= atom_entry($item,'text',$contact,$owner,true);
-				$slaps[] = atom_entry($item,'html',$contact,$owner,true);
+
+				// There's a problem here - we *were* going to use salmon to provide semi-authenticated
+				// communication to OStatus, but unless we're the item author they won't verify.
+				// commented out for now, though we'll still send local replies (and any mentions 
+				// that they contain) upstream. Rethinking the problem space.
+ 
+//				$slaps[] = atom_entry($item,'html',$contact,$owner,true);
 			}
 		}
 	}
@@ -232,7 +237,7 @@
 
 	logger('notifier: ' . $atom, LOGGER_DATA);
 
-	logger('notifier: slaps: ' . print_r($slaps,true), LOGGER_DATA);
+//	logger('notifier: slaps: ' . print_r($slaps,true), LOGGER_DATA);
 
 	if($followup)
 		$recip_str = $parent['contact-id'];
@@ -324,14 +329,12 @@
 		
 	// send additional slaps to mentioned remote tags (@foo@example.com)
 
-	if(count($slaps) && count($url_recipients) && $notify_hub) {
+	if($slap && count($url_recipients) && $followup && $notify_hub) {
 		foreach($url_recipients as $url) {
-			logger('notifier: urldelivery: ' . $url);
-			foreach($slaps as $slappy) {
-				if($url) {
-					$deliver_status = slapper($owner,$url,$slappy);
-					// TODO: redeliver/queue these items on failure, though there is no contact record
-				}
+			if($url) {
+				logger('notifier: urldelivery: ' . $url);
+				$deliver_status = slapper($owner,$url,$slap);
+				// TODO: redeliver/queue these items on failure, though there is no contact record
 			}
 		}
 	}

@@ -3,23 +3,10 @@
  * Fabio Comuni <fabrix.xm@gmail.com>
  */
 
-@font-face {
-  font-family: FreeSans;
-  font-style: normal;
-  font-weight: bold;
-  src: local('FreeSansBold'), url('FreeSansBold.otf');
-}
-@font-face {
-  font-family: FreeSans;
-  font-style: normal;
-  font-weight: normal;
-  src: local('FreeSans'), url('FreeSans.otf');
-}
 
- 
 /* generals */
 body {
-	font-family: /*FreeSans,*/ helvetica,arial,clean,sans-serif;
+	font-family: helvetica,arial,freesans,clean,sans-serif;
 	font-size: 12px;
 	background-color: #ffffff;
 	background-image: url(head.jpg);
@@ -209,10 +196,10 @@ footer {
 }
 
 
-.shiny {
-    background-image: url(shiny.jpg);
-    background-repeat: repeat-x;
-    background-position: left bottom;
+div.wall-item-content-wrapper.shiny {
+  background-image: url('shiny.png');
+  background-position: -5px 30px;
+  background-repeat:no-repeat;
 }
 
 /* from defautlt */
@@ -801,7 +788,7 @@ input#dfrn-url {
 
 .wall-item-content-wrapper.comment {
 	margin-left: 50px;
-	background: #CCCCCC;
+	background: #EEEEEE;
 }
 
 .wall-item-photo-wrapper {
@@ -879,7 +866,7 @@ input#dfrn-url {
 
 .comment-edit-wrapper {
 	margin-top: 15px;
-	background: #CCCCCC;
+	background: #f3f3f3;
 	margin-left: 50px;
 }
 
@@ -1876,5 +1863,5 @@ a.mail-list-link {
 }
 
 #birthday-wrapper {
-	margin-bottom: 15px;
+	margin-bottom: 20px;
 }
