@@ -302,3 +302,18 @@ function update_1030() {
 
 }
 
+function update_1031() {
+	// Repair any bad links that slipped into the item table
+	$r = q("SELECT `id`, `object` FROM `item` WHERE `object` != '' ");
+	if($r && count($r)) {
+		foreach($r as $rr) {
+			if(strstr($rr['object'],'type=&quot;http')) {
+				q("UPDATE `item` SET `object` = '%s' WHERE `id` = %d LIMIT 1",
+					dbesc(str_replace('type=&quot;http','href=&quot;http',$rr['object'])),
+					intval($rr['id'])
+				);
+			}
+		}
+	}
+}
+	
