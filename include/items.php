@@ -788,8 +788,8 @@ function dfrn_deliver($owner,$contact,$atom) {
 		return (($res->status) ? $res->status : 3);
 
 	$postvars     = array();
-	$sent_dfrn_id = hex2bin($res->dfrn_id);
-	$challenge    = hex2bin($res->challenge);
+	$sent_dfrn_id = hex2bin((string) $res->dfrn_id);
+	$challenge    = hex2bin((string) $res->challenge);
 	$rino_allowed = ((intval($res->rino) === 1) ? 1 : 0);
 
 	$final_dfrn_id = '';

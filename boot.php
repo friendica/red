@@ -945,6 +945,11 @@ function unxmlify($s) {
 
 if(! function_exists('hex2bin')) {
 function hex2bin($s) {
+	if(! ctype_xdigit($s)) {
+		logger('hex2bin: illegal input: ' . print_r(debug_backtrace(), true));
+		return($s);
+	}
+
 	return(pack("H*",$s));
 }}
 

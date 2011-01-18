@@ -186,8 +186,8 @@
 
 			$postvars = array();
 
-			$sent_dfrn_id = hex2bin($res->dfrn_id);
-			$challenge    = hex2bin($res->challenge);
+			$sent_dfrn_id = hex2bin((string) $res->dfrn_id);
+			$challenge    = hex2bin((string) $res->challenge);
 
 			$final_dfrn_id = '';
 
