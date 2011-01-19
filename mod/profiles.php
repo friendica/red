@@ -46,6 +46,7 @@ function profiles_post(&$a) {
 		if($orig[0]['name'] != $name)
 			$namechanged = true;
 
+		$pdesc = notags(trim($_POST['pdesc']));
 		$gender = notags(trim($_POST['gender']));
 		$address = notags(trim($_POST['address']));
 		$locality = notags(trim($_POST['locality']));
@@ -125,6 +126,7 @@ function profiles_post(&$a) {
 		$r = q("UPDATE `profile` 
 			SET `profile-name` = '%s',
 			`name` = '%s',
+			`pdesc` = '%s',
 			`gender` = '%s',
 			`dob` = '%s',
 			`address` = '%s',
@@ -153,6 +155,7 @@ function profiles_post(&$a) {
 			WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			dbesc($profile_name),
 			dbesc($name),
+			dbesc($pdesc),
 			dbesc($gender),
 			dbesc($dob),
 			dbesc($address),
@@ -208,6 +211,7 @@ function profiles_post(&$a) {
 
 
 function profiles_content(&$a) {
+
 	$o = '';
 	$o .= '<script>	$(document).ready(function() { $(\'#nav-profiles-link\').addClass(\'nav-selected\'); });</script>';
 
@@ -356,6 +360,7 @@ function profiles_content(&$a) {
 			'$profile_name' => $r[0]['profile-name'],
 			'$default' => (($is_default) ? '<p id="profile-edit-default-desc">' . t('This is your <strong>public</strong> profile.<br />It <strong>may</strong> be visible to anybody using the internet.') . '</p>' : ""),
 			'$name' => $r[0]['name'],
+			'$pdesc' => $r[0]['pdesc'],
 			'$dob' => dob($r[0]['dob']),
 			'$hide_friends' => $hide_friends,
 			'$address' => $r[0]['address'],
