@@ -1,16 +1,17 @@
 
-Dear $username,
+Lieber $username,
 
-	You've received a new private message at $sitename from '$from'.
+du hast eine neue private Nachricht von '$from' auf '$sitename' erhhalten.
 -----
 $title
 -----
 $body
 -----
-Please login at $siteurl to read and reply to your private messages.
+Bitte melde dich unter $siteurl an um deine privaten Nachrichte zu lesen und zu
+beantworten.
 
-Thank you,
-	$sitename administrator
+Viele Grüße,
+    $sitenname Administrator
 
  
 
