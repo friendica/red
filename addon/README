@@ -100,9 +100,13 @@ Current hooks:
 		'contact' => contact (array) record for the person from the database
 		'entry' => the (string) HTML of the generated entry 
 
+'profile_sidebar_enter' - called prior to generating the sidebar "short" profile for a page
+	$b is (array) the person's profile array
+
 'profile_sidebar' - called when generating the sidebar "short" profile for a page
-	$b is the (string) generated HTML of the entry
-		(The profile array details are in $a->profile)
+	$b is an array
+		'profile' => profile (array) record for the person from the database
+		'entry' => the (string) HTML of the generated entry
 
 'contact_block_end' - called when formatting the block of contacts/friends on a 
 	profile sidebar has completed

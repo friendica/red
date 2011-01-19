@@ -2009,6 +2009,8 @@ function profile_sidebar($profile) {
 	if((! is_array($profile)) && (! count($profile)))
 		return $o;
 
+	call_hooks('profile_sidebar_enter', $profile);
+
 	$fullname = '<div class="fn">' . $profile['name'] . '</div>';
 
 	$pdesc = '<div class="title">' . $profile['pdesc'] . '</div>';
@@ -2062,7 +2064,10 @@ function profile_sidebar($profile) {
 		'$homepage' => $homepage
 	));
 
-	call_hooks('profile_sidebar', $o);
+
+	$arr = array('profile' => $profile, 'entry' => $o);
+
+	call_hooks('profile_sidebar', $arr);
 
 	return $o;
 }}
