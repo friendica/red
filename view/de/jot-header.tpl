@@ -77,7 +77,7 @@ tinyMCE.init({
 	});
 
 	function jotGetLink() {
-		reply = prompt("Please enter a link URL:");
+		reply = prompt("Bitte URL des Links angeben:");
 		if(reply && reply.length) {
 			$('#profile-rotator').show();
 			$.get('parse_url?url=' + reply, function(data) {
@@ -88,14 +88,14 @@ tinyMCE.init({
 	}
 
 	function jotGetVideo() {
-		reply = prompt("Please enter a YouTube link:");
+		reply = prompt("Bitte den YouTube Link angeben:");
 		if(reply && reply.length) {
 			tinyMCE.execCommand('mceInsertRawHTML',false,'[youtube]' + reply + '[/youtube]');
 		}
 	}
 
 	function jotGetLocation() {
-		reply = prompt("Where are you right now?", $('#jot-location').val());
+		reply = prompt("Wo bist du im Moment?", $('#jot-location').val());
 		if(reply && reply.length) {
 			$('#jot-location').val(reply);
 		}
