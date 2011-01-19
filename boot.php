@@ -2,8 +2,8 @@
 
 set_time_limit(0);
 
-define ( 'BUILD_ID',               1032   );
-define ( 'FRIENDIKA_VERSION',      '2.01.1003' );
+define ( 'BUILD_ID',               1033   );
+define ( 'FRIENDIKA_VERSION',      '2.01.1004' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.0'  );
 
 define ( 'EOL',                    "<br />\r\n"     );
@@ -2011,6 +2011,8 @@ function profile_sidebar($profile) {
 
 	$fullname = '<div class="fn">' . $profile['name'] . '</div>';
 
+	$pdesc = '<div class="title">' . $profile['pdesc'] . '</div>';
+
 	$tabs = '';
 
 	$photo = '<div id="profile=photo-wrapper"><img class="photo" src="' . $profile['photo'] . '" alt="' . $profile['name'] . '" /></div>';
@@ -2049,6 +2051,7 @@ function profile_sidebar($profile) {
 
 	$o .= replace_macros($tpl, array(
 		'$fullname' => $fullname,
+		'$pdesc'    => $pdesc,
 		'$tabs'     => $tabs,
 		'$photo'    => $photo,
 		'$connect'  => $connect,		

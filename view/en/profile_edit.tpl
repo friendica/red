@@ -29,6 +29,13 @@ $default
 </div>
 <div id="profile-edit-name-end"></div>
 
+<div id="profile-edit-pdesc-wrapper" >
+<label id="profile-edit-pdesc-label" for="profile-edit-pdesc" >Title/Description: </label>
+<input type="text" size="32" name="pdesc" id="profile-edit-pdesc" value="$pdesc" />
+</div>
+<div id="profile-edit-pdesc-end"></div>
+
+
 <div id="profile-edit-gender-wrapper" >
 <label id="profile-edit-gender-label" for="gender-select" >Your Gender: </label>
 $gender
