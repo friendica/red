@@ -153,7 +153,7 @@ Lascia questi campi in bianco per non effettuare variazioni alla password
 </div>
 
 
-<h3 class="settings-heading">Impostazioni Avanzante Pagina</h3>
+<h3 class="settings-heading">Impostazioni Avanzate Account</h3>
 
 $pagetype
 

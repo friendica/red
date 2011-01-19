@@ -30,9 +30,9 @@ $default
 <div id="profile-edit-name-end"></div>
 
 <div id="profile-edit-pdesc-wrapper" >
-<label id="profile-edit-pdesc-label" for="profile-edit-pdesc" >Il tuo titolo: </label>
+<label id="profile-edit-pdesc-label" for="profile-edit-pdesc" >Breve descrizione: </label>
 <input type="text" size="32" name="pdesc" id="profile-edit-pdesc" value="$pdesc" />
-</div>
+</div><div id="profile-edit-pdesc-desc">(es. titolo, posizione, altro)</div>
 <div id="profile-edit-pdesc-end"></div>
 
 
