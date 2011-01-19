@@ -1,22 +1,22 @@
 
-Dear $username,
+Lieber $username,
 
-	Great news... '$fn' at '$dfrn_url' has accepted 
-your connection request at '$sitename'.
+großartige Neuigkeiten... '$fn' von '$dfrn_url' hat deine Kontaktaufnahme auf
+'$sitename' bestätigt.
 
-You are now mutual friends and may exchange status updates, photos, and email
-without restriction.
+Ihr seit nun beidseitige Freunde und könnt Statusmitteilungen, Fotos und
+EMail ohne Einschränkungen austauschen.
 
-Please visit your 'Contacts' page at $sitename if you wish to make 
-any changes to this relationship. 
+Bitte rufe deine 'Kontakte' Seite auf $sitename auf um du Änderungen an
+dieser Freundschaft vorzunehmen.
 
 $siteurl
 
-[For instance, you may create a separate profile with information that is not
-available to the general public - and assign viewing rights to '$fn'].
+[Du könntest zum Beispiel ein neue Profil anlegen mit Informationen die nicht
+für die Allgemeinheit bestimmt sind, die du aber gerne mit '$fn' teilen
+möchtest].
 
-Sincerely,
-
-	$sitename Administrator
+Mit freundlichen Grüßen
+        $sitename Administrator
 
  
