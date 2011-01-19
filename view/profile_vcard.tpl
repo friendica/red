@@ -1,7 +1,7 @@
 <div class="vcard">
 
 	$fullname
-
+	$pdesc
 	$tabs
 
 	$photo

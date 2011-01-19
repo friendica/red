@@ -40,7 +40,7 @@ function directory_content(&$a) {
 
 	if($search)
 		$search = dbesc($search);
-	$sql_extra = ((strlen($search)) ? " AND MATCH (`profile`.`name`, `user`.`nickname`, `locality`,`region`,`country-name`,`gender`,`marital`,`sexual`,`about`,`romance`,`work`,`education`,`keywords` ) AGAINST ('$search' IN BOOLEAN MODE) " : "");
+	$sql_extra = ((strlen($search)) ? " AND MATCH (`profile`.`name`, `user`.`nickname`, `pdesc`, `locality`,`region`,`country-name`,`gender`,`marital`,`sexual`,`about`,`romance`,`work`,`education`,`keywords` ) AGAINST ('$search' IN BOOLEAN MODE) " : "");
 
 	$publish = ((get_config('system','publish_all')) ? '' : " AND `publish` = 1 " );
 
@@ -68,6 +68,9 @@ function directory_content(&$a) {
 
 
 			$profile_link = $a->get_baseurl() . '/profile/' . ((strlen($rr['nickname'])) ? $rr['nickname'] : $rr['profile_uid']);
+		
+			$pdesc = (($rr['pdesc']) ? $rr['pdesc'] . '<br />' : '');
+
 			$details = '';
 			if(strlen($rr['locality']))
 				$details .= $rr['locality'];
@@ -94,7 +97,7 @@ function directory_content(&$a) {
 				'$photo' => $rr[$photo],
 				'$alt-text' => $rr['name'],
 				'$name' => $rr['name'],
-				'$details' => $details  
+				'$details' => $pdesc . $details  
 
 
 			));
