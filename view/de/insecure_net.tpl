@@ -1,6 +1,8 @@
 <div id="profile-edit-insecure">
 <p>
-The social network that $name belongs to is an open network with limited or non-existent privacy controls. 
-Please use appropriate discretion.
+Das Soziale Netzwerk dem $name angehört ist ein offenes Netzwerk das nur
+eingeschränkte oder nicht existente Privatspäreneinstellungen bietet.
+
+Bitte verhalte dich entsprechend diskret.
 </p>
 </div>
