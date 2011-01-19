@@ -6,10 +6,10 @@
 
 <div id="group-new-text">
 <p>
-Create a group of contacts/friends.
+Erstelle eine neue Gruppe für Freunde/Kontakte.
 
 <div id="group-new-input-wrapper">
-<label id="group-new-label" for="group-new-name" >Group Name: </label>
+<label id="group-new-label" for="group-new-name" >Gruppen Name: </label>
 <input name="groupname" id="group-new-name" />
 </div>
 <div id="group-new-input-end" ></div>
