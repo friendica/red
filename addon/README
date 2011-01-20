@@ -91,6 +91,14 @@ Current hooks:
 'plugin_settings_post' - called when the Addon Settings pages are submitted.
 	$b is the $_POST array
 
+'profile_post' - called when posting a profile page.
+	$b is the $_POST array
+
+'profile_edit' - called prior to output of profile edit page
+	$b is array
+		'profile' => profile (array) record from the database
+		'entry' => the (string) HTML of the generated entry
+
 'profile_advanced' - called when the HTML is generated for the 'Advanced profile', 
 	corresponding to the 'Profile' tab within a person's profile page.
 	$b is the (string) HTML representation of the generated profile
