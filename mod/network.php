@@ -2,6 +2,10 @@
 
 
 function network_init(&$a) {
+  if(! local_user())
+      goaway( $a->get_baseurl() . "/login" );
+  
+  
 	require_once('include/group.php');
 	if(! x($a->page,'aside'))
 		$a->page['aside'] = '';
@@ -22,8 +26,7 @@ function network_init(&$a) {
 function network_content(&$a, $update = 0) {
 
 	if(! local_user())
-		return '';
-
+    return "";
 	$o = '';
 
 	require_once("include/bbcode.php");
