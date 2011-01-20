@@ -667,6 +667,7 @@ input#dfrn-url {
 	margin-left: 20px;
 }
 
+#profile-edit-pdesc-desc,
 #profile-edit-keywords-desc {
 	float: left;
 	margin-left: 20px;
@@ -1872,3 +1873,10 @@ a.mail-list-link {
 #birthday-wrapper {
 	margin-bottom: 20px;
 }
+
+#network-new-link {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+
