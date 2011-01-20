@@ -303,7 +303,7 @@ function network_content(&$a, $update = 0) {
 					$template = $wallwall;
 					$commentww = 'ww';
 					// If it is our contact, use a friendly redirect link
-					if(($item['owner-link'] == $item['url']) 
+					if((link_compare($item['owner-link'],$item['url'])) 
 						&& ($item['network'] === 'dfrn')) {
 						$owner_url = $redirect_url;
 						$osparkle = ' sparkle';
@@ -350,7 +350,7 @@ function network_content(&$a, $update = 0) {
 
 			// Post was remotely authored.
 
-			$diff_author = (($item['url'] !== $item['author-link']) ? true : false);
+			$diff_author = ((link_compare($item['url'],$item['author-link'])) ? false : true);
 
 			$profile_name   = (((strlen($item['author-name']))   && $diff_author) ? $item['author-name']   : $item['name']);
 			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $thumb);
@@ -361,7 +361,7 @@ function network_content(&$a, $update = 0) {
 			// Can we use our special contact URL for this author? 
 
 			if(strlen($item['author-link'])) {
-				if($item['author-link'] == $item['url'] && ($item['network'] === 'dfrn') && (! $item['self'])) {
+				if((link_compare($item['author-link'],$item['url'])) && ($item['network'] === 'dfrn') && (! $item['self'])) {
 					$profile_link = $redirect_url;
 					$sparkle = ' sparkle';
 				}

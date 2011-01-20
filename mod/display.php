@@ -202,7 +202,7 @@ function display_content(&$a) {
 					$template = $wallwall;
 					$commentww = 'ww';
 					// If it is our contact, use a friendly redirect link
-					if(($item['owner-link'] == $item['url']) && ($item['network'] === 'dfrn')) {
+					if((link_compare($item['owner-link'],$item['url'])) && ($item['network'] === 'dfrn')) {
 						$owner_url = $redirect_url;
 						$osparkle = ' sparkle';
 					}
@@ -211,7 +211,7 @@ function display_content(&$a) {
 				}
 			}
 
-			$diff_author = (($item['url'] !== $item['author-link']) ? true : false);
+			$diff_author = ((link_compare($item['url'],$item['author-link'])) ? false : true);
 
 			$profile_name   = (((strlen($item['author-name']))   && $diff_author) ? $item['author-name']   : $item['name']);
 			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $item['thumb']);
