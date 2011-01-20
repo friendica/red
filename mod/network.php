@@ -2,8 +2,9 @@
 
 
 function network_init(&$a) {
-  if(! local_user())
-      goaway( $a->get_baseurl() . "/login" );
+	if(! local_user()) {
+		return;
+	}
   
   
 	require_once('include/group.php');
@@ -26,7 +27,8 @@ function network_init(&$a) {
 function network_content(&$a, $update = 0) {
 
 	if(! local_user())
-    return "";
+    	return login(false);
+
 	$o = '';
 
 	require_once("include/bbcode.php");
