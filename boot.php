@@ -3,7 +3,7 @@
 set_time_limit(0);
 
 define ( 'BUILD_ID',               1033   );
-define ( 'FRIENDIKA_VERSION',      '2.01.1004' );
+define ( 'FRIENDIKA_VERSION',      '2.01.1005' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.0'  );
 
 define ( 'EOL',                    "<br />\r\n"     );
@@ -2191,3 +2191,22 @@ function get_birthdays() {
 
 }}
 
+/**
+ *
+ * Compare two URLs to see if they are the same, but ignore
+ * slight but hopefully insignificant differences such as if one 
+ * is https and the other isn't, or if one is www.something and 
+ * the other isn't - and also ignore case differences.
+ *
+ * Return true if the URLs match, otherwise false.
+ *
+ */
+
+if(! function_exists('link_compare')) {
+function link_compare($a,$b) {
+	$a1 = str_replace(array('https:','//www.'), array('http:','//'), $a);
+	$b1 = str_replace(array('https:','//www.'), array('http:','//'), $b);
+	if(strcasecmp($a1,$b1) === 0)
+		return true;
+	return false;
+}}

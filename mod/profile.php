@@ -297,7 +297,7 @@ function profile_content(&$a, $update = 0) {
 
 			$profile_url = $item['url'];
 
-			// This is my profile but I'm not the author of this post/comment. If it's somebody that's a fan or mutual friend,
+			// This is my profile page but I'm not the author of this post/comment. If it's somebody that's a fan or mutual friend,
 			// I can go directly to their profile as an authenticated guest.
 
 			if(local_user() && ($item['contact-uid'] == $_SESSION['uid']) 
@@ -314,7 +314,7 @@ function profile_content(&$a, $update = 0) {
 			// local contact info at all. In this module you should never encounter a third-party author, but we still will do
 			// the right thing if you ever do. 
 
-			$diff_author = (($item['url'] !== $item['author-link']) ? true : false);
+			$diff_author = ((link_compare($item['url'],$item['author-link'])) ? false : true);
 
 			$profile_name   = (((strlen($item['author-name']))   && $diff_author) ? $item['author-name']   : $item['name']);
 			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $item['thumb']);
