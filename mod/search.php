@@ -81,6 +81,7 @@ function search_content(&$a) {
 
 		foreach($r as $item) {
 
+			$total       = 0;
 			$comment     = '';
 			$owner_url   = '';
 			$owner_photo = '';
@@ -90,6 +91,8 @@ function search_content(&$a) {
 			if(((activity_match($item['verb'],ACTIVITY_LIKE)) || (activity_match($item['verb'],ACTIVITY_DISLIKE))) 
 				&& ($item['id'] != $item['parent']))
 				continue;
+
+			$total ++;
 
 			$profile_name   = ((strlen($item['author-name']))   ? $item['author-name']   : $item['name']);
 			$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $item['thumb']);
@@ -129,6 +132,13 @@ function search_content(&$a) {
 
 		}
 	}
+
+
+	if(! $r[0]['total']) {
+		notice('No results.');
+		return $o;
+	}
+
 
 	$o .= paginate($a);
 

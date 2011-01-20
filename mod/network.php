@@ -5,6 +5,16 @@ function network_init(&$a) {
 	require_once('include/group.php');
 	if(! x($a->page,'aside'))
 		$a->page['aside'] = '';
+
+	$a->page['aside'] .= '<div id="network-new-link">';
+
+	if(($a->argc > 1 && $a->argv[1] === 'new') || ($a->argc > 2 && $a->argv[2] === 'new'))
+		$a->page['aside'] .= '<a href="' . $a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . '">' . t('Normal View') . '</a>';
+	else 
+		$a->page['aside'] .= '<a href="' . $a->get_baseurl() . '/' . $a->cmd . '/new' . '">' . t('New Item View') . '</a>';
+
+	$a->page['aside'] .= '</div>';
+
 	$a->page['aside'] .= group_side('network','network');
 }
 
@@ -25,11 +35,21 @@ function network_content(&$a, $update = 0) {
 	if(! $update) {
 		$o .= '<script>	$(document).ready(function() { $(\'#nav-network-link\').addClass(\'nav-selected\'); });</script>';
 
+		$nouveau = false;
+
+		if(($a->argc > 2) && $a->argv[2] === 'new')
+			$nouveau = true;
+
 			// pull out the group here because the updater might have different args
 		if($a->argc > 1) {
-			$group = intval($a->argv[1]);
-			$group_acl = array('allow_gid' => '<' . $group . '>');
+			if($a->argv[1] === 'new')
+				$nouveau = true;
+			else {
+				$group = intval($a->argv[1]);
+				$group_acl = array('allow_gid' => '<' . $group . '>');
+			}
 		}
+
 		$_SESSION['return_url'] = $a->cmd;
 
 		$geotag = (($a->user['allow_location']) ? load_view_file('view/jot_geotag.tpl') : '');
@@ -111,6 +131,7 @@ function network_content(&$a, $update = 0) {
 				$contact_str = ' 0 ';
 				notice( t('Group is empty'));
 		}
+
 		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `contact-id` IN ( $contact_str )) ";
 		$o = '<h4>' . t('Group: ') . $r[0]['name'] . '</h4>' . $o;
 	}
@@ -130,22 +151,39 @@ function network_content(&$a, $update = 0) {
 	if(count($r))
 		$a->set_pager_total($r[0]['total']);
 
-	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-		`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-		`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`, 
-		`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-		FROM `item`, (SELECT `p`.`id`,`p`.`created` FROM `item` AS `p` WHERE `p`.`parent`=`p`.`id`) as `parentitem`,
-             `contact` 
-		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-		AND `contact`.`id` = `item`.`contact-id`
-		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-		AND `item`.`parent` = `parentitem`.`id`
-		$sql_extra
-		ORDER BY `parentitem`.`created`  DESC, `item`.`gravity` ASC, `item`.`created` ASC LIMIT %d ,%d ",
-		intval($_SESSION['uid']),
-		intval($a->pager['start']),
-		intval($a->pager['itemspage'])
-	);
+	if($nouveau) {
+		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
+			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
+			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`, 
+			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
+			FROM `item`, `contact`
+			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+			AND `contact`.`id` = `item`.`contact-id`
+			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+			$sql_extra
+			ORDER BY `item`.`created` DESC LIMIT %d ,%d ",
+			intval($_SESSION['uid']),
+			intval($a->pager['start']),
+			intval($a->pager['itemspage'])
+		);
+	}
+	else {
+		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
+			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
+			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`, 
+			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
+			FROM `item`, (SELECT `p`.`id`,`p`.`created` FROM `item` AS `p` WHERE `p`.`parent`=`p`.`id`) as `parentitem`, `contact` 
+			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+			AND `contact`.`id` = `item`.`contact-id`
+			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+			AND `item`.`parent` = `parentitem`.`id`
+			$sql_extra
+			ORDER BY `parentitem`.`created`  DESC, `item`.`gravity` ASC, `item`.`created` ASC LIMIT %d ,%d ",
+			intval($_SESSION['uid']),
+			intval($a->pager['start']),
+			intval($a->pager['itemspage'])
+		);
+	}
 
 
 	$cmnt_tpl = load_view_file('view/comment_item.tpl');
@@ -157,6 +195,64 @@ function network_content(&$a, $update = 0) {
 	$dlike = array();
 	
 	if(count($r)) {
+
+		if($nouveau) {
+
+			$tpl = load_view_file('view/search_item.tpl');
+			$droptpl = load_view_file('view/wall_fake_drop.tpl');
+
+			foreach($r as $item) {
+
+				$comment     = '';
+				$owner_url   = '';
+				$owner_photo = '';
+				$owner_name  = '';
+				$sparkle     = '';
+			
+				$profile_name   = ((strlen($item['author-name']))   ? $item['author-name']   : $item['name']);
+				$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $item['thumb']);
+				$profile_link   = ((strlen($item['author-link']))   ? $item['author-link']   : $item['url']);
+
+
+				$location = (($item['location']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : '');
+				$coord = (($item['coord']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['coord']) . '">' . $item['coord'] . '</a>' : '');
+				if($coord) {
+					if($location)
+						$location .= '<br /><span class="smalltext">(' . $coord . ')</span>';
+					else
+						$location = '<span class="smalltext">' . $coord . '</span>';
+				}
+
+				$drop = replace_macros($droptpl,array('$id' => $item['id']));
+				$lock = '<div class="wall-item-lock"></div>';
+
+				$o .= replace_macros($tpl,array(
+					'$id' => $item['item_id'],
+					'$profile_url' => $profile_link,
+					'$name' => $profile_name,
+					'$sparkle' => $sparkle,
+					'$lock' => $lock,
+					'$thumb' => $profile_avatar,
+					'$title' => $item['title'],
+					'$body' => bbcode($item['body']),
+					'$ago' => relative_date($item['created']),
+					'$location' => $location,
+					'$indent' => '',
+					'$owner_url' => $owner_url,
+					'$owner_photo' => $owner_photo,
+					'$owner_name' => $owner_name,
+					'$drop' => $drop,
+					'$conv' => '<a href="' . $a->get_baseurl() . '/display/' . $item['nickname'] . '/' . $item['id'] . '">' . t('View in context') . '</a>'
+				));
+
+			}
+			$o .= paginate($a);
+
+			return $o;
+
+		}
+
+
 
 		foreach($r as $item) {
 			like_puller($a,$item,$alike,'like');
