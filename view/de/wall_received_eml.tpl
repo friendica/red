@@ -1,18 +1,18 @@
 
-Dear $username,
+Hallo $username,
 
-	'$from' posted something to your profile wall.
+'$from' hat etwas auf deiner Profilwand gepostet.
 
 -----
 $body
 -----
 
-Please login at $siteurl to view or delete the item:
+Bitte melde dich unter $siteurl an um den Eintrag anzusehen oder zu löschen.
 
 $display
 
-Thank you,
-	$sitename administrator
+Besten Dank!
+        $sitename Administrator
 
  
 
