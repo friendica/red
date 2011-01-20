@@ -154,7 +154,7 @@ function network_content(&$a, $update = 0) {
 	if($nouveau) {
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`, 
+			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 			FROM `item`, `contact`
 			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
@@ -242,7 +242,7 @@ function network_content(&$a, $update = 0) {
 					'$owner_photo' => $owner_photo,
 					'$owner_name' => $owner_name,
 					'$drop' => $drop,
-					'$conv' => '<a href="' . $a->get_baseurl() . '/display/' . $item['nickname'] . '/' . $item['id'] . '">' . t('View in context') . '</a>'
+					'$conv' => '<a href="' . $a->get_baseurl() . '/display/' . $a->user['nickname'] . '/' . $item['id'] . '">' . t('View in context') . '</a>'
 				));
 
 			}
