@@ -1,13 +1,15 @@
 
 <div id="settings-nick-wrapper" >
 <p id="settings-nickname-desc">
-Your profile URL is currently <strong>'$baseurl/profile/$uid'</strong>.
-Setting a nickname will allow a friendly profile URL such as
-<strong>'nickname@$basepath'</strong>.
+Deine Profil URL ist im Moment <strong>'$baseurl/profile/$uid'</strong>.
+Wenn du einen Spitznamen wählst kann man diese URL freundlicher ausdrücken
+z.B. <strong>'spitzname@$basepath'</strong>.
 <br />
-Once set, it can never be changed. The nickname <strong>must</strong> start with a letter; and only letters, numbers, dashes, and underscores are allowed.
+Einmal gewählt kann der Spitzname nicht mehr geändert werden. Er
+<strong>muss</strong> mit einem Buchstaben beginnen. Es sind ausschließlich
+Buchstaben, Zahlen sowie Binde- und Unterstriche erlaubt.
 </p>
-<label id="settings-nick-label" for="settings-nick" >URL Nickname: </label>
+<label id="settings-nick-label" for="settings-nick" >URL Spitzname: </label>
 <input type="text" name="nick" id="settings-nick" value="$nickname" />
 </div>
 <div id="settings-nick-end" ></div>
