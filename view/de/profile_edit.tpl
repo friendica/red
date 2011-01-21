@@ -1,4 +1,4 @@
-<h1>Edit Profile Details</h1>
+<h1>Proil Details Bearbeiten</h1>
 
 <div id="profile-edit-links">
 <ul>
