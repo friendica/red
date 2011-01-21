@@ -1,1 +1,1 @@
-	<a href="register" name="Create a New Account" id="register-link" >Register</a>
+	<a href="register" name="Neuen Account anlegen" id="register-link" >Registrieren</a>
