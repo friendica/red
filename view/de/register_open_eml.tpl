@@ -1,25 +1,22 @@
 
-Dear $username,
-	Thank you for registering at $sitename. Your account has been created. 
-The login details are as follows:
+Lieber $username,
+danke für die Registrierung bei $sitename. Dein neuer Account wurde angelegt.
+Die Anmeldedetails sind die Folgenden.
+
+Adresse der Seite: $siteurl
+Anmelde Name: $email
+Passwort: $password
+
+Du kannst dein Passwort auf der "Einstellungen" Seite deines Accounts ändern
+nachdem du dich angemeldet hast.
+
+Nimm dir bitte ein paar Augenblicke Zeit um die anderen Einstellungen deines
+Accounts zu bearbeiten. Standardmäßig ist dein Account privat und versteckt
+(unsichtbar für andere Personen). Falls du möchtest kannst du dein Profil
+veröffentlichen, damit andere Leute dich im Verzeichnis finden.
 
 
-Site Location:	$siteurl
-Login Name:	$email
-Password:	$password
+Vielen Dank und Willkommen auf $sitename.
 
-You may change your password from your account "Settings" page after logging 
-in.
-
-Please take a few moments to review the other account settings on that page. 
-By default your account is private and hidden (invisible to other people). 
-You might wish to change this by publishing your profile - so that it appears 
-in a directory and other people can find you. 
-
-
-Thank you and welcome to $sitename.
-
-Sincerely,
+Mit freundlichem Gruß,
 	$sitename Administrator
-
- 

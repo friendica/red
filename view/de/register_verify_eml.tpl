@@ -5,7 +5,7 @@ benötigt noch deine Zustimmung.
 Die Anmeldedetails sind Folgende:
 
 Kompletter Name: $username
-URL der Seite: $siteurl
+Adresse der Seite: $siteurl
 Anmelde Name: $email
 
 
