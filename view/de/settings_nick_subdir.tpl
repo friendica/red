@@ -1,5 +1,5 @@
 <p>
-Es scheint so als ob deine Webseite in einem Unterverzeichnis von $hostname
+Es scheint so als ob deine Friendika Installation in einem Unterverzeichnis von $hostname
 liegt, es könnte deshalb unzuverlässig arbeiten.
 </p>
 <p>
