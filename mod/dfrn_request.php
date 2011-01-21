@@ -590,8 +590,12 @@ function dfrn_request_content(&$a) {
 				$myaddr = $a->user['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3 );
 			}
 		}
-		else { 
-			$myaddr = ((x($_GET,'address')) ? urldecode($_GET['address']) : '');
+		elseif($x($_GET,'addr')) {
+			$myaddr = hex2bin($_GET['addr']);
+		}
+		else {
+			/* $_GET variables are already urldecoded */ 
+			$myaddr = ((x($_GET,'address')) ? $_GET['address'] : '');
 		}
 
 		/**
