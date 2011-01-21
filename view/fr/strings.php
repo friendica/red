@@ -186,17 +186,17 @@ $a->strings['You may need to import the file "database.sql" manually using phpmy
 $a->strings['Welcome to Friendika.'] = 'Bienvenue sur Friendika.';
 $a->strings['Submit'] = 'Envoyer';
 $a->strings['Could not find a command line version of PHP in the web server PATH.'] = 'Impossible de trouver la version "ligne de commande" de PHP dans le PATH du serveur web.';
+$a->strings['This is required. Please adjust the configuration file .htconfig.php accordingly.'] = 'Ceci est requis. Merci d\'ajuster la configuration dans le fichier .htconfig.php en conséquence.';
+$a->strings['The command line version of PHP on your system does not have "register_argc_argv" enabled.'] = 'La version "ligne de commande" de PHP de votre système n\'a pas "register_argc_argv" d\'activé.';
+$a->strings['This is required for message delivery to work.'] = 'Ceci est requis pour que la livraison des messages fonctionne.';
+$a->strings['Error: the "openssl_pkey_new" function on this system is not able to generate encryption keys'] = 'Erreur: la fonction "openssl_pkey_new" de ce système ne permet pas de générer des clés de chiffrement';
+$a->strings['If running under Windows, please see "http://www.php.net/manual/en/openssl.installation.php".'] = 'Si vous utilisez Windows, merci de vous réferer à "http://www.php.net/manual/en/openssl.installation.php".';
+$a->strings['Error: Apache webserver mod-rewrite module is required but not installed.'] = 'Erreur: Le module "rewrite" du serveur web Apache est requis mais pas installé.';
+$a->strings['Error: libCURL PHP module required but not installed.'] = 'Erreur: Le module PHP "libCURL" est requis mais pas installé.';
+$a->strings['Error: GD graphics PHP module with JPEG support required but not installed.'] = 'Erreur: Le module PHP "GD" disposant du support JPEG est requis mais pas installé.';
+$a->strings['Error: openssl PHP module required but not installed.'] = 'Erreur: Le module PHP "openssl" est requis mais pas installé.';
+$a->strings['Error: mysqli PHP module required but not installed.'] = 'Erreur: Le module PHP "mysqli" est requis mais pas installé.';
 // TODO
-$a->strings['This is required. Please adjust the configuration file .htconfig.php accordingly.'] = 'This is required. Please adjust the configuration file .htconfig.php accordingly.';
-$a->strings['The command line version of PHP on your system does not have "register_argc_argv" enabled.'] = 'The command line version of PHP on your system does not have "register_argc_argv" enabled.';
-$a->strings['This is required for message delivery to work.'] = 'This is required for message delivery to work.';
-$a->strings['Error: the "openssl_pkey_new" function on this system is not able to generate encryption keys'] = 'Error: the "openssl_pkey_new" function on this system is not able to generate encryption keys';
-$a->strings['If running under Windows, please see "http://www.php.net/manual/en/openssl.installation.php".'] = 'If running under Windows, please see "http://www.php.net/manual/en/openssl.installation.php".';
-$a->strings['Error: Apache webserver mod-rewrite module is required but not installed.'] = 'Error: Apache webserver mod-rewrite module is required but not installed.';
-$a->strings['Error: libCURL PHP module required but not installed.'] = 'Error: libCURL PHP module required but not installed.';
-$a->strings['Error: GD graphics PHP module with JPEG support required but not installed.'] = 'Error: GD graphics PHP module with JPEG support required but not installed.';
-$a->strings['Error: openssl PHP module required but not installed.'] = 'Error: openssl PHP module required but not installed.';
-$a->strings['Error: mysqli PHP module required but not installed.'] = 'Error: mysqli PHP module required but not installed.';
 $a->strings['The web installer needs to be able to create a file called ".htconfig.php" in the top folder of your web server and it is unable to do so.'] = 'The web installer needs to be able to create a file called ".htconfig.php" in the top folder of your web server and it is unable to do so.';
 $a->strings['This is most often a permission setting, as the web server may not be able to write files in your folder - even if you can.'] = 'This is most often a permission setting, as the web server may not be able to write files in your folder - even if you can.';
 $a->strings['Please check with your site documentation or support people to see if this situation can be corrected.'] = 'Please check with your site documentation or support people to see if this situation can be corrected.';
