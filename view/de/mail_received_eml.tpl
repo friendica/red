@@ -11,7 +11,7 @@ Bitte melde dich unter $siteurl an um deine privaten Nachrichte zu lesen und zu
 beantworten.
 
 Viele Grüße,
-    $sitenname Administrator
+    $sitename Administrator
 
  
 
