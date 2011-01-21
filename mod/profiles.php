@@ -10,6 +10,8 @@ function profiles_post(&$a) {
 
 	$namechanged = false;
 
+	call_hooks('profile_post', $_POST);
+
 	if(($a->argc > 1) && ($a->argv[1] !== "new") && intval($a->argv[1])) {
 		$orig = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($a->argv[1]),
@@ -388,6 +390,9 @@ function profiles_content(&$a) {
 			'$education' => $r[0]['education'],
 			'$contact' => $r[0]['contact']
 		));
+
+		$arr = array('profile' => $r[0], 'entry' => $o);
+		call_hooks('profile_edit', $arr);
 
 		return $o;
 	}
