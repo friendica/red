@@ -1,26 +1,21 @@
 
-A new user registration request was received at $sitename which requires 
-your approval. 
+Ein neuer Nutzer hat sich auf $sitename registriert. Diese Registration
+benötigt noch deine Zustimmung.
+
+Die Anmeldedetails sind Folgende:
+
+Kompletter Name: $username
+URL der Seite: $siteurl
+Anmelde Name: $email
 
 
-The login details are as follows:
-
-Full Name:	$username
-Site Location:	$siteurl
-Login Name:	$email
-
-
-To approve this request please visit the following link:
-
+Um dieser Anmeldung zuzustimmen folge bitte diesem Link:
 
 $siteurl/regmod/allow/$hash 
 
 
-To deny the request and remove the account, please visit:
-
+Um die Anfrage abzulehen und den Account zu entfernen folge diesem Link:
 
 $siteurl/regmod/deny/$hash
 
-
-Thank you.
-
+Besten Dank!
