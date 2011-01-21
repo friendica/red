@@ -38,11 +38,11 @@ function follow_post(&$a) {
 		$ret = scrape_dfrn($dfrn);
 		if(is_array($ret) && x($ret,'dfrn-request')) {
 			if(strlen($a->path))
-				$myaddr = urlencode($a->get_baseurl() . '/profile/' . $a->user['nickname']);
+				$myaddr = bin2hex($a->get_baseurl() . '/profile/' . $a->user['nickname']);
 			else
-				$myaddr = urlencode($a->user['nickname'] . '@' . $a->get_hostname());
+				$myaddr = bin2hex($a->user['nickname'] . '@' . $a->get_hostname());
  
-			goaway($ret['dfrn-request'] . "&address=$myaddr");
+			goaway($ret['dfrn-request'] . "&addr=$myaddr");
 		
 			// NOTREACHED
 		}
