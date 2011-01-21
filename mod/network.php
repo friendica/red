@@ -2,6 +2,12 @@
 
 
 function network_init(&$a) {
+	if(! local_user()) {
+		notice( t('Permission denied.') . EOL);
+		return;
+	}
+  
+  
 	require_once('include/group.php');
 	if(! x($a->page,'aside'))
 		$a->page['aside'] = '';
@@ -22,7 +28,7 @@ function network_init(&$a) {
 function network_content(&$a, $update = 0) {
 
 	if(! local_user())
-		return '';
+    	return login(false);
 
 	$o = '';
 
