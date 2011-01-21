@@ -1,16 +1,16 @@
-<h3>Password Reset</h3>
+<h3>Zurücksetzen des Passworts</h3>
 
 <p>
-Your password has been reset as requested.
+Dein Passwort wurde wie gewünscht zurück gesetzt.
 </p>
 <p>
-Your new password is
+Dein neues Passwort lautet:
 </p>
 <p>
 $newpass
 </p>
 <p>
-Save or copy your new password - and then <a href="$baseurl" >click here to login</a>.
+Sichere oder kopiere dein neues Passwort und melde dich <a href="$baseurl" >dann hier an</a>.
 </p>
 <p>
-Your password may be changed from the 'Settings' page after successful login.
+Nachdem du dich angemeldet hast kannst du dein Passwort auf der "Einstellungen" Seite ändern.
