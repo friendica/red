@@ -70,7 +70,7 @@ $rating
 </div>
 <div id="contact-edit-rating-explain">
 <p>
-Bitte numm dir einen Moment um deine Auswahl zu kommentieren wenn du meinst das
+Bitte nimm dir einen Moment um deine Auswahl zu kommentieren wenn du meinst das
 könnte anderen weiter helfen.
 </p>
 <textarea id="contact-edit-rating-text" name="reason" rows="3" cols="64" >$reason</textarea>
