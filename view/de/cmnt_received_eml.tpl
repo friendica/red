@@ -1,8 +1,7 @@
 
 Hallo $username,
 
-        '$from' hat ein Ding oder eine Konversation kommentiert welchem/r du
-        auch folgst.
+'$from' hat einen Pinnwandeintrag kommentiert dem du auch folgst.
 
 -----
 $body
