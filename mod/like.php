@@ -150,7 +150,7 @@ EOT;
 	$arr['author-link'] = $contact['url'];
 	$arr['author-avatar'] = $contact['thumb'];
 	$arr['body'] = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]' . ' ' .  t('likes') . ' ' 
-		. '[url=' . $owner['url'] . ']' . $owner['name'] . t('\'s') . '[/url]' . ' '
+		. '[url=' . $item['author-link'] . ']' . $item['author-name'] . t('\'s') . '[/url]' . ' '
 		. '[url=' . $a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id'] . ']' . $post_type . '[/url]' ;
 
 	$arr['verb'] = $activity;
