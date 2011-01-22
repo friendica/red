@@ -39,8 +39,8 @@ EOT;
 
 $o .= '<div id="advanced-profile-dob">' 
 	. ((intval($a->profile['dob'])) 
-		? day_translate(datetime_convert('UTC',date_default_timezone_get(),$a->profile['dob'],'j F, Y'))
-		: day_translate(datetime_convert('UTC',date_default_timezone_get(),'2001-' . substr($a->profile['dob'],6),'j F'))) 
+		? day_translate(datetime_convert('UTC','UTC',$a->profile['dob'] . ' 00:00 +00:00','j F, Y'))
+		: day_translate(datetime_convert('UTC','UTC','2001-' . substr($a->profile['dob'],6) . ' 00:00 +00:00','j F'))) 
 	. "</div>\r\n</div>";
 
 $o .= '<div id="advanced-profile-dob-end"></div>';
