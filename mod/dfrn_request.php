@@ -590,7 +590,7 @@ function dfrn_request_content(&$a) {
 				$myaddr = $a->user['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3 );
 			}
 		}
-		elseif($x($_GET,'addr')) {
+		elseif(x($_GET,'addr')) {
 			$myaddr = hex2bin($_GET['addr']);
 		}
 		else {
