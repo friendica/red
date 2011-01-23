@@ -149,7 +149,7 @@ EOT;
 	$arr['author-name'] = $contact['name'];
 	$arr['author-link'] = $contact['url'];
 	$arr['author-avatar'] = $contact['thumb'];
-	$arr['body'] = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]' . ' ' .  t('likes') . ' ' 
+	$arr['body'] = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]' . ' ' . $bodyverb . ' ' 
 		. '[url=' . $item['author-link'] . ']' . $item['author-name'] . t('\'s') . '[/url]' . ' '
 		. '[url=' . $a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id'] . ']' . $post_type . '[/url]' ;
 
