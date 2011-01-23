@@ -291,6 +291,9 @@ function display_content(&$a) {
 		}
 
 	}
+
+	$o .= '<div class="cc-license">' . t('Shared content is covered by the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> license.') . '</div>';
+
 	return $o;
 }
 
