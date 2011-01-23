@@ -280,7 +280,7 @@
 					);
 				}
 				break;
-			default:
+			case 'stat':
 				if($followup && $contact['notify']) {
 					logger('notifier: slapdelivery: ' . $contact['name']);
 					$deliver_status = slapper($owner,$contact['notify'],$slap);
@@ -323,6 +323,11 @@
 						}
 					}
 				}
+				break;
+			case 'mail':
+			case 'dspr':
+			case 'feed':
+			default:
 				break;
 		}
 	}

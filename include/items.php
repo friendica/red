@@ -637,7 +637,7 @@ function item_store($arr) {
 
 	$arr['body']          = str_replace(
 								array('&amp;amp;', '&amp;gt;', '&amp;lt;', '&amp;quot;'),
-								array('&amp;'    , '&gt;'    , '&lt;',     '&quot'),
+								array('&amp;'    , '&gt;'    , '&lt;',     '&quot;'),
 								$arr['body']
 							);
 

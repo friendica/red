@@ -35,7 +35,7 @@
 	// 'stat' clause is a temporary measure until we have federation subscriptions working both directions
 	$contacts = q("SELECT * FROM `contact` 
 		WHERE ( ( `network` = 'dfrn' AND ( `dfrn-id` != '' OR (`issued-id` != '' AND `duplex` = 1)))
-		OR ( `network` = 'stat' AND `poll` != '' ) ) 
+		OR ( `network` IN ( 'stat', 'feed' ) AND `poll` != '' )) 
 		AND `self` = 0 AND `blocked` = 0 AND `readonly` = 0 ORDER BY RAND()");
 
 	if(! count($contacts))
