@@ -57,10 +57,10 @@ function invite_content(&$a) {
 		'$invite' => t('Send invitations'),
 		'$addr_text' => t('Enter email addresses, one per line:'),
 		'$msg_text' => t('Your message:'),
-		'$default_message' => t('Please join my social network on ') . $a->config['sitename'] . t("\r\n") . t("\r\n")
-			. t('To accept this invitation, please visit:') . t("\r\n") . t("\r\n") . $a->get_baseurl()
-			. t("\r\n") . t("\r\n") . t('Once you have registered, please connect with me via my profile page at:') 
-			. t("\r\n") . t("\r\n") . $a->get_baseurl() . '/profile/' . $a->user['nickname'] ,
+		'$default_message' => t('Please join my social network on ') . $a->config['sitename'] . "\r\n" . "\r\n"
+			. t('To accept this invitation, please visit:') . "\r\n" . "\r\n" . $a->get_baseurl()
+			. "\r\n" . "\r\n" . t('Once you have registered, please connect with me via my profile page at:') 
+			. "\r\n" . "\r\n" . $a->get_baseurl() . '/profile/' . $a->user['nickname'] ,
 		'$submit' => t('Submit')
 	));
 
