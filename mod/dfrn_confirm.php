@@ -438,8 +438,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 
 				$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 
-			    proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"activity\" \"$i\" &",
-        		array(),$foo));
+			    //proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"activity\" \"$i\" &", array(),$foo));
+			    proc_run($php_path,"include/notifier.php","activity","$i");
 
 			}
 

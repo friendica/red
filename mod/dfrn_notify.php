@@ -283,9 +283,9 @@ function dfrn_notify_post(&$a) {
 
 					$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 
-					proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"comment-import\" \"$posted_id\" &", 
-						array(),$foo));
-
+					//proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"comment-import\" \"$posted_id\" &", array(),$foo));
+					proc_run($php_path,"include/notifier.php","comment-import","$posted_id");
+					
 					if((! $is_like) && ($importer['notify-flags'] & NOTIFY_COMMENT) && (! $importer['self'])) {
 						require_once('bbcode.php');
 						$from = stripslashes($datarray['author-name']);

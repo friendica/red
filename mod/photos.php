@@ -179,9 +179,8 @@ function photos_post(&$a) {
 					// send the notification upstream/downstream as the case may be
 
 					if($rr['visible'])
-						proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" & ",
-							array(),$foo));
-
+						//proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" & ",array(),$foo));
+						proc_run($php_path,"include/notifier.php","drop","$drop_id");
 				}
 			}
 		}
@@ -228,8 +227,8 @@ function photos_post(&$a) {
 				$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 
 				if($i[0]['visible'])
-					proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" & ",
-						array(),$foo));
+					//proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" & ", 	array(),$foo));
+					proc_run($php_path,"include/notifier.php","drop","$drop_id");
 			}
 		}
 
@@ -454,8 +453,8 @@ function photos_post(&$a) {
 
 					$item_id = item_store($arr);
 					$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
-					proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"tag\" \"$item_id\" & ",
-						array(),$foo));
+					//proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"tag\" \"$item_id\" & ",array(),$foo));
+					proc_run($php_path,"include/notifier.php","tag","$item_id");
 				}
 
 			}

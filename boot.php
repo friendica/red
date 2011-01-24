@@ -2215,3 +2215,33 @@ function link_compare($a,$b) {
 		return true;
 	return false;
 }}
+
+
+/**
+ * 
+ * Wrap calls to proc_close(proc_open()) and call hook
+ * so plugins can take part in process :)
+ * 
+ * args:
+ * $cmd program to run
+ *  next args are passed as $cmd command line
+ * 
+ * e.g.: proc_run("ls","-la","/tmp");
+ * 
+ * $cmd and string args are surrounded with ""
+ */
+if(! function_exists('run_proc')) {
+function proc_run($cmd){
+	$args = func_get_args();
+	foreach ($args as &$arg){
+		if(is_string($arg)) $arg='"'.$arg.'"';
+	}
+	$cmdline = implode($args," ");
+	
+	call_hooks("proc_run", $args);
+	
+	proc_close(proc_open($cmdline." &",array(),$foo));
+}}
+
+?>
+

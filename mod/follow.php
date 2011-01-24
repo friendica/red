@@ -206,8 +206,8 @@ function follow_post(&$a) {
 	// pull feed and consume it, which should subscribe to the hub.
 
 	$php_path = ((x($a->config,'php_path') && strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
-	proc_close(proc_open("\"$php_path\" \"include/poller.php\" \"$contact_id\" &", array(), $foo));
-
+	//proc_close(proc_open("\"$php_path\" \"include/poller.php\" \"$contact_id\" &", array(), $foo));
+	proc_run($php_path,"include/poller.php","$contact_id");
 
 	// create a follow slap
 
