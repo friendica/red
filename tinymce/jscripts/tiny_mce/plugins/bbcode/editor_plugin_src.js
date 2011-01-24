@@ -64,8 +64,8 @@
 			rep(/<u>/gi,"[u]");
 			rep(/<blockquote[^>]*>/gi,"[quote]");
 			rep(/<\/blockquote>/gi,"[/quote]");
-			rep(/<br \/>/gi,"\n");
-			rep(/<br\/>/gi,"\n");
+			rep(/<br \/>/gi,"\n\n");
+			rep(/<br\/>/gi,"\n\n");
 			rep(/<br>/gi,"\n");
 			rep(/<p>/gi,"");
 			rep(/<\/p>/gi,"\n");
@@ -98,6 +98,7 @@
 			rep(/\[url\](.*?)\[\/url\]/gi,"<a href=\"$1\">$1</a>");
 			rep(/\[img\](.*?)\[\/img\]/gi,"<img src=\"$1\" />");
 			rep(/\[color=(.*?)\](.*?)\[\/color\]/gi,"<span style=\"color: $1;\">$2</span>");
+//			rep(/\[\/code\]\s*\[code\]/gi,"<br />"); // fold multiline code
 			rep(/\[code\](.*?)\[\/code\]/gi,"<code>$1</code>");
 			rep(/\[quote.*?\](.*?)\[\/quote\]/gi,"<blockquote>$1</blockquote>");
 

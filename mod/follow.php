@@ -48,6 +48,8 @@ function follow_post(&$a) {
 		}
 	}
 
+	$network = 'stat';
+
 	if($hcard) {
 		$vcard = scrape_vcard($hcard);
 
@@ -63,13 +65,58 @@ function follow_post(&$a) {
 	if(! $profile)
 		$profile = $url;
 
-	// do we have enough information?
 
 	if(! x($vcard,'fn'))
 		if(x($vcard,'nick'))
 			$vcard['fn'] = $vcard['nick'];
 
+	if((! isset($vcard)) && (! $poll)) {
+
+		$ret = scrape_feed($url);
+
+		if(count($ret) && $ret['feed_atom']) {
+			$poll = $ret['feed_atom'];
+			$vcard = array();
+			require_once('simplepie/simplepie.inc');
+		    $feed = new SimplePie();
+			$xml = fetch_url($poll);
+
+    		$feed->set_raw_data($xml);
+
+		    $feed->init();
+
+			$vcard['photo'] = $feed->get_image_url();
+			$author = $feed->get_author();
+			if($author) {			
+				$vcard['fn'] = trim($author->get_name());
+				$vcard['nick'] = strtolower($vcard['fn']);
+				if(strpos($vcard['nick'],' '))
+					$vcard['nick'] = trim(substr($vcard['nick'],0,strpos($vcard['nick'],' ')));
+				$email = $author->get_email();
+			}
+			else {
+				$item = $feed->get_item(0);
+				if($item) {
+					$author = $item->get_author();
+					if($author) {			
+						$vcard['fn'] = trim($author->get_name());
+						$vcard['nick'] = strtolower($vcard['fn']);
+						if(strpos($vcard['nick'],' '))
+							$vcard['nick'] = trim(substr($vcard['nick'],0,strpos($vcard['nick'],' ')));
+						$email = $author->get_email();
+					}
+				}
+			}
+			if((! $vcard['photo']) && strlen($email))
+				$vcard['photo'] = gravatar_img($email);
+			$network = 'feed';
+        }
+	}
+
 	logger('follow: poll=' . $poll . ' notify=' . $notify . ' profile=' . $profile . ' vcard=' . print_r($vcard,true));
+
+
+	// do we have enough information?
 	
 	if(! ((x($vcard['fn'])) && ($poll) && ($profile))) {
 		notice( t('The profile address specified does not provide adequate information.') . EOL);
@@ -115,7 +162,7 @@ function follow_post(&$a) {
 			dbesc($vcard['fn']),
 			dbesc($vcard['nick']),
 			dbesc($vcard['photo']),
-			dbesc('stat'),
+			dbesc($network),
 			intval(REL_FAN)
 		);
 	}
@@ -157,6 +204,9 @@ function follow_post(&$a) {
 
 
 	// pull feed and consume it, which should subscribe to the hub.
+
+	$php_path = ((x($a->config,'php_path') && strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
+	proc_close(proc_open("\"$php_path\" \"include/poller.php\" \"$contact_id\" &", array(), $foo));
 
 
 	// create a follow slap

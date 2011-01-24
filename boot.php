@@ -1687,6 +1687,11 @@ function activity_match($haystack,$needle) {
 if(! function_exists('get_tags')) {
 function get_tags($s) {
 	$ret = array();
+
+	// ignore anything in a code block
+
+	$s = preg_replace('/\[code\](.*?)\[\/code\]/sm','',$s);
+
 	if(preg_match_all('/([@#][^ \x0D\x0A,:?]*)([ \x0D\x0A,:?]|$)/',$s,$match)) {
 		foreach($match[1] as $match) {
 			if(strstr($match,"]")) {

@@ -22,6 +22,8 @@ function scrape_dfrn($url) {
 
 	foreach($items as $item) {
 		$x = $item->getAttribute('rel');
+		if(($x === 'alternate') && ($item->getAttribute('type') === 'application/atom+xml'))
+			$ret['feed_atom'] = $item->getAttribute('href');
 		if(substr($x,0,5) == "dfrn-")
 			$ret[$x] = $item->getAttribute('href');
 		if($x === 'lrdd') {
@@ -131,6 +133,34 @@ function scrape_vcard($url) {
 					$ret['nick'] = $x->textContent;
 			}
 		}
+	}
+
+	return $ret;
+}}
+
+
+if(! function_exists('scrape_feed')) {
+function scrape_feed($url) {
+
+	$ret = array();
+	$s = fetch_url($url);
+
+	if(! $s) 
+		return $ret;
+
+	$dom = HTML5_Parser::parse($s);
+
+	if(! $dom)
+		return $ret;
+
+	$items = $dom->getElementsByTagName('link');
+
+	// get Atom link elements
+
+	foreach($items as $item) {
+		$x = $item->getAttribute('rel');
+		if(($x === 'alternate') && ($item->getAttribute('type') === 'application/atom+xml'))
+			$ret['feed_atom'] = $item->getAttribute('href');
 	}
 
 	return $ret;

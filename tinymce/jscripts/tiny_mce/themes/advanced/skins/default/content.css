@@ -18,6 +18,18 @@ del {color:red; text-decoration:line-through}
 cite {border-bottom:1px dashed blue}
 acronym {border-bottom:1px dotted #CCC; cursor:help}
 abbr {border-bottom:1px dashed #CCC; cursor:help}
+code {
+	font-family: Courier, monospace;
+	white-space: pre;
+	display: block;
+	overflow: auto;
+	border: 1px solid #444;
+	background: #EEE;
+	color: #444;
+	padding: 10px;
+	margin-top: 20px;
+}
+
 
 /* IE */
 * html body {

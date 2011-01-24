@@ -165,7 +165,11 @@ function item_post(&$a) {
 		}
 	}
 
+	/**
+	 * Fold multi-line [code] sequences
+	 */
 
+	$body = preg_replace('/\[\/code\]\s*\[code\]/m',"\n",$body); 
 
 	/**
 	 * Look for any tags and linkify them
@@ -228,7 +232,7 @@ function item_post(&$a) {
 					}
 				}
 				if($profile) {
-					$body = str_replace($name,'[url=' . $profile . ']' . $newname	. '[/url]', $body);
+					$body = str_replace('@' . $name, '@' . '[url=' . $profile . ']' . $newname	. '[/url]', $body);
 					$profile = str_replace(',','%2c',$profile);
 					if(strlen($str_tags))
 						$str_tags .= ',';
