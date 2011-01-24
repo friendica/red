@@ -165,7 +165,11 @@ function item_post(&$a) {
 		}
 	}
 
+	/**
+	 * Fold multi-line [code] sequences
+	 */
 
+	$body = preg_replace('/\[\/code\]\s*\[code\]/m',"\n",$body); 
 
 	/**
 	 * Look for any tags and linkify them
