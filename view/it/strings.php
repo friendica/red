@@ -188,7 +188,6 @@ $a->strings['Send invitations'] = 'Invia inviti';
 $a->strings['Enter email addresses, one per line:'] = 'Inserisci gli indirizzi email, uno per riga:';
 $a->strings['Your message:'] = 'Il tuo messaggio:';
 $a->strings['Please join my social network on '] = 'Unisciti al mio social network su ';
-$a->strings['\r\n'] = '';
 $a->strings['To accept this invitation, please visit:'] = 'Per accettare questo invito visita:';
 $a->strings['Once you have registered, please connect with me via my profile page at:'] = 'Una volta registrato, connettiti con me sul mio profilo a:';
 $a->strings['Unable to locate original post.'] = 'Impossibile trovare il messaggio originale.';
