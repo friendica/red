@@ -1453,8 +1453,9 @@ input#dfrn-url {
 	margin-top: 10px;
 }
 a.mail-list-link {
-	display: block;
-	padding: 4px 5px;
+    display: block;
+    font-size: 1.3em;
+    padding: 4px 0;
 }
 
 /*
@@ -1492,8 +1493,8 @@ a.mail-list-link {
 }
 
 .mail-conv-subject {
-	font-size: 1.1em;
-	margin-top: 10px;
+    font-size: 1.4em;
+    margin: 10px 0;
 }
 
 .mail-conv-outside-wrapper-end {
