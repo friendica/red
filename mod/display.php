@@ -173,6 +173,9 @@ function display_content(&$a) {
 
 			$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 
+			// I think this is redundant now but too chicken to remove it unless
+			// I've had six cups of coffee and tested it completely
+
 			if(($item['network'] === 'dfrn') && (! $item['self'] )) {
 				$profile_url = $redirect_url;
 				$sparkle = ' sparkle';
@@ -216,7 +219,18 @@ function display_content(&$a) {
 			$profile_name   = (((strlen($item['author-name']))   && $diff_author) ? $item['author-name']   : $item['name']);
 			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $item['thumb']);
 
-			$profile_link = $profile_url;
+			// Can we use our special contact URL for this author? 
+
+			if(strlen($item['author-link'])) {
+				if((link_compare($item['author-link'],$item['url'])) && ($item['network'] === 'dfrn') && (! $item['self'])) {
+					$profile_link = $redirect_url;
+					$sparkle = ' sparkle';
+				}
+				else {
+					$profile_link = $item['author-link'];
+					$sparkle = '';
+				}
+			}
 
 			if(($item['contact-id'] == remote_user()) || ($item['uid'] == local_user()))
 				$drop = replace_macros(load_view_file('view/wall_item_drop.tpl'), array('$id' => $item['id']));
