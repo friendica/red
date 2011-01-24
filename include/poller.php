@@ -32,10 +32,18 @@
 	if(($argc > 1) && ($argv[1] == 'force'))
 		$force = true;
 
+	if(($argc > 1) && intval($argv[1])) {
+		$manual_id = intval($argv[1]);
+		$force = true;
+	}
+
+	$sql_extra = (($manual_id) ? " AND `id` = $manual_id " : "");
+
 	// 'stat' clause is a temporary measure until we have federation subscriptions working both directions
 	$contacts = q("SELECT * FROM `contact` 
 		WHERE ( ( `network` = 'dfrn' AND ( `dfrn-id` != '' OR (`issued-id` != '' AND `duplex` = 1)))
-		OR ( `network` = 'stat' AND `poll` != '' ) ) 
+		OR ( `network` IN ( 'stat', 'feed' ) AND `poll` != '' ))
+		$sql_extra 
 		AND `self` = 0 AND `blocked` = 0 AND `readonly` = 0 ORDER BY RAND()");
 
 	if(! count($contacts))
