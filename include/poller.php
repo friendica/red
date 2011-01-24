@@ -19,11 +19,12 @@
 	$a->set_baseurl(get_config('system','url'));
 
 	logger('poller: start');
-
+	
 	// run queue delivery process in the background
 
 	$php_path = ((x($a->config,'php_path') && strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
-	proc_close(proc_open("\"$php_path\" \"include/queue.php\" &", array(), $foo));
+	//proc_close(proc_open("\"$php_path\" \"include/queue.php\" &", array(), $foo));
+	proc_run($php_path,"include/queue.php");
 
 
 	$hub_update = false;
@@ -46,8 +47,9 @@
 		$sql_extra 
 		AND `self` = 0 AND `blocked` = 0 AND `readonly` = 0 ORDER BY RAND()");
 
-	if(! count($contacts))
-		killme();
+	if(! count($contacts)){
+		killme(); return;
+	}
 
 	foreach($contacts as $contact) {
 

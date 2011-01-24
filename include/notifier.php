@@ -16,7 +16,7 @@
 	require_once('include/bbcode.php');
 
 	if($argc < 3)
-		exit;
+		return;
 
 	$a->set_baseurl(get_config('system','url'));
 
@@ -29,8 +29,9 @@
 		case 'mail':
 		default:
 			$item_id = intval($argv[2]);
-			if(! $item_id)
-				killme();
+			if(! $item_id){
+				killme(); return;
+			}
 			break;
 	}
 
@@ -42,8 +43,9 @@
 		$message = q("SELECT * FROM `mail` WHERE `id` = %d LIMIT 1",
 				intval($item_id)
 		);
-		if(! count($message))
-			killme();
+		if(! count($message)){
+			killme(); return;
+		}
 		$uid = $message[0]['uid'];
 		$recipients[] = $message[0]['contact-id'];
 		$item = $message[0];
@@ -55,8 +57,9 @@
 		$r = q("SELECT `parent`, `uid`, `edited` FROM `item` WHERE `id` = %d LIMIT 1",
 			intval($item_id)
 		);
-		if(! count($r))
-			killme();
+		if(! count($r)){
+			killme(); return;
+		}
 
 		$parent_id = $r[0]['parent'];
 		$uid = $r[0]['uid'];
@@ -66,8 +69,9 @@
 			intval($parent_id)
 		);
 
-		if(! count($items))
-			killme();
+		if(! count($items)){
+			killme(); return;
+		}
 	}
 
 	$r = q("SELECT `contact`.*, `user`.`nickname`, `user`.`sprvkey`, `user`.`spubkey`, `user`.`page-flags` 
@@ -78,9 +82,9 @@
 
 	if(count($r))
 		$owner = $r[0];
-	else
-		killme();
-
+	else {
+		killme(); return;
+	}
 	$hub = get_config('system','huburl');
 
 	// If this is a public conversation, notify the feed hub
@@ -150,8 +154,9 @@
 
 		$r = q("SELECT * FROM `contact` WHERE `id` IN ( $conversant_str ) AND `blocked` = 0 AND `pending` = 0");
 
-		if( ! count($r))
-			killme();
+		if( ! count($r)){
+			killme(); return;
+		}
 
 		$contacts = $r;
 	}
@@ -248,9 +253,9 @@
 	$r = q("SELECT * FROM `contact` WHERE `id` IN ( %s ) AND `blocked` = 0 ",
 		dbesc($recip_str)
 	);
-	if(! count($r))
-		killme();
-
+	if(! count($r)){
+		killme(); return;
+	}
 	// delivery loop
 
 	require_once('include/salmon.php');

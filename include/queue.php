@@ -50,9 +50,9 @@ function remove_queue_item($id) {
 		
 	$r = q("SELECT `id` FROM `queue` WHERE `last` < UTC_TIMESTAMP() - INTERVAL 15 MINUTE ");
 
-	if(! count($r))
-		killme();
-
+	if(! count($r)){
+		killme(); return;
+	}
 	// delivery loop
 
 	require_once('include/salmon.php');

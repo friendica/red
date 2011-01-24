@@ -11,7 +11,7 @@
 
 
 	if($argc != 2)
-		exit;
+		return;
 
 	load_config('system');
 
@@ -24,5 +24,5 @@
 
 	fetch_url($dir . '?url=' . bin2hex($argv[1]));
 
-	exit;
+	return;
 
