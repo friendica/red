@@ -854,6 +854,9 @@ input#dfrn-url {
 	width: 450px;
 	margin-left: 10px;
 	margin-bottom: 20px;
+	padding: 20px;
+	max-height: 400px;
+	overflow: auto;
 }
 
 .wall-item-title {
@@ -1879,7 +1882,3 @@ a.mail-list-link {
 	margin-bottom: 15px;
 }
 
-.wall-item-content {
-  max-height: 400px;
-  overflow:auto;
-}
