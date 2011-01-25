@@ -756,7 +756,7 @@ function get_item_contact($item,$contacts) {
 }
 
 
-function dfrn_deliver($owner,$contact,$atom) {
+function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 
 	$a = get_app();
 
@@ -827,6 +827,8 @@ function dfrn_deliver($owner,$contact,$atom) {
 
 	$postvars['dfrn_id']      = $idtosend;
 	$postvars['dfrn_version'] = DFRN_PROTOCOL_VERSION;
+	if($dissolve)
+		$postvars['dissolve'] = '1';
 
 	if(($contact['rel']) && ($contact['rel'] != REL_FAN) && (! $contact['blocked']) && (! $contact['readonly'])) {
 		$postvars['data'] = $atom;
@@ -838,7 +840,7 @@ function dfrn_deliver($owner,$contact,$atom) {
 		$postvars['data'] = str_replace('<dfrn:comment-allow>1','<dfrn:comment-allow>0',$atom);
 	}
 
-	if($rino && $rino_allowed) {
+	if($rino && $rino_allowed && (! $dissolve)) {
 		$key = substr(random_string(),0,16);
 		$data = bin2hex(aes_encrypt($postvars['data'],$key));
 		$postvars['data'] = $data;

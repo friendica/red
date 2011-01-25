@@ -11,6 +11,7 @@ function dfrn_notify_post(&$a) {
 	$challenge    = ((x($_POST,'challenge'))    ? notags(trim($_POST['challenge'])) : '');
 	$data         = ((x($_POST,'data'))         ? $_POST['data']                    : '');
 	$key          = ((x($_POST,'key'))          ? $_POST['key']                     : '');
+	$dissolve     = ((x($_POST,'dissolve'))     ? intval($_POST['dissolve'])        :  0);
 
 	$direction = (-1);
 	if(strpos($dfrn_id,':') == 1) {
@@ -51,6 +52,8 @@ function dfrn_notify_post(&$a) {
 	}
 		 
 
+
+
 	$r = q("SELECT `contact`.*, `contact`.`uid` AS `importer_uid`, 
 		`contact`.`pubkey` AS `cpubkey`, `contact`.`prvkey` AS `cprvkey`, `user`.* FROM `contact` 
 		LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid` 
@@ -65,18 +68,12 @@ function dfrn_notify_post(&$a) {
 		//NOTREACHED
 	}
 
+	// $importer in this case contains the contact record for the remote contact joined with the user record of our user. 
+
 	$importer = $r[0];
 
 	logger('dfrn_notify: received notify from ' . $importer['name'] . ' for ' . $importer['username']);
 	logger('dfrn_notify: data: ' . $data, LOGGER_DATA);
-
-	if($importer['readonly']) {
-		// We aren't receiving stuff from this person. But we will quietly ignore them
-		// rather than a blatant "go away" message.
-		logger('dfrn_notify: ignoring');
-		xml_status(0);
-		//NOTREACHED
-	}
 
 	if(strlen($key)) {
 		$rawkey = hex2bin(trim($key));
@@ -93,6 +90,28 @@ function dfrn_notify_post(&$a) {
 		logger('rino: received key : ' . $final_key);
 		$data = aes_decrypt(hex2bin($data),$final_key);
 		logger('rino: decrypted data: ' . $data, LOGGER_DATA);
+	}
+
+
+
+	if($dissolve == 1) {
+
+		/**
+		 * Relationship is dissolved permanently
+		 */
+ 
+		contact_remove($importer['id']);
+		logger('relationship dissolved : ' . $importer['name'] . ' dissolved ' . $importer['username']);
+		xml_status(0);
+
+	}
+
+	if($importer['readonly']) {
+		// We aren't receiving stuff from this person. But we will quietly ignore them
+		// rather than a blatant "go away" message.
+		logger('dfrn_notify: ignoring');
+		xml_status(0);
+		//NOTREACHED
 	}
 
 	// Consume notification feed. This may differ from consuming a public feed in several ways
