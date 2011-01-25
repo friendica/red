@@ -1880,6 +1880,6 @@ a.mail-list-link {
 }
 
 .wall-item-content {
-  max-height: 350px;
+  max-height: 400px;
   overflow:auto;
 }
