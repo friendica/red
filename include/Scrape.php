@@ -161,6 +161,8 @@ function scrape_feed($url) {
 		$x = $item->getAttribute('rel');
 		if(($x === 'alternate') && ($item->getAttribute('type') === 'application/atom+xml'))
 			$ret['feed_atom'] = $item->getAttribute('href');
+		if(($x === 'alternate') && ($item->getAttribute('type') === 'application/rss+xml'))
+			$ret['feed_rss'] = $item->getAttribute('href');
 	}
 
 	return $ret;
