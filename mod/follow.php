@@ -74,8 +74,8 @@ function follow_post(&$a) {
 
 		$ret = scrape_feed($url);
 
-		if(count($ret) && $ret['feed_atom']) {
-			$poll = $ret['feed_atom'];
+		if(count($ret) && ($ret['feed_atom'] || $ret['feed_rss'])) {
+			$poll = ((x($ret,'feed_atom')) ? $ret['feed_atom'] : $ret['feed_rss']);
 			$vcard = array();
 			require_once('simplepie/simplepie.inc');
 		    $feed = new SimplePie();
@@ -114,7 +114,6 @@ function follow_post(&$a) {
 	}
 
 	logger('follow: poll=' . $poll . ' notify=' . $notify . ' profile=' . $profile . ' vcard=' . print_r($vcard,true));
-
 
 	// do we have enough information?
 	
