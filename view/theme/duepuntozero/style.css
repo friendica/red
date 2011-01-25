@@ -1879,4 +1879,7 @@ a.mail-list-link {
 	margin-bottom: 15px;
 }
 
-
+.wall-item-content {
+  max-height: 350px;
+  overflow:auto;
+}
