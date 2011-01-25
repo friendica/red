@@ -423,18 +423,28 @@ function get_atom_elements($feed,$item) {
 	else
 		$res['private'] = 0;
 
-	$rawcreated = $item->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'published');
-	if($rawcreated)
-		$res['created'] = unxmlify($rawcreated[0]['data']);
 
 	$rawlocation = $item->get_item_tags(NAMESPACE_DFRN, 'location');
 	if($rawlocation)
 		$res['location'] = unxmlify($rawlocation[0]['data']);
 
 
+	$rawcreated = $item->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'published');
+	if($rawcreated)
+		$res['created'] = unxmlify($rawcreated[0]['data']);
+
+
 	$rawedited = $item->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'updated');
 	if($rawedited)
 		$res['edited'] = unxmlify($rawcreated[0]['data']);
+
+
+	if(! $res['created'])
+		$res['created'] = $item->get_date();
+
+	if(! $res['edited'])
+		$res['edited'] = $item->get_date();
+
 
 	$rawowner = $item->get_item_tags(NAMESPACE_DFRN, 'owner');
 	if($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data'])
@@ -1155,6 +1165,10 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 					);
 					$datarray['last-child'] = 1;
 				}
+				if(($contact['network'] === 'feed') || (! strlen($contact['poll']))) {
+					// one way feed - no remote comment ability
+					$datarray['last-child'] = 0;
+				}
 				$datarray['parent-uri'] = $parent_uri;
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $contact['id'];
@@ -1207,6 +1221,11 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 					$datarray['last-child'] = 1;
 				}
 
+				if(($contact['network'] === 'feed') || (! strlen($contact['poll']))) {
+					// one way feed - no remote comment ability
+					$datarray['last-child'] = 0;
+				}
+
 				$datarray['parent-uri'] = $item_id;
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $contact['id'];
@@ -1216,7 +1235,6 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 			}
 		}
 	}
-
 }
 
 function new_follower($importer,$contact,$datarray,$item) {
