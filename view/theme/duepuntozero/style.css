@@ -809,6 +809,8 @@ input#dfrn-url {
 }
 .wall-item-wrapper {
 	float: left;
+    margin-right: 5px;
+    width: 80px;
 }
 .wall-item-lock {
 	height: 20px;
