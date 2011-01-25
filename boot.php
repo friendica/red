@@ -2215,3 +2215,17 @@ function link_compare($a,$b) {
 		return true;
 	return false;
 }}
+
+
+if(! function_exists('prepare_body')) {
+function prepare_body($item) {
+
+	require_once('include/bbcode.php');
+
+	$s = smilies(bbcode($item['body']));
+
+	return $s;
+
+
+
+}}

@@ -87,11 +87,14 @@ function settings_post(&$a) {
 
 	$err = '';
 
+	$name_change = false;
+
 	if($username != $a->user['username']) {
-        	if(strlen($username) > 40)
-                	$err .= t(' Please use a shorter name.');
-        	if(strlen($username) < 3)
-                	$err .= t(' Name too short.');
+		$name_change = true;
+		if(strlen($username) > 40)
+			$err .= t(' Please use a shorter name.');
+		if(strlen($username) < 3)
+			$err .= t(' Name too short.');
 	}
 
 	if($email != $a->user['email']) {
@@ -164,6 +167,15 @@ function settings_post(&$a) {
 		intval($net_publish),
 		intval(local_user())
 	);
+
+
+	if($name_change) {
+		q("UPDATE `contact` SET `name` = '%s', `name-date` = '%s' WHERE `uid` = %d AND `self` = 1 LIMIT 1",
+			dbesc($username),
+			dbesc(datetime_convert()),
+			intval(local_user())
+		);
+	}		
 
 	if($old_visibility != $net_publish) {
 		// Update global directory in background
