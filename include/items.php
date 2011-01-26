@@ -1167,7 +1167,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 					);
 					$datarray['last-child'] = 1;
 				}
-				if(($contact['network'] === 'feed') || (! strlen($contact['poll']))) {
+				if(($contact['network'] === 'feed') || (! strlen($contact['notify']))) {
 					// one way feed - no remote comment ability
 					$datarray['last-child'] = 0;
 				}
@@ -1223,7 +1223,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 					$datarray['last-child'] = 1;
 				}
 
-				if(($contact['network'] === 'feed') || (! strlen($contact['poll']))) {
+				if(($contact['network'] === 'feed') || (! strlen($contact['notify']))) {
 					// one way feed - no remote comment ability
 					$datarray['last-child'] = 0;
 				}
