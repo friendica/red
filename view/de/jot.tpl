@@ -13,6 +13,11 @@
 		<input type="hidden" name="location" id="jot-location" value="$defloc" />
 		<input type="hidden" name="coord" id="jot-coord" value="" />
 
+<div id="profile-jot-plugin-wrapper" >
+	$jotplugins
+</div>
+<div id="profile-jot-plugin-end"></div>
+
 		<textarea rows="5" cols="64" class="profile-jot-text" id="profile-jot-text" name="body" ></textarea>
 
 <div id="profile-jot-submit-wrapper" >
