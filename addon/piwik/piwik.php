@@ -1,0 +1,64 @@
+<?php
+
+/*   Piwik Analytics Plugin for Friendika
+ *
+ *   Author: Tobias Diekershoff
+ *           tobias.diekershoff@gmx.net
+ *
+ *   License: 3-clause BSD license (same as Friendika)
+ *
+ *   Configuration:
+ *     Add the following two lines to your .htconfig.php file:
+ *
+ *     $a->config['piwik']['baseurl'] = 'www.example.com/piwik/';
+ *     $a->config['piwik']['sideid'] = '1';
+ *     $a->config['piwik']['optout'] = true;  // set to false to disable
+ *
+ *     Change the sideid to the ID that the Piwik tracker for your Friendika
+ *     installation has. Alter the baseurl to fit your needs, don't care
+ *     about http/https but beware to put the trailing / at the end of your
+ *     setting.
+ */
+
+function piwik_install() {
+	register_hook('page_end', 'addon/piwik/piwik.php', 'piwik_analytics');
+
+        logger("installed piwik plugin");
+}
+
+function piwik_uninstall() {
+	unregister_hook('page_end', 'addon/piwik/piwik.php', 'piwik_analytics');
+
+        logger("uninstalled piwik plugin");
+}
+
+function piwik_analytics($a,&$b) {
+
+	/*
+	 *   styling of every HTML block added by this plugin is done in the
+	 *   associated CSS file. We just have to tell Friendika to get it
+	 *   into the page header.
+	 */
+	$a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/piwik/piwik.css' . '" media="all" />' . "\r\n";
+
+	/*
+	 *   Get the configuration variables from the .htconfig file.
+	 */
+	$baseurl = get_config('piwik','baseurl');
+	$sideod  = get_config('piwik','sideid');
+	$optout  = get_config('piwik','optout');
+
+	/*
+	 *   Add the Piwik code for the side.
+	 */
+	$b .= "<div id='piwik-code-block'> <!-- Piwik -->\r\n <script type=\"text/javascript\">\r\n var pkBaseURL = ((\"https:\" == document.location.protocol) ? \"https://".$baseurl."\" : \"http://".$baseurl."\");\r\n document.write(unescape(\"%3Cscript src='\" + pkBaseURL + \"piwik.js' type='text/javascript'%3E%3C/script%3E\"));\r\n </script>\r\n<script type=\"text/javascript\">\r\n try {\r\n var piwikTracker = Piwik.getTracker(pkBaseURL + \"piwik.php\", 8);\r\n piwikTracker.trackPageView();\r\n piwikTracker.enableLinkTracking();\r\n }\r\n catch( err ) {}\r\n </script>\r\n<noscript><p><img src=\"http://".$baseurl."/piwik.php?idsite=8\" style=\"border:0\" alt=\"\" /></p></noscript>\r\n <!-- End Piwik Tracking Tag --> </div>";
+	/*
+	 *   If the optout variable is set to true then display the notice
+	 *   otherwise just include the above code into the page.
+	 */
+	if ($optout) {
+		$b .= "<div id='piwik-optout-link'>This website is tracked using the <a href='http://www.piwik.org'>Piwik</a> analytics tool. If you do not want that your visits are logged this way you <a href='http://". $baseurl ."index.php?module=CoreAdminHome&action=optOut'>can set a cookie to prevent Piwik from tracking further visits of the site</a> (opt-out).</div>";
+	}
+
+}
+
