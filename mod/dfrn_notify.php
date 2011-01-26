@@ -75,6 +75,19 @@ function dfrn_notify_post(&$a) {
 	logger('dfrn_notify: received notify from ' . $importer['name'] . ' for ' . $importer['username']);
 	logger('dfrn_notify: data: ' . $data, LOGGER_DATA);
 
+	if($dissolve == 1) {
+
+		/**
+		 * Relationship is dissolved permanently
+		 */
+
+		require_once('include/Contact.php'); 
+		contact_remove($importer['id']);
+		logger('relationship dissolved : ' . $importer['name'] . ' dissolved ' . $importer['username']);
+		xml_status(0);
+
+	}
+
 	if(strlen($key)) {
 		$rawkey = hex2bin(trim($key));
 		logger('rino: md5 raw key: ' . md5($rawkey));
@@ -94,17 +107,6 @@ function dfrn_notify_post(&$a) {
 
 
 
-	if($dissolve == 1) {
-
-		/**
-		 * Relationship is dissolved permanently
-		 */
- 
-		contact_remove($importer['id']);
-		logger('relationship dissolved : ' . $importer['name'] . ' dissolved ' . $importer['username']);
-		xml_status(0);
-
-	}
 
 	if($importer['readonly']) {
 		// We aren't receiving stuff from this person. But we will quietly ignore them

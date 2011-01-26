@@ -1157,6 +1157,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 					continue;
 				}
 				$datarray = get_atom_elements($feed,$item);
+
 				if($contact['network'] === 'stat') {
 					if(strlen($datarray['title']))
 						unset($datarray['title']);
@@ -1167,6 +1168,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 					);
 					$datarray['last-child'] = 1;
 				}
+
 				if(($contact['network'] === 'feed') || (! strlen($contact['notify']))) {
 					// one way feed - no remote comment ability
 					$datarray['last-child'] = 0;

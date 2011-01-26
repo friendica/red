@@ -177,6 +177,12 @@ function contacts_content(&$a) {
 				}
 			}
 
+			if($orig_record[0]['network'] === 'dfrn') {
+				require_once('include/items.php');
+				dfrn_deliver($a->user,$orig_record[0],'placeholder', 1);
+			}
+
+
 			contact_remove($contact_id);
 			notice( t('Contact has been removed.') . EOL );
 			goaway($a->get_baseurl() . '/contacts');
