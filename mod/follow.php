@@ -110,7 +110,7 @@ function follow_post(&$a) {
 			if((! $vcard['photo']) && strlen($email))
 				$vcard['photo'] = gravatar_img($email);
 			$network = 'feed';
-        }
+		}
 	}
 
 	logger('follow: poll=' . $poll . ' notify=' . $notify . ' profile=' . $profile . ' vcard=' . print_r($vcard,true));
