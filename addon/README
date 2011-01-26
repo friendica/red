@@ -156,7 +156,8 @@ Current hooks:
 'page_end' - called after HTML content functions have completed
     $b is (string) HTML of content div
 
-
+'jot_plugin' - add tools to jot toolbar
+  $b is (string) HTML for tool icon
 
 
 *** = subject to change

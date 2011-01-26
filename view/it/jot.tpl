@@ -15,6 +15,11 @@
 
 		<textarea rows="5" cols="64" class="profile-jot-text" id="profile-jot-text" name="body" ></textarea>
 
+<div id="profile-jot-plugin-wrapper" >
+  $jotplugins
+</div>
+<div id="profile-jot-plugin-end"></div>
+
 <div id="profile-jot-submit-wrapper" >
 <input type="submit" id="profile-jot-submit" name="submit" value="Condividi" />
 	<div id="profile-upload-wrapper" style="display: $visitor;" >
@@ -39,6 +44,8 @@
 	<div id="profile-jot-perms-end"></div>
 	<div id="profile-jot-acl-wrapper" style="display: none;" >$acl</div>
 </div>
+
+
 
 <div id="profile-jot-end"></div>
 </form>

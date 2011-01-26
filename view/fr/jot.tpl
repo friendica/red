@@ -15,6 +15,12 @@
 
 		<textarea rows="5" cols="64" class="profile-jot-text" id="profile-jot-text" name="body" ></textarea>
 
+<div id="profile-jot-plugin-wrapper" >
+  $jotplugins
+</div>
+<div id="profile-jot-plugin-end"></div>
+
+
 <div id="profile-jot-submit-wrapper" >
 <input type="submit" id="profile-jot-submit" name="submit" value="Share" />
 	<div id="profile-upload-wrapper" style="display: $visitor;" >

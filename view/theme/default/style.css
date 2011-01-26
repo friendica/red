@@ -1034,7 +1034,7 @@ input#dfrn-url {
 	margin-left: 110px;
 	margin-top: 10px;
 }
-
+#profile-jot-plugin-wrapper,
 #profile-jot-submit-wrapper {
 	margin-top: 15px;
 }
@@ -1078,7 +1078,9 @@ input#dfrn-url {
 #profile-jot-perms-end {
 	clear: both;
 }
-
+#profile-jot-plugin-end {
+  clear:both;
+}
 #profile-jot-end {
 	clear: both;
 	margin-bottom: 30px;
@@ -2000,3 +2002,10 @@ a.mail-list-link {
 	margin-bottom: 15px;
 }
 
+.tool-wrapper {
+  float: left;
+  margin-left: 5px;
+}
+.tool-link {
+  cursor: pointer;
+}
