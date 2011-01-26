@@ -853,7 +853,7 @@ input#dfrn-url {
 }
 .wall-item-content {
 	float: left;
-	width: 450px;
+	/*width: 450px;*/
 	margin-left: 10px;
 	margin-bottom: 20px;
 	padding: 20px;
