@@ -53,9 +53,9 @@ function contacts_post(&$a) {
 			return;
 		}
 	}
+logger('contact_edit ' . print_r($_POST,true));
 
-
-	$priority = intval($_POST['priority']);
+	$priority = intval($_POST['poll']);
 	if($priority == (-1))
 		
 	if($priority > 5 || $priority < 0)
@@ -177,6 +177,12 @@ function contacts_content(&$a) {
 				}
 			}
 
+			if($orig_record[0]['network'] === 'dfrn') {
+				require_once('include/items.php');
+				dfrn_deliver($a->user,$orig_record[0],'placeholder', 1);
+			}
+
+
 			contact_remove($contact_id);
 			notice( t('Contact has been removed.') . EOL );
 			goaway($a->get_baseurl() . '/contacts');
@@ -246,7 +252,7 @@ function contacts_content(&$a) {
 			'$contact_id' => $r[0]['id'],
 			'$block_text' => (($r[0]['blocked']) ? t('Unblock this contact') : t('Block this contact') ),
 			'$ignore_text' => (($r[0]['readonly']) ? t('Unignore this contact') : t('Ignore this contact') ),
-			'$insecure' => (($r[0]['network'] === 'dfrn') ? '' : load_view_file('view/insecure_net.tpl')),
+			'$insecure' => (($r[0]['network'] === 'stat') ? load_view_file('view/insecure_net.tpl') : ''),
 			'$info' => $r[0]['info'],
 			'$blocked' => (($r[0]['blocked']) ? '<div id="block-message">' . t('Currently blocked') . '</div>' : ''),
 			'$ignored' => (($r[0]['readonly']) ? '<div id="ignore-message">' . t('Currently ignored') . '</div>' : ''),

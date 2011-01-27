@@ -48,7 +48,8 @@ function follow_post(&$a) {
 		}
 	}
 
-	$network = 'stat';
+	$network  = 'stat';
+	$priority = 0;
 
 	if($hcard) {
 		$vcard = scrape_vcard($hcard);
@@ -110,7 +111,8 @@ function follow_post(&$a) {
 			if((! $vcard['photo']) && strlen($email))
 				$vcard['photo'] = gravatar_img($email);
 			$network = 'feed';
-        }
+			$priority = 2;
+		}
 	}
 
 	logger('follow: poll=' . $poll . ' notify=' . $notify . ' profile=' . $profile . ' vcard=' . print_r($vcard,true));
@@ -150,7 +152,7 @@ function follow_post(&$a) {
 	}
 	else {
 		// create contact record 
-		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `notify`, `poll`, `name`, `nick`, `photo`, `network`, `rel`, 
+		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `notify`, `poll`, `name`, `nick`, `photo`, `network`, `rel`, `priority`,
 			`blocked`, `readonly`, `pending` )
 			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, 0, 0, 0 ) ",
 			intval(local_user()),
@@ -162,7 +164,8 @@ function follow_post(&$a) {
 			dbesc($vcard['nick']),
 			dbesc($vcard['photo']),
 			dbesc($network),
-			intval(REL_FAN)
+			intval(REL_FAN),
+			intval($priority)
 		);
 	}
 

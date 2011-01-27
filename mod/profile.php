@@ -134,6 +134,10 @@ function profile_content(&$a, $update = 0) {
 				$lockstate = 'lock';
 			else
 				$lockstate = 'unlock';
+       
+      $jotplugins = "";
+      call_hooks('jot_tool', $jotplugins); 
+        
 			$o .= replace_macros($tpl,array(
 				'$baseurl' => $a->get_baseurl(),
 				'$defloc' => (($is_owner) ? $a->user['default-location'] : ''),
@@ -142,7 +146,8 @@ function profile_content(&$a, $update = 0) {
 				'$lockstate' => $lockstate,
 				'$bang' => '',
 				'$acl' => (($is_owner) ? populate_acl($a->user, $celeb) : ''),
-				'$profile_uid' => $a->profile['profile_uid']
+				'$profile_uid' => $a->profile['profile_uid'],
+				'$jotplugins' => $jotplugins
 			));
 		}
 
