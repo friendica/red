@@ -1878,7 +1878,7 @@ function aes_encrypt($val,$ky)
 
 if(! function_exists('linkify')) {
 function linkify($s) {
-	$s = preg_replace("/(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\.\=\_\~\#\'\%]*)/", ' <a href="$1" >$1</a>', $s);
+	$s = preg_replace("/(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\.\=\_\~\#\'\%]*)/", ' <a href="$1" target="external-link">$1</a>', $s);
 	return($s);
 }}
 
