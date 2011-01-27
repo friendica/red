@@ -1,19 +1,97 @@
 <?php
 
+/**
+ *
+ * JavaScript Photo/Image Uploader
+ *
+ * Uses Valum 'qq' Uploader. 
+ * Module Author: Chris Case
+ *
+ * Prior to enabling, ensure that you have a directory 'uploads'
+ * which is writable by the web server.
+ *
+ */
+
 
 function js_upload_install() {
-	register_hooks('photo_post_init', 'addon/js_upload/js_upload.php', 'js_upload_post_init');
-	register_hooks('photo_post_file', 'addon/js_upload/js_upload.php', 'js_upload_post_file');
-	register_hooks('photo_post_end',  'addon/js_upload/js_upload.php', 'js_upload_post_end');
+	register_hook('photo_upload_form', 'addon/js_upload/js_upload.php', 'js_upload_form');
+	register_hook('photo_post_init',   'addon/js_upload/js_upload.php', 'js_upload_post_init');
+	register_hook('photo_post_file',   'addon/js_upload/js_upload.php', 'js_upload_post_file');
+	register_hook('photo_post_end',    'addon/js_upload/js_upload.php', 'js_upload_post_end');
 }
 
 
 function js_upload_uninstall() {
-	register_hooks('photo_post_init', 'addon/js_upload/js_upload.php', 'js_upload_post_init');
-	register_hooks('photo_post_file', 'addon/js_upload/js_upload.php', 'js_upload_post_file');
-	register_hooks('photo_post_end',  'addon/js_upload/js_upload.php', 'js_upload_post_end');
+	unregister_hook('photo_upload_form', 'addon/js_upload/js_upload.php', 'js_upload_form');
+	unregister_hook('photo_post_init',   'addon/js_upload/js_upload.php', 'js_upload_post_init');
+	unregister_hook('photo_post_file',   'addon/js_upload/js_upload.php', 'js_upload_post_file');
+	unregister_hook('photo_post_end',    'addon/js_upload/js_upload.php', 'js_upload_post_end');
 }
 
+
+function js_upload_form(&$a,&$b) {
+
+	$b['default_upload'] = false;
+
+	$b['addon_text'] .= '<link href="' . $a->get_baseurl() . '/addon/js_upload/file-uploader/client/fileuploader.css" rel="stylesheet" type="text/css">';
+	$b['addon_text'] .= '<script src="' . $a->get_baseurl() . '/addon/js_upload/file-uploader/client/fileuploader.js" type="text/javascript"></script>';
+   
+	$b['addon_text'] .= <<< EOT
+	
+ <div id="file-uploader-demo1">		
+  <noscript>			
+   <p>Please enable JavaScript to use file uploader.</p>
+   <!-- or put a simple form for upload here -->
+  </noscript> 
+ </div>
+
+<script type="text/javascript">
+var uploader = null;       
+function getSelected(opt) {
+            var selected = new Array();
+            var index = 0;
+            for (var intLoop = 0; intLoop < opt.length; intLoop++) {
+               if ((opt[intLoop].selected) ||
+                   (opt[intLoop].checked)) {
+                  index = selected.length;
+                  //selected[index] = new Object;
+                  selected[index] = opt[intLoop].value;
+                  //selected[index] = intLoop;
+               }
+            }
+            return selected;
+         } 
+function createUploader() {
+	uploader = new qq.FileUploader({
+		element: document.getElementById('file-uploader-demo1'),
+		action: '{$b['post_url']}',
+		debug: true,
+		onSubmit: function(id,filename) {
+
+			uploader.setParams( {
+				newalbum		:	document.getElementById('photos-upload-newalbum').value,
+				album			:	document.getElementById('photos-upload-album-select').value,
+				group_allow		:	getSelected(document.getElementById('group_allow')).join(','),
+				contact_allow	:	getSelected(document.getElementById('contact_allow')).join(','),
+				group_deny		:	getSelected(document.getElementById('group_deny')).join(','),
+				contact_deny	:	getSelected(document.getElementById('contact_deny')).join(',')
+			});
+		}
+	});           
+}
+
+
+// in your app create uploader as soon as the DOM is ready
+// don't wait for the window to load  
+window.onload = createUploader;     
+
+
+</script>
+ 
+EOT;
+
+
+}
 
 function js_upload_post_init(&$a,&$b) {
 
@@ -26,7 +104,9 @@ function js_upload_post_init(&$a,&$b) {
 	$sizeLimit = 6 * 1024 * 1024;
 
 	$uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
+
 	$result = $uploader->handleUpload('uploads/');
+
 
 	// to pass data through iframe you will need to encode all html tags
 	$a->data['upload_jsonresponse'] =  htmlspecialchars(json_encode($result), ENT_NOQUOTES);
@@ -36,22 +116,27 @@ function js_upload_post_init(&$a,&$b) {
 		killme();
 	}
 
+	$a->data['upload_result'] = $result;
 
 }
 
-function js_upload_photo_post_file(&$a,&$b) {
+function js_upload_post_file(&$a,&$b) {
 
-	$b['src']		= 'uploads/'.$result['filename'];
+	$result = $a->data['upload_result'];
+
+	$b['src']		= 'uploads/' . $result['filename'];
 	$b['filename']	= $result['filename'];
-	$b['filesize']	= filesize($src);
+	$b['filesize']	= filesize($b['src']);
+
+logger('post_file' . print_r($b, true));
 }
 
 
-function js_upload_photo_post_end(&$a,&$b) {
+function js_upload_post_end(&$a,&$b) {
 
+logger('upload_post_end');
 	if(x($a->data,'upload_jsonresponse')) {
 		echo $a->data['upload_jsonresponse'];
-		@unlink($src);
 		killme();
 	}
 
@@ -83,9 +168,11 @@ class qqUploadedFileXhr {
         
         return true;
     }
+
     function getName() {
         return $_GET['qqfile'];
     }
+
     function getSize() {
         if (isset($_SERVER["CONTENT_LENGTH"])){
             return (int)$_SERVER["CONTENT_LENGTH"];            
@@ -98,6 +185,7 @@ class qqUploadedFileXhr {
 /**
  * Handle file uploads via regular form post (uses the $_FILES array)
  */
+
 class qqUploadedFileForm {  
     /**
      * Save the file to the specified path
@@ -116,6 +204,7 @@ class qqUploadedFileForm {
         return $_FILES['qqfile']['size'];
     }
 }
+
 class qqFileUploader {
     private $allowedExtensions = array();
     private $sizeLimit = 10485760;
@@ -164,7 +253,7 @@ class qqFileUploader {
      */
     function handleUpload($uploadDirectory, $replaceOldFile = FALSE){
         if (!is_writable($uploadDirectory)){
-            return array('error' => t('Server error. Upload directory isn't writable.'));
+            return array('error' => t('Server error. Upload directory isn\'t writable.'));
         }
         
         if (!$this->file){
@@ -192,7 +281,7 @@ class qqFileUploader {
 
         $pathinfo = pathinfo($this->file->getName());
         $filename = $pathinfo['filename'];
-        //$filename = md5(uniqid());
+
         $ext = $pathinfo['extension'];
 
         if($this->allowedExtensions && !in_array(strtolower($ext), $this->allowedExtensions)){
