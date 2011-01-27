@@ -23,41 +23,12 @@
 
 	</div>
 
-	<div id="photos-upload-select-files-text">$filestext</div>
+	<div id="photos_upload_spacer"></div>
 
-	<div id="photos_upload_applet_wrapper">
-		<applet name="jumpLoaderApplet"
-			code="jmaster.jumploader.app.JumpLoaderApplet.class"
-			archive="$archive"
-			width="700"
-			height="600"
-			mayscript >
-			<param name="uc_uploadUrl" value="$uploadurl" />
-			<param name="uc_uploadFormName" value="photos-upload-form" />
-			<param name="gc_loggingLeveL" value="FATAL" />
-			<param name="uc_fileParameterName" value="userfile" />
-			<param name="uc_cookie" value="PHPSESSID=$sessid; path=/;" />
-			<param name="vc_disableLocalFileSystem" value="false" />
-			<param name="vc_uploadViewMenuBarVisible" value="false" />
-			<param name="vc_mainViewFileListViewVisible" value="true" />
-			<param name="vc_mainViewFileListViewHeightPercent" value="50" />
-			<param name="vc_mainViewFileTreeViewVisible" value="true" />
-			<param name="vc_mainViewFileTreeViewWidthPercent" value="35" />
-			<param name="vc_lookAndFeel" value="system" />
-	
-		</applet>
-		
-	</div>
+	$uploader
 
-	<div id="photos-upload-no-java-message" >
-	$nojava
-	</div>	
+	$default
 
-	<input type="file" name="userfile" />
-
-	<div class="photos-upload-submit-wrapper" >
-		<input type="submit" name="submit" value="$submit" id="photos-upload-submit" />
-	</div>
 	<div class="photos-upload-end" ></div>
 </form>
 
