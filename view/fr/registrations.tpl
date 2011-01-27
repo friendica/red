@@ -1,1 +1,1 @@
-<li>$fullname ($email) : <a href="$approvelink">Approve</a> - <a href="$denylink">Deny</a></li>
+<li>$fullname ($email) : <a href="$approvelink">Approuver</a> - <a href="$denylink">Refuser</a></li>
