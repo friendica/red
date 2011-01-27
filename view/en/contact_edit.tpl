@@ -23,6 +23,10 @@
 			<a href="contacts/$contact_id/drop" id="contact-edit-drop-link" onclick="return confirmDelete();" ><img src="images/b_drophide.gif" alt="$delete" title="$delete" onmouseover="imgbright(this);" onmouseout="imgdull(this);" /></a>
 		</div>
 		<div id="contact-edit-nav-end"></div>
+
+<form action="contacts/$contact_id" method="post" >
+<input type="hidden" name="contact_id" value="$contact_id">
+
 		<div id="contact-edit-poll-wrapper">
 			<div id="contact-edit-last-update-text">$lastupdtext<span id="contact-edit-last-updated">$last_update</span</div>
 			<div id="contact-edit-poll-text">$updpub</div>
@@ -34,9 +38,6 @@
 $insecure
 $blocked
 $ignored
-
-<form action="contacts/$contact_id" method="post" >
-<input type="hidden" name="contact_id" value="$contact_id">
 
 <div id="contact-edit-info-wrapper">
 <h4>Contact Information / Notes</h4>
