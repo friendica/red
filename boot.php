@@ -1655,7 +1655,6 @@ function attribute_contains($attr,$s) {
 
 if(! function_exists('logger')) {
 function logger($msg,$level = 0) {
-
 	$debugging = get_config('system','debugging');
 	$loglevel  = intval(get_config('system','loglevel'));
 	$logfile   = get_config('system','logfile');
@@ -2233,15 +2232,13 @@ function link_compare($a,$b) {
 if(! function_exists('run_proc')) {
 function proc_run($cmd){
 	$args = func_get_args();
+	call_hooks("proc_run", $args);
+	
 	foreach ($args as &$arg){
 		if(is_string($arg)) $arg='"'.$arg.'"';
 	}
 	$cmdline = implode($args," ");
-	
-	call_hooks("proc_run", $args);
-	
 	proc_close(proc_open($cmdline." &",array(),$foo));
 }}
 
 ?>
-
