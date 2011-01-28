@@ -3,7 +3,7 @@
 set_time_limit(0);
 
 define ( 'BUILD_ID',               1033   );
-define ( 'FRIENDIKA_VERSION',      '2.01.1006' );
+define ( 'FRIENDIKA_VERSION',      '2.10.0902' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.0'  );
 
 define ( 'EOL',                    "<br />\r\n"     );
@@ -1692,7 +1692,7 @@ function get_tags($s) {
 
 	$s = preg_replace('/\[code\](.*?)\[\/code\]/sm','',$s);
 
-	if(preg_match_all('/([@#][^ \x0D\x0A,:?]*)([ \x0D\x0A,:?]|$)/',$s,$match)) {
+	if(preg_match_all('/([@#][^ \x0D\x0A,:?]+)([ \x0D\x0A,:?]|$)/',$s,$match)) {
 		foreach($match[1] as $match) {
 			if(strstr($match,"]")) {
 				// we might be inside a bbcode color tag - leave it alone
@@ -1878,7 +1878,7 @@ function aes_encrypt($val,$ky)
 
 if(! function_exists('linkify')) {
 function linkify($s) {
-	$s = preg_replace("/(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\.\=\_\~\#\'\%]*)/", ' <a href="$1" >$1</a>', $s);
+	$s = preg_replace("/(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\.\=\_\~\#\'\%]*)/", ' <a href="$1" target="external-link">$1</a>', $s);
 	return($s);
 }}
 

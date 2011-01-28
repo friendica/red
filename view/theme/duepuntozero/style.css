@@ -1600,6 +1600,10 @@ a.mail-list-link {
 #photos-upload-album-select {
 	float: left;
 }
+
+#photos-upload-spacer {
+	margin-top: 25px;
+}
 #photos-upload-new-end, #photos-upload-exist-end {
 	clear: both;
 }

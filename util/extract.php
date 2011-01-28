@@ -3,7 +3,7 @@
 	$arr = array();
 
 	$files = array('index.php','boot.php');
-	$files = array_merge($files,glob('mod/*'),glob('include/*'));
+	$files = array_merge($files,glob('mod/*'),glob('include/*'),glob('addon/*/*'));
 
 
 	foreach($files as $file) {
