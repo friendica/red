@@ -1,5 +1,4 @@
 <?php
-
 require_once('include/Photo.php');
 require_once('include/items.php');
 require_once('include/acl_selectors.php');
@@ -49,8 +48,17 @@ function photos_init(&$a) {
 
 
 
-
 function photos_post(&$a) {
+
+logger('mod/photos.php: photos_post(): begin' , 'LOGGER_DEBUG');
+
+foreach($_REQUEST AS $key => $val) {
+	logger('mod/photos.php: photos_post(): $_REQUEST key: ' . $key . ' val: ' . $val , 'LOGGER_DEBUG');
+}
+
+foreach($_FILES AS $key => $val) {
+	logger('mod/photos.php: photos_post(): $_FILES key: ' . $key . ' val: ' . $val , 'LOGGER_DEBUG');
+}
 
 	$can_post  = false;
 	$visitor   = 0;
@@ -466,18 +474,20 @@ function photos_post(&$a) {
 	}
 
 
-	// default post action - upload a photo
+	/**
+	 * default post action - upload a photo
+	 */
 
-	if(! x($_FILES,'userfile'))
-		killme();
+	call_hooks('photo_post_init', $_POST);
 
-	if($_POST['partitionCount'])
-		$java_upload = true;
-	else
-		$java_upload = false;
+	/**
+	 * Determine the album to use
+	 */
 
-	$album =  notags(trim($_POST['album']));
-	$newalbum = notags(trim($_POST['newalbum']));
+	$album    = notags(trim($_REQUEST['album']));
+	$newalbum = notags(trim($_REQUEST['newalbum']));
+
+	logger('mod/photos.php: photos_post(): album= ' . $album . ' newalbum= ' . $newalbum , 'LOGGER_DEBUG');
 
 	if(! strlen($album)) {
 		if(strlen($newalbum))
@@ -485,6 +495,16 @@ function photos_post(&$a) {
 		else
 			$album = datetime_convert('UTC',date_default_timezone_get(),'now', 'Y');
 	}
+
+	/**
+	 *
+	 * We create a wall item for every photo, but we don't want to
+	 * overwhelm the data stream with a hundred newly uploaded photos.
+	 * So we will make one photo (the first one uploaded to this album)
+	 * visible by default, the rest will become visible over time when and if
+	 * they acquire comments, likes, dislikes, and/or tags 
+	 *
+	 */
 
 	$r = q("SELECT * FROM `photo` WHERE `album` = '%s' AND `uid` = %d",
 		dbesc($album),
@@ -495,15 +515,25 @@ function photos_post(&$a) {
 	else
 		$visible = 0;
 
+	$str_group_allow   = perms2str(((is_array($_REQUEST['group_allow']))   ? $_REQUEST['group_allow']   : explode(',',$_REQUEST['group_allow'])));
+	$str_contact_allow = perms2str(((is_array($_REQUEST['contact_allow'])) ? $_REQUEST['contact_allow'] : explode(',',$_REQUEST['contact_allow'])));
+	$str_group_deny    = perms2str(((is_array($_REQUEST['group_deny']))    ? $_REQUEST['group_deny']    : explode(',',$_REQUEST['group_deny'])));
+	$str_contact_deny  = perms2str(((is_array($_REQUEST['contact_deny']))  ? $_REQUEST['contact_deny']  : explode(',',$_REQUEST['contact_deny'])));
 
-	$str_group_allow   = perms2str($_POST['group_allow']);
-	$str_contact_allow = perms2str($_POST['contact_allow']);
-	$str_group_deny    = perms2str($_POST['group_deny']);
-	$str_contact_deny  = perms2str($_POST['contact_deny']);
+	$ret = array('src' => '', 'filename' => '', 'filesize' => 0);
 
-	$src               = $_FILES['userfile']['tmp_name'];
-	$filename          = basename($_FILES['userfile']['name']);
-	$filesize          = intval($_FILES['userfile']['size']);
+	call_hooks('photo_post_file',$ret);
+
+	if(x($ret,'src') && x($ret,'filesize')) {
+		$src      = $ret['src'];
+		$filename = $ret['filename'];
+		$filesize = $ret['filesize'];
+	}
+	else {
+		$src        = $_FILES['userfile']['tmp_name'];
+		$filename   = basename($_FILES['userfile']['name']);
+		$filesize   = intval($_FILES['userfile']['size']);
+	}
 
 	$maximagesize = get_config('system','maximagesize');
 
@@ -513,10 +543,13 @@ function photos_post(&$a) {
 		return;
 	}
 
+	logger('mod/photos.php: photos_post(): loading the contents of ' . $src , 'LOGGER_DEBUG');
+
 	$imagedata = @file_get_contents($src);
 	$ph = new Photo($imagedata);
 
 	if(! $ph->is_valid()) {
+		logger('mod/photos.php: photos_post(): unable to process image' , 'LOGGER_DEBUG');
 		notice( t('Unable to process image.') . EOL );
 		@unlink($src);
 		killme();
@@ -524,7 +557,7 @@ function photos_post(&$a) {
 
 	@unlink($src);
 
-	$width = $ph->getWidth();
+	$width  = $ph->getWidth();
 	$height = $ph->getHeight();
 
 	$smallest = 0;
@@ -534,6 +567,7 @@ function photos_post(&$a) {
 	$r = $ph->store($page_owner_uid, $visitor, $photo_hash, $filename, $album, 0 , 0, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny);
 
 	if(! $r) {
+		logger('mod/photos.php: photos_post(): image store failed' , 'LOGGER_DEBUG');
 		notice( t('Image upload failed.') . EOL );
 		killme();
 	}
@@ -554,7 +588,6 @@ function photos_post(&$a) {
 	$uri = item_new_uri($a->get_hostname(), $page_owner_uid);
 
 	// Create item container
-
 
 	$arr = array();
 
@@ -584,14 +617,13 @@ function photos_post(&$a) {
 
 	$item_id = item_store($arr);
 
-	if(! $java_upload) {
-		goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
-		return; // NOTREACHED
-	}
+	call_hooks('photo_post_end',intval($item_id));
 
-	killme();
-	return; // NOTREACHED
+	// addon uploaders should call "killme()" [e.g. exit] within the photo_post_end hook
+	// if they do not wish to be redirected
 
+	goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
+	// NOTREACHED
 }
 
 
@@ -737,6 +769,22 @@ function photos_content(&$a) {
 		$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
 
 		$albumselect .= '</select>';
+
+		$uploader = '';
+
+		$ret = array('post_url' => $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'],
+				'addon_text' => $uploader,
+				'default_upload' => true);
+
+
+		call_hooks('photo_upload_form',$ret);
+
+		$default_upload = '<input type="file" name="userfile" /> 	<div class="photos-upload-submit-wrapper" >
+		<input type="submit" name="submit" value="' . t('Submit') . '" id="photos-upload-submit" /> </div>';
+
+
+ 
+
 		$tpl = load_view_file('view/photos_upload.tpl');
 		$o .= replace_macros($tpl,array(
 			'$pagename' => t('Upload Photos'),
@@ -744,14 +792,13 @@ function photos_content(&$a) {
 			'$nickname' => $a->data['user']['nickname'],
 			'$newalbum' => t('New album name: '),
 			'$existalbumtext' => t('or existing album name: '),
-			'$filestext' => t('Select files to upload: '),
 			'$albumselect' => $albumselect,
 			'$permissions' => t('Permissions'),
 			'$aclselect' => (($visitor) ? '' : populate_acl($a->user, $celeb)),
-			'$archive' => $a->get_baseurl() . '/jumploader_z.jar',
-			'$nojava' => t('Use the following controls only if the Java uploader [above] fails to launch.'),
-			'$uploadurl' => $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'],
-			'$submit' => t('Submit')
+			'$uploader' => $ret['addon_text'],
+			'$default' => (($ret['default_upload']) ? $default_upload : ''),
+			'$uploadurl' => $ret['post_url']
+
 		));
 
 		return $o; 
@@ -1154,3 +1201,4 @@ function photos_content(&$a) {
 	$o .= paginate($a);
 	return $o;
 }
+
