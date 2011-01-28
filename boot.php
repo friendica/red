@@ -1692,7 +1692,7 @@ function get_tags($s) {
 
 	$s = preg_replace('/\[code\](.*?)\[\/code\]/sm','',$s);
 
-	if(preg_match_all('/([@#][^ \x0D\x0A,:?]*)([ \x0D\x0A,:?]|$)/',$s,$match)) {
+	if(preg_match_all('/([@#][^ \x0D\x0A,:?]+)([ \x0D\x0A,:?]|$)/',$s,$match)) {
 		foreach($match[1] as $match) {
 			if(strstr($match,"]")) {
 				// we might be inside a bbcode color tag - leave it alone
