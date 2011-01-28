@@ -1,14 +1,19 @@
 <?php
+require_once("boot.php");
 
-	require_once("boot.php");
+function notifier_run($argv, $argc){
+  global $a, $db;
 
-	$a = new App;
-
-	@include(".htconfig.php");
-	require_once("dba.php");
-	$db = new dba($db_host, $db_user, $db_pass, $db_data);
-		unset($db_host, $db_user, $db_pass, $db_data);
-
+  if(is_null($a)){
+    $a = new App;
+  }
+  
+  if(is_null($db)){
+    @include(".htconfig.php");
+    require_once("dba.php");
+    $db = new dba($db_host, $db_user, $db_pass, $db_data);
+    unset($db_host, $db_user, $db_pass, $db_data);
+  };
 
 	require_once("session.php");
 	require_once("datetime.php");
@@ -30,7 +35,7 @@
 		default:
 			$item_id = intval($argv[2]);
 			if(! $item_id){
-				killme(); return;
+				return;
 			}
 			break;
 	}
@@ -44,7 +49,7 @@
 				intval($item_id)
 		);
 		if(! count($message)){
-			killme(); return;
+			return;
 		}
 		$uid = $message[0]['uid'];
 		$recipients[] = $message[0]['contact-id'];
@@ -52,15 +57,15 @@
 
 	}
 	else {
-		// find ancestors
 
+		// find ancestors
 		$r = q("SELECT `parent`, `uid`, `edited` FROM `item` WHERE `id` = %d LIMIT 1",
 			intval($item_id)
 		);
 		if(! count($r)){
-			killme(); return;
+			return;
 		}
-
+  
 		$parent_id = $r[0]['parent'];
 		$uid = $r[0]['uid'];
 		$updated = $r[0]['edited'];
@@ -70,7 +75,7 @@
 		);
 
 		if(! count($items)){
-			killme(); return;
+			return;
 		}
 	}
 
@@ -83,7 +88,7 @@
 	if(count($r))
 		$owner = $r[0];
 	else {
-		killme(); return;
+		return;
 	}
 	$hub = get_config('system','huburl');
 
@@ -155,7 +160,7 @@
 		$r = q("SELECT * FROM `contact` WHERE `id` IN ( $conversant_str ) AND `blocked` = 0 AND `pending` = 0");
 
 		if( ! count($r)){
-			killme(); return;
+			return;
 		}
 
 		$contacts = $r;
@@ -254,7 +259,7 @@
 		dbesc($recip_str)
 	);
 	if(! count($r)){
-		killme(); return;
+		return;
 	}
 	// delivery loop
 
@@ -365,5 +370,11 @@
 		}
 	}
 
-	killme();
+	return;
+}
 
+if (array_search(__file__,get_included_files())===0){
+  echo "run!";
+  notifier_run($argv,$argc);
+  killme();
+}

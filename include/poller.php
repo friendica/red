@@ -1,14 +1,19 @@
 <?php
+require_once("boot.php");
 
+function poller_run($argv, $argc){
+  global $a, $db;
 
-	require_once('boot.php');
-
-	$a = new App;
-
-	@include('.htconfig.php');
-	require_once('dba.php');
-	$db = new dba($db_host, $db_user, $db_pass, $db_data);
-		unset($db_host, $db_user, $db_pass, $db_data);
+  if(is_null($a)){
+    $a = new App;
+  }
+  
+  if(is_null($db)){
+    @include(".htconfig.php");
+    require_once("dba.php");
+    $db = new dba($db_host, $db_user, $db_pass, $db_data);
+    unset($db_host, $db_user, $db_pass, $db_data);
+  };
 
 	require_once('session.php');
 	require_once('datetime.php');
@@ -48,7 +53,7 @@
 		AND `self` = 0 AND `blocked` = 0 AND `readonly` = 0 ORDER BY RAND()");
 
 	if(! count($contacts)){
-		killme(); return;
+		return;
 	}
 
 	foreach($contacts as $contact) {
@@ -267,7 +272,10 @@
 		// loop - next contact
 	}  
 		
-	killme();
+	return;
+}
 
-
-
+if (array_search(__file__,get_included_files())===0){
+  poller_run($argv,$argc);
+  killme();
+}
