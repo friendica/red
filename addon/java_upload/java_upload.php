@@ -1,12 +1,43 @@
 <?php
 
+/**
+ *
+ * Java photo uploader, uses Jumploader
+ *
+ * WARNING: This module currently has privacy issues.
+ * The java package does not pass the permissions array intact and could lead to
+ * photos being seen by people that were excluded from seeing them.
+ *
+ */
 
+
+function java_upload_install() {
+	register_hook('photo_upload_form', 'addon/java_upload/java_upload.php', 'java_upload_form');
+	register_hook('photo_post_init',   'addon/java_upload/java_upload.php', 'java_upload_post_init');
+	register_hook('photo_post_end',    'addon/java_upload/java_upload.php', 'java_upload_post_end');
+}
+
+
+function java_upload_uninstall() {
+	unregister_hook('photo_upload_form', 'addon/java_upload/java_upload.php', 'java_upload_form');
+	unregister_hook('photo_post_init',   'addon/java_upload/java_upload.php', 'java_upload_post_init');
+	unregister_hook('photo_post_end',    'addon/java_upload/java_upload.php', 'java_upload_post_end');
+}
 
 
 function java_upload_form(&$a,&$b) {
 
+	$uploadurl = $b['post_url'];
+	$sessid = session_id();
+	$archive = $a->get_baseurl() . '/addon/java_upload/jumploader_z.jar';
+	$filestext = t('Select files to upload: ');
 
-$b .= <<< EOT;
+	$nojava = t('Use the following controls only if the Java uploader [above] fails to launch.');
+
+	$b['default_upload'] = true;
+
+
+$b['addon_text'] .= <<< EOT
 
 	<div id="photos-upload-select-files-text">$filestext</div>
 
