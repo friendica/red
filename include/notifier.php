@@ -1,14 +1,19 @@
 <?php
+require_once("boot.php");
 
-	require_once("boot.php");
+function notifier_run($argv, $argc){
+  global $a, $db;
 
-	$a = new App;
-
-	@include(".htconfig.php");
-	require_once("dba.php");
-	$db = new dba($db_host, $db_user, $db_pass, $db_data);
-		unset($db_host, $db_user, $db_pass, $db_data);
-
+  if(is_null($a)){
+    $a = new App;
+  }
+  
+  if(is_null($db)){
+    @include(".htconfig.php");
+    require_once("dba.php");
+    $db = new dba($db_host, $db_user, $db_pass, $db_data);
+    unset($db_host, $db_user, $db_pass, $db_data);
+  };
 
 	require_once("session.php");
 	require_once("datetime.php");
@@ -16,7 +21,7 @@
 	require_once('include/bbcode.php');
 
 	if($argc < 3)
-		exit;
+		return;
 
 	$a->set_baseurl(get_config('system','url'));
 
@@ -29,8 +34,9 @@
 		case 'mail':
 		default:
 			$item_id = intval($argv[2]);
-			if(! $item_id)
-				killme();
+			if(! $item_id){
+				return;
+			}
 			break;
 	}
 
@@ -42,22 +48,24 @@
 		$message = q("SELECT * FROM `mail` WHERE `id` = %d LIMIT 1",
 				intval($item_id)
 		);
-		if(! count($message))
-			killme();
+		if(! count($message)){
+			return;
+		}
 		$uid = $message[0]['uid'];
 		$recipients[] = $message[0]['contact-id'];
 		$item = $message[0];
 
 	}
 	else {
-		// find ancestors
 
+		// find ancestors
 		$r = q("SELECT `parent`, `uid`, `edited` FROM `item` WHERE `id` = %d LIMIT 1",
 			intval($item_id)
 		);
-		if(! count($r))
-			killme();
-
+		if(! count($r)){
+			return;
+		}
+  
 		$parent_id = $r[0]['parent'];
 		$uid = $r[0]['uid'];
 		$updated = $r[0]['edited'];
@@ -66,8 +74,9 @@
 			intval($parent_id)
 		);
 
-		if(! count($items))
-			killme();
+		if(! count($items)){
+			return;
+		}
 	}
 
 	$r = q("SELECT `contact`.*, `user`.`nickname`, `user`.`sprvkey`, `user`.`spubkey`, `user`.`page-flags` 
@@ -78,9 +87,9 @@
 
 	if(count($r))
 		$owner = $r[0];
-	else
-		killme();
-
+	else {
+		return;
+	}
 	$hub = get_config('system','huburl');
 
 	// If this is a public conversation, notify the feed hub
@@ -150,8 +159,9 @@
 
 		$r = q("SELECT * FROM `contact` WHERE `id` IN ( $conversant_str ) AND `blocked` = 0 AND `pending` = 0");
 
-		if( ! count($r))
-			killme();
+		if( ! count($r)){
+			return;
+		}
 
 		$contacts = $r;
 	}
@@ -248,9 +258,9 @@
 	$r = q("SELECT * FROM `contact` WHERE `id` IN ( %s ) AND `blocked` = 0 ",
 		dbesc($recip_str)
 	);
-	if(! count($r))
-		killme();
-
+	if(! count($r)){
+		return;
+	}
 	// delivery loop
 
 	require_once('include/salmon.php');
@@ -360,5 +370,11 @@
 		}
 	}
 
-	killme();
+	return;
+}
 
+if (array_search(__file__,get_included_files())===0){
+  echo "run!";
+  notifier_run($argv,$argc);
+  killme();
+}
