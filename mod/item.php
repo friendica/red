@@ -421,8 +421,7 @@ function item_post(&$a) {
 
 	logger('mod_item: notifier invoked: ' . "\"$php_path\" \"include/notifier.php\" \"$notify_type\" \"$post_id\" &");
 
-	proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"$notify_type\" \"$post_id\" &",
-		array(),$foo));
+  proc_run($php_path, "include/notifier.php", $notify_type, "$post_id");
 
 	$datarray['id'] = $post_id;
 
@@ -520,8 +519,8 @@ function item_content(&$a) {
 			
 			// send the notification upstream/downstream as the case may be
 
-			proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" &",
-				array(), $foo));
+			//proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" &", array(), $foo));
+			proc_run($php_path,"include/notifier.php","drop","$drop_id");
 
 			goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
 			return; //NOTREACHED
