@@ -10,7 +10,9 @@ function follow_post(&$a) {
 		// NOTREACHED
 	}
 
-	$url = notags(trim($_POST['url']));
+	$url = $orig_url = notags(trim($_POST['url']));
+	
+	$email_conversant = false;
 
 	if($url) {
 		$links = lrdd($url);
@@ -27,6 +29,11 @@ function follow_post(&$a) {
 				if($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page')
 					$profile = $link['@attributes']['href'];
 
+			}
+		}
+		else {
+			if((strpos($orig_url,'@')) && validate_email($orig_url)) {
+				$email_conversant = true;
 			}
 		}
 	}	
