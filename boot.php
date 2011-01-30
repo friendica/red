@@ -10,6 +10,16 @@ define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
 define ( 'DOWN_ARROW',             '&#x21e9;'       );
          
+
+/**
+ * SSL redirection policies
+ */
+
+define ( 'SSL_POLICY_NONE',         0 );
+define ( 'SSL_POLICY_FULL',         1 );
+define ( 'SSL_POLICY_SELFSIGN'      2 );
+
+
 /**
  * log levels
  */
@@ -273,7 +283,14 @@ class App {
 		if(strlen($this->baseurl))
 			return $this->baseurl;
 
-		$this->baseurl = (($ssl) ? 'https' : $this->scheme) . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
+		$scheme = $this->scheme;
+
+		if(($ssl) || ($a->config['ssl_policy'] == SSL_POLICY_FULL)) 
+			$scheme = 'https';
+		if(($a->config['ssl_policy'] == SSL_POLICY_SELFSIGN) && (local_user() || x($_POST,'auth-params')))
+			$scheme = 'https';
+
+		$this->baseurl = ( $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
 		return $this->baseurl;
 	}
 
