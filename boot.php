@@ -17,7 +17,7 @@ define ( 'DOWN_ARROW',             '&#x21e9;'       );
 
 define ( 'SSL_POLICY_NONE',         0 );
 define ( 'SSL_POLICY_FULL',         1 );
-define ( 'SSL_POLICY_SELFSIGN'      2 );
+define ( 'SSL_POLICY_SELFSIGN',      2 );
 
 
 /**
@@ -280,8 +280,8 @@ class App {
 	}
 
 	function get_baseurl($ssl = false) {
-		if(strlen($this->baseurl))
-			return $this->baseurl;
+//		if(strlen($this->baseurl))
+//			return $this->baseurl;
 
 		$scheme = $this->scheme;
 
@@ -290,7 +290,7 @@ class App {
 		if(($a->config['ssl_policy'] == SSL_POLICY_SELFSIGN) && (local_user() || x($_POST,'auth-params')))
 			$scheme = 'https';
 
-		$this->baseurl = ( $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
+		$this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
 		return $this->baseurl;
 	}
 
