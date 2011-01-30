@@ -17,7 +17,7 @@ define ( 'DOWN_ARROW',             '&#x21e9;'       );
 
 define ( 'SSL_POLICY_NONE',         0 );
 define ( 'SSL_POLICY_FULL',         1 );
-define ( 'SSL_POLICY_SELFSIGN',      2 );
+define ( 'SSL_POLICY_SELFSIGN',     2 );
 
 
 /**
@@ -280,8 +280,6 @@ class App {
 	}
 
 	function get_baseurl($ssl = false) {
-//		if(strlen($this->baseurl))
-//			return $this->baseurl;
 
 		$scheme = $this->scheme;
 
