@@ -71,6 +71,7 @@ function item_post(&$a) {
 	$location          = notags(trim($_POST['location']));
 	$coord             = notags(trim($_POST['coord']));
 	$verb              = notags(trim($_POST['verb']));
+	$emailcc           = notags(trim($_POST['emailcc']));
 
 	if(! strlen($body)) {
 		notice( t('Empty post discarded.') . EOL );
