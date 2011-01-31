@@ -10,7 +10,9 @@ function follow_post(&$a) {
 		// NOTREACHED
 	}
 
-	$url = notags(trim($_POST['url']));
+	$url = $orig_url = notags(trim($_POST['url']));
+	
+	$email_conversant = false;
 
 	if($url) {
 		$links = lrdd($url);
@@ -27,6 +29,11 @@ function follow_post(&$a) {
 				if($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page')
 					$profile = $link['@attributes']['href'];
 
+			}
+		}
+		else {
+			if((strpos($orig_url,'@')) && validate_email($orig_url)) {
+				$email_conversant = true;
 			}
 		}
 	}	
@@ -208,8 +215,8 @@ function follow_post(&$a) {
 	// pull feed and consume it, which should subscribe to the hub.
 
 	$php_path = ((x($a->config,'php_path') && strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
-	proc_close(proc_open("\"$php_path\" \"include/poller.php\" \"$contact_id\" &", array(), $foo));
-
+	//proc_close(proc_open("\"$php_path\" \"include/poller.php\" \"$contact_id\" &", array(), $foo));
+	proc_run($php_path,"include/poller.php","$contact_id");
 
 	// create a follow slap
 

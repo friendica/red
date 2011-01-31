@@ -1,14 +1,19 @@
 <?php
+require_once("boot.php");
 
+function poller_run($argv, $argc){
+  global $a, $db;
 
-	require_once('boot.php');
-
-	$a = new App;
-
-	@include('.htconfig.php');
-	require_once('dba.php');
-	$db = new dba($db_host, $db_user, $db_pass, $db_data);
-		unset($db_host, $db_user, $db_pass, $db_data);
+  if(is_null($a)){
+    $a = new App;
+  }
+  
+  if(is_null($db)){
+    @include(".htconfig.php");
+    require_once("dba.php");
+    $db = new dba($db_host, $db_user, $db_pass, $db_data);
+    unset($db_host, $db_user, $db_pass, $db_data);
+  };
 
 	require_once('session.php');
 	require_once('datetime.php');
@@ -19,11 +24,12 @@
 	$a->set_baseurl(get_config('system','url'));
 
 	logger('poller: start');
-
+	
 	// run queue delivery process in the background
 
 	$php_path = ((x($a->config,'php_path') && strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
-	proc_close(proc_open("\"$php_path\" \"include/queue.php\" &", array(), $foo));
+	//proc_close(proc_open("\"$php_path\" \"include/queue.php\" &", array(), $foo));
+	proc_run($php_path,"include/queue.php");
 
 
 	$hub_update = false;
@@ -46,10 +52,14 @@
 		$sql_extra 
 		AND `self` = 0 AND `blocked` = 0 AND `readonly` = 0 ORDER BY RAND()");
 
-	if(! count($contacts))
-		killme();
+	if(! count($contacts)){
+		return;
+	}
 
 	foreach($contacts as $contact) {
+
+			if($manual_id)
+				$contact['last-update'] = '0000-00-00 00:00:00';
 
 		if($contact['priority'] || $contact['subhub']) {
 
@@ -69,7 +79,7 @@
 				$contact['priority'] = (($interval !== false) ? intval($interval) : 3);
 				$hub_update = false;
 
-				if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 day"))
+				if((datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 day")) || $force)
 						$hub_update = true;
 			}
 
@@ -265,7 +275,10 @@
 		// loop - next contact
 	}  
 		
-	killme();
+	return;
+}
 
-
-
+if (array_search(__file__,get_included_files())===0){
+  poller_run($argv,$argc);
+  killme();
+}

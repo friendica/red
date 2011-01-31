@@ -71,6 +71,7 @@ function item_post(&$a) {
 	$location          = notags(trim($_POST['location']));
 	$coord             = notags(trim($_POST['coord']));
 	$verb              = notags(trim($_POST['verb']));
+	$emailcc           = notags(trim($_POST['emailcc']));
 
 	if(! strlen($body)) {
 		notice( t('Empty post discarded.') . EOL );
@@ -421,8 +422,7 @@ function item_post(&$a) {
 
 	logger('mod_item: notifier invoked: ' . "\"$php_path\" \"include/notifier.php\" \"$notify_type\" \"$post_id\" &");
 
-	proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"$notify_type\" \"$post_id\" &",
-		array(),$foo));
+  proc_run($php_path, "include/notifier.php", $notify_type, "$post_id");
 
 	$datarray['id'] = $post_id;
 
@@ -520,8 +520,8 @@ function item_content(&$a) {
 			
 			// send the notification upstream/downstream as the case may be
 
-			proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" &",
-				array(), $foo));
+			//proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" &", array(), $foo));
+			proc_run($php_path,"include/notifier.php","drop","$drop_id");
 
 			goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
 			return; //NOTREACHED

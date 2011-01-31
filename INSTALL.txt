@@ -29,7 +29,7 @@ php.ini file
 	- Mysql 5.x
 
 	- ability to schedule jobs with cron (Linux/Mac) or Scheduled Tasks
-(Windows)
+(Windows) [Note: other options are presented in Section 7 of this document]
 
 	- Installation into a top-level domain or sub-domain (without a 
 directory/path component in the URL) is preferred. Directory paths will
@@ -89,3 +89,18 @@ You can generally find the location of PHP by executing "which php". If you
 have troubles with this section please contact your hosting provider for 
 assistance. Friendika will not work correctly if you cannot perform this step.
   
+Alternative: You may be able to use the 'poormancron' plugin to perform this
+step if you are using a recent Friendika release. To do this, edit the file 
+".htconfig.php" and look for a line describing your plugins. On a fresh 
+installation, it will look like
+
+$a->config['system']['addon'] = 'js_upload';
+
+This indicates the "js_upload" addon module is enabled. You may add additional 
+addons/plugins using this same line in the configuration file. Change it to 
+read
+
+$a->config['system']['addon'] = 'js_upload,poormancron';
+
+and save your changes.
+

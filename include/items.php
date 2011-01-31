@@ -903,6 +903,10 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 		$feed->enable_order_by_date(false);
 	$feed->init();
 
+	if($feed->error())
+		logger('consume_feed: Error parsing XML: ' . $feed->error());
+
+
 	// Check at the feed level for updated contact name and/or photo
 
 	$name_updated  = '';

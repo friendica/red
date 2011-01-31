@@ -140,7 +140,7 @@ if(strlen($a->module)) {
 	}
 	else {
 		if((x($_SERVER,'QUERY_STRING')) && ($_SERVER['QUERY_STRING'] === 'q=internal_error.html') && isset($dreamhost_error_hack)) {
-			logger('index.php: dreamhost_error_hack invoked');
+			logger('index.php: dreamhost_error_hack invoked. Original URI =' . $_SERVER['REQUEST_URI']);
 			goaway($a->get_baseurl() . $_SERVER['REQUEST_URI']);
 		}
 

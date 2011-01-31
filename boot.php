@@ -10,6 +10,16 @@ define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
 define ( 'DOWN_ARROW',             '&#x21e9;'       );
          
+
+/**
+ * SSL redirection policies
+ */
+
+define ( 'SSL_POLICY_NONE',         0 );
+define ( 'SSL_POLICY_FULL',         1 );
+define ( 'SSL_POLICY_SELFSIGN',     2 );
+
+
 /**
  * log levels
  */
@@ -270,10 +280,17 @@ class App {
 	}
 
 	function get_baseurl($ssl = false) {
-		if(strlen($this->baseurl))
-			return $this->baseurl;
 
-		$this->baseurl = (($ssl) ? 'https' : $this->scheme) . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
+		$scheme = $this->scheme;
+
+		if(x($this->config,'ssl_policy')) {
+			if(($ssl) || ($this->config['ssl_policy'] == SSL_POLICY_FULL)) 
+				$scheme = 'https';
+			if(($this->config['ssl_policy'] == SSL_POLICY_SELFSIGN) && (local_user() || x($_POST,'auth-params')))
+				$scheme = 'https';
+		}
+
+		$this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
 		return $this->baseurl;
 	}
 
@@ -1655,7 +1672,6 @@ function attribute_contains($attr,$s) {
 
 if(! function_exists('logger')) {
 function logger($msg,$level = 0) {
-
 	$debugging = get_config('system','debugging');
 	$loglevel  = intval(get_config('system','loglevel'));
 	$logfile   = get_config('system','logfile');
@@ -2225,7 +2241,31 @@ function prepare_body($item) {
 	$s = smilies(bbcode($item['body']));
 
 	return $s;
-
-
-
 }}
+
+/**
+ * 
+ * Wrap calls to proc_close(proc_open()) and call hook
+ * so plugins can take part in process :)
+ * 
+ * args:
+ * $cmd program to run
+ *  next args are passed as $cmd command line
+ * 
+ * e.g.: proc_run("ls","-la","/tmp");
+ * 
+ * $cmd and string args are surrounded with ""
+ */
+
+if(! function_exists('run_proc')) {
+function proc_run($cmd){
+	$args = func_get_args();
+	call_hooks("proc_run", $args);
+	
+	foreach ($args as &$arg){
+		if(is_string($arg)) $arg='"'.$arg.'"';
+	}
+	$cmdline = implode($args," ");
+	proc_close(proc_open($cmdline." &",array(),$foo));
+}}
+

@@ -3,6 +3,8 @@
 
 <div id="contact-edit-banner-name">$name</div>
 
+<form action="contacts/$contact_id" method="post" >
+<input type="hidden" name="contact_id" value="$contact_id">
 
 <div id="contact-edit-wrapper" >
 
@@ -24,13 +26,12 @@
 		</div>
 		<div id="contact-edit-nav-end"></div>
 
-<form action="contacts/$contact_id" method="post" >
-<input type="hidden" name="contact_id" value="$contact_id">
 
 		<div id="contact-edit-poll-wrapper">
 			<div id="contact-edit-last-update-text">$lastupdtext<span id="contact-edit-last-updated">$last_update</span</div>
 			<div id="contact-edit-poll-text">$updpub</div>
 			$poll_interval
+			<div id="contact-edit-update-now"><a href="contacts/$contact_id/update">$udnow</a></div>
 		</div>
 	</div>
 	<div id="contact-edit-end" ></div>
