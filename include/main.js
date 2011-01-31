@@ -44,12 +44,13 @@
 					$('#pause').html('');
 				}
 			}
-			if(event.keyCode == '36' && event.shiftKey == true) {
-				if(homebase !== undefined) {
-					event.preventDefault();
-					document.location = homebase;
-				}
-			}
+// this is shift-home on FF, but $ on IE, disabling until I figure out why the diff.
+//			if(event.keyCode == '36' && event.shiftKey == true) {
+//				if(homebase !== undefined) {
+//					event.preventDefault();
+//					document.location = homebase;
+//				}
+//			}
 		});					
 	});
 
