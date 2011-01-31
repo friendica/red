@@ -45,6 +45,7 @@
 				}
 			}
 // this is shift-home on FF, but $ on IE, disabling until I figure out why the diff.
+// update: incompatible usage of onKeyDown vs onKeyPress
 //			if(event.keyCode == '36' && event.shiftKey == true) {
 //				if(homebase !== undefined) {
 //					event.preventDefault();
