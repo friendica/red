@@ -72,4 +72,7 @@ $a->config['system']['rino_encrypt'] = true;
 $a->config['system']['addon'] = 'js_upload';
 
 
- 
+// Disable oembed embedding
+// This disable the conversion of [embed]$url[/embed] tag in html
+// $a->config['system']['no_oembed'] = true;
+

@@ -10,7 +10,7 @@ function oembed_replacecb($matches){
        if (isset($j->thumbnail_url)) {
          $tw = (isset($j->thumbnail_width)) ? $j->thumbnail_width:200;
          $th = (isset($j->thumbnail_height)) ? $j->thumbnail_height:180;
-         $ret = "<a href='#' onclick='this.innerHTML=unescape(\"".urlencode($j->html)."\").replace(/\+/g,\" \"); return false;' >";
+         $ret = "<a href='".$embedurl."' onclick='this.innerHTML=unescape(\"".urlencode($j->html)."\").replace(/\+/g,\" \"); return false;' >";
          $ret.= "<img width='$tw' height='$th' src='".$j->thumbnail_url."'>";
          $ret.= "</a>";
        } else {
@@ -41,8 +41,9 @@ function oembed_replacecb($matches){
 
 function oembed_bbcode($text){
 	$stopoembed = get_config("system","no_oembed");
-	if ($stopoembed == True):
-		return preg_replace_callback("/\[embed\](.+?)\[\/embed\]/is", "$1" ,$text);
+	if ($stopoembed == true){
+		return preg_replace("/\[embed\](.+?)\[\/embed\]/is", "<!-- oembed $1 --><i>". t('Embedding disabled') ." : $1</i><!-- /oembed $1 -->" ,$text);
+	}
 	return preg_replace_callback("/\[embed\](.+?)\[\/embed\]/is", oembed_replacecb ,$text);
 }
 ?>
