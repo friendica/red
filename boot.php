@@ -283,10 +283,12 @@ class App {
 
 		$scheme = $this->scheme;
 
-		if(($ssl) || ($this->config['ssl_policy'] == SSL_POLICY_FULL)) 
-			$scheme = 'https';
-		if(($this->config['ssl_policy'] == SSL_POLICY_SELFSIGN) && (local_user() || x($_POST,'auth-params')))
-			$scheme = 'https';
+		if(x($this->config,'ssl_policy')) {
+			if(($ssl) || ($this->config['ssl_policy'] == SSL_POLICY_FULL)) 
+				$scheme = 'https';
+			if(($this->config['ssl_policy'] == SSL_POLICY_SELFSIGN) && (local_user() || x($_POST,'auth-params')))
+				$scheme = 'https';
+		}
 
 		$this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
 		return $this->baseurl;

@@ -58,6 +58,9 @@ function poller_run($argv, $argc){
 
 	foreach($contacts as $contact) {
 
+			if($manual_id)
+				$contact['last-update'] = '0000-00-00 00:00:00';
+
 		if($contact['priority'] || $contact['subhub']) {
 
 			$hub_update = true;
