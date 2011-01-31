@@ -1,8 +1,20 @@
 <?php
 function oembed_replacecb($matches){
   $embedurl=$matches[1];
-  $ourl = "http://oohembed.com/oohembed/?url=".urlencode($embedurl);  
-  $txt = fetch_url($ourl);
+  
+  $r = q("SELECT v FROM `cache` WHERE k='%s'",
+  		dbesc($embedurl));
+  if(count($r)){
+  	$txt = $r[0]['v'];
+  } else {
+	  $ourl = "http://oohembed.com/oohembed/?url=".urlencode($embedurl);  
+	  $txt = fetch_url($ourl);
+	  //save in cache
+	  q("INSERT INTO `cache` VALUES ('%s','%s','%s')",
+	  	dbesc($embedurl),
+		dbesc($txt),
+		dbesc(datetime_convert()));
+  }
   $j = json_decode($txt);
   $ret="<span class='oembed'>";
   switch ($j->type) {
