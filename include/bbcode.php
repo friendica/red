@@ -94,7 +94,7 @@ function bbcode($Text) {
 	$Text = preg_replace("/\[youtube\](.+?)\[\/youtube\]/", '<object width="425" height="350" type="application/x-shockwave-flash" data="http://www.youtube.com/v/$1" ><param name="movie" value="http://www.youtube.com/v/$1"></param><!--[if IE]><embed src="http://www.youtube.com/v/$1" type="application/x-shockwave-flash" width="425" height="350" /><![endif]--></object>', $Text);
 
 	// oembed tag
-	$Text = oembed_bbcode($Text);
+	$Text = oembed_bbcode2html($Text);
 
 	call_hooks('bbcode',$Text);
 
