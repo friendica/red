@@ -363,7 +363,7 @@ function notifier_run($argv, $argc){
 					continue;
 				$params = 'hub.mode=publish&hub.url=' . urlencode($a->get_baseurl() . '/dfrn_poll/' . $owner['nickname'] );
 				post_url($h,$params);
-				logger('pubsub: publish: ' . $h . ' returned ' . $a->get_curl_code());
+				logger('pubsub: publish: ' . $h . ' ' . $params . ' returned ' . $a->get_curl_code());
 				if(count($hubs) > 1)
 					sleep(7);				// try and avoid multiple hubs responding at precisely the same time
 			}

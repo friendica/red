@@ -76,7 +76,7 @@ function poller_run($argv, $argc){
 				$contact['priority'] = (($interval !== false) ? intval($interval) : 3);
 				$hub_update = false;
 
-				if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 day"))
+				if((datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 day")) || $force)
 						$hub_update = true;
 			}
 

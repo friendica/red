@@ -283,9 +283,9 @@ class App {
 
 		$scheme = $this->scheme;
 
-		if(($ssl) || ($a->config['ssl_policy'] == SSL_POLICY_FULL)) 
+		if(($ssl) || ($this->config['ssl_policy'] == SSL_POLICY_FULL)) 
 			$scheme = 'https';
-		if(($a->config['ssl_policy'] == SSL_POLICY_SELFSIGN) && (local_user() || x($_POST,'auth-params')))
+		if(($this->config['ssl_policy'] == SSL_POLICY_SELFSIGN) && (local_user() || x($_POST,'auth-params')))
 			$scheme = 'https';
 
 		$this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
