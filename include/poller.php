@@ -30,6 +30,10 @@ function poller_run($argv, $argc){
 	$php_path = ((x($a->config,'php_path') && strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 	//proc_close(proc_open("\"$php_path\" \"include/queue.php\" &", array(), $foo));
 	proc_run($php_path,"include/queue.php");
+	
+	// clear old cache
+	q("DELETE FROM `cache` WHERE `updated`<'%s'",
+		dbesc(datetime_convert('UTC','UTC',"now - 30 days")));
 
 
 	$hub_update = false;
