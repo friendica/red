@@ -2,6 +2,7 @@
 
 require_once('bbcode.php');
 require_once('oembed.php');
+require_once('include/salmon.php');
 
 function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) {
 
@@ -376,6 +377,21 @@ function get_atom_elements($feed,$item) {
 	}
 
 
+	/**
+	 * If there's a copy of the body content which is guaranteed to have survived mangling in transit, use it.
+	 */
+
+	$have_real_body = false;
+
+	$rawenv = $item->get_item_tags(NAMESPACE_DFRN, 'env');
+	if($rawenv) {
+		$have_real_body = true;
+		$res['body'] = $rawenv[0]['data'];
+		$res['body'] = str_replace(array(' ',"\t","\r","\n"), array('','','',''),$res['body']);
+		$res['body'] = base64url_decode($res['body']);
+		$res['realbody'] = true;
+	}
+
 	$maxlen = get_max_import_size();
 	if($maxlen && (strlen($res['body']) > $maxlen))
 		$res['body'] = substr($res['body'],0, $maxlen);
@@ -391,7 +407,7 @@ function get_atom_elements($feed,$item) {
 	// html.
 
 
-	if((strpos($res['body'],'<')) || (strpos($res['body'],'>'))) {
+	if((! $have_real_body) || (strpos($res['body'],'<')) || (strpos($res['body'],'>'))) {
 
 		$res['body'] = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
 			'[youtube]$1[/youtube]', $res['body']);
@@ -643,18 +659,21 @@ function item_store($arr) {
 	$arr['private']       = ((x($arr,'private'))       ? intval($arr['private'])             : 0 );
 	$arr['body']          = ((x($arr,'body'))          ? escape_tags(trim($arr['body']))     : '');
 
-	// The content body has been through a lot of filtering and transport escaping by now. 
+	// The content body may have been through a lot of filtering and transport escaping by now. 
 	// We don't want to skip any filters, however a side effect of all this filtering 
 	// is that ampersands and <> may have been double encoded, depending on which filter chain
-	// they came through. 
+	// they came through. The presence of $res['realbody'] means we have something encoded in a 
+	// transport safe manner at the source and does not require any filter corrections. 
 
-	$arr['body']          = str_replace(
-								array('&amp;amp;', '&amp;gt;', '&amp;lt;', '&amp;quot;'),
-								array('&amp;'    , '&gt;'    , '&lt;',     '&quot;'),
-								$arr['body']
-							);
-
-
+	if(x($arr,'realbody'))
+		unset($arr['realbody']);
+	else {
+		$arr['body']          = str_replace(
+									array('&amp;amp;', '&amp;gt;', '&amp;lt;', '&amp;quot;'),
+									array('&amp;'    , '&gt;'    , '&lt;',     '&quot;'),
+									$arr['body']
+								);
+	}
 
 	if($arr['parent-uri'] === $arr['uri']) {
 		$parent_id = 0;
@@ -1421,6 +1440,7 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 	$o .= '<title>' . xmlify($item['title']) . '</title>' . "\r\n";
 	$o .= '<published>' . xmlify(datetime_convert('UTC','UTC',$item['created'] . '+00:00',ATOM_TIME)) . '</published>' . "\r\n";
 	$o .= '<updated>' . xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00',ATOM_TIME)) . '</updated>' . "\r\n";
+	$o .= '<dfrn:env>' . base64url_encode($item['body'], true) . '</dfrn:env>' . "\r\n";
 	$o .= '<content type="' . $type . '" >' . xmlify(($type === 'html') ? bbcode($item['body']) : $item['body']) . '</content>' . "\r\n";
 	$o .= '<link rel="alternate" href="' . xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']) . '" />' . "\r\n";
 	if($comment)
