@@ -67,7 +67,7 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 			else
 				$selected = '';
 
-			$trimmed = substr($rr['name'],0,24);
+			$trimmed = substr($rr['name'],0,22);
 
 			$o .= "<option value=\"{$rr['id']}\" $selected title=\"{$rr['name']}|{$rr['url']}\" >$trimmed</option>\r\n";
 		}
