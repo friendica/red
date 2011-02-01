@@ -18,15 +18,13 @@ function salmon_key($pubkey) {
 }
 
 
-function base64url_encode($s) {
+function base64url_encode($s, $strip_padding = false) {
+
 	$s = strtr(base64_encode($s),'+/','-_');
-/*
- *  // placeholder for un-padded base64url_encode 
- *  // per latest salmon rev
- *
- *  $s = str_replace('=','',$s);
- *
- */
+
+	if($strip_padding)
+		$s = str_replace('=','',$s);
+
 	return $s;
 }
 
