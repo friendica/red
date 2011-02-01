@@ -5,11 +5,24 @@ require_once('library/HTML5/Parser.php');
 if(! function_exists('scrape_dfrn')) {
 function scrape_dfrn($url) {
 
+	$a = get_app();
+
 	$ret = array();
 	$s = fetch_url($url);
 
 	if(! $s) 
 		return $ret;
+
+	$headers = $a->get_curl_headers();
+	$lines = explode("\n",$headers);
+	if(count($lines)) {
+		foreach($lines as $line) {				
+			// don't try and run feeds through the html5 parser
+			if(stristr($line,'content-type:') && ((stristr($line,'application/atom+xml')) || (stristr($line,'application/rss+xml'))))
+				return ret;
+		}
+	}
+
 
 	$dom = HTML5_Parser::parse($s);
 
@@ -77,11 +90,25 @@ function validate_dfrn($a) {
 if(! function_exists('scrape_meta')) {
 function scrape_meta($url) {
 
+	$a = get_app();
+
 	$ret = array();
 	$s = fetch_url($url);
 
 	if(! $s) 
 		return $ret;
+
+	$headers = $a->get_curl_headers();
+	$lines = explode("\n",$headers);
+	if(count($lines)) {
+		foreach($lines as $line) {				
+			// don't try and run feeds through the html5 parser
+			if(stristr($line,'content-type:') && ((stristr($line,'application/atom+xml')) || (stristr($line,'application/rss+xml'))))
+				return ret;
+		}
+	}
+
+
 
 	$dom = HTML5_Parser::parse($s);
 
@@ -105,11 +132,23 @@ function scrape_meta($url) {
 if(! function_exists('scrape_vcard')) {
 function scrape_vcard($url) {
 
+	$a = get_app();
+
 	$ret = array();
 	$s = fetch_url($url);
 
 	if(! $s) 
 		return $ret;
+
+	$headers = $a->get_curl_headers();
+	$lines = explode("\n",$headers);
+	if(count($lines)) {
+		foreach($lines as $line) {				
+			// don't try and run feeds through the html5 parser
+			if(stristr($line,'content-type:') && ((stristr($line,'application/atom+xml')) || (stristr($line,'application/rss+xml'))))
+				return ret;
+		}
+	}
 
 	$dom = HTML5_Parser::parse($s);
 
@@ -142,11 +181,30 @@ function scrape_vcard($url) {
 if(! function_exists('scrape_feed')) {
 function scrape_feed($url) {
 
+	$a = get_app();
+
 	$ret = array();
 	$s = fetch_url($url);
 
 	if(! $s) 
 		return $ret;
+
+	$headers = $a->get_curl_headers();
+	$lines = explode("\n",$headers);
+	if(count($lines)) {
+		foreach($lines as $line) {				
+			if(stristr($line,'content-type:')) {
+				if(stristr($line,'application/atom+xml')) {
+					$ret['feed_atom'] = $url;
+					return $ret;
+				}
+ 				if(stristr($line,'application/rss+xml')) {
+					$ret['feed_rss'] = $url;
+					return ret;
+				}
+			}
+		}
+	}
 
 	$dom = HTML5_Parser::parse($s);
 

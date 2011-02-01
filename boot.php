@@ -1374,6 +1374,9 @@ function lrdd($uri) {
 					$link = $matches[1];
 					break;
 				}
+				// don't try and run feeds through the html5 parser
+				if(stristr($line,'content-type:') && ((stristr($line,'application/atom+xml')) || (stristr($line,'application/rss+xml'))))
+					return array();
 			}
 		}
 		if(! isset($link)) {
