@@ -159,11 +159,12 @@ function notifier_run($argv, $argc){
 
 		$r = q("SELECT * FROM `contact` WHERE `id` IN ( $conversant_str ) AND `blocked` = 0 AND `pending` = 0");
 
-		if( ! count($r)){
-			return;
-		}
+//		if( ! count($r)){
+//			return;
+//		}
 
-		$contacts = $r;
+		if(count($r))
+			$contacts = $r;
 	}
 
 	$feed_template = load_view_file('view/atom_feed.tpl');
@@ -258,87 +259,87 @@ function notifier_run($argv, $argc){
 	$r = q("SELECT * FROM `contact` WHERE `id` IN ( %s ) AND `blocked` = 0 AND `pending` = 0 ",
 		dbesc($recip_str)
 	);
-	if(! count($r)){
-		return;
-	}
+
 	// delivery loop
 
 	require_once('include/salmon.php');
 
-	foreach($r as $contact) {
-		if($contact['self'])
-			continue;
+	if(count($r)) {
+		foreach($r as $contact) {
+			if($contact['self'])
+				continue;
 
-		$deliver_status = 0;
+			$deliver_status = 0;
 
-		switch($contact['network']) {
-			case 'dfrn':
-				logger('notifier: dfrndelivery: ' . $contact['name']);
-				$deliver_status = dfrn_deliver($owner,$contact,$atom);
+			switch($contact['network']) {
+				case 'dfrn':
+					logger('notifier: dfrndelivery: ' . $contact['name']);
+					$deliver_status = dfrn_deliver($owner,$contact,$atom);
 
-				logger('notifier: dfrn_delivery returns ' . $deliver_status);
-
-				if($deliver_status == (-1)) {
-					logger('notifier: delivery failed: queuing message');
-					// queue message for redelivery
-					q("INSERT INTO `queue` ( `cid`, `created`, `last`, `content`)
-						VALUES ( %d, '%s', '%s', '%s') ",
-						intval($contact['id']),
-						dbesc(datetime_convert()),
-						dbesc(datetime_convert()),
-						dbesc($atom)
-					);
-				}
-				break;
-			case 'stat':
-				if($followup && $contact['notify']) {
-					logger('notifier: slapdelivery: ' . $contact['name']);
-					$deliver_status = slapper($owner,$contact['notify'],$slap);
-
+					logger('notifier: dfrn_delivery returns ' . $deliver_status);
+	
 					if($deliver_status == (-1)) {
+						logger('notifier: delivery failed: queuing message');
 						// queue message for redelivery
 						q("INSERT INTO `queue` ( `cid`, `created`, `last`, `content`)
 							VALUES ( %d, '%s', '%s', '%s') ",
 							intval($contact['id']),
 							dbesc(datetime_convert()),
 							dbesc(datetime_convert()),
-							dbesc($slap)
+							dbesc($atom)
 						);
+					}
+					break;
+				case 'stat':
+					if($followup && $contact['notify']) {
+						logger('notifier: slapdelivery: ' . $contact['name']);
+						$deliver_status = slapper($owner,$contact['notify'],$slap);
+
+						if($deliver_status == (-1)) {
+							// queue message for redelivery
+							q("INSERT INTO `queue` ( `cid`, `created`, `last`, `content`)
+								VALUES ( %d, '%s', '%s', '%s') ",
+								intval($contact['id']),
+								dbesc(datetime_convert()),
+								dbesc(datetime_convert()),
+								dbesc($slap)
+							);
+
+						}
+	
 
 					}
+					else {
 
+						// only send salmon if public - e.g. if it's ok to notify
+						// a public hub, it's ok to send a salmon
 
-				}
-				else {
-
-					// only send salmon if public - e.g. if it's ok to notify
-					// a public hub, it's ok to send a salmon
-
-					if(count($slaps) && $notify_hub) {
-						logger('notifier: slapdelivery: ' . $contact['name']);
-						foreach($slaps as $slappy) {
-							if($contact['notify']) {
-								$deliver_status = slapper($owner,$contact['notify'],$slappy);
-								if($deliver_status == (-1)) {
-									// queue message for redelivery
-									q("INSERT INTO `queue` ( `cid`, `created`, `last`, `content`)
-										VALUES ( %d, '%s', '%s', '%s') ",
-										intval($contact['id']),
-										dbesc(datetime_convert()),
-										dbesc(datetime_convert()),
-										dbesc($slappy)
-									);								
+						if(count($slaps) && $notify_hub) {
+							logger('notifier: slapdelivery: ' . $contact['name']);
+							foreach($slaps as $slappy) {
+								if($contact['notify']) {
+									$deliver_status = slapper($owner,$contact['notify'],$slappy);
+									if($deliver_status == (-1)) {
+										// queue message for redelivery
+										q("INSERT INTO `queue` ( `cid`, `created`, `last`, `content`)
+											VALUES ( %d, '%s', '%s', '%s') ",
+											intval($contact['id']),
+											dbesc(datetime_convert()),
+											dbesc(datetime_convert()),
+											dbesc($slappy)
+										);								
+									}
 								}
 							}
 						}
 					}
-				}
-				break;
-			case 'mail':
-			case 'dspr':
-			case 'feed':
-			default:
-				break;
+					break;
+				case 'mail':
+				case 'dspr':
+				case 'feed':
+				default:
+					break;
+			}
 		}
 	}
 		
@@ -382,7 +383,6 @@ function notifier_run($argv, $argc){
 
 		$max_allowed = ((get_config('system','maxpubdeliver') === false) ? 150 : intval(get_config('system','maxdeliver')));
 				
-
 		/**
 		 *
 		 * Only get the bare essentials and go back for the full record. 
@@ -397,7 +397,8 @@ function notifier_run($argv, $argc){
 			intval(REL_FAN)
 		);
 
-		if((count($r)) && ($max_allowed < count($r))) {
+		if((count($r)) && (($max_allowed == 0) || (count($r) < $max_allowed))) {
+
 			foreach($r as $rr) {
 
 				/* Don't deliver to folks who have already been delivered to */
@@ -406,6 +407,7 @@ function notifier_run($argv, $argc){
 					$n = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
 							intval($rr['id'])
 					);
+
 					if(count($n)) {
 					
 						logger('notifier: dfrnpubdelivery: ' . $n[0]['name']);

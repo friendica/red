@@ -9,7 +9,7 @@ tinyMCE.init({
 	mode : "specific_textareas",
 	editor_selector: /(profile-jot-text|prvmail-text)/,
 	plugins : "bbcode,paste",
-	theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,forecolor,formatselect",
+	theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,forecolor,formatselect,code",
 	theme_advanced_buttons2 : "",
 	theme_advanced_buttons3 : "",
 	theme_advanced_toolbar_location : "top",
