@@ -320,3 +320,11 @@ function update_1031() {
 function update_1032() {
 	q("ALTER TABLE `profile` ADD `pdesc` CHAR( 255 ) NOT NULL AFTER `name` ");
 }
+
+function update_1033() {
+	q("CREATE TABLE IF NOT EXISTS `cache` (
+ 		`k` CHAR( 255 ) NOT NULL PRIMARY KEY ,
+ 		`v` TEXT NOT NULL,
+ 		`updated` DATETIME NOT NULL
+		) ENGINE = MYISAM DEFAULT CHARSET=utf8;");
+}

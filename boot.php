@@ -2,7 +2,7 @@
 
 set_time_limit(0);
 
-define ( 'BUILD_ID',               1033   );
+define ( 'BUILD_ID',               1034   );
 define ( 'FRIENDIKA_VERSION',      '2.10.0902' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.0'  );
 
@@ -10,6 +10,16 @@ define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
 define ( 'DOWN_ARROW',             '&#x21e9;'       );
          
+
+/**
+ * SSL redirection policies
+ */
+
+define ( 'SSL_POLICY_NONE',         0 );
+define ( 'SSL_POLICY_FULL',         1 );
+define ( 'SSL_POLICY_SELFSIGN',     2 );
+
+
 /**
  * log levels
  */
@@ -270,10 +280,17 @@ class App {
 	}
 
 	function get_baseurl($ssl = false) {
-		if(strlen($this->baseurl))
-			return $this->baseurl;
 
-		$this->baseurl = (($ssl) ? 'https' : $this->scheme) . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
+		$scheme = $this->scheme;
+
+		if(x($this->config,'ssl_policy')) {
+			if(($ssl) || ($this->config['ssl_policy'] == SSL_POLICY_FULL)) 
+				$scheme = 'https';
+			if(($this->config['ssl_policy'] == SSL_POLICY_SELFSIGN) && (local_user() || x($_POST,'auth-params')))
+				$scheme = 'https';
+		}
+
+		$this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
 		return $this->baseurl;
 	}
 

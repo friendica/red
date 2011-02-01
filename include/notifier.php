@@ -255,7 +255,7 @@ function notifier_run($argv, $argc){
 		$recip_str = implode(', ', $recipients);
 
 
-	$r = q("SELECT * FROM `contact` WHERE `id` IN ( %s ) AND `blocked` = 0 ",
+	$r = q("SELECT * FROM `contact` WHERE `id` IN ( %s ) AND `blocked` = 0 AND `pending` = 0 ",
 		dbesc($recip_str)
 	);
 	if(! count($r)){
@@ -363,9 +363,57 @@ function notifier_run($argv, $argc){
 					continue;
 				$params = 'hub.mode=publish&hub.url=' . urlencode($a->get_baseurl() . '/dfrn_poll/' . $owner['nickname'] );
 				post_url($h,$params);
-				logger('pubsub: publish: ' . $h . ' returned ' . $a->get_curl_code());
+				logger('pubsub: publish: ' . $h . ' ' . $params . ' returned ' . $a->get_curl_code());
 				if(count($hubs) > 1)
 					sleep(7);				// try and avoid multiple hubs responding at precisely the same time
+			}
+		}
+	}
+
+	if($notify_hub) {
+
+		/**
+		 *
+		 * If you have less than 150 dfrn friends and it's a public message,
+		 * we'll just go ahead and push them out securely with dfrn/rino.
+		 * If you've got more than that, you'll have to rely on PuSH delivery.
+		 *
+		 */
+
+		$max_allowed = ((get_config('system','maxpubdeliver') === false) ? 150 : intval(get_config('system','maxdeliver')));
+				
+
+		/**
+		 *
+		 * Only get the bare essentials and go back for the full record. 
+		 * If you've got a lot of friends and we grab all the details at once it could exhaust memory. 
+		 *
+		 */
+
+		$r = q("SELECT `id`, `name` FROM `contact` 
+			WHERE `network` = 'dfrn' AND `uid` = %d AND `blocked` = 0 AND `pending` = 0
+			AND `rel` != %d ",
+			intval($owner['uid']),
+			intval(REL_FAN)
+		);
+
+		if((count($r)) && ($max_allowed < count($r))) {
+			foreach($r as $rr) {
+
+				/* Don't deliver to folks who have already been delivered to */
+
+				if(! in_array($rr['id'], $conversants)) {
+					$n = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
+							intval($rr['id'])
+					);
+					if(count($n)) {
+					
+						logger('notifier: dfrnpubdelivery: ' . $n[0]['name']);
+						$deliver_status = dfrn_deliver($owner,$n[0],$atom);
+					}
+				}
+				else
+					logger('notifier: dfrnpubdelivery: ignoring ' . $rr['name']);
 			}
 		}
 	}

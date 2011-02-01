@@ -121,6 +121,15 @@ function contacts_content(&$a) {
 			return; // NOTREACHED
 		}
 
+		if($cmd === 'update') {
+
+			// pull feed and consume it, which should subscribe to the hub.
+
+			$php_path = ((x($a->config,'php_path') && strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
+			proc_run($php_path,"include/poller.php","$contact_id");
+			goaway($a->get_baseurl() . '/contacts/' . $contact_id);
+			// NOTREACHED
+		}
 
 		if($cmd === 'block') {
 			$blocked = (($orig_record[0]['blocked']) ? 0 : 1);
@@ -248,6 +257,7 @@ function contacts_content(&$a) {
 			'$last_update' => (($r[0]['last-update'] == '0000-00-00 00:00:00') 
 				? t('Never') 
 				: datetime_convert('UTC',date_default_timezone_get(),$r[0]['last-update'],'D, j M Y, g:i A')),
+			'$udnow' => t('Update now'),
 			'$profile_select' => contact_profile_assign($r[0]['profile-id'],(($r[0]['network'] !== 'dfrn') ? true : false)),
 			'$contact_id' => $r[0]['id'],
 			'$block_text' => (($r[0]['blocked']) ? t('Unblock this contact') : t('Block this contact') ),

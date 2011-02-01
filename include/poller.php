@@ -30,6 +30,10 @@ function poller_run($argv, $argc){
 	$php_path = ((x($a->config,'php_path') && strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 	//proc_close(proc_open("\"$php_path\" \"include/queue.php\" &", array(), $foo));
 	proc_run($php_path,"include/queue.php");
+	
+	// clear old cache
+	q("DELETE FROM `cache` WHERE `updated`<'%s'",
+		dbesc(datetime_convert('UTC','UTC',"now - 30 days")));
 
 
 	$hub_update = false;
@@ -58,6 +62,9 @@ function poller_run($argv, $argc){
 
 	foreach($contacts as $contact) {
 
+			if($manual_id)
+				$contact['last-update'] = '0000-00-00 00:00:00';
+
 		if($contact['priority'] || $contact['subhub']) {
 
 			$hub_update = true;
@@ -76,7 +83,7 @@ function poller_run($argv, $argc){
 				$contact['priority'] = (($interval !== false) ? intval($interval) : 3);
 				$hub_update = false;
 
-				if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 day"))
+				if((datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 day")) || $force)
 						$hub_update = true;
 			}
 

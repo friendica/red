@@ -71,6 +71,7 @@ function item_post(&$a) {
 	$location          = notags(trim($_POST['location']));
 	$coord             = notags(trim($_POST['coord']));
 	$verb              = notags(trim($_POST['verb']));
+	$emailcc           = notags(trim($_POST['emailcc']));
 
 	if(! strlen($body)) {
 		notice( t('Empty post discarded.') . EOL );
@@ -421,12 +422,39 @@ function item_post(&$a) {
 
 	logger('mod_item: notifier invoked: ' . "\"$php_path\" \"include/notifier.php\" \"$notify_type\" \"$post_id\" &");
 
-  proc_run($php_path, "include/notifier.php", $notify_type, "$post_id");
+	proc_run($php_path, "include/notifier.php", $notify_type, "$post_id");
 
 	$datarray['id'] = $post_id;
 
 	call_hooks('post_local_end', $datarray);
- 
+
+	if(strlen($emailcc) && $profile_uid == local_user()) {
+		$erecips = explode(',', $emailcc);
+		if(count($erecips)) {
+			foreach($erecips as $recip) {
+				$addr = trim($recip);
+				if(! strlen($addr))
+					continue;
+				$disclaimer = '<hr />' . t('This message was sent to you by ') . $a->user['username'] 
+					. t(', a member of the Friendika social network.') . '<br />';
+				$disclaimer .= t('You may visit them online at') . ' ' 
+					. $a->get_baseurl() . '/profile/' . $a->user['nickname'] . '<br />';
+				$disclaimer .= t('Please contact the sender by replying to this post if you do not wish to receive these messages.') . '<br />'; 
+
+				$subject  = '[Friendika]' . ' ' . $a->user['username'] . ' ' . t('posted an update.');
+				$headers  = 'From: ' . $a->user['username'] . ' <' . $a->user['email'] . '>' . "\n";
+				$headers .= 'MIME-Version: 1.0' . "\n";
+				$headers .= 'Content-Type: text/html; charset=UTF-8' . "\n";
+				$headers .= 'Content-Transfer-Encoding: 8bit' . "\n\n";
+				$link = '<a href="' . $a->get_baseurl() . '/profile/' . $a->user['nickname'] . '"><img src="' . $author['thumb'] . '" alt="' . $a->user['username'] . '" /></a><br /><br />';
+				$html    = prepare_body($datarray);
+				$message = '<html><body>' . $link . $html . $disclaimer . '</body></html>';
+				@mail($addr, $subject, $message, $headers);
+			}
+		}
+	}
+
+
 
 	goaway($a->get_baseurl() . "/" . $_POST['return'] );
 	return; // NOTREACHED

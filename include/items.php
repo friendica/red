@@ -1,6 +1,7 @@
 <?php
 
 require_once('bbcode.php');
+require_once('oembed.php');
 
 function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) {
 
@@ -395,6 +396,8 @@ function get_atom_elements($feed,$item) {
 		$res['body'] = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
 			'[youtube]$1[/youtube]', $res['body']);
 
+		$res['body'] = oembed_html2bbcode($res['body']);
+	
 		$config = HTMLPurifier_Config::createDefault();
 		$config->set('Cache.DefinitionImpl', null);
 
@@ -902,6 +905,10 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 	else
 		$feed->enable_order_by_date(false);
 	$feed->init();
+
+	if($feed->error())
+		logger('consume_feed: Error parsing XML: ' . $feed->error());
+
 
 	// Check at the feed level for updated contact name and/or photo
 
