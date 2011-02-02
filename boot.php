@@ -1366,6 +1366,7 @@ function lrdd($uri) {
 	else {
 		$html = fetch_url($uri);
 		$headers = $a->get_curl_headers();
+		logger('lrdd: headers=' . $headers, LOGGER_DEBUG);
 		$lines = explode("\n",$headers);
 		if(count($lines)) {
 			foreach($lines as $line) {				
@@ -1376,6 +1377,8 @@ function lrdd($uri) {
 				}
 				// don't try and run feeds through the html5 parser
 				if(stristr($line,'content-type:') && ((stristr($line,'application/atom+xml')) || (stristr($line,'application/rss+xml'))))
+					return array();
+				if(stristr($html,'<rss') || stristr($html,'<feed'))
 					return array();
 			}
 		}

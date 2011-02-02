@@ -8,12 +8,18 @@ function scrape_dfrn($url) {
 	$a = get_app();
 
 	$ret = array();
+
+	logger('scrape_dfrn: url=' . $url);
+
 	$s = fetch_url($url);
 
 	if(! $s) 
 		return $ret;
 
 	$headers = $a->get_curl_headers();
+	logger('scrape_dfrn: headers=' . $headers, LOGGER_DEBUG);
+
+
 	$lines = explode("\n",$headers);
 	if(count($lines)) {
 		foreach($lines as $line) {				
@@ -93,12 +99,17 @@ function scrape_meta($url) {
 	$a = get_app();
 
 	$ret = array();
+
+	logger('scrape_meta: url=' . $url);
+
 	$s = fetch_url($url);
 
 	if(! $s) 
 		return $ret;
 
 	$headers = $a->get_curl_headers();
+	logger('scrape_meta: headers=' . $headers, LOGGER_DEBUG);
+
 	$lines = explode("\n",$headers);
 	if(count($lines)) {
 		foreach($lines as $line) {				
@@ -135,6 +146,9 @@ function scrape_vcard($url) {
 	$a = get_app();
 
 	$ret = array();
+
+	logger('scrape_vcard: url=' . $url);
+
 	$s = fetch_url($url);
 
 	if(! $s) 
@@ -190,15 +204,17 @@ function scrape_feed($url) {
 		return $ret;
 
 	$headers = $a->get_curl_headers();
+	logger('scrape_feed: headers=' . $headers, LOGGER_DEBUG);
+
 	$lines = explode("\n",$headers);
 	if(count($lines)) {
 		foreach($lines as $line) {				
 			if(stristr($line,'content-type:')) {
-				if(stristr($line,'application/atom+xml')) {
+				if(stristr($line,'application/atom+xml') || stristr($s,'<feed')) {
 					$ret['feed_atom'] = $url;
 					return $ret;
 				}
- 				if(stristr($line,'application/rss+xml')) {
+ 				if(stristr($line,'application/rss+xml') || stristr($s,'<rss')) {
 					$ret['feed_rss'] = $url;
 					return ret;
 				}
