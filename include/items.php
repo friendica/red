@@ -813,27 +813,15 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 
 	$final_dfrn_id = '';
 
-	if($dfrn_version > 2.1) {
-		if(($contact['duplex'] && strlen($contact['pubkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
-			openssl_public_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['pubkey']);
-			openssl_public_decrypt($challenge,$postvars['challenge'],$contact['pubkey']);
-		}
-		else {
-			openssl_private_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['prvkey']);
-			openssl_private_decrypt($challenge,$postvars['challenge'],$contact['prvkey']);
-		}
+
+	if(($contact['duplex'] && strlen($contact['pubkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
+		openssl_public_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['pubkey']);
+		openssl_public_decrypt($challenge,$postvars['challenge'],$contact['pubkey']);
 	}
 	else {
-		if(($contact['duplex'] && strlen($contact['prvkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
-			openssl_private_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['prvkey']);
-			openssl_private_decrypt($challenge,$postvars['challenge'],$contact['prvkey']);
-		}
-		else {
-			openssl_public_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['pubkey']);
-			openssl_public_decrypt($challenge,$postvars['challenge'],$contact['pubkey']);
-		}
+		openssl_private_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['prvkey']);
+		openssl_private_decrypt($challenge,$postvars['challenge'],$contact['prvkey']);
 	}
-
 
 	$final_dfrn_id = substr($final_dfrn_id, 0, strpos($final_dfrn_id, '.'));
 
@@ -868,12 +856,21 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 		logger('rino: sent key = ' . $key);	
 
 
-	
-		if(($contact['duplex'] && strlen($contact['pubkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
-			openssl_public_encrypt($key,$postvars['key'],$contact['pubkey']);
+		if($dfrn_version >= 2.1) {	
+			if(($contact['duplex'] && strlen($contact['pubkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
+				openssl_public_encrypt($key,$postvars['key'],$contact['pubkey']);
+			}
+			else {
+				openssl_private_encrypt($key,$postvars['key'],$contact['prvkey']);
+			}
 		}
 		else {
-			openssl_private_encrypt($key,$postvars['key'],$contact['prvkey']);
+			if(($contact['duplex'] && strlen($contact['prvkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
+				openssl_private_encrypt($key,$postvars['key'],$contact['prvkey']);
+			}
+			else {
+				openssl_public_encrypt($key,$postvars['key'],$contact['pubkey']);
+			}
 		}
 
 		logger('md5 rawkey ' . md5($postvars['key']));

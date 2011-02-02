@@ -91,7 +91,7 @@ function dfrn_notify_post(&$a) {
 		logger('rino: md5 raw key: ' . md5($rawkey));
 		$final_key = '';
 
-		if($dfrn_version > 2.1) {
+		if($dfrn_version >= 2.1) {
 			if((($importer['duplex']) && strlen($importer['cprvkey'])) || (! strlen($importer['cpubkey']))) {
 				openssl_private_decrypt($rawkey,$final_key,$importer['cprvkey']);
 			}
