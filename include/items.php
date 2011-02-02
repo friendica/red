@@ -388,7 +388,8 @@ function get_atom_elements($feed,$item) {
 		$have_real_body = true;
 		$res['body'] = $rawenv[0]['data'];
 		$res['body'] = str_replace(array(' ',"\t","\r","\n"), array('','','',''),$res['body']);
-		$res['body'] = base64url_decode($res['body']);
+		// make sure nobody is trying to sneak some html tags by us
+		$res['body'] = notags(base64url_decode($res['body']));
 		$res['realbody'] = true;
 	}
 
@@ -407,27 +408,29 @@ function get_atom_elements($feed,$item) {
 	// html.
 
 
-	if((! $have_real_body) || (strpos($res['body'],'<')) || (strpos($res['body'],'>'))) {
+	if(! $have_real_body) {
+		if((strpos($res['body'],'<')) || (strpos($res['body'],'>'))) {
 
-		$res['body'] = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
-			'[youtube]$1[/youtube]', $res['body']);
+			$res['body'] = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
+				'[youtube]$1[/youtube]', $res['body']);
 
-		$res['body'] = oembed_html2bbcode($res['body']);
+			$res['body'] = oembed_html2bbcode($res['body']);
 	
-		$config = HTMLPurifier_Config::createDefault();
-		$config->set('Cache.DefinitionImpl', null);
+			$config = HTMLPurifier_Config::createDefault();
+			$config->set('Cache.DefinitionImpl', null);
 
-		// we shouldn't need a whitelist, because the bbcode converter
-		// will strip out any unsupported tags.
-		// $config->set('HTML.Allowed', 'p,b,a[href],i'); 
+			// we shouldn't need a whitelist, because the bbcode converter
+			// will strip out any unsupported tags.
+			// $config->set('HTML.Allowed', 'p,b,a[href],i'); 
 
-		$purifier = new HTMLPurifier($config);
-		$res['body'] = $purifier->purify($res['body']);
+			$purifier = new HTMLPurifier($config);
+			$res['body'] = $purifier->purify($res['body']);
 
-		$res['body'] = html2bbcode($res['body']);
+			$res['body'] = html2bbcode($res['body']);
+		}
+		else
+			$res['body'] = escape_tags($res['body']);
 	}
-	else
-		$res['body'] = escape_tags($res['body']);
 	
 
 	$allow = $item->get_item_tags(NAMESPACE_DFRN,'comment-allow');
