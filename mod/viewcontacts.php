@@ -43,7 +43,7 @@ function viewcontacts_content(&$a) {
 			'$id' => $rr['id'],
 			'$alt_text' => t('Visit ') . $rr['name'] . t('\'s profile'),
 			'$thumb' => $rr['thumb'], 
-			'$name' => $rr['name'],
+			'$name' => substr($rr['name'],0,20),
 			'$url' => $rr['url'] 
 		));
 	}

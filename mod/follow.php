@@ -161,7 +161,7 @@ function follow_post(&$a) {
 		// create contact record 
 		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `notify`, `poll`, `name`, `nick`, `photo`, `network`, `rel`, `priority`,
 			`blocked`, `readonly`, `pending` )
-			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, 0, 0, 0 ) ",
+			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, 0, 0, 0 ) ",
 			intval(local_user()),
 			dbesc(datetime_convert()),
 			dbesc($profile),

@@ -38,10 +38,10 @@ function network_content(&$a, $update = 0) {
 
 	$group = 0;
 
+	$nouveau = false;
+
 	if(! $update) {
 		$o .= '<script>	$(document).ready(function() { $(\'#nav-network-link\').addClass(\'nav-selected\'); });</script>';
-
-		$nouveau = false;
 
 		if(($a->argc > 2) && $a->argv[2] === 'new')
 			$nouveau = true;

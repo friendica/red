@@ -367,7 +367,7 @@ function contacts_content(&$a) {
 				'$alt_text' => $alt_text,
 				'$dir_icon' => $dir_icon,
 				'$thumb' => $rr['thumb'], 
-				'$name' => $rr['name'],
+				'$name' => substr($rr['name'],0,20),
 				'$sparkle' => $sparkle,
 				'$url' => $url
 			));
