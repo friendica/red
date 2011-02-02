@@ -768,7 +768,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 
 	$a = get_app();
 
-	if((! strlen($contact['dfrn-id'])) && (! $contact['duplex']) && (! ($owner['page-flags'] == PAGE_COMMUNITY)))
+	if((! strlen($contact['issued-id'])) && (! $contact['duplex']) && (! ($owner['page-flags'] == PAGE_COMMUNITY)))
 		return 3;
 
 	$idtosend = $orig_id = (($contact['dfrn-id']) ? $contact['dfrn-id'] : $contact['issued-id']);
@@ -808,19 +808,32 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	$postvars     = array();
 	$sent_dfrn_id = hex2bin((string) $res->dfrn_id);
 	$challenge    = hex2bin((string) $res->challenge);
+	$dfrn_version = (float) (($res->dfrn_version) ? $res->dfrn_version : 2.0);
 	$rino_allowed = ((intval($res->rino) === 1) ? 1 : 0);
 
 	$final_dfrn_id = '';
 
-
-	if(($contact['duplex'] && strlen($contact['prvkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
-		openssl_private_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['prvkey']);
-		openssl_private_decrypt($challenge,$postvars['challenge'],$contact['prvkey']);
+	if($dfrn_version > 2.1) {
+		if(($contact['duplex'] && strlen($contact['pubkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
+			openssl_public_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['pubkey']);
+			openssl_public_decrypt($challenge,$postvars['challenge'],$contact['pubkey']);
+		}
+		else {
+			openssl_private_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['prvkey']);
+			openssl_private_decrypt($challenge,$postvars['challenge'],$contact['prvkey']);
+		}
 	}
 	else {
-		openssl_public_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['pubkey']);
-		openssl_public_decrypt($challenge,$postvars['challenge'],$contact['pubkey']);
+		if(($contact['duplex'] && strlen($contact['prvkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
+			openssl_private_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['prvkey']);
+			openssl_private_decrypt($challenge,$postvars['challenge'],$contact['prvkey']);
+		}
+		else {
+			openssl_public_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['pubkey']);
+			openssl_public_decrypt($challenge,$postvars['challenge'],$contact['pubkey']);
+		}
 	}
+
 
 	$final_dfrn_id = substr($final_dfrn_id, 0, strpos($final_dfrn_id, '.'));
 
@@ -854,11 +867,13 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 		$postvars['data'] = $data;
 		logger('rino: sent key = ' . $key);	
 
-		if(($contact['duplex'] && strlen($contact['prvkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
-			openssl_private_encrypt($key,$postvars['key'],$contact['prvkey']);
+
+	
+		if(($contact['duplex'] && strlen($contact['pubkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
+			openssl_public_encrypt($key,$postvars['key'],$contact['pubkey']);
 		}
 		else {
-			openssl_public_encrypt($key,$postvars['key'],$contact['pubkey']);
+			openssl_private_encrypt($key,$postvars['key'],$contact['prvkey']);
 		}
 
 		logger('md5 rawkey ' . md5($postvars['key']));

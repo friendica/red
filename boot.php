@@ -3,8 +3,8 @@
 set_time_limit(0);
 
 define ( 'BUILD_ID',               1034   );
-define ( 'FRIENDIKA_VERSION',      '2.10.0902' );
-define ( 'DFRN_PROTOCOL_VERSION',  '2.0'  );
+define ( 'FRIENDIKA_VERSION',      '2.10.0903' );
+define ( 'DFRN_PROTOCOL_VERSION',  '2.1'  );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
