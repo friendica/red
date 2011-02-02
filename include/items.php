@@ -458,7 +458,7 @@ function get_atom_elements($feed,$item) {
 		$res['edited'] = unxmlify($rawedited[0]['data']);
 
 	if((x($res,'edited')) && (! (x($res,'created'))))
-		$res['created = $res['edited']; 
+		$res['created'] = $res['edited']; 
 
 	if(! $res['created'])
 		$res['created'] = $item->get_date('c');
