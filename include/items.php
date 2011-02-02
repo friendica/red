@@ -455,14 +455,16 @@ function get_atom_elements($feed,$item) {
 
 	$rawedited = $item->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'updated');
 	if($rawedited)
-		$res['edited'] = unxmlify($rawcreated[0]['data']);
+		$res['edited'] = unxmlify($rawedited[0]['data']);
 
+	if((x($res,'edited')) && (! (x($res,'created'))))
+		$res['created = $res['edited']; 
 
 	if(! $res['created'])
-		$res['created'] = $item->get_date();
+		$res['created'] = $item->get_date('c');
 
 	if(! $res['edited'])
-		$res['edited'] = $item->get_date();
+		$res['edited'] = $item->get_date('c');
 
 
 	$rawowner = $item->get_item_tags(NAMESPACE_DFRN, 'owner');
