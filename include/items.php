@@ -390,7 +390,6 @@ function get_atom_elements($feed,$item) {
 		$res['body'] = str_replace(array(' ',"\t","\r","\n"), array('','','',''),$res['body']);
 		// make sure nobody is trying to sneak some html tags by us
 		$res['body'] = notags(base64url_decode($res['body']));
-		$res['realbody'] = true;
 	}
 
 	$maxlen = get_max_import_size();
@@ -408,31 +407,26 @@ function get_atom_elements($feed,$item) {
 	// html.
 
 
-	if(! $have_real_body) {
-		if((strpos($res['body'],'<')) || (strpos($res['body'],'>'))) {
+	if((strpos($res['body'],'<') !== false) || (strpos($res['body'],'>') !== false)) {
 
-			$res['body'] = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
-				'[youtube]$1[/youtube]', $res['body']);
+		$res['body'] = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
+			'[youtube]$1[/youtube]', $res['body']);
 
-			$res['body'] = oembed_html2bbcode($res['body']);
+		$res['body'] = oembed_html2bbcode($res['body']);
 	
-			$config = HTMLPurifier_Config::createDefault();
-			$config->set('Cache.DefinitionImpl', null);
+		$config = HTMLPurifier_Config::createDefault();
+		$config->set('Cache.DefinitionImpl', null);
 
-			// we shouldn't need a whitelist, because the bbcode converter
-			// will strip out any unsupported tags.
-			// $config->set('HTML.Allowed', 'p,b,a[href],i'); 
+		// we shouldn't need a whitelist, because the bbcode converter
+		// will strip out any unsupported tags.
+		// $config->set('HTML.Allowed', 'p,b,a[href],i'); 
 
-			$purifier = new HTMLPurifier($config);
-			$res['body'] = $purifier->purify($res['body']);
+		$purifier = new HTMLPurifier($config);
+		$res['body'] = $purifier->purify($res['body']);
 
-			$res['body'] = html2bbcode($res['body']);
-		}
-		else
-			$res['body'] = escape_tags($res['body']);
+		$res['body'] = html2bbcode($res['body']);
 	}
 	
-
 	$allow = $item->get_item_tags(NAMESPACE_DFRN,'comment-allow');
 	if($allow && $allow[0]['data'] == 1)
 		$res['last-child'] = 1;
@@ -531,7 +525,7 @@ function get_atom_elements($feed,$item) {
 				$body = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['summary'][0]['data'];
 			// preserve a copy of the original body content in case we later need to parse out any microformat information, e.g. events
 			$res['object'] .= '<orig>' . xmlify($body) . '</orig>' . "\n";
-			if((strpos($body,'<')) || (strpos($body,'>'))) {
+			if((strpos($body,'<') !== false) || (strpos($body,'>') !== false)) {
 
 				$body = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
 					'[youtube]$1[/youtube]', $body);
@@ -543,8 +537,6 @@ function get_atom_elements($feed,$item) {
 				$body = $purifier->purify($body);
 				$body = html2bbcode($body);
 			}
-			else
-				$body = escape_tags($body);
 
 			$res['object'] .= '<content>' . $body . '</content>' . "\n";
 		}
@@ -572,7 +564,7 @@ function get_atom_elements($feed,$item) {
 				$body = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['summary'][0]['data'];
 			// preserve a copy of the original body content in case we later need to parse out any microformat information, e.g. events
 			$res['object'] .= '<orig>' . xmlify($body) . '</orig>' . "\n";
-			if((strpos($body,'<')) || (strpos($body,'>'))) {
+			if((strpos($body,'<') !== false) || (strpos($body,'>') !== false)) {
 
 				$body = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
 					'[youtube]$1[/youtube]', $body);
@@ -584,8 +576,6 @@ function get_atom_elements($feed,$item) {
 				$body = $purifier->purify($body);
 				$body = html2bbcode($body);
 			}
-			else
-				$body = escape_tags($body);
 
 			$res['target'] .= '<content>' . $body . '</content>' . "\n";
 		}
@@ -634,6 +624,13 @@ function item_store($arr) {
 
 	if(! x($arr,'type'))
 		$arr['type']      = 'remote';
+
+	// Shouldn't happen but we want to make absolutely sure it doesn't leak from a plugin.
+
+	if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false)) 
+		$arr['body'] = strip_tags($arr['body']);
+
+
 	$arr['wall']          = ((x($arr,'wall'))          ? intval($arr['wall'])                : 0);
 	$arr['uri']           = ((x($arr,'uri'))           ? notags(trim($arr['uri']))           : random_string());
 	$arr['author-name']   = ((x($arr,'author-name'))   ? notags(trim($arr['author-name']))   : '');
@@ -662,23 +659,7 @@ function item_store($arr) {
 	$arr['deny_cid']      = ((x($arr,'deny_cid'))      ? trim($arr['deny_cid'])              : '');
 	$arr['deny_gid']      = ((x($arr,'deny_gid'))      ? trim($arr['deny_gid'])              : '');
 	$arr['private']       = ((x($arr,'private'))       ? intval($arr['private'])             : 0 );
-	$arr['body']          = ((x($arr,'body'))          ? escape_tags(trim($arr['body']))     : '');
-
-	// The content body may have been through a lot of filtering and transport escaping by now. 
-	// We don't want to skip any filters, however a side effect of all this filtering 
-	// is that ampersands and <> may have been double encoded, depending on which filter chain
-	// they came through. The presence of $res['realbody'] means we have something encoded in a 
-	// transport safe manner at the source and does not require any filter corrections. 
-
-	if(x($arr,'realbody'))
-		unset($arr['realbody']);
-	else {
-		$arr['body']          = str_replace(
-									array('&amp;amp;', '&amp;gt;', '&amp;lt;', '&amp;quot;'),
-									array('&amp;'    , '&gt;'    , '&lt;',     '&quot;'),
-									$arr['body']
-								);
-	}
+	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
 
 	if($arr['parent-uri'] === $arr['uri']) {
 		$parent_id = 0;
