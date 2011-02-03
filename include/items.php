@@ -800,6 +800,12 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	if(! $xml)
 		return 3;
 
+	if(strpos($xml,'<?xml') === false) {
+		logger('dfrn_deliver: no valid XML returned');
+		logger('dfrn_deliver: returned XML: ' . $xml, LOGGER_DATA);
+		return 3;
+	}
+
 	$res = simplexml_load_string($xml);
 
 	if((intval($res->status) != 0) || (! strlen($res->challenge)) || (! strlen($res->dfrn_id)))
