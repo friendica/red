@@ -244,20 +244,26 @@ foreach($_FILES AS $key => $val) {
 		return; // NOTREACHED
 	}
 
-	if(($a->argc > 2) && ((x($_POST,'desc') !== false) || (x($_POST,'newtag') !== false))) {
+	if(($a->argc > 2) && ((x($_POST,'desc') !== false) || (x($_POST,'newtag') !== false)) || (x($_POST,'albname') !== false)) {
 
-		$desc        = ((x($_POST,'desc'))    ? notags(trim($_POST['desc']))   : '');
-		$rawtags     = ((x($_POST,'newtag'))  ? notags(trim($_POST['newtag'])) : '');
-		$item_id     = ((x($_POST,'item_id')) ? intval($_POST['item_id'])      : 0);
+		$desc        = ((x($_POST,'desc'))    ? notags(trim($_POST['desc']))    : '');
+		$rawtags     = ((x($_POST,'newtag'))  ? notags(trim($_POST['newtag']))  : '');
+		$item_id     = ((x($_POST,'item_id')) ? intval($_POST['item_id'])       : 0);
+		$albname     = ((x($_POST,'albname')) ? notags(trim($_POST['albname'])) : '');
 		$resource_id = $a->argv[2];
+
+		if(! strlen($albname))
+			$albname = datetime_convert('UTC',date_default_timezone_get(),'now', 'Y');
+		
 
 		$p = q("SELECT * FROM `photo` WHERE `resource-id` = '%s' AND `uid` = %d ORDER BY `scale` DESC",
 			dbesc($resource_id),
 			intval($page_owner_uid)
 		);
-		if((count($p)) && ($p[0]['desc'] !== $desc)) {
-			$r = q("UPDATE `photo` SET `desc` = '%s' WHERE `resource-id` = '%s' AND `uid` = %d",
+		if((count($p)) && (($p[0]['desc'] !== $desc) || ($p[0]['album'] !== $albname))) {
+			$r = q("UPDATE `photo` SET `desc` = '%s', `album` = '%s' WHERE `resource-id` = '%s' AND `uid` = %d",
 				dbesc($desc),
+				dbesc($albname),
 				dbesc($resource_id),
 				intval($page_owner_uid)
 			);
@@ -989,6 +995,8 @@ function photos_content(&$a) {
 			$edit_tpl = load_view_file('view/photo_edit.tpl');
 			$o .= replace_macros($edit_tpl, array(
 				'$id' => $ph[0]['id'],
+				'$album' => $ph[0]['album'],
+				'$newalbum' => t('New album name'), 
 				'$nickname' => $a->data['user']['nickname'],
 				'$resource_id' => $ph[0]['resource-id'],
 				'$capt_label' => t('Caption'),

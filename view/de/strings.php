@@ -303,6 +303,7 @@ $a->strings['Edit photo'] = 'Foto bearbeiten';
 $a->strings['View Full Size'] = 'Betrachte Originalgröße';
 $a->strings['Tags: '] = 'Tags: ';
 $a->strings['[Remove any tag]'] = '[Tag entfernen]';
+$a->strings['New album name'] = 'Name des neuen Albums';
 $a->strings['Caption'] = 'Titel';
 $a->strings['Add a Tag'] = 'Tag hinzufügen';
 $a->strings['Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping'] = 'Beispiel: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping';

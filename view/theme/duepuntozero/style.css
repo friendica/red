@@ -1673,11 +1673,11 @@ a.mail-list-link {
 	margin-bottom: 15px;
 }
 
-#photo-edit-caption-label, #photo-edit-tags-label {
+#photo-edit-caption-label, #photo-edit-tags-label, #photo-edit-albumname-label {
 	float: left;
 	width: 150px;
 }
-#photo-edit-caption, #photo-edit-newtag {
+#photo-edit-caption, #photo-edit-newtag, #photo-edit-albumname {
 	float: left;
 	margin-bottom: 25px;
 }
@@ -1688,7 +1688,7 @@ a.mail-list-link {
 	margin-bottom: 25px;
 }
 
-#photo-edit-caption-end, #photo-edit-tags-end {
+#photo-edit-caption-end, #photo-edit-tags-end, #photo-edit-albumname-end {
 	clear: both;
 }
 

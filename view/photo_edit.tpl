@@ -3,6 +3,12 @@
 
 	<input type="hidden" name="item_id" value="$item_id" />
 
+	<label id="photo-edit-albumname-label" for="photo-edit-albumname">$newalbum</label>
+	<input id="photo-edit-albumname" type="text" size="32" name="albname" value="$album" />
+
+	<div id="photo-edit-albumname-end"></div>
+
+
 	<label id="photo-edit-caption-label" for="photo-edit-caption">$capt_label</label>
 	<input id="photo-edit-caption" type="text" size="84" name="desc" value="$caption" />
 
