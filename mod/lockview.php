@@ -48,7 +48,6 @@ function lockview_content(&$a) {
 			dbesc(implode(', ', $allowed_groups))
 		);
 		if(count($r))
-  if($item['uid'] != local_user())
 			foreach($r as $rr) 
 				$l[] = '<b>' . $rr['name'] . '</b>';
 	}
@@ -80,11 +79,7 @@ function lockview_content(&$a) {
 
 	}
 
-	if (count($l)>0) {
-		echo $o . implode(', ', $l);
-	} else {
-		echo $o . t('nobody');
-	}
+	echo $o . implode(', ', $l);
 	killme();
 
 }
