@@ -6,7 +6,7 @@
 $nickname_block
 
 
-<form action="settings" id="settings-form" method="post" autocomplete="false" >
+<form action="settings" id="settings-form" method="post" autocomplete="off" >
 
 
 <h3 class="settings-heading">Impostazioni base</h3>

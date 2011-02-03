@@ -6,6 +6,10 @@
 // authorisation to do this.
 
 function user_remove($uid) {
+	if(! $uid)
+		return;
+	$a = get_app();
+	logger('Removing user: ' . $uid);
 	q("DELETE FROM `contact` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `group` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `group_member` WHERE `uid` = %d", intval($uid));
@@ -19,7 +23,7 @@ function user_remove($uid) {
 	if($uid == local_user()) {
 		unset($_SESSION['authenticated']);
 		unset($_SESSION['uid']);
-		killme();
+		goaway($a->get_baseurl());
 	}
 }
 
