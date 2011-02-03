@@ -15,10 +15,6 @@
 
 		<textarea rows="5" cols="64" class="profile-jot-text" id="profile-jot-text" name="body" ></textarea>
 
-<div id="profile-jot-plugin-wrapper" >
-  $jotplugins
-</div>
-<div id="profile-jot-plugin-end"></div>
 
 
 <div id="profile-jot-submit-wrapper" >
@@ -38,6 +34,11 @@
 	<div id="profile-nolocation-wrapper" style="display: none;" >
 		<img id="profile-nolocation" src="images/noglobe.gif" alt="Clear Browser Location" title="Clear Browser Location" onclick="jotClearLocation();" />
 	</div> 
+
+	<div id="profile-jot-plugin-wrapper" >
+  	$jotplugins
+	</div>
+
 	<div id="profile-rotator-wrapper" style="display: $visitor;" >
 		<img id="profile-rotator" src="images/rotator.gif" alt="Please wait" title="Please wait" style="display: none;" />
 	</div> 

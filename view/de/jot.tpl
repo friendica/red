@@ -13,10 +13,6 @@
 		<input type="hidden" name="location" id="jot-location" value="$defloc" />
 		<input type="hidden" name="coord" id="jot-coord" value="" />
 
-<div id="profile-jot-plugin-wrapper" >
-	$jotplugins
-</div>
-<div id="profile-jot-plugin-end"></div>
 
 		<textarea rows="5" cols="64" class="profile-jot-text" id="profile-jot-text" name="body" ></textarea>
 
@@ -37,6 +33,12 @@
 	<div id="profile-nolocation-wrapper" style="display: none;" >
 		<img id="profile-nolocation" src="images/noglobe.gif" alt="Browser Standort leeren" title="Browser Standort leeren" onclick="jotClearLocation();" />
 	</div> 
+
+	<div id="profile-jot-plugin-wrapper" >
+	$jotplugins
+	</div>
+
+
 	<div id="profile-rotator-wrapper" style="display: $visitor;" >
 		<img id="profile-rotator" src="images/rotator.gif" alt="Bitte warten" title="Bitte warten" style="display: none;" />
 	</div> 
