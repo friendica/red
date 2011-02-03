@@ -4,21 +4,21 @@
 function lockview_content(&$a) {
   
 	$type = (($a->argc > 1) ? $a->argv[1] : 0);
-  if (is_numeric($type)) {
-      $item_id = intval($type);
-      $type='item';
-  } else {
-    $item_id = (($a->argc > 2) ? intval($a->argv[2]) : 0);
-  }
+	if (is_numeric($type)) {
+		$item_id = intval($type);
+		$type='item';
+	} else {
+		$item_id = (($a->argc > 2) ? intval($a->argv[2]) : 0);
+	}
   
 	if(! $item_id)
 		killme();
 
-  if (!in_array($type, array('item','photo','event')))
-    killme();
+	if (!in_array($type, array('item','photo','event')))
+		killme();
      
 	$r = q("SELECT * FROM `%s` WHERE `id` = %d LIMIT 1",
-    dbesc($type),
+		dbesc($type),
 		intval($item_id)
 	);
 	if(! count($r))
@@ -80,11 +80,11 @@ function lockview_content(&$a) {
 
 	}
 
-  if (count($l)>0) {
-    echo $o . implode(', ', $l);
-  } else {
-    echo $o . t('nobody');
-  }
+	if (count($l)>0) {
+		echo $o . implode(', ', $l);
+	} else {
+		echo $o . t('nobody');
+	}
 	killme();
 
 }
