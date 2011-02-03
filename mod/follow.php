@@ -113,10 +113,16 @@ function follow_post(&$a) {
 							$vcard['nick'] = trim(substr($vcard['nick'],0,strpos($vcard['nick'],' ')));
 						$email = $author->get_email();
 					}
+					if(! $vcard['photo']) {
+						$rawmedia = $item->get_item_tags('http://search.yahoo.com/mrss/','thumbnail');
+						if($rawmedia && $rawmedia[0]['attribs']['']['url'])
+							$vcard['photo'] = $rawmedia[0]['attribs']['']['url'];
+					}
 				}
 			}
 			if((! $vcard['photo']) && strlen($email))
 				$vcard['photo'] = gravatar_img($email);
+			
 			$network = 'feed';
 			$priority = 2;
 		}
