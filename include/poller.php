@@ -35,16 +35,16 @@ function poller_run($argv, $argc){
 	q("DELETE FROM `cache` WHERE `updated`<'%s'",
 		dbesc(datetime_convert('UTC','UTC',"now - 30 days")));
 
-
+	$manual_id  = 0;
 	$hub_update = false;
-	$force = false;
+	$force      = false;
 
 	if(($argc > 1) && ($argv[1] == 'force'))
 		$force = true;
 
 	if(($argc > 1) && intval($argv[1])) {
 		$manual_id = intval($argv[1]);
-		$force = true;
+		$force     = true;
 	}
 
 	$sql_extra = (($manual_id) ? " AND `id` = $manual_id " : "");
@@ -62,8 +62,8 @@ function poller_run($argv, $argc){
 
 	foreach($contacts as $contact) {
 
-			if($manual_id)
-				$contact['last-update'] = '0000-00-00 00:00:00';
+		if($manual_id)
+			$contact['last-update'] = '0000-00-00 00:00:00';
 
 		if($contact['priority'] || $contact['subhub']) {
 

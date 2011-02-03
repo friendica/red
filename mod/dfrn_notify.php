@@ -52,8 +52,6 @@ function dfrn_notify_post(&$a) {
 	}
 		 
 
-
-
 	$r = q("SELECT `contact`.*, `contact`.`uid` AS `importer_uid`, 
 		`contact`.`pubkey` AS `cpubkey`, `contact`.`prvkey` AS `cprvkey`, `user`.* FROM `contact` 
 		LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid` 
@@ -93,11 +91,21 @@ function dfrn_notify_post(&$a) {
 		logger('rino: md5 raw key: ' . md5($rawkey));
 		$final_key = '';
 
-		if((($importer['duplex']) && strlen($importer['cpubkey'])) || (! strlen($importer['cprvkey']))) {
-			openssl_public_decrypt($rawkey,$final_key,$importer['cpubkey']);
+		if($dfrn_version >= 2.1) {
+			if((($importer['duplex']) && strlen($importer['cprvkey'])) || (! strlen($importer['cpubkey']))) {
+				openssl_private_decrypt($rawkey,$final_key,$importer['cprvkey']);
+			}
+			else {
+				openssl_public_decrypt($rawkey,$final_key,$importer['cpubkey']);
+			}
 		}
 		else {
-			openssl_private_decrypt($rawkey,$final_key,$importer['cprvkey']);
+			if((($importer['duplex']) && strlen($importer['cpubkey'])) || (! strlen($importer['cprvkey']))) {
+				openssl_public_decrypt($rawkey,$final_key,$importer['cpubkey']);
+			}
+			else {
+				openssl_private_decrypt($rawkey,$final_key,$importer['cprvkey']);
+			}
 		}
 
 		logger('rino: received key : ' . $final_key);
@@ -498,13 +506,13 @@ function dfrn_notify_content(&$a) {
 		$encrypted_id = '';
 		$id_str = $my_id . '.' . mt_rand(1000,9999);
 
-		if((($r[0]['duplex']) && strlen($r[0]['pubkey'])) || (! strlen($r[0]['prvkey']))) {
-			openssl_public_encrypt($hash,$challenge,$r[0]['pubkey']);
-			openssl_public_encrypt($id_str,$encrypted_id,$r[0]['pubkey']);
-		}
-		else {
+		if((($r[0]['duplex']) && strlen($r[0]['prvkey'])) || (! strlen($r[0]['pubkey']))) {
 			openssl_private_encrypt($hash,$challenge,$r[0]['prvkey']);
 			openssl_private_encrypt($id_str,$encrypted_id,$r[0]['prvkey']);
+		}
+		else {
+			openssl_public_encrypt($hash,$challenge,$r[0]['pubkey']);
+			openssl_public_encrypt($id_str,$encrypted_id,$r[0]['pubkey']);
 		}
 
 		$challenge    = bin2hex($challenge);

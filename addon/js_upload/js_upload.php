@@ -36,6 +36,11 @@ function js_upload_form(&$a,&$b) {
 	$b['addon_text'] .= '<link href="' . $a->get_baseurl() . '/addon/js_upload/file-uploader/client/fileuploader.css" rel="stylesheet" type="text/css">';
 	$b['addon_text'] .= '<script src="' . $a->get_baseurl() . '/addon/js_upload/file-uploader/client/fileuploader.js" type="text/javascript"></script>';
    
+	$upload_msg = t('Upload a file');
+	$drop_msg = t('Drop files here to upload');
+	$cancel = t('Cancel');
+	$failed = t('Failed');
+
 	$b['addon_text'] .= <<< EOT
 	
  <div id="file-uploader-demo1">		
@@ -65,6 +70,22 @@ function createUploader() {
 	uploader = new qq.FileUploader({
 		element: document.getElementById('file-uploader-demo1'),
 		action: '{$b['post_url']}',
+
+        template: '<div class="qq-uploader">' + 
+                '<div class="qq-upload-drop-area"><span>$drop_msg</span></div>' +
+                '<div class="qq-upload-button">$upload_msg</div>' +
+                '<ul class="qq-upload-list"></ul>' + 
+             '</div>',
+
+        // template for one item in file list
+        fileTemplate: '<li>' +
+                '<span class="qq-upload-file"></span>' +
+                '<span class="qq-upload-spinner"></span>' +
+                '<span class="qq-upload-size"></span>' +
+                '<a class="qq-upload-cancel" href="#">$cancel</a>' +
+                '<span class="qq-upload-failed-text">$failed</span>' +
+            '</li>',        
+
 		debug: true,
 		onSubmit: function(id,filename) {
 

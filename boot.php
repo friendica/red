@@ -3,8 +3,8 @@
 set_time_limit(0);
 
 define ( 'BUILD_ID',               1034   );
-define ( 'FRIENDIKA_VERSION',      '2.10.0902' );
-define ( 'DFRN_PROTOCOL_VERSION',  '2.0'  );
+define ( 'FRIENDIKA_VERSION',      '2.10.0903' );
+define ( 'DFRN_PROTOCOL_VERSION',  '2.1'  );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -1366,6 +1366,7 @@ function lrdd($uri) {
 	else {
 		$html = fetch_url($uri);
 		$headers = $a->get_curl_headers();
+		logger('lrdd: headers=' . $headers, LOGGER_DEBUG);
 		$lines = explode("\n",$headers);
 		if(count($lines)) {
 			foreach($lines as $line) {				
@@ -1376,6 +1377,8 @@ function lrdd($uri) {
 				}
 				// don't try and run feeds through the html5 parser
 				if(stristr($line,'content-type:') && ((stristr($line,'application/atom+xml')) || (stristr($line,'application/rss+xml'))))
+					return array();
+				if(stristr($html,'<rss') || stristr($html,'<feed'))
 					return array();
 			}
 		}
