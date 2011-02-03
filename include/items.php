@@ -894,6 +894,13 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	if((! $curl_stat) || (! strlen($xml)))
 		return(-1); // timed out
 
+
+	if(strpos($xml,'<?xml') === false) {
+		logger('dfrn_deliver: phase 2: no valid XML returned');
+		logger('dfrn_deliver: phase 2: returned XML: ' . $xml, LOGGER_DATA);
+		return 3;
+	}
+
 	$res = simplexml_load_string($xml);
 
 	return $res->status;
