@@ -289,54 +289,58 @@ function dfrn_notify_post(&$a) {
 					$datarray['last-child'] = 0;
 				}
 				$posted_id = item_store($datarray);
+				$parent = 0;
 
 				if($posted_id) {
+					$r = q("SELECT `parent` FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+						intval($posted_id),
+						intval($importer['importer_uid'])
+					);
+					if(count($r))
+						$parent = $r[0]['parent'];
+				
 					if(! $is_like) {
-						$r = q("SELECT `parent` FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-							intval($posted_id),
-							intval($importer['importer_uid'])
+						$r1 = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `uid` = %d AND `parent` = %d",
+							dbesc(datetime_convert()),
+							intval($importer['importer_uid']),
+							intval($r[0]['parent'])
 						);
-						if(count($r)) {
-							$r1 = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `uid` = %d AND `parent` = %d",
-								dbesc(datetime_convert()),
-								intval($importer['importer_uid']),
-								intval($r[0]['parent'])
-							);
-						}
+
 						$r2 = q("UPDATE `item` SET `last-child` = 1, `changed` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
-								dbesc(datetime_convert()),
-								intval($importer['importer_uid']),
-								intval($posted_id)
+							dbesc(datetime_convert()),
+							intval($importer['importer_uid']),
+							intval($posted_id)
 						);
 					}
 
-					$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
+					if($posted_id && $parent) {
+				
+						$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 
-					//proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"comment-import\" \"$posted_id\" &", array(),$foo));
-					proc_run($php_path,"include/notifier.php","comment-import","$posted_id");
+						proc_run($php_path,"include/notifier.php","comment-import","$posted_id");
 					
-					if((! $is_like) && ($importer['notify-flags'] & NOTIFY_COMMENT) && (! $importer['self'])) {
-						require_once('bbcode.php');
-						$from = stripslashes($datarray['author-name']);
-						$tpl = load_view_file('view/cmnt_received_eml.tpl');			
-						$email_tpl = replace_macros($tpl, array(
-							'$sitename' => $a->config['sitename'],
-							'$siteurl' =>  $a->get_baseurl(),
-							'$username' => $importer['username'],
-							'$email' => $importer['email'],
-							'$display' => $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id, 
-							'$from' => $from,
-							'$body' => strip_tags(bbcode(stripslashes($datarray['body'])))
-						));
-	
-						$res = mail($importer['email'], $from . t(' commented on an item at ') . $a->config['sitename'],
-							$email_tpl, "From: " . t('Administrator') . '@' . $a->get_hostname() );
+						if((! $is_like) && ($importer['notify-flags'] & NOTIFY_COMMENT) && (! $importer['self'])) {
+							require_once('bbcode.php');
+							$from = stripslashes($datarray['author-name']);
+							$tpl = load_view_file('view/cmnt_received_eml.tpl');			
+							$email_tpl = replace_macros($tpl, array(
+								'$sitename' => $a->config['sitename'],
+								'$siteurl' =>  $a->get_baseurl(),
+								'$username' => $importer['username'],
+								'$email' => $importer['email'],
+								'$display' => $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id, 
+								'$from' => $from,
+								'$body' => strip_tags(bbcode(stripslashes($datarray['body'])))
+							));
+		
+							$res = mail($importer['email'], $from . t(' commented on an item at ') . $a->config['sitename'],
+								$email_tpl, "From: " . t('Administrator') . '@' . $a->get_hostname() );
+						}
 					}
+
+					xml_status(0);
+					// NOTREACHED
 				}
-
-				xml_status(0);
-				// NOTREACHED
-
 			}
 			else {
 				// regular comment that is part of this total conversation. Have we seen it? If not, import it.
@@ -375,13 +379,13 @@ function dfrn_notify_post(&$a) {
 			
 				if(($datarray['type'] != 'activity') && ($importer['notify-flags'] & NOTIFY_COMMENT)) {
 
-					$myconv = q("SELECT `author-link` FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d",
+					$myconv = q("SELECT `author-link` FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `parent` != 0 ",
 						dbesc($parent_uri),
 						intval($importer['importer_uid'])
 					);
 					if(count($myconv)) {
 						foreach($myconv as $conv) {
-							if($conv['author-link'] != $importer['url'])
+							if(! link_compare($conv['author-link'],$importer['url']))
 								continue;
 							require_once('bbcode.php');
 							$from = stripslashes($datarray['author-name']);
