@@ -188,7 +188,7 @@ function profile_photo_content(&$a) {
 		$tpl = load_view_file('view/profile_photo.tpl');
 
 		$o .= replace_macros($tpl,array(
-
+			'$user' => $a->user['nickname']
 		));
 
 		return $o;

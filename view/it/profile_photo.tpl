@@ -12,3 +12,7 @@
 </div>
 
 </form>
+
+<div id="profile-photo-link-select-wrapper">
+o <a href='photos/$user'>seleziona una foto da un album</a>
+</div>
