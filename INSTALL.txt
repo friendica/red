@@ -12,6 +12,11 @@ blog. Not every PHP/MySQL hosting provider will be able to support Friendika.
 Many will. But please review the requirements and confirm these with your 
 hosting provider prior to installation.
 
+Before you begin: Choose a domain name or subdomain name for your server.
+Put some thought into this - because changing it is currently not-supported.
+Things will break, and some of your friends may have difficulty communicating
+with you. We plan to address this limitation in a future release. 
+ 
 
 1. Requirements
 	- Apache with mod-rewrite enabled and "Options All" so you can use a 
