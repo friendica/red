@@ -751,7 +751,7 @@ function item_store($arr,$force_parent = false) {
 	// Set parent id - and also make sure to inherit the parent's ACL's.
 
 	$r = q("UPDATE `item` SET `parent` = %d, `allow_cid` = '%s', `allow_gid` = '%s',
-		`deny_cid` = '%s', `deny_gid` = '%s', `private` = %d, `deleted` = $d WHERE `id` = %d LIMIT 1",
+		`deny_cid` = '%s', `deny_gid` = '%s', `private` = %d, `deleted` = %d WHERE `id` = %d LIMIT 1",
 		intval($parent_id),
 		dbesc($allow_cid),
 		dbesc($allow_gid),
