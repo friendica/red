@@ -740,10 +740,10 @@ function item_store($arr,$force_parent = false) {
 		return 0;
 	}
 
-	if($arr['parent-uri'] === $arr['uri'])
+	if((! $parent_id) || ($arr['parent-uri'] === $arr['uri']))	
 		$parent_id = $current_post;
- 
-	if(strlen($allow_cid) || strlen($allow_gid) || strlen($deny_cid) || strlen($deny_gid))
+
+ 	if(strlen($allow_cid) || strlen($allow_gid) || strlen($deny_cid) || strlen($deny_gid))
 		$private = 1;
 	else
 		$private = $arr['private']; 
