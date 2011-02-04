@@ -24,7 +24,13 @@ function dfrn_notify_post(&$a) {
 		dbesc($challenge)
 	);
 	if(! count($r)) {
-		logger('dfrn_notify: could not match challenge to dfrn_id ' . $dfrn_id);
+		logger('dfrn_notify: could not match challenge to dfrn_id ' . $dfrn_id . ' challenge=' . $challenge);
+
+		// apply some extra tracing
+		dbg(1);
+		q("SELECT * FROM `challenge` WHERE 1");
+		dbg(0);	
+	
 		xml_status(3);
 	}
 
@@ -468,12 +474,13 @@ function dfrn_notify_content(&$a) {
 		$r = q("DELETE FROM `challenge` WHERE `expire` < " . intval(time()));
 
 		$r = q("INSERT INTO `challenge` ( `challenge`, `dfrn-id`, `expire` )
-			VALUES( '%s', '%s', '%s') ",
+			VALUES( '%s', '%s', %d ) ",
 			dbesc($hash),
 			dbesc($dfrn_id),
-			intval(time() + 60 )
+			intval(time() + 90 )
 		);
 
+		logger('dfrn_notify: challenge=' . $hash . ' return value=' . $r);
 
 		$sql_extra = '';
 		switch($direction) {

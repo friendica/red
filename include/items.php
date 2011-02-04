@@ -611,7 +611,7 @@ function encode_rel_links($links) {
 	return xmlify($o);
 }
 
-function item_store($arr) {
+function item_store($arr,$force_parent = false) {
 
 	if($arr['gravity'])
 		$arr['gravity'] = intval($arr['gravity']);
@@ -695,8 +695,20 @@ function item_store($arr) {
 			$deny_gid  = $r[0]['deny_gid'];
 		}
 		else {
-			logger('item_store: item parent was not found - ignoring item');
-			return 0;
+
+			// Allow one to see reply tweets from status.net even when
+			// we don't have or can't see the original post.
+
+			if($force_parent) {
+				logger('item_store: $force_parent=true, reply converted to top-level post.');
+				$parent_id = 0;
+				$arr['thr-parent'] = $arr['parent-uri'];
+				$arr['parent-uri'] = $arr['uri'];
+			}
+			else {
+				logger('item_store: item parent was not found - ignoring item');
+				return 0;
+			}
 		}
 	}
 
@@ -1194,8 +1206,9 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 					continue;
 				}
 				$datarray = get_atom_elements($feed,$item);
-
+				$force_parent = false;
 				if($contact['network'] === 'stat') {
+					$force_parent = true;
 					if(strlen($datarray['title']))
 						unset($datarray['title']);
 					$r = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d",
@@ -1218,7 +1231,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 					$datarray['gravity'] = GRAVITY_LIKE;
 				}
 
-				$r = item_store($datarray);
+				$r = item_store($datarray,$force_parent);
 				continue;
 			}
 
