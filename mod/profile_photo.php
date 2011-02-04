@@ -123,42 +123,8 @@ function profile_photo_post(&$a) {
 	}
 
 	@unlink($src);
-
-	$width = $ph->getWidth();
-	$height = $ph->getHeight();
-
-	if($width < 175 || $height < 175) {
-		$ph->scaleImageUp(200);
-		$width = $ph->getWidth();
-		$height = $ph->getHeight();
-	}
-
-	$hash = photo_new_resource();
+	return profile_photo_crop_ui_head($a, $ph);
 	
-
-	$smallest = 0;
-
-	$r = $ph->store(local_user(), 0 , $hash, $filename, t('Profile Photos'), 0 );	
-
-	if($r)
-		notice( t('Image uploaded successfully.') . EOL );
-	else
-		notice( t('Image upload failed.') . EOL );
-
-	if($width > 640 || $height > 640) {
-		$ph->scaleImage(640);
-		$r = $ph->store(local_user(), 0 , $hash, $filename, t('Profile Photos'), 1 );	
-
-		if($r === false)
-			notice( t('Image size reduction [640] failed.') . EOL );
-		else
-			$smallest = 1;
-	}
-
-	$a->config['imagecrop'] = $hash;
-	$a->config['imagecrop_resolution'] = $smallest;
-	$a->page['htmlhead'] .= load_view_file("view/crophead.tpl");
-	return;
 }
 
 
@@ -168,6 +134,53 @@ function profile_photo_content(&$a) {
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL );
 		return;
+	}
+	
+	if( $a->argv[1]=='use'){
+		if ($a->argc<3){
+			notice( t('Permission denied.') . EOL );
+			return;
+		};
+			
+		$resource_id = $a->argv[2];
+		//die(":".local_user());
+		$r=q("SELECT * FROM `photo` WHERE `uid` = %d AND `resource-id` = '%s' ORDER BY `scale` ASC",
+			intval(local_user()),
+			dbesc($resource_id)
+			);
+		if (!count($r)){
+			notice( t('Permission denied.') . EOL );
+			return;
+		}
+		// set an already uloaded photo as profile photo
+		// if photo is in 'Profile Photos', change it in db
+		if ($r[0]['album']== t('Profile Photos')){
+			$r=q("UPDATE `photo` SET `profile`=0 WHERE `profile`=1 AND `uid`=%d",
+				intval(local_user()));
+			
+			$r=q("UPDATE `photo` SET `profile`=1 WHERE `uid` = %d AND `resource-id` = '%s'",
+				intval(local_user()),
+				dbesc($resource_id)
+				);
+			
+			$r = q("UPDATE `contact` SET `avatar-date` = '%s' WHERE `self` = 1 AND `uid` = %d LIMIT 1",
+				dbesc(datetime_convert()),
+				intval(local_user())
+			);
+			
+			// Update global directory in background
+			$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
+			$url = $_SESSION['my_url'];
+			if($url && strlen(get_config('system','directory_submit_url')))
+				//proc_close(proc_open("\"$php_path\" \"include/directory.php\" \"$url\" &",array(),$foo));
+				proc_run($php_path,"include/directory.php","$url");
+			
+			goaway($a->get_baseurl() . '/profiles');
+			return; // NOTREACHED
+		}
+		$ph = new Photo($r[0]['data']);
+		profile_photo_crop_ui_head($a, $ph);
+		// go ahead as we have jus uploaded a new photo to crop
 	}
 
 	if(! x($a->config,'imagecrop')) {
@@ -195,3 +208,44 @@ function profile_photo_content(&$a) {
 
 	return; // NOTREACHED
 }}
+
+
+if(! function_exists('_crop_ui_head')) {
+function profile_photo_crop_ui_head(&$a, $ph){
+	$width = $ph->getWidth();
+	$height = $ph->getHeight();
+
+	if($width < 175 || $height < 175) {
+		$ph->scaleImageUp(200);
+		$width = $ph->getWidth();
+		$height = $ph->getHeight();
+	}
+
+	$hash = photo_new_resource();
+	
+
+	$smallest = 0;
+
+	$r = $ph->store(local_user(), 0 , $hash, $filename, t('Profile Photos'), 0 );	
+
+	if($r)
+		notice( t('Image uploaded successfully.') . EOL );
+	else
+		notice( t('Image upload failed.') . EOL );
+
+	if($width > 640 || $height > 640) {
+		$ph->scaleImage(640);
+		$r = $ph->store(local_user(), 0 , $hash, $filename, t('Profile Photos'), 1 );	
+		
+		if($r === false)
+			notice( t('Image size reduction [640] failed.') . EOL );
+		else
+			$smallest = 1;
+	}
+
+	$a->config['imagecrop'] = $hash;
+	$a->config['imagecrop_resolution'] = $smallest;
+	$a->page['htmlhead'] .= load_view_file("view/crophead.tpl");
+	return;
+}}
+
