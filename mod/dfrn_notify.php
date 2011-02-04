@@ -25,12 +25,6 @@ function dfrn_notify_post(&$a) {
 	);
 	if(! count($r)) {
 		logger('dfrn_notify: could not match challenge to dfrn_id ' . $dfrn_id . ' challenge=' . $challenge);
-
-		// apply some extra tracing
-		dbg(1);
-		q("SELECT * FROM `challenge` WHERE 1");
-		dbg(0);	
-	
 		xml_status(3);
 	}
 
@@ -480,7 +474,7 @@ function dfrn_notify_content(&$a) {
 			intval(time() + 90 )
 		);
 
-		logger('dfrn_notify: challenge=' . $hash . ' return value=' . $r);
+		logger('dfrn_notify: challenge=' . $hash );
 
 		$sql_extra = '';
 		switch($direction) {
