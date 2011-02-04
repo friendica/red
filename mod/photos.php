@@ -913,7 +913,15 @@ function photos_content(&$a) {
 		$o .= '<h3>' . '<a href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/album/' . bin2hex($ph[0]['album']) . '">' . $ph[0]['album'] . '</a></h3>';
  
 		if($can_post && ($ph[0]['uid'] == $owner_uid)) {
-			$o .= '<div id="photo-edit-link-wrap" ><a id="photo-edit-link" href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $datum . '/edit' . '">' . t('Edit photo') . '</a></div>';
+			$o .= '<div id="photo-edit-link-wrap" ><a id="photo-edit-link" href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $datum . '/edit' . '">' . t('Edit photo') . '</a>';
+			
+			// lock
+			$o .= ( ( ($ph[0]['uid'] == local_user()) && (strlen($ph[0]['allow_cid']) || strlen($ph[0]['allow_gid']) 
+					|| strlen($ph[0]['deny_cid']) || strlen($ph[0]['deny_gid'])) ) 
+					? ' - <img src="images/lock_icon.gif" class="lockview" alt="' . t('Private Message') . '" onclick="lockview(event,\'photo/' . $ph[0]['id'] . '\');" />'
+					: '');
+	  		
+			$o .= '</div>';
 		}
 
 
