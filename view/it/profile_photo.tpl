@@ -1,4 +1,4 @@
-<h1>Upload Profile Photo</h1>
+<h1>Carica foto del profilo</h1>
 
 <form enctype="multipart/form-data" action="profile_photo" method="post">
 
@@ -12,3 +12,7 @@
 </div>
 
 </form>
+
+<div id="profile-photo-link-select-wrapper">
+o <a href='photos/$user'>seleziona una foto da un album</a>
+</div>

@@ -1,11 +1,17 @@
 <?php
 
-// This is the POST destination for most all locally posted
-// text stuff. This function handles status, wall-to-wall status, 
-// local comments, and remote coments - that are posted on this site 
-// (as opposed to being delivered in a feed).
-// All of these become an "item" which is our basic unit of 
-// information. 
+/**
+ *
+ * This is the POST destination for most all locally posted
+ * text stuff. This function handles status, wall-to-wall status, 
+ * local comments, and remote coments - that are posted on this site 
+ * (as opposed to being delivered in a feed).
+ * All of these become an "item" which is our basic unit of 
+ * information.
+ * Posts that originate externally or do not fall into the above 
+ * posting categories go through item_store() instead of this function. 
+ *
+ */  
 
 function item_post(&$a) {
 
@@ -417,6 +423,12 @@ function item_post(&$a) {
 			);
 		}
 	}
+	else {
+		logger('mod_item: unable to retrieve post that was just stored.');
+		notify( t('System error. Post not saved.'));
+		goaway($a->get_baseurl() . "/" . $_POST['return'] );
+		// NOTREACHED
+	}
 
 	$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 
@@ -454,10 +466,8 @@ function item_post(&$a) {
 		}
 	}
 
-
-
 	goaway($a->get_baseurl() . "/" . $_POST['return'] );
-	return; // NOTREACHED
+	// NOTREACHED
 }
 
 
@@ -551,7 +561,7 @@ function item_content(&$a) {
 			proc_run($php_path,"include/notifier.php","drop","$drop_id");
 
 			goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
-			return; //NOTREACHED
+			//NOTREACHED
 		}
 		else {
 			notice( t('Permission denied.') . EOL);
