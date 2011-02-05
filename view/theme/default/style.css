@@ -734,6 +734,10 @@ input#dfrn-url {
 	margin-bottom: 20px;
 }
 
+#profile-photo-link-select-wrapper {
+	margin-top: 2em;
+}
+
 #profile-edit-profile-name-label,
 #profile-edit-name-label,
 #profile-edit-pdesc-label,
