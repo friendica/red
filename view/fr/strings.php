@@ -293,6 +293,7 @@ $a->strings['Edit Album'] = 'Éditer l\'album';
 $a->strings['View Photo'] = 'Voir la photo';
 $a->strings['Photo not available'] = 'Photo indisponible';
 $a->strings['Edit photo'] = 'Éditer la photo';
+$a->strings['New album name'] = 'Nom du nouvel album';
 $a->strings['View Full Size'] = 'Voir en taille réelle';
 $a->strings['Tags: '] = 'Étiquettes: ';
 $a->strings['[Remove any tag]'] = '[Retirer toutes les étiquettes]';
