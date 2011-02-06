@@ -135,9 +135,11 @@ function profile_content(&$a, $update = 0) {
 			else
 				$lockstate = 'unlock';
        
-      $jotplugins = "";
-      call_hooks('jot_tool', $jotplugins); 
-        
+			$jotplugins = "";
+			call_hooks('jot_tool', $jotplugins); 
+
+			$tpl = replace_macros($tpl,array('$jotplugins' => $jotplugins));	
+
 			$o .= replace_macros($tpl,array(
 				'$baseurl' => $a->get_baseurl(),
 				'$defloc' => (($is_owner) ? $a->user['default-location'] : ''),
@@ -148,8 +150,7 @@ function profile_content(&$a, $update = 0) {
 				'$emtitle' => t('Example: bob@example.com, mary@example.com'),
 				'$bang' => '',
 				'$acl' => (($is_owner) ? populate_acl($a->user, $celeb) : ''),
-				'$profile_uid' => $a->profile['profile_uid'],
-				'$jotplugins' => $jotplugins
+				'$profile_uid' => $a->profile['profile_uid']
 			));
 		}
 

@@ -79,8 +79,10 @@ function network_content(&$a, $update = 0) {
 
 		$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
 
-    $jotplugins = "";
-    call_hooks('jot_tool', $jotplugins);
+		$jotplugins = "";
+		call_hooks('jot_tool', $jotplugins);
+
+		$tpl = replace_macros($tpl,array('$jotplugins' => $jotplugins));	
 
 		$o .= replace_macros($tpl,array(
 			'$return_path' => $a->cmd,
@@ -92,8 +94,7 @@ function network_content(&$a, $update = 0) {
 			'$lockstate' => $lockstate,
 			'$acl' => populate_acl((($group) ? $group_acl : $a->user), $celeb),
 			'$bang' => (($group) ? '!' : ''),
-			'$profile_uid' => $_SESSION['uid'],
-			'$jotplugins' => $jotplugins
+			'$profile_uid' => $_SESSION['uid']
 		));
 
 
