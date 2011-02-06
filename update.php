@@ -342,3 +342,10 @@ function update_1034() {
 	q("DELETE FROM `item` WHERE `parent` = 0 AND `created` < UTC_TIMESTAMP() - INTERVAL 2 MINUTE");
 
 }
+
+
+function update_1035() {
+
+	q("ALTER TABLE `contact` ADD `success_update` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `last-update` ");
+
+}

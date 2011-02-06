@@ -239,6 +239,7 @@ function poller_run($argv, $argc){
 			$xml = post_url($contact['poll'],$postvars);
 		}
 		else {
+
 			// $contact['network'] !== 'dfrn'
 
 			$xml = fetch_url($contact['poll']);
@@ -246,8 +247,14 @@ function poller_run($argv, $argc){
 
 		logger('poller: received xml : ' . $xml, LOGGER_DATA);
 
-		if(! strlen($xml))
+		if(! strstr($xml,'<?xml')) {
+			logger('poller: post_handshake: response from ' . $url . ' did not contain XML.');
+			$r = q("UPDATE `contact` SET `last-update` = '%s' WHERE `id` = %d LIMIT 1",
+				dbesc(datetime_convert()),
+				intval($contact['id'])
+			);
 			continue;
+		}
 
 		consume_feed($xml,$importer,$contact,$hub,1);
 
@@ -271,8 +278,11 @@ function poller_run($argv, $argc){
 		}
 
 
-		$r = q("UPDATE `contact` SET `last-update` = '%s' WHERE `id` = %d LIMIT 1",
-			dbesc(datetime_convert()),
+		$updated = datetime_convert();
+
+		$r = q("UPDATE `contact` SET `last-update` = '%s', `success_update` = '%s' WHERE `id` = %d LIMIT 1",
+			dbesc($updated),
+			dbesc($updated),
 			intval($contact['id'])
 		);
 

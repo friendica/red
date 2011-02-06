@@ -62,6 +62,10 @@ $a->config['system']['huburl'] = 'http://pubsubhubbub.appspot.com';
 
 $a->config['system']['rino_encrypt'] = true;
 
+// default system theme
+
+$a->config['system']['theme'] = 'duepuntozero';
+
 // Addons or plugins are configured here.
 // This is a comma seperated list of addons to enable. Example:
 // $a->config['system']['addon'] = 'js_upload,randplace,oembed';

@@ -2,7 +2,7 @@
 
 set_time_limit(0);
 
-define ( 'BUILD_ID',               1035   );
+define ( 'BUILD_ID',               1036   );
 define ( 'FRIENDIKA_VERSION',      '2.10.0905' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.1'  );
 
@@ -2273,5 +2273,35 @@ function proc_run($cmd){
 	}
 	$cmdline = implode($args," ");
 	proc_close(proc_open($cmdline." &",array(),$foo));
+}}
+
+/*
+ * Return full URL to theme which is currently in effect.
+ * Provide a sane default if nothing is chosen or the specified theme does not exist.
+ */
+
+if(! function_exists('current_theme_url')) {
+function current_theme_url() {
+
+	$app_base_themes = array('duepuntozero', 'loozah');
+
+	$a = get_app();
+
+	$system_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : '');
+	$theme_name = ((x($_SESSION,'theme')) ? $_SESSION['theme'] : $system_theme);
+
+	if($theme_name && file_exists('view/theme/' . $theme_name . '/style.css'))
+		return($a->get_baseurl() . '/view/theme/' . $theme_name . '/style.css'); 
+
+	foreach($app_base_themes as $t) {
+		if(file_exists('view/theme/' . $t . '/style.css'))
+			return($a->get_baseurl() . '/view/theme/' . $t . '/style.css'); 
+	}	
+
+	$fallback = glob('view/theme/*/style.css');
+	if(count($fallback))
+		return($a->get_baseurl() . $fallback[0]);
+
+	
 }}
 
