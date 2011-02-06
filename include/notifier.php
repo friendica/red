@@ -84,7 +84,7 @@ function notifier_run($argv, $argc){
 		if($items[0]['deleted']) {
 			foreach($items as $item)
 				$item['deleted'] = 1;
-
+		}
 	}
 
 	$r = q("SELECT `contact`.*, `user`.`nickname`, `user`.`sprvkey`, `user`.`spubkey`, `user`.`page-flags` 
