@@ -227,8 +227,8 @@ $a->strings['Please contact the sender by replying to this post if you do not wi
 $a->strings['posted an update.'] = 'posted an update.';
 $a->strings['photo'] = 'Foto';
 $a->strings['status'] = 'Status';
-$a->strings['likes'] = 'mag es';
-$a->strings['doesn\'t like'] = 'mag es nicht';
+$a->strings['likes'] = 'mag das';
+$a->strings['doesn\'t like'] = 'mag das nicht';
 $a->strings['\'s'] = '\'s';
 $a->strings['Remote privacy information not available.'] = 'Entfernte Privatsphäreneinstellungen nicht verfügbar.';
 $a->strings['Visible to:'] = 'Sichtbar für:';

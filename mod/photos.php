@@ -915,6 +915,7 @@ function photos_content(&$a) {
 		if($can_post && ($ph[0]['uid'] == $owner_uid)) {
 			$o .= '<div id="photo-edit-link-wrap" ><a id="photo-edit-link" href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $datum . '/edit' . '">' . t('Edit photo') . '</a>';
 			
+			$o .= ' - <a id="photo-toprofile-link" href="' . $a->get_baseurl() . '/profile_photo/use/'.$ph[0]['resource-id'].'">'.t('Use as profile photo').'</a>';
 			// lock
 			$o .= ( ( ($ph[0]['uid'] == local_user()) && (strlen($ph[0]['allow_cid']) || strlen($ph[0]['allow_gid']) 
 					|| strlen($ph[0]['deny_cid']) || strlen($ph[0]['deny_gid'])) ) 
@@ -1064,7 +1065,7 @@ function photos_content(&$a) {
 					like_puller($a,$item,$dlike,'dislike');
 				}
 
-	            $like    = ((isset($alike[$link_item['id']])) ? format_like($alike[$link_item['id']],$alike[$link_item['id'] . '-l'],'like',$link_item['id']) : '');
+				$like    = ((isset($alike[$link_item['id']])) ? format_like($alike[$link_item['id']],$alike[$link_item['id'] . '-l'],'like',$link_item['id']) : '');
 				$dislike = ((isset($dlike[$link_item['id']])) ? format_like($dlike[$link_item['id']],$dlike[$link_item['id'] . '-l'],'dislike',$link_item['id']) : '');
 
 				$o .= '<div id="photo-like-div">';
