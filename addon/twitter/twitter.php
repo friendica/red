@@ -24,13 +24,14 @@
  *     setting. After this, your user can configure their Twitter account settings
  *     from "Settings -> Plugin Settings".
  *
+ *     Requirements: PHP5, curl [Slinky library]
+ *
  *     Documentation: http://diekershoff.homeunix.net/redmine/wiki/friendikaplugin/Twitter_Plugin
  */
 
 /*   __TODO__
  *
  *   - deletion of the OAuth credentials does not work
- *   - include short links to the original posting if possible
  *   - what about multimedia content?
  *     so far we just strip HTML tags from the message
  *   - after entering the PIN reload page propperly
