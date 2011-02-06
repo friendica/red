@@ -688,11 +688,12 @@ function item_store($arr,$force_parent = false) {
 				$arr['parent-uri'] = $r[0]['parent-uri'];
 			}
 
-			$parent_id = $r[0]['id'];
-			$allow_cid = $r[0]['allow_cid'];
-			$allow_gid = $r[0]['allow_gid'];
-			$deny_cid  = $r[0]['deny_cid'];
-			$deny_gid  = $r[0]['deny_gid'];
+			$parent_id      = $r[0]['id'];
+			$parent_deleted = $r[0]['deleted'];
+			$allow_cid      = $r[0]['allow_cid'];
+			$allow_gid      = $r[0]['allow_gid'];
+			$deny_cid       = $r[0]['deny_cid'];
+			$deny_gid       = $r[0]['deny_gid'];
 		}
 		else {
 
@@ -739,10 +740,10 @@ function item_store($arr,$force_parent = false) {
 		return 0;
 	}
 
-	if($arr['parent-uri'] === $arr['uri'])
+	if((! $parent_id) || ($arr['parent-uri'] === $arr['uri']))	
 		$parent_id = $current_post;
- 
-	if(strlen($allow_cid) || strlen($allow_gid) || strlen($deny_cid) || strlen($deny_gid))
+
+ 	if(strlen($allow_cid) || strlen($allow_gid) || strlen($deny_cid) || strlen($deny_gid))
 		$private = 1;
 	else
 		$private = $arr['private']; 
@@ -750,13 +751,14 @@ function item_store($arr,$force_parent = false) {
 	// Set parent id - and also make sure to inherit the parent's ACL's.
 
 	$r = q("UPDATE `item` SET `parent` = %d, `allow_cid` = '%s', `allow_gid` = '%s',
-		`deny_cid` = '%s', `deny_gid` = '%s', `private` = %d WHERE `id` = %d LIMIT 1",
+		`deny_cid` = '%s', `deny_gid` = '%s', `private` = %d, `deleted` = %d WHERE `id` = %d LIMIT 1",
 		intval($parent_id),
 		dbesc($allow_cid),
 		dbesc($allow_gid),
 		dbesc($deny_cid),
 		dbesc($deny_gid),
 		intval($private),
+		intval($parent_deleted),
 		intval($current_post)
 	);
 

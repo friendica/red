@@ -2,18 +2,18 @@
 require_once("boot.php");
 
 function notifier_run($argv, $argc){
-  global $a, $db;
+	global $a, $db;
 
-  if(is_null($a)){
-    $a = new App;
-  }
+	if(is_null($a)){
+		$a = new App;
+	}
   
-  if(is_null($db)){
-    @include(".htconfig.php");
-    require_once("dba.php");
-    $db = new dba($db_host, $db_user, $db_pass, $db_data);
-    unset($db_host, $db_user, $db_pass, $db_data);
-  };
+	if(is_null($db)) {
+		@include(".htconfig.php");
+		require_once("dba.php");
+		$db = new dba($db_host, $db_user, $db_pass, $db_data);
+		        unset($db_host, $db_user, $db_pass, $db_data);
+	}
 
 	require_once("session.php");
 	require_once("datetime.php");
@@ -62,11 +62,12 @@ function notifier_run($argv, $argc){
 		$r = q("SELECT `parent`, `uid`, `edited` FROM `item` WHERE `id` = %d LIMIT 1",
 			intval($item_id)
 		);
-		if(! count($r)){
+
+		if((! count($r)) || (! intval($r[0]['parent']))) {
 			return;
 		}
-  
-		$parent_id = $r[0]['parent'];
+
+		$parent_id = intval($r[0]['parent']);
 		$uid = $r[0]['uid'];
 		$updated = $r[0]['edited'];
 
@@ -76,6 +77,13 @@ function notifier_run($argv, $argc){
 
 		if(! count($items)){
 			return;
+		}
+
+		// avoid race condition with deleting entries
+
+		if($items[0]['deleted']) {
+			foreach($items as $item)
+				$item['deleted'] = 1;
 		}
 	}
 
@@ -122,8 +130,8 @@ function notifier_run($argv, $argc){
 
 			$allow_people = expand_acl($parent['allow_cid']);
 			$allow_groups = expand_groups(expand_acl($parent['allow_gid']));
-			$deny_people = expand_acl($parent['deny_cid']);
-			$deny_groups = expand_groups(expand_acl($parent['deny_gid']));
+			$deny_people  = expand_acl($parent['deny_cid']);
+			$deny_groups  = expand_groups(expand_acl($parent['deny_gid']));
 
 			$conversants = array();
 
@@ -220,6 +228,8 @@ function notifier_run($argv, $argc){
 	else {
 		if($followup) {
 			foreach($items as $item) {  // there is only one item
+				if(! $item['parent'])
+					continue;
 				if($item['id'] == $item_id) {
 					logger('notifier: followup: item: ' . print_r($item,true), LOGGER_DATA);
 					$slap  = atom_entry($item,'html',$owner,$owner,false);
@@ -229,6 +239,9 @@ function notifier_run($argv, $argc){
 		}
 		else {
 			foreach($items as $item) {
+				if(! $item['parent'])
+					continue;
+
 				$contact = get_item_contact($item,$contacts);
 				if(! $contact)
 					continue;
