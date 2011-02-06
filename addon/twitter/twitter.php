@@ -34,7 +34,6 @@
  *   - deletion of the OAuth credentials does not work
  *   - what about multimedia content?
  *     so far we just strip HTML tags from the message
- *   - after entering the PIN reload page propperly
  */
 
 function twitter_install() {
