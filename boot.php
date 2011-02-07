@@ -2,7 +2,7 @@
 
 set_time_limit(0);
 
-define ( 'BUILD_ID',               1036   );
+define ( 'BUILD_ID',               1037   );
 define ( 'FRIENDIKA_VERSION',      '2.10.0905' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.1'  );
 
@@ -215,8 +215,18 @@ class App {
 
 		$this->scheme = ((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']))	?  'https' : 'http' );
 
-		if(x($_SERVER,'SERVER_NAME'))
+		if(x($_SERVER,'SERVER_NAME')) {
 			$this->hostname = $_SERVER['SERVER_NAME'];
+
+			/** 
+			 * Figure out if we are running at the top of a domain
+			 * or in a sub-directory and adjust accordingly
+			 */
+
+			$path = trim(dirname($_SERVER['SCRIPT_NAME']),'/\\');
+			if(isset($path) && strlen($path) && ($path != $this->path))
+				$this->path = $path;
+		}
 
 		set_include_path("include/$this->hostname" . PATH_SEPARATOR . 'include' . PATH_SEPARATOR . '.' );
 
@@ -225,14 +235,6 @@ class App {
 		if(x($_GET,'q'))
 			$this->cmd = trim($_GET['q'],'/\\');
 
-		/** 
-		 * Figure out if we are running at the top of a domain
-		 * or in a sub-directory and adjust accordingly
-		 */
-
-		$path = trim(dirname($_SERVER['SCRIPT_NAME']),'/\\');
-		if(isset($path) && strlen($path) && ($path != $this->path))
-			$this->path = $path;
 
 
 		/**
@@ -295,8 +297,20 @@ class App {
 	}
 
 	function set_baseurl($url) {
+		$parsed = parse_url($url);
+
 		$this->baseurl = $url;
-		$this->hostname = basename($url);
+
+		if($parsed) {		
+			$this->scheme = $parsed['scheme'];
+
+			$this->hostname = $parsed['host'];
+			if($parsed['port'])
+				$this->hostname .= ':' . $parsed['port'];
+			if($parsed['path'])
+				$this->path = trim($parsed['path'],'\\/');
+		}
+
 	}
 
 	function get_hostname() {
@@ -406,7 +420,11 @@ function system_unavailable() {
 if(! function_exists('check_config')) {
 function check_config(&$a) {
 
+
 	load_config('system');
+
+	if(! x($_SERVER,'SERVER_NAME'))
+		return;
 
 	$build = get_config('system','build');
 	if(! x($build))

@@ -349,3 +349,17 @@ function update_1035() {
 	q("ALTER TABLE `contact` ADD `success_update` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `last-update` ");
 
 }
+
+function update_1036() {
+
+	$r = dbq("SELECT * FROM `contact` WHERE `network` = 'dfrn' && `photo` LIKE '%include/photo%' ");
+	if(count($r)) {
+		foreach($r as $rr) {
+			q("UPDATE `contact` SET `photo` = '%s', `thumb` = '%s', `micro` = '%s' WHERE `id` = %d LIMIT 1",
+				dbesc(str_replace('include/photo','photo',$rr['photo'])),
+				dbesc(str_replace('include/photo','photo',$rr['thumb'])),
+				dbesc(str_replace('include/photo','photo',$rr['micro'])),
+				intval($rr['id']));
+		}
+	}
+}
