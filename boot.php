@@ -762,7 +762,7 @@ function login($register = false) {
 	$lostpass = t('Forgot your password?');
 	$lostlink = t('Password Reset');
 
-	if(local_user())) {
+	if(local_user()) {
 		$tpl = load_view_file("view/logout.tpl");
 	}
 	else {
