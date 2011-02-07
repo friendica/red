@@ -762,7 +762,7 @@ function login($register = false) {
 	$lostpass = t('Forgot your password?');
 	$lostlink = t('Password Reset');
 
-	if(x($_SESSION,'authenticated')) {
+	if(local_user())) {
 		$tpl = load_view_file("view/logout.tpl");
 	}
 	else {
@@ -772,12 +772,12 @@ function login($register = false) {
 	
 	$o = replace_macros($tpl,array(
 		'$register_html' => $register_html, 
-		'$classname' => $classname,
-		'$namelabel' => $namelabel,
-		'$passlabel' => $passlabel,
-		'$login' => $login,
-		'$lostpass' => $lostpass,
-		'$lostlink' => $lostlink 
+		'$classname'     => $classname,
+		'$namelabel'     => $namelabel,
+		'$passlabel'     => $passlabel,
+		'$login'         => $login,
+		'$lostpass'      => $lostpass,
+		'$lostlink'      => $lostlink 
 	));
 
 	return $o;
