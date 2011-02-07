@@ -87,7 +87,7 @@ function notifier_run($argv, $argc){
 		}
 	}
 
-	$r = q("SELECT `contact`.*, `user`.`nickname`, `user`.`sprvkey`, `user`.`spubkey`, `user`.`page-flags` 
+	$r = q("SELECT `contact`.*, `user`.`timezone`, `user`.`nickname`, `user`.`sprvkey`, `user`.`spubkey`, `user`.`page-flags` 
 		FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
 		WHERE `contact`.`uid` = %d AND `contact`.`self` = 1 LIMIT 1",
 		intval($uid)
@@ -194,6 +194,10 @@ function notifier_run($argv, $argc){
 		}
 	}
 
+	$birthday = feed_birthday($owner['uid'],$owner['timezone']);
+	if($birthday)
+		$birthday = '<dfrn:birthday>' . xmlify($birthday) . '</dfrn:birthday>';
+
 	$atom .= replace_macros($feed_template, array(
 			'$version'      => xmlify(FRIENDIKA_VERSION),
 			'$feed_id'      => xmlify($a->get_baseurl() . '/profile/' . $owner['nickname'] ),
@@ -208,7 +212,7 @@ function notifier_run($argv, $argc){
 			'$picdate'      => xmlify(datetime_convert('UTC','UTC',$owner['avatar-date'] . '+00:00' , ATOM_TIME)) ,
 			'$uridate'      => xmlify(datetime_convert('UTC','UTC',$owner['uri-date']    . '+00:00' , ATOM_TIME)) ,
 			'$namdate'      => xmlify(datetime_convert('UTC','UTC',$owner['name-date']   . '+00:00' , ATOM_TIME)) ,
-			'$birthday'     => ''
+			'$birthday'     => $birthday
 	));
 
 	if($cmd === 'mail') {

@@ -37,44 +37,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 	else
 		killme();
 
-
-	/**
-	 *
-	 * Determine the next birthday, but only if the birthday is published
-	 * in the default profile. We _could_ also look for a private profile that the
-	 * recipient can see, but somebody could get mad at us if they start getting
-	 * public birthday greetings when they haven't made this info public. 
-	 *
-	 * Assuming we are able to publish this info, we are then going to convert
-	 * the start time from the owner's timezone to UTC. 
-	 *
-	 * This will potentially solve the problem found with some social networks
-	 * where birthdays are converted to the viewer's timezone and salutations from
-	 * elsewhere in the world show up on the wrong day. We will convert it to the
-	 * viewer's timezone also, but first we are going to convert it from the birthday
-	 * person's timezone to GMT - so the viewer may find the birthday starting at
-	 * 6:00PM the day before, but that will correspond to midnight to the birthday person.
-	 *
-	 */
-
-	$birthday = '';
-
-	$p = q("SELECT `dob` FROM `profile` WHERE `is-default` = 1 AND `uid` = %d LIMIT 1",
-		intval($owner_id)
-	);
-
-	if($p && count($p)) {
-		$tmp_dob = substr($p[0]['dob'],5);
-		if(intval($tmp_dob)) {
-			$y = datetime_convert($owner_tz,$owner_tz,'now','Y');
-			$bd = $y . '-' . $tmp_dob . ' 00:00';
-			$t_dob = strtotime($bd);
-			$now = strtotime(datetime_convert($owner_tz,$owner_tz,'now'));
-			if($t_dob < $now)
-				$bd = $y + 1 . '-' . $tmp_dob . ' 00:00';
-			$birthday = datetime_convert($owner_tz,'UTC',$bd,ATOM_TIME); 
-		}
-	}
+	$birthday = feed_birthday($owner_id,$owner_tz);
 
 	if($dfrn_id && $dfrn_id != '*') {
 
