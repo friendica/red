@@ -246,7 +246,7 @@ function dfrn_notify_post(&$a) {
 						);
 						if($item['last-child']) {
 							// ensure that last-child is set in case the comment that had it just got wiped.
-							$q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d ",
+							q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d ",
 								dbesc(datetime_convert()),
 								dbesc($item['parent-uri']),
 								intval($item['uid'])

@@ -1058,7 +1058,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 					$item = $r[0];
 
 					if(! $item['deleted'])
-						logger('dfrn_notify: deleting item ' . $item['id'] . ' uri=' . $item['uri'], LOGGER_DEBUG);
+						logger('consume_feed: deleting item ' . $item['id'] . ' uri=' . $item['uri'], LOGGER_DEBUG);
 
 					if($item['uri'] == $item['parent-uri']) {
 						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s',
@@ -1081,7 +1081,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 						);
 						if($item['last-child']) {
 							// ensure that last-child is set in case the comment that had it just got wiped.
-							$q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d ",
+							q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d ",
 								dbesc(datetime_convert()),
 								dbesc($item['parent-uri']),
 								intval($item['uid'])
