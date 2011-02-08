@@ -87,7 +87,7 @@ function notifier_run($argv, $argc){
 		}
 	}
 
-	$r = q("SELECT `contact`.*, `user`.`nickname`, `user`.`sprvkey`, `user`.`spubkey`, `user`.`page-flags` 
+	$r = q("SELECT `contact`.*, `user`.`timezone`, `user`.`nickname`, `user`.`sprvkey`, `user`.`spubkey`, `user`.`page-flags` 
 		FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
 		WHERE `contact`.`uid` = %d AND `contact`.`self` = 1 LIMIT 1",
 		intval($uid)
@@ -179,20 +179,14 @@ function notifier_run($argv, $argc){
 	$mail_template = load_view_file('view/atom_mail.tpl');
 
 	$atom = '';
-	$hubxml = '';
 	$slaps = array();
 
-	if(strlen($hub)) {
-		$hubs = explode(',', $hub);
-		if(count($hubs)) {
-			foreach($hubs as $h) {
-				$h = trim($h);
-				if(! strlen($h))
-					continue;
-				$hubxml .= '<link rel="hub" href="' . xmlify($h) . '" />' . "\n" ;
-			}
-		}
-	}
+	$hubxml = feed_hublinks();
+
+	$birthday = feed_birthday($owner['uid'],$owner['timezone']);
+
+	if(strlen($birthday))
+		$birthday = '<dfrn:birthday>' . xmlify($birthday) . '</dfrn:birthday>';
 
 	$atom .= replace_macros($feed_template, array(
 			'$version'      => xmlify(FRIENDIKA_VERSION),
@@ -208,7 +202,7 @@ function notifier_run($argv, $argc){
 			'$picdate'      => xmlify(datetime_convert('UTC','UTC',$owner['avatar-date'] . '+00:00' , ATOM_TIME)) ,
 			'$uridate'      => xmlify(datetime_convert('UTC','UTC',$owner['uri-date']    . '+00:00' , ATOM_TIME)) ,
 			'$namdate'      => xmlify(datetime_convert('UTC','UTC',$owner['name-date']   . '+00:00' , ATOM_TIME)) ,
-			'$birthday'     => ''
+			'$birthday'     => $birthday
 	));
 
 	if($cmd === 'mail') {
@@ -394,7 +388,7 @@ function notifier_run($argv, $argc){
 		 *
 		 */
 
-		$max_allowed = ((get_config('system','maxpubdeliver') === false) ? 150 : intval(get_config('system','maxdeliver')));
+		$max_allowed = ((get_config('system','maxpubdeliver') === false) ? 150 : intval(get_config('system','maxpubdeliver')));
 				
 		/**
 		 *

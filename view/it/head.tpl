@@ -2,7 +2,7 @@
 <base href="$baseurl" />
 <meta name="generator" content="$generator" />
 <link rel="stylesheet" type="text/css" href="$stylesheet" media="all" />
-<link rel="shortcut icon" href="$baseurl/images/ff-32.jpg">
+<link rel="shortcut icon" href="$baseurl/images/ff-32.jpg" />
 
 <!--[if IE]>
 <script type="text/javascript" src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>

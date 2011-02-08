@@ -626,7 +626,16 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
         }
     }
 	$a->set_curl_code($http_code);
+
 	$body = substr($s,strlen($header)+4);
+
+	/* one more try to make sure there are no more headers */
+
+	if(strpos($body,'HTTP/') === 0) {
+		$header = substr($body,0,strpos($body,"\r\n\r\n"));
+		$body = substr($body,strlen($header)+4);
+	}
+
 	$a->set_curl_headers($header);
 
 	curl_close($ch);
@@ -690,6 +699,14 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
     }
 	$a->set_curl_code($http_code);
 	$body = substr($s,strlen($header)+4);
+
+	/* one more try to make sure there are no more headers */
+
+	if(strpos($body,'HTTP/') === 0) {
+		$header = substr($body,0,strpos($body,"\r\n\r\n"));
+		$body = substr($body,strlen($header)+4);
+	}
+
 	$a->set_curl_headers($header);
 
 	curl_close($ch);
@@ -762,7 +779,7 @@ function login($register = false) {
 	$lostpass = t('Forgot your password?');
 	$lostlink = t('Password Reset');
 
-	if(x($_SESSION,'authenticated')) {
+	if(local_user()) {
 		$tpl = load_view_file("view/logout.tpl");
 	}
 	else {
@@ -772,12 +789,12 @@ function login($register = false) {
 	
 	$o = replace_macros($tpl,array(
 		'$register_html' => $register_html, 
-		'$classname' => $classname,
-		'$namelabel' => $namelabel,
-		'$passlabel' => $passlabel,
-		'$login' => $login,
-		'$lostpass' => $lostpass,
-		'$lostlink' => $lostlink 
+		'$classname'     => $classname,
+		'$namelabel'     => $namelabel,
+		'$passlabel'     => $passlabel,
+		'$login'         => $login,
+		'$lostpass'      => $lostpass,
+		'$lostlink'      => $lostlink 
 	));
 
 	return $o;
@@ -1266,7 +1283,7 @@ function del_pconfig($uid,$family,$key) {
 		unset($a->config[$uid][$family][$key]);
 	$ret = q("DELETE FROM `pconfig` WHERE `uid` = %d AND `cat` = '%s' AND `k` = '%s' LIMIT 1",
 		intval($uid),
-		dbesc($cat),
+		dbesc($family),
 		dbesc($key)
 	);
 	return $ret;
@@ -2321,5 +2338,89 @@ function current_theme_url() {
 		return($a->get_baseurl() . $fallback[0]);
 
 	
+}}
+
+if(! function_exists('feed_birthday')) {
+function feed_birthday($uid,$tz) {
+
+	/**
+	 *
+	 * Determine the next birthday, but only if the birthday is published
+	 * in the default profile. We _could_ also look for a private profile that the
+	 * recipient can see, but somebody could get mad at us if they start getting
+	 * public birthday greetings when they haven't made this info public. 
+	 *
+	 * Assuming we are able to publish this info, we are then going to convert
+	 * the start time from the owner's timezone to UTC. 
+	 *
+	 * This will potentially solve the problem found with some social networks
+	 * where birthdays are converted to the viewer's timezone and salutations from
+	 * elsewhere in the world show up on the wrong day. We will convert it to the
+	 * viewer's timezone also, but first we are going to convert it from the birthday
+	 * person's timezone to GMT - so the viewer may find the birthday starting at
+	 * 6:00PM the day before, but that will correspond to midnight to the birthday person.
+	 *
+	 */
+
+	$birthday = '';
+
+	$p = q("SELECT `dob` FROM `profile` WHERE `is-default` = 1 AND `uid` = %d LIMIT 1",
+		intval($uid)
+	);
+
+	if($p && count($p)) {
+		$tmp_dob = substr($p[0]['dob'],5);
+		if(intval($tmp_dob)) {
+			$y = datetime_convert($tz,$tz,'now','Y');
+			$bd = $y . '-' . $tmp_dob . ' 00:00';
+			$t_dob = strtotime($bd);
+			$now = strtotime(datetime_convert($tz,$tz,'now'));
+			if($t_dob < $now)
+				$bd = $y + 1 . '-' . $tmp_dob . ' 00:00';
+			$birthday = datetime_convert($tz,'UTC',$bd,ATOM_TIME); 
+		}
+	}
+
+	return $birthday;
+}}
+
+/**
+ * return atom link elements for all of our hubs
+ */
+
+if(! function_exists('feed_hublinks')) {
+function feed_hublinks() {
+
+	$hub = get_config('system','huburl');
+
+	$hubxml = '';
+	if(strlen($hub)) {
+		$hubs = explode(',', $hub);
+		if(count($hubs)) {
+			foreach($hubs as $h) {
+				$h = trim($h);
+				if(! strlen($h))
+					continue;
+				$hubxml .= '<link rel="hub" href="' . xmlify($h) . '" />' . "\n" ;
+			}
+		}
+	}
+	return $hubxml;
+}}
+
+/* return atom link elements for salmon endpoints */
+
+if(! function_exists('feed_salmonlinks')) {
+function feed_salmonlinks($nick) {
+
+	$a = get_app();
+
+	$salmon  = '<link rel="salmon" href="' . xmlify($a->get_baseurl() . '/salmon/' . $nick) . '" />' . "\n" ;
+
+	// old style links that status.net still needed as of 12/2010 
+
+	$salmon .= '  <link rel="http://salmon-protocol.org/ns/salmon-replies" href="' . xmlify($a->get_baseurl() . '/salmon/' . $nick) . '" />' . "\n" ; 
+	$salmon .= '  <link rel="http://salmon-protocol.org/ns/salmon-mention" href="' . xmlify($a->get_baseurl() . '/salmon/' . $nick) . '" />' . "\n" ; 
+	return $salmon;
 }}
 
