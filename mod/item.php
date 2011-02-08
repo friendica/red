@@ -25,6 +25,7 @@ function item_post(&$a) {
 	$parent = ((x($_POST,'parent')) ? intval($_POST['parent']) : 0);
 
 	$parent_item = null;
+	$parent_contact = null;
 
 	if($parent) {
 		$r = q("SELECT * FROM `item` WHERE `id` = %d LIMIT 1",
@@ -35,6 +36,14 @@ function item_post(&$a) {
 			goaway($a->get_baseurl() . "/" . $_POST['return'] );
 		}
 		$parent_item = $r[0];
+		if($parent_item['contact-id'] && $uid) {
+			$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+				intval($parent_item['contact-id']),
+				intval($uid)
+			);
+			if(count($r))
+				$parent_contact = $r[0];
+		}
 	}
 
 	$profile_uid = ((x($_POST,'profile_uid')) ? intval($_POST['profile_uid']) : 0);
@@ -185,8 +194,13 @@ function item_post(&$a) {
 	$str_tags = '';
 	$inform   = '';
 
+
 	$tags = get_tags($body);
 
+	if(($parent_contact) && ($parent_contact['network'] === 'stat') && ($parent_contact['nick']) && (! in_array('@' . $parent_contact['nick'],$tags))) {
+		$body = '@' . $parent_contact['nick'] . ' ' . $body;
+		$tags[] = '@' . $parent_contact['nick'];
+	}		
 
 	if(count($tags)) {
 		foreach($tags as $tag) {
@@ -199,6 +213,7 @@ function item_post(&$a) {
 				continue;
 			}
 			if(strpos($tag,'@') === 0) {
+				$stat = false;
 				$name = substr($tag,1);
 				if((strpos($name,'@')) || (strpos($name,'http://'))) {
 					$newname = $name;
@@ -231,6 +246,8 @@ function item_post(&$a) {
 						);
 					}
 					if(count($r)) {
+						if($r[0]['network'] === 'stat')
+							$stat = true;
 						$profile = $r[0]['url'];
 						$newname = $r[0]['name'];
 						if(strlen($inform))
@@ -239,7 +256,8 @@ function item_post(&$a) {
 					}
 				}
 				if($profile) {
-					$body = str_replace('@' . $name, '@' . '[url=' . $profile . ']' . $newname	. '[/url]', $body);
+					if(! $stat)
+						$body = str_replace('@' . $name, '@' . '[url=' . $profile . ']' . $newname	. '[/url]', $body);
 					$profile = str_replace(',','%2c',$profile);
 					if(strlen($str_tags))
 						$str_tags .= ',';
@@ -248,6 +266,8 @@ function item_post(&$a) {
 			}
 		}
 	}
+
+
 
 	$wall = 0;
 	if($post_type === 'wall' || $post_type === 'wall-comment')
