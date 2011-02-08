@@ -1031,25 +1031,18 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 
 	}
 
-	// Now process the feed
-	if($feed->get_item_quantity()) {		
 
-        // in inverse date order
-		if ($datedir)
-			$items = array_reverse($feed->get_items());
-		else
-			$items = $feed->get_items();
+	// process any deleted entries
 
-		foreach($items as $item) {
-
+	$del_entries = $feed->get_feed_tags(NAMESPACE_TOMB, 'deleted-entry');
+	if(is_array($del_entries) && count($del_entries)) {
+		foreach($del_entries as $dentry) {
 			$deleted = false;
-
-			$rawdelete = $item->get_item_tags( NAMESPACE_TOMB, 'deleted-entry');
-			if(isset($rawdelete[0]['attribs']['']['ref'])) {
-				$uri = $rawthread[0]['attribs']['']['ref'];
+			if(isset($dentry['attribs']['']['ref'])) {
+				$uri = $dentry['attribs']['']['ref'];
 				$deleted = true;
-				if(isset($rawdelete[0]['attribs']['']['when'])) {
-					$when = $rawthread[0]['attribs']['']['when'];
+				if(isset($dentry['attribs']['']['when'])) {
+					$when = $dentry['attribs']['']['when'];
 					$when = datetime_convert('UTC','UTC', $when, 'Y-m-d H:i:s');
 				}
 				else
@@ -1063,6 +1056,10 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 				);
 				if(count($r)) {
 					$item = $r[0];
+
+					if(! $item['deleted'])
+						logger('dfrn_notify: deleting item ' . $item['id'] . ' uri=' . $item['uri'], LOGGER_DEBUG);
+
 					if($item['uri'] == $item['parent-uri']) {
 						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s',
 							`body` = '', `title` = ''
@@ -1103,9 +1100,24 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 						}	
 					}
 				}	
-				continue;
 			}
+		}
+	}
 
+	// Now process the feed
+
+	if($feed->get_item_quantity()) {		
+
+		logger('consume_feed: feed item count = ' . $feed->get_item_quantity());
+
+        // in inverse date order
+		if ($datedir)
+			$items = array_reverse($feed->get_items());
+		else
+			$items = $feed->get_items();
+
+
+		foreach($items as $item) {
 
 			$is_reply = false;		
 			$item_id = $item->get_id();
@@ -1114,7 +1126,6 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 				$is_reply = true;
 				$parent_uri = $rawthread[0]['attribs']['']['ref'];
 			}
-
 
 			if(($is_reply) && is_array($contact)) {
 	

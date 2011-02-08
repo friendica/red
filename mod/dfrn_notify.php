@@ -200,68 +200,77 @@ function dfrn_notify_post(&$a) {
 	
 	logger('dfrn_notify: feed item count = ' . $feed->get_item_quantity());
 
-	foreach($feed->get_items() as $item) {
+	// process any deleted entries
 
-		$deleted = false;
-
-		$rawdelete = $item->get_item_tags( NAMESPACE_TOMB , 'deleted-entry');
-		if(isset($rawdelete[0]['attribs']['']['ref'])) {
-			$uri = $rawthread[0]['attribs']['']['ref'];
-			$deleted = true;
-			if(isset($rawdelete[0]['attribs']['']['when'])) {
-				$when = $rawthread[0]['attribs']['']['when'];
-				$when = datetime_convert('UTC','UTC', $when, 'Y-m-d H:i:s');
+	$del_entries = $feed->get_feed_tags(NAMESPACE_TOMB, 'deleted-entry');
+	if(is_array($del_entries) && count($del_entries)) {
+		foreach($del_entries as $dentry) {
+			$deleted = false;
+			if(isset($dentry['attribs']['']['ref'])) {
+				$uri = $dentry['attribs']['']['ref'];
+				$deleted = true;
+				if(isset($dentry['attribs']['']['when'])) {
+					$when = $dentry['attribs']['']['when'];
+					$when = datetime_convert('UTC','UTC', $when, 'Y-m-d H:i:s');
+				}
+				else
+					$when = datetime_convert('UTC','UTC','now','Y-m-d H:i:s');
 			}
-			else
-				$when = datetime_convert('UTC','UTC','now','Y-m-d H:i:s');
-		}
-		if($deleted) {
-			$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
-				dbesc($uri),
-				intval($importer['importer_uid'])
-			);
-			if(count($r)) {
-				$item = $r[0];
-				if($item['uri'] == $item['parent-uri']) {
-					$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s'
-						WHERE `parent-uri` = '%s' AND `uid` = %d",
-						dbesc($when),
-						dbesc(datetime_convert()),
-						dbesc($item['uri']),
-						intval($importer['importer_uid'])
-					);
-				}
-				else {
-					$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s' 
-						WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
-						dbesc($when),
-						dbesc(datetime_convert()),
-						dbesc($uri),
-						intval($importer['importer_uid'])
-					);
-					if($item['last-child']) {
-						// ensure that last-child is set in case the comment that had it just got wiped.
-						$q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d ",
+			if($deleted) {
+				$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+					dbesc($uri),
+					intval($importer['importer_uid'])
+				);
+				if(count($r)) {
+					$item = $r[0];
+
+					if(! $item['deleted'])
+						logger('dfrn_notify: deleting item ' . $item['id'] . ' uri=' . $item['uri'], LOGGER_DEBUG);
+
+					if($item['uri'] == $item['parent-uri']) {
+						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s'
+							WHERE `parent-uri` = '%s' AND `uid` = %d",
+							dbesc($when),
 							dbesc(datetime_convert()),
-							dbesc($item['parent-uri']),
-							intval($item['uid'])
+							dbesc($item['uri']),
+							intval($importer['importer_uid'])
 						);
-						// who is the last child now? 
-						$r = q("SELECT `id` FROM `item` WHERE `parent-uri` = '%s' AND `type` != 'activity' AND `deleted` = 0 AND `uid` = %d
-							ORDER BY `created` DESC LIMIT 1",
-								dbesc($item['parent-uri']),
-								intval($importer['importer_uid'])
-						);
-						if(count($r)) {
-							q("UPDATE `item` SET `last-child` = 1 WHERE `id` = %d LIMIT 1",
-								intval($r[0]['id'])
-							);
-						}	
 					}
+					else {
+						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s' 
+							WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+							dbesc($when),
+							dbesc(datetime_convert()),
+							dbesc($uri),
+							intval($importer['importer_uid'])
+						);
+						if($item['last-child']) {
+							// ensure that last-child is set in case the comment that had it just got wiped.
+							$q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d ",
+								dbesc(datetime_convert()),
+								dbesc($item['parent-uri']),
+								intval($item['uid'])
+							);
+							// who is the last child now? 
+							$r = q("SELECT `id` FROM `item` WHERE `parent-uri` = '%s' AND `type` != 'activity' AND `deleted` = 0 AND `uid` = %d
+								ORDER BY `created` DESC LIMIT 1",
+									dbesc($item['parent-uri']),
+									intval($importer['importer_uid'])
+							);
+							if(count($r)) {
+								q("UPDATE `item` SET `last-child` = 1 WHERE `id` = %d LIMIT 1",
+									intval($r[0]['id'])
+								);
+							}	
+						}
+					}	
 				}
-			}	
-			continue;
+			}
 		}
+	}
+
+
+	foreach($feed->get_items() as $item) {
 
 		$is_reply = false;		
 		$item_id = $item->get_id();
@@ -298,7 +307,7 @@ function dfrn_notify_post(&$a) {
 					);
 					if(count($r))
 						$parent = $r[0]['parent'];
-				
+			
 					if(! $is_like) {
 						$r1 = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `uid` = %d AND `parent` = %d",
 							dbesc(datetime_convert()),
@@ -332,12 +341,11 @@ function dfrn_notify_post(&$a) {
 								'$from' => $from,
 								'$body' => strip_tags(bbcode(stripslashes($datarray['body'])))
 							));
-		
+	
 							$res = mail($importer['email'], $from . t(' commented on an item at ') . $a->config['sitename'],
 								$email_tpl, "From: " . t('Administrator') . '@' . $a->get_hostname() );
 						}
 					}
-
 					xml_status(0);
 					// NOTREACHED
 				}
@@ -372,7 +380,6 @@ function dfrn_notify_post(&$a) {
 					$datarray['type'] = 'activity';
 					$datarray['gravity'] = GRAVITY_LIKE;
 				}
-
 				$r = item_store($datarray);
 
 				// find out if our user is involved in this conversation and wants to be notified.
@@ -389,7 +396,7 @@ function dfrn_notify_post(&$a) {
 								continue;
 							require_once('bbcode.php');
 							$from = stripslashes($datarray['author-name']);
-							$tpl = load_view_file('view/cmnt_received_eml.tpl');			
+							$tpl = load_view_file('view/cmnt_received_eml.tpl');	
 							$email_tpl = replace_macros($tpl, array(
 								'$sitename' => $a->config['sitename'],
 								'$siteurl' =>  $a->get_baseurl(),
