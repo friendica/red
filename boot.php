@@ -626,7 +626,16 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
         }
     }
 	$a->set_curl_code($http_code);
+
 	$body = substr($s,strlen($header)+4);
+
+	/* one more try to make sure there are no more headers */
+
+	if(strpos($body,'HTTP/') === 0) {
+		$header = substr($body,0,strpos($body,"\r\n\r\n"));
+		$body = substr($body,strlen($header)+4);
+	}
+
 	$a->set_curl_headers($header);
 
 	curl_close($ch);
@@ -690,6 +699,14 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
     }
 	$a->set_curl_code($http_code);
 	$body = substr($s,strlen($header)+4);
+
+	/* one more try to make sure there are no more headers */
+
+	if(strpos($body,'HTTP/') === 0) {
+		$header = substr($body,0,strpos($body,"\r\n\r\n"));
+		$body = substr($body,strlen($header)+4);
+	}
+
 	$a->set_curl_headers($header);
 
 	curl_close($ch);
