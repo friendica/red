@@ -859,12 +859,12 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 }
 
 
-/*
+/**
  *
  * consume_feed - process atom feed and update anything/everything we might need to update
  *
- * $xml = the (atom) feed to consume - no RSS spoken here, it might partially work since simplepie 
- *        handles both, but we don't claim it will work well, and are reasonably certain it won't.
+ * $xml = the (atom) feed to consume - RSS isn't as fully supported but may work for simple feeds.
+ *
  * $importer = the contact_record (joined to user_record) of the local user who owns this relationship.
  *             It is this person's stuff that is going to be updated.
  * $contact =  the person who is sending us stuff. If not set, we MAY be processing a "follow" activity
