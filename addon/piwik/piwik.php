@@ -18,6 +18,8 @@
  *     installation has. Alter the baseurl to fit your needs, don't care
  *     about http/https but beware to put the trailing / at the end of your
  *     setting.
+ *
+ *     Documentation see http://diekershoff.homeunix.net/redmine/wiki/friendikaplugin/Piwik_Plugin
  */
 
 function piwik_install() {
