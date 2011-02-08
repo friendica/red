@@ -1283,7 +1283,7 @@ function del_pconfig($uid,$family,$key) {
 		unset($a->config[$uid][$family][$key]);
 	$ret = q("DELETE FROM `pconfig` WHERE `uid` = %d AND `cat` = '%s' AND `k` = '%s' LIMIT 1",
 		intval($uid),
-		dbesc($cat),
+		dbesc($family),
 		dbesc($key)
 	);
 	return $ret;
