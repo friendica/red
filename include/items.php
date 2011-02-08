@@ -9,37 +9,27 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 	// default permissions - anonymous user
 
-	$sql_extra = " 
-		AND `allow_cid` = '' 
-		AND `allow_gid` = '' 
-		AND `deny_cid`  = '' 
-		AND `deny_gid`  = '' 
-	";
-
-	if(strlen($owner_nick) && ! intval($owner_nick)) {
-		$r = q("SELECT `uid`, `nickname`, `timezone` FROM `user` WHERE `nickname` = '%s' LIMIT 1",
-			dbesc($owner_nick)
-		);
-		if(count($r)) {
-			$owner_id = $r[0]['uid'];
-			$owner_nick = $r[0]['nickname'];
-			$owner_tz = $r[0]['timezone'];
-		}
-	}
-
-	$r = q("SELECT * FROM `contact` WHERE `self` = 1 AND `uid` = %d LIMIT 1",
-		intval($owner_id)
-	);
-	if(count($r)) {
-		$owner = $r[0];
-		$owner['nickname'] = $owner_nick;
-	}
-	else
+	if(! strlen($owner_nick))
 		killme();
 
-	$birthday = feed_birthday($owner_id,$owner_tz);
+	$sql_extra = " AND `allow_cid` = '' AND `allow_gid` = '' AND `deny_cid`  = '' AND `deny_gid`  = '' ";
 
-	if($dfrn_id && $dfrn_id != '*') {
+	$r = q("SELECT `contact`.*, `user`.`uid` AS `user_uid`, `user`.`nickname`, `user`.`timezone`
+		FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid`
+		WHERE `contact`.`self` = 1 AND `user`.`nickname` = '%s' LIMIT 1",
+		dbesc($owner_nick)
+	);
+
+	if(! count($r))
+		killme();
+
+	$owner = $r[0];
+	$owner_id = $owner['user_uid'];
+	$owner_nick = $owner['nickname'];
+
+	$birthday = feed_birthday($owner_id,$owner['timezone']);
+
+	if(strlen($dfrn_id)) {
 
 		$sql_extra = '';
 		switch($direction) {
@@ -65,7 +55,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 		);
 
 		if(! count($r))
-			return false;
+			killme();
 
 		$contact = $r[0];
 		$groups = init_groups_visitor($contact['id']);
@@ -119,7 +109,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 	);
 
 	// Will check further below if this actually returned results.
-	// We will provide an empty feed in any case.
+	// We will provide an empty feed if that is the case.
 
 	$items = $r;
 
@@ -127,25 +117,9 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 	$atom = '';
 
-	$hub = get_config('system','huburl');
+	$hubxml = feed_hublinks();
 
-	$hubxml = '';
-	if(strlen($hub)) {
-		$hubs = explode(',', $hub);
-		if(count($hubs)) {
-			foreach($hubs as $h) {
-				$h = trim($h);
-				if(! strlen($h))
-					continue;
-				$hubxml .= '<link rel="hub" href="' . xmlify($h) . '" />' . "\n" ;
-			}
-		}
-	}
-
-	$salmon = '<link rel="salmon" href="' . xmlify($a->get_baseurl() . '/salmon/' . $owner_nick) . '" />' . "\n" ; 
-	$salmon .= '<link rel="http://salmon-protocol.org/ns/salmon-replies" href="' . xmlify($a->get_baseurl() . '/salmon/' . $owner_nick) . '" />' . "\n" ; 
-	$salmon .= '<link rel="http://salmon-protocol.org/ns/salmon-mention" href="' . xmlify($a->get_baseurl() . '/salmon/' . $owner_nick) . '" />' . "\n" ; 
-
+	$salmon = feed_salmonlinks($owner_nick);
 
 	$atom .= replace_macros($feed_template, array(
 		'$version'      => xmlify(FRIENDIKA_VERSION),
@@ -178,7 +152,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 		// public feeds get html, our own nodes use bbcode
 
-		if($dfrn_id === '*') {
+		if($dfrn_id === '') {
 			$type = 'html';
 		}
 		else {

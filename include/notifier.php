@@ -179,23 +179,13 @@ function notifier_run($argv, $argc){
 	$mail_template = load_view_file('view/atom_mail.tpl');
 
 	$atom = '';
-	$hubxml = '';
 	$slaps = array();
 
-	if(strlen($hub)) {
-		$hubs = explode(',', $hub);
-		if(count($hubs)) {
-			foreach($hubs as $h) {
-				$h = trim($h);
-				if(! strlen($h))
-					continue;
-				$hubxml .= '<link rel="hub" href="' . xmlify($h) . '" />' . "\n" ;
-			}
-		}
-	}
+	$hubxml = feed_hublinks();
 
 	$birthday = feed_birthday($owner['uid'],$owner['timezone']);
-	if($birthday)
+
+	if(strlen($birthday))
 		$birthday = '<dfrn:birthday>' . xmlify($birthday) . '</dfrn:birthday>';
 
 	$atom .= replace_macros($feed_template, array(
@@ -398,7 +388,7 @@ function notifier_run($argv, $argc){
 		 *
 		 */
 
-		$max_allowed = ((get_config('system','maxpubdeliver') === false) ? 150 : intval(get_config('system','maxdeliver')));
+		$max_allowed = ((get_config('system','maxpubdeliver') === false) ? 150 : intval(get_config('system','maxpubdeliver')));
 				
 		/**
 		 *

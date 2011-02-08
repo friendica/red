@@ -2366,3 +2366,44 @@ function feed_birthday($uid,$tz) {
 
 	return $birthday;
 }}
+
+/**
+ * return atom link elements for all of our hubs
+ */
+
+if(! function_exists('feed_hublinks')) {
+function feed_hublinks() {
+
+	$hub = get_config('system','huburl');
+
+	$hubxml = '';
+	if(strlen($hub)) {
+		$hubs = explode(',', $hub);
+		if(count($hubs)) {
+			foreach($hubs as $h) {
+				$h = trim($h);
+				if(! strlen($h))
+					continue;
+				$hubxml .= '<link rel="hub" href="' . xmlify($h) . '" />' . "\n" ;
+			}
+		}
+	}
+	return $hubxml;
+}}
+
+/* return atom link elements for salmon endpoints */
+
+if(! function_exists('feed_salmonlinks')) {
+function feed_salmonlinks($nick) {
+
+	$a = get_app();
+
+	$salmon  = '<link rel="salmon" href="' . xmlify($a->get_baseurl() . '/salmon/' . $nick) . '" />' . "\n" ;
+
+	// old style links that status.net still needed as of 12/2010 
+
+	$salmon .= '  <link rel="http://salmon-protocol.org/ns/salmon-replies" href="' . xmlify($a->get_baseurl() . '/salmon/' . $nick) . '" />' . "\n" ; 
+	$salmon .= '  <link rel="http://salmon-protocol.org/ns/salmon-mention" href="' . xmlify($a->get_baseurl() . '/salmon/' . $nick) . '" />' . "\n" ; 
+	return $salmon;
+}}
+
