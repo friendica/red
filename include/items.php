@@ -9,74 +9,27 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 	// default permissions - anonymous user
 
-	$sql_extra = " 
-		AND `allow_cid` = '' 
-		AND `allow_gid` = '' 
-		AND `deny_cid`  = '' 
-		AND `deny_gid`  = '' 
-	";
-
-	if(strlen($owner_nick) && ! intval($owner_nick)) {
-		$r = q("SELECT `uid`, `nickname`, `timezone` FROM `user` WHERE `nickname` = '%s' LIMIT 1",
-			dbesc($owner_nick)
-		);
-		if(count($r)) {
-			$owner_id = $r[0]['uid'];
-			$owner_nick = $r[0]['nickname'];
-			$owner_tz = $r[0]['timezone'];
-		}
-	}
-
-	$r = q("SELECT * FROM `contact` WHERE `self` = 1 AND `uid` = %d LIMIT 1",
-		intval($owner_id)
-	);
-	if(count($r)) {
-		$owner = $r[0];
-		$owner['nickname'] = $owner_nick;
-	}
-	else
+	if(! strlen($owner_nick))
 		killme();
 
+	$sql_extra = " AND `allow_cid` = '' AND `allow_gid` = '' AND `deny_cid`  = '' AND `deny_gid`  = '' ";
 
-	/**
-	 *
-	 * Determine the next birthday, but only if the birthday is published
-	 * in the default profile. We _could_ also look for a private profile that the
-	 * recipient can see, but somebody could get mad at us if they start getting
-	 * public birthday greetings when they haven't made this info public. 
-	 *
-	 * Assuming we are able to publish this info, we are then going to convert
-	 * the start time from the owner's timezone to UTC. 
-	 *
-	 * This will potentially solve the problem found with some social networks
-	 * where birthdays are converted to the viewer's timezone and salutations from
-	 * elsewhere in the world show up on the wrong day. We will convert it to the
-	 * viewer's timezone also, but first we are going to convert it from the birthday
-	 * person's timezone to GMT - so the viewer may find the birthday starting at
-	 * 6:00PM the day before, but that will correspond to midnight to the birthday person.
-	 *
-	 */
-
-	$birthday = '';
-
-	$p = q("SELECT `dob` FROM `profile` WHERE `is-default` = 1 AND `uid` = %d LIMIT 1",
-		intval($owner_id)
+	$r = q("SELECT `contact`.*, `user`.`uid` AS `user_uid`, `user`.`nickname`, `user`.`timezone`
+		FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid`
+		WHERE `contact`.`self` = 1 AND `user`.`nickname` = '%s' LIMIT 1",
+		dbesc($owner_nick)
 	);
 
-	if($p && count($p)) {
-		$tmp_dob = substr($p[0]['dob'],5);
-		if(intval($tmp_dob)) {
-			$y = datetime_convert($owner_tz,$owner_tz,'now','Y');
-			$bd = $y . '-' . $tmp_dob . ' 00:00';
-			$t_dob = strtotime($bd);
-			$now = strtotime(datetime_convert($owner_tz,$owner_tz,'now'));
-			if($t_dob < $now)
-				$bd = $y + 1 . '-' . $tmp_dob . ' 00:00';
-			$birthday = datetime_convert($owner_tz,'UTC',$bd,ATOM_TIME); 
-		}
-	}
+	if(! count($r))
+		killme();
 
-	if($dfrn_id && $dfrn_id != '*') {
+	$owner = $r[0];
+	$owner_id = $owner['user_uid'];
+	$owner_nick = $owner['nickname'];
+
+	$birthday = feed_birthday($owner_id,$owner['timezone']);
+
+	if(strlen($dfrn_id)) {
 
 		$sql_extra = '';
 		switch($direction) {
@@ -102,7 +55,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 		);
 
 		if(! count($r))
-			return false;
+			killme();
 
 		$contact = $r[0];
 		$groups = init_groups_visitor($contact['id']);
@@ -156,7 +109,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 	);
 
 	// Will check further below if this actually returned results.
-	// We will provide an empty feed in any case.
+	// We will provide an empty feed if that is the case.
 
 	$items = $r;
 
@@ -164,25 +117,9 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 	$atom = '';
 
-	$hub = get_config('system','huburl');
+	$hubxml = feed_hublinks();
 
-	$hubxml = '';
-	if(strlen($hub)) {
-		$hubs = explode(',', $hub);
-		if(count($hubs)) {
-			foreach($hubs as $h) {
-				$h = trim($h);
-				if(! strlen($h))
-					continue;
-				$hubxml .= '<link rel="hub" href="' . xmlify($h) . '" />' . "\n" ;
-			}
-		}
-	}
-
-	$salmon = '<link rel="salmon" href="' . xmlify($a->get_baseurl() . '/salmon/' . $owner_nick) . '" />' . "\n" ; 
-	$salmon .= '<link rel="http://salmon-protocol.org/ns/salmon-replies" href="' . xmlify($a->get_baseurl() . '/salmon/' . $owner_nick) . '" />' . "\n" ; 
-	$salmon .= '<link rel="http://salmon-protocol.org/ns/salmon-mention" href="' . xmlify($a->get_baseurl() . '/salmon/' . $owner_nick) . '" />' . "\n" ; 
-
+	$salmon = feed_salmonlinks($owner_nick);
 
 	$atom .= replace_macros($feed_template, array(
 		'$version'      => xmlify(FRIENDIKA_VERSION),
@@ -215,7 +152,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 		// public feeds get html, our own nodes use bbcode
 
-		if($dfrn_id === '*') {
+		if($dfrn_id === '') {
 			$type = 'html';
 		}
 		else {
@@ -922,12 +859,12 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 }
 
 
-/*
+/**
  *
  * consume_feed - process atom feed and update anything/everything we might need to update
  *
- * $xml = the (atom) feed to consume - no RSS spoken here, it might partially work since simplepie 
- *        handles both, but we don't claim it will work well, and are reasonably certain it won't.
+ * $xml = the (atom) feed to consume - RSS isn't as fully supported but may work for simple feeds.
+ *
  * $importer = the contact_record (joined to user_record) of the local user who owns this relationship.
  *             It is this person's stuff that is going to be updated.
  * $contact =  the person who is sending us stuff. If not set, we MAY be processing a "follow" activity
@@ -1094,25 +1031,18 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 
 	}
 
-	// Now process the feed
-	if($feed->get_item_quantity()) {		
 
-        // in inverse date order
-		if ($datedir)
-			$items = array_reverse($feed->get_items());
-		else
-			$items = $feed->get_items();
+	// process any deleted entries
 
-		foreach($items as $item) {
-
+	$del_entries = $feed->get_feed_tags(NAMESPACE_TOMB, 'deleted-entry');
+	if(is_array($del_entries) && count($del_entries)) {
+		foreach($del_entries as $dentry) {
 			$deleted = false;
-
-			$rawdelete = $item->get_item_tags( NAMESPACE_TOMB, 'deleted-entry');
-			if(isset($rawdelete[0]['attribs']['']['ref'])) {
-				$uri = $rawthread[0]['attribs']['']['ref'];
+			if(isset($dentry['attribs']['']['ref'])) {
+				$uri = $dentry['attribs']['']['ref'];
 				$deleted = true;
-				if(isset($rawdelete[0]['attribs']['']['when'])) {
-					$when = $rawthread[0]['attribs']['']['when'];
+				if(isset($dentry['attribs']['']['when'])) {
+					$when = $dentry['attribs']['']['when'];
 					$when = datetime_convert('UTC','UTC', $when, 'Y-m-d H:i:s');
 				}
 				else
@@ -1126,6 +1056,10 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 				);
 				if(count($r)) {
 					$item = $r[0];
+
+					if(! $item['deleted'])
+						logger('consume_feed: deleting item ' . $item['id'] . ' uri=' . $item['uri'], LOGGER_DEBUG);
+
 					if($item['uri'] == $item['parent-uri']) {
 						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s',
 							`body` = '', `title` = ''
@@ -1147,7 +1081,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 						);
 						if($item['last-child']) {
 							// ensure that last-child is set in case the comment that had it just got wiped.
-							$q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d ",
+							q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d ",
 								dbesc(datetime_convert()),
 								dbesc($item['parent-uri']),
 								intval($item['uid'])
@@ -1166,9 +1100,24 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 						}	
 					}
 				}	
-				continue;
 			}
+		}
+	}
 
+	// Now process the feed
+
+	if($feed->get_item_quantity()) {		
+
+		logger('consume_feed: feed item count = ' . $feed->get_item_quantity());
+
+        // in inverse date order
+		if ($datedir)
+			$items = array_reverse($feed->get_items());
+		else
+			$items = $feed->get_items();
+
+
+		foreach($items as $item) {
 
 			$is_reply = false;		
 			$item_id = $item->get_id();
@@ -1177,7 +1126,6 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 				$is_reply = true;
 				$parent_uri = $rawthread[0]['attribs']['']['ref'];
 			}
-
 
 			if(($is_reply) && is_array($contact)) {
 	

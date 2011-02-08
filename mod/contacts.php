@@ -245,6 +245,13 @@ function contacts_content(&$a) {
 			$sparkle = '';
 		}
 
+		$last_update = (($r[0]['last-update'] == '0000-00-00 00:00:00') 
+				? t('Never') 
+				: datetime_convert('UTC',date_default_timezone_get(),$r[0]['last-update'],'D, j M Y, g:i A'));
+
+		if($r[0]['last-update'] !== '0000-00-00 00:00:00')
+			$last_update .= ' ' . (($r[0]['last-update'] == $r[0]['success_update']) ? t("\x28Update was successful\x29") : t("\x28Update was not successful\x29"));
+
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Contact Editor'),
 			'$visit' => t('Visit $name\'s profile'),
@@ -254,9 +261,7 @@ function contacts_content(&$a) {
 			'$poll_interval' => contact_poll_interval($r[0]['priority']),
 			'$lastupdtext' => t('Last updated: '),
 			'$updpub' => t('Update public posts: '),
-			'$last_update' => (($r[0]['last-update'] == '0000-00-00 00:00:00') 
-				? t('Never') 
-				: datetime_convert('UTC',date_default_timezone_get(),$r[0]['last-update'],'D, j M Y, g:i A')),
+			'$last_update' => $last_update,
 			'$udnow' => t('Update now'),
 			'$profile_select' => contact_profile_assign($r[0]['profile-id'],(($r[0]['network'] !== 'dfrn') ? true : false)),
 			'$contact_id' => $r[0]['id'],

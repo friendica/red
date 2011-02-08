@@ -268,6 +268,13 @@ foreach($_FILES AS $key => $val) {
 				intval($page_owner_uid)
 			);
 		}
+
+		/* Don't make the item visible if the only change was the album name */
+
+		$visibility = 0;
+		if($p[0]['desc'] !== $desc || strlen($rawtags))
+			$visibility = 1;
+		
 		if(! $item_id) {
 
 			// Create item container
@@ -297,6 +304,7 @@ foreach($_FILES AS $key => $val) {
 			$arr['deny_cid']      = $p[0]['deny_cid'];
 			$arr['deny_gid']      = $p[0]['deny_gid'];
 			$arr['last-child']    = 1;
+			$arr['visible']       = $visibility;
 			$arr['body']          = '[url=' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $p[0]['resource-id'] . ']' 
 						. '[img]' . $a->get_baseurl() . '/photo/' . $p[0]['resource-id'] . '-' . $p[0]['scale'] . '.jpg' . '[/img]' 
 						. '[/url]';

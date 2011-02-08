@@ -77,6 +77,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `subhub` tinyint(1) NOT NULL DEFAULT '0',
   `hub-verify` char(255) NOT NULL,
   `last-update` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `success_update` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `name-date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `uri-date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `avatar-date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
