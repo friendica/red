@@ -31,7 +31,6 @@
 
 /*   __TODO__
  *
- *   - deletion of the OAuth credentials does not work
  *   - what about multimedia content?
  *     so far we just strip HTML tags from the message
  */
@@ -58,7 +57,6 @@ function twitter_settings_post ($a,$post) {
 		/***
 		 * if the twitter-disconnect checkbox is set, clear the OAuth key/secret pair
 		 * from the user configuration
-                 * TODO this does not work that way!?
 		 * TODO can we revoke the access tokens at Twitter and do we need to do so?
 		 */
 		del_pconfig( local_user(), 'twitter', 'consumerkey'  );
@@ -85,7 +83,7 @@ function twitter_settings_post ($a,$post) {
 	} else {
 		//  if no PIN is supplied in the POST variables, the user has changed the setting
 		//  to post a tweet for every new __public__ posting to the wall
-		set_pconfig(local_user(),'twitter','post',intval($_POST['twitter']));
+		set_pconfig(local_user(),'twitter','post',intval($_POST['twitter-enable']));
 	}}
 }
 function twitter_settings(&$a,&$s) {
@@ -130,7 +128,7 @@ function twitter_settings(&$a,&$s) {
 			 *  make some nice form
 			 */
 			$s .= '<p>'.t('At this Friendika instance the Twitter plugin was enabled but you have not yet connected your account to your Twitter account. To do so click the button below to get a PIN from Twitter which you have to copy into the input box below and submit the form. Only your <strong>public</strong> posts will be posted to Twitter.').'</p>';
-			$s .= '<a href="'.$connection->getAuthorizeURL($token).'" target="_twitter"><img src="addon/twitter/lighter.png" alt="'.t('Log in with Twitter').'></a>';
+			$s .= '<a href="'.$connection->getAuthorizeURL($token).'" target="_twitter"><img src="addon/twitter/lighter.png" alt="'.t('Log in with Twitter').'"></a>';
 			$s .= '<div id="twitter-pin-wrapper">';
 			$s .= '<label id="twitter-pin-label" for="twitter-pin">'.t('Copy the PIN from Twitter here').'</label>';
 			$s .= '<input id="twitter-pin" type="text" name="twitter-pin" />';
@@ -150,7 +148,7 @@ function twitter_settings(&$a,&$s) {
 			$s .= '<p>'.t('If enabled all your <strong>public</strong> postings will be posted to the associated Twitter account as well.').'</p>';
 			$s .= '<div id="twitter-enable-wrapper">';
 			$s .= '<label id="twitter-enable-label" for="twitter-checkbox">'.t('Send public postings to Twitter').'</label>';
-			$s .= '<input id="twitter-checkbox" type="checkbox" name="twitter" value="1" ' . $checked . '/>';
+			$s .= '<input id="twitter-checkbox" type="checkbox" name="twitter-enable" value="1" ' . $checked . '/>';
 			$s .= '</div><div class="clear"></div>';
 			$s .= '<div id="twitter-disconnect-wrapper">';
                         $s .= '<label id="twitter-disconnect-label" for="twitter-disconnect">'.t('Clear OAuth configuration').'</label>';
