@@ -246,18 +246,20 @@ function item_post(&$a) {
 						);
 					}
 					if(count($r)) {
-						if($r[0]['network'] === 'stat')
-							$stat = true;
 						$profile = $r[0]['url'];
-						$newname = $r[0]['name'];
+						if($r[0]['network'] === 'stat') {
+							$newname = $r[0]['nick'];
+							$stat = true;
+						}
+						else
+							$newname = $r[0]['name'];
 						if(strlen($inform))
 							$inform .= ',';
 						$inform .= 'cid:' . $r[0]['id'];
 					}
 				}
 				if($profile) {
-					if(! $stat)
-						$body = str_replace('@' . $name, '@' . '[url=' . $profile . ']' . $newname	. '[/url]', $body);
+					$body = str_replace('@' . $name, '@' . '[url=' . $profile . ']' . $newname	. '[/url]', $body);
 					$profile = str_replace(',','%2c',$profile);
 					if(strlen($str_tags))
 						$str_tags .= ',';

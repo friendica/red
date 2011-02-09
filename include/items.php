@@ -1128,15 +1128,16 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 			}
 
 			if(($is_reply) && is_array($contact)) {
-	
+
 				// Have we seen it? If not, import it.
 	
 				$item_id = $item->get_id();
-	
+
 				$r = q("SELECT `uid`, `last-child`, `edited` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['uid'])
 				);
+
 				// FIXME update content if 'updated' changes
 				if(count($r)) {
 					$allow = $item->get_item_tags( NAMESPACE_DFRN, 'comment-allow');
@@ -1155,6 +1156,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 					}
 					continue;
 				}
+
 				$datarray = get_atom_elements($feed,$item);
 				$force_parent = false;
 				if($contact['network'] === 'stat') {

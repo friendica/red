@@ -2,7 +2,7 @@
 
 set_time_limit(0);
 
-define ( 'BUILD_ID',               1037   );
+define ( 'BUILD_ID',               1038   );
 define ( 'FRIENDIKA_VERSION',      '2.10.0905' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.1'  );
 
@@ -1378,10 +1378,12 @@ function webfinger($s) {
 		logger('webfinger: lrdd template: ' . $tpl);
 		if(strlen($tpl)) {
 			$pxrd = str_replace('{uri}', urlencode('acct:'.$s), $tpl);
+			logger('webfinger: pxrd: ' . $pxrd);
 			$links = fetch_xrd_links($pxrd);
 			if(! count($links)) {
 				// try with double slashes
 				$pxrd = str_replace('{uri}', urlencode('acct://'.$s), $tpl);
+				logger('webfinger: pxrd: ' . $pxrd);
 				$links = fetch_xrd_links($pxrd);
 			}
 			return $links;
@@ -1453,6 +1455,7 @@ function fetch_lrdd_template($host) {
 	$tpl = '';
 	$url = 'http://' . $host . '/.well-known/host-meta' ;
 	$links = fetch_xrd_links($url);
+logger('template: ' . print_r($links,true));
 	if(count($links)) {
 		foreach($links as $link)
 			if($link['@attributes']['rel'] && $link['@attributes']['rel'] === 'lrdd')
@@ -1479,15 +1482,30 @@ function fetch_xrd_links($url) {
 	$h = simplexml_load_string($xml);
 	$arr = convert_xml_element_to_array($h);
 
+	$links = array();
+
 	if(isset($arr['xrd']['link'])) {
 		$link = $arr['xrd']['link'];
 		if(! isset($link[0]))
 			$links = array($link);
 		else
 			$links = $link;
-		return $links;
 	}
-	return array();
+	if(isset($arr['xrd']['alias'])) {
+		$alias = $arr['xrd']['alias'];
+		if(! isset($alias[0]))
+			$aliases = array($alias);
+		else
+			$aliases = $alias;
+		foreach($aliases as $alias) {
+			$links[]['@attributes'] = array('rel' => 'alias' , 'href' => $alias);
+		}
+	}
+
+	logger('fetch_xrd_links: ' . print_r($links,true), LOGGER_DATA);
+
+	return $links;
+
 }}
 
 // Convert an ACL array to a storable string

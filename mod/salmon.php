@@ -177,7 +177,7 @@ function salmon_post(&$a) {
 	*
 	*/
 
-	$r = q("SELECT * FROM `contact` WHERE `network` = 'stat' AND ( `url` = '%s' OR `lrdd` = '%s') 
+	$r = q("SELECT * FROM `contact` WHERE `network` = 'stat' AND ( `url` = '%s' OR `alias` = '%s') 
 		AND `uid` = %d LIMIT 1",
 		dbesc($author_link),
 		dbesc($author_link),
