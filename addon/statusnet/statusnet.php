@@ -127,13 +127,13 @@ function statusnet_settings(&$a,&$s) {
 		/***
 		 * no consumer keys
 		 */
-		$s .= '<p>'.t('No consumer key pair for StatusNet found. Register your Friendika Account as an desktop client on your StatusNet account, copy the consumer key pair here and enter the API base root.<br />Before you register your own OAuth key pair ask the administrator if there is already a key pair for this Friendika installation at your favorited StatusNet installation.').'</p>';
+		$s .= '<p>'. t('No consumer key pair for StatusNet found. Register your Friendika Account as an desktop client on your StatusNet account, copy the consumer key pair here and enter the API base root.<br />Before you register your own OAuth key pair ask the administrator if there is already a key pair for this Friendika installation at your favorited StatusNet installation.') .'</p>';
                 $s .= '<div id="statusnet-consumer-wrapper">';
-                $s .= '<label id="statusnet-consumerkey-label" for="statusnet-consumerkey">OAuth Consumer Key</label>';
+                $s .= '<label id="statusnet-consumerkey-label" for="statusnet-consumerkey">'. t('OAuth Consumer Key') .'</label>';
 		$s .= '<input id="statusnet-consumerkey" type="text" name="statusnet-consumerkey" size="35" /><br />';
-                $s .= '<label id="statusnet-consumersecret-label" for="statusnet-consumersecret">OAuth Consumer Secret</label>';
+                $s .= '<label id="statusnet-consumersecret-label" for="statusnet-consumersecret">'. t('OAuth Consumer Secret') .'</label>';
 		$s .= '<input id="statusnet-consumersecret" type="text" name="statusnet-consumersecret" size="35" /><br />';
-                $s .= '<label id="statusnet-baseapi-label" for="statusnet-baseapi">Base API Path (remember the trailing /)</label>';
+                $s .= '<label id="statusnet-baseapi-label" for="statusnet-baseapi">'. t('Base API Path (remember the trailing /)') .'</label>';
 		$s .= '<input id="statusnet-baseapi" type="text" name="statusnet-baseapi" size="35" /><br  />';
                 $s .= '</div><div class="clear"></div>';
                 $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
@@ -154,10 +154,10 @@ function statusnet_settings(&$a,&$s) {
 			/***
 			 *  make some nice form
 			 */
-			$s .= '<p>'.t('To connect to your StatusNet account click the button below to get a security code from StatusNet which you have to copy into the input box below and submit the form. Only your <strong>public</strong> posts will be posted to StatusNet.').'</p>';
-			$s .= '<a href="'.$connection->getAuthorizeURL($token,False).'" target="_statusnet"><img src="addon/statusnet/signinwithstatusnet.png" alt="'.t('Log in with StatusNet').'"></a>';
+			$s .= '<p>'. t('To connect to your StatusNet account click the button below to get a security code from StatusNet which you have to copy into the input box below and submit the form. Only your <strong>public</strong> posts will be posted to StatusNet.') .'</p>';
+			$s .= '<a href="'.$connection->getAuthorizeURL($token,False).'" target="_statusnet"><img src="addon/statusnet/signinwithstatusnet.png" alt="'. t('Log in with StatusNet') .'"></a>';
 			$s .= '<div id="statusnet-pin-wrapper">';
-			$s .= '<label id="statusnet-pin-label" for="statusnet-pin">'.t('Copy the PIN from StatusNet here').'</label>';
+			$s .= '<label id="statusnet-pin-label" for="statusnet-pin">'. t('Copy the security code from StatusNet here') .'</label>';
 			$s .= '<input id="statusnet-pin" type="text" name="statusnet-pin" />';
 			$s .= '<input id="statusnet-token" type="hidden" name="statusnet-token" value="'.$token.'" />';
 			$s .= '<input id="statusnet-token2" type="hidden" name="statusnet-token2" value="'.$request_token['oauth_token_secret'].'" />';
@@ -170,14 +170,14 @@ function statusnet_settings(&$a,&$s) {
 			 */
 			$connection = new StatusNetOAuth($api,$ckey,$csecret,$otoken,$osecret);
 			$details = $connection->get('account/verify_credentials');
-			$s .= '<div id="statusnet-info" ><img id="statusnet-avatar" src="'.$details->profile_image_url.'" /><p id="statusnet-info-block">'.t('Currently connected to: ').'<a href="'.$details->statusnet_profile_url.'" target="_statusnet">'.$details->screen_name.'</a><br /><em>'.$details->description.'</em></p></div>';
-			$s .= '<p>'.t('If enabled all your <strong>public</strong> postings will be posted to the associated StatusNet account as well.').'</p>';
+			$s .= '<div id="statusnet-info" ><img id="statusnet-avatar" src="'.$details->profile_image_url.'" /><p id="statusnet-info-block">'. t('Currently connected to: ') .'<a href="'.$details->statusnet_profile_url.'" target="_statusnet">'.$details->screen_name.'</a><br /><em>'.$details->description.'</em></p></div>';
+			$s .= '<p>'. t('If enabled all your <strong>public</strong> postings will be posted to the associated StatusNet account as well.') .'</p>';
 			$s .= '<div id="statusnet-enable-wrapper">';
-			$s .= '<label id="statusnet-enable-label" for="statusnet-checkbox">'.t('Send public postings to StatusNet').'</label>';
+			$s .= '<label id="statusnet-enable-label" for="statusnet-checkbox">'. t('Send public postings to StatusNet') .'</label>';
 			$s .= '<input id="statusnet-checkbox" type="checkbox" name="statusnet-enable" value="1" ' . $checked . '/>';
 			$s .= '</div><div class="clear"></div>';
 			$s .= '<div id="statusnet-disconnect-wrapper">';
-                        $s .= '<label id="statusnet-disconnect-label" for="statusnet-disconnect">'.t('Clear OAuth configuration').'</label>';
+                        $s .= '<label id="statusnet-disconnect-label" for="statusnet-disconnect">'. t('Clear OAuth configuration') .'</label>';
                         $s .= '<input id="statusnet-disconnect" type="checkbox" name="statusnet-disconnect" value="1" />';
 			$s .= '</div><div class="clear"></div>';
 			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>'; 
@@ -195,7 +195,7 @@ function statusnet_post_hook(&$a,&$b) {
 
         logger('StatusNet post invoked');
 
-	if((local_user()) && (local_user() == $b['uid']) && (! $b['private'])) {
+	if((local_user()) && (local_user() == $b['uid']) && (! $b['private']) && (!$b['parent']) ) {
 
                 load_pconfig(local_user(), 'statusnet');
             

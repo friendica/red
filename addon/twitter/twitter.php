@@ -101,14 +101,14 @@ function twitter_settings(&$a,&$s) {
 	$osecret = get_pconfig(local_user(), 'twitter', 'oauthsecret' );
         $enabled = get_pconfig(local_user(), 'twitter', 'post');
 	$checked = (($enabled) ? ' checked="checked" ' : '');
-	$s .= '<h3>'.t('Twitter Posting Settings').'</h3>';
+	$s .= '<h3>'. t('Twitter Posting Settings') .'</h3>';
 
 	if ( (!$ckey) && (!$csecret) ) {
 		/***
 		 * no global consumer keys
 		 * display warning and skip personal config
 		 */
-		$s .= '<p>'.t('No consumer key pair for Twitter found. Please contact your site administrator.').'</p>';
+		$s .= '<p>'. t('No consumer key pair for Twitter found. Please contact your site administrator.') .'</p>';
 	} else {
 		/***
 		 * ok we have a consumer key pair now look into the OAuth stuff
@@ -127,10 +127,10 @@ function twitter_settings(&$a,&$s) {
 			/***
 			 *  make some nice form
 			 */
-			$s .= '<p>'.t('At this Friendika instance the Twitter plugin was enabled but you have not yet connected your account to your Twitter account. To do so click the button below to get a PIN from Twitter which you have to copy into the input box below and submit the form. Only your <strong>public</strong> posts will be posted to Twitter.').'</p>';
+			$s .= '<p>'. t('At this Friendika instance the Twitter plugin was enabled but you have not yet connected your account to your Twitter account. To do so click the button below to get a PIN from Twitter which you have to copy into the input box below and submit the form. Only your <strong>public</strong> posts will be posted to Twitter.') .'</p>';
 			$s .= '<a href="'.$connection->getAuthorizeURL($token).'" target="_twitter"><img src="addon/twitter/lighter.png" alt="'.t('Log in with Twitter').'"></a>';
 			$s .= '<div id="twitter-pin-wrapper">';
-			$s .= '<label id="twitter-pin-label" for="twitter-pin">'.t('Copy the PIN from Twitter here').'</label>';
+			$s .= '<label id="twitter-pin-label" for="twitter-pin">'. t('Copy the PIN from Twitter here') .'</label>';
 			$s .= '<input id="twitter-pin" type="text" name="twitter-pin" />';
 			$s .= '<input id="twitter-token" type="hidden" name="twitter-token" value="'.$token.'" />';
 			$s .= '<input id="twitter-token2" type="hidden" name="twitter-token2" value="'.$request_token['oauth_token_secret'].'" />';
@@ -144,14 +144,14 @@ function twitter_settings(&$a,&$s) {
                         require_once('addon/twitter/twitteroauth.php');
 			$connection = new TwitterOAuth($ckey,$csecret,$otoken,$osecret);
 			$details = $connection->get('account/verify_credentials');
-			$s .= '<div id="twitter-info" ><img id="twitter-avatar" src="'.$details->profile_image_url.'" /><p id="twitter-info-block">'.t('Currently connected to: ').'<a href="https://twitter.com/'.$details->screen_name.'" target="_twitter">'.$details->screen_name.'</a><br /><em>'.$details->description.'</em></p></div>';
-			$s .= '<p>'.t('If enabled all your <strong>public</strong> postings will be posted to the associated Twitter account as well.').'</p>';
+			$s .= '<div id="twitter-info" ><img id="twitter-avatar" src="'.$details->profile_image_url.'" /><p id="twitter-info-block">'. t('Currently connected to: ') .'<a href="https://twitter.com/'.$details->screen_name.'" target="_twitter">'.$details->screen_name.'</a><br /><em>'.$details->description.'</em></p></div>';
+			$s .= '<p>'. t('If enabled all your <strong>public</strong> postings will be posted to the associated Twitter account as well.') .'</p>';
 			$s .= '<div id="twitter-enable-wrapper">';
-			$s .= '<label id="twitter-enable-label" for="twitter-checkbox">'.t('Send public postings to Twitter').'</label>';
+			$s .= '<label id="twitter-enable-label" for="twitter-checkbox">'. t('Send public postings to Twitter'). '</label>';
 			$s .= '<input id="twitter-checkbox" type="checkbox" name="twitter-enable" value="1" ' . $checked . '/>';
 			$s .= '</div><div class="clear"></div>';
 			$s .= '<div id="twitter-disconnect-wrapper">';
-                        $s .= '<label id="twitter-disconnect-label" for="twitter-disconnect">'.t('Clear OAuth configuration').'</label>';
+                        $s .= '<label id="twitter-disconnect-label" for="twitter-disconnect">'. t('Clear OAuth configuration') .'</label>';
                         $s .= '<input id="twitter-disconnect" type="checkbox" name="twitter-disconnect" value="1" />';
 			$s .= '</div><div class="clear"></div>';
 			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>'; 
@@ -169,7 +169,7 @@ function twitter_post_hook(&$a,&$b) {
 
         logger('twitter post invoked');
 
-	if((local_user()) && (local_user() == $b['uid']) && (! $b['private'])) {
+	if((local_user()) && (local_user() == $b['uid']) && (! $b['private']) && (! $b['parent']) ) {
 
 		load_pconfig(local_user(), 'twitter');
 
