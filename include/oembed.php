@@ -79,7 +79,10 @@ function oe_get_inner_html( $node ) {
  * and replace it with [embed]url[/embed]
  */
 function oembed_html2bbcode($text) {
-	$dom = DOMDocument::loadHTML($text);
+	// If it doesn't parse at all, just return the text.
+	$dom = @DOMDocument::loadHTML($text);
+	if(! $dom)
+		return $text;
 	$xpath = new DOMXPath($dom);
 	$attr = "oembed";
 	

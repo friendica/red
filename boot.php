@@ -3,7 +3,7 @@
 set_time_limit(0);
 
 define ( 'BUILD_ID',               1038   );
-define ( 'FRIENDIKA_VERSION',      '2.10.0905' );
+define ( 'FRIENDIKA_VERSION',      '2.10.0906' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.1'  );
 
 define ( 'EOL',                    "<br />\r\n"     );
