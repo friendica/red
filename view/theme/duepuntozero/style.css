@@ -28,7 +28,7 @@ input {
 img { border :0px; }
 
 .openid {
-   background: url(../default/login-bg.gif) no-repeat;
+   background: url(login-bg.gif) no-repeat;
    background-position: 0 50%;
    padding-left: 18px;
 }
@@ -319,7 +319,7 @@ div.wall-item-content-wrapper.shiny {
 
 input#dfrn-url {
 	float: left;
-	background: url(../default/ff-16.jpg) no-repeat;
+	background: url(ff-16.jpg) no-repeat;
 	background-position: 2px center;
 	font-size: 17px;
 	padding-left: 21px;
@@ -1781,7 +1781,7 @@ a.mail-list-link {
 }
 
 .sparkle {
-	cursor: url('../default/lock.cur'), pointer;
+	cursor: url('lock.cur'), pointer;
 /*	cursor: pointer !important; */
 }
 
