@@ -305,9 +305,9 @@ class App {
 			$this->scheme = $parsed['scheme'];
 
 			$this->hostname = $parsed['host'];
-			if($parsed['port'])
+			if(x($parsed,'port'))
 				$this->hostname .= ':' . $parsed['port'];
-			if($parsed['path'])
+			if(x($parsed,'path'))
 				$this->path = trim($parsed['path'],'\\/');
 		}
 
