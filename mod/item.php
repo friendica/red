@@ -22,6 +22,8 @@ function item_post(&$a) {
 
 	$uid = local_user();
 
+	call_hooks('post_local_start', $_POST);
+
 	$parent = ((x($_POST,'parent')) ? intval($_POST['parent']) : 0);
 
 	$parent_item = null;
