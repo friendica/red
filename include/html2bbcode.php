@@ -7,10 +7,15 @@
 
 function html2bbcode($s) {
 
+
+	// only keep newlines from source that are within pre tags
+
+	$s = stripnl_exceptinpre($s);
+
+
 	// Tags to Find
 
 	$htmltags = array(
-		'/\n/is',
 		'/\<pre\>(.*?)\<\/pre\>/is',
 		'/\<p(.*?)\>/is',
 		'/\<\/p\>/is',
@@ -36,7 +41,6 @@ function html2bbcode($s) {
 	// Replace with
 
 	$bbtags = array(
-		'',
 		'[code]$1[/code]',
 		'',
 		"\n",
@@ -66,5 +70,48 @@ function html2bbcode($s) {
 	// Strip all other HTML tags
 	$text = strip_tags($text);
 	return $text;
+
+}
+
+function stripnl_exceptinpre($string)
+{
+    // First, check for <pre> tag
+    if(strpos($string, '<pre>') === false)
+    {
+        return str_replace("\n","", $string);
+    }
+
+    // If there is a <pre>, we have to split by line
+    // and manually replace the linebreaks
+
+    $strArr=explode("\n", $string);
+
+    $output="";
+    $preFound=false;
+
+    // Loop over each line
+    foreach($strArr as $line)
+    {    // See if the line has a <pre>. If it does, set $preFound to true
+        if(strpos($line, "<pre>") !== false)
+        {
+            $preFound=true;
+        }
+        elseif(strpos($line, "</pre>") !== false)
+        {
+            $preFound=false;
+        }
+       
+        // If we are in a pre tag, add line and also add \n, else add the line without \n
+        if($preFound)
+        {
+            $output .= $line . "\n";
+        }
+        else
+        {
+            $output .= $line ;
+        }
+    }
+
+    return $output;
 }
 
