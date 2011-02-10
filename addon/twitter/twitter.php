@@ -188,30 +188,31 @@ function twitter_post_hook(&$a,&$b) {
 				$tweet = new TwitterOAuth($ckey,$csecret,$otoken,$osecret);
 				$max_char = 140; // max. length for a tweet
 				$msg = strip_tags(bbcode($b['body']));
-                                if ( strlen($msg) > $max_char) {
-                                        $shortlink = "";
-                                        require_once('addon/twitter/slinky.php');
-                                        // post url = base url + /display/ + owner + post id
-                                        // we construct this from the Owner link and replace
-                                        // profile by display - this will cause an error when
-                                        // /profile/ is in the owner url twice but I don't
-                                        // think this will be very common...
+				if ( strlen($msg) > $max_char) {
+					$shortlink = "";
+					require_once('addon/twitter/slinky.php');
+					// post url = base url + /display/ + owner + post id
+					// we construct this from the Owner link and replace
+					// profile by display - this will cause an error when
+					// /profile/ is in the owner url twice but I don't
+					// think this will be very common...
 					$posturl = str_replace('/profile/','/display/',$b['owner-link']).'/'.$b['id'];
 					$slinky = new Slinky( $posturl );
 					// setup a cascade of shortening services
 					// try to get a short link from these services
 					// in the order ur1.ca, trim, id.gd, tinyurl
 					$slinky->set_cascade( array( new Slinky_UR1ca(), new Slinky_Trim(), new Slinky_IsGd(), new Slinky_TinyURL() ) );
-                                        $shortlink = $slinky->short();
-                                        // the new message will be shortened such that "... $shortlink"
-                                        // will fit into the character limit
-                                        $msg = substr($msg, 0, $max_char-strlen($shortlink)-4);
-                                        $msg .= '... ' . $shortlink;
-                                }
-                                // and now tweet it :-)
-				$tweet->post('statuses/update', array('status' => $msg));
+					$shortlink = $slinky->short();
+					// the new message will be shortened such that "... $shortlink"
+					// will fit into the character limit
+					$msg = substr($msg, 0, $max_char-strlen($shortlink)-4);
+					$msg .= '... ' . $shortlink;
+				}
+                // and now tweet it :-)
+				if(strlen($msg))
+					$tweet->post('statuses/update', array('status' => $msg));
 			}
 		}
-        }
+	}
 }
 

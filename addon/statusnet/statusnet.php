@@ -235,7 +235,8 @@ function statusnet_post_hook(&$a,&$b) {
                                         $msg .= '... ' . $shortlink;
                                 }
                                 // and now tweet it :-)
-				$dent->post('statuses/update', array('status' => $msg));
+				if(strlen($msg))
+					$dent->post('statuses/update', array('status' => $msg));
 			}
 		}
         }
