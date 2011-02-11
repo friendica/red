@@ -516,6 +516,7 @@ function check_config(&$a) {
 			}
 		}
 	}
+	load_hooks();
 
 	return;
 }}
@@ -2189,6 +2190,7 @@ function unregister_hook($hook,$file,$function) {
 if(! function_exists('load_hooks')) {
 function load_hooks() {
 	$a = get_app();
+	$a->hooks = array();
 	$r = q("SELECT * FROM `hook` WHERE 1");
 	if(count($r)) {
 		foreach($r as $rr) {

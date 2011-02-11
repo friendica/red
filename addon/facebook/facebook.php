@@ -3,6 +3,9 @@
 /**
  * This module still needs a lot of work, but is functional today.
  * Please review this section if you upgrade because things will change.
+ * If you have issues upgrading, remove facebook from the addon list, 
+ * view a page on your site, then add it back to the list. This will reset
+ * all of the plugin 'hooks'. 
  *
  * 1. register an API key from developer.facebook.com
  *   a. We'd be very happy if you include "Friendika" in the application name
@@ -77,7 +80,7 @@ function facebook_init(&$a) {
  			if(strpos($token,'&') !== false)
 				$token = substr($token,0,strpos($token,'&'));
 			set_pconfig($uid,'facebook','access_token',$token);
-			set_pconfig($uid,'facebook','post','true');
+			set_pconfig($uid,'facebook','post','1');
 		}
 
 		// todo: is this a browser session or a server session? where do we go? 
@@ -118,12 +121,41 @@ function facebook_content(&$a) {
 }
 
 function facebook_install() {
-	register_hook('post_local_end', 'addon/facebook/facebook.php', 'facebook_post_hook');
+	register_hook('post_local_end',  'addon/facebook/facebook.php', 'facebook_post_hook');
+	register_hook('jot_networks',    'addon/facebook/facebook.php', 'facebook_jot_nets');
+	register_hook('post_local_start','addon/facebook/facebook.php', 'facebook_post_local');
+
 }
 
 
 function facebook_uninstall() {
-	unregister_hook('post_local_end', 'addon/facebook/facebook.php', 'facebook_post_hook');
+	unregister_hook('post_local_end',  'addon/facebook/facebook.php', 'facebook_post_hook');
+	unregister_hook('jot_networks',    'addon/facebook/facebook.php', 'facebook_jot_nets');
+	unregister_hook('post_local_start','addon/facebook/facebook.php', 'facebook_post_local');
+}
+
+
+function facebook_jot_nets(&$a,&$b) {
+	if(! local_user())
+		return;
+
+	$fb_post = get_pconfig(local_user(),'facebook','post');
+	if(intval($fb_post) == 1) {
+		$fb_defpost = get_pconfig(local_user(),'facebook','post_by_default');
+		$selected = ((intval($fb_defpost == 1)) ? ' selected="selected" ' : '');
+		$b .= '<div class="profile-jot-net"><input type="checkbox" name="facebook_enable" $selected value="1" /> ' 
+			. t('Post to Facebook') . '</div>';	
+	}
+}
+
+function facebook_post_local(&$a,&$b) {
+	if(! local_user())
+		return;
+
+	if((x($b,'facebook_enable')) && (intval($b['facebook_enable'])))
+		set_pconfig(local_user(),'facebook','enable','1');
+	else
+		del_pconfig(local_user(),'facebook','enable');
 }
 
 
@@ -143,10 +175,11 @@ function facebook_post_hook(&$a,&$b) {
 
 		if($appid && $secret) {
 
-			$fb_post  = get_pconfig(local_user(),'facebook','post');
-			$fb_token = get_pconfig(local_user(),'facebook','access_token');
+			$fb_post   = intval(get_pconfig(local_user(),'facebook','post'));
+			$fb_enable = intval(get_pconfig(local_user(),'facebook','enable'));
+			$fb_token  = get_pconfig(local_user(),'facebook','access_token');
 
-			if($fb_post && $fb_token) {
+			if($fb_post && $fb_token && $fb_enable) {
 				require_once('library/facebook.php');
 				require_once('include/bbcode.php');	
 

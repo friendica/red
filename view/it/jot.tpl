@@ -41,13 +41,16 @@
 	<div id="profile-rotator-wrapper" style="display: $visitor;" >
 		<img id="profile-rotator" src="images/rotator.gif" alt="Attendi" title="Attendi" style="display: none;" />
 	</div> 
-	<div id="profile-jot-perms" class="profile-jot-perms" style="display: $visitor;" ><img id="jot-perms-icon" src="images/$lockstate_icon.gif"  alt="Impostazione permessi" title="Impostazione permessi" onClick="openClose('profile-jot-acl-wrapper'); openClose('profile-jot-email-wrapper');" />$bang</div>
+	<div id="profile-jot-perms" class="profile-jot-perms" style="display: $visitor;" ><img id="jot-perms-icon" src="images/$lockstate_icon.gif"  alt="Impostazione permessi" title="Impostazione permessi" onClick="openClose('profile-jot-acl-wrapper'); openClose('profile-jot-email-wrapper'); openClose('profile-jot-networks');" />$bang</div>
 	<div id="profile-jot-perms-end"></div>
 	<div id="profile-jot-email-wrapper" style="display: none;" >
 	<div id="profile-jot-email-label">$emailcc</div><input type="text" name="emailcc" id="profile-jot-email" title="$emtitle">
 	<div id="profile-jot-email-end"></div>
 	</div>
-
+	<div id="profile-jot-networks" style="display: none;" >
+	$jotnets
+	</div>
+	<div id="profile-jot-networks-end"></div>
 	<div id="profile-jot-acl-wrapper" style="display: none;" >$acl</div>
 </div>
 

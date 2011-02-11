@@ -1085,6 +1085,17 @@ input#dfrn-url {
 #profile-jot-plugin-end {
   clear:both;
 }
+.profile-jot-net {
+	float: left;
+	margin-right: 10px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+#profile-jot-networks-end {
+	clear: both;
+}
+
 #profile-jot-end {
 	clear: both;
 	margin-bottom: 30px;

@@ -40,6 +40,8 @@ function twitter_install() {
 	register_hook('plugin_settings', 'addon/twitter/twitter.php', 'twitter_settings'); 
 	register_hook('plugin_settings_post', 'addon/twitter/twitter.php', 'twitter_settings_post');
 	register_hook('post_local_end', 'addon/twitter/twitter.php', 'twitter_post_hook');
+	register_hook('jot_networks', 'addon/twitter/twitter.php', 'twitter_jot_nets');
+	register_hook('post_local_start', 'addon/twitter/twitter.php', 'twitter_post_start');
 	logger("installed twitter");
 }
 
@@ -48,7 +50,38 @@ function twitter_uninstall() {
 	unregister_hook('plugin_settings', 'addon/twitter/twitter.php', 'twitter_settings'); 
 	unregister_hook('plugin_settings_post', 'addon/twitter/twitter.php', 'twitter_settings_post');
 	unregister_hook('post_local_end', 'addon/twitter/twitter.php', 'twitter_post_hook');
+	unregister_hook('jot_networks', 'addon/twitter/twitter.php', 'twitter_jot_nets');
+	unregister_hook('post_local_start', 'addon/twitter/twitter.php', 'twitter_post_start');
+
 }
+
+function twitter_jot_nets(&$a,&$b) {
+	if(! local_user())
+		return;
+
+	$tw_post = get_pconfig(local_user(),'twitter','post');
+	if(intval($tw_post) == 1) {
+		$tw_defpost = get_pconfig(local_user(),'twitter','post_by_default');
+		$selected = ((intval($tw_defpost == 1)) ? ' selected="selected" ' : '');
+		$b .= '<div class="profile-jot-net"><input type="checkbox" name="twitter_enable" $selected value="1" /> ' 
+			. t('Post to Twitter') . '</div>';	
+	}
+
+
+}
+
+function twitter_post_start(&$a,&$b) {
+	if(! local_user())
+		return;
+
+	if((x($b,'twitter_enable')) && (intval($b['twitter_enable'])))
+		set_pconfig(local_user(),'twitter','enable','1');
+	else
+		del_pconfig(local_user(),'twitter','enable');
+
+
+}
+
 
 function twitter_settings_post ($a,$post) {
 	if(! local_user())
@@ -181,8 +214,9 @@ function twitter_post_hook(&$a,&$b) {
 		if($ckey && $csecret && $otoken && $osecret) {
 
 			$twitter_post = get_pconfig(local_user(),'twitter','post');
+			$twitter_enable = intval(get_pconfig(local_user(),'twitter','enable'));
 
-			if($twitter_post) {
+			if($twitter_post && $twitter_enable) {
 				require_once('addon/twitter/twitteroauth.php');
 				require_once('include/bbcode.php');	
 				$tweet = new TwitterOAuth($ckey,$csecret,$otoken,$osecret);

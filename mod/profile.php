@@ -135,8 +135,11 @@ function profile_content(&$a, $update = 0) {
 			else
 				$lockstate = 'unlock';
        
-			$jotplugins = "";
+			$jotplugins = '';
+			$jotnets = '';
 			call_hooks('jot_tool', $jotplugins); 
+
+			call_hooks('jot_networks', $jotnets);
 
 			$tpl = replace_macros($tpl,array('$jotplugins' => $jotplugins));	
 
@@ -147,6 +150,7 @@ function profile_content(&$a, $update = 0) {
 				'$visitor' => (($is_owner || $commvisitor) ? 'block' : 'none'),
 				'$lockstate' => $lockstate,
 				'$emailcc' => t('CC: email addresses'),
+				'$jotnets' => $jotnets,
 				'$emtitle' => t('Example: bob@example.com, mary@example.com'),
 				'$bang' => '',
 				'$acl' => (($is_owner) ? populate_acl($a->user, $celeb) : ''),
