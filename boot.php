@@ -195,7 +195,7 @@ class App {
 	public  $hooks;
 	public  $timezone;
 	public  $interactive = true;
-
+	public  $plugins;
 
 	private $scheme;
 	private $hostname;
@@ -477,6 +477,8 @@ function check_config(&$a) {
 
 	if($plugins)
 		$plugins_arr = explode(',',str_replace(' ', '',$plugins));
+
+	$a->plugins = $plugins_arr;
 
 	$installed_arr = array();
 

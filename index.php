@@ -134,7 +134,12 @@ else
 
 
 if(strlen($a->module)) {
-	if(file_exists("mod/{$a->module}.php")) {
+	if(is_array($a->plugins) && in_array($a->module,$a->plugins) && file_exists("addon/{$a->module}/{$a->module}.php")) {
+		include("addon/{$a->module}/{$a->module}.php");
+		if(function_exists($a->module . '_module'))
+			$a->module_loaded = true;
+	}
+	if((! $a->module_loaded) && (file_exists("mod/{$a->module}.php"))) {
 		include("mod/{$a->module}.php");
 		$a->module_loaded = true;
 	}
