@@ -18,7 +18,7 @@ function facebook_module() {}
 
 
 
-/* Callback from Facebook oauth requests. */
+/* If a->argv[1] is a nickname, this is a callback from Facebook oauth requests. */
 
 function facebook_init(&$a) {
 
@@ -37,6 +37,9 @@ function facebook_init(&$a) {
 	$error         = (($_GET['error_description']) ? $_GET['error_description'] : '');
 
 
+	if($error)
+		logger('facebook_init: Error: ' . $error);
+
 	if($auth_code && $uid) {
 
 		$appid = get_config('facebook','appid');
@@ -46,11 +49,15 @@ function facebook_init(&$a) {
 			. $appid . '&client_secret=' . $appsecret . '&redirect_uri='
 			. urlencode($a->get_baseurl() . '/facebook/' . $nick) 
 			. '&code=' . $auth_code);
+
+		logger('facebook_init: returned access token: ' . $x, LOGGER_DATA);
+
 		if(strpos($x,'access_token=') !== false) {
 			$token = str_replace('access_token=', '', $x);
  			if(strpos($token,'&') !== false)
-				$token = substr('$token,0,strpos($token,'&'));
+				$token = substr($token,0,strpos($token,'&'));
 			set_pconfig($uid,'facebook','access_token',$token);
+			set_pconfig($uid,'facebook','post','true');
 		}
 
 		// todo: is this a browser session or a server session? where do we go? 
@@ -59,7 +66,34 @@ function facebook_init(&$a) {
 }
 
 function facebook_content(&$a) {
-	$o = "facebook module loaded";
+
+	if(! local_user()) {
+		notice( t('Permission denied.') . EOL);
+		return '';
+	}
+
+	if($a->argc > 1 && $a->argv[1] === 'remove') {
+		del_pconfig(local_user(),'facebook','post');
+		notice( t('Facebook disabled') . EOL);
+	}
+
+	$appid = get_config('facebook','appid');
+
+	if(! $appid) {
+		notify( t('Facebook API key is missing.') . EOL);
+		return '';
+	}
+
+	$o .= '<h3>' . t('Facebook Connect') . '</h3>';
+
+	$o .= '<br />';
+
+	$o .= '<a href="https://www.facebook.com/dialog/oauth?client_id=' . $appid . '&redirect_uri=' 
+		. $a->get_baseurl() . '/facebook/' . $a->user['nickname'] . '&scope=publish_stream,read_stream,offline_access">' . t('Install Facebook posting') . '</a><br />';
+
+	$o .= '<a href="' . $a->get_baseurl() . '/facebook/remove' . '">' . t('Remove Facebook posting') . '</a><br />';
+
+
 	return $o;
 }
 
@@ -79,7 +113,10 @@ function facebook_post_hook(&$a,&$b) {
 	 * Post to Facebook stream
 	 */
 
+	logger('Facebook post');
+
 	if((local_user()) && (local_user() == $b['uid']) && (! $b['private']) && (! $b['parent'])) {
+
 
 		$appid  = get_config('facebook', 'appid'  );
 		$secret = get_config('facebook', 'appsecret' );
@@ -93,14 +130,18 @@ function facebook_post_hook(&$a,&$b) {
 				require_once('library/facebook.php');
 				require_once('include/bbcode.php');	
 
+				$msg = $b['body'];
+
+				logger('Facebook post2: msg=' . $msg, LOGGER_DATA);
 
 				// make links readable before we strip the code
 
-				$msg = preg_replace('\[url\=(.?*)\](.?*)\[\/url\]/is','$2 ($1)',$msg);
+				$msg = preg_replace("/\[url=(.+?)\](.+?)\[\/url\]/is",'$2 ($1)',$msg);
 
-				$msg = preg_replace('\[img\](.?*)\[\/img\]/is', t('Image: ') . '$1',$msg);
+				$msg = preg_replace("/\[img\](.+?)\[\/img\]/is", t('Image: ') . '$1',$msg);
 
-				$msg = trim(strip_tags(bbcode($b['body'])));
+				$msg = trim(strip_tags(bbcode($msg)));
+
 				if (strlen($msg) > FACEBOOK_MAXPOSTLEN) {
 					$shortlink = "";
 					require_once('addon/twitter/slinky.php');
@@ -120,20 +161,14 @@ function facebook_post_hook(&$a,&$b) {
 				if(! strlen($msg))
 					return;
 
+				logger('Facebook post: msg=' . $msg, LOGGER_DATA);
 
+				$postvars = array('access_token' => $fb_token, 'message' => $msg);
 
+				$x = post_url('https://graph.facebook.com/me/feed', $postvars);
+				
+				logger('Facebook post returns: ' . $x, LOGGER_DEBUG);
 
-				$facebook = new Facebook(array(
-					'appId'  => $appid,
-					'secret' => $secret,
-					'cookie' => true
-				));			
-				try {
-					$statusUpdate = $facebook->api('/me/feed', 'post', array('message'=> bbcode($b['body']), 'cb' => ''));
-				} 
-				catch (FacebookApiException $e) {
-					notice( t('Facebook status update failed.') . EOL);
-				}
 			}
 		}
 	}
