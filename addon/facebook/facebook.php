@@ -1,12 +1,32 @@
 <?php
 
 /**
- * This module needs a lot of work.
+ * This module still needs a lot of work, but is functional today.
+ * Please review this section if you upgrade because things will change.
  *
- * - setting/storing preferences
- * - documentation on how to obtain FB API keys for your site 
- * - ensuring a valid FB login session
- * - requesting permissions within the FB login session to post on your behalf until permission revoked.
+ * 1. register an API key from developer.facebook.com
+ *   a. We'd be very happy if you include "Friendika" in the application name
+ *      to increase name recognition.
+ *   b. The url should be your site URL with a trailing slash
+ *   c. Set the following values in your .htconfig.php file
+ *         $a->config['facebook']['appid'] = 'xxxxxxxxxxx';
+ *         $a->config['facebook']['appsecret'] = 'xxxxxxxxxxxxxxx';
+ *      Replace with the settings Facebook gives you.
+ * 2. Enable the facebook plugin by including it in .htconfig.php - e.g. 
+ *     $a->config['system']['addon'] = 'plugin1,plugin2,facebook';
+ * 3. Visit your site url + '/facebook' (e.g. http://example.com/facebook)
+ *    and click 'Install Facebook posting'.
+ * 4. This will ask you to login to Facebook and grant permission to the 
+ *    plugin to do its stuff. Allow it to do so. 
+ * 5. You're done. To turn it off visit your site's /facebook page again and
+ *    'Remove Facebook posting'.
+ *
+ * Turn logging on (see the github Friendika wiki page 'Settings') and 
+ * repeat these steps if you have trouble.
+ * Vidoes and embeds will not be posted if there is no other content. Links 
+ * and images will be converted to text and long posts truncated - with a link
+ * to view the full post. Posts with permission settings and comments will
+ * not be posted to Facebook. 
  *
  */
 
