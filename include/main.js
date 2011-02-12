@@ -210,3 +210,16 @@
 		$('#panel').hide();
 	}
 
+	function post_comment(id) {
+		var typename = 'f-type-' + id;
+		var puidname = 'f-profile-uid-' + id;
+		var parname = 'f-parent-' + id;
+		var textname = 'comment-edit-text-' + id;
+		var type = $('input[id=typename]').val();
+        var profile_uid = $('input[id=puidname]').val();
+        var parent = $('input[id=parname]').val();
+        var body = $('textarea[id=textname]').val();
+
+		alert(body);
+
+	}
