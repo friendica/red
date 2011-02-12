@@ -1933,6 +1933,10 @@ a.mail-list-link {
 .contact-block-link {
 	float: left;
 }
+.contact-block-img {
+	width:48px;
+	height:48px;
+}
 
 #tag-remove {
 	margin-bottom: 15px;
