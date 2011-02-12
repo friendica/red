@@ -818,7 +818,7 @@ input#dfrn-url {
 .wall-item-wrapper {
 	float: left;
     margin-right: 5px;
-    width: 150px;
+    width: 250px;
 }
 .wall-item-lock {
 	height: 20px;
@@ -863,7 +863,7 @@ input#dfrn-url {
 	float: left;
 	/*width: 450px;*/
 	margin-left: 10px;
-	margin-bottom: 20px;
+/*	margin-bottom: 20px;*/
 	padding: 20px;
 	max-height: 400px;
 	overflow: auto;
@@ -878,7 +878,7 @@ input#dfrn-url {
 .wall-item-body {
 	float: left;
 	width: 450px;
-	margin-top: 30px;
+	margin-top: 10px;
 }
 
 .comment-edit-wrapper {
