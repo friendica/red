@@ -605,6 +605,10 @@ input#dfrn-url {
 #profile-photo-link-select-wrapper {
 	margin-top: 2em;
 }
+#profile-photo-wrapper img {
+	width:175px;
+	height:175px;
+}
 
 #profile-edit-profile-name-label,
 #profile-edit-name-label,
