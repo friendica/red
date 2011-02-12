@@ -149,6 +149,7 @@ function facebook_jot_nets(&$a,&$b) {
 }
 
 function facebook_post_local(&$a,&$b) {
+
 	if(! local_user())
 		return;
 
@@ -175,17 +176,20 @@ function facebook_post_hook(&$a,&$b) {
 
 		if($appid && $secret) {
 
+			logger('facebook: have appid+secret');
+
 			$fb_post   = intval(get_pconfig(local_user(),'facebook','post'));
 			$fb_enable = intval(get_pconfig(local_user(),'facebook','enable'));
 			$fb_token  = get_pconfig(local_user(),'facebook','access_token');
 
 			if($fb_post && $fb_token && $fb_enable) {
+				logger('facebook: able to post');
 				require_once('library/facebook.php');
 				require_once('include/bbcode.php');	
 
 				$msg = $b['body'];
 
-				logger('Facebook post2: msg=' . $msg, LOGGER_DATA);
+				logger('Facebook post: original msg=' . $msg, LOGGER_DATA);
 
 				// make links readable before we strip the code
 
