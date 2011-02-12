@@ -737,6 +737,10 @@ input#dfrn-url {
 #profile-photo-link-select-wrapper {
 	margin-top: 2em;
 }
+#profile-photo-wrapper img {
+	width:175px;
+	height:175px;
+}
 
 #profile-edit-profile-name-label,
 #profile-edit-name-label,
@@ -1085,6 +1089,17 @@ input#dfrn-url {
 #profile-jot-plugin-end {
   clear:both;
 }
+.profile-jot-net {
+	float: left;
+	margin-right: 10px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+#profile-jot-networks-end {
+	clear: both;
+}
+
 #profile-jot-end {
 	clear: both;
 	margin-bottom: 30px;
@@ -1921,6 +1936,10 @@ a.mail-list-link {
 }
 .contact-block-link {
 	float: left;
+}
+.contact-block-img {
+	width:48px;
+	height:48px;
 }
 
 #tag-remove {

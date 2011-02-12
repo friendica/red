@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `issued-id` char(255) NOT NULL,
   `dfrn-id` char(255) NOT NULL,
   `url` char(255) NOT NULL,
-  `lrdd` char(255) NOT NULL,
+  `alias` char(255) NOT NULL,
   `pubkey` text NOT NULL,
   `prvkey` text NOT NULL,
   `request` text NOT NULL,
@@ -472,7 +472,7 @@ CREATE TABLE IF NOT EXISTS `event` (
 `deny_gid` MEDIUMTEXT NOT NULL
 ) ENGINE = MYISAM DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS 'cache' (
+CREATE TABLE IF NOT EXISTS `cache` (
  `k` CHAR( 255 ) NOT NULL PRIMARY KEY ,
  `v` TEXT NOT NULL,
  `updated` DATETIME NOT NULL

@@ -103,7 +103,7 @@
 			rep(/\[img=(.*?)x(.*?)\](.*?)\[\/img\]/gi,"<img width=\"$1\" height=\"$2\" src=\"$3\" />");
 			rep(/\[img\](.*?)\[\/img\]/gi,"<img src=\"$1\" />");
 			rep(/\[color=(.*?)\](.*?)\[\/color\]/gi,"<span style=\"color: $1;\">$2</span>");
-//			rep(/\[\/code\]\s*\[code\]/gi,"<br />"); // fold multiline code
+			rep(/\[size=(.*?)\](.*?)\[\/size\]/gi,"<span style=\"font-size: $1;\">$2</span>");
 			rep(/\[code\](.*?)\[\/code\]/gi,"<code>$1</code>");
 			rep(/\[quote.*?\](.*?)\[\/quote\]/gi,"<blockquote>$1</blockquote>");
 

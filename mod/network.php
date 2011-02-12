@@ -79,8 +79,10 @@ function network_content(&$a, $update = 0) {
 
 		$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
 
-		$jotplugins = "";
+		$jotplugins = '';
+		$jotnets = '';
 		call_hooks('jot_tool', $jotplugins);
+		call_hooks('jot_networks', $jotnets);
 
 		$tpl = replace_macros($tpl,array('$jotplugins' => $jotplugins));	
 
@@ -90,6 +92,7 @@ function network_content(&$a, $update = 0) {
 			'$defloc' => $a->user['default-location'],
 			'$visitor' => 'block',
 			'$emailcc' => t('CC: email addresses'),
+			'$jotnets' => $jotnets,
 			'$emtitle' => t('Example: bob@example.com, mary@example.com'),
 			'$lockstate' => $lockstate,
 			'$acl' => populate_acl((($group) ? $group_acl : $a->user), $celeb),

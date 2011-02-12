@@ -134,11 +134,16 @@ else
 
 
 if(strlen($a->module)) {
-	if(file_exists("mod/{$a->module}.php")) {
+	if(is_array($a->plugins) && in_array($a->module,$a->plugins) && file_exists("addon/{$a->module}/{$a->module}.php")) {
+		include("addon/{$a->module}/{$a->module}.php");
+		if(function_exists($a->module . '_module'))
+			$a->module_loaded = true;
+	}
+	if((! $a->module_loaded) && (file_exists("mod/{$a->module}.php"))) {
 		include("mod/{$a->module}.php");
 		$a->module_loaded = true;
 	}
-	else {
+	if(! $a->module_loaded) {
 		if((x($_SERVER,'QUERY_STRING')) && ($_SERVER['QUERY_STRING'] === 'q=internal_error.html') && isset($dreamhost_error_hack)) {
 			logger('index.php: dreamhost_error_hack invoked. Original URI =' . $_SERVER['REQUEST_URI']);
 			goaway($a->get_baseurl() . $_SERVER['REQUEST_URI']);

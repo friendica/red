@@ -2,8 +2,8 @@
 
 set_time_limit(0);
 
-define ( 'BUILD_ID',               1037   );
-define ( 'FRIENDIKA_VERSION',      '2.10.0905' );
+define ( 'BUILD_ID',               1038   );
+define ( 'FRIENDIKA_VERSION',      '2.10.0906' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.1'  );
 
 define ( 'EOL',                    "<br />\r\n"     );
@@ -195,7 +195,7 @@ class App {
 	public  $hooks;
 	public  $timezone;
 	public  $interactive = true;
-
+	public  $plugins;
 
 	private $scheme;
 	private $hostname;
@@ -305,9 +305,9 @@ class App {
 			$this->scheme = $parsed['scheme'];
 
 			$this->hostname = $parsed['host'];
-			if($parsed['port'])
+			if(x($parsed,'port'))
 				$this->hostname .= ':' . $parsed['port'];
-			if($parsed['path'])
+			if(x($parsed,'path'))
 				$this->path = trim($parsed['path'],'\\/');
 		}
 
@@ -478,6 +478,8 @@ function check_config(&$a) {
 	if($plugins)
 		$plugins_arr = explode(',',str_replace(' ', '',$plugins));
 
+	$a->plugins = $plugins_arr;
+
 	$installed_arr = array();
 
 	if(count($installed)) {
@@ -514,6 +516,7 @@ function check_config(&$a) {
 			}
 		}
 	}
+	load_hooks();
 
 	return;
 }}
@@ -1378,10 +1381,12 @@ function webfinger($s) {
 		logger('webfinger: lrdd template: ' . $tpl);
 		if(strlen($tpl)) {
 			$pxrd = str_replace('{uri}', urlencode('acct:'.$s), $tpl);
+			logger('webfinger: pxrd: ' . $pxrd);
 			$links = fetch_xrd_links($pxrd);
 			if(! count($links)) {
 				// try with double slashes
 				$pxrd = str_replace('{uri}', urlencode('acct://'.$s), $tpl);
+				logger('webfinger: pxrd: ' . $pxrd);
 				$links = fetch_xrd_links($pxrd);
 			}
 			return $links;
@@ -1453,6 +1458,7 @@ function fetch_lrdd_template($host) {
 	$tpl = '';
 	$url = 'http://' . $host . '/.well-known/host-meta' ;
 	$links = fetch_xrd_links($url);
+logger('template: ' . print_r($links,true));
 	if(count($links)) {
 		foreach($links as $link)
 			if($link['@attributes']['rel'] && $link['@attributes']['rel'] === 'lrdd')
@@ -1479,15 +1485,30 @@ function fetch_xrd_links($url) {
 	$h = simplexml_load_string($xml);
 	$arr = convert_xml_element_to_array($h);
 
+	$links = array();
+
 	if(isset($arr['xrd']['link'])) {
 		$link = $arr['xrd']['link'];
 		if(! isset($link[0]))
 			$links = array($link);
 		else
 			$links = $link;
-		return $links;
 	}
-	return array();
+	if(isset($arr['xrd']['alias'])) {
+		$alias = $arr['xrd']['alias'];
+		if(! isset($alias[0]))
+			$aliases = array($alias);
+		else
+			$aliases = $alias;
+		foreach($aliases as $alias) {
+			$links[]['@attributes'] = array('rel' => 'alias' , 'href' => $alias);
+		}
+	}
+
+	logger('fetch_xrd_links: ' . print_r($links,true), LOGGER_DATA);
+
+	return $links;
+
 }}
 
 // Convert an ACL array to a storable string
@@ -2079,7 +2100,7 @@ function profile_sidebar($profile) {
 
 	$tabs = '';
 
-	$photo = '<div id="profile=photo-wrapper"><img class="photo" src="' . $profile['photo'] . '" alt="' . $profile['name'] . '" /></div>';
+	$photo = '<div id="profile-photo-wrapper"><img class="photo" src="' . $profile['photo'] . '" alt="' . $profile['name'] . '" /></div>';
 
 	$connect = (($profile['uid'] != local_user()) ? '<li><a id="dfrn-request-link" href="dfrn_request/' . $profile['nickname'] . '">' . t('Connect') . '</a></li>' : '');
  
@@ -2169,6 +2190,7 @@ function unregister_hook($hook,$file,$function) {
 if(! function_exists('load_hooks')) {
 function load_hooks() {
 	$a = get_app();
+	$a->hooks = array();
 	$r = q("SELECT * FROM `hook` WHERE 1");
 	if(count($r)) {
 		foreach($r as $rr) {

@@ -15,7 +15,7 @@ function follow_post(&$a) {
 	$email_conversant = false;
 
 	if($url) {
-		$links = lrdd($url);
+		$links = @lrdd($url);
 		if(count($links)) {
 			foreach($links as $link) {
 				if($link['@attributes']['rel'] === NAMESPACE_DFRN)
@@ -29,6 +29,26 @@ function follow_post(&$a) {
 				if($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page')
 					$profile = $link['@attributes']['href'];
 
+			}
+
+			// Status.Net can have more than one profile URL. We need to match the profile URL
+			// to a contact on incoming messages to prevent spam, and we won't know which one
+			// to match. So in case of two, one of them is stored as an alias. Only store URL's
+			// and not webfinger user@host aliases. If they've got more than two non-email style
+			// aliases, let's hope we're lucky and get one that matches the feed author-uri because 
+			// otherwise we're screwed.
+
+			foreach($links as $link) {
+				if($link['@attributes']['rel'] === 'alias') {
+					if(strpos($link['@attributes']['href'],'@') === false) {
+						if(isset($profile)) {
+							if($link['@attributes']['href'] !== $profile)
+								$alias = $link['@attributes']['href'];
+						}
+						else
+							$profile = $link['@attributes']['href'];
+					}
+				}
 			}
 		}
 		else {
@@ -165,12 +185,13 @@ function follow_post(&$a) {
 	}
 	else {
 		// create contact record 
-		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `notify`, `poll`, `name`, `nick`, `photo`, `network`, `rel`, `priority`,
+		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `alias`, `notify`, `poll`, `name`, `nick`, `photo`, `network`, `rel`, `priority`,
 			`blocked`, `readonly`, `pending` )
-			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, 0, 0, 0 ) ",
+			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, 0, 0, 0 ) ",
 			intval(local_user()),
 			dbesc(datetime_convert()),
 			dbesc($profile),
+			dbesc($alias),
 			dbesc($notify),
 			dbesc($poll),
 			dbesc($vcard['fn']),

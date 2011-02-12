@@ -28,7 +28,7 @@ input {
 img { border :0px; }
 
 .openid {
-   background: url(../default/login-bg.gif) no-repeat;
+   background: url(login-bg.gif) no-repeat;
    background-position: 0 50%;
    padding-left: 18px;
 }
@@ -319,7 +319,7 @@ div.wall-item-content-wrapper.shiny {
 
 input#dfrn-url {
 	float: left;
-	background: url(../default/ff-16.jpg) no-repeat;
+	background: url(ff-16.jpg) no-repeat;
 	background-position: 2px center;
 	font-size: 17px;
 	padding-left: 21px;
@@ -605,6 +605,10 @@ input#dfrn-url {
 #profile-photo-link-select-wrapper {
 	margin-top: 2em;
 }
+#profile-photo-wrapper img {
+	width:175px;
+	height:175px;
+}
 
 #profile-edit-profile-name-label,
 #profile-edit-name-label,
@@ -814,7 +818,7 @@ input#dfrn-url {
 .wall-item-wrapper {
 	float: left;
     margin-right: 5px;
-    width: 150px;
+    width: 250px;
 }
 .wall-item-lock {
 	height: 20px;
@@ -859,7 +863,7 @@ input#dfrn-url {
 	float: left;
 	/*width: 450px;*/
 	margin-left: 10px;
-	margin-bottom: 20px;
+/*	margin-bottom: 20px;*/
 	padding: 20px;
 	max-height: 400px;
 	overflow: auto;
@@ -874,7 +878,7 @@ input#dfrn-url {
 .wall-item-body {
 	float: left;
 	width: 450px;
-	margin-top: 30px;
+	margin-top: 10px;
 }
 
 .comment-edit-wrapper {
@@ -885,8 +889,8 @@ input#dfrn-url {
 
 .comment-wwedit-wrapper {
 	margin-top: 15px;
-	background: #CCCCCC;
-	margin-left: 250px;
+	background: #f3f3f3;
+	margin-left: 50px;
 }
 
 .comment-edit-photo {
@@ -960,6 +964,17 @@ input#dfrn-url {
 #profile-jot-plugin-end{
   clear: both;
 }
+.profile-jot-net {
+	float: left;
+	margin-right: 10px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+#profile-jot-networks-end {
+	clear: both;
+}
+
 #profile-jot-end {
 	/*clear: both;*/
 	margin-bottom: 30px;
@@ -1781,7 +1796,7 @@ a.mail-list-link {
 }
 
 .sparkle {
-	cursor: url('../default/lock.cur'), pointer;
+	cursor: url('lock.cur'), pointer;
 /*	cursor: pointer !important; */
 }
 
@@ -1795,6 +1810,10 @@ a.mail-list-link {
 }
 .contact-block-link {
 	float: left;
+}
+.contact-block-img {
+	width:48px;
+	height:48px;
 }
 
 #tag-remove {

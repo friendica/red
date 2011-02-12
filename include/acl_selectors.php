@@ -3,6 +3,8 @@
 
 function group_select($selname,$selclass,$preselected = false,$size = 4) {
 
+	$a = get_app();
+
 	$o = '';
 
 	$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" >\r\n";
@@ -10,6 +12,13 @@ function group_select($selname,$selclass,$preselected = false,$size = 4) {
 	$r = q("SELECT * FROM `group` WHERE `deleted` = 0 AND `uid` = %d ORDER BY `name` ASC",
 		$_SESSION['uid']
 	);
+
+
+	$arr = array('group' => $r, 'entry' => $o);
+
+	// e.g. 'network_pre_group_deny', 'profile_pre_group_allow'
+
+	call_hooks($a->module . '_pre_' . $selname, $arr);
 
 	if(count($r)) {
 		foreach($r as $rr) {
@@ -24,6 +33,8 @@ function group_select($selname,$selclass,$preselected = false,$size = 4) {
 	
 	}
 	$o .= "</select>\r\n";
+
+	call_hooks($a->module . '_post_' . $selname, $o);
 
 
 	return $o;
@@ -60,6 +71,15 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 		intval(local_user())
 	);
 
+
+	$arr = array('contact' => $r, 'entry' => $o);
+
+	// e.g. 'network_pre_contact_deny', 'profile_pre_contact_allow'
+
+	call_hooks($a->module . '_pre_' . $selname, $arr);
+
+
+
 	if(count($r)) {
 		foreach($r as $rr) {
 			if((is_array($preselected)) && in_array($rr['id'], $preselected))
@@ -73,8 +93,10 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 		}
 	
 	}
+
 	$o .= "</select>\r\n";
 
+	call_hooks($a->module . '_post_' . $selname, $o);
 
 	return $o;
 }

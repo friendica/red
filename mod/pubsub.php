@@ -105,8 +105,10 @@ function pubsub_post(&$a) {
 		intval($contact_id),
 		intval($importer['uid'])
 	);
-	if(! count($r))
+	if(! count($r)) {
+		logger('pubsub: no contact record - ignored');
 		hub_post_return();
+	}
 
 	$contact = $r[0];
 

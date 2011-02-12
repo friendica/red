@@ -1,0 +1,41 @@
+
+
+#twitter-avatar {
+	float: left;
+	width: 48px;
+	height: 48px;
+	padding: 2px;
+}
+#twitter-info-block {
+	height: 52px;
+	vertical-align: middle;
+}
+#twitter-disconnect-label {
+	float: left;
+	width: 200px;
+	margin-bottom: 25px;
+}
+
+#twitter-disconnect {
+	float: left;
+}
+#twitter-enable-label {
+	float: left;
+	width: 200px;
+	margin-bottom: 5px;
+}
+
+#twitter-checkbox {
+	float: left;
+}
+#twitter-pin-label {
+	float: left;
+	width: 200px;
+	margin-bottom: 25px;
+}
+
+#twitter-pin {
+	float: left;
+}
+
+

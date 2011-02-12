@@ -15,14 +15,14 @@ function bbcode($Text) {
 	$Text = nl2br($Text);
 
 	// Set up the parameters for a URL search string
-	$URLSearchString = " a-zA-Z0-9\:\/\-\?\&\.\=\_\~\#\'\%";
+	$URLSearchString = "^\[\]";
 	// Set up the parameters for a MAIL search string
-	$MAILSearchString = $URLSearchString . " a-zA-Z0-9\.@";
+	$MAILSearchString = $URLSearchString;
 
 	// Perform URL Search
 
 
-	$Text = preg_replace("/([^\]\=]|^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\.\=\_\~\#\'\%]+)/", ' <a href="$2" target="external-link">$2</a>', $Text);
+	$Text = preg_replace("/([^\]\=]|^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\.\=\_\~\#\'\%\$\!]+)/", ' <a href="$2" target="external-link">$2</a>', $Text);
 
 	$Text = preg_replace("/\[url\]([$URLSearchString]*)\[\/url\]/", '<a href="$1" target="external-link">$1</a>', $Text);
 	$Text = preg_replace("(\[url\=([$URLSearchString]*)\](.+?)\[/url\])", '<a href="$1" target="external-link">$2</a>', $Text);
@@ -49,10 +49,10 @@ function bbcode($Text) {
 	$Text = preg_replace("(\[o\](.+?)\[\/o\])is",'<span class="overline">$1</span>',$Text);
 
 	// Check for colored text
-	$Text = preg_replace("(\[color=(.+?)\](.+?)\[\/color\])is","<span style=\"color: $1\">$2</span>",$Text);
+	$Text = preg_replace("(\[color=(.+?)\](.+?)\[\/color\])is","<span style=\"color: $1;\">$2</span>",$Text);
 
 	// Check for sized text
-	$Text = preg_replace("(\[size=(.+?)\](.+?)\[\/size\])is","<span style=\"font-size: $1px\">$2</span>",$Text);
+	$Text = preg_replace("(\[size=(.+?)\](.+?)\[\/size\])is","<span style=\"font-size: $1;\">$2</span>",$Text);
 
 	// Check for list text
 	$Text = preg_replace("/\[list\](.+?)\[\/list\]/is", '<ul class="listbullet">$1</ul>' ,$Text);

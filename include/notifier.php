@@ -40,6 +40,7 @@ function notifier_run($argv, $argc){
 			break;
 	}
 
+	$top_level = false;
 	$recipients = array();
 	$url_recipients = array();
 
@@ -79,12 +80,16 @@ function notifier_run($argv, $argc){
 			return;
 		}
 
+
 		// avoid race condition with deleting entries
 
 		if($items[0]['deleted']) {
 			foreach($items as $item)
 				$item['deleted'] = 1;
 		}
+
+		if(count($items) == 1 && $items[0]['uri'] === $items[0]['parent-uri'])
+			$top_level = true;
 	}
 
 	$r = q("SELECT `contact`.*, `user`.`timezone`, `user`.`nickname`, `user`.`sprvkey`, `user`.`spubkey`, `user`.`page-flags` 
@@ -167,9 +172,6 @@ function notifier_run($argv, $argc){
 
 		$r = q("SELECT * FROM `contact` WHERE `id` IN ( $conversant_str ) AND `blocked` = 0 AND `pending` = 0");
 
-//		if( ! count($r)){
-//			return;
-//		}
 
 		if(count($r))
 			$contacts = $r;
@@ -242,12 +244,8 @@ function notifier_run($argv, $argc){
 
 				$atom   .= atom_entry($item,'text',$contact,$owner,true);
 
-				// There's a problem here - we *were* going to use salmon to provide semi-authenticated
-				// communication to OStatus, but unless we're the item author they won't verify.
-				// commented out for now, though we'll still send local replies (and any mentions 
-				// that they contain) upstream. Rethinking the problem space.
- 
-//				$slaps[] = atom_entry($item,'html',$contact,$owner,true);
+				if(($top_level) && ($notify_hub) && ($item['author-link'] === $item['owner-link'])) 
+					$slaps[] = atom_entry($item,'html',$contact,$owner,true);
 			}
 		}
 	}
@@ -255,7 +253,7 @@ function notifier_run($argv, $argc){
 
 	logger('notifier: ' . $atom, LOGGER_DATA);
 
-//	logger('notifier: slaps: ' . print_r($slaps,true), LOGGER_DATA);
+	logger('notifier: slaps: ' . print_r($slaps,true), LOGGER_DATA);
 
 	if($followup)
 		$recip_str = $parent['contact-id'];

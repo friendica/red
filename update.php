@@ -363,3 +363,10 @@ function update_1036() {
 		}
 	}
 }
+
+function update_1037() {
+
+	q("ALTER TABLE `contact` CHANGE `lrdd` `alias` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ");
+
+}
+

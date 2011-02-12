@@ -21,6 +21,6 @@
 	foreach($files as $file)
 		include_once($file);
 
-	$files = glob('addon/*.php');
+	$files = glob('addon/*/*.php');
 	foreach($files as $file)
 		include_once($file);
