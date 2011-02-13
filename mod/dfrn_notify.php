@@ -391,8 +391,9 @@ function dfrn_notify_post(&$a) {
 						intval($importer['importer_uid'])
 					);
 					if(count($myconv)) {
+						$importer_url = $a->get_baseurl() . '/profile/' . $importer['nickname'];
 						foreach($myconv as $conv) {
-							if(! link_compare($conv['author-link'],$importer['url']))
+							if(! link_compare($conv['author-link'],$importer_url))
 								continue;
 							require_once('bbcode.php');
 							$from = stripslashes($datarray['author-name']);
