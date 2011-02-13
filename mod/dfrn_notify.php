@@ -2,8 +2,6 @@
 
 require_once('simplepie/simplepie.inc');
 require_once('include/items.php');
-
-
 function dfrn_notify_post(&$a) {
 
 	$dfrn_id      = ((x($_POST,'dfrn_id'))      ? notags(trim($_POST['dfrn_id']))   : '');
@@ -52,11 +50,17 @@ function dfrn_notify_post(&$a) {
 	}
 		 
 
-	$r = q("SELECT `contact`.*, `contact`.`uid` AS `importer_uid`, 
-		`contact`.`pubkey` AS `cpubkey`, `contact`.`prvkey` AS `cprvkey`, `user`.* FROM `contact` 
-		LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid` 
-		WHERE `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
-		AND `user`.`nickname` = '%s' $sql_extra LIMIT 1",
+	$r = q("SELECT	`contact`.*, `contact`.`uid` AS `importer_uid`, 
+					`contact`.`pubkey` AS `cpubkey`, 
+					`contact`.`prvkey` AS `cprvkey`, 
+					`contact`.`thumb` AS `thumb`, 
+					`contact`.`url` as `url`,
+					`contact`.`name` as `senderName`,
+					`user`.* 
+			FROM `contact` 
+			LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid` 
+			WHERE `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
+				AND `user`.`nickname` = '%s' $sql_extra LIMIT 1",
 		dbesc($a->argv[1])
 	);
 
@@ -169,29 +173,37 @@ function dfrn_notify_post(&$a) {
 		require_once('bbcode.php');
 		if($importer['notify-flags'] & NOTIFY_MAIL) {
 
-			$body = html_entity_decode(strip_tags(bbcode(stripslashes($msg['body']))),ENT_QUOTES,'UTF-8');
-
-			if(function_exists('quoted_printable_encode'))
+//			$body = html_entity_decode(strip_tags(bbcode(stripslashes(nl2br($msg['body'])))),ENT_QUOTES,'UTF-8');
+//			$body = strip_tags(bbcode(stripslashes(nl2br($msg['body']))));
+			
+			/*if(function_exists('quoted_printable_encode'))
 				$body = quoted_printable_encode($body);
 			else
-				$body = qp($body);
+				$body = qp($body);*/
 
+			$msg['body'] = str_replace(array("\\r\\n", "\\r", "\\n"), "<br />", $msg['body']);
+			$msg['body'] = html_entity_decode(strip_tags(bbcode($msg['body'])));			
 			$tpl = load_view_file('view/mail_received_eml.tpl');			
 			$email_tpl = replace_macros($tpl, array(
-				'$sitename' => $a->config['sitename'],
-				'$siteurl' =>  $a->get_baseurl(),
-				'$username' => $importer['username'],
-				'$email' => $importer['email'],
-				'$from' => $msg['from-name'],
-				'$title' => stripslashes($msg['title']),
-				'$body' => $body
+				'$siteName'		=> $a->config['sitename'],
+				'$siteurl'		=> $a->get_baseurl(),
+				'$username'		=> $importer['username'],
+				'$thumb'		=> $importer['thumb'],
+				'$email'		=> $importer['email'],
+				'$url'			=> $importer['url'],
+				'$senderName'	=> $importer['senderName'],
+				'$from'			=> $msg['from-name'],
+				'$title'		=> stripslashes($msg['title']),
+				'$body'			=> $msg['body'],
+				'$hostname'		=> $a->get_hostname()
 			));
-
+			
 			$res = mail($importer['email'], t('New mail received at ') . $a->config['sitename'],
-				$email_tpl, 'From: ' . t('Administrator') . '@' . $a->get_hostname() . "\r\n"
+				$email_tpl, 
+					'From: ' . t('Administrator') . '@' . $a->get_hostname() . "\r\n"
 					. 'MIME-Version: 1.0' . "\r\n"
-					. 'Content-type: text/plain; charset=UTF-8' . "\r\n" 
-					. 'Content-transfer-encoding: quoted-printable' . "\r\n"
+					. 'Content-type: text/html; charset=iso-8859-1' . "\r\n" 
+					. 'Content-transfer-encoding: 7-bit' . "\r\n"
 			);
 		}
 		xml_status(0);
