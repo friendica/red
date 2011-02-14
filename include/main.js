@@ -29,6 +29,7 @@
 
 	$(document).ready(function() {
 		$.ajaxSetup({cache: false});
+
 		msie = $.browser.msie ;
  		NavUpdate(); 
 		// Allow folks to stop the ajax page updates with the pause/break key
@@ -211,15 +212,22 @@
 	}
 
 	function post_comment(id) {
-		var typename = 'f-type-' + id;
-		var puidname = 'f-profile-uid-' + id;
-		var parname = 'f-parent-' + id;
-		var textname = 'comment-edit-text-' + id;
-		var type = $('input[id=typename]').val();
-        var profile_uid = $('input[id=puidname]').val();
-        var parent = $('input[id=parname]').val();
-        var body = $('textarea[id=textname]').val();
-
-		alert(body);
-
+		$.post(  
+             "item",  
+             $("#comment-edit-form-" + id).serialize(),
+			function(data) {
+				if(data.success) {
+					$("#comment-edit-wrapper-" + id).hide();
+					$("#comment-edit-text-" + id).val('');
+    	  			var tarea = document.getElementById("comment-edit-text-" + id);
+					if(tarea)
+						commentClose(tarea,id);
+					if(timer) clearTimeout(timer);
+					timer = setTimeout(NavUpdate,10);
+				}
+			},
+			"json"  
+         );  
+         return false;  
 	}
+
