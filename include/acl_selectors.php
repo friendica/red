@@ -44,6 +44,8 @@ function group_select($selname,$selclass,$preselected = false,$size = 4) {
 
 function contact_select($selname, $selclass, $preselected = false, $size = 4, $privmail = false, $celeb = false, $privatenet = false) {
 
+	$a = get_app();
+
 	$o = '';
 
 	// When used for private messages, we limit correspondence to mutual friends and the selector
