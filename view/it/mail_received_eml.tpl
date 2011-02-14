@@ -21,7 +21,7 @@ Content-Transfer-Encoding: 8bit
 <html>
 <head>
 	<title>Friendika Messsaggio</title>
-	<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1" />
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 </head>
 <body>
 <table style="border:1px solid #ccc">
