@@ -198,10 +198,10 @@ function dfrn_notify_post(&$a) {
 
 
 			$msg['textversion']
-				= html_entity_decode(strip_tags(bbcode(stripslashes($msg['body']))),ENT_QUOTES,'UTF-8');
+				= strip_tags(html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r", "\\n"), "\n",$msg['body']))),ENT_QUOTES,'UTF-8'));
 			//$TextMessage	= html_entity_decode(strip_tags(bbcode(str_replace(array("\\r\\n", "\\r", "\\n"), "\n",$msg['body']))));	;
 			$msg['htmlversion']	
-				= str_replace(array("\\r\\n", "\\r", "\\n"), "<br />\n",html_entity_decode($msg['body']));
+				= html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r", "\\n"), "<br />\n",$msg['body']))));
 								
 			$tpl = load_view_file('view/mail_received_eml.tpl');			
 			$email_tpl = replace_macros($tpl, array(
