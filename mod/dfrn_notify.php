@@ -181,8 +181,28 @@ function dfrn_notify_post(&$a) {
 			else
 				$body = qp($body);*/
 
-			$msg['body'] = str_replace(array("\\r\\n", "\\r", "\\n"), "<br />", $msg['body']);
-			$msg['body'] = html_entity_decode(strip_tags(bbcode($msg['body'])));			
+			//$msg['body'] = str_replace(array("\\r\\n", "\\r", "\\n"), "<br />", $msg['body']);
+			//$msg['body'] = html_entity_decode(strip_tags(bbcode($msg['body'])));	
+			$msg['mimeboundary']   =rand(0,9)."-"
+				.rand(10000000000,9999999999)."-"
+				.rand(10000000000,9999999999)."=:"
+				.rand(10000,99999);
+
+			$msg['notificationfromname']	= t('Administrator');
+			$msg['notificationfromemail']	= t('noreply') . '@' . $a->get_hostname();				
+			$msg['headers'] =
+				"From: {$msg['notificationfromname']} <{$msg['notificationfromemail']}>\n" . 
+				"Reply-To: {$msg['notificationfromemail']}\n" .
+				"MIME-Version: 1.0\n" .
+				"Content-Type: multipart/alternative; boundary=\"{$msg['mimeboundary']}\"";
+
+
+			$msg['textversion']
+				= html_entity_decode(strip_tags(bbcode(stripslashes($msg['body']))),ENT_QUOTES,'UTF-8');
+			//$TextMessage	= html_entity_decode(strip_tags(bbcode(str_replace(array("\\r\\n", "\\r", "\\n"), "\n",$msg['body']))));	;
+			$msg['htmlversion']	
+				= str_replace(array("\\r\\n", "\\r", "\\n"), "<br />\n",html_entity_decode($msg['body']));
+								
 			$tpl = load_view_file('view/mail_received_eml.tpl');			
 			$email_tpl = replace_macros($tpl, array(
 				'$siteName'		=> $a->config['sitename'],
@@ -194,16 +214,22 @@ function dfrn_notify_post(&$a) {
 				'$senderName'	=> $importer['senderName'],
 				'$from'			=> $msg['from-name'],
 				'$title'		=> stripslashes($msg['title']),
-				'$body'			=> $msg['body'],
+				'$textversion'	=> $msg['textversion'],
+				'$htmlversion'	=> $msg['htmlversion'],
+				'$mimeboundary'	=> $msg['mimeboundary'],
 				'$hostname'		=> $a->get_hostname()
 			));
 			
+			logger("message headers: " . $msg['headers']);
+			logger("message body: " . $mail_tpl);
+			
+			
 			$res = mail($importer['email'], t('New mail received at ') . $a->config['sitename'],
-				$email_tpl, 
-					'From: ' . t('Administrator') . '@' . $a->get_hostname() . "\r\n"
+				$email_tpl, $msg['headers']
+			/*		'From: ' . t('Administrator') . '@' . $a->get_hostname() . "\r\n"
 					. 'MIME-Version: 1.0' . "\r\n"
-					. 'Content-type: text/html; charset=iso-8859-1' . "\r\n" 
-					. 'Content-transfer-encoding: 7-bit' . "\r\n"
+					. 'Content-type: text/html; charset=utf-8' . "\r\n" 
+					. 'Content-transfer-encoding: quoted-printable' . "\r\n" */
 			);
 		}
 		xml_status(0);
