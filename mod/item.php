@@ -490,7 +490,12 @@ function item_post(&$a) {
 		}
 	}
 
-	goaway($a->get_baseurl() . "/" . $_POST['return'] );
+	if((x($_POST,'return')) && strlen($_POST['return']))
+		goaway($a->get_baseurl() . "/" . $_POST['return'] );
+
+	$json = array('success' => 1);
+	echo json_encode($json);
+	killme();
 	// NOTREACHED
 }
 
