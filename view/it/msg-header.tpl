@@ -6,14 +6,14 @@ tinyMCE.init({
 	theme : "advanced",
 	mode : "specific_textareas",
 	editor_selector: /(profile-jot-text|prvmail-text)/,
-	plugins : "bbcode",
+	plugins : "bbcode,paste",
 	theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,forecolor",
 	theme_advanced_buttons2 : "",
 	theme_advanced_buttons3 : "",
 	theme_advanced_toolbar_location : "top",
 	theme_advanced_toolbar_align : "center",
-	theme_advanced_styles : "Code=codeStyle;Quote=quoteStyle",
-	content_css : "bbcode.css",
+	theme_advanced_blockformats : "blockquote,code",
+	paste_text_sticky : true,
 	entity_encoding : "raw",
 	add_unload_trigger : false,
 	remove_linebreaks : false,
@@ -44,8 +44,12 @@ tinyMCE.init({
 				$('#character-counter').addClass('red');
 			}
 			$('#character-counter').text(text);
-    		});
-     	}
+    	});
+
+		ed.onInit.add(function(ed) {
+			ed.pasteAsPlainText = true;
+		});
+	}
 });
 
 </script>
