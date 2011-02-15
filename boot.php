@@ -1804,7 +1804,7 @@ function like_puller($a,$item,&$arr,$mode) {
 
 	if((activity_match($item['verb'],$verb)) && ($item['id'] != $item['parent'])) {
 		$url = $item['author-link'];
-		if(($item['network'] === 'dfrn') && (! $item['self']) && ($item['author-link'] == $item['url'])) {
+		if((local_user()) && (local_user() == $item['uid']) && ($item['network'] === 'dfrn') && (! $item['self']) && (link_compare($item['author-link'],$item['url']))) {
 			$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
 			$sparkle = ' class="sparkle" ';
 		}
