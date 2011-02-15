@@ -1075,4 +1075,14 @@ $a->strings['At this Friendika instance the Twitter plugin was enabled but you h
 $a->strings['Copy the PIN from Twitter here'] = 'Copia il PIN da Twitter qui';
 $a->strings['If enabled all your <strong>public</strong> postings will be posted to the associated Twitter account as well.'] = 'Se abilitato tutti i tuoi messaggi <strong>pubblici</strong> verranno inviati anche sull\'account Twitter associato.';
 $a->strings['Send public postings to Twitter'] = 'Invia messaggi pubblici su Twitter';
+$a->strings['noreply'] = 'nessuna risposta';
+$a->strings['Facebook disabled'] = 'Facebook disabilitato';
+$a->strings['Facebook API key is missing.'] = 'Chiave API Facebook mancante.';
+$a->strings['Facebook Connect'] = 'Facebook Connect';
+$a->strings['Install Facebook posting'] = 'Installa invio a Facebook';
+$a->strings['Remove Facebook posting'] = 'Rimuovi invio a Facebook';
+$a->strings['Post to Facebook'] = 'Invia a Facebook';
+$a->strings['Image: '] = 'Immagine: ';
+$a->strings['Base API Path \x28remember the trailing &#47;\x29'] = 'Indirizzo base API \x28ricorda il &#47; alla fine\x29';
+$a->strings['Post to Twitter'] = 'Inva a Twitter';
 ?>
