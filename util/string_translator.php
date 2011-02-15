@@ -4,6 +4,7 @@
 <style>
 	textarea { width: 100% }
 	.no { background: #ffdddd; }
+	label { border-bottom: 1px solid #888; }
 </style>
 </head>
 <body>	
@@ -78,14 +79,13 @@ function strhex($string) {
 
 
 echo "<h1>Translator</h1>";
-echo "<p>Utility to translate <code>string.php</code> file.";
-echo " Need write permission to language file you want to modify</p>";
+echo "<small>Utility to translate <code>string.php</code> file.";
+echo " Need write permission to language file you want to modify</small>";
 echo "<p>Installed languages:";
-echo "<ul>";
 foreach($LANGS as $l){
-	echo "<li><a href='?lang=$l'>$l</a></li>";
+	echo "<a href='?lang=$l'>$l</a>, ";
 }
-echo "</ul></p>";
+echo "</p>";
 
 
 $strings['en'] = loadstrings();
@@ -156,7 +156,7 @@ if (isset($_GET['lang'])){
 		
 		$istranslate = $translation != '' ? 'yes':'no';
 		echo "<dl class='$istranslate'>";
-		echo "<dt><label for='$id'>".htmlspecialchars($v)."</label></dt>";
+		echo "<dt><pre><label for='$id'>".htmlspecialchars($v)."</label></pre></dt>";
 		echo "<dd><textarea id='$id' name='$id'>$translation</textarea></dd>";
 		echo "</dl>";
 	}
