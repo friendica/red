@@ -370,3 +370,7 @@ function update_1037() {
 
 }
 
+function update_1038() {
+ q("ALTER TABLE `item` ADD `plink` CHAR( 255 ) NOT NULL AFTER `target` ");
+}
+

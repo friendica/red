@@ -1048,7 +1048,7 @@ function photos_content(&$a) {
 				if($can_post || can_write_wall($a,$owner_uid)) {
 					if($link_item['last-child']) {
 						$o .= replace_macros($cmnt_tpl,array(
-							'$return_path' => $return_url,
+							'$return_path' => '', // $return_url,
 							'$type' => 'wall-comment',
 							'$id' => $link_item['id'],
 							'$parent' => $link_item['id'],
