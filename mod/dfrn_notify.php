@@ -210,10 +210,23 @@ function dfrn_notify_post(&$a) {
 				= html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r","\\n\\n" ,"\\n"), "<br />\n",$msg['body']))));
 			
 			// load the template for private message notifications
-			$tpl = load_view_file('view/mail_received_eml.tpl');
+			$tpl = load_view_file('view/mail_received_html_body_eml.tpl');
+			$email_html_body_tpl = replace_macros($tpl,array(
+				'$siteName'		=> $a->config['sitename'],				// name of this site
+				'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
+				'$thumb'		=> $importer['thumb'],					// thumbnail url for sender icon
+				'$email'		=> $importer['email'],					// email address to send to
+				'$url'			=> $importer['url'],					// full url for the site
+				'$from'			=> $msg['from-name'],					// name of the person sending the message
+				'$title'		=> stripslashes($msg['title']),			// subject of the message
+				'$htmlversion'	=> $msg['htmlversion'],					// html version of the message
+				'$mimeboundary'	=> $msg['mimeboundary'],				// mime message divider
+				'$hostname'		=> $a->get_hostname()					// name of this host
+			));
 			
-			// import the data into the template			
-			$email_tpl = replace_macros($tpl, array(
+			// load the template for private message notifications
+			$tpl = load_view_file('view/mail_received_text_body_eml.tpl');
+			$email_text_body_tpl = replace_macros($tpl,array(
 				'$siteName'		=> $a->config['sitename'],				// name of this site
 				'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
 				'$thumb'		=> $importer['thumb'],					// thumbnail url for sender icon
@@ -222,9 +235,22 @@ function dfrn_notify_post(&$a) {
 				'$from'			=> $msg['from-name'],					// name of the person sending the message
 				'$title'		=> stripslashes($msg['title']),			// subject of the message
 				'$textversion'	=> $msg['textversion'],					// text version of the message
-				'$htmlversion'	=> $msg['htmlversion'],					// html version of the message
 				'$mimeboundary'	=> $msg['mimeboundary'],				// mime message divider
 				'$hostname'		=> $a->get_hostname()					// name of this host
+			));
+			
+			// load the template for private message notifications
+			$tpl = load_view_file('view/mail_received_eml.tpl');
+			
+			// import the data into the template			
+			$email_tpl = replace_macros($tpl, array(
+				'$email'		=> $importer['email'],					// email address to send to
+				'$from'			=> $msg['from-name'],					// name of the person sending the message
+				'$title'		=> stripslashes($msg['title']),			// subject of the message
+				'$mimeboundary'	=> $msg['mimeboundary'],				// mime message divider
+				'$hostname'		=> $a->get_hostname(),					// name of this host
+				'$htmlbody'		=> chunk_split(base64_encode($email_html_body_tpl)),
+				'$textbody'		=> chunk_split(base64_encode($email_text_body_tpl))
 			));
 			
 			logger("message headers: " . $msg['headers']);
