@@ -833,6 +833,13 @@ input#dfrn-url {
 .wall-item-like-buttons img {
 	cursor: pointer;
 }
+
+.wall-item-links-wrapper {
+	float: left;
+	margin-bottom: 5px;
+	margin-left: 5px;
+}
+
 .wall-item-delete-wrapper {
 	float: right;
 	margin-top: 5px;

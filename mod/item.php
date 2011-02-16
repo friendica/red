@@ -429,10 +429,11 @@ function item_post(&$a) {
 			}
 		}
 
-		$r = q("UPDATE `item` SET `parent` = %d, `parent-uri` = '%s', `changed` = '%s', `last-child` = 1, `visible` = 1
+		$r = q("UPDATE `item` SET `parent` = %d, `parent-uri` = '%s', `plink` = '%s', `changed` = '%s', `last-child` = 1, `visible` = 1
 			WHERE `id` = %d LIMIT 1",
 			intval($parent),
 			dbesc(($parent == $post_id) ? $uri : $parent_item['uri']),
+			dbesc($a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id),
 			dbesc(datetime_convert()),
 			intval($post_id)
 		);

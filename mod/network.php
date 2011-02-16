@@ -425,6 +425,7 @@ function network_content(&$a, $update = 0) {
 				'$owner_url' => $owner_url,
 				'$owner_photo' => $owner_photo,
 				'$owner_name' => $owner_name,
+				'$plink' => get_plink($item),
 				'$drop' => $drop,
 				'$vote' => $likebuttons,
 				'$like' => $like,
