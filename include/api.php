@@ -89,7 +89,7 @@
 	function api_register_func($path, $func, $auth=false){
 		global $API;
 		$API[$path] = array('func'=>$func,
-							'auth'=>auth);
+							'auth'=>$auth);
 	}
 	
 	/**
@@ -167,10 +167,12 @@
 				
 				// return xml
 				if (strpos($a->query_string, ".xml")>0){
+					header ("Content-Type: text/xml");  
 					return XMLSerializer::generateValidXmlFromArray($values, $name);
 				}
 				// return json
 				if (strpos($a->query_string, ".json")>0){
+					header ("Content-Type: application/json");  
 					if ($values instanceof Container) $values= iterator_to_array($values);
 					return json_encode($values);
 				}
@@ -179,15 +181,10 @@
 		}
 		return false;
 	}
-	
-		
 	/**
-	 * Returns extended information of a given user, specified by ID or screen name as per the required id parameter.
-	 * The author's most recent status will be returned inline.
-	 * http://developer.twitter.com/doc/get/users/show
+	 * Returns user info array
 	 */
-	function api_users_show(&$a){
-		
+	function api_get_user(&$a){
 		$user = null;
 		$extra_query = "";
 		if(x($_GET, 'user_id')) {
@@ -211,7 +208,13 @@
 		}
 		
 		if ($user==='') {
-			return False;
+			if (local_user()===false) {
+				api_login($a); return False;
+			} else {
+				$user = $_SESSION['uid'];
+				$extra_query = "AND `user`.`uid` = %d ";
+			}
+			
 		}
 		
 
@@ -241,6 +244,70 @@
 				intval($uinfo[0]['uid'])
 		);
 		$countfriends = $r[0]['count'];
+				
+
+		$ret = Array(
+			'id' => $uinfo[0]['uid'],
+			'name' => $uinfo[0]['username'],
+			'screen_name' => $uinfo[0]['nickname'],
+			'location' => $uinfo[0]['default-location'],
+			'profile_image_url' => $uinfo[0]['photo'],
+			'url' => $uinfo[0]['url'],
+			'protected' => false,	#
+			'friends_count' => $countfriends,
+			'created_at' => api_date($uinfo[0]['created']),
+			'utc_offset' => 0, #XXX: fix me
+			'time_zone' => $uinfo[0]['timezone'],
+			'geo_enabled' => false,
+			'statuses_count' => $countitms, #XXX: fix me 
+			'lang' => 'en', #XXX: fix me
+			'description' => '',
+			'followers_count' => $countfriends, #XXX: fix me
+			'lang' => 'en', #XXX: fix me
+			'favourites_count' => 0,
+			'contributors_enabled' => false,
+			'follow_request_sent' => false,
+			'profile_background_color' => 'cfe8f6',
+			'profile_text_color' => '000000',
+			'profile_link_color' => 'FF8500',
+			'profile_sidebar_fill_color' =>'AD0066',
+			'profile_sidebar_border_color' => 'AD0066',
+			'profile_background_image_url' => '',
+			'profile_background_tile' => false,
+			'profile_use_background_image' => false,
+			'notifications' => false,	 
+		);
+		
+		return $ret;
+		
+	}
+	
+	/**
+	 ** TWITTER API
+	 */
+	
+	/**
+	 * Returns an HTTP 200 OK response code and a representation of the requesting user if authentication was successful; 
+	 * returns a 401 status code and an error message if not. 
+	 * http://developer.twitter.com/doc/get/account/verify_credentials
+	 */
+	function api_account_verify_credentials(&$a){
+		if (local_user()===false) return false;
+		$user_info = api_get_user($a);
+		$ret = new Container("user", $user_info);
+		return $ret;
+	}
+	api_register_func('api/account/verify_credentials','api_account_verify_credentials', true);
+	 	
+	
+		
+	/**
+	 * Returns extended information of a given user, specified by ID or screen name as per the required id parameter.
+	 * The author's most recent status will be returned inline.
+	 * http://developer.twitter.com/doc/get/users/show
+	 */
+	function api_users_show(&$a){
+		$user_info = api_get_user($a);
 		
 		// get last public wall message
 		$lastwall = q("SELECT * FROM `item`
@@ -248,45 +315,28 @@
 				AND `type`='wall' 
 				AND `allow_cid`='' AND `allow_gid`='' AND `deny_cid`='' AND `deny_gid`=''
 				ORDER BY `created` DESC LIMIT 1",
-				intval($uinfo[0]['uid'])
+				intval($user_info['uid'])
 		);
 	
 		//echo "<pre>"; var_dump($lastwall); die();
 		
-		$ret = Array(
-			'user' => Array(
-				'id' => $uinfo[0]['uid'],
-				'name' => $uinfo[0]['username'],
-				'screen_name' => $uinfo[0]['nickname'],
-				'location' => $uinfo[0]['default-location'],
-				'profile_image_url' => $uinfo[0]['photo'],
-				'url' => $uinfo[0]['url'],
-				'protected' => false,	#
-				'friends_count' => $countfriends,
-				'created_at' => api_date($uinfo[0]['created']),
-				'utc_offset' => 0, #XXX: fix me
-				'time_zone' => $uinfo[0]['timezone'],
-				'geo_enabled' => false,
-				'statuses_count' => $countitms, #XXX: fix me 
-  				'lang' => 'en', #XXX: fix me
-  				'status' => array(
-  					'created_at' => api_date($lastwall[0]['created']),
-  					'id' => $lastwall[0]['id'],
-  					'text' => bbcode($lastwall[0]['body']),
-  					'source' => 'web',
-  					'truncated' => false,
-  					'in_reply_to_status_id' => '',
-  					'in_reply_to_user_id' => '',
-  					'favorited' => false,
-  					'in_reply_to_screen_name' => '',
-  					'geo' => '',
-    				'coordinates' => $lastwall[0]['coord'],
-    				'place' => $lastwall[0]['location'],
-    				'contributors' => ''					
-  				)
-				
-			)
+		$user_info['status'] = array(
+			'created_at' => api_date($lastwall[0]['created']),
+			'id' => $lastwall[0]['id'],
+			'text' => bbcode($lastwall[0]['body']),
+			'source' => 'web',
+			'truncated' => false,
+			'in_reply_to_status_id' => '',
+			'in_reply_to_user_id' => '',
+			'favorited' => false,
+			'in_reply_to_screen_name' => '',
+			'geo' => '',
+			'coordinates' => $lastwall[0]['coord'],
+			'place' => $lastwall[0]['location'],
+			'contributors' => ''					
 		);
+
+		$ret = Array('user' => $user_info);
 		
 		return $ret;
 		
@@ -300,14 +350,7 @@
 	function api_statuses_home_timeline(&$a){
 		if (local_user()===false) return false;
 		
-		// count public wall messages
-		$r = q("SELECT COUNT(`id`) as `count` FROM `item`
-				WHERE  `uid` = %d
-				AND `type`='wall' 
-				AND `allow_cid`='' AND `allow_gid`='' AND `deny_cid`='' AND `deny_gid`=''",
-				intval($uinfo[0]['uid'])
-		);
-		$countitms = $r[0]['count'];
+		$user_info = api_get_user($a);
 		
 		// get last newtork messages
 		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` ) ";
@@ -323,20 +366,74 @@
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 			$sql_extra
 			ORDER BY `item`.`created` DESC LIMIT %d ,%d ",
-			intval($_SESSION['uid']),
-			intval($a->pager['start']),
-			intval($a->pager['itemspage'])
+			intval($user_info['id']),
+			0,20
 		);
 		$ret = new Container("statuses");
 		$ret->attrs['type']='array';
 
-		#foreach($r as $item) {
-		{
-			$item = $r[0];
+		foreach($r as $item) {
 			$status = new Container('status', array(
 				'created_at'=> api_date($item['created']),
 				'id'		=> $item['id'],
-				'text'		=> bbcode($item['body']),
+				'text'		=> strip_tags(bbcode($item['body'])),
+				'source'	=> 'web', 	#XXX: Fix me!
+				'truncated' => False,
+				'in_reply_to_status_id' => ($item['parent']!=$item['id']?$item['id']:''),
+				'in_reply_to_user_id' => '',
+				'favorited' => false,
+				'in_reply_to_screen_name' => '',
+				'geo' => '',
+				'coordinates' => $item['coord'],
+				'place' => $item['location'],
+				'contributors' => '',
+				'annotations'  => '',
+				'entities'  => '',
+				'user' => $user_info				
+			
+			));
+			$ret[]=$status;
+		};
+		
+		return $ret;
+	}
+	api_register_func('api/statuses/home_timeline','api_statuses_home_timeline', true);
+	
+	/*
+	 * http://developer.twitter.com/doc/get/statuses/user_timeline
+	 */
+	function api_statuses_user_timeline(&$a){
+			
+		$user_info = api_get_user($a);
+		
+		// get last public wall message
+		$lastwall = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
+			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
+			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
+			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
+			FROM `item`, `contact`, `user`
+			WHERE `item`.`uid` = %d AND `user`.`uid` = `item`.`uid` 
+			AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+			AND `contact`.`id` = `item`.`contact-id`
+			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+			
+			AND `item`.`type`='wall' 
+			AND `item`.`allow_cid`='' AND `item`.`allow_gid`='' AND `item`.`deny_cid`='' AND `item`.`deny_gid`=''
+			
+			ORDER BY `item`.`created` DESC LIMIT %d ,%d ",
+			intval($user_info['id']),
+			0, 20
+		);
+		
+		
+		$ret = new Container("statuses");
+		$ret->attrs['type']='array';
+		
+		foreach($lastwall as $item) {
+			$status = new Container('status', array(
+				'created_at'=> api_date($item['created']),
+				'id'		=> $item['id'],
+				'text'		=> strip_tags(bbcode($item['body'])),
 				'source'	=> 'web', 	#XXX: Fix me!
 				'truncated' => False,
 				'in_reply_to_status_id' => '',
@@ -349,41 +446,12 @@
 				'contributors' => '',
 				'annotations'  => '',
 				'entities'  => '',
-				'user' => Array(
-					'id' => $item['uid'],
-					'name' => $item['username'],
-					'screen_name' => $item['nickname'],
-					'location' => $item['default-location'],
-					'description' => '',
-					'profile_image_url' => $item['photo'],
-					'url' => $item['url'],
-					'protected' => false,	#
-					'followers_count' => $countfriends, #XXX: fix me
-					'friends_count' => $countfriends,
-					'created_at' => api_date($item['created']),
-					'utc_offset' => 0, #XXX: fix me
-					'time_zone' => $item['timezone'],
-					'geo_enabled' => false,
-					'statuses_count' => $countitms, #XXX: fix me 
-	  				'lang' => 'en', #XXX: fix me
-	  				'favourites_count' => 0,
-	  				'contributors_enabled' => false,
-	  				'follow_request_sent' => false,
-	  				'profile_background_color' => 'cfe8f6',
-      				'profile_text_color' => '000000',
-      				'profile_link_color' => 'FF8500',
- 					'profile_sidebar_fill_color' =>'AD0066',
-					'profile_sidebar_border_color' => 'AD0066',
-	  				'profile_background_image_url' => '',
-	  				'profile_background_tile' => false,
-	  				'profile_use_background_image' => false,
-	  				'notifications' => false,	  				
-				)					
-			
+				'user' => $user_info
 			));
 			$ret[]=$status;
 		};
 		
 		return $ret;
 	}
-	api_register_func('api/statuses/home_timeline','api_statuses_home_timeline', true);
+	api_register_func('api/statuses/user_timeline','api_statuses_user_timeline', true);
+	
