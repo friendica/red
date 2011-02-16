@@ -1,11 +1,11 @@
 --$mimeboundary
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: base64
 
 $textbody
 
 --$mimeboundary
-Content-Type: text/html; charset=ISO-8859-1
+Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: base64
 
 $htmlbody
