@@ -133,7 +133,7 @@ function statusnet_settings(&$a,&$s) {
 		$s .= '<input id="statusnet-consumerkey" type="text" name="statusnet-consumerkey" size="35" /><br />';
                 $s .= '<label id="statusnet-consumersecret-label" for="statusnet-consumersecret">'. t('OAuth Consumer Secret') .'</label>';
 		$s .= '<input id="statusnet-consumersecret" type="text" name="statusnet-consumersecret" size="35" /><br />';
-                $s .= '<label id="statusnet-baseapi-label" for="statusnet-baseapi">'. t('Base API Path \x28remember the trailing &#47;\x29') .'</label>';
+                $s .= '<label id="statusnet-baseapi-label" for="statusnet-baseapi">'. t("Base API Path \x28remember the trailing /\x29") .'</label>';
 		$s .= '<input id="statusnet-baseapi" type="text" name="statusnet-baseapi" size="35" /><br  />';
                 $s .= '</div><div class="clear"></div>';
                 $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
