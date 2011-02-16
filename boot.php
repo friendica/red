@@ -2,8 +2,8 @@
 
 set_time_limit(0);
 
-define ( 'BUILD_ID',               1038   );
-define ( 'FRIENDIKA_VERSION',      '2.10.0906' );
+define ( 'BUILD_ID',               1039   );
+define ( 'FRIENDIKA_VERSION',      '2.10.0907' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.1'  );
 
 define ( 'EOL',                    "<br />\r\n"     );
@@ -1804,7 +1804,7 @@ function like_puller($a,$item,&$arr,$mode) {
 
 	if((activity_match($item['verb'],$verb)) && ($item['id'] != $item['parent'])) {
 		$url = $item['author-link'];
-		if(($item['network'] === 'dfrn') && (! $item['self']) && ($item['author-link'] == $item['url'])) {
+		if((local_user()) && (local_user() == $item['uid']) && ($item['network'] === 'dfrn') && (! $item['self']) && (link_compare($item['author-link'],$item['url']))) {
 			$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
 			$sparkle = ' class="sparkle" ';
 		}
@@ -1978,8 +1978,11 @@ function smilies($s) {
 	$a = get_app();
 
 	return str_replace(
-	array( ':-)', ';-)', ':-(', ':(', ':-P', ':-"', ':-x', ':-X', ':-D', '8-|', '8-O'),
+	array( '&lt;3', '&lt;/3', '&lt;\\3', ':-)', ';-)', ':-(', ':(', ':-P', ':-"', ':-x', ':-X', ':-D', '8-|', '8-O'),
 	array(
+		'<img src="' . $a->get_baseurl() . '/images/smiley-heart.gif" alt="<3" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-brokenheart.gif" alt="</3" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-brokenheart.gif" alt="<\\3" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-smile.gif" alt=":-)" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-wink.gif" alt=";-)" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-frown.gif" alt=":-(" />',

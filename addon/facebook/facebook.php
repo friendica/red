@@ -123,15 +123,12 @@ function facebook_content(&$a) {
 function facebook_install() {
 	register_hook('post_local_end',  'addon/facebook/facebook.php', 'facebook_post_hook');
 	register_hook('jot_networks',    'addon/facebook/facebook.php', 'facebook_jot_nets');
-	register_hook('post_local_start','addon/facebook/facebook.php', 'facebook_post_local');
-
 }
 
 
 function facebook_uninstall() {
 	unregister_hook('post_local_end',  'addon/facebook/facebook.php', 'facebook_post_hook');
 	unregister_hook('jot_networks',    'addon/facebook/facebook.php', 'facebook_jot_nets');
-	unregister_hook('post_local_start','addon/facebook/facebook.php', 'facebook_post_local');
 }
 
 
@@ -146,17 +143,6 @@ function facebook_jot_nets(&$a,&$b) {
 		$b .= '<div class="profile-jot-net"><input type="checkbox" name="facebook_enable"' . $selected . 'value="1" /> ' 
 			. t('Post to Facebook') . '</div>';	
 	}
-}
-
-function facebook_post_local(&$a,&$b) {
-
-	if(! local_user())
-		return;
-
-	if((x($b,'facebook_enable')) && (intval($b['facebook_enable'])))
-		set_pconfig(local_user(),'facebook','enable','1');
-	else
-		del_pconfig(local_user(),'facebook','enable');
 }
 
 
@@ -179,9 +165,10 @@ function facebook_post_hook(&$a,&$b) {
 			logger('facebook: have appid+secret');
 
 			$fb_post   = intval(get_pconfig(local_user(),'facebook','post'));
-			$fb_enable = intval(get_pconfig(local_user(),'facebook','enable'));
+			$fb_enable = (($fb_post && x($_POST,'facebook_enable')) ? intval($_POST['facebook_enable']) : 0);
 			$fb_token  = get_pconfig(local_user(),'facebook','access_token');
 
+			logger('facebook: $fb_post: ' . $fb_post . ' $fb_enable: ' . $fb_enable . ' $fb_token: ' . $fb_token,LOGGER_DEBUG); 
 			if($fb_post && $fb_token && $fb_enable) {
 				logger('facebook: able to post');
 				require_once('library/facebook.php');

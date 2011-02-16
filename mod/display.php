@@ -153,7 +153,7 @@ function display_content(&$a) {
 				}
 				if($item['last-child']) {
 					$comment = replace_macros($cmnt_tpl,array(
-						'$return_path' => $_SESSION['return_url'],
+						'$return_path' => '', // $_SESSION['return_url'],
 						'$type' => 'wall-comment',
 						'$id' => $item['item_id'],
 						'$parent' => $item['parent'],

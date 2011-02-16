@@ -2,8 +2,6 @@
 
 require_once('simplepie/simplepie.inc');
 require_once('include/items.php');
-
-
 function dfrn_notify_post(&$a) {
 
 	$dfrn_id      = ((x($_POST,'dfrn_id'))      ? notags(trim($_POST['dfrn_id']))   : '');
@@ -52,11 +50,17 @@ function dfrn_notify_post(&$a) {
 	}
 		 
 
-	$r = q("SELECT `contact`.*, `contact`.`uid` AS `importer_uid`, 
-		`contact`.`pubkey` AS `cpubkey`, `contact`.`prvkey` AS `cprvkey`, `user`.* FROM `contact` 
-		LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid` 
-		WHERE `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
-		AND `user`.`nickname` = '%s' $sql_extra LIMIT 1",
+	$r = q("SELECT	`contact`.*, `contact`.`uid` AS `importer_uid`, 
+					`contact`.`pubkey` AS `cpubkey`, 
+					`contact`.`prvkey` AS `cprvkey`, 
+					`contact`.`thumb` AS `thumb`, 
+					`contact`.`url` as `url`,
+					`contact`.`name` as `senderName`,
+					`user`.* 
+			FROM `contact` 
+			LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid` 
+			WHERE `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
+				AND `user`.`nickname` = '%s' $sql_extra LIMIT 1",
 		dbesc($a->argv[1])
 	);
 
@@ -169,29 +173,70 @@ function dfrn_notify_post(&$a) {
 		require_once('bbcode.php');
 		if($importer['notify-flags'] & NOTIFY_MAIL) {
 
-			$body = html_entity_decode(strip_tags(bbcode(stripslashes($msg['body']))),ENT_QUOTES,'UTF-8');
+			// generate a mime boundary
+			$msg['mimeboundary']   =rand(0,9)."-"
+				.rand(10000000000,9999999999)."-"
+				.rand(10000000000,9999999999)."=:"
+				.rand(10000,99999);
 
-			if(function_exists('quoted_printable_encode'))
-				$body = quoted_printable_encode($body);
-			else
-				$body = qp($body);
+			// name of the automated email sender
+			$msg['notificationfromname']	= t('Administrator');
+			// noreply address to send from
+			$msg['notificationfromemail']	= t('noreply') . '@' . $a->get_hostname();				
+			// message headers
+			$msg['headers'] =
+				"From: {$msg['notificationfromname']} <{$msg['notificationfromemail']}>\n" . 
+				"Reply-To: {$msg['notificationfromemail']}\n" .
+				"MIME-Version: 1.0\n" .
+				"Content-Type: multipart/alternative; boundary=\"{$msg['mimeboundary']}\"";
 
-			$tpl = load_view_file('view/mail_received_eml.tpl');			
+			// text version
+			// process the message body to display properly in text mode
+			// 		1) substitute a \n character for the "\" then "n", so it behaves properly (it doesn't come in as a \n character)
+			//		2) remove escape slashes
+			//		3) decode any bbcode from the message editor
+			//		4) decode any encoded html tags
+			//		5) remove html tags
+			$msg['textversion']
+				= strip_tags(html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r", "\\n"), "\n",$msg['body']))),ENT_QUOTES,'UTF-8'));
+				
+			// html version
+			// process the message body to display properly in text mode
+			// 		1) substitute a <br /> tag for the "\" then "n", so it behaves properly (it doesn't come in as a \n character)
+			//		2) remove escape slashes
+			//		3) decode any bbcode from the message editor
+			//		4) decode any encoded html tags
+			$msg['htmlversion']	
+				= html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r","\\n\\n" ,"\\n"), "<br />\n",$msg['body']))));
+			
+			// load the template for private message notifications
+			$tpl = load_view_file('view/mail_received_eml.tpl');
+			
+			// import the data into the template			
 			$email_tpl = replace_macros($tpl, array(
-				'$sitename' => $a->config['sitename'],
-				'$siteurl' =>  $a->get_baseurl(),
-				'$username' => $importer['username'],
-				'$email' => $importer['email'],
-				'$from' => $msg['from-name'],
-				'$title' => stripslashes($msg['title']),
-				'$body' => $body
+				'$siteName'		=> $a->config['sitename'],				// name of this site
+				'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
+				'$thumb'		=> $importer['thumb'],					// thumbnail url for sender icon
+				'$email'		=> $importer['email'],					// email address to send to
+				'$url'			=> $importer['url'],					// full url for the site
+				'$from'			=> $msg['from-name'],					// name of the person sending the message
+				'$title'		=> stripslashes($msg['title']),			// subject of the message
+				'$textversion'	=> $msg['textversion'],					// text version of the message
+				'$htmlversion'	=> $msg['htmlversion'],					// html version of the message
+				'$mimeboundary'	=> $msg['mimeboundary'],				// mime message divider
+				'$hostname'		=> $a->get_hostname()					// name of this host
 			));
-
-			$res = mail($importer['email'], t('New mail received at ') . $a->config['sitename'],
-				$email_tpl, 'From: ' . t('Administrator') . '@' . $a->get_hostname() . "\r\n"
-					. 'MIME-Version: 1.0' . "\r\n"
-					. 'Content-type: text/plain; charset=UTF-8' . "\r\n" 
-					. 'Content-transfer-encoding: quoted-printable' . "\r\n"
+			
+			logger("message headers: " . $msg['headers']);
+			logger("message body: " . $mail_tpl);
+			
+			
+			// send the message
+			$res = mail(
+				$importer['email'], 									// send to address
+				t('New mail received at ') . $a->config['sitename'],	// subject
+				$email_tpl, 											// message body
+				$msg['headers']											// message headers
 			);
 		}
 		xml_status(0);
@@ -391,8 +436,9 @@ function dfrn_notify_post(&$a) {
 						intval($importer['importer_uid'])
 					);
 					if(count($myconv)) {
+						$importer_url = $a->get_baseurl() . '/profile/' . $importer['nickname'];
 						foreach($myconv as $conv) {
-							if(! link_compare($conv['author-link'],$importer['url']))
+							if(! link_compare($conv['author-link'],$importer_url))
 								continue;
 							require_once('bbcode.php');
 							$from = stripslashes($datarray['author-name']);
