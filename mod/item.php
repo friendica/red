@@ -545,7 +545,7 @@ function item_content(&$a) {
 			// generate a resource-id and therefore aren't intimately linked to the item. 
 
 			if(strlen($item['resource-id'])) {
-				$q("DELETE FROM `photo` WHERE `resource-id` = '%s' AND `uid` = %d ",
+				q("DELETE FROM `photo` WHERE `resource-id` = '%s' AND `uid` = %d ",
 					dbesc($item['resource-id']),
 					intval($item['uid'])
 				);
