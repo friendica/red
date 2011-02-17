@@ -19,15 +19,15 @@ function follow_post(&$a) {
 		if(count($links)) {
 			foreach($links as $link) {
 				if($link['@attributes']['rel'] === NAMESPACE_DFRN)
-					$dfrn = $link['@attributes']['href'];
+					$dfrn = unamp($link['@attributes']['href']);
 				if($link['@attributes']['rel'] === 'salmon')
-					$notify = $link['@attributes']['href'];
+					$notify = unamp($link['@attributes']['href']);
 				if($link['@attributes']['rel'] === NAMESPACE_FEED)
-					$poll = $link['@attributes']['href'];
+					$poll = unamp($link['@attributes']['href']);
 				if($link['@attributes']['rel'] === 'http://microformats.org/profile/hcard')
-					$hcard = $link['@attributes']['href'];
+					$hcard = unamp($link['@attributes']['href']);
 				if($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page')
-					$profile = $link['@attributes']['href'];
+					$profile = unamp($link['@attributes']['href']);
 
 			}
 
@@ -43,10 +43,10 @@ function follow_post(&$a) {
 					if(strpos($link['@attributes']['href'],'@') === false) {
 						if(isset($profile)) {
 							if($link['@attributes']['href'] !== $profile)
-								$alias = $link['@attributes']['href'];
+								$alias = unamp($link['@attributes']['href']);
 						}
 						else
-							$profile = $link['@attributes']['href'];
+							$profile = unamp($link['@attributes']['href']);
 					}
 				}
 			}
@@ -103,7 +103,7 @@ function follow_post(&$a) {
 		$ret = scrape_feed($url);
 
 		if(count($ret) && ($ret['feed_atom'] || $ret['feed_rss'])) {
-			$poll = ((x($ret,'feed_atom')) ? $ret['feed_atom'] : $ret['feed_rss']);
+			$poll = ((x($ret,'feed_atom')) ? unamp($ret['feed_atom']) : unamp($ret['feed_rss']));
 			$vcard = array();
 			require_once('simplepie/simplepie.inc');
 		    $feed = new SimplePie();
@@ -116,27 +116,31 @@ function follow_post(&$a) {
 			$vcard['photo'] = $feed->get_image_url();
 			$author = $feed->get_author();
 			if($author) {			
-				$vcard['fn'] = trim($author->get_name());
-				$vcard['nick'] = strtolower($vcard['fn']);
+				$vcard['fn'] = unxmlify(trim($author->get_name()));
+				$vcard['nick'] = strtolower(notags(unxmlify($vcard['fn'])));
 				if(strpos($vcard['nick'],' '))
 					$vcard['nick'] = trim(substr($vcard['nick'],0,strpos($vcard['nick'],' ')));
-				$email = $author->get_email();
+				$email = unxmlify($author->get_email());
 			}
 			else {
 				$item = $feed->get_item(0);
 				if($item) {
 					$author = $item->get_author();
 					if($author) {			
-						$vcard['fn'] = trim($author->get_name());
-						$vcard['nick'] = strtolower($vcard['fn']);
+						$vcard['fn'] = trim(unxmlify($author->get_name()));
+						if(! $vcard['fn'])
+							$vcard['fn'] = trim(unxmlify($author->get_email()));
+						if(strpos($vcard['fn'],'@') !== false)
+							$vcard['fn'] = substr($vcard['fn'],0,strpos($vcard['fn'],'@'));
+						$vcard['nick'] = strtolower(unxmlify($vcard['fn']));
 						if(strpos($vcard['nick'],' '))
 							$vcard['nick'] = trim(substr($vcard['nick'],0,strpos($vcard['nick'],' ')));
-						$email = $author->get_email();
+						$email = unxmlify($author->get_email());
 					}
 					if(! $vcard['photo']) {
 						$rawmedia = $item->get_item_tags('http://search.yahoo.com/mrss/','thumbnail');
 						if($rawmedia && $rawmedia[0]['attribs']['']['url'])
-							$vcard['photo'] = $rawmedia[0]['attribs']['']['url'];
+							$vcard['photo'] = unxmlify($rawmedia[0]['attribs']['']['url']);
 					}
 				}
 			}
@@ -150,12 +154,16 @@ function follow_post(&$a) {
 
 	logger('follow: poll=' . $poll . ' notify=' . $notify . ' profile=' . $profile . ' vcard=' . print_r($vcard,true));
 
+	$vcard['fn'] = notags($vcard['fn']);
+	$vcard['nick'] = notags($vcard['nick']);
+
 	// do we have enough information?
 	
 	if(! ((x($vcard['fn'])) && ($poll) && ($profile))) {
 		notice( t('The profile address specified does not provide adequate information.') . EOL);
 		goaway($_SESSION['return_url']);
 	}
+
 
 	if(! $notify) {
 		notice( t('Limited profile. This person will be unable to receive direct/personal notifications from you.') . EOL);

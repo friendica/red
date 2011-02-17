@@ -350,7 +350,7 @@ function get_atom_elements($feed,$item) {
 			'[youtube]$1[/youtube]', $res['body']);
 
 		$res['body'] = oembed_html2bbcode($res['body']);
-	
+
 		$config = HTMLPurifier_Config::createDefault();
 		$config->set('Cache.DefinitionImpl', null);
 
@@ -363,7 +363,7 @@ function get_atom_elements($feed,$item) {
 
 		$res['body'] = html2bbcode($res['body']);
 	}
-	
+
 	$allow = $item->get_item_tags(NAMESPACE_DFRN,'comment-allow');
 	if($allow && $allow[0]['data'] == 1)
 		$res['last-child'] = 1;
