@@ -238,31 +238,27 @@ function dfrn_notify_post(&$a) {
 				'$mimeboundary'	=> $msg['mimeboundary'],				// mime message divider
 				'$hostname'		=> $a->get_hostname()					// name of this host
 			));
-			
-			// load the template for private message notifications
-			$tpl = load_view_file('view/mail_received_eml.tpl');
-			
-			// import the data into the template			
-			$email_tpl = replace_macros($tpl, array(
-				'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
-				'$email'		=> $importer['email'],					// email address to send to
-				'$from'			=> $msg['from-name'],					// name of the person sending the message
-				'$title'		=> stripslashes($msg['title']),			// subject of the message
-				'$mimeboundary'	=> $msg['mimeboundary'],				// mime message divider
-				'$hostname'		=> $a->get_hostname(),					// name of this host
-				'$htmlbody'		=> chunk_split(base64_encode($email_html_body_tpl)),
-				'$textbody'		=> chunk_split(base64_encode($email_text_body_tpl))
-			));
-			
-			logger("message headers: " . $msg['headers']);
-			logger("message body: " . $mail_tpl);
+
+			// assemble the final multipart message body with the text and html types included
+			$textbody	=	chunk_split(base64_encode($email_text_body_tpl));
+			$htmlbody	=	chunk_split(base64_encode($email_html_body_tpl));
+			$multipart_message_body =
+				"--" . $msg['mimeboundary'] . "\n" .					// plain text section
+				"Content-Type: text/plain; charset=UTF-8\n" .
+				"Content-Transfer-Encoding: base64\n\n" .
+				$textbody . "\n" .
+				"--" . $msg['mimeboundary'] . "\n" .					// text/html section
+				"Content-Type: text/html; charset=UTF-8\n" .
+				"Content-Transfer-Encoding: base64\n\n" .
+				$htmlbody . "\n" .
+				"--" . $msg['mimeboundary'] . "--\n";					// message ending
 			
 			
 			// send the message
 			$res = mail(
 				$importer['email'], 									// send to address
 				t('New mail received at ') . $a->config['sitename'],	// subject
-				$email_tpl, 											// message body
+				$multipart_message_body, 								// message body
 				$msg['headers']											// message headers
 			);
 		}
