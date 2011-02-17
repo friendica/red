@@ -67,7 +67,7 @@ function network_content(&$a, $update = 0) {
 		}
 
 
-		$_SESSION['netarg'] = array('nouveau' => $nouveau, 'group' => $group, 'page' => $a->pager['page']);
+		$_SESSION['netargs'] = array('nouveau' => $nouveau, 'group' => $group, 'page' => $a->pager['page']);
 		$_SESSION['return_url'] = $a->cmd;
 
 		$geotag = (($a->user['allow_location']) ? load_view_file('view/jot_geotag.tpl') : '');
