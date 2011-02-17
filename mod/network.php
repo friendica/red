@@ -40,6 +40,14 @@ function network_content(&$a, $update = 0) {
 
 	$nouveau = false;
 
+	if($update && (x($_SESSION,'netargs'))) {
+		$nouveau = $_SESSION['netargs']['nouveau'];
+		$group   = $_SESSION['netargs']['group'];
+		$a->pager['page'] = $_SESSION['netargs']['page'];
+		$a->set_pager_itemspage(50);
+	}
+
+
 	if(! $update) {
 		$o .= '<script>	$(document).ready(function() { $(\'#nav-network-link\').addClass(\'nav-selected\'); });</script>';
 
@@ -56,6 +64,8 @@ function network_content(&$a, $update = 0) {
 			}
 		}
 
+
+		$_SESSION['netarg'] = array('nouveau' => $nouveau, 'group' => $group, 'page' => $a->pager['page']);
 		$_SESSION['return_url'] = $a->cmd;
 
 		$geotag = (($a->user['allow_location']) ? load_view_file('view/jot_geotag.tpl') : '');
@@ -106,10 +116,10 @@ function network_content(&$a, $update = 0) {
 		// filtering by group and also you aren't writing a comment (the last
 		// criteria is discovered in javascript).
 
-		if($a->pager['start'] == 0 && $a->argc == 1) {
+//		if($a->pager['start'] == 0 && $a->argc == 1) {
 			$o .= '<div id="live-network"></div>' . "\r\n";
 			$o .= "<script> var profile_uid = " . $_SESSION['uid'] . "; </script>\r\n";
-		}
+//		}
 
 	}
 
@@ -341,7 +351,7 @@ function network_content(&$a, $update = 0) {
 			if($item['last-child']) {
 				$comment = replace_macros($cmnt_tpl,array(
 					'$return_path' => '', 
-					'$jsreload => '', // $_SESSION['return_url'],
+					'$jsreload' => '', // $_SESSION['return_url'],
 					'$type' => 'net-comment',
 					'$id' => $item['item_id'],
 					'$parent' => $item['parent'],
