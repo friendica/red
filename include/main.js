@@ -225,6 +225,10 @@
 					if(timer) clearTimeout(timer);
 					timer = setTimeout(NavUpdate,10);
 				}
+				if(data.reload) {
+					window.location.href=data.reload;
+				}
+					
 			},
 			"json"  
          );  

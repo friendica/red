@@ -496,10 +496,17 @@ function item_post(&$a) {
 		}
 	}
 
-	if((x($_POST,'return')) && strlen($_POST['return']))
+	logger('post_complete');
+	if((x($_POST,'return')) && strlen($_POST['return'])) {
+		logger('return: ' . $_POST['return']);
 		goaway($a->get_baseurl() . "/" . $_POST['return'] );
-
+	}
 	$json = array('success' => 1);
+	if(x($_POST,'jsreload') && strlen($_POST['jsreload']))
+		$json['reload'] = $a->get_baseurl() . '/' . $_POST['jsreload'];
+
+	logger('post_json: ' . print_r($json,true), LOGGER_DEBUG);
+
 	echo json_encode($json);
 	killme();
 	// NOTREACHED
