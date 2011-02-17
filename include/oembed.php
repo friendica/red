@@ -79,22 +79,31 @@ function oe_get_inner_html( $node ) {
  * and replace it with [embed]url[/embed]
  */
 function oembed_html2bbcode($text) {
-	// If it doesn't parse at all, just return the text.
-	$dom = @DOMDocument::loadHTML($text);
-	if(! $dom)
+	// start parser only if 'oembed' is in text
+	if (strpos($text, "oembed")){
+		
+		// convert non ascii chars to html entities
+		$html_text = mb_convert_encoding($text, 'HTML-ENTITIES', mb_detect_encoding($text));
+		
+		// If it doesn't parse at all, just return the text.
+		$dom = @DOMDocument::loadHTML($html_text);
+		if(! $dom)
+			return $text;
+		$xpath = new DOMXPath($dom);
+		$attr = "oembed";
+		
+		$xattr = oe_build_xpath("class","oembed");
+		$entries = $xpath->query("//span[$xattr]");
+		
+		$xattr = oe_build_xpath("rel","oembed");
+		foreach($entries as $e) {
+			$href = $xpath->evaluate("a[$xattr]/@href", $e)->item(0)->nodeValue;
+			if(!is_null($href)) $e->parentNode->replaceChild(new DOMText("[embed]".$href."[embed]"), $e);
+		}
+		return oe_get_inner_html( $dom->getElementsByTagName("body")->item(0) );
+	} else {
 		return $text;
-	$xpath = new DOMXPath($dom);
-	$attr = "oembed";
-	
-	$xattr = oe_build_xpath("class","oembed");
-	$entries = $xpath->query("//span[$xattr]");
-	
-	$xattr = oe_build_xpath("rel","oembed");
-	foreach($entries as $e) {
-		$href = $xpath->evaluate("a[$xattr]/@href", $e)->item(0)->nodeValue;
-		if(!is_null($href)) $e->parentNode->replaceChild(new DOMText("[embed]".$href."[embed]"), $e);
-	}
-	return oe_get_inner_html( $dom->getElementsByTagName("body")->item(0) ); 
+	} 
 }
 
 ?>
