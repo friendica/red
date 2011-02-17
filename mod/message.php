@@ -2,11 +2,6 @@
 
 require_once('include/acl_selectors.php');
 
-function message_init(&$a) {
-
-
-}
-
 function message_post(&$a) {
 
 	if(! local_user()) {
@@ -69,6 +64,43 @@ function message_post(&$a) {
 	if(count($r))
 		$post_id = $r[0]['id'];
 
+	/**
+	 *
+	 * When a photo was uploaded into the message using the (profile wall) ajax 
+	 * uploader, The permissions are initially set to disallow anybody but the
+	 * owner from seeing it. This is because the permissions may not yet have been
+	 * set for the post. If it's private, the photo permissions should be set
+	 * appropriately. But we didn't know the final permissions on the post until
+	 * now. So now we'll look for links of uploaded messages that are in the
+	 * post and set them to the same permissions as the post itself.
+	 *
+	 */
+
+	$match = null;
+
+	if(preg_match_all("/\[img\](.+?)\[\/img\]/",$body,$match)) {
+		$images = $match[1];
+		if(count($images)) {
+			foreach($images as $image) {
+				if(! stristr($image,$a->get_baseurl() . '/photo/'))
+					continue;
+				$image_uri = substr($image,strrpos($image,'/') + 1);
+				$image_uri = substr($image_uri,0, strpos($image_uri,'-'));
+				$r = q("UPDATE `photo` SET `allow_cid` = '%s'
+					WHERE `resource-id` = '%s' AND `album` = '%s' AND `uid` = %d ",
+					dbesc('<' . $recipient . '>'),
+					dbesc($image_uri),
+					dbesc( t('Wall Photos')),
+					intval(local_user())
+				); 
+			}
+		}
+	}
+
+
+
+
+
 	$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 	
 	if($post_id) {
@@ -80,7 +112,6 @@ function message_post(&$a) {
 		notice( t('Message could not be sent.') . EOL );
 	}
 	return;
-
 }
 
 function message_content(&$a) {

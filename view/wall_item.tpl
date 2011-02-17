@@ -16,6 +16,7 @@
 			<div class="wall-item-title" id="wall-item-title-$id">$title</div>
 			<div class="wall-item-body" id="wall-item-body-$id" >$body</div>
 		</div>
+		$plink
 		$drop
 	</div>
 	<div class="wall-item-wrapper-end"></div>

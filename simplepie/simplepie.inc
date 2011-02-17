@@ -9226,6 +9226,7 @@ class SimplePie_Misc
 
 	function absolutize_url($relative, $base)
 	{
+return $relative;
 		$iri = SimplePie_IRI::absolutize(new SimplePie_IRI($base), $relative);
 		return $iri->get_iri();
 	}

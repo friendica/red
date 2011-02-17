@@ -246,7 +246,7 @@ function get_atom_elements($feed,$item) {
 	$res['uri'] = unxmlify($item->get_id());
 	$res['title'] = unxmlify($item->get_title());
 	$res['body'] = unxmlify($item->get_content());
-
+	$res['plink'] = unxmlify($item->get_link(0));
 
 	// look for a photo. We should check media size and find the best one,
 	// but for now let's just find any author photo
@@ -350,7 +350,7 @@ function get_atom_elements($feed,$item) {
 			'[youtube]$1[/youtube]', $res['body']);
 
 		$res['body'] = oembed_html2bbcode($res['body']);
-	
+
 		$config = HTMLPurifier_Config::createDefault();
 		$config->set('Cache.DefinitionImpl', null);
 
@@ -363,7 +363,7 @@ function get_atom_elements($feed,$item) {
 
 		$res['body'] = html2bbcode($res['body']);
 	}
-	
+
 	$allow = $item->get_item_tags(NAMESPACE_DFRN,'comment-allow');
 	if($allow && $allow[0]['data'] == 1)
 		$res['last-child'] = 1;
@@ -591,6 +591,7 @@ function item_store($arr,$force_parent = false) {
 	$arr['object']        = ((x($arr,'object'))        ? trim($arr['object'])                : '');
 	$arr['target-type']   = ((x($arr,'target-type'))   ? notags(trim($arr['target-type']))   : '');
 	$arr['target']        = ((x($arr,'target'))        ? trim($arr['target'])                : '');
+	$arr['plink']         = ((x($arr,'plink'))         ? notags(trim($arr['plink']))         : '');
 	$arr['allow_cid']     = ((x($arr,'allow_cid'))     ? trim($arr['allow_cid'])             : '');
 	$arr['allow_gid']     = ((x($arr,'allow_gid'))     ? trim($arr['allow_gid'])             : '');
 	$arr['deny_cid']      = ((x($arr,'deny_cid'))      ? trim($arr['deny_cid'])              : '');
@@ -1418,7 +1419,7 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 	$o .= '<updated>' . xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00',ATOM_TIME)) . '</updated>' . "\r\n";
 	$o .= '<dfrn:env>' . base64url_encode($item['body'], true) . '</dfrn:env>' . "\r\n";
 	$o .= '<content type="' . $type . '" >' . xmlify(($type === 'html') ? bbcode($item['body']) : $item['body']) . '</content>' . "\r\n";
-	$o .= '<link rel="alternate" href="' . xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']) . '" />' . "\r\n";
+	$o .= '<link rel="alternate" type="text/html" href="' . xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']) . '" />' . "\r\n";
 	if($comment)
 		$o .= '<dfrn:comment-allow>' . intval($item['last-child']) . '</dfrn:comment-allow>' . "\r\n";
 
