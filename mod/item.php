@@ -35,7 +35,9 @@ function item_post(&$a) {
 		);
 		if(! count($r)) {
 			notice( t('Unable to locate original post.') . EOL);
-			goaway($a->get_baseurl() . "/" . $_POST['return'] );
+			if(x($_POST,'return')) 
+				goaway($a->get_baseurl() . "/" . $_POST['return'] );
+			killme();
 		}
 		$parent_item = $r[0];
 		if($parent_item['contact-id'] && $uid) {
@@ -53,7 +55,9 @@ function item_post(&$a) {
 
 	if(! can_write_wall($a,$profile_uid)) {
 		notice( t('Permission denied.') . EOL) ;
-		return;
+		if(x($_POST,'return')) 
+			goaway($a->get_baseurl() . "/" . $_POST['return'] );
+		killme();
 	}
 
 	$user = null;
@@ -92,8 +96,9 @@ function item_post(&$a) {
 
 	if(! strlen($body)) {
 		notice( t('Empty post discarded.') . EOL );
-		goaway($a->get_baseurl() . "/" . $_POST['return'] );
-
+		if(x($_POST,'return')) 
+			goaway($a->get_baseurl() . "/" . $_POST['return'] );
+		killme();
 	}
 
 	// get contact info for poster

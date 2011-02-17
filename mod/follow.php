@@ -117,6 +117,10 @@ function follow_post(&$a) {
 			$author = $feed->get_author();
 			if($author) {			
 				$vcard['fn'] = unxmlify(trim($author->get_name()));
+				if(! $vcard['fn'])
+					$vcard['fn'] = trim(unxmlify($author->get_email()));
+				if(strpos($vcard['fn'],'@') !== false)
+					$vcard['fn'] = substr($vcard['fn'],0,strpos($vcard['fn'],'@'));
 				$vcard['nick'] = strtolower(notags(unxmlify($vcard['fn'])));
 				if(strpos($vcard['nick'],' '))
 					$vcard['nick'] = trim(substr($vcard['nick'],0,strpos($vcard['nick'],' ')));
