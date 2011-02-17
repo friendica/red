@@ -371,6 +371,7 @@ function profile_content(&$a, $update = 0) {
 				'$lock' => $lock,
 				'$location' => $location, 
 				'$indent' => $indent, 
+				'$plink' => get_plink($item),
 				'$drop' => $drop,
 				'$like' => $like,
 				'$vote' => $likebuttons,

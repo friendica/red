@@ -962,6 +962,13 @@ input#dfrn-url {
 .wall-item-like-buttons img {
 	cursor: pointer;
 }
+
+.wall-item-links-wrapper {
+	float: left;
+	margin-top: 100px;
+	margin-left: 10px;
+}
+
 .wall-item-delete-wrapper {
 	float: right;
 	margin-top: 20px;
