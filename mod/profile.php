@@ -82,7 +82,6 @@ function profile_content(&$a, $update = 0) {
 
 	$is_owner = ((local_user()) && (local_user() == $a->profile['profile_uid']) ? true : false);
 	
-
 	if(! $update) {
 		if(x($_GET,'tab'))
 			$tab = notags(trim($_GET['tab']));
@@ -161,11 +160,11 @@ function profile_content(&$a, $update = 0) {
 		// This is ugly, but we can't pass the profile_uid through the session to the ajax updater,
 		// because browser prefetching might change it on us. We have to deliver it with the page.
 
-		if($tab === 'posts' && (! $a->pager['start'])) {
+		if($tab === 'posts') {
 			$o .= '<div id="live-profile"></div>' . "\r\n";
-			$o .= "<script> var profile_uid = " . $a->profile['profile_uid'] . "; </script>\r\n";
+			$o .= "<script> var profile_uid = " . $a->profile['profile_uid'] 
+				. "; var netargs = ''; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 		}
-
 	}
 
 	// Construct permissions

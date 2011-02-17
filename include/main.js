@@ -108,7 +108,10 @@
 		prev = 'live-' + src;
 
 		in_progress = true;
-		$.get('update_' + src + '?p=' + profile_uid + '&msie=' + ((msie) ? 1 : 0),function(data) {
+		var udargs = '/' + netargs;
+		var update_url = 'update_' + src + udargs + '?p=' + profile_uid + '&page=' + profile_page + '&msie=' + ((msie) ? 1 : 0);
+
+		$.get(update_url,function(data) {
 			in_progress = false;
 			$('.wall-item-outside-wrapper',data).each(function() {
 				var ident = $(this).attr('id');

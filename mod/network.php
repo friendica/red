@@ -40,34 +40,21 @@ function network_content(&$a, $update = 0) {
 
 	$nouveau = false;
 
-	if($update && (x($_SESSION,'netargs'))) {
-		$nouveau = $_SESSION['netargs']['nouveau'];
-		$group   = $_SESSION['netargs']['group'];
-		if(strlen($group))
-			$group_acl = array('allow_gid' => '<' . $group . '>');
-		$a->pager['page'] = $_SESSION['netargs']['page'];
-		$a->set_pager_itemspage(50);
-	}
+	if(($a->argc > 2) && $a->argv[2] === 'new')
+		$nouveau = true;
 
+	if($a->argc > 1) {
+		if($a->argv[1] === 'new')
+			$nouveau = true;
+		else {
+			$group = intval($a->argv[1]);
+			$group_acl = array('allow_gid' => '<' . $group . '>');
+		}
+	}
 
 	if(! $update) {
 		$o .= '<script>	$(document).ready(function() { $(\'#nav-network-link\').addClass(\'nav-selected\'); });</script>';
 
-		if(($a->argc > 2) && $a->argv[2] === 'new')
-			$nouveau = true;
-
-			// pull out the group here because the updater might have different args
-		if($a->argc > 1) {
-			if($a->argv[1] === 'new')
-				$nouveau = true;
-			else {
-				$group = intval($a->argv[1]);
-				$group_acl = array('allow_gid' => '<' . $group . '>');
-			}
-		}
-
-
-		$_SESSION['netargs'] = array('nouveau' => $nouveau, 'group' => $group, 'page' => $a->pager['page']);
 		$_SESSION['return_url'] = $a->cmd;
 
 		$geotag = (($a->user['allow_location']) ? load_view_file('view/jot_geotag.tpl') : '');
@@ -118,10 +105,10 @@ function network_content(&$a, $update = 0) {
 		// filtering by group and also you aren't writing a comment (the last
 		// criteria is discovered in javascript).
 
-//		if($a->pager['start'] == 0 && $a->argc == 1) {
 			$o .= '<div id="live-network"></div>' . "\r\n";
-			$o .= "<script> var profile_uid = " . $_SESSION['uid'] . "; </script>\r\n";
-//		}
+			$o .= "<script> var profile_uid = " . $_SESSION['uid'] 
+				. "; var netargs = '" . substr($a->cmd,8) 
+				. "'; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 
 	}
 
