@@ -244,6 +244,7 @@ function dfrn_notify_post(&$a) {
 			
 			// import the data into the template			
 			$email_tpl = replace_macros($tpl, array(
+				'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
 				'$email'		=> $importer['email'],					// email address to send to
 				'$from'			=> $msg['from-name'],					// name of the person sending the message
 				'$title'		=> stripslashes($msg['title']),			// subject of the message
