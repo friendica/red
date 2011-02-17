@@ -43,6 +43,8 @@ function network_content(&$a, $update = 0) {
 	if($update && (x($_SESSION,'netargs'))) {
 		$nouveau = $_SESSION['netargs']['nouveau'];
 		$group   = $_SESSION['netargs']['group'];
+		if(strlen($group))
+			$group_acl = array('allow_gid' => '<' . $group . '>');
 		$a->pager['page'] = $_SESSION['netargs']['page'];
 		$a->set_pager_itemspage(50);
 	}
@@ -144,6 +146,8 @@ function network_content(&$a, $update = 0) {
 			intval($_SESSION['uid'])
 		);
 		if(! count($r)) {
+			if($update)
+				killme();
 			notice( t('No such group') . EOL );
 			goaway($a->get_baseurl() . '/network');
 			return; // NOTREACHED
