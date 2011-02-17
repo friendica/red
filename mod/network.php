@@ -39,6 +39,7 @@ function network_content(&$a, $update = 0) {
 	$group = 0;
 
 	$nouveau = false;
+	require_once('include/acl_selectors.php');
 
 	if(($a->argc > 2) && $a->argv[2] === 'new')
 		$nouveau = true;
@@ -67,7 +68,6 @@ function network_content(&$a, $update = 0) {
 			'$nickname' => $a->user['nickname']
 		));
 
-		require_once('include/acl_selectors.php');
 
 		$tpl = load_view_file("view/jot.tpl");
 		

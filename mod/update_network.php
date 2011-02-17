@@ -3,7 +3,7 @@
 // See update_profile.php for documentation
 
 require_once('mod/network.php');
-
+require_once('include/group.php');
 
 function update_network_content(&$a) {
 
