@@ -56,6 +56,10 @@
 		$a->page['nav'] .= '<a id="nav-register-link" class="nav-commlink" href="register" >' 
 			. t('Register') . "</a>\r\n";
 
+	if(strlen($a->apps)) {
+		$a->page['nav'] .= '<a id="nav-apps-link" class="nav-link" href="apps">' . t('Apps') . "</a>\r\n";
+	}
+
 	$a->page['nav'] .= '<a id="nav-search-link" class="nav-link" href="search">' . t('Search') . "</a>\r\n";
 	$a->page['nav'] .= '<a id="nav-directory-link" class="nav-link" href="directory">' . t('Directory') . "</a>\r\n";
 

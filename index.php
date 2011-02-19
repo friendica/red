@@ -113,6 +113,13 @@ else
 	check_config($a);
 
 
+$arr = array('app_menu' => $a->apps);
+
+call_hooks('app_menu', $arr);
+
+$a->apps = $arr['app_menu'];
+
+
 /**
  *
  * We have already parsed the server path into $->argc and $a->argv
@@ -132,10 +139,9 @@ else
  * further processing.
  */
 
-
 if(strlen($a->module)) {
 	if(is_array($a->plugins) && in_array($a->module,$a->plugins) && file_exists("addon/{$a->module}/{$a->module}.php")) {
-		include("addon/{$a->module}/{$a->module}.php");
+		include_once("addon/{$a->module}/{$a->module}.php");
 		if(function_exists($a->module . '_module'))
 			$a->module_loaded = true;
 	}
@@ -154,6 +160,8 @@ if(strlen($a->module)) {
 		notice( t('Page not found.' ) . EOL);
 	}
 }
+
+
 
 /* initialise content region */
 

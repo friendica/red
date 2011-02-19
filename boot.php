@@ -196,6 +196,7 @@ class App {
 	public  $timezone;
 	public  $interactive = true;
 	public  $plugins;
+	public  $apps;
 
 	private $scheme;
 	private $hostname;
@@ -2453,7 +2454,7 @@ if(! function_exists('get_plink')) {
 function get_plink($item) {
 	$a = get_app();	
 	$plink = (((x($item,'plink')) && (! $item['private'])) ? '<div class="wall-item-links-wrapper"><a href="' 
-			. $item['plink'] . '" title="' . t('link to source') . '"><img src="' . $a->get_baseurl() . '/images/remote-link.gif" alt="' . t('link to source') . '" /></a></div>' : '');
+			. $item['plink'] . '" title="' . t('link to source') . '" target="external-link" ><img src="' . $a->get_baseurl() . '/images/remote-link.gif" alt="' . t('link to source') . '" /></a></div>' : '');
 	return $plink;
 }}
 
