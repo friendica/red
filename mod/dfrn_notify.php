@@ -173,22 +173,10 @@ function dfrn_notify_post(&$a) {
 		require_once('bbcode.php');
 		if($importer['notify-flags'] & NOTIFY_MAIL) {
 
-			// generate a mime boundary
-			$msg['mimeboundary']   =rand(0,9)."-"
-				.rand(10000000000,9999999999)."-"
-				.rand(10000000000,9999999999)."=:"
-				.rand(10000,99999);
-
 			// name of the automated email sender
 			$msg['notificationfromname']	= t('Administrator');
 			// noreply address to send from
 			$msg['notificationfromemail']	= t('noreply') . '@' . $a->get_hostname();				
-			// message headers
-			$msg['headers'] =
-				"From: {$msg['notificationfromname']} <{$msg['notificationfromemail']}>\n" . 
-				"Reply-To: {$msg['notificationfromemail']}\n" .
-				"MIME-Version: 1.0\n" .
-				"Content-Type: multipart/alternative; boundary=\"{$msg['mimeboundary']}\"";
 
 			// text version
 			// process the message body to display properly in text mode
@@ -208,7 +196,7 @@ function dfrn_notify_post(&$a) {
 			//		4) decode any encoded html tags
 			$msg['htmlversion']	
 				= html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r","\\n\\n" ,"\\n"), "<br />\n",$msg['body']))));
-			
+
 			// load the template for private message notifications
 			$tpl = load_view_file('view/mail_received_html_body_eml.tpl');
 			$email_html_body_tpl = replace_macros($tpl,array(
@@ -239,27 +227,16 @@ function dfrn_notify_post(&$a) {
 				'$hostname'		=> $a->get_hostname()					// name of this host
 			));
 
-			// assemble the final multipart message body with the text and html types included
-			$textbody	=	chunk_split(base64_encode($email_text_body_tpl));
-			$htmlbody	=	chunk_split(base64_encode($email_html_body_tpl));
-			$multipart_message_body =
-				"--" . $msg['mimeboundary'] . "\n" .					// plain text section
-				"Content-Type: text/plain; charset=UTF-8\n" .
-				"Content-Transfer-Encoding: base64\n\n" .
-				$textbody . "\n" .
-				"--" . $msg['mimeboundary'] . "\n" .					// text/html section
-				"Content-Type: text/html; charset=UTF-8\n" .
-				"Content-Transfer-Encoding: base64\n\n" .
-				$htmlbody . "\n" .
-				"--" . $msg['mimeboundary'] . "--\n";					// message ending
-			
-			
-			// send the message
-			$res = mail(
-				$importer['email'], 									// send to address
-				t('New mail received at ') . $a->config['sitename'],	// subject
-				$multipart_message_body, 								// message body
-				$msg['headers']											// message headers
+			// use the EmailNotification library to send the message
+			require_once("include/EmailNotification.php");
+			EmailNotification::sendTextHtmlEmail(
+				$msg['notificationfromname'],
+				$msg['notificationfromemail'],
+				$msg['notificationfromemail'],
+				$importer['email'],
+				t('New mail received at ') . $a->config['sitename'],
+				$email_html_body_tpl,
+				$email_text_body_tpl
 			);
 		}
 		xml_status(0);
