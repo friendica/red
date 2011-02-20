@@ -112,9 +112,9 @@ function facebook_content(&$a) {
 	$o .= '<br />';
 
 	$o .= '<a href="https://www.facebook.com/dialog/oauth?client_id=' . $appid . '&redirect_uri=' 
-		. $a->get_baseurl() . '/facebook/' . $a->user['nickname'] . '&scope=publish_stream,read_stream,offline_access">' . t('Install Facebook posting') . '</a><br />';
+		. $a->get_baseurl() . '/facebook/' . $a->user['nickname'] . '&scope=publish_stream,read_stream,offline_access">' . t('Install Facebook post connector') . '</a><br /><br />';
 
-	$o .= '<a href="' . $a->get_baseurl() . '/facebook/remove' . '">' . t('Remove Facebook posting') . '</a><br />';
+	$o .= '<a href="' . $a->get_baseurl() . '/facebook/remove' . '">' . t('Remove Facebook post connector') . '</a><br />';
 
 
 	return $o;
@@ -123,14 +123,23 @@ function facebook_content(&$a) {
 function facebook_install() {
 	register_hook('post_local_end',  'addon/facebook/facebook.php', 'facebook_post_hook');
 	register_hook('jot_networks',    'addon/facebook/facebook.php', 'facebook_jot_nets');
+	register_hook('plugin_settings', 'addon/facebook/facebook.php', 'facebook_plugin_settings');
 }
 
 
 function facebook_uninstall() {
 	unregister_hook('post_local_end',  'addon/facebook/facebook.php', 'facebook_post_hook');
 	unregister_hook('jot_networks',    'addon/facebook/facebook.php', 'facebook_jot_nets');
+	unregister_hook('plugin_settings', 'addon/facebook/facebook.php', 'facebook_plugin_settings');
 }
 
+
+function facebook_plugin_settings(&$a,&$b) {
+
+	$b .= '<h3>' . t('Facebook') . '</h3>';
+	$b .= '<a href="facebook">' . t('Facebook Connector Settings') . '</a><br />';
+
+}
 
 function facebook_jot_nets(&$a,&$b) {
 	if(! local_user())
