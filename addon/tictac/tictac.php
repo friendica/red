@@ -11,7 +11,7 @@ function tictac_uninstall() {
 }
 
 function tictac_app_menu($a,&$b) {
-	$b['app_menu'] .= '<a href="tictac">Three Dimensional Tic-Tac-Toe</a><br />'; 
+	$b['app_menu'] .= '<a href="tictac">' . t('Three Dimensional Tic-Tac-Toe') . '</a><br />'; 
 }
 
 
@@ -49,17 +49,15 @@ function tictac_content(&$a) {
   $t = new tictac($dimen,$handicap,$mefirst,$yours,$mine);
   $o .= $t->play();
 
-  $o .=  '<a href="tictac">New game</a><br />';
-  $o .=  '<a href="tictac/1">New game with handicap</a><br />';
-$o .=  <<< EOT
-<p>
-Three dimensional tic-tac-toe is just like the traditional game except that it is played on multiple levels simultaneously. In this case there are three levels. You win by getting three in a row on any level, as well as up, down, and diagonally across the different levels. 
-</p>
-<p>
-The handicap game disables the center position on the middle level because the player claiming this square often has an unfair advantage.
-</p>
-EOT;
-return $o;
+  $o .=  '<a href="tictac">' . t('New game') . '</a><br />';
+  $o .=  '<a href="tictac/1">' . t('New game with handicap') . '</a><br />';
+  $o .=  '<p>' . t('Three dimensional tic-tac-toe is just like the traditional game except that it is played on multiple levels simultaneously.');
+  $o .= t('In this case there are three levels. You win by getting three in a row on any level, as well as up, down, and diagonally across the different levels.');
+  $o .= '</p><p>'; 
+  $o .= t('The handicap game disables the center position on the middle level because the player claiming this square often has an unfair advantage.');
+  $o .= '</p>';
+
+  return $o;
 
 }
 
@@ -175,24 +173,24 @@ class tictac {
 
      if($this->first_move) {
        if(rand(0,1) == 1) {
-         $o .=  '<div class="errmsg">You go first...</div><br />';
+         $o .=  '<div class="error-message">' . t('You go first...') . '</div><br />';
          $this->mefirst = 0;
          $o .= $this->draw_board();
          return $o;
        }
-       $o .=  '<div class="errmsg">I\'m going first this time...</div><br />';
+       $o .=  '<div class="error-message">' . t('I\'m going first this time...') . ' </div><br />';
        $this->mefirst = 1;
 
      }
 
      if($this->check_youwin()) {
-       $o .=  '<div class="errmsg">You won!</div><br />';
+       $o .=  '<div class="error-message">' . t('You won!') . '</div><br />';
        $o .= $this->draw_board();
        return $o;
      }
 
      if($this->fullboard())
-       $o .=  'Cat game!';
+       $o .=  '<div class="error-message">' . t('"Cat" game!') . '</div><br />';
 
      $move = $this->winning_move();
      if(strlen($move)) {
@@ -215,9 +213,9 @@ class tictac {
      }
 
      if($this->check_iwon())
-       $o .=  '<div class="errmsg">I won!</div><br />';
+       $o .=  '<div class="error-message">' . t('I won!') . '</div><br />';
      if($this->fullboard())
-       $o .=  'Cat game!';
+       $o .=  '<div class="error-message">' . t('"Cat" game!') . '</div><br />';
      $o .= $this->draw_board();
 	return $o;
   }
@@ -466,7 +464,7 @@ function winning_move() {
          // defensive mode.
          // We want:        or:         not:
          //           X|O|     X| |       X| |
-         //            |0|     O|O|        |O|
+         //            |O|     O|O|        |O|
          //            | |      | |        |O|
 
          if(count($this->you) == 1) {
