@@ -384,7 +384,7 @@ function dfrn_notify_post(&$a) {
 								'$email' => $importer['email'],
 								'$display' => $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id, 
 								'$from' => $from,
-								'$body' => strip_tags(bbcode(stripslashes($datarray['body'])))
+								'$body' => html_entity_decode(strip_tags(bbcode(stripslashes($datarray['body']))), ENT_QUOTES, 'UTF-8')
 							));
 	
 							$res = mail($importer['email'], $from . t(' commented on an item at ') . $a->config['sitename'],
@@ -450,7 +450,7 @@ function dfrn_notify_post(&$a) {
 								'$email' => $importer['email'],
 								'$from' => $from,
 								'$display' => $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $r,
-								'$body' => strip_tags(bbcode(stripslashes($datarray['body'])))
+								'$body' => html_entity_decode(strip_tags(bbcode(stripslashes($datarray['body']))), ENT_QUOTES, 'UTF-8')
 							));
 
 							$res = mail($importer['email'], $from . t(" commented on an item at ") 
