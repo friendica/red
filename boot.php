@@ -1381,12 +1381,12 @@ function webfinger($s) {
 		$tpl = fetch_lrdd_template($host);
 		logger('webfinger: lrdd template: ' . $tpl);
 		if(strlen($tpl)) {
-			$pxrd = str_replace('{uri}', urlencode('acct:'.$s), $tpl);
+			$pxrd = str_replace('{uri}', urlencode('acct:' . $s), $tpl);
 			logger('webfinger: pxrd: ' . $pxrd);
 			$links = fetch_xrd_links($pxrd);
 			if(! count($links)) {
 				// try with double slashes
-				$pxrd = str_replace('{uri}', urlencode('acct://'.$s), $tpl);
+				$pxrd = str_replace('{uri}', urlencode('acct://' . $s), $tpl);
 				logger('webfinger: pxrd: ' . $pxrd);
 				$links = fetch_xrd_links($pxrd);
 			}
@@ -1401,51 +1401,154 @@ function lrdd($uri) {
 
 	$a = get_app();
 
+	// default priority is host priority, host-meta first
+
+	$priority = 'host';
+
+	// All we have is an email address. Resource-priority is irrelevant
+	// because our URI isn't directly resolvable.
+
 	if(strstr($uri,'@')) {	
 		return(webfinger($uri));
 	}
-	else {
-		$html = fetch_url($uri);
-		$headers = $a->get_curl_headers();
-		logger('lrdd: headers=' . $headers, LOGGER_DEBUG);
+
+	// get the host meta file
+
+	$host = parse_url($uri);
+
+	if($host) {
+		$url  = ((x($host,'scheme')) ? $host['scheme'] : 'http') . '://';
+		$url .= $host['host'] . '/.well-known/host-meta' ;
+	}
+	else
+		return array();
+
+	logger('lrdd: constructed url: ' . $url);
+
+	$xml = fetch_url($url);
+	$headers = $a->get_curl_headers();
+
+	if (! $xml)
+		return array();
+
+	logger('lrdd: host_meta: ' . $xml, LOGGER_DATA);
+	$h = simplexml_load_string($xml);
+	$arr = convert_xml_element_to_array($h);
+
+	if(isset($arr['xrd']['property'])) {
+		$property = $arr['crd']['property'];
+		if(! isset($property[0]))
+			$properties = array($property);
+		else
+			$properties = $property;
+		foreach($properties as $prop)
+			if((string) $prop['@attributes'] === 'http://lrdd.net/priority/resource')
+				$priority = 'resource';
+	} 
+
+	// save the links in case we need them
+
+	$links = array();
+
+	if(isset($arr['xrd']['link'])) {
+		$link = $arr['xrd']['link'];
+		if(! isset($link[0]))
+			$links = array($link);
+		else
+			$links = $link;
+	}
+
+	// do we have a template or href?
+
+	if(count($links)) {
+		foreach($links as $link) {
+			if($link['@attributes']['rel'] && attribute_contains($link['@attributes']['rel'],'lrdd')) {
+				if(x($link['@attributes'],'template'))
+					$tpl = $link['@attributes']['template'];
+				elseif(x($link['@attributes'],'href'))
+					$href = $link['@attributes']['href'];
+			}
+		}		
+	}
+
+	if((! isset($tpl)) || (! strpos($tpl,'{uri}')))
+		$tpl = '';
+
+	if($priority === 'host') {
+		if(strlen($tpl)) 
+			$pxrd = str_replace('{uri}', urlencode($uri), $tpl);
+		elseif(isset($href))
+			$pxrd = $href;
+		if(isset($pxrd)) {
+			logger('lrdd: (host priority) pxrd: ' . $pxrd);
+			$links = fetch_xrd_links($pxrd);
+			return $links;
+		}
+
 		$lines = explode("\n",$headers);
 		if(count($lines)) {
 			foreach($lines as $line) {				
-				// TODO alter the following regex to support multiple relations (space separated)
 				if((stristr($line,'link:')) && preg_match('/<([^>].*)>.*rel\=[\'\"]lrdd[\'\"]/',$line,$matches)) {
-					$link = $matches[1];
+					return(fetch_xrd_links($matches[1]));
 					break;
 				}
-				// don't try and run feeds through the html5 parser
-				if(stristr($line,'content-type:') && ((stristr($line,'application/atom+xml')) || (stristr($line,'application/rss+xml'))))
-					return array();
-				if(stristr($html,'<rss') || stristr($html,'<feed'))
-					return array();
 			}
 		}
-		if(! isset($link)) {
-			// parse the page of the supplied URL looking for rel links
-
-			require_once('library/HTML5/Parser.php');
-			$dom = HTML5_Parser::parse($html);
-
-			if($dom) {
-				$items = $dom->getElementsByTagName('link');
-
-				foreach($items as $item) {
-					$x = $item->getAttribute('rel');
-					if($x == "lrdd") {
-						$link = $item->getAttribute('href');
-						break;
-					}
-				}
-			}
-		}
-
-		if(isset($link))
-			return(fetch_xrd_links($link));
 	}
+
+
+	// priority 'resource'
+
+
+	$html = fetch_url($uri);
+	$headers = $a->get_curl_headers();
+	logger('lrdd: headers=' . $headers, LOGGER_DEBUG);
+
+	require_once('library/HTML5/Parser.php');
+	$dom = @HTML5_Parser::parse($html);
+
+	if($dom) {
+		$items = $dom->getElementsByTagName('link');
+		foreach($items as $item) {
+			$x = $item->getAttribute('rel');
+			if($x == "lrdd") {
+				$pagelink = $item->getAttribute('href');
+				break;
+			}
+		}
+	}
+
+	if(isset($pagelink))
+		return(fetch_xrd_links($pagelink));
+
+	// next look in HTTP headers
+
+	$lines = explode("\n",$headers);
+	if(count($lines)) {
+		foreach($lines as $line) {				
+			// TODO alter the following regex to support multiple relations (space separated)
+			if((stristr($line,'link:')) && preg_match('/<([^>].*)>.*rel\=[\'\"]lrdd[\'\"]/',$line,$matches)) {
+				$pagelink = $matches[1];
+				break;
+			}
+			// don't try and run feeds through the html5 parser
+			if(stristr($line,'content-type:') && ((stristr($line,'application/atom+xml')) || (stristr($line,'application/rss+xml'))))
+				return array();
+			if(stristr($html,'<rss') || stristr($html,'<feed'))
+				return array();
+		}
+	}
+
+	if(isset($pagelink))
+		return(fetch_xrd_links($pagelink));
+
+	// If we haven't found any links, return the host xrd links (which we have already fetched)
+
+	if(isset($links))
+		return $links;
+
 	return array();
+
 }}
 
 
