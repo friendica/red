@@ -831,7 +831,7 @@ function photos_content(&$a) {
 			$a->set_pager_itemspage(20);
 		}
 
-		$r = q("SELECT `resource-id`, `id`, `filename`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
+		$r = q("SELECT `resource-id`, `id`, `filename`, max(`scale`) AS `scale`, `desc` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
 			$sql_extra GROUP BY `resource-id` ORDER BY `created` DESC LIMIT %d , %d",
 			intval($owner_uid),
 			dbesc($album),
@@ -873,7 +873,8 @@ function photos_content(&$a) {
 					'$photolink' => $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $rr['resource-id'],
 					'$phototitle' => t('View Photo'),
 					'$imgsrc' => $a->get_baseurl() . '/photo/' . $rr['resource-id'] . '-' . $rr['scale'] . '.jpg',
-					'$imgalt' => $rr['filename']
+					'$imgalt' => $rr['filename'],
+					'$desc'=> $rr['desc']
 				));
 
 		}
