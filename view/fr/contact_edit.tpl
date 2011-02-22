@@ -43,7 +43,7 @@ $ignored
 
 
 <div id="contact-edit-info-wrapper">
-<h4>Contact Information / Notes</h4>
+<h4>Informations / Notes du contact</h4>
 <textarea id="contact-edit-info" rows="10" cols="72" name="info" >$info</textarea>
 </div>
 <div id="contact-edit-info-end"></div>
@@ -51,8 +51,8 @@ $ignored
 <input class="contact-edit-submit" type="submit" name="submit" value="Submit" />
 
 <div id="contact-edit-profile-select-text">
-<h4>Profile Visibility</h4>
-<p>Please choose the profile you would like to display to $name when viewing your profile securely.
+<h4>Visibilité du profil</h4>
+<p>Merci de choisir le profil que vous souhaitez afficher à $name lorsqu'il consulte votre page de manière sécurisée.
 </p> 
 </div>
 $profile_select
@@ -62,22 +62,22 @@ $profile_select
 
 
 <div id="contact-edit-rating-wrapper">
-<h4>Online Reputation</h4>
+<h4>Réputation</h4>
 <p>
-Occasionally your friends may wish to inquire about this person's online legitimacy. You may help them choose whether or not to interact with this person by providing a 'reputation' to guide them.
+De temps à autre, vos amis peuvent vouloir en savoir plus sur la légitimité de cette personne "en ligne". Vous pouvez les aider à décider s'ils veulent ou non interagir avec cette personne en indiquant une "réputation".
 </p>
 <div id="contact-edit-rating-select-wrapper">
 $rating
 </div>
 <div id="contact-edit-rating-explain">
 <p>
-Please take a moment to elaborate on this selection if you feel it could be helpful to others.
+Merci de prendre un moment pour développer si vous pensez que cela peut être utile à d'autres.
 </p>
 <textarea id="contact-edit-rating-text" name="reason" rows="3" cols="64" >$reason</textarea>
 </div>
 </div>
 $groups
 
-<input class="contact-edit-submit" type="submit" name="submit" value="Submit" />
+<input class="contact-edit-submit" type="submit" name="submit" value="Sauver" />
 </form>
 </div>

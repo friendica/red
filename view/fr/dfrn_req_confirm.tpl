@@ -1,8 +1,8 @@
 
 <p id="dfrn-request-homecoming" >
-Welcome home $username. 
+Bienvenue chez vous, $username. 
 <br />
-Please confirm your introduction to $dfrn_url.
+Merci de confirmer votre volonté d'être présenté à $dfrn_url.
 
 </p>
 <form id="dfrn-request-homecoming-form" action="dfrn_request/$nickname" method="post"> 
@@ -12,6 +12,6 @@ Please confirm your introduction to $dfrn_url.
 $aes_allow
 
 <div id="dfrn-request-homecoming-submit-wrapper" >
-<input id="dfrn-request-homecoming-submit" type="submit" name="submit" value="Confirm" />
+<input id="dfrn-request-homecoming-submit" type="submit" name="submit" value="Je confirme" />
 </div>
 </form>

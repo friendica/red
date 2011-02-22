@@ -1,18 +1,18 @@
 
-Dear $username,
+Cher $username,
 
-	'$from' commented on an item/conversation which you have been following.
+	'$from' a commenté sur un élément ou une conversation que vous suivez.
 
 -----
 $body
 -----
 
-Please login at $siteurl to view the complete conversation:
+Connectez-vous à $siteurl si vous souhaitez voir la conversation complète:
 
 $display
 
-Thank you,
-	$sitename administrator
+Merci,
+	L'administrateur de $sitename
 
  
 
