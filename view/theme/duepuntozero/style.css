@@ -275,8 +275,7 @@ div.wall-item-content-wrapper.shiny {
 }
 
 #register-submit-button {
-	margin-top: 50px;
-	margin-left: 350px;
+	margin-top: 10px;
 }
 
 #label-login-name, #label-login-password, #login-extra-filler {
@@ -677,6 +676,25 @@ input#dfrn-url {
 	width: 175px;
 	margin-left: 20px;
 }
+
+#profile-publish-yes-reg,
+#profile-publish-no-reg {
+	float: left;
+	margin-bottom: 10px;
+}
+
+#profile-publish-yes-label-reg,
+#profile-publish-no-label-reg {
+	margin-left: 350px;
+	float: left;
+	width: 50px;
+}
+
+#profile-publish-break-reg,
+#profile-publish-end-reg {
+	clear: both;
+}
+
 
 #profile-edit-pdesc-desc,
 #profile-edit-keywords-desc {

@@ -37,7 +37,7 @@
 	</div>
 	<div id="register-nickname-end" ></div>
 
-
+	$publish
 
 	<div id="register-submit-wrapper">
 		<input type="submit" name="submit" id="register-submit-button" value="$regbutt" />

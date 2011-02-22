@@ -36,7 +36,10 @@ function register_post(&$a) {
 	$email      = ((x($_POST,'email'))      ? notags(trim($_POST['email']))      : '');
 	$openid_url = ((x($_POST,'openid_url')) ? notags(trim($_POST['openid_url'])) : '');
 	$photo      = ((x($_POST,'photo'))      ? notags(trim($_POST['photo']))      : '');
+	$publish    = ((x($_POST,'profile_publish_reg') && intval($_POST['profile_publish_reg'])) ? 1 : 0);
 
+	$netpublish = ((strlen(get_config('system','directory_submit_url'))) ? $publish : 0);
+		
 	$tmp_str = $openid_url;
 	if((! x($username)) || (! x($email)) || (! x($nickname))) {
 		if($openid_url) {
@@ -193,14 +196,16 @@ function register_post(&$a) {
 	} 		
 
 	if(x($newuid) !== false) {
-		$r = q("INSERT INTO `profile` ( `uid`, `profile-name`, `is-default`, `name`, `photo`, `thumb` )
-			VALUES ( %d, '%s', %d, '%s', '%s', '%s' ) ",
+		$r = q("INSERT INTO `profile` ( `uid`, `profile-name`, `is-default`, `name`, `photo`, `thumb`, `publish`, `net-publish` )
+			VALUES ( %d, '%s', %d, '%s', '%s', '%s', %d, %d ) ",
 			intval($newuid),
 			'default',
 			1,
 			dbesc($username),
 			dbesc($a->get_baseurl() . "/photo/profile/{$newuid}.jpg"),
-			dbesc($a->get_baseurl() . "/photo/avatar/{$newuid}.jpg")
+			dbesc($a->get_baseurl() . "/photo/avatar/{$newuid}.jpg"),
+			intval($publish),
+			intval($netpublish)
 
 		);
 		if($r === false) {
@@ -385,6 +390,22 @@ function register_content(&$a) {
 		$oidlabel = t("Your OpenID \x28optional\x29: ");
 	}
 
+	if(get_config('system','publish_all')) {
+		$profile_publish_reg = '<input type="hidden" name="profile_publish_reg" value="1" />';
+	}
+	else {
+		$publish_tpl = load_view_file("view/profile_publish.tpl");
+		$profile_publish = replace_macros($publish_tpl,array(
+			'$instance'     => 'reg',
+			'$pubdesc'      => t('Include your profile in member directory?'),
+			'$yes_selected' => ' checked="checked" ',
+			'$no_selected'  => '',
+			'$str_yes'      => t('Yes'),
+			'$str_no'       => t('No')
+		));
+	}
+
+
 	$license = t('Shared content is covered by the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> license.');
 
 
@@ -404,6 +425,7 @@ function register_content(&$a) {
 		'$nickdesc'  => t('Choose a profile nickname. This must begin with a text character. Your global profile locator will then be \'<strong>nickname@$sitename</strong>\'.'),
 		'$nicklabel' => t('Choose a nickname: '),
 		'$photo'     => $photo,
+		'$publish'   => $profile_publish,
 		'$regbutt'   => t('Register'),
 		'$username'  => $username,
 		'$email'     => $email,
