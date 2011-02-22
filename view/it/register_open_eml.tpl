@@ -13,10 +13,6 @@ aver effettuato l'accesso.
 
 Prenditi un momento per rivedere le altre impostazioni dell'account su quella
 pagina.
-Di defaulti il tuo account è privato e nascosto (invisibile alle altre persone).
-Puoi voler cambiarlo pubblicando il tuo profilo, così che appaia nell'elenco
-e le altro persone possono trovarti.
-
 
 Grazie e benventuo su $sitename.
 
