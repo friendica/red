@@ -924,6 +924,10 @@ input#dfrn-url {
 	/*width: 450px;*/
 }
 
+.wall-item-title-end {
+	clear: both;
+}
+
 .wall-item-body {
 	float: left;
 	/*width: 450px;*/

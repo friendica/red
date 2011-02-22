@@ -20,6 +20,7 @@
 		</span>
 		<div class="wall-item-content" id="wall-item-content-$id" >
 			<div class="wall-item-title" id="wall-item-title-$id">$title</div>
+			<div class="wall-item-title-end"></div>
 			<div class="wall-item-body" id="wall-item-body-$id" >$body</div>
 		</div>
 		<div class="wall-item-tools" id="wall-item-tools-$id">
