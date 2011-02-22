@@ -108,6 +108,9 @@ function notifications_content(&$a) {
 					'$intro_id' => $rr['intro_id'],
 					'$friend_selected' => $friend_selected,
 					'$fan_selected' => $fan_selected,
+					'$approve_as' => t('Approve as: '),
+					'$as_friend' => t('Friend'),
+					'$as_fan' => t('Fan/Admirer')
 				));
 			}			
 
