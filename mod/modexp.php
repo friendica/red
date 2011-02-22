@@ -1,6 +1,6 @@
 <?php
 
-include('library/asn1.php');
+require_once('library/asn1.php');
 
 function modexp_init(&$a) {
 

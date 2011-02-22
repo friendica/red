@@ -198,7 +198,7 @@ function facebook_post_hook(&$a,&$b) {
 
 				if (strlen($msg) > FACEBOOK_MAXPOSTLEN) {
 					$shortlink = "";
-					require_once('addon/twitter/slinky.php');
+					require_once('library/slinky.php');
 
 					$display_url = $a->get_baseurl() . '/display/' . $a->user['nickname'] . '/' . $b['id'];
 					$slinky = new Slinky( $posturl );

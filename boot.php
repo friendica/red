@@ -267,9 +267,11 @@ class App {
 		 * Just spit out the contents and exit.
 		 */
 
-		if($this->cmd === '.well-known/host-meta')
+		if($this->cmd === '.well-known/host-meta') {
 			require_once('include/hostxrd.php');
-
+			hostxrd($this->hostname);
+			// NOTREACHED
+		}
 
 		/**
 		 * See if there is any page number information, and initialise 
@@ -410,6 +412,7 @@ function x($s,$k = NULL) {
 if(! function_exists('system_unavailable')) {
 function system_unavailable() {
 	include('system_unavailable.php');
+	system_down();
 	killme();
 }}
 

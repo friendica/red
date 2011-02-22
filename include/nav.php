@@ -1,5 +1,7 @@
 <?php
 
+function nav(&$a) {
+
 	/**
 	 *
 	 * Build page header and site navigation bars
@@ -115,3 +117,5 @@
 	$a->page['nav'] .= '<span id="banner">' . $banner . '</span>';
 
 	call_hooks('page_header', $a->page['nav']);
+
+}

@@ -63,6 +63,10 @@ function register_post(&$a) {
 		return;
 	}
 
+	if(! validate_url($tmp_str))
+		$openid_url = '';
+
+
 	$err = '';
 
 

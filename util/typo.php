@@ -3,24 +3,36 @@
 	// Run this from cmdline in basedir and quickly see if we've 
 	// got any parse errors in our application files.
 
-	include 'boot.php';
 
-	error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+	error_reporting(E_ERROR | E_WARNING | E_PARSE );
 	ini_set('display_errors', '1');
 	ini_set('log_errors','0');
 
-
+	include 'boot.php';
+	
 	$a = new App();
 
+	echo "Directory: mod\n";
 	$files = glob('mod/*.php');
-	foreach($files as $file)
+	foreach($files as $file) {
+		echo $file . "\n";
 		include_once($file);
+	}
 
-
+	echo "Directory: include\n";
 	$files = glob('include/*.php');
-	foreach($files as $file)
+	foreach($files as $file) {
+		echo $file . "\n";
 		include_once($file);
+	}
 
-	$files = glob('addon/*/*.php');
-	foreach($files as $file)
-		include_once($file);
+	echo "Directory: addon\n";
+	$dirs = glob('addon/*');
+
+	foreach($dirs as $dir) {
+		$files = glob($dir . '/*.php');
+		foreach($files as $file) {
+			echo $file . "\n";
+			include_once($file);
+		}
+	}

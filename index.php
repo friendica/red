@@ -247,8 +247,10 @@ $a->page['content'] .=  '<div id="pause"></div>';
  *
  */
 
-if($a->module != 'install')
+if($a->module != 'install') {
 	require_once('nav.php');
+	nav($a);
+}
 
 /**
  * Build the page - now that we have all the components

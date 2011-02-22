@@ -30,7 +30,9 @@
  *
  * Thank you guys for the Twitter compatible API!
  */
-require_once('addon/twitter/twitteroauth.php');
+
+require_once('library/twitteroauth.php');
+
 class StatusNetOAuth extends TwitterOAuth {
     function get_maxlength() {
         $config = $this->get($this->host . 'statusnet/config.json');
@@ -216,7 +218,7 @@ function statusnet_post_hook(&$a,&$b) {
 				$msg = strip_tags(bbcode($b['body']));
                                 if ( strlen($msg) > $max_char) {
                                         $shortlink = "";
-                                        require_once('addon/statusnet/slinky.php');
+                                        require_once('library/slinky.php');
                                         // post url = base url + /display/ + owner + post id
                                         // we construct this from the Owner link and replace
                                         // profile by display - this will cause an error when

@@ -99,7 +99,7 @@ function twitter_settings_post ($a,$post) {
 	if (isset($_POST['twitter-pin'])) {
 		//  if the user supplied us with a PIN from Twitter, let the magic of OAuth happen
 		logger('got a Twitter PIN');
-		require_once('addon/twitter/twitteroauth.php');
+		require_once('library/twitteroauth.php');
 		$ckey    = get_config('twitter', 'consumerkey'  );
 		$csecret = get_config('twitter', 'consumersecret' );
 		//  the token and secret for which the PIN was generated were hidden in the settings
@@ -224,7 +224,7 @@ function twitter_post_hook(&$a,&$b) {
 				$msg = strip_tags(bbcode($b['body']));
 				if ( strlen($msg) > $max_char) {
 					$shortlink = "";
-					require_once('addon/twitter/slinky.php');
+					require_once('library/slinky.php');
 					// post url = base url + /display/ + owner + post id
 					// we construct this from the Owner link and replace
 					// profile by display - this will cause an error when
