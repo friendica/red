@@ -27,8 +27,7 @@ function poormancron_hook($a,&$b) {
     // 300 secs, 5 mins
     if (!$lastupdate || ($now-$lastupdate)>300) {
         set_config('poormancron','lastupdate', $now);
-        $php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
-        proc_run($php_path,"include/poller.php");
+        proc_run('php',"include/poller.php");
     }
 }
 

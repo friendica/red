@@ -369,9 +369,7 @@ function dfrn_notify_post(&$a) {
 
 					if($posted_id && $parent) {
 				
-						$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
-
-						proc_run($php_path,"include/notifier.php","comment-import","$posted_id");
+						proc_run('php',"include/notifier.php","comment-import","$posted_id");
 					
 						if((! $is_like) && ($importer['notify-flags'] & NOTIFY_COMMENT) && (! $importer['self'])) {
 							require_once('bbcode.php');

@@ -124,9 +124,7 @@ function contacts_content(&$a) {
 		if($cmd === 'update') {
 
 			// pull feed and consume it, which should subscribe to the hub.
-
-			$php_path = ((x($a->config,'php_path') && strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
-			proc_run($php_path,"include/poller.php","$contact_id");
+			proc_run('php',"include/poller.php","$contact_id");
 			goaway($a->get_baseurl() . '/contacts/' . $contact_id);
 			// NOTREACHED
 		}

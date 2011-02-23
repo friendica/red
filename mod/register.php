@@ -292,9 +292,8 @@ function register_post(&$a) {
 	}
 
 	if($netpublish && $a->config['register_policy'] != REGISTER_APPROVE) {
-		$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 		$url = $a->get_baseurl() . "/profile/$nickname";
-		proc_run($php_path,"include/directory.php","$url");
+		proc_run('php',"include/directory.php","$url");
 	}
 
 

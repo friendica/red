@@ -74,10 +74,9 @@ function regmod_content(&$a) {
 			intval($user[0]['uid'])
 		);
 		if(count($r) && $r[0]['net-publish']) {
-			$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 			$url = $a->get_baseurl() . '/profile/' . $user[0]['nickname'];
 			if($url && strlen(get_config('system','directory_submit_url')))
-				proc_run($php_path,"include/directory.php","$url");
+				proc_run('php',"include/directory.php","$url");
 		}
 
 		$email_tpl = load_view_file("view/register_open_eml.tpl");

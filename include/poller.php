@@ -27,8 +27,7 @@ function poller_run($argv, $argc){
 	
 	// run queue delivery process in the background
 
-	$php_path = ((x($a->config,'php_path') && strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
-	proc_run($php_path,"include/queue.php");
+	proc_run('php',"include/queue.php");
 	
 	// clear old cache
 	q("DELETE FROM `cache` WHERE `updated`<'%s'",

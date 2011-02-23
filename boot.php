@@ -2434,6 +2434,9 @@ if(! function_exists('proc_run')) {
 function proc_run($cmd){
 	$args = func_get_args();
 	call_hooks("proc_run", $args);
+
+	if(count($args) && $args[0] === 'php')
+        $args[0] = ((x($a->config,'php_path')) && (strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 	
 	foreach ($args as $arg){
 		$arg = escapeshellarg($arg);

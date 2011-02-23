@@ -460,11 +460,7 @@ function item_post(&$a) {
 		// NOTREACHED
 	}
 
-	$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
-
-	logger('mod_item: notifier invoked: ' . "\"$php_path\" \"include/notifier.php\" \"$notify_type\" \"$post_id\" &");
-
-	proc_run($php_path, "include/notifier.php", $notify_type, "$post_id");
+	proc_run('php', "include/notifier.php", $notify_type, "$post_id");
 
 	$datarray['id'] = $post_id;
 
@@ -595,12 +591,10 @@ function item_content(&$a) {
 				}	
 			}
 			$drop_id = intval($item['id']);
-			$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 			
 			// send the notification upstream/downstream as the case may be
 
-			//proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" &", array(), $foo));
-			proc_run($php_path,"include/notifier.php","drop","$drop_id");
+			proc_run('php',"include/notifier.php","drop","$drop_id");
 
 			goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
 			//NOTREACHED
