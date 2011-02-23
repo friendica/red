@@ -2065,3 +2065,11 @@ a.mail-list-link {
 .tool-link {
   cursor: pointer;
 }
+
+
+.calendar {
+	font-family: Courier, monospace;
+}
+.today {
+	color: #FF0000;
+}

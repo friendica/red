@@ -196,3 +196,114 @@ function age($dob,$owner_tz = '',$viewer_tz = '') {
 		$year_diff--;
 	return $year_diff;
 }
+
+
+
+// Get days in month
+// get_dim($year, $month);
+// returns number of days.
+// $month[1] = 'January'; 
+//   to match human usage.
+
+if(! function_exists('get_dim')) {
+function get_dim($y,$m) {
+
+  $dim = array( 0,
+    31, 28, 31, 30, 31, 30,
+    31, 31, 30, 31, 30, 31);
+ 
+  if($m != 2)
+    return $dim[$m];
+  if(((($y % 4) == 0) && (($y % 100) != 0)) || (($y % 400) == 0))
+    return 29;
+  return $dim[2];
+}}
+
+
+// Returns the first day in month for a given month, year
+// get_first_dim($year,$month)
+// returns 0 = Sunday through 6 = Saturday
+// Months start at 1.
+
+if(! function_exists('get_first_dim')) {
+function get_first_dim($y,$m) {
+  $d = sprintf('%04d-%02d-01 00:00', intval($y), intval($m));
+  return datetime_convert('UTC','UTC',$d,'w');
+}}
+
+// output a calendar for the given month, year.
+// if $links are provided (array), e.g. $links[12] => 'http://mylink' , 
+// date 12 will be linked appropriately. Today's date is also noted by 
+// altering td class.
+// Months count from 1.
+
+
+// TODO: provide (prev,next) links, define class variations for different size calendars
+
+
+if(! function_exists('cal')) {
+function cal($y = 0,$m = 0, $links = false) {
+
+
+	// month table - start at 1 to match human usage.
+
+	$mtab = array(' ',
+	  'January','February','March',
+	  'April','May','June',
+	  'July','August','September',
+	  'October','November','December'
+	); 
+
+	$thisyear = datetime_convert('UTC',date_default_timezone_get(),'now','Y');
+	$thismonth = datetime_convert('UTC',date_default_timezone_get(),'now','m');
+	if(! $y)
+		$y = $thisyear;
+	if(! $m)
+		$m = intval($thismonth);
+
+  $dn = array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
+  $f = get_first_dim($y,$m);
+  $l = get_dim($y,$m);
+  $d = 1;
+  $dow = 0;
+  $started = false;
+
+  if(($y == $thisyear) && ($m == $thismonth))
+    $tddate = intval(datetime_convert('UTC',date_default_timezone_get(),'now','j'));
+
+	$str_month = day_translate($mtab[$m]);
+  $o = '<table class="calendar">';
+  $o .= "<caption>$str_month $y</caption><tr>";
+  for($a = 0; $a < 7; $a ++)
+     $o .= '<th>' . substr(day_translate($dn[$a]),0,3) . '</th>';
+  $o .= '</tr><tr>';
+
+  while($d <= $l) {
+    if(($dow == $f) && (! $started))
+      $started = true;
+    $today = (((isset($tddate)) && ($tddate == $d)) ? "class=\"today\" " : '');
+    $o .= "<td $today>";
+	$day = str_replace(' ','&nbsp;',sprintf('%2.2d', $d));
+    if($started) {
+      if(is_array($links) && isset($links[$d]))
+        $o .=  "<a href=\"{$links[$d]}\">$day</a>";
+      else
+        $o .= $day;
+      $d ++;
+    }
+    else
+      $o .= '&nbsp;';
+    $o .= '</td>';
+    $dow ++;
+    if(($dow == 7) && ($d <= $l)) {
+      $dow = 0;
+      $o .= '</tr><tr>';
+    }
+  }
+  if($dow)
+    for($a = $dow; $a < 7; $a ++)
+       $o .= '<td>&nbsp;</td>';
+  $o .= '</tr></table>'."\r\n";  
+  
+  return $o;
+}}
