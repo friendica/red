@@ -275,7 +275,7 @@ function cal($y = 0,$m = 0, $links = false) {
   $o = '<table class="calendar">';
   $o .= "<caption>$str_month $y</caption><tr>";
   for($a = 0; $a < 7; $a ++)
-     $o .= '<th>' . substr(day_translate($dn[$a]),0,3) . '</th>';
+     $o .= '<th>' . mb_substr(day_translate($dn[$a]),0,3,'UTF-8') . '</th>';
   $o .= '</tr><tr>';
 
   while($d <= $l) {
