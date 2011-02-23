@@ -2019,3 +2019,9 @@ a.mail-list-link {
 }
 
 
+.calendar {
+	font-family: Courier, monospace;
+}
+.today {
+	color: #FF0000;
+}
