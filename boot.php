@@ -2430,13 +2430,13 @@ function prepare_body($item) {
  * $cmd and string args are surrounded with ""
  */
 
-if(! function_exists('run_proc')) {
+if(! function_exists('proc_run')) {
 function proc_run($cmd){
 	$args = func_get_args();
 	call_hooks("proc_run", $args);
 	
-	foreach ($args as &$arg){
-		if(is_string($arg)) $arg='"'.$arg.'"';
+	foreach ($args as $arg){
+		$arg = escapeshellarg($arg);
 	}
 	$cmdline = implode($args," ");
 	proc_close(proc_open($cmdline." &",array(),$foo));
