@@ -291,6 +291,13 @@ function register_post(&$a) {
 		}
 	}
 
+	if($netpublish && $a->config['register_policy'] != REGISTER_APPROVE) {
+		$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
+		$url = $a->get_baseurl() . "/profile/$nickname";
+		proc_run($php_path,"include/directory.php","$url");
+	}
+
+
 	if( $a->config['register_policy'] == REGISTER_OPEN ) {
 		$email_tpl = load_view_file("view/register_open_eml.tpl");
 		$email_tpl = replace_macros($email_tpl, array(
@@ -348,13 +355,6 @@ function register_post(&$a) {
 
 	}
 
-	if($netpublish && $a->config['register_policy'] != REGISTER_APPROVE) {
-		$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
-		$url = $a->get_baseurl() . "/profile/$nickname";
-		if($url && strlen(get_config('system','directory_submit_url')))
-			proc_run($php_path,"include/directory.php","$url");
-
-	}
 	return;
 }}
 
