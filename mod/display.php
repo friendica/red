@@ -234,7 +234,7 @@ function display_content(&$a) {
 			}
 
 			if(($item['contact-id'] == remote_user()) || ($item['uid'] == local_user()))
-				$drop = replace_macros(load_view_file('view/wall_item_drop.tpl'), array('$id' => $item['id']));
+				$drop = replace_macros(load_view_file('view/wall_item_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
 			else 
 				$drop = replace_macros(load_view_file('view/wall_fake_drop.tpl'), array('$id' => $item['id']));
 

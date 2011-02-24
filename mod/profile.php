@@ -339,7 +339,7 @@ function profile_content(&$a, $update = 0) {
 			if(($item['contact-id'] == remote_user()) || ($item['uid'] == local_user()))
 				$dropping = true;
 
-			$drop = replace_macros((($dropping)? $droptpl : $fakedrop), array('$id' => $item['id']));
+			$drop = replace_macros((($dropping)? $droptpl : $fakedrop), array('$id' => $item['id'], '$delete' => t('Delete')));
 
 
 			$like    = ((isset($alike[$item['id']])) ? format_like($alike[$item['id']],$alike[$item['id'] . '-l'],'like',$item['id']) : '');
