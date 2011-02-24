@@ -849,6 +849,10 @@ input#dfrn-url {
 	float: left;
 }
 
+.wallwall .wall-item-photo-end {
+	clear: both;
+}
+
 .wall-item-arrowphoto-wrapper {
 	margin-top: 40px;
 	margin-right: 20px;
