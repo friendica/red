@@ -800,6 +800,7 @@ function login($register = false) {
 	}
 	
 	$o = replace_macros($tpl,array(
+		'$logout'        => t('Logout'),
 		'$register_html' => $register_html, 
 		'$classname'     => $classname,
 		'$namelabel'     => $namelabel,
