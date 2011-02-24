@@ -167,6 +167,7 @@ function randplace_settings(&$a,&$s) {
 
 	/* Add some HTML to the existing form */
 
+	$s .= '<div class="settings-block">';
 	$s .= '<h3>' . t('Randplace Settings') . '</h3>';
 	$s .= '<div id="randplace-enable-wrapper">';
 	$s .= '<label id="randplace-enable-label" for="randplace-checkbox">' . t('Enable Randplace Plugin') . '</label>';
@@ -175,6 +176,6 @@ function randplace_settings(&$a,&$s) {
 
 	/* provide a submit button */
 
-	$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
+	$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div></div>';
 
 }

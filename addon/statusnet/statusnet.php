@@ -63,6 +63,22 @@ function statusnet_uninstall() {
 	unregister_hook('post_local_end', 'addon/statusnet/statusnet.php', 'statusnet_post_hook');
 }
 
+function statusnet_jot_nets(&$a,&$b) {
+	if(! local_user())
+		return;
+
+	$statusnet_post = get_pconfig(local_user(),'statusnet','post');
+	if(intval($statusnet_post) == 1) {
+		$statusnet_defpost = get_pconfig(local_user(),'statusnet','post_by_default');
+		$selected = ((intval($statusnet_defpost == 1)) ? ' selected="selected" ' : '');
+		$b .= '<div class="profile-jot-net"><input type="checkbox" name="statusnet_enable"' . $selected . 'value="1" /> ' 
+			. t('Post to StatusNet') . '</div>';	
+	}
+}
+
+
+
+
 function statusnet_settings_post ($a,$post) {
 	if(! local_user())
 	    return;
@@ -123,7 +139,8 @@ function statusnet_settings(&$a,&$s) {
 	$osecret = get_pconfig(local_user(), 'statusnet', 'oauthsecret' );
         $enabled = get_pconfig(local_user(), 'statusnet', 'post');
 	$checked = (($enabled) ? ' checked="checked" ' : '');
-	$s .= '<h3>'.t('StatusNet Posting Settings').'</h3>';
+	$s .= '<div class="settings-block">';
+	$s .= '<h3>'. t('StatusNet Posting Settings').'</h3>';
 
 	if ( (!$ckey) && (!$csecret) ) {
 		/***
@@ -185,7 +202,7 @@ function statusnet_settings(&$a,&$s) {
 			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>'; 
 		}
 	}
-        $s .= '</div><div class="clear"></div>';
+        $s .= '</div><div class="clear"></div></div>';
 }
 
 
@@ -210,8 +227,9 @@ function statusnet_post_hook(&$a,&$b) {
 		if($ckey && $csecret && $otoken && $osecret) {
 
 			$statusnet_post = get_pconfig(local_user(),'statusnet','post');
+			$statusnet_enable = (($statusnet_post && x($_POST,'statusnet_enable')) ? intval($_POST['statusnet_enable']) : 0);
 
-			if($statusnet_post) {
+			if($statusnet_enable && $statusnet_post) {
 				require_once('include/bbcode.php');	
 				$dent = new StatusNetOAuth($api,$ckey,$csecret,$otoken,$osecret);
 				$max_char = $dent->get_maxlength(); // max. length for a dent
@@ -241,6 +259,6 @@ function statusnet_post_hook(&$a,&$b) {
 					$dent->post('statuses/update', array('status' => $msg));
 			}
 		}
-        }
+    }
 }
 

@@ -114,14 +114,18 @@ function facebook_content(&$a) {
 		return '';
 	}
 
+	$a->page['htmlhead'] .= '<link rel="stylesheet" type="text/css" href="' 
+		. $a->get_baseurl() . '/addon/facebook/facebook.css' . '" media="all" />' . "\r\n";
+
 	$o .= '<h3>' . t('Facebook Connect') . '</h3>';
 
-	$o .= '<br />';
+	$o .= '<div id="facebook-enable-wrapper">';
 
 	$o .= '<a href="https://www.facebook.com/dialog/oauth?client_id=' . $appid . '&redirect_uri=' 
-		. $a->get_baseurl() . '/facebook/' . $a->user['nickname'] . '&scope=publish_stream,read_stream,offline_access">' . t('Install Facebook post connector') . '</a><br /><br />';
+		. $a->get_baseurl() . '/facebook/' . $a->user['nickname'] . '&scope=publish_stream,read_stream,offline_access">' . t('Install Facebook post connector') . '</a>';
+	$o .= '</div><div id="facebook-disable-wrapper">';
 
-	$o .= '<a href="' . $a->get_baseurl() . '/facebook/remove' . '">' . t('Remove Facebook post connector') . '</a><br />';
+	$o .= '<a href="' . $a->get_baseurl() . '/facebook/remove' . '">' . t('Remove Facebook post connector') . '</a></div>';
 
 
 	return $o;
@@ -143,8 +147,10 @@ function facebook_uninstall() {
 
 function facebook_plugin_settings(&$a,&$b) {
 
+	$b .= '<div class="settings-block">';
 	$b .= '<h3>' . t('Facebook') . '</h3>';
 	$b .= '<a href="facebook">' . t('Facebook Connector Settings') . '</a><br />';
+	$b .= '</div>';
 
 }
 
