@@ -768,7 +768,12 @@ function escape_tags($string) {
 if(! function_exists('login')) {
 function login($register = false) {
 	$o = "";
-	$register_html = (($register) ? load_view_file("view/register-link.tpl") : "");
+	$register_tpl = (($register) ? load_view_file("view/register-link.tpl") : "");
+	
+	$register_html = replace_macros($register_tpl,array(
+		'$title' => t('Create a New Account'),
+		'$desc' => t('Register')
+	));
 
 	$noid = get_config('system','no_openid');
 	if($noid) {
