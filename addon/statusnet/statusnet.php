@@ -53,6 +53,8 @@ function statusnet_install() {
 	register_hook('plugin_settings', 'addon/statusnet/statusnet.php', 'statusnet_settings'); 
 	register_hook('plugin_settings_post', 'addon/statusnet/statusnet.php', 'statusnet_settings_post');
 	register_hook('post_local_end', 'addon/statusnet/statusnet.php', 'statusnet_post_hook');
+	register_hook('jot_networks',    'addon/statusnet/statusnet.php', 'statusnet_jot_nets');
+
 	logger("installed statusnet");
 }
 
@@ -61,6 +63,7 @@ function statusnet_uninstall() {
 	unregister_hook('plugin_settings', 'addon/statusnet/statusnet.php', 'statusnet_settings'); 
 	unregister_hook('plugin_settings_post', 'addon/statusnet/statusnet.php', 'statusnet_settings_post');
 	unregister_hook('post_local_end', 'addon/statusnet/statusnet.php', 'statusnet_post_hook');
+	unregister_hook('jot_networks',    'addon/statusnet/statusnet.php', 'statusnet_jot_nets');
 }
 
 function statusnet_jot_nets(&$a,&$b) {
