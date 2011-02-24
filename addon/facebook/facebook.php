@@ -7,10 +7,17 @@
  * view a page on your site, then add it back to the list. This will reset
  * all of the plugin 'hooks'. 
  *
- * 1. register an API key from developer.facebook.com
+ * 1. register an API key for your site from developer.facebook.com
  *   a. We'd be very happy if you include "Friendika" in the application name
- *      to increase name recognition.
- *   b. The url should be your site URL with a trailing slash
+ *      to increase name recognition. The Friendika icons are also present
+ *      in the images directory and may be uploaded as a Facebook app icon.
+ *      Use images/ff-16.jpg for the Icon and images/ff-128.jpg for the Logo.
+ *   b. The url should be your site URL with a trailing slash.
+ *      You may use http://portal.friendika.com/privacy as the privacy policy
+ *      URL unless your site has different requirements, and 
+ *      http://portal.friendika.com as the Terms of Service URL unless
+ *      you have different requirements. (Friendika is a software application
+ *      and does not require Terms of Service, though your installation of it might).
  *   c. Set the following values in your .htconfig.php file
  *         $a->config['facebook']['appid'] = 'xxxxxxxxxxx';
  *         $a->config['facebook']['appsecret'] = 'xxxxxxxxxxxxxxx';
