@@ -300,7 +300,7 @@ class App {
 	}
 
 	function set_baseurl($url) {
-		$parsed = parse_url($url);
+		$parsed = @parse_url($url);
 
 		$this->baseurl = $url;
 
@@ -626,7 +626,7 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
         $matches = array();
         preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
         $url = trim(array_pop($matches));
-        $url_parsed = parse_url($url);
+        $url_parsed = @parse_url($url);
         if (isset($url_parsed)) {
             $redirects++;
             return fetch_url($url,$binary,$redirects);
@@ -698,7 +698,7 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
         $matches = array();
         preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
         $url = trim(array_pop($matches));
-        $url_parsed = parse_url($url);
+        $url_parsed = @parse_url($url);
         if (isset($url_parsed)) {
             $redirects++;
             return post_url($url,$binary,$headers,$redirects);
@@ -1423,7 +1423,7 @@ function lrdd($uri) {
 
 	// get the host meta file
 
-	$host = parse_url($uri);
+	$host = @parse_url($uri);
 
 	if($host) {
 		$url  = ((x($host,'scheme')) ? $host['scheme'] : 'http') . '://';
@@ -1684,7 +1684,7 @@ if(! function_exists('validate_url')) {
 function validate_url(&$url) {
 	if(substr($url,0,4) != 'http')
 		$url = 'http://' . $url;
-	$h = parse_url($url);
+	$h = @parse_url($url);
 
 	if(($h) && (dns_get_record($h['host'], DNS_A + DNS_CNAME + DNS_PTR))) {
 		return true;
@@ -1715,7 +1715,7 @@ function validate_email($addr) {
 if(! function_exists('allowed_url')) {
 function allowed_url($url) {
 
-	$h = parse_url($url);
+	$h = @parse_url($url);
 
 	if(! $h) {
 		return false;
@@ -2438,6 +2438,9 @@ function prepare_body($item) {
 
 if(! function_exists('proc_run')) {
 function proc_run($cmd){
+
+	$a = get_app();
+
 	$args = func_get_args();
 	call_hooks("proc_run", $args);
 

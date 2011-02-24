@@ -84,7 +84,7 @@ function follow_post(&$a) {
 		// Google doesn't use absolute url in profile photos
 
 		if((x($vcard,'photo')) && substr($vcard['photo'],0,1) == '/') {
-			$h = parse_url($hcard);
+			$h = @parse_url($hcard);
 			if($h)
 				$vcard['photo'] = $h['scheme'] . '://' . $h['host'] . $vcard['photo'];
 		}
