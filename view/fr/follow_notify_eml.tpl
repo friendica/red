@@ -1,14 +1,14 @@
 
-Dear $myname,
+Chèr(e) $myname,
 
-You have a new follower at $sitename -  '$requestor'.
+Une nouvelle personne - $requestor - vous suit désormais sur $sitename.
 
-You may visit their profile at $url.
+Vous pouvez visiter son profil sur $url.
 
-Please login to your site to approve or ignore/cancel the request.
+Merci de vous connecter à votre site pour approuver ou ignorer/annuler cette demande.
 
 $siteurl
 
-Regards,
+Cordialement,
 
-	$sitename administrator
+	l'administrateur de $sitename
