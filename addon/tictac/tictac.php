@@ -44,14 +44,14 @@ function tictac_content(&$a) {
    $dimen = 3;
   }
 
-  $o .=  '<h3>3D Tic-Tac-Toe</h3><br />';
+  $o .=  '<h3>' . t('3D Tic-Tac-Toe') . '</h3><br />';
 
   $t = new tictac($dimen,$handicap,$mefirst,$yours,$mine);
   $o .= $t->play();
 
   $o .=  '<a href="tictac">' . t('New game') . '</a><br />';
   $o .=  '<a href="tictac/1">' . t('New game with handicap') . '</a><br />';
-  $o .=  '<p>' . t('Three dimensional tic-tac-toe is just like the traditional game except that it is played on multiple levels simultaneously.');
+  $o .=  '<p>' . t('Three dimensional tic-tac-toe is just like the traditional game except that it is played on multiple levels simultaneously. ');
   $o .= t('In this case there are three levels. You win by getting three in a row on any level, as well as up, down, and diagonally across the different levels.');
   $o .= '</p><p>'; 
   $o .= t('The handicap game disables the center position on the middle level because the player claiming this square often has an unfair advantage.');
