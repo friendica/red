@@ -96,16 +96,9 @@ function message_post(&$a) {
 			}
 		}
 	}
-
-
-
-
-
-	$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 	
 	if($post_id) {
-		//proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"mail\" \"$post_id\" &", array(),$foo));
-		proc_run($php_path,"include/notifier.php","mail","$post_id");
+		proc_run('php',"include/notifier.php","mail","$post_id");
 		notice( t('Message sent.') . EOL );
 	}
 	else {

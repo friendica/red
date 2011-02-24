@@ -10,7 +10,7 @@ function calc_uninstall() {
 }
 
 function calc_app_menu($a,&$b) {
-	$b['app_menu'] .= '<a href="calc">Calculator</a><br />'; 
+	$b['app_menu'] .= '<div class="app-title"><a href="calc">Calculator</a></div>'; 
 }
 
 

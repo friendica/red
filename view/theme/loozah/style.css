@@ -2073,3 +2073,16 @@ a.mail-list-link {
 .today {
 	color: #FF0000;
 }
+
+
+.settings-block {
+	border: 1px solid #AAA;
+	margin: 10px;
+	padding: 10px;
+}
+
+
+.app-title {
+	margin: 10px;
+}
+

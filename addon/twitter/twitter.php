@@ -41,7 +41,6 @@ function twitter_install() {
 	register_hook('plugin_settings_post', 'addon/twitter/twitter.php', 'twitter_settings_post');
 	register_hook('post_local_end', 'addon/twitter/twitter.php', 'twitter_post_hook');
 	register_hook('jot_networks', 'addon/twitter/twitter.php', 'twitter_jot_nets');
-	register_hook('post_local_start', 'addon/twitter/twitter.php', 'twitter_post_start');
 	logger("installed twitter");
 }
 
@@ -51,8 +50,6 @@ function twitter_uninstall() {
 	unregister_hook('plugin_settings_post', 'addon/twitter/twitter.php', 'twitter_settings_post');
 	unregister_hook('post_local_end', 'addon/twitter/twitter.php', 'twitter_post_hook');
 	unregister_hook('jot_networks', 'addon/twitter/twitter.php', 'twitter_jot_nets');
-	unregister_hook('post_local_start', 'addon/twitter/twitter.php', 'twitter_post_start');
-
 }
 
 function twitter_jot_nets(&$a,&$b) {
@@ -69,19 +66,6 @@ function twitter_jot_nets(&$a,&$b) {
 
 
 }
-
-function twitter_post_start(&$a,&$b) {
-	if(! local_user())
-		return;
-
-	if((x($b,'twitter_enable')) && (intval($b['twitter_enable'])))
-		set_pconfig(local_user(),'twitter','enable','1');
-	else
-		del_pconfig(local_user(),'twitter','enable');
-
-
-}
-
 
 function twitter_settings_post ($a,$post) {
 	if(! local_user())
@@ -134,6 +118,7 @@ function twitter_settings(&$a,&$s) {
 	$osecret = get_pconfig(local_user(), 'twitter', 'oauthsecret' );
         $enabled = get_pconfig(local_user(), 'twitter', 'post');
 	$checked = (($enabled) ? ' checked="checked" ' : '');
+	$s .= '<div class="settings-block">';
 	$s .= '<h3>'. t('Twitter Posting Settings') .'</h3>';
 
 	if ( (!$ckey) && (!$csecret) ) {
@@ -167,8 +152,8 @@ function twitter_settings(&$a,&$s) {
 			$s .= '<input id="twitter-pin" type="text" name="twitter-pin" />';
 			$s .= '<input id="twitter-token" type="hidden" name="twitter-token" value="'.$token.'" />';
 			$s .= '<input id="twitter-token2" type="hidden" name="twitter-token2" value="'.$request_token['oauth_token_secret'].'" />';
-                        $s .= '</div><div class="clear"></div>';
-                        $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
+            $s .= '</div><div class="clear"></div>';
+            $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
 		} else {
 			/***
 			 *  we have an OAuth key / secret pair for the user
@@ -190,7 +175,7 @@ function twitter_settings(&$a,&$s) {
 			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>'; 
 		}
 	}
-        $s .= '</div><div class="clear"></div>';
+        $s .= '</div><div class="clear"></div></div>';
 }
 
 
@@ -213,11 +198,11 @@ function twitter_post_hook(&$a,&$b) {
 
 		if($ckey && $csecret && $otoken && $osecret) {
 
-			$twitter_post = get_pconfig(local_user(),'twitter','post');
-			$twitter_enable = intval(get_pconfig(local_user(),'twitter','enable'));
+			$twitter_post = intval(get_pconfig(local_user(),'twitter','post'));
+			$twitter_enable = (($twitter_post && x($_POST,'twitter_enable')) ? intval($_POST['twitter_enable']) : 0);
 
 			if($twitter_post && $twitter_enable) {
-				require_once('addon/twitter/twitteroauth.php');
+				require_once('library/twitteroauth.php');
 				require_once('include/bbcode.php');	
 				$tweet = new TwitterOAuth($ckey,$csecret,$otoken,$osecret);
 				$max_char = 140; // max. length for a tweet

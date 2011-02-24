@@ -768,7 +768,12 @@ function escape_tags($string) {
 if(! function_exists('login')) {
 function login($register = false) {
 	$o = "";
-	$register_html = (($register) ? load_view_file("view/register-link.tpl") : "");
+	$register_tpl = (($register) ? load_view_file("view/register-link.tpl") : "");
+	
+	$register_html = replace_macros($register_tpl,array(
+		'$title' => t('Create a New Account'),
+		'$desc' => t('Register')
+	));
 
 	$noid = get_config('system','no_openid');
 	if($noid) {
@@ -795,6 +800,7 @@ function login($register = false) {
 	}
 	
 	$o = replace_macros($tpl,array(
+		'$logout'        => t('Logout'),
 		'$register_html' => $register_html, 
 		'$classname'     => $classname,
 		'$namelabel'     => $namelabel,
@@ -2434,6 +2440,9 @@ if(! function_exists('proc_run')) {
 function proc_run($cmd){
 	$args = func_get_args();
 	call_hooks("proc_run", $args);
+
+	if(count($args) && $args[0] === 'php')
+        $args[0] = ((x($a->config,'php_path')) && (strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 	
 	foreach ($args as $arg){
 		$arg = escapeshellarg($arg);

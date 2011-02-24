@@ -435,11 +435,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				$arr['last-child'] = 1;
 
 				$i = item_store($arr);
-
-				$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
-
-			    //proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"activity\" \"$i\" &", array(),$foo));
-			    proc_run($php_path,"include/notifier.php","activity","$i");
+				if($i)
+			    	proc_run('php',"include/notifier.php","activity","$i");
 
 			}
 

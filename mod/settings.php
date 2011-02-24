@@ -179,11 +179,9 @@ function settings_post(&$a) {
 
 	if($old_visibility != $net_publish) {
 		// Update global directory in background
-		$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 		$url = $_SESSION['my_url'];
 		if($url && strlen(get_config('system','directory_submit_url')))
-			//proc_close(proc_open("\"$php_path\" \"include/directory.php\" \"$url\" &",array(),$foo));
-			proc_run($php_path,"include/directory.php","$url");
+			proc_run('php',"include/directory.php","$url");
 	}
 
 	$_SESSION['theme'] = $theme;

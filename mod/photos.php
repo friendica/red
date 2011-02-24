@@ -182,13 +182,11 @@ foreach($_FILES AS $key => $val) {
 					);
 
 					$drop_id = intval($rr['id']);
-					$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 
 					// send the notification upstream/downstream as the case may be
 
 					if($rr['visible'])
-						//proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" & ",array(),$foo));
-						proc_run($php_path,"include/notifier.php","drop","$drop_id");
+						proc_run('php',"include/notifier.php","drop","$drop_id");
 				}
 			}
 		}
@@ -232,11 +230,9 @@ foreach($_FILES AS $key => $val) {
 
 				$url = $a->get_baseurl();
 				$drop_id = intval($i[0]['id']);
-				$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
 
 				if($i[0]['visible'])
-					//proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"drop\" \"$drop_id\" & ", 	array(),$foo));
-					proc_run($php_path,"include/notifier.php","drop","$drop_id");
+					proc_run('php',"include/notifier.php","drop","$drop_id");
 			}
 		}
 
@@ -474,9 +470,8 @@ foreach($_FILES AS $key => $val) {
 					$arr['target'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource-id'] . '" />' . "\n" . '<link rel="preview" type="image/jpeg" href="' . $a->get_baseurl() . "/photo/" . $p[0]['resource-id'] . '-' . $best . '.jpg' . '" />') . '</link></target>';
 
 					$item_id = item_store($arr);
-					$php_path = ((strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
-					//proc_close(proc_open("\"$php_path\" \"include/notifier.php\" \"tag\" \"$item_id\" & ",array(),$foo));
-					proc_run($php_path,"include/notifier.php","tag","$item_id");
+					if($item_id)
+						proc_run('php',"include/notifier.php","tag","$item_id");
 				}
 
 			}
@@ -1153,7 +1148,7 @@ function photos_content(&$a) {
 					$drop = '';
 
 					if(($item['contact-id'] == remote_user()) || ($item['uid'] == local_user()))
-						$drop = replace_macros(load_view_file('view/wall_item_drop.tpl'), array('$id' => $item['id']));
+						$drop = replace_macros(load_view_file('view/wall_item_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
 
 
 					$o .= replace_macros($template,array(

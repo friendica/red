@@ -234,7 +234,7 @@ function display_content(&$a) {
 			}
 
 			if(($item['contact-id'] == remote_user()) || ($item['uid'] == local_user()))
-				$drop = replace_macros(load_view_file('view/wall_item_drop.tpl'), array('$id' => $item['id']));
+				$drop = replace_macros(load_view_file('view/wall_item_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
 			else 
 				$drop = replace_macros(load_view_file('view/wall_fake_drop.tpl'), array('$id' => $item['id']));
 
@@ -258,7 +258,11 @@ function display_content(&$a) {
 
 			$tmp_item = replace_macros($template,array(
 				'$id' => $item['item_id'],
-				'$title' => t('View $name\'s profile'),
+				'$linktitle' => t('View $name\'s profile'),
+				'$olinktitle' => t('View $owner_name\'s profile'),
+				'$to' => t('to'),
+				'$wall' => t('Wall-to-Wall'),
+				'$vwall' => t('via Wall-To-Wall:'),
 				'$profile_url' => $profile_link,
 				'$name' => $profile_name,
 				'$sparkle' => $sparkle,

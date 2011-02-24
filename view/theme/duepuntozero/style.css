@@ -849,6 +849,10 @@ input#dfrn-url {
 	float: left;
 }
 
+.wallwall .wall-item-photo-end {
+	clear: both;
+}
+
 .wall-item-arrowphoto-wrapper {
 	margin-top: 40px;
 	margin-right: 20px;
@@ -2025,3 +2029,14 @@ a.mail-list-link {
 .today {
 	color: #FF0000;
 }
+
+.settings-block {
+	border: 1px solid #AAA;
+	margin: 10px;
+	padding: 10px;
+}
+
+.app-title {
+	margin: 10px;
+}
+

@@ -7,10 +7,17 @@
  * view a page on your site, then add it back to the list. This will reset
  * all of the plugin 'hooks'. 
  *
- * 1. register an API key from developer.facebook.com
+ * 1. register an API key for your site from developer.facebook.com
  *   a. We'd be very happy if you include "Friendika" in the application name
- *      to increase name recognition.
- *   b. The url should be your site URL with a trailing slash
+ *      to increase name recognition. The Friendika icons are also present
+ *      in the images directory and may be uploaded as a Facebook app icon.
+ *      Use images/ff-16.jpg for the Icon and images/ff-128.jpg for the Logo.
+ *   b. The url should be your site URL with a trailing slash.
+ *      You may use http://portal.friendika.com/privacy as the privacy policy
+ *      URL unless your site has different requirements, and 
+ *      http://portal.friendika.com as the Terms of Service URL unless
+ *      you have different requirements. (Friendika is a software application
+ *      and does not require Terms of Service, though your installation of it might).
  *   c. Set the following values in your .htconfig.php file
  *         $a->config['facebook']['appid'] = 'xxxxxxxxxxx';
  *         $a->config['facebook']['appsecret'] = 'xxxxxxxxxxxxxxx';
@@ -107,14 +114,18 @@ function facebook_content(&$a) {
 		return '';
 	}
 
+	$a->page['htmlhead'] .= '<link rel="stylesheet" type="text/css" href="' 
+		. $a->get_baseurl() . '/addon/facebook/facebook.css' . '" media="all" />' . "\r\n";
+
 	$o .= '<h3>' . t('Facebook Connect') . '</h3>';
 
-	$o .= '<br />';
+	$o .= '<div id="facebook-enable-wrapper">';
 
 	$o .= '<a href="https://www.facebook.com/dialog/oauth?client_id=' . $appid . '&redirect_uri=' 
-		. $a->get_baseurl() . '/facebook/' . $a->user['nickname'] . '&scope=publish_stream,read_stream,offline_access">' . t('Install Facebook post connector') . '</a><br /><br />';
+		. $a->get_baseurl() . '/facebook/' . $a->user['nickname'] . '&scope=publish_stream,read_stream,offline_access">' . t('Install Facebook post connector') . '</a>';
+	$o .= '</div><div id="facebook-disable-wrapper">';
 
-	$o .= '<a href="' . $a->get_baseurl() . '/facebook/remove' . '">' . t('Remove Facebook post connector') . '</a><br />';
+	$o .= '<a href="' . $a->get_baseurl() . '/facebook/remove' . '">' . t('Remove Facebook post connector') . '</a></div>';
 
 
 	return $o;
@@ -136,8 +147,10 @@ function facebook_uninstall() {
 
 function facebook_plugin_settings(&$a,&$b) {
 
+	$b .= '<div class="settings-block">';
 	$b .= '<h3>' . t('Facebook') . '</h3>';
 	$b .= '<a href="facebook">' . t('Facebook Connector Settings') . '</a><br />';
+	$b .= '</div>';
 
 }
 
