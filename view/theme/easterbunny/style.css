@@ -1,0 +1,48 @@
+@import url('../duepuntozero/style.css');
+
+.vcard .fn {
+	color: orange !important;
+}
+
+.vcard .title {
+	color: #00BB00 !important;
+}
+
+.wall-item-content-wrapper {
+	border: 1px solid red;
+	background: #FFDDFF;
+}
+
+.wall-item-content-wrapper.comment {
+	background: #FFCCAA;
+}
+
+.comment-edit-wrapper {
+	background: yellow;
+}
+
+body { 	background-image: url('head.jpg'); }
+section { background: #EEFFFF; }
+
+a, a:visited { color: #0000FF; text-decoration: none; }
+a:hover {text-decoration: underline; }
+
+
+aside( 	background-image: url('border.jpg'); }
+#profile-tabs-wrapper {	background-image: url('head.jpg'); }
+div.wall-item-content-wrapper.shiny {  background-image: url('shiny.png'); }
+
+
+.nav-commlink, .nav-login-link {
+	background-color: #aed3b2;
+
+}
+
+.fakelink, .fakelink:visited {
+	color: #0000FF;
+}
+
+.wall-item-name-link {
+	color: #0000FF;
+}
+
