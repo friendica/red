@@ -152,12 +152,14 @@ function statusnet_settings(&$a,&$s) {
 		$s .= '<p>'. t('No consumer key pair for StatusNet found. Register your Friendika Account as an desktop client on your StatusNet account, copy the consumer key pair here and enter the API base root.<br />Before you register your own OAuth key pair ask the administrator if there is already a key pair for this Friendika installation at your favorited StatusNet installation.') .'</p>';
                 $s .= '<div id="statusnet-consumer-wrapper">';
                 $s .= '<label id="statusnet-consumerkey-label" for="statusnet-consumerkey">'. t('OAuth Consumer Key') .'</label>';
-		$s .= '<input id="statusnet-consumerkey" type="text" name="statusnet-consumerkey" size="35" /><br />';
+				$s .= '<input id="statusnet-consumerkey" type="text" name="statusnet-consumerkey" size="35" />';
+				$s .= '<div class="clear"></div>';
                 $s .= '<label id="statusnet-consumersecret-label" for="statusnet-consumersecret">'. t('OAuth Consumer Secret') .'</label>';
-		$s .= '<input id="statusnet-consumersecret" type="text" name="statusnet-consumersecret" size="35" /><br />';
+				$s .= '<input id="statusnet-consumersecret" type="text" name="statusnet-consumersecret" size="35" />';
+				$s .= '<div class="clear"></div>';
                 $s .= '<label id="statusnet-baseapi-label" for="statusnet-baseapi">'. t("Base API Path \x28remember the trailing /\x29") .'</label>';
-		$s .= '<input id="statusnet-baseapi" type="text" name="statusnet-baseapi" size="35" /><br  />';
-                $s .= '</div><div class="clear"></div>';
+		$s .= '<input id="statusnet-baseapi" type="text" name="statusnet-baseapi" size="35" />';
+                $s .= '<div class="clear"></div></div>';
                 $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
 	} else {
 		/***
