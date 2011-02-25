@@ -68,7 +68,10 @@ function profiles_post(&$a) {
 			if($with != strip_tags($orig[0]['with'])) {
 				$prf = '';
 				$lookup = $with;
-				if((strpos($lookup,'@')) || (strpos($lookup,'http://'))) {
+				if(strpos($lookup,'@') === 0)
+					$lookup = substr($lookup,1);
+				$lookup = str_replace('_',' ', $lookup);
+				if(strpos($lookup,'@') || (strpos($lookup,'http://'))) {
 					$newname = $lookup;
 					$links = @lrdd($lookup);
 					if(count($links)) {
@@ -101,6 +104,8 @@ function profiles_post(&$a) {
 	
 				if($prf) {
 					$with = str_replace($lookup,'<a href="' . $prf . '">' . $newname	. '</a>', $with);
+					if(strpos($with,'@') === 0)
+						$with = substr($with,1);
 				}
 			}
 			else
