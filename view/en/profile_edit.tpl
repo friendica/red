@@ -105,7 +105,7 @@ $hide_friends
 $marital
 </div>
 <label id="profile-edit-with-label" for="profile-edit-with" > Who: (if applicable) </label>
-<input type="text" size="32" name="with" id="profile-edit-with" value="$with" />
+<input type="text" size="32" name="with" id="profile-edit-with" title="Examples: cathy123, Cathy Williams, cathy@example.com" value="$with" />
 <div id="profile-edit-marital-end"></div>
 
 <div id="profile-edit-sexual-wrapper" >
