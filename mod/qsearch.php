@@ -47,3 +47,4 @@ function qsearch_init(&$a) {
 	echo str_replace('\\/','/',json_encode((object) $results));
 	killme();
 }
+
