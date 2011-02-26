@@ -26,7 +26,7 @@ function qsearch_init(&$a) {
 	if(count($r)) {
 
 		foreach($r as $rr)
-			$results[] = array( t('Group: ') . $rr['name'],'[group]<' . $rr['id'] . '>','');
+			$results[] = array( 0, (int) $rr['id'], $rr['name'], '', '');
 	}
 
 	$sql_extra = ((strlen($search)) ? " AND (`name` REGEXP '$search' OR `nick` REGEXP '$search') " : "");
@@ -41,7 +41,7 @@ function qsearch_init(&$a) {
 	if(count($r)) {
 
 		foreach($r as $rr)
-			$results[] = array($rr['name'],$rr['url'],$rr['photo']);
+			$results[] = array( (int) $rr['id'], 0, $rr['name'],$rr['url'],$rr['photo']);
 	}
 
 	echo str_replace('\\/','/',json_encode((object) $results));
