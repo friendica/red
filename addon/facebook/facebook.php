@@ -110,7 +110,7 @@ function facebook_content(&$a) {
 	$appid = get_config('facebook','appid');
 
 	if(! $appid) {
-		notify( t('Facebook API key is missing.') . EOL);
+		notice( t('Facebook API key is missing.') . EOL);
 		return '';
 	}
 
