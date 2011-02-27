@@ -159,7 +159,7 @@ function twitter_settings(&$a,&$s) {
 			 *  we have an OAuth key / secret pair for the user
 			 *  so let's give a chance to disable the postings to Twitter
 			 */
-                        require_once('addon/twitter/twitteroauth.php');
+                        require_once('library/twitteroauth.php');
 			$connection = new TwitterOAuth($ckey,$csecret,$otoken,$osecret);
 			$details = $connection->get('account/verify_credentials');
 			$s .= '<div id="twitter-info" ><img id="twitter-avatar" src="'.$details->profile_image_url.'" /><p id="twitter-info-block">'. t('Currently connected to: ') .'<a href="https://twitter.com/'.$details->screen_name.'" target="_twitter">'.$details->screen_name.'</a><br /><em>'.$details->description.'</em></p></div>';
