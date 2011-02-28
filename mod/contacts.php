@@ -13,7 +13,7 @@ function contacts_init(&$a) {
 
 	$tpl = load_view_file('view/follow.tpl');
 	$a->page['aside'] .= replace_macros($tpl,array(
-		'$label' => t('Connect/Follow [profile address]'),
+		'$label' => t('Connect/Follow'),
 		'$hint' => t('Example: bob@example.com, http://example.com/barbara'),
 		'$follow' => t('Follow')
 	));
