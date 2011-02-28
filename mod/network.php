@@ -150,7 +150,7 @@ function network_content(&$a, $update = 0) {
 		}
 
 		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `contact-id` IN ( $contact_str )) ";
-		$o = '<h4>' . t('Group: ') . $r[0]['name'] . '</h4>' . $o;
+		$o = '<h2>' . t('Group: ') . $r[0]['name'] . '</h2>' . $o;
 	}
 
 	if((! $group) && (! $update))
