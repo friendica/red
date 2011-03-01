@@ -5,7 +5,7 @@ function qsearch_init(&$a) {
 	if(! local_user())
 		killme();
 
-	$limit = (get_config('system','lsearch_limit') ? intval(get_config('system','lsearch_limit')) : 100);
+	$limit = (get_config('system','qsearch_limit') ? intval(get_config('system','qsearch_limit')) : 100);
 
 	$search = ((x($_GET,'s')) ? notags(trim(urldecode($_GET['s']))) : '');
 
