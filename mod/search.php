@@ -113,6 +113,7 @@ function search_content(&$a) {
 
 			$o .= replace_macros($tpl,array(
 				'$id' => $item['item_id'],
+				'$linktitle' => t('View $name\'s profile'),
 				'$profile_url' => $profile_link,
 				'$name' => $profile_name,
 				'$sparkle' => $sparkle,

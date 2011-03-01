@@ -245,6 +245,7 @@ function network_content(&$a, $update = 0) {
 
 				$o .= replace_macros($tpl,array(
 					'$id' => $item['item_id'],
+					'$linktitle' => t('View $name\'s profile'),
 					'$profile_url' => $profile_link,
 					'$name' => $profile_name,
 					'$sparkle' => $sparkle,

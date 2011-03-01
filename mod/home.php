@@ -4,9 +4,11 @@ if(! function_exists('home_init')) {
 function home_init(&$a) {
 
 	if(local_user() && ($a->user['nickname']))
-			goaway( $a->get_baseurl() . "/profile/" . $a->user['nickname'] );
+		goaway( $a->get_baseurl() . "/profile/" . $a->user['nickname'] );
 
-	$a->page['htmlhead'] .= "<meta name=\"dfrn-template\" content=\"" . $a->get_baseurl() . "/profile/%s" . "\" />\r\n"; 
+	if(strlen(get_config('system','singleuser')))
+		goaway( $a->get_baseurl() . "/profile/" . get_config('system','singleuser'));
+
 }}
 
 

@@ -63,8 +63,16 @@ function nav(&$a) {
 	}
 
 	$a->page['nav'] .= '<a id="nav-search-link" class="nav-link" href="search">' . t('Search') . "</a>\r\n";
-	$a->page['nav'] .= '<a id="nav-directory-link" class="nav-link" href="directory">' . t('Directory') . "</a>\r\n";
 
+	$gdirpath = 'directory';
+
+	if(strlen(get_config('system','singleuser'))) {
+		$gdir = dirname(get_config('system','directory_submit_url'));
+		if(strlen($gdir))
+			$gdirpath = $gdir;
+	}
+
+	$a->page['nav'] .= '<a id="nav-directory-link" class="nav-link" href="' . $gdirpath . '">' . t('Directory') . "</a>\r\n";
 
 	/**
 	 *
