@@ -1132,15 +1132,28 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 
 				// Have we seen it? If not, import it.
 	
-				$item_id = $item->get_id();
+				$item_id  = $item->get_id();
+				$datarray = get_atom_elements($feed,$item);
 
-				$r = q("SELECT `uid`, `last-child`, `edited` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['uid'])
 				);
 
-				// FIXME update content if 'updated' changes
+				// Update content if 'updated' changes
+
 				if(count($r)) {
+					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
+						$r = q("UPDATE `item` SET `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+							dbesc($datarray['body']),
+							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
+							dbesc($item_id),
+							intval($importer['uid'])
+						);
+					}
+
+					// update last-child if it changes
+
 					$allow = $item->get_item_tags( NAMESPACE_DFRN, 'comment-allow');
 					if(($allow) && ($allow[0]['data'] != $r[0]['last-child'])) {
 						$r = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d",
@@ -1158,7 +1171,6 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 					continue;
 				}
 
-				$datarray = get_atom_elements($feed,$item);
 				$force_parent = false;
 				if($contact['network'] === 'stat') {
 					$force_parent = true;
@@ -1189,14 +1201,31 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 			}
 
 			else {
+
 				// Head post of a conversation. Have we seen it? If not, import it.
 
-				$item_id = $item->get_id();
-				$r = q("SELECT `uid`, `last-child`, `edited` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+				$item_id  = $item->get_id();
+				$datarray = get_atom_elements($feed,$item);
+
+				$r = q("SELECT `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['uid'])
 				);
+
+				// Update content if 'updated' changes
+
 				if(count($r)) {
+					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
+						$r = q("UPDATE `item` SET `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+							dbesc($datarray['body']),
+							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
+							dbesc($item_id),
+							intval($importer['uid'])
+						);
+					}
+
+					// update last-child if it changes
+
 					$allow = $item->get_item_tags( NAMESPACE_DFRN, 'comment-allow');
 					if($allow && $allow[0]['data'] != $r[0]['last-child']) {
 						$r = q("UPDATE `item` SET `last-child` = %d , `changed` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
@@ -1208,7 +1237,6 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 					}
 					continue;
 				}
-				$datarray = get_atom_elements($feed,$item);
 
 				if(activity_match($datarray['verb'],ACTIVITY_FOLLOW)) {
 					logger('consume-feed: New follower');

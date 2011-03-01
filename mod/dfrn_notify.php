@@ -394,19 +394,39 @@ function dfrn_notify_post(&$a) {
 				}
 			}
 			else {
+
 				// regular comment that is part of this total conversation. Have we seen it? If not, import it.
 
-				$item_id = $item->get_id();
+				$item_id  = $item->get_id();
+				$datarray = get_atom_elements($feed,$item);
 
-				$r = q("SELECT `uid`, `last-child`, `edited` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['importer_uid'])
 				);
-				// FIXME update content if 'updated' changes
+
+				// Update content if 'updated' changes
+
 				if(count($r)) {
+					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
+						$r = q("UPDATE `item` SET `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+							dbesc($datarray['body']),
+							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
+							dbesc($item_id),
+							intval($importer['importer_uid'])
+						);
+					}
+
+					// update last-child if it changes
+
 					$allow = $item->get_item_tags( NAMESPACE_DFRN, 'comment-allow');
-					if($allow && $allow[0]['data'] != $r[0]['last-child']) {
-						$r = q("UPDATE `item` SET `last-child` = %d, `changed` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+					if(($allow) && ($allow[0]['data'] != $r[0]['last-child'])) {
+						$r = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d",
+							dbesc(datetime_convert()),
+							dbesc($parent_uri),
+							intval($importer['importer_uid'])
+						);
+						$r = q("UPDATE `item` SET `last-child` = %d , `changed` = '%s'  WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							intval($allow[0]['data']),
 							dbesc(datetime_convert()),
 							dbesc($item_id),
@@ -415,7 +435,7 @@ function dfrn_notify_post(&$a) {
 					}
 					continue;
 				}
-				$datarray = get_atom_elements($feed,$item);
+
 				$datarray['parent-uri'] = $parent_uri;
 				$datarray['uid'] = $importer['importer_uid'];
 				$datarray['contact-id'] = $importer['id'];
@@ -461,18 +481,37 @@ function dfrn_notify_post(&$a) {
 				continue;
 			}
 		}
+
 		else {
+
 			// Head post of a conversation. Have we seen it? If not, import it.
 
-			$item_id = $item->get_id();
-			$r = q("SELECT `uid`, `last-child`, `edited` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+
+			$item_id  = $item->get_id();
+			$datarray = get_atom_elements($feed,$item);
+
+			$r = q("SELECT `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 				dbesc($item_id),
 				intval($importer['importer_uid'])
 			);
+
+			// Update content if 'updated' changes
+
 			if(count($r)) {
+				if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
+					$r = q("UPDATE `item` SET `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						dbesc($datarray['body']),
+						dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
+						dbesc($item_id),
+						intval($importer['importer_uid'])
+					);
+				}
+
+				// update last-child if it changes
+
 				$allow = $item->get_item_tags( NAMESPACE_DFRN, 'comment-allow');
 				if($allow && $allow[0]['data'] != $r[0]['last-child']) {
-					$r = q("UPDATE `item` SET `last-child` = %d, `changed` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+					$r = q("UPDATE `item` SET `last-child` = %d , `changed` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 						intval($allow[0]['data']),
 						dbesc(datetime_convert()),
 						dbesc($item_id),
@@ -482,8 +521,6 @@ function dfrn_notify_post(&$a) {
 				continue;
 			}
 
-
-			$datarray = get_atom_elements($feed,$item);
 			$datarray['parent-uri'] = $item_id;
 			$datarray['uid'] = $importer['importer_uid'];
 			$datarray['contact-id'] = $importer['id'];
