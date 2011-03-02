@@ -113,13 +113,14 @@ function printable($s) {
 if(! function_exists('dbg')) { 
 function dbg($state) {
 	global $db;
+	if($db)
 	$db->dbg($state);
 }}
 
 if(! function_exists('dbesc')) { 
 function dbesc($str) {
 	global $db;
-	if($db->connected)
+	if($db && $db->connected)
 		return($db->escape($str));
 	else
 		return(str_replace("'","\\'",$str));
@@ -138,7 +139,7 @@ function q($sql) {
 	$args = func_get_args();
 	unset($args[0]);
 
-	if($db->connected) {
+	if($db && $db->connected) {
 		$ret = $db->q(vsprintf($sql,$args));
 		return $ret;
 	}
@@ -165,7 +166,7 @@ if(! function_exists('dbq')) {
 function dbq($sql) {
 
 	global $db;
-	if($db->connected)
+	if($db && $db->connected)
 		$ret = $db->q($sql);
 	else
 		$ret = false;

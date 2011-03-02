@@ -82,7 +82,7 @@ function nav(&$a) {
 	 *
 	 */
 
-	if(x($_SESSION,'uid')) {
+	if(local_user()) {
 
 		$a->page['nav'] .= '<a id="nav-network-link" class="nav-commlink" href="network">' . t('Network') 
 			. '</a><span id="net-update" class="nav-ajax-left"></span>' . "\r\n";
