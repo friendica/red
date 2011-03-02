@@ -16,11 +16,16 @@ class dba {
 
 	private $debug = 0;
 	private $db;
+	public  $connected = false;
 
 	function __construct($server,$user,$pass,$db,$install = false) {
 		$this->db = @new mysqli($server,$user,$pass,$db);
-		if((mysqli_connect_errno()) && (! $install))
-			system_unavailable();    
+		if((mysqli_connect_errno()) && (! $install)) {
+			$this->db = null;
+			system_unavailable();
+		}
+		else
+			$this->connected = true;    
 	}
 
 	public function getdb() {
@@ -114,7 +119,7 @@ function dbg($state) {
 if(! function_exists('dbesc')) { 
 function dbesc($str) {
 	global $db;
-	if($db)
+	if($db->connected)
 		return($db->escape($str));
 	else
 		return(str_replace("'","\\'",$str));
@@ -133,7 +138,7 @@ function q($sql) {
 	$args = func_get_args();
 	unset($args[0]);
 
-	if($db) {
+	if($db->connected) {
 		$ret = $db->q(vsprintf($sql,$args));
 		return $ret;
 	}
@@ -160,7 +165,10 @@ if(! function_exists('dbq')) {
 function dbq($sql) {
 
 	global $db;
-	$ret = $db->q($sql);
+	if($db->connected)
+		$ret = $db->q($sql);
+	else
+		$ret = false;
 	return $ret;
 }}
 
