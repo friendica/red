@@ -25,7 +25,9 @@ function nav(&$a) {
 	 *
 	 */
 
-	$a->page['nav'] .= '<div id="site-location">' . substr($a->get_baseurl(),strpos($a->get_baseurl(),'//') + 2 ) . '</div>';
+	$myident = ((is_array($a->user) && isset($a->user['nickname'])) ? $a->user['nickname'] . '@' : '');
+		
+	$a->page['nav'] .= '<div id="site-location">' . $myident . substr($a->get_baseurl(),strpos($a->get_baseurl(),'//') + 2 ) . '</div>';
 
 
 	/**
@@ -98,6 +100,9 @@ function nav(&$a) {
 		$a->page['nav'] .= '<a id="nav-messages-link" class="nav-commlink" href="message">' . t('Messages') 
 			. '</a><span id="mail-update" class="nav-ajax-left"></span>' . "\r\n";
 		
+		if(is_array($a->identities) && count($a->identities) > 1) {
+			$a->page['nav'] .= '<a id="nav-manage-link" class="nav-commlink" href="manage">' . t('Manage') . '</a>' . "\r\n"; 
+		}
 
 		$a->page['nav'] .= '<a id="nav-settings-link" class="nav-link" href="settings">' . t('Settings') . "</a>\r\n";
 

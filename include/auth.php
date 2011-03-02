@@ -61,6 +61,13 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 
 		$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
 
+		$r = q("SELECT `uid`,`username` FROM `user` WHERE `password` = '%s' AND `email` = '%s'",
+			dbesc($a->user['password']),
+			dbesc($a->user['email'])
+		);
+		if(count($r))
+			$a->identities = $r;
+
 		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
 			intval($_SESSION['uid']));
 		if(count($r)) {
@@ -192,7 +199,15 @@ else {
 			$a->timezone = $a->user['timezone'];
 		}
 
-		$r = q("SELECT * FROM `contact` WHERE `uid` = %s AND `self` = 1 LIMIT 1",
+		$r = q("SELECT `uid`,`username` FROM `user` WHERE `password` = '%s' AND `email` = '%s'",
+			dbesc($a->user['password']),
+			dbesc($a->user['email'])
+		);
+		if(count($r))
+			$a->identities = $r;
+
+
+		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
 			intval($_SESSION['uid']));
 		if(count($r)) {
 			$a->contact = $r[0];

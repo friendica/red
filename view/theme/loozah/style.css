@@ -2086,3 +2086,17 @@ a.mail-list-link {
 	margin: 10px;
 }
 
+
+#identity-manage-desc {
+	margin-top:15px;
+	margin-bottom: 15px;
+}
+
+#identity-manage-choose {
+	margin-bottom: 15px;
+}
+
+#identity-submit {
+	margin-top: 20px;
+}
+

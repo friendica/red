@@ -197,6 +197,7 @@ class App {
 	public  $interactive = true;
 	public  $plugins;
 	public  $apps;
+	public  $identities;
 
 	private $scheme;
 	private $hostname;
