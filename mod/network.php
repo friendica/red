@@ -230,6 +230,11 @@ function network_content(&$a, $update = 0) {
 				$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $item['thumb']);
 				$profile_link   = ((strlen($item['author-link']))   ? $item['author-link']   : $item['url']);
 
+				if(strlen($item['author-link']) && link_compare($item['author-link'],$item['url']) 
+					&& ($item['network'] === 'dfrn') && (! $item['self'])) {
+					$profile_link = $redirect_url;
+					$sparkle = ' sparkle';
+				}
 
 				$location = (($item['location']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : '');
 				$coord = (($item['coord']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['coord']) . '">' . $item['coord'] . '</a>' : '');
