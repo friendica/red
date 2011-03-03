@@ -20,7 +20,7 @@ class dba {
 
 	function __construct($server,$user,$pass,$db,$install = false) {
 		$this->db = @new mysqli($server,$user,$pass,$db);
-		if(! mysql_connect_errno()) {
+		if(! mysqli_connect_errno()) {
 			$this->connected = true;
 		}
 		else {
