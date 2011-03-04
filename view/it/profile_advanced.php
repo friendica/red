@@ -113,7 +113,7 @@ $o .= <<< EOT
 EOT;
 }
 
-if($txt = prepare_body($a->profile['about'])) {
+if($txt = prepare_text($a->profile['about'])) {
 $o .= <<< EOT
 <div id="advanced-profile-about-wrapper" >
 <div id="advanced-profile-about-text">Informazioni varie:</div>
@@ -124,7 +124,7 @@ $o .= <<< EOT
 EOT;
 }
 
-if($txt = prepare_body($a->profile['interest'])) {
+if($txt = prepare_text($a->profile['interest'])) {
 $o .= <<< EOT
 <div id="advanced-profile-interest-wrapper" >
 <div id="advanced-profile-interest-text">Hobbie/Interessi:</div>
@@ -135,7 +135,7 @@ $o .= <<< EOT
 EOT;
 }
 
-if($txt = prepare_body($a->profile['contact'])) {
+if($txt = prepare_text($a->profile['contact'])) {
 $o .= <<< EOT
 <div id="advanced-profile-contact-wrapper" >
 <div id="advanced-profile-contact-text">Informazioni su contatti e Social Networks:</div>
@@ -146,7 +146,7 @@ $o .= <<< EOT
 EOT;
 }
 
-if($txt = prepare_body($a->profile['music'])) {
+if($txt = prepare_text($a->profile['music'])) {
 $o .= <<< EOT
 <div id="advanced-profile-music-wrapper" >
 <div id="advanced-profile-music-text">Interessi musicali:</div>
@@ -157,7 +157,7 @@ $o .= <<< EOT
 EOT;
 }
 
-if($txt = prepare_body($a->profile['book'])) {
+if($txt = prepare_text($a->profile['book'])) {
 $o .= <<< EOT
 <div id="advanced-profile-book-wrapper" >
 <div id="advanced-profile-book-text">Libri, letteratura:</div>
@@ -168,7 +168,7 @@ $o .= <<< EOT
 EOT;
 }
 
-if($txt = prepare_body($a->profile['tv'])) {
+if($txt = prepare_text($a->profile['tv'])) {
 $o .= <<< EOT
 <div id="advanced-profile-tv-wrapper" >
 <div id="advanced-profile-tv-text">Televisione:</div>
@@ -179,7 +179,7 @@ $o .= <<< EOT
 EOT;
 }
 
-if($txt = prepare_body($a->profile['film'])) {
+if($txt = prepare_text($a->profile['film'])) {
 $o .= <<< EOT
 <div id="advanced-profile-film-wrapper" >
 <div id="advanced-profile-film-text">Film/danza/cultura/intrattenimento:</div>
@@ -190,7 +190,7 @@ $o .= <<< EOT
 EOT;
 }
 
-if($txt = prepare_body($a->profile['romance'])) {
+if($txt = prepare_text($a->profile['romance'])) {
 $o .= <<< EOT
 <div id="advanced-profile-romance-wrapper" >
 <div id="advanced-profile-romance-text">Amore/romanticismo:</div>
@@ -201,7 +201,7 @@ $o .= <<< EOT
 EOT;
 }
 
-if($txt = prepare_body($a->profile['work'])) {
+if($txt = prepare_text($a->profile['work'])) {
 $o .= <<< EOT
 <div id="advanced-profile-work-wrapper" >
 <div id="advanced-profile-work-text">Lavoro/impiego:</div>
@@ -212,7 +212,7 @@ $o .= <<< EOT
 EOT;
 }
 
-if($txt = prepare_body($a->profile['education'])) {
+if($txt = prepare_text($a->profile['education'])) {
 $o .= <<< EOT
 <div id="advanced-profile-education-wrapper" >
 <div id="advanced-profile-education-text">Scuola/educazione:</div>

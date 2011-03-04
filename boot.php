@@ -40,6 +40,8 @@ define ( 'REGISTER_OPEN',          2 );
 
 /**
  * relationship types
+ * When used in contact records, this indicates that 'uid' has 
+ * this relationship with contact['name']
  */
 
 define ( 'REL_VIP',        1);
@@ -2417,10 +2419,15 @@ function link_compare($a,$b) {
 
 if(! function_exists('prepare_body')) {
 function prepare_body($item) {
+	return prepare_text($item['body']);
+}}
+
+if(! function_exists('prepare_text')) {
+function prepare_text($text) {
 
 	require_once('include/bbcode.php');
 
-	$s = smilies(bbcode($item['body']));
+	$s = smilies(bbcode($text));
 
 	return $s;
 }}
