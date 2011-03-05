@@ -91,12 +91,13 @@ nav #site-location {
 
 nav #banner {
 	display: block;
-    padding-top: 10px;
+    padding-top: 14px;
 	position: absolute;
 }
 nav #banner #logo-text a {
-	font-size: 44px;
+	font-size: 40px;
 	font-weight: bold;
+	margin-left: 3px;
  	color: #000000;
 
 }
@@ -318,7 +319,7 @@ div.wall-item-content-wrapper.shiny {
 
 input#dfrn-url {
 	float: left;
-	background: url(ff-16.jpg) no-repeat;
+	background: url(friendika-16.png) no-repeat;
 	background-position: 2px center;
 	font-size: 17px;
 	padding-left: 21px;
