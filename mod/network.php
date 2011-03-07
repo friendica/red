@@ -234,7 +234,7 @@ function network_content(&$a, $update = 0) {
 				$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 
 				if(strlen($item['author-link'])) {
-					if(($item['network'] === 'dfrn') && (! $item['self'])) {
+					if(link_compare($item['author-link'],$item['url']) && ($item['network'] === 'dfrn') && (! $item['self'])) {
 						$profile_link = $redirect_url;
 						$sparkle = ' sparkle';
 					}
@@ -381,7 +381,7 @@ function network_content(&$a, $update = 0) {
 
 			if(strlen($item['author-link'])) {
 				$profile_link = $item['author-link'];
-				if(($item['network'] === 'dfrn') && (! $item['self'])) {
+				if(link_compare($item['author-link'],$item['url']) && ($item['network'] === 'dfrn') && (! $item['self'])) {
 					$profile_link = $redirect_url;
 					$sparkle = ' sparkle';
 				}
