@@ -233,7 +233,7 @@ function network_content(&$a, $update = 0) {
 
 				$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 
-				if(strlen($item['author-link']) && link_compare($item['author-link'],$item['url'])) {
+				if(strlen($item['author-link'])) {
 					if(($item['network'] === 'dfrn') && (! $item['self'])) {
 						$profile_link = $redirect_url;
 						$sparkle = ' sparkle';
@@ -242,7 +242,6 @@ function network_content(&$a, $update = 0) {
 						$profile_link = $a->get_baseurl() . '/redir/' . $author_contacts[$item['author-link']];
 						$sparkle = ' sparkle';
 					}
-
 				}
 
 				$location = (($item['location']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : '');
@@ -380,7 +379,8 @@ function network_content(&$a, $update = 0) {
 			$profile_name   = (((strlen($item['author-name']))   && $diff_author) ? $item['author-name']   : $item['name']);
 			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $thumb);
 
-			if(strlen($item['author-link']) && link_compare($item['author-link'],$item['url'])) {
+			if(strlen($item['author-link'])) {
+				$profile_link = $item['author-link'];
 				if(($item['network'] === 'dfrn') && (! $item['self'])) {
 					$profile_link = $redirect_url;
 					$sparkle = ' sparkle';
@@ -389,8 +389,6 @@ function network_content(&$a, $update = 0) {
 					$profile_link = $a->get_baseurl() . '/redir/' . $author_contacts[$item['author-link']];
 					$sparkle = ' sparkle';
 				}
-				else
-					$profile_link = $item['author-link'];
 			}
 			else 
 				$profile_link = $item['url'];
