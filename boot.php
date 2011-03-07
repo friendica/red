@@ -2591,3 +2591,29 @@ function unamp($s) {
 	return str_replace('&amp;', '&', $s);
 }}
 
+if(! function_exists('extract_item_authors')) {
+function extract_item_authors($arr,$uid) {
+
+	if((! $uid) || (! is_array($arr)) || (! count($arr)))
+		return array();
+	$urls = array();
+	foreach($arr as $rr) {
+		if(! in_array("'" . dbesc($rr['author-link']) . "'",$urls))
+			$urls[] = "'" . dbesc($rr['author-link']) . "'";
+	}
+
+	// pre-quoted, don't put quotes on %s
+	if(count($urls)) {
+		$r = q("SELECT `id`,`url` FROM `contact` WHERE `uid` = %d AND `url` IN ( %s ) AND `network` = 'dfrn' AND `self` = 0 AND `blocked` = 0 ",
+			intval($uid),
+			implode(',',$urls)
+		);
+		if(count($r)) {
+			$ret = array();
+			foreach($r as $rr)
+				$ret[$rr['url']] = $rr['id'];
+			return $ret;
+		}
+	}
+	return array();		
+}}
