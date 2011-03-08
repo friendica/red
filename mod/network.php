@@ -87,6 +87,17 @@ function network_content(&$a, $update = 0) {
 
 		$o .= replace_macros($tpl,array(
 			'$return_path' => $a->cmd,
+			'$action' => 'item',
+			'$share' => t('Share'),
+			'$upload' => t('Upload photo'),
+			'$weblink' => t('Insert web link'),
+			'$youtube' => t('Insert YouTube video'),
+			'$setloc' => t('Set your location'),
+			'$noloc' => t('Clear browser location'),
+			'$wait' => t('Please wait'),
+			'$permset' => t('Permission settings'),
+			'$content' => '',
+			'$post_id' => '',
 			'$baseurl' => $a->get_baseurl(),
 			'$defloc' => $a->user['default-location'],
 			'$visitor' => 'block',
