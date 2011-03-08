@@ -55,7 +55,8 @@ function pubsub_init(&$a) {
 
 		$sql_extra = ((strlen($hub_verify)) ? sprintf(" AND `hub-verify` = '%s' ", dbesc($hub_verify)) : '');
 
-		$r = q("SELECT * FROM `contact` WHERE `poll` = '%s' AND `id` = %d AND `uid` = %d AND `blocked` = 0 $sql_extra LIMIT 1",
+		$r = q("SELECT * FROM `contact` WHERE `poll` = '%s' AND `id` = %d AND `uid` = %d 
+			AND `blocked` = 0 AND `pending` = 0 $sql_extra LIMIT 1",
 			dbesc($hub_topic),
 			intval($contact_id),
 			intval($owner['uid'])
@@ -101,10 +102,14 @@ function pubsub_post(&$a) {
 
 	$importer = $r[0];
 
-	$r = q("SELECT * FROM `contact` WHERE `subhub` = 1 AND `id` = %d AND `uid` = %d AND `blocked` = 0 AND `readonly` = 0 LIMIT 1",
+	$r = q("SELECT * FROM `contact` WHERE `subhub` = 1 AND `id` = %d AND `uid` = %d 
+		AND ( `rel` = %d OR `rel` = %d ) AND `blocked` = 0 AND `readonly` = 0 LIMIT 1",
 		intval($contact_id),
-		intval($importer['uid'])
+		intval($importer['uid']),
+		intval(REL_FAN),
+		intval(REL_BUD)	
 	);
+
 	if(! count($r)) {
 		logger('pubsub: no contact record - ignored');
 		hub_post_return();

@@ -20,12 +20,14 @@ class dba {
 
 	function __construct($server,$user,$pass,$db,$install = false) {
 		$this->db = @new mysqli($server,$user,$pass,$db);
-		if((mysqli_connect_errno()) && (! $install)) {
-			$this->db = null;
-			system_unavailable();
+		if(! mysqli_connect_errno()) {
+			$this->connected = true;
 		}
-		else
-			$this->connected = true;    
+		else {
+			$this->db = null;
+			if(! $install)
+				system_unavailable();
+		}
 	}
 
 	public function getdb() {
@@ -34,7 +36,7 @@ class dba {
 
 	public function q($sql) {
 		
-		if(! $this->db )
+		if((! $this->db) || (! $this->connected))
 			return false;
 		
 		$result = @$this->db->query($sql);
@@ -92,7 +94,8 @@ class dba {
 	}
 
 	public function escape($str) {
-		return @$this->db->real_escape_string($str);
+		if($this->db && $this->connected)
+			return @$this->db->real_escape_string($str);
 	}
 
 	function __destruct() {

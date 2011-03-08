@@ -87,6 +87,17 @@ function network_content(&$a, $update = 0) {
 
 		$o .= replace_macros($tpl,array(
 			'$return_path' => $a->cmd,
+			'$action' => 'item',
+			'$share' => t('Share'),
+			'$upload' => t('Upload photo'),
+			'$weblink' => t('Insert web link'),
+			'$youtube' => t('Insert YouTube video'),
+			'$setloc' => t('Set your location'),
+			'$noloc' => t('Clear browser location'),
+			'$wait' => t('Please wait'),
+			'$permset' => t('Permission settings'),
+			'$content' => '',
+			'$post_id' => '',
 			'$baseurl' => $a->get_baseurl(),
 			'$defloc' => $a->user['default-location'],
 			'$visitor' => 'block',
@@ -196,12 +207,13 @@ function network_content(&$a, $update = 0) {
 			AND `item`.`parent` = `parentitem`.`id`
 			$sql_extra
 			ORDER BY `parentitem`.`created`  DESC, `item`.`gravity` ASC, `item`.`created` ASC LIMIT %d ,%d ",
-			intval($_SESSION['uid']),
+			intval(local_user()),
 			intval($a->pager['start']),
 			intval($a->pager['itemspage'])
 		);
 	}
 
+	$author_contacts = extract_item_authors($r,local_user());
 
 	$cmnt_tpl = load_view_file('view/comment_item.tpl');
 	$like_tpl = load_view_file('view/like.tpl');
@@ -230,10 +242,17 @@ function network_content(&$a, $update = 0) {
 				$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $item['thumb']);
 				$profile_link   = ((strlen($item['author-link']))   ? $item['author-link']   : $item['url']);
 
-				if(strlen($item['author-link']) && link_compare($item['author-link'],$item['url']) 
-					&& ($item['network'] === 'dfrn') && (! $item['self'])) {
-					$profile_link = $redirect_url;
-					$sparkle = ' sparkle';
+				$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
+
+				if(strlen($item['author-link'])) {
+					if(link_compare($item['author-link'],$item['url']) && ($item['network'] === 'dfrn') && (! $item['self'])) {
+						$profile_link = $redirect_url;
+						$sparkle = ' sparkle';
+					}
+					elseif(isset($author_contacts[$item['author-link']])) {
+						$profile_link = $a->get_baseurl() . '/redir/' . $author_contacts[$item['author-link']];
+						$sparkle = ' sparkle';
+					}
 				}
 
 				$location = (($item['location']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : '');
@@ -287,14 +306,14 @@ function network_content(&$a, $update = 0) {
 			$comment = '';
 			$template = $tpl;
 			$commentww = '';
+			$sparkle = '';
 			$owner_url = $owner_photo = $owner_name = '';
-
-			$profile_url = $item['url'];
-
-			$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 
 			if(((activity_match($item['verb'],ACTIVITY_LIKE)) || (activity_match($item['verb'],ACTIVITY_DISLIKE))) && ($item['id'] != $item['parent']))
 				continue;
+
+			$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
+
 
 
 			$lock = ((($item['private']) || (($item['uid'] == local_user()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
@@ -331,7 +350,6 @@ function network_content(&$a, $update = 0) {
 						$owner_url = $redirect_url;
 						$osparkle = ' sparkle';
 					}
-
 				}
 			}
 
@@ -362,13 +380,6 @@ function network_content(&$a, $update = 0) {
 
 			$drop = replace_macros(load_view_file('view/wall_item_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
 
-
-	
-			if(($item['network'] === 'dfrn') && (! $item['self'] )) {
-				$profile_url = $redirect_url;
-				$sparkle = ' sparkle';
-			}
-
 			$photo = $item['photo'];
 			$thumb = $item['thumb'];
 
@@ -379,22 +390,19 @@ function network_content(&$a, $update = 0) {
 			$profile_name   = (((strlen($item['author-name']))   && $diff_author) ? $item['author-name']   : $item['name']);
 			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $thumb);
 
-
-			$profile_link = $profile_url;
-
-			// Can we use our special contact URL for this author? 
-
 			if(strlen($item['author-link'])) {
-				if((link_compare($item['author-link'],$item['url'])) && ($item['network'] === 'dfrn') && (! $item['self'])) {
+				$profile_link = $item['author-link'];
+				if(link_compare($item['author-link'],$item['url']) && ($item['network'] === 'dfrn') && (! $item['self'])) {
 					$profile_link = $redirect_url;
 					$sparkle = ' sparkle';
 				}
-				else {
-					$profile_link = $item['author-link'];
-					$sparkle = '';
+				elseif(isset($author_contacts[$item['author-link']])) {
+					$profile_link = $a->get_baseurl() . '/redir/' . $author_contacts[$item['author-link']];
+					$sparkle = ' sparkle';
 				}
 			}
-
+			else 
+				$profile_link = $item['url'];
 
 			$like    = ((x($alike,$item['id'])) ? format_like($alike[$item['id']],$alike[$item['id'] . '-l'],'like',$item['id']) : '');
 			$dislike = ((x($dlike,$item['id'])) ? format_like($dlike[$item['id']],$dlike[$item['id'] . '-l'],'dislike',$item['id']) : '');

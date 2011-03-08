@@ -165,9 +165,12 @@ function message_content(&$a) {
 	if(($a->argc > 1) && ($a->argv[1] === 'new')) {
 		
 		$tpl = load_view_file('view/msg-header.tpl');
-	
-		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
 
+		$a->page['htmlhead'] .= replace_macros($tpl, array(
+			'$baseurl' => $a->get_baseurl(),
+			'$nickname' => $a->user['nickname']
+		));
+	
 		$select = contact_select('messageto','message-to-select', false, 4, true);
 		$tpl = load_view_file('view/prv_message.tpl');
 		$o .= replace_macros($tpl,array(

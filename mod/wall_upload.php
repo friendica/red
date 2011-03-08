@@ -101,5 +101,5 @@ function wall_upload_post(&$a) {
 	echo  '<br /><br /><a href="' . $a->get_baseurl() . '/photos/' . $page_owner_nick . '/image/' . $hash . '" ><img src="' . $a->get_baseurl() . "/photo/{$hash}-{$smallest}.jpg\" alt=\"$basename\" /></a><br /><br />";
 
 	killme();
-	return; // NOTREACHED
+	// NOTREACHED
 }

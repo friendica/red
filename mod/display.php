@@ -127,6 +127,8 @@ function display_content(&$a) {
 			like_puller($a,$item,$dlike,'dislike');
 		}
 
+		$author_contacts = extract_item_authors($r,$a->profile['uid']);
+
 		foreach($r as $item) {
 
 			$template = $tpl;
@@ -172,17 +174,6 @@ function display_content(&$a) {
 			$sparkle = '';
 
 
-			$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
-
-			// I think this is redundant now but too chicken to remove it unless
-			// I've had six cups of coffee and tested it completely
-
-			if(($item['network'] === 'dfrn') && (! $item['self'] )) {
-				$profile_url = $redirect_url;
-				$sparkle = ' sparkle';
-			}
-
-
 			// Top-level wall post not written by the wall owner (wall-to-wall)
 			// First figure out who owns it. 
 
@@ -223,13 +214,14 @@ function display_content(&$a) {
 			// Can we use our special contact URL for this author? 
 
 			if(strlen($item['author-link'])) {
-				if((link_compare($item['author-link'],$item['url'])) && ($item['network'] === 'dfrn') && (! $item['self'])) {
+				$profile_link = $item['author-link'];
+				if(link_compare($item['author-link'],$item['url']) && ($item['network'] === 'dfrn') && (! $item['self'])) {
 					$profile_link = $redirect_url;
 					$sparkle = ' sparkle';
 				}
-				else {
-					$profile_link = $item['author-link'];
-					$sparkle = '';
+				elseif(isset($author_contacts[$item['author-link']])) {
+					$profile_link = $a->get_baseurl() . '/redir/' . $author_contacts[$item['author-link']];
+					$sparkle = ' sparkle';
 				}
 			}
 

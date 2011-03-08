@@ -3,7 +3,7 @@
 set_time_limit(0);
 
 define ( 'BUILD_ID',               1039   );
-define ( 'FRIENDIKA_VERSION',      '2.10.0908' );
+define ( 'FRIENDIKA_VERSION',      '2.10.0909' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.1'  );
 
 define ( 'EOL',                    "<br />\r\n"     );
@@ -40,6 +40,8 @@ define ( 'REGISTER_OPEN',          2 );
 
 /**
  * relationship types
+ * When used in contact records, this indicates that 'uid' has 
+ * this relationship with contact['name']
  */
 
 define ( 'REL_VIP',        1);
@@ -2417,10 +2419,15 @@ function link_compare($a,$b) {
 
 if(! function_exists('prepare_body')) {
 function prepare_body($item) {
+	return prepare_text($item['body']);
+}}
+
+if(! function_exists('prepare_text')) {
+function prepare_text($text) {
 
 	require_once('include/bbcode.php');
 
-	$s = smilies(bbcode($item['body']));
+	$s = smilies(bbcode($text));
 
 	return $s;
 }}
@@ -2584,3 +2591,29 @@ function unamp($s) {
 	return str_replace('&amp;', '&', $s);
 }}
 
+if(! function_exists('extract_item_authors')) {
+function extract_item_authors($arr,$uid) {
+
+	if((! $uid) || (! is_array($arr)) || (! count($arr)))
+		return array();
+	$urls = array();
+	foreach($arr as $rr) {
+		if(! in_array("'" . dbesc($rr['author-link']) . "'",$urls))
+			$urls[] = "'" . dbesc($rr['author-link']) . "'";
+	}
+
+	// pre-quoted, don't put quotes on %s
+	if(count($urls)) {
+		$r = q("SELECT `id`,`url` FROM `contact` WHERE `uid` = %d AND `url` IN ( %s ) AND `network` = 'dfrn' AND `self` = 0 AND `blocked` = 0 ",
+			intval($uid),
+			implode(',',$urls)
+		);
+		if(count($r)) {
+			$ret = array();
+			foreach($r as $rr)
+				$ret[$rr['url']] = $rr['id'];
+			return $ret;
+		}
+	}
+	return array();		
+}}
