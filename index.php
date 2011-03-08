@@ -31,10 +31,17 @@ $install = ((file_exists('.htconfig.php')) ? false : true);
  *
  * Get the language setting directly from system variables, bypassing get_config()
  * as database may not yet be configured.
+ * 
+ * If possible, we use the value from the browser.
  *
  */
 
-$lang = ((isset($a->config['system']['language'])) ? $a->config['system']['language'] : 'en');
+if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+	$langs = preg_split("/[,-]/",$_SERVER['HTTP_ACCEPT_LANGUAGE'],2);
+	$lang = $langs[0];
+} else {
+	$lang = ((isset($a->config['system']['language'])) ? $a->config['system']['language'] : 'en');
+}
 	
 load_translation_table($lang);
 
