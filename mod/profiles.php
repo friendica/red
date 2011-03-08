@@ -226,7 +226,7 @@ function profiles_content(&$a) {
 	}
 
 	if(($a->argc > 2) && ($a->argv[1] === "drop") && intval($a->argv[2])) {
-		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d AND `is-default` = 0 AND `self` = 0 LIMIT 1",
+		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d AND `is-default` = 0 LIMIT 1",
 			intval($a->argv[2]),
 			intval(local_user())
 		);
@@ -243,8 +243,9 @@ function profiles_content(&$a) {
 			intval($a->argv[2]),
 			intval(local_user())
 		);
-		$r = q("DELETE FROM `profile` WHERE `id` = %d LIMIT 1",
-			intval($a->argv[2])
+		$r = q("DELETE FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			intval($a->argv[2]),
+			intval(local_user())
 		);
 		if($r)
 			notice( t('Profile deleted.') . EOL);
