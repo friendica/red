@@ -839,10 +839,6 @@ input#dfrn-url {
 .comment .wall-item-info {
 	width: 70px;
 }
-.wallwall .wall-item-info {
-	width: 170px;
-}
-
 
 .wall-item-photo-wrapper {
 	margin-top: 10px;
@@ -850,25 +846,25 @@ input#dfrn-url {
 	margin-bottom: 10px;
 	width: 100px;
 }
-/*.wallwall .wall-item-photo-wrapper {
-	float: left;
-}*/
-.wallwall .wwfrom {
-    left: 75px;
-    position: absolute;
-    top: 0;
-}
 
+.wallwall .wwto {
+    left: 50px;
+    margin: 0;
+    position: absolute;
+    top: 70px;
+    width: 30px
+}
+.wallwall .wwto img {
+	width: 30px;
+	height: 30px;
+}
 .wallwall .wall-item-photo-end {
 	clear: both;
 }
 
 .wall-item-arrowphoto-wrapper {
-	/*margin-top: 40px;
-	margin-right: 20px;
-	float: left;*/
     position: absolute;
-    left: 70px;
+    left: 75px;
     top: 70px;
     z-index: 100;
 }
@@ -902,7 +898,6 @@ input#dfrn-url {
 	/* can use a jquery plugin http://bit.ly/zJskg */
 	text-overflow: ellipsis;
 	-o-text-overflow: ellipsis;
-	white-space: nowrap;
 	width: 100%;
 }
 
