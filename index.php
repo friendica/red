@@ -19,11 +19,11 @@ $a = new App;
 /**
  *
  * Load the configuration file which contains our DB credentials.
- * Ignore errors. If the file doesn't exist, we are running in installation mode.
+ * Ignore errors. If the file doesn't exist or is empty, we are running in installation mode.
  *
  */
 
-$install = ((file_exists('.htconfig.php')) ? false : true);
+$install = ((file_exists('.htconfig.php') && filesize('.htconfig.php')) ? false : true);
 
 @include(".htconfig.php");
 
