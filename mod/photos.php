@@ -1033,8 +1033,14 @@ function photos_content(&$a) {
 
 			$likebuttons = '';
 
-			if($can_post || can_write_wall($a,$owner_uid))
-				$likebuttons = replace_macros($like_tpl,array('$id' => $link_item['id']));
+			if($can_post || can_write_wall($a,$owner_uid)) {
+				$likebuttons = replace_macros($like_tpl,array(
+					'$id' => $item['id'],
+					'$likethis' => t("I like this \x28toggle\x29"),
+					'$nolike' => t("I don't like this \x28toggle\x29"),
+					'$wait' => t('Please wait') 
+				));
+			}
 
 			if(! count($r)) {
 				$o .= '<div id="photo-like-div">';

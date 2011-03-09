@@ -360,7 +360,12 @@ function network_content(&$a, $update = 0) {
 
 			$likebuttons = '';
 			if($item['id'] == $item['parent']) {
-				$likebuttons = replace_macros($like_tpl,array('$id' => $item['id']));
+				$likebuttons = replace_macros($like_tpl,array(
+					'$id' => $item['id'],
+					'$likethis' => t("I like this \x28toggle\x29"),
+					'$nolike' => t("I don't like this \x28toggle\x29"),
+					'$wait' => t('Please wait') 
+				));
 			}
 
 			if($item['last-child']) {
