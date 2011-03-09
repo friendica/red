@@ -95,6 +95,15 @@ function facebook_init(&$a) {
 
 }
 
+function facebook_post(&$a) {
+
+	if(local_user()){
+		$value = ((x($_POST,'post_by_default')) ? intval($_POST['post_by_default']) : 0);
+		set_pconfig(local_user(),'facebook','post_by_default', $value);
+	} 
+	return;		
+}
+
 function facebook_content(&$a) {
 
 	if(! local_user()) {
@@ -106,6 +115,8 @@ function facebook_content(&$a) {
 		del_pconfig(local_user(),'facebook','post');
 		notice( t('Facebook disabled') . EOL);
 	}
+
+	$fb_installed = get_pconfig(local_user(),'facebook','post');
 
 	$appid = get_config('facebook','appid');
 
@@ -119,14 +130,26 @@ function facebook_content(&$a) {
 
 	$o .= '<h3>' . t('Facebook Connect') . '</h3>';
 
-	$o .= '<div id="facebook-enable-wrapper">';
+	if(! $fb_installed) { 
+		$o .= '<div id="facebook-enable-wrapper">';
 
-	$o .= '<a href="https://www.facebook.com/dialog/oauth?client_id=' . $appid . '&redirect_uri=' 
-		. $a->get_baseurl() . '/facebook/' . $a->user['nickname'] . '&scope=publish_stream,read_stream,offline_access">' . t('Install Facebook post connector') . '</a>';
-	$o .= '</div><div id="facebook-disable-wrapper">';
+		$o .= '<a href="https://www.facebook.com/dialog/oauth?client_id=' . $appid . '&redirect_uri=' 
+			. $a->get_baseurl() . '/facebook/' . $a->user['nickname'] . '&scope=publish_stream,read_stream,offline_access">' . t('Install Facebook post connector') . '</a>';
+		$o .= '</div>';
+	}
 
-	$o .= '<a href="' . $a->get_baseurl() . '/facebook/remove' . '">' . t('Remove Facebook post connector') . '</a></div>';
+	if($fb_installed) {
+		$o .= '<div id="facebook-disable-wrapper">';
 
+		$o .= '<a href="' . $a->get_baseurl() . '/facebook/remove' . '">' . t('Remove Facebook post connector') . '</a></div>';
+	
+		$o .= '<div id="facebook-post-default-form">';
+		$o .= '<form action="facebook" method="post" >';
+		$post_by_default = get_pconfig(local_user(),'facebook','post_by_default');
+		$checked = (($post_by_default) ? ' checked="checked" ' : '');
+		$o .= '<input type="checkbox" name="post_by_default" value="1"' . $checked . '/>' . ' ' . t('Post to Facebook by default') . '<br />';
+		$o .= '<input type="submit" name="submit" value="' . t('Submit') . '" /></form></div>';
+	}
 
 	return $o;
 }
@@ -161,7 +184,7 @@ function facebook_jot_nets(&$a,&$b) {
 	$fb_post = get_pconfig(local_user(),'facebook','post');
 	if(intval($fb_post) == 1) {
 		$fb_defpost = get_pconfig(local_user(),'facebook','post_by_default');
-		$selected = ((intval($fb_defpost == 1)) ? ' selected="selected" ' : '');
+		$selected = ((intval($fb_defpost) == 1) ? ' checked="checked" ' : '');
 		$b .= '<div class="profile-jot-net"><input type="checkbox" name="facebook_enable"' . $selected . 'value="1" /> ' 
 			. t('Post to Facebook') . '</div>';	
 	}
@@ -202,7 +225,7 @@ function facebook_post_hook(&$a,&$b) {
 
 				// make links readable before we strip the code
 
-				$msg = preg_replace("/\[url=(.+?)\](.+?)\[\/url\]/is",'$2 ($1)',$msg);
+				$msg = preg_replace("/\[url=(.+?)\](.+?)\[\/url\]/is",'$2 [$1]',$msg);
 
 				$msg = preg_replace("/\[img\](.+?)\[\/img\]/is", t('Image: ') . '$1',$msg);
 
