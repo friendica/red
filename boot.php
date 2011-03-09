@@ -2,8 +2,8 @@
 
 set_time_limit(0);
 
-define ( 'BUILD_ID',               1039   );
-define ( 'FRIENDIKA_VERSION',      '2.10.0910' );
+define ( 'BUILD_ID',               1040   );
+define ( 'FRIENDIKA_VERSION',      '2.10.0912' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.1'  );
 
 define ( 'EOL',                    "<br />\r\n"     );
@@ -512,21 +512,69 @@ function check_config(&$a) {
 		foreach($plugins_arr as $p) {
 			if(! in_array($p,$installed_arr)) {
 				logger("Addons: installing " . $p);
+				$t = filemtime('addon/' . $p . '/' . $p . '.php');
 				@include_once('addon/' . $p . '/' . $p . '.php');
 				if(function_exists($p . '_install')) {
 					$func = $p . '_install';
 					$func();
-					$r = q("INSERT INTO `addon` (`name`, `installed`) VALUES ( '%s', 1 ) ",
-						dbesc($p)
+					$r = q("INSERT INTO `addon` (`name`, `installed`, `timestamp`) VALUES ( '%s', 1, %d ) ",
+						dbesc($p),
+						intval($t)
 					);
 				}
 			}
 		}
 	}
+
+
 	load_hooks();
 
 	return;
 }}
+
+// reload all updated plugins
+
+if(! function_exists('reload_plugins')) {
+function reload_plugins() {
+	$plugins = get_config('system','addon');
+	if(strlen($plugins)) {
+
+		$r = q("SELECT * FROM `addon` WHERE `installed` = 1");
+		if(count($r))
+			$installed = $r;
+		else
+			$installed = array();
+
+		$parr = explode(',',$plugins);
+		if(count($parr)) {
+			foreach($parr as $pl) {
+				$pl = trim($pl);
+				
+				$t = filemtime('addon/' . $pl . '/' . $pl . '.php');
+				foreach($installed as $i) {
+					if(($i['name'] == $pl) && ($i['timestamp'] != $t)) {	
+						logger('Reloading plugin: ' . $i['name']);
+						@include_once('addon/' . $pl . '/' . $pl . '.php');
+
+						if(function_exists($pl . '_uninstall')) {
+							$func = $pl . '_uninstall';
+							$func();
+						}
+						if(function_exists($pl . '_install')) {
+							$func = $pl . '_install';
+							$func();
+						}
+						q("UPDATE `addon` SET `timestamp` = %d WHERE `id` = %d LIMIT 1",
+							intval($t),
+							intval($i['id'])
+						);
+					}
+				}
+			}
+		}
+	}
+}}
+				
 
 
 // This is our template processor.

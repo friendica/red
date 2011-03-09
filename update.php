@@ -374,3 +374,6 @@ function update_1038() {
  q("ALTER TABLE `item` ADD `plink` CHAR( 255 ) NOT NULL AFTER `target` ");
 }
 
+function update_1039() {
+	q("ALTER TABLE `addon` ADD `timestamp` BIGINT NOT NULL DEFAULT '0'");
+}

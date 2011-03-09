@@ -47,6 +47,11 @@ function poller_run($argv, $argc){
 
 	$sql_extra = (($manual_id) ? " AND `id` = $manual_id " : "");
 
+	$d = datetime_convert();
+	call_hooks('cron', $d);
+
+	reload_plugins();
+
 	$contacts = q("SELECT `id` FROM `contact` 
 		WHERE ( `rel` = %d OR `rel` = %d ) AND `poll` != ''
 		$sql_extra 
