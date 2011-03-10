@@ -1826,6 +1826,11 @@ a.mail-list-link {
 	float: left;
 	width: 150px;
 }
+
+#photo-edit-perms-end {
+	margin-bottom: 15px;
+}
+
 #photo-edit-caption, #photo-edit-newtag, #photo-edit-albumname {
 	float: left;
 	margin-bottom: 25px;

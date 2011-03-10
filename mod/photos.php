@@ -246,6 +246,11 @@ foreach($_FILES AS $key => $val) {
 		$rawtags     = ((x($_POST,'newtag'))  ? notags(trim($_POST['newtag']))  : '');
 		$item_id     = ((x($_POST,'item_id')) ? intval($_POST['item_id'])       : 0);
 		$albname     = ((x($_POST,'albname')) ? notags(trim($_POST['albname'])) : '');
+		$str_group_allow   = perms2str($_POST['group_allow']);
+		$str_contact_allow = perms2str($_POST['contact_allow']);
+		$str_group_deny    = perms2str($_POST['group_deny']);
+		$str_contact_deny  = perms2str($_POST['contact_deny']);
+
 		$resource_id = $a->argv[2];
 
 		if(! strlen($albname))
@@ -256,10 +261,14 @@ foreach($_FILES AS $key => $val) {
 			dbesc($resource_id),
 			intval($page_owner_uid)
 		);
-		if((count($p)) && (($p[0]['desc'] !== $desc) || ($p[0]['album'] !== $albname))) {
-			$r = q("UPDATE `photo` SET `desc` = '%s', `album` = '%s' WHERE `resource-id` = '%s' AND `uid` = %d",
+		if(count($p)) {
+			$r = q("UPDATE `photo` SET `desc` = '%s', `album` = '%s', `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s' WHERE `resource-id` = '%s' AND `uid` = %d",
 				dbesc($desc),
 				dbesc($albname),
+				dbesc($str_contact_allow),
+				dbesc($str_group_allow),
+				dbesc($str_contact_deny),
+				dbesc($str_group_deny),
 				dbesc($resource_id),
 				intval($page_owner_uid)
 			);
@@ -1016,6 +1025,8 @@ function photos_content(&$a) {
 				'$caption' => $ph[0]['desc'],
 				'$tag_label' => t('Add a Tag'),
 				'$tags' => $link_item['tag'],
+				'$permissions' => t('Permissions'),
+				'$aclselect' => populate_acl($ph[0]),
 				'$help_tags' => t('Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping'),
 				'$item_id' => ((count($linked_items)) ? $link_item['id'] : 0),
 				'$submit' => t('Submit'),
