@@ -203,7 +203,7 @@ div.wall-item-content-wrapper.shiny {
   background-repeat:no-repeat;
 }
 
-/* from defautlt */
+/* from default */
 #jot-perms-icon, 
 #profile-location,
 #profile-nolocation, 
@@ -977,6 +977,10 @@ input#dfrn-url {
     background-repeat: repeat-x;
    	padding: 5px 10px 0px;
 }
+.wall-item-author {
+	margin-top: 10px;
+}
+
 .comment .wall-item-tools {
 	background:none;
 } 
