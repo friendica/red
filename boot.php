@@ -159,6 +159,11 @@ if (get_magic_quotes_gpc()) {
     unset($process);
 }
 
+/*
+ * translation system
+ */
+require_once("include/pgettext.php");
+
 
 /**
  *
@@ -600,28 +605,6 @@ function replace_macros($s,$r) {
 	return str_replace($search,$replace,$s);
 }}
 
-
-// load string translation table for alternate language
-
-if(! function_exists('load_translation_table')) {
-function load_translation_table($lang) {
-	global $a;
-
-	if(file_exists("view/$lang/strings.php"))
-		include("view/$lang/strings.php");
-}}
-
-// translate string if translation exists
-
-if(! function_exists('t')) {
-function t($s) {
-
-	$a = get_app();
-
-	if(x($a->strings,$s))
-		return $a->strings[$s];
-	return $s;
-}}
 
 // curl wrapper. If binary flag is true, return binary
 // results. 
