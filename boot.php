@@ -2,9 +2,9 @@
 
 set_time_limit(0);
 
-define ( 'BUILD_ID',               1040   );
-define ( 'FRIENDIKA_VERSION',      '2.10.0912' );
+define ( 'FRIENDIKA_VERSION',      '2.1.913' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.1'  );
+define ( 'DB_UPDATE_VERSION',      1040   );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -435,15 +435,15 @@ function check_config(&$a) {
 
 	$build = get_config('system','build');
 	if(! x($build))
-		$build = set_config('system','build',BUILD_ID);
+		$build = set_config('system','build',DB_UPDATE_VERSION);
 
 	$url = get_config('system','url');
 	if(! x($url))
 		$url = set_config('system','url',$a->get_baseurl());
 
-	if($build != BUILD_ID) {
+	if($build != DB_UPDATE_VERSION) {
 		$stored = intval($build);
-		$current = intval(BUILD_ID);
+		$current = intval(DB_UPDATE_VERSION);
 		if(($stored < $current) && file_exists('update.php')) {
 			// We're reporting a different version than what is currently installed.
 			// Run any existing update scripts to bring the database up to current.
@@ -455,7 +455,7 @@ function check_config(&$a) {
 					$func($a);
 				}
 			}
-			set_config('system','build', BUILD_ID);
+			set_config('system','build', DB_UPDATE_VERSION);
 		}
 	}
 

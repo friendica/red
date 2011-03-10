@@ -11,24 +11,24 @@
  * Each function in this file is named update_nnnn() where nnnn is an increasing number 
  * which began counting at 1000.
  * 
- * At the top of the file "boot.php" is a define for BUILD_ID. Any time there is a change
+ * At the top of the file "boot.php" is a define for DB_UPDATE_VERSION. Any time there is a change
  * to the database schema or one which requires an upgrade path from the existing application,
- * the BUILD_ID is incremented.
+ * the DB_UPDATE_VERSION is incremented.
  *
- * The current BUILD_ID is stored in the config area of the database. If the application starts up
- * and BUILD_ID is greater than the last stored build number, we will process every update function 
- * in order from the currently stored value to the new BUILD_ID. This is expected to bring the system 
+ * The current DB_UPDATE_VERSION is stored in the config area of the database. If the application starts up
+ * and DB_UPDATE_VERSION is greater than the last stored build number, we will process every update function 
+ * in order from the currently stored value to the new DB_UPDATE_VERSION. This is expected to bring the system 
  * up to current without requiring re-installation or manual intervention.
  *
- * Once the upgrade functions have completed, the current BUILD_ID is stored as the current value.
- * The BUILD_ID will always be one greater than the last numbered script in this file. 
+ * Once the upgrade functions have completed, the current DB_UPDATE_VERSION is stored as the current value.
+ * The DB_UPDATE_VERSION will always be one greater than the last numbered script in this file. 
  *
  * If you change the database schema, the following are required:
  *    1. Update the file database.sql to match the new schema.
- *    2. Update this file by adding a new function at the end with the number of the current BUILD_ID.
+ *    2. Update this file by adding a new function at the end with the number of the current DB_UPDATE_VERSION.
  *       This function should modify the current database schema and perform any other steps necessary
  *       to ensure that upgrade is silent and free from requiring interaction.
- *    3. Increment the BUILD_ID in boot.php
+ *    3. Increment the DB_UPDATE_VERSION in boot.php
  *    4. TEST the upgrade prior to checkin and filing a pull request.
  *
  */
