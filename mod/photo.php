@@ -108,6 +108,24 @@ function photo_init(&$a) {
 			if(count($r)) {
 				$data = $r[0]['data'];
 			}
+			else {
+
+				// Does the picture exist? It may be a remote person with no credentials,
+				// but who should otherwise be able to view it. Show a default image to let 
+				// them know permissions was denied. It may be possible to view the image 
+				// through an authenticated profile visit.
+				// There won't be many complete unauthorised people seeing this because
+				// they won't have the photo link, so there's a reasonable chance that the person
+				// might be able to obtain permission to view it.
+ 
+				$r = q("SELECT * FROM `photo` WHERE `resource-id` = '%s' AND `scale` = %d LIMIT 1",
+					dbesc($photo),
+					intval($resolution)
+				);
+				if(count($r)) {
+					$data = file_get_contents('images/nosign.jpg');
+				}
+			}
 		}
 	}
 
