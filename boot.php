@@ -1825,7 +1825,7 @@ function allowed_email($email) {
 	if(count($allowed)) {
 		foreach($allowed as $a) {
 			$pat = strtolower(trim($a));
-			if(($fnmatch && fnmatch($pat,$host)) || ($pat == $host)) {
+			if(($fnmatch && fnmatch($pat,$domain)) || ($pat == $domain)) {
 				$found = true; 
 				break;
 			}
