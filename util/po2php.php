@@ -3,15 +3,15 @@
 function po2php_run($argv, $argc) {
 
 	if ($argc!=2) {
-		print "Usage: ".$argv[0]." <file.mo>\n\n";
+		print "Usage: ".$argv[0]." <file.po>\n\n";
 		return;
 	}
 	
-	$mofile = $argv[1];
-	$outfile = dirname($mofile)."/strings.php";
+	$pofile = $argv[1];
+	$outfile = dirname($pofile)."/strings.php";
 	
-	if (!file_exists($mofile)){
-		print "Unable to find '$mofile'\n";
+	if (!file_exists($pofile)){
+		print "Unable to find '$pofile'\n";
 		return;
 	}
 	
@@ -19,7 +19,7 @@ function po2php_run($argv, $argc) {
 	
 	$out="<?php\n\n";
 	
-	$infile = file($mofile);
+	$infile = file($pofile);
 	$k="";
 	$arr = False;
 	
