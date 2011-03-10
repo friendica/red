@@ -137,7 +137,8 @@ function contacts_content(&$a) {
 					intval(local_user())
 			);
 			if($r) {
-				notice( t('Contact has been ') . (($blocked) ? t('blocked') : t('unblocked')) . EOL );
+				//notice( t('Contact has been ') . (($blocked) ? t('blocked') : t('unblocked')) . EOL );
+				notice( (($blocked) ? t('Contact has been blocked') : t('Contact has been unblocked')) . EOL );
 			}
 			goaway($a->get_baseurl() . '/contacts/' . $contact_id);
 			return; // NOTREACHED
@@ -151,7 +152,7 @@ function contacts_content(&$a) {
 					intval(local_user())
 			);
 			if($r) {
-				notice( t('Contact has been ') . (($readonly) ? t('ignored') : t('unignored')) . EOL );
+				notice( (($readonly) ? t('Contact has been ignored') : t('Contact has been unignored')) . EOL );
 			}
 			goaway($a->get_baseurl() . '/contacts/' . $contact_id);
 			return; // NOTREACHED
@@ -364,13 +365,14 @@ function contacts_content(&$a) {
 
 
 			$o .= replace_macros($tpl, array(
-				'$img_hover' => t('Visit ') . $rr['name'] . t('\'s profile'),
+				'$img_hover' => t('Visit $username\'s profile'),
 				'$edit_hover' => t('Edit contact'),
 				'$id' => $rr['id'],
 				'$alt_text' => $alt_text,
 				'$dir_icon' => $dir_icon,
 				'$thumb' => $rr['thumb'], 
 				'$name' => substr($rr['name'],0,20),
+				'$username' => $rr['name'],
 				'$sparkle' => $sparkle,
 				'$url' => $url
 			));

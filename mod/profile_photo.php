@@ -58,21 +58,21 @@ function profile_photo_post(&$a) {
 				$r = $im->store(local_user(), 0, $base_image['resource-id'],$base_image['filename'], t('Profile Photos'), 4, 1);
 
 				if($r === false)
-					notice ( t('Image size reduction [175] failed.') . EOL );
+					notice ( sprintf(t('Image size reduction [%s] failed.'),"175") . EOL );
 
 				$im->scaleImage(80);
 
 				$r = $im->store(local_user(), 0, $base_image['resource-id'],$base_image['filename'], t('Profile Photos'), 5, 1);
 			
 				if($r === false)
-					notice( t('Image size reduction [80] failed.') . EOL );
+					notice( sprintf(t('Image size reduction [%s] failed.'),"80") . EOL );
 
 				$im->scaleImage(48);
 
 				$r = $im->store(local_user(), 0, $base_image['resource-id'],$base_image['filename'], t('Profile Photos'), 6, 1);
 			
 				if($r === false)
-					notice( t('Image size reduction [48] failed.') . EOL );
+					notice( sprintf(t('Image size reduction [%s] failed.'),"48") . EOL );
 
 				// Unset the profile photo flag from any other photos I own
 
@@ -106,7 +106,7 @@ function profile_photo_post(&$a) {
 	$maximagesize = get_config('system','maximagesize');
 
 	if(($maximagesize) && ($filesize > $maximagesize)) {
-		notice( t('Image exceeds size limit of ') . $maximagesize . EOL);
+		notice( sprintf(t('Image exceeds size limit of %d'), $maximagesize) . EOL);
 		@unlink($src);
 		return;
 	}
@@ -234,7 +234,7 @@ function profile_photo_crop_ui_head(&$a, $ph){
 		$r = $ph->store(local_user(), 0 , $hash, $filename, t('Profile Photos'), 1 );	
 		
 		if($r === false)
-			notice( t('Image size reduction [640] failed.') . EOL );
+			notice( sprintf(t('Image size reduction [%s] failed.'),"640") . EOL );
 		else
 			$smallest = 1;
 	}

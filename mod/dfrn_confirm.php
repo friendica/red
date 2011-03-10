@@ -491,7 +491,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			dbesc($node));
 
 		if(! count($r)) {
-			$message = t('No user record found for ') . '\'' . $node . '\'';
+			$message = sprintf(t('No user record found for \'%s\' '), $node);
 			xml_status(3,$message); // failure
 			// NOTREACHED
 		}
@@ -645,7 +645,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				'$uid' => $newuid )
 			);
 	
-			$res = mail($r[0]['email'], t("Connection accepted at ") . $a->config['sitename'],
+			$res = mail($r[0]['email'], sprintf(t("Connection accepted at %s"), $a->config['sitename']),
 				$email_tpl, 'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] );
 			if(!$res) {
 				// pointless throwing an error here and confusing the person at the other end of the wire.

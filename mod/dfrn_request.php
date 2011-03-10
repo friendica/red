@@ -123,9 +123,9 @@ function dfrn_request_post(&$a) {
 							notice( t('Warning: profile location has no profile photo.') . EOL );
 						$invalid = validate_dfrn($parms);		
 						if($invalid) {
-							notice( $invalid . t(' required parameter') 
-								. (($invalid == 1) ? t(" was ") : t("s were ") )
-								. t("not found at the given location.") . EOL ) ;
+							notice( sprintf( tt("%d required parameter was not found at the given location",
+												"%d required parameters were not found at the given location",
+												$invalid), $invalid) . EOL );
 							return;
 						}
 					}
@@ -238,7 +238,7 @@ function dfrn_request_post(&$a) {
 				intval($uid)
 			);
 			if(count($r) > $maxreq) {
-				notice( $a->profile['name'] . t(' has received too many connection requests today.') . EOL);
+				notice( sprintf( t('%s has received too many connection requests today.'),  $a->profile['name']) . EOL);
 				notice( t('Spam protection measures have been invoked.') . EOL);
 				notice( t('Friends are advised to please try again in 24 hours.') . EOL);
 				return;
@@ -306,7 +306,7 @@ function dfrn_request_post(&$a) {
 					return;
 				}
 				elseif($ret[0]['rel'] == REL_BUD) {
-					notice( t('Apparently you are already friends with .') . $a->profile['name'] . EOL);
+					notice( sprintf( t('Apparently you are already friends with %s.'), $a->profile['name']) . EOL);
 					return;
 				}
 				else {
@@ -354,9 +354,9 @@ function dfrn_request_post(&$a) {
 						notice( t('Warning: profile location has no profile photo.') . EOL );
 					$invalid = validate_dfrn($parms);		
 					if($invalid) {
-						notice( $invalid . t(' required parameter') 
-							. (($invalid == 1) ? t(" was ") : t("s were ") )
-							. t("not found at the given location.") . EOL ) ;
+						notice( sprintf( tt("%d required parameter was not found at the given location",
+											"%d required parameters were not found at the given location",
+											$invalid), $invalid) . EOL );
 	
 						return;
 					}
