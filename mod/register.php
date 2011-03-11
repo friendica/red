@@ -401,7 +401,9 @@ function register_content(&$a) {
 		$oidlabel = t("Your OpenID \x28optional\x29: ");
 	}
 
-	$realpeople = t('Members of this network prefer to communicate with real people who use their real names.');
+	// I set this and got even more fake names than before...
+
+	$realpeople = ''; // t('Members of this network prefer to communicate with real people who use their real names.');
 
 	if(get_config('system','publish_all')) {
 		$profile_publish_reg = '<input type="hidden" name="profile_publish_reg" value="1" />';
