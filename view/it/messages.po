@@ -288,10 +288,6 @@ msgstr "Età:"
 msgid "Profile Image"
 msgstr "Immagine del profilo"
 
-#: ../../mod/lostpass.php:38
-msgid "Password reset requested at "
-msgstr "Richiesta di azzeramento password presso %s"
-
 #: ../../mod/lostpass.php:39 ../../mod/dfrn_confirm.php:649
 #: ../../mod/dfrn_notify.php:177 ../../mod/dfrn_notify.php:389
 #: ../../mod/regmod.php:93 ../../mod/register.php:311
@@ -429,10 +425,12 @@ msgid ""
 "You may need to import the file \"database.sql\" manually using phpmyadmin "
 "or mysql."
 msgstr ""
+"Potresti dover importare il file \"database.sql\" manualmente con phpmyadmin "
+"o mysql."
 
 #: ../../mod/install.php:84 ../../mod/install.php:84 ../../mod/install.php:84
 msgid "Welcome to Friendika."
-msgstr ""
+msgstr "Benvenuto su Friendika."
 
 #: ../../mod/install.php:109 ../../mod/manage.php:106 ../../mod/photos.php:800
 #: ../../mod/photos.php:857 ../../mod/photos.php:1032 ../../mod/invite.php:64
@@ -456,61 +454,73 @@ msgstr ""
 #: ../../addon/statusnet/statusnet.php:189
 #: ../../addon/statusnet/statusnet.php:207
 msgid "Submit"
-msgstr ""
+msgstr "Invia"
 
 #: ../../mod/install.php:124 ../../mod/install.php:124 ../../mod/install.php:124
 msgid "Could not find a command line version of PHP in the web server PATH."
 msgstr ""
+"Non riesco a trovare la versione a riga di comando di PHP nel PATH del "
+"server web."
 
 #: ../../mod/install.php:125 ../../mod/install.php:125 ../../mod/install.php:125
 msgid ""
 "This is required. Please adjust the configuration file .htconfig.php "
 "accordingly."
-msgstr ""
+msgstr "Questo è richiesto. Sistema il file .htconfig.php di conseguenza."
 
 #: ../../mod/install.php:132 ../../mod/install.php:132 ../../mod/install.php:132
 msgid ""
 "The command line version of PHP on your system does not have "
 "\"register_argc_argv\" enabled."
 msgstr ""
+"La versione a riga di comando di PHP nel tuo sistema non ha "
+"\"register_argc_argv\" abilitato."
 
 #: ../../mod/install.php:133 ../../mod/install.php:133 ../../mod/install.php:133
 msgid "This is required for message delivery to work."
-msgstr ""
+msgstr "E' richiesto per il funzionamento della consegna dei messaggi."
 
 #: ../../mod/install.php:155 ../../mod/install.php:155 ../../mod/install.php:155
 msgid ""
 "Error: the \"openssl_pkey_new\" function on this system is not able to "
 "generate encryption keys"
 msgstr ""
+"Errore: la funzione \"openssl_pkey_new\" su questo sistema non è in grado di "
+"generare le chiavi di criptazione"
 
 #: ../../mod/install.php:156 ../../mod/install.php:156 ../../mod/install.php:156
 msgid ""
 "If running under Windows, please see "
 "\"http://www.php.net/manual/en/openssl.installation.php\"."
 msgstr ""
+"Se sta girando su Windows, guarda "
+"\"http://www.php.net/manual/en/openssl.installation.php\"."
 
 #: ../../mod/install.php:165 ../../mod/install.php:165 ../../mod/install.php:165
 msgid ""
 "Error: Apache webserver mod-rewrite module is required but not installed."
 msgstr ""
+"Errore: Il modulo mod-rewrite del server web Apache è richiesto ma non è "
+"installato."
 
 #: ../../mod/install.php:167 ../../mod/install.php:167 ../../mod/install.php:167
 msgid "Error: libCURL PHP module required but not installed."
-msgstr ""
+msgstr "Errore: Il modulo libCURL di PHP è richiesto ma non è installato."
 
 #: ../../mod/install.php:169 ../../mod/install.php:169 ../../mod/install.php:169
 msgid ""
 "Error: GD graphics PHP module with JPEG support required but not installed."
 msgstr ""
+"Errore: Il modulo GD graphics di PHP, con supporto JPEG, è richiesto ma non "
+"è installato."
 
 #: ../../mod/install.php:171 ../../mod/install.php:171 ../../mod/install.php:171
 msgid "Error: openssl PHP module required but not installed."
-msgstr ""
+msgstr "Errore: Il modulo openssl di PHP è richiesto ma non è installato."
 
 #: ../../mod/install.php:173 ../../mod/install.php:173 ../../mod/install.php:173
 msgid "Error: mysqli PHP module required but not installed."
-msgstr ""
+msgstr "Errore: Il modulo mysqli di PHP è richiesto ma non è installato."
 
 #: ../../mod/install.php:184 ../../mod/install.php:184 ../../mod/install.php:184
 msgid ""
@@ -3111,7 +3121,7 @@ msgstr ""
 #: ../../mod/like.php:151 ../../mod/like.php:151 ../../mod/like.php:151
 #, php-format
 msgid "%s's"
-msgstr ""
+msgstr "di %s"
 
 #: ../../mod/dfrn_request.php:126 ../../mod/dfrn_request.php:357 ../test.php:6
 #: ../../../mod/dfrn_request.php:126 ../../mod/dfrn_request.php:126
@@ -3120,16 +3130,17 @@ msgstr ""
 #, php-format
 msgid "%d required parameter was not found at the given location"
 msgid_plural "%d required parameters were not found at the given location"
-msgstr[0] ""
+msgstr[0] "%d parametro richiesto non è stato trovato alla posizione data"
+msgstr[1] "%d parametri richiesti non sono stati trovati alla posizione data"
 
 #: ../../mod/dfrn_request.php:241 ../../mod/dfrn_request.php:241
 #: ../../mod/dfrn_request.php:241
 #, php-format
 msgid "%s has received too many connection requests today."
-msgstr ""
+msgstr "%s ha ricevuto troppe richieste di connessioni per oggi."
 
 #: ../../mod/dfrn_request.php:309 ../../mod/dfrn_request.php:309
 #: ../../mod/dfrn_request.php:309
 #, php-format
 msgid "Apparently you are already friends with %s."
-msgstr ""
+msgstr "Sembra che tu sia già amico di %s."
