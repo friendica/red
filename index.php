@@ -160,7 +160,7 @@ if(strlen($a->module)) {
 	 */
 
 	if((! $a->module_loaded) && (file_exists("mod/{$a->module}.php"))) {
-		include("mod/{$a->module}.php");
+		include_once("mod/{$a->module}.php");
 		$a->module_loaded = true;
 	}
 
