@@ -2094,3 +2094,16 @@ a.mail-list-link {
 	margin-top: 20px;
 }
 
+#photo-prev-link, #photo-next-link {
+	padding: 10px;
+	float: left;
+}
+
+#photo-photo {
+	float: left;
+}
+
+#photo-photo-end {
+	clear: both;
+}
+

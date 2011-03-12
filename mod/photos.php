@@ -909,6 +909,32 @@ function photos_content(&$a) {
 			return;
 		}
 
+		$prevlink = '';
+		$nextlink = '';
+
+		$prvnxt = q("SELECT `resource-id` FROM `photo` WHERE `album` = '%s' AND `uid` = %d AND `scale` = 0 
+			$sql_extra ORDER BY `created` DESC ",
+			dbesc($ph[0]['album']),
+			intval($owner_uid)
+		); 
+
+		if(count($prvnxt)) {
+			for($z = 0; $z < count($prvnxt); $z++) {
+				if($prvnxt[$z]['resource-id'] == $ph[0]['resource-id']) {
+					$prv = $z - 1;
+					$nxt = $z + 1;
+					if($prv < 0)
+						$prv = count($prvnxt) - 1;
+					if($nxt >= count($prvnxt))
+						$nxt = 0;
+					break;
+				}
+			}
+			$prevlink = $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $prvnxt[$prv]['resource-id'] ;
+			$nextlink = $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $prvnxt[$nxt]['resource-id'] ;
+ 		}
+
+
 		if(count($ph) == 1)
 			$hires = $lores = $ph[0];
 		if(count($ph) > 1) {
@@ -938,11 +964,18 @@ function photos_content(&$a) {
 			$o .= '</div>';
 		}
 
+		if($prevlink)
+			$o .= '<div id="photo-prev-link"><a href="' . $prevlink .'">' . t('<< Prev') . '</a></div>' ;
 
-		$o .= '<a href="' . $a->get_baseurl() . '/photo/' 
+		$o .= '<div id="photo-photo"><a href="' . $a->get_baseurl() . '/photo/' 
 			. $hires['resource-id'] . '-' . $hires['scale'] . '.jpg" title="' 
 			. t('View Full Size') . '" ><img src="' . $a->get_baseurl() . '/photo/' 
-			. $lores['resource-id'] . '-' . $lores['scale'] . '.jpg' . '" /></a>';
+			. $lores['resource-id'] . '-' . $lores['scale'] . '.jpg' . '" /></a></div>';
+
+		if($nextlink)
+			$o .= '<div id="photo-next-link"><a href="' . $nextlink .'">' . t('Next >>') . '</a></div>';
+
+		$o .= '<div id="photo-photo-end"></div>';
 
 
 		// Do we have an item for this photo?
