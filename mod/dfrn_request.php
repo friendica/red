@@ -540,7 +540,7 @@ function dfrn_request_content(&$a) {
 						'$sitename' => $a->config['sitename']
 					));
 					$res = mail($r[0]['email'], 
-						t("Introduction received at ") . $a->config['sitename'],
+					    t("Introduction received at ") . $a->config['sitename'],
 						$email,
 						'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] );
 					// This is a redundant notification - no point throwing errors if it fails.

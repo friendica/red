@@ -419,7 +419,7 @@ function item_post(&$a) {
 					'$body' => strip_tags(bbcode($datarray['body']))
 				));
 
-				$res = mail($user['email'], sprintf(t("%s commented on your item at %s"),$from,$a->config['sitename']),
+				$res = mail($user['email'], sprintf( t("%s commented on your item at %s") ,$from,$a->config['sitename']),
 					$email_tpl,"From: " . t("Administrator") . "@" . $a->get_hostname() );
 			}
 		}
@@ -442,7 +442,7 @@ function item_post(&$a) {
 					'$body' => strip_tags(bbcode($datarray['body']))
 				));
 
-				$res = mail($user['email'], sprintf(t("%s posted on your profile wall at %s"),$from, $a->config['sitename']),
+				$res = mail($user['email'], sprintf( t("%s posted on your profile wall at %s") ,$from, $a->config['sitename']),
 					$email_tpl,"From: " . t("Administrator@") . "@" . $a->get_hostname() );
 			}
 		}

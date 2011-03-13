@@ -39,7 +39,7 @@ function invite_post(&$a) {
 		}
 
 	}
-	notice( sprintf(tt("%d message sent.", "%d messages sent.", $total), $total) . EOL);
+	notice( sprintf( tt("%d message sent.", "%d messages sent.", $total) , $total) . EOL);
 	return;
 }
 

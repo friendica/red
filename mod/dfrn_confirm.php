@@ -645,7 +645,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				'$uid' => $newuid )
 			);
 	
-			$res = mail($r[0]['email'], sprintf(t("Connection accepted at %s"), $a->config['sitename']),
+			$res = mail($r[0]['email'], sprintf( t("Connection accepted at %s") , $a->config['sitename']),
 				$email_tpl, 'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] );
 			if(!$res) {
 				// pointless throwing an error here and confusing the person at the other end of the wire.
