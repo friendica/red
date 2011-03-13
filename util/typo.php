@@ -36,3 +36,13 @@
 			include_once($file);
 		}
 	}
+
+	echo "String files\n";
+
+	echo 'util/strings.php' . "\n";
+	include_once('util/strings.php');
+	$files = glob('view/*/strings.php');
+	foreach($files as $file) {
+		echo $file . "\n";
+		include_once($file);
+	}

@@ -59,7 +59,7 @@ function twitter_jot_nets(&$a,&$b) {
 	$tw_post = get_pconfig(local_user(),'twitter','post');
 	if(intval($tw_post) == 1) {
 		$tw_defpost = get_pconfig(local_user(),'twitter','post_by_default');
-		$selected = ((intval($tw_defpost == 1)) ? ' selected="selected" ' : '');
+		$selected = ((intval($tw_defpost) == 1) ? ' checked="checked" ' : '');
 		$b .= '<div class="profile-jot-net"><input type="checkbox" name="twitter_enable"' . $selected . 'value="1" /> ' 
 			. t('Post to Twitter') . '</div>';	
 	}
@@ -138,7 +138,11 @@ function twitter_settings(&$a,&$s) {
 			 * which the user can request a PIN to connect the account to a
 			 * account at Twitter.
 			 */
+<<<<<<< HEAD
 		        require_once('library/twitteroauth.php');
+=======
+			require_once('library/twitteroauth.php');
+>>>>>>> a912a0d3cae0ae9c873dcb5c45624a725bd2c2d6
 			$connection = new TwitterOAuth($ckey, $csecret);
 			$request_token = $connection->getRequestToken();
 			$token = $request_token['oauth_token'];

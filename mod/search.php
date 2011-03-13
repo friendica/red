@@ -51,7 +51,7 @@ function search_content(&$a) {
 		$a->set_pager_total($r[0]['total']);
 
 	if(! $r[0]['total']) {
-		notice('No results.');
+		notice( t('No results.') . EOL);
 		return $o;
 	}
 
@@ -133,13 +133,6 @@ function search_content(&$a) {
 
 		}
 	}
-
-
-	if(! $r[0]['total']) {
-		notice('No results.');
-		return $o;
-	}
-
 
 	$o .= paginate($a);
 

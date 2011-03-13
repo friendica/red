@@ -34,7 +34,7 @@ php.ini file
 	- Mysql 5.x
 
 	- ability to schedule jobs with cron (Linux/Mac) or Scheduled Tasks
-(Windows) [Note: other options are presented in Section 7 of this document]
+(Windows) [Note: other options are presented in Section 8 of this document]
 
 	- Installation into a top-level domain or sub-domain (without a 
 directory/path component in the URL) is preferred. Directory paths will
@@ -53,10 +53,15 @@ you might have trouble getting everything to work.]
 3. Create an empty database and note the access details (hostname, username, 
 password, database name).
 
-4. Visit your website with a web browser and follow the instructions. Please 
+
+4. If you know in advance that it will be impossible for the web server to 
+write or create files in your web directory, create an empty file called 
+.htconfig.php and make it writable by the web server.
+
+5. Visit your website with a web browser and follow the instructions. Please 
 note any error messages and correct these before continuing.
 
-5. *If* the automated installation fails for any reason, check the following:
+6. *If* the automated installation fails for any reason, check the following:
 
 	- ".htconfig.php" exists 
 		If not, edit htconfig.php and change system settings. Rename 
@@ -65,7 +70,7 @@ to .htconfig.php
 		If not, import the contents of "database.sql" with phpmyadmin 
 or mysql command line
 
-6. At this point visit your website again, and register your personal account. 
+7. At this point visit your website again, and register your personal account. 
 Registration errors should all be recoverable automatically. 
 If you get any *critical* failure at this point, it generally indicates the
 database was not installed correctly. You might wish to move/rename 
@@ -78,7 +83,7 @@ tables, so that you can start fresh.
 ****************************************************************************
 ****************************************************************************
 
-7. Set up a cron job or scheduled task to run the poller once every 5-10 
+8. Set up a cron job or scheduled task to run the poller once every 5-10 
 minutes to pick up the recent "public" postings of your friends. Example:
 
 	cd /base/directory; /path/to/php include/poller.php

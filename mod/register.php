@@ -401,6 +401,10 @@ function register_content(&$a) {
 		$oidlabel = t("Your OpenID \x28optional\x29: ");
 	}
 
+	// I set this and got even more fake names than before...
+
+	$realpeople = ''; // t('Members of this network prefer to communicate with real people who use their real names.');
+
 	if(get_config('system','publish_all')) {
 		$profile_publish_reg = '<input type="hidden" name="profile_publish_reg" value="1" />';
 	}
@@ -423,6 +427,7 @@ function register_content(&$a) {
 	$o = load_view_file("view/register.tpl");
 	$o = replace_macros($o, array(
 		'$oidhtml' => $oidhtml,
+		'$realpeople' => $realpeople,
 		'$regtitle'  => t('Registration'),
 		'$registertext' =>((x($a->config,'register_text'))
 			? '<div class="error-message">' . $a->config['register_text'] . '</div>'
@@ -433,7 +438,7 @@ function register_content(&$a) {
 		'$openid'    => $openid_url,
 		'$namelabel' => t('Your Full Name ' . "\x28" . 'e.g. Joe Smith' . "\x29" . ': '),
 		'$addrlabel' => t('Your Email Address: '),
-		'$nickdesc'  => t('Choose a profile nickname. This must begin with a text character. Your global profile locator will then be \'<strong>nickname@$sitename</strong>\'.'),
+		'$nickdesc'  => t('Choose a profile nickname. This must begin with a text character. Your profile address on this site will then be \'<strong>nickname@$sitename</strong>\'.'),
 		'$nicklabel' => t('Choose a nickname: '),
 		'$photo'     => $photo,
 		'$publish'   => $profile_publish,

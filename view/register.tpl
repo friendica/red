@@ -6,6 +6,7 @@
 
 	$registertext
 
+	<p id="register-realpeople">$realpeople</p>
 
 	<p id="register-fill-desc">$fillwith</p>
 	<p id="register-fill-ext">$fillext</p>

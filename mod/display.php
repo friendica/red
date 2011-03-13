@@ -151,7 +151,12 @@ function display_content(&$a) {
 
 			if(can_write_wall($a,$a->profile['uid'])) {
 				if($item['id'] == $item['parent']) {
-					$likebuttons = replace_macros($like_tpl,array('$id' => $item['id']));
+					$likebuttons = replace_macros($like_tpl,array(
+						'$id' => $item['id'],
+						'$likethis' => t("I like this \x28toggle\x29"),
+						'$nolike' => t("I don't like this \x28toggle\x29"),
+						'$wait' => t('Please wait') 
+					));
 				}
 				if($item['last-child']) {
 					$comment = replace_macros($cmnt_tpl,array(

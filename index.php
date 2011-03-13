@@ -19,11 +19,11 @@ $a = new App;
 /**
  *
  * Load the configuration file which contains our DB credentials.
- * Ignore errors. If the file doesn't exist, we are running in installation mode.
+ * Ignore errors. If the file doesn't exist or is empty, we are running in installation mode.
  *
  */
 
-$install = ((file_exists('.htconfig.php')) ? false : true);
+$install = ((file_exists('.htconfig.php') && filesize('.htconfig.php')) ? false : true);
 
 @include(".htconfig.php");
 
@@ -102,8 +102,9 @@ if(! x($_SESSION,'sysmsg'))
 	$_SESSION['sysmsg'] = '';
 
 /*
- * check_config() is responible for running update scripts. These automatically 
- * update the DB schema whenever  we push a new one out. 
+ * check_config() is responsible for running update scripts. These automatically 
+ * update the DB schema whenever we push a new one out. It also checks to see if
+ * any plugins have been added or removed and reacts accordingly. 
  */
 
 
@@ -122,7 +123,7 @@ $a->apps = $arr['app_menu'];
 
 /**
  *
- * We have already parsed the server path into $->argc and $a->argv
+ * We have already parsed the server path into $a->argc and $a->argv
  *
  * $a->argv[0] is our module name. We will load the file mod/{$a->argv[0]}.php
  * and use it for handling our URL request.
@@ -130,7 +131,7 @@ $a->apps = $arr['app_menu'];
  * and in the following order:
  * 
  * "module"_init
- * "module"_post (only if there are $_POST variables)
+ * "module"_post (only called if there are $_POST variables)
  * "module"_afterpost
  * "module"_content - the string return of this function contains our page body
  *
@@ -140,15 +141,42 @@ $a->apps = $arr['app_menu'];
  */
 
 if(strlen($a->module)) {
+
+	/**
+	 *
+	 * We will always have a module name.
+	 * First see if we have a plugin which is masquerading as a module.
+	 *
+	 */
+
 	if(is_array($a->plugins) && in_array($a->module,$a->plugins) && file_exists("addon/{$a->module}/{$a->module}.php")) {
 		include_once("addon/{$a->module}/{$a->module}.php");
 		if(function_exists($a->module . '_module'))
 			$a->module_loaded = true;
 	}
+
+	/**
+	 * If not, next look for a 'standard' program module in the 'mod' directory
+	 */
+
 	if((! $a->module_loaded) && (file_exists("mod/{$a->module}.php"))) {
-		include("mod/{$a->module}.php");
+		include_once("mod/{$a->module}.php");
 		$a->module_loaded = true;
 	}
+
+	/**
+	 *
+	 * The URL provided does not resolve to a valid module.
+	 *
+	 * On Dreamhost sites, quite often things go wrong for no apparent reason and they send us to '/internal_error.html'. 
+	 * We don't like doing this, but as it occasionally accounts for 10-20% or more of all site traffic - 
+	 * we are going to trap this and redirect back to the requested page. As long as you don't have a critical error on your page
+	 * this will often succeed and eventually do the right thing.
+	 *
+	 * Otherwise we are going to emit a 404 not found.
+	 *
+	 */
+
 	if(! $a->module_loaded) {
 		if((x($_SERVER,'QUERY_STRING')) && ($_SERVER['QUERY_STRING'] === 'q=internal_error.html') && isset($dreamhost_error_hack)) {
 			logger('index.php: dreamhost_error_hack invoked. Original URI =' . $_SERVER['REQUEST_URI']);
@@ -199,7 +227,7 @@ if($a->module_loaded) {
 
 }
 
-// let javascript take you home
+// If you're just visiting, let javascript take you home
 
 if(x($_SESSION,'visitor_home'))
 	$homebase = $_SESSION['visitor_home'];

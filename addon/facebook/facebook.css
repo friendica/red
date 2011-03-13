@@ -6,3 +6,8 @@
 #facebook-disable-wrapper {
 	margin-top: 20px;
 }
+
+#facebook-post-default-form input {
+	margin-top: 20px;
+	margin-right: 20px;
+}

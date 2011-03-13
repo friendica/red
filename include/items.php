@@ -609,6 +609,7 @@ function item_store($arr,$force_parent = false) {
 	else { 
 
 		// find the parent and snarf the item id and ACL's
+		// and anything else we need to inherit
 
 		$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 			dbesc($arr['parent-uri']),
@@ -632,6 +633,7 @@ function item_store($arr,$force_parent = false) {
 			$allow_gid      = $r[0]['allow_gid'];
 			$deny_cid       = $r[0]['deny_cid'];
 			$deny_gid       = $r[0]['deny_gid'];
+			$arr['wall']    = $r[0]['wall'];
 		}
 		else {
 

@@ -246,6 +246,11 @@ foreach($_FILES AS $key => $val) {
 		$rawtags     = ((x($_POST,'newtag'))  ? notags(trim($_POST['newtag']))  : '');
 		$item_id     = ((x($_POST,'item_id')) ? intval($_POST['item_id'])       : 0);
 		$albname     = ((x($_POST,'albname')) ? notags(trim($_POST['albname'])) : '');
+		$str_group_allow   = perms2str($_POST['group_allow']);
+		$str_contact_allow = perms2str($_POST['contact_allow']);
+		$str_group_deny    = perms2str($_POST['group_deny']);
+		$str_contact_deny  = perms2str($_POST['contact_deny']);
+
 		$resource_id = $a->argv[2];
 
 		if(! strlen($albname))
@@ -256,10 +261,14 @@ foreach($_FILES AS $key => $val) {
 			dbesc($resource_id),
 			intval($page_owner_uid)
 		);
-		if((count($p)) && (($p[0]['desc'] !== $desc) || ($p[0]['album'] !== $albname))) {
-			$r = q("UPDATE `photo` SET `desc` = '%s', `album` = '%s' WHERE `resource-id` = '%s' AND `uid` = %d",
+		if(count($p)) {
+			$r = q("UPDATE `photo` SET `desc` = '%s', `album` = '%s', `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s' WHERE `resource-id` = '%s' AND `uid` = %d",
 				dbesc($desc),
 				dbesc($albname),
+				dbesc($str_contact_allow),
+				dbesc($str_group_allow),
+				dbesc($str_contact_deny),
+				dbesc($str_group_deny),
 				dbesc($resource_id),
 				intval($page_owner_uid)
 			);
@@ -900,6 +909,32 @@ function photos_content(&$a) {
 			return;
 		}
 
+		$prevlink = '';
+		$nextlink = '';
+
+		$prvnxt = q("SELECT `resource-id` FROM `photo` WHERE `album` = '%s' AND `uid` = %d AND `scale` = 0 
+			$sql_extra ORDER BY `created` DESC ",
+			dbesc($ph[0]['album']),
+			intval($owner_uid)
+		); 
+
+		if(count($prvnxt)) {
+			for($z = 0; $z < count($prvnxt); $z++) {
+				if($prvnxt[$z]['resource-id'] == $ph[0]['resource-id']) {
+					$prv = $z - 1;
+					$nxt = $z + 1;
+					if($prv < 0)
+						$prv = count($prvnxt) - 1;
+					if($nxt >= count($prvnxt))
+						$nxt = 0;
+					break;
+				}
+			}
+			$prevlink = $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $prvnxt[$prv]['resource-id'] ;
+			$nextlink = $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $prvnxt[$nxt]['resource-id'] ;
+ 		}
+
+
 		if(count($ph) == 1)
 			$hires = $lores = $ph[0];
 		if(count($ph) > 1) {
@@ -929,11 +964,18 @@ function photos_content(&$a) {
 			$o .= '</div>';
 		}
 
+		if($prevlink)
+			$o .= '<div id="photo-prev-link"><a href="' . $prevlink .'">' . t('<< Prev') . '</a></div>' ;
 
-		$o .= '<a href="' . $a->get_baseurl() . '/photo/' 
+		$o .= '<div id="photo-photo"><a href="' . $a->get_baseurl() . '/photo/' 
 			. $hires['resource-id'] . '-' . $hires['scale'] . '.jpg" title="' 
 			. t('View Full Size') . '" ><img src="' . $a->get_baseurl() . '/photo/' 
-			. $lores['resource-id'] . '-' . $lores['scale'] . '.jpg' . '" /></a>';
+			. $lores['resource-id'] . '-' . $lores['scale'] . '.jpg' . '" /></a></div>';
+
+		if($nextlink)
+			$o .= '<div id="photo-next-link"><a href="' . $nextlink .'">' . t('Next >>') . '</a></div>';
+
+		$o .= '<div id="photo-photo-end"></div>';
 
 
 		// Do we have an item for this photo?
@@ -1016,6 +1058,8 @@ function photos_content(&$a) {
 				'$caption' => $ph[0]['desc'],
 				'$tag_label' => t('Add a Tag'),
 				'$tags' => $link_item['tag'],
+				'$permissions' => t('Permissions'),
+				'$aclselect' => populate_acl($ph[0]),
 				'$help_tags' => t('Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping'),
 				'$item_id' => ((count($linked_items)) ? $link_item['id'] : 0),
 				'$submit' => t('Submit'),
@@ -1033,8 +1077,14 @@ function photos_content(&$a) {
 
 			$likebuttons = '';
 
-			if($can_post || can_write_wall($a,$owner_uid))
-				$likebuttons = replace_macros($like_tpl,array('$id' => $link_item['id']));
+			if($can_post || can_write_wall($a,$owner_uid)) {
+				$likebuttons = replace_macros($like_tpl,array(
+					'$id' => $item['id'],
+					'$likethis' => t("I like this \x28toggle\x29"),
+					'$nolike' => t("I don't like this \x28toggle\x29"),
+					'$wait' => t('Please wait') 
+				));
+			}
 
 			if(! count($r)) {
 				$o .= '<div id="photo-like-div">';

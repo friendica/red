@@ -965,36 +965,41 @@ input#dfrn-url {
 	float: left;
 }
 .wall-item-wrapper {
-	float: left;
+	margin-left: 10px;;
 }
+
 .wall-item-lock {
-	height: 20px;
-	margin-top: 10px;
+	position: absolute;
+	left: 105px;
+	top: 1px;
 }
 
 .wall-item-ago {
 	color: #888888;
 	font-size: 0.8em;
 }
-
-.wall-item-like-buttons img {
-	cursor: pointer;
+.wall-item-like-buttons {
+    float: left;
+    margin-right: 10px;
+    padding-right: 10px;
+    border-right: 2px solid #fff;
 }
 
 .wall-item-links-wrapper {
-	float: left;
-	margin-top: 100px;
-	margin-left: 10px;
+    float: left;
 }
 
 .wall-item-delete-wrapper {
-	float: right;
-	margin-top: 20px;
-	margin-right: 50px;
+    float: right;
 }
 
 .wall-item-delete-end {
-	clear: both;
+    clear: both;
+}
+
+
+.wall-item-like-buttons img {
+	cursor: pointer;
 }
 
 .wall-item-delete-icon {
@@ -1023,6 +1028,22 @@ input#dfrn-url {
 	overflow: auto;
 
 }
+.wall-item-tools {
+    clear: both;
+padding: 5px 10px 0px;
+}
+.wall-item-photo-end {
+	clear: both;
+}
+.wall-item-author {
+	margin-top: 10px;
+}
+.wall-item-info {
+    display: block;
+    float: left;
+    width:110px;
+    margin-right:10px;
+}
 
 .wall-item-title {
 	float: left;
@@ -1033,7 +1054,7 @@ input#dfrn-url {
 .wall-item-body {
 	float: left;
 	width: 450px;
-	margin-top: 30px;
+	margin-top: 10px;
 }
 
 .comment-edit-wrapper {
@@ -1848,6 +1869,11 @@ a.mail-list-link {
 	float: left;
 	width: 150px;
 }
+
+#photo-edit-perms-end {
+	margin-bottom: 15px;
+}
+
 #photo-edit-caption, #photo-edit-newtag, #photo-edit-albumname {
 	float: left;
 	margin-bottom: 25px;
@@ -2098,5 +2124,19 @@ a.mail-list-link {
 
 #identity-submit {
 	margin-top: 20px;
+}
+
+
+#photo-prev-link, #photo-next-link {
+	padding: 10px;
+	float: left;
+}
+
+#photo-photo {
+	float: left;
+}
+
+#photo-photo-end {
+	clear: both;
 }
 

@@ -203,7 +203,7 @@ div.wall-item-content-wrapper.shiny {
   background-repeat:no-repeat;
 }
 
-/* from defautlt */
+/* from default */
 #jot-perms-icon, 
 #profile-location,
 #profile-nolocation, 
@@ -833,12 +833,12 @@ input#dfrn-url {
 .wall-item-info {
 	display: block;
 	float: left;
-	width:150px;
+	width:110px;
+	margin-right:10px;
 }
-.wallwall .wall-item-info {
-	width: 300px;
+.comment .wall-item-info {
+	width: 70px;
 }
-
 
 .wall-item-photo-wrapper {
 	margin-top: 10px;
@@ -846,18 +846,27 @@ input#dfrn-url {
 	margin-bottom: 10px;
 	width: 100px;
 }
-.wallwall .wall-item-photo-wrapper {
-	float: left;
-}
 
+.wallwall .wwto {
+    left: 50px;
+    margin: 0;
+    position: absolute;
+    top: 70px;
+    width: 30px
+}
+.wallwall .wwto img {
+	width: 30px;
+	height: 30px;
+}
 .wallwall .wall-item-photo-end {
 	clear: both;
 }
 
 .wall-item-arrowphoto-wrapper {
-	margin-top: 40px;
-	margin-right: 20px;
-	float: left;
+    position: absolute;
+    left: 75px;
+    top: 70px;
+    z-index: 100;
 }
 .wall-item-wrapper {
 	/*float: left;
@@ -868,15 +877,37 @@ input#dfrn-url {
 .wall-item-lock {
 	/*height: 20px;*/
 	/*margin-top: 10px;*/
-    left: 135px;
+    left: 105px;
     position: absolute;
     top: 1px;	
+}
+.comment .wall-item-lock {
+	left: 65px;
 }
 
 .wall-item-ago {
 	color: #888888;
 	font-size: 0.8em;
 }
+
+.wall-item-location {
+	overflow: hidden;
+	/* add ellipsis on text overflow               */
+	/* this work on safari, opera, ie, chrome.     */
+	/* firefox users have to wait support or we    */
+	/* can use a jquery plugin http://bit.ly/zJskg */
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	width: 100%;
+}
+
+.wall-item-like-buttons {
+	float: left;
+	margin-right: 10px;
+	padding-right: 10px;
+	border-right: 2px solid #fff;
+}
+
 
 .wall-item-like-buttons img {
 	cursor: pointer;
@@ -946,6 +977,10 @@ input#dfrn-url {
     background-repeat: repeat-x;
    	padding: 5px 10px 0px;
 }
+.wall-item-author {
+	margin-top: 10px;
+}
+
 .comment .wall-item-tools {
 	background:none;
 } 
@@ -1791,6 +1826,11 @@ a.mail-list-link {
 	float: left;
 	width: 150px;
 }
+
+#photo-edit-perms-end {
+	margin-bottom: 15px;
+}
+
 #photo-edit-caption, #photo-edit-newtag, #photo-edit-albumname {
 	float: left;
 	margin-bottom: 25px;
@@ -2052,5 +2092,18 @@ a.mail-list-link {
 
 #identity-submit {
 	margin-top: 20px;
+}
+
+#photo-prev-link, #photo-next-link {
+	padding: 10px;
+	float: left;
+}
+
+#photo-photo {
+	float: left;
+}
+
+#photo-photo-end {
+	clear: both;
 }
 
