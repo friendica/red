@@ -326,7 +326,7 @@ function update_1033() {
  		`k` CHAR( 255 ) NOT NULL PRIMARY KEY ,
  		`v` TEXT NOT NULL,
  		`updated` DATETIME NOT NULL
-		) ENGINE = MYISAM DEFAULT CHARSET=utf8;");
+		) ENGINE = MYISAM DEFAULT CHARSET=utf8 ");
 }
 
 
@@ -377,3 +377,23 @@ function update_1038() {
 function update_1039() {
 	q("ALTER TABLE `addon` ADD `timestamp` BIGINT NOT NULL DEFAULT '0'");
 }
+
+
+function update_1040() {
+
+	q("CREATE TABLE IF NOT EXISTS `fcontact` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`url` CHAR( 255 ) NOT NULL ,
+	`name` CHAR( 255 ) NOT NULL ,
+	`photo` CHAR( 255 ) NOT NULL
+	) ENGINE = MYISAM DEFAULT CHARSET=utf8 ");
+
+	q("CREATE TABLE IF NOT EXISTS `ffinder` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`uid` INT UNSIGNED NOT NULL ,
+	`cid` INT UNSIGNED NOT NULL ,
+	`fid` INT UNSIGNED NOT NULL
+	) ENGINE = MYISAM DEFAULT CHARSET=utf8 ");
+
+}
+
