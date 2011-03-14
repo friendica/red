@@ -19,6 +19,7 @@ class dba {
 	public  $connected = false;
 
 	function __construct($server,$user,$pass,$db,$install = false) {
+
 		$server = trim($server);
 		$user = trim($user);
 		$pass = trim($pass);
@@ -77,7 +78,7 @@ class dba {
 		}
 		else {
 
-			/*
+			/**
 			 * If dbfail.out exists, we will write any failed calls directly to it,
 			 * regardless of any logging that may or may nor be in effect.
 			 * These usually indicate SQL syntax errors that need to be resolved.
