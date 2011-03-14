@@ -134,11 +134,17 @@ $sexual
 </div>
 <div id="profile-edit-religion-end"></div>
 
-<div id="profile-edit-keywords-wrapper" >
-<label id="profile-edit-keywords-label" for="profile-edit-keywords" >Keywords: </label>
-<input type="text" size="32" name="keywords" id="profile-edit-keywords" title="Example: fishing photography software" value="$keywords" />
-</div><div id="profile-edit-keywords-desc">(Used for searching public profiles, never shown to others)</div>
-<div id="profile-edit-keywords-end"></div>
+<div id="profile-edit-pubkeywords-wrapper" >
+<label id="profile-edit-pubkeywords-label" for="profile-edit-pubkeywords" >Public Keywords: </label>
+<input type="text" size="32" name="pubkeywords" id="profile-edit-pubkeywords" title="Example: fishing photography software" value="$pub_keywords" />
+</div><div id="profile-edit-pubkeywords-desc">(Used for suggesting potential friends, can be seen by others)</div>
+<div id="profile-edit-pubkeywords-end"></div>
+
+<div id="profile-edit-prvkeywords-wrapper" >
+<label id="profile-edit-prvkeywords-label" for="profile-edit-prvkeywords" >Private Keywords: </label>
+<input type="text" size="32" name="prvkeywords" id="profile-edit-prvkeywords" title="Example: fishing photography software" value="$prv_keywords" />
+</div><div id="profile-edit-prvkeywords-desc">(Used for searching profiles, never shown to others)</div>
+<div id="profile-edit-prvkeywords-end"></div>
 
 
 <div class="profile-edit-submit-wrapper" >

@@ -134,11 +134,17 @@ $sexual
 </div>
 <div id="profile-edit-religion-end"></div>
 
-<div id="profile-edit-keywords-wrapper" >
-<label id="profile-edit-keywords-label" for="profile-edit-keywords" >Parole chiave: </label>
-<input type="text" size="32" name="keywords" id="profile-edit-keywords" title="Esempio: pescare fotografia software" value="$keywords" />
-</div><div id="profile-edit-keywords-desc">(Usati per la ricerca dei profili pubblci, mai mostrati agli altri)</div>
-<div id="profile-edit-keywords-end"></div>
+<div id="profile-edit-pubkeywords-wrapper" >
+<label id="profile-edit-pubkeywords-label" for="profile-edit-pubkeywords" >[Public] Parole chiave: </label>
+<input type="text" size="32" name="pub_keywords" id="profile-edit-pubkeywords" title="Esempio: pescare fotografia software" value="$pub_keywords" />
+</div><div id="profile-edit-pubkeywords-desc">(Used for suggesting potential friends, can be seen by others)</div>
+<div id="profile-edit-pubkeywords-end"></div>
+
+<div id="profile-edit-prvkeywords-wrapper" >
+<label id="profile-edit-prvkeywords-label" for="profile-edit-prvkeywords" >Parole chiave: </label>
+<input type="text" size="32" name="prv_keywords" id="profile-edit-prvkeywords" title="Esempio: pescare fotografia software" value="$prv_keywords" />
+</div><div id="profile-edit-prvkeywords-desc">(Usati per la ricerca dei profili, mai mostrati agli altri)</div>
+<div id="profile-edit-prvkeywords-end"></div>
 
 
 <div class="profile-edit-submit-wrapper" >
