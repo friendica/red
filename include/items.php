@@ -401,6 +401,17 @@ function get_atom_elements($feed,$item) {
 		$res['edited'] = $item->get_date('c');
 
 
+	// Disallow time travelling posts
+
+	$d1 = strtotime($res['created']);
+	$d2 = strtotime($res['edited']);
+	$d3 = strtotime('now');
+
+	if($d1 > $d3)
+		$res['created'] = datetime_convert();
+	if($d2 > $d3)
+		$res['edited'] = datetime_convert();
+
 	$rawowner = $item->get_item_tags(NAMESPACE_DFRN, 'owner');
 	if($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data'])
 		$res['owner-name'] = unxmlify($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data']);
@@ -701,6 +712,18 @@ function item_store($arr,$force_parent = false) {
 		intval($parent_deleted),
 		intval($current_post)
 	);
+
+	/**
+	 * If this is now the last-child, force all _other_ children of this parent to *not* be last-child
+	 */
+
+	if($arr['last-child']) {
+		$r = q("UPDATE `item` SET `last-child` = 0 WHERE `parent-uri` = '%s' AND `uid` = %d AND `id` != %d",
+			dbesc($arr['uri']),
+			intval($arr['uid']),
+			intval($current_post)
+		);
+	}
 
 	return $current_post;
 }
