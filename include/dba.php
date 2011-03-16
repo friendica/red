@@ -19,6 +19,23 @@ class dba {
 	public  $connected = false;
 
 	function __construct($server,$user,$pass,$db,$install = false) {
+
+		$server = trim($server);
+		$user = trim($user);
+		$pass = trim($pass);
+		$db = trim($db);
+
+		if($install) {
+			if(strlen($server) && ($server !== 'localhost') && ($server !== '127.0.0.1')) {
+				if(! dns_get_record($server, DNS_A + DNS_CNAME + DNS_PTR)) {
+					notice( sprintf( t('Cannot locate DNS info for database server \'%s\'',$server)));
+					$this->connected = false;
+					$this->db = null;
+					return;
+				}
+			}
+		}
+
 		$this->db = @new mysqli($server,$user,$pass,$db);
 		if(! mysqli_connect_errno()) {
 			$this->connected = true;
@@ -61,7 +78,7 @@ class dba {
 		}
 		else {
 
-			/*
+			/**
 			 * If dbfail.out exists, we will write any failed calls directly to it,
 			 * regardless of any logging that may or may nor be in effect.
 			 * These usually indicate SQL syntax errors that need to be resolved.

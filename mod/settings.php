@@ -63,6 +63,7 @@ function settings_post(&$a) {
 	$defloc           = ((x($_POST,'defloc'))     ? notags(trim($_POST['defloc']))       : '');
 	$openid           = ((x($_POST,'openid_url')) ? notags(trim($_POST['openid_url']))   : '');
 	$maxreq           = ((x($_POST,'maxreq'))     ? intval($_POST['maxreq'])             : 0);
+	$expire           = ((x($_POST,'expire'))     ? intval($_POST['expire'])             : 0);
 
 	$allow_location   = (((x($_POST,'allow_location')) && (intval($_POST['allow_location']) == 1)) ? 1: 0);
 	$publish          = (((x($_POST,'profile_in_directory')) && (intval($_POST['profile_in_directory']) == 1)) ? 1: 0);
@@ -139,7 +140,7 @@ function settings_post(&$a) {
 			$openidserver = '';
 	}
 
-	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `theme` = '%s', `maxreq` = %d, `openidserver` = '%s'  WHERE `uid` = %d LIMIT 1",
+	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `theme` = '%s', `maxreq` = %d, `expire` = %d, `openidserver` = '%s'  WHERE `uid` = %d LIMIT 1",
 			dbesc($username),
 			dbesc($email),
 			dbesc($openid),
@@ -154,6 +155,7 @@ function settings_post(&$a) {
 			intval($allow_location),
 			dbesc($theme),
 			intval($maxreq),
+			intval($expire),
 			dbesc($openidserver),
 			intval(local_user())
 	);
@@ -238,6 +240,7 @@ function settings_content(&$a) {
 	$defloc   = $a->user['default-location'];
 	$openid   = $a->user['openid'];
 	$maxreq   = $a->user['maxreq'];
+	$expire   = ((intval($a->user['expire'])) ? $a->user['expire'] : '');
 
 	if(! strlen($a->user['timezone']))
 		$timezone = date_default_timezone_get();
@@ -358,6 +361,7 @@ function settings_content(&$a) {
 		'$sel_notify4' => (($notify & NOTIFY_COMMENT) ? ' checked="checked" ' : ''),
 		'$sel_notify5' => (($notify & NOTIFY_MAIL)    ? ' checked="checked" ' : ''),
 		'$maxreq' => $maxreq,
+		'$expire' => $expire,
 		'$theme' => $theme_selector,
 		'$pagetype' => $pagetype
 	));

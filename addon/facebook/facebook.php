@@ -225,7 +225,7 @@ function facebook_post_hook(&$a,&$b) {
 
 				// make links readable before we strip the code
 
-				$msg = preg_replace("/\[url=(.+?)\](.+?)\[\/url\]/is",'$2 [$1]',$msg);
+				$msg = preg_replace("/\[url=(.+?)\](.+?)\[\/url\]/is",'$2 $1',$msg);
 
 				$msg = preg_replace("/\[img\](.+?)\[\/img\]/is", t('Image: ') . '$1',$msg);
 

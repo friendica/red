@@ -506,6 +506,10 @@ input#dfrn-url {
 	margin-bottom: 30px;
 }
 
+#settings-expire-end {
+	margin-bottom: 30px;
+}
+
 #settings-username-end,
 #settings-email-end,
 #settings-nick-end,
@@ -755,7 +759,8 @@ input#dfrn-url {
 #profile-edit-sexual-label,
 #profile-edit-politic-label,
 #profile-edit-religion-label,
-#profile-edit-keywords-label,
+#profile-edit-pubkeywords-label,
+#profile-edit-prvkeywords-label,
 #profile-edit-homepage-label {
 	float: left;
 	width: 175px;
@@ -775,7 +780,8 @@ input#dfrn-url {
 #sexual-select,
 #profile-edit-politic,
 #profile-edit-religion,
-#profile-edit-keywords,
+#profile-edit-pubkeywords,
+#profile-edit-prvkeywords,
 #profile-in-dir-yes,
 #profile-in-dir-no,
 #profile-in-netdir-yes,
@@ -806,7 +812,8 @@ input#dfrn-url {
 	margin-left: 20px;
 }
 
-#profile-edit-keywords-desc {
+#profile-edit-pubkeywords-desc,
+#profile-edit-prvkeywords-desc {
 	float: left;
 	margin-left: 20px;
 }
@@ -864,7 +871,8 @@ input#dfrn-url {
 #profile-edit-sexual-end,
 #profile-edit-politic-end,
 #profile-edit-religion-end,
-#profile-edit-keywords-end,
+#profile-edit-pubkeywords-end,
+#profile-edit-prvkeywords-end,
 #profile-edit-homepage-end,
 #profile-in-dir-break,
 #profile-in-dir-end,

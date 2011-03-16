@@ -532,7 +532,7 @@ function item_content(&$a) {
 
 	require_once('include/security.php');
 
-	$uid = $_SESSION['uid'];
+	$uid = local_user();
 
 	if(($a->argc == 3) && ($a->argv[1] === 'drop') && intval($a->argv[2])) {
 

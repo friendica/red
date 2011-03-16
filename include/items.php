@@ -401,6 +401,17 @@ function get_atom_elements($feed,$item) {
 		$res['edited'] = $item->get_date('c');
 
 
+	// Disallow time travelling posts
+
+	$d1 = strtotime($res['created']);
+	$d2 = strtotime($res['edited']);
+	$d3 = strtotime('now');
+
+	if($d1 > $d3)
+		$res['created'] = datetime_convert();
+	if($d2 > $d3)
+		$res['edited'] = datetime_convert();
+
 	$rawowner = $item->get_item_tags(NAMESPACE_DFRN, 'owner');
 	if($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data'])
 		$res['owner-name'] = unxmlify($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data']);
@@ -701,6 +712,18 @@ function item_store($arr,$force_parent = false) {
 		intval($parent_deleted),
 		intval($current_post)
 	);
+
+	/**
+	 * If this is now the last-child, force all _other_ children of this parent to *not* be last-child
+	 */
+
+	if($arr['last-child']) {
+		$r = q("UPDATE `item` SET `last-child` = 0 WHERE `parent-uri` = '%s' AND `uid` = %d AND `id` != %d",
+			dbesc($arr['uri']),
+			intval($arr['uid']),
+			intval($current_post)
+		);
+	}
 
 	return $current_post;
 }
@@ -1484,3 +1507,49 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 	return $o;
 }
 	
+function item_expire($uid,$days) {
+
+	if((! $uid) || (! $days))
+		return;
+
+	$r = q("SELECT * FROM `item` 
+		WHERE `uid` = %d 
+		AND `created` < UTC_TIMESTAMP() - INTERVAL %d DAY 
+		AND `id` = `parent` 
+		AND `deleted` = 0",
+		intval($uid),
+		intval($days)
+	);
+
+	if(! count($r))
+		return;
+ 
+	logger('expire: # items=' . count($r) );
+
+	foreach($r as $item) {
+
+		// Only expire posts, not photos and photo comments
+
+		if(strlen($item['resource-id']))
+			continue;
+
+		$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s' WHERE `id` = %d LIMIT 1",
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
+			intval($item['id'])
+		);
+
+		// kill the kids
+
+		$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d ",
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
+			dbesc($item['parent-uri']),
+			intval($item['uid'])
+		);
+
+	}
+
+	proc_run('php',"include/notifier.php","expire","$uid");
+
+}

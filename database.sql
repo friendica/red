@@ -297,7 +297,8 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `sexual` char(255) NOT NULL,
   `politic` char(255) NOT NULL,
   `religion` char(255) NOT NULL,
-  `keywords` text NOT NULL,
+  `pub_keywords` text NOT NULL,
+  `prv_keywords` text NOT NULL,
   `about` text NOT NULL,
   `summary` char(255) NOT NULL,
   `music` text NOT NULL,
@@ -378,6 +379,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `page-flags` int(11) unsigned NOT NULL DEFAULT '0',
   `pwdreset` char(255) NOT NULL,
   `maxreq` int(11) NOT NULL DEFAULT '10',
+  `expire` int(11) unsigned NOT NULL DEFAULT '0',
   `allow_cid` mediumtext NOT NULL, 
   `allow_gid` mediumtext NOT NULL,
   `deny_cid` mediumtext NOT NULL, 
@@ -479,3 +481,19 @@ CREATE TABLE IF NOT EXISTS `cache` (
  `v` TEXT NOT NULL,
  `updated` DATETIME NOT NULL
 ) ENGINE = MYISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `fcontact` (
+`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`url` CHAR( 255 ) NOT NULL ,
+`name` CHAR( 255 ) NOT NULL ,
+`photo` CHAR( 255 ) NOT NULL
+) ENGINE = MYISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `ffinder` (
+`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`uid` INT UNSIGNED NOT NULL ,
+`cid` INT UNSIGNED NOT NULL ,
+`fid` INT UNSIGNED NOT NULL
+) ENGINE = MYISAM DEFAULT CHARSET=utf8;
+

@@ -29,6 +29,17 @@ function poller_run($argv, $argc){
 
 	proc_run('php',"include/queue.php");
 	
+	// once daily run expire in background
+
+	$d1 = get_config('system','last_expire_day');
+	$d2 = intval(datetime_convert('UTC','UTC','now','d'));
+
+	if($d2 != intval($d1)) {
+		set_config('system','last_expire_day',$d2);
+		proc_run('php','include/expire.php');
+	}
+
+
 	// clear old cache
 	q("DELETE FROM `cache` WHERE `updated` < '%s'",
 		dbesc(datetime_convert('UTC','UTC',"now - 30 days")));

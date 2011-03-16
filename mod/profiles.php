@@ -55,7 +55,8 @@ function profiles_post(&$a) {
 		$region = notags(trim($_POST['region']));
 		$postal_code = notags(trim($_POST['postal_code']));
 		$country_name = notags(trim($_POST['country_name']));
-		$keywords = notags(trim($_POST['keywords']));
+		$pub_keywords = notags(trim($_POST['pub_keywords']));
+		$prv_keywords = notags(trim($_POST['prv_keywords']));
 		$marital = notags(trim($_POST['marital']));
 		if($marital != $orig[0]['marital'])
 			$maritalchanged = true;
@@ -147,7 +148,8 @@ function profiles_post(&$a) {
 			`homepage` = '%s',
 			`politic` = '%s',
 			`religion` = '%s',
-			`keywords` = '%s',
+			`pub_keywords` = '%s',
+			`prv_keywords` = '%s',
 			`about` = '%s',
 			`interest` = '%s',
 			`contact` = '%s',
@@ -176,7 +178,8 @@ function profiles_post(&$a) {
 			dbesc($homepage),
 			dbesc($politic),
 			dbesc($religion),
-			dbesc($keywords),
+			dbesc($pub_keywords),
+			dbesc($prv_keywords),
 			dbesc($about),
 			dbesc($interest),
 			dbesc($contact),
@@ -383,7 +386,8 @@ function profiles_content(&$a) {
 			'$homepage' => $r[0]['homepage'],
 			'$politic' => $r[0]['politic'],
 			'$religion' => $r[0]['religion'],
-			'$keywords' => $r[0]['keywords'],
+			'$pub_keywords' => $r[0]['pub_keywords'],
+			'$prv_keywords' => $r[0]['prv_keywords'],
 			'$music' => $r[0]['music'],
 			'$book' => $r[0]['book'],
 			'$tv' => $r[0]['tv'],
