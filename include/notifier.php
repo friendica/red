@@ -40,6 +40,7 @@ function notifier_run($argv, $argc){
 			break;
 	}
 
+	$expire = false;
 	$top_level = false;
 	$recipients = array();
 	$url_recipients = array();
@@ -56,6 +57,17 @@ function notifier_run($argv, $argc){
 		$recipients[] = $message[0]['contact-id'];
 		$item = $message[0];
 
+	}
+	elseif($cmd === 'expire') {
+		$expire = true;
+		$items = q("SELECT * FROM `item` WHERE `uid` = %d AND `wall` = 1 
+			AND `deleted` = 1 AND `changed` > UTC_TIMESTAMP - INTERVAL 10 MINUTE",
+			intval($item_id)
+		);
+		$uid = $item_id;
+		$item_id = 0;
+		if(! count($items))
+			return;
 	}
 	else {
 
@@ -76,10 +88,9 @@ function notifier_run($argv, $argc){
 			intval($parent_id)
 		);
 
-		if(! count($items)){
+		if(! count($items)) {
 			return;
 		}
-
 
 		// avoid race condition with deleting entries
 
@@ -98,11 +109,11 @@ function notifier_run($argv, $argc){
 		intval($uid)
 	);
 
-	if(count($r))
-		$owner = $r[0];
-	else {
+	if(! count($r))
 		return;
-	}
+
+	$owner = $r[0];
+
 	$hub = get_config('system','huburl');
 
 	// If this is a public conversation, notify the feed hub
@@ -117,7 +128,7 @@ function notifier_run($argv, $argc){
 
 		$parent = $items[0];
 
-		if($parent['type'] === 'remote') {
+		if($parent['type'] === 'remote' && (! $expire)) {
 			// local followup to remote post
 			$followup = true;
 			$notify_hub = false; // not public
@@ -235,6 +246,7 @@ function notifier_run($argv, $argc){
 		}
 		else {
 			foreach($items as $item) {
+
 				if(! $item['parent'])
 					continue;
 
@@ -242,9 +254,9 @@ function notifier_run($argv, $argc){
 				if(! $contact)
 					continue;
 
-				$atom   .= atom_entry($item,'text',$contact,$owner,true);
+				$atom .= atom_entry($item,'text',$contact,$owner,true);
 
-				if(($top_level) && ($notify_hub) && ($item['author-link'] === $item['owner-link'])) 
+				if(($top_level) && ($notify_hub) && ($item['author-link'] === $item['owner-link']) && (! $expire)) 
 					$slaps[] = atom_entry($item,'html',$contact,$owner,true);
 			}
 		}
@@ -319,7 +331,7 @@ function notifier_run($argv, $argc){
 						// only send salmon if public - e.g. if it's ok to notify
 						// a public hub, it's ok to send a salmon
 
-						if(count($slaps) && $notify_hub) {
+						if((count($slaps)) && ($notify_hub) && (! $expire)) {
 							logger('notifier: slapdelivery: ' . $contact['name']);
 							foreach($slaps as $slappy) {
 								if($contact['notify']) {
@@ -350,7 +362,7 @@ function notifier_run($argv, $argc){
 		
 	// send additional slaps to mentioned remote tags (@foo@example.com)
 
-	if($slap && count($url_recipients) && $followup && $notify_hub) {
+	if($slap && count($url_recipients) && $followup && $notify_hub && (! $expire)) {
 		foreach($url_recipients as $url) {
 			if($url) {
 				logger('notifier: urldelivery: ' . $url);

@@ -373,6 +373,10 @@ input#dfrn-url {
 	margin-bottom: 30px;
 }
 
+#settings-expire-end {
+	margin-bottom: 30px;
+}
+
 #settings-username-end,
 #settings-email-end,
 #settings-nick-end,

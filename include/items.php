@@ -1507,3 +1507,49 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 	return $o;
 }
 	
+function item_expire($uid,$days) {
+
+	if((! $uid) || (! $days))
+		return;
+
+	$r = q("SELECT * FROM `item` 
+		WHERE `uid` = %d 
+		AND `created` < UTC_TIMESTAMP() - INTERVAL %d DAY 
+		AND `id` = `parent` 
+		AND `deleted` = 0",
+		intval($uid),
+		intval($days)
+	);
+
+	if(! count($r))
+		return;
+ 
+	logger('expire: # items=' . count($r) );
+
+	foreach($r as $item) {
+
+		// Only expire posts, not photos and photo comments
+
+		if(strlen($item['resource-id']))
+			continue;
+
+		$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s' WHERE `id` = %d LIMIT 1",
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
+			intval($item['id'])
+		);
+
+		// kill the kids
+
+		$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d ",
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
+			dbesc($item['parent-uri']),
+			intval($item['uid'])
+		);
+
+	}
+
+	proc_run('php',"include/notifier.php","expire","$uid");
+
+}

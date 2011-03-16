@@ -78,7 +78,7 @@ $profile_in_net_dir
 
 
 <div id="settings-default-perms" class="settings-default-perms" >
-	<div id="settings-default-perms-menu" class="fakelink" onClick="openClose('settings-default-perms-select');" >&#x21e9; $permissions</div>
+	<div id="settings-default-perms-menu" class="fakelink" onClick="openClose('settings-default-perms-select');" >$permissions</div>
 	<div id="settings-default-perms-menu-end"></div>
 
 	<div id="settings-default-perms-select" style="display: none;" >
@@ -88,6 +88,9 @@ $profile_in_net_dir
 	</div>
 </div>
 <div id="settings-default-perms-end"></div>
+
+<div id="settings-expire-desc">Automatically expire (delete) posts older than <input type="text" size="3" name="expire" value="$expire" /> days</div>
+<div id="settings-expire-end"></div>
 
 <div class="settings-submit-wrapper" >
 <input type="submit" name="submit" class="settings-submit" value="Submit" />

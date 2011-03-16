@@ -379,6 +379,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `page-flags` int(11) unsigned NOT NULL DEFAULT '0',
   `pwdreset` char(255) NOT NULL,
   `maxreq` int(11) NOT NULL DEFAULT '10',
+  `expire` int(11) unsigned NOT NULL DEFAULT '0',
   `allow_cid` mediumtext NOT NULL, 
   `allow_gid` mediumtext NOT NULL,
   `deny_cid` mediumtext NOT NULL, 

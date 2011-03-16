@@ -401,3 +401,9 @@ function update_1041() {
 	q("ALTER TABLE `profile` CHANGE `keywords` `prv_keywords` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ");
 	q("ALTER TABLE `profile` ADD `pub_keywords` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `religion` ");
 }
+
+function update_1042() {
+	q("ALTER TABLE `user` ADD `expire` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `maxreq` ");
+}
+
+
