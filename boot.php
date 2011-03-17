@@ -2428,6 +2428,8 @@ function get_birthdays() {
 		$o .= '<div id="birthday-title-end"></div>';
 
 		foreach($r as $rr) {
+			if(! strlen($rr['name']))
+				continue;
 			$now = strtotime('now');
 			$today = (((strtotime($rr['start'] . ' +00:00') < $now) && (strtotime($rr['finish'] . ' +00:00') > $now)) ? true : false); 
 
