@@ -110,6 +110,15 @@ tinyMCE.init({
 		}
 	}
 
+	function jotShare(id) {
+		$('#like-rotator-' + id).show();
+		$.get('share/' + id, function(data) {
+			tinyMCE.execCommand('mceInsertRawHTML',false,data);
+			$('#like-rotator-' + id).hide();
+			$(window).scrollTop(0);
+		});
+	}
+
 
 	function linkdropper(event) {
 		var linkFound = event.dataTransfer.types.contains("text/uri-list");

@@ -993,6 +993,10 @@ input#dfrn-url {
     border-right: 2px solid #fff;
 }
 
+.wall-item-share-buttons {
+	margin-left: 5px;
+}
+
 .wall-item-links-wrapper {
     float: left;
 }

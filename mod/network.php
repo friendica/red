@@ -364,6 +364,7 @@ function network_content(&$a, $update = 0) {
 					'$id' => $item['id'],
 					'$likethis' => t("I like this \x28toggle\x29"),
 					'$nolike' => t("I don't like this \x28toggle\x29"),
+					'$share' => t('Share'),
 					'$wait' => t('Please wait') 
 				));
 			}

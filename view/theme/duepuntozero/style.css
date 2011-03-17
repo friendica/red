@@ -921,6 +921,10 @@ input#dfrn-url {
 	cursor: pointer;
 }
 
+.wall-item-share-buttons {
+	margin-left: 5px;
+}
+
 .wall-item-links-wrapper {
 	float: left;
 }

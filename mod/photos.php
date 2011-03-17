@@ -1073,7 +1073,7 @@ function photos_content(&$a) {
 			$tpl = load_view_file('view/photo_item.tpl');
 			$return_url = $a->cmd;
 
-			$like_tpl = load_view_file('view/like.tpl');
+			$like_tpl = load_view_file('view/lik_noshare.tpl');
 
 			$likebuttons = '';
 
@@ -1082,6 +1082,7 @@ function photos_content(&$a) {
 					'$id' => $item['id'],
 					'$likethis' => t("I like this \x28toggle\x29"),
 					'$nolike' => t("I don't like this \x28toggle\x29"),
+					'$share' => t('Share'),
 					'$wait' => t('Please wait') 
 				));
 			}
