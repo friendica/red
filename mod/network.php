@@ -219,6 +219,7 @@ function network_content(&$a, $update = 0) {
 
 	$cmnt_tpl = load_view_file('view/comment_item.tpl');
 	$like_tpl = load_view_file('view/like.tpl');
+	$noshare_tpl = load_view_file('view/like_noshare.tpl');
 	$tpl = load_view_file('view/wall_item.tpl');
 	$wallwall = load_view_file('view/wallwall_item.tpl');
 
@@ -362,7 +363,7 @@ function network_content(&$a, $update = 0) {
 
 			$likebuttons = '';
 			if($item['id'] == $item['parent']) {
-				$likebuttons = replace_macros($like_tpl,array(
+				$likebuttons = replace_macros((($item['private']) ? $noshare_tpl : $like_tpl),array(
 					'$id' => $item['id'],
 					'$likethis' => t("I like this \x28toggle\x29"),
 					'$nolike' => t("I don't like this \x28toggle\x29"),
