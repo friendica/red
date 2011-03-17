@@ -2,7 +2,7 @@
 
 set_time_limit(0);
 
-define ( 'FRIENDIKA_VERSION',      '2.1.919' );
+define ( 'FRIENDIKA_VERSION',      '2.1.920' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.1'  );
 define ( 'DB_UPDATE_VERSION',      1043   );
 
@@ -2428,6 +2428,8 @@ function get_birthdays() {
 		$o .= '<div id="birthday-title-end"></div>';
 
 		foreach($r as $rr) {
+			if(! strlen($rr['name']))
+				continue;
 			$now = strtotime('now');
 			$today = (((strtotime($rr['start'] . ' +00:00') < $now) && (strtotime($rr['finish'] . ' +00:00') > $now)) ? true : false); 
 

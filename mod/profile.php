@@ -157,6 +157,8 @@ function profile_content(&$a, $update = 0) {
 				'$upload' => t('Upload photo'),
 				'$weblink' => t('Insert web link'),
 				'$youtube' => t('Insert YouTube video'),
+				'$video' => t('Insert Vorbis [.ogg] video'),
+				'$audio' => t('Insert Vorbis [.ogg] audio'),
 				'$setloc' => t('Set your location'),
 				'$noloc' => t('Clear browser location'),
 				'$wait' => t('Please wait'),
@@ -265,6 +267,7 @@ function profile_content(&$a, $update = 0) {
 	$cmnt_tpl = load_view_file('view/comment_item.tpl');
 
 	$like_tpl = load_view_file('view/like.tpl');
+	$noshare_tpl = load_view_file('view/like_noshare.tpl');
 
 	$tpl = load_view_file('view/wall_item.tpl');
 
@@ -307,10 +310,11 @@ function profile_content(&$a, $update = 0) {
 
 			if(can_write_wall($a,$a->profile['profile_uid'])) {
 				if($item['id'] == $item['parent']) {
-					$likebuttons = replace_macros($like_tpl,array(
+					$likebuttons = replace_macros((($item['private']) ? $noshare_tpl : $like_tpl),array(
 						'$id' => $item['id'],
 						'$likethis' => t("I like this \x28toggle\x29"),
 						'$nolike' => t("I don't like this \x28toggle\x29"),
+						'$share' => t('Share'),
 						'$wait' => t('Please wait') 
 					));
 				}

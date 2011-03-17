@@ -104,7 +104,7 @@ function display_content(&$a) {
 
 
 	$cmnt_tpl = load_view_file('view/comment_item.tpl');
-	$like_tpl = load_view_file('view/like.tpl');
+	$like_tpl = load_view_file('view/like_noshare.tpl');
 	$tpl = load_view_file('view/wall_item.tpl');
 	$wallwall = load_view_file('view/wallwall_item.tpl');
 
@@ -155,6 +155,7 @@ function display_content(&$a) {
 						'$id' => $item['id'],
 						'$likethis' => t("I like this \x28toggle\x29"),
 						'$nolike' => t("I don't like this \x28toggle\x29"),
+						'$share' => t('Share'),
 						'$wait' => t('Please wait') 
 					));
 				}

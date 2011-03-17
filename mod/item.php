@@ -212,6 +212,8 @@ function item_post(&$a) {
 	if(count($tags)) {
 		foreach($tags as $tag) {
 			if(strpos($tag,'#') === 0) {
+				if(strpos($tag,'[url='))
+					continue;
 				$basetag = str_replace('_',' ',substr($tag,1));
 				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
 				if(strlen($str_tags))
@@ -220,6 +222,8 @@ function item_post(&$a) {
 				continue;
 			}
 			if(strpos($tag,'@') === 0) {
+				if(strpos($tag,'[url='))
+					continue;
 				$stat = false;
 				$name = substr($tag,1);
 				if((strpos($name,'@')) || (strpos($name,'http://'))) {

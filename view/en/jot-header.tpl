@@ -104,6 +104,21 @@ tinyMCE.init({
 		}
 	}
 
+	function jotVideoURL() {
+		reply = prompt("Please enter a video(.ogg) link/URL:");
+		if(reply && reply.length) {
+			tinyMCE.execCommand('mceInsertRawHTML',false,'[video]' + reply + '[/video]');
+		}
+	}
+
+	function jotAudioURL() {
+		reply = prompt("Please enter an audio(.ogg) link/URL:");
+		if(reply && reply.length) {
+			tinyMCE.execCommand('mceInsertRawHTML',false,'[audio]' + reply + '[/audio]');
+		}
+	}
+
+
 	function jotGetLocation() {
 		reply = prompt("Where are you right now?", $('#jot-location').val());
 		if(reply && reply.length) {
@@ -111,6 +126,14 @@ tinyMCE.init({
 		}
 	}
 
+	function jotShare(id) {
+		$('#like-rotator-' + id).show();
+		$.get('share/' + id, function(data) {
+			tinyMCE.execCommand('mceInsertRawHTML',false,data);
+			$('#like-rotator-' + id).hide();
+			$(window).scrollTop(0);
+		});
+	}
 
 	function linkdropper(event) {
 		var linkFound = event.dataTransfer.types.contains("text/uri-list");

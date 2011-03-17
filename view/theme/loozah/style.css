@@ -107,8 +107,10 @@ blockquote:before {
 
 #jot-perms-icon, 
 #profile-location,
-#profile-nolocation, 
-#profile-video, 
+#profile-nolocation,
+#profile-youtube, 
+#profile-video,
+#profile-audio, 
 #profile-link, 
 #wall-image-upload,
 #profile-upload-wrapper,
@@ -993,6 +995,10 @@ input#dfrn-url {
     border-right: 2px solid #fff;
 }
 
+.wall-item-share-buttons {
+	margin-left: 5px;
+}
+
 .wall-item-links-wrapper {
     float: left;
 }
@@ -1121,6 +1127,14 @@ padding: 5px 10px 0px;
 	float: left;
 	margin-left: 20px;
 }
+#profile-video-wrapper {
+	float: left;
+	margin-left: 20px;
+}
+#profile-audio-wrapper {
+	float: left;
+	margin-left: 20px;
+}
 #profile-location-wrapper {
 	float: left;
 	margin-left: 20px;
@@ -1132,7 +1146,7 @@ padding: 5px 10px 0px;
 
 #profile-jot-perms {
 	float: left;
-	margin-left: 200px;
+	margin-left: 150px;
 	font-weight: bold;
 	font-size: 1.2em;
 }

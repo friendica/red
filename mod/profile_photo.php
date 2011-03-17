@@ -87,7 +87,7 @@ function profile_photo_post(&$a) {
 				);
 
 				// Update global directory in background
-				$url = $_SESSION['my_url'];
+				$url = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
 				if($url && strlen(get_config('system','directory_submit_url')))
 					proc_run('php',"include/directory.php","$url");
 			}
