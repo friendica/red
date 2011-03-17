@@ -69,7 +69,7 @@ $rating
 </div>
 <div id="contact-edit-rating-explain">
 <p>
-Var v&auml;nlig &auml;gna en liten stund &aring;t att fylla i n&aring;got som du k&auml;nner kan vara till hj&auml;lp f&ouml;r andra.
+Var v&auml;nlig spendera tid p&aring; att fylla i n&aring;got h&auml;r om du k&auml;nner att det kan vara till n&aring;gon hj&auml;lp f&ouml;r andra.
 </p>
 <textarea id="contact-edit-rating-text" name="reason" rows="3" cols="64" >$reason</textarea>
 </div>
