@@ -237,7 +237,7 @@ function facebook_post_hook(&$a,&$b) {
 					require_once('library/slinky.php');
 
 					$display_url = $a->get_baseurl() . '/display/' . $a->user['nickname'] . '/' . $b['id'];
-					$slinky = new Slinky( $posturl );
+					$slinky = new Slinky( $display_url );
 					// setup a cascade of shortening services
 					// try to get a short link from these services
 					// in the order ur1.ca, trim, id.gd, tinyurl
