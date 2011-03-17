@@ -26,7 +26,13 @@
 		<img id="profile-link" src="images/link-icon.gif" alt="$weblink" title="$weblink" ondragenter="return linkdropper(event);" ondragover="return linkdropper(event);" ondrop="linkdrop(event);" onclick="jotGetLink();" />
 	</div> 
 	<div id="profile-youtube-wrapper" style="display: $visitor;" >
-		<img id="profile-video" src="images/youtube_icon.gif" alt="$youtube" title="$youtube" onclick="jotGetVideo();" />
+		<img id="profile-youtube" src="images/youtube_icon.gif" alt="$youtube" title="$youtube" onclick="jotGetVideo();" />
+	</div> 
+	<div id="profile-video-wrapper" style="display: $visitor;" >
+		<img id="profile-video" src="images/video.gif" alt="$video" title="$video" onclick="jotVideoURL();" />
+	</div> 
+	<div id="profile-audio-wrapper" style="display: $visitor;" >
+		<img id="profile-audio" src="images/audio.gif" alt="$audio" title="$audio" onclick="jotAudioURL();" />
 	</div> 
 	<div id="profile-location-wrapper" style="display: $visitor;" >
 		<img id="profile-location" src="images/globe.gif" alt="$setloc" title="$setloc" onclick="jotGetLocation();" />

@@ -104,6 +104,20 @@ tinyMCE.init({
 		}
 	}
 
+	function jotVideoURL() {
+		reply = prompt("Please enter a video(.ogg) link/URL:");
+		if(reply && reply.length) {
+			tinyMCE.execCommand('mceInsertRawHTML',false,'[video]' + reply + '[/video]');
+		}
+	}
+
+	function jotAudioURL() {
+		reply = prompt("Please enter an audio(.ogg) link/URL:");
+		if(reply && reply.length) {
+			tinyMCE.execCommand('mceInsertRawHTML',false,'[audio]' + reply + '[/audio]');
+		}
+	}
+
 	function jotGetLocation() {
 		reply = prompt("Dove ti trovi ora?", $('#jot-location').val());
 		if(reply && reply.length) {
