@@ -2423,7 +2423,13 @@ function get_birthdays() {
 	);
 
 	if($r && count($r)) {
-		$o .= '<div id="birthday-wrapper"><div id="birthday-title">' . t('Birthdays this week:') . '</div>'; 
+		$total = 0;
+		foreach($r as $rr)
+			if(strlen($rr['name']))
+				$total ++;
+
+		$o .= '<div id="birthday-notice" class="birthday-notice fakelink" onclick=openClose(\'birthday-wrapper\'); >' . t('Birthday Reminders') . ' ' . '(' . $total . ')' . '</div>'; 
+		$o .= '<div id="birthday-wrapper" style="display: none;" ><div id="birthday-title">' . t('Birthdays this week:') . '</div>'; 
 		$o .= '<div id="birthday-adjust">' . t("\x28Adjusted for local time\x29") . '</div>';
 		$o .= '<div id="birthday-title-end"></div>';
 
@@ -2439,7 +2445,7 @@ function get_birthdays() {
 			. '</div>' ;
 		}
 
-		$o .= '</div>';
+		$o .= '</div></div>';
 	}
 
   return $o;
