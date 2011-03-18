@@ -20,7 +20,7 @@ function home_content(&$a) {
 	if(x($_SESSION,'theme'))
 		unset($_SESSION['theme']);
 
-	$o .= '<h1>' . ((x($a->config,'sitename')) ? t("Welcome to ").$a->config['sitename'] : "" ) . '</h1>';
+	$o .= '<h1>' . ((x($a->config,'sitename')) ? sprintf( t("Welcome to %s") ,$a->config['sitename']) : "" ) . '</h1>';
 	if(file_exists('home.html'))
  		$o .= file_get_contents('home.html');
 

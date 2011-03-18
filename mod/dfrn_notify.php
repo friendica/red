@@ -385,7 +385,7 @@ function dfrn_notify_post(&$a) {
 								'$body' => html_entity_decode(strip_tags(bbcode(stripslashes($datarray['body']))), ENT_QUOTES, 'UTF-8')
 							));
 	
-							$res = mail($importer['email'], $from . t(' commented on an item at ') . $a->config['sitename'],
+							$res = mail($importer['email'], sprintf(t('%s commented on an item at %s'), $from , $a->config['sitename']),
 								$email_tpl, "From: " . t('Administrator') . '@' . $a->get_hostname() );
 						}
 					}
@@ -471,9 +471,8 @@ function dfrn_notify_post(&$a) {
 								'$body' => html_entity_decode(strip_tags(bbcode(stripslashes($datarray['body']))), ENT_QUOTES, 'UTF-8')
 							));
 
-							$res = mail($importer['email'], $from . t(" commented on an item at ") 
-								. $a->config['sitename'],
-								$email_tpl,t("From: Administrator@") . $a->get_hostname() );
+							$res = mail($importer['email'], sprintf( t("%s commented on an item at %s") , $from ,$a->config['sitename']),
+								$email_tpl, "From: ".t("Administrator") . "@". $a->get_hostname() );
 							break;
 						}
 					}

@@ -348,6 +348,12 @@ function profile_content(&$a, $update = 0) {
 			else
 				$sparkle = '';
 
+
+			$edpost = '';
+			if((local_user()) && ($a->profile['profile_uid'] == local_user()) && ($item['id'] == $item['parent']) && (intval($item['wall']) == 1)) 
+				$edpost = '<a class="editpost" href="' . $a->get_baseurl() . '/editpost/' . $item['id'] . '" title="' . t('Edit') . '"><img src="images/pencil.gif" /></a>';
+
+
 			// We would prefer to use our own avatar link for this item because the one in the author-avatar might reference a 
 			// remote site (which could be down). We will use author-avatar if we haven't got something stored locally.
 			// We use this same logic block in mod/network.php to determine it this is a third party post and we don't have any 
@@ -400,6 +406,7 @@ function profile_content(&$a, $update = 0) {
 				'$location' => $location, 
 				'$indent' => $indent, 
 				'$plink' => get_plink($item),
+				'$edpost' => $edpost,
 				'$drop' => $drop,
 				'$like' => $like,
 				'$vote' => $likebuttons,

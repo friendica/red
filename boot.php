@@ -2,7 +2,7 @@
 
 set_time_limit(0);
 
-define ( 'FRIENDIKA_VERSION',      '2.1.920' );
+define ( 'FRIENDIKA_VERSION',      '2.1.921' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.1'  );
 define ( 'DB_UPDATE_VERSION',      1043   );
 
@@ -158,6 +158,11 @@ if (get_magic_quotes_gpc()) {
     }
     unset($process);
 }
+
+/*
+ * translation system
+ */
+require_once("include/pgettext.php");
 
 
 /**
@@ -600,28 +605,6 @@ function replace_macros($s,$r) {
 	return str_replace($search,$replace,$s);
 }}
 
-
-// load string translation table for alternate language
-
-if(! function_exists('load_translation_table')) {
-function load_translation_table($lang) {
-	global $a;
-
-	if(file_exists("view/$lang/strings.php"))
-		include("view/$lang/strings.php");
-}}
-
-// translate string if translation exists
-
-if(! function_exists('t')) {
-function t($s) {
-
-	$a = get_app();
-
-	if(x($a->strings,$s))
-		return $a->strings[$s];
-	return $s;
-}}
 
 // curl wrapper. If binary flag is true, return binary
 // results. 
@@ -1845,10 +1828,14 @@ if(! function_exists('format_like')) {
 function format_like($cnt,$arr,$type,$id) {
 	$o = '';
 	if($cnt == 1)
-		$o .= $arr[0] . (($type === 'like') ? t(' likes this.') : t(' doesn\'t like this.')) . EOL ;
+		$o .= (($type === 'like') ? sprintf( t('%s likes this.'), $arr[0]) : sprintf( t('%s doesn\'t like this.'), $arr[0])) . EOL ;
 	else {
-		$o .= '<span class="fakelink" onclick="openClose(\'' . $type . 'list-' . $id . '\');" >' 
-			. $cnt . ' ' . t('people') . '</span> ' . (($type === 'like') ? t('like this.') : t('don\'t like this.')) . EOL ;
+		$spanatts = 'class="fakelink" onclick="openClose(\'' . $type . 'list-' . $id . '\');"';
+		$o .= (($type === 'like') ? 
+					sprintf( t('<span  %1$s>%2$d people</span> like this.'), $spanatts, $cnt)
+					 : 
+					sprintf( t('<span  %1$s>%2$d people</span> don\'t like this.'), $spanatts, $cnt) ); 
+		$o .= EOL ;
 		$total = count($arr);
 		if($total >= MAX_LIKERS)
 			$arr = array_slice($arr, 0, MAX_LIKERS - 1);
@@ -1856,8 +1843,8 @@ function format_like($cnt,$arr,$type,$id) {
 			$arr[count($arr)-1] = t('and') . ' ' . $arr[count($arr)-1];
 		$str = implode(', ', $arr);
 		if($total >= MAX_LIKERS)
-			$str .= t(', and ') . $total - MAX_LIKERS . t(' other people');
-		$str .= (($type === 'like') ? t(' like this.') : t(' don\'t like this.'));
+			$str .= sprintf( t(', and %d other people'), $total - MAX_LIKERS );
+		$str = (($type === 'like') ? sprintf( t('%s like this.'), $str) : sprintf( t('%s don\'t like this.'), $str));
 		$o .= "\t" . '<div id="' . $type . 'list-' . $id . '" style="display: none;" >' . $str . '</div>';
 	}
 	return $o;
@@ -2423,7 +2410,13 @@ function get_birthdays() {
 	);
 
 	if($r && count($r)) {
-		$o .= '<div id="birthday-wrapper"><div id="birthday-title">' . t('Birthdays this week:') . '</div>'; 
+		$total = 0;
+		foreach($r as $rr)
+			if(strlen($rr['name']))
+				$total ++;
+
+		$o .= '<div id="birthday-notice" class="birthday-notice fakelink" onclick=openClose(\'birthday-wrapper\'); >' . t('Birthday Reminders') . ' ' . '(' . $total . ')' . '</div>'; 
+		$o .= '<div id="birthday-wrapper" style="display: none;" ><div id="birthday-title">' . t('Birthdays this week:') . '</div>'; 
 		$o .= '<div id="birthday-adjust">' . t("\x28Adjusted for local time\x29") . '</div>';
 		$o .= '<div id="birthday-title-end"></div>';
 
@@ -2439,7 +2432,7 @@ function get_birthdays() {
 			. '</div>' ;
 		}
 
-		$o .= '</div>';
+		$o .= '</div></div>';
 	}
 
   return $o;

@@ -24,6 +24,7 @@
 		<div class="wall-item-tools" id="wall-item-tools-$id">
 		$vote
 		$plink
+		$edpost
 		$drop
 		</div>
 	</div>

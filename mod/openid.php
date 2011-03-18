@@ -70,7 +70,7 @@ function openid_content(&$a) {
 			$_SESSION['page_flags'] = $r[0]['page-flags'];
 			$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $r[0]['nickname'];
 
-			notice( t("Welcome back ") . $r[0]['username'] . EOL);
+			notice( sprintf( t("Welcome back "), $r[0]['username']) . EOL);
 			$a->user = $r[0];
 
 			if(strlen($a->user['timezone'])) {

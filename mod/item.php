@@ -51,13 +51,28 @@ function item_post(&$a) {
 	}
 
 	$profile_uid = ((x($_POST,'profile_uid')) ? intval($_POST['profile_uid']) : 0);
-
+	$post_id     = ((x($_POST['post_id']))    ? intval($_POST['post_id'])     : 0);
 
 	if(! can_write_wall($a,$profile_uid)) {
 		notice( t('Permission denied.') . EOL) ;
 		if(x($_POST,'return')) 
 			goaway($a->get_baseurl() . "/" . $_POST['return'] );
 		killme();
+	}
+
+
+	// is this an edited post?
+
+	$orig_post = null;
+
+	if($post_id) {
+		$i = q("SELECT * FROM `item` WHERE `uid` = %d AND `id` = %d LIMIT 1",
+			intval($profile_uid),
+			intval($post_id)
+		);
+		if(! count($i))
+			killme();
+		$orig_post = $i[0];
 	}
 
 	$user = null;
@@ -68,37 +83,51 @@ function item_post(&$a) {
 	if(count($r))
 		$user = $r[0];
 	
+	if($orig_post) {
+		$str_group_allow   = $orig_post['allow_gid'];
+		$str_contact_allow = $orig_post['allow_cid'];
+		$str_group_deny    = $orig_post['deny_gid'];
+		$str_contact_deny  = $orig_post['deny_cid'];
+		$title             = $orig_post['title'];
+		$location          = $orig_post['location'];
+		$coord             = $orig_post['coord'];
+		$verb              = $orig_post['verb'];
+		$emailcc           = $orig_post['emailcc'];
 
-	$str_group_allow   = perms2str($_POST['group_allow']);
-	$str_contact_allow = perms2str($_POST['contact_allow']);
-	$str_group_deny    = perms2str($_POST['group_deny']);
-	$str_contact_deny  = perms2str($_POST['contact_deny']);
-
-	$private = ((strlen($str_group_allow) || strlen($str_contact_allow) || strlen($str_group_deny) || strlen($str_contact_deny)) ? 1 : 0);
-
-	if(($parent_item) && 
-		(($parent_item['private']) 
-			|| strlen($parent_item['allow_cid']) 
-			|| strlen($parent_item['allow_gid']) 
-			|| strlen($parent_item['deny_cid']) 
-			|| strlen($parent_item['deny_gid'])
-		)
-	) {
-		$private = 1;
+		$body              = escape_tags(trim($_POST['body']));
+		$private           = $orig_post['private'];
 	}
+	else {
+		$str_group_allow   = perms2str($_POST['group_allow']);
+		$str_contact_allow = perms2str($_POST['contact_allow']);
+		$str_group_deny    = perms2str($_POST['group_deny']);
+		$str_contact_deny  = perms2str($_POST['contact_deny']);
+		$title             = notags(trim($_POST['title']));
+		$location          = notags(trim($_POST['location']));
+		$coord             = notags(trim($_POST['coord']));
+		$verb              = notags(trim($_POST['verb']));
+		$emailcc           = notags(trim($_POST['emailcc']));
 
-	$title             = notags(trim($_POST['title']));
-	$body              = escape_tags(trim($_POST['body']));
-	$location          = notags(trim($_POST['location']));
-	$coord             = notags(trim($_POST['coord']));
-	$verb              = notags(trim($_POST['verb']));
-	$emailcc           = notags(trim($_POST['emailcc']));
+		$body              = escape_tags(trim($_POST['body']));
+		$private = ((strlen($str_group_allow) || strlen($str_contact_allow) || strlen($str_group_deny) || strlen($str_contact_deny)) ? 1 : 0);
 
-	if(! strlen($body)) {
-		notice( t('Empty post discarded.') . EOL );
-		if(x($_POST,'return')) 
-			goaway($a->get_baseurl() . "/" . $_POST['return'] );
-		killme();
+		if(($parent_item) && 
+			(($parent_item['private']) 
+				|| strlen($parent_item['allow_cid']) 
+				|| strlen($parent_item['allow_gid']) 
+				|| strlen($parent_item['deny_cid']) 
+				|| strlen($parent_item['deny_gid'])
+			)) {
+			$private = 1;
+		}
+	
+
+		if(! strlen($body)) {
+			notice( t('Empty post discarded.') . EOL );
+			if(x($_POST,'return')) 
+				goaway($a->get_baseurl() . "/" . $_POST['return'] );
+			killme();
+		}
 	}
 
 	// get contact info for poster
@@ -150,7 +179,6 @@ function item_post(&$a) {
 			}
 		}
 	}
-
 
 	/**
 	 *
@@ -287,15 +315,13 @@ function item_post(&$a) {
 							$str_tags .= ',';
 						$str_tags .= '@[url=' . $alias . ']' . $newname	. '[/url]';
 					}
-
 				}
 			}
 		}
 	}
 
-
-
 	$wall = 0;
+
 	if($post_type === 'wall' || $post_type === 'wall-comment')
 		$wall = 1;
 
@@ -346,8 +372,30 @@ function item_post(&$a) {
 	$datarray['parent']        = $parent;
 	$datarray['self']          = $self;
 
+	if($orig_post)
+		$datarray['edit']      = true;
 
 	call_hooks('post_local',$datarray);
+
+
+	if($orig_post) {
+		$r = q("UPDATE `item` SET `body` = '%s', `edited` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			dbesc($body),
+			dbesc(datetime_convert()),
+			intval($post_id),
+			intval($profile_uid)
+		);
+
+		proc_run('php', "include/notifier.php", 'edit_post', "$post_id");
+		if((x($_POST,'return')) && strlen($_POST['return'])) {
+			logger('return: ' . $_POST['return']);
+			goaway($a->get_baseurl() . "/" . $_POST['return'] );
+		}
+		killme();
+	}
+	else
+		$post_id = 0;
+
 
 	$r = q("INSERT INTO `item` (`uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `changed`, `uri`, `title`, `body`, `location`, `coord`, 
@@ -423,8 +471,8 @@ function item_post(&$a) {
 					'$body' => strip_tags(bbcode($datarray['body']))
 				));
 
-				$res = mail($user['email'], $from . t(" commented on your item at ") . $a->config['sitename'],
-					$email_tpl,t("From: Administrator@") . $a->get_hostname() );
+				$res = mail($user['email'], sprintf( t("%s commented on your item at %s") ,$from,$a->config['sitename']),
+					$email_tpl,"From: " . t("Administrator") . "@" . $a->get_hostname() );
 			}
 		}
 		else {
@@ -446,8 +494,8 @@ function item_post(&$a) {
 					'$body' => strip_tags(bbcode($datarray['body']))
 				));
 
-				$res = mail($user['email'], $from . t(" posted on your profile wall at ") . $a->config['sitename'],
-					$email_tpl,t("From: Administrator@") . $a->get_hostname() );
+				$res = mail($user['email'], sprintf( t("%s posted on your profile wall at %s") ,$from, $a->config['sitename']),
+					$email_tpl,"From: " . t("Administrator") . "@" . $a->get_hostname() );
 			}
 		}
 
@@ -490,13 +538,13 @@ function item_post(&$a) {
 				$addr = trim($recip);
 				if(! strlen($addr))
 					continue;
-				$disclaimer = '<hr />' . t('This message was sent to you by ') . $a->user['username'] 
-					. t(', a member of the Friendika social network.') . '<br />';
+				$disclaimer = '<hr />' . sprintf(t('This message was sent to you by %s, a member of the Friendika social network.'),$a->user['username']) 
+					. '<br />';
 				$disclaimer .= t('You may visit them online at') . ' ' 
 					. $a->get_baseurl() . '/profile/' . $a->user['nickname'] . '<br />';
 				$disclaimer .= t('Please contact the sender by replying to this post if you do not wish to receive these messages.') . '<br />'; 
 
-				$subject  = '[Friendika]' . ' ' . $a->user['username'] . ' ' . t('posted an update.');
+				$subject  = '[Friendika]' . ' ' . sprintf( t('%s posted an update.'),$a->user['username']);
 				$headers  = 'From: ' . $a->user['username'] . ' <' . $a->user['email'] . '>' . "\n";
 				$headers .= 'MIME-Version: 1.0' . "\n";
 				$headers .= 'Content-Type: text/html; charset=UTF-8' . "\n";

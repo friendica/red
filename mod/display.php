@@ -217,6 +217,9 @@ function display_content(&$a) {
 			$profile_name   = (((strlen($item['author-name']))   && $diff_author) ? $item['author-name']   : $item['name']);
 			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $item['thumb']);
 
+			$edpost = '';
+			if((local_user()) && ($item['uid'] == local_user()) && ($item['id'] == $item['parent']) && (intval($item['wall']) == 1)) 
+				$edpost = '<a class="editpost" href="' . $a->get_baseurl() . '/editpost/' . $item['id'] . '" title="' . t('Edit') . '"><img src="images/pencil.gif" /></a>';
 			// Can we use our special contact URL for this author? 
 
 			if(strlen($item['author-link'])) {
@@ -276,6 +279,7 @@ function display_content(&$a) {
 				'$owner_photo' => $owner_photo,
 				'$owner_name' => $owner_name,
 				'$plink' => get_plink($item),
+				'$edpost' => $edpost,
 				'$drop' => $drop,
 				'$vote' => $likebuttons,
 				'$like' => $like,

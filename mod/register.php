@@ -307,7 +307,7 @@ function register_post(&$a) {
 				'$password' => $new_password,
 				'$uid' => $newuid ));
 
-		$res = mail($email, t('Registration details for ') . $a->config['sitename'],
+		$res = mail($email, sprintf(t('Registration details for %s'), $a->config['sitename']),
 			$email_tpl, 'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME']);
 
 
@@ -344,7 +344,7 @@ function register_post(&$a) {
 				'$hash' => $hash
 		 ));
 
-		$res = mail($a->config['admin_email'], t('Registration request at ') . $a->config['sitename'],
+		$res = mail($a->config['admin_email'], sprintf(t('Registration request at %s'), $a->config['sitename']),
 			$email_tpl,'From: ' .  t('Administrator') . '@' . $_SERVER['SERVER_NAME']);
 
 		if($res) {

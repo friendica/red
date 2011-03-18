@@ -310,6 +310,7 @@ foreach($_FILES AS $key => $val) {
 			$arr['deny_gid']      = $p[0]['deny_gid'];
 			$arr['last-child']    = 1;
 			$arr['visible']       = $visibility;
+			
 			$arr['body']          = '[url=' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $p[0]['resource-id'] . ']' 
 						. '[img]' . $a->get_baseurl() . '/photo/' . $p[0]['resource-id'] . '-' . $p[0]['scale'] . '.jpg' . '[/img]' 
 						. '[/url]';

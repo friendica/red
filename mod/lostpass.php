@@ -35,7 +35,7 @@ function lostpass_post(&$a) {
 			'$reset_link' => $a->get_baseurl() . '/lostpass?verify=' . $new_password
 	));
 
-	$res = mail($email, t('Password reset requested at ') . $a->config['sitename'],
+	$res = mail($email, sprintf(t('Password reset requested at %s'),$a->config['sitename']),
 			$email_tpl, 'From: ' . t('Administrator') . '@' . $_SERVER[SERVER_NAME]);
 
 	goaway($a->get_baseurl());
