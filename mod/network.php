@@ -387,6 +387,9 @@ function network_content(&$a, $update = 0) {
 				));
 			}
 
+			$edpost = '';
+			if(($item['id'] == $item['parent']) && (intval($item['wall']) == 1)) 
+				$edpost = '<a class="editpost" href="' . $a->get_baseurl() . '/editpost/' . $item['id'] . '" title="' . t('Edit') . '"><img src="images/pencil.gif" /></a>';
 			$drop = replace_macros(load_view_file('view/wall_item_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
 
 			$photo = $item['photo'];
@@ -455,6 +458,7 @@ function network_content(&$a, $update = 0) {
 				'$owner_photo' => $owner_photo,
 				'$owner_name' => $owner_name,
 				'$plink' => get_plink($item),
+				'$edpost' => $edpost,
 				'$drop' => $drop,
 				'$vote' => $likebuttons,
 				'$like' => $like,

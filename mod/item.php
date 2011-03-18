@@ -51,7 +51,7 @@ function item_post(&$a) {
 	}
 
 	$profile_uid = ((x($_POST,'profile_uid')) ? intval($_POST['profile_uid']) : 0);
-
+	$post_id = ((x($_POST['post_id'])) ? intval($_POST['post_id']) : 0);
 
 	if(! can_write_wall($a,$profile_uid)) {
 		notice( t('Permission denied.') . EOL) ;
@@ -149,6 +149,35 @@ function item_post(&$a) {
 				$post_type = 'wall-comment';
 			}
 		}
+	}
+
+	// is this an edited post?
+
+	$orig_post = null;
+
+	if($post_id) {
+		$i = q("SELECT * FROM `item` WHERE `uid` = %d AND `id` = %d LIMIT 1",
+			intval($profile_uid),
+			intval($post_id)
+		);
+		if(! count($i))
+			killme();
+		$orig_post = $i[0];
+	}
+
+	if($orig_post) {
+		$str_group_allow   = $orig_post['allow_gid'];
+		$str_contact_allow = $orig_post['allow_cid'];
+		$str_group_deny    = $orig_post['deny_gid'];
+		$str_contact_deny  = $orig_post['deny_cid'];
+		$private           = $orig_post['private'];
+		$title             = $orig_post['title'];
+		$location          = $orig_post['location'];
+		$coord             = $orig_post['coord'];
+		$verb              = $orig_post['verb'];
+		$emailcc           = $orig_post['emailcc'];
+
+		$body              = escape_tags(trim($_POST['body']));
 	}
 
 
@@ -294,8 +323,25 @@ function item_post(&$a) {
 	}
 
 
+	if($orig_post) {
+		$r = q("UPDATE `item` SET `body` = '%s', `edited` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			dbesc($body),
+			dbesc(datetime_convert()),
+			intval($post_id),
+			intval($profile_uid)
+		);
 
+		proc_run('php', "include/notifier.php", 'edit_post', "$post_id");
+		if((x($_POST,'return')) && strlen($_POST['return'])) {
+			logger('return: ' . $_POST['return']);
+			goaway($a->get_baseurl() . "/" . $_POST['return'] );
+		}
+		killme();
+	}
+
+	$post_id = 0;
 	$wall = 0;
+
 	if($post_type === 'wall' || $post_type === 'wall-comment')
 		$wall = 1;
 

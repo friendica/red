@@ -927,6 +927,10 @@ input#dfrn-url {
 	margin-left: 10px;
 }
 
+.editpost {
+	margin-left: 15px;
+}
+
 .wall-item-links-wrapper {
 	float: left;
 }
