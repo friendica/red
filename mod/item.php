@@ -443,7 +443,7 @@ function item_post(&$a) {
 				));
 
 				$res = mail($user['email'], sprintf( t("%s posted on your profile wall at %s") ,$from, $a->config['sitename']),
-					$email_tpl,"From: " . t("Administrator@") . "@" . $a->get_hostname() );
+					$email_tpl,"From: " . t("Administrator") . "@" . $a->get_hostname() );
 			}
 		}
 

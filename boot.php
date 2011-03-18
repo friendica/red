@@ -1828,10 +1828,14 @@ if(! function_exists('format_like')) {
 function format_like($cnt,$arr,$type,$id) {
 	$o = '';
 	if($cnt == 1)
-		$o .= $arr[0] . (($type === 'like') ? t(' likes this.') : t(' doesn\'t like this.')) . EOL ;
+		$o .= (($type === 'like') ? sprintf( t('%s likes this.'), $arr[0]) : sprintf( t('%s doesn\'t like this.'), $arr[0])) . EOL ;
 	else {
-		$o .= '<span class="fakelink" onclick="openClose(\'' . $type . 'list-' . $id . '\');" >' 
-			. $cnt . ' ' . t('people') . '</span> ' . (($type === 'like') ? t('like this.') : t('don\'t like this.')) . EOL ;
+		$spanatts = 'class="fakelink" onclick="openClose(\'' . $type . 'list-' . $id . '\');"';
+		$o .= (($type === 'like') ? 
+					sprintf( t('<span  %1$s>%2$d people</span> like this.'), $spanatts, $cnt)
+					 : 
+					sprintf( t('<span  %1$s>%2$d people</span> don\'t like this.'), $spanatts, $cnt) ); 
+		$o .= EOL ;
 		$total = count($arr);
 		if($total >= MAX_LIKERS)
 			$arr = array_slice($arr, 0, MAX_LIKERS - 1);
@@ -1839,8 +1843,8 @@ function format_like($cnt,$arr,$type,$id) {
 			$arr[count($arr)-1] = t('and') . ' ' . $arr[count($arr)-1];
 		$str = implode(', ', $arr);
 		if($total >= MAX_LIKERS)
-			$str .= t(', and ') . $total - MAX_LIKERS . t(' other people');
-		$str .= (($type === 'like') ? t(' like this.') : t(' don\'t like this.'));
+			$str .= sprintf( t(', and %d other people'), $total - MAX_LIKERS );
+		$str = (($type === 'like') ? sprintf( t('%s like this.'), $str) : sprintf( t('%s don\'t like this.'), $str));
 		$o .= "\t" . '<div id="' . $type . 'list-' . $id . '" style="display: none;" >' . $str . '</div>';
 	}
 	return $o;

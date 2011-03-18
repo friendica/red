@@ -124,9 +124,9 @@ function like_content(&$a) {
 	</object>
 EOT;
 	if($verb === 'like')
-		$bodyverb = t('likes');
+		$bodyverb = t('%1$s likes %2$s\'s %3$s');
 	if($verb === 'dislike')
-		$bodyverb = t('doesn\'t like');
+		$bodyverb = t('%1$s doesn\'t like %2$s\'s %3$s');
 
 	if(! isset($bodyverb))
 			return; 
@@ -147,9 +147,11 @@ EOT;
 	$arr['author-name'] = $contact['name'];
 	$arr['author-link'] = $contact['url'];
 	$arr['author-avatar'] = $contact['thumb'];
-	$arr['body'] = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]' . ' ' . $bodyverb . ' ' 
-		. '[url=' . $item['author-link'] . ']' . sprintf( t("%s's") ,$item['author-name']) . '[/url]' . ' '
-		. '[url=' . $a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id'] . ']' . $post_type . '[/url]' ;
+	
+	$ulink = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]';
+	$alink = '[url=' . $item['author-link'] . ']' . $item['author-name'] . '[/url]';
+	$plink = '[url=' . $a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id'] . ']' . $post_type . '[/url]';
+	$arr['body'] =  sprintf( $bodyverb, $ulink, $alink, $plink );
 
 	$arr['verb'] = $activity;
 	$arr['object-type'] = $objtype;
