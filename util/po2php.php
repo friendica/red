@@ -1,5 +1,6 @@
 <?php
 
+
 function po2php_run($argv, $argc) {
 
 	if ($argc!=2) {
@@ -22,7 +23,7 @@ function po2php_run($argv, $argc) {
 	$infile = file($pofile);
 	$k="";
 	$arr = False;
-	
+	$ink = False;
 	foreach ($infile as $l) {
 		$len = strlen($l);
 		if (substr($l,0,15)=='"Plural-Forms: '){
@@ -34,22 +35,17 @@ function po2php_run($argv, $argc) {
 			$out .= '}'."\n";
 		}
 		
-		if (substr($l,0,6)=="msgid "){
-			if ($k!="") $out .= $arr?");\n":";\n";
-			$arr=False;
-			$k = substr($l,6, $len-7);
-			if ($k != '""' ) {
-				$out .= '$a->strings['.$k.'] = ';
-			} else {
-				$k = "";
-			}
-		}
+
+
 
 		if ($k!="" && substr($l,0,7)=="msgstr "){
+			if ($ink) { $ink = False; $out .= '$a->strings["'.$k.'"] = '; }
 			$v = substr($l,7,$len-8);
 			$out .= $v;
 		}
 		if ($k!="" && substr($l,0,7)=="msgstr["){
+			if ($ink) { $ink = False; $out .= '$a->strings["'.$k.'"] = '; }
+			
 			if (!$arr) {
 				$arr=True;
 				$out .= "array(\n";
@@ -58,6 +54,26 @@ function po2php_run($argv, $argc) {
 			preg_match("|\[([0-9]*)\] (.*)|", $l, $match);
 			$out .= "\t". $match[1]." => ". $match[2] .",\n";
 		}
+	
+		if (substr($l,0,6)=="msgid_") { $ink = False; $out .= '$a->strings["'.$k.'"] = '; };
+	
+		if ($ink) {
+			$k .= trim($l,"\" \r\n"); 
+			//$out .= '$a->strings['.$k.'] = ';
+		}
+		
+		if (substr($l,0,6)=="msgid "){
+			if ($k!="") $out .= $arr?");\n":";\n";
+			$arr=False;
+			$k = str_replace("msgid ","",$l);
+			if ($k != '""' ) {
+				$k = trim($k,"\"\r\n");
+			} else {
+				$k = "";
+			}
+			$ink = True;
+		}
+		
 		
 	}
 	
