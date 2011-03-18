@@ -22,10 +22,13 @@ function po2php_run($argv, $argc) {
 	
 	$infile = file($pofile);
 	$k="";
+	$v="";
 	$arr = False;
 	$ink = False;
+	$inv = False;
 	foreach ($infile as $l) {
 		$len = strlen($l);
+		if ($l[0]=="#") $l="";
 		if (substr($l,0,15)=='"Plural-Forms: '){
 			$match=Array();
 			preg_match("|nplurals=([0-9]*); plural=(.*);|", $l, $match);
@@ -40,12 +43,16 @@ function po2php_run($argv, $argc) {
 
 		if ($k!="" && substr($l,0,7)=="msgstr "){
 			if ($ink) { $ink = False; $out .= '$a->strings["'.$k.'"] = '; }
-			$v = substr($l,7,$len-8);
-			$out .= $v;
+			if ($inv) {	$inv = False; $out .= '"'.$v.'"'; }
+			
+			$v = substr($l,8,$len-10);
+			$inv = True;
+			//$out .= $v;
 		}
 		if ($k!="" && substr($l,0,7)=="msgstr["){
 			if ($ink) { $ink = False; $out .= '$a->strings["'.$k.'"] = '; }
-			
+			if ($inv) {	$inv = False; $out .= '"'.$v.'"'; }
+						
 			if (!$arr) {
 				$arr=True;
 				$out .= "array(\n";
@@ -56,13 +63,15 @@ function po2php_run($argv, $argc) {
 		}
 	
 		if (substr($l,0,6)=="msgid_") { $ink = False; $out .= '$a->strings["'.$k.'"] = '; };
-	
+
+
 		if ($ink) {
-			$k .= trim($l,"\" \r\n"); 
+			$k .= trim($l,"\"\r\n"); 
 			//$out .= '$a->strings['.$k.'] = ';
 		}
 		
 		if (substr($l,0,6)=="msgid "){
+			if ($inv) {	$inv = False; $out .= '"'.$v.'"'; }
 			if ($k!="") $out .= $arr?");\n":";\n";
 			$arr=False;
 			$k = str_replace("msgid ","",$l);
@@ -74,9 +83,15 @@ function po2php_run($argv, $argc) {
 			$ink = True;
 		}
 		
+		if ($inv && substr($l,0,6)!="msgstr") {
+			$v .= trim($l,"\"\r\n"); 
+			//$out .= '$a->strings['.$k.'] = ';
+		}
+	
 		
 	}
 	
+	if ($inv) {	$inv = False; $out .= '"'.$v.'"'; }
 	if ($k!="") $out .= $arr?");\n":";\n";
 	
 	file_put_contents($outfile, $out);
