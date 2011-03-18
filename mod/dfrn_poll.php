@@ -75,7 +75,7 @@ function dfrn_poll_init(&$a) {
 					$_SESSION['authenticated'] = 1;
 					$_SESSION['visitor_id'] = $r[0]['id'];
 					$_SESSION['visitor_home'] = $r[0]['url'];
-					notice( $r[0]['username'] . t(' welcomes ') . $r[0]['name'] . EOL);
+					notice( sprintf(t('%s welcomes %s'), $r[0]['username'] , $r[0]['name']) . EOL);
 					// Visitors get 1 day session.
 					$session_id = session_id();
 					$expire = time() + 86400;
@@ -389,7 +389,7 @@ function dfrn_poll_content(&$a) {
 					$_SESSION['authenticated'] = 1;
 					$_SESSION['visitor_id'] = $r[0]['id'];
 					$_SESSION['visitor_home'] = $r[0]['url'];
-					notice( $r[0]['username'] . t(' welcomes ') . $r[0]['name'] . EOL);
+					notice( sprintf(t('%s welcomes %s'), $r[0]['username'] , $r[0]['name']) . EOL);
 					// Visitors get 1 day session.
 					$session_id = session_id();
 					$expire = time() + 86400;

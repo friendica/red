@@ -25,21 +25,21 @@ function invite_post(&$a) {
 		$recip = trim($recip);
 
 		if(! valid_email($recip)) {
-			notice(  $recip . t(' : ') . t('Not a valid email address.') . EOL);
+			notice(  sprintf( t('%s : Not a valid email address.'), $recip) . EOL);
 			continue;
 		}
 
-		$res = mail($recip, t('Please join my network on ') . $a->config['sitename'], 
+		$res = mail($recip, sprintf(t('Please join my network on %s'), $a->config['sitename']), 
 			$message, "From: " . $a->user['email']);
 		if($res) {
 			$total ++;
 		}
 		else {
-			notice( $recip . t(' : ') . t('Message delivery failed.') . EOL);
+			notice( sprintf( t('%s : Message delivery failed.'), $recip) . EOL);
 		}
 
 	}
-	notice( $total . t(' messages sent.') . EOL);
+	notice( sprintf( tt("%d message sent.", "%d messages sent.", $total) , $total) . EOL);
 	return;
 }
 
@@ -57,7 +57,7 @@ function invite_content(&$a) {
 		'$invite' => t('Send invitations'),
 		'$addr_text' => t('Enter email addresses, one per line:'),
 		'$msg_text' => t('Your message:'),
-		'$default_message' => t('Please join my social network on ') . $a->config['sitename'] . "\r\n" . "\r\n"
+		'$default_message' => sprintf(t('Please join my social network on %s'), $a->config['sitename']) . "\r\n" . "\r\n"
 			. t('To accept this invitation, please visit:') . "\r\n" . "\r\n" . $a->get_baseurl()
 			. "\r\n" . "\r\n" . t('Once you have registered, please connect with me via my profile page at:') 
 			. "\r\n" . "\r\n" . $a->get_baseurl() . '/profile/' . $a->user['nickname'] ,

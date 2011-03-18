@@ -41,9 +41,10 @@ function viewcontacts_content(&$a) {
 
 		$o .= replace_macros($tpl, array(
 			'$id' => $rr['id'],
-			'$alt_text' => t('Visit ') . $rr['name'] . t('\'s profile'),
+			'$alt_text' => t('Visit $username\'s profile'),
 			'$thumb' => $rr['thumb'], 
 			'$name' => substr($rr['name'],0,20),
+			'$username' => $rr['name'],
 			'$url' => $rr['url'] 
 		));
 	}

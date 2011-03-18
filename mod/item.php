@@ -471,8 +471,8 @@ function item_post(&$a) {
 					'$body' => strip_tags(bbcode($datarray['body']))
 				));
 
-				$res = mail($user['email'], $from . t(" commented on your item at ") . $a->config['sitename'],
-					$email_tpl,t("From: Administrator@") . $a->get_hostname() );
+				$res = mail($user['email'], sprintf( t("%s commented on your item at %s") ,$from,$a->config['sitename']),
+					$email_tpl,"From: " . t("Administrator") . "@" . $a->get_hostname() );
 			}
 		}
 		else {
@@ -494,8 +494,8 @@ function item_post(&$a) {
 					'$body' => strip_tags(bbcode($datarray['body']))
 				));
 
-				$res = mail($user['email'], $from . t(" posted on your profile wall at ") . $a->config['sitename'],
-					$email_tpl,t("From: Administrator@") . $a->get_hostname() );
+				$res = mail($user['email'], sprintf( t("%s posted on your profile wall at %s") ,$from, $a->config['sitename']),
+					$email_tpl,"From: " . t("Administrator") . "@" . $a->get_hostname() );
 			}
 		}
 
@@ -538,13 +538,13 @@ function item_post(&$a) {
 				$addr = trim($recip);
 				if(! strlen($addr))
 					continue;
-				$disclaimer = '<hr />' . t('This message was sent to you by ') . $a->user['username'] 
-					. t(', a member of the Friendika social network.') . '<br />';
+				$disclaimer = '<hr />' . sprintf(t('This message was sent to you by %s, a member of the Friendika social network.'),$a->user['username']) 
+					. '<br />';
 				$disclaimer .= t('You may visit them online at') . ' ' 
 					. $a->get_baseurl() . '/profile/' . $a->user['nickname'] . '<br />';
 				$disclaimer .= t('Please contact the sender by replying to this post if you do not wish to receive these messages.') . '<br />'; 
 
-				$subject  = '[Friendika]' . ' ' . $a->user['username'] . ' ' . t('posted an update.');
+				$subject  = '[Friendika]' . ' ' . sprintf( t('%s posted an update.'),$a->user['username']);
 				$headers  = 'From: ' . $a->user['username'] . ' <' . $a->user['email'] . '>' . "\n";
 				$headers .= 'MIME-Version: 1.0' . "\n";
 				$headers .= 'Content-Type: text/html; charset=UTF-8' . "\n";

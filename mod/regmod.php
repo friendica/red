@@ -51,7 +51,7 @@ function regmod_content(&$a) {
 		$r = q("DELETE FROM `register` WHERE `hash` = '%s' LIMIT 1",
 			dbesc($register[0]['hash'])
 		);
-		notice( t('Registration revoked for ') . $user[0]['username'] . EOL);
+		notice( sprintf(t('Registration revoked for %s'), $user[0]['username']) . EOL);
 		return;
 
 	}
@@ -89,7 +89,7 @@ function regmod_content(&$a) {
 				'$uid' => $user[0]['uid']
 		));
 
-		$res = mail($user[0]['email'], t('Registration details for '). $a->config['sitename'],
+		$res = mail($user[0]['email'], sprintf(t('Registration details for %s'), $a->config['sitename']),
 			$email_tpl,'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] );
 
 		if($res) {
