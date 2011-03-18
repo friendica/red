@@ -26,6 +26,10 @@ function po2php_run($argv, $argc) {
 	$arr = False;
 	$ink = False;
 	$inv = False;
+	$escape_s_exp = '|[^\\\\]\$[a-z]|';
+	function escape_s($match){
+		return str_replace('$','\$',$match[0]);
+	}
 	foreach ($infile as $l) {
 		$len = strlen($l);
 		if ($l[0]=="#") $l="";
@@ -46,6 +50,7 @@ function po2php_run($argv, $argc) {
 			if ($inv) {	$inv = False; $out .= '"'.$v.'"'; }
 			
 			$v = substr($l,8,$len-10);
+			$v = preg_replace_callback($escape_s_exp,'escape_s',$v);
 			$inv = True;
 			//$out .= $v;
 		}
@@ -59,7 +64,10 @@ function po2php_run($argv, $argc) {
 			}
 			$match=Array();
 			preg_match("|\[([0-9]*)\] (.*)|", $l, $match);
-			$out .= "\t". $match[1]." => ". $match[2] .",\n";
+			$out .= "\t". 
+				preg_replace_callback($escape_s_exp,'escape_s',$match[1])
+				." => "
+				.preg_replace_callback($escape_s_exp,'escape_s',$match[2]) .",\n";
 		}
 	
 		if (substr($l,0,6)=="msgid_") { $ink = False; $out .= '$a->strings["'.$k.'"] = '; };
@@ -67,6 +75,7 @@ function po2php_run($argv, $argc) {
 
 		if ($ink) {
 			$k .= trim($l,"\"\r\n"); 
+			$k = preg_replace_callback($escape_s_exp,'escape_s',$k);
 			//$out .= '$a->strings['.$k.'] = ';
 		}
 		
@@ -80,11 +89,14 @@ function po2php_run($argv, $argc) {
 			} else {
 				$k = "";
 			}
+			
+			$k = preg_replace_callback($escape_s_exp,'escape_s',$k);
 			$ink = True;
 		}
 		
 		if ($inv && substr($l,0,6)!="msgstr") {
 			$v .= trim($l,"\"\r\n"); 
+			$v = preg_replace_callback($escape_s_exp,'escape_s',$v);
 			//$out .= '$a->strings['.$k.'] = ';
 		}
 	
