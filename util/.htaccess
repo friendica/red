@@ -1,0 +1,5 @@
+Options -Indexes
+
+# Remove the following line or modify it to run the string translator utility
+Deny from all
+

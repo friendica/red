@@ -115,6 +115,7 @@ translation to messages.po. Run:
 $ php util/php2po.php view/<language>/strings.php
 
 
+You may also use the util/string_translator.php web interface to translate the string file, but it is disabled for website security reasons. The web server will need write permission to your language directories and the "Deny ..." line in util/.htaccess will need to be modified or commented to use the utility. 
  
 
       
