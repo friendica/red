@@ -11,7 +11,7 @@ function follow_post(&$a) {
 	}
 
 	$url = $orig_url = notags(trim($_POST['url']));
-	
+	$diaspora = false;	
 	$email_conversant = false;
 
 	if($url) {
@@ -28,6 +28,9 @@ function follow_post(&$a) {
 					$hcard = unamp($link['@attributes']['href']);
 				if($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page')
 					$profile = unamp($link['@attributes']['href']);
+				if($link['@attributes']['rel'] === 'http://joindiaspora.com/seed_location')
+					$diaspora = true;
+
 
 			}
 
@@ -90,9 +93,12 @@ function follow_post(&$a) {
 		}
 	}
 
-	if(! $profile)
-		$profile = $url;
-
+	if(! $profile) {
+		if($diaspora)
+			$profile = $hcard;
+		else
+			$profile = $url;
+	}
 
 	if(! x($vcard,'fn'))
 		if(x($vcard,'nick'))

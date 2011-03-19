@@ -905,6 +905,8 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 
 	require_once('simplepie/simplepie.inc');
 
+	if(! $contact)
+		logger('consume feed: anonymous');
 	$feed = new SimplePie();
 	$feed->set_raw_data($xml);
 	if($datedir)

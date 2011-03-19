@@ -1603,9 +1603,15 @@ function lrdd($uri) {
 if(! function_exists('fetch_lrdd_template')) {
 function fetch_lrdd_template($host) {
 	$tpl = '';
-	$url = 'http://' . $host . '/.well-known/host-meta' ;
-	$links = fetch_xrd_links($url);
-logger('template: ' . print_r($links,true));
+
+	$url1 = 'https://' . $host . '/.well-known/host-meta' ;
+	$url2 = 'http://' . $host . '/.well-known/host-meta' ;
+	$links = fetch_xrd_links($url1);
+	logger('template (https): ' . print_r($links,true));
+	if(! count($links)) {
+		$links = fetch_xrd_links($url2);
+		logger('template (http): ' . print_r($links,true));
+	}
 	if(count($links)) {
 		foreach($links as $link)
 			if($link['@attributes']['rel'] && $link['@attributes']['rel'] === 'lrdd')
