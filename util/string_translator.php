@@ -99,7 +99,7 @@ if (isset($_GET['lang'])){
 	$n2 = count($strings[$lang]);
 	
 	echo "<pre>";
-	echo "Tranlsate en to $lang<br>";
+	echo "Translate en to $lang<br>";
 	//echo "Translated $n2 over $n1 strings<br>";
 	echo "</pre><hr/>";
 
