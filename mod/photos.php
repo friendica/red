@@ -1074,7 +1074,7 @@ function photos_content(&$a) {
 			$tpl = load_view_file('view/photo_item.tpl');
 			$return_url = $a->cmd;
 
-			$like_tpl = load_view_file('view/lik_noshare.tpl');
+			$like_tpl = load_view_file('view/like_noshare.tpl');
 
 			$likebuttons = '';
 
