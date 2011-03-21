@@ -1434,7 +1434,7 @@ input#dfrn-url {
 	/*margin-left: 50px;*/
 }
 
-#block-message, #ignore-message, #profile-edit-insecure {
+#block-message, #ignore-message {
 	margin-top: 20px;
 	color: #FF0000;
 	font-size: 1.1em;
@@ -1443,13 +1443,21 @@ input#dfrn-url {
 	padding: 10px;
 }
 
+#profile-edit-insecure {
+	margin-top: 20px;
+	color: #FF0000;
+	font-size: 1.1em;
+	border: 1px solid #FF8888;
+	background-color: #FFEEEE;
+	padding-left: 5px;
+	/*: 3px 3px 3px 5px; */
+	width: 587px;
+}
+
 #block-message, #ignore-message {
 	width: 180px;
 }
 
-#profile-edit-insecure {
-	width: 600px;
-}
 
 /*
 .profile-tabs {
