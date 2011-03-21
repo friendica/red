@@ -130,7 +130,12 @@ function profile_content(&$a, $update = 0) {
 			$a->page['htmlhead'] .= replace_macros($tpl, array(
 				'$baseurl' => $a->get_baseurl(),
 				'$geotag'  => $geotag,
-				'$nickname' => $a->profile['nickname']
+				'$nickname' => $a->profile['nickname'],
+				'$linkurl' => t('Please enter a link URL:'),
+				'$utubeurl' => t('Please enter a YouTube link:'),
+				'$vidurl' => t("Please enter a video\x28.ogg\x29 link/URL:"),
+				'$audurl' => t("Please enter an audio\x28.ogg\x29 link/URL:"),
+				'$whereareu' => t('Where are you right now?') 
 			));
 
 			require_once('include/acl_selectors.php');

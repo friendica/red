@@ -71,7 +71,7 @@ tinyMCE.init({
 	});
 
 	function jotGetLink() {
-		reply = prompt("Please enter a link URL:");
+		reply = prompt("$linkurl");
 		if(reply && reply.length) {
 			$('#profile-rotator').show();
 			$.get('parse_url?url=' + reply, function(data) {
