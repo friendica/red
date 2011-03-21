@@ -98,7 +98,10 @@ function profile_content(&$a, $update = 0) {
 
 		$o .= replace_macros($tpl,array(
 			'$url' => $a->get_baseurl() . '/' . $a->cmd,
-			'$phototab' => $a->get_baseurl() . '/photos/' . $a->profile['nickname']
+			'$phototab' => $a->get_baseurl() . '/photos/' . $a->profile['nickname'],
+			'$status' => t('Status')
+			'$profile' => t('Profile'),
+			'$photos' => t('Photos')
 		));
 
 

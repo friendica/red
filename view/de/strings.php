@@ -331,6 +331,9 @@ $a->strings['Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #cam
 $a->strings['Recent Photos'] = 'Neuste Fotos';
 $a->strings['Upload New Photos'] = 'Weitere Fotos hochladen';
 $a->strings['View Album'] = 'Album betrachten';
+$a->strings['Status'] = 'Status';
+$a->strings['Profile'] = 'Profil';
+$a->strings['Photos'] = 'Fotos';
 $a->strings['Image uploaded but image cropping failed.'] = 'Bilder hochgeladen aber das Zuschneiden ist fehlgeschlagen.';
 $a->strings['Image size reduction [175] failed.'] = 'Image size reduction [175] failed.';
 $a->strings['Image size reduction [80] failed.'] = 'Image size reduction [80] failed.';

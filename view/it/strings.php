@@ -165,6 +165,9 @@ $a->strings["Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #cam
 $a->strings["Recent Photos"] = "Foto recenti";
 $a->strings["Upload New Photos"] = "Carica nuova foto";
 $a->strings["View Album"] = "Vedi album";
+$a->strings['Status'] = 'Stato';
+$a->strings['Profile'] = 'Profilo';
+$a->strings['Photos'] = 'Foto';
 $a->strings["Item not found."] = "Elemento non trovato.";
 $a->strings["View \$owner_name's profile"] = "Guarda il profilo di \$owner_name";
 $a->strings["to"] = "a";

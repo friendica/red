@@ -350,6 +350,9 @@ $a->strings['Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #cam
 $a->strings['Recent Photos'] = 'Recent Photos';
 $a->strings['Upload New Photos'] = 'Upload New Photos';
 $a->strings['View Album'] = 'View Album';
+$a->strings['Status'] = 'Status';
+$a->strings['Profile'] = 'Profile';
+$a->strings['Photos'] = 'Photos';
 $a->strings['Image uploaded but image cropping failed.'] = 'Image uploaded but image cropping failed.';
 $a->strings['Unable to process image'] = 'Unable to process image';
 $a->strings['Image uploaded successfully.'] = 'Image uploaded successfully.';
