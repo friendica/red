@@ -1862,11 +1862,11 @@ function format_like($cnt,$arr,$type,$id) {
 
 if(! function_exists('load_view_file')) {
 function load_view_file($s) {
+	global $lang;
+	if(! isset($lang))
+		$lang = 'en';
 	$b = basename($s);
 	$d = dirname($s);
-	$lang = get_config('system','language');
-	if($lang === false)
-		$lang = 'en';
 	if(file_exists("$d/$lang/$b"))
 		return file_get_contents("$d/$lang/$b");
 	return file_get_contents($s);
