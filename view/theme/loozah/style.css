@@ -2180,7 +2180,7 @@ a.mail-list-link {
 	float: left;
 	text-align: center;
 	width: 120px;
-	overflow: clip;
+	overflow: hidden;
 }
 
 .profile-match-break,
@@ -2188,3 +2188,6 @@ a.mail-list-link {
 	clear: both;
 }
 
+.side-link {
+	margin-bottom: 15px;
+}
