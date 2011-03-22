@@ -32,7 +32,7 @@
 		|| (strlen($profile['region'])) 
 		|| (strlen($profile['postal-code'])) 
 		|| (strlen($profile['country-name']))) { ?>
-		<div class="location">Location:
+		<div class="location">Plats:
 			<div class="adr">
 				<div class="street-address"><?php if(strlen($profile['address'])) echo $profile['address']; ?></div>
 				<span class="city-state-zip"><span class="locality"><?php echo $profile['locality']; ?></span><?php if(strlen($profile['locality'])) echo ', '; ?><span class="region"><?php echo $profile['region'] ?></span><?php if(strlen($profile['postal-code'])) { ?> <span class="postal-code"><?php echo $profile['postal-code']; ?></span><?php } ?></span>
@@ -43,7 +43,7 @@
 	<?php } ?>
 
 	<?php if(strlen($profile['gender'])) { ?>
-		<div class="mf">Gender: <span class="x-gender"><?php echo $profile['gender']; ?></span></div>
+		<div class="mf">K&ouml;n: <span class="x-gender"><?php echo $profile['gender']; ?></span></div>
 
 	<?php } ?>
 
@@ -53,10 +53,10 @@
 </div>
 <?php } ?>
 <?php if(strlen($profile['marital'])) { ?>
-<div class="marital"><span class="marital-label"><span class="heart">&hearts;</span> Status: </span><span class="marital-text"><?php echo $profile['marital']; ?></span></div>
+<div class="marital"><span class="marital-label"><span class="heart">&hearts;</span> Civilstatus: </span><span class="marital-text"><?php echo $profile['marital']; ?></span></div>
 <?php } ?>
 <?php if(strlen($profile['homepage'])) { ?>
-<div class="homepage"><span class="homepage-label">Homepage: </span><span class="homepage-url"><?php echo linkify($profile['homepage']); ?></span></div>
+<div class="homepage"><span class="homepage-label">Webbplats: </span><span class="homepage-url"><?php echo linkify($profile['homepage']); ?></span></div>
 <?php } ?>
 <?php if(x($page,'aside')) echo $page['aside'] ?>
 </aside>
@@ -69,4 +69,3 @@
 </footer>
 </body>
 </html>
-
