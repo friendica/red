@@ -1,7 +1,6 @@
-
 <div class="profile-listing" >
 <div class="profile-listing-photo-wrapper" >
-<a href="profiles/$id" class="profile-listing-edit-link" ><img class="profile-listing-photo" id="profile-listing-photo-$id" src="$photo" alt="Profile Image" /></a>
+<a href="profiles/$id" class="profile-listing-edit-link" ><img class="profile-listing-photo" id="profile-listing-photo-$id" src="$photo" alt="Profilbild" /></a>
 </div>
 <div class="profile-listing-photo-end" ></div>
 <div class="profile-listing-name" id="profile-listing-name-$id"><a href="profiles/$id" class="profile-listing-edit-link" >$profile_name</a></div>
