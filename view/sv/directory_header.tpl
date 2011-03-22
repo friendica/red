@@ -1,4 +1,4 @@
-<h1>Katalog f&ouml;r denna sajt</h1>
+<h1>Katalog f&ouml;r denna sajt (ej global)</h1>
 
 $globaldir
 
@@ -11,4 +11,3 @@ $finding
 </form>
 </div>
 <div id="directory-search-end"></div>
-
