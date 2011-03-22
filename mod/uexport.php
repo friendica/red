@@ -36,19 +36,7 @@ function uexport_init(&$a) {
 				$profile[][$k] = $v;
 	}
 
-	$item = array();
-	$r = q("SELECT * FROM `item` WHERE `uid` = %d ",
-		local_user()
-	);
-	if(count($r)) {
-		foreach($r as $rr)
-			foreach($rr as $k => $v)
-				$item[][$k] = $v;
-	}
-
-
-
-	$output = array('user' => $user, 'contact' => $contact, 'profile' => $profile, 'item' => $item );
+	$output = array('user' => $user, 'contact' => $contact, 'profile' => $profile );
 
 	header("Content-type: text/json");
 	echo str_replace('\\/','/',json_encode($output));
