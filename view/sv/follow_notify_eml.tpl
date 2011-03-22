@@ -1,14 +1,12 @@
 
-Dear $myname,
+$myname,
 
-You have a new follower at $sitename -  '$requestor'.
+'$requestor' på $sitename har ansökt om att följa dig här på Friendika.
 
-You may visit their profile at $url.
+Här kan du kolla dennes profil: $url
 
-Please login to your site to approve or ignore/cancel the request.
-
+Logga in för att godkänna eller avslå förfrågan.
 $siteurl
 
-Regards,
-
-	$sitename administrator
+Hälsningar,
+$sitename admin
