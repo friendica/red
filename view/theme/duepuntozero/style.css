@@ -372,6 +372,7 @@ input#dfrn-url {
 }
 
 #settings-nick-wrapper {
+	margin-top: 20px;
 	margin-bottom: 30px;
 }
 
@@ -2044,8 +2045,8 @@ a.mail-list-link {
 }
 
 
-#plugin-settings-link, #account-settings-link {
-	margin-bottom: 25px;
+#plugin-settings-link, #account-settings-link, #uexport-link {
+	margin-bottom: 10px;
 }
 
 /* end from defautlt */
