@@ -1,4 +1,3 @@
-
 <h2>$header</h2>
 
 <div id="contact-edit-banner-name">$name</div>
@@ -28,7 +27,7 @@
 
 
 		<div id="contact-edit-poll-wrapper">
-			<div id="contact-edit-last-update-text">$lastupdtext<span id="contact-edit-last-updated">$last_update</span</div>
+			<div id="contact-edit-last-update-text">$lastupdtext<span id="contact-edit-last-updated">$last_update</span></div>
 			<div id="contact-edit-poll-text">$updpub</div>
 			$poll_interval
 			<div id="contact-edit-update-now"><a href="contacts/$contact_id/update">$udnow</a></div>
@@ -76,6 +75,6 @@ Var v&auml;nlig &auml;gna en liten stund &aring;t att fylla i n&aring;got som du
 </div>
 $groups
 
-<input class="contact-edit-submit" type="submit" name="submit" value="Spara" />
+<input class="contact-edit-submit" type="submit" name="submit" value="Skicka" />
 </form>
 </div>
