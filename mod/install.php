@@ -14,17 +14,20 @@ function install_post(&$a) {
 	$phpath = notags(trim($_POST['phpath']));
 
 	require_once("dba.php");
-
+	unset ($db);
 	$db = new dba($dbhost, $dbuser, $dbpass, $dbdata, true);
 
 	if(mysqli_connect_errno()) {
+		unset($db);
 		$db = new dba($dbhost, $dbuser, $dbpass, '', true);
 		if(! mysqli_connect_errno()) {
 			$r = q("CREATE DATABASE '%s'",
 					dbesc($dbdata)
 			);
-			if($r) 
+			if($r) {
+				unset($db);
 				$db = new dba($dbhost, $dbuser, $dbpass, $dbdata, true);
+			}
 		}
 		if(mysqli_connect_errno()) {
 			notice( t('Could not create/connect to database.') . EOL);
@@ -50,36 +53,47 @@ function install_post(&$a) {
 	}
 
 	$errors = load_database($db);
-	if(! $errors) {
-		// Our sessions normally are stored in the database. But as we have only managed 
-		// to get it bootstrapped milliseconds ago, we have to apply a bit of trickery so 
-		// that you'll see the following important notice (which is stored in the session). 
 
-		session_write_close();
+	if($errors)
+		$a->data['db_failed'] = true;
+	else
+		$a->data['db_installed'] = true;
 
-		require_once('session.php');
-		session_start();
-		session_regenerate_id();
-
-		$_SESSION['sysmsg'] = '';
-
-		notice( t('Database import succeeded.') . EOL 
-			. t('IMPORTANT: You will need to [manually] setup a scheduled task for the poller.') . EOL 
-			. t('Please see the file "INSTALL.txt".') . EOL );
-		goaway($a->get_baseurl() . '/register' );
-	}
-	else {
-		$db = null; // start fresh
-		notice( t('Database import failed.') . EOL
-			. t('You may need to import the file "database.sql" manually using phpmyadmin or mysql.') . EOL
-			. t('Please see the file "INSTALL.txt".') . EOL );
-	}
+	return;
 }
 
 
 function install_content(&$a) {
 
+	global $db;
 	$o = '';
+	
+	if(x($a->data,'db_installed')) {
+		$o .= '<h2>' . t('Proceed with Installation') . '</h2>';
+		$o .= '<p style="font-size: 130%;">';
+		$o .= t('Your Friendika site database has been installed.') . EOL;
+		$o .= t('IMPORTANT: You will need to [manually] setup a scheduled task for the poller.') . EOL ;
+		$o .= t('Please see the file "INSTALL.txt".') . EOL ;
+		$o .= '<br />';
+		$o .= '<a href="' . $a->get_baseurl() . '/register' . '">' . t('Proceed to registration') . '</a>' ;
+		$o .= '</p>';
+		return $o;
+	}
+
+	if(x($a->data,'db_failed')) {
+		$o .= t('Database import failed.') . EOL;
+		$o .= t('You may need to import the file "database.sql" manually using phpmyadmin or mysql.') . EOL;
+		$o .= t('Please see the file "INSTALL.txt".') . EOL ;
+		return $o;
+	}
+
+	if($db && $db->connected) {
+		$r = q("SELECT COUNT(*) as `total` FROM `user`");
+		if($r && count($r) && $r[0]['total']) {
+			notice( t('Permission denied.') . EOL);
+			return '';
+		}
+	}
 
 	notice( t('Welcome to Friendika.') . EOL);
 
