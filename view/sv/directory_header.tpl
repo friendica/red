@@ -1,4 +1,4 @@
-<h1>Katalog f&ouml;r denna sajt (ej global)</h1>
+<h1>Medlemskatalog f&ouml;r denna webbplats (ej global)</h1>
 
 $globaldir
 
