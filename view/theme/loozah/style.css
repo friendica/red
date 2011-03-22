@@ -2169,3 +2169,22 @@ a.mail-list-link {
 	clear: both;
 }
 
+
+.profile-match-photo {
+	float: left;
+	text-align: center;
+	width: 120px;
+}
+
+.profile-match-name {
+	float: left;
+	text-align: center;
+	width: 120px;
+	overflow: clip;
+}
+
+.profile-match-break,
+.profile-match-end {
+	clear: both;
+}
+
