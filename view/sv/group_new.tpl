@@ -5,7 +5,7 @@
 
 <div id="group-new-text">
 <p>
-Skapa en grupp med kontakter/v&auml;nner i.
+Skapa en grupp med kontakter/v&auml;nner.
 
 <div id="group-new-input-wrapper">
 <label id="group-new-label" for="group-new-name" >Gruppnamn: </label>
@@ -18,5 +18,3 @@ Skapa en grupp med kontakter/v&auml;nner i.
 </form>
 </div>
 <div id="group-new-end"></div>
-
- 
