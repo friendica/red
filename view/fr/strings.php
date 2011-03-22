@@ -1,7 +1,7 @@
 <?php
 
 function string_plural_select($n){
-	return ;
+	return ($n!=0);
 }
 ;
 $a->strings["Logged out."] = "Déconnecté.";
