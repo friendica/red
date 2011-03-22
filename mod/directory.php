@@ -86,10 +86,10 @@ function directory_content(&$a) {
 			}
 			if(strlen($rr['dob'])) {
 				if(($years = age($rr['dob'],$rr['timezone'],'')) != 0)
-					$details .= "<br />Age: $years" ; 
+					$details .= '<br />' . t('Age: ') . $years ; 
 			}
 			if(strlen($rr['gender']))
-				$details .= '<br />Gender: ' . $rr['gender'];
+				$details .= '<br />' . t('Gender: ') . $rr['gender'];
 
 			$entry = replace_macros($tpl,array(
 				'$id' => $rr['id'],
@@ -115,7 +115,7 @@ function directory_content(&$a) {
 
 	}
 	else
-		notice("No entries (some entries may be hidden).");
+		notice( t("No entries \x28some entries may be hidden\x29.") . EOL);
 
 	return $o;
 }
