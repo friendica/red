@@ -1,6 +1,6 @@
-<h1>Besk&auml;r bild</h1>
+<h1>Besk&auml;r bilden</h1>
 <p id="cropimage-desc">
-V&auml;lj hur bilden ska besk&auml;ras f&ouml;r att se s&aring; bra ut som m&ouml;jligt.
+V&auml;lj hur du vill att bilden ska besk&auml;ras.
 </p>
 <div id="cropimage-wrapper">
 <img src="$image_url" id="croppa" class="imgCrop" alt="" />
