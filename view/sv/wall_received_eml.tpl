@@ -1,18 +1,16 @@
+$username,
 
-Dear $username,
-
-	'$from' posted something to your profile wall.
+'$from' har skrivit på din profilsida.
 
 -----
 $body
 -----
 
-Please login at $siteurl to view or delete the item:
+Logga in på $siteurl för att kolla eller ta bort:
 
 $display
 
-Thank you,
-	$sitename administrator
+Hälsningar,
+$sitename admin
 
  
-
