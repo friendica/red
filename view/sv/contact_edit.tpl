@@ -46,7 +46,7 @@ $ignored
 </div>
 <div id="contact-edit-info-end"></div>
 
-<input class="contact-edit-submit" type="submit" name="submit" value="Submit" />
+<input class="contact-edit-submit" type="submit" name="submit" value="Spara" />
 
 <div id="contact-edit-profile-select-text">
 <h4>Profilvisning</h4>
@@ -56,7 +56,7 @@ $ignored
 $profile_select
 <div id="contact-edit-profile-select-end"></div>
 
-<input class="contact-edit-submit" type="submit" name="submit" value="Submit" />
+<input class="contact-edit-submit" type="submit" name="submit" value="Spara" />
 
 
 <div id="contact-edit-rating-wrapper">
@@ -76,6 +76,6 @@ Var v&auml;nlig &auml;gna en liten stund &aring;t att fylla i n&aring;got som du
 </div>
 $groups
 
-<input class="contact-edit-submit" type="submit" name="submit" value="Submit" />
+<input class="contact-edit-submit" type="submit" name="submit" value="Spara" />
 </form>
 </div>
