@@ -38,7 +38,7 @@ function uexport_init(&$a) {
 
 	$output = array('user' => $user, 'contact' => $contact, 'profile' => $profile );
 
-	header("Content-type: text/json");
+	header("Content-type: application/json");
 	echo str_replace('\\/','/',json_encode($output));
 
 	$r = q("SELECT count(*) as `total` FROM `item` WHERE `uid` = %d ",
