@@ -28,7 +28,7 @@ class dba {
 		if($install) {
 			if(strlen($server) && ($server !== 'localhost') && ($server !== '127.0.0.1')) {
 				if(! dns_get_record($server, DNS_A + DNS_CNAME + DNS_PTR)) {
-					notice( sprintf( t('Cannot locate DNS info for database server \'%s\'',$server)));
+					notice( sprintf( t('Cannot locate DNS info for database server \'%s\''), $server));
 					$this->connected = false;
 					$this->db = null;
 					return;

@@ -165,6 +165,9 @@ $a->strings["Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #cam
 $a->strings["Recent Photos"] = "Foto recenti";
 $a->strings["Upload New Photos"] = "Carica nuova foto";
 $a->strings["View Album"] = "Vedi album";
+$a->strings['Status'] = 'Stato';
+$a->strings['Profile'] = 'Profilo';
+$a->strings['Photos'] = 'Foto';
 $a->strings["Item not found."] = "Elemento non trovato.";
 $a->strings["View \$owner_name's profile"] = "Guarda il profilo di \$owner_name";
 $a->strings["to"] = "a";
@@ -284,6 +287,11 @@ $a->strings["The database configuration file \".htconfig.php\" could not be writ
 $a->strings["Errors encountered creating database tables."] = "Errori creando le tabelle nel database.";
 $a->strings["Normal View"] = "Vista normale";
 $a->strings["New Item View"] = "Vista Nuovi Elementi";
+$a->strings['Please enter a link URL:'] = 'Inserisci l\'indirizzo del collegamento:';
+$a->strings['Please enter a YouTube link:'] = 'Inserisci un collegamento a YouTube:';
+$a->strings["Please enter a video\x28.ogg\x29 link/URL:"] = "Please enter a video\x28.ogg\x29 link/URL:";
+$a->strings["Please enter an audio\x28.ogg\x29 link/URL:"] = "Please enter an audio\x28.ogg\x29 link/URL:";
+$a->strings['Where are you right now?'] = 'Dove ti trovi ora?';
 $a->strings["No such group"] = "Nessun gruppo";
 $a->strings["Group is empty"] = "Il gruppo è vuoto";
 $a->strings["Group: "] = "Gruppo: ";

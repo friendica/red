@@ -168,7 +168,8 @@ function message_content(&$a) {
 
 		$a->page['htmlhead'] .= replace_macros($tpl, array(
 			'$baseurl' => $a->get_baseurl(),
-			'$nickname' => $a->user['nickname']
+			'$nickname' => $a->user['nickname'],
+			'$linkurl' => t('Please enter a link URL:')
 		));
 	
 		$select = contact_select('messageto','message-to-select', false, 4, true);

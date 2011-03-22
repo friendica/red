@@ -90,6 +90,13 @@ $profile_in_net_dir
 </div>
 <div id="settings-default-perms-end"></div>
 
+<div id="settings-blockw-wrapper" >
+<label id="settings-blockw-label" for="settings-blockw" >Allow friends to post to your profile: </label>
+<input type="checkbox" name="blockwall" id="settings-blockw" value="1" $blockw_checked />
+</div>
+<div id="settings-blockw-end" ></div>
+
+
 <div id="settings-expire-desc">Automatically expire (delete) posts older than <input type="text" size="3" name="expire" value="$expire" /> days</div>
 <div id="settings-expire-end"></div>
 

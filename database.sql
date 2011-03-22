@@ -375,6 +375,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `sprvkey` text NOT NULL,
   `verified` tinyint(1) unsigned NOT NULL DEFAULT '0', 
   `blocked` tinyint(1) unsigned NOT NULL DEFAULT '0', 
+  `blockwall` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `notify-flags` int(11) unsigned NOT NULL DEFAULT '65535', 
   `page-flags` int(11) unsigned NOT NULL DEFAULT '0',
   `pwdreset` char(255) NOT NULL,

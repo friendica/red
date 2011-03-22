@@ -517,6 +517,7 @@ input#dfrn-url {
 #settings-nick-end,
 #settings-defloc-end,
 #settings-allowloc-end,
+#settings-blockw-end,
 #settings-timezone-end,
 #settings-theme-end,
 #settings-password-end,
@@ -537,6 +538,7 @@ input#dfrn-url {
 #settings-nick-label,
 #settings-defloc-label,
 #settings-allowloc-label,
+#settings-blockw-label,
 #settings-timezone-label,
 #settings-theme-label,
 #settings-password-label,
@@ -557,6 +559,7 @@ input#dfrn-url {
 #settings-nick,
 #settings-defloc,
 #settings-allowloc,
+#settings-blockw,
 #timezone-select,
 #theme-select,
 #settings-password,
@@ -2166,3 +2169,25 @@ a.mail-list-link {
 	clear: both;
 }
 
+
+.profile-match-photo {
+	float: left;
+	text-align: center;
+	width: 120px;
+}
+
+.profile-match-name {
+	float: left;
+	text-align: center;
+	width: 120px;
+	overflow: hidden;
+}
+
+.profile-match-break,
+.profile-match-end {
+	clear: both;
+}
+
+.side-link {
+	margin-bottom: 15px;
+}
