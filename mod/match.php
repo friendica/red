@@ -24,13 +24,13 @@ function match_content(&$a) {
 
 
 		$x = post_url('http://dir.friendika.com/msearch', $params);
+
 		$j = json_decode($x);
 
 		if(count($j)) {
-
-
 			foreach($j as $jj) {
-				$o .= '<a href="' . $jj[1] . '">' . '<img src="' . $jj[2] . '" alt="' . $jj[1] . '" />' . $jj[0] . '</a>';
+
+				$o .= '<a href="' . $jj->url . '">' . '<img src="' . $jj->photo . '" alt="' . $jj->name . '" />' . $jj->name . '</a>';
 			}
 		}
 		else {
