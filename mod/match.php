@@ -39,11 +39,12 @@ function match_content(&$a) {
 		if(count($j->results)) {
 			foreach($j->results as $jj) {
 				$o .= '<div class="profile-match-wrapper"><div class="profile-match-photo">';
-				$o .= '<a href="' . $jj->url . '">' . '<img src="' . $jj->photo . '" alt="' . $jj->name . '" /></a></div>';
+				$o .= '<a href="' . $jj->url . '">' . '<img src="' . $jj->photo . '" alt="' . $jj->name . '" title="' . $jj->name . '[' . $jj->url . ']' . '" /></a></div>';
 				$o .= '<div class="profile-match-break"></div>';
-				$o .= '<div class="profile-match-name"><a href="' . $jj->url . '">' . $jj->name . '</a></div>';
+				$o .= '<div class="profile-match-name"><a href="' . $jj->url . '" title="' . $jj->name . '[' . $jj->url .']' . '">' . $jj->name . '</a></div>';
 				$o .= '<div class="profile-match-end"></div></div>';
 			}
+			$o .= '<div id="profile-match-wrapper-end"></div>';
 		}
 		else {
 			notice( t('No matches') . EOL);

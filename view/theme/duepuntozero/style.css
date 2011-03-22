@@ -2162,6 +2162,13 @@ a.mail-list-link {
 	clear: both;
 }
 
+.profile-match-wrapper {
+	float: left;
+	padding: 10px;
+}
+#profile-match-wrapper-end {
+	clear: both;
+}
 .side-link {
 	margin-bottom: 15px;
 }
