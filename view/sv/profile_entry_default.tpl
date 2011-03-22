@@ -1,3 +1,4 @@
+
 <div class="profile-listing" >
 <div class="profile-listing-photo-wrapper" >
 <a href="profiles/$id" class="profile-listing-edit-link" ><img class="profile-listing-photo" id="profile-listing-photo-$id" src="$photo" alt="Profilbild" /></a>
