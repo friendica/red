@@ -1,11 +1,11 @@
-
 $myname,
 
-'$requestor' på $sitename har ansökt om att följa dig här på Friendika.
+'$requestor' på $sitename vill följa dina uppdateringar här på Friendika.
 
-Här kan du kolla dennes profil: $url
+Besök dennes profil på $url.
 
 Logga in för att godkänna eller avslå förfrågan.
+
 $siteurl
 
 Hälsningar,
