@@ -1,7 +1,7 @@
 <p id="dfrn-request-homecoming" >
-V&auml;lkommen hem $username. 
+V&auml;lkommen hem, $username. 
 <br />
-Bekr&auml;fta your introduction to $dfrn_url.
+H&auml;r kan du bekr&auml;fta kontaktf&ouml;rfr&aring;gan till $dfrn_url.
 
 </p>
 <form id="dfrn-request-homecoming-form" action="dfrn_request/$nickname" method="post"> 
