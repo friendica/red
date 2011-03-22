@@ -14,7 +14,7 @@ function install_post(&$a) {
 	$phpath = notags(trim($_POST['phpath']));
 
 	require_once("dba.php");
-	unset ($db);
+	unset($db);
 	$db = new dba($dbhost, $dbuser, $dbpass, $dbdata, true);
 
 	if(mysqli_connect_errno()) {
