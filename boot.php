@@ -2013,7 +2013,7 @@ function contact_block() {
 			intval($shown)
 	);
 	if(count($r)) {
-		$o .= '<h4 class="contact-h4">' . $total . ' ' . t('Contacts') . '</h4><div id="contact-block">';
+		$o .= '<h4 class="contact-h4">' .  sprintf(tt('%d Contact','%d Contacts', $total),$total) . '</h4><div id="contact-block">';
 		foreach($r as $rr) {
 			$redirect_url = $a->get_baseurl() . '/redir/' . $rr['id'];
 			if(local_user() && ($rr['uid'] == local_user())

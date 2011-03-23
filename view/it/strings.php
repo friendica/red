@@ -573,3 +573,7 @@ $a->strings["Next >>"] = "Succ >>";
 $a->strings["Item not found"] = "Elemento non trovato";
 $a->strings["Edit post"] = "Modifica messaggio";
 $a->strings["Cannot locate DNS info for database server '%s'"] = "Non trovo le informazioni DNS per il database server '%s'";
+$a->strings["%d Contact"] = array(
+	0 => "%d Contatto",
+	1 => "%d Contatti",
+);
