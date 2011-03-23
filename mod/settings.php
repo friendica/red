@@ -70,6 +70,7 @@ function settings_post(&$a) {
 	$net_publish      = (((x($_POST,'profile_in_netdirectory')) && (intval($_POST['profile_in_netdirectory']) == 1)) ? 1: 0);
 	$old_visibility   = (((x($_POST,'visibility')) && (intval($_POST['visibility']) == 1)) ? 1 : 0);
 	$page_flags       = (((x($_POST,'page-flags')) && (intval($_POST['page-flags']))) ? intval($_POST['page-flags']) : 0);
+	$blockwall        = (((x($_POST,'blockwall')) && (intval($_POST['blockwall']) == 1)) ? 0: 1); // this setting is inverted!
 
 	$notify = 0;
 
@@ -140,7 +141,7 @@ function settings_post(&$a) {
 			$openidserver = '';
 	}
 
-	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `theme` = '%s', `maxreq` = %d, `expire` = %d, `openidserver` = '%s'  WHERE `uid` = %d LIMIT 1",
+	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `theme` = '%s', `maxreq` = %d, `expire` = %d, `openidserver` = '%s', `blockwall` = %d  WHERE `uid` = %d LIMIT 1",
 			dbesc($username),
 			dbesc($email),
 			dbesc($openid),
@@ -157,6 +158,7 @@ function settings_post(&$a) {
 			intval($maxreq),
 			intval($expire),
 			dbesc($openidserver),
+			intval($blockwall),
 			intval(local_user())
 	);
 	if($r)
@@ -241,6 +243,7 @@ function settings_content(&$a) {
 	$openid   = $a->user['openid'];
 	$maxreq   = $a->user['maxreq'];
 	$expire   = ((intval($a->user['expire'])) ? $a->user['expire'] : '');
+	$blockwall = $a->user['blockwall'];
 
 	if(! strlen($a->user['timezone']))
 		$timezone = date_default_timezone_get();
@@ -362,6 +365,7 @@ function settings_content(&$a) {
 		'$sel_notify5' => (($notify & NOTIFY_MAIL)    ? ' checked="checked" ' : ''),
 		'$maxreq' => $maxreq,
 		'$expire' => $expire,
+		'$blockw_checked' => (($blockwall) ? '' : ' checked="checked" ' ),
 		'$theme' => $theme_selector,
 		'$pagetype' => $pagetype
 	));

@@ -407,3 +407,6 @@ function update_1042() {
 }
 
 
+function update_1043() {
+	q("ALTER TABLE `user` ADD `blockwall` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `blocked` ");
+}

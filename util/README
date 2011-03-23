@@ -49,8 +49,8 @@ Placeholders
 Do not translate placeholders in strings! Things like %s, %d, %1$s and $somename
 are used to add dynamic content to the string.
 
-%s rappresent a dynamic string, like in "Welcome to %s"
-%d rappresent a dynamic number, like in "%d new messages"
+%s represents a dynamic string, like in "Welcome to %s"
+%d represents a dynamic number, like in "%d new messages"
 $somename is a variable like in php
 In %1$s %2$s,  the numbers are the position index of multiple dynamic content.
 You could swap position in string of indexed placeholders.
@@ -78,11 +78,11 @@ More info at http://www.gnu.org/software/hello/manual/gettext/Plural-forms.html
 
 Xgettext and .po workflow
 
-1. Run utils/run_xgettext.sh script (on *unix sistems, with GNU xgettext installed)
+1. Run util/run_xgettext.sh script (on *unix sistems, with GNU xgettext installed)
 	This script runs xgettext on source tree, extracting strings from t() and tt()
-	functions, and creates a utils/messages.po file.
-2. copy utils/messages.po to views/<langauage>/messages.po
-3. open views/<langauage>/messages.po with a text editor and fill in infos in
+	functions, and creates a util/messages.po file.
+2. copy util/messages.po to view/<langauage>/messages.po
+3. open view/<langauage>/messages.po with a text editor and fill in infos in
 	"Last-Translator: FULL NAME <EMAIL@ADDRESS>"
 	"Language-Team: LANGUAGE <LL@li.org>\n"
 	"Language: \n"
@@ -102,19 +102,20 @@ Xgettext and .po workflow
 	of the many .po editors out there, like QtLinguist
 	
 5. run 
-	$ php utils/po2php.php views/<language>/messages.po
+	$ php util/po2php.php view/<language>/messages.po
  	to create the strings.php file
  	
 When strings are added or modified in source, you could run
-	$ utils/run_xgettext.sh views/<language>/messages.po
+	$ util/run_xgettext.sh view/<language>/messages.po
 	to extraxt strings from source files and join them with the existing .po file:
 	new strings are added, the existing are not overwritten.
 	
 If you already translated Friendika using strings.php, you could import your old
 translation to messages.po. Run:
-$ php utils/php2po.php views/<language>/strings.php
+$ php util/php2po.php view/<language>/strings.php
 
 
+You may also use the util/string_translator.php web interface to translate the string file, but it is disabled for website security reasons. The web server will need write permission to your language directories and the "Deny ..." line in util/.htaccess will need to be modified or commented to use the utility. 
  
 
       

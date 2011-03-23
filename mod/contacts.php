@@ -9,7 +9,10 @@ function contacts_init(&$a) {
 	$a->page['aside'] .= group_side();
 
 	if($a->config['register_policy'] != REGISTER_CLOSED)
-		$a->page['aside'] .= '<div class="side-invite-link-wrapper" id="side-invite-link-wrapper" ><a href="invite" class="side-invite-link" id="side-invite-link">' . t("Invite Friends") . '</a></div>';
+		$a->page['aside'] .= '<div class="side-link" id="side-invite-link" ><a href="invite" >' . t("Invite Friends") . '</a></div>';
+
+	if(strlen(get_config('system','directory_submit_url')))
+		$a->page['aside'] .= '<div class="side-link" id="side-match-link"><a href="match" >' . t('Find People With Shared Interests') . '</a></div>';
 
 	$tpl = load_view_file('view/follow.tpl');
 	$a->page['aside'] .= replace_macros($tpl,array(
@@ -17,6 +20,8 @@ function contacts_init(&$a) {
 		'$hint' => t('Example: bob@example.com, http://example.com/barbara'),
 		'$follow' => t('Follow')
 	));
+
+
 
 }
 
@@ -244,6 +249,9 @@ function contacts_content(&$a) {
 			$sparkle = '';
 		}
 
+		$insecure = '<div id="profile-edit-insecure"><p><img src="images/unlock_icon.gif" alt="' . t('Privacy Unavailable') . '" />&nbsp;'
+			. t('Private communications are not available for this contact.') . '</p></div>';
+
 		$last_update = (($r[0]['last-update'] == '0000-00-00 00:00:00') 
 				? t('Never') 
 				: datetime_convert('UTC',date_default_timezone_get(),$r[0]['last-update'],'D, j M Y, g:i A'));
@@ -266,7 +274,7 @@ function contacts_content(&$a) {
 			'$contact_id' => $r[0]['id'],
 			'$block_text' => (($r[0]['blocked']) ? t('Unblock this contact') : t('Block this contact') ),
 			'$ignore_text' => (($r[0]['readonly']) ? t('Unignore this contact') : t('Ignore this contact') ),
-			'$insecure' => (($r[0]['network'] === 'stat') ? load_view_file('view/insecure_net.tpl') : ''),
+			'$insecure' => (($r[0]['network'] !== 'dfrn') ? $insecure : ''),
 			'$info' => $r[0]['info'],
 			'$blocked' => (($r[0]['blocked']) ? '<div id="block-message">' . t('Currently blocked') . '</div>' : ''),
 			'$ignored' => (($r[0]['readonly']) ? '<div id="ignore-message">' . t('Currently ignored') . '</div>' : ''),

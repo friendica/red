@@ -2,9 +2,9 @@
 
 set_time_limit(0);
 
-define ( 'FRIENDIKA_VERSION',      '2.1.921' );
+define ( 'FRIENDIKA_VERSION',      '2.1.925' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.1'  );
-define ( 'DB_UPDATE_VERSION',      1043   );
+define ( 'DB_UPDATE_VERSION',      1044   );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -1603,9 +1603,15 @@ function lrdd($uri) {
 if(! function_exists('fetch_lrdd_template')) {
 function fetch_lrdd_template($host) {
 	$tpl = '';
-	$url = 'http://' . $host . '/.well-known/host-meta' ;
-	$links = fetch_xrd_links($url);
-logger('template: ' . print_r($links,true));
+
+	$url1 = 'https://' . $host . '/.well-known/host-meta' ;
+	$url2 = 'http://' . $host . '/.well-known/host-meta' ;
+	$links = fetch_xrd_links($url1);
+	logger('template (https): ' . print_r($links,true));
+	if(! count($links)) {
+		$links = fetch_xrd_links($url2);
+		logger('template (http): ' . print_r($links,true));
+	}
 	if(count($links)) {
 		foreach($links as $link)
 			if($link['@attributes']['rel'] && $link['@attributes']['rel'] === 'lrdd')
@@ -1856,11 +1862,11 @@ function format_like($cnt,$arr,$type,$id) {
 
 if(! function_exists('load_view_file')) {
 function load_view_file($s) {
+	global $lang;
+	if(! isset($lang))
+		$lang = 'en';
 	$b = basename($s);
 	$d = dirname($s);
-	$lang = get_config('system','language');
-	if($lang === false)
-		$lang = 'en';
 	if(file_exists("$d/$lang/$b"))
 		return file_get_contents("$d/$lang/$b");
 	return file_get_contents($s);

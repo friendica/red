@@ -384,6 +384,7 @@ input#dfrn-url {
 #settings-nick-end,
 #settings-defloc-end,
 #settings-allowloc-end,
+#settings-blockw-end,
 #settings-timezone-end,
 #settings-theme-end,
 #settings-password-end,
@@ -404,6 +405,7 @@ input#dfrn-url {
 #settings-nick-label,
 #settings-defloc-label,
 #settings-allowloc-label,
+#settings-blockw-label,
 #settings-timezone-label,
 #settings-theme-label,
 #settings-password-label,
@@ -424,6 +426,7 @@ input#dfrn-url {
 #settings-nick,
 #settings-defloc,
 #settings-allowloc,
+#settings-blockw,
 #timezone-select,
 #theme-select,
 #settings-password,
@@ -1431,7 +1434,7 @@ input#dfrn-url {
 	/*margin-left: 50px;*/
 }
 
-#block-message, #ignore-message, #profile-edit-insecure {
+#block-message, #ignore-message {
 	margin-top: 20px;
 	color: #FF0000;
 	font-size: 1.1em;
@@ -1440,13 +1443,21 @@ input#dfrn-url {
 	padding: 10px;
 }
 
+#profile-edit-insecure {
+	margin-top: 20px;
+	color: #FF0000;
+	font-size: 1.1em;
+	border: 1px solid #FF8888;
+	background-color: #FFEEEE;
+	padding-left: 5px;
+	/*: 3px 3px 3px 5px; */
+	width: 587px;
+}
+
 #block-message, #ignore-message {
 	width: 180px;
 }
 
-#profile-edit-insecure {
-	width: 600px;
-}
 
 /*
 .profile-tabs {
@@ -2133,3 +2144,24 @@ a.mail-list-link {
 	clear: both;
 }
 
+.profile-match-photo {
+	float: left;
+	text-align: center;
+	width: 120px;
+}
+
+.profile-match-name {
+	float: left;
+	text-align: center;
+	width: 120px;
+	overflow: hidden;
+}
+
+.profile-match-break,
+.profile-match-end {
+	clear: both;
+}
+
+.side-link {
+	margin-bottom: 15px;
+}
