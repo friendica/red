@@ -16,7 +16,7 @@ body {
 }
 
 
-a, a:visited { color: #3465a4; text-decoration: none; }
+a, a:visited, a:link { color: #3465a4; text-decoration: none; }
 a:hover {text-decoration: underline; }
 
 input {
@@ -218,7 +218,7 @@ div.wall-item-content-wrapper.shiny {
 	cursor: pointer;
 }
 
-.fakelink, .fakelink:visited {
+.fakelink, .fakelink:visited, .fakelink:link {
 	color: #3465a4;
 	text-decoration: none;
 	cursor: pointer;
@@ -1844,7 +1844,7 @@ a.mail-list-link {
 	margin-bottom: 15px;
 }
 
-#photos-upload-perms-menu, #photos-upload-perms-menu:visited {
+#photos-upload-perms-menu, #photos-upload-perms-menu:visited, #photos-upload-perms-menu:link {
 	color: #8888FF;
 	text-decoration: none;
 	cursor: pointer;
