@@ -1,22 +1,19 @@
+$username,
 
-Dear $username,
+'$fn' på '$dfrn_url' har accepterat din kontaktförfrågan på '$sitename'.
 
-	'$fn' at '$dfrn_url' has accepted 
-your connection request at '$sitename'.
+'$fn' har valt att acceptera dig som ett "fan" vilket innebär vissa begränsningar 
+i kommunikationen mellan er - som till exempel personliga meddelanden och viss interaktion
+mellan profiler. Om detta är en kändis eller en gemenskap så har dessa inställningar gjorts
+per automatik.
 
-	'$fn' has chosen to accept you a "fan", which restricts 
-some forms of communication - such as private messaging and some profile
-interactions. If this is a celebrity or community page, these settings were
-applied automatically.
+'$fn' kan välja att utöka detta till vanlig tvåvägskommunikation eller någon annan mer 
+tillåtande kommunikationsform i framtiden. 
 
-	'$fn' may choose to extend this into a two-way or more permissive 
-relationship in the future. 
-
-	You will start receiving public status updates from '$fn', 
-which will appear on your 'Network' page at  
+Du kommer hädanefter att få statusuppdateringar från '$fn', 
+vilka kommer att synas på din Nätverk-sida på 
 
 $siteurl
 
-Sincerely,
-
-	$sitename Administrator
+Hälsningar,
+$sitename admin

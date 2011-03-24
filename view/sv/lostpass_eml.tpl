@@ -1,32 +1,29 @@
+$username,
 
-Dear $username,
-	A request was recently received at $sitename to reset your account 
-password. In order to confirm this request, please select the verification link
-below or paste it into your web browser address bar. 
+En begäran om återställning av lösenord på $sitename har mottagits. 
+Gå till adressen nedan för att bekräfta denna begäran. Du kan också 
+klistra in länken i adressfältet i din webbläsare. 
 
-If you did NOT request this change, please DO NOT follow the link
-provided and ignore and/or delete this email. 
+Gå INTE till länken nedan om du INTE har begärt lösenordsåterställning. 
+Då kan du ignorera det här meddelandet. 
 
-Your password will not be changed unless we can verify that you
-issued this request. 
+Ditt lösenord kommer inte att återställas om vi inte kan säkerställa att du 
+initierat detta.
 
-Follow this link to verify your identity:
+Med den här länken kan du bekräfta din identitet:
 
 $reset_link
 
-You will then receive a follow-up message containing the new password.
+Sedan kommer du att få ett meddelande med ett nytt lösenord.
 
-You may change that password from your account settings page after logging in.
+Lösenordet kan sedan ändras i dina inställningar efter att du loggat in.
 
-The login details are as follows:
+Detaljerna ser ut så här:
 
-Site Location:	$siteurl
-Login Name:	$email
+Webbplats:		$siteurl
+Inloggningsnamn:	$email
 
-
-
-
-Sincerely,
-	$sitename Administrator
+Hälsningar,
+$sitename admin
 
  

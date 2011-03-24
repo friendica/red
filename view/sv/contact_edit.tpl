@@ -1,4 +1,3 @@
-
 <h2>$header</h2>
 
 <div id="contact-edit-banner-name">$name</div>
@@ -28,7 +27,7 @@
 
 
 		<div id="contact-edit-poll-wrapper">
-			<div id="contact-edit-last-update-text">$lastupdtext<span id="contact-edit-last-updated">$last_update</span</div>
+			<div id="contact-edit-last-update-text">$lastupdtext<span id="contact-edit-last-updated">$last_update</span></div>
 			<div id="contact-edit-poll-text">$updpub</div>
 			$poll_interval
 			<div id="contact-edit-update-now"><a href="contacts/$contact_id/update">$udnow</a></div>
@@ -46,7 +45,7 @@ $ignored
 </div>
 <div id="contact-edit-info-end"></div>
 
-<input class="contact-edit-submit" type="submit" name="submit" value="Submit" />
+<input class="contact-edit-submit" type="submit" name="submit" value="Spara" />
 
 <div id="contact-edit-profile-select-text">
 <h4>Profilvisning</h4>
@@ -56,7 +55,7 @@ $ignored
 $profile_select
 <div id="contact-edit-profile-select-end"></div>
 
-<input class="contact-edit-submit" type="submit" name="submit" value="Submit" />
+<input class="contact-edit-submit" type="submit" name="submit" value="Spara" />
 
 
 <div id="contact-edit-rating-wrapper">
@@ -69,13 +68,13 @@ $rating
 </div>
 <div id="contact-edit-rating-explain">
 <p>
-Var v&auml;nlig spendera tid p&aring; att fylla i n&aring;got h&auml;r om du k&auml;nner att det kan vara till n&aring;gon hj&auml;lp f&ouml;r andra.
+Var v&auml;nlig &auml;gna en liten stund &aring;t att fylla i n&aring;got som du k&auml;nner kan vara till hj&auml;lp f&ouml;r andra.
 </p>
 <textarea id="contact-edit-rating-text" name="reason" rows="3" cols="64" >$reason</textarea>
 </div>
 </div>
 $groups
 
-<input class="contact-edit-submit" type="submit" name="submit" value="Submit" />
+<input class="contact-edit-submit" type="submit" name="submit" value="Skicka" />
 </form>
 </div>

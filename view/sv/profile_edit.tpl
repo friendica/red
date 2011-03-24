@@ -1,11 +1,11 @@
-<h1>Edit Profile Details</h1>
+<h1>&Auml;ndra i profil</h1>
 
 <div id="profile-edit-links">
 <ul>
-<li><a href="profile/$profile_id/view?tab=profile" id="profile-edit-view-link" title="View this profile">View this profile</a></li>
-<li><a href="profiles/clone/$profile_id" id="profile-edit-clone-link" title="Create a new profile using these settings">Clone this profile</a></li>
+<li><a href="profile/$profile_id/view?tab=profile" id="profile-edit-view-link" title="View this profile">Visa denna profil</a></li>
+<li><a href="profiles/clone/$profile_id" id="profile-edit-clone-link" title="Create a new profile using these settings">Klona denna profil</a></li>
 <li></li>
-<li><a href="profiles/drop/$profile_id" id="profile-edit-drop-link" title="Delete this profile" $disabled >Delete this profile</a></li>
+<li><a href="profiles/drop/$profile_id" id="profile-edit-drop-link" title="Delete this profile" $disabled >Ta bort denna profil</a></li>
 
 </ul>
 </div>
@@ -18,32 +18,32 @@ $default
 <form id="profile-edit-form" name="form1" action="profiles/$profile_id" method="post" >
 
 <div id="profile-edit-profile-name-wrapper" >
-<label id="profile-edit-profile-name-label" for="profile-edit-profile-name" >Profile Name: </label>
+<label id="profile-edit-profile-name-label" for="profile-edit-profile-name" >Profilnamn: </label>
 <input type="text" size="32" name="profile_name" id="profile-edit-profile-name" value="$profile_name" /><div class="required">*</div>
 </div>
 <div id="profile-edit-profile-name-end"></div>
 
 <div id="profile-edit-name-wrapper" >
-<label id="profile-edit-name-label" for="profile-edit-name" >Your Full Name: </label>
+<label id="profile-edit-name-label" for="profile-edit-name" >Fullst&auml;ndigt namn: </label>
 <input type="text" size="32" name="name" id="profile-edit-name" value="$name" />
 </div>
 <div id="profile-edit-name-end"></div>
 
 <div id="profile-edit-pdesc-wrapper" >
-<label id="profile-edit-pdesc-label" for="profile-edit-pdesc" >Title/Description: </label>
+<label id="profile-edit-pdesc-label" for="profile-edit-pdesc" >Titel/Beskrivning: </label>
 <input type="text" size="32" name="pdesc" id="profile-edit-pdesc" value="$pdesc" />
 </div>
 <div id="profile-edit-pdesc-end"></div>
 
 
 <div id="profile-edit-gender-wrapper" >
-<label id="profile-edit-gender-label" for="gender-select" >Your Gender: </label>
+<label id="profile-edit-gender-label" for="gender-select" >K&ouml;n: </label>
 $gender
 </div>
 <div id="profile-edit-gender-end"></div>
 
 <div id="profile-edit-dob-wrapper" >
-<label id="profile-edit-dob-label" for="dob-select" >Birthday (y/m/d): </label>
+<label id="profile-edit-dob-label" for="dob-select" >F&ouml;delsedag (&aring;/m/d): </label>
 <div id="profile-edit-dob" >
 $dob $age
 </div>
@@ -53,32 +53,32 @@ $dob $age
 $hide_friends
 
 <div class="profile-edit-submit-wrapper" >
-<input type="submit" name="submit" class="profile-edit-submit-button" value="Submit" />
+<input type="submit" name="submit" class="profile-edit-submit-button" value="Spara" />
 </div>
 <div class="profile-edit-submit-end"></div>
 
 
 <div id="profile-edit-address-wrapper" >
-<label id="profile-edit-address-label" for="profile-edit-address" >Street Address: </label>
+<label id="profile-edit-address-label" for="profile-edit-address" >Gatuadress: </label>
 <input type="text" size="32" name="address" id="profile-edit-address" value="$address" />
 </div>
 <div id="profile-edit-address-end"></div>
 
 <div id="profile-edit-locality-wrapper" >
-<label id="profile-edit-locality-label" for="profile-edit-locality" >Locality/City: </label>
+<label id="profile-edit-locality-label" for="profile-edit-locality" >Plats/Stad: </label>
 <input type="text" size="32" name="locality" id="profile-edit-locality" value="$locality" />
 </div>
 <div id="profile-edit-locality-end"></div>
 
 
 <div id="profile-edit-postal-code-wrapper" >
-<label id="profile-edit-postal-code-label" for="profile-edit-postal-code" >Postal/Zip Code: </label>
+<label id="profile-edit-postal-code-label" for="profile-edit-postal-code" >Postnummer: </label>
 <input type="text" size="32" name="postal_code" id="profile-edit-postal-code" value="$postal_code" />
 </div>
 <div id="profile-edit-postal-code-end"></div>
 
 <div id="profile-edit-country-name-wrapper" >
-<label id="profile-edit-country-name-label" for="profile-edit-country-name" >Country: </label>
+<label id="profile-edit-country-name-label" for="profile-edit-country-name" >Land: </label>
 <select name="country_name" id="profile-edit-country-name" onChange="Fill_States('$region');">
 <option selected="selected" >$country_name</option>
 <option>temp</option>
@@ -87,7 +87,7 @@ $hide_friends
 <div id="profile-edit-country-name-end"></div>
 
 <div id="profile-edit-region-wrapper" >
-<label id="profile-edit-region-label" for="profile-edit-region" >Region/State: </label>
+<label id="profile-edit-region-label" for="profile-edit-region" >Region: </label>
 <select name="region" id="profile-edit-region" onChange="Update_Globals();" >
 <option selected="selected" >$region</option>
 <option>temp</option>
@@ -96,20 +96,20 @@ $hide_friends
 <div id="profile-edit-region-end"></div>
 
 <div class="profile-edit-submit-wrapper" >
-<input type="submit" name="submit" class="profile-edit-submit-button" value="Submit" />
+<input type="submit" name="submit" class="profile-edit-submit-button" value="Spara" />
 </div>
 <div class="profile-edit-submit-end"></div>
 
 <div id="profile-edit-marital-wrapper" >
-<label id="profile-edit-marital-label" for="profile-edit-marital" ><span class="heart">&hearts;</span> (Marital) Status: </label>
+<label id="profile-edit-marital-label" for="profile-edit-marital" ><span class="heart">&hearts;</span> Civilstatus: </label>
 $marital
 </div>
-<label id="profile-edit-with-label" for="profile-edit-with" > Who: (if applicable) </label>
+<label id="profile-edit-with-label" for="profile-edit-with" > Vem: (om aktuellt) </label>
 <input type="text" size="32" name="with" id="profile-edit-with" title="Examples: cathy123, Cathy Williams, cathy@example.com" value="$with" />
 <div id="profile-edit-marital-end"></div>
 
 <div id="profile-edit-sexual-wrapper" >
-<label id="profile-edit-sexual-label" for="sexual-select" >Sexual Preference: </label>
+<label id="profile-edit-sexual-label" for="sexual-select" >Sexuell l&auml;ggning: </label>
 $sexual
 </div>
 <div id="profile-edit-sexual-end"></div>
@@ -117,13 +117,13 @@ $sexual
 
 
 <div id="profile-edit-homepage-wrapper" >
-<label id="profile-edit-homepage-label" for="profile-edit-homepage" >Homepage URL: </label>
+<label id="profile-edit-homepage-label" for="profile-edit-homepage" >Hemsida URL: </label>
 <input type="text" size="32" name="homepage" id="profile-edit-homepage" value="$homepage" />
 </div>
 <div id="profile-edit-homepage-end"></div>
 
 <div id="profile-edit-politic-wrapper" >
-<label id="profile-edit-politic-label" for="profile-edit-politic" >Political Views: </label>
+<label id="profile-edit-politic-label" for="profile-edit-politic" >Politisk &aring;sk&aring;dning: </label>
 <input type="text" size="32" name="politic" id="profile-edit-politic" value="$politic" />
 </div>
 <div id="profile-edit-politic-end"></div>
@@ -135,20 +135,20 @@ $sexual
 <div id="profile-edit-religion-end"></div>
 
 <div id="profile-edit-keywords-wrapper" >
-<label id="profile-edit-keywords-label" for="profile-edit-keywords" >Keywords: </label>
-<input type="text" size="32" name="keywords" id="profile-edit-keywords" title="Example: fishing photography software" value="$keywords" />
-</div><div id="profile-edit-keywords-desc">(Used for searching public profiles, never shown to others)</div>
+<label id="profile-edit-keywords-label" for="profile-edit-keywords" >Nyckelord: </label>
+<input type="text" size="32" name="keywords" id="profile-edit-keywords" title="Exempel: fiske fotografering delfiner" value="$keywords" />
+</div><div id="profile-edit-keywords-desc">(Anv&auml;nds vid profils&ouml;kning, visas inte f&ouml;r andra)</div>
 <div id="profile-edit-keywords-end"></div>
 
 
 <div class="profile-edit-submit-wrapper" >
-<input type="submit" name="submit" class="profile-edit-submit-button" value="Submit" />
+<input type="submit" name="submit" class="profile-edit-submit-button" value="Spara" />
 </div>
 <div class="profile-edit-submit-end"></div>
 
 <div id="about-jot-wrapper" >
 <p id="about-jot-desc" >
-Tell us about yourself... 
+Beskriv dig sj&auml;lv... 
 </p>
 
 <textarea rows="10" cols="72" id="profile-jot-text" name="about" >$about</textarea>
@@ -160,7 +160,7 @@ Tell us about yourself...
 
 <div id="interest-jot-wrapper" >
 <p id="interest-jot-desc" >
-Hobbies/Interests 
+Hobbys/Intressen 
 </p>
 
 <textarea rows="10" cols="72" id="interest-jot-text" name="interest" >$interest</textarea>
@@ -172,7 +172,7 @@ Hobbies/Interests
 
 <div id="contact-jot-wrapper" >
 <p id="contact-jot-desc" >
-Contact information and Social Networks 
+Kontaktuppgifter och sociala n&auml;tverk 
 </p>
 
 <textarea rows="10" cols="72" id="contact-jot-text" name="contact" >$contact</textarea>
@@ -183,14 +183,14 @@ Contact information and Social Networks
 
 
 <div class="profile-edit-submit-wrapper" >
-<input type="submit" name="submit" class="profile-edit-submit-button" value="Submit" />
+<input type="submit" name="submit" class="profile-edit-submit-button" value="Spara" />
 </div>
 <div class="profile-edit-submit-end"></div>
 
 
 <div id="music-jot-wrapper" >
 <p id="music-jot-desc" >
-Musical interests 
+Musik 
 </p>
 
 <textarea rows="10" cols="72" id="music-jot-text" name="music" >$music</textarea>
@@ -201,7 +201,7 @@ Musical interests
 
 <div id="book-jot-wrapper" >
 <p id="book-jot-desc" >
-Books, literature 
+B&ouml;cker, litteratur 
 </p>
 
 <textarea rows="10" cols="72" id="book-jot-text" name="book" >$book</textarea>
@@ -214,7 +214,7 @@ Books, literature
 
 <div id="tv-jot-wrapper" >
 <p id="tv-jot-desc" >
-Television 
+TV 
 </p>
 
 <textarea rows="10" cols="72" id="tv-jot-text" name="tv" >$tv</textarea>
@@ -227,7 +227,7 @@ Television
 
 <div id="film-jot-wrapper" >
 <p id="film-jot-desc" >
-Film/dance/culture/entertainment 
+Film/dans/kultur/underh&aring;llning 
 </p>
 
 <textarea rows="10" cols="72" id="film-jot-text" name="film" >$film</textarea>
@@ -238,14 +238,14 @@ Film/dance/culture/entertainment
 
 
 <div class="profile-edit-submit-wrapper" >
-<input type="submit" name="submit" class="profile-edit-submit-button" value="Submit" />
+<input type="submit" name="submit" class="profile-edit-submit-button" value="Spara" />
 </div>
 <div class="profile-edit-submit-end"></div>
 
 
 <div id="romance-jot-wrapper" >
 <p id="romance-jot-desc" >
-Love/romance 
+K&auml;rlek/romantik 
 </p>
 
 <textarea rows="10" cols="72" id="romance-jot-text" name="romance" >$romance</textarea>
@@ -258,7 +258,7 @@ Love/romance
 
 <div id="work-jot-wrapper" >
 <p id="work-jot-desc" >
-Work/employment 
+Arbete 
 </p>
 
 <textarea rows="10" cols="72" id="work-jot-text" name="work" >$work</textarea>
@@ -271,7 +271,7 @@ Work/employment
 
 <div id="education-jot-wrapper" >
 <p id="education-jot-desc" >
-School/education 
+Skola/utbildning 
 </p>
 
 <textarea rows="10" cols="72" id="education-jot-text" name="education" >$education</textarea>
@@ -283,7 +283,7 @@ School/education
 
 
 <div class="profile-edit-submit-wrapper" >
-<input type="submit" name="submit" class="profile-edit-submit-button" value="Submit" />
+<input type="submit" name="submit" class="profile-edit-submit-button" value="Spara" />
 </div>
 <div class="profile-edit-submit-end"></div>
 
