@@ -1,6 +1,6 @@
-<h1>Crop Image</h1>
+<h1>Besk&auml;r bilden</h1>
 <p id="cropimage-desc">
-Please adjust the image cropping for optimum viewing.
+V&auml;lj hur du vill att bilden ska besk&auml;ras.
 </p>
 <div id="cropimage-wrapper">
 <img src="$image_url" id="croppa" class="imgCrop" alt="" />
@@ -51,7 +51,7 @@ Please adjust the image cropping for optimum viewing.
 <input type="hidden" name="width"  id="width" />
 
 <div id="crop-image-submit-wrapper" >
-<input type="submit" name="submit" value="Done Editing" />
+<input type="submit" name="submit" value="Spara" />
 </div>
 
 </form>

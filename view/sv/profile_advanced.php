@@ -12,7 +12,7 @@ EOT;
 if($a->profile['name']) {
 $o .= <<< EOT
 <div id="advanced-profile-name-wrapper" >
-<div id="advanced-profile-name-text">Full Name:</div>
+<div id="advanced-profile-name-text">Fullst&auml;ndigt namn:</div>
 <div id="advanced-profile-name">{$a->profile['name']}</div>
 </div>
 <div id="advanced-profile-name-end"></div>
@@ -22,7 +22,7 @@ EOT;
 if($a->profile['gender']) {
 $o .= <<< EOT
 <div id="advanced-profile-gender-wrapper" >
-<div id="advanced-profile-gender-text">Gender:</div>
+<div id="advanced-profile-gender-text">K&ouml;n:</div>
 <div id="advanced-profile-gender">{$a->profile['gender']}</div>
 </div>
 <div id="advanced-profile-gender-end"></div>
@@ -32,7 +32,7 @@ EOT;
 if(($a->profile['dob']) && ($a->profile['dob'] != '0000-00-00')) {
 $o .= <<< EOT
 <div id="advanced-profile-dob-wrapper" >
-<div id="advanced-profile-dob-text">Birthday:</div>
+<div id="advanced-profile-dob-text">F&ouml;delsedag:</div>
 EOT;
 
 // If no year, add an arbitrary one so just we can parse the month and day.
@@ -50,7 +50,7 @@ $o .= '<div id="advanced-profile-dob-end"></div>';
 if($age = age($a->profile['dob'],$a->profile['timezone'],'')) {
 $o .= <<< EOT
 <div id="advanced-profile-age-wrapper" >
-<div id="advanced-profile-age-text">Age:</div>
+<div id="advanced-profile-age-text">&Aring;lder:</div>
 <div id="advanced-profile-age">$age</div>
 </div>
 <div id="advanced-profile-age-end"></div>
@@ -60,7 +60,7 @@ EOT;
 if($a->profile['marital']) {
 $o .= <<< EOT
 <div id="advanced-profile-marital-wrapper" >
-<div id="advanced-profile-marital-text"><span class="heart">&hearts;</span> Status:</div>
+<div id="advanced-profile-marital-text"><span class="heart">&hearts;</span> Civilstatus:</div>
 <div id="advanced-profile-marital">{$a->profile['marital']}</div>
 EOT;
 
@@ -75,7 +75,7 @@ EOT;
 if($a->profile['sexual']) {
 $o .= <<< EOT
 <div id="advanced-profile-sexual-wrapper" >
-<div id="advanced-profile-sexual-text">Sexual Preference:</div>
+<div id="advanced-profile-sexual-text">Sexuell l&auml;ggning:</div>
 <div id="advanced-profile-sexual">{$a->profile['sexual']}</div>
 </div>
 <div id="advanced-profile-sexual-end"></div>
@@ -86,7 +86,7 @@ if($a->profile['homepage']) {
 	$homepage = linkify($a->profile['homepage']);
 $o .= <<< EOT
 <div id="advanced-profile-homepage-wrapper" >
-<div id="advanced-profile-homepage-text">Homepage:</div>
+<div id="advanced-profile-homepage-text">Hemsida URL:</div>
 <div id="advanced-profile-homepage">$homepage</div>
 </div>
 <div id="advanced-profile-homepage-end"></div>
@@ -96,7 +96,7 @@ EOT;
 if($a->profile['politic']) {
 $o .= <<< EOT
 <div id="advanced-profile-politic-wrapper" >
-<div id="advanced-profile-politic-text">Political Views:</div>
+<div id="advanced-profile-politic-text">Politisk &aring;sk&aring;dning:</div>
 <div id="advanced-profile-politic">{$a->profile['politic']}</div>
 </div>
 <div id="advanced-profile-politic-end"></div>
@@ -115,7 +115,7 @@ EOT;
 if($txt = prepare_text($a->profile['about'])) {
 $o .= <<< EOT
 <div id="advanced-profile-about-wrapper" >
-<div id="advanced-profile-about-text">About:</div>
+<div id="advanced-profile-about-text">Om:</div>
 <br />
 <div id="advanced-profile-about">$txt</div>
 </div>
@@ -126,7 +126,7 @@ EOT;
 if($txt = prepare_text($a->profile['interest'])) {
 $o .= <<< EOT
 <div id="advanced-profile-interest-wrapper" >
-<div id="advanced-profile-interest-text">Hobbies/Interests:</div>
+<div id="advanced-profile-interest-text">Hobbys/Intressen:</div>
 <br />
 <div id="advanced-profile-interest">$txt</div>
 </div>
@@ -137,7 +137,7 @@ EOT;
 if($txt = prepare_text($a->profile['contact'])) {
 $o .= <<< EOT
 <div id="advanced-profile-contact-wrapper" >
-<div id="advanced-profile-contact-text">Contact information and Social Networks:</div>
+<div id="advanced-profile-contact-text">Kontaktuppgifter och sociala n&auml;tverk:</div>
 <br />
 <div id="advanced-profile-contact">$txt</div>
 </div>
@@ -148,7 +148,7 @@ EOT;
 if($txt = prepare_text($a->profile['music'])) {
 $o .= <<< EOT
 <div id="advanced-profile-music-wrapper" >
-<div id="advanced-profile-music-text">Musical interests:</div>
+<div id="advanced-profile-music-text">Musik:</div>
 <br />
 <div id="advanced-profile-music">$txt</div>
 </div>
@@ -159,7 +159,7 @@ EOT;
 if($txt = prepare_text($a->profile['book'])) {
 $o .= <<< EOT
 <div id="advanced-profile-book-wrapper" >
-<div id="advanced-profile-book-text">Books, literature:</div>
+<div id="advanced-profile-book-text">B&ouml;cker, litteratur:</div>
 <br />
 <div id="advanced-profile-book">$txt</div>
 </div>
@@ -170,7 +170,7 @@ EOT;
 if($txt = prepare_text($a->profile['tv'])) {
 $o .= <<< EOT
 <div id="advanced-profile-tv-wrapper" >
-<div id="advanced-profile-tv-text">Television:</div>
+<div id="advanced-profile-tv-text">TV:</div>
 <br />
 <div id="advanced-profile-tv">$txt</div>
 </div>
@@ -181,7 +181,7 @@ EOT;
 if($txt = prepare_text($a->profile['film'])) {
 $o .= <<< EOT
 <div id="advanced-profile-film-wrapper" >
-<div id="advanced-profile-film-text">Film/dance/culture/entertainment:</div>
+<div id="advanced-profile-film-text">Film/dans/kultur/underh&aring;llning:</div>
 <br />
 <div id="advanced-profile-film">$txt</div>
 </div>
@@ -192,7 +192,7 @@ EOT;
 if($txt = prepare_text($a->profile['romance'])) {
 $o .= <<< EOT
 <div id="advanced-profile-romance-wrapper" >
-<div id="advanced-profile-romance-text">Love/romance:</div>
+<div id="advanced-profile-romance-text">K&auml;rlek/romantik:</div>
 <br />
 <div id="advanced-profile-romance">$txt</div>
 </div>
@@ -203,7 +203,7 @@ EOT;
 if($txt = prepare_text($a->profile['work'])) {
 $o .= <<< EOT
 <div id="advanced-profile-work-wrapper" >
-<div id="advanced-profile-work-text">Work/employment:</div>
+<div id="advanced-profile-work-text">Arbete:</div>
 <br />
 <div id="advanced-profile-work">$txt</div>
 </div>
@@ -214,12 +214,10 @@ EOT;
 if($txt = prepare_text($a->profile['education'])) {
 $o .= <<< EOT
 <div id="advanced-profile-education-wrapper" >
-<div id="advanced-profile-education-text">School/education:</div>
+<div id="advanced-profile-education-text">Skola/utbildning:</div>
 <br />
 <div id="advanced-profile-education">$txt</div>
 </div>
 <div id="advanced-profile-education-end"></div>
 EOT;
 }
-
-
