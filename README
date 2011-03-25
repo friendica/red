@@ -1,7 +1,7 @@
 
-    *********
-    Friendika
-    *********
+    *************
+    * Friendika *
+    *************
 
     Distributed Social Network
 
@@ -79,11 +79,6 @@ only able to see the side of you that you wish to present. If you send a
 private message to your aunt Mary, we will encrypt it with military grade
 encryption.
 
-    Other distributed social network projects talk about privacy and offering
-a feature-rich social networking alternative, but all they can deliver is 
-vapour and vague promises. Things like "Private mail will be in the next
-release". 
-
     Friendika delivers. We've got an incredibly rich social communications 
 interface you can make use of *right now*.
 
@@ -93,6 +88,13 @@ because it feels natural, and that's why Facebook grew to be what it is today.
 But we're creating something completely different. 
 
     Something better.
+
+    Start with richer communications. Adorn your text, colour it. We've got a 
+text counter in case you're sending across to one of the primitive social 
+networks, but we don't think you should have to squeeze your communications
+into some arbitrary limit. Free yourself from thinking how to squeeze your 
+message into 140 or 420 characters, or sending messages in some strange 
+short-hand code. Even edit your text after you send it. It's OK.
 
     A single instance of Friendika can easily support hundreds of (and up to
 several thousand) people using commodity hosting hardware. You could even run

@@ -5,6 +5,7 @@ function settings_init(&$a) {
 	if(local_user()) {
 		profile_load($a,$a->user['nickname']);
 	}
+
 }
 
 
@@ -341,9 +342,13 @@ function settings_content(&$a) {
 
 	$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
 
+	$uexport = '<div id="uexport-link"><a href="uexport" >' . t('Export Personal Data') . '</a></div>';
+
+
 	$o .= replace_macros($stpl,array(
 		'$baseurl' => $a->get_baseurl(),
 		'$oidhtml' => $oidhtml,
+		'$uexport' => $uexport,
 		'$uid' => local_user(),
 		'$username' => $username,
 		'$openid' => $openid,

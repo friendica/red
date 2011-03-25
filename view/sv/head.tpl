@@ -11,7 +11,7 @@
 <script type="text/javascript" src="$baseurl/include/main.js" ></script>
 <script>
 
-	function confirmDelete() { return confirm("Delete this item?"); }
+	function confirmDelete() { return confirm("Ta bort?"); }
 	function commentOpen(obj,id) {
 		if(obj.value == 'Comment') {
 			obj.value = '';
@@ -28,5 +28,3 @@
 	}
 
 </script>
-
-

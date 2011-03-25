@@ -2,6 +2,7 @@
 
 <div id="plugin-settings-link"><a href="settings/addon">Impostazioni Plugin</a></div>
 
+$uexport
 
 $nickname_block
 

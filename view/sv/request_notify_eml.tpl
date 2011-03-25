@@ -1,17 +1,13 @@
+$myname,
 
-Dear $myname,
+Du har just fått en kontaktförfrågan på $sitename från '$requestor'
 
-You have just received a connection request at $sitename 
+Profilen finns på $url.
 
-from '$requestor'.
-
-You may visit their profile at $url.
-
-Please login to your site to view the complete introduction 
-and approve or ignore/cancel the request.
+Logga in för att se hela förfrågan och godkänna eller 
+avslå den.
 
 $siteurl
 
-Regards,
-
-	$sitename administrator
+Hälsningar,
+$sitename admin

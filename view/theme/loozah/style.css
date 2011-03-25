@@ -505,7 +505,7 @@ input#dfrn-url {
 }
 
 #settings-nick-wrapper {
-	margin-bottom: 30px;
+	margin-bottom: 15px;
 }
 
 #settings-expire-end {
@@ -608,7 +608,7 @@ input#dfrn-url {
 }
 
 #settings-nick {
-	margin-bottom: 50px;
+	margin-bottom: 30px;
 }
 
 #cropimage-wrapper, #cropimage-preview-wrapper {
@@ -2079,8 +2079,8 @@ a.mail-list-link {
 }
 
 
-#plugin-settings-link, #account-settings-link {
-	margin-bottom: 25px;
+#plugin-settings-link, #account-settings-link, #uexport-link {
+	margin-bottom: 10px;
 }
 
 
@@ -2185,6 +2185,14 @@ a.mail-list-link {
 
 .profile-match-break,
 .profile-match-end {
+	clear: both;
+}
+
+.profile-match-wrapper {
+	float: left;
+	padding: 10px;
+}
+#profile-match-wrapper-end {
 	clear: both;
 }
 

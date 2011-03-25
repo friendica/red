@@ -1,21 +1,17 @@
+$username,
+Tack för att du registrerat dig på $sitename. Kontot har skapats. 
+Här är dina inloggningsuppgifter:
 
-Dear $username,
-	Thank you for registering at $sitename. Your account has been created. 
-The login details are as follows:
+Webbplats:	$siteurl
+Användarnamn:	$email
+Lösenord:	$password
 
+Lösenordet kan ändras på sidan Inställningar efter att du loggat in.
 
-Site Location:	$siteurl
-Login Name:	$email
-Password:	$password
+Ägna en liten stund åt att gå igenom alla kontoinställningar där. 
 
-You may change your password from your account "Settings" page after logging 
-in.
+Tack, och välkommen till $sitename.
 
-Please take a few moments to review the other account settings on that page. 
+Hälsningar,
+$sitename admin
 
-Thank you and welcome to $sitename.
-
-Sincerely,
-	$sitename Administrator
-
- 
