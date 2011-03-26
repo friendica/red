@@ -1,4 +1,3 @@
-
 En registreringsförfrågan som kräver svar har mottagits 
 på $sitename 
 
@@ -13,6 +12,6 @@ Användarnamn:		$email
 Gå till denna adress om du vill godkänna:
 $siteurl/regmod/allow/$hash 
 
-Gå till denna adress om du vill avslå förfrågan och ta bort kontot:
+Gå till denna adress om du vill avslå förfrågan:
 $siteurl/regmod/deny/$hash
 
