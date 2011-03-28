@@ -81,6 +81,11 @@ Xgettext and .po workflow
 1. Run util/run_xgettext.sh script (on *unix sistems, with GNU xgettext installed)
 	This script runs xgettext on source tree, extracting strings from t() and tt()
 	functions, and creates a util/messages.po file.
+
+	% cd util; ./run_xgettext.sh ../view/{language}/messages.po
+
+	Replace {language} with the language you are working on - e.g. 'es', 'fr', 'de', etc. 
+
 2. copy util/messages.po to view/<langauage>/messages.po
 3. open view/<langauage>/messages.po with a text editor and fill in infos in
 	"Last-Translator: FULL NAME <EMAIL@ADDRESS>"
