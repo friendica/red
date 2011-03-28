@@ -1,21 +1,21 @@
 
-Dear $username,
-	Thank you for registering at $sitename. Your account has been created. 
-The login details are as follows:
+Chèr(e) $username,
+	Merci de votre inscription à $sitename. Votre compte a été créé.
+Les informations de connexion sont comme suit:
 
+Site:			$siteurl
+Pseudo/Courriel:	$email
+Mot de passe:		$password
 
-Site Location:	$siteurl
-Login Name:	$email
-Password:	$password
+Vous pouvez changer de mot de passe dans la page des "Réglages" de votre compte,
+après connexion.
 
-You may change your password from your account "Settings" page after logging 
-in.
+Merci de prendre quelques minutes pour découvrir les autres réglages disponibles
+sur cette page.
 
-Please take a few moments to review the other account settings on that page. 
+Merci, et bienvenue sur $sitename.
 
-Thank you and welcome to $sitename.
-
-Sincerely,
-	$sitename Administrator
+Sincèrement votre,
+	l'administrateur de $sitename
 
  

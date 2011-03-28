@@ -1,22 +1,22 @@
 
-Dear $username,
+Chèr(e) $username,
 
-	'$fn' at '$dfrn_url' has accepted 
-your connection request at '$sitename'.
+	'$fn' du site '$dfrn_url' a accepté votre
+demande de mise en relation sur '$sitename'.
 
-	'$fn' has chosen to accept you a "fan", which restricts 
-some forms of communication - such as private messaging and some profile
-interactions. If this is a celebrity or community page, these settings were
-applied automatically.
+	'$fn' a décidé de vous accepter comme "fan", ce qui restreint
+certains de vos moyens de communication - tels que les messages privés et
+certaines interactions avec son profil. S'il s'agit de la page d'une
+célébrité et/ou communauté, ces réglages ont été définis automatiquement.
 
-	'$fn' may choose to extend this into a two-way or more permissive 
-relationship in the future. 
+	'$fn' pourra choisir d'étendre votre relation à quelque-chose de 
+plus permissif dans l'avenir.
 
-	You will start receiving public status updates from '$fn', 
-which will appear on your 'Network' page at  
+	Vous allez commencer à recevoir les mises-à-jour publiques du 
+statut de '$fn', lesquelles apparaîtront sur votre page 'Réseau' sur
 
 $siteurl
 
-Sincerely,
+Sincèrement votre,
 
-	$sitename Administrator
+	l'administrateur de $sitename
