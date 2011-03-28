@@ -165,9 +165,6 @@ $a->strings["Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #cam
 $a->strings["Recent Photos"] = "Foto recenti";
 $a->strings["Upload New Photos"] = "Carica nuova foto";
 $a->strings["View Album"] = "Vedi album";
-$a->strings['Status'] = 'Stato';
-$a->strings['Profile'] = 'Profilo';
-$a->strings['Photos'] = 'Foto';
 $a->strings["Item not found."] = "Elemento non trovato.";
 $a->strings["View \$owner_name's profile"] = "Guarda il profilo di \$owner_name";
 $a->strings["to"] = "a";
@@ -287,11 +284,6 @@ $a->strings["The database configuration file \".htconfig.php\" could not be writ
 $a->strings["Errors encountered creating database tables."] = "Errori creando le tabelle nel database.";
 $a->strings["Normal View"] = "Vista normale";
 $a->strings["New Item View"] = "Vista Nuovi Elementi";
-$a->strings['Please enter a link URL:'] = 'Inserisci l\'indirizzo del collegamento:';
-$a->strings['Please enter a YouTube link:'] = 'Inserisci un collegamento a YouTube:';
-$a->strings["Please enter a video\x28.ogg\x29 link/URL:"] = "Please enter a video\x28.ogg\x29 link/URL:";
-$a->strings["Please enter an audio\x28.ogg\x29 link/URL:"] = "Please enter an audio\x28.ogg\x29 link/URL:";
-$a->strings['Where are you right now?'] = 'Dove ti trovi ora?';
 $a->strings["No such group"] = "Nessun gruppo";
 $a->strings["Group is empty"] = "Il gruppo è vuoto";
 $a->strings["Group: "] = "Gruppo: ";
@@ -585,3 +577,32 @@ $a->strings["%d Contact"] = array(
 	0 => "%d Contatto",
 	1 => "%d Contatti",
 );
+$a->strings["Please enter a link URL:"] = "Inserisci l'indirizzo del link:";
+$a->strings["Please enter a YouTube link:"] = "Inserisci l'indirizzo di YouTube:";
+$a->strings["Please enter a video(.ogg) link/URL:"] = "Inserisci il link a un video (.ogg):";
+$a->strings["Please enter an audio(.ogg) link/URL:"] = "Inserisci il link a un audio (.ogg):";
+$a->strings["Where are you right now?"] = "Dove sei ora?";
+$a->strings["See more posts like this"] = "Vedi altri post come questo";
+$a->strings["See all %d comments"] = "Vedi tutti i %d commenti";
+$a->strings["Proceed with Installation"] = "Continua con l'installazione";
+$a->strings["Your Friendika site database has been installed."] = "Il database del tuo sito Friendika è stato installato.";
+$a->strings["Proceed to registration"] = "Continua con la registrazione";
+$a->strings["Gender: "] = "Genere:";
+$a->strings["No entries (some entries may be hidden)."] = "Nessuna voce (qualche voce potrebbe essere nascosta).";
+$a->strings["This is Friendika version"] = "Questo è Friendika versione";
+$a->strings["running at web location"] = "in esecuzione all'indirizzo";
+$a->strings["Shared content within the Friendika network is provided under the <a href=\"http://creativecommons.org/licenses/by/3.0/\">Creative Commons Attribution 3.0 license</a>"] = "I contenuti condivisi nel network Friendika è rilasciato sotto la licenza <a href=\"http://creativecommons.org/licenses/by/3.0/\">Creative Commons Attribution 3.0 license</a>";
+$a->strings["Please visit <a href=\"http://project.friendika.com\">Project.Friendika.com</a> to learn more about the Friendika project."] = "Visita <a href=\"http://project.friendika.com\">Project.Friendika.com</a> per saperne di più sul progetto Friendika.";
+$a->strings["Bug reports and issues: please visit"] = "Segnalazioni di bug e problemi: visita";
+$a->strings["Suggestions, praise, donations, etc. - please email \"Info\" at Friendika - dot com"] = "Suggerimenti, preghiere, donazioni, etc - invia una email a \"Info\" at Friendika - dot.com";
+$a->strings["Installed plugins/addons/apps"] = "Plugin/Addon/Applicazioni installate";
+$a->strings["No installed plugins/addons/apps"] = "Nessuno plugin/addons/applicazione installata";
+$a->strings["Profile Match"] = "Profili combacianti";
+$a->strings["No matches"] = "Nessun risultato";
+$a->strings["Status"] = "Stato";
+$a->strings["Profile"] = "Profilo";
+$a->strings["Photos"] = "Foto";
+$a->strings["Export Personal Data"] = "Esporta i Dati Personali";
+$a->strings["Find People With Shared Interests"] = "Trova persone che condividono i tuoi interessi";
+$a->strings["Privacy Unavailable"] = "Privacy non disponibile";
+$a->strings["Private communications are not available for this contact."] = "Le comunicazioni private non sono disponibili per questo contatto.";
