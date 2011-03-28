@@ -243,31 +243,52 @@ function profile_content(&$a, $update = 0) {
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
-		AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `wall` = 1 )
+		AND `item`.`id` = `item`.`parent` AND `item`.`wall` = 1
 		$sql_extra ",
 		intval($a->profile['profile_uid'])
 
 	);
 
-	if(count($r))
+	if(count($r)) {
 		$a->set_pager_total($r[0]['total']);
+		$a->set_pager_itemspage(40);
+	}
 
-	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-		`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`network`, `contact`.`rel`, 
-		`contact`.`thumb`, `contact`.`self`, 
-		`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
+	$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact-uid`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-		AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `wall` = 1 )
+		AND `item`.`id` = `item`.`parent` AND `item`.`wall` = 1
 		$sql_extra
-		ORDER BY `parent` DESC, `gravity` ASC, `id` ASC LIMIT %d ,%d ",
+		LIMIT %d ,%d ",
 		intval($a->profile['profile_uid']),
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
 
 	);
 
+	$parents_arr = array();
+	$parents_str = '';
+
+	if(count($r)) {
+		foreach($r as $rr)
+			$parents_arr[] = $rr['item_id'];
+		$parents_str = implode(', ', $parents_arr);
+ 
+		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
+			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`network`, `contact`.`rel`, 
+			`contact`.`thumb`, `contact`.`self`, 
+			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
+			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
+			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+			AND `item`.`parent` IN ( %s )
+			$sql_extra
+			ORDER BY `parent` DESC, `gravity` ASC, `item`.`id` ASC ",
+			intval($a->profile['profile_uid']),
+			dbesc($parents_str)
+		);
+	}
 
 	if($is_owner && ! $update)
 		$o .= get_birthdays();
@@ -292,6 +313,16 @@ function profile_content(&$a, $update = 0) {
 
 	if($r !== false && count($r)) {
 
+		$comments = array();
+		foreach($r as $rr) {
+			if(intval($rr['gravity']) == 6) {
+				if(! x($comments,$rr['parent']))
+					$comments[$rr['parent']] = 1;
+				else
+					$comments[$rr['parent']] += 1;
+			}
+		}
+
 		foreach($r as $item) {
 			like_puller($a,$item,$alike,'like');
 			like_puller($a,$item,$dlike,'dislike');
@@ -310,6 +341,25 @@ function profile_content(&$a, $update = 0) {
 			if(((activity_match($item['verb'],ACTIVITY_LIKE)) || (activity_match($item['verb'],ACTIVITY_DISLIKE))) 
 				&& ($item['id'] != $item['parent']))
 				continue;
+
+			if($item['id'] == $item['parent']) {
+				$comments_seen = 0;
+				$comments_collapsed = false;
+			}
+			else
+				$comments_seen ++;
+
+
+			if(($comments[$item['parent']] > 2) && ($comments_seen <= ($comments[$item['parent']] - 2)) && ($item['gravity'] == 6)) {
+				if(! $comments_collapsed) {
+					$o .= '<div class="ccollapse-wrapper fakelink" id="ccollapse-wrapper-' . $item['parent'] . '" onclick="openClose(' . '\'ccollapse-' . $item['parent'] . '\');" >' . sprintf( t('See all %d comments'), $comments[$item['parent']]) . '</div>';
+					$o .= '<div class="ccollapse" id="ccollapse-' . $item['parent'] . '" style="display: none;" >';
+					$comments_collapsed = true;
+				}
+			}
+			if(($comments[$item['parent']] > 2) && ($comments_seen == ($comments[$item['parent']] - 1))) {
+				$o .= '</div></div>';
+			}
 
 			$lock = ((($item['private']) || (($item['uid'] == local_user()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
 				|| strlen($item['deny_cid']) || strlen($item['deny_gid']))))

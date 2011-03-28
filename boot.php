@@ -1068,6 +1068,7 @@ function paginate(&$a) {
 	$stripped = preg_replace('/(&page=[0-9]*)/','',$a->query_string);
 	$stripped = str_replace('q=','',$stripped);
 	$stripped = trim($stripped,'/');
+	$pagenum = $a->pager['page'];
 	$url = $a->get_baseurl() . '/' . $stripped;
 
 
@@ -1080,7 +1081,7 @@ function paginate(&$a) {
 
     		$numpages = $a->pager['total'] / $a->pager['itemspage'];
 
-		$numstart = 1;
+			$numstart = 1;
     		$numstop = $numpages;
 
     		if($numpages > 14) {
