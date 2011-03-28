@@ -51,6 +51,11 @@ blockquote:before {
 	content: '>> ';
 }
 
+.icollapse-wrapper, .ccollapse-wrapper {
+	border: 1px solid #CCC;
+	padding: 5px;
+}
+
 #panel {
 	background-color: ivory;
 	position: absolute;

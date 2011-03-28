@@ -546,6 +546,10 @@ function network_content(&$a, $update = 0) {
 	}
 
 	if(! $update) {
+		if($blowhard_count > 3)
+			$o .= '</div>';
+
+
 		$o .= paginate($a);
 		$o .= '<div class="cc-license">' . t('Shared content is covered by the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> license.') . '</div>';
 	}
