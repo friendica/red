@@ -260,7 +260,7 @@ function profile_content(&$a, $update = 0) {
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 		AND `item`.`id` = `item`.`parent` AND `item`.`wall` = 1
 		$sql_extra
-		LIMIT %d ,%d ",
+		ORDER BY `item`.`created` DESC LIMIT %d ,%d ",
 		intval($a->profile['profile_uid']),
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
