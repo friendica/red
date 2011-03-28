@@ -1,3 +1,3 @@
-<h1>User registrations waiting for confirm</h1>
+<h1>Inscriptions d'utilisateurs en attente de confirmation</h1>
 
 

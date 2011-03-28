@@ -1,18 +1,18 @@
-<h1>Upload Profile Photo</h1>
+<h1>Téléverser une photo de profil</h1>
 
 <form enctype="multipart/form-data" action="profile_photo" method="post">
 
 <div id="profile-photo-upload-wrapper">
-<label id="profile-photo-upload-label" for="profile-photo-upload">Upload File: </label>
+<label id="profile-photo-upload-label" for="profile-photo-upload">Fichier à téléverser: </label>
 <input name="userfile" type="file" id="profile-photo-upload" size="48" />
 </div>
 
 <div id="profile-photo-submit-wrapper">
-<input type="submit" name="submit" id="profile-photo-submit" value="Upload">
+<input type="submit" name="submit" id="profile-photo-submit" value="Envoyer">
 </div>
 
 </form>
 
 <div id="profile-photo-link-select-wrapper">
-or <a href='photos/$user'>select a photo from albums</a>
+ou <a href='photos/$user'>choisissez une photo dans vos albums</a>
 </div>
