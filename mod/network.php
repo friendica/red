@@ -365,10 +365,9 @@ function network_content(&$a, $update = 0) {
 				}
 				else {
 					$blowhard = $item['cid'];					
-					if($blowhard_count > 3) {
-						$blowhard_count = 0;
+					if($blowhard_count > 3)
 						$o .= '</div>';
-					}
+					$blowhard_count = 0;
 				}
 
 				$comments_seen = 0;
