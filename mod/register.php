@@ -199,6 +199,24 @@ function register_post(&$a) {
 		return;
 	} 		
 
+	/**
+	 * if somebody clicked submit twice very quickly, they could end up with two accounts 
+	 * due to race condition. Remove this one.
+	 */
+
+	$r = q("SELECT `uid` FROM `user`
+               	WHERE `nickname` = '%s' ",
+               	dbesc($nickname)
+	);
+	if((count($r) > 1) && $newuid) {
+		$err .= t('Nickname is already registered. Please choose another.') . EOL;
+		q("DELETE FROM `user` WHERE `uid` = %d LIMIT 1",
+			intval($newuid)
+		);
+		notice ($err);
+		return;
+	}
+
 	if(x($newuid) !== false) {
 		$r = q("INSERT INTO `profile` ( `uid`, `profile-name`, `is-default`, `name`, `photo`, `thumb`, `publish`, `net-publish` )
 			VALUES ( %d, '%s', %d, '%s', '%s', '%s', %d, %d ) ",

@@ -1,10 +1,10 @@
-$from sent you a new private message at $siteName.
+$from har skickat ett personligt meddelande till dig på $siteName.
 	
 $title
 
 $textversion
 				
-Please login at $siteurl to read and reply to your private messages.
+Logga in på $siteurl för att läsa och svara på personliga meddelanden.
 
-Thank you,
-$siteName administrator
+Hälsningar,
+$siteName admin

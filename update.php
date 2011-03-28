@@ -410,3 +410,11 @@ function update_1042() {
 function update_1043() {
 	q("ALTER TABLE `user` ADD `blockwall` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `blocked` ");
 }
+
+function update_1044() {
+	q("ALTER TABLE `profile` ADD FULLTEXT ( `pub_keywords` ) ");
+	q("ALTER TABLE `profile` ADD FULLTEXT ( `prv_keywords` ) ");
+}
+
+
+	

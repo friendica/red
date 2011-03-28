@@ -16,7 +16,7 @@ body {
 }
 
 
-a, a:visited { color: #3465a4; text-decoration: none; }
+a, a:visited, a:link { color: #3465a4; text-decoration: none; }
 a:hover {text-decoration: underline; }
 
 input {
@@ -49,6 +49,11 @@ code {
 }
 blockquote:before {
 	content: '>> ';
+}
+
+.icollapse-wrapper, .ccollapse-wrapper {
+	border: 1px solid #CCC;
+	padding: 5px;
 }
 
 #panel {
@@ -218,7 +223,7 @@ div.wall-item-content-wrapper.shiny {
 	cursor: pointer;
 }
 
-.fakelink, .fakelink:visited {
+.fakelink, .fakelink:visited, .fakelink:link {
 	color: #3465a4;
 	text-decoration: none;
 	cursor: pointer;
@@ -372,6 +377,7 @@ input#dfrn-url {
 }
 
 #settings-nick-wrapper {
+	margin-top: 20px;
 	margin-bottom: 30px;
 }
 
@@ -1843,7 +1849,7 @@ a.mail-list-link {
 	margin-bottom: 15px;
 }
 
-#photos-upload-perms-menu, #photos-upload-perms-menu:visited {
+#photos-upload-perms-menu, #photos-upload-perms-menu:visited, #photos-upload-perms-menu:link {
 	color: #8888FF;
 	text-decoration: none;
 	cursor: pointer;
@@ -2044,8 +2050,8 @@ a.mail-list-link {
 }
 
 
-#plugin-settings-link, #account-settings-link {
-	margin-bottom: 25px;
+#plugin-settings-link, #account-settings-link, #uexport-link {
+	margin-bottom: 10px;
 }
 
 /* end from defautlt */

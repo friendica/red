@@ -183,8 +183,11 @@ function network_content(&$a, $update = 0) {
 		intval($_SESSION['uid'])
 	);
 
-	if(count($r))
+	if(count($r)) {
 		$a->set_pager_total($r[0]['total']);
+		$a->set_pager_itemspage(40);
+	}
+
 
 	if($nouveau) {
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
@@ -203,21 +206,41 @@ function network_content(&$a, $update = 0) {
 		);
 	}
 	else {
-		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`, 
-			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-			FROM `item`, (SELECT `p`.`id`,`p`.`created` FROM `item` AS `p` WHERE `p`.`parent`=`p`.`id`) as `parentitem`, `contact` 
+		$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact_uid`
+			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-			AND `contact`.`id` = `item`.`contact-id`
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-			AND `item`.`parent` = `parentitem`.`id`
+			AND `item`.`parent` = `item`.`id`
 			$sql_extra
-			ORDER BY `parentitem`.`created`  DESC, `item`.`gravity` ASC, `item`.`created` ASC LIMIT %d ,%d ",
+			ORDER BY `item`.`created` DESC LIMIT %d ,%d ",
 			intval(local_user()),
 			intval($a->pager['start']),
 			intval($a->pager['itemspage'])
 		);
+
+		$parents_arr = array();
+		$parents_str = '';
+
+		if(count($r)) {
+			foreach($r as $rr)
+				$parents_arr[] = $rr['item_id'];
+			$parents_str = implode(', ', $parents_arr);
+
+			$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
+				`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
+				`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
+				`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
+				FROM `item`, (SELECT `p`.`id`,`p`.`created` FROM `item` AS `p` WHERE `p`.`parent`=`p`.`id`) as `parentitem`, `contact`
+				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+				AND `contact`.`id` = `item`.`contact-id`
+				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+				AND `item`.`parent` = `parentitem`.`id` AND `item`.`parent` IN ( %s )
+				$sql_extra
+				ORDER BY `parentitem`.`created`  DESC, `item`.`gravity` ASC, `item`.`created` ASC ",
+				intval(local_user()),
+				dbesc($parents_str)
+			);
+		}
 	}
 
 	$author_contacts = extract_item_authors($r,local_user());
@@ -303,11 +326,24 @@ function network_content(&$a, $update = 0) {
 		}
 
 
+		$comments = array();
+		foreach($r as $rr) {
+			if(intval($rr['gravity']) == 6) {
+				if(! x($comments,$rr['parent']))
+					$comments[$rr['parent']] = 1;
+				else
+					$comments[$rr['parent']] += 1;
+			}
+		}
 
 		foreach($r as $item) {
 			like_puller($a,$item,$alike,'like');
 			like_puller($a,$item,$dlike,'dislike');
 		}
+
+		$comments_collapsed = false;
+		$blowhard = 0;
+		$blowhard_count = 0;
 
 		foreach($r as $item) {
 
@@ -320,9 +356,39 @@ function network_content(&$a, $update = 0) {
 			if(((activity_match($item['verb'],ACTIVITY_LIKE)) || (activity_match($item['verb'],ACTIVITY_DISLIKE))) && ($item['id'] != $item['parent']))
 				continue;
 
+			if($item['id'] == $item['parent']) {
+				if($blowhard == $item['cid'] && (! $item['self'])) {
+					$blowhard_count ++;
+					if($blowhard_count == 3) {
+						$o .= '<div class="icollapse-wrapper fakelink" id="icollapse-wrapper-' . $item['parent'] . '" onclick="openClose(' . '\'icollapse-' . $item['parent'] . '\');" >' . t('See more posts like this') . '</div>' . '<div class="icollapse" id="icollapse-' . $item['parent'] . '" style="display: none;" >';
+					}
+				}
+				else {
+					$blowhard = $item['cid'];					
+					if($blowhard_count > 3)
+						$o .= '</div>';
+					$blowhard_count = 0;
+				}
+
+				$comments_seen = 0;
+				$comments_collapsed = false;
+			}
+			else
+				$comments_seen ++;
+
+
+			if(($comments[$item['parent']] > 2) && ($comments_seen <= ($comments[$item['parent']] - 2)) && ($item['gravity'] == 6)) {
+				if(! $comments_collapsed) {
+					$o .= '<div class="ccollapse-wrapper fakelink" id="ccollapse-wrapper-' . $item['parent'] . '" onclick="openClose(' . '\'ccollapse-' . $item['parent'] . '\');" >' . sprintf( t('See all %d comments'), $comments[$item['parent']]) . '</div>';
+					$o .= '<div class="ccollapse" id="ccollapse-' . $item['parent'] . '" style="display: none;" >';
+					$comments_collapsed = true;
+				}
+			}
+			if(($comments[$item['parent']] > 2) && ($comments_seen == ($comments[$item['parent']] - 1))) {
+				$o .= '</div>';
+			}
+
 			$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
-
-
 
 			$lock = ((($item['private']) || (($item['uid'] == local_user()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
 				|| strlen($item['deny_cid']) || strlen($item['deny_gid']))))
@@ -480,6 +546,10 @@ function network_content(&$a, $update = 0) {
 	}
 
 	if(! $update) {
+		if($blowhard_count > 3)
+			$o .= '</div>';
+
+
 		$o .= paginate($a);
 		$o .= '<div class="cc-license">' . t('Shared content is covered by the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> license.') . '</div>';
 	}
