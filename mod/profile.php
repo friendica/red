@@ -328,6 +328,8 @@ function profile_content(&$a, $update = 0) {
 			like_puller($a,$item,$dlike,'dislike');
 		}
 
+		$comments_collapsed = false;
+
 		foreach($r as $item) {
 
 			$sparkle = '';		

@@ -325,6 +325,7 @@ function network_content(&$a, $update = 0) {
 
 		}
 
+
 		$comments = array();
 		foreach($r as $rr) {
 			if(intval($rr['gravity']) == 6) {
@@ -341,9 +342,11 @@ function network_content(&$a, $update = 0) {
 		}
 
 		$comments_collapsed = false;
+		$blowhard = 0;
+		$blowhard_count = 0;
+
 		foreach($r as $item) {
 
-			
 			$comment = '';
 			$template = $tpl;
 			$commentww = '';
@@ -354,6 +357,20 @@ function network_content(&$a, $update = 0) {
 				continue;
 
 			if($item['id'] == $item['parent']) {
+				if($blowhard == $item['cid'] && (! $item['self'])) {
+					$blowhard_count ++;
+					if($blowhard_count == 3) {
+						$o .= '<div class="icollapse-wrapper fakelink" id="icollapse-wrapper-' . $item['parent'] . '" onclick="openClose(' . '\'icollapse-' . $item['parent'] . '\');" >' . t('See more posts like this') . '</div>' . '<div class="icollapse" id="icollapse-' . $item['parent'] . '" style="display: none;" >';
+					}
+				}
+				else {
+					$blowhard = $item['cid'];					
+					if($blowhard_count > 3) {
+						$blowhard_count = 0;
+						$o .= '</div>';
+					}
+				}
+
 				$comments_seen = 0;
 				$comments_collapsed = false;
 			}
@@ -369,7 +386,7 @@ function network_content(&$a, $update = 0) {
 				}
 			}
 			if(($comments[$item['parent']] > 2) && ($comments_seen == ($comments[$item['parent']] - 1))) {
-				$o .= '</div></div>';
+				$o .= '</div>';
 			}
 
 			$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
