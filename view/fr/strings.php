@@ -579,3 +579,29 @@ $a->strings["[today]"] = "[aujourd'hui]";
 $a->strings["link to source"] = "lien original";
 $a->strings["Not Found"] = "Non trouvé";
 $a->strings["Page not found."] = "Page introuvable.";
+$a->strings["This is Friendika version"] = "Motorisé par Friendika version";
+$a->strings["running at web location"] = "hébergé sur";
+$a->strings["Shared content within the Friendika network is provided under the <a href=\"http://creativecommons.org/licenses/by/3.0/\">Creative Commons Attribution 3.0 license</a>"] = "Les contenus partagés au sein du réseau Friendika le sont sous la licence <a href=\"http://creativecommons.org/licenses/by/3.0/\">Creative Commons Attribution 3.0</a>";
+$a->strings["Please visit <a href=\"http://project.friendika.com\">Project.Friendika.com</a> to learn more about the Friendika project."] = "Pour en savoir plus, vous pouvez nous rendre visite sur <a href=\"http://project.friendika.com\">Project.Friendika.com</a>";
+$a->strings["Bug reports and issues: please visit"] = "Pour les rapports de bugs: rendez vous sur";
+$a->strings["Suggestions, praise, donations, etc. - please email \"Info\" at Friendika - dot com"] = "Suggestions, remerciements, donations, etc. - écrivez à \"Info\" arob. Friendika - point com";
+$a->strings["Installed plugins/addons/apps"] = "Extensions/greffons/applications installées";
+$a->strings["No installed plugins/addons/apps"] = "Aucune extension/greffon/application installée";
+$a->strings["Profile Match"] = "Correpondance de profils";
+$a->strings["No matches"] = "Aucune correspondance";
+$a->strings["See more posts like this"] = "Davantage de publications similaires";
+$a->strings["See all %d comments"] = "Voir les %d commentaires";
+$a->strings["Proceed with Installation"] = "Commencer l'installation";
+$a->strings["Your Friendika site database has been installed."] = "La base de données de votre site Friendika a été installée.";
+$a->strings["Proceed to registration"] = "Commencer l'inscription";
+$a->strings["Export Personal Data"] = "Exporter les données personnelles";
+$a->strings["Gender: "] = "Genre: ";
+$a->strings["No entries (some entries may be hidden)."] = "Aucune entrée (certaines peuvent être cachées).";
+$a->strings["Status"] = "Statut";
+$a->strings["Profile"] = "Profil";
+$a->strings["Photos"] = "Photos";
+$a->strings["Find People With Shared Interests"] = "Trouver des gens d'intérêts communs";
+$a->strings["%d Contact"] = array(
+	0 => "%d contact",
+	1 => "%d contacts",
+);

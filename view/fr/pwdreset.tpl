@@ -1,16 +1,18 @@
-<h3>Password Reset</h3>
+<h3>Mot de passe réinitialisé</h3>
 
 <p>
-Your password has been reset as requested.
+Votre mot de passe a été changé, comme demandé.
 </p>
 <p>
-Your new password is
+Votre nouveau mot de passe est 
 </p>
 <p>
 $newpass
 </p>
 <p>
-Save or copy your new password - and then <a href="$baseurl" >click here to login</a>.
+Sauvez ou copiez ce nouveau mot de passe - puis <a href="$baseurl" >connectez-vous</a>.
+
 </p>
 <p>
-Your password may be changed from the 'Settings' page after successful login.
+Votre mot de passe pourra être changé, après connexion, dans la page 'Réglages'.
+
