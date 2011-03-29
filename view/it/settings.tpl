@@ -58,7 +58,7 @@ $theme
 </div>
 
 
-<h3 class="settings-heading">Impostazioni si Sicurezza e Privacy</h3>
+<h3 class="settings-heading">Impostazioni di Sicurezza e Privacy</h3>
 
 
 <input type="hidden" name="visibility" value="$visibility" />
@@ -92,13 +92,13 @@ $profile_in_net_dir
 <div id="settings-default-perms-end"></div>
 
 <div id="settings-blockw-wrapper" >
-<label id="settings-blockw-label" for="settings-blockw" >Allow friends to post to your profile page: </label>
+<label id="settings-blockw-label" for="settings-blockw" >Permetti agli amici di inviare messaggi sulla tua pagina del profilo: </label>
 <input type="checkbox" name="blockwall" id="settings-blockw" value="1" $blockw_checked />
 </div>
 <div id="settings-blockw-end" ></div>
 
 
-<div id="settings-expire-desc">Automatically expire (delete) posts older than <input type="text" size="3" name="expire" value="$expire" /> days</div>
+<div id="settings-expire-desc">Cancella automaticamente i messaggi pi&ugrave; vecchi di <input type="text" size="3" name="expire" value="$expire" /> giorni</div>
 <div id="settings-expire-end"></div>
 
 <div class="settings-submit-wrapper" >
