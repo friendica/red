@@ -99,7 +99,7 @@ $profile_in_net_dir
 
 
 
-<div id="settings-expire-desc">Ta automatiskt bort inl&auml;gg som &auml;r &auml;ldre &auml;n <input type="text" size="3" name="expire" value="$expire" /> days</div>
+<div id="settings-expire-desc">Ta automatiskt bort inl&auml;gg som &auml;r &auml;ldre &auml;n <input type="text" size="3" name="expire" value="$expire" /> dagar</div>
 <div id="settings-expire-end"></div>
 
 
