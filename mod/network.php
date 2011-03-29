@@ -114,7 +114,7 @@ function network_content(&$a, $update = 0) {
 			'$lockstate' => $lockstate,
 			'$acl' => populate_acl((($group) ? $group_acl : $a->user), $celeb),
 			'$bang' => (($group) ? '!' : ''),
-			'$profile_uid' => $_SESSION['uid']
+			'$profile_uid' => local_user()
 		));
 
 
@@ -190,6 +190,9 @@ function network_content(&$a, $update = 0) {
 
 
 	if($nouveau) {
+
+		// "New Item View" - show all items unthreaded in reverse created date order
+
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
 			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
@@ -206,6 +209,10 @@ function network_content(&$a, $update = 0) {
 		);
 	}
 	else {
+
+		// Normal conversation view
+		// First fetch a known number of parent items
+
 		$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact_uid`
 			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
@@ -217,6 +224,9 @@ function network_content(&$a, $update = 0) {
 			intval($a->pager['start']),
 			intval($a->pager['itemspage'])
 		);
+
+
+		// Then fetch all the children of the parents that are on this page
 
 		$parents_arr = array();
 		$parents_str = '';
@@ -243,6 +253,10 @@ function network_content(&$a, $update = 0) {
 		}
 	}
 
+	// find all the authors involved in remote conversations
+	// We will use a local profile photo if they are one of our contacts
+	// otherwise we have to get the photo from the item owner's site
+
 	$author_contacts = extract_item_authors($r,local_user());
 
 	$cmnt_tpl = load_view_file('view/comment_item.tpl');
@@ -257,6 +271,8 @@ function network_content(&$a, $update = 0) {
 	if(count($r)) {
 
 		if($nouveau) {
+
+			// "New Item View" - just loop through the items and format them minimally for display
 
 			$tpl = load_view_file('view/search_item.tpl');
 			$droptpl = load_view_file('view/wall_fake_drop.tpl');
@@ -325,6 +341,12 @@ function network_content(&$a, $update = 0) {
 
 		}
 
+		// Normal View
+
+
+		// Figure out how many comments each parent has
+		// (Comments all have gravity of 6)
+		// Store the result in the $comments array
 
 		$comments = array();
 		foreach($r as $rr) {
@@ -335,6 +357,9 @@ function network_content(&$a, $update = 0) {
 					$comments[$rr['parent']] += 1;
 			}
 		}
+
+		// map all the like/dislike activities for each parent item 
+		// Store these in the $alike and $dlike arrays
 
 		foreach($r as $item) {
 			like_puller($a,$item,$alike,'like');
@@ -353,8 +378,17 @@ function network_content(&$a, $update = 0) {
 			$sparkle = '';
 			$owner_url = $owner_photo = $owner_name = '';
 
-			if(((activity_match($item['verb'],ACTIVITY_LIKE)) || (activity_match($item['verb'],ACTIVITY_DISLIKE))) && ($item['id'] != $item['parent']))
+
+			// We've already parsed out like/dislike for special treatment. We can ignore them now
+
+			if(((activity_match($item['verb'],ACTIVITY_LIKE)) 
+				|| (activity_match($item['verb'],ACTIVITY_DISLIKE))) 
+				&& ($item['id'] != $item['parent']))
 				continue;
+
+			// Take care of author collapsing and comment collapsing
+			// If a single author has more than 3 consecutive top-level posts, squash the remaining ones.
+			// If there are more than two comments, squash all but the last 2.
 
 			if($item['id'] == $item['parent']) {
 				if($blowhard == $item['cid'] && (! $item['self'])) {
@@ -387,6 +421,8 @@ function network_content(&$a, $update = 0) {
 			if(($comments[$item['parent']] > 2) && ($comments_seen == ($comments[$item['parent']] - 1))) {
 				$o .= '</div>';
 			}
+
+
 
 			$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 
@@ -546,6 +582,9 @@ function network_content(&$a, $update = 0) {
 	}
 
 	if(! $update) {
+
+		// if author collapsing is in force but didn't get closed, close it off now.
+
 		if($blowhard_count > 3)
 			$o .= '</div>';
 
