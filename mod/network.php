@@ -399,7 +399,7 @@ function network_content(&$a, $update = 0) {
 				}
 				else {
 					$blowhard = $item['cid'];					
-					if($blowhard_count > 3)
+					if($blowhard_count >= 3)
 						$o .= '</div>';
 					$blowhard_count = 0;
 				}
@@ -585,7 +585,7 @@ function network_content(&$a, $update = 0) {
 
 		// if author collapsing is in force but didn't get closed, close it off now.
 
-		if($blowhard_count > 3)
+		if($blowhard_count >= 3)
 			$o .= '</div>';
 
 
