@@ -101,7 +101,7 @@ $hide_friends
 <div class="profile-edit-submit-end"></div>
 
 <div id="profile-edit-marital-wrapper" >
-<label id="profile-edit-marital-label" for="profile-edit-marital" ><span class="heart">&hearts;</span> Civilstatus: </label>
+<label id="profile-edit-marital-label" for="profile-edit-marital" ><span class="heart">&hearts;</span> Civilst&aring;nd: </label>
 $marital
 </div>
 <label id="profile-edit-with-label" for="profile-edit-with" > Vem: (om aktuellt) </label>
