@@ -1,6 +1,7 @@
 <p>
-It appears that your website is located in a subdirectory of the<br />
-$hostname website, so this setting may not work reliably.<br />
+Il semble que votre site soit situé dans un sous-répertoire du<br />
+site $hostname, ce réglage pourrait donc ne pas marcher comme prévu.<br />
 </p>
-<p>If you have any issues, you may have better results using the profile<br /> address '<strong>$baseurl/profile/$nickname</strong>'.
+<p>Si vous avez le moindre problème, essayez d'utiliser l'adresse <br />
+de profil suivante : '<strong>$baseurl/profile/$nickname</strong>'.
 </p>

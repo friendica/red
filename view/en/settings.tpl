@@ -91,7 +91,7 @@ $profile_in_net_dir
 <div id="settings-default-perms-end"></div>
 
 <div id="settings-blockw-wrapper" >
-<label id="settings-blockw-label" for="settings-blockw" >Allow friends to post to your profile: </label>
+<label id="settings-blockw-label" for="settings-blockw" >Allow friends to post to your profile page: </label>
 <input type="checkbox" name="blockwall" id="settings-blockw" value="1" $blockw_checked />
 </div>
 <div id="settings-blockw-end" ></div>

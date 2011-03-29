@@ -37,6 +37,11 @@
 		}
 	}
 
+	if(x($a->config,'php_path'))
+		$phpath = $a->config['php_path'];
+	else
+		$phpath = 'php';
+
 	echo "String files\n";
 
 	echo 'util/strings.php' . "\n";
@@ -47,5 +52,6 @@
 
 	foreach($files as $file) {
 		echo $file . "\n";
-		include_once($file);
+	passthru($phpath . ' util/typohelper.php ' . $file);
+//		include_once($file);
 	}

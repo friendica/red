@@ -1,7 +1,7 @@
 
 <div id="settings-nick-wrapper" >
 <p id="settings-nickname-desc">
-<span class="error-message">Your profile address is <strong>'$nickname@$basepath'</strong></span>
+<span class="error-message">L'adresse de votre profil est <strong>'$nickname@$basepath'</strong></span>
 </p>
 $subdir
 
