@@ -1,5 +1,6 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <base href="$baseurl" />
+<meta name="generator" content="$generator" />
 <link rel="stylesheet" type="text/css" href="$stylesheet" media="all" />
 <link rel="shortcut icon" href="$baseurl/images/friendika-32.png" />
 
@@ -10,9 +11,9 @@
 <script type="text/javascript" src="$baseurl/include/main.js" ></script>
 <script>
 
-	function confirmDelete() { return confirm("Delete this item?"); }
+	function confirmDelete() { return confirm("$delitem"); }
 	function commentOpen(obj,id) {
-		if(obj.value == 'Comment') {
+		if(obj.value == '$comment') {
 			obj.value = '';
 			obj.className = "comment-edit-text-full";
 			openMenu("comment-edit-submit-wrapper-" + id);
@@ -20,7 +21,7 @@
 	}
 	function commentClose(obj,id) {
 		if(obj.value == '') {
-			obj.value = 'Comment';
+			obj.value = '$comment';
 			obj.className="comment-edit-text-empty";
 			closeMenu("comment-edit-submit-wrapper-" + id);
 		}
