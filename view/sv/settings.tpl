@@ -2,6 +2,8 @@
 
 <div id="plugin-settings-link"><a href="settings/addon">Inst&auml;llningar f&ouml;r insticksprogram</a></div>
 
+$uexport
+
 $nickname_block
 
 
@@ -31,7 +33,7 @@ $zoneselect
 <div id="settings-timezone-end" ></div>
 
 <div id="settings-defloc-wrapper" >
-<label id="settings-defloc-label" for="settings-defloc" >F&ouml;rvald plats: </label>
+<label id="settings-defloc-label" for="settings-defloc" >Standardplats: </label>
 <input type="text" name="defloc" id="settings-defloc" value="$defloc" />
 </div>
 <div id="settings-defloc-end" ></div>
@@ -46,7 +48,7 @@ $zoneselect
 
 
 <div id="settings-theme-select">
-<label id="settings-theme-label" for="theme-select" >Tema f&ouml;r layout: </label>
+<label id="settings-theme-label" for="theme-select" >Utseende (tema): </label>
 $theme
 </div>
 <div id="settings-theme-end"></div>
@@ -78,7 +80,7 @@ $profile_in_net_dir
 
 
 <div id="settings-default-perms" class="settings-default-perms" >
-	<div id="settings-default-perms-menu" class="fakelink" onClick="openClose('settings-default-perms-select');" >&#x21e9; $permissions</div>
+	<div id="settings-default-perms-menu" class="fakelink" onClick="openClose('settings-default-perms-select');" >$permissions</div>
 	<div id="settings-default-perms-menu-end"></div>
 
 	<div id="settings-default-perms-select" style="display: none;" >
@@ -88,6 +90,19 @@ $profile_in_net_dir
 	</div>
 </div>
 <div id="settings-default-perms-end"></div>
+
+<div id="settings-blockw-wrapper" >
+<label id="settings-blockw-label" for="settings-blockw" >L&aring;t kontakter g&ouml;ra inl&auml;gg p&aring; din profilsida: </label>
+<input type="checkbox" name="blockwall" id="settings-blockw" value="1" $blockw_checked />
+</div>
+<div id="settings-blockw-end" ></div>
+
+
+
+<div id="settings-expire-desc">Ta automatiskt bort inl&auml;gg som &auml;r &auml;ldre &auml;n <input type="text" size="3" name="expire" value="$expire" /> days</div>
+<div id="settings-expire-end"></div>
+
+
 
 <div class="settings-submit-wrapper" >
 <input type="submit" name="submit" class="settings-submit" value="Spara" />
