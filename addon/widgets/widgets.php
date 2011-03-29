@@ -56,6 +56,7 @@ function widgets_settings(&$a,&$o) {
 		$o.='<h4>Widgets:</h4>
 		<ul>
 			<li><a href="'.$a->get_baseurl().'/widgets/friends/?p=1&k='.$key.'">Friend list</a></li>
+			<li><a href="'.$a->get_baseurl().'/widgets/like/?p=1&k='.$key.'">Likes count</a></li>
 		</ul>
 		';
 	}
@@ -92,21 +93,37 @@ function widgets_content(&$a) {
 
 	$o = "";	
 
-//	echo "<pre>"; var_dump($a->argv); die();
+	$widgetfile =dirname(__file__)."/widget_".$a->argv[1].".php";
+	if (file_exists($widgetfile)){
+		require_once($widgetfile);
+	} else {
+		if($a->argv[2]=="cb"){header('HTTP/1.0 400 Bad Request'); killme();}
+		return;
+	}		
+	
+
+
+
+	//echo "<pre>"; var_dump($a->argv); die();
 	if ($a->argv[2]=="cb"){
-		switch($a->argv[1]) {
-			case 'friends': 
-				widget_friends_content($a, $o, $conf);
-				break;
-		}
+		if (!local_user()){
+			if (!isset($_GET['s']))
+				{header('HTTP/1.0 400 Bad Request'); killme();}
+			
+			if (substr($_GET['s'],0,strlen($conf['site'])) !== $conf['site'])
+				{header('HTTP/1.0 400 Bad Request'); killme();}
+		} 
+		widget_content($a, $o, $conf);
 		
 	} else {
 
 		
-		if (isset($_GET['p'])) {
+		if (isset($_GET['p']) && local_user()==$conf['uid'] ) {
 			$o .= "<style>.f9k_widget { float: left;border:1px solid black; }</style>";
 			$o .= "<h1>Preview Widget</h1>";
 			$o .= '<a href="'.$a->get_baseurl().'/settings/addon">'. t("Plugin Settings") .'</a>';
+			$o .= "<br style='clear:left'/><br/>";			
+			widget_help($a, $o, $conf);
 			$o .= "<br style='clear:left'/><br/>";
 			$o .= "<script>";
 		} else {
@@ -126,12 +143,17 @@ function widgets_content(&$a) {
 
 	
 		if (isset($_GET['p'])) {
+			$jsargs = implode("</em>,<em>", widget_args());
+			if ($jsargs!='') $jsargs = "&a=<em>".$jsargs."</em>";
+				
 			$o .= "</script>
 			<br style='clear:left'/><br/>
 			<h4>Copy and paste this code</h4>
 			<code>"
 			
-			.htmlspecialchars('<script src="'.$a->get_baseurl().'/widgets/'.$a->argv[1].'?k='.$conf['key'].'"></script>')
+			.htmlspecialchars('<script src="'.$a->get_baseurl().'/widgets/'.$a->argv[1].'?k='.$conf['key'])
+			.$jsargs
+			.htmlspecialchars('"></script>')
 			."</code>";
 			return $o;
 		}	
@@ -143,31 +165,6 @@ function widgets_content(&$a) {
 }
 
 
-function widget_friends_content(&$a, &$o, $conf){
-	if (!local_user()){
-		if (!isset($_GET['s']))
-			header('HTTP/1.0 400 Bad Request');
-		
-		if (substr($_GET['s'],0,strlen($conf['site'])) !== $conf['site'])
-			header('HTTP/1.0 400 Bad Request');
-	} 
-	$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `user`.* FROM `profile` 
-			LEFT JOIN `user` ON `profile`.`uid` = `user`.`uid`
-			WHERE `user`.`uid` = %s AND `profile`.`is-default` = 1 LIMIT 1",
-			intval($conf['uid'])
-	);
-	
-	if(!count($r)) return;
-	$a->profile = $r[0];
 
-	$o .= "<style>
-		.f9k_widget .contact-block-div { display: block !important; float: left!important; width: 50px!important; height: 50px!important; margin: 2px!important;}
-		.f9k_widget #contact-block-end { clear: left; }
-	</style>";
-	$o .= _abs_url(contact_block());
-	$o .= "<a href='".$a->get_baseurl().'/profile/'.$a->profile['nickname']."'>". t('Connect on Friendika!') ."</a>";
-	
-
-}
  
 ?>
