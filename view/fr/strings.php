@@ -605,3 +605,13 @@ $a->strings["%d Contact"] = array(
 	0 => "%d contact",
 	1 => "%d contacts",
 );
+$a->strings["Post successful."] = "Publication réussie.";
+$a->strings["Enter a title for this item"] = "Saisissez un titre pour cet élément";
+$a->strings["Set title"] = "Définir un titre";
+$a->strings["Crop Image"] = "(Re)cadrer l'image";
+$a->strings["Please adjust the image cropping for optimum viewing."] = "Ajustez le cadre de l'image pour une visualisation optimale.";
+$a->strings["Done Editing"] = "Édition terminée";
+$a->strings["Pending Friend/Connect Notifications"] = "Notifications de relation/amitié enattente";
+$a->strings["User registrations waiting for confirm"] = "Inscriptions d'utilisateurs en attente de confirmation";
+$a->strings["Delete this item?"] = "Effacer cet élément?";
+$a->strings["Comment"] = "Commenter";
