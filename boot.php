@@ -2,7 +2,7 @@
 
 set_time_limit(0);
 
-define ( 'FRIENDIKA_VERSION',      '2.1.932' );
+define ( 'FRIENDIKA_VERSION',      '2.1.933' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.1'  );
 define ( 'DB_UPDATE_VERSION',      1045   );
 
@@ -352,10 +352,12 @@ class App {
 
 	function init_pagehead() {
 		$this->page['title'] = $this->config['sitename'];
-		$tpl = load_view_file("view/head.tpl");
+		$tpl = load_view_file('view/head.tpl');
 		$this->page['htmlhead'] = replace_macros($tpl,array(
 			'$baseurl' => $this->get_baseurl() . '/',
-			'$generator' => 'Friendika' . ' ' . FRIENDIKA_VERSION
+			'$generator' => 'Friendika' . ' ' . FRIENDIKA_VERSION,
+			'$delitem' => t('Delete this item?'),
+			'$comment' => t('Comment')
 		));
 	}
 

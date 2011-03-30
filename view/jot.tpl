@@ -12,6 +12,7 @@
 		<input type="hidden" name="return" value="$return_path" />
 		<input type="hidden" name="location" id="jot-location" value="$defloc" />
 		<input type="hidden" name="coord" id="jot-coord" value="" />
+		<input type="hidden" name="title" id="jot-title" value="" />
 		<input type="hidden" name="post_id" value="$post_id" />
 
 		<textarea rows="5" cols="64" class="profile-jot-text" id="profile-jot-text" name="body" >$content</textarea>
@@ -40,6 +41,10 @@
 	<div id="profile-nolocation-wrapper" style="display: none;" >
 		<img id="profile-nolocation" src="images/noglobe.gif" alt="$noloc" title="$noloc" onclick="jotClearLocation();" />
 	</div> 
+	<div id="profile-title-wrapper" style="display: $visitor;" >
+		<img id="profile-title" src="images/article.gif" alt="$title" title="$title" onclick="jotTitle();" />
+	</div> 
+
 	<div id="profile-jot-plugin-wrapper">
   	$jotplugins
 	</div>

@@ -126,6 +126,13 @@ tinyMCE.init({
 		}
 	}
 
+	function jotTitle() {
+		reply = prompt("$title", $('#jot-title').val());
+		if(reply && reply.length) {
+			$('#jot-title').val(reply);
+		}
+	}
+
 	function jotShare(id) {
 		$('#like-rotator-' + id).show();
 		$.get('share/' + id, function(data) {

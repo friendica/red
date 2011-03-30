@@ -3,6 +3,8 @@ Options -Indexes
 AddType application/x-java-archive .jar
 AddType audio/ogg .oga
 
+#php_value suhosin.get.max_value_length = 2048
+
 <FilesMatch "\.(out|log)$">
 Deny from all
 </FilesMatch>

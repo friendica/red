@@ -172,7 +172,7 @@ function dfrn_request_post(&$a) {
 					$dfrn_request = $contact_record['request'];
 
 				if(strlen($dfrn_request) && strlen($confirm_key))
-					$s = fetch_url($dfrn_request . '?confirm_key=' . $confirm_key);
+					$s = fetch_url($dfrn_request . '?f=&confirm_key=' . $confirm_key);
 				
 				// (ignore reply, nothing we can do it failed)
 
