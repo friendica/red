@@ -1,9 +1,19 @@
 <div class="wall-item-outside-wrapper$indent" id="wall-item-outside-wrapper-$id" >
 	<div class="wall-item-content-wrapper$indent" id="wall-item-content-wrapper-$id" >
 		<span class="wall-item-info" id="wall-item-info-$id">
-			<div class="wall-item-photo-wrapper" id="wall-item-photo-wrapper-$id" >
+			<div class="wall-item-photo-wrapper" id="wall-item-photo-wrapper-$id" 
+				 onmouseover="openMenu('wall-item-photo-menu-button-$id')" onmouseout="if (document.getElementById('wall-item-photo-menu-$id').style.display!='block')closeMenu('wall-item-photo-menu-button-$id');">
 				<a href="$profile_url" title="$linktitle" class="wall-item-photo-link" id="wall-item-photo-link-$id">
-				<img src="$thumb" class="wall-item-photo$sparkle" id="wall-item-photo-$id" height="80" width="80" alt="$name" /></a>
+					<img src="$thumb" class="wall-item-photo$sparkle" id="wall-item-photo-$id" height="80" width="80" alt="$name" />
+				</a>
+				<span onclick="openClose('wall-item-photo-menu-$id');" class="fakelink wall-item-photo-menu-button" id="wall-item-photo-menu-button-$id">menu</span>
+				<div class="wall-item-photo-menu" id="wall-item-photo-menu-$id">
+					<ul>
+						<li><a href='$profile_tab_url'>View profile</a></li>
+						<li><a href='$contact_url'>Edit contact</a></li>
+						<li><a href='$pm_url'>Send PM</a></li>
+					</ul>
+				</div>
 			</div>
 			<div class="wall-item-photo-end"></div>
 			<div class="wall-item-wrapper" id="wall-item-wrapper-$id" >

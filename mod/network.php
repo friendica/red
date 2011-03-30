@@ -543,6 +543,8 @@ function network_content(&$a, $update = 0) {
 				$indent .= ' shiny'; 
 
 
+			$contact_url = $a->get_baseurl()."/contacts/".$item['cid'];
+
 			// Build the HTML
 
 			$tmp_item = replace_macros($template,array(
@@ -553,6 +555,9 @@ function network_content(&$a, $update = 0) {
 				'$wall' => t('Wall-to-Wall'),
 				'$vwall' => t('via Wall-To-Wall:'),
 				'$profile_url' => $profile_link,
+				'$profile_tab_url' => $profile_link."?tab=profile", //don't work with secure redirects
+				'$contact_url' => $contact_url,
+				'$pm_url' => "",
 				'$name' => $profile_name,
 				'$thumb' => $profile_avatar,
 				'$osparkle' => $osparkle,
