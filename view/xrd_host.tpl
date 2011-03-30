@@ -7,5 +7,6 @@
     <Link rel='lrdd' template='http://$domain/xrd/?uri={uri}' />
     <Link rel='acct-mgmt' href='http://$domain/amcd' />
     <Link rel='http://services.mozilla.com/amcd/0.1' href='http://$domain/amcd' />
-
+	<Link rel="http://oexchange.org/spec/0.8/rel/resident-target" type="application/xrd+xml" 
+		href="http://$domain/oexchange/xrd" />
 </XRD>

@@ -18,6 +18,10 @@ function oembed_uninstall() {
 }
 
 function oembed_hook_page_header($a, &$b){
+
+	if(($a->module !== 'network') && ($a->module !== 'profile'))
+		return; 
+
   $b .= '<script src="addon/oembed/oembed.js"></script>
   <style>#oembed.hide { display: none } 
   #oembed {
@@ -33,11 +37,11 @@ function oembed_hook_page_header($a, &$b){
   <div id="oembed" class="hide"><input id="oembed_url">&nbsp;
     <input type="button" value="Embed" onclick="oembed_do()" style="float:left;">
     <a onclick="oembed(); return false;" style="float:right;"><img onmouseout="imgdull(this);" onmouseover="imgbright(this);" class="wall-item-delete-icon" src="images/b_drophide.gif" style="width: 16px; height: 16px;"></a>
-    <p style="clear:both">Paste a link from 5min.com, Amazon Product Image, blip.tv, Clikthrough, CollegeHumor Video, 
+    <div style="clear:both">Paste a link from 5min.com, Amazon Product Image, blip.tv, Clikthrough, CollegeHumor Video, 
       Daily Show with Jon Stewart, Dailymotion, dotSUB.com, Flickr Photos, Funny or Die Video, 
       Google Video, Hulu, Kinomap, LiveJournal UserPic, Metacafe, National Film Board of Canada, 
       Phodroid Photos, Photobucket, Qik Video, Revision3, Scribd, SlideShare, TwitPic, Twitter Status, 
-      Viddler Video, Vimeo, Wikipedia, Wordpress.com, XKCD Comic, YFrog, YouTube</p> 
+      Viddler Video, Vimeo, Wikipedia, Wordpress.com, XKCD Comic, YFrog, YouTube</div> 
   </div>
   ';
 }

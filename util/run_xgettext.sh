@@ -25,7 +25,7 @@ echo "extract strings to $OUTFILE.."
 find ../../ -name "*.php" | xargs xgettext $KEYWORDS $OPTS -o "$OUTFILE" --from-code=UTF-8
 
 echo "setup base info.."
-sed -i "s/SOME DESCRIPTIVE TITLE./FRIENDIKA Distribuited Social Network/g" "$OUTFILE"
+sed -i "s/SOME DESCRIPTIVE TITLE./FRIENDIKA Distributed Social Network/g" "$OUTFILE"
 sed -i "s/YEAR THE PACKAGE'S COPYRIGHT HOLDER/2010, 2011 Mike Macgirvin/g" "$OUTFILE"
 sed -i "s/FIRST AUTHOR <EMAIL@ADDRESS>, YEAR./Mike Macgirvin, 2010/g" "$OUTFILE"
 sed -i "s/PACKAGE VERSION/$F9KVERSION/g" "$OUTFILE"
