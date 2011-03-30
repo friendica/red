@@ -65,12 +65,11 @@ function notifications_content(&$a) {
 	else
 		$sql_extra = " AND `ignore` = 0 ";
 
-
-	$tpl = load_view_file('view/intros-top.tpl');
-	$o .= replace_macros($tpl,array(
-		'$hide_url' => ((strlen($sql_extra)) ? 'notifications/all' : 'notifications' ),
-		'$hide_text' => ((strlen($sql_extra)) ? t('Show Ignored Requests') : t('Hide Ignored Requests'))
-	)); 
+	$o .= '<h1>' . t('Pending Friend/Connect Notifications') . '</h1>' . "\r\n";
+	
+	$o .= '<div id="notification-show-hide-wrapper" >';
+	$o .= '<a href="' . ((strlen($sql_extra)) ? 'notifications/all' : 'notifications' ) . '" id="notifications-show-hide-link" >'
+		. ((strlen($sql_extra)) ? t('Show Ignored Requests') : t('Hide Ignored Requests')) . '</a></div>' . "\r\n";
 
 
 	$r = q("SELECT COUNT(*)	AS `total` FROM `intro` 
@@ -141,7 +140,7 @@ function notifications_content(&$a) {
 
 	if ($a->config['register_policy'] == REGISTER_APPROVE &&	
 		$a->config['admin_email'] === $a->user['email']){
-		$o .= load_view_file('view/registrations-top.tpl');
+		$o .= '<h1>' . t('User registrations waiting for confirm') . '</h1>' . "\r\n";
 		
 		$r = q("SELECT `register`.*, `contact`.`name`, `user`.`email`
 				 FROM `register`

@@ -1,10 +1,9 @@
-<h1>Bild zuschneiden</h1>
+<h1>$title</h1>
 <p id="cropimage-desc">
-Zur optimalen Darstellung des Bildes kann es nun auf einen Bereich
-zugeschnitten werden. Bitte wähle diesen Bereich.
+$desc
 </p>
 <div id="cropimage-wrapper">
-<img src="$image_url" id="croppa" class="imgCrop" alt="" />
+<img src="$image_url" id="croppa" class="imgCrop" alt="$title" />
 </div>
 <div id="cropimage-preview-wrapper" >
 <div id="previewWrap" ></div>
@@ -42,7 +41,6 @@ zugeschnitten werden. Bitte wähle diesen Bereich.
 
 <form action="profile_photo/$resource" id="crop-image-form" method="post" />
 
-<input type="hidden" name="imagename" value="$hash" />
 <input type="hidden" name="cropfinal" value="1" />
 <input type="hidden" name="xstart" id="x1" />
 <input type="hidden" name="ystart" id="y1" />
@@ -52,7 +50,7 @@ zugeschnitten werden. Bitte wähle diesen Bereich.
 <input type="hidden" name="width"  id="width" />
 
 <div id="crop-image-submit-wrapper" >
-<input type="submit" name="submit" value="Done Editing" />
+<input type="submit" name="submit" value="$done" />
 </div>
 
 </form>

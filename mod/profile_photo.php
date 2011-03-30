@@ -196,9 +196,11 @@ function profile_photo_content(&$a) {
 		$o .= replace_macros($tpl,array(
 			'$filename' => $filename,
 			'$resource' => $a->config['imagecrop'] . '-' . $a->config['imagecrop_resolution'],
-			'$image_url' => $a->get_baseurl() . '/photo/' . $filename
-			));
-
+			'$image_url' => $a->get_baseurl() . '/photo/' . $filename,
+			'$title' => t('Crop Image'),
+			'$desc' => t('Please adjust the image cropping for optimum viewing.'),
+			'$done' => t('Done Editing')
+		));
 		return $o;
 	}
 
