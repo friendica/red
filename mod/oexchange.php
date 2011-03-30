@@ -30,7 +30,7 @@ function oexchange_content(&$a) {
 
 	$url = (((x($_GET,'url')) && strlen($_GET['url'])) ? notags(trim($_GET['url'])) : '');
 
-	$s = fetch_url($a->get_baseurl() . '/parse_url?url=' . $url);
+	$s = fetch_url($a->get_baseurl() . '/parse_url&url=' . $url);
 
 	if(! strlen($s))
 		return;
