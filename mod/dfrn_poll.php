@@ -63,7 +63,7 @@ function dfrn_poll_init(&$a) {
 		
 		if(count($r)) {
 
-			$s = fetch_url($r[0]['poll'] . '&dfrn_id=' . $my_id . '&type=profile-check');
+			$s = fetch_url($r[0]['poll'] . '?f=&dfrn_id=' . $my_id . '&type=profile-check');
 
 			logger("dfrn_poll: old profile returns " . $s, LOGGER_DATA);
 
@@ -366,7 +366,7 @@ function dfrn_poll_content(&$a) {
 			// URL reply
 
 			$s = fetch_url($r[0]['poll'] 
-				. '&dfrn_id=' . $encrypted_id 
+				. '?f=&dfrn_id=' . $encrypted_id 
 				. '&type=profile-check'
 				. '&dfrn_version=' . DFRN_PROTOCOL_VERSION
 				. '&challenge=' . $challenge
