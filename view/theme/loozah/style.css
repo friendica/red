@@ -111,7 +111,8 @@ blockquote:before {
 #profile-youtube, 
 #profile-video,
 #profile-audio, 
-#profile-link, 
+#profile-link,
+#profile-title, 
 #wall-image-upload,
 #profile-upload-wrapper,
 #wall-image-upload-div,
@@ -1119,41 +1120,46 @@ padding: 5px 10px 0px;
 }
 #profile-upload-wrapper {
 	float: left;
-	margin-left: 50px;
+	margin-left: 30px;
 }
 
 #profile-rotator {
 	float: left;
-	margin-left: 50px;
+	margin-left: 30px;
 }
 #profile-link-wrapper {
 	float: left;
-	margin-left: 20px;
+	margin-left: 15px;
 }
 #profile-youtube-wrapper {
 	float: left;
-	margin-left: 20px;
+	margin-left: 15px;
 }
 #profile-video-wrapper {
 	float: left;
-	margin-left: 20px;
+	margin-left: 15px;
 }
 #profile-audio-wrapper {
 	float: left;
-	margin-left: 20px;
+	margin-left: 15px;
 }
 #profile-location-wrapper {
 	float: left;
-	margin-left: 20px;
+	margin-left: 15px;
 }
 #profile-nolocation-wrapper {
 	float: left;
-	margin-left: 20px;
+	margin-left: 15px;
+}
+
+#profile-title-wrapper {
+	float: left;
+	margin-left: 15px;
 }
 
 #profile-jot-perms {
 	float: left;
-	margin-left: 150px;
+	margin-left: 100px;
 	font-weight: bold;
 	font-size: 1.2em;
 }
@@ -2115,7 +2121,7 @@ a.mail-list-link {
 
 .tool-wrapper {
   float: left;
-  margin-left: 20px;
+  margin-left: 15px;
 }
 .tool-link {
   cursor: pointer;

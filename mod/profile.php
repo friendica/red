@@ -138,7 +138,8 @@ function profile_content(&$a, $update = 0) {
 				'$utubeurl' => t('Please enter a YouTube link:'),
 				'$vidurl' => t("Please enter a video\x28.ogg\x29 link/URL:"),
 				'$audurl' => t("Please enter an audio\x28.ogg\x29 link/URL:"),
-				'$whereareu' => t('Where are you right now?') 
+				'$whereareu' => t('Where are you right now?'),
+				'$title' => t('Enter a title for this item') 
 			));
 
 			require_once('include/acl_selectors.php');
@@ -169,6 +170,7 @@ function profile_content(&$a, $update = 0) {
 				'$audio' => t('Insert Vorbis [.ogg] audio'),
 				'$setloc' => t('Set your location'),
 				'$noloc' => t('Clear browser location'),
+				'$title' => t('Set title'),
 				'$wait' => t('Please wait'),
 				'$permset' => t('Permission settings'),
 				'$content' => '',
