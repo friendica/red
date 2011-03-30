@@ -111,8 +111,8 @@ Xgettext and .po workflow
  	to create the strings.php file
  	
 When strings are added or modified in source, you could run
-	$ util/run_xgettext.sh view/<language>/messages.po
-	to extraxt strings from source files and join them with the existing .po file:
+	$ cd util; ./run_xgettext.sh ../view/<language>/messages.po
+	to extract strings from source files and join them with the existing .po file:
 	new strings are added, the existing are not overwritten.
 	
 If you already translated Friendika using strings.php, you could import your old
