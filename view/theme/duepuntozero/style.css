@@ -882,7 +882,7 @@ input#dfrn-url {
 	
 }
 .wall-item-photo-menu {
-	width: 90px;
+	width: auto;
 	border: 2px solid #444444;
 	background: #FFFFFF;
 	position: absolute;
@@ -892,7 +892,6 @@ input#dfrn-url {
 .wall-item-photo-menu ul { margin:0px; padding: 0px; list-style: none }
 .wall-item-photo-menu li a { display: block; padding: 2px; }
 .wall-item-photo-menu li a:hover { color: #FFFFFF; background: #3465A4; text-decoration: none; }
-.wall-item-photo-menu li a[href=""] { display: none }
 
 
 .comment .wall-item-photo-menu-button {	top: 44px;}

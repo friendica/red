@@ -454,10 +454,12 @@ function profile_content(&$a, $update = 0) {
 			if(strcmp(datetime_convert('UTC','UTC',$item['created']),datetime_convert('UTC','UTC','now - 12 hours')) > 0)
 				$indent .= ' shiny'; 
 
+
 			$tmp_item = replace_macros($template,array(
 				'$id' => $item['item_id'],
 				'$linktitle' => t('View $name\'s profile'),
 				'$profile_url' => $profile_link,
+				'$item_photo_menu' => item_photo_menu($item),				
 				'$name' => $profile_name,
 				'$thumb' => $profile_avatar,
 				'$sparkle' => $sparkle,

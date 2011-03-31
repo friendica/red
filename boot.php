@@ -2669,3 +2669,55 @@ function extract_item_authors($arr,$uid) {
 	}
 	return array();		
 }}
+
+
+if(! function_exists('item_photo_menu')){
+function item_photo_menu($item){
+	$a = get_app();
+	
+	if (!isset($a->autors)){
+		$rr = q("SELECT id, network, url FROM contact WHERE uid=%d AND self!=1", intval(local_user()));
+		$authors = array();
+		foreach($rr as $r) $authors[$r['url']]= $r;
+		$a->authors = $authors;
+	}
+	
+	$contact_url="";
+	$pm_url="";
+
+	$profile_link   = ((strlen($item['author-link']))   ? $item['author-link']."?tab=profile"   : $item['url']);
+	$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
+
+	if(strlen($item['author-link'])) {
+		if(link_compare($item['author-link'],$item['url']) && ($item['network'] === 'dfrn') && (! $item['self'])) {
+			$profile_link = $redirect_url;
+			$pm_url = $a->get_baseurl() . '/message/new/' . $item['cid'] ;
+			$contact_url = $item['self']?"":$a->get_baseurl() . '/contacts/' . $item['cid'] ;
+		} 
+		elseif(isset($a->authors[$item['author-link']])) {
+			$profile_link = $a->get_baseurl() . '/redir/' . $a->authors[$item['author-link']]['id'];
+			if ($a->authors[$item['author-link']]['network']==='dfrn'){
+				$pm_url = $a->get_baseurl() . '/message/new/' . $a->authors[$item['author-link']]['id'];
+			}
+			$contact_url = $item['self']?"":$a->get_baseurl() . '/contacts/' . $a->authors[$item['author-link']]['id'] ;
+						
+		}
+	}
+
+
+	$menu = Array(
+		t("View profile") => $profile_link,
+		t("Edit contact") => $contact_url,
+		t("Send PM") => $pm_url
+	);
+	
+	$args = array($item, &$menu);
+	
+	call_hooks('item_photo_menu', $args);
+	
+	$o = "";
+	foreach($menu as $k=>$v){
+		if ($v!="") $o .= "<li><a href='$v'>$k</a></li>\n";
+	}
+	return $o;
+}}
