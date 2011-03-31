@@ -2,7 +2,7 @@
 
 set_time_limit(0);
 
-define ( 'FRIENDIKA_VERSION',      '2.1.934' );
+define ( 'FRIENDIKA_VERSION',      '2.1.935' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.2'  );
 define ( 'DB_UPDATE_VERSION',      1045   );
 
@@ -2405,9 +2405,7 @@ function get_birthdays() {
 	if(! local_user())
 		return $o;
 
-	$bd_format = get_config('system','birthday_format');
-	if(! $bd_format)
-		$bd_format = 'g A l F d' ; // 8 AM Friday January 18
+	$bd_format = t('g A l F d') ; // 8 AM Friday January 18
 
 	$r = q("SELECT `event`.*, `event`.`id` AS `eid`, `contact`.* FROM `event` 
 		LEFT JOIN `contact` ON `contact`.`id` = `event`.`cid` 
