@@ -2669,3 +2669,23 @@ function extract_item_authors($arr,$uid) {
 	}
 	return array();		
 }}
+
+if(! function_exists('lang_selector')) {
+function lang_selector() {
+	global $lang;
+	$o .= '<div id="language-selector" style="display: none;" >';
+	$o .= '<form action="" method="post" ><select name="system_language" onchange="this.form.submit();" >';
+	$langs = glob('view/*/strings.php');
+	if(is_array($langs) && count($langs)) {
+		if(! in_array('view/en/strings.php',$langs))
+			$langs[] = 'view/en/';
+		foreach($langs as $l) {
+			$ll = substr($l,5);
+			$ll = substr($ll,0,strrpos($ll,'/'));
+			$selected = (($ll === $lang) ? ' selected="selected" ' : '');
+			$o .= '<option value="' . $ll . '"' . $selected . '>' . $ll . '</option>';
+		}
+	}
+	$o .= '</select></form></div>';
+	return $o;
+}}
