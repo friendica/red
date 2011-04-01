@@ -2675,7 +2675,7 @@ if(! function_exists('item_photo_menu')){
 function item_photo_menu($item){
 	$a = get_app();
 	
-	if (!isset($a->autors)){
+	if (!isset($a->authors)){
 		$rr = q("SELECT id, network, url FROM contact WHERE uid=%d AND self!=1", intval(local_user()));
 		$authors = array();
 		foreach($rr as $r) $authors[$r['url']]= $r;
