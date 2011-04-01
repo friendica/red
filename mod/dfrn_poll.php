@@ -424,9 +424,8 @@ function dfrn_poll_content(&$a) {
 		}
 
 		if(($type === 'profile') && (strlen($sec))) {
+
 			// URL reply
-
-
 
 			if($dfrn_version < 2.2) {
 				$s = fetch_url($r[0]['poll'] 
@@ -455,9 +454,12 @@ function dfrn_poll_content(&$a) {
 					$dest = $a->get_baseurl() . '/photos/' . $profile;
 					break;
 				case 'status':
-				default:
+				case '':
 					$dest = $a->get_baseurl() . '/profile/' . $profile;
 					break;		
+				default:
+					$dest = $destination_url;
+					break;
 			}
 
 			logger("dfrn_poll: sec profile: " . $s, LOGGER_DATA);
