@@ -2685,7 +2685,7 @@ function item_photo_menu($item){
 	$contact_url="";
 	$pm_url="";
 
-	$profile_link   = ((strlen($item['author-link']))   ? $item['author-link']."?tab=profile"   : $item['url']);
+	$profile_link   = ((strlen($item['author-link']))   ? $item['author-link'] : $item['url']);
 	$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 
 	if(strlen($item['author-link'])) {
