@@ -447,6 +447,19 @@ function dfrn_poll_content(&$a) {
 				));
 			}
 
+			switch($destination_url) {
+				case 'profile':
+					$dest = $a->get_baseurl() . '/profile/' . $profile . '?tab=profile';
+					break;
+				case 'photos':
+					$dest = $a->get_baseurl() . '/photos/' . $profile;
+					break;
+				case 'status':
+				default:
+					$dest = $a->get_baseurl() . '/profile/' . $profile;
+					break;		
+			}
+
 			logger("dfrn_poll: sec profile: " . $s, LOGGER_DATA);
 
 			if(strlen($s) && strstr($s,'<?xml')) {
@@ -473,9 +486,10 @@ function dfrn_poll_content(&$a) {
 					); 
 				}
 				$profile = $r[0]['nickname'];
-				goaway((strlen($destination_url)) ? $destination_url : $a->get_baseurl() . '/profile/' . $profile);
+			
+				goaway($dest);
 			}
-			goaway($a->get_baseurl());
+			goaway($dest);
 			// NOTREACHED
 
 		}
