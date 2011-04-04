@@ -2694,7 +2694,7 @@ function item_photo_menu($item){
 			$status_link = $redirect_url."?url=status";
 			$profile_link = $redirect_url."?url=profile";
 			$photos_link = $redirect_url."?url=photos";
-			if (local_user()){
+			if (local_user() && (! link_compare($_SESSION['my_url'],$item['author-link']))) {
 				$pm_url = $a->get_baseurl() . '/message/new/' . $item['cid'];
 				$contact_url = $item['self']?"":$a->get_baseurl() . '/contacts/' . $item['cid'];
 			}
@@ -2705,7 +2705,7 @@ function item_photo_menu($item){
 			$profile_link = $redirect_url."?url=profile";
 			$photos_link = $redirect_url."?url=photos";
 
-			if (local_user()){
+			if (local_user() && (! link_compare($_SESSION['my_url'],$a->authors[$item['author-link']]['url']))) {
 				if ($a->authors[$item['author-link']]['network']==='dfrn'){
 					$pm_url = $a->get_baseurl() . '/message/new/' . $a->authors[$item['author-link']]['id'];
 				}
