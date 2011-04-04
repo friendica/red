@@ -10,7 +10,7 @@ Lösenordet kan ändras på sidan Inställningar efter att du loggat in.
 
 Ägna en liten stund åt att gå igenom alla kontoinställningar där. 
 
-Tack, och välkommen till $sitename.
+Välkommen till $sitename.
 
 Hälsningar,
 $sitename admin

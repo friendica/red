@@ -1,4 +1,3 @@
-
 En registreringsförfrågan som kräver svar har mottagits 
 på $sitename 
 
