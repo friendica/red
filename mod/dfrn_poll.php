@@ -446,6 +446,8 @@ function dfrn_poll_content(&$a) {
 				));
 			}
 
+			$profile = $r[0]['nickname'];
+
 			switch($destination_url) {
 				case 'profile':
 					$dest = $a->get_baseurl() . '/profile/' . $profile . '?tab=profile';
@@ -487,7 +489,6 @@ function dfrn_poll_content(&$a) {
 						dbesc($session_id)
 					); 
 				}
-				$profile = $r[0]['nickname'];
 			
 				goaway($dest);
 			}
