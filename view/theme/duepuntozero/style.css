@@ -2215,3 +2215,9 @@ a.mail-list-link {
 .side-link {
 	margin-bottom: 15px;
 }
+
+#language-selector {
+	position: absolute;
+	top: 0;
+	left: 0;
+)

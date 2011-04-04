@@ -416,5 +416,6 @@ function update_1044() {
 	q("ALTER TABLE `profile` ADD FULLTEXT ( `prv_keywords` ) ");
 }
 
-
-	
+function update_1045() {
+	q("ALTER TABLE `user` ADD `language` CHAR( 16 ) NOT NULL DEFAULT 'en' AFTER `timezone` ");
+}

@@ -42,6 +42,7 @@ if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 } else {
 	$lang = ((isset($a->config['system']['language'])) ? $a->config['system']['language'] : 'en');
 }
+
 	
 load_translation_table($lang);
 
@@ -85,6 +86,19 @@ date_default_timezone_set($a->timezone);
 $a->init_pagehead();
 
 session_start();
+
+/**
+ * Language was set earlier, but we can over-ride it in the session.
+ * We have to do it here because the session was just now opened.
+ */
+
+if(x($_POST,'system_language'))
+	$_SESSION['language'] = $_POST['system_language'];
+if((x($_SESSION,'language')) && ($_SESSION['language'] !== $lang)) {
+	$lang = $_SESSION['language'];
+	load_translation_table($lang);
+}
+
 
 /**
  *

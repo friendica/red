@@ -5,6 +5,7 @@ function redir_init(&$a) {
 	if((! local_user()) || (! ($a->argc == 2)) || (! intval($a->argv[1])))
 		goaway($a->get_baseurl());
 	$cid = $a->argv[1];
+	$url = ((x($_GET,'url')) ? $_GET['url'] : '');
 
 	$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		intval($cid),
@@ -37,8 +38,8 @@ function redir_init(&$a) {
 	);
 
 	logger('mod_redir: ' . $r[0]['name'] . ' ' . $sec, LOGGER_DEBUG); 
-
+	$dest = (($url) ? '&destination_url=' . $url : '');
 	goaway ($r[0]['poll'] . '?dfrn_id=' . $dfrn_id 
-		. '&dfrn_version=' . DFRN_PROTOCOL_VERSION . '&type=profile&sec=' . $sec);
+		. '&dfrn_version=' . DFRN_PROTOCOL_VERSION . '&type=profile&sec=' . $sec . $dest );
 	
 }

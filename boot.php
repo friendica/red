@@ -2,9 +2,9 @@
 
 set_time_limit(0);
 
-define ( 'FRIENDIKA_VERSION',      '2.1.933' );
-define ( 'DFRN_PROTOCOL_VERSION',  '2.1'  );
-define ( 'DB_UPDATE_VERSION',      1045   );
+define ( 'FRIENDIKA_VERSION',      '2.1.938' );
+define ( 'DFRN_PROTOCOL_VERSION',  '2.2'  );
+define ( 'DB_UPDATE_VERSION',      1046   );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -2022,7 +2022,7 @@ function contact_block() {
 			intval($shown)
 	);
 	if(count($r)) {
-		$o .= '<h4 class="contact-h4">' .  sprintf(tt('%d Contact','%d Contacts', $total),$total) . '</h4><div id="contact-block">';
+		$o .= '<h4 class="contact-h4">' .  sprintf( tt('%d Contact','%d Contacts', $total),$total) . '</h4><div id="contact-block">';
 		foreach($r as $rr) {
 			$redirect_url = $a->get_baseurl() . '/redir/' . $rr['id'];
 			if(local_user() && ($rr['uid'] == local_user())
@@ -2405,9 +2405,7 @@ function get_birthdays() {
 	if(! local_user())
 		return $o;
 
-	$bd_format = get_config('system','birthday_format');
-	if(! $bd_format)
-		$bd_format = 'g A l F d' ; // 8 AM Friday January 18
+	$bd_format = t('g A l F d') ; // 8 AM Friday January 18
 
 	$r = q("SELECT `event`.*, `event`.`id` AS `eid`, `contact`.* FROM `event` 
 		LEFT JOIN `contact` ON `contact`.`id` = `event`.`cid` 
@@ -2670,7 +2668,6 @@ function extract_item_authors($arr,$uid) {
 	return array();		
 }}
 
-
 if(! function_exists('item_photo_menu')){
 function item_photo_menu($item){
 	$a = get_app();
@@ -2719,5 +2716,25 @@ function item_photo_menu($item){
 	foreach($menu as $k=>$v){
 		if ($v!="") $o .= "<li><a href='$v'>$k</a></li>\n";
 	}
+	return $o;
+}}
+
+if(! function_exists('lang_selector')) {
+function lang_selector() {
+	global $lang;
+	$o .= '<div id="language-selector" style="display: none;" >';
+	$o .= '<form action="" method="post" ><select name="system_language" onchange="this.form.submit();" >';
+	$langs = glob('view/*/strings.php');
+	if(is_array($langs) && count($langs)) {
+		if(! in_array('view/en/strings.php',$langs))
+			$langs[] = 'view/en/';
+		foreach($langs as $l) {
+			$ll = substr($l,5);
+			$ll = substr($ll,0,strrpos($ll,'/'));
+			$selected = (($ll === $lang) ? ' selected="selected" ' : '');
+			$o .= '<option value="' . $ll . '"' . $selected . '>' . $ll . '</option>';
+		}
+	}
+	$o .= '</select></form></div>';
 	return $o;
 }}

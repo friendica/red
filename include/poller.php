@@ -167,7 +167,7 @@ function poller_run($argv, $argc){
 				if(intval($contact['duplex']) && $contact['issued-id'])
 					$idtosend = '1:' . $orig_id;		
 
-				$url = $contact['poll'] . '?f=&dfrn_id=' . $idtosend 
+				$url = $contact['poll'] . '?dfrn_id=' . $idtosend 
 					. '&dfrn_version=' . DFRN_PROTOCOL_VERSION 
 					. '&type=data&last_update=' . $last_update ;
 	

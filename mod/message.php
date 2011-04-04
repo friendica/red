@@ -237,7 +237,7 @@ function message_content(&$a) {
 				'$delete' => t('Delete conversation'),
 				'$body' => $rr['body'],
 				'$to_name' => $rr['name'],
-				'$date' => datetime_convert('UTC',date_default_timezone_get(),$rr['mailcreated'],'D, d M Y - g:i A')
+				'$date' => datetime_convert('UTC',date_default_timezone_get(),$rr['mailcreated'], t('D, d M Y - g:i A'))
 			));
 		}
 		$o .= paginate($a);	

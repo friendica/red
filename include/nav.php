@@ -16,6 +16,7 @@ function nav(&$a) {
 	 */
 
 	$a->page['nav'] .= '<div id="panel" style="display: none;"></div>' ;
+	$a->page['nav'] .= lang_selector();
 
 	/**
 	 *

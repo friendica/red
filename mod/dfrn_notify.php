@@ -262,10 +262,13 @@ function dfrn_notify_post(&$a) {
 					$when = datetime_convert('UTC','UTC','now','Y-m-d H:i:s');
 			}
 			if($deleted) {
-				$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+
+				$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d AND `contact-id` = %d LIMIT 1",
 					dbesc($uri),
-					intval($importer['importer_uid'])
+					intval($importer['importer_uid']),
+					intval($importer['id'])
 				);
+
 				if(count($r)) {
 					$item = $r[0];
 
