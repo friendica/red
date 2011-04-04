@@ -115,6 +115,7 @@ function search_content(&$a) {
 				'$id' => $item['item_id'],
 				'$linktitle' => t('View $name\'s profile'),
 				'$profile_url' => $profile_link,
+				'$item_photo_menu' => item_photo_menu($item),				
 				'$name' => $profile_name,
 				'$sparkle' => $sparkle,
 				'$lock' => $lock,

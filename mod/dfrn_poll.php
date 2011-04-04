@@ -445,7 +445,7 @@ function dfrn_poll_content(&$a) {
 					'sec' => $sec
 				));
 			}
-
+			
 			$profile = $r[0]['nickname'];
 
 			switch($destination_url) {
@@ -489,6 +489,10 @@ function dfrn_poll_content(&$a) {
 						dbesc($session_id)
 					); 
 				}
+<<<<<<< HEAD
+=======
+				
+>>>>>>> 890753e5b545ca5777c6c9084e99cacf42a3b485
 			
 				goaway($dest);
 			}

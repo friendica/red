@@ -217,6 +217,7 @@ function network_content(&$a, $update = 0) {
 			intval($a->pager['start']),
 			intval($a->pager['itemspage'])
 		);
+		
 	}
 	else {
 
@@ -323,11 +324,12 @@ function network_content(&$a, $update = 0) {
 
 				$drop = replace_macros($droptpl,array('$id' => $item['id']));
 				$lock = '<div class="wall-item-lock"></div>';
-
+				
 				$o .= replace_macros($tpl,array(
 					'$id' => $item['item_id'],
 					'$linktitle' => t('View $name\'s profile'),
 					'$profile_url' => $profile_link,
+					'$item_photo_menu' => item_photo_menu($item),
 					'$name' => $profile_name,
 					'$sparkle' => $sparkle,
 					'$lock' => $lock,
@@ -551,6 +553,7 @@ function network_content(&$a, $update = 0) {
 				$indent .= ' shiny'; 
 
 
+
 			// Build the HTML
 
 			$tmp_item = replace_macros($template,array(
@@ -561,6 +564,7 @@ function network_content(&$a, $update = 0) {
 				'$wall' => t('Wall-to-Wall'),
 				'$vwall' => t('via Wall-To-Wall:'),
 				'$profile_url' => $profile_link,
+				'$item_photo_menu' => item_photo_menu($item),
 				'$name' => $profile_name,
 				'$thumb' => $profile_avatar,
 				'$osparkle' => $osparkle,

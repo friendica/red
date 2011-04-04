@@ -2668,6 +2668,70 @@ function extract_item_authors($arr,$uid) {
 	return array();		
 }}
 
+if(! function_exists('item_photo_menu')){
+function item_photo_menu($item){
+	$a = get_app();
+	
+	if (!isset($a->authors)){
+		$rr = q("SELECT id, network, url FROM contact WHERE uid=%d AND self!=1", intval(local_user()));
+		$authors = array();
+		foreach($rr as $r) $authors[$r['url']]= $r;
+		$a->authors = $authors;
+	}
+	
+	$contact_url="";
+	$pm_url="";
+
+	$status_link="";
+	$photo_link="";
+	$profile_link   = ((strlen($item['author-link']))   ? $item['author-link'] : $item['url']);
+	$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
+	
+
+
+	if(strlen($item['author-link'])) {
+		if(link_compare($item['author-link'],$item['url']) && ($item['network'] === 'dfrn') && (! $item['self'])) {
+			$status_link = $redirect_url."?url=status";
+			$profile_link = $redirect_url."?url=profile";
+			$photos_link = $redirect_url."?url=photos";
+			$pm_url = $a->get_baseurl() . '/message/new/' . $item['cid'] ;
+			$contact_url = $item['self']?"":$a->get_baseurl() . '/contacts/' . $item['cid'] ;
+		} 
+		elseif(isset($a->authors[$item['author-link']])) {
+			$redirect_url = $a->get_baseurl() . '/redir/' . $a->authors[$item['author-link']]['id'];
+			$status_link = $redirect_url."?url=status";
+			$profile_link = $redirect_url."?url=profile";
+			$photos_link = $redirect_url."?url=photos";
+
+			if ($a->authors[$item['author-link']]['network']==='dfrn'){
+				$pm_url = $a->get_baseurl() . '/message/new/' . $a->authors[$item['author-link']]['id'];
+			}
+			$contact_url = $item['self']?"":$a->get_baseurl() . '/contacts/' . $a->authors[$item['author-link']]['id'] ;
+						
+		}
+	}
+
+
+	$menu = Array(
+		t("View status") => $status_link,
+		t("View profile") => $profile_link,
+		t("View photos") => $photos_link,		
+		t("Edit contact") => $contact_url,
+		t("Send PM") => $pm_url,
+	);
+	
+	
+	$args = array($item, &$menu);
+	
+	call_hooks('item_photo_menu', $args);
+	
+	$o = "";
+	foreach($menu as $k=>$v){
+		if ($v!="") $o .= "<li><a href='$v'>$k</a></li>\n";
+	}
+	return $o;
+}}
+
 if(! function_exists('lang_selector')) {
 function lang_selector() {
 	global $lang;

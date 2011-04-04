@@ -172,7 +172,9 @@ function message_content(&$a) {
 			'$linkurl' => t('Please enter a link URL:')
 		));
 	
-		$select = contact_select('messageto','message-to-select', false, 4, true);
+		$preselect = (isset($a->argv[2])?array($a->argv[2]):false);
+	
+		$select = contact_select('messageto','message-to-select', $preselect, 4, true);
 		$tpl = load_view_file('view/prv_message.tpl');
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Send Private Message'),
