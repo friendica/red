@@ -42,10 +42,6 @@ if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 } else {
 	$lang = ((isset($a->config['system']['language'])) ? $a->config['system']['language'] : 'en');
 }
-if(x($_POST,'system_language'))
-if(x($_SESSION,'language'))
-	$lang = $_SESSION['language'];
-
 
 	
 load_translation_table($lang);
