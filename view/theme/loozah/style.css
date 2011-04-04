@@ -996,6 +996,7 @@ input#dfrn-url {
 	position: absolute;
 	left: 10px; top: 90px;
 	display: none;
+	z-index: 10000;
 }
 .wall-item-photo-menu ul { margin:0px; padding: 0px; list-style: none }
 .wall-item-photo-menu li a { display: block; padding: 2px; }
