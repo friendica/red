@@ -2687,37 +2687,35 @@ function item_photo_menu($item){
 	$profile_link   = ((strlen($item['author-link']))   ? $item['author-link'] : $item['url']);
 	$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 
-	$contact_uid = ((x($item,'contact-uid')) && intval($item['contact-uid']) ? intval($item['contact-uid']) : 0);	
+	// $item['contact-uid'] is only set on profile page and indicates the uid of the user who owns the profile.
 
-	// $item['contact-uid'] is only set on profile page.
-	// So we are checking for a profile page where the viewer owns the page,
-	// otherwise a logged in user if some other page that displays items.
+	$profile_owner = ((x($item,'contact-uid')) && intval($item['contact-uid']) ? intval($item['contact-uid']) : 0);	
+
+	// So we are checking that this is a logged in user on some page that *isn't* a profile page
+	// OR a profile page where the viewer owns the profile. 
 	// Then check if we can use a sparkle (redirect) link to the profile by virtue of it being our contact
 	// or a friend's contact that we both have a connection to. 
 
-	if(((local_user() && (! $contact_uid)) || ($contact_uid && $contact_uid == local_user())) && strlen($item['author-link'])) {
+	if(((local_user() && ($profile_owner == 0)) 
+		|| ($profile_owner && $profile_owner == local_user())) 
+		&& strlen($item['author-link'])) {
+
 		if(link_compare($item['author-link'],$item['url']) && ($item['network'] === 'dfrn') && (! $item['self'])) {
 			$status_link = $redirect_url."?url=status";
 			$profile_link = $redirect_url."?url=profile";
 			$photos_link = $redirect_url."?url=photos";
-			if (local_user() && (! link_compare($_SESSION['my_url'],$item['author-link']))) {
-				$pm_url = $a->get_baseurl() . '/message/new/' . $item['cid'];
-				$contact_url = $item['self']?"":$a->get_baseurl() . '/contacts/' . $item['cid'];
-			}
+			$pm_url = $a->get_baseurl() . '/message/new/' . $item['cid'];
+			$contact_url = $item['self']?"":$a->get_baseurl() . '/contacts/' . $item['cid'];
 		} 
 		elseif(isset($a->authors[$item['author-link']])) {
 			$redirect_url = $a->get_baseurl() . '/redir/' . $a->authors[$item['author-link']]['id'];
 			$status_link = $redirect_url."?url=status";
 			$profile_link = $redirect_url."?url=profile";
 			$photos_link = $redirect_url."?url=photos";
-
-			if (local_user() && (! link_compare($_SESSION['my_url'],$a->authors[$item['author-link']]['url']))) {
-				if ($a->authors[$item['author-link']]['network']==='dfrn'){
-					$pm_url = $a->get_baseurl() . '/message/new/' . $a->authors[$item['author-link']]['id'];
-				}
-				$contact_url = $item['self']?"":$a->get_baseurl() . '/contacts/' . $a->authors[$item['author-link']]['id'] ;
+			if ($a->authors[$item['author-link']]['network']==='dfrn'){
+				$pm_url = $a->get_baseurl() . '/message/new/' . $a->authors[$item['author-link']]['id'];
 			}
-						
+			$contact_url = $item['self']?"":$a->get_baseurl() . '/contacts/' . $a->authors[$item['author-link']]['id'] ;						
 		}
 	}
 
