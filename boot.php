@@ -2682,17 +2682,27 @@ function item_photo_menu($item){
 	$contact_url="";
 	$pm_url="";
 
+	$status_link="";
+	$photo_link="";
 	$profile_link   = ((strlen($item['author-link']))   ? $item['author-link'] : $item['url']);
 	$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
+	
+
 
 	if(strlen($item['author-link'])) {
 		if(link_compare($item['author-link'],$item['url']) && ($item['network'] === 'dfrn') && (! $item['self'])) {
-			$profile_link = $redirect_url;
+			$status_link = $redirect_url."?url=status";
+			$profile_link = $redirect_url."?url=profile";
+			$photos_link = $redirect_url."?url=photos";
 			$pm_url = $a->get_baseurl() . '/message/new/' . $item['cid'] ;
 			$contact_url = $item['self']?"":$a->get_baseurl() . '/contacts/' . $item['cid'] ;
 		} 
 		elseif(isset($a->authors[$item['author-link']])) {
-			$profile_link = $a->get_baseurl() . '/redir/' . $a->authors[$item['author-link']]['id'];
+			$redirect_url = $a->get_baseurl() . '/redir/' . $a->authors[$item['author-link']]['id'];
+			$status_link = $redirect_url."?url=status";
+			$profile_link = $redirect_url."?url=profile";
+			$photos_link = $redirect_url."?url=photos";
+
 			if ($a->authors[$item['author-link']]['network']==='dfrn'){
 				$pm_url = $a->get_baseurl() . '/message/new/' . $a->authors[$item['author-link']]['id'];
 			}
@@ -2703,10 +2713,13 @@ function item_photo_menu($item){
 
 
 	$menu = Array(
+		t("View status") => $status_link,
 		t("View profile") => $profile_link,
+		t("View photos") => $photos_link,		
 		t("Edit contact") => $contact_url,
-		t("Send PM") => $pm_url
+		t("Send PM") => $pm_url,
 	);
+	
 	
 	$args = array($item, &$menu);
 	
