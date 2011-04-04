@@ -2694,8 +2694,10 @@ function item_photo_menu($item){
 			$status_link = $redirect_url."?url=status";
 			$profile_link = $redirect_url."?url=profile";
 			$photos_link = $redirect_url."?url=photos";
-			$pm_url = $a->get_baseurl() . '/message/new/' . $item['cid'] ;
-			$contact_url = $item['self']?"":$a->get_baseurl() . '/contacts/' . $item['cid'] ;
+			if (local_user()){
+				$pm_url = $a->get_baseurl() . '/message/new/' . $item['cid'];
+				$contact_url = $item['self']?"":$a->get_baseurl() . '/contacts/' . $item['cid'];
+			}
 		} 
 		elseif(isset($a->authors[$item['author-link']])) {
 			$redirect_url = $a->get_baseurl() . '/redir/' . $a->authors[$item['author-link']]['id'];
@@ -2703,10 +2705,12 @@ function item_photo_menu($item){
 			$profile_link = $redirect_url."?url=profile";
 			$photos_link = $redirect_url."?url=photos";
 
-			if ($a->authors[$item['author-link']]['network']==='dfrn'){
-				$pm_url = $a->get_baseurl() . '/message/new/' . $a->authors[$item['author-link']]['id'];
+			if (local_user()){
+				if ($a->authors[$item['author-link']]['network']==='dfrn'){
+					$pm_url = $a->get_baseurl() . '/message/new/' . $a->authors[$item['author-link']]['id'];
+				}
+				$contact_url = $item['self']?"":$a->get_baseurl() . '/contacts/' . $a->authors[$item['author-link']]['id'] ;
 			}
-			$contact_url = $item['self']?"":$a->get_baseurl() . '/contacts/' . $a->authors[$item['author-link']]['id'] ;
 						
 		}
 	}
