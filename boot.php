@@ -2686,10 +2686,16 @@ function item_photo_menu($item){
 	$photo_link="";
 	$profile_link   = ((strlen($item['author-link']))   ? $item['author-link'] : $item['url']);
 	$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
-	
 
+	$contact_uid = ((x($item,'contact-uid')) && intval($item['contact-uid']) ? intval($item['contact-uid']) : 0);	
 
-	if(strlen($item['author-link'])) {
+	// $item['contact-uid'] is only set on profile page.
+	// So we are checking for a profile page where the viewer owns the page,
+	// otherwise a logged in user if some other page that displays items.
+	// Then check if we can use a sparkle (redirect) link to the profile by virtue of it being our contact
+	// or a friend's contact that we both have a connection to. 
+
+	if(((local_user() && (! $contact_uid)) || ($contact_uid && $contact_uid == local_user())) && strlen($item['author-link'])) {
 		if(link_compare($item['author-link'],$item['url']) && ($item['network'] === 'dfrn') && (! $item['self'])) {
 			$status_link = $redirect_url."?url=status";
 			$profile_link = $redirect_url."?url=profile";

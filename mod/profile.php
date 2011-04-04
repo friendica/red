@@ -402,7 +402,7 @@ function profile_content(&$a, $update = 0) {
 			// This is my profile page but I'm not the author of this post/comment. If it's somebody that's a fan or mutual friend,
 			// I can go directly to their profile as an authenticated guest.
 
-			if(local_user() && ($item['contact-uid'] == $_SESSION['uid']) 
+			if(local_user() && ($item['contact-uid'] == local_user()) 
 				&& ($item['network'] === 'dfrn') && (! $item['self'] )) {
 				$profile_url = $redirect_url;
 				$sparkle = ' sparkle';
