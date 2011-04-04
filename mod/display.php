@@ -264,6 +264,7 @@ function display_content(&$a) {
 				'$to' => t('to'),
 				'$wall' => t('Wall-to-Wall'),
 				'$vwall' => t('via Wall-To-Wall:'),
+				'$item_photo_menu' => item_photo_menu($item),
 				'$profile_url' => $profile_link,
 				'$name' => $profile_name,
 				'$sparkle' => $sparkle,
