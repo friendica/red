@@ -36,12 +36,20 @@ function search_content(&$a) {
 		AND `item`.`deny_gid`  = '' 
 	";
 
+	$s_bool  = "AND MATCH (`item`.`body`) AGAINST ( '%s' IN BOOLEAN MODE )";
+	$s_regx  = "AND `item`.`body` REGEXP '%s' ";
+
+	if(mb_strlen($search) >= 3)
+		$search_alg = $s_bool;
+	else
+		$search_alg = $s_regx;
+
 	$r = q("SELECT COUNT(*) AS `total`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`visible` = 1 AND `item`.`deleted` = 0
 		AND ( `wall` = 1 OR `contact`.`uid` = %d )
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-		AND MATCH (`item`.`body`) AGAINST ( '%s' IN BOOLEAN MODE )
+		$search_alg
 		$sql_extra ",
 		intval(local_user()),
 		dbesc($search)
@@ -65,7 +73,7 @@ function search_content(&$a) {
 		WHERE `item`.`visible` = 1 AND `item`.`deleted` = 0
 		AND ( `wall` = 1 OR `contact`.`uid` = %d )
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-		AND MATCH (`item`.`body`) AGAINST ( '%s' IN BOOLEAN MODE )
+		$search_alg
 		$sql_extra
 		ORDER BY `parent` DESC ",
 		intval(local_user()),
