@@ -227,16 +227,36 @@ function scrape_feed($url) {
 	if(! $dom)
 		return $ret;
 
+
+	$items = $dom->getElementsByTagName('img');
+
+	// get img elements (twitter)
+
+	if($items) {
+		foreach($items as $item) {
+			$x = $item->getAttribute('id');
+			if($x === 'profile-image') {
+				$ret['photo'] = $item->getAttribute('src');
+			}
+		}
+	}
+
 	$items = $dom->getElementsByTagName('link');
 
-	// get Atom link elements
+	// get Atom/RSS link elements, take the first one of either.
 
-	foreach($items as $item) {
-		$x = $item->getAttribute('rel');
-		if(($x === 'alternate') && ($item->getAttribute('type') === 'application/atom+xml'))
-			$ret['feed_atom'] = $item->getAttribute('href');
-		if(($x === 'alternate') && ($item->getAttribute('type') === 'application/rss+xml'))
-			$ret['feed_rss'] = $item->getAttribute('href');
+	if($items) {
+		foreach($items as $item) {
+			$x = $item->getAttribute('rel');
+			if(($x === 'alternate') && ($item->getAttribute('type') === 'application/atom+xml')) {
+				if(! x($ret,'feed_atom'))
+					$ret['feed_atom'] = $item->getAttribute('href');
+			}
+			if(($x === 'alternate') && ($item->getAttribute('type') === 'application/rss+xml')) {
+				if(! x($ret,'feed_rss'))
+					$ret['feed_rss'] = $item->getAttribute('href');
+			}
+		}	
 	}
 
 	return $ret;

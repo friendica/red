@@ -112,6 +112,8 @@ function follow_post(&$a) {
 		if(count($ret) && ($ret['feed_atom'] || $ret['feed_rss'])) {
 			$poll = ((x($ret,'feed_atom')) ? unamp($ret['feed_atom']) : unamp($ret['feed_rss']));
 			$vcard = array();
+				if(x($ret,'photo'))
+					$vcard['photo'] = $ret['photo'];
 			require_once('simplepie/simplepie.inc');
 		    $feed = new SimplePie();
 			$xml = fetch_url($poll);
@@ -120,7 +122,8 @@ function follow_post(&$a) {
 
 		    $feed->init();
 
-			$vcard['photo'] = $feed->get_image_url();
+			if(! x($vcard,'photo'))
+				$vcard['photo'] = $feed->get_image_url();
 			$author = $feed->get_author();
 			if($author) {			
 				$vcard['fn'] = unxmlify(trim($author->get_name()));
