@@ -15,7 +15,8 @@ function follow_post(&$a) {
 	$email_conversant = false;
 
 	if($url) {
-		$links = @lrdd($url);
+		$links = lrdd($url);
+
 		if(count($links)) {
 			foreach($links as $link) {
 				if($link['@attributes']['rel'] === NAMESPACE_DFRN)
@@ -107,7 +108,7 @@ function follow_post(&$a) {
 	if((! isset($vcard)) && (! $poll)) {
 
 		$ret = scrape_feed($url);
-
+		logger('mod_follow: scrape_feed returns: ' . print_r($ret,true), LOGGER_DATA);
 		if(count($ret) && ($ret['feed_atom'] || $ret['feed_rss'])) {
 			$poll = ((x($ret,'feed_atom')) ? unamp($ret['feed_atom']) : unamp($ret['feed_rss']));
 			$vcard = array();
@@ -156,7 +157,14 @@ function follow_post(&$a) {
 			}
 			if((! $vcard['photo']) && strlen($email))
 				$vcard['photo'] = gravatar_img($email);
-			
+			if($poll === $profile)
+				$lnk = $feed->get_permalink();
+			if(isset($lnk) && strlen($lnk))
+				$profile = $lnk;	
+			if(! (x($vcard,'fn')))
+				$vcard['fn'] = notags($feed->get_title());
+			if(! (x($vcard,'fn')))
+				$vcard['fn'] = notags($feed->get_description());
 			$network = 'feed';
 			$priority = 2;
 		}

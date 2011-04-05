@@ -69,7 +69,7 @@ function dfrn_poll_init(&$a) {
 
 			if(strlen($s)) {
 
-				$xml = simplexml_load_string($s);
+				$xml = parse_xml_string($s);
 
 				if((int) $xml->status == 1) {
 					$_SESSION['authenticated'] = 1;
@@ -468,7 +468,7 @@ function dfrn_poll_content(&$a) {
 
 			if(strlen($s) && strstr($s,'<?xml')) {
 
-				$xml = simplexml_load_string($s);
+				$xml = parse_xml_string($s);
 
 				logger('dfrn_poll: profile: parsed xml: ' . print_r($xml,true), LOGGER_DATA);
 

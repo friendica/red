@@ -1478,7 +1478,9 @@ function lrdd($uri) {
 		return array();
 
 	logger('lrdd: host_meta: ' . $xml, LOGGER_DATA);
-	$h = simplexml_load_string($xml);
+
+	$h = parse_xml_string($xml);
+
 	$arr = convert_xml_element_to_array($h);
 
 	if(isset($arr['xrd']['property'])) {
@@ -1550,16 +1552,19 @@ function lrdd($uri) {
 	$headers = $a->get_curl_headers();
 	logger('lrdd: headers=' . $headers, LOGGER_DEBUG);
 
-	require_once('library/HTML5/Parser.php');
-	$dom = @HTML5_Parser::parse($html);
+	// don't try and parse raw xml as html
+	if(! strstr($html,'<?xml')) {
+		require_once('library/HTML5/Parser.php');
+		$dom = @HTML5_Parser::parse($html);
 
-	if($dom) {
-		$items = $dom->getElementsByTagName('link');
-		foreach($items as $item) {
-			$x = $item->getAttribute('rel');
-			if($x == "lrdd") {
-				$pagelink = $item->getAttribute('href');
-				break;
+		if($dom) {
+			$items = $dom->getElementsByTagName('link');
+			foreach($items as $item) {
+				$x = $item->getAttribute('rel');
+				if($x == "lrdd") {
+					$pagelink = $item->getAttribute('href');
+					break;
+				}
 			}
 		}
 	}
@@ -1638,7 +1643,7 @@ function fetch_xrd_links($url) {
 		return array();
 
 	logger('fetch_xrd_links: ' . $xml, LOGGER_DATA);
-	$h = simplexml_load_string($xml);
+	$h = parse_xml_string($xml);
 	$arr = convert_xml_element_to_array($h);
 
 	$links = array();
@@ -2758,4 +2763,19 @@ function lang_selector() {
 	}
 	$o .= '</select></form></div>';
 	return $o;
+}}
+
+
+if(! function_exists('parse_xml_string')) {
+function parse_xml_string($s) {
+	if(! strstr($s,'<?xml'))
+		return false;
+	$s2 = substr($s,strpos($s,'<?xml'));
+	libxml_use_internal_errors(true);
+	$x = @simplexml_load_string($s2);
+	if(count(libxml_get_errors()))
+		foreach(libxml_get_errors() as $err)
+			logger('libxml: parse: ' . $err, LOGGER_DATA);
+	libxml_clear_errors();
+	return $x;
 }}

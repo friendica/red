@@ -203,7 +203,7 @@ function poller_run($argv, $argc){
 				}
 
 
-				$res = simplexml_load_string($xml);
+				$res = parse_xml_string($xml);
 	
 				if(intval($res->status) == 1) {
 					logger("poller: $url replied status 1 - marking for death ");

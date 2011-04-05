@@ -216,7 +216,7 @@ function scrape_feed($url) {
 				}
  				if(stristr($line,'application/rss+xml') || stristr($s,'<rss')) {
 					$ret['feed_rss'] = $url;
-					return ret;
+					return $ret;
 				}
 			}
 		}

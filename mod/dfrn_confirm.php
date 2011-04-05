@@ -240,7 +240,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				notice( t('Unexpected response from remote site: ') . EOL . $leading_junk . EOL );
 			}
 
-			$xml = simplexml_load_string($res);
+			$xml = parse_xml_string($res);
 			$status = (int) $xml->status;
 			$message = unxmlify($xml->message);   // human readable text of what may have gone wrong.
 			switch($status) {

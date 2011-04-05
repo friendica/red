@@ -180,7 +180,7 @@ function construct_activity_object($item) {
 
 	if($item['object']) {
 		$o = '<as:object>' . "\r\n";
-		$r = @simplexml_load_string($item['object']);
+		$r = parse_xml_string($item['object']);
 		if($r->type)
 			$o .= '<as:object-type>' . xmlify($r->type) . '</as:object-type>' . "\r\n";
 		if($r->id)
@@ -206,7 +206,7 @@ function construct_activity_target($item) {
 
 	if($item['target']) {
 		$o = '<as:target>' . "\r\n";
-		$r = @simplexml_load_string($item['target']);
+		$r = parse_xml_string($item['target']);
 		if($r->type)
 			$o .= '<as:object-type>' . xmlify($r->type) . '</as:object-type>' . "\r\n";
 		if($r->id)
@@ -241,8 +241,14 @@ function get_atom_elements($feed,$item) {
 	$res = array();
 
 	$author = $item->get_author();
-	$res['author-name'] = unxmlify($author->get_name());
-	$res['author-link'] = unxmlify($author->get_link());
+	if($author) { 
+		$res['author-name'] = unxmlify($author->get_name());
+		$res['author-link'] = unxmlify($author->get_link());
+	}
+	else {
+		$res['author-name'] = unxmlify($feed->get_title());
+		$res['author-link'] = unxmlify($feed->get_permalink());
+	}
 	$res['uri'] = unxmlify($item->get_id());
 	$res['title'] = unxmlify($item->get_title());
 	$res['body'] = unxmlify($item->get_content());
@@ -342,7 +348,6 @@ function get_atom_elements($feed,$item) {
 	// going to escape any tags we find regardless, but this lets us import a limited subset of html from 
 	// the wild, by sanitising it and converting supported tags to bbcode before we rip out any remaining 
 	// html.
-
 
 	if((strpos($res['body'],'<') !== false) || (strpos($res['body'],'>') !== false)) {
 
@@ -783,7 +788,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 		return 3;
 	}
 
-	$res = simplexml_load_string($xml);
+	$res = parse_xml_string($xml);
 
 	if((intval($res->status) != 0) || (! strlen($res->challenge)) || (! strlen($res->dfrn_id)))
 		return (($res->status) ? $res->status : 3);
@@ -878,7 +883,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 		return 3;
 	}
 
-	$res = simplexml_load_string($xml);
+	$res = parse_xml_string($xml);
 
 	return $res->status;
  
@@ -916,6 +921,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 	if($feed->error())
 		logger('consume_feed: Error parsing XML: ' . $feed->error());
 
+	$permalink = $feed->get_permalink();
 
 	// Check at the feed level for updated contact name and/or photo
 
@@ -1230,6 +1236,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 				// Head post of a conversation. Have we seen it? If not, import it.
 
 				$item_id  = $item->get_id();
+
 				$datarray = get_atom_elements($feed,$item);
 
 				$r = q("SELECT `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
@@ -1275,7 +1282,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 				if(! is_array($contact))
 					return;
 
-				if($contact['network'] === 'stat') {
+				if($contact['network'] === 'stat' || stristr($permalink,'twitter.com')) {
 					if(strlen($datarray['title']))
 						unset($datarray['title']);
 					$datarray['last-child'] = 1;
