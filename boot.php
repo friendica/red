@@ -2701,27 +2701,24 @@ function item_photo_menu($item){
 	// Then check if we can use a sparkle (redirect) link to the profile by virtue of it being our contact
 	// or a friend's contact that we both have a connection to. 
 
-	if(((local_user() && ($profile_owner == 0)) 
-		|| ($profile_owner && $profile_owner == local_user())) 
-		&& strlen($item['author-link'])) {
+	if((local_user() && ($profile_owner == 0)) 
+		|| ($profile_owner && $profile_owner == local_user())) {
 
-		if(link_compare($item['author-link'],$item['url']) && ($item['network'] === 'dfrn') && (! $item['self'])) {
-			$status_link = $redirect_url."?url=status";
-			$profile_link = $redirect_url."?url=profile";
-			$photos_link = $redirect_url."?url=photos";
-			$pm_url = $a->get_baseurl() . '/message/new/' . $item['cid'];
-			$contact_url = $item['self']?"":$a->get_baseurl() . '/contacts/' . $item['cid'];
-		} 
+		if(strlen($item['author-link']) && link_compare($item['author-link'],$item['url']))
+			$redir = $redirect_url;
 		elseif(isset($a->authors[$item['author-link']])) {
-			$redirect_url = $a->get_baseurl() . '/redir/' . $a->authors[$item['author-link']]['id'];
-			$status_link = $redirect_url."?url=status";
-			$profile_link = $redirect_url."?url=profile";
-			$photos_link = $redirect_url."?url=photos";
-			if ($a->authors[$item['author-link']]['network']==='dfrn'){
-				$pm_url = $a->get_baseurl() . '/message/new/' . $a->authors[$item['author-link']]['id'];
-			}
-			$contact_url = $item['self']?"":$a->get_baseurl() . '/contacts/' . $a->authors[$item['author-link']]['id'] ;						
+			$redir = $a->get_baseurl() . '/redir/' . $a->authors[$item['author-link']]['id'];
+			$cid = $a->authors[$item['author-link']]['id'];
 		}
+
+		if($item['network'] === 'dfrn' && (! $item['self'])) {
+			$status_link = $redir . "?url=status";
+			$profile_link = $redir . "?url=profile";
+			$photos_link = $redir . "?url=photos";
+			$pm_url = $a->get_baseurl() . '/message/new/' . $cid;
+		}
+
+		$contact_url = $item['self']?"":$a->get_baseurl() . '/contacts/' . (($item['cid']) ? $item['cid'] : $cid);
 	}
 
 
