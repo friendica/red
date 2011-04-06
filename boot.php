@@ -437,15 +437,18 @@ function check_config(&$a) {
 
 	load_config('system');
 
-	if(! x($_SERVER,'SERVER_NAME'))
-		return;
-
 	$build = get_config('system','build');
 	if(! x($build))
 		$build = set_config('system','build',DB_UPDATE_VERSION);
 
 	$url = get_config('system','url');
-	if(! x($url))
+
+	// if the url isn't set or the stored url is radically different 
+	// than the currently visited url, store the current value accordingly.
+	// "Radically different" ignores common variations such as http vs https 
+	// and www.example.com vs example.com.
+
+	if((! x($url)) || (! link_compare($url,$a->get_baseurl())))
 		$url = set_config('system','url',$a->get_baseurl());
 
 	if($build != DB_UPDATE_VERSION) {
