@@ -456,7 +456,22 @@ function get_atom_elements($feed,$item) {
 	if((x($res,'verb')) && ($res['verb'] === 'http://ostatus.org/schema/1.0/unfollow'))
 		$res['verb'] = ACTIVITY_UNFOLLOW;
 
-		
+
+	$cats = $item->get_categories();
+	if($cats) {
+		$tag_arr = array();
+		foreach($cats as $cat) {
+			$term = $cat->get_term();
+			if(! $term)
+				$term = $cat->get_label();
+			$scheme = $cat->get_scheme();
+			if($scheme && $term && stristr($scheme,'X-DFRN:'))
+				$tag_arr[] = substr($scheme,7,1) . '[url=' . unxmlify(substr($scheme,9)) . ']' . unxmlify($term) . '[/url]';
+			elseif($term)
+				$tag_arr[] = $term;
+		}
+		$res['tag'] =  implode(',', $tag_arr);
+	}
 
 	$rawobj = $item->get_item_tags(NAMESPACE_ACTIVITY, 'object');
 
@@ -614,6 +629,7 @@ function item_store($arr,$force_parent = false) {
 	$arr['deny_gid']      = ((x($arr,'deny_gid'))      ? trim($arr['deny_gid'])              : '');
 	$arr['private']       = ((x($arr,'private'))       ? intval($arr['private'])             : 0 );
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
+	$arr['tag']           = ((x($arr,'tag'))           ? notags(trim($arr['tag']))           : '');
 
 	if($arr['parent-uri'] === $arr['uri']) {
 		$parent_id = 0;
@@ -1503,6 +1519,13 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 	if(strlen($actarg))
 		$o .= $actarg;
 
+	$tags = item_getfeedtags($item);
+	if(count($tags)) {
+		foreach($tags as $t) {
+			$o .= '<category scheme="X-DFRN:' . xmlify($t[0]) . ':' . xmlify($t[1]) . '" term="' . xmlify($t[2]) . '" />' . "\r\n";
+		}
+	}
+
 	$mentioned = get_mentions($item);
 	if($mentioned)
 		$o .= $mentioned;
@@ -1513,6 +1536,29 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 	
 	return $o;
 }
+
+function item_getfeedtags($item) {
+	$ret = array();
+	$matches = false;
+	$cnt = preg_match_all('|\#\[url\=(.+?)\](.+?)\[\/url\]|',$item['tag'],$matches);
+	if($cnt) {
+		for($x = 0; $x < count($matches); $x ++) {
+			if($matches[1][$x])
+				$ret[] = array('#',$matches[1][$x], $matches[2][$x]);
+		}
+	}
+	$matches = false; 
+	$cnt = preg_match_all('|\@\[url\=(.+?)\](.+?)\[\/url\]|',$item['tag'],$matches);
+	if($cnt) {
+		for($x = 0; $x < count($matches); $x ++) {
+			if($matches[1][$x])
+				$ret[] = array('#',$matches[1][$x], $matches[2][$x]);
+		}
+	} 
+	return $ret;
+}
+
+
 	
 function item_expire($uid,$days) {
 
