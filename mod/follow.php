@@ -92,6 +92,8 @@ function follow_post(&$a) {
 			if($h)
 				$vcard['photo'] = $h['scheme'] . '://' . $h['host'] . $vcard['photo'];
 		}
+		
+		logger('mod_follow: scrape_vcard: ' . print_r($vcard,true), LOGGER_DATA);
 	}
 
 	if(! $profile) {

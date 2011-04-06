@@ -180,8 +180,8 @@ function contacts_content(&$a) {
 					'$type' => 'text',
 					'$content' => t('stopped following'),
 					'$nick' => $a->user['nickname'],
-					'$verb' => ACTIVITY_UNFOLLOW,
-					'$ostat_follow' => '<as:verb>http://ostatus.org/schema/1.0/unfollow</as:verb>' . "\r\n"
+					'$verb' => 'http://ostatus.org/schema/1.0/unfollow', // ACTIVITY_UNFOLLOW,
+					'$ostat_follow' => '' // '<as:verb>http://ostatus.org/schema/1.0/unfollow</as:verb>' . "\r\n"
 				));
 
 				if((x($orig_record[0],'notify')) && (strlen($orig_record[0]['notify']))) {
