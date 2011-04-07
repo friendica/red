@@ -1591,11 +1591,11 @@ function item_getfeedattach($item) {
 			$matches = false;
 			$cnt = preg_match('|\<a href=\"(.+?)\" size=\"(.+?)\" type=\"(.+?)\" >(.+?)</a>|',$r,$matches);
 			if($cnt) {
-				$ret .= '<link rel="enclosure" href="' . $matches[1] . '" type="' . $matches[3] . '" ';
+				$ret .= '<link rel="enclosure" href="' . xmlify($matches[1]) . '" type="' . xmlify($matches[3]) . '" ';
 				if(intval($matches[2]))
 					$ret .= 'size="' . intval($matches[2]) . '" ';
 				if($matches[4] !== ' ')
-					$ret .= 'title="' . $matches[4] . '" ';
+					$ret .= 'title="' . xmlify($matches[4]) . '" ';
 				$ret .= ' />' . "\r\n";
 			}
 		}
