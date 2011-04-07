@@ -502,6 +502,8 @@ function network_content(&$a, $update = 0) {
 					'$mylink' => $a->contact['url'],
 					'$mytitle' => t('This is you'),
 					'$myphoto' => $a->contact['thumb'],
+					'$comment' => t('Comment'),
+					'$submit' => t('Submit'),
 					'$ww' => $commentww
 				));
 			}

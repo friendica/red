@@ -170,6 +170,8 @@ function display_content(&$a) {
 						'$mylink' => $contact['url'],
 						'$mytitle' => t('This is you'),
 						'$myphoto' => $contact['thumb'],
+						'$comment' => t('Comment'),
+						'$submit' => t('Submit'),
 						'$ww' => ''
 					));
 				}

@@ -2,7 +2,7 @@
 
 set_time_limit(0);
 
-define ( 'FRIENDIKA_VERSION',      '2.1.941' );
+define ( 'FRIENDIKA_VERSION',      '2.1.942' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.2'  );
 define ( 'DB_UPDATE_VERSION',      1047   );
 
