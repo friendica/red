@@ -468,9 +468,32 @@ function get_atom_elements($feed,$item) {
 			if($scheme && $term && stristr($scheme,'X-DFRN:'))
 				$tag_arr[] = substr($scheme,7,1) . '[url=' . unxmlify(substr($scheme,9)) . ']' . unxmlify($term) . '[/url]';
 			elseif($term)
-				$tag_arr[] = $term;
+				$tag_arr[] = notags(trim($term));
 		}
 		$res['tag'] =  implode(',', $tag_arr);
+	}
+
+	$attach = $item->get_enclosures();
+	if($attach) {
+		$att_arr = array();
+		foreach($attach as $att) {
+			$len = intval($att->get_length());
+			$link = str_replace(',','%2D', notags(trim($att->get_link())));
+			$title = str_replace(',','%2D',notags(trim($att->get_title())));
+			$type = notags(trim($att->get_type()));
+			if((! $link) || (strpos($link,'http') !== 0))
+				continue;
+
+			if(! $title)
+				$title = ' ';
+			if(! $type)
+				$type = 'application/octet-stream';
+
+			// this isn't legal html - there is no size in an 'a' tag, remember to strip it before display
+
+			$att_arr[] = '<a href="' . $link . '" size="' . $len . '" type="' . $type . '">' . $title . '</a>'; 
+		}
+		$res['attach'] = implode(',', $att_arr);
 	}
 
 	$rawobj = $item->get_item_tags(NAMESPACE_ACTIVITY, 'object');
@@ -1526,6 +1549,8 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 		}
 	}
 
+	$o .= item_getfeedattach($item);
+
 	$mentioned = get_mentions($item);
 	if($mentioned)
 		$o .= $mentioned;
@@ -1555,6 +1580,26 @@ function item_getfeedtags($item) {
 				$ret[] = array('#',$matches[1][$x], $matches[2][$x]);
 		}
 	} 
+	return $ret;
+}
+
+function item_getfeedattach($item) {
+	$ret = array();
+	$arr = explode(',',$item['attach']);
+	if(count($arr)) {
+		foreach($arr as $r) {
+			$matches = false;
+			$cnt = preg_match('|\<a href=\"(.+?)\" size=\"(.+?)\" type=\"(.+?)\" >(.+?)</a>|',$item['attach'],$matches);
+			if($cnt) {
+				$ret .= '<link href="' . $matches[1] . '" type="' . $matches[3] . '" ';
+				if(intval($matches[2]))
+					$ret .= 'size="' . intval($matches[2]) . '" ';
+				if($matches[4] !== ' ')
+					$ret .= 'title="' . $matches[4] . '" ';
+				$ret .= ' />' . "\r\n";
+			}
+		}
+	}
 	return $ret;
 }
 

@@ -2,9 +2,9 @@
 
 set_time_limit(0);
 
-define ( 'FRIENDIKA_VERSION',      '2.1.940' );
+define ( 'FRIENDIKA_VERSION',      '2.1.941' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.2'  );
-define ( 'DB_UPDATE_VERSION',      1046   );
+define ( 'DB_UPDATE_VERSION',      1047   );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );

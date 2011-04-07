@@ -184,6 +184,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `plink` char(255) NOT NULL, 
   `resource-id` char(255) NOT NULL,
   `tag` mediumtext NOT NULL,
+  `attach` mediumtext NOT NULL,
   `inform` mediumtext NOT NULL,
   `location` char(255) NOT NULL,
   `coord` char(255) NOT NULL,

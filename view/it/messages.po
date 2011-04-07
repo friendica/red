@@ -1107,7 +1107,7 @@ msgid "Name too short."
 msgstr "Il Nome è troppo corto."
 
 #: ../../mod/register.php:89
-msgid "That doesn\\'t appear to be your full (First Last) name."
+msgid "That doesn't appear to be your full (First Last) name."
 msgstr "Questo non sembra essere il tuo nome completo (Nome Cognome)."
 
 #: ../../mod/register.php:92

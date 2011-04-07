@@ -1180,7 +1180,7 @@ msgid "Name too short."
 msgstr ""
 
 #: ../../mod/register.php:89
-msgid "That doesn\\'t appear to be your full (First Last) name."
+msgid "That doesn't appear to be your full (First Last) name."
 msgstr ""
 
 #: ../../mod/register.php:92

@@ -940,7 +940,7 @@ msgstr "Nom trop court."
 
 #: ../../mod/register.php:89
 #, fuzzy
-msgid "That doesn\\'t appear to be your full (First Last) name."
+msgid "That doesn't appear to be your full (First Last) name."
 msgstr "Ceci ne semble pas être votre nom complet (Prénom Nom)."
 
 #: ../../mod/register.php:92

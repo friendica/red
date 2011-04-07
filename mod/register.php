@@ -86,7 +86,7 @@ function register_post(&$a) {
 	
 	$loose_reg = get_config('system','no_regfullname');
 	if((! $loose_reg) && (! strpos($username,' ')))
-		$err .= t("That doesn\'t appear to be your full \x28First Last\x29 name.") . EOL;
+		$err .= t("That doesn't appear to be your full \x28First Last\x29 name.") . EOL;
 
 	if(! allowed_email($email))
 			$err .= t('Your email domain is not among those allowed on this site.') . EOL;

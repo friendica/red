@@ -419,3 +419,7 @@ function update_1044() {
 function update_1045() {
 	q("ALTER TABLE `user` ADD `language` CHAR( 16 ) NOT NULL DEFAULT 'en' AFTER `timezone` ");
 }
+
+function update_1046() {
+	q("ALTER TABLE `item` ADD `attach` MEDIUMTEXT NOT NULL AFTER `tag` ");
+}
