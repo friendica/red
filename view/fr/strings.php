@@ -614,4 +614,4 @@ $a->strings["Done Editing"] = "Édition terminée";
 $a->strings["Pending Friend/Connect Notifications"] = "Notifications de relation/amitié enattente";
 $a->strings["User registrations waiting for confirm"] = "Inscriptions d'utilisateurs en attente de confirmation";
 $a->strings["Delete this item?"] = "Effacer cet élément?";
-$a->strings["Comment"] = "Commenter";
+$a->strings["Comment"] = "Comment";
