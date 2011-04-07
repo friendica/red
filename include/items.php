@@ -653,6 +653,7 @@ function item_store($arr,$force_parent = false) {
 	$arr['private']       = ((x($arr,'private'))       ? intval($arr['private'])             : 0 );
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
 	$arr['tag']           = ((x($arr,'tag'))           ? notags(trim($arr['tag']))           : '');
+	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : '');
 
 	if($arr['parent-uri'] === $arr['uri']) {
 		$parent_id = 0;
