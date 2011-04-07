@@ -24,7 +24,7 @@ function lostpass_post(&$a) {
 		intval($uid)
 	);
 	if($r)
-		notice("Password reset request issued. Check your email.");
+		notice( t('Password reset request issued. Check your email.') . EOL);
 
 	$email_tpl = load_view_file("view/lostpass_eml.tpl");
 	$email_tpl = replace_macros($email_tpl, array(
@@ -35,7 +35,7 @@ function lostpass_post(&$a) {
 			'$reset_link' => $a->get_baseurl() . '/lostpass?verify=' . $new_password
 	));
 
-	$res = mail($email, sprintf(t('Password reset requested at %s'),$a->config['sitename']),
+	$res = mail($email, sprintf( t('Password reset requested at %s'),$a->config['sitename']),
 			$email_tpl, 'From: ' . t('Administrator') . '@' . $_SERVER[SERVER_NAME]);
 
 	goaway($a->get_baseurl());
@@ -53,7 +53,7 @@ function lostpass_content(&$a) {
 			dbesc($hash)
 		);
 		if(! count($r)) {
-			notice("Request could not be verified. (You may have previously submitted it.) Password reset failed." . EOL);
+			notice( t("Request could not be verified. \x28You may have previously submitted it.\x29 Password reset failed.") . EOL);
 			goaway($a->get_baseurl());
 			return;
 		}
@@ -96,7 +96,12 @@ function lostpass_content(&$a) {
 	else {
 		$tpl = load_view_file('view/lostpass.tpl');
 
-		$o .= $tpl;
+		$o .= replace_macros($tpl,array(
+			'$title' => t('Forgot your Password?'),
+			'$desc' => t('Enter your email address and submit to have your password reset. Then check your email for further instructions.'),
+			'$name' => t('Nickname or Email: '),
+			'$submit' => t('Reset') 
+		));
 
 		return $o;
 	}

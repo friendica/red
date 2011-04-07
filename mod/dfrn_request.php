@@ -500,7 +500,9 @@ function dfrn_request_content(&$a) {
 			'$dfrn_url' => $dfrn_url,
 			'$aes_allow' => (($aes_allow) ? '<input type="hidden" name="aes_allow" value="1" />' : "" ),
 			'$confirm_key' => $confirm_key,
-			'$username' => $a->user['username'], 
+			'$welcome' => sprintf( t('Welcome home %s.'), $a->user['username']),
+			'$please' => sprintf( t('Please confirm your introduction/connection request to %s.'), $dfrn_url),
+			'$submit' => t('Confirm'),
 			'$uid' => $_SESSION['uid'],
 			'$nickname' => $a->user['nickname'],
 			'dfrn_rawurl' => $_GET['dfrn_url']

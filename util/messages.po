@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.941\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-06 22:40-0700\n"
+"POT-Creation-Date: 2011-04-06 23:01-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,7 +22,7 @@ msgid "Post successful."
 msgstr ""
 
 #: ../../mod/tagrm.php:11 ../../mod/tagrm.php:94
-#: ../../mod/dfrn_request.php:628 ../../addon/js_upload/js_upload.php:41
+#: ../../mod/dfrn_request.php:630 ../../addon/js_upload/js_upload.php:41
 msgid "Cancel"
 msgstr ""
 
@@ -476,15 +476,29 @@ msgid ""
 "strong> profile."
 msgstr ""
 
-#: ../../mod/dfrn_request.php:536 ../../include/items.php:1411
+#: ../../mod/dfrn_request.php:503
+#, php-format
+msgid "Welcome home %s."
+msgstr ""
+
+#: ../../mod/dfrn_request.php:504
+#, php-format
+msgid "Please confirm your introduction/connection request to %s."
+msgstr ""
+
+#: ../../mod/dfrn_request.php:505
+msgid "Confirm"
+msgstr ""
+
+#: ../../mod/dfrn_request.php:538 ../../include/items.php:1411
 msgid "[Name Withheld]"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:543
+#: ../../mod/dfrn_request.php:545
 msgid "Introduction received at "
 msgstr ""
 
-#: ../../mod/dfrn_request.php:545 ../../mod/lostpass.php:39
+#: ../../mod/dfrn_request.php:547 ../../mod/lostpass.php:39
 #: ../../mod/register.php:329 ../../mod/register.php:366
 #: ../../mod/regmod.php:93 ../../mod/item.php:475 ../../mod/item.php:498
 #: ../../mod/dfrn_notify.php:177 ../../mod/dfrn_notify.php:392
@@ -493,57 +507,57 @@ msgstr ""
 msgid "Administrator"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:615
+#: ../../mod/dfrn_request.php:617
 msgid "Friend/Connection Request"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:616
+#: ../../mod/dfrn_request.php:618
 msgid "Please answer the following:"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:617
+#: ../../mod/dfrn_request.php:619
 msgid "Does $name know you?"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:618 ../../mod/register.php:436
+#: ../../mod/dfrn_request.php:620 ../../mod/register.php:436
 msgid "Yes"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:619 ../../mod/register.php:437
+#: ../../mod/dfrn_request.php:621 ../../mod/register.php:437
 msgid "No"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:620
+#: ../../mod/dfrn_request.php:622
 msgid "Add a personal note:"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:621
+#: ../../mod/dfrn_request.php:623
 msgid ""
 "Please enter your profile address from one of the following supported social "
 "networks:"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:622
+#: ../../mod/dfrn_request.php:624
 msgid "Friendika"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:623
+#: ../../mod/dfrn_request.php:625
 msgid "StatusNet/Federated Social Web"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:624
+#: ../../mod/dfrn_request.php:626
 msgid "Private (secure) network"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:625
+#: ../../mod/dfrn_request.php:627
 msgid "Public (insecure) network"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:626
+#: ../../mod/dfrn_request.php:628
 msgid "Your profile address:"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:627
+#: ../../mod/dfrn_request.php:629
 msgid "Submit Request"
 msgstr ""
 
@@ -953,9 +967,37 @@ msgstr ""
 msgid "Edit contact"
 msgstr ""
 
+#: ../../mod/lostpass.php:27
+msgid "Password reset request issued. Check your email."
+msgstr ""
+
 #: ../../mod/lostpass.php:38
 #, php-format
 msgid "Password reset requested at %s"
+msgstr ""
+
+#: ../../mod/lostpass.php:56
+msgid ""
+"Request could not be verified. (You may have previously submitted it.) "
+"Password reset failed."
+msgstr ""
+
+#: ../../mod/lostpass.php:100
+msgid "Forgot your Password?"
+msgstr ""
+
+#: ../../mod/lostpass.php:101
+msgid ""
+"Enter your email address and submit to have your password reset. Then check "
+"your email for further instructions."
+msgstr ""
+
+#: ../../mod/lostpass.php:102
+msgid "Nickname or Email: "
+msgstr ""
+
+#: ../../mod/lostpass.php:103
+msgid "Reset"
 msgstr ""
 
 #: ../../mod/settings.php:38
