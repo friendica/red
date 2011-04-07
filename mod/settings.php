@@ -258,7 +258,15 @@ function settings_content(&$a) {
 		'$page_normal'    => PAGE_NORMAL,
 		'$page_soapbox'   => PAGE_SOAPBOX,
 		'$page_community' => PAGE_COMMUNITY,
-		'$page_freelove'  => PAGE_FREELOVE
+		'$page_freelove'  => PAGE_FREELOVE,
+		'$n_l'            => t('Normal Account'),
+		'$n_d'            => t('This account is a normal personal profile'),
+		'$s_l'            => t('Soapbox Account'),
+		'$s_d'            => t('Automatically approve all connection/friend requests as read-only fans'),
+		'$c_l'            => t('Community/Celebrity Account'),
+		'$c_d'            => t('Automatically approve all connection/friend requests as read-write fans'),
+		'$f_l'            => t('Automatic Friend Account'),
+		'$f_d'            => t('Automatically approve all connection/friend requests as friends')		
 	));
 
 	$noid = get_config('system','no_openid');

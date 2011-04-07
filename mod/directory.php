@@ -35,7 +35,9 @@ function directory_content(&$a) {
 	$o .= replace_macros($tpl, array(
 		'$search' => $search,
 		'$globaldir' => $globaldir,
-		'$finding' => (strlen($search) ? '<h4>' . t('Finding: ') . "'" . $search . "'" . '</h4>' : "")
+		'$finding' => (strlen($search) ? '<h4>' . t('Finding: ') . "'" . $search . "'" . '</h4>' : ""),
+		'$sitedir' => t('Site Directory'),
+		'$submit' => t('Find')
 	));
 
 	if($search)

@@ -91,7 +91,11 @@ function group_content(&$a) {
 
 	if(($a->argc == 2) && ($a->argv[1] === 'new')) {
 		$tpl = load_view_file('view/group_new.tpl');
-		$o .= replace_macros($tpl,array());
+		$o .= replace_macros($tpl,array(
+			'$desc' => t('Create a group of contacts/friends.'),
+			'$name' => t('Group Name: '),
+			'$submit' => t('Submit')
+		 ));
 		return $o;
 	}
 
@@ -144,7 +148,11 @@ function group_content(&$a) {
 			'$gid' => $group['id'],
 			'$name' => $group['name'],
 			'$drop' => $drop_txt,
-			'$selector' => contact_select('group_members_select','group_members_select',$preselected,25,false,$celeb)
+			'$selector' => contact_select('group_members_select','group_members_select',$preselected,25,false,$celeb),
+			'$title' => t('Group Editor'),
+			'$gname' => t('Group Name: '),
+			'$members' => t('Members:'),
+			'$submit' => t('Submit')
 		));
 
 	}
