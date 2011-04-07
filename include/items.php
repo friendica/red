@@ -1584,14 +1584,14 @@ function item_getfeedtags($item) {
 }
 
 function item_getfeedattach($item) {
-	$ret = array();
+	$ret = '';
 	$arr = explode(',',$item['attach']);
 	if(count($arr)) {
 		foreach($arr as $r) {
 			$matches = false;
-			$cnt = preg_match('|\<a href=\"(.+?)\" size=\"(.+?)\" type=\"(.+?)\" >(.+?)</a>|',$item['attach'],$matches);
+			$cnt = preg_match('|\<a href=\"(.+?)\" size=\"(.+?)\" type=\"(.+?)\" >(.+?)</a>|',$r,$matches);
 			if($cnt) {
-				$ret .= '<link href="' . $matches[1] . '" type="' . $matches[3] . '" ';
+				$ret .= '<link rel="enclosure" href="' . $matches[1] . '" type="' . $matches[3] . '" ';
 				if(intval($matches[2]))
 					$ret .= 'size="' . intval($matches[2]) . '" ';
 				if($matches[4] !== ' ')
