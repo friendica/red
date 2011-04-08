@@ -184,7 +184,11 @@ function profile_photo_content(&$a) {
 		$tpl = load_view_file('view/profile_photo.tpl');
 
 		$o .= replace_macros($tpl,array(
-			'$user' => $a->user['nickname']
+			'$user' => $a->user['nickname'],
+			'$lbl_upfile' => t('Upload File:'),
+			'$title' => t('Upload Profile Photo'),
+			'$submit' => t('Upload'),
+			'$select' => sprintf('%s %s', t('or'), '<a href="'. $a->get_baseurl() . '/photos/' . $a->user['nickname'] . '">' . t('select a photo from your photo albums') . '</a>')
 		));
 
 		return $o;

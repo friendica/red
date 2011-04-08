@@ -621,6 +621,11 @@ input#dfrn-url {
 #profile-photo-link-select-wrapper {
 	margin-top: 2em;
 }
+
+#profile-photo-submit-wrapper {
+	margin-top: 10px;
+}
+
 #profile-photo-wrapper img {
 	width:175px;
 	height:175px;

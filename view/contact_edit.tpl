@@ -28,7 +28,7 @@
 
 
 		<div id="contact-edit-poll-wrapper">
-			<div id="contact-edit-last-update-text">$lastupdtext<span id="contact-edit-last-updated">$last_update</span</div>
+			<div id="contact-edit-last-update-text">$lastupdtext<span id="contact-edit-last-updated">$last_update</span></div>
 			<div id="contact-edit-poll-text">$updpub</div>
 			$poll_interval
 			<div id="contact-edit-update-now"><a href="contacts/$contact_id/update">$udnow</a></div>
@@ -40,47 +40,42 @@ $insecure
 $blocked
 $ignored
 
-
 <div id="contact-edit-info-wrapper">
-<h4>Kontaktinformation / Notizen</h4>
+<h4>$lbl_info1</h4>
 <textarea id="contact-edit-info" rows="10" cols="72" name="info" >$info</textarea>
 </div>
 <div id="contact-edit-info-end"></div>
 
-<input class="contact-edit-submit" type="submit" name="submit" value="Submit" />
+<input class="contact-edit-submit" type="submit" name="submit" value="$submit" />
 
 <div id="contact-edit-profile-select-text">
-<h4>Profil Sichtbarkeit</h4>
-<p>Bitte wähle das Profil, das du $name gezeigt werden soll, wenn er sich dein
-Profil in Friendika betrachtet.
+<h4>$lbl_vis1</h4>
+<p>$lbl_vis2
 </p> 
 </div>
 $profile_select
 <div id="contact-edit-profile-select-end"></div>
 
-<input class="contact-edit-submit" type="submit" name="submit" value="Submit" />
+<input class="contact-edit-submit" type="submit" name="submit" value="$submit" />
 
 
 <div id="contact-edit-rating-wrapper">
-<h4>Online Reputation</h4>
+<h4>$lbl_rep1</h4>
 <p>
-Gelegentlich werden sich deine Freunde nach der online Legitimität dieser
-Person erkundigen. Du kannst ihnen helfen bei der Entscheidung ob sie mit
-dieser Person interagieren wollen indem du den "Ruf" der Person bewertest.
+$lbl_rep2 $lbl_rep3
 </p>
 <div id="contact-edit-rating-select-wrapper">
 $rating
 </div>
 <div id="contact-edit-rating-explain">
 <p>
-Bitte nimm dir einen Moment um deine Auswahl zu kommentieren wenn du meinst das
-könnte anderen weiter helfen.
+$lbl_rep4
 </p>
 <textarea id="contact-edit-rating-text" name="reason" rows="3" cols="64" >$reason</textarea>
 </div>
 </div>
 $groups
 
-<input class="contact-edit-submit" type="submit" name="submit" value="Submit" />
+<input class="contact-edit-submit" type="submit" name="submit" value="$submit" />
 </form>
 </div>

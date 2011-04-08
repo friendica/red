@@ -106,16 +106,9 @@ function profile_content(&$a, $update = 0) {
 
 
 		if($tab === 'profile') {
-			$profile_lang = get_config('system','language');
-			if(! $profile_lang)
-				$profile_lang = 'en';
-			if(file_exists("view/$profile_lang/profile_advanced.php"))
-				require_once("view/$profile_lang/profile_advanced.php");
-			else
-				require_once('view/profile_advanced.php');
-
+			require_once('include/profile_advanced.php');
+			$o .= advanced_profile($a);
 			call_hooks('profile_advanced',$o);
-
 			return $o;
 		}
 
