@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.1.941\n"
+"Project-Id-Version: 2.1.942\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-06 23:01-0700\n"
+"POT-Creation-Date: 2011-04-07 17:54-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,8 +53,8 @@ msgid "Photo Albums"
 msgstr ""
 
 #: ../../mod/photos.php:34 ../../mod/photos.php:106 ../../mod/photos.php:781
-#: ../../mod/photos.php:850 ../../mod/photos.php:865 ../../mod/photos.php:1233
-#: ../../mod/photos.php:1244 ../../include/Photo.php:225
+#: ../../mod/photos.php:850 ../../mod/photos.php:865 ../../mod/photos.php:1235
+#: ../../mod/photos.php:1246 ../../include/Photo.php:225
 #: ../../include/Photo.php:232 ../../include/Photo.php:239
 #: ../../include/items.php:1028 ../../include/items.php:1031
 #: ../../include/items.php:1034 ../../wip/photos.php:35
@@ -78,7 +78,7 @@ msgstr ""
 #: ../../mod/profile_photo.php:139 ../../mod/profile_photo.php:150
 #: ../../mod/message.php:8 ../../mod/message.php:116
 #: ../../mod/wall_upload.php:42 ../../mod/follow.php:8
-#: ../../mod/display.php:309 ../../mod/profiles.php:7
+#: ../../mod/display.php:311 ../../mod/profiles.php:7
 #: ../../mod/profiles.php:227 ../../mod/invite.php:13 ../../mod/invite.php:50
 #: ../../mod/dfrn_confirm.php:53 ../../addon/facebook/facebook.php:110
 #: ../../wip/photos.php:77 ../../wip/photos.php:723
@@ -160,9 +160,10 @@ msgid "No photos selected"
 msgstr ""
 
 #: ../../mod/photos.php:801 ../../mod/photos.php:858 ../../mod/photos.php:1066
-#: ../../mod/install.php:123 ../../mod/manage.php:106 ../../mod/group.php:97
-#: ../../mod/group.php:155 ../../mod/invite.php:64
-#: ../../addon/facebook/facebook.php:151
+#: ../../mod/photos.php:1109 ../../mod/install.php:123
+#: ../../mod/manage.php:106 ../../mod/network.php:506 ../../mod/group.php:97
+#: ../../mod/group.php:155 ../../mod/profile.php:395 ../../mod/display.php:174
+#: ../../mod/invite.php:64 ../../addon/facebook/facebook.php:151
 #: ../../addon/randplace/randplace.php:179
 #: ../../addon/statusnet/statusnet.php:163
 #: ../../addon/statusnet/statusnet.php:189
@@ -200,7 +201,7 @@ msgstr ""
 msgid "Edit Album"
 msgstr ""
 
-#: ../../mod/photos.php:879 ../../mod/photos.php:1263 ../../wip/photos.php:814
+#: ../../mod/photos.php:879 ../../mod/photos.php:1265 ../../wip/photos.php:814
 #: ../../wip/photos.php:1141 ../../wip/photos-chris.php:861
 #: ../../wip/photos-chris.php:1188
 msgid "View Photo"
@@ -291,8 +292,8 @@ msgstr ""
 msgid "Please wait"
 msgstr ""
 
-#: ../../mod/photos.php:1106 ../../mod/photos.php:1146
-#: ../../mod/photos.php:1175 ../../mod/network.php:503
+#: ../../mod/photos.php:1106 ../../mod/photos.php:1148
+#: ../../mod/photos.php:1177 ../../mod/network.php:503
 #: ../../mod/profile.php:392 ../../mod/display.php:171
 #: ../../wip/photos.php:986 ../../wip/photos.php:1025
 #: ../../wip/photos.php:1053 ../../wip/photos-chris.php:1033
@@ -300,22 +301,27 @@ msgstr ""
 msgid "This is you"
 msgstr ""
 
-#: ../../mod/photos.php:1203 ../../mod/network.php:512 ../../mod/group.php:141
-#: ../../mod/profile.php:438 ../../mod/display.php:238
+#: ../../mod/photos.php:1108 ../../mod/network.php:505
+#: ../../mod/profile.php:394 ../../mod/display.php:173 ../../boot.php:360
+msgid "Comment"
+msgstr ""
+
+#: ../../mod/photos.php:1205 ../../mod/network.php:514 ../../mod/group.php:141
+#: ../../mod/profile.php:440 ../../mod/display.php:240
 msgid "Delete"
 msgstr ""
 
-#: ../../mod/photos.php:1249 ../../wip/photos.php:1127
+#: ../../mod/photos.php:1251 ../../wip/photos.php:1127
 #: ../../wip/photos-chris.php:1174
 msgid "Recent Photos"
 msgstr ""
 
-#: ../../mod/photos.php:1253 ../../wip/photos.php:1131
+#: ../../mod/photos.php:1255 ../../wip/photos.php:1131
 #: ../../wip/photos-chris.php:1178
 msgid "Upload New Photos"
 msgstr ""
 
-#: ../../mod/photos.php:1269 ../../wip/photos.php:1147
+#: ../../mod/photos.php:1271 ../../wip/photos.php:1147
 #: ../../wip/photos-chris.php:1194
 msgid "View Album"
 msgstr ""
@@ -328,8 +334,8 @@ msgstr ""
 msgid "Edit post"
 msgstr ""
 
-#: ../../mod/editpost.php:62 ../../mod/network.php:511
-#: ../../mod/profile.php:416 ../../mod/display.php:222
+#: ../../mod/editpost.php:62 ../../mod/network.php:513
+#: ../../mod/profile.php:418 ../../mod/display.php:224
 msgid "Edit"
 msgstr ""
 
@@ -519,11 +525,15 @@ msgstr ""
 msgid "Does $name know you?"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:620 ../../mod/register.php:436
+#: ../../mod/dfrn_request.php:620 ../../mod/settings.php:289
+#: ../../mod/settings.php:301 ../../mod/register.php:436
+#: ../../mod/profiles.php:355
 msgid "Yes"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:621 ../../mod/register.php:437
+#: ../../mod/dfrn_request.php:621 ../../mod/settings.php:290
+#: ../../mod/settings.php:302 ../../mod/register.php:437
+#: ../../mod/profiles.php:356
 msgid "No"
 msgstr ""
 
@@ -774,7 +784,7 @@ msgstr ""
 msgid "New Follower"
 msgstr ""
 
-#: ../../mod/notifications.php:130
+#: ../../mod/notifications.php:130 ../../mod/notifications.php:153
 msgid "Approve"
 msgstr ""
 
@@ -786,7 +796,11 @@ msgstr ""
 msgid "User registrations waiting for confirm"
 msgstr ""
 
-#: ../../mod/notifications.php:163
+#: ../../mod/notifications.php:154
+msgid "Deny"
+msgstr ""
+
+#: ../../mod/notifications.php:159
 msgid "No registrations."
 msgstr ""
 
@@ -1088,15 +1102,23 @@ msgstr ""
 msgid "&nbsp;(Optional) Allow this OpenID to login to this account."
 msgstr ""
 
-#: ../../mod/settings.php:310
+#: ../../mod/settings.php:288
+msgid "Publish your default profile in site directory?"
+msgstr ""
+
+#: ../../mod/settings.php:300
+msgid "Publish your default profile in global social directory?"
+msgstr ""
+
+#: ../../mod/settings.php:316
 msgid "Profile is <strong>not published</strong>."
 msgstr ""
 
-#: ../../mod/settings.php:353
+#: ../../mod/settings.php:359
 msgid "Export Personal Data"
 msgstr ""
 
-#: ../../mod/settings.php:371
+#: ../../mod/settings.php:377
 msgid "Default Post Permissions"
 msgstr ""
 
@@ -1184,8 +1206,8 @@ msgstr ""
 msgid "Group: "
 msgstr ""
 
-#: ../../mod/network.php:330 ../../mod/network.php:561
-#: ../../mod/profile.php:460 ../../mod/display.php:262
+#: ../../mod/network.php:330 ../../mod/network.php:563
+#: ../../mod/profile.php:462 ../../mod/display.php:264
 #: ../../mod/search.php:124
 msgid "View $name's profile"
 msgstr ""
@@ -1203,24 +1225,24 @@ msgstr ""
 msgid "See all %d comments"
 msgstr ""
 
-#: ../../mod/network.php:562 ../../mod/display.php:263
+#: ../../mod/network.php:564 ../../mod/display.php:265
 msgid "View $owner_name's profile"
 msgstr ""
 
-#: ../../mod/network.php:563 ../../mod/display.php:264
+#: ../../mod/network.php:565 ../../mod/display.php:266
 msgid "to"
 msgstr ""
 
-#: ../../mod/network.php:564 ../../mod/display.php:265
+#: ../../mod/network.php:566 ../../mod/display.php:267
 msgid "Wall-to-Wall"
 msgstr ""
 
-#: ../../mod/network.php:565 ../../mod/display.php:266
+#: ../../mod/network.php:567 ../../mod/display.php:268
 msgid "via Wall-To-Wall:"
 msgstr ""
 
-#: ../../mod/network.php:607 ../../mod/register.php:442
-#: ../../mod/profile.php:494 ../../mod/display.php:318
+#: ../../mod/network.php:609 ../../mod/register.php:442
+#: ../../mod/profile.php:496 ../../mod/display.php:320
 msgid ""
 "Shared content is covered by the <a href=\"http://creativecommons.org/"
 "licenses/by/3.0/\">Creative Commons Attribution 3.0</a> license."
@@ -1525,7 +1547,7 @@ msgstr ""
 msgid "%s posted an update."
 msgstr ""
 
-#: ../../mod/item.php:598 ../../mod/display.php:15 ../../mod/display.php:313
+#: ../../mod/item.php:598 ../../mod/display.php:15 ../../mod/display.php:315
 msgid "Item not found."
 msgstr ""
 
@@ -1705,7 +1727,7 @@ msgstr ""
 msgid "following"
 msgstr ""
 
-#: ../../mod/display.php:306
+#: ../../mod/display.php:308
 msgid "Item has been removed."
 msgstr ""
 
@@ -1763,17 +1785,33 @@ msgstr ""
 msgid "Profile unavailable to clone."
 msgstr ""
 
-#: ../../mod/profiles.php:370
+#: ../../mod/profiles.php:354
+msgid "Hide my contact/friend list from viewers of this profile?"
+msgstr ""
+
+#: ../../mod/profiles.php:373
 msgid ""
 "This is your <strong>public</strong> profile.<br />It <strong>may</strong> "
 "be visible to anybody using the internet."
 msgstr ""
 
-#: ../../mod/profiles.php:380 ../../mod/directory.php:91
+#: ../../mod/profiles.php:383 ../../mod/directory.php:91
 msgid "Age: "
 msgstr ""
 
-#: ../../mod/profiles.php:422
+#: ../../mod/profiles.php:418 ../../include/nav.php:110
+msgid "Profiles"
+msgstr ""
+
+#: ../../mod/profiles.php:419
+msgid "Change profile photo"
+msgstr ""
+
+#: ../../mod/profiles.php:420
+msgid "Create New Profile"
+msgstr ""
+
+#: ../../mod/profiles.php:432
 msgid "Profile Image"
 msgstr ""
 
@@ -2465,10 +2503,6 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: ../../include/nav.php:110
-msgid "Profiles"
-msgstr ""
-
 #: ../../include/auth.php:27
 msgid "Logged out."
 msgstr ""
@@ -2568,10 +2602,6 @@ msgstr ""
 
 #: ../../boot.php:359
 msgid "Delete this item?"
-msgstr ""
-
-#: ../../boot.php:360
-msgid "Comment"
 msgstr ""
 
 #: ../../boot.php:813

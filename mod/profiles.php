@@ -351,6 +351,9 @@ function profiles_content(&$a) {
 
 		$opt_tpl = load_view_file("view/profile-hide-friends.tpl");
 		$hide_friends = replace_macros($opt_tpl,array(
+			'$desc' => t('Hide my contact/friend list from viewers of this profile?'),
+			'$yes_str' => t('Yes'),
+			'$no_str' => t('No'),
 			'$yes_selected' => (($r[0]['hide-friends']) ? " checked=\"checked\" " : ""),
 			'$no_selected' => (($r[0]['hide-friends'] == 0) ? " checked=\"checked\" " : "")
 		));
@@ -410,7 +413,14 @@ function profiles_content(&$a) {
 			local_user());
 		if(count($r)) {
 
-			$o .= load_view_file('view/profile_listing_header.tpl');
+			$tpl_header = load_view_file('view/profile_listing_header.tpl');
+			$o .= replace_macros($tpl_header,array(
+				'$header' => t('Profiles'),
+				'$chg_photo' => t('Change profile photo'),
+				'$cr_new' => t('Create New Profile')
+			));
+
+
 			$tpl_default = load_view_file('view/profile_entry_default.tpl');
 			$tpl = load_view_file('view/profile_entry.tpl');
 

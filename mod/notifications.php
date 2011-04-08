@@ -147,17 +147,13 @@ function notifications_content(&$a) {
 				 LEFT JOIN `contact` ON `register`.`uid` = `contact`.`uid`
 				 LEFT JOIN `user` ON `register`.`uid` = `user`.`uid`;");
 		if(($r !== false) && (count($r))) {
-			$tpl = load_view_file("view/registrations.tpl");
+			$o .= '<ul>';
 			foreach($r as $rr) {
-				$o .= "<ul>";
-				$o .= replace_macros($tpl, array(
-					'$fullname' 	=> $rr['name'],
-					'$email'		=> $rr['email'],
-					'$approvelink' 	=> "regmod/allow/".$rr['hash'],
-					'$denylink' 	=> "regmod/deny/".$rr['hash'],
-				));
-				$o .= "</ul>";
+				$o .= '<li>' . sprintf('%s (%s) : ', $rr['name'],$rr['email']) 
+					. '<a href="regmod/allow/' . $rr['hash'] .'">' . t('Approve') 
+					. '</a> - <href="regmod/deny/' . $rr['hash'] . '">' . t('Deny') . '</a></li>' . "\r\n";
 			}
+			$o .= "</ul>";
 		}
 		else
 			notice( t('No registrations.') . EOL);

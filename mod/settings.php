@@ -285,6 +285,9 @@ function settings_content(&$a) {
 	else {
 		$opt_tpl = load_view_file("view/profile-in-directory.tpl");
 		$profile_in_dir = replace_macros($opt_tpl,array(
+			'$desc'         => t('Publish your default profile in site directory?'),
+			'$yes_str'      => t('Yes'),
+			'$no_str'       => t('No'),
 			'$yes_selected' => (($profile['publish'])      ? " checked=\"checked\" " : ""),
 			'$no_selected'  => (($profile['publish'] == 0) ? " checked=\"checked\" " : "")
 		));
@@ -294,6 +297,9 @@ function settings_content(&$a) {
 		$opt_tpl = load_view_file("view/profile-in-netdir.tpl");
 
 		$profile_in_net_dir = replace_macros($opt_tpl,array(
+			'$desc'         => t('Publish your default profile in global social directory?'),
+			'$yes_str'      => t('Yes'),
+			'$no_str'       => t('No'),
 			'$yes_selected' => (($profile['net-publish'])      ? " checked=\"checked\" " : ""),
 			'$no_selected'  => (($profile['net-publish'] == 0) ? " checked=\"checked\" " : "")
 		));
