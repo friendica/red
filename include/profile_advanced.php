@@ -112,7 +112,7 @@ EOT;
 }
 
 if($a->profile['politic']) {
-	$lbl_politic = t('Policial Views:');
+	$lbl_politic = t('Political Views:');
 	$politic = $a->profile['politic'];
 $o .= <<< EOT
 <div id="advanced-profile-politic-wrapper" >
