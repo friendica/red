@@ -3,6 +3,10 @@
 <meta name="generator" content="$generator" />
 <link rel="stylesheet" type="text/css" href="$stylesheet" media="all" />
 <link rel="shortcut icon" href="$baseurl/images/friendika-32.png" />
+<link rel="search"
+         href="$baseurl/opensearch" 
+         type="application/opensearchdescription+xml" 
+         title="Search in Friendika" />
 
 <!--[if IE]>
 <script type="text/javascript" src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
