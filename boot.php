@@ -2662,14 +2662,19 @@ function extract_item_authors($arr,$uid) {
 
 	// pre-quoted, don't put quotes on %s
 	if(count($urls)) {
-		$r = q("SELECT `id`,`url` FROM `contact` WHERE `uid` = %d AND `url` IN ( %s ) AND `network` = 'dfrn' AND `self` = 0 AND `blocked` = 0 ",
+		$r = q("SELECT `id`,`network`,`url` FROM `contact` WHERE `uid` = %d AND `url` IN ( %s )  AND `self` = 0 AND `blocked` = 0 ",
 			intval($uid),
 			implode(',',$urls)
 		);
 		if(count($r)) {
 			$ret = array();
-			foreach($r as $rr)
-				$ret[$rr['url']] = $rr['id'];
+			$authors = array();
+			foreach($r as $rr){
+				if ($rr['network']=='dfrn')
+					$ret[$rr['url']] = $rr['id'];
+				$authors[$r['url']]= $rr;
+			}
+			$a->authors = $authors;
 			return $ret;
 		}
 	}
@@ -2681,7 +2686,7 @@ function item_photo_menu($item){
 	$a = get_app();
 	
 	if (!isset($a->authors)){
-		$rr = q("SELECT id, network, url FROM contact WHERE uid=%d AND self!=1", intval(local_user()));
+		$rr = q("SELECT `id`, `network`, `url` FROM `contact` WHERE `uid`=%d AND `self`=0 AND `blocked`=0 ", intval(local_user()));
 		$authors = array();
 		foreach($rr as $r) $authors[$r['url']]= $r;
 		$a->authors = $authors;
