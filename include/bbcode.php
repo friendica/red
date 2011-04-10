@@ -3,7 +3,7 @@ require_once("include/oembed.php");
 	// BBcode 2 HTML was written by WAY2WEB.net
 	// extended to work with Mistpark/Friendika - Mike Macgirvin
 
-function bbcode($Text) {
+function bbcode($Text,$preserve_nl = false) {
 
 	// Replace any html brackets with HTML Entities to prevent executing HTML or script
 	// Don't use strip_tags here because it breaks [url] search by replacing & with amp
@@ -12,7 +12,10 @@ function bbcode($Text) {
 	$Text = str_replace(">", "&gt;", $Text);
 
 	// Convert new line chars to html <br /> tags
+
 	$Text = nl2br($Text);
+	if($preserve_nl)
+		$Text = str_replace(array("\n","\r"), array('',''),$Text);
 
 	// Set up the parameters for a URL search string
 	$URLSearchString = "^\[\]";

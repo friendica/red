@@ -17,7 +17,7 @@ function share_init(&$a) {
 	$o = '';
 
 	$o .= '&#x2672; <a href="' . $r[0]['author-link'] . '">' . $r[0]['author-name'] . '</a><br />';
-	$o .= prepare_body($r[0]);
+	$o .= bbcode($r[0]['body'], true);
 	echo $o . '<br />';
 	killme();  
 }
