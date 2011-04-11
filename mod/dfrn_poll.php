@@ -297,6 +297,7 @@ function dfrn_poll_post(&$a) {
 	if(! count($r))
 		killme();
 
+	$contact = $r[0];
 	$owner_uid = $r[0]['uid'];
 	$contact_id = $r[0]['id']; 
 
@@ -330,6 +331,23 @@ function dfrn_poll_post(&$a) {
 		// NOTREACHED
 	}
 	else {
+
+		// Update the writable flag if it changed		
+
+		if($dfrn_version >= 2.21) {
+			if($perm === 'rw')
+				$writable = 1;
+			else
+				$writable = 0;
+
+			if($writable !=  $contact['writable]) {
+				q("UPDATE `contact` SET `writable` = %d WHERE `id` = %d LIMIT 1",
+					intval($writable),
+					intval($contact_id)
+				);
+			}
+		}				
+
 		header("Content-type: application/atom+xml");
 		$o = get_feed_for($a,$dfrn_id, $a->argv[1], $last_update, $direction);
 		echo $o;
