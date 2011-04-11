@@ -1259,17 +1259,14 @@ function photos_content(&$a) {
 	if(count($r)) {
 		foreach($r as $rr) {
 			$o .= replace_macros($tpl,array(
-				'$id' => $rr['id'],
-				'$photolink' => $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] 
-					. '/image/' . $rr['resource-id'],
+				'$id'         => $rr['id'],
+				'$photolink'  => $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $rr['resource-id'],
 				'$phototitle' => t('View Photo'),
-				'$imgsrc' => $a->get_baseurl() . '/photo/' 
-					. $rr['resource-id'] . '-' . ((($rr['scale']) == 6) ? 4 : $rr['scale']) . '.jpg',
-				'$albumlink' => $a->get_baseurl() . '/photos/' 
-					. $a->data['user']['nickname'] . '/album/' . bin2hex($rr['album']),
-				'$albumname' => $rr['album'],
-				'$albumalt' => t('View Album'),
-				'$imgalt' => $rr['filename']
+				'$imgsrc'     => $a->get_baseurl() . '/photo/' . $rr['resource-id'] . '-' . ((($rr['scale']) == 6) ? 4 : $rr['scale']) . '.jpg',
+				'$albumlink'  => $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/album/' . bin2hex($rr['album']),
+				'$albumname'  => $rr['album'],
+				'$albumalt'   => t('View Album'),
+				'$imgalt'     => $rr['filename']
 			));
 
 		}

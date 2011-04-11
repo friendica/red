@@ -354,6 +354,7 @@ function notifier_run($argv, $argc){
 				case 'mail':
 				case 'dspr':
 				case 'feed':
+				case 'face':
 				default:
 					break;
 			}

@@ -74,6 +74,18 @@ define ( 'PAGE_COMMUNITY',         2 );
 define ( 'PAGE_FREELOVE',          3 );
 
 /**
+ * Network and protocol family types 
+ */
+
+define ( 'NETWORK_DFRN',             'dfrn');    // Friendika, Mistpark, other DFRN implementations
+define ( 'NETWORK_OSTATUS',          'stat');    // status.net, identi.ca, GNU-social, other OStatus implementations
+define ( 'NETWORK_FEED',             'feed');    // RSS/Atom feeds with no known "post/notify" protocol
+define ( 'NETWORK_DIASPORA',         'dspr');    // Diaspora
+define ( 'NETWORK_MAIL',             'mail');    // IMAP/POP
+define ( 'NETWORK_FACEBOOK',         'face');    // Facebook API     
+
+
+/**
  * Maximum number of "people who like (or don't like) this"  that we will list by name
  */
 

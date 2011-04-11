@@ -65,7 +65,7 @@ function search_content(&$a) {
 
 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 		`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-		`contact`.`network`, `contact`.`thumb`, `contact`.`self`, 
+		`contact`.`network`, `contact`.`thumb`, `contact`.`self`, `contact`.`writable`, 
 		`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`,
 		`user`.`nickname`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
