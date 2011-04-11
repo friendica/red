@@ -80,68 +80,10 @@ function search_content(&$a) {
 		dbesc($search)
 	);
 
-	$tpl = load_view_file('view/search_item.tpl');
-	$droptpl = load_view_file('view/wall_fake_drop.tpl');
 
-	$return_url = $_SESSION['return_url'] = $a->cmd;
+	require_once('include/conversation.php');
 
-	if(count($r)) {
-
-		foreach($r as $item) {
-
-			$total       = 0;
-			$comment     = '';
-			$owner_url   = '';
-			$owner_photo = '';
-			$owner_name  = '';
-			$sparkle     = '';
-			
-			if(((activity_match($item['verb'],ACTIVITY_LIKE)) || (activity_match($item['verb'],ACTIVITY_DISLIKE))) 
-				&& ($item['id'] != $item['parent']))
-				continue;
-
-			$total ++;
-
-			$profile_name   = ((strlen($item['author-name']))   ? $item['author-name']   : $item['name']);
-			$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $item['thumb']);
-			$profile_link   = ((strlen($item['author-link']))   ? $item['author-link']   : $item['url']);
-
-
-			$location = (($item['location']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : '');
-			$coord = (($item['coord']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['coord']) . '">' . $item['coord'] . '</a>' : '');
-			if($coord) {
-				if($location)
-					$location .= '<br /><span class="smalltext">(' . $coord . ')</span>';
-				else
-					$location = '<span class="smalltext">' . $coord . '</span>';
-			}
-
-			$drop = replace_macros($droptpl,array('$id' => $item['id']));
-			$lock = '<div class="wall-item-lock"></div>';
-
-			$o .= replace_macros($tpl,array(
-				'$id' => $item['item_id'],
-				'$linktitle' => t('View $name\'s profile'),
-				'$profile_url' => $profile_link,
-				'$item_photo_menu' => item_photo_menu($item),				
-				'$name' => $profile_name,
-				'$sparkle' => $sparkle,
-				'$lock' => $lock,
-				'$thumb' => $profile_avatar,
-				'$title' => $item['title'],
-				'$body' => bbcode($item['body']),
-				'$ago' => relative_date($item['created']),
-				'$location' => $location,
-				'$indent' => '',
-				'$owner_url' => $owner_url,
-				'$owner_photo' => $owner_photo,
-				'$owner_name' => $owner_name,
-				'$drop' => $drop,
-				'$conv' => '<a href="' . $a->get_baseurl() . '/display/' . $item['nickname'] . '/' . $item['id'] . '">' . t('View in context') . '</a>'
-			));
-
-		}
-	}
+	$o .= conversation($a,$r,'search',false);
 
 	$o .= paginate($a);
 

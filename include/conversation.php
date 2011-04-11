@@ -18,6 +18,17 @@ function conversation(&$a,$r, $mode, $update) {
 		$writable = can_write_wall($a,$profile_owner);
 	}
 
+	if($mode === 'display') {
+		$profile_owner = $a->profile['uid'];
+		$writable = can_write_wall($a,$profile_owner);
+	}
+
+
+
+	if($update)
+		$return_url = $_SESSION['return_url'];
+	else
+		$return_url = $_SESSION['return_url'] = $a->cmd;
 
 
 	// find all the authors involved in remote conversations
@@ -38,9 +49,10 @@ function conversation(&$a,$r, $mode, $update) {
 	
 	if(count($r)) {
 
-		if($mode === 'network-new') {
+		if($mode === 'network-new' || $mode === 'search') {
 
-			// "New Item View" - just loop through the items and format them minimally for display
+			// "New Item View" on network page or search page results 
+			// - just loop through the items and format them minimally for display
 
 			$tpl = load_view_file('view/search_item.tpl');
 			$droptpl = load_view_file('view/wall_fake_drop.tpl');
@@ -52,6 +64,15 @@ function conversation(&$a,$r, $mode, $update) {
 				$owner_photo = '';
 				$owner_name  = '';
 				$sparkle     = '';
+
+				if($mode === 'search') {
+					if(((activity_match($item['verb'],ACTIVITY_LIKE)) || (activity_match($item['verb'],ACTIVITY_DISLIKE))) 
+						&& ($item['id'] != $item['parent']))
+						continue;
+					$nickname = $item['nickname'];
+				}
+				else
+					$nickname = $a->user['nickname'];
 			
 				$profile_name   = ((strlen($item['author-name']))   ? $item['author-name']   : $item['name']);
 				$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $item['thumb']);
@@ -110,7 +131,7 @@ function conversation(&$a,$r, $mode, $update) {
 					'$owner_photo' => $owner_photo,
 					'$owner_name' => $owner_name,
 					'$drop' => $drop,
-					'$conv' => '<a href="' . $a->get_baseurl() . '/display/' . $a->user['nickname'] . '/' . $item['id'] . '">' . t('View in context') . '</a>'
+					'$conv' => '<a href="' . $a->get_baseurl() . '/display/' . $nickname . '/' . $item['id'] . '">' . t('View in context') . '</a>'
 				));
 
 			}
@@ -243,10 +264,6 @@ function conversation(&$a,$r, $mode, $update) {
 				}
 			}
 
-			if($update)
-				$return_url = $_SESSION['return_url'];
-			else
-				$return_url = $_SESSION['return_url'] = $a->cmd;
 
 			$likebuttons = '';
 
@@ -264,8 +281,8 @@ function conversation(&$a,$r, $mode, $update) {
 				if($item['last-child']) {
 					$comment = replace_macros($cmnt_tpl,array(
 						'$return_path' => '', 
-						'$jsreload' => '', // $_SESSION['return_url'],
-						'$type' => 'net-comment',
+						'$jsreload' => (($mode === 'display') ? $_SESSION['return_url'] : ''),
+						'$type' => (($mode === 'profile') ? 'wall-comment' : 'net-comment'),
 						'$id' => $item['item_id'],
 						'$parent' => $item['parent'],
 						'$profile_uid' =>  $profile_owner,
@@ -274,7 +291,7 @@ function conversation(&$a,$r, $mode, $update) {
 						'$myphoto' => $a->contact['thumb'],
 						'$comment' => t('Comment'),
 						'$submit' => t('Submit'),
-						'$ww' => $commentww
+						'$ww' => (($mode === 'network') ? $commentww : '')
 					));
 				}
 			}
@@ -341,8 +358,8 @@ function conversation(&$a,$r, $mode, $update) {
 
 			$tmp_item = replace_macros($template,array(
 				'$id' => $item['item_id'],
-				'$linktitle' => t('View $name\'s profile'),
-				'$olinktitle' => t('View $owner_name\'s profile'),
+				'$linktitle' => sprintf( t('View %s\'s profile'), $profile_name),
+				'$olinktitle' => sprintf( t('View %s\'s profile'), $owner_name),
 				'$to' => t('to'),
 				'$wall' => t('Wall-to-Wall'),
 				'$vwall' => t('via Wall-To-Wall:'),
