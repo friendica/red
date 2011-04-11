@@ -333,14 +333,14 @@ function dfrn_poll_post(&$a) {
 	else {
 
 		// Update the writable flag if it changed		
-
+		logger('dfrn_poll: post request feed: ' . print_r($_POST,true),LOGGER_DATA);
 		if($dfrn_version >= 2.21) {
 			if($perm === 'rw')
 				$writable = 1;
 			else
 				$writable = 0;
 
-			if($writable !=  $contact['writable]) {
+			if($writable !=  $contact['writable']) {
 				q("UPDATE `contact` SET `writable` = %d WHERE `id` = %d LIMIT 1",
 					intval($writable),
 					intval($contact_id)
