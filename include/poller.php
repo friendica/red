@@ -269,6 +269,11 @@ function poller_run($argv, $argc){
 
 				// $contact['network'] !== 'dfrn'
 
+				if(($contact['notify']) && (! $contact['writable'])) {
+					q("UPDATE `contact` SET `writable` = 1 WHERE `id` = %d LIMIT 1",
+						intval($contact['id'])
+					);
+				}
 				$xml = fetch_url($contact['poll']);
 			}
 
