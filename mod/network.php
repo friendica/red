@@ -262,6 +262,9 @@ function network_content(&$a, $update = 0) {
 		}
 	}
 
+	// Set this so that the conversation function can find out contact info for our wall-wall items
+	$a->page_contact = $a->contact;
+
 	$mode = (($nouveau) ? 'network-new' : 'network');
 
 	require_once('include/conversation.php');

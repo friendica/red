@@ -240,9 +240,9 @@ function conversation(&$a, $items, $mode, $update) {
 
 				if($item['type'] === 'wall') {
 					// I do. Put me on the left of the wall-to-wall notice.
-					$owner_url = $a->contact['url'];
-					$owner_photo = $a->contact['thumb'];
-					$owner_name = $a->contact['name'];
+					$owner_url = $a->page_contact['url'];
+					$owner_photo = $a->page_contact['thumb'];
+					$owner_name = $a->page_contact['name'];
 					$template = $wallwall;
 					$commentww = 'ww';	
 				}

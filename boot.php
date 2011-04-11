@@ -201,6 +201,7 @@ class App {
 	public  $user;
 	public  $cid;
 	public  $contact;
+	public  $page_contact;
 	public  $content;
 	public  $data;
 	public  $error = false;

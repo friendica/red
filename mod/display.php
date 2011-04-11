@@ -45,6 +45,7 @@ function display_content(&$a) {
 		}
 	}
 
+	$a->page_contact = $contact;
 
 	$sql_extra = "
 		AND `allow_cid` = '' 
