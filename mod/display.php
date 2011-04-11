@@ -45,7 +45,11 @@ function display_content(&$a) {
 		}
 	}
 
-	$a->page_contact = $contact;
+	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
+		intval($a->profile['uid'])
+	);
+	if(count($r))
+		$a->page_contact = $r[0];
 
 	$sql_extra = "
 		AND `allow_cid` = '' 
