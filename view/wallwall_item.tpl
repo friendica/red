@@ -1,6 +1,6 @@
 <div class="wall-item-outside-wrapper$indent wallwall" id="wall-item-outside-wrapper-$id" >
 	<div class="wall-item-content-wrapper$indent" id="wall-item-content-wrapper-$id" >
-		<span class="wall-item-info" id="wall-item-info-$id">
+		<div class="wall-item-info" id="wall-item-info-$id">
 			<div class="wall-item-photo-wrapper wwto" id="wall-item-ownerphoto-wrapper-$id" >
 				<a href="$owner_url" title="$olinktitle" class="wall-item-photo-link" id="wall-item-ownerphoto-link-$id">
 				<img src="$owner_photo" class="wall-item-photo$osparkle" id="wall-item-ownerphoto-$id" height="80" width="80" alt="$owner_name" /></a>
@@ -15,7 +15,7 @@
 				$lock
 				<div class="wall-item-location" id="wall-item-location-$id">$location</div>
 			</div>
-		</span>
+		</div>
 		<div class="wall-item-author">
 				<a href="$profile_url" title="$linktitle" class="wall-item-name-link"><span class="wall-item-name$sparkle" id="wall-item-name-$id" >$name</span></a> $to <a href="$owner_url" title="$olinktitle" class="wall-item-name-link"><span class="wall-item-name$osparkle" id="wall-item-ownername-$id">$owner_name</span></a> $vwall<br />
 				<div class="wall-item-ago"  id="wall-item-ago-$id">$ago</div>				
