@@ -146,7 +146,7 @@ function conversation(&$a,$r, $mode, $update) {
 			// If there are more than two comments, squash all but the last 2.
 
 			if($item['id'] == $item['parent']) {
-				if($blowhard == $item['cid'] && (! $item['self'])) {
+				if($blowhard == $item['cid'] && (! $item['self']) && ($mode != 'profile')) {
 					$blowhard_count ++;
 					if($blowhard_count == 3) {
 						$o .= '<div class="icollapse-wrapper fakelink" id="icollapse-wrapper-' . $item['parent'] . '" onclick="openClose(' . '\'icollapse-' . $item['parent'] . '\');" >' . t('See more posts like this') . '</div>' . '<div class="icollapse" id="icollapse-' . $item['parent'] . '" style="display: none;" >';
