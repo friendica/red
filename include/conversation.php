@@ -5,6 +5,21 @@ function conversation(&$a,$r, $mode, $update) {
 
 	require_once('bbcode.php');
 
+	$profile_owner = 0;
+	$writable      = false;
+
+	if($mode === 'network') {
+		$profile_owner = local_user();
+		$writable = true;
+	}
+
+	if($mode === 'profile') {
+		$profile_owner = $a->profile['profile_uid'];
+		$writable = can_write_wall($a,$profile_owner);
+	}
+
+
+
 	// find all the authors involved in remote conversations
 	// We will use a local profile photo if they are one of our contacts
 	// otherwise we have to get the photo from the item owner's site
@@ -64,12 +79,22 @@ function conversation(&$a,$r, $mode, $update) {
 						$location = '<span class="smalltext">' . $coord . '</span>';
 				}
 
+				$drop = '';
+				$dropping = false;
+
+				if((intval($item['contact-id']) && $item['contact-id'] == remote_user()) || ($item['uid'] == local_user()))
+					$dropping = true;
+
+	            $drop = replace_macros((($dropping)? $droptpl : $fakedrop), array('$id' => $item['id'], '$delete' => t('Delete')));
+
+
+
 				$drop = replace_macros($droptpl,array('$id' => $item['id']));
 				$lock = '<div class="wall-item-lock"></div>';
 				
 				$o .= replace_macros($tpl,array(
 					'$id' => $item['item_id'],
-					'$linktitle' => sprintf( t('View %s\s profile'), $profile_name),
+					'$linktitle' => sprintf( t('View %s\'s profile'), $profile_name),
 					'$profile_url' => $profile_link,
 					'$item_photo_menu' => item_photo_menu($item),
 					'$name' => $profile_name,
@@ -192,7 +217,7 @@ function conversation(&$a,$r, $mode, $update) {
 
 			$osparkle = '';
 
-			if(($item['parent'] == $item['item_id']) && (! $item['self'])) {
+			if(($item['parent'] == $item['item_id']) && (! $item['self']) && ($mode !== 'profile')) {
 
 				if($item['type'] === 'wall') {
 					// I do. Put me on the left of the wall-to-wall notice.
@@ -224,35 +249,38 @@ function conversation(&$a,$r, $mode, $update) {
 				$return_url = $_SESSION['return_url'] = $a->cmd;
 
 			$likebuttons = '';
-			if($item['id'] == $item['parent']) {
-				$likebuttons = replace_macros((($item['private']) ? $noshare_tpl : $like_tpl),array(
-					'$id' => $item['id'],
-					'$likethis' => t("I like this \x28toggle\x29"),
-					'$nolike' => t("I don't like this \x28toggle\x29"),
-					'$share' => t('Share'),
-					'$wait' => t('Please wait') 
-				));
-			}
 
-			if($item['last-child']) {
-				$comment = replace_macros($cmnt_tpl,array(
-					'$return_path' => '', 
-					'$jsreload' => '', // $_SESSION['return_url'],
-					'$type' => 'net-comment',
-					'$id' => $item['item_id'],
-					'$parent' => $item['parent'],
-					'$profile_uid' =>  $_SESSION['uid'],
-					'$mylink' => $a->contact['url'],
-					'$mytitle' => t('This is you'),
-					'$myphoto' => $a->contact['thumb'],
-					'$comment' => t('Comment'),
-					'$submit' => t('Submit'),
-					'$ww' => $commentww
-				));
+			if($writable) {
+				if($item['id'] == $item['parent']) {
+					$likebuttons = replace_macros((($item['private']) ? $noshare_tpl : $like_tpl),array(
+						'$id' => $item['id'],
+						'$likethis' => t("I like this \x28toggle\x29"),
+						'$nolike' => t("I don't like this \x28toggle\x29"),
+						'$share' => t('Share'),
+						'$wait' => t('Please wait') 
+					));
+				}
+
+				if($item['last-child']) {
+					$comment = replace_macros($cmnt_tpl,array(
+						'$return_path' => '', 
+						'$jsreload' => '', // $_SESSION['return_url'],
+						'$type' => 'net-comment',
+						'$id' => $item['item_id'],
+						'$parent' => $item['parent'],
+						'$profile_uid' =>  $profile_owner,
+						'$mylink' => $a->contact['url'],
+						'$mytitle' => t('This is you'),
+						'$myphoto' => $a->contact['thumb'],
+						'$comment' => t('Comment'),
+						'$submit' => t('Submit'),
+						'$ww' => $commentww
+					));
+				}
 			}
 
 			$edpost = '';
-			if(($item['id'] == $item['parent']) && (intval($item['wall']) == 1)) 
+			if(($profile_owner == local_user()) && ($item['id'] == $item['parent']) && (intval($item['wall']) == 1)) 
 				$edpost = '<a class="editpost" href="' . $a->get_baseurl() . '/editpost/' . $item['id'] . '" title="' . t('Edit') . '"><img src="images/pencil.gif" /></a>';
 			$drop = replace_macros(load_view_file('view/wall_item_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
 
@@ -266,7 +294,17 @@ function conversation(&$a,$r, $mode, $update) {
 			$profile_name   = (((strlen($item['author-name']))   && $diff_author) ? $item['author-name']   : $item['name']);
 			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $thumb);
 
-			if(strlen($item['author-link'])) {
+			if($mode === 'profile') {
+				if(local_user() && ($item['contact-uid'] == local_user()) && ($item['network'] === 'dfrn') && (! $item['self'] )) {
+	                $profile_link = $redirect_url;
+    	            $sparkle = ' sparkle';
+        	    }
+				else {
+					$profile_link = $item['url'];
+					$sparkle = '';
+				}
+			}
+			elseif(strlen($item['author-link'])) {
 				$profile_link = $item['author-link'];
 				if(link_compare($item['author-link'],$item['url']) && ($item['network'] === 'dfrn') && (! $item['self'])) {
 					$profile_link = $redirect_url;
