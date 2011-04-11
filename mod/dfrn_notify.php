@@ -10,6 +10,12 @@ function dfrn_notify_post(&$a) {
 	$data         = ((x($_POST,'data'))         ? $_POST['data']                    : '');
 	$key          = ((x($_POST,'key'))          ? $_POST['key']                     : '');
 	$dissolve     = ((x($_POST,'dissolve'))     ? intval($_POST['dissolve'])        :  0);
+	$perm         = ((x($_POST,'perm'))         ? notags(trim($_POST['perm']))      : 'r');
+
+	$writable = (-1);
+	if($dfrn_version >= 2.21) {
+		$writable = (($perm === 'rw') ? 1 : 0);
+	}
 
 	$direction = (-1);
 	if(strpos($dfrn_id,':') == 1) {

@@ -16,6 +16,7 @@ function dfrn_poll_init(&$a) {
 	$challenge       = ((x($_GET,'challenge'))       ? $_GET['challenge']            : '');
 	$sec             = ((x($_GET,'sec'))             ? $_GET['sec']                  : '');
 	$dfrn_version    = ((x($_GET,'dfrn_version'))    ? (float) $_GET['dfrn_version'] : 2.0);
+	$perm            = ((x($_GET,'perm'))            ? $_GET['perm']                 : 'r');
 
 	$direction = (-1);
 
@@ -183,8 +184,9 @@ function dfrn_poll_post(&$a) {
 	$challenge    = ((x($_POST,'challenge'))    ? $_POST['challenge']            : '');
 	$url          = ((x($_POST,'url'))          ? $_POST['url']                  : '');
 	$sec          = ((x($_POST,'sec'))          ? $_POST['sec']                  : '');
-	$ptype        = ((x($_POST,'type'))         ? $_POST['type']                  : '');
+	$ptype        = ((x($_POST,'type'))         ? $_POST['type']                 : '');
 	$dfrn_version = ((x($_POST,'dfrn_version')) ? (float) $_POST['dfrn_version'] : 2.0);
+	$perm         = ((x($_POST,'perm'))         ? $_POST['perm']                 : 'r');
 
 	if($ptype === 'profile-check') {
 
@@ -344,6 +346,7 @@ function dfrn_poll_content(&$a) {
 	$destination_url = ((x($_GET,'destination_url')) ? $_GET['destination_url']      : '');
 	$sec             = ((x($_GET,'sec'))             ? $_GET['sec']                  : '');
 	$dfrn_version    = ((x($_GET,'dfrn_version'))    ? (float) $_GET['dfrn_version'] : 2.0);
+	$perm            = ((x($_GET,'perm'))            ? $_GET['perm']                 : 'r');
 
 	$direction = (-1);
 	if(strpos($dfrn_id,':') == 1) {

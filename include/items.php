@@ -867,14 +867,14 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	if($dissolve)
 		$postvars['dissolve'] = '1';
 
-	if(($contact['rel']) && ($contact['rel'] != REL_FAN) && (! $contact['blocked']) && (! $contact['readonly'])) {
+
+	if((($contact['rel']) && ($contact['rel'] != REL_FAN) && (! $contact['blocked'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
 		$postvars['data'] = $atom;
-	}
-	elseif($owner['page-flags'] == PAGE_COMMUNITY) {
-		$postvars['data'] = $atom;
+		$postvars['perm'] = 'rw';
 	}
 	else {
 		$postvars['data'] = str_replace('<dfrn:comment-allow>1','<dfrn:comment-allow>0',$atom);
+		$postvars['perm'] = 'r';
 	}
 
 	if($rino && $rino_allowed && (! $dissolve)) {
@@ -916,7 +916,6 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	if((! $curl_stat) || (! strlen($xml)))
 		return(-1); // timed out
 
-
 	if(strpos($xml,'<?xml') === false) {
 		logger('dfrn_deliver: phase 2: no valid XML returned');
 		logger('dfrn_deliver: phase 2: returned XML: ' . $xml, LOGGER_DATA);
@@ -925,8 +924,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 
 	$res = parse_xml_string($xml);
 
-	return $res->status;
- 
+	return $res->status; 
 }
 
 

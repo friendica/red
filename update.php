@@ -423,3 +423,8 @@ function update_1045() {
 function update_1046() {
 	q("ALTER TABLE `item` ADD `attach` MEDIUMTEXT NOT NULL AFTER `tag` ");
 }
+
+function update_1047() {
+	q("ALTER TABLE `contact` ADD `writable` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `readonly` ");
+}
+
