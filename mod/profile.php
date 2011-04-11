@@ -291,7 +291,7 @@ function profile_content(&$a, $update = 0) {
 
 	require_once('include/conversation.php');
 
-	$o .= conversation($a,$r,'profile',$display);
+	$o .= conversation($a,$r,'profile',$update);
 
 
 	if(! $update) {

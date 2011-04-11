@@ -1,7 +1,7 @@
 <?php
 
 
-function conversation(&$a,$r, $mode, $update) {
+function conversation(&$a, $items, $mode, $update) {
 
 	require_once('bbcode.php');
 
@@ -23,8 +23,6 @@ function conversation(&$a,$r, $mode, $update) {
 		$writable = can_write_wall($a,$profile_owner);
 	}
 
-
-
 	if($update)
 		$return_url = $_SESSION['return_url'];
 	else
@@ -35,7 +33,7 @@ function conversation(&$a,$r, $mode, $update) {
 	// We will use a local profile photo if they are one of our contacts
 	// otherwise we have to get the photo from the item owner's site
 
-	$author_contacts = extract_item_authors($r,local_user());
+	$author_contacts = extract_item_authors($items,local_user());
 
 
 	$cmnt_tpl    = load_view_file('view/comment_item.tpl');
@@ -47,7 +45,7 @@ function conversation(&$a,$r, $mode, $update) {
 	$alike = array();
 	$dlike = array();
 	
-	if(count($r)) {
+	if(count($items)) {
 
 		if($mode === 'network-new' || $mode === 'search') {
 
@@ -57,7 +55,7 @@ function conversation(&$a,$r, $mode, $update) {
 			$tpl = load_view_file('view/search_item.tpl');
 			$droptpl = load_view_file('view/wall_fake_drop.tpl');
 
-			foreach($r as $item) {
+			foreach($items as $item) {
 
 				$comment     = '';
 				$owner_url   = '';
@@ -150,19 +148,19 @@ function conversation(&$a,$r, $mode, $update) {
 		// Store the result in the $comments array
 
 		$comments = array();
-		foreach($r as $rr) {
-			if(intval($rr['gravity']) == 6) {
-				if(! x($comments,$rr['parent']))
-					$comments[$rr['parent']] = 1;
+		foreach($items as $item) {
+			if(intval($item['gravity']) == 6) {
+				if(! x($comments,$item['parent']))
+					$comments[$item['parent']] = 1;
 				else
-					$comments[$rr['parent']] += 1;
+					$comments[$item['parent']] += 1;
 			}
 		}
 
 		// map all the like/dislike activities for each parent item 
 		// Store these in the $alike and $dlike arrays
 
-		foreach($r as $item) {
+		foreach($items as $item) {
 			like_puller($a,$item,$alike,'like');
 			like_puller($a,$item,$dlike,'dislike');
 		}
@@ -171,7 +169,7 @@ function conversation(&$a,$r, $mode, $update) {
 		$blowhard = 0;
 		$blowhard_count = 0;
 
-		foreach($r as $item) {
+		foreach($items as $item) {
 
 			$comment = '';
 			$template = $tpl;
