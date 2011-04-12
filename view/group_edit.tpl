@@ -8,17 +8,11 @@
 <input type="text" id="group-edit-name" name="groupname" value="$name" />
 </div>
 <div id="group-edit-name-end"></div>
-<div id="group-edit-select-wrapper" >
-<label id="group_members_select_label"  for="group_members_select" >$members</label>
-$selector
-
-</div>
 $drop
-<div id="group_members_select_end"></div>
 <div id="group-edit-submit-wrapper" >
 <input type="submit" name="submit" value="$submit" >
 </div>
-
+<div id="group-edit-desc">$desc</div>
 <div id="group-edit-select-end" ></div>
 </form>
 </div>

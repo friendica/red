@@ -2254,7 +2254,7 @@ a.mail-list-link {
 #group-members {
 	margin-top: 20px;
 	padding: 10px;
-	height: 450px;
+	height: 250px;
 	overflow: auto;
 	border: 1px solid #ddd;
 }
@@ -2279,3 +2279,6 @@ a.mail-list-link {
 	clear: both;
 }
 
+#group-edit-desc {
+    margin-top: 15px;
+}

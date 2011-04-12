@@ -278,3 +278,11 @@
           
         return a.join('');  
     }  
+
+	function groupChangeMember(gid,cid) {
+		$.get('group/' + gid + '/' + cid, function(data) {
+				$('#group-update-wrapper').html(data);
+				$('#group-update2-wrapper').html(data);
+				
+		});
+	}
