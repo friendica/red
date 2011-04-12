@@ -108,7 +108,7 @@ function group_get_members($gid) {
 	if(intval($gid)) {
 		$r = q("SELECT `group_member`.`contact-id`, `contact`.* FROM `group_member` 
 			LEFT JOIN `contact` ON `contact`.`id` = `group_member`.`contact-id` 
-			WHERE `gid` = %d AND `group_member`.`uid` = %d",
+			WHERE `gid` = %d AND `group_member`.`uid` = %d ORDER BY `contact`.`name` ASC ",
 			intval($gid),
 			intval(local_user())
 		);

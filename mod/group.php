@@ -158,10 +158,29 @@ function group_content(&$a) {
 	}
 
 	$o .= '<div id="group-members">';
+	$o .= '<h3>' . t('In Group') . '</h3>';
 	foreach($members as $member) {
+		$member['click'] = 'groupMember(' . $member['id'] . '); return true;';
 		$o .= micropro($member,true,'mpgroup');
 	}
+
 	$o .= '</div><div id="group-members-end"></div>';
+	$o .= '<hr id="group-separator" />';
+	$o .= '<div id="group-all-contacts">';
+
+		$o .= '<h3>' . t('All Contacts') . '</h3>';
+		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `blocked` = 0 and `pending` = 0 and `self` = 0 ORDER BY `name` ASC",
+			intval(local_user())
+		);
+
+		if(count($r)) {
+			foreach($r as $member) {
+				$member['click'] = 'groupMember(' . $member['id'] . '); return true;';
+				$o .= micropro($member,true,'mpall');
+			}
+		}
+
+		$o .= '</div><div id="group-all-contacts-end"></div>';
 
 	return $o;
 

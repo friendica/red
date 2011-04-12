@@ -2076,10 +2076,14 @@ function micropro($contact, $redirect = false, $class = '') {
 			$sparkle = ' sparkle';
 		}
 	}
-
+	$click = ((x($contact,'click')) ? ' onclick="' . $contact['click'] . '" ' : '');
+	if($click)
+		$url = '';
 	return '<div class="contact-block-div' . $class . '"><a class="contact-block-link' . $class . $sparkle 
-		. '" href="' . $url . '" ><img class="contact-block-img' . $class . $sparkle . '" src="' . $contact['micro'] 
-		. '" title="' . $contact['name'] . ' [' . $contact['url'] . ']" alt="' . $contact['name'] . '" /></a></div>' . "\r\n";
+		. (($click) ? ' fakelink' : '') . '" '
+		. (($url) ? '" href="' . $url . '"' : '') . $click . ' ><img class="contact-block-img' . $class . $sparkle . '" src="' 
+		. $contact['micro'] . '" title="' . $contact['name'] . ' [' . $contact['url'] . ']" alt="' . $contact['name'] 
+		. '" /></a></div>' . "\r\n";
 }}
 
 
