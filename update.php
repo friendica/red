@@ -443,3 +443,4 @@ function update_1049() {
 	`last_check` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'
 	) ENGINE = MYISAM ");
 }
+
