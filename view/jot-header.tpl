@@ -89,6 +89,7 @@ tinyMCE.init({
 	function jotGetLink() {
 		reply = prompt("$linkurl");
 		if(reply && reply.length) {
+			reply = bin2hex(reply);
 			$('#profile-rotator').show();
 			$.get('parse_url?url=' + reply, function(data) {
 				tinyMCE.execCommand('mceInsertRawHTML',false,data);

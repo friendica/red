@@ -118,6 +118,16 @@ function install_content(&$a) {
 
 	$tpl = load_view_file('view/install_db.tpl');
 	$o .= replace_macros($tpl, array(
+		'$lbl_01' => t('Friendika Social Network'),
+		'$lbl_02' => t('Installation'),
+		'$lbl_03' => t('In order to install Friendika we need to know how to contact your database.'),
+		'$lbl_04' => t('Please contact your hosting provider or site administrator if you have questions about these settings.'),
+		'$lbl_05' => t('The database you specify below must already exist. If it does not, please create it before continuing.'),
+		'$lbl_06' => t('Database Server Name'),
+		'$lbl_07' => t('Database Login Name'),
+		'$lbl_08' => t('Database Login Password'),
+		'$lbl_09' => t('Database Name'),
+		'$lbl_10' => t('Please select a default timezone for your website'),
 		'$baseurl' => $a->get_baseurl(),
 		'$tzselect' => ((x($_POST,'timezone')) ? select_timezone($_POST['timezone']) : select_timezone()),
 		'$submit' => t('Submit'),

@@ -285,6 +285,9 @@ function settings_content(&$a) {
 	else {
 		$opt_tpl = load_view_file("view/profile-in-directory.tpl");
 		$profile_in_dir = replace_macros($opt_tpl,array(
+			'$desc'         => t('Publish your default profile in site directory?'),
+			'$yes_str'      => t('Yes'),
+			'$no_str'       => t('No'),
 			'$yes_selected' => (($profile['publish'])      ? " checked=\"checked\" " : ""),
 			'$no_selected'  => (($profile['publish'] == 0) ? " checked=\"checked\" " : "")
 		));
@@ -294,6 +297,9 @@ function settings_content(&$a) {
 		$opt_tpl = load_view_file("view/profile-in-netdir.tpl");
 
 		$profile_in_net_dir = replace_macros($opt_tpl,array(
+			'$desc'         => t('Publish your default profile in global social directory?'),
+			'$yes_str'      => t('Yes'),
+			'$no_str'       => t('No'),
 			'$yes_selected' => (($profile['net-publish'])      ? " checked=\"checked\" " : ""),
 			'$no_selected'  => (($profile['net-publish'] == 0) ? " checked=\"checked\" " : "")
 		));
@@ -309,18 +315,7 @@ function settings_content(&$a) {
 	if($invisible)
 		notice( t('Profile is <strong>not published</strong>.') . EOL );
 
-	$nickname_block = load_view_file("view/settings_nick_set.tpl");
 	
-	$nickname_subdir = '';
-	if(strlen($a->get_path())) {
-		$subdir_tpl = load_view_file('view/settings_nick_subdir.tpl');
-		$nickname_subdir = replace_macros($subdir_tpl, array(
-			'$baseurl' => $a->get_baseurl(),
-			'$nickname' => $nickname,
-			'$hostname' => $a->get_hostname()
-		));
-	}
-
 	$theme_selector = '<select name="theme" id="theme-select" >';
 	$files = glob('view/theme/*');
 
@@ -338,13 +333,16 @@ function settings_content(&$a) {
 	}
 	$theme_selector .= '</select>';
 
+	$subdir = ((strlen($a->get_path())) ? '<br />' . t('or') . ' ' . $a->get_baseurl() . '/profile/' . $nickname : '');
 
-	$nickname_block = replace_macros($nickname_block,array(
+	$tpl_addr = load_view_file("view/settings_nick_set.tpl");
+
+	$prof_addr = replace_macros($tpl_addr,array(
+		'$desc' => t('Your profile address is'),
 		'$nickname' => $nickname,
-		'$uid' => local_user(),
-		'$subdir' => $nickname_subdir,
-		'$basepath' => $a->get_hostname(),
-		'$baseurl' => $a->get_baseurl()));	
+		'$subdir' => $subdir,
+		'$basepath' => $a->get_hostname()
+	));
 
 	$stpl = load_view_file('view/settings.tpl');
 
@@ -354,6 +352,34 @@ function settings_content(&$a) {
 
 
 	$o .= replace_macros($stpl,array(
+		'$ptitle' => t('Account Settings'),
+		'$lbl_plug' => t('Plugin Settings'),
+		'$lbl_basic' => t('Basic Settings'),
+		'$lbl_fn' => t('Full Name:'),
+		'$lbl_email' => t('Email Address:'),
+		'$lbl_tz' => t('Your Timezone:'),
+		'$lbl_loc1' => t('Default Post Location:'),
+		'$lbl_loc2' => t('Use Browser Location:'),
+		'$lbl_theme' => t('Display Theme:'),
+		'$submit' => t('Submit'),
+		'$lbl_prv' => t('Security and Privacy Settings'),
+		'$lbl_maxreq' => t('Maximum Friend Requests/Day:'),
+		'$lbl_maxrdesc' => t("\x28to prevent spam abuse\x29"),
+		'$lbl_rempost' => t('Allow friends to post to your profile page:'),
+		'$lbl_exp1' => t("Automatically expire \x28delete\x29 posts older than"),
+		'$lbl_exp2' => t('days'),
+		'$lbl_not1' => t('Notification Settings'),
+		'$lbl_not2' => t('Send a notification email when:'),
+		'$lbl_not3' => t('You receive an introduction'),
+		'$lbl_not4' => t('Your introductions are confirmed'),
+		'$lbl_not5' => t('Someone writes on your profile wall'),
+		'$lbl_not6' => t('Someone writes a followup comment'),
+		'$lbl_not7' => t('You receive a private message'),
+		'$lbl_pass1' => t('Password Settings'),
+		'$lbl_pass2' => t('Leave password fields blank unless changing'),
+		'$lbl_pass3' => t('New Password:'),
+		'$lbl_pass4' => t('Confirm:'),
+		'$lbl_advn' => t('Advanced Page Settings'),
 		'$baseurl' => $a->get_baseurl(),
 		'$oidhtml' => $oidhtml,
 		'$uexport' => $uexport,
@@ -361,7 +387,7 @@ function settings_content(&$a) {
 		'$username' => $username,
 		'$openid' => $openid,
 		'$email' => $email,
-		'$nickname_block' => $nickname_block,
+		'$nickname_block' => $prof_addr,
 		'$timezone' => $timezone,
 		'$zoneselect' => select_timezone($timezone),
 		'$defloc' => $defloc,

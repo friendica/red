@@ -61,6 +61,12 @@ function nav(&$a) {
 		$a->page['nav'] .= '<a id="nav-register-link" class="nav-commlink" href="register" >' 
 			. t('Register') . "</a>\r\n";
 
+	$help_url = get_config('system','help_url');
+	if(! $help_url)
+		$help_url = 'http://github.com/friendika/friendika/wiki';
+
+	$a->page['nav'] .= '<a id="nav-help-link" class="nav-link" target="friendika-help" href="' . $help_url . '">' . t('Help') . "</a>\r\n";
+
 	if(strlen($a->apps)) {
 		$a->page['nav'] .= '<a id="nav-apps-link" class="nav-link" href="apps">' . t('Apps') . "</a>\r\n";
 	}

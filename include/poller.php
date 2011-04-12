@@ -165,11 +165,15 @@ function poller_run($argv, $argc){
 				if(intval($contact['duplex']) && $contact['dfrn-id'])
 					$idtosend = '0:' . $orig_id;
 				if(intval($contact['duplex']) && $contact['issued-id'])
-					$idtosend = '1:' . $orig_id;		
+					$idtosend = '1:' . $orig_id;
+
+				// they have permission to write to us. We already filtered this in the contact query.
+				$perm = 'rw';
 
 				$url = $contact['poll'] . '?dfrn_id=' . $idtosend 
 					. '&dfrn_version=' . DFRN_PROTOCOL_VERSION 
-					. '&type=data&last_update=' . $last_update ;
+					. '&type=data&last_update=' . $last_update 
+					. '&perm=' . $perm ;
 	
 				$xml = fetch_url($url);
 
@@ -250,13 +254,14 @@ function poller_run($argv, $argc){
 					$final_dfrn_id = substr($final_dfrn_id,2);
 
 				if($final_dfrn_id != $orig_id) {
-	
+					logger('poller: ID did not decode: ' . $contact['id'] . ' orig: ' . $orig_id . ' final: ' . $final_dfrn_id);	
 					// did not decode properly - cannot trust this site 
 					continue;
 				}
 
 				$postvars['dfrn_id'] = $idtosend;
 				$postvars['dfrn_version'] = DFRN_PROTOCOL_VERSION;
+				$postvars['perm'] = 'rw';
 
 				$xml = post_url($contact['poll'],$postvars);
 			}
@@ -264,6 +269,11 @@ function poller_run($argv, $argc){
 
 				// $contact['network'] !== 'dfrn'
 
+				if(($contact['notify']) && (! $contact['writable'])) {
+					q("UPDATE `contact` SET `writable` = 1 WHERE `id` = %d LIMIT 1",
+						intval($contact['id'])
+					);
+				}
 				$xml = fetch_url($contact['poll']);
 			}
 

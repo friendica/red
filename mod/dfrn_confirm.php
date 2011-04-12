@@ -434,6 +434,11 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				$arr['object'] .= '</link></object>' . "\n";
 				$arr['last-child'] = 1;
 
+				$arr['allow_cid'] = $user[0]['allow_cid'];
+				$arr['allow_gid'] = $user[0]['allow_gid'];
+				$arr['deny_cid']  = $user[0]['deny_cid'];
+				$arr['deny_gid']  = $user[0]['deny_gid'];
+
 				$i = item_store($arr);
 				if($i)
 			    	proc_run('php',"include/notifier.php","activity","$i");

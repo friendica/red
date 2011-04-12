@@ -423,3 +423,24 @@ function update_1045() {
 function update_1046() {
 	q("ALTER TABLE `item` ADD `attach` MEDIUMTEXT NOT NULL AFTER `tag` ");
 }
+
+function update_1047() {
+	q("ALTER TABLE `contact` ADD `writable` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `readonly` ");
+}
+
+function update_1048() {
+	q("UPDATE `contact` SET `writable` = 1 WHERE `network` = 'stat' AND `notify` != '' ");
+}
+
+function update_1049() {
+	q("CREATE TABLE `mailacct` (
+	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`uid` INT NOT NULL,
+	`server` CHAR( 255 ) NOT NULL ,
+	`user` CHAR( 255 ) NOT NULL ,
+	`pass` CHAR( 255 ) NOT NULL ,
+	`reply_to` CHAR( 255 ) NOT NULL ,
+	`last_check` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'
+	) ENGINE = MYISAM ");
+}
+

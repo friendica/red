@@ -85,6 +85,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `priority` tinyint(3) NOT NULL,
   `blocked` tinyint(1) NOT NULL DEFAULT '1',
   `readonly` tinyint(1) NOT NULL DEFAULT '0',
+  `writable` tinyint(1) NOT NULL DEFAULT '0',
   `pending` tinyint(1) NOT NULL DEFAULT '1',
   `rating` tinyint(1) NOT NULL DEFAULT '0',
   `reason` text NOT NULL,
@@ -500,5 +501,16 @@ CREATE TABLE IF NOT EXISTS `ffinder` (
 `uid` INT UNSIGNED NOT NULL ,
 `cid` INT UNSIGNED NOT NULL ,
 `fid` INT UNSIGNED NOT NULL
+) ENGINE = MYISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `mailacct` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`uid` INT NOT NULL,
+`server` CHAR( 255 ) NOT NULL ,
+`user` CHAR( 255 ) NOT NULL ,
+`pass` CHAR( 255 ) NOT NULL ,
+`reply_to` CHAR( 255 ) NOT NULL ,
+`last_check` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE = MYISAM DEFAULT CHARSET=utf8;
 

@@ -261,6 +261,14 @@ function contacts_content(&$a) {
 
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Contact Editor'),
+			'$submit' => t('Submit'),
+			'$lbl_vis1' => t('Profile Visibility'),
+			'$lbl_vis2' => sprintf( t('Please choose the profile you would like to display to %s when viewing your profile securely.'), $r[0]['name']),
+			'$lbl_info1' => t('Contact Information / Notes'),
+			'$lbl_rep1' => t('Online Reputation'),
+			'$lbl_rep2' => t('Occasionally your friends may wish to inquire about this person\'s online legitimacy.'),
+			'$lbl_rep3' => t('You may help them choose whether or not to interact with this person by providing a <em>reputation</em> to guide them.'),
+			'$lbl_rep4' => t('Please take a moment to elaborate on this selection if you feel it could be helpful to others.'),
 			'$visit' => t('Visit $name\'s profile'),
 			'$blockunblock' => t('Block/Unblock contact'),
 			'$ignorecont' => t('Ignore contact'),

@@ -22,9 +22,6 @@ function display_content(&$a) {
 
 	$groups = array();
 
-	$tab = 'posts';
-
-
 	$contact = null;
 	$remote_contact = false;
 
@@ -48,6 +45,11 @@ function display_content(&$a) {
 		}
 	}
 
+	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
+		intval($a->profile['uid'])
+	);
+	if(count($r))
+		$a->page_contact = $r[0];
 
 	$sql_extra = "
 		AND `allow_cid` = '' 
@@ -88,7 +90,7 @@ function display_content(&$a) {
 
 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 		`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-		`contact`.`network`, `contact`.`thumb`, `contact`.`self`, 
+		`contact`.`network`, `contact`.`thumb`, `contact`.`self`, `contact`.`writable`, 
 		`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
@@ -102,17 +104,6 @@ function display_content(&$a) {
 	);
 
 
-
-	$cmnt_tpl = load_view_file('view/comment_item.tpl');
-	$like_tpl = load_view_file('view/like_noshare.tpl');
-	$tpl = load_view_file('view/wall_item.tpl');
-	$wallwall = load_view_file('view/wallwall_item.tpl');
-
-	$return_url = $_SESSION['return_url'] = $a->cmd;
-
-	$alike = array();
-	$dlike = array();
-
 	if(count($r)) {
 
 		if((local_user()) && (local_user() == $a->profile['uid'])) {
@@ -122,179 +113,10 @@ function display_content(&$a) {
 			);
 		}
 
-		foreach($r as $item) {
-			like_puller($a,$item,$alike,'like');
-			like_puller($a,$item,$dlike,'dislike');
-		}
+		require_once('include/conversation.php');
 
-		$author_contacts = extract_item_authors($r,$a->profile['uid']);
+		$o .= conversation($a,$r,'display', false);
 
-		foreach($r as $item) {
-
-			$template = $tpl;
-
-			$comment     = '';
-			$owner_url   = '';
-			$owner_photo = '';
-			$owner_name  = '';
-			
-			$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
-			
-			if(((activity_match($item['verb'],ACTIVITY_LIKE)) || (activity_match($item['verb'],ACTIVITY_DISLIKE))) 
-				&& ($item['id'] != $item['parent']))
-				continue;
-
-			$lock = ((($item['private']) || (($item['uid'] == local_user()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
-				|| strlen($item['deny_cid']) || strlen($item['deny_gid']))))
-				? '<div class="wall-item-lock"><img src="images/lock_icon.gif" class="lockview" alt="' . t('Private Message') . '" onclick="lockview(event,' . $item['id'] . ');" /></div>'
-				: '<div class="wall-item-lock"></div>');
-
-			if(can_write_wall($a,$a->profile['uid'])) {
-				if($item['id'] == $item['parent']) {
-					$likebuttons = replace_macros($like_tpl,array(
-						'$id' => $item['id'],
-						'$likethis' => t("I like this \x28toggle\x29"),
-						'$nolike' => t("I don't like this \x28toggle\x29"),
-						'$share' => t('Share'),
-						'$wait' => t('Please wait') 
-					));
-				}
-				if($item['last-child']) {
-					$comment = replace_macros($cmnt_tpl,array(
-						'$return_path' => '', 
-						'$jsreload' => $_SESSION['return_url'],
-						'$type' => 'wall-comment',
-						'$id' => $item['item_id'],
-						'$parent' => $item['parent'],
-						'$profile_uid' =>  $a->profile['uid'],
-						'$mylink' => $contact['url'],
-						'$mytitle' => t('This is you'),
-						'$myphoto' => $contact['thumb'],
-						'$ww' => ''
-					));
-				}
-			}
-
-
-			$profile_url = $item['url'];
-			$sparkle = '';
-
-
-			// Top-level wall post not written by the wall owner (wall-to-wall)
-			// First figure out who owns it. 
-
-			$osparkle = '';
-
-			if(($item['parent'] == $item['item_id']) && (! $item['self'])) {
-				
-				if($item['type'] === 'wall') {
-					// I do. Put me on the left of the wall-to-wall notice.
-					$owner_url = $a->contact['url'];
-					$owner_photo = $a->contact['thumb'];
-					$owner_name = $a->contact['name'];
-					$template = $wallwall;
-					$commentww = 'ww';	
-				}
-				if($item['type'] === 'remote' && ($item['owner-link'] != $item['author-link'])) {
-					// Could be anybody. 
-					$owner_url = $item['owner-link'];
-					$owner_photo = $item['owner-avatar'];
-					$owner_name = $item['owner-name'];
-					$template = $wallwall;
-					$commentww = 'ww';
-					// If it is our contact, use a friendly redirect link
-					if((link_compare($item['owner-link'],$item['url'])) && ($item['network'] === 'dfrn')) {
-						$owner_url = $redirect_url;
-						$osparkle = ' sparkle';
-					}
-
-
-				}
-			}
-
-			$diff_author = ((link_compare($item['url'],$item['author-link'])) ? false : true);
-
-			$profile_name   = (((strlen($item['author-name']))   && $diff_author) ? $item['author-name']   : $item['name']);
-			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $item['thumb']);
-
-			$edpost = '';
-			if((local_user()) && ($item['uid'] == local_user()) && ($item['id'] == $item['parent']) && (intval($item['wall']) == 1)) 
-				$edpost = '<a class="editpost" href="' . $a->get_baseurl() . '/editpost/' . $item['id'] . '" title="' . t('Edit') . '"><img src="images/pencil.gif" /></a>';
-			// Can we use our special contact URL for this author? 
-
-			if(strlen($item['author-link'])) {
-				$profile_link = $item['author-link'];
-				if(link_compare($item['author-link'],$item['url']) && ($item['network'] === 'dfrn') && (! $item['self'])) {
-					$profile_link = $redirect_url;
-					$sparkle = ' sparkle';
-				}
-				elseif(isset($author_contacts[$item['author-link']])) {
-					$profile_link = $a->get_baseurl() . '/redir/' . $author_contacts[$item['author-link']];
-					$sparkle = ' sparkle';
-				}
-			}
-
-			if(($item['contact-id'] == remote_user()) || ($item['uid'] == local_user()))
-				$drop = replace_macros(load_view_file('view/wall_item_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
-			else 
-				$drop = replace_macros(load_view_file('view/wall_fake_drop.tpl'), array('$id' => $item['id']));
-
-			$like    = ((isset($alike[$item['id']])) ? format_like($alike[$item['id']],$alike[$item['id'] . '-l'],'like',$item['id']) : '');
-			$dislike = ((isset($dlike[$item['id']])) ? format_like($dlike[$item['id']],$dlike[$item['id'] . '-l'],'dislike',$item['id']) : '');
-
-			$location = (($item['location']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : '');
-			$coord = (($item['coord']) ? '<a target="map" href="http://maps.google.com/?q=' . urlencode($item['coord']) . '">' . $item['coord'] . '</a>' : '');
-			if($coord) {
-				if($location)
-					$location .= '<br /><span class="smalltext">(' . $coord . ')</span>';
-				else
-					$location = '<span class="smalltext">' . $coord . '</span>';
-			}
-
-			$indent = (($item['parent'] != $item['item_id']) ? ' comment' : '');
-
-			if(strcmp(datetime_convert('UTC','UTC',$item['created']),datetime_convert('UTC','UTC','now - 12 hours')) > 0)
-				$indent .= ' shiny'; 
-
-
-			$tmp_item = replace_macros($template,array(
-				'$id' => $item['item_id'],
-				'$linktitle' => t('View $name\'s profile'),
-				'$olinktitle' => t('View $owner_name\'s profile'),
-				'$to' => t('to'),
-				'$wall' => t('Wall-to-Wall'),
-				'$vwall' => t('via Wall-To-Wall:'),
-				'$item_photo_menu' => item_photo_menu($item),
-				'$profile_url' => $profile_link,
-				'$name' => $profile_name,
-				'$sparkle' => $sparkle,
-				'$osparkle' => $osparkle,
-				'$thumb' => $profile_avatar,
-				'$title' => $item['title'],
-				'$body' => smilies(bbcode($item['body'])),
-				'$ago' => relative_date($item['created']),
-				'$lock' => $lock,
-				'$location' => $location,
-				'$indent' => $indent,
-				'$owner_url' => $owner_url,
-				'$owner_photo' => $owner_photo,
-				'$owner_name' => $owner_name,
-				'$plink' => get_plink($item),
-				'$edpost' => $edpost,
-				'$drop' => $drop,
-				'$vote' => $likebuttons,
-				'$like' => $like,
-				'$dislike' => $dislike,
-				'$comment' => $comment
-			));
-
-			$arr = array('item' => $item, 'output' => $tmp_item);
-			call_hooks('display_item', $arr);
-
-			$o .= $arr['output'];
-
-
-		}
 	}
 	else {
 		$r = q("SELECT `id` FROM `item` WHERE `id` = '%s' OR `uri` = '%s' LIMIT 1",

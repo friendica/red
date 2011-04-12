@@ -10,6 +10,12 @@ function dfrn_notify_post(&$a) {
 	$data         = ((x($_POST,'data'))         ? $_POST['data']                    : '');
 	$key          = ((x($_POST,'key'))          ? $_POST['key']                     : '');
 	$dissolve     = ((x($_POST,'dissolve'))     ? intval($_POST['dissolve'])        :  0);
+	$perm         = ((x($_POST,'perm'))         ? notags(trim($_POST['perm']))      : 'r');
+
+	$writable = (-1);
+	if($dfrn_version >= 2.21) {
+		$writable = (($perm === 'rw') ? 1 : 0);
+	}
 
 	$direction = (-1);
 	if(strpos($dfrn_id,':') == 1) {
@@ -74,6 +80,14 @@ function dfrn_notify_post(&$a) {
 
 	$importer = $r[0];
 
+	if(($writable != (-1)) && ($writable != $importer['writable'])) {
+		q("UPDATE `contact` SET `writable` = %d WHERE `id` = %d LIMIT 1",
+			intval($writable),
+			intval($importer['id'])
+		);
+		$importer['writable'] = $writable;
+	}
+
 	logger('dfrn_notify: received notify from ' . $importer['name'] . ' for ' . $importer['username']);
 	logger('dfrn_notify: data: ' . $data, LOGGER_DATA);
 
@@ -116,8 +130,6 @@ function dfrn_notify_post(&$a) {
 		$data = aes_decrypt(hex2bin($data),$final_key);
 		logger('rino: decrypted data: ' . $data, LOGGER_DATA);
 	}
-
-
 
 
 	if($importer['readonly']) {

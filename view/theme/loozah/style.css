@@ -1005,8 +1005,6 @@ input#dfrn-url {
 
 .wall-item-arrowphoto-wrapper {
 	margin-top: 40px;
-	margin-right: 20px;
-	float: left;
 }
 .wall-item-wrapper {
 	margin-left: 10px;;
@@ -1036,6 +1034,16 @@ input#dfrn-url {
 .editpost {
 	margin-left: 15px;
 }
+
+.wall-item-info.wallwall {
+	width: 285px;
+}
+
+.wwto, .wall-item-arrowphoto-wrapper, .wwfrom {
+	float: left;
+	margin-right: 10px;
+}
+
 
 .wall-item-links-wrapper {
     float: left;
@@ -2240,4 +2248,14 @@ a.mail-list-link {
 	position: absolute;
 	top: 0;
 	left: 0;
-)
+}
+
+
+#group-members {
+	margin-top: 20px;
+}
+
+#group-members-end {
+	clear: both;
+}
+

@@ -2,9 +2,9 @@
 
 set_time_limit(0);
 
-define ( 'FRIENDIKA_VERSION',      '2.1.941' );
-define ( 'DFRN_PROTOCOL_VERSION',  '2.2'  );
-define ( 'DB_UPDATE_VERSION',      1047   );
+define ( 'FRIENDIKA_VERSION',      '2.1.946' );
+define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
+define ( 'DB_UPDATE_VERSION',      1050      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -72,6 +72,18 @@ define ( 'PAGE_NORMAL',            0 );
 define ( 'PAGE_SOAPBOX',           1 );
 define ( 'PAGE_COMMUNITY',         2 );
 define ( 'PAGE_FREELOVE',          3 );
+
+/**
+ * Network and protocol family types 
+ */
+
+define ( 'NETWORK_DFRN',             'dfrn');    // Friendika, Mistpark, other DFRN implementations
+define ( 'NETWORK_OSTATUS',          'stat');    // status.net, identi.ca, GNU-social, other OStatus implementations
+define ( 'NETWORK_FEED',             'feed');    // RSS/Atom feeds with no known "post/notify" protocol
+define ( 'NETWORK_DIASPORA',         'dspr');    // Diaspora
+define ( 'NETWORK_MAIL',             'mail');    // IMAP/POP
+define ( 'NETWORK_FACEBOOK',         'face');    // Facebook API     
+
 
 /**
  * Maximum number of "people who like (or don't like) this"  that we will list by name
@@ -189,6 +201,7 @@ class App {
 	public  $user;
 	public  $cid;
 	public  $contact;
+	public  $page_contact;
 	public  $content;
 	public  $data;
 	public  $error = false;
@@ -2032,18 +2045,7 @@ function contact_block() {
 	if(count($r)) {
 		$o .= '<h4 class="contact-h4">' .  sprintf( tt('%d Contact','%d Contacts', $total),$total) . '</h4><div id="contact-block">';
 		foreach($r as $rr) {
-			$redirect_url = $a->get_baseurl() . '/redir/' . $rr['id'];
-			if(local_user() && ($rr['uid'] == local_user())
-				&& ($rr['network'] === 'dfrn')) {
-				$url = $redirect_url;
-				$sparkle = ' sparkle';
-			}
-			else {
-				$url = $rr['url'];
-				$sparkle = '';
-			}
-
-			$o .= '<div class="contact-block-div"><a class="contact-block-link' . $sparkle . '" href="' . $url . '" ><img class="contact-block-img' . $sparkle . '" src="' . $rr['micro'] . '" title="' . $rr['name'] . ' [' . $rr['url'] . ']" alt="' . $rr['name'] . '" /></a></div>' . "\r\n";
+			$o .= micropro($rr,true,'mpfriend');
 		}
 		$o .= '</div><div id="contact-block-end"></div>';
 		$o .=  '<div id="viewcontacts"><a id="viewcontacts-link" href="viewcontacts/' . $a->profile['nickname'] . '">' . t('View Contacts') . '</a></div>';
@@ -2056,6 +2058,31 @@ function contact_block() {
 	return $o;
 
 }}
+
+if(! function_exists('micropro')) {
+function micropro($contact, $redirect = false, $class = '') {
+
+	if($class)
+		$class = ' ' . $class;
+
+	$url = $contact['url'];
+	$sparkle = '';
+
+	if($redirect) {
+		$a = get_app();
+		$redirect_url = $a->get_baseurl() . '/redir/' . $contact['id'];
+		if(local_user() && ($contact['uid'] == local_user()) && ($contact['network'] === 'dfrn')) {
+			$url = $redirect_url;
+			$sparkle = ' sparkle';
+		}
+	}
+
+	return '<div class="contact-block-div' . $class . '"><a class="contact-block-link' . $class . $sparkle 
+		. '" href="' . $url . '" ><img class="contact-block-img' . $class . $sparkle . '" src="' . $contact['micro'] 
+		. '" title="' . $contact['name'] . ' [' . $contact['url'] . ']" alt="' . $contact['name'] . '" /></a></div>' . "\r\n";
+}}
+
+
 
 if(! function_exists('search')) {
 function search($s) {
@@ -2301,9 +2328,9 @@ function profile_sidebar($profile) {
 
 	$pubkey = ((x($profile,'pubkey') == 1) ? '<div class="key" style="display:none;">' . $profile['pubkey'] . '</div>' : '');
 
-	$marital = ((x($profile,'marital') == 1) ? '<div class="marital"><span class="marital-label"><span class="heart">&hearts;</span> ' . t('Status:') . ' </span><span class="marital-text">' . $profile['marital'] . '</span></div></div><div class="profile-clear"></div>' : '');
+	$marital = ((x($profile,'marital') == 1) ? '<div class="marital"><span class="marital-label"><span class="heart">&hearts;</span> ' . t('Status:') . ' </span><span class="marital-text">' . $profile['marital'] . '</span></div><div class="profile-clear"></div>' : '');
 
-	$homepage = ((x($profile,'homepage') == 1) ? '<div class="homepage"><span class="homepage-label">' . t('Homepage:') . ' </span><span class="homepage-url">' . linkify($profile['homepage']) . '</span></div></div><div class="profile-clear"></div>' : '');
+	$homepage = ((x($profile,'homepage') == 1) ? '<div class="homepage"><span class="homepage-label">' . t('Homepage:') . ' </span><span class="homepage-url">' . linkify($profile['homepage']) . '</span></div><div class="profile-clear"></div>' : '');
 
 	$tpl = load_view_file('view/profile_vcard.tpl');
 
@@ -2662,14 +2689,19 @@ function extract_item_authors($arr,$uid) {
 
 	// pre-quoted, don't put quotes on %s
 	if(count($urls)) {
-		$r = q("SELECT `id`,`url` FROM `contact` WHERE `uid` = %d AND `url` IN ( %s ) AND `network` = 'dfrn' AND `self` = 0 AND `blocked` = 0 ",
+		$r = q("SELECT `id`,`network`,`url` FROM `contact` WHERE `uid` = %d AND `url` IN ( %s )  AND `self` = 0 AND `blocked` = 0 ",
 			intval($uid),
 			implode(',',$urls)
 		);
 		if(count($r)) {
 			$ret = array();
-			foreach($r as $rr)
-				$ret[$rr['url']] = $rr['id'];
+			$authors = array();
+			foreach($r as $rr){
+				if ($rr['network']=='dfrn')
+					$ret[$rr['url']] = $rr['id'];
+				$authors[$r['url']]= $rr;
+			}
+			$a->authors = $authors;
 			return $ret;
 		}
 	}
@@ -2681,7 +2713,7 @@ function item_photo_menu($item){
 	$a = get_app();
 	
 	if (!isset($a->authors)){
-		$rr = q("SELECT id, network, url FROM contact WHERE uid=%d AND self!=1", intval(local_user()));
+		$rr = q("SELECT `id`, `network`, `url` FROM `contact` WHERE `uid`=%d AND `self`=0 AND `blocked`=0 ", intval(local_user()));
 		$authors = array();
 		foreach($rr as $r) $authors[$r['url']]= $r;
 		$a->authors = $authors;

@@ -128,11 +128,11 @@ function group_content(&$a) {
 			goaway($a->get_baseurl() . '/contacts');
 		}
 		$group = $r[0];
-		$ret = group_get_members($group['id']);
+		$members = group_get_members($group['id']);
 		$preselected = array();
-		if(count($ret))	{
-			foreach($ret as $p)
-				$preselected[] = $p['id'];
+		if(count($members))	{
+			foreach($members as $member)
+				$preselected[] = $member['id'];
 		}
 
 		$drop_tpl = load_view_file('view/group_drop.tpl');
@@ -156,6 +156,13 @@ function group_content(&$a) {
 		));
 
 	}
+
+	$o .= '<div id="group-members">';
+	foreach($members as $member) {
+		$o .= micropro($member,true,'mpgroup');
+	}
+	$o .= '</div><div id="group-members-end"></div>';
+
 	return $o;
 
 }

@@ -5,7 +5,11 @@ require_once('library/HTML5/Parser.php');
 
 function parse_url_content(&$a) {
 
-	$url = trim($_GET['url']);
+	logger('parse_url: ' . $_GET['url']);
+
+	$url = trim(hex2bin($_GET['url']));
+
+	logger('parse_url: ' . $url);
 
 	$text = null;
 

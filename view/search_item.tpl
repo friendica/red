@@ -1,6 +1,6 @@
 <div class="wall-item-outside-wrapper$indent" id="wall-item-outside-wrapper-$id" >
 	<div class="wall-item-content-wrapper$indent" id="wall-item-content-wrapper-$id" >
-		<span class="wall-item-info" id="wall-item-info-$id">
+		<div class="wall-item-info" id="wall-item-info-$id">
 			<div class="wall-item-photo-wrapper" id="wall-item-photo-wrapper-$id" 
 				 onmouseover="if (typeof t$id != 'undefined') clearTimeout(t$id); openMenu('wall-item-photo-menu-button-$id')" 
 				 onmouseout="t$id=setTimeout('closeMenu(\'wall-item-photo-menu-button-$id\'); closeMenu(\'wall-item-photo-menu-$id\');',200)">
@@ -18,7 +18,7 @@
 				$lock
 				<div class="wall-item-location" id="wall-item-location-$id">$location</div>
 			</div>
-		</span>
+		</div>
 		<div class="wall-item-author">
 				<a href="$profile_url" title="$linktitle" class="wall-item-name-link"><span class="wall-item-name$sparkle" id="wall-item-name-$id" >$name</span></a>
 				<div class="wall-item-ago"  id="wall-item-ago-$id">$ago</div>

@@ -195,6 +195,9 @@ function follow_post(&$a) {
 	if(! x($vcard,'photo'))
 		$vcard['photo'] = $a->get_baseurl() . '/images/default-profile.jpg' ; 
 
+
+	$writeable = ((($network === 'stat') && ($notify)) ? 1 : 0);
+
 	// check if we already have a contact
 	// the poll url is more reliable than the profile url, as we may have
 	// indirect links or webfinger links
@@ -217,8 +220,8 @@ function follow_post(&$a) {
 	else {
 		// create contact record 
 		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `alias`, `notify`, `poll`, `name`, `nick`, `photo`, `network`, `rel`, `priority`,
-			`blocked`, `readonly`, `pending` )
-			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, 0, 0, 0 ) ",
+			`writable`, `blocked`, `readonly`, `pending` )
+			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, 0, 0, 0 ) ",
 			intval(local_user()),
 			dbesc(datetime_convert()),
 			dbesc($profile),
@@ -230,7 +233,8 @@ function follow_post(&$a) {
 			dbesc($vcard['photo']),
 			dbesc($network),
 			intval(REL_FAN),
-			intval($priority)
+			intval($priority),
+			intval($writable)
 		);
 	}
 
