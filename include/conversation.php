@@ -198,7 +198,10 @@ function conversation(&$a, $items, $mode, $update) {
 				if($blowhard == $item['cid'] && (! $item['self']) && ($mode != 'profile')) {
 					$blowhard_count ++;
 					if($blowhard_count == 3) {
-						$o .= '<div class="icollapse-wrapper fakelink" id="icollapse-wrapper-' . $item['parent'] . '" onclick="openClose(' . '\'icollapse-' . $item['parent'] . '\');" >' . t('See more posts like this') . '</div>' . '<div class="icollapse" id="icollapse-' . $item['parent'] . '" style="display: none;" >';
+						$o .= '<div class="icollapse-wrapper fakelink" id="icollapse-wrapper-' . $item['parent'] 
+							. '" onclick="openClose(' . '\'icollapse-' . $item['parent'] . '\');" >' 
+							. t('See more posts like this') . '</div>' . '<div class="icollapse" id="icollapse-' 
+							. $item['parent'] . '" style="display: none;" >';
 					}
 				}
 				else {
@@ -219,16 +222,16 @@ function conversation(&$a, $items, $mode, $update) {
 
 			if(($comments[$item['parent']] > 2) && ($comments_seen <= ($comments[$item['parent']] - 2)) && ($item['gravity'] == 6)) {
 				if(! $comments_collapsed) {
-					$o .= '<div class="ccollapse-wrapper fakelink" id="ccollapse-wrapper-' . $item['parent'] . '" onclick="openClose(' . '\'ccollapse-' . $item['parent'] . '\');" >' . sprintf( t('See all %d comments'), $comments[$item['parent']]) . '</div>';
-					$o .= '<div class="ccollapse" id="ccollapse-' . $item['parent'] . '" style="display: none;" >';
+					$o .= '<div class="ccollapse-wrapper fakelink" id="ccollapse-wrapper-' . $item['parent'] 
+						. '" onclick="openClose(' . '\'ccollapse-' . $item['parent'] . '\');" >' 
+						. sprintf( t('See all %d comments'), $comments[$item['parent']]) . '</div>'
+						. '<div class="ccollapse" id="ccollapse-' . $item['parent'] . '" style="display: none;" >';
 					$comments_collapsed = true;
 				}
 			}
 			if(($comments[$item['parent']] > 2) && ($comments_seen == ($comments[$item['parent']] - 1))) {
 				$o .= '</div>';
 			}
-
-
 
 			$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 
@@ -243,10 +246,14 @@ function conversation(&$a, $items, $mode, $update) {
 
 			$osparkle = '';
 
-			if(($item['parent'] == $item['item_id']) && (! $item['self']) && ($mode !== 'profile')) {
+			if(($toplevelpost) && (! $item['self']) && ($mode !== 'profile')) {
 
 				if($item['type'] === 'wall') {
-					// I do. Put me on the left of the wall-to-wall notice.
+
+					// On the network page, I am the owner. On the display page it will be the profile owner.
+					// This will have been stored in $a->page_contact by our calling page.
+					// Put this person on the left of the wall-to-wall notice.
+
 					$owner_url = $a->page_contact['url'];
 					$owner_photo = $a->page_contact['thumb'];
 					$owner_name = $a->page_contact['name'];
@@ -254,7 +261,9 @@ function conversation(&$a, $items, $mode, $update) {
 					$commentww = 'ww';	
 				}
 				if(($item['type'] === 'remote') && (strlen($item['owner-link'])) && ($item['owner-link'] != $item['author-link'])) {
+
 					// Could be anybody. 
+
 					$owner_url = $item['owner-link'];
 					$owner_photo = $item['owner-avatar'];
 					$owner_name = $item['owner-name'];
@@ -273,7 +282,7 @@ function conversation(&$a, $items, $mode, $update) {
 			$likebuttons = '';
 
 			if($page_writeable) {
-				if($item['id'] == $item['parent']) {
+				if($toplevelpost) {
 					$likebuttons = replace_macros((($item['private']) ? $noshare_tpl : $like_tpl),array(
 						'$id' => $item['id'],
 						'$likethis' => t("I like this \x28toggle\x29"),
@@ -301,9 +310,10 @@ function conversation(&$a, $items, $mode, $update) {
 				}
 			}
 
-			$edpost = '';
-			if(($profile_owner == local_user()) && ($item['id'] == $item['parent']) && (intval($item['wall']) == 1)) 
-				$edpost = '<a class="editpost" href="' . $a->get_baseurl() . '/editpost/' . $item['id'] . '" title="' . t('Edit') . '"><img src="images/pencil.gif" /></a>';
+			$edpost = ((($profile_owner == local_user()) && ($toplevelpost) && (intval($item['wall']) == 1))
+					? '<a class="editpost" href="' . $a->get_baseurl() . '/editpost/' . $item['id'] 
+						. '" title="' . t('Edit') . '"><img src="images/pencil.gif" /></a>'
+					: '');
 			$drop = replace_macros(load_view_file('view/wall_item_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
 
 			$photo = $item['photo'];
@@ -311,7 +321,7 @@ function conversation(&$a, $items, $mode, $update) {
 
 			// Post was remotely authored.
 
-			$diff_author = ((link_compare($item['url'],$item['author-link'])) ? false : true);
+			$diff_author    = ((link_compare($item['url'],$item['author-link'])) ? false : true);
 
 			$profile_name   = (((strlen($item['author-name']))   && $diff_author) ? $item['author-name']   : $item['name']);
 			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $thumb);
@@ -343,8 +353,10 @@ function conversation(&$a, $items, $mode, $update) {
 			$like    = ((x($alike,$item['id'])) ? format_like($alike[$item['id']],$alike[$item['id'] . '-l'],'like',$item['id']) : '');
 			$dislike = ((x($dlike,$item['id'])) ? format_like($dlike[$item['id']],$dlike[$item['id'] . '-l'],'dislike',$item['id']) : '');
 
-			$location = (($item['location']) ? '<a target="map" title="' . $item['location'] . '" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : '');
-			$coord = (($item['coord']) ? '<a target="map" title="' . $item['coord'] . '" href="http://maps.google.com/?q=' . urlencode($item['coord']) . '">' . $item['coord'] . '</a>' : '');
+			$location = (($item['location']) ? '<a target="map" title="' . $item['location'] 
+				. '" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : '');
+			$coord = (($item['coord']) ? '<a target="map" title="' . $item['coord'] 
+				. '" href="http://maps.google.com/?q=' . urlencode($item['coord']) . '">' . $item['coord'] . '</a>' : '');
 			if($coord) {
 				if($location)
 					$location .= '<br /><span class="smalltext">(' . $coord . ')</span>';
@@ -352,12 +364,10 @@ function conversation(&$a, $items, $mode, $update) {
 					$location = '<span class="smalltext">' . $coord . '</span>';
 			}
 
-			$indent = (($item['parent'] != $item['item_id']) ? ' comment' : '');
+			$indent = (($toplevelpost) ? '' : ' comment');
 
 			if(strcmp(datetime_convert('UTC','UTC',$item['created']),datetime_convert('UTC','UTC','now - 12 hours')) > 0)
 				$indent .= ' shiny'; 
-
-
 
 			// Build the HTML
 
