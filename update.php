@@ -435,6 +435,7 @@ function update_1048() {
 function update_1049() {
 	q("CREATE TABLE `mailacct` (
 	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`uid` INT NOT NULL,
 	`server` CHAR( 255 ) NOT NULL ,
 	`user` CHAR( 255 ) NOT NULL ,
 	`pass` CHAR( 255 ) NOT NULL ,
