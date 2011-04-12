@@ -2045,18 +2045,7 @@ function contact_block() {
 	if(count($r)) {
 		$o .= '<h4 class="contact-h4">' .  sprintf( tt('%d Contact','%d Contacts', $total),$total) . '</h4><div id="contact-block">';
 		foreach($r as $rr) {
-			$redirect_url = $a->get_baseurl() . '/redir/' . $rr['id'];
-			if(local_user() && ($rr['uid'] == local_user())
-				&& ($rr['network'] === 'dfrn')) {
-				$url = $redirect_url;
-				$sparkle = ' sparkle';
-			}
-			else {
-				$url = $rr['url'];
-				$sparkle = '';
-			}
-
-			$o .= '<div class="contact-block-div"><a class="contact-block-link' . $sparkle . '" href="' . $url . '" ><img class="contact-block-img' . $sparkle . '" src="' . $rr['micro'] . '" title="' . $rr['name'] . ' [' . $rr['url'] . ']" alt="' . $rr['name'] . '" /></a></div>' . "\r\n";
+			$o .= micropro($rr,true,'mpfriend');
 		}
 		$o .= '</div><div id="contact-block-end"></div>';
 		$o .=  '<div id="viewcontacts"><a id="viewcontacts-link" href="viewcontacts/' . $a->profile['nickname'] . '">' . t('View Contacts') . '</a></div>';
@@ -2069,6 +2058,31 @@ function contact_block() {
 	return $o;
 
 }}
+
+if(! function_exists('micropro')) {
+function micropro($contact, $redirect = false, $class = '') {
+
+	if($class)
+		$class = ' ' . $class;
+
+	$url = $contact['url'];
+	$sparkle = '';
+
+	if($redirect) {
+		$a = get_app();
+		$redirect_url = $a->get_baseurl() . '/redir/' . $contact['id'];
+		if(local_user() && ($contact['uid'] == local_user()) && ($contact['network'] === 'dfrn')) {
+			$url = $redirect_url;
+			$sparkle = ' sparkle';
+		}
+	}
+
+	return '<div class="contact-block-div' . $class . '"><a class="contact-block-link' . $class . $sparkle 
+		. '" href="' . $url . '" ><img class="contact-block-img' . $class . $sparkle . '" src="' . $contact['micro'] 
+		. '" title="' . $contact['name'] . ' [' . $contact['url'] . ']" alt="' . $contact['name'] . '" /></a></div>' . "\r\n";
+}}
+
+
 
 if(! function_exists('search')) {
 function search($s) {

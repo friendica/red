@@ -2225,4 +2225,13 @@ a.mail-list-link {
 	position: absolute;
 	top: 0;
 	left: 0;
-)
+}
+
+#group-members {
+	margin-top: 20px;
+}
+
+#group-members-end {
+	clear: both;
+}
+
