@@ -428,3 +428,7 @@ function update_1047() {
 	q("ALTER TABLE `contact` ADD `writable` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `readonly` ");
 }
 
+function update_1048() {
+	q("UPDATE `contact` SET `writable` = 1 WHERE `network` = 'stat' AND `notify` != '' ");
+}
+

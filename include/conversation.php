@@ -6,21 +6,21 @@ function conversation(&$a, $items, $mode, $update) {
 	require_once('bbcode.php');
 
 	$profile_owner = 0;
-	$writable      = false;
+	$page_writeable      = false;
 
 	if($mode === 'network') {
 		$profile_owner = local_user();
-		$writable = true;
+		$page_writeable = true;
 	}
 
 	if($mode === 'profile') {
 		$profile_owner = $a->profile['profile_uid'];
-		$writable = can_write_wall($a,$profile_owner);
+		$page_writeable = can_write_wall($a,$profile_owner);
 	}
 
 	if($mode === 'display') {
 		$profile_owner = $a->profile['uid'];
-		$writable = can_write_wall($a,$profile_owner);
+		$page_writeable = can_write_wall($a,$profile_owner);
 	}
 
 	if($update)
@@ -177,7 +177,6 @@ function conversation(&$a, $items, $mode, $update) {
 			$sparkle = '';
 			$owner_url = $owner_photo = $owner_name = '';
 
-
 			// We've already parsed out like/dislike for special treatment. We can ignore them now
 
 			if(((activity_match($item['verb'],ACTIVITY_LIKE)) 
@@ -185,11 +184,17 @@ function conversation(&$a, $items, $mode, $update) {
 				&& ($item['id'] != $item['parent']))
 				continue;
 
+			$toplevelpost = (($item['id'] == $item['parent']) ? true : false);
+
+
 			// Take care of author collapsing and comment collapsing
 			// If a single author has more than 3 consecutive top-level posts, squash the remaining ones.
 			// If there are more than two comments, squash all but the last 2.
 
-			if($item['id'] == $item['parent']) {
+			if($toplevelpost) {
+
+				$item_writeable = (($item['writable'] || $item['self']) ? true : false);
+
 				if($blowhard == $item['cid'] && (! $item['self']) && ($mode != 'profile')) {
 					$blowhard_count ++;
 					if($blowhard_count == 3) {
@@ -209,6 +214,8 @@ function conversation(&$a, $items, $mode, $update) {
 			else
 				$comments_seen ++;
 
+
+			$show_comment_box = ((($page_writeable) && ($item_writeable) && ($comments_seen == $comments[$item['parent']])) ? true : false);
 
 			if(($comments[$item['parent']] > 2) && ($comments_seen <= ($comments[$item['parent']] - 2)) && ($item['gravity'] == 6)) {
 				if(! $comments_collapsed) {
@@ -265,7 +272,7 @@ function conversation(&$a, $items, $mode, $update) {
 
 			$likebuttons = '';
 
-			if($writable) {
+			if($page_writeable) {
 				if($item['id'] == $item['parent']) {
 					$likebuttons = replace_macros((($item['private']) ? $noshare_tpl : $like_tpl),array(
 						'$id' => $item['id'],
@@ -276,7 +283,7 @@ function conversation(&$a, $items, $mode, $update) {
 					));
 				}
 
-				if($item['last-child']) {
+				if(($show_comment_box) || (($show_comment_box == false) && ($item['last-child']))) {
 					$comment = replace_macros($cmnt_tpl,array(
 						'$return_path' => '', 
 						'$jsreload' => (($mode === 'display') ? $_SESSION['return_url'] : ''),
