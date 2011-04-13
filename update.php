@@ -444,3 +444,19 @@ function update_1049() {
 	) ENGINE = MYISAM ");
 }
 
+function update_1050() {
+	q("CREATE TABLE `attach` (
+	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`uid` INT NOT NULL ,
+	`filetype` CHAR( 64 ) NOT NULL ,
+	`filesize` INT NOT NULL ,
+	`data` LONGBLOB NOT NULL ,
+	`created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+	`edited` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+	`allow_cid` MEDIUMTEXT NOT NULL ,
+	`allow_gid` MEDIUMTEXT NOT NULL ,
+	`deny_cid` MEDIUMTEXT NOT NULL ,
+	`deny_gid` MEDIUMTEXT NOT NULL
+	) ENGINE = MYISAM ");
+
+}

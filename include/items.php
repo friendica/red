@@ -477,10 +477,12 @@ function get_atom_elements($feed,$item) {
 	if($attach) {
 		$att_arr = array();
 		foreach($attach as $att) {
-			$len = intval($att->get_length());
-			$link = str_replace(',','%2D', notags(trim($att->get_link())));
-			$title = str_replace(',','%2D',notags(trim($att->get_title())));
-			$type = notags(trim($att->get_type()));
+			$len   = intval($att->get_length());
+			$link  = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att->get_link()))));
+			$title = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att->get_title()))));
+			$type  = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att->get_type()))));
+			if(strpos($type,';'))
+				$type = substr($type,0,strpos($type,';'));
 			if((! $link) || (strpos($link,'http') !== 0))
 				continue;
 
@@ -489,9 +491,7 @@ function get_atom_elements($feed,$item) {
 			if(! $type)
 				$type = 'application/octet-stream';
 
-			// this isn't legal html - there is no size in an 'a' tag, remember to strip it before display
-
-			$att_arr[] = '<a href="' . $link . '" size="' . $len . '" type="' . $type . '">' . $title . '</a>'; 
+			$att_arr[] = '[attach]href="' . $link . '" size="' . $len . '" type="' . $type . '" title="' . $title . '"[/attach]'; 
 		}
 		$res['attach'] = implode(',', $att_arr);
 	}
@@ -1588,13 +1588,13 @@ function item_getfeedattach($item) {
 	if(count($arr)) {
 		foreach($arr as $r) {
 			$matches = false;
-			$cnt = preg_match('|\<a href=\"(.+?)\" size=\"(.+?)\" type=\"(.+?)\" >(.+?)</a>|',$r,$matches);
+			$cnt = preg_match('|\[attach\]href=\"(.+?)\" size=\"(.+?)\" type=\"(.+?)\" title=\"(.+?)\"\[\/attach\]|',$r,$matches);
 			if($cnt) {
 				$ret .= '<link rel="enclosure" href="' . xmlify($matches[1]) . '" type="' . xmlify($matches[3]) . '" ';
 				if(intval($matches[2]))
 					$ret .= 'size="' . intval($matches[2]) . '" ';
 				if($matches[4] !== ' ')
-					$ret .= 'title="' . xmlify($matches[4]) . '" ';
+					$ret .= 'title="' . xmlify(trim($matches[4])) . '" ';
 				$ret .= ' />' . "\r\n";
 			}
 		}

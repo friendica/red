@@ -3,7 +3,7 @@
     * Friendika *
     *************
 
-    Distributed Social Network
+    Social Communications Platform
 
     http://friendika.com
 
@@ -40,8 +40,8 @@ interaction you've grown to love, *and* was free to use, *and* was open source,
 *and* where your privacy is always under your control?
  
     And what if this social network could scale to encompass the entire 
-internet, and *not* require a central organisation to provide servers? 
-(In exchange for peddling your private information behind your back.)
+internet, and *not* require a central organisation - whose core business model 
+is to sell information it can discover about you for profit?
 
     Look no further. 
 
@@ -53,7 +53,7 @@ Status.Net and many other sites and social networks *today*.
 
     Welcome to the federated social web. If you choose not to use Friendika 
 (though we think you'd be foolish not to), you can choose any of 20-30 other
-providers of federated social networking software and still be a part of this
+providers of federated social communications software and still be a part of this
 vast new social network. This is going to be bigger than Facebook. 
 
     Much bigger.  
