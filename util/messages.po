@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.947\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-12 21:22-0700\n"
+"POT-Creation-Date: 2011-04-12 21:37-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1499,7 +1499,7 @@ msgid "Visible To"
 msgstr ""
 
 #: ../../mod/profperm.php:116
-msgid "All Contacts (with remote profile access)"
+msgid "All Contacts (with secure profile access)"
 msgstr ""
 
 #: ../../mod/viewcontacts.php:17 ../../boot.php:1996

@@ -113,7 +113,7 @@ function profperm_content(&$a) {
 	$o .= '<hr id="prof-separator" />';
 	$o .= '<div id="prof-all-contacts">';
 
-		$o .= '<h3>' . t("All Contacts \x28with remote profile access\x29") . '</h3>';
+		$o .= '<h3>' . t("All Contacts \x28with secure profile access\x29") . '</h3>';
 		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `blocked` = 0 and `pending` = 0 and `self` = 0 
 			AND `network` = 'dfrn' ORDER BY `name` ASC",
 			intval(local_user())
