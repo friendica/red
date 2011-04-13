@@ -21,7 +21,7 @@ function network_init(&$a) {
 
 	$a->page['aside'] .= '</div>';
 
-	$a->page['aside'] .= group_side('network','network');
+	$a->page['aside'] .= group_side('network','network',true);
 }
 
 

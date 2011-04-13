@@ -135,7 +135,7 @@ function group_public_members($gid) {
 
 
 
-function group_side($every="contacts",$each="group") {
+function group_side($every="contacts",$each="group",$edit = false) {
 
 	$o = '';
 
@@ -165,7 +165,7 @@ EOT;
 	);
 	if(count($r)) {
 		foreach($r as $rr)
-			$o .= "	<li class=\"sidebar-group-li\"><a href=\"$each/{$rr['id']}\">{$rr['name']}</a></li>\r\n";
+			$o .= '	<li class="sidebar-group-li">' . (($edit) ? "<a href=\"group/{$rr['id']}\" title=\"" . t('Edit') . "\" ><img src=\"images/spencil.gif\" alt=\"" . t('Edit') . "\"></a> " : "") . "<a href=\"$each/{$rr['id']}\">{$rr['name']}</a></li>\r\n";
 	}
 	$o .= "	</ul>\r\n	</div>\r\n</div>";	
 
