@@ -283,7 +283,15 @@
 		$('body .fakelink').css('cursor', 'wait');
 		$.get('group/' + gid + '/' + cid, function(data) {
 				$('#group-update-wrapper').html(data);
-				$('#group-update2-wrapper').html(data);
 				$('body .fakelink').css('cursor', 'auto');				
 		});
 	}
+
+	function profChangeMember(gid,cid) {
+		$('body .fakelink').css('cursor', 'wait');
+		$.get('profperm/' + gid + '/' + cid, function(data) {
+				$('#prof-update-wrapper').html(data);
+				$('body .fakelink').css('cursor', 'auto');				
+		});
+	}
+

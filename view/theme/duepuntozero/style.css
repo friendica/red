@@ -2258,3 +2258,36 @@ a.mail-list-link {
 #group-edit-desc {
 	margin-top: 15px;
 }
+
+
+#prof-members {
+	margin-top: 20px;
+	padding: 10px;
+	height: 250px;
+	overflow: auto;
+	border: 1px solid #ddd;
+}
+
+#prof-members-end {
+	clear: both;
+}
+
+#prof-separator {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+#prof-all-contacts {
+	padding: 10px;
+	height: 450px;
+	overflow: auto;
+	border: 1px solid #ddd;
+}
+
+#prof-all-contacts-end {
+	clear: both;
+}
+
+#prof-edit-desc {
+	margin-top: 15px;
+}

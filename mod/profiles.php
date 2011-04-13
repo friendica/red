@@ -459,16 +459,16 @@ function profiles_content(&$a) {
 			));
 
 
-			$tpl_default = load_view_file('view/profile_entry_default.tpl');
 			$tpl = load_view_file('view/profile_entry.tpl');
 
 			foreach($r as $rr) {
-				$template = (($rr['is-default']) ? $tpl_default : $tpl);
-				$o .= replace_macros($template, array(
+				$o .= replace_macros($tpl, array(
 					'$photo' => $rr['thumb'],
 					'$id' => $rr['id'],
 					'$alt' => t('Profile Image'),
-					'$profile_name' => $rr['profile-name']
+					'$profile_name' => $rr['profile-name'],
+					'$visible' => (($rr['is-default']) ? t('Visible to everybody') 
+						: '<a href="' . $a->get_baseurl() . '/profperm/' . $rr['id'] . '" />' . t('Edit visibility') . '</a>')
 				));
 			}
 		}
