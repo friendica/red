@@ -10,6 +10,35 @@ $nickname_block
 <form action="settings" id="settings-form" method="post" autocomplete="off" >
 
 
+<h3 class="settings-heading">$lbl_pass1</h3>
+
+
+<div id="settings-password-wrapper" >
+<p id="settings-password-desc" >
+$lbl_pass2
+</p>
+<label id="settings-password-label" for="settings-password" >$lbl_pass3 </label>
+<input type="password" id="settings-password" name="npassword" />
+</div>
+<div id="settings-password-end" ></div>
+
+<div id="settings-confirm-wrapper" >
+<label id="settings-confirm-label" for="settings-confirm" >$lbl_pass4 </label>
+<input type="password" id="settings-confirm" name="confirm" />
+</div>
+<div id="settings-confirm-end" ></div>
+
+<div id="settings-openid-wrapper" >
+	$oidhtml
+</div>
+<div id="settings-openid-end" ></div>
+
+
+<div class="settings-submit-wrapper" >
+<input type="submit" name="submit" class="settings-submit" value="$submit" />
+</div>
+
+
 <h3 class="settings-heading">$lbl_basic</h3>
 
 <div id="settings-username-wrapper" >
@@ -136,33 +165,6 @@ $profile_in_net_dir
 </div>
 
 
-<h3 class="settings-heading">$lbl_pass1</h3>
-
-
-<div id="settings-password-wrapper" >
-<p id="settings-password-desc" >
-$lbl_pass2
-</p>
-<label id="settings-password-label" for="settings-password" >$lbl_pass3 </label>
-<input type="password" id="settings-password" name="npassword" />
-</div>
-<div id="settings-password-end" ></div>
-
-<div id="settings-confirm-wrapper" >
-<label id="settings-confirm-label" for="settings-confirm" >$lbl_pass4 </label>
-<input type="password" id="settings-confirm" name="confirm" />
-</div>
-<div id="settings-confirm-end" ></div>
-
-<div id="settings-openid-wrapper" >
-	$oidhtml
-</div>
-<div id="settings-openid-end" ></div>
-
-
-<div class="settings-submit-wrapper" >
-<input type="submit" name="submit" class="settings-submit" value="$submit" />
-</div>
 
 
 <h3 class="settings-heading">$lbl_advn</h3>

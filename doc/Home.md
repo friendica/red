@@ -4,6 +4,7 @@ Friendika Documentation and Resources
 
 **Contents**
 
+* [Account Basics](help/Account-Basics)
 * [Making Friends](help/Making-Friends)
 * [Tags and Mentions](help/Tags-and-Mentions)
 * [Profiles](help/Profiles)

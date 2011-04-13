@@ -85,8 +85,11 @@ function register_post(&$a) {
 	// So now we are just looking for a space in the full name. 
 	
 	$loose_reg = get_config('system','no_regfullname');
-	if((! $loose_reg) && (! strpos($username,' ')))
-		$err .= t("That doesn't appear to be your full \x28First Last\x29 name.") . EOL;
+	if(! $loose_reg) {
+		$username = mb_convert_case($username,MB_CASE_TITLE,'UTF-8');
+		if(! strpos($username,' '))
+			$err .= t("That doesn't appear to be your full \x28First Last\x29 name.") . EOL;
+	}
 
 	if(! allowed_email($email))
 			$err .= t('Your email domain is not among those allowed on this site.') . EOL;
