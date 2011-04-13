@@ -9,6 +9,10 @@ function search_post(&$a) {
 
 function search_content(&$a) {
 
+	require_once("include/bbcode.php");
+	require_once('include/security.php');
+	require_once('include/conversation.php');
+
 	if(x($_SESSION,'theme'))
 		unset($_SESSION['theme']);
 
@@ -26,8 +30,6 @@ function search_content(&$a) {
 	if(! $search)
 		return $o;
 
-	require_once("include/bbcode.php");
-	require_once('include/security.php');
 
 	$sql_extra = "
 		AND `item`.`allow_cid` = '' 
@@ -81,7 +83,6 @@ function search_content(&$a) {
 	);
 
 
-	require_once('include/conversation.php');
 
 	$o .= conversation($a,$r,'search',false);
 

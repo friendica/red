@@ -27,6 +27,8 @@ function network_init(&$a) {
 
 function network_content(&$a, $update = 0) {
 
+	require_once('include/conversation.php');
+
 	if(! local_user())
     	return login(false);
 
@@ -266,8 +268,6 @@ function network_content(&$a, $update = 0) {
 	$a->page_contact = $a->contact;
 
 	$mode = (($nouveau) ? 'network-new' : 'network');
-
-	require_once('include/conversation.php');
 
 	$o .= conversation($a,$r,$mode,$update);
 

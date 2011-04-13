@@ -3,6 +3,11 @@
 
 function display_content(&$a) {
 
+	require_once("include/bbcode.php");
+	require_once('include/security.php');
+	require_once('include/conversation.php');
+
+
 	$o = '<div id="live-display"></div>' . "\r\n";
 
 	$nick = (($a->argc > 1) ? $a->argv[1] : '');
@@ -16,8 +21,6 @@ function display_content(&$a) {
 		return;
 	}
 
-	require_once("include/bbcode.php");
-	require_once('include/security.php');
 
 
 	$groups = array();
@@ -113,7 +116,6 @@ function display_content(&$a) {
 			);
 		}
 
-		require_once('include/conversation.php');
 
 		$o .= conversation($a,$r,'display', false);
 

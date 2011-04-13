@@ -1847,38 +1847,6 @@ function allowed_email($email) {
 	return $found;
 }}
 
-// Format the like/dislike text for a profile item
-// $cnt = number of people who like/dislike the item
-// $arr = array of pre-linked names of likers/dislikers
-// $type = one of 'like, 'dislike'
-// $id  = item id
-// returns formatted text
-
-if(! function_exists('format_like')) {
-function format_like($cnt,$arr,$type,$id) {
-	$o = '';
-	if($cnt == 1)
-		$o .= (($type === 'like') ? sprintf( t('%s likes this.'), $arr[0]) : sprintf( t('%s doesn\'t like this.'), $arr[0])) . EOL ;
-	else {
-		$spanatts = 'class="fakelink" onclick="openClose(\'' . $type . 'list-' . $id . '\');"';
-		$o .= (($type === 'like') ? 
-					sprintf( t('<span  %1$s>%2$d people</span> like this.'), $spanatts, $cnt)
-					 : 
-					sprintf( t('<span  %1$s>%2$d people</span> don\'t like this.'), $spanatts, $cnt) ); 
-		$o .= EOL ;
-		$total = count($arr);
-		if($total >= MAX_LIKERS)
-			$arr = array_slice($arr, 0, MAX_LIKERS - 1);
-		if($total < MAX_LIKERS)
-			$arr[count($arr)-1] = t('and') . ' ' . $arr[count($arr)-1];
-		$str = implode(', ', $arr);
-		if($total >= MAX_LIKERS)
-			$str .= sprintf( t(', and %d other people'), $total - MAX_LIKERS );
-		$str = (($type === 'like') ? sprintf( t('%s like this.'), $str) : sprintf( t('%s don\'t like this.'), $str));
-		$o .= "\t" . '<div id="' . $type . 'list-' . $id . '" style="display: none;" >' . $str . '</div>';
-	}
-	return $o;
-}}
 
 
 // wrapper to load a view template, checking for alternate
@@ -1976,29 +1944,6 @@ return str_replace ("%","=",rawurlencode($s));
 }} 
 
 
-if(! function_exists('like_puller')) {
-function like_puller($a,$item,&$arr,$mode) {
-
-	$url = '';
-	$sparkle = '';
-	$verb = (($mode === 'like') ? ACTIVITY_LIKE : ACTIVITY_DISLIKE);
-
-	if((activity_match($item['verb'],$verb)) && ($item['id'] != $item['parent'])) {
-		$url = $item['author-link'];
-		if((local_user()) && (local_user() == $item['uid']) && ($item['network'] === 'dfrn') && (! $item['self']) && (link_compare($item['author-link'],$item['url']))) {
-			$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
-			$sparkle = ' class="sparkle" ';
-		}
-		if(! ((isset($arr[$item['parent'] . '-l'])) && (is_array($arr[$item['parent'] . '-l']))))
-			$arr[$item['parent'] . '-l'] = array();
-		if(! isset($arr[$item['parent']]))
-			$arr[$item['parent']] = 1;
-		else	
-			$arr[$item['parent']] ++;
-		$arr[$item['parent'] . '-l'][] = '<a href="'. $url . '"'. $sparkle .'>' . $item['author-name'] . '</a>';
-	}
-	return;
-}}
 
 if(! function_exists('get_mentions')) {
 function get_mentions($item) {
@@ -2680,106 +2625,6 @@ function unamp($s) {
 	return str_replace('&amp;', '&', $s);
 }}
 
-if(! function_exists('extract_item_authors')) {
-function extract_item_authors($arr,$uid) {
-
-	if((! $uid) || (! is_array($arr)) || (! count($arr)))
-		return array();
-	$urls = array();
-	foreach($arr as $rr) {
-		if(! in_array("'" . dbesc($rr['author-link']) . "'",$urls))
-			$urls[] = "'" . dbesc($rr['author-link']) . "'";
-	}
-
-	// pre-quoted, don't put quotes on %s
-	if(count($urls)) {
-		$r = q("SELECT `id`,`network`,`url` FROM `contact` WHERE `uid` = %d AND `url` IN ( %s )  AND `self` = 0 AND `blocked` = 0 ",
-			intval($uid),
-			implode(',',$urls)
-		);
-		if(count($r)) {
-			$ret = array();
-			$authors = array();
-			foreach($r as $rr){
-				if ($rr['network']=='dfrn')
-					$ret[$rr['url']] = $rr['id'];
-				$authors[$r['url']]= $rr;
-			}
-			$a->authors = $authors;
-			return $ret;
-		}
-	}
-	return array();		
-}}
-
-if(! function_exists('item_photo_menu')){
-function item_photo_menu($item){
-	$a = get_app();
-	
-	if (!isset($a->authors)){
-		$rr = q("SELECT `id`, `network`, `url` FROM `contact` WHERE `uid`=%d AND `self`=0 AND `blocked`=0 ", intval(local_user()));
-		$authors = array();
-		foreach($rr as $r) $authors[$r['url']]= $r;
-		$a->authors = $authors;
-	}
-	
-	$contact_url="";
-	$pm_url="";
-
-	$status_link="";
-	$photo_link="";
-	$profile_link   = ((strlen($item['author-link']))   ? $item['author-link'] : $item['url']);
-	$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
-
-	// $item['contact-uid'] is only set on profile page and indicates the uid of the user who owns the profile.
-
-	$profile_owner = ((x($item,'contact-uid')) && intval($item['contact-uid']) ? intval($item['contact-uid']) : 0);	
-
-	// So we are checking that this is a logged in user on some page that *isn't* a profile page
-	// OR a profile page where the viewer owns the profile. 
-	// Then check if we can use a sparkle (redirect) link to the profile by virtue of it being our contact
-	// or a friend's contact that we both have a connection to. 
-
-	if((local_user() && ($profile_owner == 0)) 
-		|| ($profile_owner && $profile_owner == local_user())) {
-
-		if(strlen($item['author-link']) && link_compare($item['author-link'],$item['url']))
-			$redir = $redirect_url;
-		elseif(isset($a->authors[$item['author-link']])) {
-			$redir = $a->get_baseurl() . '/redir/' . $a->authors[$item['author-link']]['id'];
-			$cid = $a->authors[$item['author-link']]['id'];
-		}
-
-		if($item['network'] === 'dfrn' && (! $item['self'])) {
-			$status_link = $redir . "?url=status";
-			$profile_link = $redir . "?url=profile";
-			$photos_link = $redir . "?url=photos";
-			$pm_url = $a->get_baseurl() . '/message/new/' . $cid;
-		}
-
-		$contact_url = $item['self']?"":$a->get_baseurl() . '/contacts/' . (($item['cid']) ? $item['cid'] : $cid);
-	}
-
-
-	$menu = Array(
-		t("View status") => $status_link,
-		t("View profile") => $profile_link,
-		t("View photos") => $photos_link,		
-		t("Edit contact") => $contact_url,
-		t("Send PM") => $pm_url,
-	);
-	
-	
-	$args = array($item, &$menu);
-	
-	call_hooks('item_photo_menu', $args);
-	
-	$o = "";
-	foreach($menu as $k=>$v){
-		if ($v!="") $o .= "<li><a href='$v'>$k</a></li>\n";
-	}
-	return $o;
-}}
 
 if(! function_exists('lang_selector')) {
 function lang_selector() {

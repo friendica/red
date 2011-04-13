@@ -50,6 +50,7 @@ function profile_content(&$a, $update = 0) {
 
 	require_once("include/bbcode.php");
 	require_once('include/security.php');
+	require_once('include/conversation.php');
 
 	$groups = array();
 
@@ -289,7 +290,6 @@ function profile_content(&$a, $update = 0) {
 		$o .= get_birthdays();
 
 
-	require_once('include/conversation.php');
 
 	$o .= conversation($a,$r,'profile',$update);
 

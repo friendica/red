@@ -657,6 +657,10 @@ function photos_content(&$a) {
 	// photos/name/image/xxxxx/edit
 
 
+	require_once('include/bbcode.php');
+	require_once('include/security.php');
+	require_once('include/conversation.php');
+
 	if(! x($a->data,'user')) {
 		notice( t('No photos selected') . EOL );
 		return;
@@ -893,8 +897,7 @@ function photos_content(&$a) {
 
 	if($datatype === 'image') {
 
-		require_once('security.php');
-		require_once('bbcode.php');
+
 
 		$o = '<div id="live-display"></div>' . "\r\n";
 		// fetch image, item containing image, then comments
