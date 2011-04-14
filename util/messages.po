@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.1.947\n"
+"Project-Id-Version: 2.1.948\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-12 21:37-0700\n"
+"POT-Creation-Date: 2011-04-13 20:16-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,101 @@ msgstr ""
 
 #: ../../mod/oexchange.php:27
 msgid "Post successful."
+msgstr ""
+
+#: ../../mod/crepair.php:42
+msgid "Contact settings applied."
+msgstr ""
+
+#: ../../mod/crepair.php:44
+msgid "Contact update failed."
+msgstr ""
+
+#: ../../mod/crepair.php:54 ../../mod/photos.php:85 ../../mod/photos.php:777
+#: ../../mod/editpost.php:10 ../../mod/install.php:93
+#: ../../mod/notifications.php:56 ../../mod/contacts.php:106
+#: ../../mod/settings.php:15 ../../mod/settings.php:20
+#: ../../mod/settings.php:211 ../../mod/manage.php:75 ../../mod/network.php:6
+#: ../../mod/group.php:19 ../../mod/viewcontacts.php:13
+#: ../../mod/register.php:25 ../../mod/regmod.php:16 ../../mod/item.php:57
+#: ../../mod/item.php:668 ../../mod/profile_photo.php:19
+#: ../../mod/profile_photo.php:133 ../../mod/profile_photo.php:139
+#: ../../mod/profile_photo.php:150 ../../mod/message.php:8
+#: ../../mod/message.php:116 ../../mod/wall_upload.php:42
+#: ../../mod/follow.php:8 ../../mod/display.php:133 ../../mod/profiles.php:7
+#: ../../mod/profiles.php:227 ../../mod/invite.php:13 ../../mod/invite.php:50
+#: ../../mod/dfrn_confirm.php:53 ../../addon/facebook/facebook.php:110
+#: ../../wip/photos.php:77 ../../wip/photos.php:723 ../../wip/group.php:19
+#: ../../wip/photos-chris.php:97 ../../wip/photos-chris.php:770
+#: ../../index.php:265
+msgid "Permission denied."
+msgstr ""
+
+#: ../../mod/crepair.php:68 ../../mod/contacts.php:214
+#: ../../mod/dfrn_confirm.php:114
+msgid "Contact not found."
+msgstr ""
+
+#: ../../mod/crepair.php:74
+msgid "Repair Contact Settings"
+msgstr ""
+
+#: ../../mod/crepair.php:76
+msgid ""
+"<strong>WARNING: This is highly advanced</strong> and if you enter incorrect "
+"information your communications with this contact will stop working."
+msgstr ""
+
+#: ../../mod/crepair.php:77
+msgid ""
+"Please use your browser 'Back' button <strong>now</strong> if you are "
+"uncertain what to do on this page."
+msgstr ""
+
+#: ../../mod/crepair.php:85
+msgid "Name"
+msgstr ""
+
+#: ../../mod/crepair.php:86
+msgid "Account Nickname"
+msgstr ""
+
+#: ../../mod/crepair.php:87
+msgid "Account URL"
+msgstr ""
+
+#: ../../mod/crepair.php:88
+msgid "Friend Request URL"
+msgstr ""
+
+#: ../../mod/crepair.php:89
+msgid "Friend Confirm URL"
+msgstr ""
+
+#: ../../mod/crepair.php:90
+msgid "Notification Endpoint URL"
+msgstr ""
+
+#: ../../mod/crepair.php:91
+msgid "Poll/Feed URL"
+msgstr ""
+
+#: ../../mod/crepair.php:100 ../../mod/photos.php:805 ../../mod/photos.php:862
+#: ../../mod/photos.php:1069 ../../mod/photos.php:1112
+#: ../../mod/install.php:133 ../../mod/contacts.php:264
+#: ../../mod/settings.php:364 ../../mod/manage.php:106 ../../mod/group.php:76
+#: ../../mod/group.php:159 ../../mod/profiles.php:370 ../../mod/invite.php:64
+#: ../../addon/facebook/facebook.php:151
+#: ../../addon/randplace/randplace.php:179
+#: ../../addon/statusnet/statusnet.php:163
+#: ../../addon/statusnet/statusnet.php:189
+#: ../../addon/statusnet/statusnet.php:207 ../../addon/twitter/twitter.php:156
+#: ../../addon/twitter/twitter.php:175 ../../include/conversation.php:317
+#: ../../wip/photos.php:754 ../../wip/photos.php:793 ../../wip/photos.php:954
+#: ../../wip/addon/randplace/randplace.php:178 ../../wip/group.php:99
+#: ../../wip/group.php:176 ../../wip/photos-chris.php:801
+#: ../../wip/photos-chris.php:840 ../../wip/photos-chris.php:1001
+msgid "Submit"
 msgstr ""
 
 #: ../../mod/tagrm.php:11 ../../mod/tagrm.php:94
@@ -67,34 +162,14 @@ msgstr ""
 msgid "Contact Photos"
 msgstr ""
 
-#: ../../mod/photos.php:85 ../../mod/photos.php:777 ../../mod/editpost.php:10
-#: ../../mod/install.php:93 ../../mod/notifications.php:56
-#: ../../mod/contacts.php:106 ../../mod/settings.php:15
-#: ../../mod/settings.php:20 ../../mod/settings.php:211
-#: ../../mod/manage.php:75 ../../mod/network.php:6 ../../mod/group.php:19
-#: ../../mod/viewcontacts.php:13 ../../mod/register.php:25
-#: ../../mod/regmod.php:16 ../../mod/item.php:57 ../../mod/item.php:668
-#: ../../mod/profile_photo.php:19 ../../mod/profile_photo.php:133
-#: ../../mod/profile_photo.php:139 ../../mod/profile_photo.php:150
-#: ../../mod/message.php:8 ../../mod/message.php:116
-#: ../../mod/wall_upload.php:42 ../../mod/follow.php:8
-#: ../../mod/display.php:133 ../../mod/profiles.php:7
-#: ../../mod/profiles.php:227 ../../mod/invite.php:13 ../../mod/invite.php:50
-#: ../../mod/dfrn_confirm.php:53 ../../addon/facebook/facebook.php:110
-#: ../../wip/photos.php:77 ../../wip/photos.php:723 ../../wip/group.php:19
-#: ../../wip/photos-chris.php:97 ../../wip/photos-chris.php:770
-#: ../../index.php:265
-msgid "Permission denied."
-msgstr ""
-
 #: ../../mod/photos.php:95 ../../wip/photos.php:87
 #: ../../wip/photos-chris.php:107
 msgid "Contact information unavailable"
 msgstr ""
 
 #: ../../mod/photos.php:106 ../../mod/photos.php:531 ../../mod/photos.php:854
-#: ../../mod/photos.php:869 ../../mod/register.php:285
-#: ../../mod/register.php:292 ../../mod/register.php:299
+#: ../../mod/photos.php:869 ../../mod/register.php:288
+#: ../../mod/register.php:295 ../../mod/register.php:302
 #: ../../mod/profile_photo.php:58 ../../mod/profile_photo.php:65
 #: ../../mod/profile_photo.php:72 ../../mod/profile_photo.php:155
 #: ../../mod/profile_photo.php:231 ../../mod/profile_photo.php:240
@@ -157,24 +232,6 @@ msgstr ""
 #: ../../mod/photos.php:665 ../../wip/photos.php:611
 #: ../../wip/photos-chris.php:658
 msgid "No photos selected"
-msgstr ""
-
-#: ../../mod/photos.php:805 ../../mod/photos.php:862 ../../mod/photos.php:1069
-#: ../../mod/photos.php:1112 ../../mod/install.php:133
-#: ../../mod/contacts.php:264 ../../mod/settings.php:364
-#: ../../mod/manage.php:106 ../../mod/group.php:76 ../../mod/group.php:159
-#: ../../mod/profiles.php:370 ../../mod/invite.php:64
-#: ../../addon/facebook/facebook.php:151
-#: ../../addon/randplace/randplace.php:179
-#: ../../addon/statusnet/statusnet.php:163
-#: ../../addon/statusnet/statusnet.php:189
-#: ../../addon/statusnet/statusnet.php:207 ../../addon/twitter/twitter.php:156
-#: ../../addon/twitter/twitter.php:175 ../../include/conversation.php:317
-#: ../../wip/photos.php:754 ../../wip/photos.php:793 ../../wip/photos.php:954
-#: ../../wip/addon/randplace/randplace.php:178 ../../wip/group.php:99
-#: ../../wip/group.php:176 ../../wip/photos-chris.php:801
-#: ../../wip/photos-chris.php:840 ../../wip/photos-chris.php:1001
-msgid "Submit"
 msgstr ""
 
 #: ../../mod/photos.php:812 ../../wip/photos.php:742
@@ -502,7 +559,7 @@ msgid "Introduction received at "
 msgstr ""
 
 #: ../../mod/dfrn_request.php:547 ../../mod/lostpass.php:39
-#: ../../mod/register.php:329 ../../mod/register.php:366
+#: ../../mod/register.php:332 ../../mod/register.php:369
 #: ../../mod/regmod.php:93 ../../mod/item.php:475 ../../mod/item.php:498
 #: ../../mod/dfrn_notify.php:189 ../../mod/dfrn_notify.php:404
 #: ../../mod/dfrn_notify.php:490 ../../mod/dfrn_confirm.php:654
@@ -523,13 +580,13 @@ msgid "Does $name know you?"
 msgstr ""
 
 #: ../../mod/dfrn_request.php:620 ../../mod/settings.php:289
-#: ../../mod/settings.php:301 ../../mod/register.php:436
+#: ../../mod/settings.php:301 ../../mod/register.php:439
 #: ../../mod/profiles.php:355
 msgid "Yes"
 msgstr ""
 
 #: ../../mod/dfrn_request.php:621 ../../mod/settings.php:290
-#: ../../mod/settings.php:302 ../../mod/register.php:437
+#: ../../mod/settings.php:302 ../../mod/register.php:440
 #: ../../mod/profiles.php:356
 msgid "No"
 msgstr ""
@@ -902,19 +959,15 @@ msgstr ""
 msgid "Contact has been removed."
 msgstr ""
 
-#: ../../mod/contacts.php:214 ../../mod/dfrn_confirm.php:114
-msgid "Contact not found."
-msgstr ""
-
-#: ../../mod/contacts.php:228 ../../mod/contacts.php:360
+#: ../../mod/contacts.php:228 ../../mod/contacts.php:362
 msgid "Mutual Friendship"
 msgstr ""
 
-#: ../../mod/contacts.php:232 ../../mod/contacts.php:364
+#: ../../mod/contacts.php:232 ../../mod/contacts.php:366
 msgid "is a fan of yours"
 msgstr ""
 
-#: ../../mod/contacts.php:237 ../../mod/contacts.php:368
+#: ../../mod/contacts.php:237 ../../mod/contacts.php:370
 msgid "you are a fan of"
 msgstr ""
 
@@ -992,71 +1045,79 @@ msgid "Ignore contact"
 msgstr ""
 
 #: ../../mod/contacts.php:275
-msgid "Delete contact"
+msgid "Repair contact URL settings"
+msgstr ""
+
+#: ../../mod/contacts.php:276
+msgid "Repair contact URL settings (WARNING: Advanced)"
 msgstr ""
 
 #: ../../mod/contacts.php:277
+msgid "Delete contact"
+msgstr ""
+
+#: ../../mod/contacts.php:279
 msgid "Last updated: "
 msgstr ""
 
-#: ../../mod/contacts.php:278
+#: ../../mod/contacts.php:280
 msgid "Update public posts: "
 msgstr ""
 
-#: ../../mod/contacts.php:280
+#: ../../mod/contacts.php:282
 msgid "Update now"
 msgstr ""
 
-#: ../../mod/contacts.php:283
+#: ../../mod/contacts.php:285
 msgid "Unblock this contact"
 msgstr ""
 
-#: ../../mod/contacts.php:283
+#: ../../mod/contacts.php:285
 msgid "Block this contact"
 msgstr ""
 
-#: ../../mod/contacts.php:284
+#: ../../mod/contacts.php:286
 msgid "Unignore this contact"
 msgstr ""
 
-#: ../../mod/contacts.php:284
+#: ../../mod/contacts.php:286
 msgid "Ignore this contact"
 msgstr ""
 
-#: ../../mod/contacts.php:287
+#: ../../mod/contacts.php:289
 msgid "Currently blocked"
 msgstr ""
 
-#: ../../mod/contacts.php:288
+#: ../../mod/contacts.php:290
 msgid "Currently ignored"
 msgstr ""
 
-#: ../../mod/contacts.php:319 ../../include/nav.php:118
+#: ../../mod/contacts.php:321 ../../include/nav.php:117
 #: ../../include/acl_selectors.php:140 ../../include/acl_selectors.php:155
 msgid "Contacts"
 msgstr ""
 
-#: ../../mod/contacts.php:321
+#: ../../mod/contacts.php:323
 msgid "Show Blocked Connections"
 msgstr ""
 
-#: ../../mod/contacts.php:321
+#: ../../mod/contacts.php:323
 msgid "Hide Blocked Connections"
 msgstr ""
 
-#: ../../mod/contacts.php:323 ../../mod/directory.php:38
+#: ../../mod/contacts.php:325 ../../mod/directory.php:38
 msgid "Finding: "
 msgstr ""
 
-#: ../../mod/contacts.php:324 ../../mod/directory.php:40
+#: ../../mod/contacts.php:326 ../../mod/directory.php:40
 msgid "Find"
 msgstr ""
 
-#: ../../mod/contacts.php:384 ../../mod/viewcontacts.php:44
+#: ../../mod/contacts.php:386 ../../mod/viewcontacts.php:44
 msgid "Visit $username's profile"
 msgstr ""
 
-#: ../../mod/contacts.php:385 ../../include/conversation.php:520
+#: ../../mod/contacts.php:387 ../../include/conversation.php:520
 msgid "Edit contact"
 msgstr ""
 
@@ -1335,6 +1396,10 @@ msgstr ""
 msgid "Default Post Permissions"
 msgstr ""
 
+#: ../../mod/settings.php:398
+msgid "(click to open/close)"
+msgstr ""
+
 #: ../../mod/manage.php:37
 #, php-format
 msgid "Welcome back %s"
@@ -1419,7 +1484,7 @@ msgstr ""
 msgid "Group: "
 msgstr ""
 
-#: ../../mod/network.php:277 ../../mod/register.php:442
+#: ../../mod/network.php:277 ../../mod/register.php:445
 #: ../../mod/profile.php:300 ../../mod/display.php:142
 msgid ""
 "Shared content is covered by the <a href=\"http://creativecommons.org/"
@@ -1526,115 +1591,115 @@ msgstr ""
 msgid "Name too short."
 msgstr ""
 
-#: ../../mod/register.php:89
+#: ../../mod/register.php:91
 msgid "That doesn't appear to be your full (First Last) name."
 msgstr ""
 
-#: ../../mod/register.php:92
+#: ../../mod/register.php:95
 msgid "Your email domain is not among those allowed on this site."
 msgstr ""
 
-#: ../../mod/register.php:95
+#: ../../mod/register.php:98
 msgid "Not a valid email address."
 msgstr ""
 
-#: ../../mod/register.php:101
+#: ../../mod/register.php:104
 msgid "Cannot use that email."
 msgstr ""
 
-#: ../../mod/register.php:106
+#: ../../mod/register.php:109
 msgid ""
 "Your \"nickname\" can only contain \"a-z\", \"0-9\", \"-\", and \"_\", and "
 "must also begin with a letter."
 msgstr ""
 
-#: ../../mod/register.php:112 ../../mod/register.php:212
+#: ../../mod/register.php:115 ../../mod/register.php:215
 msgid "Nickname is already registered. Please choose another."
 msgstr ""
 
-#: ../../mod/register.php:131
+#: ../../mod/register.php:134
 msgid "SERIOUS ERROR: Generation of security keys failed."
 msgstr ""
 
-#: ../../mod/register.php:198
+#: ../../mod/register.php:201
 msgid "An error occurred during registration. Please try again."
 msgstr ""
 
-#: ../../mod/register.php:234
+#: ../../mod/register.php:237
 msgid "An error occurred creating your default profile. Please try again."
 msgstr ""
 
-#: ../../mod/register.php:328 ../../mod/regmod.php:92
+#: ../../mod/register.php:331 ../../mod/regmod.php:92
 #, php-format
 msgid "Registration details for %s"
 msgstr ""
 
-#: ../../mod/register.php:333
+#: ../../mod/register.php:336
 msgid ""
 "Registration successful. Please check your email for further instructions."
 msgstr ""
 
-#: ../../mod/register.php:337
+#: ../../mod/register.php:340
 msgid "Failed to send email message. Here is the message that failed."
 msgstr ""
 
-#: ../../mod/register.php:342
+#: ../../mod/register.php:345
 msgid "Your registration can not be processed."
 msgstr ""
 
-#: ../../mod/register.php:365
+#: ../../mod/register.php:368
 #, php-format
 msgid "Registration request at %s"
 msgstr ""
 
-#: ../../mod/register.php:369
+#: ../../mod/register.php:372
 msgid "Your registration is pending approval by the site owner."
 msgstr ""
 
-#: ../../mod/register.php:417
+#: ../../mod/register.php:420
 msgid ""
 "You may (optionally) fill in this form via OpenID by supplying your OpenID "
 "and clicking 'Register'."
 msgstr ""
 
-#: ../../mod/register.php:418
+#: ../../mod/register.php:421
 msgid ""
 "If you are not familiar with OpenID, please leave that field blank and fill "
 "in the rest of the items."
 msgstr ""
 
-#: ../../mod/register.php:419
+#: ../../mod/register.php:422
 msgid "Your OpenID (optional): "
 msgstr ""
 
-#: ../../mod/register.php:433
+#: ../../mod/register.php:436
 msgid "Include your profile in member directory?"
 msgstr ""
 
-#: ../../mod/register.php:449
+#: ../../mod/register.php:452
 msgid "Registration"
 msgstr ""
 
-#: ../../mod/register.php:457
+#: ../../mod/register.php:460
 msgid "Your Full Name (e.g. Joe Smith): "
 msgstr ""
 
-#: ../../mod/register.php:458
+#: ../../mod/register.php:461
 msgid "Your Email Address: "
 msgstr ""
 
-#: ../../mod/register.php:459
+#: ../../mod/register.php:462
 msgid ""
 "Choose a profile nickname. This must begin with a text character. Your "
 "profile address on this site will then be '<strong>nickname@$sitename</"
 "strong>'."
 msgstr ""
 
-#: ../../mod/register.php:460
+#: ../../mod/register.php:463
 msgid "Choose a nickname: "
 msgstr ""
 
-#: ../../mod/register.php:463 ../../include/nav.php:62 ../../boot.php:827
+#: ../../mod/register.php:466 ../../include/nav.php:62 ../../boot.php:827
 msgid "Register"
 msgstr ""
 
@@ -1842,7 +1907,7 @@ msgstr ""
 msgid "Message could not be sent."
 msgstr ""
 
-#: ../../mod/message.php:125 ../../include/nav.php:107
+#: ../../mod/message.php:125 ../../include/nav.php:106
 msgid "Messages"
 msgstr ""
 
@@ -1966,7 +2031,7 @@ msgstr ""
 msgid "Applications"
 msgstr ""
 
-#: ../../mod/search.php:21 ../../include/nav.php:74 ../../boot.php:2042
+#: ../../mod/search.php:21 ../../include/nav.php:73 ../../boot.php:2042
 msgid "Search"
 msgstr ""
 
@@ -2165,7 +2230,7 @@ msgstr ""
 msgid "Age: "
 msgstr ""
 
-#: ../../mod/profiles.php:456 ../../include/nav.php:116
+#: ../../mod/profiles.php:456 ../../include/nav.php:115
 msgid "Profiles"
 msgstr ""
 
@@ -2921,35 +2986,35 @@ msgstr ""
 msgid "Login"
 msgstr ""
 
-#: ../../include/nav.php:57 ../../include/nav.php:98
+#: ../../include/nav.php:57 ../../include/nav.php:97
 msgid "Home"
 msgstr ""
 
-#: ../../include/nav.php:68
+#: ../../include/nav.php:67
 msgid "Help"
 msgstr ""
 
-#: ../../include/nav.php:71
+#: ../../include/nav.php:70
 msgid "Apps"
 msgstr ""
 
-#: ../../include/nav.php:84
+#: ../../include/nav.php:83
 msgid "Directory"
 msgstr ""
 
-#: ../../include/nav.php:94
+#: ../../include/nav.php:93
 msgid "Network"
 msgstr ""
 
-#: ../../include/nav.php:103
+#: ../../include/nav.php:102
 msgid "Notifications"
 msgstr ""
 
-#: ../../include/nav.php:111
+#: ../../include/nav.php:110
 msgid "Manage"
 msgstr ""
 
-#: ../../include/nav.php:114
+#: ../../include/nav.php:113
 msgid "Settings"
 msgstr ""
 

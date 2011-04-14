@@ -3,132 +3,60 @@
     * Friendika *
     *************
 
-    Social Communications Platform
+    Friendika Communications Server
 
-    http://friendika.com
+    http://project.friendika.com
 
-	
-    Since the dawn of the world-wide-web, the internet has been a battleground
-between the "big boys" with all their resources, and a bunch of upstarts whose
-goal is to topple the status quo - and bring the same powers of global reach 
-to anybody with a computer and an internet connection. 
 
-    The latest battleground is social networking. Many of your friends would 
-have you believe that the world (and all the information in it) belongs to 
-Facebook. 
+	Friendika is a web application for managing social communications. Some
+would call it a "social network" or "distributed social network". We think 
+both terms have been over-used and don't really apply - though Friendika can
+also fill those roles.
 
-    Friendika is here to rock that boat. 
+	At its essence, Friendika is a web application which can monitor various
+information streams, and also let you participate in online conversations with
+friends and associates using a variety of network protocols.
 
-    Granted, all your friends aren't here - yet. The people who made fun of you
-in high school (yet curiously wanted to be friends with you now) are still
-"poking" each other and managing their virtual farms and telling you all about
-their virtual gang wars. Would you miss them? 
+	Friendika also manages your personal profiles and photo albums and lets 
+you tailor either of these to specific audiences. Your communications can be 
+either open and public, or closed and private. You can easily create "groups"
+of contacts with which you can partition your conversations into social
+circles.
 
-    I wouldn't. 
+	Friendika is decentralised. Any account on any Friendika server can connect
+with any other Friendika account on any other server. You can also connect to
+friends on Status.Net and other federated social web services (e.g. identi.ca,
+GNU-Social, etc.).
 
-    You probably have a handful of friends that are truly special. Tell those
-friends that the world has changed - because it has. It's time to move on. A 
-year ago, if you had left Facebook, there was no place to go - at least a 
-place which offered the same kind of social interaction (and wasn't just
-another huge company trying to make money off of all of your private
-information).
+	Outgoing communications can be directed at these networks and/or your
+existing accounts on Facebook and Twitter - and even delivered to email 
+contacts.
 
-    Today you have options.  
+	Incoming data streams aren't limited to traditional social networks.
+They may include most any service that provide a syndication feed (both RSS
+and Atom). This allows you to view communications from friends in other 
+diverse social networks - such as Diaspora, Google Buzz, and millions of 
+Wordpress blogs, news services, and other websites. Over time we will try to
+build two-way bridges to many of these services so that you can freely
+interact in both directions with anybody who allows it. 
 
-    What if there was a social network which provided some of the same
-interaction you've grown to love, *and* was free to use, *and* was open source,
-*and* where your privacy is always under your control?
- 
-    And what if this social network could scale to encompass the entire 
-internet, and *not* require a central organisation - whose core business model 
-is to sell information it can discover about you for profit?
+	 Communications between supported networks are private and encrypted, 
+using military grade encryption - and require mutual authentication of servers
+before any data is exchanged. 
 
-    Look no further. 
+    Friendika has no boundaries and no central ownership. Anybody with a 
+commodity PHP/MySQL web server can provide a membership hub, and each 
+individual server can then support several thousand participating members 
+- each with their own unique communication and privacy needs.
 
-    Friendika is a social network without boundaries, and without ownership. 
-Friendika installations can link together into a global social network which 
-is free from central control. Besides the Friendika network (which is privacy 
-enhanced); you can also connect with and communicate with friends on identi.ca,
-Status.Net and many other sites and social networks *today*. 
-
-    Welcome to the federated social web. If you choose not to use Friendika 
-(though we think you'd be foolish not to), you can choose any of 20-30 other
-providers of federated social communications software and still be a part of this
-vast new social network. This is going to be bigger than Facebook. 
-
-    Much bigger.  
-
-    We are currently developing connectors to seamlessly communicate with many 
-other open social networks and providers - like Diaspora, GNU-Social,
-OneSocialWeb, and even some of the larger closed services such as Facebook and
-Twitter.
-
-    Over the coming months, the boundaries between these networks will start
-to become indistinguishable as they all become part of your social circle.
-
-   Our core belief is that your personal thoughts and conversations belong to 
-you - and are only meant to be shared with those you wish to share them with. 
-
-   Period.  
-
-   Friendika is secure, and as private as you wish it to be. Our privacy 
-settings are straight-forward and simple, because we know that relationships 
-rarely are (straight-forward and simple). Whether you're communicating with
-drinking buddies or potential employers, you can rest assured that each is
-only able to see the side of you that you wish to present. If you send a
-private message to your aunt Mary, we will encrypt it with military grade
-encryption.
-
-    Friendika delivers. We've got an incredibly rich social communications 
-interface you can make use of *right now*.
-
-    And lest you think we're just trying to copy Facebook feature-for-feature,
-you couldn't be further from the truth. We like the conversational style
-because it feels natural, and that's why Facebook grew to be what it is today. 
-But we're creating something completely different. 
-
-    Something better.
-
-    Start with richer communications. Adorn your text, colour it. We've got a 
-text counter in case you're sending across to one of the primitive social 
-networks, but we don't think you should have to squeeze your communications
-into some arbitrary limit. Free yourself from thinking how to squeeze your 
-message into 140 or 420 characters, or sending messages in some strange 
-short-hand code. Even edit your text after you send it. It's OK.
-
-    A single instance of Friendika can easily support hundreds of (and up to
-several thousand) people using commodity hosting hardware. You could even run
-Friendika on an old PC in your closet or garage. Each of these people are able
-to connect with potentially hundreds or thousands of friends and associates 
-on any other supported network anywhere in the world and share photos, links,
-status updates, etc. 
-
-    But maybe you don't want to be connected to the world... and that's OK 
-too. Friendika may be closed off from the global community and used to support
-social networking amongst corporate, educational, religious, and other private
-communities. This makes it an excellent choice for the social networking needs
-of young teenagers and especially k-12 organisations. 
-
-    Every person on Friendika has unlimited profiles available to them. There
-is a "public profile" which can be seen by anybody. Additional profiles may be 
-tailored to specific groups or individuals. Try doing that on Twitter.
-
-    Groups may be created and used for closed conversations. In this way your 
-conversations with one group of friends is completely isolated from other 
-friends or groups of friends.
-
-    You may also create interactive band/celebrity pages, special interest
-groups, and even organisational 'soapboxes' - for social communications that
-require the ability to scale to global levels. Friendika provides for automatic
-relationship management in these extreme cases so that you can concentrate on
-your message and public persona - and not worry about being swamped by friend
-requests. You can even maintain private social contact with your closest 
-friends and public updates to your hordes of fans - using the same interface.
-
-    No other social network offers this ability.  
-
+	If you are creating a website which requires social interaction, Friendika 
+can take the place of blog software, forum software and feed readers, and
+also provide individualised communications and content management - or
+provide a ready alternative to traditional "monolithic" social networks.
 
     Join us.
+
+	Find out more about the project at http://project.friendika.com
 
     *******************
     Friendika Demo Site
