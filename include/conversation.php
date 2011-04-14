@@ -495,21 +495,24 @@ function item_photo_menu($item){
 	if((local_user() && ($profile_owner == 0)) 
 		|| ($profile_owner && $profile_owner == local_user())) {
 
-		if(strlen($item['author-link']) && link_compare($item['author-link'],$item['url']))
+		if(strlen($item['author-link']) && link_compare($item['author-link'],$item['url'])) {
 			$redir = $redirect_url;
+			$cid = $item['cid'];
+		}
 		elseif(isset($a->authors[$item['author-link']])) {
 			$redir = $a->get_baseurl() . '/redir/' . $a->authors[$item['author-link']]['id'];
 			$cid = $a->authors[$item['author-link']]['id'];
 		}
 
-		if($item['network'] === 'dfrn' && (! $item['self'])) {
-			$status_link = $redir . "?url=status";
-			$profile_link = $redir . "?url=profile";
-			$photos_link = $redir . "?url=photos";
-			$pm_url = $a->get_baseurl() . '/message/new/' . $cid;
+		if((isset($cid)) && (! $item['self'])) {
+			$contact_url = $a->get_baseurl() . '/contacts/' . $cid;
+			if($item['network'] === 'dfrn') {
+				$status_link = $redir . "?url=status";
+				$profile_link = $redir . "?url=profile";
+				$photos_link = $redir . "?url=photos";
+				$pm_url = $a->get_baseurl() . '/message/new/' . $cid;
+			}
 		}
-
-		$contact_url = $item['self']?"":$a->get_baseurl() . '/contacts/' . (($item['cid']) ? $item['cid'] : $cid);
 	}
 
 
