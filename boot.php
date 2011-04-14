@@ -608,19 +608,14 @@ function reload_plugins() {
 // For instance if 'test' => "foo" and 'testing' => "bar", testing could become either bar or fooing, 
 // depending on the order in which they were declared in the array.   
 
+require_once("include/template_processor.php");
+
 if(! function_exists('replace_macros')) {  
 function replace_macros($s,$r) {
+	global $t;
+	
+	return $t->replace($s,$r);
 
-	$search = array();
-	$replace = array();
-
-	if(is_array($r) && count($r)) {
-		foreach ($r as $k => $v ) {
-			$search[] =  $k;
-			$replace[] = $v;
-		}
-	}
-	return str_replace($search,$replace,$s);
 }}
 
 
@@ -1854,13 +1849,19 @@ function allowed_email($email) {
 
 if(! function_exists('load_view_file')) {
 function load_view_file($s) {
-	global $lang;
+	global $lang, $a;
 	if(! isset($lang))
 		$lang = 'en';
 	$b = basename($s);
 	$d = dirname($s);
 	if(file_exists("$d/$lang/$b"))
 		return file_get_contents("$d/$lang/$b");
+	
+	$theme = current_theme();
+	
+	if(file_exists("$d/theme/$theme/$b"))
+		return file_get_contents("$d/theme/$theme/$b");
+			
 	return file_get_contents($s);
 }}
 
@@ -2498,34 +2499,38 @@ function proc_run($cmd){
 	proc_close(proc_open($cmdline." &",array(),$foo));
 }}
 
-/*
- * Return full URL to theme which is currently in effect.
- * Provide a sane default if nothing is chosen or the specified theme does not exist.
- */
-
-if(! function_exists('current_theme_url')) {
-function current_theme_url() {
-
+if(! function_exists('current_theme')) {
+function current_theme(){
 	$app_base_themes = array('duepuntozero', 'loozah');
-
+	
 	$a = get_app();
-
+	
 	$system_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : '');
 	$theme_name = ((x($_SESSION,'theme')) ? $_SESSION['theme'] : $system_theme);
-
+	
 	if($theme_name && file_exists('view/theme/' . $theme_name . '/style.css'))
-		return($a->get_baseurl() . '/view/theme/' . $theme_name . '/style.css'); 
-
+		return($theme_name);
+	
 	foreach($app_base_themes as $t) {
 		if(file_exists('view/theme/' . $t . '/style.css'))
-			return($a->get_baseurl() . '/view/theme/' . $t . '/style.css'); 
-	}	
-
+			return($t);
+	}
+	
 	$fallback = glob('view/theme/*/style.css');
 	if(count($fallback))
-		return($a->get_baseurl() . $fallback[0]);
+		return (str_replace('view/theme/','', str_replace("/style.css","",$fallback[0])));
 
-	
+}}
+
+/*
+* Return full URL to theme which is currently in effect.
+* Provide a sane default if nothing is chosen or the specified theme does not exist.
+*/
+if(! function_exists('current_theme_url')) {
+function current_theme_url() {
+	global $a;
+	$t = current_theme();
+	return($a->get_baseurl() . '/view/theme/' . $t . '/style.css');
 }}
 
 if(! function_exists('feed_birthday')) {
