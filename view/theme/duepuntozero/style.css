@@ -2293,3 +2293,24 @@ a.mail-list-link {
 #prof-edit-desc {
 	margin-top: 15px;
 }
+
+#crepair-nick-label,
+#crepair-url-label,
+#crepair-request-label,
+#crepair-confirm-label,
+#crepair-notify-label,
+#crepair-poll-label {
+	float: left;
+	width: 200px;
+	margin-bottom: 15px;
+}
+
+#crepair-nick,
+#crepair-url,
+#crepair-request,
+#crepair-confirm,
+#crepair-notify,
+#crepair-poll {
+	float: left;
+	width: 300px;
+}

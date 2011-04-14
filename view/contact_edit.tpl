@@ -20,6 +20,8 @@
 		<div id="contact-edit-links" >
 			<a href="contacts/$contact_id/block" id="contact-edit-block-link" ><img src="images/b_block.gif" alt="$blockunblock" title="$block_text"/></a>
 			<a href="contacts/$contact_id/ignore" id="contact-edit-ignore-link" ><img src="images/no.gif" alt="$ignorecont" title="$ignore_text"/></a>
+			<a href="crepair/$contact_id" id="contact-edit-repair" ><img src="images/tools.png" alt="$altcrepair" title="$lblcrepair"/></a>
+
 		</div>
 		<div id="contact-drop-links" >
 			<a href="contacts/$contact_id/drop" id="contact-edit-drop-link" onclick="return confirmDelete();" ><img src="images/b_drophide.gif" alt="$delete" title="$delete" onmouseover="imgbright(this);" onmouseout="imgdull(this);" /></a>

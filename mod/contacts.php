@@ -272,6 +272,8 @@ function contacts_content(&$a) {
 			'$visit' => t('Visit $name\'s profile'),
 			'$blockunblock' => t('Block/Unblock contact'),
 			'$ignorecont' => t('Ignore contact'),
+			'$altcrepair' => t('Repair contact URL settings'),
+			'$lblcrepair' => t("Repair contact URL settings \x28WARNING: Advanced\x29"),
 			'$delete' => t('Delete contact'),
 			'$poll_interval' => contact_poll_interval($r[0]['priority']),
 			'$lastupdtext' => t('Last updated: '),
