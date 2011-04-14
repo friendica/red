@@ -395,6 +395,7 @@ function settings_content(&$a) {
 		'$profile_in_dir' => $profile_in_dir,
 		'$profile_in_net_dir' => $profile_in_net_dir,
 		'$permissions' => t('Default Post Permissions'),
+		'$permdesc' => t("\x28click to open/close\x29"),
 		'$visibility' => $profile['net-publish'],
 		'$aclselect' => populate_acl($a->user,$celeb),
 		'$sel_notify1' => (($notify & NOTIFY_INTRO)   ? ' checked="checked" ' : ''),
