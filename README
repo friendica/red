@@ -10,26 +10,28 @@
 
 	Friendika is a web application for managing social communications. Some
 would call it a "social network" or "distributed social network". We think 
-both terms have been over-used and don't really apply - though Friendika can
-also fill those roles.
+both terms have been over-used, and don't adequately describe Friendika's 
+capabilities - though Friendika can also fill those roles.
 
 	At its essence, Friendika is a web application which can monitor various
-information streams, and also let you participate in online conversations with
-friends and associates using a variety of network protocols.
+information and social activity streams, and which also lets you participate
+in online conversations with friends and associates, using a variety of network
+protocols. These are combined into an overview of your various communications
+and activities - regardless of network origin.
 
 	Friendika also manages your personal profiles and photo albums and lets 
-you tailor either of these to specific audiences. Your communications can be 
-either open and public, or closed and private. You can easily create "groups"
-of contacts with which you can partition your conversations into social
-circles.
+you securely present each of these to specific audiences. Your communications
+can be either open and public, or closed and private. You can easily create
+"groups" of contacts with which you can partition your conversations into
+private social circles, and which cannot be seen outside the circle.
 
 	Friendika is decentralised. Any account on any Friendika server can connect
-with any other Friendika account on any other server. You can also connect to
-friends on Status.Net and other federated social web services (e.g. identi.ca,
-GNU-Social, etc.).
+with any account on any other Friendika server. You can also connect to and
+interact directly with friends on Status.Net and other federated social web
+services (e.g. identi.ca, GNU-Social, etc.).
 
-	Outgoing communications can be directed at these networks and/or your
-existing accounts on Facebook and Twitter - and even delivered to email 
+	Outgoing communications can be directed at these networks and also
+existing accounts on Facebook and Twitter - or even delivered to email 
 contacts.
 
 	Incoming data streams aren't limited to traditional social networks.
@@ -40,21 +42,28 @@ Wordpress blogs, news services, and other websites. Over time we will try to
 build two-way bridges to many of these services so that you can freely
 interact in both directions with anybody who allows it. 
 
-	 Communications between supported networks are private and encrypted, 
-using military grade encryption - and require mutual authentication of servers
-before any data is exchanged. 
+	 Communications between Friendika servers are private and encrypted, 
+using military grade encryption - and require mutual identity provenance
+before any data is exchanged. These same crypto mechanisms provide remote 
+password-less authentication; allowing you to post to profiles and view private
+photo collections on other servers - without encountering any login and/or
+authorisation dialogues when visiting these sites.
 
-    Friendika has no boundaries and no central ownership. Anybody with a 
-commodity PHP/MySQL web server can provide a membership hub, and each 
-individual server can then support several thousand participating members 
-- each with their own unique communication and privacy needs.
+    Friendika has no boundaries and no central ownership of the data generated
+within the network. Anybody with a commodity PHP/MySQL web server or hosting
+account can provide a server, and each individual server can then support
+up to several thousand participating members - each with their own unique
+communication and privacy needs. This allows Friendika to scale to global
+levels and mimics the decentralised architecture of the web itself.
 
 	If you are creating a website which requires social interaction, Friendika 
-can take the place of blog software, forum software and feed readers, and
+can also take the place of blog software, forum software and feed readers, and
 also provide individualised communications and content management - or
-provide a ready alternative to traditional "monolithic" social networks.
+simply be used as an alternative to traditional "monolithic" social networks.
 
-    Join us.
+	Friendika is also free - in every sense of the word. 
+
+    Choose freedom. Join us.
 
 	Find out more about the project at http://project.friendika.com
 
