@@ -42,14 +42,14 @@ Wordpress blogs, news services, and other websites. Over time we will try to
 build two-way bridges to many of these services so that you can freely
 interact in both directions with anybody who allows it. 
 
-	 Communications between Friendika servers are private and encrypted, 
+	Communications between Friendika servers are private and encrypted, 
 using military grade encryption - and require mutual identity provenance
 before any data is exchanged. These same crypto mechanisms provide remote 
 password-less authentication; allowing you to post to profiles and view private
 photo collections on other servers - without encountering any login and/or
 authorisation dialogues when visiting these sites.
 
-    Friendika has no boundaries and no central ownership of the data generated
+	Friendika has no boundaries and no central ownership of the data generated
 within the network. Anybody with a commodity PHP/MySQL web server or hosting
 account can provide a server, and each individual server can then support
 up to several thousand participating members - each with their own unique
