@@ -331,6 +331,7 @@ function settings_content(&$a) {
 			$theme_selector .= '<option val="' . basename($file) . '"' . $selected . '>' . basename($file) . '</option>';
 		}
 	}
+
 	$theme_selector .= '</select>';
 
 	$subdir = ((strlen($a->get_path())) ? '<br />' . t('or') . ' ' . $a->get_baseurl() . '/profile/' . $nickname : '');
@@ -338,7 +339,7 @@ function settings_content(&$a) {
 	$tpl_addr = load_view_file("view/settings_nick_set.tpl");
 
 	$prof_addr = replace_macros($tpl_addr,array(
-		'$desc' => t('Your profile address is'),
+		'$desc' => t('Your Identity Address is'),
 		'$nickname' => $nickname,
 		'$subdir' => $subdir,
 		'$basepath' => $a->get_hostname()
