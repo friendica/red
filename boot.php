@@ -290,7 +290,7 @@ class App {
 
 		if($this->cmd === '.well-known/host-meta') {
 			require_once('include/hostxrd.php');
-			hostxrd($this->hostname);
+			hostxrd($this->get_baseurl());
 			// NOTREACHED
 		}
 
