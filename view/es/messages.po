@@ -54,7 +54,7 @@ msgstr "Permiso denegado."
 
 #: ../../boot.php:808
 msgid "Create a New Account"
-msgstr "Crea una nueva cuenta"
+msgstr "Crear una nueva cuenta"
 
 #: ../../boot.php:809 ../../mod/register.php:443 ../../include/nav.php:61
 #: ../../mod/register.php:445
