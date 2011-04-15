@@ -544,7 +544,10 @@ function dfrn_request_content(&$a) {
 					$res = mail($r[0]['email'], 
 					    t("Introduction received at ") . $a->config['sitename'],
 						$email,
-						'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] );
+						'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+						. 'Content-type: text/plain; charset=UTF-8' . "\n"
+						. 'Content-transfer-encoding: 8bit' );
+
 					// This is a redundant notification - no point throwing errors if it fails.
 				}
 				if($auto_confirm) {

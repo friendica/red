@@ -401,7 +401,11 @@ function dfrn_notify_post(&$a) {
 							));
 	
 							$res = mail($importer['email'], sprintf(t('%s commented on an item at %s'), $from , $a->config['sitename']),
-								$email_tpl, "From: " . t('Administrator') . '@' . $a->get_hostname() );
+								$email_tpl, 
+								'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+								. 'Content-type: text/plain; charset=UTF-8' . "\n"
+								. 'Content-transfer-encoding: 8bit' );
+
 						}
 					}
 					xml_status(0);
@@ -487,7 +491,11 @@ function dfrn_notify_post(&$a) {
 							));
 
 							$res = mail($importer['email'], sprintf( t("%s commented on an item at %s") , $from ,$a->config['sitename']),
-								$email_tpl, "From: ".t("Administrator") . "@". $a->get_hostname() );
+								$email_tpl, 
+								'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+								. 'Content-type: text/plain; charset=UTF-8' . "\n"
+								. 'Content-transfer-encoding: 8bit' );
+
 							break;
 						}
 					}

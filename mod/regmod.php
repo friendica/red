@@ -90,7 +90,10 @@ function regmod_content(&$a) {
 		));
 
 		$res = mail($user[0]['email'], sprintf(t('Registration details for %s'), $a->config['sitename']),
-			$email_tpl,'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] );
+			$email_tpl,
+				'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+				. 'Content-type: text/plain; charset=UTF-8' . "\n"
+				. 'Content-transfer-encoding: 8bit' );
 
 		if($res) {
 			notice( t('Account approved.') . EOL );

@@ -30,7 +30,11 @@ function invite_post(&$a) {
 		}
 
 		$res = mail($recip, sprintf(t('Please join my network on %s'), $a->config['sitename']), 
-			$message, "From: " . $a->user['email']);
+			$message, 
+			"From: " . $a->user['email'] . "\n"
+			. 'Content-type: text/plain; charset=UTF-8' . "\n"
+			. 'Content-transfer-encoding: 8bit' );
+
 		if($res) {
 			$total ++;
 		}

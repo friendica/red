@@ -651,7 +651,11 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			);
 	
 			$res = mail($r[0]['email'], sprintf( t("Connection accepted at %s") , $a->config['sitename']),
-				$email_tpl, 'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] );
+				$email_tpl,
+				'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+				. 'Content-type: text/plain; charset=UTF-8' . "\n"
+				. 'Content-transfer-encoding: 8bit' );
+
 			if(!$res) {
 				// pointless throwing an error here and confusing the person at the other end of the wire.
 			}

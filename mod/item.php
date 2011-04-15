@@ -472,7 +472,10 @@ function item_post(&$a) {
 				));
 
 				$res = mail($user['email'], sprintf( t("%s commented on your item at %s") ,$from,$a->config['sitename']),
-					$email_tpl,"From: " . t("Administrator") . "@" . $a->get_hostname() );
+					$email_tpl,
+					'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+					. 'Content-type: text/plain; charset=UTF-8' . "\n"
+					. 'Content-transfer-encoding: 8bit' );
 			}
 		}
 		else {
@@ -495,7 +498,11 @@ function item_post(&$a) {
 				));
 
 				$res = mail($user['email'], sprintf( t("%s posted on your profile wall at %s") ,$from, $a->config['sitename']),
-					$email_tpl,"From: " . t("Administrator") . "@" . $a->get_hostname() );
+					$email_tpl,
+					'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+					. 'Content-type: text/plain; charset=UTF-8' . "\n"
+					. 'Content-transfer-encoding: 8bit' );
+
 			}
 		}
 
