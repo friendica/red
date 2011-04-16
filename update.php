@@ -460,3 +460,12 @@ function update_1050() {
 	) ENGINE = MYISAM ");
 
 }
+
+function update_1051() {
+	q("ALTER TABLE `mailacct` ADD `port` INT NOT NULL AFTER `server` ,
+		ADD `ssltype` CHAR( 16 ) NOT NULL AFTER `port` ,
+		ADD `mailbox` CHAR( 255 ) NOT NULL AFTER `ssltype` ");
+
+	q("ALTER TABLE `contact` ADD `addr` CHAR( 255 ) NOT NULL AFTER `url` ");
+}
+

@@ -1,28 +1,31 @@
 <?php
 
-
-function f9_imap_connect($mailbox,$username,$password) {
-
+function email_connect($mailbox,$username,$password) {
 	if(! (local_user() && function_exists('imap_open')))
 		return false;
 
 	$mbox = imap_open($mailbox,$username,$password);
 
 	return $mbox;
-	
 }
 
+function email_poll($mbox,$email_addr) {
 
-function f9_imap_poll_from($mbox,$str) {
-
-	if(! ($mbox && $str))
+	if(! ($mbox && $email_addr))
 		return false;
 
-	$search = imap_search($mbox,'FROM "' . $str . '"', SE_UID);
-
+	$search = imap_search($mbox,'FROM "' . $email_addr . '"', SE_UID);
 	return $search;
 }
-	
+
+
+function construct_mailbox_name($mailacct) {
+	$ret = '{' . $mailacct['server'] . (($mailacct['port']) ? ':' . $mailacct['port'] : '');
+	$ret .= (($mailacct['ssltype']) ?  '/' . $mailacct['ssltype'] . '/novalidate-cert' : '');
+	$ret .= '}' . $mailacct['mailbox'];
+	return $ret;
+}
+
 
 function getmsg($mbox,$mid) {
     // input $mbox = IMAP stream, $mid = message id
@@ -84,9 +87,9 @@ function getpart($mbox,$mid,$p,$partno) {
         // Messages may be split in different parts because of inline attachments,
         // so append parts together with blank row.
         if (strtolower($p->subtype)=='plain')
-            $plainmsg. = trim($data) ."\n\n";
+            $plainmsg .= trim($data) ."\n\n";
         else
-            $htmlmsg. = $data ."<br><br>";
+            $htmlmsg .= $data ."<br><br>";
         $charset = $params['charset'];  // assume all parts are same charset
     }
 
@@ -96,7 +99,7 @@ function getpart($mbox,$mid,$p,$partno) {
     // There are no PHP functions to parse embedded messages,
     // so this just appends the raw source to the main message.
     elseif ($p->type==2 && $data) {
-        $plainmsg. = $data."\n\n";
+        $plainmsg .= $data."\n\n";
     }
 
     // SUBPART RECURSION
