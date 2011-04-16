@@ -338,6 +338,7 @@ function probe_url($url) {
 						$addr = $orig_url;
 						$network = NETWORK_MAIL;
 						$name = substr($url,0,strpos($url,'@'));
+						$profile = 'http://' . substr($url,strpos($url,'@')+1);
 						// fix nick
 						$vcard = array('fn' => $name, 'nick' => $name, 'photo' => gravatar_img($url));
 						$notify = 'smtp';
