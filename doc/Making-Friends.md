@@ -17,9 +17,7 @@ If your Friendika site is called "demo.friendika.com" and your username/nickname
 
 Notice this looks just like an email address. It was meant to be that way. It's easy for people to remember.
 
-You *could* also put in the URL of your profile page, such as "http://demo.friendika.com/profile/bob". 
-
-The email-style address is certainly easier.
+You *could* also put in the URL of your "home" page, such as "http://demo.friendika.com/profile/bob", but the email-style address is certainly easier.
 
 When you've submitted the connection page, it will take you back to your own site where you must then login (if necessary) and verify the connection request on *your* site. Once you've done this, the two websites can communicate with each other to complete the process (after your new friend has approved the request). 
 

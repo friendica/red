@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.949\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-14 20:36-0700\n"
+"POT-Creation-Date: 2011-04-15 01:04-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,9 +43,9 @@ msgstr ""
 #: ../../mod/follow.php:8 ../../mod/display.php:133 ../../mod/profiles.php:7
 #: ../../mod/profiles.php:227 ../../mod/invite.php:13 ../../mod/invite.php:54
 #: ../../mod/dfrn_confirm.php:53 ../../addon/facebook/facebook.php:110
-#: ../../wip/photos.php:77 ../../wip/photos.php:723 ../../wip/group.php:19
-#: ../../wip/photos-chris.php:97 ../../wip/photos-chris.php:770
-#: ../../index.php:265
+#: ../../wip/photos.php:77 ../../wip/photos.php:723 ../../wip/follow2.php:8
+#: ../../wip/group.php:19 ../../wip/photos-chris.php:97
+#: ../../wip/photos-chris.php:770 ../../index.php:265
 msgid "Permission denied."
 msgstr ""
 
@@ -2006,21 +2006,21 @@ msgstr ""
 msgid "Welcome back "
 msgstr ""
 
-#: ../../mod/follow.php:186
+#: ../../mod/follow.php:32 ../../wip/follow2.php:186
 msgid "The profile address specified does not provide adequate information."
 msgstr ""
 
-#: ../../mod/follow.php:192
+#: ../../mod/follow.php:38 ../../wip/follow2.php:192
 msgid ""
 "Limited profile. This person will be unable to receive direct/personal "
 "notifications from you."
 msgstr ""
 
-#: ../../mod/follow.php:247
+#: ../../mod/follow.php:89 ../../wip/follow2.php:247
 msgid "Unable to retrieve contact information."
 msgstr ""
 
-#: ../../mod/follow.php:293
+#: ../../mod/follow.php:135 ../../wip/follow2.php:293
 msgid "following"
 msgstr ""
 
