@@ -1,7 +1,7 @@
 <?php
 
 function email_connect($mailbox,$username,$password) {
-	if(! (local_user() && function_exists('imap_open')))
+	if(! function_exists('imap_open'))
 		return false;
 
 	$mbox = imap_open($mailbox,$username,$password);
@@ -33,36 +33,41 @@ function email_msg_meta($mbox,$uid) {
 }
 
 
+function email_get_msg($mbox,$uid) {
+	$ret = array();
 
-function getmsg($mbox,$mid) {
-    // input $mbox = IMAP stream, $mid = message id
-    // output all the following:
-    global $charset,$htmlmsg,$plainmsg,$attachments;
-    $htmlmsg = $plainmsg = $charset = '';
-    $attachments = array();
+	$struc = (($mbox && $uid) ? imap_fetchstructure($mbox,$uid,FT_UID) : null);
 
-    // HEADER
-    $h = imap_header($mbox,$mid);
-    // add code here to get date, from, to, cc, subject...
+	if(! $struc)
+		return $ret;
 
-    // BODY
-    $s = imap_fetchstructure($mbox,$mid);
-    if (!$s->parts)  // simple
-        getpart($mbox,$mid,$s,0);  // pass 0 as part-number
-    else {  // multipart: cycle through each part
-        foreach ($s->parts as $partno0=>$p)
-            getpart($mbox,$mid,$p,$partno0+1);
-    }
+	if(! $struc->parts) {
+		$ret['body'] = email_get_part($mbox,$uid,$struc,0);
+	}
+	else {
+		foreach($struc->parts as $ptop => $p) {
+			$x = email_get_part($mbox,$uid,$p,$ptop + 1);
+			if($x)
+				$ret['body'] = $x;
+		}
+	}
+	return $ret;
 }
 
-function getpart($mbox,$mid,$p,$partno) {
+// At the moment - only return plain/text.
+// Later we'll repackage inline images as data url's and make the HTML safe
+
+function email_get_part($mbox,$uid,$p,$partno) {
     // $partno = '1', '2', '2.1', '2.1.3', etc for multipart, 0 if simple
     global $htmlmsg,$plainmsg,$charset,$attachments;
 
+	echo $partno;
+
     // DECODE DATA
-    $data = ($partno)?
-        imap_fetchbody($mbox,$mid,$partno):  // multipart
-        imap_body($mbox,$mid);  // simple
+    $data = ($partno)
+		? imap_fetchbody($mbox,$uid,$partno, FT_UID|FT_PEEK)
+        : imap_body($mbox,$uid,FT_UID|FT_PEEK);
+
     // Any part may be encoded, even plain text messages, so check everything.
     if ($p->encoding==4)
         $data = quoted_printable_decode($data);
@@ -82,6 +87,7 @@ function getpart($mbox,$mid,$p,$partno) {
     // ATTACHMENT
     // Any part with a filename is an attachment,
     // so an attached text file (type 0) is not mistaken as the message.
+
     if ($params['filename'] || $params['name']) {
         // filename may be given as 'Filename' or 'Name' or both
         $filename = ($params['filename'])? $params['filename'] : $params['name'];
@@ -90,13 +96,15 @@ function getpart($mbox,$mid,$p,$partno) {
     }
 
     // TEXT
-    if ($p->type==0 && $data) {
+    if ($p->type == 0 && $data) {
         // Messages may be split in different parts because of inline attachments,
         // so append parts together with blank row.
         if (strtolower($p->subtype)=='plain')
-            $plainmsg .= trim($data) ."\n\n";
+            return (trim($data) ."\n\n");
         else
-            $htmlmsg .= $data ."<br><br>";
+			$data = '';
+
+ //           $htmlmsg .= $data ."<br><br>";
         $charset = $params['charset'];  // assume all parts are same charset
     }
 
@@ -105,13 +113,19 @@ function getpart($mbox,$mid,$p,$partno) {
     // but AOL uses type 1 (multipart), which is not handled here.
     // There are no PHP functions to parse embedded messages,
     // so this just appends the raw source to the main message.
-    elseif ($p->type==2 && $data) {
-        $plainmsg .= $data."\n\n";
-    }
+//    elseif ($p->type==2 && $data) {
+//        $plainmsg .= $data."\n\n";
+//    }
 
     // SUBPART RECURSION
     if ($p->parts) {
-        foreach ($p->parts as $partno0=>$p2)
-            getpart($mbox,$mid,$p2,$partno.'.'.($partno0+1));  // 1.2, 1.2.1, etc.
+        foreach ($p->parts as $partno0=>$p2) {
+            $x =  email_get_part($mbox,$uid,$p2,$partno . '.' . ($partno0+1));  // 1.2, 1.2.1, etc.
+			if($x)
+				return $x;
+		}
     }
 }
+
+
+

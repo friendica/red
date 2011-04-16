@@ -513,7 +513,7 @@ CREATE TABLE IF NOT EXISTS `mailacct` (
 `ssltype` CHAR( 16 ) NOT NULL,
 `mailbox` CHAR( 255 ) NOT NULL,
 `user` CHAR( 255 ) NOT NULL ,
-`pass` CHAR( 255 ) NOT NULL ,
+`pass` TEXT NOT NULL ,
 `reply_to` CHAR( 255 ) NOT NULL ,
 `last_check` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE = MYISAM DEFAULT CHARSET=utf8;

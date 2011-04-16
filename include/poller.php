@@ -289,7 +289,7 @@ function poller_run($argv, $argc){
 			}
 			elseif($contact['network'] === NETWORK_MAIL) {
 				if(! $mbox) {
-					$x = q("SELECT `prvkey` FROM `user` WHERE `uid` = $d LIMIT 1",
+					$x = q("SELECT `prvkey` FROM `user` WHERE `uid` = %d LIMIT 1",
 						intval($importer_uid)
 					);
 					$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",
@@ -298,7 +298,7 @@ function poller_run($argv, $argc){
 					if(count($x) && count($r)) {
 					    $mailbox = construct_mailbox_name($r[0]);
 						$password = '';
-						openssl_private_decrypt($r[0]['pass'],$password,$x[0]['prvkey']);
+						openssl_private_decrypt(hex2bin($r[0]['pass']),$password,$x[0]['prvkey']);
 						$mbox = email_connect($mailbox,$r[0]['user'],$password);
 						unset($password);
 					}
@@ -306,7 +306,42 @@ function poller_run($argv, $argc){
 				if($mbox) {
 					$msgs = email_poll($mbox,$contact['addr']);
 					if(count($msgs)) {
-							// TODO: loop through, fetch, check duplicates, and import
+						foreach($msgs as $msg_uid) {
+							$datarray = array();
+							$meta = email_msg_meta($mbox,$msg_uid);
+							$datarray['uri'] = trim($meta->message_id,'<>');
+//FIXME
+							$datarray['parent-uri'] = $datarray['uri'];
+							// Have we seen it before?
+							$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `uri` = '%s' LIMIT 1",
+								intval($importer_uid),
+								dbesc($datarray['uri'])
+							);
+							if(count($r)) {
+								if($meta->deleted && ! $r[0]['deleted']) {
+									q("UPDATE `item` SET `deleted` = `, `changed` = '%s' WHERE `id` = %d LIMIT 1",
+										dbesc(datetime_convert()),
+										intval($r[0]['id'])
+									);
+								}		
+								continue;
+							}
+							$datarray['title'] = notags(trim($meta->subject));
+							$datarray['created'] = datetime_convert('UTC','UTC',$meta->date);
+	
+							$r = email_get_msg($mbox,$msg_uid);
+							if(! $r)
+								continue;
+							$datarray['body'] = escape_tags($r['body']);
+							$datarray['uid'] = $importer_uid;
+							$datarray['contact-id'] = $contact['id'];
+							$datarray['private'] = 1;
+							$datarray['author-name'] = $contact['name'];
+							$datarray['author-link'] = 'mailbox';
+							$datarray['author-avatar'] = $contact['photo'];
+						
+							item_store($datarray);
+						}
 					}
 				}
 			}
@@ -359,6 +394,9 @@ function poller_run($argv, $argc){
 			// loop - next contact
 		}
 	}
+
+	if($mbox && function_exists('imap_close'))
+		imap_close($mbox);
 		
 	return;
 }

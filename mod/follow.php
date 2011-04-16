@@ -28,7 +28,7 @@ function follow_post(&$a) {
 
 	// do we have enough information?
 	
-	if(! ((x($ret,'name')) && (x($ret,'poll')) && (x($ret,'url')))) {
+	if(! ((x($ret,'name')) && (x($ret,'poll')) && ((x($ret,'url')) || (x($ret,'addr'))))) {
 		notice( t('The profile address specified does not provide adequate information.') . EOL);
 		goaway($_SESSION['return_url']);
 	}
@@ -39,7 +39,10 @@ function follow_post(&$a) {
 	}
 
 	$writeable = ((($ret['network'] === NETWORK_OSTATUS) && ($ret['notify'])) ? 1 : 0);
-
+	if($ret['network'] === NETWORK_MAIL) {
+		$writeable = 1;
+		
+	}
 	// check if we already have a contact
 	// the poll url is more reliable than the profile url, as we may have
 	// indirect links or webfinger links
@@ -61,12 +64,13 @@ function follow_post(&$a) {
 	}
 	else {
 		// create contact record 
-		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `alias`, `notify`, `poll`, `name`, `nick`, `photo`, `network`, `rel`, `priority`,
+		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `addr`, `alias`, `notify`, `poll`, `name`, `nick`, `photo`, `network`, `rel`, `priority`,
 			`writable`, `blocked`, `readonly`, `pending` )
-			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, 0, 0, 0 ) ",
+			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, 0, 0, 0 ) ",
 			intval(local_user()),
 			dbesc(datetime_convert()),
 			dbesc($ret['url']),
+			dbesc($ret['addr']),
 			dbesc($ret['alias']),
 			dbesc($ret['notify']),
 			dbesc($ret['poll']),
@@ -74,9 +78,9 @@ function follow_post(&$a) {
 			dbesc($ret['nick']),
 			dbesc($ret['photo']),
 			dbesc($ret['network']),
-			intval(REL_FAN),
+			intval(($ret['network'] === NETWORK_MAIL) ? REL_BUD : REL_FAN),
 			intval($ret['priority']),
-			intval($writable)
+			intval($writeable)
 		);
 	}
 
