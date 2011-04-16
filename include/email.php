@@ -12,10 +12,10 @@ function email_connect($mailbox,$username,$password) {
 function email_poll($mbox,$email_addr) {
 
 	if(! ($mbox && $email_addr))
-		return false;
+		return array();;
 
 	$search = imap_search($mbox,'FROM "' . $email_addr . '"', SE_UID);
-	return $search;
+	return (($search) ? $search : array());
 }
 
 
@@ -25,6 +25,13 @@ function construct_mailbox_name($mailacct) {
 	$ret .= '}' . $mailacct['mailbox'];
 	return $ret;
 }
+
+
+function email_msg_meta($mbox,$uid) {
+	$ret = (($mbox && $uid) ? imap_fetch_overview($mbox,$uid,FT_UID) : array(array()));
+	return ((count($ret)) ? $ret[0] : array());
+}
+
 
 
 function getmsg($mbox,$mid) {
