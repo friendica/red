@@ -339,11 +339,15 @@ function probe_url($url) {
 						$network = NETWORK_MAIL;
 						$name = substr($url,0,strpos($url,'@'));
 						$profile = 'http://' . substr($url,strpos($url,'@')+1);
-						// fix nick
+						// fix nick character range
 						$vcard = array('fn' => $name, 'nick' => $name, 'photo' => gravatar_img($url));
 						$notify = 'smtp';
 						$poll = 'email';
 						$priority = 0;
+						$x = email_msg_meta($mbox,$msgs[0]);
+						$adr = imap_rfc822_parse_adrlist($x->from,'');
+						if(strlen($adr[0]->personal))
+							$vcard['fn'] = notags($adr[0]->personal);
 					}
 					imap_close($mbox);
 				}
