@@ -8,12 +8,18 @@ function localize_item(&$item){
 	if ($item['verb']=="http://activitystrea.ms/schema/1.0/like" ||
 		$item['verb']=="http://activitystrea.ms/schema/1.0/dislike"){
 
+		$r = q("SELECT * from `item`,`contact` WHERE 
+				`item`.`contact-id`=`contact`.`id` AND `item`.`uri`='%s';",
+				 dbesc($item['parent-uri']));
+		if(count($r)==0) return;
+		$obj=$r[0];
 		
 		$author	 = '[url=' . $item['author-link'] . ']' . $item['author-name'] . '[/url]';
-		#$objauthor =  '[url=' . $obj['author-link'] . ']' . $obj['author-name'] . '[/url]';
-		#$objlink = preg_grep("|<link.*href=&quot;, $input)$item['object']
-		// $item['verb']=="http://activitystrea.ms/schema/1.0/like"
+		$objauthor =  '[url=' . $obj['author-link'] . ']' . $obj['author-name'] . '[/url]';
 		
+		$post_type = (($obj['resource-id']) ? t('photo') : t('status'));		
+		$plink = '[url=' . $obj['plink'] . ']' . $post_type . '[/url]';
+                
 		switch($item['verb']){
 			case "http://activitystrea.ms/schema/1.0/like":
 				$bodyverb = t('%1$s likes %2$s\'s %3$s');
@@ -22,11 +28,21 @@ function localize_item(&$item){
 				$bodyverb = t('%1$s doesn\'t like %2$s\'s %3$s');
 				break;
 		}
-		$item['body'] = sprintf($bodyverb, $author, "tizio", "coso");
+		$item['body'] = sprintf($bodyverb, $author, $objauthor, $plink);
 			
 	}
+	if ($item['verb']=='http://activitystrea.ms/schema/1.0/make-friend'){
 
+		$b = str_replace("[/url]","[/url]\n", $item['body']);
+		preg_match_all("|(\[url.*\[/url\])|", $b, $match);
 
+		$item['body'] = $match[0][0]." "
+						.t('is now friends with')
+						." ".$match[0][1]."\n\n\n"
+						.$match[0][2];
+                
+	}
+        
 }
 
 /**
