@@ -290,7 +290,7 @@ function settings_content(&$a) {
 	);
 
 	$mail_server = ((count($r)) ? $r[0]['server'] : '');
-	$mail_port = ((count($r)) ? $r[0]['port'] : '');
+	$mail_port = ((count($r)) ? intval($r[0]['port']) : '');
 	$mail_ssl = ((count($r)) ? $r[0]['ssltype'] : '');
 	$mail_user = ((count($r)) ? $r[0]['user'] : '');
 	$mail_replyto = ((count($r)) ? $r[0]['reply_to'] : '');
