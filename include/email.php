@@ -32,6 +32,27 @@ function email_msg_meta($mbox,$uid) {
 	return ((count($ret)) ? $ret[0] : array());
 }
 
+function email_msg_headers($mbox,$uid) {
+	$raw_header = (($mbox && $uid) ? imap_fetchheader($mbox,$uid,FT_UID) : '');
+	$raw_header = str_replace("\r",'',$raw_header);
+	$ret = array();
+	$h = split("\n",$raw_header);
+	if(count($h))
+	foreach($h as $line ) {
+	    if (preg_match("/^[a-zA-Z]/", $line)) {
+			$key = substr($line,0,strpos($line,':'));
+			$value = substr($line,strpos($line,':')+1);
+
+			$last_entry = strtolower($key);
+			$ret[$last_entry] = trim($value);
+		}
+		else {
+			$ret[$last_entry] .= ' ' . trim($line);
+    	}
+	}
+	return $ret;
+}
+
 
 function email_get_msg($mbox,$uid) {
 	$ret = array();
@@ -129,3 +150,42 @@ function email_get_part($mbox,$uid,$p,$partno) {
 
 
 
+function email_header_encode($in_str, $charset) {
+    $out_str = $in_str;
+    if ($out_str && $charset) {
+
+        // define start delimimter, end delimiter and spacer
+        $end = "?=";
+        $start = "=?" . $charset . "?B?";
+        $spacer = $end . "\r\n " . $start;
+
+        // determine length of encoded text within chunks
+        // and ensure length is even
+        $length = 75 - strlen($start) - strlen($end);
+
+        /*
+            [EDIT BY danbrown AT php DOT net: The following
+            is a bugfix provided by (gardan AT gmx DOT de)
+            on 31-MAR-2005 with the following note:
+            "This means: $length should not be even,
+            but divisible by 4. The reason is that in
+            base64-encoding 3 8-bit-chars are represented
+            by 4 6-bit-chars. These 4 chars must not be
+            split between two encoded words, according
+            to RFC-2047.
+        */
+        $length = $length - ($length % 4);
+
+        // encode the string and split it into chunks
+        // with spacers after each chunk
+        $out_str = base64_encode($out_str);
+        $out_str = chunk_split($out_str, $length, $spacer);
+
+        // remove trailing spacer and
+        // add start and end delimiters
+        $spacer = preg_quote($spacer);
+        $out_str = preg_replace("/" . $spacer . "$/", "", $out_str);
+        $out_str = $start . $out_str . $end;
+    }
+    return $out_str;
+} 

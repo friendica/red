@@ -85,6 +85,8 @@ function conversation(&$a, $items, $mode, $update) {
 				$profile_name   = ((strlen($item['author-name']))   ? $item['author-name']   : $item['name']);
 				$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $item['thumb']);
 				$profile_link   = ((strlen($item['author-link']))   ? $item['author-link']   : $item['url']);
+				if($profile_link === 'mailbox')
+					$profile_link = '';
 
 				$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 
@@ -360,6 +362,9 @@ function conversation(&$a, $items, $mode, $update) {
 			else 
 				$profile_link = $item['url'];
 
+			if($profile_link === 'mailbox')
+				$profile_link = '';
+
 			$like    = ((x($alike,$item['id'])) ? format_like($alike[$item['id']],$alike[$item['id'] . '-l'],'like',$item['id']) : '');
 			$dislike = ((x($dlike,$item['id'])) ? format_like($dlike[$item['id']],$dlike[$item['id'] . '-l'],'dislike',$item['id']) : '');
 
@@ -483,6 +488,9 @@ function item_photo_menu($item){
 	$profile_link   = ((strlen($item['author-link']))   ? $item['author-link'] : $item['url']);
 	$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 
+	if($profile_link === 'mailbox')
+		$profile_link = '';
+
 	// $item['contact-uid'] is only set on profile page and indicates the uid of the user who owns the profile.
 
 	$profile_owner = ((x($item,'contact-uid')) && intval($item['contact-uid']) ? intval($item['contact-uid']) : 0);	
@@ -503,6 +511,8 @@ function item_photo_menu($item){
 			$redir = $a->get_baseurl() . '/redir/' . $a->authors[$item['author-link']]['id'];
 			$cid = $a->authors[$item['author-link']]['id'];
 		}
+		if($item['author-link'] === 'mailbox')
+			$cid = $item['cid'];
 
 		if((isset($cid)) && (! $item['self'])) {
 			$contact_url = $a->get_baseurl() . '/contacts/' . $cid;

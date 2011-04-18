@@ -123,7 +123,8 @@ function group_public_members($gid) {
 	if(intval($gid)) {
 		$r = q("SELECT `contact`.`id` AS `contact-id` FROM `group_member` 
 			LEFT JOIN `contact` ON `contact`.`id` = `group_member`.`contact-id` 
-			WHERE `gid` = %d AND `group_member`.`uid` = %d AND `contact`.`network` != 'dfrn' ",
+			WHERE `gid` = %d AND `group_member`.`uid` = %d 
+			AND `contact`.`network` != 'dfrn' AND `contact`.`network` != 'mail' ",
 			intval($gid),
 			intval(local_user())
 		);		

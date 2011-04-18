@@ -292,31 +292,63 @@ function poller_run($argv, $argc){
 					$x = q("SELECT `prvkey` FROM `user` WHERE `uid` = %d LIMIT 1",
 						intval($importer_uid)
 					);
-					$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",
+					$mailconf = q("SELECT * FROM `mailacct` WHERE `server` != '' AND `uid` = %d LIMIT 1",
 						intval($importer_uid)
 					);
-					if(count($x) && count($r)) {
-					    $mailbox = construct_mailbox_name($r[0]);
+					if(count($x) && count($mailconf)) {
+					    $mailbox = construct_mailbox_name($mailconf[0]);
 						$password = '';
-						openssl_private_decrypt(hex2bin($r[0]['pass']),$password,$x[0]['prvkey']);
-						$mbox = email_connect($mailbox,$r[0]['user'],$password);
+						openssl_private_decrypt(hex2bin($mailconf[0]['pass']),$password,$x[0]['prvkey']);
+						$mbox = email_connect($mailbox,$mailconf[0]['user'],$password);
 						unset($password);
+						if($mbox) {
+							q("UPDATE `mailacct` SET `last_check` = '%d' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+								dbesc(datetime_convert()),
+								intval($mailconf[0]['id']),
+								intval($importer_uid)
+							);
+						}
 					}
 				}
 				if($mbox) {
+
 					$msgs = email_poll($mbox,$contact['addr']);
+
 					if(count($msgs)) {
 						foreach($msgs as $msg_uid) {
 							$datarray = array();
 							$meta = email_msg_meta($mbox,$msg_uid);
+							$headers = email_msg_headers($mbox,$msg_uid);
+
+							// look for a 'references' header and try and match with a parent item we have locally.
+
+							$raw_refs = ((x($headers,'references')) ? str_replace("\t",'',$headers['references']) : '');
 							$datarray['uri'] = trim($meta->message_id,'<>');
-//FIXME
-							$datarray['parent-uri'] = $datarray['uri'];
+
+							if($raw_refs) {
+								$refs_arr = explode(' ', $raw_refs);
+								if(count($refs_arr)) {
+									for($x = 0; $x < count($refs_arr); $x ++)
+										$refs_arr[$x] = "'" . str_replace(array('<','>',' '),array('','',''),dbesc($refs_arr[$x])) . "'";
+								}
+								$qstr = implode(',',$refs_arr);
+								$r = q("SELECT `uri` , `parent-uri` FROM `item` WHERE `uri` IN ( $qstr ) AND `uid` = %d LIMIT 1",
+									intval($importer_uid)
+								);
+								if(count($r))
+									$datarray['parent-uri'] = $r[0]['uri'];
+							}
+
+
+							if(! x($datarray,'parent-uri'))
+								$datarray['parent-uri'] = $datarray['uri'];
+
 							// Have we seen it before?
 							$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `uri` = '%s' LIMIT 1",
 								intval($importer_uid),
 								dbesc($datarray['uri'])
 							);
+
 							if(count($r)) {
 								if($meta->deleted && ! $r[0]['deleted']) {
 									q("UPDATE `item` SET `deleted` = `, `changed` = '%s' WHERE `id` = %d LIMIT 1",
@@ -335,12 +367,20 @@ function poller_run($argv, $argc){
 							$datarray['body'] = escape_tags($r['body']);
 							$datarray['uid'] = $importer_uid;
 							$datarray['contact-id'] = $contact['id'];
-							$datarray['private'] = 1;
+							if($datarray['parent-uri'] === $datarray['uri'])
+								$datarray['private'] = 1;
 							$datarray['author-name'] = $contact['name'];
 							$datarray['author-link'] = 'mailbox';
 							$datarray['author-avatar'] = $contact['photo'];
 						
-							item_store($datarray);
+							$stored_item = item_store($datarray);
+							q("UPDATE `item` SET `last-child` = 0 WHERE `parent-uri` = '%s' AND `uid` = %d",
+								dbesc($datarray['parent-uri']),
+								intval($importer_uid)
+							);
+							q("UPDATE `item` SET `last-child` = 1 WHERE `id` = %d LIMIT 1",
+								intval($stored_item)
+							);
 						}
 					}
 				}

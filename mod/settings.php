@@ -73,6 +73,41 @@ function settings_post(&$a) {
 	$page_flags       = (((x($_POST,'page-flags')) && (intval($_POST['page-flags']))) ? intval($_POST['page-flags']) : 0);
 	$blockwall        = (((x($_POST,'blockwall')) && (intval($_POST['blockwall']) == 1)) ? 0: 1); // this setting is inverted!
 
+	$mail_server      = ((x($_POST,'mail_server')) ? $_POST['mail_server'] : '');
+	$mail_port        = ((x($_POST,'mail_port')) ? $_POST['mail_port'] : '');
+	$mail_ssl         = ((x($_POST,'mail_ssl')) ? strtolower(trim($_POST['mail_ssl'])) : '');
+	$mail_user        = ((x($_POST,'mail_user')) ? $_POST['mail_user'] : '');
+	$mail_pass        = ((x($_POST,'mail_pass')) ? trim($_POST['mail_pass']) : '');
+	$mail_replyto     = ((x($_POST,'mail_replyto')) ? $_POST['mail_replyto'] : '');
+	$mail_pubmail     = ((x($_POST,'mail_pubmail')) ? $_POST['mail_pubmail'] : '');
+
+	$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",
+		intval(local_user())
+	);
+	if(! count($r)) {
+		q("INSERT INTO `mailacct` (`uid`) VALUES (%d)",
+			intval(local_user())
+		);
+	}
+	if(strlen($mail_pass)) {
+		$pass = '';
+		openssl(private_encrypt($mail_pass,$pass,$a->user['pubkey']));
+		q("UPDATE `mailacct` SET `pass` = '%s' WHERE `uid` = %d LIMIT 1",
+				dbesc(hex2bin($pass)),
+				intval(local_user())
+		);
+	}
+	$r = q("UPDATE `mailacct` SET `server` = '%s', `port` = %d, `ssltype` = '%s', `user` = '%s',
+		`mailbox` = 'INBOX', `reply_to` = '%s', `pubmail` = %d WHERE `uid` = %d LIMIT 1",
+		dbesc($mail_server),
+		intval($mail_port),
+		dbesc($mail_ssl),
+		dbesc($mail_user),
+		dbesc($mail_replyto),
+		intval($mail_pubmail),
+		intval(local_user())
+	);
+
 	$notify = 0;
 
 	if(x($_POST,'notify1'))
@@ -249,6 +284,19 @@ function settings_content(&$a) {
 	if(! strlen($a->user['timezone']))
 		$timezone = date_default_timezone_get();
 
+
+	$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",
+		local_user()
+	);
+
+	$mail_server = ((count($r)) ? $r[0]['server'] : '');
+	$mail_port = ((count($r)) ? $r[0]['port'] : '');
+	$mail_ssl = ((count($r)) ? $r[0]['ssltype'] : '');
+	$mail_user = ((count($r)) ? $r[0]['user'] : '');
+	$mail_replyto = ((count($r)) ? $r[0]['reply_to'] : '');
+	$mail_pubmail = ((count($r)) ? $r[0]['pubmail'] : 0);
+
+
 	$pageset_tpl = load_view_file('view/pagetypes.tpl');
 	$pagetype = replace_macros($pageset_tpl,array(
 		'$normal'         => (($a->user['page-flags'] == PAGE_NORMAL)      ? " checked=\"checked\" " : ""),
@@ -408,7 +456,23 @@ function settings_content(&$a) {
 		'$expire' => $expire,
 		'$blockw_checked' => (($blockwall) ? '' : ' checked="checked" ' ),
 		'$theme' => $theme_selector,
-		'$pagetype' => $pagetype
+		'$pagetype' => $pagetype,
+		'$lbl_imap0' => t('Email/Mailbox Setup'),
+		'$imap_desc' => t("If you wish to communicate with email contacts using this service \x28optional\x29, please specify how to connect to your mailbox."),
+		'$lbl_imap1' => t('IMAP server name:'),
+		'$imap_server' => $mail_server,
+		'$lbl_imap2' => t('IMAP port:'),
+		'$imap_port' => $mail_port,
+		'$lbl_imap3' => t("Security \x28TLS or SSL\x29:"),
+		'$imap_ssl' => $mail_ssl,
+		'$lbl_imap4' => t('Email login name:'),
+		'$imap_user' => $mail_user,
+		'$lbl_imap5' => t('Email password:'),
+		'$lbl_imap6' => t("Reply-to address \x28Optional\x29:"),
+		'$imap_replyto' => $mail_replyto,
+		'$lbl_imap7' => t('Send public posts to all email contacts:'),
+		'$pubmail_checked' => (($mail_pubmail) ? ' checked="checked" ' : ''),
+
 	));
 
 	call_hooks('settings_form',$o);

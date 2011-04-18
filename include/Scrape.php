@@ -322,7 +322,7 @@ function probe_url($url) {
 				$x = q("SELECT `prvkey` FROM `user` WHERE `uid` = %d LIMIT 1",
 					intval(local_user())
 				);
-				$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",
+				$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d AND `server` != '' LIMIT 1",
 					intval(local_user())
 				);
 				if(count($x) && count($r)) {
@@ -341,8 +341,8 @@ function probe_url($url) {
 						$profile = 'http://' . substr($url,strpos($url,'@')+1);
 						// fix nick character range
 						$vcard = array('fn' => $name, 'nick' => $name, 'photo' => gravatar_img($url));
-						$notify = 'smtp';
-						$poll = 'email';
+						$notify = 'smtp ' . random_string();
+						$poll = 'email ' . random_string();
 						$priority = 0;
 						$x = email_msg_meta($mbox,$msgs[0]);
 						$adr = imap_rfc822_parse_adrlist($x->from,'');

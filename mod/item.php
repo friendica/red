@@ -96,6 +96,7 @@ function item_post(&$a) {
 
 		$body              = escape_tags(trim($_POST['body']));
 		$private           = $orig_post['private'];
+		$pubmail_enable    = $orig_post['pubmail'];
 	}
 	else {
 		$str_group_allow   = perms2str($_POST['group_allow']);
@@ -121,6 +122,7 @@ function item_post(&$a) {
 			$private = 1;
 		}
 	
+		$pubmail_enable    = ((x($_POST,'pubmail_enable') && intval($_POST['pubmail_enable']) && (! $private)) ? 1 : 0);
 
 		if(! strlen($body)) {
 			notice( t('Empty post discarded.') . EOL );
@@ -362,6 +364,7 @@ function item_post(&$a) {
 	$datarray['deny_cid']      = $str_contact_deny;
 	$datarray['deny_gid']      = $str_group_deny;
 	$datarray['private']       = $private;
+	$datarray['pubmail']       = $pubmail_enable;
 
 	/**
 	 * These fields are for the convenience of plugins...
@@ -399,8 +402,8 @@ function item_post(&$a) {
 
 	$r = q("INSERT INTO `item` (`uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `changed`, `uri`, `title`, `body`, `location`, `coord`, 
-		`tag`, `inform`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private` )
-		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d )",
+		`tag`, `inform`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail` )
+		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d )",
 		intval($datarray['uid']),
 		dbesc($datarray['type']),
 		intval($datarray['wall']),
@@ -427,7 +430,8 @@ function item_post(&$a) {
 		dbesc($datarray['allow_gid']),
 		dbesc($datarray['deny_cid']),
 		dbesc($datarray['deny_gid']),
-		intval($datarray['private'])
+		intval($datarray['private']),
+		intval($datarray['pubmail'])
 	);
 
 	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
@@ -545,11 +549,10 @@ function item_post(&$a) {
 				$addr = trim($recip);
 				if(! strlen($addr))
 					continue;
-				$disclaimer = '<hr />' . sprintf(t('This message was sent to you by %s, a member of the Friendika social network.'),$a->user['username']) 
+				$disclaimer = '<hr />' . sprintf( t('This message was sent to you by %s, a member of the Friendika social network.'),$a->user['username']) 
 					. '<br />';
-				$disclaimer .= t('You may visit them online at') . ' ' 
-					. $a->get_baseurl() . '/profile/' . $a->user['nickname'] . '<br />';
-				$disclaimer .= t('Please contact the sender by replying to this post if you do not wish to receive these messages.') . '<br />'; 
+				$disclaimer .= sprintf( t('You may visit them online at %s'), $a->get_baseurl() . '/profile/' . $a->user['nickname']) . EOL;
+				$disclaimer .= t('Please contact the sender by replying to this post if you do not wish to receive these messages.') . EOL; 
 
 				$subject  = '[Friendika]' . ' ' . sprintf( t('%s posted an update.'),$a->user['username']);
 				$headers  = 'From: ' . $a->user['username'] . ' <' . $a->user['email'] . '>' . "\n";
