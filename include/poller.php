@@ -302,7 +302,7 @@ function poller_run($argv, $argc){
 						$mbox = email_connect($mailbox,$mailconf[0]['user'],$password);
 						unset($password);
 						if($mbox) {
-							q("UPDATE `mailacct` SET `last_check` = '%d' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+							q("UPDATE `mailacct` SET `last_check` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
 								dbesc(datetime_convert()),
 								intval($mailconf[0]['id']),
 								intval($importer_uid)
