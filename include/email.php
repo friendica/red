@@ -20,7 +20,7 @@ function email_poll($mbox,$email_addr) {
 
 
 function construct_mailbox_name($mailacct) {
-	$ret = '{' . $mailacct['server'] . (($mailacct['port']) ? ':' . $mailacct['port'] : '');
+	$ret = '{' . $mailacct['server'] . ((intval($mailacct['port'])) ? ':' . $mailacct['port'] : '');
 	$ret .= (($mailacct['ssltype']) ?  '/' . $mailacct['ssltype'] . '/novalidate-cert' : '');
 	$ret .= '}' . $mailacct['mailbox'];
 	return $ret;
