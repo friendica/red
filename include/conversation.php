@@ -1,6 +1,35 @@
 <?php
 
 /**
+ * Render actions localized
+ */
+function localize_item(&$item){
+	
+	if ($item['verb']=="http://activitystrea.ms/schema/1.0/like" ||
+		$item['verb']=="http://activitystrea.ms/schema/1.0/dislike"){
+
+		
+		$author	 = '[url=' . $item['author-link'] . ']' . $item['author-name'] . '[/url]';
+		#$objauthor =  '[url=' . $obj['author-link'] . ']' . $obj['author-name'] . '[/url]';
+		#$objlink = preg_grep("|<link.*href=&quot;, $input)$item['object']
+		// $item['verb']=="http://activitystrea.ms/schema/1.0/like"
+		
+		switch($item['verb']){
+			case "http://activitystrea.ms/schema/1.0/like":
+				$bodyverb = t('%1$s likes %2$s\'s %3$s');
+				break;
+			case "http://activitystrea.ms/schema/1.0/dislike":
+				$bodyverb = t('%1$s doesn\'t like %2$s\'s %3$s');
+				break;
+		}
+		$item['body'] = sprintf($bodyverb, $author, "tizio", "coso");
+			
+	}
+
+
+}
+
+/**
  * "Render" a conversation or list of items for HTML display.
  * There are two major forms of display:
  *      - Sequential or unthreaded ("New Item View" or search results)
@@ -10,7 +39,6 @@
  * that are based on unique features of the calling module.
  *
  */
-
 function conversation(&$a, $items, $mode, $update) {
 
 	require_once('bbcode.php');
@@ -118,7 +146,8 @@ function conversation(&$a, $items, $mode, $update) {
 
 	            $drop = replace_macros((($dropping)? $droptpl : $fakedrop), array('$id' => $item['id'], '$delete' => t('Delete')));
 
-
+				// 
+				localize_item($item);
 
 				$drop = replace_macros($droptpl,array('$id' => $item['id']));
 				$lock = '<div class="wall-item-lock"></div>';
@@ -383,6 +412,9 @@ function conversation(&$a, $items, $mode, $update) {
 
 			if(strcmp(datetime_convert('UTC','UTC',$item['created']),datetime_convert('UTC','UTC','now - 12 hours')) > 0)
 				$indent .= ' shiny'; 
+
+			// 
+			localize_item($item);
 
 			// Build the HTML
 
