@@ -9,4 +9,5 @@ function widget_args(){
 }
 
 function widget_content(&$a, &$o, $conf){
+	$o .= " #TODO# ";
 }
