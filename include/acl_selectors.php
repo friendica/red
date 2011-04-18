@@ -57,9 +57,12 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 		$sql_extra .= sprintf(" AND `rel` = %d ", intval(REL_BUD));
 	}
 
-	if($privmail || $privatenet) {
+	if($privmail) {
 		$sql_extra .= " AND `network` IN ( 'dfrn' ) ";
-	}	
+	}
+	elseif($privatenet) {	
+		$sql_extra .= " AND `network` IN ( 'dfrn', 'mail' ) ";
+	}
 
 	if($privmail)
 		$o .= "<select name=\"$selname\" id=\"$selclass\" class=\"$selclass\" size=\"$size\" >\r\n";
