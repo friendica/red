@@ -264,6 +264,7 @@ function scrape_feed($url) {
 
 
 function probe_url($url) {
+	require_once('include/email.php');
 
 	$result = array();
 
@@ -313,8 +314,43 @@ function probe_url($url) {
 			}
 		}
 		else {
+
+			// Check email
+
+			$orig_url = $url;
 			if((strpos($orig_url,'@')) && validate_email($orig_url)) {
-				$email_conversant = true;
+				$x = q("SELECT `prvkey` FROM `user` WHERE `uid` = %d LIMIT 1",
+					intval(local_user())
+				);
+				$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d AND `server` != '' LIMIT 1",
+					intval(local_user())
+				);
+				if(count($x) && count($r)) {
+				    $mailbox = construct_mailbox_name($r[0]);
+					$password = '';
+					openssl_private_decrypt(hex2bin($r[0]['pass']),$password,$x[0]['prvkey']);
+					$mbox = email_connect($mailbox,$r[0]['user'],$password);
+					unset($password);
+				}
+				if($mbox) {
+					$msgs = email_poll($mbox,$orig_url);
+					if(count($msgs)) {
+						$addr = $orig_url;
+						$network = NETWORK_MAIL;
+						$name = substr($url,0,strpos($url,'@'));
+						$profile = 'http://' . substr($url,strpos($url,'@')+1);
+						// fix nick character range
+						$vcard = array('fn' => $name, 'nick' => $name, 'photo' => gravatar_img($url));
+						$notify = 'smtp ' . random_string();
+						$poll = 'email ' . random_string();
+						$priority = 0;
+						$x = email_msg_meta($mbox,$msgs[0]);
+						$adr = imap_rfc822_parse_adrlist($x->from,'');
+						if(strlen($adr[0]->personal))
+							$vcard['fn'] = notags($adr[0]->personal);
+					}
+					imap_close($mbox);
+				}
 			}
 		}
 	}	
@@ -330,7 +366,7 @@ function probe_url($url) {
 		}
 	}
 
-	if($network !== NETWORK_DFRN) {
+	if($network !== NETWORK_DFRN && $network !== NETWORK_MAIL) {
 		$network  = NETWORK_OSTATUS;
 		$priority = 0;
 
@@ -435,9 +471,11 @@ function probe_url($url) {
 	$vcard['fn'] = notags($vcard['fn']);
 	$vcard['nick'] = notags($vcard['nick']);
 
+
 	$result['name'] = $vcard['fn'];
 	$result['nick'] = $vcard['nick'];
 	$result['url'] = $profile;
+	$result['addr'] = $addr;
 	$result['notify'] = $notify;
 	$result['poll'] = $poll;
 	$result['request'] = $request;

@@ -164,7 +164,35 @@ $profile_in_net_dir
 <input type="submit" name="submit" class="settings-submit" value="$submit" />
 </div>
 
+<h3 class="settings-imap">$lbl_imap0</h3>
+<p>
+$imap_desc
+</p>
+<label for="imap-server" id="settings-label-imap1">$lbl_imap1</label>
+<input type="text" id="imap-server" name="mail_server" value="$imap_server" />
+<div id="imap-server-end"></div>
+<label for="imap-port" id="settings-label-imap2">$lbl_imap2</label>
+<input type="text" id="imap-port" name="mail_port" value="$imap_port" />
+<div id="imap-port-end"></div>
+<label for="imap-ssl" id="settings-label-imap3">$lbl_imap3</label>
+<input type="text" id="imap-ssl" name="mail_ssl" value="$imap_ssl" />
+<div id="imap-ssl-end"></div>
+<label for="imap-user" id="settings-label-imap4">$lbl_imap4</label>
+<input type="text" id="imap-user" name="mail_user" value="$imap_user" />
+<div id="imap-user-end"></div>
+<label for="imap-pass" id="settings-label-imap5">$lbl_imap5</label>
+<input type="password" id="imap-pass" name="mail_pass" value="" />
+<div id="imap-pass-end"></div>
+<label for="imap-replyto" id="settings-label-imap6">$lbl_imap6</label>
+<input type="text" id="imap-replyto" name="mail_replyto" value="$imap_replyto" />
+<div id="imap-replyto-end"></div>
+<label for="imap-pubmail" id="settings-label-imap7">$lbl_imap7</label>
+<input type="checkbox" name="mail_pubmail" id="imap-pubmail" $pubmail_checked value="1" />
+<div id="imap-pubmail-end"></div>
 
+<div class="settings-submit-wrapper" >
+<input type="submit" name="submit" class="settings-submit" value="$submit" />
+</div>
 
 
 <h3 class="settings-heading">$lbl_advn</h3>
