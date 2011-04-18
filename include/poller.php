@@ -16,7 +16,6 @@ function poller_run($argv, $argc){
     	unset($db_host, $db_user, $db_pass, $db_data);
   	};
 
-	$mbox = null;
 
 	require_once('session.php');
 	require_once('datetime.php');
@@ -288,26 +287,25 @@ function poller_run($argv, $argc){
 				$xml = fetch_url($contact['poll']);
 			}
 			elseif($contact['network'] === NETWORK_MAIL) {
-				if(! $mbox) {
-					$x = q("SELECT `prvkey` FROM `user` WHERE `uid` = %d LIMIT 1",
-						intval($importer_uid)
-					);
-					$mailconf = q("SELECT * FROM `mailacct` WHERE `server` != '' AND `uid` = %d LIMIT 1",
-						intval($importer_uid)
-					);
-					if(count($x) && count($mailconf)) {
-					    $mailbox = construct_mailbox_name($mailconf[0]);
-						$password = '';
-						openssl_private_decrypt(hex2bin($mailconf[0]['pass']),$password,$x[0]['prvkey']);
-						$mbox = email_connect($mailbox,$mailconf[0]['user'],$password);
-						unset($password);
-						if($mbox) {
-							q("UPDATE `mailacct` SET `last_check` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
-								dbesc(datetime_convert()),
-								intval($mailconf[0]['id']),
-								intval($importer_uid)
-							);
-						}
+				$mbox = null;
+				$x = q("SELECT `prvkey` FROM `user` WHERE `uid` = %d LIMIT 1",
+					intval($importer_uid)
+				);
+				$mailconf = q("SELECT * FROM `mailacct` WHERE `server` != '' AND `uid` = %d LIMIT 1",
+					intval($importer_uid)
+				);
+				if(count($x) && count($mailconf)) {
+				    $mailbox = construct_mailbox_name($mailconf[0]);
+					$password = '';
+					openssl_private_decrypt(hex2bin($mailconf[0]['pass']),$password,$x[0]['prvkey']);
+					$mbox = email_connect($mailbox,$mailconf[0]['user'],$password);
+					unset($password);
+					if($mbox) {
+						q("UPDATE `mailacct` SET `last_check` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+							dbesc(datetime_convert()),
+							intval($mailconf[0]['id']),
+							intval($importer_uid)
+						);
 					}
 				}
 				if($mbox) {
@@ -383,6 +381,8 @@ function poller_run($argv, $argc){
 							);
 						}
 					}
+
+					imap_close($mbox);
 				}
 			}
 			elseif($contact['network'] === NETWORK_FACEBOOK) {
@@ -435,8 +435,6 @@ function poller_run($argv, $argc){
 		}
 	}
 
-	if($mbox && function_exists('imap_close'))
-		imap_close($mbox);
 		
 	return;
 }
