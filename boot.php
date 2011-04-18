@@ -2027,7 +2027,7 @@ function micropro($contact, $redirect = false, $class = '') {
 		$url = '';
 	return '<div class="contact-block-div' . $class . '"><a class="contact-block-link' . $class . $sparkle 
 		. (($click) ? ' fakelink' : '') . '" '
-		. (($url) ? '" href="' . $url . '"' : '') . $click . ' ><img class="contact-block-img' . $class . $sparkle . '" src="' 
+		. (($url) ? ' href="' . $url . '"' : '') . $click . ' ><img class="contact-block-img' . $class . $sparkle . '" src="' 
 		. $contact['micro'] . '" title="' . $contact['name'] . ' [' . $contact['url'] . ']" alt="' . $contact['name'] 
 		. '" /></a></div>' . "\r\n";
 }}
