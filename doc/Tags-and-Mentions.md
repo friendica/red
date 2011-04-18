@@ -15,7 +15,7 @@ The following are various ways of indicating a person:
 
 * @mike - indicates a known contact in your social circle whose nickname is "mike"
 * @mike_macgirvin - indicates a known contact in your social circle whose  full name is "Mike Macgirvin". Note that spaces cannot be used inside tags.
-* @mike@macgirvin.com - indicates the profile locator of a person on a different network, or one that is *not* in your social circle. This can only be an email-style locator, not a web URL. 
+* @mike@macgirvin.com - indicates the Identity Address of a person on a different network, or one that is *not* in your social circle. This can only be an email-style locator, not a web URL. 
 
 Unless their system blocks unsolicited "mentions", the person tagged will likely receive a "Mention" post/activity or become a direct participant in the conversation in the case of public posts. Please note that Friendika often blocks incoming "mentions" from other networks and especially from people with no relationship to you. This is a spam prevention measure. 
 

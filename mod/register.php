@@ -329,7 +329,10 @@ function register_post(&$a) {
 				'$uid' => $newuid ));
 
 		$res = mail($email, sprintf(t('Registration details for %s'), $a->config['sitename']),
-			$email_tpl, 'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME']);
+			$email_tpl, 
+				'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+				. 'Content-type: text/plain; charset=UTF-8' . "\n"
+				. 'Content-transfer-encoding: 8bit' );
 
 
 		if($res) {
@@ -366,8 +369,10 @@ function register_post(&$a) {
 		 ));
 
 		$res = mail($a->config['admin_email'], sprintf(t('Registration request at %s'), $a->config['sitename']),
-			$email_tpl,'From: ' .  t('Administrator') . '@' . $_SERVER['SERVER_NAME']);
-
+			$email_tpl,
+				'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+				. 'Content-type: text/plain; charset=UTF-8' . "\n"
+				. 'Content-transfer-encoding: 8bit' );
 		if($res) {
 			notice( t('Your registration is pending approval by the site owner.') . EOL ) ;
 			goaway($a->get_baseurl());

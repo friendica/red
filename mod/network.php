@@ -94,6 +94,28 @@ function network_content(&$a, $update = 0) {
 
 		$jotplugins = '';
 		$jotnets = '';
+
+
+		$mail_enabled = false;
+		$pubmail_enabled = false;
+
+
+		$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d AND `server` != '' LIMIT 1",
+			intval(local_user())
+		);
+		if(count($r)) {
+			$mail_enabled = true;
+			if(intval($r[0]['pubmail']))
+				$pubmail_enabled = true;
+		}
+
+		if($mail_enabled) {
+	       $selected = (($pubmail_enabled) ? ' checked="checked" ' : '');
+			$jotnets .= '<div class="profile-jot-net"><input type="checkbox" name="pubmail_enable"' . $selected . 'value="1" /> '
+           	. t("Post to Email") . '</div>';
+		}
+
+
 		call_hooks('jot_tool', $jotplugins);
 		call_hooks('jot_networks', $jotnets);
 

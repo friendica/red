@@ -284,7 +284,7 @@ function contacts_content(&$a) {
 			'$contact_id' => $r[0]['id'],
 			'$block_text' => (($r[0]['blocked']) ? t('Unblock this contact') : t('Block this contact') ),
 			'$ignore_text' => (($r[0]['readonly']) ? t('Unignore this contact') : t('Ignore this contact') ),
-			'$insecure' => (($r[0]['network'] !== 'dfrn') ? $insecure : ''),
+			'$insecure' => (($r[0]['network'] !== NETWORK_DFRN && $r[0]['network'] !== NETWORK_MAIL) ? $insecure : ''),
 			'$info' => $r[0]['info'],
 			'$blocked' => (($r[0]['blocked']) ? '<div id="block-message">' . t('Currently blocked') . '</div>' : ''),
 			'$ignored' => (($r[0]['readonly']) ? '<div id="ignore-message">' . t('Currently ignored') . '</div>' : ''),

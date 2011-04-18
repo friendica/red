@@ -36,7 +36,11 @@ function lostpass_post(&$a) {
 	));
 
 	$res = mail($email, sprintf( t('Password reset requested at %s'),$a->config['sitename']),
-			$email_tpl, 'From: ' . t('Administrator') . '@' . $_SERVER[SERVER_NAME]);
+			$email_tpl,
+			'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+			. 'Content-type: text/plain; charset=UTF-8' . "\n"
+			. 'Content-transfer-encoding: 8bit' );
+
 
 	goaway($a->get_baseurl());
 }
@@ -94,7 +98,10 @@ function lostpass_content(&$a) {
 			'$new_password' => $new_password,
 			'$uid' => $newuid ));
 
-			$res = mail($email,"Your password has changed at {$a->config['sitename']}",$email_tpl,"From: Administrator@{$_SERVER[SERVER_NAME]}");
+			$res = mail($email,"Your password has changed at {$a->config['sitename']}",$email_tpl,
+				'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+				. 'Content-type: text/plain; charset=UTF-8' . "\n"
+				. 'Content-transfer-encoding: 8bit' );
 
 			return $o;
 		}

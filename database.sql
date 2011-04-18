@@ -64,6 +64,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `issued-id` char(255) NOT NULL,
   `dfrn-id` char(255) NOT NULL,
   `url` char(255) NOT NULL,
+  `addr` char(255) NOT NULL,
   `alias` char(255) NOT NULL,
   `pubkey` text NOT NULL,
   `prvkey` text NOT NULL,
@@ -194,6 +195,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `deny_cid` mediumtext NOT NULL,
   `deny_gid` mediumtext NOT NULL,
   `private` tinyint(1) NOT NULL DEFAULT '0',
+  `pubmail` tinyint(1) NOT NULL DEFAULT '0',
   `visible` tinyint(1) NOT NULL DEFAULT '0',
   `unseen` tinyint(1) NOT NULL DEFAULT '1',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
@@ -508,9 +510,13 @@ CREATE TABLE IF NOT EXISTS `mailacct` (
 `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 `uid` INT NOT NULL,
 `server` CHAR( 255 ) NOT NULL ,
+`port` INT NOT NULL,
+`ssltype` CHAR( 16 ) NOT NULL,
+`mailbox` CHAR( 255 ) NOT NULL,
 `user` CHAR( 255 ) NOT NULL ,
-`pass` CHAR( 255 ) NOT NULL ,
+`pass` TEXT NOT NULL ,
 `reply_to` CHAR( 255 ) NOT NULL ,
+`pubmail` TINYINT(1) NOT NULL DEFAULT '0',
 `last_check` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE = MYISAM DEFAULT CHARSET=utf8;
 

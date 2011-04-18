@@ -402,7 +402,14 @@ input#dfrn-url {
 #notify2-end,
 #notify3-end,
 #notify4-end,
-#notify5-end {
+#notify5-end,
+#imap-server-end,
+#imap-port-end,
+#imap-ssl-end,
+#imap-user-end,
+#imap-pass-end,
+#imap-replyto-end,
+#imap-pubmail-end {
 	margin-bottom: 5px;
 	clear: both;
 }
@@ -423,7 +430,14 @@ input#dfrn-url {
 #settings-label-notify2,
 #settings-label-notify3,
 #settings-label-notify4,
-#settings-label-notify5 {
+#settings-label-notify5,
+#settings-label-imap1,
+#settings-label-imap2,
+#settings-label-imap3,
+#settings-label-imap4,
+#settings-label-imap5,
+#settings-label-imap6,
+#settings-label-imap7 {
 	float: left;
 	width: 200px;
 }
@@ -443,7 +457,14 @@ input#dfrn-url {
 #notify2,
 #notify3,
 #notify4,
-#notify5 {
+#notify5,
+#imap-server,
+#imap-port,
+#imap-ssl,
+#imap-user,
+#imap-pass,
+#imap-replyto,
+#imap-pubmail {
 	float: left;
 	margin-bottom: 20px;
 }

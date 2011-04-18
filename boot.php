@@ -2,9 +2,9 @@
 
 set_time_limit(0);
 
-define ( 'FRIENDIKA_VERSION',      '2.1.948' );
+define ( 'FRIENDIKA_VERSION',      '2.1.952' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
-define ( 'DB_UPDATE_VERSION',      1051      );
+define ( 'DB_UPDATE_VERSION',      1053      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -290,7 +290,7 @@ class App {
 
 		if($this->cmd === '.well-known/host-meta') {
 			require_once('include/hostxrd.php');
-			hostxrd($this->hostname);
+			hostxrd($this->get_baseurl());
 			// NOTREACHED
 		}
 

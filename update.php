@@ -460,3 +460,19 @@ function update_1050() {
 	) ENGINE = MYISAM ");
 
 }
+
+function update_1051() {
+	q("ALTER TABLE `mailacct` ADD `port` INT NOT NULL AFTER `server` ,
+		ADD `ssltype` CHAR( 16 ) NOT NULL AFTER `port` ,
+		ADD `mailbox` CHAR( 255 ) NOT NULL AFTER `ssltype` ");
+
+	q("ALTER TABLE `contact` ADD `addr` CHAR( 255 ) NOT NULL AFTER `url` ");
+}
+
+function update_1052() {
+	q("ALTER TABLE `mailacct` CHANGE `pass` `pass` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL");
+	q("ALTER TABLE `mailacct` ADD `pubmail` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `reply_to` ");
+	q("ALTER TABLE `item` ADD `pubmail` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `private` ");
+}
+
+

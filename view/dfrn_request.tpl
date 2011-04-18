@@ -7,6 +7,7 @@ $page_desc<br />
 <li><a href="http://friendika.com" title="$private_net">$friendika</a> <img src="images/lock_icon.gif" alt="$private_net" title="$private_net" /></li>
 <li><a href="http://ostatus.org" title="$public_net" >$statusnet</a> <img src="images/unlock_icon.gif" alt="$public_net" title="$public_net"/></li>
 </ul>
+$desc
 </p>
 
 <form action="dfrn_request/$nickname" method="post" />
