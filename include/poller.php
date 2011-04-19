@@ -287,6 +287,11 @@ function poller_run($argv, $argc){
 				$xml = fetch_url($contact['poll']);
 			}
 			elseif($contact['network'] === NETWORK_MAIL) {
+
+				$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
+				if($mail_disabled)
+					continue;
+
 				$mbox = null;
 				$x = q("SELECT `prvkey` FROM `user` WHERE `uid` = %d LIMIT 1",
 					intval($importer_uid)

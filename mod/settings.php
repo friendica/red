@@ -81,32 +81,37 @@ function settings_post(&$a) {
 	$mail_replyto     = ((x($_POST,'mail_replyto')) ? $_POST['mail_replyto'] : '');
 	$mail_pubmail     = ((x($_POST,'mail_pubmail')) ? $_POST['mail_pubmail'] : '');
 
-	$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",
-		intval(local_user())
-	);
-	if(! count($r)) {
-		q("INSERT INTO `mailacct` (`uid`) VALUES (%d)",
+
+	$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
+
+	if(! $mail_disabled) {
+		$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",
+			intval(local_user())
+		);
+		if(! count($r)) {
+			q("INSERT INTO `mailacct` (`uid`) VALUES (%d)",
+				intval(local_user())
+			);
+		}
+		if(strlen($mail_pass)) {
+			$pass = '';
+			openssl(private_encrypt($mail_pass,$pass,$a->user['pubkey']));
+			q("UPDATE `mailacct` SET `pass` = '%s' WHERE `uid` = %d LIMIT 1",
+					dbesc(hex2bin($pass)),
+					intval(local_user())
+			);
+		}
+		$r = q("UPDATE `mailacct` SET `server` = '%s', `port` = %d, `ssltype` = '%s', `user` = '%s',
+			`mailbox` = 'INBOX', `reply_to` = '%s', `pubmail` = %d WHERE `uid` = %d LIMIT 1",
+			dbesc($mail_server),
+			intval($mail_port),
+			dbesc($mail_ssl),
+			dbesc($mail_user),
+			dbesc($mail_replyto),
+			intval($mail_pubmail),
 			intval(local_user())
 		);
 	}
-	if(strlen($mail_pass)) {
-		$pass = '';
-		openssl(private_encrypt($mail_pass,$pass,$a->user['pubkey']));
-		q("UPDATE `mailacct` SET `pass` = '%s' WHERE `uid` = %d LIMIT 1",
-				dbesc(hex2bin($pass)),
-				intval(local_user())
-		);
-	}
-	$r = q("UPDATE `mailacct` SET `server` = '%s', `port` = %d, `ssltype` = '%s', `user` = '%s',
-		`mailbox` = 'INBOX', `reply_to` = '%s', `pubmail` = %d WHERE `uid` = %d LIMIT 1",
-		dbesc($mail_server),
-		intval($mail_port),
-		dbesc($mail_ssl),
-		dbesc($mail_user),
-		dbesc($mail_replyto),
-		intval($mail_pubmail),
-		intval(local_user())
-	);
 
 	$notify = 0;
 
@@ -285,9 +290,17 @@ function settings_content(&$a) {
 		$timezone = date_default_timezone_get();
 
 
-	$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",
-		local_user()
-	);
+	$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
+
+	if(! $mail_disabled) {
+		$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",
+			local_user()
+		);
+	}
+	else {
+		$r = null;
+		$imap_disabled = (($mail_disabled) ? ' disabled="disabled" ' : '');
+	}
 
 	$mail_server  = ((count($r)) ? $r[0]['server'] : '');
 	$mail_port    = ((count($r) && intval($r[0]['port'])) ? intval($r[0]['port']) : '');
@@ -472,7 +485,8 @@ function settings_content(&$a) {
 		'$imap_replyto' => $mail_replyto,
 		'$lbl_imap7' => t('Send public posts to all email contacts:'),
 		'$pubmail_checked' => (($mail_pubmail) ? ' checked="checked" ' : ''),
-
+		'$mail_disabled' => (($mail_disabled) ? '<div class="error-message">' . t('Email access is disabled on this site.') . '</div>' : ''),
+		'$imap_disabled' => $imap_disabled
 	));
 
 	call_hooks('settings_form',$o);

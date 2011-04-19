@@ -593,6 +593,7 @@ $a->strings['Email login name:'] = 'Email login name:';
 $a->strings['Email password:'] = 'Email password:';
 $a->strings["Reply-to address \x28Optional\x29:"] = "Reply-to address \x28Optional\x29:";
 $a->strings['Send public posts to all email contacts:'] = 'Send public posts to all email contacts:';
+$a->strings['Email access is disabled on this site.'] = 'Email access is disabled on this site.';
 $a->strings['Tag removed'] = 'Tag removed';
 $a->strings['Remove Item Tag'] = 'Remove Item Tag';
 $a->strings['Select a tag to remove: '] = 'Select a tag to remove: ';

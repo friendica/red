@@ -270,15 +270,20 @@ function notifier_run($argv, $argc){
 
 	// If this is a public message and pubmail is set on the parent, include all your email contacts
 
-	if((! strlen($parent_item['allow_cid'])) && (! strlen($parent_item['allow_gid'])) && (! strlen($parent_item['deny_cid'])) && (! strlen($parent_item['deny_gid'])) 
-		&& (intval($parent_item['pubmail']))) {
-		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `network` = '%s'",
-			intval($uid),
-			dbesc(NETWORK_MAIL)
-		);
-		if(count($r)) {
-			foreach($r as $rr)
-				$recipients[] = $rr['id'];
+	$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
+
+	if(! $mail_disabled) {
+		if((! strlen($parent_item['allow_cid'])) && (! strlen($parent_item['allow_gid'])) 
+			&& (! strlen($parent_item['deny_cid'])) && (! strlen($parent_item['deny_gid'])) 
+			&& (intval($parent_item['pubmail']))) {
+			$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `network` = '%s'",
+				intval($uid),
+				dbesc(NETWORK_MAIL)
+			);
+			if(count($r)) {
+				foreach($r as $rr)
+					$recipients[] = $rr['id'];
+			}
 		}
 	}
 

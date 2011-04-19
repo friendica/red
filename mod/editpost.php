@@ -52,17 +52,20 @@ function editpost_content(&$a) {
 	$jotplugins = '';
 	$jotnets = '';
 
+	$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
+
 	$mail_enabled = false;
 	$pubmail_enabled = false;
 
-
-	$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d AND `server` != '' LIMIT 1",
-		intval(local_user())
-	);
-	if(count($r)) {
-		$mail_enabled = true;
-		if(intval($r[0]['pubmail']))
-			$pubmail_enabled = true;
+	if(! $mail_disabled) {
+		$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d AND `server` != '' LIMIT 1",
+			intval(local_user())
+		);
+		if(count($r)) {
+			$mail_enabled = true;
+			if(intval($r[0]['pubmail']))
+				$pubmail_enabled = true;
+		}
 	}
 
 	if($mail_enabled) {
