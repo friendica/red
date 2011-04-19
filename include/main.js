@@ -27,6 +27,7 @@
 	var liking = 0;
 	var in_progress = false;
 	var langSelect = false;
+	var commentBusy = false;
 
 	$(document).ready(function() {
 		$.ajaxSetup({cache: false});
@@ -109,7 +110,6 @@
 			}) ;
 		}
 		timer = setTimeout(NavUpdate,30000);
-
 	}
 
 	function liveUpdate() {
@@ -153,8 +153,11 @@
 				prev = ident; 
 			});
 			$('.like-rotator').hide();
+			if(commentBusy) {
+				commentBusy = false;
+				$('body').css('cursor', 'auto');
+			}
 		});
-
 	}
 
 	function imgbright(node) {
@@ -232,6 +235,8 @@
 	}
 
 	function post_comment(id) {
+		commentBusy = true;
+		$('body').css('cursor', 'wait');
 		$.post(  
              "item",  
              $("#comment-edit-form-" + id).serialize(),
@@ -248,7 +253,6 @@
 				if(data.reload) {
 					window.location.href=data.reload;
 				}
-					
 			},
 			"json"  
          );  
