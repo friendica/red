@@ -12,6 +12,13 @@ function follow_post(&$a) {
 
 	$url = $orig_url = notags(trim($_POST['url']));
 
+	if(! allowed_url($url)) {
+		notice( t('Disallowed profile URL.') . EOL);
+		goaway($_SESSION['return_url']);
+		// NOTREACHED
+	}
+
+
 	$ret = probe_url($url);
 
 
