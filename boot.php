@@ -2661,7 +2661,7 @@ function parse_xml_string($s) {
 	$x = @simplexml_load_string($s2);
 	if(count(libxml_get_errors()))
 		foreach(libxml_get_errors() as $err)
-			logger('libxml: parse: ' . $err, LOGGER_DATA);
+			logger('libxml: parse: ' . $err->code." at ".$err->line.":".$err->column." : ".$err->message, LOGGER_DATA);
 	libxml_clear_errors();
 	return $x;
 }}

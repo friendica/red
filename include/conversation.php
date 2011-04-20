@@ -33,14 +33,33 @@ function localize_item(&$item){
 	}
 	if ($item['verb']=='http://activitystrea.ms/schema/1.0/make-friend'){
 
-		$b = str_replace("[/url]","[/url]\n", $item['body']);
-		preg_match_all("|(\[url.*\[/url\])|", $b, $match);
+		if ($item['object-type']=="" || $item['object-type']!='http://activitystrea.ms/schema/1.0/person') return;
 
-		$item['body'] = $match[0][0]." "
-						.t('is now friends with')
-						." ".$match[0][1]."\n\n\n"
-						.$match[0][2];
-                
+		$Aname = $item['author-name'];
+		$Alink = $item['author-link'];
+		
+		$xmlhead="<"."?xml version='1.0' encoding='UTF-8' ?".">";
+		
+		$obj = parse_xml_string($xmlhead.$item['object']);
+		$links = parse_xml_string($xmlhead."<links>".unxmlify($obj->link)."</links>");
+		
+		$Bname = $obj->title;
+		$Blink = ""; $Bphoto = "";
+		foreach ($links->link as $l){
+			$atts = $l->attributes();
+			switch($atts['rel']){
+				case "alternate": $Blink = $atts['href'];
+				case "photo": $Bphoto = $atts['href'];
+			}
+			
+		}
+		
+		$A = '[url=' . $Alink . ']' . $Aname . '[/url]';
+		$B = '[url=' . $Blink . ']' . $Bname . '[/url]';
+		if ($Bphoto!="") $Bphoto = '[url=' . $Blink . '][img]' . $Bphoto . '[/img][/url]';
+
+		$item['body'] = sprintf(t('%1$s is now friends with %2$s'), $A, $B)."\n\n\n".$Bphoto;
+
 	}
         
 }
@@ -579,8 +598,8 @@ function item_photo_menu($item){
 	$menu = Array(
 		t("View status") => $status_link,
 		t("View profile") => $profile_link,
-		t("View photos") => $photos_link,
-		t("View recent") => $posts_link,		
+		t("View photos") => $photos_link,		
+		t("View recent") => $posts_link, 
 		t("Edit contact") => $contact_url,
 		t("Send PM") => $pm_url,
 	);

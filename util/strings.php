@@ -143,7 +143,6 @@ $a->strings['Remote site reported: '] = 'Remote site reported: ';
 $a->strings["Temporary failure. Please wait and try again."] = "Temporary failure. Please wait and try again.";
 $a->strings["Introduction failed or was revoked."] = "Introduction failed or was revoked.";
 $a->strings['Unable to set contact photo.'] = 'Unable to set contact photo.';
-$a->strings['is now friends with'] = 'is now friends with';
 $a->strings['Our site encryption key is apparently messed up.'] = 'Our site encryption key is apparently messed up.';
 $a->strings['Empty site URL was provided or URL could not be decrypted by us.'] = 'Empty site URL was provided or URL could not be decrypted by us.';
 $a->strings['Contact record was not found for you on our site.'] = 'Contact record was not found for you on our site.';

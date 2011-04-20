@@ -423,9 +423,11 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				$arr['author-avatar'] = $arr['owner-avatar'] = $self[0]['thumb'];
 				$arr['verb'] = ACTIVITY_FRIEND;
 				$arr['object-type'] = ACTIVITY_OBJ_PERSON;
-				$arr['body'] = '[url=' . $self[0]['url'] . ']' . $self[0]['name'] . '[/url] ' . t('is now friends with')
-					. ' [url=' . $contact['url'] . ']' . $contact['name'] . '[/url]' . "\n\n\n" 
-					. ' [url=' . $contact['url'] . ']' . '[img]' . $contact['thumb'] . '[/img][/url]';
+				
+				$A = '[url=' . $self[0]['url'] . ']' . $self[0]['name'] . '[/url]';
+				$B = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]';
+				$BPhoto = '[url=' . $contact['url'] . ']' . '[img]' . $contact['thumb'] . '[/img][/url]';
+				$arr['body'] =  sprintf(t('%1$s is now friends with %2$s'), $A, $B)."\n\n\n".$Bphoto;
 
 				$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PERSON . '</type><title>' . $contact['name'] . '</title>'
 					. '<id>' . $contact['url'] . '/' . $contact['name'] . '</id>';

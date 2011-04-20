@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.954\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-19 21:09-0700\n"
+"POT-Creation-Date: 2011-04-20 04:49-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -108,7 +108,7 @@ msgstr ""
 #: ../../addon/statusnet/statusnet.php:163
 #: ../../addon/statusnet/statusnet.php:189
 #: ../../addon/statusnet/statusnet.php:207 ../../addon/twitter/twitter.php:156
-#: ../../addon/twitter/twitter.php:175 ../../include/conversation.php:364
+#: ../../addon/twitter/twitter.php:175 ../../include/conversation.php:383
 #: ../../wip/photos.php:754 ../../wip/photos.php:793 ../../wip/photos.php:954
 #: ../../wip/addon/randplace/randplace.php:178 ../../wip/group.php:99
 #: ../../wip/group.php:176 ../../wip/photos-chris.php:801
@@ -289,7 +289,7 @@ msgstr ""
 msgid "Use as profile photo"
 msgstr ""
 
-#: ../../mod/photos.php:965 ../../include/conversation.php:297
+#: ../../mod/photos.php:965 ../../include/conversation.php:316
 msgid "Private Message"
 msgstr ""
 
@@ -335,41 +335,41 @@ msgstr ""
 msgid "Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping"
 msgstr ""
 
-#: ../../mod/photos.php:1087 ../../include/conversation.php:345
+#: ../../mod/photos.php:1087 ../../include/conversation.php:364
 msgid "I like this (toggle)"
 msgstr ""
 
-#: ../../mod/photos.php:1088 ../../include/conversation.php:346
+#: ../../mod/photos.php:1088 ../../include/conversation.php:365
 msgid "I don't like this (toggle)"
 msgstr ""
 
 #: ../../mod/photos.php:1089 ../../mod/network.php:134
-#: ../../mod/profile.php:181 ../../include/conversation.php:347
+#: ../../mod/profile.php:181 ../../include/conversation.php:366
 msgid "Share"
 msgstr ""
 
 #: ../../mod/photos.php:1090 ../../mod/editpost.php:95
 #: ../../mod/network.php:143 ../../mod/message.php:190
 #: ../../mod/message.php:324 ../../mod/profile.php:190
-#: ../../include/conversation.php:348
+#: ../../include/conversation.php:367
 msgid "Please wait"
 msgstr ""
 
 #: ../../mod/photos.php:1109 ../../mod/photos.php:1151
-#: ../../mod/photos.php:1180 ../../include/conversation.php:361
+#: ../../mod/photos.php:1180 ../../include/conversation.php:380
 #: ../../wip/photos.php:986 ../../wip/photos.php:1025
 #: ../../wip/photos.php:1053 ../../wip/photos-chris.php:1033
 #: ../../wip/photos-chris.php:1072 ../../wip/photos-chris.php:1100
 msgid "This is you"
 msgstr ""
 
-#: ../../mod/photos.php:1111 ../../include/conversation.php:363
+#: ../../mod/photos.php:1111 ../../include/conversation.php:382
 #: ../../boot.php:373
 msgid "Comment"
 msgstr ""
 
 #: ../../mod/photos.php:1208 ../../mod/group.php:146
-#: ../../include/conversation.php:163 ../../include/conversation.php:374
+#: ../../include/conversation.php:182 ../../include/conversation.php:393
 #: ../../wip/group.php:162
 msgid "Delete"
 msgstr ""
@@ -403,7 +403,7 @@ msgid "Post to Email"
 msgstr ""
 
 #: ../../mod/editpost.php:87 ../../include/group.php:169
-#: ../../include/conversation.php:372
+#: ../../include/conversation.php:391
 msgid "Edit"
 msgstr ""
 
@@ -577,7 +577,7 @@ msgstr ""
 #: ../../mod/register.php:373 ../../mod/regmod.php:94 ../../mod/item.php:480
 #: ../../mod/item.php:506 ../../mod/dfrn_notify.php:189
 #: ../../mod/dfrn_notify.php:405 ../../mod/dfrn_notify.php:495
-#: ../../mod/dfrn_confirm.php:655 ../../include/items.php:1418
+#: ../../mod/dfrn_confirm.php:657 ../../include/items.php:1418
 msgid "Administrator"
 msgstr ""
 
@@ -1141,7 +1141,7 @@ msgstr ""
 msgid "Visit $username's profile"
 msgstr ""
 
-#: ../../mod/contacts.php:388 ../../include/conversation.php:584
+#: ../../mod/contacts.php:388 ../../include/conversation.php:603
 msgid "Edit contact"
 msgstr ""
 
@@ -2422,42 +2422,43 @@ msgstr ""
 msgid "Unable to set contact photo."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:426 ../../include/conversation.php:40
-msgid "is now friends with"
+#: ../../mod/dfrn_confirm.php:430 ../../include/conversation.php:61
+#, php-format
+msgid "%1$s is now friends with %2$s"
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:499
+#: ../../mod/dfrn_confirm.php:501
 #, php-format
 msgid "No user record found for '%s' "
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:509
+#: ../../mod/dfrn_confirm.php:511
 msgid "Our site encryption key is apparently messed up."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:520
+#: ../../mod/dfrn_confirm.php:522
 msgid "Empty site URL was provided or URL could not be decrypted by us."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:532
+#: ../../mod/dfrn_confirm.php:534
 msgid "Contact record was not found for you on our site."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:560
+#: ../../mod/dfrn_confirm.php:562
 msgid ""
 "The ID provided by your system is a duplicate on our system. It should work "
 "if you try again."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:571
+#: ../../mod/dfrn_confirm.php:573
 msgid "Unable to set your contact credentials on our system."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:624
+#: ../../mod/dfrn_confirm.php:626
 msgid "Unable to update your contact profile details on our system"
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:653
+#: ../../mod/dfrn_confirm.php:655
 #, php-format
 msgid "Connection accepted at %s"
 msgstr ""
@@ -3186,92 +3187,92 @@ msgstr ""
 msgid "You have a new follower at "
 msgstr ""
 
-#: ../../include/conversation.php:173 ../../include/conversation.php:439
-#: ../../include/conversation.php:440
+#: ../../include/conversation.php:192 ../../include/conversation.php:458
+#: ../../include/conversation.php:459
 #, php-format
 msgid "View %s's profile"
 msgstr ""
 
-#: ../../include/conversation.php:189
+#: ../../include/conversation.php:208
 msgid "View in context"
 msgstr ""
 
-#: ../../include/conversation.php:260
+#: ../../include/conversation.php:279
 msgid "See more posts like this"
 msgstr ""
 
-#: ../../include/conversation.php:284
+#: ../../include/conversation.php:303
 #, php-format
 msgid "See all %d comments"
 msgstr ""
 
-#: ../../include/conversation.php:441
+#: ../../include/conversation.php:460
 msgid "to"
 msgstr ""
 
-#: ../../include/conversation.php:442
+#: ../../include/conversation.php:461
 msgid "Wall-to-Wall"
 msgstr ""
 
-#: ../../include/conversation.php:443
+#: ../../include/conversation.php:462
 msgid "via Wall-To-Wall:"
 msgstr ""
 
-#: ../../include/conversation.php:580
+#: ../../include/conversation.php:599
 msgid "View status"
 msgstr ""
 
-#: ../../include/conversation.php:581
+#: ../../include/conversation.php:600
 msgid "View profile"
 msgstr ""
 
-#: ../../include/conversation.php:582
+#: ../../include/conversation.php:601
 msgid "View photos"
 msgstr ""
 
-#: ../../include/conversation.php:583
+#: ../../include/conversation.php:602
 msgid "View recent"
 msgstr ""
 
-#: ../../include/conversation.php:585
+#: ../../include/conversation.php:604
 msgid "Send PM"
 msgstr ""
 
-#: ../../include/conversation.php:635
+#: ../../include/conversation.php:654
 #, php-format
 msgid "%s likes this."
 msgstr ""
 
-#: ../../include/conversation.php:635
+#: ../../include/conversation.php:654
 #, php-format
 msgid "%s doesn't like this."
 msgstr ""
 
-#: ../../include/conversation.php:639
+#: ../../include/conversation.php:658
 #, php-format
 msgid "<span  %1$s>%2$d people</span> like this."
 msgstr ""
 
-#: ../../include/conversation.php:641
+#: ../../include/conversation.php:660
 #, php-format
 msgid "<span  %1$s>%2$d people</span> don't like this."
 msgstr ""
 
-#: ../../include/conversation.php:647
+#: ../../include/conversation.php:666
 msgid "and"
 msgstr ""
 
-#: ../../include/conversation.php:650
+#: ../../include/conversation.php:669
 #, php-format
 msgid ", and %d other people"
 msgstr ""
 
-#: ../../include/conversation.php:651
+#: ../../include/conversation.php:670
 #, php-format
 msgid "%s like this."
 msgstr ""
 
-#: ../../include/conversation.php:651
+#: ../../include/conversation.php:670
 #, php-format
 msgid "%s don't like this."
 msgstr ""
