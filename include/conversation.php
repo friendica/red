@@ -672,3 +672,88 @@ function format_like($cnt,$arr,$type,$id) {
 	}
 	return $o;
 }}
+
+
+function status_editor($a,$x) {
+
+	$o = '';
+		
+	$geotag = (($x['allow_location']) ? load_view_file('view/jot_geotag.tpl') : '');
+
+		$tpl = load_view_file('view/jot-header.tpl');
+	
+		$a->page['htmlhead'] .= replace_macros($tpl, array(
+			'$baseurl' => $a->get_baseurl(),
+			'$geotag' => $geotag,
+			'$nickname' => $x['nickname'],
+			'$linkurl' => t('Please enter a link URL:'),
+			'$utubeurl' => t('Please enter a YouTube link:'),
+			'$vidurl' => t("Please enter a video\x28.ogg\x29 link/URL:"),
+			'$audurl' => t("Please enter an audio\x28.ogg\x29 link/URL:"),
+			'$whereareu' => t('Where are you right now?'),
+			'$title' => t('Enter a title for this item') 
+		));
+
+
+		$tpl = load_view_file("view/jot.tpl");
+		
+		$jotplugins = '';
+		$jotnets = '';
+
+		$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
+
+		$mail_enabled = false;
+		$pubmail_enabled = false;
+
+		if(($x['is_owner']) && (! $mail_disabled)) {
+			$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d AND `server` != '' LIMIT 1",
+				intval(local_user())
+			);
+			if(count($r)) {
+				$mail_enabled = true;
+				if(intval($r[0]['pubmail']))
+					$pubmail_enabled = true;
+			}
+		}
+
+		if($mail_enabled) {
+	       $selected = (($pubmail_enabled) ? ' checked="checked" ' : '');
+			$jotnets .= '<div class="profile-jot-net"><input type="checkbox" name="pubmail_enable"' . $selected . 'value="1" /> '
+           	. t("Post to Email") . '</div>';
+		}
+
+		call_hooks('jot_tool', $jotplugins);
+		call_hooks('jot_networks', $jotnets);
+
+		$tpl = replace_macros($tpl,array('$jotplugins' => $jotplugins));	
+
+		$o .= replace_macros($tpl,array(
+			'$return_path' => $a->cmd,
+			'$action' => 'item',
+			'$share' => t('Share'),
+			'$upload' => t('Upload photo'),
+			'$weblink' => t('Insert web link'),
+			'$youtube' => t('Insert YouTube video'),
+			'$video' => t('Insert Vorbis [.ogg] video'),
+			'$audio' => t('Insert Vorbis [.ogg] audio'),
+			'$setloc' => t('Set your location'),
+			'$noloc' => t('Clear browser location'),
+			'$title' => t('Set title'),
+			'$wait' => t('Please wait'),
+			'$permset' => t('Permission settings'),
+			'$content' => '',
+			'$post_id' => '',
+			'$baseurl' => $a->get_baseurl(),
+			'$defloc' => $x['default-location'],
+			'$visitor' => $x['visitor'],
+			'$emailcc' => t('CC: email addresses'),
+			'$jotnets' => $jotnets,
+			'$emtitle' => t('Example: bob@example.com, mary@example.com'),
+			'$lockstate' => $x['lockstate'],
+			'$acl' => $x['acl'],
+			'$bang' => $x['bang'],
+			'$profile_uid' => $x['profile_uid'],
+		));
+
+	return $o;
+}

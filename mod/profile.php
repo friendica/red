@@ -120,88 +120,19 @@ function profile_content(&$a, $update = 0) {
 
 		if(can_write_wall($a,$a->profile['profile_uid'])) {
 
-			$geotag = ((($is_owner || $commvisitor) && $a->profile['allow_location']) ? load_view_file('view/jot_geotag.tpl') : '');
+			$x = array(
+				'is_owner' => $is_owner,
+            	'allow_location' => ((($is_owner || $commvisitor) && $a->profile['allow_location']) ? true : false),
+	            'default_location' => (($is_owner) ? $a->user['default-location'] : ''),
+    	        'nickname' => $a->profile['nickname'],
+        	    'lockstate' => (((is_array($a->user) && ((strlen($a->user['allow_cid'])) || (strlen($a->user['allow_gid'])) || (strlen($a->user['deny_cid'])) || (strlen($a->user['deny_gid']))))) ? 'lock' : 'unlock'),
+            	'acl' => (($is_owner) ? populate_acl($a->user, $celeb) : ''),
+	            'bang' => '',
+    	        'visitor' => (($is_owner || $commvisitor) ? 'block' : 'none'),
+        	    'profile_uid' => $a->profile['profile_uid']
+        	);
 
-			$tpl = load_view_file('view/jot-header.tpl');
-	
-			$a->page['htmlhead'] .= replace_macros($tpl, array(
-				'$baseurl' => $a->get_baseurl(),
-				'$geotag'  => $geotag,
-				'$nickname' => $a->profile['nickname'],
-				'$linkurl' => t('Please enter a link URL:'),
-				'$utubeurl' => t('Please enter a YouTube link:'),
-				'$vidurl' => t("Please enter a video\x28.ogg\x29 link/URL:"),
-				'$audurl' => t("Please enter an audio\x28.ogg\x29 link/URL:"),
-				'$whereareu' => t('Where are you right now?'),
-				'$title' => t('Enter a title for this item') 
-			));
-
-			require_once('include/acl_selectors.php');
-
-			$tpl = load_view_file('view/jot.tpl');
-
-			if(is_array($a->user) && ((strlen($a->user['allow_cid'])) || (strlen($a->user['allow_gid'])) || (strlen($a->user['deny_cid'])) || (strlen($a->user['deny_gid']))))
-				$lockstate = 'lock';
-			else
-				$lockstate = 'unlock';
-       
-			$jotplugins = '';
-			$jotnets = '';
-
-			$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
-
-			$mail_enabled = false;
-			$pubmail_enabled = false;
-
-			if(($is_owner) && (! $mail_disabled)) {
-				$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d AND `server` != '' LIMIT 1",
-					intval(local_user())
-				);
-				if(count($r)) {
-					$mail_enabled = true;
-					if(intval($r[0]['pubmail']))
-						$pubmail_enabled = true;
-				}
-			}
-			if($mail_enabled) {
-		       $selected = (($pubmail_enabled) ? ' checked="checked" ' : '');
-				$jotnets .= '<div class="profile-jot-net"><input type="checkbox" name="pubmail_enable"' . $selected . 'value="1" /> '
-            	. t("Post to Email") . '</div>';
-			}
-					
-			call_hooks('jot_tool', $jotplugins); 
-
-			call_hooks('jot_networks', $jotnets);
-
-			$tpl = replace_macros($tpl,array('$jotplugins' => $jotplugins));	
-
-			$o .= replace_macros($tpl,array(
-				'$baseurl' => $a->get_baseurl(),
-				'$action' => 'item',
-				'$share' => t('Share'),
-				'$upload' => t('Upload photo'),
-				'$weblink' => t('Insert web link'),
-				'$youtube' => t('Insert YouTube video'),
-				'$video' => t('Insert Vorbis [.ogg] video'),
-				'$audio' => t('Insert Vorbis [.ogg] audio'),
-				'$setloc' => t('Set your location'),
-				'$noloc' => t('Clear browser location'),
-				'$title' => t('Set title'),
-				'$wait' => t('Please wait'),
-				'$permset' => t('Permission settings'),
-				'$content' => '',
-				'$post_id' => '',
-				'$defloc' => (($is_owner) ? $a->user['default-location'] : ''),
-				'$return_path' => $a->cmd,
-				'$visitor' => (($is_owner || $commvisitor) ? 'block' : 'none'),
-				'$lockstate' => $lockstate,
-				'$emailcc' => t('CC: email addresses'),
-				'$jotnets' => $jotnets,
-				'$emtitle' => t('Example: bob@example.com, mary@example.com'),
-				'$bang' => '',
-				'$acl' => (($is_owner) ? populate_acl($a->user, $celeb) : ''),
-				'$profile_uid' => $a->profile['profile_uid']
-			));
+        	$o .= status_editor($a,$x);
 		}
 
 		// This is ugly, but we can't pass the profile_uid through the session to the ajax updater,
