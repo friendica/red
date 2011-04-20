@@ -18,12 +18,12 @@ function editpost_content(&$a) {
 		return;
 	}
 
-	$r = q("SELECT * FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+	$itm = q("SELECT * FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		intval($post_id),
 		intval(local_user())
 	);
 
-	if(! count($r)) {
+	if(! count($itm)) {
 		notice( t('Item not found') . EOL);
 		return;
 	}
@@ -94,7 +94,7 @@ function editpost_content(&$a) {
 		'$noloc' => t('Clear browser location'),
 		'$wait' => t('Please wait'),
 		'$permset' => t('Permission settings'),
-		'$content' => $r[0]['body'],
+		'$content' => $itm[0]['body'],
 		'$post_id' => $post_id,
 		'$baseurl' => $a->get_baseurl(),
 		'$defloc' => $a->user['default-location'],
