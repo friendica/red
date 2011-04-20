@@ -274,6 +274,7 @@ function contacts_content(&$a) {
 			'$ignorecont' => t('Ignore contact'),
 			'$altcrepair' => t('Repair contact URL settings'),
 			'$lblcrepair' => t("Repair contact URL settings \x28WARNING: Advanced\x29"),
+			'$lblrecent' => t('View conversations'),
 			'$delete' => t('Delete contact'),
 			'$poll_interval' => contact_poll_interval($r[0]['priority']),
 			'$lastupdtext' => t('Last updated: '),

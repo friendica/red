@@ -42,6 +42,8 @@ $insecure
 $blocked
 $ignored
 
+<div id="view-recent-wrapper"><a href="network/?cid=$contact_id" id="contact-view-recent">$lblrecent</a></div>
+
 <div id="contact-edit-info-wrapper">
 <h4>$lbl_info1</h4>
 <textarea id="contact-edit-info" rows="10" cols="72" name="info" >$info</textarea>

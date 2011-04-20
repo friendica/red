@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.954\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-19 20:49-0700\n"
+"POT-Creation-Date: 2011-04-19 21:09-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -979,15 +979,15 @@ msgstr ""
 msgid "Contact has been removed."
 msgstr ""
 
-#: ../../mod/contacts.php:228 ../../mod/contacts.php:362
+#: ../../mod/contacts.php:228 ../../mod/contacts.php:363
 msgid "Mutual Friendship"
 msgstr ""
 
-#: ../../mod/contacts.php:232 ../../mod/contacts.php:366
+#: ../../mod/contacts.php:232 ../../mod/contacts.php:367
 msgid "is a fan of yours"
 msgstr ""
 
-#: ../../mod/contacts.php:237 ../../mod/contacts.php:370
+#: ../../mod/contacts.php:237 ../../mod/contacts.php:371
 msgid "you are a fan of"
 msgstr ""
 
@@ -1073,71 +1073,75 @@ msgid "Repair contact URL settings (WARNING: Advanced)"
 msgstr ""
 
 #: ../../mod/contacts.php:277
+msgid "View conversations"
+msgstr ""
+
+#: ../../mod/contacts.php:278
 msgid "Delete contact"
 msgstr ""
 
-#: ../../mod/contacts.php:279
+#: ../../mod/contacts.php:280
 msgid "Last updated: "
 msgstr ""
 
-#: ../../mod/contacts.php:280
+#: ../../mod/contacts.php:281
 msgid "Update public posts: "
 msgstr ""
 
-#: ../../mod/contacts.php:282
+#: ../../mod/contacts.php:283
 msgid "Update now"
 msgstr ""
 
-#: ../../mod/contacts.php:285
+#: ../../mod/contacts.php:286
 msgid "Unblock this contact"
 msgstr ""
 
-#: ../../mod/contacts.php:285
+#: ../../mod/contacts.php:286
 msgid "Block this contact"
 msgstr ""
 
-#: ../../mod/contacts.php:286
+#: ../../mod/contacts.php:287
 msgid "Unignore this contact"
 msgstr ""
 
-#: ../../mod/contacts.php:286
+#: ../../mod/contacts.php:287
 msgid "Ignore this contact"
 msgstr ""
 
-#: ../../mod/contacts.php:289
+#: ../../mod/contacts.php:290
 msgid "Currently blocked"
 msgstr ""
 
-#: ../../mod/contacts.php:290
+#: ../../mod/contacts.php:291
 msgid "Currently ignored"
 msgstr ""
 
-#: ../../mod/contacts.php:321 ../../include/nav.php:110
+#: ../../mod/contacts.php:322 ../../include/nav.php:110
 #: ../../include/acl_selectors.php:143 ../../include/acl_selectors.php:158
 msgid "Contacts"
 msgstr ""
 
-#: ../../mod/contacts.php:323
+#: ../../mod/contacts.php:324
 msgid "Show Blocked Connections"
 msgstr ""
 
-#: ../../mod/contacts.php:323
+#: ../../mod/contacts.php:324
 msgid "Hide Blocked Connections"
 msgstr ""
 
-#: ../../mod/contacts.php:325 ../../mod/directory.php:38
+#: ../../mod/contacts.php:326 ../../mod/directory.php:38
 msgid "Finding: "
 msgstr ""
 
-#: ../../mod/contacts.php:326 ../../mod/directory.php:40
+#: ../../mod/contacts.php:327 ../../mod/directory.php:40
 msgid "Find"
 msgstr ""
 
-#: ../../mod/contacts.php:386 ../../mod/viewcontacts.php:44
+#: ../../mod/contacts.php:387 ../../mod/viewcontacts.php:44
 msgid "Visit $username's profile"
 msgstr ""
 
-#: ../../mod/contacts.php:387 ../../include/conversation.php:584
+#: ../../mod/contacts.php:388 ../../include/conversation.php:584
 msgid "Edit contact"
 msgstr ""
 
@@ -1550,11 +1554,15 @@ msgstr ""
 msgid "Contact: "
 msgstr ""
 
-#: ../../mod/network.php:224
+#: ../../mod/network.php:223
+msgid "Private messages to this person are at risk of public disclosure."
+msgstr ""
+
+#: ../../mod/network.php:228
 msgid "Invalid contact."
 msgstr ""
 
-#: ../../mod/network.php:323 ../../mod/register.php:450
+#: ../../mod/network.php:327 ../../mod/register.php:450
 #: ../../mod/profile.php:322 ../../mod/display.php:142
 msgid ""
 "Shared content is covered by the <a href=\"http://creativecommons.org/"
