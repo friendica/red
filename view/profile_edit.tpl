@@ -136,7 +136,7 @@ $sexual
 
 <div id="profile-edit-pubkeywords-wrapper" >
 <label id="profile-edit-pubkeywords-label" for="profile-edit-pubkeywords" >$lbl_pubkey </label>
-<input type="text" size="32" name="pub_keywords" id="profile-edit-pubkeywords" title="lbl_ex2" value="$pub_keywords" />
+<input type="text" size="32" name="pub_keywords" id="profile-edit-pubkeywords" title="$lbl_ex2" value="$pub_keywords" />
 </div><div id="profile-edit-pubkeywords-desc">$lbl_pubdsc</div>
 <div id="profile-edit-pubkeywords-end"></div>
 
