@@ -2,7 +2,7 @@
 
 set_time_limit(0);
 
-define ( 'FRIENDIKA_VERSION',      '2.1.954' );
+define ( 'FRIENDIKA_VERSION',      '2.1.955' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
 define ( 'DB_UPDATE_VERSION',      1053      );
 
@@ -2252,8 +2252,15 @@ function profile_sidebar($profile) {
 
 	$photo = '<div id="profile-photo-wrapper"><img class="photo" src="' . $profile['photo'] . '" alt="' . $profile['name'] . '" /></div>';
 
+	// don't show connect link to yourself
+	
 	$connect = (($profile['uid'] != local_user()) ? '<li><a id="dfrn-request-link" href="dfrn_request/' . $profile['nickname'] . '">' . t('Connect') . '</a></li>' : '');
- 
+
+	// don't show connect link to authenticated visitors either
+
+	if((remote_user()) && ($_SESSION['visitor_visiting'] == $profile['uid']))
+		$connect = ''; 
+
 	if((x($profile,'address') == 1) 
 		|| (x($profile,'locality') == 1) 
 		|| (x($profile,'region') == 1) 
