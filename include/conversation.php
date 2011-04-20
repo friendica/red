@@ -58,7 +58,7 @@ function localize_item(&$item){
 		$B = '[url=' . $Blink . ']' . $Bname . '[/url]';
 		if ($Bphoto!="") $Bphoto = '[url=' . $Blink . '][img]' . $Bphoto . '[/img][/url]';
 
-		$item['body'] = sprintf(t('%1$s is now friends with %2$s'), $A, $B)."\n\n\n".$Bphoto;
+		$item['body'] = sprintf( t('%1$s is now friends with %2$s'), $A, $B)."\n\n\n".$Bphoto;
 
 	}
         
