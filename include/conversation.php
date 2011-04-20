@@ -532,7 +532,7 @@ function item_photo_menu($item){
 	$pm_url="";
 
 	$status_link="";
-	$photo_link="";
+	$photos_link="";
 	$posts_link="";
 	$profile_link   = ((strlen($item['author-link']))   ? $item['author-link'] : $item['url']);
 	$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
