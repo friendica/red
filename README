@@ -38,9 +38,12 @@ contacts.
 They may include most any service which provides a syndication feed (both RSS
 and Atom). This allows you to view communications from friends in other 
 diverse social networks - such as Diaspora, Google Buzz, and millions of 
-Wordpress blogs, news services, and other websites. Over time we will try to
-build two-way bridges to many of these services so that you can freely
-interact in both directions with anybody who allows it. 
+Wordpress blogs, news services, and other websites. You can also import
+contacts from (and write to) anybody that is accessible from your email
+INBOX and view them in your social stream. Over time we will try to
+build two-way bridges to other services so that you can freely
+interact in both directions with anybody on an accessible network that 
+allows it. 
 
 	Communications between Friendika servers are private and encrypted, 
 using military grade encryption - and require mutual identity provenance
