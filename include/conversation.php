@@ -533,6 +533,7 @@ function item_photo_menu($item){
 
 	$status_link="";
 	$photo_link="";
+	$posts_link="";
 	$profile_link   = ((strlen($item['author-link']))   ? $item['author-link'] : $item['url']);
 	$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 
@@ -564,6 +565,7 @@ function item_photo_menu($item){
 
 		if((isset($cid)) && (! $item['self'])) {
 			$contact_url = $a->get_baseurl() . '/contacts/' . $cid;
+			$posts_link = $a->get_baseurl() . '/network/?cid=' . $cid;
 			if($item['network'] === 'dfrn') {
 				$status_link = $redir . "?url=status";
 				$profile_link = $redir . "?url=profile";
@@ -577,7 +579,8 @@ function item_photo_menu($item){
 	$menu = Array(
 		t("View status") => $status_link,
 		t("View profile") => $profile_link,
-		t("View photos") => $photos_link,		
+		t("View photos") => $photos_link,
+		t("View recent") => $posts_link,		
 		t("Edit contact") => $contact_url,
 		t("Send PM") => $pm_url,
 	);

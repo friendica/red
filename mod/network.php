@@ -15,9 +15,9 @@ function network_init(&$a) {
 	$a->page['aside'] .= '<div id="network-new-link">';
 
 	if(($a->argc > 1 && $a->argv[1] === 'new') || ($a->argc > 2 && $a->argv[2] === 'new'))
-		$a->page['aside'] .= '<a href="' . $a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . '">' . t('Normal View') . '</a>';
+		$a->page['aside'] .= '<a href="' . $a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '">' . t('Normal View') . '</a>';
 	else 
-		$a->page['aside'] .= '<a href="' . $a->get_baseurl() . '/' . $a->cmd . '/new' . '">' . t('New Item View') . '</a>';
+		$a->page['aside'] .= '<a href="' . $a->get_baseurl() . '/' . $a->cmd . '/new' . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '">' . t('New Item View') . '</a>';
 
 	$a->page['aside'] .= '</div>';
 
@@ -41,6 +41,8 @@ function network_content(&$a, $update = 0) {
 	$nouveau = false;
 	require_once('include/acl_selectors.php');
 
+	$cid = ((x($_GET['cid'])) ? intval($_GET['cid']) : 0);
+
 	if(($a->argc > 2) && $a->argv[2] === 'new')
 		$nouveau = true;
 
@@ -49,9 +51,12 @@ function network_content(&$a, $update = 0) {
 			$nouveau = true;
 		else {
 			$group = intval($a->argv[1]);
-			$group_acl = array('allow_gid' => '<' . $group . '>');
+			$def_acl = array('allow_gid' => '<' . $group . '>');
 		}
 	}
+
+	if($cid)
+		$def_acl = array('allow_cid' => '<' . intval($cid) . '>');
 
 	if(! $update) {
 		if(group) {
@@ -146,8 +151,8 @@ function network_content(&$a, $update = 0) {
 			'$jotnets' => $jotnets,
 			'$emtitle' => t('Example: bob@example.com, mary@example.com'),
 			'$lockstate' => $lockstate,
-			'$acl' => populate_acl((($group) ? $group_acl : $a->user), $celeb),
-			'$bang' => (($group) ? '!' : ''),
+			'$acl' => populate_acl((($group || $cid) ? $def_acl : $a->user), $celeb),
+			'$bang' => (($group || $cid) ? '!' : ''),
 			'$profile_uid' => local_user()
 		));
 
@@ -160,6 +165,7 @@ function network_content(&$a, $update = 0) {
 			$o .= '<div id="live-network"></div>' . "\r\n";
 			$o .= "<script> var profile_uid = " . $_SESSION['uid'] 
 				. "; var netargs = '" . substr($a->cmd,8) 
+				. ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '')
 				. "'; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 
 	}
@@ -189,7 +195,7 @@ function network_content(&$a, $update = 0) {
 				killme();
 			notice( t('No such group') . EOL );
 			goaway($a->get_baseurl() . '/network');
-			return; // NOTREACHED
+			// NOTREACHED
 		}
 
 		$contacts = expand_groups(array($group));
@@ -204,8 +210,24 @@ function network_content(&$a, $update = 0) {
 		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `contact-id` IN ( $contact_str )) ";
 		$o = '<h2>' . t('Group: ') . $r[0]['name'] . '</h2>' . $o;
 	}
+	elseif($cid) {
 
-	if((! $group) && (! $update))
+		$r = q("SELECT `id`,`name` FROM `contact` WHERE `id` = %d 
+				AND `blocked` = 0 AND `pending` = 0 LIMIT 1",
+			intval($cid)
+		);
+		if(count($r)) {
+			$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `contact-id` IN ( " . intval($cid) . " )) ";
+			$o = '<h2>' . t('Contact: ') . $r[0]['name'] . '</h2>' . $o;
+		}
+		else {
+			notice( t('Invalid contact.') . EOL);
+			goaway($a->get_baseurl() . '/network');
+			// NOTREACHED
+		}
+	}
+
+	if((! $group) && (! $cid) && (! $update))
 		$o .= get_birthdays();
 
 

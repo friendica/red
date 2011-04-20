@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.1.953\n"
+"Project-Id-Version: 2.1.954\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-18 20:13-0700\n"
+"POT-Creation-Date: 2011-04-19 20:49-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -343,13 +343,13 @@ msgstr ""
 msgid "I don't like this (toggle)"
 msgstr ""
 
-#: ../../mod/photos.php:1089 ../../mod/network.php:129
+#: ../../mod/photos.php:1089 ../../mod/network.php:134
 #: ../../mod/profile.php:181 ../../include/conversation.php:347
 msgid "Share"
 msgstr ""
 
 #: ../../mod/photos.php:1090 ../../mod/editpost.php:95
-#: ../../mod/network.php:138 ../../mod/message.php:190
+#: ../../mod/network.php:143 ../../mod/message.php:190
 #: ../../mod/message.php:324 ../../mod/profile.php:190
 #: ../../include/conversation.php:348
 msgid "Please wait"
@@ -397,7 +397,7 @@ msgstr ""
 msgid "Edit post"
 msgstr ""
 
-#: ../../mod/editpost.php:74 ../../mod/network.php:117
+#: ../../mod/editpost.php:74 ../../mod/network.php:122
 #: ../../mod/profile.php:169
 msgid "Post to Email"
 msgstr ""
@@ -407,54 +407,54 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: ../../mod/editpost.php:88 ../../mod/network.php:130
+#: ../../mod/editpost.php:88 ../../mod/network.php:135
 #: ../../mod/message.php:188 ../../mod/message.php:322
 #: ../../mod/profile.php:182
 msgid "Upload photo"
 msgstr ""
 
-#: ../../mod/editpost.php:89 ../../mod/network.php:131
+#: ../../mod/editpost.php:89 ../../mod/network.php:136
 #: ../../mod/message.php:189 ../../mod/message.php:323
 #: ../../mod/profile.php:183
 msgid "Insert web link"
 msgstr ""
 
-#: ../../mod/editpost.php:90 ../../mod/network.php:132
+#: ../../mod/editpost.php:90 ../../mod/network.php:137
 #: ../../mod/profile.php:184
 msgid "Insert YouTube video"
 msgstr ""
 
-#: ../../mod/editpost.php:91 ../../mod/network.php:133
+#: ../../mod/editpost.php:91 ../../mod/network.php:138
 #: ../../mod/profile.php:185
 msgid "Insert Vorbis [.ogg] video"
 msgstr ""
 
-#: ../../mod/editpost.php:92 ../../mod/network.php:134
+#: ../../mod/editpost.php:92 ../../mod/network.php:139
 #: ../../mod/profile.php:186
 msgid "Insert Vorbis [.ogg] audio"
 msgstr ""
 
-#: ../../mod/editpost.php:93 ../../mod/network.php:135
+#: ../../mod/editpost.php:93 ../../mod/network.php:140
 #: ../../mod/profile.php:187
 msgid "Set your location"
 msgstr ""
 
-#: ../../mod/editpost.php:94 ../../mod/network.php:136
+#: ../../mod/editpost.php:94 ../../mod/network.php:141
 #: ../../mod/profile.php:188
 msgid "Clear browser location"
 msgstr ""
 
-#: ../../mod/editpost.php:96 ../../mod/network.php:139
+#: ../../mod/editpost.php:96 ../../mod/network.php:144
 #: ../../mod/profile.php:191
 msgid "Permission settings"
 msgstr ""
 
-#: ../../mod/editpost.php:102 ../../mod/network.php:145
+#: ../../mod/editpost.php:102 ../../mod/network.php:150
 #: ../../mod/profile.php:198
 msgid "CC: email addresses"
 msgstr ""
 
-#: ../../mod/editpost.php:104 ../../mod/network.php:147
+#: ../../mod/editpost.php:104 ../../mod/network.php:152
 #: ../../mod/profile.php:200
 msgid "Example: bob@example.com, mary@example.com"
 msgstr ""
@@ -528,7 +528,7 @@ msgstr ""
 msgid "Invalid profile URL."
 msgstr ""
 
-#: ../../mod/dfrn_request.php:336
+#: ../../mod/dfrn_request.php:336 ../../mod/follow.php:16
 msgid "Disallowed profile URL."
 msgstr ""
 
@@ -1137,7 +1137,7 @@ msgstr ""
 msgid "Visit $username's profile"
 msgstr ""
 
-#: ../../mod/contacts.php:387 ../../include/conversation.php:581
+#: ../../mod/contacts.php:387 ../../include/conversation.php:584
 msgid "Edit contact"
 msgstr ""
 
@@ -1489,64 +1489,72 @@ msgstr ""
 msgid "New Item View"
 msgstr ""
 
-#: ../../mod/network.php:59
+#: ../../mod/network.php:64
 #, php-format
 msgid "%d member"
 msgid_plural "%d members"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../mod/network.php:60
+#: ../../mod/network.php:65
 #, php-format
 msgid "Warning: This group contains %s from an insecure network."
 msgstr ""
 
-#: ../../mod/network.php:61
+#: ../../mod/network.php:66
 msgid "Private messages to this group are at risk of public disclosure."
 msgstr ""
 
-#: ../../mod/network.php:77 ../../mod/message.php:172
+#: ../../mod/network.php:82 ../../mod/message.php:172
 #: ../../mod/profile.php:131
 msgid "Please enter a link URL:"
 msgstr ""
 
-#: ../../mod/network.php:78 ../../mod/profile.php:132
+#: ../../mod/network.php:83 ../../mod/profile.php:132
 msgid "Please enter a YouTube link:"
 msgstr ""
 
-#: ../../mod/network.php:79 ../../mod/profile.php:133
+#: ../../mod/network.php:84 ../../mod/profile.php:133
 msgid "Please enter a video(.ogg) link/URL:"
 msgstr ""
 
-#: ../../mod/network.php:80 ../../mod/profile.php:134
+#: ../../mod/network.php:85 ../../mod/profile.php:134
 msgid "Please enter an audio(.ogg) link/URL:"
 msgstr ""
 
-#: ../../mod/network.php:81 ../../mod/profile.php:135
+#: ../../mod/network.php:86 ../../mod/profile.php:135
 msgid "Where are you right now?"
 msgstr ""
 
-#: ../../mod/network.php:82 ../../mod/profile.php:136
+#: ../../mod/network.php:87 ../../mod/profile.php:136
 msgid "Enter a title for this item"
 msgstr ""
 
-#: ../../mod/network.php:137 ../../mod/profile.php:189
+#: ../../mod/network.php:142 ../../mod/profile.php:189
 msgid "Set title"
 msgstr ""
 
-#: ../../mod/network.php:190
+#: ../../mod/network.php:196
 msgid "No such group"
 msgstr ""
 
-#: ../../mod/network.php:201
+#: ../../mod/network.php:207
 msgid "Group is empty"
 msgstr ""
 
-#: ../../mod/network.php:205
+#: ../../mod/network.php:211
 msgid "Group: "
 msgstr ""
 
-#: ../../mod/network.php:301 ../../mod/register.php:450
+#: ../../mod/network.php:221
+msgid "Contact: "
+msgstr ""
+
+#: ../../mod/network.php:224
+msgid "Invalid contact."
+msgstr ""
+
+#: ../../mod/network.php:323 ../../mod/register.php:450
 #: ../../mod/profile.php:322 ../../mod/display.php:142
 msgid ""
 "Shared content is covered by the <a href=\"http://creativecommons.org/"
@@ -2055,21 +2063,21 @@ msgstr ""
 msgid "Welcome back "
 msgstr ""
 
-#: ../../mod/follow.php:32 ../../wip/follow2.php:186
+#: ../../mod/follow.php:39 ../../wip/follow2.php:186
 msgid "The profile address specified does not provide adequate information."
 msgstr ""
 
-#: ../../mod/follow.php:38 ../../wip/follow2.php:192
+#: ../../mod/follow.php:45 ../../wip/follow2.php:192
 msgid ""
 "Limited profile. This person will be unable to receive direct/personal "
 "notifications from you."
 msgstr ""
 
-#: ../../mod/follow.php:93 ../../wip/follow2.php:247
+#: ../../mod/follow.php:100 ../../wip/follow2.php:247
 msgid "Unable to retrieve contact information."
 msgstr ""
 
-#: ../../mod/follow.php:139 ../../wip/follow2.php:293
+#: ../../mod/follow.php:146 ../../wip/follow2.php:293
 msgid "following"
 msgstr ""
 
@@ -3162,7 +3170,7 @@ msgstr ""
 msgid "Except For:"
 msgstr ""
 
-#: ../../include/notifier.php:407
+#: ../../include/notifier.php:412
 msgid "(no subject)"
 msgstr ""
 
@@ -3201,57 +3209,61 @@ msgstr ""
 msgid "via Wall-To-Wall:"
 msgstr ""
 
-#: ../../include/conversation.php:578
+#: ../../include/conversation.php:580
 msgid "View status"
 msgstr ""
 
-#: ../../include/conversation.php:579
+#: ../../include/conversation.php:581
 msgid "View profile"
 msgstr ""
 
-#: ../../include/conversation.php:580
+#: ../../include/conversation.php:582
 msgid "View photos"
 msgstr ""
 
-#: ../../include/conversation.php:582
+#: ../../include/conversation.php:583
+msgid "View recent"
+msgstr ""
+
+#: ../../include/conversation.php:585
 msgid "Send PM"
 msgstr ""
 
-#: ../../include/conversation.php:632
+#: ../../include/conversation.php:635
 #, php-format
 msgid "%s likes this."
 msgstr ""
 
-#: ../../include/conversation.php:632
+#: ../../include/conversation.php:635
 #, php-format
 msgid "%s doesn't like this."
 msgstr ""
 
-#: ../../include/conversation.php:636
+#: ../../include/conversation.php:639
 #, php-format
 msgid "<span  %1$s>%2$d people</span> like this."
 msgstr ""
 
-#: ../../include/conversation.php:638
+#: ../../include/conversation.php:641
 #, php-format
 msgid "<span  %1$s>%2$d people</span> don't like this."
 msgstr ""
 
-#: ../../include/conversation.php:644
+#: ../../include/conversation.php:647
 msgid "and"
 msgstr ""
 
-#: ../../include/conversation.php:647
+#: ../../include/conversation.php:650
 #, php-format
 msgid ", and %d other people"
 msgstr ""
 
-#: ../../include/conversation.php:648
+#: ../../include/conversation.php:651
 #, php-format
 msgid "%s like this."
 msgstr ""
 
-#: ../../include/conversation.php:648
+#: ../../include/conversation.php:651
 #, php-format
 msgid "%s don't like this."
 msgstr ""
