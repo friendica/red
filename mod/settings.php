@@ -97,7 +97,7 @@ function settings_post(&$a) {
 			$pass = '';
 			openssl_public_encrypt($mail_pass,$pass,$a->user['pubkey']);
 			q("UPDATE `mailacct` SET `pass` = '%s' WHERE `uid` = %d LIMIT 1",
-					dbesc(hex2bin($pass)),
+					dbesc(bin2hex($pass)),
 					intval(local_user())
 			);
 		}
