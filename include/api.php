@@ -9,76 +9,7 @@
 
 	$API = Array();
 	 
-	class XMLSerializer {
-	
-	    // functions adopted from http://www.sean-barton.co.uk/2009/03/turning-an-array-or-object-into-xml-using-php/
-	
-	    public static function generateValidXmlFromObj(stdClass $obj, $node_block='nodes', $node_name='node') {
-	        $arr = get_object_vars($obj);
-	        return self::generateValidXmlFromArray($arr, $node_block, $node_name);
-	    }
-	
-	    public static function generateValidXmlFromArray($array, $node_block='nodes', $node_name='node') {
-			$attrs="";
-			if ($array instanceof Container){
-				$node_block=$array->name;
-				foreach($array->attrs as $n=>$v){
-					$attrs .= " $n='$v'";
-				}
-			}
-	
-	
-	        $xml = '<?xml version="1.0" encoding="UTF-8" ?>';
-	
-	        $xml .= '<' . $node_block . $attrs. '>';
-	        $xml .= self::generateXmlFromArray($array, $node_name);
-	        $xml .= '</' . $node_block . '>';
-	
-	        return $xml;
-	    }
-	
-	    private static function generateXmlFromArray($array, $node_name) {
-	        $xml = '';
-				
-	        if (is_array($array) || is_object($array)) {
-	            foreach ($array as $key=>$value) {
-	            	$attrs="";
-					if ($value instanceof Container){
-						$node_name=$value->name;
-						foreach($value->attrs as $n=>$v){
-							$attrs .= " $n='$v'";
-						}
-					}		            	
-	                if (is_numeric($key)) {
-	                    $key = $node_name;
-	                }
-	
-	
-	                $xml .= '<' . $key . $attrs.'>' . self::generateXmlFromArray($value, $node_name) . '</' . $key . '>';
-	            }
-	        } else {
-	        	if (is_bool($array)) $array = ($array===true?"true":"false");
-	            $xml = htmlspecialchars($array, ENT_QUOTES);
-	        }
-	
-	        return $xml;
-	    }
-	
-	}
-	
-	// this is used when json and xml are not translatable to arrays
-	// like [{text:'text'},{text:'text2'}]
-	//	and	<statuses type='array'><status><text>text</text></status><status><text>text2</text></status></statuses>
-	class Container extends ArrayObject{
-		public $name;
-		public $attrs=Array();
-		function __construct($name){
-			$this->name = $name;
-			$args = func_get_args();
-			unset($args[0]);
-			call_user_func_array(array(parent,'__construct'), $args);
-		}
-	}
+
 	
 	function api_date($str){
 		//Wed May 23 06:01:13 +0000 2007
@@ -106,8 +37,10 @@
 		$encrypted = hash('whirlpool',trim($_SERVER['PHP_AUTH_PW']));
     		
 		
-			// da auth.php
-		
+			/**
+			 *  next code from mod/auth.php. needs better solution
+			 */
+			
 		// process normal login request
 
 		$r = q("SELECT * FROM `user` WHERE ( `email` = '%s' OR `nickname` = '%s' ) 
@@ -125,7 +58,7 @@
 		$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $record['nickname'];
 		$_SESSION['addr'] = $_SERVER['REMOTE_ADDR'];
 
-		notice( t("Welcome back ") . $record['username'] . EOL);
+		//notice( t("Welcome back ") . $record['username'] . EOL);
 		$a->user = $record;
 
 		if(strlen($a->user['timezone'])) {
@@ -150,60 +83,90 @@
 		header('X-Account-Management-Status: active; name="' . $a->user['username'] . '"; id="' . $a->user['nickname'] .'"');
 	}
 	
+	/**************************
+	 *  MAIN API ENTRY POINT  *
+	 **************************/
 	function api_call(&$a){
 		GLOBAL $API;
 		foreach ($API as $p=>$info){
 			if (strpos($a->query_string, $p)===0){
-				if ($info['auth']===true) api_login($a);
+				if ($info['auth']===true && local_user()===false) {
+						api_login($a);
+				}
+		
+				$type="json";		
+				if (strpos($a->query_string, ".xml")>0) $type="xml";
+				if (strpos($a->query_string, ".json")>0) $type="json";
+				if (strpos($a->query_string, ".rss")>0) $type="rss";
+				if (strpos($a->query_string, ".atom")>0) $type="atom";				
 				
-				$r = call_user_func($info['func'], $a);
+				$r = call_user_func($info['func'], $a, $type);
 				if ($r===false) return;
-				
-				if ($r instanceof Container){
-					$name=NULL; $values=$r;
-				} else {						
-					foreach($r as $name=>$values){}
-				}
-				
-				// return xml
-				if (strpos($a->query_string, ".xml")>0){
-					header ("Content-Type: text/xml");  
-					return XMLSerializer::generateValidXmlFromArray($values, $name);
-				}
-				// return json
-				if (strpos($a->query_string, ".json")>0){
-					header ("Content-Type: application/json");  
-					if ($values instanceof Container) $values= iterator_to_array($values);
-					return json_encode($values);
+
+				switch($type){
+					case "xml":
+						$r = mb_convert_encoding($r, "UTF-8",mb_detect_encoding($r));
+						header ("Content-Type: text/xml");
+						return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
+						break;
+					case "json": 
+						header ("Content-Type: application/json");  
+						return json_encode($r);
+						break;
+					case "rss":
+						header ("Content-Type: application/rss+xml");
+						return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
+						break;
+					case "atom":
+						#header ("Content-Type: application/atom+xml");
+						return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
+						break;
+						
 				}
 				//echo "<pre>"; var_dump($r); die();
 			}
 		}
 		return false;
 	}
+
 	/**
-	 * Returns user info array
+	 * RSS extra info
+	 */
+	function api_rss_extra(&$a, $arr, $user_info){
+		if (is_null($user_info)) $user_info = api_get_user($a);
+		$arr['$rss'] = array(
+			'alternate' => $user_info['url'],
+			'self' => $a->get_baseurl(). "/". $a->query_string,
+			'updated' => api_date(null),
+			'language' => $user_info['language'],
+		);
+		
+		return $arr;
+	}
+	 
+	/**
+	 * Returns user info array.
 	 */
 	function api_get_user(&$a){
 		$user = null;
 		$extra_query = "";
 		if(x($_GET, 'user_id')) {
 			$user = intval($_GET['user_id']);	
-			$extra_query = "AND `user`.`uid` = %d ";
+			$extra_query = "AND `contact`.`id` = %d ";
 		}
 		if(x($_GET, 'screen_name')) {
 			$user = dbesc($_GET['screen_name']);	
-			$extra_query = "AND `user`.`nickname` = '%s' ";
+			$extra_query = "AND `contact`.`nick` = '%s' ";
 		}
 		
 		if ($user===null){
 			list($user, $null) = explode(".",$a->argv[3]);
 			if(is_numeric($user)){
 				$user = intval($user);
-				$extra_query = "AND `user`.`uid` = %d ";
+				$extra_query = "AND `contact`.`id` = %d ";
 			} else {
 				$user = dbesc($user);
-				$extra_query = "AND `user`.`nickname` = '%s' ";
+				$extra_query = "AND `contact`.`nick` = '%s' ";
 			}
 		}
 		
@@ -219,7 +182,7 @@
 		
 
 		// user info		
-		$uinfo = q("SELECT * FROM `user`, `contact`
+		$uinfo = q("SELECT *, `contact`.`id` as `cid` FROM `user`, `contact`
 				WHERE `user`.`uid`=`contact`.`uid` AND `contact`.`self`=1
 				$extra_query",
 				$user
@@ -247,7 +210,7 @@
 				
 
 		$ret = Array(
-			'id' => $uinfo[0]['uid'],
+			'id' => $uinfo[0]['cid'],
 			'name' => $uinfo[0]['username'],
 			'screen_name' => $uinfo[0]['nickname'],
 			'location' => $uinfo[0]['default-location'],
@@ -275,11 +238,42 @@
 			'profile_background_image_url' => '',
 			'profile_background_tile' => false,
 			'profile_use_background_image' => false,
-			'notifications' => false,	 
+			'notifications' => false,
+			'verified' => true, #XXX: fix me
+			'followers' => '', #XXX: fix me
+			#'status' => null
 		);
-		
+	
 		return $ret;
 		
+	}
+
+	/**
+	 * apply xmlify() to all values of array $val, recursively
+	 */
+	function api_xmlify($val){
+		if (is_bool($val)) return $val?"true":"false";
+		if (is_array($val)) return array_map('api_xmlify', $val);
+		return xmlify($val);
+	}
+
+	/**
+	 *  load api $templatename for $type and replace $data array
+	 */
+	function api_apply_template($templatename, $type, $data){
+		switch($type){
+			case "rss":
+			case "atom":
+			case "xml":
+				$data = api_xmlify($data);
+				$tpl = load_view_file("view/api_".$templatename."_".$type.".tpl");
+				$ret = replace_macros($tpl, $data);
+				break;
+			case "json":
+				$ret = $data;
+				break;
+		}
+		return $ret;
 	}
 	
 	/**
@@ -291,11 +285,12 @@
 	 * returns a 401 status code and an error message if not. 
 	 * http://developer.twitter.com/doc/get/account/verify_credentials
 	 */
-	function api_account_verify_credentials(&$a){
+	function api_account_verify_credentials(&$a, $type){
 		if (local_user()===false) return false;
 		$user_info = api_get_user($a);
-		$ret = new Container("user", $user_info);
-		return $ret;
+		
+		return api_apply_template("user", $type, array('$user' => $user_info));
+
 	}
 	api_register_func('api/account/verify_credentials','api_account_verify_credentials', true);
 	 	
@@ -306,39 +301,50 @@
 	 * The author's most recent status will be returned inline.
 	 * http://developer.twitter.com/doc/get/users/show
 	 */
-	function api_users_show(&$a){
+	function api_users_show(&$a, $type){
 		$user_info = api_get_user($a);
-		
 		// get last public wall message
-		$lastwall = q("SELECT * FROM `item`
-				WHERE  `uid` = %d
-				AND `type`='wall' 
-				AND `allow_cid`='' AND `allow_gid`='' AND `deny_cid`='' AND `deny_gid`=''
-				ORDER BY `created` DESC LIMIT 1",
-				intval($user_info['uid'])
-		);
-	
-		//echo "<pre>"; var_dump($lastwall); die();
-		
-		$user_info['status'] = array(
-			'created_at' => api_date($lastwall[0]['created']),
-			'id' => $lastwall[0]['id'],
-			'text' => bbcode($lastwall[0]['body']),
-			'source' => 'web',
-			'truncated' => false,
-			'in_reply_to_status_id' => '',
-			'in_reply_to_user_id' => '',
-			'favorited' => false,
-			'in_reply_to_screen_name' => '',
-			'geo' => '',
-			'coordinates' => $lastwall[0]['coord'],
-			'place' => $lastwall[0]['location'],
-			'contributors' => ''					
+		$lastwall = q("SELECT `item`.*, `i`.`contact-id` as `reply_uid`, `i`.`nick` as `reply_author`
+				FROM `item`, `contact`,
+					(SELECT `item`.`id`, `item`.`contact-id`, `contact`.`nick` FROM `item`,`contact` WHERE `contact`.`id`=`item`.`contact-id`) as `i` 
+				WHERE `item`.`contact-id` = %d
+					AND `i`.`id` = `item`.`parent`
+					AND `contact`.`id`=`item`.`contact-id` AND `contact`.`self`=1
+					AND `type`!='activity'
+					AND `item`.`allow_cid`='' AND `item`.`allow_gid`='' AND `item`.`deny_cid`='' AND `item`.`deny_gid`=''
+				ORDER BY `created` DESC 
+				LIMIT 1",
+				intval($user_info['id'])
 		);
 
-		$ret = Array('user' => $user_info);
-		
-		return $ret;
+		if (count($lastwall)>0){
+			$lastwall = $lastwall[0];
+			
+			$in_reply_to_status_id = '';
+			$in_reply_to_user_id = '';
+			$in_reply_to_screen_name = '';
+			if ($lastwall['parent']!=$lastwall['id']) {
+				$in_reply_to_status_id=$lastwall['parent'];
+				$in_reply_to_user_id = $lastwall['reply_uid'];
+				$in_reply_to_screen_name = $lastwall['reply_author'];
+			}  
+			$user_info['status'] = array(
+				'created_at' => api_date($lastwall['created']),
+				'id' => $lastwall['contact-id'],
+				'text' => strip_tags(bbcode($lastwall['body'])),
+				'source' => 'web',
+				'truncated' => false,
+				'in_reply_to_status_id' => $in_reply_to_status_id,
+				'in_reply_to_user_id' => $in_reply_to_user_id,
+				'favorited' => false,
+				'in_reply_to_screen_name' => $in_reply_to_screen_name,
+				'geo' => '',
+				'coordinates' => $lastwall['coord'],
+				'place' => $lastwall['location'],
+				'contributors' => ''					
+			);
+		}
+		return  api_apply_template("user", $type, array('$user' => $user_info));
 		
 	}
 	api_register_func('api/users/show','api_users_show');
@@ -346,21 +352,24 @@
 	/**
 	 * 
 	 * http://developer.twitter.com/doc/get/statuses/home_timeline
+	 * 
+	 * TODO: Optional parameters
+	 * TODO: Add reply info
 	 */
-	function api_statuses_home_timeline(&$a){
+	function api_statuses_home_timeline(&$a, $type){
 		if (local_user()===false) return false;
 		
 		$user_info = api_get_user($a);
 		
 		// get last newtork messages
 		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` ) ";
-		
+
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
 			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 			FROM `item`, `contact`, `user`
-			WHERE `item`.`uid` = %d AND `user`.`uid` = `item`.`uid` 
+			WHERE `item`.`contact-id` = %d AND `user`.`uid` = `item`.`uid` 
 			AND `item`.`visible` = 1 AND `item`.`deleted` = 0
 			AND `contact`.`id` = `item`.`contact-id`
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
@@ -369,15 +378,15 @@
 			intval($user_info['id']),
 			0,20
 		);
-		$ret = new Container("statuses");
-		$ret->attrs['type']='array';
+		$ret = Array();
 
 		foreach($r as $item) {
-			$status = new Container('status', array(
+			$status = array(
 				'created_at'=> api_date($item['created']),
 				'id'		=> $item['id'],
 				'text'		=> strip_tags(bbcode($item['body'])),
-				'source'	=> 'web', 	#XXX: Fix me!
+				'source'	=> 'web',
+				'url'		=> ($item['plink']!=''?$item['plink']:$item['author-link']),
 				'truncated' => False,
 				'in_reply_to_status_id' => ($item['parent']!=$item['id']?$item['id']:''),
 				'in_reply_to_user_id' => '',
@@ -389,69 +398,18 @@
 				'contributors' => '',
 				'annotations'  => '',
 				'entities'  => '',
-				'user' => $user_info				
-			
-			));
+				'user' =>  $user_info				
+			);
 			$ret[]=$status;
 		};
 		
-		return $ret;
+		$data = array('$statuses' => $ret);
+		if ($type=="rss" || $type=="atom") $data = api_rss_extra($a, $data, $user_info);
+		
+		return  api_apply_template("timeline", $type, $data);
 	}
 	api_register_func('api/statuses/home_timeline','api_statuses_home_timeline', true);
-	
-	/*
-	 * http://developer.twitter.com/doc/get/statuses/user_timeline
-	 */
-	function api_statuses_user_timeline(&$a){
-			
-		$user_info = api_get_user($a);
-		
-		// get last public wall message
-		$lastwall = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
-			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-			FROM `item`, `contact`, `user`
-			WHERE `item`.`uid` = %d AND `user`.`uid` = `item`.`uid` 
-			AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-			AND `contact`.`id` = `item`.`contact-id`
-			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-			
-			AND `item`.`type`='wall' 
-			AND `item`.`allow_cid`='' AND `item`.`allow_gid`='' AND `item`.`deny_cid`='' AND `item`.`deny_gid`=''
-			
-			ORDER BY `item`.`created` DESC LIMIT %d ,%d ",
-			intval($user_info['id']),
-			0, 20
-		);
-		
-		
-		$ret = new Container("statuses");
-		$ret->attrs['type']='array';
-		
-		foreach($lastwall as $item) {
-			$status = new Container('status', array(
-				'created_at'=> api_date($item['created']),
-				'id'		=> $item['id'],
-				'text'		=> strip_tags(bbcode($item['body'])),
-				'source'	=> 'web', 	#XXX: Fix me!
-				'truncated' => False,
-				'in_reply_to_status_id' => '',
-				'in_reply_to_user_id' => '',
-				'favorited' => false,
-				'in_reply_to_screen_name' => '',
-				'geo' => '',
-				'coordinates' => $item['coord'],
-				'place' => $item['location'],
-				'contributors' => '',
-				'annotations'  => '',
-				'entities'  => '',
-				'user' => $user_info
-			));
-			$ret[]=$status;
-		};
-		
-		return $ret;
-	}
-	api_register_func('api/statuses/user_timeline','api_statuses_user_timeline', true);
+	api_register_func('api/statuses/friends_timeline','api_statuses_home_timeline', true);
+	api_register_func('api/statuses/user_timeline','api_statuses_home_timeline', true);
+	# TODO: user_timeline should be profile view
 	
