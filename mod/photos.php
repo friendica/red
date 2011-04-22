@@ -6,6 +6,10 @@ require_once('include/bbcode.php');
 
 function photos_init(&$a) {
 
+
+	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+		return;
+	}
 	$o = '';
 
 	if($a->argc > 1) {
@@ -655,6 +659,12 @@ function photos_content(&$a) {
 	// photos/name/album/xxxxx/edit
 	// photos/name/image/xxxxx
 	// photos/name/image/xxxxx/edit
+
+
+	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+		notice( t('Public access denied.') . EOL);
+		return;
+	}
 
 
 	require_once('include/bbcode.php');

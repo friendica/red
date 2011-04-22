@@ -13,6 +13,12 @@ function directory_post(&$a) {
 
 
 function directory_content(&$a) {
+
+	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+		notice( t('Public access denied.') . EOL);
+		return;
+	}
+
 	$o = '';
 	$o .= '<script>	$(document).ready(function() { $(\'#nav-directory-link\').addClass(\'nav-selected\'); });</script>';
 	if(x($_SESSION,'theme'))

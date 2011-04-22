@@ -2,6 +2,9 @@
 
 function profile_init(&$a) {
 
+	if((get_config('system','block_public')) && (! local_user()) && (! remote_user()))
+		return;
+
 	if($a->argc > 1)
 		$which = $a->argv[1];
 	else {
@@ -47,6 +50,13 @@ function profile_init(&$a) {
 
 
 function profile_content(&$a, $update = 0) {
+
+	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+		notice( t('Public access denied.') . EOL);
+		return;
+	}
+
+
 
 	require_once("include/bbcode.php");
 	require_once('include/security.php');

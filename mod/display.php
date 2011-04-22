@@ -3,6 +3,11 @@
 
 function display_content(&$a) {
 
+	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+		notice( t('Public access denied.') . EOL);
+		return;
+	}
+
 	require_once("include/bbcode.php");
 	require_once('include/security.php');
 	require_once('include/conversation.php');
