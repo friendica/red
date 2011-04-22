@@ -75,6 +75,17 @@ Config:
 $a->config['system']['allowed_email'] = "sitea.com, *siteb.com";
 ```
 
+**Block Public**
+
+Corporate/Edu enhancement
+
+Set to true to block public access to all otherwise public personal pages on this site unless you are currently logged in. This blocks the viewing of profiles, friends, photos, the site directory and search pages to unauthorised persons. A side effect is that entries from this site will not appear in the global directory. We recommend specifically disabling that also (setting is described elsewhere on this page). Note: this is specifically for sites that desire to be "standalone" and do not wish to be connected to any other Friendika sites. Unauthorised persons will also not be able to request friendship with site members. Default is false. Available in version 2.2 or greater.
+ 
+Config:
+```
+$a->config['system']['block_public'] = true;
+```
+
 
 **Force Publish**
 

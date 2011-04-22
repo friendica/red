@@ -5,7 +5,7 @@ Profiles
 
 Friendika has unlimited profiles. You may use different profiles to show different "sides of yourself" to different audiences.
 
-You always have a profile known as your "default" profile (though you may change the name). This profile is always available to the general public and cannot be hidden. You may (and probably should) restrict the information you make available on your public profile.
+You always have a profile known as your "default" or "public" profile. This profile is always available to the general public and cannot be hidden (there may be rare exceptions on privately run or disconnected sites). You may, and probably should restrict the information you make available on your public profile.
 
 That said, if you want other friends to be able to find you, it helps to have the following information in your public profile...
 
@@ -15,7 +15,7 @@ That said, if you want other friends to be able to find you, it helps to have th
 
 Without this basic information, you could get very lonely here. Most people (even your best friends) will not try and connect with somebody that has a fake name or doesn't contain a real photo.  
 
-In addition, if you'd like to meet people that share some general interests with you, please take a moment and add some "Public Keywords" to your profile. Such as "music, linux, photography" or whatever. You can add as many keywords as you like. Without this, people with similar interests may never know it unless you stumble across them through another friend. 
+In addition, if you'd like to meet people that share some general interests with you, please take a moment and add some "Public Keywords" to your profile. Such as "music, linux, photography" or whatever. You can add as many keywords as you like. 
 
 
 Your default or public profile is also shown to contacts on other networks, since they do not have the ability to view your private profiles. Only members of the Friendika network can see alternate/private profiles.
@@ -41,7 +41,7 @@ Although you may have multiple profiles, you only have one profile photo. This i
 
 **Keywords and Directory Search**
 
-On the site Directory page, you may search for people with published profiles who are on this site. The search is typically for your nickname or part of your full name. However this search will also match against other profile fields - such as gender, location, "about", work, and education. You may also include "Keywords" in your default profile - which may be used to search for common interests with other members. These keywords are *not* displayed on your profile page. You could use these keywords to locate people who share membership in secret societies, or that share a love of fishing (for example) - without making this information visible on your public profile. In Friendika version 2.2 and later there are two sets of Keywords - public and private. Public keywords are used in the friend suggestion tool and although they aren't readily visible, they may be seen by viewing the HTML of your profile page. Private keywords are hidden and secret. (Keywords from earlier releases are all converted into private keywords during upgrade). 
+On the site Directory page, you may search for people with published profiles who are on this site. The search is typically for your nickname or part of your full name. However this search will also match against other profile fields - such as gender, location, "about", work, and education. You may also include "Keywords" in your default profile - which may be used to search for common interests with other members. You have two sets of keywords available - public and private. Private keywords are *not* visible to anybody. You could use these keywords to locate people who share membership in secret societies, or that share a love of fishing (for example) - without making this information visible on your public profile. Public keywords are used in the friend suggestion tool and although they aren't readily visible, they may be seen by viewing the HTML of your profile page.
 
 Directory searches are also able to use "boolean" logic so that you can search for "+lesbian +Florida" and find those who's sexual preference (or keywords) contain the world "lesbian" and that live in Florida. See the section on "Topical Tags" on the [[Tags-and-Mentions]] page for more information on performing boolean searches. 
 

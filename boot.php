@@ -2513,7 +2513,7 @@ function current_theme(){
 	$a = get_app();
 	
 	$system_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : '');
-	$theme_name = ((x($_SESSION,'theme')) ? $_SESSION['theme'] : $system_theme);
+	$theme_name = ((is_array($_SESSION) && x($_SESSION,'theme')) ? $_SESSION['theme'] : $system_theme);
 	
 	if($theme_name && file_exists('view/theme/' . $theme_name . '/style.css'))
 		return($theme_name);
