@@ -12,6 +12,10 @@
 if(! function_exists('dfrn_request_init')) {
 function dfrn_request_init(&$a) {
 
+	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+		return;
+	}
+
 	if($a->argc > 1)
 		$which = $a->argv[1];
 
@@ -583,6 +587,12 @@ function dfrn_request_content(&$a) {
 		 * Normal web request. Display our user's introduction form.
 		 */
  
+		if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+			notice( t('Public access denied.') . EOL);
+			return;
+		}
+
+
 		/**
 		 * Try to auto-fill the profile address
 		 */
