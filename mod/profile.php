@@ -52,8 +52,7 @@ function profile_init(&$a) {
 function profile_content(&$a, $update = 0) {
 
 	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
-		notice( t('Public access denied.') . EOL);
-		return;
+		return login();
 	}
 
 
