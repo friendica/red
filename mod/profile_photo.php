@@ -134,6 +134,11 @@ function profile_photo_content(&$a) {
 		return;
 	}
 	
+	$newuser = false;
+
+	if($a->argc == 2 && $a->argv[1] === 'new')
+		$newuser = true;
+
 	if( $a->argv[1]=='use'){
 		if ($a->argc<3){
 			notice( t('Permission denied.') . EOL );
@@ -188,7 +193,7 @@ function profile_photo_content(&$a) {
 			'$lbl_upfile' => t('Upload File:'),
 			'$title' => t('Upload Profile Photo'),
 			'$submit' => t('Upload'),
-			'$select' => sprintf('%s %s', t('or'), '<a href="'. $a->get_baseurl() . '/photos/' . $a->user['nickname'] . '">' . t('select a photo from your photo albums') . '</a>')
+			'$select' => sprintf('%s %s', t('or'), ($newuser) ? '<a href="' . $a->get_baseurl() . '">' . t('skip this step') . '</a>' : '<a href="'. $a->get_baseurl() . '/photos/' . $a->user['nickname'] . '">' . t('select a photo from your photo albums') . '</a>')
 		));
 
 		return $o;

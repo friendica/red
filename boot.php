@@ -2,7 +2,7 @@
 
 set_time_limit(0);
 
-define ( 'FRIENDIKA_VERSION',      '2.1.956' );
+define ( 'FRIENDIKA_VERSION',      '2.1.958' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
 define ( 'DB_UPDATE_VERSION',      1053      );
 
@@ -2125,7 +2125,7 @@ function smilies($s) {
 	$a = get_app();
 
 	return str_replace(
-	array( '&lt;3', '&lt;/3', '&lt;\\3', ':-)', ';-)', ':-(', ':(', ':-P', ':-"', ':-x', ':-X', ':-D', '8-|', '8-O'),
+	array( '&lt;3', '&lt;/3', '&lt;\\3', ':-)', ';-)', ':-(', ':(', ':-P', ':P', ':-"', ':-x', ':-X', ':-D', '8-|', '8-O'),
 	array(
 		'<img src="' . $a->get_baseurl() . '/images/smiley-heart.gif" alt="<3" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-brokenheart.gif" alt="</3" />',
@@ -2135,6 +2135,7 @@ function smilies($s) {
 		'<img src="' . $a->get_baseurl() . '/images/smiley-frown.gif" alt=":-(" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-frown.gif" alt=":(" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-tongue-out.gif" alt=":-P" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-tongue-out.gif" alt=":P" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-\"" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-x" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-X" />',
