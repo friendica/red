@@ -646,7 +646,17 @@ function fb_consume_stream($uid,$j,$wall = false) {
 				$likedata['author-name'] = $likes->name;
 				$likedata['author-link'] = 'http://facebook.com/profile.php?id=' . $likes->id;
 				$likedata['author-avatar'] = 'https://graph.facebook.com/' . $likes->id . '/picture';
-				$likedata['body'] = sprintf( t('%1$s likes %2$s\'s %3$s'), $likes->name, $orig_post['author-name'], t('post'));
+				
+				$author  = '[url=' . $likedata['author-link'] . ']' . $likedata['author-name'] . '[/url]';
+				$objauthor =  '[url=' . $orig_post['author-link'] . ']' . $orig_post['author-name'] . '[/url]';
+				$post_type = t('status');
+        		$plink = '[url=' . $orig_post['plink'] . ']' . $post_type . '[/url]';
+				$likedata['object-type'] = ACTIVITY_OBJ_NOTE;
+
+				$likedata['body'] = sprintf( t('%1$s likes %2$s\'s %3$s'), $author, $objauthor, $plink);
+				$likedata['object'] = '<object><type>' . ACTIVITY_OBJ_NOTE . '</type><local>1</local>' . 
+					'<id>' . $orig_post['uri'] . '</id><link>' . xmlify('<link rel="alternate" type="text/html" href="' . $orig_post['plink'] . '">') . '</link><title>' . $orig_post['title'] . '</title><content>' . $orig_post['body'] . '</content></object>';  
+
 				$item = item_store($likedata);			
 			}
 		}
