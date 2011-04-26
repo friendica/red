@@ -20,6 +20,8 @@ function notifier_run($argv, $argc){
 	require_once('include/items.php');
 	require_once('include/bbcode.php');
 
+	load_hooks();
+
 	if($argc < 3)
 		return;
 

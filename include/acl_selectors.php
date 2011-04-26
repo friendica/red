@@ -48,7 +48,7 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 
 	$o = '';
 
-	// When used for private messages, we limit correspondence to mutual friends and the selector
+	// When used for private messages, we limit correspondence to mutual DFRN/Friendika friends and the selector
 	// to one recipient. By default our selector allows multiple selects amongst all contacts.
 
 	$sql_extra = '';
@@ -61,7 +61,7 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 		$sql_extra .= " AND `network` IN ( 'dfrn' ) ";
 	}
 	elseif($privatenet) {	
-		$sql_extra .= " AND `network` IN ( 'dfrn', 'mail' ) ";
+		$sql_extra .= " AND `network` IN ( 'dfrn', 'mail', 'face' ) ";
 	}
 
 	if($privmail)
@@ -82,8 +82,6 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 	// e.g. 'network_pre_contact_deny', 'profile_pre_contact_allow'
 
 	call_hooks($a->module . '_pre_' . $selname, $arr);
-
-
 
 	if(count($r)) {
 		foreach($r as $rr) {

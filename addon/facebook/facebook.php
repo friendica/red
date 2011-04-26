@@ -88,12 +88,123 @@ function facebook_init(&$a) {
 				$token = substr($token,0,strpos($token,'&'));
 			set_pconfig($uid,'facebook','access_token',$token);
 			set_pconfig($uid,'facebook','post','1');
+			fb_get_self($uid);
+			fb_get_friends($uid);
+			fb_consume_all($uid);
+
 		}
 
 		// todo: is this a browser session or a server session? where do we go? 
 	}
 
 }
+
+
+function fb_get_self($uid) {
+	$access_token = get_pconfig($uid,'facebook','access_token');
+	if(! $access_token)
+		return;
+	$s = fetch_url('https://graph.facebook.com/me/?access_token=' . $access_token);
+	if($s) {
+		$j = json_decode($s);
+		set_pconfig($uid,'facebook','self_id',(string) $j->id);
+	}
+}
+
+
+
+function fb_get_friends($uid) {
+
+	$access_token = get_pconfig($uid,'facebook','access_token');
+	if(! $access_token)
+		return;
+	$s = fetch_url('https://graph.facebook.com/me/friends?access_token=' . $access_token);
+	if($s) {
+		logger('facebook: fb_get_friends: ' . $s);
+		$j = json_decode($s);
+		logger('facebook: fb_get_friends: json: ' . print_r($j,true));
+		foreach($j->data as $person) {
+			$s = fetch_url('https://graph.facebook.com/' . $person->id . '?access_token=' . $access_token);
+			if($s) {
+				$jp = json_decode($s);
+				logger('fb_get_friends: info: ' . print_r($jp,true));
+
+				// always use numeric link for consistency
+
+				$jp->link = 'http://facebook.com/profile.php?id=' . $person->id;
+
+				// check if we already have a contact
+
+				$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `url` = '%s' LIMIT 1",
+					intval($uid),
+					dbesc($jp->link)
+				);			
+
+				if(count($r)) {
+					continue;
+				}
+				else {
+
+					// create contact record 
+					$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `addr`, `alias`, `notify`, `poll`, 
+						`name`, `nick`, `photo`, `network`, `rel`, `priority`,
+						`writable`, `blocked`, `readonly`, `pending` )
+						VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, 0, 0, 0 ) ",
+						intval($uid),
+						dbesc(datetime_convert()),
+						dbesc($jp->link),
+						dbesc(''),
+						dbesc(''),
+						dbesc($jp->id),
+						dbesc('facebook ' . $jp->id),
+						dbesc($jp->name),
+						dbesc(($jp->nickname) ? $jp->nickname : strtolower($jp->first_name)),
+						dbesc('https://graph.facebook.com/' . $jp->id . '/picture'),
+						dbesc(NETWORK_FACEBOOK),
+						intval(REL_BUD),
+						intval(1),
+						intval(1)
+					);
+				}
+
+				$r = q("SELECT * FROM `contact` WHERE `url` = '%s' AND `uid` = %d LIMIT 1",
+					dbesc($jp->link),
+					intval($uid)
+				);
+
+				if(! count($r)) {
+					continue;
+				}
+
+				$contact = $r[0];
+				$contact_id  = $r[0]['id'];
+
+				require_once("Photo.php");
+
+				$photos = import_profile_photo($r[0]['photo'],$uid,$contact_id);
+
+				$r = q("UPDATE `contact` SET `photo` = '%s', 
+					`thumb` = '%s',
+					`micro` = '%s', 
+					`name-date` = '%s', 
+					`uri-date` = '%s', 
+					`avatar-date` = '%s'
+					WHERE `id` = %d LIMIT 1
+				",
+					dbesc($photos[0]),
+					dbesc($photos[1]),
+					dbesc($photos[2]),
+					dbesc(datetime_convert()),
+					dbesc(datetime_convert()),
+					dbesc(datetime_convert()),
+					intval($contact_id)
+				);			
+
+			}
+		}
+	}
+}
+
 
 function facebook_post(&$a) {
 
@@ -158,6 +269,7 @@ function facebook_install() {
 	register_hook('post_local_end',  'addon/facebook/facebook.php', 'facebook_post_hook');
 	register_hook('jot_networks',    'addon/facebook/facebook.php', 'facebook_jot_nets');
 	register_hook('plugin_settings', 'addon/facebook/facebook.php', 'facebook_plugin_settings');
+	register_hook('cron',            'addon/facebook/facebook.php', 'facebook_cron');
 }
 
 
@@ -165,7 +277,40 @@ function facebook_uninstall() {
 	unregister_hook('post_local_end',  'addon/facebook/facebook.php', 'facebook_post_hook');
 	unregister_hook('jot_networks',    'addon/facebook/facebook.php', 'facebook_jot_nets');
 	unregister_hook('plugin_settings', 'addon/facebook/facebook.php', 'facebook_plugin_settings');
+	unregister_hook('cron',            'addon/facebook/facebook.php', 'facebook_cron');
 }
+
+
+function facebook_cron($a,$b) {
+
+	$last = get_config('facebook','last_poll');
+	
+	if($last) {
+		$next = $last + 3600;
+		if($next > time()) 
+			return;
+	}
+
+	logger('facebook_cron');
+
+	set_config('facebook','last_poll', time());
+
+	$r = q("SELECT * FROM `pconfig` WHERE `cat` = 'facebook' AND `k` = 'post' AND `v` = '1' ");
+	if(count($r)) {
+		foreach($r as $rr) {
+			// check for new friends once a day
+			$last_friend_check = get_pconfig($uid,'facebook','friend_check');
+			if($last_friend_check) 
+				$next_friend_check = $last_friend_check + 86400;
+			if($next_friend_check <= time()) {
+				fb_get_friends($uid);
+				set_pconfig($uid,'facebook','friend_check',time());
+			}
+			fb_consume_all($rr['uid']);
+		}
+	}	
+}
+
 
 
 function facebook_plugin_settings(&$a,&$b) {
@@ -197,9 +342,55 @@ function facebook_post_hook(&$a,&$b) {
 	 * Post to Facebook stream
 	 */
 
+	require_once('include/group.php');
+
 	logger('Facebook post');
 
-	if((local_user()) && (local_user() == $b['uid']) && (! $b['private']) && (! $b['parent'])) {
+	$reply = false;
+	$likes = false;
+
+	if((local_user()) && (local_user() == $b['uid'])) {
+
+		if($b['parent']) {
+			$r = q("SELECT * FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+				intval($b['parent']),
+				intval(local_user())
+			);
+			if(count($r) && substr($r[0]['uri'],0,4) === 'fb::')
+				$reply = substr($r[0]['uri'],4);
+			else
+				return;
+			logger('facebook reply id=' . $reply);
+		}
+
+		if($b['private'] && $reply == false) {
+			$allow_people = expand_acl($b['allow_cid']);
+			$allow_groups = expand_groups(expand_acl($b['allow_gid']));
+			$deny_people  = expand_acl($b['deny_cid']);
+			$deny_groups  = expand_groups(expand_acl($b['deny_gid']));
+
+			$recipients = array_unique(array_merge($allow_people,$allow_groups));
+			$deny = array_unique(array_merge($deny_people,$deny_groups));
+
+			$allow_str = dbesc(implode(', ',$recipients));
+			$r = q("SELECT `notify` FROM `contact` WHERE `id` IN ( $allow_str ) AND `network` = 'face'"); 
+			$allow_arr = array();
+			if(count($r)) 
+				foreach($r as $rr)
+					$allow_arr[] = $rr['notify'];
+
+			$deny_str = dbesc(implode(', ',$deny));
+			$r = q("SELECT `notify` FROM `contact` WHERE `id` IN ( $deny_str ) AND `network` = 'face'"); 
+			$deny_arr = array();
+			if(count($r)) 
+				foreach($r as $rr)
+					$deny_arr[] = $rr['notify'];
+			if((! count($allow_arr)) && (! count($deny_arr)))
+				return;
+		}
+
+		if($b['verb'] == ACTIVITY_LIKE)
+			$likes = true;				
 
 
 		$appid  = get_config('facebook', 'appid'  );
@@ -214,7 +405,7 @@ function facebook_post_hook(&$a,&$b) {
 			$fb_token  = get_pconfig(local_user(),'facebook','access_token');
 
 			logger('facebook: $fb_post: ' . $fb_post . ' $fb_enable: ' . $fb_enable . ' $fb_token: ' . $fb_token,LOGGER_DEBUG); 
-			if($fb_post && $fb_token && $fb_enable) {
+			if($fb_post && $fb_token && ($fb_enable || $b['private'])) {
 				logger('facebook: able to post');
 				require_once('library/facebook.php');
 				require_once('include/bbcode.php');	
@@ -253,9 +444,36 @@ function facebook_post_hook(&$a,&$b) {
 
 				logger('Facebook post: msg=' . $msg, LOGGER_DATA);
 
-				$postvars = array('access_token' => $fb_token, 'message' => $msg);
+				$postvars = array(
+					'access_token' => $fb_token, 
+					'message' => $msg
+				);
 
-				$x = post_url('https://graph.facebook.com/me/feed', $postvars);
+				if(($b['private']) && (! $b['parent'])) {
+					$postvars['privacy'] = '{"value": "CUSTOM", "friends": "SOME_FRIENDS"';
+					if(count($allow_arr))
+						$postvars['privacy'] .= ',"allow": "' . implode(',',$allow_arr) . '"';
+					if(count($deny_arr))
+						$postvars['privacy'] .= ',"deny": "' . implode(',',$deny_arr) . '"';
+					$postvars['privacy'] .= '}';
+
+				}
+
+				if(! $reply) { 
+					if($b['plink'])
+						$postvars['actions'] = '{"name": "' . t('View on Friendika') . '", "link": "' .  $b['plink'] . '"}';
+				}
+
+				if($reply) {
+					$url = 'https://graph.facebook.com/' . $reply . '/' . (($likes) ? 'likes' : 'comments');
+				}
+				else { 
+					$url = 'https://graph.facebook.com/me/feed';
+				}
+				logger('facebook: post to ' . $url);
+				logger('facebook: postvars: ' . print_r($postvars,true));
+
+				$x = post_url($url, $postvars);
 				
 				logger('Facebook post returns: ' . $x, LOGGER_DEBUG);
 
@@ -264,3 +482,231 @@ function facebook_post_hook(&$a,&$b) {
 	}
 }
 
+
+function fb_consume_all($uid) {
+
+	require_once('include/items.php');
+
+	$access_token = get_pconfig($uid,'facebook','access_token');
+	if(! $access_token)
+		return;
+	$s = fetch_url('https://graph.facebook.com/me/feed?access_token=' . $access_token);
+	if($s) {
+		$j = json_decode($s);
+		logger('fb_consume_stream: wall: ' . print_r($j,true), LOGGER_DATA);
+		fb_consume_stream($uid,$j,true);
+	}
+	$s = fetch_url('https://graph.facebook.com/me/home?access_token=' . $access_token);
+	if($s) {
+		$j = json_decode($s);
+		logger('fb_consume_stream: feed: ' . print_r($j,true), LOGGER_DATA);
+		fb_consume_stream($uid,$j,false);
+	}
+
+}
+
+function fb_consume_stream($uid,$j,$wall = false) {
+	$a = get_app();
+
+	$self = q("SELECT * FROM `contact` WHERE `self` = 1 AND `uid` = %d LIMIT 1",
+		intval($uid)
+	);
+
+	$user = q("SELECT `nickname` FROM `user` WHERE `uid` = %d LIMIT 1",
+		intval($uid)
+	);
+	if(count($user))
+		$my_local_url = $a->get_baseurl() . '/profile/' . $user[0]['nickname'];
+
+
+	$self_id = get_pconfig($uid,'facebook','self_id');
+	if(! count($j->data) || (! strlen($self_id)))
+		return;
+
+	foreach($j->data as $entry) {
+		logger('fb_consume: entry: ' . print_r($entry,true), LOGGER_DATA);
+		$datarray = array();
+		$we_posted = false;
+		$app = $entry->application;
+		if($app->id == get_config('facebook','appid') && $wall)
+			$we_posted = true;
+
+		if($we_posted) {
+			$r = q("SELECT * FROM `item` WHERE `wall` = 1 AND `uid` = %d AND `created` > '%s' AND `created` < '%s' AND `deleted` = 0 LIMIT 1",
+				intval($uid),
+				dbesc(datetime_convert('UTC','UTC',$entry->created_time . ' - 1 minute')),
+				dbesc(datetime_convert('UTC','UTC',$entry->created_time . ' + 1 minute'))
+			);
+		}
+		else {
+			$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d AND `deleted` = 0 LIMIT 1",
+				dbesc('fb::' . $entry->id),
+				intval($uid)
+			);
+		}
+		if(count($r)) {
+			$post_exists = true;
+			$orig_post = $r[0];
+			$top_item = $r[0]['id'];
+		}
+		else {
+			$post_exists = false;
+			$orig_post = null;
+		}
+
+		if(! $orig_post) {
+			$datarray['gravity'] = 0;
+			$datarray['uid'] = $uid;
+			$datarray['wall'] = (($wall) ? 1 : 0);
+			$datarray['uri'] = $datarray['parent-uri'] = 'fb::' . $entry->id;
+			$from = $entry->from;
+			if($from->id == $self_id)
+				$datarray['contact-id'] = $self[0]['id'];
+			else {
+				$r = q("SELECT * FROM `contact` WHERE `notify` = '%s' AND `uid` = %d LIMIT 1",
+					dbesc($from->id),
+					intval($uid)
+				);
+				if(count($r))
+					$datarray['contact-id'] = $r[0]['id'];
+			}
+			$datarray['verb'] = ACTIVITY_POST;						
+			if($wall) {
+				$datarray['owner-name'] = $self[0]['name'];
+				$datarray['author-link'] = $self[0]['url'];
+				$datarray['author-avatar'] = $self[0]['thumb'];
+			}
+			$datarray['author-name'] = $from->name;
+			$datarray['author-link'] = 'http://facebook.com/profile.php?id=' . $from->id;
+			$datarray['author-avatar'] = 'https://graph.facebook.com/' . $from->id . '/picture';
+			$datarray['body'] = $entry->message;
+			if($entry->picture)
+				$datarray['body'] .= "\n\n" . '[img]' . $entry->picture . '[/img]';
+			if($entry->link)
+				$datarray['body'] .= "\n" . linkify($entry->link);
+			if($entry->name)
+				$datarray['body'] .= "\n" . $entry->name;
+			if($entry->caption)
+				$datarray['body'] .= "\n" . $entry->caption;
+			if($entry->description)
+				$datarray['body'] .= "\n" . $entry->description;
+			$datarray['created'] = datetime_convert('UTC','UTC',$entry->created_time);
+			$datarray['edited'] = datetime_convert('UTC','UTC',$entry->updated_time);
+			if($entry->privacy && $entry->privacy->value !== 'EVERYONE')
+				$datarray['private'] = 1;			
+			$top_item = item_store($datarray);
+			$r = q("SELECT * FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+				intval($top_item),
+				intval($uid)
+			);			
+			if(count($r))
+				$orig_post = $r[0];
+
+		}
+		$likers = $entry->likes->data;
+		$comments = $entry->comments->data;
+
+		if(is_array($likers)) {
+			foreach($likers as $likes) {
+
+				$r = q("SELECT * FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `verb` = '%s' AND `author-link` = '%s'
+					LIMIT 1",
+					dbesc('fb::' . $entry->id),
+					intval($uid),
+					dbesc(ACTIVITY_LIKE),
+					dbesc('http://facebook.com/profile.php?id=' . $likes->id)
+				);
+				if(count($r))
+					continue;
+					
+				$likedata = array();
+				$likedata['parent'] = $top_item;
+				$likedata['verb'] = ACTIVITY_LIKE;
+
+
+				$likedata['gravity'] = 3;
+				$likedata['uid'] = $uid;
+				$likedata['wall'] = (($wall) ? 1 : 0);
+				$likedata['uri'] = item_new_uri($a->get_baseurl(), $uid);
+				$likedata['parent-uri'] = 'fb::' . $entry->id;
+				if($likes->id == $self_id)
+					$likedata['contact-id'] = $self[0]['id'];
+				else {
+					$r = q("SELECT * FROM `contact` WHERE `notify` = '%s' AND `uid` = %d LIMIT 1",
+						dbesc($likes->id),
+						intval($uid)
+					);
+					if(count($r))
+						$likedata['contact-id'] = $r[0]['id'];
+				}
+				if(! x($likedata,'contact-id'))
+					$likedata['contact-id'] = $orig_post['contact-id'];
+
+				$likedata['verb'] = ACTIVITY_LIKE;						
+				$likedata['author-name'] = $likes->name;
+				$likedata['author-link'] = 'http://facebook.com/profile.php?id=' . $likes->id;
+				$likedata['author-avatar'] = 'https://graph.facebook.com/' . $likes->id . '/picture';
+				$likedata['body'] = sprintf( t('%1$s likes %2$s\'s %3$s'), $likes->name, $orig_post['author-name'], t('post'));
+				$item = item_store($likedata);			
+			}
+		}
+		if(is_array($comments)) {
+			foreach($comments as $cmnt) {
+
+				$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `uri` = '%s' LIMIT 1",
+					intval($uid),
+					dbesc('fb::' . $cmnt->id)
+				);
+				if(count($r))
+					continue;
+
+				$cmntdata = array();
+				$cmntdata['parent'] = $top_item;
+				$cmntdata['verb'] = ACTIVITY_POST;
+				$cmntdata['gravity'] = 6;
+				$cmntdata['uid'] = $uid;
+				$cmntdata['wall'] = (($wall) ? 1 : 0);
+				$cmntdata['uri'] = 'fb::' . $cmnt->id;
+				$cmntdata['parent-uri'] = 'fb::' . $entry->id;
+				if($cmnt->from->id == $self_id) {
+					$cmntdata['contact-id'] = $self[0]['id'];
+					// see if I already posted it here locally and we're now getting it back from FB
+					$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `created` > '%s' AND `created` < '%s' 
+						AND `parent-uri` = '%s' AND `author-link` = '%s' LIMIT 1",
+						intval($uid),
+						dbesc(datetime_convert('UTC','UTC',$cmnt->created_time . ' - 1 minute')),
+						dbesc(datetime_convert('UTC','UTC',$cmnt->created_time . ' + 1 minute')),
+						dbesc('fb::' . $entry->id),
+						dbesc($my_local_url)
+					);
+					if(count($r))
+						continue;
+				}
+				elseif(is_array($orig_post) && (x($orig_post,'contact-id')))
+					$cmntdata['contact-id'] = $orig_post['contact-id'];
+				else {
+					$r = q("SELECT * FROM `contact` WHERE `notify` = '%s' AND `uid` = %d LIMIT 1",
+						dbesc($cmnt->from->id),
+						intval($uid)
+					);
+					if(count($r))
+						$cmntdata['contact-id'] = $r[0]['id'];
+				}
+				$cmntdata['verb'] = ACTIVITY_POST;						
+				$cmntdata['author-name'] = $cmnt->from->name;
+				$cmntdata['author-link'] = 'http://facebook.com/profile.php?id=' . $cmnt->from->id;
+				$cmntdata['author-avatar'] = 'https://graph.facebook.com/' . $cmnt->from->id . '/picture';
+				$cmntdata['body'] = $cmnt->message;
+				$item = item_store($cmntdata);			
+			}
+
+
+		}
+
+	}
+
+
+
+
+
+}
