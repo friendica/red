@@ -538,7 +538,8 @@ function item_post(&$a) {
 
 	proc_run('php', "include/notifier.php", $notify_type, "$post_id");
 
-	$datarray['id'] = $post_id;
+	$datarray['id']    = $post_id;
+	$datarray['plink'] = $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id;
 
 	call_hooks('post_local_end', $datarray);
 

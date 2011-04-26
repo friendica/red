@@ -1218,6 +1218,7 @@ function set_config($family,$key,$value) {
 	global $a;
 
 	if(get_config($family,$key,true) === false) {
+		$a->config[$family][$key] = $value;
 		$ret = q("INSERT INTO `config` ( `cat`, `k`, `v` ) VALUES ( '%s', '%s', '%s' ) ",
 			dbesc($family),
 			dbesc($key),
@@ -1312,6 +1313,7 @@ function set_pconfig($uid,$family,$key,$value) {
 	global $a;
 
 	if(get_pconfig($uid,$family,$key,true) === false) {
+		$a->config[$uid][$family][$key] = $value;
 		$ret = q("INSERT INTO `pconfig` ( `uid`, `cat`, `k`, `v` ) VALUES ( %d, '%s', '%s', '%s' ) ",
 			intval($uid),
 			dbesc($family),

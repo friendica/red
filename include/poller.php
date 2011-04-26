@@ -26,6 +26,8 @@ function poller_run($argv, $argc){
 
 	$a->set_baseurl(get_config('system','url'));
 
+	load_hooks();
+
 	logger('poller: start');
 	
 	// run queue delivery process in the background
@@ -61,10 +63,12 @@ function poller_run($argv, $argc){
 
 	$sql_extra = (($manual_id) ? " AND `id` = $manual_id " : "");
 
+	reload_plugins();
+
 	$d = datetime_convert();
+
 	call_hooks('cron', $d);
 
-	reload_plugins();
 
 	$contacts = q("SELECT `id` FROM `contact` 
 		WHERE ( `rel` = %d OR `rel` = %d ) AND `poll` != ''
