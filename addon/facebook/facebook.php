@@ -122,12 +122,12 @@ function fb_get_friends($uid) {
 	if($s) {
 		logger('facebook: fb_get_friends: ' . $s);
 		$j = json_decode($s);
-		logger('facebook: fb_get_friends: json: ' . print_r($j,true));
+		logger('facebook: fb_get_friends: json: ' . print_r($j,true), LOGGER_DATA);
 		foreach($j->data as $person) {
 			$s = fetch_url('https://graph.facebook.com/' . $person->id . '?access_token=' . $access_token);
 			if($s) {
 				$jp = json_decode($s);
-				logger('fb_get_friends: info: ' . print_r($jp,true));
+				logger('fb_get_friends: info: ' . print_r($jp,true), LOGGER_DATA);
 
 				// always use numeric link for consistency
 
