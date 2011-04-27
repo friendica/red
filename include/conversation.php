@@ -294,7 +294,7 @@ function conversation(&$a, $items, $mode, $update) {
 				$comments_seen ++;
 
 
-			$override_coment_box = (($page_writeable) && ($item_writeable) ? true : false);
+			$override_comment_box = ((($page_writeable) && ($item_writeable)) ? true : false);
 			$show_comment_box = ((($page_writeable) && ($item_writeable) && ($comments_seen == $comments[$item['parent']])) ? true : false);
 
 			if(($comments[$item['parent']] > 2) && ($comments_seen <= ($comments[$item['parent']] - 2)) && ($item['gravity'] == 6)) {
