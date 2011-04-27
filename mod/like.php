@@ -173,6 +173,8 @@ EOT;
 		);
 	}			
 
+	call_hooks('post_local_end', $arr);
+
 	proc_run('php',"include/notifier.php","like","$post_id");
 
 	return; // NOTREACHED
