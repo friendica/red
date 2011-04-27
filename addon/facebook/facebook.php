@@ -712,6 +712,8 @@ function fb_consume_stream($uid,$j,$wall = false) {
 					if(count($r))
 						$cmntdata['contact-id'] = $r[0]['id'];
 				}
+				$cmntdata['created'] = datetime_convert('UTC','UTC',$cmnt->created_time);
+				$cmntdata['edited']  = datetime_convert('UTC','UTC',$cmnt->created_time);
 				$cmntdata['verb'] = ACTIVITY_POST;						
 				$cmntdata['author-name'] = $cmnt->from->name;
 				$cmntdata['author-link'] = 'http://facebook.com/profile.php?id=' . $cmnt->from->id;
