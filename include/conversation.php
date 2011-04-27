@@ -294,6 +294,7 @@ function conversation(&$a, $items, $mode, $update) {
 				$comments_seen ++;
 
 
+			$override_coment_box = (($page_writeable) && ($item_writeable) ? true : false);
 			$show_comment_box = ((($page_writeable) && ($item_writeable) && ($comments_seen == $comments[$item['parent']])) ? true : false);
 
 			if(($comments[$item['parent']] > 2) && ($comments_seen <= ($comments[$item['parent']] - 2)) && ($item['gravity'] == 6)) {
@@ -368,7 +369,7 @@ function conversation(&$a, $items, $mode, $update) {
 					));
 				}
 
-				if(($show_comment_box) || (($show_comment_box == false) && ($item['last-child']))) {
+				if(($show_comment_box) || (($show_comment_box == false) && ($override_comment_box == false) && ($item['last-child']))) {
 					$comment = replace_macros($cmnt_tpl,array(
 						'$return_path' => '', 
 						'$jsreload' => (($mode === 'display') ? $_SESSION['return_url'] : ''),
