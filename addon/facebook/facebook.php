@@ -598,8 +598,8 @@ function fb_consume_stream($uid,$j,$wall = false) {
 			$datarray['verb'] = ACTIVITY_POST;						
 			if($wall) {
 				$datarray['owner-name'] = $self[0]['name'];
-				$datarray['author-link'] = $self[0]['url'];
-				$datarray['author-avatar'] = $self[0]['thumb'];
+				$datarray['owner-link'] = $self[0]['url'];
+				$datarray['owner-avatar'] = $self[0]['thumb'];
 			}
 			$datarray['author-name'] = $from->name;
 			$datarray['author-link'] = 'http://facebook.com/profile.php?id=' . $from->id;
