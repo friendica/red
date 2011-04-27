@@ -589,6 +589,8 @@ function fb_consume_stream($uid,$j,$wall = false) {
 			$datarray['author-name'] = $from->name;
 			$datarray['author-link'] = 'http://facebook.com/profile.php?id=' . $from->id;
 			$datarray['author-avatar'] = 'https://graph.facebook.com/' . $from->id . '/picture';
+			$datarray['plink'] = $datarray['author-link'] . '&v=wall&story_fbid=' . substr($entry->id,strpos($entry->id,'_') + 1);
+
 			$datarray['body'] = $entry->message;
 			if($entry->picture)
 				$datarray['body'] .= "\n\n" . '[img]' . $entry->picture . '[/img]';
