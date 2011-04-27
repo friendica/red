@@ -385,6 +385,21 @@ function facebook_post_hook(&$a,&$b) {
 			if(count($r)) 
 				foreach($r as $rr)
 					$deny_arr[] = $rr['notify'];
+			if(count($deny_arr) && (! count($allow_arr))) {
+
+				// One or more FB folks were denied access but nobody on FB was specifically allowed access.
+				// This might cause the post to be open to public on Facebook, but only to selected members
+				// on another network. Since this could potentially leak a post to somebody who was denied, 
+				// we will skip posting it to Facebook with a slightly vague but relevant message that will 
+				// hopefully lead somebody to this code comment for a better explanation of what went wrong.
+
+				notice( t('Post to Facebook cancelled because of multi-network access permission conflict.') . EOL);
+				return;
+			}
+
+
+			// if it's a private message but no Facebook members are allowed or denied, skip Facebook post
+
 			if((! count($allow_arr)) && (! count($deny_arr)))
 				return;
 		}
