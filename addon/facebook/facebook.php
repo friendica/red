@@ -405,7 +405,12 @@ function facebook_post_hook(&$a,&$b) {
 			$fb_token  = get_pconfig(local_user(),'facebook','access_token');
 
 			logger('facebook: $fb_post: ' . $fb_post . ' $fb_enable: ' . $fb_enable . ' $fb_token: ' . $fb_token,LOGGER_DEBUG); 
-			if($fb_post && $fb_token && ($fb_enable || $b['private'])) {
+
+			// post to facebook if it's a public post and we've ticked the 'post to Facebook' box, 
+			// or it's a private message with facebook participants
+			// or it's a reply or likes action to an existing facebook post			
+
+			if($fb_post && $fb_token && ($fb_enable || $b['private'] || $reply)) {
 				logger('facebook: able to post');
 				require_once('library/facebook.php');
 				require_once('include/bbcode.php');	
@@ -444,10 +449,15 @@ function facebook_post_hook(&$a,&$b) {
 
 				logger('Facebook post: msg=' . $msg, LOGGER_DATA);
 
-				$postvars = array(
-					'access_token' => $fb_token, 
-					'message' => $msg
-				);
+				if($likes) { 
+					$postvars = array('access_token' => $fb_token);
+				}
+				else {
+					$postvars = array(
+						'access_token' => $fb_token, 
+						'message' => $msg
+					);
+				}
 
 				if(($b['private']) && (! $b['parent'])) {
 					$postvars['privacy'] = '{"value": "CUSTOM", "friends": "SOME_FRIENDS"';
