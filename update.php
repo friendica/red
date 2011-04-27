@@ -476,3 +476,7 @@ function update_1052() {
 }
 
 
+function update_1053() {
+	q("ALTER TABLE `item` ADD `extid` CHAR( 255 ) NOT NULL AFTER `parent-uri` , ADD INDEX ( `extid` ) ");
+}
+

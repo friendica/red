@@ -24,8 +24,8 @@
  *      Replace with the settings Facebook gives you.
  * 2. Enable the facebook plugin by including it in .htconfig.php - e.g. 
  *     $a->config['system']['addon'] = 'plugin1,plugin2,facebook';
- * 3. Visit your site url + '/facebook' (e.g. http://example.com/facebook)
- *    and click 'Install Facebook posting'.
+ * 3. Visit the Facebook Settings from "Settings->Plugin Settings" page.
+ *    and click 'Install Facebook Connector'.
  * 4. This will ask you to login to Facebook and grant permission to the 
  *    plugin to do its stuff. Allow it to do so. 
  * 5. You're done. To turn it off visit your site's /facebook page again and
@@ -245,14 +245,14 @@ function facebook_content(&$a) {
 		$o .= '<div id="facebook-enable-wrapper">';
 
 		$o .= '<a href="https://www.facebook.com/dialog/oauth?client_id=' . $appid . '&redirect_uri=' 
-			. $a->get_baseurl() . '/facebook/' . $a->user['nickname'] . '&scope=publish_stream,read_stream,offline_access">' . t('Install Facebook post connector') . '</a>';
+			. $a->get_baseurl() . '/facebook/' . $a->user['nickname'] . '&scope=publish_stream,read_stream,offline_access">' . t('Install Facebook connector for this account.') . '</a>';
 		$o .= '</div>';
 	}
 
 	if($fb_installed) {
 		$o .= '<div id="facebook-disable-wrapper">';
 
-		$o .= '<a href="' . $a->get_baseurl() . '/facebook/remove' . '">' . t('Remove Facebook post connector') . '</a></div>';
+		$o .= '<a href="' . $a->get_baseurl() . '/facebook/remove' . '">' . t('Remove Facebook connector') . '</a></div>';
 	
 		$o .= '<div id="facebook-post-default-form">';
 		$o .= '<form action="facebook" method="post" >';
@@ -499,6 +499,14 @@ function facebook_post_hook(&$a,&$b) {
 				logger('facebook: postvars: ' . print_r($postvars,true));
 
 				$x = post_url($url, $postvars);
+
+				$retj = json_decode($x);
+				if($retj->id) {
+					q("UPDATE `item` SET `extid` = '%s' WHERE `id` = %d LIMIT 1",
+						dbesc($retj->id),
+						intval($b['id'])
+					);
+				}
 				
 				logger('Facebook post returns: ' . $x, LOGGER_DEBUG);
 
@@ -556,19 +564,11 @@ function fb_consume_stream($uid,$j,$wall = false) {
 		if($app->id == get_config('facebook','appid') && $wall)
 			$we_posted = true;
 
-		if($we_posted) {
-			$r = q("SELECT * FROM `item` WHERE `wall` = 1 AND `uid` = %d AND `created` > '%s' AND `created` < '%s' AND `deleted` = 0 LIMIT 1",
-				intval($uid),
-				dbesc(datetime_convert('UTC','UTC',$entry->created_time . ' - 1 minute')),
-				dbesc(datetime_convert('UTC','UTC',$entry->created_time . ' + 1 minute'))
-			);
-		}
-		else {
-			$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d AND `deleted` = 0 LIMIT 1",
+		$r = q("SELECT * FROM `item` WHERE ( `uri` = '%s' OR `extid` = '%s') AND `uid` = %d LIMIT 1",
+				dbesc('fb::' . $entry->id),
 				dbesc('fb::' . $entry->id),
 				intval($uid)
-			);
-		}
+		);
 		if(count($r)) {
 			$post_exists = true;
 			$orig_post = $r[0];
@@ -690,8 +690,9 @@ function fb_consume_stream($uid,$j,$wall = false) {
 		if(is_array($comments)) {
 			foreach($comments as $cmnt) {
 
-				$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `uri` = '%s' LIMIT 1",
+				$r = q("SELECT * FROM `item` WHERE `uid` = %d AND ( `uri` = '%s' OR `extid` = '%s' ) LIMIT 1",
 					intval($uid),
+					dbesc('fb::' . $cmnt->id),
 					dbesc('fb::' . $cmnt->id)
 				);
 				if(count($r))
@@ -707,17 +708,6 @@ function fb_consume_stream($uid,$j,$wall = false) {
 				$cmntdata['parent-uri'] = 'fb::' . $entry->id;
 				if($cmnt->from->id == $self_id) {
 					$cmntdata['contact-id'] = $self[0]['id'];
-					// see if I already posted it here locally and we're now getting it back from FB
-					$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `created` > '%s' AND `created` < '%s' 
-						AND `parent-uri` = '%s' AND `author-link` = '%s' LIMIT 1",
-						intval($uid),
-						dbesc(datetime_convert('UTC','UTC',$cmnt->created_time . ' - 1 minute')),
-						dbesc(datetime_convert('UTC','UTC',$cmnt->created_time . ' + 1 minute')),
-						dbesc('fb::' . $entry->id),
-						dbesc($my_local_url)
-					);
-					if(count($r))
-						continue;
 				}
 				elseif(is_array($orig_post) && (x($orig_post,'contact-id')))
 					$cmntdata['contact-id'] = $orig_post['contact-id'];
@@ -738,14 +728,7 @@ function fb_consume_stream($uid,$j,$wall = false) {
 				$cmntdata['body'] = $cmnt->message;
 				$item = item_store($cmntdata);			
 			}
-
-
 		}
-
 	}
-
-
-
-
-
 }
+
