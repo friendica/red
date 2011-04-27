@@ -299,12 +299,12 @@ function facebook_cron($a,$b) {
 	if(count($r)) {
 		foreach($r as $rr) {
 			// check for new friends once a day
-			$last_friend_check = get_pconfig($uid,'facebook','friend_check');
+			$last_friend_check = get_pconfig($rr['uid'],'facebook','friend_check');
 			if($last_friend_check) 
 				$next_friend_check = $last_friend_check + 86400;
 			if($next_friend_check <= time()) {
-				fb_get_friends($uid);
-				set_pconfig($uid,'facebook','friend_check',time());
+				fb_get_friends($rr['uid']);
+				set_pconfig($rr['uid'],'facebook','friend_check',time());
 			}
 			fb_consume_all($rr['uid']);
 		}
