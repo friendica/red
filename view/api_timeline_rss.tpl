@@ -1,23 +1,21 @@
-<feed xml:lang="en-US" xmlns:georss="http://www.georss.org/georss" xmlns="http://www.w3.org/2005/Atom" xmlns:twitter="http://api.twitter.com">
-  <title>Friendika</title>
-  <id>tag:friendika:Status</id>
-  <link type="text/html" rel="alternate" href="$rss.alternate"/>
-  <link type="application/atom+xml" rel="self" href="$rss.self"/>
-  <updated>$rss.updated</updated>
-  <subtitle>Friendika timeline</subtitle>
-  	{{ for $statuses as $status }}
-    <entry>
-      <title>$status.text</title>
-      <content type="html">$status.text</content>
-      <id>$status.id</id>
-      <published>$status.created_at</published>
-      <updated>$status.created_at</updated>
-      <link type="text/html" rel="alternate" href="$status.url"/>
-      <author>
-        <name>$status.user.name</name>
-        <uri>$status.user.url</uri>
-      </author>
-      <twitter:source>$status.source</twitter:source>
-    </entry>
-    {{ endfor }}
-</feed>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:georss="http://www.georss.org/georss" xmlns:twitter="http://api.twitter.com">
+  <channel>
+    <title>Friendika</title>
+    <link>$rss.alternate</link>
+    <atom:link type="application/rss+xml" rel="self" href="$rss.self"/>
+    <description>Friendika timeline</description>
+    <language>$rss.language</language>
+    <ttl>40</ttl>
+
+{{ for $statuses as $status }}
+  <item>
+    <title>$status.text</title>
+    <description>$status.text</description>
+    <pubDate>$status.created_at</pubDate>
+    <guid>$status.url</guid>
+    <link>$status.url</link>
+    <twitter:source>$status.source</twitter:source>
+  </item>
+{{ endfor }}
+  </channel>
+</rss>

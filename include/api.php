@@ -49,8 +49,13 @@
 			dbesc(trim($user)),
 			dbesc($encrypted)
 		);
-		if(count($r))
+		if(count($r)){
 			$record = $r[0];
+		} else {
+		    header('WWW-Authenticate: Basic realm="Friendika"');
+		    header('HTTP/1.0 401 Unauthorized');
+		    die('This api require login');
+		}
 		$_SESSION['uid'] = $record['uid'];
 		$_SESSION['theme'] = $record['theme'];
 		$_SESSION['authenticated'] = 1;
@@ -90,6 +95,7 @@
 		GLOBAL $API;
 		foreach ($API as $p=>$info){
 			if (strpos($a->query_string, $p)===0){
+				#unset($_SERVER['PHP_AUTH_USER']);
 				if ($info['auth']===true && local_user()===false) {
 						api_login($a);
 				}
@@ -139,6 +145,7 @@
 			'self' => $a->get_baseurl(). "/". $a->query_string,
 			'updated' => api_date(null),
 			'language' => $user_info['language'],
+			'logo'	=> $a->get_baseurl()."/images/friendika-32.png",
 		);
 		
 		return $arr;
@@ -214,7 +221,7 @@
 			'name' => $uinfo[0]['username'],
 			'screen_name' => $uinfo[0]['nickname'],
 			'location' => $uinfo[0]['default-location'],
-			'profile_image_url' => $uinfo[0]['photo'],
+			'profile_image_url' => $uinfo[0]['micro'],
 			'url' => $uinfo[0]['url'],
 			'protected' => false,	#
 			'friends_count' => $countfriends,
@@ -385,6 +392,7 @@
 				'created_at'=> api_date($item['created']),
 				'id'		=> $item['id'],
 				'text'		=> strip_tags(bbcode($item['body'])),
+				'html'		=> bbcode($item['body']),
 				'source'	=> 'web',
 				'url'		=> ($item['plink']!=''?$item['plink']:$item['author-link']),
 				'truncated' => False,
@@ -398,14 +406,22 @@
 				'contributors' => '',
 				'annotations'  => '',
 				'entities'  => '',
-				'user' =>  $user_info				
+				'user' =>  $user_info,
+				'objecttype' => $item['object-type'],
+				'verb' => $item['verb'],
+				'self' => $a->get_baseurl()."/api/statuses/show/".$ite['id'].".".$type,
+				'edit' => $a->get_baseurl()."/api/statuses/show/".$ite['id'].".".$type,				
 			);
 			$ret[]=$status;
 		};
 		
 		$data = array('$statuses' => $ret);
-		if ($type=="rss" || $type=="atom") $data = api_rss_extra($a, $data, $user_info);
-		
+		switch($type){
+			case "atom":
+			case "rss":
+				$data = api_rss_extra($a, $data, $user_info);
+		}
+				
 		return  api_apply_template("timeline", $type, $data);
 	}
 	api_register_func('api/statuses/home_timeline','api_statuses_home_timeline', true);
