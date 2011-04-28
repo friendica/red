@@ -120,6 +120,10 @@ blockquote:before {
 	cursor: pointer;
 }
 
+#jot-perms-icon {
+	float: left;
+}
+
 .fakelink, .fakelink:visited {
 	color: #15607B;
 	text-decoration: none;
@@ -2359,3 +2363,38 @@ a.mail-list-link {
 	float: left;
 	width: 300px;
 }
+
+/**
+ * ICONS
+ */
+.icon {
+	display: block; width: 16px; height: 16px;
+	background-image: url('../../../images/icons.png');
+}
+.article { background-position: 0px 0px;}
+.audio { background-position: -16px 0px;}
+.block { background-position: -32px 0px;}
+.drop { background-position: -48px 0px;}
+.drophide { background-position: -64px 0px;}
+.edit { background-position: -80px 0px;}
+.camera { background-position: -96px 0px;}
+.dislike { background-position: -112px 0px;}
+.like { background-position: -128px 0px;}
+.link { background-position: -144px 0px;}
+
+.globe { background-position: 0px -16px;}
+.noglobe { background-position: -16px -16px;}
+.no { background-position: -32px -16px;}
+.pause { background-position: -48px -16px;}
+.play { background-position: -64px -16px;}
+.pencil { background-position: -80px -16px;}
+.small-pencil { background-position: -96px -16px;}
+.recycle { background-position: -112px -16px;}
+.remote-link { background-position: -128px -16px;}
+.share { background-position: -144px -16px;}
+
+.tools { background-position: 0px -32px;}
+.lock { background-position: -16px -32px;}
+.unlock { background-position: -32px -32px;}
+.video { background-position: -48px -32px;}
+.youtube { background-position: -64px -32px;}

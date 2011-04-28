@@ -21,28 +21,28 @@
 <div id="profile-jot-submit-wrapper" >
 <input type="submit" id="profile-jot-submit" name="submit" value="$share" />
 	<div id="profile-upload-wrapper" style="display: $visitor;" >
-		<div id="wall-image-upload-div" ><img id="wall-image-upload" src="images/camera-icon.gif" alt="$upload" title="$upload" /></div>
+		<div id="wall-image-upload-div" ><a href="#" onclick="return false;" id="wall-image-upload" class="icon camera" title="$upload"></a></div>
 	</div> 
 	<div id="profile-link-wrapper" style="display: $visitor;" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);" >
-		<img id="profile-link" src="images/link-icon.gif" alt="$weblink" title="$weblink" ondragenter="return linkdropper(event);" ondragover="return linkdropper(event);" ondrop="linkdrop(event);" onclick="jotGetLink();" />
+		<a id="profile-link" class="icon link" title="$weblink" ondragenter="return linkdropper(event);" ondragover="return linkdropper(event);" ondrop="linkdrop(event);" onclick="jotGetLink(); return false;"></a>
 	</div> 
 	<div id="profile-youtube-wrapper" style="display: $visitor;" >
-		<img id="profile-youtube" src="images/youtube_icon.gif" alt="$youtube" title="$youtube" onclick="jotGetVideo();" />
+		<a id="profile-youtube" class="icon youtube" title="$youtube" onclick="jotGetVideo();return false;"></a>
 	</div> 
 	<div id="profile-video-wrapper" style="display: $visitor;" >
-		<img id="profile-video" src="images/video.gif" alt="$video" title="$video" onclick="jotVideoURL();" />
+		<a id="profile-video" class="icon video" title="$video" onclick="jotVideoURL();return false;"></a>
 	</div> 
 	<div id="profile-audio-wrapper" style="display: $visitor;" >
-		<img id="profile-audio" src="images/audio.gif" alt="$audio" title="$audio" onclick="jotAudioURL();" />
+		<a id="profile-audio" class="icon audio" title="$audio" onclick="jotAudioURL();return false;"></a>
 	</div> 
 	<div id="profile-location-wrapper" style="display: $visitor;" >
-		<img id="profile-location" src="images/globe.gif" alt="$setloc" title="$setloc" onclick="jotGetLocation();" />
+		<a id="profile-location" class="icon globe" title="$setloc" onclick="jotGetLocation();return false;"></a>
 	</div> 
 	<div id="profile-nolocation-wrapper" style="display: none;" >
-		<img id="profile-nolocation" src="images/noglobe.gif" alt="$noloc" title="$noloc" onclick="jotClearLocation();" />
+		<a id="profile-nolocation" class="icon noglobe" title="$noloc" onclick="jotClearLocation();return false;"></a>
 	</div> 
 	<div id="profile-title-wrapper" style="display: $visitor;" >
-		<img id="profile-title" src="images/article.gif" alt="$title" title="$title" onclick="jotTitle();" />
+		<a id="profile-title" class="icon article" title="$title" onclick="jotTitle();return false;"></a>
 	</div> 
 
 	<div id="profile-jot-plugin-wrapper">
@@ -52,14 +52,16 @@
 	<div id="profile-rotator-wrapper" style="display: $visitor;" >
 		<img id="profile-rotator" src="images/rotator.gif" alt="$wait" title="$wait" style="display: none;" />
 	</div> 
-	<div id="profile-jot-perms" class="profile-jot-perms" style="display: $visitor;" ><img id="jot-perms-icon" src="images/$lockstate_icon.gif"  alt="$permset" title="$permset" onClick="openClose('profile-jot-acl-wrapper'); openClose('profile-jot-email-wrapper'); openClose('profile-jot-networks');" />$bang</div>
+	<div id="profile-jot-perms" class="profile-jot-perms" style="display: $visitor;" >
+		<a id="jot-perms-icon" class="icon $lockstate"  title="$permset" onClick="openClose('profile-jot-acl-wrapper'); openClose('profile-jot-email-wrapper'); openClose('profile-jot-networks');return false;"></a>$bang
+	</div>
 	<div id="profile-jot-perms-end"></div>
 	<div id="profile-jot-email-wrapper" style="display: none;" >
-	<div id="profile-jot-email-label">$emailcc</div><input type="text" name="emailcc" id="profile-jot-email" title="$emtitle">
-	<div id="profile-jot-email-end"></div>
+		<div id="profile-jot-email-label">$emailcc</div><input type="text" name="emailcc" id="profile-jot-email" title="$emtitle">
+		<div id="profile-jot-email-end"></div>
 	</div>
 	<div id="profile-jot-networks" style="display: none;" >
-	$jotnets
+		$jotnets
 	</div>
 	<div id="profile-jot-networks-end"></div>
 	<div id="profile-jot-acl-wrapper" style="display: none;" >$acl</div>
