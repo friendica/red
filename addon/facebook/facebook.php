@@ -227,6 +227,12 @@ function facebook_content(&$a) {
 		notice( t('Facebook disabled') . EOL);
 	}
 
+	if($a->argc > 1 && $a->argv[1] === 'friends') {
+		fb_get_friends(local_user());
+		notice( t('Updating contacts') . EOL);
+	}
+
+
 	$fb_installed = get_pconfig(local_user(),'facebook','post');
 
 	$appid = get_config('facebook','appid');
@@ -595,6 +601,12 @@ function fb_consume_stream($uid,$j,$wall = false) {
 				if(count($r))
 					$datarray['contact-id'] = $r[0]['id'];
 			}
+
+			// don't store post if we don't have a contact
+
+			if(! x($datarray,'contact-id'))
+				continue; 
+
 			$datarray['verb'] = ACTIVITY_POST;						
 			if($wall) {
 				$datarray['owner-name'] = $self[0]['name'];
