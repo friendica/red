@@ -175,6 +175,11 @@ aside h4 { font-size: 1.2em; }
 
 aside #viewcontacts { text-align: right;}
 
+/**
+* contacts block
+*/
+.contact-block-div { width: 50px; height: 50px; float: left; }
+#contact-block-end { clear: both; }
 
 /**
  * jot
@@ -525,19 +530,17 @@ section { margin: 10px 20% 0px 20%; font-size: 0.8em; padding-right: 230px;}
  * 	contacts selector
  */
 
-.contact-block-div {
-	height: 200px;
-	overflow: auto;
-}
 #prof-members {
 	height: 200px; 
+	overflow: auto;
 	border: 1px solid #555753;
     -webkit-border-radius: 5px 5px 0px 0px;
     -moz-border-radius: 5px 5px 0px 0px;
     border-radius: 5px 5px 0px 0px;
 }
 #prof-all-contacts { 
-	height: 200px; 
+	height: 200px;
+    overflow: auto;	
 	border: 1px solid #555753;
     -webkit-border-radius: 0px 0px 5px 5px;
     -moz-border-radius: 0px 0px 5px 5px;
@@ -607,5 +610,7 @@ section { margin: 10px 20% 0px 20%; font-size: 0.8em; padding-right: 230px;}
                                   
 /**
  * 	footer
- */                                   .cc-license { margin-top: 100px; font-size: 0.7em; }                                  
-footer { display: block; margin-top: 50px;}                                  
+ */                                  
+ .cc-license { margin-top: 100px; font-size: 0.7em; }                                  
+footer { display: block; margin: 50px 20%; clear: both; }
+                                  
