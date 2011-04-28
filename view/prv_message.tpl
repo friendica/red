@@ -17,12 +17,12 @@ $select
 
 </div>
 <div id="prvmail-submit-wrapper" >
-<input type="submit" id="prvmail-submit" name="submit" value="Submit" />
+	<input type="submit" id="prvmail-submit" name="submit" value="Submit" />
 	<div id="prvmail-upload-wrapper" >
-		<div id="prvmail-upload-div" ><img id="prvmail-upload" src="images/camera-icon.gif" alt="$upload" title="$upload" /></div>
+		<div id="prvmail-upload"class="icon border camera" title="$upload" /></div>
 	</div> 
 	<div id="prvmail-link-wrapper" >
-		<img id="prvmail-link" src="images/link-icon.gif" alt="$insert" title="$insert" onclick="jotGetLink();" />
+		<div id="prvmail-link" class="icon border link" title="$insert" onclick="jotGetLink();" ></div>
 	</div> 
 	<div id="prvmail-rotator-wrapper" >
 		<img id="prvmail-rotator" src="images/rotator.gif" alt="$wait" title="$wait" style="display: none;" />

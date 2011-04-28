@@ -91,19 +91,20 @@
 			$.get("ping",function(data) {
 				$(data).find('result').each(function() {
 					var net = $(this).find('net').text();
-					if(net == 0) { net = ''; }
+					if(net == 0) { net = ''; $('#net-update').hide() } else { $('#net-update').show() }
 					$('#net-update').html(net);
 					var home = $(this).find('home').text();
-					if(home == 0) { home = ''; }
+					if(home == 0) { home = '';  $('#home-update').hide() } else { $('#home-update').show() }
 					$('#home-update').html(home);
 					var mail = $(this).find('mail').text();
-					if(mail == 0) { mail = ''; }
+					if(mail == 0) { mail = '';  $('#mail-update').hide() } else { $('#mail-update').show() }
 					$('#mail-update').html(mail);
 					var intro = $(this).find('intro').text();
 					var register = $(this).find('register').text();
 					if(intro == 0) { intro = ''; }
 					if(register != 0 && intro != '') { intro = intro+'/'+register; }
 					if(register != 0 && intro == '') { intro = '0/'+register; }
+					if (intro == '') { $('#notify-update').hide() } else { $('#notify-update').show() }
 					$('#notify-update').html(intro);
 
 				});
@@ -161,15 +162,11 @@
 	}
 
 	function imgbright(node) {
-		$(node).attr("src",$(node).attr("src").replace('hide','show'));
-		$(node).css('width',24);
-		$(node).css('height',24);
+		$(node).removeClass("drophide").addClass("drop");
 	}
 
 	function imgdull(node) {
-		$(node).attr("src",$(node).attr("src").replace('show','hide'));
-		$(node).css('width',16);
-		$(node).css('height',16);
+		$(node).removeClass("drop").addClass("drophide");
 	}
 
 	// Since our ajax calls are asynchronous, we will give a few 
