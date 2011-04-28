@@ -8,6 +8,9 @@
 		<div class="mail-list-subject"><a href="message/$id" class="mail-list-link">$subject</a></div>
 	</div>
 </div>
-<div class="mail-list-delete-wrapper" id="mail-list-delete-wrapper-$id" ><a href="message/dropconv/$id" onclick="return confirmDelete();" ><img src="images/b_drophide.gif" alt="$delete" title="$delete" id="mail-list-delete-icon-$id" class="mail-list-delete-icon" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a></div><div class="mail-list-delete-end"></div>
+<div class="mail-list-delete-wrapper" id="mail-list-delete-wrapper-$id" >
+	<a href="message/dropconv/$id" onclick="return confirmDelete();"  title="$delete" class="icon drophide mail-list-delete-icon" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a>
+</div>
+<div class="mail-list-delete-end"></div>
 
 <div class="mail-list-outside-wrapper-end"></div>
