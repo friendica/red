@@ -444,7 +444,7 @@ function facebook_post_hook(&$a,&$b) {
 
 				$msg = preg_replace("/\[url=(.+?)\](.+?)\[\/url\]/is",'$2 $1',$msg);
 
-				$msg = preg_replace("/\[img\](.+?)\[\/img\]/is", t('Image: ') . '$1',$msg);
+				$msg = preg_replace("/\[img\](.+?)\[\/img\]/is", t('Image: ') . '$1', $msg);
 
 				$msg = trim(strip_tags(bbcode($msg)));
 				$msg = html_entity_decode($msg,ENT_QUOTES,'UTF-8');
@@ -504,7 +504,11 @@ function facebook_post_hook(&$a,&$b) {
 				logger('facebook: post to ' . $url);
 				logger('facebook: postvars: ' . print_r($postvars,true));
 
-				$x = post_url($url, $postvars);
+				// "test_mode" prevents anything from actually being posted.
+				// Otherwise, let's do it. 
+
+				if(! get_config('facebook','test_mode'))
+					$x = post_url($url, $postvars);
 
 				$retj = json_decode($x);
 				if($retj->id) {
