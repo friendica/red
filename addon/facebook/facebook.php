@@ -509,7 +509,7 @@ function facebook_post_hook(&$a,&$b) {
 				$retj = json_decode($x);
 				if($retj->id) {
 					q("UPDATE `item` SET `extid` = '%s' WHERE `id` = %d LIMIT 1",
-						dbesc($retj->id),
+						dbesc('fb::' . $retj->id),
 						intval($b['id'])
 					);
 				}
@@ -731,6 +731,8 @@ function fb_consume_stream($uid,$j,$wall = false) {
 					if(count($r))
 						$cmntdata['contact-id'] = $r[0]['id'];
 				}
+				if(! x($cmntdata,'contact-id'))
+					return;
 				$cmntdata['created'] = datetime_convert('UTC','UTC',$cmnt->created_time);
 				$cmntdata['edited']  = datetime_convert('UTC','UTC',$cmnt->created_time);
 				$cmntdata['verb'] = ACTIVITY_POST;						
