@@ -594,7 +594,7 @@ function fb_consume_stream($uid,$j,$wall = false) {
 			if($from->id == $self_id)
 				$datarray['contact-id'] = $self[0]['id'];
 			else {
-				$r = q("SELECT * FROM `contact` WHERE `notify` = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT * FROM `contact` WHERE `notify` = '%s' AND `uid` = %d AND `blocked` = 0 AND `readonly` = 0 LIMIT 1",
 					dbesc($from->id),
 					intval($uid)
 				);
@@ -671,7 +671,7 @@ function fb_consume_stream($uid,$j,$wall = false) {
 				if($likes->id == $self_id)
 					$likedata['contact-id'] = $self[0]['id'];
 				else {
-					$r = q("SELECT * FROM `contact` WHERE `notify` = '%s' AND `uid` = %d LIMIT 1",
+					$r = q("SELECT * FROM `contact` WHERE `notify` = '%s' AND `uid` = %d AND `blocked` = 0 AND `readonly` = 0 LIMIT 1",
 						dbesc($likes->id),
 						intval($uid)
 					);
@@ -724,7 +724,7 @@ function fb_consume_stream($uid,$j,$wall = false) {
 				elseif(is_array($orig_post) && (x($orig_post,'contact-id')))
 					$cmntdata['contact-id'] = $orig_post['contact-id'];
 				else {
-					$r = q("SELECT * FROM `contact` WHERE `notify` = '%s' AND `uid` = %d LIMIT 1",
+					$r = q("SELECT * FROM `contact` WHERE `notify` = '%s' AND `uid` = %d AND `blocked` = 0 AND `readonly` = 0 LIMIT 1",
 						dbesc($cmnt->from->id),
 						intval($uid)
 					);
