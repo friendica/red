@@ -442,9 +442,21 @@ function facebook_post_hook(&$a,&$b) {
 
 				// make links readable before we strip the code
 
+				if(preg_match("/\[url=(.+?)\](.+?)\[\/url\]/is",$msg,$matches)) {
+
+					$link = $matches[1];
+					if(substr($matches[2],0,5) != '[img]' )
+						$linkname = $matches[2];
+				}
+
 				$msg = preg_replace("/\[url=(.+?)\](.+?)\[\/url\]/is",'$2 $1',$msg);
 
+				if(preg_match("/\[img\](.+?)\[\/img\]/is",$msg,$matches))
+					$image = $matches[1];
+
 				$msg = preg_replace("/\[img\](.+?)\[\/img\]/is", t('Image: ') . '$1', $msg);
+
+
 
 				$msg = trim(strip_tags(bbcode($msg)));
 				$msg = html_entity_decode($msg,ENT_QUOTES,'UTF-8');
@@ -478,6 +490,12 @@ function facebook_post_hook(&$a,&$b) {
 						'access_token' => $fb_token, 
 						'message' => $msg
 					);
+					if(isset($image))
+						$postvars['picture'] = $image;
+					if(isset($link))
+						$postvars['link'] = $link;
+					if(isset($linkname))
+						$postvars['name'] = $linkname;
 				}
 
 				if(($b['private']) && (! $b['parent'])) {
@@ -490,17 +508,15 @@ function facebook_post_hook(&$a,&$b) {
 
 				}
 
-				if(! $reply) { 
-					if($b['plink'])
-						$postvars['actions'] = '{"name": "' . t('View on Friendika') . '", "link": "' .  $b['plink'] . '"}';
-				}
-
 				if($reply) {
 					$url = 'https://graph.facebook.com/' . $reply . '/' . (($likes) ? 'likes' : 'comments');
 				}
 				else { 
 					$url = 'https://graph.facebook.com/me/feed';
+					if($b['plink'])
+						$postvars['actions'] = '{"name": "' . t('View on Friendika') . '", "link": "' .  $b['plink'] . '"}';
 				}
+
 				logger('facebook: post to ' . $url);
 				logger('facebook: postvars: ' . print_r($postvars,true));
 
