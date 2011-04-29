@@ -25,20 +25,21 @@ $langselector
 	    {{ if $nav.messages }}<li><a id="nav-messages-link" class="nav-commlink $nav.messages.2" href="$nav.messages.0">$nav.messages.1</a></li>{{ endif }}
 	    {{ if $nav.contacts }}<li><a id="nav-contacts-link" class="nav-commlink $nav.contacts.2" href="$nav.contacts.0">$nav.contacts.1</a></li>{{ endif }}
 	
-	    {{ if $nav.manage }}<li><a id="nav-manage-link" class="nav-commlink nav-sep $nav.manage.2" href="$nav.manage.0">$nav.manage.1</a></li>{{ endif }}
-	
+	    {{ if $nav.profiles }}<li><a id="nav-profiles-link" class="nav-commlink nav-sep $nav.profiles.2" href="$nav.profiles.0">$nav.profiles.1</a></li>{{ endif }}
 	    {{ if $nav.settings }}<li><a id="nav-settings-link" class="nav-commlink $nav.settings.2" href="$nav.settings.0">$nav.settings.1</a></li>{{ endif }}
-	    {{ if $nav.profiles }}<li><a id="nav-profiles-link" class="nav-commlink $nav.profiles.2" href="$nav.profiles.0">$nav.profiles.1</a></li>{{ endif }}
+	    
+	    {{ if $nav.manage }}<li><a id="nav-manage-link" class="nav-commlink $nav.manage.2" href="$nav.manage.0">$nav.manage.1</a></li>{{ endif }}
+	
 	
 
 	    {{ if $nav.logout }}<li><a id="nav-logout-link" class="nav-commlink nav-sep $nav.logout.2" href="$nav.logout.0">$nav.logout.1</a></li> {{ endif }}
     </ul>
 
 	<div id="notifications">
-    {{ if $nav.network }}<div id="net-update-wrap" class="nav-ajax-update"><a id="net-update" href="$nav.network.0" title="$nav.network.1">1</a></div>{{ endif }}
-    {{ if $nav.home }}<div id="home-update-wrap" class="nav-ajax-update"><a id="home-update" href="$nav.home.0" title="$nav.home.1">2</a></div>{{ endif }}
-    {{ if $nav.notifications }}<div id="notify-update-wrap" class="nav-ajax-update"><a id="notify-update" href="$nav.notifications.0" title="$nav.notifications.1">3</a></div>{{ endif }}
-    {{ if $nav.messages }}<div id="mail-update-wrap" class="nav-ajax-update"><a id="mail-update" href="$nav.messages.0" title="$nav.messages.1">4</a></div>{{ endif }}
+    {{ if $nav.network }}<a id="net-update" class="nav-ajax-update" href="$nav.network.0" title="$nav.network.1"></a>{{ endif }}
+    {{ if $nav.home }}<a id="home-update" class="nav-ajax-update" href="$nav.home.0" title="$nav.home.1"></a>{{ endif }}
+    {{ if $nav.notifications }}<a id="notify-update" class="nav-ajax-update" href="$nav.notifications.0" title="$nav.notifications.1"></a>{{ endif }}
+    {{ if $nav.messages }}<a id="mail-update" class="nav-ajax-update" href="$nav.messages.0" title="$nav.messages.1"></a>{{ endif }}
 	</div>
 
 </div>

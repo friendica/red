@@ -40,7 +40,7 @@ nav {
 	background-color: #2e3436;
 	color: #eeeeec;
 	position: relative;
-	padding: 0px 20%;
+	padding: 0px 10%;
 }
 nav a { text-decoration: none;	color: #eeeeec; border:0px;}
 nav a:hover { text-decoration: none;	color: #eeeeec; border:0px;}
@@ -129,7 +129,6 @@ nav .nav-link {
 	top:-19px; left: 0px;
 }
 .nav-ajax-update {
-	display: none;
 	width: 30px;
 	height: 19px;
 	background: transparent url('notifications.png') 0px 0px no-repeat; 
@@ -140,12 +139,12 @@ nav .nav-link {
 	text-align: center;
 	float: left;
 	margin-right: -4px;
+    display: none;
 }
-.nav-ajax-update a { display: block;}
-#net-update-wrap { background-position: 0px 0px; }
-#mail-update-wrap { background-position: -30px 0px; }
-#notify-update-wrap { background-position: -60px 0px; }
-#home-update-wrap { background-position: -90px 0px; }
+#net-update { background-position: 0px 0px; }
+#mail-update { background-position: -30px 0px; }
+#notify-update { background-position: -60px 0px; }
+#home-update { background-position: -90px 0px; }
 
 /** sysmsg **/
 #sysmsg { 
@@ -162,7 +161,7 @@ nav .nav-link {
 
 aside {
     position: absolute;
-    right: 20%;
+    right: 11%;
     width: 200px;
     font-size: 0.7em;
 
@@ -185,6 +184,7 @@ aside #viewcontacts { text-align: right;}
  * jot
  **/ 
 #profile-jot-text_tbl { margin-bottom: 10px; }
+#profile-jot-text_ifr { width: 99.9%!important }
 #profile-jot-submit-wrapper { float: right;}
 #profile-jot-perms { 
  	float: right;
@@ -206,6 +206,7 @@ aside #viewcontacts { text-align: right;}
 	-moz-border-radius: 5px 0px 0px  5px;
 	border-radius: 5px 0px 0px  5px;
 	border: 0px;
+	margin-top: 0px;
 }
 #character-counter {
  float: right; padding: 8px 10px; 
@@ -221,11 +222,54 @@ aside #viewcontacts { text-align: right;}
 #profile-jot-tools-end,
 #profile-jot-banner-end { clear: both; }
 
+#profile-jot-email-wrapper {
+	margin: 10px 20% 0px 20%;
+	border: 1px solid #555753;
+	border-bottom: 0px;
+}
+#profile-jot-email-label { background-color: #555753; color: #ccccce; 	padding: 5px;}
+#profile-jot-email { margin: 5px; width: 90%; }
+	
+#profile-jot-networks {
+	margin: 0px 20%;
+	border: 1px solid #555753;
+	border-top: 0px;
+	border-bottom: 0px;
+	padding: 5px;
+}
+#profile-jot-acl-wrapper {
+	margin: 0px 20%;
+	border: 1px solid #555753;
+	border-top: 0px;
+}
+#group_allow_wrapper,
+#group_deny_wrapper,
+#acl-permit-outer-wrapper { width: 47%; float: left; }
+
+#contact_allow_wrapper,
+#contact_deny_wrapper,
+#acl-deny-outer-wrapper { width: 47%; float: right; }
+
+#acl-permit-text,
+#acl-deny-text {background-color: #555753; color: #ccccce; padding: 5px;}
+
+#acl-permit-wrapper,
+#acl-deny-wrapper { padding: 5px; }
+
+#acl-allow-group-label,
+#acl-allow-contact-label,
+#acl-deny-group-label,
+#acl-deny-contact-label { display: block }
+
+#profile-jot-acl-wrapper select { width: 100%; }
+
+#acl-wrapper-end,
+#profile-jot-end { clear: both; height: 5px; }
 
 /**
  * section
  */
-section { margin: 10px 20% 0px 20%; font-size: 0.8em; padding-right: 230px;}
+section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
 
 /** tabs **/
 .tabs-wrapper {list-style: none; padding: 0px; margin: 0px; border-bottom: 1px solid #729fcf; }
@@ -311,8 +355,8 @@ section { margin: 10px 20% 0px 20%; font-size: 0.8em; padding-right: 230px;}
 	text-overflow: ellipsis;
 	-o-text-overflow: ellipsis;
 }
-.wall-item-location span { float: left; }
-.wall-item-location a { margin-left: 25px; display: block;}
+.wall-item-location .icon { float: left; }
+.wall-item-location a { margin-left: 25px; display: block; font-size: 0.7em; }
 
 .wallwall .wwto {
     left: -10px;
@@ -335,7 +379,7 @@ section { margin: 10px 20% 0px 20%; font-size: 0.8em; padding-right: 230px;}
 }
 
 .wall-item-photo-menu {
-	min-width 92px;
+	min-width: 92px;
 	border: 2px solid #FFFFFF;
 	border-top: 0px;
 	background: #555753;
@@ -367,10 +411,8 @@ section { margin: 10px 20% 0px 20%; font-size: 0.8em; padding-right: 230px;}
 .wall-item-outside-wrapper.comment .wall-item-author { margin-left: 60px;}
 
 .wall-item-outside-wrapper.comment .wall-item-photo-menu {
+	min-width: 50px;
 	top: 60px;
-	-webkit-border-radius: 0px 5px 5px 5px;
-	-moz-border-radius: 0px 5px 5px 5px;
-	border-radius: 0px 5px 5px 5px;		
 }
 
 
@@ -485,6 +527,24 @@ section { margin: 10px 20% 0px 20%; font-size: 0.8em; padding-right: 230px;}
 	background-color: #ffffff;
 }
 
+#contact-edit-banner-name { font-size: 1.5em; }
+#contact-edit-photo-wrapper {position: relative; float: left; padding: 20px;}
+#contact-edit-direction-icon { position: absolute; top: 60px; left:0px;}
+#contact-edit-nav-wrapper { margin-left: 210px; }
+#contact-edit-links { float: left; margin-top: 23px; }
+#contact-drop-links { margin-left: 5px; }
+#contact-edit-nav-wrapper .icon {
+	border: 1px solid #babdb6;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;	
+}
+#contact-edit-poll-wrapper { margin-left: 50px; }
+#contact-edit-last-update-text { margin-bottom: 15px; }
+#contact-edit-last-updated { font-weight: bold; }
+#contact-edit-poll-text { display: inline; }
+#contact-edit-end { clear: both; }
+
 /**
  * 	register, settings & profile forms
  */
@@ -517,8 +577,6 @@ section { margin: 10px 20% 0px 20%; font-size: 0.8em; padding-right: 230px;}
 }
 .settings-submit-wrapper,
 .profile-edit-submit-wrapper { margin: 30px 0px;}
-.settings-submit-wrapper input,
-
 .profile-listing { float: left; margin: 20px 20px 0px 0px}
 
 #profile-edit-links ul { margin: 20px 0px; padding: 0px; list-style: none; }
@@ -610,7 +668,5 @@ section { margin: 10px 20% 0px 20%; font-size: 0.8em; padding-right: 230px;}
                                   
 /**
  * 	footer
- */                                  
- .cc-license { margin-top: 100px; font-size: 0.7em; }                                  
-footer { display: block; margin: 50px 20%; clear: both; }
-                                  
+ */                                   .cc-license { margin-top: 100px; font-size: 0.7em; }                                  
+footer { display: block; margin: 50px 20%; clear: both; }                                  

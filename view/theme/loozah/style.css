@@ -1051,6 +1051,10 @@ input#dfrn-url {
     padding-right: 10px;
     border-right: 2px solid #fff;
 }
+.wall-item-like-buttons > a,
+.wall-item-like-buttons > img {
+	float: left;
+}
 
 .wall-item-share-buttons {
 	margin-left: 5px;
@@ -1506,6 +1510,9 @@ padding: 5px 10px 0px;
 	margin-bottom: 20px;
 }
 #contact-edit-links {
+	float: left;
+}
+#contact-edit-links a {
 	float: left;
 }
 #contact-edit-links img {
