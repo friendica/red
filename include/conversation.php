@@ -745,7 +745,7 @@ function status_editor($a,$x) {
 			'$content' => '',
 			'$post_id' => '',
 			'$baseurl' => $a->get_baseurl(),
-			'$defloc' => $x['default-location'],
+			'$defloc' => $x['default_location'],
 			'$visitor' => $x['visitor'],
 			'$emailcc' => t('CC: email addresses'),
 			'$jotnets' => $jotnets,
