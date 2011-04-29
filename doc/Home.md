@@ -28,3 +28,7 @@ Friendika Documentation and Resources
 * [Forums](http://groups.google.com/group/friendika)
 * [Developer Forums](http://groups.google.com/group/friendika-dev)
 
+**About**
+
+* [Site/Version Info](friendika)
+
