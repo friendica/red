@@ -80,7 +80,7 @@ function bbcode($Text,$preserve_nl = false) {
          
 	// Images
 	// [img]pathtoimage[/img]
-	$Text = preg_replace("/\[img\](.+?)\[\/img\]/", '<img src="$1">', $Text);
+	$Text = preg_replace("/\[img\](.+?)\[\/img\]/", '<img src="$1" alt="' . t('Image/photo') . '" />', $Text);
 
 	// html5 video and audio
 

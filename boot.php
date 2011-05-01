@@ -2,7 +2,7 @@
 
 set_time_limit(0);
 
-define ( 'FRIENDIKA_VERSION',      '2.1.964' );
+define ( 'FRIENDIKA_VERSION',      '2.1.965' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
 define ( 'DB_UPDATE_VERSION',      1054      );
 
@@ -845,7 +845,9 @@ function login($register = false) {
 		$tpl = load_view_file("view/login.tpl");
 
 	}
-	
+
+//	$o = '<script type="text/javascript"> $(document).ready(function() { $.("#login-name").focus();} );</script>';	
+
 	$o = replace_macros($tpl,array(
 		'$logout'        => t('Logout'),
 		'$register_html' => $register_html, 

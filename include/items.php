@@ -1496,10 +1496,17 @@ function atom_author($tag,$name,$uri,$h,$w,$photo) {
 
 function atom_entry($item,$type,$author,$owner,$comment = false) {
 
+	$a = get_app();
+
 	if($item['deleted'])
 		return '<at:deleted-entry ref="' . xmlify($item['uri']) . '" when="' . xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00',ATOM_TIME)) . '" />' . "\r\n";
 
-	$a = get_app();
+
+	if($item['allow_cid'] || $item['allow_gid'] || $item['deny_cid'] || $item['deny_gid'])
+		$body = fix_private_photos($item['body'],$owner['uid']);
+	else
+		$body = $item['body'];
+
 
 	$o = "\r\n\r\n<entry>\r\n";
 
@@ -1517,8 +1524,8 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 	$o .= '<title>' . xmlify($item['title']) . '</title>' . "\r\n";
 	$o .= '<published>' . xmlify(datetime_convert('UTC','UTC',$item['created'] . '+00:00',ATOM_TIME)) . '</published>' . "\r\n";
 	$o .= '<updated>' . xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00',ATOM_TIME)) . '</updated>' . "\r\n";
-	$o .= '<dfrn:env>' . base64url_encode($item['body'], true) . '</dfrn:env>' . "\r\n";
-	$o .= '<content type="' . $type . '" >' . xmlify(($type === 'html') ? bbcode($item['body']) : $item['body']) . '</content>' . "\r\n";
+	$o .= '<dfrn:env>' . base64url_encode($body, true) . '</dfrn:env>' . "\r\n";
+	$o .= '<content type="' . $type . '" >' . xmlify(($type === 'html') ? bbcode($body) : $body) . '</content>' . "\r\n";
 	$o .= '<link rel="alternate" type="text/html" href="' . xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']) . '" />' . "\r\n";
 	if($comment)
 		$o .= '<dfrn:comment-allow>' . intval($item['last-child']) . '</dfrn:comment-allow>' . "\r\n";
@@ -1562,6 +1569,38 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 	
 	return $o;
 }
+
+function fix_private_photos($s,$uid) {
+	$a = get_app();
+	logger('fix_private_photos');
+
+	if(preg_match("/\[img\](.+?)\[\/img\]/is",$s,$matches)) {
+		$image = $matches[1];
+		logger('fix_private_photos: found photo ' . $image);
+		if(stristr($image ,$a->get_baseurl() . '/photo/')) {
+			$i = basename($image);
+			$i = str_replace('.jpg','',$i);
+			$x = strpos($i,'-');
+			if($x) {
+				$res = substr($i,$x+1);
+				$i = substr($i,0,$x);
+				$r = q("SELECT * FROM `photo` WHERE `resource-id` = '%s' AND `scale` = %d AND `uid` = %d",
+					dbesc($i),
+					intval($res),
+					intval($uid)
+				);
+				if(count($r)) {
+					logger('replacing photo');
+					$s = str_replace($image, 'data:image/jpg;base64,' . base64_encode($r[0]['data']), $s);
+				}
+			}
+			logger('fix_private_photos: replaced: ' . $s, LOGGER_DATA);
+		}	
+	}
+	return($s);
+}
+
+
 
 function item_getfeedtags($item) {
 	$ret = array();
