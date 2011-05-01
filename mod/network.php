@@ -137,7 +137,7 @@ function network_content(&$a, $update = 0) {
 				notice( t('Group is empty'));
 		}
 
-		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `contact-id` IN ( $contact_str )) ";
+		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND ( `contact-id` IN ( $contact_str ) OR `allow_gid` REGEXP '<" . intval($group) . ">' )) ";
 		$o = '<h2>' . t('Group: ') . $r[0]['name'] . '</h2>' . $o;
 	}
 	elseif($cid) {
