@@ -379,18 +379,23 @@ function facebook_post_hook(&$a,&$b) {
 			$deny = array_unique(array_merge($deny_people,$deny_groups));
 
 			$allow_str = dbesc(implode(', ',$recipients));
-			$r = q("SELECT `notify` FROM `contact` WHERE `id` IN ( $allow_str ) AND `network` = 'face'"); 
-			$allow_arr = array();
-			if(count($r)) 
-				foreach($r as $rr)
-					$allow_arr[] = $rr['notify'];
+			if($allow_str) {
+				$r = q("SELECT `notify` FROM `contact` WHERE `id` IN ( $allow_str ) AND `network` = 'face'"); 
+				$allow_arr = array();
+				if(count($r)) 
+					foreach($r as $rr)
+						$allow_arr[] = $rr['notify'];
+			}
 
 			$deny_str = dbesc(implode(', ',$deny));
-			$r = q("SELECT `notify` FROM `contact` WHERE `id` IN ( $deny_str ) AND `network` = 'face'"); 
-			$deny_arr = array();
-			if(count($r)) 
-				foreach($r as $rr)
-					$deny_arr[] = $rr['notify'];
+			if($deny_str) {
+				$r = q("SELECT `notify` FROM `contact` WHERE `id` IN ( $deny_str ) AND `network` = 'face'"); 
+				$deny_arr = array();
+				if(count($r)) 
+					foreach($r as $rr)
+						$deny_arr[] = $rr['notify'];
+			}
+
 			if(count($deny_arr) && (! count($allow_arr))) {
 
 				// One or more FB folks were denied access but nobody on FB was specifically allowed access.
