@@ -846,9 +846,9 @@ function login($register = false) {
 
 	}
 
-//	$o = '<script type="text/javascript"> $(document).ready(function() { $.("#login-name").focus();} );</script>';	
+	$o = '<script type="text/javascript"> $(document).ready(function() { $("#login-name").focus();} );</script>';	
 
-	$o = replace_macros($tpl,array(
+	$o .= replace_macros($tpl,array(
 		'$logout'        => t('Logout'),
 		'$register_html' => $register_html, 
 		'$classname'     => $classname,
