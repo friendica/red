@@ -11,6 +11,8 @@ a:hover { color: #729fcf; padding-bottom: 0px; border-bottom: 1px dotted #729fcf
 
 
 .required { display: inline; color: #ff0000;}
+.fakelink { color: #3465a4; cursor: pointer; }
+.fakelink :hover{ color: #729fcf; }
 
 input[type=submit] {
 	margin-top: 20px;
@@ -23,7 +25,19 @@ input[type=submit] {
 	border: 0px;	
 }
 
+.smalltext { font-size: 0.7em }
 
+#panel {
+	position: absolute;
+	font-size:0.8em;
+	-webkit-border-radius: 5px ;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	border: 1px solid #ffffff;
+	background-color: #2e3436;
+	color: #eeeeec;
+	padding:1em;
+}
 
 /**
  * 	login
@@ -148,11 +162,21 @@ nav .nav-link {
 
 /** sysmsg **/
 #sysmsg { 
-	position:absolute; top: 20px; left:40%; 
+	position:fixed; 
+	bottom: 0px; right:10%; 
 	-moz-box-shadow: 0px 0px 5px #888;
 	-webkit-box-shadow: 0px 0px 5px #888;
 	box-shadow: 0px 0px 5px #888;
-	padding: 10px; background-color: #fff;
+	padding: 10px; 
+	background-color: #fcaf3e; border:2px solid #f8911b;
+	border-bottom:0px;
+	padding-bottom: 50px;	
+	z-index: 1000;
+}
+#sysmsg br {
+	display:block;
+	margin:2px 0px;
+	border-top: 1px solid #ccccce;
 }
 
 /**
@@ -173,6 +197,17 @@ aside {
 aside h4 { font-size: 1.2em; }
 
 aside #viewcontacts { text-align: right;}
+
+#profile-extra-links ul { margin-left: 0px; padding-left: 0px; list-style: none; }
+
+#dfrn-request-link {
+    background: #3465A4 url('connect.png') no-repeat right center;
+    border-radius: 5px 5px 5px 5px;
+    color: #FFFFFF;
+    display: block;
+    font-size: 1.2em;
+    padding: 0.2em 0.5em;
+}
 
 /**
 * contacts block
@@ -223,7 +258,7 @@ aside #viewcontacts { text-align: right;}
 #profile-jot-banner-end { clear: both; }
 
 #profile-jot-email-wrapper {
-	margin: 10px 20% 0px 20%;
+	margin: 10px 10% 0px 10%;
 	border: 1px solid #555753;
 	border-bottom: 0px;
 }
@@ -231,14 +266,14 @@ aside #viewcontacts { text-align: right;}
 #profile-jot-email { margin: 5px; width: 90%; }
 	
 #profile-jot-networks {
-	margin: 0px 20%;
+	margin: 0px 10%;
 	border: 1px solid #555753;
 	border-top: 0px;
 	border-bottom: 0px;
 	padding: 5px;
 }
 #profile-jot-acl-wrapper {
-	margin: 0px 20%;
+	margin: 0px 10%;
 	border: 1px solid #555753;
 	border-top: 0px;
 }
@@ -356,7 +391,9 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
 	-o-text-overflow: ellipsis;
 }
 .wall-item-location .icon { float: left; }
-.wall-item-location a { margin-left: 25px; display: block; font-size: 0.7em; }
+.wall-item-location > a { margin-left: 25px;  font-size: 0.7em; display: block;}
+.wall-item-location .smalltext { margin-left: 25px;  font-size: 0.7em; display: block;}
+.wall-item-location > br { display: none; }
 
 .wallwall .wwto {
     left: -10px;
@@ -395,11 +432,12 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
 .wall-item-photo-menu li a { white-space: nowrap;  display: block; padding: 5px 2px; 	color: #eeeeec;	 }
 .wall-item-photo-menu li a:hover { color: #555753; background: #eeeeec; }
 
-
-
 /**
  * 	comment
  */
+ 
+ .ccollapse-wrapper { font-size: 0.9em; margin-left: 80px; }
+ 
 .wall-item-outside-wrapper.comment { margin-left: 80px; }
 .wall-item-outside-wrapper.comment .wall-item-photo { width: 40px; height: 40px;}
 .wall-item-outside-wrapper.comment .wall-item-photo-wrapper {width: 40px; height: 40px; }
