@@ -1,6 +1,6 @@
 $langselector
-<span id="banner">$banner</span>
 
+<span id="banner">$banner</span>
 
 {{ if $nav.login }}<a id="nav-login-link" class="nav-link $nav.login.2" href="$nav.login.0" title="$nav.login.1">$nav.login.1</a> {{ endif }}
 <a id="nav-search-link" class="nav-link $nav.search.2" href="$nav.search.0" title="$nav.search.1">$nav.search.1</a>
