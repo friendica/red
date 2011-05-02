@@ -1895,9 +1895,11 @@ a.mail-list-link {
 #profile-jot-desc {
 	/*float: left;*/
 	width: 480px;
+	color: #FF0000;
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
+
 #character-counter {
 	float: right;
 	font-size: 120%;

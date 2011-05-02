@@ -3,6 +3,7 @@
 <script language="javascript" type="text/javascript">
 
 var editor;
+var textlen = 0;
 
 tinyMCE.init({
 	theme : "advanced",
@@ -29,23 +30,29 @@ tinyMCE.init({
 	     //Character count
 		ed.onKeyUp.add(function(ed, e) {
 			var txt = tinyMCE.activeEditor.getContent();
-			var text = txt.length;
-			if(txt.length <= 140) {
+			textlen = txt.length;
+			if(textlen != 0 && $('#jot-perms-icon').is('.unlock')) {
+				$('#profile-jot-desc').html(ispublic);
+			}
+			else {
+				$('#profile-jot-desc').html('&nbsp;');
+			}	 
+			if(textlen <= 140) {
 				$('#character-counter').removeClass('red');
 				$('#character-counter').removeClass('orange');
 				$('#character-counter').addClass('grey');
 			}
-			if((txt.length > 140) && (txt .length <= 420)) {
+			if((textlen > 140) && (textlen <= 420)) {
 				$('#character-counter').removeClass('grey');
 				$('#character-counter').removeClass('red');
 				$('#character-counter').addClass('orange');
 			}
-			if(txt.length > 420) {
+			if(textlen > 420) {
 				$('#character-counter').removeClass('grey');
 				$('#character-counter').removeClass('orange');
 				$('#character-counter').addClass('red');
 			}
-			$('#character-counter').text(text);
+			$('#character-counter').text(textlen);
     	});
 
 		ed.onInit.add(function(ed) {
@@ -58,6 +65,7 @@ tinyMCE.init({
 </script>
 <script type="text/javascript" src="include/ajaxupload.js" ></script>
 <script>
+	var ispublic = '$ispublic';
 	$(document).ready(function() {
 		var uploader = new window.AjaxUpload(
 			'wall-image-upload',

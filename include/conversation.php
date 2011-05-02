@@ -687,6 +687,7 @@ function status_editor($a,$x) {
 			'$baseurl' => $a->get_baseurl(),
 			'$geotag' => $geotag,
 			'$nickname' => $x['nickname'],
+			'$ispublic' => t('Visible to <strong>everybody</strong>'),
 			'$linkurl' => t('Please enter a link URL:'),
 			'$utubeurl' => t('Please enter a YouTube link:'),
 			'$vidurl' => t("Please enter a video\x28.ogg\x29 link/URL:"),
