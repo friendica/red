@@ -291,8 +291,12 @@ function facebook_cron($a,$b) {
 
 	$last = get_config('facebook','last_poll');
 	
+	$poll_interval = get_config('facebook','poll_interval');
+	if(! $poll_interval)
+		$poll_interval = 3600;
+
 	if($last) {
-		$next = $last + 3600;
+		$next = $last + $poll_interval;
 		if($next > time()) 
 			return;
 	}

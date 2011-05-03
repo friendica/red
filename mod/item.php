@@ -671,7 +671,8 @@ function item_content(&$a) {
 			// send the notification upstream/downstream as the case may be
 
 			proc_run('php',"include/notifier.php","drop","$drop_id");
-
+// We seem to lose the return url occasionally. Have not been able to reliably duplicate
+//			logger('drop_return_url: ' . $_SESSION['return_url']);
 			goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
 			//NOTREACHED
 		}

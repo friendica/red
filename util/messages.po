@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.1.961\n"
+"Project-Id-Version: 2.1.967\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-27 04:23-0700\n"
+"POT-Creation-Date: 2011-05-02 20:13-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,7 +36,7 @@ msgstr ""
 #: ../../mod/settings.php:251 ../../mod/manage.php:75 ../../mod/network.php:6
 #: ../../mod/group.php:19 ../../mod/viewcontacts.php:21
 #: ../../mod/register.php:25 ../../mod/regmod.php:16 ../../mod/item.php:57
-#: ../../mod/item.php:679 ../../mod/profile_photo.php:19
+#: ../../mod/item.php:680 ../../mod/profile_photo.php:19
 #: ../../mod/profile_photo.php:133 ../../mod/profile_photo.php:144
 #: ../../mod/profile_photo.php:155 ../../mod/message.php:8
 #: ../../mod/message.php:116 ../../mod/wall_upload.php:42
@@ -103,7 +103,7 @@ msgstr ""
 #: ../../mod/install.php:133 ../../mod/contacts.php:264
 #: ../../mod/settings.php:426 ../../mod/manage.php:106 ../../mod/group.php:76
 #: ../../mod/group.php:159 ../../mod/profiles.php:370 ../../mod/invite.php:68
-#: ../../addon/facebook/facebook.php:262
+#: ../../addon/facebook/facebook.php:268
 #: ../../addon/randplace/randplace.php:179
 #: ../../addon/statusnet/statusnet.php:163
 #: ../../addon/statusnet/statusnet.php:189
@@ -350,13 +350,13 @@ msgid "I don't like this (toggle)"
 msgstr ""
 
 #: ../../mod/photos.php:1099 ../../include/conversation.php:367
-#: ../../include/conversation.php:734
+#: ../../include/conversation.php:735
 msgid "Share"
 msgstr ""
 
 #: ../../mod/photos.php:1100 ../../mod/editpost.php:95
 #: ../../mod/message.php:190 ../../mod/message.php:324
-#: ../../include/conversation.php:368 ../../include/conversation.php:743
+#: ../../include/conversation.php:368 ../../include/conversation.php:744
 msgid "Please wait"
 msgstr ""
 
@@ -402,7 +402,7 @@ msgstr ""
 msgid "Edit post"
 msgstr ""
 
-#: ../../mod/editpost.php:74 ../../include/conversation.php:723
+#: ../../mod/editpost.php:74 ../../include/conversation.php:724
 msgid "Post to Email"
 msgstr ""
 
@@ -412,44 +412,44 @@ msgid "Edit"
 msgstr ""
 
 #: ../../mod/editpost.php:88 ../../mod/message.php:188
-#: ../../mod/message.php:322 ../../include/conversation.php:735
+#: ../../mod/message.php:322 ../../include/conversation.php:736
 msgid "Upload photo"
 msgstr ""
 
 #: ../../mod/editpost.php:89 ../../mod/message.php:189
-#: ../../mod/message.php:323 ../../include/conversation.php:736
+#: ../../mod/message.php:323 ../../include/conversation.php:737
 msgid "Insert web link"
 msgstr ""
 
-#: ../../mod/editpost.php:90 ../../include/conversation.php:737
+#: ../../mod/editpost.php:90 ../../include/conversation.php:738
 msgid "Insert YouTube video"
 msgstr ""
 
-#: ../../mod/editpost.php:91 ../../include/conversation.php:738
+#: ../../mod/editpost.php:91 ../../include/conversation.php:739
 msgid "Insert Vorbis [.ogg] video"
 msgstr ""
 
-#: ../../mod/editpost.php:92 ../../include/conversation.php:739
+#: ../../mod/editpost.php:92 ../../include/conversation.php:740
 msgid "Insert Vorbis [.ogg] audio"
 msgstr ""
 
-#: ../../mod/editpost.php:93 ../../include/conversation.php:740
+#: ../../mod/editpost.php:93 ../../include/conversation.php:741
 msgid "Set your location"
 msgstr ""
 
-#: ../../mod/editpost.php:94 ../../include/conversation.php:741
+#: ../../mod/editpost.php:94 ../../include/conversation.php:742
 msgid "Clear browser location"
 msgstr ""
 
-#: ../../mod/editpost.php:96 ../../include/conversation.php:744
+#: ../../mod/editpost.php:96 ../../include/conversation.php:745
 msgid "Permission settings"
 msgstr ""
 
-#: ../../mod/editpost.php:102 ../../include/conversation.php:750
+#: ../../mod/editpost.php:102 ../../include/conversation.php:751
 msgid "CC: email addresses"
 msgstr ""
 
-#: ../../mod/editpost.php:104 ../../include/conversation.php:752
+#: ../../mod/editpost.php:104 ../../include/conversation.php:753
 msgid "Example: bob@example.com, mary@example.com"
 msgstr ""
 
@@ -1610,7 +1610,7 @@ msgstr ""
 msgid "All Contacts (with secure profile access)"
 msgstr ""
 
-#: ../../mod/viewcontacts.php:25 ../../boot.php:1999
+#: ../../mod/viewcontacts.php:25 ../../boot.php:2001
 msgid "View Contacts"
 msgstr ""
 
@@ -1746,12 +1746,12 @@ msgstr ""
 msgid "Register"
 msgstr ""
 
-#: ../../mod/like.php:110 ../../addon/facebook/facebook.php:679
+#: ../../mod/like.php:110 ../../addon/facebook/facebook.php:720
 #: ../../include/conversation.php:20
 msgid "status"
 msgstr ""
 
-#: ../../mod/like.php:127 ../../addon/facebook/facebook.php:683
+#: ../../mod/like.php:127 ../../addon/facebook/facebook.php:724
 #: ../../include/conversation.php:25
 #, php-format
 msgid "%1$s likes %2$s's %3$s"
@@ -1981,7 +1981,7 @@ msgstr ""
 msgid "Conversation removed."
 msgstr ""
 
-#: ../../mod/message.php:172 ../../include/conversation.php:690
+#: ../../mod/message.php:172 ../../include/conversation.php:691
 msgid "Please enter a link URL:"
 msgstr ""
 
@@ -2025,7 +2025,7 @@ msgstr ""
 msgid "Send Reply"
 msgstr ""
 
-#: ../../mod/profile.php:11 ../../boot.php:2201
+#: ../../mod/profile.php:11 ../../boot.php:2203
 msgid "No profile"
 msgstr ""
 
@@ -2093,7 +2093,7 @@ msgstr ""
 msgid "Applications"
 msgstr ""
 
-#: ../../mod/search.php:26 ../../include/nav.php:71 ../../boot.php:2045
+#: ../../mod/search.php:26 ../../include/nav.php:71 ../../boot.php:2047
 msgid "Search"
 msgstr ""
 
@@ -2450,49 +2450,53 @@ msgstr ""
 msgid "Facebook disabled"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:235
+#: ../../addon/facebook/facebook.php:232
+msgid "Updating contacts"
+msgstr ""
+
+#: ../../addon/facebook/facebook.php:241
 msgid "Facebook API key is missing."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:242
+#: ../../addon/facebook/facebook.php:248
 msgid "Facebook Connect"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:248
+#: ../../addon/facebook/facebook.php:254
 msgid "Install Facebook connector for this account."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:255
+#: ../../addon/facebook/facebook.php:261
 msgid "Remove Facebook connector"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:261
+#: ../../addon/facebook/facebook.php:267
 msgid "Post to Facebook by default"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:319
+#: ../../addon/facebook/facebook.php:329
 msgid "Facebook"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:320
+#: ../../addon/facebook/facebook.php:330
 msgid "Facebook Connector Settings"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:334
+#: ../../addon/facebook/facebook.php:344
 msgid "Post to Facebook"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:396
+#: ../../addon/facebook/facebook.php:411
 msgid ""
 "Post to Facebook cancelled because of multi-network access permission "
 "conflict."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:441
+#: ../../addon/facebook/facebook.php:466
 msgid "Image: "
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:489
+#: ../../addon/facebook/facebook.php:526
 msgid "View on Friendika"
 msgstr ""
 
@@ -2707,7 +2711,7 @@ msgstr ""
 msgid "Send public postings to Twitter"
 msgstr ""
 
-#: ../../include/profile_advanced.php:23 ../../boot.php:2287
+#: ../../include/profile_advanced.php:23 ../../boot.php:2289
 msgid "Gender:"
 msgstr ""
 
@@ -2731,7 +2735,7 @@ msgstr ""
 msgid "<span class=\"heart\">&hearts;</span> Status:"
 msgstr ""
 
-#: ../../include/profile_advanced.php:103 ../../boot.php:2293
+#: ../../include/profile_advanced.php:103 ../../boot.php:2295
 msgid "Homepage:"
 msgstr ""
 
@@ -3051,7 +3055,7 @@ msgstr ""
 msgid "Everybody"
 msgstr ""
 
-#: ../../include/nav.php:41 ../../boot.php:850
+#: ../../include/nav.php:41 ../../boot.php:852
 msgid "Logout"
 msgstr ""
 
@@ -3153,6 +3157,10 @@ msgstr ""
 
 #: ../../include/datetime.php:164
 msgid " ago"
+msgstr ""
+
+#: ../../include/bbcode.php:83
+msgid "Image/photo"
 msgstr ""
 
 #: ../../include/dba.php:31
@@ -3270,27 +3278,31 @@ msgstr ""
 msgid "%s don't like this."
 msgstr ""
 
-#: ../../include/conversation.php:691
-msgid "Please enter a YouTube link:"
+#: ../../include/conversation.php:690
+msgid "Visible to <strong>everybody</strong>"
 msgstr ""
 
 #: ../../include/conversation.php:692
-msgid "Please enter a video(.ogg) link/URL:"
+msgid "Please enter a YouTube link:"
 msgstr ""
 
 #: ../../include/conversation.php:693
-msgid "Please enter an audio(.ogg) link/URL:"
+msgid "Please enter a video(.ogg) link/URL:"
 msgstr ""
 
 #: ../../include/conversation.php:694
-msgid "Where are you right now?"
+msgid "Please enter an audio(.ogg) link/URL:"
 msgstr ""
 
 #: ../../include/conversation.php:695
+msgid "Where are you right now?"
+msgstr ""
+
+#: ../../include/conversation.php:696
 msgid "Enter a title for this item"
 msgstr ""
 
-#: ../../include/conversation.php:742
+#: ../../include/conversation.php:743
 msgid "Set title"
 msgstr ""
 
@@ -3322,146 +3334,146 @@ msgstr ""
 msgid "Forgot your password?"
 msgstr ""
 
-#: ../../boot.php:1091
+#: ../../boot.php:1093
 msgid "prev"
 msgstr ""
 
-#: ../../boot.php:1093
+#: ../../boot.php:1095
 msgid "first"
 msgstr ""
 
-#: ../../boot.php:1122
+#: ../../boot.php:1124
 msgid "last"
 msgstr ""
 
-#: ../../boot.php:1125
+#: ../../boot.php:1127
 msgid "next"
 msgstr ""
 
-#: ../../boot.php:1986
+#: ../../boot.php:1988
 msgid "No contacts"
 msgstr ""
 
-#: ../../boot.php:1994
+#: ../../boot.php:1996
 #, php-format
 msgid "%d Contact"
 msgid_plural "%d Contacts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../boot.php:2260
+#: ../../boot.php:2262
 msgid "Connect"
 msgstr ""
 
-#: ../../boot.php:2275
+#: ../../boot.php:2277
 msgid "Location:"
 msgstr ""
 
-#: ../../boot.php:2279
+#: ../../boot.php:2281
 msgid ", "
 msgstr ""
 
-#: ../../boot.php:2291
+#: ../../boot.php:2293
 msgid "Status:"
 msgstr ""
 
-#: ../../boot.php:2384
+#: ../../boot.php:2386
 msgid "Monday"
 msgstr ""
 
-#: ../../boot.php:2384
+#: ../../boot.php:2386
 msgid "Tuesday"
 msgstr ""
 
-#: ../../boot.php:2384
+#: ../../boot.php:2386
 msgid "Wednesday"
 msgstr ""
 
-#: ../../boot.php:2384
+#: ../../boot.php:2386
 msgid "Thursday"
 msgstr ""
 
-#: ../../boot.php:2384
+#: ../../boot.php:2386
 msgid "Friday"
 msgstr ""
 
-#: ../../boot.php:2384
+#: ../../boot.php:2386
 msgid "Saturday"
 msgstr ""
 
-#: ../../boot.php:2384
+#: ../../boot.php:2386
 msgid "Sunday"
 msgstr ""
 
-#: ../../boot.php:2388
+#: ../../boot.php:2390
 msgid "January"
 msgstr ""
 
-#: ../../boot.php:2388
+#: ../../boot.php:2390
 msgid "February"
 msgstr ""
 
-#: ../../boot.php:2388
+#: ../../boot.php:2390
 msgid "March"
 msgstr ""
 
-#: ../../boot.php:2388
+#: ../../boot.php:2390
 msgid "April"
 msgstr ""
 
-#: ../../boot.php:2388
+#: ../../boot.php:2390
 msgid "May"
 msgstr ""
 
-#: ../../boot.php:2388
+#: ../../boot.php:2390
 msgid "June"
 msgstr ""
 
-#: ../../boot.php:2388
+#: ../../boot.php:2390
 msgid "July"
 msgstr ""
 
-#: ../../boot.php:2388
+#: ../../boot.php:2390
 msgid "August"
 msgstr ""
 
-#: ../../boot.php:2388
+#: ../../boot.php:2390
 msgid "September"
 msgstr ""
 
-#: ../../boot.php:2388
+#: ../../boot.php:2390
 msgid "October"
 msgstr ""
 
-#: ../../boot.php:2388
+#: ../../boot.php:2390
 msgid "November"
 msgstr ""
 
-#: ../../boot.php:2388
+#: ../../boot.php:2390
 msgid "December"
 msgstr ""
 
-#: ../../boot.php:2403
+#: ../../boot.php:2405
 msgid "g A l F d"
 msgstr ""
 
-#: ../../boot.php:2420
+#: ../../boot.php:2422
 msgid "Birthday Reminders"
 msgstr ""
 
-#: ../../boot.php:2421
+#: ../../boot.php:2423
 msgid "Birthdays this week:"
 msgstr ""
 
-#: ../../boot.php:2422
+#: ../../boot.php:2424
 msgid "(Adjusted for local time)"
 msgstr ""
 
-#: ../../boot.php:2433
+#: ../../boot.php:2435
 msgid "[today]"
 msgstr ""
 
-#: ../../boot.php:2634
+#: ../../boot.php:2636
 msgid "link to source"
 msgstr ""
 
