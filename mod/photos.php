@@ -639,6 +639,9 @@ foreach($_FILES AS $key => $val) {
 
 	$item_id = item_store($arr);
 
+	if($visible) 
+		proc_run('php', "include/notifier.php", 'wall-new', $item_id);
+
 	call_hooks('photo_post_end',intval($item_id));
 
 	// addon uploaders should call "killme()" [e.g. exit] within the photo_post_end hook
