@@ -225,7 +225,7 @@ function conversation(&$a, $items, $mode, $update) {
 
 		$comments = array();
 		foreach($items as $item) {
-			if(intval($item['gravity']) == 6) {
+			if((intval($item['gravity']) == 6) && ($item['id'] != $item['parent'])) {
 				if(! x($comments,$item['parent']))
 					$comments[$item['parent']] = 1;
 				else
