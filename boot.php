@@ -1,6 +1,7 @@
 <?php
 
 set_time_limit(0);
+ini_set('pcre.backtrack_limit', 250000);
 
 define ( 'FRIENDIKA_VERSION',      '2.1.968' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
@@ -9,7 +10,17 @@ define ( 'DB_UPDATE_VERSION',      1054      );
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
 define ( 'DOWN_ARROW',             '&#x21e9;'       );
-         
+
+/**
+ *
+ * Image storage quality. Lower numbers save space at cost of image detail.
+ * For ease of upgrade, please do not change here. Change jpeg quality with 
+ * set_config('system','jpeg_quality',n) in .htconfig.php
+ * where n is netween 1 and 100, and with very poor results below about 50 
+ *
+ */
+
+define ( 'JPEG_QUALITY',            100              );         
 
 /**
  * SSL redirection policies

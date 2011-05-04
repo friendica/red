@@ -701,6 +701,7 @@ function item_store($arr,$force_parent = false) {
 				$parent_id = 0;
 				$arr['thr-parent'] = $arr['parent-uri'];
 				$arr['parent-uri'] = $arr['uri'];
+				$arr['gravity'] = 0;
 			}
 			else {
 				logger('item_store: item parent was not found - ignoring item');

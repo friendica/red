@@ -37,7 +37,7 @@ $a->config['admin_email'] = '';
 
 // Maximum size of an imported message, 0 is unlimited
 
-$a->config['max_import_size'] = 10000;
+$a->config['max_import_size'] = 200000;
 
 // maximum size of uploaded photos
 
