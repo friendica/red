@@ -2349,6 +2349,10 @@ a.mail-list-link {
 	width: 300px;
 }
 
+#contact-edit-links .icon, #contact-drop-links .icon {
+	margin: 0px 3px 0px 3px;
+}
+
 /**
  * ICONS
  */
