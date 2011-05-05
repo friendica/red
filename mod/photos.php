@@ -909,7 +909,7 @@ function photos_content(&$a) {
 
 
 
-		$o = '<div id="live-display"></div>' . "\r\n";
+		$o = '';
 		// fetch image, item containing image, then comments
 
 		$ph = q("SELECT * FROM `photo` WHERE `uid` = %d AND `resource-id` = '%s' 
@@ -962,34 +962,36 @@ function photos_content(&$a) {
 			}
 		}
 
-		
-		$o .= '<h3>' . '<a href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/album/' . bin2hex($ph[0]['album']) . '">' . $ph[0]['album'] . '</a></h3>';
+		$album_link = $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/album/' . bin2hex($ph[0]['album']);
+ 		$tools = Null;
+ 		$lock = Null;
  
 		if($can_post && ($ph[0]['uid'] == $owner_uid)) {
-			$o .= '<div id="photo-edit-link-wrap" ><a id="photo-edit-link" href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $datum . '/edit' . '">' . t('Edit photo') . '</a>';
-			
-			$o .= ' - <a id="photo-toprofile-link" href="' . $a->get_baseurl() . '/profile_photo/use/'.$ph[0]['resource-id'].'">'.t('Use as profile photo').'</a>';
+			$tools = array(
+				'edit'	=> array($a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $datum . '/edit', t('Edit photo')),
+				'profile'=>array($a->get_baseurl() . '/profile_photo/use/'.$ph[0]['resource-id'], t('Use as profile photo')),
+			);
+
 			// lock
-			$o .= ( ( ($ph[0]['uid'] == local_user()) && (strlen($ph[0]['allow_cid']) || strlen($ph[0]['allow_gid']) 
+			$lock = ( ( ($ph[0]['uid'] == local_user()) && (strlen($ph[0]['allow_cid']) || strlen($ph[0]['allow_gid']) 
 					|| strlen($ph[0]['deny_cid']) || strlen($ph[0]['deny_gid'])) ) 
-					? ' - <img src="images/lock_icon.gif" class="lockview" alt="' . t('Private Message') . '" onclick="lockview(event,\'photo/' . $ph[0]['id'] . '\');" />'
-					: '');
+					? t('Private Message')
+					: Null);
 	  		
-			$o .= '</div>';
+			
 		}
 
 		if($prevlink)
-			$o .= '<div id="photo-prev-link"><a href="' . $prevlink .'">' . t('<< Prev') . '</a></div>' ;
+			$prevlink = array($prevlink, t('<< Prev')) ;
 
-		$o .= '<div id="photo-photo"><a href="' . $a->get_baseurl() . '/photo/' 
-			. $hires['resource-id'] . '-' . $hires['scale'] . '.jpg" title="' 
-			. t('View Full Size') . '" ><img src="' . $a->get_baseurl() . '/photo/' 
-			. $lores['resource-id'] . '-' . $lores['scale'] . '.jpg' . '" /></a></div>';
+		$photo = array(
+			'href' => $a->get_baseurl() . '/photo/' . $hires['resource-id'] . '-' . $hires['scale'] . '.jpg',
+			'title'=> t('View Full Size'),
+			'src'  => $a->get_baseurl() . '/photo/' . $lores['resource-id'] . '-' . $lores['scale'] . '.jpg'
+		);
 
 		if($nextlink)
-			$o .= '<div id="photo-next-link"><a href="' . $nextlink .'">' . t('Next >>') . '</a></div>';
-
-		$o .= '<div id="photo-photo-end"></div>';
+			$nextlink = array($nextlink, t('Next >>'));
 
 
 		// Do we have an item for this photo?
@@ -1041,28 +1043,27 @@ function photos_content(&$a) {
 			}
 		}
 
-		$o .= '<div id="photo-caption" >' . $ph[0]['desc'] . '</div>';
-
+		$tags=Null;
 		if(count($linked_items) && strlen($link_item['tag'])) {
 			$arr = explode(',',$link_item['tag']);
-			// parse tags and add links	
-			$o .= '<div id="in-this-photo-text">' . t('Tags: ') . '</div>';
-			$o .= '<div id="in-this-photo">';
+			// parse tags and add links
 			$tag_str = '';
 			foreach($arr as $t) {
 				if(strlen($tag_str))
 					$tag_str .= ', ';
 				$tag_str .= bbcode($t);
 			} 
-			$o .= $tag_str . '</div>';
+			$tags = array(t('Tags: '), $tag_str);
 			if($cmd === 'edit')
-				$o .= '<div id="tag-remove"><a href="' . $a->get_baseurl() . '/tagrm/' . $link_item['id'] . '">' . t('[Remove any tag]') . '</a></div>';
+				$tags[] = $a->get_baseurl() . '/tagrm/' . $link_item['id'];
+				$tags[] = t('[Remove any tag]');
 		}
 
 
+		$edit = Null;
 		if(($cmd === 'edit') && ($can_post)) {
 			$edit_tpl = load_view_file('view/photo_edit.tpl');
-			$o .= replace_macros($edit_tpl, array(
+			$edit = replace_macros($edit_tpl, array(
 				'$id' => $ph[0]['id'],
 				'$album' => $ph[0]['album'],
 				'$newalbum' => t('New album name'), 
@@ -1093,22 +1094,19 @@ function photos_content(&$a) {
 
 			if($can_post || can_write_wall($a,$owner_uid)) {
 				$likebuttons = replace_macros($like_tpl,array(
-					'$id' => $item['id'],
+					'$id' => $link_item['id'],
 					'$likethis' => t("I like this \x28toggle\x29"),
 					'$nolike' => t("I don't like this \x28toggle\x29"),
 					'$share' => t('Share'),
-					'$wait' => t('Please wait') 
+					'$wait' => t('Please wait')
 				));
 			}
 
+			$comments = '';
 			if(! count($r)) {
-				$o .= '<div id="photo-like-div">';
-				$o .= $likebuttons;
-				$o .= '</div>';
-
 				if($can_post || can_write_wall($a,$owner_uid)) {
 					if($link_item['last-child']) {
-						$o .= replace_macros($cmnt_tpl,array(
+						$comments .= replace_macros($cmnt_tpl,array(
 							'$return_path' => '', 
 							'$jsreload' => $return_url,
 							'$type' => 'wall-comment',
@@ -1128,6 +1126,9 @@ function photos_content(&$a) {
 
 			$alike = array();
 			$dlike = array();
+			
+			$like = '';
+			$dislike = '';
 
 			// display comments
 			if(count($r)) {
@@ -1140,17 +1141,11 @@ function photos_content(&$a) {
 				$like    = ((isset($alike[$link_item['id']])) ? format_like($alike[$link_item['id']],$alike[$link_item['id'] . '-l'],'like',$link_item['id']) : '');
 				$dislike = ((isset($dlike[$link_item['id']])) ? format_like($dlike[$link_item['id']],$dlike[$link_item['id'] . '-l'],'dislike',$link_item['id']) : '');
 
-				$o .= '<div id="photo-like-div">';
-				$o .= $likebuttons;
-				$o .= $like;
-				$o .= $dislike;
-				$o .= '</div>';
-
 
 
 				if($can_post || can_write_wall($a,$owner_uid)) {
 					if($link_item['last-child']) {
-						$o .= replace_macros($cmnt_tpl,array(
+						$comments .= replace_macros($cmnt_tpl,array(
 							'$return_path' => '',
 							'$jsreload' => $return_url,
 							'$type' => 'wall-comment',
@@ -1179,7 +1174,7 @@ function photos_content(&$a) {
 					if($can_post || can_write_wall($a,$owner_uid)) {
 
 						if($item['last-child']) {
-							$comment = replace_macros($cmnt_tpl,array(
+							$comments .= replace_macros($cmnt_tpl,array(
 								'$return_path' => '',
 								'$jsreload' => $return_url,
 								'$type' => 'wall-comment',
@@ -1218,7 +1213,7 @@ function photos_content(&$a) {
 						$drop = replace_macros(load_view_file('view/wall_item_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
 
 
-					$o .= replace_macros($template,array(
+					$comments .= replace_macros($template,array(
 						'$id' => $item['item_id'],
 						'$profile_url' => $profile_link,
 						'$name' => $profile_name,
@@ -1234,8 +1229,28 @@ function photos_content(&$a) {
 				}
 			}
 
-			$o .= paginate($a);
+			$paginate = paginate($a);
 		}
+		
+		$photo_tpl = load_view_file('view/photo_view.tpl');
+		$o .= replace_macros($photo_tpl, array(
+			'$id' => $ph[0]['id'],
+			'$album' => array($album_link,$ph[0]['album']),
+			'$tools' => $tools,
+			'$lock' => $lock,
+			'$photo' => $photo,
+			'$prevlink' => $prevlink,
+			'$nextlink' => $nextlink,
+			'$desc' => $ph[0]['desc'],
+			'$tags' => $tags,
+			'$edit' => $edit,	
+			'$likebuttons' => $likebuttons,
+			'$like' => $like,
+			'$dislike' => $dislike,
+			'$comments' => $comments,
+			'$paginate' => $paginate,
+		));
+		
 		return $o;
 	}
 
