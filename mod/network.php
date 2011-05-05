@@ -164,11 +164,13 @@ function network_content(&$a, $update = 0) {
 	if((! $group) && (! $cid) && (! $update))
 		$o .= get_birthdays();
 
+	$sql_extra2 = (($nouveau) ? '' : " AND `item`.`parent` = `item`.`id` ");
 
 	$r = q("SELECT COUNT(*) AS `total`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+		$sql_extra2
 		$sql_extra ",
 		intval($_SESSION['uid'])
 	);
