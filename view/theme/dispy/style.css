@@ -11,6 +11,8 @@ a:hover { color: #729fcf; padding-bottom: 0px; border-bottom: 1px dotted #729fcf
 
 
 .required { display: inline; color: #ff0000;}
+.fakelink { color: #3465a4; cursor: pointer; }
+.fakelink :hover{ color: #729fcf; }
 
 input[type=submit] {
 	margin-top: 20px;
@@ -23,7 +25,29 @@ input[type=submit] {
 	border: 0px;	
 }
 
+.smalltext { font-size: 0.7em }
 
+#panel {
+	position: absolute;
+	font-size:0.8em;
+	-webkit-border-radius: 5px ;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	border: 1px solid #ffffff;
+	background-color: #2e3436;
+	color: #eeeeec;
+	padding:1em;
+}
+
+.pager {
+	padding-top: 30px;
+	display:block;
+	clear: both;
+	text-align: center;
+}
+
+.pager span { padding: 4px; margin:4px; }
+.pager_current { background-color: #729fcf; color: #ffffff; }
 
 /**
  * 	login
@@ -148,11 +172,21 @@ nav .nav-link {
 
 /** sysmsg **/
 #sysmsg { 
-	position:absolute; top: 20px; left:40%; 
+	position:fixed; 
+	bottom: 0px; right:10%; 
 	-moz-box-shadow: 0px 0px 5px #888;
 	-webkit-box-shadow: 0px 0px 5px #888;
 	box-shadow: 0px 0px 5px #888;
-	padding: 10px; background-color: #fff;
+	padding: 10px; 
+	background-color: #fcaf3e; border:2px solid #f8911b;
+	border-bottom:0px;
+	padding-bottom: 50px;	
+	z-index: 1000;
+}
+#sysmsg br {
+	display:block;
+	margin:2px 0px;
+	border-top: 1px solid #ccccce;
 }
 
 /**
@@ -173,6 +207,17 @@ aside {
 aside h4 { font-size: 1.2em; }
 
 aside #viewcontacts { text-align: right;}
+
+#profile-extra-links ul { margin-left: 0px; padding-left: 0px; list-style: none; }
+
+#dfrn-request-link {
+    background: #3465A4 url('connect.png') no-repeat 95% center;
+    border-radius: 5px 5px 5px 5px;
+    color: #FFFFFF;
+    display: block;
+    font-size: 1.2em;
+    padding: 0.2em 0.5em;
+}
 
 /**
 * contacts block
@@ -223,7 +268,7 @@ aside #viewcontacts { text-align: right;}
 #profile-jot-banner-end { clear: both; }
 
 #profile-jot-email-wrapper {
-	margin: 10px 20% 0px 20%;
+	margin: 10px 10% 0px 10%;
 	border: 1px solid #555753;
 	border-bottom: 0px;
 }
@@ -231,14 +276,14 @@ aside #viewcontacts { text-align: right;}
 #profile-jot-email { margin: 5px; width: 90%; }
 	
 #profile-jot-networks {
-	margin: 0px 20%;
+	margin: 0px 10%;
 	border: 1px solid #555753;
 	border-top: 0px;
 	border-bottom: 0px;
 	padding: 5px;
 }
 #profile-jot-acl-wrapper {
-	margin: 0px 20%;
+	margin: 0px 10%;
 	border: 1px solid #555753;
 	border-top: 0px;
 }
@@ -261,6 +306,8 @@ aside #viewcontacts { text-align: right;}
 #acl-deny-group-label,
 #acl-deny-contact-label { display: block }
 
+#group_allow, #contact_allow,
+#group_deny, #contact_deny,
 #profile-jot-acl-wrapper select { width: 100%; }
 
 #acl-wrapper-end,
@@ -289,7 +336,7 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
 .wall-item-photo-menu { display: none;}
 .wall-item-photo-menu-button {
 	display:none;
-	text-indent: -9999px;
+	text-indent: -99999px;
 	background: #555753 url("menu-user-pin.jpg") no-repeat 75px center;
 	position: absolute;
 	overflow: hidden;
@@ -356,7 +403,9 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
 	-o-text-overflow: ellipsis;
 }
 .wall-item-location .icon { float: left; }
-.wall-item-location a { margin-left: 25px; display: block; font-size: 0.7em; }
+.wall-item-location > a { margin-left: 25px;  font-size: 0.7em; display: block;}
+.wall-item-location .smalltext { margin-left: 25px;  font-size: 0.7em; display: block;}
+.wall-item-location > br { display: none; }
 
 .wallwall .wwto {
     left: -10px;
@@ -395,11 +444,12 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
 .wall-item-photo-menu li a { white-space: nowrap;  display: block; padding: 5px 2px; 	color: #eeeeec;	 }
 .wall-item-photo-menu li a:hover { color: #555753; background: #eeeeec; }
 
-
-
 /**
  * 	comment
  */
+ 
+ .ccollapse-wrapper { font-size: 0.9em; margin-left: 80px; }
+ 
 .wall-item-outside-wrapper.comment { margin-left: 80px; }
 .wall-item-outside-wrapper.comment .wall-item-photo { width: 40px; height: 40px;}
 .wall-item-outside-wrapper.comment .wall-item-photo-wrapper {width: 40px; height: 40px; }
@@ -453,6 +503,9 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
 /**
  * photos
  **/
+#photo-top-links {
+	margin-bottom:30px;
+}
 .photo-album-image-wrapper,
 .photo-top-image-wrapper { 
 	float: left; 
@@ -461,12 +514,12 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
 	-webkit-box-shadow: 0px 0px 5px #888;
 	box-shadow: 0px 0px 5px #888;
 	background-color: #eeeeee;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    
-    height: 265px; 
-    position:relative;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+
+	padding-bottom: 30px; 
+	position:relative;
 	
 }
 
@@ -485,6 +538,61 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
 
 .photo-top-album-name { position: absolute; bottom: 0px; padding: 0px 5px;} 
 .caption { position: absolute; bottom: 0px; margin: 0px 5px}
+
+
+#photo-photo{
+	position: relative;
+	float:left;
+}
+#photo-photo-end { clear: both; }
+#photo-prev-link,
+#photo-next-link{
+	position: absolute;
+	width:30%;
+	height: 100%;
+	background-color: rgba(255,255,255,0.5);
+	opacity: 0;
+	-webkit-transition: all 0.2s ease-in-out;
+	-moz-transition: all 0.2s ease-in-out;
+	-o-transition: all 0.2s ease-in-out;
+	-ms-transition: all 0.2s ease-in-out;
+	transition: all 0.2s ease-in-out;
+	background-position: center center;
+	background-repeat: no-repeat;
+	
+}
+#photo-prev-link { left:0px; top:0px; background-image: url('prev.png'); }
+#photo-next-link { right:0px; top:0px; background-image: url('next.png');}
+
+#photo-prev-link a,
+#photo-next-link a{
+ display: block; width: 100%; height: 100%;
+ overflow: hidden;
+ text-indent: -900000px;		 
+}
+
+#photo-prev-link:hover,
+#photo-next-link:hover{
+	opacity: 1;
+	-webkit-transition: all 0.2s ease-in-out;
+	-moz-transition: all 0.2s ease-in-out;
+	-o-transition: all 0.2s ease-in-out;
+	-ms-transition: all 0.2s ease-in-out;
+	transition: all 0.2s ease-in-out;		
+}
+
+#photos-upload-spacer,
+#photos-upload-new-wrapper,
+#photos-upload-exist-wrapper { margin-bottom: 1em; }
+#photos-upload-existing-album-text,
+#photos-upload-newalbum-div { 
+	background-color: #555753;
+	color: #eeeeec;
+	padding: 1px;
+}
+#photos-upload-album-select,
+#photos-upload-newalbum { width: 99% }
+#photos-upload-perms-menu { text-align: right; }
 
 /**
  * 	message
@@ -513,6 +621,7 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
  * 	contacts
  */
 
+.view-contact-wrapper,
 .contact-entry-wrapper { float: left; margin-right: 20px; margin-bottom: 20px; position: relative;}
 .contact-entry-direction-wrapper {position: absolute; top: 20px;}
 .contact-entry-edit-links { position: absolute; top: 60px; }
@@ -614,6 +723,12 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
 
 #prof-separator { display: none;}
 
+/**
+ * profile
+ */
+#cropimage-wrapper { float:left; }
+#crop-image-form { clear:both; }
+
 
 /**
  * 	directory
@@ -668,5 +783,7 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
                                   
 /**
  * 	footer
- */                                   .cc-license { margin-top: 100px; font-size: 0.7em; }                                  
-footer { display: block; margin: 50px 20%; clear: both; }                                  
+ */                                  
+ .cc-license { margin-top: 100px; font-size: 0.7em; }                                  
+footer { display: block; margin: 50px 20%; clear: both; }
+                                  
