@@ -54,6 +54,17 @@ Otherwise, enter your password. This will have been initially provided in your r
 After your first login, please visit the 'Settings' page from the top menu bar and change your password to something that you will remember.
 
 
+**Facebook Connector**
+
+The Facebook connector is a plugin/addon which allows you to interact with friends on Facebook from within Friendika. If enabled, your Facebook friend list will be imported, and you will see and be able to respond to Facebook posts. Facebook members may also be added to private conversation groups.  
+
+Assuming the Facebook plugin/addon has been installed on your system, it can be enabled by going to your Settings page, clicking "Plugin Settings" near the top of the page, and then select "Facebook Connector Settings" on that page. This will only appear if the Facebook plugin/addon has been installed. Follow the instruction to install or remove the Facebook connector.
+
+You may also choose whether your public postings are posted to Facebook by default. You may toggle this setting at any time from the Permissions settings of the status post editor (click the lock icon). This setting has no effect on private conversations - which will always be delivered to Facebook friends who are included in the permissions.  
+
+(Note: At this time, Facebook contacts will not be able to view any private photos. This will be resolved in a future release. They may however see any public photos you have uploaded.)
+
+
 **See Also**
 
 * [Profiles](help/Profiles)
