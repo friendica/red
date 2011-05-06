@@ -212,6 +212,7 @@ class App {
 	public  $user;
 	public  $cid;
 	public  $contact;
+	public  $contacts;
 	public  $page_contact;
 	public  $content;
 	public  $data;
@@ -2454,6 +2455,13 @@ function get_birthdays() {
 
 }}
 
+
+if(! function_exists('normalise_link')) {
+function normalise_link($url) {
+	$ret = str_replace(array('https:','//www.'), array('http:','//'), $url);
+	return(rtrim($ret,'/'));
+}}
+
 /**
  *
  * Compare two URLs to see if they are the same, but ignore
@@ -2467,9 +2475,7 @@ function get_birthdays() {
 
 if(! function_exists('link_compare')) {
 function link_compare($a,$b) {
-	$a1 = str_replace(array('https:','//www.'), array('http:','//'), $a);
-	$b1 = str_replace(array('https:','//www.'), array('http:','//'), $b);
-	if(strcasecmp($a1,$b1) === 0)
+	if(strcasecmp(normalise_link($a),normalise_link($b)) === 0)
 		return true;
 	return false;
 }}

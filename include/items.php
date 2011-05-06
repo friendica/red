@@ -1205,6 +1205,13 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 				$item_id  = $item->get_id();
 				$datarray = get_atom_elements($feed,$item);
 
+				if(! x($datarray,'author-name'))
+					$datarray['author-name'] = $contact['name'];
+				if(! x($datarray,'author-link'))
+					$datarray['author-link'] = $contact['url'];
+				if(! x($datarray,'author-avatar'))
+					$datarray['author-avatar'] = $contact['thumb'];
+
 				$r = q("SELECT `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['uid'])
@@ -1277,6 +1284,15 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 				$item_id  = $item->get_id();
 
 				$datarray = get_atom_elements($feed,$item);
+
+				if(is_array($contact)) {
+					if(! x($datarray,'author-name'))
+						$datarray['author-name'] = $contact['name'];
+					if(! x($datarray,'author-link'))
+						$datarray['author-link'] = $contact['url'];
+					if(! x($datarray,'author-avatar'))
+						$datarray['author-avatar'] = $contact['thumb'];
+				}
 
 				$r = q("SELECT `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),

@@ -101,12 +101,7 @@ function conversation(&$a, $items, $mode, $update) {
 	else
 		$return_url = $_SESSION['return_url'] = $a->cmd;
 
-
-	// find all the authors involved in remote conversations
-	// We will use a local profile photo if they are one of our contacts
-	// otherwise we have to get the photo from the item owner's site
-
-	$author_contacts = extract_item_authors($items,local_user());
+	load_contact_links(local_user());
 
 
 	$cmnt_tpl    = load_view_file('view/comment_item.tpl');
@@ -147,22 +142,14 @@ function conversation(&$a, $items, $mode, $update) {
 			
 				$profile_name   = ((strlen($item['author-name']))   ? $item['author-name']   : $item['name']);
 				$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $item['thumb']);
-				$profile_link   = ((strlen($item['author-link']))   ? $item['author-link']   : $item['url']);
+
+				$sp = false;
+				$profile_link = best_link_url($item,$sp);
+				if($sp)
+					$sparkle = ' sparkle';
 				if($profile_link === 'mailbox')
 					$profile_link = '';
 
-				$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
-
-				if(strlen($item['author-link'])) {
-					if(link_compare($item['author-link'],$item['url']) && ($item['network'] === 'dfrn') && (! $item['self'])) {
-						$profile_link = $redirect_url;
-						$sparkle = ' sparkle';
-					}
-					elseif(isset($author_contacts[$item['author-link']])) {
-						$profile_link = $a->get_baseurl() . '/redir/' . $author_contacts[$item['author-link']];
-						$sparkle = ' sparkle';
-					}
-				}
 
 				$location = (($item['location']) ? '<a target="map" title="' . $item['location'] . '" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : '');
 				$coord = (($item['coord']) ? '<a target="map" title="' . $item['coord'] . '" href="http://maps.google.com/?q=' . urlencode($item['coord']) . '">' . $item['coord'] . '</a>' : '');
@@ -403,32 +390,14 @@ function conversation(&$a, $items, $mode, $update) {
 			$profile_name   = (((strlen($item['author-name']))   && $diff_author) ? $item['author-name']   : $item['name']);
 			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $thumb);
 
-			if($mode === 'profile') {
-				if(local_user() && ($item['contact-uid'] == local_user()) && ($item['network'] === 'dfrn') && (! $item['self'] )) {
-	                $profile_link = $redirect_url;
-    	            $sparkle = ' sparkle';
-        	    }
-				else {
-					$profile_link = $item['url'];
-					$sparkle = '';
-				}
-			}
-			elseif(strlen($item['author-link'])) {
-				$profile_link = $item['author-link'];
-				if(link_compare($item['author-link'],$item['url']) && ($item['network'] === 'dfrn') && (! $item['self'])) {
-					$profile_link = $redirect_url;
-					$sparkle = ' sparkle';
-				}
-				elseif(isset($author_contacts[$item['author-link']])) {
-					$profile_link = $a->get_baseurl() . '/redir/' . $author_contacts[$item['author-link']];
-					$sparkle = ' sparkle';
-				}
-			}
-			else 
-				$profile_link = $item['url'];
+			$sp = false;
+			$profile_link = best_link_url($item,$sp);
+			if($sp)
+				$sparkle = ' sparkle';
 
 			if($profile_link === 'mailbox')
 				$profile_link = '';
+
 
 			$like    = ((x($alike,$item['id'])) ? format_like($alike[$item['id']],$alike[$item['id'] . '-l'],'like',$item['id']) : '');
 			$dislike = ((x($dlike,$item['id'])) ? format_like($dlike[$item['id']],$dlike[$item['id'] . '-l'],'dislike',$item['id']) : '');
@@ -503,98 +472,99 @@ function conversation(&$a, $items, $mode, $update) {
 } 
 
 
+if(! function_exists('load_contact_links')) {
+function load_contact_links($uid) {
 
+	$a = get_app();
 
-if(! function_exists('extract_item_authors')) {
-function extract_item_authors($arr,$uid) {
+	$ret = array();
 
-	if((! $uid) || (! is_array($arr)) || (! count($arr)))
-		return array();
-	$urls = array();
-	foreach($arr as $rr) {
-		if(! in_array("'" . dbesc($rr['author-link']) . "'",$urls))
-			$urls[] = "'" . dbesc($rr['author-link']) . "'";
-	}
+	if(! $uid || x($a->contacts,'empty'))
+		return;
 
-	// pre-quoted, don't put quotes on %s
-	if(count($urls)) {
-		$r = q("SELECT `id`,`network`,`url` FROM `contact` WHERE `uid` = %d AND `url` IN ( %s )  AND `self` = 0 AND `blocked` = 0 ",
-			intval($uid),
-			implode(',',$urls)
-		);
-		if(count($r)) {
-			$ret = array();
-			$authors = array();
-			foreach($r as $rr){
-				if ($rr['network']=='dfrn')
-					$ret[$rr['url']] = $rr['id'];
-				$authors[$r['url']]= $rr;
-			}
-			$a->authors = $authors;
-			return $ret;
+	$r = q("SELECT `id`,`network`,`url`,`thumb` FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 ",
+			intval($uid)
+	);
+	if(count($r)) {
+		foreach($r as $rr){
+			$url = normalise_link($rr['url']);
+			$ret[$url] = $rr;
 		}
 	}
-	return array();		
+	else 
+		$ret['empty'] = true;	
+	$a->contacts = $ret;
+	return;		
 }}
+
+
+function best_link_url($item,&$sparkle) {
+
+	$a = get_app();
+
+	$best_url = '';
+	$sparkle  = false;
+
+	$clean_url = normalise_link($item['author-link']);
+
+	if((local_user()) && (local_user() == $item['uid'])) {
+		if(isset($a->contacts) && x($a->contacts,$clean_url)) {
+			if($a->contacts[$clean_url]['network'] === NETWORK_DFRN) {
+				$best_url = $a->get_baseurl() . '/redir/' . $a->contacts[$clean_url]['id'];
+				$sparkle = true;
+			}
+			else
+				$best_url = $a->contacts[$clean_url]['url'];
+		}
+	}
+	if(! $best_url) {
+		if(strlen($item['author-link']))
+			$best_url = $item['author-link'];
+		else
+			$best_url = $item['url'];
+	}
+
+	return $best_url;
+}
+
 
 if(! function_exists('item_photo_menu')){
 function item_photo_menu($item){
 	$a = get_app();
 	
-	if (!isset($a->authors)){
-		$rr = q("SELECT `id`, `network`, `url` FROM `contact` WHERE `uid`=%d AND `self`=0 AND `blocked`=0 ", intval(local_user()));
-		$authors = array();
-		foreach($rr as $r) $authors[$r['url']]= $r;
-		$a->authors = $authors;
-	}
-	
+	if (local_user() && (! count($a->contacts)))
+		load_contact_links(local_user());
+
 	$contact_url="";
 	$pm_url="";
-
 	$status_link="";
 	$photos_link="";
 	$posts_link="";
-	$profile_link   = ((strlen($item['author-link']))   ? $item['author-link'] : $item['url']);
-	$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 
+	$sparkle = false;
+    $profile_link = best_link_url($item,$sparkle);
 	if($profile_link === 'mailbox')
 		$profile_link = '';
 
-	// $item['contact-uid'] is only set on profile page and indicates the uid of the user who owns the profile.
-
-	$profile_owner = ((x($item,'contact-uid')) && intval($item['contact-uid']) ? intval($item['contact-uid']) : 0);	
-
-	// So we are checking that this is a logged in user on some page that *isn't* a profile page
-	// OR a profile page where the viewer owns the profile. 
-	// Then check if we can use a sparkle (redirect) link to the profile by virtue of it being our contact
-	// or a friend's contact that we both have a connection to. 
-
-	if((local_user() && ($profile_owner == 0)) 
-		|| ($profile_owner && $profile_owner == local_user())) {
-
-		if(strlen($item['author-link']) && link_compare($item['author-link'],$item['url'])) {
-			$redir = $redirect_url;
-			$cid = $item['cid'];
-		}
-		elseif(isset($a->authors[$item['author-link']])) {
-			$redir = $a->get_baseurl() . '/redir/' . $a->authors[$item['author-link']]['id'];
-			$cid = $a->authors[$item['author-link']]['id'];
-		}
-		if($item['author-link'] === 'mailbox')
-			$cid = $item['cid'];
-
-		if((isset($cid)) && (! $item['self'])) {
-			$contact_url = $a->get_baseurl() . '/contacts/' . $cid;
-			$posts_link = $a->get_baseurl() . '/network/?cid=' . $cid;
-			if($item['network'] === 'dfrn') {
-				$status_link = $redir . "?url=status";
-				$profile_link = $redir . "?url=profile";
-				$photos_link = $redir . "?url=photos";
-				$pm_url = $a->get_baseurl() . '/message/new/' . $cid;
-			}
+	if($sparkle) {
+		$cid = intval(basename($profile_link));
+		$status_link = $profile_link . "?url=status";
+		$photos_link = $profile_link . "?url=photos";
+		$profile_link = $profile_link . "?url=profile";
+		$pm_url = $a->get_baseurl() . '/message/new/' . $cid;
+	}
+	else {
+		if(local_user() && local_user() == $item['uid'] && link_compare($item['url'],$item['author-link'])) {
+			$cid = $item['contact-id'];
+		}		
+		else {
+			$cid = 0;
 		}
 	}
-
+	if(($cid) && (! $item['self'])) {
+		$contact_url = $a->get_baseurl() . '/contacts/' . $cid;
+		$posts_link = $a->get_baseurl() . '/network/?cid=' . $cid;
+	}
 
 	$menu = Array(
 		t("View status") => $status_link,
