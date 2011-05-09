@@ -639,6 +639,14 @@ foreach($_FILES AS $key => $val) {
 
 	$item_id = item_store($arr);
 
+	if($item_id) {
+		q("UPDATE `item` SET `plink` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
+			dbesc($a->get_baseurl() . '/display/' . $owner_record['nickname'] . '/' . $item_id),
+			intval($page_owner_uid),
+			intval($item_id)
+		);
+	}
+	
 	if($visible) 
 		proc_run('php', "include/notifier.php", 'wall-new', $item_id);
 
