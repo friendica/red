@@ -120,7 +120,7 @@ function fb_get_friends($uid) {
 		return;
 	$s = fetch_url('https://graph.facebook.com/me/friends?access_token=' . $access_token);
 	if($s) {
-		logger('facebook: fb_get_friends: ' . $s);
+		logger('facebook: fb_get_friends: ' . $s, LOGGER_DATA);
 		$j = json_decode($s);
 		logger('facebook: fb_get_friends: json: ' . print_r($j,true), LOGGER_DATA);
 		foreach($j->data as $person) {

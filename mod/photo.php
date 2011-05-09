@@ -19,6 +19,11 @@ function photo_init(&$a) {
 	$default = 'images/default-profile.jpg';
 
 	if(isset($type)) {
+
+		/**
+		 * Profile photos
+		 */
+
 		switch($type) {
 
 			case 'profile':
@@ -49,6 +54,10 @@ function photo_init(&$a) {
 		}
 	}
 	else {
+
+		/**
+		 * Other photos
+		 */
 
 		$resolution = 0;
 		$photo = str_replace('.jpg','',$photo);
@@ -114,7 +123,7 @@ function photo_init(&$a) {
 				// but who should otherwise be able to view it. Show a default image to let 
 				// them know permissions was denied. It may be possible to view the image 
 				// through an authenticated profile visit.
-				// There won't be many complete unauthorised people seeing this because
+				// There won't be many completely unauthorised people seeing this because
 				// they won't have the photo link, so there's a reasonable chance that the person
 				// might be able to obtain permission to view it.
  
