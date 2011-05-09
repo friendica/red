@@ -141,7 +141,6 @@ function conversation(&$a, $items, $mode, $update) {
 					$nickname = $a->user['nickname'];
 			
 				$profile_name   = ((strlen($item['author-name']))   ? $item['author-name']   : $item['name']);
-				$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $item['thumb']);
 
 				$sp = false;
 				$profile_link = best_link_url($item,$sp);
@@ -150,6 +149,12 @@ function conversation(&$a, $items, $mode, $update) {
 				if($profile_link === 'mailbox')
 					$profile_link = '';
 
+
+				$normalised = normalise_link((strlen($item['author-link'])) ? $item['author-link'] : $item['url']);
+				if(($normalised != 'mailbox') && (x($a->contacts[$normalised])))
+					$profile_avatar = $a->contacts[$normalised]['thumb'];
+				else
+					$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $item['thumb']);
 
 				$location = (($item['location']) ? '<a target="map" title="' . $item['location'] . '" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : '');
 				$coord = (($item['coord']) ? '<a target="map" title="' . $item['coord'] . '" href="http://maps.google.com/?q=' . urlencode($item['coord']) . '">' . $item['coord'] . '</a>' : '');
@@ -388,7 +393,6 @@ function conversation(&$a, $items, $mode, $update) {
 			$diff_author    = ((link_compare($item['url'],$item['author-link'])) ? false : true);
 
 			$profile_name   = (((strlen($item['author-name']))   && $diff_author) ? $item['author-name']   : $item['name']);
-			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $thumb);
 
 			$sp = false;
 			$profile_link = best_link_url($item,$sp);
@@ -397,6 +401,15 @@ function conversation(&$a, $items, $mode, $update) {
 
 			if($profile_link === 'mailbox')
 				$profile_link = '';
+
+			$normalised = normalise_link((strlen($item['author-link'])) ? $item['author-link'] : $item['url']);
+			if(($normalised != 'mailbox') && (x($a->contacts[$normalised])))
+				$profile_avatar = $a->contacts[$normalised]['thumb'];
+			else
+				$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $thumb);
+
+
+
 
 
 			$like    = ((x($alike,$item['id'])) ? format_like($alike[$item['id']],$alike[$item['id'] . '-l'],'like',$item['id']) : '');
