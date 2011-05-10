@@ -31,6 +31,7 @@ sed -i "s/FIRST AUTHOR <EMAIL@ADDRESS>, YEAR./Mike Macgirvin, 2010/g" "$OUTFILE"
 sed -i "s/PACKAGE VERSION/$F9KVERSION/g" "$OUTFILE"
 sed -i "s/PACKAGE/Friendika/g" "$OUTFILE"
 sed -i "s/CHARSET/UTF-8/g" "$OUTFILE"
+sed -i "s/^\"Plural-Forms/#\"Plural-Forms/g" "$OUTFILE"
 
 
 echo "done."
