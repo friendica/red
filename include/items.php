@@ -113,7 +113,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 	$items = $r;
 
-	$feed_template = load_view_file('view/atom_feed.tpl');
+	$feed_template = file_get_contents('view/atom_feed.tpl');
 
 	$atom = '';
 

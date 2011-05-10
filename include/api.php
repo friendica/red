@@ -273,7 +273,7 @@
 			case "atom":
 			case "xml":
 				$data = api_xmlify($data);
-				$tpl = load_view_file("view/api_".$templatename."_".$type.".tpl");
+				$tpl = file_get_contents("view/api_".$templatename."_".$type.".tpl");
 				$ret = replace_macros($tpl, $data);
 				break;
 			case "json":

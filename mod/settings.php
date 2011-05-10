@@ -310,7 +310,7 @@ function settings_content(&$a) {
 	$mail_pubmail = ((count($r)) ? $r[0]['pubmail'] : 0);
 
 
-	$pageset_tpl = load_view_file('view/pagetypes.tpl');
+	$pageset_tpl = file_get_contents('view/pagetypes.tpl');
 	$pagetype = replace_macros($pageset_tpl,array(
 		'$normal'         => (($a->user['page-flags'] == PAGE_NORMAL)      ? " checked=\"checked\" " : ""),
 		'$soapbox'        => (($a->user['page-flags'] == PAGE_SOAPBOX)     ? " checked=\"checked\" " : ""),
@@ -344,7 +344,7 @@ function settings_content(&$a) {
 		$profile_in_dir = '<input type="hidden" name="profile_in_directory" value="1" />';
 	}
 	else {
-		$opt_tpl = load_view_file("view/profile-in-directory.tpl");
+		$opt_tpl = file_get_contents("view/profile-in-directory.tpl");
 		$profile_in_dir = replace_macros($opt_tpl,array(
 			'$desc'         => t('Publish your default profile in site directory?'),
 			'$yes_str'      => t('Yes'),
@@ -355,7 +355,7 @@ function settings_content(&$a) {
 	}
 
 	if(strlen(get_config('system','directory_submit_url'))) {
-		$opt_tpl = load_view_file("view/profile-in-netdir.tpl");
+		$opt_tpl = file_get_contents("view/profile-in-netdir.tpl");
 
 		$profile_in_net_dir = replace_macros($opt_tpl,array(
 			'$desc'         => t('Publish your default profile in global social directory?'),
@@ -397,7 +397,7 @@ function settings_content(&$a) {
 
 	$subdir = ((strlen($a->get_path())) ? '<br />' . t('or') . ' ' . $a->get_baseurl() . '/profile/' . $nickname : '');
 
-	$tpl_addr = load_view_file("view/settings_nick_set.tpl");
+	$tpl_addr = file_get_contents("view/settings_nick_set.tpl");
 
 	$prof_addr = replace_macros($tpl_addr,array(
 		'$desc' => t('Your Identity Address is'),
@@ -406,7 +406,7 @@ function settings_content(&$a) {
 		'$basepath' => $a->get_hostname()
 	));
 
-	$stpl = load_view_file('view/settings.tpl');
+	$stpl = file_get_contents('view/settings.tpl');
 
 	$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
 

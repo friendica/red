@@ -14,7 +14,7 @@ function contacts_init(&$a) {
 	if(strlen(get_config('system','directory_submit_url')))
 		$a->page['aside'] .= '<div class="side-link" id="side-match-link"><a href="match" >' . t('Find People With Shared Interests') . '</a></div>';
 
-	$tpl = load_view_file('view/follow.tpl');
+	$tpl = file_get_contents('view/follow.tpl');
 	$a->page['aside'] .= replace_macros($tpl,array(
 		'$label' => t('Connect/Follow'),
 		'$hint' => t('Example: bob@example.com, http://example.com/barbara'),
@@ -168,7 +168,7 @@ function contacts_content(&$a) {
 			// create an unfollow slap
 
 			if($orig_record[0]['network'] === 'stat') {
-				$tpl = load_view_file('view/follow_slap.tpl');
+				$tpl = file_get_contents('view/follow_slap.tpl');
 				$slap = replace_macros($tpl, array(
 					'$name' => $a->user['username'],
 					'$profile_page' => $a->get_baseurl() . '/profile/' . $a->user['nickname'],
@@ -215,12 +215,12 @@ function contacts_content(&$a) {
 			return;
 		}
 
-		$tpl = load_view_file('view/contact_head.tpl');
+		$tpl = file_get_contents('view/contact_head.tpl');
 		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
 
 		require_once('include/contact_selectors.php');
 
-		$tpl = load_view_file("view/contact_edit.tpl");
+		$tpl = file_get_contents("view/contact_edit.tpl");
 
 		switch($r[0]['rel']) {
 			case REL_BUD:
@@ -317,7 +317,7 @@ function contacts_content(&$a) {
 
 	$search = ((x($_GET,'search')) ? notags(trim($_GET['search'])) : '');
 
-	$tpl = load_view_file("view/contacts-top.tpl");
+	$tpl = file_get_contents("view/contacts-top.tpl");
 	$o .= replace_macros($tpl,array(
 		'$header' => t('Contacts'),
 		'$hide_url' => ((strlen($sql_extra)) ? 'contacts/all' : 'contacts' ),
@@ -351,7 +351,7 @@ function contacts_content(&$a) {
 
 	if(count($r)) {
 
-		$tpl = load_view_file("view/contact_template.tpl");
+		$tpl = file_get_contents("view/contact_template.tpl");
 
 		foreach($r as $rr) {
 			if($rr['self'])

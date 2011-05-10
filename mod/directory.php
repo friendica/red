@@ -29,7 +29,7 @@ function directory_content(&$a) {
 	else
 		$search = ((x($_GET,'search')) ? notags(trim(rawurldecode($_GET['search']))) : '');
 
-	$tpl = load_view_file('view/directory_header.tpl');
+	$tpl = file_get_contents('view/directory_header.tpl');
 
 	$globaldir = '';
 	$gdirpath = dirname(get_config('system','directory_submit_url'));
@@ -65,7 +65,7 @@ function directory_content(&$a) {
 	);
 	if(count($r)) {
 
-		$tpl = load_view_file('view/directory_item.tpl');
+		$tpl = file_get_contents('view/directory_item.tpl');
 
 		if(in_array('small', $a->argv))
 			$photo = 'thumb';

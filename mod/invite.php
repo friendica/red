@@ -55,7 +55,7 @@ function invite_content(&$a) {
 		return;
 	}
 
-	$tpl = load_view_file('view/invite.tpl');
+	$tpl = file_get_contents('view/invite.tpl');
 	
 	$o = replace_macros($tpl, array(
 		'$invite' => t('Send invitations'),

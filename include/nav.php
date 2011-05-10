@@ -125,7 +125,7 @@ function nav(&$a) {
 		$banner .= '<a href="http://project.friendika.com"><img id="logo-img" src="images/friendika-32.png" alt="logo" /></a><span id="logo-text"><a href="http://project.friendika.com">Friendika</a></span>';
 
 
-	$tpl = load_view_file('view/nav.tpl');
+	$tpl = file_get_contents('view/nav.tpl');
 
 	$a->page['nav'] .= replace_macros($tpl, array(
 		'$langselector' => lang_selector(),

@@ -73,7 +73,7 @@ function lostpass_content(&$a) {
 			intval($uid)
 		);
 		if($r) {
-			$tpl = load_view_file('view/pwdreset.tpl');
+			$tpl = file_get_contents('view/pwdreset.tpl');
 			$o .= replace_macros($tpl,array(
 				'$lbl1' => t('Password Reset'),
 				'$lbl2' => t('Your password has been reset as requested.'),
@@ -108,7 +108,7 @@ function lostpass_content(&$a) {
 	
 	}
 	else {
-		$tpl = load_view_file('view/lostpass.tpl');
+		$tpl = file_get_contents('view/lostpass.tpl');
 
 		$o .= replace_macros($tpl,array(
 			'$title' => t('Forgot your Password?'),

@@ -120,7 +120,7 @@ function message_content(&$a) {
 	$myprofile = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
 
 
-	$tpl = load_view_file('view/mail_head.tpl');
+	$tpl = file_get_contents('view/mail_head.tpl');
 	$header = replace_macros($tpl, array(
 		'$messages' => t('Messages'),
 		'$inbox' => t('Inbox'),
@@ -164,7 +164,7 @@ function message_content(&$a) {
 
 	if(($a->argc > 1) && ($a->argv[1] === 'new')) {
 		
-		$tpl = load_view_file('view/msg-header.tpl');
+		$tpl = file_get_contents('view/msg-header.tpl');
 
 		$a->page['htmlhead'] .= replace_macros($tpl, array(
 			'$baseurl' => $a->get_baseurl(),
@@ -175,7 +175,7 @@ function message_content(&$a) {
 		$preselect = (isset($a->argv[2])?array($a->argv[2]):false);
 	
 		$select = contact_select('messageto','message-to-select', $preselect, 4, true);
-		$tpl = load_view_file('view/prv_message.tpl');
+		$tpl = file_get_contents('view/prv_message.tpl');
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Send Private Message'),
 			'$to' => t('To:'),
@@ -225,7 +225,7 @@ function message_content(&$a) {
 			return $o;
 		}
 
-		$tpl = load_view_file('view/mail_list.tpl');
+		$tpl = file_get_contents('view/mail_list.tpl');
 		foreach($r as $rr) {
 			$o .= replace_macros($tpl, array(
 				'$id' => $rr['id'],
@@ -275,7 +275,7 @@ function message_content(&$a) {
 
 		require_once("include/bbcode.php");
 
-		$tpl = load_view_file('view/msg-header.tpl');
+		$tpl = file_get_contents('view/msg-header.tpl');
 	
 		$a->page['htmlhead'] .= replace_macros($tpl, array(
 			'$nickname' => $a->user['nickname'],
@@ -283,7 +283,7 @@ function message_content(&$a) {
 		));
 
 
-		$tpl = load_view_file('view/mail_conv.tpl');
+		$tpl = file_get_contents('view/mail_conv.tpl');
 		foreach($messages as $message) {
 			if($message['from-url'] == $myprofile) {
 				$from_url = $myprofile;
@@ -309,7 +309,7 @@ function message_content(&$a) {
 		}
 		$select = $message['name'] . '<input type="hidden" name="messageto" value="' . $contact_id . '" />';
 		$parent = '<input type="hidden" name="replyto" value="' . $message['parent-uri'] . '" />';
-		$tpl = load_view_file('view/prv_message.tpl');
+		$tpl = file_get_contents('view/prv_message.tpl');
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Send Reply'),
 			'$to' => t('To:'),

@@ -133,7 +133,7 @@ function follow_post(&$a) {
 
 	// create a follow slap
 
-	$tpl = load_view_file('view/follow_slap.tpl');
+	$tpl = file_get_contents('view/follow_slap.tpl');
 	$slap = replace_macros($tpl, array(
 		'$name' => $a->user['username'],
 		'$profile_page' => $a->get_baseurl() . '/profile/' . $a->user['nickname'],

@@ -499,7 +499,7 @@ function dfrn_request_content(&$a) {
 		$dfrn_url = notags(trim(hex2bin($_GET['dfrn_url'])));
 		$aes_allow = (((x($_GET,'aes_allow')) && ($_GET['aes_allow'] == 1)) ? 1 : 0);
 		$confirm_key = (x($_GET,'confirm_key') ? $_GET['confirm_key'] : "");
-		$o .= load_view_file("view/dfrn_req_confirm.tpl");
+		$o .= file_get_contents("view/dfrn_req_confirm.tpl");
 		$o  = replace_macros($o,array(
 			'$dfrn_url' => $dfrn_url,
 			'$aes_allow' => (($aes_allow) ? '<input type="hidden" name="aes_allow" value="1" />' : "" ),
@@ -622,9 +622,9 @@ function dfrn_request_content(&$a) {
 		 */
 
 		if($a->profile['page-flags'] == PAGE_NORMAL)
-			$tpl = load_view_file('view/dfrn_request.tpl');
+			$tpl = file_get_contents('view/dfrn_request.tpl');
 		else
-			$tpl = load_view_file('view/auto_request.tpl');
+			$tpl = file_get_contents('view/auto_request.tpl');
 
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Friend/Connection Request'),

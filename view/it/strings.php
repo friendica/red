@@ -1,7 +1,7 @@
 <?php
 
 function string_plural_select($n){
-	return ($n != 1)\$n";
+	return ($n != 1);
 }
 ;
 $a->strings["Post successful."] = "Inviato con successo.";

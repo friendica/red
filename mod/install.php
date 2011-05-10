@@ -116,7 +116,7 @@ function install_content(&$a) {
 
 	require_once('datetime.php');
 
-	$tpl = load_view_file('view/install_db.tpl');
+	$tpl = file_get_contents('view/install_db.tpl');
 	$o .= replace_macros($tpl, array(
 		'$lbl_01' => t('Friendika Social Network'),
 		'$lbl_02' => t('Installation'),

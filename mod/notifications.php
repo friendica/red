@@ -89,13 +89,13 @@ function notifications_content(&$a) {
 	if(($r !== false) && (count($r))) {
 
 
-		$tpl = load_view_file("view/intros.tpl");
+		$tpl = file_get_contents("view/intros.tpl");
 
 		foreach($r as $rr) {
 
 			$friend_selected = (($rr['network'] !== 'stat') ? ' checked="checked" ' : ' disabled ');
 			$fan_selected = (($rr['network'] === 'stat') ? ' checked="checked" disabled ' : '');
-			$dfrn_tpl = load_view_file('view/netfriend.tpl');
+			$dfrn_tpl = file_get_contents('view/netfriend.tpl');
 
 			$knowyou   = '';
 			$dfrn_text = '';

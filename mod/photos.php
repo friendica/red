@@ -828,7 +828,7 @@ function photos_content(&$a) {
 
  
 
-		$tpl = load_view_file('view/photos_upload.tpl');
+		$tpl = file_get_contents('view/photos_upload.tpl');
 		$o .= replace_macros($tpl,array(
 			'$pagename' => t('Upload Photos'),
 			'$sessid' => session_id(),
@@ -874,7 +874,7 @@ function photos_content(&$a) {
 		if($cmd === 'edit') {		
 			if(($album != t('Profile Photos')) && ($album != t('Contact Photos'))) {
 				if($can_post) {
-					$edit_tpl = load_view_file('view/album_edit.tpl');
+					$edit_tpl = file_get_contents('view/album_edit.tpl');
 					$o .= replace_macros($edit_tpl,array(
 						'$nametext' => t('New album name: '),
 						'$nickname' => $a->data['user']['nickname'],
@@ -895,7 +895,7 @@ function photos_content(&$a) {
  				}
 			}
 		}
-		$tpl = load_view_file('view/photo_album.tpl');
+		$tpl = file_get_contents('view/photo_album.tpl');
 		if(count($r))
 			foreach($r as $rr) {
 				$o .= replace_macros($tpl,array(
@@ -1073,7 +1073,7 @@ function photos_content(&$a) {
 
 		$edit = Null;
 		if(($cmd === 'edit') && ($can_post)) {
-			$edit_tpl = load_view_file('view/photo_edit.tpl');
+			$edit_tpl = file_get_contents('view/photo_edit.tpl');
 			$edit = replace_macros($edit_tpl, array(
 				'$id' => $ph[0]['id'],
 				'$album' => $ph[0]['album'],
@@ -1095,11 +1095,11 @@ function photos_content(&$a) {
 
 		if(count($linked_items)) {
 
-			$cmnt_tpl = load_view_file('view/comment_item.tpl');
-			$tpl = load_view_file('view/photo_item.tpl');
+			$cmnt_tpl = file_get_contents('view/comment_item.tpl');
+			$tpl = file_get_contents('view/photo_item.tpl');
 			$return_url = $a->cmd;
 
-			$like_tpl = load_view_file('view/like_noshare.tpl');
+			$like_tpl = file_get_contents('view/like_noshare.tpl');
 
 			$likebuttons = '';
 
@@ -1225,7 +1225,7 @@ function photos_content(&$a) {
 					$drop = '';
 
 					if(($item['contact-id'] == remote_user()) || ($item['uid'] == local_user()))
-						$drop = replace_macros(load_view_file('view/wall_item_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
+						$drop = replace_macros(file_get_contents('view/wall_item_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
 
 
 					$comments .= replace_macros($template,array(
@@ -1247,7 +1247,7 @@ function photos_content(&$a) {
 			$paginate = paginate($a);
 		}
 		
-		$photo_tpl = load_view_file('view/photo_view.tpl');
+		$photo_tpl = file_get_contents('view/photo_view.tpl');
 		$o .= replace_macros($photo_tpl, array(
 			'$id' => $ph[0]['id'],
 			'$album' => array($album_link,$ph[0]['album']),
@@ -1298,7 +1298,7 @@ function photos_content(&$a) {
 			. $a->data['user']['nickname'] . '/upload' . '">' . t('Upload New Photos') . '</a></div>';
 	}
 
-	$tpl = load_view_file('view/photo_top.tpl');
+	$tpl = file_get_contents('view/photo_top.tpl');
 	if(count($r)) {
 		foreach($r as $rr) {
 			$o .= replace_macros($tpl,array(

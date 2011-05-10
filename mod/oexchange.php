@@ -4,7 +4,7 @@
 function oexchange_init(&$a) {
 
 	if(($a->argc > 1) && ($a->argv[1] === 'xrd')) {
-		$tpl = load_view_file('view/oexchange_xrd.tpl');
+		$tpl = file_get_contents('view/oexchange_xrd.tpl');
 
 		$o = replace_macros($tpl, array('$base' => $a->get_baseurl()));
 		echo $o;

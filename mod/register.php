@@ -435,7 +435,7 @@ function register_content(&$a) {
 		$profile_publish_reg = '<input type="hidden" name="profile_publish_reg" value="1" />';
 	}
 	else {
-		$publish_tpl = load_view_file("view/profile_publish.tpl");
+		$publish_tpl = file_get_contents("view/profile_publish.tpl");
 		$profile_publish = replace_macros($publish_tpl,array(
 			'$instance'     => 'reg',
 			'$pubdesc'      => t('Include your profile in member directory?'),
@@ -450,7 +450,7 @@ function register_content(&$a) {
 	$license = t('Shared content is covered by the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> license.');
 
 
-	$o = load_view_file("view/register.tpl");
+	$o = file_get_contents("view/register.tpl");
 	$o = replace_macros($o, array(
 		'$oidhtml' => $oidhtml,
 		'$realpeople' => $realpeople,

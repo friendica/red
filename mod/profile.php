@@ -104,7 +104,7 @@ function profile_content(&$a, $update = 0) {
 		if(x($_GET,'tab'))
 			$tab = notags(trim($_GET['tab']));
 
-		$tpl = load_view_file('view/profile_tabs.tpl');
+		$tpl = file_get_contents('view/profile_tabs.tpl');
 
 		$o .= replace_macros($tpl,array(
 			'$url' => $a->get_baseurl() . '/' . $a->cmd,

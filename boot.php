@@ -378,7 +378,7 @@ class App {
 
 	function init_pagehead() {
 		$this->page['title'] = $this->config['sitename'];
-		$tpl = load_view_file('view/head.tpl');
+		$tpl = file_get_contents('view/head.tpl');
 		$this->page['htmlhead'] = replace_macros($tpl,array(
 			'$baseurl' => $this->get_baseurl(),
 			'$generator' => 'Friendika' . ' ' . FRIENDIKA_VERSION,
@@ -828,7 +828,7 @@ function escape_tags($string) {
 if(! function_exists('login')) {
 function login($register = false) {
 	$o = "";
-	$register_tpl = (($register) ? load_view_file("view/register-link.tpl") : "");
+	$register_tpl = (($register) ? file_get_contents("view/register-link.tpl") : "");
 	
 	$register_html = replace_macros($register_tpl,array(
 		'$title' => t('Create a New Account'),
@@ -852,10 +852,10 @@ function login($register = false) {
 	$lostlink = t('Password Reset');
 
 	if(local_user()) {
-		$tpl = load_view_file("view/logout.tpl");
+		$tpl = file_get_contents("view/logout.tpl");
 	}
 	else {
-		$tpl = load_view_file("view/login.tpl");
+		$tpl = file_get_contents("view/login.tpl");
 
 	}
 
@@ -2307,7 +2307,7 @@ function profile_sidebar($profile) {
 
 	$homepage = ((x($profile,'homepage') == 1) ? '<div class="homepage"><span class="homepage-label">' . t('Homepage:') . ' </span><span class="homepage-url">' . linkify($profile['homepage']) . '</span></div><div class="profile-clear"></div>' : '');
 
-	$tpl = load_view_file('view/profile_vcard.tpl');
+	$tpl = file_get_contents('view/profile_vcard.tpl');
 
 	$o .= replace_macros($tpl, array(
 		'$fullname' => $fullname,

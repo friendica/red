@@ -1,7 +1,7 @@
 <?php
     function opensearch_content(&$a) {
     	
-		$tpl = load_view_file('view/opensearch.tpl');
+		$tpl = file_get_contents('view/opensearch.tpl');
 	
 		header("Content-type: application/opensearchdescription+xml");
 	
