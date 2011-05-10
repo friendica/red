@@ -35,7 +35,7 @@ function po2php_run($argv, $argc) {
 		if ($l[0]=="#") $l="";
 		if (substr($l,0,15)=='"Plural-Forms: '){
 			$match=Array();
-			preg_match("|nplurals=([0-9]*); plural=(.*);|", $l, $match);
+			preg_match("|nplurals=([0-9]*); *plural=(.*)|", $l, $match);
 			$cond = str_replace('n','$n',$match[2]);
 			$out .= 'function string_plural_select($n){'."\n";
 			$out .= '	return '.$cond.';'."\n";
