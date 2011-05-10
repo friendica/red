@@ -141,6 +141,31 @@ function fb_get_friends($uid) {
 				);			
 
 				if(count($r)) {
+
+					// check that we have all the photos, this has been known to fail on occasion
+
+					if((! $r[0]['photo']) || (! $r[0]['thumb']) || (! $r[0]['micro'])) {  
+						require_once("Photo.php");
+
+						$photos = import_profile_photo('https://graph.facebook.com/' . $jp->id . '/picture', $uid, $r[0]['id']);
+
+						$r = q("UPDATE `contact` SET `photo` = '%s', 
+							`thumb` = '%s',
+							`micro` = '%s', 
+							`name-date` = '%s', 
+							`uri-date` = '%s', 
+							`avatar-date` = '%s'
+							WHERE `id` = %d LIMIT 1
+						",
+							dbesc($photos[0]),
+							dbesc($photos[1]),
+							dbesc($photos[2]),
+							dbesc(datetime_convert()),
+							dbesc(datetime_convert()),
+							dbesc(datetime_convert()),
+							intval($r[0]['id'])
+						);			
+					}	
 					continue;
 				}
 				else {
