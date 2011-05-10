@@ -380,7 +380,7 @@ class App {
 		$this->page['title'] = $this->config['sitename'];
 		$tpl = load_view_file('view/head.tpl');
 		$this->page['htmlhead'] = replace_macros($tpl,array(
-			'$baseurl' => $this->get_baseurl() . '/',
+			'$baseurl' => $this->get_baseurl(),
 			'$generator' => 'Friendika' . ' ' . FRIENDIKA_VERSION,
 			'$delitem' => t('Delete this item?'),
 			'$comment' => t('Comment')
