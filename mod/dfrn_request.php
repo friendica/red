@@ -499,8 +499,8 @@ function dfrn_request_content(&$a) {
 		$dfrn_url = notags(trim(hex2bin($_GET['dfrn_url'])));
 		$aes_allow = (((x($_GET,'aes_allow')) && ($_GET['aes_allow'] == 1)) ? 1 : 0);
 		$confirm_key = (x($_GET,'confirm_key') ? $_GET['confirm_key'] : "");
-		$o .= file_get_contents("view/dfrn_req_confirm.tpl");
-		$o  = replace_macros($o,array(
+		$tpl = get_markup_template("dfrn_req_confirm.tpl");
+		$o  = replace_macros($tpl,array(
 			'$dfrn_url' => $dfrn_url,
 			'$aes_allow' => (($aes_allow) ? '<input type="hidden" name="aes_allow" value="1" />' : "" ),
 			'$confirm_key' => $confirm_key,
@@ -537,7 +537,7 @@ function dfrn_request_content(&$a) {
 				if($r[0]['page-flags'] != PAGE_NORMAL)
 					$auto_confirm = true;				
 				if(($r[0]['notify-flags'] & NOTIFY_INTRO) && (! $auto_confirm)) {
-					$email_tpl = load_view_file('view/request_notify_eml.tpl');
+					$email_tpl = get_intltext_template('request_notify_eml.tpl');
 					$email = replace_macros($email_tpl, array(
 						'$requestor' => ((strlen(stripslashes($r[0]['name']))) ? stripslashes($r[0]['name']) : t('[Name Withheld]')),
 						'$url' => stripslashes($r[0]['url']),
@@ -622,9 +622,9 @@ function dfrn_request_content(&$a) {
 		 */
 
 		if($a->profile['page-flags'] == PAGE_NORMAL)
-			$tpl = file_get_contents('view/dfrn_request.tpl');
+			$tpl = get_markup_template('dfrn_request.tpl');
 		else
-			$tpl = file_get_contents('view/auto_request.tpl');
+			$tpl = get_markup_template('auto_request.tpl');
 
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Friend/Connection Request'),

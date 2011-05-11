@@ -79,7 +79,7 @@ function regmod_content(&$a) {
 				proc_run('php',"include/directory.php","$url");
 		}
 
-		$email_tpl = load_view_file("view/register_open_eml.tpl");
+		$email_tpl = get_intltext_template("register_open_eml.tpl");
 		$email_tpl = replace_macros($email_tpl, array(
 				'$sitename' => $a->config['sitename'],
 				'$siteurl' =>  $a->get_baseurl(),

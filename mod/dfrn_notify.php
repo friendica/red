@@ -210,7 +210,7 @@ function dfrn_notify_post(&$a) {
 				= html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r","\\n\\n" ,"\\n"), "<br />\n",$msg['body']))));
 
 			// load the template for private message notifications
-			$tpl = load_view_file('view/mail_received_html_body_eml.tpl');
+			$tpl = get_intltext_template('mail_received_html_body_eml.tpl');
 			$email_html_body_tpl = replace_macros($tpl,array(
 				'$siteName'		=> $a->config['sitename'],				// name of this site
 				'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
@@ -225,7 +225,7 @@ function dfrn_notify_post(&$a) {
 			));
 			
 			// load the template for private message notifications
-			$tpl = load_view_file('view/mail_received_text_body_eml.tpl');
+			$tpl = get_intltext_template('mail_received_text_body_eml.tpl');
 			$email_text_body_tpl = replace_macros($tpl,array(
 				'$siteName'		=> $a->config['sitename'],				// name of this site
 				'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
@@ -389,7 +389,7 @@ function dfrn_notify_post(&$a) {
 						if((! $is_like) && ($importer['notify-flags'] & NOTIFY_COMMENT) && (! $importer['self'])) {
 							require_once('bbcode.php');
 							$from = stripslashes($datarray['author-name']);
-							$tpl = load_view_file('view/cmnt_received_eml.tpl');			
+							$tpl = get_intltext_template('cmnt_received_eml.tpl');			
 							$email_tpl = replace_macros($tpl, array(
 								'$sitename' => $a->config['sitename'],
 								'$siteurl' =>  $a->get_baseurl(),
@@ -479,7 +479,7 @@ function dfrn_notify_post(&$a) {
 								continue;
 							require_once('bbcode.php');
 							$from = stripslashes($datarray['author-name']);
-							$tpl = load_view_file('view/cmnt_received_eml.tpl');	
+							$tpl = get_intltext_template('cmnt_received_eml.tpl');	
 							$email_tpl = replace_macros($tpl, array(
 								'$sitename' => $a->config['sitename'],
 								'$siteurl' =>  $a->get_baseurl(),

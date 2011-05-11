@@ -80,7 +80,7 @@ function crepair_content(&$a) {
 
 	$o .= '<div class="error-message">' . $msg2 . EOL . EOL. $msg3 . '</div>';
 
-	$tpl = file_get_contents('view/crepair.tpl');
+	$tpl = get_markup_template('crepair.tpl');
 	$o .= replace_macros($tpl, array(
 		'$label_name' => t('Name'),
 		'$label_nick' => t('Account Nickname'),

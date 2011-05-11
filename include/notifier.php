@@ -191,8 +191,8 @@ function notifier_run($argv, $argc){
 			$contacts = $r;
 	}
 
-	$feed_template = file_get_contents('view/atom_feed.tpl');
-	$mail_template = file_get_contents('view/atom_mail.tpl');
+	$feed_template = get_markup_template('atom_feed.tpl');
+	$mail_template = get_markup_template('atom_mail.tpl');
 
 	$atom = '';
 	$slaps = array();

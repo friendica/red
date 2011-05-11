@@ -37,7 +37,7 @@ function install_post(&$a) {
 
 	notice( t('Connected to database.') . EOL);
 
-	$tpl = load_view_file('view/htconfig.tpl');
+	$tpl = get_intltext_template('htconfig.tpl');
 	$txt = replace_macros($tpl,array(
 		'$dbhost' => $dbhost,
 		'$dbuser' => $dbuser,
@@ -116,7 +116,7 @@ function install_content(&$a) {
 
 	require_once('datetime.php');
 
-	$tpl = file_get_contents('view/install_db.tpl');
+	$tpl = get_markup_template('install_db.tpl');
 	$o .= replace_macros($tpl, array(
 		'$lbl_01' => t('Friendika Social Network'),
 		'$lbl_02' => t('Installation'),

@@ -104,11 +104,11 @@ function conversation(&$a, $items, $mode, $update) {
 	load_contact_links(local_user());
 
 
-	$cmnt_tpl    = file_get_contents('view/comment_item.tpl');
-	$like_tpl    = file_get_contents('view/like.tpl');
-	$noshare_tpl = file_get_contents('view/like_noshare.tpl');
-	$tpl         = load_view_file('view/wall_item.tpl');
-	$wallwall    = load_view_file('view/wallwall_item.tpl');
+	$cmnt_tpl    = get_markup_template('comment_item.tpl');
+	$like_tpl    = get_markup_template('like.tpl');
+	$noshare_tpl = get_markup_template('like_noshare.tpl');
+	$tpl         = get_markup_template('wall_item.tpl');
+	$wallwall    = get_markup_template('wallwall_item.tpl');
 
 	$alike = array();
 	$dlike = array();
@@ -120,8 +120,8 @@ function conversation(&$a, $items, $mode, $update) {
 			// "New Item View" on network page or search page results 
 			// - just loop through the items and format them minimally for display
 
-			$tpl = load_view_file('view/search_item.tpl');
-			$droptpl = file_get_contents('view/wall_fake_drop.tpl');
+			$tpl = get_markup_template('search_item.tpl');
+			$droptpl = get_markup_template('wall_fake_drop.tpl');
 
 			foreach($items as $item) {
 
@@ -383,7 +383,7 @@ function conversation(&$a, $items, $mode, $update) {
 					? '<a class="editpost" href="' . $a->get_baseurl() . '/editpost/' . $item['id'] 
 						. '" title="' . t('Edit') . '"><img src="images/pencil.gif" /></a>'
 					: '');
-			$drop = replace_macros(file_get_contents('view/wall_item_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
+			$drop = replace_macros(get_markup_template('wall_item_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
 
 			$photo = $item['photo'];
 			$thumb = $item['thumb'];
@@ -662,9 +662,9 @@ function status_editor($a,$x) {
 
 	$o = '';
 		
-	$geotag = (($x['allow_location']) ? file_get_contents('view/jot_geotag.tpl') : '');
+	$geotag = (($x['allow_location']) ? get_markup_template('jot_geotag.tpl') : '');
 
-		$tpl = load_view_file('view/jot-header.tpl');
+		$tpl = get_markup_template('jot-header.tpl');
 	
 		$a->page['htmlhead'] .= replace_macros($tpl, array(
 			'$baseurl' => $a->get_baseurl(),
@@ -680,7 +680,7 @@ function status_editor($a,$x) {
 		));
 
 
-		$tpl = load_view_file("view/jot.tpl");
+		$tpl = get_markup_template("jot.tpl");
 		
 		$jotplugins = '';
 		$jotnets = '';

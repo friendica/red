@@ -31,7 +31,7 @@ function editpost_content(&$a) {
 
 	$o .= '<h2>' . t('Edit post') . '</h2>';
 
-	$tpl = load_view_file('view/jot-header.tpl');
+	$tpl = get_markup_template('jot-header.tpl');
 	
 	$a->page['htmlhead'] .= replace_macros($tpl, array(
 		'$baseurl' => $a->get_baseurl(),
@@ -41,7 +41,7 @@ function editpost_content(&$a) {
 	));
 
 
-	$tpl = load_view_file("view/jot.tpl");
+	$tpl = get_markup_template("jot.tpl");
 		
 	if(($group) || (is_array($a->user) && ((strlen($a->user['allow_cid'])) || (strlen($a->user['allow_gid'])) || (strlen($a->user['deny_cid'])) || (strlen($a->user['deny_gid'])))))
 		$lockstate = 'lock';

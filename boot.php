@@ -828,7 +828,7 @@ function escape_tags($string) {
 if(! function_exists('login')) {
 function login($register = false) {
 	$o = "";
-	$register_tpl = (($register) ? file_get_contents("view/register-link.tpl") : "");
+	$register_tpl = (($register) ? get_markup_template("register-link.tpl") : "");
 	
 	$register_html = replace_macros($register_tpl,array(
 		'$title' => t('Create a New Account'),
@@ -852,10 +852,10 @@ function login($register = false) {
 	$lostlink = t('Password Reset');
 
 	if(local_user()) {
-		$tpl = file_get_contents("view/logout.tpl");
+		$tpl = get_markup_template("logout.tpl");
 	}
 	else {
-		$tpl = file_get_contents("view/login.tpl");
+		$tpl = get_markup_template("login.tpl");
 
 	}
 
@@ -1864,6 +1864,8 @@ function allowed_email($email) {
 // wrapper to load a view template, checking for alternate
 // languages before falling back to the default
 
+// obsolete, deprecated.
+
 if(! function_exists('load_view_file')) {
 function load_view_file($s) {
 	global $lang, $a;
@@ -1881,6 +1883,37 @@ function load_view_file($s) {
 			
 	return file_get_contents($s);
 }}
+
+if(! function_exists('get_intltext_template')) {
+function get_intltext_template($s) {
+	global $lang;
+
+	if(! isset($lang))
+		$lang = 'en';
+
+	if(file_exists("view/$lang/$s"))
+		return file_get_contents("view/$lang/$s");
+	elseif(file_exists("view/en/$s"))
+		return file_get_contents("view/en/$s");
+	else
+		return file_get_contents("view/$s");
+}}
+
+if(! function_exists('get_markup_template')) {
+function get_markup_template($s) {
+
+	$theme = current_theme();
+	
+	if(file_exists("view/theme/$theme/$s"))
+		return file_get_contents("view/theme/$theme/$s");
+	else
+		return file_get_contents("view/$s");
+
+}}
+
+
+
+
 
 // for html,xml parsing - let's say you've got
 // an attribute foobar="class1 class2 class3"
@@ -2307,7 +2340,7 @@ function profile_sidebar($profile) {
 
 	$homepage = ((x($profile,'homepage') == 1) ? '<div class="homepage"><span class="homepage-label">' . t('Homepage:') . ' </span><span class="homepage-url">' . linkify($profile['homepage']) . '</span></div><div class="profile-clear"></div>' : '');
 
-	$tpl = file_get_contents('view/profile_vcard.tpl');
+	$tpl = get_markup_template('profile_vcard.tpl');
 
 	$o .= replace_macros($tpl, array(
 		'$fullname' => $fullname,

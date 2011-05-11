@@ -464,7 +464,7 @@ function item_post(&$a) {
 			if(($user['notify-flags'] & NOTIFY_COMMENT) && ($contact_record != $author)) {
 				require_once('bbcode.php');
 				$from = $author['name'];
-				$tpl = load_view_file('view/cmnt_received_eml.tpl');			
+				$tpl = get_intltext_template('cmnt_received_eml.tpl');			
 				$email_tpl = replace_macros($tpl, array(
 					'$sitename' => $a->config['sitename'],
 					'$siteurl' =>  $a->get_baseurl(),
@@ -490,7 +490,7 @@ function item_post(&$a) {
 			if(($user['notify-flags'] & NOTIFY_WALL) && ($contact_record != $author)) {
 				require_once('bbcode.php');
 				$from = $author['name'];
-				$tpl = load_view_file('view/wall_received_eml.tpl');			
+				$tpl = get_intltext_template('wall_received_eml.tpl');			
 				$email_tpl = replace_macros($tpl, array(
 					'$sitename' => $a->config['sitename'],
 					'$siteurl' =>  $a->get_baseurl(),

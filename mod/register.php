@@ -319,7 +319,7 @@ function register_post(&$a) {
 
 
 	if( $a->config['register_policy'] == REGISTER_OPEN ) {
-		$email_tpl = load_view_file("view/register_open_eml.tpl");
+		$email_tpl = get_intltext_template("register_open_eml.tpl");
 		$email_tpl = replace_macros($email_tpl, array(
 				'$sitename' => $a->config['sitename'],
 				'$siteurl' =>  $a->get_baseurl(),
@@ -357,7 +357,7 @@ function register_post(&$a) {
 			dbesc($new_password)
 		);
 
-		$email_tpl = load_view_file("view/register_verify_eml.tpl");
+		$email_tpl = get_intltext_template("register_verify_eml.tpl");
 		$email_tpl = replace_macros($email_tpl, array(
 				'$sitename' => $a->config['sitename'],
 				'$siteurl' =>  $a->get_baseurl(),
@@ -435,7 +435,7 @@ function register_content(&$a) {
 		$profile_publish_reg = '<input type="hidden" name="profile_publish_reg" value="1" />';
 	}
 	else {
-		$publish_tpl = file_get_contents("view/profile_publish.tpl");
+		$publish_tpl = get_markup_template("profile_publish.tpl");
 		$profile_publish = replace_macros($publish_tpl,array(
 			'$instance'     => 'reg',
 			'$pubdesc'      => t('Include your profile in member directory?'),
@@ -450,7 +450,7 @@ function register_content(&$a) {
 	$license = t('Shared content is covered by the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> license.');
 
 
-	$o = file_get_contents("view/register.tpl");
+	$o = get_markup_template("register.tpl");
 	$o = replace_macros($o, array(
 		'$oidhtml' => $oidhtml,
 		'$realpeople' => $realpeople,

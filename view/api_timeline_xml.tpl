@@ -15,7 +15,7 @@
     <coordinates>$status.coordinates</coordinates>
     <place>$status.place</place>
     <contributors>$status.contributors</contributors>
-  	{{ inc view/api_user_xml.tpl with $user=$status.user }}{{ endinc }}
+  	{{ inc api_user_xml.tpl with $user=$status.user }}{{ endinc }}
   </status>
   {{ endfor }}
 </statuses>

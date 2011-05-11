@@ -347,9 +347,9 @@ function profiles_content(&$a) {
 
 		require_once('include/profile_selectors.php');
 
-		$tpl = file_get_contents('view/profed_head.tpl');
+		$tpl = get_markup_template('profed_head.tpl');
 
-		$opt_tpl = file_get_contents("view/profile-hide-friends.tpl");
+		$opt_tpl = get_markup_template("profile-hide-friends.tpl");
 		$hide_friends = replace_macros($opt_tpl,array(
 			'$desc' => t('Hide my contact/friend list from viewers of this profile?'),
 			'$yes_str' => t('Yes'),
@@ -364,7 +364,7 @@ function profiles_content(&$a) {
 
 
 		$is_default = (($r[0]['is-default']) ? 1 : 0);
-		$tpl = file_get_contents("view/profile_edit.tpl");
+		$tpl = get_markup_template("profile_edit.tpl");
 		$o .= replace_macros($tpl,array(
 			'$banner' => t('Edit Profile Details'),
 			'$submit' => t('Submit'),
@@ -451,7 +451,7 @@ function profiles_content(&$a) {
 			local_user());
 		if(count($r)) {
 
-			$tpl_header = file_get_contents('view/profile_listing_header.tpl');
+			$tpl_header = get_markup_template('profile_listing_header.tpl');
 			$o .= replace_macros($tpl_header,array(
 				'$header' => t('Profiles'),
 				'$chg_photo' => t('Change profile photo'),
@@ -459,7 +459,7 @@ function profiles_content(&$a) {
 			));
 
 
-			$tpl = file_get_contents('view/profile_entry.tpl');
+			$tpl = get_markup_template('profile_entry.tpl');
 
 			foreach($r as $rr) {
 				$o .= replace_macros($tpl, array(

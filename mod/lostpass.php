@@ -26,7 +26,7 @@ function lostpass_post(&$a) {
 	if($r)
 		notice( t('Password reset request issued. Check your email.') . EOL);
 
-	$email_tpl = load_view_file("view/lostpass_eml.tpl");
+	$email_tpl = get_intltext_template("lostpass_eml.tpl");
 	$email_tpl = replace_macros($email_tpl, array(
 			'$sitename' => $a->config['sitename'],
 			'$siteurl' =>  $a->get_baseurl(),
@@ -73,7 +73,7 @@ function lostpass_content(&$a) {
 			intval($uid)
 		);
 		if($r) {
-			$tpl = file_get_contents('view/pwdreset.tpl');
+			$tpl = get_markup_template('pwdreset.tpl');
 			$o .= replace_macros($tpl,array(
 				'$lbl1' => t('Password Reset'),
 				'$lbl2' => t('Your password has been reset as requested.'),
@@ -89,7 +89,7 @@ function lostpass_content(&$a) {
 
 
 
-			$email_tpl = load_view_file("view/passchanged_eml.tpl");
+			$email_tpl = get_intltext_template("passchanged_eml.tpl");
 			$email_tpl = replace_macros($email_tpl, array(
 			'$sitename' => $a->config['sitename'],
 			'$siteurl' =>  $a->get_baseurl(),
@@ -108,7 +108,7 @@ function lostpass_content(&$a) {
 	
 	}
 	else {
-		$tpl = file_get_contents('view/lostpass.tpl');
+		$tpl = get_markup_template('lostpass.tpl');
 
 		$o .= replace_macros($tpl,array(
 			'$title' => t('Forgot your Password?'),

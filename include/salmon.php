@@ -161,7 +161,7 @@ EOT;
 
 	$signature2  = base64url_encode($rsa->sign($data));
 
-	$salmon_tpl = file_get_contents('view/magicsig.tpl');
+	$salmon_tpl = get_markup_template('magicsig.tpl');
 	$salmon = replace_macros($salmon_tpl,array(
 		'$data'      => $data,
 		'$encoding'  => $encoding,

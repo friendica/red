@@ -86,7 +86,7 @@
 				$r[$a] = $this->_get_var($b); 
 			}
 			$this->nodes = Array();
-			$tpl = load_view_file($tplfile);
+			$tpl = get_markup_template($tplfile);
 			$ret = $this->replace($tpl, $r);
 			$this->_pop_stack();
 			return $ret;

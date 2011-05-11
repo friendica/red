@@ -69,7 +69,7 @@ function group_content(&$a) {
 	}
 
 	if(($a->argc == 2) && ($a->argv[1] === 'new')) {
-		$tpl = file_get_contents('view/group_new.tpl');
+		$tpl = get_markup_template('group_new.tpl');
 		$o .= replace_macros($tpl,array(
 			'$desc' => t('Create a group of contacts/friends.'),
 			'$name' => t('Group Name: '),
@@ -140,7 +140,7 @@ function group_content(&$a) {
 		}
 
 
-		$drop_tpl = file_get_contents('view/group_drop.tpl');
+		$drop_tpl = get_markup_template('group_drop.tpl');
 		$drop_txt = replace_macros($drop_tpl, array(
 			'$id' => $group['id'],
 			'$delete' => t('Delete')
@@ -148,7 +148,7 @@ function group_content(&$a) {
 
 		$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
 
-		$tpl = file_get_contents('view/group_edit.tpl');
+		$tpl = get_markup_template('group_edit.tpl');
 		$o .= replace_macros($tpl, array(
 			'$gid' => $group['id'],
 			'$name' => $group['name'],

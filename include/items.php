@@ -113,7 +113,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 	$items = $r;
 
-	$feed_template = file_get_contents('view/atom_feed.tpl');
+	$feed_template = get_markup_template('atom_feed.tpl');
 
 	$atom = '';
 
@@ -1421,7 +1421,7 @@ function new_follower($importer,$contact,$datarray,$item) {
 		$a = get_app();
 		if(count($r)) {
 			if(($r[0]['notify-flags'] & NOTIFY_INTRO) && ($r[0]['page-flags'] == PAGE_NORMAL)) {
-				$email_tpl = load_view_file('view/follow_notify_eml.tpl');
+				$email_tpl = get_intltext_template('follow_notify_eml.tpl');
 				$email = replace_macros($email_tpl, array(
 					'$requestor' => ((strlen($name)) ? $name : t('[Name Withheld]')),
 					'$url' => $url,

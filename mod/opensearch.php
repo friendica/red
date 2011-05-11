@@ -1,7 +1,7 @@
 <?php
     function opensearch_content(&$a) {
     	
-		$tpl = file_get_contents('view/opensearch.tpl');
+		$tpl = get_markup_template('opensearch.tpl');
 	
 		header("Content-type: application/opensearchdescription+xml");
 	

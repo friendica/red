@@ -186,7 +186,7 @@ function profile_photo_content(&$a) {
 
 	if(! x($a->config,'imagecrop')) {
 	
-		$tpl = file_get_contents('view/profile_photo.tpl');
+		$tpl = get_markup_template('profile_photo.tpl');
 
 		$o .= replace_macros($tpl,array(
 			'$user' => $a->user['nickname'],
@@ -201,7 +201,7 @@ function profile_photo_content(&$a) {
 	else {
 		$filename = $a->config['imagecrop'] . '-' . $a->config['imagecrop_resolution'] . '.jpg';
 		$resolution = $a->config['imagecrop_resolution'];
-		$tpl = file_get_contents("view/cropbody.tpl");
+		$tpl = get_markup_template("cropbody.tpl");
 		$o .= replace_macros($tpl,array(
 			'$filename' => $filename,
 			'$resource' => $a->config['imagecrop'] . '-' . $a->config['imagecrop_resolution'],
@@ -252,7 +252,7 @@ function profile_photo_crop_ui_head(&$a, $ph){
 
 	$a->config['imagecrop'] = $hash;
 	$a->config['imagecrop_resolution'] = $smallest;
-	$a->page['htmlhead'] .= file_get_contents("view/crophead.tpl");
+	$a->page['htmlhead'] .= get_markup_template("crophead.tpl");
 	return;
 }}
 
