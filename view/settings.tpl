@@ -1,10 +1,10 @@
 <h1>$ptitle</h1>
 
+$nickname_block
+
 <div id="plugin-settings-link"><a href="settings/addon">$lbl_plug</a></div>
 
 $uexport
-
-$nickname_block
 
 
 <form action="settings" id="settings-form" method="post" autocomplete="off" >

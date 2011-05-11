@@ -383,7 +383,7 @@ input#dfrn-url {
 
 #settings-nick-wrapper {
 	margin-top: 20px;
-	margin-bottom: 30px;
+
 }
 
 #settings-expire-end {
@@ -504,10 +504,6 @@ input#dfrn-url {
 }
 #settings-nick-desc {
 	width: 500px;
-}
-
-#settings-nick {
-	margin-bottom: 50px;
 }
 
 #cropimage-wrapper, #cropimage-preview-wrapper {
@@ -2126,11 +2122,15 @@ a.mail-list-link {
 }
 
 
-#plugin-settings-link, #account-settings-link, #uexport-link {
+#plugin-settings-link, #account-settings-link {
 	margin-bottom: 10px;
 }
 
-/* end from defautlt */
+#uexport-link {
+	margin-bottom: 20px;
+}
+
+/* end from default */
 	
 
 .fn {
