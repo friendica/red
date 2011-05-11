@@ -120,7 +120,7 @@ function message_content(&$a) {
 	$myprofile = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
 
 
-	$tpl = file_get_contents('view/mail_head.tpl');
+	$tpl = load_view_file('view/mail_head.tpl');
 	$header = replace_macros($tpl, array(
 		'$messages' => t('Messages'),
 		'$inbox' => t('Inbox'),

@@ -1247,7 +1247,7 @@ function photos_content(&$a) {
 			$paginate = paginate($a);
 		}
 		
-		$photo_tpl = file_get_contents('view/photo_view.tpl');
+		$photo_tpl = load_view_file('view/photo_view.tpl');
 		$o .= replace_macros($photo_tpl, array(
 			'$id' => $ph[0]['id'],
 			'$album' => array($album_link,$ph[0]['album']),

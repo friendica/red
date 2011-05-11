@@ -107,8 +107,8 @@ function conversation(&$a, $items, $mode, $update) {
 	$cmnt_tpl    = file_get_contents('view/comment_item.tpl');
 	$like_tpl    = file_get_contents('view/like.tpl');
 	$noshare_tpl = file_get_contents('view/like_noshare.tpl');
-	$tpl         = file_get_contents('view/wall_item.tpl');
-	$wallwall    = file_get_contents('view/wallwall_item.tpl');
+	$tpl         = load_view_file('view/wall_item.tpl');
+	$wallwall    = load_view_file('view/wallwall_item.tpl');
 
 	$alike = array();
 	$dlike = array();
@@ -120,7 +120,7 @@ function conversation(&$a, $items, $mode, $update) {
 			// "New Item View" on network page or search page results 
 			// - just loop through the items and format them minimally for display
 
-			$tpl = file_get_contents('view/search_item.tpl');
+			$tpl = load_view_file('view/search_item.tpl');
 			$droptpl = file_get_contents('view/wall_fake_drop.tpl');
 
 			foreach($items as $item) {
@@ -664,7 +664,7 @@ function status_editor($a,$x) {
 		
 	$geotag = (($x['allow_location']) ? file_get_contents('view/jot_geotag.tpl') : '');
 
-		$tpl = file_get_contents('view/jot-header.tpl');
+		$tpl = load_view_file('view/jot-header.tpl');
 	
 		$a->page['htmlhead'] .= replace_macros($tpl, array(
 			'$baseurl' => $a->get_baseurl(),
@@ -680,7 +680,7 @@ function status_editor($a,$x) {
 		));
 
 
-		$tpl = file_get_contents("view/jot.tpl");
+		$tpl = load_view_file("view/jot.tpl");
 		
 		$jotplugins = '';
 		$jotnets = '';

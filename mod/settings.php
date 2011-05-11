@@ -406,7 +406,7 @@ function settings_content(&$a) {
 		'$basepath' => $a->get_hostname()
 	));
 
-	$stpl = file_get_contents('view/settings.tpl');
+	$stpl = load_view_file('view/settings.tpl');
 
 	$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
 
