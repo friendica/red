@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: friendika\n"
 "Report-Msgid-Bugs-To: http://bugs.friendika.com/\n"
 "POT-Creation-Date: 2011-05-02 20:13-0700\n"
-"PO-Revision-Date: 2011-05-11 08:14+0000\n"
+"PO-Revision-Date: 2011-05-11 08:55+0000\n"
 "Last-Translator: bavatar <tobias.diekershoff@gmx.net>\n"
 "Language-Team: German (http://www.transifex.net/projects/p/friendika/team/de/)\n"
 "MIME-Version: 1.0\n"
@@ -1380,7 +1380,7 @@ msgstr "oder"
 
 #: ../../mod/settings.php:403
 msgid "Your Identity Address is"
-msgstr "Die Adresse deiner Identität lautet:"
+msgstr "Die Adresse deines Profils lautet:"
 
 #: ../../mod/settings.php:413
 msgid "Export Personal Data"
@@ -1496,7 +1496,7 @@ msgstr "(klicke zum öffnen/schließen)"
 
 #: ../../mod/settings.php:473
 msgid "Email/Mailbox Setup"
-msgstr "Email/Postfach Setup"
+msgstr "Email/Postfach Einstellungen"
 
 #: ../../mod/settings.php:474
 msgid ""
