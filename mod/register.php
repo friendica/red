@@ -70,9 +70,9 @@ function register_post(&$a) {
 	$err = '';
 
 
-	if(strlen($username) > 48)
+	if(mb_strlen($username) > 48)
 		$err .= t('Please use a shorter name.') . EOL;
-	if(strlen($username) < 3)
+	if(mb_strlen($username) < 3)
 		$err .= t('Name too short.') . EOL;
 
 	// I don't really like having this rule, but it cuts down
