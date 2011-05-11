@@ -1,13 +1,22 @@
 <?php
 
-function widget_help(&$a, &$o, $conf) {
-	$o .= "<p>Shows likes<br>Search ";
+function like_widget_name() {
+	return "Shows likes";
+}
+function like_widget_help() {
+	return "Search first item wich contains <em>KEY</em> and print like/dislike count";
 }
 
-function widget_args(){
+function like_widget_args(){
 	return Array("KEY");
 }
 
-function widget_content(&$a, &$o, $conf){
-	$o .= " #TODO# ";
+function like_widget_content(&$a, $conf){
+	$args = explode(",",$_GET['a']);
+	
+	if ($args[0]!=""){
+		return " #TODO like/dislike count for item with <em>" .$args[0]. "</em> # ";
+	} else {
+		return " #TODO# ";
+	}
 }

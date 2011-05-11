@@ -17,8 +17,8 @@ function widgets_install() {
 function widgets_settings_post(){
 	
 	if (isset($_POST['widgets-submit'])){
-		set_pconfig(local_user(), 'widgets', 'site', $_POST['widgets-site']);
-		set_pconfig(local_user(), 'widgets', 'key', $_POST['widgets-key']);
+		del_pconfig(local_user(), 'widgets', 'key');
+		
 	}
 }
 
@@ -26,40 +26,36 @@ function widgets_settings(&$a,&$o) {
     if(! local_user())
 		return;		
 	
-	$key    = get_pconfig(local_user(), 'widgets', 'key' );
-	$site    = get_pconfig(local_user(), 'widgets', 'site' );
-
-	if ($key=='') $key = mt_rand(); 
-
-	$o .='
-	<h3 class="settings-heading">Widgets</h3>
-	<div id="settings-username-wrapper">
-		<label for="widgets-site" id="settings-username-label">'.t('Remote site: ').'</label>
-		<input type="text" value="'.$site.'" id="settings-username" name="widgets-site">
-	</div>
-	<div id="settings-username-end"></div>
-	<div id="settings-username-wrapper">
-		<label for="widgets-key" id="settings-username-label">'.t('Widgets key: ').'</label>
-		<input type="hidden" value="'.$key.'" id="settings-username" name="widgets-key">
-		<strong>'.$key.'</strong>
-	</div>
-	<div id="settings-username-end"></div>
+	
+	$key = get_pconfig(local_user(), 'widgets', 'key' );
+	if ($key=='') { $key = mt_rand(); set_pconfig(local_user(), 'widgets', 'key', $key); }
+	
+	$o .='<h3 class="settings-heading">Widgets</h3>';
 	
 	
-		
+	$o.='
+	<div id="settings-username-wrapper">
+		'. t('Widgets key: ') .'<strong>'.$key.'</strong>
+	</div>
+	<div id="settings-username-end"></div>
 	<div class="settings-submit-wrapper">
-		<input type="submit" value="'.t('Submit').'" class="settings-submit" name="widgets-submit">
-	</div>	
-	';
+		<input type="submit" value="'.t('Generate new key').'" class="settings-submit" name="widgets-submit">
+	</div>';
 	
-	if ($key!='' and $site!='') {
-		$o.='<h4>Widgets:</h4>
-		<ul>
-			<li><a href="'.$a->get_baseurl().'/widgets/friends/?p=1&k='.$key.'">Friend list</a></li>
-			<li><a href="'.$a->get_baseurl().'/widgets/like/?p=1&k='.$key.'">Likes count</a></li>
-		</ul>
-		';
+	
+	$o.='<h4>Widgets:</h4>';
+	$o .= '<ul>';
+	$d = dir(dirname(__file__));
+	while(false !== ($f = $d->read())) {
+		 if(substr($f,0,7)=="widget_") {
+			 preg_match("|widget_([^.]+).php|", $f, $m);
+			 $w=$m[1];
+			 require_once($f);
+			 $o.='<li><a href="'.$a->get_baseurl().'/widgets/'.$w.'/?k='.$key.'&p=1">'. call_user_func($w."_widget_name") .'</a></li>';
+		 }
 	}
+
+	$o .= '</ul>';
 
 }
 
@@ -90,7 +86,7 @@ function widgets_content(&$a) {
 	$conf = array();
 	$conf['uid'] = $r[0]['uid'];
 	foreach($r as $e) { $conf[$e['k']]=$e['v']; }
-
+	
 	$o = "";	
 
 	$widgetfile =dirname(__file__)."/widget_".$a->argv[1].".php";
@@ -106,14 +102,14 @@ function widgets_content(&$a) {
 
 	//echo "<pre>"; var_dump($a->argv); die();
 	if ($a->argv[2]=="cb"){
-		if (!local_user()){
+		/*if (!local_user()){
 			if (!isset($_GET['s']))
 				{header('HTTP/1.0 400 Bad Request'); killme();}
 			
 			if (substr($_GET['s'],0,strlen($conf['site'])) !== $conf['site'])
 				{header('HTTP/1.0 400 Bad Request'); killme();}
-		} 
-		widget_content($a, $o, $conf);
+		} */
+		$o .= call_user_func($a->argv[1].'_widget_content',$a, $conf);
 		
 	} else {
 
@@ -122,8 +118,9 @@ function widgets_content(&$a) {
 			$o .= "<style>.f9k_widget { float: left;border:1px solid black; }</style>";
 			$o .= "<h1>Preview Widget</h1>";
 			$o .= '<a href="'.$a->get_baseurl().'/settings/addon">'. t("Plugin Settings") .'</a>';
-			$o .= "<br style='clear:left'/><br/>";			
-			widget_help($a, $o, $conf);
+
+			$o .=  "<h4>".call_user_func($a->argv[1].'_widget_name')."</h4>";
+			$o .=  call_user_func($a->argv[1].'_widget_help');
 			$o .= "<br style='clear:left'/><br/>";
 			$o .= "<script>";
 		} else {
@@ -139,11 +136,12 @@ function widgets_content(&$a) {
 			'$key' => $conf['key'],
 			'$widget_id' => 'f9k_'.$a->argv[1]."_".time(),
 			'$loader' => $a->get_baseurl()."/images/rotator.gif",
+			'$args' => (isset($_GET['a'])?$_GET['a']:''),
 		));
 
 	
 		if (isset($_GET['p'])) {
-			$jsargs = implode("</em>,<em>", widget_args());
+			$jsargs = implode("</em>,<em>", call_user_func($a->argv[1].'_widget_args'));
 			if ($jsargs!='') $jsargs = "&a=<em>".$jsargs."</em>";
 				
 			$o .= "</script>

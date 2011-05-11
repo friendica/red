@@ -2,10 +2,11 @@
  * @author Fabio Comuni
  */
 
-var f9a_widget = {
+var f9a_widget_$widget_id = {
 	entrypoint : "$entrypoint",
 	key	: "$key",
 	widgetid: "$widget_id",
+	argstr: "$args",
 	xmlhttp : null,
 	
 	getXHRObj : function(){
@@ -22,6 +23,7 @@ var f9a_widget = {
 		if (args===null) args = new Array();
 		args['k']=this.key;
 		args['s']=window.location;
+		args['a']=this.argstr;
 		var urlencodedargs = new Array();
 		for(k in args){ urlencodedargs.push( encodeURIComponent(k)+"="+encodeURIComponent(args[k]) ); }
 	
@@ -29,20 +31,21 @@ var f9a_widget = {
 
 		this.xmlhttp.open("GET", url  ,true);
 		this.xmlhttp.send();
+		this.xmlhttp.obj = this;
 		this.xmlhttp.onreadystatechange=function(){
 		  if (this.readyState==4){
 		  	if (this.status==200) {
-		    	cb(this.responseText);
+		    	cb(this.obj, this.responseText);
 			} else {
-		  		document.getElementById(f9a_widget.widgetid).innerHTML="Error loading widget.";
+		  		document.getElementById(this.obj.widgetid).innerHTML="Error loading widget.";
 		  	}
 		  }
 		} 
 
 	},
 	
-	requestcb: function(responseText) {
-		document.getElementById(f9a_widget.widgetid).innerHTML=responseText;
+	requestcb: function(obj, responseText) {
+		document.getElementById(obj.widgetid).innerHTML=responseText;
 	},
 	
 	load : function (){
@@ -53,7 +56,7 @@ var f9a_widget = {
 };
 
 (function() {
-	f9a_widget.load();	
+	f9a_widget_$widget_id.load();	
 })();
 
 document.writeln("<div id='$widget_id' class='f9k_widget'>");
