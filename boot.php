@@ -2432,28 +2432,27 @@ function get_birthdays() {
 			if(strlen($rr['name']))
 				$total ++;
 
-		$o .= '<div id="birthday-notice" class="birthday-notice fakelink" onclick=openClose(\'birthday-wrapper\'); >' . t('Birthday Reminders') . ' ' . '(' . $total . ')' . '</div>'; 
-		$o .= '<div id="birthday-wrapper" style="display: none;" ><div id="birthday-title">' . t('Birthdays this week:') . '</div>'; 
-		$o .= '<div id="birthday-adjust">' . t("\x28Adjusted for local time\x29") . '</div>';
-		$o .= '<div id="birthday-title-end"></div>';
+		if($total) {
+			$o .= '<div id="birthday-notice" class="birthday-notice fakelink" onclick=openClose(\'birthday-wrapper\'); >' . t('Birthday Reminders') . ' ' . '(' . $total . ')' . '</div>'; 
+			$o .= '<div id="birthday-wrapper" style="display: none;" ><div id="birthday-title">' . t('Birthdays this week:') . '</div>'; 
+			$o .= '<div id="birthday-adjust">' . t("\x28Adjusted for local time\x29") . '</div>';
+			$o .= '<div id="birthday-title-end"></div>';
 
-		foreach($r as $rr) {
-			if(! strlen($rr['name']))
-				continue;
-			$now = strtotime('now');
-			$today = (((strtotime($rr['start'] . ' +00:00') < $now) && (strtotime($rr['finish'] . ' +00:00') > $now)) ? true : false); 
-
-			$o .= '<div class="birthday-list" id="birthday-' . $rr['eid'] . '"><a class="sparkle" href="' 
-			. $a->get_baseurl() . '/redir/'  . $rr['cid'] . '">' . $rr['name'] . '</a> ' 
-			. day_translate(datetime_convert('UTC', $a->timezone, $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '')
-			. '</div>' ;
+			foreach($r as $rr) {
+				if(! strlen($rr['name']))
+					continue;
+				$now = strtotime('now');
+				$today = (((strtotime($rr['start'] . ' +00:00') < $now) && (strtotime($rr['finish'] . ' +00:00') > $now)) ? true : false); 
+	
+				$o .= '<div class="birthday-list" id="birthday-' . $rr['eid'] . '"><a class="sparkle" href="' 
+				. $a->get_baseurl() . '/redir/'  . $rr['cid'] . '">' . $rr['name'] . '</a> ' 
+				. day_translate(datetime_convert('UTC', $a->timezone, $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '')
+				. '</div>' ;
+			}
+			$o .= '</div></div>';
 		}
-
-		$o .= '</div></div>';
 	}
-
-  return $o;
-
+	return $o;
 }}
 
 
