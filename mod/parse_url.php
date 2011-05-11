@@ -13,7 +13,7 @@ function parse_url_content(&$a) {
 
 	$text = null;
 
-	$template = "<a href=\"%s\" >%s</a>%s";
+	$template = "<a href=\"%s\" >%s</a>\n%s";
 
 
 	$arr = array('url' => $url, 'text' => '');
