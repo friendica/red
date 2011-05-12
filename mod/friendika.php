@@ -1,6 +1,6 @@
 <?php
 
-function friendika_content(&$a) {
+function friendika_init(&$a) {
 	if ($a->argv[1]=="json"){
 		$register_policy = Array('REGISTER_CLOSED', 'REGISTER_APPROVE', 'REGISTER_OPEN');
 
@@ -14,8 +14,6 @@ function friendika_content(&$a) {
 			$admin = false;
 		}
 
-
-
 		$data = Array(
 			'version' => FRIENDIKA_VERSION,
 			'url' => $a->get_baseurl(),
@@ -26,9 +24,14 @@ function friendika_content(&$a) {
 			
 		);
 
-		echo json_encode($data);
+		echo str_replace('\\/','/',json_encode($data));
 		killme();
 	}
+}
+
+
+
+function friendika_content(&$a) {
 
 	$o = '';
 	$o .= '<h3>Friendika</h3>';
