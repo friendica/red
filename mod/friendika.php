@@ -8,7 +8,7 @@ function friendika_content(&$a) {
 			$r = q("SELECT username, nickname FROM user WHERE email='%s'", $a->config['admin_email']);
 			$admin = array(
 				'name' => $r[0]['username'],
-				'profile'=> $a->get_baseurl().'profile/'.$r[0]['nickname'],
+				'profile'=> $a->get_baseurl().'/profile/'.$r[0]['nickname'],
 			);
 		} else {
 			$admin = false;
