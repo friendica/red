@@ -1,17 +1,13 @@
 <?php
 
 /**
- * This module still needs a lot of work, but is functional today.
- * Please review this section if you upgrade because things will change.
- * If you have issues upgrading, remove facebook from the addon list, 
- * view a page on your site, then add it back to the list. This will reset
- * all of the plugin 'hooks'. 
+ * Installing the Friendika/Facebook connector
  *
  * 1. register an API key for your site from developer.facebook.com
  *   a. We'd be very happy if you include "Friendika" in the application name
  *      to increase name recognition. The Friendika icons are also present
  *      in the images directory and may be uploaded as a Facebook app icon.
- *      Use images/ff-16.jpg for the Icon and images/ff-128.jpg for the Logo.
+ *      Use images/friendika-16.jpg for the Icon and images/friendika-128.jpg for the Logo.
  *   b. The url should be your site URL with a trailing slash.
  *      You may use http://portal.friendika.com/privacy as the privacy policy
  *      URL unless your site has different requirements, and 
@@ -24,20 +20,20 @@
  *      Replace with the settings Facebook gives you.
  * 2. Enable the facebook plugin by including it in .htconfig.php - e.g. 
  *     $a->config['system']['addon'] = 'plugin1,plugin2,facebook';
- * 3. Visit the Facebook Settings from "Settings->Plugin Settings" page.
+ * 3. Visit the Facebook Settings section of the "Settings->Plugin Settings" page.
  *    and click 'Install Facebook Connector'.
  * 4. This will ask you to login to Facebook and grant permission to the 
  *    plugin to do its stuff. Allow it to do so. 
- * 5. You're done. To turn it off visit your site's /facebook page again and
+ * 5. You're done. To turn it off visit the Plugin Settings page again and
  *    'Remove Facebook posting'.
  *
- * Turn logging on (see the github Friendika wiki page 'Settings') and 
- * repeat these steps if you have trouble.
  * Vidoes and embeds will not be posted if there is no other content. Links 
- * and images will be converted to text and long posts truncated - with a link
- * to view the full post. Posts with permission settings and comments will
- * not be posted to Facebook. 
+ * and images will be converted to a format suitable for the Facebook API and 
+ * long posts truncated - with a link to view the full post. 
  *
+ * Facebook contacts will not be able to view private photos, as they are not able to
+ * authenticate to your site to establish identity. We will address this 
+ * in a future release.
  */
 
 define('FACEBOOK_MAXPOSTLEN', 420);
