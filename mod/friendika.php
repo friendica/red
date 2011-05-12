@@ -1,6 +1,34 @@
 <?php
 
 function friendika_content(&$a) {
+	if ($a->argv[1]=="json"){
+		$register_policy = Array('REGISTER_CLOSED', 'REGISTER_APPROVE', 'REGISTER_OPEN');
+
+		if (isset($a->config['admin_email']) && $a->config['admin_email']!=''){
+			$r = q("SELECT username, nickname FROM user WHERE email='%s'", $a->config['admin_email']);
+			$admin = array(
+				'name' => $r[0]['username'],
+				'profile'=> $a->get_baseurl().'/profile/'.$r[0]['nickname'],
+			);
+		} else {
+			$admin = false;
+		}
+
+
+
+		$data = Array(
+			'version' => FRIENDIKA_VERSION,
+			'url' => $a->get_baseurl(),
+			'plugins' => $a->plugins,
+			'register_policy' =>  $register_policy[$a->config['register_policy']],
+			'admin' => $admin,
+			'site_name' => $a->config['sitename'],
+			
+		);
+
+		echo json_encode($data);
+		killme();
+	}
 
 	$o = '';
 	$o .= '<h3>Friendika</h3>';
@@ -33,15 +61,5 @@ function friendika_content(&$a) {
 		$o .= '<p>' . t('No installed plugins/addons/apps');
  	
 	return $o;
-
-
-
-
-
-
-
-
-
-
 
 }
