@@ -18,6 +18,7 @@ Friendika Documentation and Resources
 * [Install](help/Install)
 * [Settings](help/Settings)
 * [Plugins](help/Plugins)
+* [Installing Connectors (Facebook/Twitter/StatusNet)](help/Connectors)
 * [Message Flow](help/Message-Flow)
 * [Developers](help/Developers)
 
