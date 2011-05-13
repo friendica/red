@@ -2056,7 +2056,7 @@ function contact_block() {
 }}
 
 if(! function_exists('micropro')) {
-function micropro($contact, $redirect = false, $class = '') {
+function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 
 	if($class)
 		$class = ' ' . $class;
@@ -2075,11 +2075,20 @@ function micropro($contact, $redirect = false, $class = '') {
 	$click = ((x($contact,'click')) ? ' onclick="' . $contact['click'] . '" ' : '');
 	if($click)
 		$url = '';
-	return '<div class="contact-block-div' . $class . '"><a class="contact-block-link' . $class . $sparkle 
-		. (($click) ? ' fakelink' : '') . '" '
-		. (($url) ? ' href="' . $url . '"' : '') . $click . ' ><img class="contact-block-img' . $class . $sparkle . '" src="' 
-		. $contact['micro'] . '" title="' . $contact['name'] . ' [' . $contact['url'] . ']" alt="' . $contact['name'] 
-		. '" /></a></div>' . "\r\n";
+	if($textmode) {
+		return '<div class="contact-block-textdiv' . $class . '"><a class="contact-block-link' . $class . $sparkle 
+			. (($click) ? ' fakelink' : '') . '" '
+			. (($url) ? ' href="' . $url . '"' : '') . $click
+			. '" title="' . $contact['name'] . ' [' . $contact['url'] . ']" alt="' . $contact['name'] 
+			. '" >'. $contact['name'] . '</a></div>' . "\r\n";
+	}
+	else {
+		return '<div class="contact-block-div' . $class . '"><a class="contact-block-link' . $class . $sparkle 
+			. (($click) ? ' fakelink' : '') . '" '
+			. (($url) ? ' href="' . $url . '"' : '') . $click . ' ><img class="contact-block-img' . $class . $sparkle . '" src="' 
+			. $contact['micro'] . '" title="' . $contact['name'] . ' [' . $contact['url'] . ']" alt="' . $contact['name'] 
+			. '" /></a></div>' . "\r\n";
+	}
 }}
 
 

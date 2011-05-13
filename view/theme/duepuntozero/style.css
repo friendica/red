@@ -2054,6 +2054,12 @@ a.mail-list-link {
 	width: 52px;
 	height: 52px;
 }
+.contact-block-textdiv {
+	float: left;
+	width: 150px;
+	height: 34px;
+}
+
 #contact-block-end {
 	clear: both;
 }
