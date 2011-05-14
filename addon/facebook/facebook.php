@@ -785,10 +785,9 @@ function fb_consume_stream($uid,$j,$wall = false) {
 					if(count($r))
 						$cmntdata['contact-id'] = $r[0]['id'];
 				}
-				if(! x($cmntdata,'contact-id')) {
-					logger('fb_consume: comment: no contact-id available');
-					return;
-				}
+				if(! x($cmntdata,'contact-id'))
+					$cmntdata['contact-id'] = $orig_post['contact-id'];
+
 				$cmntdata['created'] = datetime_convert('UTC','UTC',$cmnt->created_time);
 				$cmntdata['edited']  = datetime_convert('UTC','UTC',$cmnt->created_time);
 				$cmntdata['verb'] = ACTIVITY_POST;						
