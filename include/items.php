@@ -1530,7 +1530,7 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 	if(is_array($author))
 		$o .= atom_author('author',$author['name'],$author['url'],80,80,$author['thumb']);
 	else
-		$o .= atom_author('author',$item['name'],$item['url'],80,80,$item['thumb']);
+		$o .= atom_author('author',(($item['author-name']) ? $item['author-name'] : $item['name']),(($item['author-link']) ? $item['author-link'] : $item['url']),80,80,(($item['author-avatar']) ? $item['author-avatar'] : $item['thumb']));
 	if(strlen($item['owner-name']))
 		$o .= atom_author('dfrn:owner',$item['owner-name'],$item['owner-link'],80,80,$item['owner-avatar']);
 
