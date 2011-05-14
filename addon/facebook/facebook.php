@@ -389,6 +389,8 @@ function facebook_post_hook(&$a,&$b) {
 			);
 			if(count($r) && substr($r[0]['uri'],0,4) === 'fb::')
 				$reply = substr($r[0]['uri'],4);
+			elseif(count($r) && substr($r[0]['extid'],0,4) === 'fb::')
+				$reply = substr($r[0]['extid'],4);
 			else
 				return;
 			logger('facebook reply id=' . $reply);
