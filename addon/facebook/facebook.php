@@ -700,26 +700,27 @@ function fb_consume_stream($uid,$j,$wall = false) {
 		if(is_array($likers)) {
 			foreach($likers as $likes) {
 
-				$r = q("SELECT * FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `verb` = '%s' AND `author-link` = '%s'
-					LIMIT 1",
-					dbesc('fb::' . $entry->id),
+				if(! $orig_post)
+					continue;
+
+				$r = q("SELECT * FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `verb` = '%s' AND `author-link` = '%s' LIMIT 1",
+					dbesc($orig_post['uri']),
 					intval($uid),
 					dbesc(ACTIVITY_LIKE),
 					dbesc('http://facebook.com/profile.php?id=' . $likes->id)
 				);
+
 				if(count($r))
 					continue;
 					
 				$likedata = array();
 				$likedata['parent'] = $top_item;
 				$likedata['verb'] = ACTIVITY_LIKE;
-
-
 				$likedata['gravity'] = 3;
 				$likedata['uid'] = $uid;
 				$likedata['wall'] = (($wall) ? 1 : 0);
 				$likedata['uri'] = item_new_uri($a->get_baseurl(), $uid);
-				$likedata['parent-uri'] = 'fb::' . $entry->id;
+				$likedata['parent-uri'] = $orig_post['uri'];
 				if($likes->id == $self_id)
 					$likedata['contact-id'] = $self[0]['id'];
 				else {
@@ -754,6 +755,9 @@ function fb_consume_stream($uid,$j,$wall = false) {
 		if(is_array($comments)) {
 			foreach($comments as $cmnt) {
 
+				if(! $orig_post)
+					continue;
+
 				$r = q("SELECT * FROM `item` WHERE `uid` = %d AND ( `uri` = '%s' OR `extid` = '%s' ) LIMIT 1",
 					intval($uid),
 					dbesc('fb::' . $cmnt->id),
@@ -769,12 +773,10 @@ function fb_consume_stream($uid,$j,$wall = false) {
 				$cmntdata['uid'] = $uid;
 				$cmntdata['wall'] = (($wall) ? 1 : 0);
 				$cmntdata['uri'] = 'fb::' . $cmnt->id;
-				$cmntdata['parent-uri'] = 'fb::' . $entry->id;
+				$cmntdata['parent-uri'] = $orig_post['uri'];
 				if($cmnt->from->id == $self_id) {
 					$cmntdata['contact-id'] = $self[0]['id'];
 				}
-				elseif(is_array($orig_post) && (x($orig_post,'contact-id')))
-					$cmntdata['contact-id'] = $orig_post['contact-id'];
 				else {
 					$r = q("SELECT * FROM `contact` WHERE `notify` = '%s' AND `uid` = %d AND `blocked` = 0 AND `readonly` = 0 LIMIT 1",
 						dbesc($cmnt->from->id),
@@ -783,8 +785,10 @@ function fb_consume_stream($uid,$j,$wall = false) {
 					if(count($r))
 						$cmntdata['contact-id'] = $r[0]['id'];
 				}
-				if(! x($cmntdata,'contact-id'))
+				if(! x($cmntdata,'contact-id')) {
+					logger('fb_consume: comment: no contact-id available');
 					return;
+				}
 				$cmntdata['created'] = datetime_convert('UTC','UTC',$cmnt->created_time);
 				$cmntdata['edited']  = datetime_convert('UTC','UTC',$cmnt->created_time);
 				$cmntdata['verb'] = ACTIVITY_POST;						
