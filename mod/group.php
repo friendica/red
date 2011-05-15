@@ -92,7 +92,7 @@ function group_content(&$a) {
 				notice( t('Unable to remove group.') . EOL);
 		}
 		goaway($a->get_baseurl() . '/group');
-		return; // NOTREACHED
+		// NOTREACHED
 	}
 
 	if(($a->argc > 2) && intval($a->argv[1]) && intval($a->argv[2])) {
@@ -107,7 +107,7 @@ function group_content(&$a) {
 	if(($a->argc > 1) && (intval($a->argv[1]))) {
 
 		require_once('include/acl_selectors.php');
-		$r = q("SELECT * FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+		$r = q("SELECT * FROM `group` WHERE `id` = %d AND `uid` = %d AND `deleted` = 0 LIMIT 1",
 			intval($a->argv[1]),
 			intval(local_user())
 		);
@@ -160,6 +160,9 @@ function group_content(&$a) {
 		));
 
 	}
+
+	if(! isset($group))
+		return;
 
 	$o .= '<div id="group-update-wrapper">';
 	if($change) 

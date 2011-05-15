@@ -28,7 +28,7 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 		goaway($a->get_baseurl());
 	}
 
-	if(x($_SESSION['visitor_id']) && (! x($_SESSION['uid']))) {
+	if(x($_SESSION,'visitor_id') && (! x($_SESSION,'uid'))) {
 		$r = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
 			intval($_SESSION['visitor_id'])
 		);
