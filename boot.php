@@ -2736,3 +2736,11 @@ function parse_xml_string($s) {
 	libxml_clear_errors();
 	return $x;
 }}
+
+if(! function_exists('is_site_admin')) {
+function is_site_admin() {
+	$a = get_app();
+	if(local_user() && x($a->user,'email') && x($a->config,'admin_email') && ($a->user['email'] === $a->config['admin_email']))
+		return true;
+	return false;
+}}

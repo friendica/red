@@ -1,6 +1,7 @@
 <h1>$sitedir</h1>
 
 $globaldir
+$admin
 
 $finding
 
