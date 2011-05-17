@@ -267,7 +267,7 @@ function conversation(&$a, $items, $mode, $update) {
 					$blowhard_count ++;
 					if($blowhard_count == 3) {
 						$o .= '<div class="icollapse-wrapper fakelink" id="icollapse-wrapper-' . $item['parent'] 
-							. '" onclick="openClose(' . '\'icollapse-' . $item['parent'] . '\');" >' 
+							. '" onclick="openClose(' . '\'icollapse-' . $item['parent'] . '\'); $(\'#icollapse-wrapper-' . $item['parent'] . '\').hide();" >' 
 							. t('See more posts like this') . '</div>' . '<div class="icollapse" id="icollapse-' 
 							. $item['parent'] . '" style="display: none;" >';
 					}
@@ -292,7 +292,7 @@ function conversation(&$a, $items, $mode, $update) {
 			if(($comments[$item['parent']] > 2) && ($comments_seen <= ($comments[$item['parent']] - 2)) && ($item['gravity'] == 6)) {
 				if(! $comments_collapsed) {
 					$o .= '<div class="ccollapse-wrapper fakelink" id="ccollapse-wrapper-' . $item['parent'] 
-						. '" onclick="openClose(' . '\'ccollapse-' . $item['parent'] . '\');" >' 
+						. '" onclick="openClose(' . '\'ccollapse-' . $item['parent'] . '\'); $(\'#ccollapse-wrapper-' . $item['parent'] . '\').hide();" >' 
 						. sprintf( t('See all %d comments'), $comments[$item['parent']]) . '</div>'
 						. '<div class="ccollapse" id="ccollapse-' . $item['parent'] . '" style="display: none;" >';
 					$comments_collapsed = true;
