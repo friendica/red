@@ -98,9 +98,34 @@ function statusnet_settings_post ($a,$post) {
             del_pconfig( local_user(), 'statusnet', 'baseapi' );
 	} else {
         if (isset($_POST['statusnet-consumersecret'])) {
-            set_pconfig(local_user(), 'statusnet', 'consumerkey', $_POST['statusnet-consumerkey']);
-            set_pconfig(local_user(), 'statusnet', 'consumersecret', $_POST['statusnet-consumersecret']);
-            set_pconfig(local_user(), 'statusnet', 'baseapi', $_POST['statusnet-baseapi']);
+            //  check if we can reach the API of the StatusNet server
+            //  we'll check the API Version for that, if we don't get one we'll try to fix the path but will
+            //  resign quickly after this one try to fix the path ;-)
+            $apibase = $_POST['statusnet-baseapi'];
+            $f = fopen( $apibase . 'statusnet/version.xml', 'r');
+            $c = stream_get_contents($f);
+            fclose($f);
+            if (strlen($c) > 0) {
+                //  ok the API path is correct, let's save the settings
+                set_pconfig(local_user(), 'statusnet', 'consumerkey', $_POST['statusnet-consumerkey']);
+                set_pconfig(local_user(), 'statusnet', 'consumersecret', $_POST['statusnet-consumersecret']);
+                set_pconfig(local_user(), 'statusnet', 'baseapi', $apibase );
+            } else {
+                //  the API path is not correct, maybe missing trailing / ?
+                $apibase = $apibase . '/';
+                $f = fopen( $apibase . 'statusnet/version.xml', 'r');
+                $c = stream_get_contents($f);
+                fclose($f);
+                if (strlen($c) > 0) {
+                    //  ok the API path is now correct, let's save the settings
+                    set_pconfig(local_user(), 'statusnet', 'consumerkey', $_POST['statusnet-consumerkey']);
+                    set_pconfig(local_user(), 'statusnet', 'consumersecret', $_POST['statusnet-consumersecret']);
+                    set_pconfig(local_user(), 'statusnet', 'baseapi', $apibase );
+                } else {
+                    //  still not the correct API base, let's do noting
+                    notice( t('We could not contact the StatusNet API with the Path you entered.').EOL );
+                }
+            }
             header('Location: '.$a->get_baseurl().'/settings/addon');
         } else {
 	if (isset($_POST['statusnet-pin'])) {
@@ -133,6 +158,7 @@ function statusnet_settings(&$a,&$s) {
 	/***
 	 * 1) Check that we have a base api url and a consumer key & secret
 	 * 2) If no OAuthtoken & stuff is present, generate button to get some
+         *    allow the user to cancel the connection process at this step
 	 * 3) Checkbox for "Send public notices (respect size limitation)
 	 */
         $api     = get_pconfig(local_user(), 'statusnet', 'baseapi');
@@ -185,6 +211,13 @@ function statusnet_settings(&$a,&$s) {
 			$s .= '<input id="statusnet-pin" type="text" name="statusnet-pin" />';
 			$s .= '<input id="statusnet-token" type="hidden" name="statusnet-token" value="'.$token.'" />';
 			$s .= '<input id="statusnet-token2" type="hidden" name="statusnet-token2" value="'.$request_token['oauth_token_secret'].'" />';
+                        $s .= '</div><div class="clear"></div>';
+                        $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
+                        $s .= '<h4>'.t('Cancel Connection Process').'</h4>';
+                        $s .= '<div id="statusnet-cancel-wrapper">';
+                        $s .= '<p>'.t('Current StatusNet API is').': '.$api.'</p>';
+                        $s .= '<label id="statusnet-cancel-label" for="statusnet-cancel">'. t('Cancel StatusNet Connection') . '</label>';
+                        $s .= '<input id="statusnet-cancel" type="checkbox" name="statusnet-disconnect" value="1" />';
                         $s .= '</div><div class="clear"></div>';
                         $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
 		} else {
