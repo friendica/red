@@ -474,6 +474,11 @@ function facebook_post_hook(&$a,&$b) {
 
 				// make links readable before we strip the code
 
+				// unless it's a dislike - just send the text as a comment
+
+				if($b['verb'] == ACTIVITY_DISLIKE)
+					$msg = trim(strip_tags(bbcode($msg)));
+
 				if(preg_match("/\[url=(.+?)\](.+?)\[\/url\]/is",$msg,$matches)) {
 
 					$link = $matches[1];
