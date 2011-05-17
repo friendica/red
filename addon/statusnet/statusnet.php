@@ -100,7 +100,7 @@ function statusnet_settings_post ($a,$post) {
         if (isset($_POST['statusnet-consumersecret'])) {
             //  check if we can reach the API of the StatusNet server
             //  we'll check the API Version for that, if we don't get one we'll try to fix the path but will
-            //  resign
+            //  resign quickly after this one try to fix the path ;-)
             $apibase = $_POST['statusnet-baseapi'];
             $f = fopen( $apibase . 'statusnet/version.xml', 'r');
             $c = stream_get_contents($f);
