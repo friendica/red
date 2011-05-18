@@ -12,25 +12,32 @@
 }
 #statusnet-disconnect-label {
 	float: left;
-	width: 200px;
+	width: 250px;
+	margin-bottom: 25px;
+}
+#statusnet-default-label {
+	float: left;
+	width: 250px;
 	margin-bottom: 25px;
 }
 
 #statusnet-disconnect {
 	float: left;
 }
+
 #statusnet-enable-label {
 	float: left;
-	width: 200px;
+	width: 250px;
 	margin-bottom: 5px;
 }
 
 #statusnet-checkbox {
 	float: left;
 }
+
 #statusnet-pin-label {
 	float: left;
-	width: 200px;
+	width: 250px;
 	margin-bottom: 25px;
 }
 #statusnet-pin {
@@ -40,7 +47,7 @@
 
 #statusnet-consumerkey-label {
 	float: left;
-	width: 200px;
+	width: 250px;
 	margin-bottom: 8px;
 }
 #statusnet-consumerkey {
@@ -49,7 +56,7 @@
 }
 #statusnet-consumersecret-label {
 	float: left;
-	width: 200px;
+	width: 250px;
 	margin-bottom: 8px;
 }
 #statusnet-consumersecret {
@@ -58,7 +65,7 @@
 }
 #statusnet-baseapi-label {
 	float: left;
-	width: 200px;
+	width: 250px;
 	margin-bottom: 25px;
 }
 #statusnet-baseapi {

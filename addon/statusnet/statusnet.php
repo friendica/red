@@ -90,10 +90,11 @@ function statusnet_settings_post ($a,$post) {
 	     * if the statusnet-disconnect checkbox is set, clear the statusnet configuration
 	     * TODO can we revoke the access tokens at Twitter and do we need to do so?
 	     */
-            del_pconfig( local_user(), 'statusnet', 'consumerkey'  );
-	    del_pconfig( local_user(), 'statusnet', 'consumersecret' );
-	    del_pconfig( local_user(), 'statusnet', 'post' );
-            del_pconfig( local_user(), 'statusnet', 'oauthtoken' );
+		del_pconfig( local_user(), 'statusnet', 'consumerkey'  );
+		del_pconfig( local_user(), 'statusnet', 'consumersecret' );
+		del_pconfig( local_user(), 'statusnet', 'post' );
+		del_pconfig( local_user(), 'statusnet', 'post_by_default' );
+        del_pconfig( local_user(), 'statusnet', 'oauthtoken' );
             del_pconfig( local_user(), 'statusnet', 'oauthsecret' );
             del_pconfig( local_user(), 'statusnet', 'baseapi' );
 	} else {
@@ -149,6 +150,8 @@ function statusnet_settings_post ($a,$post) {
 	    //  if no PIN is supplied in the POST variables, the user has changed the setting
 	    //  to post a tweet for every new __public__ posting to the wall
 	    set_pconfig(local_user(),'statusnet','post',intval($_POST['statusnet-enable']));
+	    set_pconfig(local_user(),'statusnet','post_by_default',intval($_POST['statusnet-default']));
+		notice( t('StatusNet settings updated.') . EOL);
 	}}}
 }
 function statusnet_settings(&$a,&$s) {
@@ -166,8 +169,10 @@ function statusnet_settings(&$a,&$s) {
 	$csecret = get_pconfig(local_user(), 'statusnet', 'consumersecret' );
 	$otoken  = get_pconfig(local_user(), 'statusnet', 'oauthtoken'  );
 	$osecret = get_pconfig(local_user(), 'statusnet', 'oauthsecret' );
-        $enabled = get_pconfig(local_user(), 'statusnet', 'post');
+	$enabled = get_pconfig(local_user(), 'statusnet', 'post');
 	$checked = (($enabled) ? ' checked="checked" ' : '');
+	$defenabled = get_pconfig(local_user(),'statusnet','post_by_default');
+	$defchecked = (($defenabled) ? ' checked="checked" ' : '');
 	$s .= '<div class="settings-block">';
 	$s .= '<h3>'. t('StatusNet Posting Settings').'</h3>';
 
@@ -228,11 +233,15 @@ function statusnet_settings(&$a,&$s) {
 			$connection = new StatusNetOAuth($api,$ckey,$csecret,$otoken,$osecret);
 			$details = $connection->get('account/verify_credentials');
 			$s .= '<div id="statusnet-info" ><img id="statusnet-avatar" src="'.$details->profile_image_url.'" /><p id="statusnet-info-block">'. t('Currently connected to: ') .'<a href="'.$details->statusnet_profile_url.'" target="_statusnet">'.$details->screen_name.'</a><br /><em>'.$details->description.'</em></p></div>';
-			$s .= '<p>'. t('If enabled all your <strong>public</strong> postings will be posted to the associated StatusNet account as well.') .'</p>';
+			$s .= '<p>'. t('If enabled all your <strong>public</strong> postings will be posted to the associated StatusNet account.') .'</p>';
 			$s .= '<div id="statusnet-enable-wrapper">';
-			$s .= '<label id="statusnet-enable-label" for="statusnet-checkbox">'. t('Send public postings to StatusNet') .'</label>';
+			$s .= '<label id="statusnet-enable-label" for="statusnet-checkbox">'. t('Allow posting to StatusNet') .'</label>';
 			$s .= '<input id="statusnet-checkbox" type="checkbox" name="statusnet-enable" value="1" ' . $checked . '/>';
+			$s .= '<div class="clear"></div>';
+			$s .= '<label id="statusnet-default-label" for="statusnet-default">'. t('Send public postings to StatusNet by default') .'</label>';
+			$s .= '<input id="statusnet-default" type="checkbox" name="statusnet-default" value="1" ' . $defchecked . '/>';
 			$s .= '</div><div class="clear"></div>';
+
 			$s .= '<div id="statusnet-disconnect-wrapper">';
                         $s .= '<label id="statusnet-disconnect-label" for="statusnet-disconnect">'. t('Clear OAuth configuration') .'</label>';
                         $s .= '<input id="statusnet-disconnect" type="checkbox" name="statusnet-disconnect" value="1" />';
