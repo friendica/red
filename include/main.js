@@ -129,8 +129,11 @@
 			in_progress = false;
 			$('.ccollapse-wrapper',data).each(function() {
 				var ident = $(this).attr('id');
+				var is_hidden = $('#' + ident).is(':hidden');
 				if($('#' + ident).length) {
 					$('#' + ident).replaceWith($(this));
+					if(is_hidden)
+						$('#' + ident).hide();
 				}
 			});
 			$('.wall-item-outside-wrapper',data).each(function() {
