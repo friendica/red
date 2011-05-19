@@ -48,7 +48,7 @@
 	<div class="wall-item-comment-wrapper" >
 	$comment
 	</div>
-</div>
 
 <div class="wall-item-outside-wrapper-end$indent" ></div>
+</div>
 
