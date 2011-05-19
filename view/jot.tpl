@@ -57,9 +57,11 @@
 	</div>
 	<div id="profile-jot-perms-end"></div>
 	<div id="profile-jot-email-wrapper" style="display: none;" >
-		<div id="profile-jot-email-label">$emailcc</div><input type="text" name="emailcc" id="profile-jot-email" title="$emtitle">
+		<div id="profile-jot-email-label">$emailcc</div><input type="text" name="emailcc" id="profile-jot-email" title="$emtitle" />
+		<!-- div id="profile-jot-publabel">$public</div><input type="checkbox" name="public" id="jot-public" /  --> 
 		<div id="profile-jot-email-end"></div>
 	</div>
+	
 	<div id="profile-jot-networks" style="display: none;" >
 		$jotnets
 	</div>

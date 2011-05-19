@@ -101,6 +101,7 @@ function editpost_content(&$a) {
 		'$defloc' => $a->user['default-location'],
 		'$visitor' => 'none',
 		'$emailcc' => t('CC: email addresses'),
+		'$public' => t('Public post'),
 		'$jotnets' => $jotnets,
 		'$emtitle' => t('Example: bob@example.com, mary@example.com'),
 		'$lockstate' => $lockstate,

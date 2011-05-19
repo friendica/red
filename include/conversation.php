@@ -732,6 +732,7 @@ function status_editor($a,$x) {
 			'$defloc' => $x['default_location'],
 			'$visitor' => $x['visitor'],
 			'$emailcc' => t('CC: email addresses'),
+			'$public' => t('Public post'),
 			'$jotnets' => $jotnets,
 			'$emtitle' => t('Example: bob@example.com, mary@example.com'),
 			'$lockstate' => $x['lockstate'],

@@ -6,6 +6,7 @@ Friendika Documentation and Resources
 
 * [Account Basics](help/Account-Basics)
 * [Profiles](help/Profiles)
+* [Connectors](help/Connectors)
 * [Making Friends](help/Making-Friends)
 * [Groups and Privacy](help/Groups-and-Privacy)
 * [Tags and Mentions](help/Tags-and-Mentions)
@@ -18,7 +19,7 @@ Friendika Documentation and Resources
 * [Install](help/Install)
 * [Settings](help/Settings)
 * [Plugins](help/Plugins)
-* [Installing Connectors (Facebook/Twitter/StatusNet)](help/Connectors)
+* [Installing Connectors (Facebook/Twitter/StatusNet)](help/Installing-Connectors)
 * [Message Flow](help/Message-Flow)
 * [Developers](help/Developers)
 
