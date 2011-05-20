@@ -562,6 +562,7 @@ foreach($_FILES AS $key => $val) {
 	if(($maximagesize) && ($filesize > $maximagesize)) {
 		notice( t('Image exceeds size limit of ') . $maximagesize . EOL);
 		@unlink($src);
+		call_hooks('photo_post_end',0);
 		return;
 	}
 
@@ -574,6 +575,7 @@ foreach($_FILES AS $key => $val) {
 		logger('mod/photos.php: photos_post(): unable to process image' , 'LOGGER_DEBUG');
 		notice( t('Unable to process image.') . EOL );
 		@unlink($src);
+		call_hooks('photo_post_end',0);
 		killme();
 	}
 
