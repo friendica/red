@@ -64,9 +64,8 @@ function nav(&$a) {
 		$nav['help'] = array($help_url, t('Help'), "");
 
 
-	if(strlen($a->apps)) {
-		$nav['apps'] = array('apps', t('Apps'), "");
-	}
+
+	$nav['apps'] = array('apps', t('Apps'), "");
 
 	$nav['search'] = array('search', t('Search'), "");
 

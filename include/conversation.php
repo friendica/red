@@ -91,6 +91,11 @@ function conversation(&$a, $items, $mode, $update) {
 		$page_writeable = can_write_wall($a,$profile_owner);
 	}
 
+	if($mode === 'notes') {
+		$profile_owner = $a->profile['profile_uid'];
+		$page_writeable = true;
+	}
+
 	if($mode === 'display') {
 		$profile_owner = $a->profile['uid'];
 		$page_writeable = can_write_wall($a,$profile_owner);
@@ -263,7 +268,7 @@ function conversation(&$a, $items, $mode, $update) {
 
 				$item_writeable = (($item['writable'] || $item['self']) ? true : false);
 
-				if($blowhard == $item['cid'] && (! $item['self']) && ($mode != 'profile')) {
+				if($blowhard == $item['cid'] && (! $item['self']) && ($mode != 'profile') && ($mode != 'notes')) {
 					$blowhard_count ++;
 					if($blowhard_count == 3) {
 						$o .= '<div class="icollapse-wrapper fakelink" id="icollapse-wrapper-' . $item['parent'] 
@@ -379,7 +384,7 @@ function conversation(&$a, $items, $mode, $update) {
 				}
 			}
 
-			$edpost = ((($profile_owner == local_user()) && ($toplevelpost) && (intval($item['wall']) == 1))
+			$edpost = (((($profile_owner == local_user()) && ($toplevelpost) && (intval($item['wall']) == 1)) || ($mode === 'notes'))
 					? '<a class="editpost" href="' . $a->get_baseurl() . '/editpost/' . $item['id'] 
 						. '" title="' . t('Edit') . '"><img src="images/pencil.gif" /></a>'
 					: '');
@@ -658,7 +663,7 @@ function format_like($cnt,$arr,$type,$id) {
 }}
 
 
-function status_editor($a,$x) {
+function status_editor($a,$x, $notes_cid = 0) {
 
 	$o = '';
 		
@@ -710,12 +715,15 @@ function status_editor($a,$x) {
 		call_hooks('jot_tool', $jotplugins);
 		call_hooks('jot_networks', $jotnets);
 
+		if($notes_cid)
+			$jotnets .= '<input type="hidden" name="contact_allow[]" value="' . $notes_cid .'" />';
+
 		$tpl = replace_macros($tpl,array('$jotplugins' => $jotplugins));	
 
 		$o .= replace_macros($tpl,array(
 			'$return_path' => $a->cmd,
 			'$action' => 'item',
-			'$share' => t('Share'),
+			'$share' => (($x['button']) ? $x['button'] : t('Share')),
 			'$upload' => t('Upload photo'),
 			'$weblink' => t('Insert web link'),
 			'$youtube' => t('Insert YouTube video'),
@@ -726,11 +734,13 @@ function status_editor($a,$x) {
 			'$title' => t('Set title'),
 			'$wait' => t('Please wait'),
 			'$permset' => t('Permission settings'),
+			'$ptyp' => (($notes_cid) ? 'note' : 'wall'),
 			'$content' => '',
 			'$post_id' => '',
 			'$baseurl' => $a->get_baseurl(),
 			'$defloc' => $x['default_location'],
 			'$visitor' => $x['visitor'],
+			'$pvisit' => (($notes_cid) ? 'none' : $x['visitor']),
 			'$emailcc' => t('CC: email addresses'),
 			'$public' => t('Public post'),
 			'$jotnets' => $jotnets,

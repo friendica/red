@@ -35,7 +35,7 @@ function editpost_content(&$a) {
 	
 	$a->page['htmlhead'] .= replace_macros($tpl, array(
 		'$baseurl' => $a->get_baseurl(),
-		'$ispublic' => t('Visible to <strong>everybody</strong>'),
+		'$ispublic' => '&nbsp;', // t('Visible to <strong>everybody</strong>'),
 		'$geotag' => $geotag,
 		'$nickname' => $a->user['nickname']
 	));
@@ -95,11 +95,13 @@ function editpost_content(&$a) {
 		'$noloc' => t('Clear browser location'),
 		'$wait' => t('Please wait'),
 		'$permset' => t('Permission settings'),
+		'$ptyp' => $itm[0]['type'],
 		'$content' => $itm[0]['body'],
 		'$post_id' => $post_id,
 		'$baseurl' => $a->get_baseurl(),
 		'$defloc' => $a->user['default-location'],
 		'$visitor' => 'none',
+		'$pvisit' => 'none',
 		'$emailcc' => t('CC: email addresses'),
 		'$public' => t('Public post'),
 		'$jotnets' => $jotnets,

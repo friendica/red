@@ -7,7 +7,7 @@
 	<div id="profile-jot-banner-end"></div>
 
 	<form id="profile-jot-form" action="$action" method="post" >
-		<input type="hidden" name="type" value="wall" />
+		<input type="hidden" name="type" value="$ptyp" />
 		<input type="hidden" name="profile_uid" value="$profile_uid" />
 		<input type="hidden" name="return" value="$return_path" />
 		<input type="hidden" name="location" id="jot-location" value="$defloc" />
@@ -52,7 +52,7 @@
 	<div id="profile-rotator-wrapper" style="display: $visitor;" >
 		<img id="profile-rotator" src="images/rotator.gif" alt="$wait" title="$wait" style="display: none;" />
 	</div> 
-	<div id="profile-jot-perms" class="profile-jot-perms" style="display: $visitor;" >
+	<div id="profile-jot-perms" class="profile-jot-perms" style="display: $pvisit;" >
 		<a id="jot-perms-icon" class="icon $lockstate"  title="$permset" onClick="openClose('profile-jot-acl-wrapper'); openClose('profile-jot-email-wrapper'); openClose('profile-jot-networks');return false;"></a>$bang
 	</div>
 	<div id="profile-jot-perms-end"></div>

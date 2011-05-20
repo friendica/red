@@ -3,7 +3,7 @@
 <script language="javascript" type="text/javascript">
 
 var editor;
-var textlen;
+var textlen = 0;
 
 tinyMCE.init({
 	theme : "advanced",
