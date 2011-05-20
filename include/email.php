@@ -15,7 +15,17 @@ function email_poll($mbox,$email_addr) {
 		return array();;
 
 	$search = imap_search($mbox,'FROM "' . $email_addr . '"', SE_UID);
-	return (($search) ? $search : array());
+
+	$search2 = imap_search($mbox,'TO "' . $email_addr . '"', SE_UID);
+
+	if($search && $search2)
+		$res = array_merge($search,$search2);
+	elseif($search)
+		$res = $search;
+	else
+		$res = $search2;
+
+	return (($res) ? $res : array());
 }
 
 

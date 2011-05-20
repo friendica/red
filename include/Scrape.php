@@ -278,6 +278,7 @@ function probe_url($url) {
 		$links = lrdd($url);
 
 		if(count($links)) {
+			logger('probe_url: found lrdd links: ' . print_r($links,true), LOGGER_DATA);
 			foreach($links as $link) {
 				if($link['@attributes']['rel'] === NAMESPACE_DFRN)
 					$dfrn = unamp($link['@attributes']['href']);
@@ -345,8 +346,11 @@ function probe_url($url) {
 						$poll = 'email ' . random_string();
 						$priority = 0;
 						$x = email_msg_meta($mbox,$msgs[0]);
-						$adr = imap_rfc822_parse_adrlist($x->from,'');
-						if(strlen($adr[0]->personal))
+						if(stristr($x->from,$orig_url))
+							$adr = imap_rfc822_parse_adrlist($x->from,'');
+						elseif(stristr($x->to,$orig_url))
+							$adr = imap_rfc822_parse_adrlist($x->to,'');
+						if(isset($adr) && strlen($adr[0]->personal))
 							$vcard['fn'] = notags($adr[0]->personal);
 					}
 					imap_close($mbox);
