@@ -123,7 +123,7 @@ function statusnet_settings_post ($a,$post) {
                     notice( t('We could not contact the StatusNet API with the Path you entered.').EOL );
                 }
             }
-            header('Location: '.$a->get_baseurl().'/settings/addon');
+            goaway($a->get_baseurl().'/settings/addon');
         } else {
 	if (isset($_POST['statusnet-pin'])) {
 	    //  if the user supplied us with a PIN from Twitter, let the magic of OAuth happen
@@ -141,7 +141,7 @@ function statusnet_settings_post ($a,$post) {
 	    set_pconfig(local_user(),'statusnet', 'oauthsecret', $token['oauth_token_secret']);
             set_pconfig(local_user(),'statusnet', 'post', 1);
             //  reload the Addon Settings page, if we don't do it see Bug #42
-            header('Location: '.$a->get_baseurl().'/settings/addon');
+            goaway($a->get_baseurl().'/settings/addon');
 	} else {
 	    //  if no PIN is supplied in the POST variables, the user has changed the setting
 	    //  to post a tweet for every new __public__ posting to the wall

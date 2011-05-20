@@ -151,7 +151,7 @@ function notifications_content(&$a) {
 			foreach($r as $rr) {
 				$o .= '<li>' . sprintf('%s (%s) : ', $rr['name'],$rr['email']) 
 					. '<a href="regmod/allow/' . $rr['hash'] .'">' . t('Approve') 
-					. '</a> - <href="regmod/deny/' . $rr['hash'] . '">' . t('Deny') . '</a></li>' . "\r\n";
+					. '</a> - <a href="regmod/deny/' . $rr['hash'] . '">' . t('Deny') . '</a></li>' . "\r\n";
 			}
 			$o .= "</ul>";
 		}
