@@ -26,6 +26,8 @@ function update_network_content(&$a) {
         $text = preg_replace($pattern, $replace, $text);
         $pattern = "/<\s*embed[^>]*>(.*?)<\s*\/\s*embed>/i";
         $text = preg_replace($pattern, $replace, $text);
+        $pattern = "/<\s*iframe[^>]*>(.*?)<\s*\/\s*iframe>/i";
+        $text = preg_replace($pattern, $replace, $text);
 
 
         echo str_replace("\t",'       ',$text);

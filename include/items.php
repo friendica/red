@@ -354,6 +354,9 @@ function get_atom_elements($feed,$item) {
 		$res['body'] = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
 			'[youtube]$1[/youtube]', $res['body']);
 
+		$res['body'] = preg_replace('#<iframe[^>].+?' . 'http://www.youtube.com/embed/[A-Za-z0-9\-_=]+).+?</iframe>#s',
+			'[youtube]$1[/youtube]', $res['body']);
+
 		$res['body'] = oembed_html2bbcode($res['body']);
 
 		$config = HTMLPurifier_Config::createDefault();
@@ -521,6 +524,10 @@ function get_atom_elements($feed,$item) {
 				$body = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
 					'[youtube]$1[/youtube]', $body);
 
+		$res['body'] = preg_replace('#<iframe[^>].+?' . 'http://www.youtube.com/embed/[A-Za-z0-9\-_=]+).+?</iframe>#s',
+			'[youtube]$1[/youtube]', $res['body']);
+
+
 				$config = HTMLPurifier_Config::createDefault();
 				$config->set('Cache.DefinitionImpl', null);
 
@@ -559,6 +566,9 @@ function get_atom_elements($feed,$item) {
 
 				$body = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
 					'[youtube]$1[/youtube]', $body);
+
+		$res['body'] = preg_replace('#<iframe[^>].+?' . 'http://www.youtube.com/embed/[A-Za-z0-9\-_=]+).+?</iframe>#s',
+			'[youtube]$1[/youtube]', $res['body']);
 
 				$config = HTMLPurifier_Config::createDefault();
 				$config->set('Cache.DefinitionImpl', null);
