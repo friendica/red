@@ -103,9 +103,7 @@ function statusnet_settings_post ($a,$post) {
             //  we'll check the API Version for that, if we don't get one we'll try to fix the path but will
             //  resign quickly after this one try to fix the path ;-)
             $apibase = $_POST['statusnet-baseapi'];
-            $f = fopen( $apibase . 'statusnet/version.xml', 'r');
-            $c = stream_get_contents($f);
-            fclose($f);
+            $c = fetch_url( $apibase . 'statusnet/version.xml' );
             if (strlen($c) > 0) {
                 //  ok the API path is correct, let's save the settings
                 set_pconfig(local_user(), 'statusnet', 'consumerkey', $_POST['statusnet-consumerkey']);
@@ -114,9 +112,7 @@ function statusnet_settings_post ($a,$post) {
             } else {
                 //  the API path is not correct, maybe missing trailing / ?
                 $apibase = $apibase . '/';
-                $f = fopen( $apibase . 'statusnet/version.xml', 'r');
-                $c = stream_get_contents($f);
-                fclose($f);
+                $c = fetch_url( $apibase . 'statusnet/version.xml' );
                 if (strlen($c) > 0) {
                     //  ok the API path is now correct, let's save the settings
                     set_pconfig(local_user(), 'statusnet', 'consumerkey', $_POST['statusnet-consumerkey']);
