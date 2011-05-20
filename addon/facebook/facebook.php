@@ -479,11 +479,17 @@ function facebook_post_hook(&$a,&$b) {
 				if($b['verb'] == ACTIVITY_DISLIKE)
 					$msg = trim(strip_tags(bbcode($msg)));
 
+				$search_str = $a->get_baseurl() . '/search';
+
 				if(preg_match("/\[url=(.+?)\](.+?)\[\/url\]/is",$msg,$matches)) {
 
-					$link = $matches[1];
-					if(substr($matches[2],0,5) != '[img]' )
-						$linkname = $matches[2];
+					// don't use hashtags for message link
+
+					if(strpos($matches[2],$search_str) === false) {
+						$link = $matches[1];
+						if(substr($matches[2],0,5) != '[img]')
+							$linkname = $matches[2];
+					}
 				}
 
 				$msg = preg_replace("/\[url=(.+?)\](.+?)\[\/url\]/is",'$2 $1',$msg);
