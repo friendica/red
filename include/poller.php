@@ -358,7 +358,7 @@ function poller_run($argv, $argc){
 
 							if(count($r)) {
 								if($meta->deleted && ! $r[0]['deleted']) {
-									q("UPDATE `item` SET `deleted` = `, `changed` = '%s' WHERE `id` = %d LIMIT 1",
+									q("UPDATE `item` SET `deleted` = 1, `changed` = '%s' WHERE `id` = %d LIMIT 1",
 										dbesc(datetime_convert()),
 										intval($r[0]['id'])
 									);
@@ -372,6 +372,13 @@ function poller_run($argv, $argc){
 							if(! $r)
 								continue;
 							$datarray['body'] = escape_tags($r['body']);
+
+							// some mailing lists have the original author as 'from' - add this sender info to msg body. 
+							// todo: adding a gravatar for the original author would be cool
+
+							if(! stristr($meta->from,$contact['addr']))
+								$datarray['body'] = t('From: ') . escape_tags($meta->from) . "\n\n" . $datarray['body'];
+
 							$datarray['uid'] = $importer_uid;
 							$datarray['contact-id'] = $contact['id'];
 							if($datarray['parent-uri'] === $datarray['uri'])
