@@ -1644,9 +1644,24 @@ padding: 5px 10px 0px;
 	display: block;
 }
 
-#acl-permit-text,
+#acl-permit-text {
+    margin-top: 10px;
+    float: left;
+}
+
 #acl-deny-text {
-	margin-top: 10px;
+    margin-top: 10px;
+}
+
+#jot-public {
+    float: left;
+    margin-top: 10px;
+    margin-left: 15px;
+    color: #FF0000;
+}
+
+#acl-permit-text-end {
+    clear: both;
 }
 
 #acl-allow-group-label,

@@ -77,10 +77,12 @@ tinyMCE.init({
 			$('#contact_allow option:selected, #contact_deny option:selected, #group_allow option:selected, #group_deny option:selected').each( function() {
 				selstr = $(this).text();
 				$('#jot-perms-icon').removeClass('unlock').addClass('lock');
+				$('#jot-public').hide();
 				$('.profile-jot-net input').attr('disabled', 'disabled');
 			});
 			if(selstr == null) { 
 				$('#jot-perms-icon').removeClass('lock').addClass('unlock');
+				$('#jot-public').show();
 				$('.profile-jot-net input').attr('disabled', false);
 			}
 

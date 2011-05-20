@@ -130,7 +130,7 @@ function populate_acl($user = null,$celeb = false) {
 	$o = '';
 	$o .= '<div id="acl-wrapper">';
 	$o .= '<div id="acl-permit-outer-wrapper">';
-	$o .= '<div id="acl-permit-text">' . t('Visible To:') . '</div>';
+	$o .= '<div id="acl-permit-text">' . t('Visible To:') . '</div><div id="jot-public">' . t('everybody') . '</div>';
 	$o .= '<div id="acl-permit-text-end"></div>';
 	$o .= '<div id="acl-permit-wrapper">';
 	$o .= '<div id="group_allow_wrapper">';
