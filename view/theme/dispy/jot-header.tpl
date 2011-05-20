@@ -3,6 +3,7 @@
 <script language="javascript" type="text/javascript">
 
 var editor;
+var textlen;
 
 tinyMCE.init({
 	theme : "advanced",
@@ -31,7 +32,7 @@ tinyMCE.init({
 	     //Character count
 		ed.onKeyUp.add(function(ed, e) {
 			var txt = tinyMCE.activeEditor.getContent();
-			var textlen = txt.length;
+			textlen = txt.length;
 			if(textlen != 0 && $('#jot-perms-icon').is('.unlock')) {
 				$('#profile-jot-desc').html(ispublic);
 			}
