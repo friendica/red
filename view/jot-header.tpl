@@ -30,13 +30,14 @@ tinyMCE.init({
 	     //Character count
 		ed.onKeyUp.add(function(ed, e) {
 			var txt = tinyMCE.activeEditor.getContent();
-			textlen = txt.length;
+			var textlen = txt.length;
 			if(textlen != 0 && $('#jot-perms-icon').is('.unlock')) {
 				$('#profile-jot-desc').html(ispublic);
 			}
 			else {
 				$('#profile-jot-desc').html('&nbsp;');
 			}	 
+
 			if(textlen <= 140) {
 				$('#character-counter').removeClass('red');
 				$('#character-counter').removeClass('orange');
