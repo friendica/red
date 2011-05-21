@@ -168,7 +168,7 @@ function profile_content(&$a, $update = 0) {
 		// Oh - while we're here... reset the Unseen messages
 
 		$r = q("UPDATE `item` SET `unseen` = 0 
-			WHERE `type` != 'remote' AND `unseen` = 1 AND `uid` = %d",
+			WHERE `wall` = 1 AND `unseen` = 1 AND `uid` = %d",
 			intval($_SESSION['uid'])
 		);
 

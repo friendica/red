@@ -100,14 +100,16 @@ function network_content(&$a, $update = 0) {
 
 	}
 
-	// We aren't going to try and figure out at the item, group, and page level 
-	// which items you've seen and which you haven't. You're looking at some
-	// subset of items, so just mark everything seen. 
+	// We aren't going to try and figure out at the item, group, and page
+	// level which items you've seen and which you haven't. If you're looking
+	// at the top level network page just mark everything seen. 
 	
-	$r = q("UPDATE `item` SET `unseen` = 0 
-		WHERE `unseen` = 1 AND `uid` = %d",
-		intval($_SESSION['uid'])
-	);
+	if((! $group) && (! $cid)) {
+		$r = q("UPDATE `item` SET `unseen` = 0 
+			WHERE `unseen` = 1 AND `uid` = %d",
+			intval($_SESSION['uid'])
+		);
+	}
 
 	// We don't have to deal with ACL's on this page. You're looking at everything
 	// that belongs to you, hence you can see all of it. We will filter by group if
