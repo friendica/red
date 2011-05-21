@@ -61,6 +61,8 @@ function parse_url_content(&$a) {
 				$items = $div->getElementsByTagName('p');
 				if($items) {
 					foreach($items as $item) {
+						if($item->getElementsByTagName('script'))
+							continue;
 						$text = $item->textContent;
 						$text = strip_tags($text);
 						if(strlen($text) < 100)
@@ -77,6 +79,8 @@ function parse_url_content(&$a) {
 		$items = $dom->getElementsByTagName('p');
 		if($items) {
 			foreach($items as $item) {
+				if($item->getElementsByTagName('script'))
+					continue;
 				$text = $item->textContent;
 				$text = strip_tags($text);
 				if(strlen($text) < 100)
