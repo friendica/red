@@ -1,55 +1,92 @@
 <?php
 function oembed_replacecb($matches){
-  $embedurl=$matches[1];
-  
-  $r = q("SELECT v FROM `cache` WHERE k='%s'",
-  		dbesc($embedurl));
-  if(count($r)){
-  	$txt = $r[0]['v'];
-  } else {
-	  $ourl = "http://oohembed.com/oohembed/?url=".urlencode($embedurl);  
-	  $txt = fetch_url($ourl);
-	  //save in cache
-	  q("INSERT INTO `cache` VALUES ('%s','%s','%s')",
-	  	dbesc($embedurl),
-		dbesc($txt),
-		dbesc(datetime_convert()));
-  }
-  $j = json_decode($txt);
-  $ret="<span class='oembed ".$j->type."'>";
-  switch ($j->type) {
-    case "video": {
-       if (isset($j->thumbnail_url)) {
-         /*$tw = (isset($j->thumbnail_width)) ? $j->thumbnail_width:200;
-         $th = (isset($j->thumbnail_height)) ? $j->thumbnail_height:180;*/
-		$tw=150; $th=120; 
-         $ret = "<a href='".$embedurl."' onclick='this.innerHTML=unescape(\"".urlencode($j->html)."\").replace(/\+/g,\" \"); return false;' style='float:left; margin: 1em; '>";
-         $ret.= "<img width='$tw' height='$th' src='".$j->thumbnail_url."'>";
-         $ret.= "</a>";
-       } else {
-         $ret=$j->html;
-       }
-       $ret.="<br>";
-    }; break;
-    case "photo": {
-      $ret = "<img width='".$j->width."' height='".$j->height."' src='".$j->url."'>";
-      $ret.="<br>";
-    }; break;  
-    case "link": {
-      //$ret = "<a href='".$embedurl."'>".$j->title."</a>";
-    }; break;  
-    case "rich": {
-      // not so safe.. 
-      $ret = "<blockquote>".$j->html."</blockquote>";
-    }; break;
-  }
-  
-  $embedlink = (isset($j->title))?$j->title:$embedurl;
-  $ret .= "<a href='$embedurl' rel='oembed'>$embedlink</a>";
-  if (isset($j->author_name)) $ret.=" by ".$j->author_name;
-  if (isset($j->provider_name)) $ret.=" on ".$j->provider_name;
-  $ret.="<br style='clear:left'></span>";
-  return $ret;
+	$embedurl=$matches[1];
+	$j = oembed_fetch_url($embedurl);
+	return oembed_format_object($j);
+}
+
+
+function oembed_fetch_url($embedurl){
+	$r = q("SELECT v FROM `cache` WHERE k='%s'",
+				dbesc($embedurl));
+				
+	if(count($r)){
+		$txt = $r[0]['v'];
+	} else {
+		$txt = "";
+		
+		// try oembed autodiscovery
+		$html_text = fetch_url($embedurl);
+		$dom = @DOMDocument::loadHTML($html_text);
+		if ($dom){
+			$xpath = new DOMXPath($dom);
+			$attr = "oembed";
+		
+			$xattr = oe_build_xpath("class","oembed");
+			$entries = $xpath->query("//link[@type='application/json+oembed']");
+			foreach($entries as $e){
+				$href = $e->getAttributeNode("href")->nodeValue;
+				$txt = fetch_url($href);
+			}
+		}
+		
+		if ($txt==false || $txt==""){
+			// try oohembed service
+			$ourl = "http://oohembed.com/oohembed/?url=".urlencode($embedurl);  
+			$txt = fetch_url($ourl);
+		}
+		
+		$txt=trim($txt);
+		if ($txt[0]!="{") $txt='{"type":"error"}';
+	
+		//save in cache
+		/*q("INSERT INTO `cache` VALUES ('%s','%s','%s')",
+			dbesc($embedurl),
+			dbesc($txt),
+			dbesc(datetime_convert()));*/
+	}
+	
+	$j = json_decode($txt);
+	$j->embedurl = $embedurl;
+	return $j;
+}
+	
+function oembed_format_object($j){
+	$embedurl = $j->embedurl;
+	$ret="<span class='oembed ".$j->type."'>";
+	switch ($j->type) {
+		case "video": {
+			if (isset($j->thumbnail_url)) {
+				/*$tw = (isset($j->thumbnail_width)) ? $j->thumbnail_width:200;
+				$th = (isset($j->thumbnail_height)) ? $j->thumbnail_height:180;*/
+				$tw=150; $th=120; 
+				$ret.= "<a href='".$embedurl."' onclick='this.innerHTML=unescape(\"".urlencode($j->html)."\").replace(/\+/g,\" \"); return false;' style='float:left; margin: 1em; '>";
+				$ret.= "<img width='$tw' height='$th' src='".$j->thumbnail_url."'>";
+				$ret.= "</a>";
+			} else {
+				$ret=$j->html;
+			}
+			$ret.="<br>";
+		}; break;
+		case "photo": {
+			$ret.= "<img width='".$j->width."' height='".$j->height."' src='".$j->url."'>";
+			$ret.="<br>";
+		}; break;  
+		case "link": {
+			//$ret = "<a href='".$embedurl."'>".$j->title."</a>";
+		}; break;  
+		case "rich": {
+			// not so safe.. 
+			$ret.= "<blockquote>".$j->html."</blockquote>";
+		}; break;
+	}
+
+	$embedlink = (isset($j->title))?$j->title:$embedurl;
+	$ret .= "<a href='$embedurl' rel='oembed'>$embedlink</a>";
+	if (isset($j->author_name)) $ret.=" by ".$j->author_name;
+	if (isset($j->provider_name)) $ret.=" on ".$j->provider_name;
+	$ret.="<br style='clear:left'></span>";
+	return $ret;
 }
 
 function oembed_bbcode2html($text){

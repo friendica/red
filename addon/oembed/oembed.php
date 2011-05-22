@@ -47,7 +47,7 @@ function oembed_init(&$a) {
 	
 	if ($a->argv[1]=='b2h'){
 		$url = array( "", trim(hex2bin($_GET['url'])));
-		echo "<span class='oembed'>".oembed_replacecb($url)."</span>";
+		echo oembed_replacecb($url);
 	}
 	
 	if ($a->argv[1]=='h2b'){
