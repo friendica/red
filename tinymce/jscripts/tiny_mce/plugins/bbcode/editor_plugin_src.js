@@ -48,6 +48,27 @@
 				s = s.replace(re, str);
 			};
 
+
+
+
+			/* oembed */
+			function _h2b_cb(match) {
+				text = bin2hex(match);
+				function s_h2b(data) {
+						match = data;
+				}
+				$.ajax({
+					url: 'oembed/h2b?text=' + text,
+					async: false,
+					success: s_h2b,
+					dataType: 'html'
+				});
+				return match;
+			}
+			s = s.replace(/<span class=\"oembed\">(.*?)<\/span>/gi, _h2b_cb);
+			/* /oembed */
+
+
 			// example: <strong> to [b]
 			rep(/<a.*?href=\"(.*?)\".*?>(.*?)<\/a>/gi,"[url=$1]$2[/url]");
 			rep(/<span style=\"font-size:(.*?);\">(.*?)<\/span>/gi,"[size=$1]$2[/size]");
@@ -55,8 +76,8 @@
 			rep(/<font>(.*?)<\/font>/gi,"$1");
 			rep(/<img.*?width=\"(.*?)\".*?height=\"(.*?)\".*?src=\"(.*?)\".*?\/>/gi,"[img=$1x$2]$3[/img]");
 			rep(/<img.*?height=\"(.*?)\".*?width=\"(.*?)\".*?src=\"(.*?)\".*?\/>/gi,"[img=$2x$1]$3[/img]");
-      rep(/<img.*?src=\"(.*?)\".*?height=\"(.*?)\".*?width=\"(.*?)\".*?\/>/gi,"[img=$3x$2]$1[/img]");
-      rep(/<img.*?src=\"(.*?)\".*?width=\"(.*?)\".*?height=\"(.*?)\".*?\/>/gi,"[img=$2x$3]$1[/img]");
+			rep(/<img.*?src=\"(.*?)\".*?height=\"(.*?)\".*?width=\"(.*?)\".*?\/>/gi,"[img=$3x$2]$1[/img]");
+			rep(/<img.*?src=\"(.*?)\".*?width=\"(.*?)\".*?height=\"(.*?)\".*?\/>/gi,"[img=$2x$3]$1[/img]");
 			rep(/<img.*?src=\"(.*?)\".*?\/>/gi,"[img]$1[/img]");
 			rep(/<code>(.*?)<\/code>/gi,"[code]$1[/code]");
 			rep(/<\/(strong|b)>/gi,"[/b]");
@@ -106,6 +127,25 @@
 			rep(/\[size=(.*?)\](.*?)\[\/size\]/gi,"<span style=\"font-size: $1;\">$2</span>");
 			rep(/\[code\](.*?)\[\/code\]/gi,"<code>$1</code>");
 			rep(/\[quote.*?\](.*?)\[\/quote\]/gi,"<blockquote>$1</blockquote>");
+
+			/* oembed */
+			function _b2h_cb(match) {
+				url = match.replace(/\[\/*embed\]/gi, "")
+				url = bin2hex(url);
+				function s_b2h(data) {
+						match = data;
+				}
+				$.ajax({
+					url: 'oembed/b2h?url=' + url,
+					async: false,
+					success: s_b2h,
+					dataType: 'html'
+				});
+				return match;
+			}
+			s = s.replace(/\[embed\](.*?)\[\/embed\]/gi, _b2h_cb);
+			
+			/* /oembed */
 
 			return s; 
 		}

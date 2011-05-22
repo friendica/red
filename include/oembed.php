@@ -16,13 +16,14 @@ function oembed_replacecb($matches){
 		dbesc(datetime_convert()));
   }
   $j = json_decode($txt);
-  $ret="<span class='oembed'>";
+  $ret="<span class='oembed ".$j->type."'>";
   switch ($j->type) {
     case "video": {
        if (isset($j->thumbnail_url)) {
-         $tw = (isset($j->thumbnail_width)) ? $j->thumbnail_width:200;
-         $th = (isset($j->thumbnail_height)) ? $j->thumbnail_height:180;
-         $ret = "<a href='".$embedurl."' onclick='this.innerHTML=unescape(\"".urlencode($j->html)."\").replace(/\+/g,\" \"); return false;' >";
+         /*$tw = (isset($j->thumbnail_width)) ? $j->thumbnail_width:200;
+         $th = (isset($j->thumbnail_height)) ? $j->thumbnail_height:180;*/
+		$tw=150; $th=120; 
+         $ret = "<a href='".$embedurl."' onclick='this.innerHTML=unescape(\"".urlencode($j->html)."\").replace(/\+/g,\" \"); return false;' style='float:left; margin: 1em; '>";
          $ret.= "<img width='$tw' height='$th' src='".$j->thumbnail_url."'>";
          $ret.= "</a>";
        } else {
@@ -47,7 +48,7 @@ function oembed_replacecb($matches){
   $ret .= "<a href='$embedurl' rel='oembed'>$embedlink</a>";
   if (isset($j->author_name)) $ret.=" by ".$j->author_name;
   if (isset($j->provider_name)) $ret.=" on ".$j->provider_name;
-  $ret.="</span>";
+  $ret.="<br style='clear:left'></span>";
   return $ret;
 }
 
@@ -98,7 +99,7 @@ function oembed_html2bbcode($text) {
 		$xattr = oe_build_xpath("rel","oembed");
 		foreach($entries as $e) {
 			$href = $xpath->evaluate("a[$xattr]/@href", $e)->item(0)->nodeValue;
-			if(!is_null($href)) $e->parentNode->replaceChild(new DOMText("[embed]".$href."[embed]"), $e);
+			if(!is_null($href)) $e->parentNode->replaceChild(new DOMText("[embed]".$href."[/embed]"), $e);
 		}
 		return oe_get_inner_html( $dom->getElementsByTagName("body")->item(0) );
 	} else {
