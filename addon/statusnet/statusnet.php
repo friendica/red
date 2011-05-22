@@ -86,69 +86,91 @@ function statusnet_settings_post ($a,$post) {
 	if(! local_user())
 	    return;
 	if (isset($_POST['statusnet-disconnect'])) {
-	    /***
-	     * if the statusnet-disconnect checkbox is set, clear the statusnet configuration
-	     * TODO can we revoke the access tokens at Twitter and do we need to do so?
-	     */
-		del_pconfig( local_user(), 'statusnet', 'consumerkey'  );
-		del_pconfig( local_user(), 'statusnet', 'consumersecret' );
-		del_pconfig( local_user(), 'statusnet', 'post' );
-		del_pconfig( local_user(), 'statusnet', 'post_by_default' );
-        del_pconfig( local_user(), 'statusnet', 'oauthtoken' );
+            /***
+             * if the statusnet-disconnect checkbox is set, clear the statusnet configuration
+             * TODO can we revoke the access tokens at Twitter and do we need to do so?
+             */
+            del_pconfig( local_user(), 'statusnet', 'consumerkey'  );
+            del_pconfig( local_user(), 'statusnet', 'consumersecret' );
+            del_pconfig( local_user(), 'statusnet', 'post' );
+            del_pconfig( local_user(), 'statusnet', 'post_by_default' );
+            del_pconfig( local_user(), 'statusnet', 'oauthtoken' );
             del_pconfig( local_user(), 'statusnet', 'oauthsecret' );
             del_pconfig( local_user(), 'statusnet', 'baseapi' );
 	} else {
-        if (isset($_POST['statusnet-consumersecret'])) {
-            //  check if we can reach the API of the StatusNet server
-            //  we'll check the API Version for that, if we don't get one we'll try to fix the path but will
-            //  resign quickly after this one try to fix the path ;-)
-            $apibase = $_POST['statusnet-baseapi'];
-            $c = fetch_url( $apibase . 'statusnet/version.xml' );
-            if (strlen($c) > 0) {
-                //  ok the API path is correct, let's save the settings
-                set_pconfig(local_user(), 'statusnet', 'consumerkey', $_POST['statusnet-consumerkey']);
-                set_pconfig(local_user(), 'statusnet', 'consumersecret', $_POST['statusnet-consumersecret']);
-                set_pconfig(local_user(), 'statusnet', 'baseapi', $apibase );
+            if (isset($_POST['statusnet-preconf-apiurl'])) {
+                /***
+                 * If the user used one of the preconfigured StatusNet server credentials
+                 * use them. All the data are available in the global config.
+                 * Check the API Url never the less and blame the admin if it's not working ^^
+                 */
+                $globalsn = get_config('statusnet', 'sites');
+                foreach ( $globalsn as $asn) {
+                    if ($asn['apiurl'] == $_POST['statusnet-preconf-apiurl'] ) {
+                        $apibase = $asn['apiurl'];
+                        $c = fetch_url( $apibase . 'statusnet/version.xml' );
+                        if (strlen($c) > 0) {
+                            set_pconfig(local_user(), 'statusnet', 'consumerkey', $asn['consumerkey'] );
+                            set_pconfig(local_user(), 'statusnet', 'consumersecret', $asn['consumersecret'] );
+                            set_pconfig(local_user(), 'statusnet', 'baseapi', $asn['apiurl'] );
+                        } else {
+                            notice( t('Please contact your site administrator.<br />The provided API URL is not valid.').EOL.$asn['apiurl'].EOL );
+                        }
+                    }
+                }
+                goaway($a->get_baseurl().'/settings/addon');
             } else {
-                //  the API path is not correct, maybe missing trailing / ?
-                $apibase = $apibase . '/';
+            if (isset($_POST['statusnet-consumersecret'])) {
+                //  check if we can reach the API of the StatusNet server
+                //  we'll check the API Version for that, if we don't get one we'll try to fix the path but will
+                //  resign quickly after this one try to fix the path ;-)
+                $apibase = $_POST['statusnet-baseapi'];
                 $c = fetch_url( $apibase . 'statusnet/version.xml' );
                 if (strlen($c) > 0) {
-                    //  ok the API path is now correct, let's save the settings
+                    //  ok the API path is correct, let's save the settings
                     set_pconfig(local_user(), 'statusnet', 'consumerkey', $_POST['statusnet-consumerkey']);
                     set_pconfig(local_user(), 'statusnet', 'consumersecret', $_POST['statusnet-consumersecret']);
                     set_pconfig(local_user(), 'statusnet', 'baseapi', $apibase );
                 } else {
-                    //  still not the correct API base, let's do noting
-                    notice( t('We could not contact the StatusNet API with the Path you entered.').EOL );
+                    //  the API path is not correct, maybe missing trailing / ?
+                    $apibase = $apibase . '/';
+                    $c = fetch_url( $apibase . 'statusnet/version.xml' );
+                    if (strlen($c) > 0) {
+                        //  ok the API path is now correct, let's save the settings
+                        set_pconfig(local_user(), 'statusnet', 'consumerkey', $_POST['statusnet-consumerkey']);
+                        set_pconfig(local_user(), 'statusnet', 'consumersecret', $_POST['statusnet-consumersecret']);
+                        set_pconfig(local_user(), 'statusnet', 'baseapi', $apibase );
+                    } else {
+                        //  still not the correct API base, let's do noting
+                        notice( t('We could not contact the StatusNet API with the Path you entered.').EOL );
+                    }
                 }
-            }
-            goaway($a->get_baseurl().'/settings/addon');
-        } else {
-	if (isset($_POST['statusnet-pin'])) {
-	    //  if the user supplied us with a PIN from Twitter, let the magic of OAuth happen
-	    logger('got a StatusNet security code');
-            $api     = get_pconfig(local_user(), 'statusnet', 'baseapi');
-	    $ckey    = get_pconfig(local_user(), 'statusnet', 'consumerkey'  );
-	    $csecret = get_pconfig(local_user(), 'statusnet', 'consumersecret' );
-	    //  the token and secret for which the PIN was generated were hidden in the settings
-	    //  form as token and token2, we need a new connection to Twitter using these token
-	    //  and secret to request a Access Token with the PIN
-	    $connection = new StatusNetOAuth($api, $ckey, $csecret, $_POST['statusnet-token'], $_POST['statusnet-token2']);
-	    $token   = $connection->getAccessToken( $_POST['statusnet-pin'] );
-	    //  ok, now that we have the Access Token, save them in the user config
- 	    set_pconfig(local_user(),'statusnet', 'oauthtoken',  $token['oauth_token']);
-	    set_pconfig(local_user(),'statusnet', 'oauthsecret', $token['oauth_token_secret']);
-            set_pconfig(local_user(),'statusnet', 'post', 1);
-            //  reload the Addon Settings page, if we don't do it see Bug #42
-            goaway($a->get_baseurl().'/settings/addon');
-	} else {
-	    //  if no PIN is supplied in the POST variables, the user has changed the setting
-	    //  to post a tweet for every new __public__ posting to the wall
-	    set_pconfig(local_user(),'statusnet','post',intval($_POST['statusnet-enable']));
-	    set_pconfig(local_user(),'statusnet','post_by_default',intval($_POST['statusnet-default']));
-		notice( t('StatusNet settings updated.') . EOL);
-	}}}
+                goaway($a->get_baseurl().'/settings/addon');
+            } else {
+    	        if (isset($_POST['statusnet-pin'])) {
+	            //  if the user supplied us with a PIN from Twitter, let the magic of OAuth happen
+	            logger('got a StatusNet security code');
+                    $api     = get_pconfig(local_user(), 'statusnet', 'baseapi');
+        	    $ckey    = get_pconfig(local_user(), 'statusnet', 'consumerkey'  );
+        	    $csecret = get_pconfig(local_user(), 'statusnet', 'consumersecret' );
+        	    //  the token and secret for which the PIN was generated were hidden in the settings
+        	    //  form as token and token2, we need a new connection to Twitter using these token
+        	    //  and secret to request a Access Token with the PIN
+        	    $connection = new StatusNetOAuth($api, $ckey, $csecret, $_POST['statusnet-token'], $_POST['statusnet-token2']);
+        	    $token   = $connection->getAccessToken( $_POST['statusnet-pin'] );
+        	    //  ok, now that we have the Access Token, save them in the user config
+         	    set_pconfig(local_user(),'statusnet', 'oauthtoken',  $token['oauth_token']);
+        	    set_pconfig(local_user(),'statusnet', 'oauthsecret', $token['oauth_token_secret']);
+                    set_pconfig(local_user(),'statusnet', 'post', 1);
+                    //  reload the Addon Settings page, if we don't do it see Bug #42
+                    goaway($a->get_baseurl().'/settings/addon');
+        	} else {
+        	    //  if no PIN is supplied in the POST variables, the user has changed the setting
+        	    //  to post a tweet for every new __public__ posting to the wall
+        	    set_pconfig(local_user(),'statusnet','post',intval($_POST['statusnet-enable']));
+        	    set_pconfig(local_user(),'statusnet','post_by_default',intval($_POST['statusnet-default']));
+        		notice( t('StatusNet settings updated.') . EOL);
+        	}}}}
 }
 function statusnet_settings(&$a,&$s) {
         if(! local_user())
@@ -175,19 +197,37 @@ function statusnet_settings(&$a,&$s) {
 	if ( (!$ckey) && (!$csecret) ) {
 		/***
 		 * no consumer keys
-		 */
-		$s .= '<p>'. t('No consumer key pair for StatusNet found. Register your Friendika Account as an desktop client on your StatusNet account, copy the consumer key pair here and enter the API base root.<br />Before you register your own OAuth key pair ask the administrator if there is already a key pair for this Friendika installation at your favorited StatusNet installation.') .'</p>';
-                $s .= '<div id="statusnet-consumer-wrapper">';
-                $s .= '<label id="statusnet-consumerkey-label" for="statusnet-consumerkey">'. t('OAuth Consumer Key') .'</label>';
-				$s .= '<input id="statusnet-consumerkey" type="text" name="statusnet-consumerkey" size="35" />';
-				$s .= '<div class="clear"></div>';
-                $s .= '<label id="statusnet-consumersecret-label" for="statusnet-consumersecret">'. t('OAuth Consumer Secret') .'</label>';
-				$s .= '<input id="statusnet-consumersecret" type="text" name="statusnet-consumersecret" size="35" />';
-				$s .= '<div class="clear"></div>';
-                $s .= '<label id="statusnet-baseapi-label" for="statusnet-baseapi">'. t("Base API Path \x28remember the trailing /\x29") .'</label>';
-		$s .= '<input id="statusnet-baseapi" type="text" name="statusnet-baseapi" size="35" />';
-                $s .= '<div class="clear"></div></div>';
+                 */
+            $globalsn = get_config('statusnet', 'sites');
+            /***
+             * lets check if we have one or more globally configured StatusNet
+             * server OAuth credentials in the configuration. If so offer them
+             * with a little explanation to the user as choice - otherwise
+             * ignore this option entirely.
+             */
+            if (! $globalsn == null) {
+                $s .= '<h4>' . t('Globally Available StatusNet OAuthKeys') . '</h4>';
+                $s .= '<p>'. t('There are preconfigured OAuth key pairs for some StatusNet servers available. If you are useing one of them, please use these credentials. If not feel free to connect to any other StatusNet instance (see below).') .'</p>';
+                $s .= '<div id="statusnet-preconf-wrapper">';
+                foreach ($globalsn as $asn) {
+                    $s .= '<input type="radio" name="statusnet-preconf-apiurl" value="'. $asn['apiurl'] .'">'. $asn['sitename'] .'<br />';
+                }
+                $s .= '<p></p><div class="clear"></div></div>';
                 $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
+            }
+            $s .= '<h4>' . t('Provide your own OAuth Credentials') . '</h4>';
+            $s .= '<p>'. t('No consumer key pair for StatusNet found. Register your Friendika Account as an desktop client on your StatusNet account, copy the consumer key pair here and enter the API base root.<br />Before you register your own OAuth key pair ask the administrator if there is already a key pair for this Friendika installation at your favorited StatusNet installation.') .'</p>';
+            $s .= '<div id="statusnet-consumer-wrapper">';
+            $s .= '<label id="statusnet-consumerkey-label" for="statusnet-consumerkey">'. t('OAuth Consumer Key') .'</label>';
+            $s .= '<input id="statusnet-consumerkey" type="text" name="statusnet-consumerkey" size="35" /><br />';
+            $s .= '<div class="clear"></div>';
+            $s .= '<label id="statusnet-consumersecret-label" for="statusnet-consumersecret">'. t('OAuth Consumer Secret') .'</label>';
+            $s .= '<input id="statusnet-consumersecret" type="text" name="statusnet-consumersecret" size="35" /><br />';
+            $s .= '<div class="clear"></div>';
+            $s .= '<label id="statusnet-baseapi-label" for="statusnet-baseapi">'. t("Base API Path \x28remember the trailing /\x29") .'</label>';
+            $s .= '<input id="statusnet-baseapi" type="text" name="statusnet-baseapi" size="35" /><br />';
+            $s .= '<p></p><div class="clear"></div></div>';
+            $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
 	} else {
 		/***
 		 * ok we have a consumer key pair now look into the OAuth stuff
