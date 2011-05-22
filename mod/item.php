@@ -464,22 +464,59 @@ function item_post(&$a) {
 			if(($user['notify-flags'] & NOTIFY_COMMENT) && ($contact_record != $author)) {
 				require_once('bbcode.php');
 				$from = $author['name'];
-				$tpl = get_intltext_template('cmnt_received_eml.tpl');			
-				$email_tpl = replace_macros($tpl, array(
-					'$sitename' => $a->config['sitename'],
-					'$siteurl' =>  $a->get_baseurl(),
-					'$username' => $user['username'],
-					'$email' => $user['email'],
-					'$from' => $from,
-					'$display' => $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
-					'$body' => strip_tags(bbcode($datarray['body']))
+
+				// name of the automated email sender
+				$msg['notificationfromname']	= stripslashes($datarray['author-name']);;
+				// noreply address to send from
+				$msg['notificationfromemail']	= t('noreply') . '@' . $a->get_hostname();				
+
+				// text version
+				// process the message body to display properly in text mode
+				$msg['textversion']
+					= html_entity_decode(strip_tags(bbcode(stripslashes($datarray['body']))), ENT_QUOTES, 'UTF-8');
+				
+				// html version
+				// process the message body to display properly in text mode
+				$msg['htmlversion']	
+					= html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r","\\n\\n" ,"\\n"), "<br />\n",$datarray['body']))));
+
+				// load the template for private message notifications
+				$tpl = get_intltext_template('cmnt_received_html_body_eml.tpl');
+				$email_html_body_tpl = replace_macros($tpl,array(
+					'$sitename'		=> $a->config['sitename'],				// name of this site
+					'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
+					'$thumb'		=> $author['thumb'],					// thumbnail url for sender icon
+					'$email'		=> $importer['email'],					// email address to send to
+					'$url'			=> $author['url'],					// full url for the site
+					'$from'			=> $from,						// name of the person sending the message
+					'$body'			=> $msg['htmlversion'],					// html version of the message
+					'$display'		=> $a->get_baseurl() . '/display/' . $author['nick'] . '/' . $post_id,
+				));
+			
+				// load the template for private message notifications
+				$tpl = get_intltext_template('cmnt_received_text_body_eml.tpl');
+				$email_text_body_tpl = replace_macros($tpl,array(
+					'$sitename'		=> $a->config['sitename'],				// name of this site
+					'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
+					'$thumb'		=> $author['thumb'],					// thumbnail url for sender icon
+					'$email'		=> $importer['email'],					// email address to send to
+					'$url'			=> $author['url'],					// full url for the site
+					'$from'			=> $from,						// name of the person sending the message
+					'$body'			=> $msg['textversion'],					// text version of the message
+					'$display'		=> $a->get_baseurl() . '/display/' . $author['nick'] . '/' . $post_id,
 				));
 
-				$res = mail($user['email'], sprintf( t("%s commented on your item at %s") ,$from,$a->config['sitename']),
-					$email_tpl,
-					'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
-					. 'Content-type: text/plain; charset=UTF-8' . "\n"
-					. 'Content-transfer-encoding: 8bit' );
+				// use the EmailNotification library to send the message
+				require_once("include/EmailNotification.php");
+				EmailNotification::sendTextHtmlEmail(
+					$msg['notificationfromname'],
+					t("Administrator@") . $a->get_hostname(),
+					t("noreply") . '@' . $a->get_hostname(),
+					$user['email'],
+					$from . t(" commented on an item at ") . $a->config['sitename'],
+					$email_html_body_tpl,
+					$email_text_body_tpl
+				);
 			}
 		}
 		else {
@@ -490,23 +527,57 @@ function item_post(&$a) {
 			if(($user['notify-flags'] & NOTIFY_WALL) && ($contact_record != $author)) {
 				require_once('bbcode.php');
 				$from = $author['name'];
-				$tpl = get_intltext_template('wall_received_eml.tpl');			
-				$email_tpl = replace_macros($tpl, array(
-					'$sitename' => $a->config['sitename'],
-					'$siteurl' =>  $a->get_baseurl(),
-					'$username' => $user['username'],
-					'$email' => $user['email'],
-					'$from' => $from,
-					'$display' => $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
-					'$body' => strip_tags(bbcode($datarray['body']))
+							
+				// name of the automated email sender
+				$msg['notificationfromname']	= $from;
+				// noreply address to send from
+				$msg['notificationfromemail']	= t('noreply') . '@' . $a->get_hostname();				
+
+				// text version
+				// process the message body to display properly in text mode
+				$msg['textversion']
+					= html_entity_decode(strip_tags(bbcode(stripslashes($datarray['body']))), ENT_QUOTES, 'UTF-8');
+				
+				// html version
+				// process the message body to display properly in text mode
+				$msg['htmlversion']	
+					= html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r","\\n\\n" ,"\\n"), "<br />\n",$datarray['body']))));
+
+				// load the template for private message notifications
+				$tpl = load_view_file('view/wall_received_html_body_eml.tpl');
+				$email_html_body_tpl = replace_macros($tpl,array(
+					'$sitename'		=> $a->config['sitename'],				// name of this site
+					'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
+					'$thumb'		=> $author['thumb'],					// thumbnail url for sender icon
+					'$url'			=> $author['url'],					// full url for the site
+					'$from'			=> $from,						// name of the person sending the message
+					'$body'			=> $msg['htmlversion'],					// html version of the message
+					'$display'		=> $a->get_baseurl() . '/display/' . $author['nick'] . '/' . $post_id,
+				));
+			
+				// load the template for private message notifications
+				$tpl = load_view_file('view/wall_received_text_body_eml.tpl');
+				$email_text_body_tpl = replace_macros($tpl,array(
+					'$sitename'		=> $a->config['sitename'],				// name of this site
+					'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
+					'$thumb'		=> $author['thumb'],					// thumbnail url for sender icon
+					'$url'			=> $author['url'],					// full url for the site
+					'$from'			=> $from,						// name of the person sending the message
+					'$body'			=> $msg['textversion'],					// text version of the message
+					'$display'		=> $a->get_baseurl() . '/display/' . $author['nick'] . '/' . $post_id,
 				));
 
-				$res = mail($user['email'], sprintf( t("%s posted on your profile wall at %s") ,$from, $a->config['sitename']),
-					$email_tpl,
-					'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
-					. 'Content-type: text/plain; charset=UTF-8' . "\n"
-					. 'Content-transfer-encoding: 8bit' );
-
+				// use the EmailNotification library to send the message
+				require_once("include/EmailNotification.php");
+				EmailNotification::sendTextHtmlEmail(
+					$msg['notificationfromname'],
+					t("Administrator@") . $a->get_hostname(),
+					t("noreply") . '@' . $a->get_hostname(),
+					$user['email'],
+					$from . t(" commented on an item at ") . $a->config['sitename'],
+					$email_html_body_tpl,
+					$email_text_body_tpl
+				);
 			}
 		}
 
@@ -518,6 +589,9 @@ function item_post(&$a) {
 			dbesc(datetime_convert()),
 			intval($post_id)
 		);
+		foreach( $r as $key => $val) {
+			logger("key: " . $key . " val: " . $val);
+		}
 
 		// photo comments turn the corresponding item visible to the profile wall
 		// This way we don't see every picture in your new photo album posted to your wall at once.
