@@ -48,7 +48,7 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 
 	$o = '';
 
-	// When used for private messages, we limit correspondence to mutual friends and the selector
+	// When used for private messages, we limit correspondence to mutual DFRN/Friendika friends and the selector
 	// to one recipient. By default our selector allows multiple selects amongst all contacts.
 
 	$sql_extra = '';
@@ -57,9 +57,12 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 		$sql_extra .= sprintf(" AND `rel` = %d ", intval(REL_BUD));
 	}
 
-	if($privmail || $privatenet) {
+	if($privmail) {
 		$sql_extra .= " AND `network` IN ( 'dfrn' ) ";
-	}	
+	}
+	elseif($privatenet) {	
+		$sql_extra .= " AND `network` IN ( 'dfrn', 'mail', 'face' ) ";
+	}
 
 	if($privmail)
 		$o .= "<select name=\"$selname\" id=\"$selclass\" class=\"$selclass\" size=\"$size\" >\r\n";
@@ -79,8 +82,6 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 	// e.g. 'network_pre_contact_deny', 'profile_pre_contact_allow'
 
 	call_hooks($a->module . '_pre_' . $selname, $arr);
-
-
 
 	if(count($r)) {
 		foreach($r as $rr) {
@@ -129,7 +130,7 @@ function populate_acl($user = null,$celeb = false) {
 	$o = '';
 	$o .= '<div id="acl-wrapper">';
 	$o .= '<div id="acl-permit-outer-wrapper">';
-	$o .= '<div id="acl-permit-text">' . t('Visible To:') . '</div>';
+	$o .= '<div id="acl-permit-text">' . t('Visible To:') . '</div><div id="jot-public">' . t('everybody') . '</div>';
 	$o .= '<div id="acl-permit-text-end"></div>';
 	$o .= '<div id="acl-permit-wrapper">';
 	$o .= '<div id="group_allow_wrapper">';

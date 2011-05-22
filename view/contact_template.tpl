@@ -7,7 +7,7 @@
 			</div>
 			<div class="contact-entry-direction-end" ></div>
 			<div class="contact-entry-edit-links" >
-				<a href="contacts/$id" class="contact-entry-edit-link" ><img src="images/b_edit.gif" alt="$edit_hover" title="$edit_hover" /></a>
+				<a class="icon pencil" href="contacts/$id" class="contact-entry-edit-link" title="$edit_hover"></a>
 			</div>
 			<div class="contact-entry-edit-end"></div>
 		</div>

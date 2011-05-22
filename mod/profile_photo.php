@@ -58,21 +58,21 @@ function profile_photo_post(&$a) {
 				$r = $im->store(local_user(), 0, $base_image['resource-id'],$base_image['filename'], t('Profile Photos'), 4, 1);
 
 				if($r === false)
-					notice ( t('Image size reduction [175] failed.') . EOL );
+					notice ( sprintf(t('Image size reduction [%s] failed.'),"175") . EOL );
 
 				$im->scaleImage(80);
 
 				$r = $im->store(local_user(), 0, $base_image['resource-id'],$base_image['filename'], t('Profile Photos'), 5, 1);
 			
 				if($r === false)
-					notice( t('Image size reduction [80] failed.') . EOL );
+					notice( sprintf(t('Image size reduction [%s] failed.'),"80") . EOL );
 
 				$im->scaleImage(48);
 
 				$r = $im->store(local_user(), 0, $base_image['resource-id'],$base_image['filename'], t('Profile Photos'), 6, 1);
 			
 				if($r === false)
-					notice( t('Image size reduction [48] failed.') . EOL );
+					notice( sprintf(t('Image size reduction [%s] failed.'),"48") . EOL );
 
 				// Unset the profile photo flag from any other photos I own
 
@@ -87,7 +87,7 @@ function profile_photo_post(&$a) {
 				);
 
 				// Update global directory in background
-				$url = $_SESSION['my_url'];
+				$url = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
 				if($url && strlen(get_config('system','directory_submit_url')))
 					proc_run('php',"include/directory.php","$url");
 			}
@@ -106,7 +106,7 @@ function profile_photo_post(&$a) {
 	$maximagesize = get_config('system','maximagesize');
 
 	if(($maximagesize) && ($filesize > $maximagesize)) {
-		notice( t('Image exceeds size limit of ') . $maximagesize . EOL);
+		notice( sprintf(t('Image exceeds size limit of %d'), $maximagesize) . EOL);
 		@unlink($src);
 		return;
 	}
@@ -134,6 +134,11 @@ function profile_photo_content(&$a) {
 		return;
 	}
 	
+	$newuser = false;
+
+	if($a->argc == 2 && $a->argv[1] === 'new')
+		$newuser = true;
+
 	if( $a->argv[1]=='use'){
 		if ($a->argc<3){
 			notice( t('Permission denied.') . EOL );
@@ -181,10 +186,14 @@ function profile_photo_content(&$a) {
 
 	if(! x($a->config,'imagecrop')) {
 	
-		$tpl = load_view_file('view/profile_photo.tpl');
+		$tpl = get_markup_template('profile_photo.tpl');
 
 		$o .= replace_macros($tpl,array(
-			'$user' => $a->user['nickname']
+			'$user' => $a->user['nickname'],
+			'$lbl_upfile' => t('Upload File:'),
+			'$title' => t('Upload Profile Photo'),
+			'$submit' => t('Upload'),
+			'$select' => sprintf('%s %s', t('or'), ($newuser) ? '<a href="' . $a->get_baseurl() . '">' . t('skip this step') . '</a>' : '<a href="'. $a->get_baseurl() . '/photos/' . $a->user['nickname'] . '">' . t('select a photo from your photo albums') . '</a>')
 		));
 
 		return $o;
@@ -192,13 +201,15 @@ function profile_photo_content(&$a) {
 	else {
 		$filename = $a->config['imagecrop'] . '-' . $a->config['imagecrop_resolution'] . '.jpg';
 		$resolution = $a->config['imagecrop_resolution'];
-		$tpl = load_view_file("view/cropbody.tpl");
+		$tpl = get_markup_template("cropbody.tpl");
 		$o .= replace_macros($tpl,array(
 			'$filename' => $filename,
 			'$resource' => $a->config['imagecrop'] . '-' . $a->config['imagecrop_resolution'],
-			'$image_url' => $a->get_baseurl() . '/photo/' . $filename
-			));
-
+			'$image_url' => $a->get_baseurl() . '/photo/' . $filename,
+			'$title' => t('Crop Image'),
+			'$desc' => t('Please adjust the image cropping for optimum viewing.'),
+			'$done' => t('Done Editing')
+		));
 		return $o;
 	}
 
@@ -234,14 +245,14 @@ function profile_photo_crop_ui_head(&$a, $ph){
 		$r = $ph->store(local_user(), 0 , $hash, $filename, t('Profile Photos'), 1 );	
 		
 		if($r === false)
-			notice( t('Image size reduction [640] failed.') . EOL );
+			notice( sprintf(t('Image size reduction [%s] failed.'),"640") . EOL );
 		else
 			$smallest = 1;
 	}
 
 	$a->config['imagecrop'] = $hash;
 	$a->config['imagecrop_resolution'] = $smallest;
-	$a->page['htmlhead'] .= load_view_file("view/crophead.tpl");
+	$a->page['htmlhead'] .= get_markup_template("crophead.tpl");
 	return;
 }}
 

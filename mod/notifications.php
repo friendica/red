@@ -65,12 +65,11 @@ function notifications_content(&$a) {
 	else
 		$sql_extra = " AND `ignore` = 0 ";
 
-
-	$tpl = load_view_file('view/intros-top.tpl');
-	$o .= replace_macros($tpl,array(
-		'$hide_url' => ((strlen($sql_extra)) ? 'notifications/all' : 'notifications' ),
-		'$hide_text' => ((strlen($sql_extra)) ? t('Show Ignored Requests') : t('Hide Ignored Requests'))
-	)); 
+	$o .= '<h1>' . t('Pending Friend/Connect Notifications') . '</h1>' . "\r\n";
+	
+	$o .= '<div id="notification-show-hide-wrapper" >';
+	$o .= '<a href="' . ((strlen($sql_extra)) ? 'notifications/all' : 'notifications' ) . '" id="notifications-show-hide-link" >'
+		. ((strlen($sql_extra)) ? t('Show Ignored Requests') : t('Hide Ignored Requests')) . '</a></div>' . "\r\n";
 
 
 	$r = q("SELECT COUNT(*)	AS `total` FROM `intro` 
@@ -90,13 +89,13 @@ function notifications_content(&$a) {
 	if(($r !== false) && (count($r))) {
 
 
-		$tpl = load_view_file("view/intros.tpl");
+		$tpl = get_markup_template("intros.tpl");
 
 		foreach($r as $rr) {
 
 			$friend_selected = (($rr['network'] !== 'stat') ? ' checked="checked" ' : ' disabled ');
 			$fan_selected = (($rr['network'] === 'stat') ? ' checked="checked" disabled ' : '');
-			$dfrn_tpl = load_view_file('view/netfriend.tpl');
+			$dfrn_tpl = get_markup_template('netfriend.tpl');
 
 			$knowyou   = '';
 			$dfrn_text = '';
@@ -141,24 +140,20 @@ function notifications_content(&$a) {
 
 	if ($a->config['register_policy'] == REGISTER_APPROVE &&	
 		$a->config['admin_email'] === $a->user['email']){
-		$o .= load_view_file('view/registrations-top.tpl');
+		$o .= '<h1>' . t('User registrations waiting for confirm') . '</h1>' . "\r\n";
 		
 		$r = q("SELECT `register`.*, `contact`.`name`, `user`.`email`
 				 FROM `register`
 				 LEFT JOIN `contact` ON `register`.`uid` = `contact`.`uid`
 				 LEFT JOIN `user` ON `register`.`uid` = `user`.`uid`;");
 		if(($r !== false) && (count($r))) {
-			$tpl = load_view_file("view/registrations.tpl");
+			$o .= '<ul>';
 			foreach($r as $rr) {
-				$o .= "<ul>";
-				$o .= replace_macros($tpl, array(
-					'$fullname' 	=> $rr['name'],
-					'$email'		=> $rr['email'],
-					'$approvelink' 	=> "regmod/allow/".$rr['hash'],
-					'$denylink' 	=> "regmod/deny/".$rr['hash'],
-				));
-				$o .= "</ul>";
+				$o .= '<li>' . sprintf('%s (%s) : ', $rr['name'],$rr['email']) 
+					. '<a href="regmod/allow/' . $rr['hash'] .'">' . t('Approve') 
+					. '</a> - <a href="regmod/deny/' . $rr['hash'] . '">' . t('Deny') . '</a></li>' . "\r\n";
 			}
+			$o .= "</ul>";
 		}
 		else
 			notice( t('No registrations.') . EOL);

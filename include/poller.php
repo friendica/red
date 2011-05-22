@@ -1,4 +1,5 @@
 <?php
+
 require_once("boot.php");
 
 function poller_run($argv, $argc){
@@ -15,13 +16,17 @@ function poller_run($argv, $argc){
     	unset($db_host, $db_user, $db_pass, $db_data);
   	};
 
+
 	require_once('session.php');
 	require_once('datetime.php');
 	require_once('simplepie/simplepie.inc');
 	require_once('include/items.php');
 	require_once('include/Contact.php');
+	require_once('include/email.php');
 
 	$a->set_baseurl(get_config('system','url'));
+
+	load_hooks();
 
 	logger('poller: start');
 	
@@ -29,6 +34,17 @@ function poller_run($argv, $argc){
 
 	proc_run('php',"include/queue.php");
 	
+	// once daily run expire in background
+
+	$d1 = get_config('system','last_expire_day');
+	$d2 = intval(datetime_convert('UTC','UTC','now','d'));
+
+	if($d2 != intval($d1)) {
+		set_config('system','last_expire_day',$d2);
+		proc_run('php','include/expire.php');
+	}
+
+
 	// clear old cache
 	q("DELETE FROM `cache` WHERE `updated` < '%s'",
 		dbesc(datetime_convert('UTC','UTC',"now - 30 days")));
@@ -47,10 +63,12 @@ function poller_run($argv, $argc){
 
 	$sql_extra = (($manual_id) ? " AND `id` = $manual_id " : "");
 
+	reload_plugins();
+
 	$d = datetime_convert();
+
 	call_hooks('cron', $d);
 
-	reload_plugins();
 
 	$contacts = q("SELECT `id` FROM `contact` 
 		WHERE ( `rel` = %d OR `rel` = %d ) AND `poll` != ''
@@ -74,6 +92,9 @@ function poller_run($argv, $argc){
 			continue;
 
 		foreach($res as $contact) {
+
+			$xml = false;
+
 			if($manual_id)
 				$contact['last-update'] = '0000-00-00 00:00:00';
 
@@ -147,25 +168,29 @@ function poller_run($argv, $argc){
 				: datetime_convert('UTC','UTC',$contact['last-update'], ATOM_TIME)
 			);
 
-			if($contact['network'] === 'dfrn') {
+			if($contact['network'] === NETWORK_DFRN) {
 
 				$idtosend = $orig_id = (($contact['dfrn-id']) ? $contact['dfrn-id'] : $contact['issued-id']);
 
 				if(intval($contact['duplex']) && $contact['dfrn-id'])
 					$idtosend = '0:' . $orig_id;
 				if(intval($contact['duplex']) && $contact['issued-id'])
-					$idtosend = '1:' . $orig_id;		
+					$idtosend = '1:' . $orig_id;
+
+				// they have permission to write to us. We already filtered this in the contact query.
+				$perm = 'rw';
 
 				$url = $contact['poll'] . '?dfrn_id=' . $idtosend 
 					. '&dfrn_version=' . DFRN_PROTOCOL_VERSION 
-					. '&type=data&last_update=' . $last_update ;
+					. '&type=data&last_update=' . $last_update 
+					. '&perm=' . $perm ;
 	
-				$xml = fetch_url($url);
+				$handshake_xml = fetch_url($url);
 
-				logger('poller: handshake with url ' . $url . ' returns xml: ' . $xml, LOGGER_DATA);
+				logger('poller: handshake with url ' . $url . ' returns xml: ' . $handshake_xml, LOGGER_DATA);
 
 
-				if(! $xml) {
+				if(! $handshake_xml) {
 					logger("poller: $url appears to be dead - marking for death ");
 					// dead connection - might be a transient event, or this might
 					// mean the software was uninstalled or the domain expired. 
@@ -182,7 +207,7 @@ function poller_run($argv, $argc){
 					continue;
 				}
 
-				if(! strstr($xml,'<?xml')) {
+				if(! strstr($handshake_xml,'<?xml')) {
 					logger('poller: response from ' . $url . ' did not contain XML.');
 					$r = q("UPDATE `contact` SET `last-update` = '%s' WHERE `id` = %d LIMIT 1",
 						dbesc(datetime_convert()),
@@ -192,7 +217,7 @@ function poller_run($argv, $argc){
 				}
 
 
-				$res = simplexml_load_string($xml);
+				$res = parse_xml_string($handshake_xml);
 	
 				if(intval($res->status) == 1) {
 					logger("poller: $url replied status 1 - marking for death ");
@@ -239,55 +264,180 @@ function poller_run($argv, $argc){
 					$final_dfrn_id = substr($final_dfrn_id,2);
 
 				if($final_dfrn_id != $orig_id) {
-	
+					logger('poller: ID did not decode: ' . $contact['id'] . ' orig: ' . $orig_id . ' final: ' . $final_dfrn_id);	
 					// did not decode properly - cannot trust this site 
 					continue;
 				}
 
 				$postvars['dfrn_id'] = $idtosend;
 				$postvars['dfrn_version'] = DFRN_PROTOCOL_VERSION;
+				$postvars['perm'] = 'rw';
 
 				$xml = post_url($contact['poll'],$postvars);
 			}
-			else {
+			elseif(($contact['network'] === NETWORK_OSTATUS) 
+				|| ($contact['network'] === NETWORK_DIASPORA)
+				|| ($contact['network'] === NETWORK_FEED) ) {
 
-				// $contact['network'] !== 'dfrn'
+				// Upgrading DB fields from an older Friendika version
+				// Will only do this once per notify-enabled OStatus contact
+
+				if(($contact['notify']) && (! $contact['writable'])) {
+					q("UPDATE `contact` SET `writable` = 1 WHERE `id` = %d LIMIT 1",
+						intval($contact['id'])
+					);
+				}
 
 				$xml = fetch_url($contact['poll']);
 			}
+			elseif($contact['network'] === NETWORK_MAIL) {
 
-			logger('poller: received xml : ' . $xml, LOGGER_DATA);
+				$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
+				if($mail_disabled)
+					continue;
 
-			if(! strstr($xml,'<?xml')) {
-				logger('poller: post_handshake: response from ' . $url . ' did not contain XML.');
-				$r = q("UPDATE `contact` SET `last-update` = '%s' WHERE `id` = %d LIMIT 1",
-					dbesc(datetime_convert()),
-					intval($contact['id'])
+				$mbox = null;
+				$x = q("SELECT `prvkey` FROM `user` WHERE `uid` = %d LIMIT 1",
+					intval($importer_uid)
 				);
-				continue;
+				$mailconf = q("SELECT * FROM `mailacct` WHERE `server` != '' AND `uid` = %d LIMIT 1",
+					intval($importer_uid)
+				);
+				if(count($x) && count($mailconf)) {
+				    $mailbox = construct_mailbox_name($mailconf[0]);
+					$password = '';
+					openssl_private_decrypt(hex2bin($mailconf[0]['pass']),$password,$x[0]['prvkey']);
+					$mbox = email_connect($mailbox,$mailconf[0]['user'],$password);
+					unset($password);
+					if($mbox) {
+						q("UPDATE `mailacct` SET `last_check` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+							dbesc(datetime_convert()),
+							intval($mailconf[0]['id']),
+							intval($importer_uid)
+						);
+					}
+				}
+				if($mbox) {
+
+					$msgs = email_poll($mbox,$contact['addr']);
+
+					if(count($msgs)) {
+						foreach($msgs as $msg_uid) {
+							$datarray = array();
+							$meta = email_msg_meta($mbox,$msg_uid);
+							$headers = email_msg_headers($mbox,$msg_uid);
+
+							// look for a 'references' header and try and match with a parent item we have locally.
+
+							$raw_refs = ((x($headers,'references')) ? str_replace("\t",'',$headers['references']) : '');
+							$datarray['uri'] = trim($meta->message_id,'<>');
+
+							if($raw_refs) {
+								$refs_arr = explode(' ', $raw_refs);
+								if(count($refs_arr)) {
+									for($x = 0; $x < count($refs_arr); $x ++)
+										$refs_arr[$x] = "'" . str_replace(array('<','>',' '),array('','',''),dbesc($refs_arr[$x])) . "'";
+								}
+								$qstr = implode(',',$refs_arr);
+								$r = q("SELECT `uri` , `parent-uri` FROM `item` WHERE `uri` IN ( $qstr ) AND `uid` = %d LIMIT 1",
+									intval($importer_uid)
+								);
+								if(count($r))
+									$datarray['parent-uri'] = $r[0]['uri'];
+							}
+
+
+							if(! x($datarray,'parent-uri'))
+								$datarray['parent-uri'] = $datarray['uri'];
+
+							// Have we seen it before?
+							$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `uri` = '%s' LIMIT 1",
+								intval($importer_uid),
+								dbesc($datarray['uri'])
+							);
+
+							if(count($r)) {
+								if($meta->deleted && ! $r[0]['deleted']) {
+									q("UPDATE `item` SET `deleted` = 1, `changed` = '%s' WHERE `id` = %d LIMIT 1",
+										dbesc(datetime_convert()),
+										intval($r[0]['id'])
+									);
+								}		
+								continue;
+							}
+							$datarray['title'] = notags(trim($meta->subject));
+							$datarray['created'] = datetime_convert('UTC','UTC',$meta->date);
+	
+							$r = email_get_msg($mbox,$msg_uid);
+							if(! $r)
+								continue;
+							$datarray['body'] = escape_tags($r['body']);
+
+							// some mailing lists have the original author as 'from' - add this sender info to msg body. 
+							// todo: adding a gravatar for the original author would be cool
+
+							if(! stristr($meta->from,$contact['addr']))
+								$datarray['body'] = t('From: ') . escape_tags($meta->from) . "\n\n" . $datarray['body'];
+
+							$datarray['uid'] = $importer_uid;
+							$datarray['contact-id'] = $contact['id'];
+							if($datarray['parent-uri'] === $datarray['uri'])
+								$datarray['private'] = 1;
+							$datarray['author-name'] = $contact['name'];
+							$datarray['author-link'] = 'mailbox';
+							$datarray['author-avatar'] = $contact['photo'];
+						
+							$stored_item = item_store($datarray);
+							q("UPDATE `item` SET `last-child` = 0 WHERE `parent-uri` = '%s' AND `uid` = %d",
+								dbesc($datarray['parent-uri']),
+								intval($importer_uid)
+							);
+							q("UPDATE `item` SET `last-child` = 1 WHERE `id` = %d LIMIT 1",
+								intval($stored_item)
+							);
+						}
+					}
+
+					imap_close($mbox);
+				}
+			}
+			elseif($contact['network'] === NETWORK_FACEBOOK) {
+				// TODO: work in progress			
 			}
 
-			consume_feed($xml,$importer,$contact,$hub,1);
+			if($xml) {
+				logger('poller: received xml : ' . $xml, LOGGER_DATA);
 
-			// do it twice. Ensures that children of parents which may be later in the stream aren't tossed
+				if(! strstr($xml,'<?xml')) {
+					logger('poller: post_handshake: response from ' . $url . ' did not contain XML.');
+					$r = q("UPDATE `contact` SET `last-update` = '%s' WHERE `id` = %d LIMIT 1",
+						dbesc(datetime_convert()),
+						intval($contact['id'])
+					);
+					continue;
+				}
 
-			consume_feed($xml,$importer,$contact,$hub,1);
+
+				consume_feed($xml,$importer,$contact,$hub,1, true);
+
+				// do it twice. Ensures that children of parents which may be later in the stream aren't tossed
+	
+				consume_feed($xml,$importer,$contact,$hub,1);
 
 
-			if((strlen($hub)) && ($hub_update) 
-				&& (($contact['rel'] == REL_BUD) || (($contact['network'] === 'stat') && (! $contact['readonly'])))) {
-				logger('poller: subscribing to hub(s) : ' . $hub . ' contact name : ' . $contact['name'] . ' local user : ' . $importer['name']);
-				$hubs = explode(',', $hub);
-				if(count($hubs)) {
-					foreach($hubs as $h) {
-						$h = trim($h);
-						if(! strlen($h))
-							continue;
-						subscribe_to_hub($h,$importer,$contact);
+				if((strlen($hub)) && ($hub_update) && (($contact['rel'] == REL_BUD) || (($contact['network'] === NETWORK_OSTATUS) && (! $contact['readonly'])))) {
+					logger('poller: subscribing to hub(s) : ' . $hub . ' contact name : ' . $contact['name'] . ' local user : ' . $importer['name']);
+					$hubs = explode(',', $hub);
+					if(count($hubs)) {
+						foreach($hubs as $h) {
+							$h = trim($h);
+							if(! strlen($h))
+								continue;
+							subscribe_to_hub($h,$importer,$contact);
+						}
 					}
 				}
 			}
-
 
 			$updated = datetime_convert();
 
@@ -300,6 +450,7 @@ function poller_run($argv, $argc){
 			// loop - next contact
 		}
 	}
+
 		
 	return;
 }

@@ -326,7 +326,7 @@ function update_1033() {
  		`k` CHAR( 255 ) NOT NULL PRIMARY KEY ,
  		`v` TEXT NOT NULL,
  		`updated` DATETIME NOT NULL
-		) ENGINE = MYISAM DEFAULT CHARSET=utf8;");
+		) ENGINE = MYISAM DEFAULT CHARSET=utf8 ");
 }
 
 
@@ -377,3 +377,106 @@ function update_1038() {
 function update_1039() {
 	q("ALTER TABLE `addon` ADD `timestamp` BIGINT NOT NULL DEFAULT '0'");
 }
+
+
+function update_1040() {
+
+	q("CREATE TABLE IF NOT EXISTS `fcontact` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`url` CHAR( 255 ) NOT NULL ,
+	`name` CHAR( 255 ) NOT NULL ,
+	`photo` CHAR( 255 ) NOT NULL
+	) ENGINE = MYISAM DEFAULT CHARSET=utf8 ");
+
+	q("CREATE TABLE IF NOT EXISTS `ffinder` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`uid` INT UNSIGNED NOT NULL ,
+	`cid` INT UNSIGNED NOT NULL ,
+	`fid` INT UNSIGNED NOT NULL
+	) ENGINE = MYISAM DEFAULT CHARSET=utf8 ");
+
+}
+
+function update_1041() {
+	q("ALTER TABLE `profile` CHANGE `keywords` `prv_keywords` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ");
+	q("ALTER TABLE `profile` ADD `pub_keywords` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `religion` ");
+}
+
+function update_1042() {
+	q("ALTER TABLE `user` ADD `expire` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `maxreq` ");
+}
+
+
+function update_1043() {
+	q("ALTER TABLE `user` ADD `blockwall` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `blocked` ");
+}
+
+function update_1044() {
+	q("ALTER TABLE `profile` ADD FULLTEXT ( `pub_keywords` ) ");
+	q("ALTER TABLE `profile` ADD FULLTEXT ( `prv_keywords` ) ");
+}
+
+function update_1045() {
+	q("ALTER TABLE `user` ADD `language` CHAR( 16 ) NOT NULL DEFAULT 'en' AFTER `timezone` ");
+}
+
+function update_1046() {
+	q("ALTER TABLE `item` ADD `attach` MEDIUMTEXT NOT NULL AFTER `tag` ");
+}
+
+function update_1047() {
+	q("ALTER TABLE `contact` ADD `writable` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `readonly` ");
+}
+
+function update_1048() {
+	q("UPDATE `contact` SET `writable` = 1 WHERE `network` = 'stat' AND `notify` != '' ");
+}
+
+function update_1049() {
+	q("CREATE TABLE `mailacct` (
+	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`uid` INT NOT NULL,
+	`server` CHAR( 255 ) NOT NULL ,
+	`user` CHAR( 255 ) NOT NULL ,
+	`pass` CHAR( 255 ) NOT NULL ,
+	`reply_to` CHAR( 255 ) NOT NULL ,
+	`last_check` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'
+	) ENGINE = MYISAM ");
+}
+
+function update_1050() {
+	q("CREATE TABLE `attach` (
+	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`uid` INT NOT NULL ,
+	`filetype` CHAR( 64 ) NOT NULL ,
+	`filesize` INT NOT NULL ,
+	`data` LONGBLOB NOT NULL ,
+	`created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+	`edited` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+	`allow_cid` MEDIUMTEXT NOT NULL ,
+	`allow_gid` MEDIUMTEXT NOT NULL ,
+	`deny_cid` MEDIUMTEXT NOT NULL ,
+	`deny_gid` MEDIUMTEXT NOT NULL
+	) ENGINE = MYISAM ");
+
+}
+
+function update_1051() {
+	q("ALTER TABLE `mailacct` ADD `port` INT NOT NULL AFTER `server` ,
+		ADD `ssltype` CHAR( 16 ) NOT NULL AFTER `port` ,
+		ADD `mailbox` CHAR( 255 ) NOT NULL AFTER `ssltype` ");
+
+	q("ALTER TABLE `contact` ADD `addr` CHAR( 255 ) NOT NULL AFTER `url` ");
+}
+
+function update_1052() {
+	q("ALTER TABLE `mailacct` CHANGE `pass` `pass` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL");
+	q("ALTER TABLE `mailacct` ADD `pubmail` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `reply_to` ");
+	q("ALTER TABLE `item` ADD `pubmail` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `private` ");
+}
+
+
+function update_1053() {
+	q("ALTER TABLE `item` ADD `extid` CHAR( 255 ) NOT NULL AFTER `parent-uri` , ADD INDEX ( `extid` ) ");
+}
+

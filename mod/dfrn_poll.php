@@ -16,6 +16,7 @@ function dfrn_poll_init(&$a) {
 	$challenge       = ((x($_GET,'challenge'))       ? $_GET['challenge']            : '');
 	$sec             = ((x($_GET,'sec'))             ? $_GET['sec']                  : '');
 	$dfrn_version    = ((x($_GET,'dfrn_version'))    ? (float) $_GET['dfrn_version'] : 2.0);
+	$perm            = ((x($_GET,'perm'))            ? $_GET['perm']                 : 'r');
 
 	$direction = (-1);
 
@@ -26,6 +27,10 @@ function dfrn_poll_init(&$a) {
 	}
 
 	if(($dfrn_id === '') && (! x($_POST,'dfrn_id')) && ($a->argc > 1)) {
+		if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+			killme();
+		}
+
 		logger('dfrn_poll: public feed request from ' . $_SERVER['REMOTE_ADDR'] );
 		header("Content-type: application/atom+xml");
 		$o = get_feed_for($a, '', $a->argv[1],$last_update);
@@ -69,13 +74,14 @@ function dfrn_poll_init(&$a) {
 
 			if(strlen($s)) {
 
-				$xml = simplexml_load_string($s);
+				$xml = parse_xml_string($s);
 
 				if((int) $xml->status == 1) {
 					$_SESSION['authenticated'] = 1;
 					$_SESSION['visitor_id'] = $r[0]['id'];
 					$_SESSION['visitor_home'] = $r[0]['url'];
-					notice( $r[0]['username'] . t(' welcomes ') . $r[0]['name'] . EOL);
+					$_SESSION['visitor_visiting'] = $r[0]['uid'];
+					notice( sprintf(t('%s welcomes %s'), $r[0]['username'] , $r[0]['name']) . EOL);
 					// Visitors get 1 day session.
 					$session_id = session_id();
 					$expire = time() + 86400;
@@ -92,7 +98,7 @@ function dfrn_poll_init(&$a) {
 
 	}
 
-	if($type === 'profile-check') {
+	if($type === 'profile-check' && $dfrn_version < 2.2 ) {
 
 		if((strlen($challenge)) && (strlen($sec))) {
 
@@ -182,7 +188,69 @@ function dfrn_poll_post(&$a) {
 	$dfrn_id      = ((x($_POST,'dfrn_id'))      ? $_POST['dfrn_id']              : '');
 	$challenge    = ((x($_POST,'challenge'))    ? $_POST['challenge']            : '');
 	$url          = ((x($_POST,'url'))          ? $_POST['url']                  : '');
+	$sec          = ((x($_POST,'sec'))          ? $_POST['sec']                  : '');
+	$ptype        = ((x($_POST,'type'))         ? $_POST['type']                 : '');
 	$dfrn_version = ((x($_POST,'dfrn_version')) ? (float) $_POST['dfrn_version'] : 2.0);
+	$perm         = ((x($_POST,'perm'))         ? $_POST['perm']                 : 'r');
+
+	if($ptype === 'profile-check') {
+
+		if((strlen($challenge)) && (strlen($sec))) {
+
+			logger('dfrn_poll: POST: profile-check');
+ 
+			q("DELETE FROM `profile_check` WHERE `expire` < " . intval(time()));
+			$r = q("SELECT * FROM `profile_check` WHERE `sec` = '%s' ORDER BY `expire` DESC LIMIT 1",
+				dbesc($sec)
+			);
+			if(! count($r)) {
+				xml_status(3, 'No ticket');
+				// NOTREACHED
+			}
+			$orig_id = $r[0]['dfrn_id'];
+			if(strpos($orig_id, ':'))
+				$orig_id = substr($orig_id,2);
+
+			$c = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
+				intval($r[0]['cid'])
+			);
+			if(! count($c)) {
+				xml_status(3, 'No profile');
+			}
+			$contact = $c[0];
+
+			$sent_dfrn_id = hex2bin($dfrn_id);
+			$challenge    = hex2bin($challenge);
+
+			$final_dfrn_id = '';
+
+			if(($contact['duplex']) && strlen($contact['prvkey'])) {
+				openssl_private_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['prvkey']);
+				openssl_private_decrypt($challenge,$decoded_challenge,$contact['prvkey']);
+			}
+			else {
+				openssl_public_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['pubkey']);
+				openssl_public_decrypt($challenge,$decoded_challenge,$contact['pubkey']);
+			}
+
+			$final_dfrn_id = substr($final_dfrn_id, 0, strpos($final_dfrn_id, '.'));
+
+			if(strpos($final_dfrn_id,':') == 1)
+				$final_dfrn_id = substr($final_dfrn_id,2);
+
+			if($final_dfrn_id != $orig_id) {
+				logger('profile_check: ' . $final_dfrn_id . ' != ' . $orig_id, LOGGER_DEBUG);
+				// did not decode properly - cannot trust this site 
+				xml_status(3, 'Bad decryption');
+			}
+
+			header("Content-type: text/xml");
+			echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?><dfrn_poll><status>0</status><challenge>$decoded_challenge</challenge><sec>$sec</sec></dfrn_poll>";
+			killme();
+			// NOTREACHED
+		}
+
+	}
 
 	$direction    = (-1);
 	if(strpos($dfrn_id,':') == 1) {
@@ -234,6 +302,7 @@ function dfrn_poll_post(&$a) {
 	if(! count($r))
 		killme();
 
+	$contact = $r[0];
 	$owner_uid = $r[0]['uid'];
 	$contact_id = $r[0]['id']; 
 
@@ -267,6 +336,23 @@ function dfrn_poll_post(&$a) {
 		// NOTREACHED
 	}
 	else {
+
+		// Update the writable flag if it changed		
+		logger('dfrn_poll: post request feed: ' . print_r($_POST,true),LOGGER_DATA);
+		if($dfrn_version >= 2.21) {
+			if($perm === 'rw')
+				$writable = 1;
+			else
+				$writable = 0;
+
+			if($writable !=  $contact['writable']) {
+				q("UPDATE `contact` SET `writable` = %d WHERE `id` = %d LIMIT 1",
+					intval($writable),
+					intval($contact_id)
+				);
+			}
+		}				
+
 		header("Content-type: application/atom+xml");
 		$o = get_feed_for($a,$dfrn_id, $a->argv[1], $last_update, $direction);
 		echo $o;
@@ -283,6 +369,7 @@ function dfrn_poll_content(&$a) {
 	$destination_url = ((x($_GET,'destination_url')) ? $_GET['destination_url']      : '');
 	$sec             = ((x($_GET,'sec'))             ? $_GET['sec']                  : '');
 	$dfrn_version    = ((x($_GET,'dfrn_version'))    ? (float) $_GET['dfrn_version'] : 2.0);
+	$perm            = ((x($_GET,'perm'))            ? $_GET['perm']                 : 'r');
 
 	$direction = (-1);
 	if(strpos($dfrn_id,':') == 1) {
@@ -363,21 +450,51 @@ function dfrn_poll_content(&$a) {
 		}
 
 		if(($type === 'profile') && (strlen($sec))) {
+
 			// URL reply
 
-			$s = fetch_url($r[0]['poll'] 
-				. '?dfrn_id=' . $encrypted_id 
-				. '&type=profile-check'
-				. '&dfrn_version=' . DFRN_PROTOCOL_VERSION
-				. '&challenge=' . $challenge
-				. '&sec=' . $sec
-			);
+			if($dfrn_version < 2.2) {
+				$s = fetch_url($r[0]['poll'] 
+					. '?dfrn_id=' . $encrypted_id 
+					. '&type=profile-check'
+					. '&dfrn_version=' . DFRN_PROTOCOL_VERSION
+					. '&challenge=' . $challenge
+					. '&sec=' . $sec
+				);
+			}
+			else {
+				$s = post_url($r[0]['poll'], array(
+					'dfrn_id' => $encrypted_id,
+					'type' => 'profile-check',
+					'dfrn_version' => DFRN_PROTOCOL_VERSION,
+					'challenge' => $challenge,
+					'sec' => $sec
+				));
+			}
+			
+			$profile = $r[0]['nickname'];
+
+			switch($destination_url) {
+				case 'profile':
+					$dest = $a->get_baseurl() . '/profile/' . $profile . '?tab=profile';
+					break;
+				case 'photos':
+					$dest = $a->get_baseurl() . '/photos/' . $profile;
+					break;
+				case 'status':
+				case '':
+					$dest = $a->get_baseurl() . '/profile/' . $profile;
+					break;		
+				default:
+					$dest = $destination_url;
+					break;
+			}
 
 			logger("dfrn_poll: sec profile: " . $s, LOGGER_DATA);
 
 			if(strlen($s) && strstr($s,'<?xml')) {
 
-				$xml = simplexml_load_string($s);
+				$xml = parse_xml_string($s);
 
 				logger('dfrn_poll: profile: parsed xml: ' . print_r($xml,true), LOGGER_DATA);
 
@@ -389,7 +506,8 @@ function dfrn_poll_content(&$a) {
 					$_SESSION['authenticated'] = 1;
 					$_SESSION['visitor_id'] = $r[0]['id'];
 					$_SESSION['visitor_home'] = $r[0]['url'];
-					notice( $r[0]['username'] . t(' welcomes ') . $r[0]['name'] . EOL);
+					$_SESSION['visitor_visiting'] = $r[0]['uid'];
+					notice( sprintf(t('%s welcomes %s'), $r[0]['username'] , $r[0]['name']) . EOL);
 					// Visitors get 1 day session.
 					$session_id = session_id();
 					$expire = time() + 86400;
@@ -398,10 +516,10 @@ function dfrn_poll_content(&$a) {
 						dbesc($session_id)
 					); 
 				}
-				$profile = $r[0]['nickname'];
-				goaway((strlen($destination_url)) ? $destination_url : $a->get_baseurl() . '/profile/' . $profile);
+			
+				goaway($dest);
 			}
-			goaway($a->get_baseurl());
+			goaway($dest);
 			// NOTREACHED
 
 		}

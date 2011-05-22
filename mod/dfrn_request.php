@@ -12,6 +12,10 @@
 if(! function_exists('dfrn_request_init')) {
 function dfrn_request_init(&$a) {
 
+	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+		return;
+	}
+
 	if($a->argc > 1)
 		$which = $a->argv[1];
 
@@ -123,9 +127,9 @@ function dfrn_request_post(&$a) {
 							notice( t('Warning: profile location has no profile photo.') . EOL );
 						$invalid = validate_dfrn($parms);		
 						if($invalid) {
-							notice( $invalid . t(' required parameter') 
-								. (($invalid == 1) ? t(" was ") : t("s were ") )
-								. t("not found at the given location.") . EOL ) ;
+							notice( sprintf( tt("%d required parameter was not found at the given location",
+												"%d required parameters were not found at the given location",
+												$invalid), $invalid) . EOL );
 							return;
 						}
 					}
@@ -238,7 +242,7 @@ function dfrn_request_post(&$a) {
 				intval($uid)
 			);
 			if(count($r) > $maxreq) {
-				notice( $a->profile['name'] . t(' has received too many connection requests today.') . EOL);
+				notice( sprintf( t('%s has received too many connection requests today.'),  $a->profile['name']) . EOL);
 				notice( t('Spam protection measures have been invoked.') . EOL);
 				notice( t('Friends are advised to please try again in 24 hours.') . EOL);
 				return;
@@ -306,7 +310,7 @@ function dfrn_request_post(&$a) {
 					return;
 				}
 				elseif($ret[0]['rel'] == REL_BUD) {
-					notice( t('Apparently you are already friends with .') . $a->profile['name'] . EOL);
+					notice( sprintf( t('Apparently you are already friends with %s.'), $a->profile['name']) . EOL);
 					return;
 				}
 				else {
@@ -354,9 +358,9 @@ function dfrn_request_post(&$a) {
 						notice( t('Warning: profile location has no profile photo.') . EOL );
 					$invalid = validate_dfrn($parms);		
 					if($invalid) {
-						notice( $invalid . t(' required parameter') 
-							. (($invalid == 1) ? t(" was ") : t("s were ") )
-							. t("not found at the given location.") . EOL ) ;
+						notice( sprintf( tt("%d required parameter was not found at the given location",
+											"%d required parameters were not found at the given location",
+											$invalid), $invalid) . EOL );
 	
 						return;
 					}
@@ -495,12 +499,14 @@ function dfrn_request_content(&$a) {
 		$dfrn_url = notags(trim(hex2bin($_GET['dfrn_url'])));
 		$aes_allow = (((x($_GET,'aes_allow')) && ($_GET['aes_allow'] == 1)) ? 1 : 0);
 		$confirm_key = (x($_GET,'confirm_key') ? $_GET['confirm_key'] : "");
-		$o .= load_view_file("view/dfrn_req_confirm.tpl");
-		$o  = replace_macros($o,array(
+		$tpl = get_markup_template("dfrn_req_confirm.tpl");
+		$o  = replace_macros($tpl,array(
 			'$dfrn_url' => $dfrn_url,
 			'$aes_allow' => (($aes_allow) ? '<input type="hidden" name="aes_allow" value="1" />' : "" ),
 			'$confirm_key' => $confirm_key,
-			'$username' => $a->user['username'], 
+			'$welcome' => sprintf( t('Welcome home %s.'), $a->user['username']),
+			'$please' => sprintf( t('Please confirm your introduction/connection request to %s.'), $dfrn_url),
+			'$submit' => t('Confirm'),
 			'$uid' => $_SESSION['uid'],
 			'$nickname' => $a->user['nickname'],
 			'dfrn_rawurl' => $_GET['dfrn_url']
@@ -531,7 +537,7 @@ function dfrn_request_content(&$a) {
 				if($r[0]['page-flags'] != PAGE_NORMAL)
 					$auto_confirm = true;				
 				if(($r[0]['notify-flags'] & NOTIFY_INTRO) && (! $auto_confirm)) {
-					$email_tpl = load_view_file('view/request_notify_eml.tpl');
+					$email_tpl = get_intltext_template('request_notify_eml.tpl');
 					$email = replace_macros($email_tpl, array(
 						'$requestor' => ((strlen(stripslashes($r[0]['name']))) ? stripslashes($r[0]['name']) : t('[Name Withheld]')),
 						'$url' => stripslashes($r[0]['url']),
@@ -540,9 +546,12 @@ function dfrn_request_content(&$a) {
 						'$sitename' => $a->config['sitename']
 					));
 					$res = mail($r[0]['email'], 
-						t("Introduction received at ") . $a->config['sitename'],
+					    t("Introduction received at ") . $a->config['sitename'],
 						$email,
-						'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] );
+						'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+						. 'Content-type: text/plain; charset=UTF-8' . "\n"
+						. 'Content-transfer-encoding: 8bit' );
+
 					// This is a redundant notification - no point throwing errors if it fails.
 				}
 				if($auto_confirm) {
@@ -578,6 +587,12 @@ function dfrn_request_content(&$a) {
 		 * Normal web request. Display our user's introduction form.
 		 */
  
+		if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+			notice( t('Public access denied.') . EOL);
+			return;
+		}
+
+
 		/**
 		 * Try to auto-fill the profile address
 		 */
@@ -607,23 +622,24 @@ function dfrn_request_content(&$a) {
 		 */
 
 		if($a->profile['page-flags'] == PAGE_NORMAL)
-			$tpl = load_view_file('view/dfrn_request.tpl');
+			$tpl = get_markup_template('dfrn_request.tpl');
 		else
-			$tpl = load_view_file('view/auto_request.tpl');
+			$tpl = get_markup_template('auto_request.tpl');
 
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Friend/Connection Request'),
+			'$desc' => t('Examples: jojo@demo.friendika.com, http://demo.friendika.com/profile/jojo, testuser@identi.ca'),
 			'$pls_answer' => t('Please answer the following:'),
 			'$does_know' => t('Does $name know you?'),
 			'$yes' => t('Yes'),
 			'$no' => t('No'),
 			'$add_note' => t('Add a personal note:'),
-			'$page_desc' => t('Please enter your profile address from one of the following supported social networks:'),
+			'$page_desc' => t("Please enter your 'Identity Address' from one of the following supported social networks:"),
 			'$friendika' => t('Friendika'),
 			'$statusnet' => t('StatusNet/Federated Social Web'),
 			'$private_net' => t("Private \x28secure\x29 network"),
 			'$public_net' => t("Public \x28insecure\x29 network"),
-			'$your_address' => t('Your profile address:'),
+			'$your_address' => t('Your Identity Address:'),
 			'$submit' => t('Submit Request'),
 			'$cancel' => t('Cancel'),
 			'$nickname' => $a->argv[1],

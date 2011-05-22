@@ -70,8 +70,17 @@ function openid_content(&$a) {
 			$_SESSION['page_flags'] = $r[0]['page-flags'];
 			$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $r[0]['nickname'];
 
-			notice( t("Welcome back ") . $r[0]['username'] . EOL);
 			$a->user = $r[0];
+
+			if($a->user['login_date'] === '0000-00-00 00:00:00') {
+				$_SESSION['return_url'] = 'profile_photo/new';
+				$a->module = 'profile_photo';
+				notice( t("Welcome ") . $a->user['username'] . EOL);
+				notice( t('Please upload a profile photo.') . EOL);
+			}
+			else
+				notice( t("Welcome back ") . $a->user['username'] . EOL);
+
 
 			if(strlen($a->user['timezone'])) {
 				date_default_timezone_set($a->user['timezone']);

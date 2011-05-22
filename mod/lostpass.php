@@ -24,9 +24,9 @@ function lostpass_post(&$a) {
 		intval($uid)
 	);
 	if($r)
-		notice("Password reset request issued. Check your email.");
+		notice( t('Password reset request issued. Check your email.') . EOL);
 
-	$email_tpl = load_view_file("view/lostpass_eml.tpl");
+	$email_tpl = get_intltext_template("lostpass_eml.tpl");
 	$email_tpl = replace_macros($email_tpl, array(
 			'$sitename' => $a->config['sitename'],
 			'$siteurl' =>  $a->get_baseurl(),
@@ -35,8 +35,12 @@ function lostpass_post(&$a) {
 			'$reset_link' => $a->get_baseurl() . '/lostpass?verify=' . $new_password
 	));
 
-	$res = mail($email, t('Password reset requested at ') . $a->config['sitename'],
-			$email_tpl, 'From: ' . t('Administrator') . '@' . $_SERVER[SERVER_NAME]);
+	$res = mail($email, sprintf( t('Password reset requested at %s'),$a->config['sitename']),
+			$email_tpl,
+			'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+			. 'Content-type: text/plain; charset=UTF-8' . "\n"
+			. 'Content-transfer-encoding: 8bit' );
+
 
 	goaway($a->get_baseurl());
 }
@@ -53,7 +57,7 @@ function lostpass_content(&$a) {
 			dbesc($hash)
 		);
 		if(! count($r)) {
-			notice("Request could not be verified. (You may have previously submitted it.) Password reset failed." . EOL);
+			notice( t("Request could not be verified. \x28You may have previously submitted it.\x29 Password reset failed.") . EOL);
 			goaway($a->get_baseurl());
 			return;
 		}
@@ -69,16 +73,23 @@ function lostpass_content(&$a) {
 			intval($uid)
 		);
 		if($r) {
-			$tpl = load_view_file('view/pwdreset.tpl');
+			$tpl = get_markup_template('pwdreset.tpl');
 			$o .= replace_macros($tpl,array(
+				'$lbl1' => t('Password Reset'),
+				'$lbl2' => t('Your password has been reset as requested.'),
+				'$lbl3' => t('Your new password is'),
+				'$lbl4' => t('Save or copy your new password - and then'),
+				'$lbl5' => '<a href="' . $a->get_baseurl() . '">' . t('click here to login') . '</a>.',
+				'$lbl6' => t('Your password may be changed from the <em>Settings</em> page after successful login.'),
 				'$newpass' => $new_password,
 				'$baseurl' => $a->get_baseurl()
+
 			));
 				notice("Your password has been reset." . EOL);
 
 
 
-			$email_tpl = load_view_file("view/passchanged_eml.tpl");
+			$email_tpl = get_intltext_template("passchanged_eml.tpl");
 			$email_tpl = replace_macros($email_tpl, array(
 			'$sitename' => $a->config['sitename'],
 			'$siteurl' =>  $a->get_baseurl(),
@@ -87,16 +98,24 @@ function lostpass_content(&$a) {
 			'$new_password' => $new_password,
 			'$uid' => $newuid ));
 
-			$res = mail($email,"Your password has changed at {$a->config['sitename']}",$email_tpl,"From: Administrator@{$_SERVER[SERVER_NAME]}");
+			$res = mail($email,"Your password has changed at {$a->config['sitename']}",$email_tpl,
+				'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+				. 'Content-type: text/plain; charset=UTF-8' . "\n"
+				. 'Content-transfer-encoding: 8bit' );
 
 			return $o;
 		}
 	
 	}
 	else {
-		$tpl = load_view_file('view/lostpass.tpl');
+		$tpl = get_markup_template('lostpass.tpl');
 
-		$o .= $tpl;
+		$o .= replace_macros($tpl,array(
+			'$title' => t('Forgot your Password?'),
+			'$desc' => t('Enter your email address and submit to have your password reset. Then check your email for further instructions.'),
+			'$name' => t('Nickname or Email: '),
+			'$submit' => t('Reset') 
+		));
 
 		return $o;
 	}

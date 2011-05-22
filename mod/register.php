@@ -70,9 +70,9 @@ function register_post(&$a) {
 	$err = '';
 
 
-	if(strlen($username) > 48)
+	if(mb_strlen($username) > 48)
 		$err .= t('Please use a shorter name.') . EOL;
-	if(strlen($username) < 3)
+	if(mb_strlen($username) < 3)
 		$err .= t('Name too short.') . EOL;
 
 	// I don't really like having this rule, but it cuts down
@@ -85,8 +85,11 @@ function register_post(&$a) {
 	// So now we are just looking for a space in the full name. 
 	
 	$loose_reg = get_config('system','no_regfullname');
-	if((! $loose_reg) && (! strpos($username,' ')))
-		$err .= t("That doesn\'t appear to be your full \x28First Last\x29 name.") . EOL;
+	if(! $loose_reg) {
+		$username = mb_convert_case($username,MB_CASE_TITLE,'UTF-8');
+		if(! strpos($username,' '))
+			$err .= t("That doesn't appear to be your full \x28First Last\x29 name.") . EOL;
+	}
 
 	if(! allowed_email($email))
 			$err .= t('Your email domain is not among those allowed on this site.') . EOL;
@@ -199,6 +202,24 @@ function register_post(&$a) {
 		return;
 	} 		
 
+	/**
+	 * if somebody clicked submit twice very quickly, they could end up with two accounts 
+	 * due to race condition. Remove this one.
+	 */
+
+	$r = q("SELECT `uid` FROM `user`
+               	WHERE `nickname` = '%s' ",
+               	dbesc($nickname)
+	);
+	if((count($r) > 1) && $newuid) {
+		$err .= t('Nickname is already registered. Please choose another.') . EOL;
+		q("DELETE FROM `user` WHERE `uid` = %d LIMIT 1",
+			intval($newuid)
+		);
+		notice ($err);
+		return;
+	}
+
 	if(x($newuid) !== false) {
 		$r = q("INSERT INTO `profile` ( `uid`, `profile-name`, `is-default`, `name`, `photo`, `thumb`, `publish`, `net-publish` )
 			VALUES ( %d, '%s', %d, '%s', '%s', '%s', %d, %d ) ",
@@ -298,7 +319,7 @@ function register_post(&$a) {
 
 
 	if( $a->config['register_policy'] == REGISTER_OPEN ) {
-		$email_tpl = load_view_file("view/register_open_eml.tpl");
+		$email_tpl = get_intltext_template("register_open_eml.tpl");
 		$email_tpl = replace_macros($email_tpl, array(
 				'$sitename' => $a->config['sitename'],
 				'$siteurl' =>  $a->get_baseurl(),
@@ -307,8 +328,11 @@ function register_post(&$a) {
 				'$password' => $new_password,
 				'$uid' => $newuid ));
 
-		$res = mail($email, t('Registration details for ') . $a->config['sitename'],
-			$email_tpl, 'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME']);
+		$res = mail($email, sprintf(t('Registration details for %s'), $a->config['sitename']),
+			$email_tpl, 
+				'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+				. 'Content-type: text/plain; charset=UTF-8' . "\n"
+				. 'Content-transfer-encoding: 8bit' );
 
 
 		if($res) {
@@ -333,7 +357,7 @@ function register_post(&$a) {
 			dbesc($new_password)
 		);
 
-		$email_tpl = load_view_file("view/register_verify_eml.tpl");
+		$email_tpl = get_intltext_template("register_verify_eml.tpl");
 		$email_tpl = replace_macros($email_tpl, array(
 				'$sitename' => $a->config['sitename'],
 				'$siteurl' =>  $a->get_baseurl(),
@@ -344,9 +368,11 @@ function register_post(&$a) {
 				'$hash' => $hash
 		 ));
 
-		$res = mail($a->config['admin_email'], t('Registration request at ') . $a->config['sitename'],
-			$email_tpl,'From: ' .  t('Administrator') . '@' . $_SERVER['SERVER_NAME']);
-
+		$res = mail($a->config['admin_email'], sprintf(t('Registration request at %s'), $a->config['sitename']),
+			$email_tpl,
+				'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+				. 'Content-type: text/plain; charset=UTF-8' . "\n"
+				. 'Content-transfer-encoding: 8bit' );
 		if($res) {
 			notice( t('Your registration is pending approval by the site owner.') . EOL ) ;
 			goaway($a->get_baseurl());
@@ -409,7 +435,7 @@ function register_content(&$a) {
 		$profile_publish_reg = '<input type="hidden" name="profile_publish_reg" value="1" />';
 	}
 	else {
-		$publish_tpl = load_view_file("view/profile_publish.tpl");
+		$publish_tpl = get_markup_template("profile_publish.tpl");
 		$profile_publish = replace_macros($publish_tpl,array(
 			'$instance'     => 'reg',
 			'$pubdesc'      => t('Include your profile in member directory?'),
@@ -424,7 +450,7 @@ function register_content(&$a) {
 	$license = t('Shared content is covered by the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> license.');
 
 
-	$o = load_view_file("view/register.tpl");
+	$o = get_markup_template("register.tpl");
 	$o = replace_macros($o, array(
 		'$oidhtml' => $oidhtml,
 		'$realpeople' => $realpeople,

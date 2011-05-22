@@ -20,6 +20,8 @@ function notifier_run($argv, $argc){
 	require_once('include/items.php');
 	require_once('include/bbcode.php');
 
+	load_hooks();
+
 	if($argc < 3)
 		return;
 
@@ -40,6 +42,7 @@ function notifier_run($argv, $argc){
 			break;
 	}
 
+	$expire = false;
 	$top_level = false;
 	$recipients = array();
 	$url_recipients = array();
@@ -57,10 +60,21 @@ function notifier_run($argv, $argc){
 		$item = $message[0];
 
 	}
+	elseif($cmd === 'expire') {
+		$expire = true;
+		$items = q("SELECT * FROM `item` WHERE `uid` = %d AND `wall` = 1 
+			AND `deleted` = 1 AND `changed` > UTC_TIMESTAMP - INTERVAL 10 MINUTE",
+			intval($item_id)
+		);
+		$uid = $item_id;
+		$item_id = 0;
+		if(! count($items))
+			return;
+	}
 	else {
 
 		// find ancestors
-		$r = q("SELECT `parent`, `uid`, `edited` FROM `item` WHERE `id` = %d LIMIT 1",
+		$r = q("SELECT * FROM `item` WHERE `id` = %d LIMIT 1",
 			intval($item_id)
 		);
 
@@ -68,6 +82,7 @@ function notifier_run($argv, $argc){
 			return;
 		}
 
+		$parent_item = $r[0];
 		$parent_id = intval($r[0]['parent']);
 		$uid = $r[0]['uid'];
 		$updated = $r[0]['edited'];
@@ -76,10 +91,9 @@ function notifier_run($argv, $argc){
 			intval($parent_id)
 		);
 
-		if(! count($items)){
+		if(! count($items)) {
 			return;
 		}
-
 
 		// avoid race condition with deleting entries
 
@@ -98,11 +112,11 @@ function notifier_run($argv, $argc){
 		intval($uid)
 	);
 
-	if(count($r))
-		$owner = $r[0];
-	else {
+	if(! count($r))
 		return;
-	}
+
+	$owner = $r[0];
+
 	$hub = get_config('system','huburl');
 
 	// If this is a public conversation, notify the feed hub
@@ -117,7 +131,7 @@ function notifier_run($argv, $argc){
 
 		$parent = $items[0];
 
-		if($parent['type'] === 'remote') {
+		if($parent['type'] === 'remote' && (! $expire)) {
 			// local followup to remote post
 			$followup = true;
 			$notify_hub = false; // not public
@@ -177,8 +191,8 @@ function notifier_run($argv, $argc){
 			$contacts = $r;
 	}
 
-	$feed_template = load_view_file('view/atom_feed.tpl');
-	$mail_template = load_view_file('view/atom_mail.tpl');
+	$feed_template = get_markup_template('atom_feed.tpl');
+	$mail_template = get_markup_template('atom_mail.tpl');
 
 	$atom = '';
 	$slaps = array();
@@ -235,6 +249,7 @@ function notifier_run($argv, $argc){
 		}
 		else {
 			foreach($items as $item) {
+
 				if(! $item['parent'])
 					continue;
 
@@ -242,9 +257,9 @@ function notifier_run($argv, $argc){
 				if(! $contact)
 					continue;
 
-				$atom   .= atom_entry($item,'text',$contact,$owner,true);
+				$atom .= atom_entry($item,'text',$contact,$owner,true);
 
-				if(($top_level) && ($notify_hub) && ($item['author-link'] === $item['owner-link'])) 
+				if(($top_level) && ($notify_hub) && ($item['author-link'] === $item['owner-link']) && (! $expire)) 
 					$slaps[] = atom_entry($item,'html',$contact,$owner,true);
 			}
 		}
@@ -255,11 +270,29 @@ function notifier_run($argv, $argc){
 
 	logger('notifier: slaps: ' . print_r($slaps,true), LOGGER_DATA);
 
+	// If this is a public message and pubmail is set on the parent, include all your email contacts
+
+	$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
+
+	if(! $mail_disabled) {
+		if((! strlen($parent_item['allow_cid'])) && (! strlen($parent_item['allow_gid'])) 
+			&& (! strlen($parent_item['deny_cid'])) && (! strlen($parent_item['deny_gid'])) 
+			&& (intval($parent_item['pubmail']))) {
+			$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `network` = '%s'",
+				intval($uid),
+				dbesc(NETWORK_MAIL)
+			);
+			if(count($r)) {
+				foreach($r as $rr)
+					$recipients[] = $rr['id'];
+			}
+		}
+	}
+
 	if($followup)
 		$recip_str = $parent['contact-id'];
 	else
 		$recip_str = implode(', ', $recipients);
-
 
 	$r = q("SELECT * FROM `contact` WHERE `id` IN ( %s ) AND `blocked` = 0 AND `pending` = 0 ",
 		dbesc($recip_str)
@@ -319,7 +352,7 @@ function notifier_run($argv, $argc){
 						// only send salmon if public - e.g. if it's ok to notify
 						// a public hub, it's ok to send a salmon
 
-						if(count($slaps) && $notify_hub) {
+						if((count($slaps)) && ($notify_hub) && (! $expire)) {
 							logger('notifier: slapdelivery: ' . $contact['name']);
 							foreach($slaps as $slappy) {
 								if($contact['notify']) {
@@ -340,8 +373,82 @@ function notifier_run($argv, $argc){
 					}
 					break;
 				case 'mail':
+
+					// WARNING: does not currently convert to RFC2047 header encodings, etc.
+
+					$addr = $contact['addr'];
+					if(! strlen($addr))
+						break;
+
+					if($cmd === 'wall-new' || $cmd === 'comment-new') {
+
+						$it = null;
+						if($cmd === 'wall-new') 
+							$it = $items[0];
+						else {
+							$r = q("SELECT * FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1", 
+								intval($argv[2]),
+								intval($uid)
+							);
+							if(count($r))
+								$it = $r[0];
+						}
+						if(! $it)
+							break;
+						
+
+
+						$local_user = q("SELECT * FROM `user` WHERE `uid` = %d LIMIT 1",
+							intval($uid)
+						);
+						if(! count($local_user))
+							break;
+						
+						$reply_to = '';
+						$r1 = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",
+							intval($uid)
+						);
+						if($r1 && $r1[0]['reply_to'])
+							$reply_to = $r1[0]['reply_to'];
+	
+						$subject  = (($it['title']) ? $it['title'] : t("\x28no subject\x29")) ;
+						$headers  = 'From: ' . $local_user[0]['username'] . ' <' . $local_user[0]['email'] . '>' . "\n";
+
+						if($reply_to)
+							$headers .= 'Reply-to: ' . $reply_to . "\n";
+
+						$headers .= 'Message-id: <' . $it['uri'] . '>' . "\n";
+
+						if($it['uri'] !== $it['parent-uri']) {
+							$header .= 'References: <' . $it['parent-uri'] . '>' . "\n";
+							if(! strlen($it['title'])) {
+								$r = q("SELECT `title` FROM `item` WHERE `parent-uri` = '%s' LIMIT 1",
+									dbesc($it['parent-uri'])
+								);
+								if(count($r)) {
+									$subtitle = $r[0]['title'];
+									if($subtitle) {
+										if(strncasecmp($subtitle,'RE:',3))
+											$subject = $subtitle;
+										else
+											$subject = 'Re: ' . $subtitle;
+									}
+								}
+							}
+						}
+
+						$headers .= 'MIME-Version: 1.0' . "\n";
+						$headers .= 'Content-Type: text/html; charset=UTF-8' . "\n";
+						$headers .= 'Content-Transfer-Encoding: 8bit' . "\n\n";
+						$html    = prepare_body($it);
+						$message = '<html><body>' . $html . '</body></html>';
+						logger('notifier: email delivery to ' . $addr);
+						mail($addr, $subject, $message, $headers);
+					}
+					break;
 				case 'dspr':
 				case 'feed':
+				case 'face':
 				default:
 					break;
 			}
@@ -350,7 +457,7 @@ function notifier_run($argv, $argc){
 		
 	// send additional slaps to mentioned remote tags (@foo@example.com)
 
-	if($slap && count($url_recipients) && $followup && $notify_hub) {
+	if($slap && count($url_recipients) && $followup && $notify_hub && (! $expire)) {
 		foreach($url_recipients as $url) {
 			if($url) {
 				logger('notifier: urldelivery: ' . $url);

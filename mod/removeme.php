@@ -35,7 +35,7 @@ function removeme_content(&$a) {
 
 	$_SESSION['remove_account_verify'] = $hash;
 
-	$tpl = load_view_file('view/removeme.tpl');
+	$tpl = get_markup_template('removeme.tpl');
 	$o .= replace_macros($tpl, array(
 		'$basedir' => $a->get_baseurl(),
 		'$hash' => $hash,

@@ -27,7 +27,7 @@ function xrd_content(&$a) {
 
 	header("Content-type: text/xml");
 
-	$tpl = load_view_file('view/xrd_person.tpl');
+	$tpl = file_get_contents('view/xrd_person.tpl');
 
 	$o = replace_macros($tpl, array(
 		'$accturi'     => $uri,

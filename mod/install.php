@@ -14,17 +14,20 @@ function install_post(&$a) {
 	$phpath = notags(trim($_POST['phpath']));
 
 	require_once("dba.php");
-
+	unset($db);
 	$db = new dba($dbhost, $dbuser, $dbpass, $dbdata, true);
 
 	if(mysqli_connect_errno()) {
+		unset($db);
 		$db = new dba($dbhost, $dbuser, $dbpass, '', true);
 		if(! mysqli_connect_errno()) {
 			$r = q("CREATE DATABASE '%s'",
 					dbesc($dbdata)
 			);
-			if($r) 
+			if($r) {
+				unset($db);
 				$db = new dba($dbhost, $dbuser, $dbpass, $dbdata, true);
+			}
 		}
 		if(mysqli_connect_errno()) {
 			notice( t('Could not create/connect to database.') . EOL);
@@ -34,7 +37,7 @@ function install_post(&$a) {
 
 	notice( t('Connected to database.') . EOL);
 
-	$tpl = load_view_file('view/htconfig.tpl');
+	$tpl = get_intltext_template('htconfig.tpl');
 	$txt = replace_macros($tpl,array(
 		'$dbhost' => $dbhost,
 		'$dbuser' => $dbuser,
@@ -50,36 +53,47 @@ function install_post(&$a) {
 	}
 
 	$errors = load_database($db);
-	if(! $errors) {
-		// Our sessions normally are stored in the database. But as we have only managed 
-		// to get it bootstrapped milliseconds ago, we have to apply a bit of trickery so 
-		// that you'll see the following important notice (which is stored in the session). 
 
-		session_write_close();
+	if($errors)
+		$a->data['db_failed'] = true;
+	else
+		$a->data['db_installed'] = true;
 
-		require_once('session.php');
-		session_start();
-		session_regenerate_id();
-
-		$_SESSION['sysmsg'] = '';
-
-		notice( t('Database import succeeded.') . EOL 
-			. t('IMPORTANT: You will need to [manually] setup a scheduled task for the poller.') . EOL 
-			. t('Please see the file "INSTALL.txt".') . EOL );
-		goaway($a->get_baseurl() . '/register' );
-	}
-	else {
-		$db = null; // start fresh
-		notice( t('Database import failed.') . EOL
-			. t('You may need to import the file "database.sql" manually using phpmyadmin or mysql.') . EOL
-			. t('Please see the file "INSTALL.txt".') . EOL );
-	}
+	return;
 }
 
 
 function install_content(&$a) {
 
+	global $db;
 	$o = '';
+	
+	if(x($a->data,'db_installed')) {
+		$o .= '<h2>' . t('Proceed with Installation') . '</h2>';
+		$o .= '<p style="font-size: 130%;">';
+		$o .= t('Your Friendika site database has been installed.') . EOL;
+		$o .= t('IMPORTANT: You will need to [manually] setup a scheduled task for the poller.') . EOL ;
+		$o .= t('Please see the file "INSTALL.txt".') . EOL ;
+		$o .= '<br />';
+		$o .= '<a href="' . $a->get_baseurl() . '/register' . '">' . t('Proceed to registration') . '</a>' ;
+		$o .= '</p>';
+		return $o;
+	}
+
+	if(x($a->data,'db_failed')) {
+		$o .= t('Database import failed.') . EOL;
+		$o .= t('You may need to import the file "database.sql" manually using phpmyadmin or mysql.') . EOL;
+		$o .= t('Please see the file "INSTALL.txt".') . EOL ;
+		return $o;
+	}
+
+	if($db && $db->connected) {
+		$r = q("SELECT COUNT(*) as `total` FROM `user`");
+		if($r && count($r) && $r[0]['total']) {
+			notice( t('Permission denied.') . EOL);
+			return '';
+		}
+	}
 
 	notice( t('Welcome to Friendika.') . EOL);
 
@@ -102,8 +116,18 @@ function install_content(&$a) {
 
 	require_once('datetime.php');
 
-	$tpl = load_view_file('view/install_db.tpl');
+	$tpl = get_markup_template('install_db.tpl');
 	$o .= replace_macros($tpl, array(
+		'$lbl_01' => t('Friendika Social Network'),
+		'$lbl_02' => t('Installation'),
+		'$lbl_03' => t('In order to install Friendika we need to know how to contact your database.'),
+		'$lbl_04' => t('Please contact your hosting provider or site administrator if you have questions about these settings.'),
+		'$lbl_05' => t('The database you specify below must already exist. If it does not, please create it before continuing.'),
+		'$lbl_06' => t('Database Server Name'),
+		'$lbl_07' => t('Database Login Name'),
+		'$lbl_08' => t('Database Login Password'),
+		'$lbl_09' => t('Database Name'),
+		'$lbl_10' => t('Please select a default timezone for your website'),
 		'$baseurl' => $a->get_baseurl(),
 		'$tzselect' => ((x($_POST,'timezone')) ? select_timezone($_POST['timezone']) : select_timezone()),
 		'$submit' => t('Submit'),

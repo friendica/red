@@ -108,9 +108,9 @@ function group_get_members($gid) {
 	if(intval($gid)) {
 		$r = q("SELECT `group_member`.`contact-id`, `contact`.* FROM `group_member` 
 			LEFT JOIN `contact` ON `contact`.`id` = `group_member`.`contact-id` 
-			WHERE `gid` = %d AND `group_member`.`uid` = %d",
+			WHERE `gid` = %d AND `group_member`.`uid` = %d ORDER BY `contact`.`name` ASC ",
 			intval($gid),
-			intval($_SESSION['uid'])
+			intval(local_user())
 		);
 		if(count($r))
 			$ret = $r;
@@ -118,9 +118,25 @@ function group_get_members($gid) {
 	return $ret;
 }
 
+function group_public_members($gid) {
+	$ret = 0;
+	if(intval($gid)) {
+		$r = q("SELECT `contact`.`id` AS `contact-id` FROM `group_member` 
+			LEFT JOIN `contact` ON `contact`.`id` = `group_member`.`contact-id` 
+			WHERE `gid` = %d AND `group_member`.`uid` = %d 
+			AND `contact`.`network` != 'dfrn' AND `contact`.`network` != 'mail' AND `contact`.`network` != 'face' ",
+			intval($gid),
+			intval(local_user())
+		);		
+		if(count($r))
+			$ret = count($r);
+	}
+	return $ret;
+}
 
 
-function group_side($every="contacts",$each="group") {
+
+function group_side($every="contacts",$each="group",$edit = false) {
 
 	$o = '';
 
@@ -150,7 +166,7 @@ EOT;
 	);
 	if(count($r)) {
 		foreach($r as $rr)
-			$o .= "	<li class=\"sidebar-group-li\"><a href=\"$each/{$rr['id']}\">{$rr['name']}</a></li>\r\n";
+			$o .= '	<li class="sidebar-group-li">' . (($edit) ? "<a href=\"group/{$rr['id']}\" title=\"" . t('Edit') . "\" ><img src=\"images/spencil.gif\" alt=\"" . t('Edit') . "\"></a> " : "") . "<a href=\"$each/{$rr['id']}\">{$rr['name']}</a></li>\r\n";
 	}
 	$o .= "	</ul>\r\n	</div>\r\n</div>";	
 

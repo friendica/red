@@ -26,6 +26,8 @@
 	var pr = 0;
 	var liking = 0;
 	var in_progress = false;
+	var langSelect = false;
+	var commentBusy = false;
 
 	$(document).ready(function() {
 		$.ajaxSetup({cache: false});
@@ -45,6 +47,18 @@
 					$('#pause').html('');
 				}
 			}
+			// F8 - show/hide language selector
+			if(event.keyCode == '119') {
+				if(langSelect) {
+					langSelect = false;
+					$('#language-selector').hide();
+				}
+				else {
+					langSelect = true;
+					$('#language-selector').show();
+				}
+			}		
+
 // this is shift-home on FF, but $ on IE, disabling until I figure out why the diff.
 // update: incompatible usage of onKeyDown vs onKeyPress
 //			if(event.keyCode == '36' && event.shiftKey == true) {
@@ -77,26 +91,26 @@
 			$.get("ping",function(data) {
 				$(data).find('result').each(function() {
 					var net = $(this).find('net').text();
-					if(net == 0) { net = ''; }
+					if(net == 0) { net = ''; $('#net-update').hide() } else { $('#net-update').show() }
 					$('#net-update').html(net);
 					var home = $(this).find('home').text();
-					if(home == 0) { home = ''; }
+					if(home == 0) { home = '';  $('#home-update').hide() } else { $('#home-update').show() }
 					$('#home-update').html(home);
 					var mail = $(this).find('mail').text();
-					if(mail == 0) { mail = ''; }
+					if(mail == 0) { mail = '';  $('#mail-update').hide() } else { $('#mail-update').show() }
 					$('#mail-update').html(mail);
 					var intro = $(this).find('intro').text();
 					var register = $(this).find('register').text();
 					if(intro == 0) { intro = ''; }
 					if(register != 0 && intro != '') { intro = intro+'/'+register; }
 					if(register != 0 && intro == '') { intro = '0/'+register; }
+					if (intro == '') { $('#notify-update').hide() } else { $('#notify-update').show() }
 					$('#notify-update').html(intro);
 
 				});
 			}) ;
 		}
 		timer = setTimeout(NavUpdate,30000);
-
 	}
 
 	function liveUpdate() {
@@ -113,12 +127,21 @@
 
 		$.get(update_url,function(data) {
 			in_progress = false;
+			$('.ccollapse-wrapper',data).each(function() {
+				var ident = $(this).attr('id');
+				var is_hidden = $('#' + ident).is(':hidden');
+				if($('#' + ident).length) {
+					$('#' + ident).replaceWith($(this));
+					if(is_hidden)
+						$('#' + ident).hide();
+				}
+			});
 			$('.wall-item-outside-wrapper',data).each(function() {
 				var ident = $(this).attr('id');
-				if($('#' + ident).length == 0) { 
-                                        $('img',this).each(function() {
-                                                $(this).attr('src',$(this).attr('dst'));
-                                        });
+				if($('#' + ident).length == 0) {
+					$('img',this).each(function() {
+						$(this).attr('src',$(this).attr('dst'));
+					});
 					$('#' + prev).after($(this));
 				}
 				else { 
@@ -127,29 +150,26 @@
 					$('#' + ident + ' ' + '.wall-item-comment-wrapper').replaceWith($(this).find('.wall-item-comment-wrapper'));
 					$('#' + ident + ' ' + '.wall-item-like').replaceWith($(this).find('.wall-item-like'));
 					$('#' + ident + ' ' + '.wall-item-dislike').replaceWith($(this).find('.wall-item-dislike'));
-                                        $('#' + ident + ' ' + '.my-comment-photo').each(function() {
-                                                $(this).attr('src',$(this).attr('dst'));
-                                        });
-
-
+					$('#' + ident + ' ' + '.my-comment-photo').each(function() {
+						$(this).attr('src',$(this).attr('dst'));
+					});
 				}
 				prev = ident; 
 			});
 			$('.like-rotator').hide();
+			if(commentBusy) {
+				commentBusy = false;
+				$('body').css('cursor', 'auto');
+			}
 		});
-
 	}
 
 	function imgbright(node) {
-		$(node).attr("src",$(node).attr("src").replace('hide','show'));
-		$(node).css('width',24);
-		$(node).css('height',24);
+		$(node).removeClass("drophide").addClass("drop");
 	}
 
 	function imgdull(node) {
-		$(node).attr("src",$(node).attr("src").replace('show','hide'));
-		$(node).css('width',16);
-		$(node).css('height',16);
+		$(node).removeClass("drop").addClass("drophide");
 	}
 
 	// Since our ajax calls are asynchronous, we will give a few 
@@ -215,6 +235,8 @@
 	}
 
 	function post_comment(id) {
+		commentBusy = true;
+		$('body').css('cursor', 'wait');
 		$.post(  
              "item",  
              $("#comment-edit-form-" + id).serialize(),
@@ -231,10 +253,49 @@
 				if(data.reload) {
 					window.location.href=data.reload;
 				}
-					
 			},
 			"json"  
          );  
          return false;  
+	}
+
+
+    function bin2hex(s){  
+        // Converts the binary representation of data to hex    
+        //   
+        // version: 812.316  
+        // discuss at: http://phpjs.org/functions/bin2hex  
+        // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)  
+        // +   bugfixed by: Onno Marsman  
+        // +   bugfixed by: Linuxworld  
+        // *     example 1: bin2hex('Kev');  
+        // *     returns 1: '4b6576'  
+        // *     example 2: bin2hex(String.fromCharCode(0x00));  
+        // *     returns 2: '00'  
+        var v,i, f = 0, a = [];  
+        s += '';  
+        f = s.length;  
+          
+        for (i = 0; i<f; i++) {  
+            a[i] = s.charCodeAt(i).toString(16).replace(/^([\da-f])$/,"0$1");  
+        }  
+          
+        return a.join('');  
+    }  
+
+	function groupChangeMember(gid,cid) {
+		$('body .fakelink').css('cursor', 'wait');
+		$.get('group/' + gid + '/' + cid, function(data) {
+				$('#group-update-wrapper').html(data);
+				$('body .fakelink').css('cursor', 'auto');				
+		});
+	}
+
+	function profChangeMember(gid,cid) {
+		$('body .fakelink').css('cursor', 'wait');
+		$.get('profperm/' + gid + '/' + cid, function(data) {
+				$('#prof-update-wrapper').html(data);
+				$('body .fakelink').css('cursor', 'auto');				
+		});
 	}
 

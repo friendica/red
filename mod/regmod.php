@@ -51,7 +51,7 @@ function regmod_content(&$a) {
 		$r = q("DELETE FROM `register` WHERE `hash` = '%s' LIMIT 1",
 			dbesc($register[0]['hash'])
 		);
-		notice( t('Registration revoked for ') . $user[0]['username'] . EOL);
+		notice( sprintf(t('Registration revoked for %s'), $user[0]['username']) . EOL);
 		return;
 
 	}
@@ -79,7 +79,7 @@ function regmod_content(&$a) {
 				proc_run('php',"include/directory.php","$url");
 		}
 
-		$email_tpl = load_view_file("view/register_open_eml.tpl");
+		$email_tpl = get_intltext_template("register_open_eml.tpl");
 		$email_tpl = replace_macros($email_tpl, array(
 				'$sitename' => $a->config['sitename'],
 				'$siteurl' =>  $a->get_baseurl(),
@@ -89,8 +89,11 @@ function regmod_content(&$a) {
 				'$uid' => $user[0]['uid']
 		));
 
-		$res = mail($user[0]['email'], t('Registration details for '). $a->config['sitename'],
-			$email_tpl,'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] );
+		$res = mail($user[0]['email'], sprintf(t('Registration details for %s'), $a->config['sitename']),
+			$email_tpl,
+				'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+				. 'Content-type: text/plain; charset=UTF-8' . "\n"
+				. 'Content-transfer-encoding: 8bit' );
 
 		if($res) {
 			notice( t('Account approved.') . EOL );

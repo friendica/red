@@ -28,6 +28,15 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 		goaway($a->get_baseurl());
 	}
 
+	if(x($_SESSION,'visitor_id') && (! x($_SESSION,'uid'))) {
+		$r = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
+			intval($_SESSION['visitor_id'])
+		);
+		if(count($r)) {
+			$a->contact = $r[0];
+		}
+	}
+
 	if(x($_SESSION,'uid')) {
 
 		// already logged in user returning
@@ -191,8 +200,16 @@ else {
 		$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $record['nickname'];
 		$_SESSION['addr'] = $_SERVER['REMOTE_ADDR'];
 
-		notice( t("Welcome back ") . $record['username'] . EOL);
 		$a->user = $record;
+
+		if($a->user['login_date'] === '0000-00-00 00:00:00') {
+			$_SESSION['return_url'] = 'profile_photo/new';
+			$a->module = 'profile_photo';
+			notice( t("Welcome ") . $a->user['username'] . EOL);
+			notice( t('Please upload a profile photo.') . EOL);
+		}
+		else
+			notice( t("Welcome back ") . $a->user['username'] . EOL);
 
 		if(strlen($a->user['timezone'])) {
 			date_default_timezone_set($a->user['timezone']);
@@ -214,6 +231,8 @@ else {
 			$a->cid = $r[0]['id'];
 			$_SESSION['cid'] = $a->cid;
 		}
+
+
 		q("UPDATE `user` SET `login_date` = '%s' WHERE `uid` = %d LIMIT 1",
 			dbesc(datetime_convert()),
 			intval($_SESSION['uid'])

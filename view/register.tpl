@@ -1,6 +1,6 @@
 <h3>$regtitle</h3>
 
-<form action="register" method="post" >
+<form action="register" method="post" id="register-form">
 
 	<input type="hidden" name="photo" value="$photo" />
 

@@ -2,12 +2,20 @@
 
 function viewcontacts_init(&$a) {
 
-	profile_load($a,$a->argv[1]);
+	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+		return;
+	}
 
+	profile_load($a,$a->argv[1]);
 }
 
 
 function viewcontacts_content(&$a) {
+
+	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+		notice( t('Public access denied.') . EOL);
+		return;
+	}
 
 	if(((! count($a->profile)) || ($a->profile['hide-friends']))) {
 		notice( t('Permission denied.') . EOL);
@@ -33,7 +41,7 @@ function viewcontacts_content(&$a) {
 		return $o;
 	}
 
-	$tpl = load_view_file("view/viewcontact_template.tpl");
+	$tpl = get_markup_template("viewcontact_template.tpl");
 
 	foreach($r as $rr) {
 		if($rr['self'])
@@ -41,9 +49,10 @@ function viewcontacts_content(&$a) {
 
 		$o .= replace_macros($tpl, array(
 			'$id' => $rr['id'],
-			'$alt_text' => t('Visit ') . $rr['name'] . t('\'s profile'),
+			'$alt_text' => t('Visit $username\'s profile'),
 			'$thumb' => $rr['thumb'], 
 			'$name' => substr($rr['name'],0,20),
+			'$username' => $rr['name'],
 			'$url' => $rr['url'] 
 		));
 	}

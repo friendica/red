@@ -2,7 +2,7 @@
 
 /* green variation by Tobias Diekershoff <tobias.diekershoff@gmx.net> */
 
-a, a:visited { color: #549f4f; text-decoration: none; }
+a:link, a:visited { color: #549f4f; text-decoration: none; }
 a:hover {text-decoration: underline; }
 
 

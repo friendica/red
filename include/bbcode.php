@@ -3,7 +3,7 @@ require_once("include/oembed.php");
 	// BBcode 2 HTML was written by WAY2WEB.net
 	// extended to work with Mistpark/Friendika - Mike Macgirvin
 
-function bbcode($Text) {
+function bbcode($Text,$preserve_nl = false) {
 
 	// Replace any html brackets with HTML Entities to prevent executing HTML or script
 	// Don't use strip_tags here because it breaks [url] search by replacing & with amp
@@ -12,7 +12,10 @@ function bbcode($Text) {
 	$Text = str_replace(">", "&gt;", $Text);
 
 	// Convert new line chars to html <br /> tags
+
 	$Text = nl2br($Text);
+	if($preserve_nl)
+		$Text = str_replace(array("\n","\r"), array('',''),$Text);
 
 	// Set up the parameters for a URL search string
 	$URLSearchString = "^\[\]";
@@ -22,7 +25,7 @@ function bbcode($Text) {
 	// Perform URL Search
 
 
-	$Text = preg_replace("/([^\]\=]|^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\.\=\_\~\#\'\%\$\!\+]+)/", ' <a href="$2" target="external-link">$2</a>', $Text);
+	$Text = preg_replace("/([^\]\=]|^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\.\=\_\~\#\'\%\$\!\+\,]+)/", ' <a href="$2" target="external-link">$2</a>', $Text);
 
 	$Text = preg_replace("/\[url\]([$URLSearchString]*)\[\/url\]/", '<a href="$1" target="external-link">$1</a>', $Text);
 	$Text = preg_replace("(\[url\=([$URLSearchString]*)\](.+?)\[/url\])", '<a href="$1" target="external-link">$2</a>', $Text);
@@ -77,7 +80,7 @@ function bbcode($Text) {
          
 	// Images
 	// [img]pathtoimage[/img]
-	$Text = preg_replace("/\[img\](.+?)\[\/img\]/", '<img src="$1">', $Text);
+	$Text = preg_replace("/\[img\](.+?)\[\/img\]/", '<img src="$1" alt="' . t('Image/photo') . '" />', $Text);
 
 	// html5 video and audio
 
@@ -90,8 +93,12 @@ function bbcode($Text) {
 	$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.+?)\[\/img\]/", '<img src="$3" height="$2" width="$1">', $Text);
 
 	// Youtube extensions
-        $Text = preg_replace("/\[youtube\]http:\/\/www.youtube.com\/watch\?v\=(.+?)\[\/youtube\]/",'[youtube]$1[/youtube]',$Text); 
-	$Text = preg_replace("/\[youtube\](.+?)\[\/youtube\]/", '<object width="425" height="350" type="application/x-shockwave-flash" data="http://www.youtube.com/v/$1" ><param name="movie" value="http://www.youtube.com/v/$1"></param><!--[if IE]><embed src="http://www.youtube.com/v/$1" type="application/x-shockwave-flash" width="425" height="350" /><![endif]--></object>', $Text);
+        $Text = preg_replace("/\[youtube\]https?:\/\/www.youtube.com\/watch\?v\=(.+?)\[\/youtube\]/",'[youtube]$1[/youtube]',$Text); 
+        $Text = preg_replace("/\[youtube\]https?:\/\/youtu.be\/(.+?)\[\/youtube\]/",'[youtube]$1[/youtube]',$Text); 
+
+	$Text = preg_replace("/\[youtube\](.+?)\[\/youtube\]/", '<iframe width="425" height="349" src="http://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe>', $Text);
+
+//	$Text = preg_replace("/\[youtube\](.+?)\[\/youtube\]/", '<object width="425" height="350" type="application/x-shockwave-flash" data="http://www.youtube.com/v/$1" ><param name="movie" value="http://www.youtube.com/v/$1"></param><!--[if IE]><embed src="http://www.youtube.com/v/$1" type="application/x-shockwave-flash" width="425" height="350" /><![endif]--></object>', $Text);
 
 	// oembed tag
 	$Text = oembed_bbcode2html($Text);

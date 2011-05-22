@@ -38,6 +38,16 @@ function update_profile_content(&$a) {
 	$replace = "<img\${1} dst=\"\${2}\"";
 	$text = preg_replace($pattern, $replace, $text);
 
+	$replace = '<br />' . t('[Embedded content - reload page to view]') . '<br />';
+	$pattern = "/<\s*audio[^>]*>(.*?)<\s*\/\s*audio>/i";
+	$text = preg_replace($pattern, $replace, $text);
+	$pattern = "/<\s*video[^>]*>(.*?)<\s*\/\s*video>/i";
+	$text = preg_replace($pattern, $replace, $text);
+	$pattern = "/<\s*embed[^>]*>(.*?)<\s*\/\s*embed>/i";
+	$text = preg_replace($pattern, $replace, $text);
+    $pattern = "/<\s*iframe[^>]*>(.*?)<\s*\/\s*iframe>/i";
+    $text = preg_replace($pattern, $replace, $text);
+
 	/**
 	 * reportedly some versions of MSIE don't handle tabs in XMLHttpRequest documents very well
 	 */

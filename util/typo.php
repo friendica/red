@@ -37,12 +37,21 @@
 		}
 	}
 
+	if(x($a->config,'php_path'))
+		$phpath = $a->config['php_path'];
+	else
+		$phpath = 'php';
+
 	echo "String files\n";
 
 	echo 'util/strings.php' . "\n";
 	include_once('util/strings.php');
+	echo count($a->strings) . ' strings' . "\n";
+
 	$files = glob('view/*/strings.php');
+
 	foreach($files as $file) {
 		echo $file . "\n";
-		include_once($file);
+	passthru($phpath . ' util/typohelper.php ' . $file);
+//		include_once($file);
 	}

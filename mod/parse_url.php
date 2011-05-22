@@ -5,11 +5,15 @@ require_once('library/HTML5/Parser.php');
 
 function parse_url_content(&$a) {
 
-	$url = trim($_GET['url']);
+	logger('parse_url: ' . $_GET['url']);
+
+	$url = trim(hex2bin($_GET['url']));
+
+	logger('parse_url: ' . $url);
 
 	$text = null;
 
-	$template = "<a href=\"%s\" >%s</a>%s";
+	$template = "<a href=\"%s\" >%s</a>\n%s";
 
 
 	$arr = array('url' => $url, 'text' => '');
@@ -57,6 +61,8 @@ function parse_url_content(&$a) {
 				$items = $div->getElementsByTagName('p');
 				if($items) {
 					foreach($items as $item) {
+						if($item->getElementsByTagName('script'))
+							continue;
 						$text = $item->textContent;
 						$text = strip_tags($text);
 						if(strlen($text) < 100)
@@ -73,6 +79,8 @@ function parse_url_content(&$a) {
 		$items = $dom->getElementsByTagName('p');
 		if($items) {
 			foreach($items as $item) {
+				if($item->getElementsByTagName('script'))
+					continue;
 				$text = $item->textContent;
 				$text = strip_tags($text);
 				if(strlen($text) < 100)

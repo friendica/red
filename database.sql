@@ -64,6 +64,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `issued-id` char(255) NOT NULL,
   `dfrn-id` char(255) NOT NULL,
   `url` char(255) NOT NULL,
+  `addr` char(255) NOT NULL,
   `alias` char(255) NOT NULL,
   `pubkey` text NOT NULL,
   `prvkey` text NOT NULL,
@@ -85,6 +86,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `priority` tinyint(3) NOT NULL,
   `blocked` tinyint(1) NOT NULL DEFAULT '1',
   `readonly` tinyint(1) NOT NULL DEFAULT '0',
+  `writable` tinyint(1) NOT NULL DEFAULT '0',
   `pending` tinyint(1) NOT NULL DEFAULT '1',
   `rating` tinyint(1) NOT NULL DEFAULT '0',
   `reason` text NOT NULL,
@@ -164,6 +166,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `gravity` tinyint(1) NOT NULL DEFAULT '0',
   `parent` int(10) unsigned NOT NULL DEFAULT '0',
   `parent-uri` char(255) NOT NULL,
+  `extid` char(255) NOT NULL,
   `thr-parent` char(255) NOT NULL,
   `created` datetime NOT NULL,
   `edited` datetime NOT NULL,
@@ -184,6 +187,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `plink` char(255) NOT NULL, 
   `resource-id` char(255) NOT NULL,
   `tag` mediumtext NOT NULL,
+  `attach` mediumtext NOT NULL,
   `inform` mediumtext NOT NULL,
   `location` char(255) NOT NULL,
   `coord` char(255) NOT NULL,
@@ -192,6 +196,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `deny_cid` mediumtext NOT NULL,
   `deny_gid` mediumtext NOT NULL,
   `private` tinyint(1) NOT NULL DEFAULT '0',
+  `pubmail` tinyint(1) NOT NULL DEFAULT '0',
   `visible` tinyint(1) NOT NULL DEFAULT '0',
   `unseen` tinyint(1) NOT NULL DEFAULT '1',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
@@ -204,6 +209,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `wall` (`wall`),
   KEY `parent` (`parent`),
   KEY `parent-uri` (`parent-uri`),
+  KEY `extid` (`extid`),
   KEY `created` (`created`),
   KEY `edited` (`edited`),
   KEY `visible` (`visible`),
@@ -297,7 +303,8 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `sexual` char(255) NOT NULL,
   `politic` char(255) NOT NULL,
   `religion` char(255) NOT NULL,
-  `keywords` text NOT NULL,
+  `pub_keywords` text NOT NULL,
+  `prv_keywords` text NOT NULL,
   `about` text NOT NULL,
   `summary` char(255) NOT NULL,
   `music` text NOT NULL,
@@ -314,7 +321,9 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `thumb` char(255) NOT NULL,
   `publish` tinyint(1) NOT NULL DEFAULT '0',
   `net-publish` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  FULLTEXT KEY `pub_keywords` (`pub_keywords`),
+  FULLTEXT KEY `prv_keywords` (`prv_keywords`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -363,6 +372,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `email` char(255) NOT NULL,
   `openid` char(255) NOT NULL,
   `timezone` char(128) NOT NULL,
+  `language` char(32) NOT NULL DEFAULT 'en',
   `register_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `login_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `default-location` char(255) NOT NULL,
@@ -374,10 +384,12 @@ CREATE TABLE IF NOT EXISTS `user` (
   `sprvkey` text NOT NULL,
   `verified` tinyint(1) unsigned NOT NULL DEFAULT '0', 
   `blocked` tinyint(1) unsigned NOT NULL DEFAULT '0', 
+  `blockwall` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `notify-flags` int(11) unsigned NOT NULL DEFAULT '65535', 
   `page-flags` int(11) unsigned NOT NULL DEFAULT '0',
   `pwdreset` char(255) NOT NULL,
   `maxreq` int(11) NOT NULL DEFAULT '10',
+  `expire` int(11) unsigned NOT NULL DEFAULT '0',
   `allow_cid` mediumtext NOT NULL, 
   `allow_gid` mediumtext NOT NULL,
   `deny_cid` mediumtext NOT NULL, 
@@ -479,3 +491,48 @@ CREATE TABLE IF NOT EXISTS `cache` (
  `v` TEXT NOT NULL,
  `updated` DATETIME NOT NULL
 ) ENGINE = MYISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `fcontact` (
+`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`url` CHAR( 255 ) NOT NULL ,
+`name` CHAR( 255 ) NOT NULL ,
+`photo` CHAR( 255 ) NOT NULL
+) ENGINE = MYISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `ffinder` (
+`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`uid` INT UNSIGNED NOT NULL ,
+`cid` INT UNSIGNED NOT NULL ,
+`fid` INT UNSIGNED NOT NULL
+) ENGINE = MYISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `mailacct` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`uid` INT NOT NULL,
+`server` CHAR( 255 ) NOT NULL ,
+`port` INT NOT NULL,
+`ssltype` CHAR( 16 ) NOT NULL,
+`mailbox` CHAR( 255 ) NOT NULL,
+`user` CHAR( 255 ) NOT NULL ,
+`pass` TEXT NOT NULL ,
+`reply_to` CHAR( 255 ) NOT NULL ,
+`pubmail` TINYINT(1) NOT NULL DEFAULT '0',
+`last_check` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE = MYISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `attach` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`uid` INT NOT NULL ,
+`filetype` CHAR( 64 ) NOT NULL ,
+`filesize` INT NOT NULL ,
+`data` LONGBLOB NOT NULL ,
+`created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+`edited` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+`allow_cid` MEDIUMTEXT NOT NULL ,
+`allow_gid` MEDIUMTEXT NOT NULL ,
+`deny_cid` MEDIUMTEXT NOT NULL ,
+`deny_gid` MEDIUMTEXT NOT NULL
+) ENGINE = MYISAM DEFAULT CHARSET=utf8;
+

@@ -44,5 +44,83 @@ then relocate the files to the view directory. The files in the top-level view
 directory are template files which do not require translation. 
 
 
+Placeholders
+
+Do not translate placeholders in strings! Things like %s, %d, %1$s and $somename
+are used to add dynamic content to the string.
+
+%s represents a dynamic string, like in "Welcome to %s"
+%d represents a dynamic number, like in "%d new messages"
+$somename is a variable like in php
+In %1$s %2$s,  the numbers are the position index of multiple dynamic content.
+You could swap position in string of indexed placeholders.
+e.g.
+"%1$s's %2$s" => "John's photo", "John's item"
+"%2$s di %1$s" => "foto di John", "elemento di John"
+
+
+Plural
+
+The tt() function supports plural form. Script extract.php write this in 
+strings.php as an array, one string for every plural form language supports:
+
+$a->string["%d message sent"] = Array(
+ 0 => "%d message sent",
+ 1 => "%d messages sent",
+);
+
+The function string_plural_select($n) defined in strings.php, return the string
+index to use, related to the numbers of item (value of $n).
+
+This is modelled after ngettext function of GNU gettext.
+More info at http://www.gnu.org/software/hello/manual/gettext/Plural-forms.html
+
+
+Xgettext and .po workflow
+
+1. Run util/run_xgettext.sh script (on *unix sistems, with GNU xgettext installed)
+	This script runs xgettext on source tree, extracting strings from t() and tt()
+	functions, and creates a util/messages.po file.
+
+	% cd util; ./run_xgettext.sh ../view/{language}/messages.po
+
+	Replace {language} with the language you are working on - e.g. 'es', 'fr', 'de', etc. 
+
+2. copy util/messages.po to view/<langauage>/messages.po
+3. open view/<langauage>/messages.po with a text editor and fill in infos in
+	"Last-Translator: FULL NAME <EMAIL@ADDRESS>"
+	"Language-Team: LANGUAGE <LL@li.org>\n"
+	"Language: \n"
+
+	(eg:
+	"Last-Translator: Guybrush Threepwood <gb@host.com>"
+	"Language-Team: Pirate Friendika <pirate-friendika-ml@host.com>\n"
+	"Language: pi\n"
+	)
+	
+	For the line
+	"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+	read GNU gettext manual at 
+	http://www.gnu.org/software/hello/manual/gettext/Plural-forms.html
+	
+4. You could then translate the strings in text editor, but I suggest to use one
+	of the many .po editors out there, like QtLinguist
+	
+5. run 
+	$ php util/po2php.php view/<language>/messages.po
+ 	to create the strings.php file
+ 	
+When strings are added or modified in source, you could run
+	$ cd util; ./run_xgettext.sh ../view/<language>/messages.po
+	to extract strings from source files and join them with the existing .po file:
+	new strings are added, the existing are not overwritten.
+	
+If you already translated Friendika using strings.php, you could import your old
+translation to messages.po. Run:
+$ php util/php2po.php view/<language>/strings.php
+
+
+You may also use the util/string_translator.php web interface to translate the string file, but it is disabled for website security reasons. The web server will need write permission to your language directories and the "Deny ..." line in util/.htaccess will need to be modified or commented to use the utility. 
+ 
 
       

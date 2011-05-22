@@ -9,14 +9,19 @@ function contacts_init(&$a) {
 	$a->page['aside'] .= group_side();
 
 	if($a->config['register_policy'] != REGISTER_CLOSED)
-		$a->page['aside'] .= '<div class="side-invite-link-wrapper" id="side-invite-link-wrapper" ><a href="invite" class="side-invite-link" id="side-invite-link">' . t("Invite Friends") . '</a></div>';
+		$a->page['aside'] .= '<div class="side-link" id="side-invite-link" ><a href="invite" >' . t("Invite Friends") . '</a></div>';
 
-	$tpl = load_view_file('view/follow.tpl');
+	if(strlen(get_config('system','directory_submit_url')))
+		$a->page['aside'] .= '<div class="side-link" id="side-match-link"><a href="match" >' . t('Find People With Shared Interests') . '</a></div>';
+
+	$tpl = get_markup_template('follow.tpl');
 	$a->page['aside'] .= replace_macros($tpl,array(
 		'$label' => t('Connect/Follow'),
 		'$hint' => t('Example: bob@example.com, http://example.com/barbara'),
 		'$follow' => t('Follow')
 	));
+
+
 
 }
 
@@ -137,7 +142,8 @@ function contacts_content(&$a) {
 					intval(local_user())
 			);
 			if($r) {
-				notice( t('Contact has been ') . (($blocked) ? t('blocked') : t('unblocked')) . EOL );
+				//notice( t('Contact has been ') . (($blocked) ? t('blocked') : t('unblocked')) . EOL );
+				notice( (($blocked) ? t('Contact has been blocked') : t('Contact has been unblocked')) . EOL );
 			}
 			goaway($a->get_baseurl() . '/contacts/' . $contact_id);
 			return; // NOTREACHED
@@ -151,7 +157,7 @@ function contacts_content(&$a) {
 					intval(local_user())
 			);
 			if($r) {
-				notice( t('Contact has been ') . (($readonly) ? t('ignored') : t('unignored')) . EOL );
+				notice( (($readonly) ? t('Contact has been ignored') : t('Contact has been unignored')) . EOL );
 			}
 			goaway($a->get_baseurl() . '/contacts/' . $contact_id);
 			return; // NOTREACHED
@@ -162,7 +168,7 @@ function contacts_content(&$a) {
 			// create an unfollow slap
 
 			if($orig_record[0]['network'] === 'stat') {
-				$tpl = load_view_file('view/follow_slap.tpl');
+				$tpl = get_markup_template('follow_slap.tpl');
 				$slap = replace_macros($tpl, array(
 					'$name' => $a->user['username'],
 					'$profile_page' => $a->get_baseurl() . '/profile/' . $a->user['nickname'],
@@ -174,8 +180,8 @@ function contacts_content(&$a) {
 					'$type' => 'text',
 					'$content' => t('stopped following'),
 					'$nick' => $a->user['nickname'],
-					'$verb' => ACTIVITY_UNFOLLOW,
-					'$ostat_follow' => '<as:verb>http://ostatus.org/schema/1.0/unfollow</as:verb>' . "\r\n"
+					'$verb' => 'http://ostatus.org/schema/1.0/unfollow', // ACTIVITY_UNFOLLOW,
+					'$ostat_follow' => '' // '<as:verb>http://ostatus.org/schema/1.0/unfollow</as:verb>' . "\r\n"
 				));
 
 				if((x($orig_record[0],'notify')) && (strlen($orig_record[0]['notify']))) {
@@ -209,12 +215,12 @@ function contacts_content(&$a) {
 			return;
 		}
 
-		$tpl = load_view_file('view/contact_head.tpl');
+		$tpl = get_markup_template('contact_head.tpl');
 		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
 
 		require_once('include/contact_selectors.php');
 
-		$tpl = load_view_file("view/contact_edit.tpl");
+		$tpl = get_markup_template("contact_edit.tpl");
 
 		switch($r[0]['rel']) {
 			case REL_BUD:
@@ -243,6 +249,9 @@ function contacts_content(&$a) {
 			$sparkle = '';
 		}
 
+		$insecure = '<div id="profile-edit-insecure"><p><img src="images/unlock_icon.gif" alt="' . t('Privacy Unavailable') . '" />&nbsp;'
+			. t('Private communications are not available for this contact.') . '</p></div>';
+
 		$last_update = (($r[0]['last-update'] == '0000-00-00 00:00:00') 
 				? t('Never') 
 				: datetime_convert('UTC',date_default_timezone_get(),$r[0]['last-update'],'D, j M Y, g:i A'));
@@ -252,9 +261,20 @@ function contacts_content(&$a) {
 
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Contact Editor'),
+			'$submit' => t('Submit'),
+			'$lbl_vis1' => t('Profile Visibility'),
+			'$lbl_vis2' => sprintf( t('Please choose the profile you would like to display to %s when viewing your profile securely.'), $r[0]['name']),
+			'$lbl_info1' => t('Contact Information / Notes'),
+			'$lbl_rep1' => t('Online Reputation'),
+			'$lbl_rep2' => t('Occasionally your friends may wish to inquire about this person\'s online legitimacy.'),
+			'$lbl_rep3' => t('You may help them choose whether or not to interact with this person by providing a <em>reputation</em> to guide them.'),
+			'$lbl_rep4' => t('Please take a moment to elaborate on this selection if you feel it could be helpful to others.'),
 			'$visit' => t('Visit $name\'s profile'),
 			'$blockunblock' => t('Block/Unblock contact'),
 			'$ignorecont' => t('Ignore contact'),
+			'$altcrepair' => t('Repair contact URL settings'),
+			'$lblcrepair' => t("Repair contact URL settings \x28WARNING: Advanced\x29"),
+			'$lblrecent' => t('View conversations'),
 			'$delete' => t('Delete contact'),
 			'$poll_interval' => contact_poll_interval($r[0]['priority']),
 			'$lastupdtext' => t('Last updated: '),
@@ -265,7 +285,7 @@ function contacts_content(&$a) {
 			'$contact_id' => $r[0]['id'],
 			'$block_text' => (($r[0]['blocked']) ? t('Unblock this contact') : t('Block this contact') ),
 			'$ignore_text' => (($r[0]['readonly']) ? t('Unignore this contact') : t('Ignore this contact') ),
-			'$insecure' => (($r[0]['network'] === 'stat') ? load_view_file('view/insecure_net.tpl') : ''),
+			'$insecure' => (($r[0]['network'] !== NETWORK_DFRN && $r[0]['network'] !== NETWORK_MAIL && $r[0]['network'] !== NETWORK_FACEBOOK) ? $insecure : ''),
 			'$info' => $r[0]['info'],
 			'$blocked' => (($r[0]['blocked']) ? '<div id="block-message">' . t('Currently blocked') . '</div>' : ''),
 			'$ignored' => (($r[0]['readonly']) ? '<div id="ignore-message">' . t('Currently ignored') . '</div>' : ''),
@@ -297,7 +317,7 @@ function contacts_content(&$a) {
 
 	$search = ((x($_GET,'search')) ? notags(trim($_GET['search'])) : '');
 
-	$tpl = load_view_file("view/contacts-top.tpl");
+	$tpl = get_markup_template("contacts-top.tpl");
 	$o .= replace_macros($tpl,array(
 		'$header' => t('Contacts'),
 		'$hide_url' => ((strlen($sql_extra)) ? 'contacts/all' : 'contacts' ),
@@ -331,7 +351,7 @@ function contacts_content(&$a) {
 
 	if(count($r)) {
 
-		$tpl = load_view_file("view/contact_template.tpl");
+		$tpl = get_markup_template("contact_template.tpl");
 
 		foreach($r as $rr) {
 			if($rr['self'])
@@ -364,13 +384,14 @@ function contacts_content(&$a) {
 
 
 			$o .= replace_macros($tpl, array(
-				'$img_hover' => t('Visit ') . $rr['name'] . t('\'s profile'),
+				'$img_hover' => t('Visit $username\'s profile'),
 				'$edit_hover' => t('Edit contact'),
 				'$id' => $rr['id'],
 				'$alt_text' => $alt_text,
 				'$dir_icon' => $dir_icon,
 				'$thumb' => $rr['thumb'], 
 				'$name' => substr($rr['name'],0,20),
+				'$username' => $rr['name'],
 				'$sparkle' => $sparkle,
 				'$url' => $url
 			));

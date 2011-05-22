@@ -89,7 +89,7 @@ function salmon_post(&$a) {
 
 	// Create a fake feed wrapper so simplepie doesn't choke
 
-	$tpl = load_view_file('view/fake_feed.tpl');
+	$tpl = get_markup_template('fake_feed.tpl');
 	
 	$base = substr($data,strpos($data,'<entry'));
 

@@ -162,12 +162,20 @@ class Photo {
 	}
 
 	public function saveImage($path) {
-		imagejpeg($this->image,$path,100);
+		$quality = get_config('system','jpeg_quality');
+		if((! $quality) || ($quality > 100))
+			$quality = JPEG_QUALITY;
+		imagejpeg($this->image,$path,$quality);
 	}
 
 	public function imageString() {
 		ob_start();
-		imagejpeg($this->image,NULL,100);
+
+		$quality = get_config('system','jpeg_quality');
+		if((! $quality) || ($quality > 100))
+			$quality = JPEG_QUALITY;
+
+		imagejpeg($this->image,NULL,$quality);
 		$s = ob_get_contents();
 		ob_end_clean();
 		return $s;

@@ -13,6 +13,14 @@ function directory_post(&$a) {
 
 
 function directory_content(&$a) {
+
+	$everything = (($a->argc > 1 && $a->argv[1] === 'all' && is_site_admin()) ? true : false);
+
+	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+		notice( t('Public access denied.') . EOL);
+		return;
+	}
+
 	$o = '';
 	$o .= '<script>	$(document).ready(function() { $(\'#nav-directory-link\').addClass(\'nav-selected\'); });</script>';
 	if(x($_SESSION,'theme'))
@@ -23,7 +31,7 @@ function directory_content(&$a) {
 	else
 		$search = ((x($_GET,'search')) ? notags(trim(rawurldecode($_GET['search']))) : '');
 
-	$tpl = load_view_file('view/directory_header.tpl');
+	$tpl = get_markup_template('directory_header.tpl');
 
 	$globaldir = '';
 	$gdirpath = dirname(get_config('system','directory_submit_url'));
@@ -32,32 +40,47 @@ function directory_content(&$a) {
 		. $gdirpath . '">' . t('Global Directory') . '</a></div></li></ul>';
 	}
 
+	$admin = '';
+	if(is_site_admin()) {
+		if($everything)
+			$admin =  '<ul><li><div id="directory-admin-link"><a href="' . $a->get_baseurl() . '/directory' . '">' . t('Normal site view') . '</a></div></li></ul>';
+		else
+			$admin = '<ul><li><div id="directory-admin-link"><a href="' . $a->get_baseurl() . '/directory/all' . '">' . t('View all site entries') . '</a></div></li></ul>';
+	}
+
 	$o .= replace_macros($tpl, array(
 		'$search' => $search,
 		'$globaldir' => $globaldir,
-		'$finding' => (strlen($search) ? '<h4>' . t('Finding: ') . "'" . $search . "'" . '</h4>' : "")
+		'$admin' => $admin,
+		'$finding' => (strlen($search) ? '<h4>' . t('Finding: ') . "'" . $search . "'" . '</h4>' : ""),
+		'$sitedir' => t('Site Directory'),
+		'$submit' => t('Find')
 	));
 
 	if($search)
 		$search = dbesc($search);
-	$sql_extra = ((strlen($search)) ? " AND MATCH (`profile`.`name`, `user`.`nickname`, `pdesc`, `locality`,`region`,`country-name`,`gender`,`marital`,`sexual`,`about`,`romance`,`work`,`education`,`keywords` ) AGAINST ('$search' IN BOOLEAN MODE) " : "");
+	$sql_extra = ((strlen($search)) ? " AND MATCH (`profile`.`name`, `user`.`nickname`, `pdesc`, `locality`,`region`,`country-name`,`gender`,`marital`,`sexual`,`about`,`romance`,`work`,`education`,`pub_keywords`,`prv_keywords` ) AGAINST ('$search' IN BOOLEAN MODE) " : "");
 
-	$publish = ((get_config('system','publish_all')) ? '' : " AND `publish` = 1 " );
+	$publish = ((get_config('system','publish_all') || $everything) ? '' : " AND `publish` = 1 " );
 
 
 	$r = q("SELECT COUNT(*) AS `total` FROM `profile` LEFT JOIN `user` ON `user`.`uid` = `profile`.`uid` WHERE `is-default` = 1 $publish AND `user`.`blocked` = 0 $sql_extra ");
 	if(count($r))
 		$a->set_pager_total($r[0]['total']);
 
+	if($everything)
+		$order = " ORDER BY `register_date` DESC ";
+	else
+		$order = " ORDER BY `name` ASC "; 
 
 
-	$r = q("SELECT `profile`.*, `profile`.`uid` AS `profile_uid`, `user`.`nickname`, `user`.`timezone` FROM `profile` LEFT JOIN `user` ON `user`.`uid` = `profile`.`uid` WHERE `is-default` = 1 $publish AND `user`.`blocked` = 0 $sql_extra ORDER BY `name` ASC LIMIT %d , %d ",
+	$r = q("SELECT `profile`.*, `profile`.`uid` AS `profile_uid`, `user`.`nickname`, `user`.`timezone` FROM `profile` LEFT JOIN `user` ON `user`.`uid` = `profile`.`uid` WHERE `is-default` = 1 $publish AND `user`.`blocked` = 0 $sql_extra $order LIMIT %d , %d ",
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
 	);
 	if(count($r)) {
 
-		$tpl = load_view_file('view/directory_item.tpl');
+		$tpl = get_markup_template('directory_item.tpl');
 
 		if(in_array('small', $a->argv))
 			$photo = 'thumb';
@@ -86,10 +109,10 @@ function directory_content(&$a) {
 			}
 			if(strlen($rr['dob'])) {
 				if(($years = age($rr['dob'],$rr['timezone'],'')) != 0)
-					$details .= "<br />Age: $years" ; 
+					$details .= '<br />' . t('Age: ') . $years ; 
 			}
 			if(strlen($rr['gender']))
-				$details .= '<br />Gender: ' . $rr['gender'];
+				$details .= '<br />' . t('Gender: ') . $rr['gender'];
 
 			$entry = replace_macros($tpl,array(
 				'$id' => $rr['id'],
@@ -115,7 +138,7 @@ function directory_content(&$a) {
 
 	}
 	else
-		notice("No entries (some entries may be hidden).");
+		notice( t("No entries \x28some entries may be hidden\x29.") . EOL);
 
 	return $o;
 }

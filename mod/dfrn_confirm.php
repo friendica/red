@@ -240,7 +240,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				notice( t('Unexpected response from remote site: ') . EOL . $leading_junk . EOL );
 			}
 
-			$xml = simplexml_load_string($res);
+			$xml = parse_xml_string($res);
 			$status = (int) $xml->status;
 			$message = unxmlify($xml->message);   // human readable text of what may have gone wrong.
 			switch($status) {
@@ -423,9 +423,11 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				$arr['author-avatar'] = $arr['owner-avatar'] = $self[0]['thumb'];
 				$arr['verb'] = ACTIVITY_FRIEND;
 				$arr['object-type'] = ACTIVITY_OBJ_PERSON;
-				$arr['body'] = '[url=' . $self[0]['url'] . ']' . $self[0]['name'] . '[/url] ' . t('is now friends with')
-					. ' [url=' . $contact['url'] . ']' . $contact['name'] . '[/url]' . "\n\n\n" 
-					. ' [url=' . $contact['url'] . ']' . '[img]' . $contact['thumb'] . '[/img][/url]';
+				
+				$A = '[url=' . $self[0]['url'] . ']' . $self[0]['name'] . '[/url]';
+				$B = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]';
+				$BPhoto = '[url=' . $contact['url'] . ']' . '[img]' . $contact['thumb'] . '[/img][/url]';
+				$arr['body'] =  sprintf( t('%1$s is now friends with %2$s'), $A, $B)."\n\n\n".$Bphoto;
 
 				$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PERSON . '</type><title>' . $contact['name'] . '</title>'
 					. '<id>' . $contact['url'] . '/' . $contact['name'] . '</id>';
@@ -433,6 +435,11 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				$arr['object'] .= xmlify('<link rel="photo" type="image/jpeg" href="' . $contact['thumb'] . '" />' . "\n");
 				$arr['object'] .= '</link></object>' . "\n";
 				$arr['last-child'] = 1;
+
+				$arr['allow_cid'] = $user[0]['allow_cid'];
+				$arr['allow_gid'] = $user[0]['allow_gid'];
+				$arr['deny_cid']  = $user[0]['deny_cid'];
+				$arr['deny_gid']  = $user[0]['deny_gid'];
 
 				$i = item_store($arr);
 				if($i)
@@ -491,7 +498,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			dbesc($node));
 
 		if(! count($r)) {
-			$message = t('No user record found for ') . '\'' . $node . '\'';
+			$message = sprintf(t('No user record found for \'%s\' '), $node);
 			xml_status(3,$message); // failure
 			// NOTREACHED
 		}
@@ -632,8 +639,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		if((count($r)) && ($r[0]['notify-flags'] & NOTIFY_CONFIRM)) {
 
 			$tpl = (($new_relation == REL_BUD) 
-				? load_view_file('view/friend_complete_eml.tpl')
-				: load_view_file('view/intro_complete_eml.tpl'));
+				? get_intltext_template('friend_complete_eml.tpl')
+				: get_intltext_template('intro_complete_eml.tpl'));
 		
 			$email_tpl = replace_macros($tpl, array(
 				'$sitename' => $a->config['sitename'],
@@ -645,8 +652,12 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				'$uid' => $newuid )
 			);
 	
-			$res = mail($r[0]['email'], t("Connection accepted at ") . $a->config['sitename'],
-				$email_tpl, 'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] );
+			$res = mail($r[0]['email'], sprintf( t("Connection accepted at %s") , $a->config['sitename']),
+				$email_tpl,
+				'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+				. 'Content-type: text/plain; charset=UTF-8' . "\n"
+				. 'Content-transfer-encoding: 8bit' );
+
 			if(!$res) {
 				// pointless throwing an error here and confusing the person at the other end of the wire.
 			}

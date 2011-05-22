@@ -1,15 +1,27 @@
 <?php
 
 set_time_limit(0);
+ini_set('pcre.backtrack_limit', 250000);
 
-define ( 'FRIENDIKA_VERSION',      '2.1.915' );
-define ( 'DFRN_PROTOCOL_VERSION',  '2.1'  );
-define ( 'DB_UPDATE_VERSION',      1040   );
+
+define ( 'FRIENDIKA_VERSION',      '2.2.987' );
+define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
+define ( 'DB_UPDATE_VERSION',      1054      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
 define ( 'DOWN_ARROW',             '&#x21e9;'       );
-         
+
+/**
+ *
+ * Image storage quality. Lower numbers save space at cost of image detail.
+ * For ease of upgrade, please do not change here. Change jpeg quality with 
+ * set_config('system','jpeg_quality',n) in .htconfig.php
+ * where n is netween 1 and 100, and with very poor results below about 50 
+ *
+ */
+
+define ( 'JPEG_QUALITY',            100  );         
 
 /**
  * SSL redirection policies
@@ -72,6 +84,18 @@ define ( 'PAGE_NORMAL',            0 );
 define ( 'PAGE_SOAPBOX',           1 );
 define ( 'PAGE_COMMUNITY',         2 );
 define ( 'PAGE_FREELOVE',          3 );
+
+/**
+ * Network and protocol family types 
+ */
+
+define ( 'NETWORK_DFRN',             'dfrn');    // Friendika, Mistpark, other DFRN implementations
+define ( 'NETWORK_OSTATUS',          'stat');    // status.net, identi.ca, GNU-social, other OStatus implementations
+define ( 'NETWORK_FEED',             'feed');    // RSS/Atom feeds with no known "post/notify" protocol
+define ( 'NETWORK_DIASPORA',         'dspr');    // Diaspora
+define ( 'NETWORK_MAIL',             'mail');    // IMAP/POP
+define ( 'NETWORK_FACEBOOK',         'face');    // Facebook API     
+
 
 /**
  * Maximum number of "people who like (or don't like) this"  that we will list by name
@@ -159,6 +183,11 @@ if (get_magic_quotes_gpc()) {
     unset($process);
 }
 
+/*
+ * translation system
+ */
+require_once("include/pgettext.php");
+
 
 /**
  *
@@ -184,6 +213,8 @@ class App {
 	public  $user;
 	public  $cid;
 	public  $contact;
+	public  $contacts;
+	public  $page_contact;
 	public  $content;
 	public  $data;
 	public  $error = false;
@@ -259,7 +290,7 @@ class App {
 		$this->argv = explode('/',$this->cmd);
 		$this->argc = count($this->argv);
 		if((array_key_exists('0',$this->argv)) && strlen($this->argv[0])) {
-			$this->module = $this->argv[0];
+			$this->module = str_replace(".", "_", $this->argv[0]);
 		}
 		else {
 			$this->module = 'home';
@@ -272,7 +303,7 @@ class App {
 
 		if($this->cmd === '.well-known/host-meta') {
 			require_once('include/hostxrd.php');
-			hostxrd($this->hostname);
+			hostxrd($this->get_baseurl());
 			// NOTREACHED
 		}
 
@@ -347,10 +378,12 @@ class App {
 
 	function init_pagehead() {
 		$this->page['title'] = $this->config['sitename'];
-		$tpl = load_view_file("view/head.tpl");
+		$tpl = file_get_contents('view/head.tpl');
 		$this->page['htmlhead'] = replace_macros($tpl,array(
-			'$baseurl' => $this->get_baseurl() . '/',
-			'$generator' => 'Friendika' . ' ' . FRIENDIKA_VERSION
+			'$baseurl' => $this->get_baseurl(),
+			'$generator' => 'Friendika' . ' ' . FRIENDIKA_VERSION,
+			'$delitem' => t('Delete this item?'),
+			'$comment' => t('Comment')
 		));
 	}
 
@@ -430,15 +463,18 @@ function check_config(&$a) {
 
 	load_config('system');
 
-	if(! x($_SERVER,'SERVER_NAME'))
-		return;
-
 	$build = get_config('system','build');
 	if(! x($build))
 		$build = set_config('system','build',DB_UPDATE_VERSION);
 
 	$url = get_config('system','url');
-	if(! x($url))
+
+	// if the url isn't set or the stored url is radically different 
+	// than the currently visited url, store the current value accordingly.
+	// "Radically different" ignores common variations such as http vs https 
+	// and www.example.com vs example.com.
+
+	if((! x($url)) || (! link_compare($url,$a->get_baseurl())))
 		$url = set_config('system','url',$a->get_baseurl());
 
 	if($build != DB_UPDATE_VERSION) {
@@ -585,43 +621,16 @@ function reload_plugins() {
 // For instance if 'test' => "foo" and 'testing' => "bar", testing could become either bar or fooing, 
 // depending on the order in which they were declared in the array.   
 
+require_once("include/template_processor.php");
+
 if(! function_exists('replace_macros')) {  
 function replace_macros($s,$r) {
+	global $t;
+	
+	return $t->replace($s,$r);
 
-	$search = array();
-	$replace = array();
-
-	if(is_array($r) && count($r)) {
-		foreach ($r as $k => $v ) {
-			$search[] =  $k;
-			$replace[] = $v;
-		}
-	}
-	return str_replace($search,$replace,$s);
 }}
 
-
-// load string translation table for alternate language
-
-if(! function_exists('load_translation_table')) {
-function load_translation_table($lang) {
-	global $a;
-
-	if(file_exists("view/$lang/strings.php"))
-		include("view/$lang/strings.php");
-}}
-
-// translate string if translation exists
-
-if(! function_exists('t')) {
-function t($s) {
-
-	$a = get_app();
-
-	if(x($a->strings,$s))
-		return $a->strings[$s];
-	return $s;
-}}
 
 // curl wrapper. If binary flag is true, return binary
 // results. 
@@ -819,7 +828,7 @@ function escape_tags($string) {
 if(! function_exists('login')) {
 function login($register = false) {
 	$o = "";
-	$register_tpl = (($register) ? load_view_file("view/register-link.tpl") : "");
+	$register_tpl = (($register) ? get_markup_template("register-link.tpl") : "");
 	
 	$register_html = replace_macros($register_tpl,array(
 		'$title' => t('Create a New Account'),
@@ -843,14 +852,16 @@ function login($register = false) {
 	$lostlink = t('Password Reset');
 
 	if(local_user()) {
-		$tpl = load_view_file("view/logout.tpl");
+		$tpl = get_markup_template("logout.tpl");
 	}
 	else {
-		$tpl = load_view_file("view/login.tpl");
+		$tpl = get_markup_template("login.tpl");
 
 	}
-	
-	$o = replace_macros($tpl,array(
+
+	$o = '<script type="text/javascript"> $(document).ready(function() { $("#login-name").focus();} );</script>';	
+
+	$o .= replace_macros($tpl,array(
 		'$logout'        => t('Logout'),
 		'$register_html' => $register_html, 
 		'$classname'     => $classname,
@@ -1085,6 +1096,7 @@ function paginate(&$a) {
 	$stripped = preg_replace('/(&page=[0-9]*)/','',$a->query_string);
 	$stripped = str_replace('q=','',$stripped);
 	$stripped = trim($stripped,'/');
+	$pagenum = $a->pager['page'];
 	$url = $a->get_baseurl() . '/' . $stripped;
 
 
@@ -1097,7 +1109,7 @@ function paginate(&$a) {
 
     		$numpages = $a->pager['total'] / $a->pager['itemspage'];
 
-		$numstart = 1;
+			$numstart = 1;
     		$numstop = $numpages;
 
     		if($numpages > 14) {
@@ -1221,6 +1233,7 @@ function set_config($family,$key,$value) {
 	global $a;
 
 	if(get_config($family,$key,true) === false) {
+		$a->config[$family][$key] = $value;
 		$ret = q("INSERT INTO `config` ( `cat`, `k`, `v` ) VALUES ( '%s', '%s', '%s' ) ",
 			dbesc($family),
 			dbesc($key),
@@ -1315,6 +1328,7 @@ function set_pconfig($uid,$family,$key,$value) {
 	global $a;
 
 	if(get_pconfig($uid,$family,$key,true) === false) {
+		$a->config[$uid][$family][$key] = $value;
 		$ret = q("INSERT INTO `pconfig` ( `uid`, `cat`, `k`, `v` ) VALUES ( %d, '%s', '%s', '%s' ) ",
 			intval($uid),
 			dbesc($family),
@@ -1492,7 +1506,9 @@ function lrdd($uri) {
 		return array();
 
 	logger('lrdd: host_meta: ' . $xml, LOGGER_DATA);
-	$h = simplexml_load_string($xml);
+
+	$h = parse_xml_string($xml);
+
 	$arr = convert_xml_element_to_array($h);
 
 	if(isset($arr['xrd']['property'])) {
@@ -1564,16 +1580,19 @@ function lrdd($uri) {
 	$headers = $a->get_curl_headers();
 	logger('lrdd: headers=' . $headers, LOGGER_DEBUG);
 
-	require_once('library/HTML5/Parser.php');
-	$dom = @HTML5_Parser::parse($html);
+	// don't try and parse raw xml as html
+	if(! strstr($html,'<?xml')) {
+		require_once('library/HTML5/Parser.php');
+		$dom = @HTML5_Parser::parse($html);
 
-	if($dom) {
-		$items = $dom->getElementsByTagName('link');
-		foreach($items as $item) {
-			$x = $item->getAttribute('rel');
-			if($x == "lrdd") {
-				$pagelink = $item->getAttribute('href');
-				break;
+		if($dom) {
+			$items = $dom->getElementsByTagName('link');
+			foreach($items as $item) {
+				$x = $item->getAttribute('rel');
+				if($x == "lrdd") {
+					$pagelink = $item->getAttribute('href');
+					break;
+				}
 			}
 		}
 	}
@@ -1620,9 +1639,15 @@ function lrdd($uri) {
 if(! function_exists('fetch_lrdd_template')) {
 function fetch_lrdd_template($host) {
 	$tpl = '';
-	$url = 'http://' . $host . '/.well-known/host-meta' ;
-	$links = fetch_xrd_links($url);
-logger('template: ' . print_r($links,true));
+
+	$url1 = 'https://' . $host . '/.well-known/host-meta' ;
+	$url2 = 'http://' . $host . '/.well-known/host-meta' ;
+	$links = fetch_xrd_links($url1);
+	logger('template (https): ' . print_r($links,true));
+	if(! count($links)) {
+		$links = fetch_xrd_links($url2);
+		logger('template (http): ' . print_r($links,true));
+	}
 	if(count($links)) {
 		foreach($links as $link)
 			if($link['@attributes']['rel'] && $link['@attributes']['rel'] === 'lrdd')
@@ -1646,7 +1671,7 @@ function fetch_xrd_links($url) {
 		return array();
 
 	logger('fetch_xrd_links: ' . $xml, LOGGER_DATA);
-	$h = simplexml_load_string($xml);
+	$h = parse_xml_string($xml);
 	$arr = convert_xml_element_to_array($h);
 
 	$links = array();
@@ -1834,50 +1859,61 @@ function allowed_email($email) {
 	return $found;
 }}
 
-// Format the like/dislike text for a profile item
-// $cnt = number of people who like/dislike the item
-// $arr = array of pre-linked names of likers/dislikers
-// $type = one of 'like, 'dislike'
-// $id  = item id
-// returns formatted text
-
-if(! function_exists('format_like')) {
-function format_like($cnt,$arr,$type,$id) {
-	$o = '';
-	if($cnt == 1)
-		$o .= $arr[0] . (($type === 'like') ? t(' likes this.') : t(' doesn\'t like this.')) . EOL ;
-	else {
-		$o .= '<span class="fakelink" onclick="openClose(\'' . $type . 'list-' . $id . '\');" >' 
-			. $cnt . ' ' . t('people') . '</span> ' . (($type === 'like') ? t('like this.') : t('don\'t like this.')) . EOL ;
-		$total = count($arr);
-		if($total >= MAX_LIKERS)
-			$arr = array_slice($arr, 0, MAX_LIKERS - 1);
-		if($total < MAX_LIKERS)
-			$arr[count($arr)-1] = t('and') . ' ' . $arr[count($arr)-1];
-		$str = implode(', ', $arr);
-		if($total >= MAX_LIKERS)
-			$str .= t(', and ') . $total - MAX_LIKERS . t(' other people');
-		$str .= (($type === 'like') ? t(' like this.') : t(' don\'t like this.'));
-		$o .= "\t" . '<div id="' . $type . 'list-' . $id . '" style="display: none;" >' . $str . '</div>';
-	}
-	return $o;
-}}
 
 
 // wrapper to load a view template, checking for alternate
 // languages before falling back to the default
 
+// obsolete, deprecated.
+
 if(! function_exists('load_view_file')) {
 function load_view_file($s) {
+	global $lang, $a;
+	if(! isset($lang))
+		$lang = 'en';
 	$b = basename($s);
 	$d = dirname($s);
-	$lang = get_config('system','language');
-	if($lang === false)
-		$lang = 'en';
 	if(file_exists("$d/$lang/$b"))
 		return file_get_contents("$d/$lang/$b");
+	
+	$theme = current_theme();
+	
+	if(file_exists("$d/theme/$theme/$b"))
+		return file_get_contents("$d/theme/$theme/$b");
+			
 	return file_get_contents($s);
 }}
+
+if(! function_exists('get_intltext_template')) {
+function get_intltext_template($s) {
+	global $lang;
+
+	if(! isset($lang))
+		$lang = 'en';
+
+	if(file_exists("view/$lang/$s"))
+		return file_get_contents("view/$lang/$s");
+	elseif(file_exists("view/en/$s"))
+		return file_get_contents("view/en/$s");
+	else
+		return file_get_contents("view/$s");
+}}
+
+if(! function_exists('get_markup_template')) {
+function get_markup_template($s) {
+
+	$theme = current_theme();
+	
+	if(file_exists("view/theme/$theme/$s"))
+		return file_get_contents("view/theme/$theme/$s");
+	else
+		return file_get_contents("view/$s");
+
+}}
+
+
+
+
 
 // for html,xml parsing - let's say you've got
 // an attribute foobar="class1 class2 class3"
@@ -1959,29 +1995,6 @@ return str_replace ("%","=",rawurlencode($s));
 }} 
 
 
-if(! function_exists('like_puller')) {
-function like_puller($a,$item,&$arr,$mode) {
-
-	$url = '';
-	$sparkle = '';
-	$verb = (($mode === 'like') ? ACTIVITY_LIKE : ACTIVITY_DISLIKE);
-
-	if((activity_match($item['verb'],$verb)) && ($item['id'] != $item['parent'])) {
-		$url = $item['author-link'];
-		if((local_user()) && (local_user() == $item['uid']) && ($item['network'] === 'dfrn') && (! $item['self']) && (link_compare($item['author-link'],$item['url']))) {
-			$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
-			$sparkle = ' class="sparkle" ';
-		}
-		if(! ((isset($arr[$item['parent'] . '-l'])) && (is_array($arr[$item['parent'] . '-l']))))
-			$arr[$item['parent'] . '-l'] = array();
-		if(! isset($arr[$item['parent']]))
-			$arr[$item['parent']] = 1;
-		else	
-			$arr[$item['parent']] ++;
-		$arr[$item['parent'] . '-l'][] = '<a href="'. $url . '"'. $sparkle .'>' . $item['author-name'] . '</a>';
-	}
-	return;
-}}
 
 if(! function_exists('get_mentions')) {
 function get_mentions($item) {
@@ -2026,20 +2039,9 @@ function contact_block() {
 			intval($shown)
 	);
 	if(count($r)) {
-		$o .= '<h4 class="contact-h4">' . $total . ' ' . t('Contacts') . '</h4><div id="contact-block">';
+		$o .= '<h4 class="contact-h4">' .  sprintf( tt('%d Contact','%d Contacts', $total),$total) . '</h4><div id="contact-block">';
 		foreach($r as $rr) {
-			$redirect_url = $a->get_baseurl() . '/redir/' . $rr['id'];
-			if(local_user() && ($rr['uid'] == local_user())
-				&& ($rr['network'] === 'dfrn')) {
-				$url = $redirect_url;
-				$sparkle = ' sparkle';
-			}
-			else {
-				$url = $rr['url'];
-				$sparkle = '';
-			}
-
-			$o .= '<div class="contact-block-div"><a class="contact-block-link' . $sparkle . '" href="' . $url . '" ><img class="contact-block-img' . $sparkle . '" src="' . $rr['micro'] . '" title="' . $rr['name'] . ' [' . $rr['url'] . ']" alt="' . $rr['name'] . '" /></a></div>' . "\r\n";
+			$o .= micropro($rr,true,'mpfriend');
 		}
 		$o .= '</div><div id="contact-block-end"></div>';
 		$o .=  '<div id="viewcontacts"><a id="viewcontacts-link" href="viewcontacts/' . $a->profile['nickname'] . '">' . t('View Contacts') . '</a></div>';
@@ -2052,6 +2054,44 @@ function contact_block() {
 	return $o;
 
 }}
+
+if(! function_exists('micropro')) {
+function micropro($contact, $redirect = false, $class = '', $textmode = false) {
+
+	if($class)
+		$class = ' ' . $class;
+
+	$url = $contact['url'];
+	$sparkle = '';
+
+	if($redirect) {
+		$a = get_app();
+		$redirect_url = $a->get_baseurl() . '/redir/' . $contact['id'];
+		if(local_user() && ($contact['uid'] == local_user()) && ($contact['network'] === 'dfrn')) {
+			$url = $redirect_url;
+			$sparkle = ' sparkle';
+		}
+	}
+	$click = ((x($contact,'click')) ? ' onclick="' . $contact['click'] . '" ' : '');
+	if($click)
+		$url = '';
+	if($textmode) {
+		return '<div class="contact-block-textdiv' . $class . '"><a class="contact-block-link' . $class . $sparkle 
+			. (($click) ? ' fakelink' : '') . '" '
+			. (($url) ? ' href="' . $url . '"' : '') . $click
+			. '" title="' . $contact['name'] . ' [' . $contact['url'] . ']" alt="' . $contact['name'] 
+			. '" >'. $contact['name'] . '</a></div>' . "\r\n";
+	}
+	else {
+		return '<div class="contact-block-div' . $class . '"><a class="contact-block-link' . $class . $sparkle 
+			. (($click) ? ' fakelink' : '') . '" '
+			. (($url) ? ' href="' . $url . '"' : '') . $click . ' ><img class="contact-block-img' . $class . $sparkle . '" src="' 
+			. $contact['micro'] . '" title="' . $contact['name'] . ' [' . $contact['url'] . ']" alt="' . $contact['name'] 
+			. '" /></a></div>' . "\r\n";
+	}
+}}
+
+
 
 if(! function_exists('search')) {
 function search($s) {
@@ -2144,7 +2184,7 @@ function smilies($s) {
 	$a = get_app();
 
 	return str_replace(
-	array( '&lt;3', '&lt;/3', '&lt;\\3', ':-)', ';-)', ':-(', ':(', ':-P', ':-"', ':-x', ':-X', ':-D', '8-|', '8-O'),
+	array( '&lt;3', '&lt;/3', '&lt;\\3', ':-)', ';-)', ':-(', ':(', ':-P', ':P', ':-"', ':-x', ':-X', ':-D', '8-|', '8-O'),
 	array(
 		'<img src="' . $a->get_baseurl() . '/images/smiley-heart.gif" alt="<3" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-brokenheart.gif" alt="</3" />',
@@ -2154,6 +2194,7 @@ function smilies($s) {
 		'<img src="' . $a->get_baseurl() . '/images/smiley-frown.gif" alt=":-(" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-frown.gif" alt=":(" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-tongue-out.gif" alt=":-P" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-tongue-out.gif" alt=":P" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-\"" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-x" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-X" />',
@@ -2271,8 +2312,15 @@ function profile_sidebar($profile) {
 
 	$photo = '<div id="profile-photo-wrapper"><img class="photo" src="' . $profile['photo'] . '" alt="' . $profile['name'] . '" /></div>';
 
+	// don't show connect link to yourself
+	
 	$connect = (($profile['uid'] != local_user()) ? '<li><a id="dfrn-request-link" href="dfrn_request/' . $profile['nickname'] . '">' . t('Connect') . '</a></li>' : '');
- 
+
+	// don't show connect link to authenticated visitors either
+
+	if((remote_user()) && ($_SESSION['visitor_visiting'] == $profile['uid']))
+		$connect = ''; 
+
 	if((x($profile,'address') == 1) 
 		|| (x($profile,'locality') == 1) 
 		|| (x($profile,'region') == 1) 
@@ -2297,11 +2345,11 @@ function profile_sidebar($profile) {
 
 	$pubkey = ((x($profile,'pubkey') == 1) ? '<div class="key" style="display:none;">' . $profile['pubkey'] . '</div>' : '');
 
-	$marital = ((x($profile,'marital') == 1) ? '<div class="marital"><span class="marital-label"><span class="heart">&hearts;</span> ' . t('Status:') . ' </span><span class="marital-text">' . $profile['marital'] . '</span></div></div><div class="profile-clear"></div>' : '');
+	$marital = ((x($profile,'marital') == 1) ? '<div class="marital"><span class="marital-label"><span class="heart">&hearts;</span> ' . t('Status:') . ' </span><span class="marital-text">' . $profile['marital'] . '</span></div><div class="profile-clear"></div>' : '');
 
-	$homepage = ((x($profile,'homepage') == 1) ? '<div class="homepage"><span class="homepage-label">' . t('Homepage:') . ' </span><span class="homepage-url">' . linkify($profile['homepage']) . '</span></div></div><div class="profile-clear"></div>' : '');
+	$homepage = ((x($profile,'homepage') == 1) ? '<div class="homepage"><span class="homepage-label">' . t('Homepage:') . ' </span><span class="homepage-url">' . linkify($profile['homepage']) . '</span></div><div class="profile-clear"></div>' : '');
 
-	$tpl = load_view_file('view/profile_vcard.tpl');
+	$tpl = get_markup_template('profile_vcard.tpl');
 
 	$o .= replace_macros($tpl, array(
 		'$fullname' => $fullname,
@@ -2409,9 +2457,7 @@ function get_birthdays() {
 	if(! local_user())
 		return $o;
 
-	$bd_format = get_config('system','birthday_format');
-	if(! $bd_format)
-		$bd_format = 'g A l F d' ; // 8 AM Friday January 18
+	$bd_format = t('g A l F d') ; // 8 AM Friday January 18
 
 	$r = q("SELECT `event`.*, `event`.`id` AS `eid`, `contact`.* FROM `event` 
 		LEFT JOIN `contact` ON `contact`.`id` = `event`.`cid` 
@@ -2423,25 +2469,39 @@ function get_birthdays() {
 	);
 
 	if($r && count($r)) {
-		$o .= '<div id="birthday-wrapper"><div id="birthday-title">' . t('Birthdays this week:') . '</div>'; 
-		$o .= '<div id="birthday-adjust">' . t("\x28Adjusted for local time\x29") . '</div>';
-		$o .= '<div id="birthday-title-end"></div>';
+		$total = 0;
+		foreach($r as $rr)
+			if(strlen($rr['name']))
+				$total ++;
 
-		foreach($r as $rr) {
-			$now = strtotime('now');
-			$today = (((strtotime($rr['start'] . ' +00:00') < $now) && (strtotime($rr['finish'] . ' +00:00') > $now)) ? true : false); 
+		if($total) {
+			$o .= '<div id="birthday-notice" class="birthday-notice fakelink" onclick=openClose(\'birthday-wrapper\'); >' . t('Birthday Reminders') . ' ' . '(' . $total . ')' . '</div>'; 
+			$o .= '<div id="birthday-wrapper" style="display: none;" ><div id="birthday-title">' . t('Birthdays this week:') . '</div>'; 
+			$o .= '<div id="birthday-adjust">' . t("\x28Adjusted for local time\x29") . '</div>';
+			$o .= '<div id="birthday-title-end"></div>';
 
-			$o .= '<div class="birthday-list" id="birthday-' . $rr['eid'] . '"><a class="sparkle" href="' 
-			. $a->get_baseurl() . '/redir/'  . $rr['cid'] . '">' . $rr['name'] . '</a> ' 
-			. day_translate(datetime_convert('UTC', $a->timezone, $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '')
-			. '</div>' ;
+			foreach($r as $rr) {
+				if(! strlen($rr['name']))
+					continue;
+				$now = strtotime('now');
+				$today = (((strtotime($rr['start'] . ' +00:00') < $now) && (strtotime($rr['finish'] . ' +00:00') > $now)) ? true : false); 
+	
+				$o .= '<div class="birthday-list" id="birthday-' . $rr['eid'] . '"><a class="sparkle" href="' 
+				. $a->get_baseurl() . '/redir/'  . $rr['cid'] . '">' . $rr['name'] . '</a> ' 
+				. day_translate(datetime_convert('UTC', $a->timezone, $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '')
+				. '</div>' ;
+			}
+			$o .= '</div></div>';
 		}
-
-		$o .= '</div>';
 	}
+	return $o;
+}}
 
-  return $o;
 
+if(! function_exists('normalise_link')) {
+function normalise_link($url) {
+	$ret = str_replace(array('https:','//www.'), array('http:','//'), $url);
+	return(rtrim($ret,'/'));
 }}
 
 /**
@@ -2457,9 +2517,7 @@ function get_birthdays() {
 
 if(! function_exists('link_compare')) {
 function link_compare($a,$b) {
-	$a1 = str_replace(array('https:','//www.'), array('http:','//'), $a);
-	$b1 = str_replace(array('https:','//www.'), array('http:','//'), $b);
-	if(strcasecmp($a1,$b1) === 0)
+	if(strcasecmp(normalise_link($a),normalise_link($b)) === 0)
 		return true;
 	return false;
 }}
@@ -2512,34 +2570,38 @@ function proc_run($cmd){
 	proc_close(proc_open($cmdline." &",array(),$foo));
 }}
 
-/*
- * Return full URL to theme which is currently in effect.
- * Provide a sane default if nothing is chosen or the specified theme does not exist.
- */
-
-if(! function_exists('current_theme_url')) {
-function current_theme_url() {
-
+if(! function_exists('current_theme')) {
+function current_theme(){
 	$app_base_themes = array('duepuntozero', 'loozah');
-
+	
 	$a = get_app();
-
+	
 	$system_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : '');
-	$theme_name = ((x($_SESSION,'theme')) ? $_SESSION['theme'] : $system_theme);
-
+	$theme_name = ((is_array($_SESSION) && x($_SESSION,'theme')) ? $_SESSION['theme'] : $system_theme);
+	
 	if($theme_name && file_exists('view/theme/' . $theme_name . '/style.css'))
-		return($a->get_baseurl() . '/view/theme/' . $theme_name . '/style.css'); 
-
+		return($theme_name);
+	
 	foreach($app_base_themes as $t) {
 		if(file_exists('view/theme/' . $t . '/style.css'))
-			return($a->get_baseurl() . '/view/theme/' . $t . '/style.css'); 
-	}	
-
+			return($t);
+	}
+	
 	$fallback = glob('view/theme/*/style.css');
 	if(count($fallback))
-		return($a->get_baseurl() . $fallback[0]);
+		return (str_replace('view/theme/','', str_replace("/style.css","",$fallback[0])));
 
-	
+}}
+
+/*
+* Return full URL to theme which is currently in effect.
+* Provide a sane default if nothing is chosen or the specified theme does not exist.
+*/
+if(! function_exists('current_theme_url')) {
+function current_theme_url() {
+	global $a;
+	$t = current_theme();
+	return($a->get_baseurl() . '/view/theme/' . $t . '/style.css');
 }}
 
 if(! function_exists('feed_birthday')) {
@@ -2630,7 +2692,7 @@ if(! function_exists('get_plink')) {
 function get_plink($item) {
 	$a = get_app();	
 	$plink = (((x($item,'plink')) && (! $item['private'])) ? '<div class="wall-item-links-wrapper"><a href="' 
-			. $item['plink'] . '" title="' . t('link to source') . '" target="external-link" ><img src="' . $a->get_baseurl() . '/images/remote-link.gif" alt="' . t('link to source') . '" /></a></div>' : '');
+			. $item['plink'] . '" title="' . t('link to source') . '" target="external-link" class="icon remote-link"></a></div>' : '');
 	return $plink;
 }}
 
@@ -2639,29 +2701,46 @@ function unamp($s) {
 	return str_replace('&amp;', '&', $s);
 }}
 
-if(! function_exists('extract_item_authors')) {
-function extract_item_authors($arr,$uid) {
 
-	if((! $uid) || (! is_array($arr)) || (! count($arr)))
-		return array();
-	$urls = array();
-	foreach($arr as $rr) {
-		if(! in_array("'" . dbesc($rr['author-link']) . "'",$urls))
-			$urls[] = "'" . dbesc($rr['author-link']) . "'";
-	}
-
-	// pre-quoted, don't put quotes on %s
-	if(count($urls)) {
-		$r = q("SELECT `id`,`url` FROM `contact` WHERE `uid` = %d AND `url` IN ( %s ) AND `network` = 'dfrn' AND `self` = 0 AND `blocked` = 0 ",
-			intval($uid),
-			implode(',',$urls)
-		);
-		if(count($r)) {
-			$ret = array();
-			foreach($r as $rr)
-				$ret[$rr['url']] = $rr['id'];
-			return $ret;
+if(! function_exists('lang_selector')) {
+function lang_selector() {
+	global $lang;
+	$o .= '<div id="language-selector" style="display: none;" >';
+	$o .= '<form action="" method="post" ><select name="system_language" onchange="this.form.submit();" >';
+	$langs = glob('view/*/strings.php');
+	if(is_array($langs) && count($langs)) {
+		if(! in_array('view/en/strings.php',$langs))
+			$langs[] = 'view/en/';
+		foreach($langs as $l) {
+			$ll = substr($l,5);
+			$ll = substr($ll,0,strrpos($ll,'/'));
+			$selected = (($ll === $lang) ? ' selected="selected" ' : '');
+			$o .= '<option value="' . $ll . '"' . $selected . '>' . $ll . '</option>';
 		}
 	}
-	return array();		
+	$o .= '</select></form></div>';
+	return $o;
+}}
+
+
+if(! function_exists('parse_xml_string')) {
+function parse_xml_string($s) {
+	if(! strstr($s,'<?xml'))
+		return false;
+	$s2 = substr($s,strpos($s,'<?xml'));
+	libxml_use_internal_errors(true);
+	$x = @simplexml_load_string($s2);
+	if(count(libxml_get_errors()))
+		foreach(libxml_get_errors() as $err)
+			logger('libxml: parse: ' . $err->code." at ".$err->line.":".$err->column." : ".$err->message, LOGGER_DATA);
+	libxml_clear_errors();
+	return $x;
+}}
+
+if(! function_exists('is_site_admin')) {
+function is_site_admin() {
+	$a = get_app();
+	if(local_user() && x($a->user,'email') && x($a->config,'admin_email') && ($a->user['email'] === $a->config['admin_email']))
+		return true;
+	return false;
 }}

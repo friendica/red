@@ -90,18 +90,40 @@ function statusnet_settings_post ($a,$post) {
 	     * if the statusnet-disconnect checkbox is set, clear the statusnet configuration
 	     * TODO can we revoke the access tokens at Twitter and do we need to do so?
 	     */
-            del_pconfig( local_user(), 'statusnet', 'consumerkey'  );
-	    del_pconfig( local_user(), 'statusnet', 'consumersecret' );
-	    del_pconfig( local_user(), 'statusnet', 'post' );
-            del_pconfig( local_user(), 'statusnet', 'oauthtoken' );
+		del_pconfig( local_user(), 'statusnet', 'consumerkey'  );
+		del_pconfig( local_user(), 'statusnet', 'consumersecret' );
+		del_pconfig( local_user(), 'statusnet', 'post' );
+		del_pconfig( local_user(), 'statusnet', 'post_by_default' );
+        del_pconfig( local_user(), 'statusnet', 'oauthtoken' );
             del_pconfig( local_user(), 'statusnet', 'oauthsecret' );
             del_pconfig( local_user(), 'statusnet', 'baseapi' );
 	} else {
         if (isset($_POST['statusnet-consumersecret'])) {
-            set_pconfig(local_user(), 'statusnet', 'consumerkey', $_POST['statusnet-consumerkey']);
-            set_pconfig(local_user(), 'statusnet', 'consumersecret', $_POST['statusnet-consumersecret']);
-            set_pconfig(local_user(), 'statusnet', 'baseapi', $_POST['statusnet-baseapi']);
-            header('Location: '.$a->get_baseurl().'/settings/addon');
+            //  check if we can reach the API of the StatusNet server
+            //  we'll check the API Version for that, if we don't get one we'll try to fix the path but will
+            //  resign quickly after this one try to fix the path ;-)
+            $apibase = $_POST['statusnet-baseapi'];
+            $c = fetch_url( $apibase . 'statusnet/version.xml' );
+            if (strlen($c) > 0) {
+                //  ok the API path is correct, let's save the settings
+                set_pconfig(local_user(), 'statusnet', 'consumerkey', $_POST['statusnet-consumerkey']);
+                set_pconfig(local_user(), 'statusnet', 'consumersecret', $_POST['statusnet-consumersecret']);
+                set_pconfig(local_user(), 'statusnet', 'baseapi', $apibase );
+            } else {
+                //  the API path is not correct, maybe missing trailing / ?
+                $apibase = $apibase . '/';
+                $c = fetch_url( $apibase . 'statusnet/version.xml' );
+                if (strlen($c) > 0) {
+                    //  ok the API path is now correct, let's save the settings
+                    set_pconfig(local_user(), 'statusnet', 'consumerkey', $_POST['statusnet-consumerkey']);
+                    set_pconfig(local_user(), 'statusnet', 'consumersecret', $_POST['statusnet-consumersecret']);
+                    set_pconfig(local_user(), 'statusnet', 'baseapi', $apibase );
+                } else {
+                    //  still not the correct API base, let's do noting
+                    notice( t('We could not contact the StatusNet API with the Path you entered.').EOL );
+                }
+            }
+            goaway($a->get_baseurl().'/settings/addon');
         } else {
 	if (isset($_POST['statusnet-pin'])) {
 	    //  if the user supplied us with a PIN from Twitter, let the magic of OAuth happen
@@ -119,11 +141,13 @@ function statusnet_settings_post ($a,$post) {
 	    set_pconfig(local_user(),'statusnet', 'oauthsecret', $token['oauth_token_secret']);
             set_pconfig(local_user(),'statusnet', 'post', 1);
             //  reload the Addon Settings page, if we don't do it see Bug #42
-            header('Location: '.$a->get_baseurl().'/settings/addon');
+            goaway($a->get_baseurl().'/settings/addon');
 	} else {
 	    //  if no PIN is supplied in the POST variables, the user has changed the setting
 	    //  to post a tweet for every new __public__ posting to the wall
 	    set_pconfig(local_user(),'statusnet','post',intval($_POST['statusnet-enable']));
+	    set_pconfig(local_user(),'statusnet','post_by_default',intval($_POST['statusnet-default']));
+		notice( t('StatusNet settings updated.') . EOL);
 	}}}
 }
 function statusnet_settings(&$a,&$s) {
@@ -133,6 +157,7 @@ function statusnet_settings(&$a,&$s) {
 	/***
 	 * 1) Check that we have a base api url and a consumer key & secret
 	 * 2) If no OAuthtoken & stuff is present, generate button to get some
+         *    allow the user to cancel the connection process at this step
 	 * 3) Checkbox for "Send public notices (respect size limitation)
 	 */
         $api     = get_pconfig(local_user(), 'statusnet', 'baseapi');
@@ -140,8 +165,10 @@ function statusnet_settings(&$a,&$s) {
 	$csecret = get_pconfig(local_user(), 'statusnet', 'consumersecret' );
 	$otoken  = get_pconfig(local_user(), 'statusnet', 'oauthtoken'  );
 	$osecret = get_pconfig(local_user(), 'statusnet', 'oauthsecret' );
-        $enabled = get_pconfig(local_user(), 'statusnet', 'post');
+	$enabled = get_pconfig(local_user(), 'statusnet', 'post');
 	$checked = (($enabled) ? ' checked="checked" ' : '');
+	$defenabled = get_pconfig(local_user(),'statusnet','post_by_default');
+	$defchecked = (($defenabled) ? ' checked="checked" ' : '');
 	$s .= '<div class="settings-block">';
 	$s .= '<h3>'. t('StatusNet Posting Settings').'</h3>';
 
@@ -187,6 +214,13 @@ function statusnet_settings(&$a,&$s) {
 			$s .= '<input id="statusnet-token2" type="hidden" name="statusnet-token2" value="'.$request_token['oauth_token_secret'].'" />';
                         $s .= '</div><div class="clear"></div>';
                         $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
+                        $s .= '<h4>'.t('Cancel Connection Process').'</h4>';
+                        $s .= '<div id="statusnet-cancel-wrapper">';
+                        $s .= '<p>'.t('Current StatusNet API is').': '.$api.'</p>';
+                        $s .= '<label id="statusnet-cancel-label" for="statusnet-cancel">'. t('Cancel StatusNet Connection') . '</label>';
+                        $s .= '<input id="statusnet-cancel" type="checkbox" name="statusnet-disconnect" value="1" />';
+                        $s .= '</div><div class="clear"></div>';
+                        $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
 		} else {
 			/***
 			 *  we have an OAuth key / secret pair for the user
@@ -195,11 +229,15 @@ function statusnet_settings(&$a,&$s) {
 			$connection = new StatusNetOAuth($api,$ckey,$csecret,$otoken,$osecret);
 			$details = $connection->get('account/verify_credentials');
 			$s .= '<div id="statusnet-info" ><img id="statusnet-avatar" src="'.$details->profile_image_url.'" /><p id="statusnet-info-block">'. t('Currently connected to: ') .'<a href="'.$details->statusnet_profile_url.'" target="_statusnet">'.$details->screen_name.'</a><br /><em>'.$details->description.'</em></p></div>';
-			$s .= '<p>'. t('If enabled all your <strong>public</strong> postings will be posted to the associated StatusNet account as well.') .'</p>';
+			$s .= '<p>'. t('If enabled all your <strong>public</strong> postings will be posted to the associated StatusNet account.') .'</p>';
 			$s .= '<div id="statusnet-enable-wrapper">';
-			$s .= '<label id="statusnet-enable-label" for="statusnet-checkbox">'. t('Send public postings to StatusNet') .'</label>';
+			$s .= '<label id="statusnet-enable-label" for="statusnet-checkbox">'. t('Allow posting to StatusNet') .'</label>';
 			$s .= '<input id="statusnet-checkbox" type="checkbox" name="statusnet-enable" value="1" ' . $checked . '/>';
+			$s .= '<div class="clear"></div>';
+			$s .= '<label id="statusnet-default-label" for="statusnet-default">'. t('Send public postings to StatusNet by default') .'</label>';
+			$s .= '<input id="statusnet-default" type="checkbox" name="statusnet-default" value="1" ' . $defchecked . '/>';
 			$s .= '</div><div class="clear"></div>';
+
 			$s .= '<div id="statusnet-disconnect-wrapper">';
                         $s .= '<label id="statusnet-disconnect-label" for="statusnet-disconnect">'. t('Clear OAuth configuration') .'</label>';
                         $s .= '<input id="statusnet-disconnect" type="checkbox" name="statusnet-disconnect" value="1" />';

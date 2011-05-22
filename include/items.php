@@ -113,7 +113,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 	$items = $r;
 
-	$feed_template = load_view_file('view/atom_feed.tpl');
+	$feed_template = get_markup_template('atom_feed.tpl');
 
 	$atom = '';
 
@@ -180,7 +180,7 @@ function construct_activity_object($item) {
 
 	if($item['object']) {
 		$o = '<as:object>' . "\r\n";
-		$r = @simplexml_load_string($item['object']);
+		$r = parse_xml_string($item['object']);
 		if($r->type)
 			$o .= '<as:object-type>' . xmlify($r->type) . '</as:object-type>' . "\r\n";
 		if($r->id)
@@ -206,7 +206,7 @@ function construct_activity_target($item) {
 
 	if($item['target']) {
 		$o = '<as:target>' . "\r\n";
-		$r = @simplexml_load_string($item['target']);
+		$r = parse_xml_string($item['target']);
 		if($r->type)
 			$o .= '<as:object-type>' . xmlify($r->type) . '</as:object-type>' . "\r\n";
 		if($r->id)
@@ -241,8 +241,14 @@ function get_atom_elements($feed,$item) {
 	$res = array();
 
 	$author = $item->get_author();
-	$res['author-name'] = unxmlify($author->get_name());
-	$res['author-link'] = unxmlify($author->get_link());
+	if($author) { 
+		$res['author-name'] = unxmlify($author->get_name());
+		$res['author-link'] = unxmlify($author->get_link());
+	}
+	else {
+		$res['author-name'] = unxmlify($feed->get_title());
+		$res['author-link'] = unxmlify($feed->get_permalink());
+	}
 	$res['uri'] = unxmlify($item->get_id());
 	$res['title'] = unxmlify($item->get_title());
 	$res['body'] = unxmlify($item->get_content());
@@ -343,10 +349,12 @@ function get_atom_elements($feed,$item) {
 	// the wild, by sanitising it and converting supported tags to bbcode before we rip out any remaining 
 	// html.
 
-
 	if((strpos($res['body'],'<') !== false) || (strpos($res['body'],'>') !== false)) {
 
 		$res['body'] = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
+			'[youtube]$1[/youtube]', $res['body']);
+
+		$res['body'] = preg_replace('#<iframe[^>].+?' . 'http://www.youtube.com/embed/([A-Za-z0-9\-_=]+).+?</iframe>#s',
 			'[youtube]$1[/youtube]', $res['body']);
 
 		$res['body'] = oembed_html2bbcode($res['body']);
@@ -401,6 +409,17 @@ function get_atom_elements($feed,$item) {
 		$res['edited'] = $item->get_date('c');
 
 
+	// Disallow time travelling posts
+
+	$d1 = strtotime($res['created']);
+	$d2 = strtotime($res['edited']);
+	$d3 = strtotime('now');
+
+	if($d1 > $d3)
+		$res['created'] = datetime_convert();
+	if($d2 > $d3)
+		$res['edited'] = datetime_convert();
+
 	$rawowner = $item->get_item_tags(NAMESPACE_DFRN, 'owner');
 	if($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data'])
 		$res['owner-name'] = unxmlify($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data']);
@@ -440,7 +459,45 @@ function get_atom_elements($feed,$item) {
 	if((x($res,'verb')) && ($res['verb'] === 'http://ostatus.org/schema/1.0/unfollow'))
 		$res['verb'] = ACTIVITY_UNFOLLOW;
 
-		
+
+	$cats = $item->get_categories();
+	if($cats) {
+		$tag_arr = array();
+		foreach($cats as $cat) {
+			$term = $cat->get_term();
+			if(! $term)
+				$term = $cat->get_label();
+			$scheme = $cat->get_scheme();
+			if($scheme && $term && stristr($scheme,'X-DFRN:'))
+				$tag_arr[] = substr($scheme,7,1) . '[url=' . unxmlify(substr($scheme,9)) . ']' . unxmlify($term) . '[/url]';
+			elseif($term)
+				$tag_arr[] = notags(trim($term));
+		}
+		$res['tag'] =  implode(',', $tag_arr);
+	}
+
+	$attach = $item->get_enclosures();
+	if($attach) {
+		$att_arr = array();
+		foreach($attach as $att) {
+			$len   = intval($att->get_length());
+			$link  = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att->get_link()))));
+			$title = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att->get_title()))));
+			$type  = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att->get_type()))));
+			if(strpos($type,';'))
+				$type = substr($type,0,strpos($type,';'));
+			if((! $link) || (strpos($link,'http') !== 0))
+				continue;
+
+			if(! $title)
+				$title = ' ';
+			if(! $type)
+				$type = 'application/octet-stream';
+
+			$att_arr[] = '[attach]href="' . $link . '" size="' . $len . '" type="' . $type . '" title="' . $title . '"[/attach]'; 
+		}
+		$res['attach'] = implode(',', $att_arr);
+	}
 
 	$rawobj = $item->get_item_tags(NAMESPACE_ACTIVITY, 'object');
 
@@ -466,6 +523,10 @@ function get_atom_elements($feed,$item) {
 
 				$body = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
 					'[youtube]$1[/youtube]', $body);
+
+		$res['body'] = preg_replace('#<iframe[^>].+?' . 'http://www.youtube.com/embed/([A-Za-z0-9\-_=]+).+?</iframe>#s',
+			'[youtube]$1[/youtube]', $res['body']);
+
 
 				$config = HTMLPurifier_Config::createDefault();
 				$config->set('Cache.DefinitionImpl', null);
@@ -505,6 +566,9 @@ function get_atom_elements($feed,$item) {
 
 				$body = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
 					'[youtube]$1[/youtube]', $body);
+
+		$res['body'] = preg_replace('#<iframe[^>].+?' . 'http://www.youtube.com/embed/([A-Za-z0-9\-_=]+).+?</iframe>#s',
+			'[youtube]$1[/youtube]', $res['body']);
 
 				$config = HTMLPurifier_Config::createDefault();
 				$config->set('Cache.DefinitionImpl', null);
@@ -598,6 +662,8 @@ function item_store($arr,$force_parent = false) {
 	$arr['deny_gid']      = ((x($arr,'deny_gid'))      ? trim($arr['deny_gid'])              : '');
 	$arr['private']       = ((x($arr,'private'))       ? intval($arr['private'])             : 0 );
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
+	$arr['tag']           = ((x($arr,'tag'))           ? notags(trim($arr['tag']))           : '');
+	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : '');
 
 	if($arr['parent-uri'] === $arr['uri']) {
 		$parent_id = 0;
@@ -645,6 +711,7 @@ function item_store($arr,$force_parent = false) {
 				$parent_id = 0;
 				$arr['thr-parent'] = $arr['parent-uri'];
 				$arr['parent-uri'] = $arr['uri'];
+				$arr['gravity'] = 0;
 			}
 			else {
 				logger('item_store: item parent was not found - ignoring item');
@@ -702,6 +769,18 @@ function item_store($arr,$force_parent = false) {
 		intval($current_post)
 	);
 
+	/**
+	 * If this is now the last-child, force all _other_ children of this parent to *not* be last-child
+	 */
+
+	if($arr['last-child']) {
+		$r = q("UPDATE `item` SET `last-child` = 0 WHERE `parent-uri` = '%s' AND `uid` = %d AND `id` != %d",
+			dbesc($arr['uri']),
+			intval($arr['uid']),
+			intval($current_post)
+		);
+	}
+
 	return $current_post;
 }
 
@@ -739,7 +818,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	if(! $rino_enable)
 		$rino = 0;
 
-	$url = $contact['notify'] . '?dfrn_id=' . $idtosend . '&dfrn_version=' . DFRN_PROTOCOL_VERSION . (($rino) ? '&rino=1' : '');
+	$url = $contact['notify'] . '&dfrn_id=' . $idtosend . '&dfrn_version=' . DFRN_PROTOCOL_VERSION . (($rino) ? '&rino=1' : '');
 
 	logger('dfrn_deliver: ' . $url);
 
@@ -760,7 +839,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 		return 3;
 	}
 
-	$res = simplexml_load_string($xml);
+	$res = parse_xml_string($xml);
 
 	if((intval($res->status) != 0) || (! strlen($res->challenge)) || (! strlen($res->dfrn_id)))
 		return (($res->status) ? $res->status : 3);
@@ -799,14 +878,14 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	if($dissolve)
 		$postvars['dissolve'] = '1';
 
-	if(($contact['rel']) && ($contact['rel'] != REL_FAN) && (! $contact['blocked']) && (! $contact['readonly'])) {
+
+	if((($contact['rel']) && ($contact['rel'] != REL_FAN) && (! $contact['blocked'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
 		$postvars['data'] = $atom;
-	}
-	elseif($owner['page-flags'] == PAGE_COMMUNITY) {
-		$postvars['data'] = $atom;
+		$postvars['perm'] = 'rw';
 	}
 	else {
 		$postvars['data'] = str_replace('<dfrn:comment-allow>1','<dfrn:comment-allow>0',$atom);
+		$postvars['perm'] = 'r';
 	}
 
 	if($rino && $rino_allowed && (! $dissolve)) {
@@ -848,17 +927,15 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	if((! $curl_stat) || (! strlen($xml)))
 		return(-1); // timed out
 
-
 	if(strpos($xml,'<?xml') === false) {
 		logger('dfrn_deliver: phase 2: no valid XML returned');
 		logger('dfrn_deliver: phase 2: returned XML: ' . $xml, LOGGER_DATA);
 		return 3;
 	}
 
-	$res = simplexml_load_string($xml);
+	$res = parse_xml_string($xml);
 
-	return $res->status;
- 
+	return $res->status; 
 }
 
 
@@ -878,7 +955,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
  *
  */
 
-function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
+function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_feed = false) {
 
 	require_once('simplepie/simplepie.inc');
 
@@ -893,6 +970,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 	if($feed->error())
 		logger('consume_feed: Error parsing XML: ' . $feed->error());
 
+	$permalink = $feed->get_permalink();
 
 	// Check at the feed level for updated contact name and/or photo
 
@@ -1137,6 +1215,13 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 				$item_id  = $item->get_id();
 				$datarray = get_atom_elements($feed,$item);
 
+				if(! x($datarray,'author-name'))
+					$datarray['author-name'] = $contact['name'];
+				if(! x($datarray,'author-link'))
+					$datarray['author-link'] = $contact['url'];
+				if(! x($datarray,'author-avatar'))
+					$datarray['author-avatar'] = $contact['thumb'];
+
 				$r = q("SELECT `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['uid'])
@@ -1207,7 +1292,17 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 				// Head post of a conversation. Have we seen it? If not, import it.
 
 				$item_id  = $item->get_id();
+
 				$datarray = get_atom_elements($feed,$item);
+
+				if(is_array($contact)) {
+					if(! x($datarray,'author-name'))
+						$datarray['author-name'] = $contact['name'];
+					if(! x($datarray,'author-link'))
+						$datarray['author-link'] = $contact['url'];
+					if(! x($datarray,'author-avatar'))
+						$datarray['author-avatar'] = $contact['thumb'];
+				}
 
 				$r = q("SELECT `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
@@ -1252,7 +1347,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0) {
 				if(! is_array($contact))
 					return;
 
-				if($contact['network'] === 'stat') {
+				if($contact['network'] === 'stat' || stristr($permalink,'twitter.com')) {
 					if(strlen($datarray['title']))
 						unset($datarray['title']);
 					$datarray['last-child'] = 1;
@@ -1299,8 +1394,8 @@ function new_follower($importer,$contact,$datarray,$item) {
 		// create contact record - set to readonly
 
 		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `name`, `nick`, `photo`, `network`, `rel`, 
-			`blocked`, `readonly`, `pending` )
-			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, 0, 1, 1 ) ",
+			`blocked`, `readonly`, `pending`, `writable` )
+			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, 0, 1, 1, 1 ) ",
 			intval($importer['uid']),
 			dbesc(datetime_convert()),
 			dbesc($url),
@@ -1336,7 +1431,7 @@ function new_follower($importer,$contact,$datarray,$item) {
 		$a = get_app();
 		if(count($r)) {
 			if(($r[0]['notify-flags'] & NOTIFY_INTRO) && ($r[0]['page-flags'] == PAGE_NORMAL)) {
-				$email_tpl = load_view_file('view/follow_notify_eml.tpl');
+				$email_tpl = get_intltext_template('follow_notify_eml.tpl');
 				$email = replace_macros($email_tpl, array(
 					'$requestor' => ((strlen($name)) ? $name : t('[Name Withheld]')),
 					'$url' => $url,
@@ -1347,7 +1442,9 @@ function new_follower($importer,$contact,$datarray,$item) {
 				$res = mail($r[0]['email'], 
 					t("You have a new follower at ") . $a->config['sitename'],
 					$email,
-					'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] );
+					'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+					. 'Content-type: text/plain; charset=UTF-8' . "\n"
+					. 'Content-transfer-encoding: 8bit' );
 			
 			}
 		}
@@ -1426,17 +1523,24 @@ function atom_author($tag,$name,$uri,$h,$w,$photo) {
 
 function atom_entry($item,$type,$author,$owner,$comment = false) {
 
+	$a = get_app();
+
 	if($item['deleted'])
 		return '<at:deleted-entry ref="' . xmlify($item['uri']) . '" when="' . xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00',ATOM_TIME)) . '" />' . "\r\n";
 
-	$a = get_app();
+
+	if($item['allow_cid'] || $item['allow_gid'] || $item['deny_cid'] || $item['deny_gid'])
+		$body = fix_private_photos($item['body'],$owner['uid']);
+	else
+		$body = $item['body'];
+
 
 	$o = "\r\n\r\n<entry>\r\n";
 
 	if(is_array($author))
 		$o .= atom_author('author',$author['name'],$author['url'],80,80,$author['thumb']);
 	else
-		$o .= atom_author('author',$item['name'],$item['url'],80,80,$item['thumb']);
+		$o .= atom_author('author',(($item['author-name']) ? $item['author-name'] : $item['name']),(($item['author-link']) ? $item['author-link'] : $item['url']),80,80,(($item['author-avatar']) ? $item['author-avatar'] : $item['thumb']));
 	if(strlen($item['owner-name']))
 		$o .= atom_author('dfrn:owner',$item['owner-name'],$item['owner-link'],80,80,$item['owner-avatar']);
 
@@ -1447,8 +1551,8 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 	$o .= '<title>' . xmlify($item['title']) . '</title>' . "\r\n";
 	$o .= '<published>' . xmlify(datetime_convert('UTC','UTC',$item['created'] . '+00:00',ATOM_TIME)) . '</published>' . "\r\n";
 	$o .= '<updated>' . xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00',ATOM_TIME)) . '</updated>' . "\r\n";
-	$o .= '<dfrn:env>' . base64url_encode($item['body'], true) . '</dfrn:env>' . "\r\n";
-	$o .= '<content type="' . $type . '" >' . xmlify(($type === 'html') ? bbcode($item['body']) : $item['body']) . '</content>' . "\r\n";
+	$o .= '<dfrn:env>' . base64url_encode($body, true) . '</dfrn:env>' . "\r\n";
+	$o .= '<content type="' . $type . '" >' . xmlify(($type === 'html') ? bbcode($body) : $body) . '</content>' . "\r\n";
 	$o .= '<link rel="alternate" type="text/html" href="' . xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']) . '" />' . "\r\n";
 	if($comment)
 		$o .= '<dfrn:comment-allow>' . intval($item['last-child']) . '</dfrn:comment-allow>' . "\r\n";
@@ -1473,6 +1577,15 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 	if(strlen($actarg))
 		$o .= $actarg;
 
+	$tags = item_getfeedtags($item);
+	if(count($tags)) {
+		foreach($tags as $t) {
+			$o .= '<category scheme="X-DFRN:' . xmlify($t[0]) . ':' . xmlify($t[1]) . '" term="' . xmlify($t[2]) . '" />' . "\r\n";
+		}
+	}
+
+	$o .= item_getfeedattach($item);
+
 	$mentioned = get_mentions($item);
 	if($mentioned)
 		$o .= $mentioned;
@@ -1483,4 +1596,125 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 	
 	return $o;
 }
+
+function fix_private_photos($s,$uid) {
+	$a = get_app();
+	logger('fix_private_photos');
+
+	if(preg_match("/\[img\](.+?)\[\/img\]/is",$s,$matches)) {
+		$image = $matches[1];
+		logger('fix_private_photos: found photo ' . $image);
+		if(stristr($image ,$a->get_baseurl() . '/photo/')) {
+			$i = basename($image);
+			$i = str_replace('.jpg','',$i);
+			$x = strpos($i,'-');
+			if($x) {
+				$res = substr($i,$x+1);
+				$i = substr($i,0,$x);
+				$r = q("SELECT * FROM `photo` WHERE `resource-id` = '%s' AND `scale` = %d AND `uid` = %d",
+					dbesc($i),
+					intval($res),
+					intval($uid)
+				);
+				if(count($r)) {
+					logger('replacing photo');
+					$s = str_replace($image, 'data:image/jpg;base64,' . base64_encode($r[0]['data']), $s);
+				}
+			}
+			logger('fix_private_photos: replaced: ' . $s, LOGGER_DATA);
+		}	
+	}
+	return($s);
+}
+
+
+
+function item_getfeedtags($item) {
+	$ret = array();
+	$matches = false;
+	$cnt = preg_match_all('|\#\[url\=(.+?)\](.+?)\[\/url\]|',$item['tag'],$matches);
+	if($cnt) {
+		for($x = 0; $x < count($matches); $x ++) {
+			if($matches[1][$x])
+				$ret[] = array('#',$matches[1][$x], $matches[2][$x]);
+		}
+	}
+	$matches = false; 
+	$cnt = preg_match_all('|\@\[url\=(.+?)\](.+?)\[\/url\]|',$item['tag'],$matches);
+	if($cnt) {
+		for($x = 0; $x < count($matches); $x ++) {
+			if($matches[1][$x])
+				$ret[] = array('#',$matches[1][$x], $matches[2][$x]);
+		}
+	} 
+	return $ret;
+}
+
+function item_getfeedattach($item) {
+	$ret = '';
+	$arr = explode(',',$item['attach']);
+	if(count($arr)) {
+		foreach($arr as $r) {
+			$matches = false;
+			$cnt = preg_match('|\[attach\]href=\"(.+?)\" size=\"(.+?)\" type=\"(.+?)\" title=\"(.+?)\"\[\/attach\]|',$r,$matches);
+			if($cnt) {
+				$ret .= '<link rel="enclosure" href="' . xmlify($matches[1]) . '" type="' . xmlify($matches[3]) . '" ';
+				if(intval($matches[2]))
+					$ret .= 'size="' . intval($matches[2]) . '" ';
+				if($matches[4] !== ' ')
+					$ret .= 'title="' . xmlify(trim($matches[4])) . '" ';
+				$ret .= ' />' . "\r\n";
+			}
+		}
+	}
+	return $ret;
+}
+
+
 	
+function item_expire($uid,$days) {
+
+	if((! $uid) || (! $days))
+		return;
+
+	$r = q("SELECT * FROM `item` 
+		WHERE `uid` = %d 
+		AND `created` < UTC_TIMESTAMP() - INTERVAL %d DAY 
+		AND `id` = `parent` 
+		AND `deleted` = 0",
+		intval($uid),
+		intval($days)
+	);
+
+	if(! count($r))
+		return;
+ 
+	logger('expire: # items=' . count($r) );
+
+	foreach($r as $item) {
+
+		// Only expire posts, not photos and photo comments
+
+		if(strlen($item['resource-id']))
+			continue;
+
+		$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s' WHERE `id` = %d LIMIT 1",
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
+			intval($item['id'])
+		);
+
+		// kill the kids
+
+		$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d ",
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
+			dbesc($item['parent-uri']),
+			intval($item['uid'])
+		);
+
+	}
+
+	proc_run('php',"include/notifier.php","expire","$uid");
+
+}

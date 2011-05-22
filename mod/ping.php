@@ -14,7 +14,7 @@ function ping_init(&$a) {
 	$network = $r[0]['total'];
 
 	$r = q("SELECT COUNT(*) AS `total` FROM `item` 
-		WHERE `unseen` = 1 AND `visible` = 1 AND `deleted` = 0 AND `uid` = %d AND `type` != 'remote' ",
+		WHERE `unseen` = 1 AND `visible` = 1 AND `deleted` = 0 AND `uid` = %d AND `wall` = 1 ",
 		intval(local_user())
 	);
 	$home = $r[0]['total'];
