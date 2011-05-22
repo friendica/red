@@ -241,6 +241,17 @@ function scrape_feed($url) {
 		}
 	}
 
+
+	$head = $dom->getElementsByTagName('base');
+	if($head) {
+		foreach($head as $head0) {
+			$basename = $head0->getAttribute('href');
+			break;
+		}
+	}
+	if(! $basename)
+		$basename = substr($url,0,strrpos($url,'/')) . '/';
+
 	$items = $dom->getElementsByTagName('link');
 
 	// get Atom/RSS link elements, take the first one of either.
@@ -258,6 +269,13 @@ function scrape_feed($url) {
 			}
 		}	
 	}
+
+	// Drupal and perhaps others only provide relative URL's. Turn them into absolute.
+
+	if(x($ret,'feed_atom') && (! strstr($ret['feed_atom'],'://')))
+		$ret['feed_atom'] = $basename . $ret['feed_atom'];
+	if(x($ret,'feed_rss') && (! strstr($ret['feed_rss'],'://')))
+		$ret['feed_rss'] = $basename . $ret['feed_rss'];
 
 	return $ret;
 }}
