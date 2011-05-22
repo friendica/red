@@ -65,7 +65,7 @@
 				});
 				return match;
 			}
-			s = s.replace(/<span class=\"oembed\">(.*?)<\/span>/gi, _h2b_cb);
+			s = s.replace(/<span class=\"oembed(.*?)<\/span>/gi, _h2b_cb);
 			/* /oembed */
 
 
@@ -129,8 +129,7 @@
 			rep(/\[quote.*?\](.*?)\[\/quote\]/gi,"<blockquote>$1</blockquote>");
 
 			/* oembed */
-			function _b2h_cb(match) {
-				url = match.replace(/\[\/*embed\]/gi, "")
+			function _b2h_cb(match, url) {
 				url = bin2hex(url);
 				function s_b2h(data) {
 						match = data;
