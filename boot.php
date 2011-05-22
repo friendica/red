@@ -1508,6 +1508,8 @@ function lrdd($uri) {
 	logger('lrdd: host_meta: ' . $xml, LOGGER_DATA);
 
 	$h = parse_xml_string($xml);
+	if(! $h)
+		return array();
 
 	$arr = convert_xml_element_to_array($h);
 
@@ -1672,6 +1674,9 @@ function fetch_xrd_links($url) {
 
 	logger('fetch_xrd_links: ' . $xml, LOGGER_DATA);
 	$h = parse_xml_string($xml);
+	if(! $h)
+		return array();
+
 	$arr = convert_xml_element_to_array($h);
 
 	$links = array();
