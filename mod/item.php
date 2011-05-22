@@ -485,12 +485,12 @@ function item_post(&$a) {
 				$email_html_body_tpl = replace_macros($tpl,array(
 					'$sitename'		=> $a->config['sitename'],				// name of this site
 					'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
-					'$thumb'		=> $conv['author-avatar'],				// thumbnail url for sender icon
+					'$thumb'		=> $author['thumb'],					// thumbnail url for sender icon
 					'$email'		=> $importer['email'],					// email address to send to
-					'$url'			=> $conv['author-link'],				// full url for the site
-					'$from'			=> $from,								// name of the person sending the message
+					'$url'			=> $author['url'],					// full url for the site
+					'$from'			=> $from,						// name of the person sending the message
 					'$body'			=> $msg['htmlversion'],					// html version of the message
-					'$display'		=> $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $r,
+					'$display'		=> $a->get_baseurl() . '/display/' . $author['nick'] . '/' . $post_id,
 				));
 			
 				// load the template for private message notifications
@@ -498,12 +498,12 @@ function item_post(&$a) {
 				$email_text_body_tpl = replace_macros($tpl,array(
 					'$sitename'		=> $a->config['sitename'],				// name of this site
 					'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
-					'$thumb'		=> $conv['author-avatar'],				// thumbnail url for sender icon
+					'$thumb'		=> $author['thumb'],					// thumbnail url for sender icon
 					'$email'		=> $importer['email'],					// email address to send to
-					'$url'			=> $conv['author-link'],				// full url for the site
-					'$from'			=> $from,								// name of the person sending the message
+					'$url'			=> $author['url'],					// full url for the site
+					'$from'			=> $from,						// name of the person sending the message
 					'$body'			=> $msg['textversion'],					// text version of the message
-					'$display'		=> $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $r,
+					'$display'		=> $a->get_baseurl() . '/display/' . $author['nick'] . '/' . $post_id,
 				));
 
 				// use the EmailNotification library to send the message
@@ -548,11 +548,11 @@ function item_post(&$a) {
 				$email_html_body_tpl = replace_macros($tpl,array(
 					'$sitename'		=> $a->config['sitename'],				// name of this site
 					'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
-					'$thumb'		=> $conv['author-avatar'],				// thumbnail url for sender icon
-					'$url'			=> $conv['author-link'],				// full url for the site
-					'$from'			=> $from,								// name of the person sending the message
+					'$thumb'		=> $author['thumb'],					// thumbnail url for sender icon
+					'$url'			=> $author['url'],					// full url for the site
+					'$from'			=> $from,						// name of the person sending the message
 					'$body'			=> $msg['htmlversion'],					// html version of the message
-					'$display'		=> $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $r,
+					'$display'		=> $a->get_baseurl() . '/display/' . $author['nick'] . '/' . $post_id,
 				));
 			
 				// load the template for private message notifications
@@ -560,11 +560,11 @@ function item_post(&$a) {
 				$email_text_body_tpl = replace_macros($tpl,array(
 					'$sitename'		=> $a->config['sitename'],				// name of this site
 					'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
-					'$thumb'		=> $conv['author-avatar'],				// thumbnail url for sender icon
-					'$url'			=> $conv['author-link'],				// full url for the site
-					'$from'			=> $from,								// name of the person sending the message
+					'$thumb'		=> $author['thumb'],					// thumbnail url for sender icon
+					'$url'			=> $author['url'],					// full url for the site
+					'$from'			=> $from,						// name of the person sending the message
 					'$body'			=> $msg['textversion'],					// text version of the message
-					'$display'		=> $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $r,
+					'$display'		=> $a->get_baseurl() . '/display/' . $author['nick'] . '/' . $post_id,
 				));
 
 				// use the EmailNotification library to send the message
@@ -589,6 +589,9 @@ function item_post(&$a) {
 			dbesc(datetime_convert()),
 			intval($post_id)
 		);
+		foreach( $r as $key => $val) {
+			logger("key: " . $key . " val: " . $val);
+		}
 
 		// photo comments turn the corresponding item visible to the profile wall
 		// This way we don't see every picture in your new photo album posted to your wall at once.

@@ -79,6 +79,9 @@ function dfrn_notify_post(&$a) {
 	// $importer in this case contains the contact record for the remote contact joined with the user record of our user. 
 
 	$importer = $r[0];
+	foreach($importer as $key => $val) {
+		logger( "importer - key: " . $key . " val: " . $val);
+	}
 
 	if(($writable != (-1)) && ($writable != $importer['writable'])) {
 		q("UPDATE `contact` SET `writable` = %d WHERE `id` = %d LIMIT 1",
@@ -212,31 +215,31 @@ function dfrn_notify_post(&$a) {
 			// load the template for private message notifications
 			$tpl = get_intltext_template('mail_received_html_body_eml.tpl');
 			$email_html_body_tpl = replace_macros($tpl,array(
-				'$siteName'		=> $a->config['sitename'],				// name of this site
-				'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
-				'$thumb'		=> $importer['thumb'],					// thumbnail url for sender icon
-				'$email'		=> $importer['email'],					// email address to send to
-				'$url'			=> $importer['url'],					// full url for the site
-				'$from'			=> $msg['from-name'],					// name of the person sending the message
+				'$siteName'		=> $a->config['sitename'],			// name of this site
+				'$siteurl'		=> $a->get_baseurl(),				// descriptive url of this site
+				'$thumb'		=> $importer['thumb'],				// thumbnail url for sender icon
+				'$email'		=> $importer['email'],				// email address to send to
+				'$url'			=> $importer['url'],				// full url for the site
+				'$from'			=> $msg['from-name'],				// name of the person sending the message
 				'$title'		=> stripslashes($msg['title']),			// subject of the message
 				'$htmlversion'	=> $msg['htmlversion'],					// html version of the message
 				'$mimeboundary'	=> $msg['mimeboundary'],				// mime message divider
-				'$hostname'		=> $a->get_hostname()					// name of this host
+				'$hostname'		=> $a->get_hostname()				// name of this host
 			));
 			
 			// load the template for private message notifications
 			$tpl = get_intltext_template('mail_received_text_body_eml.tpl');
 			$email_text_body_tpl = replace_macros($tpl,array(
-				'$siteName'		=> $a->config['sitename'],				// name of this site
-				'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
-				'$thumb'		=> $importer['thumb'],					// thumbnail url for sender icon
-				'$email'		=> $importer['email'],					// email address to send to
-				'$url'			=> $importer['url'],					// full url for the site
-				'$from'			=> $msg['from-name'],					// name of the person sending the message
+				'$siteName'		=> $a->config['sitename'],			// name of this site
+				'$siteurl'		=> $a->get_baseurl(),				// descriptive url of this site
+				'$thumb'		=> $importer['thumb'],				// thumbnail url for sender icon
+				'$email'		=> $importer['email'],				// email address to send to
+				'$url'			=> $importer['url'],				// full url for the site
+				'$from'			=> $msg['from-name'],				// name of the person sending the message
 				'$title'		=> stripslashes($msg['title']),			// subject of the message
 				'$textversion'	=> $msg['textversion'],					// text version of the message
 				'$mimeboundary'	=> $msg['mimeboundary'],				// mime message divider
-				'$hostname'		=> $a->get_hostname()					// name of this host
+				'$hostname'		=> $a->get_hostname()				// name of this host
 			));
 
 			// use the EmailNotification library to send the message
@@ -408,27 +411,27 @@ function dfrn_notify_post(&$a) {
 							// load the template for private message notifications
 							$tpl = get_intltext_template('cmnt_received_html_body_eml.tpl');
 							$email_html_body_tpl = replace_macros($tpl,array(
-								'$sitename'		=> $a->config['sitename'],				// name of this site
-								'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
+								'$sitename'		=> $a->config['sitename'],			// name of this site
+								'$siteurl'		=> $a->get_baseurl(),				// descriptive url of this site
 								'$thumb'		=> $datarray['author-avatar'],			// thumbnail url for sender icon
-								'$email'		=> $importer['email'],					// email address to send to
+								'$email'		=> $importer['email'],				// email address to send to
 								'$url'			=> $datarray['author-link'],			// full url for the site
-								'$from'			=> $from,								// name of the person sending the message
-								'$body'			=> 'q1' .$msg['htmlversion'],					// html version of the message
-								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $r,
+								'$from'			=> $from,					// name of the person sending the message
+								'$body'			=> 'q1' .$msg['htmlversion'],			// html version of the message
+								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nick'] . '/' . $posted_id,
 							));
 			
 							// load the template for private message notifications
 							$tpl = get_intltext_template('cmnt_received_text_body_eml.tpl');
 							$email_text_body_tpl = replace_macros($tpl,array(
-								'$sitename'		=> $a->config['sitename'],				// name of this site
-								'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
+								'$sitename'		=> $a->config['sitename'],			// name of this site
+								'$siteurl'		=> $a->get_baseurl(),				// descriptive url of this site
 								'$thumb'		=> $datarray['author-avatar'],			// thumbnail url for sender icon
-								'$email'		=> $importer['email'],					// email address to send to
+								'$email'		=> $importer['email'],				// email address to send to
 								'$url'			=> $datarray['author-link'],			// full url for the site
-								'$from'			=> $from,								// name of the person sending the message
-								'$body'			=> $msg['textversion'],					// text version of the message
-								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $r,
+								'$from'			=> $from,					// name of the person sending the message
+								'$body'			=> $msg['textversion'],				// text version of the message
+								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nick'] . '/' . $posted_id,
 							));
 
 							// use the EmailNotification library to send the message
@@ -539,9 +542,9 @@ function dfrn_notify_post(&$a) {
 								'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
 								'$thumb'		=> $conv['author-avatar'],				// thumbnail url for sender icon
 								'$url'			=> $conv['author-link'],				// full url for the site
-								'$from'			=> $from,								// name of the person sending the message
+								'$from'			=> $from,						// name of the person sending the message
 								'$body'			=> $msg['htmlversion'],					// html version of the message
-								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $r,
+								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nick'] . '/' . $posted_id,
 							));
 			
 							// load the template for private message notifications
@@ -551,9 +554,9 @@ function dfrn_notify_post(&$a) {
 								'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
 								'$thumb'		=> $conv['author-avatar'],				// thumbnail url for sender icon
 								'$url'			=> $conv['author-link'],				// full url for the site
-								'$from'			=> $from,								// name of the person sending the message
+								'$from'			=> $from,						// name of the person sending the message
 								'$body'			=> $msg['textversion'],					// text version of the message
-								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $r,
+								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nick'] . '/' . $posted_id,
 							));
 
 							// use the EmailNotification library to send the message
