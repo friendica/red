@@ -1,7 +1,7 @@
 <?php
 
 require_once('library/HTML5/Parser.php');
-
+require_once('include/oembed.php');
 
 function parse_url_content(&$a) {
 
@@ -25,9 +25,18 @@ function parse_url_content(&$a) {
 		killme();
 	}
 
-	if($url) 
+	if($url) {
+		// fetch link with oembed
+		if ($a->config['system']['embed_all']){
+			$j = oembed_fetch_url($url);
+			if ($j->type!="error"){
+				echo oembed_format_object($j);
+				killme();
+			}
+		}
+
 		$s = fetch_url($url);
-	else {
+	} else {
 		echo '';
 		killme();
 	}
