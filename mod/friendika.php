@@ -62,7 +62,9 @@ function friendika_content(&$a) {
 	}
 	else
 		$o .= '<p>' . t('No installed plugins/addons/apps');
- 	
+
+	call_hooks('about_hook', $o); 	
+
 	return $o;
 
 }
