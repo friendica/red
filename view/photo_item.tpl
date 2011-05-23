@@ -1,7 +1,7 @@
 <div class="wall-item-outside-wrapper$indent" id="wall-item-outside-wrapper-$id" >
 	<div class="wall-item-photo-wrapper" id="wall-item-photo-wrapper-$id" >
 		<a href="$profile_url" title="View $name's profile" class="wall-item-photo-link" id="wall-item-photo-link-$id">
-		<img src="$thumb" class="wall-item-photo" id="wall-item-photo-$id" height="80" width="80" alt="$name" /></a>
+		<img src="$thumb" class="wall-item-photo" id="wall-item-photo-$id" style="height: 80px; width: 80px;" alt="$name" /></a>
 	</div>
 
 	<div class="wall-item-wrapper" id="wall-item-wrapper-$id" >
