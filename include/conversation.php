@@ -357,7 +357,7 @@ function conversation(&$a, $items, $mode, $update) {
 
 			if($page_writeable) {
 				if($toplevelpost) {
-					$likebuttons = replace_macros((($item['private']) ? $noshare_tpl : $like_tpl),array(
+					$likebuttons = replace_macros((($item['private'] || ($profile_owner != local_user())) ? $noshare_tpl : $like_tpl),array(
 						'$id' => $item['id'],
 						'$likethis' => t("I like this \x28toggle\x29"),
 						'$nolike' => t("I don't like this \x28toggle\x29"),

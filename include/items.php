@@ -384,6 +384,9 @@ function get_atom_elements($feed,$item) {
 	else
 		$res['private'] = 0;
 
+	$extid = $item->get_item_tags(NAMESPACE_DFRN,'extid');
+	if($extid && $extid[0]['data'])
+		$res['extid'] = $extid[0]['data'];
 
 	$rawlocation = $item->get_item_tags(NAMESPACE_DFRN, 'location');
 	if($rawlocation)
@@ -634,6 +637,7 @@ function item_store($arr,$force_parent = false) {
 
 	$arr['wall']          = ((x($arr,'wall'))          ? intval($arr['wall'])                : 0);
 	$arr['uri']           = ((x($arr,'uri'))           ? notags(trim($arr['uri']))           : random_string());
+	$arr['extid']         = ((x($arr,'extid'))         ? notags(trim($arr['extid']))         : '');
 	$arr['author-name']   = ((x($arr,'author-name'))   ? notags(trim($arr['author-name']))   : '');
 	$arr['author-link']   = ((x($arr,'author-link'))   ? notags(trim($arr['author-link']))   : '');
 	$arr['author-avatar'] = ((x($arr,'author-avatar')) ? notags(trim($arr['author-avatar'])) : '');
@@ -1567,6 +1571,10 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 
 	if(($item['private']) || strlen($item['allow_cid']) || strlen($item['allow_gid']) || strlen($item['deny_cid']) || strlen($item['deny_gid']))
 		$o .= '<dfrn:private>1</dfrn:private>' . "\r\n";
+
+	if($item['extid'])
+		$o .= '<dfrn:extid>' . $item['extid'] . '</dfrn:extid>' . "\r\n";
+
 
 	$verb = construct_verb($item);
 	$o .= '<as:verb>' . xmlify($verb) . '</as:verb>' . "\r\n";

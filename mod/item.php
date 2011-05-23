@@ -589,9 +589,6 @@ function item_post(&$a) {
 			dbesc(datetime_convert()),
 			intval($post_id)
 		);
-		foreach( $r as $key => $val) {
-			logger("key: " . $key . " val: " . $val);
-		}
 
 		// photo comments turn the corresponding item visible to the profile wall
 		// This way we don't see every picture in your new photo album posted to your wall at once.

@@ -12,7 +12,7 @@ function follow_post(&$a) {
 
 	$url = $orig_url = notags(trim($_POST['url']));
 
-	// remove ajax junk
+	// remove ajax junk, e.g. Twitter
 
 	$url = str_replace('/#!/','/',$url);
 
@@ -41,6 +41,14 @@ function follow_post(&$a) {
 	
 	if(! ((x($ret,'name')) && (x($ret,'poll')) && ((x($ret,'url')) || (x($ret,'addr'))))) {
 		notice( t('The profile address specified does not provide adequate information.') . EOL);
+		if(! x($ret,'poll'))
+			notice( t('No compatible communication protocols or feeds were discovered.') . EOL);
+		if(! x($ret,'name'))
+			notice( t('An author or name was not found.') . EOL);
+		if(! x($ret,'url'))
+			notice( t('No browser URL could be matched to this address.') . EOL);
+		if(strpos($url,'@') !== false)
+			notice('Unable to match @-style Identity Address with a known protocol or email contact');
 		goaway($_SESSION['return_url']);
 	}
 
