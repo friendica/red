@@ -10,26 +10,58 @@
 require_once('include/oembed.php');
 
 function oembed_install() {
-  register_hook('jot_tool', 'addon/oembed/oembed.php', 'oembed_hook_jot_tool');
-  register_hook('page_header', 'addon/oembed/oembed.php', 'oembed_hook_page_header');
+	register_hook('jot_tool', 'addon/oembed/oembed.php', 'oembed_hook_jot_tool');
+	register_hook('page_header', 'addon/oembed/oembed.php', 'oembed_hook_page_header');
+	register_hook('plugin_settings', 'addon/oembed/oembed.php', 'oembed_settings'); 
+	register_hook('plugin_settings_post', 'addon/oembed/oembed.php', 'oembed_settings_post');
 }
 
 function oembed_uninstall() {
-  unregister_hook('jot_tool', 'addon/oembed/oembed.php', 'oembed_hook_jot_tool');
-  unregister_hook('page_header', 'addon/oembed/oembed.php', 'oembed_hook_page_header');
+	unregister_hook('jot_tool', 'addon/oembed/oembed.php', 'oembed_hook_jot_tool');
+	unregister_hook('page_header', 'addon/oembed/oembed.php', 'oembed_hook_page_header');
 }
 
+function oembed_settings_post(){
+    if(! local_user())
+		return;
+	if (isset($_POST['oembed-submit'])){
+		set_pconfig(local_user(), 'oembed', 'use_for_youtube', (isset($_POST['oembed_use_for_youtube'])?1:0));
+		notice( t('OEmbed settings updated') . EOL);
+	}
+}
+
+function oembed_settings(&$a,&$o) {
+    if(! local_user())
+		return;
+	$uofy = get_pconfig(local_user(), 'oembed', 'use_for_youtube' );
+	
+	$o .='<h3 class="settings-heading">OEmbed</h3>';
+	$o.='
+	<div id="settings-username-wrapper">
+		<label for="oembed_use_for_youtube">'
+			.t('Use OEmbed for YouTube videos: ') 
+		.'</label><input type="checkbox" id="oembed_use_for_youtube" name="oembed_use_for_youtube"'
+		. ($uofy==1?'checked="true"':'')
+		.'>
+	</div>
+	<div id="settings-username-end"></div>
+	<div class="settings-submit-wrapper">
+		<input type="submit" value="'.t('Submit').'" class="settings-submit" name="oembed-submit">
+	</div>';
+}
+
+
 function oembed_hook_page_header($a, &$b){
-  $a->page['htmlhead'] .= sprintf('<script src="%s/oembed/oembed.js"></script>', $a->get_baseurl());
+	$a->page['htmlhead'] .= sprintf('<script src="%s/oembed/oembed.js"></script>', $a->get_baseurl());
 }
 
 
 function oembed_hook_jot_tool($a, &$b) {
-  $b .= '
-    <div class="tool-wrapper" style="display: $visitor;" >
-      <img class="tool-link" src="addon/oembed/oembed.png" alt="Embed" title="Embed" onclick="oembed();" />
-    </div> 
-  ';
+	$b .= '
+	<div class="tool-wrapper" style="display: $visitor;" >
+	  <img class="tool-link" src="addon/oembed/oembed.png" alt="Embed" title="Embed" onclick="oembed();" />
+	</div> 
+	';
 }
 
 

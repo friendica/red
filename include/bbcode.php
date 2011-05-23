@@ -92,8 +92,7 @@ function bbcode($Text,$preserve_nl = false) {
 	// [img=widthxheight]image source[/img]
 	$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.+?)\[\/img\]/", '<img src="$3" style="height:{$2}px; width:{$1}px;" >', $Text);
 
-	$a = get_app();
-	if ($a->config['system']['embed_all']){
+	if (get_pconfig(local_user(), 'oembed', 'use_for_youtube' )==1){
 		// use oembed for youtube links
 		$Text = preg_replace("/\[youtube\]/",'[embed]',$Text); 
 		$Text = preg_replace("/\[\/youtube\]/",'[/embed]',$Text); 
