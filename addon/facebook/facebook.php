@@ -700,13 +700,17 @@ function fb_consume_stream($uid,$j,$wall = false) {
 			);			
 			if(count($r))
 				$orig_post = $r[0];
-
 		}
 
 		if(isset($entry->likes) && isset($entry->likes->data))
 			$likers = $entry->likes->data;
+		else
+			$likers = null;
+
 		if(isset($entry->comments) && isset($entry->comments->data))
 			$comments = $entry->comments->data;
+		else
+			$comments = null;
 
 		if(is_array($likers)) {
 			foreach($likers as $likes) {
