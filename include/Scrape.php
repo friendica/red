@@ -292,7 +292,9 @@ function probe_url($url) {
 	$diaspora = false;	
 	$email_conversant = false;
 
-	if($url) {
+	$twitter = ((strpos($url,'twitter.com') !== false) ? true : false);
+
+	if(! $twitter) {
 		$links = lrdd($url);
 
 		if(count($links)) {
@@ -413,76 +415,94 @@ function probe_url($url) {
 				$profile = $url;
 		}
 
+		if($twitter) {		
+			logger('twitter: setup');
+			$tid = basename($url);
+			$tapi = 'https://api.twitter.com/1/statuses/user_timeline.rss';
+			if(intval($tid))
+				$poll = $tapi . '?user_id=' . $tid;
+			else
+				$poll = $tapi . '?screen_name=' . $tid;
+			$profile = 'http://twitter.com/!#/' . $tid;
+		}
+
 		if(! x($vcard,'fn'))
 			if(x($vcard,'nick'))
 				$vcard['fn'] = $vcard['nick'];
 
-		if((! isset($vcard)) && (! $poll)) {
+	
+		if(((! isset($vcard)) && (! $poll)) || ($twitter)) {
 
-			$ret = scrape_feed($url);
-			logger('probe_url: scrape_feed returns: ' . print_r($ret,true), LOGGER_DATA);
-			if(count($ret) && ($ret['feed_atom'] || $ret['feed_rss'])) {
-				$poll = ((x($ret,'feed_atom')) ? unamp($ret['feed_atom']) : unamp($ret['feed_rss']));
+			$feedret = scrape_feed($url);
+			logger('probe_url: scrape_feed returns: ' . print_r($feedret,true), LOGGER_DATA);
+			if(count($feedret) && ($feedret['feed_atom'] || $feedret['feed_rss'])) {
+				$poll = ((x($feedret,'feed_atom')) ? unamp($feedret['feed_atom']) : unamp($feedret['feed_rss']));
 				$vcard = array();
-					if(x($ret,'photo'))
-						$vcard['photo'] = $ret['photo'];
-				require_once('simplepie/simplepie.inc');
-			    $feed = new SimplePie();
-				$xml = fetch_url($poll);
+			}
 
-    			$feed->set_raw_data($xml);
+			if(x($feedret,'photo'))
+				$vcard['photo'] = $feedret['photo'];
+			require_once('simplepie/simplepie.inc');
+		    $feed = new SimplePie();
+			$xml = fetch_url($poll);
 
-			    $feed->init();
+   			$feed->set_raw_data($xml);
 
-				if(! x($vcard,'photo'))
-					$vcard['photo'] = $feed->get_image_url();
-				$author = $feed->get_author();
-				if($author) {			
-					$vcard['fn'] = unxmlify(trim($author->get_name()));
-					if(! $vcard['fn'])
-						$vcard['fn'] = trim(unxmlify($author->get_email()));
-					if(strpos($vcard['fn'],'@') !== false)
-						$vcard['fn'] = substr($vcard['fn'],0,strpos($vcard['fn'],'@'));
-					$vcard['nick'] = strtolower(notags(unxmlify($vcard['fn'])));
-					if(strpos($vcard['nick'],' '))
-						$vcard['nick'] = trim(substr($vcard['nick'],0,strpos($vcard['nick'],' ')));
-					$email = unxmlify($author->get_email());
-				}
-				else {
-					$item = $feed->get_item(0);
-					if($item) {
-						$author = $item->get_author();
-						if($author) {			
-							$vcard['fn'] = trim(unxmlify($author->get_name()));
-							if(! $vcard['fn'])
-								$vcard['fn'] = trim(unxmlify($author->get_email()));
-							if(strpos($vcard['fn'],'@') !== false)
-								$vcard['fn'] = substr($vcard['fn'],0,strpos($vcard['fn'],'@'));
-							$vcard['nick'] = strtolower(unxmlify($vcard['fn']));
-							if(strpos($vcard['nick'],' '))
-								$vcard['nick'] = trim(substr($vcard['nick'],0,strpos($vcard['nick'],' ')));
-							$email = unxmlify($author->get_email());
-						}
-						if(! $vcard['photo']) {
-							$rawmedia = $item->get_item_tags('http://search.yahoo.com/mrss/','thumbnail');
-							if($rawmedia && $rawmedia[0]['attribs']['']['url'])
-								$vcard['photo'] = unxmlify($rawmedia[0]['attribs']['']['url']);
-						}
+		    $feed->init();
+
+			if(! x($vcard,'photo'))
+				$vcard['photo'] = $feed->get_image_url();
+			$author = $feed->get_author();
+			if($author) {			
+				$vcard['fn'] = unxmlify(trim($author->get_name()));
+				if(! $vcard['fn'])
+					$vcard['fn'] = trim(unxmlify($author->get_email()));
+				if(strpos($vcard['fn'],'@') !== false)
+					$vcard['fn'] = substr($vcard['fn'],0,strpos($vcard['fn'],'@'));
+				$email = unxmlify($author->get_email());
+			}
+			else {
+				$item = $feed->get_item(0);
+				if($item) {
+					$author = $item->get_author();
+					if($author) {			
+						$vcard['fn'] = trim(unxmlify($author->get_name()));
+						if(! $vcard['fn'])
+							$vcard['fn'] = trim(unxmlify($author->get_email()));
+						if(strpos($vcard['fn'],'@') !== false)
+							$vcard['fn'] = substr($vcard['fn'],0,strpos($vcard['fn'],'@'));
+						$email = unxmlify($author->get_email());
+					}
+					if(! $vcard['photo']) {
+						$rawmedia = $item->get_item_tags('http://search.yahoo.com/mrss/','thumbnail');
+						if($rawmedia && $rawmedia[0]['attribs']['']['url'])
+							$vcard['photo'] = unxmlify($rawmedia[0]['attribs']['']['url']);
 					}
 				}
-				if((! $vcard['photo']) && strlen($email))
-					$vcard['photo'] = gravatar_img($email);
-				if($poll === $profile)
-					$lnk = $feed->get_permalink();
-				if(isset($lnk) && strlen($lnk))
-					$profile = $lnk;	
-				if(! (x($vcard,'fn')))
-					$vcard['fn'] = notags($feed->get_title());
-				if(! (x($vcard,'fn')))
-					$vcard['fn'] = notags($feed->get_description());
-				$network = 'feed';
-				$priority = 2;
 			}
+			if((! $vcard['photo']) && strlen($email))
+				$vcard['photo'] = gravatar_img($email);
+			if($poll === $profile)
+				$lnk = $feed->get_permalink();
+			if(isset($lnk) && strlen($lnk))
+				$profile = $lnk;	
+
+			if(! (x($vcard,'fn')))
+				$vcard['fn'] = notags($feed->get_title());
+			if(! (x($vcard,'fn')))
+				$vcard['fn'] = notags($feed->get_description());
+
+			if(strpos($vcard['fn'],'Twitter / ') !== false) {
+				$vcard['fn'] = substr($vcard['fn'],strpos($vcard['fn'],'/')+1);
+				$vcard['fn'] = trim($vcard['fn']);
+			}
+			if(! x($vcard,'nick')) {
+				$vcard['nick'] = strtolower(notags(unxmlify($vcard['fn'])));
+				if(strpos($vcard['nick'],' '))
+					$vcard['nick'] = trim(substr($vcard['nick'],0,strpos($vcard['nick'],' ')));
+			}
+			$network = 'feed';
+			$priority = 2;
 		}
 	}
 
