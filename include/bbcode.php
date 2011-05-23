@@ -90,15 +90,15 @@ function bbcode($Text,$preserve_nl = false) {
 
          
 	// [img=widthxheight]image source[/img]
-	$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.+?)\[\/img\]/", '<img src="$3" height="$2" width="$1">', $Text);
+	$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.+?)\[\/img\]/", '<img src="$3" style="height:{$2}px; width:{$1}px;" >', $Text);
 
 	// Youtube extensions
         $Text = preg_replace("/\[youtube\]https?:\/\/www.youtube.com\/watch\?v\=(.+?)\[\/youtube\]/",'[youtube]$1[/youtube]',$Text); 
         $Text = preg_replace("/\[youtube\]https?:\/\/youtu.be\/(.+?)\[\/youtube\]/",'[youtube]$1[/youtube]',$Text); 
 
-	$Text = preg_replace("/\[youtube\](.+?)\[\/youtube\]/", '<iframe width="425" height="349" src="http://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe>', $Text);
+	$Text = preg_replace("/\[youtube\](.+?)\[\/youtube\]/", '<br /><iframe style="width:425px;height:349px;padding:10px 0 10px 0;float:left;" src="http://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe>', $Text);
 
-//	$Text = preg_replace("/\[youtube\](.+?)\[\/youtube\]/", '<object width="425" height="350" type="application/x-shockwave-flash" data="http://www.youtube.com/v/$1" ><param name="movie" value="http://www.youtube.com/v/$1"></param><!--[if IE]><embed src="http://www.youtube.com/v/$1" type="application/x-shockwave-flash" width="425" height="350" /><![endif]--></object>', $Text);
+//	$Text = preg_replace("/\[youtube\](.+?)\[\/youtube\]/", '<br /><object style="width:425px;height:350px;" type="application/x-shockwave-flash" data="http://www.youtube.com/v/$1" ><param name="movie" value="http://www.youtube.com/v/$1"></param><!--[if IE]><embed src="http://www.youtube.com/v/$1" type="application/x-shockwave-flash" style="width:425px;height:350px;" /><![endif]--></object>', $Text);
 
 	// oembed tag
 	$Text = oembed_bbcode2html($Text);
