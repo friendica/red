@@ -91,6 +91,11 @@ function pubsub_post(&$a) {
 	logger('pubsub: user-agent: ' . $_SERVER['HTTP_USER_AGENT'] );
 	logger('pubsub: data: ' . $xml, LOGGER_DATA);
 
+	if(! stristr($xml,'<?xml')) {
+		logger('pubsub_post: bad xml');
+		hub_post_return();
+	}
+
 	$nick       = (($a->argc > 1) ? notags(trim($a->argv[1])) : '');
 	$contact_id = (($a->argc > 2) ? intval($a->argv[2])       : 0 );
 
