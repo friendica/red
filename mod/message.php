@@ -99,7 +99,7 @@ function message_post(&$a) {
 	
 	if($post_id) {
 		proc_run('php',"include/notifier.php","mail","$post_id");
-		notice( t('Message sent.') . EOL );
+		info( t('Message sent.') . EOL );
 	}
 	else {
 		notice( t('Message could not be sent.') . EOL );
@@ -139,7 +139,7 @@ function message_content(&$a) {
 				intval(local_user())
 			);
 			if($r) {
-				notice( t('Message deleted.') . EOL );
+				info( t('Message deleted.') . EOL );
 			}
 			goaway($a->get_baseurl() . '/message' );
 		}
@@ -155,7 +155,7 @@ function message_content(&$a) {
 					intval(local_user())
 				);
 				if($r)
-					notice( t('Conversation removed.') . EOL );
+					info( t('Conversation removed.') . EOL );
 			} 
 			goaway($a->get_baseurl() . '/message' );
 		}	
@@ -221,7 +221,7 @@ function message_content(&$a) {
 			intval($a->pager['itemspage'])
 		);
 		if(! count($r)) {
-			notice( t('No messages.') . EOL);
+			info( t('No messages.') . EOL);
 			return $o;
 		}
 

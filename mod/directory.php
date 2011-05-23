@@ -138,7 +138,7 @@ function directory_content(&$a) {
 
 	}
 	else
-		notice( t("No entries \x28some entries may be hidden\x29.") . EOL);
+		info( t("No entries \x28some entries may be hidden\x29.") . EOL);
 
 	return $o;
 }

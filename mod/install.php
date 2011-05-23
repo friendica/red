@@ -35,7 +35,7 @@ function install_post(&$a) {
 		}
 	}
 
-	notice( t('Connected to database.') . EOL);
+	info( t('Connected to database.') . EOL);
 
 	$tpl = get_intltext_template('htconfig.tpl');
 	$txt = replace_macros($tpl,array(
@@ -95,7 +95,7 @@ function install_content(&$a) {
 		}
 	}
 
-	notice( t('Welcome to Friendika.') . EOL);
+	info( t('Welcome to Friendika.') . EOL);
 
 
 	check_funcs();

@@ -136,7 +136,7 @@ function notifications_content(&$a) {
 		}
 	}
 	else
-		notice( t('No notifications.') . EOL);
+		info( t('No notifications.') . EOL);
 
 	if ($a->config['register_policy'] == REGISTER_APPROVE &&	
 		$a->config['admin_email'] === $a->user['email']){
@@ -156,7 +156,7 @@ function notifications_content(&$a) {
 			$o .= "</ul>";
 		}
 		else
-			notice( t('No registrations.') . EOL);
+			info( t('No registrations.') . EOL);
 
 	}
 

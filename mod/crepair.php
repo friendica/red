@@ -39,7 +39,7 @@ function crepair_post(&$a) {
 	);
 
 	if($r)
-		notice( t('Contact settings applied.') . EOL);
+		info( t('Contact settings applied.') . EOL);
 	else
 		notice( t('Contact update failed.') . EOL);
 

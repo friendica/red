@@ -165,7 +165,7 @@ function dfrn_request_post(&$a) {
 				}
 
 				if($r) {
-					notice( t("Introduction complete.") . EOL);
+					info( t("Introduction complete.") . EOL);
 				}
 
 				/**
@@ -424,7 +424,7 @@ function dfrn_request_post(&$a) {
 			// This notice will only be seen by the requestor if the requestor and requestee are on the same server.
 
 			if(! $failed) 
-				notice( t('Your introduction has been sent.') . EOL );
+				info( t('Your introduction has been sent.') . EOL );
 
 			// "Homecoming" - send the requestor back to their site to record the introduction.
 
@@ -478,7 +478,7 @@ function dfrn_request_content(&$a) {
 	if(x($_GET,'dfrn_url')) {
 
 		if(! local_user()) {
-			notice( t("Please login to confirm introduction.") . EOL );
+			info( t("Please login to confirm introduction.") . EOL );
 
 			/* setup the return URL to come back to this page if they use openid */
 

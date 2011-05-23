@@ -236,7 +236,7 @@ function profile_photo_crop_ui_head(&$a, $ph){
 	$r = $ph->store(local_user(), 0 , $hash, $filename, t('Profile Photos'), 0 );	
 
 	if($r)
-		notice( t('Image uploaded successfully.') . EOL );
+		info( t('Image uploaded successfully.') . EOL );
 	else
 		notice( t('Image upload failed.') . EOL );
 

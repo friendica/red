@@ -38,7 +38,7 @@ function tagrm_post(&$a) {
 		intval(local_user())
 	);
 
-	notice( t('Tag removed') . EOL );
+	info( t('Tag removed') . EOL );
 	goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
 	
 	// NOTREACHED

@@ -196,7 +196,7 @@ function profiles_post(&$a) {
 		);
 
 		if($r)
-			notice( t('Profile updated.') . EOL);
+			info( t('Profile updated.') . EOL);
 
 
 		if($namechanged && $is_default) {
@@ -251,7 +251,7 @@ function profiles_content(&$a) {
 			intval(local_user())
 		);
 		if($r)
-			notice( t('Profile deleted.') . EOL);
+			info( t('Profile deleted.') . EOL);
 
 		goaway($a->get_baseurl() . '/profiles');
 		return; // NOTREACHED
@@ -286,7 +286,7 @@ function profiles_content(&$a) {
 			dbesc($name)
 		);
 
-		notice( t('New profile created.') . EOL);
+		info( t('New profile created.') . EOL);
 		if(count($r3) == 1)
 			goaway($a->get_baseurl() . '/profiles/' . $r3[0]['id']);
 		goaway($a->get_baseurl() . '/profiles');
@@ -325,7 +325,7 @@ function profiles_content(&$a) {
 			intval(local_user()),
 			dbesc($name)
 		);
-		notice( t('New profile created.') . EOL);
+		info( t('New profile created.') . EOL);
 		if(count($r3) == 1)
 			goaway($a->get_baseurl() . '/profiles/' . $r3[0]['id']);
 	goaway($a->get_baseurl() . '/profiles');

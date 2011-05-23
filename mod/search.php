@@ -66,7 +66,7 @@ function search_content(&$a) {
 		$a->set_pager_total($r[0]['total']);
 
 	if(! $r[0]['total']) {
-		notice( t('No results.') . EOL);
+		info( t('No results.') . EOL);
 		return $o;
 	}
 

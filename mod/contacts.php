@@ -85,7 +85,7 @@ logger('contact_edit ' . print_r($_POST,true));
 		intval(local_user())
 	);
 	if($r)
-		notice( t('Contact updated.') . EOL);
+		info( t('Contact updated.') . EOL);
 	else
 		notice( t('Failed to update contact record.') . EOL);
 	return;
@@ -143,7 +143,7 @@ function contacts_content(&$a) {
 			);
 			if($r) {
 				//notice( t('Contact has been ') . (($blocked) ? t('blocked') : t('unblocked')) . EOL );
-				notice( (($blocked) ? t('Contact has been blocked') : t('Contact has been unblocked')) . EOL );
+				info( (($blocked) ? t('Contact has been blocked') : t('Contact has been unblocked')) . EOL );
 			}
 			goaway($a->get_baseurl() . '/contacts/' . $contact_id);
 			return; // NOTREACHED
@@ -157,7 +157,7 @@ function contacts_content(&$a) {
 					intval(local_user())
 			);
 			if($r) {
-				notice( (($readonly) ? t('Contact has been ignored') : t('Contact has been unignored')) . EOL );
+				info( (($readonly) ? t('Contact has been ignored') : t('Contact has been unignored')) . EOL );
 			}
 			goaway($a->get_baseurl() . '/contacts/' . $contact_id);
 			return; // NOTREACHED
@@ -197,7 +197,7 @@ function contacts_content(&$a) {
 
 
 			contact_remove($contact_id);
-			notice( t('Contact has been removed.') . EOL );
+			info( t('Contact has been removed.') . EOL );
 			goaway($a->get_baseurl() . '/contacts');
 			return; // NOTREACHED
 		}

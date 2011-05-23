@@ -24,7 +24,7 @@ function oexchange_content(&$a) {
 	}
 
 	if(($a->argc > 1) && $a->argv[1] === 'done') {
-		notice( t('Post successful.') . EOL);
+		info( t('Post successful.') . EOL);
 		return;
 	}
 

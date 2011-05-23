@@ -124,6 +124,9 @@ if(! x($_SESSION,'authenticated'))
 if(! x($_SESSION,'sysmsg'))
 	$_SESSION['sysmsg'] = '';
 
+if(! x($_SESSION,'sysmsg_info'))
+	$_SESSION['sysmsg_info'] = '';
+
 /*
  * check_config() is responsible for running update scripts. These automatically 
  * update the DB schema whenever we push a new one out. It also checks to see if
@@ -276,8 +279,16 @@ if(stristr($_SESSION['sysmsg'], t('Permission denied'))) {
 if(x($_SESSION,'sysmsg')) {
 	$a->page['content'] = "<div id=\"sysmsg\" class=\"error-message\">{$_SESSION['sysmsg']}</div>\r\n"
 		. ((x($a->page,'content')) ? $a->page['content'] : '');
+	$_SESSION['sysmsg']="";
 	unset($_SESSION['sysmsg']);
 }
+if(x($_SESSION,'sysmsg_info')) {
+	$a->page['content'] = "<div id=\"sysmsg_info\" class=\"info-message\">{$_SESSION['sysmsg_info']}</div>\r\n"
+		. ((x($a->page,'content')) ? $a->page['content'] : '');
+	$_SESSION['sysmsg_info']="";
+	unset($_SESSION['sysmsg_info']);
+}
+
 
 
 call_hooks('page_end', $a->page['content']);
