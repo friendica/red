@@ -79,9 +79,6 @@ function dfrn_notify_post(&$a) {
 	// $importer in this case contains the contact record for the remote contact joined with the user record of our user. 
 
 	$importer = $r[0];
-	foreach($importer as $key => $val) {
-		logger( "importer - key: " . $key . " val: " . $val);
-	}
 
 	if(($writable != (-1)) && ($writable != $importer['writable'])) {
 		q("UPDATE `contact` SET `writable` = %d WHERE `id` = %d LIMIT 1",
