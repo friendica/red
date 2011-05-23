@@ -628,10 +628,6 @@ function fb_consume_stream($uid,$j,$wall = false) {
 	foreach($j->data as $entry) {
 		logger('fb_consume: entry: ' . print_r($entry,true), LOGGER_DATA);
 		$datarray = array();
-		$we_posted = false;
-		$app = $entry->application;
-		if($app->id == get_config('facebook','appid') && $wall)
-			$we_posted = true;
 
 		$r = q("SELECT * FROM `item` WHERE ( `uri` = '%s' OR `extid` = '%s') AND `uid` = %d LIMIT 1",
 				dbesc('fb::' . $entry->id),
@@ -705,8 +701,11 @@ function fb_consume_stream($uid,$j,$wall = false) {
 				$orig_post = $r[0];
 
 		}
-		$likers = $entry->likes->data;
-		$comments = $entry->comments->data;
+
+		if(isset($entry->likes) && isset($entry->likes->data))
+			$likers = $entry->likes->data;
+		if(isset($entry->comments) && isset($entry->comments->data))
+			$comments = $entry->comments->data;
 
 		if(is_array($likers)) {
 			foreach($likers as $likes) {
