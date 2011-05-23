@@ -3,7 +3,7 @@
 		<div class="wall-item-info wallwall" id="wall-item-info-$id">
 			<div class="wall-item-photo-wrapper wwto" id="wall-item-ownerphoto-wrapper-$id" >
 				<a href="$owner_url" title="$olinktitle" class="wall-item-photo-link" id="wall-item-ownerphoto-link-$id">
-				<img src="$owner_photo" class="wall-item-photo$osparkle" id="wall-item-ownerphoto-$id" height="80" width="80" alt="$owner_name" /></a>
+				<img src="$owner_photo" class="wall-item-photo$osparkle" id="wall-item-ownerphoto-$id" style="height: 80px; width: 80px;" alt="$owner_name" /></a>
 			</div>
 			<div class="wall-item-arrowphoto-wrapper" ><img src="images/larrow.gif" alt="$wall" /></div>
 			<div class="wall-item-photo-wrapper wwfrom" id="wall-item-photo-wrapper-$id" 
