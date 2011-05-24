@@ -2,7 +2,6 @@
 
 require_once('library/HTML5/Parser.php');
 
-
 function parse_url_content(&$a) {
 
 	logger('parse_url: ' . $_GET['url']);
@@ -25,9 +24,9 @@ function parse_url_content(&$a) {
 		killme();
 	}
 
-	if($url) 
+	if($url) {
 		$s = fetch_url($url);
-	else {
+	} else {
 		echo '';
 		killme();
 	}

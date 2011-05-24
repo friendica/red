@@ -1,10 +1,6 @@
 function oembed(){
-  $("#oembed").toggleClass('hide');
-}
-
-function oembed_do(){
-  embed = "[embed]"+$('#oembed_url').attr('value')+"[/embed]";
-  
-  tinyMCE.execCommand('mceInsertRawHTML',false,embed);
-  oembed();
+	var reply = prompt("$oembed_message:");
+	if(reply && reply.length) { 
+		  tinyMCE.execCommand('mceInsertRawHTML',false, "[embed]"+reply+"[/embed]" );
+	}
 }
