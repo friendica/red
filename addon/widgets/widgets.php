@@ -7,12 +7,15 @@
 	 
 	 
 function widgets_install() {
-	//  we need some hooks, for the configuration and for sending tweets
 	register_hook('plugin_settings', 'addon/widgets/widgets.php', 'widgets_settings'); 
 	register_hook('plugin_settings_post', 'addon/widgets/widgets.php', 'widgets_settings_post');
-
 	logger("installed widgets");
 }
+function widgets_uninstall() {
+	unregister_hook('plugin_settings', 'addon/widgets/widgets.php', 'widgets_settings'); 
+	unregister_hook('plugin_settings_post', 'addon/widgets/widgets.php', 'widgets_settings_post');
+}
+
 
 function widgets_settings_post(){
 	
