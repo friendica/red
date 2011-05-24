@@ -52,6 +52,8 @@ $dob $age
 
 $hide_friends
 
+$hide_wall
+
 <div class="profile-edit-submit-wrapper" >
 <input type="submit" name="submit" class="profile-edit-submit-button" value="$submit" />
 </div>

@@ -288,6 +288,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `profile-name` char(255) NOT NULL,
   `is-default` tinyint(1) NOT NULL DEFAULT '0',
   `hide-friends` tinyint(1) NOT NULL DEFAULT '0',
+  `hidewall` tinyint(1) NOT NULL DEFAULT '0',
   `name` char(255) NOT NULL,
   `pdesc` char(255) NOT NULL,
   `dob` char(32) NOT NULL DEFAULT '0000-00-00',

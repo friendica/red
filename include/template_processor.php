@@ -128,7 +128,7 @@
 			#$s = str_replace(array("\n","\r"),array("§n§","§r§"),$s);
 			$s = $this->_build_nodes($s);
 			$s = preg_replace_callback('/\|\|([0-9]+)\|\|/', array($this, "_replcb_node"), $s);
-			$s = str_replace($this->search,$this->replace, (string) $s);
+			$s = str_replace($this->search,$this->replace, $s);
 			
 			return $s;
 		}

@@ -825,6 +825,8 @@ input#dfrn-url {
 #profile-in-dir-no,
 #profile-in-netdir-yes,
 #profile-in-netdir-no,
+#hide-wall-yes,
+#hide-wall-no,
 #hide-friends-yes,
 #hide-friends-no,
 #settings-normal,
@@ -839,6 +841,8 @@ input#dfrn-url {
 #profile-in-dir-no-label,
 #profile-in-netdir-yes-label,
 #profile-in-netdir-no-label,
+#hide-wall-yes-label,
+#hide-wall-no-label,
 #hide-friends-yes-label,
 #hide-friends-no-label {
 	margin-left: 125px;
@@ -917,6 +921,8 @@ input#dfrn-url {
 #profile-in-dir-end,
 #profile-in-netdir-break,
 #profile-in-netdir-end,
+#hide-wall-break,
+#hide-wall-end,
 #hide-friends-break,
 #hide-friends-end,
 #settings-normal-break,

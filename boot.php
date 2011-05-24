@@ -4,9 +4,9 @@ set_time_limit(0);
 ini_set('pcre.backtrack_limit', 250000);
 
 
-define ( 'FRIENDIKA_VERSION',      '2.2.989' );
+define ( 'FRIENDIKA_VERSION',      '2.2.990' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
-define ( 'DB_UPDATE_VERSION',      1055      );
+define ( 'DB_UPDATE_VERSION',      1056      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -2360,6 +2360,10 @@ function profile_sidebar($profile) {
 	$marital = ((x($profile,'marital') == 1) ? '<div class="marital"><span class="marital-label"><span class="heart">&hearts;</span> ' . t('Status:') . ' </span><span class="marital-text">' . $profile['marital'] . '</span></div><div class="profile-clear"></div>' : '');
 
 	$homepage = ((x($profile,'homepage') == 1) ? '<div class="homepage"><span class="homepage-label">' . t('Homepage:') . ' </span><span class="homepage-url">' . linkify($profile['homepage']) . '</span></div><div class="profile-clear"></div>' : '');
+
+	if($profile['hidewall'] && (! local_user()) && (! remote_user())) {
+		$location = $gender = $marital = $homepage = '';
+	}
 
 	$tpl = get_markup_template('profile_vcard.tpl');
 

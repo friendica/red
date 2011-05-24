@@ -483,3 +483,7 @@ function update_1053() {
 function update_1054() {
 	q("ALTER TABLE `register` ADD `language` CHAR( 16 ) NOT NULL AFTER `password` ");
 }
+
+function update_1055() {
+	q("ALTER TABLE `profile` ADD `hidewall` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `hide-friends` ");
+}

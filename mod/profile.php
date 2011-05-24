@@ -51,11 +51,14 @@ function profile_init(&$a) {
 
 function profile_content(&$a, $update = 0) {
 
-	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+	if(get_config('system','block_public') && (! local_user()) && (! remote_user())) {
 		return login();
 	}
 
-
+	if($a->profile['hidewall'] && (! local_user()) && (! remote_user())) {
+		notice( t('Access to this profile has been restricted.') . EOL);
+		return;
+	}
 
 	require_once("include/bbcode.php");
 	require_once('include/security.php');
