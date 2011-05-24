@@ -462,6 +462,7 @@ function item_post(&$a) {
 
 			// Send a notification email to the conversation owner, unless the owner is me and I wrote this item
 			if(($user['notify-flags'] & NOTIFY_COMMENT) && ($contact_record != $author)) {
+				push_lang($user['language']);
 				require_once('bbcode.php');
 				$from = $author['name'];
 
@@ -517,6 +518,8 @@ function item_post(&$a) {
 					$email_html_body_tpl,
 					$email_text_body_tpl
 				);
+
+				pop_lang();
 			}
 		}
 		else {
@@ -525,6 +528,7 @@ function item_post(&$a) {
 			// let me know if somebody did a wall-to-wall post on my profile
 
 			if(($user['notify-flags'] & NOTIFY_WALL) && ($contact_record != $author)) {
+				push_lang($user['language']);
 				require_once('bbcode.php');
 				$from = $author['name'];
 							
@@ -578,6 +582,7 @@ function item_post(&$a) {
 					$email_html_body_tpl,
 					$email_text_body_tpl
 				);
+				pop_lang();
 			}
 		}
 

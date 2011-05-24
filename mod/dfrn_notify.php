@@ -185,6 +185,8 @@ function dfrn_notify_post(&$a) {
 		require_once('bbcode.php');
 		if($importer['notify-flags'] & NOTIFY_MAIL) {
 
+			push_lang($importer['language']);
+
 			// name of the automated email sender
 			$msg['notificationfromname']	= t('Administrator');
 			// noreply address to send from
@@ -250,6 +252,8 @@ function dfrn_notify_post(&$a) {
 				$email_html_body_tpl,
 				$email_text_body_tpl
 			);
+
+			pop_lang();
 		}
 		xml_status(0);
 		// NOTREACHED
@@ -387,6 +391,7 @@ function dfrn_notify_post(&$a) {
 						proc_run('php',"include/notifier.php","comment-import","$posted_id");
 					
 						if((! $is_like) && ($importer['notify-flags'] & NOTIFY_COMMENT) && (! $importer['self'])) {
+							push_lang($importer['language']);
 							require_once('bbcode.php');
 							$from = stripslashes($datarray['author-name']);
 
@@ -442,7 +447,7 @@ function dfrn_notify_post(&$a) {
 								$email_html_body_tpl,
 								$email_text_body_tpl
 							);
-
+							pop_lang();
 						}
 					}
 					xml_status(0);
@@ -514,6 +519,8 @@ function dfrn_notify_post(&$a) {
 						foreach($myconv as $conv) {
 							if(! link_compare($conv['author-link'],$importer_url))
 								continue;
+
+							push_lang($importer['language']);
 							require_once('bbcode.php');
 							$from = stripslashes($datarray['author-name']);
 							
@@ -567,7 +574,7 @@ function dfrn_notify_post(&$a) {
 								$email_html_body_tpl,
 								$email_text_body_tpl
 							);
-
+							pop_lang();
 							break;
 						}
 					}

@@ -406,6 +406,7 @@ CREATE TABLE IF NOT EXISTS `register` (
   `created` DATETIME NOT NULL ,
   `uid` INT(11) UNSIGNED NOT NULL,
   `password` CHAR(255) NOT NULL,
+  `language` CHAR(16) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE = MYISAM DEFAULT CHARSET=utf8;
 

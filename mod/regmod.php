@@ -4,6 +4,8 @@
 
 function regmod_content(&$a) {
 
+	global $lang;
+
 	$_SESSION['return_url'] = $a->cmd;
 
 	if(! local_user()) {
@@ -79,6 +81,8 @@ function regmod_content(&$a) {
 				proc_run('php',"include/directory.php","$url");
 		}
 
+		push_lang($register[0]['language']);
+
 		$email_tpl = get_intltext_template("register_open_eml.tpl");
 		$email_tpl = replace_macros($email_tpl, array(
 				'$sitename' => $a->config['sitename'],
@@ -94,6 +98,8 @@ function regmod_content(&$a) {
 				'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
 				. 'Content-type: text/plain; charset=UTF-8' . "\n"
 				. 'Content-transfer-encoding: 8bit' );
+
+		pop_lang();
 
 		if($res) {
 			info( t('Account approved.') . EOL );

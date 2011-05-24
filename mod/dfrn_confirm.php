@@ -632,12 +632,13 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 
 		logger('dfrn_confirm: request: info updated');
 
-		$r = q("SELECT * FROM `contact` LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid`
+		$r = q("SELECT `contact`.*, `user`.* FROM `contact` LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid`
 			WHERE `contact`.`id` = %d LIMIT 1",
 			intval($dfrn_record)
 		);
 		if((count($r)) && ($r[0]['notify-flags'] & NOTIFY_CONFIRM)) {
 
+			push_lang($r[0]['language']);
 			$tpl = (($new_relation == REL_BUD) 
 				? get_intltext_template('friend_complete_eml.tpl')
 				: get_intltext_template('intro_complete_eml.tpl'));
@@ -661,6 +662,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			if(!$res) {
 				// pointless throwing an error here and confusing the person at the other end of the wire.
 			}
+			pop_lang();
 		}
 		xml_status(0); // Success
 		return; // NOTREACHED

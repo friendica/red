@@ -3,6 +3,8 @@
 if(! function_exists('register_post')) {
 function register_post(&$a) {
 
+	global $lang;
+
 	$verified = 0;
 	$blocked  = 1;
 
@@ -350,12 +352,22 @@ function register_post(&$a) {
 		}
 
 		$hash = random_string();
-		$r = q("INSERT INTO `register` ( `hash`, `created`, `uid`, `password` ) VALUES ( '%s', '%s', %d, '%s' ) ",
+		$r = q("INSERT INTO `register` ( `hash`, `created`, `uid`, `password`, `language` ) VALUES ( '%s', '%s', %d, '%s', '%s' ) ",
 			dbesc($hash),
 			dbesc(datetime_convert()),
 			intval($newuid),
-			dbesc($new_password)
+			dbesc($new_password),
+			dbesc($lang)
 		);
+
+		$r = q("SELECT `language` FROM `user` WHERE `email` = '%s' LIMIT 1",
+			dbesc($a->config['admin_email'])
+		);
+		if(count($r))
+			push_lang($r[0]['language']);
+		else
+			push_lang('en');
+
 
 		$email_tpl = get_intltext_template("register_verify_eml.tpl");
 		$email_tpl = replace_macros($email_tpl, array(
@@ -373,6 +385,9 @@ function register_post(&$a) {
 				'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
 				. 'Content-type: text/plain; charset=UTF-8' . "\n"
 				. 'Content-transfer-encoding: 8bit' );
+
+		pop_lang();
+
 		if($res) {
 			info( t('Your registration is pending approval by the site owner.') . EOL ) ;
 			goaway($a->get_baseurl());

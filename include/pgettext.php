@@ -53,6 +53,29 @@ function get_language() {
 }}
 
 
+function push_lang($language) {
+	global $lang, $a;
+
+	$a->langsave = $lang;
+
+	if(isset($a->strings) && count($a->strings)) {
+		$a->stringsave = $a->strings;
+	}
+	$a->strings = array();
+	load_translation_table($language);
+	$lang = $language;
+}
+
+function pop_lang() {
+	global $lang, $a;
+	if(isset($a->stringsave))
+		$a->strings = $a->stringsave;
+	else
+		$a->strings = array();
+
+	$lang = $a->langsave;
+}
+
 
 // load string translation table for alternate language
 

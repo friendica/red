@@ -29,7 +29,7 @@ function invite_post(&$a) {
 			continue;
 		}
 
-		$res = mail($recip, sprintf(t('Please join my network on %s'), $a->config['sitename']), 
+		$res = mail($recip, sprintf( t('Please join my network on %s'), $a->config['sitename']), 
 			$message, 
 			"From: " . $a->user['email'] . "\n"
 			. 'Content-type: text/plain; charset=UTF-8' . "\n"
