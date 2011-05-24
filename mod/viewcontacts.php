@@ -37,7 +37,7 @@ function viewcontacts_content(&$a) {
 		intval($a->pager['itemspage'])
 	);
 	if(! count($r)) {
-		notice( t('No contacts.') . EOL );
+		info( t('No contacts.') . EOL );
 		return $o;
 	}
 

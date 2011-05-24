@@ -75,11 +75,11 @@ function openid_content(&$a) {
 			if($a->user['login_date'] === '0000-00-00 00:00:00') {
 				$_SESSION['return_url'] = 'profile_photo/new';
 				$a->module = 'profile_photo';
-				notice( t("Welcome ") . $a->user['username'] . EOL);
-				notice( t('Please upload a profile photo.') . EOL);
+				info( t("Welcome ") . $a->user['username'] . EOL);
+				info( t('Please upload a profile photo.') . EOL);
 			}
 			else
-				notice( t("Welcome back ") . $a->user['username'] . EOL);
+				info( t("Welcome back ") . $a->user['username'] . EOL);
 
 
 			if(strlen($a->user['timezone'])) {

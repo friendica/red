@@ -125,7 +125,7 @@ function item_post(&$a) {
 		$pubmail_enable    = ((x($_POST,'pubmail_enable') && intval($_POST['pubmail_enable']) && (! $private)) ? 1 : 0);
 
 		if(! strlen($body)) {
-			notice( t('Empty post discarded.') . EOL );
+			info( t('Empty post discarded.') . EOL );
 			if(x($_POST,'return')) 
 				goaway($a->get_baseurl() . "/" . $_POST['return'] );
 			killme();

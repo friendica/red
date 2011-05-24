@@ -1007,6 +1007,13 @@ function notice($s) {
 	if($a->interactive)
 		$_SESSION['sysmsg'] .= $s;
 }}
+if(! function_exists('info')) {
+function info($s) {
+	$a = get_app();
+	if($a->interactive)
+		$_SESSION['sysmsg_info'] .= $s;
+}}
+
 
 // wrapper around config to limit the text length of an incoming message
 

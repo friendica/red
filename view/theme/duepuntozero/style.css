@@ -93,6 +93,14 @@ nav #site-location {
 	padding: 10px;
 }
 
+.info-message {
+	color: #204a87;
+	font-size: 1.1em;
+	border: 1px solid #3465a4;
+	background-color: #d7e3f1;
+	padding: 10px;
+}
+
 
 nav #banner {
 	display: block;

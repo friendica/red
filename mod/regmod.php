@@ -7,7 +7,7 @@ function regmod_content(&$a) {
 	$_SESSION['return_url'] = $a->cmd;
 
 	if(! local_user()) {
-		notice( t('Please login.') . EOL);
+		info( t('Please login.') . EOL);
 		$o .= '<br /><br />' . login(($a->config['register_policy'] == REGISTER_CLOSED) ? 0 : 1);
 		return $o;
 	}
@@ -96,7 +96,7 @@ function regmod_content(&$a) {
 				. 'Content-transfer-encoding: 8bit' );
 
 		if($res) {
-			notice( t('Account approved.') . EOL );
+			info( t('Account approved.') . EOL );
 			return;
 		}
 	}

@@ -169,7 +169,7 @@ function statusnet_settings_post ($a,$post) {
         	    //  to post a tweet for every new __public__ posting to the wall
         	    set_pconfig(local_user(),'statusnet','post',intval($_POST['statusnet-enable']));
         	    set_pconfig(local_user(),'statusnet','post_by_default',intval($_POST['statusnet-default']));
-        		notice( t('StatusNet settings updated.') . EOL);
+        		info( t('StatusNet settings updated.') . EOL);
         	}}}}
 }
 function statusnet_settings(&$a,&$s) {

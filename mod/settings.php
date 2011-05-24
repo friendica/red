@@ -51,7 +51,7 @@ function settings_post(&$a) {
 				intval(local_user())
 			);
 			if($r)
-				notice( t('Password changed.') . EOL);
+				info( t('Password changed.') . EOL);
 			else
 				notice( t('Password update failed. Please try again.') . EOL);
 		}
@@ -203,7 +203,7 @@ function settings_post(&$a) {
 			intval(local_user())
 	);
 	if($r)
-		notice( t('Settings updated.') . EOL);
+		info( t('Settings updated.') . EOL);
 
 	$r = q("UPDATE `profile` 
 		SET `publish` = %d, `net-publish` = %d
@@ -374,7 +374,7 @@ function settings_content(&$a) {
 		? true : false);
 
 	if($invisible)
-		notice( t('Profile is <strong>not published</strong>.') . EOL );
+		info( t('Profile is <strong>not published</strong>.') . EOL );
 
 	
 	$theme_selector = '<select name="theme" id="theme-select" >';
@@ -485,7 +485,7 @@ function settings_content(&$a) {
 		'$imap_replyto' => $mail_replyto,
 		'$lbl_imap7' => t('Send public posts to all email contacts:'),
 		'$pubmail_checked' => (($mail_pubmail) ? ' checked="checked" ' : ''),
-		'$mail_disabled' => (($mail_disabled) ? '<div class="error-message">' . t('Email access is disabled on this site.') . '</div>' : ''),
+		'$mail_disabled' => (($mail_disabled) ? '<div class="info-message">' . t('Email access is disabled on this site.') . '</div>' : ''),
 		'$imap_disabled' => $imap_disabled
 	));
 

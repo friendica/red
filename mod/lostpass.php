@@ -24,7 +24,7 @@ function lostpass_post(&$a) {
 		intval($uid)
 	);
 	if($r)
-		notice( t('Password reset request issued. Check your email.') . EOL);
+		info( t('Password reset request issued. Check your email.') . EOL);
 
 	$email_tpl = get_intltext_template("lostpass_eml.tpl");
 	$email_tpl = replace_macros($email_tpl, array(
@@ -85,7 +85,7 @@ function lostpass_content(&$a) {
 				'$baseurl' => $a->get_baseurl()
 
 			));
-				notice("Your password has been reset." . EOL);
+				info("Your password has been reset." . EOL);
 
 
 

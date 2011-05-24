@@ -24,7 +24,7 @@ function group_post(&$a) {
 		$name = notags(trim($_POST['groupname']));
 		$r = group_add(local_user(),$name);
 		if($r) {
-			notice( t('Group created.') . EOL );
+			info( t('Group created.') . EOL );
 			$r = group_byname(local_user(),$name);
 			if($r)
 				goaway($a->get_baseurl() . '/group/' . $r);
@@ -53,7 +53,7 @@ function group_post(&$a) {
 				intval($group['id'])
 			);
 			if($r)
-				notice( t('Group name changed.') . EOL );
+				info( t('Group name changed.') . EOL );
 		}
 
 		$a->page['aside'] = group_side();
@@ -87,7 +87,7 @@ function group_content(&$a) {
 			if(count($r)) 
 				$result = group_rmv(local_user(),$r[0]['name']);
 			if($result)
-				notice( t('Group removed.') . EOL);
+				info( t('Group removed.') . EOL);
 			else
 				notice( t('Unable to remove group.') . EOL);
 		}

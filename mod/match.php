@@ -47,7 +47,7 @@ function match_content(&$a) {
 			$o .= '<div id="profile-match-wrapper-end"></div>';
 		}
 		else {
-			notice( t('No matches') . EOL);
+			info( t('No matches') . EOL);
 		}		
 
 	}

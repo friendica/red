@@ -61,8 +61,9 @@ function network_content(&$a, $update = 0) {
 	if(! $update) {
 		if(group) {
 			if(($t = group_public_members($group)) && (! get_pconfig(local_user(),'system','nowarn_insecure'))) {
-				$plural_form = sprintf( tt('%d member', '%d members', $t), $t);
-				notice( sprintf( t('Warning: This group contains %s from an insecure network.'), $plural_form ) . EOL);
+				notice( sprintf( tt('Warning: This group contains %s member from an insecure network.',
+									'Warning: This group contains %s members from an insecure network.',
+									$t), $t ) . EOL);
 				notice( t('Private messages to this group are at risk of public disclosure.') . EOL);
 			}
 		}
@@ -136,7 +137,7 @@ function network_content(&$a, $update = 0) {
 		}
 		else {
 				$contact_str = ' 0 ';
-				notice( t('Group is empty'));
+				info( t('Group is empty'));
 		}
 
 		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND ( `contact-id` IN ( $contact_str ) OR `allow_gid` REGEXP '<" . intval($group) . ">' )) ";

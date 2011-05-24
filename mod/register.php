@@ -336,7 +336,7 @@ function register_post(&$a) {
 
 
 		if($res) {
-			notice( t('Registration successful. Please check your email for further instructions.') . EOL ) ;
+			info( t('Registration successful. Please check your email for further instructions.') . EOL ) ;
 			goaway($a->get_baseurl());
 		}
 		else {
@@ -374,7 +374,7 @@ function register_post(&$a) {
 				. 'Content-type: text/plain; charset=UTF-8' . "\n"
 				. 'Content-transfer-encoding: 8bit' );
 		if($res) {
-			notice( t('Your registration is pending approval by the site owner.') . EOL ) ;
+			info( t('Your registration is pending approval by the site owner.') . EOL ) ;
 			goaway($a->get_baseurl());
 		}
 

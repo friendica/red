@@ -245,12 +245,12 @@ function facebook_content(&$a) {
 
 	if($a->argc > 1 && $a->argv[1] === 'remove') {
 		del_pconfig(local_user(),'facebook','post');
-		notice( t('Facebook disabled') . EOL);
+		info( t('Facebook disabled') . EOL);
 	}
 
 	if($a->argc > 1 && $a->argv[1] === 'friends') {
 		fb_get_friends(local_user());
-		notice( t('Updating contacts') . EOL);
+		info( t('Updating contacts') . EOL);
 	}
 
 
