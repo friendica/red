@@ -58,6 +58,9 @@ function push_lang($language) {
 
 	$a->langsave = $lang;
 
+	if($language === $lang)
+		return;
+
 	if(isset($a->strings) && count($a->strings)) {
 		$a->stringsave = $a->strings;
 	}
@@ -68,6 +71,10 @@ function push_lang($language) {
 
 function pop_lang() {
 	global $lang, $a;
+
+	if($lang === $a->langsave)
+		return;
+
 	if(isset($a->stringsave))
 		$a->strings = $a->stringsave;
 	else
