@@ -103,10 +103,14 @@ function openid_content(&$a) {
 				$_SESSION['cid'] = $a->cid;
 			}
 
-			q("UPDATE `user` SET `login_date` = '%s' WHERE `uid` = %d LIMIT 1",
+			$l = get_language();
+
+			q("UPDATE `user` SET `login_date` = '%s', `language` = '%s' WHERE `uid` = %d LIMIT 1",
 				dbesc(datetime_convert()),
+				dbesc($l),
 				intval($_SESSION['uid'])
 			);
+
 
 			header('X-Account-Management-Status: active; name="' . $a->user['username'] . '"; id="' . $a->user['nickname'] .'"');
 			if(($a->module !== 'home') && isset($_SESSION['return_url']))

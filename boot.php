@@ -4,7 +4,7 @@ set_time_limit(0);
 ini_set('pcre.backtrack_limit', 250000);
 
 
-define ( 'FRIENDIKA_VERSION',      '2.2.988' );
+define ( 'FRIENDIKA_VERSION',      '2.2.989' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
 define ( 'DB_UPDATE_VERSION',      1054      );
 
@@ -2707,6 +2707,8 @@ function unamp($s) {
 }}
 
 
+
+
 if(! function_exists('lang_selector')) {
 function lang_selector() {
 	global $lang;
@@ -2749,3 +2751,4 @@ function is_site_admin() {
 		return true;
 	return false;
 }}
+

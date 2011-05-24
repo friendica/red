@@ -232,9 +232,11 @@ else {
 			$_SESSION['cid'] = $a->cid;
 		}
 
+		$l = get_language();
 
-		q("UPDATE `user` SET `login_date` = '%s' WHERE `uid` = %d LIMIT 1",
+		q("UPDATE `user` SET `login_date` = '%s', `language` = '%s' WHERE `uid` = %d LIMIT 1",
 			dbesc(datetime_convert()),
+			dbesc($l),
 			intval($_SESSION['uid'])
 		);
 
