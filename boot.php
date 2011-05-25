@@ -2547,6 +2547,7 @@ function prepare_body($item,$attach = false) {
 		return $s;
 
 	$arr = explode(',',$item['attach']);
+	$s .= '<div class="body-attach">';
 	if(count($arr)) {
 		foreach($arr as $r) {
 			$matches = false;
@@ -2559,7 +2560,7 @@ function prepare_body($item,$attach = false) {
 					case 'audio':
 					case 'image':
 					case 'text':
-						$icon = '<div class="attachtype type-' . $attachtype . '"></div>';
+						$icon = '<div class="attachtype type-' . $icontype . '"></div>';
 						break;
 					default:
 						$icon = '<div class="attachtype type-unkn"></div>';
@@ -2572,7 +2573,7 @@ function prepare_body($item,$attach = false) {
 			}
 		}
 	}
-	$s .= '<div class="clear"></div>';
+	$s .= '<div class="clear"></div></div>';
 	return $s;
 }}
 
