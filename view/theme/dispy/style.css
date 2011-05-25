@@ -807,7 +807,6 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
 
 .attachtype {
 	display: block; width: 20px; height: 23px;
-	padding: 3px;
 	background-image: url('../../../images/content-types.gif');
 }
 
