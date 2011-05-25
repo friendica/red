@@ -2430,8 +2430,8 @@ a.mail-list-link {
 	background-image: url('../../../images/content-types.gif');
 }
 
-.attachlink {
-	margin: 10px 10px 0px 0px;
+.body-attach {
+	margin-top: 10px;
 }
 
 .type-video { background-position: 0px; 0px; }
