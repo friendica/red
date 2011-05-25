@@ -3,12 +3,13 @@
 # This file is distributed under the same license as the Friendika package.
 # 
 #   <tobias.diekershoff@gmx.net>, 2011
+# bavatar <tobias.diekershoff@gmx.net>, 2011
 msgid ""
 msgstr ""
 "Project-Id-Version: friendika\n"
 "Report-Msgid-Bugs-To: http://bugs.friendika.com/\n"
 "POT-Creation-Date: 2011-05-23 12:00+0200\n"
-"PO-Revision-Date: 2011-05-25 09:58+0000\n"
+"PO-Revision-Date: 2011-05-25 17:37+0000\n"
 "Last-Translator: bavatar <tobias.diekershoff@gmx.net>\n"
 "Language-Team: German (http://www.transifex.net/projects/p/friendika/team/de/)\n"
 "MIME-Version: 1.0\n"
@@ -1248,7 +1249,7 @@ msgstr "Z.B.: bob@example.com, mary@example.com"
 
 #: ../../mod/update_network.php:22 ../../mod/update_profile.php:41
 msgid "[Embedded content - reload page to view]"
-msgstr "[Eingebetteter Inhalt - Seite neu Laden zum Betrachten]"
+msgstr "[Eingebetteter Inhalt - Seite neu laden zum Betrachten]"
 
 #: ../../mod/invite.php:28
 #, php-format
