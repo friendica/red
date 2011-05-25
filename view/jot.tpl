@@ -24,7 +24,7 @@
 		<div id="wall-image-upload-div" ><a href="#" onclick="return false;" id="wall-image-upload" class="icon camera" title="$upload"></a></div>
 	</div> 
 	<div id="profile-attach-wrapper" style="display: $visitor;" >
-		<div id="wall-file-upload-div" ><a href="#" onclick="return false;" id="wall-file-upload" class="icon camera" title="$attach"></a></div>
+		<div id="wall-file-upload-div" ><a href="#" onclick="return false;" id="wall-file-upload" class="icon attach" title="$attach"></a></div>
 	</div> 
 
 	<div id="profile-link-wrapper" style="display: $visitor;" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);" >

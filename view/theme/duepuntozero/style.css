@@ -2428,6 +2428,8 @@ a.mail-list-link {
 .unlock { background-position: -32px -32px;}
 .video { background-position: -48px -32px;}
 .youtube { background-position: -64px -32px;}
+.attach { background-position: -80px -32px; }
+
 
 .attachtype {
 	display: block; width: 20px; height: 23px;
