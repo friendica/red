@@ -184,7 +184,7 @@ function conversation(&$a, $items, $mode, $update) {
 				$drop = replace_macros($droptpl,array('$id' => $item['id']));
 				$lock = '<div class="wall-item-lock"></div>';
 
-				$body = prepare_body($item);
+				$body = prepare_body($item,true);
 				
 				$o .= replace_macros($tpl,array(
 					'$id' => $item['item_id'],
@@ -443,7 +443,7 @@ function conversation(&$a, $items, $mode, $update) {
 
 			// Build the HTML
 
-			$body = prepare_body($item);
+			$body = prepare_body($item,true);
 
 
 			$tmp_item = replace_macros($template,array(
