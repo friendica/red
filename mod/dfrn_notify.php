@@ -440,10 +440,10 @@ function dfrn_notify_post(&$a) {
 							require_once("include/EmailNotification.php");
 							EmailNotification::sendTextHtmlEmail(
 								$msg['notificationfromname'],
-								t("Administrator@") . $a->get_hostname(),
+								t("Administrator") . '@' . $a->get_hostname(),
 								t("noreply") . '@' . $a->get_hostname(),
 								$importer['email'],
-								$from . t(" commented on an item at ") . $a->config['sitename'],
+								sprintf( t('%s commented on an item at %s'), $from , $a->config['sitename']),
 								$email_html_body_tpl,
 								$email_text_body_tpl
 							);
