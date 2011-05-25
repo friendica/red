@@ -226,8 +226,10 @@ div.wall-item-content-wrapper.shiny {
 #profile-link,
 #profile-title, 
 #wall-image-upload,
+#wall-file-upload,
 #profile-upload-wrapper,
 #wall-image-upload-div,
+#wall-file-upload-div,
 .hover, .focus {
 	cursor: pointer;
 }
@@ -1136,7 +1138,10 @@ input#dfrn-url {
 	float: left;
 	margin-left: 30px;
 }
-
+#profile-attach-wrapper {
+	float: left;
+	margin-left: 30px;
+}
 #profile-rotator {
 	float: left;
 	margin-left: 30px;

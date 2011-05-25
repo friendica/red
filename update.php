@@ -487,3 +487,8 @@ function update_1054() {
 function update_1055() {
 	q("ALTER TABLE `profile` ADD `hidewall` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `hide-friends` ");
 }
+
+function update_1056() {
+	q("ALTER TABLE `attach` ADD `hash` CHAR( 64 ) NOT NULL AFTER `uid` ");
+}
+
