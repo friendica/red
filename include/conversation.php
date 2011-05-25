@@ -183,6 +183,8 @@ function conversation(&$a, $items, $mode, $update) {
 
 				$drop = replace_macros($droptpl,array('$id' => $item['id']));
 				$lock = '<div class="wall-item-lock"></div>';
+
+				$body = prepare_body($item);
 				
 				$o .= replace_macros($tpl,array(
 					'$id' => $item['item_id'],
@@ -194,7 +196,7 @@ function conversation(&$a, $items, $mode, $update) {
 					'$lock' => $lock,
 					'$thumb' => $profile_avatar,
 					'$title' => $item['title'],
-					'$body' => smilies(bbcode($item['body'])),
+					'$body' => $body,
 					'$ago' => relative_date($item['created']),
 					'$location' => $location,
 					'$indent' => '',
@@ -441,6 +443,9 @@ function conversation(&$a, $items, $mode, $update) {
 
 			// Build the HTML
 
+			$body = prepare_body($item);
+
+
 			$tmp_item = replace_macros($template,array(
 				'$id' => $item['item_id'],
 				'$linktitle' => sprintf( t('View %s\'s profile'), $profile_name),
@@ -455,7 +460,7 @@ function conversation(&$a, $items, $mode, $update) {
 				'$osparkle' => $osparkle,
 				'$sparkle' => $sparkle,
 				'$title' => $item['title'],
-				'$body' => smilies(bbcode($item['body'])),
+				'$body' => $body,
 				'$ago' => relative_date($item['created']),
 				'$lock' => $lock,
 				'$location' => $location,

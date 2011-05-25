@@ -2540,8 +2540,40 @@ function link_compare($a,$b) {
 
 
 if(! function_exists('prepare_body')) {
-function prepare_body($item) {
-	return prepare_text($item['body']);
+function prepare_body($item,$attach = false) {
+
+	$s = prepare_text($item['body']);
+	if(! $attach)
+		return $s;
+
+	$arr = explode(',',$item['attach']);
+	if(count($arr)) {
+		foreach($arr as $r) {
+			$matches = false;
+			$icon = '';
+			$cnt = preg_match('|\[attach\]href=\"(.+?)\" size=\"(.+?)\" type=\"(.+?)\" title=\"(.+?)\"\[\/attach\]|',$r,$matches);
+			if($cnt) {
+				$icontype = strtolower(substr($matches[3],0,strpos($matches[3],'/')));
+				switch($icontype) {
+					case 'video':
+					case 'audio':
+					case 'image':
+					case 'text':
+						$icon = '<div class="attachtype type-' . $attachtype . '"></div>';
+						break;
+					default:
+						$icon = '<div class="attachtype type-unkn"></div>';
+						break;
+				}
+				$title = ((strlen(trim($matches[4]))) ? escape_tags(trim($matches[4])) : escape_tags($matches[1]));
+				$title .= ' ' . $matches[2] . ' ' . t('bytes');
+
+				$s .= '<a href="' . strip_tags($matches[1]) . '" title="' . $title . '" >' . $icon . '</a>';
+			}
+		}
+	}
+	$s .= '<div class="clear"></div>';
+	return $s;
 }}
 
 if(! function_exists('prepare_text')) {
