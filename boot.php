@@ -2569,7 +2569,7 @@ function prepare_body($item,$attach = false) {
 				$title = ((strlen(trim($matches[4]))) ? escape_tags(trim($matches[4])) : escape_tags($matches[1]));
 				$title .= ' ' . $matches[2] . ' ' . t('bytes');
 
-				$s .= '<a href="' . strip_tags($matches[1]) . '" title="' . $title . '" >' . $icon . '</a>';
+				$s .= '<a href="' . strip_tags($matches[1]) . '" title="' . $title . '"  class="attachlink" >' . $icon . '</a>';
 			}
 		}
 	}

@@ -2430,6 +2430,10 @@ a.mail-list-link {
 	background-image: url('../../../images/content-types.gif');
 }
 
+.attachlink {
+	margin: 10px 10px 0px 0px;
+}
+
 .type-video { background-position: 0px; 0px; }
 .type-image { background-position: -20px; 0px; }
 .type-audio { background-position: -40px; 0px; }
