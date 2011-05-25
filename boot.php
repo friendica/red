@@ -6,7 +6,7 @@ ini_set('pcre.backtrack_limit', 250000);
 
 define ( 'FRIENDIKA_VERSION',      '2.2.990' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
-define ( 'DB_UPDATE_VERSION',      1057      );
+define ( 'DB_UPDATE_VERSION',      1058      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -1983,15 +1983,15 @@ function get_tags($s) {
 	$s = preg_replace('/\[code\](.*?)\[\/code\]/sm','',$s);
 
 	if(preg_match_all('/([@#][^ \x0D\x0A,:?]+)([ \x0D\x0A,:?]|$)/',$s,$match)) {
-		foreach($match[1] as $match) {
-			if(strstr($match,"]")) {
+		foreach($match[1] as $mtch) {
+			if(strstr($mtch,"]")) {
 				// we might be inside a bbcode color tag - leave it alone
 				continue;
 			}
-			if(substr($match,-1,1) === '.')
-				$ret[] = substr($match,0,-1);
+			if(substr($mtch,-1,1) === '.')
+				$ret[] = substr($mtch,0,-1);
 			else
-				$ret[] = $match;
+				$ret[] = $mtch;
 		}
 	}
 

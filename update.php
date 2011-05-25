@@ -492,3 +492,6 @@ function update_1056() {
 	q("ALTER TABLE `attach` ADD `hash` CHAR( 64 ) NOT NULL AFTER `uid` ");
 }
 
+function update_1057() {
+	q("ALTER TABLE `attach` ADD `filename` CHAR( 255 ) NOT NULL AFTER `hash` ");
+}

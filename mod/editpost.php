@@ -87,6 +87,7 @@ function editpost_content(&$a) {
 		'$action' => 'item',
 		'$share' => t('Edit'),
 		'$upload' => t('Upload photo'),
+		'$attach' => t('Attach file'),
 		'$weblink' => t('Insert web link'),
 		'$youtube' => t('Insert YouTube video'),
 		'$video' => t('Insert Vorbis [.ogg] video'),

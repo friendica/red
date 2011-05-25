@@ -64,11 +64,12 @@ function wall_attach_post(&$a) {
 	$mimetype = mime_content_type($src);
 	$hash = random_string();
 	$created = datetime_convert();
-dbg(1);
-	$r = q("INSERT INTO `attach` ( `uid`, `hash`, `filetype`, `filesize`, `data`, `created`, `edited`, `allow_cid`, `allow_gid`,`deny_cid`, `deny_gid` )
-		VALUES ( %d, '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
+
+	$r = q("INSERT INTO `attach` ( `uid`, `hash`, `filename`, `filetype`, `filesize`, `data`, `created`, `edited`, `allow_cid`, `allow_gid`,`deny_cid`, `deny_gid` )
+		VALUES ( %d, '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 		intval($page_owner_uid),
 		dbesc($hash),
+		dbesc($filename),
 		dbesc($mimetype),
 		intval($filesize),
 		dbesc($filedata),

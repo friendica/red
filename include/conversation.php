@@ -730,6 +730,7 @@ function status_editor($a,$x, $notes_cid = 0) {
 			'$action' => 'item',
 			'$share' => (($x['button']) ? $x['button'] : t('Share')),
 			'$upload' => t('Upload photo'),
+			'$attach' => t('Attach file'),
 			'$weblink' => t('Insert web link'),
 			'$youtube' => t('Insert YouTube video'),
 			'$video' => t('Insert Vorbis [.ogg] video'),

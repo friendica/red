@@ -218,6 +218,32 @@ function item_post(&$a) {
 		}
 	}
 
+
+	$match = null;
+
+	if(preg_match_all("/\[attachment\](.+?)\[\/attachment\]/",$body,$match)) {
+		$attaches = $match[1];
+		if(count($attaches)) {
+			foreach($attaches as $attach) {
+				$r = q("SELECT * FROM `attach` WHERE `uid` = %d AND `id` = %d LIMIT 1",
+					intval($profile_uid),
+					intval($attaches)
+				);				
+				if(count($r)) {
+					$r = q("UPDATE `attach` SET `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s'
+						WHERE `uid` = %d AND `id` = %d LIMIT 1",
+						intval($profile_uid),
+						intval($attaches)
+					);
+				}
+			}
+		}
+	}
+
+
+
+
+
 	/**
 	 * Fold multi-line [code] sequences
 	 */
@@ -322,6 +348,23 @@ function item_post(&$a) {
 		}
 	}
 
+	$attachments = '';
+
+	if(preg_match_all('/(\[attachment\]([0-9]+)\[\/attachment\])/',$body,$match)) {
+		foreach($match[2] as $mtch) {
+			$r = q("SELECT `id`,`filename`,`filesize`,`filetype` FROM `attach` WHERE `uid` = %d AND `id` = %d LIMIT 1",
+				intval($profile_uid),
+				intval($mtch)
+			);
+			if(count($r)) {
+				if(strlen($attachments))
+					$attachments .= ',';
+				$attachments .= '[attach]href="' . $a->get_baseurl() . '/attach/' . $r[0]['id'] . '" size="' . $r[0]['filesize'] . '" type="' . $r[0]['filetype'] . '" title="' . $r[0]['filename'] . '"[/attach]'; 
+			}
+			$body = str_replace($match[1],'',$body);
+		}
+	}
+
 	$wall = 0;
 
 	if($post_type === 'wall' || $post_type === 'wall-comment')
@@ -365,6 +408,7 @@ function item_post(&$a) {
 	$datarray['deny_gid']      = $str_group_deny;
 	$datarray['private']       = $private;
 	$datarray['pubmail']       = $pubmail_enable;
+	$datarray['attach']        = $attachments;
 
 	/**
 	 * These fields are for the convenience of plugins...
@@ -399,11 +443,11 @@ function item_post(&$a) {
 	else
 		$post_id = 0;
 
-
+dbg(1);
 	$r = q("INSERT INTO `item` (`uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `changed`, `uri`, `title`, `body`, `location`, `coord`, 
-		`tag`, `inform`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail` )
-		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d )",
+		`tag`, `inform`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach` )
+		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s' )",
 		intval($datarray['uid']),
 		dbesc($datarray['type']),
 		intval($datarray['wall']),
@@ -431,7 +475,8 @@ function item_post(&$a) {
 		dbesc($datarray['deny_cid']),
 		dbesc($datarray['deny_gid']),
 		intval($datarray['private']),
-		intval($datarray['pubmail'])
+		intval($datarray['pubmail']),
+		dbesc($datarray['attach'])
 	);
 
 	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
