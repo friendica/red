@@ -363,7 +363,7 @@ function profiles_content(&$a) {
 
 		$opt_tpl = get_markup_template("profile-hide-wall.tpl");
 		$hide_wall = replace_macros($opt_tpl,array(
-			'$desc' => t('Hide your messages from unknown viewers of this profile?'),
+			'$desc' => t('Hide profile details and all your messages from unknown viewers?'),
 			'$yes_str' => t('Yes'),
 			'$no_str' => t('No'),
 			'$yes_selected' => (($r[0]['hidewall']) ? " checked=\"checked\" " : ""),

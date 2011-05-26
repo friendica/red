@@ -31,6 +31,12 @@ function dfrn_poll_init(&$a) {
 			killme();
 		}
 
+		$r = q("SELECT `hidewall` FROM `profile` LEFT JOIN `user` ON `profile`.`uid` = `user`.`uid` WHERE `user`.`nickname` = '%s' AND `profile`.`is-default` = 1 LIMIT 1",
+			dbesc($a->argv[1])
+		);
+		if(count($r) && $r[0]['hidewall'])
+			killme();
+ 
 		logger('dfrn_poll: public feed request from ' . $_SERVER['REMOTE_ADDR'] );
 		header("Content-type: application/atom+xml");
 		$o = get_feed_for($a, '', $a->argv[1],$last_update);
