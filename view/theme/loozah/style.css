@@ -114,8 +114,10 @@ blockquote:before {
 #profile-link,
 #profile-title, 
 #wall-image-upload,
+#wall-file-upload,
 #profile-upload-wrapper,
 #wall-image-upload-div,
+#wall-file-upload-div,
 .hover, .focus {
 	cursor: pointer;
 }
@@ -1203,7 +1205,10 @@ padding: 5px 10px 0px;
 	float: left;
 	margin-left: 30px;
 }
-
+#profile-attach-wrapper {
+    float: left;
+    margin-left: 30px;
+}
 #profile-rotator {
 	float: left;
 	margin-left: 30px;
@@ -2445,7 +2450,7 @@ a.mail-list-link {
 .attachtype {
 	display: block; width: 20px; height: 23px;
 	float: left;
-	background-image: url('../../../images/content-types.gif');
+	background-image: url('../../../images/content-types.png');
 }
 
 .body-attach {

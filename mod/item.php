@@ -443,7 +443,7 @@ function item_post(&$a) {
 	else
 		$post_id = 0;
 
-dbg(1);
+
 	$r = q("INSERT INTO `item` (`uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `changed`, `uri`, `title`, `body`, `location`, `coord`, 
 		`tag`, `inform`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach` )
@@ -533,10 +533,10 @@ dbg(1);
 					'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
 					'$thumb'		=> $author['thumb'],					// thumbnail url for sender icon
 					'$email'		=> $importer['email'],					// email address to send to
-					'$url'			=> $author['url'],					// full url for the site
-					'$from'			=> $from,						// name of the person sending the message
+					'$url'			=> $author['url'],						// full url for the site
+					'$from'			=> $from,								// name of the person sending the message
 					'$body'			=> $msg['htmlversion'],					// html version of the message
-					'$display'		=> $a->get_baseurl() . '/display/' . $author['nick'] . '/' . $post_id,
+					'$display'		=> $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
 				));
 			
 				// load the template for private message notifications
@@ -546,10 +546,10 @@ dbg(1);
 					'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
 					'$thumb'		=> $author['thumb'],					// thumbnail url for sender icon
 					'$email'		=> $importer['email'],					// email address to send to
-					'$url'			=> $author['url'],					// full url for the site
-					'$from'			=> $from,						// name of the person sending the message
+					'$url'			=> $author['url'],						// profile url for the author
+					'$from'			=> $from,								// name of the person sending the message
 					'$body'			=> $msg['textversion'],					// text version of the message
-					'$display'		=> $a->get_baseurl() . '/display/' . $author['nick'] . '/' . $post_id,
+					'$display'		=> $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
 				));
 
 				// use the EmailNotification library to send the message
@@ -559,7 +559,7 @@ dbg(1);
 					t("Administrator@") . $a->get_hostname(),
 					t("noreply") . '@' . $a->get_hostname(),
 					$user['email'],
-					$from . t(" commented on an item at ") . $a->config['sitename'],
+					sprintf( t('%s commented on an item at %s'), $from , $a->config['sitename']),
 					$email_html_body_tpl,
 					$email_text_body_tpl
 				);
@@ -598,10 +598,10 @@ dbg(1);
 					'$sitename'		=> $a->config['sitename'],				// name of this site
 					'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
 					'$thumb'		=> $author['thumb'],					// thumbnail url for sender icon
-					'$url'			=> $author['url'],					// full url for the site
-					'$from'			=> $from,						// name of the person sending the message
+					'$url'			=> $author['url'],						// full url for the site
+					'$from'			=> $from,								// name of the person sending the message
 					'$body'			=> $msg['htmlversion'],					// html version of the message
-					'$display'		=> $a->get_baseurl() . '/display/' . $author['nick'] . '/' . $post_id,
+					'$display'		=> $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
 				));
 			
 				// load the template for private message notifications
@@ -610,10 +610,10 @@ dbg(1);
 					'$sitename'		=> $a->config['sitename'],				// name of this site
 					'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
 					'$thumb'		=> $author['thumb'],					// thumbnail url for sender icon
-					'$url'			=> $author['url'],					// full url for the site
-					'$from'			=> $from,						// name of the person sending the message
+					'$url'			=> $author['url'],						// full url for the site
+					'$from'			=> $from,								// name of the person sending the message
 					'$body'			=> $msg['textversion'],					// text version of the message
-					'$display'		=> $a->get_baseurl() . '/display/' . $author['nick'] . '/' . $post_id,
+					'$display'		=> $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
 				));
 
 				// use the EmailNotification library to send the message
@@ -623,7 +623,7 @@ dbg(1);
 					t("Administrator@") . $a->get_hostname(),
 					t("noreply") . '@' . $a->get_hostname(),
 					$user['email'],
-					$from . t(" commented on an item at ") . $a->config['sitename'],
+					sprintf( t('%s posted to your profile wall at %s') , $from , $a->config['sitename']),
 					$email_html_body_tpl,
 					$email_text_body_tpl
 				);
