@@ -533,10 +533,10 @@ function item_post(&$a) {
 					'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
 					'$thumb'		=> $author['thumb'],					// thumbnail url for sender icon
 					'$email'		=> $importer['email'],					// email address to send to
-					'$url'			=> $author['url'],					// full url for the site
-					'$from'			=> $from,						// name of the person sending the message
+					'$url'			=> $author['url'],						// full url for the site
+					'$from'			=> $from,								// name of the person sending the message
 					'$body'			=> $msg['htmlversion'],					// html version of the message
-					'$display'		=> $a->get_baseurl() . '/display/' . $author['nick'] . '/' . $post_id,
+					'$display'		=> $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
 				));
 			
 				// load the template for private message notifications
@@ -546,10 +546,10 @@ function item_post(&$a) {
 					'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
 					'$thumb'		=> $author['thumb'],					// thumbnail url for sender icon
 					'$email'		=> $importer['email'],					// email address to send to
-					'$url'			=> $author['url'],					// full url for the site
-					'$from'			=> $from,						// name of the person sending the message
+					'$url'			=> $author['url'],						// profile url for the author
+					'$from'			=> $from,								// name of the person sending the message
 					'$body'			=> $msg['textversion'],					// text version of the message
-					'$display'		=> $a->get_baseurl() . '/display/' . $author['nick'] . '/' . $post_id,
+					'$display'		=> $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
 				));
 
 				// use the EmailNotification library to send the message
@@ -559,7 +559,7 @@ function item_post(&$a) {
 					t("Administrator@") . $a->get_hostname(),
 					t("noreply") . '@' . $a->get_hostname(),
 					$user['email'],
-					$from . t(" commented on an item at ") . $a->config['sitename'],
+					sprintf( t('%s commented on an item at %s'), $from , $a->config['sitename']),
 					$email_html_body_tpl,
 					$email_text_body_tpl
 				);
@@ -598,10 +598,10 @@ function item_post(&$a) {
 					'$sitename'		=> $a->config['sitename'],				// name of this site
 					'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
 					'$thumb'		=> $author['thumb'],					// thumbnail url for sender icon
-					'$url'			=> $author['url'],					// full url for the site
-					'$from'			=> $from,						// name of the person sending the message
+					'$url'			=> $author['url'],						// full url for the site
+					'$from'			=> $from,								// name of the person sending the message
 					'$body'			=> $msg['htmlversion'],					// html version of the message
-					'$display'		=> $a->get_baseurl() . '/display/' . $author['nick'] . '/' . $post_id,
+					'$display'		=> $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
 				));
 			
 				// load the template for private message notifications
@@ -610,10 +610,10 @@ function item_post(&$a) {
 					'$sitename'		=> $a->config['sitename'],				// name of this site
 					'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
 					'$thumb'		=> $author['thumb'],					// thumbnail url for sender icon
-					'$url'			=> $author['url'],					// full url for the site
-					'$from'			=> $from,						// name of the person sending the message
+					'$url'			=> $author['url'],						// full url for the site
+					'$from'			=> $from,								// name of the person sending the message
 					'$body'			=> $msg['textversion'],					// text version of the message
-					'$display'		=> $a->get_baseurl() . '/display/' . $author['nick'] . '/' . $post_id,
+					'$display'		=> $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
 				));
 
 				// use the EmailNotification library to send the message
@@ -623,7 +623,7 @@ function item_post(&$a) {
 					t("Administrator@") . $a->get_hostname(),
 					t("noreply") . '@' . $a->get_hostname(),
 					$user['email'],
-					$from . t(" commented on an item at ") . $a->config['sitename'],
+					sprintf( t('%s posted to your profile wall at %s') , $from , $a->config['sitename']),
 					$email_html_body_tpl,
 					$email_text_body_tpl
 				);

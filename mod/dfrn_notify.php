@@ -419,7 +419,7 @@ function dfrn_notify_post(&$a) {
 								'$email'		=> $importer['email'],				// email address to send to
 								'$url'			=> $datarray['author-link'],			// full url for the site
 								'$from'			=> $from,					// name of the person sending the message
-								'$body'			=> 'q1' .$msg['htmlversion'],			// html version of the message
+								'$body'			=> $msg['htmlversion'],			// html version of the message
 								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nick'] . '/' . $posted_id,
 							));
 			
@@ -504,7 +504,7 @@ function dfrn_notify_post(&$a) {
 					$datarray['type'] = 'activity';
 					$datarray['gravity'] = GRAVITY_LIKE;
 				}
-				$r = item_store($datarray);
+				$posted_id = item_store($datarray);
 
 				// find out if our user is involved in this conversation and wants to be notified.
 			
@@ -544,11 +544,11 @@ function dfrn_notify_post(&$a) {
 							$email_html_body_tpl = replace_macros($tpl,array(
 								'$sitename'		=> $a->config['sitename'],				// name of this site
 								'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
-								'$thumb'		=> $conv['author-avatar'],				// thumbnail url for sender icon
-								'$url'			=> $conv['author-link'],				// full url for the site
+								'$thumb'		=> $datarray['author-avatar'],				// thumbnail url for sender icon
+								'$url'			=> $datarray['author-link'],				// full url for the site
 								'$from'			=> $from,						// name of the person sending the message
 								'$body'			=> $msg['htmlversion'],					// html version of the message
-								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nick'] . '/' . $posted_id,
+								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id,
 							));
 			
 							// load the template for private message notifications
@@ -556,11 +556,11 @@ function dfrn_notify_post(&$a) {
 							$email_text_body_tpl = replace_macros($tpl,array(
 								'$sitename'		=> $a->config['sitename'],				// name of this site
 								'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
-								'$thumb'		=> $conv['author-avatar'],				// thumbnail url for sender icon
-								'$url'			=> $conv['author-link'],				// full url for the site
+								'$thumb'		=> $datarray['author-avatar'],				// thumbnail url for sender icon
+								'$url'			=> $datarray['author-link'],				// full url for the site
 								'$from'			=> $from,						// name of the person sending the message
 								'$body'			=> $msg['textversion'],					// text version of the message
-								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nick'] . '/' . $posted_id,
+								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id,
 							));
 
 							// use the EmailNotification library to send the message
@@ -570,7 +570,7 @@ function dfrn_notify_post(&$a) {
 								t("Administrator@") . $a->get_hostname(),
 								t("noreply") . '@' . $a->get_hostname(),
 								$importer['email'],
-								$from . t(" commented on an item at ") . $a->config['sitename'],
+								sprintf( t('%s commented on an item at %s'), $from , $a->config['sitename']),
 								$email_html_body_tpl,
 								$email_text_body_tpl
 							);
