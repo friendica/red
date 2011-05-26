@@ -2434,7 +2434,7 @@ a.mail-list-link {
 .attachtype {
 	display: block; width: 20px; height: 23px;
 	float: left;
-	background-image: url('../../../images/content-types.gif');
+	background-image: url('../../../images/content-types.png');
 }
 
 .body-attach {

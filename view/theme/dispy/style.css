@@ -814,7 +814,7 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
 
 .attachtype {
 	display: block; width: 20px; height: 23px;
-	background-image: url('../../../images/content-types.gif');
+	background-image: url('../../../images/content-types.png');
 }
 
 .type-video { background-position: 0px; 0px; }
