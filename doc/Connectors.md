@@ -26,6 +26,8 @@ These are described as the "federated social web" or OStatus contacts.
 
 Please note that there are **no** privacy provisions on the OStatus network. Any message which is delivered to **any** OStatus member is visible to anybody in the world and will negate any privacy settings that you have in effect. These messages will also turn up in public searches. 
 
+Since OStatus communications do not use authentication, if you select the profile privacy option to hide your profile and messages from unknown viewers, OStatus members will **not** be able to recieve your communications. 
+
 To connect with an OStatus member insert their profile URL or Identity address into the Connect box on your [Contacts](contacts) page.
 
 The StatusNet connector may be used if you wish posts to appear on an OStatus site using an existing OStatus account. 
