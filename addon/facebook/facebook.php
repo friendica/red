@@ -505,6 +505,21 @@ function facebook_post_hook(&$a,&$b) {
 				$msg = trim(strip_tags(bbcode($msg)));
 				$msg = html_entity_decode($msg,ENT_QUOTES,'UTF-8');
 
+				// add any attachments as text urls
+
+			    $arr = explode(',',$b['attach']);
+
+			    if(count($arr)) {
+					$msg .= "\n";
+        			foreach($arr as $r) {
+            			$matches = false;
+						$cnt = preg_match('|\[attach\]href=\"(.+?)\" size=\"(.+?)\" type=\"(.+?)\" title=\"(.+?)\"\[\/attach\]|',$r,$matches);
+						if($cnt) {
+							$msg .= $matches[1];
+						}
+					}
+				}
+
 				if (strlen($msg) > FACEBOOK_MAXPOSTLEN) {
 					$shortlink = "";
 					require_once('library/slinky.php');

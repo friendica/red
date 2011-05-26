@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.2.991\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-05-25 17:11-0700\n"
+"POT-Creation-Date: 2011-05-26 06:46-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1725,12 +1725,12 @@ msgstr ""
 msgid "Register"
 msgstr ""
 
-#: ../../mod/like.php:110 ../../addon/facebook/facebook.php:759
+#: ../../mod/like.php:110 ../../addon/facebook/facebook.php:774
 #: ../../include/conversation.php:20
 msgid "status"
 msgstr ""
 
-#: ../../mod/like.php:127 ../../addon/facebook/facebook.php:763
+#: ../../mod/like.php:127 ../../addon/facebook/facebook.php:778
 #: ../../include/conversation.php:25
 #, php-format
 msgid "%1$s likes %2$s's %3$s"
@@ -1822,8 +1822,15 @@ msgstr ""
 msgid "Administrator@"
 msgstr ""
 
-#: ../../mod/item.php:562 ../../mod/item.php:626 ../../mod/dfrn_notify.php:573
-msgid " commented on an item at "
+#: ../../mod/item.php:562 ../../mod/dfrn_notify.php:446
+#: ../../mod/dfrn_notify.php:573
+#, php-format
+msgid "%s commented on an item at %s"
+msgstr ""
+
+#: ../../mod/item.php:626
+#, php-format
+msgid "%s posted to your profile wall at %s"
 msgstr ""
 
 #: ../../mod/item.php:655
@@ -2082,11 +2089,6 @@ msgstr ""
 
 #: ../../mod/dfrn_notify.php:251
 msgid "New mail received at "
-msgstr ""
-
-#: ../../mod/dfrn_notify.php:446
-#, php-format
-msgid "%s commented on an item at %s"
 msgstr ""
 
 #: ../../mod/apps.php:6
@@ -2508,7 +2510,7 @@ msgstr ""
 msgid "Image: "
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:561
+#: ../../addon/facebook/facebook.php:576
 msgid "View on Friendika"
 msgstr ""
 

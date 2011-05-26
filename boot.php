@@ -2547,8 +2547,8 @@ function prepare_body($item,$attach = false) {
 		return $s;
 
 	$arr = explode(',',$item['attach']);
-	$s .= '<div class="body-attach">';
 	if(count($arr)) {
+		$s .= '<div class="body-attach">';
 		foreach($arr as $r) {
 			$matches = false;
 			$icon = '';
@@ -2572,8 +2572,8 @@ function prepare_body($item,$attach = false) {
 				$s .= '<a href="' . strip_tags($matches[1]) . '" title="' . $title . '" class="attachlink" target="external-link" >' . $icon . '</a>';
 			}
 		}
+		$s .= '<div class="clear"></div></div>';
 	}
-	$s .= '<div class="clear"></div></div>';
 	return $s;
 }}
 

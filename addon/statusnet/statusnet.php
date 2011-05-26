@@ -207,7 +207,7 @@ function statusnet_settings(&$a,&$s) {
              */
             if (! $globalsn == null) {
                 $s .= '<h4>' . t('Globally Available StatusNet OAuthKeys') . '</h4>';
-                $s .= '<p>'. t('There are preconfigured OAuth key pairs for some StatusNet servers available. If you are useing one of them, please use these credentials. If not feel free to connect to any other StatusNet instance (see below).') .'</p>';
+                $s .= '<p>'. t("There are preconfigured OAuth key pairs for some StatusNet servers available. If you are useing one of them, please use these credentials. If not feel free to connect to any other StatusNet instance \x28see below\x29.") .'</p>';
                 $s .= '<div id="statusnet-preconf-wrapper">';
                 foreach ($globalsn as $asn) {
                     $s .= '<input type="radio" name="statusnet-preconf-apiurl" value="'. $asn['apiurl'] .'">'. $asn['sitename'] .'<br />';
