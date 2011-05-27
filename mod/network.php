@@ -12,10 +12,18 @@ function network_init(&$a) {
 	if(! x($a->page,'aside'))
 		$a->page['aside'] = '';
 
+	$search = ((x($_GET,'search')) ? escape_tags($_GET['search']) : '');
+	$srchurl = '/network' . ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '');
+
+
+	$a->page['aside'] .= search($search,'netsearch-box',$srchurl);
+
 	$a->page['aside'] .= '<div id="network-new-link">';
 
-	if(($a->argc > 1 && $a->argv[1] === 'new') || ($a->argc > 2 && $a->argv[2] === 'new'))
-		$a->page['aside'] .= '<a href="' . $a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '">' . t('Normal View') . '</a>';
+
+
+	if(($a->argc > 1 && $a->argv[1] === 'new') || ($a->argc > 2 && $a->argv[2] === 'new') || x($_GET,'search'))
+		$a->page['aside'] .= '<a href="' . $a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') . '">' . t('Normal View') . '</a>';
 	else 
 		$a->page['aside'] .= '<a href="' . $a->get_baseurl() . '/' . $a->cmd . '/new' . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '">' . t('New Item View') . '</a>';
 
@@ -55,6 +63,8 @@ function network_content(&$a, $update = 0) {
 		}
 	}
 
+	if(x($_GET,'search'))
+		$nouveau = true;
 	if($cid)
 		$def_acl = array('allow_cid' => '<' . intval($cid) . '>');
 
@@ -96,7 +106,8 @@ function network_content(&$a, $update = 0) {
 			$o .= '<div id="live-network"></div>' . "\r\n";
 			$o .= "<script> var profile_uid = " . $_SESSION['uid'] 
 				. "; var netargs = '" . substr($a->cmd,8) 
-				. ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '')
+				. ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '')
+				. ((x($_GET,'search')) ? '?search=' . $_GET['search'] : '') 
 				. "'; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 
 	}
@@ -168,6 +179,10 @@ function network_content(&$a, $update = 0) {
 		$o .= get_birthdays();
 
 	$sql_extra2 = (($nouveau) ? '' : " AND `item`.`parent` = `item`.`id` ");
+
+	if(x($_GET,'search'))
+		$sql_extra .= " AND `item`.`body` REGEXP '" . dbesc(escape_tags($_GET['search'])) . "' ";
+
 
 	$r = q("SELECT COUNT(*) AS `total`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
