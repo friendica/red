@@ -682,7 +682,7 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 		$s = substr($s,strlen($header)+4);
 		$header = substr($s,0,strpos($s,"\r\n\r\n"));
 	}
-	if($http_code == 301 || $http_code == 302 || $http_code == 303) {
+	if($http_code == 301 || $http_code == 302 || $http_code == 303 || $http_code == 307) {
         $matches = array();
         preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
         $url = trim(array_pop($matches));
@@ -2196,12 +2196,13 @@ function smilies($s) {
 	$a = get_app();
 
 	return str_replace(
-	array( '&lt;3', '&lt;/3', '&lt;\\3', ':-)', ';-)', ':-(', ':(', ':-P', ':P', ':-"', ':-x', ':-X', ':-D', '8-|', '8-O'),
+	array( '&lt;3', '&lt;/3', '&lt;\\3', ':-)', ':)', ';-)', ':-(', ':(', ':-P', ':P', ':-"', ':-x', ':-X', ':-D', '8-|', '8-O'),
 	array(
 		'<img src="' . $a->get_baseurl() . '/images/smiley-heart.gif" alt="<3" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-brokenheart.gif" alt="</3" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-brokenheart.gif" alt="<\\3" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-smile.gif" alt=":-)" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-smile.gif" alt=":)" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-wink.gif" alt=";-)" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-frown.gif" alt=":-(" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-frown.gif" alt=":(" />',

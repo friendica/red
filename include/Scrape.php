@@ -446,9 +446,16 @@ function probe_url($url) {
 		    $feed = new SimplePie();
 			$xml = fetch_url($poll);
 
+			logger('probe_url: fetch feed: ' . $poll . ' returns: ' . $xml, LOGGER_DATA);
+			$a = get_app();
+
+			logger('probe_url: scrape_feed: headers: ' . $a->get_curl_headers(), $LOGGER_DATA);
+
    			$feed->set_raw_data($xml);
 
 		    $feed->init();
+			if($feed->error())
+				logger('probe_url: scrape_feed: Error parsing XML: ' . $feed->error());
 
 			if(! x($vcard,'photo'))
 				$vcard['photo'] = $feed->get_image_url();
