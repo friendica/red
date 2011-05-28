@@ -14,14 +14,14 @@ function format_event_html($ev) {
 		. datetime_convert('UTC','UTC',$ev['start'], ATOM_TIME)
 		. '" >' 
 		. datetime_convert('UTC', date_default_timezone_get(), 
-			$ev['start'] /*, format /*) 
+			$ev['start'] /*, format */ ) 
 		. '</abbr></p>';
 
 	$o .= '<p>' . t('Ends: ') . '<abbr class="dtend" title="'
 		. datetime_convert('UTC','UTC',$ev['finish'], ATOM_TIME)
 		. '" >' 
 		. datetime_convert('UTC', date_default_timezone_get(), 
-			$ev['finish'] /*, format /*) 
+			$ev['finish'] /*, format */ ) 
 		. '</abbr></p>';
 
 	$o .= '<p> ' . t('Location:') . '<span class="location">' 
