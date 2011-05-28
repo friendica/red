@@ -769,7 +769,7 @@ function photos_content(&$a) {
 		intval($owner_uid)
 	);
 
-	if(count($r) && $r[0]['hidewall'] && (local_user() !== $owner_uid) && (! remote_contact)) {
+	if(count($r) && $r[0]['hidewall'] && (local_user() != $owner_uid) && (! $remote_contact)) {
 		notice( t('Access to this item is restricted.') . EOL);
 		return;
 	}

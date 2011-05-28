@@ -98,7 +98,7 @@ function profile_content(&$a, $update = 0) {
 
 	$is_owner = ((local_user()) && (local_user() == $a->profile['profile_uid']) ? true : false);
 
-	if($a->profile['hidewall'] && (! $is_owner) && (! remote_contact)) {
+	if($a->profile['hidewall'] && (! $is_owner) && (! $remote_contact)) {
 		notice( t('Access to this profile has been restricted.') . EOL);
 		return;
 	}
