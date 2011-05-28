@@ -186,6 +186,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `target` text NOT NULL,
   `plink` char(255) NOT NULL, 
   `resource-id` char(255) NOT NULL,
+  `event-id` int(10) unsigned NOT NULL,
   `tag` mediumtext NOT NULL,
   `attach` mediumtext NOT NULL,
   `inform` mediumtext NOT NULL,
