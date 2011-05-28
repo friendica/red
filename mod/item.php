@@ -204,13 +204,25 @@ function item_post(&$a) {
 					continue;
 				$image_uri = substr($image,strrpos($image,'/') + 1);
 				$image_uri = substr($image_uri,0, strpos($image_uri,'-'));
+				$srch = '<' . intval($profile_uid) . '>';
+				$r = q("SELECT `id` FROM `photo` WHERE `allow_cid` = '%s' AND `allow_gid` = '' AND `deny_cid` = '' AND `deny_gid` = ''
+					AND `resource-id` = '%s' AND `uid` = %d LIMIT 1",
+					dbesc($srch),
+					dbesc($image_uri),
+					intval($profile_uid)
+				);
+				if(! count($r))
+					continue;
+ 
+
 				$r = q("UPDATE `photo` SET `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s'
-					WHERE `resource-id` = '%s' AND `album` = '%s' ",
+					WHERE `resource-id` = '%s' AND `uid` = %d AND `album` = '%s' ",
 					dbesc($str_contact_allow),
 					dbesc($str_group_allow),
 					dbesc($str_contact_deny),
 					dbesc($str_group_deny),
 					dbesc($image_uri),
+					intval($profile_uid),
 					dbesc( t('Wall Photos'))
 				);
  

@@ -55,11 +55,6 @@ function profile_content(&$a, $update = 0) {
 		return login();
 	}
 
-	if($a->profile['hidewall'] && (! local_user()) && (! remote_user())) {
-		notice( t('Access to this profile has been restricted.') . EOL);
-		return;
-	}
-
 	require_once("include/bbcode.php");
 	require_once('include/security.php');
 	require_once('include/conversation.php');
@@ -102,6 +97,12 @@ function profile_content(&$a, $update = 0) {
 	}
 
 	$is_owner = ((local_user()) && (local_user() == $a->profile['profile_uid']) ? true : false);
+
+	if($a->profile['hidewall'] && (! $is_owner) && (! $remote_contact)) {
+		notice( t('Access to this profile has been restricted.') . EOL);
+		return;
+	}
+
 	
 	if(! $update) {
 		if(x($_GET,'tab'))

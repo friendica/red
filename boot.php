@@ -4,9 +4,9 @@ set_time_limit(0);
 ini_set('pcre.backtrack_limit', 250000);
 
 
-define ( 'FRIENDIKA_VERSION',      '2.2.991' );
+define ( 'FRIENDIKA_VERSION',      '2.2.993' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
-define ( 'DB_UPDATE_VERSION',      1058      );
+define ( 'DB_UPDATE_VERSION',      1059      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -682,7 +682,7 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 		$s = substr($s,strlen($header)+4);
 		$header = substr($s,0,strpos($s,"\r\n\r\n"));
 	}
-	if($http_code == 301 || $http_code == 302 || $http_code == 303) {
+	if($http_code == 301 || $http_code == 302 || $http_code == 303 || $http_code == 307) {
         $matches = array();
         preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
         $url = trim(array_pop($matches));
@@ -2106,10 +2106,10 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 
 
 if(! function_exists('search')) {
-function search($s) {
+function search($s,$id='search-box',$url='/search') {
 	$a = get_app();
-	$o  = '<div id="search-box">';
-	$o .= '<form action="' . $a->get_baseurl() . '/search' . '" method="get" >';
+	$o  = '<div id="' . $id . '">';
+	$o .= '<form action="' . $a->get_baseurl() . $url . '" method="get" >';
 	$o .= '<input type="text" name="search" id="search-text" value="' . $s .'" />';
 	$o .= '<input type="submit" name="submit" id="search-submit" value="' . t('Search') . '" />'; 
 	$o .= '</form></div>';
@@ -2196,12 +2196,13 @@ function smilies($s) {
 	$a = get_app();
 
 	return str_replace(
-	array( '&lt;3', '&lt;/3', '&lt;\\3', ':-)', ';-)', ':-(', ':(', ':-P', ':P', ':-"', ':-x', ':-X', ':-D', '8-|', '8-O'),
+	array( '&lt;3', '&lt;/3', '&lt;\\3', ':-)', ':)', ';-)', ':-(', ':(', ':-P', ':P', ':-"', ':-x', ':-X', ':-D', '8-|', '8-O'),
 	array(
 		'<img src="' . $a->get_baseurl() . '/images/smiley-heart.gif" alt="<3" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-brokenheart.gif" alt="</3" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-brokenheart.gif" alt="<\\3" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-smile.gif" alt=":-)" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-smile.gif" alt=":)" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-wink.gif" alt=";-)" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-frown.gif" alt=":-(" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-frown.gif" alt=":(" />',
@@ -2547,8 +2548,8 @@ function prepare_body($item,$attach = false) {
 		return $s;
 
 	$arr = explode(',',$item['attach']);
-	$s .= '<div class="body-attach">';
 	if(count($arr)) {
+		$s .= '<div class="body-attach">';
 		foreach($arr as $r) {
 			$matches = false;
 			$icon = '';
@@ -2572,8 +2573,8 @@ function prepare_body($item,$attach = false) {
 				$s .= '<a href="' . strip_tags($matches[1]) . '" title="' . $title . '" class="attachlink" target="external-link" >' . $icon . '</a>';
 			}
 		}
+		$s .= '<div class="clear"></div></div>';
 	}
-	$s .= '<div class="clear"></div></div>';
 	return $s;
 }}
 

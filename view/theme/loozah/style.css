@@ -2411,6 +2411,14 @@ a.mail-list-link {
 	width: 300px;
 }
 
+#netsearch-box {
+	margin-top: 20px;	
+}
+
+#netsearch-box #search-submit {
+	margin: 5px 0px 0px 0px;
+}
+
 /**
  * ICONS
  */

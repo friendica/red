@@ -505,6 +505,21 @@ function facebook_post_hook(&$a,&$b) {
 				$msg = trim(strip_tags(bbcode($msg)));
 				$msg = html_entity_decode($msg,ENT_QUOTES,'UTF-8');
 
+				// add any attachments as text urls
+
+			    $arr = explode(',',$b['attach']);
+
+			    if(count($arr)) {
+					$msg .= "\n";
+        			foreach($arr as $r) {
+            			$matches = false;
+						$cnt = preg_match('|\[attach\]href=\"(.+?)\" size=\"(.+?)\" type=\"(.+?)\" title=\"(.+?)\"\[\/attach\]|',$r,$matches);
+						if($cnt) {
+							$msg .= $matches[1];
+						}
+					}
+				}
+
 				if (strlen($msg) > FACEBOOK_MAXPOSTLEN) {
 					$shortlink = "";
 					require_once('library/slinky.php');
@@ -718,11 +733,17 @@ function fb_consume_stream($uid,$j,$wall = false) {
 				if(! $orig_post)
 					continue;
 
-				$r = q("SELECT * FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `verb` = '%s' AND `author-link` = '%s' LIMIT 1",
+				// If we posted the like locally, it will be found with our url, not the FB url.
+
+				$second_url = (($likes->id == $self_id) ? $self[0]['url'] : 'http://facebook.com/profile.php?id=' . $likes->id); 
+
+				$r = q("SELECT * FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `verb` = '%s' 
+					AND ( `author-link` = '%s' OR `author-link` = '%s' ) LIMIT 1",
 					dbesc($orig_post['uri']),
 					intval($uid),
 					dbesc(ACTIVITY_LIKE),
-					dbesc('http://facebook.com/profile.php?id=' . $likes->id)
+					dbesc('http://facebook.com/profile.php?id=' . $likes->id),
+					dbesc($second_url)
 				);
 
 				if(count($r))

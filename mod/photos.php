@@ -722,6 +722,8 @@ function photos_content(&$a) {
 
 	$owner_uid = $a->data['user']['uid'];
 
+
+
 	$community_page = (($a->data['user']['page-flags'] == PAGE_COMMUNITY) ? true : false);
 
 	if((local_user()) && (local_user() == $owner_uid))
@@ -761,6 +763,15 @@ function photos_content(&$a) {
 			$contact_id = $_SESSION['cid'];
 			$contact = $a->contact;
 		}
+	}
+
+	$r = q("SELECT `hidewall` FROM `profile` WHERE `uid` = %d AND `is-default` = 1 LIMIT 1",
+		intval($owner_uid)
+	);
+
+	if(count($r) && $r[0]['hidewall'] && (local_user() != $owner_uid) && (! $remote_contact)) {
+		notice( t('Access to this item is restricted.') . EOL);
+		return;
 	}
 
 	// default permissions - anonymous user

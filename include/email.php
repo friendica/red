@@ -12,20 +12,27 @@ function email_connect($mailbox,$username,$password) {
 function email_poll($mbox,$email_addr) {
 
 	if(! ($mbox && $email_addr))
-		return array();;
+		return array();
 
-	$search = imap_search($mbox,'FROM "' . $email_addr . '"', SE_UID);
+	$search1 = imap_search($mbox,'FROM "' . $email_addr . '"', SE_UID);
+	if(! $search1)
+		$search1 = array();
 
 	$search2 = imap_search($mbox,'TO "' . $email_addr . '"', SE_UID);
+	if(! $search2)
+		$search2 = array();
 
-	if($search && $search2)
-		$res = array_merge($search,$search2);
-	elseif($search)
-		$res = $search;
-	else
-		$res = $search2;
+	$search3 = imap_search($mbox,'CC "' . $email_addr . '"', SE_UID);
+	if(! $search3)
+		$search3 = array();
 
-	return (($res) ? $res : array());
+	$search4 = imap_search($mbox,'BCC "' . $email_addr . '"', SE_UID);
+	if(! $search4)
+		$search4 = array();
+
+	$res = array_unique(array_merge($search1,$search2,$search3,$search4));
+
+	return $res;
 }
 
 

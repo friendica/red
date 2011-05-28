@@ -2394,6 +2394,16 @@ a.mail-list-link {
 	margin: 0px 3px 0px 3px;
 }
 
+
+#netsearch-box {
+	margin-top: 20px;	
+}
+
+#netsearch-box #search-submit {
+	margin: 5px 0px 0px 0px;
+}
+
+
 /**
  * ICONS
  */

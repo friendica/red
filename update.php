@@ -495,3 +495,7 @@ function update_1056() {
 function update_1057() {
 	q("ALTER TABLE `attach` ADD `filename` CHAR( 255 ) NOT NULL AFTER `hash` ");
 }
+
+function update_1058() {
+	q("ALTER TABLE `item` ADD `event-id` INT NOT NULL AFTER `resource-id` ");
+}

@@ -420,7 +420,7 @@ function dfrn_notify_post(&$a) {
 								'$url'			=> $datarray['author-link'],			// full url for the site
 								'$from'			=> $from,					// name of the person sending the message
 								'$body'			=> $msg['htmlversion'],			// html version of the message
-								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nick'] . '/' . $posted_id,
+								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id,
 							));
 			
 							// load the template for private message notifications
@@ -433,7 +433,7 @@ function dfrn_notify_post(&$a) {
 								'$url'			=> $datarray['author-link'],			// full url for the site
 								'$from'			=> $from,					// name of the person sending the message
 								'$body'			=> $msg['textversion'],				// text version of the message
-								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nick'] . '/' . $posted_id,
+								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id,
 							));
 
 							// use the EmailNotification library to send the message
