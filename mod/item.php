@@ -204,6 +204,8 @@ function item_post(&$a) {
 					continue;
 				$image_uri = substr($image,strrpos($image,'/') + 1);
 				$image_uri = substr($image_uri,0, strpos($image_uri,'-'));
+				if(! strlen($image_uri))
+					continue;
 				$srch = '<' . intval($profile_uid) . '>';
 				$r = q("SELECT `id` FROM `photo` WHERE `allow_cid` = '%s' AND `allow_gid` = '' AND `deny_cid` = '' AND `deny_gid` = ''
 					AND `resource-id` = '%s' AND `uid` = %d LIMIT 1",
@@ -231,7 +233,7 @@ function item_post(&$a) {
 	}
 
 
-	$match = null;
+	$match = false;
 
 	if(preg_match_all("/\[attachment\](.+?)\[\/attachment\]/",$body,$match)) {
 		$attaches = $match[1];
@@ -239,13 +241,13 @@ function item_post(&$a) {
 			foreach($attaches as $attach) {
 				$r = q("SELECT * FROM `attach` WHERE `uid` = %d AND `id` = %d LIMIT 1",
 					intval($profile_uid),
-					intval($attaches)
+					intval($attach)
 				);				
 				if(count($r)) {
 					$r = q("UPDATE `attach` SET `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s'
 						WHERE `uid` = %d AND `id` = %d LIMIT 1",
 						intval($profile_uid),
-						intval($attaches)
+						intval($attach)
 					);
 				}
 			}
@@ -361,6 +363,7 @@ function item_post(&$a) {
 	}
 
 	$attachments = '';
+	$match = false;
 
 	if(preg_match_all('/(\[attachment\]([0-9]+)\[\/attachment\])/',$body,$match)) {
 		foreach($match[2] as $mtch) {
@@ -371,7 +374,7 @@ function item_post(&$a) {
 			if(count($r)) {
 				if(strlen($attachments))
 					$attachments .= ',';
-				$attachments .= '[attach]href="' . $a->get_baseurl() . '/attach/' . $r[0]['id'] . '" size="' . $r[0]['filesize'] . '" type="' . $r[0]['filetype'] . '" title="' . $r[0]['filename'] . '"[/attach]'; 
+				$attachments .= '[attach]href="' . $a->get_baseurl() . '/attach/' . $r[0]['id'] . '" size="' . $r[0]['filesize'] . '" type="' . $r[0]['filetype'] . '" title="' . (($r[0]['filename']) ? $r[0]['filename'] : ' ') . '"[/attach]'; 
 			}
 			$body = str_replace($match[1],'',$body);
 		}
