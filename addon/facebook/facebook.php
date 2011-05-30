@@ -112,6 +112,11 @@ function fb_get_self($uid) {
 function fb_get_friends($uid) {
 
 	$access_token = get_pconfig($uid,'facebook','access_token');
+
+	$no_linking = get_pconfig($uid,'facebook','no_linking');
+	if($no_linking)
+		return;
+
 	if(! $access_token)
 		return;
 	$s = fetch_url('https://graph.facebook.com/me/friends?access_token=' . $access_token);
@@ -229,10 +234,40 @@ function fb_get_friends($uid) {
 
 function facebook_post(&$a) {
 
-	if(local_user()){
+	$uid = local_user();
+	if($uid){
+
 		$value = ((x($_POST,'post_by_default')) ? intval($_POST['post_by_default']) : 0);
-		set_pconfig(local_user(),'facebook','post_by_default', $value);
+		set_pconfig($uid,'facebook','post_by_default', $value);
+
+		$no_linking = get_pconfig($uid,'facebook','no_linking');
+
+		$linkvalue = ((x($_POST,'facebook_linking')) ? intval($_POST['facebook_linking']) : 0);
+		set_pconfig($uid,'facebook','no_linking', (($linkvalue) ? 0 : 1));
+
+		// FB linkage was allowed but has just been turned off - remove all FB contacts and posts
+
+		if((! intval($no_linking)) && (! intval($linkvalue))) {
+			$r = q("SELECT `id` FROM `contact` WHERE `uid` = %d AND `network` = '%s' ",
+				intval($uid),
+				dbesc(NETWORK_FACEBOOK)
+			);
+			if(count($r)) {
+				require_once('include/Contact.php');
+				foreach($r as $rr)
+					contact_remove($rr['id']);
+			}
+		}
+		elseif(intval($no_linking) && intval($linkvalue)) {
+			// FB linkage is now allowed - import stuff.
+			fb_get_self($uid);
+			fb_get_friends($uid);
+			fb_consume_all($uid);
+		}
+
+		info( t('Settings updated.') . EOL);
 	} 
+
 	return;		
 }
 
@@ -286,6 +321,13 @@ function facebook_content(&$a) {
 		$post_by_default = get_pconfig(local_user(),'facebook','post_by_default');
 		$checked = (($post_by_default) ? ' checked="checked" ' : '');
 		$o .= '<input type="checkbox" name="post_by_default" value="1"' . $checked . '/>' . ' ' . t('Post to Facebook by default') . '<br />';
+
+		$no_linking = get_pconfig(local_user(),'facebook','no_linking');
+		$checked = (($no_linking) ? '' : ' checked="checked" ');
+		$o .= '<input type="checkbox" name="facebook_linking" value="1"' . $checked . '/>' . ' ' . t('Link all your Facebook friends and conversations') . '<br />';
+
+
+
 		$o .= '<input type="submit" name="submit" value="' . t('Submit') . '" /></form></div>';
 	}
 
@@ -625,6 +667,10 @@ function fb_consume_all($uid) {
 
 function fb_consume_stream($uid,$j,$wall = false) {
 	$a = get_app();
+
+	$no_linking = get_pconfig($uid,'facebook','no_linking');
+	if($no_linking)
+		return;
 
 	$self = q("SELECT * FROM `contact` WHERE `self` = 1 AND `uid` = %d LIMIT 1",
 		intval($uid)

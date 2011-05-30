@@ -27,12 +27,12 @@ private social circles, and which cannot be seen outside the circle.
 
 	Friendika is decentralised. Any account on any Friendika server can connect
 with any account on any other Friendika server. You can also connect to and
-interact directly with friends on Status.Net and other federated social web
-services (e.g. identi.ca, GNU-Social, etc.).
+interact directly with friends on Facebook, Status.Net, and other federated
+social web services (e.g. identi.ca, GNU-Social, etc.).
 
-	Outgoing communications can be directed at these networks and also
-existing accounts on Facebook and Twitter - or even delivered to email 
-contacts.
+	Outgoing communications can be directed to Friendika, existing accounts on 
+Facebook and Twitter, federated social web providers - or even delivered to
+email contacts.
 
 	Incoming data streams aren't limited to traditional social networks.
 They may include most any service which provides a syndication feed (both RSS

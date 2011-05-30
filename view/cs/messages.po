@@ -1,0 +1,3727 @@
+# FRIENDIKA Distributed Social Network
+# Copyright (C) 2010, 2011 Mike Macgirvin
+# This file is distributed under the same license as the Friendika package.
+# 
+# Michal Šupler <msupler@gmail.com>, 2011, 2011.0
+msgid ""
+msgstr ""
+"Project-Id-Version: friendika\n"
+"Report-Msgid-Bugs-To: http://bugs.friendika.com/\n"
+"POT-Creation-Date: 2011-05-26 06:46-0700\n"
+"PO-Revision-Date: 2011-05-29 22:49+0000\n"
+"Last-Translator: michal_s <msupler@gmail.com>\n"
+"Language-Team: Czech (http://www.transifex.net/projects/p/friendika/team/cs/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: cs\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2\n"
+
+#: ../../mod/oexchange.php:27
+msgid "Post successful."
+msgstr "Příspěvek úspěšně odeslán"
+
+#: ../../mod/crepair.php:42
+msgid "Contact settings applied."
+msgstr "Opravit nastavení kontaktu"
+
+#: ../../mod/crepair.php:44
+msgid "Contact update failed."
+msgstr "Aktualizace kontaktu selhala."
+
+#: ../../mod/crepair.php:54 ../../mod/wall_attach.php:43
+#: ../../mod/photos.php:89 ../../mod/photos.php:802 ../../mod/editpost.php:10
+#: ../../mod/install.php:93 ../../mod/notifications.php:56
+#: ../../mod/contacts.php:106 ../../mod/settings.php:15
+#: ../../mod/settings.php:20 ../../mod/settings.php:251
+#: ../../mod/manage.php:75 ../../mod/network.php:6 ../../mod/notes.php:20
+#: ../../mod/attach.php:64 ../../mod/group.php:19
+#: ../../mod/viewcontacts.php:21 ../../mod/register.php:27
+#: ../../mod/regmod.php:18 ../../mod/item.php:57 ../../mod/item.php:801
+#: ../../mod/profile_photo.php:19 ../../mod/profile_photo.php:133
+#: ../../mod/profile_photo.php:144 ../../mod/profile_photo.php:155
+#: ../../mod/message.php:8 ../../mod/message.php:116
+#: ../../mod/wall_upload.php:42 ../../mod/follow.php:8
+#: ../../mod/display.php:138 ../../mod/profiles.php:7
+#: ../../mod/profiles.php:230 ../../mod/invite.php:13 ../../mod/invite.php:54
+#: ../../mod/dfrn_confirm.php:53 ../../addon/facebook/facebook.php:242
+#: ../../index.php:256
+msgid "Permission denied."
+msgstr "Přístup odmítnut."
+
+#: ../../mod/crepair.php:68 ../../mod/contacts.php:214
+#: ../../mod/dfrn_confirm.php:114
+msgid "Contact not found."
+msgstr "Kontakt nenalezen."
+
+#: ../../mod/crepair.php:74
+msgid "Repair Contact Settings"
+msgstr "Opravit nastavení kontaktu"
+
+#: ../../mod/crepair.php:76
+msgid ""
+"<strong>WARNING: This is highly advanced</strong> and if you enter incorrect"
+" information your communications with this contact will stop working."
+msgstr ""
+"<strong>VAROVÁNÍ: Toto je velmi pokročilé nastavení,</strong> pokud zadáte "
+"nesprávné informace, komunikace s tímto kontaktem přestane fungovat."
+
+#: ../../mod/crepair.php:77
+msgid ""
+"Please use your browser 'Back' button <strong>now</strong> if you are "
+"uncertain what to do on this page."
+msgstr "Aktualizace kontaktu selhala"
+
+#: ../../mod/crepair.php:85
+msgid "Name"
+msgstr "Jméno"
+
+#: ../../mod/crepair.php:86
+msgid "Account Nickname"
+msgstr "Přezdívka účtu"
+
+#: ../../mod/crepair.php:87
+msgid "Account URL"
+msgstr "URL adresa účtu"
+
+#: ../../mod/crepair.php:88
+msgid "Friend Request URL"
+msgstr "Žádost o přátelství URL"
+
+#: ../../mod/crepair.php:89
+msgid "Friend Confirm URL"
+msgstr "URL adresa potvrzení přátelství"
+
+#: ../../mod/crepair.php:90
+msgid "Notification Endpoint URL"
+msgstr "Notifikační URL adresa"
+
+#: ../../mod/crepair.php:91
+msgid "Poll/Feed URL"
+msgstr ""
+"Sdílený obsah v síti Friendika je poskytována pod <a "
+"href=\"http://creativecommons.org/licenses/by/3.0/cz/\">licencí Creative "
+"Commons Attribution 3.0</a>"
+
+#: ../../mod/crepair.php:100 ../../mod/photos.php:830 ../../mod/photos.php:887
+#: ../../mod/photos.php:1095 ../../mod/photos.php:1135
+#: ../../mod/photos.php:1174 ../../mod/photos.php:1205
+#: ../../mod/install.php:133 ../../mod/contacts.php:264
+#: ../../mod/settings.php:426 ../../mod/manage.php:106 ../../mod/group.php:76
+#: ../../mod/group.php:159 ../../mod/profiles.php:383 ../../mod/invite.php:68
+#: ../../addon/facebook/facebook.php:289
+#: ../../addon/randplace/randplace.php:179 ../../addon/oembed/oembed.php:49
+#: ../../addon/statusnet/statusnet.php:216
+#: ../../addon/statusnet/statusnet.php:230
+#: ../../addon/statusnet/statusnet.php:256
+#: ../../addon/statusnet/statusnet.php:263
+#: ../../addon/statusnet/statusnet.php:285 ../../addon/twitter/twitter.php:156
+#: ../../addon/twitter/twitter.php:175 ../../include/conversation.php:383
+msgid "Submit"
+msgstr "Odeslat"
+
+#: ../../mod/help.php:27
+msgid "Help:"
+msgstr "Nápověda:"
+
+#: ../../mod/help.php:31 ../../include/nav.php:64
+msgid "Help"
+msgstr "Nápověda"
+
+#: ../../mod/wall_attach.php:57
+#, php-format
+msgid "File exceeds size limit of %d"
+msgstr "Velikost souboru přesáhla limit %d"
+
+#: ../../mod/wall_attach.php:87 ../../mod/wall_attach.php:98
+msgid "File upload failed."
+msgstr "Nahrání souboru se nezdařilo."
+
+#: ../../mod/tagrm.php:11 ../../mod/tagrm.php:94
+#: ../../mod/dfrn_request.php:644 ../../addon/js_upload/js_upload.php:41
+msgid "Cancel"
+msgstr "Zrušit"
+
+#: ../../mod/tagrm.php:41
+msgid "Tag removed"
+msgstr "Štítek odstraněn"
+
+#: ../../mod/tagrm.php:79
+msgid "Remove Item Tag"
+msgstr "Odebrat štítek položky"
+
+#: ../../mod/tagrm.php:81
+msgid "Select a tag to remove: "
+msgstr "Vyberte štítek k odebrání:"
+
+#: ../../mod/tagrm.php:93
+msgid "Remove"
+msgstr "Odstranit"
+
+#: ../../mod/dfrn_poll.php:90 ../../mod/dfrn_poll.php:516
+#, php-format
+msgid "%s welcomes %s"
+msgstr "%s vítá %s "
+
+#: ../../mod/photos.php:34
+msgid "Photo Albums"
+msgstr "Fotoalba"
+
+#: ../../mod/photos.php:38 ../../mod/photos.php:110 ../../mod/photos.php:810
+#: ../../mod/photos.php:879 ../../mod/photos.php:894 ../../mod/photos.php:1282
+#: ../../mod/photos.php:1293 ../../include/Photo.php:233
+#: ../../include/Photo.php:240 ../../include/Photo.php:247
+#: ../../include/items.php:1041 ../../include/items.php:1044
+#: ../../include/items.php:1047
+msgid "Contact Photos"
+msgstr "Fotogalerie kontaktu"
+
+#: ../../mod/photos.php:99
+msgid "Contact information unavailable"
+msgstr "Kontakt byl zablokován"
+
+#: ../../mod/photos.php:110 ../../mod/photos.php:535 ../../mod/photos.php:879
+#: ../../mod/photos.php:894 ../../mod/register.php:290
+#: ../../mod/register.php:297 ../../mod/register.php:304
+#: ../../mod/profile_photo.php:58 ../../mod/profile_photo.php:65
+#: ../../mod/profile_photo.php:72 ../../mod/profile_photo.php:160
+#: ../../mod/profile_photo.php:236 ../../mod/profile_photo.php:245
+msgid "Profile Photos"
+msgstr "Profilové fotografie"
+
+#: ../../mod/photos.php:120
+msgid "Album not found."
+msgstr "Album nenalezeno."
+
+#: ../../mod/photos.php:138 ../../mod/photos.php:888
+msgid "Delete Album"
+msgstr "Smazat album"
+
+#: ../../mod/photos.php:201 ../../mod/photos.php:1096
+msgid "Delete Photo"
+msgstr "Smazat fotografii"
+
+#: ../../mod/photos.php:473
+msgid "was tagged in a"
+msgstr "štítek byl přidán v"
+
+#: ../../mod/photos.php:473 ../../mod/like.php:110
+#: ../../include/conversation.php:20
+msgid "photo"
+msgstr "fotografie"
+
+#: ../../mod/photos.php:473
+msgid "by"
+msgstr "od"
+
+#: ../../mod/photos.php:563 ../../addon/js_upload/js_upload.php:306
+msgid "Image exceeds size limit of "
+msgstr "Velikost obrázku překračuje limit velikosti"
+
+#: ../../mod/photos.php:577 ../../mod/profile_photo.php:118
+#: ../../mod/wall_upload.php:65
+msgid "Unable to process image."
+msgstr "Kontakt byl odblokován"
+
+#: ../../mod/photos.php:597 ../../mod/profile_photo.php:241
+#: ../../mod/wall_upload.php:82
+msgid "Image upload failed."
+msgstr "Nahrání obrázku selhalo."
+
+#: ../../mod/photos.php:680 ../../mod/dfrn_request.php:591
+#: ../../mod/viewcontacts.php:16 ../../mod/display.php:7
+#: ../../mod/search.php:13 ../../mod/directory.php:20
+msgid "Public access denied."
+msgstr "Veřejný přístup odepřen."
+
+#: ../../mod/photos.php:690
+msgid "No photos selected"
+msgstr "Není vybrána žádná fotografie"
+
+#: ../../mod/photos.php:837
+msgid "Upload Photos"
+msgstr "Nahrání fotografií "
+
+#: ../../mod/photos.php:840 ../../mod/photos.php:883
+msgid "New album name: "
+msgstr "Název nového alba:"
+
+#: ../../mod/photos.php:841
+msgid "or existing album name: "
+msgstr "nebo stávající název alba:"
+
+#: ../../mod/photos.php:843 ../../mod/photos.php:1091
+msgid "Permissions"
+msgstr "Oprávnění:"
+
+#: ../../mod/photos.php:898
+msgid "Edit Album"
+msgstr "Edituj album"
+
+#: ../../mod/photos.php:908 ../../mod/photos.php:1311
+msgid "View Photo"
+msgstr "Zobraz fotografii"
+
+#: ../../mod/photos.php:937
+msgid "Photo not available"
+msgstr "Fotografie není k dispozici"
+
+#: ../../mod/photos.php:986
+msgid "Edit photo"
+msgstr "Editovat fotografii"
+
+#: ../../mod/photos.php:987
+msgid "Use as profile photo"
+msgstr "Použít jako profilovou fotografii"
+
+#: ../../mod/photos.php:993 ../../include/conversation.php:316
+msgid "Private Message"
+msgstr "Soukromá zpráva"
+
+#: ../../mod/photos.php:1000
+msgid "<< Prev"
+msgstr "<< Předchozí"
+
+#: ../../mod/photos.php:1004
+msgid "View Full Size"
+msgstr "Zobrazit v plné velikosti"
+
+#: ../../mod/photos.php:1009
+msgid "Next >>"
+msgstr "Následující >>"
+
+#: ../../mod/photos.php:1071
+msgid "Tags: "
+msgstr "Štítky:"
+
+#: ../../mod/photos.php:1074
+msgid "[Remove any tag]"
+msgstr "[Odstranit všechny štítky]"
+
+#: ../../mod/photos.php:1084
+msgid "New album name"
+msgstr "Nové jméno alba"
+
+#: ../../mod/photos.php:1087
+msgid "Caption"
+msgstr "Titulek"
+
+#: ../../mod/photos.php:1089
+msgid "Add a Tag"
+msgstr "Přidat štítek"
+
+#: ../../mod/photos.php:1093
+msgid ""
+"Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping"
+msgstr "Kontakt byl ignorován"
+
+#: ../../mod/photos.php:1113 ../../include/conversation.php:364
+msgid "I like this (toggle)"
+msgstr "Líbí se mi to (přepínač)"
+
+#: ../../mod/photos.php:1114 ../../include/conversation.php:365
+msgid "I don't like this (toggle)"
+msgstr "Nelíbí se mi to (přepínač)"
+
+#: ../../mod/photos.php:1115 ../../include/conversation.php:366
+#: ../../include/conversation.php:731
+msgid "Share"
+msgstr "Sdílet"
+
+#: ../../mod/photos.php:1116 ../../mod/editpost.php:97
+#: ../../mod/message.php:190 ../../mod/message.php:324
+#: ../../include/conversation.php:367 ../../include/conversation.php:741
+msgid "Please wait"
+msgstr "Čekejte prosím"
+
+#: ../../mod/photos.php:1132 ../../mod/photos.php:1171
+#: ../../mod/photos.php:1202 ../../include/conversation.php:380
+msgid "This is you"
+msgstr "To je Vy"
+
+#: ../../mod/photos.php:1134 ../../mod/photos.php:1173
+#: ../../mod/photos.php:1204 ../../include/conversation.php:382
+#: ../../boot.php:386
+msgid "Comment"
+msgstr "Okomentovat"
+
+#: ../../mod/photos.php:1232 ../../mod/group.php:146
+#: ../../include/conversation.php:179 ../../include/conversation.php:393
+msgid "Delete"
+msgstr "Odstranit"
+
+#: ../../mod/photos.php:1298
+msgid "Recent Photos"
+msgstr "Aktuální fotografie"
+
+#: ../../mod/photos.php:1302
+msgid "Upload New Photos"
+msgstr "Nahrát nové fotografie"
+
+#: ../../mod/photos.php:1315
+msgid "View Album"
+msgstr "Zobrazit album"
+
+#: ../../mod/editpost.php:17 ../../mod/editpost.php:27
+msgid "Item not found"
+msgstr "Položka nenalezena"
+
+#: ../../mod/editpost.php:32
+msgid "Edit post"
+msgstr "Upravit příspěvek"
+
+#: ../../mod/editpost.php:75 ../../include/conversation.php:717
+msgid "Post to Email"
+msgstr "Poslat příspěvek na e-mail"
+
+#: ../../mod/editpost.php:88 ../../include/group.php:169
+#: ../../include/conversation.php:391
+msgid "Edit"
+msgstr "Upravit"
+
+#: ../../mod/editpost.php:89 ../../mod/message.php:188
+#: ../../mod/message.php:322 ../../include/conversation.php:732
+msgid "Upload photo"
+msgstr "Nahrát fotografii"
+
+#: ../../mod/editpost.php:90 ../../include/conversation.php:733
+msgid "Attach file"
+msgstr "Přiložit soubor"
+
+#: ../../mod/editpost.php:91 ../../mod/message.php:189
+#: ../../mod/message.php:323 ../../include/conversation.php:734
+msgid "Insert web link"
+msgstr "Vložit webový odkaz"
+
+#: ../../mod/editpost.php:92 ../../include/conversation.php:735
+msgid "Insert YouTube video"
+msgstr "Vložit YouTube video"
+
+#: ../../mod/editpost.php:93 ../../include/conversation.php:736
+msgid "Insert Vorbis [.ogg] video"
+msgstr "Vložit Vorbis [.ogg] video"
+
+#: ../../mod/editpost.php:94 ../../include/conversation.php:737
+msgid "Insert Vorbis [.ogg] audio"
+msgstr "Vložit Vorbis [.ogg] audio"
+
+#: ../../mod/editpost.php:95 ../../include/conversation.php:738
+msgid "Set your location"
+msgstr "Kontakt přestal být ignorován"
+
+#: ../../mod/editpost.php:96 ../../include/conversation.php:739
+msgid "Clear browser location"
+msgstr "Kontakt byl odstraněn"
+
+#: ../../mod/editpost.php:98 ../../include/conversation.php:742
+msgid "Permission settings"
+msgstr "Nastavení oprávnění"
+
+#: ../../mod/editpost.php:106 ../../include/conversation.php:750
+msgid "CC: email addresses"
+msgstr "skrytá kopie: e-mailové adresy"
+
+#: ../../mod/editpost.php:107 ../../include/conversation.php:751
+msgid "Public post"
+msgstr "Veřejný příspěvek"
+
+#: ../../mod/editpost.php:109 ../../include/conversation.php:753
+msgid "Example: bob@example.com, mary@example.com"
+msgstr "Editor kontaktu"
+
+#: ../../mod/dfrn_request.php:96
+msgid "This introduction has already been accepted."
+msgstr "Kontaktní informace / poznámky"
+
+#: ../../mod/dfrn_request.php:120 ../../mod/dfrn_request.php:351
+msgid "Profile location is not valid or does not contain profile information."
+msgstr "Zablokovat/Odblokovat kontakt"
+
+#: ../../mod/dfrn_request.php:125 ../../mod/dfrn_request.php:356
+msgid "Warning: profile location has no identifiable owner name."
+msgstr ""
+"Varování: umístění profilu nemá žádné identifikovatelné jméno vlastníka"
+
+#: ../../mod/dfrn_request.php:127 ../../mod/dfrn_request.php:358
+msgid "Warning: profile location has no profile photo."
+msgstr "Varování: umístění profilu nemá žádnou profilovou fotografii."
+
+#: ../../mod/dfrn_request.php:130 ../../mod/dfrn_request.php:361
+#, php-format
+msgid "%d required parameter was not found at the given location"
+msgid_plural "%d required parameters were not found at the given location"
+msgstr[0] "%d požadovaný parametr nebyl nalezen na daném místě"
+msgstr[1] "%d požadované parametry nebyly nalezeny na daném místě"
+msgstr[2] "%d požadované parametry nebyly nalezeny na daném místě"
+
+#: ../../mod/dfrn_request.php:168
+msgid "Introduction complete."
+msgstr "Představení dokončeno."
+
+#: ../../mod/dfrn_request.php:192
+msgid "Unrecoverable protocol error."
+msgstr "Smazat kontakt"
+
+#: ../../mod/dfrn_request.php:220
+msgid "Profile unavailable."
+msgstr "Profil není k dispozici."
+
+#: ../../mod/dfrn_request.php:245
+#, php-format
+msgid "%s has received too many connection requests today."
+msgstr "%s dnes obdržel příliš mnoho požadavků na připojení."
+
+#: ../../mod/dfrn_request.php:246
+msgid "Spam protection measures have been invoked."
+msgstr "Blokovat tento kontakt"
+
+#: ../../mod/dfrn_request.php:247
+msgid "Friends are advised to please try again in 24 hours."
+msgstr "Přátelům se doporučuje to zkusit znovu za 24 hodin."
+
+#: ../../mod/dfrn_request.php:277
+msgid "Invalid locator"
+msgstr "Neplatný odkaz"
+
+#: ../../mod/dfrn_request.php:296
+msgid "Unable to resolve your name at the provided location."
+msgstr "Nepodařilo se zjistit Vaše jméno na zadané adrese."
+
+#: ../../mod/dfrn_request.php:309
+msgid "You have already introduced yourself here."
+msgstr "Již jste se zde zavedli."
+
+#: ../../mod/dfrn_request.php:313
+#, php-format
+msgid "Apparently you are already friends with %s."
+msgstr "Zřejmě jste již přátelé se %s."
+
+#: ../../mod/dfrn_request.php:334
+msgid "Invalid profile URL."
+msgstr "Neplatné URL profilu."
+
+#: ../../mod/dfrn_request.php:340 ../../mod/follow.php:20
+msgid "Disallowed profile URL."
+msgstr "Nepovolené URL profilu."
+
+#: ../../mod/dfrn_request.php:406 ../../mod/contacts.php:90
+msgid "Failed to update contact record."
+msgstr "Nepodařilo se aktualizovat kontakt."
+
+#: ../../mod/dfrn_request.php:427
+msgid "Your introduction has been sent."
+msgstr "Vaše žádost o propojení byla odeslána."
+
+#: ../../mod/dfrn_request.php:481
+msgid "Please login to confirm introduction."
+msgstr "Prosím přihlašte se k potvrzení žádosti o propojení."
+
+#: ../../mod/dfrn_request.php:495
+msgid ""
+"Incorrect identity currently logged in. Please login to "
+"<strong>this</strong> profile."
+msgstr ""
+"Jste přihlášeni pod nesprávnou identitou  Prosím, přihlaste se do "
+"<strong>tohoto</strong> profilu."
+
+#: ../../mod/dfrn_request.php:507
+#, php-format
+msgid "Welcome home %s."
+msgstr "Vítejte doma %s."
+
+#: ../../mod/dfrn_request.php:508
+#, php-format
+msgid "Please confirm your introduction/connection request to %s."
+msgstr "Prosím potvrďte Vaši žádost o představení/spojení %s."
+
+#: ../../mod/dfrn_request.php:509
+msgid "Confirm"
+msgstr "Potvrdit"
+
+#: ../../mod/dfrn_request.php:542 ../../include/items.php:1440
+msgid "[Name Withheld]"
+msgstr "[Jméno odepřeno]"
+
+#: ../../mod/dfrn_request.php:549
+msgid "Introduction received at "
+msgstr "Pozvánka přijata v"
+
+#: ../../mod/dfrn_request.php:551 ../../mod/lostpass.php:40
+#: ../../mod/lostpass.php:102 ../../mod/register.php:335
+#: ../../mod/register.php:385 ../../mod/regmod.php:98
+#: ../../mod/dfrn_notify.php:191 ../../mod/dfrn_notify.php:443
+#: ../../mod/dfrn_confirm.php:658 ../../include/items.php:1449
+msgid "Administrator"
+msgstr "Správce"
+
+#: ../../mod/dfrn_request.php:630
+msgid "Friend/Connection Request"
+msgstr "Požadavek o přátelství / propojení"
+
+#: ../../mod/dfrn_request.php:631
+msgid ""
+"Examples: jojo@demo.friendika.com, http://demo.friendika.com/profile/jojo, "
+"testuser@identi.ca"
+msgstr ""
+"Příklady: jojo@demo.friendika.com, http://demo.friendika.com/profile/jojo, "
+"testuser@identi.ca"
+
+#: ../../mod/dfrn_request.php:632
+msgid "Please answer the following:"
+msgstr "Odpovězte, prosím, následující:"
+
+#: ../../mod/dfrn_request.php:633
+msgid "Does $name know you?"
+msgstr "Zná Vás $name?"
+
+#: ../../mod/dfrn_request.php:634 ../../mod/settings.php:350
+#: ../../mod/settings.php:362 ../../mod/register.php:459
+#: ../../mod/profiles.php:358 ../../mod/profiles.php:367
+msgid "Yes"
+msgstr "Ano"
+
+#: ../../mod/dfrn_request.php:635 ../../mod/settings.php:351
+#: ../../mod/settings.php:363 ../../mod/register.php:460
+#: ../../mod/profiles.php:359 ../../mod/profiles.php:368
+msgid "No"
+msgstr "Ne"
+
+#: ../../mod/dfrn_request.php:636
+msgid "Add a personal note:"
+msgstr "Přidat osobní poznámku:"
+
+#: ../../mod/dfrn_request.php:637
+msgid ""
+"Please enter your 'Identity Address' from one of the following supported "
+"social networks:"
+msgstr ""
+"Prosím, zadejte adresu své 'identity' jedné z následujících podporovaných "
+"sociálních sítí:"
+
+#: ../../mod/dfrn_request.php:638
+msgid "Friendika"
+msgstr "Friendika"
+
+#: ../../mod/dfrn_request.php:639
+msgid "StatusNet/Federated Social Web"
+msgstr "StatusNet / Federativní Sociální Web"
+
+#: ../../mod/dfrn_request.php:640
+msgid "Private (secure) network"
+msgstr "Soukromá (zabezpečená) síť"
+
+#: ../../mod/dfrn_request.php:641
+msgid "Public (insecure) network"
+msgstr "Veřejná (nezabezpečená) síť"
+
+#: ../../mod/dfrn_request.php:642
+msgid "Your Identity Address:"
+msgstr "Adresa Vaší identity :"
+
+#: ../../mod/dfrn_request.php:643
+msgid "Submit Request"
+msgstr "Odeslat žádost"
+
+#: ../../mod/install.php:33
+msgid "Could not create/connect to database."
+msgstr "Nelze vytvořit / připojit se k databázi."
+
+#: ../../mod/install.php:38
+msgid "Connected to database."
+msgstr "Připojeno k databázi."
+
+#: ../../mod/install.php:72
+msgid "Proceed with Installation"
+msgstr "Pokračovat v instalaci"
+
+#: ../../mod/install.php:74
+msgid "Your Friendika site database has been installed."
+msgstr "Vaše databáze Friendiky byla nainstalována."
+
+#: ../../mod/install.php:75
+msgid ""
+"IMPORTANT: You will need to [manually] setup a scheduled task for the "
+"poller."
+msgstr "Důležité: Budete si muset [ručně] plánovat úlohu pro poller."
+
+#: ../../mod/install.php:76 ../../mod/install.php:86 ../../mod/install.php:199
+msgid "Please see the file \"INSTALL.txt\"."
+msgstr "Přečtěte si prosím informace v souboru \"INSTALL.txt\"."
+
+#: ../../mod/install.php:78
+msgid "Proceed to registration"
+msgstr "Pokračovat k registraci"
+
+#: ../../mod/install.php:84
+msgid "Database import failed."
+msgstr "Import databáze se nezdařil."
+
+#: ../../mod/install.php:85
+msgid ""
+"You may need to import the file \"database.sql\" manually using phpmyadmin "
+"or mysql."
+msgstr ""
+"Možná budete muset importovat soubor \"database.sql\" ručně pomocí "
+"phpMyAdmin či MySQL."
+
+#: ../../mod/install.php:98
+msgid "Welcome to Friendika."
+msgstr "Vítejte na Friendice."
+
+#: ../../mod/install.php:121
+msgid "Friendika Social Network"
+msgstr "Sociální síť Friendika "
+
+#: ../../mod/install.php:122
+msgid "Installation"
+msgstr "Instalace"
+
+#: ../../mod/install.php:123
+msgid ""
+"In order to install Friendika we need to know how to contact your database."
+msgstr ""
+"Pro instalaci Friendiky musíme vědět, jak se připojit k Vaší databázi."
+
+#: ../../mod/install.php:124
+msgid ""
+"Please contact your hosting provider or site administrator if you have "
+"questions about these settings."
+msgstr ""
+"Obraťte se na svého poskytovatele hostingu nebo správce serveru, pokud máte "
+"dotazy týkající se těchto nastavení."
+
+#: ../../mod/install.php:125
+msgid ""
+"The database you specify below must already exist. If it does not, please "
+"create it before continuing."
+msgstr ""
+"Databáze zadáte níže již musí existovat. Pokud ještě neexistuje, vytvořte "
+"ji, prosím, aby bylo možné pokračovat."
+
+#: ../../mod/install.php:126
+msgid "Database Server Name"
+msgstr "Jméno databázového serveru"
+
+#: ../../mod/install.php:127
+msgid "Database Login Name"
+msgstr "Přihlašovací jméno k databázi"
+
+#: ../../mod/install.php:128
+msgid "Database Login Password"
+msgstr "Heslo k databázovému účtu "
+
+#: ../../mod/install.php:129
+msgid "Database Name"
+msgstr "Jméno databáze"
+
+#: ../../mod/install.php:130
+msgid "Please select a default timezone for your website"
+msgstr "Prosím, vyberte výchozí časové pásmo pro vaše webové stránky"
+
+#: ../../mod/install.php:148
+msgid "Could not find a command line version of PHP in the web server PATH."
+msgstr "Nelze najít verzi PHP pro příkazový řádek v PATH webového serveru."
+
+#: ../../mod/install.php:149
+msgid ""
+"This is required. Please adjust the configuration file .htconfig.php "
+"accordingly."
+msgstr ""
+"Tento krok je nutný. Upravte příslušným způsobem konfigurační soubor "
+".htconfig.php."
+
+#: ../../mod/install.php:156
+msgid ""
+"The command line version of PHP on your system does not have "
+"\"register_argc_argv\" enabled."
+msgstr ""
+"Verze PHP pro příkazový řádek na vašem systému nemá povolen "
+"\"register_argc_argv\"."
+
+#: ../../mod/install.php:157
+msgid "This is required for message delivery to work."
+msgstr "Toto je nutné pro fungování doručování zpráv."
+
+#: ../../mod/install.php:179
+msgid ""
+"Error: the \"openssl_pkey_new\" function on this system is not able to "
+"generate encryption keys"
+msgstr ""
+"Chyba: funkce \"openssl_pkey_new\" na tomto systému není schopna generovat "
+"šifrovací klíče"
+
+#: ../../mod/install.php:180
+msgid ""
+"If running under Windows, please see "
+"\"http://www.php.net/manual/en/openssl.installation.php\"."
+msgstr ""
+"Pokud systém běží na Windows, seznamte se s "
+"\"http://www.php.net/manual/en/openssl.installation.php\"."
+
+#: ../../mod/install.php:189
+msgid ""
+"Error: Apache webserver mod-rewrite module is required but not installed."
+msgstr ""
+"Chyba: Požadovaný Apache webserver mod-rewrite modul není nainstalován."
+
+#: ../../mod/install.php:191
+msgid "Error: libCURL PHP module required but not installed."
+msgstr "Chyba: požadovaný libcurl PHP modul není nainstalován."
+
+#: ../../mod/install.php:193
+msgid ""
+"Error: GD graphics PHP module with JPEG support required but not installed."
+msgstr "Chyba: požadovaný GD graphics PHP modul není nainstalován."
+
+#: ../../mod/install.php:195
+msgid "Error: openssl PHP module required but not installed."
+msgstr "Chyba: požadovaný openssl PHP modul není nainstalován."
+
+#: ../../mod/install.php:197
+msgid "Error: mysqli PHP module required but not installed."
+msgstr "Chyba: požadovaný mysqli PHP modul není nainstalován."
+
+#: ../../mod/install.php:208
+msgid ""
+"The web installer needs to be able to create a file called \".htconfig.php\""
+" in the top folder of your web server and it is unable to do so."
+msgstr ""
+"Webový instalátor musí být schopen vytvořit soubor s názvem "
+"\".htconfig.php\" v hlavním adresáři vašeho webového serveru ale nyní mu to "
+"není umožněno."
+
+#: ../../mod/install.php:209
+msgid ""
+"This is most often a permission setting, as the web server may not be able "
+"to write files in your folder - even if you can."
+msgstr ""
+"Toto je nejčastěji nastavením oprávnění, kdy webový server nemusí být "
+"schopen zapisovat soubory do vašeho adresáře - i když Vy můžete."
+
+#: ../../mod/install.php:210
+msgid ""
+"Please check with your site documentation or support people to see if this "
+"situation can be corrected."
+msgstr ""
+"Prosím, poraďte se s dokumentací k Vašemu hostingu nebo s technickou "
+"podporou, zda-li lze tuto situaci napravit."
+
+#: ../../mod/install.php:211
+msgid ""
+"If not, you may be required to perform a manual installation. Please see the"
+" file \"INSTALL.txt\" for instructions."
+msgstr ""
+"Pokud ne, může být vyžadováno provedení ruční instalace. Prosím, seznamte se"
+" s návodem popsaným v souboru \"INSTALL.txt\"."
+
+#: ../../mod/install.php:220
+msgid ""
+"The database configuration file \".htconfig.php\" could not be written. "
+"Please use the enclosed text to create a configuration file in your web "
+"server root."
+msgstr ""
+"Databázový konfigurační soubor \".htconfig.php\" nemohl být uložen. Prosím, "
+"použijte přiložený text k vytvoření konfiguračního souboru ve vašem "
+"kořenovém adresáři webového serveru."
+
+#: ../../mod/install.php:235
+msgid "Errors encountered creating database tables."
+msgstr "Při vytváření databázových tabulek došlo k chybám."
+
+#: ../../mod/match.php:10
+msgid "Profile Match"
+msgstr "Shoda profilu"
+
+#: ../../mod/match.php:50
+msgid "No matches"
+msgstr "Žádné shody"
+
+#: ../../mod/lockview.php:39
+msgid "Remote privacy information not available."
+msgstr "Vzdálené soukromé informace nejsou k dispozici."
+
+#: ../../mod/lockview.php:43
+msgid "Visible to:"
+msgstr "Viditelné pro:"
+
+#: ../../mod/home.php:23
+#, php-format
+msgid "Welcome to %s"
+msgstr "Vítá Vás %s"
+
+#: ../../mod/notifications.php:28
+msgid "Invalid request identifier."
+msgstr "Neplatný identifikátor požadavku."
+
+#: ../../mod/notifications.php:31 ../../mod/notifications.php:133
+msgid "Discard"
+msgstr "Odstranit"
+
+#: ../../mod/notifications.php:41 ../../mod/notifications.php:132
+msgid "Ignore"
+msgstr "Ignorovat"
+
+#: ../../mod/notifications.php:68
+msgid "Pending Friend/Connect Notifications"
+msgstr "Čekající požadavky na Přátelství / Připojení "
+
+#: ../../mod/notifications.php:72
+msgid "Show Ignored Requests"
+msgstr "Zobrazit ignorované žádosti"
+
+#: ../../mod/notifications.php:72
+msgid "Hide Ignored Requests"
+msgstr "Skrýt ignorované žádosti"
+
+#: ../../mod/notifications.php:104
+msgid "Claims to be known to you: "
+msgstr "Vaši údajní známí:"
+
+#: ../../mod/notifications.php:104
+msgid "yes"
+msgstr "ano"
+
+#: ../../mod/notifications.php:104
+msgid "no"
+msgstr "ne"
+
+#: ../../mod/notifications.php:110
+msgid "Approve as: "
+msgstr "Schválit jako:"
+
+#: ../../mod/notifications.php:111
+msgid "Friend"
+msgstr "Přítel"
+
+#: ../../mod/notifications.php:112
+msgid "Fan/Admirer"
+msgstr "Fanoušek / obdivovatel"
+
+#: ../../mod/notifications.php:119
+msgid "Notification type: "
+msgstr "Typ oznámení:"
+
+#: ../../mod/notifications.php:120
+msgid "Friend/Connect Request"
+msgstr "Přítel / žádost o připojení"
+
+#: ../../mod/notifications.php:120
+msgid "New Follower"
+msgstr "Nový následovník"
+
+#: ../../mod/notifications.php:130 ../../mod/notifications.php:153
+msgid "Approve"
+msgstr "Schválit"
+
+#: ../../mod/notifications.php:139
+msgid "No notifications."
+msgstr "Žádné oznámení."
+
+#: ../../mod/notifications.php:143
+msgid "User registrations waiting for confirm"
+msgstr "Registrace uživatele čeká na potvrzení"
+
+#: ../../mod/notifications.php:154
+msgid "Deny"
+msgstr "Odmítnout"
+
+#: ../../mod/notifications.php:159
+msgid "No registrations."
+msgstr "Žádné registrace."
+
+#: ../../mod/contacts.php:12
+msgid "Invite Friends"
+msgstr "Pozvat přátele"
+
+#: ../../mod/contacts.php:15
+msgid "Find People With Shared Interests"
+msgstr "Najít lidi se společnými zájmy"
+
+#: ../../mod/contacts.php:19
+msgid "Connect/Follow"
+msgstr "Připojit / Následovat"
+
+#: ../../mod/contacts.php:20
+msgid "Example: bob@example.com, http://example.com/barbara"
+msgstr "Příklad: jan@příklad.cz, http://příklad.cz/jana"
+
+#: ../../mod/contacts.php:21
+msgid "Follow"
+msgstr "Následovat"
+
+#: ../../mod/contacts.php:43 ../../mod/contacts.php:124
+msgid "Could not access contact record."
+msgstr "Nelze získat přístup k záznamu kontaktu."
+
+#: ../../mod/contacts.php:57
+msgid "Could not locate selected profile."
+msgstr "Nelze nalézt vybraný profil."
+
+#: ../../mod/contacts.php:88
+msgid "Contact updated."
+msgstr "Kontakt aktualizován."
+
+#: ../../mod/contacts.php:146
+msgid "Contact has been blocked"
+msgstr "Kontakt byl zablokován"
+
+#: ../../mod/contacts.php:146
+msgid "Contact has been unblocked"
+msgstr "Kontakt byl odblokován"
+
+#: ../../mod/contacts.php:160
+msgid "Contact has been ignored"
+msgstr "Kontakt bude ignorován"
+
+#: ../../mod/contacts.php:160
+msgid "Contact has been unignored"
+msgstr "Kontakt přestal být ignorován"
+
+#: ../../mod/contacts.php:181
+msgid "stopped following"
+msgstr "následování zastaveno"
+
+#: ../../mod/contacts.php:200
+msgid "Contact has been removed."
+msgstr "Kontakt byl odstraněn."
+
+#: ../../mod/contacts.php:228 ../../mod/contacts.php:363
+msgid "Mutual Friendship"
+msgstr "Vzájemné přátelství"
+
+#: ../../mod/contacts.php:232 ../../mod/contacts.php:367
+msgid "is a fan of yours"
+msgstr "je Váš fanoušek"
+
+#: ../../mod/contacts.php:237 ../../mod/contacts.php:371
+msgid "you are a fan of"
+msgstr "jste fanouškem"
+
+#: ../../mod/contacts.php:252
+msgid "Privacy Unavailable"
+msgstr "Ochrana soukromí není k dispozici"
+
+#: ../../mod/contacts.php:253
+msgid "Private communications are not available for this contact."
+msgstr "Soukromá komunikace není dostupná pro tento kontakt."
+
+#: ../../mod/contacts.php:256
+msgid "Never"
+msgstr "Nikdy"
+
+#: ../../mod/contacts.php:260
+msgid "(Update was successful)"
+msgstr "(Aktualizace byla úspěšná)"
+
+#: ../../mod/contacts.php:260
+msgid "(Update was not successful)"
+msgstr "(Aktualizace nebyla úspěšná)"
+
+#: ../../mod/contacts.php:263
+msgid "Contact Editor"
+msgstr "Editor kontaktu"
+
+#: ../../mod/contacts.php:265
+msgid "Profile Visibility"
+msgstr "Viditelnost profilu"
+
+#: ../../mod/contacts.php:266
+#, php-format
+msgid ""
+"Please choose the profile you would like to display to %s when viewing your "
+"profile securely."
+msgstr ""
+"Vyberte prosím profil, který chcete zobrazit %s při zabezpečeném prohlížení "
+"vašeho profilu."
+
+#: ../../mod/contacts.php:267
+msgid "Contact Information / Notes"
+msgstr "Kontaktní informace / poznámky"
+
+#: ../../mod/contacts.php:268
+msgid "Online Reputation"
+msgstr "Online pověst"
+
+#: ../../mod/contacts.php:269
+msgid ""
+"Occasionally your friends may wish to inquire about this person's online "
+"legitimacy."
+msgstr ""
+"Občas mohou vaši přátelé chtít informovat o online legitimitě této osoby."
+
+#: ../../mod/contacts.php:270
+msgid ""
+"You may help them choose whether or not to interact with this person by "
+"providing a <em>reputation</em> to guide them."
+msgstr ""
+"Poskytnutím <em>pověsti</em> jim můžete pomoci se rozhodnout, zda-li s touto"
+" osobou komunikovat či nikoliv."
+
+#: ../../mod/contacts.php:271
+msgid ""
+"Please take a moment to elaborate on this selection if you feel it could be "
+"helpful to others."
+msgstr ""
+"Věnujte prosím chvilku vyplnění této volby, pokud máte pocit, že by mohlo "
+"být užitečné pro ostatní."
+
+#: ../../mod/contacts.php:272
+msgid "Visit $name's profile"
+msgstr "Navštívit profil $name"
+
+#: ../../mod/contacts.php:273
+msgid "Block/Unblock contact"
+msgstr "Blokovat / Odblokovat kontakt"
+
+#: ../../mod/contacts.php:274
+msgid "Ignore contact"
+msgstr "Ignorovat kontakt"
+
+#: ../../mod/contacts.php:275
+msgid "Repair contact URL settings"
+msgstr "Opravit nastavení URL kontaktu"
+
+#: ../../mod/contacts.php:276
+msgid "Repair contact URL settings (WARNING: Advanced)"
+msgstr "Opravit nastavení URL kontaktu (Varování: Pokročilé)"
+
+#: ../../mod/contacts.php:277
+msgid "View conversations"
+msgstr "Zobrazit konverzace"
+
+#: ../../mod/contacts.php:278
+msgid "Delete contact"
+msgstr "Odstranit kontakt"
+
+#: ../../mod/contacts.php:280
+msgid "Last updated: "
+msgstr "Poslední aktualizace:"
+
+#: ../../mod/contacts.php:281
+msgid "Update public posts: "
+msgstr "Aktualizace veřejných příspěvků:"
+
+#: ../../mod/contacts.php:283
+msgid "Update now"
+msgstr "Aktualizovat"
+
+#: ../../mod/contacts.php:286
+msgid "Unblock this contact"
+msgstr "Odblokovat tento kontakt"
+
+#: ../../mod/contacts.php:286
+msgid "Block this contact"
+msgstr "Blokovat tento kontakt"
+
+#: ../../mod/contacts.php:287
+msgid "Unignore this contact"
+msgstr "Přestat ignorovat tento kontakt"
+
+#: ../../mod/contacts.php:287
+msgid "Ignore this contact"
+msgstr "Ignorovat tento kontakt"
+
+#: ../../mod/contacts.php:290
+msgid "Currently blocked"
+msgstr "V současnosti zablokováno"
+
+#: ../../mod/contacts.php:291
+msgid "Currently ignored"
+msgstr "V současnosti ignorováno"
+
+#: ../../mod/contacts.php:322 ../../include/nav.php:109
+#: ../../include/acl_selectors.php:141 ../../include/acl_selectors.php:156
+msgid "Contacts"
+msgstr "Kontakty"
+
+#: ../../mod/contacts.php:324
+msgid "Show Blocked Connections"
+msgstr "Zobrazit blokované spojení"
+
+#: ../../mod/contacts.php:324
+msgid "Hide Blocked Connections"
+msgstr "Skrýt blokované spojení"
+
+#: ../../mod/contacts.php:326 ../../mod/directory.php:55
+msgid "Finding: "
+msgstr "Zjištění: "
+
+#: ../../mod/contacts.php:327 ../../mod/directory.php:57
+msgid "Find"
+msgstr "Najít"
+
+#: ../../mod/contacts.php:387 ../../mod/viewcontacts.php:52
+msgid "Visit $username's profile"
+msgstr "Navštívit profil uživatele $username"
+
+#: ../../mod/contacts.php:388 ../../include/conversation.php:597
+msgid "Edit contact"
+msgstr "Editovat kontakt"
+
+#: ../../mod/lostpass.php:27
+msgid "Password reset request issued. Check your email."
+msgstr ""
+"Žádost o obnovení hesla vyřízena. Zkontrolujte Vaši e-mailovou schránku."
+
+#: ../../mod/lostpass.php:38
+#, php-format
+msgid "Password reset requested at %s"
+msgstr "Resetování hesla vyžádáno v %s"
+
+#: ../../mod/lostpass.php:60
+msgid ""
+"Request could not be verified. (You may have previously submitted it.) "
+"Password reset failed."
+msgstr ""
+"Žádost nemohla být ověřena. (Možná jste ji odeslali již dříve.) Obnovení "
+"hesla se nezdařilo."
+
+#: ../../mod/lostpass.php:78 ../../boot.php:852
+msgid "Password Reset"
+msgstr "Obnovit heslo"
+
+#: ../../mod/lostpass.php:79
+msgid "Your password has been reset as requested."
+msgstr "Vaše heslo bylo resetováno jak bylo požadováno."
+
+#: ../../mod/lostpass.php:80
+msgid "Your new password is"
+msgstr "Vaše nové heslo je"
+
+#: ../../mod/lostpass.php:81
+msgid "Save or copy your new password - and then"
+msgstr "Uložte si nebo zkopírujte nové heslo - a pak"
+
+#: ../../mod/lostpass.php:82
+msgid "click here to login"
+msgstr "klikněte zde pro přihlášení"
+
+#: ../../mod/lostpass.php:83
+msgid ""
+"Your password may be changed from the <em>Settings</em> page after "
+"successful login."
+msgstr ""
+"Vaše heslo může být změněno na stránce <em>nastavení</em> po úspěšném "
+"přihlášení."
+
+#: ../../mod/lostpass.php:114
+msgid "Forgot your Password?"
+msgstr "Zapomněli jste heslo?"
+
+#: ../../mod/lostpass.php:115
+msgid ""
+"Enter your email address and submit to have your password reset. Then check "
+"your email for further instructions."
+msgstr ""
+"Zadejte svůj e-mailovou adresu a odešlete žádost o zaslání Vašeho nového "
+"hesla. Poté zkontrolujte svůj e-mail pro další instrukce."
+
+#: ../../mod/lostpass.php:116
+msgid "Nickname or Email: "
+msgstr "Přezdívka nebo e-mail:"
+
+#: ../../mod/lostpass.php:117
+msgid "Reset"
+msgstr "Reset"
+
+#: ../../mod/settings.php:38
+msgid "Passwords do not match. Password unchanged."
+msgstr "Hesla se neshodují. Heslo nebylo změněno."
+
+#: ../../mod/settings.php:43
+msgid "Empty passwords are not allowed. Password unchanged."
+msgstr "Prázdné hesla nejsou povolena. Heslo nebylo změněno."
+
+#: ../../mod/settings.php:54
+msgid "Password changed."
+msgstr "Heslo bylo změněno."
+
+#: ../../mod/settings.php:56
+msgid "Password update failed. Please try again."
+msgstr "Aktualizace hesla se nezdařila. Zkuste to prosím znovu."
+
+#: ../../mod/settings.php:138
+msgid " Please use a shorter name."
+msgstr "Prosím použijte kratší jméno."
+
+#: ../../mod/settings.php:140
+msgid " Name too short."
+msgstr "Jméno je příliš krátké."
+
+#: ../../mod/settings.php:146
+msgid " Not valid email."
+msgstr "Neplatný e-mail."
+
+#: ../../mod/settings.php:148
+msgid " Cannot change to that email."
+msgstr "Nelze provést změnu na tento e-mail."
+
+#: ../../mod/settings.php:206
+msgid "Settings updated."
+msgstr "Nastavení aktualizováno."
+
+#: ../../mod/settings.php:256 ../../mod/settings.php:418
+#: ../../addon/widgets/widgets.php:123
+msgid "Plugin Settings"
+msgstr "Nastavení doplňku"
+
+#: ../../mod/settings.php:257 ../../mod/settings.php:417
+msgid "Account Settings"
+msgstr "Nastavení účtu"
+
+#: ../../mod/settings.php:263
+msgid "No Plugin settings configured"
+msgstr "Žádný doplněk není nastaven"
+
+#: ../../mod/settings.php:323
+msgid "Normal Account"
+msgstr "Normální účet"
+
+#: ../../mod/settings.php:324
+msgid "This account is a normal personal profile"
+msgstr "Tento účet je běžný osobní profil"
+
+#: ../../mod/settings.php:325
+msgid "Soapbox Account"
+msgstr "Soapbox účet"
+
+#: ../../mod/settings.php:326
+msgid "Automatically approve all connection/friend requests as read-only fans"
+msgstr ""
+"Automaticky schválit všechna spojení / přátelství jako fanoušky s právem "
+"pouze ke čtení"
+
+#: ../../mod/settings.php:327
+msgid "Community/Celebrity Account"
+msgstr "Komunitní účet / Účet celebrity"
+
+#: ../../mod/settings.php:328
+msgid ""
+"Automatically approve all connection/friend requests as read-write fans"
+msgstr ""
+"Automaticky schvalovat všechny žádosti o spojení / přátelství, jako fanoušky"
+" s právem ke čtení."
+
+#: ../../mod/settings.php:329
+msgid "Automatic Friend Account"
+msgstr "Automatický účet přítele"
+
+#: ../../mod/settings.php:330
+msgid "Automatically approve all connection/friend requests as friends"
+msgstr ""
+"Automaticky schvalovat všechny žádosti o spojení / přátelství jako přátele"
+
+#: ../../mod/settings.php:339
+msgid "OpenID: "
+msgstr "OpenID: "
+
+#: ../../mod/settings.php:339
+msgid "&nbsp;(Optional) Allow this OpenID to login to this account."
+msgstr "&nbsp;(Volitelné) Povolit toto OpenID pro přihlášení k tomuto účtu."
+
+#: ../../mod/settings.php:349
+msgid "Publish your default profile in site directory?"
+msgstr "Zveřejnit Váš výchozí profil v místním adresáři?"
+
+#: ../../mod/settings.php:361
+msgid "Publish your default profile in global social directory?"
+msgstr "Zveřejnit Váš výchozí profil v globálním sociální adresáři?"
+
+#: ../../mod/settings.php:377
+msgid "Profile is <strong>not published</strong>."
+msgstr "Profil <strong>není zveřejněn</strong>."
+
+#: ../../mod/settings.php:398 ../../mod/profile_photo.php:196
+msgid "or"
+msgstr "nebo"
+
+#: ../../mod/settings.php:403
+msgid "Your Identity Address is"
+msgstr "Vaše adresa identity je"
+
+#: ../../mod/settings.php:413
+msgid "Export Personal Data"
+msgstr "Export osobních údajů"
+
+#: ../../mod/settings.php:419
+msgid "Basic Settings"
+msgstr "Základní nastavení"
+
+#: ../../mod/settings.php:420 ../../include/profile_advanced.php:10
+msgid "Full Name:"
+msgstr "Celé jméno:"
+
+#: ../../mod/settings.php:421
+msgid "Email Address:"
+msgstr "E-mailová adresa:"
+
+#: ../../mod/settings.php:422
+msgid "Your Timezone:"
+msgstr "Vaše časové pásmo:"
+
+#: ../../mod/settings.php:423
+msgid "Default Post Location:"
+msgstr "Výchozí umístění příspěvků:"
+
+#: ../../mod/settings.php:424
+msgid "Use Browser Location:"
+msgstr "Použijte prohlížeč Místo:"
+
+#: ../../mod/settings.php:425
+msgid "Display Theme:"
+msgstr "Zobrazit téma:"
+
+#: ../../mod/settings.php:427
+msgid "Security and Privacy Settings"
+msgstr "Nastavení zabezpečení a soukromí"
+
+#: ../../mod/settings.php:428
+msgid "Maximum Friend Requests/Day:"
+msgstr "Maximální počet žádostí o přátelství za den:"
+
+#: ../../mod/settings.php:429
+msgid "(to prevent spam abuse)"
+msgstr "(Aby se zabránilo spamu)"
+
+#: ../../mod/settings.php:430
+msgid "Allow friends to post to your profile page:"
+msgstr "Povolit přátelům příspěvky na Vaši profilovou stránku:"
+
+#: ../../mod/settings.php:431
+msgid "Automatically expire (delete) posts older than"
+msgstr "Automaticky smazat příspěvky starší než"
+
+#: ../../mod/settings.php:432 ../../include/datetime.php:154
+msgid "days"
+msgstr "dnů"
+
+#: ../../mod/settings.php:433
+msgid "Notification Settings"
+msgstr "Nastavení notifikací"
+
+#: ../../mod/settings.php:434
+msgid "Send a notification email when:"
+msgstr "Posílat e-mailové upozornění když: "
+
+#: ../../mod/settings.php:435
+msgid "You receive an introduction"
+msgstr "Obdržíte žádost o propojení"
+
+#: ../../mod/settings.php:436
+msgid "Your introductions are confirmed"
+msgstr "Vaše žádosti jsou potvrzeny"
+
+#: ../../mod/settings.php:437
+msgid "Someone writes on your profile wall"
+msgstr "Někdo píše na Vaši profilovou stránku"
+
+#: ../../mod/settings.php:438
+msgid "Someone writes a followup comment"
+msgstr "Někdo píše následný komentář"
+
+#: ../../mod/settings.php:439
+msgid "You receive a private message"
+msgstr "Obdržel jste soukromou zprávu"
+
+#: ../../mod/settings.php:440
+msgid "Password Settings"
+msgstr "Nastavení hesla"
+
+#: ../../mod/settings.php:441
+msgid "Leave password fields blank unless changing"
+msgstr "Pokud nechcete změnit heslo, položku hesla nevyplňujte"
+
+#: ../../mod/settings.php:442
+msgid "New Password:"
+msgstr "Nové heslo:"
+
+#: ../../mod/settings.php:443
+msgid "Confirm:"
+msgstr "Potvrďte:"
+
+#: ../../mod/settings.php:444
+msgid "Advanced Page Settings"
+msgstr "Pokročilé nastavení stránky"
+
+#: ../../mod/settings.php:459
+msgid "Default Post Permissions"
+msgstr "Výchozí oprávnění pro příspěvek"
+
+#: ../../mod/settings.php:460
+msgid "(click to open/close)"
+msgstr "(Klikněte pro otevření/zavření)"
+
+#: ../../mod/settings.php:473
+msgid "Email/Mailbox Setup"
+msgstr "Nastavení e-mailu"
+
+#: ../../mod/settings.php:474
+msgid ""
+"If you wish to communicate with email contacts using this service "
+"(optional), please specify how to connect to your mailbox."
+msgstr ""
+"Pokud chcete komunikovat pomocí této služby s Vašimi kontakty z e-mailu "
+"(volitelné), uveďte, jak se připojit k Vaší e-mailové schránce."
+
+#: ../../mod/settings.php:475
+msgid "IMAP server name:"
+msgstr "jméno IMAP serveru:"
+
+#: ../../mod/settings.php:477
+msgid "IMAP port:"
+msgstr "IMAP port:"
+
+#: ../../mod/settings.php:479
+msgid "Security (TLS or SSL):"
+msgstr "Zabezpečení (TLS nebo SSL):"
+
+#: ../../mod/settings.php:481
+msgid "Email login name:"
+msgstr "přihlašovací jméno k e-mailu:"
+
+#: ../../mod/settings.php:483
+msgid "Email password:"
+msgstr "heslo k Vašemu e-mailu:"
+
+#: ../../mod/settings.php:484
+msgid "Reply-to address (Optional):"
+msgstr "Odpovědět na adresu (nepovinné):"
+
+#: ../../mod/settings.php:486
+msgid "Send public posts to all email contacts:"
+msgstr "Poslat veřejné příspěvky na všechny e-mailové kontakty:"
+
+#: ../../mod/settings.php:488
+msgid "Email access is disabled on this site."
+msgstr "Přístup k elektronické poště je na tomto serveru zakázán."
+
+#: ../../mod/manage.php:37
+#, php-format
+msgid "Welcome back %s"
+msgstr "Vítejte zpět %s"
+
+#: ../../mod/manage.php:87
+msgid "Manage Identities and/or Pages"
+msgstr "Správa identit a / nebo stránek"
+
+#: ../../mod/manage.php:90
+msgid ""
+"(Toggle between different identities or community/group pages which share "
+"your account details.)"
+msgstr ""
+"(Přepínání mezi různými identitami nebo komunitními / skupinovými stránkami,"
+" které sdílejí Vaše detaily  účtu.)"
+
+#: ../../mod/manage.php:92
+msgid "Select an identity to manage: "
+msgstr "Vyberte identitu pro správu:"
+
+#: ../../mod/network.php:18
+msgid "Normal View"
+msgstr "Normální zobrazení"
+
+#: ../../mod/network.php:20
+msgid "New Item View"
+msgstr "Zobrazení nových položek"
+
+#: ../../mod/network.php:64
+#, php-format
+msgid "Warning: This group contains %s member from an insecure network."
+msgid_plural ""
+"Warning: This group contains %s members from an insecure network."
+msgstr[0] "Upozornění: Tato skupina obsahuje %s člena z nezabezpečené sítě."
+msgstr[1] "Upozornění: Tato skupina obsahuje %s členy z nezabezpečené sítě."
+msgstr[2] "Upozornění: Tato skupina obsahuje %s členy z nezabezpečené sítě."
+
+#: ../../mod/network.php:67
+msgid "Private messages to this group are at risk of public disclosure."
+msgstr "Soukromé zprávy této skupině jsou vystaveny riziku prozrazení."
+
+#: ../../mod/network.php:129
+msgid "No such group"
+msgstr "Žádná taková skupina"
+
+#: ../../mod/network.php:140
+msgid "Group is empty"
+msgstr "Skupina je prázdná"
+
+#: ../../mod/network.php:144
+msgid "Group: "
+msgstr "Skupina:"
+
+#: ../../mod/network.php:154
+msgid "Contact: "
+msgstr "Kontakt:"
+
+#: ../../mod/network.php:156
+msgid "Private messages to this person are at risk of public disclosure."
+msgstr "Soukromé zprávy této osobě jsou vystaveny riziku prozrazení."
+
+#: ../../mod/network.php:161
+msgid "Invalid contact."
+msgstr "Neplatný kontakt."
+
+#: ../../mod/network.php:262 ../../mod/register.php:465
+#: ../../mod/profile.php:265 ../../mod/display.php:147
+msgid ""
+"Shared content is covered by the <a "
+"href=\"http://creativecommons.org/licenses/by/3.0/\">Creative Commons "
+"Attribution 3.0</a> license."
+msgstr ""
+"Sdílený obsah je v souladu s <a "
+"href=\"http://creativecommons.org/licenses/by/3.0/\">Commons Creative "
+"3.0</a> licencí."
+
+#: ../../mod/notes.php:41 ../../mod/apps.php:8
+msgid "Private Notes"
+msgstr "Soukromé poznámky"
+
+#: ../../mod/notes.php:60
+msgid "Save"
+msgstr "Uložit"
+
+#: ../../mod/attach.php:6
+msgid "Item not available."
+msgstr "Položka není k dispozici."
+
+#: ../../mod/attach.php:16
+msgid "Item was not found."
+msgstr "Položka nebyla nalezena."
+
+#: ../../mod/group.php:27
+msgid "Group created."
+msgstr "Skupina vytvořena."
+
+#: ../../mod/group.php:33
+msgid "Could not create group."
+msgstr "Nelze vytvořit skupinu."
+
+#: ../../mod/group.php:43 ../../mod/group.php:115
+msgid "Group not found."
+msgstr "Skupina nenalezena."
+
+#: ../../mod/group.php:56
+msgid "Group name changed."
+msgstr "Název skupiny byl změněn."
+
+#: ../../mod/group.php:67 ../../mod/profperm.php:19 ../../index.php:255
+msgid "Permission denied"
+msgstr "Nedostatečné oprávnění"
+
+#: ../../mod/group.php:74
+msgid "Create a group of contacts/friends."
+msgstr "Vytvořit skupinu kontaktů / přátel."
+
+#: ../../mod/group.php:75 ../../mod/group.php:158
+msgid "Group Name: "
+msgstr "Název skupiny:"
+
+#: ../../mod/group.php:90
+msgid "Group removed."
+msgstr "Skupina odstraněna. "
+
+#: ../../mod/group.php:92
+msgid "Unable to remove group."
+msgstr "Nelze odstranit skupinu."
+
+#: ../../mod/group.php:156 ../../mod/profperm.php:96
+msgid "Click on a contact to add or remove."
+msgstr "Klikněte na kontakt pro přidání nebo odebrání"
+
+#: ../../mod/group.php:157
+msgid "Group Editor"
+msgstr "Editor skupin"
+
+#: ../../mod/group.php:172
+msgid "Members"
+msgstr "Členové"
+
+#: ../../mod/group.php:186
+msgid "All Contacts"
+msgstr "Všechny kontakty"
+
+#: ../../mod/profperm.php:25 ../../mod/profperm.php:46
+msgid "Invalid profile identifier."
+msgstr "Neplatný identifikátor profilu."
+
+#: ../../mod/profperm.php:92
+msgid "Profile Visibility Editor"
+msgstr "Editor viditelnosti profilu "
+
+#: ../../mod/profperm.php:94 ../../mod/profile.php:116
+#: ../../include/profile_advanced.php:7
+msgid "Profile"
+msgstr "Profil"
+
+#: ../../mod/profperm.php:105
+msgid "Visible To"
+msgstr "Viditelný pro"
+
+#: ../../mod/profperm.php:116
+msgid "All Contacts (with secure profile access)"
+msgstr "Všechny kontakty (se zabezpečeným přístupovým profilem )"
+
+#: ../../mod/viewcontacts.php:25 ../../boot.php:2059
+msgid "View Contacts"
+msgstr "Zobrazit kontakty"
+
+#: ../../mod/viewcontacts.php:40
+msgid "No contacts."
+msgstr "Žádné kontakty."
+
+#: ../../mod/register.php:49
+msgid "Invalid OpenID url"
+msgstr "Neplatný odkaz OpenID"
+
+#: ../../mod/register.php:64
+msgid "Please enter the required information."
+msgstr "Zadejte prosím požadované informace."
+
+#: ../../mod/register.php:76
+msgid "Please use a shorter name."
+msgstr "Použijte prosím kratší jméno."
+
+#: ../../mod/register.php:78
+msgid "Name too short."
+msgstr "Jméno je příliš krátké."
+
+#: ../../mod/register.php:93
+msgid "That doesn't appear to be your full (First Last) name."
+msgstr "Nezdá se, že by to bylo vaše celé jméno (křestní jméno a příjmení)."
+
+#: ../../mod/register.php:97
+msgid "Your email domain is not among those allowed on this site."
+msgstr "Váš e-mailová doména není na tomto serveru mezi povolenými."
+
+#: ../../mod/register.php:100
+msgid "Not a valid email address."
+msgstr "Neplatná e-mailová adresa."
+
+#: ../../mod/register.php:106
+msgid "Cannot use that email."
+msgstr "Tento e-mail nelze použít."
+
+#: ../../mod/register.php:111
+msgid ""
+"Your \"nickname\" can only contain \"a-z\", \"0-9\", \"-\", and \"_\", and "
+"must also begin with a letter."
+msgstr ""
+"Vaše \"přezdívka\" může obsahovat pouze \"a-z\", \"0-9\", \"-\", a \"_\", a "
+"musí začínat písmenem."
+
+#: ../../mod/register.php:117 ../../mod/register.php:217
+msgid "Nickname is already registered. Please choose another."
+msgstr "Přezdívka je již registrována. Prosím vyberte jinou."
+
+#: ../../mod/register.php:136
+msgid "SERIOUS ERROR: Generation of security keys failed."
+msgstr "Závažná chyba: Generování bezpečnostních klíčů se nezdařilo."
+
+#: ../../mod/register.php:203
+msgid "An error occurred during registration. Please try again."
+msgstr "Došlo k chybě při registraci. Zkuste to prosím znovu."
+
+#: ../../mod/register.php:239
+msgid "An error occurred creating your default profile. Please try again."
+msgstr ""
+"Došlo k chybě při vytváření Vašeho výchozího profilu. Zkuste to prosím "
+"znovu."
+
+#: ../../mod/register.php:333 ../../mod/regmod.php:96
+#, php-format
+msgid "Registration details for %s"
+msgstr "Registrační údaje pro %s"
+
+#: ../../mod/register.php:341
+msgid ""
+"Registration successful. Please check your email for further instructions."
+msgstr ""
+"Registrace úspěšná. Zkontrolujte prosím svůj e-mail pro další instrukce."
+
+#: ../../mod/register.php:345
+msgid "Failed to send email message. Here is the message that failed."
+msgstr ""
+"Nepodařilo se odeslat zprávu na e-mail. Zde je zpráva, která nebyla "
+"odeslána."
+
+#: ../../mod/register.php:350
+msgid "Your registration can not be processed."
+msgstr "Vaši registraci nelze zpracovat."
+
+#: ../../mod/register.php:383
+#, php-format
+msgid "Registration request at %s"
+msgstr "Žádost o registraci na %s"
+
+#: ../../mod/register.php:392
+msgid "Your registration is pending approval by the site owner."
+msgstr "Vaše registrace čeká na schválení vlastníkem serveru."
+
+#: ../../mod/register.php:440
+msgid ""
+"You may (optionally) fill in this form via OpenID by supplying your OpenID "
+"and clicking 'Register'."
+msgstr ""
+"Tento formulář můžete (volitelně) vyplnit s pomocí OpenID tím, že vyplníte "
+"své OpenID a kliknutete na tlačítko 'Zaregistrovat'."
+
+#: ../../mod/register.php:441
+msgid ""
+"If you are not familiar with OpenID, please leave that field blank and fill "
+"in the rest of the items."
+msgstr ""
+"Pokud nepoužíváte OpenID, nechte prosím toto pole prázdné a vyplňte zbylé "
+"položky."
+
+#: ../../mod/register.php:442
+msgid "Your OpenID (optional): "
+msgstr "Vaše OpenID (nepovinné):"
+
+#: ../../mod/register.php:456
+msgid "Include your profile in member directory?"
+msgstr "Uvést Váš profil v adresáři členů?"
+
+#: ../../mod/register.php:472
+msgid "Registration"
+msgstr "Registrace"
+
+#: ../../mod/register.php:480
+msgid "Your Full Name (e.g. Joe Smith): "
+msgstr "Vaše celé jméno (např. Jan Novák):"
+
+#: ../../mod/register.php:481
+msgid "Your Email Address: "
+msgstr "Vaše e-mailová adresa:"
+
+#: ../../mod/register.php:482
+msgid ""
+"Choose a profile nickname. This must begin with a text character. Your "
+"profile address on this site will then be "
+"'<strong>nickname@$sitename</strong>'."
+msgstr ""
+"Vyberte přezdívku k profilu. Ta musí začít s textovým znakem. Vaše profilová"
+" adresa na tomto webu pak bude \"<strong>přezdívka@$sitename</strong>\"."
+
+#: ../../mod/register.php:483
+msgid "Choose a nickname: "
+msgstr "Vyberte přezdívku:"
+
+#: ../../mod/register.php:486 ../../include/nav.php:59 ../../boot.php:835
+msgid "Register"
+msgstr "Registrovat"
+
+#: ../../mod/like.php:110 ../../addon/facebook/facebook.php:774
+#: ../../include/conversation.php:20
+msgid "status"
+msgstr "Stav"
+
+#: ../../mod/like.php:127 ../../addon/facebook/facebook.php:778
+#: ../../include/conversation.php:25
+#, php-format
+msgid "%1$s likes %2$s's %3$s"
+msgstr "%1$s má rád %2$s' na %3$s"
+
+#: ../../mod/like.php:129 ../../include/conversation.php:28
+#, php-format
+msgid "%1$s doesn't like %2$s's %3$s"
+msgstr "%1$s nemá rád %2$s na %3$s"
+
+#: ../../mod/friendika.php:43
+msgid "This is Friendika version"
+msgstr "Toto je Friendika verze"
+
+#: ../../mod/friendika.php:44
+msgid "running at web location"
+msgstr "běžící na webu"
+
+#: ../../mod/friendika.php:46
+msgid ""
+"Shared content within the Friendika network is provided under the <a "
+"href=\"http://creativecommons.org/licenses/by/3.0/\">Creative Commons "
+"Attribution 3.0 license</a>"
+msgstr ""
+"Sdílený obsah v síti Friendika je poskytována pod <a "
+"href=\"http://creativecommons.org/licenses/by/3.0/cz/\">licencí Creative "
+"Commons Attribution 3.0</a>"
+
+#: ../../mod/friendika.php:48
+msgid ""
+"Please visit <a "
+"href=\"http://project.friendika.com\">Project.Friendika.com</a> to learn "
+"more about the Friendika project."
+msgstr ""
+"Pokud se chcete dozvědět více o projektu Friendika, navštivte, prosím, <a "
+"href=\"http://project.friendika.com\">Project.Friendika.com</a>"
+
+#: ../../mod/friendika.php:50
+msgid "Bug reports and issues: please visit"
+msgstr "Pro hlášení chyb a námětů na změny navštivte:"
+
+#: ../../mod/friendika.php:51
+msgid ""
+"Suggestions, praise, donations, etc. - please email \"Info\" at Friendika - "
+"dot com"
+msgstr ""
+"Návrhy, chválu, dary, atd. - prosím pošlete na e-mail \"Info\" na Friendika "
+"tečka com"
+
+#: ../../mod/friendika.php:56
+msgid "Installed plugins/addons/apps"
+msgstr "Nainstalované doplňky/aplikace"
+
+#: ../../mod/friendika.php:64
+msgid "No installed plugins/addons/apps"
+msgstr "Nejsou žádné nainstalované doplňky/aplikace"
+
+#: ../../mod/regmod.php:12
+msgid "Please login."
+msgstr "Přihlaste se, prosím."
+
+#: ../../mod/regmod.php:56
+#, php-format
+msgid "Registration revoked for %s"
+msgstr "Registrace zrušena pro %s"
+
+#: ../../mod/regmod.php:105
+msgid "Account approved."
+msgstr "Účet schválen."
+
+#: ../../mod/update_network.php:22 ../../mod/update_profile.php:41
+msgid "[Embedded content - reload page to view]"
+msgstr "[Vložený obsah - obnovení stránky pro zobrazení]"
+
+#: ../../mod/item.php:37
+msgid "Unable to locate original post."
+msgstr "Nelze nalézt původní příspěvek."
+
+#: ../../mod/item.php:128
+msgid "Empty post discarded."
+msgstr "Prázdný příspěvek odstraněn."
+
+#: ../../mod/item.php:214 ../../mod/message.php:93
+#: ../../mod/wall_upload.php:79 ../../mod/wall_upload.php:88
+#: ../../mod/wall_upload.php:95
+msgid "Wall Photos"
+msgstr "Fotografie na zdi"
+
+#: ../../mod/item.php:517 ../../mod/item.php:560 ../../mod/item.php:583
+#: ../../mod/item.php:624 ../../mod/dfrn_notify.php:193
+#: ../../mod/dfrn_notify.php:401 ../../mod/dfrn_notify.php:444
+#: ../../mod/dfrn_notify.php:530 ../../mod/dfrn_notify.php:571
+msgid "noreply"
+msgstr "bez odpovědi"
+
+#: ../../mod/item.php:559 ../../mod/item.php:623 ../../mod/dfrn_notify.php:570
+msgid "Administrator@"
+msgstr "Správce@"
+
+#: ../../mod/item.php:562 ../../mod/dfrn_notify.php:446
+#: ../../mod/dfrn_notify.php:573
+#, php-format
+msgid "%s commented on an item at %s"
+msgstr "%s okomentoval položku v %s"
+
+#: ../../mod/item.php:626
+#, php-format
+msgid "%s posted to your profile wall at %s"
+msgstr "%s přidal příspěvek na vaší profilovou zeď v %s"
+
+#: ../../mod/item.php:655
+msgid "System error. Post not saved."
+msgstr "Chyba systému. Příspěvek nebyl uložen."
+
+#: ../../mod/item.php:674
+#, php-format
+msgid ""
+"This message was sent to you by %s, a member of the Friendika social "
+"network."
+msgstr "Tuto zprávu Vám zaslal %s, člen sociální sítě Friendika."
+
+#: ../../mod/item.php:676
+#, php-format
+msgid "You may visit them online at %s"
+msgstr "Můžete je navštívit online na adrese %s"
+
+#: ../../mod/item.php:677
+msgid ""
+"Please contact the sender by replying to this post if you do not wish to "
+"receive these messages."
+msgstr ""
+"Pokud nechcete dostávat tyto zprávy, kontaktujte prosím odesilatele odpovědí"
+" na tento záznam."
+
+#: ../../mod/item.php:679
+#, php-format
+msgid "%s posted an update."
+msgstr "%s poslal aktualizaci."
+
+#: ../../mod/item.php:730 ../../mod/display.php:25 ../../mod/display.php:142
+msgid "Item not found."
+msgstr "Položka nenalezena."
+
+#: ../../mod/profile_photo.php:28
+msgid "Image uploaded but image cropping failed."
+msgstr "Obrázek byl odeslán, ale jeho oříznutí se nesdařilo."
+
+#: ../../mod/profile_photo.php:61 ../../mod/profile_photo.php:68
+#: ../../mod/profile_photo.php:75 ../../mod/profile_photo.php:248
+#, php-format
+msgid "Image size reduction [%s] failed."
+msgstr "Nepodařilo se snížit velikost obrázku [%s]."
+
+#: ../../mod/profile_photo.php:95
+msgid "Unable to process image"
+msgstr "Obrázek nelze zpracovat "
+
+#: ../../mod/profile_photo.php:109 ../../mod/wall_upload.php:56
+#, php-format
+msgid "Image exceeds size limit of %d"
+msgstr "Obrázek překročil limit velikosti %d"
+
+#: ../../mod/profile_photo.php:193
+msgid "Upload File:"
+msgstr "Nahrát soubor:"
+
+#: ../../mod/profile_photo.php:194
+msgid "Upload Profile Photo"
+msgstr "Nahrát profilovou fotografii"
+
+#: ../../mod/profile_photo.php:195
+msgid "Upload"
+msgstr "Nahrát"
+
+#: ../../mod/profile_photo.php:196
+msgid "skip this step"
+msgstr "přeskočit tento krok "
+
+#: ../../mod/profile_photo.php:196
+msgid "select a photo from your photo albums"
+msgstr "Vybrat fotografii z Vašich fotoalb"
+
+#: ../../mod/profile_photo.php:209
+msgid "Crop Image"
+msgstr "Oříznout obrázek"
+
+#: ../../mod/profile_photo.php:210
+msgid "Please adjust the image cropping for optimum viewing."
+msgstr "Prosím, ořízněte tento obrázek pro optimální zobrazení."
+
+#: ../../mod/profile_photo.php:211
+msgid "Done Editing"
+msgstr "Editace dokončena"
+
+#: ../../mod/profile_photo.php:239
+msgid "Image uploaded successfully."
+msgstr "Obrázek byl úspěšně nahrán."
+
+#: ../../mod/removeme.php:42 ../../mod/removeme.php:45
+msgid "Remove My Account"
+msgstr "Odstranit můj účet"
+
+#: ../../mod/removeme.php:43
+msgid ""
+"This will completely remove your account. Once this has been done it is not "
+"recoverable."
+msgstr ""
+"Tímto bude kompletně odstraněn váš účet. Jakmile bude účet odstraněn, nebude"
+" už možné ho obnovit."
+
+#: ../../mod/removeme.php:44
+msgid "Please enter your password for verification:"
+msgstr "Prosím, zadejte své heslo pro ověření:"
+
+#: ../../mod/message.php:18
+msgid "No recipient selected."
+msgstr "Nevybrán příjemce."
+
+#: ../../mod/message.php:23
+msgid "[no subject]"
+msgstr "[bez předmětu]"
+
+#: ../../mod/message.php:34
+msgid "Unable to locate contact information."
+msgstr "Nepodařilo se najít kontaktní informace."
+
+#: ../../mod/message.php:102
+msgid "Message sent."
+msgstr "Zpráva odeslána."
+
+#: ../../mod/message.php:105
+msgid "Message could not be sent."
+msgstr "Zprávu se nepodařilo odeslat."
+
+#: ../../mod/message.php:125 ../../include/nav.php:101
+msgid "Messages"
+msgstr "Zprávy"
+
+#: ../../mod/message.php:126
+msgid "Inbox"
+msgstr "Doručená pošta"
+
+#: ../../mod/message.php:127
+msgid "Outbox"
+msgstr "Odeslaná pošta"
+
+#: ../../mod/message.php:128
+msgid "New Message"
+msgstr "Nová zpráva"
+
+#: ../../mod/message.php:142
+msgid "Message deleted."
+msgstr "Zpráva odstraněna."
+
+#: ../../mod/message.php:158
+msgid "Conversation removed."
+msgstr "Konverzace odstraněna."
+
+#: ../../mod/message.php:172 ../../include/conversation.php:684
+msgid "Please enter a link URL:"
+msgstr "Zadejte prosím URL odkaz:"
+
+#: ../../mod/message.php:180
+msgid "Send Private Message"
+msgstr "Odeslat soukromou zprávu"
+
+#: ../../mod/message.php:181 ../../mod/message.php:315
+msgid "To:"
+msgstr "Adresát:"
+
+#: ../../mod/message.php:182 ../../mod/message.php:316
+msgid "Subject:"
+msgstr "Předmět:"
+
+#: ../../mod/message.php:185 ../../mod/message.php:319 ../../mod/invite.php:63
+msgid "Your message:"
+msgstr "Vaše zpráva:"
+
+#: ../../mod/message.php:224
+msgid "No messages."
+msgstr "Žádné zprávy."
+
+#: ../../mod/message.php:237
+msgid "Delete conversation"
+msgstr "Odstranit konverzaci"
+
+#: ../../mod/message.php:240
+msgid "D, d M Y - g:i A"
+msgstr "D M R - g:i A"
+
+#: ../../mod/message.php:267
+msgid "Message not available."
+msgstr "Zpráva není k dispozici."
+
+#: ../../mod/message.php:304
+msgid "Delete message"
+msgstr "Smazat zprávu"
+
+#: ../../mod/message.php:314
+msgid "Send Reply"
+msgstr "Poslat odpověď"
+
+#: ../../mod/profile.php:11 ../../boot.php:2270
+msgid "No profile"
+msgstr "Žádný profil"
+
+#: ../../mod/profile.php:59
+msgid "Access to this profile has been restricted."
+msgstr "Přístup na tento profil byl omezen."
+
+#: ../../mod/profile.php:115
+msgid "Status"
+msgstr "Stav"
+
+#: ../../mod/profile.php:117
+msgid "Photos"
+msgstr "Fotografie"
+
+#: ../../mod/openid.php:62 ../../mod/openid.php:122 ../../include/auth.php:114
+#: ../../include/auth.php:139 ../../include/auth.php:192
+msgid "Login failed."
+msgstr "Přihlášení se nezdařilo."
+
+#: ../../mod/openid.php:78 ../../include/auth.php:208
+msgid "Welcome "
+msgstr "Vítejte"
+
+#: ../../mod/openid.php:79 ../../include/auth.php:209
+msgid "Please upload a profile photo."
+msgstr "Prosím nahrejte profilovou fotografii"
+
+#: ../../mod/openid.php:82 ../../include/auth.php:212
+msgid "Welcome back "
+msgstr "Vítejte zpět"
+
+#: ../../mod/follow.php:43
+msgid "The profile address specified does not provide adequate information."
+msgstr "Uvedená adresa profilu neposkytuje dostatečné informace."
+
+#: ../../mod/follow.php:45
+msgid "No compatible communication protocols or feeds were discovered."
+msgstr "Nenalezen žádný kompatibilní komunikační protokol nebo kanál."
+
+#: ../../mod/follow.php:47
+msgid "An author or name was not found."
+msgstr "Autor nebo jméno nenalezeno"
+
+#: ../../mod/follow.php:49
+msgid "No browser URL could be matched to this address."
+msgstr "Této adrese neodpovídá žádné URL prohlížeče."
+
+#: ../../mod/follow.php:57
+msgid ""
+"Limited profile. This person will be unable to receive direct/personal "
+"notifications from you."
+msgstr ""
+"Omezený profil. Tato osoba nebude schopna od Vás přijímat přímé / osobní "
+"sdělení."
+
+#: ../../mod/follow.php:112
+msgid "Unable to retrieve contact information."
+msgstr "Nepodařilo se získat kontaktní informace."
+
+#: ../../mod/follow.php:158
+msgid "following"
+msgstr "následující"
+
+#: ../../mod/display.php:135
+msgid "Item has been removed."
+msgstr "Položka byla odstraněna."
+
+#: ../../mod/dfrn_notify.php:251
+msgid "New mail received at "
+msgstr "Přišel nový e-mail v"
+
+#: ../../mod/apps.php:6
+msgid "Applications"
+msgstr "Aplikace"
+
+#: ../../mod/search.php:26 ../../include/nav.php:70 ../../boot.php:2114
+msgid "Search"
+msgstr "Vyhledávání"
+
+#: ../../mod/search.php:69
+msgid "No results."
+msgstr "Žádné výsledky."
+
+#: ../../mod/profiles.php:21 ../../mod/profiles.php:240
+#: ../../mod/profiles.php:345 ../../mod/dfrn_confirm.php:62
+msgid "Profile not found."
+msgstr "Profil nenalezen"
+
+#: ../../mod/profiles.php:28
+msgid "Profile Name is required."
+msgstr "Jméno profilu je povinné."
+
+#: ../../mod/profiles.php:202
+msgid "Profile updated."
+msgstr "Profil aktualizován."
+
+#: ../../mod/profiles.php:257
+msgid "Profile deleted."
+msgstr "Profil smazán."
+
+#: ../../mod/profiles.php:273 ../../mod/profiles.php:304
+msgid "Profile-"
+msgstr "Profil-"
+
+#: ../../mod/profiles.php:292 ../../mod/profiles.php:331
+msgid "New profile created."
+msgstr "Nový profil vytvořen."
+
+#: ../../mod/profiles.php:310
+msgid "Profile unavailable to clone."
+msgstr "Profil není možné naklonovat."
+
+#: ../../mod/profiles.php:357
+msgid "Hide your contact/friend list from viewers of this profile?"
+msgstr ""
+"Skrýt u tohoto profilu vaše kontakty / seznam přátel před před dalšími "
+"uživateli zobrazující si tento profil?"
+
+#: ../../mod/profiles.php:366
+msgid "Hide profile details and all your messages from unknown viewers?"
+msgstr "Skrýt detaily profilu a všechny zprávy před neznámými uživateli?"
+
+#: ../../mod/profiles.php:382
+msgid "Edit Profile Details"
+msgstr "Upravit podrobnosti profilu "
+
+#: ../../mod/profiles.php:384
+msgid "View this profile"
+msgstr "Zobrazit tento profil"
+
+#: ../../mod/profiles.php:385
+msgid "Create a new profile using these settings"
+msgstr "Vytvořit nový profil pomocí tohoto nastavení"
+
+#: ../../mod/profiles.php:386
+msgid "Clone this profile"
+msgstr "Klonovat tento profil"
+
+#: ../../mod/profiles.php:387
+msgid "Delete this profile"
+msgstr "Smazat tento profil"
+
+#: ../../mod/profiles.php:388
+msgid "Profile Name:"
+msgstr "Jméno profilu:"
+
+#: ../../mod/profiles.php:389
+msgid "Your Full Name:"
+msgstr "Vaše celé jméno:"
+
+#: ../../mod/profiles.php:390
+msgid "Title/Description:"
+msgstr "Název / Popis:"
+
+#: ../../mod/profiles.php:391
+msgid "Your Gender:"
+msgstr "Vaše pohlaví:"
+
+#: ../../mod/profiles.php:392
+msgid "Birthday (y/m/d):"
+msgstr "Narozeniny (rok/měsíc/den):"
+
+#: ../../mod/profiles.php:393
+msgid "Street Address:"
+msgstr "Ulice:"
+
+#: ../../mod/profiles.php:394
+msgid "Locality/City:"
+msgstr "Město:"
+
+#: ../../mod/profiles.php:395
+msgid "Postal/Zip Code:"
+msgstr "PSČ:"
+
+#: ../../mod/profiles.php:396
+msgid "Country:"
+msgstr "Země:"
+
+#: ../../mod/profiles.php:397
+msgid "Region/State:"
+msgstr "Region / stát:"
+
+#: ../../mod/profiles.php:398
+msgid "<span class=\"heart\">&hearts;</span> Marital Status:"
+msgstr "<span class=\"heart\">&hearts;</span> Rodinný stav:"
+
+#: ../../mod/profiles.php:399
+msgid "Who: (if applicable)"
+msgstr "Kdo: (pokud je možné)"
+
+#: ../../mod/profiles.php:400
+msgid "Examples: cathy123, Cathy Williams, cathy@example.com"
+msgstr "Příklady: jan123, Jan Novák, jan@seznam.cz"
+
+#: ../../mod/profiles.php:401 ../../include/profile_advanced.php:90
+msgid "Sexual Preference:"
+msgstr "Sexuální preference:"
+
+#: ../../mod/profiles.php:402
+msgid "Homepage URL:"
+msgstr "Odkaz na domovskou stránku:"
+
+#: ../../mod/profiles.php:403 ../../include/profile_advanced.php:115
+msgid "Political Views:"
+msgstr "Politické přesvědčení:"
+
+#: ../../mod/profiles.php:404
+msgid "Religious Views:"
+msgstr "Náboženské přesvědčení:"
+
+#: ../../mod/profiles.php:405
+msgid "Public Keywords:"
+msgstr "Veřejná klíčová slova:"
+
+#: ../../mod/profiles.php:406
+msgid "Private Keywords:"
+msgstr "Soukromá klíčová slova:"
+
+#: ../../mod/profiles.php:407
+msgid "Example: fishing photography software"
+msgstr "Příklad: fishing photography software"
+
+#: ../../mod/profiles.php:408
+msgid "(Used for suggesting potential friends, can be seen by others)"
+msgstr ""
+"(Používá se pro doporučování potenciálních přátel, může být viděno "
+"ostatními)"
+
+#: ../../mod/profiles.php:409
+msgid "(Used for searching profiles, never shown to others)"
+msgstr "(Používá se pro vyhledávání profilů, není nikdy zobrazeno ostatním)"
+
+#: ../../mod/profiles.php:410
+msgid "Tell us about yourself..."
+msgstr "Řekněte nám něco o sobě ..."
+
+#: ../../mod/profiles.php:411
+msgid "Hobbies/Interests"
+msgstr "Koníčky/zájmy"
+
+#: ../../mod/profiles.php:412
+msgid "Contact information and Social Networks"
+msgstr "Kontaktní informace a sociální sítě"
+
+#: ../../mod/profiles.php:413
+msgid "Musical interests"
+msgstr "Hudební vkus"
+
+#: ../../mod/profiles.php:414
+msgid "Books, literature"
+msgstr "Knihy, literatura"
+
+#: ../../mod/profiles.php:415
+msgid "Television"
+msgstr "Televize"
+
+#: ../../mod/profiles.php:416
+msgid "Film/dance/culture/entertainment"
+msgstr "Film/tanec/kultura/zábava"
+
+#: ../../mod/profiles.php:417
+msgid "Love/romance"
+msgstr "Láska/romantika"
+
+#: ../../mod/profiles.php:418
+msgid "Work/employment"
+msgstr "Práce/zaměstnání"
+
+#: ../../mod/profiles.php:419
+msgid "School/education"
+msgstr "Škola/vzdělání"
+
+#: ../../mod/profiles.php:424
+msgid ""
+"This is your <strong>public</strong> profile.<br />It <strong>may</strong> "
+"be visible to anybody using the internet."
+msgstr ""
+"Toto je váš <strong>veřejný</strong> profil.<br />Ten <strong>může</strong> "
+"být viditelný kýmkoliv na internetu."
+
+#: ../../mod/profiles.php:435 ../../mod/directory.php:112
+msgid "Age: "
+msgstr "Věk: "
+
+#: ../../mod/profiles.php:470 ../../include/nav.php:108
+msgid "Profiles"
+msgstr "Profily"
+
+#: ../../mod/profiles.php:471
+msgid "Change profile photo"
+msgstr "Změnit profilovou fotografii"
+
+#: ../../mod/profiles.php:472
+msgid "Create New Profile"
+msgstr "Vytvořit nový profil"
+
+#: ../../mod/profiles.php:482
+msgid "Profile Image"
+msgstr "Profilový obrázek"
+
+#: ../../mod/profiles.php:484
+msgid "Visible to everybody"
+msgstr "Viditelné pro všechny"
+
+#: ../../mod/profiles.php:485
+msgid "Edit visibility"
+msgstr "Upravit viditelnost"
+
+#: ../../mod/directory.php:40
+msgid "Global Directory"
+msgstr "Globální adresář"
+
+#: ../../mod/directory.php:46
+msgid "Normal site view"
+msgstr "Normální zobrazení stránky"
+
+#: ../../mod/directory.php:48
+msgid "View all site entries"
+msgstr "Zobrazit všechny položky stránky"
+
+#: ../../mod/directory.php:56
+msgid "Site Directory"
+msgstr "Adresář serveru"
+
+#: ../../mod/directory.php:115
+msgid "Gender: "
+msgstr "Pohlaví: "
+
+#: ../../mod/directory.php:141
+msgid "No entries (some entries may be hidden)."
+msgstr "Žádné záznamy (některé položky mohou být skryty)."
+
+#: ../../mod/invite.php:28
+#, php-format
+msgid "%s : Not a valid email address."
+msgstr "%s : není platná e-mailová adresa."
+
+#: ../../mod/invite.php:32
+#, php-format
+msgid "Please join my network on %s"
+msgstr "Prosím, připojte se do mé sítě na %s"
+
+#: ../../mod/invite.php:42
+#, php-format
+msgid "%s : Message delivery failed."
+msgstr "%s : Doručení zprávy se nezdařilo."
+
+#: ../../mod/invite.php:46
+#, php-format
+msgid "%d message sent."
+msgid_plural "%d messages sent."
+msgstr[0] "%d zpráva odeslána."
+msgstr[1] "%d zprávy odeslány."
+msgstr[2] "%d zprávy odeslány."
+
+#: ../../mod/invite.php:61
+msgid "Send invitations"
+msgstr "Poslat pozvánky"
+
+#: ../../mod/invite.php:62
+msgid "Enter email addresses, one per line:"
+msgstr "Zadejte e-mailové adresy, jednu na řádek:"
+
+#: ../../mod/invite.php:64
+#, php-format
+msgid "Please join my social network on %s"
+msgstr "Prosím, připojte se do mé sociální sítě na %s"
+
+#: ../../mod/invite.php:65
+msgid "To accept this invitation, please visit:"
+msgstr "Chcete-li toto pozvání přijmout, navštivte prosím:"
+
+#: ../../mod/invite.php:66
+msgid ""
+"Once you have registered, please connect with me via my profile page at:"
+msgstr ""
+"Jakmile se zaregistrujete, prosím spojte se se mnou přes mou profilovu "
+"stránku na:"
+
+#: ../../mod/dfrn_confirm.php:231
+msgid "Response from remote site was not understood."
+msgstr "Odpověď ze vzdáleného serveru nebyla srozumitelná."
+
+#: ../../mod/dfrn_confirm.php:240
+msgid "Unexpected response from remote site: "
+msgstr "Neočekávaná odpověď od vzdáleného serveru:"
+
+#: ../../mod/dfrn_confirm.php:248
+msgid "Confirmation completed successfully."
+msgstr "Potvrzení úspěšně dokončena."
+
+#: ../../mod/dfrn_confirm.php:250 ../../mod/dfrn_confirm.php:264
+#: ../../mod/dfrn_confirm.php:271
+msgid "Remote site reported: "
+msgstr "Vzdálený server oznámil:"
+
+#: ../../mod/dfrn_confirm.php:262
+msgid "Temporary failure. Please wait and try again."
+msgstr "Dočasné selhání. Prosím, vyčkejte a zkuste to znovu."
+
+#: ../../mod/dfrn_confirm.php:269
+msgid "Introduction failed or was revoked."
+msgstr "Žádost o propojení selhala nebo byla zrušena."
+
+#: ../../mod/dfrn_confirm.php:387
+msgid "Unable to set contact photo."
+msgstr "Nelze nastavit fotografii kontaktu."
+
+#: ../../mod/dfrn_confirm.php:430 ../../include/conversation.php:61
+#, php-format
+msgid "%1$s is now friends with %2$s"
+msgstr "%1$s je nyní přítel s %2$s"
+
+#: ../../mod/dfrn_confirm.php:501
+#, php-format
+msgid "No user record found for '%s' "
+msgstr "Pro '%s' nenalezen žádný uživatelský záznam "
+
+#: ../../mod/dfrn_confirm.php:511
+msgid "Our site encryption key is apparently messed up."
+msgstr "Náš šifrovací klíč zřejmě přestal správně fungovat."
+
+#: ../../mod/dfrn_confirm.php:522
+msgid "Empty site URL was provided or URL could not be decrypted by us."
+msgstr ""
+"Byla poskytnuta prázdná URL adresa nebo se nepodařilo URL adresu dešifrovat."
+
+#: ../../mod/dfrn_confirm.php:534
+msgid "Contact record was not found for you on our site."
+msgstr "Kontakt záznam nebyl nalezen pro vás na našich stránkách."
+
+#: ../../mod/dfrn_confirm.php:562
+msgid ""
+"The ID provided by your system is a duplicate on our system. It should work "
+"if you try again."
+msgstr ""
+"Váš systém poskytl duplicitní ID vůči našemu systému. Pokuste se akci "
+"zopakovat."
+
+#: ../../mod/dfrn_confirm.php:573
+msgid "Unable to set your contact credentials on our system."
+msgstr "Nelze nastavit Vaše přihlašovací údaje v našem systému."
+
+#: ../../mod/dfrn_confirm.php:626
+msgid "Unable to update your contact profile details on our system"
+msgstr "Nelze aktualizovat Váš profil v našem systému"
+
+#: ../../mod/dfrn_confirm.php:656
+#, php-format
+msgid "Connection accepted at %s"
+msgstr "Připojení přijato na %s"
+
+#: ../../addon/facebook/facebook.php:248
+msgid "Facebook disabled"
+msgstr "Facebook zakázán"
+
+#: ../../addon/facebook/facebook.php:253
+msgid "Updating contacts"
+msgstr "Aktualizace kontaktů"
+
+#: ../../addon/facebook/facebook.php:262
+msgid "Facebook API key is missing."
+msgstr "Chybí Facebook API klíč."
+
+#: ../../addon/facebook/facebook.php:269
+msgid "Facebook Connect"
+msgstr "Facebook připojen"
+
+#: ../../addon/facebook/facebook.php:275
+msgid "Install Facebook connector for this account."
+msgstr "Nainstalovat pro tento účet Facebook konektor."
+
+#: ../../addon/facebook/facebook.php:282
+msgid "Remove Facebook connector"
+msgstr "Odstranit konektor na Facebook"
+
+#: ../../addon/facebook/facebook.php:288
+msgid "Post to Facebook by default"
+msgstr "Standardně posílat příspěvky na Facebook"
+
+#: ../../addon/facebook/facebook.php:350
+msgid "Facebook"
+msgstr "Facebook"
+
+#: ../../addon/facebook/facebook.php:351
+msgid "Facebook Connector Settings"
+msgstr "Nastavení Facebook konektoru "
+
+#: ../../addon/facebook/facebook.php:365
+msgid "Post to Facebook"
+msgstr "Přidat příspěvek na Facebook"
+
+#: ../../addon/facebook/facebook.php:434
+msgid ""
+"Post to Facebook cancelled because of multi-network access permission "
+"conflict."
+msgstr ""
+"Příspěvek na Facebook zrušen kvůli konfliktu přístupových práv mezi sítěmi."
+
+#: ../../addon/facebook/facebook.php:500
+msgid "Image: "
+msgstr "Obrázek: "
+
+#: ../../addon/facebook/facebook.php:576
+msgid "View on Friendika"
+msgstr "Pohled na Friendiku"
+
+#: ../../addon/widgets/widgets.php:41
+msgid "Widgets key: "
+msgstr "Widgets klíč:"
+
+#: ../../addon/widgets/widgets.php:45
+msgid "Generate new key"
+msgstr "Generovat nové klíče"
+
+#: ../../addon/widgets/widget_friends.php:30
+msgid "Connect on Friendika!"
+msgstr "Spojit se na Friendice!"
+
+#: ../../addon/tictac/tictac.php:14
+msgid "Three Dimensional Tic-Tac-Toe"
+msgstr "Trojrozměrné Tic-Tac-Toe"
+
+#: ../../addon/tictac/tictac.php:47
+msgid "3D Tic-Tac-Toe"
+msgstr "3D Tic-Tac-Toe"
+
+#: ../../addon/tictac/tictac.php:52
+msgid "New game"
+msgstr "Nová hra"
+
+#: ../../addon/tictac/tictac.php:53
+msgid "New game with handicap"
+msgstr "Nová hra s handicapem"
+
+#: ../../addon/tictac/tictac.php:54
+msgid ""
+"Three dimensional tic-tac-toe is just like the traditional game except that "
+"it is played on multiple levels simultaneously. "
+msgstr ""
+"Trojrozměrné tic-tac-toe je podobná této tradiční hře kromě toho, že se "
+"hraje na více úrovních současně."
+
+#: ../../addon/tictac/tictac.php:55
+msgid ""
+"In this case there are three levels. You win by getting three in a row on "
+"any level, as well as up, down, and diagonally across the different levels."
+msgstr ""
+"V tomto případě existují tři úrovně. Vyhrajete tím, že dostane tři v řadě na"
+" jakékoli úrovni, stejně jako nahoru, dolů a šikmo na různých úrovních."
+
+#: ../../addon/tictac/tictac.php:57
+msgid ""
+"The handicap game disables the center position on the middle level because "
+"the player claiming this square often has an unfair advantage."
+msgstr ""
+"Hra s handicapem zakáže centrální pozici na střední úrovni, protože hráč "
+"zaujímající tuto polohu má často nespravedlivou výhodu."
+
+#: ../../addon/tictac/tictac.php:176
+msgid "You go first..."
+msgstr "Vy začněte ..."
+
+#: ../../addon/tictac/tictac.php:181
+msgid "I'm going first this time..."
+msgstr "Tentokrát začnu já..."
+
+#: ../../addon/tictac/tictac.php:187
+msgid "You won!"
+msgstr "Vyhrál jste!"
+
+#: ../../addon/tictac/tictac.php:193 ../../addon/tictac/tictac.php:218
+msgid "\"Cat\" game!"
+msgstr "\"Kočičí\" hra!"
+
+#: ../../addon/tictac/tictac.php:216
+msgid "I won!"
+msgstr "Vyhrál jsem!"
+
+#: ../../addon/randplace/randplace.php:171
+msgid "Randplace Settings"
+msgstr "Randplace Nastavení"
+
+#: ../../addon/randplace/randplace.php:173
+msgid "Enable Randplace Plugin"
+msgstr "Povolit Randplace Plugin"
+
+#: ../../addon/java_upload/java_upload.php:33
+msgid "Select files to upload: "
+msgstr "Vyberte soubory k nahrání:"
+
+#: ../../addon/java_upload/java_upload.php:35
+msgid ""
+"Use the following controls only if the Java uploader [above] fails to "
+"launch."
+msgstr ""
+"Následující ovládací prvky použijte pouze v případě, že se nezdaří hru "
+"spustit s pomocí Java uploaderu [výše]."
+
+#: ../../addon/js_upload/js_upload.php:39
+msgid "Upload a file"
+msgstr "Nahrát soubor"
+
+#: ../../addon/js_upload/js_upload.php:40
+msgid "Drop files here to upload"
+msgstr "Přeneste sem soubory k nahrání"
+
+#: ../../addon/js_upload/js_upload.php:42
+msgid "Failed"
+msgstr "Neúspěch"
+
+#: ../../addon/js_upload/js_upload.php:288
+msgid "No files were uploaded."
+msgstr "Žádné soubory nebyly nahrány."
+
+#: ../../addon/js_upload/js_upload.php:294
+msgid "Uploaded file is empty"
+msgstr "Nahraný soubor je prázdný"
+
+#: ../../addon/js_upload/js_upload.php:299
+msgid "Uploaded file is too large"
+msgstr "Nahraný soubor je příliš velký"
+
+#: ../../addon/js_upload/js_upload.php:317
+msgid "File has an invalid extension, it should be one of "
+msgstr "Soubor má neplatnou příponu, ta by měla být jednou z"
+
+#: ../../addon/js_upload/js_upload.php:328
+msgid "Upload was cancelled, or server error encountered"
+msgstr "Nahrávání bylo zrušeno nebo došlo k chybě na serveru"
+
+#: ../../addon/oembed/oembed.php:29
+msgid "OEmbed settings updated"
+msgstr "OEmbed nastavení aktualizováno"
+
+#: ../../addon/oembed/oembed.php:42
+msgid "Use OEmbed for YouTube videos: "
+msgstr "Použít OEmbed pro videa YouTube:"
+
+#: ../../addon/oembed/oembed.php:76
+msgid "URL to embed:"
+msgstr "URL adresa k vložení:"
+
+#: ../../addon/statusnet/statusnet.php:78
+msgid "Post to StatusNet"
+msgstr "Poslat příspěvek na StatusNet"
+
+#: ../../addon/statusnet/statusnet.php:117
+msgid ""
+"Please contact your site administrator.<br />The provided API URL is not "
+"valid."
+msgstr "Obraťte se na správce webu.<br />Poskytnutý odkaz na API není platný."
+
+#: ../../addon/statusnet/statusnet.php:145
+msgid "We could not contact the StatusNet API with the Path you entered."
+msgstr ""
+"S cestou, kterou jste zadali, se nebylo možné spojit s API StatusNetu."
+
+#: ../../addon/statusnet/statusnet.php:172
+msgid "StatusNet settings updated."
+msgstr "Nastavení StatusNetu aktualizováno."
+
+#: ../../addon/statusnet/statusnet.php:195
+msgid "StatusNet Posting Settings"
+msgstr "Nastavení zasílání příspěvků na StatusNet "
+
+#: ../../addon/statusnet/statusnet.php:209
+msgid "Globally Available StatusNet OAuthKeys"
+msgstr "Globálně dostupné StatusNet OAuth klíče"
+
+#: ../../addon/statusnet/statusnet.php:210
+msgid ""
+"There are preconfigured OAuth key pairs for some StatusNet servers "
+"available. If you are useing one of them, please use these credentials. If "
+"not feel free to connect to any other StatusNet instance (see below)."
+msgstr ""
+"Jsou dostupné přednastavené OAuth páry klíčů pro některé servery StatusNetu."
+" Pokud používáte některý z nich, použijte toto přihlášení. Pokud ne, "
+"neváhejte se připojit k jiné instanci StatusNet (viz níže)."
+
+#: ../../addon/statusnet/statusnet.php:218
+msgid "Provide your own OAuth Credentials"
+msgstr "Uveďte své vlastní OAuth přihlašovací údaje"
+
+#: ../../addon/statusnet/statusnet.php:219
+msgid ""
+"No consumer key pair for StatusNet found. Register your Friendika Account as"
+" an desktop client on your StatusNet account, copy the consumer key pair "
+"here and enter the API base root.<br />Before you register your own OAuth "
+"key pair ask the administrator if there is already a key pair for this "
+"Friendika installation at your favorited StatusNet installation."
+msgstr ""
+"Nenalezen žádný consumer pár klíčů pro StatusNet. Zaregistrujte svůj "
+"Friendika účet jako desktopový klient na svém účtu StatusNetu, zkopírujte "
+"níže consumer pár klíčů a zadejte API base root.<br />Než si zaregistrujete "
+"svůj vlastní pár klíčů OAuth, zjistěte si od správce, zda-li už náhodou na "
+"tento Friendika server nepřidal pár klíčů pro vámi požadovanou instalaci "
+"StatusNetu."
+
+#: ../../addon/statusnet/statusnet.php:221
+msgid "OAuth Consumer Key"
+msgstr "OAuth Consumer Key"
+
+#: ../../addon/statusnet/statusnet.php:224
+msgid "OAuth Consumer Secret"
+msgstr "OAuth Consumer Secret"
+
+#: ../../addon/statusnet/statusnet.php:227
+msgid "Base API Path (remember the trailing /)"
+msgstr "Cesta k Base API  (nezapomeňte na koncový /)"
+
+#: ../../addon/statusnet/statusnet.php:248
+msgid ""
+"To connect to your StatusNet account click the button below to get a "
+"security code from StatusNet which you have to copy into the input box below"
+" and submit the form. Only your <strong>public</strong> posts will be posted"
+" to StatusNet."
+msgstr ""
+"Chcete-li připojit k vašemu účtu StatusNet klikněte na tlačítko níže, abyste"
+" dostati bezpečnostní kód ze StatusNetu, který musíte zkopírovat do "
+"vstupního pole níže a odelat formulář. Pouze Vaše <strong>veřejné</strong> "
+"příspěvky budou zveřejněny na StatusNetu."
+
+#: ../../addon/statusnet/statusnet.php:249
+msgid "Log in with StatusNet"
+msgstr "Přihlásit se s StatusNet"
+
+#: ../../addon/statusnet/statusnet.php:251
+msgid "Copy the security code from StatusNet here"
+msgstr "Zkopírujte sem bezpečnostní kód ze StatusNet"
+
+#: ../../addon/statusnet/statusnet.php:257
+msgid "Cancel Connection Process"
+msgstr "Zrušit připojování"
+
+#: ../../addon/statusnet/statusnet.php:259
+msgid "Current StatusNet API is"
+msgstr "Aktuální StatusNet API je"
+
+#: ../../addon/statusnet/statusnet.php:260
+msgid "Cancel StatusNet Connection"
+msgstr "Zrušit StatusNet připojení"
+
+#: ../../addon/statusnet/statusnet.php:271 ../../addon/twitter/twitter.php:165
+msgid "Currently connected to: "
+msgstr "V současné době připojen k:"
+
+#: ../../addon/statusnet/statusnet.php:272
+msgid ""
+"If enabled all your <strong>public</strong> postings will be posted to the "
+"associated StatusNet account."
+msgstr ""
+"Je-li povoleno, všechny Vaše <strong>veřejné</strong> příspěvky budou "
+"zveřejněny na příslušném účtu StatusNetu."
+
+#: ../../addon/statusnet/statusnet.php:274
+msgid "Allow posting to StatusNet"
+msgstr "Povolit zasílání příspěvků na StatusNet"
+
+#: ../../addon/statusnet/statusnet.php:277
+msgid "Send public postings to StatusNet by default"
+msgstr "Standardně poslílat veřejné příspěvky na StatusNet"
+
+#: ../../addon/statusnet/statusnet.php:282 ../../addon/twitter/twitter.php:172
+msgid "Clear OAuth configuration"
+msgstr "Vymazat konfiguraci OAuth"
+
+#: ../../addon/twitter/twitter.php:64
+msgid "Post to Twitter"
+msgstr "Poslat příspěvek na Twitter"
+
+#: ../../addon/twitter/twitter.php:122
+msgid "Twitter Posting Settings"
+msgstr "Nastavení zasílání příspěvků na Twitter "
+
+#: ../../addon/twitter/twitter.php:129
+msgid ""
+"No consumer key pair for Twitter found. Please contact your site "
+"administrator."
+msgstr ""
+"Nenalezen žádný spotřebitelský páru klíčů pro Twitter. Obraťte se na správce"
+" webu."
+
+#: ../../addon/twitter/twitter.php:148
+msgid ""
+"At this Friendika instance the Twitter plugin was enabled but you have not "
+"yet connected your account to your Twitter account. To do so click the "
+"button below to get a PIN from Twitter which you have to copy into the input"
+" box below and submit the form. Only your <strong>public</strong> posts will"
+" be posted to Twitter."
+msgstr ""
+"Na tomto Friendika serveru je Twitter plugin povolen, ale ještě nemáte svůj "
+"účet připojen ke svému Twitter účtu. Chcete-li tak učinit, klepnutím na "
+"tlačítko níže získejte PIN z Twitteru, který musíte zkopírovat do vstupního "
+"pole níže a odešlete formulář. Pouze Vaše <strong>veřejné</strong> příspěvky"
+" budou zveřejněny na Twitteru."
+
+#: ../../addon/twitter/twitter.php:149
+msgid "Log in with Twitter"
+msgstr "Přihlásit se s Twitter"
+
+#: ../../addon/twitter/twitter.php:151
+msgid "Copy the PIN from Twitter here"
+msgstr "Zkopírujte sem PIN z Twitteru"
+
+#: ../../addon/twitter/twitter.php:166
+msgid ""
+"If enabled all your <strong>public</strong> postings will be posted to the "
+"associated Twitter account as well."
+msgstr ""
+"Je-li povoleno, všechny <strong>veřejné</strong> příspěvky budou zároveň "
+"zveřejněny na příslušný  Twitter účet."
+
+#: ../../addon/twitter/twitter.php:168
+msgid "Send public postings to Twitter"
+msgstr "Poslat veřejné příspěvky na Twitter"
+
+#: ../../include/profile_advanced.php:23 ../../boot.php:2356
+msgid "Gender:"
+msgstr "Pohlaví:"
+
+#: ../../include/profile_advanced.php:36 ../../include/items.php:1086
+msgid "Birthday:"
+msgstr "Narozeniny:"
+
+#: ../../include/profile_advanced.php:45
+msgid "j F, Y"
+msgstr "j F, Y"
+
+#: ../../include/profile_advanced.php:46
+msgid "j F"
+msgstr "j F"
+
+#: ../../include/profile_advanced.php:59
+msgid "Age:"
+msgstr "Věk:"
+
+#: ../../include/profile_advanced.php:70
+msgid "<span class=\"heart\">&hearts;</span> Status:"
+msgstr "<span class=\"heart\">&hearts;</span> Status:"
+
+#: ../../include/profile_advanced.php:103 ../../boot.php:2362
+msgid "Homepage:"
+msgstr "Domácí stránka:"
+
+#: ../../include/profile_advanced.php:127
+msgid "Religion:"
+msgstr "Náboženství:"
+
+#: ../../include/profile_advanced.php:138
+msgid "About:"
+msgstr "O mě:"
+
+#: ../../include/profile_advanced.php:150
+msgid "Hobbies/Interests:"
+msgstr "Koníčky/zájmy:"
+
+#: ../../include/profile_advanced.php:162
+msgid "Contact information and Social Networks:"
+msgstr "Kontaktní informace a sociální sítě:"
+
+#: ../../include/profile_advanced.php:174
+msgid "Musical interests:"
+msgstr "Hudební vkus:"
+
+#: ../../include/profile_advanced.php:186
+msgid "Books, literature:"
+msgstr "Knihy, literatura:"
+
+#: ../../include/profile_advanced.php:198
+msgid "Television:"
+msgstr "Televize:"
+
+#: ../../include/profile_advanced.php:210
+msgid "Film/dance/culture/entertainment:"
+msgstr "Film/tanec/kultura/zábava:"
+
+#: ../../include/profile_advanced.php:222
+msgid "Love/Romance:"
+msgstr "Láska/romance"
+
+#: ../../include/profile_advanced.php:234
+msgid "Work/employment:"
+msgstr "Práce/zaměstnání:"
+
+#: ../../include/profile_advanced.php:246
+msgid "School/education:"
+msgstr "Škola/vzdělávání:"
+
+#: ../../include/contact_selectors.php:32
+msgid "Unknown | Not categorised"
+msgstr "Neznámé | Nezařazeno"
+
+#: ../../include/contact_selectors.php:33
+msgid "Block immediately"
+msgstr "Okamžitě blokovat "
+
+#: ../../include/contact_selectors.php:34
+msgid "Shady, spammer, self-marketer"
+msgstr "pochybný, spammer, self-makerter"
+
+#: ../../include/contact_selectors.php:35
+msgid "Known to me, but no opinion"
+msgstr "Znám ho ale, ale bez rozhodnutí"
+
+#: ../../include/contact_selectors.php:36
+msgid "OK, probably harmless"
+msgstr "OK, pravděpodobně neškodný"
+
+#: ../../include/contact_selectors.php:37
+msgid "Reputable, has my trust"
+msgstr "Renomovaný, má mou důvěru"
+
+#: ../../include/contact_selectors.php:55
+msgid "Frequently"
+msgstr "Často"
+
+#: ../../include/contact_selectors.php:56
+msgid "Hourly"
+msgstr "každou hodinu"
+
+#: ../../include/contact_selectors.php:57
+msgid "Twice daily"
+msgstr "Dvakrát denně"
+
+#: ../../include/contact_selectors.php:58
+msgid "Daily"
+msgstr "denně"
+
+#: ../../include/contact_selectors.php:59
+msgid "Weekly"
+msgstr "Týdenně"
+
+#: ../../include/contact_selectors.php:60
+msgid "Monthly"
+msgstr "Měsíčně"
+
+#: ../../include/profile_selectors.php:6
+msgid "Male"
+msgstr "Muž"
+
+#: ../../include/profile_selectors.php:6
+msgid "Female"
+msgstr "Žena"
+
+#: ../../include/profile_selectors.php:6
+msgid "Currently Male"
+msgstr "V současné době muž"
+
+#: ../../include/profile_selectors.php:6
+msgid "Currently Female"
+msgstr "V současné době žena"
+
+#: ../../include/profile_selectors.php:6
+msgid "Mostly Male"
+msgstr "Většinou muž"
+
+#: ../../include/profile_selectors.php:6
+msgid "Mostly Female"
+msgstr "Většinou žena"
+
+#: ../../include/profile_selectors.php:6
+msgid "Transgender"
+msgstr "Transgender"
+
+#: ../../include/profile_selectors.php:6
+msgid "Intersex"
+msgstr "Intersex"
+
+#: ../../include/profile_selectors.php:6
+msgid "Transsexual"
+msgstr "Transexuál"
+
+#: ../../include/profile_selectors.php:6
+msgid "Hermaphrodite"
+msgstr "Hermafrodit"
+
+#: ../../include/profile_selectors.php:6
+msgid "Neuter"
+msgstr "Neutrál"
+
+#: ../../include/profile_selectors.php:6
+msgid "Non-specific"
+msgstr "Nespecifikováno"
+
+#: ../../include/profile_selectors.php:6
+msgid "Other"
+msgstr "Jiné"
+
+#: ../../include/profile_selectors.php:6
+msgid "Undecided"
+msgstr "Nerozhodnuto"
+
+#: ../../include/profile_selectors.php:19
+msgid "Males"
+msgstr "Muži"
+
+#: ../../include/profile_selectors.php:19
+msgid "Females"
+msgstr "Ženy"
+
+#: ../../include/profile_selectors.php:19
+msgid "Gay"
+msgstr "Gay"
+
+#: ../../include/profile_selectors.php:19
+msgid "Lesbian"
+msgstr "Lesbička"
+
+#: ../../include/profile_selectors.php:19
+msgid "No Preference"
+msgstr "Bez preferencí"
+
+#: ../../include/profile_selectors.php:19
+msgid "Bisexual"
+msgstr "Bisexuál"
+
+#: ../../include/profile_selectors.php:19
+msgid "Autosexual"
+msgstr "Autosexuál"
+
+#: ../../include/profile_selectors.php:19
+msgid "Abstinent"
+msgstr "Abstinent"
+
+#: ../../include/profile_selectors.php:19
+msgid "Virgin"
+msgstr "panic/panna"
+
+#: ../../include/profile_selectors.php:19
+msgid "Deviant"
+msgstr "Deviant"
+
+#: ../../include/profile_selectors.php:19
+msgid "Fetish"
+msgstr "Fetišista"
+
+#: ../../include/profile_selectors.php:19
+msgid "Oodles"
+msgstr "Hodně"
+
+#: ../../include/profile_selectors.php:19
+msgid "Nonsexual"
+msgstr "Nesexuální"
+
+#: ../../include/profile_selectors.php:33
+msgid "Single"
+msgstr "Svobodný"
+
+#: ../../include/profile_selectors.php:33
+msgid "Lonely"
+msgstr "Osamnělý"
+
+#: ../../include/profile_selectors.php:33
+msgid "Available"
+msgstr "Dostupný"
+
+#: ../../include/profile_selectors.php:33
+msgid "Unavailable"
+msgstr "Nedostupný"
+
+#: ../../include/profile_selectors.php:33
+msgid "Dating"
+msgstr "Seznamující se"
+
+#: ../../include/profile_selectors.php:33
+msgid "Unfaithful"
+msgstr "Nevěrný"
+
+#: ../../include/profile_selectors.php:33
+msgid "Sex Addict"
+msgstr "Závislý na sexu"
+
+#: ../../include/profile_selectors.php:33
+msgid "Friends"
+msgstr "Přátelé"
+
+#: ../../include/profile_selectors.php:33
+msgid "Friends/Benefits"
+msgstr "Přátelé / výhody"
+
+#: ../../include/profile_selectors.php:33
+msgid "Casual"
+msgstr "Ležérní"
+
+#: ../../include/profile_selectors.php:33
+msgid "Engaged"
+msgstr "Zadaný"
+
+#: ../../include/profile_selectors.php:33
+msgid "Married"
+msgstr "Ženatý/vdaná"
+
+#: ../../include/profile_selectors.php:33
+msgid "Partners"
+msgstr "Partneři"
+
+#: ../../include/profile_selectors.php:33
+msgid "Cohabiting"
+msgstr "Žijící ve společné domácnosti"
+
+#: ../../include/profile_selectors.php:33
+msgid "Happy"
+msgstr "Šťastný"
+
+#: ../../include/profile_selectors.php:33
+msgid "Not Looking"
+msgstr "Nehledající"
+
+#: ../../include/profile_selectors.php:33
+msgid "Swinger"
+msgstr "Swinger"
+
+#: ../../include/profile_selectors.php:33
+msgid "Betrayed"
+msgstr "Zrazen"
+
+#: ../../include/profile_selectors.php:33
+msgid "Separated"
+msgstr "Odloučený"
+
+#: ../../include/profile_selectors.php:33
+msgid "Unstable"
+msgstr "Nestálý"
+
+#: ../../include/profile_selectors.php:33
+msgid "Divorced"
+msgstr "Rozvedený(á)"
+
+#: ../../include/profile_selectors.php:33
+msgid "Widowed"
+msgstr "Ovdovělý(á)"
+
+#: ../../include/profile_selectors.php:33
+msgid "Uncertain"
+msgstr "Nejistý"
+
+#: ../../include/profile_selectors.php:33
+msgid "Complicated"
+msgstr "Komplikovaný"
+
+#: ../../include/profile_selectors.php:33
+msgid "Don't care"
+msgstr "Nezajímá"
+
+#: ../../include/profile_selectors.php:33
+msgid "Ask me"
+msgstr "Zeptej se mě"
+
+#: ../../include/oembed.php:95
+msgid "Embedding disabled"
+msgstr "Vkládání zakázáno"
+
+#: ../../include/group.php:146
+msgid "Create a new group"
+msgstr "Vytvořit novou skupinu"
+
+#: ../../include/group.php:147
+msgid "Everybody"
+msgstr "Všichni"
+
+#: ../../include/nav.php:41 ../../boot.php:865
+msgid "Logout"
+msgstr "Odhlásit se"
+
+#: ../../include/nav.php:44 ../../boot.php:843 ../../boot.php:849
+msgid "Login"
+msgstr "Přihlásit se"
+
+#: ../../include/nav.php:55 ../../include/nav.php:92
+msgid "Home"
+msgstr "Domů"
+
+#: ../../include/nav.php:68
+msgid "Apps"
+msgstr "Aplikace"
+
+#: ../../include/nav.php:80
+msgid "Directory"
+msgstr "Adresář"
+
+#: ../../include/nav.php:90
+msgid "Network"
+msgstr "Síť"
+
+#: ../../include/nav.php:98
+msgid "Notifications"
+msgstr "Upozornění"
+
+#: ../../include/nav.php:104
+msgid "Manage"
+msgstr "Spravovat"
+
+#: ../../include/nav.php:107
+msgid "Settings"
+msgstr "Nastavení"
+
+#: ../../include/auth.php:27
+msgid "Logged out."
+msgstr "Odhlášen."
+
+#: ../../include/datetime.php:44 ../../include/datetime.php:46
+msgid "Miscellaneous"
+msgstr "Různé"
+
+#: ../../include/datetime.php:148
+msgid "less than a second ago"
+msgstr "méně než před sekundou"
+
+#: ../../include/datetime.php:151
+msgid "year"
+msgstr "rok"
+
+#: ../../include/datetime.php:151
+msgid "years"
+msgstr "let"
+
+#: ../../include/datetime.php:152
+msgid "month"
+msgstr "měsíc"
+
+#: ../../include/datetime.php:152
+msgid "months"
+msgstr "měsíců"
+
+#: ../../include/datetime.php:153
+msgid "week"
+msgstr "týden"
+
+#: ../../include/datetime.php:153
+msgid "weeks"
+msgstr "týdny"
+
+#: ../../include/datetime.php:154
+msgid "day"
+msgstr "den"
+
+#: ../../include/datetime.php:155
+msgid "hour"
+msgstr "hodina"
+
+#: ../../include/datetime.php:155
+msgid "hours"
+msgstr "hodin"
+
+#: ../../include/datetime.php:156
+msgid "minute"
+msgstr "minuta"
+
+#: ../../include/datetime.php:156
+msgid "minutes"
+msgstr "minut"
+
+#: ../../include/datetime.php:157
+msgid "second"
+msgstr "sekunda"
+
+#: ../../include/datetime.php:157
+msgid "seconds"
+msgstr "sekund"
+
+#: ../../include/datetime.php:164
+msgid " ago"
+msgstr "před"
+
+#: ../../include/poller.php:380
+msgid "From: "
+msgstr "Od:"
+
+#: ../../include/bbcode.php:83
+msgid "Image/photo"
+msgstr "Obrázek/fotografie"
+
+#: ../../include/dba.php:31
+#, php-format
+msgid "Cannot locate DNS info for database server '%s'"
+msgstr "Nelze nalézt záznam v DNS pro databázový server '%s'"
+
+#: ../../include/acl_selectors.php:133
+msgid "Visible To:"
+msgstr "Viditelné pro:"
+
+#: ../../include/acl_selectors.php:133
+msgid "everybody"
+msgstr "Žádost o připojení selhala nebo byla zrušena."
+
+#: ../../include/acl_selectors.php:137 ../../include/acl_selectors.php:152
+msgid "Groups"
+msgstr "Skupiny"
+
+#: ../../include/acl_selectors.php:148
+msgid "Except For:"
+msgstr "S výjimkou:"
+
+#: ../../include/notifier.php:414
+msgid "(no subject)"
+msgstr "(Bez předmětu)"
+
+#: ../../include/items.php:1447
+msgid "You have a new follower at "
+msgstr "Máte nového následovníka na"
+
+#: ../../include/conversation.php:191 ../../include/conversation.php:451
+#: ../../include/conversation.php:452
+#, php-format
+msgid "View %s's profile"
+msgstr "Zobrazit %s profilu"
+
+#: ../../include/conversation.php:207
+msgid "View in context"
+msgstr "Pohled v kontextu"
+
+#: ../../include/conversation.php:278
+msgid "See more posts like this"
+msgstr "Zobrazit více podobných příspěvků"
+
+#: ../../include/conversation.php:303
+#, php-format
+msgid "See all %d comments"
+msgstr "Zobrazit všechny komentáře %d"
+
+#: ../../include/conversation.php:453
+msgid "to"
+msgstr "pro"
+
+#: ../../include/conversation.php:454
+msgid "Wall-to-Wall"
+msgstr "Zeď-na-Zeď"
+
+#: ../../include/conversation.php:455
+msgid "via Wall-To-Wall:"
+msgstr "přes Zeď-na-Zeď "
+
+#: ../../include/conversation.php:593
+msgid "View status"
+msgstr "Zobrazit stav"
+
+#: ../../include/conversation.php:594
+msgid "View profile"
+msgstr "Zobrazit profil"
+
+#: ../../include/conversation.php:595
+msgid "View photos"
+msgstr "Zobrazit fotografie"
+
+#: ../../include/conversation.php:596
+msgid "View recent"
+msgstr "Zobrazit poslední"
+
+#: ../../include/conversation.php:598
+msgid "Send PM"
+msgstr "Poslat PM"
+
+#: ../../include/conversation.php:648
+#, php-format
+msgid "%s likes this."
+msgstr "%s se to líbí."
+
+#: ../../include/conversation.php:648
+#, php-format
+msgid "%s doesn't like this."
+msgstr "%s se to nelíbí."
+
+#: ../../include/conversation.php:652
+#, php-format
+msgid "<span  %1$s>%2$d people</span> like this."
+msgstr "<span  %1$s>%2$d lidem</span> se to líbí."
+
+#: ../../include/conversation.php:654
+#, php-format
+msgid "<span  %1$s>%2$d people</span> don't like this."
+msgstr "<span  %1$s>%2$d lidem</span> se to nelíbí."
+
+#: ../../include/conversation.php:660
+msgid "and"
+msgstr "a"
+
+#: ../../include/conversation.php:663
+#, php-format
+msgid ", and %d other people"
+msgstr ", a %d dalších lidí"
+
+#: ../../include/conversation.php:664
+#, php-format
+msgid "%s like this."
+msgstr "%s se to líbí."
+
+#: ../../include/conversation.php:664
+#, php-format
+msgid "%s don't like this."
+msgstr "%s se to nelíbí."
+
+#: ../../include/conversation.php:683
+msgid "Visible to <strong>everybody</strong>"
+msgstr "Viditelné pro <strong>všechny</strong>"
+
+#: ../../include/conversation.php:685
+msgid "Please enter a YouTube link:"
+msgstr "Prosím zadejte odkaz na YouTube:"
+
+#: ../../include/conversation.php:686
+msgid "Please enter a video(.ogg) link/URL:"
+msgstr "Prosím, zadejte odkaz na video (ogg.):"
+
+#: ../../include/conversation.php:687
+msgid "Please enter an audio(.ogg) link/URL:"
+msgstr "Prosím, zadejte odkaz na audio (ogg.):"
+
+#: ../../include/conversation.php:688
+msgid "Where are you right now?"
+msgstr "Kde právě jste?"
+
+#: ../../include/conversation.php:689
+msgid "Enter a title for this item"
+msgstr "Zadejte titulek pro tuto položku"
+
+#: ../../include/conversation.php:740
+msgid "Set title"
+msgstr "Nastavit titulek"
+
+#: ../../boot.php:385
+msgid "Delete this item?"
+msgstr "Odstranit tuto položku?"
+
+#: ../../boot.php:834
+msgid "Create a New Account"
+msgstr "Vytvořit nový účet"
+
+#: ../../boot.php:841
+msgid "Nickname or Email address: "
+msgstr "Přezdívka nebo e-mailová adresa:"
+
+#: ../../boot.php:842
+msgid "Password: "
+msgstr "Heslo: "
+
+#: ../../boot.php:847
+msgid "Nickname/Email/OpenID: "
+msgstr "Přezdívka/Email/OpenID: "
+
+#: ../../boot.php:848
+msgid "Password (if not OpenID): "
+msgstr "Heslo (pokud se nepoužívá OpenID):"
+
+#: ../../boot.php:851
+msgid "Forgot your password?"
+msgstr "Zapomněli jste své heslo?"
+
+#: ../../boot.php:1113
+msgid "prev"
+msgstr "předchozí"
+
+#: ../../boot.php:1115
+msgid "first"
+msgstr "první"
+
+#: ../../boot.php:1144
+msgid "last"
+msgstr "poslední"
+
+#: ../../boot.php:1147
+msgid "next"
+msgstr "další"
+
+#: ../../boot.php:2046
+msgid "No contacts"
+msgstr "Žádné kontakty"
+
+#: ../../boot.php:2054
+#, php-format
+msgid "%d Contact"
+msgid_plural "%d Contacts"
+msgstr[0] "%d kontakt"
+msgstr[1] "%d kontaktů"
+msgstr[2] "%d kontaktů"
+
+#: ../../boot.php:2329
+msgid "Connect"
+msgstr "Spojit"
+
+#: ../../boot.php:2344
+msgid "Location:"
+msgstr "Místo:"
+
+#: ../../boot.php:2348
+msgid ", "
+msgstr ", "
+
+#: ../../boot.php:2360
+msgid "Status:"
+msgstr "Status:"
+
+#: ../../boot.php:2457
+msgid "Monday"
+msgstr "Pondělí"
+
+#: ../../boot.php:2457
+msgid "Tuesday"
+msgstr "Úterý"
+
+#: ../../boot.php:2457
+msgid "Wednesday"
+msgstr "Středa"
+
+#: ../../boot.php:2457
+msgid "Thursday"
+msgstr "Čtvrtek"
+
+#: ../../boot.php:2457
+msgid "Friday"
+msgstr "Pátek"
+
+#: ../../boot.php:2457
+msgid "Saturday"
+msgstr "Sobota"
+
+#: ../../boot.php:2457
+msgid "Sunday"
+msgstr "Neděle"
+
+#: ../../boot.php:2461
+msgid "January"
+msgstr "Ledna"
+
+#: ../../boot.php:2461
+msgid "February"
+msgstr "Února"
+
+#: ../../boot.php:2461
+msgid "March"
+msgstr "Března"
+
+#: ../../boot.php:2461
+msgid "April"
+msgstr "Dubna"
+
+#: ../../boot.php:2461
+msgid "May"
+msgstr "Května"
+
+#: ../../boot.php:2461
+msgid "June"
+msgstr "Června"
+
+#: ../../boot.php:2461
+msgid "July"
+msgstr "Července"
+
+#: ../../boot.php:2461
+msgid "August"
+msgstr "Srpna"
+
+#: ../../boot.php:2461
+msgid "September"
+msgstr "Září"
+
+#: ../../boot.php:2461
+msgid "October"
+msgstr "Října"
+
+#: ../../boot.php:2461
+msgid "November"
+msgstr "Listopadu"
+
+#: ../../boot.php:2461
+msgid "December"
+msgstr "Prosince"
+
+#: ../../boot.php:2476
+msgid "g A l F d"
+msgstr "g A l F d"
+
+#: ../../boot.php:2494
+msgid "Birthday Reminders"
+msgstr "Připomínka narozenin"
+
+#: ../../boot.php:2495
+msgid "Birthdays this week:"
+msgstr "Narozeniny tento týden:"
+
+#: ../../boot.php:2496
+msgid "(Adjusted for local time)"
+msgstr "(Upraveno pro místní čas)"
+
+#: ../../boot.php:2507
+msgid "[today]"
+msgstr "[Dnes]"
+
+#: ../../boot.php:2570
+msgid "bytes"
+msgstr "bytů"
+
+#: ../../boot.php:2744
+msgid "link to source"
+msgstr "odkaz na zdroj"
+
+#: ../../index.php:199
+msgid "Not Found"
+msgstr "Nenalezen"
+
+#: ../../index.php:200
+msgid "Page not found."
+msgstr "Stránka nenalezena"
+
+

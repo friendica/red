@@ -12,14 +12,6 @@ class EmailNotification {
 	 * @param textVersion		text only version of the message
 	 */
 	static public function sendTextHtmlEmail($fromName,$fromEmail,$replyTo,$toEmail,$messageSubject,$htmlVersion,$textVersion) {
-		logger("sendTextHtmlEmail: BEGIN");
-		logger("fromName:       " . $fromName);
-		logger("fromEmail:      " . $fromEmail);
-		logger("replyTo:        " . $replyTo);
-		logger("toEmail:        " . $toEmail);
-		logger("messageSubject: " . $messageSubject);
-		//logger("htmlVersion:    " . $htmlVersion);
-		//logger("textVersion:    " . $textVersion);
 		
 		// generate a mime boundary
 		$mimeBoundary   =rand(0,9)."-"
