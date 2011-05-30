@@ -169,6 +169,9 @@ $profile_in_net_dir
 $imap_desc
 $mail_disabled
 </p>
+<p>
+$lbl_imap8 $lbl_imap9
+</p>
 <label for="imap-server" id="settings-label-imap1">$lbl_imap1</label>
 <input type="text" id="imap-server" name="mail_server" value="$imap_server" $imap_disabled />
 <div id="imap-server-end"></div>
