@@ -161,7 +161,7 @@ $o .= <<< EOT
 
 EOT;
 
-	$r = q("SELECT * FROM `group` WHERE `deleted` = 0 AND `uid` = %d",
+	$r = q("SELECT * FROM `group` WHERE `deleted` = 0 AND `uid` = %d ORDER BY `name` ASC",
 		intval($_SESSION['uid'])
 	);
 	if(count($r)) {
