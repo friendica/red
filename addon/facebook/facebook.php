@@ -725,8 +725,10 @@ function fb_consume_stream($uid,$j,$wall = false) {
 
 			// don't store post if we don't have a contact
 
-			if(! x($datarray,'contact-id'))
+			if(! x($datarray,'contact-id')) {
+				logger('no contact: post ignored');
 				continue; 
+			}
 
 			$datarray['verb'] = ACTIVITY_POST;						
 			if($wall) {
@@ -759,8 +761,10 @@ function fb_consume_stream($uid,$j,$wall = false) {
 				intval($top_item),
 				intval($uid)
 			);			
-			if(count($r))
+			if(count($r)) {
 				$orig_post = $r[0];
+				logger('fb: new top level item posted');
+			}
 		}
 
 		if(isset($entry->likes) && isset($entry->likes->data))

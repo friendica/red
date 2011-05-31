@@ -111,6 +111,22 @@ function settings_post(&$a) {
 			intval($mail_pubmail),
 			intval(local_user())
 		);
+		$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",
+			intval(local_user())
+		);
+		if(count($r)) {
+			$eacct = $r[0];
+			require_once('include/email.php');
+			$mb = construct_mailbox_name($eacct);
+			if(strlen($eacct['server'])) {
+				$dcrpass = '';
+				openssl_private_decrypt(hex2bin($eacct['pass']),$dcrpass,$a->user['prvkey']);
+				$mbox = email_connect($mb,$mail_user,$dcrpass);
+				unset($dcrpass);
+				if(! $mbox)
+					notice( t('Failed to connect with email account using the settings provided.') . EOL);
+			}
+		}
 	}
 
 	$notify = 0;
@@ -308,7 +324,7 @@ function settings_content(&$a) {
 	$mail_user    = ((count($r)) ? $r[0]['user'] : '');
 	$mail_replyto = ((count($r)) ? $r[0]['reply_to'] : '');
 	$mail_pubmail = ((count($r)) ? $r[0]['pubmail'] : 0);
-
+	$mail_chk     = ((count($r)) ? $r[0]['last_check'] : '0000-00-00 00:00:00');
 
 	$pageset_tpl = get_markup_template('pagetypes.tpl');
 	$pagetype = replace_macros($pageset_tpl,array(
@@ -484,6 +500,8 @@ function settings_content(&$a) {
 		'$lbl_imap6' => t("Reply-to address \x28Optional\x29:"),
 		'$imap_replyto' => $mail_replyto,
 		'$lbl_imap7' => t('Send public posts to all email contacts:'),
+		'$lbl_imap8' => t('Last successful email check:'),
+		'$lbl_imap9' => (($mail_chk === '0000-00-00 00:00:00') ? t('never') : datetime_convert('UTC', date_default_timezone_get(), $mail_chk, t('g A l F d Y'))), 
 		'$pubmail_checked' => (($mail_pubmail) ? ' checked="checked" ' : ''),
 		'$mail_disabled' => (($mail_disabled) ? '<div class="info-message">' . t('Email access is disabled on this site.') . '</div>' : ''),
 		'$imap_disabled' => $imap_disabled

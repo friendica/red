@@ -58,7 +58,7 @@ function contacts_post(&$a) {
 			return;
 		}
 	}
-logger('contact_edit ' . print_r($_POST,true));
+
 
 	$priority = intval($_POST['poll']);
 	if($priority == (-1))
@@ -269,7 +269,7 @@ function contacts_content(&$a) {
 			'$lbl_rep2' => t('Occasionally your friends may wish to inquire about this person\'s online legitimacy.'),
 			'$lbl_rep3' => t('You may help them choose whether or not to interact with this person by providing a <em>reputation</em> to guide them.'),
 			'$lbl_rep4' => t('Please take a moment to elaborate on this selection if you feel it could be helpful to others.'),
-			'$visit' => t('Visit $name\'s profile'),
+			'$visit' => sprintf( t('Visit %s\'s profile [%s]'),$r[0]['name'],$r[0]['url']),
 			'$blockunblock' => t('Block/Unblock contact'),
 			'$ignorecont' => t('Ignore contact'),
 			'$altcrepair' => t('Repair contact URL settings'),
@@ -384,7 +384,7 @@ function contacts_content(&$a) {
 
 
 			$o .= replace_macros($tpl, array(
-				'$img_hover' => t('Visit $username\'s profile'),
+				'$img_hover' => sprintf( t('Visit %s\'s profile [%s]'),$rr['name'],$rr['url']),
 				'$edit_hover' => t('Edit contact'),
 				'$id' => $rr['id'],
 				'$alt_text' => $alt_text,

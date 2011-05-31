@@ -742,6 +742,15 @@ function item_store($arr,$force_parent = false) {
 		$arr['uri'],           // already dbesc'd
 		intval($arr['uid'])
 	);
+	if(! count($r)) {
+		// This is not good, but perhaps we encountered a rare race/cache condition, so back off and try again. 
+		sleep(3);
+		$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+			$arr['uri'],           // already dbesc'd
+			intval($arr['uid'])
+		);
+	}
+
 	if(count($r)) {
 		$current_post = $r[0]['id'];
 		logger('item_store: created item ' . $current_post);
