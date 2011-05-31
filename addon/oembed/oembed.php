@@ -34,9 +34,10 @@ function oembed_settings(&$a,&$o) {
     if(! local_user())
 		return;
 	$uofy = get_pconfig(local_user(), 'oembed', 'use_for_youtube' );
-	
-	$o .='<h3 class="settings-heading">OEmbed</h3>';
+
 	$o.='
+	<div class="settings-block">
+	<h3 class="settings-heading">OEmbed</h3>
 	<div id="settings-username-wrapper">
 		<label for="oembed_use_for_youtube">'
 			.t('Use OEmbed for YouTube videos: ') 
@@ -47,6 +48,7 @@ function oembed_settings(&$a,&$o) {
 	<div id="settings-username-end"></div>
 	<div class="settings-submit-wrapper">
 		<input type="submit" value="'.t('Submit').'" class="settings-submit" name="oembed-submit">
+	</div>
 	</div>';
 }
 
