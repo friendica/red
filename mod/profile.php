@@ -241,12 +241,13 @@ function profile_content(&$a, $update = 0) {
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`network`, `contact`.`rel`, 
 			`contact`.`thumb`, `contact`.`self`, `contact`.`writable`, 
 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
+			FROM `item`, (SELECT `p`.`id`,`p`.`created` FROM `item` AS `p` WHERE `p`.`parent` = `p`.`id`) AS `parentitem`, `contact`
 			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+			AND `contact`.`id` = `item`.`contact-id`
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-			AND `item`.`parent` IN ( %s )
+			AND `item`.`parent` = `parentitem`.`id` AND `item`.`parent` IN ( %s )
 			$sql_extra
-			ORDER BY `parent` DESC, `gravity` ASC, `item`.`id` ASC ",
+			ORDER BY `parentitem`.`created` DESC, `gravity` ASC, `item`.`created` ASC ",
 			intval($a->profile['profile_uid']),
 			dbesc($parents_str)
 		);
