@@ -185,3 +185,15 @@ function expand_groups($a) {
 			$ret[] = $rr['contact-id'];
 	return $ret;
 }
+
+
+function member_of($c) {
+
+	$r = q("SELECT `group`.`name`, `group`.`id` FROM `group` LEFT JOIN `group_member` ON `group_member`.`gid` = `group`.`id` WHERE `group_member`.`contact-id` = %d AND `group`.`deleted` = 0 ORDER BY `group`.`name`  ASC ",
+		intval($c)
+	);
+
+	return $r;
+
+}
+
