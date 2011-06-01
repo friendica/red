@@ -42,6 +42,8 @@ $insecure
 $blocked
 $ignored
 
+$grps
+
 <div id="view-recent-wrapper"><a href="network/?cid=$contact_id" id="contact-view-recent">$lblrecent</a></div>
 
 <div id="contact-edit-info-wrapper">

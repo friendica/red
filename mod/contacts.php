@@ -249,6 +249,15 @@ function contacts_content(&$a) {
 			$sparkle = '';
 		}
 
+		$grps = '';
+		$member_of = member_of($r[0]['id']);
+		if(is_array($member_of) && count($member_of)) {
+			$grps = t('Member of: ') . EOL . '<ul>';
+			foreach($member_of as $member)
+				$grps .= '<li><a href="group/' . $member['id'] . '" title="' . t('Edit') . '" ><img src="images/spencil.gif" alt="' . t('Edit') . '" /></a> <a href="network/' . $member['id'] . '">' . $member['name'] . '</a></li>';
+			$grps .= '</ul>';
+		}
+
 		$insecure = '<div id="profile-edit-insecure"><p><img src="images/unlock_icon.gif" alt="' . t('Privacy Unavailable') . '" />&nbsp;'
 			. t('Private communications are not available for this contact.') . '</p></div>';
 
@@ -275,6 +284,7 @@ function contacts_content(&$a) {
 			'$altcrepair' => t('Repair contact URL settings'),
 			'$lblcrepair' => t("Repair contact URL settings \x28WARNING: Advanced\x29"),
 			'$lblrecent' => t('View conversations'),
+			'$grps' => $grps,
 			'$delete' => t('Delete contact'),
 			'$poll_interval' => contact_poll_interval($r[0]['priority']),
 			'$lastupdtext' => t('Last updated: '),
