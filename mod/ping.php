@@ -8,7 +8,7 @@ function ping_init(&$a) {
 		xml_status(0);
 
 	$r = q("SELECT COUNT(*) AS `total` FROM `item` 
-		WHERE `unseen` = 1 AND `visible` = 1 AND `deleted` = 0 AND `uid` = %d",
+		WHERE `unseen` = 1 AND `visible` = 1 AND `deleted` = 0 AND `uid` = %d AND `wall` = 0 ",
 		intval(local_user())
 	);
 	$network = $r[0]['total'];
@@ -25,8 +25,7 @@ function ping_init(&$a) {
 	);
 	$intro = $r[0]['total'];
 
-	if ($a->config['register_policy'] == REGISTER_APPROVE &&	
-		$a->config['admin_email'] === $a->user['email']){
+	if (($a->config['register_policy'] == REGISTER_APPROVE) && (is_site_admin())) {
 			$r = q("SELECT COUNT(*) AS `total` FROM `register`");
 			$register = $r[0]['total'];
 	} else {
