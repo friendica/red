@@ -624,19 +624,23 @@ function facebook_post_hook(&$a,&$b) {
 				// "test_mode" prevents anything from actually being posted.
 				// Otherwise, let's do it. 
 
-				if(! get_config('facebook','test_mode'))
+				if(! get_config('facebook','test_mode')) {
 					$x = post_url($url, $postvars);
 
-				$retj = json_decode($x);
-				if($retj->id) {
-					q("UPDATE `item` SET `extid` = '%s' WHERE `id` = %d LIMIT 1",
-						dbesc('fb::' . $retj->id),
-						intval($b['id'])
-					);
+					$retj = json_decode($x);
+					if($retj->id) {
+						q("UPDATE `item` SET `extid` = '%s' WHERE `id` = %d LIMIT 1",
+							dbesc('fb::' . $retj->id),
+							intval($b['id'])
+						);
+					}
+					else {
+						// FIXME queue the message so we can attempt to redeliver, see include/notifier.php and include/queue.php
+						notice( t('Facebook delivery failed.') . EOL);
+					}
+					
+					logger('Facebook post returns: ' . $x, LOGGER_DEBUG);
 				}
-				
-				logger('Facebook post returns: ' . $x, LOGGER_DEBUG);
-
 			}
 		}
 	}
