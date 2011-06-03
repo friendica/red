@@ -44,7 +44,7 @@ function qsearch_init(&$a) {
 			$results[] = array( (int) $rr['id'], 0, $rr['name'],$rr['url'],$rr['photo']);
 	}
 
-	echo str_replace('\\/','/',json_encode((object) $results));
+	echo json_encode((object) $results);
 	killme();
 }
 

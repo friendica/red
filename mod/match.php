@@ -38,6 +38,7 @@ function match_content(&$a) {
 
 		if(count($j->results)) {
 			foreach($j->results as $jj) {
+
 				$o .= '<div class="profile-match-wrapper"><div class="profile-match-photo">';
 				$o .= '<a href="' . $jj->url . '">' . '<img src="' . $jj->photo . '" alt="' . $jj->name . '" title="' . $jj->name . '[' . $jj->url . ']' . '" /></a></div>';
 				$o .= '<div class="profile-match-break"></div>';
