@@ -438,7 +438,7 @@ function facebook_post_hook(&$a,&$b) {
 			logger('facebook reply id=' . $reply);
 		}
 
-		if($b['private'] && $reply == false) {
+		if($b['private'] && $reply === false) {
 			$allow_people = expand_acl($b['allow_cid']);
 			$allow_groups = expand_groups(expand_acl($b['allow_gid']));
 			$deny_people  = expand_acl($b['deny_cid']);
@@ -636,7 +636,8 @@ function facebook_post_hook(&$a,&$b) {
 					}
 					else {
 						// FIXME queue the message so we can attempt to redeliver, see include/notifier.php and include/queue.php
-						notice( t('Facebook delivery failed.') . EOL);
+						if(! $likes)
+							notice( t('Facebook delivery failed.') . EOL);
 					}
 					
 					logger('Facebook post returns: ' . $x, LOGGER_DEBUG);
