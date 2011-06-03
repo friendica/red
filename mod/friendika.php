@@ -24,7 +24,7 @@ function friendika_init(&$a) {
 			
 		);
 
-		echo str_replace('\\/','/',json_encode($data));
+		echo json_encode($data);
 		killme();
 	}
 }

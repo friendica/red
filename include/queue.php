@@ -97,7 +97,7 @@ function queue_run($argv, $argc){
 		$deliver_status = 0;
 
 		switch($contact['network']) {
-			case 'dfrn':
+			case NETWORK_DFRN:
 				logger('queue: dfrndelivery: item ' . $q_item['id'] . ' for ' . $contact['name']);
 				$deliver_status = dfrn_deliver($owner,$contact,$data);
 
@@ -109,7 +109,7 @@ function queue_run($argv, $argc){
 					remove_queue_item($q_item['id']);
 				}
 				break;
-			default:
+			case NETWORK_OSTATUS:
 				if($contact['notify']) {
 					logger('queue: slapdelivery: item ' . $q_item['id'] . ' for ' . $contact['name']);
 					$deliver_status = slapper($owner,$contact['notify'],$data);
@@ -120,6 +120,18 @@ function queue_run($argv, $argc){
 						remove_queue_item($q_item['id']);
 				}
 				break;
+			default:
+				$a = get_app();
+				$params = array('owner' => $owner, 'contact' => $contact, 'queue' => $q_item, 'result' => false);
+				call_hooks('queue_deliver', $a, $params);
+		
+				if($params['result'])
+						remove_queue_item($q_item['id']);
+				else
+						update_queue_time($q_item['id']);
+	
+				break;
+
 		}
 	}
 		
