@@ -31,9 +31,11 @@ function newmember_content(&$a) {
 
 	$o .= '<li>' . '<a href="profiles">' . t('Set some public keywords for your default profile which describe your interests. We may be able to find other people with similar interests and suggest friendships.') . '</a></li>' . EOL;
 
-	$o .= '<li>' . '<a href="contacts">' . t('Your Contact page is your gateway to editing and connecting with friends on other networks. Typically you enter their address or site URL in the <em>Connect</em> dialog.') . '</a></li>' . EOL;
+	$o .= '<li>' . '<a href="contacts">' . t('Your Contacts page is your gateway to managing friendships and connecting with friends on other networks. Typically you enter their address or site URL in the <em>Connect</em> dialog.') . '</a></li>' . EOL;
 
 	$o .= '<li>' . '<a href="directory">' . t('The Directory page lets you find other people in this network or other federated sites. Look for a <em>Connect</em> or <em>Follow</em> link on their profile page. Provide your own Identity Address if requested.') . '</a></li>' . EOL;
+
+	$o .= '<li>' . '<a href="contacts">' . t('Once you have made some friends, organize them into private conversation groups from the sidebar of your Contacts page and then you can interact with each group privately on your Network page.') . '</a></li>' . EOL;
 
 	$o .= '<li>' . '<a href="help">' . t('Our <strong>help</strong> pages may be consulted for detail on other program features and resources.') . '</a></li>' . EOL;
 
