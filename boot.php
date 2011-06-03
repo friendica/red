@@ -6,7 +6,7 @@ ini_set('pcre.backtrack_limit', 250000);
 
 define ( 'FRIENDIKA_VERSION',      '2.2.999' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
-define ( 'DB_UPDATE_VERSION',      1059      );
+define ( 'DB_UPDATE_VERSION',      1060      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -481,17 +481,26 @@ function check_config(&$a) {
 		$stored = intval($build);
 		$current = intval(DB_UPDATE_VERSION);
 		if(($stored < $current) && file_exists('update.php')) {
+
 			// We're reporting a different version than what is currently installed.
 			// Run any existing update scripts to bring the database up to current.
 
 			require_once('update.php');
-			for($x = $stored; $x < $current; $x ++) {
-				if(function_exists('update_' . $x)) {
-					$func = 'update_' . $x;
-					$func($a);
+
+			// make sure that boot.php and update.php are the same release, we might be
+			// updating right this very second and the correct version of the update.php
+			// file may not be here yet. This can happen on a very busy site.
+
+			if(DB_UPDATE_VERSION == UPDATE_VERSION) {
+
+				for($x = $stored; $x < $current; $x ++) {
+					if(function_exists('update_' . $x)) {
+						$func = 'update_' . $x;
+						$func($a);
+					}
 				}
+				set_config('system','build', DB_UPDATE_VERSION);
 			}
-			set_config('system','build', DB_UPDATE_VERSION);
 		}
 	}
 

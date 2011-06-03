@@ -1,5 +1,7 @@
 <?php
 
+define( 'UPDATE_VERSION' , 1060 );
+
 /**
  *
  * update.php - automatic system update
@@ -28,7 +30,7 @@
  *    2. Update this file by adding a new function at the end with the number of the current DB_UPDATE_VERSION.
  *       This function should modify the current database schema and perform any other steps necessary
  *       to ensure that upgrade is silent and free from requiring interaction.
- *    3. Increment the DB_UPDATE_VERSION in boot.php
+ *    3. Increment the DB_UPDATE_VERSION in boot.php *AND* the UPDATE_VERSION in this file to match it
  *    4. TEST the upgrade prior to checkin and filing a pull request.
  *
  */
@@ -499,3 +501,8 @@ function update_1057() {
 function update_1058() {
 	q("ALTER TABLE `item` ADD `event-id` INT NOT NULL AFTER `resource-id` ");
 }
+
+function update_1059() {
+	q("ALTER TABLE `queue` ADD `network` CHAR( 32 ) NOT NULL AFTER `cid` ");
+}
+
