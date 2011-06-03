@@ -638,7 +638,7 @@ function facebook_post_hook(&$a,&$b) {
 					}
 					else {
 						if(! $likes) {
-							$s = serialize(array('url' => $url, 'item' => $b, 'post' => $postvars));
+							$s = serialize(array('url' => $url, 'item' => $b['id'], 'post' => $postvars));
 							q("INSERT INTO `queue` ( `network`, `cid`, `created`, `last`, `content`)
 								VALUES ( '%s', '%s', '%s', '%s') ",
 								dbesc(NETWORK_FACEBOOK),
@@ -696,7 +696,7 @@ function fb_queue_hook(&$a,&$b) {
 				if($retj->id) {
 					q("UPDATE `item` SET `extid` = '%s' WHERE `id` = %d LIMIT 1",
 						dbesc('fb::' . $retj->id),
-						intval($item['id'])
+						intval($item)
 					);
 					logger('facebook queue: success: ' . $j); 
 					remove_queue_item($x['id']);
