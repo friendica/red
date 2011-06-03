@@ -63,6 +63,12 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 		$_SESSION['theme'] = $a->user['theme'];
 		$_SESSION['page_flags'] = $a->user['page-flags'];
 
+		$member_since = strtotime($a->user['register_date']);
+		if(time() < ($member_since + ( 60 * 60 * 24 * 14)))
+			$_SESSION['new_member'] = true;
+		else
+			$_SESSION['new_member'] = false;
+
 		if(strlen($a->user['timezone'])) {
 			date_default_timezone_set($a->user['timezone']);
 			$a->timezone = $a->user['timezone'];
@@ -210,6 +216,13 @@ else {
 		}
 		else
 			info( t("Welcome back ") . $a->user['username'] . EOL);
+
+
+		$member_since = strtotime($a->user['register_date']);
+		if(time() < ($member_since + ( 60 * 60 * 24 * 14)))
+			$_SESSION['new_member'] = true;
+		else
+			$_SESSION['new_member'] = false;
 
 		if(strlen($a->user['timezone'])) {
 			date_default_timezone_set($a->user['timezone']);

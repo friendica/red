@@ -1,20 +1,6 @@
 <?php
 require_once("boot.php");
-
-function update_queue_time($id) {
-	logger('queue: requeue item ' . $id);
-	q("UPDATE `queue` SET `last` = '%s' WHERE `id` = %d LIMIT 1",
-		dbesc(datetime_convert()),
-		intval($id)
-	);
-}
-
-function remove_queue_item($id) {
-	logger('queue: remove queue item ' . $id);
-	q("DELETE FROM `queue` WHERE `id` = %d LIMIT 1",
-		intval($id)
-	);
-}
+require_once('include/queue_fn.php');
 
 function queue_run($argv, $argc){
   global $a, $db;
@@ -58,6 +44,10 @@ function queue_run($argv, $argc){
 	if(! count($r)){
 		return;
 	}
+
+	call_hooks('queue_predeliver', $a, $r);
+
+
 	// delivery loop
 
 	require_once('include/salmon.php');
@@ -68,6 +58,7 @@ function queue_run($argv, $argc){
 		);
 		if(! count($qi))
 			continue;
+
 
 		$c = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
 			intval($qi[0]['cid'])
@@ -121,7 +112,6 @@ function queue_run($argv, $argc){
 				}
 				break;
 			default:
-				$a = get_app();
 				$params = array('owner' => $owner, 'contact' => $contact, 'queue' => $q_item, 'result' => false);
 				call_hooks('queue_deliver', $a, $params);
 		

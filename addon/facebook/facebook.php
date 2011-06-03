@@ -335,18 +335,20 @@ function facebook_content(&$a) {
 }
 
 function facebook_install() {
-	register_hook('post_local_end',  'addon/facebook/facebook.php', 'facebook_post_hook');
-	register_hook('jot_networks',    'addon/facebook/facebook.php', 'facebook_jot_nets');
-	register_hook('plugin_settings', 'addon/facebook/facebook.php', 'facebook_plugin_settings');
-	register_hook('cron',            'addon/facebook/facebook.php', 'facebook_cron');
+	register_hook('post_local_end',   'addon/facebook/facebook.php', 'facebook_post_hook');
+	register_hook('jot_networks',     'addon/facebook/facebook.php', 'facebook_jot_nets');
+	register_hook('plugin_settings',  'addon/facebook/facebook.php', 'facebook_plugin_settings');
+	register_hook('cron',             'addon/facebook/facebook.php', 'facebook_cron');
+	register_hook('queue_predeliver', 'addon/facebook/facebook.php', 'fb_queue_hook');
 }
 
 
 function facebook_uninstall() {
-	unregister_hook('post_local_end',  'addon/facebook/facebook.php', 'facebook_post_hook');
-	unregister_hook('jot_networks',    'addon/facebook/facebook.php', 'facebook_jot_nets');
-	unregister_hook('plugin_settings', 'addon/facebook/facebook.php', 'facebook_plugin_settings');
-	unregister_hook('cron',            'addon/facebook/facebook.php', 'facebook_cron');
+	unregister_hook('post_local_end',   'addon/facebook/facebook.php', 'facebook_post_hook');
+	unregister_hook('jot_networks',     'addon/facebook/facebook.php', 'facebook_jot_nets');
+	unregister_hook('plugin_settings',  'addon/facebook/facebook.php', 'facebook_plugin_settings');
+	unregister_hook('cron',             'addon/facebook/facebook.php', 'facebook_cron');
+	unregister_hook('queue_predeliver', 'addon/facebook/facebook.php', 'fb_queue_hook');
 }
 
 
@@ -635,9 +637,19 @@ function facebook_post_hook(&$a,&$b) {
 						);
 					}
 					else {
-						// FIXME queue the message so we can attempt to redeliver, see include/notifier.php and include/queue.php
-						if(! $likes)
-							notice( t('Facebook delivery failed.') . EOL);
+						if(! $likes) {
+							$s = serialize(array('url' => $url, 'item' => $b['id'], 'post' => $postvars));
+							q("INSERT INTO `queue` ( `network`, `cid`, `created`, `last`, `content`)
+								VALUES ( '%s', '%s', '%s', '%s') ",
+								dbesc(NETWORK_FACEBOOK),
+								intval($a->contact),
+								dbesc(datetime_convert()),
+								dbesc(datetime_convert()),
+								dbesc($s)
+							);								
+
+							notice( t('Facebook post failed. Queued for retry.') . EOL);
+						}
 					}
 					
 					logger('Facebook post returns: ' . $x, LOGGER_DEBUG);
@@ -647,6 +659,56 @@ function facebook_post_hook(&$a,&$b) {
 	}
 }
 
+
+function fb_queue_hook(&$a,&$b) {
+
+	require_once('include/queue_fn.php');
+	if((! is_array($b)) || (! count($b)))
+		return;
+	foreach($b as $x) {
+		if($b['network'] !== NETWORK_FACEBOOK)
+			continue;
+		$r = q("SELECT `user`.* FROM `user` LEFT JOIN `contact` on `contact`.`uid` = `user`.`uid` 
+			WHERE `contact`.`self` = 1 AND `contact`.`id` = %d LIMIT 1",
+			intval($x['cid'])
+		);
+		if(! count($r))
+			continue;
+
+		$user = $r[0];
+
+		$appid  = get_config('facebook', 'appid'  );
+		$secret = get_config('facebook', 'appsecret' );
+
+		if($appid && $secret) {
+			$fb_post   = intval(get_pconfig($user['uid'],'facebook','post'));
+			$fb_token  = get_pconfig($user['uid'],'facebook','access_token');
+
+			if($fb_post && $fb_token) {
+				logger('facebook_queue: able to post');
+				require_once('library/facebook.php');
+
+				$z = unserialize($x['content']);
+				$item = $z['item'];
+				$j = post_url($z['url'],$z['post']);
+
+				$retj = json_decode($j);
+				if($retj->id) {
+					q("UPDATE `item` SET `extid` = '%s' WHERE `id` = %d LIMIT 1",
+						dbesc('fb::' . $retj->id),
+						intval($item)
+					);
+					logger('facebook queue: success: ' . $j); 
+					remove_queue_item($x['id']);
+				}
+				else {
+					logger('facebook_queue: failed: ' . $j);
+					update_queue_time($x['id']);
+				}
+			}
+		}
+	}
+}
 
 function fb_consume_all($uid) {
 
