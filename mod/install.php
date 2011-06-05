@@ -194,7 +194,10 @@ function check_funcs() {
 	if(! function_exists('openssl_public_encrypt')) 
 		notice( t('Error: openssl PHP module required but not installed.') . EOL);	
 	if(! function_exists('mysqli_connect')) 
-		notice( t('Error: mysqli PHP module required but not installed.') . EOL);	
+		notice( t('Error: mysqli PHP module required but not installed.') . EOL);
+	if(! function_exists('mb_strlen'))
+		notice( t('Error: mb_string PHP module required but not installed.') . EOL);
+	
 	if((x($_SESSION,'sysmsg')) && strlen($_SESSION['sysmsg']))
 		notice( t('Please see the file "INSTALL.txt".') . EOL);
 }
