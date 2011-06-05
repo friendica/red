@@ -640,7 +640,7 @@ function facebook_post_hook(&$a,&$b) {
 						if(! $likes) {
 							$s = serialize(array('url' => $url, 'item' => $b['id'], 'post' => $postvars));
 							q("INSERT INTO `queue` ( `network`, `cid`, `created`, `last`, `content`)
-								VALUES ( '%s', '%s', '%s', '%s') ",
+								VALUES ( '%s', %d, '%s', '%s', '%s') ",
 								dbesc(NETWORK_FACEBOOK),
 								intval($a->contact),
 								dbesc(datetime_convert()),
