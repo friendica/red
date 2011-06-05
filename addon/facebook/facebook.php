@@ -666,7 +666,7 @@ function fb_queue_hook(&$a,&$b) {
 	if((! is_array($b)) || (! count($b)))
 		return;
 	foreach($b as $x) {
-		if($b['network'] !== NETWORK_FACEBOOK)
+		if($x['network'] !== NETWORK_FACEBOOK)
 			continue;
 		$r = q("SELECT `user`.* FROM `user` LEFT JOIN `contact` on `contact`.`uid` = `user`.`uid` 
 			WHERE `contact`.`self` = 1 AND `contact`.`id` = %d LIMIT 1",
