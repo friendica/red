@@ -662,12 +662,20 @@ function facebook_post_hook(&$a,&$b) {
 
 function fb_queue_hook(&$a,&$b) {
 
-	require_once('include/queue_fn.php');
-	if((! is_array($b)) || (! count($b)))
+	$qi = q("SELECT * FROM `queue` WHERE `network` = '%s'",
+		dbesc(NETWORK_FACEBOOK)
+	);
+	if(! count($qi))
 		return;
-	foreach($b as $x) {
+
+	require_once('include/queue_fn.php');
+
+	foreach($qi as $x) {
 		if($x['network'] !== NETWORK_FACEBOOK)
 			continue;
+
+		logger('facebook_queue: run');
+
 		$r = q("SELECT `user`.* FROM `user` LEFT JOIN `contact` on `contact`.`uid` = `user`.`uid` 
 			WHERE `contact`.`self` = 1 AND `contact`.`id` = %d LIMIT 1",
 			intval($x['cid'])
@@ -698,7 +706,7 @@ function fb_queue_hook(&$a,&$b) {
 						dbesc('fb::' . $retj->id),
 						intval($item)
 					);
-					logger('facebook queue: success: ' . $j); 
+					logger('facebook_queue: success: ' . $j); 
 					remove_queue_item($x['id']);
 				}
 				else {

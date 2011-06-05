@@ -24,6 +24,8 @@ function queue_run($argv, $argc){
 
 	$a->set_baseurl(get_config('system','url'));
 
+	load_hooks();
+
 	$deadguys = array();
 
 	logger('queue: start');
