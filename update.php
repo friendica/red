@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1060 );
+define( 'UPDATE_VERSION' , 1061 );
 
 /**
  *
@@ -504,5 +504,9 @@ function update_1058() {
 
 function update_1059() {
 	q("ALTER TABLE `queue` ADD `network` CHAR( 32 ) NOT NULL AFTER `cid` ");
+}
+
+function update_1060() {
+	q("ALTER TABLE `event` ADD `uri` CHAR( 255 ) NOT NULL AFTER `cid` ");
 }
 

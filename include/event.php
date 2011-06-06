@@ -32,3 +32,6 @@ function format_event_html($ev) {
 
 return $o;
 }
+
+
+
