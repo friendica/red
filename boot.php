@@ -2773,6 +2773,7 @@ function lang_selector() {
 	if(is_array($langs) && count($langs)) {
 		if(! in_array('view/en/strings.php',$langs))
 			$langs[] = 'view/en/';
+		asort($langs);
 		foreach($langs as $l) {
 			$ll = substr($l,5);
 			$ll = substr($ll,0,strrpos($ll,'/'));
