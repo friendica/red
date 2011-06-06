@@ -2319,7 +2319,7 @@ a.mail-list-link {
 #language-selector {
 	position: absolute;
 	top: 0;
-	left: 0;
+	left: 16px;
 }
 
 
@@ -2419,6 +2419,13 @@ a.mail-list-link {
 	margin: 5px 0px 0px 0px;
 }
 
+#lang-select-icon {
+	cursor: pointer;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+}
+
 /**
  * ICONS
  */
@@ -2454,6 +2461,7 @@ a.mail-list-link {
 .video { background-position: -48px -32px;}
 .youtube { background-position: -64px -32px;}
 .attach { background-position: -80px -32px; }
+.language { background-position: -96px -32px; }
 
 .attachtype {
 	display: block; width: 20px; height: 23px;

@@ -47,18 +47,18 @@
 					$('#pause').html('');
 				}
 			}
-			// F8 - show/hide language selector
-			if(event.keyCode == '119') {
-				if(langSelect) {
-					langSelect = false;
-					$('#language-selector').hide();
-				}
-				else {
-					langSelect = true;
-					$('#language-selector').show();
-				}
-			}		
-
+//			// F8 - show/hide language selector
+//			if(event.keyCode == '119') {
+//				if(langSelect) {
+//					langSelect = false;
+//					$('#language-selector').hide();
+//				}
+//				else {
+//					langSelect = true;
+//					$('#language-selector').show();
+//				}
+//			}		
+//
 // this is shift-home on FF, but $ on IE, disabling until I figure out why the diff.
 // update: incompatible usage of onKeyDown vs onKeyPress
 //			if(event.keyCode == '36' && event.shiftKey == true) {
