@@ -22,9 +22,7 @@ function follow_post(&$a) {
 		// NOTREACHED
 	}
 
-
 	$ret = probe_url($url);
-
 
 	if($ret['network'] === NETWORK_DFRN) {
 		if(strlen($a->path))
@@ -35,6 +33,9 @@ function follow_post(&$a) {
 		goaway($ret['request'] . "&addr=$myaddr");
 		
 		// NOTREACHED
+	}
+	elseif(get_config('system','strict_privacy')) {
+		unset($ret['notify']);
 	}
 
 	// do we have enough information?

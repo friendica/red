@@ -527,8 +527,20 @@ function check_config(&$a) {
 	$plugins = get_config('system','addon');
 	$plugins_arr = array();
 
-	if($plugins)
+	if($plugins) {
 		$plugins_arr = explode(',',str_replace(' ', '',$plugins));
+		if(get_config('system','strict_privacy')) {
+			unset($a->config['system']['huburl']);
+			for($x = 0; $x < count($plugins_arr); $x ++) {
+				if(    $plugins_arr[$x] === 'facebook' 
+					|| $plugins_arr[$x] === 'twitter' 
+					|| $plugins_arr[$x] === 'statusnet') {
+					unset($plugins_arr[$x]);
+				}
+			}
+		}
+	}
+
 
 	$a->plugins = $plugins_arr;
 

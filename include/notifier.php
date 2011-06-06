@@ -27,6 +27,8 @@ function notifier_run($argv, $argc){
 
 	$a->set_baseurl(get_config('system','url'));
 
+	$prv = get_config('system','strict_privacy');
+
 	logger('notifier: invoked: ' . print_r($argv,true));
 
 	$cmd = $argv[1];
@@ -329,6 +331,10 @@ function notifier_run($argv, $argc){
 					}
 					break;
 				case 'stat':
+
+					if($prv)
+						break;
+
 					if($followup && $contact['notify']) {
 						logger('notifier: slapdelivery: ' . $contact['name']);
 						$deliver_status = slapper($owner,$contact['notify'],$slap);
@@ -373,7 +379,7 @@ function notifier_run($argv, $argc){
 					}
 					break;
 				case 'mail':
-
+						
 					// WARNING: does not currently convert to RFC2047 header encodings, etc.
 
 					$addr = $contact['addr'];
@@ -459,7 +465,7 @@ function notifier_run($argv, $argc){
 
 	if($slap && count($url_recipients) && $followup && $notify_hub && (! $expire)) {
 		foreach($url_recipients as $url) {
-			if($url) {
+			if($url && (! $prv)) {
 				logger('notifier: urldelivery: ' . $url);
 				$deliver_status = slapper($owner,$url,$slap);
 				// TODO: redeliver/queue these items on failure, though there is no contact record
