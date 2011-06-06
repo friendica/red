@@ -815,9 +815,9 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
 .pause 		{ background-position: -110px -20px;}
 .play 		{ background-position: -130px -20px;}
 .pencil 	{ background-position: -150px -20px;}
-.small-pencil{ background-position: -170px -20px;}
+.small-pencil	{ background-position: -170px -20px;}
 .recycle 	{ background-position: -190px -20px;}
-.remote-link{ background-position: -210px -20px;}
+.remote-link	{ background-position: -210px -20px;}
 .share 		{ background-position: -230px -20px;}
 
 .tools 		{ background-position: -50px  -40px;}
@@ -825,7 +825,9 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
 .unlock 	{ background-position: -90px  -40px;}
 .video 		{ background-position: -110px -40px;}
 .youtube 	{ background-position: -130px -40px;}
-                                  
+
+.attach 	{ background-position: -190px -40px;}
+.language 	{ background-position: -210px -40px;}
 
 .attachtype {
 	display: block; width: 20px; height: 23px;
