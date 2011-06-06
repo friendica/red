@@ -26,8 +26,11 @@
 </div>
 
 	<div id="profile-upload-wrapper" class="jot-tool" style="display: $visitor;" >
-		<div id="wall-image-upload-div" ><a onclick="return false;" id="wall-image-upload" class="icon border  camera" title="$upload"></a></div>
-	</div> 
+		<div id="wall-image-upload-div" ><a onclick="return false;" id="wall-image-upload" class="icon border camera" title="$upload"></a></div>
+	</div>
+	<div id="profile-attach-wrapper" class="jot-tool" style="display: $visitor;" >
+		<div id="wall-file-upload-div" ><a href="#" onclick="return false;" id="wall-file-upload" class="icon border attach" title="$attach"></a></div>
+	</div>  
 	<div id="profile-link-wrapper" class="jot-tool" style="display: $visitor;" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);" >
 		<a id="profile-link" class="icon border  link" title="$weblink" ondragenter="return linkdropper(event);" ondragover="return linkdropper(event);" ondrop="linkdrop(event);" onclick="jotGetLink(); return false;"></a>
 	</div> 
