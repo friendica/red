@@ -170,6 +170,20 @@ nav .nav-link {
 #notify-update { background-position: -60px 0px; }
 #home-update { background-position: -90px 0px; }
 
+#lang-select-icon {
+	cursor: pointer;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+}
+
+#language-selector {
+	position: absolute;
+	top: 0;
+	left: 16px;
+}
+
+
 /** sysmsg **/
 #sysmsg_info{
 	position:fixed; 
@@ -775,6 +789,7 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
 /*.icon:hover {
 	border-bottom: 0px;
 }*/
+
 
 .border {
 	border: 1px solid #babdb6;
