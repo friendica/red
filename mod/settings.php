@@ -432,7 +432,7 @@ function settings_content(&$a) {
 			$selected = (($f == $_SESSION['theme']) || ($f === $default_theme && (! x($_SESSION,'theme')))
 				? ' selected="selected" ' : '' );
 			$theme_name = ((file_exists($file . '/experimental')) ?  sprintf("%s - \x28Experimental\x29", $f) : $f);
-			$theme_selector .= '<option val="' . $f . '"' . $selected . '>' . $theme_name . '</option>';
+			$theme_selector .= '<option value="' . $f . '"' . $selected . '>' . $theme_name . '</option>';
 		}
 	}
 
