@@ -82,3 +82,71 @@ function events_post(&$a) {
 }
 
 
+
+function events_content(&$a) {
+
+	if(! local_user()) {
+		notice( t('Permission denied.') . EOL);
+		return;
+	}
+
+	$mode = 'view';
+	$y = 0;
+	$m = 0;
+
+	if($a->argc > 1) {
+		if($a->argc > 2 && $a->argv[1] == 'event') {
+			$mode = 'edit';
+			$event_id = intval($a->argv[2]);
+		}
+		if($a->argv[1] === 'new') {
+			$mode = 'new';
+			$event_id = 0;
+		}
+		if($a->argc > 2 && intval($a->argv[1]) && intval($a->argv[2])) {
+			$mode = 'view';
+			$y = intval($a->argv[1]);
+			$m = intval($a->argv[2]);
+		}
+	}
+
+	if($mode == 'view') {
+	    $thisyear = datetime_convert('UTC',date_default_timezone_get(),'now','Y');
+    	$thismonth = datetime_convert('UTC',date_default_timezone_get(),'now','m');
+		if(! $y)
+			$y = intval($thisyear);
+		if(! $m)
+			$m = intval($thismonth);
+
+	
+		$o .= cal($y,$m,false);
+
+		return $o;
+	}
+
+	if($mode === 'edit' || $mode === 'new') {
+		$tpl = get_markup_template('event_form.tpl');
+
+		$year = datetime_convert('UTC', date_default_timezone_get(), 'now', 'Y');
+
+
+		$o .= replace_macros($tpl,array(
+			'$post' => $a->get_baseurl() . '/events',
+			'$e_text' => t('Event details'),
+			'$s_text' => t('Starting date/time:'),
+			'$s_dsel' => datesel('start',$year+5,$year,false,$year,0,0),
+			'$s_tsel' => timesel('start',0,0),
+			'$f_text' => t('Finish date/time:'),
+			'$f_dsel' => datesel('start',$year+5,$year,false,$year,0,0),
+			'$f_tsel' => timesel('start',0,0),
+			'$d_text' => t('Description:'),
+			'$d_orig' => '',
+			'$l_text' => t('Location:'),
+			'$l_orig' => '',
+			'$submit' => t('Submit')
+
+		));
+
+		return $o;
+	}
+}

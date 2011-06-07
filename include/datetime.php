@@ -108,9 +108,17 @@ function datesel($pre,$ymin,$ymax,$allow_blank,$y,$m,$d) {
 		$o .= "<option value=\"0000\" $sel ></option>";
 	}
 
-	for($x = $ymax; $x >= $ymin; $x --) {
-		$sel = (($x == $y) ? " selected=\"selected\" " : "");
-		$o .= "<option value=\"$x\" $sel>$x</option>";
+	if($ymax > $ymin) {
+		for($x = $ymax; $x >= $ymin; $x --) {
+			$sel = (($x == $y) ? " selected=\"selected\" " : "");
+			$o .= "<option value=\"$x\" $sel>$x</option>";
+		}
+	}
+	else {
+		for($x = $ymax; $x <= $ymin; $x ++) {
+			$sel = (($x == $y) ? " selected=\"selected\" " : "");
+			$o .= "<option value=\"$x\" $sel>$x</option>";
+		}
 	}
   
 	$o .= "</select> <select name=\"{$pre}month\" class=\"{$pre}month\" size=\"1\">";
@@ -130,6 +138,32 @@ function datesel($pre,$ymin,$ymax,$allow_blank,$y,$m,$d) {
 	$o .= "</select>";
 	return $o;
 }}
+
+if(! function_exists('timesel')) {
+function timesel($pre,$h,$m) {
+
+	$o = '';
+	$o .= "<select name=\"{$pre}hour\" class=\"{$pre}hour\" size=\"1\">";
+	for($x = 0; $x < 24; $x ++) {
+		$sel = (($x == $h) ? " selected=\"selected\" " : "");
+		$o .= "<option value=\"$x\" $sel>$x</option>";
+	}
+	$o .= "</select> : <select name=\"{$pre}minute\" class=\"{$pre}minute\" size=\"1\">";
+	for($x = 0; $x < 60; $x ++) {
+		$sel = (($x == $m) ? " selected=\"selected\" " : "");
+		$o .= "<option value=\"$x\" $sel>$x</option>";
+	}
+
+	$o .= "</select>";
+	return $o;
+}}
+
+
+
+
+
+
+
 
 // implements "3 seconds ago" etc.
 // based on $posted_date, (UTC).
