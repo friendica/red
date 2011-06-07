@@ -3,12 +3,14 @@
 
 function format_event_html($ev) {
 
+	require_once('include/bbcode.php');
+
 	if(! ((is_array($ev)) && count($ev)))
 		return '';
 
 	$o = '<div class="vevent">';
 
-	$o .= '<p class="description">' . $ev['desc'] .  '</p>';
+	$o .= '<p class="description">' . bbcode($ev['desc']) .  '</p>';
 
 	$o .= '<p>' . t('Starts: ') . '<abbr class="dtstart" title="'
 		. datetime_convert('UTC','UTC',$ev['start'], ATOM_TIME)
@@ -25,7 +27,7 @@ function format_event_html($ev) {
 		. '</abbr></p>';
 
 	$o .= '<p> ' . t('Location:') . '<span class="location">' 
-		. $ev['location'] 
+		. bbcode($ev['location']) 
 		. '</span></p>';
 
 	$o .= '</div>';

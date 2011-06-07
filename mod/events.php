@@ -90,6 +90,8 @@ function events_content(&$a) {
 		return;
 	}
 
+	$o .= '<h2>' . t('Events') . '</h2>';
+
 	$mode = 'view';
 	$y = 0;
 	$m = 0;
@@ -119,7 +121,22 @@ function events_content(&$a) {
 			$m = intval($thismonth);
 
 	
-		$o .= cal($y,$m,false);
+		$o .= cal($y,$m,false, ' eventcal');
+
+		$dim = get_dim($y,$m);
+		$start = sprintf('%d-%d-%d %d:%d:%d',$y,$m,1,0,0,0);
+		$finish = sprintf('%d-%d-%d %d:%d:%d',$y,$m,$dim,23,59,59);
+
+
+		$r = q("SELECT * FROM `event` WHERE `start` >= '%s' AND `finish` <= '%s' AND `uid` = %d ",
+			dbesc($start),
+			dbesc($finish),
+			intval(local_user())
+		);
+
+		if(count($r))
+			foreach($r as $rr) 
+				$o .= format_event_html($rr);
 
 		return $o;
 	}

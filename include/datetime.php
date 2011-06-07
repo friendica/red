@@ -276,7 +276,7 @@ function get_first_dim($y,$m) {
 
 
 if(! function_exists('cal')) {
-function cal($y = 0,$m = 0, $links = false) {
+function cal($y = 0,$m = 0, $links = false, $class='') {
 
 
 	// month table - start at 1 to match human usage.
@@ -306,7 +306,7 @@ function cal($y = 0,$m = 0, $links = false) {
     $tddate = intval(datetime_convert('UTC',date_default_timezone_get(),'now','j'));
 
 	$str_month = day_translate($mtab[$m]);
-  $o = '<table class="calendar">';
+  $o = '<table class="calendar' . $class . '">';
   $o .= "<caption>$str_month $y</caption><tr>";
   for($a = 0; $a < 7; $a ++)
      $o .= '<th>' . mb_substr(day_translate($dn[$a]),0,3,'UTF-8') . '</th>';

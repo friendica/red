@@ -2223,6 +2223,9 @@ a.mail-list-link {
   cursor: pointer;
 }
 
+.eventcal {
+	font-size: 24px;
+}
 
 .calendar {
 	font-family: Courier, monospace;
