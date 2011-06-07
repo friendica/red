@@ -122,14 +122,14 @@ function datesel($pre,$ymin,$ymax,$allow_blank,$y,$m,$d) {
 	}
   
 	$o .= "</select> <select name=\"{$pre}month\" class=\"{$pre}month\" size=\"1\">";
-	for($x = 0; $x <= 12; $x ++) {
+	for($x = (($allow_blank) ? 0 : 1); $x <= 12; $x ++) {
 		$sel = (($x == $m) ? " selected=\"selected\" " : "");
 		$y = (($x) ? $x : '');
 		$o .= "<option value=\"$x\" $sel>$y</option>";
 	}
 
 	$o .= "</select> <select name=\"{$pre}day\" class=\"{$pre}day\" size=\"1\">";
-	for($x = 0; $x <= 31; $x ++) {
+	for($x = (($allow_blank) ? 0 : 1); $x <= 31; $x ++) {
 		$sel = (($x == $d) ? " selected=\"selected\" " : "");
 		$y = (($x) ? $x : '');
 		$o .= "<option value=\"$x\" $sel>$y</option>";

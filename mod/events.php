@@ -158,19 +158,23 @@ function events_content(&$a) {
 	}
 
 	if($mode === 'edit' || $mode === 'new') {
+		$htpl = get_markup_template('profed_head.tpl');
+		$a->page['htmlhead'] .= replace_macros($htpl,array('$baseurl' => $a->get_baseurl()));
+
 		$tpl = get_markup_template('event_form.tpl');
 
 		$year = datetime_convert('UTC', date_default_timezone_get(), 'now', 'Y');
-
+		$month = datetime_convert('UTC', date_default_timezone_get(), 'now', 'm');
+		$day = datetime_convert('UTC', date_default_timezone_get(), 'now', 'd');
 
 		$o .= replace_macros($tpl,array(
 			'$post' => $a->get_baseurl() . '/events',
 			'$e_text' => t('Event details'),
-			'$s_text' => t('Starting date/time:'),
-			'$s_dsel' => datesel('start',$year+5,$year,false,$year,0,0),
+			'$s_text' => t('Start: year-month-day hour:minute'),
+			'$s_dsel' => datesel('start',$year+5,$year,false,$year,$month,$day),
 			'$s_tsel' => timesel('start',0,0),
-			'$f_text' => t('Finish date/time:'),
-			'$f_dsel' => datesel('start',$year+5,$year,false,$year,0,0),
+			'$f_text' => t('Finish: year-month-day hour:minute'),
+			'$f_dsel' => datesel('start',$year+5,$year,false,$year,$month,$day),
 			'$f_tsel' => timesel('start',0,0),
 			'$d_text' => t('Description:'),
 			'$d_orig' => '',
