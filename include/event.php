@@ -15,15 +15,19 @@ function format_event_html($ev) {
 	$o .= '<p>' . t('Starts: ') . '<abbr class="dtstart" title="'
 		. datetime_convert('UTC','UTC',$ev['start'], ATOM_TIME)
 		. '" >' 
-		. datetime_convert('UTC', date_default_timezone_get(), 
-			$ev['start'] /*, format */ ) 
+		. (($ev['adjust']) ? datetime_convert('UTC', date_default_timezone_get(), 
+			$ev['start'] /*, format */ )
+			:  datetime_convert('UTC', 'UTC', 
+			$ev['start'] /*, format */ ))
 		. '</abbr></p>';
 
 	$o .= '<p>' . t('Ends: ') . '<abbr class="dtend" title="'
 		. datetime_convert('UTC','UTC',$ev['finish'], ATOM_TIME)
 		. '" >' 
-		. datetime_convert('UTC', date_default_timezone_get(), 
-			$ev['finish'] /*, format */ ) 
+		. (($ev['adjust']) ? datetime_convert('UTC', date_default_timezone_get(), 
+			$ev['finish'] /*, format */ )
+			:  datetime_convert('UTC', 'UTC', 
+			$ev['finish'] /*, format */ ))
 		. '</abbr></p>';
 
 	$o .= '<p> ' . t('Location:') . '<span class="location">' 

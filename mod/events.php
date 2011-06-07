@@ -10,19 +10,44 @@ function events_post(&$a) {
 
 	$event_id = ((x($_POST,'event_id')) ? intval($_POST['event_id']) : 0);
 	$uid      = local_user();
-	$start    = strip_tags($_POST['start']);
-	$finish   = strip_tags($_POST['finish']);
+	$startyear = intval($_POST['startyear']);
+	$startmonth = intval($_POST['startmonth']);
+	$startday = intval($_POST['startday']);
+	$starthour = intval($_POST['starthour']);
+	$startminute = intval($_POST['startminute']);
+
+	$finishyear = intval($_POST['finishyear']);
+	$finishmonth = intval($_POST['finishmonth']);
+	$finishday = intval($_POST['finishday']);
+	$finishhour = intval($_POST['finishhour']);
+	$finishminute = intval($_POST['finishminute']);
+
+	$adjust   = intval($_POST['adjust']);
+
+
+	$start    = sprintf('%d-%d-%d %d:%d:0',$startyear,$startmonth,$startday,$starthour,$startminute);
+	$finish    = sprintf('%d-%d-%d %d:%d:0',$finishyear,$finishmonth,$finishday,$finishhour,$finishminute);
+
+	if($adjust) {
+		$start = datetime_convert(date_default_timezone_get(),'UTC',$start);
+		$finish = datetime_convert(date_default_timezone_get(),'UTC',$finish);
+	}
+	else {
+		$start = datetime_convert('UTC','UTC',$start);
+		$finish = datetime_convert('UTC','UTC',$finish);
+	}
+
+
 	$desc     = escape_tags($_POST['desc']);
 	$location = escape_tags($_POST['location']);
 	$type     = 'event';
-	$adjust   = intval($_POST['adjust']);
 
 	$str_group_allow   = perms2str($_POST['group_allow']);
 	$str_contact_allow = perms2str($_POST['contact_allow']);
 	$str_group_deny    = perms2str($_POST['group_deny']);
 	$str_contact_deny  = perms2str($_POST['contact_deny']);
 
-
+dbg(1);
 	if($event_id) {
 		$r = q("UPDATE `event` SET
 			`edited` = '%s',
@@ -62,7 +87,7 @@ function events_post(&$a) {
 			`adjust`,`allow_cid`,`allow_gid`,`deny_cid`,`deny_gid`)
 			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s' ) ",
 			intval(local_user()),
-
+			dbesc($uri),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
 			dbesc($start),
@@ -174,8 +199,10 @@ function events_content(&$a) {
 			'$s_dsel' => datesel('start',$year+5,$year,false,$year,$month,$day),
 			'$s_tsel' => timesel('start',0,0),
 			'$f_text' => t('Finish: year-month-day hour:minute'),
-			'$f_dsel' => datesel('start',$year+5,$year,false,$year,$month,$day),
-			'$f_tsel' => timesel('start',0,0),
+			'$f_dsel' => datesel('finish',$year+5,$year,false,$year,$month,$day),
+			'$f_tsel' => timesel('finish',0,0),
+			'$a_text' => t('Adjust for viewer timezone'),
+			'$a_checked' => '',
 			'$d_text' => t('Description:'),
 			'$d_orig' => '',
 			'$l_text' => t('Location:'),
