@@ -120,7 +120,23 @@ function events_content(&$a) {
 		if(! $m)
 			$m = intval($thismonth);
 
-	
+		$nextyear = $y;
+		$nextmonth = $m + 1;
+		if($nextmonth > 12) {
+				$nextmonth = 1;
+			$nextyear ++;
+		}
+
+		$prevyear = $y;
+		if($m > 1)
+			$prevmonth = $m - 1;
+		else {
+			$prevmonth = 12;
+			$prevyear --;
+		}
+			
+
+		$o .= '<a href="' . $a->get_baseurl() . '/events/' . $prevyear . '/' . $prevmonth . '" class="prevcal">' . t('&lt;&lt; Previous') . '</a> | <a href="' . $a->get_baseurl() . '/events/' . $nextyear . '/' . $nextmonth . '" class="nextcal">' . t('Next &gt;&gt;') . '</a>'; 
 		$o .= cal($y,$m,false, ' eventcal');
 
 		$dim = get_dim($y,$m);
