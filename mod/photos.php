@@ -548,13 +548,13 @@ foreach($_FILES AS $key => $val) {
 	 *
 	 * We create a wall item for every photo, but we don't want to
 	 * overwhelm the data stream with a hundred newly uploaded photos.
-	 * So we will make one photo (the first one uploaded to this album)
+	 * So we will make the first photo uploaded to this album in the last several hours
 	 * visible by default, the rest will become visible over time when and if
 	 * they acquire comments, likes, dislikes, and/or tags 
 	 *
 	 */
 
-	$r = q("SELECT * FROM `photo` WHERE `album` = '%s' AND `uid` = %d",
+	$r = q("SELECT * FROM `photo` WHERE `album` = '%s' AND `uid` = %d AND `created` > UTC_TIMESTAMP() - INTERVAL 3 HOUR ",
 		dbesc($album),
 		intval($page_owner_uid)
 	);
