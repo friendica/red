@@ -47,13 +47,22 @@ function viewcontacts_content(&$a) {
 		if($rr['self'])
 			continue;
 
+	    $url = $rr['url'];
+
+		// route DFRN profiles through the redirect
+
+		$is_owner = ((local_user() && ($a->profile['profile_uid'] == local_user())) ? true : false);
+
+		if($is_owner && ($rr['network'] === NETWORK_DFRN) && ($rr['rel']))
+			$url = 'redir/' . $rr['id'];
+
 		$o .= replace_macros($tpl, array(
 			'$id' => $rr['id'],
-			'$alt_text' => t('Visit $username\'s profile'),
+			'$alt_text' => sprintf( t('Visit %s\'s profile [%s]'), $rr['name'], $rr['url']),
 			'$thumb' => $rr['thumb'], 
 			'$name' => substr($rr['name'],0,20),
 			'$username' => $rr['name'],
-			'$url' => $rr['url'] 
+			'$url' => $url
 		));
 	}
 

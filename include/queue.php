@@ -24,6 +24,8 @@ function queue_run($argv, $argc){
 
 	$a->set_baseurl(get_config('system','url'));
 
+	load_hooks();
+
 	$deadguys = array();
 
 	logger('queue: start');
@@ -53,7 +55,11 @@ function queue_run($argv, $argc){
 	require_once('include/salmon.php');
 
 	foreach($r as $q_item) {
-		$qi = q("SELECT * FROM `queue` WHERE `id` = %d LIMIT 1",
+
+		// queue_predeliver hooks may have changed the queue db details, 
+		// so check again if this entry still needs processing
+
+		$qi = q("SELECT * FROM `queue` WHERE `id` = %d AND `last` < UTC_TIMESTAMP() - INTERVAL 15 MINUTE ",
 			intval($q_item['id'])
 		);
 		if(! count($qi))

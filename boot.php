@@ -4,9 +4,9 @@ set_time_limit(0);
 ini_set('pcre.backtrack_limit', 250000);
 
 
-define ( 'FRIENDIKA_VERSION',      '2.2.1001' );
+define ( 'FRIENDIKA_VERSION',      '2.2.1003' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
-define ( 'DB_UPDATE_VERSION',      1060      );
+define ( 'DB_UPDATE_VERSION',      1061      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -527,8 +527,20 @@ function check_config(&$a) {
 	$plugins = get_config('system','addon');
 	$plugins_arr = array();
 
-	if($plugins)
+	if($plugins) {
 		$plugins_arr = explode(',',str_replace(' ', '',$plugins));
+		if(get_config('system','strict_privacy')) {
+			unset($a->config['system']['huburl']);
+			for($x = 0; $x < count($plugins_arr); $x ++) {
+				if(    $plugins_arr[$x] === 'facebook' 
+					|| $plugins_arr[$x] === 'twitter' 
+					|| $plugins_arr[$x] === 'statusnet') {
+					unset($plugins_arr[$x]);
+				}
+			}
+		}
+	}
+
 
 	$a->plugins = $plugins_arr;
 
@@ -2766,12 +2778,14 @@ function unamp($s) {
 if(! function_exists('lang_selector')) {
 function lang_selector() {
 	global $lang;
+	$o .= '<div id="lang-select-icon" class="icon language" title="' . t('Select an alternate language') . '" onclick="openClose(\'language-selector\');" ></div>';
 	$o .= '<div id="language-selector" style="display: none;" >';
 	$o .= '<form action="" method="post" ><select name="system_language" onchange="this.form.submit();" >';
 	$langs = glob('view/*/strings.php');
 	if(is_array($langs) && count($langs)) {
 		if(! in_array('view/en/strings.php',$langs))
 			$langs[] = 'view/en/';
+		asort($langs);
 		foreach($langs as $l) {
 			$ll = substr($l,5);
 			$ll = substr($ll,0,strrpos($ll,'/'));

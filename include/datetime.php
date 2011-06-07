@@ -108,20 +108,28 @@ function datesel($pre,$ymin,$ymax,$allow_blank,$y,$m,$d) {
 		$o .= "<option value=\"0000\" $sel ></option>";
 	}
 
-	for($x = $ymax; $x >= $ymin; $x --) {
-		$sel = (($x == $y) ? " selected=\"selected\" " : "");
-		$o .= "<option value=\"$x\" $sel>$x</option>";
+	if($ymax > $ymin) {
+		for($x = $ymax; $x >= $ymin; $x --) {
+			$sel = (($x == $y) ? " selected=\"selected\" " : "");
+			$o .= "<option value=\"$x\" $sel>$x</option>";
+		}
+	}
+	else {
+		for($x = $ymax; $x <= $ymin; $x ++) {
+			$sel = (($x == $y) ? " selected=\"selected\" " : "");
+			$o .= "<option value=\"$x\" $sel>$x</option>";
+		}
 	}
   
 	$o .= "</select> <select name=\"{$pre}month\" class=\"{$pre}month\" size=\"1\">";
-	for($x = 0; $x <= 12; $x ++) {
+	for($x = (($allow_blank) ? 0 : 1); $x <= 12; $x ++) {
 		$sel = (($x == $m) ? " selected=\"selected\" " : "");
 		$y = (($x) ? $x : '');
 		$o .= "<option value=\"$x\" $sel>$y</option>";
 	}
 
 	$o .= "</select> <select name=\"{$pre}day\" class=\"{$pre}day\" size=\"1\">";
-	for($x = 0; $x <= 31; $x ++) {
+	for($x = (($allow_blank) ? 0 : 1); $x <= 31; $x ++) {
 		$sel = (($x == $d) ? " selected=\"selected\" " : "");
 		$y = (($x) ? $x : '');
 		$o .= "<option value=\"$x\" $sel>$y</option>";
@@ -130,6 +138,32 @@ function datesel($pre,$ymin,$ymax,$allow_blank,$y,$m,$d) {
 	$o .= "</select>";
 	return $o;
 }}
+
+if(! function_exists('timesel')) {
+function timesel($pre,$h,$m) {
+
+	$o = '';
+	$o .= "<select name=\"{$pre}hour\" class=\"{$pre}hour\" size=\"1\">";
+	for($x = 0; $x < 24; $x ++) {
+		$sel = (($x == $h) ? " selected=\"selected\" " : "");
+		$o .= "<option value=\"$x\" $sel>$x</option>";
+	}
+	$o .= "</select> : <select name=\"{$pre}minute\" class=\"{$pre}minute\" size=\"1\">";
+	for($x = 0; $x < 60; $x ++) {
+		$sel = (($x == $m) ? " selected=\"selected\" " : "");
+		$o .= "<option value=\"$x\" $sel>$x</option>";
+	}
+
+	$o .= "</select>";
+	return $o;
+}}
+
+
+
+
+
+
+
 
 // implements "3 seconds ago" etc.
 // based on $posted_date, (UTC).
@@ -242,7 +276,7 @@ function get_first_dim($y,$m) {
 
 
 if(! function_exists('cal')) {
-function cal($y = 0,$m = 0, $links = false) {
+function cal($y = 0,$m = 0, $links = false, $class='') {
 
 
 	// month table - start at 1 to match human usage.
@@ -272,7 +306,7 @@ function cal($y = 0,$m = 0, $links = false) {
     $tddate = intval(datetime_convert('UTC',date_default_timezone_get(),'now','j'));
 
 	$str_month = day_translate($mtab[$m]);
-  $o = '<table class="calendar">';
+  $o = '<table class="calendar' . $class . '">';
   $o .= "<caption>$str_month $y</caption><tr>";
   for($a = 0; $a < 7; $a ++)
      $o .= '<th>' . mb_substr(day_translate($dn[$a]),0,3,'UTF-8') . '</th>';
