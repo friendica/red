@@ -1618,7 +1618,7 @@ function fix_private_photos($s,$uid) {
 	$a = get_app();
 	logger('fix_private_photos');
 
-	if(preg_match("/\[img\](.+?)\[\/img\]/is",$s,$matches)) {
+	if(preg_match("/\[img\](.*?)\[\/img\]/is",$s,$matches)) {
 		$image = $matches[1];
 		logger('fix_private_photos: found photo ' . $image);
 		if(stristr($image ,$a->get_baseurl() . '/photo/')) {
@@ -1649,7 +1649,7 @@ function fix_private_photos($s,$uid) {
 function item_getfeedtags($item) {
 	$ret = array();
 	$matches = false;
-	$cnt = preg_match_all('|\#\[url\=(.+?)\](.+?)\[\/url\]|',$item['tag'],$matches);
+	$cnt = preg_match_all('|\#\[url\=(.*?)\](.*?)\[\/url\]|',$item['tag'],$matches);
 	if($cnt) {
 		for($x = 0; $x < count($matches); $x ++) {
 			if($matches[1][$x])
@@ -1657,7 +1657,7 @@ function item_getfeedtags($item) {
 		}
 	}
 	$matches = false; 
-	$cnt = preg_match_all('|\@\[url\=(.+?)\](.+?)\[\/url\]|',$item['tag'],$matches);
+	$cnt = preg_match_all('|\@\[url\=(.*?)\](.*?)\[\/url\]|',$item['tag'],$matches);
 	if($cnt) {
 		for($x = 0; $x < count($matches); $x ++) {
 			if($matches[1][$x])
@@ -1673,7 +1673,7 @@ function item_getfeedattach($item) {
 	if(count($arr)) {
 		foreach($arr as $r) {
 			$matches = false;
-			$cnt = preg_match('|\[attach\]href=\"(.+?)\" size=\"(.+?)\" type=\"(.+?)\" title=\"(.+?)\"\[\/attach\]|',$r,$matches);
+			$cnt = preg_match('|\[attach\]href=\"(.*?)\" size=\"(.*?)\" type=\"(.*?)\" title=\"(.*?)\"\[\/attach\]|',$r,$matches);
 			if($cnt) {
 				$ret .= '<link rel="enclosure" href="' . xmlify($matches[1]) . '" type="' . xmlify($matches[3]) . '" ';
 				if(intval($matches[2]))

@@ -78,7 +78,7 @@ function message_post(&$a) {
 
 	$match = null;
 
-	if(preg_match_all("/\[img\](.+?)\[\/img\]/",$body,$match)) {
+	if(preg_match_all("/\[img\](.*?)\[\/img\]/",$body,$match)) {
 		$images = $match[1];
 		if(count($images)) {
 			foreach($images as $image) {

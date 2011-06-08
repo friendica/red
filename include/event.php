@@ -12,8 +12,8 @@ function format_event_html($ev) {
 
 	$o .= '<p class="description">' . bbcode($ev['desc']) .  '</p>';
 
-	$o .= '<p>' . t('Starts: ') . '<abbr class="dtstart" title="'
-		. datetime_convert('UTC','UTC',$ev['start'], ATOM_TIME)
+	$o .= '<p>' . t('Starts:') . ' <abbr class="dtstart" title="'
+		. datetime_convert('UTC','UTC',$ev['start'], $ev['adjust'] ? ATOM_TIME : 'Y-m-d\TH:i:s' )
 		. '" >' 
 		. (($ev['adjust']) ? datetime_convert('UTC', date_default_timezone_get(), 
 			$ev['start'] /*, format */ )
@@ -22,8 +22,8 @@ function format_event_html($ev) {
 		. '</abbr></p>';
 
 	if(! $ev['nofinish'])
-		$o .= '<p>' . t('Ends: ') . '<abbr class="dtend" title="'
-			. datetime_convert('UTC','UTC',$ev['finish'], ATOM_TIME)
+		$o .= '<p>' . t('Finishes:') . ' <abbr class="dtend" title="'
+			. datetime_convert('UTC','UTC',$ev['finish'], $ev['adjust'] ? ATOM_TIME : 'Y-m-d\TH:i:s' )
 			. '" >' 
 			. (($ev['adjust']) ? datetime_convert('UTC', date_default_timezone_get(), 
 				$ev['finish'] /*, format */ )
