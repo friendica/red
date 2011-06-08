@@ -525,7 +525,7 @@ function facebook_post_hook(&$a,&$b) {
 
 				$search_str = $a->get_baseurl() . '/search';
 
-				if(preg_match("/\[url=(.+?)\](.+?)\[\/url\]/is",$msg,$matches)) {
+				if(preg_match("/\[url=(.*?)\](.*?)\[\/url\]/is",$msg,$matches)) {
 
 					// don't use hashtags for message link
 
@@ -536,12 +536,12 @@ function facebook_post_hook(&$a,&$b) {
 					}
 				}
 
-				$msg = preg_replace("/\[url=(.+?)\](.+?)\[\/url\]/is",'$2 $1',$msg);
+				$msg = preg_replace("/\[url=(.*?)\](.*?)\[\/url\]/is",'$2 $1',$msg);
 
-				if(preg_match("/\[img\](.+?)\[\/img\]/is",$msg,$matches))
+				if(preg_match("/\[img\](.*?)\[\/img\]/is",$msg,$matches))
 					$image = $matches[1];
 
-				$msg = preg_replace("/\[img\](.+?)\[\/img\]/is", t('Image: ') . '$1', $msg);
+				$msg = preg_replace("/\[img\](.*?)\[\/img\]/is", t('Image: ') . '$1', $msg);
 
 				if((strpos($link,$a->get_baseurl()) !== false) && (! $image))
 					$image = $a->get_baseurl() . '/images/friendika-64.jpg';
@@ -557,7 +557,7 @@ function facebook_post_hook(&$a,&$b) {
 					$msg .= "\n";
         			foreach($arr as $r) {
             			$matches = false;
-						$cnt = preg_match('|\[attach\]href=\"(.+?)\" size=\"(.+?)\" type=\"(.+?)\" title=\"(.+?)\"\[\/attach\]|',$r,$matches);
+						$cnt = preg_match('|\[attach\]href=\"(.*?)\" size=\"(.*?)\" type=\"(.*?)\" title=\"(.*?)\"\[\/attach\]|',$r,$matches);
 						if($cnt) {
 							$msg .= $matches[1];
 						}

@@ -484,6 +484,7 @@ CREATE TABLE IF NOT EXISTS `event` (
 `desc` TEXT NOT NULL ,
 `location` TEXT NOT NULL ,
 `type` CHAR( 255 ) NOT NULL ,
+`nofinish` TINYINT( 1 ) NOT NULL DEFAULT '0',
 `adjust` TINYINT( 1 ) NOT NULL DEFAULT '1',
 `allow_cid` MEDIUMTEXT NOT NULL ,
 `allow_gid` MEDIUMTEXT NOT NULL ,

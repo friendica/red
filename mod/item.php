@@ -196,7 +196,7 @@ function item_post(&$a) {
 
 	$match = null;
 
-	if(preg_match_all("/\[img\](.+?)\[\/img\]/",$body,$match)) {
+	if(preg_match_all("/\[img\](.*?)\[\/img\]/",$body,$match)) {
 		$images = $match[1];
 		if(count($images)) {
 			foreach($images as $image) {
@@ -235,7 +235,7 @@ function item_post(&$a) {
 
 	$match = false;
 
-	if(preg_match_all("/\[attachment\](.+?)\[\/attachment\]/",$body,$match)) {
+	if(preg_match_all("/\[attachment\](.*?)\[\/attachment\]/",$body,$match)) {
 		$attaches = $match[1];
 		if(count($attaches)) {
 			foreach($attaches as $attach) {

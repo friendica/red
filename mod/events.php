@@ -23,18 +23,24 @@ function events_post(&$a) {
 	$finishminute = intval($_POST['finishminute']);
 
 	$adjust   = intval($_POST['adjust']);
+	$nofinish = intval($_POST['nofinish']);
 
 
 	$start    = sprintf('%d-%d-%d %d:%d:0',$startyear,$startmonth,$startday,$starthour,$startminute);
-	$finish    = sprintf('%d-%d-%d %d:%d:0',$finishyear,$finishmonth,$finishday,$finishhour,$finishminute);
+	if($nofinish)
+		$finish = '0000-00-00 00:00:00';
+	else
+		$finish    = sprintf('%d-%d-%d %d:%d:0',$finishyear,$finishmonth,$finishday,$finishhour,$finishminute);
 
 	if($adjust) {
 		$start = datetime_convert(date_default_timezone_get(),'UTC',$start);
-		$finish = datetime_convert(date_default_timezone_get(),'UTC',$finish);
+		if(! $nofinish)
+			$finish = datetime_convert(date_default_timezone_get(),'UTC',$finish);
 	}
 	else {
 		$start = datetime_convert('UTC','UTC',$start);
-		$finish = datetime_convert('UTC','UTC',$finish);
+		if(! $nofinish)
+			$finish = datetime_convert('UTC','UTC',$finish);
 	}
 
 
@@ -47,7 +53,7 @@ function events_post(&$a) {
 	$str_group_deny    = perms2str($_POST['group_deny']);
 	$str_contact_deny  = perms2str($_POST['contact_deny']);
 
-dbg(1);
+
 	if($event_id) {
 		$r = q("UPDATE `event` SET
 			`edited` = '%s',
@@ -57,6 +63,7 @@ dbg(1);
 			`location` = '%s',
 			`type` = '%s',
 			`adjust` = %d,
+			`nofinish` = %d,
 			`allow_cid` = '%s',
 			`allow_gid` = '%s',
 			`deny_cid` = '%s',
@@ -70,6 +77,7 @@ dbg(1);
 			dbesc($location),
 			dbesc($type),
 			intval($adjust),
+			intval($nofinish),
 			dbesc($str_contact_allow),
 			dbesc($str_group_allow),
 			dbesc($str_contact_deny),
@@ -84,8 +92,8 @@ dbg(1);
 		$uri = item_new_uri($a->get_hostname(),local_user());
 
 		$r = q("INSERT INTO `event` ( `uid`,`uri`,`created`,`edited`,`start`,`finish`,`desc`,`location`,`type`,
-			`adjust`,`allow_cid`,`allow_gid`,`deny_cid`,`deny_gid`)
-			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s' ) ",
+			`adjust`,`nofinish`,`allow_cid`,`allow_gid`,`deny_cid`,`deny_gid`)
+			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
 			intval(local_user()),
 			dbesc($uri),
 			dbesc(datetime_convert()),
@@ -96,6 +104,7 @@ dbg(1);
 			dbesc($location),
 			dbesc($type),
 			intval($adjust),
+			intval($nofinish),
 			dbesc($str_contact_allow),
 			dbesc($str_group_allow),
 			dbesc($str_contact_deny),
@@ -164,21 +173,42 @@ function events_content(&$a) {
 		$o .= '<a href="' . $a->get_baseurl() . '/events/' . $prevyear . '/' . $prevmonth . '" class="prevcal">' . t('&lt;&lt; Previous') . '</a> | <a href="' . $a->get_baseurl() . '/events/' . $nextyear . '/' . $nextmonth . '" class="nextcal">' . t('Next &gt;&gt;') . '</a>'; 
 		$o .= cal($y,$m,false, ' eventcal');
 
-		$dim = get_dim($y,$m);
-		$start = sprintf('%d-%d-%d %d:%d:%d',$y,$m,1,0,0,0);
+		$dim    = get_dim($y,$m);
+		$start  = sprintf('%d-%d-%d %d:%d:%d',$y,$m,1,0,0,0);
 		$finish = sprintf('%d-%d-%d %d:%d:%d',$y,$m,$dim,23,59,59);
+	
+		$start  = datetime_convert('UTC','UTC',$start);
+		$finish = datetime_convert('UTC','UTC',$finish);
+
+		$adjust_start = datetime_convert('UTC', date_default_timezone_get(), $start);
+		$adjust_finish = datetime_convert('UTC', date_default_timezone_get(), $finish);
 
 
-		$r = q("SELECT * FROM `event` WHERE `start` >= '%s' AND `finish` <= '%s' AND `uid` = %d ",
+		$r = q("SELECT * FROM `event` WHERE `uid` = %d
+			AND (( `adjust` = 0 AND `start` >= '%s' AND `finish` <= '%s' ) 
+			OR  (  `adjust` = 1 AND `start` >= '%s' AND `finish` <= '%s' )) ",
+			intval(local_user()),
 			dbesc($start),
 			dbesc($finish),
-			intval(local_user())
+			dbesc($adjust_start),
+			dbesc($adjust_finish)
 		);
 
-		if(count($r))
-			foreach($r as $rr) 
-				$o .= format_event_html($rr);
+		$last_date = '';
 
+		$fmt = t('l, F j');
+
+		if(count($r)) {
+			$r = sort_by_date($r);
+			foreach($r as $rr) {
+				$d = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['start'], $fmt) : datetime_convert('UTC','UTC',$rr['start'],$fmt));
+				$d = day_translate($d);
+				if($d !== $last_date) 
+					$o .= '<hr /><div class="event-list-date">' . $d . '</div>';
+				$last_date = $d;
+				$o .= format_event_html($rr);
+			}
+		}
 		return $o;
 	}
 
@@ -195,15 +225,18 @@ function events_content(&$a) {
 		$o .= replace_macros($tpl,array(
 			'$post' => $a->get_baseurl() . '/events',
 			'$e_text' => t('Event details'),
-			'$s_text' => t('Start: year-month-day hour:minute'),
+			'$e_desc' => t('Format is year-month-day hour:minute. Starting date and Description are required.'),
+			'$s_text' => t('Event Starts:') . ' <span class="required">*</span> ',
 			'$s_dsel' => datesel('start',$year+5,$year,false,$year,$month,$day),
 			'$s_tsel' => timesel('start',0,0),
-			'$f_text' => t('Finish: year-month-day hour:minute'),
+			'$n_text' => t('Finish date/time is not known or not relevant'),
+			'$n_checked' => '',
+			'$f_text' => t('Event Finishes:'),
 			'$f_dsel' => datesel('finish',$year+5,$year,false,$year,$month,$day),
 			'$f_tsel' => timesel('finish',0,0),
 			'$a_text' => t('Adjust for viewer timezone'),
 			'$a_checked' => '',
-			'$d_text' => t('Description:'),
+			'$d_text' => t('Description:') . ' <span class="required">*</span>',
 			'$d_orig' => '',
 			'$l_text' => t('Location:'),
 			'$l_orig' => '',

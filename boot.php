@@ -4,9 +4,9 @@ set_time_limit(0);
 ini_set('pcre.backtrack_limit', 250000);
 
 
-define ( 'FRIENDIKA_VERSION',      '2.2.1003' );
+define ( 'FRIENDIKA_VERSION',      '2.2.1004' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
-define ( 'DB_UPDATE_VERSION',      1061      );
+define ( 'DB_UPDATE_VERSION',      1062      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -2574,7 +2574,7 @@ function prepare_body($item,$attach = false) {
 		foreach($arr as $r) {
 			$matches = false;
 			$icon = '';
-			$cnt = preg_match('|\[attach\]href=\"(.+?)\" size=\"(.+?)\" type=\"(.+?)\" title=\"(.+?)\"\[\/attach\]|',$r,$matches);
+			$cnt = preg_match('|\[attach\]href=\"(.*?)\" size=\"(.*?)\" type=\"(.*?)\" title=\"(.*?)\"\[\/attach\]|',$r,$matches);
 			if($cnt) {
 				$icontype = strtolower(substr($matches[3],0,strpos($matches[3],'/')));
 				switch($icontype) {

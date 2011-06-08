@@ -102,7 +102,7 @@ function po2php_run($argv, $argc) {
 	
 		
 	}
-	
+
 	if ($inv) {	$inv = False; $out .= '"'.$v.'"'; }
 	if ($k!="") $out .= $arr?");\n":";\n";
 	
