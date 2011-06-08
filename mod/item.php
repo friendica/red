@@ -772,6 +772,17 @@ function item_content(&$a) {
 				// ignore the result
 			}
 
+			// If item is a link to an event, nuke the event record.
+
+			if(intval($item['event-id'])) {
+				q("DELETE FROM `event` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+					intval($item['event-id']),
+					intval($item['uid'])
+				);
+				// ignore the result
+			}
+
+
 			// If it's the parent of a comment thread, kill all the kids
 
 			if($item['uri'] == $item['parent-uri']) {
