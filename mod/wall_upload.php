@@ -76,7 +76,9 @@ function wall_upload_post(&$a) {
 	
 	$smallest = 0;
 
-	$r = $ph->store($page_owner_uid, $visitor, $hash, $filename, t('Wall Photos'), 0, 0, '<0>');
+	$defperm = '<' . $page_owner_uid . '>';
+
+	$r = $ph->store($page_owner_uid, $visitor, $hash, $filename, t('Wall Photos'), 0, 0, $defperm);
 
 	if(! $r) {
 		echo ( t('Image upload failed.') . EOL);
@@ -85,14 +87,14 @@ function wall_upload_post(&$a) {
 
 	if($width > 640 || $height > 640) {
 		$ph->scaleImage(640);
-		$r = $ph->store($page_owner_uid, $visitor, $hash, $filename, t('Wall Photos'), 1, 0, '<0>');
+		$r = $ph->store($page_owner_uid, $visitor, $hash, $filename, t('Wall Photos'), 1, 0, $defperm);
 		if($r) 
 			$smallest = 1;
 	}
 
 	if($width > 320 || $height > 320) {
 		$ph->scaleImage(320);
-		$r = $ph->store($page_owner_uid, $visitor, $hash, $filename, t('Wall Photos'), 2, 0, '<0>' );
+		$r = $ph->store($page_owner_uid, $visitor, $hash, $filename, t('Wall Photos'), 2, 0, $defperm);
 		if($r)
 			$smallest = 2;
 	}
