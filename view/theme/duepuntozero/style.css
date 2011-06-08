@@ -2406,6 +2406,35 @@ a.mail-list-link {
 	margin: 5px 0px 0px 0px;
 }
 
+.required {
+	color: #FF0000;
+}
+
+#event-start-text, #event-finish-text {
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
+
+#event-nofinish-checkbox, #event-nofinish-text, #event-adjust-checkbox, #event-adjust-text {
+	float: left;
+}
+#event-datetime-break {
+	margin-bottom: 10px;
+}
+
+#event-nofinish-break, #event-adjust-break {
+	clear: both;
+}
+
+#event-desc-text, #event-location-text {
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
+#event-submit {
+	margin-top: 10px;
+}
+
+
 #lang-select-icon {
 	cursor: pointer;
 	position: absolute;

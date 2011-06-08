@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1061 );
+define( 'UPDATE_VERSION' , 1062 );
 
 /**
  *
@@ -510,3 +510,6 @@ function update_1060() {
 	q("ALTER TABLE `event` ADD `uri` CHAR( 255 ) NOT NULL AFTER `cid` ");
 }
 
+function update_1061() {
+	q("ALTER TABLE `event` ADD `nofinish` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `type` ");
+}
