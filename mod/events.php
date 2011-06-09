@@ -54,6 +54,9 @@ function events_post(&$a) {
 	$str_contact_deny  = perms2str($_POST['contact_deny']);
 
 
+	// until publishing is ready
+	$str_contact_allow = '<' . local_user() . '>';
+
 	if($event_id) {
 		$r = q("UPDATE `event` SET
 			`edited` = '%s',
