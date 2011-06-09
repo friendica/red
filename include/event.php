@@ -34,7 +34,7 @@ function format_event_html($ev,$pre = '') {
 			. '</abbr></p>';
 
 	if(strlen($ev['location']))
-		$o .= '<p class="event-location"> ' . t('Location:') . '<span class="location">' 
+		$o .= '<p class="event-location"> ' . t('Location:') . ' <span class="location">' 
 			. bbcode($ev['location']) 
 			. '</span></p>';
 
