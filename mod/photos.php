@@ -1106,9 +1106,10 @@ function photos_content(&$a) {
 				$tag_str .= bbcode($t);
 			} 
 			$tags = array(t('Tags: '), $tag_str);
-			if($cmd === 'edit')
+			if($cmd === 'edit') {
 				$tags[] = $a->get_baseurl() . '/tagrm/' . $link_item['id'];
 				$tags[] = t('[Remove any tag]');
+			}
 		}
 
 
