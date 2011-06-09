@@ -4,9 +4,9 @@ set_time_limit(0);
 ini_set('pcre.backtrack_limit', 250000);
 
 
-define ( 'FRIENDIKA_VERSION',      '2.2.1004' );
+define ( 'FRIENDIKA_VERSION',      '2.2.1005' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
-define ( 'DB_UPDATE_VERSION',      1062      );
+define ( 'DB_UPDATE_VERSION',      1063      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -527,20 +527,8 @@ function check_config(&$a) {
 	$plugins = get_config('system','addon');
 	$plugins_arr = array();
 
-	if($plugins) {
+	if($plugins)
 		$plugins_arr = explode(',',str_replace(' ', '',$plugins));
-		if(get_config('system','strict_privacy')) {
-			unset($a->config['system']['huburl']);
-			for($x = 0; $x < count($plugins_arr); $x ++) {
-				if(    $plugins_arr[$x] === 'facebook' 
-					|| $plugins_arr[$x] === 'twitter' 
-					|| $plugins_arr[$x] === 'statusnet') {
-					unset($plugins_arr[$x]);
-				}
-			}
-		}
-	}
-
 
 	$a->plugins = $plugins_arr;
 

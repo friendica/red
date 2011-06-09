@@ -389,6 +389,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `blockwall` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `notify-flags` int(11) unsigned NOT NULL DEFAULT '65535', 
   `page-flags` int(11) unsigned NOT NULL DEFAULT '0',
+  `prvnets` tinyint(1) NOT NULL DEFAULT '0',
   `pwdreset` char(255) NOT NULL,
   `maxreq` int(11) NOT NULL DEFAULT '10',
   `expire` int(11) unsigned NOT NULL DEFAULT '0',

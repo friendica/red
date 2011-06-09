@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1062 );
+define( 'UPDATE_VERSION' , 1063 );
 
 /**
  *
@@ -513,3 +513,8 @@ function update_1060() {
 function update_1061() {
 	q("ALTER TABLE `event` ADD `nofinish` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `type` ");
 }
+
+function update_1062() {
+	q("ALTER TABLE `user` ADD `prvnets` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `page-flags` ");
+}
+

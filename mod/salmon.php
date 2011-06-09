@@ -192,11 +192,6 @@ function salmon_post(&$a) {
 		// NOTREACHED
 	}
 
-	// Check if we're allowed to talk to insecure networks
-
-	if(get_config('system','strict_privacy'))
-		salmon_return(400);
-
 	require_once('include/items.php');
 
 	// Placeholder for hub discovery. We shouldn't find any hubs
