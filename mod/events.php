@@ -54,6 +54,9 @@ function events_post(&$a) {
 	$str_contact_deny  = perms2str($_POST['contact_deny']);
 
 
+	// until publishing is ready
+	$str_contact_allow = '<' . local_user() . '>';
+
 	if($event_id) {
 		$r = q("UPDATE `event` SET
 			`edited` = '%s',
@@ -169,7 +172,7 @@ function events_content(&$a) {
 			$prevyear --;
 		}
 			
-
+		$o .= '<div id="new-event-link"><a href="' . $a->get_baseurl() . '/events/new' . '" >' . t('Create New Event') . '</a></div>';
 		$o .= '<a href="' . $a->get_baseurl() . '/events/' . $prevyear . '/' . $prevmonth . '" class="prevcal">' . t('&lt;&lt; Previous') . '</a> | <a href="' . $a->get_baseurl() . '/events/' . $nextyear . '/' . $nextmonth . '" class="nextcal">' . t('Next &gt;&gt;') . '</a>'; 
 		$o .= cal($y,$m,false, ' eventcal');
 

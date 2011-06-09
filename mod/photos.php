@@ -510,8 +510,15 @@ foreach($_FILES AS $key => $val) {
 					$arr['target'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource-id'] . '" />' . "\n" . '<link rel="preview" type="image/jpeg" href="' . $a->get_baseurl() . "/photo/" . $p[0]['resource-id'] . '-' . $best . '.jpg' . '" />') . '</link></target>';
 
 					$item_id = item_store($arr);
-					if($item_id)
+					if($item_id) {
+						q("UPDATE `item` SET `plink` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
+							dbesc($a->get_baseurl() . '/display/' . $owner_record['nickname'] . '/' . $item_id),
+							intval($page_owner_uid),
+							intval($item_id)
+						);
+
 						proc_run('php',"include/notifier.php","tag","$item_id");
+					}
 				}
 
 			}
@@ -1106,9 +1113,10 @@ function photos_content(&$a) {
 				$tag_str .= bbcode($t);
 			} 
 			$tags = array(t('Tags: '), $tag_str);
-			if($cmd === 'edit')
+			if($cmd === 'edit') {
 				$tags[] = $a->get_baseurl() . '/tagrm/' . $link_item['id'];
 				$tags[] = t('[Remove any tag]');
+			}
 		}
 
 

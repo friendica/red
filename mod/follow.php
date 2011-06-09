@@ -34,9 +34,6 @@ function follow_post(&$a) {
 		
 		// NOTREACHED
 	}
-	elseif(get_config('system','strict_privacy')) {
-		unset($ret['notify']);
-	}
 
 	// do we have enough information?
 	

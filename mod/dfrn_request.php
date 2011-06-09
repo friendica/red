@@ -626,11 +626,9 @@ function dfrn_request_content(&$a) {
 		else
 			$tpl = get_markup_template('auto_request.tpl');
 
-		$prv = get_config('system','strict_privacy');
-
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Friend/Connection Request'),
-			'$desc' => t('Examples: jojo@demo.friendika.com, http://demo.friendika.com/profile/jojo') . (($prv) ? ', testuser@identi.ca' : ''),
+			'$desc' => t('Examples: jojo@demo.friendika.com, http://demo.friendika.com/profile/jojo, testuser@identi.ca'),
 			'$pls_answer' => t('Please answer the following:'),
 			'$does_know' => sprintf( t('Does %s know you?'),$a->profile['name']),
 			'$yes' => t('Yes'),
@@ -638,9 +636,9 @@ function dfrn_request_content(&$a) {
 			'$add_note' => t('Add a personal note:'),
 			'$page_desc' => t("Please enter your 'Identity Address' from one of the following supported social networks:"),
 			'$friendika' => t('Friendika'),
-			'$statusnet' => (($prv) ? t('StatusNet/Federated Social Web') : ''),
+			'$statusnet' => t('StatusNet/Federated Social Web'),
 			'$private_net' => t("Private \x28secure\x29 network"),
-			'$public_net' => (($prv) ? t("Public \x28insecure\x29 network") : ''),
+			'$public_net' => t("Public \x28insecure\x29 network"),
 			'$your_address' => t('Your Identity Address:'),
 			'$submit' => t('Submit Request'),
 			'$cancel' => t('Cancel'),

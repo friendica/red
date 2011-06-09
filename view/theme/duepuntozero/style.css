@@ -2227,6 +2227,25 @@ a.mail-list-link {
 	font-size: 24px;
 }
 
+#new-event-link {
+	margin-bottom: 10px;
+}
+
+.event-description:before {
+	content: url('../../../images/calendar.png');
+	margin-right: 15px;
+}
+
+.event-start, .event-end {
+	margin-left: 10px;
+	width: 330px;
+	clear: both;
+}
+
+.event-start .dtstart, .event-end .dtend {
+	float: right;
+}
+ 
 .calendar {
 	font-family: Courier, monospace;
 }
