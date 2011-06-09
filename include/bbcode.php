@@ -37,7 +37,7 @@ function bbcode($Text,$preserve_nl = false) {
 	$Text = preg_replace("/\[mail\=([$MAILSearchString]*)\](.*?)\[\/mail\]/", '<a href="mailto:$1">$2</a>', $Text);
          
 	// Check for bold text
-	$Text = preg_replace("(\[b\](.*?)\[\/b])is",'<strong>$1</strong>',$Text);
+	$Text = preg_replace("(\[b\](.*?)\[\/b\])is",'<strong>$1</strong>',$Text);
 
 	// Check for Italics text
 	$Text = preg_replace("(\[i\](.*?)\[\/i\])is",'<em>$1</em>',$Text);
