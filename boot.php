@@ -2788,16 +2788,23 @@ function lang_selector() {
 
 
 if(! function_exists('parse_xml_string')) {
-function parse_xml_string($s) {
-	if(! strstr($s,'<?xml'))
-		return false;
-	$s2 = substr($s,strpos($s,'<?xml'));
+function parse_xml_string($s,$strict = true) {
+	if($strict) {
+		if(! strstr($s,'<?xml'))
+			return false;
+		$s2 = substr($s,strpos($s,'<?xml'));
+	}
+	else
+		$s2 = $s;
 	libxml_use_internal_errors(true);
+
 	$x = @simplexml_load_string($s2);
-	if(count(libxml_get_errors()))
+	if(! $x) {
+		logger('libxml: parse: error: ' . $s2, LOGGER_DATA);
 		foreach(libxml_get_errors() as $err)
 			logger('libxml: parse: ' . $err->code." at ".$err->line.":".$err->column." : ".$err->message, LOGGER_DATA);
-	libxml_clear_errors();
+		libxml_clear_errors();
+	}
 	return $x;
 }}
 

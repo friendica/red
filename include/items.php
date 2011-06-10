@@ -180,7 +180,11 @@ function construct_activity_object($item) {
 
 	if($item['object']) {
 		$o = '<as:object>' . "\r\n";
-		$r = parse_xml_string($item['object']);
+		$r = parse_xml_string($item['object'],false);
+
+
+		if(! $r)
+			return '';
 		if($r->type)
 			$o .= '<as:object-type>' . xmlify($r->type) . '</as:object-type>' . "\r\n";
 		if($r->id)
@@ -188,8 +192,15 @@ function construct_activity_object($item) {
 		if($r->title)
 			$o .= '<title>' . xmlify($r->title) . '</title>' . "\r\n";
 		if($r->link) {
-			if(substr($r->link,0,1) === '<') 
+			if(substr($r->link,0,1) === '<') {
+				// patch up some facebook "like" activity objects that got stored incorrectly
+				// for a couple of months prior to 9-Jun-2011 and generated bad XML.
+				// we can probably remove this hack here and in the following function in a few months time.
+				if(strstr($r->link,'&') && (! strstr($r->link,'&amp;')))
+					$r->link = str_replace('&','&amp;', $r->link);
+				$r->link = preg_replace('/\<link(.*?)\"\>/','<link$1"/>',$r->link);
 				$o .= $r->link;
+			}					
 			else
 				$o .= '<link rel="alternate" type="text/html" href="' . xmlify($r->link) . '" />' . "\r\n";
 		}
@@ -206,7 +217,9 @@ function construct_activity_target($item) {
 
 	if($item['target']) {
 		$o = '<as:target>' . "\r\n";
-		$r = parse_xml_string($item['target']);
+		$r = parse_xml_string($item['target'],false);
+		if(! $r)
+			return '';
 		if($r->type)
 			$o .= '<as:object-type>' . xmlify($r->type) . '</as:object-type>' . "\r\n";
 		if($r->id)
@@ -214,8 +227,12 @@ function construct_activity_target($item) {
 		if($r->title)
 			$o .= '<title>' . xmlify($r->title) . '</title>' . "\r\n";
 		if($r->link) {
-			if(substr($r->link,0,1) === '<') 
+			if(substr($r->link,0,1) === '<') {
+				if(strstr($r->link,'&') && (! strstr($r->link,'&amp;')))
+					$r->link = str_replace('&','&amp;', $r->link);
+				$r->link = preg_replace('/\<link(.*?)\"\>/','<link$1"/>',$r->link);
 				$o .= $r->link;
+			}					
 			else
 				$o .= '<link rel="alternate" type="text/html" href="' . xmlify($r->link) . '" />' . "\r\n";
 		}
