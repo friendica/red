@@ -2,6 +2,7 @@
 
 require_once('include/datetime.php');
 require_once('include/event.php');
+require_once('include/items.php');
 
 function events_post(&$a) {
 
@@ -44,18 +45,27 @@ function events_post(&$a) {
 	}
 
 
-	$desc     = escape_tags($_POST['desc']);
-	$location = escape_tags($_POST['location']);
+	$desc     = escape_tags(trim($_POST['desc']));
+	$location = escape_tags(trim($_POST['location']));
 	$type     = 'event';
 
-	$str_group_allow   = perms2str($_POST['group_allow']);
-	$str_contact_allow = perms2str($_POST['contact_allow']);
-	$str_group_deny    = perms2str($_POST['group_deny']);
-	$str_contact_deny  = perms2str($_POST['contact_deny']);
+	if((! $desc) || (! $start)) {
+		notice('Event description and start time are required.');
+		goaway($a->get_baseurl() . '/events/new');
+	}
 
+	$share = ((intval($_POST['share'])) ? intval($_POST['share']) : 0);
 
-	// until publishing is ready
-	$str_contact_allow = '<' . local_user() . '>';
+	if($share) {
+		$str_group_allow   = perms2str($_POST['group_allow']);
+		$str_contact_allow = perms2str($_POST['contact_allow']);
+		$str_group_deny    = perms2str($_POST['group_deny']);
+		$str_contact_deny  = perms2str($_POST['contact_deny']);
+	}
+	else {
+		$str_contact_allow = '<' . local_user() . '>';
+		$str_group_allow = $str_contact_deny = $str_group_deny = '';
+	}
 
 	if($event_id) {
 		$r = q("UPDATE `event` SET
@@ -114,8 +124,56 @@ function events_post(&$a) {
 			dbesc($str_group_deny)
 
 		);
-	}
 
+		$r = q("SELECT * FROM `event` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+			dbesc($uri),
+			intval(local_user())
+		);
+		if(count($r))
+			$event = $r[0];
+
+		$arr = array();
+
+		$arr['uid']           = local_user();
+		$arr['uri']           = $uri;
+		$arr['parent-uri']    = $uri;
+		$arr['type']          = 'activity';
+		$arr['wall']          = 1;
+		$arr['contact-id']    = $a->contact['id'];
+		$arr['owner-name']    = $a->contact['name'];
+		$arr['owner-link']    = $a->contact['url'];
+		$arr['owner-avatar']  = $a->contact['thumb'];
+		$arr['author-name']   = $a->contact['name'];
+		$arr['author-link']   = $a->contact['url'];
+		$arr['author-avatar'] = $a->contact['thumb'];
+		$arr['title']         = '';
+		$arr['allow_cid']     = $str_contact_allow;
+		$arr['allow_gid']     = $str_group_allow;
+		$arr['deny_cid']      = $str_contact_deny;
+		$arr['deny_gid']      = $str_group_deny;
+		$arr['last-child']    = 1;
+		$arr['visible']       = 1;
+		$arr['verb']          = ACTIVITY_POST;
+		$arr['object-type']   = ACTIVITY_OBJ_EVENT;
+
+		$arr['body']          = format_event_bbcode($event);
+
+
+		$arr['object'] = '<object><type>' . ACTIVITY_OBJ_EVENT . '</type><title></title><id>' . $uri . '</id>';
+		$arr['object'] .= '<content>' . format_event_bbcode($event) . '</content>';
+		$arr['object'] .= '</object>' . "\n";
+
+		$item_id = item_store($arr);
+		if($item_id) {
+			q("UPDATE `item` SET `plink` = '%s', `event-id` = %d  WHERE `uid` = %d AND `id` = %d LIMIT 1",
+				dbesc($a->get_baseurl() . '/display/' . $owner_record['nickname'] . '/' . $item_id),
+				intval($event['id']),
+				intval(local_user()),
+				intval($item_id)
+			);
+			proc_run('php',"include/notifier.php","tag","$item_id");
+		}
+	}
 }
 
 
@@ -204,6 +262,7 @@ function events_content(&$a) {
 		if(count($r)) {
 			$r = sort_by_date($r);
 			foreach($r as $rr) {
+
 				$d = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['start'], $fmt) : datetime_convert('UTC','UTC',$rr['start'],$fmt));
 				$d = day_translate($d);
 				if($d !== $last_date) 
@@ -216,7 +275,7 @@ function events_content(&$a) {
 	}
 
 	if($mode === 'edit' || $mode === 'new') {
-		$htpl = get_markup_template('profed_head.tpl');
+		$htpl = get_markup_template('event_head.tpl');
 		$a->page['htmlhead'] .= replace_macros($htpl,array('$baseurl' => $a->get_baseurl()));
 
 		$tpl = get_markup_template('event_form.tpl');
@@ -224,6 +283,8 @@ function events_content(&$a) {
 		$year = datetime_convert('UTC', date_default_timezone_get(), 'now', 'Y');
 		$month = datetime_convert('UTC', date_default_timezone_get(), 'now', 'm');
 		$day = datetime_convert('UTC', date_default_timezone_get(), 'now', 'd');
+
+		require_once('include/acl_selectors.php');
 
 		$o .= replace_macros($tpl,array(
 			'$post' => $a->get_baseurl() . '/events',
@@ -243,6 +304,9 @@ function events_content(&$a) {
 			'$d_orig' => '',
 			'$l_text' => t('Location:'),
 			'$l_orig' => '',
+			'$sh_text' => t('Share this event'),
+			'$sh_checked' => '',
+			'$acl' => populate_acl($a->user,false),
 			'$submit' => t('Submit')
 
 		));

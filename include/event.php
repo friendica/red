@@ -1,7 +1,7 @@
 <?php
 
 
-function format_event_html($ev,$pre = '') {
+function format_event_html($ev) {
 
 	require_once('include/bbcode.php');
 
@@ -105,16 +105,63 @@ function parse_event($h) {
 }
 
 
+function format_event_bbcode($ev) {
+
+	$o = '';
+
+	if($ev['desc'])
+		$o .= '[event-description]' . $ev['desc'] . '[/event-description]';
+
+	if($ev['start'])
+		$o .= '[event-start]' . $ev['start'] . '[/event-start]';
+
+	if(($ev['finish']) && (! $ev['nofinish']))
+		$o .= '[event-finish]' . $ev['finish'] . '[/event-finish]';
+ 
+	if($ev['location'])
+		$o .= '[event-location]' . $ev['location'] . '[/event-location]';
+
+	if($ev['adjust'])
+		$o .= '[event-adjust]' . $ev['adjust'] . '[/event-adjust]';
 
 
+	return $o;
+
+}
+
+function bbtovcal($s) {
+	$o = '';
+	$ev = bbtoevent($s);
+	if($ev['desc'])
+		$o = format_event_html($ev);
+	return $o;
+}
 
 
+function bbtoevent($s) {
 
+	$ev = array();
 
+	$match = '';
+	if(preg_match("/\[event\-description\](.*?)\[\/event\-description\]/is",$s,$match))
+		$ev['desc'] = $match[1];
+	$match = '';
+	if(preg_match("/\[event\-start\](.*?)\[\/event\-start\]/is",$s,$match))
+		$ev['start'] = $match[1];
+	$match = '';
+	if(preg_match("/\[event\-finish\](.*?)\[\/event\-finish\]/is",$s,$match))
+		$ev['finish'] = $match[1];
+	$match = '';
+	if(preg_match("/\[event\-location\](.*?)\[\/event\-location\]/is",$s,$match))
+		$ev['location'] = $match[1];
+	$match = '';
+	if(preg_match("/\[event\-adjust\](.*?)\[\/event\-adjust\]/is",$s,$match))
+		$ev['adjust'] = $match[1];
+	$match = '';
+	$ev['nofinish'] = (($ev['start'] && (! $ev['finish'])) ? 1 : 0);
+	return $ev;
 
-
-
-
+}
 
 
 function sort_by_date($a) {
