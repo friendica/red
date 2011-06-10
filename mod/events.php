@@ -159,8 +159,8 @@ function events_post(&$a) {
 		$arr['body']          = format_event_bbcode($event);
 
 
-		$arr['object'] = '<object><type>' . ACTIVITY_OBJ_EVENT . '</type><title></title><id>' . $uri . '</id>';
-		$arr['object'] .= '<content>' . format_event_bbcode($event) . '</content>';
+		$arr['object'] = '<object><type>' . xmlify(ACTIVITY_OBJ_EVENT) . '</type><title></title><id>' . xmlify($uri) . '</id>';
+		$arr['object'] .= '<content>' . xmlify(format_event_bbcode($event)) . '</content>';
 		$arr['object'] .= '</object>' . "\n";
 
 		$item_id = item_store($arr);
