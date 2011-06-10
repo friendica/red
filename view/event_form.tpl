@@ -29,6 +29,11 @@ $f_dsel $f_tsel
 <div id="event-location-text">$l_text</div>
 <textarea id="event-location-textarea" name="location">$l_orig</textarea>
 
+<input type="checkbox" name="share" value="1" id="event-share-checkbox" $sh_checked /> <div id="event-share-text">$sh_text</div>
+<div id="event-share-break"></div>
+
+$acl
+
 <input id="event-submit" type="submit" name="submit" value="$submit" />
 </form>
 
