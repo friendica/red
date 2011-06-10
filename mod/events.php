@@ -114,8 +114,56 @@ function events_post(&$a) {
 			dbesc($str_group_deny)
 
 		);
-	}
 
+		$r = q("SELECT * FROM `event` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+			dbesc($uri),
+			intval(local_user())
+		);
+		if(count($r))
+			$event = $r[0];
+
+		$arr = array();
+
+		$arr['uid']           = local_user();
+		$arr['uri']           = $uri;
+		$arr['parent-uri']    = $uri;
+		$arr['type']          = 'activity';
+		$arr['wall']          = 1;
+		$arr['contact-id']    = $a->contact['id'];
+		$arr['owner-name']    = $a->contact['name'];
+		$arr['owner-link']    = $a->contact['url'];
+		$arr['owner-avatar']  = $a->contact['thumb'];
+		$arr['author-name']   = $a->contact['name'];
+		$arr['author-link']   = $a->contact['url'];
+		$arr['author-avatar'] = $a->contact['thumb'];
+		$arr['title']         = '';
+		$arr['allow_cid']     = $str_contact_allow;
+		$arr['allow_gid']     = $str_group_allow;
+		$arr['deny_cid']      = $str_contact_deny;
+		$arr['deny_gid']      = $str_group_deny;
+		$arr['last-child']    = 1;
+		$arr['visible']       = 1;
+		$arr['verb']          = ACTIVITY_POST;
+		$arr['object-type']   = ACTIVITY_OBJ_EVENT;
+
+		$arr['body']          = format_event_bbcode($event);
+
+
+		$arr['object'] = '<object><type>' . ACTIVITY_OBJ_EVENT . '</type><title></title><id>' . $uri . '</id>';
+		$arr['object'] .= '<content>' . format_event_bbcode($event) . '</content>';
+		$arr['object'] .= '</object>' . "\n";
+
+		$item_id = item_store($arr);
+		if($item_id) {
+			q("UPDATE `item` SET `plink` = '%s', `event-id` = %d  WHERE `uid` = %d AND `id` = %d LIMIT 1",
+				dbesc($a->get_baseurl() . '/display/' . $owner_record['nickname'] . '/' . $item_id),
+				intval($event['id']),
+				intval($local_user()),
+				intval($item_id)
+			);
+			proc_run('php',"include/notifier.php","tag","$item_id");
+		}
+	}
 }
 
 
@@ -204,6 +252,7 @@ function events_content(&$a) {
 		if(count($r)) {
 			$r = sort_by_date($r);
 			foreach($r as $rr) {
+
 				$d = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['start'], $fmt) : datetime_convert('UTC','UTC',$rr['start'],$fmt));
 				$d = day_translate($d);
 				if($d !== $last_date) 

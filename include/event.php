@@ -1,7 +1,7 @@
 <?php
 
 
-function format_event_html($ev,$pre = '') {
+function format_event_html($ev) {
 
 	require_once('include/bbcode.php');
 
@@ -115,7 +115,7 @@ function format_event_bbcode($ev) {
 	if($ev['start'])
 		$o .= '[event-start]' . $ev['start'] . '[/event-start]';
 
-	if($ev['start'])
+	if(($ev['finish']) && (! $ev['nofinish']))
 		$o .= '[event-finish]' . $ev['finish'] . '[/event-finish]';
  
 	if($ev['location'])
@@ -158,7 +158,7 @@ function bbtoevent($s) {
 	if(preg_match("/\[event\-adjust\](.*?)\[\/event\-adjust\]/is",$s,$match))
 		$ev['adjust'] = $match[1];
 	$match = '';
-
+	$ev['nofinish'] = (($ev['start'] && (! $ev['finish'])) ? 1 : 0);
 	return $ev;
 
 }

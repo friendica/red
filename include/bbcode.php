@@ -1,5 +1,8 @@
 <?php
+
 require_once("include/oembed.php");
+require_once('include/event.php');
+
 	// BBcode 2 HTML was written by WAY2WEB.net
 	// extended to work with Mistpark/Friendika - Mike Macgirvin
 
@@ -16,6 +19,12 @@ function bbcode($Text,$preserve_nl = false) {
 	$Text = nl2br($Text);
 	if($preserve_nl)
 		$Text = str_replace(array("\n","\r"), array('',''),$Text);
+
+	// If we find any event code, turn it into an event.
+	// After we're finished processing the bbcode we'll 
+	// replace all of the event code with a reformatted version.
+
+	$ev = bbtoevent($Text);
 
 	// Set up the parameters for a URL search string
 	$URLSearchString = "^\[\]";
@@ -104,8 +113,24 @@ function bbcode($Text,$preserve_nl = false) {
 	}
 //	$Text = preg_replace("/\[youtube\](.*?)\[\/youtube\]/", '<object width="425" height="350" type="application/x-shockwave-flash" data="http://www.youtube.com/v/$1" ><param name="movie" value="http://www.youtube.com/v/$1"></param><!--[if IE]><embed src="http://www.youtube.com/v/$1" type="application/x-shockwave-flash" width="425" height="350" /><![endif]--></object>', $Text);
 
+
+
 	// oembed tag
 	$Text = oembed_bbcode2html($Text);
+
+	// If we found an event earlier, strip out all the event code and replace with a reformatted version.
+
+	if(x($ev,'desc') && x($ev,'start')) {
+		$sub = format_event_html($ev);
+
+		$Text = preg_replace("/\[event\-description\](.*?)\[\/event\-description\]/is",$sub,$Text);
+		$Text = preg_replace("/\[event\-start\](.*?)\[\/event\-start\]/is",'',$Text);
+		$Text = preg_replace("/\[event\-finish\](.*?)\[\/event\-finish\]/is",'',$Text);
+		$Text = preg_replace("/\[event\-location\](.*?)\[\/event\-location\]/is",'',$Text);
+		$Text = preg_replace("/\[event\-adjust\](.*?)\[\/event\-adjust\]/is",'',$Text);
+	}
+
+
 	
 	call_hooks('bbcode',$Text);
 
