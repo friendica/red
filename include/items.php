@@ -1334,6 +1334,17 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 						$datarray['author-avatar'] = $contact['thumb'];
 				}
 
+				if((x($datarray,'object-type')) && ($datarray['object-type'] === ACTIVITY_OBJ_EVENT)) {
+					$ev = bbtoevent($datarray['body']);
+					if(x($ev,'desc') && x($ev,'start')) {
+						$r = q("SELECT * FROM `event` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+							dbesc($item_id),
+							intval($importer['uid'])
+						);
+						// import/update event
+
+					}
+				}
 				$r = q("SELECT `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['uid'])
@@ -1752,3 +1763,4 @@ function item_expire($uid,$days) {
 	proc_run('php',"include/notifier.php","expire","$uid");
 
 }
+
