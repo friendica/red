@@ -1,4 +1,4 @@
-<h4>Admin</h4>
+<h4><a href="$admurl">Admin</a></h4>
 <ul>
 	<li class='admin link $admin.site.2'><a href='$admin.site.0'>$admin.site.1</a></li>
 	<li class='admin link $admin.users.2'><a href='$admin.users.0'>$admin.users.1</a></li>
