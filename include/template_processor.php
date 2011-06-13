@@ -41,9 +41,24 @@
 		 * IF node
 		 * 
 		 * {{ if <$var> }}...{{ endif }}
+		 * {{ if <$var>==<val|$var> }}...{{ endif }}
+		 * {{ if <$var>!=<val|$var> }}...{{ endif }}
 		 */
 		private function _replcb_if($args){
-			$val = $this->_get_var($args[2]);
+			
+			if (strpos($args[2],"==")>0){
+				list($a,$b) = array_map("trim",explode("==",$args[2]));
+				$a = $this->_get_var($a);
+				if ($b[0]=="$") $b =  $this->_get_var($b);
+				$val = ($a == $b);
+			} else if (strpos($args[2],"!=")>0){
+				list($a,$b) = explode("!=",$args[2]);
+				$a = $this->_get_var($a);
+				if ($b[0]=="$") $b =  $this->_get_var($b);
+				$val = ($a != $b);
+			} else {
+				$val = $this->_get_var($args[2]);
+			}
 			return ($val?$args[3]:"");
 		}
 		
