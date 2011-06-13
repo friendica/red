@@ -58,7 +58,8 @@
 			list($keyname, $varname) = explode("=>",$m[1]);
 			if (is_null($varname)) { $varname=$keyname; $keyname=""; }
 			if ($m[0]=="" || $varname=="" || is_null($varname)) die("template error: 'for ".$m[0]." as ".$varname."'") ;
-			$vals = $this->r[$m[0]];
+			//$vals = $this->r[$m[0]];
+			$vals = $this->_get_var($m[0]);
 			$ret="";
 			if (!is_array($vals)) return $ret; 
 			foreach ($vals as $k=>$v){
