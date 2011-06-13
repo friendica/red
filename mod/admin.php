@@ -153,7 +153,7 @@ function admin_page_site_post(&$a){
 	$verifyssl			=	((x($_POST,'verifyssl'))		? True	:	False);
 	$proxyuser			=	((x($_POST,'proxyuser'))		? notags(trim($_POST['global_search_url']))	: '');
 	$proxy				=	((x($_POST,'proxy'))			? notags(trim($_POST['global_search_url']))	: '');
-	$timeout			=	((x($_POST,'timeout'))			? intval(trim($_POST['maximagesize']))		: 60);
+	$timeout			=	((x($_POST,'timeout'))			? intval(trim($_POST['timeout']))		: 60);
 
 
 	$a->config['sitename'] = $sitename;
