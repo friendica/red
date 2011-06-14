@@ -310,7 +310,58 @@ function admin_page_users(&$a){
 
 function admin_page_plugins(&$a){
 	
-	/* all plugins */
+	/**
+	 * Single plugin
+	 */
+	if ($a->argc == 3){
+		$plugin = $a->argv[2];
+		if (!is_file("addon/$plugin/$plugin.php")){
+			notice( t("Item not found.") );
+			return;
+		}
+		
+		if (x($_GET,"a") && $_GET['a']=="t"){
+			// Toggle plugin status
+			$idx = array_search($plugin, $a->plugins);
+			if ($idx){
+				unset($a->plugins[$idx]);
+				uninstall_plugin($plugin);
+			} else {
+				$a->plugins[] = $plugin;
+				install_plugin($plugin);
+			}
+			set_config("system","addon", implode(", ",$a->plugins));
+			goaway($a->get_baseurl() . '/admin/plugins' );
+			return; // NOTREACHED	
+		}
+		// display plugin details
+		
+
+		if (in_array($plugin, $a->plugins)){
+			$status="on"; $action= t("Disable");
+		} else {
+			$status="off"; $action= t("Enable");
+		}
+		
+		$t = get_markup_template("admin_plugins_details.tpl");
+		return replace_macros($t, array(
+			'$title' => t('Administration'),
+			'$page' => t('Plugins'),
+			'$toggle' => t('Toggle'),
+			'$baseurl' => $a->get_baseurl(),
+		
+			'$plugin' => $plugin,
+			'$status' => $status,
+			'$action' => $action
+		));
+	} 
+	 
+	 
+	
+	/**
+	 * List plugins
+	 */
+	
 	$plugins = array();
 	$files = glob("addon/*/");
 	if($files) {

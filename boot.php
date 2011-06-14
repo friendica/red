@@ -453,6 +453,37 @@ function system_unavailable() {
 	killme();
 }}
 
+
+// install and uninstall plugin
+if (! function_exists('uninstall_plugin')){
+function uninstall_plugin($plugin){
+	logger("Addons: uninstalling " . $plugin);
+	q("DELETE FROM `addon` WHERE `name` = '%s' LIMIT 1",
+		dbesc($plugin)
+	);
+
+	@include_once('addon/' . $plugin . '/' . $plugin . '.php');
+	if(function_exists($plugin . '_uninstall')) {
+		$func = $plugin . '_uninstall';
+		$func();
+	}
+}}
+
+if (! function_exists('install_plugin')){
+function install_plugin($plugin){
+	logger("Addons: installing " . $plugin);
+	$t = filemtime('addon/' . $plugin . '/' . $plugin . '.php');
+	@include_once('addon/' . $plugin . '/' . $plugin . '.php');
+	if(function_exists($plugin . '_install')) {
+		$func = $plugin . '_install';
+		$func();
+		$r = q("INSERT INTO `addon` (`name`, `installed`, `timestamp`) VALUES ( '%s', 1, %d ) ",
+			dbesc($plugin),
+			intval($t)
+		);
+	}
+}}
+
 // Primarily involved with database upgrade, but also sets the 
 // base url for use in cmdline programs which don't have
 // $_SERVER variables, and synchronising the state of installed plugins.
@@ -538,16 +569,7 @@ function check_config(&$a) {
 	if(count($installed)) {
 		foreach($installed as $i) {
 			if(! in_array($i['name'],$plugins_arr)) {
-				logger("Addons: uninstalling " . $i['name']);
-				q("DELETE FROM `addon` WHERE `id` = %d LIMIT 1",
-					intval($i['id'])
-				);
-
-				@include_once('addon/' . $i['name'] . '/' . $i['name'] . '.php');
-				if(function_exists($i['name'] . '_uninstall')) {
-					$func = $i['name'] . '_uninstall';
-					$func();
-				}
+				uninstall_plugin($i['name']);
 			}
 			else
 				$installed_arr[] = $i['name'];
@@ -557,17 +579,7 @@ function check_config(&$a) {
 	if(count($plugins_arr)) {
 		foreach($plugins_arr as $p) {
 			if(! in_array($p,$installed_arr)) {
-				logger("Addons: installing " . $p);
-				$t = filemtime('addon/' . $p . '/' . $p . '.php');
-				@include_once('addon/' . $p . '/' . $p . '.php');
-				if(function_exists($p . '_install')) {
-					$func = $p . '_install';
-					$func();
-					$r = q("INSERT INTO `addon` (`name`, `installed`, `timestamp`) VALUES ( '%s', 1, %d ) ",
-						dbesc($p),
-						intval($t)
-					);
-				}
+				install_plugin($p);
 			}
 		}
 	}
