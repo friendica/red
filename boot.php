@@ -2828,3 +2828,55 @@ function is_site_admin() {
 	return false;
 }}
 
+/*
+ * parse plugin comment in search of plugin infos.
+ * like
+ * 	
+ * 	 * Name: Plugin
+ *   * Description: A plugin which plugs in
+ * 	 * Version: 1.2.3
+ *   * Author: John <profile url>
+ *   * Author: Jane <email>
+ *   *
+ */
+
+if (! function_exists('get_plugin_info')){
+function get_plugin_info($plugin){
+	if (!is_file("addon/$plugin/$plugin.php")) return false;
+	
+	$f = file_get_contents("addon/$plugin/$plugin.php");
+	$r = preg_match("|/\*.*\*/|msU", $f, $m);
+	
+	$info=Array(
+		'name' => $plugin,
+		'description' => "",
+		'author' => array(),
+		'version' => ""
+	);
+	
+	if ($r){
+		$ll = explode("\n", $m[0]);
+		foreach( $ll as $l ) {
+			$l = trim($l,"\t\n\r */");
+			if ($l!=""){
+				list($k,$v) = array_map("trim", explode(":",$l,2));
+				$k= strtolower($k);
+				if ($k=="author"){
+					$r=preg_match("|([^<]+)<([^>]+)>|", $v, $m);
+					if ($r) {
+						$info['author'][] = array('name'=>$m[1], 'link'=>$m[2]);
+					} else {
+						$info['author'][] = array('name'=>$v);
+					}
+				} else {
+					if (array_key_exists($k,$info)){
+						$info[$k]=$v;
+					}
+				}
+				
+			}
+		}
+		
+	}
+	return $info;
+}}

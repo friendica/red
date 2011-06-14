@@ -340,13 +340,21 @@ function admin_page_plugins(&$a){
 			return; // NOTREACHED	
 		}
 		// display plugin details
-		
+		require_once('library/markdown.php');
 
 		if (in_array($plugin, $a->plugins)){
 			$status="on"; $action= t("Disable");
 		} else {
 			$status="off"; $action= t("Enable");
 		}
+		
+		$readme=Null;
+		if (is_file("addon/$plugin/README.md")){
+			$readme = file_get_contents("addon/$plugin/README.md");
+			$readme = Markdown($readme);
+		} else if (is_file("addon/$plugin/README")){
+			$readme = "<pre>". file_get_contents("addon/$plugin/README") ."</pre>";
+		} 
 		
 		$t = get_markup_template("admin_plugins_details.tpl");
 		return replace_macros($t, array(
@@ -357,7 +365,10 @@ function admin_page_plugins(&$a){
 		
 			'$plugin' => $plugin,
 			'$status' => $status,
-			'$action' => $action
+			'$action' => $action,
+			'$info' => get_plugin_info($plugin),
+			
+			'$readme' => $readme
 		));
 	} 
 	 
@@ -373,9 +384,8 @@ function admin_page_plugins(&$a){
 		foreach($files as $file) {	
 			if (is_dir($file)){
 				list($tmp, $id)=array_map("trim", explode("/",$file));
-				// TODO: plugins info
-				$name=$author=$description=$homepage="";
-				$plugins[] = array( $id, (in_array($id,  $a->plugins)?"on":"off") , $name, $author, $description, $homepage);
+				$info = get_plugin_info($id);
+				$plugins[] = array( $id, (in_array($id,  $a->plugins)?"on":"off") , $info);
 			}
 		}
 	}

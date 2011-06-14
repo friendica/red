@@ -1,10 +1,9 @@
 <?php
 /**
- * oembed plugin
- * 
- * oEmbed is a format for allowing an embedded representation of a URL on third party sites
- * http://www.oembed.com/
- * 
+ * Name: OEmbed
+ * Description: OEmbed is a format for allowing an embedded representation of a URL on third party sites http://www.oembed.com/
+ * Version: 1.2
+ * Author: Fabio Comuni <http://kirgroup.com/profile/fabrix>
  */
 
 require_once('include/oembed.php');
