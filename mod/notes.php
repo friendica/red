@@ -38,7 +38,7 @@ function notes_content(&$a) {
 	$is_owner = true;
 	
 
-	$o .= '<h3>' . t('Private Notes') . '</h3>';
+	$o .= '<h3>' . t('Personal Notes') . '</h3>';
 
 	$commpage = false;
 	$commvisitor = false;

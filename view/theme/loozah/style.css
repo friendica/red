@@ -2423,6 +2423,48 @@ a.mail-list-link {
 	color: #FF0000;
 }
 
+.eventcal {
+	float: left;
+	font-size: 20px;
+}
+
+#new-event-link {
+	margin-bottom: 10px;
+}
+
+.event-description:before {
+	content: url('../../../images/calendar.png');
+	margin-right: 15px;
+}
+
+.event-start, .event-end {
+	margin-left: 10px;
+	width: 330px;
+	clear: both;
+}
+
+.event-start .dtstart, .event-end .dtend {
+	float: right;
+}
+
+.prevcal, .nextcal {
+	float: left;
+	margin-left: 32px;
+	margin-right: 32px;
+	margin-top: 64px;
+}
+.event-calendar-end {
+	clear: both;
+}
+ 
+.calendar {
+	font-family: Courier, monospace;
+}
+.today {
+	color: #FF0000;
+}
+
+
 #event-start-text, #event-finish-text {
 	margin-top: 10px;
 	margin-bottom: 5px;
@@ -2491,6 +2533,8 @@ a.mail-list-link {
 .youtube { background-position: -64px -32px;}
 .attach { background-position: -80px -32px; }
 .language { background-position: -96px -32px; }
+.prev { background-position: -112px -32px; }
+.next { background-position: -128px -32px; }
 
 .attachtype {
 	display: block; width: 20px; height: 23px;

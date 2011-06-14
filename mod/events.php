@@ -130,6 +130,14 @@ function events_content(&$a) {
 		if(! $m)
 			$m = intval($thismonth);
 
+		// Put some limits on dates. The PHP date functions don't seem to do so well before 1900.
+		// An upper limit was chosen to keep search engines from exploring links endlessly. 
+
+		if($y < 1901)
+			$y = 1900;
+		if($y > 2099)
+			$y = 2100;
+
 		$nextyear = $y;
 		$nextmonth = $m + 1;
 		if($nextmonth > 12) {
@@ -144,10 +152,17 @@ function events_content(&$a) {
 			$prevmonth = 12;
 			$prevyear --;
 		}
+
 			
 		$o .= '<div id="new-event-link"><a href="' . $a->get_baseurl() . '/events/new' . '" >' . t('Create New Event') . '</a></div>';
-		$o .= '<a href="' . $a->get_baseurl() . '/events/' . $prevyear . '/' . $prevmonth . '" class="prevcal">' . t('&lt;&lt; Previous') . '</a> | <a href="' . $a->get_baseurl() . '/events/' . $nextyear . '/' . $nextmonth . '" class="nextcal">' . t('Next &gt;&gt;') . '</a>'; 
+		$o .= '<div id="event-calendar-wrapper">';
+
+		$o .= '<a href="' . $a->get_baseurl() . '/events/' . $prevyear . '/' . $prevmonth . '" class="prevcal"><div id="event-calendar-prev" class="icon prev" title="' . t('Previous') . '"></div></a>';
 		$o .= cal($y,$m,false, ' eventcal');
+
+		$o .= '<a href="' . $a->get_baseurl() . '/events/' . $nextyear . '/' . $nextmonth . '" class="nextcal"><div id="event-calendar-next" class="icon next" title="' . t('Next') . '"></div></a>';
+		$o .= '</div>';
+		$o .= '<div class="event-calendar-end"></div>';
 
 		$dim    = get_dim($y,$m);
 		$start  = sprintf('%d-%d-%d %d:%d:%d',$y,$m,1,0,0,0);
