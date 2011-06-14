@@ -19,10 +19,12 @@ function admin_post(&$a){
 	// urls
 	if ($a->argc > 1){
 		switch ($a->argv[1]){
-			case 'site': {
+			case 'site':
 				admin_page_site_post($a);
 				break;
-			}
+			case 'logs':
+				admin_page_logs_post($a);
+				break;
 		}
 	}
 
@@ -83,6 +85,9 @@ function admin_content(&$a) {
 			case 'plugins':
 				$o = admin_page_plugins($a);
 				break;
+			case 'logs':
+				$o = admin_page_logs($a);
+				break;				
 			default:
 				notice( t("Item not found.") );
 		}
@@ -383,6 +388,55 @@ function admin_page_plugins(&$a){
 		'$baseurl' => $a->get_baseurl(),
 	
 		'$plugins' => $plugins
+	));
+}
+
+
+/**
+ * Logs admin page
+ */
+ 
+function admin_page_logs_post(&$a) {
+	if (x($_POST,"page_logs")) {
+
+		$logfile 		=	((x($_POST,'logfile'))		? notags(trim($_POST['logfile']))	: '');
+		$debugging		=	((x($_POST,'debugging'))	? true								: false);
+		$loglevel 		=	((x($_POST,'loglevel'))		? intval(trim($_POST['loglevel']))	: 0);
+
+		set_config('system','logfile', $logfile);
+		set_config('system','debugging',  $debugging);
+		set_config('system','loglevel', $loglevel);
+
+		
+	}
+
+	goaway($a->get_baseurl() . '/admin/logs' );
+	return; // NOTREACHED	
+}
+ 
+function admin_page_logs(&$a){
+	
+	$log_choices = Array(
+		LOGGER_NORMAL => 'Normal',
+		LOGGER_TRACE => 'Trace',
+		LOGGER_DEBUG => 'Debug',
+		LOGGER_DATA => 'Data',
+		LOGGER_ALL => 'All'
+	);
+	
+	$t = get_markup_template("admin_logs.tpl");
+	return replace_macros($t, array(
+		'$title' => t('Administration'),
+		'$page' => t('Logs'),
+		'$submit' => t('Submit'),
+		'$clear' => t('Clear'),
+		'$baseurl' => $a->get_baseurl(),
+		'$logname' =>  get_config('system','logfile'),
+		
+									// name, label, value, help string, extra data...
+		'$debugging' 		=> array('debugging', t("Debugging"),get_config('system','debugging'), ""),
+		'$logfile'			=> array('logfile', t("Log file"), get_config('system','logfile'), "Must be writable by web server. Relative to your Friendika index.php."),
+		'$loglevel' 		=> array('loglevel', t("Log level"), get_config('system','loglevel'), "", $log_choices),
 	));
 }
 
