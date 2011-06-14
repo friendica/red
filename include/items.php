@@ -1338,6 +1338,8 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 					$ev = bbtoevent($datarray['body']);
 					if(x($ev,'desc') && x($ev,'start')) {
 						$ev['uid'] = $importer['uid'];
+						$ev['uri'] = $item_id;
+
 						if(is_array($contact))
 							$ev['cid'] = $contact['id'];
 						$r = q("SELECT * FROM `event` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",

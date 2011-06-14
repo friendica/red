@@ -599,6 +599,7 @@ function dfrn_notify_post(&$a) {
 				if(x($ev,'desc') && x($ev,'start')) {
 					$ev['cid'] = $importer['id'];
 					$ev['uid'] = $importer['uid'];
+					$ev['uri'] = $item_id;
 
 					$r = q("SELECT * FROM `event` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 						dbesc($item_id),

@@ -193,6 +193,7 @@ function event_store($arr) {
 	$arr['edited'] = (($arr['edited']) ? $arr['edited'] : datetime_convert());
 	$arr['type'] = (($arr['type']) ? $arr['type'] : 'event' );	
 	$arr['cid'] = ((intval($arr['cid'])) ? intval($arr['cid']) : 0);
+	$arr['uri'] = (x($arr,'uri') ? $arr['uri'] : item_new_uri($a->get_hostname(),$arr['uid']));
 
 	if($arr['cid'])
 		$c = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -250,14 +251,12 @@ function event_store($arr) {
 	}
 	else {
 
-		$uri = item_new_uri($a->get_hostname(),local_user());
-
 		$r = q("INSERT INTO `event` ( `uid`,`cid`,`uri`,`created`,`edited`,`start`,`finish`,`desc`,`location`,`type`,
 			`adjust`,`nofinish`,`allow_cid`,`allow_gid`,`deny_cid`,`deny_gid`)
 			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
 			intval($arr['uid']),
 			intval($arr['cid']),
-			dbesc($uri),
+			dbesc($arr['uri']),
 			dbesc($arr['created']),
 			dbesc($arr['edited']),
 			dbesc($arr['start']),
