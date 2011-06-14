@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Demo plugin for adding various types of Flash games to Friendika.
+ * In this case we're using "Hot Shot Sniper" by FlashGames247
+ */
+
+
 function sniper_install() {
     register_hook('app_menu', 'addon/sniper/sniper.php', 'sniper_app_menu');
 }
