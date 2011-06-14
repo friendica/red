@@ -2,6 +2,9 @@
 
 require_once('simplepie/simplepie.inc');
 require_once('include/items.php');
+require_once('include/event.php');
+
+
 function dfrn_notify_post(&$a) {
 
 	$dfrn_id      = ((x($_POST,'dfrn_id'))      ? notags(trim($_POST['dfrn_id']))   : '');
@@ -590,6 +593,23 @@ function dfrn_notify_post(&$a) {
 
 			$item_id  = $item->get_id();
 			$datarray = get_atom_elements($feed,$item);
+
+			if((x($datarray,'object-type')) && ($datarray['object-type'] === ACTIVITY_OBJ_EVENT)) {
+				$ev = bbtoevent($datarray['body']);
+				if(x($ev,'desc') && x($ev,'start')) {
+					$ev['cid'] = $importer['id'];
+					$ev['uid'] = $importer['uid'];
+
+					$r = q("SELECT * FROM `event` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						dbesc($item_id),
+						intval($importer['uid'])
+					);
+					if(count($r))
+						$ev['id'] = $r[0]['id'];
+					$xyz = event_store($ev);
+					continue;
+				}
+			}
 
 			$r = q("SELECT `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 				dbesc($item_id),

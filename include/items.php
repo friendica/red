@@ -1337,14 +1337,20 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 				if((x($datarray,'object-type')) && ($datarray['object-type'] === ACTIVITY_OBJ_EVENT)) {
 					$ev = bbtoevent($datarray['body']);
 					if(x($ev,'desc') && x($ev,'start')) {
+						$ev['uid'] = $importer['uid'];
+						if(is_array($contact))
+							$ev['cid'] = $contact['id'];
 						$r = q("SELECT * FROM `event` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($item_id),
 							intval($importer['uid'])
 						);
-						// import/update event
-
+						if(count($r))
+							$ev['id'] = $r[0]['id'];
+						$xyz = event_store($ev);
+						continue;
 					}
 				}
+
 				$r = q("SELECT `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['uid'])

@@ -178,3 +178,158 @@ function ev_compare($a,$b) {
 	
 	return strcmp($date_a,$date_b);
 }
+
+
+
+function event_store($arr) {
+
+	require_once('include/datetime.php');
+	require_once('include/items.php');
+	require_once('include/bbcode.php');
+
+	$a = get_app();
+
+	$arr['created'] = (($arr['created']) ? $arr['created'] : datetime_convert());
+	$arr['edited'] = (($arr['edited']) ? $arr['edited'] : datetime_convert());
+	$arr['type'] = (($arr['type']) ? $arr['type'] : 'event' );	
+	$arr['cid'] = ((intval($arr['cid'])) ? intval($arr['cid']) : 0);
+
+	if($arr['cid'])
+		$c = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			intval($arr['cid']),
+			intval($arr['uid'])
+		);
+	else
+		$c = q("SELECT * FROM `contact` WHERE `self` = 1 AND `uid` = %d LIMIT 1",
+			intval($arr['uid'])
+		);
+
+	if(count($c))
+		$contact = $c[0];
+
+
+	if($arr['id']) {
+		$r = q("UPDATE `event` SET
+			`edited` = '%s',
+			`start` = '%s',
+			`finish` = '%s',
+			`desc` = '%s',
+			`location` = '%s',
+			`type` = '%s',
+			`adjust` = %d,
+			`nofinish` = %d,
+			`allow_cid` = '%s',
+			`allow_gid` = '%s',
+			`deny_cid` = '%s',
+			`deny_gid` = '%s'
+			WHERE `id` = %d AND `uid` = %d LIMIT 1",
+
+			dbesc($arr['edited']),
+			dbesc($arr['start']),
+			dbesc($arr['finish']),
+			dbesc($arr['desc']),
+			dbesc($arr['location']),
+			dbesc($arr['type']),
+			intval($arr['adjust']),
+			intval($arr['nofinish']),
+			dbesc($arr['allow_cid']),
+			dbesc($arr['allow_gid']),
+			dbesc($arr['deny_cid']),
+			dbesc($arr['deny_gid']),
+			intval($arr['id']),
+			intval($arr['uid'])
+		);
+		$r = q("SELECT * FROM `item` WHERE `event-id` = %d AND `uid` = %d LIMIT 1",
+			intval($arr['id']),
+			intval($arr['uid'])
+		);
+		if(count($r))
+			return $r[0]['id'];
+		else
+			return 0;
+	}
+	else {
+
+		$uri = item_new_uri($a->get_hostname(),local_user());
+
+		$r = q("INSERT INTO `event` ( `uid`,`cid`,`uri`,`created`,`edited`,`start`,`finish`,`desc`,`location`,`type`,
+			`adjust`,`nofinish`,`allow_cid`,`allow_gid`,`deny_cid`,`deny_gid`)
+			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
+			intval($arr['uid']),
+			intval($arr['cid']),
+			dbesc($uri),
+			dbesc($arr['created']),
+			dbesc($arr['edited']),
+			dbesc($arr['start']),
+			dbesc($arr['finish']),
+			dbesc($arr['desc']),
+			dbesc($arr['location']),
+			dbesc($arr['type']),
+			intval($arr['adjust']),
+			intval($arr['nofinish']),
+			dbesc($arr['allow_cid']),
+			dbesc($arr['allow_gid']),
+			dbesc($arr['deny_cid']),
+			dbesc($arr['deny_gid'])
+
+		);
+
+		$r = q("SELECT * FROM `event` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+			dbesc($uri),
+			intval($arr['uid'])
+		);
+		if(count($r))
+			$event = $r[0];
+
+		$item_arr = array();
+
+		$item_arr['uid']           = $arr['uid'];
+		$item_arr['contact-id']    = $arr['cid'];
+		$item_arr['uri']           = $uri;
+		$item_arr['parent-uri']    = $uri;
+		$item_arr['type']          = 'activity';
+		$item_arr['wall']          = 1;
+		$item_arr['contact-id']    = $contact['id'];
+		$item_arr['owner-name']    = $contact['name'];
+		$item_arr['owner-link']    = $contact['url'];
+		$item_arr['owner-avatar']  = $contact['thumb'];
+		$item_arr['author-name']   = $contact['name'];
+		$item_arr['author-link']   = $contact['url'];
+		$item_arr['author-avatar'] = $contact['thumb'];
+		$item_arr['title']         = '';
+		$item_arr['allow_cid']     = $str_contact_allow;
+		$item_arr['allow_gid']     = $str_group_allow;
+		$item_arr['deny_cid']      = $str_contact_deny;
+		$item_arr['deny_gid']      = $str_group_deny;
+		$item_arr['last-child']    = 1;
+		$item_arr['visible']       = 1;
+		$item_arr['verb']          = ACTIVITY_POST;
+		$item_arr['object-type']   = ACTIVITY_OBJ_EVENT;
+
+		$item_arr['body']          = format_event_bbcode($event);
+
+
+		$item_arr['object'] = '<object><type>' . xmlify(ACTIVITY_OBJ_EVENT) . '</type><title></title><id>' . xmlify($uri) . '</id>';
+		$item_arr['object'] .= '<content>' . xmlify(format_event_bbcode($event)) . '</content>';
+		$item_arr['object'] .= '</object>' . "\n";
+
+		$item_id = item_store($item_arr);
+
+		$r = q("SELECT * FROM `user` WHERE `uid` = %d LIMIT 1",
+			intval($arr['uid'])
+		);
+		if(count($r))
+			$plink = $a->get_baseurl() . '/display/' . $r[0]['nickname'] . '/' . $item_id;
+
+
+		if($item_id) {
+			q("UPDATE `item` SET `plink` = '%s', `event-id` = %d  WHERE `uid` = %d AND `id` = %d LIMIT 1",
+				dbesc($plink),
+				intval($event['id']),
+				intval($arr['uid']),
+				intval($item_id)
+			);
+		}
+		return $item_id;
+	}
+}
