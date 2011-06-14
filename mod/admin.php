@@ -74,10 +74,15 @@ function admin_content(&$a) {
 	// urls
 	if ($a->argc > 1){
 		switch ($a->argv[1]){
-			case 'site': {
+			case 'site':
 				$o = admin_page_site($a);
 				break;
-			}
+			case 'users':
+				$o = admin_page_users($a);
+				break;
+			case 'plugins':
+				$o = admin_page_plugins($a);
+				break;
 			default:
 				notice( t("Item not found.") );
 		}
@@ -288,3 +293,45 @@ function admin_page_site(&$a) {
 	));
 
 }
+
+
+/**
+ * Users admin page
+ */
+ 
+function admin_page_users(&$a){
+	return ":)";
+}
+
+
+/*
+ * Plugins admin page
+ */
+
+function admin_page_plugins(&$a){
+	
+	/* all plugins */
+	$plugins = array();
+	$files = glob("addon/*/");
+	if($files) {
+		foreach($files as $file) {	
+			if (is_dir($file)){
+				list($tmp, $id)=array_map("trim", explode("/",$file));
+				// TODO: plugins info
+				$name=$author=$description=$homepage="";
+				$plugins[] = array( $id, (in_array($id,  $a->plugins)?"on":"off") , $name, $author, $description, $homepage);
+			}
+		}
+	}
+	
+	$t = get_markup_template("admin_plugins.tpl");
+	return replace_macros($t, array(
+		'$title' => t('Administration'),
+		'$page' => t('Plugins'),
+		'$submit' => t('Submit'),
+		'$baseurl' => $a->get_baseurl(),
+	
+		'$plugins' => $plugins
+	));
+}
+

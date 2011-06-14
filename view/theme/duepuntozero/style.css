@@ -2520,6 +2520,21 @@ a.mail-list-link {
 	text-align: right;
 }
 
+#adminpage #pluginslist {
+	margin: 0px; padding: 0px;
+}
+#adminpage .plugin {
+	list-style: none;
+	display: block;
+	border: 1px solid #888888;
+	padding: 1em;
+	margin-bottom: 5px;
+	clear: left;
+}
+#adminpage .plugin .toggle {
+	float:left;
+	margin-right: 1em;
+}
 
 /**
  * ICONS
@@ -2557,7 +2572,8 @@ a.mail-list-link {
 .youtube { background-position: -64px -32px;}
 .attach { background-position: -80px -32px; }
 .language { background-position: -96px -32px; }
-
+.on { background-position: -112px -32px; }
+.off { background-position: -128px -32px; }
 
 .attachtype {
 	display: block; width: 20px; height: 23px;
