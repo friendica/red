@@ -512,6 +512,8 @@ function notifier_run($argv, $argc){
 
 		if((count($r)) && (($max_allowed == 0) || (count($r) < $max_allowed))) {
 
+			logger('pubdeliver: ' . print_r($r,true));
+
 			foreach($r as $rr) {
 
 				/* Don't deliver to folks who have already been delivered to */

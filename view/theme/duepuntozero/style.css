@@ -2224,7 +2224,8 @@ a.mail-list-link {
 }
 
 .eventcal {
-	font-size: 24px;
+	float: left;
+	font-size: 20px;
 }
 
 #new-event-link {
@@ -2245,6 +2246,17 @@ a.mail-list-link {
 .event-start .dtstart, .event-end .dtend {
 	float: right;
 }
+
+.prevcal, .nextcal {
+	float: left;
+	margin-left: 32px;
+	margin-right: 32px;
+	margin-top: 64px;
+}
+.event-calendar-end {
+	clear: both;
+}
+
  
 .calendar {
 	font-family: Courier, monospace;
@@ -2454,6 +2466,8 @@ a.mail-list-link {
 }
 
 
+
+
 #lang-select-icon {
 	cursor: pointer;
 	position: absolute;
@@ -2505,6 +2519,8 @@ a.mail-list-link {
 .youtube { background-position: -64px -32px;}
 .attach { background-position: -80px -32px; }
 .language { background-position: -96px -32px; }
+.prev { background-position: -112px -32px; }
+.next { background-position: -128px -32px; }
 
 
 .attachtype {
