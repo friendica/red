@@ -2545,7 +2545,8 @@ a.mail-list-link {
 	margin-bottom: 5px;
 	clear: left;
 }
-#adminpage .plugin .toggle {
+#adminpage .plugin .desc { margin-left: 2.5em;}
+#adminpage .toggleplugin {
 	float:left;
 	margin-right: 1em;
 }
