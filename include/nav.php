@@ -64,7 +64,7 @@ function nav(&$a) {
 		$nav['help'] = array($help_url, t('Help'), "");
 
 
-	if(count($a->apps))
+	if($a->apps)
 		$nav['apps'] = array('apps', t('Apps'), "");
 
 	$nav['search'] = array('search', t('Search'), "");
