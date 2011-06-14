@@ -115,7 +115,9 @@ function profile_content(&$a, $update = 0) {
 			'$phototab' => $a->get_baseurl() . '/photos/' . $a->profile['nickname'],
 			'$status' => t('Status'),
 			'$profile' => t('Profile'),
-			'$photos' => t('Photos')
+			'$photos' => t('Photos'),
+			'$events' => (($is_owner) ? 	'<a href="events" id="profile-tab-events-link" class="profile-tabs" >' . t('Events') . '</a>' : ''),
+			'$notes' => (($is_owner) ? 	'<a href="notes" id="profile-tab-notes-link" class="profile-tabs" >' . t('Personal Notes') . '</a>' : '')
 		));
 
 

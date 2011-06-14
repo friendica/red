@@ -67,113 +67,28 @@ function events_post(&$a) {
 		$str_group_allow = $str_contact_deny = $str_group_deny = '';
 	}
 
-	if($event_id) {
-		$r = q("UPDATE `event` SET
-			`edited` = '%s',
-			`start` = '%s',
-			`finish` = '%s',
-			`desc` = '%s',
-			`location` = '%s',
-			`type` = '%s',
-			`adjust` = %d,
-			`nofinish` = %d,
-			`allow_cid` = '%s',
-			`allow_gid` = '%s',
-			`deny_cid` = '%s',
-			`deny_gid` = '%s'
-			WHERE `id` = %d AND `uid` = %d LIMIT 1",
 
-			dbesc(datetime_convert()),
-			dbesc($start),
-			dbesc($finish),
-			dbesc($desc),
-			dbesc($location),
-			dbesc($type),
-			intval($adjust),
-			intval($nofinish),
-			dbesc($str_contact_allow),
-			dbesc($str_group_allow),
-			dbesc($str_contact_deny),
-			dbesc($str_group_deny),
-			intval($event_id),
-			intval($local_user())
-		);
+	$datarray = array();
+	$datarray['start'] = $start;
+	$datarray['finish'] = $finish;
+	$datarray['desc'] = $desc;
+	$datarray['location'] = $location;
+	$datarray['type'] = $type;
+	$datarray['adjust'] = $adjust;
+	$datarray['nofinish'] = $nofinish;
+	$datarray['uid'] = $uid;
+	$datarray['cid'] = 0;
+	$datarray['allow_cid'] = $str_contact_allow;
+	$datarray['allow_gid'] = $str_group_allow;
+	$datarray['deny_cid'] = $str_contact_deny;
+	$datarray['deny_gid'] = $str_group_deny;
+	$datarray['id'] = $event_id;
+	$datarray['created'] = $created;
+	$datarray['edited'] = $edited;
 
-	}
-	else {
+	$item_id = event_store($datarray);
+	proc_run('php',"include/notifier.php","event","$item_id");
 
-		$uri = item_new_uri($a->get_hostname(),local_user());
-
-		$r = q("INSERT INTO `event` ( `uid`,`uri`,`created`,`edited`,`start`,`finish`,`desc`,`location`,`type`,
-			`adjust`,`nofinish`,`allow_cid`,`allow_gid`,`deny_cid`,`deny_gid`)
-			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
-			intval(local_user()),
-			dbesc($uri),
-			dbesc(datetime_convert()),
-			dbesc(datetime_convert()),
-			dbesc($start),
-			dbesc($finish),
-			dbesc($desc),
-			dbesc($location),
-			dbesc($type),
-			intval($adjust),
-			intval($nofinish),
-			dbesc($str_contact_allow),
-			dbesc($str_group_allow),
-			dbesc($str_contact_deny),
-			dbesc($str_group_deny)
-
-		);
-
-		$r = q("SELECT * FROM `event` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
-			dbesc($uri),
-			intval(local_user())
-		);
-		if(count($r))
-			$event = $r[0];
-
-		$arr = array();
-
-		$arr['uid']           = local_user();
-		$arr['uri']           = $uri;
-		$arr['parent-uri']    = $uri;
-		$arr['type']          = 'activity';
-		$arr['wall']          = 1;
-		$arr['contact-id']    = $a->contact['id'];
-		$arr['owner-name']    = $a->contact['name'];
-		$arr['owner-link']    = $a->contact['url'];
-		$arr['owner-avatar']  = $a->contact['thumb'];
-		$arr['author-name']   = $a->contact['name'];
-		$arr['author-link']   = $a->contact['url'];
-		$arr['author-avatar'] = $a->contact['thumb'];
-		$arr['title']         = '';
-		$arr['allow_cid']     = $str_contact_allow;
-		$arr['allow_gid']     = $str_group_allow;
-		$arr['deny_cid']      = $str_contact_deny;
-		$arr['deny_gid']      = $str_group_deny;
-		$arr['last-child']    = 1;
-		$arr['visible']       = 1;
-		$arr['verb']          = ACTIVITY_POST;
-		$arr['object-type']   = ACTIVITY_OBJ_EVENT;
-
-		$arr['body']          = format_event_bbcode($event);
-
-
-		$arr['object'] = '<object><type>' . xmlify(ACTIVITY_OBJ_EVENT) . '</type><title></title><id>' . xmlify($uri) . '</id>';
-		$arr['object'] .= '<content>' . xmlify(format_event_bbcode($event)) . '</content>';
-		$arr['object'] .= '</object>' . "\n";
-
-		$item_id = item_store($arr);
-		if($item_id) {
-			q("UPDATE `item` SET `plink` = '%s', `event-id` = %d  WHERE `uid` = %d AND `id` = %d LIMIT 1",
-				dbesc($a->get_baseurl() . '/display/' . $owner_record['nickname'] . '/' . $item_id),
-				intval($event['id']),
-				intval(local_user()),
-				intval($item_id)
-			);
-			proc_run('php',"include/notifier.php","tag","$item_id");
-		}
-	}
 }
 
 
@@ -215,6 +130,14 @@ function events_content(&$a) {
 		if(! $m)
 			$m = intval($thismonth);
 
+		// Put some limits on dates. The PHP date functions don't seem to do so well before 1900.
+		// An upper limit was chosen to keep search engines from exploring links endlessly. 
+
+		if($y < 1901)
+			$y = 1900;
+		if($y > 2099)
+			$y = 2100;
+
 		$nextyear = $y;
 		$nextmonth = $m + 1;
 		if($nextmonth > 12) {
@@ -229,10 +152,17 @@ function events_content(&$a) {
 			$prevmonth = 12;
 			$prevyear --;
 		}
+
 			
 		$o .= '<div id="new-event-link"><a href="' . $a->get_baseurl() . '/events/new' . '" >' . t('Create New Event') . '</a></div>';
-		$o .= '<a href="' . $a->get_baseurl() . '/events/' . $prevyear . '/' . $prevmonth . '" class="prevcal">' . t('&lt;&lt; Previous') . '</a> | <a href="' . $a->get_baseurl() . '/events/' . $nextyear . '/' . $nextmonth . '" class="nextcal">' . t('Next &gt;&gt;') . '</a>'; 
+		$o .= '<div id="event-calendar-wrapper">';
+
+		$o .= '<a href="' . $a->get_baseurl() . '/events/' . $prevyear . '/' . $prevmonth . '" class="prevcal"><div id="event-calendar-prev" class="icon prev" title="' . t('Previous') . '"></div></a>';
 		$o .= cal($y,$m,false, ' eventcal');
+
+		$o .= '<a href="' . $a->get_baseurl() . '/events/' . $nextyear . '/' . $nextmonth . '" class="nextcal"><div id="event-calendar-next" class="icon next" title="' . t('Next') . '"></div></a>';
+		$o .= '</div>';
+		$o .= '<div class="event-calendar-end"></div>';
 
 		$dim    = get_dim($y,$m);
 		$start  = sprintf('%d-%d-%d %d:%d:%d',$y,$m,1,0,0,0);
@@ -245,7 +175,8 @@ function events_content(&$a) {
 		$adjust_finish = datetime_convert('UTC', date_default_timezone_get(), $finish);
 
 
-		$r = q("SELECT * FROM `event` WHERE `uid` = %d
+		$r = q("SELECT `event`.*, `item`.`id` AS `itemid`,`item`.`plink` FROM `event` LEFT JOIN `item` ON `item`.`event-id` = `event`.`id` 
+			WHERE `event`.`uid` = %d
 			AND (( `adjust` = 0 AND `start` >= '%s' AND `finish` <= '%s' ) 
 			OR  (  `adjust` = 1 AND `start` >= '%s' AND `finish` <= '%s' )) ",
 			intval(local_user()),
@@ -269,6 +200,8 @@ function events_content(&$a) {
 					$o .= '<hr /><div class="event-list-date">' . $d . '</div>';
 				$last_date = $d;
 				$o .= format_event_html($rr);
+				if($rr['plink'])
+					$o .= get_plink($rr) . '<br />';
 			}
 		}
 		return $o;

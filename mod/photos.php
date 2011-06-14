@@ -1041,7 +1041,7 @@ function photos_content(&$a) {
 		}
 
 		if($prevlink)
-			$prevlink = array($prevlink, t('<< Prev')) ;
+			$prevlink = array($prevlink, '<div class="icon prev"></div>') ;
 
 		$photo = array(
 			'href' => $a->get_baseurl() . '/photo/' . $hires['resource-id'] . '-' . $hires['scale'] . '.jpg',
@@ -1050,7 +1050,7 @@ function photos_content(&$a) {
 		);
 
 		if($nextlink)
-			$nextlink = array($nextlink, t('Next >>'));
+			$nextlink = array($nextlink, '<div class="icon next"></div>');
 
 
 		// Do we have an item for this photo?
