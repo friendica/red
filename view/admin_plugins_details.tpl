@@ -3,11 +3,11 @@
 	
 	<p><span class='toggleplugin icon $status'></span> $info.name - $info.version : <a href="$baseurl/admin/plugins/$plugin/?a=t">$action</a></p>
 	<p>$info.description</p>
-	<p>
+	
 	{{ for $info.author as $a }}
-	<a href="$a.link">$a.name</a> 
+		<p class="author">{{ if $a.link }}<a href="$a.link"><span class='icon remote-link'></span></a>{{ endif }}$a.name</p>
 	{{ endfor }}
-	</p>
+	
 	
 
 	{{ if $readme }}

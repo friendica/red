@@ -1,4 +1,10 @@
 <?php
+/**
+ * Name: Twitter Connector
+ * Version: 1.0
+ * Author: Tobias Diekershoff <https://diekershoff.homeunix.net/friendika/profile/tobias>
+ */
+
 
 /*   Twitter Plugin for Friendika
  *

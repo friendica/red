@@ -1,4 +1,10 @@
 <?php
+/**
+ * Name: Sniper App
+ * Description: Example of flash game application
+ * Version: 1.0
+ * Author: Mike Macgirvin <http://macgirvin.com/profile/mike>
+ */
 
 function sniper_install() {
     register_hook('app_menu', 'addon/sniper/sniper.php', 'sniper_app_menu');

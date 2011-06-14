@@ -2550,6 +2550,7 @@ a.mail-list-link {
 	float:left;
 	margin-right: 1em;
 }
+#adminpage .author .icon { float: left;}
 
 /**
  * ICONS

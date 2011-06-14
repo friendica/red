@@ -1,4 +1,9 @@
 <?php
+/**
+ * Name: Facebook Connector
+ * Version: 1.0
+ * Author: Mike Macgirvin <http://macgirvin.com/profile/mike>
+ */
 
 /**
  * Installing the Friendika/Facebook connector

@@ -1,4 +1,11 @@
 <?php
+/**
+ * Name: Calculator App
+ * Description: Simple Calculator Application
+ * Version: 1.0
+ * Author: Mike Macgirvin <http://macgirvin.com/profile/mike>
+ */
+
 
 function calc_install() {
 	register_hook('app_menu', 'addon/calc/calc.php', 'calc_app_menu');
