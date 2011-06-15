@@ -10,9 +10,9 @@ function format_event_html($ev) {
 
 	$bd_format = t('l F d, Y \@ g A') ; // Friday January 18, 2011 @ 8 AM
 
-	$o = '<div class="vevent">';
+	$o = '<div class="vevent">' . "\r\n";
 
-	$o .= '<p class="description event-description">' . bbcode($ev['desc']) .  '</p>';
+	$o .= '<p class="description event-description">' . bbcode($ev['desc']) .  '</p>' . "\r\n";
 
 	$o .= '<p class="event-start">' . t('Starts:') . ' <abbr class="dtstart" title="'
 		. datetime_convert('UTC','UTC',$ev['start'], (($ev['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' ))
@@ -21,7 +21,7 @@ function format_event_html($ev) {
 			$ev['start'] , $bd_format ))
 			:  day_translate(datetime_convert('UTC', 'UTC', 
 			$ev['start'] , $bd_format)))
-		. '</abbr></p>';
+		. '</abbr></p>' . "\r\n";
 
 	if(! $ev['nofinish'])
 		$o .= '<p class="event-end" >' . t('Finishes:') . ' <abbr class="dtend" title="'
@@ -31,14 +31,14 @@ function format_event_html($ev) {
 				$ev['finish'] , $bd_format ))
 				:  day_translate(datetime_convert('UTC', 'UTC', 
 				$ev['finish'] , $bd_format )))
-			. '</abbr></p>';
+			. '</abbr></p>'  . "\r\n";
 
 	if(strlen($ev['location']))
 		$o .= '<p class="event-location"> ' . t('Location:') . ' <span class="location">' 
 			. bbcode($ev['location']) 
-			. '</span></p>';
+			. '</span></p>' . "\r\n";
 
-	$o .= '</div>';
+	$o .= '</div>' . "\r\n";
 	return $o;
 }
 
