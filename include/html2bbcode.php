@@ -35,6 +35,7 @@ function html2bbcode($s) {
 		'/\<blockquote\>(.*?)\<\/blockquote\>/is',
 		'/\<video(.*?) src=\"(.*?)\" (.*?)\>(.*?)\<\/video\>/is',
 		'/\<audio(.*?) src=\"(.*?)\" (.*?)\>(.*?)\<\/audio\>/is',
+		'/\<iframe(.*?) src=\"(.*?)\" (.*?)\>(.*?)\<\/iframe\>/is',
 
 	);
 
@@ -60,6 +61,7 @@ function html2bbcode($s) {
 		'[quote]$1[/quote]',
 		'[video]$1[/video]',
 		'[audio]$1[/audio]',
+		'[iframe]$1[/iframe]',
 	);
 
 	// Replace $htmltags in $text with $bbtags
