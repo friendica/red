@@ -544,6 +544,7 @@ function item_post(&$a) {
 				// load the template for private message notifications
 				$tpl = get_intltext_template('cmnt_received_html_body_eml.tpl');
 				$email_html_body_tpl = replace_macros($tpl,array(
+					'$username'     => $user['username'],
 					'$sitename'		=> $a->config['sitename'],				// name of this site
 					'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
 					'$thumb'		=> $author['thumb'],					// thumbnail url for sender icon
@@ -557,6 +558,7 @@ function item_post(&$a) {
 				// load the template for private message notifications
 				$tpl = get_intltext_template('cmnt_received_text_body_eml.tpl');
 				$email_text_body_tpl = replace_macros($tpl,array(
+					'$username'     => $user['username'],
 					'$sitename'		=> $a->config['sitename'],				// name of this site
 					'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
 					'$thumb'		=> $author['thumb'],					// thumbnail url for sender icon
@@ -610,6 +612,7 @@ function item_post(&$a) {
 				// load the template for private message notifications
 				$tpl = load_view_file('view/wall_received_html_body_eml.tpl');
 				$email_html_body_tpl = replace_macros($tpl,array(
+					'$username'     => $user['username'],
 					'$sitename'		=> $a->config['sitename'],				// name of this site
 					'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
 					'$thumb'		=> $author['thumb'],					// thumbnail url for sender icon
@@ -622,6 +625,7 @@ function item_post(&$a) {
 				// load the template for private message notifications
 				$tpl = load_view_file('view/wall_received_text_body_eml.tpl');
 				$email_text_body_tpl = replace_macros($tpl,array(
+					'$username'     => $user['username'],
 					'$sitename'		=> $a->config['sitename'],				// name of this site
 					'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
 					'$thumb'		=> $author['thumb'],					// thumbnail url for sender icon
