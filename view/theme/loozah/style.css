@@ -2432,6 +2432,13 @@ a.mail-list-link {
 	margin-bottom: 10px;
 }
 
+
+.edit-event-link, .plink-event-link {
+	float: left;
+	margin-right: 4px;
+}
+
+
 .event-description:before {
 	content: url('../../../images/calendar.png');
 	margin-right: 15px;
@@ -2461,6 +2468,7 @@ a.mail-list-link {
 	font-family: Courier, monospace;
 }
 .today {
+	font-weight: bold;
 	color: #FF0000;
 }
 

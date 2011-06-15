@@ -10,6 +10,7 @@ function events_post(&$a) {
 		return;
 
 	$event_id = ((x($_POST,'event_id')) ? intval($_POST['event_id']) : 0);
+	$cid = ((x($_POST,'cid')) ? intval($_POST['cid']) : 0);
 	$uid      = local_user();
 	$startyear = intval($_POST['startyear']);
 	$startmonth = intval($_POST['startmonth']);
@@ -77,7 +78,7 @@ function events_post(&$a) {
 	$datarray['adjust'] = $adjust;
 	$datarray['nofinish'] = $nofinish;
 	$datarray['uid'] = $uid;
-	$datarray['cid'] = 0;
+	$datarray['cid'] = $cid;
 	$datarray['allow_cid'] = $str_contact_allow;
 	$datarray['allow_gid'] = $str_group_allow;
 	$datarray['deny_cid'] = $str_contact_deny;
@@ -87,7 +88,9 @@ function events_post(&$a) {
 	$datarray['edited'] = $edited;
 
 	$item_id = event_store($datarray);
-	proc_run('php',"include/notifier.php","event","$item_id");
+
+	if(! $cid)
+		proc_run('php',"include/notifier.php","event","$item_id");
 
 }
 
@@ -131,7 +134,7 @@ function events_content(&$a) {
 			$m = intval($thismonth);
 
 		// Put some limits on dates. The PHP date functions don't seem to do so well before 1900.
-		// An upper limit was chosen to keep search engines from exploring links endlessly. 
+		// An upper limit was chosen to keep search engines from exploring links millions of years in the future. 
 
 		if($y < 1901)
 			$y = 1900;
@@ -154,16 +157,6 @@ function events_content(&$a) {
 		}
 
 			
-		$o .= '<div id="new-event-link"><a href="' . $a->get_baseurl() . '/events/new' . '" >' . t('Create New Event') . '</a></div>';
-		$o .= '<div id="event-calendar-wrapper">';
-
-		$o .= '<a href="' . $a->get_baseurl() . '/events/' . $prevyear . '/' . $prevmonth . '" class="prevcal"><div id="event-calendar-prev" class="icon prev" title="' . t('Previous') . '"></div></a>';
-		$o .= cal($y,$m,false, ' eventcal');
-
-		$o .= '<a href="' . $a->get_baseurl() . '/events/' . $nextyear . '/' . $nextmonth . '" class="nextcal"><div id="event-calendar-next" class="icon next" title="' . t('Next') . '"></div></a>';
-		$o .= '</div>';
-		$o .= '<div class="event-calendar-end"></div>';
-
 		$dim    = get_dim($y,$m);
 		$start  = sprintf('%d-%d-%d %d:%d:%d',$y,$m,1,0,0,0);
 		$finish = sprintf('%d-%d-%d %d:%d:%d',$y,$m,$dim,23,59,59);
@@ -173,73 +166,148 @@ function events_content(&$a) {
 
 		$adjust_start = datetime_convert('UTC', date_default_timezone_get(), $start);
 		$adjust_finish = datetime_convert('UTC', date_default_timezone_get(), $finish);
-
+dbg(1);
 
 		$r = q("SELECT `event`.*, `item`.`id` AS `itemid`,`item`.`plink` FROM `event` LEFT JOIN `item` ON `item`.`event-id` = `event`.`id` 
 			WHERE `event`.`uid` = %d
-			AND (( `adjust` = 0 AND `start` >= '%s' AND `finish` <= '%s' ) 
-			OR  (  `adjust` = 1 AND `start` >= '%s' AND `finish` <= '%s' )) ",
+			AND (( `adjust` = 0 AND `start` >= '%s' AND `start` <= '%s' ) 
+			OR  (  `adjust` = 1 AND `start` >= '%s' AND `start` <= '%s' )) ",
 			intval(local_user()),
 			dbesc($start),
 			dbesc($finish),
 			dbesc($adjust_start),
 			dbesc($adjust_finish)
 		);
+dbg(0);
+		$links = array();
+
+		if(count($r)) {
+			$r = sort_by_date($r);
+			foreach($r as $rr) {
+				$j = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['start'], 'j') : datetime_convert('UTC','UTC',$rr['start'],'j'));
+				if(! x($links,$j)) 
+					$links[$j] = $a->get_baseurl() . '/' . $a->cmd . '#link-' . $j;
+			}
+		}
+
+
+		$o .= '<div id="new-event-link"><a href="' . $a->get_baseurl() . '/events/new' . '" >' . t('Create New Event') . '</a></div>';
+		$o .= '<div id="event-calendar-wrapper">';
+
+		$o .= '<a href="' . $a->get_baseurl() . '/events/' . $prevyear . '/' . $prevmonth . '" class="prevcal"><div id="event-calendar-prev" class="icon prev" title="' . t('Previous') . '"></div></a>';
+		$o .= cal($y,$m,$links, ' eventcal');
+
+		$o .= '<a href="' . $a->get_baseurl() . '/events/' . $nextyear . '/' . $nextmonth . '" class="nextcal"><div id="event-calendar-next" class="icon next" title="' . t('Next') . '"></div></a>';
+		$o .= '</div>';
+		$o .= '<div class="event-calendar-end"></div>';
+
+
+
+
+
+
 
 		$last_date = '';
-
 		$fmt = t('l, F j');
 
 		if(count($r)) {
 			$r = sort_by_date($r);
 			foreach($r as $rr) {
-
+				$j = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['start'], 'j') : datetime_convert('UTC','UTC',$rr['start'],'j'));
 				$d = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['start'], $fmt) : datetime_convert('UTC','UTC',$rr['start'],$fmt));
 				$d = day_translate($d);
-				if($d !== $last_date) 
-					$o .= '<hr /><div class="event-list-date">' . $d . '</div>';
+				if($d !== $last_date)
+					$o .= '<hr /><a name="link-' . $j . '" ><div class="event-list-date">' . $d . '</div></a>';
 				$last_date = $d;
 				$o .= format_event_html($rr);
+				$o .= '<a href="' . $a->get_baseurl() . '/events/event/' . $rr['id'] . '" title="' . t('Edit event') . '" class="edit-event-link icon pencil"></a>';
 				if($rr['plink'])
-					$o .= get_plink($rr) . '<br />';
+					$o .= '<a href="' . $rr['plink'] . '" title="' . t('link to source') . '" target="external-link" class="plink-event-link icon remote-link"></a></div>';
+
+				$o .= '<div class="clear"></div>';
+
 			}
 		}
 		return $o;
 	}
 
+	if($mode === 'edit' && $event_id) {
+		$r = q("SELECT * FROM `event` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			intval($event_id),
+			intval(local_user())
+		);
+		if(count($r))
+			$orig_event = $r[0];
+	}
+
 	if($mode === 'edit' || $mode === 'new') {
+
+		$n_checked = ((x($orig_event) && $orig_event['nofinish']) ? ' checked="checked" ' : '');
+		$a_checked = ((x($orig_event) && $orig_event['adjust']) ? ' checked="checked" ' : '');
+		$d_orig = ((x($orig_event)) ? $orig_event['desc'] : '');
+		$l_orig = ((x($orig_event)) ? $orig_event['location'] : '');
+		$eid = ((x($orig_event)) ? $orig_event['id'] : 0);
+		$cid = ((x($orig_event)) ? $orig_event['cid'] : 0);
+		$uri = ((x($orig_event)) ? $orig_event['uri'] : '');
+
+
+		if(! x($orig_event))
+			$sh_checked = '';
+		else
+			$sh_checked = (($orig_event['allow_cid'] === '<' . local_user() . '>' && (! $orig_event['allow_gid']) && (! $orig_event['deny_cid']) && (! $orig_event['deny_gid'])) ? '' : ' checked="checked" ' );
+
+		if($cid)
+			$sh_checked .= ' disabled="disabled" ';
+
 		$htpl = get_markup_template('event_head.tpl');
 		$a->page['htmlhead'] .= replace_macros($htpl,array('$baseurl' => $a->get_baseurl()));
 
 		$tpl = get_markup_template('event_form.tpl');
 
-		$year = datetime_convert('UTC', date_default_timezone_get(), 'now', 'Y');
-		$month = datetime_convert('UTC', date_default_timezone_get(), 'now', 'm');
-		$day = datetime_convert('UTC', date_default_timezone_get(), 'now', 'd');
+		$sdt = ((x($orig_event)) ? $orig_event['start'] : 'now');
+		$fdt = ((x($orig_event)) ? $orig_event['finish'] : 'now');
+
+		$syear = datetime_convert('UTC', date_default_timezone_get(), $sdt, 'Y');
+		$smonth = datetime_convert('UTC', date_default_timezone_get(), $sdt, 'm');
+		$sday = datetime_convert('UTC', date_default_timezone_get(), $sdt, 'd');
+
+		$shour = ((x($orig_event)) ? datetime_convert('UTC', date_default_timezone_get(), $sdt, 'H') : 0);
+		$sminute = ((x($orig_event)) ? datetime_convert('UTC', date_default_timezone_get(), $sdt, 'i') : 0);
+
+		$fyear = datetime_convert('UTC', date_default_timezone_get(), $fdt, 'Y');
+		$fmonth = datetime_convert('UTC', date_default_timezone_get(), $fdt, 'm');
+		$fday = datetime_convert('UTC', date_default_timezone_get(), $fdt, 'd');
+
+		$fhour = ((x($orig_event)) ? datetime_convert('UTC', date_default_timezone_get(), $fdt, 'H') : 0);
+		$fminute = ((x($orig_event)) ? datetime_convert('UTC', date_default_timezone_get(), $fdt, 'i') : 0);
+
 
 		require_once('include/acl_selectors.php');
 
 		$o .= replace_macros($tpl,array(
 			'$post' => $a->get_baseurl() . '/events',
+			'$eid' => $eid, 
+			'$cid' => $cid,
+			'$uri' => $uri,
 			'$e_text' => t('Event details'),
 			'$e_desc' => t('Format is year-month-day hour:minute. Starting date and Description are required.'),
 			'$s_text' => t('Event Starts:') . ' <span class="required">*</span> ',
-			'$s_dsel' => datesel('start',$year+5,$year,false,$year,$month,$day),
-			'$s_tsel' => timesel('start',0,0),
+			'$s_dsel' => datesel('start',$syear+5,$syear,false,$syear,$smonth,$sday),
+			'$s_tsel' => timesel('start',$shour,$sminute),
 			'$n_text' => t('Finish date/time is not known or not relevant'),
-			'$n_checked' => '',
+			'$n_checked' => $n_checked,
 			'$f_text' => t('Event Finishes:'),
-			'$f_dsel' => datesel('finish',$year+5,$year,false,$year,$month,$day),
-			'$f_tsel' => timesel('finish',0,0),
+			'$f_dsel' => datesel('finish',$fyear+5,$fyear,false,$fyear,$fmonth,$fday),
+			'$f_tsel' => timesel('finish',$fhour,$fminute),
 			'$a_text' => t('Adjust for viewer timezone'),
-			'$a_checked' => '',
+			'$a_checked' => $a_checked,
 			'$d_text' => t('Description:') . ' <span class="required">*</span>',
-			'$d_orig' => '',
+			'$d_orig' => $d_orig,
 			'$l_text' => t('Location:'),
-			'$l_orig' => '',
+			'$l_orig' => $l_orig,
 			'$sh_text' => t('Share this event'),
-			'$sh_checked' => '',
-			'$acl' => populate_acl($a->user,false),
+			'$sh_checked' => $sh_checked,
+			'$acl' => (($cid) ? '' : populate_acl(((x($orig_event)) ? $orig_event : $a->user),false)),
 			'$submit' => t('Submit')
 
 		));

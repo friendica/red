@@ -190,10 +190,10 @@ function event_store($arr) {
 	$a = get_app();
 
 	$arr['created'] = (($arr['created']) ? $arr['created'] : datetime_convert());
-	$arr['edited'] = (($arr['edited']) ? $arr['edited'] : datetime_convert());
-	$arr['type'] = (($arr['type']) ? $arr['type'] : 'event' );	
-	$arr['cid'] = ((intval($arr['cid'])) ? intval($arr['cid']) : 0);
-	$arr['uri'] = (x($arr,'uri') ? $arr['uri'] : item_new_uri($a->get_hostname(),$arr['uid']));
+	$arr['edited']  = (($arr['edited']) ? $arr['edited'] : datetime_convert());
+	$arr['type']    = (($arr['type']) ? $arr['type'] : 'event' );	
+	$arr['cid']     = ((intval($arr['cid'])) ? intval($arr['cid']) : 0);
+	$arr['uri']     = (x($arr,'uri') ? $arr['uri'] : item_new_uri($a->get_hostname(),$arr['uid']));
 
 	if($arr['cid'])
 		$c = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -244,8 +244,26 @@ function event_store($arr) {
 			intval($arr['id']),
 			intval($arr['uid'])
 		);
-		if(count($r))
+		if(count($r)) {
+			$object = '<object><type>' . xmlify(ACTIVITY_OBJ_EVENT) . '</type><title></title><id>' . xmlify($arr['uri']) . '</id>';
+			$object .= '<content>' . xmlify(format_event_bbcode($arr)) . '</content>';
+			$object .= '</object>' . "\n";
+
+
+			q("UPDATE `item` SET `body` = '%s', `object` = '%s', `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `edited` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+				dbesc(format_event_bbcode($arr)),
+				dbesc($object),
+				dbesc($arr['allow_cid']),
+				dbesc($arr['allow_gid']),
+				dbesc($arr['deny_cid']),
+				dbesc($arr['deny_gid']),
+				dbesc(datetime_convert()),
+				intval($r[0]['id']),
+				intval($arr['uid'])
+			);
+
 			return $r[0]['id'];
+		}
 		else
 			return 0;
 	}
@@ -274,7 +292,7 @@ function event_store($arr) {
 		);
 
 		$r = q("SELECT * FROM `event` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
-			dbesc($uri),
+			dbesc($arr['uri']),
 			intval($arr['uid'])
 		);
 		if(count($r))
@@ -284,8 +302,8 @@ function event_store($arr) {
 
 		$item_arr['uid']           = $arr['uid'];
 		$item_arr['contact-id']    = $arr['cid'];
-		$item_arr['uri']           = $uri;
-		$item_arr['parent-uri']    = $uri;
+		$item_arr['uri']           = $arr['uri'];
+		$item_arr['parent-uri']    = $arr['uri'];
 		$item_arr['type']          = 'activity';
 		$item_arr['wall']          = 1;
 		$item_arr['contact-id']    = $contact['id'];
@@ -329,6 +347,7 @@ function event_store($arr) {
 				intval($item_id)
 			);
 		}
+
 		return $item_id;
 	}
 }

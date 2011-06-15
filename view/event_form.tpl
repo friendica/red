@@ -6,6 +6,10 @@ $e_desc
 
 <form action="$post" method="post" >
 
+<input type="hidden" name="event_id" value="$eid" />
+<input type="hidden" name="cid" value="$cid" />
+<input type="hidden" name="uri" value="$uri" />
+
 <div id="event-start-text">$s_text</div>
 $s_dsel $s_tsel
 
