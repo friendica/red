@@ -175,6 +175,9 @@ function ev_compare($a,$b) {
 
 	$date_a = (($a['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$a['start']) : $a['start']);
 	$date_b = (($b['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$b['start']) : $b['start']);
+
+	if($date_a === $date_b)
+		return strcasecmp($a['desc'],$b['desc']);
 	
 	return strcmp($date_a,$date_b);
 }

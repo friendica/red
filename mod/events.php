@@ -267,19 +267,23 @@ dbg(0);
 		$sdt = ((x($orig_event)) ? $orig_event['start'] : 'now');
 		$fdt = ((x($orig_event)) ? $orig_event['finish'] : 'now');
 
-		$syear = datetime_convert('UTC', date_default_timezone_get(), $sdt, 'Y');
-		$smonth = datetime_convert('UTC', date_default_timezone_get(), $sdt, 'm');
-		$sday = datetime_convert('UTC', date_default_timezone_get(), $sdt, 'd');
+		$tz = ((x($orig_event) && $orig_event['adjust']) ? date_default_timezone_get() : 'UTC');
+ 
 
-		$shour = ((x($orig_event)) ? datetime_convert('UTC', date_default_timezone_get(), $sdt, 'H') : 0);
-		$sminute = ((x($orig_event)) ? datetime_convert('UTC', date_default_timezone_get(), $sdt, 'i') : 0);
 
-		$fyear = datetime_convert('UTC', date_default_timezone_get(), $fdt, 'Y');
-		$fmonth = datetime_convert('UTC', date_default_timezone_get(), $fdt, 'm');
-		$fday = datetime_convert('UTC', date_default_timezone_get(), $fdt, 'd');
+		$syear = datetime_convert('UTC', $tz, $sdt, 'Y');
+		$smonth = datetime_convert('UTC', $tz, $sdt, 'm');
+		$sday = datetime_convert('UTC', $tz, $sdt, 'd');
 
-		$fhour = ((x($orig_event)) ? datetime_convert('UTC', date_default_timezone_get(), $fdt, 'H') : 0);
-		$fminute = ((x($orig_event)) ? datetime_convert('UTC', date_default_timezone_get(), $fdt, 'i') : 0);
+		$shour = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'H') : 0);
+		$sminute = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'i') : 0);
+
+		$fyear = datetime_convert('UTC', $tz, $fdt, 'Y');
+		$fmonth = datetime_convert('UTC', $tz, $fdt, 'm');
+		$fday = datetime_convert('UTC', $tz, $fdt, 'd');
+
+		$fhour = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'H') : 0);
+		$fminute = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'i') : 0);
 
 
 		require_once('include/acl_selectors.php');
