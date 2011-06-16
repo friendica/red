@@ -2779,7 +2779,7 @@ function unamp($s) {
 if(! function_exists('lang_selector')) {
 function lang_selector() {
 	global $lang;
-	$o .= '<div id="lang-select-icon" class="icon language" title="' . t('Select an alternate language') . '" onclick="openClose(\'language-selector\');" ></div>';
+	$o = '<div id="lang-select-icon" class="icon language" title="' . t('Select an alternate language') . '" onclick="openClose(\'language-selector\');" ></div>';
 	$o .= '<div id="language-selector" style="display: none;" >';
 	$o .= '<form action="" method="post" ><select name="system_language" onchange="this.form.submit();" >';
 	$langs = glob('view/*/strings.php');
