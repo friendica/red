@@ -1274,7 +1274,7 @@ function photos_content(&$a) {
 					$drop = '';
 
 					if(($item['contact-id'] == remote_user()) || ($item['uid'] == local_user()))
-						$drop = replace_macros(get_markup_template('wall_item_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
+						$drop = replace_macros(get_markup_template('photo_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
 
 
 					$comments .= replace_macros($template,array(

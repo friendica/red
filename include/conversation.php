@@ -114,6 +114,8 @@ function conversation(&$a, $items, $mode, $update) {
 	$noshare_tpl = get_markup_template('like_noshare.tpl');
 	$tpl         = get_markup_template('wall_item.tpl');
 	$wallwall    = get_markup_template('wallwall_item.tpl');
+	$droptpl     = get_markup_template('wall_item_drop.tpl');
+	$fakedrop    = get_markup_template('wall_fake_drop.tpl');
 
 	$alike = array();
 	$dlike = array();
@@ -126,7 +128,6 @@ function conversation(&$a, $items, $mode, $update) {
 			// - just loop through the items and format them minimally for display
 
 			$tpl = get_markup_template('search_item.tpl');
-			$droptpl = get_markup_template('wall_fake_drop.tpl');
 
 			foreach($items as $item) {
 
@@ -171,14 +172,7 @@ function conversation(&$a, $items, $mode, $update) {
 				}
 
 				$drop = '';
-				$dropping = false;
 
-				if((intval($item['contact-id']) && $item['contact-id'] == remote_user()) || ($item['uid'] == local_user()))
-					$dropping = true;
-
-	            $drop = replace_macros((($dropping)? $droptpl : $fakedrop), array('$id' => $item['id'], '$delete' => t('Delete')));
-
-				// 
 				localize_item($item);
 
 				$drop = replace_macros($droptpl,array('$id' => $item['id']));
@@ -390,7 +384,16 @@ function conversation(&$a, $items, $mode, $update) {
 					? '<a class="editpost" href="' . $a->get_baseurl() . '/editpost/' . $item['id'] 
 						. '" title="' . t('Edit') . '"><img src="images/pencil.gif" /></a>'
 					: '');
-			$drop = replace_macros(get_markup_template('wall_item_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
+
+
+			$drop = '';
+			$dropping = false;
+
+			if((intval($item['contact-id']) && $item['contact-id'] == remote_user()) || ($item['uid'] == local_user()))
+				$dropping = true;
+
+            $drop = replace_macros((($dropping)? $droptpl : $fakedrop), array('$id' => $item['id'], '$delete' => t('Delete')));
+
 
 			$photo = $item['photo'];
 			$thumb = $item['thumb'];
@@ -477,6 +480,7 @@ function conversation(&$a, $items, $mode, $update) {
 				'$comment' => $comment
 			));
 
+
 			$arr = array('item' => $item, 'output' => $tmp_item);
 			call_hooks('display_item', $arr);
 
@@ -490,6 +494,9 @@ function conversation(&$a, $items, $mode, $update) {
 
 	if($blowhard_count >= 3)
 		$o .= '</div>';
+
+	if($dropping)
+		$o .= '<div id="item-delete-selected" class="fakelink" onclick="deleteCheckedItems();"><div id="item-delete-selected-icon" class="icon drophide" title="' . t('Delete Selected Items') . '" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></div><div id="item-delete-selected-desc" >' .  t('Delete Selected Items') . '</div></div><div id="item-delete-selected-end"></div>';
 
 	return $o;
 } 
