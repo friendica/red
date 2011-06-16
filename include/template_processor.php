@@ -8,6 +8,18 @@
 		var $nodes = array();
 		var $done = false;
 		
+		private function _preg_error(){
+			switch(preg_last_error()){
+			    case PREG_INTERNAL_ERROR: die('PREG_INTERNAL_ERROR'); break;
+			    case PREG_BACKTRACK_LIMIT_ERROR: die('PREG_BACKTRACK_LIMIT_ERROR'); break;
+			    case PREG_RECURSION_LIMIT_ERROR: die('PREG_RECURSION_LIMIT_ERROR'); break;
+			    case PREG_BAD_UTF8_ERROR: die('PREG_BAD_UTF8_ERROR'); break;
+			    case PREG_BAD_UTF8_OFFSET_ERROR: die('PREG_BAD_UTF8_OFFSET_ERROR'); break;
+			    default:
+					die("Unknown preg error.");
+			}
+		}
+		
 		private function _build_replace($r, $prefix){
 	
 			if(is_array($r) && count($r)) {
@@ -40,9 +52,9 @@
 		/**
 		 * IF node
 		 * 
-		 * {{ if <$var> }}...{{ endif }}
-		 * {{ if <$var>==<val|$var> }}...{{ endif }}
-		 * {{ if <$var>!=<val|$var> }}...{{ endif }}
+		 * {{ if <$var> }}...[{{ else }} ...] {{ endif }}
+		 * {{ if <$var>==<val|$var> }}...[{{ else }} ...]{{ endif }}
+		 * {{ if <$var>!=<val|$var> }}...[{{ else }} ...]{{ endif }}
 		 */
 		private function _replcb_if($args){
 			
@@ -59,7 +71,13 @@
 			} else {
 				$val = $this->_get_var($args[2]);
 			}
-			return ($val?$args[3]:"");
+			if (isset($args[4])) {
+				list($strue, $sfalse)= explode($args[4], $args[3]);
+			} else {
+				$strue = $args[3]; $sfalse = "";
+			}
+			
+			return ($val?$strue:$sfalse);
 		}
 		
 		/**
@@ -112,13 +130,17 @@
 		private function _replcb_node($m) {
 			$node = $this->nodes[$m[1]];
 			if (method_exists($this, "_replcb_".$node[1])){
-				return call_user_func(array($this, "_replcb_".$node[1]),  $node);
+				$s = call_user_func(array($this, "_replcb_".$node[1]),  $node);
 			} else {
-				return "";
+				$s = "";
 			}
+			$s = preg_replace_callback('/\|\|([0-9]+)\|\|/', array($this, "_replcb_node"), $s);
+			if ($s==Null) $this->_preg_error()	
+			return $s;
 		}
 						
 		private function _replcb($m){
+			//var_dump(array_map('htmlspecialchars', $m));
 			$this->done = false;	
 			$this->nodes[] = (array) $m;
 			return "||". (count($this->nodes)-1) ."||";
@@ -128,8 +150,10 @@
 			$this->done = false;
 			while (!$this->done){
 				$this->done=true;
-				$s = preg_replace_callback('|{{ *([a-z]*) *([^}]*)}}([^{]*){{ *end\1 *}}|', array($this, "_replcb"), $s);
+				$s = preg_replace_callback('|{{ *([a-z]*) *([^}]*)}}([^{]*({{ *else *}}[^{]*)?){{ *end\1 *}}|', array($this, "_replcb"), $s);
+				if ($s==Null) $this->_preg_error();
 			}
+			//({{ *else *}}[^{]*)?
 			krsort($this->nodes);
 			return $s;
 		}
@@ -144,6 +168,7 @@
 			#$s = str_replace(array("\n","\r"),array("§n§","§r§"),$s);
 			$s = $this->_build_nodes($s);
 			$s = preg_replace_callback('/\|\|([0-9]+)\|\|/', array($this, "_replcb_node"), $s);
+			if ($s==Null) $this->_preg_error()
 			$s = str_replace($this->search,$this->replace, $s);
 			
 			return $s;
