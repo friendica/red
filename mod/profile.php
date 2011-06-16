@@ -261,10 +261,7 @@ function profile_content(&$a, $update = 0) {
 	if($is_owner && ! $update)
 		$o .= get_birthdays();
 
-
-
 	$o .= conversation($a,$r,'profile',$update);
-
 
 	if(! $update) {
 		

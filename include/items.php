@@ -1772,3 +1772,129 @@ function item_expire($uid,$days) {
 
 }
 
+
+function drop_items($items) {
+	$uid = 0;
+
+	if(count($items)) {
+		foreach($items as $item) {
+			$owner = drop_item($item,false);
+			if($owner && ! $uid)
+				$uid = $owner;
+		}
+	}
+
+	// multiple threads may have been deleted, send an expire notification
+
+	if($uid)
+		proc_run('php',"include/notifier.php","expire","$uid");
+}
+
+
+function drop_item($id,$interactive = true) {
+
+	$a = get_app();
+
+	// locate item to be deleted
+
+	$r = q("SELECT * FROM `item` WHERE `id` = %d LIMIT 1",
+		intval($id)
+	);
+
+	if(! count($r)) {
+		if(! $interactive)
+			return 0;
+		notice( t('Item not found.') . EOL);
+		goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
+	}
+
+	$item = $r[0];
+
+	$owner = $item['uid'];
+
+	// check if logged in user is either the author or owner of this item
+
+	if((local_user() == $item['uid']) || (remote_user() == $item['contact-id'])) {
+
+		// delete the item
+
+		$r = q("UPDATE `item` SET `deleted` = 1, `body` = '', `edited` = '%s', `changed` = '%s' WHERE `id` = %d LIMIT 1",
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
+			intval($item['id'])
+		);
+
+		// If item is a link to a photo resource, nuke all the associated photos 
+		// (visitors will not have photo resources)
+		// This only applies to photos uploaded from the photos page. Photos inserted into a post do not
+		// generate a resource-id and therefore aren't intimately linked to the item. 
+
+		if(strlen($item['resource-id'])) {
+			q("DELETE FROM `photo` WHERE `resource-id` = '%s' AND `uid` = %d ",
+				dbesc($item['resource-id']),
+				intval($item['uid'])
+			);
+			// ignore the result
+		}
+
+		// If item is a link to an event, nuke the event record.
+
+		if(intval($item['event-id'])) {
+			q("DELETE FROM `event` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+				intval($item['event-id']),
+				intval($item['uid'])
+			);
+			// ignore the result
+		}
+
+
+		// If it's the parent of a comment thread, kill all the kids
+
+		if($item['uri'] == $item['parent-uri']) {
+			$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s', `body` = '' 
+				WHERE `parent-uri` = '%s' AND `uid` = %d ",
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert()),
+				dbesc($item['parent-uri']),
+				intval($item['uid'])
+			);
+			// ignore the result
+		}
+		else {
+			// ensure that last-child is set in case the comment that had it just got wiped.
+			q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d ",
+				dbesc(datetime_convert()),
+				dbesc($item['parent-uri']),
+				intval($item['uid'])
+			);
+			// who is the last child now? 
+			$r = q("SELECT `id` FROM `item` WHERE `parent-uri` = '%s' AND `type` != 'activity' AND `deleted` = 0 AND `uid` = %d ORDER BY `edited` DESC LIMIT 1",
+				dbesc($item['parent-uri']),
+				intval($item['uid'])
+			);
+			if(count($r)) {
+				q("UPDATE `item` SET `last-child` = 1 WHERE `id` = %d LIMIT 1",
+					intval($r[0]['id'])
+				);
+			}	
+		}
+		$drop_id = intval($item['id']);
+			
+		// send the notification upstream/downstream as the case may be
+
+		if(! $interactive)
+			return $owner;
+
+		proc_run('php',"include/notifier.php","drop","$drop_id");
+		goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
+		//NOTREACHED
+	}
+	else {
+		if(! $interactive)
+			return 0;
+		notice( t('Permission denied.') . EOL);
+		goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
+		//NOTREACHED
+	}
+	
+}

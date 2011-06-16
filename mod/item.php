@@ -22,6 +22,13 @@ function item_post(&$a) {
 
 	$uid = local_user();
 
+	if(x($_POST,'dropitems')) {
+		require_once('include/items.php');
+		$arr_drop = explode(',',$_POST['dropitems']);
+		drop_items($arr_drop);
+		killme();
+	}
+
 	call_hooks('post_local_start', $_POST);
 
 	$parent = ((x($_POST,'parent')) ? intval($_POST['parent']) : 0);
@@ -735,102 +742,8 @@ function item_content(&$a) {
 
 	require_once('include/security.php');
 
-	$uid = local_user();
-
 	if(($a->argc == 3) && ($a->argv[1] === 'drop') && intval($a->argv[2])) {
-
-		// locate item to be deleted
-
-		$r = q("SELECT * FROM `item` WHERE `id` = %d LIMIT 1",
-			intval($a->argv[2])
-		);
-
-		if(! count($r)) {
-			notice( t('Item not found.') . EOL);
-			goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
-		}
-		$item = $r[0];
-
-		// check if logged in user is either the author or owner of this item
-
-		if(($_SESSION['visitor_id'] == $item['contact-id']) || ($_SESSION['uid'] == $item['uid'])) {
-
-			// delete the item
-
-			$r = q("UPDATE `item` SET `deleted` = 1, `body` = '', `edited` = '%s', `changed` = '%s' WHERE `id` = %d LIMIT 1",
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert()),
-				intval($item['id'])
-			);
-
-			// If item is a link to a photo resource, nuke all the associated photos 
-			// (visitors will not have photo resources)
-			// This only applies to photos uploaded from the photos page. Photos inserted into a post do not
-			// generate a resource-id and therefore aren't intimately linked to the item. 
-
-			if(strlen($item['resource-id'])) {
-				q("DELETE FROM `photo` WHERE `resource-id` = '%s' AND `uid` = %d ",
-					dbesc($item['resource-id']),
-					intval($item['uid'])
-				);
-				// ignore the result
-			}
-
-			// If item is a link to an event, nuke the event record.
-
-			if(intval($item['event-id'])) {
-				q("DELETE FROM `event` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-					intval($item['event-id']),
-					intval($item['uid'])
-				);
-				// ignore the result
-			}
-
-
-			// If it's the parent of a comment thread, kill all the kids
-
-			if($item['uri'] == $item['parent-uri']) {
-				$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s', `body` = '' 
-					WHERE `parent-uri` = '%s' AND `uid` = %d ",
-					dbesc(datetime_convert()),
-					dbesc(datetime_convert()),
-					dbesc($item['parent-uri']),
-					intval($item['uid'])
-				);
-				// ignore the result
-			}
-			else {
-				// ensure that last-child is set in case the comment that had it just got wiped.
-				q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d ",
-					dbesc(datetime_convert()),
-					dbesc($item['parent-uri']),
-					intval($item['uid'])
-				);
-				// who is the last child now? 
-				$r = q("SELECT `id` FROM `item` WHERE `parent-uri` = '%s' AND `type` != 'activity' AND `deleted` = 0 AND `uid` = %d ORDER BY `edited` DESC LIMIT 1",
-					dbesc($item['parent-uri']),
-					intval($item['uid'])
-				);
-				if(count($r)) {
-					q("UPDATE `item` SET `last-child` = 1 WHERE `id` = %d LIMIT 1",
-						intval($r[0]['id'])
-					);
-				}	
-			}
-			$drop_id = intval($item['id']);
-			
-			// send the notification upstream/downstream as the case may be
-
-			proc_run('php',"include/notifier.php","drop","$drop_id");
-// We seem to lose the return url occasionally. Have not been able to reliably duplicate
-//			logger('drop_return_url: ' . $_SESSION['return_url']);
-			goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
-			//NOTREACHED
-		}
-		else {
-			notice( t('Permission denied.') . EOL);
-			goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
-			//NOTREACHED
-		}
+		require_once('include/items.php');
+		drop_item($a->argv[2]);
 	}
 }

@@ -109,6 +109,22 @@ tinyMCE.init({
 
 	});
 
+	function deleteCheckedItems() {
+		var checkedstr = '';
+
+		$('.item-select').each( function() {
+			if($(this).is(':checked')) {
+				if(checkedstr.length != 0)
+					checkedstr = checkedstr + ',' + $(this).val();
+				else
+					checkedstr = $(this).val();
+			}	
+		});
+		$.post('item', { dropitems: checkedstr });
+		window.location.reload();
+
+	}
+
 	function jotGetLink() {
 		reply = prompt("$linkurl");
 		if(reply && reply.length) {
