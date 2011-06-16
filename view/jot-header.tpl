@@ -114,10 +114,12 @@ tinyMCE.init({
 
 		$('.item-select').each( function() {
 			if($(this).is(':checked')) {
-				if(checkedstr.length != 0)
+				if(checkedstr.length != 0) {
 					checkedstr = checkedstr + ',' + $(this).val();
-				else
+				}
+				else {
 					checkedstr = $(this).val();
+				}
 			}	
 		});
 		$.post('item', { dropitems: checkedstr }, function(data) {
