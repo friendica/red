@@ -5,18 +5,18 @@
 a:link, a:visited { color: #549f4f; text-decoration: none; }
 a:hover {text-decoration: underline; }
 
+.nav-selected.nav-link { color: #549f4f!important; border-bottom: 0px}
+.nav-commlink, .nav-login-link {background-color: #aed3b2;}
+.nav-commlink:link, .nav-commlink:visited,
+.nav-login-link:link, .nav-login-link:visited{
+	color: #ffffff;
+}
 
 body { 	background-image: url(head.jpg); }
 aside( 	background-image: url(border.jpg); }
 section { 	background-image: url(border.jpg); }
 #profile-tabs-wrapper {	background-image: url(head.jpg); }
 div.wall-item-content-wrapper.shiny {  background-image: url('shiny.png'); }
-
-
-.nav-commlink, .nav-login-link {
-	background-color: #aed3b2;
-
-}
 
 .fakelink, .fakelink:visited {
 	color: #549f4f;
