@@ -1,4 +1,11 @@
 <?php
+/**
+ * Name: Piwik Analytics
+ * Description: Piwik Analytics Plugin for Friendika
+ * Version: 1.0
+ * Author: Tobias Diekershoff <https://diekershoff.homeunix.net/friendika/profile/tobias>
+ */
+ 
 
 /*   Piwik Analytics Plugin for Friendika
  *

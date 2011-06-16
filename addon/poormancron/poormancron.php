@@ -1,9 +1,9 @@
 <?php
 /**
- * Poor Man Cron. Execute updates on pageviews
- *
- * Addon Name: poormancron
- *
+ * Name: Poor Man Cron
+ * Description: Execute updates on pageviews, without the need of commandline php
+ * Version: 1.2
+ * Author: Fabio Comuni <http://kirgroup.com/profile/fabrix>
  */
 
 function poormancron_install() {

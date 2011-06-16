@@ -107,9 +107,14 @@ function nav(&$a) {
 		$nav['settings'] = array('settings', t('Settings'),"");
 		$nav['profiles'] = array('profiles', t('Profiles'),"");
 		$nav['contacts'] = array('contacts', t('Contacts'),"");
-
-		
 	}
+
+	/**
+	 * Admin page
+	 */
+	 if (is_site_admin()){
+		 $nav['admin'] = array('admin/', t('Admin'), "");
+	 }
 
 
 	/**
