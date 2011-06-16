@@ -63,6 +63,7 @@ function admin_content(&$a) {
 	$t = get_markup_template("admin_aside.tpl");
 	$a->page['aside'] = replace_macros( $t, array(
 			'$admin' => $aside, 
+			'$h_pending' => t('User registrations waiting for confirm'),
 			'$admurl'=> $a->get_baseurl()."/admin/"
 	));
 
@@ -148,6 +149,11 @@ function admin_page_site_post(&$a){
 	$language			=	((x($_POST,'language'))			? notags(trim($_POST['language']))			: '');
 	$theme				=	((x($_POST,'theme'))			? notags(trim($_POST['theme']))				: '');
 	$maximagesize		=	((x($_POST,'maximagesize'))		? intval(trim($_POST['maximagesize']))		:  0);
+	
+	
+	$register_policy	=	((x($_POST,'register_policy'))	? intval(trim($_POST['register_policy']))	:  0);
+	$register_text		=	((x($_POST,'register_text'))	? notags(trim($_POST['register_text']))		: '');	
+	
 	$allowed_sites		=	((x($_POST,'allowed_sites'))	? notags(trim($_POST['allowed_sites']))		: '');
 	$allowed_email		=	((x($_POST,'allowed_email'))	? notags(trim($_POST['allowed_email']))		: '');
 	$block_public		=	((x($_POST,'block_public'))		? True	:	False);
@@ -166,7 +172,7 @@ function admin_page_site_post(&$a){
 	$timeout			=	((x($_POST,'timeout'))			? intval(trim($_POST['timeout']))		: 60);
 
 
-	$a->config['sitename'] = $sitename;
+	set_config('config','sitename',$sitename);
 	if ($banner==""){
 		// don't know why, but del_config doesn't work...
 		q("DELETE FROM `config` WHERE `cat` = '%s' AND `k` = '%s' LIMIT 1",
@@ -179,6 +185,9 @@ function admin_page_site_post(&$a){
 	set_config('system','language', $language);
 	set_config('system','theme', $theme);
 	set_config('system','maximagesize', $maximagesize);
+	
+	set_config('config','register_policy', $register_policy);
+	set_config('config','register_text', $register_text);
 	set_config('system','allowed_sites', $allowed_sites);
 	set_config('system','allowed_email', $allowed_email);
 	set_config('system','block_public', $block_public);
@@ -203,18 +212,6 @@ function admin_page_site_post(&$a){
 	set_config('system','proxyuser', $proxyuser);
 	set_config('system','proxy', $proxy);
 	set_config('system','curl_timeout', $timeout);
-
-	$r = q("SELECT * FROM `config` WHERE `cat`='config' AND `k`='sitename'");
-	if (count($r)>0){
-		q("UPDATE `config` SET `v`='%s' WHERE `cat`='config' AND `k`='sitename'",
-			dbesc($a->config['sitename'])
-		);
-	} else {
-		q("INSERT INTO `config`  ( `cat`, `k`, `v` ) VALUES ( 'config', 'sitename', '%s' )",
-			dbesc($a->config['sitename'])
-		);
-	}
-	
 
 
 	goaway($a->get_baseurl() . '/admin/site' );
@@ -257,7 +254,12 @@ function admin_page_site(&$a) {
 	
 	//echo "<pre>"; var_dump($lang_choices); die("</pre>");
 
-
+	/* Register policy */
+	$register_choices = Array(
+		REGISTER_CLOSED => t("Closed"),
+		REGISTER_APPROVE => t("Need approvation"),
+		REGISTER_OPEN => t("Open")
+	); 
 	
 	$t = get_markup_template("admin_site.tpl");
 	return replace_macros($t, array(
@@ -274,6 +276,8 @@ function admin_page_site(&$a) {
 
 		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), get_config('system','maximagesize'), "Maximum size in bytes of uploaded images. Default is 0, which means no limits."),
 
+		'$register_policy'	=> array('register_policy', t("Register policy"), $a->config['register_policy'], "", $register_choices),
+		'$register_text'	=> array('register_text', t("Register text"), $a->config['register_text'], "Will be displayed prominently on the registration page."),
 		'$allowed_sites'	=> array('allowed_sites', t("Allowed friend domains"), get_config('system','allowed_sites'), "Comma separated list of domains which are allowed to establish friendships with this site. Wildcards are accepted. Empty to allow any domains"),
 		'$allowed_email'	=> array('allowed_email', t("Allowed email domains"), get_config('system','allowed_email'), "Comma separated list of domains which are allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains"),
 		'$block_public'		=> array('block_public', t("Block public"), get_config('system','block_public'), "Check to block public access to all otherwise public personal pages on this site unless you are currently logged in."),
@@ -305,7 +309,44 @@ function admin_page_site(&$a) {
  */
  
 function admin_page_users(&$a){
-	return ":)";
+	/* get pending */
+	$pending = q("SELECT `register`.*, `contact`.`name`, `user`.`email`
+				 FROM `register`
+				 LEFT JOIN `contact` ON `register`.`uid` = `contact`.`uid`
+				 LEFT JOIN `user` ON `register`.`uid` = `user`.`uid`;");
+	
+	/* get users */
+	$users = q("SELECT `user`.*, `contact`.`name` FROM `user` 
+					LEFT JOIN `contact` ON `user`.`uid` = `contact`.`uid`
+					WHERE `user`.`verified`=1 AND `contact`.`self`=1
+					ORDER BY `contact`.`name`");
+					
+	
+	$t = get_markup_template("admin_users.tpl");
+	return replace_macros($t, array(
+		// strings //
+		'$title' => t('Administration'),
+		'$page' => t('Users'),
+		'$submit' => t('Submit'),
+		'$select_all' => t('select all'),
+		'$h_pending' => t('User registrations waiting for confirm'),
+		'$th_pending' => array( t('Request date'), t('Name'), t('Email') ),
+		'$no_pending' =>  t('No registrations.'),
+		'$approve' => t('Approve'),
+		'$deny' => t('Deny'),
+		'$delete' => t('Delete'),
+		'$block' => t('Block'),
+		
+		'$h_users' => t('Users'),
+		'$th_users' => array( t('Name'), t('Nickname'), t('Email'), t('Register date'), t('Last login') ),
+
+		// values //
+		'$baseurl' => $a->get_baseurl(),
+
+		'$pending' => $pending,
+		'$users' => $users,
+	));
+	
 }
 
 

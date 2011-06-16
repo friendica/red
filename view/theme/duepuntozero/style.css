@@ -2485,7 +2485,14 @@ a.mail-list-link {
 /**
  * ADMIN
  */
-
+#pending-update {
+	float:right;
+	color: #ffffff;
+	font-weight: bold;
+	background-color: #FF0000;
+	padding: 0em 0.3em;
+	
+}
 #adminpage dl {
 	clear: left;
 	margin-bottom: 2px;
@@ -2551,7 +2558,9 @@ a.mail-list-link {
 	margin-right: 1em;
 }
 #adminpage .author .icon { float: left;}
-
+#adminpage table {width:100%; border-bottom: 1p solid #000000; margin: 5px 0px;}
+#adminpage table th { text-align: left;}
+#adminpage td .icon { float: left;}
 /**
  * ICONS
  */
@@ -2593,6 +2602,8 @@ a.mail-list-link {
 .on { background-position: -144px -32px; }
 
 .off { background-position: 0px -48px; }
+
+.icon.dim { opacity: 0.3;filter:alpha(opacity=30); }
 
 .attachtype {
 	display: block; width: 20px; height: 23px;

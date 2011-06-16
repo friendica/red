@@ -10,6 +10,18 @@
 	
 	<div class="submit"><input type="submit" name="page_site" value="$submit" /></div>
 	
+	<h3>Registration</h3>
+	{{ inc field_input.tpl with $field=$register_text }}{{ endinc }}
+	{{ inc field_select.tpl with $field=$register_policy }}{{ endinc }}
+	
+	{{ inc field_checkbox.tpl with $field=$no_multi_reg }}{{ endinc }}
+	{{ inc field_checkbox.tpl with $field=$no_openid }}{{ endinc }}
+	{{ inc field_checkbox.tpl with $field=$no_gravatar }}{{ endinc }}
+	{{ inc field_checkbox.tpl with $field=$no_regfullname }}{{ endinc }}
+	{{ inc field_checkbox.tpl with $field=$no_utf }}{{ endinc }}
+	
+	<div class="submit"><input type="submit" name="page_site" value="$submit" /></div>
+
 	<h3>Upload</h3>
 	{{ inc field_input.tpl with $field=$maximagesize }}{{ endinc }}
 	
@@ -20,15 +32,6 @@
 	{{ inc field_checkbox.tpl with $field=$force_publish }}{{ endinc }}
 	{{ inc field_input.tpl with $field=$global_directory }}{{ endinc }}
 	{{ inc field_input.tpl with $field=$global_search_url }}{{ endinc }}
-	
-	<div class="submit"><input type="submit" name="page_site" value="$submit" /></div>
-	
-	<h3>Registration</h3>
-	{{ inc field_checkbox.tpl with $field=$no_multi_reg }}{{ endinc }}
-	{{ inc field_checkbox.tpl with $field=$no_openid }}{{ endinc }}
-	{{ inc field_checkbox.tpl with $field=$no_gravatar }}{{ endinc }}
-	{{ inc field_checkbox.tpl with $field=$no_regfullname }}{{ endinc }}
-	{{ inc field_checkbox.tpl with $field=$no_utf }}{{ endinc }}
 	
 	<div class="submit"><input type="submit" name="page_site" value="$submit" /></div>
 	
