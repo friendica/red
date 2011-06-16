@@ -29,10 +29,33 @@
 	var langSelect = false;
 	var commentBusy = false;
 
-	$(document).ready(function() {
+	$(function() {
 		$.ajaxSetup({cache: false});
 
 		msie = $.browser.msie ;
+		
+		
+		/* nav update event  */
+		$('nav').bind('nav-update', function(e,data){;
+			var net = $(data).find('net').text();
+			if(net == 0) { net = ''; $('#net-update').hide() } else { $('#net-update').show() }
+			$('#net-update').html(net);
+			var home = $(data).find('home').text();
+			if(home == 0) { home = '';  $('#home-update').hide() } else { $('#home-update').show() }
+			$('#home-update').html(home);
+			var mail = $(data).find('mail').text();
+			if(mail == 0) { mail = '';  $('#mail-update').hide() } else { $('#mail-update').show() }
+			$('#mail-update').html(mail);
+			var intro = $(data).find('intro').text();
+			var register = $(data).find('register').text();
+			if(intro == 0) { intro = ''; }
+			if(register != 0 && intro != '') { intro = intro+'/'+register; }
+			if(register != 0 && intro == '') { intro = '0/'+register; }
+			if (intro == '') { $('#notify-update').hide() } else { $('#notify-update').show() }
+			$('#notify-update').html(intro);
+		});
+		
+		
  		NavUpdate(); 
 		// Allow folks to stop the ajax page updates with the pause/break key
 		$(document).keypress(function(event) {
@@ -90,23 +113,8 @@
 		if(! stopped) {
 			$.get("ping",function(data) {
 				$(data).find('result').each(function() {
-					var net = $(this).find('net').text();
-					if(net == 0) { net = ''; $('#net-update').hide() } else { $('#net-update').show() }
-					$('#net-update').html(net);
-					var home = $(this).find('home').text();
-					if(home == 0) { home = '';  $('#home-update').hide() } else { $('#home-update').show() }
-					$('#home-update').html(home);
-					var mail = $(this).find('mail').text();
-					if(mail == 0) { mail = '';  $('#mail-update').hide() } else { $('#mail-update').show() }
-					$('#mail-update').html(mail);
-					var intro = $(this).find('intro').text();
-					var register = $(this).find('register').text();
-					if(intro == 0) { intro = ''; }
-					if(register != 0 && intro != '') { intro = intro+'/'+register; }
-					if(register != 0 && intro == '') { intro = '0/'+register; }
-					if (intro == '') { $('#notify-update').hide() } else { $('#notify-update').show() }
-					$('#notify-update').html(intro);
-
+					// send nav-update event
+					$('nav').trigger('nav-update', this);
 				});
 			}) ;
 		}
