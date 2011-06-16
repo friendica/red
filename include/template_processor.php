@@ -71,11 +71,7 @@
 			} else {
 				$val = $this->_get_var($args[2]);
 			}
-			if (isset($args[4])) {
-				list($strue, $sfalse)= explode($args[4], $args[3]);
-			} else {
-				$strue = $args[3]; $sfalse = "";
-			}
+			list($strue, $sfalse)= preg_split("|{{ *else *}}|", $args[3]);
 			
 			return ($val?$strue:$sfalse);
 		}
@@ -135,7 +131,6 @@
 				$s = "";
 			}
 			$s = preg_replace_callback('/\|\|([0-9]+)\|\|/', array($this, "_replcb_node"), $s);
-			if ($s==Null) $this->_preg_error()	
 			return $s;
 		}
 						
@@ -168,7 +163,7 @@
 			#$s = str_replace(array("\n","\r"),array("§n§","§r§"),$s);
 			$s = $this->_build_nodes($s);
 			$s = preg_replace_callback('/\|\|([0-9]+)\|\|/', array($this, "_replcb_node"), $s);
-			if ($s==Null) $this->_preg_error()
+			if ($s==Null) $this->_preg_error();
 			$s = str_replace($this->search,$this->replace, $s);
 			
 			return $s;

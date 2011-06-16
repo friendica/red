@@ -22,6 +22,9 @@ function admin_post(&$a){
 			case 'site':
 				admin_page_site_post($a);
 				break;
+			case 'users':
+				admin_page_users_post($a);
+				break;				
 			case 'logs':
 				admin_page_logs_post($a);
 				break;
@@ -307,8 +310,74 @@ function admin_page_site(&$a) {
 /**
  * Users admin page
  */
+function admin_page_users_post(&$a){
+	$users=array(); $pending=array();
+	foreach($_POST as $k=>$v){
+		if (substr($k,0,5)=="user_") $users[] = substr($k,5,strlen($k)-5);
+		if (substr($k,0,8)=="pending_") $users[] = substr($k,8,strlen($k)-8);
+	}
+	
+	if (x($_POST,'page_users_block')){
+		foreach($users as $uid){
+			q("UPDATE `user` SET `blocked`=1-`blocked` WHERE `uid`=%s",
+				intval( $uid )
+			);
+		}
+		notice( sprintf( tt("%s user blocked", "%s users blocked", count($users)), count($users)) );
+	}
+	if (x($_POST,'page_users_delete')){
+		require_once("include/Contact.php");
+		foreach($users as $uid){
+			user_remove($uid);
+		}
+		notice( sprintf( tt("%s user deleted", "%s users deleted", count($users)), count($users)) );
+	}
+	
+	if (x($_POST,'page_users_approve')){
+		require_once("include/regmod.php");
+		foreach($pending as $hash){
+			user_allow($hash);
+		}
+	}
+	if (x($_POST,'page_users_deny')){
+		require_once("include/regmod.php");
+		foreach($pending as $hash){
+			user_deny($hash);
+		}
+	}
+	goaway($a->get_baseurl() . '/admin/users' );
+	return; // NOTREACHED	
+}
  
 function admin_page_users(&$a){
+	if ($a->argc>2) {
+		$uid = $a->argv[3];
+		$user = q("SELECT * FROM `user` WHERE `uid`=%d", intval($uid));
+		if (count($user)==0){
+			notice( 'User not found' . EOL);
+			goaway($a->get_baseurl() . '/admin/users' );
+			return; // NOTREACHED						
+		}		
+		switch($a->argv[2]){
+			case "delete":{
+				// delete user
+				require_once("include/Contact.php");
+				user_remove($uid);
+				
+				notice( sprintf(t("User '%s' deleted"), $user[0]['username']) . EOL);
+			}; break;
+			case "block":{
+				q("UPDATE `user` SET `blocked`=%d WHERE `uid`=%s",
+					intval( 1-$user[0]['blocked'] ),
+					intval( $uid )
+				);
+			}; break;
+		}
+		goaway($a->get_baseurl() . '/admin/users' );
+		return; // NOTREACHED	
+		
+	}
+	
 	/* get pending */
 	$pending = q("SELECT `register`.*, `contact`.`name`, `user`.`email`
 				 FROM `register`
@@ -316,11 +385,34 @@ function admin_page_users(&$a){
 				 LEFT JOIN `user` ON `register`.`uid` = `user`.`uid`;");
 	
 	/* get users */
-	$users = q("SELECT `user`.*, `contact`.`name` FROM `user` 
-					LEFT JOIN `contact` ON `user`.`uid` = `contact`.`uid`
-					WHERE `user`.`verified`=1 AND `contact`.`self`=1
-					ORDER BY `contact`.`name`");
+	$users = q("SELECT `user` . * , `contact`.`name` , `contact`.`url` , `contact`.`micro` , `lastitem`.`changed` AS `lastitem_date`
+				FROM (
+					SELECT `item`.`changed` , `item`.`uid`
+					FROM `item`
+					GROUP BY `uid`
+					ORDER BY `item`.`changed`
+				) AS `lastitem` , `user`
+				LEFT JOIN `contact` ON `user`.`uid` = `contact`.`uid`
+				WHERE `user`.`verified` =1
+				AND `contact`.`self` =1
+				AND `lastitem`.`uid` = `user`.`uid`
+				ORDER BY `contact`.`name`
+				");
 					
+	function _setup_users($e){
+		$accounts = Array(
+			t('Normal Account'), 
+			t('Soapbox Account'),
+			t('Community/Celebrity Account'),
+			t('Automatic Friend Account')
+		);
+		$e['page-flags'] = $accounts[$e['page-flags']];
+		$e['register_date'] = relative_date($e['register_date']);
+		$e['login_date'] = relative_date($e['login_date']);
+		$e['lastitem_date'] = relative_date($e['lastitem_date']);
+		return $e;
+	}
+	$users = array_map("_setup_users", $users);
 	
 	$t = get_markup_template("admin_users.tpl");
 	return replace_macros($t, array(
@@ -336,9 +428,14 @@ function admin_page_users(&$a){
 		'$deny' => t('Deny'),
 		'$delete' => t('Delete'),
 		'$block' => t('Block'),
+		'$unblock' => t('Unblock'),
 		
 		'$h_users' => t('Users'),
-		'$th_users' => array( t('Name'), t('Nickname'), t('Email'), t('Register date'), t('Last login') ),
+		'$th_users' => array( t('Name'), t('Email'), t('Register date'), t('Last login'), t('Last item'), t('Account') ),
+
+		'$confirm_delete_multi' => t('Selected users will be deleted!\n\nEverything these users had posted on this site will be permanently deleted!\n\nAre you sure?'),
+		'$confirm_delete' => t('The user {0} will be deleted!\n\nEverything this user has posted on this site will be permanently deleted!\n\nAre you sure?'),
+
 
 		// values //
 		'$baseurl' => $a->get_baseurl(),

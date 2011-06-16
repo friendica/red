@@ -2561,6 +2561,8 @@ a.mail-list-link {
 #adminpage table {width:100%; border-bottom: 1p solid #000000; margin: 5px 0px;}
 #adminpage table th { text-align: left;}
 #adminpage td .icon { float: left;}
+#adminpage table#users img { width: 16px; height: 16px; }
+#adminpage table tr:hover { background-color: #bbc7d7; }
 /**
  * ICONS
  */
