@@ -120,9 +120,9 @@ tinyMCE.init({
 					checkedstr = $(this).val();
 			}	
 		});
-		$.post('item', { dropitems: checkedstr });
-		window.location.reload();
-
+		$.post('item', { dropitems: checkedstr }, function(data) {
+			window.location.reload();
+		});
 	}
 
 	function jotGetLink() {

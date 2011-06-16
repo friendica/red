@@ -26,6 +26,8 @@ function item_post(&$a) {
 		require_once('include/items.php');
 		$arr_drop = explode(',',$_POST['dropitems']);
 		drop_items($arr_drop);
+		$json = array('success' => 1);
+		echo json_encode($json);
 		killme();
 	}
 
