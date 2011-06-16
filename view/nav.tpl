@@ -16,6 +16,8 @@ $langselector
 <a id="nav-search-link" class="nav-link $nav.search.2" href="$nav.search.0">$nav.search.1</a>
 <a id="nav-directory-link" class="nav-link $nav.directory.2" href="$nav.directory.0">$nav.directory.1</a>
 
+{{ if $nav.admin }}<a id="nav-admin-link" class="nav-link $nav.admin.2" href="$nav.admin.0">$nav.admin.1</a>{{ endif }}
+
 {{ if $nav.network }}
 <a id="nav-network-link" class="nav-commlink $nav.network.2" href="$nav.network.0">$nav.network.1</a>
 <span id="net-update" class="nav-ajax-left"></span>

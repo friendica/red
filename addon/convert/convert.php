@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * Name: Converter App
+ * Description: Unit converter application
+ * Version: 1.0
+ * Author: Mike Macgirvin <http://macgirvin.com/profile/mike>
+ */
 
 function convert_install() {
 	register_hook('app_menu', 'addon/convert/convert.php', 'convert_app_menu');

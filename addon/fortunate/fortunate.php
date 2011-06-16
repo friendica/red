@@ -1,7 +1,10 @@
 <?php
-
-
-
+/**
+ * Name: Fortunate
+ * Description: Add a random fortune cookie at the bottom of every pages.
+ * Version: 1.0
+ * Author: Mike Macgirvin <http://macgirvin.com/profile/mike>
+ */
 
 
 function fortunate_install() {

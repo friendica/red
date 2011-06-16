@@ -453,6 +453,37 @@ function system_unavailable() {
 	killme();
 }}
 
+
+// install and uninstall plugin
+if (! function_exists('uninstall_plugin')){
+function uninstall_plugin($plugin){
+	logger("Addons: uninstalling " . $plugin);
+	q("DELETE FROM `addon` WHERE `name` = '%s' LIMIT 1",
+		dbesc($plugin)
+	);
+
+	@include_once('addon/' . $plugin . '/' . $plugin . '.php');
+	if(function_exists($plugin . '_uninstall')) {
+		$func = $plugin . '_uninstall';
+		$func();
+	}
+}}
+
+if (! function_exists('install_plugin')){
+function install_plugin($plugin){
+	logger("Addons: installing " . $plugin);
+	$t = filemtime('addon/' . $plugin . '/' . $plugin . '.php');
+	@include_once('addon/' . $plugin . '/' . $plugin . '.php');
+	if(function_exists($plugin . '_install')) {
+		$func = $plugin . '_install';
+		$func();
+		$r = q("INSERT INTO `addon` (`name`, `installed`, `timestamp`) VALUES ( '%s', 1, %d ) ",
+			dbesc($plugin),
+			intval($t)
+		);
+	}
+}}
+
 // Primarily involved with database upgrade, but also sets the 
 // base url for use in cmdline programs which don't have
 // $_SERVER variables, and synchronising the state of installed plugins.
@@ -538,16 +569,7 @@ function check_config(&$a) {
 	if(count($installed)) {
 		foreach($installed as $i) {
 			if(! in_array($i['name'],$plugins_arr)) {
-				logger("Addons: uninstalling " . $i['name']);
-				q("DELETE FROM `addon` WHERE `id` = %d LIMIT 1",
-					intval($i['id'])
-				);
-
-				@include_once('addon/' . $i['name'] . '/' . $i['name'] . '.php');
-				if(function_exists($i['name'] . '_uninstall')) {
-					$func = $i['name'] . '_uninstall';
-					$func();
-				}
+				uninstall_plugin($i['name']);
 			}
 			else
 				$installed_arr[] = $i['name'];
@@ -557,17 +579,7 @@ function check_config(&$a) {
 	if(count($plugins_arr)) {
 		foreach($plugins_arr as $p) {
 			if(! in_array($p,$installed_arr)) {
-				logger("Addons: installing " . $p);
-				$t = filemtime('addon/' . $p . '/' . $p . '.php');
-				@include_once('addon/' . $p . '/' . $p . '.php');
-				if(function_exists($p . '_install')) {
-					$func = $p . '_install';
-					$func();
-					$r = q("INSERT INTO `addon` (`name`, `installed`, `timestamp`) VALUES ( '%s', 1, %d ) ",
-						dbesc($p),
-						intval($t)
-					);
-				}
+				install_plugin($p);
 			}
 		}
 	}
@@ -2767,7 +2779,7 @@ function unamp($s) {
 if(! function_exists('lang_selector')) {
 function lang_selector() {
 	global $lang;
-	$o .= '<div id="lang-select-icon" class="icon language" title="' . t('Select an alternate language') . '" onclick="openClose(\'language-selector\');" ></div>';
+	$o = '<div id="lang-select-icon" class="icon language" title="' . t('Select an alternate language') . '" onclick="openClose(\'language-selector\');" ></div>';
 	$o .= '<div id="language-selector" style="display: none;" >';
 	$o .= '<form action="" method="post" ><select name="system_language" onchange="this.form.submit();" >';
 	$langs = glob('view/*/strings.php');
@@ -2816,3 +2828,55 @@ function is_site_admin() {
 	return false;
 }}
 
+/*
+ * parse plugin comment in search of plugin infos.
+ * like
+ * 	
+ * 	 * Name: Plugin
+ *   * Description: A plugin which plugs in
+ * 	 * Version: 1.2.3
+ *   * Author: John <profile url>
+ *   * Author: Jane <email>
+ *   *
+ */
+
+if (! function_exists('get_plugin_info')){
+function get_plugin_info($plugin){
+	if (!is_file("addon/$plugin/$plugin.php")) return false;
+	
+	$f = file_get_contents("addon/$plugin/$plugin.php");
+	$r = preg_match("|/\*.*\*/|msU", $f, $m);
+	
+	$info=Array(
+		'name' => $plugin,
+		'description' => "",
+		'author' => array(),
+		'version' => ""
+	);
+	
+	if ($r){
+		$ll = explode("\n", $m[0]);
+		foreach( $ll as $l ) {
+			$l = trim($l,"\t\n\r */");
+			if ($l!=""){
+				list($k,$v) = array_map("trim", explode(":",$l,2));
+				$k= strtolower($k);
+				if ($k=="author"){
+					$r=preg_match("|([^<]+)<([^>]+)>|", $v, $m);
+					if ($r) {
+						$info['author'][] = array('name'=>$m[1], 'link'=>$m[2]);
+					} else {
+						$info['author'][] = array('name'=>$v);
+					}
+				} else {
+					if (array_key_exists($k,$info)){
+						$info[$k]=$v;
+					}
+				}
+				
+			}
+		}
+		
+	}
+	return $info;
+}}

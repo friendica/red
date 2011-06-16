@@ -29,7 +29,6 @@ $install = ((file_exists('.htconfig.php') && filesize('.htconfig.php')) ? false 
 
 @include(".htconfig.php");
 
-
 $lang = get_language();
 	
 load_translation_table($lang);
@@ -43,6 +42,20 @@ load_translation_table($lang);
 require_once("dba.php");
 $db = new dba($db_host, $db_user, $db_pass, $db_data, $install);
         unset($db_host, $db_user, $db_pass, $db_data);
+
+
+/**
+ * Load configs from db. Overwrite configs from .htconfig.php
+ */
+$r = q("SELECT * FROM `config` WHERE `cat` IN ('system', 'config')");
+foreach ($r as $c) {
+	if ($c['cat']=='config') {
+		$a->config[$c['k']] = $c['v'];
+	} else {
+		$a->config[$c['cat']][$c['k']] = $c['v'];
+	}
+}
+unset($r);
 
 
 /**

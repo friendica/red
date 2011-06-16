@@ -1,6 +1,13 @@
 <?php
 
 /**
+ * Name: Java photo uploader
+ * Description: WARNING: This module currently has privacy issues. The java package does not pass the permissions array intact and could lead to photos being seen by people that were excluded from seeing them.
+ * Version: 1.0
+ * Author: Mike Macgirvin <http://macgirvin.com/profile/mike>
+ */
+
+/**
  *
  * Java photo uploader, uses Jumploader
  *

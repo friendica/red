@@ -1,10 +1,11 @@
 <?php
-	/**
-	 * widgets from friendika
-	 * 
-	 * allow to embed info from friendika into another site
-	 */
-	 
+/**
+ * Name: Widgets
+ * Description: Allow to embed info from friendika into another site
+ * Version: 1.0
+ * Author: Fabio Comuni <http://kirgroup.com/profile/fabrix/>
+ */
+ 
 	 
 function widgets_install() {
 	register_hook('plugin_settings', 'addon/widgets/widgets.php', 'widgets_settings'); 

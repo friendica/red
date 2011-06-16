@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * Name: StatusNet Connector
+ * Version: 1.0
+ * Author: Tobias Diekershoff <https://diekershoff.homeunix.net/friendika/profile/tobias>
+ */
+ 
 /*   StatusNet Plugin for Friendika
  *
  *   Author: Tobias Diekershoff

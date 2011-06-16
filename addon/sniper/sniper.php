@@ -1,4 +1,10 @@
 <?php
+/**
+ * Name: Sniper App
+ * Description: Example of flash game application
+ * Version: 1.0
+ * Author: Mike Macgirvin <http://macgirvin.com/profile/mike>
+ */
 
 /**
  * Demo plugin for adding various types of Flash games to Friendika.

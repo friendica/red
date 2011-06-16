@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * Name: LDAP Authenticate
+ * Description: Authenticate a user against an LDAP directory
+ * Version: 1.0
+ * Author: Mike Macgirvin <http://macgirvin.com/profile/mike>
+ */
+ 
 /**
  * Friendika addon
  * 
