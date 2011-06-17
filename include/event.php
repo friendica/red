@@ -308,7 +308,7 @@ function event_store($arr) {
 		$item_arr['uri']           = $arr['uri'];
 		$item_arr['parent-uri']    = $arr['uri'];
 		$item_arr['type']          = 'activity';
-		$item_arr['wall']          = 1;
+		$item_arr['wall']          = (($arr['cid']) ? 0 : 1);
 		$item_arr['contact-id']    = $contact['id'];
 		$item_arr['owner-name']    = $contact['name'];
 		$item_arr['owner-link']    = $contact['url'];
