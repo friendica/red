@@ -385,6 +385,13 @@ function admin_page_users(&$a){
 				 LEFT JOIN `user` ON `register`.`uid` = `user`.`uid`;");
 	
 	/* get users */
+
+	$total = q("SELECT count(*) as total FROM `user` where 1");
+	if(count($total)) {
+		$a->set_pager_total($total[0]['total']);
+		$a->set_pager_itemspage(100);
+	}
+
 	$users = q("SELECT `user` . * , `contact`.`name` , `contact`.`url` , `contact`.`micro` , `lastitem`.`changed` AS `lastitem_date`
 				FROM (
 					SELECT `item`.`changed` , `item`.`uid`
@@ -396,8 +403,12 @@ function admin_page_users(&$a){
 				WHERE `user`.`verified` =1
 				AND `contact`.`self` =1
 				AND `lastitem`.`uid` = `user`.`uid`
-				ORDER BY `contact`.`name`
-				");
+				ORDER BY `contact`.`name` LIMIT %d, %d
+				",
+				intval($a->pager['start']),
+				intval($a->pager['itemspage'])
+
+				);
 					
 	function _setup_users($e){
 		$accounts = Array(
@@ -415,7 +426,7 @@ function admin_page_users(&$a){
 	$users = array_map("_setup_users", $users);
 	
 	$t = get_markup_template("admin_users.tpl");
-	return replace_macros($t, array(
+	$o = replace_macros($t, array(
 		// strings //
 		'$title' => t('Administration'),
 		'$page' => t('Users'),
@@ -443,7 +454,8 @@ function admin_page_users(&$a){
 		'$pending' => $pending,
 		'$users' => $users,
 	));
-	
+	$o .= paginate($a);
+	return $o;
 }
 
 
