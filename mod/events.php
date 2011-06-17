@@ -166,7 +166,7 @@ function events_content(&$a) {
 
 		$adjust_start = datetime_convert('UTC', date_default_timezone_get(), $start);
 		$adjust_finish = datetime_convert('UTC', date_default_timezone_get(), $finish);
-dbg(1);
+
 
 		$r = q("SELECT `event`.*, `item`.`id` AS `itemid`,`item`.`plink` FROM `event` LEFT JOIN `item` ON `item`.`event-id` = `event`.`id` 
 			WHERE `event`.`uid` = %d
@@ -178,7 +178,7 @@ dbg(1);
 			dbesc($adjust_start),
 			dbesc($adjust_finish)
 		);
-dbg(0);
+
 		$links = array();
 
 		if(count($r)) {
