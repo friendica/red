@@ -573,11 +573,32 @@ function admin_page_logs(&$a){
 	);
 	
 	$t = get_markup_template("admin_logs.tpl");
+
+	$f = get_config('system','logfile');
+	$size = filesize($f);
+	if($size > 5000000)
+		$size = 5000000;
+
+	$data = '';
+	$fp = fopen($f,'r');
+	if($fp) {
+		$seek = fseek($fp,0-$size,SEEK_END);
+		if($seek === 0) {
+			fgets($fp); // throw away the first partial line
+			$data = str_replace(array("\n","\t"),array('<br />','&nbsp;&nbsp;&nbsp;&nbsp;'),escape_tags(fread($fp,$size)));
+			while(! feof($fp))
+				$data .= str_replace(array("\n","\t"),array('<br />','&nbsp;&nbsp;&nbsp;&nbsp;'),escape_tags(fread($fp,4096)));
+		}
+		fclose($fp);
+	}
+
+
 	return replace_macros($t, array(
 		'$title' => t('Administration'),
 		'$page' => t('Logs'),
 		'$submit' => t('Submit'),
 		'$clear' => t('Clear'),
+		'$data' => $data,
 		'$baseurl' => $a->get_baseurl(),
 		'$logname' =>  get_config('system','logfile'),
 		
