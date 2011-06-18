@@ -408,12 +408,12 @@ function admin_page_users(&$a){
 		$a->set_pager_itemspage(100);
 	}
 
-	$users = q("SELECT `user` . * , `contact`.`name` , `contact`.`url` , `contact`.`micro` , `lastitem`.`changed` AS `lastitem_date`
+	$users = q("SELECT `user` . * , `contact`.`name` , `contact`.`url` , `contact`.`micro` , `lastitem`.`lastitem_date`
 				FROM (
-					SELECT `item`.`changed` , `item`.`uid`
+					SELECT MAX(`item`.`changed`) as `lastitem_date`, `item`.`uid`
 					FROM `item`
-					GROUP BY `uid`
-					ORDER BY `item`.`changed`
+					WHERE `item`.`type` = 'wall'
+					GROUP BY `item`.`uid`
 				) AS `lastitem` , `user`
 				LEFT JOIN `contact` ON `user`.`uid` = `contact`.`uid`
 				WHERE `user`.`verified` =1
@@ -534,6 +534,7 @@ function admin_page_plugins(&$a){
 			'$title' => t('Administration'),
 			'$page' => t('Plugins'),
 			'$toggle' => t('Toggle'),
+			'$settings' => t('Settings'),
 			'$baseurl' => $a->get_baseurl(),
 		
 			'$plugin' => $plugin,
