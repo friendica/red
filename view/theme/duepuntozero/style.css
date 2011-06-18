@@ -2490,16 +2490,17 @@ a.mail-list-link {
 }
 
 .item-select {
-	opacity: 0.3;
-	filter:alpha(opacity=30);
+	opacity: 0.1;
+	filter:alpha(opacity=10);
 	float: right;
 	margin-right: 10px;
 
 }
-.item-select:hover {
+.item-select:hover, .checkeditem {
 	opacity: 1;
 	filter:alpha(opacity=100);
 }
+
 
 #item-delete-selected {
 	margin-top: 30px;

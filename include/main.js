@@ -287,6 +287,17 @@
 		});
 	}
 
+function checkboxhighlight(box) {
+  if($(box).is(':checked')) {
+	$(box).addClass('checkeditem');
+  }
+  else {
+	$(box).removeClass('checkeditem');
+  }
+}
+
+
+
 /** 
  * sprintf in javascript 
  *	"{0} and {1}".format('zero','uno'); 
