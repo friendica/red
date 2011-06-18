@@ -10,7 +10,13 @@
 	{{ endfor }}
 	</p>
 	
-	
+
+	{{ if $admin_form }}
+	<h3>Settings</h3>
+	<form method="post" action="$baseurl/admin/plugins/$plugin/">
+		$admin_form
+	</form>
+	{{ endif }}
 
 	{{ if $readme }}
 	<h3>Readme</h3>

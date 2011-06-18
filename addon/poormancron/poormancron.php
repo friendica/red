@@ -20,7 +20,7 @@ function poormancron_uninstall() {
 
 
 
-function poormancron_hook($a,&$b) {
+function poormancron_hook(&$a,&$b) {
     $now = time();
     $lastupdate = get_config('poormancron', 'lastupdate');
 
@@ -31,7 +31,7 @@ function poormancron_hook($a,&$b) {
     }
 }
 
-function poormancron_procrun($a, $argv) {
+function poormancron_procrun(&$a, $argv) {
 	logger("poormancron procrun ".implode(", ",$argv));
 	array_shift($argv);
 	$argc = count($argv);
@@ -41,7 +41,6 @@ function poormancron_procrun($a, $argv) {
   
 	$funcname($argv, $argc);
 }
-
 
 
 ?>

@@ -16,7 +16,8 @@
 			    case PREG_BAD_UTF8_ERROR: die('PREG_BAD_UTF8_ERROR'); break;
 			    case PREG_BAD_UTF8_OFFSET_ERROR: die('PREG_BAD_UTF8_OFFSET_ERROR'); break;
 			    default:
-					die("Unknown preg error.");
+					//die("Unknown preg error.");
+					return;
 			}
 		}
 		

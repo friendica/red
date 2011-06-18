@@ -24,7 +24,18 @@ function admin_post(&$a){
 				break;
 			case 'users':
 				admin_page_users_post($a);
-				break;				
+				break;
+			case 'plugins':
+				if ($a->argc > 2 && 
+					is_file("addon/".$a->argv[2]."/".$a->argv[2].".php")){
+						@include_once("addon/".$a->argv[2]."/".$a->argv[2].".php");
+						if(function_exists('plugin_admin_post')) {
+							plugin_admin_post($a);
+						}
+				}
+				goaway($a->get_baseurl() . '/admin/plugins/' . $a->argv[2] );
+				return; // NOTREACHED							
+				break;
 			case 'logs':
 				admin_page_logs_post($a);
 				break;
@@ -59,6 +70,8 @@ function admin_content(&$a) {
 	foreach ($r as $h){
 		$plugin = explode("/",$h['file']); $plugin = $plugin[1];
 		$aside['plugins_admin'][] = Array($a->get_baseurl()."/admin/plugins/".$plugin, $plugin, "plugin");
+		// temp plugins with admin
+		$a->plugins_admin[] = $plugin;
 	}
 		
 	$aside['logs'] = Array($a->get_baseurl()."/admin/logs/", t("Logs"), "logs");
@@ -164,11 +177,10 @@ function admin_page_site_post(&$a){
 	$global_directory	=	((x($_POST,'directory_submit_url'))	? notags(trim($_POST['directory_submit_url']))	: '');
 	$global_search_url	=	((x($_POST,'directory_search_url'))? notags(trim($_POST['directory_search_url']))	: '');
 	$no_multi_reg		=	((x($_POST,'no_multi_reg'))		? True	:	False);
-	$no_openid			=	((x($_POST,'no_openid'))		? True	:	False);
-	$no_gravatar		=	((x($_POST,'no_gravatar'))		? True	:	False);
-	$no_regfullname		=	((x($_POST,'no_regfullname'))	? True	:	False);
-	$no_utf				=	((x($_POST,'no_utf'))			? True	:	False);
-	$rino_enc			=	((x($_POST,'rino_enc'))			? True	:	False);
+	$no_openid			=	!((x($_POST,'no_openid'))		? True	:	False);
+	$no_gravatar		=	!((x($_POST,'no_gravatar'))		? True	:	False);
+	$no_regfullname		=	!((x($_POST,'no_regfullname'))	? True	:	False);
+	$no_utf				=	!((x($_POST,'no_utf'))			? True	:	False);
 	$verifyssl			=	((x($_POST,'verifyssl'))		? True	:	False);
 	$proxyuser			=	((x($_POST,'proxyuser'))		? notags(trim($_POST['global_search_url']))	: '');
 	$proxy				=	((x($_POST,'proxy'))			? notags(trim($_POST['global_search_url']))	: '');
@@ -210,13 +222,13 @@ function admin_page_site_post(&$a){
 	set_config('system','no_gravatar', $no_gravatar);
 	set_config('system','no_regfullname', $no_regfullname);
 	set_config('system','proxy', $no_utf);
-	set_config('system','rino_encrypt', $rino_enc);
 	set_config('system','verifyssl', $verifyssl);
 	set_config('system','proxyuser', $proxyuser);
 	set_config('system','proxy', $proxy);
 	set_config('system','curl_timeout', $timeout);
 
 
+	info( t('Site settings updated.') . EOL);
 	goaway($a->get_baseurl() . '/admin/site' );
 	return; // NOTREACHED	
 	
@@ -269,8 +281,12 @@ function admin_page_site(&$a) {
 		'$title' => t('Administration'),
 		'$page' => t('Site'),
 		'$submit' => t('Submit'),
+		'$registration' => t('Registration'),
+		'$upload' => t('File upload'),
+		'$corporate' => t('Corporate/Edu'),
+		'$advanced' => t('Advanced'),
+		
 		'$baseurl' => $a->get_baseurl(),
-						
 									// name, label, value, help string, extra data...
 		'$sitename' 		=> array('sitename', t("Site name"), $a->config['sitename'], ""),
 		'$banner'			=> array('banner', t("Banner/Logo"), $banner, ""),
@@ -290,12 +306,11 @@ function admin_page_site(&$a) {
 			
 			
 		'$no_multi_reg'		=> array('no_multi_reg', t("Block multiple registrations"),  get_config('system','block_extended_register'), "Disallow users to register additional accounts for use as pages."),
-		'$no_openid'		=> array('no_openid', t("No OpenID support"), get_config('system','no_openid'), "Disable OpenID support for registration and logins."),
-		'$no_gravatar'		=> array('no_gravatar', t("No Gravatar support"), get_config('system','no_gravatar'), ""),
-		'$no_regfullname'	=> array('no_regfullname', t("No fullname check"), get_config('system','no_regfullname'), "If unchecked, force users to registrate with a space between his firsname and lastname in Full name, as an antispam measure"),
-		'$no_utf'			=> array('no_utf', t("No UTF-8 Regular expressions"), get_config('system','proxy'), "Default is false (meaning UTF8 regular expressions are supported and working)"),
+		'$no_openid'		=> array('no_openid', t("OpenID support"), !get_config('system','no_openid'), "OpenID support for registration and logins."),
+		'$no_gravatar'		=> array('no_gravatar', t("Gravatar support"), !get_config('system','no_gravatar'), "Search new user's photo on Gravatar."),
+		'$no_regfullname'	=> array('no_regfullname', t("Fullname check"), !get_config('system','no_regfullname'), "Force users to registrate with a space between his firsname and lastname in Full name, as an antispam measure"),
+		'$no_utf'			=> array('no_utf', t("UTF-8 Regular expressions"), !get_config('system','proxy'), "Use PHP UTF8 regular expressions"),
 			
-		'$rino_enc'			=> array('rino_enc', t("Enable Rino encrypt"), get_config('system','rino_encrypt'),""),
 		'$verifyssl' 		=> array('verifyssl', t("Verify SSL"), get_config('system','verifyssl'), "If you wish, you can turn on strict certificate checking. This will mean you cannot connect (at all) to self-signed SSL sites."),
 		'$proxyuser'		=> array('proxyuser', t("Proxy user"), get_config('system','proxyuser'), ""),
 		'$proxy'			=> array('proxy', t("Proxy URL"), get_config('system','proxy'), ""),
@@ -323,7 +338,7 @@ function admin_page_users_post(&$a){
 				intval( $uid )
 			);
 		}
-		notice( sprintf( tt("%s user blocked", "%s users blocked", count($users)), count($users)) );
+		notice( sprintf( tt("%s user blocked", "%s users blocked/unblocked", count($users)), count($users)) );
 	}
 	if (x($_POST,'page_users_delete')){
 		require_once("include/Contact.php");
@@ -371,6 +386,7 @@ function admin_page_users(&$a){
 					intval( 1-$user[0]['blocked'] ),
 					intval( $uid )
 				);
+				notice( sprintf( ($user[0]['blocked']?t("User '%s' unblocked"):t("User '%s' blocked")) , $user[0]['username']) . EOL);
 			}; break;
 		}
 		goaway($a->get_baseurl() . '/admin/users' );
@@ -481,9 +497,11 @@ function admin_page_plugins(&$a){
 			if ($idx){
 				unset($a->plugins[$idx]);
 				uninstall_plugin($plugin);
+				info( sprintf( t("Plugin %s disabled."), $plugin ) );
 			} else {
 				$a->plugins[] = $plugin;
 				install_plugin($plugin);
+				info( sprintf( t("Plugin %s enabled."), $plugin ) );
 			}
 			set_config("system","addon", implode(", ",$a->plugins));
 			goaway($a->get_baseurl() . '/admin/plugins' );
@@ -506,6 +524,11 @@ function admin_page_plugins(&$a){
 			$readme = "<pre>". file_get_contents("addon/$plugin/README") ."</pre>";
 		} 
 		
+		$admin_form="";
+		if (in_array($plugin, $a->plugins_admin)){
+			call_hooks('plugin_admin', $admin_form);
+		}
+		
 		$t = get_markup_template("admin_plugins_details.tpl");
 		return replace_macros($t, array(
 			'$title' => t('Administration'),
@@ -517,6 +540,8 @@ function admin_page_plugins(&$a){
 			'$status' => $status,
 			'$action' => $action,
 			'$info' => get_plugin_info($plugin),
+		
+			'$admin_form' => $admin_form,
 			
 			'$readme' => $readme
 		));
@@ -570,6 +595,7 @@ function admin_page_logs_post(&$a) {
 		
 	}
 
+	info( t("Log settings updated.") );
 	goaway($a->get_baseurl() . '/admin/logs' );
 	return; // NOTREACHED	
 }

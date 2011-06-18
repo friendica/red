@@ -10,7 +10,7 @@
 	
 	<div class="submit"><input type="submit" name="page_site" value="$submit" /></div>
 	
-	<h3>Registration</h3>
+	<h3>$registration</h3>
 	{{ inc field_input.tpl with $field=$register_text }}{{ endinc }}
 	{{ inc field_select.tpl with $field=$register_policy }}{{ endinc }}
 	
@@ -18,14 +18,13 @@
 	{{ inc field_checkbox.tpl with $field=$no_openid }}{{ endinc }}
 	{{ inc field_checkbox.tpl with $field=$no_gravatar }}{{ endinc }}
 	{{ inc field_checkbox.tpl with $field=$no_regfullname }}{{ endinc }}
-	{{ inc field_checkbox.tpl with $field=$no_utf }}{{ endinc }}
 	
 	<div class="submit"><input type="submit" name="page_site" value="$submit" /></div>
 
-	<h3>Upload</h3>
+	<h3>$upload</h3>
 	{{ inc field_input.tpl with $field=$maximagesize }}{{ endinc }}
 	
-	<h3>Corporate/Edu</h3>
+	<h3>$corporate</h3>
 	{{ inc field_input.tpl with $field=$allowed_sites }}{{ endinc }}
 	{{ inc field_input.tpl with $field=$allowed_email }}{{ endinc }}
 	{{ inc field_checkbox.tpl with $field=$block_public }}{{ endinc }}
@@ -35,8 +34,8 @@
 	
 	<div class="submit"><input type="submit" name="page_site" value="$submit" /></div>
 	
-	<h3>Advanced</h3>
-	{{ inc field_checkbox.tpl with $field=$rino_enc }}{{ endinc }}
+	<h3>$advanced</h3>
+	{{ inc field_checkbox.tpl with $field=$no_utf }}{{ endinc }}
 	{{ inc field_checkbox.tpl with $field=$verifyssl }}{{ endinc }}
 	{{ inc field_input.tpl with $field=$proxy }}{{ endinc }}
 	{{ inc field_input.tpl with $field=$proxyuser }}{{ endinc }}
