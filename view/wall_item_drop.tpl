@@ -2,5 +2,5 @@
 	
 	<a href="item/drop/$id" onclick="return confirmDelete();" class="icon drophide" title="$delete" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a>
 </div>
-<input type="checkbox" onclick="checkboxhighlight(this);" class="item-select" name="itemselected[]" value="$id" />
+<input type="checkbox" onclick="checkboxhighlight(this);" title="$select" class="item-select" name="itemselected[]" value="$id" />
 <div class="wall-item-delete-end"></div>

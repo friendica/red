@@ -2522,8 +2522,8 @@ a.mail-list-link {
 	position: absolute;
 	left: 0px;
 	top: 0px;
-	opacity: 0.3;
-	filter:alpha(opacity=30);
+	opacity: 0.2;
+	filter:alpha(opacity=20);
 }
 
 #lang-select-icon:hover {

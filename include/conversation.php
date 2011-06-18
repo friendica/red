@@ -392,7 +392,7 @@ function conversation(&$a, $items, $mode, $update) {
 			if((intval($item['contact-id']) && $item['contact-id'] == remote_user()) || ($item['uid'] == local_user()))
 				$dropping = true;
 
-            $drop = replace_macros((($dropping)? $droptpl : $fakedrop), array('$id' => $item['id'], '$delete' => t('Delete')));
+            $drop = replace_macros((($dropping)? $droptpl : $fakedrop), array('$id' => $item['id'], '$select' => t('Select'), '$delete' => t('Delete')));
 
 
 			$photo = $item['photo'];
