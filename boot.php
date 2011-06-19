@@ -1243,8 +1243,10 @@ function get_config($family, $key, $instore = false) {
 		dbesc($key)
 	);
 	if(count($ret)) {
-		$a->config[$family][$key] = $ret[0]['v'];
-		return $ret[0]['v'];
+		// manage array value
+		$val = (preg_match("|^a:[0-9]+:{.*}$|", $ret[0]['v'])?unserialize( $ret[0]['v']):$ret[0]['v']);
+		$a->config[$family][$key] = $val;
+		return $val;
 	}
 	else {
 		$a->config[$family][$key] = '!<unset>!';
@@ -1258,22 +1260,25 @@ function get_config($family, $key, $instore = false) {
 
 if(! function_exists('set_config')) {
 function set_config($family,$key,$value) {
-
 	global $a;
+	
+	// manage array value
+	$dbvalue = (is_array($value)?serialize($value):$value);
 
 	if(get_config($family,$key,true) === false) {
 		$a->config[$family][$key] = $value;
 		$ret = q("INSERT INTO `config` ( `cat`, `k`, `v` ) VALUES ( '%s', '%s', '%s' ) ",
 			dbesc($family),
 			dbesc($key),
-			dbesc($value)
+			dbesc($dbvalue)
 		);
 		if($ret) 
 			return $value;
 		return $ret;
 	}
+	
 	$ret = q("UPDATE `config` SET `v` = '%s' WHERE `cat` = '%s' AND `k` = '%s' LIMIT 1",
-		dbesc($value),
+		dbesc($dbvalue),
 		dbesc($family),
 		dbesc($key)
 	);
