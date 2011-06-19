@@ -138,14 +138,17 @@ nav .nav-link {
     background: transparent url('icons.png') 0px 0px no-repeat; 
 }
 
-#nav-directory-link { background-position: 0px -22px }
-#nav-directory-link:hover { background-position: -22px -22px;}
-#nav-search-link { background-position: 0px -44px }
-#nav-search-link:hover { background-position: -22px -44px;}
-#nav-apps-link { background-position: 0px -66px }
-#nav-apps-link:hover { background-position: -22px -66px;}
-#nav-login-link { background-position: 0px -88px }
-#nav-login-link:hover { background-position: -22px -88px;}
+#nav-directory-link 		{ background-position: 0px -22px }
+#nav-directory-link:hover	{ background-position: -22px -22px;}
+#nav-search-link 			{ background-position: 0px -44px }
+#nav-search-link:hover 		{ background-position: -22px -44px;}
+#nav-apps-link 				{ background-position: 0px -66px }
+#nav-apps-link:hover		{ background-position: -22px -66px;}
+#nav-login-link 			{ background-position: 0px -88px }
+#nav-login-link:hover 		{ background-position: -22px -88px;}
+#nav-help-link 				{ background-position: 0px -110px }
+#nav-help-link:hover 		{ background-position: -22px -110px;}
+
 
 #notifications {
 	height: 20px; width: 100%;
@@ -246,6 +249,11 @@ aside #viewcontacts { text-align: right;}
     display: block;
     font-size: 1.2em;
     padding: 0.2em 0.5em;
+}
+
+
+#netsearch-box {
+	margin: 30px 0px;
 }
 
 /**
@@ -484,6 +492,9 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
 .wall-item-photo-menu li a { white-space: nowrap;  display: block; padding: 5px 2px; 	color: #eeeeec;	 }
 .wall-item-photo-menu li a:hover { color: #555753; background: #eeeeec; }
 
+.icon.drop,
+.icon.drophide { float: left; }
+#item-delete-selected {	overflow: auto;	width: 100%}
 /**
  * 	comment
  */
@@ -780,6 +791,93 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
 .directory-item {float: left; margin: 50px 50px 0px 0px;}
 
 /**
+ * ADMIN
+ */
+#pending-update {
+	float:right;
+	color: #ffffff;
+	font-weight: bold;
+	background-color: #FF0000;
+	padding: 0em 0.3em;
+}
+.admin.linklist {
+	border: 0px; padding: 0px;
+}
+.admin.link {
+	list-style-position: inside;
+}
+
+#adminpage dl {
+	clear: left;
+	margin-bottom: 2px;
+	padding-bottom: 2px;
+	border-bottom: 1px solid black;
+}
+#adminpage dt {
+	width: 200px;
+	float: left;
+	font-weight: bold;
+}
+#adminpage dd {
+	margin-left: 200px;
+}
+
+#adminpage .field {
+	clear: left;
+	margin-bottom: 5px;
+	padding-bottom: 5px;
+}
+
+#adminpage .field label {
+	float: left;
+	width: 200px;
+	font-weight: bold;
+}
+
+#adminpage .field input,
+#adminpage .field textarea {
+	width: 400px;
+}
+#adminpage .field textarea { height: 100px; }
+#adminpage .field_help {
+	display: block;
+	margin-left: 200px;
+	color: #666666;
+	
+}
+
+#adminpage h3 {
+	border-bottom: 1px solid #cccccc;
+}
+
+#adminpage .submit {
+	clear:left;
+}
+
+#adminpage #pluginslist {
+	margin: 0px; padding: 0px;
+}
+#adminpage .plugin {
+	list-style: none;
+	display: block;
+	border: 1px solid #888888;
+	padding: 1em;
+	margin-bottom: 5px;
+	clear: left;
+}
+#adminpage .toggleplugin {
+	float:left;
+	margin-right: 1em;
+}
+
+#adminpage table {width:100%; border-bottom: 1p solid #000000; margin: 5px 0px;}
+#adminpage table th { text-align: left;}
+#adminpage td .icon { float: left;}
+#adminpage table#users img { width: 16px; height: 16px; }
+#adminpage table tr:hover { background-color: #bbc7d7; }
+#adminpage .selectall { text-align: right; }
+
+/**
  * ICONS
  */
 .icon {
@@ -829,16 +927,24 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
 .attach 	{ background-position: -190px -40px;}
 .language 	{ background-position: -210px -40px;}
 
+
+.on 		{ background-position: -50px  -60px;}
+.off 		{ background-position: -70px  -60px;}
+
+
+
+.icon.dim { opacity: 0.3;filter:alpha(opacity=30); }
+
 .attachtype {
 	display: block; width: 20px; height: 23px;
 	background-image: url('../../../images/content-types.png');
 }
 
-.type-video { background-position: 0px; 0px; }
-.type-image { background-position: -20px; 0px; }
-.type-audio { background-position: -40px; 0px; }
-.type-text  { background-position: -60px; 0px; }
-.type-unkn  { background-position: -80px; 0px; }
+.type-video { background-position: 0px 0px; }
+.type-image { background-position: -20px 0px; }
+.type-audio { background-position: -40px 0px; }
+.type-text  { background-position: -60px 0px; }
+.type-unkn  { background-position: -80px 0px; }
 
 
 
