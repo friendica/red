@@ -104,7 +104,7 @@ nav #site-location {
 
 nav #banner {
 	display: block;
-    padding-top: 14px;
+    margin-top: 14px;
 	position: absolute;
 }
 nav #banner #logo-text a {

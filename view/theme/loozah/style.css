@@ -2556,6 +2556,13 @@ a.mail-list-link {
 /**
  * ADMIN
  */
+#pending-update {
+	float:right;
+	color: #ffffff;
+	font-weight: bold;
+	background-color: #FF0000;
+	padding: 0em 0.3em;
+}
 
 #adminpage dl {
 	clear: left;
@@ -2615,7 +2622,7 @@ a.mail-list-link {
 	margin-bottom: 5px;
 	clear: left;
 }
-#adminpage .plugin .toggle {
+#adminpage .toggleplugin {
 	float:left;
 	margin-right: 1em;
 }
