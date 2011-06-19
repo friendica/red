@@ -6,7 +6,7 @@ ini_set('pcre.backtrack_limit', 250000);
 
 define ( 'FRIENDIKA_VERSION',      '2.2.1016' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
-define ( 'DB_UPDATE_VERSION',      1063      );
+define ( 'DB_UPDATE_VERSION',      1064      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -477,9 +477,13 @@ function install_plugin($plugin){
 	if(function_exists($plugin . '_install')) {
 		$func = $plugin . '_install';
 		$func();
-		$r = q("INSERT INTO `addon` (`name`, `installed`, `timestamp`) VALUES ( '%s', 1, %d ) ",
+		
+		$plugin_admin = (function_exists($plugin."_plugin_admin")?1:0);
+		
+		$r = q("INSERT INTO `addon` (`name`, `installed`, `timestamp`, `plugin_admin`) VALUES ( '%s', 1, %d , %d ) ",
 			dbesc($plugin),
-			intval($t)
+			intval($t),
+			$plugin_admin
 		);
 	}
 }}
@@ -1243,8 +1247,10 @@ function get_config($family, $key, $instore = false) {
 		dbesc($key)
 	);
 	if(count($ret)) {
-		$a->config[$family][$key] = $ret[0]['v'];
-		return $ret[0]['v'];
+		// manage array value
+		$val = (preg_match("|^a:[0-9]+:{.*}$|", $ret[0]['v'])?unserialize( $ret[0]['v']):$ret[0]['v']);
+		$a->config[$family][$key] = $val;
+		return $val;
 	}
 	else {
 		$a->config[$family][$key] = '!<unset>!';
@@ -1258,22 +1264,25 @@ function get_config($family, $key, $instore = false) {
 
 if(! function_exists('set_config')) {
 function set_config($family,$key,$value) {
-
 	global $a;
+	
+	// manage array value
+	$dbvalue = (is_array($value)?serialize($value):$value);
 
 	if(get_config($family,$key,true) === false) {
 		$a->config[$family][$key] = $value;
 		$ret = q("INSERT INTO `config` ( `cat`, `k`, `v` ) VALUES ( '%s', '%s', '%s' ) ",
 			dbesc($family),
 			dbesc($key),
-			dbesc($value)
+			dbesc($dbvalue)
 		);
 		if($ret) 
 			return $value;
 		return $ret;
 	}
+	
 	$ret = q("UPDATE `config` SET `v` = '%s' WHERE `cat` = '%s' AND `k` = '%s' LIMIT 1",
-		dbesc($value),
+		dbesc($dbvalue),
 		dbesc($family),
 		dbesc($key)
 	);
