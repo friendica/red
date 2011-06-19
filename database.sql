@@ -469,7 +469,8 @@ CREATE TABLE IF NOT EXISTS `addon` (
 `name` CHAR( 255 ) NOT NULL ,
 `version` CHAR( 255 ) NOT NULL ,
 `installed` TINYINT( 1 ) NOT NULL DEFAULT '0' ,
-`timestamp` BIGINT NOT NULL DEFAULT '0'
+`timestamp` BIGINT NOT NULL DEFAULT '0' ,
+`plugin_admin` TINYINT( 1 ) NOT NULL DEFAULT '0'
 ) ENGINE = MYISAM DEFAULT CHARSET=utf8;
 
 

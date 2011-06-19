@@ -6,7 +6,7 @@ ini_set('pcre.backtrack_limit', 250000);
 
 define ( 'FRIENDIKA_VERSION',      '2.2.1015' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
-define ( 'DB_UPDATE_VERSION',      1063      );
+define ( 'DB_UPDATE_VERSION',      1064      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -477,9 +477,13 @@ function install_plugin($plugin){
 	if(function_exists($plugin . '_install')) {
 		$func = $plugin . '_install';
 		$func();
-		$r = q("INSERT INTO `addon` (`name`, `installed`, `timestamp`) VALUES ( '%s', 1, %d ) ",
+		
+		$plugin_admin = (function_exists($plugin."_plugin_admin")?1:0);
+		
+		$r = q("INSERT INTO `addon` (`name`, `installed`, `timestamp`, `plugin_admin`) VALUES ( '%s', 1, %d , %d ) ",
 			dbesc($plugin),
-			intval($t)
+			intval($t),
+			$plugin_admin
 		);
 	}
 }}
