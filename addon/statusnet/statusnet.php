@@ -59,7 +59,6 @@ function statusnet_install() {
 	register_hook('plugin_settings_post', 'addon/statusnet/statusnet.php', 'statusnet_settings_post');
 	register_hook('post_local_end', 'addon/statusnet/statusnet.php', 'statusnet_post_hook');
 	register_hook('jot_networks',    'addon/statusnet/statusnet.php', 'statusnet_jot_nets');
-
 	logger("installed statusnet");
 }
 
@@ -350,3 +349,66 @@ function statusnet_post_hook(&$a,&$b) {
     }
 }
 
+function statusnet_plugin_admin_post(&$a){
+	
+	$sites = array();
+	
+	foreach($_POST['sitename'] as $id=>$sitename){
+		$sitename=trim($sitename);
+		$apiurl=trim($_POST['apiurl'][$id]);
+		$secret=trim($_POST['secret'][$id]);
+		$key=trim($_POST['key'][$id]);
+		if ($sitename!="" &&
+			$apiurl!="" &&
+			$secret!="" &&
+			$key!="" &&
+			!x($_POST['delete'][$id])){
+				
+				$sites[] = Array(
+					'sitename' => $sitename,
+					'apiurl' => $apiurl,
+					'secret' => $secret,
+					'key' => $key
+				);
+		}
+	}
+	
+	$sites = set_config('statusnet','sites', $sites);
+	
+}
+
+function statusnet_plugin_admin(&$a, &$o){
+
+	$sites = get_config('statusnet','sites');
+	$sitesform=array();
+	if (is_array($sites)){
+		foreach($sites as $id=>$s){
+			$sitesform[] = Array(
+				'sitename' => Array("sitename[$id]", "Site name", $s['sitename'], ""),
+				'apiurl' => Array("apiurl[$id]", "Api url", $s['apiurl'], ""),
+				'secret' => Array("secret[$id]", "Secret", $s['secret'], ""),
+				'key' => Array("key[$id]", "Key", $s['key'], ""),
+				'delete' => Array("delete[$id]", "Delete", False , "Check to delete this preset"),
+			);
+		}
+	}
+	/* empty form to add new site */
+	$id++;
+	$sitesform[] = Array(
+		'sitename' => Array("sitename[$id]", "Site name", "", ""),
+		'apiurl' => Array("apiurl[$id]", "Api url", "", ""),
+		'secret' => Array("secret[$id]", "Secret", "", ""),
+		'key' => Array("key[$id]", "Key", "", ""),
+	);
+
+	
+	$t = file_get_contents( dirname(__file__). "/admin.tpl" );
+	$o = replace_macros($t, array(
+		'$submit' => t('Submit'),
+							
+		'$sites' => $sitesform,
+		
+	));
+	
+	
+}
