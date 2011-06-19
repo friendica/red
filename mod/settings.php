@@ -99,6 +99,12 @@ function settings_post(&$a) {
 	$page_flags       = (((x($_POST,'page-flags')) && (intval($_POST['page-flags']))) ? intval($_POST['page-flags']) : 0);
 	$blockwall        = (((x($_POST,'blockwall')) && (intval($_POST['blockwall']) == 1)) ? 0: 1); // this setting is inverted!
 
+	$hide_friends = (($_POST['hide-friends'] == 1) ? 1: 0);
+	$hidewall = (($_POST['hidewall'] == 1) ? 1: 0);
+
+
+
+
 	$mail_server      = ((x($_POST,'mail_server')) ? $_POST['mail_server'] : '');
 	$mail_port        = ((x($_POST,'mail_port')) ? $_POST['mail_port'] : '');
 	$mail_ssl         = ((x($_POST,'mail_ssl')) ? strtolower(trim($_POST['mail_ssl'])) : '');
@@ -248,10 +254,15 @@ function settings_post(&$a) {
 		info( t('Settings updated.') . EOL);
 
 	$r = q("UPDATE `profile` 
-		SET `publish` = %d, `net-publish` = %d
+		SET `publish` = %d, 
+		`net-publish` = %d,
+		`hide-friends` = %d,
+		`hidewall` = %d
 		WHERE `is-default` = 1 AND `uid` = %d LIMIT 1",
 		intval($publish),
 		intval($net_publish),
+		intval($hide_friends),
+		intval($hidewall),
 		intval(local_user())
 	);
 
@@ -388,7 +399,7 @@ function settings_content(&$a) {
 	else {
 		$opt_tpl = get_markup_template("profile-in-directory.tpl");
 		$profile_in_dir = replace_macros($opt_tpl,array(
-			'$desc'         => t('Publish your default profile in site directory?'),
+			'$desc'         => t('Publish your default profile in your local site directory?'),
 			'$yes_str'      => t('Yes'),
 			'$no_str'       => t('No'),
 			'$yes_selected' => (($profile['publish'])      ? " checked=\"checked\" " : ""),
@@ -400,7 +411,7 @@ function settings_content(&$a) {
 		$opt_tpl = get_markup_template("profile-in-netdir.tpl");
 
 		$profile_in_net_dir = replace_macros($opt_tpl,array(
-			'$desc'         => t('Publish your default profile in global social directory?'),
+			'$desc'         => t('Publish your default profile in the global social directory?'),
 			'$yes_str'      => t('Yes'),
 			'$no_str'       => t('No'),
 			'$yes_selected' => (($profile['net-publish'])      ? " checked=\"checked\" " : ""),
@@ -409,6 +420,30 @@ function settings_content(&$a) {
 	}
 	else
 		$profile_in_net_dir = '';
+
+
+	$opt_tpl = get_markup_template("profile-hide-friends.tpl");
+	$hide_friends = replace_macros($opt_tpl,array(
+		'$desc' => t('Hide your contact/friend list from viewers of your default profile?'),
+		'$yes_str' => t('Yes'),
+		'$no_str' => t('No'),
+		'$yes_selected' => (($profile['hide-friends']) ? " checked=\"checked\" " : ""),
+		'$no_selected' => (($profile['hide-friends'] == 0) ? " checked=\"checked\" " : "")
+	));
+
+	$opt_tpl = get_markup_template("profile-hide-wall.tpl");
+	$hide_wall = replace_macros($opt_tpl,array(
+		'$desc' => t('Hide profile details and all your messages from unknown viewers?'),
+		'$yes_str' => t('Yes'),
+		'$no_str' => t('No'),
+		'$yes_selected' => (($profile['hidewall']) ? " checked=\"checked\" " : ""),
+		'$no_selected' => (($profile['hidewall'] == 0) ? " checked=\"checked\" " : "")
+	));
+
+
+
+
+
 
 	$loc_checked = (($a->user['allow_location'] == 1)      ? " checked=\"checked\" " : "");
 
@@ -486,6 +521,8 @@ function settings_content(&$a) {
 		'$lbl_pass4' => t('Confirm:'),
 		'$lbl_advn' => t('Advanced Page Settings'),
 		'$baseurl' => $a->get_baseurl(),
+		'$hide_friends' => $hide_friends,
+		'$hide_wall' => $hide_wall,
 		'$oidhtml' => $oidhtml,
 		'$uexport' => $uexport,
 		'$uid' => local_user(),

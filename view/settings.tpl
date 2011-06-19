@@ -100,12 +100,13 @@ $theme
 <div id="settings-maxreq-end"></div>
 
 
-
-
 $profile_in_dir
 
 $profile_in_net_dir
 
+$hide_friends
+
+$hide_wall
 
 <div id="settings-default-perms" class="settings-default-perms" >
 	<div id="settings-default-perms-menu" class="fakelink" onClick="openClose('settings-default-perms-select');" >$permissions $permdesc</div>
@@ -124,8 +125,6 @@ $profile_in_net_dir
 <input type="checkbox" name="blockwall" id="settings-blockw" value="1" $blockw_checked />
 </div>
 <div id="settings-blockw-end" ></div>
-
-
 
 <div id="settings-expire-desc">$lbl_exp1 <input type="text" size="3" name="expire" value="$expire" /> $lbl_exp2</div>
 <div id="settings-expire-end"></div>

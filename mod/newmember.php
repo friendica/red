@@ -15,7 +15,7 @@ function newmember_content(&$a) {
 
 	$o .= '<li>' . '<a href="settings">' . t('On your <em>Settings</em> page -  change your initial password. Also make a note of your Identity Address. This will be useful in making friends.') . '</a></li>' . EOL; 
 
-	$o .= '<li>' . '<a href="settings">' . t('Review the other settings, particularly the choice of publishing your profile to various directories. An unpublished directory is like an unlisted phone number. Great for privacy - but unless you inform all your friends, nobody can find you.') . '</a></li>' . EOL;
+	$o .= '<li>' . '<a href="settings">' . t('Review the other settings, particularly the privacy settings. An unpublished directory listing is like having an unlisted phone number. In general, you should probably publish your listing - unless all of your friends and potential friends know exactly how to find you.') . '</a></li>' . EOL;
 
 	$o .= '<li>' . '<a href="profile_photo">' . t('Upload a profile photo if you have not done so already. Studies have shown that people with real photos of themselves are ten times more likely to make friends than people who do not.') . '</a></li>' . EOL;  
 

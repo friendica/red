@@ -129,8 +129,6 @@ function profiles_post(&$a) {
 		$work = escape_tags(trim($_POST['work']));
 		$education = escape_tags(trim($_POST['education']));
 		$hide_friends = (($_POST['hide-friends'] == 1) ? 1: 0);
-		$hidewall = (($_POST['hidewall'] == 1) ? 1: 0);
-
 
 		$r = q("UPDATE `profile` 
 			SET `profile-name` = '%s',
@@ -161,8 +159,7 @@ function profiles_post(&$a) {
 			`romance` = '%s',
 			`work` = '%s',
 			`education` = '%s',
-			`hide-friends` = %d,
-			`hidewall` = %d
+			`hide-friends` = %d
 			WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			dbesc($profile_name),
 			dbesc($name),
@@ -193,7 +190,6 @@ function profiles_post(&$a) {
 			dbesc($work),
 			dbesc($education),
 			intval($hide_friends),
-			intval($hidewall),
 			intval($a->argv[1]),
 			intval($_SESSION['uid'])
 		);
@@ -361,16 +357,6 @@ function profiles_content(&$a) {
 			'$no_selected' => (($r[0]['hide-friends'] == 0) ? " checked=\"checked\" " : "")
 		));
 
-		$opt_tpl = get_markup_template("profile-hide-wall.tpl");
-		$hide_wall = replace_macros($opt_tpl,array(
-			'$desc' => t('Hide profile details and all your messages from unknown viewers?'),
-			'$yes_str' => t('Yes'),
-			'$no_str' => t('No'),
-			'$yes_selected' => (($r[0]['hidewall']) ? " checked=\"checked\" " : ""),
-			'$no_selected' => (($r[0]['hidewall'] == 0) ? " checked=\"checked\" " : "")
-		));
-
-
 
 		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
 		$a->page['htmlhead'] .= "<script type=\"text/javascript\" src=\"include/country.js\" ></script>";
@@ -426,7 +412,6 @@ function profiles_content(&$a) {
 			'$pdesc' => $r[0]['pdesc'],
 			'$dob' => dob($r[0]['dob']),
 			'$hide_friends' => $hide_friends,
-			'$hide_wall' => $hide_wall,
 			'$address' => $r[0]['address'],
 			'$locality' => $r[0]['locality'],
 			'$region' => $r[0]['region'],
