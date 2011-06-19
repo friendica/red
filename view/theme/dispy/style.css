@@ -548,6 +548,16 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
 	border: 0px;
 }
 
+/**
+ * item text style
+ **/
+.wall-item-body code {
+    border-color: #CCCCCC;
+    border-style: solid;
+    border-width: 1px 1px 1px 10px;
+    display: block;
+    padding-left: 10px;
+}
 
 
 
