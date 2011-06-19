@@ -29,8 +29,9 @@ function admin_post(&$a){
 				if ($a->argc > 2 && 
 					is_file("addon/".$a->argv[2]."/".$a->argv[2].".php")){
 						@include_once("addon/".$a->argv[2]."/".$a->argv[2].".php");
-						if(function_exists('plugin_admin_post')) {
-							plugin_admin_post($a);
+						if(function_exists($a->argv[2].'_plugin_admin_post')) {
+							$func = $a->argv[2].'_plugin_admin_post';
+							$func($a);
 						}
 				}
 				goaway($a->get_baseurl() . '/admin/plugins/' . $a->argv[2] );
@@ -65,10 +66,10 @@ function admin_content(&$a) {
 	
 	/* get plugins admin page */
 	
-	$r = q("SELECT * FROM `hook` WHERE `hook`='plugin_admin'");
+	$r = q("SELECT * FROM `addon` WHERE `plugin_admin`=1");
 	$aside['plugins_admin']=Array();
 	foreach ($r as $h){
-		$plugin = explode("/",$h['file']); $plugin = $plugin[1];
+		$plugin =$h['name'];
 		$aside['plugins_admin'][] = Array($a->get_baseurl()."/admin/plugins/".$plugin, $plugin, "plugin");
 		// temp plugins with admin
 		$a->plugins_admin[] = $plugin;
@@ -526,7 +527,9 @@ function admin_page_plugins(&$a){
 		
 		$admin_form="";
 		if (in_array($plugin, $a->plugins_admin)){
-			call_hooks('plugin_admin', $admin_form);
+			@require_once("addon/$plugin/$plugin.php");
+			$func = $plugin.'_plugin_admin';
+			$func($a, $admin_form);
 		}
 		
 		$t = get_markup_template("admin_plugins_details.tpl");

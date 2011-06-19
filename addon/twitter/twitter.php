@@ -47,7 +47,6 @@ function twitter_install() {
 	register_hook('plugin_settings_post', 'addon/twitter/twitter.php', 'twitter_settings_post');
 	register_hook('post_local_end', 'addon/twitter/twitter.php', 'twitter_post_hook');
 	register_hook('jot_networks', 'addon/twitter/twitter.php', 'twitter_jot_nets');
-	register_hook('plugin_admin', 'addon/twitter/twitter.php', 'plugin_admin');
 	logger("installed twitter");
 }
 
@@ -57,7 +56,6 @@ function twitter_uninstall() {
 	unregister_hook('plugin_settings_post', 'addon/twitter/twitter.php', 'twitter_settings_post');
 	unregister_hook('post_local_end', 'addon/twitter/twitter.php', 'twitter_post_hook');
 	unregister_hook('jot_networks', 'addon/twitter/twitter.php', 'twitter_jot_nets');
-	unregister_hook('plugin_admin', 'addon/twitter/twitter.php', 'plugin_admin');
 }
 
 function twitter_jot_nets(&$a,&$b) {
@@ -242,14 +240,15 @@ function twitter_post_hook(&$a,&$b) {
 		}
 	}
 }
-function plugin_admin_post(&$a){
+
+function twitter_plugin_admin_post(&$a){
 	$consumerkey	=	((x($_POST,'consumerkey'))		? notags(trim($_POST['consumerkey']))	: '');
 	$consumersecret	=	((x($_POST,'consumersecret'))	? notags(trim($_POST['consumersecret'])): '');
 	set_config('twitter','consumerkey',$consumerkey);
 	set_config('twitter','consumersecret',$consumersecret);
 	info( t('Settings updated.'). EOL );
 }
-function plugin_admin(&$a, &$o){
+function twitter_plugin_admin(&$a, &$o){
 	$t = file_get_contents( dirname(__file__). "/admin.tpl" );
 	$o = replace_macros($t, array(
 		'$submit' => t('Submit'),

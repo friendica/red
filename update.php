@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1063 );
+define( 'UPDATE_VERSION' , 1064 );
 
 /**
  *
@@ -516,5 +516,8 @@ function update_1061() {
 
 function update_1062() {
 	q("ALTER TABLE `user` ADD `prvnets` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `page-flags` ");
+}
+function update_1063() {
+	q("ALTER TABLE `addon` ADD `plugin_admin` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `timestamp` ");
 }
 
