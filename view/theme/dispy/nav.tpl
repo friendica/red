@@ -2,6 +2,7 @@ $langselector
 
 <span id="banner">$banner</span>
 
+<a id="nav-help-link" class="nav-link $nav.help.2" href="$nav.help.0" title="$nav.help.1">$nav.help.1</a>
 {{ if $nav.login }}<a id="nav-login-link" class="nav-link $nav.login.2" href="$nav.login.0" title="$nav.login.1">$nav.login.1</a> {{ endif }}
 <a id="nav-search-link" class="nav-link $nav.search.2" href="$nav.search.0" title="$nav.search.1">$nav.search.1</a>
 <a id="nav-directory-link" class="nav-link $nav.directory.2" href="$nav.directory.0" title="$nav.directory.1">$nav.directory.1</a>
@@ -30,6 +31,7 @@ $langselector
 	    
 	    {{ if $nav.manage }}<li><a id="nav-manage-link" class="nav-commlink $nav.manage.2" href="$nav.manage.0">$nav.manage.1</a></li>{{ endif }}
 	
+		{{ if $nav.admin }}<li><a id="nav-admin-link" class="nav-commlink $nav.admin.2" href="$nav.admin.0">$nav.admin.1</a></li>{{ endif }}
 	
 
 	    {{ if $nav.logout }}<li><a id="nav-logout-link" class="nav-commlink nav-sep $nav.logout.2" href="$nav.logout.0">$nav.logout.1</a></li> {{ endif }}
