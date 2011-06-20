@@ -26,7 +26,7 @@ function match_content(&$a) {
 		$params['s'] = $tags;
 		if($a->pager['page'] != 1)
 			$params['p'] = $a->pager['page'];
-
+			
 		$x = post_url('http://dir.friendika.com/msearch', $params);
 
 		$j = json_decode($x);
