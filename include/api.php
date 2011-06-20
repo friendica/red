@@ -233,7 +233,6 @@
 			'lang' => 'en', #XXX: fix me
 			'description' => '',
 			'followers_count' => $countfriends, #XXX: fix me
-			'lang' => 'en', #XXX: fix me
 			'favourites_count' => 0,
 			'contributors_enabled' => false,
 			'follow_request_sent' => false,
@@ -301,7 +300,39 @@
 	}
 	api_register_func('api/account/verify_credentials','api_account_verify_credentials', true);
 	 	
+
+	// TODO - media uploads and alternate 'source'
 	
+	function api_post_message(&$a, $type) {
+		if (local_user()===false) return false;
+		$user_info = api_get_user($a);
+
+		// convert $_POST array items to the form we use for web posts.
+
+		$_POST['body'] = urldecode($_POST['status']);
+		$_POST['parent'] = $_POST['in_reply_to_status_id'];
+		if($_POST['lat'] && $_POST['long'])
+			$_POST['coord'] = sprintf("%s %s",$_POST['lat'],$_POST['long']);
+		$_POST['profile_uid'] = local_user();
+		if($_POST['parent'])
+			$_POST['type'] = 'net-comment';
+		else
+			$_POST['type'] = 'wall';
+
+		// set this so that the item_post() function is quiet and doesn't redirect or emit json
+
+		$_POST['api_source'] = true;
+
+		// call out normal post function
+
+		require_once('mod/item.php');
+		item_post($a);	
+
+		// this should output the last post (the one we just posted).
+		return api_users_show();
+	}
+	api_register_func('api/statuses/update','api_statuses_update', true);
+
 		
 	/**
 	 * Returns extended information of a given user, specified by ID or screen name as per the required id parameter.
@@ -396,7 +427,7 @@
 				'source'	=> 'web',
 				'url'		=> ($item['plink']!=''?$item['plink']:$item['author-link']),
 				'truncated' => False,
-				'in_reply_to_status_id' => ($item['parent']!=$item['id']?$item['id']:''),
+				'in_reply_to_status_id' => ($item['parent']!=$item['id']?$item['parent']:''),
 				'in_reply_to_user_id' => '',
 				'favorited' => false,
 				'in_reply_to_screen_name' => '',
