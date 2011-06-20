@@ -341,9 +341,61 @@
 		item_post($a);	
 
 		// this should output the last post (the one we just posted).
-		return api_users_show($a,$type);
+		return api_status_show($a,$type);
 	}
 	api_register_func('api/statuses/update','api_statuses_update', true);
+
+
+	function api_status_show(&$a, $type){
+		$user_info = api_get_user($a);
+		// get last public wall message
+		$lastwall = q("SELECT `item`.*, `i`.`contact-id` as `reply_uid`, `i`.`nick` as `reply_author`
+				FROM `item`, `contact`,
+					(SELECT `item`.`id`, `item`.`contact-id`, `contact`.`nick` FROM `item`,`contact` WHERE `contact`.`id`=`item`.`contact-id`) as `i` 
+				WHERE `item`.`contact-id` = %d
+					AND `i`.`id` = `item`.`parent`
+					AND `contact`.`id`=`item`.`contact-id` AND `contact`.`self`=1
+					AND `type`!='activity'
+					AND `item`.`allow_cid`='' AND `item`.`allow_gid`='' AND `item`.`deny_cid`='' AND `item`.`deny_gid`=''
+				ORDER BY `created` DESC 
+				LIMIT 1",
+				intval($user_info['id'])
+		);
+
+		if (count($lastwall)>0){
+			$lastwall = $lastwall[0];
+			
+			$in_reply_to_status_id = '';
+			$in_reply_to_user_id = '';
+			$in_reply_to_screen_name = '';
+			if ($lastwall['parent']!=$lastwall['id']) {
+				$in_reply_to_status_id=$lastwall['parent'];
+				$in_reply_to_user_id = $lastwall['reply_uid'];
+				$in_reply_to_screen_name = $lastwall['reply_author'];
+			}  
+			$status_info = array(
+				'created_at' => api_date($lastwall['created']),
+				'id' => $lastwall['contact-id'],
+				'text' => strip_tags(bbcode($lastwall['body'])),
+				'source' => 'web',
+				'truncated' => false,
+				'in_reply_to_status_id' => $in_reply_to_status_id,
+				'in_reply_to_user_id' => $in_reply_to_user_id,
+				'favorited' => false,
+				'in_reply_to_screen_name' => $in_reply_to_screen_name,
+				'geo' => '',
+				'coordinates' => $lastwall['coord'],
+				'place' => $lastwall['location'],
+				'contributors' => ''					
+			);
+			$status_info['user'] = $user_info;
+		}
+		return  api_apply_template("status", $type, array('$status' => $status_info));
+		
+	}
+
+
+
 
 		
 	/**
