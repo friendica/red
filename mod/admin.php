@@ -627,9 +627,9 @@ function admin_page_logs(&$a){
 		$seek = fseek($fp,0-$size,SEEK_END);
 		if($seek === 0) {
 			fgets($fp); // throw away the first partial line
-			$data = str_replace(array("\n","\t"),array('<br />','&nbsp;&nbsp;&nbsp;&nbsp;'),escape_tags(fread($fp,$size)));
+			$data = escape_tags(fread($fp,$size));
 			while(! feof($fp))
-				$data .= str_replace(array("\n","\t"),array('<br />','&nbsp;&nbsp;&nbsp;&nbsp;'),escape_tags(fread($fp,4096)));
+				$data .= escape_tags(fread($fp,4096));
 		}
 		fclose($fp);
 	}
@@ -646,7 +646,7 @@ function admin_page_logs(&$a){
 		
 									// name, label, value, help string, extra data...
 		'$debugging' 		=> array('debugging', t("Debugging"),get_config('system','debugging'), ""),
-		'$logfile'			=> array('logfile', t("Log file"), get_config('system','logfile'), "Must be writable by web server. Relative to your Friendika index.php."),
+		'$logfile'			=> array('logfile', t("Log file"), get_config('system','logfile'), t("Must be writable by web server. Relative to your Friendika index.php.")),
 		'$loglevel' 		=> array('loglevel', t("Log level"), get_config('system','loglevel'), "", $log_choices),
 	));
 }
