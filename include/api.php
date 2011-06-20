@@ -485,6 +485,8 @@
 		foreach($r as $item) {
 			$status = array(
 				'created_at'=> api_date($item['created']),
+				'published' => datetime_convert('UTC','UTC',$item['created'],ATOM_TIME),
+				'updated'   => datetime_convert('UTC','UTC',$item['edited'],ATOM_TIME),
 				'id'		=> $item['id'],
 				'text'		=> strip_tags(bbcode($item['body'])),
 				'html'		=> bbcode($item['body']),

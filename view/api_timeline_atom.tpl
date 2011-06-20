@@ -15,8 +15,8 @@
 	 <content type="html">$status.html</content>
 	 <link rel="alternate" type="text/html" href="$status.url"/>
 	 <activity:verb>$status.verb</activity:verb>
-	 <published>$status.created_at</published>
-	 <updated>$status.created_at</updated>
+	 <published>$status.published</published>
+	 <updated>$status.updated</updated>
 
 	 <link rel="ostatus:conversation" href="$status.url"/>
 	 <!--
