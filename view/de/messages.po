@@ -2,14 +2,14 @@
 # Copyright (C) 2010, 2011 Mike Macgirvin
 # This file is distributed under the same license as the Friendika package.
 # 
-#   <tobias.diekershoff@gmx.net>, 2011
-# bavatar <tobias.diekershoff@gmx.net>, 2011
+#   <tobias.diekershoff@gmx.net>, 2011.
+# bavatar <tobias.diekershoff@gmx.net>, 2011.
 msgid ""
 msgstr ""
 "Project-Id-Version: friendika\n"
 "Report-Msgid-Bugs-To: http://bugs.friendika.com/\n"
 "POT-Creation-Date: 2011-05-26 06:46-0700\n"
-"PO-Revision-Date: 2011-06-01 06:45+0000\n"
+"PO-Revision-Date: 2011-06-20 07:28+0000\n"
 "Last-Translator: bavatar <tobias.diekershoff@gmx.net>\n"
 "Language-Team: German (http://www.transifex.net/projects/p/friendika/team/de/)\n"
 "MIME-Version: 1.0\n"
@@ -599,7 +599,7 @@ msgid ""
 "Please enter your 'Identity Address' from one of the following supported "
 "social networks:"
 msgstr ""
-"Bitte gib die Adresse deiner Identität in einem der unterstützten sozialen "
+"Bitte gib die Adresse deines Profils in einem der unterstützten sozialen "
 "Netzwerke an:"
 
 #: ../../mod/dfrn_request.php:638
@@ -620,7 +620,7 @@ msgstr "Öffentliches (unsicheres) Netzwerk"
 
 #: ../../mod/dfrn_request.php:642
 msgid "Your Identity Address:"
-msgstr "Adresse deiner Identität"
+msgstr "Adresse deines Profils:"
 
 #: ../../mod/dfrn_request.php:643
 msgid "Submit Request"
@@ -1528,7 +1528,7 @@ msgstr ""
 
 #: ../../mod/manage.php:92
 msgid "Select an identity to manage: "
-msgstr "Wähle eine Identität zum Verwalten:"
+msgstr "Wähle eine Identität zum Verwalten: "
 
 #: ../../mod/network.php:18
 msgid "Normal View"
@@ -2283,7 +2283,7 @@ msgstr "Neues Profil anlegen und diese Einstellungen verwenden"
 
 #: ../../mod/profiles.php:386
 msgid "Clone this profile"
-msgstr "Dieses Profil dublizieren"
+msgstr "Dieses Profil duplizieren"
 
 #: ../../mod/profiles.php:387
 msgid "Delete this profile"
