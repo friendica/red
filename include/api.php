@@ -27,10 +27,21 @@
 	 * Simple HTTP Login
 	 */
 	function api_login(&$a){
+		// workaround for HTTP-auth in CGI mode
+		if(x($_SERVER,'REDIRECT_REMOTE_USER')) {
+		 	$userpass = base64_decode(substr($_SERVER["REDIRECT_REMOTE_USER"],6)) ;
+			if(strlen($userpass)) {
+			 	list($name, $password) = explode(':', $userpass);
+				$_SERVER['PHP_AUTH_USER'] = $name;
+				$_SERVER['PHP_AUTH_PW'] = $password;
+			}
+		}
+
 		if (!isset($_SERVER['PHP_AUTH_USER'])) {
+		   logger('API_login: ' . print_r($_SERVER,true), LOGGER_DEBUG);
 		    header('WWW-Authenticate: Basic realm="Friendika"');
 		    header('HTTP/1.0 401 Unauthorized');
-		    die('This api require login');
+		    die('This api requires login');
 		}
 		
 		$user = $_SERVER['PHP_AUTH_USER'];
@@ -52,9 +63,10 @@
 		if(count($r)){
 			$record = $r[0];
 		} else {
+		   logger('API_login failure: ' . print_r($_SERVER,true), LOGGER_DEBUG);
 		    header('WWW-Authenticate: Basic realm="Friendika"');
 		    header('HTTP/1.0 401 Unauthorized');
-		    die('This api require login');
+		    die('This api requires login');
 		}
 		$_SESSION['uid'] = $record['uid'];
 		$_SESSION['theme'] = $record['theme'];
@@ -303,7 +315,7 @@
 
 	// TODO - media uploads and alternate 'source'
 	
-	function api_post_message(&$a, $type) {
+	function api_statuses_update(&$a, $type) {
 		if (local_user()===false) return false;
 		$user_info = api_get_user($a);
 
@@ -329,7 +341,7 @@
 		item_post($a);	
 
 		// this should output the last post (the one we just posted).
-		return api_users_show();
+		return api_users_show($a,$type);
 	}
 	api_register_func('api/statuses/update','api_statuses_update', true);
 

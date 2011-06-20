@@ -9,13 +9,15 @@ Deny from all
 <IfModule mod_rewrite.c>
   RewriteEngine on
 
+#  RewriteRule api.* - [E=REMOTE_USER:%{HTTP:Authorization},L]
+
   # Protect repo directory from browsing
   RewriteRule "(^|/)\.git" - [F]
 
   # Rewrite current-style URLs of the form 'index.php?q=x'.
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
+  RewriteRule ^(.*)$ index.php?q=$1 [E=REMOTE_USER:%{HTTP:Authorization},L,QSA]
 
 </IfModule>
 

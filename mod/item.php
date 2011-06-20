@@ -722,6 +722,8 @@ function item_post(&$a) {
 		logger('return: ' . $_POST['return']);
 		goaway($a->get_baseurl() . "/" . $_POST['return'] );
 	}
+	if($_POST['api_source'])
+		return;
 	$json = array('success' => 1);
 	if(x($_POST,'jsreload') && strlen($_POST['jsreload']))
 		$json['reload'] = $a->get_baseurl() . '/' . $_POST['jsreload'];
