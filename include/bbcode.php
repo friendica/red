@@ -78,6 +78,10 @@ function bbcode($Text,$preserve_nl = false) {
 	$Text = preg_replace("/\[td\](.*?)\[\/td\]/s", '<td>$1</td>' ,$Text);
 	$Text = preg_replace("/\[tr\](.*?)\[\/tr\]/s", '<tr>$1</tr>' ,$Text);
 	$Text = preg_replace("/\[table\](.*?)\[\/table\]/s", '<table>$1</table>' ,$Text);
+
+	$Text = preg_replace("/\[table border=1\](.*?)\[\/table\]/s", '<table border="1" >$1</table>' ,$Text);
+	$Text = preg_replace("/\[table border=0\](.*?)\[\/table\]/s", '<table border="0" >$1</table>' ,$Text);
+
 	
 //	$Text = str_replace("[*]", "<li>", $Text);
 
