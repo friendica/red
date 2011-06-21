@@ -315,7 +315,7 @@
 	api_register_func('api/account/verify_credentials','api_account_verify_credentials', true);
 	 	
 
-	// TODO - media uploads and alternate 'source'
+	// TODO - media uploads
 	
 	function api_statuses_update(&$a, $type) {
 		if (local_user()===false) return false;
@@ -379,7 +379,7 @@
 				'created_at' => api_date($lastwall['created']),
 				'id' => $lastwall['contact-id'],
 				'text' => strip_tags(bbcode($lastwall['body'])),
-				'source' => 'web',
+				'source' => (($lastwall['app']) ? $lastwall['app'] : 'web'),
 				'truncated' => false,
 				'in_reply_to_status_id' => $in_reply_to_status_id,
 				'in_reply_to_user_id' => $in_reply_to_user_id,
@@ -436,7 +436,7 @@
 				'created_at' => api_date($lastwall['created']),
 				'id' => $lastwall['contact-id'],
 				'text' => strip_tags(bbcode($lastwall['body'])),
-				'source' => 'web',
+				'source' => (($lastwall['app']) ? $lastwall['app'] : 'web'),
 				'truncated' => false,
 				'in_reply_to_status_id' => $in_reply_to_status_id,
 				'in_reply_to_user_id' => $in_reply_to_user_id,
@@ -492,7 +492,7 @@
 				'id'		=> $item['id'],
 				'text'		=> strip_tags(bbcode($item['body'])),
 				'html'		=> bbcode($item['body']),
-				'source'	=> 'web',
+				'source'    => (($item['app']) ? $item['app'] : 'web'),
 				'url'		=> ($item['plink']!=''?$item['plink']:$item['author-link']),
 				'truncated' => False,
 				'in_reply_to_status_id' => ($item['parent']!=$item['id']?$item['parent']:''),

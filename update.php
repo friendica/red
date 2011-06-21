@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1064 );
+define( 'UPDATE_VERSION' , 1065 );
 
 /**
  *
@@ -521,3 +521,6 @@ function update_1063() {
 	q("ALTER TABLE `addon` ADD `plugin_admin` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `timestamp` ");
 }
 
+function update_1064() {
+	q("ALTER TABLE `item` ADD `app` CHAR( 255 ) NOT NULL AFTER `body` ");
+}

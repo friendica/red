@@ -6,7 +6,7 @@ ini_set('pcre.backtrack_limit', 250000);
 
 define ( 'FRIENDIKA_VERSION',      '2.2.1017' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
-define ( 'DB_UPDATE_VERSION',      1064      );
+define ( 'DB_UPDATE_VERSION',      1065      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -128,6 +128,8 @@ define ( 'NAMESPACE_OSTATUSSUB',      'http://ostatus.org/schema/1.0/subscribe' 
 define ( 'NAMESPACE_GEORSS',          'http://www.georss.org/georss' );
 define ( 'NAMESPACE_POCO',            'http://portablecontacts.net/spec/1.0' );
 define ( 'NAMESPACE_FEED',            'http://schemas.google.com/g/2010#updates-from' );
+define ( 'NAMESPACE_OSTATUS',         'http://ostatus.org/schema/1.0' );
+define ( 'NAMESPACE_STATUSNET',       'http://status.net/schema/api/1/' );
 
 /**
  * activity stream defines

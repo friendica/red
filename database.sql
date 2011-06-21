@@ -179,6 +179,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `author-avatar` char(255) NOT NULL,
   `title` char(255) NOT NULL,
   `body` mediumtext NOT NULL,
+  `app` char(255) NOT NULL,
   `verb` char(255) NOT NULL,
   `object-type` char(255) NOT NULL,
   `object` text NOT NULL,

@@ -61,6 +61,7 @@ function item_post(&$a) {
 
 	$profile_uid = ((x($_POST,'profile_uid')) ? intval($_POST['profile_uid']) : 0);
 	$post_id     = ((x($_POST['post_id']))    ? intval($_POST['post_id'])     : 0);
+	$app         = ((x($_POST['source']))     ? notags($_POST['source'])      : '');
 
 	if(! can_write_wall($a,$profile_uid)) {
 		notice( t('Permission denied.') . EOL) ;
@@ -102,6 +103,7 @@ function item_post(&$a) {
 		$coord             = $orig_post['coord'];
 		$verb              = $orig_post['verb'];
 		$emailcc           = $orig_post['emailcc'];
+		$app			   = $orig_post['app'];
 
 		$body              = escape_tags(trim($_POST['body']));
 		$private           = $orig_post['private'];
@@ -421,6 +423,7 @@ function item_post(&$a) {
 	$datarray['uri']           = $uri;
 	$datarray['title']         = $title;
 	$datarray['body']          = $body;
+	$datarray['app']           = $app;
 	$datarray['location']      = $location;
 	$datarray['coord']         = $coord;
 	$datarray['tag']           = $str_tags;
@@ -469,9 +472,9 @@ function item_post(&$a) {
 
 
 	$r = q("INSERT INTO `item` (`uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
-		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `changed`, `uri`, `title`, `body`, `location`, `coord`, 
+		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `changed`, `uri`, `title`, `body`, `app`, `location`, `coord`, 
 		`tag`, `inform`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach` )
-		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s' )",
+		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s' )",
 		intval($datarray['uid']),
 		dbesc($datarray['type']),
 		intval($datarray['wall']),
@@ -489,6 +492,7 @@ function item_post(&$a) {
 		dbesc($datarray['uri']),
 		dbesc($datarray['title']),
 		dbesc($datarray['body']),
+		dbesc($datarray['app']),
 		dbesc($datarray['location']),
 		dbesc($datarray['coord']),
 		dbesc($datarray['tag']),

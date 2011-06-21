@@ -129,7 +129,8 @@ $namespaces = <<< EOT
       xmlns:as="http://activitystrea.ms/spec/1.0/"
       xmlns:georss="http://www.georss.org/georss" 
       xmlns:poco="http://portablecontacts.net/spec/1.0" 
-      xmlns:ostatus="http://ostatus.org/schema/1.0" >
+      xmlns:ostatus="http://ostatus.org/schema/1.0" 
+	  xmlns:statusnet="http://status.net/schema/api/1/" >													>
 EOT;
 
 	$slap = str_replace('<entry>',$namespaces,$slap);

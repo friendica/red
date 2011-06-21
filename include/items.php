@@ -336,6 +336,12 @@ function get_atom_elements($feed,$item) {
 		}
 	}
 
+	$apps = $item->get_item_tags(NAMESPACE_STATUSNET,'notice_info');
+	if($apps && $apps[0]['attribs']['']['source']) {
+		$res['app'] = $apps[0]['attribs']['']['source'];
+		if($res['app'] === 'web')
+			$res['app'] = 'OStatus';
+	}		   
 
 	/**
 	 * If there's a copy of the body content which is guaranteed to have survived mangling in transit, use it.
@@ -685,6 +691,7 @@ function item_store($arr,$force_parent = false) {
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
 	$arr['tag']           = ((x($arr,'tag'))           ? notags(trim($arr['tag']))           : '');
 	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : '');
+	$arr['app']           = ((x($arr,'app'))           ? notags(trim($arr['app']))           : '');
 
 	if($arr['parent-uri'] === $arr['uri']) {
 		$parent_id = 0;
@@ -1620,7 +1627,8 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 	if($item['extid'])
 		$o .= '<dfrn:extid>' . $item['extid'] . '</dfrn:extid>' . "\r\n";
 
-
+	if($item['app'])
+		$o .= '<statusnet:notice_info local_id="' . $item['id'] . '" source="' . $item['app'] . '" ></statusnet:notice_info>';
 	$verb = construct_verb($item);
 	$o .= '<as:verb>' . xmlify($verb) . '</as:verb>' . "\r\n";
 	$actobj = construct_activity_object($item);
