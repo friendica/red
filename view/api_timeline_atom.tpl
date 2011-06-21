@@ -32,7 +32,7 @@
  <!--Deprecation warning: activity:subject is present only for backward compatibility. It will be removed in the next version of StatusNet.-->
  <activity:subject>
 	<activity:object-type>http://activitystrea.ms/schema/1.0/person</activity:object-type>
-	<id>$user.url</id>
+	<id>$user.contact_url</id>
 	<title>$user.name</title>
 	<link rel="alternate" type="text/html" href="$user.url"/>
 	<link rel="avatar" type="image/jpeg" media:width="106" media:height="106" href="$user.profile_image_url"/>
@@ -100,7 +100,7 @@
 		<!--Deprecation warning: activity:actor is present only for backward compatibility. It will be removed in the next version of StatusNet.-->
 		<activity:actor>
 			<activity:object-type>http://activitystrea.ms/schema/1.0/person</activity:object-type>
-			<id>$status.user.url</id>
+			<id>$status.user.contact_url</id>
 			<title>$status.user.name</title>
 			<link rel="alternate" type="text/html" href="$status.user.url"/>
 			<link rel="avatar" type="image/jpeg" media:width="106" media:height="106" href="$status.user.profile_image_url"/>

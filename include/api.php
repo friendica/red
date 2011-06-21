@@ -243,6 +243,7 @@
 			'location' => '', //$uinfo[0]['default-location'],
 			'profile_image_url' => $uinfo[0]['micro'],
 			'url' => $uinfo[0]['url'],
+			'contact_url' => $a->get_baseurl()."/contacts/".$uinfo[0]['cid'],
 			'protected' => false,	#
 			'friends_count' => $countfriends,
 			'created_at' => api_date($uinfo[0]['name-date']),
