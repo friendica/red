@@ -816,6 +816,8 @@ function fb_consume_stream($uid,$j,$wall = false) {
 				$datarray['owner-link'] = $self[0]['url'];
 				$datarray['owner-avatar'] = $self[0]['thumb'];
 			}
+
+			$datarray['app'] = 'facebook';
 			$datarray['author-name'] = $from->name;
 			$datarray['author-link'] = 'http://facebook.com/profile.php?id=' . $from->id;
 			$datarray['author-avatar'] = 'https://graph.facebook.com/' . $from->id . '/picture';
@@ -834,8 +836,15 @@ function fb_consume_stream($uid,$j,$wall = false) {
 				$datarray['body'] .= "\n" . $entry->description;
 			$datarray['created'] = datetime_convert('UTC','UTC',$entry->created_time);
 			$datarray['edited'] = datetime_convert('UTC','UTC',$entry->updated_time);
-			if($entry->privacy && $entry->privacy->value !== 'EVERYONE')
-				$datarray['private'] = 1;			
+
+			// If the entry has a privacy policy, we cannot assume who can or cannot see it,
+			// as the identities are from a foreign system. Mark it as private to the owner.
+
+			if($entry->privacy && $entry->privacy->value !== 'EVERYONE') {
+				$datarray['private'] = 1;
+				$datarray['allow_cid'] = '<' . $uid . '>';
+			}
+			
 			$top_item = item_store($datarray);
 			$r = q("SELECT * FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval($top_item),
@@ -900,6 +909,7 @@ function fb_consume_stream($uid,$j,$wall = false) {
 				if(! x($likedata,'contact-id'))
 					$likedata['contact-id'] = $orig_post['contact-id'];
 
+				$likedata['app'] = 'facebook';
 				$likedata['verb'] = ACTIVITY_LIKE;						
 				$likedata['author-name'] = $likes->name;
 				$likedata['author-link'] = 'http://facebook.com/profile.php?id=' . $likes->id;
@@ -957,6 +967,7 @@ function fb_consume_stream($uid,$j,$wall = false) {
 				if(! x($cmntdata,'contact-id'))
 					$cmntdata['contact-id'] = $orig_post['contact-id'];
 
+				$cmntdata['app'] = 'facebook';
 				$cmntdata['created'] = datetime_convert('UTC','UTC',$cmnt->created_time);
 				$cmntdata['edited']  = datetime_convert('UTC','UTC',$cmnt->created_time);
 				$cmntdata['verb'] = ACTIVITY_POST;						
