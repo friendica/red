@@ -515,7 +515,6 @@
 				'user' =>  $status_user ,
 				'objecttype' => $item['object-type'],
 				'verb' => $item['verb'],
-				'conversation' => $a->get_baseurl() . '/display/' . $status_user['screen_name'] . '/' . $item['id'],
 				'self' => $a->get_baseurl()."/api/statuses/show/".$ite['id'].".".$type,
 				'edit' => $a->get_baseurl()."/api/statuses/show/".$ite['id'].".".$type,				
 			);

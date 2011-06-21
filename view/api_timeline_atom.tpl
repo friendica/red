@@ -61,7 +61,6 @@
 		<published>$status.published</published>
 		<updated>$status.updated</updated>
 
-		<link rel="ostatus:conversation" href="$status.url"/>
 		<!--
 		<source>
 		<id>http://identi.ca/api/statuses/user_timeline/397830.atom</id>
@@ -119,7 +118,7 @@
 			</poco:urls>
 			<!-- <statusnet:profile_info local_id="123710" following="true" blocking="false"></statusnet:profile_info> -->
 		</activity:actor>
-		<link rel="ostatus:conversation" href="$status.conversation"/> 
+		<link rel="ostatus:conversation" href="$status.url"/> 
 
 	</entry>    
     {{ endfor }}
