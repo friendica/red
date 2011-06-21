@@ -73,7 +73,13 @@ function bbcode($Text,$preserve_nl = false) {
 	$Text = preg_replace("/\[list=I\](.*?)\[\/list\]/s", '<ul class="listupperroman">$1</ul>' ,$Text);
 	$Text = preg_replace("/\[list=a\](.*?)\[\/list\]/s", '<ul class="listloweralpha">$1</ul>' ,$Text);
 	$Text = preg_replace("/\[list=A\](.*?)\[\/list\]/s", '<ul class="listupperalpha">$1</ul>' ,$Text);
-	$Text = str_replace("[*]", "<li>", $Text);
+	$Text = preg_replace("/\[li\](.*?)\[\/li\]/s", '<li>$1</li>' ,$Text);
+
+	$Text = preg_replace("/\[td\](.*?)\[\/td\]/s", '<td>$1</td>' ,$Text);
+	$Text = preg_replace("/\[tr\](.*?)\[\/tr\]/s", '<tr>$1</tr>' ,$Text);
+	$Text = preg_replace("/\[table\](.*?)\[\/table\]/s", '<table>$1</table>' ,$Text);
+	
+//	$Text = str_replace("[*]", "<li>", $Text);
 
 	// Check for font change text
 	$Text = preg_replace("(\[font=(.*?)\](.*?)\[\/font\])","<span style=\"font-family: $1;\">$2</span>",$Text);
