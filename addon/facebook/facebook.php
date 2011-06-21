@@ -816,8 +816,10 @@ function fb_consume_stream($uid,$j,$wall = false) {
 				$datarray['owner-link'] = $self[0]['url'];
 				$datarray['owner-avatar'] = $self[0]['thumb'];
 			}
-
-			$datarray['app'] = 'facebook';
+			if(isset($entry->application) && isset($entry->application->name) && strlen($entry->application->name))
+				$datarray['app'] = $entry->application->name;
+			else
+				$datarray['app'] = 'facebook';
 			$datarray['author-name'] = $from->name;
 			$datarray['author-link'] = 'http://facebook.com/profile.php?id=' . $from->id;
 			$datarray['author-avatar'] = 'https://graph.facebook.com/' . $from->id . '/picture';
