@@ -464,7 +464,7 @@ function conversation(&$a, $items, $mode, $update) {
 				'$sparkle' => $sparkle,
 				'$title' => $item['title'],
 				'$body' => $body,
-				'$ago' => (($item['app']) ? sprintf( t('%s from %s'),relative_date($item['created']),$item['app']) : relative_date($item['created'])),
+				'$ago' => ((($item['app']) && ($item['id'] == $item['parent'])) ? sprintf( t('%s from %s'),relative_date($item['created']),$item['app']) : relative_date($item['created'])),
 				'$lock' => $lock,
 				'$location' => $location,
 				'$indent' => $indent,
