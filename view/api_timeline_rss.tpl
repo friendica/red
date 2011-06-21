@@ -6,10 +6,15 @@
     <description>Friendika timeline</description>
     <language>$rss.language</language>
     <ttl>40</ttl>
-
+	<image>
+		<link>$user.link</link>
+		<title>$user.name's items</title>
+		<url>$user.profile_image_url</url>
+	</image>
+	
 {{ for $statuses as $status }}
   <item>
-    <title>$status.text</title>
+    <title>$status.user.name: $status.text</title>
     <description>$status.text</description>
     <pubDate>$status.created_at</pubDate>
     <guid>$status.url</guid>

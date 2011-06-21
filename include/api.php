@@ -137,7 +137,7 @@
 						return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
 						break;
 					case "atom":
-						#header ("Content-Type: application/atom+xml");
+						header ("Content-Type: application/atom+xml");
 						return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
 						break;
 						
@@ -153,6 +153,7 @@
 	 */
 	function api_rss_extra(&$a, $arr, $user_info){
 		if (is_null($user_info)) $user_info = api_get_user($a);
+		$arr['$user'] = $user_info;
 		$arr['$rss'] = array(
 			'alternate' => $user_info['url'],
 			'self' => $a->get_baseurl(). "/". $a->query_string,
@@ -167,19 +168,24 @@
 	/**
 	 * Returns user info array.
 	 */
-	function api_get_user(&$a){
+	function api_get_user(&$a, $contact_id=Null){
 		$user = null;
 		$extra_query = "";
-		if(x($_GET, 'user_id')) {
+		if(!is_null($contact_id)){
+			$user=$contact_id;
+			$extra_query = "AND `contact`.`id` = %d ";
+		}
+		
+		if(is_null($user) && x($_GET, 'user_id')) {
 			$user = intval($_GET['user_id']);	
 			$extra_query = "AND `contact`.`id` = %d ";
 		}
-		if(x($_GET, 'screen_name')) {
+		if(is_null($user) && x($_GET, 'screen_name')) {
 			$user = dbesc($_GET['screen_name']);	
 			$extra_query = "AND `contact`.`nick` = '%s' ";
 		}
 		
-		if ($user===null){
+		if (is_null($user)){
 			list($user, $null) = explode(".",$a->argv[3]);
 			if(is_numeric($user)){
 				$user = intval($user);
@@ -195,15 +201,15 @@
 				api_login($a); return False;
 			} else {
 				$user = $_SESSION['uid'];
-				$extra_query = "AND `user`.`uid` = %d ";
+				$extra_query = "AND `contact`.`uid` = %d ";
 			}
 			
 		}
 		
 
 		// user info		
-		$uinfo = q("SELECT *, `contact`.`id` as `cid` FROM `user`, `contact`
-				WHERE `user`.`uid`=`contact`.`uid` AND `contact`.`self`=1
+		$uinfo = q("SELECT *, `contact`.`id` as `cid` FROM `contact`
+				WHERE 1
 				$extra_query",
 				$user
 		);
@@ -230,17 +236,18 @@
 				
 
 		$ret = Array(
+			'uid' => $uinfo[0]['uid'],
 			'id' => $uinfo[0]['cid'],
-			'name' => $uinfo[0]['username'],
-			'screen_name' => $uinfo[0]['nickname'],
-			'location' => $uinfo[0]['default-location'],
+			'name' => $uinfo[0]['name'],
+			'screen_name' => $uinfo[0]['nick'],
+			'location' => '', //$uinfo[0]['default-location'],
 			'profile_image_url' => $uinfo[0]['micro'],
 			'url' => $uinfo[0]['url'],
 			'protected' => false,	#
 			'friends_count' => $countfriends,
-			'created_at' => api_date($uinfo[0]['created']),
+			'created_at' => api_date($uinfo[0]['name-date']),
 			'utc_offset' => 0, #XXX: fix me
-			'time_zone' => $uinfo[0]['timezone'],
+			'time_zone' => '', //$uinfo[0]['timezone'],
 			'geo_enabled' => false,
 			'statuses_count' => $countitms, #XXX: fix me 
 			'lang' => 'en', #XXX: fix me
@@ -464,7 +471,6 @@
 		if (local_user()===false) return false;
 		
 		$user_info = api_get_user($a);
-		
 		// get last newtork messages
 		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` ) ";
 
@@ -472,19 +478,20 @@
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
 			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-			FROM `item`, `contact`, `user`
-			WHERE `item`.`contact-id` = %d AND `user`.`uid` = `item`.`uid` 
+			FROM `item`, `contact`
+			WHERE `item`.`uid` = %d
 			AND `item`.`visible` = 1 AND `item`.`deleted` = 0
 			AND `contact`.`id` = `item`.`contact-id`
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 			$sql_extra
 			ORDER BY `item`.`created` DESC LIMIT %d ,%d ",
-			intval($user_info['id']),
+			intval($user_info['uid']),
 			0,20
 		);
 		$ret = Array();
 
 		foreach($r as $item) {
+			$status_user = (($item['cid']==$user_info['id'])?$user_info: api_get_user($a,$item['cid']));
 			$status = array(
 				'created_at'=> api_date($item['created']),
 				'published' => datetime_convert('UTC','UTC',$item['created'],ATOM_TIME),
@@ -505,9 +512,10 @@
 				'contributors' => '',
 				'annotations'  => '',
 				'entities'  => '',
-				'user' =>  $user_info,
+				'user' =>  $status_user ,
 				'objecttype' => $item['object-type'],
 				'verb' => $item['verb'],
+				'conversation' => $a->get_baseurl() . '/display/' . $status_user['screen_name'] . '/' . $item['id'],
 				'self' => $a->get_baseurl()."/api/statuses/show/".$ite['id'].".".$type,
 				'edit' => $a->get_baseurl()."/api/statuses/show/".$ite['id'].".".$type,				
 			);
