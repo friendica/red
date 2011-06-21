@@ -129,7 +129,8 @@
 						break;
 					case "json": 
 						header ("Content-Type: application/json");  
-						return json_encode($r);
+						foreach($r as $rr)
+						    return json_encode($rr);
 						break;
 					case "rss":
 						header ("Content-Type: application/rss+xml");
@@ -279,6 +280,7 @@
 	 *  load api $templatename for $type and replace $data array
 	 */
 	function api_apply_template($templatename, $type, $data){
+
 		switch($type){
 			case "rss":
 			case "atom":
@@ -526,3 +528,17 @@
 	api_register_func('api/statuses/user_timeline','api_statuses_home_timeline', true);
 	# TODO: user_timeline should be profile view
 	
+
+	function api_account_rate_limit_status(&$a,$type) {
+
+		$hash = array(
+			  'remaining_hits' => (string) 150,
+			  'hourly_limit' => (string) 150,
+			  'reset_time' => datetime_convert('UTC','UTC','now + 1 hour',ATOM_TIME),
+			  'reset_time_in_seconds' => strtotime('now + 1 hour')
+		);
+
+		return api_apply_template('ratelimit', $type, array('$hash' => $hash));
+
+	}
+	api_register_func('api/account/rate_limit_status','api_account_rate_limit_status',true);
