@@ -18,13 +18,15 @@ function oembed_install() {
 function oembed_uninstall() {
 	unregister_hook('jot_tool', 'addon/oembed/oembed.php', 'oembed_hook_jot_tool');
 	unregister_hook('page_header', 'addon/oembed/oembed.php', 'oembed_hook_page_header');
+	unregister_hook('plugin_settings', 'addon/oembed/oembed.php', 'oembed_settings'); 
+	unregister_hook('plugin_settings_post', 'addon/oembed/oembed.php', 'oembed_settings_post');
 }
 
-function oembed_settings_post(){
+function oembed_settings_post($a,$b){
     if(! local_user())
 		return;
 	if (isset($_POST['oembed-submit'])){
-		set_pconfig(local_user(), 'oembed', 'use_for_youtube', (isset($_POST['oembed_use_for_youtube'])?1:0));
+		set_pconfig(local_user(), 'oembed', 'use_for_youtube', (isset($_POST['oembed_use_for_youtube'])? intval($_POST['oembed_use_for_youtube']):0));
 		notice( t('OEmbed settings updated') . EOL);
 	}
 }
@@ -32,7 +34,7 @@ function oembed_settings_post(){
 function oembed_settings(&$a,&$o) {
     if(! local_user())
 		return;
-	$uofy = get_pconfig(local_user(), 'oembed', 'use_for_youtube' );
+	$uofy = intval(get_pconfig(local_user(), 'oembed', 'use_for_youtube' ));
 
 	$o.='
 	<div class="settings-block">
@@ -40,13 +42,13 @@ function oembed_settings(&$a,&$o) {
 	<div id="settings-username-wrapper">
 		<label for="oembed_use_for_youtube">'
 			.t('Use OEmbed for YouTube videos: ') 
-		.'</label><input type="checkbox" id="oembed_use_for_youtube" name="oembed_use_for_youtube"'
+		.'</label><input type="checkbox" id="oembed_use_for_youtube" name="oembed_use_for_youtube" value="1"'
 		. ($uofy==1?'checked="true"':'')
-		.'>
+		.' />
 	</div>
 	<div id="settings-username-end"></div>
 	<div class="settings-submit-wrapper">
-		<input type="submit" value="'.t('Submit').'" class="settings-submit" name="oembed-submit">
+		<input type="submit" value="'.t('Submit').'" class="settings-submit" name="oembed-submit" />
 	</div>
 	</div>';
 }
