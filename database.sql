@@ -139,6 +139,7 @@ CREATE TABLE IF NOT EXISTS `group_member` (
 CREATE TABLE IF NOT EXISTS `intro` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(10) unsigned NOT NULL,
+  `fid` int(11) NOT NULL DEFAULT '0',
   `contact-id` int(11) NOT NULL,
   `knowyou` tinyint(1) NOT NULL,
   `duplex` tinyint(1) NOT NULL DEFAULT '0',

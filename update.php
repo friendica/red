@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1065 );
+define( 'UPDATE_VERSION' , 1066 );
 
 /**
  *
@@ -524,3 +524,8 @@ function update_1063() {
 function update_1064() {
 	q("ALTER TABLE `item` ADD `app` CHAR( 255 ) NOT NULL AFTER `body` ");
 }
+
+function update_1065() {
+	q("ALTER TABLE `intro` ADD `fid` INT NOT NULL DEFAULT '0' AFTER `uid`");
+}
+
