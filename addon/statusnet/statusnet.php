@@ -367,8 +367,8 @@ function statusnet_plugin_admin_post(&$a){
 				$sites[] = Array(
 					'sitename' => $sitename,
 					'apiurl' => $apiurl,
-					'secret' => $secret,
-					'key' => $key
+					'consumersecret' => $secret,
+					'consumerkey' => $key
 				);
 		}
 	}
@@ -386,8 +386,8 @@ function statusnet_plugin_admin(&$a, &$o){
 			$sitesform[] = Array(
 				'sitename' => Array("sitename[$id]", "Site name", $s['sitename'], ""),
 				'apiurl' => Array("apiurl[$id]", "Api url", $s['apiurl'], ""),
-				'secret' => Array("secret[$id]", "Secret", $s['secret'], ""),
-				'key' => Array("key[$id]", "Key", $s['key'], ""),
+				'secret' => Array("secret[$id]", "Secret", $s['consumersecret'], ""),
+				'key' => Array("key[$id]", "Key", $s['consumerkey'], ""),
 				'delete' => Array("delete[$id]", "Delete", False , "Check to delete this preset"),
 			);
 		}
