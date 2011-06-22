@@ -24,7 +24,6 @@ local .htaccess file
 
 	- PHP 5.2+. The later the better. You'll need 5.3 for encryption of key
 exchange conversations
-encryption support
 		- PHP *command line* access with register_argc_argv set to true in the 
 php.ini file
 		- curl, gd, mysql, mbstring, and openssl extensions
