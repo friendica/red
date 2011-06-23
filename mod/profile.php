@@ -116,8 +116,9 @@ function profile_content(&$a, $update = 0) {
 			'$status' => t('Status'),
 			'$profile' => t('Profile'),
 			'$photos' => t('Photos'),
-			'$events' => (($is_owner) ? 	'<a href="events" id="profile-tab-events-link" class="profile-tabs" >' . t('Events') . '</a>' : ''),
-			'$notes' => (($is_owner) ? 	'<a href="notes" id="profile-tab-notes-link" class="profile-tabs" >' . t('Personal Notes') . '</a>' : '')
+			'$events' => (($is_owner) ? t('Events') : ''),
+			'$notes' => (($is_owner) ? 	t('Personal Notes') : ''),
+			'$activetab' => $tab,
 		));
 
 
