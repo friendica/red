@@ -144,7 +144,7 @@ function dfrn_notify_post(&$a) {
 	}
 
 	// Consume notification feed. This may differ from consuming a public feed in several ways
-	// - might contain email
+	// - might contain email or friend suggestions
 	// - might contain remote followup to our message
 	//		- in which case we need to accept it and then notify other conversants
 	// - we may need to send various email notifications
@@ -153,6 +153,76 @@ function dfrn_notify_post(&$a) {
 	$feed->set_raw_data($data);
 	$feed->enable_order_by_date(false);
 	$feed->init();
+
+	// handle friend suggestion notification
+
+	$sugg = $feed->get_feed_tags( NAMESPACE_DFRN, 'suggest' );
+	if(isset($sugg[0]['child'][NAMESPACE_DFRN])) {
+		$base = $sugg[0]['child'][NAMESPACE_DFRN];
+		$fsugg = array();
+		$fsugg['uid'] = $importer['importer_uid'];
+		$fsugg['cid'] = $importer['id'];
+		$fsugg['name'] = notags(unxmlify($base['name'][0]['data']));
+		$fsugg['photo'] = notags(unxmlify($base['photo'][0]['data']));
+		$fsugg['url'] = notags(unxmlify($base['url'][0]['data']));
+		$fsugg['body'] = escape_tags(unxmlify($base['note'][0]['data']));
+
+		// Does our member already have a friend matching this description?
+
+		$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `url` = '%s' AND `uid` = %d LIMIT 1",
+			dbesc($fsugg['name']),
+			dbesc($fsuff['url']),
+			intval($fsugg['uid'])
+		);
+		if(count($r))
+			xml_status(0);
+
+		// Do we already have an fcontact record for this person?
+
+		$fid = 0;
+		$r = q("SELECT * FROM `fcontact` WHERE `url` = '%s' AND `name` = '%s' AND `photo` = '%s' LIMIT 1",
+			dbesc($fsugg['url']),
+			dbesc($fsuff['name']),
+			dbesc($fsugg['photo'])
+		);
+		if(count($r)) {
+			$fid = $r[0]['id'];
+		}
+		if(! $fid)
+			$r = q("INSERT INTO `fcontact` ( `name`,`url`,`photo` ) VALUES ( '%s', '%s', '%s' ) ",
+			dbesc($fsuff['name']),
+			dbesc($fsugg['url']),
+			dbesc($fsugg['photo'])
+		);
+		$r = q("SELECT * FROM `fcontact` WHERE `url` = '%s' AND `name` = '%s' AND `photo` = '%s' LIMIT 1",
+			dbesc($fsugg['url']),
+			dbesc($fsuff['name']),
+			dbesc($fsugg['photo'])
+		);
+		if(count($r)) {
+			$fid = $r[0]['id'];
+		}
+		// database record did not get created. Quietly give up.
+		else
+			xml_status(0);
+
+		$hash = random_string();
+ 
+		$r = q("INSERT INTO `intro` ( `uid`, `fid`, `contact-id`, `note`, `hash`, `datetime`, `blocked` )
+			VALUES( %d, %d, %d, '%s', '%s', '%s', %d )",
+			intval($fsugg['uid']),
+			intval($fid),
+			intval($fsugg['cid']),
+			dbesc($fsugg['body']),
+			dbesc($hash),
+			dbesc(datetime_convert()),
+			intval(0)
+		);
+
+		// TODO - send email notify (which may require a new notification preference)
+
+		xml_status(0);
+	}
 
 	$ismail = false;
 
