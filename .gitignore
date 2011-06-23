@@ -8,4 +8,5 @@ include/jquery-1.4.2.min.js
 *.version*
 push*
 langup
+merge
 home.html
