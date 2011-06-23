@@ -643,6 +643,9 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
 	transition: all 0.2s ease-in-out;		
 }
 
+#photo-next-link .icon,
+#photo-prev-link .icon { display: none }
+
 #photos-upload-spacer,
 #photos-upload-new-wrapper,
 #photos-upload-exist-wrapper { margin-bottom: 1em; }
@@ -795,6 +798,108 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
 #cropimage-wrapper { float:left; }
 #crop-image-form { clear:both; }
 
+/**
+ * events
+ **/
+ 
+.clear { clear: both; }
+.eventcal {
+	float: left;
+	font-size: 20px;
+}
+
+.vevent {
+	border: 1px solid #CCCCCC;
+}
+.vevent .event-description, .vevent .event-location {
+	margin-left: 10px;
+	margin-right: 10px;
+}
+.vevent .event-start {
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+#new-event-link {
+	margin-bottom: 10px;
+}
+
+.edit-event-link, .plink-event-link {
+	float: left;
+	margin-top: 4px;
+	margin-right: 4px;
+	margin-bottom: 15px;
+}
+
+.event-description:before {
+	content: url('../../../images/calendar.png');
+	margin-right: 15px;
+}
+
+.event-start, .event-end {
+	margin-left: 10px;
+	width: 330px;
+}
+
+.event-start .dtstart, .event-end .dtend {
+	float: right;
+}
+
+.event-list-date {
+	margin-bottom: 10px;
+}
+
+.prevcal, .nextcal {
+	float: left;
+	margin-left: 32px;
+	margin-right: 32px;
+	margin-top: 64px;
+}
+.event-calendar-end {
+	clear: both;
+}
+
+ 
+.calendar {
+	font-family: Courier, monospace;
+}
+.today {
+	font-weight: bold;
+	color: #FF0000;
+} 
+ 
+#event-start-text, 
+#event-finish-text {
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
+
+#event-nofinish-checkbox, 
+#event-nofinish-text, 
+#event-adjust-checkbox, 
+#event-adjust-text,
+#event-share-checkbox
+{
+	float: left;
+}
+#event-datetime-break {
+	margin-bottom: 10px;
+}
+
+#event-nofinish-break, 
+#event-adjust-break,
+#event-share-break {
+	clear: both;
+}
+
+#event-desc-text, 
+#event-location-text {
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
+#event-submit {
+	margin-top: 10px;
+}
 
 /**
  * 	directory
@@ -941,7 +1046,8 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
 
 .on 		{ background-position: -50px  -60px;}
 .off 		{ background-position: -70px  -60px;}
-
+.prev 		{ background-position: -90px  -60px;}
+.next 		{ background-position: -110px  -60px;}
 
 
 .icon.dim { opacity: 0.3;filter:alpha(opacity=30); }
