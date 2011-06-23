@@ -70,4 +70,21 @@ function piwik_analytics($a,&$b) {
 	}
 
 }
-
+function piwik_plugin_admin (&$a, &$o) {
+    $t = file_get_contents( dirname(__file__)."/admin.tpl");
+    $o = replace_macros( $t, array(
+            '$submit' => t('Submit'),
+            '$baseurl' => array('baseurl', t('Piwik Base URL'), get_config('piwik','baseurl' ), ''),
+            '$sideid' => array('sideid', t('Side ID'), get_config('piwik','sideid' ), ''),
+            '$optout' => array('optout', t('Show opt-out cookie link?'), get_config('piwik','optout' ), ''),
+        ));
+}
+function piwik_plugin_admin_post (&$a) {
+    $url = ((x($_POST, 'baseurl')) ? notags(trim($_POST['baseurl'])) : '');
+    $id = ((x($_POST, 'sideid')) ? trim($_POST['sideid']) : '');
+    $optout = ((x($_POST, 'optout')) ? trim($_POST['optout']) : '');
+    set_config('piwik', 'baseurl', $url);
+    set_config('piwik', 'sideid', $id);
+    set_config('piwik', 'optout', $optout);
+    info( t('Settings updated.'). EOL);
+}
