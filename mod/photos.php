@@ -80,15 +80,15 @@ EOT;
 
 function photos_post(&$a) {
 
-logger('mod/photos.php: photos_post(): begin' , 'LOGGER_DEBUG');
+	logger('mod/photos.php: photos_post(): begin' , 'LOGGER_DEBUG');
 
-foreach($_REQUEST AS $key => $val) {
-	logger('mod/photos.php: photos_post(): $_REQUEST key: ' . $key . ' val: ' . $val , 'LOGGER_DEBUG');
-}
+	foreach($_REQUEST AS $key => $val) {
+		logger('mod/photos.php: photos_post(): $_REQUEST key: ' . $key . ' val: ' . $val , 'LOGGER_DEBUG');
+	}
 
-foreach($_FILES AS $key => $val) {
-	logger('mod/photos.php: photos_post(): $_FILES key: ' . $key . ' val: ' . $val , 'LOGGER_DEBUG');
-}
+	foreach($_FILES AS $key => $val) {
+		logger('mod/photos.php: photos_post(): $_FILES key: ' . $key . ' val: ' . $val , 'LOGGER_DEBUG');
+	}
 
 	$can_post  = false;
 	$visitor   = 0;
@@ -836,6 +836,22 @@ function photos_content(&$a) {
 		);
 	}
 
+	$o = "";
+
+	// tabs
+	$tpl = get_markup_template('profile_tabs.tpl');
+	$_is_owner = (local_user() && (local_user() == $owner_uid));
+	$o .= replace_macros($tpl,array(
+		'$url' => $a->get_baseurl() . '/profile/' .$a->data['user']['nickname'],
+		'$phototab' => $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'],
+		'$status' => t('Status'),
+		'$profile' => t('Profile'),
+		'$photos' => t('Photos'),
+		'$events' => (($_is_owner) ? t('Events') : ''),
+		'$notes' => (($_is_owner) ? 	t('Personal Notes') : ''),
+		'$activetab' => "photos",
+	));	
+
 	//
 	// dispatch request
 	//
@@ -968,7 +984,7 @@ function photos_content(&$a) {
 
 
 
-		$o = '';
+		//$o = '';
 		// fetch image, item containing image, then comments
 
 		$ph = q("SELECT * FROM `photo` WHERE `uid` = %d AND `resource-id` = '%s' 
@@ -1319,7 +1335,7 @@ function photos_content(&$a) {
 	}
 
 	// Default - show recent photos with upload link (if applicable)
-	$o = '';
+	//$o = '';
 
 	$r = q("SELECT `resource-id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` != '%s' 
 		$sql_extra GROUP BY `resource-id`",

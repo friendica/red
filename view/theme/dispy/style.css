@@ -371,6 +371,7 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
 .tabs-wrapper li { display: inline;}
 .tabs { padding: 0px 5px; margin-right: 10px; }
 .tabs:hover { background-color: #729fcf; color: #eeeeec; border: 0px; }
+.tabs.active { background-color: #729fcf; color: #eeeeec; border: 0px; }
 
 
 /**

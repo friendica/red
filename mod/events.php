@@ -103,7 +103,22 @@ function events_content(&$a) {
 		return;
 	}
 
+	$o ="";
+	// tabs
+	$tpl = get_markup_template('profile_tabs.tpl');
+	$o .= replace_macros($tpl,array(
+		'$url' => $a->get_baseurl() . '/profile/' . $a->user['nickname'],
+		'$phototab' => $a->get_baseurl() . '/photos/' . $a->user['nickname'],
+		'$status' => t('Status'),
+		'$profile' => t('Profile'),
+		'$photos' => t('Photos'),
+		'$events' => t('Events') ,
+		'$notes' => t('Personal Notes'),
+		'$activetab' => "events",
+	));	
+
 	$o .= '<h2>' . t('Events') . '</h2>';
+
 
 	$mode = 'view';
 	$y = 0;

@@ -36,6 +36,20 @@ function notes_content(&$a) {
 	$contact = $a->contact;
 
 	$is_owner = true;
+
+	$o ="";
+	// tabs
+	$tpl = get_markup_template('profile_tabs.tpl');
+	$o .= replace_macros($tpl,array(
+		'$url' => $a->get_baseurl() . '/profile/' . $a->user['nickname'],
+		'$phototab' => $a->get_baseurl() . '/photos/' . $a->user['nickname'],
+		'$status' => t('Status'),
+		'$profile' => t('Profile'),
+		'$photos' => t('Photos'),
+		'$events' => t('Events') ,
+		'$notes' => t('Personal Notes'),
+		'$activetab' => "notes",
+	));	
 	
 
 	$o .= '<h3>' . t('Personal Notes') . '</h3>';
