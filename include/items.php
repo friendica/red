@@ -338,7 +338,7 @@ function get_atom_elements($feed,$item) {
 
 	$apps = $item->get_item_tags(NAMESPACE_STATUSNET,'notice_info');
 	if($apps && $apps[0]['attribs']['']['source']) {
-		$res['app'] = $apps[0]['attribs']['']['source'];
+		$res['app'] = strip_tags(unxmlify($apps[0]['attribs']['']['source']));
 		if($res['app'] === 'web')
 			$res['app'] = 'OStatus';
 	}		   

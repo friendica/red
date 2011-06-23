@@ -61,7 +61,7 @@ function item_post(&$a) {
 
 	$profile_uid = ((x($_POST,'profile_uid')) ? intval($_POST['profile_uid']) : 0);
 	$post_id     = ((x($_POST['post_id']))    ? intval($_POST['post_id'])     : 0);
-	$app         = ((x($_POST['source']))     ? notags($_POST['source'])      : '');
+	$app         = ((x($_POST['source']))     ? strip_tags($_POST['source'])  : '');
 
 	if(! can_write_wall($a,$profile_uid)) {
 		notice( t('Permission denied.') . EOL) ;

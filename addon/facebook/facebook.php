@@ -821,7 +821,7 @@ function fb_consume_stream($uid,$j,$wall = false) {
 				$datarray['owner-avatar'] = $self[0]['thumb'];
 			}
 			if(isset($entry->application) && isset($entry->application->name) && strlen($entry->application->name))
-				$datarray['app'] = $entry->application->name;
+				$datarray['app'] = strip_tags($entry->application->name);
 			else
 				$datarray['app'] = 'facebook';
 			$datarray['author-name'] = $from->name;
