@@ -195,6 +195,11 @@ function twitter_post_hook(&$a,&$b) {
 
 	if((local_user()) && (local_user() == $b['uid']) && (! $b['private']) && (! $b['parent']) ) {
 
+		// Twitter is not considered a private network
+		if($b['prvnets'])
+			return;
+
+
 		load_pconfig(local_user(), 'twitter');
 
 		$ckey    = get_config('twitter', 'consumerkey'  );

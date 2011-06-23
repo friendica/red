@@ -445,6 +445,7 @@ function item_post(&$a) {
 
 	$datarray['parent']        = $parent;
 	$datarray['self']          = $self;
+	$datarray['prvnets']       = $user['prvnets'];
 
 	if($orig_post)
 		$datarray['edit']      = true;

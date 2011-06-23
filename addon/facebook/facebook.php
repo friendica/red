@@ -431,6 +431,10 @@ function facebook_post_hook(&$a,&$b) {
 
 	if((local_user()) && (local_user() == $b['uid'])) {
 
+		// Facebook is not considered a private network
+		if($b['prvnets'])
+			return;
+
 		if($b['parent']) {
 			$r = q("SELECT * FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval($b['parent']),

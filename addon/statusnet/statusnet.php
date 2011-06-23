@@ -303,10 +303,14 @@ function statusnet_post_hook(&$a,&$b) {
 
 	if((local_user()) && (local_user() == $b['uid']) && (! $b['private']) && (!$b['parent']) ) {
 
-                load_pconfig(local_user(), 'statusnet');
+		// Status.Net is not considered a private network
+		if($b['prvnets'])
+			return;
+
+		load_pconfig(local_user(), 'statusnet');
             
-                $api     = get_pconfig(local_user(), 'statusnet', 'baseapi');
-                $ckey    = get_pconfig(local_user(), 'statusnet', 'consumerkey'  );
+		$api     = get_pconfig(local_user(), 'statusnet', 'baseapi');
+		$ckey    = get_pconfig(local_user(), 'statusnet', 'consumerkey'  );
 		$csecret = get_pconfig(local_user(), 'statusnet', 'consumersecret' );
 		$otoken  = get_pconfig(local_user(), 'statusnet', 'oauthtoken'  );
 		$osecret = get_pconfig(local_user(), 'statusnet', 'oauthsecret' );

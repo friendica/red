@@ -64,6 +64,8 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 		$sql_extra .= " AND `network` IN ( 'dfrn', 'mail', 'face' ) ";
 	}
 
+
+
 	if($privmail)
 		$o .= "<select name=\"$selname\" id=\"$selclass\" class=\"$selclass\" size=\"$size\" >\r\n";
 	else 

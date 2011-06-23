@@ -106,7 +106,8 @@ function notifier_run($argv, $argc){
 			$top_level = true;
 	}
 
-	$r = q("SELECT `contact`.*, `user`.`timezone`, `user`.`nickname`, `user`.`sprvkey`, `user`.`spubkey`, `user`.`page-flags` 
+	$r = q("SELECT `contact`.*, `user`.`timezone`, `user`.`nickname`, `user`.`sprvkey`, `user`.`spubkey`, 
+		`user`.`page-flags`, `user`.`prvnets`
 		FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
 		WHERE `contact`.`uid` = %d AND `contact`.`self` = 1 LIMIT 1",
 		intval($uid)
@@ -329,7 +330,8 @@ function notifier_run($argv, $argc){
 					}
 					break;
 				case 'stat':
-
+					if($owner['prvnets'])
+						break;
 					if($followup && $contact['notify']) {
 						logger('notifier: slapdelivery: ' . $contact['name']);
 						$deliver_status = slapper($owner,$contact['notify'],$slap);
@@ -373,6 +375,7 @@ function notifier_run($argv, $argc){
 						}
 					}
 					break;
+
 				case 'mail':
 						
 					// WARNING: does not currently convert to RFC2047 header encodings, etc.
@@ -447,9 +450,9 @@ function notifier_run($argv, $argc){
 						mail($addr, $subject, $message, $headers);
 					}
 					break;
-				case 'dspr':
 				case 'feed':
 				case 'face':
+				case 'dspr':
 				default:
 					break;
 			}
