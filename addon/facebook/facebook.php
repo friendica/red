@@ -43,6 +43,25 @@
 
 define('FACEBOOK_MAXPOSTLEN', 420);
 
+
+function facebook_install() {
+	register_hook('post_local_end',   'addon/facebook/facebook.php', 'facebook_post_hook');
+	register_hook('jot_networks',     'addon/facebook/facebook.php', 'facebook_jot_nets');
+	register_hook('plugin_settings',  'addon/facebook/facebook.php', 'facebook_plugin_settings');
+	register_hook('cron',             'addon/facebook/facebook.php', 'facebook_cron');
+	register_hook('queue_predeliver', 'addon/facebook/facebook.php', 'fb_queue_hook');
+}
+
+
+function facebook_uninstall() {
+	unregister_hook('post_local_end',   'addon/facebook/facebook.php', 'facebook_post_hook');
+	unregister_hook('jot_networks',     'addon/facebook/facebook.php', 'facebook_jot_nets');
+	unregister_hook('plugin_settings',  'addon/facebook/facebook.php', 'facebook_plugin_settings');
+	unregister_hook('cron',             'addon/facebook/facebook.php', 'facebook_cron');
+	unregister_hook('queue_predeliver', 'addon/facebook/facebook.php', 'fb_queue_hook');
+}
+
+
 /* declare the facebook_module function so that /facebook url requests will land here */
 
 function facebook_module() {}
@@ -339,22 +358,6 @@ function facebook_content(&$a) {
 	return $o;
 }
 
-function facebook_install() {
-	register_hook('post_local_end',   'addon/facebook/facebook.php', 'facebook_post_hook');
-	register_hook('jot_networks',     'addon/facebook/facebook.php', 'facebook_jot_nets');
-	register_hook('plugin_settings',  'addon/facebook/facebook.php', 'facebook_plugin_settings');
-	register_hook('cron',             'addon/facebook/facebook.php', 'facebook_cron');
-	register_hook('queue_predeliver', 'addon/facebook/facebook.php', 'fb_queue_hook');
-}
-
-
-function facebook_uninstall() {
-	unregister_hook('post_local_end',   'addon/facebook/facebook.php', 'facebook_post_hook');
-	unregister_hook('jot_networks',     'addon/facebook/facebook.php', 'facebook_jot_nets');
-	unregister_hook('plugin_settings',  'addon/facebook/facebook.php', 'facebook_plugin_settings');
-	unregister_hook('cron',             'addon/facebook/facebook.php', 'facebook_cron');
-	unregister_hook('queue_predeliver', 'addon/facebook/facebook.php', 'fb_queue_hook');
-}
 
 
 function facebook_cron($a,$b) {
@@ -432,7 +435,7 @@ function facebook_post_hook(&$a,&$b) {
 	if((local_user()) && (local_user() == $b['uid'])) {
 
 		// Facebook is not considered a private network
-		if($b['prvnets'])
+		if($b['prvnets'] && $b['private'])
 			return;
 
 		if($b['parent']) {
