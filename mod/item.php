@@ -419,6 +419,7 @@ function item_post(&$a) {
 	$datarray['author-avatar'] = $author['thumb'];
 	$datarray['created']       = datetime_convert();
 	$datarray['edited']        = datetime_convert();
+	$datarray['received']      = datetime_convert();
 	$datarray['changed']       = datetime_convert();
 	$datarray['uri']           = $uri;
 	$datarray['title']         = $title;
@@ -473,9 +474,9 @@ function item_post(&$a) {
 
 
 	$r = q("INSERT INTO `item` (`uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
-		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `changed`, `uri`, `title`, `body`, `app`, `location`, `coord`, 
+		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `received`, `changed`, `uri`, `title`, `body`, `app`, `location`, `coord`, 
 		`tag`, `inform`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach` )
-		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s' )",
+		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s' )",
 		intval($datarray['uid']),
 		dbesc($datarray['type']),
 		intval($datarray['wall']),
@@ -489,6 +490,7 @@ function item_post(&$a) {
 		dbesc($datarray['author-avatar']),
 		dbesc($datarray['created']),
 		dbesc($datarray['edited']),
+		dbesc($datarray['received']),
 		dbesc($datarray['changed']),
 		dbesc($datarray['uri']),
 		dbesc($datarray['title']),

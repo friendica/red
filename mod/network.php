@@ -212,7 +212,7 @@ function network_content(&$a, $update = 0) {
 			AND `contact`.`id` = `item`.`contact-id`
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 			$sql_extra
-			ORDER BY `item`.`created` DESC LIMIT %d ,%d ",
+			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
 			intval($_SESSION['uid']),
 			intval($a->pager['start']),
 			intval($a->pager['itemspage'])

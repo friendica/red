@@ -669,6 +669,7 @@ function item_store($arr,$force_parent = false) {
 	$arr['owner-avatar']  = ((x($arr,'owner-avatar'))  ? notags(trim($arr['owner-avatar']))  : '');
 	$arr['created']       = ((x($arr,'created') !== false) ? datetime_convert('UTC','UTC',$arr['created']) : datetime_convert());
 	$arr['edited']        = ((x($arr,'edited')  !== false) ? datetime_convert('UTC','UTC',$arr['edited'])  : datetime_convert());
+	$arr['received']      = datetime_convert();
 	$arr['changed']       = datetime_convert();
 	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
 	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : '');

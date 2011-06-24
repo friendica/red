@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1066 );
+define( 'UPDATE_VERSION' , 1067 );
 
 /**
  *
@@ -529,3 +529,10 @@ function update_1065() {
 	q("ALTER TABLE `intro` ADD `fid` INT NOT NULL DEFAULT '0' AFTER `uid`");
 }
 
+function update_1066() {
+	$r = q("ALTER TABLE `item` ADD `received` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `edited` ");
+	if($r)
+		q("ALTER TABLE `item` ADD INDEX ( `received` ) ");
+
+	$r = q("UPDATE `item` SET `received` = `edited` WHERE 1");
+}
