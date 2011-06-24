@@ -212,6 +212,8 @@ function event_store($arr) {
 		$contact = $c[0];
 
 
+	// Existing event being modified
+
 	if($arr['id']) {
 
 		// has the event actually changed?
@@ -221,6 +223,9 @@ function event_store($arr) {
 			intval($arr['uid'])
 		);
 		if((! count($r)) || ($r[0]['edited'] === $arr['edited'])) {
+
+			// Nothing has changed. Grab the item id to return.
+
 			$r = q("SELECT * FROM `item` WHERE `event-id` = %d AND `uid` = %d LIMIT 1",
 				intval($arr['id']),
 				intval($arr['uid'])
@@ -228,6 +233,7 @@ function event_store($arr) {
 			return((count($r)) ? $r[0]['id'] : 0);
 		}
 
+		// The event changed. Update it.
 
 		$r = q("UPDATE `event` SET
 			`edited` = '%s',
@@ -276,7 +282,7 @@ function event_store($arr) {
 				dbesc($arr['allow_gid']),
 				dbesc($arr['deny_cid']),
 				dbesc($arr['deny_gid']),
-				dbesc(datetime_convert()),
+				dbesc($arr['edited']),
 				intval($r[0]['id']),
 				intval($arr['uid'])
 			);
@@ -287,6 +293,8 @@ function event_store($arr) {
 			return 0;
 	}
 	else {
+
+		// New event. Store it. 
 
 		$r = q("INSERT INTO `event` ( `uid`,`cid`,`uri`,`created`,`edited`,`start`,`finish`,`desc`,`location`,`type`,
 			`adjust`,`nofinish`,`allow_cid`,`allow_gid`,`deny_cid`,`deny_gid`)
