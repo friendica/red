@@ -213,6 +213,22 @@ function event_store($arr) {
 
 
 	if($arr['id']) {
+
+		// has the event actually changed?
+
+		$r = q("SELECT * FROM `event` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			intval($arr['id']),
+			intval($arr['uid'])
+		);
+		if((! count($r)) || ($r[0]['edited'] === $arr['edited'])) {
+			$r = q("SELECT * FROM `item` WHERE `event-id` = %d AND `uid` = %d LIMIT 1",
+				intval($arr['id']),
+				intval($arr['uid'])
+			);
+			return((count($r)) ? $r[0]['id'] : 0);
+		}
+
+
 		$r = q("UPDATE `event` SET
 			`edited` = '%s',
 			`start` = '%s',

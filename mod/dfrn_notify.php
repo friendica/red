@@ -676,6 +676,7 @@ function dfrn_notify_post(&$a) {
 					$ev['cid'] = $importer['id'];
 					$ev['uid'] = $importer['uid'];
 					$ev['uri'] = $item_id;
+					$ev['edited'] = $datarray['edited'];
 
 					$r = q("SELECT * FROM `event` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 						dbesc($item_id),

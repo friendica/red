@@ -1347,6 +1347,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 					if(x($ev,'desc') && x($ev,'start')) {
 						$ev['uid'] = $importer['uid'];
 						$ev['uri'] = $item_id;
+						$ev['edited'] = $datarray['edited'];
 
 						if(is_array($contact))
 							$ev['cid'] = $contact['id'];
