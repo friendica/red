@@ -507,7 +507,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		$local_uid = $r[0]['uid'];
 
 
-		if(! strstr($my_prvkey,'BEGIN RSA PRIVATE KEY')) {
+		if(! strstr($my_prvkey,'PRIVATE KEY')) {
 			$message = t('Our site encryption key is apparently messed up.');
 			xml_status(3,$message);
 		}
