@@ -171,7 +171,7 @@ function dfrn_notify_post(&$a) {
 
 		$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `url` = '%s' AND `uid` = %d LIMIT 1",
 			dbesc($fsugg['name']),
-			dbesc($fsuff['url']),
+			dbesc($fsugg['url']),
 			intval($fsugg['uid'])
 		);
 		if(count($r))
@@ -182,7 +182,7 @@ function dfrn_notify_post(&$a) {
 		$fid = 0;
 		$r = q("SELECT * FROM `fcontact` WHERE `url` = '%s' AND `name` = '%s' AND `photo` = '%s' LIMIT 1",
 			dbesc($fsugg['url']),
-			dbesc($fsuff['name']),
+			dbesc($fsugg['name']),
 			dbesc($fsugg['photo'])
 		);
 		if(count($r)) {
@@ -190,13 +190,13 @@ function dfrn_notify_post(&$a) {
 		}
 		if(! $fid)
 			$r = q("INSERT INTO `fcontact` ( `name`,`url`,`photo` ) VALUES ( '%s', '%s', '%s' ) ",
-			dbesc($fsuff['name']),
+			dbesc($fsugg['name']),
 			dbesc($fsugg['url']),
 			dbesc($fsugg['photo'])
 		);
 		$r = q("SELECT * FROM `fcontact` WHERE `url` = '%s' AND `name` = '%s' AND `photo` = '%s' LIMIT 1",
 			dbesc($fsugg['url']),
-			dbesc($fsuff['name']),
+			dbesc($fsugg['name']),
 			dbesc($fsugg['photo'])
 		);
 		if(count($r)) {
