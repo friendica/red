@@ -24,7 +24,7 @@ function xrd_content(&$a) {
 
 	$salmon_key = salmon_key($r[0]['spubkey']);
 
-
+	header('Access-Control-Allow-Origin: *');
 	header("Content-type: text/xml");
 
 	$tpl = file_get_contents('view/xrd_person.tpl');
