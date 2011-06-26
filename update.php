@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1067 );
+define( 'UPDATE_VERSION' , 1068 );
 
 /**
  *
@@ -535,4 +535,9 @@ function update_1066() {
 		q("ALTER TABLE `item` ADD INDEX ( `received` ) ");
 
 	$r = q("UPDATE `item` SET `received` = `edited` WHERE 1");
+}
+
+function update_1067() {
+	q("ALTER TABLE `ffinder` ADD `type` CHAR( 16 ) NOT NULL AFTER `id` ,
+	ADD `note` TEXT NOT NULL AFTER `type` ");
 }
