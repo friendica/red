@@ -3,7 +3,7 @@
 
 <p class="intro-desc">$str_notifytype $notify_type</p>
 <div class="intro-fullname" id="intro-fullname-$contact_id" >$fullname</div>
-<a class="intro-url-link" id="intro-url-link-$contact_id" href="$url" ><img id="photo-$contact_id" class="intro-photo" src="$photo" width="175" height=175" name="$fullname" alt="fullname" /></a>
+<a class="intro-url-link" id="intro-url-link-$contact_id" href="$url" ><img id="photo-$contact_id" class="intro-photo" src="$photo" width="175" height=175" title="$fullname" alt="$fullname" /></a>
 <div class="intro-knowyou">$knowyou</div>
 <div class="intro-note" id="intro-note-$contact_id">$note</div>
 <div class="intro-wrapper-end" id="intro-wrapper-end-$contact_id"></div>
