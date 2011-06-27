@@ -1,0 +1,114 @@
+<?php
+
+
+function fsuggest_post(&$a) {
+
+	if(! local_user()) {
+		return;
+	}
+
+	if($a->argc != 2)
+		return;
+
+	$contact_id = intval($a->argv[1]);
+
+	$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+		intval($contact_id),
+		intval(local_user())
+	);
+	if(! count($r)) {
+		notice( t('Contact not found.') . EOL);
+		return;
+	}
+	$contact = $r[0];
+
+	$new_contact = intval($_POST['suggest']);
+
+	$hash = random_string();
+
+	$note = escape_tags(trim($_POST['note']));
+
+	if($new_contact) {
+		$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			intval($new_contact),
+			intval(local_user())
+		);
+		if(count($r)) {
+
+			$x = q("INSERT INTO `fsuggest` ( `uid`,`cid`,`name`,`url`,`request`,`photo`,`note`,`created`)
+				VALUES ( %d, %d, '%s','%s','%s','%s','%s','%s')",
+				intval(local_user()),
+				intval($contact_id),
+				dbesc($r[0]['name']), 
+				dbesc($r[0]['url']), 
+				dbesc($r[0]['request']), 
+				dbesc($r[0]['photo']), 
+				dbesc($hash), 
+				dbesc(datetime_convert())
+			);
+			$r = q("SELECT `id` FROM `fsuggest` WHERE `note` = '%s' AND `uid` = %d LIMIT 1",
+				dbesc($hash),
+				intval(local_user())
+			);
+			if(count($r)) {
+				$fsuggest_id = $r[0]['id'];
+				q("UPDATE `fsuggest` SET `note` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+					dbesc($note),
+					intval($fsuggest_id),
+					intval(local_user())
+				);
+				proc_run('php', 'include/notifier.php', 'suggest' , $fsuggest_id);
+			}
+
+			info( t('Friend suggestion sent.') . EOL);
+		}
+
+	}
+
+
+}
+
+
+
+function fsuggest_content(&$a) {
+
+	require_once('include/acl_selectors.php');
+
+	if(! local_user()) {
+		notice( t('Permission denied.') . EOL);
+		return;
+	}
+
+	if($a->argc != 2)
+		return;
+
+	$contact_id = intval($a->argv[1]);
+
+	$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+		intval($contact_id),
+		intval(local_user())
+	);
+	if(! count($r)) {
+		notice( t('Contact not found.') . EOL);
+		return;
+	}
+	$contact = $r[0];
+
+
+
+
+	$o = '<h3>' . t('Suggest Friends') . '</h3>';
+
+	$o .= sprintf( t('Suggest a friend for %s'), $contact['name']);
+
+	$o .= '<form action="fsuggest/' . $contact_id . '" method="post" >';
+
+	// TODO: selector should have an option to ignore the recipient
+	$o .= contact_select('suggest','suggest-select', $preselect, 4, true);
+
+
+	$o .= '<input type="submit" name="submit" value="' . t('Submit') . '" />';
+	$o .= '</form>';
+
+	return $o;
+}
