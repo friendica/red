@@ -165,6 +165,7 @@ function dfrn_notify_post(&$a) {
 		$fsugg['name'] = notags(unxmlify($base['name'][0]['data']));
 		$fsugg['photo'] = notags(unxmlify($base['photo'][0]['data']));
 		$fsugg['url'] = notags(unxmlify($base['url'][0]['data']));
+		$fsugg['request'] = notags(unxmlify($base['request'][0]['data']));
 		$fsugg['body'] = escape_tags(unxmlify($base['note'][0]['data']));
 
 		// Does our member already have a friend matching this description?
@@ -180,24 +181,25 @@ function dfrn_notify_post(&$a) {
 		// Do we already have an fcontact record for this person?
 
 		$fid = 0;
-		$r = q("SELECT * FROM `fcontact` WHERE `url` = '%s' AND `name` = '%s' AND `photo` = '%s' LIMIT 1",
+		$r = q("SELECT * FROM `fcontact` WHERE `url` = '%s' AND `name` = '%s' AND `request` = '%s' LIMIT 1",
 			dbesc($fsugg['url']),
 			dbesc($fsugg['name']),
-			dbesc($fsugg['photo'])
+			dbesc($fsugg['request'])
 		);
 		if(count($r)) {
 			$fid = $r[0]['id'];
 		}
 		if(! $fid)
-			$r = q("INSERT INTO `fcontact` ( `name`,`url`,`photo` ) VALUES ( '%s', '%s', '%s' ) ",
+			$r = q("INSERT INTO `fcontact` ( `name`,`url`,`photo`,`request` ) VALUES ( '%s', '%s', '%s', '%s' ) ",
 			dbesc($fsugg['name']),
 			dbesc($fsugg['url']),
-			dbesc($fsugg['photo'])
+			dbesc($fsugg['photo']),
+			dbesc($fsugg['request'])
 		);
-		$r = q("SELECT * FROM `fcontact` WHERE `url` = '%s' AND `name` = '%s' AND `photo` = '%s' LIMIT 1",
+		$r = q("SELECT * FROM `fcontact` WHERE `url` = '%s' AND `name` = '%s' AND `request` = '%s' LIMIT 1",
 			dbesc($fsugg['url']),
 			dbesc($fsugg['name']),
-			dbesc($fsugg['photo'])
+			dbesc($fsugg['request'])
 		);
 		if(count($r)) {
 			$fid = $r[0]['id'];

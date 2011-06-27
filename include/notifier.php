@@ -71,6 +71,16 @@ function notifier_run($argv, $argc){
 		if(! count($items))
 			return;
 	}
+	elseif($cmd === 'suggest') {
+		$suggest = q("SELECT * FROM `fsuggest` WHERE `id` = %d LIMIT 1",
+			intval($item_id)
+		);
+		if(! count($suggest))
+			return;
+		$uid = $suggest[0]['uid'];
+		$recipients[] = $suggest[0]['cid'];
+		$item = $suggest[0];
+	}
 	else {
 
 		// find ancestors
@@ -126,7 +136,7 @@ function notifier_run($argv, $argc){
 	// fill this in with a single salmon slap if applicable
 	$slap = '';
 
-	if($cmd != 'mail') {
+	if($cmd != 'mail' && $cmd != 'suggest') {
 
 		require_once('include/group.php');
 
@@ -235,6 +245,26 @@ function notifier_run($argv, $argc){
 			'$content'      => xmlify($item['body']),
 			'$parent_id'    => xmlify($item['parent-uri'])
 		));
+	}
+	elseif($cmd === 'suggest') {
+		$notify_hub = false;  // suggestions are not public
+
+		$sugg_template = get_markup_template('atom_suggest.tpl');
+
+		$atom .= replace_macros($sugg_template, array(
+			'$name'         => xmlify($item['name']),
+			'$url'          => xmlify($item['url']),
+			'$photo'        => xmlify($item['photo']),
+			'$request'      => xmlify($item['request']),
+			'$note'         => xmlify($item['note'])
+		));
+
+		// We don't need this any more
+
+		q("DELETE FROM `fsuggest` WHERE `id` = %d LIMIT 1",
+			intval($item['id'])
+		);
+
 	}
 	else {
 		if($followup) {

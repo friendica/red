@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1069 );
+define( 'UPDATE_VERSION' , 1070 );
 
 /**
  *
@@ -561,4 +561,7 @@ function update_1068() {
 
 }
 
-
+function update_1069() {
+	q("ALTER TABLE `fsuggest` ADD `request` CHAR( 255 ) NOT NULL AFTER `url` ");
+	q("ALTER TABLE `fcontact` ADD `request` CHAR( 255 ) NOT NULL AFTER `photo` ");
+}
