@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1068 );
+define( 'UPDATE_VERSION' , 1069 );
 
 /**
  *
@@ -541,3 +541,24 @@ function update_1067() {
 	q("ALTER TABLE `ffinder` ADD `type` CHAR( 16 ) NOT NULL AFTER `id` ,
 	ADD `note` TEXT NOT NULL AFTER `type` ");
 }
+
+function update_1068() {
+	// 1067 was short-sighted. Undo it.
+	q("ALTER TABLE `ffinder` DROP `type` , DROP `note` ");
+
+	// and do this instead.
+
+	q("CREATE TABLE IF NOT EXISTS `fsuggest` (
+	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`uid` INT NOT NULL ,
+	`cid` INT NOT NULL ,
+	`name` CHAR( 255 ) NOT NULL ,
+	`url` CHAR( 255 ) NOT NULL ,
+	`photo` CHAR( 255 ) NOT NULL ,
+	`note` TEXT NOT NULL ,
+	`created` DATETIME NOT NULL 
+	) ENGINE = MYISAM DEFAULT CHARSET=utf8");
+
+}
+
+

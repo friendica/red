@@ -128,7 +128,8 @@ and save your changes.
 #####################################################################
 	
 	Check your database settings. It usually means your database could not 
-be opened or accessed.
+be opened or accessed. If the database resides on the same machine, check that
+the database server name is "localhost". 
 
 #####################################################################
 - 500 Internal Error
@@ -140,6 +141,11 @@ supported by your version of Apache. Examine your apache server logs.
 you are using a Windows server as this has been known to cause problems.
 Also check your file permissions. Your website and all contents must generally 
 be world-readable.
+
+	It is likely that your web server reported the source of the problem in
+its error log files. Please review these system error logs to determine what 
+caused the problem. Often this will need to be resolved with your hosting
+provider or (if self-hosted) your web server configuration. 
 
 #####################################################################
 - 400 and 4xx "File not found" errors
