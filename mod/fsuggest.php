@@ -104,7 +104,7 @@ function fsuggest_content(&$a) {
 		array('size' => 4, 'exclude' => $contact_id, 'networks' => 'DFRN_ONLY', 'single' => true));
 
 
-	$o .= '<input id="fsuggest-submit" type="submit" name="submit" value="' . t('Submit') . '" />';
+	$o .= '<div id="fsuggest-submit-wrapper"><input id="fsuggest-submit" type="submit" name="submit" value="' . t('Submit') . '" /></div>';
 	$o .= '</form>';
 
 	return $o;

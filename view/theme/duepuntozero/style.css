@@ -881,6 +881,11 @@ input#dfrn-url {
 	clear: both;
 }
 
+#fsuggest-desc, #fsuggest-submit-wrapper {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
 .wall-item-content-wrapper {
 	margin-top: 10px;
 	border: 1px solid #CCC;
