@@ -94,20 +94,17 @@ function fsuggest_content(&$a) {
 	}
 	$contact = $r[0];
 
-
-
-
 	$o = '<h3>' . t('Suggest Friends') . '</h3>';
 
-	$o .= sprintf( t('Suggest a friend for %s'), $contact['name']);
+	$o .= '<div id="fsuggest-desc" >' . sprintf( t('Suggest a friend for %s'), $contact['name']) . '</div>';
 
-	$o .= '<form action="fsuggest/' . $contact_id . '" method="post" >';
+	$o .= '<form id="fsuggest-form" action="fsuggest/' . $contact_id . '" method="post" >';
 
 	$o .= contact_selector('suggest','suggest-select', false, 
 		array('size' => 4, 'exclude' => $contact_id, 'networks' => 'DFRN_ONLY', 'single' => true));
 
 
-	$o .= '<input type="submit" name="submit" value="' . t('Submit') . '" />';
+	$o .= '<input id="fsuggest-submit" type="submit" name="submit" value="' . t('Submit') . '" />';
 	$o .= '</form>';
 
 	return $o;
