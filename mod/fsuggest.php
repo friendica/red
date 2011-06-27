@@ -103,8 +103,8 @@ function fsuggest_content(&$a) {
 
 	$o .= '<form action="fsuggest/' . $contact_id . '" method="post" >';
 
-	// TODO: selector should have an option to ignore the recipient
-	$o .= contact_select('suggest','suggest-select', $preselect, 4, true);
+	$o .= contact_selector('suggest','suggest-select', false, 
+		array('size' => 4, 'exclude' => $contact_id, 'networks' => 'DFRN_ONLY', 'single' => true));
 
 
 	$o .= '<input type="submit" name="submit" value="' . t('Submit') . '" />';

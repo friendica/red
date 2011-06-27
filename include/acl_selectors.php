@@ -48,14 +48,22 @@ function contact_selector($selname, $selclass, $preselected = false, $options) {
 	$mutual = false;
 	$networks = null;
 	$single = false;
+	$exclude = false;
+	$size = 4;
 
-	if($is_array($options)) {
+	if(is_array($options)) {
+		if(x($options,'size'))
+			$size = $options['size'];
+
 		if(x($options,'mutual_friends'))
 			$mutual = true;
 		if(x($options,'single'))
 			$single = true;
 		if(x($options,'multiple'))
 			$single = false;
+		if(x($options,'exclude'))
+			$exclude = $options['exclude'];
+
 		if(x($options,'networks')) {
 			switch($options['networks']) {
 				case 'DFRN_ONLY':
@@ -79,7 +87,7 @@ function contact_selector($selname, $selclass, $preselected = false, $options) {
 		}
 	}
 		
-	$x = array('options' => $options, 'single' => $single, 'mutual' => $mutual, 'networks' => $networks);
+	$x = array('options' => $options, 'size' => $size, 'single' => $single, 'mutual' => $mutual, 'exclude' => $exclude, 'networks' => $networks);
 
 	call_hooks('contact_select_options', $x);
 
@@ -91,6 +99,9 @@ function contact_selector($selname, $selclass, $preselected = false, $options) {
 		$sql_extra .= sprintf(" AND `rel` = %d ", intval(REL_BUD));
 	}
 
+	if(intval($x['exclude']))
+		$sql_extra .= sprintf(" AND `id` != %d ", intval($x['exclude']));
+
 	if(is_array($x['networks']) && count($x['networks'])) {
 		for($y = 0; $y < count($x['networks']) ; $y ++)
 			$x['networks'][$y] = "'" . dbesc($x['networks'][$y]) . "'";
@@ -99,9 +110,9 @@ function contact_selector($selname, $selclass, $preselected = false, $options) {
 	}
 
 	if($x['single'])
-		$o .= "<select name=\"$selname\" id=\"$selclass\" class=\"$selclass\" size=\"$size\" >\r\n";
+		$o .= "<select name=\"$selname\" id=\"$selclass\" class=\"$selclass\" size=\"" . $x['size'] . "\" >\r\n";
 	else 
-		$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" >\r\n";
+		$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"" . $x['size'] . "$\" >\r\n";
 
 	$r = q("SELECT `id`, `name`, `url`, `network` FROM `contact` 
 		WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 AND `notify` != ''
