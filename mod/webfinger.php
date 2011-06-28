@@ -18,7 +18,9 @@ function webfinger_content(&$a) {
 			$res = webfinger($addr);
 		else
 			$res = lrdd($addr);
+		$o .= '<pre>';
 		$o .= str_replace("\n",'<br />',print_r($res,true));
+		$o .= '</pre>';
 	}
 	return $o;
 }
