@@ -1685,8 +1685,10 @@ function fetch_lrdd_template($host) {
 	$url1 = 'https://' . $host . '/.well-known/host-meta' ;
 	$url2 = 'http://' . $host . '/.well-known/host-meta' ;
 	$links = fetch_xrd_links($url1);
+	logger('fetch_lrdd_template from: ' . $url1);
 	logger('template (https): ' . print_r($links,true));
 	if(! count($links)) {
+		logger('fetch_lrdd_template from: ' . $url2);
 		$links = fetch_xrd_links($url2);
 		logger('template (http): ' . print_r($links,true));
 	}

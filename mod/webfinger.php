@@ -13,7 +13,7 @@ function webfinger_content(&$a) {
 	$o .= '<br /><br />';
 
 	if(x($_GET,'addr')) {
-		$addr = $_GET['addr'];
+		$addr = trim($_GET['addr']);
 		if(strpos($addr,'@' !== false))
 			$res = webfinger($addr);
 		else
