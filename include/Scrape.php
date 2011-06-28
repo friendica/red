@@ -423,7 +423,7 @@ function probe_url($url) {
 				$poll = $tapi . '?user_id=' . $tid;
 			else
 				$poll = $tapi . '?screen_name=' . $tid;
-			$profile = 'http://twitter.com/!#/' . $tid;
+			$profile = 'http://twitter.com/#!/' . $tid;
 		}
 
 		if(! x($vcard,'fn'))
