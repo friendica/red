@@ -178,6 +178,10 @@ function relative_date($posted_date) {
 	$abs = strtotime($localtime);
 	$etime = time() - $abs;
     
+    if ($abs==False) {
+		 return t('never');
+	}
+    
 	if ($etime < 1) {
 		return t('less than a second ago');
 	}

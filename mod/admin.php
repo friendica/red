@@ -327,11 +327,8 @@ function admin_page_site(&$a) {
  * Users admin page
  */
 function admin_page_users_post(&$a){
-	$users=array(); $pending=array();
-	foreach($_POST as $k=>$v){
-		if (substr($k,0,5)=="user_") $users[] = substr($k,5,strlen($k)-5);
-		if (substr($k,0,8)=="pending_") $users[] = substr($k,8,strlen($k)-8);
-	}
+	$pending = ( x(£_POST, 'pending') ? $_POST['pending'] : Array() );
+	$users = ( x($_POST, 'user') ? $_POST['user'] : Array() );
 	
 	if (x($_POST,'page_users_block')){
 		foreach($users as $uid){
@@ -350,13 +347,13 @@ function admin_page_users_post(&$a){
 	}
 	
 	if (x($_POST,'page_users_approve')){
-		require_once("include/regmod.php");
+		require_once("mod/regmod.php");
 		foreach($pending as $hash){
 			user_allow($hash);
 		}
 	}
 	if (x($_POST,'page_users_deny')){
-		require_once("include/regmod.php");
+		require_once("mod/regmod.php");
 		foreach($pending as $hash){
 			user_deny($hash);
 		}
@@ -409,22 +406,15 @@ function admin_page_users(&$a){
 		$a->set_pager_itemspage(100);
 	}
 
-	$users = q("SELECT `user` . * , `contact`.`name` , `contact`.`url` , `contact`.`micro` , `lastitem`.`lastitem_date`
-				FROM (
-					SELECT MAX(`item`.`changed`) as `lastitem_date`, `item`.`uid`
-					FROM `item`
-					WHERE `item`.`type` = 'wall'
-					GROUP BY `item`.`uid`
-				) AS `lastitem` , `user`
+	$users = q("SELECT `user` . * , `contact`.`name` , `contact`.`url` , `contact`.`micro` 
+				FROM `user`
 				LEFT JOIN `contact` ON `user`.`uid` = `contact`.`uid`
 				WHERE `user`.`verified` =1
 				AND `contact`.`self` =1
-				AND `lastitem`.`uid` = `user`.`uid`
 				ORDER BY `contact`.`name` LIMIT %d, %d
 				",
 				intval($a->pager['start']),
 				intval($a->pager['itemspage'])
-
 				);
 					
 	function _setup_users($e){
@@ -437,7 +427,6 @@ function admin_page_users(&$a){
 		$e['page-flags'] = $accounts[$e['page-flags']];
 		$e['register_date'] = relative_date($e['register_date']);
 		$e['login_date'] = relative_date($e['login_date']);
-		$e['lastitem_date'] = relative_date($e['lastitem_date']);
 		return $e;
 	}
 	$users = array_map("_setup_users", $users);
@@ -459,7 +448,7 @@ function admin_page_users(&$a){
 		'$unblock' => t('Unblock'),
 		
 		'$h_users' => t('Users'),
-		'$th_users' => array( t('Name'), t('Email'), t('Register date'), t('Last login'), t('Last item'), t('Account') ),
+		'$th_users' => array( t('Name'), t('Email'), t('Register date'), t('Last login'),  t('Account') ),
 
 		'$confirm_delete_multi' => t('Selected users will be deleted!\n\nEverything these users had posted on this site will be permanently deleted!\n\nAre you sure?'),
 		'$confirm_delete' => t('The user {0} will be deleted!\n\nEverything this user has posted on this site will be permanently deleted!\n\nAre you sure?'),
