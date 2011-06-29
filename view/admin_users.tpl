@@ -68,6 +68,7 @@
 						<td class='email'>$u.email</td>
 						<td class='register_date'>$u.register_date</td>
 						<td class='login_date'>$u.login_date</td>
+						<td class='lastitem_date'>$u.lastitem_date</td>
 						<td class='login_date'>$u.page-flags</td>
 						<td class="checkbox"><input type="checkbox" class="users_ckbx" id="id_user_$u.uid" name="user[]" value="$u.uid"/></td>
 						<td class="tools">

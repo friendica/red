@@ -177,7 +177,7 @@ function relative_date($posted_date) {
 
 	$abs = strtotime($localtime);
     
-    if ($posted_date === '0000-00-00 00:00:00' || $abs === False) {
+    if (is_null($posted_date) || $posted_date === '0000-00-00 00:00:00' || $abs === False) {
 		 return t('never');
 	}
 
