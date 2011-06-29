@@ -65,9 +65,9 @@ if(! function_exists('datetime_convert')) {
 function datetime_convert($from = 'UTC', $to = 'UTC', $s = 'now', $fmt = "Y-m-d H:i:s") {
 
 	// Slight hackish adjustment so that 'zero' datetime actually returns what is intended
-        // otherwise we end up with -0001-11-30 ...
+	// otherwise we end up with -0001-11-30 ...
 	// add 32 days so that we at least get year 00, and then hack around the fact that 
-        // months and days always start with 1. 
+	// months and days always start with 1. 
 
 	if(substr($s,0,10) == '0000-00-00') {
 		$d = new DateTime($s . ' + 32 days', new DateTimeZone('UTC'));
@@ -176,23 +176,24 @@ function relative_date($posted_date) {
 	$localtime = datetime_convert('UTC',date_default_timezone_get(),$posted_date); 
 
 	$abs = strtotime($localtime);
-	$etime = time() - $abs;
     
-    if ($abs==False) {
+    if ($posted_date === '0000-00-00 00:00:00' || $abs === False) {
 		 return t('never');
 	}
+
+	$etime = time() - $abs;
     
 	if ($etime < 1) {
 		return t('less than a second ago');
 	}
     
 	$a = array( 12 * 30 * 24 * 60 * 60  =>  array( t('year'),   t('years')),
-		    30 * 24 * 60 * 60       =>  array( t('month'),  t('months')),
-		    7  * 24 * 60 * 60       =>  array( t('week'),   t('weeks')),
-		    24 * 60 * 60            =>  array( t('day'),    t('days')),
-		    60 * 60                 =>  array( t('hour'),   t('hours')),
-		    60                      =>  array( t('minute'), t('minutes')),
-		    1                       =>  array( t('second'), t('seconds'))
+				30 * 24 * 60 * 60       =>  array( t('month'),  t('months')),
+				7  * 24 * 60 * 60       =>  array( t('week'),   t('weeks')),
+				24 * 60 * 60            =>  array( t('day'),    t('days')),
+				60 * 60                 =>  array( t('hour'),   t('hours')),
+				60                      =>  array( t('minute'), t('minutes')),
+				1                       =>  array( t('second'), t('seconds'))
 	);
     
 	foreach ($a as $secs => $str) {
