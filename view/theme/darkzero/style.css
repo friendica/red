@@ -7,7 +7,7 @@ a:hover {text-decoration: underline; }
 
 input, select, textarea {
 	background-color: #222222;
-	color: #FFFFFF;
+	color: #FFFFFF !important;
 	border: 1px solid #444444;
 }
 .openid { background-color: #222222;}
