@@ -1072,13 +1072,13 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 			$img->scaleImageSquare(175);
 				
 			$hash = $resource_id;
-			$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), t('Contact Photos') , 4);
+			$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), 'Contact Photos', 4);
 				
 			$img->scaleImage(80);
-			$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), t('Contact Photos') , 5);
+			$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), 'Contact Photos', 5);
 
 			$img->scaleImage(48);
-			$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), t('Contact Photos') , 6);
+			$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), 'Contact Photos', 6);
 
 			$a = get_app();
 

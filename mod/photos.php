@@ -35,7 +35,11 @@ function photos_init(&$a) {
 		
 			$o .= '<ul>';
 			foreach($albums as $album) {
-				if((! strlen($album['album'])) || ($album['album'] == t('Contact Photos')))
+
+				// don't show contact photos. We once trasnlated this name, but then you could still access it under
+				// a different language setting. Now we store the name in English and check in English (and translated for legacy albums).
+
+				if((! strlen($album['album'])) || ($album['album'] === 'Contact Photos') || ($album['album'] === t('Contact Photos')))
 					continue;
 				$o .= '<li>' . '<a href="photos/' . $a->argv[1] . '/album/' . bin2hex($album['album']) . '" />' . $album['album'] . '</a></li>'; 
 			}
@@ -133,7 +137,7 @@ function photos_post(&$a) {
 	if(($a->argc > 3) && ($a->argv[2] === 'album')) {
 		$album = hex2bin($a->argv[3]);
 
-		if($album == t('Profile Photos') || $album == t('Contact Photos')) {
+		if($album === t('Profile Photos') || $album === 'Contact Photos' || $album === t('Contact Photos')) {
 			goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
 			return; // NOTREACHED
 		}
@@ -878,7 +882,7 @@ function photos_content(&$a) {
 		$albumselect .= '<option value="" selected="selected" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>';
 		if(count($a->data['albums'])) {
 			foreach($a->data['albums'] as $album) {
-				if(($album['album'] === '') || ($album['album'] == t('Contact Photos')))
+				if(($album['album'] === '') || ($album['album'] === 'Contact Photos') || ($album['album'] === t('Contact Photos')))
 					continue;
 				$albumselect .= '<option value="' . $album['album'] . '">' . $album['album'] . '</option>';
 			}
@@ -947,7 +951,7 @@ function photos_content(&$a) {
 		$o .= '<h3>' . $album . '</h3>';
 		
 		if($cmd === 'edit') {		
-			if(($album != t('Profile Photos')) && ($album != t('Contact Photos'))) {
+			if(($album !== t('Profile Photos')) && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
 				if($can_post) {
 					$edit_tpl = get_markup_template('album_edit.tpl');
 					$o .= replace_macros($edit_tpl,array(
@@ -962,7 +966,7 @@ function photos_content(&$a) {
 			}
 		}
 		else {
-			if(($album != t('Profile Photos')) && ($album != t('Contact Photos'))) {
+			if(($album !== t('Profile Photos')) && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
 				if($can_post) {
 					$o .= '<div id="album-edit-link"><a href="'. $a->get_baseurl() . '/photos/' 
 						. $a->data['user']['nickname'] . '/album/' . bin2hex($album) . '/edit' . '">' 
@@ -1348,9 +1352,10 @@ function photos_content(&$a) {
 	// Default - show recent photos with upload link (if applicable)
 	//$o = '';
 
-	$r = q("SELECT `resource-id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` != '%s' 
+	$r = q("SELECT `resource-id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` != '%s' AND `album` != '%s' 
 		$sql_extra GROUP BY `resource-id`",
 		intval($a->data['user']['uid']),
+		dbesc('Contact Photos'),
 		dbesc( t('Contact Photos'))
 	);
 	if(count($r)) {
@@ -1359,9 +1364,10 @@ function photos_content(&$a) {
 	}
 
 	$r = q("SELECT `resource-id`, `id`, `filename`, `album`, max(`scale`) AS `scale` FROM `photo`
-		WHERE `uid` = %d AND `album` != '%s' 
+		WHERE `uid` = %d AND `album` != '%s' AND `album` != '%s'  
 		$sql_extra GROUP BY `resource-id` ORDER BY `created` DESC LIMIT %d , %d",
 		intval($a->data['user']['uid']),
+		dbesc('Contact Photos'),
 		dbesc( t('Contact Photos')),
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
