@@ -15,7 +15,7 @@ define( 'UPDATE_VERSION' , 1070 );
  * 
  * At the top of the file "boot.php" is a define for DB_UPDATE_VERSION. Any time there is a change
  * to the database schema or one which requires an upgrade path from the existing application,
- * the DB_UPDATE_VERSION is incremented.
+ * the DB_UPDATE_VERSION and the UPDATE_VERSION at the top of this file are incremented.
  *
  * The current DB_UPDATE_VERSION is stored in the config area of the database. If the application starts up
  * and DB_UPDATE_VERSION is greater than the last stored build number, we will process every update function 
