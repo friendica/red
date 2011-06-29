@@ -590,10 +590,21 @@ function photos_post(&$a) {
 		$filesize   = intval($_FILES['userfile']['size']);
 	}
 
+
+	logger('photos: upload: received file: ' . $filename . ' as ' . $src . ' ' . $filesize . ' bytes', LOGGER_DEBUG);
+
 	$maximagesize = get_config('system','maximagesize');
 
 	if(($maximagesize) && ($filesize > $maximagesize)) {
 		notice( t('Image exceeds size limit of ') . $maximagesize . EOL);
+		@unlink($src);
+		$foo = 0;
+		call_hooks('photo_post_end',$foo);
+		return;
+	}
+
+	if(! $filesize) {
+		notice( t('Image file is empty.') . EOL);
 		@unlink($src);
 		$foo = 0;
 		call_hooks('photo_post_end',$foo);
