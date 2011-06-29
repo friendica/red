@@ -1,6 +1,9 @@
 <?php
 
 function user_allow($hash) {
+
+	$a = get_app();
+
 	$register = q("SELECT * FROM `register` WHERE `hash` = '%s' LIMIT 1",
 		dbesc($hash)
 	);
