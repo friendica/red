@@ -995,7 +995,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 
 function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_feed = false) {
 
-	require_once('simplepie/simplepie.inc');
+	require_once('library/simplepie/simplepie.inc');
 
 	$feed = new SimplePie();
 	$feed->set_raw_data($xml);

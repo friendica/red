@@ -442,7 +442,7 @@ function probe_url($url) {
 
 			if(x($feedret,'photo'))
 				$vcard['photo'] = $feedret['photo'];
-			require_once('simplepie/simplepie.inc');
+			require_once('library/simplepie/simplepie.inc');
 		    $feed = new SimplePie();
 			$xml = fetch_url($poll);
 

@@ -1,14 +1,11 @@
 <?php
 
 
-// TODO: 
-// add relevant contacts so they can use this
-
 // There is a lot of debug stuff in here because this is quite a
 // complicated process to try and sort out. 
 
 require_once('include/salmon.php');
-require_once('simplepie/simplepie.inc');
+require_once('library/simplepie/simplepie.inc');
 
 function salmon_return($val) {
 
@@ -133,9 +130,9 @@ function salmon_post(&$a) {
 
 	// Setup RSA stuff to verify the signature
 
-	set_include_path(get_include_path() . PATH_SEPARATOR . 'phpsec');
+	set_include_path(get_include_path() . PATH_SEPARATOR . 'library' . PATH_SEPARATOR . 'phpsec');
 
-	require_once('phpsec/Crypt/RSA.php');
+	require_once('library/phpsec/Crypt/RSA.php');
 
 	$key_info = explode('.',$key);
 

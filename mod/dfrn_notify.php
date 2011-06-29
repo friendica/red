@@ -1,6 +1,6 @@
 <?php
 
-require_once('simplepie/simplepie.inc');
+require_once('library/simplepie/simplepie.inc');
 require_once('include/items.php');
 require_once('include/event.php');
 
