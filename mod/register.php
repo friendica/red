@@ -71,6 +71,8 @@ function register_post(&$a) {
 
 	$err = '';
 
+	// collapse multiple spaces in name
+	$username = preg_replace('/ +/',' ',$username);
 
 	if(mb_strlen($username) > 48)
 		$err .= t('Please use a shorter name.') . EOL;
@@ -92,6 +94,7 @@ function register_post(&$a) {
 		if(! strpos($username,' '))
 			$err .= t("That doesn't appear to be your full \x28First Last\x29 name.") . EOL;
 	}
+
 
 	if(! allowed_email($email))
 			$err .= t('Your email domain is not among those allowed on this site.') . EOL;
