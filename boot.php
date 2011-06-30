@@ -498,9 +498,6 @@ function install_plugin($plugin){
 if(! function_exists('check_config')) {
 function check_config(&$a) {
 
-
-	load_config('system');
-
 	$build = get_config('system','build');
 	if(! x($build))
 		$build = set_config('system','build',DB_UPDATE_VERSION);
@@ -1218,7 +1215,11 @@ function load_config($family) {
 	if(count($r)) {
 		foreach($r as $rr) {
 			$k = $rr['k'];
-			$a->config[$family][$k] = $rr['v'];
+			if ($rr['cat'] === 'config') {
+				$a->config[$k] = $rr['v'];
+			} else {
+				$a->config[$family][$k] = $rr['v'];
+			}
 		}
 	}
 }}

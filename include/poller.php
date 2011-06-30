@@ -24,6 +24,9 @@ function poller_run($argv, $argc){
 	require_once('include/Contact.php');
 	require_once('include/email.php');
 
+	load_config('config');
+	load_config('system');
+
 	$a->set_baseurl(get_config('system','url'));
 
 	load_hooks();

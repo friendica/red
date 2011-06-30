@@ -50,15 +50,8 @@ if(! $install) {
 	 * Load configs from db. Overwrite configs from .htconfig.php
 	 */
 
-	$r = q("SELECT * FROM `config` WHERE `cat` IN ('system', 'config')");
-	foreach ($r as $c) {
-		if ($c['cat']=='config') {
-			$a->config[$c['k']] = $c['v'];
-		} else {
-			$a->config[$c['cat']][$c['k']] = $c['v'];
-		}
-	}
-	unset($r);
+	load_config('config');
+	load_config('system');
 
 	require_once("session.php");
 	load_hooks();
