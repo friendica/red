@@ -2559,6 +2559,33 @@ a.mail-list-link {
 	left: 0px;
 	top: 0px;
 }
+/**
+ * Form fields
+ */
+.field {
+	clear: left;
+	margin-bottom: 5px;
+	padding-bottom: 5px;
+}
+
+.field label {
+	float: left;
+	width: 200px;
+	font-weight: bold;
+}
+
+.field input,
+.field textarea {
+	width: 400px;
+}
+.field textarea { height: 100px; }
+.field_help {
+	display: block;
+	margin-left: 200px;
+	color: #666666;
+	
+}
+
 
 /**
  * ADMIN
@@ -2584,30 +2611,6 @@ a.mail-list-link {
 }
 #adminpage dd {
 	margin-left: 200px;
-}
-
-#adminpage .field {
-	clear: left;
-	margin-bottom: 5px;
-	padding-bottom: 5px;
-}
-
-#adminpage .field label {
-	float: left;
-	width: 200px;
-	font-weight: bold;
-}
-
-#adminpage .field input,
-#adminpage .field textarea {
-	width: 400px;
-}
-#adminpage .field textarea { height: 100px; }
-#adminpage .field_help {
-	display: block;
-	margin-left: 200px;
-	color: #666666;
-	
 }
 
 #adminpage h3 {
