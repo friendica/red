@@ -25,9 +25,9 @@ function oembed_uninstall() {
 function oembed_settings_post($a,$b){
     if(! local_user())
 		return;
-	if (isset($_POST['oembed-submit'])){
-		set_pconfig(local_user(), 'oembed', 'use_for_youtube', (isset($_POST['oembed_use_for_youtube'])? intval($_POST['oembed_use_for_youtube']):0));
-		notice( t('OEmbed settings updated') . EOL);
+	if (x($_POST,'oembed-submit')){
+		set_pconfig(local_user(), 'oembed', 'use_for_youtube', (x($_POST,'oembed_use_for_youtube')? intval($_POST['oembed_use_for_youtube']):0));
+		info( t('OEmbed settings updated') . EOL);
 	}
 }
 
@@ -36,21 +36,13 @@ function oembed_settings(&$a,&$o) {
 		return;
 	$uofy = intval(get_pconfig(local_user(), 'oembed', 'use_for_youtube' ));
 
-	$o.='
-	<div class="settings-block">
-	<h3 class="settings-heading">OEmbed</h3>
-	<div id="settings-username-wrapper">
-		<label for="oembed_use_for_youtube">'
-			.t('Use OEmbed for YouTube videos: ') 
-		.'</label><input type="checkbox" id="oembed_use_for_youtube" name="oembed_use_for_youtube" value="1"'
-		. ($uofy==1?'checked="true"':'')
-		.' />
-	</div>
-	<div id="settings-username-end"></div>
-	<div class="settings-submit-wrapper">
-		<input type="submit" value="'.t('Submit').'" class="settings-submit" name="oembed-submit" />
-	</div>
-	</div>';
+	$t = file_get_contents( dirname(__file__). "/settings.tpl" );
+	$o .= replace_macros($t, array(
+		'$submit' => t('Submit'),
+		'$title' => "OEmbed",
+		'$useoembed' => array('oembed_use_for_youtube', t('Use OEmbed for YouTube videos'), $uofy, ""),
+	));
+	
 }
 
 

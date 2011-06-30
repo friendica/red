@@ -2542,6 +2542,43 @@ a.mail-list-link {
 }
 
 /**
+ * Plugins settings
+ */
+
+.settings-block > h3,
+.settings-heading {
+	border-bottom: 1px solid #babdb6
+}
+ 
+
+/**
+ * Form fields
+ */
+.field {
+	clear: left;
+	margin-bottom: 5px;
+	padding-bottom: 5px;
+}
+
+.field label {
+	float: left;
+	width: 200px;
+}
+
+.field input,
+.field textarea {
+	width: 400px;
+}
+.field textarea { height: 100px; }
+.field_help {
+	display: block;
+	margin-left: 200px;
+	color: #666666;
+	
+}
+ 
+
+/**
  * ADMIN
  */
 #pending-update {
@@ -2567,34 +2604,12 @@ a.mail-list-link {
 	margin-left: 200px;
 }
 
-#adminpage .field {
-	clear: left;
-	margin-bottom: 5px;
-	padding-bottom: 5px;
-}
-
-#adminpage .field label {
-	float: left;
-	width: 200px;
-	font-weight: bold;
-}
-
-#adminpage .field input,
-#adminpage .field textarea {
-	width: 400px;
-}
-#adminpage .field textarea { height: 100px; }
-#adminpage .field_help {
-	display: block;
-	margin-left: 200px;
-	color: #666666;
-	
-}
-
 #adminpage h3 {
 	border-bottom: 1px solid #cccccc;
 }
-
+#adminpage .field label {
+	font-weight: bold;
+}
 #adminpage .submit {
 	clear:left;
 	text-align: right;
