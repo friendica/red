@@ -167,30 +167,6 @@ function notifications_content(&$a) {
 	else
 		info( t('No notifications.') . EOL);
 
-/*
-	if ($a->config['register_policy'] == REGISTER_APPROVE &&	
-		$a->config['admin_email'] === $a->user['email']){
-		$o .= '<h1>' . t('User registrations waiting for confirm') . '</h1>' . "\r\n";
-		
-		$r = q("SELECT `register`.*, `contact`.`name`, `user`.`email`
-				 FROM `register`
-				 LEFT JOIN `contact` ON `register`.`uid` = `contact`.`uid`
-				 LEFT JOIN `user` ON `register`.`uid` = `user`.`uid`;");
-		if(($r !== false) && (count($r))) {
-			$o .= '<ul>';
-			foreach($r as $rr) {
-				$o .= '<li>' . sprintf('%s (%s) : ', $rr['name'],$rr['email']) 
-					. '<a href="regmod/allow/' . $rr['hash'] .'">' . t('Approve') 
-					. '</a> - <a href="regmod/deny/' . $rr['hash'] . '">' . t('Deny') . '</a></li>' . "\r\n";
-			}
-			$o .= "</ul>";
-		}
-		else
-			info( t('No registrations.') . EOL);
-
-	}
-*/
-
 	$o .= paginate($a);
 	return $o;
 }
