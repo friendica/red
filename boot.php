@@ -4,7 +4,7 @@ set_time_limit(0);
 ini_set('pcre.backtrack_limit', 250000);
 
 
-define ( 'FRIENDIKA_VERSION',      '2.2.1025' );
+define ( 'FRIENDIKA_VERSION',      '2.2.1026' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
 define ( 'DB_UPDATE_VERSION',      1070      );
 
@@ -2017,7 +2017,7 @@ function get_tags($s) {
 
 	$s = preg_replace('/\[code\](.*?)\[\/code\]/sm','',$s);
 
-	if(preg_match_all('/([@#][^ \x0D\x0A,:?]+)([ \x0D\x0A,:?]|$)/',$s,$match)) {
+	if(preg_match_all('/([@#][^ \x0D\x0A,:?]+ [^ \x0D\x0A,:?]+)([ \x0D\x0A,:?]|$)/',$s,$match)) {
 		foreach($match[1] as $mtch) {
 			if(strstr($mtch,"]")) {
 				// we might be inside a bbcode color tag - leave it alone
@@ -2030,6 +2030,18 @@ function get_tags($s) {
 		}
 	}
 
+	if(preg_match_all('/([@#][^ \x0D\x0A,:?]+)([ \x0D\x0A,:?]|$)/',$s,$match)) {
+		foreach($match[1] as $mtch) {
+			if(strstr($mtch,"]")) {
+				// we might be inside a bbcode color tag - leave it alone
+				continue;
+			}
+			if(substr($mtch,-1,1) === '.')
+				$ret[] = substr($mtch,0,-1);
+			else
+				$ret[] = $mtch;
+		}
+	}
 	return $ret;
 }}
 

@@ -380,6 +380,8 @@ function photos_post(&$a) {
 
 			if(count($tags)) {
 				foreach($tags as $tag) {
+					if(isset($profile))
+						unset($profile);
 					if(strpos($tag,'@') === 0) {
 						$name = substr($tag,1);
 						if((strpos($name,'@')) || (strpos($name,'http://'))) {
@@ -401,7 +403,7 @@ function photos_post(&$a) {
 						}
 						else {
 							$newname = $name;
-							if(strstr($name,'_')) {
+							if(strstr($name,'_') || strstr($name,' ')) {
 								$newname = str_replace('_',' ',$name);
 								$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `uid` = %d LIMIT 1",
 									dbesc($newname),

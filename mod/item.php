@@ -244,6 +244,10 @@ function item_post(&$a) {
 	}
 
 
+	/**
+	 * Next link in any attachment references we find in the post.
+	 */
+
 	$match = false;
 
 	if(preg_match_all("/\[attachment\](.*?)\[\/attachment\]/",$body,$match)) {
@@ -265,10 +269,6 @@ function item_post(&$a) {
 		}
 	}
 
-
-
-
-
 	/**
 	 * Fold multi-line [code] sequences
 	 */
@@ -285,13 +285,21 @@ function item_post(&$a) {
 
 	$tags = get_tags($body);
 
-	if(($parent_contact) && ($parent_contact['network'] === 'stat') && ($parent_contact['nick']) && (! in_array('@' . $parent_contact['nick'],$tags))) {
+	/**
+	 * add a statusnet style reply tag if the original post was from there
+	 * and we are replying, and there isn't one already
+	 */
+
+	if(($parent_contact) && ($parent_contact['network'] === 'stat') 
+		&& ($parent_contact['nick']) && (! in_array('@' . $parent_contact['nick'],$tags))) {
 		$body = '@' . $parent_contact['nick'] . ' ' . $body;
 		$tags[] = '@' . $parent_contact['nick'];
 	}		
 
 	if(count($tags)) {
 		foreach($tags as $tag) {
+			if(isset($profile))
+				unset($profile);
 			if(strpos($tag,'#') === 0) {
 				if(strpos($tag,'[url='))
 					continue;
@@ -325,7 +333,7 @@ function item_post(&$a) {
 				else {
 					$newname = $name;
 					$alias = '';
-					if(strstr($name,'_')) {
+					if(strstr($name,'_') || strstr($name,' ')) {
 						$newname = str_replace('_',' ',$name);
 						$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($newname),
