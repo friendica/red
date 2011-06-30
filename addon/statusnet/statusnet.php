@@ -89,6 +89,9 @@ function statusnet_jot_nets(&$a,&$b) {
 function statusnet_settings_post ($a,$post) {
 	if(! local_user())
 	    return;
+	// don't check statusnet settings if statusnet submit button is not clicked
+	if (!x($_POST,'statusnet-submit')) return;
+	
 	if (isset($_POST['statusnet-disconnect'])) {
             /***
              * if the statusnet-disconnect checkbox is set, clear the statusnet configuration
@@ -152,28 +155,28 @@ function statusnet_settings_post ($a,$post) {
                 goaway($a->get_baseurl().'/settings/addon');
             } else {
     	        if (isset($_POST['statusnet-pin'])) {
-	            //  if the user supplied us with a PIN from Twitter, let the magic of OAuth happen
-	            logger('got a StatusNet security code');
+					//  if the user supplied us with a PIN from Twitter, let the magic of OAuth happen
+					logger('got a StatusNet security code');
                     $api     = get_pconfig(local_user(), 'statusnet', 'baseapi');
-        	    $ckey    = get_pconfig(local_user(), 'statusnet', 'consumerkey'  );
-        	    $csecret = get_pconfig(local_user(), 'statusnet', 'consumersecret' );
-        	    //  the token and secret for which the PIN was generated were hidden in the settings
-        	    //  form as token and token2, we need a new connection to Twitter using these token
-        	    //  and secret to request a Access Token with the PIN
-        	    $connection = new StatusNetOAuth($api, $ckey, $csecret, $_POST['statusnet-token'], $_POST['statusnet-token2']);
-        	    $token   = $connection->getAccessToken( $_POST['statusnet-pin'] );
-        	    //  ok, now that we have the Access Token, save them in the user config
-         	    set_pconfig(local_user(),'statusnet', 'oauthtoken',  $token['oauth_token']);
-        	    set_pconfig(local_user(),'statusnet', 'oauthsecret', $token['oauth_token_secret']);
+					$ckey    = get_pconfig(local_user(), 'statusnet', 'consumerkey'  );
+					$csecret = get_pconfig(local_user(), 'statusnet', 'consumersecret' );
+					//  the token and secret for which the PIN was generated were hidden in the settings
+					//  form as token and token2, we need a new connection to Twitter using these token
+					//  and secret to request a Access Token with the PIN
+					$connection = new StatusNetOAuth($api, $ckey, $csecret, $_POST['statusnet-token'], $_POST['statusnet-token2']);
+					$token   = $connection->getAccessToken( $_POST['statusnet-pin'] );
+					//  ok, now that we have the Access Token, save them in the user config
+					set_pconfig(local_user(),'statusnet', 'oauthtoken',  $token['oauth_token']);
+					set_pconfig(local_user(),'statusnet', 'oauthsecret', $token['oauth_token_secret']);
                     set_pconfig(local_user(),'statusnet', 'post', 1);
                     //  reload the Addon Settings page, if we don't do it see Bug #42
                     goaway($a->get_baseurl().'/settings/addon');
-        	} else {
-        	    //  if no PIN is supplied in the POST variables, the user has changed the setting
-        	    //  to post a tweet for every new __public__ posting to the wall
-        	    set_pconfig(local_user(),'statusnet','post',intval($_POST['statusnet-enable']));
-        	    set_pconfig(local_user(),'statusnet','post_by_default',intval($_POST['statusnet-default']));
-        		info( t('StatusNet settings updated.') . EOL);
+				} else {
+					//  if no PIN is supplied in the POST variables, the user has changed the setting
+					//  to post a tweet for every new __public__ posting to the wall
+					set_pconfig(local_user(),'statusnet','post',intval($_POST['statusnet-enable']));
+					set_pconfig(local_user(),'statusnet','post_by_default',intval($_POST['statusnet-default']));
+					info( t('StatusNet settings updated.') . EOL);
         	}}}}
 }
 function statusnet_settings(&$a,&$s) {
@@ -217,7 +220,7 @@ function statusnet_settings(&$a,&$s) {
                     $s .= '<input type="radio" name="statusnet-preconf-apiurl" value="'. $asn['apiurl'] .'">'. $asn['sitename'] .'<br />';
                 }
                 $s .= '<p></p><div class="clear"></div></div>';
-                $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
+                $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="statusnet-submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
             }
             $s .= '<h4>' . t('Provide your own OAuth Credentials') . '</h4>';
             $s .= '<p>'. t('No consumer key pair for StatusNet found. Register your Friendika Account as an desktop client on your StatusNet account, copy the consumer key pair here and enter the API base root.<br />Before you register your own OAuth key pair ask the administrator if there is already a key pair for this Friendika installation at your favorited StatusNet installation.') .'</p>';
@@ -231,7 +234,7 @@ function statusnet_settings(&$a,&$s) {
             $s .= '<label id="statusnet-baseapi-label" for="statusnet-baseapi">'. t("Base API Path \x28remember the trailing /\x29") .'</label>';
             $s .= '<input id="statusnet-baseapi" type="text" name="statusnet-baseapi" size="35" /><br />';
             $s .= '<p></p><div class="clear"></div></div>';
-            $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
+            $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="statusnet-submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
 	} else {
 		/***
 		 * ok we have a consumer key pair now look into the OAuth stuff
@@ -256,15 +259,15 @@ function statusnet_settings(&$a,&$s) {
 			$s .= '<input id="statusnet-pin" type="text" name="statusnet-pin" />';
 			$s .= '<input id="statusnet-token" type="hidden" name="statusnet-token" value="'.$token.'" />';
 			$s .= '<input id="statusnet-token2" type="hidden" name="statusnet-token2" value="'.$request_token['oauth_token_secret'].'" />';
-                        $s .= '</div><div class="clear"></div>';
-                        $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
-                        $s .= '<h4>'.t('Cancel Connection Process').'</h4>';
-                        $s .= '<div id="statusnet-cancel-wrapper">';
-                        $s .= '<p>'.t('Current StatusNet API is').': '.$api.'</p>';
-                        $s .= '<label id="statusnet-cancel-label" for="statusnet-cancel">'. t('Cancel StatusNet Connection') . '</label>';
-                        $s .= '<input id="statusnet-cancel" type="checkbox" name="statusnet-disconnect" value="1" />';
-                        $s .= '</div><div class="clear"></div>';
-                        $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
+			$s .= '</div><div class="clear"></div>';
+			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
+			$s .= '<h4>'.t('Cancel Connection Process').'</h4>';
+			$s .= '<div id="statusnet-cancel-wrapper">';
+			$s .= '<p>'.t('Current StatusNet API is').': '.$api.'</p>';
+			$s .= '<label id="statusnet-cancel-label" for="statusnet-cancel">'. t('Cancel StatusNet Connection') . '</label>';
+			$s .= '<input id="statusnet-cancel" type="checkbox" name="statusnet-disconnect" value="1" />';
+			$s .= '</div><div class="clear"></div>';
+			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="statusnet-submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
 		} else {
 			/***
 			 *  we have an OAuth key / secret pair for the user
@@ -286,7 +289,7 @@ function statusnet_settings(&$a,&$s) {
                         $s .= '<label id="statusnet-disconnect-label" for="statusnet-disconnect">'. t('Clear OAuth configuration') .'</label>';
                         $s .= '<input id="statusnet-disconnect" type="checkbox" name="statusnet-disconnect" value="1" />';
 			$s .= '</div><div class="clear"></div>';
-			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>'; 
+			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="statusnet-submit" class="settings-submit" value="' . t('Submit') . '" /></div>'; 
 		}
 	}
         $s .= '</div><div class="clear"></div></div>';

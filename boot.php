@@ -2430,7 +2430,7 @@ function profile_sidebar($profile) {
 	));
 
 
-	$arr = array('profile' => $profile, 'entry' => $o);
+	$arr = array('profile' => &$profile, 'entry' => &$o);
 
 	call_hooks('profile_sidebar', $arr);
 
