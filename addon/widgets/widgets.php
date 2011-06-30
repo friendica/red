@@ -33,34 +33,32 @@ function widgets_settings(&$a,&$o) {
 	
 	$key = get_pconfig(local_user(), 'widgets', 'key' );
 	if ($key=='') { $key = mt_rand(); set_pconfig(local_user(), 'widgets', 'key', $key); }
-	
-	$o .='<h3 class="settings-heading">Widgets</h3>';
-	
-	
-	$o.='
-	<div id="settings-username-wrapper">
-		'. t('Widgets key: ') .'<strong>'.$key.'</strong>
-	</div>
-	<div id="settings-username-end"></div>
-	<div class="settings-submit-wrapper">
-		<input type="submit" value="'.t('Generate new key').'" class="settings-submit" name="widgets-submit">
-	</div>';
-	
-	
-	$o.='<h4>Widgets:</h4>';
-	$o .= '<ul>';
+
+	$widgets = array();
 	$d = dir(dirname(__file__));
 	while(false !== ($f = $d->read())) {
 		 if(substr($f,0,7)=="widget_") {
 			 preg_match("|widget_([^.]+).php|", $f, $m);
 			 $w=$m[1];
 			 require_once($f);
-			 $o.='<li><a href="'.$a->get_baseurl().'/widgets/'.$w.'/?k='.$key.'&p=1">'. call_user_func($w."_widget_name") .'</a></li>';
+			 $widgets[] = array($w, call_user_func($w."_widget_name"));
+
 		 }
 	}
 
-	$o .= '</ul>';
-
+	
+	
+	$t = file_get_contents( dirname(__file__). "/settings.tpl" );
+	$o .= replace_macros($t, array(
+		'$submit' => t('Generate new key'),
+		'$baseurl' => $a->get_baseurl(),
+		'$title' => "Widgets",
+		'$label' => t('Widgets key'),
+		'$key' => $key,
+		'$widgets_h' => t('Widgets available'),
+		'$widgets' => $widgets,
+	));
+	
 }
 
 function widgets_module() {

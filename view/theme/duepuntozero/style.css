@@ -2541,6 +2541,15 @@ a.mail-list-link {
 	filter:alpha(opacity=100);
 }
 
+/**
+ * Plugins settings
+ */
+
+.settings-block > h3,
+.settings-heading {
+	border-bottom: 1px solid #babdb6
+}
+ 
 
 /**
  * Form fields
@@ -2554,7 +2563,6 @@ a.mail-list-link {
 .field label {
 	float: left;
 	width: 200px;
-	font-weight: bold;
 }
 
 .field input,
@@ -2599,7 +2607,9 @@ a.mail-list-link {
 #adminpage h3 {
 	border-bottom: 1px solid #cccccc;
 }
-
+#adminpage .field label {
+	font-weight: bold;
+}
 #adminpage .submit {
 	clear:left;
 	text-align: right;
