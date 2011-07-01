@@ -7,7 +7,8 @@ function network_init(&$a) {
 		return;
 	}
   
-  
+	$group_id = (($a->argc > 1 && intval($a->argv[1])) ? intval($a->argv[1]) : 0);
+		  
 	require_once('include/group.php');
 	if(! x($a->page,'aside'))
 		$a->page['aside'] = '';
@@ -29,7 +30,7 @@ function network_init(&$a) {
 
 	$a->page['aside'] .= '</div>';
 
-	$a->page['aside'] .= group_side('network','network',true);
+	$a->page['aside'] .= group_side('network','network',true,$group_id);
 }
 
 

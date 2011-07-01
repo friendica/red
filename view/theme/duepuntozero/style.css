@@ -249,6 +249,12 @@ div.wall-item-content-wrapper.shiny {
 	cursor: pointer;
 }
 
+.group-selected {
+	padding: 3px;
+	border: 2px solid #CCCCCC;
+	font-weight: bold;
+}
+
 .fakelink:hover {
 	color: #3465a4;
 	text-decoration: underline;
