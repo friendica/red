@@ -165,9 +165,10 @@ EOT;
 		intval($_SESSION['uid'])
 	);
 	if(count($r)) {
-		foreach($r as $rr)
+		foreach($r as $rr) {
 			$selected = (($group_id == $rr['id']) ? ' class="group-selected" ' : '');
 			$o .= '	<li class="sidebar-group-li">' . (($edit) ? "<a href=\"group/{$rr['id']}\" title=\"" . t('Edit') . "\" ><img src=\"images/spencil.gif\" alt=\"" . t('Edit') . "\"></a> " : "") . "<a href=\"$each/{$rr['id']}\" $selected >{$rr['name']}</a></li>\r\n";
+		}
 	}
 	$o .= "	</ul>\r\n	</div>\r\n</div>";	
 
