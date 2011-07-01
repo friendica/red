@@ -243,7 +243,7 @@ CREATE TABLE IF NOT EXISTS `mail` (
   `from-url` char(255) NOT NULL,
   `contact-id` char(255) NOT NULL,
   `title` char(255) NOT NULL,
-  `body` text NOT NULL,
+  `body` mediumtext NOT NULL,
   `seen` tinyint(1) NOT NULL,
   `replied` tinyint(1) NOT NULL,
   `uri` char(255) NOT NULL,

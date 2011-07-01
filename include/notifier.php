@@ -238,6 +238,8 @@ function notifier_run($argv, $argc){
 	if($cmd === 'mail') {
 		$notify_hub = false;  // mail is  not public
 
+		$body = fix_private_photos($item['body'],$owner['uid']);
+
 		$atom .= replace_macros($mail_template, array(
 			'$name'         => xmlify($owner['name']),
 			'$profile_page' => xmlify($owner['url']),
@@ -245,7 +247,7 @@ function notifier_run($argv, $argc){
 			'$item_id'      => xmlify($item['uri']),
 			'$subject'      => xmlify($item['title']),
 			'$created'      => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , ATOM_TIME)),
-			'$content'      => xmlify($item['body']),
+			'$content'      => xmlify($body),
 			'$parent_id'    => xmlify($item['parent-uri'])
 		));
 	}

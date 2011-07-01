@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1070 );
+define( 'UPDATE_VERSION' , 1071 );
 
 /**
  *
@@ -565,3 +565,10 @@ function update_1069() {
 	q("ALTER TABLE `fsuggest` ADD `request` CHAR( 255 ) NOT NULL AFTER `url` ");
 	q("ALTER TABLE `fcontact` ADD `request` CHAR( 255 ) NOT NULL AFTER `photo` ");
 }
+
+// mail body needs to accomodate private photos
+
+function update_1070() {
+	q("ALTER TABLE `mail` CHANGE `body` `body` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ");
+}
+
