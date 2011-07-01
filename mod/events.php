@@ -183,7 +183,8 @@ function events_content(&$a) {
 		$adjust_finish = datetime_convert('UTC', date_default_timezone_get(), $finish);
 
 
-		$r = q("SELECT `event`.*, `item`.`id` AS `itemid`,`item`.`plink` FROM `event` LEFT JOIN `item` ON `item`.`event-id` = `event`.`id` 
+		$r = q("SELECT `event`.*, `item`.`id` AS `itemid`,`item`.`plink`,
+			`item`.`author-name`, `item`.`author-avatar`, `item`.`author-link` FROM `event` LEFT JOIN `item` ON `item`.`event-id` = `event`.`id` 
 			WHERE `event`.`uid` = %d
 			AND (( `adjust` = 0 AND `start` >= '%s' AND `start` <= '%s' ) 
 			OR  (  `adjust` = 1 AND `start` >= '%s' AND `start` <= '%s' )) ",
@@ -218,10 +219,6 @@ function events_content(&$a) {
 
 
 
-
-
-
-
 		$last_date = '';
 		$fmt = t('l, F j');
 
@@ -235,7 +232,7 @@ function events_content(&$a) {
 					$o .= '<hr /><a name="link-' . $j . '" ><div class="event-list-date">' . $d . '</div></a>';
 				$last_date = $d;
 				$o .= format_event_html($rr);
-				$o .= '<a href="' . $a->get_baseurl() . '/events/event/' . $rr['id'] . '" title="' . t('Edit event') . '" class="edit-event-link icon pencil"></a>';
+				$o .= (($rr['cid']) ? '<a href="' . $a->get_baseurl() . '/events/event/' . $rr['id'] . '" title="' . t('Edit event') . '" class="edit-event-link icon pencil"></a>' : '');
 				if($rr['plink'])
 					$o .= '<a href="' . $rr['plink'] . '" title="' . t('link to source') . '" target="external-link" class="plink-event-link icon remote-link"></a></div>';
 
