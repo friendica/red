@@ -296,6 +296,8 @@ class App {
 			$this->module = str_replace(".", "_", $this->argv[0]);
 		}
 		else {
+			$this->argc = 1;
+			$this->argv = array('home');
 			$this->module = 'home';
 		}
 
