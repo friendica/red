@@ -376,9 +376,12 @@ function facebook_cron($a,$b) {
 
 	logger('facebook_cron');
 
-	set_config('facebook','last_poll', time());
 
-	$r = q("SELECT * FROM `pconfig` WHERE `cat` = 'facebook' AND `k` = 'post' AND `v` = '1' ");
+	// Find the FB users on this site and randomize in case one of them
+	// uses an obscene amount of memory. It may kill this queue run
+	// but hopefully we'll get a few others through on each run. 
+
+	$r = q("SELECT * FROM `pconfig` WHERE `cat` = 'facebook' AND `k` = 'post' AND `v` = '1' ORDER BY RAND() ");
 	if(count($r)) {
 		foreach($r as $rr) {
 			// check for new friends once a day
@@ -392,6 +395,9 @@ function facebook_cron($a,$b) {
 			fb_consume_all($rr['uid']);
 		}
 	}	
+
+	set_config('facebook','last_poll', time());
+
 }
 
 

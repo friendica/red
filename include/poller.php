@@ -2,6 +2,7 @@
 
 require_once("boot.php");
 
+
 function poller_run($argv, $argc){
 	global $a, $db;
 
@@ -47,17 +48,25 @@ function poller_run($argv, $argc){
 		proc_run('php','include/expire.php');
 	}
 
-
 	// clear old cache
 	q("DELETE FROM `cache` WHERE `updated` < '%s'",
 		dbesc(datetime_convert('UTC','UTC',"now - 30 days")));
 
 	$manual_id  = 0;
+	$generation = 0;
 	$hub_update = false;
 	$force      = false;
+	$restart    = false;
 
 	if(($argc > 1) && ($argv[1] == 'force'))
 		$force = true;
+
+	if(($argc > 1) && ($argv[1] == 'restart')) {
+		$restart = true;
+		$generation = intval($argv[2]);
+		if(! $generation)
+			killme();		
+	}
 
 	if(($argc > 1) && intval($argv[1])) {
 		$manual_id = intval($argv[1]);
@@ -70,7 +79,8 @@ function poller_run($argv, $argc){
 
 	$d = datetime_convert();
 
-	call_hooks('cron', $d);
+	if(! $restart)
+		call_hooks('cron', $d);
 
 
 	$contacts = q("SELECT `id` FROM `contact` 
@@ -95,7 +105,7 @@ function poller_run($argv, $argc){
 			continue;
 
 		foreach($res as $contact) {
-
+			logger('processing a contact');
 			$xml = false;
 
 			if($manual_id)
@@ -152,6 +162,22 @@ function poller_run($argv, $argc){
 				}
 				if((! $update) && (! $force))
 					continue;
+			}
+
+			// Check to see if we are running out of memory - if so spawn a new process and kill this one
+
+			$avail_memory = return_bytes(ini_get('memory_limit'));
+			$memused = memory_get_peak_usage(true);
+			if(intval($avail_memory)) {
+				if(($memused / $avail_memory) > 0.95) {
+					if($generation + 1 > 10) {
+						logger('poller: maximum number of spawns exceeded. Terminating.');
+						killme();
+					}
+					logger('poller: memory exceeded. ' . $memused . ' bytes used. Spawning new poll.');
+					proc_run('php', 'include/poller.php', 'restart', (string) $generation + 1);
+					killme();
+				}
 			}
 
 			$importer_uid = $contact['uid'];
