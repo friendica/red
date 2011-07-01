@@ -44,3 +44,74 @@ function can_write_wall(&$a,$owner) {
 
 	return false;
 }
+
+
+function permissions_sql($owner_id,$remote_verified = false,$groups = null) {
+
+	$local_user = local_user();
+	$remote_user = remote_user();
+
+	/**
+	 * Construct permissions
+	 *
+	 * default permissions - anonymous user
+	 */
+
+	$sql = " AND allow_cid = '' 
+			 AND allow_gid = '' 
+			 AND deny_cid  = '' 
+			 AND deny_gid  = '' 
+	";
+
+	/**
+	 * Profile owner - everything is visible
+	 */
+
+	if(($local_user) && ($local_user == $owner_id)) {
+		$sql = ''; 
+	}
+
+	/**
+	 * Authenticated visitor. Unless pre-verified, 
+	 * check that the contact belongs to this $owner_id
+	 * and load the groups the visitor belongs to.
+	 * If pre-verified, the caller is expected to have already
+	 * done this and passed the groups into this function.
+	 */
+
+	elseif($remote_user) {
+
+		if(! $remote_verified) {
+			$r = q("SELECT id FROM contact WHERE id = %d AND uid = %d AND blocked = 0 LIMIT 1",
+				intval($remote_user),
+				intval($owner_id)
+			);
+			if(count($r)) {
+				$remote_verified = true;
+				$groups = init_groups_visitor($remote_user);
+			}
+		}
+		if($remote_verified) {
+		
+			$gs = '<<>>'; // should be impossible to match
+
+			if(is_array($groups) && count($groups)) {
+				foreach($groups as $g)
+					$gs .= '|<' . intval($g) . '>';
+			} 
+
+			$sql = sprintf(
+				" AND ( allow_cid = '' OR allow_cid REGEXP '<%d>' ) 
+				  AND ( deny_cid  = '' OR  NOT deny_cid REGEXP '<%d>' ) 
+				  AND ( allow_gid = '' OR allow_gid REGEXP '%s' )
+				  AND ( deny_gid  = '' OR NOT deny_gid REGEXP '%s') 
+				",
+				intval($remote_user),
+				intval($remote_user),
+				dbesc($gs),
+				dbesc($gs)
+			);
+		}
+	}
+	return $sql;
+}

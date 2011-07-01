@@ -164,48 +164,19 @@ function profile_content(&$a, $update = 0) {
 		}
 	}
 
-	// Construct permissions
-
-	// default permissions - anonymous user
-
-	$sql_extra = " AND `allow_cid` = '' AND `allow_gid` = '' AND `deny_cid` = '' AND `deny_gid` = '' ";
-
-	// Profile owner - everything is visible
-
 	if($is_owner) {
-		$sql_extra = ''; 
-		
-		// Oh - while we're here... reset the Unseen messages
-
 		$r = q("UPDATE `item` SET `unseen` = 0 
 			WHERE `wall` = 1 AND `unseen` = 1 AND `uid` = %d",
-			intval($_SESSION['uid'])
-		);
-
-	}
-
-	// authenticated visitor - here lie dragons
-	// If $remotecontact is true, we know that not only is this a remotely authenticated
-	// person, but that it is *our* contact, which is important in multi-user mode.
-
-	elseif($remote_contact) {
-		$gs = '<<>>'; // should be impossible to match
-		if(count($groups)) {
-			foreach($groups as $g)
-				$gs .= '|<' . intval($g) . '>';
-		} 
-		$sql_extra = sprintf(
-			" AND ( `allow_cid` = '' OR `allow_cid` REGEXP '<%d>' ) 
-			  AND ( `deny_cid`  = '' OR  NOT `deny_cid` REGEXP '<%d>' ) 
-			  AND ( `allow_gid` = '' OR `allow_gid` REGEXP '%s' )
-			  AND ( `deny_gid`  = '' OR NOT `deny_gid` REGEXP '%s') ",
-
-			intval($_SESSION['visitor_id']),
-			intval($_SESSION['visitor_id']),
-			dbesc($gs),
-			dbesc($gs)
+			intval(local_user())
 		);
 	}
+
+	/**
+	 * Get permissions SQL - if $remote_contact is true, our remote user has been pre-verified and we already have fetched his/her groups
+	 */
+
+	$sql_extra = permissions_sql($a->profile['profile_uid'],$remote_contact,$groups);
+
 
 	$r = q("SELECT COUNT(*) AS `total`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`

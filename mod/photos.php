@@ -3,6 +3,7 @@ require_once('include/Photo.php');
 require_once('include/items.php');
 require_once('include/acl_selectors.php');
 require_once('include/bbcode.php');
+require_once('include/security.php');
 
 function photos_init(&$a) {
 
@@ -23,40 +24,8 @@ function photos_init(&$a) {
 
 		$a->data['user'] = $r[0];
 
-
-		// default permissions - anonymous user
-
-		$sql_extra = " AND `allow_cid` = '' AND `allow_gid` = '' AND `deny_cid` = '' AND `deny_gid` = '' ";
-
-		// Profile owner - everything is visible
-
-		if(local_user() && (local_user() == $a->data['user']['uid'])) {
-			$sql_extra = ''; 	
-		}
-		elseif(remote_user()) {
-
-			$groups = init_groups_visitor(remote_user());
-
-			// authenticated visitor - here lie dragons
-			$gs = '<<>>'; // should be impossible to match
-			if(count($groups)) {
-				foreach($groups as $g)
-					$gs .= '|<' . intval($g) . '>';
-			} 
-			$sql_extra = sprintf(
-				" AND ( `allow_cid` = '' OR `allow_cid` REGEXP '<%d>' ) 
-				  AND ( `deny_cid`  = '' OR  NOT `deny_cid` REGEXP '<%d>' ) 
-				  AND ( `allow_gid` = '' OR `allow_gid` REGEXP '%s' )
-				  AND ( `deny_gid`  = '' OR NOT `deny_gid` REGEXP '%s') ",
-
-				intval(remote_user()),
-				intval(remote_user()),
-				dbesc($gs),
-				dbesc($gs)
-			);
-		}
-
-
+		$sql_extra = permissions_sql($a->data['user']['uid']);
+echo "SQL=$sql_extra";
 		$albums = q("SELECT distinct(`album`) AS `album` FROM `photo` WHERE `uid` = %d $sql_extra ",
 			intval($a->data['user']['uid'])
 		);
@@ -806,8 +775,6 @@ function photos_content(&$a) {
 
 	$owner_uid = $a->data['user']['uid'];
 
-
-
 	$community_page = (($a->data['user']['page-flags'] == PAGE_COMMUNITY) ? true : false);
 
 	if((local_user()) && (local_user() == $owner_uid))
@@ -858,34 +825,7 @@ function photos_content(&$a) {
 		return;
 	}
 
-	// default permissions - anonymous user
-
-	$sql_extra = " AND `allow_cid` = '' AND `allow_gid` = '' AND `deny_cid` = '' AND `deny_gid` = '' ";
-
-	// Profile owner - everything is visible
-
-	if(local_user() && (local_user() == $owner_uid)) {
-		$sql_extra = ''; 	
-	}
-	elseif(remote_user()) {
-		// authenticated visitor - here lie dragons
-		$gs = '<<>>'; // should be impossible to match
-		if(count($groups)) {
-			foreach($groups as $g)
-				$gs .= '|<' . intval($g) . '>';
-		} 
-		$sql_extra = sprintf(
-			" AND ( `allow_cid` = '' OR `allow_cid` REGEXP '<%d>' ) 
-			  AND ( `deny_cid`  = '' OR  NOT `deny_cid` REGEXP '<%d>' ) 
-			  AND ( `allow_gid` = '' OR `allow_gid` REGEXP '%s' )
-			  AND ( `deny_gid`  = '' OR NOT `deny_gid` REGEXP '%s') ",
-
-			intval(remote_user()),
-			intval(remote_user()),
-			dbesc($gs),
-			dbesc($gs)
-		);
-	}
+	$sql_extra = permissions_sql($owner_uid,$remote_contact,$groups);
 
 	$o = "";
 

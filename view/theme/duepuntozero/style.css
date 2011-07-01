@@ -2547,7 +2547,7 @@ a.mail-list-link {
 
 .settings-block > h3,
 .settings-heading {
-	border-bottom: 1px solid #babdb6
+	border-bottom: 1px solid #babdb6;
 }
  
 
@@ -2632,7 +2632,7 @@ a.mail-list-link {
 	margin-right: 1em;
 }
 
-#adminpage table {width:100%; border-bottom: 1p solid #000000; margin: 5px 0px;}
+#adminpage table {width:100%; border-bottom: 1px solid #000000; margin: 5px 0px;}
 #adminpage table th { text-align: left;}
 #adminpage td .icon { float: left;}
 #adminpage table#users img { width: 16px; height: 16px; }
@@ -2692,9 +2692,9 @@ a.mail-list-link {
 	margin-top: 10px;
 }
 
-.type-video { background-position: 0px; 0px; }
-.type-image { background-position: -20px; 0px; }
-.type-audio { background-position: -40px; 0px; }
-.type-text  { background-position: -60px; 0px; }
-.type-unkn  { background-position: -80px; 0px; }
+.type-video { background-position: 0px 0px; }
+.type-image { background-position: -20px 0px; }
+.type-audio { background-position: -40px 0px; }
+.type-text  { background-position: -60px 0px; }
+.type-unkn  { background-position: -80px 0px; }
 
