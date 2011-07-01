@@ -105,7 +105,7 @@ function poller_run($argv, $argc){
 			continue;
 
 		foreach($res as $contact) {
-			logger('processing a contact');
+
 			$xml = false;
 
 			if($manual_id)
