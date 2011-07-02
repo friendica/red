@@ -56,9 +56,9 @@ define ( 'REGISTER_OPEN',          2 );
  * this relationship with contact['name']
  */
 
-define ( 'REL_VIP',        1);
-define ( 'REL_FAN',        2);
-define ( 'REL_BUD',        3);
+define ( 'REL_VIP',        1);     // other person is 'following' us
+define ( 'REL_FAN',        2);     // we are 'following' other person
+define ( 'REL_BUD',        3);     // mutual relationship
 
 /**
  * Hook array order
