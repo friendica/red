@@ -15,7 +15,7 @@ function match_content(&$a) {
 	if(! count($r))
 		return; 
 	if(! $r[0]['pub_keywords'] && (! $r[0]['prv_keywords'])) {
-		notice('No keywords to match. Please add keywords to your default profile.');
+		notice( t('No keywords to match. Please add keywords to your default profile.') . EOL);
 		return;
 
 	}
@@ -27,7 +27,10 @@ function match_content(&$a) {
 		if($a->pager['page'] != 1)
 			$params['p'] = $a->pager['page'];
 			
-		$x = post_url('http://dir.friendika.com/msearch', $params);
+		if(strlen(get_config('system','directory_submit_url')))
+			$x = post_url('http://dir.friendika.com/msearch', $params);
+		else
+			$x = post_url($a->get_baseurl() . '/msearch', $params);
 
 		$j = json_decode($x);
 

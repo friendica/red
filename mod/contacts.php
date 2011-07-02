@@ -11,8 +11,9 @@ function contacts_init(&$a) {
 	if($a->config['register_policy'] != REGISTER_CLOSED)
 		$a->page['aside'] .= '<div class="side-link" id="side-invite-link" ><a href="invite" >' . t("Invite Friends") . '</a></div>';
 
-	if(strlen(get_config('system','directory_submit_url')))
-		$a->page['aside'] .= '<div class="side-link" id="side-match-link"><a href="match" >' . t('Find People With Shared Interests') . '</a></div>';
+
+	$a->page['aside'] .= '<div class="side-link" id="side-match-link"><a href="match" >' 
+		. t('Find People With Shared Interests') . '</a></div>';
 
 	$tpl = get_markup_template('follow.tpl');
 	$a->page['aside'] .= replace_macros($tpl,array(
