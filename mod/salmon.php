@@ -187,7 +187,7 @@ function salmon_post(&$a) {
 	// is this a follower? Or have we ignored the person?
 	// If so we can not accept this post.
 
-	if((count($r)) && (($r[0]['readonly']) || ($r[0]['rel'] == REL_VIP)) {
+	if((count($r)) && (($r[0]['readonly']) || ($r[0]['rel'] == REL_VIP) || ($r[0]['blocked']))) {
 		logger('mod-salmon: Ignoring this author.');
 		salmon_return(202);
 		// NOTREACHED
