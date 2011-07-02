@@ -310,12 +310,21 @@ function poller_run($argv, $argc){
 
 				// Upgrading DB fields from an older Friendika version
 				// Will only do this once per notify-enabled OStatus contact
+				// or if relationship changes
 
-				if(($contact['notify']) && (! $contact['writable'])) {
-					q("UPDATE `contact` SET `writable` = 1 WHERE `id` = %d LIMIT 1",
+				$stat_writeable = ((($contact['notify']) && ($contact['rel'] == REL_VIP || $contact['rel'] == REL_BUD)) ? 1 : 0);
+
+				if($stat_writeable != $contact['writable']) {
+					q("UPDATE `contact` SET `writable` = %d WHERE `id` = %d LIMIT 1",
+						intval($stat_writeable),
 						intval($contact['id'])
 					);
 				}
+
+				// Are we allowed to import from this person?
+
+				if($contact['rel'] == REL_VIP || $contact['blocked'] || $contact['readonly'])
+					continue;
 
 				$xml = fetch_url($contact['poll']);
 			}
