@@ -1449,11 +1449,11 @@ function new_follower($importer,$contact,$datarray,$item) {
 	}
 	else {
 	
-		// create contact record - set to readonly
+		// create contact record
 
 		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `name`, `nick`, `photo`, `network`, `rel`, 
 			`blocked`, `readonly`, `pending`, `writable` )
-			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, 0, 1, 1, 1 ) ",
+			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, 0, 0, 1, 1 ) ",
 			intval($importer['uid']),
 			dbesc(datetime_convert()),
 			dbesc($url),

@@ -183,7 +183,11 @@ function salmon_post(&$a) {
 	if(! count($r)) {
 		logger('mod-salmon: Author unknown to us.');
 	}	
-	if((count($r)) && ($r[0]['readonly'])) {
+
+	// is this a follower? Or have we ignored the person?
+	// If so we can not accept this post.
+
+	if((count($r)) && (($r[0]['readonly']) || ($r[0]['rel'] == REL_VIP)) {
 		logger('mod-salmon: Ignoring this author.');
 		salmon_return(202);
 		// NOTREACHED
