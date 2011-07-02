@@ -278,7 +278,12 @@ CREATE TABLE IF NOT EXISTS `photo` (
   `allow_gid` mediumtext NOT NULL,
   `deny_cid` mediumtext NOT NULL,
   `deny_gid` mediumtext NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `uid` (`uid`),
+  KEY `resource-id` (`resource-id`),
+  KEY `album` (`album`),
+  KEY `scale` (`scale`),
+  KEY `profile` (`profile`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

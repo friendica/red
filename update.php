@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1071 );
+define( 'UPDATE_VERSION' , 1072 );
 
 /**
  *
@@ -572,3 +572,11 @@ function update_1070() {
 	q("ALTER TABLE `mail` CHANGE `body` `body` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ");
 }
 
+function update_1071() {
+	q("ALTER TABLE `photo` ADD INDEX ( `uid` ) ");
+	q("ALTER TABLE `photo` ADD INDEX ( `resource-id` ) ");
+	q("ALTER TABLE `photo` ADD INDEX ( `album` ) ");
+	q("ALTER TABLE `photo` ADD INDEX ( `scale` ) ");
+	q("ALTER TABLE `photo` ADD INDEX ( `profile` ) ");
+
+}

@@ -6,7 +6,7 @@ ini_set('pcre.backtrack_limit', 250000);
 
 define ( 'FRIENDIKA_VERSION',      '2.2.1028' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
-define ( 'DB_UPDATE_VERSION',      1071      );
+define ( 'DB_UPDATE_VERSION',      1072      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
