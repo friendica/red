@@ -251,7 +251,8 @@ div.wall-item-content-wrapper.shiny {
 
 .group-selected {
 	padding: 3px;
-	border: 2px solid #CCCCCC;
+	border: 1px solid #CCCCCC;
+	background: #F8F8F8;
 	font-weight: bold;
 }
 
