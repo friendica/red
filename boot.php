@@ -673,7 +673,7 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 
 	curl_setopt($ch, CURLOPT_HEADER, true);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-
+	curl_setopt($ch, CURLOPT_USERAGENT, "Friendika");
 
 	$curl_time = intval(get_config('system','curl_timeout'));
 	curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
@@ -749,6 +749,7 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 	curl_setopt($ch, CURLOPT_POST,1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
+	curl_setopt($ch, CURLOPT_USERAGENT, "Friendika");
 
 	$curl_time = intval(get_config('system','curl_timeout'));
 	curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
