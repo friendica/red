@@ -137,6 +137,18 @@ blockquote:before {
 	cursor: pointer;
 }
 
+
+#group-sidebar {
+    margin-bottom: 10px;
+}
+
+.group-selected {
+    padding: 3px;
+    border: 1px solid #CCCCCC;
+    background: #F8F8F8;
+    font-weight: bold;
+}
+
 .fakelink:hover {
 	color: #0CBEFE;
 	text-decoration: none;

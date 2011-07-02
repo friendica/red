@@ -151,10 +151,6 @@ $o .= <<< EOT
 <div id="group-sidebar">
 <h3>Groups</h3>
 
-<div id="sidebar-new-group">
-<a href="group/new">$createtext</a>
-</div>
-
 <div id="sidebar-group-list">
 	<ul id="sidebar-group-ul">
 	<li class="sidebar-group-li" ><a href="$every" $selected >$linktext</a></li>
@@ -170,7 +166,16 @@ EOT;
 			$o .= '	<li class="sidebar-group-li">' . (($edit) ? "<a href=\"group/{$rr['id']}\" title=\"" . t('Edit') . "\" ><img src=\"images/spencil.gif\" alt=\"" . t('Edit') . "\"></a> " : "") . "<a href=\"$each/{$rr['id']}\" $selected >{$rr['name']}</a></li>\r\n";
 		}
 	}
-	$o .= "	</ul>\r\n	</div>\r\n</div>";	
+	$o .= "	</ul>\r\n	</div>";
+
+	$o .= <<< EOT
+
+  <div id="sidebar-new-group">
+  <a href="group/new">$createtext</a>
+  </div>
+</div>
+	
+EOT;
 
 	return $o;
 }

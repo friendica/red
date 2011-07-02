@@ -249,6 +249,10 @@ div.wall-item-content-wrapper.shiny {
 	cursor: pointer;
 }
 
+#group-sidebar {
+	margin-bottom: 10px;
+}
+
 .group-selected {
 	padding: 3px;
 	border: 1px solid #CCCCCC;
