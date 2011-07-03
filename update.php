@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1072 );
+define( 'UPDATE_VERSION' , 1073 );
 
 /**
  *
@@ -579,4 +579,9 @@ function update_1071() {
 	q("ALTER TABLE `photo` ADD INDEX ( `scale` ) ");
 	q("ALTER TABLE `photo` ADD INDEX ( `profile` ) ");
 
+}
+
+function update_1072() {
+	q("ALTER TABLE `item` ADD `starred` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `visible` ");
+	q("ALTER TABLE `item` ADD INDEX ( `starred` ) ");
 }
