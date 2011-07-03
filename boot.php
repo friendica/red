@@ -704,7 +704,7 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 
 	$http_code = intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
 	$header = substr($s,0,strpos($s,"\r\n\r\n"));
-	if(stristr($header,'100') && (strlen($header) < 30)) {
+	if(preg_match('/HTTP\/.+? 100/',$header)) {
 		// 100 Continue has two headers, get the real one
 		$s = substr($s,strlen($header)+4);
 		$header = substr($s,0,strpos($s,"\r\n\r\n"));
@@ -777,7 +777,7 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
 
 	$http_code = intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
 	$header = substr($s,0,strpos($s,"\r\n\r\n"));
-	if(stristr($header,'100') && (strlen($header) < 30)) {
+	if(preg_match('/HTTP\/.+? 100/',$header)) {
 		// 100 Continue has two headers, get the real one
 		$s = substr($s,strlen($header)+4);
 		$header = substr($s,0,strpos($s,"\r\n\r\n"));
