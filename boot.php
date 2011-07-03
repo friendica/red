@@ -702,13 +702,12 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 
 	$s = @curl_exec($ch);
 
-	$http_code = intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
-	$header = substr($s,0,strpos($s,"\r\n\r\n"));
-	if(preg_match('/HTTP\/.+? 100/',$header)) {
-		// 100 Continue has two headers, get the real one
-		$s = substr($s,strlen($header)+4);
-		$header = substr($s,0,strpos($s,"\r\n\r\n"));
-	}
+	$curl_info = curl_getinfo($ch);
+	$header_size = $curl_info['header_size'];
+	$http_code = $curl_info['http_code'];
+
+	$header = substr($s,0,$header_size);
+
 	if($http_code == 301 || $http_code == 302 || $http_code == 303 || $http_code == 307) {
         $matches = array();
         preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
@@ -721,14 +720,7 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
     }
 	$a->set_curl_code($http_code);
 
-	$body = substr($s,strlen($header)+4);
-
-	/* one more try to make sure there are no more headers */
-
-	if(strpos($body,'HTTP/') === 0) {
-		$header = substr($body,0,strpos($body,"\r\n\r\n"));
-		$body = substr($body,strlen($header)+4);
-	}
+	$body = substr($s,$header_size);
 
 	$a->set_curl_headers($header);
 
@@ -775,13 +767,12 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
 
 	$s = @curl_exec($ch);
 
-	$http_code = intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
-	$header = substr($s,0,strpos($s,"\r\n\r\n"));
-	if(preg_match('/HTTP\/.+? 100/',$header)) {
-		// 100 Continue has two headers, get the real one
-		$s = substr($s,strlen($header)+4);
-		$header = substr($s,0,strpos($s,"\r\n\r\n"));
-	}
+	$curl_info = curl_getinfo($ch);
+	$header_size = $curl_info['header_size'];
+	$http_code = $curl_info['http_code'];
+
+	$header = substr($s,0,$header_size);
+
 	if($http_code == 301 || $http_code == 302 || $http_code == 303) {
         $matches = array();
         preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
@@ -793,14 +784,7 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
         }
     }
 	$a->set_curl_code($http_code);
-	$body = substr($s,strlen($header)+4);
-
-	/* one more try to make sure there are no more headers */
-
-	if(strpos($body,'HTTP/') === 0) {
-		$header = substr($body,0,strpos($body,"\r\n\r\n"));
-		$body = substr($body,strlen($header)+4);
-	}
+	$body = substr($s,$header_size);
 
 	$a->set_curl_headers($header);
 
