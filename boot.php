@@ -702,11 +702,20 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 
 	$s = @curl_exec($ch);
 
+	$base = $s;
 	$curl_info = curl_getinfo($ch);
-	$header_size = $curl_info['header_size'];
 	$http_code = $curl_info['http_code'];
 
-	$header = substr($s,0,$header_size);
+	$header = '';
+
+	// Pull out multiple headers, e.g. proxy and continuation headers
+	// allow for HTTP/2.x without fixing code
+
+	while(preg_match('/^HTTP\/[1-2].+? [1-5][0-9][0-9]/',$base)) {
+		$chunk = substr($base,0,strpos($base,"\r\n\r\n")+4);
+		$header .= $chunk;
+		$base = substr($base,strlen($chunk));
+	}
 
 	if($http_code == 301 || $http_code == 302 || $http_code == 303 || $http_code == 307) {
         $matches = array();
@@ -718,9 +727,10 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
             return fetch_url($url,$binary,$redirects);
         }
     }
+
 	$a->set_curl_code($http_code);
 
-	$body = substr($s,$header_size);
+	$body = substr($s,strlen($header));
 
 	$a->set_curl_headers($header);
 
@@ -767,11 +777,20 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
 
 	$s = @curl_exec($ch);
 
+	$base = $s;
 	$curl_info = curl_getinfo($ch);
-	$header_size = $curl_info['header_size'];
 	$http_code = $curl_info['http_code'];
 
-	$header = substr($s,0,$header_size);
+	$header = '';
+
+	// Pull out multiple headers, e.g. proxy and continuation headers
+	// allow for HTTP/2.x without fixing code
+
+	while(preg_match('/^HTTP\/[1-2].+? [1-5][0-9][0-9]/',$base)) {
+		$chunk = substr($base,0,strpos($base,"\r\n\r\n")+4);
+		$header .= $chunk;
+		$base = substr($base,strlen($chunk));
+	}
 
 	if($http_code == 301 || $http_code == 302 || $http_code == 303) {
         $matches = array();
@@ -784,7 +803,7 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
         }
     }
 	$a->set_curl_code($http_code);
-	$body = substr($s,$header_size);
+	$body = substr($s,strlen($header));
 
 	$a->set_curl_headers($header);
 
