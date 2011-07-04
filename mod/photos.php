@@ -25,7 +25,7 @@ function photos_init(&$a) {
 		$a->data['user'] = $r[0];
 
 		$sql_extra = permissions_sql($a->data['user']['uid']);
-echo "SQL=$sql_extra";
+
 		$albums = q("SELECT distinct(`album`) AS `album` FROM `photo` WHERE `uid` = %d $sql_extra ",
 			intval($a->data['user']['uid'])
 		);
@@ -1110,6 +1110,7 @@ function photos_content(&$a) {
 		}
 
 		$tags=Null;
+
 		if(count($linked_items) && strlen($link_item['tag'])) {
 			$arr = explode(',',$link_item['tag']);
 			// parse tags and add links
