@@ -24,9 +24,9 @@ function network_init(&$a) {
 
 	$a->page['aside'] .= '<div id="network-view-link">';
 	if(($a->argc > 1 && $a->argv[1] === 'new') || ($a->argc > 2 && $a->argv[2] === 'new') || x($_GET,'search'))
-		$a->page['aside'] .= '<a href="' . $a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') . '">' . t('Normal View') . '</a></div>';
+		$a->page['aside'] .= '<a href="' . $a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') . '">' . t('View Conversations') . '</a></div>';
 	else { 
-		$a->page['aside'] .= '<a href="' . $a->get_baseurl() . '/' . $a->cmd . '/new' . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '">' . t('New Item View') . '</a></div>';
+		$a->page['aside'] .= '<a href="' . $a->get_baseurl() . '/' . $a->cmd . '/new' . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '">' . t('View New Items') . '</a></div>';
 
 		if(x($_GET,'star'))
 			$a->page['aside'] .= '<div id="network-star-link">'
