@@ -689,6 +689,15 @@ div[id$="wrapper"] br { clear: left; }
 .mail-list-delete-wrapper { float: right; }
 .mail-list-outside-wrapper-end { clear: both;}
 
+.mail-conv-sender {float: left; margin: 0px 5px 5px 0px }
+.mail-conv-sender-photo { width: 32px; height: 32px }
+.mail-conv-sender-name { float: left }
+.mail-conv-date { float: right }
+.mail-conv-subject { clear: right; font-weight: bold; font-size: 1.2em }
+.mail-conv-body { clear: both; }
+.mail-conv-delete-wrapper { margin-top: 5px; }
+
+
 /**
  * 	contacts
  */
