@@ -174,6 +174,21 @@
 		liking = 1;
 	}
 
+	function dostar(ident) {
+		$('#like-rotator-' + ident.toString()).show();
+		$.get('starred/' + ident.toString(), function(data) {
+			if(data.match(/1/)) {
+				$('#starred-' + ident.toString()).addClass('starred');
+				$('#starred-' + ident.toString()).removeClass('unstarred');
+			}
+			else {			
+				$('#starred-' + ident.toString()).addClass('unstarred');
+				$('#starred-' + ident.toString()).removeClass('starred');
+			}
+			$('#like-rotator-' + ident.toString()).hide();	
+		});
+	}
+
 	function getPosition(e) {
 		var cursor = {x:0, y:0};
 		if ( e.pageX || e.pageY  ) {

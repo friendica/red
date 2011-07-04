@@ -1096,8 +1096,23 @@ input#dfrn-url {
 }
 
 .editpost {
-	margin-left: 15px;
+	margin-left: 10px;
+	float: left;
 }
+.star-item {
+	margin-left: 10px;
+	float: left;	
+}
+
+
+#network-star-link{
+	margin-top: 10px;
+}
+.network-star {
+	float: left;
+	margin-right: 5px;
+}
+
 
 .wall-item-info.wallwall {
 	width: 285px;

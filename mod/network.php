@@ -14,7 +14,7 @@ function network_init(&$a) {
 		$a->page['aside'] = '';
 
 	$search = ((x($_GET,'search')) ? escape_tags($_GET['search']) : '');
-	$srchurl = '/network' . ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '');
+	$srchurl = '/network' . ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') . ((x($_GET,'star')) ? '?star=' . $_GET['star'] : '');
 
 
 	$a->page['aside'] .= search($search,'netsearch-box',$srchurl);
@@ -22,11 +22,29 @@ function network_init(&$a) {
 	$a->page['aside'] .= '<div id="network-new-link">';
 
 
-
+	$a->page['aside'] .= '<div id="network-view-link">';
 	if(($a->argc > 1 && $a->argv[1] === 'new') || ($a->argc > 2 && $a->argv[2] === 'new') || x($_GET,'search'))
-		$a->page['aside'] .= '<a href="' . $a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') . '">' . t('Normal View') . '</a>';
-	else 
-		$a->page['aside'] .= '<a href="' . $a->get_baseurl() . '/' . $a->cmd . '/new' . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '">' . t('New Item View') . '</a>';
+		$a->page['aside'] .= '<a href="' . $a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') . '">' . t('Normal View') . '</a></div>';
+	else { 
+		$a->page['aside'] .= '<a href="' . $a->get_baseurl() . '/' . $a->cmd . '/new' . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '">' . t('New Item View') . '</a></div>';
+
+		if(x($_GET,'star'))
+			$a->page['aside'] .= '<div id="network-star-link">'
+				. '<a class="network-star" href="' . $a->get_baseurl() . '/' . $a->cmd 
+				. ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '">' 
+				. t('View Any Items') . '</a>' 
+				. '<span class="network-star icon starred"></span>' 
+				. '<span class="network-star icon unstarred"></span>' 
+				. '<div class="clear"></div></div>';
+		else
+			$a->page['aside'] .= '<div id="network-star-link">'
+				. '<a class="network-star" href="' . $a->get_baseurl() . '/' . $a->cmd 
+				. ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '&star=1" >' 
+				. t('View Starred Items') . '</a>'
+				. '<span class="network-star icon starred"></span>' 
+				. '<div class="clear"></div></div>';
+
+	}
 
 	$a->page['aside'] .= '</div>';
 
@@ -51,6 +69,7 @@ function network_content(&$a, $update = 0) {
 	require_once('include/acl_selectors.php');
 
 	$cid = ((x($_GET['cid'])) ? intval($_GET['cid']) : 0);
+	$star = ((x($_GET['star'])) ? intval($_GET['star']) : 0);
 
 	if(($a->argc > 2) && $a->argv[2] === 'new')
 		$nouveau = true;
@@ -109,6 +128,7 @@ function network_content(&$a, $update = 0) {
 				. "; var netargs = '" . substr($a->cmd,8) 
 				. ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '')
 				. ((x($_GET,'search')) ? '?search=' . $_GET['search'] : '') 
+				. ((x($_GET,'star')) ? '?star=' . $_GET['star'] : '') 
 				. "'; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 
 	}
@@ -117,7 +137,7 @@ function network_content(&$a, $update = 0) {
 	// level which items you've seen and which you haven't. If you're looking
 	// at the top level network page just mark everything seen. 
 	
-	if((! $group) && (! $cid)) {
+	if((! $group) && (! $cid) && (! $star)) {
 		$r = q("UPDATE `item` SET `unseen` = 0 
 			WHERE `unseen` = 1 AND `uid` = %d",
 			intval($_SESSION['uid'])
@@ -128,7 +148,9 @@ function network_content(&$a, $update = 0) {
 	// that belongs to you, hence you can see all of it. We will filter by group if
 	// desired. 
 
-	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` ) ";
+	$star_sql = (($star) ?  " AND `starred` = 1 " : '');
+
+	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` $star_sql ) ";
 
 	if($group) {
 		$r = q("SELECT `name`, `id` FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -152,7 +174,8 @@ function network_content(&$a, $update = 0) {
 				info( t('Group is empty'));
 		}
 
-		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND ( `contact-id` IN ( $contact_str ) OR `allow_gid` REGEXP '<" . intval($group) . ">' )) ";
+
+		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` $star_sql AND ( `contact-id` IN ( $contact_str ) OR `allow_gid` REGEXP '<" . intval($group) . ">' )) ";
 		$o = '<h2>' . t('Group: ') . $r[0]['name'] . '</h2>' . $o;
 	}
 	elseif($cid) {
@@ -162,7 +185,7 @@ function network_content(&$a, $update = 0) {
 			intval($cid)
 		);
 		if(count($r)) {
-			$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` AND `contact-id` IN ( " . intval($cid) . " )) ";
+			$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` $star_sql AND `contact-id` IN ( " . intval($cid) . " )) ";
 			$o = '<h2>' . t('Contact: ') . $r[0]['name'] . '</h2>' . $o;
 			if($r[0]['network'] !== NETWORK_MAIL && $r[0]['network'] !== NETWORK_DFRN && $r[0]['network'] !== NETWORK_FACEBOOK && $r[0]['writable'] && (! get_pconfig(local_user(),'system','nowarn_insecure'))) {
 				notice( t('Private messages to this person are at risk of public disclosure.') . EOL);
@@ -184,6 +207,7 @@ function network_content(&$a, $update = 0) {
 	if(x($_GET,'search'))
 		$sql_extra .= " AND `item`.`body` REGEXP '" . dbesc(escape_tags($_GET['search'])) . "' ";
 
+	
 
 	$r = q("SELECT COUNT(*) AS `total`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
