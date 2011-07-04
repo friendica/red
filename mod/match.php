@@ -43,7 +43,7 @@ function match_content(&$a) {
 			foreach($j->results as $jj) {
 
 				$o .= '<div class="profile-match-wrapper"><div class="profile-match-photo">';
-				$o .= '<a href="' . $jj->url . '">' . '<img src="' . $jj->photo . '" alt="' . $jj->name . '" title="' . $jj->name . '[' . $jj->url . ']' . '" /></a></div>';
+				$o .= '<a href="' . $jj->url . '">' . '<img src="' . $jj->photo . '" alt="' . $jj->name . '" title="' . $jj->name . '[' . $jj->tags . ']' . '" /></a></div>';
 				$o .= '<div class="profile-match-break"></div>';
 				$o .= '<div class="profile-match-name"><a href="' . $jj->url . '" title="' . $jj->name . '[' . $jj->url .']' . '">' . $jj->name . '</a></div>';
 				$o .= '<div class="profile-match-end"></div></div>';
