@@ -21,7 +21,7 @@ function friendika_init(&$a) {
 			'register_policy' =>  $register_policy[$a->config['register_policy']],
 			'admin' => $admin,
 			'site_name' => $a->config['sitename'],
-			
+			'info' => ((x($a->config,'info')) ? $a->config['info'] : '')			
 		);
 
 		echo json_encode($data);
