@@ -28,8 +28,8 @@ function msearch_post(&$a) {
 			$results[] = array(
 				'name' => $rr['name'], 
 				'url' => $a->get_baseurl() . '/profile/' . $rr['nickname'], 
-				'photo' => $a->get_baseurl() . '/photo/avatar/' . $rr['uid'] . 'jpg'
-				'tags' => str_replace(array(',','  '),array(' ',' '),$rr['pub_keywords']);
+				'photo' => $a->get_baseurl() . '/photo/avatar/' . $rr['uid'] . 'jpg',
+				'tags' => str_replace(array(',','  '),array(' ',' '),$rr['pub_keywords'])
 			);
 	}
 
