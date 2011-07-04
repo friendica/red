@@ -756,8 +756,15 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
 	$curl_time = intval(get_config('system','curl_timeout'));
 	curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
 
-	if(is_array($headers))
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+	if(!is_array($headers)) {
+		$headers = array('Expect:');
+	} else {
+		if(!in_array('Expect:', $headers)) {
+			array_push($headers, 'Expect:');
+		}
+	}
+
+	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
 	$check_cert = get_config('system','verifyssl');
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, (($check_cert) ? true : false));
