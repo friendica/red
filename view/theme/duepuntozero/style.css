@@ -2380,6 +2380,9 @@ a.mail-list-link {
 .profile-match-wrapper {
 	float: left;
 	padding: 10px;
+	width: 120px;
+	height: 120px;
+	scroll: auto;
 }
 #profile-match-wrapper-end {
 	clear: both;
