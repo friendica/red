@@ -564,7 +564,7 @@ section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
  * profile
  **/
  
-div[id$="text"] { font-weight: bold; float: left; width: 200px; } 
+div[id$="text"] { font-weight: bold; border-bottom: 1px solid #cccccc; } 
 div[id$="wrapper"] { height: 100%; margin-bottom: 1em; } 
 div[id$="wrapper"] br { clear: left; }
 #advanced-profile-with { margin-left: 200px; }
@@ -591,6 +591,9 @@ div[id$="wrapper"] br { clear: left; }
 	position:relative;
 	
 }
+
+#photo-photo { max-width: 100% }
+#photo-photo img { max-width: 100% }
 
 .photo-top-image-wrapper a:hover,
 #photo-photo a:hover,
@@ -688,6 +691,15 @@ div[id$="wrapper"] br { clear: left; }
 .mail-list-subject { font-size: 1.5em;}
 .mail-list-delete-wrapper { float: right; }
 .mail-list-outside-wrapper-end { clear: both;}
+
+.mail-conv-sender {float: left; margin: 0px 5px 5px 0px }
+.mail-conv-sender-photo { width: 32px; height: 32px }
+.mail-conv-sender-name { float: left }
+.mail-conv-date { float: right }
+.mail-conv-subject { clear: right; font-weight: bold; font-size: 1.2em }
+.mail-conv-body { clear: both; }
+.mail-conv-delete-wrapper { margin-top: 5px; }
+
 
 /**
  * 	contacts
