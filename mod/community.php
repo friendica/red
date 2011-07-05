@@ -77,7 +77,7 @@ function community_content(&$a, $update = 0) {
 
 	// we behave the same in message lists as the search module
 
-	$o .= conversation($a,$r,'search',false);
+	$o .= conversation($a,$r,'community',false);
 
 	$o .= paginate($a);
 

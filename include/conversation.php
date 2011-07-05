@@ -101,6 +101,11 @@ function conversation(&$a, $items, $mode, $update) {
 		$page_writeable = can_write_wall($a,$profile_owner);
 	}
 
+	if($mode === 'community') {
+		$profile_owner = 0;
+		$page_writeable = false;
+	}
+
 	if($update)
 		$return_url = $_SESSION['return_url'];
 	else
@@ -122,7 +127,7 @@ function conversation(&$a, $items, $mode, $update) {
 	
 	if(count($items)) {
 
-		if($mode === 'network-new' || $mode === 'search') {
+		if($mode === 'network-new' || $mode === 'search' || $mode === 'community') {
 
 			// "New Item View" on network page or search page results 
 			// - just loop through the items and format them minimally for display
@@ -174,8 +179,12 @@ function conversation(&$a, $items, $mode, $update) {
 				$drop = '';
 
 				localize_item($item);
+				if($mode === 'network-new')
+					$t = $droptpl;
+				else
+					$t = $fakedrop;
 
-				$drop = replace_macros($droptpl,array('$id' => $item['id']));
+				$drop = replace_macros($t,array('$id' => $item['id']));
 				$lock = '<div class="wall-item-lock"></div>';
 				$star = '';
 
