@@ -4,7 +4,7 @@ set_time_limit(0);
 ini_set('pcre.backtrack_limit', 250000);
 
 
-define ( 'FRIENDIKA_VERSION',      '2.2.1031' );
+define ( 'FRIENDIKA_VERSION',      '2.2.1032' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
 define ( 'DB_UPDATE_VERSION',      1073      );
 
@@ -2031,7 +2031,10 @@ function get_tags($s) {
 
 	$s = preg_replace('/\[code\](.*?)\[\/code\]/sm','',$s);
 
-	if(preg_match_all('/([@#][^ \x0D\x0A,:?]+ [^ \x0D\x0A,:?]+)([ \x0D\x0A,:?]|$)/',$s,$match)) {
+	// Match full names against @tags including the space between first and last
+	// We will look these up afterward to see if they are full names or not recognisable.
+
+	if(preg_match_all('/(@[^ \x0D\x0A,:?]+ [^ \x0D\x0A,:?]+)([ \x0D\x0A,:?]|$)/',$s,$match)) {
 		foreach($match[1] as $mtch) {
 			if(strstr($mtch,"]")) {
 				// we might be inside a bbcode color tag - leave it alone
@@ -2043,6 +2046,9 @@ function get_tags($s) {
 				$ret[] = $mtch;
 		}
 	}
+
+	// Otherwise pull out single word tags. These can be @nickname, @first_last
+	// and #hash tags.
 
 	if(preg_match_all('/([@#][^ \x0D\x0A,:?]+)([ \x0D\x0A,:?]|$)/',$s,$match)) {
 		foreach($match[1] as $mtch) {
