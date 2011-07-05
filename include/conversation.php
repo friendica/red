@@ -177,6 +177,7 @@ function conversation(&$a, $items, $mode, $update) {
 
 				$drop = replace_macros($droptpl,array('$id' => $item['id']));
 				$lock = '<div class="wall-item-lock"></div>';
+				$star = '';
 
 				$body = prepare_body($item,true);
 				
@@ -197,6 +198,7 @@ function conversation(&$a, $items, $mode, $update) {
 					'$owner_url' => $owner_url,
 					'$owner_photo' => $owner_photo,
 					'$owner_name' => $owner_name,
+					'$star' => $star,
 					'$drop' => $drop,
 					'$conv' => '<a href="' . $a->get_baseurl() . '/display/' . $nickname . '/' . $item['id'] . '">' . t('View in context') . '</a>'
 				));
@@ -381,8 +383,8 @@ function conversation(&$a, $items, $mode, $update) {
 			}
 
 			$edpost = (((($profile_owner == local_user()) && ($toplevelpost) && (intval($item['wall']) == 1)) || ($mode === 'notes'))
-					? '<a class="editpost" href="' . $a->get_baseurl() . '/editpost/' . $item['id'] 
-						. '" title="' . t('Edit') . '"><img src="images/pencil.gif" /></a>'
+					? '<a class="editpost icon pencil" href="' . $a->get_baseurl() . '/editpost/' . $item['id'] 
+						. '" title="' . t('Edit') . '"></a>'
 					: '');
 
 
@@ -393,6 +395,8 @@ function conversation(&$a, $items, $mode, $update) {
 				$dropping = true;
 
             $drop = replace_macros((($dropping)? $droptpl : $fakedrop), array('$id' => $item['id'], '$select' => t('Select'), '$delete' => t('Delete')));
+
+			$star = (($profile_owner == local_user() && $toplevelpost) ? '<a href="#" id="starred-' . $item['id'] . '" onclick="dostar(' . $item['id'] . '); return false;" class="star-item icon ' . (($item['starred']) ? 'starred' : 'unstarred') . '" title="' . t('toggle star status')  . '"></a>' : '');
 
 
 			$photo = $item['photo'];
@@ -473,6 +477,7 @@ function conversation(&$a, $items, $mode, $update) {
 				'$owner_name' => $owner_name,
 				'$plink' => get_plink($item),
 				'$edpost' => $edpost,
+				'$star' => $star,
 				'$drop' => $drop,
 				'$vote' => $likebuttons,
 				'$like' => $like,

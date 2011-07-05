@@ -3,6 +3,7 @@ require_once('include/Photo.php');
 require_once('include/items.php');
 require_once('include/acl_selectors.php');
 require_once('include/bbcode.php');
+require_once('include/security.php');
 
 function photos_init(&$a) {
 
@@ -23,7 +24,9 @@ function photos_init(&$a) {
 
 		$a->data['user'] = $r[0];
 
-		$albums = q("SELECT distinct(`album`) AS `album` FROM `photo` WHERE `uid` = %d",
+		$sql_extra = permissions_sql($a->data['user']['uid']);
+
+		$albums = q("SELECT distinct(`album`) AS `album` FROM `photo` WHERE `uid` = %d $sql_extra ",
 			intval($a->data['user']['uid'])
 		);
 
@@ -35,7 +38,11 @@ function photos_init(&$a) {
 		
 			$o .= '<ul>';
 			foreach($albums as $album) {
-				if((! strlen($album['album'])) || ($album['album'] == t('Contact Photos')))
+
+				// don't show contact photos. We once trasnlated this name, but then you could still access it under
+				// a different language setting. Now we store the name in English and check in English (and translated for legacy albums).
+
+				if((! strlen($album['album'])) || ($album['album'] === 'Contact Photos') || ($album['album'] === t('Contact Photos')))
 					continue;
 				$o .= '<li>' . '<a href="photos/' . $a->argv[1] . '/album/' . bin2hex($album['album']) . '" />' . $album['album'] . '</a></li>'; 
 			}
@@ -133,7 +140,7 @@ function photos_post(&$a) {
 	if(($a->argc > 3) && ($a->argv[2] === 'album')) {
 		$album = hex2bin($a->argv[3]);
 
-		if($album == t('Profile Photos') || $album == t('Contact Photos')) {
+		if($album === t('Profile Photos') || $album === 'Contact Photos' || $album === t('Contact Photos')) {
 			goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
 			return; // NOTREACHED
 		}
@@ -376,6 +383,8 @@ function photos_post(&$a) {
 
 			if(count($tags)) {
 				foreach($tags as $tag) {
+					if(isset($profile))
+						unset($profile);
 					if(strpos($tag,'@') === 0) {
 						$name = substr($tag,1);
 						if((strpos($name,'@')) || (strpos($name,'http://'))) {
@@ -397,7 +406,7 @@ function photos_post(&$a) {
 						}
 						else {
 							$newname = $name;
-							if(strstr($name,'_')) {
+							if(strstr($name,'_') || strstr($name,' ')) {
 								$newname = str_replace('_',' ',$name);
 								$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `uid` = %d LIMIT 1",
 									dbesc($newname),
@@ -590,10 +599,21 @@ function photos_post(&$a) {
 		$filesize   = intval($_FILES['userfile']['size']);
 	}
 
+
+	logger('photos: upload: received file: ' . $filename . ' as ' . $src . ' ' . $filesize . ' bytes', LOGGER_DEBUG);
+
 	$maximagesize = get_config('system','maximagesize');
 
 	if(($maximagesize) && ($filesize > $maximagesize)) {
 		notice( t('Image exceeds size limit of ') . $maximagesize . EOL);
+		@unlink($src);
+		$foo = 0;
+		call_hooks('photo_post_end',$foo);
+		return;
+	}
+
+	if(! $filesize) {
+		notice( t('Image file is empty.') . EOL);
 		@unlink($src);
 		$foo = 0;
 		call_hooks('photo_post_end',$foo);
@@ -755,8 +775,6 @@ function photos_content(&$a) {
 
 	$owner_uid = $a->data['user']['uid'];
 
-
-
 	$community_page = (($a->data['user']['page-flags'] == PAGE_COMMUNITY) ? true : false);
 
 	if((local_user()) && (local_user() == $owner_uid))
@@ -807,34 +825,7 @@ function photos_content(&$a) {
 		return;
 	}
 
-	// default permissions - anonymous user
-
-	$sql_extra = " AND `allow_cid` = '' AND `allow_gid` = '' AND `deny_cid` = '' AND `deny_gid` = '' ";
-
-	// Profile owner - everything is visible
-
-	if(local_user() && (local_user() == $owner_uid)) {
-		$sql_extra = ''; 	
-	}
-	elseif(remote_user()) {
-		// authenticated visitor - here lie dragons
-		$gs = '<<>>'; // should be impossible to match
-		if(count($groups)) {
-			foreach($groups as $g)
-				$gs .= '|<' . intval($g) . '>';
-		} 
-		$sql_extra = sprintf(
-			" AND ( `allow_cid` = '' OR `allow_cid` REGEXP '<%d>' ) 
-			  AND ( `deny_cid`  = '' OR  NOT `deny_cid` REGEXP '<%d>' ) 
-			  AND ( `allow_gid` = '' OR `allow_gid` REGEXP '%s' )
-			  AND ( `deny_gid`  = '' OR NOT `deny_gid` REGEXP '%s') ",
-
-			intval(remote_user()),
-			intval(remote_user()),
-			dbesc($gs),
-			dbesc($gs)
-		);
-	}
+	$sql_extra = permissions_sql($owner_uid,$remote_contact,$groups);
 
 	$o = "";
 
@@ -867,7 +858,7 @@ function photos_content(&$a) {
 		$albumselect .= '<option value="" selected="selected" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>';
 		if(count($a->data['albums'])) {
 			foreach($a->data['albums'] as $album) {
-				if(($album['album'] === '') || ($album['album'] == t('Contact Photos')))
+				if(($album['album'] === '') || ($album['album'] === 'Contact Photos') || ($album['album'] === t('Contact Photos')))
 					continue;
 				$albumselect .= '<option value="' . $album['album'] . '">' . $album['album'] . '</option>';
 			}
@@ -936,7 +927,7 @@ function photos_content(&$a) {
 		$o .= '<h3>' . $album . '</h3>';
 		
 		if($cmd === 'edit') {		
-			if(($album != t('Profile Photos')) && ($album != t('Contact Photos'))) {
+			if(($album !== t('Profile Photos')) && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
 				if($can_post) {
 					$edit_tpl = get_markup_template('album_edit.tpl');
 					$o .= replace_macros($edit_tpl,array(
@@ -951,7 +942,7 @@ function photos_content(&$a) {
 			}
 		}
 		else {
-			if(($album != t('Profile Photos')) && ($album != t('Contact Photos'))) {
+			if(($album !== t('Profile Photos')) && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
 				if($can_post) {
 					$o .= '<div id="album-edit-link"><a href="'. $a->get_baseurl() . '/photos/' 
 						. $a->data['user']['nickname'] . '/album/' . bin2hex($album) . '/edit' . '">' 
@@ -1119,6 +1110,7 @@ function photos_content(&$a) {
 		}
 
 		$tags=Null;
+
 		if(count($linked_items) && strlen($link_item['tag'])) {
 			$arr = explode(',',$link_item['tag']);
 			// parse tags and add links
@@ -1337,9 +1329,10 @@ function photos_content(&$a) {
 	// Default - show recent photos with upload link (if applicable)
 	//$o = '';
 
-	$r = q("SELECT `resource-id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` != '%s' 
+	$r = q("SELECT `resource-id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` != '%s' AND `album` != '%s' 
 		$sql_extra GROUP BY `resource-id`",
 		intval($a->data['user']['uid']),
+		dbesc('Contact Photos'),
 		dbesc( t('Contact Photos'))
 	);
 	if(count($r)) {
@@ -1348,9 +1341,10 @@ function photos_content(&$a) {
 	}
 
 	$r = q("SELECT `resource-id`, `id`, `filename`, `album`, max(`scale`) AS `scale` FROM `photo`
-		WHERE `uid` = %d AND `album` != '%s' 
+		WHERE `uid` = %d AND `album` != '%s' AND `album` != '%s'  
 		$sql_extra GROUP BY `resource-id` ORDER BY `created` DESC LIMIT %d , %d",
 		intval($a->data['user']['uid']),
+		dbesc('Contact Photos'),
 		dbesc( t('Contact Photos')),
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])

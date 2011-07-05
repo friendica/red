@@ -113,3 +113,95 @@ $a->config['system']['addon'] = 'js_upload,poormancron';
 
 and save your changes.
 
+
+
+#####################################################################
+
+		If things don't work...
+
+#####################################################################
+
+
+#####################################################################
+- If you get the message 
+	"System is currently unavailable. Please try again later"
+#####################################################################
+	
+	Check your database settings. It usually means your database could not 
+be opened or accessed. If the database resides on the same machine, check that
+the database server name is "localhost". 
+
+#####################################################################
+- 500 Internal Error
+#####################################################################
+
+	This could be the result of one of our Apache directives not being 
+supported by your version of Apache. Examine your apache server logs.
+	You might remove the line "Options -Indexes" from the .htaccess file if 
+you are using a Windows server as this has been known to cause problems.
+Also check your file permissions. Your website and all contents must generally 
+be world-readable.
+
+	It is likely that your web server reported the source of the problem in
+its error log files. Please review these system error logs to determine what 
+caused the problem. Often this will need to be resolved with your hosting
+provider or (if self-hosted) your web server configuration. 
+
+#####################################################################
+- 400 and 4xx "File not found" errors
+#####################################################################
+
+	First check your file permissions. Your website and all contents must 
+generally be world-readable.
+
+	Ensure that mod-rewite is installed and working, and that your
+.htaccess file is being used. To verify the latter, create a file test.out
+containing the word "test" in the top directory of Friendika, make it world 
+readable and point your web browser to
+
+http://yoursitenamehere.com/test.out
+
+	This file should be blocked. You should get a permission denied message.
+
+	If you see the word "test" your Apache configuration is not allowing
+your .htaccess file to be used (there are rules in this file to block access
+to any file with .out at the end, as these are typically used for system logs).
+
+	Make certain the .htaccess file exists and is readable by everybody, then 
+look for the existence of "AllowOverride None" in the Apache server 
+configuration for your site. This will need to be changed to 
+"AllowOverride All".  
+
+	If you do not see the word "test", your .htaccess is working, but it is 
+likely that mod-rewrite is not installed in your web server or is not working.
+
+	On most flavour of Linux,
+
+% a2enmod rewrite
+% /etc/init.d/apache2 restart
+
+	Consult your hosting provider, experts on your particular Linux 
+distribution or (if Windows) the provider of your Apache server software if 
+you need to change either of these and can not figure out how. There is 
+a lot of help available on the web. Google "mod-rewrite" along with the 
+name of your operating system distribution or Apache package (if using 
+Windows).
+
+  
+#####################################################################
+- If you are unable to write the file .htconfig.php during installation 
+due to permissions issues:
+#####################################################################
+
+	create an empty file with that name and give it world-write permission.
+For Linux:
+
+% touch .htconfig.php
+% chmod 777 .htconfig.php
+
+Retry the installation. As soon as the database has been created, 
+
+******* this is important *********
+
+% chmod 755 .htconfig.php
+

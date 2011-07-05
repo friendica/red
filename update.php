@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1066 );
+define( 'UPDATE_VERSION' , 1073 );
 
 /**
  *
@@ -15,7 +15,7 @@ define( 'UPDATE_VERSION' , 1066 );
  * 
  * At the top of the file "boot.php" is a define for DB_UPDATE_VERSION. Any time there is a change
  * to the database schema or one which requires an upgrade path from the existing application,
- * the DB_UPDATE_VERSION is incremented.
+ * the DB_UPDATE_VERSION and the UPDATE_VERSION at the top of this file are incremented.
  *
  * The current DB_UPDATE_VERSION is stored in the config area of the database. If the application starts up
  * and DB_UPDATE_VERSION is greater than the last stored build number, we will process every update function 
@@ -529,3 +529,59 @@ function update_1065() {
 	q("ALTER TABLE `intro` ADD `fid` INT NOT NULL DEFAULT '0' AFTER `uid`");
 }
 
+function update_1066() {
+	$r = q("ALTER TABLE `item` ADD `received` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `edited` ");
+	if($r)
+		q("ALTER TABLE `item` ADD INDEX ( `received` ) ");
+
+	$r = q("UPDATE `item` SET `received` = `edited` WHERE 1");
+}
+
+function update_1067() {
+	q("ALTER TABLE `ffinder` ADD `type` CHAR( 16 ) NOT NULL AFTER `id` ,
+	ADD `note` TEXT NOT NULL AFTER `type` ");
+}
+
+function update_1068() {
+	// 1067 was short-sighted. Undo it.
+	q("ALTER TABLE `ffinder` DROP `type` , DROP `note` ");
+
+	// and do this instead.
+
+	q("CREATE TABLE IF NOT EXISTS `fsuggest` (
+	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`uid` INT NOT NULL ,
+	`cid` INT NOT NULL ,
+	`name` CHAR( 255 ) NOT NULL ,
+	`url` CHAR( 255 ) NOT NULL ,
+	`photo` CHAR( 255 ) NOT NULL ,
+	`note` TEXT NOT NULL ,
+	`created` DATETIME NOT NULL 
+	) ENGINE = MYISAM DEFAULT CHARSET=utf8");
+
+}
+
+function update_1069() {
+	q("ALTER TABLE `fsuggest` ADD `request` CHAR( 255 ) NOT NULL AFTER `url` ");
+	q("ALTER TABLE `fcontact` ADD `request` CHAR( 255 ) NOT NULL AFTER `photo` ");
+}
+
+// mail body needs to accomodate private photos
+
+function update_1070() {
+	q("ALTER TABLE `mail` CHANGE `body` `body` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ");
+}
+
+function update_1071() {
+	q("ALTER TABLE `photo` ADD INDEX ( `uid` ) ");
+	q("ALTER TABLE `photo` ADD INDEX ( `resource-id` ) ");
+	q("ALTER TABLE `photo` ADD INDEX ( `album` ) ");
+	q("ALTER TABLE `photo` ADD INDEX ( `scale` ) ");
+	q("ALTER TABLE `photo` ADD INDEX ( `profile` ) ");
+
+}
+
+function update_1072() {
+	q("ALTER TABLE `item` ADD `starred` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `visible` ");
+	q("ALTER TABLE `item` ADD INDEX ( `starred` ) ");
+}

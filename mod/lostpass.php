@@ -7,12 +7,16 @@ function lostpass_post(&$a) {
 	if(! $email)
 		goaway($a->get_baseurl());
 
-	$r = q("SELECT * FROM `user` WHERE ( `email` = '%s' OR `nickname` = '%s' ) LIMIT 1",
+	$r = q("SELECT * FROM `user` WHERE ( `email` = '%s' OR `nickname` = '%s' ) AND `verified` = 1 AND `blocked` = 0 LIMIT 1",
 		dbesc($email),
 		dbesc($email)
 	);
-	if(! count($r))
+
+	if(! count($r)) {
+		notice( t('No valid account found.') . EOL);
 		goaway($a->get_baseurl());
+	}
+
 	$uid = $r[0]['uid'];
 	$username = $r[0]['username'];
 

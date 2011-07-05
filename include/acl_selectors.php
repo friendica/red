@@ -41,6 +41,115 @@ function group_select($selname,$selclass,$preselected = false,$size = 4) {
 }
 
 
+function contact_selector($selname, $selclass, $preselected = false, $options) {
+
+	$a = get_app();
+
+	$mutual = false;
+	$networks = null;
+	$single = false;
+	$exclude = false;
+	$size = 4;
+
+	if(is_array($options)) {
+		if(x($options,'size'))
+			$size = $options['size'];
+
+		if(x($options,'mutual_friends'))
+			$mutual = true;
+		if(x($options,'single'))
+			$single = true;
+		if(x($options,'multiple'))
+			$single = false;
+		if(x($options,'exclude'))
+			$exclude = $options['exclude'];
+
+		if(x($options,'networks')) {
+			switch($options['networks']) {
+				case 'DFRN_ONLY':
+					$networks = array('dfrn');
+					break;
+				case 'PRIVATE':
+					if(is_array($a->user) && $a->user['prvnets'])
+						$networks = array('dfrn','mail','dspr');
+					else
+						$networks = array('dfrn','face','mail', 'dspr');
+					break;
+				case 'TWO_WAY':
+					if(is_array($a->user) && $a->user['prvnets'])
+						$networks = array('dfrn','mail','dspr');
+					else
+						$networks = array('dfrn','face','mail','dspr','stat');
+					break;					
+				default:
+					break;
+			}
+		}
+	}
+		
+	$x = array('options' => $options, 'size' => $size, 'single' => $single, 'mutual' => $mutual, 'exclude' => $exclude, 'networks' => $networks);
+
+	call_hooks('contact_select_options', $x);
+
+	$o = '';
+
+	$sql_extra = '';
+
+	if($x['mutual']) {
+		$sql_extra .= sprintf(" AND `rel` = %d ", intval(REL_BUD));
+	}
+
+	if(intval($x['exclude']))
+		$sql_extra .= sprintf(" AND `id` != %d ", intval($x['exclude']));
+
+	if(is_array($x['networks']) && count($x['networks'])) {
+		for($y = 0; $y < count($x['networks']) ; $y ++)
+			$x['networks'][$y] = "'" . dbesc($x['networks'][$y]) . "'";
+		$str_nets = implode(',',$x['networks']);
+		$sql_extra .= " AND `network` IN ( $str_nets ) ";
+	}
+
+	if($x['single'])
+		$o .= "<select name=\"$selname\" id=\"$selclass\" class=\"$selclass\" size=\"" . $x['size'] . "\" >\r\n";
+	else 
+		$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"" . $x['size'] . "$\" >\r\n";
+
+	$r = q("SELECT `id`, `name`, `url`, `network` FROM `contact` 
+		WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 AND `notify` != ''
+		$sql_extra
+		ORDER BY `name` ASC ",
+		intval(local_user())
+	);
+
+
+	$arr = array('contact' => $r, 'entry' => $o);
+
+	// e.g. 'network_pre_contact_deny', 'profile_pre_contact_allow'
+
+	call_hooks($a->module . '_pre_' . $selname, $arr);
+
+	if(count($r)) {
+		foreach($r as $rr) {
+			if((is_array($preselected)) && in_array($rr['id'], $preselected))
+				$selected = " selected=\"selected\" ";
+			else
+				$selected = '';
+
+			$trimmed = mb_substr($rr['name'],0,20);
+
+			$o .= "<option value=\"{$rr['id']}\" $selected title=\"{$rr['name']}|{$rr['url']}\" >$trimmed</option>\r\n";
+		}
+	
+	}
+
+	$o .= "</select>\r\n";
+
+	call_hooks($a->module . '_post_' . $selname, $o);
+
+	return $o;
+}
+
+
 
 function contact_select($selname, $selclass, $preselected = false, $size = 4, $privmail = false, $celeb = false, $privatenet = false) {
 
@@ -63,6 +172,8 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 	elseif($privatenet) {	
 		$sql_extra .= " AND `network` IN ( 'dfrn', 'mail', 'face' ) ";
 	}
+
+
 
 	if($privmail)
 		$o .= "<select name=\"$selname\" id=\"$selclass\" class=\"$selclass\" size=\"$size\" >\r\n";
@@ -103,6 +214,7 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 
 	return $o;
 }
+
 
 function fixacl(&$item) {
 	$item = intval(str_replace(array('<','>'),array('',''),$item));

@@ -38,6 +38,7 @@
 		$vote
 		$plink
 		$edpost
+		$star
 		$drop
 		</div>
 	</div>	

@@ -249,6 +249,17 @@ div.wall-item-content-wrapper.shiny {
 	cursor: pointer;
 }
 
+#group-sidebar {
+	margin-bottom: 10px;
+}
+
+.group-selected {
+	padding: 3px;
+	border: 1px solid #CCCCCC;
+	background: #F8F8F8;
+	font-weight: bold;
+}
+
 .fakelink:hover {
 	color: #3465a4;
 	text-decoration: underline;
@@ -881,6 +892,19 @@ input#dfrn-url {
 	clear: both;
 }
 
+#fsuggest-desc, #fsuggest-submit-wrapper {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+#network-star-link{
+	margin-top: 10px;
+}
+.network-star {
+	float: left;
+	margin-right: 5px;
+}
+
 .wall-item-content-wrapper {
 	margin-top: 10px;
 	border: 1px solid #CCC;
@@ -998,8 +1022,12 @@ input#dfrn-url {
 .wall-item-like-buttons {
 	float: left;
 	margin-right: 10px;
-	padding-right: 10px;
-	border-right: 2px solid #fff;
+/*	padding-right: 10px; */
+/*	border-right: 2px solid #fff; */
+}
+
+.like-rotator {
+	margin-left: 5px;
 }
 
 .wall-item-like-buttons > a,
@@ -1013,10 +1041,16 @@ input#dfrn-url {
 
 .wall-item-share-buttons {
 	margin-left: 10px;
+	margin-right: 10px;
 }
 
 .editpost {
-	margin-left: 15px;
+	margin-left: 10px;
+	float: left;
+}
+.star-item {
+	margin-left: 10px;
+	float: left;	
 }
 
 .wall-item-links-wrapper {
@@ -2346,6 +2380,9 @@ a.mail-list-link {
 .profile-match-wrapper {
 	float: left;
 	padding: 10px;
+	width: 120px;
+	height: 120px;
+	scroll: auto;
 }
 #profile-match-wrapper-end {
 	clear: both;
@@ -2532,6 +2569,43 @@ a.mail-list-link {
 }
 
 /**
+ * Plugins settings
+ */
+
+.settings-block > h3,
+.settings-heading {
+	border-bottom: 1px solid #babdb6;
+}
+ 
+
+/**
+ * Form fields
+ */
+.field {
+	clear: left;
+	margin-bottom: 5px;
+	padding-bottom: 5px;
+}
+
+.field label {
+	float: left;
+	width: 200px;
+}
+
+.field input,
+.field textarea {
+	width: 400px;
+}
+.field textarea { height: 100px; }
+.field_help {
+	display: block;
+	margin-left: 200px;
+	color: #666666;
+	
+}
+ 
+
+/**
  * ADMIN
  */
 #pending-update {
@@ -2557,34 +2631,12 @@ a.mail-list-link {
 	margin-left: 200px;
 }
 
-#adminpage .field {
-	clear: left;
-	margin-bottom: 5px;
-	padding-bottom: 5px;
-}
-
-#adminpage .field label {
-	float: left;
-	width: 200px;
-	font-weight: bold;
-}
-
-#adminpage .field input,
-#adminpage .field textarea {
-	width: 400px;
-}
-#adminpage .field textarea { height: 100px; }
-#adminpage .field_help {
-	display: block;
-	margin-left: 200px;
-	color: #666666;
-	
-}
-
 #adminpage h3 {
 	border-bottom: 1px solid #cccccc;
 }
-
+#adminpage .field label {
+	font-weight: bold;
+}
 #adminpage .submit {
 	clear:left;
 	text-align: right;
@@ -2607,7 +2659,7 @@ a.mail-list-link {
 	margin-right: 1em;
 }
 
-#adminpage table {width:100%; border-bottom: 1p solid #000000; margin: 5px 0px;}
+#adminpage table {width:100%; border-bottom: 1px solid #000000; margin: 5px 0px;}
 #adminpage table th { text-align: left;}
 #adminpage td .icon { float: left;}
 #adminpage table#users img { width: 16px; height: 16px; }
@@ -2654,6 +2706,9 @@ a.mail-list-link {
 .on { background-position: -144px -32px; }
 
 .off { background-position: 0px -48px; }
+.starred { background-position: -16px -48px; }
+.unstarred { background-position: -32px -48px; }
+
 
 .icon.dim { opacity: 0.3;filter:alpha(opacity=30); }
 
@@ -2667,9 +2722,9 @@ a.mail-list-link {
 	margin-top: 10px;
 }
 
-.type-video { background-position: 0px; 0px; }
-.type-image { background-position: -20px; 0px; }
-.type-audio { background-position: -40px; 0px; }
-.type-text  { background-position: -60px; 0px; }
-.type-unkn  { background-position: -80px; 0px; }
+.type-video { background-position: 0px 0px; }
+.type-image { background-position: -20px 0px; }
+.type-audio { background-position: -40px 0px; }
+.type-text  { background-position: -60px 0px; }
+.type-unkn  { background-position: -80px 0px; }
 

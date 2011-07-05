@@ -13,11 +13,9 @@ function notifications_post(&$a) {
 
 	if($request_id) {
 
-		$r = q("SELECT * FROM `intro` 
-			WHERE `id` = %d 
-			AND `uid` = %d LIMIT 1",
-				intval($request_id),
-				intval(local_user())
+		$r = q("SELECT * FROM `intro` WHERE `id` = %d  AND `uid` = %d LIMIT 1",
+			intval($request_id),
+			intval(local_user())
 		);
 	
 		if(count($r)) {
@@ -28,14 +26,22 @@ function notifications_post(&$a) {
 			notice( t('Invalid request identifier.') . EOL);
 			return;
 		}
+
+		// If it is a friend suggestion, the contact is not a new friend but an existing friend
+		// that should not be deleted.
+
+		$fid = $r[0]['fid'];
+
 		if($_POST['submit'] == t('Discard')) {
 			$r = q("DELETE FROM `intro` WHERE `id` = %d LIMIT 1", 
 				intval($intro_id)
 			);	
-			$r = q("DELETE FROM `contact` WHERE `id` = %d AND `uid` = %d AND `self` = 0 LIMIT 1", 
-				intval($contact_id),
-				intval(local_user())
-			);
+			if(! $fid) {
+				$r = q("DELETE FROM `contact` WHERE `id` = %d AND `uid` = %d AND `self` = 0 LIMIT 1", 
+					intval($contact_id),
+					intval(local_user())
+				);
+			}
 			return;
 		}
 		if($_POST['submit'] == t('Ignore')) {
@@ -81,18 +87,41 @@ function notifications_content(&$a) {
 		$a->set_pager_itemspage(20);
 	}
 
-	$r = q("SELECT `intro`.`id` AS `intro_id`, `intro`.*, `contact`.* 
-		FROM `intro` LEFT JOIN `contact` ON `intro`.`contact-id` = `contact`.`id`
+	$r = q("SELECT `intro`.`id` AS `intro_id`, `intro`.*, `contact`.*, `fcontact`.`name` AS `fname`,`fcontact`.`url` AS `furl`,`fcontact`.`photo` AS `fphoto`,`fcontact`.`request` AS `frequest`
+		FROM `intro` LEFT JOIN `contact` ON `contact`.`id` = `intro`.`contact-id` LEFT JOIN `fcontact` ON `intro`.`fid` = `fcontact`.`id`
 		WHERE `intro`.`uid` = %d $sql_extra AND `intro`.`blocked` = 0 ",
 			intval($_SESSION['uid']));
 
 	if(($r !== false) && (count($r))) {
 
-
+		$sugg = get_markup_template('suggestions.tpl');
 		$tpl = get_markup_template("intros.tpl");
 
 		foreach($r as $rr) {
+			if($rr['fid']) {
 
+				$return_addr = bin2hex($a->user['nickname'] . '@' . $a->get_hostname() . (($a->path) ? '/' . $a->path : ''));
+				$o .= replace_macros($sugg,array(
+					'$str_notifytype' => t('Notification type: '),
+					'$notify_type' => t('Friend Suggestion'),
+					'$intro_id' => $rr['intro_id'],
+					'$madeby' => sprintf( t('suggested by %s'),$rr['name']),
+					'$contact_id' => $rr['contact-id'],
+					'$photo' => ((x($rr,'fphoto')) ? $rr['fphoto'] : "images/default-profile.jpg"),
+					'$fullname' => $rr['fname'],
+					'$url' => $rr['furl'],
+					'$knowyou' => $knowyou,
+					'$approve' => t('Approve'),
+					'$note' => $rr['note'],
+					'$request' => $rr['frequest'] . '?addr=' . $return_addr,
+					'$ignore' => t('Ignore'),
+					'$discard' => t('Discard')
+
+				));
+
+				continue;
+
+			}
 			$friend_selected = (($rr['network'] !== 'stat') ? ' checked="checked" ' : ' disabled ');
 			$fan_selected = (($rr['network'] === 'stat') ? ' checked="checked" disabled ' : '');
 			$dfrn_tpl = get_markup_template('netfriend.tpl');
@@ -137,28 +166,6 @@ function notifications_content(&$a) {
 	}
 	else
 		info( t('No notifications.') . EOL);
-
-	if ($a->config['register_policy'] == REGISTER_APPROVE &&	
-		$a->config['admin_email'] === $a->user['email']){
-		$o .= '<h1>' . t('User registrations waiting for confirm') . '</h1>' . "\r\n";
-		
-		$r = q("SELECT `register`.*, `contact`.`name`, `user`.`email`
-				 FROM `register`
-				 LEFT JOIN `contact` ON `register`.`uid` = `contact`.`uid`
-				 LEFT JOIN `user` ON `register`.`uid` = `user`.`uid`;");
-		if(($r !== false) && (count($r))) {
-			$o .= '<ul>';
-			foreach($r as $rr) {
-				$o .= '<li>' . sprintf('%s (%s) : ', $rr['name'],$rr['email']) 
-					. '<a href="regmod/allow/' . $rr['hash'] .'">' . t('Approve') 
-					. '</a> - <a href="regmod/deny/' . $rr['hash'] . '">' . t('Deny') . '</a></li>' . "\r\n";
-			}
-			$o .= "</ul>";
-		}
-		else
-			info( t('No registrations.') . EOL);
-
-	}
 
 	$o .= paginate($a);
 	return $o;

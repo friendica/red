@@ -4,9 +4,9 @@ set_time_limit(0);
 ini_set('pcre.backtrack_limit', 250000);
 
 
-define ( 'FRIENDIKA_VERSION',      '2.2.1019' );
+define ( 'FRIENDIKA_VERSION',      '2.2.1030' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
-define ( 'DB_UPDATE_VERSION',      1066      );
+define ( 'DB_UPDATE_VERSION',      1073      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -56,9 +56,9 @@ define ( 'REGISTER_OPEN',          2 );
  * this relationship with contact['name']
  */
 
-define ( 'REL_VIP',        1);
-define ( 'REL_FAN',        2);
-define ( 'REL_BUD',        3);
+define ( 'REL_VIP',        1);     // other person is 'following' us
+define ( 'REL_FAN',        2);     // we are 'following' other person
+define ( 'REL_BUD',        3);     // mutual relationship
 
 /**
  * Hook array order
@@ -296,6 +296,8 @@ class App {
 			$this->module = str_replace(".", "_", $this->argv[0]);
 		}
 		else {
+			$this->argc = 1;
+			$this->argv = array('home');
 			$this->module = 'home';
 		}
 
@@ -498,9 +500,6 @@ function install_plugin($plugin){
 if(! function_exists('check_config')) {
 function check_config(&$a) {
 
-
-	load_config('system');
-
 	$build = get_config('system','build');
 	if(! x($build))
 		$build = set_config('system','build',DB_UPDATE_VERSION);
@@ -674,7 +673,7 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 
 	curl_setopt($ch, CURLOPT_HEADER, true);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-
+	curl_setopt($ch, CURLOPT_USERAGENT, "Friendika");
 
 	$curl_time = intval(get_config('system','curl_timeout'));
 	curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
@@ -703,13 +702,21 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 
 	$s = @curl_exec($ch);
 
-	$http_code = intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
-	$header = substr($s,0,strpos($s,"\r\n\r\n"));
-	if(stristr($header,'100') && (strlen($header) < 30)) {
-		// 100 Continue has two headers, get the real one
-		$s = substr($s,strlen($header)+4);
-		$header = substr($s,0,strpos($s,"\r\n\r\n"));
+	$base = $s;
+	$curl_info = curl_getinfo($ch);
+	$http_code = $curl_info['http_code'];
+
+	$header = '';
+
+	// Pull out multiple headers, e.g. proxy and continuation headers
+	// allow for HTTP/2.x without fixing code
+
+	while(preg_match('/^HTTP\/[1-2].+? [1-5][0-9][0-9]/',$base)) {
+		$chunk = substr($base,0,strpos($base,"\r\n\r\n")+4);
+		$header .= $chunk;
+		$base = substr($base,strlen($chunk));
 	}
+
 	if($http_code == 301 || $http_code == 302 || $http_code == 303 || $http_code == 307) {
         $matches = array();
         preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
@@ -720,16 +727,10 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
             return fetch_url($url,$binary,$redirects);
         }
     }
+
 	$a->set_curl_code($http_code);
 
-	$body = substr($s,strlen($header)+4);
-
-	/* one more try to make sure there are no more headers */
-
-	if(strpos($body,'HTTP/') === 0) {
-		$header = substr($body,0,strpos($body,"\r\n\r\n"));
-		$body = substr($body,strlen($header)+4);
-	}
+	$body = substr($s,strlen($header));
 
 	$a->set_curl_headers($header);
 
@@ -750,6 +751,7 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 	curl_setopt($ch, CURLOPT_POST,1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
+	curl_setopt($ch, CURLOPT_USERAGENT, "Friendika");
 
 	$curl_time = intval(get_config('system','curl_timeout'));
 	curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
@@ -775,13 +777,21 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
 
 	$s = @curl_exec($ch);
 
-	$http_code = intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
-	$header = substr($s,0,strpos($s,"\r\n\r\n"));
-	if(stristr($header,'100') && (strlen($header) < 30)) {
-		// 100 Continue has two headers, get the real one
-		$s = substr($s,strlen($header)+4);
-		$header = substr($s,0,strpos($s,"\r\n\r\n"));
+	$base = $s;
+	$curl_info = curl_getinfo($ch);
+	$http_code = $curl_info['http_code'];
+
+	$header = '';
+
+	// Pull out multiple headers, e.g. proxy and continuation headers
+	// allow for HTTP/2.x without fixing code
+
+	while(preg_match('/^HTTP\/[1-2].+? [1-5][0-9][0-9]/',$base)) {
+		$chunk = substr($base,0,strpos($base,"\r\n\r\n")+4);
+		$header .= $chunk;
+		$base = substr($base,strlen($chunk));
 	}
+
 	if($http_code == 301 || $http_code == 302 || $http_code == 303) {
         $matches = array();
         preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
@@ -793,14 +803,7 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
         }
     }
 	$a->set_curl_code($http_code);
-	$body = substr($s,strlen($header)+4);
-
-	/* one more try to make sure there are no more headers */
-
-	if(strpos($body,'HTTP/') === 0) {
-		$header = substr($body,0,strpos($body,"\r\n\r\n"));
-		$body = substr($body,strlen($header)+4);
-	}
+	$body = substr($s,strlen($header));
 
 	$a->set_curl_headers($header);
 
@@ -1218,7 +1221,11 @@ function load_config($family) {
 	if(count($r)) {
 		foreach($r as $rr) {
 			$k = $rr['k'];
-			$a->config[$family][$k] = $rr['v'];
+			if ($rr['cat'] === 'config') {
+				$a->config[$k] = $rr['v'];
+			} else {
+				$a->config[$family][$k] = $rr['v'];
+			}
 		}
 	}
 }}
@@ -1685,8 +1692,10 @@ function fetch_lrdd_template($host) {
 	$url1 = 'https://' . $host . '/.well-known/host-meta' ;
 	$url2 = 'http://' . $host . '/.well-known/host-meta' ;
 	$links = fetch_xrd_links($url1);
+	logger('fetch_lrdd_template from: ' . $url1);
 	logger('template (https): ' . print_r($links,true));
 	if(! count($links)) {
+		logger('fetch_lrdd_template from: ' . $url2);
 		$links = fetch_xrd_links($url2);
 		logger('template (http): ' . print_r($links,true));
 	}
@@ -2015,7 +2024,7 @@ function get_tags($s) {
 
 	$s = preg_replace('/\[code\](.*?)\[\/code\]/sm','',$s);
 
-	if(preg_match_all('/([@#][^ \x0D\x0A,:?]+)([ \x0D\x0A,:?]|$)/',$s,$match)) {
+	if(preg_match_all('/([@#][^ \x0D\x0A,:?]+ [^ \x0D\x0A,:?]+)([ \x0D\x0A,:?]|$)/',$s,$match)) {
 		foreach($match[1] as $mtch) {
 			if(strstr($mtch,"]")) {
 				// we might be inside a bbcode color tag - leave it alone
@@ -2028,6 +2037,18 @@ function get_tags($s) {
 		}
 	}
 
+	if(preg_match_all('/([@#][^ \x0D\x0A,:?]+)([ \x0D\x0A,:?]|$)/',$s,$match)) {
+		foreach($match[1] as $mtch) {
+			if(strstr($mtch,"]")) {
+				// we might be inside a bbcode color tag - leave it alone
+				continue;
+			}
+			if(substr($mtch,-1,1) === '.')
+				$ret[] = substr($mtch,0,-1);
+			else
+				$ret[] = $mtch;
+		}
+	}
 	return $ret;
 }}
 
@@ -2415,7 +2436,7 @@ function profile_sidebar($profile) {
 	));
 
 
-	$arr = array('profile' => $profile, 'entry' => $o);
+	$arr = array('profile' => &$profile, 'entry' => &$o);
 
 	call_hooks('profile_sidebar', $arr);
 
@@ -2891,3 +2912,15 @@ function get_plugin_info($plugin){
 	}
 	return $info;
 }}
+
+if(! function_exists('return_bytes')) {
+function return_bytes ($size_str) {
+    switch (substr ($size_str, -1))
+    {
+        case 'M': case 'm': return (int)$size_str * 1048576;
+        case 'K': case 'k': return (int)$size_str * 1024;
+        case 'G': case 'g': return (int)$size_str * 1073741824;
+        default: return $size_str;
+    }
+}}
+

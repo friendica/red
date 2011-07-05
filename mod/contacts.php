@@ -11,8 +11,9 @@ function contacts_init(&$a) {
 	if($a->config['register_policy'] != REGISTER_CLOSED)
 		$a->page['aside'] .= '<div class="side-link" id="side-invite-link" ><a href="invite" >' . t("Invite Friends") . '</a></div>';
 
-	if(strlen(get_config('system','directory_submit_url')))
-		$a->page['aside'] .= '<div class="side-link" id="side-match-link"><a href="match" >' . t('Find People With Shared Interests') . '</a></div>';
+
+	$a->page['aside'] .= '<div class="side-link" id="side-match-link"><a href="match" >' 
+		. t('Find People With Shared Interests') . '</a></div>';
 
 	$tpl = get_markup_template('follow.tpl');
 	$a->page['aside'] .= replace_macros($tpl,array(
@@ -268,6 +269,10 @@ function contacts_content(&$a) {
 		if($r[0]['last-update'] !== '0000-00-00 00:00:00')
 			$last_update .= ' ' . (($r[0]['last-update'] == $r[0]['success_update']) ? t("\x28Update was successful\x29") : t("\x28Update was not successful\x29"));
 
+		$lblsuggest = (($r[0]['network'] === NETWORK_DFRN) 
+			? '<div id="contact-suggest-wrapper"><a href="fsuggest/' . $r[0]['id'] . '" id="contact-suggest">' . t('Suggest friends') . '</a></div>' : '');
+
+
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Contact Editor'),
 			'$submit' => t('Submit'),
@@ -284,6 +289,7 @@ function contacts_content(&$a) {
 			'$altcrepair' => t('Repair contact URL settings'),
 			'$lblcrepair' => t("Repair contact URL settings \x28WARNING: Advanced\x29"),
 			'$lblrecent' => t('View conversations'),
+			'$lblsuggest' => $lblsuggest,
 			'$grps' => $grps,
 			'$delete' => t('Delete contact'),
 			'$poll_interval' => contact_poll_interval($r[0]['priority']),

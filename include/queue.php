@@ -22,6 +22,9 @@ function queue_run($argv, $argc){
 	require_once('include/items.php');
 	require_once('include/bbcode.php');
 
+	load_config('config');
+	load_config('system');
+
 	$a->set_baseurl(get_config('system','url'));
 
 	load_hooks();

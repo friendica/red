@@ -43,6 +43,25 @@
 
 define('FACEBOOK_MAXPOSTLEN', 420);
 
+
+function facebook_install() {
+	register_hook('post_local_end',   'addon/facebook/facebook.php', 'facebook_post_hook');
+	register_hook('jot_networks',     'addon/facebook/facebook.php', 'facebook_jot_nets');
+	register_hook('plugin_settings',  'addon/facebook/facebook.php', 'facebook_plugin_settings');
+	register_hook('cron',             'addon/facebook/facebook.php', 'facebook_cron');
+	register_hook('queue_predeliver', 'addon/facebook/facebook.php', 'fb_queue_hook');
+}
+
+
+function facebook_uninstall() {
+	unregister_hook('post_local_end',   'addon/facebook/facebook.php', 'facebook_post_hook');
+	unregister_hook('jot_networks',     'addon/facebook/facebook.php', 'facebook_jot_nets');
+	unregister_hook('plugin_settings',  'addon/facebook/facebook.php', 'facebook_plugin_settings');
+	unregister_hook('cron',             'addon/facebook/facebook.php', 'facebook_cron');
+	unregister_hook('queue_predeliver', 'addon/facebook/facebook.php', 'fb_queue_hook');
+}
+
+
 /* declare the facebook_module function so that /facebook url requests will land here */
 
 function facebook_module() {}
@@ -339,22 +358,6 @@ function facebook_content(&$a) {
 	return $o;
 }
 
-function facebook_install() {
-	register_hook('post_local_end',   'addon/facebook/facebook.php', 'facebook_post_hook');
-	register_hook('jot_networks',     'addon/facebook/facebook.php', 'facebook_jot_nets');
-	register_hook('plugin_settings',  'addon/facebook/facebook.php', 'facebook_plugin_settings');
-	register_hook('cron',             'addon/facebook/facebook.php', 'facebook_cron');
-	register_hook('queue_predeliver', 'addon/facebook/facebook.php', 'fb_queue_hook');
-}
-
-
-function facebook_uninstall() {
-	unregister_hook('post_local_end',   'addon/facebook/facebook.php', 'facebook_post_hook');
-	unregister_hook('jot_networks',     'addon/facebook/facebook.php', 'facebook_jot_nets');
-	unregister_hook('plugin_settings',  'addon/facebook/facebook.php', 'facebook_plugin_settings');
-	unregister_hook('cron',             'addon/facebook/facebook.php', 'facebook_cron');
-	unregister_hook('queue_predeliver', 'addon/facebook/facebook.php', 'fb_queue_hook');
-}
 
 
 function facebook_cron($a,$b) {
@@ -373,9 +376,12 @@ function facebook_cron($a,$b) {
 
 	logger('facebook_cron');
 
-	set_config('facebook','last_poll', time());
 
-	$r = q("SELECT * FROM `pconfig` WHERE `cat` = 'facebook' AND `k` = 'post' AND `v` = '1' ");
+	// Find the FB users on this site and randomize in case one of them
+	// uses an obscene amount of memory. It may kill this queue run
+	// but hopefully we'll get a few others through on each run. 
+
+	$r = q("SELECT * FROM `pconfig` WHERE `cat` = 'facebook' AND `k` = 'post' AND `v` = '1' ORDER BY RAND() ");
 	if(count($r)) {
 		foreach($r as $rr) {
 			// check for new friends once a day
@@ -389,6 +395,9 @@ function facebook_cron($a,$b) {
 			fb_consume_all($rr['uid']);
 		}
 	}	
+
+	set_config('facebook','last_poll', time());
+
 }
 
 
@@ -430,6 +439,10 @@ function facebook_post_hook(&$a,&$b) {
 	$likes = false;
 
 	if((local_user()) && (local_user() == $b['uid'])) {
+
+		// Facebook is not considered a private network
+		if($b['prvnets'] && $b['private'])
+			return;
 
 		if($b['parent']) {
 			$r = q("SELECT * FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -817,7 +830,7 @@ function fb_consume_stream($uid,$j,$wall = false) {
 				$datarray['owner-avatar'] = $self[0]['thumb'];
 			}
 			if(isset($entry->application) && isset($entry->application->name) && strlen($entry->application->name))
-				$datarray['app'] = $entry->application->name;
+				$datarray['app'] = strip_tags($entry->application->name);
 			else
 				$datarray['app'] = 'facebook';
 			$datarray['author-name'] = $from->name;

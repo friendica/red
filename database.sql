@@ -169,9 +169,10 @@ CREATE TABLE IF NOT EXISTS `item` (
   `parent-uri` char(255) NOT NULL,
   `extid` char(255) NOT NULL,
   `thr-parent` char(255) NOT NULL,
-  `created` datetime NOT NULL,
-  `edited` datetime NOT NULL,
-  `changed` datetime NOT NULL,
+  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `edited` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `received` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `changed` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `owner-name` char(255) NOT NULL,
   `owner-link` char(255) NOT NULL,
   `owner-avatar` char(255) NOT NULL,
@@ -201,6 +202,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `private` tinyint(1) NOT NULL DEFAULT '0',
   `pubmail` tinyint(1) NOT NULL DEFAULT '0',
   `visible` tinyint(1) NOT NULL DEFAULT '0',
+  `starred` tinyint(1) NOT NULL DEFAULT '0',
   `unseen` tinyint(1) NOT NULL DEFAULT '1',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `last-child` tinyint(1) unsigned NOT NULL DEFAULT '1',
@@ -215,7 +217,9 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `extid` (`extid`),
   KEY `created` (`created`),
   KEY `edited` (`edited`),
+  KEY `received` (`received`),
   KEY `visible` (`visible`),
+  KEY `starred` (`starred`),
   KEY `deleted` (`deleted`),
   KEY `last-child` (`last-child`),
   KEY `unseen` (`unseen`),
@@ -241,7 +245,7 @@ CREATE TABLE IF NOT EXISTS `mail` (
   `from-url` char(255) NOT NULL,
   `contact-id` char(255) NOT NULL,
   `title` char(255) NOT NULL,
-  `body` text NOT NULL,
+  `body` mediumtext NOT NULL,
   `seen` tinyint(1) NOT NULL,
   `replied` tinyint(1) NOT NULL,
   `uri` char(255) NOT NULL,
@@ -276,7 +280,12 @@ CREATE TABLE IF NOT EXISTS `photo` (
   `allow_gid` mediumtext NOT NULL,
   `deny_cid` mediumtext NOT NULL,
   `deny_gid` mediumtext NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `uid` (`uid`),
+  KEY `resource-id` (`resource-id`),
+  KEY `album` (`album`),
+  KEY `scale` (`scale`),
+  KEY `profile` (`profile`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -507,7 +516,8 @@ CREATE TABLE IF NOT EXISTS `fcontact` (
 `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 `url` CHAR( 255 ) NOT NULL ,
 `name` CHAR( 255 ) NOT NULL ,
-`photo` CHAR( 255 ) NOT NULL
+`photo` CHAR( 255 ) NOT NULL ,
+`request` CHAR( 255 ) NOT NULL
 ) ENGINE = MYISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `ffinder` (
@@ -517,6 +527,19 @@ CREATE TABLE IF NOT EXISTS `ffinder` (
 `fid` INT UNSIGNED NOT NULL
 ) ENGINE = MYISAM DEFAULT CHARSET=utf8;
 
+
+CREATE TABLE IF NOT EXISTS `fsuggest` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`uid` INT NOT NULL ,
+`cid` INT NOT NULL ,
+`name` CHAR( 255 ) NOT NULL ,
+`url` CHAR( 255 ) NOT NULL ,
+`request` CHAR( 255 ) NOT NULL,
+`photo` CHAR( 255 ) NOT NULL ,
+`note` TEXT NOT NULL ,
+`created` DATETIME NOT NULL
+) ENGINE = MYISAM DEFAULT CHARSET=utf8;
+ 
 
 CREATE TABLE IF NOT EXISTS `mailacct` (
 `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,

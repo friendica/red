@@ -338,7 +338,7 @@ function get_atom_elements($feed,$item) {
 
 	$apps = $item->get_item_tags(NAMESPACE_STATUSNET,'notice_info');
 	if($apps && $apps[0]['attribs']['']['source']) {
-		$res['app'] = $apps[0]['attribs']['']['source'];
+		$res['app'] = strip_tags(unxmlify($apps[0]['attribs']['']['source']));
 		if($res['app'] === 'web')
 			$res['app'] = 'OStatus';
 	}		   
@@ -669,6 +669,7 @@ function item_store($arr,$force_parent = false) {
 	$arr['owner-avatar']  = ((x($arr,'owner-avatar'))  ? notags(trim($arr['owner-avatar']))  : '');
 	$arr['created']       = ((x($arr,'created') !== false) ? datetime_convert('UTC','UTC',$arr['created']) : datetime_convert());
 	$arr['edited']        = ((x($arr,'edited')  !== false) ? datetime_convert('UTC','UTC',$arr['edited'])  : datetime_convert());
+	$arr['received']      = datetime_convert();
 	$arr['changed']       = datetime_convert();
 	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
 	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : '');
@@ -994,7 +995,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 
 function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_feed = false) {
 
-	require_once('simplepie/simplepie.inc');
+	require_once('library/simplepie/simplepie.inc');
 
 	$feed = new SimplePie();
 	$feed->set_raw_data($xml);
@@ -1071,13 +1072,13 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 			$img->scaleImageSquare(175);
 				
 			$hash = $resource_id;
-			$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), t('Contact Photos') , 4);
+			$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), 'Contact Photos', 4);
 				
 			$img->scaleImage(80);
-			$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), t('Contact Photos') , 5);
+			$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), 'Contact Photos', 5);
 
 			$img->scaleImage(48);
-			$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), t('Contact Photos') , 6);
+			$r = $img->store($contact['uid'], $contact['id'], $hash, basename($photo_url), 'Contact Photos', 6);
 
 			$a = get_app();
 
@@ -1346,6 +1347,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 					if(x($ev,'desc') && x($ev,'start')) {
 						$ev['uid'] = $importer['uid'];
 						$ev['uri'] = $item_id;
+						$ev['edited'] = $datarray['edited'];
 
 						if(is_array($contact))
 							$ev['cid'] = $contact['id'];
@@ -1447,11 +1449,11 @@ function new_follower($importer,$contact,$datarray,$item) {
 	}
 	else {
 	
-		// create contact record - set to readonly
+		// create contact record
 
 		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `name`, `nick`, `photo`, `network`, `rel`, 
 			`blocked`, `readonly`, `pending`, `writable` )
-			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, 0, 1, 1, 1 ) ",
+			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, 0, 0, 1, 1 ) ",
 			intval($importer['uid']),
 			dbesc(datetime_convert()),
 			dbesc($url),

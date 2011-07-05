@@ -1,5 +1,5 @@
 
-<script language="javascript" type="text/javascript" src="$baseurl/tinymce/jscripts/tiny_mce/tiny_mce_src.js"></script>
+<script language="javascript" type="text/javascript" src="$baseurl/library/tinymce/jscripts/tiny_mce/tiny_mce_src.js"></script>
 <script language="javascript" type="text/javascript">
 
 var editor;
@@ -109,6 +109,24 @@ tinyMCE.init({
 		}).trigger('change');
 
 	});
+
+	function deleteCheckedItems() {
+		var checkedstr = '';
+
+		$('.item-select').each( function() {
+			if($(this).is(':checked')) {
+				if(checkedstr.length != 0) {
+					checkedstr = checkedstr + ',' + $(this).val();
+				}
+				else {
+					checkedstr = $(this).val();
+				}
+			}	
+		});
+		$.post('item', { dropitems: checkedstr }, function(data) {
+			window.location.reload();
+		});
+	}
 
 	function jotGetLink() {
 		reply = prompt("$linkurl");

@@ -31,7 +31,7 @@
 					<td class="created">$u.created</td>
 					<td class="name">$u.name</td>
 					<td class="email">$u.email</td>
-					<td class="checkbox"><input type="checkbox" class="pending_ckbx" id="id_pending_$u.hash" name="pending_$u.hash"/></td>
+					<td class="checkbox"><input type="checkbox" class="pending_ckbx" id="id_pending_$u.hash" name="pending[]" value="$u.hash" /></td>
 					<td class="tools">
 						<a href="$baseurl/regmod/allow/$u.hash" title='$approve'><span class='icon like'></span></a>
 						<a href="$baseurl/regmod/deny/$u.hash" title='$deny'><span class='icon dislike'></span></a>
@@ -70,10 +70,10 @@
 						<td class='login_date'>$u.login_date</td>
 						<td class='lastitem_date'>$u.lastitem_date</td>
 						<td class='login_date'>$u.page-flags</td>
-						<td class="checkbox"><input type="checkbox" class="users_ckbx" id="id_user_$u.uid" name="user_$u.uid"/></td>
+						<td class="checkbox"><input type="checkbox" class="users_ckbx" id="id_user_$u.uid" name="user[]" value="$u.uid"/></td>
 						<td class="tools">
 							<a href="$baseurl/admin/users/block/$u.uid" title='{{ if $u.blocked }}$unblock{{ else }}$block{{ endif }}'><span class='icon block {{ if $u.blocked==0 }}dim{{ endif }}'></span></a>
-							<a href="$baseurl/admin/users/delete/$u.uid" title='$discard' onclick="return confirm_delete('$u.name')"><span class='icon drop'></span></a>
+							<a href="$baseurl/admin/users/delete/$u.uid" title='$delete' onclick="return confirm_delete('$u.name')"><span class='icon drop'></span></a>
 						</td>
 					</tr>
 				{{ endfor }}

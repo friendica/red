@@ -61,7 +61,7 @@ function item_post(&$a) {
 
 	$profile_uid = ((x($_POST,'profile_uid')) ? intval($_POST['profile_uid']) : 0);
 	$post_id     = ((x($_POST['post_id']))    ? intval($_POST['post_id'])     : 0);
-	$app         = ((x($_POST['source']))     ? notags($_POST['source'])      : '');
+	$app         = ((x($_POST['source']))     ? strip_tags($_POST['source'])  : '');
 
 	if(! can_write_wall($a,$profile_uid)) {
 		notice( t('Permission denied.') . EOL) ;
@@ -244,6 +244,10 @@ function item_post(&$a) {
 	}
 
 
+	/**
+	 * Next link in any attachment references we find in the post.
+	 */
+
 	$match = false;
 
 	if(preg_match_all("/\[attachment\](.*?)\[\/attachment\]/",$body,$match)) {
@@ -265,10 +269,6 @@ function item_post(&$a) {
 		}
 	}
 
-
-
-
-
 	/**
 	 * Fold multi-line [code] sequences
 	 */
@@ -285,13 +285,21 @@ function item_post(&$a) {
 
 	$tags = get_tags($body);
 
-	if(($parent_contact) && ($parent_contact['network'] === 'stat') && ($parent_contact['nick']) && (! in_array('@' . $parent_contact['nick'],$tags))) {
+	/**
+	 * add a statusnet style reply tag if the original post was from there
+	 * and we are replying, and there isn't one already
+	 */
+
+	if(($parent_contact) && ($parent_contact['network'] === 'stat') 
+		&& ($parent_contact['nick']) && (! in_array('@' . $parent_contact['nick'],$tags))) {
 		$body = '@' . $parent_contact['nick'] . ' ' . $body;
 		$tags[] = '@' . $parent_contact['nick'];
 	}		
 
 	if(count($tags)) {
 		foreach($tags as $tag) {
+			if(isset($profile))
+				unset($profile);
 			if(strpos($tag,'#') === 0) {
 				if(strpos($tag,'[url='))
 					continue;
@@ -325,7 +333,7 @@ function item_post(&$a) {
 				else {
 					$newname = $name;
 					$alias = '';
-					if(strstr($name,'_')) {
+					if(strstr($name,'_') || strstr($name,' ')) {
 						$newname = str_replace('_',' ',$name);
 						$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($newname),
@@ -419,6 +427,7 @@ function item_post(&$a) {
 	$datarray['author-avatar'] = $author['thumb'];
 	$datarray['created']       = datetime_convert();
 	$datarray['edited']        = datetime_convert();
+	$datarray['received']      = datetime_convert();
 	$datarray['changed']       = datetime_convert();
 	$datarray['uri']           = $uri;
 	$datarray['title']         = $title;
@@ -445,6 +454,7 @@ function item_post(&$a) {
 
 	$datarray['parent']        = $parent;
 	$datarray['self']          = $self;
+	$datarray['prvnets']       = $user['prvnets'];
 
 	if($orig_post)
 		$datarray['edit']      = true;
@@ -472,9 +482,9 @@ function item_post(&$a) {
 
 
 	$r = q("INSERT INTO `item` (`uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
-		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `changed`, `uri`, `title`, `body`, `app`, `location`, `coord`, 
+		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `received`, `changed`, `uri`, `title`, `body`, `app`, `location`, `coord`, 
 		`tag`, `inform`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach` )
-		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s' )",
+		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s' )",
 		intval($datarray['uid']),
 		dbesc($datarray['type']),
 		intval($datarray['wall']),
@@ -488,6 +498,7 @@ function item_post(&$a) {
 		dbesc($datarray['author-avatar']),
 		dbesc($datarray['created']),
 		dbesc($datarray['edited']),
+		dbesc($datarray['received']),
 		dbesc($datarray['changed']),
 		dbesc($datarray['uri']),
 		dbesc($datarray['title']),

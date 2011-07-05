@@ -7,7 +7,7 @@ function validate_members(&$item) {
 function group_init(&$a) {
 	if(local_user()) {
 		require_once('include/group.php');
-		$a->page['aside'] = group_side();
+		$a->page['aside'] = group_side('contacts','group',false,(($a->argc > 1) ? intval($a->argv[1]) : 0));
 	}
 }
 
@@ -67,6 +67,14 @@ function group_content(&$a) {
 		notice( t('Permission denied') . EOL);
 		return;
 	}
+
+	// Switch to text mod interface if we have more than 'n' contacts or group members
+
+	$switchtotext = get_pconfig(local_user(),'system','groupedit_image_limit');
+	if($switchtotext === false)
+		$switchtotext = get_config('system','groupedit_image_limit');
+	if($switchtotext === false)
+		$switchtotext = 400;
 
 	if(($a->argc == 2) && ($a->argv[1] === 'new')) {
 		$tpl = get_markup_template('group_new.tpl');
@@ -170,10 +178,11 @@ function group_content(&$a) {
 
 	$o .= '<div id="group-members">';
 	$o .= '<h3>' . t('Members') . '</h3>';
+	$textmode = (($switchtotext && (count($members) > $switchtotext)) ? true : false);
 	foreach($members as $member) {
 		if($member['url']) {
 			$member['click'] = 'groupChangeMember(' . $group['id'] . ',' . $member['id'] . '); return true;';
-			$o .= micropro($member,true,'mpgroup');
+			$o .= micropro($member,true,'mpgroup', $textmode);
 		}
 		else
 			group_rmv_member(local_user(),$group['name'],$member['id']);
@@ -189,10 +198,11 @@ function group_content(&$a) {
 		);
 
 		if(count($r)) {
+			$textmode = (($switchtotext && (count($r) > $switchtotext)) ? true : false);
 			foreach($r as $member) {
 				if(! in_array($member['id'],$preselected)) {
 					$member['click'] = 'groupChangeMember(' . $group['id'] . ',' . $member['id'] . '); return true;';
-					$o .= micropro($member,true,'mpall');
+					$o .= micropro($member,true,'mpall', $textmode);
 				}
 			}
 		}

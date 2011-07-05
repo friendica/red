@@ -59,42 +59,7 @@ function display_content(&$a) {
 	if(count($r))
 		$a->page_contact = $r[0];
 
-	$sql_extra = "
-		AND `allow_cid` = '' 
-		AND `allow_gid` = '' 
-		AND `deny_cid`  = '' 
-		AND `deny_gid`  = '' 
-	";
-
-
-	// Profile owner - everything is visible
-
-	if(local_user() && (local_user() == $a->profile['uid'])) {
-		$sql_extra = ''; 		
-	}
-
-	// authenticated visitor - here lie dragons
-	// If $remotecontact is true, we know that not only is this a remotely authenticated
-	// person, but that it is *our* contact, which is important in multi-user mode.
-
-	elseif($remote_contact) {
-		$gs = '<<>>'; // should be impossible to match
-		if(count($groups)) {
-			foreach($groups as $g)
-				$gs .= '|<' . intval($g) . '>';
-		} 
-		$sql_extra = sprintf(
-			" AND ( `allow_cid` = '' OR `allow_cid` REGEXP '<%d>' ) 
-			  AND ( `deny_cid`  = '' OR  NOT `deny_cid` REGEXP '<%d>' ) 
-			  AND ( `allow_gid` = '' OR `allow_gid` REGEXP '%s' )
-			  AND ( `deny_gid`  = '' OR  NOT `deny_gid` REGEXP '%s') ",
-
-			intval($_SESSION['visitor_id']),
-			intval($_SESSION['visitor_id']),
-			dbesc($gs),
-			dbesc($gs)
-		);
-	}
+	$sql_extra = permissions_sql($a->profile['uid'],$remote_contact,$groups);
 
 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 		`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,

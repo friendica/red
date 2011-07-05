@@ -13,12 +13,14 @@ function webfinger_content(&$a) {
 	$o .= '<br /><br />';
 
 	if(x($_GET,'addr')) {
-		$addr = $_GET['addr'];
+		$addr = trim($_GET['addr']);
 		if(strpos($addr,'@' !== false))
 			$res = webfinger($addr);
 		else
 			$res = lrdd($addr);
+		$o .= '<pre>';
 		$o .= str_replace("\n",'<br />',print_r($res,true));
+		$o .= '</pre>';
 	}
 	return $o;
 }

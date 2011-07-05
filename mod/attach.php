@@ -1,5 +1,7 @@
 <?php
 
+require_once('include/security.php');
+
 function attach_init(&$a) {
 
 	if($a->argc != 2) {
@@ -9,6 +11,8 @@ function attach_init(&$a) {
 
 	$item_id = intval($a->argv[1]);
 
+	// Check for existence, which will also provide us the owner uid
+
 	$r = q("SELECT * FROM `attach` WHERE `id` = %d LIMIT 1",
 		intval($item_id)
 	);
@@ -17,39 +21,7 @@ function attach_init(&$a) {
 		return;
 	}
 
-	$owner = $r[0]['uid'];
-
-	$sql_extra = " AND `allow_cid` = '' AND `allow_gid` = '' AND `deny_cid` = '' AND `deny_gid` = '' ";
-
-	if(local_user() && ($owner == $_SESSION['uid'])) {
-
-			// Owner can always see his/her photos
-			$sql_extra = ''; 
-
-	}
-	elseif(remote_user()) {
-
-		// authenticated visitor - here lie dragons
-
-		$groups = init_groups_visitor($_SESSION['visitor_id']);
-		$gs = '<<>>'; // should be impossible to match
-		if(count($groups)) {
-			foreach($groups as $g)
-				$gs .= '|<' . intval($g) . '>';
-		} 
-
-		$sql_extra = sprintf(
-			" AND ( `allow_cid` = '' OR `allow_cid` REGEXP '<%d>' ) 
-			  AND ( `deny_cid`  = '' OR  NOT `deny_cid` REGEXP '<%d>' ) 
-			  AND ( `allow_gid` = '' OR `allow_gid` REGEXP '%s' )
-			  AND ( `deny_gid`  = '' OR NOT `deny_gid` REGEXP '%s') ",
-
-			intval($_SESSION['visitor_id']),
-			intval($_SESSION['visitor_id']),
-			dbesc($gs),
-			dbesc($gs)
-		);
-	}
+	$sql_extra = permissions_sql($r[0]['uid']);
 
 	// Now we'll see if we can access the attachment
 
@@ -57,17 +29,14 @@ function attach_init(&$a) {
 		dbesc($item_id)
 	);
 
-	if(count($r)) {
-		$data = $r[0]['data'];
-	}
-	else {
+	if(! count($r)) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
 
 	header('Content-type: ' . $r[0]['filetype']);
 	header('Content-disposition: attachment; filename=' . $r[0]['filename']);
-	echo $data;
+	echo $r[0]['data'];
 	killme();
 	// NOTREACHED
 }

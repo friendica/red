@@ -45,6 +45,7 @@ $ignored
 $grps
 
 <div id="view-recent-wrapper"><a href="network/?cid=$contact_id" id="contact-view-recent">$lblrecent</a></div>
+$lblsuggest
 
 <div id="contact-edit-info-wrapper">
 <h4>$lbl_info1</h4>

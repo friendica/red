@@ -20,6 +20,9 @@ function notifier_run($argv, $argc){
 	require_once('include/items.php');
 	require_once('include/bbcode.php');
 
+	load_config('config');
+	load_config('system');
+
 	load_hooks();
 
 	if($argc < 3)
@@ -71,6 +74,16 @@ function notifier_run($argv, $argc){
 		if(! count($items))
 			return;
 	}
+	elseif($cmd === 'suggest') {
+		$suggest = q("SELECT * FROM `fsuggest` WHERE `id` = %d LIMIT 1",
+			intval($item_id)
+		);
+		if(! count($suggest))
+			return;
+		$uid = $suggest[0]['uid'];
+		$recipients[] = $suggest[0]['cid'];
+		$item = $suggest[0];
+	}
 	else {
 
 		// find ancestors
@@ -106,7 +119,8 @@ function notifier_run($argv, $argc){
 			$top_level = true;
 	}
 
-	$r = q("SELECT `contact`.*, `user`.`timezone`, `user`.`nickname`, `user`.`sprvkey`, `user`.`spubkey`, `user`.`page-flags` 
+	$r = q("SELECT `contact`.*, `user`.`timezone`, `user`.`nickname`, `user`.`sprvkey`, `user`.`spubkey`, 
+		`user`.`page-flags`, `user`.`prvnets`
 		FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
 		WHERE `contact`.`uid` = %d AND `contact`.`self` = 1 LIMIT 1",
 		intval($uid)
@@ -125,7 +139,7 @@ function notifier_run($argv, $argc){
 	// fill this in with a single salmon slap if applicable
 	$slap = '';
 
-	if($cmd != 'mail') {
+	if($cmd != 'mail' && $cmd != 'suggest') {
 
 		require_once('include/group.php');
 
@@ -224,6 +238,8 @@ function notifier_run($argv, $argc){
 	if($cmd === 'mail') {
 		$notify_hub = false;  // mail is  not public
 
+		$body = fix_private_photos($item['body'],$owner['uid']);
+
 		$atom .= replace_macros($mail_template, array(
 			'$name'         => xmlify($owner['name']),
 			'$profile_page' => xmlify($owner['url']),
@@ -231,9 +247,29 @@ function notifier_run($argv, $argc){
 			'$item_id'      => xmlify($item['uri']),
 			'$subject'      => xmlify($item['title']),
 			'$created'      => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , ATOM_TIME)),
-			'$content'      => xmlify($item['body']),
+			'$content'      => xmlify($body),
 			'$parent_id'    => xmlify($item['parent-uri'])
 		));
+	}
+	elseif($cmd === 'suggest') {
+		$notify_hub = false;  // suggestions are not public
+
+		$sugg_template = get_markup_template('atom_suggest.tpl');
+
+		$atom .= replace_macros($sugg_template, array(
+			'$name'         => xmlify($item['name']),
+			'$url'          => xmlify($item['url']),
+			'$photo'        => xmlify($item['photo']),
+			'$request'      => xmlify($item['request']),
+			'$note'         => xmlify($item['note'])
+		));
+
+		// We don't need this any more
+
+		q("DELETE FROM `fsuggest` WHERE `id` = %d LIMIT 1",
+			intval($item['id'])
+		);
+
 	}
 	else {
 		if($followup) {
@@ -329,7 +365,8 @@ function notifier_run($argv, $argc){
 					}
 					break;
 				case 'stat':
-
+					if($owner['prvnets'])
+						break;
 					if($followup && $contact['notify']) {
 						logger('notifier: slapdelivery: ' . $contact['name']);
 						$deliver_status = slapper($owner,$contact['notify'],$slap);
@@ -373,6 +410,7 @@ function notifier_run($argv, $argc){
 						}
 					}
 					break;
+
 				case 'mail':
 						
 					// WARNING: does not currently convert to RFC2047 header encodings, etc.
@@ -447,9 +485,9 @@ function notifier_run($argv, $argc){
 						mail($addr, $subject, $message, $headers);
 					}
 					break;
-				case 'dspr':
 				case 'feed':
 				case 'face':
+				case 'dspr':
 				default:
 					break;
 			}

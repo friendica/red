@@ -44,18 +44,19 @@ $db = new dba($db_host, $db_user, $db_pass, $db_data, $install);
         unset($db_host, $db_user, $db_pass, $db_data);
 
 
-/**
- * Load configs from db. Overwrite configs from .htconfig.php
- */
-$r = q("SELECT * FROM `config` WHERE `cat` IN ('system', 'config')");
-foreach ($r as $c) {
-	if ($c['cat']=='config') {
-		$a->config[$c['k']] = $c['v'];
-	} else {
-		$a->config[$c['cat']][$c['k']] = $c['v'];
-	}
+if(! $install) {
+
+	/**
+	 * Load configs from db. Overwrite configs from .htconfig.php
+	 */
+
+	load_config('config');
+	load_config('system');
+
+	require_once("session.php");
+	load_hooks();
+	call_hooks('init_1');
 }
-unset($r);
 
 
 /**
@@ -69,14 +70,6 @@ unset($r);
  * order was critical to everything working properly
  *
  */
-
-if(! $install) {
-	require_once("session.php");
-	load_hooks();
-	call_hooks('init_1');
-}
-
-
 
 require_once("datetime.php");
 

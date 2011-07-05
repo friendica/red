@@ -230,21 +230,21 @@ function import_profile_photo($photo,$uid,$cid) {
 					
 		$hash = photo_new_resource();
 
-		$r = $img->store($uid, $cid, $hash, $filename, t('Contact Photos'), 4 );
+		$r = $img->store($uid, $cid, $hash, $filename, 'Contact Photos', 4 );
 
 		if($r === false)
 			$photo_failure = true;
 
 		$img->scaleImage(80);
 
-		$r = $img->store($uid, $cid, $hash, $filename, t('Contact Photos'), 5 );
+		$r = $img->store($uid, $cid, $hash, $filename, 'Contact Photos', 5 );
 
 		if($r === false)
 			$photo_failure = true;
 
 		$img->scaleImage(48);
 
-		$r = $img->store($uid, $cid, $hash, $filename, t('Contact Photos'), 6 );
+		$r = $img->store($uid, $cid, $hash, $filename, 'Contact Photos', 6 );
 
 		if($r === false)
 			$photo_failure = true;

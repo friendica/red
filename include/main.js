@@ -47,11 +47,7 @@
 			if(mail == 0) { mail = '';  $('#mail-update').hide() } else { $('#mail-update').show() }
 			$('#mail-update').html(mail);
 			var intro = $(data).find('intro').text();
-			var register = $(data).find('register').text();
-			if(intro == 0) { intro = ''; }
-			if(register != 0 && intro != '') { intro = intro+'/'+register; }
-			if(register != 0 && intro == '') { intro = '0/'+register; }
-			if (intro == '') { $('#notify-update').hide() } else { $('#notify-update').show() }
+			if(intro == 0) { intro = ''; $('#notify-update').hide() } else { $('#notify-update').show() }
 			$('#notify-update').html(intro);
 		});
 		
@@ -176,6 +172,21 @@
 		if(timer) clearTimeout(timer);
 		timer = setTimeout(NavUpdate,3000);
 		liking = 1;
+	}
+
+	function dostar(ident) {
+		$('#like-rotator-' + ident.toString()).show();
+		$.get('starred/' + ident.toString(), function(data) {
+			if(data.match(/1/)) {
+				$('#starred-' + ident.toString()).addClass('starred');
+				$('#starred-' + ident.toString()).removeClass('unstarred');
+			}
+			else {			
+				$('#starred-' + ident.toString()).addClass('unstarred');
+				$('#starred-' + ident.toString()).removeClass('starred');
+			}
+			$('#like-rotator-' + ident.toString()).hide();	
+		});
 	}
 
 	function getPosition(e) {

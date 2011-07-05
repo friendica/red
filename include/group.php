@@ -136,7 +136,7 @@ function group_public_members($gid) {
 
 
 
-function group_side($every="contacts",$each="group",$edit = false) {
+function group_side($every="contacts",$each="group",$edit = false, $group_id = 0) {
 
 	$o = '';
 
@@ -145,19 +145,15 @@ function group_side($every="contacts",$each="group",$edit = false) {
 
 	$createtext = t('Create a new group');
 	$linktext= t('Everybody');
-
+	$selected = (($group_id == 0) ? ' class="group-selected" ' : '');
 $o .= <<< EOT
 
 <div id="group-sidebar">
 <h3>Groups</h3>
 
-<div id="sidebar-new-group">
-<a href="group/new">$createtext</a>
-</div>
-
 <div id="sidebar-group-list">
 	<ul id="sidebar-group-ul">
-	<li class="sidebar-group-li" ><a href="$every" >$linktext</a></li>
+	<li class="sidebar-group-li" ><a href="$every" $selected >$linktext</a></li>
 
 EOT;
 
@@ -165,10 +161,21 @@ EOT;
 		intval($_SESSION['uid'])
 	);
 	if(count($r)) {
-		foreach($r as $rr)
-			$o .= '	<li class="sidebar-group-li">' . (($edit) ? "<a href=\"group/{$rr['id']}\" title=\"" . t('Edit') . "\" ><img src=\"images/spencil.gif\" alt=\"" . t('Edit') . "\"></a> " : "") . "<a href=\"$each/{$rr['id']}\">{$rr['name']}</a></li>\r\n";
+		foreach($r as $rr) {
+			$selected = (($group_id == $rr['id']) ? ' class="group-selected" ' : '');
+			$o .= '	<li class="sidebar-group-li">' . (($edit) ? "<a href=\"group/{$rr['id']}\" title=\"" . t('Edit') . "\" ><img src=\"images/spencil.gif\" alt=\"" . t('Edit') . "\"></a> " : "") . "<a href=\"$each/{$rr['id']}\" $selected >{$rr['name']}</a></li>\r\n";
+		}
 	}
-	$o .= "	</ul>\r\n	</div>\r\n</div>";	
+	$o .= "	</ul>\r\n	</div>";
+
+	$o .= <<< EOT
+
+  <div id="sidebar-new-group">
+  <a href="group/new">$createtext</a>
+  </div>
+</div>
+	
+EOT;
 
 	return $o;
 }

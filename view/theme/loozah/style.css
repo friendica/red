@@ -137,6 +137,18 @@ blockquote:before {
 	cursor: pointer;
 }
 
+
+#group-sidebar {
+    margin-bottom: 10px;
+}
+
+.group-selected {
+    padding: 3px;
+    border: 1px solid #CCCCCC;
+    background: #F8F8F8;
+    font-weight: bold;
+}
+
 .fakelink:hover {
 	color: #0CBEFE;
 	text-decoration: none;
@@ -997,6 +1009,13 @@ input#dfrn-url {
 	clear: both;
 }
 
+
+#fsuggest-desc, #fsuggest-submit-wrapper {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+
 .wall-item-content-wrapper {
 	margin-top: 10px;
 	border: 1px solid #CCC;
@@ -1077,8 +1096,23 @@ input#dfrn-url {
 }
 
 .editpost {
-	margin-left: 15px;
+	margin-left: 10px;
+	float: left;
 }
+.star-item {
+	margin-left: 10px;
+	float: left;	
+}
+
+
+#network-star-link{
+	margin-top: 10px;
+}
+.network-star {
+	float: left;
+	margin-right: 5px;
+}
+
 
 .wall-item-info.wallwall {
 	width: 285px;
@@ -2307,6 +2341,10 @@ a.mail-list-link {
 .profile-match-wrapper {
 	float: left;
 	padding: 10px;
+    width: 120px;
+    height: 120px;
+    scroll: auto;
+
 }
 #profile-match-wrapper-end {
 	clear: both;
@@ -2552,6 +2590,33 @@ a.mail-list-link {
 	left: 0px;
 	top: 0px;
 }
+/**
+ * Form fields
+ */
+.field {
+	clear: left;
+	margin-bottom: 5px;
+	padding-bottom: 5px;
+}
+
+.field label {
+	float: left;
+	width: 200px;
+	font-weight: bold;
+}
+
+.field input,
+.field textarea {
+	width: 400px;
+}
+.field textarea { height: 100px; }
+.field_help {
+	display: block;
+	margin-left: 200px;
+	color: #666666;
+	
+}
+
 
 /**
  * ADMIN
@@ -2577,30 +2642,6 @@ a.mail-list-link {
 }
 #adminpage dd {
 	margin-left: 200px;
-}
-
-#adminpage .field {
-	clear: left;
-	margin-bottom: 5px;
-	padding-bottom: 5px;
-}
-
-#adminpage .field label {
-	float: left;
-	width: 200px;
-	font-weight: bold;
-}
-
-#adminpage .field input,
-#adminpage .field textarea {
-	width: 400px;
-}
-#adminpage .field textarea { height: 100px; }
-#adminpage .field_help {
-	display: block;
-	margin-left: 200px;
-	color: #666666;
-	
 }
 
 #adminpage h3 {
@@ -2674,6 +2715,8 @@ a.mail-list-link {
 .on { background-position: -144px -32px; }
 
 .off { background-position: 0px -48px; }
+.starred { background-position: -16px -48px; }
+.unstarred { background-position: -32px -48px; }
 
 .icon.dim { opacity: 0.3;filter:alpha(opacity=30); }
 

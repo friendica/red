@@ -26,6 +26,15 @@ function profperm_content(&$a) {
 		return;
 	}
 
+	// Switch to text mod interface if we have more than 'n' contacts or group members
+
+	$switchtotext = get_pconfig(local_user(),'system','groupedit_image_limit');
+	if($switchtotext === false)
+		$switchtotext = get_config('system','groupedit_image_limit');
+	if($switchtotext === false)
+		$switchtotext = 400;
+
+
 	if(($a->argc > 2) && intval($a->argv[1]) && intval($a->argv[2])) {
 		$r = q("SELECT `id` FROM `contact` WHERE `blocked` = 0 AND `pending` = 0 AND `self` = 0 
 			AND `network` = 'dfrn' AND `id` = %d AND `uid` = %d LIMIT 1",
@@ -103,10 +112,13 @@ function profperm_content(&$a) {
 
 	$o .= '<div id="prof-members">';
 	$o .= '<h3>' . t('Visible To') . '</h3>';
+
+	$textmode = (($switchtotext && (count($members) > $switchtotext)) ? true : false);
+
 	foreach($members as $member) {
 		if($member['url']) {
 			$member['click'] = 'profChangeMember(' . $profile['id'] . ',' . $member['id'] . '); return true;';
-			$o .= micropro($member,true,'mpprof');
+			$o .= micropro($member,true,'mpprof', $textmode);
 		}
 	}
 	$o .= '</div><div id="prof-members-end"></div>';
@@ -120,10 +132,11 @@ function profperm_content(&$a) {
 		);
 
 		if(count($r)) {
+			$textmode = (($switchtotext && (count($r) > $switchtotext)) ? true : false);
 			foreach($r as $member) {
 				if(! in_array($member['id'],$ingroup)) {
 					$member['click'] = 'profChangeMember(' . $profile['id'] . ',' . $member['id'] . '); return true;';
-					$o .= micropro($member,true,'mpprof');
+					$o .= micropro($member,true,'mpprof',$textmode);
 				}
 			}
 		}
