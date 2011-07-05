@@ -10,7 +10,7 @@ function community_content(&$a, $update = 0) {
 		return;
 	}
 
-	if(! get_config('system','no_community_page')) {
+	if(get_config('system','no_community_page')) {
 		notice( t('Not available.') . EOL);
 		return;
 	}
