@@ -1,6 +1,7 @@
 <?php
 
 require_once('library/HTML5/Parser.php');
+require_once('library/HTMLPurifier.auto.php');
 
 function parse_url_content(&$a) {
 
@@ -31,16 +32,25 @@ function parse_url_content(&$a) {
 		killme();
 	}
 
+	logger('parse_url: data: ' . $s, LOGGER_DATA);
 
 	if(! $s) {
 		echo sprintf($template,$url,$url,'');
 		killme();
 	}
 
+	$config = HTMLPurifier_Config::createDefault();
+	$config->set('Cache.DefinitionImpl', null);
+
+	$purifier = new HTMLPurifier($config);
+	$s = $purifier->purify($s);
+
 	$dom = @HTML5_Parser::parse($s);
 
-	if(! $dom)
-		return $ret;
+	if(! $dom) {
+		echo sprintf($template,$url,$url,'');
+		killme();
+	}
 
 	$items = $dom->getElementsByTagName('title');
 
@@ -50,7 +60,6 @@ function parse_url_content(&$a) {
 			break;
 		}
 	}
-
 
 	$divs = $dom->getElementsByTagName('div');
 	if($divs) {
@@ -94,6 +103,6 @@ function parse_url_content(&$a) {
 		$text = '<br />' . $text;
 	}
 
-	echo sprintf($template,$url,$title,$text);
+	echo sprintf($template,$url,($title) ? $title : $url,$text);
 	killme();
 }
