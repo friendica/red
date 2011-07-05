@@ -60,9 +60,8 @@ function nav(&$a) {
 
 	$help_url = $a->get_baseurl() . '/help';
 
-	if(! get_config('system','hide-help'))
+	if(! get_config('system','hide_help'))
 		$nav['help'] = array($help_url, t('Help'), "");
-
 
 	if($a->apps)
 		$nav['apps'] = array('apps', t('Apps'), "");
@@ -76,6 +75,8 @@ function nav(&$a) {
 		if(strlen($gdir))
 			$gdirpath = $gdir;
 	}
+	elseif(! get_config('system','no_community_page'))
+		$nav['community'] = array('community', t('Community'), "");
 
 	$nav['directory'] = array($gdirpath, t('Directory'), ""); 
 

@@ -71,8 +71,9 @@
 
 	function NavUpdate() {
 
-		if($('#live-network').length) { src = 'network'; liveUpdate(); }
-		if($('#live-profile').length) { src = 'profile'; liveUpdate(); }
+		if($('#live-network').length)   { src = 'network'; liveUpdate(); }
+		if($('#live-profile').length)   { src = 'profile'; liveUpdate(); }
+		if($('#live-community').length) { src = 'community'; liveUpdate(); }
 		if($('#live-display').length) { 
 			if(liking) {
 				liking = 0;

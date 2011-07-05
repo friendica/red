@@ -26,6 +26,9 @@ $langselector
 <a id="nav-home-link" class="nav-commlink $nav.home.2" href="$nav.home.0">$nav.home.1</a>
 <span id="home-update" class="nav-ajax-left"></span>
 {{ endif }}
+{{ if $nav.community }}
+<a id="nav-community-link" class="nav-commlink $nav.community.2" href="$nav.community.0">$nav.community.1</a>
+{{ endif }}
 {{ if $nav.notifications }}
 <a id="nav-notify-link" class="nav-commlink $nav.notifications.2" href="$nav.notifications.0">$nav.notifications.1</a>
 <span id="notify-update" class="nav-ajax-left"></span>

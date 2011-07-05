@@ -29,8 +29,8 @@
 	{{ inc field_input.tpl with $field=$allowed_email }}{{ endinc }}
 	{{ inc field_checkbox.tpl with $field=$block_public }}{{ endinc }}
 	{{ inc field_checkbox.tpl with $field=$force_publish }}{{ endinc }}
+	{{ inc field_checkbox.tpl with $field=$no_community_page }}{{ endinc }}
 	{{ inc field_input.tpl with $field=$global_directory }}{{ endinc }}
-	{{ inc field_input.tpl with $field=$global_search_url }}{{ endinc }}
 	
 	<div class="submit"><input type="submit" name="page_site" value="$submit" /></div>
 	

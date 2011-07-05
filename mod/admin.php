@@ -1,4 +1,5 @@
 <?php
+
  /**
   * Friendika admin
   */
@@ -80,7 +81,7 @@ function admin_content(&$a) {
 	$t = get_markup_template("admin_aside.tpl");
 	$a->page['aside'] = replace_macros( $t, array(
 			'$admin' => $aside, 
-			'$h_pending' => t('User registrations waiting for confirm'),
+			'$h_pending' => t('User registrations waiting for confirmation'),
 			'$admurl'=> $a->get_baseurl()."/admin/"
 	));
 
@@ -176,12 +177,13 @@ function admin_page_site_post(&$a){
 	$block_public		=	((x($_POST,'block_public'))		? True	:	False);
 	$force_publish		=	((x($_POST,'publish_all'))		? True	:	False);
 	$global_directory	=	((x($_POST,'directory_submit_url'))	? notags(trim($_POST['directory_submit_url']))	: '');
-	$global_search_url	=	((x($_POST,'directory_search_url'))? notags(trim($_POST['directory_search_url']))	: '');
 	$no_multi_reg		=	((x($_POST,'no_multi_reg'))		? True	:	False);
 	$no_openid			=	!((x($_POST,'no_openid'))		? True	:	False);
 	$no_gravatar		=	!((x($_POST,'no_gravatar'))		? True	:	False);
 	$no_regfullname		=	!((x($_POST,'no_regfullname'))	? True	:	False);
 	$no_utf				=	!((x($_POST,'no_utf'))			? True	:	False);
+	$no_community_page	=	!((x($_POST,'no_community_page'))	? True	:	False);
+
 	$verifyssl			=	((x($_POST,'verifyssl'))		? True	:	False);
 	$proxyuser			=	((x($_POST,'proxyuser'))		? notags(trim($_POST['global_search_url']))	: '');
 	$proxy				=	((x($_POST,'proxy'))			? notags(trim($_POST['global_search_url']))	: '');
@@ -222,6 +224,7 @@ function admin_page_site_post(&$a){
 	set_config('system','no_openid', $no_openid);
 	set_config('system','no_gravatar', $no_gravatar);
 	set_config('system','no_regfullname', $no_regfullname);
+	set_config('system','no_community_page', $no_community_page);
 	set_config('system','proxy', $no_utf);
 	set_config('system','verifyssl', $verifyssl);
 	set_config('system','proxyuser', $proxyuser);
@@ -266,14 +269,15 @@ function admin_page_site(&$a) {
 	/* Banner */
 	$banner = get_config('system','banner');
 	if($banner == false) 
-		$banner = htmlspecialchars('<a href="http://project.friendika.com"><img id="logo-img" src="images/friendika-32.png" alt="logo" /></a><span id="logo-text"><a href="http://project.friendika.com">Friendika</a></span>');
+		$banner = '<a href="http://project.friendika.com"><img id="logo-img" src="images/friendika-32.png" alt="logo" /></a><span id="logo-text"><a href="http://project.friendika.com">Friendika</a></span>';
+	$banner = htmlspecialchars($banner);
 	
 	//echo "<pre>"; var_dump($lang_choices); die("</pre>");
 
 	/* Register policy */
 	$register_choices = Array(
 		REGISTER_CLOSED => t("Closed"),
-		REGISTER_APPROVE => t("Need approvation"),
+		REGISTER_APPROVE => t("Requires approval"),
 		REGISTER_OPEN => t("Open")
 	); 
 	
@@ -284,12 +288,12 @@ function admin_page_site(&$a) {
 		'$submit' => t('Submit'),
 		'$registration' => t('Registration'),
 		'$upload' => t('File upload'),
-		'$corporate' => t('Corporate/Edu'),
+		'$corporate' => t('Policies'),
 		'$advanced' => t('Advanced'),
 		
 		'$baseurl' => $a->get_baseurl(),
 									// name, label, value, help string, extra data...
-		'$sitename' 		=> array('sitename', t("Site name"), $a->config['sitename'], ""),
+		'$sitename' 		=> array('sitename', t("Site name"), htmlentities($a->config['sitename'], ENT_QUOTES), ""),
 		'$banner'			=> array('banner', t("Banner/Logo"), $banner, ""),
 		'$language' 		=> array('language', t("System language"), get_config('system','language'), "", $lang_choices),
 		'$theme' 			=> array('theme', t("System theme"), get_config('system','theme'), "Default system theme (which may be over-ridden by user profiles)", $theme_choices),
@@ -297,21 +301,19 @@ function admin_page_site(&$a) {
 		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), get_config('system','maximagesize'), "Maximum size in bytes of uploaded images. Default is 0, which means no limits."),
 
 		'$register_policy'	=> array('register_policy', t("Register policy"), $a->config['register_policy'], "", $register_choices),
-		'$register_text'	=> array('register_text', t("Register text"), $a->config['register_text'], "Will be displayed prominently on the registration page."),
+		'$register_text'	=> array('register_text', t("Register text"), htmlentities($a->config['register_text'], ENT_QUOTES), "Will be displayed prominently on the registration page."),
 		'$allowed_sites'	=> array('allowed_sites', t("Allowed friend domains"), get_config('system','allowed_sites'), "Comma separated list of domains which are allowed to establish friendships with this site. Wildcards are accepted. Empty to allow any domains"),
 		'$allowed_email'	=> array('allowed_email', t("Allowed email domains"), get_config('system','allowed_email'), "Comma separated list of domains which are allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains"),
 		'$block_public'		=> array('block_public', t("Block public"), get_config('system','block_public'), "Check to block public access to all otherwise public personal pages on this site unless you are currently logged in."),
 		'$force_publish'	=> array('publish_all', t("Force publish"), get_config('system','publish_all'), "Check to force all profiles on this site to be listed in the site directory."),
 		'$global_directory'	=> array('directory_submit_url', t("Global directory update URL"), get_config('system','directory_submit_url'), "URL to update the global directory. If this is not set, the global directory is completely unavailable to the application."),
-		'$global_search_url'=> array('directory_search_url', t("Global directory search URL"), get_config('system','directory_search_url'), ""),
-			
 			
 		'$no_multi_reg'		=> array('no_multi_reg', t("Block multiple registrations"),  get_config('system','block_extended_register'), "Disallow users to register additional accounts for use as pages."),
 		'$no_openid'		=> array('no_openid', t("OpenID support"), !get_config('system','no_openid'), "OpenID support for registration and logins."),
 		'$no_gravatar'		=> array('no_gravatar', t("Gravatar support"), !get_config('system','no_gravatar'), "Search new user's photo on Gravatar."),
-		'$no_regfullname'	=> array('no_regfullname', t("Fullname check"), !get_config('system','no_regfullname'), "Force users to registrate with a space between his firsname and lastname in Full name, as an antispam measure"),
+		'$no_regfullname'	=> array('no_regfullname', t("Fullname check"), !get_config('system','no_regfullname'), "Force users to register with a space between firstname and lastname in Full name, as an antispam measure"),
 		'$no_utf'			=> array('no_utf', t("UTF-8 Regular expressions"), !get_config('system','proxy'), "Use PHP UTF8 regular expressions"),
-			
+		'$no_community_page' => array('no_community_page', t("Show Community Page"), !get_config('system','no_community_page'), "Display a Community page showing all recent public postings on this site."),	
 		'$verifyssl' 		=> array('verifyssl', t("Verify SSL"), get_config('system','verifyssl'), "If you wish, you can turn on strict certificate checking. This will mean you cannot connect (at all) to self-signed SSL sites."),
 		'$proxyuser'		=> array('proxyuser', t("Proxy user"), get_config('system','proxyuser'), ""),
 		'$proxy'			=> array('proxy', t("Proxy URL"), get_config('system','proxy'), ""),
