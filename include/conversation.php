@@ -142,7 +142,7 @@ function conversation(&$a, $items, $mode, $update) {
 				$owner_name  = '';
 				$sparkle     = '';
 
-				if($mode === 'search') {
+				if($mode === 'search' || $mode === 'community') {
 					if(((activity_match($item['verb'],ACTIVITY_LIKE)) || (activity_match($item['verb'],ACTIVITY_DISLIKE))) 
 						&& ($item['id'] != $item['parent']))
 						continue;
