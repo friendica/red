@@ -26,8 +26,6 @@ function display_content(&$a) {
 		return;
 	}
 
-
-
 	$groups = array();
 
 	$contact = null;
@@ -58,6 +56,13 @@ function display_content(&$a) {
 	);
 	if(count($r))
 		$a->page_contact = $r[0];
+
+	$is_owner = ((local_user()) && (local_user() == $a->profile['profile_uid']) ? true : false);
+
+	if($a->profile['hidewall'] && (! $is_owner) && (! $remote_contact)) {
+		notice( t('Access to this profile has been restricted.') . EOL);
+		return;
+	}
 
 	$sql_extra = permissions_sql($a->profile['uid'],$remote_contact,$groups);
 
