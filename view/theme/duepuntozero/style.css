@@ -27,6 +27,7 @@ input {
 
 img { border :0px; }
 
+#id_openid_url,
 .openid {
    background: url(login-bg.gif) no-repeat;
    background-position: 0 50%;
@@ -402,130 +403,7 @@ input#dfrn-url {
 	margin-left: 50px;
 }
 
-#settings-nick-wrapper {
-	margin-top: 20px;
 
-}
-
-#settings-expire-end {
-	margin-bottom: 30px;
-}
-
-#settings-username-end,
-#settings-email-end,
-#settings-nick-end,
-#settings-defloc-end,
-#settings-allowloc-end,
-#settings-blockw-end,
-#settings-timezone-end,
-#settings-theme-end,
-#settings-password-end,
-#settings-confirm-end,
-#settings-openid-end,
-#settings-maxreq-end,
-#notify1-end,
-#notify2-end,
-#notify3-end,
-#notify4-end,
-#notify5-end,
-#imap-server-end,
-#imap-port-end,
-#imap-ssl-end,
-#imap-user-end,
-#imap-pass-end,
-#imap-replyto-end,
-#imap-pubmail-end {
-	margin-bottom: 5px;
-	clear: both;
-}
-
-#settings-username-label,
-#settings-email-label,
-#settings-nick-label,
-#settings-defloc-label,
-#settings-allowloc-label,
-#settings-blockw-label,
-#settings-timezone-label,
-#settings-theme-label,
-#settings-password-label,
-#settings-confirm-label,
-#settings-openid-label,
-#settings-maxreq-label,
-#settings-label-notify1,
-#settings-label-notify2,
-#settings-label-notify3,
-#settings-label-notify4,
-#settings-label-notify5,
-#settings-label-imap1,
-#settings-label-imap2,
-#settings-label-imap3,
-#settings-label-imap4,
-#settings-label-imap5,
-#settings-label-imap6,
-#settings-label-imap7 {
-	float: left;
-	width: 200px;
-}
-
-#settings-username,
-#settings-email,
-#settings-nick,
-#settings-defloc,
-#settings-allowloc,
-#settings-blockw,
-#timezone-select,
-#theme-select,
-#settings-password,
-#settings-confirm,
-#settings-maxreq,
-#notify1,
-#notify2,
-#notify3,
-#notify4,
-#notify5,
-#imap-server,
-#imap-port,
-#imap-ssl,
-#imap-user,
-#imap-pass,
-#imap-replyto,
-#imap-pubmail {
-	float: left;
-	margin-bottom: 20px;
-}
-
-#settings-openid {
-	float: left;
-	margin-bottom: 20px;
-	width: 127px;
-}
-	
-#settings-maxreq-desc {
-	float: left;
-	margin-left: 20px;
-}
-
-#settings-theme-label,
-#settings-defloc-label {
-	margin-top: 20px;
-}
-
-#settings-defloc {
-	margin-top: 20px;
-}
-
-
-#theme-select {
-	margin-top: 20px;
-	width: 207px;
-}
-#settings-notify-desc {
-	margin-top: 20px;
-	margin-bottom: 20px;
-}
-#settings-nick-desc {
-	width: 500px;
-}
 
 #cropimage-wrapper, #cropimage-preview-wrapper {
 	float: left;
@@ -1588,30 +1466,6 @@ input#dfrn-url {
 	width: 180px;
 }
 
-
-/*
-.profile-tabs {
-	float: left;
-	padding: 4px;
-	margin-top: 10px;
-	margin-bottom: 10px;
-	margin-right: 5px;
-	font-size: 0.8em;
-	font-weight: bold;
-	background-color: #ECECEC;
-	border: 1px solid #858585;
-}
-.profile-tabs:hover {
-	background-color: #0CBEFE;
-	color: #F5F6FB;
-	border: 1px solid #F5F6FB;
-}
-
-
-#profile-tabs-end {
-	clear: both;
-}*/
-
 .comment-edit-text-empty {
 	color: gray;
 	height: 30px;
@@ -2582,9 +2436,10 @@ a.mail-list-link {
  * Form fields
  */
 .field {
-	clear: left;
-	margin-bottom: 5px;
-	padding-bottom: 5px;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+	overflow: auto;
+	width: 100%
 }
 
 .field label {
@@ -2603,7 +2458,40 @@ a.mail-list-link {
 	color: #666666;
 	
 }
- 
+
+
+.field .onoff {
+	float: left;
+	width: 80px;
+}
+.field .onoff a {
+	display: block;
+	border:1px solid #666666;
+	background-image:url("../../../images/onoff.jpg");
+	background-repeat: no-repeat;
+	padding: 4px 2px 2px 2px;
+	height: 16px;
+	text-decoration: none;
+}
+.field .onoff .off {
+	border-color:#666666;
+	padding-left: 40px;
+	background-position: left center;
+	background-color: #cccccc;
+	color: #666666;
+	text-align: right;
+}
+.field .onoff .on {
+	border-color:#204A87;
+	padding-right: 40px;
+	background-position: right center;
+	background-color: #3465A4;
+	color: #FFFFFF;
+	text-align: left;
+}
+.hidden { display: none!important; }
+
+.field.radio .field_help { margin-left: 0px; }
 
 /**
  * ADMIN

@@ -741,6 +741,13 @@ div[id$="wrapper"] br { clear: left; }
 /**
  * 	register, settings & profile forms
  */
+#id_openid_url,
+.openid {
+   background: url(login-bg.gif) no-repeat;
+   background-position: 0 50%;
+   padding-left: 18px;
+}
+ 
 #settings-nickname-desc {
 	background-color: #DDEFFF;
 	-webkit-border-radius: 5px;
@@ -750,20 +757,17 @@ div[id$="wrapper"] br { clear: left; }
 }
 
 #register-form div,
-#profile-edit-form div,
-#settings-form  div { 
+#profile-edit-form div { 
 	clear: both;
 }
 
 #register-form label,
-#profile-edit-form label,
-#settings-form label {
+#profile-edit-form label {
 	width: 300px; float: left;
 }
 
 #register-form span,
-#profile-edit-form span,
-#settings-form span {
+#profile-edit-form span  {
 	color: #555753;
 	display:block;
 	margin-bottom: 20px;
@@ -956,31 +960,6 @@ div[id$="wrapper"] br { clear: left; }
 #adminpage dd {
 	margin-left: 200px;
 }
-
-#adminpage .field {
-	clear: left;
-	margin-bottom: 5px;
-	padding-bottom: 5px;
-}
-
-#adminpage .field label {
-	float: left;
-	width: 200px;
-	font-weight: bold;
-}
-
-#adminpage .field input,
-#adminpage .field textarea {
-	width: 400px;
-}
-#adminpage .field textarea { height: 100px; }
-#adminpage .field_help {
-	display: block;
-	margin-left: 200px;
-	color: #666666;
-	
-}
-
 #adminpage h3 {
 	border-bottom: 1px solid #cccccc;
 }
@@ -1011,6 +990,67 @@ div[id$="wrapper"] br { clear: left; }
 #adminpage table#users img { width: 16px; height: 16px; }
 #adminpage table tr:hover { background-color: #bbc7d7; }
 #adminpage .selectall { text-align: right; }
+
+/**
+ * Form fields
+ */
+.field {
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+	overflow: auto;
+	width: 100%
+}
+
+.field label {
+	float: left;
+	width: 200px;
+}
+
+.field input,
+.field textarea {
+	width: 400px;
+}
+.field textarea { height: 100px; }
+.field_help {
+	display: block;
+	margin-left: 200px;
+	color: #666666;
+	
+}
+
+
+.field .onoff {
+	float: left;
+	width: 80px;
+}
+.field .onoff a {
+	display: block;
+	border:1px solid #666666;
+	background-image:url("../../../images/onoff.jpg");
+	background-repeat: no-repeat;
+	padding: 4px 2px 2px 2px;
+	height: 16px;
+	text-decoration: none;
+}
+.field .onoff .off {
+	border-color:#666666;
+	padding-left: 40px;
+	background-position: left center;
+	background-color: #cccccc;
+	color: #666666;
+	text-align: right;
+}
+.field .onoff .on {
+	border-color:#204A87;
+	padding-right: 40px;
+	background-position: right center;
+	background-color: #3465A4;
+	color: #FFFFFF;
+	text-align: left;
+}
+.hidden { display: none!important; }
+
+.field.radio .field_help { margin-left: 0px; }
 
 /**
  * ICONS
