@@ -326,5 +326,4 @@ else
 	require_once(str_replace($lang . '/', '', $template));
 
 session_write_close();
-closedb();
 exit;

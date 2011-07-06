@@ -215,10 +215,3 @@ function dbesc_array(&$arr) {
 }}		
 
 
-if(! function_exists('closedb')) {
-function closedb() {
-	global $db;
-	if($db && $db->connected)
-		$db->close();
-}}
-
