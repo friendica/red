@@ -747,6 +747,12 @@ function dfrn_notify_post(&$a) {
 				continue;
 			}
 
+			// This is my contact on another system, but it's really me.
+			// Turn this into a wall post.
+
+			if($contact['remote_self'])
+				$datarray['wall'] = 1;
+
 			$datarray['parent-uri'] = $item_id;
 			$datarray['uid'] = $importer['importer_uid'];
 			$datarray['contact-id'] = $importer['id'];

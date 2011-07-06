@@ -1260,6 +1260,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 				if(! x($datarray,'author-avatar'))
 					$datarray['author-avatar'] = $contact['thumb'];
 
+
 				$r = q("SELECT `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['uid'])
@@ -1415,6 +1416,12 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 					// one way feed - no remote comment ability
 					$datarray['last-child'] = 0;
 				}
+
+				// This is my contact on another system, but it's really me.
+				// Turn this into a wall post.
+
+				if($contact['remote_self'])
+					$datarray['wall'] = 1;
 
 				$datarray['parent-uri'] = $item_id;
 				$datarray['uid'] = $importer['uid'];

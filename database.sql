@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `uid` int(11) NOT NULL COMMENT 'owner uid',
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `self` tinyint(1) NOT NULL DEFAULT '0',
+  `remote_self` tinyint(1) NOT NULL DEFAULT '0',
   `rel` tinyint(1) NOT NULL DEFAULT '0',
   `duplex` tinyint(1) NOT NULL DEFAULT '0',
   `network` char(255) NOT NULL,

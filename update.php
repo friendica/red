@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1073 );
+define( 'UPDATE_VERSION' , 1074 );
 
 /**
  *
@@ -585,3 +585,8 @@ function update_1072() {
 	q("ALTER TABLE `item` ADD `starred` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `visible` ");
 	q("ALTER TABLE `item` ADD INDEX ( `starred` ) ");
 }
+
+function update_1073() {
+	q("ALTER TABLE `contact` ADD `remote_self` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `self` ");
+}
+
