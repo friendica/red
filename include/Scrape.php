@@ -494,7 +494,7 @@ function probe_url($url) {
 							$vcard['photo'] = unxmlify($rawmedia[0]['attribs']['']['url']);
 					}
 					if(! $vcard['photo']) {
-						$rawtags = $item->get_feed_tags( SIMPLEPIE_NAMESPACE_ATOM_10, 'author');
+						$rawtags = $item->get_item_tags( SIMPLEPIE_NAMESPACE_ATOM_10, 'author');
     					if($rawtags) {
 							$elems = $rawtags[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10];
 							if((x($elems,'link')) && ($elems['link'][0]['attribs']['']['rel'] === 'photo'))
