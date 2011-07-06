@@ -11,7 +11,6 @@ Deny from all
 
   # Protect repository directory from browsing
   RewriteRule "(^|/)\.git" - [F]
-  RewriteBase /~fabio/friendika
 
   # Rewrite current-style URLs of the form 'index.php?q=x'.
   # Also place auth information into REMOTE_USER for sites running
