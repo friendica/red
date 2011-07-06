@@ -129,7 +129,7 @@ function js_upload_post_init(&$a,&$b) {
 
 	// max file size in bytes
 
-	$sizeLimit = 6 * 1024 * 1024;
+	$sizeLimit = get_config('system','maximagesize'); //6 * 1024 * 1024;
 
 	$uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
 
@@ -141,6 +141,7 @@ function js_upload_post_init(&$a,&$b) {
 
 	if(isset($result['error'])) {
 		logger('mod/photos.php: photos_post(): error uploading photo: ' . $result['error'] , 'LOGGER_DEBUG');
+		echo json_encode($result);
 		killme();
 	}
 
