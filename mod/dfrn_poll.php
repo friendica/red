@@ -31,7 +31,7 @@ function dfrn_poll_init(&$a) {
 			killme();
 		}
 
-		$r = q("SELECT `hidewall` FROM `profile` LEFT JOIN `user` ON `profile`.`uid` = `user`.`uid` WHERE `user`.`nickname` = '%s' AND `profile`.`is-default` = 1 LIMIT 1",
+		$r = q("SELECT `hidewall` FROM `user` WHERE `user`.`nickname` = '%s' LIMIT 1",
 			dbesc($a->argv[1])
 		);
 		if(count($r) && $r[0]['hidewall'])

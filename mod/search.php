@@ -48,11 +48,11 @@ function search_content(&$a) {
 		$search_alg = $s_regx;
 
 	$r = q("SELECT COUNT(*) AS `total`
-		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` LEFT JOIN `profile` ON `profile`.`uid` = `item`.`uid`
+		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` LEFT JOIN `user` ON `user`.`uid` = `item`.`uid`
 		WHERE `item`.`visible` = 1 AND `item`.`deleted` = 0
-		AND (( `wall` = 1 AND `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND `profile`.`hidewall` = 0) 
+		AND (( `wall` = 1 AND `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND `user`.`hidewall` = 0) 
 			OR `item`.`uid` = %d )
-		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0 AND `profile`.`is-default` = 1
+		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 		$search_alg ",
 		intval(local_user()),
 		dbesc($search)
@@ -70,14 +70,13 @@ function search_content(&$a) {
 		`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
 		`contact`.`network`, `contact`.`thumb`, `contact`.`self`, `contact`.`writable`, 
 		`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`,
-		`user`.`nickname`, `profile`.`hidewall`
+		`user`.`nickname`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		LEFT JOIN `user` ON `user`.`uid` = `item`.`uid`
-		LEFT JOIN `profile` ON `profile`.`uid` = `item`.`uid` 
 		WHERE `item`.`visible` = 1 AND `item`.`deleted` = 0
-		AND (( `wall` = 1 AND `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND `profile`.`hidewall` = 0 ) 
+		AND (( `wall` = 1 AND `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND `user`.`hidewall` = 0 ) 
 			OR `item`.`uid` = %d )
-		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0 AND `profile`.`is-default` = 1
+		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 		$search_alg
 		ORDER BY `received` DESC LIMIT %d , %d ",
 		intval(local_user()),

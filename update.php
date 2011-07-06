@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1074 );
+define( 'UPDATE_VERSION' , 1075 );
 
 /**
  *
@@ -590,3 +590,14 @@ function update_1073() {
 	q("ALTER TABLE `contact` ADD `remote_self` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `self` ");
 }
 
+function update_1074() {
+	q("ALTER TABLE `user` ADD `hidewall` TINYINT( 1) NOT NULL DEFAULT '0' AFTER `blockwall` ");
+	$r = q("SELECT `uid` FROM `profile` WHERE `is-default` = 1 AND `hidewall` = 1");
+	if(count($r)) {
+		foreach($r as $rr)
+			q("UPDATE `user` SET `hidewall` = 1 WHERE `uid` = %d LIMIT 1",
+				intval($rr['uid'])
+			);
+	}
+	q("ALTER TABLE `profile` DROP `hidewall`");
+}

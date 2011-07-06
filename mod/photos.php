@@ -816,11 +816,7 @@ function photos_content(&$a) {
 		}
 	}
 
-	$r = q("SELECT `hidewall` FROM `profile` WHERE `uid` = %d AND `is-default` = 1 LIMIT 1",
-		intval($owner_uid)
-	);
-
-	if(count($r) && $r[0]['hidewall'] && (local_user() != $owner_uid) && (! $remote_contact)) {
+	if($a->data['user']['hidewall'] && (local_user() != $owner_uid) && (! $remote_contact)) {
 		notice( t('Access to this item is restricted.') . EOL);
 		return;
 	}

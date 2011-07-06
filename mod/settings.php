@@ -230,7 +230,7 @@ function settings_post(&$a) {
 			$openidserver = '';
 	}
 
-	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `theme` = '%s', `maxreq` = %d, `expire` = %d, `openidserver` = '%s', `blockwall` = %d  WHERE `uid` = %d LIMIT 1",
+	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `theme` = '%s', `maxreq` = %d, `expire` = %d, `openidserver` = '%s', `blockwall` = %d, `hidewall` = %d  WHERE `uid` = %d LIMIT 1",
 			dbesc($username),
 			dbesc($email),
 			dbesc($openid),
@@ -248,6 +248,7 @@ function settings_post(&$a) {
 			intval($expire),
 			dbesc($openidserver),
 			intval($blockwall),
+			intval($hidewall),
 			intval(local_user())
 	);
 	if($r)
@@ -257,12 +258,10 @@ function settings_post(&$a) {
 		SET `publish` = %d, 
 		`net-publish` = %d,
 		`hide-friends` = %d,
-		`hidewall` = %d
 		WHERE `is-default` = 1 AND `uid` = %d LIMIT 1",
 		intval($publish),
 		intval($net_publish),
 		intval($hide_friends),
-		intval($hidewall),
 		intval(local_user())
 	);
 
@@ -436,8 +435,8 @@ function settings_content(&$a) {
 		'$desc' => t('Hide profile details and all your messages from unknown viewers?'),
 		'$yes_str' => t('Yes'),
 		'$no_str' => t('No'),
-		'$yes_selected' => (($profile['hidewall']) ? " checked=\"checked\" " : ""),
-		'$no_selected' => (($profile['hidewall'] == 0) ? " checked=\"checked\" " : "")
+		'$yes_selected' => (($a->user['hidewall']) ? " checked=\"checked\" " : ""),
+		'$no_selected' => (($a->user['hidewall'] == 0) ? " checked=\"checked\" " : "")
 	));
 
 
