@@ -989,6 +989,7 @@ function autoname($len) {
 if(! function_exists('killme')) {
 function killme() {
 	session_write_close();
+	closedb();
 	exit;
 }}
 

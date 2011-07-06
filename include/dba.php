@@ -213,3 +213,12 @@ function dbesc_array(&$arr) {
 		array_walk($arr,'dbesc_array_cb');
 	}
 }}		
+
+
+if(! function_exists('closedb')) {
+function closedb() {
+	global $db;
+	if($db && $db->connected)
+		$db->close();
+}}
+
