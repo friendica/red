@@ -257,7 +257,7 @@ function settings_post(&$a) {
 	$r = q("UPDATE `profile` 
 		SET `publish` = %d, 
 		`net-publish` = %d,
-		`hide-friends` = %d,
+		`hide-friends` = %d
 		WHERE `is-default` = 1 AND `uid` = %d LIMIT 1",
 		intval($publish),
 		intval($net_publish),
@@ -375,19 +375,19 @@ function settings_content(&$a) {
 
 	$pageset_tpl = get_markup_template('pagetypes.tpl');
 	$pagetype = replace_macros($pageset_tpl,array(
-		$page_normal 	=> array('page-flags', t('Normal Account'), PAGE_NORMAL, 
+		'$page_normal' 	=> array('page-flags', t('Normal Account'), PAGE_NORMAL, 
 									t('This account is a normal personal profile'), 
 									($a->user['page-flags'] == PAGE_NORMAL)),
 								
-		$page_soapbox 	=> array('page-flags', t('Soapbox Account'), PAGE_SOAPBOX, 
+		'$page_soapbox' 	=> array('page-flags', t('Soapbox Account'), PAGE_SOAPBOX, 
 									t('Automatically approve all connection/friend requests as read-only fans'), 
-									($a->user['page-flags'] == PAGE_NORMAL)),
+									($a->user['page-flags'] == PAGE_SOAPBOX)),
 									
-		$page_community	=> array('page-flags', t('Community/Celebrity Account'), PAGE_COMMUNITY, 
+		'$page_community'	=> array('page-flags', t('Community/Celebrity Account'), PAGE_COMMUNITY, 
 									t('Automatically approve all connection/friend requests as read-write fans'), 
 									($a->user['page-flags'] == PAGE_COMMUNITY)),
 									
-		$page_freelove 	=> array('page-flags', t('Automatic Friend Account'), PAGE_FREELOVE, 
+		'$page_freelove' 	=> array('page-flags', t('Automatic Friend Account'), PAGE_FREELOVE, 
 									t('Automatically approve all connection/friend requests as friends'), 
 									($a->user['page-flags'] == PAGE_FREELOVE)),
 	));
@@ -537,8 +537,8 @@ function settings_content(&$a) {
 		'$mail_disabled' => (($mail_disabled) ? t('Email access is disabled on this site.') : ''),
 		'$mail_server'	=> array('mail_server',  t('IMAP server name:'), $mail_server, ''),
 		'$mail_port'	=> array('mail_port', 	 t('IMAP port:'), $mail_port, ''),
-		'$mail_ssl'		=> array('mail_ssl', 	 t('Security:'), $mail_ssl, '', array( ''=>t('None'), 'TSL'=>'TSL', 'SSL'=>'SSL')),
-		'$mail_user'	=> array('mail_server',  t('Email login name:'), $mail_server, ''),
+		'$mail_ssl'		=> array('mail_ssl', 	 t('Security:'), strtoupper($mail_ssl), '', array( ''=>t('None'), 'TSL'=>'TSL', 'SSL'=>'SSL')),
+		'$mail_user'	=> array('mail_user',    t('Email login name:'), $mail_user, ''),
 		'$mail_pass'	=> array('mail_pass', 	 t('Email password:'), '', ''),
 		'$mail_replyto'	=> array('mail_replyto', t('Reply-to address:'), '', 'Optional'),
 		'$mail_pubmail'	=> array('mail_pubmail', t('Send public posts to all email contacts:'), $mail_pubmail, ''),
