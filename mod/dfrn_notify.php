@@ -154,6 +154,31 @@ function dfrn_notify_post(&$a) {
 	$feed->enable_order_by_date(false);
 	$feed->init();
 
+	$reloc = $feed->get_feed_tags( NAMESPACE_DFRN, 'relocate' );
+	if(isset($reloc[0]['child'][NAMESPACE_DFRN])) {
+		$base = $reloc[0]['child'][NAMESPACE_DFRN];
+		$newloc = array();
+		$newloc['uid'] = $importer['importer_uid'];
+		$newloc['cid'] = $importer['id'];
+		$newloc['name'] = notags(unxmlify($base['name'][0]['data']));
+		$newloc['photo'] = notags(unxmlify($base['photo'][0]['data']));
+		$newloc['url'] = notags(unxmlify($base['url'][0]['data']));
+		$newloc['request'] = notags(unxmlify($base['request'][0]['data']));
+		$newloc['confirm'] = notags(unxmlify($base['confirm'][0]['data']));
+		$newloc['notify'] = notags(unxmlify($base['notify'][0]['data']));
+		$newloc['poll'] = notags(unxmlify($base['poll'][0]['data']));
+		$newloc['site-pubkey'] = notags(unxmlify($base['site-pubkey'][0]['data']));
+		$newloc['pubkey'] = notags(unxmlify($base['pubkey'][0]['data']));
+		$newloc['prvkey'] = notags(unxmlify($base['prvkey'][0]['data']));
+		
+		// TODO
+		// merge with current record, current contents have priority
+		// update record, set url-updated
+		// update profile photos
+		// schedule a scan?
+
+	}
+
 	// handle friend suggestion notification
 
 	$sugg = $feed->get_feed_tags( NAMESPACE_DFRN, 'suggest' );
