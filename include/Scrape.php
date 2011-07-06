@@ -467,6 +467,14 @@ function probe_url($url) {
 				if(strpos($vcard['fn'],'@') !== false)
 					$vcard['fn'] = substr($vcard['fn'],0,strpos($vcard['fn'],'@'));
 				$email = unxmlify($author->get_email());
+				if(! $vcard['photo']) {
+					$rawtags = $feed->get_feed_tags( SIMPLEPIE_NAMESPACE_ATOM_10, 'author');
+    				if($rawtags) {
+						$elems = $rawtags[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10];
+						if((x($elems,'link')) && ($elems['link'][0]['attribs']['']['rel'] === 'photo'))
+							$vcard['photo'] = $elems['link'][0]['attribs']['']['href'];
+        			}
+				}
 			}
 			else {
 				$item = $feed->get_item(0);
@@ -484,6 +492,14 @@ function probe_url($url) {
 						$rawmedia = $item->get_item_tags('http://search.yahoo.com/mrss/','thumbnail');
 						if($rawmedia && $rawmedia[0]['attribs']['']['url'])
 							$vcard['photo'] = unxmlify($rawmedia[0]['attribs']['']['url']);
+					}
+					if(! $vcard['photo']) {
+						$rawtags = $item->get_feed_tags( SIMPLEPIE_NAMESPACE_ATOM_10, 'author');
+    					if($rawtags) {
+							$elems = $rawtags[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10];
+							if((x($elems,'link')) && ($elems['link'][0]['attribs']['']['rel'] === 'photo'))
+								$vcard['photo'] = $elems['link'][0]['attribs']['']['href'];
+        				}
 					}
 				}
 			}
