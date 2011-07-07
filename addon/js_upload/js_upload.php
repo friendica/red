@@ -14,9 +14,6 @@
  * Uses Valum 'qq' Uploader. 
  * Module Author: Chris Case
  *
- * Prior to enabling, ensure that you have a directory 'uploads'
- * which is writable by the web server.
- *
  */
 
 
@@ -254,8 +251,6 @@ class qqFileUploader {
         $this->allowedExtensions = $allowedExtensions;        
         $this->sizeLimit = $sizeLimit;
         
-        $this->checkServerSettings();       
-
         if (isset($_GET['qqfile'])) {
             $this->file = new qqUploadedFileXhr();
         } elseif (isset($_FILES['qqfile'])) {
@@ -266,15 +261,6 @@ class qqFileUploader {
 
     }
     
-    private function checkServerSettings(){        
-        $postSize = $this->toBytes(ini_get('post_max_size'));
-        $uploadSize = $this->toBytes(ini_get('upload_max_filesize'));        
-		logger('mod/photos.php: qqFileUploader(): upload_max_filesize=' . $uploadSize , 'LOGGER_DEBUG');
-        if ($postSize < $this->sizeLimit || $uploadSize < $this->sizeLimit){
-            $size = max(1, $this->sizeLimit / 1024 / 1024) . 'M';             
-            die("{'error':'increase post_max_size and upload_max_filesize to $size'}");    
-        }        
-    }
     
     private function toBytes($str){
         $val = trim($str);
