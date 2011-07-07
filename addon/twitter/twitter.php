@@ -216,6 +216,7 @@ function twitter_post_hook(&$a,&$b) {
 			$twitter_enable = (($twitter_post && x($_POST,'twitter_enable')) ? intval($_POST['twitter_enable']) : 0);
 
 			if($twitter_post && $twitter_enable) {
+				logger('Posting to Twitter', LOGGER_DEBUG);
 				require_once('library/twitteroauth.php');
 				require_once('include/bbcode.php');	
 				$tweet = new TwitterOAuth($ckey,$csecret,$otoken,$osecret);
