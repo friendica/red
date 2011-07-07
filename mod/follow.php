@@ -34,6 +34,13 @@ function follow_post(&$a) {
 		
 		// NOTREACHED
 	}
+	else {
+		if(get_config('system','dfrn_only')) {
+			notice( t('This site is not configured to allow communications with other networks.') . EOL);
+			notice( t('No compatible communication protocols or feeds were discovered.') . EOL);
+			goaway($_SESSION['return_url']);
+		}
+	}
 
 	// do we have enough information?
 	
@@ -50,6 +57,10 @@ function follow_post(&$a) {
 		goaway($_SESSION['return_url']);
 	}
 
+	if($ret['network'] === NETWORK_OSTATUS && get_config('system','ostatus_disabled')) {
+		notice( t('Communication options with this network have been restricted.') . EOL);
+		$ret['notify'] = '';
+	}
 
 	if(! $ret['notify']) {
 		notice( t('Limited profile. This person will be unable to receive direct/personal notifications from you.') . EOL);

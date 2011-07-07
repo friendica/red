@@ -365,8 +365,13 @@ function notifier_run($argv, $argc){
 					}
 					break;
 				case 'stat':
+
+					// Do not send to otatus if we are not configured to send to public networks
 					if($owner['prvnets'])
 						break;
+					if(get_config('system','ostatus_disabled') || get_config('system','dfrn_only'))
+						break;
+
 					if($followup && $contact['notify']) {
 						logger('notifier: slapdelivery: ' . $contact['name']);
 						$deliver_status = slapper($owner,$contact['notify'],$slap);
@@ -382,8 +387,6 @@ function notifier_run($argv, $argc){
 							);
 
 						}
-	
-
 					}
 					else {
 
@@ -413,6 +416,9 @@ function notifier_run($argv, $argc){
 
 				case 'mail':
 						
+					if(get_config('system','dfrn_only'))
+						break;
+
 					// WARNING: does not currently convert to RFC2047 header encodings, etc.
 
 					$addr = $contact['addr'];
@@ -488,6 +494,8 @@ function notifier_run($argv, $argc){
 				case 'feed':
 				case 'face':
 				case 'dspr':
+					if(get_config('system','dfrn_only'))
+						break;
 				default:
 					break;
 			}
@@ -497,11 +505,13 @@ function notifier_run($argv, $argc){
 	// send additional slaps to mentioned remote tags (@foo@example.com)
 
 	if($slap && count($url_recipients) && $followup && $notify_hub && (! $expire)) {
-		foreach($url_recipients as $url) {
-			if($url) {
-				logger('notifier: urldelivery: ' . $url);
-				$deliver_status = slapper($owner,$url,$slap);
-				// TODO: redeliver/queue these items on failure, though there is no contact record
+		if(! get_config('system','dfrn_only')) {
+			foreach($url_recipients as $url) {
+				if($url) {
+					logger('notifier: urldelivery: ' . $url);
+					$deliver_status = slapper($owner,$url,$slap);
+					// TODO: redeliver/queue these items on failure, though there is no contact record
+				}
 			}
 		}
 	}
@@ -577,7 +587,6 @@ function notifier_run($argv, $argc){
 }
 
 if (array_search(__file__,get_included_files())===0){
-  echo "run!";
   notifier_run($argv,$argc);
   killme();
 }
