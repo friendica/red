@@ -17,7 +17,26 @@ function localize_item(&$item){
 		$author	 = '[url=' . $item['author-link'] . ']' . $item['author-name'] . '[/url]';
 		$objauthor =  '[url=' . $obj['author-link'] . ']' . $obj['author-name'] . '[/url]';
 		
-		$post_type = (($obj['resource-id']) ? t('photo') : t('status'));		
+		switch($obj['verb']){
+			case 'http://activitystrea.ms/schema/1.0/post':
+				switch ($obj['object-type']){
+					case 'http://activitystrea.ms/schema/1.0/event':
+						$post_type = t('event');
+						break;
+					default:
+						$post_type = t('status');
+				}
+				break;
+			default:
+				if($obj['resource-id']){
+					$post_type = t('photo');
+					$m=array();	preg_match("/\[url=([^]]*)\]/", $obj['body'], $m);
+					$rr['plink'] = $m[1];
+				} else {
+					$post_type = t('status');
+				}
+		}
+	
 		$plink = '[url=' . $obj['plink'] . ']' . $post_type . '[/url]';
                 
 		switch($item['verb']){

@@ -48,8 +48,13 @@ code {
 	padding: 10px;
 	margin-top: 20px;
 }
-blockquote:before {
+/*blockquote:before {
 	content: '>> ';
+}*/
+blockquote {
+	background-color: #f4f8f9;
+	border-left: 4px solid #dae4ee;
+	padding: 0.4em;
 }
 
 .icollapse-wrapper, .ccollapse-wrapper {
@@ -174,6 +179,16 @@ aside {
 	position: absolute;
 }
 
+#dfrn-request-link {
+	display: block;
+	color: #FFFFFF;
+	-webkit-border-radius: 5px ;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	padding: 5px;
+	font-weight: bold;
+	background: #3465a4 url('friendika-16.png') no-repeat 95% center;
+}
 
 /* section */
 section {
@@ -203,6 +218,7 @@ section {
 	padding: 0.4em;
 	margin-right: 1em;
 }
+
 
 /* footer */
 footer {
@@ -479,6 +495,7 @@ input#dfrn-url {
 
 #profile-extra-links ul {
 	list-style-type: none;
+	padding: 0px;
 }
 
 
