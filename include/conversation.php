@@ -5,8 +5,7 @@
  */
 function localize_item(&$item){
 	
-	if ($item['verb']=="http://activitystrea.ms/schema/1.0/like" ||
-		$item['verb']=="http://activitystrea.ms/schema/1.0/dislike"){
+	if ($item['verb']=== ACTIVITY_LIKE || $item['verb']=== ACTIVITY_DISLIKE){
 
 		$r = q("SELECT * from `item`,`contact` WHERE 
 				`item`.`contact-id`=`contact`.`id` AND `item`.`uri`='%s';",
@@ -18,9 +17,9 @@ function localize_item(&$item){
 		$objauthor =  '[url=' . $obj['author-link'] . ']' . $obj['author-name'] . '[/url]';
 		
 		switch($obj['verb']){
-			case 'http://activitystrea.ms/schema/1.0/post':
+			case ACTIVITY_POST:
 				switch ($obj['object-type']){
-					case 'http://activitystrea.ms/schema/1.0/event':
+					case ACTIVITY_OBJ_EVENT:
 						$post_type = t('event');
 						break;
 					default:
@@ -40,19 +39,19 @@ function localize_item(&$item){
 		$plink = '[url=' . $obj['plink'] . ']' . $post_type . '[/url]';
                 
 		switch($item['verb']){
-			case "http://activitystrea.ms/schema/1.0/like":
+			case ACTIVITY_LIKE :
 				$bodyverb = t('%1$s likes %2$s\'s %3$s');
 				break;
-			case "http://activitystrea.ms/schema/1.0/dislike":
+			case ACTIVITY_DISLIKE:
 				$bodyverb = t('%1$s doesn\'t like %2$s\'s %3$s');
 				break;
 		}
 		$item['body'] = sprintf($bodyverb, $author, $objauthor, $plink);
 			
 	}
-	if ($item['verb']=='http://activitystrea.ms/schema/1.0/make-friend'){
+	if ($item['verb']=== ACTIVITY_FRIEND){
 
-		if ($item['object-type']=="" || $item['object-type']!='http://activitystrea.ms/schema/1.0/person') return;
+		if ($item['object-type']=="" || $item['object-type']!== ACTIVITY_OBJ_PERSON) return;
 
 		$Aname = $item['author-name'];
 		$Alink = $item['author-link'];
