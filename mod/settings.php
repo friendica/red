@@ -115,6 +115,8 @@ function settings_post(&$a) {
 
 
 	$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
+	if(get_config('system','dfrn_only'))
+		$mail_disabled = 1;
 
 	if(! $mail_disabled) {
 		$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",
@@ -355,6 +357,8 @@ function settings_content(&$a) {
 
 
 	$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
+	if(get_config('system','dfrn_only'))
+		$mail_disabled = 1;
 
 	if(! $mail_disabled) {
 		$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",

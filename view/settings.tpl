@@ -94,10 +94,10 @@ $hide_wall
 <input type="submit" name="submit" class="settings-submit" value="$submit" />
 </div>
 
-<h3 class="settings-heading">$h_imap</h3>
 {{ if $mail_disabled }}
-	<div class="info-message">$mail_disabled</div>
+
 {{ else }}
+	<h3 class="settings-heading">$h_imap</h3>
 	<p>$imap_desc</p>
 	{{inc field_custom.tpl with $field=$imap_lastcheck }}{{endinc}}
 	{{inc field_input.tpl with $field=$mail_server }}{{endinc}}
