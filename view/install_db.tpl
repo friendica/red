@@ -26,6 +26,10 @@ $lbl_03 $lbl_04 $lbl_05
 <input type="text" name="dbdata" id="install-dbdata"  value="$dbdata" />
 <div id="install-dbdata-end"></div>
 
+<label for="install-admin" id="install-admin-label">$lbl_11</label>
+<input type="text" name="adminemail" id="install-admin"  value="$adminemail" />
+<div id="install-admin-end"></div>
+
 <div id="install-tz-desc">
 $lbl_10
 </div>

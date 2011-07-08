@@ -12,6 +12,7 @@ function install_post(&$a) {
 	$dbdata = notags(trim($_POST['dbdata']));
 	$timezone = notags(trim($_POST['timezone']));
 	$phpath = notags(trim($_POST['phpath']));
+	$adminmail = notags(trim($_POST['adminmail']));
 
 	require_once("dba.php");
 	unset($db);
@@ -45,8 +46,10 @@ function install_post(&$a) {
 		'$dbdata' => $dbdata,
 		'$timezone' => $timezone,
 		'$urlpath' => $urlpath,
-		'$phpath' => $phpath
+		'$phpath' => $phpath,
+		'$adminmail' => $adminmail
 	));
+
 	$result = file_put_contents('.htconfig.php', $txt);
 	if(! $result) {
 		$a->data = $txt;
@@ -128,6 +131,7 @@ function install_content(&$a) {
 		'$lbl_08' => t('Database Login Password'),
 		'$lbl_09' => t('Database Name'),
 		'$lbl_10' => t('Please select a default timezone for your website'),
+		'$lbl_11' => t('Site administrator email address. Your account email address will need match this.'), 
 		'$baseurl' => $a->get_baseurl(),
 		'$tzselect' => ((x($_POST,'timezone')) ? select_timezone($_POST['timezone']) : select_timezone()),
 		'$submit' => t('Submit'),
@@ -135,7 +139,8 @@ function install_content(&$a) {
 		'$dbuser' => notags(trim($_POST['dbuser'])),
 		'$dbpass' => notags(trim($_POST['dbpass'])),
 		'$dbdata' => notags(trim($_POST['dbdata'])),
-		'$phpath' => $phpath
+		'$phpath' => $phpath,
+		'$adminemail' => notags(trim($_POST['adminemail']))
 	));
 
 	return $o;

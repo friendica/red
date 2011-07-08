@@ -1943,6 +1943,7 @@ a.mail-list-link {
 #install-dbuser-label,
 #install-dbpass-label,
 #install-dbdata-label,
+#install-admin-label,
 #install-tz-desc {
        float: left;
        width: 250px;
@@ -1954,7 +1955,8 @@ a.mail-list-link {
 #install-dbhost,
 #install-dbuser,
 #install-dbpass,
-#install-dbdata {
+#install-dbdata,
+#install-admin {
        float: left;
        width: 200px;
        margin-left: 20px;
@@ -1964,6 +1966,7 @@ a.mail-list-link {
 #install-dbuser-end,
 #install-dbpass-end,
 #install-dbdata-end,
+#install-admin-end,
 #install-tz-end {
        clear: both;
 }

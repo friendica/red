@@ -103,10 +103,15 @@ function register_post(&$a) {
 		$err .= t('Not a valid email address.') . EOL;
 
 	// Disallow somebody creating an account using openid that uses the admin email address,
-	// since openid bypasses email verification.
+	// since openid bypasses email verification. We'll allow it if there is not yet an admin account.
 
-	if((x($a->config,'admin_email')) && (strcasecmp($email,$a->config['admin_email']) == 0) && strlen($openid_url))
-		$err .= t('Cannot use that email.') . EOL;
+	if((x($a->config,'admin_email')) && (strcasecmp($email,$a->config['admin_email']) == 0) && strlen($openid_url)) {
+		$r = q("SELECT * FROM `user` WHERE `email` = '%s' LIMIT 1",
+			dbesc($email)
+		);
+		if(count($r))
+			$err .= t('Cannot use that email.') . EOL;
+	}
 
 	$nickname = $_POST['nickname'] = strtolower($nickname);
 
