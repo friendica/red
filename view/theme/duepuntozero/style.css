@@ -1943,7 +1943,6 @@ a.mail-list-link {
 #install-dbuser-label,
 #install-dbpass-label,
 #install-dbdata-label,
-#install-admin-label,
 #install-tz-desc {
        float: left;
        width: 250px;
@@ -1955,8 +1954,7 @@ a.mail-list-link {
 #install-dbhost,
 #install-dbuser,
 #install-dbpass,
-#install-dbdata,
-#install-admin {
+#install-dbdata {
        float: left;
        width: 200px;
        margin-left: 20px;
@@ -1966,7 +1964,6 @@ a.mail-list-link {
 #install-dbuser-end,
 #install-dbpass-end,
 #install-dbdata-end,
-#install-admin-end,
 #install-tz-end {
        clear: both;
 }
@@ -2573,6 +2570,38 @@ a.mail-list-link {
 #adminpage table#users img { width: 16px; height: 16px; }
 #adminpage table tr:hover { background-color: #bbc7d7; }
 #adminpage .selectall { text-align: right; }
+
+/*
+ * UPDATE
+ */
+.popup { 	
+	width: 100%; height: 100%;
+	top:0px; left:0px;
+	position: absolute;
+	display: none;
+}
+
+.popup .background {
+	background-color: rgba(0,0,0,128);
+	opacity: 0.5;
+	width: 100%; height: 100%;
+	position: absolute;
+	top:0px; left:0px;
+}
+.popup .panel {
+	top:25%;left:25%;width:50%;height:50%;
+	padding: 1em;
+	position: absolute;
+	border: 4px solid #000000;
+	background-color: #FFFFFF;
+}
+.popup .panel .panel_text { display: block; overflow: auto; height: 80%; } 
+.popup .panel .panel_in { width: 100%; height: 100%;	position: relative; }
+.popup .panel .panel_actions {  width: 100%; bottom: 4px; left: 0px; position: absolute; }
+.panel_text .progress { width: 50%; overflow: hidden; height: auto; border: 1px solid #cccccc; margin-bottom: 5px}
+.panel_text .progress span {float: right; display: block; width: 25%; background-color: #eeeeee; text-align: right;}
+
+
 /**
  * ICONS
  */
