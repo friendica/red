@@ -30,6 +30,8 @@
 	{{ inc field_checkbox.tpl with $field=$block_public }}{{ endinc }}
 	{{ inc field_checkbox.tpl with $field=$force_publish }}{{ endinc }}
 	{{ inc field_checkbox.tpl with $field=$no_community_page }}{{ endinc }}
+	{{ inc field_checkbox.tpl with $field=$ostatus_disabled }}{{ endinc }}
+	{{ inc field_checkbox.tpl with $field=$dfrn_only }}{{ endinc }}
 	{{ inc field_input.tpl with $field=$global_directory }}{{ endinc }}
 	
 	<div class="submit"><input type="submit" name="page_site" value="$submit" /></div>
