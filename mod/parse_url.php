@@ -39,6 +39,12 @@ function parse_url_content(&$a) {
 		killme();
 	}
 
+	if(strpos($s,'<title>')) {
+		$title = substr($s,strpos($s,'<title>')+7,64);
+		if(strpos($title,'<') !== false)
+			$title = substr($title,0,strpos($title,'<'));
+	}
+
 	$config = HTMLPurifier_Config::createDefault();
 	$config->set('Cache.DefinitionImpl', null);
 
