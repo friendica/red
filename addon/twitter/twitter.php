@@ -243,8 +243,11 @@ function twitter_post_hook(&$a,&$b) {
 					$msg .= '... ' . $shortlink;
 				}
                 // and now tweet it :-)
-				if(strlen($msg))
-					$tweet->post('statuses/update', array('status' => $msg));
+				if(strlen($msg)) {
+					$result = $tweet->post('statuses/update', array('status' => $msg));
+					logger('twitter_post returns: ' . $result);
+				}
+
 			}
 		}
 	}
