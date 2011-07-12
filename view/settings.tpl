@@ -82,11 +82,11 @@ $hide_wall
 <div id="settings-notify-desc">$lbl_not </div>
 
 <div class="group">
-{{inc field_checkbox.tpl with $field=$notify1 }}{{endinc}}
-{{inc field_checkbox.tpl with $field=$notify2 }}{{endinc}}
-{{inc field_checkbox.tpl with $field=$notify3 }}{{endinc}}
-{{inc field_checkbox.tpl with $field=$notify4 }}{{endinc}}
-{{inc field_checkbox.tpl with $field=$notify5 }}{{endinc}}
+{{inc field_intcheckbox.tpl with $field=$notify1 }}{{endinc}}
+{{inc field_intcheckbox.tpl with $field=$notify2 }}{{endinc}}
+{{inc field_intcheckbox.tpl with $field=$notify3 }}{{endinc}}
+{{inc field_intcheckbox.tpl with $field=$notify4 }}{{endinc}}
+{{inc field_intcheckbox.tpl with $field=$notify5 }}{{endinc}}
 </div>
 
 
