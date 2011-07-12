@@ -300,6 +300,8 @@ function probe_url($url) {
 		if(count($links)) {
 			logger('probe_url: found lrdd links: ' . print_r($links,true), LOGGER_DATA);
 			foreach($links as $link) {
+				if($link['@attributes']['rel'] === NAMESPACE_ZOT)
+					$zot = unamp($link['@attributes']['href']);
 				if($link['@attributes']['rel'] === NAMESPACE_DFRN)
 					$dfrn = unamp($link['@attributes']['href']);
 				if($link['@attributes']['rel'] === 'salmon')
@@ -379,6 +381,25 @@ function probe_url($url) {
 		}
 	}	
 
+	if(strlen($zot)) {
+		$s = fetch_url($zot);
+		if($s) {
+			$j = json_decode($s);
+			if($j) {
+				$network = NETWORK_ZOT;
+				$vcard   = array(
+					'fn'    => $j->name, 
+					'nick'  => $j->username, 
+					'photo' => $j->photo
+				);
+				$profile  = $j->url;
+				$notify   = $j->post;
+				$key      = $j->pubkey;
+				$poll     = 'N/A';
+			}
+		}
+	}
+
 	if(strlen($dfrn)) {
 		$ret = scrape_dfrn($dfrn);
 		if(is_array($ret) && x($ret,'dfrn-request')) {
@@ -390,7 +411,7 @@ function probe_url($url) {
 		}
 	}
 
-	if($network !== NETWORK_DFRN && $network !== NETWORK_MAIL) {
+	if($network !== NETWORK_ZOT && $network !== NETWORK_DFRN && $network !== NETWORK_MAIL) {
 		$network  = NETWORK_OSTATUS;
 		$priority = 0;
 
@@ -549,6 +570,7 @@ function probe_url($url) {
 	$result['priority'] = $priority;
 	$result['network'] = $network;
 	$result['alias'] = $alias;
+	$result['key'] = $key;
 
 	logger('probe_url: ' . print_r($result,true), LOGGER_DEBUG);
 

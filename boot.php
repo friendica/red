@@ -89,6 +89,7 @@ define ( 'PAGE_FREELOVE',          3 );
  * Network and protocol family types 
  */
 
+define ( 'NETWORK_ZOT',              'zot!');    // Zot!
 define ( 'NETWORK_DFRN',             'dfrn');    // Friendika, Mistpark, other DFRN implementations
 define ( 'NETWORK_OSTATUS',          'stat');    // status.net, identi.ca, GNU-social, other OStatus implementations
 define ( 'NETWORK_FEED',             'feed');    // RSS/Atom feeds with no known "post/notify" protocol
@@ -117,6 +118,7 @@ define ( 'NOTIFY_MAIL',    0x0010 );
  * various namespaces we may need to parse
  */
 
+define ( 'NAMESPACE_ZOT',             'http://purl.org/macgirvin/zot' );
 define ( 'NAMESPACE_DFRN' ,           'http://purl.org/macgirvin/dfrn/1.0' ); 
 define ( 'NAMESPACE_THREAD' ,         'http://purl.org/syndication/thread/1.0' );
 define ( 'NAMESPACE_TOMB' ,           'http://purl.org/atompub/tombstones/1.0' );
