@@ -490,6 +490,7 @@ function settings_content(&$a) {
 		'$h_pass' 	=> t('Password Settings'),
 		'$password1'=> array('npassword', t('New Password:'), '', ''),
 		'$password2'=> array('confirm', t('Confirm:'), '', t('Leave password fields blank unless changing')),
+		'$oid_enable' => (! get_config('system','no_openid')),
 		'$openid'	=> $openid_field,
 		
 		'$h_basic' 	=> t('Basic Settings'),

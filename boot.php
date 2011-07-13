@@ -4,7 +4,7 @@ set_time_limit(0);
 ini_set('pcre.backtrack_limit', 250000);
 
 
-define ( 'FRIENDIKA_VERSION',      '2.2.1038' );
+define ( 'FRIENDIKA_VERSION',      '2.2.1039' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
 define ( 'DB_UPDATE_VERSION',      1075      );
 
@@ -2058,6 +2058,9 @@ function get_tags($s) {
 				// we might be inside a bbcode color tag - leave it alone
 				continue;
 			}
+			// ignore strictly numeric tags like #1
+			if((strpos($mtch,'#') === 0) && ctype_digit(substr($mtch,1)))
+				continue;
 			if(substr($mtch,-1,1) === '.')
 				$ret[] = substr($mtch,0,-1);
 			else
