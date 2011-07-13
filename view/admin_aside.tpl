@@ -17,6 +17,10 @@
 	<li class='admin link $admin.plugins.2'><a href='$admin.plugins.0'>$admin.plugins.1</a></li>
 </ul>
 
+<ul class='admin linklist'>
+	<li class='admin link $admin.update.2'><a href='$admin.update.0'>$admin.update.1</a></li>
+</ul>
+
 
 {{ if $admin.plugins_admin }}<h4>Plugins</h4>{{ endif }}
 <ul class='admin linklist'>
@@ -31,7 +35,3 @@
 	<li class='admin link $admin.logs.2'><a href='$admin.logs.0'>$admin.logs.1</a></li>
 </ul>
 
-
-<ul class='admin linklist'>
-	<li class='admin link $admin.update.2'><a href='$admin.update.0'>$admin.update.1</a></li>
-</ul>
