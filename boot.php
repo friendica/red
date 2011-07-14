@@ -4,7 +4,7 @@ set_time_limit(0);
 ini_set('pcre.backtrack_limit', 250000);
 
 
-define ( 'FRIENDIKA_VERSION',      '2.2.1040' );
+define ( 'FRIENDIKA_VERSION',      '2.2.1041' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
 define ( 'DB_UPDATE_VERSION',      1075      );
 
@@ -758,11 +758,13 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
 	$curl_time = intval(get_config('system','curl_timeout'));
 	curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
 
-	if(!is_array($headers)) {
-		$headers = array('Expect:');
-	} else {
-		if(!in_array('Expect:', $headers)) {
-			array_push($headers, 'Expect:');
+	if(defined('LIGHTTPD')) {
+		if(!is_array($headers)) {
+			$headers = array('Expect:');
+		} else {
+			if(!in_array('Expect:', $headers)) {
+				array_push($headers, 'Expect:');
+			}
 		}
 	}
 
