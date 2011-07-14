@@ -388,8 +388,8 @@ function probe_url($url) {
 			if($j) {
 				$network = NETWORK_ZOT;
 				$vcard   = array(
-					'fn'    => $j->name, 
-					'nick'  => $j->username, 
+					'fn'    => $j->fullname, 
+					'nick'  => $j->nickname, 
 					'photo' => $j->photo
 				);
 				$profile  = $j->url;
