@@ -88,9 +88,9 @@ function nav(&$a) {
 
 	if(local_user()) {
 
-		$nav['network'] = array('network', t('Network'), "", t('Conversations from my friends'));
+		$nav['network'] = array('network', t('Network'), "", t('Conversations from your friends'));
 
-		$nav['home'] = array('profile/' . $a->user['nickname'], t('Home'), "", t('My posts and conversations'));
+		$nav['home'] = array('profile/' . $a->user['nickname'], t('Home'), "", t('Your posts and conversations'));
 
 
 		/* only show friend requests for normal pages. Other page types have automatic friendship. */
