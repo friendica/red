@@ -3,7 +3,7 @@
  /**
   * Friendika admin
   */
-  
+require_once("include/remoteupdate.php");
  
 function admin_init(&$a) {
 	if(!is_site_admin()) {
@@ -36,10 +36,13 @@ function admin_post(&$a){
 						}
 				}
 				goaway($a->get_baseurl() . '/admin/plugins/' . $a->argv[2] );
-				return; // NOTREACHED							
+				return; // NOTREACHED
 				break;
 			case 'logs':
 				admin_page_logs_post($a);
+				break;
+			case 'update':
+				admin_page_remoteupdate_post($a);
 				break;
 		}
 	}
@@ -62,7 +65,8 @@ function admin_content(&$a) {
 	$aside = Array(
 		'site'	 =>	Array($a->get_baseurl()."/admin/site/", t("Site") , "site"),
 		'users'	 =>	Array($a->get_baseurl()."/admin/users/", t("Users") , "users"),
-		'plugins'=>	Array($a->get_baseurl()."/admin/plugins/", t("Plugins") , "plugins")
+		'plugins'=>	Array($a->get_baseurl()."/admin/plugins/", t("Plugins") , "plugins"),
+		'update' =>	Array($a->get_baseurl()."/admin/update/", t("Update") , "update")
 	);
 	
 	/* get plugins admin page */
@@ -106,7 +110,10 @@ function admin_content(&$a) {
 				break;
 			case 'logs':
 				$o = admin_page_logs($a);
-				break;				
+				break;
+			case 'update':
+				$o = admin_page_remoteupdate($a);
+				break;
 			default:
 				notice( t("Item not found.") );
 		}
@@ -655,3 +662,54 @@ function admin_page_logs(&$a){
 	));
 }
 
+function admin_page_remoteupdate_post(&$a) {
+	// this function should be called via ajax post
+	if(!is_site_admin()) {
+		return login(false);
+	}
+
+	
+	if (x($_POST,'remotefile') && $_POST['remotefile']!=""){
+		$remotefile = $_POST['remotefile'];
+		$ftpdata = (x($_POST['ftphost'])?$_POST:false);
+		doUpdate($remotefile, $ftpdata);
+	} else {
+		echo "No remote file to download. Abort!";
+	}
+
+	killme();
+}
+
+function admin_page_remoteupdate(&$a) {
+	if(!is_site_admin()) {
+		return login(false);
+	}
+
+	$canwrite = canWeWrite();
+	$canftp = function_exists('ftp_connect');
+	
+	$needupdate = true;
+	$u = checkUpdate();
+	if (!is_array($u)){
+		$needupdate = false;
+		$u = array('','','');
+	}
+	
+	$tpl = get_markup_template("admin_remoteupdate.tpl");
+	return replace_macros($tpl, array(
+		'$baseurl' => $a->get_baseurl(),
+		'$submit' => t("Update now"),
+		'$close' => t("Close"),
+		'$localversion' => FRIENDIKA_VERSION,
+		'$remoteversion' => $u[1],
+		'$needupdate' => $needupdate,
+		'$canwrite' => $canwrite,
+		'$canftp'	=> $canftp,
+		'$ftphost'	=> array('ftphost', t("FTP Host"), '',''),
+		'$ftppath'	=> array('ftppath', t("FTP Path"), '/',''),
+		'$ftpuser'	=> array('ftpuser', t("FTP User"), '',''),
+		'$ftppwd'	=> array('ftppwd', t("FTP Password"), '',''),
+		'$remotefile'=>array('remotefile','', $u['2'],'')
+	));
+	
+}
