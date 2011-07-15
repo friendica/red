@@ -105,6 +105,13 @@ define ( 'NETWORK_FACEBOOK',         'face');    // Facebook API
 define ( 'MAX_LIKERS',    75);
 
 /**
+ * Communication timeout
+ */
+
+define ( 'ZCURL_TIMEOUT' , (-1));
+
+
+/**
  * email notification options
  */
 

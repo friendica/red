@@ -394,7 +394,7 @@ function probe_url($url) {
 				);
 				$profile  = $j->url;
 				$notify   = $j->post;
-				$key      = $j->pubkey;
+				$pubkey   = $j->pubkey;
 				$poll     = 'N/A';
 			}
 		}
@@ -570,7 +570,7 @@ function probe_url($url) {
 	$result['priority'] = $priority;
 	$result['network'] = $network;
 	$result['alias'] = $alias;
-	$result['key'] = $key;
+	$result['pubkey'] = $pubkey;
 
 	logger('probe_url: ' . print_r($result,true), LOGGER_DEBUG);
 
