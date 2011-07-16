@@ -4,7 +4,7 @@ set_time_limit(0);
 ini_set('pcre.backtrack_limit', 250000);
 
 
-define ( 'FRIENDIKA_VERSION',      '2.2.1042' );
+define ( 'FRIENDIKA_VERSION',      '2.2.1043' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
 define ( 'DB_UPDATE_VERSION',      1075      );
 
@@ -774,8 +774,8 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
 			}
 		}
 	}
-
-	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+	if($headers)
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
 	$check_cert = get_config('system','verifyssl');
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, (($check_cert) ? true : false));
