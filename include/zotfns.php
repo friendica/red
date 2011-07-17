@@ -1,7 +1,5 @@
 <?php
 
-require_once('include/text.php');
-
 function zot_get($url,$args) {
 	$argstr = '';
 	foreach($args as $k => $v) {

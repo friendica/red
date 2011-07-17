@@ -23,6 +23,9 @@
  *         $a->config['facebook']['appid'] = 'xxxxxxxxxxx';
  *         $a->config['facebook']['appsecret'] = 'xxxxxxxxxxxxxxx';
  *      Replace with the settings Facebook gives you.
+ *   d. Navigate to Set Web->Site URL & Domain -> Website Settings.  Set 
+ *      Site URL to yoursubdomain.yourdomain.com. Set Site Domain to your 
+ *      yourdomain.com.
  * 2. Enable the facebook plugin by including it in .htconfig.php - e.g. 
  *     $a->config['system']['addon'] = 'plugin1,plugin2,facebook';
  * 3. Visit the Facebook Settings section of the "Settings->Plugin Settings" page.

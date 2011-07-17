@@ -129,6 +129,10 @@ $a->config['facebook']['appsecret'] = 'xxxxxxxxxxxxxxx';
 
 Replace with the settings Facebook gives you.
 
+d. Navigate to Set Web->Site URL & Domain -> Website Settings.  Set Site URL
+to yoursubdomain.yourdomain.com.  Set Site Domain to your yourdomain.com.
+
+
 Visit the Facebook Settings section of the "Settings->Plugin Settings" page.
 and click 'Install Facebook Connector'.
 
