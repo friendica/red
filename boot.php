@@ -1,9 +1,5 @@
 <?php
 
-set_time_limit(0);
-ini_set('pcre.backtrack_limit', 250000);
-
-
 define ( 'FRIENDIKA_VERSION',      '2.2.1044' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
 define ( 'DB_UPDATE_VERSION',      1075      );
@@ -179,20 +175,28 @@ define ( 'GRAVITY_COMMENT',      6);
  *
  */
 
-if (get_magic_quotes_gpc()) {
-    $process = array(&$_GET, &$_POST, &$_COOKIE, &$_REQUEST);
-    while (list($key, $val) = each($process)) {
-        foreach ($val as $k => $v) {
-            unset($process[$key][$k]);
-            if (is_array($v)) {
-                $process[$key][stripslashes($k)] = $v;
-                $process[] = &$process[$key][stripslashes($k)];
-            } else {
-                $process[$key][stripslashes($k)] = stripslashes($v);
-            }
-        }
-    }
-    unset($process);
+function startup() {
+	error_reporting(E_ERROR | E_WARNING | E_PARSE);
+	set_time_limit(0);
+	ini_set('pcre.backtrack_limit', 250000);
+
+
+	if (get_magic_quotes_gpc()) {
+    	$process = array(&$_GET, &$_POST, &$_COOKIE, &$_REQUEST);
+	    while (list($key, $val) = each($process)) {
+    	    foreach ($val as $k => $v) {
+        	    unset($process[$key][$k]);
+            	if (is_array($v)) {
+                	$process[$key][stripslashes($k)] = $v;
+	                $process[] = &$process[$key][stripslashes($k)];
+    	        } else {
+        	        $process[$key][stripslashes($k)] = stripslashes($v);
+            	}
+	        }
+    	}
+	    unset($process);
+	}
+
 }
 
 /*
@@ -259,6 +263,8 @@ class App {
 		$this->pager= array();
 
 		$this->query_string = '';
+
+		startup();
 
 		$this->scheme = ((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']))	?  'https' : 'http' );
 
