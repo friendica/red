@@ -16,6 +16,17 @@
 	</div>
 	<div id="register-openid-end" ></div>
 
+{{ if $invitations }}
+
+	<p id="register-invite-desc">$invite_desc</p>
+	<div id="register-invite-wrapper" >
+		<label for="register-invite" id="label-register-invite" >$invite_label</label>
+		<input type="text" maxlength="60" size="32" name="invite_id" id="register-invite" value="$invite_id" >
+	</div>
+	<div id="register-name-end" ></div>
+
+{{ endif }}
+
 
 	<div id="register-name-wrapper" >
 		<label for="register-name" id="label-register-name" >$namelabel</label>

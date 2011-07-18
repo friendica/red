@@ -32,7 +32,11 @@ function register_post(&$a) {
 		break;
 	}
 
+	$using_invites = get_config('system','invitation_only');
+	$num_invites = get_config('system','number_invites');
 
+
+	$invite_id  = ((x($_POST,'invite_id'))  ? notags(trim($_POST['invite_id']))  : '');
 	$username   = ((x($_POST,'username'))   ? notags(trim($_POST['username']))   : '');
 	$nickname   = ((x($_POST,'nickname'))   ? notags(trim($_POST['nickname']))   : '');
 	$email      = ((x($_POST,'email'))      ? notags(trim($_POST['email']))      : '');
@@ -43,6 +47,19 @@ function register_post(&$a) {
 	$netpublish = ((strlen(get_config('system','directory_submit_url'))) ? $publish : 0);
 		
 	$tmp_str = $openid_url;
+
+	if($using_invites) {
+		if(! $invite_id) {
+			notice( t('An invitation is required.') . EOL);
+			return;
+		}
+		$r = q("select * from register where `hash` = '%s' limit 1", dbesc($invite_id));
+		if(! results($r)) {
+			notice( t('Invitation could not be verified.') . EOL);
+			return;
+		}
+	} 
+
 	if((! x($username)) || (! x($email)) || (! x($nickname))) {
 		if($openid_url) {
 			if(! validate_url($tmp_str)) {
@@ -329,6 +346,12 @@ function register_post(&$a) {
 
 
 	if( $a->config['register_policy'] == REGISTER_OPEN ) {
+
+		if($using_invites && $invite_id) {
+			q("delete * from register where hash = '%s' limit 1", dbesc($invite_id));
+			set_pconfig($newuid,'system','invites_remaining',$num_invites);
+		}
+
 		$email_tpl = get_intltext_template("register_open_eml.tpl");
 		$email_tpl = replace_macros($email_tpl, array(
 				'$sitename' => $a->config['sitename'],
@@ -376,6 +399,10 @@ function register_post(&$a) {
 		else
 			push_lang('en');
 
+		if($using_invites && $invite_id) {
+			q("delete * from register where hash = '%s' limit 1", dbesc($invite_id));
+			set_pconfig($newuid,'system','invites_remaining',$num_invites);
+		}
 
 		$email_tpl = get_intltext_template("register_verify_eml.tpl");
 		$email_tpl = replace_macros($email_tpl, array(
@@ -434,6 +461,7 @@ function register_content(&$a) {
 	$openid_url   = ((x($_POST,'openid_url'))   ? $_POST['openid_url']   : ((x($_GET,'openid_url'))   ? $_GET['openid_url']            : ''));
 	$nickname     = ((x($_POST,'nickname'))     ? $_POST['nickname']     : ((x($_GET,'nickname'))     ? $_GET['nickname']              : ''));
 	$photo        = ((x($_POST,'photo'))        ? $_POST['photo']        : ((x($_GET,'photo'))        ? hex2bin($_GET['photo'])        : ''));
+	$invite_id    = ((x($_POST,'invite_id'))    ? $_POST['invite_id']    : ((x($_GET,'invite_id'))    ? $_GET['invite_id']             : ''));
 
 	$noid = get_config('system','no_openid');
 
@@ -476,6 +504,10 @@ function register_content(&$a) {
 	$o = get_markup_template("register.tpl");
 	$o = replace_macros($o, array(
 		'$oidhtml' => $oidhtml,
+		'$invitations' => get_config('system','invitation_only'),
+		'$invite_desc' => t('Membership on this site is by invitation only.'),
+		'$invite_label' => t('Your invitation ID: '),
+		'$invite_id' => $invite_id,
 		'$realpeople' => $realpeople,
 		'$regtitle'  => t('Registration'),
 		'$registertext' =>((x($a->config,'register_text'))

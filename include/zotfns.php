@@ -1,5 +1,8 @@
 <?php
 
+
+require_once('include/salmon.php');
+
 function zot_get($url,$args) {
 	$argstr = '';
 	foreach($args as $k => $v) {

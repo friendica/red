@@ -20,7 +20,7 @@ function invite_post(&$a) {
 
 	$total = 0;
 
-	if(get_config('system','invitations_only')) {
+	if(get_config('system','invitation_only')) {
 		$invonly = true;
 		$x = get_pconfig(local_user(),'system','invites_remaining');
 		if((! $x) && (! is_site_admin()))
@@ -39,12 +39,16 @@ function invite_post(&$a) {
 		if($invonly && ($x || is_site_admin())) {
 			$code = autoname(8) . srand(1000,9999);
 			$nmessage = str_replace('$invite_code',$code,$message);
-			// store in db
+
+			$r = q("INSERT INTO `register` (`hash`,`created`) VALUES ('%s', '%s') ",
+				dbesc($code),
+				dbesc(datetime_convert())
+			);
 
 			if(! is_site_admin()) {
 				$x --;
 				if($x >= 0)
-					set_pconfig(local_user(),'system','invites_remaining,$x);
+					set_pconfig(local_user(),'system','invites_remaining',$x);
 				else
 					return;
 			}
@@ -81,7 +85,7 @@ function invite_content(&$a) {
 	$tpl = get_markup_template('invite.tpl');
 	$invonly = false;
 
-	if(get_config('system','invitations_only')) {
+	if(get_config('system','invitation_only')) {
 		$invonly = true;
 		$x = get_pconfig(local_user(),'system','invites_remaining');
 		if((! $x) && (! is_site_admin())) {

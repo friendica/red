@@ -13,7 +13,7 @@ function contacts_init(&$a) {
 
 	$inv = '<div class="side-link" id="side-invite-link" ><a href="invite" >' . t("Invite Friends") . '</a></div>';
 
-	if(get_config('system','invitations_only')) {
+	if(get_config('system','invitation_only')) {
 		$x = get_pconfig(local_user(),'system','invites_remaining');
 		if($x || is_site_admin()) {
 			$a->page['aside'] .= '<div class="side-link" id="side-invite-remain">' 
