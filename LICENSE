@@ -1,7 +1,8 @@
 The Friendika project is distributed under the following license terms:
 
 * This software is provided for any use with no license terms or restrictions.
-* No guarantee is provided. Use at your own risk.
+
+No guarantee is provided. Use at your own risk.
 
 Components packaged with this software may fall under different license terms.
 
@@ -13,6 +14,7 @@ ajax-upload  - MIT
 simplepie    - MIT
 LightOpenID  - MIT
 HTML5        - MIT
+jQuery       - MIT
 TinyMCE      - LGPL
 phpsec       - LGPL
 HTMLPurifer  - LGPL
