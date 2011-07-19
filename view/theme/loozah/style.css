@@ -1568,7 +1568,7 @@ padding: 5px 10px 0px;
 }
 
 #acl-wrapper {
-	width: 805px;
+	width: 690px;
 	float:left;
 }
 #acl-search {
@@ -1594,14 +1594,14 @@ padding: 5px 10px 0px;
 }
 
 #acl-list {
-	width: 805px;
 	height: 210px;
 	border: 1px solid #cccccc;
 	clear: both;
 	margin-top: 30px;
+	overflow: auto;
 }
 #acl-list-content {
-	overflow: auto;
+
 }
 .acl-list-item {
 	display: block;

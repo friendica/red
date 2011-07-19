@@ -1490,7 +1490,7 @@ input#dfrn-url {
 }
 
 #acl-wrapper {
-	width: 805px;
+	width: 690px;
 	float:left;
 }
 #acl-search {
@@ -1516,14 +1516,14 @@ input#dfrn-url {
 }
 
 #acl-list {
-	width: 805px;
 	height: 210px;
 	border: 1px solid #cccccc;
 	clear: both;
 	margin-top: 30px;
+	overflow: auto;
 }
 #acl-list-content {
-	overflow: auto;
+	
 }
 .acl-list-item {
 	display: block;

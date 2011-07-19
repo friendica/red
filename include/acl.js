@@ -11,7 +11,7 @@ function ACL(backend_url, preset){
 	that.deny_cid  = (preset[2] || []);
 	that.deny_gid  = (preset[3] || []);
 	that.group_uids = [];
-	that.nw = 5; that.nh = 5;
+	that.nw = 4; //items per row. should be calulated from #acl-list.width
 	
 	that.list_content = $("#acl-list-content");
 	that.item_tpl = unescape($(".acl-list-item[rel=acl-template]").html());
