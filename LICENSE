@@ -1,0 +1,23 @@
+The Friendika project is distributed under the following license terms:
+
+* This software is provided for any use with no license terms or restrictions.
+* No guarantee is provided. Use at your own risk.
+
+Components packaged with this software may fall under different license terms.
+
+cropper      - BSD
+TwitterOAuth - BSD
+markdown     - BSD
+slinky       - BSD
+ajax-upload  - MIT
+simplepie    - MIT
+LightOpenID  - MIT
+HTML5        - MIT
+TinyMCE      - LGPL
+phpsec       - LGPL
+HTMLPurifer  - LGPL
+Facebook SDK - Apache
+
+Addons, plugins, and themes are also provided under their own license terms.
+
+
