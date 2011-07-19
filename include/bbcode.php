@@ -3,6 +3,13 @@
 require_once("include/oembed.php");
 require_once('include/event.php');
 
+
+
+function stripcode_br_cb($s) {
+	return '[code]' . str_replace('<br />', '', $s[1]) . '[/code]';
+}
+
+
 	// BBcode 2 HTML was written by WAY2WEB.net
 	// extended to work with Mistpark/Friendika - Mike Macgirvin
 
@@ -89,9 +96,16 @@ function bbcode($Text,$preserve_nl = false) {
 	$Text = preg_replace("(\[font=(.*?)\](.*?)\[\/font\])","<span style=\"font-family: $1;\">$2</span>",$Text);
 
 	// Declare the format for [code] layout
+
+	$Text = preg_replace_callback("/\[code\](.*?)\[\/code\]/is",'stripcode_br_cb',$Text);
+
 	$CodeLayout = '<code>$1</code>';
 	// Check for [code] text
 	$Text = preg_replace("/\[code\](.*?)\[\/code\]/is","$CodeLayout", $Text);
+
+
+
+
 	// Declare the format for [quote] layout
 	$QuoteLayout = '<blockquote>$1</blockquote>';                     
 	// Check for [quote] text
