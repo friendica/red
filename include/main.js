@@ -53,8 +53,11 @@
 			//console.log(id);
 		});
 		
+		/* setup field_richtext */
+		setupFieldRichtext();
+		
 		/* load tinyMCE if needed and setup field_richtext */
-		if(typeof tinyMCE == "undefined") {
+		/*if(typeof tinyMCE == "undefined") {
 			window.tinyMCEPreInit = {
 				suffix:"",
 				base: baseurl+"/library/tinymce/jscripts/tiny_mce/",
@@ -62,8 +65,8 @@
 			};
 			$.getScript(baseurl	+"/library/tinymce/jscripts/tiny_mce/tiny_mce_src.js", setupFieldRichtext);
 		} else {
-			setupFieldRichtext();
-		}
+		}*/
+		
 		
 		
 		/* nav update event  */
@@ -364,7 +367,6 @@ function setupFieldRichtext(){
 	});
 }
 
-
 /** 
  * sprintf in javascript 
  *	"{0} and {1}".format('zero','uno'); 
@@ -376,4 +378,11 @@ String.prototype.format = function() {
         formatted = formatted.replace(regexp, arguments[i]);
     }
     return formatted;
+};
+// Array Remove
+Array.prototype.remove = function(item) {
+  to=undefined; from=this.indexOf(item);
+  var rest = this.slice((to || from) + 1 || this.length);
+  this.length = from < 0 ? this.length + from : from;
+  return this.push.apply(this, rest);
 };
