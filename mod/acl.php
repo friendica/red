@@ -50,7 +50,7 @@ function acl_init(&$a){
 	foreach($r as $g){
 		$groups[] = array(
 			"type"  => "g",
-			"photo" => "images/default-group-mm.jpg",
+			"photo" => "images/default-group-mm.png",
 			"name"  => $g['name'],
 			"id"	=> intval($g['id']),
 			"uids"  => array_map("intval", explode(",",$g['uids']))
