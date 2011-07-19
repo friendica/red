@@ -19,6 +19,7 @@
     <Link rel="http://webfinger.net/rel/avatar"
           type="image/jpeg"
           href="$photo" />
+	$dspr
     <Link rel="salmon" 
           href="$salmon" />
     <Link rel="http://salmon-protocol.org/ns/salmon-replies" 

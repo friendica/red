@@ -379,6 +379,7 @@ CREATE TABLE IF NOT EXISTS `session` (
 
 CREATE TABLE IF NOT EXISTS `user` (
   `uid` int(11) NOT NULL AUTO_INCREMENT,
+  `guid` char(16) NOT NULL,
   `username` char(255) NOT NULL,
   `password` char(255) NOT NULL,
   `nickname` char(255) NOT NULL,

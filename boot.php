@@ -2,7 +2,7 @@
 
 define ( 'FRIENDIKA_VERSION',      '2.2.1045' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
-define ( 'DB_UPDATE_VERSION',      1075      );
+define ( 'DB_UPDATE_VERSION',      1076      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -2957,3 +2957,15 @@ function return_bytes ($size_str) {
     }
 }}
 
+function generate_guid() {
+	$found = true;
+	do {
+		$guid = substr(random_string(),0,16);
+		$x = q("SELECT `uid` FROM `user` WHERE `guid` = '%s' LIMIT 1",
+			dbesc($guid)
+		);
+		if(! count($x))
+			$found = false;
+	} while ($found == true );
+	return $guid;
+}
