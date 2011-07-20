@@ -27,6 +27,20 @@ function xrd_content(&$a) {
 	header('Access-Control-Allow-Origin: *');
 	header("Content-type: text/xml");
 
+	$dspr_enabled = get_config('system','diaspora_enabled');
+
+	if($dspr_enabled) {
+		$tpl = file_get_contents('view/xrd_diaspora.tpl');
+		$dspr = replace_macros($tpl,array(
+			'$baseurl' => $a->get_baseurl(),
+			'$dspr_guid' => $r[0]['guid'],
+			'$dspr_key' => base64_encode($r[0]['pubkey'])
+		));
+	}
+	else
+		$dspr = '';
+
+
 	$tpl = file_get_contents('view/xrd_person.tpl');
 
 	$o = replace_macros($tpl, array(
@@ -34,6 +48,7 @@ function xrd_content(&$a) {
 		'$profile_url' => $a->get_baseurl() . '/profile/'       . $r[0]['nickname'],
 		'$atom'        => $a->get_baseurl() . '/dfrn_poll/'     . $r[0]['nickname'],
 		'$photo'       => $a->get_baseurl() . '/photo/profile/' . $r[0]['uid']      . '.jpg',
+		'$dspr'        => $dspr,
 		'$salmon'      => $a->get_baseurl() . '/salmon/'        . $r[0]['nickname'],
 		'$salmen'      => $a->get_baseurl() . '/salmon/'        . $r[0]['nickname'] . '/mention',
 		'$modexp'      => 'data:application/magic-public-key,'  . $salmon_key

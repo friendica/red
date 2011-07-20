@@ -260,7 +260,7 @@ function statusnet_settings(&$a,&$s) {
 			$s .= '<input id="statusnet-token" type="hidden" name="statusnet-token" value="'.$token.'" />';
 			$s .= '<input id="statusnet-token2" type="hidden" name="statusnet-token2" value="'.$request_token['oauth_token_secret'].'" />';
 			$s .= '</div><div class="clear"></div>';
-			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
+			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="statusnet-submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
 			$s .= '<h4>'.t('Cancel Connection Process').'</h4>';
 			$s .= '<div id="statusnet-cancel-wrapper">';
 			$s .= '<p>'.t('Current StatusNet API is').': '.$api.'</p>';

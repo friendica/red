@@ -140,7 +140,7 @@ function install_content(&$a) {
 		'$dbpass' => notags(trim($_POST['dbpass'])),
 		'$dbdata' => notags(trim($_POST['dbdata'])),
 		'$phpath' => $phpath,
-		'$adminemail' => notags(trim($_POST['adminemail']))
+		'$adminmail' => notags(trim($_POST['adminmail']))
 	));
 
 	return $o;

@@ -39,7 +39,6 @@ function friendika_content(&$a) {
 
 	$o .= '<p></p><p>';
 
-	$o .= 'View <a href="LICENSE">License</a>' . '<br /><br />';
 	$o .= t('This is Friendika version') . ' ' . FRIENDIKA_VERSION . ' ';
 	$o .= t('running at web location') . ' ' . $a->get_baseurl() . '</p><p>';
 

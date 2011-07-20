@@ -435,11 +435,6 @@ function settings_content(&$a) {
 	));
 
 
-
-
-
-
-
 	$invisible = (((! $profile['publish']) && (! $profile['net-publish']))
 		? true : false);
 
@@ -495,6 +490,7 @@ function settings_content(&$a) {
 		'$h_pass' 	=> t('Password Settings'),
 		'$password1'=> array('npassword', t('New Password:'), '', ''),
 		'$password2'=> array('confirm', t('Confirm:'), '', t('Leave password fields blank unless changing')),
+		'$oid_enable' => (! get_config('system','no_openid')),
 		'$openid'	=> $openid_field,
 		
 		'$h_basic' 	=> t('Basic Settings'),
@@ -527,11 +523,11 @@ function settings_content(&$a) {
 		
 		'$h_not' 	=> t('Notification Settings'),
 		'$lbl_not' 	=> t('Send a notification email when:'),
-		'$notify1'	=> array('notify1', t('You receive an introduction'), ($notify & NOTIFY_INTRO), ''),
-		'$notify2'	=> array('notify1', t('Your introductions are confirmed'), ($notify & NOTIFY_CONFIRM), ''),
-		'$notify3'	=> array('notify1', t('Someone writes on your profile wall'), ($notify & NOTIFY_WALL), ''),
-		'$notify4'	=> array('notify1', t('Someone writes a followup comment'), ($notify & NOTIFY_COMMENT), ''),
-		'$notify5'	=> array('notify1', t('You receive a private message'), ($notify & NOTIFY_MAIL), ''),
+		'$notify1'	=> array('notify1', t('You receive an introduction'), ($notify & NOTIFY_INTRO), NOTIFY_INTRO, ''),
+		'$notify2'	=> array('notify2', t('Your introductions are confirmed'), ($notify & NOTIFY_CONFIRM), NOTIFY_CONFIRM, ''),
+		'$notify3'	=> array('notify3', t('Someone writes on your profile wall'), ($notify & NOTIFY_WALL), NOTIFY_WALL, ''),
+		'$notify4'	=> array('notify4', t('Someone writes a followup comment'), ($notify & NOTIFY_COMMENT), NOTIFY_COMMENT, ''),
+		'$notify5'	=> array('notify5', t('You receive a private message'), ($notify & NOTIFY_MAIL), NOTIFY_MAIL, ''),
 		
 		
 		

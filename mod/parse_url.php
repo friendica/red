@@ -13,7 +13,7 @@ function parse_url_content(&$a) {
 
 	$text = null;
 
-	$template = "<a href=\"%s\" >%s</a>\n%s";
+	$template = "<br /><a href=\"%s\" >%s</a>%s<br />";
 
 
 	$arr = array('url' => $url, 'text' => '');
@@ -39,11 +39,19 @@ function parse_url_content(&$a) {
 		killme();
 	}
 
+	if(strpos($s,'<title>')) {
+		$title = substr($s,strpos($s,'<title>')+7,64);
+		if(strpos($title,'<') !== false)
+			$title = strip_tags(substr($title,0,strpos($title,'<')));
+	}
+
 	$config = HTMLPurifier_Config::createDefault();
 	$config->set('Cache.DefinitionImpl', null);
 
 	$purifier = new HTMLPurifier($config);
 	$s = $purifier->purify($s);
+
+//	logger('parse_url: purified: ' . $s, LOGGER_DATA);
 
 	$dom = @HTML5_Parser::parse($s);
 
@@ -65,21 +73,27 @@ function parse_url_content(&$a) {
 	if($divs) {
 		foreach($divs as $div) {
 			$class = $div->getAttribute('class');
-			if($class && stristr($class,'article')) {
+			if($class && (stristr($class,'article') || stristr($class,'content'))) {
 				$items = $div->getElementsByTagName('p');
 				if($items) {
 					foreach($items as $item) {
-						if($item->getElementsByTagName('script'))
-							continue;
 						$text = $item->textContent;
-						$text = strip_tags($text);
-						if(strlen($text) < 100)
+						if(stristr($text,'<script')) {
+							$text = '';
 							continue;
+						}
+						$text = strip_tags($text);
+						if(strlen($text) < 100) {
+							$text = '';
+							continue;
+						}
 						$text = substr($text,0,250) . '...' ;
 						break;
 					}
 				}
 			}
+			if($text)
+				break;
 		}
 	}
 
@@ -87,12 +101,14 @@ function parse_url_content(&$a) {
 		$items = $dom->getElementsByTagName('p');
 		if($items) {
 			foreach($items as $item) {
-				if($item->getElementsByTagName('script'))
-					continue;
 				$text = $item->textContent;
-				$text = strip_tags($text);
-				if(strlen($text) < 100)
+				if(stristr($text,'<script'))
 					continue;
+				$text = strip_tags($text);
+				if(strlen($text) < 100) {
+					$text = '';
+					continue;
+				}
 				$text = substr($text,0,250) . '...' ;
 				break;
 			}
@@ -100,7 +116,7 @@ function parse_url_content(&$a) {
 	}
 
 	if(strlen($text)) {
-		$text = '<br />' . $text;
+		$text = '<br /><br />' . $text;
 	}
 
 	echo sprintf($template,$url,($title) ? $title : $url,$text);

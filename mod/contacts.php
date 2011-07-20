@@ -3,13 +3,26 @@
 require_once('include/Contact.php');
 
 function contacts_init(&$a) {
+	if(! local_user())
+		return;
+
 	require_once('include/group.php');
 	if(! x($a->page,'aside'))
 		$a->page['aside'] = '';
 	$a->page['aside'] .= group_side();
 
-	if($a->config['register_policy'] != REGISTER_CLOSED)
-		$a->page['aside'] .= '<div class="side-link" id="side-invite-link" ><a href="invite" >' . t("Invite Friends") . '</a></div>';
+	$inv = '<div class="side-link" id="side-invite-link" ><a href="invite" >' . t("Invite Friends") . '</a></div>';
+
+	if(get_config('system','invitation_only')) {
+		$x = get_pconfig(local_user(),'system','invites_remaining');
+		if($x || is_site_admin()) {
+			$a->page['aside'] .= '<div class="side-link" id="side-invite-remain">' 
+			. sprintf( tt('%d invitation available','%d invitations available',$x), $x) 
+			. '</div>' . $inv;
+		}
+	}
+	elseif($a->config['register_policy'] != REGISTER_CLOSED)
+		$a->page['aside'] .= $inv;
 
 
 	$a->page['aside'] .= '<div class="side-link" id="side-match-link"><a href="match" >' 

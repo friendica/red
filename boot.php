@@ -1,12 +1,8 @@
 <?php
 
-set_time_limit(0);
-ini_set('pcre.backtrack_limit', 250000);
-
-
-define ( 'FRIENDIKA_VERSION',      '2.2.1034' );
+define ( 'FRIENDIKA_VERSION',      '2.2.1046' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
-define ( 'DB_UPDATE_VERSION',      1075      );
+define ( 'DB_UPDATE_VERSION',      1076      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -89,6 +85,7 @@ define ( 'PAGE_FREELOVE',          3 );
  * Network and protocol family types 
  */
 
+define ( 'NETWORK_ZOT',              'zot!');    // Zot!
 define ( 'NETWORK_DFRN',             'dfrn');    // Friendika, Mistpark, other DFRN implementations
 define ( 'NETWORK_OSTATUS',          'stat');    // status.net, identi.ca, GNU-social, other OStatus implementations
 define ( 'NETWORK_FEED',             'feed');    // RSS/Atom feeds with no known "post/notify" protocol
@@ -104,6 +101,13 @@ define ( 'NETWORK_FACEBOOK',         'face');    // Facebook API
 define ( 'MAX_LIKERS',    75);
 
 /**
+ * Communication timeout
+ */
+
+define ( 'ZCURL_TIMEOUT' , (-1));
+
+
+/**
  * email notification options
  */
 
@@ -117,6 +121,7 @@ define ( 'NOTIFY_MAIL',    0x0010 );
  * various namespaces we may need to parse
  */
 
+define ( 'NAMESPACE_ZOT',             'http://purl.org/macgirvin/zot' );
 define ( 'NAMESPACE_DFRN' ,           'http://purl.org/macgirvin/dfrn/1.0' ); 
 define ( 'NAMESPACE_THREAD' ,         'http://purl.org/syndication/thread/1.0' );
 define ( 'NAMESPACE_TOMB' ,           'http://purl.org/atompub/tombstones/1.0' );
@@ -170,20 +175,28 @@ define ( 'GRAVITY_COMMENT',      6);
  *
  */
 
-if (get_magic_quotes_gpc()) {
-    $process = array(&$_GET, &$_POST, &$_COOKIE, &$_REQUEST);
-    while (list($key, $val) = each($process)) {
-        foreach ($val as $k => $v) {
-            unset($process[$key][$k]);
-            if (is_array($v)) {
-                $process[$key][stripslashes($k)] = $v;
-                $process[] = &$process[$key][stripslashes($k)];
-            } else {
-                $process[$key][stripslashes($k)] = stripslashes($v);
-            }
-        }
-    }
-    unset($process);
+function startup() {
+	error_reporting(E_ERROR | E_WARNING | E_PARSE);
+	set_time_limit(0);
+	ini_set('pcre.backtrack_limit', 250000);
+
+
+	if (get_magic_quotes_gpc()) {
+    	$process = array(&$_GET, &$_POST, &$_COOKIE, &$_REQUEST);
+	    while (list($key, $val) = each($process)) {
+    	    foreach ($val as $k => $v) {
+        	    unset($process[$key][$k]);
+            	if (is_array($v)) {
+                	$process[$key][stripslashes($k)] = $v;
+	                $process[] = &$process[$key][stripslashes($k)];
+    	        } else {
+        	        $process[$key][stripslashes($k)] = stripslashes($v);
+            	}
+	        }
+    	}
+	    unset($process);
+	}
+
 }
 
 /*
@@ -250,6 +263,8 @@ class App {
 		$this->pager= array();
 
 		$this->query_string = '';
+
+		startup();
 
 		$this->scheme = ((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']))	?  'https' : 'http' );
 
@@ -756,15 +771,17 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
 	$curl_time = intval(get_config('system','curl_timeout'));
 	curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
 
-	if(!is_array($headers)) {
-		$headers = array('Expect:');
-	} else {
-		if(!in_array('Expect:', $headers)) {
-			array_push($headers, 'Expect:');
+	if(defined('LIGHTTPD')) {
+		if(!is_array($headers)) {
+			$headers = array('Expect:');
+		} else {
+			if(!in_array('Expect:', $headers)) {
+				array_push($headers, 'Expect:');
+			}
 		}
 	}
-
-	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+	if($headers)
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
 	$check_cert = get_config('system','verifyssl');
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, (($check_cert) ? true : false));
@@ -2056,6 +2073,9 @@ function get_tags($s) {
 				// we might be inside a bbcode color tag - leave it alone
 				continue;
 			}
+			// ignore strictly numeric tags like #1
+			if((strpos($mtch,'#') === 0) && ctype_digit(substr($mtch,1)))
+				continue;
 			if(substr($mtch,-1,1) === '.')
 				$ret[] = substr($mtch,0,-1);
 			else
@@ -2937,3 +2957,15 @@ function return_bytes ($size_str) {
     }
 }}
 
+function generate_guid() {
+	$found = true;
+	do {
+		$guid = substr(random_string(),0,16);
+		$x = q("SELECT `uid` FROM `user` WHERE `guid` = '%s' LIMIT 1",
+			dbesc($guid)
+		);
+		if(! count($x))
+			$found = false;
+	} while ($found == true );
+	return $guid;
+}

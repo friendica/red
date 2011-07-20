@@ -184,12 +184,10 @@ function item_post(&$a) {
 
 	if($post_type === 'net-comment') {
 		if($parent_item !== null) {
-			if($parent_item['type'] === 'remote') {
-				$post_type = 'remote-comment';
-			} 
-			else {		
+			if($parent_item['wall'] == 1)
 				$post_type = 'wall-comment';
-			}
+			else
+				$post_type = 'remote-comment';
 		}
 	}
 

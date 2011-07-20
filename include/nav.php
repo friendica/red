@@ -30,7 +30,7 @@ function nav(&$a) {
 	$sitelocation = $myident . substr($a->get_baseurl(),strpos($a->get_baseurl(),'//') + 2 );
 
 
-	// nav links: array of array('href', 'text', 'extra css classes')
+	// nav links: array of array('href', 'text', 'extra css classes', 'title')
 	$nav = Array();
 
 	/**
@@ -38,10 +38,10 @@ function nav(&$a) {
 	 */
 
 	if(local_user()) {
-		$nav['logout'] = Array('logout',t('Logout'), "");
+		$nav['logout'] = Array('logout',t('Logout'), "", t('End this session'));
 	}
 	else {
-		$nav['login'] = Array('login',t('Login'), ($a->module == 'login'?'nav-selected':''));
+		$nav['login'] = Array('login',t('Login'), ($a->module == 'login'?'nav-selected':''), t('Sign in'));
 	}
 
 
@@ -52,21 +52,21 @@ function nav(&$a) {
 	$homelink = ((x($_SESSION,'visitor_home')) ? $_SESSION['visitor_home'] : '');
 
 	if(($a->module != 'home') && (! (local_user()))) 
-		$nav['home'] = array($homelink, t('Home'), "");
+		$nav['home'] = array($homelink, t('Home'), "", t('Home Page'));
 
 
 	if(($a->config['register_policy'] == REGISTER_OPEN) && (! local_user()) && (! remote_user()))
-		$nav['register'] = array('register',t('Register'), "");
+		$nav['register'] = array('register',t('Register'), "", t('Create an account'));
 
 	$help_url = $a->get_baseurl() . '/help';
 
 	if(! get_config('system','hide_help'))
-		$nav['help'] = array($help_url, t('Help'), "");
+		$nav['help'] = array($help_url, t('Help'), "", t('Help and documentation'));
 
 	if($a->apps)
-		$nav['apps'] = array('apps', t('Apps'), "");
+		$nav['apps'] = array('apps', t('Apps'), "", t('Addon applications, utilities, games'));
 
-	$nav['search'] = array('search', t('Search'), "");
+	$nav['search'] = array('search', t('Search'), "", t('Search site content'));
 
 	$gdirpath = 'directory';
 
@@ -76,9 +76,9 @@ function nav(&$a) {
 			$gdirpath = $gdir;
 	}
 	elseif(! get_config('system','no_community_page'))
-		$nav['community'] = array('community', t('Community'), "");
+		$nav['community'] = array('community', t('Community'), "", t('Conversations on this site'));
 
-	$nav['directory'] = array($gdirpath, t('Directory'), ""); 
+	$nav['directory'] = array($gdirpath, t('Directory'), "", t('People directory')); 
 
 	/**
 	 *
@@ -88,33 +88,33 @@ function nav(&$a) {
 
 	if(local_user()) {
 
-		$nav['network'] = array('network', t('Network'), "");
+		$nav['network'] = array('network', t('Network'), "", t('Conversations from your friends'));
 
-		$nav['home'] = array('profile/' . $a->user['nickname'], t('Home'), "");
+		$nav['home'] = array('profile/' . $a->user['nickname'], t('Home'), "", t('Your posts and conversations'));
 
 
 		/* only show friend requests for normal pages. Other page types have automatic friendship. */
 
 		if($_SESSION['page_flags'] == PAGE_NORMAL) {
-			$nav['notifications'] = array('notifications',	t('Notifications'), "");
+			$nav['notifications'] = array('notifications',	t('Notifications'), "", t('Friend requests'));
 		}
 
-		$nav['messages'] = array('message', t('Messages'), "");
+		$nav['messages'] = array('message', t('Messages'), "", t('Private mail'));
 		
 		if(is_array($a->identities) && count($a->identities) > 1) {
-			$nav['manage'] = array('manage', t('Manage'), "");
+			$nav['manage'] = array('manage', t('Manage'), "", t('Manage other pages'));
 		}
 
-		$nav['settings'] = array('settings', t('Settings'),"");
-		$nav['profiles'] = array('profiles', t('Profiles'),"");
-		$nav['contacts'] = array('contacts', t('Contacts'),"");
+		$nav['settings'] = array('settings', t('Settings'),"", t('Account settings'));
+		$nav['profiles'] = array('profiles', t('Profiles'),"", t('Manage/edit profiles'));
+		$nav['contacts'] = array('contacts', t('Contacts'),"", t('Manage/edit friends and contacts'));
 	}
 
 	/**
 	 * Admin page
 	 */
 	 if (is_site_admin()){
-		 $nav['admin'] = array('admin/', t('Admin'), "");
+		 $nav['admin'] = array('admin/', t('Admin'), "", t('Site setup and configuration'));
 	 }
 
 

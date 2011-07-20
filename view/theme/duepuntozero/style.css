@@ -45,8 +45,8 @@ code {
 	border: 1px solid #444;
 	background: #EEE;
 	color: #444;
-	padding: 10px;
-	margin-top: 20px;
+	padding: 0px 10px 10px 10px;
+	margin-top: 20px; 
 }
 /*blockquote:before {
 	content: '>> ';

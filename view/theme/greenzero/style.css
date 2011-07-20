@@ -12,6 +12,13 @@ a:hover {text-decoration: underline; }
 	color: #ffffff;
 }
 
+.icon {
+	display: block; width: 16px; height: 16px;
+	background-image: url('greenicons.png');
+}
+
+
+
 body { 	background-image: url(head.jpg); }
 aside( 	background-image: url(border.jpg); }
 section { 	background-image: url(border.jpg); }

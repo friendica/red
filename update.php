@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1075 );
+define( 'UPDATE_VERSION' , 1076 );
 
 /**
  *
@@ -600,4 +600,27 @@ function update_1074() {
 			);
 	}
 	q("ALTER TABLE `profile` DROP `hidewall`");
+}
+
+function update_1075() {
+	q("ALTER TABLE `user` ADD `guid` CHAR( 16 ) NOT NULL AFTER `uid` ");
+	$r = q("SELECT `uid` FROM `user` WHERE 1");
+	if(count($r)) {
+		foreach($r as $rr) {
+			$found = true;
+			do {
+				$guid = substr(random_string(),0,16);
+				$x = q("SELECT `uid` FROM `user` WHERE `guid` = '%s' LIMIT 1",
+					dbesc($guid)
+				);
+				if(! count($x))
+					$found = false;
+			} while ($found == true );
+
+			q("UPDATE `user` SET `guid` = '%s' WHERE `uid` = %d LIMIT 1",
+				dbesc($guid),
+				intval($rr['uid'])
+			);
+		}
+	}
 }

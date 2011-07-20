@@ -15,8 +15,9 @@ $nickname_block
 {{inc field_password.tpl with $field=$password1 }}{{endinc}}
 {{inc field_password.tpl with $field=$password2 }}{{endinc}}
 
+{{ if $oid_enable }}
 {{inc field_input.tpl with $field=$openid }}{{endinc}}
-
+{{ endif }}
 
 <div class="settings-submit-wrapper" >
 <input type="submit" name="submit" class="settings-submit" value="$submit" />
@@ -82,11 +83,11 @@ $hide_wall
 <div id="settings-notify-desc">$lbl_not </div>
 
 <div class="group">
-{{inc field_checkbox.tpl with $field=$notify1 }}{{endinc}}
-{{inc field_checkbox.tpl with $field=$notify2 }}{{endinc}}
-{{inc field_checkbox.tpl with $field=$notify3 }}{{endinc}}
-{{inc field_checkbox.tpl with $field=$notify4 }}{{endinc}}
-{{inc field_checkbox.tpl with $field=$notify5 }}{{endinc}}
+{{inc field_intcheckbox.tpl with $field=$notify1 }}{{endinc}}
+{{inc field_intcheckbox.tpl with $field=$notify2 }}{{endinc}}
+{{inc field_intcheckbox.tpl with $field=$notify3 }}{{endinc}}
+{{inc field_intcheckbox.tpl with $field=$notify4 }}{{endinc}}
+{{inc field_intcheckbox.tpl with $field=$notify5 }}{{endinc}}
 </div>
 
 
