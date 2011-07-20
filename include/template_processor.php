@@ -7,6 +7,7 @@
 		var $stack = array();
 		var $nodes = array();
 		var $done = false;
+		var $d = false;
 		
 		private function _preg_error(){
 			switch(preg_last_error()){
@@ -39,10 +40,11 @@
 		}
 		private function _pop_stack(){
 			list($this->r, $this->search, $this->replace, $this->nodes) = array_pop($this->stack);
+			
 		}
 		
 		private function _get_var($name){
-			$keys = array_map('trim',explode(".",$name));			
+			$keys = array_map('trim',explode(".",$name));		
 			$val = $this->r;
 			foreach($keys as $k) {
 				$val = $val[$k];
@@ -58,7 +60,6 @@
 		 * {{ if <$var>!=<val|$var> }}...[{{ else }} ...]{{ endif }}
 		 */
 		private function _replcb_if($args){
-			
 			if (strpos($args[2],"==")>0){
 				list($a,$b) = array_map("trim",explode("==",$args[2]));
 				$a = $this->_get_var($a);
@@ -73,7 +74,6 @@
 				$val = $this->_get_var($args[2]);
 			}
 			list($strue, $sfalse)= preg_split("|{{ *else *}}|", $args[3]);
-			
 			return ($val?$strue:$sfalse);
 		}
 		
@@ -165,8 +165,13 @@
 			$s = $this->_build_nodes($s);
 			$s = preg_replace_callback('/\|\|([0-9]+)\|\|/', array($this, "_replcb_node"), $s);
 			if ($s==Null) $this->_preg_error();
-			$s = str_replace($this->search,$this->replace, $s);
 			
+			// replace strings recursively (limit to 10 loops)
+			$os = ""; $count=0;
+			while($os!=$s && $count<10){
+				$os=$s; $count++;
+				$s = str_replace($this->search,$this->replace, $s);
+			}
 			return $s;
 		}
 	}
