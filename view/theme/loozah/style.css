@@ -1561,6 +1561,13 @@ padding: 5px 10px 0px;
 	overflow: auto;
 }
 
+#profile-jot-text {
+	height: 20px;
+	color:#cccccc;
+	border: 1px solid #cccccc;
+}
+
+
 /** acl **/
 #profile-jot-acl-wrapper{
 	display:block!important;

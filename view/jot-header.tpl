@@ -1,68 +1,79 @@
 
 <script language="javascript" type="text/javascript">
 
-var editor;
+var editor=false;
 var textlen = 0;
 
+function initEditor(){
+	$("#profile-jot-text-loading").show();
+	tinyMCE.init({
+		theme : "advanced",
+		mode : "specific_textareas",
+		editor_selector: /(profile-jot-text|prvmail-text)/,
+		plugins : "bbcode,paste,autoresize",
+		theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,forecolor,formatselect,code",
+		theme_advanced_buttons2 : "",
+		theme_advanced_buttons3 : "",
+		theme_advanced_toolbar_location : "top",
+		theme_advanced_toolbar_align : "center",
+		theme_advanced_blockformats : "blockquote,code",
+		paste_text_sticky : true,
+		entity_encoding : "raw",
+		add_unload_trigger : false,
+		remove_linebreaks : false,
+		force_p_newlines : false,
+		force_br_newlines : true,
+		forced_root_block : '',
+		convert_urls: false,
+		content_css: "$baseurl/view/custom_tinymce.css",
+		theme_advanced_path : false,
+		setup : function(ed) {
+			 //Character count
+			ed.onKeyUp.add(function(ed, e) {
+				var txt = tinyMCE.activeEditor.getContent();
+				textlen = txt.length;
+				if(textlen != 0 && $('#jot-perms-icon').is('.unlock')) {
+					$('#profile-jot-desc').html(ispublic);
+				}
+				else {
+					$('#profile-jot-desc').html('&nbsp;');
+				}	 
 
-tinyMCE.init({
-	theme : "advanced",
-	mode : "specific_textareas",
-	editor_selector: /(profile-jot-text|prvmail-text)/,
-	plugins : "bbcode,paste,autoresize",
-	theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,forecolor,formatselect,code",
-	theme_advanced_buttons2 : "",
-	theme_advanced_buttons3 : "",
-	theme_advanced_toolbar_location : "top",
-	theme_advanced_toolbar_align : "center",
-	theme_advanced_blockformats : "blockquote,code",
-	paste_text_sticky : true,
-	entity_encoding : "raw",
-	add_unload_trigger : false,
-	remove_linebreaks : false,
-	force_p_newlines : false,
-	force_br_newlines : true,
-	forced_root_block : '',
-	convert_urls: false,
-	content_css: "$baseurl/view/custom_tinymce.css",
-	theme_advanced_path : false,
-	setup : function(ed) {
-		 //Character count
-		ed.onKeyUp.add(function(ed, e) {
-			var txt = tinyMCE.activeEditor.getContent();
-			textlen = txt.length;
-			if(textlen != 0 && $('#jot-perms-icon').is('.unlock')) {
-				$('#profile-jot-desc').html(ispublic);
-			}
-			else {
-				$('#profile-jot-desc').html('&nbsp;');
-			}	 
+				if(textlen <= 140) {
+					$('#character-counter').removeClass('red');
+					$('#character-counter').removeClass('orange');
+					$('#character-counter').addClass('grey');
+				}
+				if((textlen > 140) && (textlen <= 420)) {
+					$('#character-counter').removeClass('grey');
+					$('#character-counter').removeClass('red');
+					$('#character-counter').addClass('orange');
+				}
+				if(textlen > 420) {
+					$('#character-counter').removeClass('grey');
+					$('#character-counter').removeClass('orange');
+					$('#character-counter').addClass('red');
+				}
+				$('#character-counter').text(textlen);
+			});
 
-			if(textlen <= 140) {
-				$('#character-counter').removeClass('red');
-				$('#character-counter').removeClass('orange');
-				$('#character-counter').addClass('grey');
-			}
-			if((textlen > 140) && (textlen <= 420)) {
-				$('#character-counter').removeClass('grey');
-				$('#character-counter').removeClass('red');
-				$('#character-counter').addClass('orange');
-			}
-			if(textlen > 420) {
-				$('#character-counter').removeClass('grey');
-				$('#character-counter').removeClass('orange');
-				$('#character-counter').addClass('red');
-			}
-			$('#character-counter').text(textlen);
-		});
+			ed.onInit.add(function(ed) {
+				ed.pasteAsPlainText = true;
+				$("#profile-jot-text-loading").hide();
+				$("#profile-jot-submit-wrapper").show();
+			});
 
-		ed.onInit.add(function(ed) {
-			ed.pasteAsPlainText = true;
-		});
-
-	}
-});
-
+		}
+	});
+	editor = true;
+	
+	// setup acl popup
+	$("#profile-jot-acl-wrapper").hide();
+	$("a#jot-perms-icon").fancybox({
+		'transitionIn' : 'none',
+		'transitionOut' : 'none'
+	}); 
+}
 
 </script>
 <script type="text/javascript" src="include/ajaxupload.js" ></script>
@@ -70,11 +81,13 @@ tinyMCE.init({
 	var ispublic = '$ispublic';
 	$(document).ready(function() {
 		
-		$("#profile-jot-acl-wrapper").hide();
-		$("a#jot-perms-icon").fancybox({
-			'transitionIn' : 'none',
-			'transitionOut' : 'none'
-		}); 
+		/* enable tinymce on focus */
+		$("#profile-jot-text").focus(function(){
+			if (editor) return;
+			$(this).val("");
+			initEditor();
+		});
+		
 	
 		var uploader = new window.AjaxUpload(
 			'wall-image-upload',

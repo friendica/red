@@ -15,10 +15,12 @@
 		<input type="hidden" name="title" id="jot-title" value="" />
 		<input type="hidden" name="post_id" value="$post_id" />
 
-		<textarea rows="5" cols="64" class="profile-jot-text" id="profile-jot-text" name="body" >$content</textarea>
+		<img id="profile-jot-text-loading" src="images/rotator.gif" alt="$wait" title="$wait" style="display: none;" />
+		<textarea rows="5" cols="64" class="profile-jot-text" id="profile-jot-text" name="body" >{{ if $content }}$content{{ else }}$share{{ endif }}</textarea>
 
+		{{ if $content }}<script>initEditor();</script>{{ endif }}
 
-<div id="profile-jot-submit-wrapper" >
+<div id="profile-jot-submit-wrapper" style="display:none">
 <input type="submit" id="profile-jot-submit" name="submit" value="$share" />
 	<div id="profile-upload-wrapper" style="display: $visitor;" >
 		<div id="wall-image-upload-div" ><a href="#" onclick="return false;" id="wall-image-upload" class="icon camera" title="$upload"></a></div>

@@ -80,7 +80,9 @@ function editpost_content(&$a) {
 	call_hooks('jot_tool', $jotplugins);
 	call_hooks('jot_networks', $jotnets);
 
-	$tpl = replace_macros($tpl,array('$jotplugins' => $jotplugins));	
+	
+	//$tpl = replace_macros($tpl,array('$jotplugins' => $jotplugins));	
+	
 
 	$o .= replace_macros($tpl,array(
 		'$return_path' => $_SESSION['return_url'],
@@ -110,9 +112,9 @@ function editpost_content(&$a) {
 		'$lockstate' => $lockstate,
 		'$acl' => '', // populate_acl((($group) ? $group_acl : $a->user), $celeb),
 		'$bang' => (($group) ? '!' : ''),
-		'$profile_uid' => $_SESSION['uid']
+		'$profile_uid' => $_SESSION['uid'],
+		'$jotplugins' => $jotplugins,
 	));
-
 
 	return $o;
 
