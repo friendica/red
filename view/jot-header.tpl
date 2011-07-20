@@ -1,5 +1,4 @@
 
-<script language="javascript" type="text/javascript" src="$baseurl/library/tinymce/jscripts/tiny_mce/tiny_mce_src.js"></script>
 <script language="javascript" type="text/javascript">
 
 var editor;
@@ -91,7 +90,7 @@ tinyMCE.init({
 			}
 		);
 
-		$('#contact_allow, #contact_deny, #group_allow, #group_deny').change(function() {
+		/*$('#contact_allow, #contact_deny, #group_allow, #group_deny').change(function() {
 			var selstr;
 			$('#contact_allow option:selected, #contact_deny option:selected, #group_allow option:selected, #group_deny option:selected').each( function() {
 				selstr = $(this).text();
@@ -105,7 +104,7 @@ tinyMCE.init({
 				$('.profile-jot-net input').attr('disabled', false);
 			}
 
-		}).trigger('change');
+		}).trigger('change');*/
 
 	});
 

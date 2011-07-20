@@ -12,6 +12,8 @@
 <script type="text/javascript" src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
 <script type="text/javascript" src="$baseurl/include/jquery.js" ></script>
+<script type="text/javascript" src="$baseurl/library/tinymce/jscripts/tiny_mce/tiny_mce_src.js" ></script>
+<script type="text/javascript" src="$baseurl/include/acl.js" ></script>
 <script type="text/javascript" src="$baseurl/include/main.js" ></script>
 <script>
 

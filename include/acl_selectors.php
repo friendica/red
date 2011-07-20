@@ -239,7 +239,7 @@ function populate_acl($user = null,$celeb = false) {
 		array_walk($deny_gid,'fixacl');
 	}
 
-	$o = '';
+	/*$o = '';
 	$o .= '<div id="acl-wrapper">';
 	$o .= '<div id="acl-permit-outer-wrapper">';
 	$o .= '<div id="acl-permit-text">' . t('Visible To:') . '</div><div id="jot-public">' . t('everybody') . '</div>';
@@ -272,7 +272,20 @@ function populate_acl($user = null,$celeb = false) {
 	$o .= '<div id="acl-deny-end"></div>' . "\r\n";
 	$o .= '</div>';
 	$o .= '</div>' . "\r\n";
-	$o .= '<div id="acl-wrapper-end"></div>' . "\r\n";
+	$o .= '<div id="acl-wrapper-end"></div>' . "\r\n";*/
+	
+	$tpl = get_markup_template("acl_selector.tpl");
+	$o = replace_macros($tpl, array(
+		'$showall'=> t("Visible to everybody"),
+		'$show'		 => t("show"),
+		'$hide'		 => t("don't show"),
+		'$allowcid' => json_encode($allow_cid),
+		'$allowgid' => json_encode($allow_gid),
+		'$denycid' => json_encode($deny_cid),
+		'$denygid' => json_encode($deny_gid),
+	));
+	
+	
 	return $o;
 
 }
