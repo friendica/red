@@ -4,6 +4,7 @@
 var editor;
 var textlen = 0;
 
+
 tinyMCE.init({
 	theme : "advanced",
 	mode : "specific_textareas",
@@ -26,7 +27,7 @@ tinyMCE.init({
 	content_css: "$baseurl/view/custom_tinymce.css",
 	theme_advanced_path : false,
 	setup : function(ed) {
-	     //Character count
+		 //Character count
 		ed.onKeyUp.add(function(ed, e) {
 			var txt = tinyMCE.activeEditor.getContent();
 			textlen = txt.length;
@@ -53,7 +54,7 @@ tinyMCE.init({
 				$('#character-counter').addClass('red');
 			}
 			$('#character-counter').text(textlen);
-    	});
+		});
 
 		ed.onInit.add(function(ed) {
 			ed.pasteAsPlainText = true;
@@ -62,11 +63,19 @@ tinyMCE.init({
 	}
 });
 
+
 </script>
 <script type="text/javascript" src="include/ajaxupload.js" ></script>
 <script>
 	var ispublic = '$ispublic';
 	$(document).ready(function() {
+		
+		$("#profile-jot-acl-wrapper").hide();
+		$("a#jot-perms-icon").fancybox({
+			'transitionIn' : 'none',
+			'transitionOut' : 'none'
+		}); 
+	
 		var uploader = new window.AjaxUpload(
 			'wall-image-upload',
 			{ action: 'wall_upload/$nickname',
@@ -90,21 +99,6 @@ tinyMCE.init({
 			}
 		);
 
-		/*$('#contact_allow, #contact_deny, #group_allow, #group_deny').change(function() {
-			var selstr;
-			$('#contact_allow option:selected, #contact_deny option:selected, #group_allow option:selected, #group_deny option:selected').each( function() {
-				selstr = $(this).text();
-				$('#jot-perms-icon').removeClass('unlock').addClass('lock');
-				$('#jot-public').hide();
-				$('.profile-jot-net input').attr('disabled', 'disabled');
-			});
-			if(selstr == null) { 
-				$('#jot-perms-icon').removeClass('lock').addClass('unlock');
-				$('#jot-public').show();
-				$('.profile-jot-net input').attr('disabled', false);
-			}
-
-		}).trigger('change');*/
 
 	});
 

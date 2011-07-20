@@ -1563,9 +1563,9 @@ padding: 5px 10px 0px;
 
 /** acl **/
 #profile-jot-acl-wrapper{
-	overflow:hidden;
-	height: 100%;
+	display:block!important;
 }
+
 
 #acl-wrapper {
 	width: 690px;
