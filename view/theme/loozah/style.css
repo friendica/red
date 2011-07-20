@@ -1569,6 +1569,7 @@ padding: 5px 10px 0px;
 
 
 /** acl **/
+#photos-upload-permissions-wrapper,
 #profile-jot-acl-wrapper{
 	display:block!important;
 }

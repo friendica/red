@@ -1491,7 +1491,7 @@ input#dfrn-url {
 
 
 /** acl **/
-
+#photos-upload-permissions-wrapper,
 #profile-jot-acl-wrapper{
 	display:block!important;
 }

@@ -14,13 +14,16 @@
 	<div id="photos-upload-exist-end"></div>
 
 
-	<div id="photos-upload-perms" class="photos-upload-perms" ><div id="photos-upload-perms-menu" onClick="openClose('photos-upload-permissions-wrapper');" />$permissions</div>
+	<div id="photos-upload-perms" class="photos-upload-perms" >
+		<a href="#photos-upload-permissions-wrapper" id="photos-upload-perms-menu" />
+		<span id="jot-perms-icon" class="icon $lockstate" ></span>$permissions
+		</a>
 	<div id="photos-upload-perms-end"></div>
 
-	<div id="photos-upload-permissions-wrapper" style="display: none;" >
-	
-		$aclselect
-
+	<div style="display: none;">
+		<div id="photos-upload-permissions-wrapper">
+			$aclselect
+		</div>
 	</div>
 
 	<div id="photos-upload-spacer"></div>
@@ -32,3 +35,9 @@
 	<div class="photos-upload-end" ></div>
 </form>
 
+<script>
+	$("a#photos-upload-perms-menu").fancybox({
+		'transitionIn' : 'none',
+		'transitionOut' : 'none'
+	}); 
+</script>
