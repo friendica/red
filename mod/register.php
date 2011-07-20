@@ -346,6 +346,8 @@ function register_post(&$a) {
 	}
 
 
+	call_hooks('register_account', $newuid);
+
 	if( $a->config['register_policy'] == REGISTER_OPEN ) {
 
 		if($using_invites && $invite_id) {
