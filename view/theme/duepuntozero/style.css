@@ -1483,10 +1483,17 @@ input#dfrn-url {
 	width: 180px;
 }
 
+#profile-jot-text {
+	height: 20px;
+	color:#cccccc;
+	border: 1px solid #cccccc;
+}
+
+
 /** acl **/
+#photos-upload-permissions-wrapper,
 #profile-jot-acl-wrapper{
-	overflow:hidden;
-	height: 100%;
+	display:block!important;
 }
 
 #acl-wrapper {

@@ -15,10 +15,12 @@
 		<input type="hidden" name="title" id="jot-title" value="" />
 		<input type="hidden" name="post_id" value="$post_id" />
 
-		<textarea rows="5" cols="64" class="profile-jot-text" id="profile-jot-text" name="body" >$content</textarea>
+		<img id="profile-jot-text-loading" src="images/rotator.gif" alt="$wait" title="$wait" style="display: none;" />
+		<textarea rows="5" cols="64" class="profile-jot-text" id="profile-jot-text" name="body" >{{ if $content }}$content{{ else }}$share{{ endif }}</textarea>
 
+		{{ if $content }}<script>initEditor();</script>{{ endif }}
 
-<div id="profile-jot-submit-wrapper" >
+<div id="profile-jot-submit-wrapper" style="display:none">
 <input type="submit" id="profile-jot-submit" name="submit" value="$share" />
 	<div id="profile-upload-wrapper" style="display: $visitor;" >
 		<div id="wall-image-upload-div" ><a href="#" onclick="return false;" id="wall-image-upload" class="icon camera" title="$upload"></a></div>
@@ -57,19 +59,20 @@
 		<img id="profile-rotator" src="images/rotator.gif" alt="$wait" title="$wait" style="display: none;" />
 	</div> 
 	<div id="profile-jot-perms" class="profile-jot-perms" style="display: $pvisit;" >
-		<a id="jot-perms-icon" class="icon $lockstate"  title="$permset" onClick="openClose('profile-jot-acl-wrapper'); openClose('profile-jot-email-wrapper'); openClose('profile-jot-networks');return false;"></a>$bang
+		<a href="#profile-jot-acl-wrapper" id="jot-perms-icon" class="icon $lockstate"  title="$permset" ></a>$bang
 	</div>
 	<div id="profile-jot-perms-end"></div>
-	<div id="profile-jot-email-wrapper" style="display: none;" >
-		<div id="profile-jot-email-label">$emailcc</div><input type="text" name="emailcc" id="profile-jot-email" title="$emtitle" />
-		<div id="profile-jot-email-end"></div>
-	</div>
 	
-	<div id="profile-jot-networks" style="display: none;" >
-		$jotnets
+	<div style="display: none;">
+		<div id="profile-jot-acl-wrapper" style="width:auto;height:auto;overflow:auto;">
+			$acl
+			<hr style="clear:both"/>
+			<div id="profile-jot-email-label">$emailcc</div><input type="text" name="emailcc" id="profile-jot-email" title="$emtitle" />
+			<div id="profile-jot-email-end"></div>
+			$jotnets
+		</div>
 	</div>
-	<div id="profile-jot-networks-end"></div>
-	<div id="profile-jot-acl-wrapper" style="display: none;" >$acl</div>
+
 </div>
 
 <div id="profile-jot-end"></div>

@@ -92,15 +92,25 @@ function createUploader() {
 
 		debug: true,
 		onSubmit: function(id,filename) {
-
-			uploader.setParams( {
-				newalbum		:	document.getElementById('photos-upload-newalbum').value,
-				album			:	document.getElementById('photos-upload-album-select').value,
-				group_allow		:	getSelected(document.getElementById('group_allow')).join(','),
-				contact_allow	:	getSelected(document.getElementById('contact_allow')).join(','),
-				group_deny		:	getSelected(document.getElementById('group_deny')).join(','),
-				contact_deny	:	getSelected(document.getElementById('contact_deny')).join(',')
-			});
+			if (typeof acl!="undefined"){
+				uploader.setParams( {
+					newalbum		:	document.getElementById('photos-upload-newalbum').value,
+					album			:	document.getElementById('photos-upload-album-select').value,
+					group_allow		:	acl.allow_gid.join(','),
+					contact_allow	:	acl.allow_cid.join(','),
+					group_deny		:	acl.deny_gid.join(','),
+					contact_deny	:	acl.deny_cid.join(',')
+				});
+			} else {
+				uploader.setParams( {
+					newalbum		:	document.getElementById('photos-upload-newalbum').value,
+					album			:	document.getElementById('photos-upload-album-select').value,
+					group_allow		:	getSelected(document.getElementById('group_allow')).join(','),
+					contact_allow	:	getSelected(document.getElementById('contact_allow')).join(','),
+					group_deny		:	getSelected(document.getElementById('group_deny')).join(','),
+					contact_deny	:	getSelected(document.getElementById('contact_deny')).join(',')
+				});
+			}
 		}
 	});           
 }
