@@ -135,7 +135,7 @@ define ( 'NAMESPACE_POCO',            'http://portablecontacts.net/spec/1.0' );
 define ( 'NAMESPACE_FEED',            'http://schemas.google.com/g/2010#updates-from' );
 define ( 'NAMESPACE_OSTATUS',         'http://ostatus.org/schema/1.0' );
 define ( 'NAMESPACE_STATUSNET',       'http://status.net/schema/api/1/' );
-
+define ( 'NAMESPACE_ATOM1',           'http://www.w3.org/2005/Atom' );
 /**
  * activity stream defines
  */

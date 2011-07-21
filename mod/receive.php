@@ -5,7 +5,6 @@
  */
 
 
-
 require_once('include/salmon.php');
 require_once('library/simplepie/simplepie.inc');
 

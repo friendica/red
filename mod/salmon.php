@@ -130,7 +130,7 @@ function salmon_post(&$a) {
 
 	// Setup RSA stuff to verify the signature
 
-	set_include_path(get_include_path() . PATH_SEPARATOR . 'library' . PATH_SEPARATOR . 'phpsec');
+	set_include_path(get_include_path() . PATH_SEPARATOR . 'library/phpsec');
 
 	require_once('library/phpsec/Crypt/RSA.php');
 
