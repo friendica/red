@@ -19,13 +19,15 @@
 	<div id="photo-edit-tags-end"></div>
 
 	<div id="photo-edit-perms" class="photo-edit-perms" >
-		<div id="photo-edit-perms-menu" class="fakelink" onClick="openClose('photo-edit-perms-select');" >$permissions</div>
+		<a href="#photo-edit-perms-select" id="photo-edit-perms-menu" title="$permissions"/>
+			<span id="jot-perms-icon" class="icon $lockstate" ></span>$permissions
+		</a>
 		<div id="photo-edit-perms-menu-end"></div>
-
-		<div id="photo-edit-perms-select" style="display: none;" >
-	
-		$aclselect
-
+		
+		<div style="display: none;">
+			<div id="photo-edit-perms-select" >
+				$aclselect
+			</div>
 		</div>
 	</div>
 	<div id="photo-edit-perms-end"></div>
@@ -35,3 +37,10 @@
 
 	<div id="photo-edit-end"></div>
 </form>
+
+<script>
+	$("a#photo-edit-perms-menu").fancybox({
+		'transitionIn' : 'none',
+		'transitionOut' : 'none'
+	}); 
+</script>
