@@ -1,6 +1,6 @@
 <?php
 
-define ( 'FRIENDIKA_VERSION',      '2.2.1046' );
+define ( 'FRIENDIKA_VERSION',      '2.2.1047' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
 define ( 'DB_UPDATE_VERSION',      1076      );
 

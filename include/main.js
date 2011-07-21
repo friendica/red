@@ -100,6 +100,14 @@
 					$('#pause').html('');
 				}
 			}
+			else {
+				// any key to resume
+				if(stopped == true) {
+					stopped = false;
+					$('#pause').html('');
+				}
+			}
+
 		});					
 	});
 
