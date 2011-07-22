@@ -126,7 +126,7 @@ function network_content(&$a, $update = 0) {
 			$o .= '<div id="live-network"></div>' . "\r\n";
 			$o .= "<script> var profile_uid = " . $_SESSION['uid'] 
 				. "; var netargs = '" . substr($a->cmd,8)
-				. '?f=';
+				. '?f='
 				. ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '')
 				. ((x($_GET,'search')) ? '&search=' . $_GET['search'] : '') 
 				. ((x($_GET,'star')) ? '&star=' . $_GET['star'] : '') 
