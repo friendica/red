@@ -27,7 +27,7 @@ function community_content(&$a, $update = 0) {
 	if(! $update) {
 		$o .= '<script>	$(document).ready(function() { $(\'#nav-community-link\').addClass(\'nav-selected\'); });</script>';
 		$o .= '<div id="live-community"></div>' . "\r\n";
-		$o .= "<script> var profile_uid = -1; var netargs = ''; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
+		$o .= "<script> var profile_uid = -1; var netargs = '/?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 	}
 
 	if(x($a->data,'search'))

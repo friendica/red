@@ -160,7 +160,7 @@ function profile_content(&$a, $update = 0) {
 		if($tab === 'posts') {
 			$o .= '<div id="live-profile"></div>' . "\r\n";
 			$o .= "<script> var profile_uid = " . $a->profile['profile_uid'] 
-				. "; var netargs = ''; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
+				. "; var netargs = '/?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 		}
 	}
 

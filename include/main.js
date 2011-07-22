@@ -149,7 +149,7 @@
 		prev = 'live-' + src;
 
 		in_progress = true;
-		var udargs = ((netargs.length) ? '/?f=' + netargs : '?f=');
+		var udargs = ((netargs.length) ? '/' + netargs : '');
 		var update_url = 'update_' + src + udargs + '&p=' + profile_uid + '&page=' + profile_page + '&msie=' + ((msie) ? 1 : 0);
 
 		$.get(update_url,function(data) {
