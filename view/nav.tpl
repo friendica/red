@@ -1,6 +1,62 @@
-$langselector
+{# $langselector #}
 
 <div id="site-location">$sitelocation</div>
+
+
+<div id="nav">
+	<div id="nav-user-menu-wrapper">
+		<div class="left nav-menu-icon"><a href="#" rel="#nav-user-menu" title="$sitelocation"><img src="http://localhost/~fabio/friendika/photo/profile/4.jpg"></a>
+			<ul id="nav-user-menu" class="menu-popup">
+				<li><a href="profile">Profile</a></li>
+				<li><a href="photos">Photos</a></li>
+				{{ if $nav.notifications }}<li><a class="$nav.notifications.2" href="$nav.notifications.0" title="$nav.notifications.3" >$nav.notifications.1</a></li>{{ endif }}
+				{{ if $nav.messages }}<li><a class="$nav.messages.2" href="$nav.messages.0" title="$nav.messages.3" >$nav.messages.1</a></li>{{ endif }}
+			</ul>
+		</div>
+		
+		{{ if $nav.community }}
+			<div id="nav-community-link" class="left nav-menu">
+				<a class="$nav.community.2" href="$nav.community.0" title="$nav.community.3" >$nav.community.1</a>
+			</div>
+		{{ endif }}
+		
+		{{ if $nav.network }}
+			<div id="nav-network-link" class="left nav-menu">
+				<a class="$nav.network.2" href="$nav.network.0" title="$nav.network.3" >$nav.network.1</a>
+				<span id="net-update" class="nav-notify">12</span>
+			</div>
+		{{ endif }}
+		{{ if $nav.network }}
+			<div id="nav-home-link" class="left nav-menu selected">
+				<a class="$nav.home.2" href="$nav.home.0" title="$nav.home.3" >$nav.home.1</a>
+				<span id="home-update" class="nav-notify">2</span>
+			</div>
+		{{ endif }}
+		
+		{{ if $nav.notifications }}
+			<div class="left nav-menu-icon"><a href="#" rel="#nav-notifications-menu" title=""><span class="icon s22 notify_off"></span></a>
+				<ul id="nav-notifications-menu" class="menu-popup">
+				</ul>
+			</div>		
+		{{ endif }}
+		
+		
+		
+		<div class="right nav-menu-icon"><a href="#" rel="#nav-site-menu"><img src="http://localhost/~fabio/friendika/images/icons/gear_22.png"></a>
+			<ul id="nav-site-menu" class="menu-popup" ">
+				{{ if $nav.settings }}<li><a class="$nav.settings.2" href="$nav.settings.0" title="$nav.settings.3">$nav.settings.1</a></li>{{ endif }}
+				{{ if $nav.admin }}<li><a class="$nav.admin.2" href="$nav.admin.0" title="$nav.admin.3" >$nav.admin.1</a></li>{{ endif }}
+
+				{{ if $nav.logout }}<li><a class="menu-sep $nav.logout.2" href="$nav.logout.0" title="$nav.logout.3" >$nav.logout.1</a></li>{{ endif }}
+				{{ if $nav.login }}<li><a class="$nav.login.2" href="$nav.login.0" title="$nav.login.3" >$nav.login.1</a><li>{{ endif }}
+			</ul>		
+		</div>
+	</div>
+
+</div>
+
+
+{#
 
 {{ if $nav.logout }}<a id="nav-logout-link" class="nav-link $nav.logout.2" href="$nav.logout.0" title="$nav.logout.3" >$nav.logout.1</a> {{ endif }}
 {{ if $nav.login }}<a id="nav-login-link" class="nav-login-link $nav.login.2" href="$nav.login.0" title="$nav.login.3" >$nav.login.1</a> {{ endif }}
@@ -18,17 +74,6 @@ $langselector
 
 {{ if $nav.admin }}<a id="nav-admin-link" class="nav-link $nav.admin.2" href="$nav.admin.0" title="$nav.admin.3" >$nav.admin.1</a>{{ endif }}
 
-{{ if $nav.network }}
-<a id="nav-network-link" class="nav-commlink $nav.network.2" href="$nav.network.0" title="$nav.network.3" >$nav.network.1</a>
-<span id="net-update" class="nav-ajax-left"></span>
-{{ endif }}
-{{ if $nav.home }}
-<a id="nav-home-link" class="nav-commlink $nav.home.2" href="$nav.home.0" title="$nav.home.3" >$nav.home.1</a>
-<span id="home-update" class="nav-ajax-left"></span>
-{{ endif }}
-{{ if $nav.community }}
-<a id="nav-community-link" class="nav-commlink $nav.community.2" href="$nav.community.0" title="$nav.community.3" >$nav.community.1</a>
-{{ endif }}
 {{ if $nav.notifications }}
 <a id="nav-notify-link" class="nav-commlink $nav.notifications.2" href="$nav.notifications.0" title="$nav.notifications.3" >$nav.notifications.1</a>
 <span id="notify-update" class="nav-ajax-left"></span>
@@ -47,3 +92,4 @@ $langselector
 </span>
 <span id="nav-end"></span>
 <span id="banner">$banner</span>
+#}

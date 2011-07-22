@@ -1,0 +1,168 @@
+/**
+ * Fabio Comuni <http://kirgroup.com/profile/fabrixxm>
+ **/
+/* fonts */
+@font-face {
+  font-family: "LiberationSans";
+  src: local("Liberation Sans"), url(LiberationSans-Regular.ttf) format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "LiberationSans";
+  src: local("Liberation Sans"), url(LiberationSans-Bold.ttf) format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+@font-face {
+  font-family: "LiberationSans";
+  src: local("Liberation Sans"), url(LiberationSans-Italic.ttf) format("truetype");
+  font-weight: normal;
+  font-style: italic;
+}
+/* global */
+body {
+  font-family: LiberationSans, helvetica, arial, freesans, clean, sans-serif;
+  font-size: 12px;
+  background-color: #FFFFFF;
+  color: #2d2d2d;
+  margin: 0px;
+}
+a, a:visited, a:link {
+  color: #005c94;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+.left {
+  float: left;
+}
+.right {
+  float: right;
+}
+/* nav */
+nav {
+  width: 100%;
+  height: 50px;
+  background-color: #0e232e;
+  color: #FFFFFF;
+}
+nav a,
+nav a:visited,
+nav a:link,
+nav a:hover {
+  color: #FFFFFF;
+  text-decoration: none;
+}
+nav #site-location {
+  font-size: 8px;
+  float: left;
+  background-color: #364e59;
+  padding: 1px 5px;
+  margin-left: 20px;
+  -moz-border-radius: 0 0 5px 5px;
+  -webkit-border-radius: 0 0 5px 5px;
+  border-radius: 0 0 5px 5px;
+}
+nav #nav {
+  clear: both;
+  padding: 0px 20px;
+  height: auto;
+  padding-top: 6px;
+}
+nav #nav .nav-menu-icon {
+  position: relative;
+  height: 22px;
+  padding: 5px;
+  margin: 0px 10px;
+  -moz-border-radius: 5px 5px 0 0;
+  -webkit-border-radius: 5px 5px 0 0;
+  border-radius: 5px 5px 0 0;
+}
+nav #nav .nav-menu-icon.selected {
+  background-color: #364e59;
+}
+nav #nav .nav-menu-icon img {
+  width: 22px;
+  height: 22px;
+}
+nav #nav .nav-menu {
+  position: relative;
+  height: 16px;
+  padding: 5px;
+  margin: 3px 15px 0px;
+  font-size: 14px;
+  border-bottom: 3px solid #0e232e;
+}
+nav #nav .nav-menu.selected {
+  border-bottom: 3px solid #9eabb0;
+}
+nav #nav .nav-menu .nav-notify {
+  position: absolute;
+  background-color: #19aeff;
+  -moz-border-radius: 5px 5px 5px 5px;
+  -webkit-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
+  font-size: 10px;
+  padding: 1px 3px;
+  top: 0px;
+  right: -10px;
+  min-width: 15px;
+  text-align: right;
+}
+ul.menu-popup {
+  position: absolute;
+  /*display: none;*/
+
+  width: auto;
+  background: #FFFFFF;
+  color: #2d2d2d;
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+  border: 3px solid #364e59;
+  z-index: 100000;
+}
+ul.menu-popup a {
+  display: block;
+  color: #2d2d2d;
+  padding: 5px 10px;
+}
+ul.menu-popup a:hover {
+  background-color: #bdcdd4;
+}
+ul.menu-popup .menu-sep {
+  border-top: 1px solid #9eabb0;
+}
+.left .menu-popup {
+  left: 0px;
+}
+.right .menu-popup {
+  right: 0px;
+}
+/* icons */
+.icon {
+  background-color: transparent ;
+  background-repeat: no-repeat;
+  background-position: center center;
+  display: block;
+}
+.icon.s22 {
+  width: 22px;
+  height: 22px;
+}
+.icon.s22.notify_off {
+  background-image: url("../../../images/icons/notify_off_22.png");
+}
+.icon.s22.notify_on {
+  background-image: url("../../../images/icons/notify_on_22.png");
+}
+/* aside */
+aside {
+  display: none;
+}
+/* section */
+section {
+  display: none;
+}

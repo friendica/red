@@ -166,6 +166,9 @@
 			$s = preg_replace_callback('/\|\|([0-9]+)\|\|/', array($this, "_replcb_node"), $s);
 			if ($s==Null) $this->_preg_error();
 			
+			// remove comments block
+			$s = preg_replace('/{#[^#]*#}/', "" , $s);
+			
 			// replace strings recursively (limit to 10 loops)
 			$os = ""; $count=0;
 			while($os!=$s && $count<10){

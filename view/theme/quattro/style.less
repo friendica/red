@@ -1,0 +1,193 @@
+/**
+ * Fabio Comuni <http://kirgroup.com/profile/fabrixxm>
+ **/
+// Less file http://lesscss.org/
+// compile with lessc
+// $ lessc style.less > style.css
+
+// "Echo" palette from Inkscape
+@Blue1:rgb(25,174,255);
+@Blue2:rgb(0,132,200);
+@Blue3:rgb(0,92,148);
+@Red1:rgb(255,65,65);
+@Red2:rgb(220,0,0);
+@Red3:rgb(181,0,0);
+@Orange1:rgb(255,255,62);
+@Orange2:rgb(255,153,0);
+@Orange3:rgb(255,102,0);
+@Brown1:rgb(255,192,34);
+@Brown2:rgb(184,129,0);
+@Brown3:rgb(128,77,0);
+@Green1:rgb(204,255,66);
+@Green2:rgb(154,222,0);
+@Green3:rgb(0,145,0);
+@Purple1:rgb(241,202,255);
+@Purple2:rgb(215,108,255);
+@Purple3:rgb(186,0,255);
+@Metalic1:rgb(189,205,212);
+@Metalic2:rgb(158,171,176);
+@Metalic3:rgb(54,78,89);
+@Metalic4:rgb(14,35,46);
+@Grey1:rgb(255,255,255);
+@Grey2:rgb(204,204,204);
+@Grey3:rgb(153,153,153);
+@Grey4:rgb(102,102,102);
+@Grey5:rgb(45,45,45);
+
+
+ 
+/* fonts */
+@font-face {  
+  font-family: "LiberationSans";  
+  src: local("Liberation Sans"), url( LiberationSans-Regular.ttf ) format("truetype");
+  font-weight: normal; font-style: normal;
+}
+@font-face {  
+  font-family: "LiberationSans";  
+  src: local("Liberation Sans"), url( LiberationSans-Bold.ttf ) format("truetype");
+  font-weight: bold; font-style: normal;
+}
+@font-face {  
+  font-family: "LiberationSans";  
+  src: local("Liberation Sans"), url( LiberationSans-Italic.ttf ) format("truetype");
+  font-weight: normal; font-style: italic;
+}
+ 
+/* global */
+body {
+	font-family: LiberationSans,helvetica,arial,freesans,clean,sans-serif;
+	font-size: 12px;
+	background-color: #FFFFFF;
+	color: @Grey5;
+	margin: 0px;
+}
+
+.rounded(@tr: 5px, @tl: 5px, @bl: 5px, @br: 5px){
+	-moz-border-radius: @arguments;
+	-webkit-border-radius: @arguments;
+	border-radius: @arguments;
+}
+
+.roundbottom (@radius: 5px){ .rounded(0, 0, @radius, @radius); }
+.roundtop (@radius: 5px){ .rounded(@radius, @radius, 0, 0); }
+
+a, a:visited, a:link { color: @Blue3; text-decoration: none; }
+a:hover {text-decoration: underline; }
+
+.left { float: left; }
+.right { float: right; }
+
+/* nav */
+nav { 
+	width: 100%; height: 50px; 
+	background-color: @Metalic4;
+	color: #FFFFFF;
+	a, a:visited, a:link, a:hover { color: #FFFFFF; text-decoration: none; }
+
+	#site-location {
+		font-size:8px;
+		float:left;
+		background-color: @Metalic3;
+		padding: 1px 5px;
+		margin-left: 20px;
+		.roundbottom()
+	}
+
+	#nav {
+		clear: both;
+		padding: 0px 20px;
+		height: auto;
+		padding-top: 6px;
+	
+		.nav-menu-icon {
+			position: relative;
+			height: 22px;
+			padding: 5px;
+			margin: 0px 10px;
+			.roundtop();
+			
+			&.selected {
+				background-color: @Metalic3;
+			}
+			
+			img { width: 22px; height: 22px; }
+		}
+
+		.nav-menu {
+			position: relative;
+			height: 16px;
+			padding: 5px;
+			margin: 3px 15px 0px;
+			font-size: 14px;
+			border-bottom: 3px solid @Metalic4;
+			&.selected {
+				border-bottom: 3px solid @Metalic2;
+			}
+			
+			.nav-notify {
+				position: absolute;
+				background-color: @Blue1;
+				.rounded();
+				font-size: 10px;
+				padding: 1px 3px;
+				top: 0px;
+				right: -10px;
+				min-width: 15px;
+			    text-align: right;
+			}
+			
+		}
+		
+	}
+}
+
+ul.menu-popup {
+	position: absolute;
+	/*display: none;*/
+	width: auto;
+	background: #FFFFFF;
+	color: @Grey5;
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+	border: 3px solid @Metalic3;
+	a { display: block; color: @Grey5; padding: 5px 10px;}
+	a:hover { background-color: @Metalic1; }
+	z-index: 100000;
+	
+	.menu-sep  {
+		border-top: 1px solid @Metalic2;
+	}
+}
+.left .menu-popup{ left: 0px; }
+.right .menu-popup{ right: 0px; }
+
+/* icons */
+
+
+.icons(@size: 22) {
+	&.notify_off { background-image: url("../../../images/icons/notify_off_@{size}.png"); }
+	&.notify_on  { background-image: url("../../../images/icons/notify_on_@{size}.png"); }
+}
+
+
+.icon {
+	background-color: transparent ;
+	background-repeat: no-repeat;
+	background-position: center center;
+	display: block;
+
+	&.s22 {
+		width:22px; height: 22px;
+		.icons(22);
+	}
+	
+}
+
+
+
+/* aside */
+aside { display: none; }
+
+/* section */
+section { display: none;}
