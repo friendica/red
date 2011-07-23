@@ -21,7 +21,8 @@
 
 
 <div id="profile-jot-submit-wrapper" >
-	<div id="profile-jot-perms" class="profile-jot-perms" style="display: $visitor;" ><a id="jot-perms-icon" class="icon $lockstate"  title="$permset" onClick="openClose('profile-jot-acl-wrapper'); openClose('profile-jot-email-wrapper'); openClose('profile-jot-networks');return false;"></a>$bang</div>
+	<div id="profile-jot-perms" class="profile-jot-perms" style="display: $visitor;" >
+            <a href="#profile-jot-acl-wrapper" id="jot-perms-icon" class="icon $lockstate"  title="$permset" ></a>$bang</div>
 	<input type="submit" id="profile-jot-submit" name="submit" value="$share" />
 </div>
 
@@ -59,16 +60,15 @@
 
 	<div id="profile-jot-tools-end"></div>
 	
-	<div id="profile-jot-email-wrapper" style="display: none;" >
-	<div id="profile-jot-email-label">$emailcc</div><input type="text" name="emailcc" id="profile-jot-email" title="$emtitle">
-	<div id="profile-jot-email-end"></div>
-	</div>
-	<div id="profile-jot-networks" style="display: none;" >
-	$jotnets
-	</div>
-	<div id="profile-jot-networks-end"></div>
-	<div id="profile-jot-acl-wrapper" style="display: none;" >$acl</div>
-
+        <div style="display: none;">
+            <div id="profile-jot-acl-wrapper" style="width:auto;height:auto;overflow:auto;">
+                $acl
+                <hr style="clear:both"/>
+                <div id="profile-jot-email-label">$emailcc</div><input type="text" name="emailcc" id="profile-jot-email" title="$emtitle" />
+                <div id="profile-jot-email-end"></div>
+                $jotnets
+            </div>
+        </div>
 
 <div id="profile-jot-end"></div>
 </form>
