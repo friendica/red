@@ -70,6 +70,11 @@ tinyMCE.init({
 <script>
     var ispublic = '$ispublic';
 	$(document).ready(function() {
+                $("#profile-jot-acl-wrapper").hide();
+                $("a#jot-perms-icon").fancybox({
+                    'transitionIn' : 'none',
+                    'transitionOut' : 'none'
+                }); 
 		var uploader = new window.AjaxUpload(
 			'wall-image-upload',
 			{ action: 'wall_upload/$nickname',
