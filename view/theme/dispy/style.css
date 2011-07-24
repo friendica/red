@@ -1112,6 +1112,11 @@ div[id$="wrapper"] br { clear: left; }
  .cc-license { margin-top: 100px; font-size: 0.7em; }                                  
 footer { display: block; margin: 50px 20%; clear: both; }
                                   
+#profile-jot-text {
+    height: 20px;
+    color:#cccccc;
+    border: 1px solid #cccccc;
+}
 /** acl **/
 #photo-edit-perms-select,
 #photos-upload-permissions-wrapper,
