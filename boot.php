@@ -1,6 +1,6 @@
 <?php
 
-define ( 'FRIENDIKA_VERSION',      '2.2.1051' );
+define ( 'FRIENDIKA_VERSION',      '2.2.1052' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
 define ( 'DB_UPDATE_VERSION',      1076      );
 
@@ -270,7 +270,8 @@ class App {
 
 		if(x($_SERVER,'SERVER_NAME')) {
 			$this->hostname = $_SERVER['SERVER_NAME'];
-
+			if(x($_SERVER,'SERVER_PORT') && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443)
+				$this->hostname .= ':' . $_SERVER['SERVER_PORT'];
 			/** 
 			 * Figure out if we are running at the top of a domain
 			 * or in a sub-directory and adjust accordingly
