@@ -34,6 +34,9 @@
 
 		msie = $.browser.msie ;
 		
+		/* setup navbar menus */
+		
+		
 		
 		/* setup onoff widgets */
 		$(".onoff input").each(function(){
@@ -55,34 +58,46 @@
 		
 		/* setup field_richtext */
 		setupFieldRichtext();
-		
-		/* load tinyMCE if needed and setup field_richtext */
-		/*if(typeof tinyMCE == "undefined") {
-			window.tinyMCEPreInit = {
-				suffix:"",
-				base: baseurl+"/library/tinymce/jscripts/tiny_mce/",
-				query:"",
-			};
-			$.getScript(baseurl	+"/library/tinymce/jscripts/tiny_mce/tiny_mce_src.js", setupFieldRichtext);
-		} else {
-		}*/
+
+		/* popup menus */
+		$('a[rel^=#]').click(function(e){
+			e.stopPropagation();
+			menu = $( $(this).attr('rel') );
+			$(this).parent().toggleClass("selected");
+			menu.toggle();
+			return false;
+		});
 		
 		
+
+		/* notifications template */
+		var notifications_tpl= unescape($("#nav-notifications-template[rel=template]").html());
 		
 		/* nav update event  */
 		$('nav').bind('nav-update', function(e,data){;
 			var net = $(data).find('net').text();
-			if(net == 0) { net = ''; $('#net-update').hide() } else { $('#net-update').show() }
+			if(net == 0) { net = ''; $('#net-update').removeClass('show') } else { $('#net-update').addClass('show') }
 			$('#net-update').html(net);
+
 			var home = $(data).find('home').text();
-			if(home == 0) { home = '';  $('#home-update').hide() } else { $('#home-update').show() }
+			if(home == 0) { home = '';  $('#home-update').removeClass('show') } else { $('#home-update').addClass('show') }
 			$('#home-update').html(home);
-			var mail = $(data).find('mail').text();
-			if(mail == 0) { mail = '';  $('#mail-update').hide() } else { $('#mail-update').show() }
-			$('#mail-update').html(mail);
-			var intro = $(data).find('intro').text();
-			if(intro == 0) { intro = ''; $('#notify-update').hide() } else { $('#notify-update').show() }
-			$('#notify-update').html(intro);
+
+			var eNotif = $(data).find('notif')
+			notif = eNotif.attr('count');
+			if (notif>0){
+				nnm = $("#nav-notifications-menu");
+				nnm.html("");
+				eNotif.children("note").each(function(){
+					e = $(this);
+					text = e.text().format("<span class='contactname'>"+e.attr('name')+"</span>");
+					html = notifications_tpl.format(e.attr('href'),e.attr('photo'), text, e.attr('date'));
+					nnm.append(html);
+				});
+			}
+			if(notif == 0) { notif = ''; $('#notify-update').removeClass('show') } else { $('#notify-update').addClass('show') }
+			$('#notify-update').html(notif);
+			
 		});
 		
 		
