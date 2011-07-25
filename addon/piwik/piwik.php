@@ -12,7 +12,7 @@
  *   Author: Tobias Diekershoff
  *           tobias.diekershoff@gmx.net
  *
- *   License: 3-clause BSD license (same as Friendika)
+*   License: 3-clause BSD license
  *
  *   Configuration:
  *     Add the following two lines to your .htconfig.php file:

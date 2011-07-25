@@ -10,7 +10,7 @@
  *   Author: Tobias Diekershoff
  *           tobias.diekershoff@gmx.net
  *
- *   License:3-clause BSD license (same as Friendika)
+ *   License:3-clause BSD license
  *
  *   Configuration:
  *     To activate the plugin itself add it to the $a->config['system']['addon']
@@ -155,8 +155,8 @@ function statusnet_settings_post ($a,$post) {
                 goaway($a->get_baseurl().'/settings/addon');
             } else {
     	        if (isset($_POST['statusnet-pin'])) {
-					//  if the user supplied us with a PIN from Twitter, let the magic of OAuth happen
-					logger('got a StatusNet security code');
+                	//  if the user supplied us with a PIN from Twitter, let the magic of OAuth happen
+			logger('got a StatusNet security code');
                     $api     = get_pconfig(local_user(), 'statusnet', 'baseapi');
 					$ckey    = get_pconfig(local_user(), 'statusnet', 'consumerkey'  );
 					$csecret = get_pconfig(local_user(), 'statusnet', 'consumersecret' );

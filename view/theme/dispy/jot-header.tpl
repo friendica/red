@@ -2,74 +2,104 @@
 <script language="javascript" type="text/javascript" src="$baseurl/library/tinymce/jscripts/tiny_mce/tiny_mce_src.js"></script>
 <script language="javascript" type="text/javascript">
 
-var editor;
+var editor=false;
 var textlen = 0;
 
-tinyMCE.init({
-	theme : "advanced",
-	mode : "specific_textareas",
-	editor_selector: /(profile-jot-text|prvmail-text)/,
-	plugins : "bbcode,paste,fullscreen,autoresize",
-	theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,forecolor,formatselect,code,fullscreen",
-	theme_advanced_buttons2 : "",
-	theme_advanced_buttons3 : "",
-	theme_advanced_toolbar_location : "top",
-	theme_advanced_toolbar_align : "center",
-	theme_advanced_blockformats : "blockquote,code",
-	//theme_advanced_resizing : true,
-	//theme_advanced_statusbar_location : "bottom",
-	paste_text_sticky : true,
-	entity_encoding : "raw",
-	add_unload_trigger : false,
-	remove_linebreaks : false,
-	force_p_newlines : false,
-	force_br_newlines : true,
-	forced_root_block : '',
-	convert_urls: false,
-	content_css: "$baseurl/view/custom_tinymce.css",
-	theme_advanced_path : false,
-	setup : function(ed) {
-	     //Character count
-		ed.onKeyUp.add(function(ed, e) {
-			var txt = tinyMCE.activeEditor.getContent();
-			textlen = txt.length;
-			if(textlen != 0 && $('#jot-perms-icon').is('.unlock')) {
-				$('#profile-jot-desc').html(ispublic);
-			}
-			else {
-				$('#profile-jot-desc').html('&nbsp;');
-			}
+function initEditor(cb) {
+    if (editor==false) {
+        $("#profile-jot-text-loading").show();
+        tinyMCE.init({
+                theme : "advanced",
+                mode : "specific_textareas",
+                editor_selector: /(profile-jot-text|prvmail-text)/,
+                plugins : "bbcode,paste,fullscreen,autoresize",
+                theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,forecolor,formatselect,code,fullscreen",
+                theme_advanced_buttons2 : "",
+                theme_advanced_buttons3 : "",
+                theme_advanced_toolbar_location : "top",
+                theme_advanced_toolbar_align : "center",
+                theme_advanced_blockformats : "blockquote,code",
+                //theme_advanced_resizing : true,
+                //theme_advanced_statusbar_location : "bottom",
+                paste_text_sticky : true,
+                entity_encoding : "raw",
+                add_unload_trigger : false,
+                remove_linebreaks : false,
+                force_p_newlines : false,
+                force_br_newlines : true,
+                forced_root_block : '',
+                convert_urls: false,
+                content_css: "$baseurl/view/custom_tinymce.css",
+                theme_advanced_path : false,
+                setup : function(ed) {
+                     //Character count
+                        ed.onKeyUp.add(function(ed, e) {
+                                var txt = tinyMCE.activeEditor.getContent();
+                                textlen = txt.length;
+                                if(textlen != 0 && $('#jot-perms-icon').is('.unlock')) {
+                                        $('#profile-jot-desc').html(ispublic);
+                                }
+                                else {
+                                        $('#profile-jot-desc').html('&nbsp;');
+                                }
 
-			if(textlen <= 140) {
-				$('#character-counter').removeClass('red');
-				$('#character-counter').removeClass('orange');
-				$('#character-counter').addClass('grey');
-			}
-			if((textlen > 140) && (textlen <= 420)) {
-				$('#character-counter').removeClass('grey');
-				$('#character-counter').removeClass('red');
-				$('#character-counter').addClass('orange');
-			}
-			if(textlen > 420) {
-				$('#character-counter').removeClass('grey');
-				$('#character-counter').removeClass('orange');
-				$('#character-counter').addClass('red');
-			}
-			$('#character-counter').text(textlen);
-    	});
-
-		ed.onInit.add(function(ed) {
-			ed.pasteAsPlainText = true;
-		});
-
-	}
-});
-
+                                if(textlen <= 140) {
+                                        $('#character-counter').removeClass('red');
+                                        $('#character-counter').removeClass('orange');
+                                        $('#character-counter').addClass('grey');
+                                }
+                                if((textlen > 140) && (textlen <= 420)) {
+                                        $('#character-counter').removeClass('grey');
+                                        $('#character-counter').removeClass('red');
+                                        $('#character-counter').addClass('orange');
+                                }
+                                if(textlen > 420) {
+                                        $('#character-counter').removeClass('grey');
+                                        $('#character-counter').removeClass('orange');
+                                        $('#character-counter').addClass('red');
+                                }
+                                $('#character-counter').text(textlen);
+                        });
+                        ed.onInit.add(function(ed) {
+                                ed.pasteAsPlainText = true;
+                                $("#profile-jot-text-loading").hide();
+                                $("#profile-jot-submit-wrapper").show();
+                                $("#profile-upload-wrapper").show();
+                                $("#profile-attach-wrapper").show();
+                                $("#profile-link-wrapper").show();
+                                $("#profile-youtube-wrapper").show();
+                                $("#profile-video-wrapper").show();
+                                $("#profile-audio-wrapper").show();
+                                $("#profile-location-wrapper").show();
+                                $("#profile-nolocation-wrapper").show();
+                                $("#profile-title-wrapper").show();
+                                $("#profile-jot-plugin-wrapper").show();
+                                $("#character-counter").show();
+                                if (typeof cb!="undefined") cb();
+                        });
+                }
+        });
+        editor = true;
+        // setup acl popup
+        $("a#jot-perms-icon").fancybox({
+            'transitionIn' : 'none',
+            'transitionOut' : 'none'
+        }); 
+    } else {
+        if (typeof cb!="undefined") cb();
+    }
+} // initEditor
 </script>
 <script type="text/javascript" src="include/ajaxupload.js" ></script>
 <script>
     var ispublic = '$ispublic';
 	$(document).ready(function() {
+                /* enable tinymce on focus */
+                $("#profile-jot-text").focus(function(){
+                    if (editor) return;
+                    $(this).val("");
+                    initEditor();
+                }); 
 		var uploader = new window.AjaxUpload(
 			'wall-image-upload',
 			{ action: 'wall_upload/$nickname',
@@ -179,9 +209,12 @@ tinyMCE.init({
 	function jotShare(id) {
 		$('#like-rotator-' + id).show();
 		$.get('share/' + id, function(data) {
-			tinyMCE.execCommand('mceInsertRawHTML',false,data);
-			$('#like-rotator-' + id).hide();
-			$(window).scrollTop(0);
+				if (!editor) $("#profile-jot-text").val("");
+				initEditor(function(){
+					tinyMCE.execCommand('mceInsertRawHTML',false,data);
+					$('#like-rotator-' + id).hide();
+					$(window).scrollTop(0);
+				});
 		});
 	}
 
@@ -198,8 +231,11 @@ tinyMCE.init({
 		if(reply && reply.length) {
 			$('#profile-rotator').show();
 			$.get('parse_url?url=' + reply, function(data) {
-				tinyMCE.execCommand('mceInsertRawHTML',false,data);
-				$('#profile-rotator').hide();
+				if (!editor) $("#profile-jot-text").val("");
+				initEditor(function(){
+					tinyMCE.execCommand('mceInsertRawHTML',false,data);
+					$('#profile-rotator').hide();
+				});
 			});
 		}
 	}

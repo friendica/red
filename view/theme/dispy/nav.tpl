@@ -21,6 +21,9 @@ $langselector
 	
 	    {{ if $nav.network }}<li><a id="nav-network-link" class="nav-commlink $nav.network.2" href="$nav.network.0">$nav.network.1</a></li>{{ endif }}
 	
+            {{ if $nav.community }}
+            <li><a id="nav-community-link" class="nav-commlink $nav.community.2" href="$nav.community.0" title="$nav.community.3" >$nav.community.1</a></li>
+            {{ endif }}
 	
 	    {{ if $nav.notifications }}<li><a id="nav-notify-link" class="nav-commlink $nav.notifications.2" href="$nav.notifications.0">$nav.notifications.1</a></li>{{ endif }}
 	    {{ if $nav.messages }}<li><a id="nav-messages-link" class="nav-commlink $nav.messages.2" href="$nav.messages.0">$nav.messages.1</a></li>{{ endif }}

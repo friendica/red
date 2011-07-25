@@ -11,7 +11,7 @@
  *   Author: Tobias Diekershoff
  *           tobias.diekershoff@gmx.net
  *
- *   License:3-clause BSD license (same as Friendika)
+ *   License:3-clause BSD license
  *
  *   Configuration:
  *     To use this plugin you need a OAuth Consumer key pair (key & secret)

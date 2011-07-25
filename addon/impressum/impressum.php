@@ -4,7 +4,7 @@
  * Description: Plugin to add contact information to the about page (/friendika)
  * Version: 1.0
  * Author: Tobias Diekershoff <https://diekershoff.homeunix.net/friendika/profile/tobias>
- * License: 3-clause BSD license (same as Friendika)
+ * License: 3-clause BSD license
  */
 
 function impressum_install() {
