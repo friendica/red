@@ -209,11 +209,12 @@ function initEditor(cb) {
 	function jotShare(id) {
 		$('#like-rotator-' + id).show();
 		$.get('share/' + id, function(data) {
-                    initEditor(function(){
-                        tinyMCE.execCommand('mceInsertRawHTML',false,data);
-                        $('#like-rotator-' + id).hide();
-                        $(window).scrollTop(0);
-                    })
+				if (!editor) $("#profile-jot-text").val("");
+				initEditor(function(){
+					tinyMCE.execCommand('mceInsertRawHTML',false,data);
+					$('#like-rotator-' + id).hide();
+					$(window).scrollTop(0);
+				});
 		});
 	}
 
@@ -230,8 +231,11 @@ function initEditor(cb) {
 		if(reply && reply.length) {
 			$('#profile-rotator').show();
 			$.get('parse_url?url=' + reply, function(data) {
-				tinyMCE.execCommand('mceInsertRawHTML',false,data);
-				$('#profile-rotator').hide();
+				if (!editor) $("#profile-jot-text").val("");
+				initEditor(function(){
+					tinyMCE.execCommand('mceInsertRawHTML',false,data);
+					$('#profile-rotator').hide();
+				});
 			});
 		}
 	}
