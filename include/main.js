@@ -61,8 +61,9 @@
 
 		/* popup menus */
 		$('a[rel^=#]').click(function(e){
-			e.stopPropagation();
 			menu = $( $(this).attr('rel') );
+			e.stopPropagation();
+			if (menu.attr('popup')=="false") return false;
 			$(this).parent().toggleClass("selected");
 			menu.toggle();
 			return false;
@@ -72,6 +73,7 @@
 
 		/* notifications template */
 		var notifications_tpl= unescape($("#nav-notifications-template[rel=template]").html());
+		var notifications_empty = unescape($("#nav-notifications-menu").html());
 		
 		/* nav update event  */
 		$('nav').bind('nav-update', function(e,data){;
@@ -88,12 +90,15 @@
 			if (notif>0){
 				nnm = $("#nav-notifications-menu");
 				nnm.html("");
+				nnm.attr('popup','true');
 				eNotif.children("note").each(function(){
 					e = $(this);
 					text = e.text().format("<span class='contactname'>"+e.attr('name')+"</span>");
 					html = notifications_tpl.format(e.attr('href'),e.attr('photo'), text, e.attr('date'));
 					nnm.append(html);
 				});
+			} else {
+				$("#nav-notifications-menu").html(notifications_empty);
 			}
 			if(notif == 0) { notif = ''; $('#notify-update').removeClass('show') } else { $('#notify-update').addClass('show') }
 			$('#notify-update').html(notif);

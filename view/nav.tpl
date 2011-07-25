@@ -5,7 +5,7 @@
 </header>
 <nav>
 	<ul>
-		<li id="nav-user-link" class="nav-menu-icon"><a href="#" rel="#nav-user-menu" title="$sitelocation"><img src="http://localhost/~fabio/friendika/photo/52728a08b979618a787e43664bfbae98-6.jpg" alt="User"></a>
+		<li id="nav-user-linkmenu" class="nav-menu-icon"><a href="#" rel="#nav-user-menu" title="$sitelocation"><img src="http://localhost/~fabio/friendika/photo/52728a08b979618a787e43664bfbae98-6.jpg" alt="User"></a>
 			<ul id="nav-user-menu" class="menu-popup">
 				<li><a href="profile">Profile</a></li>
 				<li><a href="photos">Photos</a></li>
@@ -34,9 +34,10 @@
 		{{ endif }}
 		
 		{{ if $nav.notifications }}
-			<li  id="nav-notifications-link" class="nav-menu-icon"><a href="#" rel="#nav-notifications-menu" title="$nav.notifications.1"><span class="icon s22 notify">$nav.notifications.1</span></a>
+			<li  id="nav-notifications-linkmenu" class="nav-menu-icon"><a href="$nav.notifications.0" rel="#nav-notifications-menu" title="$nav.notifications.1"><span class="icon s22 notify">$nav.notifications.1</span></a>
 				<span id="notify-update" class="nav-notify"></span>
 				<ul id="nav-notifications-menu" class="menu-popup">
+					<li class="empty">Nothing new here</li>
 				</ul>
 			</li>		
 		{{ endif }}
@@ -47,7 +48,7 @@
 		
 		
 		
-		<li id="nav-site-link" class="nav-menu-icon"><a href="#" rel="#nav-site-menu"><span class="icon s22 gear">Site</span></a>
+		<li id="nav-site-linkmenu" class="nav-menu-icon"><a href="#" rel="#nav-site-menu"><span class="icon s22 gear">Site</span></a>
 			<ul id="nav-site-menu" class="menu-popup">
 				{{ if $nav.settings }}<li><a class="$nav.settings.2" href="$nav.settings.0" title="$nav.settings.3">$nav.settings.1</a></li>{{ endif }}
 				{{ if $nav.admin }}<li><a class="$nav.admin.2" href="$nav.admin.0" title="$nav.admin.3" >$nav.admin.1</a></li>{{ endif }}

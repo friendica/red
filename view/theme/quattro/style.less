@@ -188,12 +188,12 @@ nav {
 		
 		
 		
-		#nav-site-link { 
+		#nav-site-linkmenu { 
 			float: right;
 			.menu-popup{ right: 0px; left: auto; }
 		}
 	
-		#nav-notifications-link.selected .icon.s22.notify { background-image: url("../../../images/icons/notify_on_22.png") }
+		#nav-notifications-linkmenu.selected .icon.s22.notify { background-image: url("../../../images/icons/notify_on_22.png") }
 		
 }
 
@@ -213,6 +213,12 @@ ul.menu-popup {
 		a:hover { background-color: @Metalic1; }
 		.menu-sep  { border-top: 1px solid @Metalic2; }
 		li { float: none;  overflow: auto; height: auto; display: block; }
+		
+		.empty {
+			padding: 5px;
+			text-align: center;
+			color: @Metalic2;
+		}
 }
 
 #nav-notifications-menu {
