@@ -2946,6 +2946,11 @@ function get_plugin_info($plugin){
 	return $info;
 }}
 
+if(! function_exists('set_nav_selected')){
+function set_nav_selected($id){
+	return '<script>	$(document).ready(function() { $("#'.$id.'").addClass("selected"); });</script>';
+}}
+
 if(! function_exists('return_bytes')) {
 function return_bytes ($size_str) {
     switch (substr ($size_str, -1))

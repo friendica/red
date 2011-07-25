@@ -41,7 +41,7 @@ function nav(&$a) {
 		$nav['logout'] = Array('logout',t('Logout'), "", t('End this session'));
 	}
 	else {
-		$nav['login'] = Array('login',t('Login'), ($a->module == 'login'?'nav-selected':''), t('Sign in'));
+		$nav['login'] = Array('login',t('Login'), ($a->module == 'login'?'selected':''), t('Sign in'));
 	}
 
 

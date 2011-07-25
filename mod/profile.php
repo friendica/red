@@ -70,7 +70,7 @@ function profile_content(&$a, $update = 0) {
 	}
 	else {
 		if($a->profile['profile_uid'] == local_user())		
-			$o .= '<script>	$(document).ready(function() { $(\'#nav-home-link\').addClass(\'nav-selected\'); });</script>';
+			$o .= set_nav_selected('nav-home-link');
 	}
 
 	$contact = null;

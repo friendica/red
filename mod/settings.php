@@ -299,7 +299,7 @@ if(! function_exists('settings_content')) {
 function settings_content(&$a) {
 
 	$o = '';
-	$o .= '<script>	$(document).ready(function() { $(\'#nav-settings-link\').addClass(\'nav-selected\'); });</script>';
+	$o .=  set_nav_selected('nav-settings-link');
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL );
