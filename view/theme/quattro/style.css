@@ -2,27 +2,9 @@
  * Fabio Comuni <http://kirgroup.com/profile/fabrixxm>
  **/
 /* fonts */
-@font-face {
-  font-family: "LiberationSans";
-  src: local("Liberation Sans"), url(LiberationSans-Regular.ttf) format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: "LiberationSans";
-  src: local("Liberation Sans"), url(LiberationSans-Bold.ttf) format("truetype");
-  font-weight: bold;
-  font-style: normal;
-}
-@font-face {
-  font-family: "LiberationSans";
-  src: local("Liberation Sans"), url(LiberationSans-Italic.ttf) format("truetype");
-  font-weight: normal;
-  font-style: italic;
-}
 /* global */
 body {
-  font-family: LiberationSans, helvetica, arial, freesans, clean, sans-serif;
+  font-family: Liberation Sans, helvetica, arial, clean, sans-serif;
   font-size: 12px;
   background-color: #FFFFFF;
   color: #2d2d2d;
@@ -41,37 +23,81 @@ a:hover {
 .right {
   float: right;
 }
+/* icons */
+.icon {
+  background-color: transparent ;
+  background-repeat: no-repeat;
+  background-position: center center;
+  display: block;
+  overflow: hidden;
+  text-indent: -9999px;
+}
+.icon.s22 {
+  width: 22px;
+  height: 22px;
+  padding: 1px;
+}
+.icon.s22.notify {
+  background-image: url("../../../images/icons/notify_off_22.png");
+}
+.icon.s22.gear {
+  background-image: url("../../../images/icons/gear_22.png");
+}
+/* header */
+header {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  height: 12px;
+  color: #FFFFFF;
+}
+header #site-location {
+  /*font-size:8px;
+		float:left;
+		background-color: @Metalic3;
+		padding: 1px 5px;
+		margin-left: 20px;
+		.roundbottom()*/
+
+  display: none;
+}
 /* nav */
 nav {
   width: 100%;
-  height: 50px;
+  height: 32px;
+  position: fixed;
+  left: 0px;
+  top: 0px;
   background-color: #0e232e;
   color: #FFFFFF;
 }
 nav a,
+nav a:active,
 nav a:visited,
 nav a:link,
 nav a:hover {
   color: #FFFFFF;
   text-decoration: none;
+  outline: none;
 }
-nav #site-location {
-  font-size: 8px;
-  float: left;
-  background-color: #364e59;
-  padding: 1px 5px;
-  margin-left: 20px;
-  -moz-border-radius: 0 0 5px 5px;
-  -webkit-border-radius: 0 0 5px 5px;
-  border-radius: 0 0 5px 5px;
-}
-nav #nav {
-  clear: both;
+nav ul {
+  margin: 0px;
   padding: 0px 20px;
-  height: auto;
-  padding-top: 6px;
 }
-nav #nav .nav-menu-icon {
+nav ul li {
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+  float: left;
+}
+nav ul li .menu-popup {
+  left: 0px;
+  right: auto;
+}
+nav .nav-menu-icon {
   position: relative;
   height: 22px;
   padding: 5px;
@@ -80,14 +106,17 @@ nav #nav .nav-menu-icon {
   -webkit-border-radius: 5px 5px 0 0;
   border-radius: 5px 5px 0 0;
 }
-nav #nav .nav-menu-icon.selected {
+nav .nav-menu-icon.selected {
   background-color: #364e59;
 }
-nav #nav .nav-menu-icon img {
+nav .nav-menu-icon img {
   width: 22px;
   height: 22px;
 }
-nav #nav .nav-menu {
+nav .nav-menu-icon .nav-notify {
+  top: 3px;
+}
+nav .nav-menu {
   position: relative;
   height: 16px;
   padding: 5px;
@@ -95,10 +124,11 @@ nav #nav .nav-menu {
   font-size: 14px;
   border-bottom: 3px solid #0e232e;
 }
-nav #nav .nav-menu.selected {
+nav .nav-menu.selected {
   border-bottom: 3px solid #9eabb0;
 }
-nav #nav .nav-menu .nav-notify {
+nav .nav-notify {
+  display: none;
   position: absolute;
   background-color: #19aeff;
   -moz-border-radius: 5px 5px 5px 5px;
@@ -111,10 +141,22 @@ nav #nav .nav-menu .nav-notify {
   min-width: 15px;
   text-align: right;
 }
+nav .nav-notify.show {
+  display: block;
+}
+nav #nav-site-link {
+  float: right;
+}
+nav #nav-site-link .menu-popup {
+  right: 0px;
+  left: auto;
+}
+nav #nav-notifications-link.selected .icon.s22.notify {
+  background-image: url("../../../images/icons/notify_on_22.png");
+}
 ul.menu-popup {
   position: absolute;
-  /*display: none;*/
-
+  display: none;
   width: auto;
   background: #FFFFFF;
   color: #2d2d2d;
@@ -135,34 +177,26 @@ ul.menu-popup a:hover {
 ul.menu-popup .menu-sep {
   border-top: 1px solid #9eabb0;
 }
-.left .menu-popup {
-  left: 0px;
-}
-.right .menu-popup {
-  right: 0px;
-}
-/* icons */
-.icon {
-  background-color: transparent ;
-  background-repeat: no-repeat;
-  background-position: center center;
+ul.menu-popup li {
+  float: none;
+  overflow: auto;
+  height: auto;
   display: block;
 }
-.icon.s22 {
-  width: 22px;
-  height: 22px;
+#nav-notifications-menu {
+  width: 400px;
 }
-.icon.s22.notify_off {
-  background-image: url("../../../images/icons/notify_off_22.png");
+#nav-notifications-menu img {
+  float: left;
+  margin-right: 5px;
 }
-.icon.s22.notify_on {
-  background-image: url("../../../images/icons/notify_on_22.png");
+#nav-notifications-menu .contactname {
+  font-weight: bold;
+}
+#nav-notifications-menu .notif-when {
+  font-size: 10px;
+  color: #9eabb0;
+  display: block;
 }
 /* aside */
-aside {
-  display: none;
-}
 /* section */
-section {
-  display: none;
-}
