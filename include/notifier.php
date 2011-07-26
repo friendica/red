@@ -145,7 +145,7 @@ function notifier_run($argv, $argc){
 
 		$parent = $items[0];
 
-		if($parent['type'] === 'remote' && (! $expire)) {
+		if($parent['wall'] != 0 && (! $expire)) {
 			// local followup to remote post
 			$followup = true;
 			$notify_hub = false; // not public
