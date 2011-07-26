@@ -2075,7 +2075,7 @@ function get_tags($s) {
 				continue;
 			}
 			// ignore strictly numeric tags like #1
-			if((strpos($mtch,'#') === 0) && ctype_digit(substr($mtch,1)))
+			if((strpos($mtch,'#') === 0) && ctype_digit($mtch))
 				continue;
 			if(substr($mtch,-1,1) === '.')
 				$ret[] = substr($mtch,0,-1);
