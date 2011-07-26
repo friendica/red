@@ -11,6 +11,7 @@ function initEditor(cb){
 			theme : "advanced",
 			mode : "specific_textareas",
 			editor_selector: /(profile-jot-text|prvmail-text)/,
+			auto_focus: "profile-jot-text",
 			plugins : "bbcode,paste,autoresize",
 			theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,forecolor,formatselect,code",
 			theme_advanced_buttons2 : "",
