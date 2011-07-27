@@ -341,10 +341,10 @@ function event_store($arr) {
 		$item_arr['author-link']   = $contact['url'];
 		$item_arr['author-avatar'] = $contact['thumb'];
 		$item_arr['title']         = '';
-		$item_arr['allow_cid']     = $str_contact_allow;
-		$item_arr['allow_gid']     = $str_group_allow;
-		$item_arr['deny_cid']      = $str_contact_deny;
-		$item_arr['deny_gid']      = $str_group_deny;
+		$item_arr['allow_cid']     = $arr['allow_cid'];
+		$item_arr['allow_gid']     = $arr['allow_gid'];
+		$item_arr['deny_cid']      = $arr['deny_cid'];
+		$item_arr['deny_gid']      = $arr['deny_gid'];
 		$item_arr['last-child']    = 1;
 		$item_arr['visible']       = 1;
 		$item_arr['verb']          = ACTIVITY_POST;
