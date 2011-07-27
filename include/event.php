@@ -197,6 +197,7 @@ function event_store($arr) {
 	$arr['type']    = (($arr['type']) ? $arr['type'] : 'event' );	
 	$arr['cid']     = ((intval($arr['cid'])) ? intval($arr['cid']) : 0);
 	$arr['uri']     = (x($arr,'uri') ? $arr['uri'] : item_new_uri($a->get_hostname(),$arr['uid']));
+	$arr['private'] = ((x($arr,'private')) ? intval($arr['private']) : 0);
 
 	if($arr['cid'])
 		$c = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -275,7 +276,7 @@ function event_store($arr) {
 			$object .= '</object>' . "\n";
 
 
-			q("UPDATE `item` SET `body` = '%s', `object` = '%s', `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `edited` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			q("UPDATE `item` SET `body` = '%s', `object` = '%s', `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `edited` = '%s', `private` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				dbesc(format_event_bbcode($arr)),
 				dbesc($object),
 				dbesc($arr['allow_cid']),
@@ -283,6 +284,7 @@ function event_store($arr) {
 				dbesc($arr['deny_cid']),
 				dbesc($arr['deny_gid']),
 				dbesc($arr['edited']),
+				intval($arr['private']),
 				intval($r[0]['id']),
 				intval($arr['uid'])
 			);
@@ -345,6 +347,7 @@ function event_store($arr) {
 		$item_arr['allow_gid']     = $arr['allow_gid'];
 		$item_arr['deny_cid']      = $arr['deny_cid'];
 		$item_arr['deny_gid']      = $arr['deny_gid'];
+		$item_arr['private']       = $arr['private'];
 		$item_arr['last-child']    = 1;
 		$item_arr['visible']       = 1;
 		$item_arr['verb']          = ACTIVITY_POST;
