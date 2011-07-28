@@ -903,7 +903,7 @@ function photos_content(&$a) {
 		$album = hex2bin($datum);
 
 		$r = q("SELECT `resource-id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
-			$sql_extra GROUP BY `resource-id`",
+			AND `scale` < 4 $sql_extra GROUP BY `resource-id`",
 			intval($owner_uid),
 			dbesc($album)
 		);
@@ -913,7 +913,7 @@ function photos_content(&$a) {
 		}
 
 		$r = q("SELECT `resource-id`, `id`, `filename`, max(`scale`) AS `scale`, `desc` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
-			$sql_extra GROUP BY `resource-id` ORDER BY `created` DESC LIMIT %d , %d",
+			AND `scale` < 4 $sql_extra GROUP BY `resource-id` ORDER BY `created` DESC LIMIT %d , %d",
 			intval($owner_uid),
 			dbesc($album),
 			intval($a->pager['start']),
