@@ -182,9 +182,10 @@ function twitter_settings(&$a,&$s) {
 			$s .= '<div id="twitter-enable-wrapper">';
 			$s .= '<label id="twitter-enable-label" for="twitter-checkbox">'. t('Allow posting to Twitter'). '</label>';
 			$s .= '<input id="twitter-checkbox" type="checkbox" name="twitter-enable" value="1" ' . $checked . '/>';
-                        $s .= '</div><div class="clear"></div>';
+                        $s .= '<div class="clear"></div>';
                         $s .= '<label id="twitter-default-label" for="twitter-default">'. t('Send public postings to Twitter by default') .'</label>';
                         $s .= '<input id="twitter-default" type="checkbox" name="twitter-default" value="1" ' . $defchecked . '/>';
+			$s .= '</div><div class="clear"></div>';
 
 			$s .= '<div id="twitter-disconnect-wrapper">';
                         $s .= '<label id="twitter-disconnect-label" for="twitter-disconnect">'. t('Clear OAuth configuration') .'</label>';
