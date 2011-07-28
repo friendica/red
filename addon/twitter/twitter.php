@@ -1,7 +1,7 @@
 <?php
 /**
  * Name: Twitter Connector
- * Version: 1.0
+ * Version: 1.0.1
  * Author: Tobias Diekershoff <https://diekershoff.homeunix.net/friendika/profile/tobias>
  */
 
@@ -87,7 +87,8 @@ function twitter_settings_post ($a,$post) {
 		 */
 		del_pconfig( local_user(), 'twitter', 'consumerkey'  );
 		del_pconfig( local_user(), 'twitter', 'consumersecret' );
-		del_pconfig( local_user(), 'twitter', 'post' );
+                del_pconfig( local_user(), 'twitter', 'post' );
+                del_pconfig( local_user(), 'twitter', 'post_by_default' );
 	} else {
 	if (isset($_POST['twitter-pin'])) {
 		//  if the user supplied us with a PIN from Twitter, let the magic of OAuth happen
@@ -105,11 +106,13 @@ function twitter_settings_post ($a,$post) {
 		set_pconfig(local_user(),'twitter', 'oauthsecret', $token['oauth_token_secret']);
                 set_pconfig(local_user(),'twitter', 'post', 1);
                 //  reload the Addon Settings page, if we don't do it see Bug #42
-                header('Location: '.$a->get_baseurl().'/settings/addon');
+                goaway($a->get_baseurl().'/settings/addon');
 	} else {
 		//  if no PIN is supplied in the POST variables, the user has changed the setting
 		//  to post a tweet for every new __public__ posting to the wall
 		set_pconfig(local_user(),'twitter','post',intval($_POST['twitter-enable']));
+                set_pconfig(local_user(),'twitter','post_by_default',intval($_POST['twitter-default']));
+                info( t('Twitter settings updated.') . EOL);
 	}}
 }
 function twitter_settings(&$a,&$s) {
@@ -127,6 +130,9 @@ function twitter_settings(&$a,&$s) {
 	$osecret = get_pconfig(local_user(), 'twitter', 'oauthsecret' );
         $enabled = get_pconfig(local_user(), 'twitter', 'post');
 	$checked = (($enabled) ? ' checked="checked" ' : '');
+        $defenabled = get_pconfig(local_user(),'twitter','post_by_default');
+	$defchecked = (($defenabled) ? ' checked="checked" ' : '');
+
 	$s .= '<div class="settings-block">';
 	$s .= '<h3>'. t('Twitter Posting Settings') .'</h3>';
 
@@ -172,11 +178,15 @@ function twitter_settings(&$a,&$s) {
 			$connection = new TwitterOAuth($ckey,$csecret,$otoken,$osecret);
 			$details = $connection->get('account/verify_credentials');
 			$s .= '<div id="twitter-info" ><img id="twitter-avatar" src="'.$details->profile_image_url.'" /><p id="twitter-info-block">'. t('Currently connected to: ') .'<a href="https://twitter.com/'.$details->screen_name.'" target="_twitter">'.$details->screen_name.'</a><br /><em>'.$details->description.'</em></p></div>';
-			$s .= '<p>'. t('If enabled all your <strong>public</strong> postings will be posted to the associated Twitter account as well.') .'</p>';
+			$s .= '<p>'. t('If enabled all your <strong>public</strong> postings can be posted to the associated Twitter account. You can choose to do so by default (here) or for every posting separately in the posting options when writing the entry.') .'</p>';
 			$s .= '<div id="twitter-enable-wrapper">';
-			$s .= '<label id="twitter-enable-label" for="twitter-checkbox">'. t('Send public postings to Twitter'). '</label>';
+			$s .= '<label id="twitter-enable-label" for="twitter-checkbox">'. t('Allow posting to Twitter'). '</label>';
 			$s .= '<input id="twitter-checkbox" type="checkbox" name="twitter-enable" value="1" ' . $checked . '/>';
+                        $s .= '<div class="clear"></div>';
+                        $s .= '<label id="twitter-default-label" for="twitter-default">'. t('Send public postings to Twitter by default') .'</label>';
+                        $s .= '<input id="twitter-default" type="checkbox" name="twitter-default" value="1" ' . $defchecked . '/>';
 			$s .= '</div><div class="clear"></div>';
+
 			$s .= '<div id="twitter-disconnect-wrapper">';
                         $s .= '<label id="twitter-disconnect-label" for="twitter-disconnect">'. t('Clear OAuth configuration') .'</label>';
                         $s .= '<input id="twitter-disconnect" type="checkbox" name="twitter-disconnect" value="1" />';
