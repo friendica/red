@@ -2,17 +2,22 @@
 	{# $langselector #}
 
 	<div id="site-location">$sitelocation</div>
+	<div id="banner">$banner</div>
 </header>
 <nav>
 	<ul>
-		<li id="nav-user-linkmenu" class="nav-menu-icon"><a href="#" rel="#nav-user-menu" title="$sitelocation"><img src="http://localhost/~fabio/friendika/photo/52728a08b979618a787e43664bfbae98-6.jpg" alt="User"></a>
-			<ul id="nav-user-menu" class="menu-popup">
-				<li><a href="profile">Profile</a></li>
-				<li><a href="photos">Photos</a></li>
-				{{ if $nav.notifications }}<li><a class="$nav.notifications.2" href="$nav.notifications.0" title="$nav.notifications.3" >$nav.notifications.1</a></li>{{ endif }}
-				{{ if $nav.messages }}<li><a class="$nav.messages.2" href="$nav.messages.0" title="$nav.messages.3" >$nav.messages.1</a></li>{{ endif }}
-			</ul>
-		</li>
+		{{ if $userinfo }}
+			<li id="nav-user-linkmenu" class="nav-menu-icon"><a href="#" rel="#nav-user-menu" title="$sitelocation"><img src="$userinfo.icon" alt="$userinfo.name"></a>
+				<ul id="nav-user-menu" class="menu-popup">
+					{{ for $nav.usermenu as $usermenu }}
+						<li><a class="$usermenu.2" href="$usermenu.0" title="$usermenu.3">$usermenu.1</a></li>
+					{{ endfor }}
+					
+					{{ if $nav.notifications }}<li><a class="$nav.notifications.2" href="$nav.notifications.0" title="$nav.notifications.3" >$nav.notifications.1</a></li>{{ endif }}
+					{{ if $nav.messages }}<li><a class="$nav.messages.2" href="$nav.messages.0" title="$nav.messages.3" >$nav.messages.1</a></li>{{ endif }}
+				</ul>
+			</li>
+		{{ endif }}
 		
 		{{ if $nav.community }}
 			<li id="nav-community-link" class="nav-menu">
@@ -37,7 +42,7 @@
 			<li  id="nav-notifications-linkmenu" class="nav-menu-icon"><a href="$nav.notifications.0" rel="#nav-notifications-menu" title="$nav.notifications.1"><span class="icon s22 notify">$nav.notifications.1</span></a>
 				<span id="notify-update" class="nav-notify"></span>
 				<ul id="nav-notifications-menu" class="menu-popup">
-					<li class="empty">Nothing new here</li>
+					<li class="empty">$emptynotifications</li>
 				</ul>
 			</li>		
 		{{ endif }}

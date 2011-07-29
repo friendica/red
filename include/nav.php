@@ -37,8 +37,26 @@ function nav(&$a) {
 	 * Display login or logout
 	 */
 
+	$nav['usermenu']=array();
+	$userinfo = null;
+
 	if(local_user()) {
 		$nav['logout'] = Array('logout',t('Logout'), "", t('End this session'));
+		
+		// user menu
+		$nav['usermenu'][] = Array('profile/' . $a->user['nickname'], t('Status'), "", t('Your posts and conversations'));
+		$nav['usermenu'][] = Array('profile/' . $a->user['nickname']. '?tab=profile', t('Profile'), "", t('Your profile page'));
+		$nav['usermenu'][] = Array('photos/' . $a->user['nickname'], t('Photos'), "", t('Your photos'));
+		$nav['usermenu'][] = Array('events/', t('Events'), "", t('Your events'));
+		$nav['usermenu'][] = Array('notes/', t('Personal notes'), "", t('Your personal photos'));
+		
+		// user info
+		$r = q("SELECT micro FROM contact WHERE uid=%d AND self=1", intval($a->user['uid']));
+		$userinfo = array(
+			'icon' => (count($r) ? $r[0]['micro']: $a->get_baseurl()."/images/default-profile-mm.jpg"),
+			'name' => $a->user['username'],
+		);
+		
 	}
 	else {
 		$nav['login'] = Array('login',t('Login'), ($a->module == 'login'?'selected':''), t('Sign in'));
@@ -137,6 +155,8 @@ function nav(&$a) {
 		'$sitelocation' => $sitelocation,
 		'$nav' => $nav,
 		'$banner' =>  $banner,
+		'$emptynotifications' => t('Nothing new here'),
+		'$userinfo' => $userinfo,
 	));
 
 	call_hooks('page_header', $a->page['nav']);
