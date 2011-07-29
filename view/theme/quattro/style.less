@@ -34,9 +34,7 @@
 @Grey4:rgb(102,102,102);
 @Grey5:rgb(45,45,45);
 
-
- 
-/* fonts */
+///* fonts */
 // @font-face {  
 //   font-family: "LiberationSans";  
 //   src: local("Liberation Sans"),url( LiberationSans-Regular.ttf ) format("truetype");
@@ -59,9 +57,16 @@
 body {
 	font-family: Liberation Sans,helvetica,arial,clean,sans-serif;
 	font-size: 12px;
-	background-color: #FFFFFF;
+	background-color: @Grey1;
 	color: @Grey5;
 	margin: 0px;
+	display:table-row;
+}
+
+.shadow(@x: 0px, @y: 5px){
+   -webkit-box-shadow:@x @y 10px rgba(0, 0, 0, 0.7);
+   -moz-box-shadow:@x @y 10px rgba(0, 0, 0, 0.7);
+   box-shadow:@x @y 10px rgba(0, 0, 0, 0.7);
 }
 
 .rounded(@tr: 5px, @tl: 5px, @bl: 5px, @br: 5px){
@@ -108,10 +113,11 @@ a:hover {text-decoration: underline; }
 
 /* header */
 header {
-	position: fixed; left: 0px; top: 0px;
+	position: fixed; left: 43%; right: 43%; top: 0px;
 	margin: 0px; padding: 0px;
-	width: 100%; height: 12px; 
-	color: #FFFFFF;
+	/*width: 100%; height: 12px; */
+	z-index: 110;
+	color: @Grey1;
 	#site-location {
 		/*font-size:8px;
 		float:left;
@@ -121,15 +127,27 @@ header {
 		.roundbottom()*/
 		display: none;
 	}
+	
+	#banner {
+		
+	    text-align: center;
+		width: 100%;
+		a, a:active, a:visited, a:link, a:hover { color: @Grey1; text-decoration: none; outline: none; vertical-align: bottom; }
+		#logo-img { height: 22px; margin-top:5px;}
+		#logo-text { font-size: 22px }
+	}
 }
 /* nav */
 nav { 
 	width: 100%; height: 32px;
 	position: fixed; left: 0px; top: 0px;
+	padding: 0px;
 	background-color: @Metalic4;
-	color: #FFFFFF;
+	color: @Grey1;
+	z-index: 100;
+	.shadow(0px, 0px);
 
-		a, a:active, a:visited, a:link, a:hover { color: #FFFFFF; text-decoration: none; outline: none;  }
+		a, a:active, a:visited, a:link, a:hover { color: @Grey1; text-decoration: none; outline: none;  }
 
 		ul {
 			margin: 0px;
@@ -200,15 +218,17 @@ nav {
 ul.menu-popup {
 	position: absolute;
 	display: none;
-	width: auto;
-	background: #FFFFFF;
+	width: 10em;
+	background: @Grey1;
 	color: @Grey5;
 	margin: 0px;
 	padding: 0px;
 	list-style: none;
 	border: 3px solid @Metalic3;
 	z-index: 100000;
-		
+	
+	.shadow();
+	
 		a { display: block; color: @Grey5; padding: 5px 10px;}
 		a:hover { background-color: @Metalic1; }
 		.menu-sep  { border-top: 1px solid @Metalic2; }
@@ -232,7 +252,15 @@ ul.menu-popup {
 
 
 /* aside */
-// aside { display: none; }
+aside { 
+	display: table-cell;
+	width: 200px;
+	padding:50px 10px 0px 20px;
+}
 
 /* section */
-// section { display: none;}
+section { 
+	display: table-cell;
+	width: 800px;
+	padding:50px 20px 0px 10px;
+}
