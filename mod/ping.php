@@ -31,11 +31,18 @@ function ping_init(&$a) {
 		intval(local_user()),
 		dbesc($myurl)
 	);
-
 	$mail = $r[0]['total'];
+
+	if ($a->config['register_policy'] == REGISTER_APPROVE && is_site_admin()){
+		$r = q("SELECT COUNT(*) AS `total` FROM `register`");
+		$register = $r[0]['total'];
+	} else {
+		$register = "0";
+	}
+
 	
 	header("Content-type: text/xml");
-	echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r\n<result><intro>$intro</intro><mail>$mail</mail><net>$network</net><home>$home</home></result>\r\n";
+	echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r\n<result><intro>$intro</intro><mail>$mail</mail><net>$network</net><home>$home</home><register>$register</register></result>\r\n";
 
 	killme();
 }
