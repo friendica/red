@@ -323,20 +323,31 @@
 	api_register_func('api/account/verify_credentials','api_account_verify_credentials', true);
 	 	
 
+	/**
+	 * get data from $_POST or $_GET
+	 */
+	function requestdata($k){
+		if (isset($_POST[$k])){
+			return $_POST[$k];
+		}
+		if (isset($_GET[$k])){
+			return $_GET[$k];
+		}
+		return null;
+	}
 	// TODO - media uploads
-	
 	function api_statuses_update(&$a, $type) {
 		if (local_user()===false) return false;
 		$user_info = api_get_user($a);
 
 		// convert $_POST array items to the form we use for web posts.
 
-		$_POST['body'] = urldecode($_POST['status']);
-		$_POST['parent'] = $_POST['in_reply_to_status_id'];
-		if($_POST['lat'] && $_POST['long'])
-			$_POST['coord'] = sprintf("%s %s",$_POST['lat'],$_POST['long']);
+		$_POST['body'] = urldecode(requestdata('status'));
+		$_POST['parent'] = requestdata('in_reply_to_status_id');
+		if(requestdata('lat') && requestdata('long'))
+			$_POST['coord'] = sprintf("%s %s",requestdata('lat'),requestdata('long'));
 		$_POST['profile_uid'] = local_user();
-		if($_POST['parent'])
+		if(requestdata('parent'))
 			$_POST['type'] = 'net-comment';
 		else
 			$_POST['type'] = 'wall';
