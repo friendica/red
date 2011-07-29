@@ -36,6 +36,16 @@ function ping_init(&$a) {
 	);
 	$mail = $mails[0]['total'];
 	
+	if ($a->config['register_policy'] == REGISTER_APPROVE && is_site_admin()){
+		$regs = q("SELECT `contact`.`name`, `contact`.`url`, `contact`.`micro`, `register`.`created`, COUNT(*) as `total` FROM `contact` RIGHT JOIN `register` ON `register`.`uid`=`contact`.`uid` WHERE `contact`.`self`=1");
+		$register = $regs[0]['total'];
+	} else {
+		$register = "0";
+	}
+
+
+	$notsxml = '<note href="%s" name="%s" url="%s" photo="%s" date="%s">%s</note>';
+
 	
 	
 	header("Content-type: text/xml");
@@ -44,23 +54,32 @@ function ping_init(&$a) {
 			<intro>$intro</intro>
 			<mail>$mail</mail>
 			<net>$network</net>
-			<home>$home</home>
-			<notif count=\"".($mail+$intro)."\">";
+			<home>$home</home>";
+	if ($register!=0) echo "<register>$register</register>";
+	
+	echo '	<notif count="'.($mail+$intro+$register).'">';
 	if ($intro>0){
 		foreach ($intros as $i) { 
-			echo sprintf ('<note href="%s" name="%s" url="%s" photo="%s" date="%s">%s</note>', 
+			echo sprintf ( $notsxml, 
 				$a->get_baseurl().'/notification/'.$i['id'], $i['name'], $i['url'], $i['photo'], relative_date($i['datetime']), t("{0} wants to be your friend")
 			);
 		};
 	}
 	if ($mail>0){
 		foreach ($mails as $i) { 
-			var_dump($i);
-			echo sprintf ('<note href="%s" name="%s" url="%s" photo="%s" date="%s">%s</note>',
+			echo sprintf ( $notsxml,
 				$a->get_baseurl().'/message/'.$i['id'], $i['from-name'], $i['from-url'], $i['from-photo'], relative_date($i['created']), t("{0} sent you a message")
 			);
 		};
 	}
+	if ($register>0){
+		foreach ($regs as $i) { 
+			echo sprintf ( $notsxml,
+				$a->get_baseurl().'/admin/users/', $i['name'], $i['url'], $i['micro'], relative_date($i['created']), t("{0} requested registration")
+			);
+		};
+	}
+
 
 	echo "  </notif>
 		</result>
