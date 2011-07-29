@@ -347,7 +347,7 @@ function conversation(&$a, $items, $mode, $update) {
 
 			if(($toplevelpost) && (! $item['self']) && ($mode !== 'profile')) {
 
-				if($item['type'] === 'wall') {
+				if($item['wall']) {
 
 					// On the network page, I am the owner. On the display page it will be the profile owner.
 					// This will have been stored in $a->page_contact by our calling page.
@@ -359,7 +359,7 @@ function conversation(&$a, $items, $mode, $update) {
 					$template = $wallwall;
 					$commentww = 'ww';	
 				}
-				if(($item['type'] === 'remote') && (strlen($item['owner-link'])) && ($item['owner-link'] != $item['author-link'])) {
+				if((! $item['wall']) && (strlen($item['owner-link'])) && ($item['owner-link'] != $item['author-link'])) {
 
 					// Could be anybody. 
 

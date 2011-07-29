@@ -45,7 +45,7 @@ code {
 	border: 1px solid #444;
 	background: #EEE;
 	color: #444;
-	padding: 0px 10px 10px 10px;
+	padding: 10px;
 	margin-top: 20px; 
 }
 /*blockquote:before {
@@ -1487,10 +1487,12 @@ input#dfrn-url {
 	height: 20px;
 	color:#cccccc;
 	border: 1px solid #cccccc;
+	padding: 3px 0px 0px 5px;
 }
 
 
 /** acl **/
+#photo-edit-perms-select,
 #photos-upload-permissions-wrapper,
 #profile-jot-acl-wrapper{
 	display:block!important;

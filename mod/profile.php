@@ -21,7 +21,7 @@ function profile_init(&$a) {
 
 	profile_load($a,$which,$profile);
 
-	if((x($a->profile,'page-flags')) && ($a->profile['page-flags'] & PAGE_COMMUNITY)) {
+	if((x($a->profile,'page-flags')) && ($a->profile['page-flags'] == PAGE_COMMUNITY)) {
 		$a->page['htmlhead'] .= '<meta name="friendika.community" content="true" />';
 	}
 	if(x($a->profile,'openidserver'))				
@@ -160,7 +160,7 @@ function profile_content(&$a, $update = 0) {
 		if($tab === 'posts') {
 			$o .= '<div id="live-profile"></div>' . "\r\n";
 			$o .= "<script> var profile_uid = " . $a->profile['profile_uid'] 
-				. "; var netargs = ''; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
+				. "; var netargs = '/?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 		}
 	}
 

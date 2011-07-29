@@ -1,25 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <config>
  <site>
-  <name>$sitedesc</name>
-  <server>$sitename</server>
+  <name>$config.site.name</name>
+  <server>$config.site.server</server>
   <theme>default</theme>
   <path></path>
-  <logo>$sitelogo</logo>
+  <logo>$config.site.logo</logo>
 
   <fancy>true</fancy>
   <language>en</language>
-  <email>$adminemail</email>
+  <email>$config.site.email</email>
   <broughtby></broughtby>
   <broughtbyurl></broughtbyurl>
   <timezone>UTC</timezone>
-  <closed>$siteclosed</closed>
+  <closed>$config.site.closed</closed>
 
   <inviteonly>false</inviteonly>
-  <private>$siteprivate</private>
-  <textlimit>$textlimit</textlimit>
-  <ssl>$has_ssl</ssl>
-  <sslserver>$ssl_server</sslserver>
+  <private>$config.site.private</private>
+  <textlimit>$config.site.textlimit</textlimit>
+  <ssl>$config.site.ssl</ssl>
+  <sslserver>$config.site.sslserver</sslserver>
   <shorturllength>30</shorturllength>
 
 </site>

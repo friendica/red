@@ -561,3 +561,30 @@
 
 	}
 	api_register_func('api/account/rate_limit_status','api_account_rate_limit_status',true);
+
+
+	function api_statusnet_config(&$a,$type) {
+		$name = $a->config['sitename'];
+		$server = $a->get_hostname();
+		$logo = $a->get_baseurl() . '/images/friendika-64.png';
+		$email = $a->config['admin_email'];
+		$closed = (($a->config['register_policy'] == REGISTER_CLOSED) ? 'true' : 'false');
+		$private = (($a->config['system']['block_public']) ? 'true' : 'false');
+		$textlimit = (($a->config['max_import_size']) ? $a->config['max_import_size'] : '200000');
+		$ssl = (($a->config['system']['have_ssl']) ? 'true' : 'false');
+		$sslserver = (($ssl === 'true') ? str_replace('http:','https:',$a->get_baseurl()) : '');
+
+		$config = array(
+			'site' => array('name' => $name,'server' => $server, 'theme' => 'default', 'path' => '',
+				'logo' => $logo, 'fancy' => 'true', 'language' => 'en', 'email' => $email, 'broughtby' => '',
+				'broughtbyurl' => '', 'timezone' => 'UTC', 'closed' => $closed, 'inviteonly' => 'false',
+				'private' => $private, 'textlimit' => $textlimit, 'sslserver' => $sslserver, 'ssl' => $ssl,
+				'shorturllength' => '30'
+			),
+		);  
+
+		return api_apply_template('config', $type, array('$config' => $config));
+
+	}
+	api_register_func('api/statusnet/config','api_statusnet_config',true);
+

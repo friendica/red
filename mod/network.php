@@ -125,10 +125,11 @@ function network_content(&$a, $update = 0) {
 
 			$o .= '<div id="live-network"></div>' . "\r\n";
 			$o .= "<script> var profile_uid = " . $_SESSION['uid'] 
-				. "; var netargs = '" . substr($a->cmd,8) 
-				. ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '')
-				. ((x($_GET,'search')) ? '?search=' . $_GET['search'] : '') 
-				. ((x($_GET,'star')) ? '?star=' . $_GET['star'] : '') 
+				. "; var netargs = '" . substr($a->cmd,8)
+				. '?f='
+				. ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '')
+				. ((x($_GET,'search')) ? '&search=' . $_GET['search'] : '') 
+				. ((x($_GET,'star')) ? '&star=' . $_GET['star'] : '') 
 				. "'; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 
 	}
@@ -208,7 +209,6 @@ function network_content(&$a, $update = 0) {
 		$sql_extra .= " AND `item`.`body` REGEXP '" . dbesc(escape_tags($_GET['search'])) . "' ";
 
 	
-
 	$r = q("SELECT COUNT(*) AS `total`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0

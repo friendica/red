@@ -194,6 +194,12 @@ if(strlen($a->module)) {
 	 */
 
 	if(! $a->module_loaded) {
+
+		// Stupid browser tried to pre-fetch our ACL img template. Don't log the event or return anything - just quietly exit.
+		if((x($_SERVER,'QUERY_STRING')) && strpos($_SERVER['QUERY_STRING'],'{0}') !== false) {
+			killme();
+		}
+
 		if((x($_SERVER,'QUERY_STRING')) && ($_SERVER['QUERY_STRING'] === 'q=internal_error.html') && isset($dreamhost_error_hack)) {
 			logger('index.php: dreamhost_error_hack invoked. Original URI =' . $_SERVER['REQUEST_URI']);
 			goaway($a->get_baseurl() . $_SERVER['REQUEST_URI']);

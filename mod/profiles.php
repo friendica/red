@@ -361,6 +361,9 @@ function profiles_content(&$a) {
 		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
 		$a->page['htmlhead'] .= "<script type=\"text/javascript\" src=\"include/country.js\" ></script>";
 
+		$f = get_config('system','birthday_input_format');
+		if(! $f)
+			$f = 'ymd';
 
 		$is_default = (($r[0]['is-default']) ? 1 : 0);
 		$tpl = get_markup_template("profile_edit.tpl");
@@ -375,7 +378,7 @@ function profiles_content(&$a) {
 			'$lbl_fullname' => t('Your Full Name:'),
 			'$lbl_title' => t('Title/Description:'),
 			'$lbl_gender' => t('Your Gender:'),
-			'$lbl_bd' => t("Birthday \x28y/m/d\x29:"),
+			'$lbl_bd' => sprintf( t("Birthday \x28%s\x29:"),datesel_format($f)),
 			'$lbl_address' => t('Street Address:'),
 			'$lbl_city' => t('Locality/City:'),
 			'$lbl_zip' => t('Postal/Zip Code:'),

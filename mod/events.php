@@ -297,6 +297,12 @@ function events_content(&$a) {
 		$fhour = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'H') : 0);
 		$fminute = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'i') : 0);
 
+		$f = get_config('system','event_input_format');
+		if(! $f)
+			$f = 'ymd';
+
+		$dateformat = datesel_format($f);
+		$timeformat = t('hour:minute');
 
 		require_once('include/acl_selectors.php');
 
@@ -306,14 +312,14 @@ function events_content(&$a) {
 			'$cid' => $cid,
 			'$uri' => $uri,
 			'$e_text' => t('Event details'),
-			'$e_desc' => t('Format is year-month-day hour:minute. Starting date and Description are required.'),
+			'$e_desc' => sprintf( t('Format is %s %s. Starting date and Description are required.'),$dateformat,$timeformat),
 			'$s_text' => t('Event Starts:') . ' <span class="required">*</span> ',
-			'$s_dsel' => datesel('start',$syear+5,$syear,false,$syear,$smonth,$sday),
+			'$s_dsel' => datesel($f,'start',$syear+5,$syear,false,$syear,$smonth,$sday),
 			'$s_tsel' => timesel('start',$shour,$sminute),
 			'$n_text' => t('Finish date/time is not known or not relevant'),
 			'$n_checked' => $n_checked,
 			'$f_text' => t('Event Finishes:'),
-			'$f_dsel' => datesel('finish',$fyear+5,$fyear,false,$fyear,$fmonth,$fday),
+			'$f_dsel' => datesel($f,'finish',$fyear+5,$fyear,false,$fyear,$fmonth,$fday),
 			'$f_tsel' => timesel('finish',$fhour,$fminute),
 			'$a_text' => t('Adjust for viewer timezone'),
 			'$a_checked' => $a_checked,

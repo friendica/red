@@ -1,7 +1,7 @@
 <?php
 /**
  * Name: StatusNet Connector
- * Version: 1.0
+ * Version: 1.0.1
  * Author: Tobias Diekershoff <https://diekershoff.homeunix.net/friendika/profile/tobias>
  */
  
@@ -10,7 +10,7 @@
  *   Author: Tobias Diekershoff
  *           tobias.diekershoff@gmx.net
  *
- *   License:3-clause BSD license (same as Friendika)
+ *   License:3-clause BSD license
  *
  *   Configuration:
  *     To activate the plugin itself add it to the $a->config['system']['addon']
@@ -155,8 +155,8 @@ function statusnet_settings_post ($a,$post) {
                 goaway($a->get_baseurl().'/settings/addon');
             } else {
     	        if (isset($_POST['statusnet-pin'])) {
-					//  if the user supplied us with a PIN from Twitter, let the magic of OAuth happen
-					logger('got a StatusNet security code');
+                	//  if the user supplied us with a PIN from Twitter, let the magic of OAuth happen
+			logger('got a StatusNet security code');
                     $api     = get_pconfig(local_user(), 'statusnet', 'baseapi');
 					$ckey    = get_pconfig(local_user(), 'statusnet', 'consumerkey'  );
 					$csecret = get_pconfig(local_user(), 'statusnet', 'consumersecret' );
@@ -276,7 +276,7 @@ function statusnet_settings(&$a,&$s) {
 			$connection = new StatusNetOAuth($api,$ckey,$csecret,$otoken,$osecret);
 			$details = $connection->get('account/verify_credentials');
 			$s .= '<div id="statusnet-info" ><img id="statusnet-avatar" src="'.$details->profile_image_url.'" /><p id="statusnet-info-block">'. t('Currently connected to: ') .'<a href="'.$details->statusnet_profile_url.'" target="_statusnet">'.$details->screen_name.'</a><br /><em>'.$details->description.'</em></p></div>';
-			$s .= '<p>'. t('If enabled all your <strong>public</strong> postings will be posted to the associated StatusNet account.') .'</p>';
+			$s .= '<p>'. t('If enabled all your <strong>public</strong> postings can be posted to the associated StatusNet account. You can choose to do so by default (here) or for every posting separately in the posting options when writing the entry.') .'</p>';
 			$s .= '<div id="statusnet-enable-wrapper">';
 			$s .= '<label id="statusnet-enable-label" for="statusnet-checkbox">'. t('Allow posting to StatusNet') .'</label>';
 			$s .= '<input id="statusnet-checkbox" type="checkbox" name="statusnet-enable" value="1" ' . $checked . '/>';
