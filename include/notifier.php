@@ -504,7 +504,7 @@ function notifier_run($argv, $argc){
 		
 	// send additional slaps to mentioned remote tags (@foo@example.com)
 
-	if($slap && count($url_recipients) && $followup && $notify_hub && (! $expire)) {
+	if($slap && count($url_recipients) && ($followup || $top_level) && $notify_hub && (! $expire)) {
 		if(! get_config('system','dfrn_only')) {
 			foreach($url_recipients as $url) {
 				if($url) {
