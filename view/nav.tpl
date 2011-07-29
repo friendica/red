@@ -46,9 +46,12 @@
 				</ul>
 			</li>		
 		{{ endif }}
-		<ul id="nav-notifications-template" style="display:none;" rel="template">
-			<li><a href="{0}"><img src="{1}">{2} <span class="notif-when">{3}</span></a></li>
-		</ul>
+
+
+
+		
+	
+
 
 		
 		
@@ -62,10 +65,30 @@
 				{{ if $nav.login }}<li><a class="$nav.login.2" href="$nav.login.0" title="$nav.login.3" >$nav.login.1</a><li>{{ endif }}
 			</ul>		
 		</li>
+		
+		
+		<li id="nav-help-link" class="nav-menu">
+			<a class="$nav.help.2" target="friendika-help" href="$nav.help.0" title="$nav.help.3" >$nav.help.1</a>
+		</li>
+
+		<li id="nav-search-link" class="nav-menu">
+			<a class="$nav.search.2" href="$nav.search.0" title="$nav.search.3" >$nav.search.1</a>
+		</li>
+		<li id="nav-directory-link" class="nav-menu">
+			<a class="$nav.directory.2" href="$nav.directory.0" title="$nav.directory.3" >$nav.directory.1</a>
+		</li>
+		
+		{{ if $nav.apps }}
+			<li id="nav-apps-link" class="nav-menu">
+				<a class=" $nav.apps.2" href="$nav.apps.0" title="$nav.apps.3" >$nav.apps.1</a>
+			</li>
+		{{ endif }}
 	</ul>
 
 </nav>
-
+<ul id="nav-notifications-template" style="display:none;" rel="template">
+	<li><a href="{0}"><img src="{1}">{2} <span class="notif-when">{3}</span></a></li>
+</ul>
 
 {#
 

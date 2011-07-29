@@ -172,9 +172,17 @@ nav .nav-notify {
 nav .nav-notify.show {
   display: block;
 }
+nav #nav-help-link,
+nav #nav-search-link,
+nav #nav-directory-link,
+nav #nav-apps-link,
 nav #nav-site-linkmenu {
   float: right;
 }
+nav #nav-help-link .menu-popup,
+nav #nav-search-link .menu-popup,
+nav #nav-directory-link .menu-popup,
+nav #nav-apps-link .menu-popup,
 nav #nav-site-linkmenu .menu-popup {
   right: 0px;
   left: auto;
