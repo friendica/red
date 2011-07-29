@@ -21,7 +21,7 @@ function profile_init(&$a) {
 
 	profile_load($a,$which,$profile);
 
-	if((x($a->profile,'page-flags')) && ($a->profile['page-flags'] & PAGE_COMMUNITY)) {
+	if((x($a->profile,'page-flags')) && ($a->profile['page-flags'] == PAGE_COMMUNITY)) {
 		$a->page['htmlhead'] .= '<meta name="friendika.community" content="true" />';
 	}
 	if(x($a->profile,'openidserver'))				
