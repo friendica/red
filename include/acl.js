@@ -153,6 +153,9 @@ ACL.prototype.updateview = function(){
 				$('#jot-perms-icon').removeClass('lock').addClass('unlock');
 				$('#jot-public').show();
 				$('.profile-jot-net input').attr('disabled', false);			
+				if(editor != false) {
+					$('#profile-jot-desc').html(ispublic);
+				}
 			
 	} else {
 			that.showall.removeClass("selected");
@@ -160,6 +163,7 @@ ACL.prototype.updateview = function(){
 				$('#jot-perms-icon').removeClass('unlock').addClass('lock');
 				$('#jot-public').hide();
 				$('.profile-jot-net input').attr('disabled', 'disabled');			
+				$('#profile-jot-desc').html('&nbsp;');
 	}
 	
 	$("#acl-list-content .acl-list-item").each(function(){
