@@ -6,7 +6,7 @@
 
 
 require_once('include/salmon.php');
-require_once('library/simplepie/simplepie.inc');
+require_once('include/certfns.php');
 
 function receive_return($val) {
 
@@ -21,6 +21,30 @@ function receive_return($val) {
 
 }
 
+
+function get_diaspora_key($uri) {
+	$key = '';
+
+	logger('Fetching diaspora key for: ' . $uri);
+
+	$arr = lrdd($uri);
+
+	if(is_array($arr)) {
+		foreach($arr as $a) {
+			if($a['@attributes']['rel'] === 'diaspora-public-key') {
+				$key = base64_decode($a['@attributes']['href']);
+			}
+		}
+	}
+	else {
+		return '';
+	}
+
+	if($key)
+		return rsatopem($key);
+	return '';
+}
+	
 function receive_post(&$a) {
 
 	if($a->argc != 3 || $a->argv[1] !== 'users')
@@ -125,12 +149,12 @@ function receive_post(&$a) {
 
 	logger('signature: ' . bin2hex($signature));
 
-	openssl_public_encrypt('test',$rrr,$ryanpubkey);
-	logger('rrr: ' . $rrr);
+//	openssl_public_encrypt('test',$rrr,$rpubkey);
+//	logger('rrr: ' . $rrr);
 
-	$pubdecsig = '';
-	openssl_public_decrypt($signature,$pubdecsig,$ryanpubkey);
-	logger('decsig: ' . bin2hex($pubdecsig));
+//	$pubdecsig = '';
+//	openssl_public_decrypt($signature,$pubdecsig,$rpubkey);
+//	logger('decsig: ' . bin2hex($pubdecsig));
 
 	// unpack the  data
 
@@ -178,9 +202,7 @@ function receive_post(&$a) {
 	logger('mod-diaspora: Fetching key for ' . $author_link );
 
 // Get diaspora public key (pkcs#1) and convert to pkcs#8
-// 	$key = get_diaspora_key($author_link);
-
-//	$key = get_salmon_key($author_link,$keyhash);
+ 	$key = get_diaspora_key($author_link);
 
 	if(! $key) {
 		logger('mod-salmon: Could not retrieve author key.');
