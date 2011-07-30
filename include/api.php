@@ -588,3 +588,20 @@
 	}
 	api_register_func('api/statusnet/config','api_statusnet_config',false);
 
+
+	function api_statusnet_version(&$a,$type) {
+
+		// liar
+
+		if($type === 'xml') {
+			header("Content-type: application/xml");
+			echo '<?xml version="1.0" encoding="UTF-8"?>' . "\r\n" . '<version>0.9.7</version>' . "\r\n";
+			killme();
+		}
+		elseif($type === 'json') {
+			header("Content-type: application/json");
+			echo '"0.9.7"';
+			killme();
+		}
+	}
+	api_register_func('api/statusnet/version','api_statusnet_version',false);
