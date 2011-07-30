@@ -121,6 +121,10 @@ function rsatopem($key) {
 	return(metopem($m,$e));
 }
 
+function pemtorsa($key) {
+	pemtome($key,$m,$e);
+	return(metorsa($m,$e));
+}
 
 function pemtome($key,&$m,&$e) {
 	require_once('include/salmon.php');

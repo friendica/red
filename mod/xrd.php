@@ -1,6 +1,7 @@
 <?php
 
 require_once('salmon.php');
+require_once('certfns.php');
 
 function xrd_content(&$a) {
 
@@ -34,7 +35,7 @@ function xrd_content(&$a) {
 		$dspr = replace_macros($tpl,array(
 			'$baseurl' => $a->get_baseurl(),
 			'$dspr_guid' => $r[0]['guid'],
-			'$dspr_key' => base64_encode($r[0]['pubkey'])
+			'$dspr_key' => base64_encode(pemtorsa($r[0]['pubkey']))
 		));
 	}
 	else
