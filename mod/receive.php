@@ -43,10 +43,68 @@ function receive_post(&$a) {
 	if(! $xml)
 		receive_return(500);
 
-	// parse the xml
 
-	$dom = simplexml_load_string($xml,'SimpleXMLElement',0,NAMESPACE_SALMON_ME);
+	$basedom = parse_xml_string($xml);
 
+	if($basedom)
+		logger('parsed dom');
+
+	$atom = $basedom->children(NAMESPACE_ATOM1);
+
+	logger('atom: ' . count($atom));
+	$encrypted_header = json_decode(base64_decode($atom->encrypted_header));
+
+	print_r($encrypted_header);
+	
+	$encrypted_aes_key_bundle = base64_decode($encrypted_header->aes_key);
+	$ciphertext = base64_decode($encrypted_header->ciphertext);
+
+	logger('encrypted_aes: ' . print_r($encrypted_aes_key_bundle,true));
+	logger('ciphertext: ' . print_r($ciphertext,true));
+
+	$outer_key_bundle = '';
+	openssl_private_decrypt($encrypted_aes_key_bundle,$outer_key_bundle,$localprvkey);
+
+	logger('outer_bundle: ' . print_r($outer_key_bundle,true));
+
+	$j_outer_key_bundle = json_decode($outer_key_bundle);
+
+	$outer_iv = base64_decode($j_outer_key_bundle->iv);
+	$outer_key = base64_decode($j_outer_key_bundle->key);
+
+	$decrypted = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $outer_key, $ciphertext, MCRYPT_MODE_CBC, $outer_iv);
+
+	$decrypted = pkcs5_unpad($decrypted);
+
+	logger('decrypted: ' . print_r($decrypted,true));
+
+	/**
+	 * $decrypted now contains something like
+	 *
+	 *  <decrypted_header>
+	 *     <iv>8e+G2+ET8l5BPuW0sVTnQw==</iv>
+	 *     <aes_key>UvSMb4puPeB14STkcDWq+4QE302Edu15oaprAQSkLKU=</aes_key>
+	 *     <author>
+	 *       <name>Ryan Hughes</name>
+	 *       <uri>acct:galaxor@diaspora.pirateship.org</uri>
+	 *     </author>
+	 *  </decrypted_header>
+	 */
+
+	$idom = parse_xml_string($decrypted,false);
+
+	print_r($idom);
+	$inner_iv = base64_decode($idom->iv);
+	$inner_aes_key = base64_decode($idom->aes_key);
+
+	logger('inner_iv: ' . $inner_iv);
+
+	$dom = $basedom->children(NAMESPACE_SALMON_ME);
+
+	if($dom)
+		logger('have dom');
+
+	logger('dom: ' . count($dom));
 	// figure out where in the DOM tree our data is hiding
 
 	if($dom->provenance->data)
@@ -58,11 +116,21 @@ function receive_post(&$a) {
 	
 	if(! $base) {
 		logger('mod-diaspora: unable to locate salmon data in xml ');
-		receive_return(400);
+		dt_return(400);
 	}
+
 
 	// Stash the signature away for now. We have to find their key or it won't be good for anything.
 	$signature = base64url_decode($base->sig);
+
+	logger('signature: ' . bin2hex($signature));
+
+	openssl_public_encrypt('test',$rrr,$ryanpubkey);
+	logger('rrr: ' . $rrr);
+
+	$pubdecsig = '';
+	openssl_public_decrypt($signature,$pubdecsig,$ryanpubkey);
+	logger('decsig: ' . bin2hex($pubdecsig));
 
 	// unpack the  data
 
@@ -76,40 +144,28 @@ function receive_post(&$a) {
 	$encoding = $base->encoding;
 	$alg = $base->alg;
 
-	$signed_data = $data  . '.' . base64url_encode($type) . '.' . base64url_encode($encoding) . '.' . base64url_encode($alg);
+	$signed_data = $data  . "\n" . '.' . base64url_encode($type) . "\n" . '.' . base64url_encode($encoding) . "\n" . '.' . base64url_encode($alg) . "\n";
+
+	logger('signed data: ' . $signed_data);
 
 	// decode the data
 	$data = base64url_decode($data);
 
-	// Remove the xml declaration
-	$data = preg_replace('/\<\?xml[^\?].*\?\>/','',$data);
+	// Now pull out the inner encrypted blob
 
-	// Create a fake feed wrapper so simplepie doesn't choke
 
-	$tpl = get_markup_template('fake_feed.tpl');
-	
-	$base = substr($data,strpos($data,'<entry'));
 
-	$feedxml = $tpl . $base . '</feed>';
 
-	logger('mod-diaspora: Processed feed: ' . $feedxml);
+	$inner_encrypted = base64_decode($data);
 
-	// Now parse it like a normal atom feed to scrape out the author URI
-	
-    $feed = new SimplePie();
-    $feed->set_raw_data($feedxml);
-    $feed->enable_order_by_date(false);
-    $feed->init();
+	$inner_decrypted = 
+	$inner_decrypted = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $inner_aes_key, $inner_encrypted, MCRYPT_MODE_CBC, $inner_iv);
 
-	logger('mod-diaspora: Feed parsed.');
+	$inner_decrypted = pkcs5_unpad($inner_decrypted);
 
-	if($feed->get_item_quantity()) {
-		foreach($feed->get_items() as $item) {
-			$author = $item->get_author();
-			$author_link = unxmlify($author->get_link());
-			break;
-		}
-	}
+	logger('inner_decrypted: ' . $inner_decrypted);
+
+
 
 	if(! $author_link) {
 		logger('mod-diaspora: Could not retrieve author URI.');
@@ -117,16 +173,24 @@ function receive_post(&$a) {
 	}
 
 	// Once we have the author URI, go to the web and try to find their public key
+	// *** or look it up locally ***
 
-	logger('mod-salmon: Fetching key for ' . $author_link );
+	logger('mod-diaspora: Fetching key for ' . $author_link );
 
+// Get diaspora public key (pkcs#1) and convert to pkcs#8
+// 	$key = get_diaspora_key($author_link);
 
-	$key = get_salmon_key($author_link,$keyhash);
+//	$key = get_salmon_key($author_link,$keyhash);
 
 	if(! $key) {
 		logger('mod-salmon: Could not retrieve author key.');
 		receive_return(400);
 	}
+
+// FIXME
+// Use non salmon compliant signature
+
+/*
 
 	// Setup RSA stuff to verify the signature
 
@@ -155,6 +219,7 @@ function receive_post(&$a) {
 		logger('mod-diaspora: Message did not verify. Discarding.');
 		receive_return(400);
 	}
+*/
 
 	logger('mod-diaspora: Message verified.');
 
@@ -204,7 +269,14 @@ function receive_post(&$a) {
 
 	$contact_rec = ((count($r)) ? $r[0] : null);
 
-	consume_feed($feedxml,$importer,$contact_rec,$hub);
+
+
+
+// figure out what kind of diaspora message we have, and process accordingly.
+
+
+
+
 
 	receive_return(200);
 }
