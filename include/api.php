@@ -201,7 +201,7 @@
 				api_login($a); return False;
 			} else {
 				$user = $_SESSION['uid'];
-				$extra_query = "AND `contact`.`uid` = %d ";
+				$extra_query = "AND `contact`.`uid` = %d AND `contact`.`self` = 1 ";
 			}
 			
 		}
