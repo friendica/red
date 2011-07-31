@@ -444,7 +444,7 @@ function conversation(&$a, $items, $mode, $update) {
 				$profile_link = '';
 
 			$normalised = normalise_link((strlen($item['author-link'])) ? $item['author-link'] : $item['url']);
-			if(($normalised != 'mailbox') && (x($a->contacts[$normalised])))
+			if(($normalised != 'mailbox') && (x($a->contacts,$normalised)))
 				$profile_avatar = $a->contacts[$normalised]['thumb'];
 			else
 				$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $thumb);
@@ -532,33 +532,6 @@ function conversation(&$a, $items, $mode, $update) {
 
 	return $o;
 } 
-
-
-if(! function_exists('load_contact_links')) {
-function load_contact_links($uid) {
-
-	$a = get_app();
-
-	$ret = array();
-
-	if(! $uid || x($a->contacts,'empty'))
-		return;
-
-	$r = q("SELECT `id`,`network`,`url`,`thumb` FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 ",
-			intval($uid)
-	);
-	if(count($r)) {
-		foreach($r as $rr){
-			$url = normalise_link($rr['url']);
-			$ret[$url] = $rr;
-		}
-	}
-	else 
-		$ret['empty'] = true;	
-	$a->contacts = $ret;
-	return;		
-}}
-
 
 function best_link_url($item,&$sparkle) {
 

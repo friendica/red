@@ -6,7 +6,6 @@ require_once('include/salmon.php');
 
 function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) {
 
-
 	// default permissions - anonymous user
 
 	if(! strlen($owner_nick))
@@ -484,7 +483,6 @@ function get_atom_elements($feed,$item) {
 		
 	if((x($res,'verb')) && ($res['verb'] === 'http://ostatus.org/schema/1.0/unfollow'))
 		$res['verb'] = ACTIVITY_UNFOLLOW;
-
 
 	$cats = $item->get_categories();
 	if($cats) {

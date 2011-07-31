@@ -1,6 +1,6 @@
 <?php
 
-define ( 'FRIENDIKA_VERSION',      '2.2.1057' );
+define ( 'FRIENDIKA_VERSION',      '2.2.1058' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
 define ( 'DB_UPDATE_VERSION',      1076      );
 
@@ -2985,3 +2985,29 @@ function pkcs5_unpad($text)
     if (strspn($text, chr($pad), strlen($text) - $pad) != $pad) return false;
     return substr($text, 0, -1 * $pad);
 } 
+
+
+if(! function_exists('load_contact_links')) {
+function load_contact_links($uid) {
+
+	$a = get_app();
+
+	$ret = array();
+
+	if(! $uid || x($a->contacts,'empty'))
+		return;
+
+	$r = q("SELECT `id`,`network`,`url`,`thumb` FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 ",
+			intval($uid)
+	);
+	if(count($r)) {
+		foreach($r as $rr){
+			$url = normalise_link($rr['url']);
+			$ret[$url] = $rr;
+		}
+	}
+	else 
+		$ret['empty'] = true;	
+	$a->contacts = $ret;
+	return;		
+}}

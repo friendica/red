@@ -10,7 +10,6 @@
 	$API = Array();
 	 
 
-	
 	function api_date($str){
 		//Wed May 23 06:01:13 +0000 2007
 		return datetime_convert('UTC', 'UTC', $str, "D M d h:i:s +0000 Y" );
@@ -111,7 +110,10 @@
 				if ($info['auth']===true && local_user()===false) {
 						api_login($a);
 				}
-		
+
+				load_contact_links(local_user());
+
+				logger('API call for ' . $a->user['username'] . ': ' . $a->query_string);		
 				$type="json";		
 				if (strpos($a->query_string, ".xml")>0) $type="xml";
 				if (strpos($a->query_string, ".json")>0) $type="json";
@@ -157,7 +159,9 @@
 		$arr['$rss'] = array(
 			'alternate' => $user_info['url'],
 			'self' => $a->get_baseurl(). "/". $a->query_string,
+			'base' => $a->get_baseurl(),
 			'updated' => api_date(null),
+			'atom_updated' => datetime_convert('UTC','UTC','now',ATOM_TIME),
 			'language' => $user_info['language'],
 			'logo'	=> $a->get_baseurl()."/images/friendika-32.png",
 		);
@@ -277,8 +281,18 @@
 	}
 
 	function api_item_get_user(&$a, $item) {
-		if(link_compare($item['url'],$item['author-link']))
+		// The author is our direct contact, in a conversation with us.
+		if(link_compare($item['url'],$item['author-link'])) {
 			return api_get_user($a,$item['cid']);
+		}
+		else {
+			// The author may be a contact of ours, but is replying to somebody else. 
+			// Figure out if we know him/her.
+			$normalised = normalise_link((strlen($item['author-link'])) ? $item['author-link'] : $item['url']);
+            if(($normalised != 'mailbox') && (x($a->contacts[$normalised])))
+				return api_get_user($a,$a->contacts[$normalised]['id']);
+		}
+		// We don't know this person directly.
 		$ret = array(
 			'uid' => 0,
 			'id' => 0,
@@ -290,7 +304,7 @@
 			'contact_url' => 0,
 			'protected' => false,	#
 			'friends_count' => 0,
-			'created_at' => '0000-00-00 00:00:00',
+			'created_at' => '',
 			'utc_offset' => 0, #XXX: fix me
 			'time_zone' => '', //$uinfo[0]['timezone'],
 			'geo_enabled' => false,
@@ -332,9 +346,11 @@
 	 */
 	function api_apply_template($templatename, $type, $data){
 
+		$a = get_app();
+
 		switch($type){
-			case "rss":
 			case "atom":
+			case "rss":
 			case "xml":
 				$data = api_xmlify($data);
 				$tpl = get_markup_template("api_".$templatename."_".$type.".tpl");
@@ -527,7 +543,7 @@
 		
 		$user_info = api_get_user($a);
 		// get last newtork messages
-		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` ) ";
+//		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` ) ";
 
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
@@ -539,10 +555,108 @@
 			AND `contact`.`id` = `item`.`contact-id`
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 			$sql_extra
-			ORDER BY `item`.`created` DESC LIMIT %d ,%d ",
+			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
 			intval($user_info['uid']),
 			0,20
 		);
+
+		$ret = api_format_items($r,$user_info);
+
+		
+		$data = array('$statuses' => $ret);
+		switch($type){
+			case "atom":
+			case "rss":
+				$data = api_rss_extra($a, $data, $user_info);
+		}
+				
+		return  api_apply_template("timeline", $type, $data);
+	}
+	api_register_func('api/statuses/home_timeline','api_statuses_home_timeline', true);
+	api_register_func('api/statuses/friends_timeline','api_statuses_home_timeline', true);
+
+
+
+	function api_statuses_user_timeline(&$a, $type){
+		if (local_user()===false) return false;
+		
+		$user_info = api_get_user($a);
+		// get last newtork messages
+//		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` ) ";
+
+		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
+			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
+			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
+			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
+			FROM `item`, `contact`
+			WHERE `item`.`uid` = %d
+			AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+			AND `item`.`wall` = 1
+			AND `contact`.`id` = `item`.`contact-id`
+			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+			$sql_extra
+			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
+			intval($user_info['uid']),
+			0,20
+		);
+
+		$ret = api_format_items($r,$user_info);
+
+		
+		$data = array('$statuses' => $ret);
+		switch($type){
+			case "atom":
+			case "rss":
+				$data = api_rss_extra($a, $data, $user_info);
+		}
+				
+		return  api_apply_template("timeline", $type, $data);
+	}
+
+	api_register_func('api/statuses/user_timeline','api_statuses_user_timeline', true);
+
+
+	function api_favorites(&$a, $type){
+		if (local_user()===false) return false;
+		
+		$user_info = api_get_user($a);
+		// get last newtork messages
+//		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` ) ";
+
+		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
+			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
+			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
+			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
+			FROM `item`, `contact`
+			WHERE `item`.`uid` = %d
+			AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+			AND `item`.`starred` = 1
+			AND `contact`.`id` = `item`.`contact-id`
+			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+			$sql_extra
+			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
+			intval($user_info['uid']),
+			0,20
+		);
+
+		$ret = api_format_items($r,$user_info);
+
+		
+		$data = array('$statuses' => $ret);
+		switch($type){
+			case "atom":
+			case "rss":
+				$data = api_rss_extra($a, $data, $user_info);
+		}
+				
+		return  api_apply_template("timeline", $type, $data);
+	}
+
+	api_register_func('api/favorites','api_favorites', true);
+
+	
+	function api_format_items($r,$user_info) {
+		$a = get_app();
 		$ret = Array();
 
 		foreach($r as $item) {
@@ -551,7 +665,7 @@
 				'created_at'=> api_date($item['created']),
 				'published' => datetime_convert('UTC','UTC',$item['created'],ATOM_TIME),
 				'updated'   => datetime_convert('UTC','UTC',$item['edited'],ATOM_TIME),
-				'id'		=> $item['id'],
+				'id'		=> $item['uri'],
 				'text'		=> strip_tags(bbcode($item['body'])),
 				'html'		=> bbcode($item['body']),
 				'source'    => (($item['app']) ? $item['app'] : 'web'),
@@ -568,28 +682,16 @@
 				'annotations'  => '',
 				'entities'  => '',
 				'user' =>  $status_user ,
-				'objecttype' => $item['object-type'],
-				'verb' => $item['verb'],
-				'self' => $a->get_baseurl()."/api/statuses/show/".$ite['id'].".".$type,
-				'edit' => $a->get_baseurl()."/api/statuses/show/".$ite['id'].".".$type,				
+				'objecttype' => (($item['object-type']) ? $item['object-type'] : ACTIVITY_OBJ_NOTE),
+				'verb' => (($item['verb']) ? $item['verb'] : ACTIVITY_POST),
+				'self' => $a->get_baseurl()."/api/statuses/show/".$item['id'].".".$type,
+				'edit' => $a->get_baseurl()."/api/statuses/show/".$item['id'].".".$type,				
 			);
 			$ret[]=$status;
 		};
-		
-		$data = array('$statuses' => $ret);
-		switch($type){
-			case "atom":
-			case "rss":
-				$data = api_rss_extra($a, $data, $user_info);
-		}
-				
-		return  api_apply_template("timeline", $type, $data);
+		return $ret;
 	}
-	api_register_func('api/statuses/home_timeline','api_statuses_home_timeline', true);
-	api_register_func('api/statuses/friends_timeline','api_statuses_home_timeline', true);
-	api_register_func('api/statuses/user_timeline','api_statuses_home_timeline', true);
-	# TODO: user_timeline should be profile view
-	
+
 
 	function api_account_rate_limit_status(&$a,$type) {
 
