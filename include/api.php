@@ -168,9 +168,10 @@
 	/**
 	 * Returns user info array.
 	 */
-	function api_get_user(&$a, $contact_id=Null){
+	function api_get_user(&$a, $contact_id = Null){
 		$user = null;
 		$extra_query = "";
+
 		if(!is_null($contact_id)){
 			$user=$contact_id;
 			$extra_query = "AND `contact`.`id` = %d ";
@@ -273,6 +274,48 @@
 	
 		return $ret;
 		
+	}
+
+	function api_item_get_user(&$a, $item) {
+		if(link_compare($item['url'],$item['author-link']))
+			return api_get_user($a,$item['cid']);
+		$ret = array(
+			'uid' => 0,
+			'id' => 0,
+			'name' => $item['author-name'],
+			'screen_name' => '',
+			'location' => '', //$uinfo[0]['default-location'],
+			'profile_image_url' => $item['author-avatar'],
+			'url' => $item['author-link'],
+			'contact_url' => 0,
+			'protected' => false,	#
+			'friends_count' => 0,
+			'created_at' => '0000-00-00 00:00:00',
+			'utc_offset' => 0, #XXX: fix me
+			'time_zone' => '', //$uinfo[0]['timezone'],
+			'geo_enabled' => false,
+			'statuses_count' => 0,
+			'lang' => 'en', #XXX: fix me
+			'description' => '',
+			'followers_count' => 0,
+			'favourites_count' => 0,
+			'contributors_enabled' => false,
+			'follow_request_sent' => false,
+			'profile_background_color' => 'cfe8f6',
+			'profile_text_color' => '000000',
+			'profile_link_color' => 'FF8500',
+			'profile_sidebar_fill_color' =>'AD0066',
+			'profile_sidebar_border_color' => 'AD0066',
+			'profile_background_image_url' => '',
+			'profile_background_tile' => false,
+			'profile_use_background_image' => false,
+			'notifications' => false,
+			'verified' => true, #XXX: fix me
+			'followers' => '', #XXX: fix me
+			#'status' => null
+		);
+
+		return $ret; 
 	}
 
 	/**
@@ -503,7 +546,7 @@
 		$ret = Array();
 
 		foreach($r as $item) {
-			$status_user = (($item['cid']==$user_info['id'])?$user_info: api_get_user($a,$item['cid']));
+			$status_user = (($item['cid']==$user_info['id'])?$user_info: api_item_get_user($a,$item));
 			$status = array(
 				'created_at'=> api_date($item['created']),
 				'published' => datetime_convert('UTC','UTC',$item['created'],ATOM_TIME),
