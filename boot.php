@@ -2396,6 +2396,8 @@ function profile_load(&$a, $nickname, $profile = 0) {
 if(! function_exists('profile_sidebar')) {
 function profile_sidebar($profile) {
 
+	$a = get_app();
+
 	$o = '';
 	$location = '';
 	$address = false;
@@ -2454,6 +2456,41 @@ function profile_sidebar($profile) {
 		$location = $gender = $marital = $homepage = '';
 	}
 
+	$podloc = $a->get_baseurl();
+	$searchable = (($profile['publish'] && $profile['net-publish']) ? 'true' : 'false' );
+	$nickname = $profile['nick'];
+	$dphoto = $profile['photo'];
+
+	$diaspora_vcard = <<< EOT
+
+<div style="display:none;">
+<dl class='entity_nickname'>
+<dt>Nickname</dt>
+<dd>
+<a class="nickname url uid" href="$podloc" rel="me">$nickname</a>
+</dd>
+</dl>
+<dl class="entity_url">
+<dt>URL</dt>
+<dd>
+<a class="url" href="$podloc" id="pod_location" rel="me">$podloc</a>
+</dd>
+</dl>
+<dl class="entity_photo">
+<dt>Photo</dt>
+<dd>
+<img class="photo avatar" height="175px" src="$dphoto" width='175px'>
+</dd>
+</dl>
+<dl class='entity_searchable'>
+<dt>Searchable</dt>
+<dd>
+<span class='searchable'>$searchable</span>
+</dd>
+</dl>
+</div>
+EOT;
+
 	$tpl = get_markup_template('profile_vcard.tpl');
 
 	$o .= replace_macros($tpl, array(
@@ -2466,7 +2503,8 @@ function profile_sidebar($profile) {
 		'$gender'   => $gender,
 		'$pubkey'   => $pubkey,
 		'$marital'  => $marital,
-		'$homepage' => $homepage
+		'$homepage' => $homepage,
+		'$diaspora' => $diaspora_vcard
 	));
 
 

@@ -114,6 +114,7 @@
 				load_contact_links(local_user());
 
 				logger('API call for ' . $a->user['username'] . ': ' . $a->query_string);		
+				logger('API parameters: ' . print_r($_REQUEST,true));
 				$type="json";		
 				if (strpos($a->query_string, ".xml")>0) $type="xml";
 				if (strpos($a->query_string, ".json")>0) $type="json";
@@ -220,7 +221,7 @@
 			}
 		}
 		
-		if ($user==='') {
+		if (! $user) {
 			if (local_user()===false) {
 				api_login($a); return False;
 			} else {
@@ -230,7 +231,7 @@
 			
 		}
 		
-
+		logger('api_user: ' . $extra_query . ' ' , $user);
 		// user info		
 		$uinfo = q("SELECT *, `contact`.`id` as `cid` FROM `contact`
 				WHERE 1
