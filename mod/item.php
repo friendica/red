@@ -33,11 +33,18 @@ function item_post(&$a) {
 
 	call_hooks('post_local_start', $_POST);
 
+
+	/**
+	 * Is this a reply to something?
+	 */
+
 	$parent = ((x($_POST,'parent')) ? intval($_POST['parent']) : 0);
 	$parent_uri = ((x($_POST,'parent_uri')) ? trim($_POST['parent_uri']) : '');
 
 	$parent_item = null;
 	$parent_contact = null;
+	$thr_parent = '';
+	$parid = 0;
 	$r = false;
 
 	if($parent || $parent_uri) {
@@ -47,11 +54,20 @@ function item_post(&$a) {
 			);
 		}
 		elseif($parent_uri && local_user()) {
+			$_POST['type'] = 'net-comment';
 			// This is coming from an API source, we are logged in
+			// This query will find the immediate parent
 			$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 				dbesc($parent_uri),
 				intval(local_user())
 			);
+			// now find the real parent of the conversation
+			if(count($r)) {
+				$parid = $r[0]['parent'];
+				$r = q("SELECT * FROM `item` WHERE `id` = `parent` AND `parent` = %d LIMIT 1",
+					intval($parid)
+				);
+			}
 		}
 
 		if(($r === false) || (! count($r))) {
@@ -62,6 +78,11 @@ function item_post(&$a) {
 		}
 		$parent_item = $r[0];
 		$parent = $r[0]['id'];
+
+		// multi-level threading - preserve the info but re-parent to our single level threading
+		if(($parid) && ($parid != $parent))
+			$thr_parent = $parent_uri;
+
 		if($parent_item['contact-id'] && $uid) {
 			$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval($parent_item['contact-id']),
@@ -194,6 +215,8 @@ function item_post(&$a) {
 		if(count($r))
 			$contact_record = $r[0];
 	}
+
+
 
 	$post_type = notags(trim($_POST['type']));
 
@@ -458,6 +481,7 @@ function item_post(&$a) {
 	$datarray['private']       = $private;
 	$datarray['pubmail']       = $pubmail_enable;
 	$datarray['attach']        = $attachments;
+	$datarray['thr-parent']    = $thr_parent;
 
 	/**
 	 * These fields are for the convenience of plugins...
@@ -495,9 +519,9 @@ function item_post(&$a) {
 
 
 	$r = q("INSERT INTO `item` (`uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
-		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `received`, `changed`, `uri`, `title`, `body`, `app`, `location`, `coord`, 
+		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `received`, `changed`, `uri`, `thr-parent`, `title`, `body`, `app`, `location`, `coord`, 
 		`tag`, `inform`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach` )
-		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s' )",
+		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s' )",
 		intval($datarray['uid']),
 		dbesc($datarray['type']),
 		intval($datarray['wall']),
@@ -514,6 +538,7 @@ function item_post(&$a) {
 		dbesc($datarray['received']),
 		dbesc($datarray['changed']),
 		dbesc($datarray['uri']),
+		dbesc($datarray['thr-parent']),
 		dbesc($datarray['title']),
 		dbesc($datarray['body']),
 		dbesc($datarray['app']),

@@ -147,7 +147,26 @@
 				//echo "<pre>"; var_dump($r); die();
 			}
 		}
-		return false;
+		$r = '<status><error>not implemented</error></status>';
+		switch($type){
+			case "xml":
+				header ("Content-Type: text/xml");
+				return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
+				break;
+			case "json": 
+				header ("Content-Type: application/json");  
+			    return json_encode(array('error' => 'not implemented'));
+				break;
+			case "rss":
+				header ("Content-Type: application/rss+xml");
+				return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
+				break;
+			case "atom":
+				header ("Content-Type: application/atom+xml");
+				return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
+				break;
+				
+		}
 	}
 
 	/**
@@ -222,15 +241,25 @@
 			return False;
 		}
 		
-		// count public wall messages
-		$r = q("SELECT COUNT(`id`) as `count` FROM `item`
-				WHERE  `uid` = %d
-				AND `type`='wall' 
-				AND `allow_cid`='' AND `allow_gid`='' AND `deny_cid`='' AND `deny_gid`=''",
-				intval($uinfo[0]['uid'])
-		);
-		$countitms = $r[0]['count'];
-		
+		if($uinfo[0]['self']) {
+			// count public wall messages
+			$r = q("SELECT COUNT(`id`) as `count` FROM `item`
+					WHERE  `uid` = %d
+					AND `type`='wall' 
+					AND `allow_cid`='' AND `allow_gid`='' AND `deny_cid`='' AND `deny_gid`=''",
+					intval($uinfo[0]['uid'])
+			);
+			$countitms = $r[0]['count'];
+		}
+		else {
+			$r = q("SELECT COUNT(`id`) as `count` FROM `item`
+					WHERE  `contact-id` = %d
+					AND `allow_cid`='' AND `allow_gid`='' AND `deny_cid`='' AND `deny_gid`=''",
+					intval($uinfo[0]['id'])
+			);
+			$countitms = $r[0]['count'];
+		}
+
 		// count friends
 		$r = q("SELECT COUNT(`id`) as `count` FROM `contact`
 				WHERE  `uid` = %d
@@ -238,7 +267,10 @@
 				intval($uinfo[0]['uid'])
 		);
 		$countfriends = $r[0]['count'];
-				
+
+		if(! $uinfo[0]['self']) {
+			$countfriends = 0;
+		}
 
 		$ret = Array(
 			'uid' => $uinfo[0]['uid'],
@@ -664,6 +696,11 @@
 
 	
 	function api_format_items($r,$user_info) {
+
+		//logger('api_format_items: ' . print_r($r,true));
+
+		//logger('api_format_items: ' . print_r($user_info,true));
+
 		$a = get_app();
 		$ret = Array();
 
