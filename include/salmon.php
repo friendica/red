@@ -18,37 +18,6 @@ function salmon_key($pubkey) {
 }
 
 
-function base64url_encode($s, $strip_padding = false) {
-
-	$s = strtr(base64_encode($s),'+/','-_');
-
-	if($strip_padding)
-		$s = str_replace('=','',$s);
-
-	return $s;
-}
-
-function base64url_decode($s) {
-
-/*
- *  // Placeholder for new rev of salmon which strips base64 padding.
- *  // PHP base64_decode handles the un-padded input without requiring this step
- *  // Uncomment if you find you need it.
- *
- *	$l = strlen($s);
- *	if(! strpos($s,'=')) {
- *		$m = $l % 4;
- *		if($m == 2)
- *			$s .= '==';
- *		if($m == 3)
- *			$s .= '=';
- *	}
- *
- */
-
-	return base64_decode(strtr($s,'-_','+/'));
-}
-
 function get_salmon_key($uri,$keyhash) {
 	$ret = array();
 
