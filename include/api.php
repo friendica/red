@@ -209,7 +209,7 @@
 			$extra_query = "AND `contact`.`nick` = '%s' ";
 		}
 		
-		if (is_null($user)){
+		if (is_null($user) && $a->argc > 3){
 			list($user, $null) = explode(".",$a->argv[3]);
 			if(is_numeric($user)){
 				$user = intval($user);
@@ -262,14 +262,26 @@
 
 		// count friends
 		$r = q("SELECT COUNT(`id`) as `count` FROM `contact`
-				WHERE  `uid` = %d
+				WHERE  `uid` = %d AND `rel` IN ( %d, %d )
 				AND `self`=0 AND `blocked`=0", 
-				intval($uinfo[0]['uid'])
+				intval($uinfo[0]['uid']),
+				intval(REL_FAN),
+				intval(REL_BUD)
 		);
 		$countfriends = $r[0]['count'];
 
+		$r = q("SELECT COUNT(`id`) as `count` FROM `contact`
+				WHERE  `uid` = %d AND `rel` IN ( %d, %d )
+				AND `self`=0 AND `blocked`=0", 
+				intval($uinfo[0]['uid']),
+				intval(REL_VIP),
+				intval(REL_BUD)
+		);
+		$countfollowers = $r[0]['count'];
+
 		if(! $uinfo[0]['self']) {
 			$countfriends = 0;
+			$countfollowers = 0;
 		}
 
 		$ret = Array(
@@ -290,7 +302,7 @@
 			'statuses_count' => $countitms, #XXX: fix me 
 			'lang' => 'en', #XXX: fix me
 			'description' => '',
-			'followers_count' => $countfriends, #XXX: fix me
+			'followers_count' => $countfollowers, #XXX: fix me
 			'favourites_count' => 0,
 			'contributors_enabled' => false,
 			'follow_request_sent' => false,
@@ -795,3 +807,47 @@
 		}
 	}
 	api_register_func('api/statusnet/version','api_statusnet_version',false);
+
+
+	function api_ff_ids(&$a,$type,$qtype) {
+		if(! local_user())
+			return false;
+
+		if($qtype == 'friends')
+			$sql_extra = sprintf(" AND ( `rel` = %d OR `rel` = %d ) ", intval(REL_FAN), intval(REL_BUD));
+		if($qtype == 'followers')
+			$sql_extra = sprintf(" AND ( `rel` = %d OR `rel` = %d ) ", intval(REL_VIP), intval(REL_BUD));
+ 
+
+		$r = q("SELECT id FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 $sql_extra",
+			intval(local_user())
+		);
+
+		if(is_array($r)) {
+			if($type === 'xml') {
+				header("Content-type: application/xml");
+				echo '<?xml version="1.0" encoding="UTF-8"?>' . "\r\n" . '<ids>' . "\r\n";
+				foreach($r as $rr)
+					echo '<id>' . $rr['id'] . '</id>' . "\r\n";
+				echo '</ids>' . "\r\n";
+				killme();
+			}
+			elseif($type === 'json') {
+				$ret = array();
+				header("Content-type: application/json");
+				foreach($r as $rr) $ret[] = $rr['id'];
+				echo json_encode($ret);
+				killme();
+			}
+		}
+	}
+
+	function api_friends_ids(&$a,$type) {
+		api_ff_ids($a,$type,'friends');
+	}
+	function api_followers_ids(&$a,$type) {
+		api_ff_ids($a,$type,'followers');
+	}
+	api_register_func('api/friends/ids','api_friends_ids',true);
+	api_register_func('api/followers/ids','api_followers_ids',true);
+
