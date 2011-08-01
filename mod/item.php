@@ -34,21 +34,34 @@ function item_post(&$a) {
 	call_hooks('post_local_start', $_POST);
 
 	$parent = ((x($_POST,'parent')) ? intval($_POST['parent']) : 0);
+	$parent_uri = ((x($_POST,'parent_uri')) ? trim($_POST['parent_uri']) : '');
 
 	$parent_item = null;
 	$parent_contact = null;
+	$r = false;
 
-	if($parent) {
-		$r = q("SELECT * FROM `item` WHERE `id` = %d LIMIT 1",
-			intval($parent)
-		);
-		if(! count($r)) {
+	if($parent || $parent_uri) {
+		if($parent) {
+			$r = q("SELECT * FROM `item` WHERE `id` = %d LIMIT 1",
+				intval($parent)
+			);
+		}
+		elseif($parent_uri && local_user()) {
+			// This is coming from an API source, we are logged in
+			$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+				dbesc($parent_uri),
+				intval(local_user())
+			);
+		}
+
+		if(($r === false) || (! count($r))) {
 			notice( t('Unable to locate original post.') . EOL);
 			if(x($_POST,'return')) 
 				goaway($a->get_baseurl() . "/" . $_POST['return'] );
 			killme();
 		}
 		$parent_item = $r[0];
+		$parent = $r[0]['id'];
 		if($parent_item['contact-id'] && $uid) {
 			$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval($parent_item['contact-id']),
@@ -58,6 +71,8 @@ function item_post(&$a) {
 				$parent_contact = $r[0];
 		}
 	}
+
+	if($parent) logger('mod_post: parent=' . $parent);
 
 	$profile_uid = ((x($_POST,'profile_uid')) ? intval($_POST['profile_uid']) : 0);
 	$post_id     = ((x($_POST['post_id']))    ? intval($_POST['post_id'])     : 0);

@@ -401,8 +401,16 @@
 
 		// convert $_POST array items to the form we use for web posts.
 
+		// logger('api_post: ' . print_r($_POST,true));
+
 		$_POST['body'] = urldecode(requestdata('status'));
-		$_POST['parent'] = requestdata('in_reply_to_status_id');
+
+		$parent = requestdata('in_reply_to_status_id');
+		if(ctype_digit($parent))
+			$_POST['parent'] = $parent;
+		else
+			$_POST['parent_uri'] = $parent;
+
 		if(requestdata('lat') && requestdata('long'))
 			$_POST['coord'] = sprintf("%s %s",requestdata('lat'),requestdata('long'));
 		$_POST['profile_uid'] = local_user();
