@@ -294,6 +294,8 @@ function probe_url($url) {
 
 	$twitter = ((strpos($url,'twitter.com') !== false) ? true : false);
 
+	$at_addr = ((strpos($url,'@') !== false) ? true : false);
+
 	if(! $twitter) {
 		$links = lrdd($url);
 
@@ -452,7 +454,7 @@ function probe_url($url) {
 				$vcard['fn'] = $vcard['nick'];
 
 	
-		if(((! isset($vcard)) && (! $poll)) || ($twitter)) {
+		if(((! isset($vcard)) && (! $poll) && (! $at_addr)) || ($twitter)) {
 
 			$feedret = scrape_feed($url);
 			logger('probe_url: scrape_feed returns: ' . print_r($feedret,true), LOGGER_DATA);

@@ -1,6 +1,6 @@
 <?php
 
-define ( 'FRIENDIKA_VERSION',      '2.2.1058' );
+define ( 'FRIENDIKA_VERSION',      '2.2.1059' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
 define ( 'DB_UPDATE_VERSION',      1076      );
 
@@ -1743,10 +1743,12 @@ function fetch_xrd_links($url) {
 
 
 	$xml = fetch_url($url);
-	if (! $xml)
-		return array();
 
 	logger('fetch_xrd_links: ' . $xml, LOGGER_DATA);
+
+	if ((! $xml) || (! stristr($xml,'<xrd')))
+		return array();
+
 	$h = parse_xml_string($xml);
 	if(! $h)
 		return array();
