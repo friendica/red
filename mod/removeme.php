@@ -29,7 +29,7 @@ function removeme_post(&$a) {
 function removeme_content(&$a) {
 
 	if(! local_user())
-		goaway($a->get_baseurl());
+		goaway(z_root());
 
 	$hash = random_string();
 

@@ -3,7 +3,7 @@
 function notifications_post(&$a) {
 
 	if(! local_user()) {
-		goaway($a->get_baseurl());
+		goaway(z_root());
 	}
 	
 	$request_id = (($a->argc > 1) ? $a->argv[1] : 0);
@@ -60,7 +60,7 @@ function notifications_content(&$a) {
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
-		goaway($a->get_baseurl());
+		return;
 	}
 
 	$o = '';

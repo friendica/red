@@ -16,7 +16,7 @@ function friendika_init(&$a) {
 
 		$data = Array(
 			'version' => FRIENDIKA_VERSION,
-			'url' => $a->get_baseurl(),
+			'url' => z_root(),
 			'plugins' => $a->plugins,
 			'register_policy' =>  $register_policy[$a->config['register_policy']],
 			'admin' => $admin,
@@ -40,7 +40,7 @@ function friendika_content(&$a) {
 	$o .= '<p></p><p>';
 
 	$o .= t('This is Friendika version') . ' ' . FRIENDIKA_VERSION . ' ';
-	$o .= t('running at web location') . ' ' . $a->get_baseurl() . '</p><p>';
+	$o .= t('running at web location') . ' ' . z_root() . '</p><p>';
 
 	$o .= t('Shared content within the Friendika network is provided under the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 license</a>') . '</p><p>';
 

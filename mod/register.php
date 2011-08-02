@@ -373,7 +373,7 @@ function register_post(&$a) {
 
 		if($res) {
 			info( t('Registration successful. Please check your email for further instructions.') . EOL ) ;
-			goaway($a->get_baseurl());
+			goaway(z_root());
 		}
 		else {
 			notice( t('Failed to send email message. Here is the message that failed.') . $email_tpl . EOL );
@@ -382,7 +382,7 @@ function register_post(&$a) {
 	elseif($a->config['register_policy'] == REGISTER_APPROVE) {
 		if(! strlen($a->config['admin_email'])) {
 			notice( t('Your registration can not be processed.') . EOL);
-			goaway($a->get_baseurl());
+			goaway(z_root());
 		}
 
 		$hash = random_string();
@@ -428,7 +428,7 @@ function register_post(&$a) {
 
 		if($res) {
 			info( t('Your registration is pending approval by the site owner.') . EOL ) ;
-			goaway($a->get_baseurl());
+			goaway(z_root());
 		}
 
 	}

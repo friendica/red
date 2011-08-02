@@ -672,7 +672,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 
 	// somebody arrived here by mistake or they are fishing. Send them to the homepage.
 
-	goaway($a->get_baseurl());
+	goaway(z_root());
 	// NOTREACHED
 
 }

@@ -564,7 +564,7 @@ function facebook_post_hook(&$a,&$b) {
 
 				$msg = preg_replace("/\[img\](.*?)\[\/img\]/is", t('Image: ') . '$1', $msg);
 
-				if((strpos($link,$a->get_baseurl()) !== false) && (! $image))
+				if((strpos($link,z_root()) !== false) && (! $image))
 					$image = $a->get_baseurl() . '/images/friendika-64.jpg';
 
 				$msg = trim(strip_tags(bbcode($msg)));

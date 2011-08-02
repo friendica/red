@@ -325,7 +325,7 @@ class App {
 
 		if($this->cmd === '.well-known/host-meta') {
 			require_once('include/hostxrd.php');
-			hostxrd($this->get_baseurl());
+			hostxrd();
 			// NOTREACHED
 		}
 
@@ -402,7 +402,7 @@ class App {
 		$this->page['title'] = $this->config['sitename'];
 		$tpl = file_get_contents('view/head.tpl');
 		$this->page['htmlhead'] = replace_macros($tpl,array(
-			'$baseurl' => $this->get_baseurl(),
+			'$baseurl' => $this->get_baseurl(), // FIXME for z_path!!!!
 			'$generator' => 'Friendika' . ' ' . FRIENDIKA_VERSION,
 			'$delitem' => t('Delete this item?'),
 			'$comment' => t('Comment')
@@ -473,6 +473,34 @@ function system_unavailable() {
 	system_down();
 	killme();
 }}
+
+
+
+function clean_urls() {
+	global $a;
+//	if($a->config['system']['clean_urls'])
+		return true;
+//	return false;
+}
+
+function z_path() {
+	global $a;
+	$base = $a->get_baseurl();
+	if(! clean_urls())
+		$base .= '/?q=';
+	return $base;
+}
+
+function z_root() {
+	global $a;
+	return $a->get_baseurl();
+}
+
+function absurl($path) {
+	if(strpos($path,'/') === 0)
+		return z_path() . $path;
+	return $path;
+}
 
 
 // Primarily involved with database upgrade, but also sets the 

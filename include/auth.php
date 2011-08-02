@@ -25,7 +25,7 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 
 		nuke_session();
 		info( t('Logged out.') . EOL);
-		goaway($a->get_baseurl());
+		goaway(z_root());
 	}
 
 	if(x($_SESSION,'visitor_id') && (! x($_SESSION,'uid'))) {
@@ -45,7 +45,7 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 		// extra paranoia - if the IP changed, log them out
 		if($check && ($_SESSION['addr'] != $_SERVER['REMOTE_ADDR'])) {
 			nuke_session();
-			goaway($a->get_baseurl());
+			goaway(z_root());
 		}
 
 		$r = q("SELECT * FROM `user` WHERE `uid` = %d LIMIT 1",
@@ -54,7 +54,7 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 
 		if(! count($r)) {
 			nuke_session();
-			goaway($a->get_baseurl());
+			goaway(z_root());
 		}
 
 		// initialise user environment
@@ -118,7 +118,7 @@ else {
 			if(($noid) || (strpos($temp_string,'@')) || (! validate_url($temp_string))) {
 				$a = get_app();
 				notice( t('Login failed.') . EOL);
-				goaway($a->get_baseurl());
+				goaway(z_root());
 				// NOTREACHED
 			}
 
@@ -143,7 +143,7 @@ else {
 				if($a->config['register_policy'] == REGISTER_CLOSED) {
 					$a = get_app();
 					notice( t('Login failed.') . EOL);
-					goaway($a->get_baseurl());
+					goaway(z_root());
 					// NOTREACHED
 				}
 				// new account
@@ -196,7 +196,7 @@ else {
 		if((! $record) || (! count($record))) {
 			logger('authenticate: failed login attempt: ' . trim($_POST['openid_url'])); 
 			notice( t('Login failed.') . EOL );
-			goaway($a->get_baseurl());
+			goaway(z_root());
   		}
 
 		$_SESSION['uid'] = $record['uid'];

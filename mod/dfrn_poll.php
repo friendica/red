@@ -61,7 +61,7 @@ function dfrn_poll_init(&$a) {
 				$my_id = '0:' . $dfrn_id;
 				break;
 			default:
-				goaway($a->get_baseurl());
+				goaway(z_root());
 				break; // NOTREACHED
 		}
 
@@ -100,7 +100,7 @@ function dfrn_poll_init(&$a) {
 			$profile = $r[0]['nickname'];
 			goaway((strlen($destination_url)) ? $destination_url : $a->get_baseurl() . '/profile/' . $profile);
 		}
-		goaway($a->get_baseurl());
+		goaway(z_root());
 
 	}
 
@@ -297,7 +297,7 @@ function dfrn_poll_post(&$a) {
 			$my_id = '0:' . $dfrn_id;
 			break;
 		default:
-			goaway($a->get_baseurl());
+			goaway(z_root());
 			break; // NOTREACHED
 	}
 
@@ -420,7 +420,7 @@ function dfrn_poll_content(&$a) {
 				$my_id = '0:' . $dfrn_id;
 				break;
 			default:
-				goaway($a->get_baseurl());
+				goaway(z_root());
 				break; // NOTREACHED
 		}
 

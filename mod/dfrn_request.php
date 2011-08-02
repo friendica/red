@@ -48,7 +48,7 @@ function dfrn_request_post(&$a) {
 
 
 	if($_POST['cancel']) {
-		goaway($a->get_baseurl());
+		goaway(z_root());
 	} 
 
 
@@ -190,7 +190,7 @@ function dfrn_request_post(&$a) {
  		// invalid/bogus request
 
 		notice( t('Unrecoverable protocol error.') . EOL );
-		goaway($a->get_baseurl());
+		goaway(z_root());
 		return; // NOTREACHED
 	}
 
@@ -602,7 +602,7 @@ function dfrn_request_content(&$a) {
 				$myaddr = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
 			}
 			else {
-				$myaddr = $a->user['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3 );
+				$myaddr = $a->user['nickname'] . '@' . substr(z_root(), strpos(z_root(),'://') + 3 );
 			}
 		}
 		elseif(x($_GET,'addr')) {
