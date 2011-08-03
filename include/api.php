@@ -775,6 +775,8 @@
 		$closed = (($a->config['register_policy'] == REGISTER_CLOSED) ? 'true' : 'false');
 		$private = (($a->config['system']['block_public']) ? 'true' : 'false');
 		$textlimit = (string) (($a->config['max_import_size']) ? $a->config['max_import_size'] : 200000);
+		if($a->config['api_import_size'])
+			$texlimit = string($a->config['api_import_size']);
 		$ssl = (($a->config['system']['have_ssl']) ? 'true' : 'false');
 		$sslserver = (($ssl === 'true') ? str_replace('http:','https:',$a->get_baseurl()) : '');
 
