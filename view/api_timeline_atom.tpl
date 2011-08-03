@@ -53,7 +53,7 @@
   	{{ for $statuses as $status }}
 	<entry>
 		<activity:object-type>$status.objecttype</activity:object-type>
-		<id>$status.id</id>
+		<id>$status.message_id</id>
 		<title>$status.text</title>
 		<content type="html">$status.html</content>
 		<link rel="alternate" type="text/html" href="$status.url"/>

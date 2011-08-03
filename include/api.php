@@ -723,7 +723,8 @@
 				'created_at'=> api_date($item['created']),
 				'published' => datetime_convert('UTC','UTC',$item['created'],ATOM_TIME),
 				'updated'   => datetime_convert('UTC','UTC',$item['edited'],ATOM_TIME),
-				'id'		=> $item['uri'],
+				'id'		=> $item['id'],
+				'message_id' => $item['uri'],
 				'text'		=> strip_tags(bbcode($item['body'])),
 				'html'		=> bbcode($item['body']),
 				'source'    => (($item['app']) ? $item['app'] : 'web'),
@@ -773,7 +774,7 @@
 		$email = $a->config['admin_email'];
 		$closed = (($a->config['register_policy'] == REGISTER_CLOSED) ? 'true' : 'false');
 		$private = (($a->config['system']['block_public']) ? 'true' : 'false');
-		$textlimit = (($a->config['max_import_size']) ? $a->config['max_import_size'] : '200000');
+		$textlimit = (string) (($a->config['max_import_size']) ? $a->config['max_import_size'] : 200000);
 		$ssl = (($a->config['system']['have_ssl']) ? 'true' : 'false');
 		$sslserver = (($ssl === 'true') ? str_replace('http:','https:',$a->get_baseurl()) : '');
 
