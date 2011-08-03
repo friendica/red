@@ -6,6 +6,8 @@
  * text stuff. This function handles status, wall-to-wall status, 
  * local comments, and remote coments - that are posted on this site 
  * (as opposed to being delivered in a feed).
+ * Also processed here are posts and comments coming through the 
+ * statusnet/twitter API. 
  * All of these become an "item" which is our basic unit of 
  * information.
  * Posts that originate externally or do not fall into the above 
@@ -33,6 +35,7 @@ function item_post(&$a) {
 
 	call_hooks('post_local_start', $_POST);
 
+	$api_source = ((x($_POST,'api_source')) ? true : false);
 
 	/**
 	 * Is this a reply to something?
@@ -48,22 +51,26 @@ function item_post(&$a) {
 	$r = false;
 
 	if($parent || $parent_uri) {
+
+		if(! x($_POST,'type'))
+			$_POST['type'] = 'net-comment';
+
 		if($parent) {
 			$r = q("SELECT * FROM `item` WHERE `id` = %d LIMIT 1",
 				intval($parent)
 			);
 		}
 		elseif($parent_uri && local_user()) {
-			$_POST['type'] = 'net-comment';
-			// This is coming from an API source, we are logged in
-			// This query will find the immediate parent
+			// This is coming from an API source, and we are logged in
 			$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 				dbesc($parent_uri),
 				intval(local_user())
 			);
-			// now find the real parent of the conversation
-			if(count($r)) {
-				$parid = $r[0]['parent'];
+		}
+		// if this isn't the real parent of the conversation, find it
+		if($r !== false && count($r)) {
+			$parid = $r[0]['parent'];
+			if($r[0]['id'] != $r[0]['parent']) {
 				$r = q("SELECT * FROM `item` WHERE `id` = `parent` AND `parent` = %d LIMIT 1",
 					intval($parid)
 				);
@@ -771,12 +778,16 @@ function item_post(&$a) {
 	}
 
 	logger('post_complete');
+
+	// figure out how to return, depending on from whence we came
+
+	if($api_source)
+		return;
+
 	if((x($_POST,'return')) && strlen($_POST['return'])) {
 		logger('return: ' . $_POST['return']);
 		goaway($a->get_baseurl() . "/" . $_POST['return'] );
 	}
-	if($_POST['api_source'])
-		return;
 	$json = array('success' => 1);
 	if(x($_POST,'jsreload') && strlen($_POST['jsreload']))
 		$json['reload'] = $a->get_baseurl() . '/' . $_POST['jsreload'];
