@@ -111,13 +111,13 @@ function facebook_init(&$a) {
 				$token = substr($token,0,strpos($token,'&'));
 			set_pconfig($uid,'facebook','access_token',$token);
 			set_pconfig($uid,'facebook','post','1');
+			set_pconfig($uid,'facebook','no_linking',1);
 			fb_get_self($uid);
 			fb_get_friends($uid);
 			fb_consume_all($uid);
 
 		}
 
-		// todo: is this a browser session or a server session? where do we go? 
 	}
 
 }
@@ -258,6 +258,8 @@ function fb_get_friends($uid) {
 	}
 }
 
+// This is the POST method to the facebook settings page
+// Content is posted to Facebook in the function facebook_post_hook() 
 
 function facebook_post(&$a) {
 
@@ -297,6 +299,8 @@ function facebook_post(&$a) {
 
 	return;		
 }
+
+// Facebook settings form
 
 function facebook_content(&$a) {
 
@@ -347,14 +351,18 @@ function facebook_content(&$a) {
 		$o .= '<form action="facebook" method="post" >';
 		$post_by_default = get_pconfig(local_user(),'facebook','post_by_default');
 		$checked = (($post_by_default) ? ' checked="checked" ' : '');
-		$o .= '<input type="checkbox" name="post_by_default" value="1"' . $checked . '/>' . ' ' . t('Post to Facebook by default') . '<br />';
+		$o .= '<input type="checkbox" name="post_by_default" value="1"' . $checked . '/>' . ' ' . t('Post to Facebook by default') . EOL;
 
 		$no_linking = get_pconfig(local_user(),'facebook','no_linking');
 		$checked = (($no_linking) ? '' : ' checked="checked" ');
-		$o .= '<input type="checkbox" name="facebook_linking" value="1"' . $checked . '/>' . ' ' . t('Link all your Facebook friends and conversations') . '<br />';
+		$o .= '<input type="checkbox" name="facebook_linking" value="1"' . $checked . '/>' . ' ' . t('Link all your Facebook friends and conversations') . EOL ;
 
-
-
+		$hidden = (($a->user['hidewall'] || get_config('system','block_public')) ? true : false);
+		if(! $hidden) {
+			$o .= EOL;
+			$o .= t('Warning: Your Facebook privacy settings can not be imported.') . EOL;
+			$o .= t('Linked Facebook items <strong>may</strong> be publicly visible, depending on your privacy settings for this website/account.') . EOL;
+		}
 		$o .= '<input type="submit" name="submit" value="' . t('Submit') . '" /></form></div>';
 	}
 
@@ -746,6 +754,8 @@ function fb_consume_all($uid) {
 	$access_token = get_pconfig($uid,'facebook','access_token');
 	if(! $access_token)
 		return;
+	
+
 	$s = fetch_url('https://graph.facebook.com/me/feed?access_token=' . $access_token);
 	if($s) {
 		$j = json_decode($s);
@@ -772,12 +782,11 @@ function fb_consume_stream($uid,$j,$wall = false) {
 		intval($uid)
 	);
 
-	$user = q("SELECT `nickname` FROM `user` WHERE `uid` = %d LIMIT 1",
+	$user = q("SELECT `nickname`, `blockwall` FROM `user` WHERE `uid` = %d LIMIT 1",
 		intval($uid)
 	);
 	if(count($user))
 		$my_local_url = $a->get_baseurl() . '/profile/' . $user[0]['nickname'];
-
 
 	$self_id = get_pconfig($uid,'facebook','self_id');
 	if(! count($j->data) || (! strlen($self_id)))
