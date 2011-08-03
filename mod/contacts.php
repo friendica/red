@@ -6,10 +6,22 @@ function contacts_init(&$a) {
 	if(! local_user())
 		return;
 
+	$contact_id = 0;
+	if(($a->argc == 2) && intval($a->argv[1])) {
+		$contact_id = intval($a->argv[1]);
+		$r = q("SELECT * FROM `contact` WHERE `uid` = %d and `id` = %d LIMIT 1",
+			intval(local_user()),
+			intval($contact_id)
+		);
+		if(! count($r)) {
+			$contact_id = 0;
+		}
+	}
+
 	require_once('include/group.php');
 	if(! x($a->page,'aside'))
 		$a->page['aside'] = '';
-	$a->page['aside'] .= group_side();
+	$a->page['aside'] .= group_side('contacts','group',false,0,$contact_id);
 
 	$inv = '<div class="side-link" id="side-invite-link" ><a href="invite" >' . t("Invite Friends") . '</a></div>';
 
@@ -264,13 +276,6 @@ function contacts_content(&$a) {
 		}
 
 		$grps = '';
-		$member_of = member_of($r[0]['id']);
-		if(is_array($member_of) && count($member_of)) {
-			$grps = t('Member of: ') . EOL . '<ul>';
-			foreach($member_of as $member)
-				$grps .= '<li><a href="group/' . $member['id'] . '" title="' . t('Edit') . '" ><img src="images/spencil.gif" alt="' . t('Edit') . '" /></a> <a href="network/' . $member['id'] . '">' . $member['name'] . '</a></li>';
-			$grps .= '</ul>';
-		}
 
 		$insecure = '<div id="profile-edit-insecure"><p><img src="images/unlock_icon.gif" alt="' . t('Privacy Unavailable') . '" />&nbsp;'
 			. t('Private communications are not available for this contact.') . '</p></div>';

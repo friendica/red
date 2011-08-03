@@ -341,6 +341,14 @@
 		});
 	}
 
+	function contactgroupChangeMember(gid,cid) {
+		$('body').css('cursor', 'wait');
+		$.get('contactgroup/' + gid + '/' + cid, function(data) {
+				$('body').css('cursor', 'auto');				
+		});
+	}
+
+
 function checkboxhighlight(box) {
   if($(box).is(':checked')) {
 	$(box).addClass('checkeditem');
