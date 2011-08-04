@@ -732,6 +732,9 @@ function link_compare($a,$b) {
 	return false;
 }}
 
+// Given an item array, convert the body element from bbcode to html and add smilie icons.
+// If attach is true, also add icons for item attachments
+
 
 if(! function_exists('prepare_body')) {
 function prepare_body($item,$attach = false) {
@@ -770,6 +773,9 @@ function prepare_body($item,$attach = false) {
 	}
 	return $s;
 }}
+
+
+// Given a text string, convert from bbcode to html and add smilie icons.
 
 if(! function_exists('prepare_text')) {
 function prepare_text($text) {

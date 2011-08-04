@@ -5,6 +5,11 @@ require_once('include/security.php');
 function photo_init(&$a) {
 
 	switch($a->argc) {
+		case 4:
+			$person = $a->argv[3];
+			$customres = intval($a->argv[2]);
+			$type = $a->argv[1];
+			break;
 		case 3:
 			$person = $a->argv[2];
 			$type = $a->argv[1];
@@ -29,6 +34,7 @@ function photo_init(&$a) {
 		switch($type) {
 
 			case 'profile':
+			case 'custom':
 				$resolution = 4;
 				break;
 			case 'micro':
@@ -111,6 +117,15 @@ function photo_init(&$a) {
 	if(! isset($data)) {
 		killme();
 		// NOTREACHED
+	}
+
+	if(intval($customres) && $customres > 0 && $customres < 500) {
+		require_once('include/Photo.php');
+		$ph = new Photo($data);
+		if($ph->is_valid()) {
+			$ph->scaleImageSquare($customres);
+			$data = $ph->imageString();
+		}
 	}
 
 	header("Content-type: image/jpeg");

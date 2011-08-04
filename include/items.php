@@ -995,6 +995,11 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 
 	require_once('library/simplepie/simplepie.inc');
 
+	if(! strlen($xml)) {
+		logger('consume_feed: empty input');
+		return;
+	}
+		
 	$feed = new SimplePie();
 	$feed->set_raw_data($xml);
 	if($datedir)

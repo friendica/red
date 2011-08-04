@@ -877,7 +877,9 @@ function profile_sidebar($profile) {
 	$podloc = $a->get_baseurl();
 	$searchable = (($profile['publish'] && $profile['net-publish']) ? 'true' : 'false' );
 	$nickname = $profile['nick'];
-	$dphoto = $profile['photo'];
+	$photo300 = $a->get_baseurl() . '/photo/custom/300/' . $profile['uid'] . '.jpg';
+	$photo100 = $a->get_baseurl() . '/photo/custom/100/' . $profile['uid'] . '.jpg';
+	$photo50  = $a->get_baseurl() . '/photo/custom/50/'  . $profile['uid'] . '.jpg';
 
 	$diaspora_vcard = <<< EOT
 
@@ -897,7 +899,19 @@ function profile_sidebar($profile) {
 <dl class="entity_photo">
 <dt>Photo</dt>
 <dd>
-<img class="photo avatar" height="175px" src="$dphoto" width='175px'>
+<img class="photo avatar" height="300px" width="300px" src="$photo300">
+</dd>
+</dl>
+<dl class="entity_photo_medium">
+<dt>Photo</dt>
+<dd> 
+<img class="photo avatar" height="100px" width="100px" src="$photo100">
+</dd>
+</dl>
+<dl class="entity_photo_small">
+<dt>Photo</dt>
+<dd>
+<img class="photo avatar" height="50px" width="50px" src="$photo50">
 </dd>
 </dl>
 <dl class='entity_searchable'>
