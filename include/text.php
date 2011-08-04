@@ -746,7 +746,7 @@ function prepare_body($item,$attach = false) {
 		foreach($arr as $r) {
 			$matches = false;
 			$icon = '';
-			$cnt = preg_match('|\[attach\]href=\"(.*?)\" size=\"(.*?)\" type=\"(.*?)\" title=\"(.*?)\"\[\/attach\]|',$r,$matches);
+			$cnt = preg_match('|\[attach\]href=\"(.*?)\" length=\"(.*?)\" type=\"(.*?)\" title=\"(.*?)\"\[\/attach\]|',$r,$matches);
 			if($cnt) {
 				$icontype = strtolower(substr($matches[3],0,strpos($matches[3],'/')));
 				switch($icontype) {

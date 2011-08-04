@@ -518,7 +518,7 @@ function get_atom_elements($feed,$item) {
 			if(! $type)
 				$type = 'application/octet-stream';
 
-			$att_arr[] = '[attach]href="' . $link . '" size="' . $len . '" type="' . $type . '" title="' . $title . '"[/attach]'; 
+			$att_arr[] = '[attach]href="' . $link . '" length="' . $len . '" type="' . $type . '" title="' . $title . '"[/attach]'; 
 		}
 		$res['attach'] = implode(',', $att_arr);
 	}
@@ -1725,11 +1725,11 @@ function item_getfeedattach($item) {
 	if(count($arr)) {
 		foreach($arr as $r) {
 			$matches = false;
-			$cnt = preg_match('|\[attach\]href=\"(.*?)\" size=\"(.*?)\" type=\"(.*?)\" title=\"(.*?)\"\[\/attach\]|',$r,$matches);
+			$cnt = preg_match('|\[attach\]href=\"(.*?)\" length=\"(.*?)\" type=\"(.*?)\" title=\"(.*?)\"\[\/attach\]|',$r,$matches);
 			if($cnt) {
 				$ret .= '<link rel="enclosure" href="' . xmlify($matches[1]) . '" type="' . xmlify($matches[3]) . '" ';
 				if(intval($matches[2]))
-					$ret .= 'size="' . intval($matches[2]) . '" ';
+					$ret .= 'length="' . intval($matches[2]) . '" ';
 				if($matches[4] !== ' ')
 					$ret .= 'title="' . xmlify(trim($matches[4])) . '" ';
 				$ret .= ' />' . "\r\n";

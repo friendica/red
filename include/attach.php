@@ -1,7 +1,7 @@
 <?php
 
-if(!function_exists('mime_content_type')) {
-function mime_content_type($filename) {
+
+function z_mime_content_type($filename) {
 
 	$mime_types = array(
 
@@ -61,8 +61,9 @@ function mime_content_type($filename) {
 		'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
 	);
 
-	if(strpos($filename,'.') !== false) {
-		$ext = strtolower(array_pop(explode('.',$filename)));
+	$dot = strpos($filename,'.');
+	if($dot !== false) {
+		$ext = strtolower(substr($filename,$dot+1));
 		if (array_key_exists($ext, $mime_types)) {
 			return $mime_types[$ext];
 		}
@@ -76,5 +77,5 @@ function mime_content_type($filename) {
 	else {
 		return 'application/octet-stream';
 	}
-}}
+}
 
