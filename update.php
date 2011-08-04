@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1076 );
+define( 'UPDATE_VERSION' , 1077 );
 
 /**
  *
@@ -624,3 +624,10 @@ function update_1075() {
 		}
 	}
 }
+
+function update_1076() {
+	q("CREATE TABLE ``guid` ( `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+		`guid` CHAR( 16 ) NOT NULL , INDEX ( `guid` ) ) ENGINE = MYISAM ");
+
+}
+
