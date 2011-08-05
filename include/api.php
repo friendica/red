@@ -243,6 +243,13 @@
 		}
 		
 		if($uinfo[0]['self']) {
+			$usr = q("select * from user where uid = %d limit 1",
+				intval(local_user())
+			);
+			$profile = q("select * from profile where uid = %d and `is-default` = 1 limit 1",
+				intval(local_user())
+			);
+
 			// count public wall messages
 			$r = q("SELECT COUNT(`id`) as `count` FROM `item`
 					WHERE  `uid` = %d
@@ -280,9 +287,16 @@
 		);
 		$countfollowers = $r[0]['count'];
 
+		$r = q("SELECT count(`id`) as `count` FROM item where starred = 1 and uid = %d and deleted = 0",
+			intval($uinfo[0]['uid'])
+		);
+		$starred = $r[0]['count'];
+	
+
 		if(! $uinfo[0]['self']) {
 			$countfriends = 0;
 			$countfollowers = 0;
+			$starred = 0;
 		}
 
 		$ret = Array(
@@ -290,21 +304,21 @@
 			'id' => intval($uinfo[0]['cid']),
 			'name' => $uinfo[0]['name'],
 			'screen_name' => $uinfo[0]['nick'],
-			'location' => '', //$uinfo[0]['default-location'],
+			'location' => ($usr) ? $usr[0]['default-location'] : '',
 			'profile_image_url' => $uinfo[0]['micro'],
 			'url' => $uinfo[0]['url'],
 			'contact_url' => $a->get_baseurl()."/contacts/".$uinfo[0]['cid'],
-			'protected' => false,	#
+			'protected' => false,	
 			'friends_count' => intval($countfriends),
 			'created_at' => api_date($uinfo[0]['name-date']),
-			'utc_offset' => 0, #XXX: fix me
-			'time_zone' => '', //$uinfo[0]['timezone'],
+			'utc_offset' => "+00:00",
+			'time_zone' => 'UTC', //$uinfo[0]['timezone'],
 			'geo_enabled' => false,
 			'statuses_count' => intval($countitms), #XXX: fix me 
 			'lang' => 'en', #XXX: fix me
-			'description' => '',
-			'followers_count' => intval($countfollowers), #XXX: fix me
-			'favourites_count' => 0,
+			'description' => (($profile) ? $profile[0]['pdesc'] : ''),
+			'followers_count' => intval($countfollowers),
+			'favourites_count' => intval($starred),
 			'contributors_enabled' => false,
 			'follow_request_sent' => false,
 			'profile_background_color' => 'cfe8f6',
@@ -316,8 +330,8 @@
 			'profile_background_tile' => false,
 			'profile_use_background_image' => false,
 			'notifications' => false,
+			'following' => '', #XXX: fix me
 			'verified' => true, #XXX: fix me
-			'followers' => '', #XXX: fix me
 			#'status' => null
 		);
 	
