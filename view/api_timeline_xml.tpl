@@ -4,6 +4,7 @@
     <created_at>$status.created_at</created_at>
     <id>$status.id</id>
     <text>$status.text</text>
+	<statusnet_html>$status.statusnet_html</statusnet_html>
     <source>$status.source</source>
     <truncated>$status.truncated</truncated>
     <url>$status.url</url>

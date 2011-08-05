@@ -740,7 +740,7 @@
 				'id'		=> intval($item['id']),
 				'message_id' => $item['uri'],
 				'text'		=> strip_tags(bbcode($item['body'])),
-				'html'		=> bbcode($item['body']),
+				'statusnet_html'		=> bbcode($item['body']),
 				'source'    => (($item['app']) ? $item['app'] : 'web'),
 				'url'		=> ($item['plink']!=''?$item['plink']:$item['author-link']),
 				'truncated' => False,

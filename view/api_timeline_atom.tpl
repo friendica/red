@@ -55,7 +55,7 @@
 		<activity:object-type>$status.objecttype</activity:object-type>
 		<id>$status.message_id</id>
 		<title>$status.text</title>
-		<content type="html">$status.html</content>
+		<content type="html">$status.statusnet_html</content>
 		<link rel="alternate" type="text/html" href="$status.url"/>
 		<activity:verb>$status.verb</activity:verb>
 		<published>$status.published</published>
