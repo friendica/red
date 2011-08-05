@@ -116,7 +116,7 @@ function parse_url_content(&$a) {
 	}
 
 	if(strlen($text)) {
-		$text = '<br /><br />' . $text;
+		$text = '<br /><br /><blockquote>' . $text . '</blockquote><br />';
 	}
 
 	echo sprintf($template,$url,($title) ? $title : $url,$text);

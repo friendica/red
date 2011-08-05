@@ -7,7 +7,7 @@ require_once('include/text.php');
 require_once("include/pgettext.php");
 
 
-define ( 'FRIENDIKA_VERSION',      '2.2.1061' );
+define ( 'FRIENDIKA_VERSION',      '2.2.1062' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
 define ( 'DB_UPDATE_VERSION',      1077      );
 
@@ -606,6 +606,18 @@ function check_config(&$a) {
 	return;
 }}
 
+
+function get_guid() {
+	$exists = true;
+	do {
+		$s = random_string(16);
+		$r = q("select id from guid where guid = '%s' limit 1", dbesc($s));
+		if(! results($r))
+			$exists = false;
+	} while($exists);
+	q("insert into guid ( guid ) values ( '%s' ) ", dbesc($s));
+	return $s;
+}
 
 
 // wrapper for adding a login box. If $register == true provide a registration
