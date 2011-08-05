@@ -320,13 +320,12 @@ class App {
 
 		/**
 		 * Special handling for the webfinger/lrdd host XRD file
-		 * Just spit out the contents and exit.
 		 */
 
 		if($this->cmd === '.well-known/host-meta') {
-			require_once('include/hostxrd.php');
-			hostxrd();
-			// NOTREACHED
+			$this->argc = 1;
+			$this->argv = array('hostxrd');
+			$this->module = 'hostxrd';
 		}
 
 		/**

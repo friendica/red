@@ -72,11 +72,15 @@ function salmon_post(&$a) {
 	$encoding = $base->encoding;
 	$alg = $base->alg;
 
-	// If we're talking to status.net or one of their ilk, they aren't following the magic envelope spec
-	// and only signed the data element. We'll be nice and let them validate anyway. 
+	// Salmon magic signatures have evolved and there is no way of knowing ahead of time which
+	// flavour we have. We'll try and verify it regardless.
 
 	$stnet_signed_data = $data;
+
 	$signed_data = $data  . '.' . base64url_encode($type) . '.' . base64url_encode($encoding) . '.' . base64url_encode($alg);
+
+	$compliant_format = str_replace('=','',$signed_data);
+
 
 	// decode the data
 	$data = base64url_decode($data);
@@ -150,13 +154,16 @@ function salmon_post(&$a) {
     $rsa->exponent = new Math_BigInteger($e, 256);
 
 	// We should have everything we need now. Let's see if it verifies.
-	// If it fails with the proper data format, try again using just the data
-	// (e.g. status.net)
 
-    $verify = $rsa->verify($signed_data,$signature);
+    $verify = $rsa->verify($compliant_format,$signature);
 
 	if(! $verify) {
-		logger('mod-salmon: message did not verify using protocol. Trying statusnet hack.');
+		logger('mod-salmon: message did not verify using protocol. Trying padding hack.');
+	    $verify = $rsa->verify($signed_data,$signature);
+    }
+
+	if(! $verify) {
+		logger('mod-salmon: message did not verify using padding. Trying old statusnet hack.');
 	    $verify = $rsa->verify($stnet_signed_data,$signature);
     }
 

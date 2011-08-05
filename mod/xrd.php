@@ -23,7 +23,7 @@ function xrd_content(&$a) {
 	if(! count($r))
 		killme();
 
-	$salmon_key = salmon_key($r[0]['spubkey']);
+	$salmon_key = str_replace('=','',salmon_key($r[0]['spubkey']));
 
 	header('Access-Control-Allow-Origin: *');
 	header("Content-type: text/xml");

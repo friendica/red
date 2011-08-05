@@ -5,5 +5,5 @@ $data
 </me:data>
 <me:encoding>$encoding</me:encoding>
 <me:alg>$algorithm</me:alg>
-<me:sig keyhash="$keyhash">$signature</me:sig>
+<me:sig key_id="$keyhash">$signature</me:sig>
 </me:env>

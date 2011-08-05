@@ -110,7 +110,7 @@ EOT;
 	$data_type = 'application/atom+xml';
 	$encoding  = 'base64url';
 	$algorithm = 'RSA-SHA256';
-	$keyhash   = base64url_encode(hash('sha256',salmon_key($owner['spubkey'])));
+	$keyhash   = base64url_encode(hash('sha256',salmon_key($owner['spubkey'])),true);
 
 	// Setup RSA stuff to PKCS#1 sign the data
 
@@ -127,11 +127,14 @@ EOT;
 
 	$precomputed = '.YXBwbGljYXRpb24vYXRvbSt4bWw=.YmFzZTY0dXJs.UlNBLVNIQTI1Ng==';
 
-	$signature  = base64url_encode($rsa->sign($data . $precomputed));
+	$signature   = base64url_encode($rsa->sign(str_replace('=','',$data . $precomputed),true));
 
-	$signature2  = base64url_encode($rsa->sign($data));
+	$signature2  = base64url_encode($rsa->sign($data . $precomputed));
+
+	$signature3  = base64url_encode($rsa->sign($data));
 
 	$salmon_tpl = get_markup_template('magicsig.tpl');
+
 	$salmon = replace_macros($salmon_tpl,array(
 		'$data'      => $data,
 		'$encoding'  => $encoding,
@@ -153,11 +156,11 @@ EOT;
 
 	if($return_code > 299) {
 
-		logger('slapper: compliant salmon failed. Falling back to status.net hack');
+		logger('slapper: compliant salmon failed. Falling back to status.net hack2');
 
 		// Entirely likely that their salmon implementation is
 		// non-compliant. Let's try once more, this time only signing
-		// the data, without the precomputed blob 
+		// the data, without stripping '=' chars
 
 		$salmon = replace_macros($salmon_tpl,array(
 			'$data'      => $data,
@@ -174,6 +177,30 @@ EOT;
 		));
 		$return_code = $a->get_curl_code();
 
+
+		if($return_code > 299) {
+
+			logger('slapper: compliant salmon failed. Falling back to status.net hack3');
+
+			// Entirely likely that their salmon implementation is
+			// non-compliant. Let's try once more, this time only signing
+			// the data, without the precomputed blob 
+
+			$salmon = replace_macros($salmon_tpl,array(
+				'$data'      => $data,
+				'$encoding'  => $encoding,
+				'$algorithm' => $algorithm,
+				'$keyhash'   => $keyhash,
+				'$signature' => $signature3
+			));
+
+			// slap them 
+			post_url($url,$salmon, array(
+				'Content-type: application/magic-envelope+xml',
+				'Content-length: ' . strlen($salmon)
+			));
+			$return_code = $a->get_curl_code();
+		}
 	}
 	logger('slapper returned ' . $return_code); 
 	if(! $return_code)
