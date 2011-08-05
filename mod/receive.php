@@ -117,7 +117,6 @@ function receive_post(&$a) {
 
 	$idom = parse_xml_string($decrypted,false);
 
-	print_r($idom);
 	$inner_iv = base64_decode($idom->iv);
 	$inner_aes_key = base64_decode($idom->aes_key);
 
@@ -149,17 +148,14 @@ function receive_post(&$a) {
 
 	logger('signature: ' . bin2hex($signature));
 
-//	openssl_public_encrypt('test',$rrr,$rpubkey);
-//	logger('rrr: ' . $rrr);
-
-//	$pubdecsig = '';
-//	openssl_public_decrypt($signature,$pubdecsig,$rpubkey);
-//	logger('decsig: ' . bin2hex($pubdecsig));
-
 	// unpack the  data
 
 	// strip whitespace so our data element will return to one big base64 blob
 	$data = str_replace(array(" ","\t","\r","\n"),array("","","",""),$base->data);
+	// Add back the 60 char linefeeds
+    $lines = str_split($data,60);
+    $data = implode("\n",$lines);
+
 
 	// stash away some other stuff for later
 
@@ -168,7 +164,7 @@ function receive_post(&$a) {
 	$encoding = $base->encoding;
 	$alg = $base->alg;
 
-	$signed_data = $data  . "\n" . '.' . base64url_encode($type) . "\n" . '.' . base64url_encode($encoding) . "\n" . '.' . base64url_encode($alg) . "\n";
+	$signed_data = $data  . (($data[-1] != "\n") ? "\n" : '') . '.' . base64url_encode($type) . "\n" . '.' . base64url_encode($encoding) . "\n" . '.' . base64url_encode($alg) . "\n";
 
 	logger('signed data: ' . $signed_data);
 
@@ -176,9 +172,6 @@ function receive_post(&$a) {
 	$data = base64url_decode($data);
 
 	// Now pull out the inner encrypted blob
-
-
-
 
 	$inner_encrypted = base64_decode($data);
 
@@ -209,52 +202,25 @@ function receive_post(&$a) {
 		receive_return(400);
 	}
 
-// FIXME
-// Use non salmon compliant signature
 
-/*
+	if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
+    	$verify = openssl_verify($signed_data,$signature,$key,'sha256');
+	}
+	else {
+		// FIXME
+		// fallback sha256 verify for PHP < 5.3
 
-	// Setup RSA stuff to verify the signature
-
-	set_include_path(get_include_path() . PATH_SEPARATOR . 'library' . PATH_SEPARATOR . 'phpsec');
-
-	require_once('library/phpsec/Crypt/RSA.php');
-
-	$key_info = explode('.',$key);
-
-	$m = base64url_decode($key_info[1]);
-	$e = base64url_decode($key_info[2]);
-
-	logger('mod-salmon: key details: ' . print_r($key_info,true));
-
-    $rsa = new CRYPT_RSA();
-    $rsa->signatureMode = CRYPT_RSA_SIGNATURE_PKCS1;
-    $rsa->setHash('sha256');
-
-    $rsa->modulus = new Math_BigInteger($m, 256);
-    $rsa->k = strlen($rsa->modulus->toBytes());
-    $rsa->exponent = new Math_BigInteger($e, 256);
-
-    $verify = $rsa->verify($signed_data,$signature);
+	}
 
 	if(! $verify) {
 		logger('mod-diaspora: Message did not verify. Discarding.');
 		receive_return(400);
 	}
-*/
 
 	logger('mod-diaspora: Message verified.');
 
-	/* decrypt the sucker */
-	/*
-		// TODO
-	*/
-
-	/*
-	*
-	* If we reached this point, the message is good. Now let's figure out if the author is allowed to send us stuff.
-	*
-	*/
+	// If we reached this point, the message is good. 
+	// Now let's figure out if the author is allowed to send us stuff.
 
 	$r = q("SELECT * FROM `contact` WHERE `network` = 'dspr' AND ( `url` = '%s' OR `alias` = '%s') 
 		AND `uid` = %d LIMIT 1",
