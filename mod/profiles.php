@@ -469,7 +469,7 @@ function profiles_content(&$a) {
 					'$id' => $rr['id'],
 					'$alt' => t('Profile Image'),
 					'$profile_name' => $rr['profile-name'],
-					'$visible' => (($rr['is-default']) ?  '<strong>' . t('Visible to everybody') . '</strong>' 
+					'$visible' => (($rr['is-default']) ? '<strong>' . t('visible to everybody') . '</strong>' 
 						: '<a href="' . $a->get_baseurl() . '/profperm/' . $rr['id'] . '" />' . t('Edit visibility') . '</a>')
 				));
 			}

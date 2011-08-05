@@ -539,13 +539,12 @@ input#dfrn-url {
 	width: 300px;
 }
 
-#profile-edit-drop-link-wrapper {
-	float: left;
-}
 
 #profile-edit-links-end {
 	clear: both;
+	margin-bottom: 15px;
 }
+
 .profile-listing-photo {
 	border: none;
 }
