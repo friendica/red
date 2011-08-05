@@ -194,7 +194,7 @@ function receive_post(&$a) {
 
 	logger('mod-diaspora: Fetching key for ' . $author_link );
 
-// Get diaspora public key (pkcs#1) and convert to pkcs#8
+	// Get diaspora public key (pkcs#1) and convert to pkcs#8
  	$key = get_diaspora_key($author_link);
 
 	if(! $key) {
@@ -202,14 +202,17 @@ function receive_post(&$a) {
 		receive_return(400);
 	}
 
+	$verify = false;
 
 	if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
     	$verify = openssl_verify($signed_data,$signature,$key,'sha256');
 	}
 	else {
-		// FIXME
 		// fallback sha256 verify for PHP < 5.3
-
+		$rawsig = '';
+		$hash = hash('sha256',$signed_data,true);
+		openssl_public_decrypt($signature,$rawsig,$key);
+		$verify = (($rawsig && substr($rawsig,-32) === $hash) ? true : false);
 	}
 
 	if(! $verify) {
