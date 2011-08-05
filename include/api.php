@@ -383,7 +383,7 @@
 	function api_xmlify($val){
 		if (is_bool($val)) return $val?"true":"false";
 		if (is_array($val)) return array_map('api_xmlify', $val);
-		return xmlify($val);
+		return xmlify((string) $val);
 	}
 
 	/**
