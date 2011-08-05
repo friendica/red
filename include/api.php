@@ -286,8 +286,8 @@
 		}
 
 		$ret = Array(
-			'uid' => $uinfo[0]['uid'],
-			'id' => $uinfo[0]['cid'],
+			'uid' => intval($uinfo[0]['uid']),
+			'id' => intval($uinfo[0]['cid']),
 			'name' => $uinfo[0]['name'],
 			'screen_name' => $uinfo[0]['nick'],
 			'location' => '', //$uinfo[0]['default-location'],
@@ -295,15 +295,15 @@
 			'url' => $uinfo[0]['url'],
 			'contact_url' => $a->get_baseurl()."/contacts/".$uinfo[0]['cid'],
 			'protected' => false,	#
-			'friends_count' => $countfriends,
+			'friends_count' => intval($countfriends),
 			'created_at' => api_date($uinfo[0]['name-date']),
 			'utc_offset' => 0, #XXX: fix me
 			'time_zone' => '', //$uinfo[0]['timezone'],
 			'geo_enabled' => false,
-			'statuses_count' => $countitms, #XXX: fix me 
+			'statuses_count' => intval($countitms), #XXX: fix me 
 			'lang' => 'en', #XXX: fix me
 			'description' => '',
-			'followers_count' => $countfollowers, #XXX: fix me
+			'followers_count' => intval($countfollowers), #XXX: fix me
 			'favourites_count' => 0,
 			'contributors_enabled' => false,
 			'follow_request_sent' => false,
@@ -723,16 +723,16 @@
 				'created_at'=> api_date($item['created']),
 				'published' => datetime_convert('UTC','UTC',$item['created'],ATOM_TIME),
 				'updated'   => datetime_convert('UTC','UTC',$item['edited'],ATOM_TIME),
-				'id'		=> $item['id'],
+				'id'		=> intval($item['id']),
 				'message_id' => $item['uri'],
 				'text'		=> strip_tags(bbcode($item['body'])),
 				'html'		=> bbcode($item['body']),
 				'source'    => (($item['app']) ? $item['app'] : 'web'),
 				'url'		=> ($item['plink']!=''?$item['plink']:$item['author-link']),
 				'truncated' => False,
-				'in_reply_to_status_id' => ($item['parent']!=$item['id']?$item['parent']:''),
+				'in_reply_to_status_id' => ($item['parent']!=$item['id']? intval($item['parent']):''),
 				'in_reply_to_user_id' => '',
-				'favorited' => false,
+				'favorited' => $item['starred'] ? true : false,
 				'in_reply_to_screen_name' => '',
 				'geo' => '',
 				'coordinates' => $item['coord'],
