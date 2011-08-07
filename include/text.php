@@ -19,11 +19,11 @@ function replace_macros($s,$r) {
 }}
 
 
-// random hash, 64 chars
+// random hex string, 64 chars max
 
 if(! function_exists('random_string')) {
-function random_string() {
-	return(hash('sha256',uniqid(rand(),true)));
+function random_string($size = 64) {
+	return(substr(hash('sha256',uniqid(rand(),true)),0,$size));
 }}
 
 /**
@@ -878,7 +878,7 @@ function return_bytes ($size_str) {
     }
 }}
 
-function generate_guid() {
+function generate_user_guid() {
 	$found = true;
 	do {
 		$guid = substr(random_string(),0,16);

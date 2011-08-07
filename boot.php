@@ -610,12 +610,12 @@ function check_config(&$a) {
 }}
 
 
-function get_guid() {
-	$exists = true;
+function get_guid($size=16) {
+	$exists = true; // assume by default that we don't have a unique guid
 	do {
-		$s = random_string(16);
+		$s = random_string($size);
 		$r = q("select id from guid where guid = '%s' limit 1", dbesc($s));
-		if(! results($r))
+		if(! count($r))
 			$exists = false;
 	} while($exists);
 	q("insert into guid ( guid ) values ( '%s' ) ", dbesc($s));
