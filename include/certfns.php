@@ -37,8 +37,6 @@ function DerToRsa($Der)
 }
 
 
-
-
 function pkcs8_encode($Modulus,$PublicExponent) {
 	//Encode key sequence
 	$modulus = new ASNValue(ASNValue::TAG_INTEGER);
@@ -75,17 +73,6 @@ function pkcs1_encode($Modulus,$PublicExponent) {
 	//Encode bit string
 	$bitStringValue = $keySequence->Encode();
 	return $bitStringValue;
-
-//	$bitStringValue = chr(0x00) . $bitStringValue; //Add unused bits byte
-//	$bitString = new ASNValue(ASNValue::TAG_BITSTRING);
-//	$bitString->Value = $bitStringValue;
-	//Encode body
-//	$bodyValue = "\x30\x0d\x06\x09\x2a\x86\x48\x86\xf7\x0d\x01\x01\x01\x05\x00" . $bitString->Encode();
-//	$body = new ASNValue(ASNValue::TAG_SEQUENCE);
-//	$body->Value = $bodyValue;
-	//Get DER encoded public key:
-//	$PublicDER = $body->Encode();
-//	return $PublicDER;
 }
 
 
@@ -107,12 +94,8 @@ function pubrsatome($key,&$m,&$e) {
 
 	$r = ASN_BASE::parseASNString($x);
 
-//	print_r($r);
-
 	$m = base64url_decode($r[0]->asnData[0]->asnData);
 	$e = base64url_decode($r[0]->asnData[1]->asnData);
-
-
 }
 
 

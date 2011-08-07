@@ -915,7 +915,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 		$postvars['dissolve'] = '1';
 
 
-	if((($contact['rel']) && ($contact['rel'] != REL_FAN) && (! $contact['blocked'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
+	if((($contact['rel']) && ($contact['rel'] != CONTACT_IS_SHARING) && (! $contact['blocked'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
 		$postvars['data'] = $atom;
 		$postvars['perm'] = 'rw';
 	}
@@ -1448,9 +1448,9 @@ function new_follower($importer,$contact,$datarray,$item) {
 		$nick = $rawtag[0]['child'][NAMESPACE_POCO]['preferredUsername'][0]['data'];
 
 	if(is_array($contact)) {
-		if($contact['network'] == 'stat' && $contact['rel'] == REL_FAN) {
+		if($contact['network'] == 'stat' && $contact['rel'] == CONTACT_IS_SHARING) {
 			$r = q("UPDATE `contact` SET `rel` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
-				intval(REL_BUD),
+				intval(CONTACT_IS_FRIEND),
 				intval($contact['id']),
 				intval($importer['uid'])
 			);
@@ -1472,12 +1472,12 @@ function new_follower($importer,$contact,$datarray,$item) {
 			dbesc($nick),
 			dbesc($photo),
 			dbesc('stat'),
-			intval(REL_VIP)
+			intval(CONTACT_IS_FOLLOWER)
 		);
 		$r = q("SELECT `id` FROM `contact` WHERE `uid` = %d AND `url` = '%s' AND `pending` = 1 AND `rel` = %d LIMIT 1",
 				intval($importer['uid']),
 				dbesc($url),
-				intval(REL_VIP)
+				intval(CONTACT_IS_FOLLOWER)
 		);
 		if(count($r))
 				$contact_record = $r[0];
@@ -1522,9 +1522,9 @@ function new_follower($importer,$contact,$datarray,$item) {
 
 function lose_follower($importer,$contact,$datarray,$item) {
 
-	if(($contact['rel'] == REL_BUD) || ($contact['rel'] == REL_FAN)) {
+	if(($contact['rel'] == CONTACT_IS_FRIEND) || ($contact['rel'] == CONTACT_IS_SHARING)) {
 		q("UPDATE `contact` SET `rel` = %d WHERE `id` = %d LIMIT 1",
-			intval(REL_FAN),
+			intval(CONTACT_IS_SHARING),
 			intval($contact['id'])
 		);
 	}

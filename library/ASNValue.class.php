@@ -167,6 +167,3 @@ class ASNValue
         return $result;
     }    
 }
-
-
-?>

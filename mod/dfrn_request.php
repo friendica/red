@@ -309,7 +309,7 @@ function dfrn_request_post(&$a) {
 					notice( t('You have already introduced yourself here.') . EOL );
 					return;
 				}
-				elseif($ret[0]['rel'] == REL_BUD) {
+				elseif($ret[0]['rel'] == CONTACT_IS_FRIEND) {
 					notice( sprintf( t('Apparently you are already friends with %s.'), $a->profile['name']) . EOL);
 					return;
 				}
@@ -445,7 +445,7 @@ function dfrn_request_post(&$a) {
 			 *
 			 * OStatus network
 			 * Check contact existence
-			 * Try and scrape together enough information to create a contact record, with us as REL_VIP
+			 * Try and scrape together enough information to create a contact record, with us as CONTACT_IS_FOLLOWER
 			 * Substitute our user's feed URL into $url template
 			 * Send the subscriber home to subscribe
 			 *

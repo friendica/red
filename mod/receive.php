@@ -238,7 +238,7 @@ function receive_post(&$a) {
 	// is this a follower? Or have we ignored the person?
 	// If so we can not accept this post.
 
-	if((count($r)) && (($r[0]['readonly']) || ($r[0]['rel'] == REL_VIP) || ($r[0]['blocked']))) {
+	if((count($r)) && (($r[0]['readonly']) || ($r[0]['rel'] == CONTACT_IS_FOLLOWER) || ($r[0]['blocked']))) {
 		logger('mod-diaspora: Ignoring this author.');
 		receive_return(202);
 		// NOTREACHED

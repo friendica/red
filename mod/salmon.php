@@ -134,7 +134,14 @@ function salmon_post(&$a) {
 
 	// Setup RSA stuff to verify the signature
 
-	set_include_path(get_include_path() . PATH_SEPARATOR . 'library/phpsec');
+    require_once('library/phpsec/Crypt/RSA.php');
+
+    $rsa = new CRYPT_RSA();
+    $rsa->signatureMode = CRYPT_RSA_SIGNATURE_PKCS1;
+    $rsa->setHash('sha256');
+    $rsa->loadKey($prvkey);
+
+    $sig   = $rsa->sign($data);
 
 	require_once('library/phpsec/Crypt/RSA.php');
 
@@ -194,7 +201,7 @@ function salmon_post(&$a) {
 	// is this a follower? Or have we ignored the person?
 	// If so we can not accept this post.
 
-	if((count($r)) && (($r[0]['readonly']) || ($r[0]['rel'] == REL_VIP) || ($r[0]['blocked']))) {
+	if((count($r)) && (($r[0]['readonly']) || ($r[0]['rel'] == CONTACT_IS_FOLLOWER) || ($r[0]['blocked']))) {
 		logger('mod-salmon: Ignoring this author.');
 		salmon_return(202);
 		// NOTREACHED

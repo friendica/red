@@ -111,8 +111,8 @@ function pubsub_post(&$a) {
 		AND ( `rel` = %d OR `rel` = %d ) AND `blocked` = 0 AND `readonly` = 0 LIMIT 1",
 		intval($contact_id),
 		intval($importer['uid']),
-		intval(REL_FAN),
-		intval(REL_BUD)	
+		intval(CONTACT_IS_SHARING),
+		intval(CONTACT_IS_FRIEND)	
 	);
 
 	if(! count($r)) {

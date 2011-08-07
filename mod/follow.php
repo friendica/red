@@ -82,9 +82,9 @@ function follow_post(&$a) {
 
 	if(count($r)) {
 		// update contact
-		if($r[0]['rel'] == REL_VIP) {
+		if($r[0]['rel'] == CONTACT_IS_FOLLOWER) {
 			q("UPDATE `contact` SET `rel` = %d , `readonly` = 0 WHERE `id` = %d AND `uid` = %d LIMIT 1",
-				intval(REL_BUD),
+				intval(CONTACT_IS_FRIEND),
 				intval($r[0]['id']),
 				intval(local_user())
 			);
@@ -106,7 +106,7 @@ function follow_post(&$a) {
 			dbesc($ret['nick']),
 			dbesc($ret['photo']),
 			dbesc($ret['network']),
-			intval(($ret['network'] === NETWORK_MAIL) ? REL_BUD : REL_FAN),
+			intval(($ret['network'] === NETWORK_MAIL) ? CONTACT_IS_FRIEND : CONTACT_IS_SHARING),
 			intval($ret['priority']),
 			intval($writeable)
 		);

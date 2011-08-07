@@ -306,11 +306,11 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 
 		if($network === 'dfrn') {
 
-			$new_relation = REL_VIP;
-			if(($relation == REL_FAN) || ($duplex))
-				$new_relation = REL_BUD;
+			$new_relation = CONTACT_IS_FOLLOWER;
+			if(($relation == CONTACT_IS_SHARING) || ($duplex))
+				$new_relation = CONTACT_IS_FRIEND;
 
-			if(($relation == REL_FAN) && ($duplex))
+			if(($relation == CONTACT_IS_SHARING) && ($duplex))
 				$duplex = 0;
 
 			$r = q("UPDATE `contact` SET `photo` = '%s', 
@@ -401,7 +401,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		$r = q("SELECT `hide-friends` FROM `profile` WHERE `uid` = %d AND `is-default` = 1 LIMIT 1",
 			intval($uid)
 		);
-		if((count($r)) && ($r[0]['hide-friends'] == 0) && (is_array($contact)) &&  isset($new_relation) && ($new_relation == REL_BUD)) {
+		if((count($r)) && ($r[0]['hide-friends'] == 0) && (is_array($contact)) &&  isset($new_relation) && ($new_relation == CONTACT_IS_FRIEND)) {
 
 			require_once('include/items.php');
 
@@ -592,11 +592,11 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 
 		logger('dfrn_confirm: request - photos imported');
 
-		$new_relation = REL_FAN;
-		if(($relation == REL_VIP) || ($duplex))
-			$new_relation = REL_BUD;
+		$new_relation = CONTACT_IS_SHARING;
+		if(($relation == CONTACT_IS_FOLLOWER) || ($duplex))
+			$new_relation = CONTACT_IS_FRIEND;
 
-		if(($relation == REL_VIP) && ($duplex))
+		if(($relation == CONTACT_IS_FOLLOWER) && ($duplex))
 			$duplex = 0;
 
 		$r = q("UPDATE `contact` SET 
@@ -639,7 +639,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		if((count($r)) && ($r[0]['notify-flags'] & NOTIFY_CONFIRM)) {
 
 			push_lang($r[0]['language']);
-			$tpl = (($new_relation == REL_BUD) 
+			$tpl = (($new_relation == CONTACT_IS_FRIEND) 
 				? get_intltext_template('friend_complete_eml.tpl')
 				: get_intltext_template('intro_complete_eml.tpl'));
 		

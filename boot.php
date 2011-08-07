@@ -7,9 +7,9 @@ require_once('include/text.php');
 require_once("include/pgettext.php");
 
 
-define ( 'FRIENDIKA_VERSION',      '2.2.1063' );
+define ( 'FRIENDIKA_VERSION',      '2.2.1065' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
-define ( 'DB_UPDATE_VERSION',      1077      );
+define ( 'DB_UPDATE_VERSION',      1078      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -55,13 +55,12 @@ define ( 'REGISTER_OPEN',          2 );
 
 /**
  * relationship types
- * When used in contact records, this indicates that 'uid' has 
- * this relationship with contact['name']
  */
 
-define ( 'REL_VIP',        1);     // other person is 'following' us
-define ( 'REL_FAN',        2);     // we are 'following' other person
-define ( 'REL_BUD',        3);     // mutual relationship
+define ( 'CONTACT_IS_FOLLOWER', 1);
+define ( 'CONTACT_IS_SHARING',  2);
+define ( 'CONTACT_IS_FRIEND',   3);
+
 
 /**
  * Hook array order
@@ -76,10 +75,10 @@ define ( 'HOOK_FUNCTION',  2);
  * page/profile types
  *
  * PAGE_NORMAL is a typical personal profile account
- * PAGE_SOAPBOX automatically approves all friend requests as REL_FAN, (readonly)
- * PAGE_COMMUNITY automatically approves all friend requests as REL_FAN, but with 
+ * PAGE_SOAPBOX automatically approves all friend requests as CONTACT_IS_SHARING, (readonly)
+ * PAGE_COMMUNITY automatically approves all friend requests as CONTACT_IS_SHARING, but with 
  *      write access to wall and comments (no email and not included in page owner's ACL lists)
- * PAGE_FREELOVE automatically approves all friend requests as full friends (REL_BUD). 
+ * PAGE_FREELOVE automatically approves all friend requests as full friends (CONTACT_IS_FRIEND). 
  *
  */
 
@@ -283,7 +282,12 @@ class App {
 				$this->path = $path;
 		}
 
-		set_include_path("include/$this->hostname" . PATH_SEPARATOR . 'include' . PATH_SEPARATOR . '.' );
+		set_include_path(
+			"include/$this->hostname" . PATH_SEPARATOR 
+			. 'include' . PATH_SEPARATOR 
+			. 'library' . PATH_SEPARATOR 
+			. 'library/phpsec' . PATH_SEPARATOR 
+			. '.' );
 
 		if((x($_SERVER,'QUERY_STRING')) && substr($_SERVER['QUERY_STRING'],0,2) === "q=")
 			$this->query_string = substr($_SERVER['QUERY_STRING'],2);

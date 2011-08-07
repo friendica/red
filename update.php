@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1077 );
+define( 'UPDATE_VERSION' , 1078 );
 
 /**
  *
@@ -626,7 +626,15 @@ function update_1075() {
 }
 
 function update_1076() {
-	q("CREATE TABLE ``guid` ( `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	q("CREATE TABLE `guid` ( `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+		`guid` CHAR( 16 ) NOT NULL , INDEX ( `guid` ) ) ENGINE = MYISAM ");
+
+}
+
+// There was a typo in 1076 so we'll try again in 1077 to make sure
+
+function update_1077() {
+	q("CREATE TABLE IF NOT EXISTS `guid` ( `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 		`guid` CHAR( 16 ) NOT NULL , INDEX ( `guid` ) ) ENGINE = MYISAM ");
 
 }

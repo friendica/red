@@ -249,16 +249,16 @@ function contacts_content(&$a) {
 		$tpl = get_markup_template("contact_edit.tpl");
 
 		switch($r[0]['rel']) {
-			case REL_BUD:
+			case CONTACT_IS_FRIEND:
 				$dir_icon = 'images/lrarrow.gif';
 				$alt_text = t('Mutual Friendship');
 				break;
-			case REL_VIP;
+			case CONTACT_IS_FOLLOWER;
 				$dir_icon = 'images/larrow.gif';
 				$alt_text = t('is a fan of yours');
 				break;
 	
-			case REL_FAN;
+			case CONTACT_IS_SHARING;
 				$dir_icon = 'images/rarrow.gif';
 				$alt_text = t('you are a fan of');
 				break;
@@ -368,7 +368,7 @@ function contacts_content(&$a) {
 		$search = dbesc($search.'*');
 	$sql_extra .= ((strlen($search)) ? " AND MATCH `name` AGAINST ('$search' IN BOOLEAN MODE) " : "");
 
-	$sql_extra2 = ((($sort_type > 0) && ($sort_type <= REL_BUD)) ? sprintf(" AND `rel` = %d ",intval($sort_type)) : ''); 
+	$sql_extra2 = ((($sort_type > 0) && ($sort_type <= CONTACT_IS_FRIEND)) ? sprintf(" AND `rel` = %d ",intval($sort_type)) : ''); 
 
 	
 	$r = q("SELECT COUNT(*) AS `total` FROM `contact` 
@@ -392,15 +392,15 @@ function contacts_content(&$a) {
 				continue;
 
 			switch($rr['rel']) {
-				case REL_BUD:
+				case CONTACT_IS_FRIEND:
 					$dir_icon = 'images/lrarrow.gif';
 					$alt_text = t('Mutual Friendship');
 					break;
-				case  REL_VIP;
+				case  CONTACT_IS_FOLLOWER;
 					$dir_icon = 'images/larrow.gif';
 					$alt_text = t('is a fan of yours');
 					break;
-				case REL_FAN;
+				case CONTACT_IS_SHARING;
 					$dir_icon = 'images/rarrow.gif';
 					$alt_text = t('you are a fan of');
 					break;

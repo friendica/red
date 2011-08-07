@@ -555,7 +555,7 @@ function notifier_run($argv, $argc){
 			WHERE `network` = 'dfrn' AND `uid` = %d AND `blocked` = 0 AND `pending` = 0
 			AND `rel` != %d ",
 			intval($owner['uid']),
-			intval(REL_FAN)
+			intval(CONTACT_IS_SHARING)
 		);
 
 		if((count($r)) && (($max_allowed == 0) || (count($r) < $max_allowed))) {

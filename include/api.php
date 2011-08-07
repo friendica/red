@@ -273,8 +273,8 @@
 				WHERE  `uid` = %d AND `rel` IN ( %d, %d )
 				AND `self`=0 AND `blocked`=0", 
 				intval($uinfo[0]['uid']),
-				intval(REL_FAN),
-				intval(REL_BUD)
+				intval(CONTACT_IS_SHARING),
+				intval(CONTACT_IS_FRIEND)
 		);
 		$countfriends = $r[0]['count'];
 
@@ -282,8 +282,8 @@
 				WHERE  `uid` = %d AND `rel` IN ( %d, %d )
 				AND `self`=0 AND `blocked`=0", 
 				intval($uinfo[0]['uid']),
-				intval(REL_VIP),
-				intval(REL_BUD)
+				intval(CONTACT_IS_FOLLOWER),
+				intval(CONTACT_IS_FRIEND)
 		);
 		$countfollowers = $r[0]['count'];
 
@@ -832,9 +832,9 @@
 			return false;
 
 		if($qtype == 'friends')
-			$sql_extra = sprintf(" AND ( `rel` = %d OR `rel` = %d ) ", intval(REL_FAN), intval(REL_BUD));
+			$sql_extra = sprintf(" AND ( `rel` = %d OR `rel` = %d ) ", intval(CONTACT_IS_SHARING), intval(CONTACT_IS_FRIEND));
 		if($qtype == 'followers')
-			$sql_extra = sprintf(" AND ( `rel` = %d OR `rel` = %d ) ", intval(REL_VIP), intval(REL_BUD));
+			$sql_extra = sprintf(" AND ( `rel` = %d OR `rel` = %d ) ", intval(CONTACT_IS_FOLLOWER), intval(CONTACT_IS_FRIEND));
  
 
 		$r = q("SELECT id FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 $sql_extra",

@@ -114,8 +114,6 @@ EOT;
 
 	// Setup RSA stuff to PKCS#1 sign the data
 
-	set_include_path(get_include_path() . PATH_SEPARATOR . 'library/phpsec');
-
 	require_once('library/phpsec/Crypt/RSA.php');
 
     $rsa = new CRYPT_RSA();

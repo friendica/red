@@ -96,7 +96,7 @@ function contact_selector($selname, $selclass, $preselected = false, $options) {
 	$sql_extra = '';
 
 	if($x['mutual']) {
-		$sql_extra .= sprintf(" AND `rel` = %d ", intval(REL_BUD));
+		$sql_extra .= sprintf(" AND `rel` = %d ", intval(CONTACT_IS_FRIEND));
 	}
 
 	if(intval($x['exclude']))
@@ -163,7 +163,7 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 	$sql_extra = '';
 
 	if($privmail || $celeb) {
-		$sql_extra .= sprintf(" AND `rel` = %d ", intval(REL_BUD));
+		$sql_extra .= sprintf(" AND `rel` = %d ", intval(CONTACT_IS_FRIEND));
 	}
 
 	if($privmail) {

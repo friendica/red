@@ -214,7 +214,7 @@ function fb_get_friends($uid) {
 						dbesc(($jp->nickname) ? $jp->nickname : strtolower($jp->first_name)),
 						dbesc('https://graph.facebook.com/' . $jp->id . '/picture'),
 						dbesc(NETWORK_FACEBOOK),
-						intval(REL_BUD),
+						intval(CONTACT_IS_FRIEND),
 						intval(1),
 						intval(1)
 					);

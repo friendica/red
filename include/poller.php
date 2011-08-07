@@ -87,8 +87,8 @@ function poller_run($argv, $argc){
 		WHERE ( `rel` = %d OR `rel` = %d ) AND `poll` != ''
 		$sql_extra 
 		AND `self` = 0 AND `blocked` = 0 AND `readonly` = 0 ORDER BY RAND()",
-		intval(REL_FAN),
-		intval(REL_BUD)
+		intval(CONTACT_IS_SHARING),
+		intval(CONTACT_IS_FRIEND)
 	);
 
 	if(! count($contacts)) {
@@ -312,7 +312,7 @@ function poller_run($argv, $argc){
 				// Will only do this once per notify-enabled OStatus contact
 				// or if relationship changes
 
-				$stat_writeable = ((($contact['notify']) && ($contact['rel'] == REL_VIP || $contact['rel'] == REL_BUD)) ? 1 : 0);
+				$stat_writeable = ((($contact['notify']) && ($contact['rel'] == CONTACT_IS_FOLLOWER || $contact['rel'] == CONTACT_IS_FRIEND)) ? 1 : 0);
 
 				if($stat_writeable != $contact['writable']) {
 					q("UPDATE `contact` SET `writable` = %d WHERE `id` = %d LIMIT 1",
@@ -323,7 +323,7 @@ function poller_run($argv, $argc){
 
 				// Are we allowed to import from this person?
 
-				if($contact['rel'] == REL_VIP || $contact['blocked'] || $contact['readonly'])
+				if($contact['rel'] == CONTACT_IS_FOLLOWER || $contact['blocked'] || $contact['readonly'])
 					continue;
 
 				$xml = fetch_url($contact['poll']);
@@ -463,7 +463,7 @@ function poller_run($argv, $argc){
 				consume_feed($xml,$importer,$contact,$hub,1);
 
 
-				if((strlen($hub)) && ($hub_update) && (($contact['rel'] == REL_BUD) || (($contact['network'] === NETWORK_OSTATUS) && (! $contact['readonly'])))) {
+				if((strlen($hub)) && ($hub_update) && (($contact['rel'] == CONTACT_IS_FRIEND) || (($contact['network'] === NETWORK_OSTATUS) && (! $contact['readonly'])))) {
 					logger('poller: subscribing to hub(s) : ' . $hub . ' contact name : ' . $contact['name'] . ' local user : ' . $importer['name']);
 					$hubs = explode(',', $hub);
 					if(count($hubs)) {
