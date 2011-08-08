@@ -58,7 +58,7 @@ function follow_post(&$a) {
 	}
 
 	if($ret['network'] === NETWORK_OSTATUS && get_config('system','ostatus_disabled')) {
-		notice( t('Communication options with this network have been restricted.') . EOL);
+		notice( t('The profile address specified belongs to a network which has been disabled on this site.') . EOL);
 		$ret['notify'] = '';
 	}
 
