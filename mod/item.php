@@ -536,8 +536,8 @@ function item_post(&$a) {
 		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `received`, `changed`, `uri`, `thr-parent`, `title`, `body`, `app`, `location`, `coord`, 
 		`tag`, `inform`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach` )
 		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s' )",
-		intval($datarray['uid']),
 		dbesc($datarray['guid']),
+		intval($datarray['uid']),
 		dbesc($datarray['type']),
 		intval($datarray['wall']),
 		intval($datarray['gravity']),
