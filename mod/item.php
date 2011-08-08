@@ -506,6 +506,9 @@ function item_post(&$a) {
 
 	if($orig_post)
 		$datarray['edit']      = true;
+	else
+		$datarray['guid']      = get_guid();
+
 
 	call_hooks('post_local',$datarray);
 
@@ -529,11 +532,12 @@ function item_post(&$a) {
 		$post_id = 0;
 
 
-	$r = q("INSERT INTO `item` (`uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
+	$r = q("INSERT INTO `item` (`guid`, `uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `received`, `changed`, `uri`, `thr-parent`, `title`, `body`, `app`, `location`, `coord`, 
 		`tag`, `inform`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach` )
-		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s' )",
+		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s' )",
 		intval($datarray['uid']),
+		dbesc($datarray['guid']),
 		dbesc($datarray['type']),
 		intval($datarray['wall']),
 		intval($datarray['gravity']),

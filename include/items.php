@@ -747,6 +747,8 @@ function item_store($arr,$force_parent = false) {
 		}
 	}
 
+	$arr['guid'] = get_guid();
+
 	call_hooks('post_remote',$arr);
 
 	dbesc_array($arr);

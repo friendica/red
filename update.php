@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1078 );
+define( 'UPDATE_VERSION' , 1079 );
 
 /**
  *
@@ -643,3 +643,6 @@ function update_1077() {
 	q("ALTER TABLE `guid` CHANGE `guid` `guid` CHAR( 64 ) NOT NULL"); 
 }
 
+function update_1078() {
+	q("ALTER TABLE `item` ADD `guid` CHAR( 64 ) NOT NULL AFTER `id` , ADD INDEX ( `guid` ) ");
+}
