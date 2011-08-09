@@ -402,10 +402,10 @@ function statusnet_plugin_admin(&$a, &$o){
 	/* empty form to add new site */
 	$id++;
 	$sitesform[] = Array(
-		'sitename' => Array("sitename[$id]", "Site name", "", ""),
-		'apiurl' => Array("apiurl[$id]", "Api url", "", ""),
-		'secret' => Array("secret[$id]", "Secret", "", ""),
-		'key' => Array("key[$id]", "Key", "", ""),
+		'sitename' => Array("sitename[$id]", t("Site name"), "", ""),
+		'apiurl' => Array("apiurl[$id]", t("API URL"), "", ""),
+		'secret' => Array("secret[$id]", t("Consumer Secret"), "", ""),
+		'key' => Array("key[$id]", t("Consumer Key"), "", ""),
 	);
 
 	
