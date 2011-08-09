@@ -16,14 +16,14 @@ function diaspora_base_message($type,$data) {
 function diaspora_msg_build($msg,$user,$contact,$prvkey,$pubkey) {
 	$a = get_app();
 
-	$inner_aes_key = random_string(16);
+	$inner_aes_key = random_string(32);
 	$b_inner_aes_key = base64_encode($inner_aes_key);
-	$inner_iv = random_string(16);
+	$inner_iv = random_string(32);
 	$b_inner_iv = base64_encode($inner_iv);
 
-	$outer_aes_key = random_string(16);
+	$outer_aes_key = random_string(32);
 	$b_outer_aes_key = base64_encode($outer_aes_key);
-	$outer_iv = random_string(16);
+	$outer_iv = random_string(32);
 	$b_outer_iv = base64_encode($outer_iv);
 	
 	$handle = 'acct:' . $user['nickname'] . '@' . substr($a->get_baseurl(), strpos('://') + 3);
