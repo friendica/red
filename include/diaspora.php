@@ -69,7 +69,7 @@ function diaspora_msg_build($msg,$user,$contact,$prvkey,$pubkey) {
 	$inner_encrypted = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $inner_aes_key, $padded_data, MCRYPT_MODE_CBC, $inner_iv);
 
 	$b64_data = base64_encode($inner_encrypted);
-echo "inner: $b64_data";
+
 
 	$b64url_data = base64url_encode($b64_data);
 	$b64url_stripped = str_replace(array("\n","\r"," ","\t"),array('','','',''),$b64url_data);
@@ -100,12 +100,8 @@ $decrypted_header = <<< EOT
 EOT;
 
 	$decrypted_header = pkcs5_pad($decrypted_header,16);
-logger("decrypted_header: $decrypted_header");
-	$ciphertext = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $outer_aes_key, $decrypted_header, MCRYPT_MODE_CBC, $outer_iv);
 
-logger( "encrypted_ciphertext: " . base64_encode($ciphertext));
-	logger("encrypt_outer_key: $b_outer_aes_key");
-	logger("ecnrypt_outer_iv: $b_outer_iv");
+	$ciphertext = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $outer_aes_key, $decrypted_header, MCRYPT_MODE_CBC, $outer_iv);
 
 	$outer_json = json_encode(array('iv' => $b_outer_iv,'key' => $b_outer_aes_key));
 	$encrypted_outer_key_bundle = '';
@@ -135,43 +131,27 @@ EOT;
 
 
 function diaspora_decode($importer,$xml) {
-	$basedom = parse_xml_string($xml);
 
-	if($basedom)
-		logger('parsed dom');
+	$basedom = parse_xml_string($xml);
 
 	$atom = $basedom->children(NAMESPACE_ATOM1);
 
-	logger('atom: ' . count($atom));
 	$encrypted_header = json_decode(base64_decode($atom->encrypted_header));
-
-	print_r($encrypted_header);
 	
 	$encrypted_aes_key_bundle = base64_decode($encrypted_header->aes_key);
 	$ciphertext = base64_decode($encrypted_header->ciphertext);
 
-	logger('encrypted_aes: ' . print_r($encrypted_aes_key_bundle,true));
-	logger('ciphertext: ' . print_r($ciphertext,true));
-
 	$outer_key_bundle = '';
 	openssl_private_decrypt($encrypted_aes_key_bundle,$outer_key_bundle,$importer['prvkey']);
-
-	logger('outer_bundle: ' . print_r($outer_key_bundle,true));
 
 	$j_outer_key_bundle = json_decode($outer_key_bundle);
 
 	$outer_iv = base64_decode($j_outer_key_bundle->iv);
 	$outer_key = base64_decode($j_outer_key_bundle->key);
 
-	logger("outer_iv: $outer_iv");
-	logger("outer_key: $outer_key");
-	logger("ciphertext: " . base64_encode($ciphertext));
-
 	$decrypted = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $outer_key, $ciphertext, MCRYPT_MODE_CBC, $outer_iv);
 
 	$decrypted = pkcs5_unpad($decrypted);
-
-	logger('decrypted: ' . print_r($decrypted,true));
 
 	/**
 	 * $decrypted now contains something like
@@ -190,18 +170,11 @@ function diaspora_decode($importer,$xml) {
 
 	$inner_iv = base64_decode($idom->iv);
 	$inner_aes_key = base64_decode($idom->aes_key);
-logger('idom: ' . print_r($idom,true));
 
 	$author_link = str_replace('acct:','',$idom->author->uri);
 
-	logger('inner_iv: ' . $inner_iv);
-
 	$dom = $basedom->children(NAMESPACE_SALMON_ME);
 
-	if($dom)
-		logger('have dom');
-
-	logger('dom: ' . count($dom));
 	// figure out where in the DOM tree our data is hiding
 
 	if($dom->provenance->data)
@@ -219,8 +192,6 @@ logger('idom: ' . print_r($idom,true));
 
 	// Stash the signature away for now. We have to find their key or it won't be good for anything.
 	$signature = base64url_decode($base->sig);
-
-	logger('signature: ' . bin2hex($signature));
 
 	// unpack the  data
 
@@ -240,7 +211,6 @@ logger('idom: ' . print_r($idom,true));
 
 	$signed_data = $data  . (($data[-1] != "\n") ? "\n" : '') . '.' . base64url_encode($type) . "\n" . '.' . base64url_encode($encoding) . "\n" . '.' . base64url_encode($alg) . "\n";
 
-	logger('signed data: ' . $signed_data);
 
 	// decode the data
 	$data = base64url_decode($data);
@@ -253,10 +223,6 @@ logger('idom: ' . print_r($idom,true));
 	$inner_decrypted = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $inner_aes_key, $inner_encrypted, MCRYPT_MODE_CBC, $inner_iv);
 
 	$inner_decrypted = pkcs5_unpad($inner_decrypted);
-
-	logger('inner_decrypted: ' . $inner_decrypted);
-
-
 
 	if(! $author_link) {
 		logger('mod-diaspora: Could not retrieve author URI.');
@@ -272,7 +238,7 @@ logger('idom: ' . print_r($idom,true));
  	$key = get_diaspora_key($author_link);
 
 	if(! $key) {
-		logger('mod-salmon: Could not retrieve author key.');
+		logger('mod-diaspora: Could not retrieve author key.');
 		receive_return(400);
 	}
 
