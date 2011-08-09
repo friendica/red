@@ -1489,7 +1489,7 @@ msgstr "Dieser Account ist ein normales persönliches Profil"
 
 #: ../../mod/settings.php:386 ../../mod/admin.php:134 ../../mod/admin.php:444
 msgid "Soapbox Account"
-msgstr "Sandkasten Accunt"
+msgstr "Sandkasten Account"
 
 #: ../../mod/settings.php:387
 msgid "Automatically approve all connection/friend requests as read-only fans"
@@ -2791,7 +2791,7 @@ msgstr "löschen"
 
 #: ../../mod/admin.php:659
 msgid "Debugging"
-msgstr "Fehlerbeseitigung"
+msgstr "Protokoll führen"
 
 #: ../../mod/admin.php:660
 msgid "Log file"
