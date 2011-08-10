@@ -2,20 +2,6 @@
 
 require_once('include/crypto.php');
 
-function receive_return($val) {
-
-	if($val >= 400)
-		$err = 'Error';
-	if($val >= 200 && $val < 300)
-		$err = 'OK';
-
-	logger('mod-diaspora returns ' . $val);	
-	header($_SERVER["SERVER_PROTOCOL"] . ' ' . $val . ' ' . $err);
-	killme();
-
-}
-
-
 function get_diaspora_key($uri) {
 	$key = '';
 
@@ -255,4 +241,24 @@ function diaspora_decode($importer,$xml) {
 
 
 
+
+function diaspora_request($importer,$contact,$xml) {
+
+}
+
+function diaspora_post($importer,$contact,$xml) {
+
+}
+
+function diaspora_comment($importer,$contact,$xml) {
+
+}
+
+function diaspora_like($importer,$contact,$xml) {
+
+}
+
+function diaspora_retraction($importer,$contact,$xml) {
+
+}
 
