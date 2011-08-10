@@ -3416,7 +3416,7 @@ msgstr "segundos"
 
 #: ../../include/datetime.php:164
 msgid " ago"
-msgstr "atrás"
+msgstr " atrás"
 
 #: ../../include/poller.php:380
 msgid "From: "
