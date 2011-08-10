@@ -1,5 +1,18 @@
 <?php
 
+/**
+ *
+ * Arbitrary configuration storage
+ * Note:
+ * Please do not store booleans - convert to 0/1 integer values
+ * The get_?config() functions return boolean false for keys that are unset,
+ * and this could lead to subtle bugs.  
+ *
+ * There are a few places in the code (such as the admin panel) where boolean
+ * configurations need to be fixed as of 10/08/2011.
+ */
+
+
 // retrieve a "family" of config variables from database to cached storage
 
 if(! function_exists('load_config')) {

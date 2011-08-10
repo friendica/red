@@ -440,7 +440,8 @@ function poller_run($argv, $argc){
 				}
 			}
 			elseif($contact['network'] === NETWORK_FACEBOOK) {
-				// TODO: work in progress			
+				// This is picked up by the Facebook plugin on a cron hook.
+				// Ignored here.			
 			}
 
 			if($xml) {
