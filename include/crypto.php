@@ -1,6 +1,56 @@
 <?php
 
 require_once('library/ASNValue.class.php');
+require_once('library/asn1.php');
+
+
+function rsa_sign($data,$key) {
+
+	$sig = '';
+	if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
+		openssl_sign($data,$sig,$key,'sha256');
+    }
+    else {
+		if(strlen($key) < 1024 || extension_loaded('gmp')) {
+			require_once('library/phpsec/Crypt/RSA.php');
+			$rsa = new CRYPT_RSA();
+			$rsa->signatureMode = CRYPT_RSA_SIGNATURE_PKCS1;
+			$rsa->setHash('sha256');
+			$rsa->loadKey($key);
+			$sig = $rsa->sign($data);
+		}
+		else {
+			logger('rsa_sign: insecure algorithm used. Please upgrade PHP to 5.3');
+			openssl_private_encrypt(hex2bin('3031300d060960864801650304020105000420') . hash('sha256',$data,true), $sig, $key);
+		}
+	}
+	return $sig;
+}
+
+function rsa_verify($data,$sig,$key) {
+
+	if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
+		$verify = openssl_verify($data,$sig,$key,'sha256');
+    }
+    else {
+		if(strlen($key) <= 300 || extension_loaded('gmp')) {
+			require_once('library/phpsec/Crypt/RSA.php');
+			$rsa = new CRYPT_RSA();
+			$rsa->signatureMode = CRYPT_RSA_SIGNATURE_PKCS1;
+			$rsa->setHash('sha256');
+			$rsa->loadKey($key);
+			$verify = $rsa->verify($data,$sig);
+		}
+		else {
+			// fallback sha256 verify for PHP < 5.3 and large key lengths
+			$rawsig = '';
+        	openssl_public_decrypt($sig,$rawsig,$key);
+	        $verify = (($rawsig && substr($rawsig,-32) === hash('sha256',$data,true)) ? true : false);
+    	}
+	}
+	return $verify;
+}
+
 
 function DerToPem($Der, $Private=false)
 {
@@ -128,3 +178,7 @@ function metorsa($m,$e) {
 	return $key;
 }	
 
+function salmon_key($pubkey) {
+	pemtome($pubkey,$m,$e);
+	return 'RSA' . '.' . base64url_encode($m,true) . '.' . base64url_encode($e,true) ;
+}

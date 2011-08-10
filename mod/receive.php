@@ -6,7 +6,7 @@
 
 
 require_once('include/salmon.php');
-require_once('include/certfns.php');
+require_once('include/crypto.php');
 require_once('include/diaspora.php');
 
 

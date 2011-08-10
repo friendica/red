@@ -5,6 +5,7 @@
 // complicated process to try and sort out. 
 
 require_once('include/salmon.php');
+require_once('include/crypto.php');
 require_once('library/simplepie/simplepie.inc');
 
 function salmon_return($val) {
@@ -33,7 +34,7 @@ function salmon_post(&$a) {
 		dbesc($nick)
 	);
 	if(! count($r))
-		salmon_return(500);
+		http_status_exit(500);
 
 	$importer = $r[0];
 
@@ -52,7 +53,7 @@ function salmon_post(&$a) {
 	
 	if(! $base) {
 		logger('mod-salmon: unable to locate salmon data in xml ');
-		salmon_return(400);
+		http_status_exit(400);
 	}
 
 	// Stash the signature away for now. We have to find their key or it won't be good for anything.
@@ -117,7 +118,7 @@ function salmon_post(&$a) {
 
 	if(! $author_link) {
 		logger('mod-salmon: Could not retrieve author URI.');
-		salmon_return(400);
+		http_status_exit(400);
 	}
 
 	// Once we have the author URI, go to the web and try to find their public key
@@ -129,54 +130,35 @@ function salmon_post(&$a) {
 
 	if(! $key) {
 		logger('mod-salmon: Could not retrieve author key.');
-		salmon_return(400);
+		http_status_exit(400);
 	}
-
-	// Setup RSA stuff to verify the signature
-
-    require_once('library/phpsec/Crypt/RSA.php');
-
-    $rsa = new CRYPT_RSA();
-    $rsa->signatureMode = CRYPT_RSA_SIGNATURE_PKCS1;
-    $rsa->setHash('sha256');
-    $rsa->loadKey($prvkey);
-
-    $sig   = $rsa->sign($data);
-
-	require_once('library/phpsec/Crypt/RSA.php');
 
 	$key_info = explode('.',$key);
 
 	$m = base64url_decode($key_info[1]);
 	$e = base64url_decode($key_info[2]);
 
-	logger('mod-salmon: key details: ' . print_r($key_info,true));
+	logger('mod-salmon: key details: ' . print_r($key_info,true), LOGGER_DEBUG);
 
-    $rsa = new CRYPT_RSA();
-    $rsa->signatureMode = CRYPT_RSA_SIGNATURE_PKCS1;
-    $rsa->setHash('sha256');
-
-    $rsa->modulus = new Math_BigInteger($m, 256);
-    $rsa->k = strlen($rsa->modulus->toBytes());
-    $rsa->exponent = new Math_BigInteger($e, 256);
+	$pubkey = metopem($m,$e);
 
 	// We should have everything we need now. Let's see if it verifies.
 
-    $verify = $rsa->verify($compliant_format,$signature);
+    $verify = rsa_verify($compliant_format,$signature,$pubkey);
 
 	if(! $verify) {
 		logger('mod-salmon: message did not verify using protocol. Trying padding hack.');
-	    $verify = $rsa->verify($signed_data,$signature);
+	    $verify = rsa_verify($signed_data,$signature,$pubkey);
     }
 
 	if(! $verify) {
 		logger('mod-salmon: message did not verify using padding. Trying old statusnet hack.');
-	    $verify = $rsa->verify($stnet_signed_data,$signature);
+	    $verify = rsa_verify($stnet_signed_data,$signature,$pubkey);
     }
 
 	if(! $verify) {
 		logger('mod-salmon: Message did not verify. Discarding.');
-		salmon_return(400);
+		http_status_exit(400);
 	}
 
 	logger('mod-salmon: Message verified.');
@@ -203,7 +185,7 @@ function salmon_post(&$a) {
 
 	if((count($r)) && (($r[0]['readonly']) || ($r[0]['rel'] == CONTACT_IS_FOLLOWER) || ($r[0]['blocked']))) {
 		logger('mod-salmon: Ignoring this author.');
-		salmon_return(202);
+		http_status_exit(202);
 		// NOTREACHED
 	}
 
@@ -225,7 +207,7 @@ function salmon_post(&$a) {
 
 	consume_feed($feedxml,$importer,$contact_rec,$hub);
 
-	salmon_return(200);
+	http_status_exit(200);
 }
 
 

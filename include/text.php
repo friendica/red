@@ -671,7 +671,7 @@ function smilies($s) {
 	$a = get_app();
 
 	return str_replace(
-	array( '&lt;3', '&lt;/3', '&lt;\\3', ':-)', ':)', ';-)', ':-(', ':(', ':-P', ':P', ':-"', ':-x', ':-X', ':-D', '8-|', '8-O'),
+	array( '&lt;3', '&lt;/3', '&lt;\\3', ':-)', ':)', ';-)', ':-(', ':(', ':-P', ':P', ':-"', ':-x', ':-X', ':-D', '8-|', '8-O', '~friendika' ),
 	array(
 		'<img src="' . $a->get_baseurl() . '/images/smiley-heart.gif" alt="<3" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-brokenheart.gif" alt="</3" />',
@@ -688,7 +688,9 @@ function smilies($s) {
 		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-X" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-laughing.gif" alt=":-D" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-|" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-O" />'
+		'<img src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-O" />',
+		'<a href="http://project.friendika.com">~friendika <img src="' . $a->get_baseurl() . '/images/friendika-16.png" alt="~friendika" /></a>',
+
 	), $s);
 }}
 

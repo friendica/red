@@ -1,9 +1,8 @@
 <?php
 
-require_once('salmon.php');
-require_once('certfns.php');
+require_once('include/crypto.php');
 
-function xrd_content(&$a) {
+function xrd_init(&$a) {
 
 	$uri = urldecode(notags(trim($_GET['uri'])));
 
@@ -23,14 +22,12 @@ function xrd_content(&$a) {
 	if(! count($r))
 		killme();
 
-	$salmon_key = str_replace('=','',salmon_key($r[0]['spubkey']));
+	$salmon_key = salmon_key($r[0]['spubkey']);
 
 	header('Access-Control-Allow-Origin: *');
 	header("Content-type: text/xml");
 
-	$dspr_enabled = get_config('system','diaspora_enabled');
-
-	if($dspr_enabled) {
+	if(get_config('system','diaspora_enabled')) {
 		$tpl = file_get_contents('view/xrd_diaspora.tpl');
 		$dspr = replace_macros($tpl,array(
 			'$baseurl' => $a->get_baseurl(),
@@ -40,7 +37,6 @@ function xrd_content(&$a) {
 	}
 	else
 		$dspr = '';
-
 
 	$tpl = file_get_contents('view/xrd_person.tpl');
 
@@ -60,7 +56,7 @@ function xrd_content(&$a) {
 	$arr = array('user' => $r[0], 'xml' => $o);
 	call_hooks('personal_xrd', $arr);
 
-	echo $o;
+	echo $arr['xml'];
 	killme();
 
 }

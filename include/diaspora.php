@@ -1,6 +1,6 @@
 <?php
 
-require_once('include/certfns.php');
+require_once('include/crypto.php');
 
 function receive_return($val) {
 
@@ -83,9 +83,7 @@ function diaspora_msg_build($msg,$user,$contact,$prvkey,$pubkey) {
 	$signable_data = $data  . '.' . base64url_encode($type) . "\n" . '.' 
 		. base64url_encode($encoding) . "\n" . '.' . base64url_encode($alg) . "\n";
 
-	$signature = '';
-	$result = openssl_sign($signable_data,$signature,$prvkey,'SHA256');
-
+	$signature = rsa_sign($signable_data,$prvkey);
 	$sig = base64url_encode($signature);
 
 $decrypted_header = <<< EOT
@@ -226,7 +224,7 @@ function diaspora_decode($importer,$xml) {
 
 	if(! $author_link) {
 		logger('mod-diaspora: Could not retrieve author URI.');
-		receive_return(400);
+		http_status_exit(400);
 	}
 
 	// Once we have the author URI, go to the web and try to find their public key
@@ -239,25 +237,14 @@ function diaspora_decode($importer,$xml) {
 
 	if(! $key) {
 		logger('mod-diaspora: Could not retrieve author key.');
-		receive_return(400);
+		http_status_exit(400);
 	}
 
-	$verify = false;
-
-	if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
-    	$verify = openssl_verify($signed_data,$signature,$key,'sha256');
-	}
-	else {
-		// fallback sha256 verify for PHP < 5.3
-		$rawsig = '';
-		$hash = hash('sha256',$signed_data,true);
-		openssl_public_decrypt($signature,$rawsig,$key);
-		$verify = (($rawsig && substr($rawsig,-32) === $hash) ? true : false);
-	}
+	$verify = rsa_verify($signed_data,$signature,$key);
 
 	if(! $verify) {
 		logger('mod-diaspora: Message did not verify. Discarding.');
-		receive_return(400);
+		http_status_exit(400);
 	}
 
 	logger('mod-diaspora: Message verified.');

@@ -181,6 +181,20 @@ function xml_status($st, $message = '') {
 }}
 
 
+if(! function_exists('http_status_exit')) {
+function http_status_exit($val) {
+
+	if($val >= 400)
+		$err = 'Error';
+	if($val >= 200 && $val < 300)
+		$err = 'OK';
+
+	logger('http_status_exit ' . $val);	
+	header($_SERVER["SERVER_PROTOCOL"] . ' ' . $val . ' ' . $err);
+	killme();
+
+}}
+
 
 // convert an XML document to a normalised, case-corrected array
 // used by webfinger

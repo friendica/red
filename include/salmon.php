@@ -1,21 +1,7 @@
 <?php
 
-require_once('library/asn1.php');
+require_once('include/crypto.php');
 
-function salmon_key($pubkey) {
-	$lines = explode("\n",$pubkey);
-	unset($lines[0]);
-	unset($lines[count($lines)]);
-	$x = base64_decode(implode('',$lines));
-
-	$r = ASN_BASE::parseASNString($x);
-
-	$m = $r[0]->asnData[1]->asnData[0]->asnData[0]->asnData;
-	$e = $r[0]->asnData[1]->asnData[0]->asnData[1]->asnData;
-
-
-	return 'RSA' . '.' . $m . '.' . $e ;
-}
 
 
 function get_salmon_key($uri,$keyhash) {
@@ -112,24 +98,15 @@ EOT;
 	$algorithm = 'RSA-SHA256';
 	$keyhash   = base64url_encode(hash('sha256',salmon_key($owner['spubkey'])),true);
 
-	// Setup RSA stuff to PKCS#1 sign the data
-
-	require_once('library/phpsec/Crypt/RSA.php');
-
-    $rsa = new CRYPT_RSA();
-    $rsa->signatureMode = CRYPT_RSA_SIGNATURE_PKCS1;
-    $rsa->setHash('sha256');
-	$rsa->loadKey($owner['sprvkey']);
-
 	// precomputed base64url encoding of data_type, encoding, algorithm concatenated with periods
 
 	$precomputed = '.YXBwbGljYXRpb24vYXRvbSt4bWw=.YmFzZTY0dXJs.UlNBLVNIQTI1Ng==';
 
-	$signature   = base64url_encode($rsa->sign(str_replace('=','',$data . $precomputed),true));
+	$signature   = base64url_encode(rsa_sign(str_replace('=','',$data . $precomputed),true),$owner['sprvkey']);
 
-	$signature2  = base64url_encode($rsa->sign($data . $precomputed));
+	$signature2  = base64url_encode(rsa_sign($data . $precomputed),$owner['sprvkey']);
 
-	$signature3  = base64url_encode($rsa->sign($data));
+	$signature3  = base64url_encode(rsa_sign($data),$owner['sprvkey']);
 
 	$salmon_tpl = get_markup_template('magicsig.tpl');
 
