@@ -297,7 +297,13 @@ function probe_url($url) {
 	$at_addr = ((strpos($url,'@') !== false) ? true : false);
 
 	if(! $twitter) {
-		$links = lrdd($url);
+
+		if(strpos($url,'mailto:') !== false && $at_addr) {
+			$url = str_replace('mailto:','',$url);
+			$links = array();
+		}
+		else
+			$links = lrdd($url);
 
 		if(count($links)) {
 			logger('probe_url: found lrdd links: ' . print_r($links,true), LOGGER_DATA);
