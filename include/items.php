@@ -153,6 +153,9 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 		if($dfrn_id === '') {
 			$type = 'html';
+			// catch any email that's in a public conversation and make sure it doesn't leak
+			if($item['private'])
+				continue;
 		}
 		else {
 			$type = 'text';

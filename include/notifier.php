@@ -289,6 +289,11 @@ function notifier_run($argv, $argc){
 				if(! $item['parent'])
 					continue;
 
+				// private emails may be in included in public conversations. Filter them.
+
+				if(($notify_hub) && $item['private'])
+					continue;
+
 				$contact = get_item_contact($item,$contacts);
 				if(! $contact)
 					continue;
