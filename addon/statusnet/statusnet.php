@@ -1,7 +1,7 @@
 <?php
 /**
  * Name: StatusNet Connector
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: Tobias Diekershoff <https://diekershoff.homeunix.net/friendika/profile/tobias>
  */
  
@@ -51,6 +51,58 @@ class StatusNetOAuth extends TwitterOAuth {
         parent::__construct($consumer_key, $consumer_secret, $oauth_token, $oauth_token_secret);
         $this->host = $apipath;
     }
+  /**
+   * Make an HTTP request
+   *
+   * @return API results
+   *
+   * Copied here from the twitteroauth library and complemented by applying the proxy settings of friendika
+   */
+  function http($url, $method, $postfields = NULL) {
+    $this->http_info = array();
+    $ci = curl_init();
+    /* Curl settings */
+    $prx = 'http://localhost:8118';
+    $prx = get_config('system','proxy');
+    logger('Proxy SN: '.$prx);
+    if(strlen($prx)) {
+        curl_setopt($ci, CURLOPT_HTTPPROXYTUNNEL, 1);
+        curl_setopt($ci, CURLOPT_PROXY, $prx);
+        $prxusr = get_config('system','proxyuser');
+        if(strlen($prxusr))
+            curl_setopt($ci, CURLOPT_PROXYUSERPWD, $prxusr);
+    }
+    curl_setopt($ci, CURLOPT_USERAGENT, $this->useragent);
+    curl_setopt($ci, CURLOPT_CONNECTTIMEOUT, $this->connecttimeout);
+    curl_setopt($ci, CURLOPT_TIMEOUT, $this->timeout);
+    curl_setopt($ci, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($ci, CURLOPT_HTTPHEADER, array('Expect:'));
+    curl_setopt($ci, CURLOPT_SSL_VERIFYPEER, $this->ssl_verifypeer);
+    curl_setopt($ci, CURLOPT_HEADERFUNCTION, array($this, 'getHeader'));
+    curl_setopt($ci, CURLOPT_HEADER, FALSE);
+
+    switch ($method) {
+      case 'POST':
+        curl_setopt($ci, CURLOPT_POST, TRUE);
+        if (!empty($postfields)) {
+          curl_setopt($ci, CURLOPT_POSTFIELDS, $postfields);
+        }
+        break;
+      case 'DELETE':
+        curl_setopt($ci, CURLOPT_CUSTOMREQUEST, 'DELETE');
+        if (!empty($postfields)) {
+          $url = "{$url}?{$postfields}";
+        }
+    }
+
+    curl_setopt($ci, CURLOPT_URL, $url);
+    $response = curl_exec($ci);
+    $this->http_code = curl_getinfo($ci, CURLINFO_HTTP_CODE);
+    $this->http_info = array_merge($this->http_info, curl_getinfo($ci));
+    $this->url = $url;
+    curl_close ($ci);
+    return $response;
+  }
 }
 
 function statusnet_install() {
