@@ -283,14 +283,14 @@ function conversation(&$a, $items, $mode, $update) {
 				continue;
 
 			$toplevelpost = (($item['id'] == $item['parent']) ? true : false);
-
+			$toplevelprivate = false;
 
 			// Take care of author collapsing and comment collapsing
 			// If a single author has more than 3 consecutive top-level posts, squash the remaining ones.
 			// If there are more than two comments, squash all but the last 2.
-
+		
 			if($toplevelpost) {
-
+				$toplevelprivate = (($toplevelpost && $item['private']) ? true : false);
 				$item_writeable = (($item['writable'] || $item['self']) ? true : false);
 
 				if($blowhard == $item['cid'] && (! $item['self']) && ($mode != 'profile') && ($mode != 'notes')) {
@@ -312,9 +312,12 @@ function conversation(&$a, $items, $mode, $update) {
 				$comments_seen = 0;
 				$comments_collapsed = false;
 			}
-			else
+			else {
+				// prevent private email from leaking into public conversation
+				if((! $toplevelpost) && (! toplevelprivate) && ($item['private']) && ($profile_owner != local_user()))
+					continue;
 				$comments_seen ++;
-
+			}	
 
 			$override_comment_box = ((($page_writeable) && ($item_writeable)) ? true : false);
 			$show_comment_box = ((($page_writeable) && ($item_writeable) && ($comments_seen == $comments[$item['parent']])) ? true : false);
