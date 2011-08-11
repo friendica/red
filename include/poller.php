@@ -421,6 +421,8 @@ function poller_run($argv, $argc){
 							$datarray['contact-id'] = $contact['id'];
 							if($datarray['parent-uri'] === $datarray['uri'])
 								$datarray['private'] = 1;
+							if(! get_pconfig($importer_uid,'system','allow_public_email_replies'))
+								$datarray['private'] = 1;
 							$datarray['author-name'] = $contact['name'];
 							$datarray['author-link'] = 'mailbox';
 							$datarray['author-avatar'] = $contact['photo'];

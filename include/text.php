@@ -19,11 +19,18 @@ function replace_macros($s,$r) {
 }}
 
 
-// random hex string, 64 chars max
+// random string, there are 86 characters max in text mode, 128 for hex
+// output is urlsafe
+
+define('RANDOM_STRING_HEX',  0x00 );
+define('RANDOM_STRING_TEXT', 0x01 );
 
 if(! function_exists('random_string')) {
-function random_string($size = 64) {
-	return(substr(hash('sha256',uniqid(rand(),true)),0,$size));
+function random_string($size = 64,$type = RANDOM_STRING_HEX) {
+	// generate a bit of entropy and run it through the whirlpool
+	$s = hash('whirlpool', (string) rand() . uniqid(rand(),true) . (string) rand(),(($type == RANDOM_STRING_TEXT) ? true : false));
+	$s = (($type == RANDOM_STRING_TEXT) ? str_replace("\n","",base64url_encode($s,true)) : $s);
+	return(substr($s,0,$size));
 }}
 
 /**

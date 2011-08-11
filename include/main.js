@@ -344,7 +344,7 @@
 	function contactgroupChangeMember(gid,cid) {
 		$('body').css('cursor', 'wait');
 		$.get('contactgroup/' + gid + '/' + cid, function(data) {
-				$('body').css('cursor', 'auto');				
+				$('body').css('cursor', 'auto');
 		});
 	}
 
@@ -402,3 +402,4 @@ Array.prototype.remove = function(item) {
   this.length = from < 0 ? this.length + from : from;
   return this.push.apply(this, rest);
 };
+

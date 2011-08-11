@@ -170,7 +170,7 @@ EOT;
 			$o .= '	<li class="sidebar-group-li">' 
 			. (($edit) ? "<a href=\"group/{$rr['id']}\" title=\"" . t('Edit') 
 				. "\" ><img src=\"images/spencil.gif\" alt=\"" . t('Edit') . "\"></a> " : "") 
-			. (($cid) ? '<input type="checkbox" onclick="contactgroupChangeMember(' . $rr['id'] . ',' . $cid . ');return true;" '
+			. (($cid) ? '<input type="checkbox" class="' . (($selected) ? 'ticked' : 'unticked') . '" onclick="contactgroupChangeMember(' . $rr['id'] . ',' . $cid . ');return true;" '
 				. ((in_array($rr['id'],$member_of)) ? ' checked="checked" ' : '') . '/>' : '')
 			. "<a href=\"$each/{$rr['id']}\" $selected >{$rr['name']}</a></li>\r\n";
 		}
