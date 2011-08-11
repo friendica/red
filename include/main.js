@@ -174,7 +174,8 @@
 				else { 
 
 					$('#' + ident + ' ' + '.wall-item-ago').replaceWith($(this).find('.wall-item-ago')); 
-					$('#' + ident + ' ' + '.wall-item-comment-wrapper').replaceWith($(this).find('.wall-item-comment-wrapper'));
+					if($('#' + ident + ' ' + '.comment-edit-text-empty').length)
+						$('#' + ident + ' ' + '.wall-item-comment-wrapper').replaceWith($(this).find('.wall-item-comment-wrapper'));
 					$('#' + ident + ' ' + '.wall-item-like').replaceWith($(this).find('.wall-item-like'));
 					$('#' + ident + ' ' + '.wall-item-dislike').replaceWith($(this).find('.wall-item-dislike'));
 					$('#' + ident + ' ' + '.my-comment-photo').each(function() {
