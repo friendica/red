@@ -1,6 +1,7 @@
 <?php
 
 require_once('library/HTML5/Parser.php');
+require_once('include/crypto.php');
 
 if(! function_exists('scrape_dfrn')) {
 function scrape_dfrn($url) {
@@ -171,6 +172,8 @@ function scrape_vcard($url) {
 
 	// Pull out hCard profile elements
 
+	$largest_photo = 0;
+
 	$items = $dom->getElementsByTagName('*');
 	foreach($items as $item) {
 		if(attribute_contains($item->getAttribute('class'), 'vcard')) {
@@ -179,8 +182,13 @@ function scrape_vcard($url) {
 				if(attribute_contains($x->getAttribute('class'),'fn'))
 					$ret['fn'] = $x->textContent;
 				if((attribute_contains($x->getAttribute('class'),'photo'))
-					|| (attribute_contains($x->getAttribute('class'),'avatar')))
-					$ret['photo'] = $x->getAttribute('src');
+					|| (attribute_contains($x->getAttribute('class'),'avatar'))) {
+					$size = intval($x->getAttribute('width'));
+					if(($size > $largest_photo) || (! $largest_photo)) {
+						$ret['photo'] = $x->getAttribute('src');
+						$largest_photo = $size;
+					}
+				}
 				if((attribute_contains($x->getAttribute('class'),'nickname'))
 					|| (attribute_contains($x->getAttribute('class'),'uid')))
 					$ret['nick'] = $x->textContent;
@@ -289,7 +297,10 @@ function probe_url($url) {
 	if(! $url)
 		return $result;
 
-	$diaspora = false;	
+	$diaspora = false;
+	$diaspora_base = '';
+	$diaspora_guid = '';	
+	$diaspora_key = '';
 	$email_conversant = false;
 
 	$twitter = ((strpos($url,'twitter.com') !== false) ? true : false);
@@ -320,8 +331,19 @@ function probe_url($url) {
 					$hcard = unamp($link['@attributes']['href']);
 				if($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page')
 					$profile = unamp($link['@attributes']['href']);
-				if($link['@attributes']['rel'] === 'http://joindiaspora.com/seed_location')
+				if($link['@attributes']['rel'] === 'http://joindiaspora.com/seed_location') {
+					$diaspora_base = unamp($link['@attributes']['href']);
 					$diaspora = true;
+				}
+				if($link['@attributes']['rel'] === 'http://joindiaspora.com/guid') {
+					$diaspora_guid = unamp($link['@attributes']['href']);
+					$diaspora = true;
+				}
+				if($link['@attributes']['rel'] === 'diaspora-public-key') {
+					$diaspora_key = base64_decode(unamp($link['@attributes']['href']));
+					$pubkey = rsatopem($diaspora_key);
+					$diaspora = true;
+				}
 			}
 
 			// Status.Net can have more than one profile URL. We need to match the profile URL
@@ -419,8 +441,17 @@ function probe_url($url) {
 		}
 	}
 
+	if($diaspora && $diaspora_base && $diaspora_guid) {
+		$notify = $diaspora_base . 'receive/post/' . $diaspora_guid;
+		if(strpos($url,'@'))
+			$addr = str_replace('acct:', '', $url);
+	}			
+
 	if($network !== NETWORK_ZOT && $network !== NETWORK_DFRN && $network !== NETWORK_MAIL) {
-		$network  = NETWORK_OSTATUS;
+		if($diaspora)
+			$network = NETWORK_DIASPORA;
+		else
+			$network  = NETWORK_OSTATUS;
 		$priority = 0;
 
 		if($hcard) {

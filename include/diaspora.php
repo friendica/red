@@ -244,6 +244,39 @@ function diaspora_decode($importer,$xml) {
 
 function diaspora_request($importer,$contact,$xml) {
 
+	$sender_handle = $xml->sender_handle;
+	$recipient_handle = $xml->recipient_handle;
+
+	if(! $sender_handle || ! $recipient_handle)
+		return;
+	
+	if($contact) {
+		q("UPDATE `contact` SET `rel` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			intval(CONTACT_IS_FRIEND),
+			intval($contact['id']),
+			intval($importer['uid'])
+		);
+		// send notification
+		return;
+	}
+	
+	require_once('include/Scrape.php');
+	$ret = probe_url($sender_handle);
+	$errors = false;
+	if((! count($ret)) || ($ret['network'] != NETWORK_DIASPORA)) {
+		logger('diaspora_request: Cannot resolve diaspora handle ' . $sender_handle . ' for ' . $recipient_handle);
+		$errors = true;
+	}
+
+
+	if($errors)
+		return;
+
+
+
+
+
+
 }
 
 function diaspora_post($importer,$contact,$xml) {

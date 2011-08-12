@@ -71,7 +71,7 @@ function receive_post(&$a) {
 
 	$contact = ((count($r)) ? $r[0] : null);
 
-
+	logger('diaspora msg: ' . $msg, LOGGER_DATA); 
 
 	if($xmlbase->request) {
 		diaspora_request($importer,$contact,$xmlbase->request);
