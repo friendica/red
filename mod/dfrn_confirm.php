@@ -528,12 +528,22 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			dbesc($decrypted_source_url),
 			intval($local_uid)
 		);
-
 		if(! count($ret)) {
-			// this is either a bogus confirmation (?) or we deleted the original introduction.
-			$message = t('Contact record was not found for you on our site.');
-			xml_status(3,$message);
-			return; // NOTREACHED 
+			if(strstr($decrypted_source_url,'http:'))
+				$newurl = str_replace('http:','https:',$decrypted_source_url);
+			else
+				$newurl = str_replace('https:','http:',$decrypted_source_url);
+
+			$ret = q("SELECT * FROM `contact` WHERE `url` = '%s' AND `uid` = %d LIMIT 1",
+				dbesc($newurl),
+				intval($local_uid)
+			);
+			if(! count($r)) {
+				// this is either a bogus confirmation (?) or we deleted the original introduction.
+				$message = t('Contact record was not found for you on our site.');
+				xml_status(3,$message);
+				return; // NOTREACHED 
+			}
 		}
 
 		$relation = $ret[0]['rel'];
