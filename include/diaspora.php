@@ -250,7 +250,7 @@ function diaspora_request($importer,$contact,$xml) {
 	if(! $sender_handle || ! $recipient_handle)
 		return;
 	
-	if($contact) {
+	if($contact && ($contact['rel'] == CONTACT_IS_FOLLOWER || $contact['rel'] == CONTACT_IS_FRIEND)) {
 		q("UPDATE `contact` SET `rel` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval(CONTACT_IS_FRIEND),
 			intval($contact['id']),
@@ -262,20 +262,58 @@ function diaspora_request($importer,$contact,$xml) {
 	
 	require_once('include/Scrape.php');
 	$ret = probe_url($sender_handle);
-	$errors = false;
+
 	if((! count($ret)) || ($ret['network'] != NETWORK_DIASPORA)) {
 		logger('diaspora_request: Cannot resolve diaspora handle ' . $sender_handle . ' for ' . $recipient_handle);
-		$errors = true;
+		return;
 	}
 
+	$r = q("INSERT INTO `contact` (`uid`, `network`,`addr`,`created`,`url`,`name`,`nick`,`photo`,`pubkey`,`notify`,`poll`,`blocked`,`priority`)
+		VALUES ( %d, '%s', '%s', '%s','%s','%s','%s','%s','%s','%s','%s',%d,%d) ",
+		intval($importer['uid']),
+		dbesc($ret['network']),
+		dbesc($ret['addr']),
+		datetime_convert(),
+		dbesc($ret['url']),
+		dbesc($ret['name']),
+		dbesc($ret['nick']),
+		dbesc($ret['photo']),
+		dbesc($ret['pubkey']),
+		dbesc($ret['notify']),
+		dbesc($ret['poll']),
+		1,
+		2
+	);
+		 
+	// find the contact record we just created
+	$contact_record = null;
+	if($r) {	
+		$r = q("SELECT `id` FROM `contact` 
+				WHERE `uid` = %d AND `addr` = '%s' AND `poll` = '%s' LIMIT 1",
+				intval($importer['uid']),
+				$ret['addr'],
+				$ret['poll']
+		);
+		if(count($r)) 
+			$contact_record = $r[0];
+	}
 
-	if($errors)
-		return;
+	$hash = random_string() . (string) time();   // Generate a confirm_key
+	
+	if(is_array($contact_record)) {
+		$ret = q("INSERT INTO `intro` ( `uid`, `contact-id`, `blocked`, `knowyou`, `note`, `hash`, `datetime`)
+			VALUES ( %d, %d, 1, %d, '%s', '%s', '%s' )",
+			intval($importer['uid']),
+			intval($contact_record['id']),
+			0,
+			dbesc( t('Sharing notification from Diaspora network')),
+			dbesc($hash),
+			dbesc(datetime_convert())
+		);
+	}
+	
 
-
-
-
-
+	return;
 
 }
 
