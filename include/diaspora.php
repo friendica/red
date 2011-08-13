@@ -319,6 +319,79 @@ function diaspora_request($importer,$contact,$xml) {
 
 function diaspora_post($importer,$contact,$xml) {
 
+	$guid = notags(unxmlify($xml->guid));
+	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
+	$message_id = $diaspora_handle . ':' . $guid;
+	$r = q("SELECT `id` FROM `item` WHERE `uid` = %d AND `uri` = '%s' AND `guid` = '%s' LIMIT 1",
+		intval($importer['uid']),
+		dbesc($message_id),
+		dbesc($guid)
+	);
+	if(count($r))
+		return;
+
+	$owner = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
+		intval($importer['uid'])
+	);
+	if(! count($owner))
+		return;
+
+	$created = unxmlify($xml->created_at);
+	$private = ((unxmlify($xml->public) == 'false') ? 1 : 0);
+
+	$body = unxmlify($xml->raw_message);
+
+	require_once('library/HTMLPurifier.auto.php');
+	require_once('include/html2bbcode.php');
+
+	$maxlen = get_max_import_size();
+	if($maxlen && (strlen($body) > $maxlen))
+		$body = substr($body,0, $maxlen);
+
+	if((strpos($body,'<') !== false) || (strpos($body,'>') !== false)) {
+
+		$body = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
+			'[youtube]$1[/youtube]', $body);
+
+		$body = preg_replace('#<iframe[^>].+?' . 'http://www.youtube.com/embed/([A-Za-z0-9\-_=]+).+?</iframe>#s',
+			'[youtube]$1[/youtube]', $body);
+
+		$body = oembed_html2bbcode($body);
+
+		$config = HTMLPurifier_Config::createDefault();
+		$config->set('Cache.DefinitionImpl', null);
+
+		// we shouldn't need a whitelist, because the bbcode converter
+		// will strip out any unsupported tags.
+		// $config->set('HTML.Allowed', 'p,b,a[href],i'); 
+
+		$purifier = new HTMLPurifier($config);
+		$body = $purifier->purify($body);
+
+		$body = html2bbcode($body);
+	}
+
+	$datarray = array();
+	$datarray['uid'] = $importer['uid'];
+	$datarray['contact-id'] = $contact['id'];
+	$datarray['wall'] = 0;
+	$datarray['guid'] = $guid;
+	$datarray['uri'] = $message_id;
+	$dattarray['created'] = $datarray['edited'] = datetime_convert('UTC','UTC',$created);
+	$dattarray['private'] = $private;
+	$dattarray['parent'] = 0;
+	$datarray['owner-name'] = $owner[0]['name'];
+	$datarray['owner-link'] = $owner[0]['url'];
+	$datarray['owner-avatar'] = $owner[0]['thumb'];
+	$datarray['author-name'] = $contact['name'];
+	$datarray['author-link'] = $contact['url'];
+	$datarray['author-avatar'] = $contact['thumb'];
+
+	item_store($datarray);
+
+	return;
+
+
 }
 
 function diaspora_comment($importer,$contact,$xml) {
