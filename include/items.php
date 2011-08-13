@@ -112,7 +112,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 	$items = $r;
 
-	$feed_template = get_markup_template('atom_feed.tpl');
+	$feed_template = get_markup_template(($dfrn_id) ? 'atom_feed_dfrn.tpl' : 'atom_feed.tpl');
 
 	$atom = '';
 
@@ -1038,7 +1038,9 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 	if(count($hubs))
 		$hub = implode(',', $hubs);
 
-	$rawtags = $feed->get_feed_tags( SIMPLEPIE_NAMESPACE_ATOM_10, 'author');
+	$rawtags = $feed->get_feed_tags( NAMESPACE_DFRN, 'owner');
+	if(! $rawtags)
+		$rawtags = $feed->get_feed_tags( SIMPLEPIE_NAMESPACE_ATOM_10, 'author');
 	if($rawtags) {
 		$elems = $rawtags[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10];
 		if($elems['name'][0]['attribs'][NAMESPACE_DFRN]['updated']) {
