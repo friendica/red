@@ -124,6 +124,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		$aes_allow    = $contact['aes_allow'];
 
 		$network = ((strlen($contact['issued-id'])) ? 'dfrn' : 'stat');
+		if($contact['network'])
+			$network = $contact['network'];
 
 		if($network === 'dfrn') {
 
@@ -339,16 +341,18 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		else {  
 			// $network !== 'dfrn'
 
-			$notify = '';
-			$poll   = '';
+			$notify = (($contact['notify']) ? $contact['notify'] : '');
+			$poll   = (($contact['poll']) ? $contact['poll'] : '');
 
-			$arr = lrdd($contact['url']);
-			if(count($arr)) {
-				foreach($arr as $link) {
-					if($link['@attributes']['rel'] === 'salmon')
-						$notify = $link['@attributes']['href'];
-					if($link['@attributes']['rel'] === NAMESPACE_FEED)
-						$poll = $link['@attributes']['href'];
+			if((! $contact['notify']) || (! $contact['poll'])) {
+				$arr = lrdd($contact['url']);
+				if(count($arr)) {
+					foreach($arr as $link) {
+						if($link['@attributes']['rel'] === 'salmon')
+							$notify = $link['@attributes']['href'];
+						if($link['@attributes']['rel'] === NAMESPACE_FEED)
+							$poll = $link['@attributes']['href'];
+					}
 				}
 			}
 
