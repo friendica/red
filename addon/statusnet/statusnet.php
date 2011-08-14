@@ -374,6 +374,9 @@ function statusnet_post_hook(&$a,&$b) {
 
 			$statusnet_post = get_pconfig(local_user(),'statusnet','post');
 			$statusnet_enable = (($statusnet_post && x($_POST,'statusnet_enable')) ? intval($_POST['statusnet_enable']) : 0);
+			// if API is used, default to the chosen settings
+			if($_POST['api_source'] && intval(get_pconfig(local_user(),'statusnet','post_by_default')))
+				$statusnet_enable = 1;
 
 			if($statusnet_enable && $statusnet_post) {
 				require_once('include/bbcode.php');	

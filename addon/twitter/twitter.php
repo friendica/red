@@ -225,6 +225,10 @@ function twitter_post_hook(&$a,&$b) {
 			$twitter_post = intval(get_pconfig(local_user(),'twitter','post'));
 			$twitter_enable = (($twitter_post && x($_POST,'twitter_enable')) ? intval($_POST['twitter_enable']) : 0);
 
+			// if API is used, default to the chosen settings
+			if($_POST['api_source'] && intval(get_pconfig(local_user(),'twitter','post_by_default')))
+				$twitter_enable = 1;
+
 			if($twitter_post && $twitter_enable) {
 				logger('Posting to Twitter', LOGGER_DEBUG);
 				require_once('library/twitteroauth.php');

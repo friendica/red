@@ -530,6 +530,13 @@ function facebook_post_hook(&$a,&$b) {
 			$fb_enable = (($fb_post && x($_POST,'facebook_enable')) ? intval($_POST['facebook_enable']) : 0);
 			$fb_token  = get_pconfig(local_user(),'facebook','access_token');
 
+			// if API is used, default to the chosen settings
+			if($_POST['api_source'] && intval(get_pconfig(local_user(),'facebook','post_by_default')))
+				$fb_enable = 1;
+
+
+
+
 			logger('facebook: $fb_post: ' . $fb_post . ' $fb_enable: ' . $fb_enable . ' $fb_token: ' . $fb_token,LOGGER_DEBUG); 
 
 			// post to facebook if it's a public post and we've ticked the 'post to Facebook' box, 

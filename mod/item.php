@@ -178,6 +178,20 @@ function item_post(&$a) {
 	
 		$pubmail_enable    = ((x($_POST,'pubmail_enable') && intval($_POST['pubmail_enable']) && (! $private)) ? 1 : 0);
 
+		// if using the API, we won't see pubmail_enable - figure out if it should be set
+
+		if($api_source && $profile_uid && $profile_uid == local_user()) {
+			$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
+			if(! $mail_disabled) {
+				$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d AND `server` != '' LIMIT 1",
+					intval(local_user())
+				);
+				if(count($r) && intval($r[0]['pubmail']))
+					$pubmail_enabled = true;
+			}
+		}
+
+
 		if(! strlen($body)) {
 			info( t('Empty post discarded.') . EOL );
 			if(x($_POST,'return')) 
