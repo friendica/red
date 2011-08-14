@@ -341,6 +341,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		else {  
 			// $network !== 'dfrn'
 
+			$network = (($contact['network']) ? $contact['network'] : 'stat');
 			$notify = (($contact['notify']) ? $contact['notify'] : '');
 			$poll   = (($contact['poll']) ? $contact['poll'] : '');
 
@@ -372,7 +373,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				`poll` = '%s',
 				`blocked` = 0, 
 				`pending` = 0,
-				`network` = 'stat'
+				`network` = '%s'
 				WHERE `id` = %d LIMIT 1
 			",
 				dbesc($photos[0]),
@@ -383,6 +384,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				dbesc(datetime_convert()),
 				dbesc($notify),
 				dbesc($poll),
+				dbesc($network),
 				intval($contact_id)
 			);			
 		}
