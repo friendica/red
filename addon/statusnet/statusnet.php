@@ -62,7 +62,6 @@ class StatusNetOAuth extends TwitterOAuth {
     $this->http_info = array();
     $ci = curl_init();
     /* Curl settings */
-    $prx = 'http://localhost:8118';
     $prx = get_config('system','proxy');
     logger('Proxy SN: '.$prx);
     if(strlen($prx)) {
