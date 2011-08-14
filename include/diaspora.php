@@ -330,11 +330,18 @@ function diaspora_post($importer,$contact,$xml) {
 	if(count($r))
 		return;
 
-	$owner = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
-		intval($importer['uid'])
+    // allocate a guid on our system - we aren't fixing any collisions.
+	// we're ignoring them
+
+	$g = q("select * from guid where guid = '%s' limit 1",
+		dbesc($guid)
 	);
-	if(! count($owner))
-		return;
+	if(! count($g)) {
+		q("insert into guid ( guid ) values ( '%s' )",
+			dbesc($guid)
+		);
+	}
+
 
 	$created = unxmlify($xml->created_at);
 	$private = ((unxmlify($xml->public) == 'false') ? 1 : 0);
@@ -360,11 +367,6 @@ function diaspora_post($importer,$contact,$xml) {
 
 		$config = HTMLPurifier_Config::createDefault();
 		$config->set('Cache.DefinitionImpl', null);
-
-		// we shouldn't need a whitelist, because the bbcode converter
-		// will strip out any unsupported tags.
-		// $config->set('HTML.Allowed', 'p,b,a[href],i'); 
-
 		$purifier = new HTMLPurifier($config);
 		$body = $purifier->purify($body);
 
@@ -380,9 +382,9 @@ function diaspora_post($importer,$contact,$xml) {
 	$dattarray['created'] = $datarray['edited'] = datetime_convert('UTC','UTC',$created);
 	$dattarray['private'] = $private;
 	$dattarray['parent'] = 0;
-	$datarray['owner-name'] = $owner[0]['name'];
-	$datarray['owner-link'] = $owner[0]['url'];
-	$datarray['owner-avatar'] = $owner[0]['thumb'];
+	$datarray['owner-name'] = $contact['name'];
+	$datarray['owner-link'] = $contact['url'];
+	$datarray['owner-avatar'] = $contact['thumb'];
 	$datarray['author-name'] = $contact['name'];
 	$datarray['author-link'] = $contact['url'];
 	$datarray['author-avatar'] = $contact['thumb'];
@@ -395,10 +397,121 @@ function diaspora_post($importer,$contact,$xml) {
 }
 
 function diaspora_comment($importer,$contact,$xml) {
+	$guid = notags(unxmlify($xml->guid));
+	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
+	$message_id = $diaspora_handle . ':' . $guid;
+	$r = q("SELECT `id` FROM `item` WHERE `uid` = %d AND `uri` = '%s' AND `guid` = '%s' LIMIT 1",
+		intval($importer['uid']),
+		dbesc($message_id),
+		dbesc($guid)
+	);
+	if(count($r))
+		return;
+
+	$owner = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
+		intval($importer['uid'])
+	);
+	if(! count($owner))
+		return;
+
+	$created = unxmlify($xml->created_at);
+	$private = ((unxmlify($xml->public) == 'false') ? 1 : 0);
 
 }
 
 function diaspora_like($importer,$contact,$xml) {
+
+	$guid = notags(unxmlify($xml->guid));
+	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
+	$message_id = $diaspora_handle . ':' . $guid;
+	$r = q("SELECT `id` FROM `item` WHERE `uid` = %d AND `uri` = '%s' AND `guid` = '%s' LIMIT 1",
+		intval($importer['uid']),
+		dbesc($message_id),
+		dbesc($guid)
+	);
+	if(count($r))
+		return;
+
+	$owner = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
+		intval($importer['uid'])
+	);
+	if(! count($owner))
+		return;
+
+	$created = unxmlify($xml->created_at);
+	$private = ((unxmlify($xml->public) == 'false') ? 1 : 0);
+
+	$uri = item_new_uri($a->get_hostname(),$owner_uid);
+
+	$post_type = (($item['resource-id']) ? t('photo') : t('status'));
+	$objtype = (($item['resource-id']) ? ACTIVITY_OBJ_PHOTO : ACTIVITY_OBJ_NOTE ); 
+	$link = xmlify('<link rel="alternate" type="text/html" href="' . $a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id'] . '" />' . "\n") ;
+	$body = $item['body'];
+
+	$obj = <<< EOT
+
+	<object>
+		<type>$objtype</type>
+		<local>1</local>
+		<id>{$item['uri']}</id>
+		<link>$link</link>
+		<title></title>
+		<content>$body</content>
+	</object>
+EOT;
+	if($verb === 'like')
+		$bodyverb = t('%1$s likes %2$s\'s %3$s');
+	if($verb === 'dislike')
+		$bodyverb = t('%1$s doesn\'t like %2$s\'s %3$s');
+
+	if(! isset($bodyverb))
+			return; 
+
+	$arr = array();
+
+	$arr['uri'] = $uri;
+	$arr['uid'] = $owner_uid;
+	$arr['contact-id'] = $contact['id'];
+	$arr['type'] = 'activity';
+	$arr['wall'] = 1;
+	$arr['gravity'] = GRAVITY_LIKE;
+	$arr['parent'] = $item['id'];
+	$arr['parent-uri'] = $item['uri'];
+	$arr['owner-name'] = $owner['name'];
+	$arr['owner-link'] = $owner['url'];
+	$arr['owner-avatar'] = $owner['thumb'];
+	$arr['author-name'] = $contact['name'];
+	$arr['author-link'] = $contact['url'];
+	$arr['author-avatar'] = $contact['thumb'];
+	
+	$ulink = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]';
+	$alink = '[url=' . $item['author-link'] . ']' . $item['author-name'] . '[/url]';
+	$plink = '[url=' . $a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id'] . ']' . $post_type . '[/url]';
+	$arr['body'] =  sprintf( $bodyverb, $ulink, $alink, $plink );
+
+	$arr['verb'] = $activity;
+	$arr['object-type'] = $objtype;
+	$arr['object'] = $obj;
+	$arr['allow_cid'] = $item['allow_cid'];
+	$arr['allow_gid'] = $item['allow_gid'];
+	$arr['deny_cid'] = $item['deny_cid'];
+	$arr['deny_gid'] = $item['deny_gid'];
+	$arr['visible'] = 1;
+	$arr['unseen'] = 1;
+	$arr['last-child'] = 0;
+
+	$post_id = item_store($arr);	
+
+	if(! $item['visible']) {
+		$r = q("UPDATE `item` SET `visible` = 1 WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			intval($item['id']),
+			intval($owner_uid)
+		);
+	}			
+
+	$arr['id'] = $post_id;
+
+
 
 }
 
