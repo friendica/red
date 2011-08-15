@@ -494,7 +494,7 @@ function probe_url($url) {
 
 		if($check_feed) {
 
-			$feedret = scrape_feed($url);
+			$feedret = scrape_feed(($poll) ? $poll : $url);
 			logger('probe_url: scrape_feed returns: ' . print_r($feedret,true), LOGGER_DATA);
 			if(count($feedret) && ($feedret['feed_atom'] || $feedret['feed_rss'])) {
 				$poll = ((x($feedret,'feed_atom')) ? unamp($feedret['feed_atom']) : unamp($feedret['feed_rss']));

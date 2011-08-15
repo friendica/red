@@ -26,7 +26,7 @@ function receive_post(&$a) {
 
 	$importer = $r[0];
 
-	$xml = $_POST['xml'];
+	$xml = urldecode($_POST['xml']);
 
 	logger('mod-diaspora: new salmon ' . $xml, LOGGER_DATA);
 
@@ -38,7 +38,7 @@ function receive_post(&$a) {
 		http_status_exit(500);
 
 
-	$parsed_xml = parse_xml_string($msg);
+	$parsed_xml = parse_xml_string($msg,false);
 
 	$xmlbase = $parsed_xml->post;
 

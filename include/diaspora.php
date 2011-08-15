@@ -116,6 +116,8 @@ EOT;
 
 function diaspora_decode($importer,$xml) {
 
+
+
 	$basedom = parse_xml_string($xml);
 
 	$atom = $basedom->children(NAMESPACE_ATOM1);
@@ -129,7 +131,7 @@ function diaspora_decode($importer,$xml) {
 	openssl_private_decrypt($encrypted_aes_key_bundle,$outer_key_bundle,$importer['prvkey']);
 
 	$j_outer_key_bundle = json_decode($outer_key_bundle);
-
+logger('outer: ' . $j_outer_key_bundle);
 	$outer_iv = base64_decode($j_outer_key_bundle->iv);
 	$outer_key = base64_decode($j_outer_key_bundle->key);
 
@@ -150,6 +152,7 @@ function diaspora_decode($importer,$xml) {
 	 *  </decrypted_header>
 	 */
 
+	logger('decrypted: ' . $decrypted);
 	$idom = parse_xml_string($decrypted,false);
 
 	$inner_iv = base64_decode($idom->iv);
@@ -301,8 +304,8 @@ function diaspora_request($importer,$contact,$xml) {
 	$hash = random_string() . (string) time();   // Generate a confirm_key
 	
 	if(is_array($contact_record)) {
-		$ret = q("INSERT INTO `intro` ( `uid`, `contact-id`, `blocked`, `knowyou`, `note`, `hash`, `datetime`)
-			VALUES ( %d, %d, 1, %d, '%s', '%s', '%s' )",
+		$ret = q("INSERT INTO `intro` ( `uid`, `contact-id`, `blocked`, `knowyou`, `note`, `hash`, `datetime`,`blocked`)
+			VALUES ( %d, %d, 1, %d, '%s', '%s', '%s', 0 )",
 			intval($importer['uid']),
 			intval($contact_record['id']),
 			0,
