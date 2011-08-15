@@ -71,6 +71,7 @@ function follow_post(&$a) {
 		$writeable = 1;
 		
 	}
+
 	// check if we already have a contact
 	// the poll url is more reliable than the profile url, as we may have
 	// indirect links or webfinger links
@@ -175,10 +176,16 @@ function follow_post(&$a) {
 			intval(local_user())
 	);
 
-
-	if((count($r)) && (x($contact,'notify')) && (strlen($contact['notify']))) {
-		require_once('include/salmon.php');
-		slapper($r[0],$contact['notify'],$slap);
+	if(count($r)) {
+		if(($contact['network'] == NETWORK_OSTATUS) && (strlen($contact['notify']))) {
+			require_once('include/salmon.php');
+			slapper($r[0],$contact['notify'],$slap);
+		}
+		if($contact['network'] == NETWORK_DIASPORA) {
+			require_once('include/diaspora.php');
+			$ret = diaspora_share($a->user,$r[0]);
+			logger('mod_follow: diaspora_share returns: ' . $ret);
+		}
 	}
 
 	goaway($_SESSION['return_url']);

@@ -77,7 +77,7 @@ $decrypted_header = <<< EOT
   <iv>$b_inner_iv</iv>
   <aes_key>$b_inner_aes_key</aes_key>
   <author>
-    <name>{$contact['name']}</name>
+    <name>{$user['username']}</name>
     <uri>$handle</uri>
   </author>
 </decrypted_header>
@@ -170,7 +170,7 @@ function diaspora_decode($importer,$xml) {
 	
 	if(! $base) {
 		logger('mod-diaspora: unable to locate salmon data in xml ');
-		dt_return(400);
+		http_status_exit(400);
 	}
 
 
@@ -517,5 +517,26 @@ EOT;
 
 function diaspora_retraction($importer,$contact,$xml) {
 
+}
+
+function diaspora_share($me,$contact) {
+	$a = get_app();
+	$myaddr = $me['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+	$theiraddr = $contact['addr'];
+
+	$tpl = get_markup_template('diaspora_share.tpl');
+	$msg = replace_macros($tpl, array(
+		'$sender' => myaddr,
+		'$recipient' => $theiraddr
+	));
+
+	$slap = diaspora_msg_build($msg,$me,$contact,$me['prvkey'],$contact['pubkey']);
+
+	post_url($contact['notify'],$slap, array(
+		'Content-type: application/magic-envelope+xml',
+		'Content-length: ' . strlen($slap)
+	));
+	$return_code = $a->get_curl_code();
+	return $return_code;
 }
 
