@@ -7,6 +7,7 @@ function oembed_replacecb($matches){
 
 
 function oembed_fetch_url($embedurl){
+return;
 	$r = q("SELECT v FROM `cache` WHERE k='%s'",
 				dbesc($embedurl));
 				
@@ -17,6 +18,8 @@ function oembed_fetch_url($embedurl){
 		
 		// try oembed autodiscovery
 		$html_text = fetch_url($embedurl);
+		if(! $html_text)
+			return;
 		$dom = @DOMDocument::loadHTML($html_text);
 		if ($dom){
 			$xpath = new DOMXPath($dom);
