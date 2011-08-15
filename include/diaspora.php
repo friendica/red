@@ -131,7 +131,7 @@ function diaspora_decode($importer,$xml) {
 	openssl_private_decrypt($encrypted_aes_key_bundle,$outer_key_bundle,$importer['prvkey']);
 
 	$j_outer_key_bundle = json_decode($outer_key_bundle);
-logger('outer: ' . $j_outer_key_bundle);
+
 	$outer_iv = base64_decode($j_outer_key_bundle->iv);
 	$outer_key = base64_decode($j_outer_key_bundle->key);
 
