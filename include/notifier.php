@@ -119,7 +119,8 @@ function notifier_run($argv, $argc){
 			$top_level = true;
 	}
 
-	$r = q("SELECT `contact`.*, `user`.`timezone`, `user`.`nickname`, `user`.`sprvkey`, `user`.`spubkey`, 
+	$r = q("SELECT `contact`.*, `user`.`pubkey` AS `upubkey`, `user`.`prvkey` AS `uprvkey`, 
+		`user`.`timezone`, `user`.`nickname`, `user`.`sprvkey`, `user`.`spubkey`, 
 		`user`.`page-flags`, `user`.`prvnets`
 		FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
 		WHERE `contact`.`uid` = %d AND `contact`.`self` = 1 LIMIT 1",
@@ -351,7 +352,7 @@ function notifier_run($argv, $argc){
 			$deliver_status = 0;
 
 			switch($contact['network']) {
-				case 'dfrn':
+				case NETWORK_DFRN:
 					logger('notifier: dfrndelivery: ' . $contact['name']);
 					$deliver_status = dfrn_deliver($owner,$contact,$atom);
 
@@ -369,7 +370,7 @@ function notifier_run($argv, $argc){
 						);
 					}
 					break;
-				case 'stat':
+				case NETWORK_OSTATUS:
 
 					// Do not send to otatus if we are not configured to send to public networks
 					if($owner['prvnets'])
@@ -419,7 +420,7 @@ function notifier_run($argv, $argc){
 					}
 					break;
 
-				case 'mail':
+				case NETWORK_MAIL:
 						
 					if(get_config('system','dfrn_only'))
 						break;
@@ -496,9 +497,18 @@ function notifier_run($argv, $argc){
 						mail($addr, $subject, $message, $headers);
 					}
 					break;
-				case 'feed':
-				case 'face':
-				case 'dspr':
+				case NETWORK_DIASPORA:
+					if(get_config('system','dfrn_only') || (! get_config('diaspora_enabled')))
+						break;
+					if($top_level) {
+						diaspora_send_status($parent_item,$owner,$contact);
+						break;
+					}
+
+					break;
+
+				case NETWORK_FEED:
+				case NETWORK_FACEBOOK:
 					if(get_config('system','dfrn_only'))
 						break;
 				default:

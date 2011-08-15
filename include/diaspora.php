@@ -540,3 +540,38 @@ function diaspora_share($me,$contact) {
 	return $return_code;
 }
 
+function diaspora_send_status($item,$owner,$contact) {
+
+	$a = get_app();
+	$myaddr = $owner['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+	$theiraddr = $contact['addr'];
+	require_once('include/bbcode.php');
+
+	$body = xmlify(bbcode($item['body']));
+	$public = (($item['private']) ? 'false' : 'true');
+
+	require_once('include/datetime.php');
+	$created = datetime_convert('UTC','UTC',$item['created'],'Y-m-d h:i:s \U\T\C');
+
+	$tpl = get_markup_template('diaspora_post.tpl');
+	$msg = replace_macros($tpl, array(
+		'$body' => $body,
+		'$guid' => $item['guid'],
+		'$handle' => xmlify($myaddr),
+		'$public' => $public,
+		'$created' => $created
+	));
+
+	logger('diaspora_send_status: base message: ' . $msg, LOGGER_DATA);
+
+	$slap = diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey']);
+
+	post_url($contact['notify'],$slap, array(
+		'Content-type: application/magic-envelope+xml',
+		'Content-length: ' . strlen($slap)
+	));
+	$return_code = $a->get_curl_code();
+	logger('diaspora_send_status: returns: ' . $return_code);
+	return $return_code;
+}
+
