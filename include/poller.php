@@ -80,8 +80,7 @@ function poller_run($argv, $argc){
 	$d = datetime_convert();
 
 	if(! $restart)
-		call_hooks('cron', $d);
-
+		proc_run('php','include/cronhooks.php');
 
 	$contacts = q("SELECT `id` FROM `contact` 
 		WHERE ( `rel` = %d OR `rel` = %d ) AND `poll` != ''
@@ -101,7 +100,7 @@ function poller_run($argv, $argc){
 			intval($c['id'])
 		);
 
-		if(! count($res))
+		if((! $res) || (! count($res)))
 			continue;
 
 		foreach($res as $contact) {
