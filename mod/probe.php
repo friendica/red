@@ -13,6 +13,7 @@ function probe_content(&$a) {
 	$o .= '<br /><br />';
 
 	if(x($_GET,'addr')) {
+
 		$addr = trim($_GET['addr']);
 		$res = probe_url($addr);
 		$o .= '<pre>';

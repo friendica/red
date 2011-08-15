@@ -468,13 +468,6 @@ function probe_url($url) {
 			logger('probe_url: scrape_vcard: ' . print_r($vcard,true), LOGGER_DATA);
 		}
 
-		if(! $profile) {
-			if($diaspora)
-				$profile = $hcard;
-			else
-				$profile = $url;
-		}
-
 		if($twitter) {		
 			logger('twitter: setup');
 			$tid = basename($url);
@@ -490,8 +483,16 @@ function probe_url($url) {
 			if(x($vcard,'nick'))
 				$vcard['fn'] = $vcard['nick'];
 
-	
-		if(((! isset($vcard)) && (! $poll) && (! $at_addr)) || ($twitter)) {
+		$check_feed = false;
+
+		if($twitter || ! $poll)
+			$check_feed = true;
+		if((! isset($vcard)) || (! $profile))
+			$check_feed = true;
+		if(($at_addr) && (! count($links)))
+			$check_feed = false;
+
+		if($check_feed) {
 
 			$feedret = scrape_feed($url);
 			logger('probe_url: scrape_feed returns: ' . print_r($feedret,true), LOGGER_DATA);
@@ -527,6 +528,8 @@ function probe_url($url) {
 				if(strpos($vcard['fn'],'@') !== false)
 					$vcard['fn'] = substr($vcard['fn'],0,strpos($vcard['fn'],'@'));
 				$email = unxmlify($author->get_email());
+				if(! $profile && $author->get_link())
+					$profile = trim(unxmlify($author->get_link()));
 				if(! $vcard['photo']) {
 					$rawtags = $feed->get_feed_tags( SIMPLEPIE_NAMESPACE_ATOM_10, 'author');
     				if($rawtags) {
@@ -547,6 +550,8 @@ function probe_url($url) {
 						if(strpos($vcard['fn'],'@') !== false)
 							$vcard['fn'] = substr($vcard['fn'],0,strpos($vcard['fn'],'@'));
 						$email = unxmlify($author->get_email());
+						if(! $profile && $author->get_link())
+							$profile = trim(unxmlify($author->get_link()));
 					}
 					if(! $vcard['photo']) {
 						$rawmedia = $item->get_item_tags('http://search.yahoo.com/mrss/','thumbnail');
@@ -584,8 +589,10 @@ function probe_url($url) {
 				if(strpos($vcard['nick'],' '))
 					$vcard['nick'] = trim(substr($vcard['nick'],0,strpos($vcard['nick'],' ')));
 			}
-			$network = 'feed';
-			$priority = 2;
+			if(! $network)
+				$network = 'feed';
+			if(! $priority)
+				$priority = 2;
 		}
 	}
 
@@ -593,8 +600,12 @@ function probe_url($url) {
 		$a = get_app();
 		$vcard['photo'] = $a->get_baseurl() . '/images/default-profile.jpg' ; 
 	}
+
+	if(! $profile)
+		$profile = $url;
+
 	$vcard['fn'] = notags($vcard['fn']);
-	$vcard['nick'] = notags($vcard['nick']);
+	$vcard['nick'] = str_replace(' ','',notags($vcard['nick']));
 
 
 	$result['name'] = $vcard['fn'];

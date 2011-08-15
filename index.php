@@ -205,7 +205,7 @@ if(strlen($a->module)) {
 			goaway($a->get_baseurl() . $_SERVER['REQUEST_URI']);
 		}
 
-		logger('index.php: page not found: ' . $_SERVER['REQUEST_URI'] . ' QUERY: ' . $_SERVER['QUERY_STRING'], LOGGER_DEBUG);
+		logger('index.php: page not found: ' . $_SERVER['REQUEST_URI'] . ' ADDRESS: ' . $_SERVER['REMOTE_ADDR'] . ' QUERY: ' . $_SERVER['QUERY_STRING'], LOGGER_DEBUG);
 		header($_SERVER["SERVER_PROTOCOL"] . ' 404 ' . t('Not Found'));
 		notice( t('Page not found.' ) . EOL);
 	}
