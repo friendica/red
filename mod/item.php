@@ -35,7 +35,7 @@ function item_post(&$a) {
 
 	call_hooks('post_local_start', $_POST);
 
-	$api_source = ((x($_POST,'api_source')) ? true : false);
+	$api_source = ((x($_POST,'api_source') && $_POST['api_source']) ? true : false);
 
 	/**
 	 * Is this a reply to something?
