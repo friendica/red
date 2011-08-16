@@ -26,6 +26,9 @@ function receive_post(&$a) {
 
 	$importer = $r[0];
 
+	// I really don't know why we need urldecode - PHP should be doing this for us.
+	// It is an application/x-www-form-urlencoded
+
 	$xml = urldecode($_POST['xml']);
 
 	logger('mod-diaspora: new salmon ' . $xml, LOGGER_DATA);
@@ -34,6 +37,9 @@ function receive_post(&$a) {
 		http_status_exit(500);
 
 	$msg = diaspora_decode($importer,$xml);
+
+	logger('mod-diaspora: decoded msg: ' . $msg, LOGGER_DATA);
+
 	if(! $msg)
 		http_status_exit(500);
 
@@ -58,20 +64,22 @@ function receive_post(&$a) {
 	// is this a follower? Or have we ignored the person?
 	// If so we can not accept this post.
 	// However we will accept a sharing e.g. friend request
+	// or a retraction of same.
 
-	if((count($r)) && (($r[0]['readonly']) || ($r[0]['rel'] == CONTACT_IS_FOLLOWER) || ($r[0]['blocked']))) {
-		if(! $xmlbase->request) {
+
+	$allow_blocked = (($xmlbase->request || ($xmlbase->retraction && $xmlbase->retraction->type == 'Person')) ? true : false);
+
+	if((count($r)) 
+		&& (($r[0]['rel'] == CONTACT_IS_FOLLOWER) || ($r[0]['blocked']) || ($r[0]['readonly'])) 
+		&& (! $allow_blocked)) {
 			logger('mod-diaspora: Ignoring this author.');
 			http_status_exit(202);
 			// NOTREACHED
-		}
 	}
 
 	require_once('include/items.php');
 
 	$contact = ((count($r)) ? $r[0] : null);
-
-	logger('diaspora msg: ' . $msg, LOGGER_DATA); 
 
 	if($xmlbase->request) {
 		diaspora_request($importer,$contact,$xmlbase->request);

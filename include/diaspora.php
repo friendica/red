@@ -533,12 +533,9 @@ function diaspora_share($me,$contact) {
 		'$recipient' => $theiraddr
 	));
 
-	$slap = diaspora_msg_build($msg,$me,$contact,$me['prvkey'],$contact['pubkey']);
+	$slap = 'xml=' . urlencode(diaspora_msg_build($msg,$me,$contact,$me['prvkey'],$contact['pubkey']));
 
-	post_url($contact['notify'],$slap, array(
-		'Content-type: application/magic-envelope+xml',
-		'Content-length: ' . strlen($slap)
-	));
+	post_url($contact['notify'],$slap);
 	$return_code = $a->get_curl_code();
 	return $return_code;
 }
@@ -567,12 +564,9 @@ function diaspora_send_status($item,$owner,$contact) {
 
 	logger('diaspora_send_status: base message: ' . $msg, LOGGER_DATA);
 
-	$slap = diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey']);
+	$slap = 'xml=' . urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey']));
 
-	post_url($contact['notify'],$slap, array(
-		'Content-type: application/magic-envelope+xml',
-		'Content-length: ' . strlen($slap)
-	));
+	post_url($contact['notify'],$slap);
 	$return_code = $a->get_curl_code();
 	logger('diaspora_send_status: returns: ' . $return_code);
 	return $return_code;
