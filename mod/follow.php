@@ -71,6 +71,8 @@ function follow_post(&$a) {
 		$writeable = 1;
 		
 	}
+	if($ret['network'] === NETWORK_DIASPORA)
+		$writeable = 1;
 
 	// check if we already have a contact
 	// the poll url is more reliable than the profile url, as we may have
@@ -83,7 +85,7 @@ function follow_post(&$a) {
 
 	if(count($r)) {
 		// update contact
-		if($r[0]['rel'] == CONTACT_IS_FOLLOWER) {
+		if($r[0]['rel'] == CONTACT_IS_FOLLOWER || ($network === NETWORK_DIASPORA && $r[0]['rel'] == CONTACT_IS_SHARING)) {
 			q("UPDATE `contact` SET `rel` = %d , `readonly` = 0 WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval(CONTACT_IS_FRIEND),
 				intval($r[0]['id']),
@@ -92,6 +94,11 @@ function follow_post(&$a) {
 		}
 	}
 	else {
+
+		$new_relation = (($ret['network'] === NETWORK_MAIL) ? CONTACT_IS_FRIEND : CONTACT_IS_SHARING);
+		if($ret['network'] === NETWORK_DIASPORA)
+			$new_relation = CONTACT_IS_FOLLOWER;
+
 		// create contact record 
 		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `addr`, `alias`, `notify`, `poll`, `name`, `nick`, `photo`, `network`, `rel`, `priority`,
 			`writable`, `blocked`, `readonly`, `pending` )
@@ -107,7 +114,7 @@ function follow_post(&$a) {
 			dbesc($ret['nick']),
 			dbesc($ret['photo']),
 			dbesc($ret['network']),
-			intval(($ret['network'] === NETWORK_MAIL) ? CONTACT_IS_FRIEND : CONTACT_IS_SHARING),
+			intval($new_relation),
 			intval($ret['priority']),
 			intval($writeable)
 		);

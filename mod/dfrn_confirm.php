@@ -419,7 +419,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 
 			if($r[0]['network'] === NETWORK_DIASPORA) {
 				require_once('include_diaspora.php');
-				diaspora_share($user[0],$r[0]);
+				$ret = diaspora_share($user[0],$r[0]);
+				logger('mod_follow: diaspora_share returns: ' . $ret);
 			}
 
 			require_once('include/items.php');
