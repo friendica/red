@@ -301,7 +301,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		 *
 		 */
 
-		require_once("Photo.php");
+		require_once('include/Photo.php');
 
 		$photos = import_profile_photo($contact['photo'],$uid,$contact_id);
 		
@@ -418,7 +418,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		if((count($r)) && ($r[0]['hide-friends'] == 0) && (is_array($contact)) &&  isset($new_relation) && ($new_relation == CONTACT_IS_FRIEND)) {
 
 			if($r[0]['network'] === NETWORK_DIASPORA) {
-				require_once('include_diaspora.php');
+				require_once('include/diaspora.php');
 				$ret = diaspora_share($user[0],$r[0]);
 				logger('mod_follow: diaspora_share returns: ' . $ret);
 			}
