@@ -382,9 +382,9 @@ function diaspora_post($importer,$contact,$xml) {
 	$datarray['wall'] = 0;
 	$datarray['guid'] = $guid;
 	$datarray['uri'] = $datarray['parent-uri'] = $message_id;
-	$dattarray['created'] = $datarray['edited'] = datetime_convert('UTC','UTC',$created);
-	$dattarray['private'] = $private;
-	$dattarray['parent'] = 0;
+	$datarray['created'] = $datarray['edited'] = datetime_convert('UTC','UTC',$created);
+	$datarray['private'] = $private;
+	$datarray['parent'] = 0;
 	$datarray['owner-name'] = $contact['name'];
 	$datarray['owner-link'] = $contact['url'];
 	$datarray['owner-avatar'] = $contact['thumb'];
