@@ -129,9 +129,11 @@ function notifications_content(&$a) {
 			$knowyou   = '';
 			$dfrn_text = '';
 						
-			if($rr['network'] === NETWORK_DFRN) {
-				$knowyou = t('Claims to be known to you: ') . (($rr['knowyou']) ? t('yes') : t('no'));
-
+			if($rr['network'] === NETWORK_DFRN || $rr['network'] === NETWORK_DIASPORA) {
+				if($rr['network'] === NETWORK_DFRN)
+					$knowyou = t('Claims to be known to you: ') . (($rr['knowyou']) ? t('yes') : t('no'));
+				else
+					$knowyou = '';
 				$dfrn_text = replace_macros($dfrn_tpl,array(
 					'$intro_id' => $rr['intro_id'],
 					'$friend_selected' => $friend_selected,
