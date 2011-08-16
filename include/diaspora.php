@@ -381,7 +381,7 @@ function diaspora_post($importer,$contact,$xml) {
 	$datarray['contact-id'] = $contact['id'];
 	$datarray['wall'] = 0;
 	$datarray['guid'] = $guid;
-	$datarray['uri'] = $message_id;
+	$datarray['uri'] = $datarray['parent-uri'] = $message_id;
 	$dattarray['created'] = $datarray['edited'] = datetime_convert('UTC','UTC',$created);
 	$dattarray['private'] = $private;
 	$dattarray['parent'] = 0;
