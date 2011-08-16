@@ -257,8 +257,8 @@ function diaspora_get_contact_by_handle($uid,$handle) {
 
 function diaspora_request($importer,$xml) {
 
-	$sender_handle = $xml->sender_handle;
-	$recipient_handle = $xml->recipient_handle;
+	$sender_handle = unxmlify($xml->sender_handle);
+	$recipient_handle = unxmlify($xml->recipient_handle);
 
 	if(! $sender_handle || ! $recipient_handle)
 		return;
@@ -303,21 +303,12 @@ function diaspora_request($importer,$xml) {
 	);
 		 
 	// find the contact record we just created
-	$contact_record = null;
-	if($r) {	
-		$r = q("SELECT `id` FROM `contact` 
-				WHERE `uid` = %d AND `addr` = '%s' AND `poll` = '%s' LIMIT 1",
-				intval($importer['uid']),
-				$ret['addr'],
-				$ret['poll']
-		);
-		if(count($r)) 
-			$contact_record = $r[0];
-	}
+
+	$contact_record = diaspora_get_contact_by_handle($importer['uid'],$sender_handle);
 
 	$hash = random_string() . (string) time();   // Generate a confirm_key
 	
-	if(is_array($contact_record)) {
+	if($contact_record) {
 		$ret = q("INSERT INTO `intro` ( `uid`, `contact-id`, `blocked`, `knowyou`, `note`, `hash`, `datetime`,`blocked`)
 			VALUES ( %d, %d, 1, %d, '%s', '%s', '%s', 0 )",
 			intval($importer['uid']),
@@ -328,10 +319,8 @@ function diaspora_request($importer,$xml) {
 			dbesc(datetime_convert())
 		);
 	}
-	
 
 	return;
-
 }
 
 function diaspora_post($importer,$xml) {
@@ -369,7 +358,6 @@ function diaspora_post($importer,$xml) {
 			dbesc($guid)
 		);
 	}
-
 
 	$created = unxmlify($xml->created_at);
 	$private = ((unxmlify($xml->public) == 'false') ? 1 : 0);
@@ -421,7 +409,6 @@ function diaspora_post($importer,$xml) {
 	item_store($datarray);
 
 	return;
-
 
 }
 
