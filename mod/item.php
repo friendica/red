@@ -180,7 +180,7 @@ function item_post(&$a) {
 
 		// if using the API, we won't see pubmail_enable - figure out if it should be set
 
-		if($api_source && $profile_uid && $profile_uid == local_user()) {
+		if($api_source && $profile_uid && $profile_uid == local_user() && (! $private)) {
 			$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
 			if(! $mail_disabled) {
 				$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d AND `server` != '' LIMIT 1",
