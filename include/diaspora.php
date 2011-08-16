@@ -1,6 +1,7 @@
 <?php
 
 require_once('include/crypto.php');
+require_once('include/items.php');
 
 function get_diaspora_key($uri) {
 	$key = '';
@@ -242,24 +243,37 @@ function diaspora_decode($importer,$xml) {
 
 }
 
+function diaspora_get_contact_by_handle($uid,$handle) {
+	$r = q("SELECT * FROM `contact` WHERE `network` = '%s' AND `uid` = %d AND `addr` = '%s' LIMIT 1",
+		dbesc(NETWORK_DIASPORA),
+		intval($uid),
+		dbesc($handle)
+	);
+	if($r && count($r))
+		return $r[0];
+	return false;
+}
 
 
-
-function diaspora_request($importer,$contact,$xml) {
+function diaspora_request($importer,$xml) {
 
 	$sender_handle = $xml->sender_handle;
 	$recipient_handle = $xml->recipient_handle;
 
 	if(! $sender_handle || ! $recipient_handle)
 		return;
-	
-	if($contact && ($contact['rel'] == CONTACT_IS_FOLLOWER || $contact['rel'] == CONTACT_IS_FRIEND)) {
-		q("UPDATE `contact` SET `rel` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval(CONTACT_IS_FRIEND),
-			intval($contact['id']),
-			intval($importer['uid'])
-		);
-		// send notification
+	 
+	$contact = diaspora_get_contact_by_handle($importer['uid'],$sender_handle);
+
+	if($contact) {
+		if($contact['rel'] == CONTACT_IS_FOLLOWER) {
+			q("UPDATE `contact` SET `rel` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
+				intval(CONTACT_IS_FRIEND),
+				intval($contact['id']),
+				intval($importer['uid'])
+			);
+		}
+		// send notification?
 		return;
 	}
 	
@@ -320,10 +334,21 @@ function diaspora_request($importer,$contact,$xml) {
 
 }
 
-function diaspora_post($importer,$contact,$xml) {
+function diaspora_post($importer,$xml) {
 
 	$guid = notags(unxmlify($xml->guid));
 	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
+
+	$contact = diaspora_get_contact_by_handle($importer['uid'],$diaspora_handle);
+	if(! $contact)
+		return;
+
+	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
+		logger('diaspora_post: Ignoring this author.');
+		http_status_exit(202);
+		// NOTREACHED
+	}
+
 	$message_id = $diaspora_handle . ':' . $guid;
 	$r = q("SELECT `id` FROM `item` WHERE `uid` = %d AND `uri` = '%s' AND `guid` = '%s' LIMIT 1",
 		intval($importer['uid']),
@@ -400,9 +425,23 @@ function diaspora_post($importer,$contact,$xml) {
 
 }
 
-function diaspora_comment($importer,$contact,$xml) {
+function diaspora_comment($importer,$xml) {
 	$guid = notags(unxmlify($xml->guid));
 	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
+
+
+	$contact = diaspora_get_contact_by_handle($importer['uid'],$diaspora_handle);
+	if(! $contact)
+		return;
+
+	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
+		logger('diaspora_comment: Ignoring this author.');
+		http_status_exit(202);
+		// NOTREACHED
+	}
+
+
+
 	$message_id = $diaspora_handle . ':' . $guid;
 	$r = q("SELECT `id` FROM `item` WHERE `uid` = %d AND `uri` = '%s' AND `guid` = '%s' LIMIT 1",
 		intval($importer['uid']),
@@ -423,10 +462,23 @@ function diaspora_comment($importer,$contact,$xml) {
 
 }
 
-function diaspora_like($importer,$contact,$xml) {
+function diaspora_like($importer,$xml) {
 
 	$guid = notags(unxmlify($xml->guid));
 	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
+
+
+	$contact = diaspora_get_contact_by_handle($importer['uid'],$diaspora_handle);
+	if(! $contact)
+		return;
+
+	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
+		logger('diaspora_like: Ignoring this author.');
+		http_status_exit(202);
+		// NOTREACHED
+	}
+
+
 	$message_id = $diaspora_handle . ':' . $guid;
 	$r = q("SELECT `id` FROM `item` WHERE `uid` = %d AND `uri` = '%s' AND `guid` = '%s' LIMIT 1",
 		intval($importer['uid']),
@@ -519,7 +571,22 @@ EOT;
 
 }
 
-function diaspora_retraction($importer,$contact,$xml) {
+function diaspora_retraction($importer,$xml) {
+
+	$guid = notags(unxmlify($xml->guid));
+	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
+
+	$contact = diaspora_get_contact_by_handle($importer['uid'],$diaspora_handle);
+	if(! $contact)
+		return;
+
+//	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
+//		logger('diaspora_retraction: Ignoring this author.');
+//		http_status_exit(202);
+//		// NOTREACHED
+//	}
+
+
 
 }
 
