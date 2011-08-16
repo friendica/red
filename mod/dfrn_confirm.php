@@ -123,11 +123,12 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		$dfrn_confirm = $contact['confirm'];
 		$aes_allow    = $contact['aes_allow'];
 
-		$network = ((strlen($contact['issued-id'])) ? 'dfrn' : 'stat');
+		$network = ((strlen($contact['issued-id'])) ? NETWORK_DFRN : NETWORK_OSTATUS);
+
 		if($contact['network'])
 			$network = $contact['network'];
 
-		if($network === 'dfrn') {
+		if($network === NETWORK_DFRN) {
 
 			/**
 			 *
@@ -306,7 +307,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		
 		logger('dfrn_confirm: confirm - imported photos');
 
-		if($network === 'dfrn') {
+		if($network === NETWORK_DFRN) {
 
 			$new_relation = CONTACT_IS_FOLLOWER;
 			if(($relation == CONTACT_IS_SHARING) || ($duplex))
@@ -339,9 +340,10 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			);
 		}
 		else {  
-			// $network !== 'dfrn'
 
-			$network = (($contact['network']) ? $contact['network'] : 'stat');
+			// $network !== NETWORK_DFRN
+
+			$network = (($contact['network']) ? $contact['network'] : NETWORK_OSTATUS);
 			$notify = (($contact['notify']) ? $contact['notify'] : '');
 			$poll   = (($contact['poll']) ? $contact['poll'] : '');
 
@@ -356,6 +358,10 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 					}
 				}
 			}
+
+			$new_relation = $contact['rel'];
+			if($network === NETWORK_DIASPORA && $duplex)
+				$new_relation = CONTACT_IS_FRIEND;
 
 			$r = q("DELETE FROM `intro` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval($intro_id),
@@ -373,7 +379,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				`poll` = '%s',
 				`blocked` = 0, 
 				`pending` = 0,
-				`network` = '%s'
+				`network` = '%s',
+				`rel` = %d
 				WHERE `id` = %d LIMIT 1
 			",
 				dbesc($photos[0]),
@@ -385,6 +392,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				dbesc($notify),
 				dbesc($poll),
 				dbesc($network),
+				intval($new_relation),
 				intval($contact_id)
 			);			
 		}
@@ -408,6 +416,11 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			intval($uid)
 		);
 		if((count($r)) && ($r[0]['hide-friends'] == 0) && (is_array($contact)) &&  isset($new_relation) && ($new_relation == CONTACT_IS_FRIEND)) {
+
+			if($r[0]['network'] === NETWORK_DIASPORA) {
+				require_once('include_diaspora.php');
+				diaspora_share($user[0],$r[0]);
+			}
 
 			require_once('include/items.php');
 

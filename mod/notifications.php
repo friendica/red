@@ -122,14 +122,14 @@ function notifications_content(&$a) {
 				continue;
 
 			}
-			$friend_selected = (($rr['network'] !== 'stat') ? ' checked="checked" ' : ' disabled ');
-			$fan_selected = (($rr['network'] === 'stat') ? ' checked="checked" disabled ' : '');
+			$friend_selected = (($rr['network'] !== NETWORK_OSTATUS) ? ' checked="checked" ' : ' disabled ');
+			$fan_selected = (($rr['network'] === NETWORK_OSTATUS) ? ' checked="checked" disabled ' : '');
 			$dfrn_tpl = get_markup_template('netfriend.tpl');
 
 			$knowyou   = '';
 			$dfrn_text = '';
 						
-			if($rr['network'] !== 'stat') {
+			if($rr['network'] === NETWORK_DFRN) {
 				$knowyou = t('Claims to be known to you: ') . (($rr['knowyou']) ? t('yes') : t('no'));
 
 				$dfrn_text = replace_macros($dfrn_tpl,array(
@@ -138,7 +138,7 @@ function notifications_content(&$a) {
 					'$fan_selected' => $fan_selected,
 					'$approve_as' => t('Approve as: '),
 					'$as_friend' => t('Friend'),
-					'$as_fan' => t('Fan/Admirer')
+					'$as_fan' => (($rr['network'] == NETWORK_DIASPORA) ? t('Sharer') : t('Fan/Admirer'))
 				));
 			}			
 
@@ -146,7 +146,7 @@ function notifications_content(&$a) {
 
 			$o .= replace_macros($tpl,array(
 				'$str_notifytype' => t('Notification type: '),
-				'$notify_type' => (($rr['network'] !== 'stat') ? t('Friend/Connect Request') : t('New Follower')),
+				'$notify_type' => (($rr['network'] !== NETWORK_OSTATUS) ? t('Friend/Connect Request') : t('New Follower')),
 				'$dfrn_text' => $dfrn_text,	
 				'$dfrn_id' => $rr['issued-id'],
 				'$uid' => $_SESSION['uid'],
