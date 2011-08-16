@@ -9,7 +9,9 @@ function load_doc_file($s) {
 	$d = dirname($s);
 	if(file_exists("$d/$lang/$b"))
 		return file_get_contents("$d/$lang/$b");
-	return file_get_contents($s);
+	if(file_exists($s))
+		return file_get_contents($s);
+	return '';
 }}
 
 
@@ -31,7 +33,12 @@ function help_content(&$a) {
 		$a->page['title'] = t('Help');
 	}
 	
-
+	if(! strlen($text)) {
+		header($_SERVER["SERVER_PROTOCOL"] . ' 404 ' . t('Not Found'));
+		notice( t('Page not found.' ) . EOL);
+		return;
+	}
+	
 	return Markdown($text);
 
 }
