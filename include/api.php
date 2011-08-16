@@ -12,7 +12,7 @@
 
 	function api_date($str){
 		//Wed May 23 06:01:13 +0000 2007
-		return datetime_convert('UTC', 'UTC', $str, "D M d h:i:s +0000 Y" );
+		return datetime_convert('UTC', 'UTC', $str, "D M d H:i:s +0000 Y" );
 	}
 	 
 	
