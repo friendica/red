@@ -7,7 +7,7 @@ function oembed_replacecb($matches){
 
 
 function oembed_fetch_url($embedurl){
-return;
+
 	$r = q("SELECT v FROM `cache` WHERE k='%s'",
 				dbesc($embedurl));
 				
