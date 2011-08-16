@@ -391,6 +391,7 @@ function diaspora_post($importer,$contact,$xml) {
 	$datarray['author-name'] = $contact['name'];
 	$datarray['author-link'] = $contact['url'];
 	$datarray['author-avatar'] = $contact['thumb'];
+	$datarray['body'] = $body;
 
 	item_store($datarray);
 
