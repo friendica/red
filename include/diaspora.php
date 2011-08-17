@@ -114,14 +114,28 @@ EOT;
 
 }
 
+/**
+ *
+ * diaspora_decode($importer,$xml)
+ *   array $importer -> from user table
+ *   string $xml -> urldecoded Diaspora salmon 
+ *
+ * Returns array
+ * 'message' -> decoded Diaspora XML message
+ * 'author' -> author diaspora handle
+ * 'key' -> author public key (converted to pkcs#8)
+ *
+ * Author and key are used elsewhere to save a lookup for verifying replies and likes
+ */
+
 
 function diaspora_decode($importer,$xml) {
-
-
 
 	$basedom = parse_xml_string($xml);
 
 	$atom = $basedom->children(NAMESPACE_ATOM1);
+
+	// Diaspora devs: This is kind of sucky - 'encrypted_header' does not belong in the atom namespace
 
 	$encrypted_header = json_decode(base64_decode($atom->encrypted_header));
 	
@@ -185,7 +199,14 @@ function diaspora_decode($importer,$xml) {
 
 	// strip whitespace so our data element will return to one big base64 blob
 	$data = str_replace(array(" ","\t","\r","\n"),array("","","",""),$base->data);
+
 	// Add back the 60 char linefeeds
+
+	// Diaspora devs: This completely violates the entire principle of salmon magic signatures,
+	// which was to have a message signing format that was completely ambivalent to linefeeds 
+	// and transport whitespace mangling, and base64 wrapping rules. Guess what? PHP and Ruby 
+	// use different linelengths for base64 output. 
+
     $lines = str_split($data,60);
     $data = implode("\n",$lines);
 
@@ -196,6 +217,8 @@ function diaspora_decode($importer,$xml) {
 	$keyhash = $base->sig[0]->attributes()->keyhash[0];
 	$encoding = $base->encoding;
 	$alg = $base->alg;
+
+	// Diaspora devs: I can't even begin to tell you how sucky this is. Read the freaking spec.
 
 	$signed_data = $data  . (($data[-1] != "\n") ? "\n" : '') . '.' . base64url_encode($type) . "\n" . '.' . base64url_encode($encoding) . "\n" . '.' . base64url_encode($alg) . "\n";
 
@@ -255,6 +278,20 @@ function diaspora_get_contact_by_handle($uid,$handle) {
 	return false;
 }
 
+function find_person_by_handle($handle) {
+		// we don't care about the uid, we just want to save an expensive webfinger probe
+		$r = q("select * from contact where network = '%s' and addr = '%s' LIMIT 1",
+			dbesc(NETWORK_DIASPORA),
+			dbesc($handle)
+		);
+		if(count($r))
+			return $r[0];
+		$r = probe_url($handle);
+		// need to cached this, perhaps in fcontact
+		if(count($r))
+			return ($r);
+		return false;
+}
 
 function diaspora_request($importer,$xml) {
 
@@ -266,7 +303,12 @@ function diaspora_request($importer,$xml) {
 	 
 	$contact = diaspora_get_contact_by_handle($importer['uid'],$sender_handle);
 
+
 	if($contact) {
+
+		// perhaps we were already sharing with this person. Now they're sharing with us.
+		// That makes us friends.
+
 		if($contact['rel'] == CONTACT_IS_FOLLOWER) {
 			q("UPDATE `contact` SET `rel` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval(CONTACT_IS_FRIEND),
@@ -414,11 +456,19 @@ function diaspora_post($importer,$xml) {
 }
 
 function diaspora_comment($importer,$xml,$msg) {
+
 	$guid = notags(unxmlify($xml->guid));
+	$parent_guid = notags(unxmlify($xml->parent_guid));
 	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
+	$target_type = notags(unxmlify($xml->target_type));
+	$text = unxmlify($xml->text);
+	$author_signature = notags(unxmlify($xml->author_signature));
 
+	$parent_author_signature = (($xml->parent_author_signature) ? notags(unxmlify($xml->parent_author_signature)) : '');
 
-	$contact = diaspora_get_contact_by_handle($importer['uid'],$diaspora_handle);
+	$text = $xml->text;
+
+	$contact = diaspora_get_contact_by_handle($importer['uid'],$msg['author']);
 	if(! $contact)
 		return;
 
@@ -428,24 +478,109 @@ function diaspora_comment($importer,$xml,$msg) {
 		// NOTREACHED
 	}
 
+	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '%s' LIMIT 1",
+		intval($importer['uid']),
+		dbesc($parent_guid)
+	);
+	if(! count($r)) {
+		logger('diaspora_comment: parent item not found: ' . $guid);
+		return;
+	}
+	$parent_item = $r[0];
 
+	$author_signed_data = $guid . ';' . $parent_guid . ';' . $text . ';' . $diaspora_handle;
+
+	$author_signature = base64_decode($author_signature);
+
+	if(stricmp($diaspora_handle,$msg['author']) == 0) {
+		$person = $contact;
+		$key = $msg['key'];
+	}
+	else {
+		$person = find_person_by_handle($diaspora_handle);	
+
+		if(is_array($person) && x($person,'pubkey'))
+			$key = $person['pubkey'];
+		else {
+			logger('diaspora_comment: unable to find author details');
+			return;
+		}
+	}
+
+	if(! rsa_verify($author_signed_data,$author_signature,$key)) {
+		logger('diaspora_comment: verification failed.');
+		return;
+	}
+
+	if($parent_author_signature) {
+		$owner_signed_data = $guid . ';' . $parent_guid . ';' . $text . ';' . $msg['author'];
+
+		$parent_author_signature = base64_decode($parent_author_signature);
+
+		$key = $msg['key'];
+
+		if(! rsa_verify($owner_signed_data,$parent_author_signature,$key)) {
+			logger('diaspora_comment: owner verification failed.');
+			return;
+		}
+	}
+
+	// Phew! Everything checks out. Now create an item.
+
+	require_once('library/HTMLPurifier.auto.php');
+	require_once('include/html2bbcode.php');
+
+	$body = $text;
+
+	$maxlen = get_max_import_size();
+	if($maxlen && (strlen($body) > $maxlen))
+		$body = substr($body,0, $maxlen);
+
+	if((strpos($body,'<') !== false) || (strpos($body,'>') !== false)) {
+
+		$body = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
+			'[youtube]$1[/youtube]', $body);
+
+		$body = preg_replace('#<iframe[^>].+?' . 'http://www.youtube.com/embed/([A-Za-z0-9\-_=]+).+?</iframe>#s',
+			'[youtube]$1[/youtube]', $body);
+
+		$body = oembed_html2bbcode($body);
+
+		$config = HTMLPurifier_Config::createDefault();
+		$config->set('Cache.DefinitionImpl', null);
+		$purifier = new HTMLPurifier($config);
+		$body = $purifier->purify($body);
+
+		$body = html2bbcode($body);
+	}
 
 	$message_id = $diaspora_handle . ':' . $guid;
-	$r = q("SELECT `id` FROM `item` WHERE `uid` = %d AND `guid` = '%s' LIMIT 1",
-		intval($importer['uid']),
-		dbesc($guid)
-	);
-	if(! count($r))
-		return;
 
-	$owner = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
-		intval($importer['uid'])
-	);
-	if(! count($owner))
-		return;
+	$datarray = array();
+	$datarray['uid'] = $importer['uid'];
+	$datarray['contact-id'] = $contact['id'];
+	$datarray['wall'] = $parent_item['wall'];
+	$datarray['gravity'] = GRAVITY_COMMENT;
+	$datarray['guid'] = $guid;
+	$datarray['uri'] = $message_id;
+	$datarray['parent-uri'] = $parent_item['uri'];
 
-	$created = unxmlify($xml->created_at);
-	$private = ((unxmlify($xml->public) == 'false') ? 1 : 0);
+	// No timestamps for comments? OK, we'll the use current time.
+	$datarray['created'] = $datarray['edited'] = datetime_convert();
+	$datarray['private'] = $parent_item['private'];
+
+	$datarray['owner-name'] = $contact['name'];
+	$datarray['owner-link'] = $contact['url'];
+	$datarray['owner-avatar'] = $contact['thumb'];
+
+	$datarray['author-name'] = $person['name'];
+	$datarray['author-link'] = $person['url'];
+	$datarray['author-avatar'] = ((x($person,'thumb')) ? $person['thumb'] : $person['photo']);
+	$datarray['body'] = $body;
+
+	item_store($datarray);
+
+	return;
 
 }
 
@@ -456,14 +591,16 @@ function diaspora_like($importer,$xml,$msg) {
 	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
 	$target_type = notags(unxmlify($xml->target_type));
 	$positive = notags(unxmlify($xml->positive));
+	$author_signature = notags(unxmlify($xml->author_signature));
 
 	$parent_author_signature = (($xml->parent_author_signature) ? notags(unxmlify($xml->parent_author_signature)) : '');
 
-	// likes on comments not supported here
+	// likes on comments not supported here and likes on photos not supported by Diaspora
+
 	if($target_type !== 'Post')
 		return;
 
-	$contact = diaspora_get_contact_by_handle($importer['uid'],$msg->author);
+	$contact = diaspora_get_contact_by_handle($importer['uid'],$msg['author']);
 	if(! $contact)
 		return;
 
@@ -512,10 +649,19 @@ function diaspora_like($importer,$xml,$msg) {
 
 	$author_signature = base64_decode($author_signature);
 
-	if(stricmp($diaspora_handle,$msg['author']) == 0)
+	if(stricmp($diaspora_handle,$msg['author']) == 0) {
+		$person = $contact;
 		$key = $msg['key'];
-	else
-		$key = get_diaspora_key($diaspora_handle);
+	}
+	else {
+		$person = find_person_by_handle($diaspora_handle);	
+		if(is_array($person) && x($person,'pubkey'))
+			$key = $person['pubkey'];
+		else {
+			logger('diaspora_comment: unable to find author details');
+			return;
+		}
+	}
 
 	if(! rsa_verify($author_signed_data,$author_signature,$key)) {
 		logger('diaspora_like: verification failed.');
@@ -539,6 +685,7 @@ function diaspora_like($importer,$xml,$msg) {
 
 	$uri = $diaspora_handle . ':' . $guid;
 
+	$activity = ACTIVITY_LIKE;
 	$post_type = (($parent_item['resource-id']) ? t('photo') : t('status'));
 	$objtype = (($parent_item['resource-id']) ? ACTIVITY_OBJ_PHOTO : ACTIVITY_OBJ_NOTE ); 
 	$link = xmlify('<link rel="alternate" type="text/html" href="' . $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $parent_item['id'] . '" />' . "\n") ;
@@ -568,26 +715,23 @@ EOT;
 	$arr['parent'] = $parent_item['id'];
 	$arr['parent-uri'] = $parent_item['uri'];
 
-//	$arr['owner-name'] = $owner['name']; // FIXME
-//	$arr['owner-link'] = $owner['url'];
-//	$arr['owner-avatar'] = $owner['thumb'];
+	$datarray['owner-name'] = $contact['name'];
+	$datarray['owner-link'] = $contact['url'];
+	$datarray['owner-avatar'] = $contact['thumb'];
 
-	$arr['author-name'] = $contact['name'];
-	$arr['author-link'] = $contact['url'];
-	$arr['author-avatar'] = $contact['thumb'];
+	$datarray['author-name'] = $person['name'];
+	$datarray['author-link'] = $person['url'];
+	$datarray['author-avatar'] = ((x($person,'thumb')) ? $person['thumb'] : $person['photo']);
 	
 	$ulink = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]';
 	$alink = '[url=' . $parent_item['author-link'] . ']' . $parent_item['author-name'] . '[/url]';
 	$plink = '[url=' . $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $parent_item['id'] . ']' . $post_type . '[/url]';
 	$arr['body'] =  sprintf( $bodyverb, $ulink, $alink, $plink );
 
+	$arr['private'] = $parent_item['private'];
 	$arr['verb'] = $activity;
 	$arr['object-type'] = $objtype;
 	$arr['object'] = $obj;
-	$arr['allow_cid'] = $parent_item['allow_cid'];
-	$arr['allow_gid'] = $parent_item['allow_gid'];
-	$arr['deny_cid'] = $parent_item['deny_cid'];
-	$arr['deny_gid'] = $parent_item['deny_gid'];
 	$arr['visible'] = 1;
 	$arr['unseen'] = 1;
 	$arr['last-child'] = 0;
