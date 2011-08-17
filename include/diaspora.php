@@ -223,6 +223,7 @@ function diaspora_decode($importer,$xml) {
 	logger('mod-diaspora: Fetching key for ' . $author_link );
 
 	// Get diaspora public key (pkcs#1) and convert to pkcs#8
+
  	$key = get_diaspora_key($author_link);
 
 	if(! $key) {
@@ -239,7 +240,7 @@ function diaspora_decode($importer,$xml) {
 
 	logger('mod-diaspora: Message verified.');
 
-	return $inner_decrypted;
+	return array('message' => $inner_decrypted, 'author' => $author_link, 'key' => $key);
 
 }
 
@@ -412,7 +413,7 @@ function diaspora_post($importer,$xml) {
 
 }
 
-function diaspora_comment($importer,$xml) {
+function diaspora_comment($importer,$xml,$msg) {
 	$guid = notags(unxmlify($xml->guid));
 	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
 
@@ -430,12 +431,11 @@ function diaspora_comment($importer,$xml) {
 
 
 	$message_id = $diaspora_handle . ':' . $guid;
-	$r = q("SELECT `id` FROM `item` WHERE `uid` = %d AND `uri` = '%s' AND `guid` = '%s' LIMIT 1",
+	$r = q("SELECT `id` FROM `item` WHERE `uid` = %d AND `guid` = '%s' LIMIT 1",
 		intval($importer['uid']),
-		dbesc($message_id),
 		dbesc($guid)
 	);
-	if(count($r))
+	if(! count($r))
 		return;
 
 	$owner = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
@@ -449,13 +449,21 @@ function diaspora_comment($importer,$xml) {
 
 }
 
-function diaspora_like($importer,$xml) {
+function diaspora_like($importer,$xml,$msg) {
 
 	$guid = notags(unxmlify($xml->guid));
+	$parent_guid = notags(unxmlify($xml->parent_guid));
 	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
+	$target_type = notags(unxmlify($xml->target_type));
+	$positive = notags(unxmlify($xml->positive));
 
+	$parent_author_signature = (($xml->parent_author_signature) ? notags(unxmlify($xml->parent_author_signature)) : '');
 
-	$contact = diaspora_get_contact_by_handle($importer['uid'],$diaspora_handle);
+	// likes on comments not supported here
+	if($target_type !== 'Post')
+		return;
+
+	$contact = diaspora_get_contact_by_handle($importer['uid'],$msg->author);
 	if(! $contact)
 		return;
 
@@ -465,95 +473,129 @@ function diaspora_like($importer,$xml) {
 		// NOTREACHED
 	}
 
-
-	$message_id = $diaspora_handle . ':' . $guid;
-	$r = q("SELECT `id` FROM `item` WHERE `uid` = %d AND `uri` = '%s' AND `guid` = '%s' LIMIT 1",
+	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '%s' LIMIT 1",
 		intval($importer['uid']),
-		dbesc($message_id),
+		dbesc($parent_guid)
+	);
+	if(! count($r)) {
+		logger('diaspora_like: parent item not found: ' . $guid);
+		return;
+	}
+
+	$parent_item = $r[0];
+
+	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '$s' LIMIT 1",
+		intval($importer['uid']),
 		dbesc($guid)
 	);
-	if(count($r))
+	if(count($r)) {
+		if($positive === 'true') {
+			logger('diaspora_like: duplicate like: ' . $guid);
+			return;
+		} 
+		if($positive === 'false') {
+			q("UPDATE `item` SET `deleted` = 1 WHERE `id` = %d AND `uid` = %d LIMIT 1",
+				intval($r[0]['id']),
+				intval($importer['uid'])
+			);
+			// FIXME
+			//  send notification via proc_run()
+			return;
+		}
+	}
+	if($positive === 'false') {
+		logger('diaspora_like: unlike received with no corresponding like');
+		return;	
+	}
+
+	$author_signed_data = $guid . ';' . $parent_guid . ';' . $target_type . ';' . $positive . ';' . $diaspora_handle;
+
+	$author_signature = base64_decode($author_signature);
+
+	if(stricmp($diaspora_handle,$msg['author']) == 0)
+		$key = $msg['key'];
+	else
+		$key = get_diaspora_key($diaspora_handle);
+
+	if(! rsa_verify($author_signed_data,$author_signature,$key)) {
+		logger('diaspora_like: verification failed.');
 		return;
+	}
 
-	$owner = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
-		intval($importer['uid'])
-	);
-	if(! count($owner))
-		return;
+	if($parent_author_signature) {
+		$owner_signed_data = $guid . ';' . $parent_guid . ';' . $target_type . ';' . $positive . ';' . $msg['author'];
 
-	$created = unxmlify($xml->created_at);
-	$private = ((unxmlify($xml->public) == 'false') ? 1 : 0);
+		$parent_author_signature = base64_decode($parent_author_signature);
 
-	$uri = item_new_uri($a->get_hostname(),$owner_uid);
+		$key = $msg['key'];
 
-	$post_type = (($item['resource-id']) ? t('photo') : t('status'));
-	$objtype = (($item['resource-id']) ? ACTIVITY_OBJ_PHOTO : ACTIVITY_OBJ_NOTE ); 
-	$link = xmlify('<link rel="alternate" type="text/html" href="' . $a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id'] . '" />' . "\n") ;
-	$body = $item['body'];
+		if(! rsa_verify($owner_signed_data,$parent_author_signature,$key)) {
+			logger('diaspora_like: owner verification failed.');
+			return;
+		}
+	}
+
+	// Phew! Everything checks out. Now create an item.
+
+	$uri = $diaspora_handle . ':' . $guid;
+
+	$post_type = (($parent_item['resource-id']) ? t('photo') : t('status'));
+	$objtype = (($parent_item['resource-id']) ? ACTIVITY_OBJ_PHOTO : ACTIVITY_OBJ_NOTE ); 
+	$link = xmlify('<link rel="alternate" type="text/html" href="' . $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $parent_item['id'] . '" />' . "\n") ;
+	$body = $parent_item['body'];
 
 	$obj = <<< EOT
 
 	<object>
 		<type>$objtype</type>
 		<local>1</local>
-		<id>{$item['uri']}</id>
+		<id>{$parent_item['uri']}</id>
 		<link>$link</link>
 		<title></title>
 		<content>$body</content>
 	</object>
 EOT;
-	if($verb === 'like')
-		$bodyverb = t('%1$s likes %2$s\'s %3$s');
-	if($verb === 'dislike')
-		$bodyverb = t('%1$s doesn\'t like %2$s\'s %3$s');
-
-	if(! isset($bodyverb))
-			return; 
+	$bodyverb = t('%1$s likes %2$s\'s %3$s');
 
 	$arr = array();
 
 	$arr['uri'] = $uri;
-	$arr['uid'] = $owner_uid;
+	$arr['uid'] = $importer['uid'];
 	$arr['contact-id'] = $contact['id'];
 	$arr['type'] = 'activity';
-	$arr['wall'] = 1;
+	$arr['wall'] = $parent_item['wall'];
 	$arr['gravity'] = GRAVITY_LIKE;
-	$arr['parent'] = $item['id'];
-	$arr['parent-uri'] = $item['uri'];
-	$arr['owner-name'] = $owner['name'];
-	$arr['owner-link'] = $owner['url'];
-	$arr['owner-avatar'] = $owner['thumb'];
+	$arr['parent'] = $parent_item['id'];
+	$arr['parent-uri'] = $parent_item['uri'];
+
+//	$arr['owner-name'] = $owner['name']; // FIXME
+//	$arr['owner-link'] = $owner['url'];
+//	$arr['owner-avatar'] = $owner['thumb'];
+
 	$arr['author-name'] = $contact['name'];
 	$arr['author-link'] = $contact['url'];
 	$arr['author-avatar'] = $contact['thumb'];
 	
 	$ulink = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]';
-	$alink = '[url=' . $item['author-link'] . ']' . $item['author-name'] . '[/url]';
-	$plink = '[url=' . $a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id'] . ']' . $post_type . '[/url]';
+	$alink = '[url=' . $parent_item['author-link'] . ']' . $parent_item['author-name'] . '[/url]';
+	$plink = '[url=' . $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $parent_item['id'] . ']' . $post_type . '[/url]';
 	$arr['body'] =  sprintf( $bodyverb, $ulink, $alink, $plink );
 
 	$arr['verb'] = $activity;
 	$arr['object-type'] = $objtype;
 	$arr['object'] = $obj;
-	$arr['allow_cid'] = $item['allow_cid'];
-	$arr['allow_gid'] = $item['allow_gid'];
-	$arr['deny_cid'] = $item['deny_cid'];
-	$arr['deny_gid'] = $item['deny_gid'];
+	$arr['allow_cid'] = $parent_item['allow_cid'];
+	$arr['allow_gid'] = $parent_item['allow_gid'];
+	$arr['deny_cid'] = $parent_item['deny_cid'];
+	$arr['deny_gid'] = $parent_item['deny_gid'];
 	$arr['visible'] = 1;
 	$arr['unseen'] = 1;
 	$arr['last-child'] = 0;
 
 	$post_id = item_store($arr);	
 
-	if(! $item['visible']) {
-		$r = q("UPDATE `item` SET `visible` = 1 WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($item['id']),
-			intval($owner_uid)
-		);
-	}			
 
-	$arr['id'] = $post_id;
-
+	// FIXME send notification
 
 
 }

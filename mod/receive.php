@@ -36,13 +36,13 @@ function receive_post(&$a) {
 
 	$msg = diaspora_decode($importer,$xml);
 
-	logger('mod-diaspora: decoded msg: ' . $msg, LOGGER_DATA);
+	logger('mod-diaspora: decoded msg: ' . print_r($msg,true), LOGGER_DATA);
 
-	if(! $msg)
+	if(! is_array($msg))
 		http_status_exit(500);
 
 
-	$parsed_xml = parse_xml_string($msg,false);
+	$parsed_xml = parse_xml_string($msg['message'],false);
 
 	$xmlbase = $parsed_xml->post;
 
@@ -53,13 +53,13 @@ function receive_post(&$a) {
 		diaspora_post($importer,$xmlbase->status_message);
 	}
 	elseif($xmlbase->comment) {
-		diaspora_comment($importer,$xmlbase->comment);
+		diaspora_comment($importer,$xmlbase->comment,$msg);
 	}
 	elseif($xmlbase->like) {
-		diaspora_like($importer,$xmlbase->like);
+		diaspora_like($importer,$xmlbase->like,$msg);
 	}
 	elseif($xmlbase->retraction) {
-		diaspora_retraction($importer,$xmlbase->retraction);
+		diaspora_retraction($importer,$xmlbase->retraction,$msg);
 	}
 	else {
 		logger('mod-diaspora: unknown message type: ' . print_r($xmlbase,true));
