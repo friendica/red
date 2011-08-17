@@ -20,13 +20,25 @@ function ping_init(&$a) {
 	);
 	$home = $r[0]['total'];
 
-	$intros = q("SELECT COUNT(`intro`.`id`) AS `total`, `intro`.`id`, `intro`.`datetime`, 
+	$intros1 = q("SELECT COUNT(`intro`.`id`) AS `total`, `intro`.`id`, `intro`.`datetime`, 
 		`fcontact`.`name`, `fcontact`.`url`, `fcontact`.`photo` 
 		FROM `intro` LEFT JOIN `fcontact` ON `intro`.`fid` = `fcontact`.`id`
-		WHERE `intro`.`uid` = %d  AND `intro`.`blocked` = 0 AND `intro`.`ignore` = 0 ",
+		WHERE `intro`.`uid` = %d  AND `intro`.`blocked` = 0 AND `intro`.`ignore` = 0 AND `intro`.`fid`!=0",
 		intval(local_user())
 	);
-	$intro = $intros[0]['total'];
+	$intros2 = q("SELECT COUNT(`intro`.`id`) AS `total`, `intro`.`id`, `intro`.`datetime`, 
+		`contact`.`name`, `contact`.`url`, `contact`.`photo` 
+		FROM `intro` LEFT JOIN `contact` ON `intro`.`contact-id` = `contact`.`id`
+		WHERE `intro`.`uid` = %d  AND `intro`.`blocked` = 0 AND `intro`.`ignore` = 0 AND `intro`.`contact-id`!=0",
+		intval(local_user())
+	);
+	
+	$intro = $intros1[0]['total'] + $intros2[0]['total'];
+	if ($intros1[0]['total']==0) $intros1=Array();
+	if ($intros2[0]['total']==0) $intros2=Array();
+	$intros = $intros1+$intros2;
+
+
 
 	$myurl = $a->get_baseurl() . '/profile/' . $a->user['nickname'] ;
 	$mails = q("SELECT *,  COUNT(*) AS `total` FROM `mail`
@@ -61,7 +73,7 @@ function ping_init(&$a) {
 	if ($intro>0){
 		foreach ($intros as $i) { 
 			echo sprintf ( $notsxml, 
-				$a->get_baseurl().'/notification/'.$i['id'], $i['name'], $i['url'], $i['photo'], relative_date($i['datetime']), t("{0} wants to be your friend")
+				$a->get_baseurl().'/notifications/'.$i['id'], $i['name'], $i['url'], $i['photo'], relative_date($i['datetime']), t("{0} wants to be your friend")
 			);
 		};
 	}
