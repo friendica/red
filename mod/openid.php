@@ -8,7 +8,7 @@ function openid_content(&$a) {
 
 	$noid = get_config('system','no_openid');
 	if($noid)
-		goaway($a->get_baseurl());
+		goaway(z_root());
 
 	if((x($_GET,'openid_mode')) && (x($_SESSION,'openid'))) {
 		$openid = new LightOpenID;
@@ -49,7 +49,7 @@ function openid_content(&$a) {
 				if($a->config['register_policy'] != REGISTER_CLOSED)
 					goaway($a->get_baseurl() . '/register' . $args);
 				else
-					goaway($a->get_baseurl());
+					goaway(z_root());
 
 				// NOTREACHED
 			} 
@@ -60,7 +60,7 @@ function openid_content(&$a) {
 			);
 			if(! count($r)) {
 				notice( t('Login failed.') . EOL );
-				goaway($a->get_baseurl());
+				goaway(z_root());
   			}
 			unset($_SESSION['openid']);
 
@@ -116,10 +116,10 @@ function openid_content(&$a) {
 			if(($a->module !== 'home') && isset($_SESSION['return_url']))
 				goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
 			else
-				goaway($a->get_baseurl());
+				goaway(z_root());
 		}
 	}
 	notice( t('Login failed.') . EOL);
-	goaway($a->get_baseurl());
+	goaway(z_root());
 	// NOTREACHED
 }

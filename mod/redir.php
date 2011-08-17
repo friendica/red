@@ -3,7 +3,7 @@
 function redir_init(&$a) {
 
 	if((! local_user()) || (! ($a->argc == 2)) || (! intval($a->argv[1])))
-		goaway($a->get_baseurl());
+		goaway(z_root());
 	$cid = $a->argv[1];
 	$url = ((x($_GET,'url')) ? $_GET['url'] : '');
 
@@ -13,7 +13,7 @@ function redir_init(&$a) {
 	);
 
 	if((! count($r)) || ($r[0]['network'] !== 'dfrn'))
-		goaway($a->get_baseurl());
+		goaway(z_root());
 
 	$dfrn_id = $orig_id = (($r[0]['issued-id']) ? $r[0]['issued-id'] : $r[0]['dfrn-id']);
 

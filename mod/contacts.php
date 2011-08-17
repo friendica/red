@@ -6,10 +6,22 @@ function contacts_init(&$a) {
 	if(! local_user())
 		return;
 
+	$contact_id = 0;
+	if(($a->argc == 2) && intval($a->argv[1])) {
+		$contact_id = intval($a->argv[1]);
+		$r = q("SELECT * FROM `contact` WHERE `uid` = %d and `id` = %d LIMIT 1",
+			intval(local_user()),
+			intval($contact_id)
+		);
+		if(! count($r)) {
+			$contact_id = 0;
+		}
+	}
+
 	require_once('include/group.php');
 	if(! x($a->page,'aside'))
 		$a->page['aside'] = '';
-	$a->page['aside'] .= group_side();
+	$a->page['aside'] .= group_side('contacts','group',false,0,$contact_id);
 
 	$inv = '<div class="side-link" id="side-invite-link" ><a href="invite" >' . t("Invite Friends") . '</a></div>';
 
@@ -237,16 +249,16 @@ function contacts_content(&$a) {
 		$tpl = get_markup_template("contact_edit.tpl");
 
 		switch($r[0]['rel']) {
-			case REL_BUD:
+			case CONTACT_IS_FRIEND:
 				$dir_icon = 'images/lrarrow.gif';
 				$alt_text = t('Mutual Friendship');
 				break;
-			case REL_VIP;
+			case CONTACT_IS_FOLLOWER;
 				$dir_icon = 'images/larrow.gif';
 				$alt_text = t('is a fan of yours');
 				break;
 	
-			case REL_FAN;
+			case CONTACT_IS_SHARING;
 				$dir_icon = 'images/rarrow.gif';
 				$alt_text = t('you are a fan of');
 				break;
@@ -264,13 +276,6 @@ function contacts_content(&$a) {
 		}
 
 		$grps = '';
-		$member_of = member_of($r[0]['id']);
-		if(is_array($member_of) && count($member_of)) {
-			$grps = t('Member of: ') . EOL . '<ul>';
-			foreach($member_of as $member)
-				$grps .= '<li><a href="group/' . $member['id'] . '" title="' . t('Edit') . '" ><img src="images/spencil.gif" alt="' . t('Edit') . '" /></a> <a href="network/' . $member['id'] . '">' . $member['name'] . '</a></li>';
-			$grps .= '</ul>';
-		}
 
 		$insecure = '<div id="profile-edit-insecure"><p><img src="images/unlock_icon.gif" alt="' . t('Privacy Unavailable') . '" />&nbsp;'
 			. t('Private communications are not available for this contact.') . '</p></div>';
@@ -314,7 +319,7 @@ function contacts_content(&$a) {
 			'$contact_id' => $r[0]['id'],
 			'$block_text' => (($r[0]['blocked']) ? t('Unblock this contact') : t('Block this contact') ),
 			'$ignore_text' => (($r[0]['readonly']) ? t('Unignore this contact') : t('Ignore this contact') ),
-			'$insecure' => (($r[0]['network'] !== NETWORK_DFRN && $r[0]['network'] !== NETWORK_MAIL && $r[0]['network'] !== NETWORK_FACEBOOK) ? $insecure : ''),
+			'$insecure' => (($r[0]['network'] !== NETWORK_DFRN && $r[0]['network'] !== NETWORK_MAIL && $r[0]['network'] !== NETWORK_FACEBOOK && $r[0]['network'] !== NETWORK_DIASPORA) ? $insecure : ''),
 			'$info' => $r[0]['info'],
 			'$blocked' => (($r[0]['blocked']) ? '<div id="block-message">' . t('Currently blocked') . '</div>' : ''),
 			'$ignored' => (($r[0]['readonly']) ? '<div id="ignore-message">' . t('Currently ignored') . '</div>' : ''),
@@ -363,7 +368,7 @@ function contacts_content(&$a) {
 		$search = dbesc($search.'*');
 	$sql_extra .= ((strlen($search)) ? " AND MATCH `name` AGAINST ('$search' IN BOOLEAN MODE) " : "");
 
-	$sql_extra2 = ((($sort_type > 0) && ($sort_type <= REL_BUD)) ? sprintf(" AND `rel` = %d ",intval($sort_type)) : ''); 
+	$sql_extra2 = ((($sort_type > 0) && ($sort_type <= CONTACT_IS_FRIEND)) ? sprintf(" AND `rel` = %d ",intval($sort_type)) : ''); 
 
 	
 	$r = q("SELECT COUNT(*) AS `total` FROM `contact` 
@@ -387,15 +392,15 @@ function contacts_content(&$a) {
 				continue;
 
 			switch($rr['rel']) {
-				case REL_BUD:
+				case CONTACT_IS_FRIEND:
 					$dir_icon = 'images/lrarrow.gif';
 					$alt_text = t('Mutual Friendship');
 					break;
-				case  REL_VIP;
+				case  CONTACT_IS_FOLLOWER;
 					$dir_icon = 'images/larrow.gif';
 					$alt_text = t('is a fan of yours');
 					break;
-				case REL_FAN;
+				case CONTACT_IS_SHARING;
 					$dir_icon = 'images/rarrow.gif';
 					$alt_text = t('you are a fan of');
 					break;

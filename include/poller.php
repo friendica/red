@@ -80,15 +80,14 @@ function poller_run($argv, $argc){
 	$d = datetime_convert();
 
 	if(! $restart)
-		call_hooks('cron', $d);
-
+		proc_run('php','include/cronhooks.php');
 
 	$contacts = q("SELECT `id` FROM `contact` 
 		WHERE ( `rel` = %d OR `rel` = %d ) AND `poll` != ''
 		$sql_extra 
 		AND `self` = 0 AND `blocked` = 0 AND `readonly` = 0 ORDER BY RAND()",
-		intval(REL_FAN),
-		intval(REL_BUD)
+		intval(CONTACT_IS_SHARING),
+		intval(CONTACT_IS_FRIEND)
 	);
 
 	if(! count($contacts)) {
@@ -101,7 +100,7 @@ function poller_run($argv, $argc){
 			intval($c['id'])
 		);
 
-		if(! count($res))
+		if((! $res) || (! count($res)))
 			continue;
 
 		foreach($res as $contact) {
@@ -312,7 +311,7 @@ function poller_run($argv, $argc){
 				// Will only do this once per notify-enabled OStatus contact
 				// or if relationship changes
 
-				$stat_writeable = ((($contact['notify']) && ($contact['rel'] == REL_VIP || $contact['rel'] == REL_BUD)) ? 1 : 0);
+				$stat_writeable = ((($contact['notify']) && ($contact['rel'] == CONTACT_IS_FOLLOWER || $contact['rel'] == CONTACT_IS_FRIEND)) ? 1 : 0);
 
 				if($stat_writeable != $contact['writable']) {
 					q("UPDATE `contact` SET `writable` = %d WHERE `id` = %d LIMIT 1",
@@ -323,7 +322,7 @@ function poller_run($argv, $argc){
 
 				// Are we allowed to import from this person?
 
-				if($contact['rel'] == REL_VIP || $contact['blocked'] || $contact['readonly'])
+				if($contact['rel'] == CONTACT_IS_FOLLOWER || $contact['blocked'] || $contact['readonly'])
 					continue;
 
 				$xml = fetch_url($contact['poll']);
@@ -421,6 +420,10 @@ function poller_run($argv, $argc){
 							$datarray['contact-id'] = $contact['id'];
 							if($datarray['parent-uri'] === $datarray['uri'])
 								$datarray['private'] = 1;
+							if(! get_pconfig($importer_uid,'system','allow_public_email_replies')) {
+								$datarray['private'] = 1;
+								$datarray['allow_cid'] = '<' . $contact['id'] . '>';
+							}
 							$datarray['author-name'] = $contact['name'];
 							$datarray['author-link'] = 'mailbox';
 							$datarray['author-avatar'] = $contact['photo'];
@@ -440,7 +443,8 @@ function poller_run($argv, $argc){
 				}
 			}
 			elseif($contact['network'] === NETWORK_FACEBOOK) {
-				// TODO: work in progress			
+				// This is picked up by the Facebook plugin on a cron hook.
+				// Ignored here.			
 			}
 
 			if($xml) {
@@ -463,7 +467,7 @@ function poller_run($argv, $argc){
 				consume_feed($xml,$importer,$contact,$hub,1);
 
 
-				if((strlen($hub)) && ($hub_update) && (($contact['rel'] == REL_BUD) || (($contact['network'] === NETWORK_OSTATUS) && (! $contact['readonly'])))) {
+				if((strlen($hub)) && ($hub_update) && (($contact['rel'] == CONTACT_IS_FRIEND) || (($contact['network'] === NETWORK_OSTATUS) && (! $contact['readonly'])))) {
 					logger('poller: subscribing to hub(s) : ' . $hub . ' contact name : ' . $contact['name'] . ' local user : ' . $importer['name']);
 					$hubs = explode(',', $hub);
 					if(count($hubs)) {

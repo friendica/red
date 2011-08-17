@@ -1,3 +1,5 @@
+$default
+
 <h1>$banner</h1>
 
 <div id="profile-edit-links">
@@ -12,7 +14,6 @@
 
 <div id="profile-edit-links-end"></div>
 
-$default
 
 <div id="profile-edit-wrapper" >
 <form id="profile-edit-form" name="form1" action="profiles/$profile_id" method="post" >

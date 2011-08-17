@@ -298,10 +298,10 @@ class qqFileUploader {
             return array('error' => t('Uploaded file is empty'));
         }
         
-        if ($size > $this->sizeLimit) {
+//        if ($size > $this->sizeLimit) {
 
-            return array('error' => t('Uploaded file is too large'));
-        }
+//            return array('error' => t('Uploaded file is too large'));
+//        }
         
 
 		$maximagesize = get_config('system','maximagesize');

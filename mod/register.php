@@ -201,7 +201,7 @@ function register_post(&$a) {
 	$r = q("INSERT INTO `user` ( `guid`, `username`, `password`, `email`, `openid`, `nickname`,
 		`pubkey`, `prvkey`, `spubkey`, `sprvkey`, `register_date`, `verified`, `blocked` )
 		VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d )",
-		dbesc(generate_guid()),
+		dbesc(generate_user_guid()),
 		dbesc($username),
 		dbesc($new_password_encoded),
 		dbesc($email),
@@ -373,7 +373,7 @@ function register_post(&$a) {
 
 		if($res) {
 			info( t('Registration successful. Please check your email for further instructions.') . EOL ) ;
-			goaway($a->get_baseurl());
+			goaway(z_root());
 		}
 		else {
 			notice( t('Failed to send email message. Here is the message that failed.') . $email_tpl . EOL );
@@ -382,7 +382,7 @@ function register_post(&$a) {
 	elseif($a->config['register_policy'] == REGISTER_APPROVE) {
 		if(! strlen($a->config['admin_email'])) {
 			notice( t('Your registration can not be processed.') . EOL);
-			goaway($a->get_baseurl());
+			goaway(z_root());
 		}
 
 		$hash = random_string();
@@ -428,7 +428,7 @@ function register_post(&$a) {
 
 		if($res) {
 			info( t('Your registration is pending approval by the site owner.') . EOL ) ;
-			goaway($a->get_baseurl());
+			goaway(z_root());
 		}
 
 	}
@@ -501,7 +501,7 @@ function register_content(&$a) {
 	}
 
 
-	$license = t('Shared content is covered by the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> license.');
+	$license = cc_license();
 
 
 	$o = get_markup_template("register.tpl");

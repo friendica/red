@@ -28,8 +28,8 @@ function can_write_wall(&$a,$owner) {
 				AND `user`.`blockwall` = 0 AND `readonly` = 0  AND ( `contact`.`rel` IN ( %d , %d ) OR `user`.`page-flags` = %d ) LIMIT 1",
 				intval($owner),
 				intval(remote_user()),
-				intval(REL_VIP),
-				intval(REL_BUD),
+				intval(CONTACT_IS_FOLLOWER),
+				intval(CONTACT_IS_FRIEND),
 				intval(PAGE_COMMUNITY)
 			);
 			if(count($r)) {

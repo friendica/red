@@ -48,7 +48,7 @@ function dfrn_request_post(&$a) {
 
 
 	if($_POST['cancel']) {
-		goaway($a->get_baseurl());
+		goaway(z_root());
 	} 
 
 
@@ -190,7 +190,7 @@ function dfrn_request_post(&$a) {
  		// invalid/bogus request
 
 		notice( t('Unrecoverable protocol error.') . EOL );
-		goaway($a->get_baseurl());
+		goaway(z_root());
 		return; // NOTREACHED
 	}
 
@@ -309,7 +309,7 @@ function dfrn_request_post(&$a) {
 					notice( t('You have already introduced yourself here.') . EOL );
 					return;
 				}
-				elseif($ret[0]['rel'] == REL_BUD) {
+				elseif($ret[0]['rel'] == CONTACT_IS_FRIEND) {
 					notice( sprintf( t('Apparently you are already friends with %s.'), $a->profile['name']) . EOL);
 					return;
 				}
@@ -445,7 +445,7 @@ function dfrn_request_post(&$a) {
 			 *
 			 * OStatus network
 			 * Check contact existence
-			 * Try and scrape together enough information to create a contact record, with us as REL_VIP
+			 * Try and scrape together enough information to create a contact record, with us as CONTACT_IS_FOLLOWER
 			 * Substitute our user's feed URL into $url template
 			 * Send the subscriber home to subscribe
 			 *
@@ -602,7 +602,7 @@ function dfrn_request_content(&$a) {
 				$myaddr = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
 			}
 			else {
-				$myaddr = $a->user['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3 );
+				$myaddr = $a->user['nickname'] . '@' . substr(z_root(), strpos(z_root(),'://') + 3 );
 			}
 		}
 		elseif(x($_GET,'addr')) {

@@ -194,7 +194,8 @@
 				else { 
 
 					$('#' + ident + ' ' + '.wall-item-ago').replaceWith($(this).find('.wall-item-ago')); 
-					$('#' + ident + ' ' + '.wall-item-comment-wrapper').replaceWith($(this).find('.wall-item-comment-wrapper'));
+					if($('#' + ident + ' ' + '.comment-edit-text-empty').length)
+						$('#' + ident + ' ' + '.wall-item-comment-wrapper').replaceWith($(this).find('.wall-item-comment-wrapper'));
 					$('#' + ident + ' ' + '.wall-item-like').replaceWith($(this).find('.wall-item-like'));
 					$('#' + ident + ' ' + '.wall-item-dislike').replaceWith($(this).find('.wall-item-dislike'));
 					$('#' + ident + ' ' + '.my-comment-photo').each(function() {
@@ -361,6 +362,14 @@
 		});
 	}
 
+	function contactgroupChangeMember(gid,cid) {
+		$('body').css('cursor', 'wait');
+		$.get('contactgroup/' + gid + '/' + cid, function(data) {
+				$('body').css('cursor', 'auto');
+		});
+	}
+
+
 function checkboxhighlight(box) {
   if($(box).is(':checked')) {
 	$(box).addClass('checkeditem');
@@ -414,3 +423,4 @@ Array.prototype.remove = function(item) {
   this.length = from < 0 ? this.length + from : from;
   return this.push.apply(this, rest);
 };
+

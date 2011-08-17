@@ -192,8 +192,8 @@ function admin_page_site_post(&$a){
 	$no_community_page	=	!((x($_POST,'no_community_page'))	? True	:	False);
 
 	$verifyssl			=	((x($_POST,'verifyssl'))		? True	:	False);
-	$proxyuser			=	((x($_POST,'proxyuser'))		? notags(trim($_POST['global_search_url']))	: '');
-	$proxy				=	((x($_POST,'proxy'))			? notags(trim($_POST['global_search_url']))	: '');
+	$proxyuser			=	((x($_POST,'proxyuser'))		? notags(trim($_POST['proxyuser']))	: '');
+	$proxy				=	((x($_POST,'proxy'))			? notags(trim($_POST['proxy']))	: '');
 	$timeout			=	((x($_POST,'timeout'))			? intval(trim($_POST['timeout']))		: 60);
 	$dfrn_only          =	((x($_POST,'dfrn_only'))	    ? True	:	False);
     $ostatus_disabled   =   !((x($_POST,'ostatus_disabled')) ? True  :   False);
@@ -234,7 +234,7 @@ function admin_page_site_post(&$a){
 	set_config('system','no_gravatar', $no_gravatar);
 	set_config('system','no_regfullname', $no_regfullname);
 	set_config('system','no_community_page', $no_community_page);
-	set_config('system','proxy', $no_utf);
+	set_config('system','no_utf', $no_utf);
 	set_config('system','verifyssl', $verifyssl);
 	set_config('system','proxyuser', $proxyuser);
 	set_config('system','proxy', $proxy);
@@ -322,7 +322,7 @@ function admin_page_site(&$a) {
 		'$no_openid'		=> array('no_openid', t("OpenID support"), !get_config('system','no_openid'), "OpenID support for registration and logins."),
 		'$no_gravatar'		=> array('no_gravatar', t("Gravatar support"), !get_config('system','no_gravatar'), "Search new user's photo on Gravatar."),
 		'$no_regfullname'	=> array('no_regfullname', t("Fullname check"), !get_config('system','no_regfullname'), "Force users to register with a space between firstname and lastname in Full name, as an antispam measure"),
-		'$no_utf'			=> array('no_utf', t("UTF-8 Regular expressions"), !get_config('system','proxy'), "Use PHP UTF8 regular expressions"),
+		'$no_utf'			=> array('no_utf', t("UTF-8 Regular expressions"), !get_config('system','no_utf'), "Use PHP UTF8 regular expressions"),
 		'$no_community_page' => array('no_community_page', t("Show Community Page"), !get_config('system','no_community_page'), "Display a Community page showing all recent public postings on this site."),
 		'$ostatus_disabled' => array('ostatus_disabled', t("Enable OStatus support"), !get_config('system','ostatus_disable'), "Provide built-in OStatus \x28identi.ca, status.net, etc.\x29 compatibility. All communications in OStatus are public, so privacy warnings will be occasionally displayed."),	
 		'$dfrn_only'        => array('dfrn_only', t('Only allow Friendika contacts'), get_config('system','dfrn_only'), "All contacts must use Friendika protocols. All other built-in communication protocols disabled."),

@@ -194,12 +194,18 @@ if(strlen($a->module)) {
 	 */
 
 	if(! $a->module_loaded) {
+
+		// Stupid browser tried to pre-fetch our ACL img template. Don't log the event or return anything - just quietly exit.
+		if((x($_SERVER,'QUERY_STRING')) && strpos($_SERVER['QUERY_STRING'],'{0}') !== false) {
+			killme();
+		}
+
 		if((x($_SERVER,'QUERY_STRING')) && ($_SERVER['QUERY_STRING'] === 'q=internal_error.html') && isset($dreamhost_error_hack)) {
 			logger('index.php: dreamhost_error_hack invoked. Original URI =' . $_SERVER['REQUEST_URI']);
 			goaway($a->get_baseurl() . $_SERVER['REQUEST_URI']);
 		}
 
-		logger('index.php: page not found: ' . $_SERVER['REQUEST_URI'] . ' QUERY: ' . $_SERVER['QUERY_STRING'], LOGGER_DEBUG);
+		logger('index.php: page not found: ' . $_SERVER['REQUEST_URI'] . ' ADDRESS: ' . $_SERVER['REMOTE_ADDR'] . ' QUERY: ' . $_SERVER['QUERY_STRING'], LOGGER_DEBUG);
 		header($_SERVER["SERVER_PROTOCOL"] . ' 404 ' . t('Not Found'));
 		notice( t('Page not found.' ) . EOL);
 	}

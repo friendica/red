@@ -123,9 +123,12 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		$dfrn_confirm = $contact['confirm'];
 		$aes_allow    = $contact['aes_allow'];
 
-		$network = ((strlen($contact['issued-id'])) ? 'dfrn' : 'stat');
+		$network = ((strlen($contact['issued-id'])) ? NETWORK_DFRN : NETWORK_OSTATUS);
 
-		if($network === 'dfrn') {
+		if($contact['network'])
+			$network = $contact['network'];
+
+		if($network === NETWORK_DFRN) {
 
 			/**
 			 *
@@ -298,19 +301,19 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		 *
 		 */
 
-		require_once("Photo.php");
+		require_once('include/Photo.php');
 
 		$photos = import_profile_photo($contact['photo'],$uid,$contact_id);
 		
 		logger('dfrn_confirm: confirm - imported photos');
 
-		if($network === 'dfrn') {
+		if($network === NETWORK_DFRN) {
 
-			$new_relation = REL_VIP;
-			if(($relation == REL_FAN) || ($duplex))
-				$new_relation = REL_BUD;
+			$new_relation = CONTACT_IS_FOLLOWER;
+			if(($relation == CONTACT_IS_SHARING) || ($duplex))
+				$new_relation = CONTACT_IS_FRIEND;
 
-			if(($relation == REL_FAN) && ($duplex))
+			if(($relation == CONTACT_IS_SHARING) && ($duplex))
 				$duplex = 0;
 
 			$r = q("UPDATE `contact` SET `photo` = '%s', 
@@ -337,20 +340,28 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			);
 		}
 		else {  
-			// $network !== 'dfrn'
 
-			$notify = '';
-			$poll   = '';
+			// $network !== NETWORK_DFRN
 
-			$arr = lrdd($contact['url']);
-			if(count($arr)) {
-				foreach($arr as $link) {
-					if($link['@attributes']['rel'] === 'salmon')
-						$notify = $link['@attributes']['href'];
-					if($link['@attributes']['rel'] === NAMESPACE_FEED)
-						$poll = $link['@attributes']['href'];
+			$network = (($contact['network']) ? $contact['network'] : NETWORK_OSTATUS);
+			$notify = (($contact['notify']) ? $contact['notify'] : '');
+			$poll   = (($contact['poll']) ? $contact['poll'] : '');
+
+			if((! $contact['notify']) || (! $contact['poll'])) {
+				$arr = lrdd($contact['url']);
+				if(count($arr)) {
+					foreach($arr as $link) {
+						if($link['@attributes']['rel'] === 'salmon')
+							$notify = $link['@attributes']['href'];
+						if($link['@attributes']['rel'] === NAMESPACE_FEED)
+							$poll = $link['@attributes']['href'];
+					}
 				}
 			}
+
+			$new_relation = $contact['rel'];
+			if($network === NETWORK_DIASPORA && $duplex)
+				$new_relation = CONTACT_IS_FRIEND;
 
 			$r = q("DELETE FROM `intro` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval($intro_id),
@@ -368,7 +379,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				`poll` = '%s',
 				`blocked` = 0, 
 				`pending` = 0,
-				`network` = 'stat'
+				`network` = '%s',
+				`rel` = %d
 				WHERE `id` = %d LIMIT 1
 			",
 				dbesc($photos[0]),
@@ -379,6 +391,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				dbesc(datetime_convert()),
 				dbesc($notify),
 				dbesc($poll),
+				dbesc($network),
+				intval($new_relation),
 				intval($contact_id)
 			);			
 		}
@@ -401,7 +415,13 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		$r = q("SELECT `hide-friends` FROM `profile` WHERE `uid` = %d AND `is-default` = 1 LIMIT 1",
 			intval($uid)
 		);
-		if((count($r)) && ($r[0]['hide-friends'] == 0) && (is_array($contact)) &&  isset($new_relation) && ($new_relation == REL_BUD)) {
+		if((count($r)) && ($r[0]['hide-friends'] == 0) && (is_array($contact)) &&  isset($new_relation) && ($new_relation == CONTACT_IS_FRIEND)) {
+
+			if($r[0]['network'] === NETWORK_DIASPORA) {
+				require_once('include/diaspora.php');
+				$ret = diaspora_share($user[0],$r[0]);
+				logger('mod_follow: diaspora_share returns: ' . $ret);
+			}
 
 			require_once('include/items.php');
 
@@ -528,12 +548,22 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			dbesc($decrypted_source_url),
 			intval($local_uid)
 		);
-
 		if(! count($ret)) {
-			// this is either a bogus confirmation (?) or we deleted the original introduction.
-			$message = t('Contact record was not found for you on our site.');
-			xml_status(3,$message);
-			return; // NOTREACHED 
+			if(strstr($decrypted_source_url,'http:'))
+				$newurl = str_replace('http:','https:',$decrypted_source_url);
+			else
+				$newurl = str_replace('https:','http:',$decrypted_source_url);
+
+			$ret = q("SELECT * FROM `contact` WHERE `url` = '%s' AND `uid` = %d LIMIT 1",
+				dbesc($newurl),
+				intval($local_uid)
+			);
+			if(! count($r)) {
+				// this is either a bogus confirmation (?) or we deleted the original introduction.
+				$message = t('Contact record was not found for you on our site.');
+				xml_status(3,$message);
+				return; // NOTREACHED 
+			}
 		}
 
 		$relation = $ret[0]['rel'];
@@ -592,11 +622,11 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 
 		logger('dfrn_confirm: request - photos imported');
 
-		$new_relation = REL_FAN;
-		if(($relation == REL_VIP) || ($duplex))
-			$new_relation = REL_BUD;
+		$new_relation = CONTACT_IS_SHARING;
+		if(($relation == CONTACT_IS_FOLLOWER) || ($duplex))
+			$new_relation = CONTACT_IS_FRIEND;
 
-		if(($relation == REL_VIP) && ($duplex))
+		if(($relation == CONTACT_IS_FOLLOWER) && ($duplex))
 			$duplex = 0;
 
 		$r = q("UPDATE `contact` SET 
@@ -639,7 +669,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		if((count($r)) && ($r[0]['notify-flags'] & NOTIFY_CONFIRM)) {
 
 			push_lang($r[0]['language']);
-			$tpl = (($new_relation == REL_BUD) 
+			$tpl = (($new_relation == CONTACT_IS_FRIEND) 
 				? get_intltext_template('friend_complete_eml.tpl')
 				: get_intltext_template('intro_complete_eml.tpl'));
 		
@@ -672,7 +702,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 
 	// somebody arrived here by mistake or they are fishing. Send them to the homepage.
 
-	goaway($a->get_baseurl());
+	goaway(z_root());
 	// NOTREACHED
 
 }

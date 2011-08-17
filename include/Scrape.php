@@ -1,6 +1,7 @@
 <?php
 
 require_once('library/HTML5/Parser.php');
+require_once('include/crypto.php');
 
 if(! function_exists('scrape_dfrn')) {
 function scrape_dfrn($url) {
@@ -171,6 +172,8 @@ function scrape_vcard($url) {
 
 	// Pull out hCard profile elements
 
+	$largest_photo = 0;
+
 	$items = $dom->getElementsByTagName('*');
 	foreach($items as $item) {
 		if(attribute_contains($item->getAttribute('class'), 'vcard')) {
@@ -179,8 +182,13 @@ function scrape_vcard($url) {
 				if(attribute_contains($x->getAttribute('class'),'fn'))
 					$ret['fn'] = $x->textContent;
 				if((attribute_contains($x->getAttribute('class'),'photo'))
-					|| (attribute_contains($x->getAttribute('class'),'avatar')))
-					$ret['photo'] = $x->getAttribute('src');
+					|| (attribute_contains($x->getAttribute('class'),'avatar'))) {
+					$size = intval($x->getAttribute('width'));
+					if(($size > $largest_photo) || (! $largest_photo)) {
+						$ret['photo'] = $x->getAttribute('src');
+						$largest_photo = $size;
+					}
+				}
 				if((attribute_contains($x->getAttribute('class'),'nickname'))
 					|| (attribute_contains($x->getAttribute('class'),'uid')))
 					$ret['nick'] = $x->textContent;
@@ -289,13 +297,24 @@ function probe_url($url) {
 	if(! $url)
 		return $result;
 
-	$diaspora = false;	
+	$diaspora = false;
+	$diaspora_base = '';
+	$diaspora_guid = '';	
+	$diaspora_key = '';
 	$email_conversant = false;
 
 	$twitter = ((strpos($url,'twitter.com') !== false) ? true : false);
 
+	$at_addr = ((strpos($url,'@') !== false) ? true : false);
+
 	if(! $twitter) {
-		$links = lrdd($url);
+
+		if(strpos($url,'mailto:') !== false && $at_addr) {
+			$url = str_replace('mailto:','',$url);
+			$links = array();
+		}
+		else
+			$links = lrdd($url);
 
 		if(count($links)) {
 			logger('probe_url: found lrdd links: ' . print_r($links,true), LOGGER_DATA);
@@ -312,8 +331,19 @@ function probe_url($url) {
 					$hcard = unamp($link['@attributes']['href']);
 				if($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page')
 					$profile = unamp($link['@attributes']['href']);
-				if($link['@attributes']['rel'] === 'http://joindiaspora.com/seed_location')
+				if($link['@attributes']['rel'] === 'http://joindiaspora.com/seed_location') {
+					$diaspora_base = unamp($link['@attributes']['href']);
 					$diaspora = true;
+				}
+				if($link['@attributes']['rel'] === 'http://joindiaspora.com/guid') {
+					$diaspora_guid = unamp($link['@attributes']['href']);
+					$diaspora = true;
+				}
+				if($link['@attributes']['rel'] === 'diaspora-public-key') {
+					$diaspora_key = base64_decode(unamp($link['@attributes']['href']));
+					$pubkey = rsatopem($diaspora_key);
+					$diaspora = true;
+				}
 			}
 
 			// Status.Net can have more than one profile URL. We need to match the profile URL
@@ -411,8 +441,17 @@ function probe_url($url) {
 		}
 	}
 
+	if($diaspora && $diaspora_base && $diaspora_guid) {
+		$notify = $diaspora_base . 'receive/post/' . $diaspora_guid;
+		if(strpos($url,'@'))
+			$addr = str_replace('acct:', '', $url);
+	}			
+
 	if($network !== NETWORK_ZOT && $network !== NETWORK_DFRN && $network !== NETWORK_MAIL) {
-		$network  = NETWORK_OSTATUS;
+		if($diaspora)
+			$network = NETWORK_DIASPORA;
+		else
+			$network  = NETWORK_OSTATUS;
 		$priority = 0;
 
 		if($hcard) {
@@ -427,13 +466,6 @@ function probe_url($url) {
 			}
 		
 			logger('probe_url: scrape_vcard: ' . print_r($vcard,true), LOGGER_DATA);
-		}
-
-		if(! $profile) {
-			if($diaspora)
-				$profile = $hcard;
-			else
-				$profile = $url;
 		}
 
 		if($twitter) {		
@@ -451,10 +483,18 @@ function probe_url($url) {
 			if(x($vcard,'nick'))
 				$vcard['fn'] = $vcard['nick'];
 
-	
-		if(((! isset($vcard)) && (! $poll)) || ($twitter)) {
+		$check_feed = false;
 
-			$feedret = scrape_feed($url);
+		if($twitter || ! $poll)
+			$check_feed = true;
+		if((! isset($vcard)) || (! $profile))
+			$check_feed = true;
+		if(($at_addr) && (! count($links)))
+			$check_feed = false;
+
+		if($check_feed) {
+
+			$feedret = scrape_feed(($poll) ? $poll : $url);
 			logger('probe_url: scrape_feed returns: ' . print_r($feedret,true), LOGGER_DATA);
 			if(count($feedret) && ($feedret['feed_atom'] || $feedret['feed_rss'])) {
 				$poll = ((x($feedret,'feed_atom')) ? unamp($feedret['feed_atom']) : unamp($feedret['feed_rss']));
@@ -488,6 +528,8 @@ function probe_url($url) {
 				if(strpos($vcard['fn'],'@') !== false)
 					$vcard['fn'] = substr($vcard['fn'],0,strpos($vcard['fn'],'@'));
 				$email = unxmlify($author->get_email());
+				if(! $profile && $author->get_link())
+					$profile = trim(unxmlify($author->get_link()));
 				if(! $vcard['photo']) {
 					$rawtags = $feed->get_feed_tags( SIMPLEPIE_NAMESPACE_ATOM_10, 'author');
     				if($rawtags) {
@@ -508,6 +550,8 @@ function probe_url($url) {
 						if(strpos($vcard['fn'],'@') !== false)
 							$vcard['fn'] = substr($vcard['fn'],0,strpos($vcard['fn'],'@'));
 						$email = unxmlify($author->get_email());
+						if(! $profile && $author->get_link())
+							$profile = trim(unxmlify($author->get_link()));
 					}
 					if(! $vcard['photo']) {
 						$rawmedia = $item->get_item_tags('http://search.yahoo.com/mrss/','thumbnail');
@@ -545,8 +589,10 @@ function probe_url($url) {
 				if(strpos($vcard['nick'],' '))
 					$vcard['nick'] = trim(substr($vcard['nick'],0,strpos($vcard['nick'],' ')));
 			}
-			$network = 'feed';
-			$priority = 2;
+			if(! $network)
+				$network = 'feed';
+			if(! $priority)
+				$priority = 2;
 		}
 	}
 
@@ -554,8 +600,12 @@ function probe_url($url) {
 		$a = get_app();
 		$vcard['photo'] = $a->get_baseurl() . '/images/default-profile.jpg' ; 
 	}
+
+	if(! $profile)
+		$profile = $url;
+
 	$vcard['fn'] = notags($vcard['fn']);
-	$vcard['nick'] = notags($vcard['nick']);
+	$vcard['nick'] = str_replace(' ','',notags($vcard['nick']));
 
 
 	$result['name'] = $vcard['fn'];

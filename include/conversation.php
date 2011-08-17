@@ -283,14 +283,14 @@ function conversation(&$a, $items, $mode, $update) {
 				continue;
 
 			$toplevelpost = (($item['id'] == $item['parent']) ? true : false);
-
+			$toplevelprivate = false;
 
 			// Take care of author collapsing and comment collapsing
 			// If a single author has more than 3 consecutive top-level posts, squash the remaining ones.
 			// If there are more than two comments, squash all but the last 2.
-
+		
 			if($toplevelpost) {
-
+				$toplevelprivate = (($toplevelpost && $item['private']) ? true : false);
 				$item_writeable = (($item['writable'] || $item['self']) ? true : false);
 
 				if($blowhard == $item['cid'] && (! $item['self']) && ($mode != 'profile') && ($mode != 'notes')) {
@@ -312,9 +312,12 @@ function conversation(&$a, $items, $mode, $update) {
 				$comments_seen = 0;
 				$comments_collapsed = false;
 			}
-			else
+			else {
+				// prevent private email from leaking into public conversation
+				if((! $toplevelpost) && (! toplevelprivate) && ($item['private']) && ($profile_owner != local_user()))
+					continue;
 				$comments_seen ++;
-
+			}	
 
 			$override_comment_box = ((($page_writeable) && ($item_writeable)) ? true : false);
 			$show_comment_box = ((($page_writeable) && ($item_writeable) && ($comments_seen == $comments[$item['parent']])) ? true : false);
@@ -347,7 +350,7 @@ function conversation(&$a, $items, $mode, $update) {
 
 			if(($toplevelpost) && (! $item['self']) && ($mode !== 'profile')) {
 
-				if($item['type'] === 'wall') {
+				if($item['wall']) {
 
 					// On the network page, I am the owner. On the display page it will be the profile owner.
 					// This will have been stored in $a->page_contact by our calling page.
@@ -359,7 +362,7 @@ function conversation(&$a, $items, $mode, $update) {
 					$template = $wallwall;
 					$commentww = 'ww';	
 				}
-				if(($item['type'] === 'remote') && (strlen($item['owner-link'])) && ($item['owner-link'] != $item['author-link'])) {
+				if((! $item['wall']) && (strlen($item['owner-link'])) && ($item['owner-link'] != $item['author-link'])) {
 
 					// Could be anybody. 
 
@@ -444,7 +447,7 @@ function conversation(&$a, $items, $mode, $update) {
 				$profile_link = '';
 
 			$normalised = normalise_link((strlen($item['author-link'])) ? $item['author-link'] : $item['url']);
-			if(($normalised != 'mailbox') && (x($a->contacts[$normalised])))
+			if(($normalised != 'mailbox') && (x($a->contacts,$normalised)))
 				$profile_avatar = $a->contacts[$normalised]['thumb'];
 			else
 				$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $thumb);
@@ -532,33 +535,6 @@ function conversation(&$a, $items, $mode, $update) {
 
 	return $o;
 } 
-
-
-if(! function_exists('load_contact_links')) {
-function load_contact_links($uid) {
-
-	$a = get_app();
-
-	$ret = array();
-
-	if(! $uid || x($a->contacts,'empty'))
-		return;
-
-	$r = q("SELECT `id`,`network`,`url`,`thumb` FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 ",
-			intval($uid)
-	);
-	if(count($r)) {
-		foreach($r as $rr){
-			$url = normalise_link($rr['url']);
-			$ret[$url] = $rr;
-		}
-	}
-	else 
-		$ret['empty'] = true;	
-	$a->contacts = $ret;
-	return;		
-}}
-
 
 function best_link_url($item,&$sparkle) {
 

@@ -6,7 +6,6 @@ require_once('include/salmon.php');
 
 function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) {
 
-
 	// default permissions - anonymous user
 
 	if(! strlen($owner_nick))
@@ -113,7 +112,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 	$items = $r;
 
-	$feed_template = get_markup_template('atom_feed.tpl');
+	$feed_template = get_markup_template(($dfrn_id) ? 'atom_feed_dfrn.tpl' : 'atom_feed.tpl');
 
 	$atom = '';
 
@@ -154,6 +153,9 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 		if($dfrn_id === '') {
 			$type = 'html';
+			// catch any email that's in a public conversation and make sure it doesn't leak
+			if($item['private'])
+				continue;
 		}
 		else {
 			$type = 'text';
@@ -485,7 +487,6 @@ function get_atom_elements($feed,$item) {
 	if((x($res,'verb')) && ($res['verb'] === 'http://ostatus.org/schema/1.0/unfollow'))
 		$res['verb'] = ACTIVITY_UNFOLLOW;
 
-
 	$cats = $item->get_categories();
 	if($cats) {
 		$tag_arr = array();
@@ -520,7 +521,7 @@ function get_atom_elements($feed,$item) {
 			if(! $type)
 				$type = 'application/octet-stream';
 
-			$att_arr[] = '[attach]href="' . $link . '" size="' . $len . '" type="' . $type . '" title="' . $title . '"[/attach]'; 
+			$att_arr[] = '[attach]href="' . $link . '" length="' . $len . '" type="' . $type . '" title="' . $title . '"[/attach]'; 
 		}
 		$res['attach'] = implode(',', $att_arr);
 	}
@@ -720,6 +721,13 @@ function item_store($arr,$force_parent = false) {
 			if($r[0]['uri'] != $r[0]['parent-uri']) {
 				$arr['thr-parent'] = $arr['parent-uri'];
 				$arr['parent-uri'] = $r[0]['parent-uri'];
+				$z = q("SELECT `id` FROM `item` WHERE `uri` = '%s' AND `parent-uri` = '%s' AND `uid` = %d LIMIT 1",
+					dbesc($r[0]['parent-uri']),
+					dbesc($r[0]['parent-uri']),
+					intval($arr['uid'])
+				);
+				if($z && count($z))
+					$r = $z;
 			}
 
 			$parent_id      = $r[0]['id'];
@@ -748,6 +756,8 @@ function item_store($arr,$force_parent = false) {
 			}
 		}
 	}
+
+	$arr['guid'] = get_guid();
 
 	call_hooks('post_remote',$arr);
 
@@ -917,7 +927,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 		$postvars['dissolve'] = '1';
 
 
-	if((($contact['rel']) && ($contact['rel'] != REL_FAN) && (! $contact['blocked'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
+	if((($contact['rel']) && ($contact['rel'] != CONTACT_IS_SHARING) && (! $contact['blocked'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
 		$postvars['data'] = $atom;
 		$postvars['perm'] = 'rw';
 	}
@@ -997,6 +1007,11 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 
 	require_once('library/simplepie/simplepie.inc');
 
+	if(! strlen($xml)) {
+		logger('consume_feed: empty input');
+		return;
+	}
+		
 	$feed = new SimplePie();
 	$feed->set_raw_data($xml);
 	if($datedir)
@@ -1023,7 +1038,9 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 	if(count($hubs))
 		$hub = implode(',', $hubs);
 
-	$rawtags = $feed->get_feed_tags( SIMPLEPIE_NAMESPACE_ATOM_10, 'author');
+	$rawtags = $feed->get_feed_tags( NAMESPACE_DFRN, 'owner');
+	if(! $rawtags)
+		$rawtags = $feed->get_feed_tags( SIMPLEPIE_NAMESPACE_ATOM_10, 'author');
 	if($rawtags) {
 		$elems = $rawtags[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10];
 		if($elems['name'][0]['attribs'][NAMESPACE_DFRN]['updated']) {
@@ -1349,6 +1366,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 						$ev['uid'] = $importer['uid'];
 						$ev['uri'] = $item_id;
 						$ev['edited'] = $datarray['edited'];
+						$ev['private'] = $datarray['private'];
 
 						if(is_array($contact))
 							$ev['cid'] = $contact['id'];
@@ -1444,9 +1462,9 @@ function new_follower($importer,$contact,$datarray,$item) {
 		$nick = $rawtag[0]['child'][NAMESPACE_POCO]['preferredUsername'][0]['data'];
 
 	if(is_array($contact)) {
-		if($contact['network'] == 'stat' && $contact['rel'] == REL_FAN) {
+		if($contact['network'] == 'stat' && $contact['rel'] == CONTACT_IS_SHARING) {
 			$r = q("UPDATE `contact` SET `rel` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
-				intval(REL_BUD),
+				intval(CONTACT_IS_FRIEND),
 				intval($contact['id']),
 				intval($importer['uid'])
 			);
@@ -1468,12 +1486,12 @@ function new_follower($importer,$contact,$datarray,$item) {
 			dbesc($nick),
 			dbesc($photo),
 			dbesc('stat'),
-			intval(REL_VIP)
+			intval(CONTACT_IS_FOLLOWER)
 		);
 		$r = q("SELECT `id` FROM `contact` WHERE `uid` = %d AND `url` = '%s' AND `pending` = 1 AND `rel` = %d LIMIT 1",
 				intval($importer['uid']),
 				dbesc($url),
-				intval(REL_VIP)
+				intval(CONTACT_IS_FOLLOWER)
 		);
 		if(count($r))
 				$contact_record = $r[0];
@@ -1518,9 +1536,9 @@ function new_follower($importer,$contact,$datarray,$item) {
 
 function lose_follower($importer,$contact,$datarray,$item) {
 
-	if(($contact['rel'] == REL_BUD) || ($contact['rel'] == REL_FAN)) {
+	if(($contact['rel'] == CONTACT_IS_FRIEND) || ($contact['rel'] == CONTACT_IS_SHARING)) {
 		q("UPDATE `contact` SET `rel` = %d WHERE `id` = %d LIMIT 1",
-			intval(REL_FAN),
+			intval(CONTACT_IS_SHARING),
 			intval($contact['id'])
 		);
 	}
@@ -1726,11 +1744,11 @@ function item_getfeedattach($item) {
 	if(count($arr)) {
 		foreach($arr as $r) {
 			$matches = false;
-			$cnt = preg_match('|\[attach\]href=\"(.*?)\" size=\"(.*?)\" type=\"(.*?)\" title=\"(.*?)\"\[\/attach\]|',$r,$matches);
+			$cnt = preg_match('|\[attach\]href=\"(.*?)\" length=\"(.*?)\" type=\"(.*?)\" title=\"(.*?)\"\[\/attach\]|',$r,$matches);
 			if($cnt) {
 				$ret .= '<link rel="enclosure" href="' . xmlify($matches[1]) . '" type="' . xmlify($matches[3]) . '" ';
 				if(intval($matches[2]))
-					$ret .= 'size="' . intval($matches[2]) . '" ';
+					$ret .= 'length="' . intval($matches[2]) . '" ';
 				if($matches[4] !== ' ')
 					$ret .= 'title="' . xmlify(trim($matches[4])) . '" ';
 				$ret .= ' />' . "\r\n";

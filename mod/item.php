@@ -6,6 +6,8 @@
  * text stuff. This function handles status, wall-to-wall status, 
  * local comments, and remote coments - that are posted on this site 
  * (as opposed to being delivered in a feed).
+ * Also processed here are posts and comments coming through the 
+ * statusnet/twitter API. 
  * All of these become an "item" which is our basic unit of 
  * information.
  * Posts that originate externally or do not fall into the above 
@@ -33,22 +35,61 @@ function item_post(&$a) {
 
 	call_hooks('post_local_start', $_POST);
 
+	$api_source = ((x($_POST,'api_source') && $_POST['api_source']) ? true : false);
+
+	/**
+	 * Is this a reply to something?
+	 */
+
 	$parent = ((x($_POST,'parent')) ? intval($_POST['parent']) : 0);
+	$parent_uri = ((x($_POST,'parent_uri')) ? trim($_POST['parent_uri']) : '');
 
 	$parent_item = null;
 	$parent_contact = null;
+	$thr_parent = '';
+	$parid = 0;
+	$r = false;
 
-	if($parent) {
-		$r = q("SELECT * FROM `item` WHERE `id` = %d LIMIT 1",
-			intval($parent)
-		);
-		if(! count($r)) {
+	if($parent || $parent_uri) {
+
+		if(! x($_POST,'type'))
+			$_POST['type'] = 'net-comment';
+
+		if($parent) {
+			$r = q("SELECT * FROM `item` WHERE `id` = %d LIMIT 1",
+				intval($parent)
+			);
+		}
+		elseif($parent_uri && local_user()) {
+			// This is coming from an API source, and we are logged in
+			$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+				dbesc($parent_uri),
+				intval(local_user())
+			);
+		}
+		// if this isn't the real parent of the conversation, find it
+		if($r !== false && count($r)) {
+			$parid = $r[0]['parent'];
+			if($r[0]['id'] != $r[0]['parent']) {
+				$r = q("SELECT * FROM `item` WHERE `id` = `parent` AND `parent` = %d LIMIT 1",
+					intval($parid)
+				);
+			}
+		}
+
+		if(($r === false) || (! count($r))) {
 			notice( t('Unable to locate original post.') . EOL);
 			if(x($_POST,'return')) 
 				goaway($a->get_baseurl() . "/" . $_POST['return'] );
 			killme();
 		}
 		$parent_item = $r[0];
+		$parent = $r[0]['id'];
+
+		// multi-level threading - preserve the info but re-parent to our single level threading
+		if(($parid) && ($parid != $parent))
+			$thr_parent = $parent_uri;
+
 		if($parent_item['contact-id'] && $uid) {
 			$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval($parent_item['contact-id']),
@@ -58,6 +99,8 @@ function item_post(&$a) {
 				$parent_contact = $r[0];
 		}
 	}
+
+	if($parent) logger('mod_post: parent=' . $parent);
 
 	$profile_uid = ((x($_POST,'profile_uid')) ? intval($_POST['profile_uid']) : 0);
 	$post_id     = ((x($_POST['post_id']))    ? intval($_POST['post_id'])     : 0);
@@ -135,6 +178,20 @@ function item_post(&$a) {
 	
 		$pubmail_enable    = ((x($_POST,'pubmail_enable') && intval($_POST['pubmail_enable']) && (! $private)) ? 1 : 0);
 
+		// if using the API, we won't see pubmail_enable - figure out if it should be set
+
+		if($api_source && $profile_uid && $profile_uid == local_user() && (! $private)) {
+			$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
+			if(! $mail_disabled) {
+				$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d AND `server` != '' LIMIT 1",
+					intval(local_user())
+				);
+				if(count($r) && intval($r[0]['pubmail']))
+					$pubmail_enabled = true;
+			}
+		}
+
+
 		if(! strlen($body)) {
 			info( t('Empty post discarded.') . EOL );
 			if(x($_POST,'return')) 
@@ -179,6 +236,8 @@ function item_post(&$a) {
 		if(count($r))
 			$contact_record = $r[0];
 	}
+
+
 
 	$post_type = notags(trim($_POST['type']));
 
@@ -259,6 +318,10 @@ function item_post(&$a) {
 				if(count($r)) {
 					$r = q("UPDATE `attach` SET `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s'
 						WHERE `uid` = %d AND `id` = %d LIMIT 1",
+						dbesc($str_contact_allow),
+						dbesc($str_group_allow),
+						dbesc($str_contact_deny),
+						dbesc($str_group_deny),
 						intval($profile_uid),
 						intval($attach)
 					);
@@ -391,7 +454,7 @@ function item_post(&$a) {
 			if(count($r)) {
 				if(strlen($attachments))
 					$attachments .= ',';
-				$attachments .= '[attach]href="' . $a->get_baseurl() . '/attach/' . $r[0]['id'] . '" size="' . $r[0]['filesize'] . '" type="' . $r[0]['filetype'] . '" title="' . (($r[0]['filename']) ? $r[0]['filename'] : ' ') . '"[/attach]'; 
+				$attachments .= '[attach]href="' . $a->get_baseurl() . '/attach/' . $r[0]['id'] . '" length="' . $r[0]['filesize'] . '" type="' . $r[0]['filetype'] . '" title="' . (($r[0]['filename']) ? $r[0]['filename'] : '') . '"[/attach]'; 
 			}
 			$body = str_replace($match[1],'',$body);
 		}
@@ -443,6 +506,7 @@ function item_post(&$a) {
 	$datarray['private']       = $private;
 	$datarray['pubmail']       = $pubmail_enable;
 	$datarray['attach']        = $attachments;
+	$datarray['thr-parent']    = $thr_parent;
 
 	/**
 	 * These fields are for the convenience of plugins...
@@ -456,6 +520,9 @@ function item_post(&$a) {
 
 	if($orig_post)
 		$datarray['edit']      = true;
+	else
+		$datarray['guid']      = get_guid();
+
 
 	call_hooks('post_local',$datarray);
 
@@ -479,10 +546,11 @@ function item_post(&$a) {
 		$post_id = 0;
 
 
-	$r = q("INSERT INTO `item` (`uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
-		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `received`, `changed`, `uri`, `title`, `body`, `app`, `location`, `coord`, 
+	$r = q("INSERT INTO `item` (`guid`, `uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
+		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `received`, `changed`, `uri`, `thr-parent`, `title`, `body`, `app`, `location`, `coord`, 
 		`tag`, `inform`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach` )
-		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s' )",
+		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s' )",
+		dbesc($datarray['guid']),
 		intval($datarray['uid']),
 		dbesc($datarray['type']),
 		intval($datarray['wall']),
@@ -499,6 +567,7 @@ function item_post(&$a) {
 		dbesc($datarray['received']),
 		dbesc($datarray['changed']),
 		dbesc($datarray['uri']),
+		dbesc($datarray['thr-parent']),
 		dbesc($datarray['title']),
 		dbesc($datarray['body']),
 		dbesc($datarray['app']),
@@ -731,12 +800,16 @@ function item_post(&$a) {
 	}
 
 	logger('post_complete');
+
+	// figure out how to return, depending on from whence we came
+
+	if($api_source)
+		return;
+
 	if((x($_POST,'return')) && strlen($_POST['return'])) {
 		logger('return: ' . $_POST['return']);
 		goaway($a->get_baseurl() . "/" . $_POST['return'] );
 	}
-	if($_POST['api_source'])
-		return;
 	$json = array('success' => 1);
 	if(x($_POST,'jsreload') && strlen($_POST['jsreload']))
 		$json['reload'] = $a->get_baseurl() . '/' . $_POST['jsreload'];

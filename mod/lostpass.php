@@ -5,7 +5,7 @@ function lostpass_post(&$a) {
 
 	$email = notags(trim($_POST['login-name']));
 	if(! $email)
-		goaway($a->get_baseurl());
+		goaway(z_root());
 
 	$r = q("SELECT * FROM `user` WHERE ( `email` = '%s' OR `nickname` = '%s' ) AND `verified` = 1 AND `blocked` = 0 LIMIT 1",
 		dbesc($email),
@@ -14,7 +14,7 @@ function lostpass_post(&$a) {
 
 	if(! count($r)) {
 		notice( t('No valid account found.') . EOL);
-		goaway($a->get_baseurl());
+		goaway(z_root());
 	}
 
 	$uid = $r[0]['uid'];
@@ -46,7 +46,7 @@ function lostpass_post(&$a) {
 			. 'Content-transfer-encoding: 8bit' );
 
 
-	goaway($a->get_baseurl());
+	goaway(z_root());
 }
 
 
@@ -62,7 +62,7 @@ function lostpass_content(&$a) {
 		);
 		if(! count($r)) {
 			notice( t("Request could not be verified. \x28You may have previously submitted it.\x29 Password reset failed.") . EOL);
-			goaway($a->get_baseurl());
+			goaway(z_root());
 			return;
 		}
 		$uid = $r[0]['uid'];

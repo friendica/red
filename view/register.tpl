@@ -57,5 +57,6 @@
 	<div id="register-submit-end" ></div>
 </form>
 
-<div class="cc-license">$license</div>
+$license
+
 

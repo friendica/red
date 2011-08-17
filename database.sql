@@ -160,6 +160,7 @@ CREATE TABLE IF NOT EXISTS `intro` (
 
 CREATE TABLE IF NOT EXISTS `item` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `guid` char(64) NOT NULL,
   `uri` char(255) NOT NULL,
   `uid` int(10) unsigned NOT NULL DEFAULT '0',
   `contact-id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -208,6 +209,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `last-child` tinyint(1) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
+  KEY `guid` (`guid`),
   KEY `uri` (`uri`),
   KEY `uid` (`uid`),
   KEY `contact-id` (`contact-id`),
@@ -572,4 +574,10 @@ CREATE TABLE IF NOT EXISTS `attach` (
 `deny_cid` MEDIUMTEXT NOT NULL ,
 `deny_gid` MEDIUMTEXT NOT NULL
 ) ENGINE = MYISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `guid` (
+`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`guid` CHAR( 64 ) NOT NULL ,
+INDEX ( `guid` )
+) ENGINE = MYISAM  DEFAULT CHARSET=utf8;
 

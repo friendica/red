@@ -7,7 +7,7 @@
   <profile_image_url>$user.profile_image_url</profile_image_url>
   <url>$user.url</url>
   <protected>$user.protected</protected>
-  <followers_count>$user.followers</followers_count>
+  <followers_count>$user.followers_count</followers_count>
   <profile_background_color>$user.profile_background_color</profile_background_color>
   <profile_text_color>$user.profile_text_color</profile_text_color>
   <profile_link_color>$user.profile_link_color</profile_link_color>
@@ -21,10 +21,10 @@
   <profile_background_image_url>$user.profile_background_image_url</profile_background_image_url>
   <profile_background_tile>$user.profile_background_tile</profile_background_tile>
   <profile_use_background_image>$user.profile_use_background_image</profile_use_background_image>
-  <notifications></notifications>
+  <notifications>$user.notifications</notifications>
   <geo_enabled>$user.geo_enabled</geo_enabled>
   <verified>$user.verified</verified>
-  <following></following>
+  <following>$user.following</following>
   <statuses_count>$user.statuses_count</statuses_count>
   <lang>$user.lang</lang>
   <contributors_enabled>$user.contributors_enabled</contributors_enabled>

@@ -21,7 +21,7 @@ function profile_init(&$a) {
 
 	profile_load($a,$which,$profile);
 
-	if((x($a->profile,'page-flags')) && ($a->profile['page-flags'] & PAGE_COMMUNITY)) {
+	if((x($a->profile,'page-flags')) && ($a->profile['page-flags'] == PAGE_COMMUNITY)) {
 		$a->page['htmlhead'] .= '<meta name="friendika.community" content="true" />';
 	}
 	if(x($a->profile,'openidserver'))				
@@ -236,9 +236,8 @@ function profile_content(&$a, $update = 0) {
 	$o .= conversation($a,$r,'profile',$update);
 
 	if(! $update) {
-		
 		$o .= paginate($a);
-		$o .= '<div class="cc-license">' . t('Shared content is covered by the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> license.') . '</div>';
+		$o .= cc_license();
 	}
 
 	return $o;

@@ -50,8 +50,10 @@ function notifier_run($argv, $argc){
 	$recipients = array();
 	$url_recipients = array();
 
-	if($cmd === 'mail') {
+	$normal_mode = true;
 
+	if($cmd === 'mail') {
+		$normal_mode = false;
 		$message = q("SELECT * FROM `mail` WHERE `id` = %d LIMIT 1",
 				intval($item_id)
 		);
@@ -64,6 +66,7 @@ function notifier_run($argv, $argc){
 
 	}
 	elseif($cmd === 'expire') {
+		$normal_mode = false;
 		$expire = true;
 		$items = q("SELECT * FROM `item` WHERE `uid` = %d AND `wall` = 1 
 			AND `deleted` = 1 AND `changed` > UTC_TIMESTAMP - INTERVAL 10 MINUTE",
@@ -75,6 +78,7 @@ function notifier_run($argv, $argc){
 			return;
 	}
 	elseif($cmd === 'suggest') {
+		$normal_mode = false;
 		$suggest = q("SELECT * FROM `fsuggest` WHERE `id` = %d LIMIT 1",
 			intval($item_id)
 		);
@@ -95,7 +99,7 @@ function notifier_run($argv, $argc){
 			return;
 		}
 
-		$parent_item = $r[0];
+		$target_item = $r[0];
 		$parent_id = intval($r[0]['parent']);
 		$uid = $r[0]['uid'];
 		$updated = $r[0]['edited'];
@@ -119,7 +123,8 @@ function notifier_run($argv, $argc){
 			$top_level = true;
 	}
 
-	$r = q("SELECT `contact`.*, `user`.`timezone`, `user`.`nickname`, `user`.`sprvkey`, `user`.`spubkey`, 
+	$r = q("SELECT `contact`.*, `user`.`pubkey` AS `upubkey`, `user`.`prvkey` AS `uprvkey`, 
+		`user`.`timezone`, `user`.`nickname`, `user`.`sprvkey`, `user`.`spubkey`, 
 		`user`.`page-flags`, `user`.`prvnets`
 		FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
 		WHERE `contact`.`uid` = %d AND `contact`.`self` = 1 LIMIT 1",
@@ -145,7 +150,7 @@ function notifier_run($argv, $argc){
 
 		$parent = $items[0];
 
-		if($parent['type'] === 'remote' && (! $expire)) {
+		if($parent['wall'] == 0 && (! $expire)) {
 			// local followup to remote post
 			$followup = true;
 			$notify_hub = false; // not public
@@ -289,6 +294,11 @@ function notifier_run($argv, $argc){
 				if(! $item['parent'])
 					continue;
 
+				// private emails may be in included in public conversations. Filter them.
+
+				if(($notify_hub) && $item['private'])
+					continue;
+
 				$contact = get_item_contact($item,$contacts);
 				if(! $contact)
 					continue;
@@ -311,9 +321,9 @@ function notifier_run($argv, $argc){
 	$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
 
 	if(! $mail_disabled) {
-		if((! strlen($parent_item['allow_cid'])) && (! strlen($parent_item['allow_gid'])) 
-			&& (! strlen($parent_item['deny_cid'])) && (! strlen($parent_item['deny_gid'])) 
-			&& (intval($parent_item['pubmail']))) {
+		if((! strlen($target_item['allow_cid'])) && (! strlen($target_item['allow_gid'])) 
+			&& (! strlen($target_item['deny_cid'])) && (! strlen($target_item['deny_gid'])) 
+			&& (intval($target_item['pubmail']))) {
 			$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `network` = '%s'",
 				intval($uid),
 				dbesc(NETWORK_MAIL)
@@ -346,7 +356,7 @@ function notifier_run($argv, $argc){
 			$deliver_status = 0;
 
 			switch($contact['network']) {
-				case 'dfrn':
+				case NETWORK_DFRN:
 					logger('notifier: dfrndelivery: ' . $contact['name']);
 					$deliver_status = dfrn_deliver($owner,$contact,$atom);
 
@@ -364,7 +374,7 @@ function notifier_run($argv, $argc){
 						);
 					}
 					break;
-				case 'stat':
+				case NETWORK_OSTATUS:
 
 					// Do not send to otatus if we are not configured to send to public networks
 					if($owner['prvnets'])
@@ -414,7 +424,7 @@ function notifier_run($argv, $argc){
 					}
 					break;
 
-				case 'mail':
+				case NETWORK_MAIL:
 						
 					if(get_config('system','dfrn_only'))
 						break;
@@ -491,9 +501,34 @@ function notifier_run($argv, $argc){
 						mail($addr, $subject, $message, $headers);
 					}
 					break;
-				case 'feed':
-				case 'face':
-				case 'dspr':
+				case NETWORK_DIASPORA:
+					if(get_config('system','dfrn_only') || (! get_config('diaspora_enabled')) || (! $normal_mode))
+						break;
+
+					if($target_item['deleted']) {
+						// diaspora delete, (check for like)
+
+						break;
+					}
+					elseif($followup) {
+						// send to owner to relay
+
+						break;
+					}
+					elseif($target_item['parent'] != $target_item['id']) {
+						// we are the relay
+
+						break;
+					}		
+					elseif($top_level) {
+						diaspora_send_status($target_item,$owner,$contact);
+						break;
+					}
+
+					break;
+
+				case NETWORK_FEED:
+				case NETWORK_FACEBOOK:
 					if(get_config('system','dfrn_only'))
 						break;
 				default:
@@ -504,7 +539,7 @@ function notifier_run($argv, $argc){
 		
 	// send additional slaps to mentioned remote tags (@foo@example.com)
 
-	if($slap && count($url_recipients) && $followup && $notify_hub && (! $expire)) {
+	if($slap && count($url_recipients) && ($followup || $top_level) && $notify_hub && (! $expire)) {
 		if(! get_config('system','dfrn_only')) {
 			foreach($url_recipients as $url) {
 				if($url) {
@@ -542,7 +577,7 @@ function notifier_run($argv, $argc){
 		 *
 		 */
 
-		$max_allowed = ((get_config('system','maxpubdeliver') === false) ? 150 : intval(get_config('system','maxpubdeliver')));
+		$max_allowed = ((get_config('system','maxpubdeliver') === false) ? 999 : intval(get_config('system','maxpubdeliver')));
 				
 		/**
 		 *
@@ -552,10 +587,10 @@ function notifier_run($argv, $argc){
 		 */
 
 		$r = q("SELECT `id`, `name` FROM `contact` 
-			WHERE `network` = 'dfrn' AND `uid` = %d AND `blocked` = 0 AND `pending` = 0
+			WHERE `network` = NETWORK_DFRN AND `uid` = %d AND `blocked` = 0 AND `pending` = 0
 			AND `rel` != %d ",
 			intval($owner['uid']),
-			intval(REL_FAN)
+			intval(CONTACT_IS_SHARING)
 		);
 
 		if((count($r)) && (($max_allowed == 0) || (count($r) < $max_allowed))) {

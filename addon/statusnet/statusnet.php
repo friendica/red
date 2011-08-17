@@ -1,7 +1,7 @@
 <?php
 /**
  * Name: StatusNet Connector
- * Version: 1.0
+ * Version: 1.0.2
  * Author: Tobias Diekershoff <https://diekershoff.homeunix.net/friendika/profile/tobias>
  */
  
@@ -51,6 +51,57 @@ class StatusNetOAuth extends TwitterOAuth {
         parent::__construct($consumer_key, $consumer_secret, $oauth_token, $oauth_token_secret);
         $this->host = $apipath;
     }
+  /**
+   * Make an HTTP request
+   *
+   * @return API results
+   *
+   * Copied here from the twitteroauth library and complemented by applying the proxy settings of friendika
+   */
+  function http($url, $method, $postfields = NULL) {
+    $this->http_info = array();
+    $ci = curl_init();
+    /* Curl settings */
+    $prx = get_config('system','proxy');
+    logger('Proxy SN: '.$prx);
+    if(strlen($prx)) {
+        curl_setopt($ci, CURLOPT_HTTPPROXYTUNNEL, 1);
+        curl_setopt($ci, CURLOPT_PROXY, $prx);
+        $prxusr = get_config('system','proxyuser');
+        if(strlen($prxusr))
+            curl_setopt($ci, CURLOPT_PROXYUSERPWD, $prxusr);
+    }
+    curl_setopt($ci, CURLOPT_USERAGENT, $this->useragent);
+    curl_setopt($ci, CURLOPT_CONNECTTIMEOUT, $this->connecttimeout);
+    curl_setopt($ci, CURLOPT_TIMEOUT, $this->timeout);
+    curl_setopt($ci, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($ci, CURLOPT_HTTPHEADER, array('Expect:'));
+    curl_setopt($ci, CURLOPT_SSL_VERIFYPEER, $this->ssl_verifypeer);
+    curl_setopt($ci, CURLOPT_HEADERFUNCTION, array($this, 'getHeader'));
+    curl_setopt($ci, CURLOPT_HEADER, FALSE);
+
+    switch ($method) {
+      case 'POST':
+        curl_setopt($ci, CURLOPT_POST, TRUE);
+        if (!empty($postfields)) {
+          curl_setopt($ci, CURLOPT_POSTFIELDS, $postfields);
+        }
+        break;
+      case 'DELETE':
+        curl_setopt($ci, CURLOPT_CUSTOMREQUEST, 'DELETE');
+        if (!empty($postfields)) {
+          $url = "{$url}?{$postfields}";
+        }
+    }
+
+    curl_setopt($ci, CURLOPT_URL, $url);
+    $response = curl_exec($ci);
+    $this->http_code = curl_getinfo($ci, CURLINFO_HTTP_CODE);
+    $this->http_info = array_merge($this->http_info, curl_getinfo($ci));
+    $this->url = $url;
+    curl_close ($ci);
+    return $response;
+  }
 }
 
 function statusnet_install() {
@@ -276,7 +327,7 @@ function statusnet_settings(&$a,&$s) {
 			$connection = new StatusNetOAuth($api,$ckey,$csecret,$otoken,$osecret);
 			$details = $connection->get('account/verify_credentials');
 			$s .= '<div id="statusnet-info" ><img id="statusnet-avatar" src="'.$details->profile_image_url.'" /><p id="statusnet-info-block">'. t('Currently connected to: ') .'<a href="'.$details->statusnet_profile_url.'" target="_statusnet">'.$details->screen_name.'</a><br /><em>'.$details->description.'</em></p></div>';
-			$s .= '<p>'. t('If enabled all your <strong>public</strong> postings will be posted to the associated StatusNet account.') .'</p>';
+			$s .= '<p>'. t('If enabled all your <strong>public</strong> postings can be posted to the associated StatusNet account. You can choose to do so by default (here) or for every posting separately in the posting options when writing the entry.') .'</p>';
 			$s .= '<div id="statusnet-enable-wrapper">';
 			$s .= '<label id="statusnet-enable-label" for="statusnet-checkbox">'. t('Allow posting to StatusNet') .'</label>';
 			$s .= '<input id="statusnet-checkbox" type="checkbox" name="statusnet-enable" value="1" ' . $checked . '/>';
@@ -322,6 +373,9 @@ function statusnet_post_hook(&$a,&$b) {
 
 			$statusnet_post = get_pconfig(local_user(),'statusnet','post');
 			$statusnet_enable = (($statusnet_post && x($_POST,'statusnet_enable')) ? intval($_POST['statusnet_enable']) : 0);
+			// if API is used, default to the chosen settings
+			if($_POST['api_source'] && intval(get_pconfig(local_user(),'statusnet','post_by_default')))
+				$statusnet_enable = 1;
 
 			if($statusnet_enable && $statusnet_post) {
 				require_once('include/bbcode.php');	
@@ -402,10 +456,10 @@ function statusnet_plugin_admin(&$a, &$o){
 	/* empty form to add new site */
 	$id++;
 	$sitesform[] = Array(
-		'sitename' => Array("sitename[$id]", "Site name", "", ""),
-		'apiurl' => Array("apiurl[$id]", "Api url", "", ""),
-		'secret' => Array("secret[$id]", "Secret", "", ""),
-		'key' => Array("key[$id]", "Key", "", ""),
+		'sitename' => Array("sitename[$id]", t("Site name"), "", ""),
+		'apiurl' => Array("apiurl[$id]", t("API URL"), "", ""),
+		'secret' => Array("secret[$id]", t("Consumer Secret"), "", ""),
+		'key' => Array("key[$id]", t("Consumer Key"), "", ""),
 	);
 
 	

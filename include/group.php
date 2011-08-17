@@ -136,7 +136,7 @@ function group_public_members($gid) {
 
 
 
-function group_side($every="contacts",$each="group",$edit = false, $group_id = 0) {
+function group_side($every="contacts",$each="group",$edit = false, $group_id = 0, $cid = 0) {
 
 	$o = '';
 
@@ -160,10 +160,19 @@ EOT;
 	$r = q("SELECT * FROM `group` WHERE `deleted` = 0 AND `uid` = %d ORDER BY `name` ASC",
 		intval($_SESSION['uid'])
 	);
+	if($cid) {
+		$member_of = groups_containing(local_user(),$cid);
+	} 
+
 	if(count($r)) {
 		foreach($r as $rr) {
 			$selected = (($group_id == $rr['id']) ? ' class="group-selected" ' : '');
-			$o .= '	<li class="sidebar-group-li">' . (($edit) ? "<a href=\"group/{$rr['id']}\" title=\"" . t('Edit') . "\" ><img src=\"images/spencil.gif\" alt=\"" . t('Edit') . "\"></a> " : "") . "<a href=\"$each/{$rr['id']}\" $selected >{$rr['name']}</a></li>\r\n";
+			$o .= '	<li class="sidebar-group-li">' 
+			. (($edit) ? "<a href=\"group/{$rr['id']}\" title=\"" . t('Edit') 
+				. "\" ><img src=\"images/spencil.gif\" alt=\"" . t('Edit') . "\"></a> " : "") 
+			. (($cid) ? '<input type="checkbox" class="' . (($selected) ? 'ticked' : 'unticked') . '" onclick="contactgroupChangeMember(' . $rr['id'] . ',' . $cid . ');return true;" '
+				. ((in_array($rr['id'],$member_of)) ? ' checked="checked" ' : '') . '/>' : '')
+			. "<a href=\"$each/{$rr['id']}\" $selected >{$rr['name']}</a></li>\r\n";
 		}
 	}
 	$o .= "	</ul>\r\n	</div>";
@@ -204,3 +213,18 @@ function member_of($c) {
 
 }
 
+function groups_containing($uid,$c) {
+
+	$r = q("SELECT `gid` FROM `group_member` WHERE `uid` = %d AND `group_member`.`contact-id` = %d ",
+		intval($uid),
+		intval($c)
+	);
+
+	$ret = array();
+	if(count($r)) {
+		foreach($r as $rr)
+			$ret[] = $rr['gid'];
+	}
+
+	return $ret;
+}

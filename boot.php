@@ -1,12 +1,19 @@
 <?php
 
-define ( 'FRIENDIKA_VERSION',      '2.2.1050' );
+require_once('include/config.php');
+require_once('include/network.php');
+require_once('include/plugin.php');
+require_once('include/text.php');
+require_once("include/pgettext.php");
+
+
+define ( 'FRIENDIKA_VERSION',      '2.2.1074' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
-define ( 'DB_UPDATE_VERSION',      1076      );
+define ( 'DB_UPDATE_VERSION',      1079      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
-define ( 'DOWN_ARROW',             '&#x21e9;'       );
+
 
 /**
  *
@@ -48,13 +55,12 @@ define ( 'REGISTER_OPEN',          2 );
 
 /**
  * relationship types
- * When used in contact records, this indicates that 'uid' has 
- * this relationship with contact['name']
  */
 
-define ( 'REL_VIP',        1);     // other person is 'following' us
-define ( 'REL_FAN',        2);     // we are 'following' other person
-define ( 'REL_BUD',        3);     // mutual relationship
+define ( 'CONTACT_IS_FOLLOWER', 1);
+define ( 'CONTACT_IS_SHARING',  2);
+define ( 'CONTACT_IS_FRIEND',   3);
+
 
 /**
  * Hook array order
@@ -69,10 +75,10 @@ define ( 'HOOK_FUNCTION',  2);
  * page/profile types
  *
  * PAGE_NORMAL is a typical personal profile account
- * PAGE_SOAPBOX automatically approves all friend requests as REL_FAN, (readonly)
- * PAGE_COMMUNITY automatically approves all friend requests as REL_FAN, but with 
+ * PAGE_SOAPBOX automatically approves all friend requests as CONTACT_IS_SHARING, (readonly)
+ * PAGE_COMMUNITY automatically approves all friend requests as CONTACT_IS_SHARING, but with 
  *      write access to wall and comments (no email and not included in page owner's ACL lists)
- * PAGE_FREELOVE automatically approves all friend requests as full friends (REL_BUD). 
+ * PAGE_FREELOVE automatically approves all friend requests as full friends (CONTACT_IS_FRIEND). 
  *
  */
 
@@ -199,12 +205,6 @@ function startup() {
 
 }
 
-/*
- * translation system
- */
-require_once("include/pgettext.php");
-
-
 /**
  *
  * class: App
@@ -270,7 +270,8 @@ class App {
 
 		if(x($_SERVER,'SERVER_NAME')) {
 			$this->hostname = $_SERVER['SERVER_NAME'];
-
+			if(x($_SERVER,'SERVER_PORT') && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443)
+				$this->hostname .= ':' . $_SERVER['SERVER_PORT'];
 			/** 
 			 * Figure out if we are running at the top of a domain
 			 * or in a sub-directory and adjust accordingly
@@ -281,7 +282,12 @@ class App {
 				$this->path = $path;
 		}
 
-		set_include_path("include/$this->hostname" . PATH_SEPARATOR . 'include' . PATH_SEPARATOR . '.' );
+		set_include_path(
+			"include/$this->hostname" . PATH_SEPARATOR 
+			. 'include' . PATH_SEPARATOR 
+			. 'library' . PATH_SEPARATOR 
+			. 'library/phpsec' . PATH_SEPARATOR 
+			. '.' );
 
 		if((x($_SERVER,'QUERY_STRING')) && substr($_SERVER['QUERY_STRING'],0,2) === "q=")
 			$this->query_string = substr($_SERVER['QUERY_STRING'],2);
@@ -318,13 +324,12 @@ class App {
 
 		/**
 		 * Special handling for the webfinger/lrdd host XRD file
-		 * Just spit out the contents and exit.
 		 */
 
 		if($this->cmd === '.well-known/host-meta') {
-			require_once('include/hostxrd.php');
-			hostxrd($this->get_baseurl());
-			// NOTREACHED
+			$this->argc = 1;
+			$this->argv = array('hostxrd');
+			$this->module = 'hostxrd';
 		}
 
 		/**
@@ -400,7 +405,7 @@ class App {
 		$this->page['title'] = $this->config['sitename'];
 		$tpl = file_get_contents('view/head.tpl');
 		$this->page['htmlhead'] = replace_macros($tpl,array(
-			'$baseurl' => $this->get_baseurl(),
+			'$baseurl' => $this->get_baseurl(), // FIXME for z_path!!!!
 			'$generator' => 'Friendika' . ' ' . FRIENDIKA_VERSION,
 			'$delitem' => t('Delete this item?'),
 			'$comment' => t('Comment')
@@ -473,39 +478,33 @@ function system_unavailable() {
 }}
 
 
-// install and uninstall plugin
-if (! function_exists('uninstall_plugin')){
-function uninstall_plugin($plugin){
-	logger("Addons: uninstalling " . $plugin);
-	q("DELETE FROM `addon` WHERE `name` = '%s' LIMIT 1",
-		dbesc($plugin)
-	);
 
-	@include_once('addon/' . $plugin . '/' . $plugin . '.php');
-	if(function_exists($plugin . '_uninstall')) {
-		$func = $plugin . '_uninstall';
-		$func();
-	}
-}}
+function clean_urls() {
+	global $a;
+//	if($a->config['system']['clean_urls'])
+		return true;
+//	return false;
+}
 
-if (! function_exists('install_plugin')){
-function install_plugin($plugin){
-	logger("Addons: installing " . $plugin);
-	$t = filemtime('addon/' . $plugin . '/' . $plugin . '.php');
-	@include_once('addon/' . $plugin . '/' . $plugin . '.php');
-	if(function_exists($plugin . '_install')) {
-		$func = $plugin . '_install';
-		$func();
-		
-		$plugin_admin = (function_exists($plugin."_plugin_admin")?1:0);
-		
-		$r = q("INSERT INTO `addon` (`name`, `installed`, `timestamp`, `plugin_admin`) VALUES ( '%s', 1, %d , %d ) ",
-			dbesc($plugin),
-			intval($t),
-			$plugin_admin
-		);
-	}
-}}
+function z_path() {
+	global $a;
+	$base = $a->get_baseurl();
+	if(! clean_urls())
+		$base .= '/?q=';
+	return $base;
+}
+
+function z_root() {
+	global $a;
+	return $a->get_baseurl();
+}
+
+function absurl($path) {
+	if(strpos($path,'/') === 0)
+		return z_path() . $path;
+	return $path;
+}
+
 
 // Primarily involved with database upgrade, but also sets the 
 // base url for use in cmdline programs which don't have
@@ -610,271 +609,19 @@ function check_config(&$a) {
 	return;
 }}
 
-// reload all updated plugins
 
-if(! function_exists('reload_plugins')) {
-function reload_plugins() {
-	$plugins = get_config('system','addon');
-	if(strlen($plugins)) {
+function get_guid($size=16) {
+	$exists = true; // assume by default that we don't have a unique guid
+	do {
+		$s = random_string($size);
+		$r = q("select id from guid where guid = '%s' limit 1", dbesc($s));
+		if(! count($r))
+			$exists = false;
+	} while($exists);
+	q("insert into guid ( guid ) values ( '%s' ) ", dbesc($s));
+	return $s;
+}
 
-		$r = q("SELECT * FROM `addon` WHERE `installed` = 1");
-		if(count($r))
-			$installed = $r;
-		else
-			$installed = array();
-
-		$parr = explode(',',$plugins);
-		if(count($parr)) {
-			foreach($parr as $pl) {
-				$pl = trim($pl);
-				
-				$t = filemtime('addon/' . $pl . '/' . $pl . '.php');
-				foreach($installed as $i) {
-					if(($i['name'] == $pl) && ($i['timestamp'] != $t)) {	
-						logger('Reloading plugin: ' . $i['name']);
-						@include_once('addon/' . $pl . '/' . $pl . '.php');
-
-						if(function_exists($pl . '_uninstall')) {
-							$func = $pl . '_uninstall';
-							$func();
-						}
-						if(function_exists($pl . '_install')) {
-							$func = $pl . '_install';
-							$func();
-						}
-						q("UPDATE `addon` SET `timestamp` = %d WHERE `id` = %d LIMIT 1",
-							intval($t),
-							intval($i['id'])
-						);
-					}
-				}
-			}
-		}
-	}
-}}
-				
-
-
-// This is our template processor.
-// $s is the string requiring macro substitution.
-// $r is an array of key value pairs (search => replace)
-// returns substituted string.
-// WARNING: this is pretty basic, and doesn't properly handle search strings that are substrings of each other.
-// For instance if 'test' => "foo" and 'testing' => "bar", testing could become either bar or fooing, 
-// depending on the order in which they were declared in the array.   
-
-require_once("include/template_processor.php");
-
-if(! function_exists('replace_macros')) {  
-function replace_macros($s,$r) {
-	global $t;
-	
-	return $t->replace($s,$r);
-
-}}
-
-
-// curl wrapper. If binary flag is true, return binary
-// results. 
-
-if(! function_exists('fetch_url')) {
-function fetch_url($url,$binary = false, &$redirects = 0) {
-
-	$a = get_app();
-
-	$ch = curl_init($url);
-	if(($redirects > 8) || (! $ch)) 
-		return false;
-
-	curl_setopt($ch, CURLOPT_HEADER, true);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-	curl_setopt($ch, CURLOPT_USERAGENT, "Friendika");
-
-	$curl_time = intval(get_config('system','curl_timeout'));
-	curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
-
-	// by default we will allow self-signed certs
-	// but you can override this
-
-	$check_cert = get_config('system','verifyssl');
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, (($check_cert) ? true : false));
-
-	$prx = get_config('system','proxy');
-	if(strlen($prx)) {
-		curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
-		curl_setopt($ch, CURLOPT_PROXY, $prx);
-		$prxusr = get_config('system','proxyuser');
-		if(strlen($prxusr))
-			curl_setopt($ch, CURLOPT_PROXYUSERPWD, $prxusr);
-	}
-	if($binary)
-		curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
-
-	$a->set_curl_code(0);
-
-	// don't let curl abort the entire application
-	// if it throws any errors.
-
-	$s = @curl_exec($ch);
-
-	$base = $s;
-	$curl_info = curl_getinfo($ch);
-	$http_code = $curl_info['http_code'];
-
-	$header = '';
-
-	// Pull out multiple headers, e.g. proxy and continuation headers
-	// allow for HTTP/2.x without fixing code
-
-	while(preg_match('/^HTTP\/[1-2].+? [1-5][0-9][0-9]/',$base)) {
-		$chunk = substr($base,0,strpos($base,"\r\n\r\n")+4);
-		$header .= $chunk;
-		$base = substr($base,strlen($chunk));
-	}
-
-	if($http_code == 301 || $http_code == 302 || $http_code == 303 || $http_code == 307) {
-        $matches = array();
-        preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
-        $url = trim(array_pop($matches));
-        $url_parsed = @parse_url($url);
-        if (isset($url_parsed)) {
-            $redirects++;
-            return fetch_url($url,$binary,$redirects);
-        }
-    }
-
-	$a->set_curl_code($http_code);
-
-	$body = substr($s,strlen($header));
-
-	$a->set_curl_headers($header);
-
-	curl_close($ch);
-	return($body);
-}}
-
-// post request to $url. $params is an array of post variables.
-
-if(! function_exists('post_url')) {
-function post_url($url,$params, $headers = null, &$redirects = 0) {
-	$a = get_app();
-	$ch = curl_init($url);
-	if(($redirects > 8) || (! $ch)) 
-		return false;
-
-	curl_setopt($ch, CURLOPT_HEADER, true);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-	curl_setopt($ch, CURLOPT_POST,1);
-	curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
-	curl_setopt($ch, CURLOPT_USERAGENT, "Friendika");
-
-	$curl_time = intval(get_config('system','curl_timeout'));
-	curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
-
-	if(defined('LIGHTTPD')) {
-		if(!is_array($headers)) {
-			$headers = array('Expect:');
-		} else {
-			if(!in_array('Expect:', $headers)) {
-				array_push($headers, 'Expect:');
-			}
-		}
-	}
-	if($headers)
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-	$check_cert = get_config('system','verifyssl');
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, (($check_cert) ? true : false));
-	$prx = get_config('system','proxy');
-	if(strlen($prx)) {
-		curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
-		curl_setopt($ch, CURLOPT_PROXY, $prx);
-		$prxusr = get_config('system','proxyuser');
-		if(strlen($prxusr))
-			curl_setopt($ch, CURLOPT_PROXYUSERPWD, $prxusr);
-	}
-
-	$a->set_curl_code(0);
-
-	// don't let curl abort the entire application
-	// if it throws any errors.
-
-	$s = @curl_exec($ch);
-
-	$base = $s;
-	$curl_info = curl_getinfo($ch);
-	$http_code = $curl_info['http_code'];
-
-	$header = '';
-
-	// Pull out multiple headers, e.g. proxy and continuation headers
-	// allow for HTTP/2.x without fixing code
-
-	while(preg_match('/^HTTP\/[1-2].+? [1-5][0-9][0-9]/',$base)) {
-		$chunk = substr($base,0,strpos($base,"\r\n\r\n")+4);
-		$header .= $chunk;
-		$base = substr($base,strlen($chunk));
-	}
-
-	if($http_code == 301 || $http_code == 302 || $http_code == 303) {
-        $matches = array();
-        preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
-        $url = trim(array_pop($matches));
-        $url_parsed = @parse_url($url);
-        if (isset($url_parsed)) {
-            $redirects++;
-            return post_url($url,$binary,$headers,$redirects);
-        }
-    }
-	$a->set_curl_code($http_code);
-	$body = substr($s,strlen($header));
-
-	$a->set_curl_headers($header);
-
-	curl_close($ch);
-	return($body);
-}}
-
-// random hash, 64 chars
-
-if(! function_exists('random_string')) {
-function random_string() {
-	return(hash('sha256',uniqid(rand(),true)));
-}}
-
-/**
- * This is our primary input filter. 
- *
- * The high bit hack only involved some old IE browser, forget which (IE5/Mac?)
- * that had an XSS attack vector due to stripping the high-bit on an 8-bit character
- * after cleansing, and angle chars with the high bit set could get through as markup.
- * 
- * This is now disabled because it was interfering with some legitimate unicode sequences 
- * and hopefully there aren't a lot of those browsers left. 
- *
- * Use this on any text input where angle chars are not valid or permitted
- * They will be replaced with safer brackets. This may be filtered further
- * if these are not allowed either.   
- *
- */
-
-if(! function_exists('notags')) {
-function notags($string) {
-
-	return(str_replace(array("<",">"), array('[',']'), $string));
-
-//  High-bit filter no longer used
-//	return(str_replace(array("<",">","\xBA","\xBC","\xBE"), array('[',']','','',''), $string));
-}}
-
-// use this on "body" or "content" input where angle chars shouldn't be removed,
-// and allow them to be safely displayed.
-
-if(! function_exists('escape_tags')) {
-function escape_tags($string) {
-
-	return(htmlspecialchars($string));
-}}
 
 // wrapper for adding a login box. If $register == true provide a registration
 // link. This will most always depend on the value of $a->config['register_policy'].
@@ -930,77 +677,6 @@ function login($register = false) {
 	return $o;
 }}
 
-// generate a string that's random, but usually pronounceable. 
-// used to generate initial passwords
-
-if(! function_exists('autoname')) {
-function autoname($len) {
-
-	$vowels = array('a','a','ai','au','e','e','e','ee','ea','i','ie','o','ou','u'); 
-	if(mt_rand(0,5) == 4)
-		$vowels[] = 'y';
-
-	$cons = array(
-			'b','bl','br',
-			'c','ch','cl','cr',
-			'd','dr',
-			'f','fl','fr',
-			'g','gh','gl','gr',
-			'h',
-			'j',
-			'k','kh','kl','kr',
-			'l',
-			'm',
-			'n',
-			'p','ph','pl','pr',
-			'qu',
-			'r','rh',
-			's','sc','sh','sm','sp','st',
-			't','th','tr',
-			'v',
-			'w','wh',
-			'x',
-			'z','zh'
-			);
-
-	$midcons = array('ck','ct','gn','ld','lf','lm','lt','mb','mm', 'mn','mp',
-				'nd','ng','nk','nt','rn','rp','rt');
-
-	$noend = array('bl', 'br', 'cl','cr','dr','fl','fr','gl','gr',
-				'kh', 'kl','kr','mn','pl','pr','rh','tr','qu','wh');
-
-	$start = mt_rand(0,2);
-  	if($start == 0)
-    		$table = $vowels;
-  	else
-    		$table = $cons;
-
-	$word = '';
-
-	for ($x = 0; $x < $len; $x ++) {
-  		$r = mt_rand(0,count($table) - 1);
-  		$word .= $table[$r];
-  
-  		if($table == $vowels)
-    			$table = array_merge($cons,$midcons);
-  		else
-    			$table = $vowels;
-
-	}
-
-	$word = substr($word,0,$len);
-
-	foreach($noend as $noe) {
-  		if((strlen($word) > 2) && (substr($word,-2) == $noe)) {
-    			$word = substr($word,0,-1);
-    			break;
-  		}
-	}
-	if(substr($word,-1) == 'q')
-		$word = substr($word,0,-1);    
-	return $word;
-}}
-
 // Used to end the current process, after saving session state. 
 
 if(! function_exists('killme')) {
@@ -1017,23 +693,6 @@ function goaway($s) {
 	killme();
 }}
 
-// Generic XML return
-// Outputs a basic dfrn XML status structure to STDOUT, with a <status> variable 
-// of $st and an optional text <message> of $message and terminates the current process. 
-
-if(! function_exists('xml_status')) {
-function xml_status($st, $message = '') {
-
-	$xml_message = ((strlen($message)) ? "\t<message>" . xmlify($message) . "</message>\r\n" : '');
-
-	if($st)
-		logger('xml_status returning non_zero: ' . $st . " message=" . $message);
-
-	header( "Content-type: text/xml" );
-	echo '<?xml version="1.0" encoding="UTF-8"?>'."\r\n";
-	echo "<result>\r\n\t<status>$st</status>\r\n$xml_message</result>\r\n";
-	killme();
-}}
 
 // Returns the uid of locally logged in user or false.
 
@@ -1078,1231 +737,6 @@ function get_max_import_size() {
 	return ((x($a->config,'max_import_size')) ? $a->config['max_import_size'] : 0 );
 }}
 
-
-// escape text ($str) for XML transport
-// returns escaped text.
-
-if(! function_exists('xmlify')) {
-function xmlify($str) {
-	$buffer = '';
-	
-	for($x = 0; $x < strlen($str); $x ++) {
-		$char = $str[$x];
-        
-		switch( $char ) {
-
-			case "\r" :
-				break;
-			case "&" :
-				$buffer .= '&amp;';
-				break;
-			case "'" :
-				$buffer .= '&apos;';
-				break;
-			case "\"" :
-				$buffer .= '&quot;';
-				break;
-			case '<' :
-				$buffer .= '&lt;';
-				break;
-			case '>' :
-				$buffer .= '&gt;';
-				break;
-			case "\n" :
-				$buffer .= "\n";
-				break;
-			default :
-				$buffer .= $char;
-				break;
-		}	
-	}
-	$buffer = trim($buffer);
-	return($buffer);
-}}
-
-// undo an xmlify
-// pass xml escaped text ($s), returns unescaped text
-
-if(! function_exists('unxmlify')) {
-function unxmlify($s) {
-	$ret = str_replace('&amp;','&', $s);
-	$ret = str_replace(array('&lt;','&gt;','&quot;','&apos;'),array('<','>','"',"'"),$ret);
-	return $ret;	
-}}
-
-// convenience wrapper, reverse the operation "bin2hex"
-
-if(! function_exists('hex2bin')) {
-function hex2bin($s) {
-	if(! ctype_xdigit($s)) {
-		logger('hex2bin: illegal input: ' . print_r(debug_backtrace(), true));
-		return($s);
-	}
-
-	return(pack("H*",$s));
-}}
-
-// Automatic pagination.
-// To use, get the count of total items.
-// Then call $a->set_pager_total($number_items);
-// Optionally call $a->set_pager_itemspage($n) to the number of items to display on each page
-// Then call paginate($a) after the end of the display loop to insert the pager block on the page
-// (assuming there are enough items to paginate).
-// When using with SQL, the setting LIMIT %d, %d => $a->pager['start'],$a->pager['itemspage']
-// will limit the results to the correct items for the current page. 
-// The actual page handling is then accomplished at the application layer. 
-
-if(! function_exists('paginate')) {
-function paginate(&$a) {
-	$o = '';
-	$stripped = preg_replace('/(&page=[0-9]*)/','',$a->query_string);
-	$stripped = str_replace('q=','',$stripped);
-	$stripped = trim($stripped,'/');
-	$pagenum = $a->pager['page'];
-	$url = $a->get_baseurl() . '/' . $stripped;
-
-
-	  if($a->pager['total'] > $a->pager['itemspage']) {
-		$o .= '<div class="pager">';
-    		if($a->pager['page'] != 1)
-			$o .= '<span class="pager_prev">'."<a href=\"$url".'&page='.($a->pager['page'] - 1).'">' . t('prev') . '</a></span> ';
-
-		$o .=  "<span class=\"pager_first\"><a href=\"$url"."&page=1\">" . t('first') . "</a></span> ";
-
-    		$numpages = $a->pager['total'] / $a->pager['itemspage'];
-
-			$numstart = 1;
-    		$numstop = $numpages;
-
-    		if($numpages > 14) {
-      			$numstart = (($pagenum > 7) ? ($pagenum - 7) : 1);
-      			$numstop = (($pagenum > ($numpages - 7)) ? $numpages : ($numstart + 14));
-    		}
-   
-		for($i = $numstart; $i <= $numstop; $i++){
-      			if($i == $a->pager['page'])
-				$o .= '<span class="pager_current">'.(($i < 10) ? '&nbsp;'.$i : $i);
-			else
-				$o .= "<span class=\"pager_n\"><a href=\"$url"."&page=$i\">".(($i < 10) ? '&nbsp;'.$i : $i)."</a>";
-			$o .= '</span> ';
-		}
-
-		if(($a->pager['total'] % $a->pager['itemspage']) != 0) {
-			if($i == $a->pager['page'])
-				$o .= '<span class="pager_current">'.(($i < 10) ? '&nbsp;'.$i : $i);
-			else
-				$o .= "<span class=\"pager_n\"><a href=\"$url"."&page=$i\">".(($i < 10) ? '&nbsp;'.$i : $i)."</a>";
-			$o .= '</span> ';
-		}
-
-		$lastpage = (($numpages > intval($numpages)) ? intval($numpages)+1 : $numpages);
-		$o .= "<span class=\"pager_last\"><a href=\"$url"."&page=$lastpage\">" . t('last') . "</a></span> ";
-
-    		if(($a->pager['total'] - ($a->pager['itemspage'] * $a->pager['page'])) > 0)
-			$o .= '<span class="pager_next">'."<a href=\"$url"."&page=".($a->pager['page'] + 1).'">' . t('next') . '</a></span>';
-		$o .= '</div>'."\r\n";
-	}
-	return $o;
-}}
-
-// Turn user/group ACLs stored as angle bracketed text into arrays
-
-if(! function_exists('expand_acl')) {
-function expand_acl($s) {
-	// turn string array of angle-bracketed elements into numeric array
-	// e.g. "<1><2><3>" => array(1,2,3);
-	$ret = array();
-
-	if(strlen($s)) {
-		$t = str_replace('<','',$s);
-		$a = explode('>',$t);
-		foreach($a as $aa) {
-			if(intval($aa))
-				$ret[] = intval($aa);
-		}
-	}
-	return $ret;
-}}		
-
-// Used to wrap ACL elements in angle brackets for storage 
-
-if(! function_exists('sanitise_acl')) {
-function sanitise_acl(&$item) {
-	if(intval($item))
-		$item = '<' . intval(notags(trim($item))) . '>';
-	else
-		unset($item);
-}}
-
-// retrieve a "family" of config variables from database to cached storage
-
-if(! function_exists('load_config')) {
-function load_config($family) {
-	global $a;
-	$r = q("SELECT * FROM `config` WHERE `cat` = '%s'",
-		dbesc($family)
-	);
-	if(count($r)) {
-		foreach($r as $rr) {
-			$k = $rr['k'];
-			if ($rr['cat'] === 'config') {
-				$a->config[$k] = $rr['v'];
-			} else {
-				$a->config[$family][$k] = $rr['v'];
-			}
-		}
-	}
-}}
-
-// get a particular config variable given the family name
-// and key. Returns false if not set.
-// $instore is only used by the set_config function
-// to determine if the key already exists in the DB
-// If a key is found in the DB but doesn't exist in
-// local config cache, pull it into the cache so we don't have
-// to hit the DB again for this item.
-
-if(! function_exists('get_config')) {
-function get_config($family, $key, $instore = false) {
-
-	global $a;
-
-	if(! $instore) {
-		if(isset($a->config[$family][$key])) {
-			if($a->config[$family][$key] === '!<unset>!') {
-				return false;
-			}
-			return $a->config[$family][$key];
-		}
-	}
-	$ret = q("SELECT `v` FROM `config` WHERE `cat` = '%s' AND `k` = '%s' LIMIT 1",
-		dbesc($family),
-		dbesc($key)
-	);
-	if(count($ret)) {
-		// manage array value
-		$val = (preg_match("|^a:[0-9]+:{.*}$|", $ret[0]['v'])?unserialize( $ret[0]['v']):$ret[0]['v']);
-		$a->config[$family][$key] = $val;
-		return $val;
-	}
-	else {
-		$a->config[$family][$key] = '!<unset>!';
-	}
-	return false;
-}}
-
-// Store a config value ($value) in the category ($family)
-// under the key ($key)
-// Return the value, or false if the database update failed
-
-if(! function_exists('set_config')) {
-function set_config($family,$key,$value) {
-	global $a;
-	
-	// manage array value
-	$dbvalue = (is_array($value)?serialize($value):$value);
-
-	if(get_config($family,$key,true) === false) {
-		$a->config[$family][$key] = $value;
-		$ret = q("INSERT INTO `config` ( `cat`, `k`, `v` ) VALUES ( '%s', '%s', '%s' ) ",
-			dbesc($family),
-			dbesc($key),
-			dbesc($dbvalue)
-		);
-		if($ret) 
-			return $value;
-		return $ret;
-	}
-	
-	$ret = q("UPDATE `config` SET `v` = '%s' WHERE `cat` = '%s' AND `k` = '%s' LIMIT 1",
-		dbesc($dbvalue),
-		dbesc($family),
-		dbesc($key)
-	);
-
-	$a->config[$family][$key] = $value;
-
-	if($ret)
-		return $value;
-	return $ret;
-}}
-
-
-if(! function_exists('load_pconfig')) {
-function load_pconfig($uid,$family) {
-	global $a;
-	$r = q("SELECT * FROM `pconfig` WHERE `cat` = '%s' AND `uid` = %d",
-		dbesc($family),
-		intval($uid)
-	);
-	if(count($r)) {
-		foreach($r as $rr) {
-			$k = $rr['k'];
-			$a->config[$uid][$family][$k] = $rr['v'];
-		}
-	}
-}}
-
-
-
-if(! function_exists('get_pconfig')) {
-function get_pconfig($uid,$family, $key, $instore = false) {
-
-	global $a;
-
-	if(! $instore) {
-		if(isset($a->config[$uid][$family][$key])) {
-			if($a->config[$uid][$family][$key] === '!<unset>!') {
-				return false;
-			}
-			return $a->config[$uid][$family][$key];
-		}
-	}
-
-	$ret = q("SELECT `v` FROM `pconfig` WHERE `uid` = %d AND `cat` = '%s' AND `k` = '%s' LIMIT 1",
-		intval($uid),
-		dbesc($family),
-		dbesc($key)
-	);
-
-	if(count($ret)) {
-		$a->config[$uid][$family][$key] = $ret[0]['v'];
-		return $ret[0]['v'];
-	}
-	else {
-		$a->config[$uid][$family][$key] = '!<unset>!';
-	}
-	return false;
-}}
-
-if(! function_exists('del_config')) {
-function del_config($family,$key) {
-
-	global $a;
-	if(x($a->config[$family],$key))
-		unset($a->config[$family][$key]);
-	$ret = q("DELETE FROM `config` WHERE `cat` = '%s' AND `k` = '%s' LIMIT 1",
-		dbesc($cat),
-		dbesc($key)
-	);
-	return $ret;
-}}
-
-
-
-// Same as above functions except these are for personal config storage and take an
-// additional $uid argument.
-
-if(! function_exists('set_pconfig')) {
-function set_pconfig($uid,$family,$key,$value) {
-
-	global $a;
-
-	if(get_pconfig($uid,$family,$key,true) === false) {
-		$a->config[$uid][$family][$key] = $value;
-		$ret = q("INSERT INTO `pconfig` ( `uid`, `cat`, `k`, `v` ) VALUES ( %d, '%s', '%s', '%s' ) ",
-			intval($uid),
-			dbesc($family),
-			dbesc($key),
-			dbesc($value)
-		);
-		if($ret) 
-			return $value;
-		return $ret;
-	}
-	$ret = q("UPDATE `pconfig` SET `v` = '%s' WHERE `uid` = %d AND `cat` = '%s' AND `k` = '%s' LIMIT 1",
-		dbesc($value),
-		intval($uid),
-		dbesc($family),
-		dbesc($key)
-	);
-
-	$a->config[$uid][$family][$key] = $value;
-
-	if($ret)
-		return $value;
-	return $ret;
-}}
-
-if(! function_exists('del_pconfig')) {
-function del_pconfig($uid,$family,$key) {
-
-	global $a;
-	if(x($a->config[$uid][$family],$key))
-		unset($a->config[$uid][$family][$key]);
-	$ret = q("DELETE FROM `pconfig` WHERE `uid` = %d AND `cat` = '%s' AND `k` = '%s' LIMIT 1",
-		intval($uid),
-		dbesc($family),
-		dbesc($key)
-	);
-	return $ret;
-}}
-
-
-// convert an XML document to a normalised, case-corrected array
-// used by webfinger
-
-if(! function_exists('convert_xml_element_to_array')) {
-function convert_xml_element_to_array($xml_element, &$recursion_depth=0) {
-
-        // If we're getting too deep, bail out
-        if ($recursion_depth > 512) {
-                return(null);
-        }
-
-        if (!is_string($xml_element) &&
-        !is_array($xml_element) &&
-        (get_class($xml_element) == 'SimpleXMLElement')) {
-                $xml_element_copy = $xml_element;
-                $xml_element = get_object_vars($xml_element);
-        }
-
-        if (is_array($xml_element)) {
-                $result_array = array();
-                if (count($xml_element) <= 0) {
-                        return (trim(strval($xml_element_copy)));
-                }
-
-                foreach($xml_element as $key=>$value) {
-
-                        $recursion_depth++;
-                        $result_array[strtolower($key)] =
-                convert_xml_element_to_array($value, $recursion_depth);
-                        $recursion_depth--;
-                }
-                if ($recursion_depth == 0) {
-                        $temp_array = $result_array;
-                        $result_array = array(
-                                strtolower($xml_element_copy->getName()) => $temp_array,
-                        );
-                }
-
-                return ($result_array);
-
-        } else {
-                return (trim(strval($xml_element)));
-        }
-}}
-
-// Given an email style address, perform webfinger lookup and 
-// return the resulting DFRN profile URL, or if no DFRN profile URL
-// is located, returns an OStatus subscription template (prefixed 
-// with the string 'stat:' to identify it as on OStatus template).
-// If this isn't an email style address just return $s.
-// Return an empty string if email-style addresses but webfinger fails,
-// or if the resultant personal XRD doesn't contain a supported 
-// subscription/friend-request attribute.
-
-if(! function_exists('webfinger_dfrn')) {
-function webfinger_dfrn($s) {
-	if(! strstr($s,'@')) {
-		return $s;
-	}
-	$links = webfinger($s);
-	logger('webfinger_dfrn: ' . $s . ':' . print_r($links,true), LOGGER_DATA);
-	if(count($links)) {
-		foreach($links as $link)
-			if($link['@attributes']['rel'] === NAMESPACE_DFRN)
-				return $link['@attributes']['href'];
-		foreach($links as $link)
-			if($link['@attributes']['rel'] === NAMESPACE_OSTATUSSUB)
-				return 'stat:' . $link['@attributes']['template'];		
-	}
-	return '';
-}}
-
-// Given an email style address, perform webfinger lookup and 
-// return the array of link attributes from the personal XRD file.
-// On error/failure return an empty array.
-
-
-if(! function_exists('webfinger')) {
-function webfinger($s) {
-	$host = '';
-	if(strstr($s,'@')) {
-		$host = substr($s,strpos($s,'@') + 1);
-	}
-	if(strlen($host)) {
-		$tpl = fetch_lrdd_template($host);
-		logger('webfinger: lrdd template: ' . $tpl);
-		if(strlen($tpl)) {
-			$pxrd = str_replace('{uri}', urlencode('acct:' . $s), $tpl);
-			logger('webfinger: pxrd: ' . $pxrd);
-			$links = fetch_xrd_links($pxrd);
-			if(! count($links)) {
-				// try with double slashes
-				$pxrd = str_replace('{uri}', urlencode('acct://' . $s), $tpl);
-				logger('webfinger: pxrd: ' . $pxrd);
-				$links = fetch_xrd_links($pxrd);
-			}
-			return $links;
-		}
-	}
-	return array();
-}}
-
-if(! function_exists('lrdd')) {
-function lrdd($uri) {
-
-	$a = get_app();
-
-	// default priority is host priority, host-meta first
-
-	$priority = 'host';
-
-	// All we have is an email address. Resource-priority is irrelevant
-	// because our URI isn't directly resolvable.
-
-	if(strstr($uri,'@')) {	
-		return(webfinger($uri));
-	}
-
-	// get the host meta file
-
-	$host = @parse_url($uri);
-
-	if($host) {
-		$url  = ((x($host,'scheme')) ? $host['scheme'] : 'http') . '://';
-		$url .= $host['host'] . '/.well-known/host-meta' ;
-	}
-	else
-		return array();
-
-	logger('lrdd: constructed url: ' . $url);
-
-	$xml = fetch_url($url);
-	$headers = $a->get_curl_headers();
-
-	if (! $xml)
-		return array();
-
-	logger('lrdd: host_meta: ' . $xml, LOGGER_DATA);
-
-	$h = parse_xml_string($xml);
-	if(! $h)
-		return array();
-
-	$arr = convert_xml_element_to_array($h);
-
-	if(isset($arr['xrd']['property'])) {
-		$property = $arr['crd']['property'];
-		if(! isset($property[0]))
-			$properties = array($property);
-		else
-			$properties = $property;
-		foreach($properties as $prop)
-			if((string) $prop['@attributes'] === 'http://lrdd.net/priority/resource')
-				$priority = 'resource';
-	} 
-
-	// save the links in case we need them
-
-	$links = array();
-
-	if(isset($arr['xrd']['link'])) {
-		$link = $arr['xrd']['link'];
-		if(! isset($link[0]))
-			$links = array($link);
-		else
-			$links = $link;
-	}
-
-	// do we have a template or href?
-
-	if(count($links)) {
-		foreach($links as $link) {
-			if($link['@attributes']['rel'] && attribute_contains($link['@attributes']['rel'],'lrdd')) {
-				if(x($link['@attributes'],'template'))
-					$tpl = $link['@attributes']['template'];
-				elseif(x($link['@attributes'],'href'))
-					$href = $link['@attributes']['href'];
-			}
-		}		
-	}
-
-	if((! isset($tpl)) || (! strpos($tpl,'{uri}')))
-		$tpl = '';
-
-	if($priority === 'host') {
-		if(strlen($tpl)) 
-			$pxrd = str_replace('{uri}', urlencode($uri), $tpl);
-		elseif(isset($href))
-			$pxrd = $href;
-		if(isset($pxrd)) {
-			logger('lrdd: (host priority) pxrd: ' . $pxrd);
-			$links = fetch_xrd_links($pxrd);
-			return $links;
-		}
-
-		$lines = explode("\n",$headers);
-		if(count($lines)) {
-			foreach($lines as $line) {				
-				if((stristr($line,'link:')) && preg_match('/<([^>].*)>.*rel\=[\'\"]lrdd[\'\"]/',$line,$matches)) {
-					return(fetch_xrd_links($matches[1]));
-					break;
-				}
-			}
-		}
-	}
-
-
-	// priority 'resource'
-
-
-	$html = fetch_url($uri);
-	$headers = $a->get_curl_headers();
-	logger('lrdd: headers=' . $headers, LOGGER_DEBUG);
-
-	// don't try and parse raw xml as html
-	if(! strstr($html,'<?xml')) {
-		require_once('library/HTML5/Parser.php');
-		$dom = @HTML5_Parser::parse($html);
-
-		if($dom) {
-			$items = $dom->getElementsByTagName('link');
-			foreach($items as $item) {
-				$x = $item->getAttribute('rel');
-				if($x == "lrdd") {
-					$pagelink = $item->getAttribute('href');
-					break;
-				}
-			}
-		}
-	}
-
-	if(isset($pagelink))
-		return(fetch_xrd_links($pagelink));
-
-	// next look in HTTP headers
-
-	$lines = explode("\n",$headers);
-	if(count($lines)) {
-		foreach($lines as $line) {				
-			// TODO alter the following regex to support multiple relations (space separated)
-			if((stristr($line,'link:')) && preg_match('/<([^>].*)>.*rel\=[\'\"]lrdd[\'\"]/',$line,$matches)) {
-				$pagelink = $matches[1];
-				break;
-			}
-			// don't try and run feeds through the html5 parser
-			if(stristr($line,'content-type:') && ((stristr($line,'application/atom+xml')) || (stristr($line,'application/rss+xml'))))
-				return array();
-			if(stristr($html,'<rss') || stristr($html,'<feed'))
-				return array();
-		}
-	}
-
-	if(isset($pagelink))
-		return(fetch_xrd_links($pagelink));
-
-	// If we haven't found any links, return the host xrd links (which we have already fetched)
-
-	if(isset($links))
-		return $links;
-
-	return array();
-
-}}
-
-
-
-// Given a host name, locate the LRDD template from that
-// host. Returns the LRDD template or an empty string on
-// error/failure.
-
-if(! function_exists('fetch_lrdd_template')) {
-function fetch_lrdd_template($host) {
-	$tpl = '';
-
-	$url1 = 'https://' . $host . '/.well-known/host-meta' ;
-	$url2 = 'http://' . $host . '/.well-known/host-meta' ;
-	$links = fetch_xrd_links($url1);
-	logger('fetch_lrdd_template from: ' . $url1);
-	logger('template (https): ' . print_r($links,true));
-	if(! count($links)) {
-		logger('fetch_lrdd_template from: ' . $url2);
-		$links = fetch_xrd_links($url2);
-		logger('template (http): ' . print_r($links,true));
-	}
-	if(count($links)) {
-		foreach($links as $link)
-			if($link['@attributes']['rel'] && $link['@attributes']['rel'] === 'lrdd')
-				$tpl = $link['@attributes']['template'];
-	}
-	if(! strpos($tpl,'{uri}'))
-		$tpl = '';
-	return $tpl;
-}}
-
-// Given a URL, retrieve the page as an XRD document.
-// Return an array of links.
-// on error/failure return empty array.
-
-if(! function_exists('fetch_xrd_links')) {
-function fetch_xrd_links($url) {
-
-
-	$xml = fetch_url($url);
-	if (! $xml)
-		return array();
-
-	logger('fetch_xrd_links: ' . $xml, LOGGER_DATA);
-	$h = parse_xml_string($xml);
-	if(! $h)
-		return array();
-
-	$arr = convert_xml_element_to_array($h);
-
-	$links = array();
-
-	if(isset($arr['xrd']['link'])) {
-		$link = $arr['xrd']['link'];
-		if(! isset($link[0]))
-			$links = array($link);
-		else
-			$links = $link;
-	}
-	if(isset($arr['xrd']['alias'])) {
-		$alias = $arr['xrd']['alias'];
-		if(! isset($alias[0]))
-			$aliases = array($alias);
-		else
-			$aliases = $alias;
-		foreach($aliases as $alias) {
-			$links[]['@attributes'] = array('rel' => 'alias' , 'href' => $alias);
-		}
-	}
-
-	logger('fetch_xrd_links: ' . print_r($links,true), LOGGER_DATA);
-
-	return $links;
-
-}}
-
-// Convert an ACL array to a storable string
-
-if(! function_exists('perms2str')) {
-function perms2str($p) {
-	$ret = '';
-	$tmp = $p;
-	if(is_array($tmp)) {
-		array_walk($tmp,'sanitise_acl');
-		$ret = implode('',$tmp);
-	}
-	return $ret;
-}}
-
-// generate a guaranteed unique (for this domain) item ID for ATOM
-// safe from birthday paradox
-
-if(! function_exists('item_new_uri')) {
-function item_new_uri($hostname,$uid) {
-
-	do {
-		$dups = false;
-		$hash = random_string();
-
-		$uri = "urn:X-dfrn:" . $hostname . ':' . $uid . ':' . $hash;
-
-		$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
-			dbesc($uri));
-		if(count($r))
-			$dups = true;
-	} while($dups == true);
-	return $uri;
-}}
-
-// Generate a guaranteed unique photo ID.
-// safe from birthday paradox
-
-if(! function_exists('photo_new_resource')) {
-function photo_new_resource() {
-
-	do {
-		$found = false;
-		$resource = hash('md5',uniqid(mt_rand(),true));
-		$r = q("SELECT `id` FROM `photo` WHERE `resource-id` = '%s' LIMIT 1",
-			dbesc($resource)
-		);
-		if(count($r))
-			$found = true;
-	} while($found == true);
-	return $resource;
-}}
-
-
-// Take a URL from the wild, prepend http:// if necessary
-// and check DNS to see if it's real
-// return true if it's OK, false if something is wrong with it
-
-if(! function_exists('validate_url')) {
-function validate_url(&$url) {
-	if(substr($url,0,4) != 'http')
-		$url = 'http://' . $url;
-	$h = @parse_url($url);
-
-	if(($h) && (dns_get_record($h['host'], DNS_A + DNS_CNAME + DNS_PTR))) {
-		return true;
-	}
-	return false;
-}}
-
-// checks that email is an actual resolvable internet address
-
-if(! function_exists('validate_email')) {
-function validate_email($addr) {
-
-	if(! strpos($addr,'@'))
-		return false;
-	$h = substr($addr,strpos($addr,'@') + 1);
-
-	if(($h) && (dns_get_record($h, DNS_A + DNS_CNAME + DNS_PTR + DNS_MX))) {
-		return true;
-	}
-	return false;
-}}
-
-// Check $url against our list of allowed sites,
-// wildcards allowed. If allowed_sites is unset return true;
-// If url is allowed, return true.
-// otherwise, return false
-
-if(! function_exists('allowed_url')) {
-function allowed_url($url) {
-
-	$h = @parse_url($url);
-
-	if(! $h) {
-		return false;
-	}
-
-	$str_allowed = get_config('system','allowed_sites');
-	if(! $str_allowed)
-		return true;
-
-	$found = false;
-
-	$host = strtolower($h['host']);
-
-	// always allow our own site
-
-	if($host == strtolower($_SERVER['SERVER_NAME']))
-		return true;
-
-	$fnmatch = function_exists('fnmatch');
-	$allowed = explode(',',$str_allowed);
-
-	if(count($allowed)) {
-		foreach($allowed as $a) {
-			$pat = strtolower(trim($a));
-			if(($fnmatch && fnmatch($pat,$host)) || ($pat == $host)) {
-				$found = true; 
-				break;
-			}
-		}
-	}
-	return $found;
-}}
-
-// check if email address is allowed to register here.
-// Compare against our list (wildcards allowed).
-// Returns false if not allowed, true if allowed or if
-// allowed list is not configured.
-
-if(! function_exists('allowed_email')) {
-function allowed_email($email) {
-
-
-	$domain = strtolower(substr($email,strpos($email,'@') + 1));
-	if(! $domain)
-		return false;
-
-	$str_allowed = get_config('system','allowed_email');
-	if(! $str_allowed)
-		return true;
-
-	$found = false;
-
-	$fnmatch = function_exists('fnmatch');
-	$allowed = explode(',',$str_allowed);
-
-	if(count($allowed)) {
-		foreach($allowed as $a) {
-			$pat = strtolower(trim($a));
-			if(($fnmatch && fnmatch($pat,$domain)) || ($pat == $domain)) {
-				$found = true; 
-				break;
-			}
-		}
-	}
-	return $found;
-}}
-
-
-
-// wrapper to load a view template, checking for alternate
-// languages before falling back to the default
-
-// obsolete, deprecated.
-
-if(! function_exists('load_view_file')) {
-function load_view_file($s) {
-	global $lang, $a;
-	if(! isset($lang))
-		$lang = 'en';
-	$b = basename($s);
-	$d = dirname($s);
-	if(file_exists("$d/$lang/$b"))
-		return file_get_contents("$d/$lang/$b");
-	
-	$theme = current_theme();
-	
-	if(file_exists("$d/theme/$theme/$b"))
-		return file_get_contents("$d/theme/$theme/$b");
-			
-	return file_get_contents($s);
-}}
-
-if(! function_exists('get_intltext_template')) {
-function get_intltext_template($s) {
-	global $lang;
-
-	if(! isset($lang))
-		$lang = 'en';
-
-	if(file_exists("view/$lang/$s"))
-		return file_get_contents("view/$lang/$s");
-	elseif(file_exists("view/en/$s"))
-		return file_get_contents("view/en/$s");
-	else
-		return file_get_contents("view/$s");
-}}
-
-if(! function_exists('get_markup_template')) {
-function get_markup_template($s) {
-
-	$theme = current_theme();
-	
-	if(file_exists("view/theme/$theme/$s"))
-		return file_get_contents("view/theme/$theme/$s");
-	else
-		return file_get_contents("view/$s");
-
-}}
-
-
-
-
-
-// for html,xml parsing - let's say you've got
-// an attribute foobar="class1 class2 class3"
-// and you want to find out if it contains 'class3'.
-// you can't use a normal sub string search because you
-// might match 'notclass3' and a regex to do the job is 
-// possible but a bit complicated. 
-// pass the attribute string as $attr and the attribute you 
-// are looking for as $s - returns true if found, otherwise false
-
-if(! function_exists('attribute_contains')) {
-function attribute_contains($attr,$s) {
-	$a = explode(' ', $attr);
-	if(count($a) && in_array($s,$a))
-		return true;
-	return false;
-}}
-
-if(! function_exists('logger')) {
-function logger($msg,$level = 0) {
-	$debugging = get_config('system','debugging');
-	$loglevel  = intval(get_config('system','loglevel'));
-	$logfile   = get_config('system','logfile');
-
-	if((! $debugging) || (! $logfile) || ($level > $loglevel))
-		return;
-	
-	@file_put_contents($logfile, datetime_convert() . ':' . session_id() . ' ' . $msg . "\n", FILE_APPEND);
-	return;
-}}
-
-
-if(! function_exists('activity_match')) {
-function activity_match($haystack,$needle) {
-	if(($haystack === $needle) || ((basename($needle) === $haystack) && strstr($needle,NAMESPACE_ACTIVITY_SCHEMA)))
-		return true;
-	return false;
-}}
-
-
-// Pull out all #hashtags and @person tags from $s;
-// We also get @person@domain.com - which would make 
-// the regex quite complicated as tags can also
-// end a sentence. So we'll run through our results
-// and strip the period from any tags which end with one.
-// Returns array of tags found, or empty array.
-
-
-if(! function_exists('get_tags')) {
-function get_tags($s) {
-	$ret = array();
-
-	// ignore anything in a code block
-
-	$s = preg_replace('/\[code\](.*?)\[\/code\]/sm','',$s);
-
-	// Match full names against @tags including the space between first and last
-	// We will look these up afterward to see if they are full names or not recognisable.
-
-	if(preg_match_all('/(@[^ \x0D\x0A,:?]+ [^ \x0D\x0A,:?]+)([ \x0D\x0A,:?]|$)/',$s,$match)) {
-		foreach($match[1] as $mtch) {
-			if(strstr($mtch,"]")) {
-				// we might be inside a bbcode color tag - leave it alone
-				continue;
-			}
-			if(substr($mtch,-1,1) === '.')
-				$ret[] = substr($mtch,0,-1);
-			else
-				$ret[] = $mtch;
-		}
-	}
-
-	// Otherwise pull out single word tags. These can be @nickname, @first_last
-	// and #hash tags.
-
-	if(preg_match_all('/([@#][^ \x0D\x0A,:?]+)([ \x0D\x0A,:?]|$)/',$s,$match)) {
-		foreach($match[1] as $mtch) {
-			if(strstr($mtch,"]")) {
-				// we might be inside a bbcode color tag - leave it alone
-				continue;
-			}
-			// ignore strictly numeric tags like #1
-			if((strpos($mtch,'#') === 0) && ctype_digit(substr($mtch,1)))
-				continue;
-			if(substr($mtch,-1,1) === '.')
-				$ret[] = substr($mtch,0,-1);
-			else
-				$ret[] = $mtch;
-		}
-	}
-	return $ret;
-}}
-
-
-// quick and dirty quoted_printable encoding
-
-if(! function_exists('qp')) {
-function qp($s) {
-return str_replace ("%","=",rawurlencode($s));
-}} 
-
-
-
-if(! function_exists('get_mentions')) {
-function get_mentions($item) {
-	$o = '';
-	if(! strlen($item['tag']))
-		return $o;
-
-	$arr = explode(',',$item['tag']);
-	foreach($arr as $x) {
-		$matches = null;
-		if(preg_match('/@\[url=([^\]]*)\]/',$x,$matches)) {
-			$o .= "\t\t" . '<link rel="mentioned" href="' . $matches[1] . '" />' . "\r\n";
-			$o .= "\t\t" . '<link rel="ostatus:attention" href="' . $matches[1] . '" />' . "\r\n";
-		}
-	}
-	return $o;
-}}
-
-if(! function_exists('contact_block')) {
-function contact_block() {
-	$o = '';
-	$a = get_app();
-
-	$shown = get_pconfig($a->profile['uid'],'system','display_friend_count');
-	if(! $shown)
-		$shown = 24;
-
-	if((! is_array($a->profile)) || ($a->profile['hide-friends']))
-		return $o;
-	$r = q("SELECT COUNT(*) AS `total` FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 and `pending` = 0",
-			intval($a->profile['uid'])
-	);
-	if(count($r)) {
-		$total = intval($r[0]['total']);
-	}
-	if(! $total) {
-		$o .= '<h4 class="contact-h4">' . t('No contacts') . '</h4>';
-		return $o;
-	}
-	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 and `pending` = 0 ORDER BY RAND() LIMIT %d",
-			intval($a->profile['uid']),
-			intval($shown)
-	);
-	if(count($r)) {
-		$o .= '<h4 class="contact-h4">' .  sprintf( tt('%d Contact','%d Contacts', $total),$total) . '</h4><div id="contact-block">';
-		foreach($r as $rr) {
-			$o .= micropro($rr,true,'mpfriend');
-		}
-		$o .= '</div><div id="contact-block-end"></div>';
-		$o .=  '<div id="viewcontacts"><a id="viewcontacts-link" href="viewcontacts/' . $a->profile['nickname'] . '">' . t('View Contacts') . '</a></div>';
-		
-	}
-
-	$arr = array('contacts' => $r, 'output' => $o);
-
-	call_hooks('contact_block_end', $arr);
-	return $o;
-
-}}
-
-if(! function_exists('micropro')) {
-function micropro($contact, $redirect = false, $class = '', $textmode = false) {
-
-	if($class)
-		$class = ' ' . $class;
-
-	$url = $contact['url'];
-	$sparkle = '';
-
-	if($redirect) {
-		$a = get_app();
-		$redirect_url = $a->get_baseurl() . '/redir/' . $contact['id'];
-		if(local_user() && ($contact['uid'] == local_user()) && ($contact['network'] === 'dfrn')) {
-			$url = $redirect_url;
-			$sparkle = ' sparkle';
-		}
-	}
-	$click = ((x($contact,'click')) ? ' onclick="' . $contact['click'] . '" ' : '');
-	if($click)
-		$url = '';
-	if($textmode) {
-		return '<div class="contact-block-textdiv' . $class . '"><a class="contact-block-link' . $class . $sparkle 
-			. (($click) ? ' fakelink' : '') . '" '
-			. (($url) ? ' href="' . $url . '"' : '') . $click
-			. '" title="' . $contact['name'] . ' [' . $contact['url'] . ']" alt="' . $contact['name'] 
-			. '" >'. $contact['name'] . '</a></div>' . "\r\n";
-	}
-	else {
-		return '<div class="contact-block-div' . $class . '"><a class="contact-block-link' . $class . $sparkle 
-			. (($click) ? ' fakelink' : '') . '" '
-			. (($url) ? ' href="' . $url . '"' : '') . $click . ' ><img class="contact-block-img' . $class . $sparkle . '" src="' 
-			. $contact['micro'] . '" title="' . $contact['name'] . ' [' . $contact['url'] . ']" alt="' . $contact['name'] 
-			. '" /></a></div>' . "\r\n";
-	}
-}}
-
-
-
-if(! function_exists('search')) {
-function search($s,$id='search-box',$url='/search') {
-	$a = get_app();
-	$o  = '<div id="' . $id . '">';
-	$o .= '<form action="' . $a->get_baseurl() . $url . '" method="get" >';
-	$o .= '<input type="text" name="search" id="search-text" value="' . $s .'" />';
-	$o .= '<input type="submit" name="submit" id="search-submit" value="' . t('Search') . '" />'; 
-	$o .= '</form></div>';
-	return $o;
-}}
-
-if(! function_exists('valid_email')) {
-function valid_email($x){
-	if(preg_match('/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$/',$x))
-		return true;
-	return false;
-}}
-
-
-if(! function_exists('gravatar_img')) {
-function gravatar_img($email) {
-	$size = 175;
-	$opt = 'identicon';   // psuedo-random geometric pattern if not found
-	$rating = 'pg';
-	$hash = md5(trim(strtolower($email)));
-	
-	$url = 'http://www.gravatar.com/avatar/' . $hash . '.jpg' 
-		. '?s=' . $size . '&d=' . $opt . '&r=' . $rating;
-
-	logger('gravatar: ' . $email . ' ' . $url);
-	return $url;
-}}
-
-if(! function_exists('aes_decrypt')) {
-function aes_decrypt($val,$ky)
-{
-    $key="\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
-    for($a=0;$a<strlen($ky);$a++)
-      $key[$a%16]=chr(ord($key[$a%16]) ^ ord($ky[$a]));
-    $mode = MCRYPT_MODE_ECB;
-    $enc = MCRYPT_RIJNDAEL_128;
-    $dec = @mcrypt_decrypt($enc, $key, $val, $mode, @mcrypt_create_iv( @mcrypt_get_iv_size($enc, $mode), MCRYPT_DEV_URANDOM ) );
-    return rtrim($dec,(( ord(substr($dec,strlen($dec)-1,1))>=0 and ord(substr($dec, strlen($dec)-1,1))<=16)? chr(ord( substr($dec,strlen($dec)-1,1))):null));
-}}
-
-
-if(! function_exists('aes_encrypt')) {
-function aes_encrypt($val,$ky)
-{
-    $key="\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
-    for($a=0;$a<strlen($ky);$a++)
-      $key[$a%16]=chr(ord($key[$a%16]) ^ ord($ky[$a]));
-    $mode=MCRYPT_MODE_ECB;
-    $enc=MCRYPT_RIJNDAEL_128;
-    $val=str_pad($val, (16*(floor(strlen($val) / 16)+(strlen($val) % 16==0?2:1))), chr(16-(strlen($val) % 16)));
-    return mcrypt_encrypt($enc, $key, $val, $mode, mcrypt_create_iv( mcrypt_get_iv_size($enc, $mode), MCRYPT_DEV_URANDOM));
-}} 
-
-
-/**
- *
- * Function: linkify
- *
- * Replace naked text hyperlink with HTML formatted hyperlink
- *
- */
-
-if(! function_exists('linkify')) {
-function linkify($s) {
-	$s = preg_replace("/(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\.\=\_\~\#\'\%\$\!\+]*)/", ' <a href="$1" target="external-link">$1</a>', $s);
-	return($s);
-}}
-
-
-/**
- * 
- * Function: smilies
- *
- * Description:
- * Replaces text emoticons with graphical images
- *
- * @Parameter: string $s
- *
- * Returns string
- */
-
-if(! function_exists('smilies')) {
-function smilies($s) {
-	$a = get_app();
-
-	return str_replace(
-	array( '&lt;3', '&lt;/3', '&lt;\\3', ':-)', ':)', ';-)', ':-(', ':(', ':-P', ':P', ':-"', ':-x', ':-X', ':-D', '8-|', '8-O'),
-	array(
-		'<img src="' . $a->get_baseurl() . '/images/smiley-heart.gif" alt="<3" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-brokenheart.gif" alt="</3" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-brokenheart.gif" alt="<\\3" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-smile.gif" alt=":-)" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-smile.gif" alt=":)" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-wink.gif" alt=";-)" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-frown.gif" alt=":-(" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-frown.gif" alt=":(" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-tongue-out.gif" alt=":-P" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-tongue-out.gif" alt=":P" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-\"" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-x" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-X" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-laughing.gif" alt=":-D" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-|" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-O" />'
-	), $s);
-}}
 
 
 /**
@@ -2395,6 +829,8 @@ function profile_load(&$a, $nickname, $profile = 0) {
 if(! function_exists('profile_sidebar')) {
 function profile_sidebar($profile) {
 
+	$a = get_app();
+
 	$o = '';
 	$location = '';
 	$address = false;
@@ -2453,6 +889,55 @@ function profile_sidebar($profile) {
 		$location = $gender = $marital = $homepage = '';
 	}
 
+	$podloc = $a->get_baseurl();
+	$searchable = (($profile['publish'] && $profile['net-publish']) ? 'true' : 'false' );
+	$nickname = $profile['nick'];
+	$photo300 = $a->get_baseurl() . '/photo/custom/300/' . $profile['uid'] . '.jpg';
+	$photo100 = $a->get_baseurl() . '/photo/custom/100/' . $profile['uid'] . '.jpg';
+	$photo50  = $a->get_baseurl() . '/photo/custom/50/'  . $profile['uid'] . '.jpg';
+
+	$diaspora_vcard = <<< EOT
+
+<div style="display:none;">
+<dl class='entity_nickname'>
+<dt>Nickname</dt>
+<dd>
+<a class="nickname url uid" href="$podloc" rel="me">$nickname</a>
+</dd>
+</dl>
+<dl class="entity_url">
+<dt>URL</dt>
+<dd>
+<a class="url" href="$podloc" id="pod_location" rel="me">$podloc</a>
+</dd>
+</dl>
+<dl class="entity_photo">
+<dt>Photo</dt>
+<dd>
+<img class="photo avatar" height="300px" width="300px" src="$photo300">
+</dd>
+</dl>
+<dl class="entity_photo_medium">
+<dt>Photo</dt>
+<dd> 
+<img class="photo avatar" height="100px" width="100px" src="$photo100">
+</dd>
+</dl>
+<dl class="entity_photo_small">
+<dt>Photo</dt>
+<dd>
+<img class="photo avatar" height="50px" width="50px" src="$photo50">
+</dd>
+</dl>
+<dl class='entity_searchable'>
+<dt>Searchable</dt>
+<dd>
+<span class='searchable'>$searchable</span>
+</dd>
+</dl>
+</div>
+EOT;
+
 	$tpl = get_markup_template('profile_vcard.tpl');
 
 	$o .= replace_macros($tpl, array(
@@ -2465,7 +950,8 @@ function profile_sidebar($profile) {
 		'$gender'   => $gender,
 		'$pubkey'   => $pubkey,
 		'$marital'  => $marital,
-		'$homepage' => $homepage
+		'$homepage' => $homepage,
+		'$diaspora' => $diaspora_vcard
 	));
 
 
@@ -2476,81 +962,6 @@ function profile_sidebar($profile) {
 	return $o;
 }}
 
-
-if(! function_exists('register_hook')) {
-function register_hook($hook,$file,$function) {
-
-	$r = q("SELECT * FROM `hook` WHERE `hook` = '%s' AND `file` = '%s' AND `function` = '%s' LIMIT 1",
-		dbesc($hook),
-		dbesc($file),
-		dbesc($function)
-	);
-	if(count($r))
-		return true;
-
-	$r = q("INSERT INTO `hook` (`hook`, `file`, `function`) VALUES ( '%s', '%s', '%s' ) ",
-		dbesc($hook),
-		dbesc($file),
-		dbesc($function)
-	);
-	return $r;
-}}
-
-if(! function_exists('unregister_hook')) {
-function unregister_hook($hook,$file,$function) {
-
-	$r = q("DELETE FROM `hook` WHERE `hook` = '%s' AND `file` = '%s' AND `function` = '%s' LIMIT 1",
-		dbesc($hook),
-		dbesc($file),
-		dbesc($function)
-	);
-	return $r;
-}}
-
-
-if(! function_exists('load_hooks')) {
-function load_hooks() {
-	$a = get_app();
-	$a->hooks = array();
-	$r = q("SELECT * FROM `hook` WHERE 1");
-	if(count($r)) {
-		foreach($r as $rr) {
-			$a->hooks[] = array($rr['hook'], $rr['file'], $rr['function']);
-		}
-	}
-}}
-
-
-if(! function_exists('call_hooks')) {
-function call_hooks($name, &$data = null) {
-	$a = get_app();
-
-	if(count($a->hooks)) {
-		foreach($a->hooks as $hook) {
-			if($hook[HOOK_HOOK] === $name) {
-				@include_once($hook[HOOK_FILE]);
-				if(function_exists($hook[HOOK_FUNCTION])) {
-					$func = $hook[HOOK_FUNCTION];
-					$func($a,$data);
-				}
-			}
-		}
-	}
-}}
-
-
-if(! function_exists('day_translate')) {
-function day_translate($s) {
-	$ret = str_replace(array('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'),
-		array( t('Monday'), t('Tuesday'), t('Wednesday'), t('Thursday'), t('Friday'), t('Saturday'), t('Sunday')),
-		$s);
-
-	$ret = str_replace(array('January','February','March','April','May','June','July','August','September','October','November','December'),
-		array( t('January'), t('February'), t('March'), t('April'), t('May'), t('June'), t('July'), t('August'), t('September'), t('October'), t('November'), t('December')),
-		$ret);
-
-	return $ret;
-}}
 
 if(! function_exists('get_birthdays')) {
 function get_birthdays() {
@@ -2601,79 +1012,6 @@ function get_birthdays() {
 	return $o;
 }}
 
-
-if(! function_exists('normalise_link')) {
-function normalise_link($url) {
-	$ret = str_replace(array('https:','//www.'), array('http:','//'), $url);
-	return(rtrim($ret,'/'));
-}}
-
-/**
- *
- * Compare two URLs to see if they are the same, but ignore
- * slight but hopefully insignificant differences such as if one 
- * is https and the other isn't, or if one is www.something and 
- * the other isn't - and also ignore case differences.
- *
- * Return true if the URLs match, otherwise false.
- *
- */
-
-if(! function_exists('link_compare')) {
-function link_compare($a,$b) {
-	if(strcasecmp(normalise_link($a),normalise_link($b)) === 0)
-		return true;
-	return false;
-}}
-
-
-if(! function_exists('prepare_body')) {
-function prepare_body($item,$attach = false) {
-
-	$s = prepare_text($item['body']);
-	if(! $attach)
-		return $s;
-
-	$arr = explode(',',$item['attach']);
-	if(count($arr)) {
-		$s .= '<div class="body-attach">';
-		foreach($arr as $r) {
-			$matches = false;
-			$icon = '';
-			$cnt = preg_match('|\[attach\]href=\"(.*?)\" size=\"(.*?)\" type=\"(.*?)\" title=\"(.*?)\"\[\/attach\]|',$r,$matches);
-			if($cnt) {
-				$icontype = strtolower(substr($matches[3],0,strpos($matches[3],'/')));
-				switch($icontype) {
-					case 'video':
-					case 'audio':
-					case 'image':
-					case 'text':
-						$icon = '<div class="attachtype type-' . $icontype . '"></div>';
-						break;
-					default:
-						$icon = '<div class="attachtype type-unkn"></div>';
-						break;
-				}
-				$title = ((strlen(trim($matches[4]))) ? escape_tags(trim($matches[4])) : escape_tags($matches[1]));
-				$title .= ' ' . $matches[2] . ' ' . t('bytes');
-
-				$s .= '<a href="' . strip_tags($matches[1]) . '" title="' . $title . '" class="attachlink" target="external-link" >' . $icon . '</a>';
-			}
-		}
-		$s .= '<div class="clear"></div></div>';
-	}
-	return $s;
-}}
-
-if(! function_exists('prepare_text')) {
-function prepare_text($text) {
-
-	require_once('include/bbcode.php');
-
-	$s = smilies(bbcode($text));
-
-	return $s;
-}}
 
 /**
  * 
@@ -2785,106 +1123,6 @@ function feed_birthday($uid,$tz) {
 	return $birthday;
 }}
 
-/**
- * return atom link elements for all of our hubs
- */
-
-if(! function_exists('feed_hublinks')) {
-function feed_hublinks() {
-
-	$hub = get_config('system','huburl');
-
-	$hubxml = '';
-	if(strlen($hub)) {
-		$hubs = explode(',', $hub);
-		if(count($hubs)) {
-			foreach($hubs as $h) {
-				$h = trim($h);
-				if(! strlen($h))
-					continue;
-				$hubxml .= '<link rel="hub" href="' . xmlify($h) . '" />' . "\n" ;
-			}
-		}
-	}
-	return $hubxml;
-}}
-
-/* return atom link elements for salmon endpoints */
-
-if(! function_exists('feed_salmonlinks')) {
-function feed_salmonlinks($nick) {
-
-	$a = get_app();
-
-	$salmon  = '<link rel="salmon" href="' . xmlify($a->get_baseurl() . '/salmon/' . $nick) . '" />' . "\n" ;
-
-	// old style links that status.net still needed as of 12/2010 
-
-	$salmon .= '  <link rel="http://salmon-protocol.org/ns/salmon-replies" href="' . xmlify($a->get_baseurl() . '/salmon/' . $nick) . '" />' . "\n" ; 
-	$salmon .= '  <link rel="http://salmon-protocol.org/ns/salmon-mention" href="' . xmlify($a->get_baseurl() . '/salmon/' . $nick) . '" />' . "\n" ; 
-	return $salmon;
-}}
-
-if(! function_exists('get_plink')) {
-function get_plink($item) {
-	$a = get_app();	
-	$plink = (((x($item,'plink')) && (! $item['private'])) ? '<div class="wall-item-links-wrapper"><a href="' 
-			. $item['plink'] . '" title="' . t('link to source') . '" target="external-link" class="icon remote-link"></a></div>' : '');
-	return $plink;
-}}
-
-if(! function_exists('unamp')) {
-function unamp($s) {
-	return str_replace('&amp;', '&', $s);
-}}
-
-
-
-
-if(! function_exists('lang_selector')) {
-function lang_selector() {
-	global $lang;
-	$o = '<div id="lang-select-icon" class="icon language" title="' . t('Select an alternate language') . '" onclick="openClose(\'language-selector\');" ></div>';
-	$o .= '<div id="language-selector" style="display: none;" >';
-	$o .= '<form action="" method="post" ><select name="system_language" onchange="this.form.submit();" >';
-	$langs = glob('view/*/strings.php');
-	if(is_array($langs) && count($langs)) {
-		if(! in_array('view/en/strings.php',$langs))
-			$langs[] = 'view/en/';
-		asort($langs);
-		foreach($langs as $l) {
-			$ll = substr($l,5);
-			$ll = substr($ll,0,strrpos($ll,'/'));
-			$selected = (($ll === $lang) ? ' selected="selected" ' : '');
-			$o .= '<option value="' . $ll . '"' . $selected . '>' . $ll . '</option>';
-		}
-	}
-	$o .= '</select></form></div>';
-	return $o;
-}}
-
-
-if(! function_exists('parse_xml_string')) {
-function parse_xml_string($s,$strict = true) {
-	if($strict) {
-		if(! strstr($s,'<?xml'))
-			return false;
-		$s2 = substr($s,strpos($s,'<?xml'));
-	}
-	else
-		$s2 = $s;
-	libxml_use_internal_errors(true);
-
-	$x = @simplexml_load_string($s2);
-	if(! $x) {
-		logger('libxml: parse: error: ' . $s2, LOGGER_DATA);
-		foreach(libxml_get_errors() as $err)
-			logger('libxml: parse: ' . $err->code." at ".$err->line.":".$err->column." : ".$err->message, LOGGER_DATA);
-		libxml_clear_errors();
-	}
-	return $x;
-}}
-
 if(! function_exists('is_site_admin')) {
 function is_site_admin() {
 	$a = get_app();
@@ -2893,84 +1131,28 @@ function is_site_admin() {
 	return false;
 }}
 
-/*
- * parse plugin comment in search of plugin infos.
- * like
- * 	
- * 	 * Name: Plugin
- *   * Description: A plugin which plugs in
- * 	 * Version: 1.2.3
- *   * Author: John <profile url>
- *   * Author: Jane <email>
- *   *
- */
 
-if (! function_exists('get_plugin_info')){
-function get_plugin_info($plugin){
-	if (!is_file("addon/$plugin/$plugin.php")) return false;
-	
-	$f = file_get_contents("addon/$plugin/$plugin.php");
-	$r = preg_match("|/\*.*\*/|msU", $f, $m);
-	
-	$info=Array(
-		'name' => $plugin,
-		'description' => "",
-		'author' => array(),
-		'version' => ""
+if(! function_exists('load_contact_links')) {
+function load_contact_links($uid) {
+
+	$a = get_app();
+
+	$ret = array();
+
+	if(! $uid || x($a->contacts,'empty'))
+		return;
+
+	$r = q("SELECT `id`,`network`,`url`,`thumb` FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 ",
+			intval($uid)
 	);
-	
-	if ($r){
-		$ll = explode("\n", $m[0]);
-		foreach( $ll as $l ) {
-			$l = trim($l,"\t\n\r */");
-			if ($l!=""){
-				list($k,$v) = array_map("trim", explode(":",$l,2));
-				$k= strtolower($k);
-				if ($k=="author"){
-					$r=preg_match("|([^<]+)<([^>]+)>|", $v, $m);
-					if ($r) {
-						$info['author'][] = array('name'=>$m[1], 'link'=>$m[2]);
-					} else {
-						$info['author'][] = array('name'=>$v);
-					}
-				} else {
-					if (array_key_exists($k,$info)){
-						$info[$k]=$v;
-					}
-				}
-				
-			}
+	if(count($r)) {
+		foreach($r as $rr){
+			$url = normalise_link($rr['url']);
+			$ret[$url] = $rr;
 		}
-		
 	}
-	return $info;
+	else 
+		$ret['empty'] = true;	
+	$a->contacts = $ret;
+	return;		
 }}
-
-if(! function_exists('set_nav_selected')){
-function set_nav_selected($id){
-	return '<script>	$(document).ready(function() { $("#'.$id.'").addClass("selected"); });</script>';
-}}
-
-if(! function_exists('return_bytes')) {
-function return_bytes ($size_str) {
-    switch (substr ($size_str, -1))
-    {
-        case 'M': case 'm': return (int)$size_str * 1048576;
-        case 'K': case 'k': return (int)$size_str * 1024;
-        case 'G': case 'g': return (int)$size_str * 1073741824;
-        default: return $size_str;
-    }
-}}
-
-function generate_guid() {
-	$found = true;
-	do {
-		$guid = substr(random_string(),0,16);
-		$x = q("SELECT `uid` FROM `user` WHERE `guid` = '%s' LIMIT 1",
-			dbesc($guid)
-		);
-		if(! count($x))
-			$found = false;
-	} while ($found == true );
-	return $guid;
-}

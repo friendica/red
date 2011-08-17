@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1076 );
+define( 'UPDATE_VERSION' , 1079 );
 
 /**
  *
@@ -623,4 +623,26 @@ function update_1075() {
 			);
 		}
 	}
+}
+
+function update_1076() {
+	q("CREATE TABLE `guid` ( `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+		`guid` CHAR( 16 ) NOT NULL , INDEX ( `guid` ) ) ENGINE = MYISAM ");
+
+}
+
+// There was a typo in 1076 so we'll try again in 1077 to make sure
+// We'll also make it big enough to allow for future growth, I seriously 
+// doubt Diaspora will be able to leave guids at 16 bytes,
+// and we can also use the same structure for our own larger guids
+
+function update_1077() {
+	q("CREATE TABLE IF NOT EXISTS `guid` ( `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+		`guid` CHAR( 16 ) NOT NULL , INDEX ( `guid` ) ) ENGINE = MYISAM ");
+
+	q("ALTER TABLE `guid` CHANGE `guid` `guid` CHAR( 64 ) NOT NULL"); 
+}
+
+function update_1078() {
+	q("ALTER TABLE `item` ADD `guid` CHAR( 64 ) NOT NULL AFTER `id` , ADD INDEX ( `guid` ) ");
 }

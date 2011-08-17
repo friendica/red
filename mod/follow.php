@@ -58,7 +58,7 @@ function follow_post(&$a) {
 	}
 
 	if($ret['network'] === NETWORK_OSTATUS && get_config('system','ostatus_disabled')) {
-		notice( t('Communication options with this network have been restricted.') . EOL);
+		notice( t('The profile address specified belongs to a network which has been disabled on this site.') . EOL);
 		$ret['notify'] = '';
 	}
 
@@ -71,6 +71,9 @@ function follow_post(&$a) {
 		$writeable = 1;
 		
 	}
+	if($ret['network'] === NETWORK_DIASPORA)
+		$writeable = 1;
+
 	// check if we already have a contact
 	// the poll url is more reliable than the profile url, as we may have
 	// indirect links or webfinger links
@@ -82,15 +85,20 @@ function follow_post(&$a) {
 
 	if(count($r)) {
 		// update contact
-		if($r[0]['rel'] == REL_VIP) {
+		if($r[0]['rel'] == CONTACT_IS_FOLLOWER || ($network === NETWORK_DIASPORA && $r[0]['rel'] == CONTACT_IS_SHARING)) {
 			q("UPDATE `contact` SET `rel` = %d , `readonly` = 0 WHERE `id` = %d AND `uid` = %d LIMIT 1",
-				intval(REL_BUD),
+				intval(CONTACT_IS_FRIEND),
 				intval($r[0]['id']),
 				intval(local_user())
 			);
 		}
 	}
 	else {
+
+		$new_relation = (($ret['network'] === NETWORK_MAIL) ? CONTACT_IS_FRIEND : CONTACT_IS_SHARING);
+		if($ret['network'] === NETWORK_DIASPORA)
+			$new_relation = CONTACT_IS_FOLLOWER;
+
 		// create contact record 
 		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `addr`, `alias`, `notify`, `poll`, `name`, `nick`, `photo`, `network`, `rel`, `priority`,
 			`writable`, `blocked`, `readonly`, `pending` )
@@ -106,7 +114,7 @@ function follow_post(&$a) {
 			dbesc($ret['nick']),
 			dbesc($ret['photo']),
 			dbesc($ret['network']),
-			intval(($ret['network'] === NETWORK_MAIL) ? REL_BUD : REL_FAN),
+			intval($new_relation),
 			intval($ret['priority']),
 			intval($writeable)
 		);
@@ -175,10 +183,16 @@ function follow_post(&$a) {
 			intval(local_user())
 	);
 
-
-	if((count($r)) && (x($contact,'notify')) && (strlen($contact['notify']))) {
-		require_once('include/salmon.php');
-		slapper($r[0],$contact['notify'],$slap);
+	if(count($r)) {
+		if(($contact['network'] == NETWORK_OSTATUS) && (strlen($contact['notify']))) {
+			require_once('include/salmon.php');
+			slapper($r[0],$contact['notify'],$slap);
+		}
+		if($contact['network'] == NETWORK_DIASPORA) {
+			require_once('include/diaspora.php');
+			$ret = diaspora_share($a->user,$r[0]);
+			logger('mod_follow: diaspora_share returns: ' . $ret);
+		}
 	}
 
 	goaway($_SESSION['return_url']);

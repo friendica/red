@@ -84,12 +84,47 @@ function datetime_convert($from = 'UTC', $to = 'UTC', $s = 'now', $fmt = "Y-m-d 
 function dob($dob) {
 	list($year,$month,$day) = sscanf($dob,'%4d-%2d-%2d');
 	$y = datetime_convert('UTC',date_default_timezone_get(),'now','Y');
-	$o = datesel('',1920,$y,true,$year,$month,$day);
+	$f = get_config('system','birthday_input_format');
+	if(! $f)
+		$f = 'ymd';
+	$o = datesel($f,'',1920,$y,true,$year,$month,$day);
+	return $o;
+}
+
+
+function datesel_format($f) {
+
+	$o = '';
+
+	if(strlen($f)) {
+		for($x = 0; $x < strlen($f); $x ++) {
+			switch($f[$x]) {
+				case 'y':
+					if(strlen($o))
+						$o .= '-';
+					$o .= t('year');					
+					break;
+				case 'm':
+					if(strlen($o))
+						$o .= '-';
+					$o .= t('month');					
+					break;
+				case 'd':
+					if(strlen($o))
+						$o .= '-';
+					$o .= t('day');
+					break;
+				default:
+					break;
+			}
+		}
+	}
 	return $o;
 }
 
 
 // returns a date selector.
+// $f           = format string, e.g. 'ymd' or 'mdy'
 // $pre         = prefix (if needed) for HTML name and class fields
 // $ymin        = first year shown in selector dropdown
 // $ymax        = last year shown in selector dropdown
@@ -99,40 +134,52 @@ function dob($dob) {
 // $d           = already selected day
 
 if(! function_exists('datesel')) {
-function datesel($pre,$ymin,$ymax,$allow_blank,$y,$m,$d) {
+function datesel($f,$pre,$ymin,$ymax,$allow_blank,$y,$m,$d) {
 
 	$o = '';
-	$o .= "<select name=\"{$pre}year\" class=\"{$pre}year\" size=\"1\">";
-	if($allow_blank) {
-		$sel = (($y == '0000') ? " selected=\"selected\" " : "");
-		$o .= "<option value=\"0000\" $sel ></option>";
-	}
 
-	if($ymax > $ymin) {
-		for($x = $ymax; $x >= $ymin; $x --) {
-			$sel = (($x == $y) ? " selected=\"selected\" " : "");
-			$o .= "<option value=\"$x\" $sel>$x</option>";
-		}
-	}
-	else {
-		for($x = $ymax; $x <= $ymin; $x ++) {
-			$sel = (($x == $y) ? " selected=\"selected\" " : "");
-			$o .= "<option value=\"$x\" $sel>$x</option>";
-		}
-	}
+	if(strlen($f)) {
+		for($z = 0; $z < strlen($f); $z ++) {
+			if($f[$z] === 'y') {
+
+				$o .= "<select name=\"{$pre}year\" class=\"{$pre}year\" size=\"1\">";
+				if($allow_blank) {
+					$sel = (($y == '0000') ? " selected=\"selected\" " : "");
+					$o .= "<option value=\"0000\" $sel ></option>";
+				}
+
+				if($ymax > $ymin) {
+					for($x = $ymax; $x >= $ymin; $x --) {
+						$sel = (($x == $y) ? " selected=\"selected\" " : "");
+						$o .= "<option value=\"$x\" $sel>$x</option>";
+					}
+				}
+				else {
+					for($x = $ymax; $x <= $ymin; $x ++) {
+						$sel = (($x == $y) ? " selected=\"selected\" " : "");
+						$o .= "<option value=\"$x\" $sel>$x</option>";
+					}
+				}
+			}
+			elseif($f[$z] == 'm') {
   
-	$o .= "</select> <select name=\"{$pre}month\" class=\"{$pre}month\" size=\"1\">";
-	for($x = (($allow_blank) ? 0 : 1); $x <= 12; $x ++) {
-		$sel = (($x == $m) ? " selected=\"selected\" " : "");
-		$y = (($x) ? $x : '');
-		$o .= "<option value=\"$x\" $sel>$y</option>";
-	}
+				$o .= "</select> <select name=\"{$pre}month\" class=\"{$pre}month\" size=\"1\">";
+				for($x = (($allow_blank) ? 0 : 1); $x <= 12; $x ++) {
+					$sel = (($x == $m) ? " selected=\"selected\" " : "");
+					$y = (($x) ? $x : '');
+					$o .= "<option value=\"$x\" $sel>$y</option>";
+				}
+			}
+			elseif($f[$z] == 'd') {
 
-	$o .= "</select> <select name=\"{$pre}day\" class=\"{$pre}day\" size=\"1\">";
-	for($x = (($allow_blank) ? 0 : 1); $x <= 31; $x ++) {
-		$sel = (($x == $d) ? " selected=\"selected\" " : "");
-		$y = (($x) ? $x : '');
-		$o .= "<option value=\"$x\" $sel>$y</option>";
+				$o .= "</select> <select name=\"{$pre}day\" class=\"{$pre}day\" size=\"1\">";
+				for($x = (($allow_blank) ? 0 : 1); $x <= 31; $x ++) {
+					$sel = (($x == $d) ? " selected=\"selected\" " : "");
+					$y = (($x) ? $x : '');
+					$o .= "<option value=\"$x\" $sel>$y</option>";
+				}
+			}
+		}
 	}
 
 	$o .= "</select>";
