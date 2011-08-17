@@ -69,8 +69,9 @@ function profile_content(&$a, $update = 0) {
 		$a->profile['profile_uid'] = $update;
 	}
 	else {
-		if($a->profile['profile_uid'] == local_user())		
-			$o .= set_nav_selected('nav-home-link');
+		if($a->profile['profile_uid'] == local_user()) {
+			nav_set_selected('home');
+		}
 	}
 
 	$contact = null;

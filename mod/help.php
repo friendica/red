@@ -17,6 +17,7 @@ function load_doc_file($s) {
 
 
 function help_content(&$a) {
+	nav_set_selected('help');
 
 	global $lang;
 

@@ -11,15 +11,18 @@
 		
 		private function _preg_error(){
 			switch(preg_last_error()){
-			    case PREG_INTERNAL_ERROR: die('PREG_INTERNAL_ERROR'); break;
-			    case PREG_BACKTRACK_LIMIT_ERROR: die('PREG_BACKTRACK_LIMIT_ERROR'); break;
-			    case PREG_RECURSION_LIMIT_ERROR: die('PREG_RECURSION_LIMIT_ERROR'); break;
-			    case PREG_BAD_UTF8_ERROR: die('PREG_BAD_UTF8_ERROR'); break;
-			    case PREG_BAD_UTF8_OFFSET_ERROR: die('PREG_BAD_UTF8_OFFSET_ERROR'); break;
+			    case PREG_INTERNAL_ERROR: echo('PREG_INTERNAL_ERROR'); break;
+			    case PREG_BACKTRACK_LIMIT_ERROR: echo('PREG_BACKTRACK_LIMIT_ERROR'); break;
+			    case PREG_RECURSION_LIMIT_ERROR: echo('PREG_RECURSION_LIMIT_ERROR'); break;
+			    case PREG_BAD_UTF8_ERROR: echo('PREG_BAD_UTF8_ERROR'); break;
+			    case PREG_BAD_UTF8_OFFSET_ERROR: echo('PREG_BAD_UTF8_OFFSET_ERROR'); break;
 			    default:
 					//die("Unknown preg error.");
 					return;
 			}
+			echo "<hr><pre>";
+			debug_print_backtrace();
+			die();
 		}
 		
 		private function _build_replace($r, $prefix){

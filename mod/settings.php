@@ -299,7 +299,7 @@ if(! function_exists('settings_content')) {
 function settings_content(&$a) {
 
 	$o = '';
-	$o .=  set_nav_selected('nav-settings-link');
+	nav_set_selected('settings');
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL );

@@ -15,24 +15,25 @@
 					
 					{{ if $nav.notifications }}<li><a class="$nav.notifications.2" href="$nav.notifications.0" title="$nav.notifications.3" >$nav.notifications.1</a></li>{{ endif }}
 					{{ if $nav.messages }}<li><a class="$nav.messages.2" href="$nav.messages.0" title="$nav.messages.3" >$nav.messages.1</a></li>{{ endif }}
+					{{ if $nav.contacts }}<li><a class="$nav.contacts.2" href="$nav.contacts.0" title="$nav.contacts.3" >$nav.contacts.1</a>{{ endif }}					
 				</ul>
 			</li>
 		{{ endif }}
 		
 		{{ if $nav.community }}
-			<li id="nav-community-link" class="nav-menu">
+			<li id="nav-community-link" class="nav-menu $sel.community">
 				<a class="$nav.community.2" href="$nav.community.0" title="$nav.community.3" >$nav.community.1</a>
 			</li>
 		{{ endif }}
 		
 		{{ if $nav.network }}
-			<li id="nav-network-link" class="nav-menu">
+			<li id="nav-network-link" class="nav-menu $sel.network">
 				<a class="$nav.network.2" href="$nav.network.0" title="$nav.network.3" >$nav.network.1</a>
 				<span id="net-update" class="nav-notify"></span>
 			</li>
 		{{ endif }}
-		{{ if $nav.network }}
-			<li id="nav-home-link" class="nav-menu">
+		{{ if $nav.home }}
+			<li id="nav-home-link" class="nav-menu $sel.home">
 				<a class="$nav.home.2" href="$nav.home.0" title="$nav.home.3" >$nav.home.1</a>
 				<span id="home-update" class="nav-notify"></span>
 			</li>
@@ -67,19 +68,19 @@
 		</li>
 		
 		
-		<li id="nav-help-link" class="nav-menu">
+		<li id="nav-help-link" class="nav-menu $sel.help">
 			<a class="$nav.help.2" target="friendika-help" href="$nav.help.0" title="$nav.help.3" >$nav.help.1</a>
 		</li>
 
-		<li id="nav-search-link" class="nav-menu">
+		<li id="nav-search-link" class="nav-menu $sel.search">
 			<a class="$nav.search.2" href="$nav.search.0" title="$nav.search.3" >$nav.search.1</a>
 		</li>
-		<li id="nav-directory-link" class="nav-menu">
+		<li id="nav-directory-link" class="nav-menu $sel.directory">
 			<a class="$nav.directory.2" href="$nav.directory.0" title="$nav.directory.3" >$nav.directory.1</a>
 		</li>
 		
 		{{ if $nav.apps }}
-			<li id="nav-apps-link" class="nav-menu">
+			<li id="nav-apps-link" class="nav-menu $sel.apps">
 				<a class=" $nav.apps.2" href="$nav.apps.0" title="$nav.apps.3" >$nav.apps.1</a>
 			</li>
 		{{ endif }}
@@ -122,7 +123,7 @@
 {{ if $nav.settings }}<a id="nav-settings-link" class="nav-link $nav.settings.2" href="$nav.settings.0" title="$nav.settings.3">$nav.settings.1</a>{{ endif }}
 {{ if $nav.profiles }}<a id="nav-profiles-link" class="nav-link $nav.profiles.2" href="$nav.profiles.0" title="$nav.profiles.3" >$nav.profiles.1</a>{{ endif }}
 
-{{ if $nav.contacts }}<a id="nav-contacts-link" class="nav-link $nav.contacts.2" href="$nav.contacts.0" title="$nav.contacts.3" >$nav.contacts.1</a>{{ endif }}
+
 </span>
 <span id="nav-end"></span>
 <span id="banner">$banner</span>

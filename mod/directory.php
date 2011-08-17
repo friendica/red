@@ -22,7 +22,7 @@ function directory_content(&$a) {
 	}
 
 	$o = '';
-	$o .= set_nav_selected('nav-directory-link');
+	nav_set_selected('directory');
 	if(x($_SESSION,'theme'))
 		unset($_SESSION['theme']);
 

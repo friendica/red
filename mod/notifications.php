@@ -64,7 +64,7 @@ function notifications_content(&$a) {
 	}
 
 	$o = '';
-	$o .= set_nav_selected("nav-notifications-link");
+	nav_set_selected("notifications");
 
 	if(($a->argc > 1) && ($a->argv[1] == 'all'))
 		$sql_extra = '';

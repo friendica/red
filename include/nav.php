@@ -157,8 +157,28 @@ function nav(&$a) {
 		'$banner' =>  $banner,
 		'$emptynotifications' => t('Nothing new here'),
 		'$userinfo' => $userinfo,
+		'$sel' => 	$a->nav_sel,
 	));
 
 	call_hooks('page_header', $a->page['nav']);
+}
 
+/*
+ * Set a menu item in navbar as selected
+ * 
+ */
+function nav_set_selected($item){
+	$a = get_app();
+    $a->nav_sel = array(
+		'community' 	=> null,
+		'network' 		=> null,
+		'home'			=> null,
+		'profiles'		=> null,
+		'notifications'	=> null,
+		'messages'		=> null,
+		'directyory'	=> null,
+		'settings'		=> null,
+		'contacts'		=> null,
+	);
+	$a->nav_sel[$item] = 'selected';
 }

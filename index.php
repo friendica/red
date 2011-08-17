@@ -195,8 +195,8 @@ if(strlen($a->module)) {
 
 	if(! $a->module_loaded) {
 
-		// Stupid browser tried to pre-fetch our ACL img template. Don't log the event or return anything - just quietly exit.
-		if((x($_SERVER,'QUERY_STRING')) && strpos($_SERVER['QUERY_STRING'],'{0}') !== false) {
+		// Stupid browser tried to pre-fetch our Javascript img template. Don't log the event or return anything - just quietly exit.
+		if((x($_SERVER,'QUERY_STRING')) && preg_match('/{[0-9]}/',$_SERVER['QUERY_STRING']) !== 0) {
 			killme();
 		}
 
@@ -306,7 +306,6 @@ $a->page['content'] .=  '<div id="pause"></div>';
  */
 
 if($a->module != 'install') {
-	require_once('nav.php');
 	nav($a);
 }
 

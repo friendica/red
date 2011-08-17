@@ -5,6 +5,7 @@ require_once('include/network.php');
 require_once('include/plugin.php');
 require_once('include/text.php');
 require_once("include/pgettext.php");
+require_once('include/nav.php');
 
 
 define ( 'FRIENDIKA_VERSION',      '2.2.1074' );
@@ -1156,3 +1157,4 @@ function load_contact_links($uid) {
 	$a->contacts = $ret;
 	return;		
 }}
+

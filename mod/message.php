@@ -110,7 +110,7 @@ function message_post(&$a) {
 function message_content(&$a) {
 
 	$o = '';
-	$o .= set_nav_selected('nav-messages-link');
+	nav_set_selected('messages');
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);

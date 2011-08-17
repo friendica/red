@@ -98,7 +98,7 @@ function network_content(&$a, $update = 0) {
 			}
 		}
 
-		$o .= set_nav_selected('nav-network-link');
+		nav_set_selected('network');
 
 		$_SESSION['return_url'] = $a->cmd;
 
