@@ -948,3 +948,7 @@ function base64url_decode($s) {
 
 	return base64_decode(strtr($s,'-_','+/'));
 }
+
+function cc_license() {
+return '<div class="cc-license">' . t('Shared content is covered by the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> license.') . '</div>';
+}

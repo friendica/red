@@ -7,13 +7,13 @@ require_once('include/text.php');
 require_once("include/pgettext.php");
 
 
-define ( 'FRIENDIKA_VERSION',      '2.2.1073' );
+define ( 'FRIENDIKA_VERSION',      '2.2.1074' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
 define ( 'DB_UPDATE_VERSION',      1079      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
-define ( 'DOWN_ARROW',             '&#x21e9;'       );
+
 
 /**
  *

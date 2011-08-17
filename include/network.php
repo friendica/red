@@ -5,7 +5,7 @@
 // results. 
 
 if(! function_exists('fetch_url')) {
-function fetch_url($url,$binary = false, &$redirects = 0) {
+function fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0) {
 
 	$a = get_app();
 
@@ -17,9 +17,13 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 	curl_setopt($ch, CURLOPT_USERAGENT, "Friendika");
 
-	$curl_time = intval(get_config('system','curl_timeout'));
-	curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
-
+	if(intval($timeout)) {
+		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+	}
+	else {
+		$curl_time = intval(get_config('system','curl_timeout'));
+		curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
+	}
 	// by default we will allow self-signed certs
 	// but you can override this
 
@@ -66,7 +70,7 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
         $url_parsed = @parse_url($url);
         if (isset($url_parsed)) {
             $redirects++;
-            return fetch_url($url,$binary,$redirects);
+            return fetch_url($url,$binary,$redirects,$timeout);
         }
     }
 
@@ -83,7 +87,7 @@ function fetch_url($url,$binary = false, &$redirects = 0) {
 // post request to $url. $params is an array of post variables.
 
 if(! function_exists('post_url')) {
-function post_url($url,$params, $headers = null, &$redirects = 0) {
+function post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0) {
 	$a = get_app();
 	$ch = curl_init($url);
 	if(($redirects > 8) || (! $ch)) 
@@ -95,8 +99,13 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
 	curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
 	curl_setopt($ch, CURLOPT_USERAGENT, "Friendika");
 
-	$curl_time = intval(get_config('system','curl_timeout'));
-	curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
+	if(intval($timeout)) {
+		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+	}
+	else {
+		$curl_time = intval(get_config('system','curl_timeout'));
+		curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
+	}
 
 	if(defined('LIGHTTPD')) {
 		if(!is_array($headers)) {
@@ -150,7 +159,7 @@ function post_url($url,$params, $headers = null, &$redirects = 0) {
         $url_parsed = @parse_url($url);
         if (isset($url_parsed)) {
             $redirects++;
-            return post_url($url,$binary,$headers,$redirects);
+            return post_url($url,$params,$headers,$redirects,$timeout);
         }
     }
 	$a->set_curl_code($http_code);
@@ -497,8 +506,9 @@ function fetch_lrdd_template($host) {
 if(! function_exists('fetch_xrd_links')) {
 function fetch_xrd_links($url) {
 
-
-	$xml = fetch_url($url);
+	$xrd_timeout = intval(get_config('system','xrd_timeout'));
+	$redirects = 0;
+	$xml = fetch_url($url,false,$redirects,(($xrd_timeout) ? $xrd_timeout : 30));
 
 	logger('fetch_xrd_links: ' . $xml, LOGGER_DATA);
 

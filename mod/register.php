@@ -501,7 +501,7 @@ function register_content(&$a) {
 	}
 
 
-	$license = t('Shared content is covered by the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> license.');
+	$license = cc_license();
 
 
 	$o = get_markup_template("register.tpl");

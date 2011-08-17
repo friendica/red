@@ -557,7 +557,7 @@ function notifier_run($argv, $argc){
 		 *
 		 */
 
-		$max_allowed = ((get_config('system','maxpubdeliver') === false) ? 150 : intval(get_config('system','maxpubdeliver')));
+		$max_allowed = ((get_config('system','maxpubdeliver') === false) ? 999 : intval(get_config('system','maxpubdeliver')));
 				
 		/**
 		 *
@@ -567,7 +567,7 @@ function notifier_run($argv, $argc){
 		 */
 
 		$r = q("SELECT `id`, `name` FROM `contact` 
-			WHERE `network` = 'dfrn' AND `uid` = %d AND `blocked` = 0 AND `pending` = 0
+			WHERE `network` = NETWORK_DFRN AND `uid` = %d AND `blocked` = 0 AND `pending` = 0
 			AND `rel` != %d ",
 			intval($owner['uid']),
 			intval(CONTACT_IS_SHARING)
