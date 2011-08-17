@@ -50,8 +50,10 @@ function notifier_run($argv, $argc){
 	$recipients = array();
 	$url_recipients = array();
 
-	if($cmd === 'mail') {
+	$normal_mode = true;
 
+	if($cmd === 'mail') {
+		$normal_mode = false;
 		$message = q("SELECT * FROM `mail` WHERE `id` = %d LIMIT 1",
 				intval($item_id)
 		);
@@ -64,6 +66,7 @@ function notifier_run($argv, $argc){
 
 	}
 	elseif($cmd === 'expire') {
+		$normal_mode = false;
 		$expire = true;
 		$items = q("SELECT * FROM `item` WHERE `uid` = %d AND `wall` = 1 
 			AND `deleted` = 1 AND `changed` > UTC_TIMESTAMP - INTERVAL 10 MINUTE",
@@ -75,6 +78,7 @@ function notifier_run($argv, $argc){
 			return;
 	}
 	elseif($cmd === 'suggest') {
+		$normal_mode = false;
 		$suggest = q("SELECT * FROM `fsuggest` WHERE `id` = %d LIMIT 1",
 			intval($item_id)
 		);
@@ -95,7 +99,7 @@ function notifier_run($argv, $argc){
 			return;
 		}
 
-		$parent_item = $r[0];
+		$target_item = $r[0];
 		$parent_id = intval($r[0]['parent']);
 		$uid = $r[0]['uid'];
 		$updated = $r[0]['edited'];
@@ -317,9 +321,9 @@ function notifier_run($argv, $argc){
 	$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
 
 	if(! $mail_disabled) {
-		if((! strlen($parent_item['allow_cid'])) && (! strlen($parent_item['allow_gid'])) 
-			&& (! strlen($parent_item['deny_cid'])) && (! strlen($parent_item['deny_gid'])) 
-			&& (intval($parent_item['pubmail']))) {
+		if((! strlen($target_item['allow_cid'])) && (! strlen($target_item['allow_gid'])) 
+			&& (! strlen($target_item['deny_cid'])) && (! strlen($target_item['deny_gid'])) 
+			&& (intval($target_item['pubmail']))) {
 			$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `network` = '%s'",
 				intval($uid),
 				dbesc(NETWORK_MAIL)
@@ -498,10 +502,26 @@ function notifier_run($argv, $argc){
 					}
 					break;
 				case NETWORK_DIASPORA:
-					if(get_config('system','dfrn_only') || (! get_config('diaspora_enabled')))
+					if(get_config('system','dfrn_only') || (! get_config('diaspora_enabled')) || (! $normal_mode))
 						break;
-					if($top_level) {
-						diaspora_send_status($parent_item,$owner,$contact);
+
+					if($target_item['deleted']) {
+						// diaspora delete, (check for like)
+
+						break;
+					}
+					elseif($followup) {
+						// send to owner to relay
+
+						break;
+					}
+					elseif($target_item['parent'] != $target_item['id']) {
+						// we are the relay
+
+						break;
+					}		
+					elseif($top_level) {
+						diaspora_send_status($target_item,$owner,$contact);
 						break;
 					}
 

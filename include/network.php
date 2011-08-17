@@ -536,8 +536,10 @@ function fetch_xrd_links($url) {
 			$aliases = array($alias);
 		else
 			$aliases = $alias;
-		foreach($aliases as $alias) {
-			$links[]['@attributes'] = array('rel' => 'alias' , 'href' => $alias);
+		if(count($aliases)) {
+			foreach($aliases as $alias) {
+				$links[]['@attributes'] = array('rel' => 'alias' , 'href' => $alias);
+			}
 		}
 	}
 
