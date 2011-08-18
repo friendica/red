@@ -31,7 +31,9 @@ function poormancron_hook(&$a,&$b) {
     }
 }
 
-function poormancron_procrun(&$a, $argv) {
+function poormancron_procrun(&$a, &$arr) {
+	$argv = $arr['args'];
+	$arr['run_cmd'] = false;
 	logger("poormancron procrun ".implode(", ",$argv));
 	array_shift($argv);
 	$argc = count($argv);

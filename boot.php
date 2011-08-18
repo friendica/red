@@ -7,7 +7,7 @@ require_once('include/text.php');
 require_once("include/pgettext.php");
 
 
-define ( 'FRIENDIKA_VERSION',      '2.2.1074' );
+define ( 'FRIENDIKA_VERSION',      '2.2.1075' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
 define ( 'DB_UPDATE_VERSION',      1079      );
 
@@ -1033,11 +1033,14 @@ function proc_run($cmd){
 	$a = get_app();
 
 	$args = func_get_args();
-	call_hooks("proc_run", $args);
+	$arr = array('args' => $args, 'run_cmd' => true);
+
+	call_hooks("proc_run", $arr);
+	if(! $arr['run_cmd'])
+		return;
 
 	if(count($args) && $args[0] === 'php')
         $args[0] = ((x($a->config,'php_path')) && (strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
-	
 	foreach ($args as $arg){
 		$arg = escapeshellarg($arg);
 	}
