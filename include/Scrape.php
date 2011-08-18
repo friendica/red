@@ -498,10 +498,11 @@ function probe_url($url) {
 			logger('probe_url: scrape_feed returns: ' . print_r($feedret,true), LOGGER_DATA);
 			if(count($feedret) && ($feedret['feed_atom'] || $feedret['feed_rss'])) {
 				$poll = ((x($feedret,'feed_atom')) ? unamp($feedret['feed_atom']) : unamp($feedret['feed_rss']));
-				$vcard = array();
+				if(! x($vcard)) 
+					$vcard = array();
 			}
 
-			if(x($feedret,'photo'))
+			if(x($feedret,'photo') && (! x($vcard,'photo')))
 				$vcard['photo'] = $feedret['photo'];
 			require_once('library/simplepie/simplepie.inc');
 		    $feed = new SimplePie();
@@ -518,9 +519,11 @@ function probe_url($url) {
 			if($feed->error())
 				logger('probe_url: scrape_feed: Error parsing XML: ' . $feed->error());
 
+
 			if(! x($vcard,'photo'))
 				$vcard['photo'] = $feed->get_image_url();
 			$author = $feed->get_author();
+
 			if($author) {			
 				$vcard['fn'] = unxmlify(trim($author->get_name()));
 				if(! $vcard['fn'])
@@ -568,6 +571,7 @@ function probe_url($url) {
 					}
 				}
 			}
+
 			if((! $vcard['photo']) && strlen($email))
 				$vcard['photo'] = gravatar_img($email);
 			if($poll === $profile)
