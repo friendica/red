@@ -12,10 +12,6 @@
 if(! function_exists('dfrn_request_init')) {
 function dfrn_request_init(&$a) {
 
-	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
-		return;
-	}
-
 	if($a->argc > 1)
 		$which = $a->argv[1];
 
@@ -147,8 +143,8 @@ function dfrn_request_post(&$a) {
 					 */
 
 					$r = q("INSERT INTO `contact` ( `uid`, `created`,`url`, `name`, `nick`, `photo`, `site-pubkey`,
-						`request`, `confirm`, `notify`, `poll`, `aes_allow`) 
-						VALUES ( %d, '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d)",
+						`request`, `confirm`, `notify`, `poll`, `network`, `aes_allow`) 
+						VALUES ( %d, '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d)",
 						intval(local_user()),
 						datetime_convert(),
 						dbesc($dfrn_url),
@@ -160,6 +156,7 @@ function dfrn_request_post(&$a) {
 						$parms['dfrn-confirm'],
 						$parms['dfrn-notify'],
 						$parms['dfrn-poll'],
+						dbesc(NETWORK_DFRN),
 						intval($aes_allow)
 					);
 				}
@@ -298,7 +295,7 @@ function dfrn_request_post(&$a) {
 		}
 
 
-		if($network === 'dfrn') {
+		if($network === NETWORK_DFRN) {
 			$ret = q("SELECT * FROM `contact` WHERE `uid` = %d AND `url` = '%s' AND `self` = 0 LIMIT 1", 
 				intval($uid),
 				dbesc($url)
@@ -373,8 +370,8 @@ function dfrn_request_post(&$a) {
 
 				dbesc_array($parms);
 				$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `name`, `nick`, `issued-id`, `photo`, `site-pubkey`,
-					`request`, `confirm`, `notify`, `poll` )
-					VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+					`request`, `confirm`, `notify`, `poll`, `network` )
+					VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 					intval($uid),
 					datetime_convert(),
 					$parms['url'],
@@ -386,7 +383,8 @@ function dfrn_request_post(&$a) {
 					$parms['dfrn-request'],
 					$parms['dfrn-confirm'],
 					$parms['dfrn-notify'],
-					$parms['dfrn-poll']
+					$parms['dfrn-poll'],
+					dbesc(NETWORK_DFRN)
 				);
 
 				// find the contact record we just created
@@ -437,15 +435,16 @@ function dfrn_request_post(&$a) {
 				. (($aes_allow) ? "&aes_allow=1" : "")
 			);
 			// NOTREACHED
-			// END $network === 'dfrn'
+			// END $network === NETWORK_DFRN
 		}
-		elseif($network === 'stat') {
+		elseif($network === NETWORK_OSTATUS) {
 			
 			/**
 			 *
 			 * OStatus network
 			 * Check contact existence
-			 * Try and scrape together enough information to create a contact record, with us as CONTACT_IS_FOLLOWER
+			 * Try and scrape together enough information to create a contact record, 
+			 * with us as CONTACT_IS_FOLLOWER
 			 * Substitute our user's feed URL into $url template
 			 * Send the subscriber home to subscribe
 			 *
@@ -454,7 +453,7 @@ function dfrn_request_post(&$a) {
 			$url = str_replace('{uri}', $a->get_baseurl() . '/dfrn_poll/' . $nickname, $url);
 			goaway($url);
 			// NOTREACHED
-			// END $network === 'stat'
+			// END $network === NETWORK_OSTATUS
 		}
 
 	}	return;
@@ -465,8 +464,6 @@ function dfrn_request_post(&$a) {
 
 if(! function_exists('dfrn_request_content')) {
 function dfrn_request_content(&$a) {
-
-	
 
 	if(($a->argc != 2) || (! count($a->profile)))
 		return "";
@@ -578,6 +575,7 @@ function dfrn_request_content(&$a) {
 				);
 			}
 		}
+
 		killme();
 		return; // NOTREACHED
 	}
