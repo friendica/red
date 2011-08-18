@@ -939,10 +939,10 @@ function profile_sidebar($profile, $block = 0) {
 <img class="photo avatar" height="50px" width="50px" src="$photo50">
 </dd>
 </dl>
-<dl class='entity_searchable'>
+<dl class="entity_searchable">
 <dt>Searchable</dt>
 <dd>
-<span class='searchable'>$searchable</span>
+<span class="searchable">$searchable</span>
 </dd>
 </dl>
 </div>
