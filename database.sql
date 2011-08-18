@@ -531,6 +531,7 @@ CREATE TABLE IF NOT EXISTS `fcontact` (
 `network` CHAR( 32 ) NOT NULL ,
 `alias` CHAR( 255 ) NOT NULL ,
 `pubkey` TEXT NOT NULL ,
+`updated` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 INDEX ( `addr` ),
 INDEX ( `network` )
 ) ENGINE = MYISAM DEFAULT CHARSET=utf8;

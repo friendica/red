@@ -693,3 +693,24 @@ function parse_xml_string($s,$strict = true) {
 	}
 	return $x;
 }}
+
+function add_fcontact($arr) {
+
+	$r = q("insert into fcontact ( `url`,`name`,`photo`,`request`,`nick`,`addr`,
+		`notify`,`poll`,`confirm`,`network`,`alias`,`pubkey` )
+		values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",
+		dbesc($arr['url']),
+		dbesc($arr['name']),
+		dbesc($arr['photo']),
+		dbesc($arr['request']),
+		dbesc($arr['nick']),
+		dbesc($arr['addr']),
+		dbesc($arr['notify']),
+		dbesc($arr['poll']),
+		dbesc($arr['confirm']),
+		dbesc($arr['network']),
+		dbesc($arr['alias']),
+		dbesc($arr['pubkey'])
+	);
+	return $r;
+}

@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1080 );
+define( 'UPDATE_VERSION' , 1081 );
 
 /**
  *
@@ -671,3 +671,6 @@ function update_1079() {
 
 }
 
+function update_1080() {
+	q("ALTER TABLE `fcontact` ADD `updated` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'");
+}

@@ -4,25 +4,11 @@ require_once('include/crypto.php');
 require_once('include/items.php');
 
 function get_diaspora_key($uri) {
-	$key = '';
-
 	logger('Fetching diaspora key for: ' . $uri);
 
-	$arr = lrdd($uri);
-
-	if(is_array($arr)) {
-		foreach($arr as $a) {
-			if($a['@attributes']['rel'] === 'diaspora-public-key') {
-				$key = base64_decode($a['@attributes']['href']);
-			}
-		}
-	}
-	else {
-		return '';
-	}
-
-	if($key)
-		return rsatopem($key);
+	$r = find_diaspora_person_by_handle($uri);
+	if($r)
+		return $r['pubkey'];
 	return '';
 }
 
@@ -218,7 +204,7 @@ function diaspora_decode($importer,$xml) {
 	$encoding = $base->encoding;
 	$alg = $base->alg;
 
-	// Diaspora devs: I can't even begin to tell you how sucky this is. Read the freaking spec.
+	// Diaspora devs: I can't even begin to tell you how sucky this is. Please read the spec.
 
 	$signed_data = $data  . (($data[-1] != "\n") ? "\n" : '') . '.' . base64url_encode($type) . "\n" . '.' . base64url_encode($encoding) . "\n" . '.' . base64url_encode($alg) . "\n";
 
@@ -278,27 +264,32 @@ function diaspora_get_contact_by_handle($uid,$handle) {
 	return false;
 }
 
-function find_person_by_handle($handle) {
-		$r = q("select * from fcontact where network = '%s' and addr = '%s' limit 1",
-			dbesc(NETWORK_DIASPORA),
-			dbesc($handle)
-		);
-		if(count($r))
+function find_diaspora_person_by_handle($handle) {
+	$r = q("select * from fcontact where network = '%s' and addr = '%s' limit 1",
+		dbesc(NETWORK_DIASPORA),
+		dbesc($handle)
+	);
+	if(count($r)) {
+		// update record occasionally so it doesn't get stale
+		$d = strtotime($r[0]['updated'] . ' +00:00');
+		if($d < strtotime('now - 14 days')) {
+			q("delete from fcontact where id = %d limit 1",
+				intval($r[0]['id'])
+			);
+		}
+		else
 			return $r[0];
-
-		// we don't care about the uid, we just want to save an expensive webfinger probe
-		$r = q("select * from contact where network = '%s' and addr = '%s' LIMIT 1",
-			dbesc(NETWORK_DIASPORA),
-			dbesc($handle)
-		);
-		if(count($r))
-			return $r[0];
-		$r = probe_url($handle);
-		// need to cached this, perhaps in fcontact
-		if(count($r))
-			return ($r);
-		return false;
+	}
+	require_once('include/Scrape.php');
+	$r = probe_url($handle, PROBE_DIASPORA);
+	if((count($r)) && ($r['network'] === NETWORK_DIASPORA)) {
+		add_fcontact($r);
+		return ($r);
+	}
+	return false;
 }
+
+	
 
 function diaspora_request($importer,$xml) {
 
@@ -504,7 +495,7 @@ function diaspora_comment($importer,$xml,$msg) {
 		$key = $msg['key'];
 	}
 	else {
-		$person = find_person_by_handle($diaspora_handle);	
+		$person = find_diaspora_person_by_handle($diaspora_handle);	
 
 		if(is_array($person) && x($person,'pubkey'))
 			$key = $person['pubkey'];
@@ -661,7 +652,7 @@ function diaspora_like($importer,$xml,$msg) {
 		$key = $msg['key'];
 	}
 	else {
-		$person = find_person_by_handle($diaspora_handle);	
+		$person = find_diaspora_person_by_handle($diaspora_handle);	
 		if(is_array($person) && x($person,'pubkey'))
 			$key = $person['pubkey'];
 		else {
