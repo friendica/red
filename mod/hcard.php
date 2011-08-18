@@ -2,8 +2,7 @@
 
 function hcard_init(&$a) {
 
-	if((get_config('system','block_public')) && (! local_user()) && (! remote_user()))
-		return;
+	$blocked = (((get_config('system','block_public')) && (! local_user()) && (! remote_user())) ? true : false);
 
 	if($a->argc > 1)
 		$which = $a->argv[1];
@@ -31,10 +30,12 @@ function hcard_init(&$a) {
 		$a->page['htmlhead'] .= '<link rel="openid.delegate" href="' . $delegate . '" />' . "\r\n";
 	}
 
-	$keywords = ((x($a->profile,'pub_keywords')) ? $a->profile['pub_keywords'] : '');
-	$keywords = str_replace(array(',',' ',',,'),array(' ',',',','),$keywords);
-	if(strlen($keywords))
-		$a->page['htmlhead'] .= '<meta name="keywords" content="' . $keywords . '" />' . "\r\n" ;
+	if(! $blocked) {
+		$keywords = ((x($a->profile,'pub_keywords')) ? $a->profile['pub_keywords'] : '');
+		$keywords = str_replace(array(',',' ',',,'),array(' ',',',','),$keywords);
+		if(strlen($keywords))
+			$a->page['htmlhead'] .= '<meta name="keywords" content="' . $keywords . '" />' . "\r\n" ;
+	}
 
 	$a->page['htmlhead'] .= '<meta name="dfrn-global-visibility" content="' . (($a->profile['net-publish']) ? 'true' : 'false') . '" />' . "\r\n" ;
 	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . $a->get_baseurl() . '/dfrn_poll/' . $which .'" />' . "\r\n" ;

@@ -18,11 +18,12 @@
 
 	$pubkey
 
+$diaspora
+
 </div>
 
 $marital
 
 $homepage
 
-$diaspora
 

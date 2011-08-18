@@ -44,8 +44,9 @@ function scrape_dfrn($url) {
 		$x = $item->getAttribute('rel');
 		if(($x === 'alternate') && ($item->getAttribute('type') === 'application/atom+xml'))
 			$ret['feed_atom'] = $item->getAttribute('href');
-		if(substr($x,0,5) == "dfrn-")
+		if(substr($x,0,5) == "dfrn-") {
 			$ret[$x] = $item->getAttribute('href');
+		}
 		if($x === 'lrdd') {
 			$decoded = urldecode($item->getAttribute('href'));
 			if(preg_match('/acct:([^@]*)@/',$decoded,$matches))
@@ -55,17 +56,28 @@ function scrape_dfrn($url) {
 
 	// Pull out hCard profile elements
 
+	$largest_photo = 0;
+
 	$items = $dom->getElementsByTagName('*');
 	foreach($items as $item) {
 		if(attribute_contains($item->getAttribute('class'), 'vcard')) {
 			$level2 = $item->getElementsByTagName('*');
 			foreach($level2 as $x) {
-				if(attribute_contains($x->getAttribute('class'),'fn'))
+				if(attribute_contains($x->getAttribute('class'),'fn')) {
 					$ret['fn'] = $x->textContent;
-				if(attribute_contains($x->getAttribute('class'),'photo'))
-					$ret['photo'] = $x->getAttribute('src');
-				if(attribute_contains($x->getAttribute('class'),'key'))
+				}
+				if((attribute_contains($x->getAttribute('class'),'photo'))
+					|| (attribute_contains($x->getAttribute('class'),'avatar'))) {
+					$size = intval($x->getAttribute('width'));
+					// dfrn prefers 175, so if we find this, we set largest_size so it can't be topped.
+					if(($size > $largest_photo) || ($size == 175) || (! $largest_photo)) {
+						$ret['photo'] = $x->getAttribute('src');
+						$largest_photo = (($size == 175) ? 9999 : $size);
+					}
+				}
+				if(attribute_contains($x->getAttribute('class'),'key')) {
 					$ret['key'] = $x->textContent;
+				}
 			}
 		}
 	}
@@ -190,8 +202,9 @@ function scrape_vcard($url) {
 					}
 				}
 				if((attribute_contains($x->getAttribute('class'),'nickname'))
-					|| (attribute_contains($x->getAttribute('class'),'uid')))
+					|| (attribute_contains($x->getAttribute('class'),'uid'))) {
 					$ret['nick'] = $x->textContent;
+				}
 			}
 		}
 	}
@@ -288,8 +301,10 @@ function scrape_feed($url) {
 	return $ret;
 }}
 
+define ( 'PROBE_NORMAL',   0);
+define ( 'PROBE_DIASPORA', 1);
 
-function probe_url($url) {
+function probe_url($url, $mode = PROBE_NORMAL) {
 	require_once('include/email.php');
 
 	$result = array();
@@ -366,7 +381,7 @@ function probe_url($url) {
 				}
 			}
 		}
-		else {
+		elseif($mode == PROBE_NORMAL) {
 
 			// Check email
 
@@ -411,38 +426,46 @@ function probe_url($url) {
 		}
 	}	
 
-	if(strlen($zot)) {
-		$s = fetch_url($zot);
-		if($s) {
-			$j = json_decode($s);
-			if($j) {
-				$network = NETWORK_ZOT;
-				$vcard   = array(
-					'fn'    => $j->fullname, 
-					'nick'  => $j->nickname, 
-					'photo' => $j->photo
-				);
-				$profile  = $j->url;
-				$notify   = $j->post;
-				$pubkey   = $j->pubkey;
-				$poll     = 'N/A';
+	if($mode == PROBE_NORMAL) {
+		if(strlen($zot)) {
+			$s = fetch_url($zot);
+			if($s) {
+				$j = json_decode($s);
+				if($j) {
+					$network = NETWORK_ZOT;
+					$vcard   = array(
+						'fn'    => $j->fullname, 
+						'nick'  => $j->nickname, 
+						'photo' => $j->photo
+					);
+					$profile  = $j->url;
+					$notify   = $j->post;
+					$pubkey   = $j->pubkey;
+					$poll     = 'N/A';
+				}
+			}
+		}
+
+		if(strlen($dfrn)) {
+			$ret = scrape_dfrn($dfrn);
+			if(is_array($ret) && x($ret,'dfrn-request')) {
+				$network = NETWORK_DFRN;
+				$request = $ret['dfrn-request'];
+				$confirm = $ret['dfrn-confirm'];
+				$notify  = $ret['dfrn-notify'];
+				$poll    = $ret['dfrn-poll'];
+
+				$vcard = array();
+				$vcard['fn'] = $ret['fn'];
+				$vcard['nick'] = $ret['nick'];
+				$vcard['photo'] = $ret['photo'];
 			}
 		}
 	}
 
-	if(strlen($dfrn)) {
-		$ret = scrape_dfrn($dfrn);
-		if(is_array($ret) && x($ret,'dfrn-request')) {
-			$network = NETWORK_DFRN;
-			$request = $ret['dfrn-request'];
-			$confirm = $ret['dfrn-confirm'];
-			$notify  = $ret['dfrn-notify'];
-			$poll    = $ret['dfrn-poll'];
-		}
-	}
-
 	if($diaspora && $diaspora_base && $diaspora_guid) {
-		$notify = $diaspora_base . 'receive/post/' . $diaspora_guid;
+		if($mode == PROBE_DIASPORA || ! $notify)
+			$notify = $diaspora_base . 'receive/post/' . $diaspora_guid;
 		if(strpos($url,'@'))
 			$addr = str_replace('acct:', '', $url);
 	}			
@@ -454,7 +477,7 @@ function probe_url($url) {
 			$network  = NETWORK_OSTATUS;
 		$priority = 0;
 
-		if($hcard) {
+		if($hcard && ! $vcard) {
 			$vcard = scrape_vcard($hcard);
 
 			// Google doesn't use absolute url in profile photos

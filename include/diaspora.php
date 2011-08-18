@@ -279,6 +279,13 @@ function diaspora_get_contact_by_handle($uid,$handle) {
 }
 
 function find_person_by_handle($handle) {
+		$r = q("select * from fcontact where network = '%s' and addr = '%s' limit 1",
+			dbesc(NETWORK_DIASPORA),
+			dbesc($handle)
+		);
+		if(count($r))
+			return $r[0];
+
 		// we don't care about the uid, we just want to save an expensive webfinger probe
 		$r = q("select * from contact where network = '%s' and addr = '%s' LIMIT 1",
 			dbesc(NETWORK_DIASPORA),
