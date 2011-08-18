@@ -510,6 +510,7 @@ function diaspora_comment($importer,$xml,$msg) {
 		return;
 	}
 
+
 	if($parent_author_signature) {
 		$owner_signed_data = $guid . ';' . $parent_guid . ';' . $text . ';' . $msg['author'];
 
@@ -576,8 +577,18 @@ function diaspora_comment($importer,$xml,$msg) {
 	$datarray['author-avatar'] = ((x($person,'thumb')) ? $person['thumb'] : $person['photo']);
 	$datarray['body'] = $body;
 
-	item_store($datarray);
+	$message_id = item_store($datarray);
 
+	if(! $parent_author_signature) {
+		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+			intval($message_id),
+			dbesc($author_signed_data),
+			dbesc(base64_encode($author_signature)),
+			dbesc($diaspora_handle)
+		);
+	}
+
+	// notify others
 	return;
 
 }
@@ -734,12 +745,20 @@ EOT;
 	$arr['unseen'] = 1;
 	$arr['last-child'] = 0;
 
-	$post_id = item_store($arr);	
+	$message_id = item_store($arr);
 
+	if(! $parent_author_signature) {
+		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+			intval($message_id),
+			dbesc($author_signed_data),
+			dbesc(base64_encode($author_signature)),
+			dbesc($diaspora_handle)
+		);
+	}
 
 	// FIXME send notification
 
-
+	return;
 }
 
 function diaspora_retraction($importer,$xml) {
