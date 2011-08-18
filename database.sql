@@ -521,7 +521,18 @@ CREATE TABLE IF NOT EXISTS `fcontact` (
 `url` CHAR( 255 ) NOT NULL ,
 `name` CHAR( 255 ) NOT NULL ,
 `photo` CHAR( 255 ) NOT NULL ,
-`request` CHAR( 255 ) NOT NULL
+`request` CHAR( 255 ) NOT NULL,
+`nick` CHAR( 255 ) NOT NULL ,
+`addr` CHAR( 255 ) NOT NULL ,
+`notify` CHAR( 255 ) NOT NULL ,
+`poll` CHAR( 255 ) NOT NULL ,
+`confirm` CHAR( 255 ) NOT NULL ,
+`priority` TINYINT( 1 ) NOT NULL ,
+`network` CHAR( 32 ) NOT NULL ,
+`alias` CHAR( 255 ) NOT NULL ,
+`pubkey` TEXT NOT NULL ,
+INDEX ( `addr` ),
+INDEX ( `network` )
 ) ENGINE = MYISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `ffinder` (
@@ -580,4 +591,15 @@ CREATE TABLE IF NOT EXISTS `guid` (
 `guid` CHAR( 64 ) NOT NULL ,
 INDEX ( `guid` )
 ) ENGINE = MYISAM  DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `sign` (
+`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`iid` INT UNSIGNED NOT NULL ,
+`signed_text` MEDIUMTEXT NOT NULL ,
+`signature` TEXT NOT NULL ,
+`signer` CHAR( 255 ) NOT NULL ,
+INDEX ( `iid` )
+) ENGINE = MYISAM DEFAULT CHARSET=utf8;
+
 

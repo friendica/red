@@ -19,14 +19,10 @@ function like_content(&$a) {
 
 	switch($verb) {
 		case 'like':
-			$activity = ACTIVITY_LIKE;
-			break;
-		case 'dislike':
-			$activity = ACTIVITY_DISLIKE;
-			break;
 		case 'unlike':
 			$activity = ACTIVITY_LIKE;
 			break;
+		case 'dislike':
 		case 'undislike':
 			$activity = ACTIVITY_DISLIKE;
 			break;
