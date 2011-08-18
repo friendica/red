@@ -66,7 +66,12 @@ function piwik_analytics($a,&$b) {
 	 *   otherwise just include the above code into the page.
 	 */
 	if ($optout) {
-		$b .= "<div id='piwik-optout-link'>This website is tracked using the <a href='http://www.piwik.org'>Piwik</a> analytics tool. If you do not want that your visits are logged this way you <a href='http://". $baseurl ."index.php?module=CoreAdminHome&action=optOut'>can set a cookie to prevent Piwik from tracking further visits of the site</a> (opt-out).</div>";
+            $b .= "<div id='piwik-optout-link'>";
+            $b .= t("This website is tracked using the <a href='http://www.piwik.org'>Piwik</a> analytics tool.");
+            $b .= " ";
+            $the_url =  "http://".$baseurl ."index.php?module=CoreAdminHome&action=optOut";
+            $b .= sprintf(t("If you do not want that your visits are logged this way you <a href='%s'>can set a cookie to prevent Piwik from tracking further visits of the site</a> (opt-out)."), $the_url);
+            $b .= "</div>";
 	}
 
 }
