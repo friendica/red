@@ -575,7 +575,7 @@ function notifier_run($argv, $argc){
 
 		/**
 		 *
-		 * If you have less than 150 dfrn friends and it's a public message,
+		 * If you have less than 999 dfrn friends and it's a public message,
 		 * we'll just go ahead and push them out securely with dfrn/rino.
 		 * If you've got more than that, you'll have to rely on PuSH delivery.
 		 *

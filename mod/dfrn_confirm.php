@@ -360,8 +360,14 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			}
 
 			$new_relation = $contact['rel'];
-			if($network === NETWORK_DIASPORA && $duplex)
-				$new_relation = CONTACT_IS_FRIEND;
+			$writable = $contact['writable'];
+
+			if($network === NETWORK_DIASPORA) {
+				if($duplex)
+					$new_relation = CONTACT_IS_FRIEND;
+				if($new_relation != CONTACT_IS_FOLLOWER)
+					$writable = 1;
+			}
 
 			$r = q("DELETE FROM `intro` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval($intro_id),
@@ -380,6 +386,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				`blocked` = 0, 
 				`pending` = 0,
 				`network` = '%s',
+				`writable` = %d,
 				`rel` = %d
 				WHERE `id` = %d LIMIT 1
 			",
@@ -392,6 +399,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				dbesc($notify),
 				dbesc($poll),
 				dbesc($network),
+				intval($writable),
 				intval($new_relation),
 				intval($contact_id)
 			);			
@@ -640,7 +648,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			`blocked` = 0, 
 			`pending` = 0,
 			`duplex` = %d, 
-			`network` = 'dfrn' WHERE `id` = %d LIMIT 1
+			`network` = '%s' WHERE `id` = %d LIMIT 1
 		",
 			dbesc($photos[0]),
 			dbesc($photos[1]),
@@ -650,6 +658,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
 			intval($duplex),
+			dbesc(NETWORK_DFRN),
 			intval($dfrn_record)
 		);
 		if($r === false) {    // indicates schema is messed up or total db failure

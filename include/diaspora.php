@@ -308,7 +308,7 @@ function diaspora_request($importer,$xml) {
 		// That makes us friends.
 
 		if($contact['rel'] == CONTACT_IS_FOLLOWER) {
-			q("UPDATE `contact` SET `rel` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			q("UPDATE `contact` SET `rel` = %d, `writable` = 1 WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval(CONTACT_IS_FRIEND),
 				intval($contact['id']),
 				intval($importer['uid'])
