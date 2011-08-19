@@ -789,9 +789,10 @@ function diaspora_share($me,$contact) {
 	$myaddr = $me['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
 	$theiraddr = $contact['addr'];
 
+logger('diaspora_share: contact: ' . print_r($contact,true), LOGGER_DATA);
 	$tpl = get_markup_template('diaspora_share.tpl');
 	$msg = replace_macros($tpl, array(
-		'$sender' => myaddr,
+		'$sender' => $myaddr,
 		'$recipient' => $theiraddr
 	));
 

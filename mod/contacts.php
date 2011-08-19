@@ -141,7 +141,7 @@ function contacts_content(&$a) {
 
 		$cmd = $a->argv[2];
 
-		$orig_record = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+		$orig_record = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d AND `self` = 0 LIMIT 1",
 			intval($contact_id),
 			intval(local_user())
 		);
@@ -222,7 +222,7 @@ function contacts_content(&$a) {
 			}
 
 
-			contact_remove($contact_id);
+			contact_remove($orig_record[0]['id']);
 			info( t('Contact has been removed.') . EOL );
 			goaway($a->get_baseurl() . '/contacts');
 			return; // NOTREACHED
