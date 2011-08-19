@@ -801,7 +801,7 @@ function diaspora_share($me,$contact) {
 function diaspora_send_status($item,$owner,$contact) {
 
 	$a = get_app();
-	$myaddr = $owner['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+	$myaddr = $owner['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
 	$theiraddr = $contact['addr'];
 	require_once('include/bbcode.php');
 
@@ -830,3 +830,141 @@ function diaspora_send_status($item,$owner,$contact) {
 	return $return_code;
 }
 
+
+function diaspora_send_followup($item,$owner,$contact) {
+
+	$a = get_app();
+	$myaddr = $me['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+	$theiraddr = $contact['addr'];
+
+	$p = q("select guid from item where parent = %d limit 1",
+		$item['parent']
+	);
+	if(count($p))
+		$parent_guid = $p[0]['guid'];
+	else
+		return;
+
+	if($item['verb'] === ACTIVITY_LIKE) {
+		$tpl = get_markup_template('diaspora_like.tpl');
+		$like = true;
+		$target_type = 'Post';
+		$positive = (($item['deleted']) ? 'false' : 'true');
+	}
+	else {
+		$tpl = get_markup_template('diaspora_comment.tpl');
+		$like = false;
+	}
+
+	$text = bbcode($item['body']);
+
+	// sign it
+
+	if($like)
+		$signed_text = $item['guid'] . ';' . $target_type . ';' . $positive . ';' . $myaddr;
+	else
+		$signed_text = $item['guid'] . ';' . $parent_guid . ';' . $text . $myaddr;
+
+	$authorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey']));
+
+	$msg = replace_macros($tpl,array(
+		'$guid' => xmlify($item['guid']),
+		'$parent_guid' => xmlify($parent_guid),
+		'$target_type' =>xmlify($target_type),
+		'$authorsig' => xmlify($authorsig),
+		'$text' => xmlify($text),
+		'$positive' => xmlify($positive),
+		'$diaspora_handle' => xmlify($myaddr)
+	));
+
+	logger('diaspora_followup: base message: ' . $msg, LOGGER_DATA);
+
+	$slap = 'xml=' . urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey']));
+
+	post_url($contact['notify'],$slap);
+	$return_code = $a->get_curl_code();
+	logger('diaspora_send_status: returns: ' . $return_code);
+	return $return_code;
+
+}
+
+
+function diaspora_send_relay($item,$owner,$contact) {
+
+
+	$p = q("select guid from item where parent = %d limit 1",
+		$item['parent']
+	);
+	if(count($p))
+		$parent_guid = $p[0]['guid'];
+	else
+		return;
+
+	// fetch the original signature	
+	$r = q("select * from sign where iid = %d limit 1",
+		intval($item['id'])
+	);
+	if(! count($r)) 
+		return;
+	$orig_sign = $r[0];
+
+	if($item['verb'] === ACTIVITY_LIKE) {
+		$tpl = get_markup_template('diaspora_like_relay.tpl');
+		$like = true;
+		$target_type = 'Post';
+		$positive = (($item['deleted']) ? 'false' : 'true');
+	}
+	else {
+		$tpl = get_markup_template('diaspora_comment_relay.tpl');
+		$like = false;
+	}
+
+	$text = bbcode($item['body']);
+
+	// sign it
+
+	if($like)
+		$parent_signed_text = $orig_sign['signed_text'];
+	else
+		$parent_signed_text = $orig_sign['signed_text'];
+
+	$parentauthorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey']));
+
+	$msg = replace_macros($tpl,array(
+		'$guid' => xmlify($item['guid']),
+		'$parent_guid' => xmlify($parent_guid),
+		'$target_type' =>xmlify($target_type),
+		'$authorsig' => xmlify($orig_sign['signature']),
+		'$parentsig' => xmlify($parentauthorsig),
+		'$text' => xmlify($text),
+		'$positive' => xmlify($positive),
+		'$diaspora_handle' => xmlify($myaddr)
+	));
+
+	// fetch the original signature	
+	$r = q("select * from sign where iid = %d limit 1",
+		intval($item['id'])
+	);
+	if(! count($r)) 
+		return;
+
+	logger('diaspora_relay_comment: base message: ' . $msg, LOGGER_DATA);
+
+	$slap = 'xml=' . urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey']));
+
+	post_url($contact['notify'],$slap);
+	$return_code = $a->get_curl_code();
+	logger('diaspora_send_status: returns: ' . $return_code);
+	return $return_code;
+
+}
+
+
+
+function diaspora_send_retraction($item,$owner,$contact) {
+
+
+
+
+
+}

@@ -504,20 +504,24 @@ function notifier_run($argv, $argc){
 				case NETWORK_DIASPORA:
 					if(get_config('system','dfrn_only') || (! get_config('diaspora_enabled')) || (! $normal_mode))
 						break;
-
-					if($target_item['deleted']) {
-						// diaspora delete, (check for like)
-
+					
+					if($target_item['verb'] === ACTIVITY_DISLIKE) {
+						// unsupported
+						break;
+					}
+					elseif($target_item['deleted'] && (! $parent_item['verb'] === ACTIVITY_LIKE)) {
+						// diaspora delete, 
+						diaspora_send_retraction($target_item,$owner,$contact);
 						break;
 					}
 					elseif($followup) {
-						// send to owner to relay
-
+						// send comments, likes and retractions of likes to owner to relay
+						diaspora_send_followup($target_item,$owner,$contact);
 						break;
 					}
 					elseif($target_item['parent'] != $target_item['id']) {
-						// we are the relay
-
+						// we are the relay - send comments, likes and unlikes to our conversants
+						diaspora_send_relay($target_item,$owner,$contact);
 						break;
 					}		
 					elseif($top_level) {
