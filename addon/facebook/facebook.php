@@ -395,6 +395,8 @@ function facebook_cron($a,$b) {
 	$r = q("SELECT * FROM `pconfig` WHERE `cat` = 'facebook' AND `k` = 'post' AND `v` = '1' ORDER BY RAND() ");
 	if(count($r)) {
 		foreach($r as $rr) {
+			if(get_pconfig($rr['uid'],'facebook','no_linking'))
+				continue;
 			// check for new friends once a day
 			$last_friend_check = get_pconfig($rr['uid'],'facebook','friend_check');
 			if($last_friend_check) 
