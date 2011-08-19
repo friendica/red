@@ -30,12 +30,12 @@ function diaspora_msg_build($msg,$user,$contact,$prvkey,$pubkey) {
 
 	$inner_aes_key = random_string(32);
 	$b_inner_aes_key = base64_encode($inner_aes_key);
-	$inner_iv = random_string(32);
+	$inner_iv = random_string(16);
 	$b_inner_iv = base64_encode($inner_iv);
 
 	$outer_aes_key = random_string(32);
 	$b_outer_aes_key = base64_encode($outer_aes_key);
-	$outer_iv = random_string(32);
+	$outer_iv = random_string(16);
 	$b_outer_iv = base64_encode($outer_iv);
 	
 	$handle = 'acct:' . $user['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);

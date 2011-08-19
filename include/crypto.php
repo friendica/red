@@ -182,3 +182,5 @@ function salmon_key($pubkey) {
 	pemtome($pubkey,$m,$e);
 	return 'RSA' . '.' . base64url_encode($m,true) . '.' . base64url_encode($e,true) ;
 }
+
+
