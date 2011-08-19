@@ -482,7 +482,7 @@ function diaspora_comment($importer,$xml,$msg) {
 		dbesc($parent_guid)
 	);
 	if(! count($r)) {
-		logger('diaspora_comment: parent item not found: ' . $guid);
+		logger('diaspora_comment: parent item not found: parent: ' . $parent_guid . ' item: ' . $guid);
 		return;
 	}
 	$parent_item = $r[0];
