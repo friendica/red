@@ -350,8 +350,8 @@ function diaspora_request($importer,$xml) {
 	$hash = random_string() . (string) time();   // Generate a confirm_key
 	
 	if($contact_record) {
-		$ret = q("INSERT INTO `intro` ( `uid`, `contact-id`, `blocked`, `knowyou`, `note`, `hash`, `datetime`,`blocked`)
-			VALUES ( %d, %d, 1, %d, '%s', '%s', '%s', 0 )",
+		$ret = q("INSERT INTO `intro` ( `uid`, `contact-id`, `blocked`, `knowyou`, `note`, `hash`, `datetime` )
+			VALUES ( %d, %d, 1, %d, '%s', '%s', '%s' )",
 			intval($importer['uid']),
 			intval($contact_record['id']),
 			0,
