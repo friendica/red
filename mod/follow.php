@@ -195,7 +195,7 @@ function follow_post(&$a) {
 		}
 	}
 
-	goaway($a->get_baseurl() . '/contacts/' . $r[0]['id']);
+	goaway($a->get_baseurl() . '/contacts/' . $contact_id);
 //	goaway($_SESSION['return_url']);
 	// NOTREACHED
 }
