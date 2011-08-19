@@ -190,7 +190,7 @@ function follow_post(&$a) {
 		}
 		if($contact['network'] == NETWORK_DIASPORA) {
 			require_once('include/diaspora.php');
-			$ret = diaspora_share($a->user,$r[0]);
+			$ret = diaspora_share($a->user,$contact);
 			logger('mod_follow: diaspora_share returns: ' . $ret);
 		}
 	}
