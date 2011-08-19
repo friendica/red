@@ -196,6 +196,7 @@
 		$user = null;
 		$extra_query = "";
 
+
 		if(!is_null($contact_id)){
 			$user=$contact_id;
 			$extra_query = "AND `contact`.`id` = %d ";
@@ -332,7 +333,7 @@
 			'notifications' => false,
 			'following' => '', #XXX: fix me
 			'verified' => true, #XXX: fix me
-			'status' => null
+			'status' => array()
 		);
 	
 		return $ret;
@@ -631,7 +632,7 @@
 			$sql_extra
 			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
 			intval($user_info['uid']),
-			$start, $count
+			intval($start),	intval($count)
 		);
 
 		$ret = api_format_items($r,$user_info);
@@ -678,7 +679,7 @@
 			$sql_extra
 			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
 			intval($user_info['uid']),
-			$start, $count
+			intval($start),	intval($count)
 		);
 
 		$ret = api_format_items($r,$user_info);
@@ -703,6 +704,11 @@
 		$user_info = api_get_user($a);
 		// get last newtork messages
 //		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` ) ";
+		// params
+		$count = (x($_GET,'count')?$_GET['count']:20);
+		$page = (x($_GET,'page')?$_GET['page']:0);
+		
+		$start = $page*$count;
 
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
@@ -717,7 +723,7 @@
 			$sql_extra
 			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
 			intval($user_info['uid']),
-			0,20
+			intval($start),	intval($count)
 		);
 
 		$ret = api_format_items($r,$user_info);
@@ -935,3 +941,129 @@
 	api_register_func('api/followers/ids','api_followers_ids',true);
 
 
+	function api_direct_messages_new(&$a, $type) {
+		if (local_user()===false) return false;
+		
+		if (!x($_POST, "text") || !x($_POST,"screen_name")) return;
+		
+		$sender = api_get_user($a);
+		
+		$r = q("SELECT `id` FROM `contact` WHERE `uid`=%d AND `nick`='%s'",
+				intval(local_user()),
+				dbesc($_POST['screen_name']));
+		
+		$recipient = api_get_user($a, $r[0]['id']);			
+		
+
+		require_once("include/message.php");
+		$sub = ( (strlen($_POST['text'])>10)?substr($_POST['text'],0,10)."...":$_POST['text']);
+		$id = send_message($recipient['id'], $_POST['text'], $sub);
+		
+		
+		if ($id>-1) {
+			$r = q("SELECT * FROM `mail` WHERE id=%d", intval($id));
+			$item = $r[0];
+			$ret=Array(
+					'id' => $item['id'],
+					'created_at'=> datetime_convert('UTC','UTC',$item['created'],ATOM_TIME),
+					'sender_id'=> $sender['id'] ,
+					'sender_screen_name'=> $sender['screen_name'],
+					'sender'=> $sender,
+					'recipient_id'=> $recipient['id'],
+					'recipient_screen_name'=> $recipient['screen_name'],
+					'recipient'=> $recipient,
+					
+					'text'=> $item['title']."\n".strip_tags(bbcode($item['body'])) ,
+					
+			);
+		
+		} else {
+			$ret = array("error"=>$id);	
+		}
+		
+		$data = Array('$messages'=>$ret);
+		
+		switch($type){
+			case "atom":
+			case "rss":
+				$data = api_rss_extra($a, $data, $user_info);
+		}
+				
+		return  api_apply_template("direct_messages", $type, $data);
+				
+	}
+	api_register_func('api/direct_messages/new','api_direct_messages_new',true);
+
+    function api_direct_messages_box(&$a, $type, $box) {
+		if (local_user()===false) return false;
+		
+		$user_info = api_get_user($a);
+		
+		// params
+		$count = (x($_GET,'count')?$_GET['count']:20);
+		$page = (x($_GET,'page')?$_GET['page']:0);
+		
+		$start = $page*$count;
+		
+	
+		if ($box=="sentbox") {
+			$sql_extra = "`from-url`='%s'";
+		} else {
+			$sql_extra = "`from-url`!='%s'";
+		}
+		
+		$r = q("SELECT * FROM `mail` WHERE uid=%d AND $sql_extra ORDER BY created DESC LIMIT %d,%d",
+				intval(local_user()),
+				dbesc( $a->get_baseurl() . '/profile/' . $a->user['nickname'] ),
+				intval($start),	intval($count)
+			   );
+		
+		$ret = Array();
+		foreach($r as $item){
+			switch ($box){
+				case "inbox":
+					$recipient = $user_info;
+					$sender = api_get_user($a,$item['contact-id']);
+					break;
+				case "sentbox":
+					$recipient = api_get_user($a,$item['contact-id']);
+					$sender = $user_info;
+					break;
+			}
+				
+			$ret[]=Array(
+				'id' => $item['id'],
+				'created_at'=> datetime_convert('UTC','UTC',$item['created'],ATOM_TIME),
+				'sender_id'=> $sender['id'] ,
+				'sender_screen_name'=> $sender['screen_name'],
+				'sender'=> $sender,
+				'recipient_id'=> $recipient['id'],
+				'recipient_screen_name'=> $recipient['screen_name'],
+				'recipient'=> $recipient,
+				
+				'text'=> $item['title']."\n".strip_tags(bbcode($item['body'])) ,
+				
+			);
+			
+		}
+		
+
+		$data = array('$messages' => $ret);
+		switch($type){
+			case "atom":
+			case "rss":
+				$data = api_rss_extra($a, $data, $user_info);
+		}
+				
+		return  api_apply_template("direct_messages", $type, $data);
+		
+	}
+
+	function api_direct_messages_sentbox(&$a, $type){
+		return api_direct_messages_box($a, $type, "sentbox");
+	}
+	function api_direct_messages_inbox(&$a, $type){
+		return api_direct_messages_box($a, $type, "inbox");
+	}
+	api_register_func('api/direct_messages/sent','api_direct_messages_sentbox',true);
+	api_register_func('api/direct_messages','api_direct_messages_inbox',true);
