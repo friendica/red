@@ -318,14 +318,14 @@ function diaspora_request($importer,$xml) {
 		return;
 	}
 	
-	require_once('include/Scrape.php');
-	$ret = probe_url($sender_handle);
+	$ret = find_diaspora_person_by_handle($sender_handle);
+
 
 	if((! count($ret)) || ($ret['network'] != NETWORK_DIASPORA)) {
 		logger('diaspora_request: Cannot resolve diaspora handle ' . $sender_handle . ' for ' . $recipient_handle);
 		return;
 	}
-
+dbg(1);
 	$r = q("INSERT INTO `contact` (`uid`, `network`,`addr`,`created`,`url`,`name`,`nick`,`photo`,`pubkey`,`notify`,`poll`,`blocked`,`priority`)
 		VALUES ( %d, '%s', '%s', '%s','%s','%s','%s','%s','%s','%s','%s',%d,%d) ",
 		intval($importer['uid']),
@@ -360,7 +360,7 @@ function diaspora_request($importer,$xml) {
 			dbesc(datetime_convert())
 		);
 	}
-
+dbg(0);
 	return;
 }
 
