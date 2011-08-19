@@ -796,11 +796,23 @@
 
 	/**
 	 *  https://dev.twitter.com/docs/api/1/get/statuses/friends 
-	 *  This function is deprecated by Twitter 
+	 *  This function is deprecated by Twitter
+	 *  returns: json, xml 
 	 **/
 	function api_statuses_f(&$a, $type, $qtype) {
 		if (local_user()===false) return false;
 		$user_info = api_get_user($a);
+		
+		if (x($_GET,'cursor') && $_GET['cursor']=='undefined'){
+			/* this is to stop Hotot to load friends multiple times
+			*  I'm not sure if I'm missing return something or
+			*  is a bug in hotot. Workaround, meantime
+			*/
+			
+			$ret=Array();
+			$data = array('$users' => $ret);
+			return  api_apply_template("friends", $type, $data);
+		}
 		
 		if($qtype == 'friends')
 			$sql_extra = sprintf(" AND ( `rel` = %d OR `rel` = %d ) ", intval(CONTACT_IS_SHARING), intval(CONTACT_IS_FRIEND));
@@ -816,13 +828,8 @@
 			$ret[] = api_get_user($a, $cid['id']);
 		}
 
+		
 		$data = array('$users' => $ret);
-		switch($type){
-			case "atom":
-			case "rss":
-				$data = api_rss_extra($a, $data, $user_info);
-		}
-				
 		return  api_apply_template("friends", $type, $data);
 
 	}
