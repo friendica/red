@@ -502,7 +502,8 @@ function notifier_run($argv, $argc){
 					}
 					break;
 				case NETWORK_DIASPORA:
-					if(get_config('system','dfrn_only') || (! get_config('diaspora_enabled')) || (! $normal_mode))
+					require_once('include/diaspora.php');
+					if(get_config('system','dfrn_only') || (! get_config('system','diaspora_enabled')) || (! $normal_mode))
 						break;
 					
 					if($target_item['verb'] === ACTIVITY_DISLIKE) {

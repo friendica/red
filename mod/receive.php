@@ -15,6 +15,8 @@ function receive_post(&$a) {
 	if($a->argc != 3 || $a->argv[1] !== 'users')
 		http_status_exit(500);
 
+	logger('receive: raw input: ' . file_get_contents('php://input'), LOGGER_DATA);
+
 	$guid = $a->argv[2];
 
 	$r = q("SELECT * FROM `user` WHERE `guid` = '%s' LIMIT 1",

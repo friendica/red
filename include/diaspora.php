@@ -792,7 +792,7 @@ function diaspora_share($me,$contact) {
 		'$recipient' => $theiraddr
 	));
 
-	$slap = 'xml=' . urlencode(diaspora_msg_build($msg,$me,$contact,$me['prvkey'],$contact['pubkey']));
+	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$me,$contact,$me['prvkey'],$contact['pubkey'])));
 
 	post_url($contact['notify'],$slap);
 	$return_code = $a->get_curl_code();
@@ -823,7 +823,7 @@ function diaspora_send_status($item,$owner,$contact) {
 
 	logger('diaspora_send_status: base message: ' . $msg, LOGGER_DATA);
 
-	$slap = 'xml=' . urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey']));
+	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'])));
 
 	post_url($contact['notify'],$slap);
 	$return_code = $a->get_curl_code();
@@ -835,7 +835,7 @@ function diaspora_send_status($item,$owner,$contact) {
 function diaspora_send_followup($item,$owner,$contact) {
 
 	$a = get_app();
-	$myaddr = $me['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+	$myaddr = $owner['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
 	$theiraddr = $contact['addr'];
 
 	$p = q("select guid from item where parent = %d limit 1",
@@ -864,7 +864,7 @@ function diaspora_send_followup($item,$owner,$contact) {
 	if($like)
 		$signed_text = $item['guid'] . ';' . $target_type . ';' . $positive . ';' . $myaddr;
 	else
-		$signed_text = $item['guid'] . ';' . $parent_guid . ';' . $text . $myaddr;
+		$signed_text = $item['guid'] . ';' . $parent_guid . ';' . $text . ';' . $myaddr;
 
 	$authorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey']));
 
@@ -873,14 +873,14 @@ function diaspora_send_followup($item,$owner,$contact) {
 		'$parent_guid' => xmlify($parent_guid),
 		'$target_type' =>xmlify($target_type),
 		'$authorsig' => xmlify($authorsig),
-		'$text' => xmlify($text),
+		'$body' => xmlify($text),
 		'$positive' => xmlify($positive),
-		'$diaspora_handle' => xmlify($myaddr)
+		'$handle' => xmlify($myaddr)
 	));
 
 	logger('diaspora_followup: base message: ' . $msg, LOGGER_DATA);
 
-	$slap = 'xml=' . urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey']));
+	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'])));
 
 	post_url($contact['notify'],$slap);
 	$return_code = $a->get_curl_code();
@@ -891,6 +891,11 @@ function diaspora_send_followup($item,$owner,$contact) {
 
 
 function diaspora_send_relay($item,$owner,$contact) {
+
+
+	$a = get_app();
+	$myaddr = $owner['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+	$theiraddr = $contact['addr'];
 
 
 	$p = q("select guid from item where parent = %d limit 1",
@@ -951,7 +956,7 @@ function diaspora_send_relay($item,$owner,$contact) {
 
 	logger('diaspora_relay_comment: base message: ' . $msg, LOGGER_DATA);
 
-	$slap = 'xml=' . urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey']));
+	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'])));
 
 	post_url($contact['notify'],$slap);
 	$return_code = $a->get_curl_code();
