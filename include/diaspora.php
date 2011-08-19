@@ -26,6 +26,8 @@ function diaspora_base_message($type,$data) {
 function diaspora_msg_build($msg,$user,$contact,$prvkey,$pubkey) {
 	$a = get_app();
 
+	logger('diaspora_msg_build: ' . $msg, LOGGER_DATA);
+
 	$inner_aes_key = random_string(32);
 	$b_inner_aes_key = base64_encode($inner_aes_key);
 	$inner_iv = random_string(32);
@@ -96,6 +98,7 @@ $magic_env = <<< EOT
 </entry>
 EOT;
 
+	logger('diaspora_msg_build: magic_env: ' . $magic_env, LOGGER_DATA);
 	return $magic_env;
 
 }
