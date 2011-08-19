@@ -353,11 +353,15 @@
 				return api_get_user($a,$a->contacts[$normalised]['id']);
 		}
 		// We don't know this person directly.
+		
+		list($nick, $name) = array_map("trim",explode("(",$item['author-name']));
+		$name=str_replace(")","",$name);
+		
 		$ret = array(
 			'uid' => 0,
 			'id' => 0,
-			'name' => $item['author-name'],
-			'screen_name' => $item['author_name'],
+			'name' => $name,
+			'screen_name' => $nick,
 			'location' => '', //$uinfo[0]['default-location'],
 			'profile_image_url' => $item['author-avatar'],
 			'url' => $item['author-link'],
@@ -386,7 +390,7 @@
 			'notifications' => false,
 			'verified' => true, #XXX: fix me
 			'followers' => '', #XXX: fix me
-			#'status' => null
+			'status' => array()
 		);
 
 		return $ret; 
@@ -608,17 +612,17 @@
 	 */
 	function api_statuses_home_timeline(&$a, $type){
 		if (local_user()===false) return false;
-		
+				
 		$user_info = api_get_user($a);
 		// get last newtork messages
-//		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` ) ";
 
 		// params
-		$count = (x($_GET,'count')?$_GET['count']:20);
-		$page = (x($_GET,'page')?$_GET['page']:0);
+		$count = (x($_REQUEST,'count')?$_REQUEST['count']:20);
+		$page = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
+		if ($page<0) $page=0;
+		$since_id = 0;//$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
 		
 		$start = $page*$count;
-
 
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
@@ -630,8 +634,10 @@
 			AND `contact`.`id` = `item`.`contact-id`
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 			$sql_extra
+			AND `item`.`id`>%d
 			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
 			intval($user_info['uid']),
+			intval($since_id),
 			intval($start),	intval($count)
 		);
 
@@ -657,11 +663,12 @@
 		
 		$user_info = api_get_user($a);
 		// get last newtork messages
-//		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` ) ";
 
 		// params
-		$count = (x($_GET,'count')?$_GET['count']:20);
-		$page = (x($_GET,'page')?$_GET['page']:0);
+		$count = (x($_REQUEST,'count')?$_REQUEST['count']:20);
+		$page = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
+		if ($page<0) $page=0;
+		$since_id = 0;//$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
 		
 		$start = $page*$count;
 
@@ -677,8 +684,10 @@
 			AND `contact`.`id` = `item`.`contact-id`
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 			$sql_extra
+			AND `item`.`id`>%d
 			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
 			intval($user_info['uid']),
+			intval($since_id),
 			intval($start),	intval($count)
 		);
 
@@ -703,10 +712,11 @@
 		
 		$user_info = api_get_user($a);
 		// get last newtork messages
-//		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` ) ";
+		
 		// params
 		$count = (x($_GET,'count')?$_GET['count']:20);
-		$page = (x($_GET,'page')?$_GET['page']:0);
+		$page = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
+		if ($page<0) $page=0;
 		
 		$start = $page*$count;
 
@@ -755,8 +765,8 @@
 			$status_user = (($item['cid']==$user_info['id'])?$user_info: api_item_get_user($a,$item));
 			$status = array(
 				'created_at'=> api_date($item['created']),
-				'published' => datetime_convert('UTC','UTC',$item['created'],ATOM_TIME),
-				'updated'   => datetime_convert('UTC','UTC',$item['edited'],ATOM_TIME),
+				'published' => api_date($item['created']),
+				'updated'   => api_date($item['edited']),
 				'id'		=> intval($item['id']),
 				'message_id' => $item['uri'],
 				'text'		=> strip_tags(bbcode($item['body'])),
@@ -965,7 +975,7 @@
 			$item = $r[0];
 			$ret=Array(
 					'id' => $item['id'],
-					'created_at'=> datetime_convert('UTC','UTC',$item['created'],ATOM_TIME),
+					'created_at'=> api_date($item['created']),
 					'sender_id'=> $sender['id'] ,
 					'sender_screen_name'=> $sender['screen_name'],
 					'sender'=> $sender,
@@ -1001,7 +1011,8 @@
 		
 		// params
 		$count = (x($_GET,'count')?$_GET['count']:20);
-		$page = (x($_GET,'page')?$_GET['page']:0);
+		$page = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
+		if ($page<0) $page=0;
 		
 		$start = $page*$count;
 		
@@ -1033,7 +1044,7 @@
 				
 			$ret[]=Array(
 				'id' => $item['id'],
-				'created_at'=> datetime_convert('UTC','UTC',$item['created'],ATOM_TIME),
+				'created_at'=> api_date($item['created']),
 				'sender_id'=> $sender['id'] ,
 				'sender_screen_name'=> $sender['screen_name'],
 				'sender'=> $sender,
