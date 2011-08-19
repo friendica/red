@@ -587,8 +587,9 @@ function notifier_run($argv, $argc){
 		 */
 
 		$r = q("SELECT `id`, `name` FROM `contact` 
-			WHERE `network` = NETWORK_DFRN AND `uid` = %d AND `blocked` = 0 AND `pending` = 0
+			WHERE `network` = '%s' AND `uid` = %d AND `blocked` = 0 AND `pending` = 0
 			AND `rel` != %d ",
+			dbesc(NETWORK_DFRN),
 			intval($owner['uid']),
 			intval(CONTACT_IS_SHARING)
 		);

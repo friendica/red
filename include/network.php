@@ -697,8 +697,8 @@ function parse_xml_string($s,$strict = true) {
 function add_fcontact($arr) {
 
 	$r = q("insert into fcontact ( `url`,`name`,`photo`,`request`,`nick`,`addr`,
-		`notify`,`poll`,`confirm`,`network`,`alias`,`pubkey` )
-		values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",
+		`notify`,`poll`,`confirm`,`network`,`alias`,`pubkey`,`updated` )
+		values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",
 		dbesc($arr['url']),
 		dbesc($arr['name']),
 		dbesc($arr['photo']),
@@ -710,7 +710,8 @@ function add_fcontact($arr) {
 		dbesc($arr['confirm']),
 		dbesc($arr['network']),
 		dbesc($arr['alias']),
-		dbesc($arr['pubkey'])
+		dbesc($arr['pubkey']),
+		dbesc(datetime_convert())
 	);
 	return $r;
 }
