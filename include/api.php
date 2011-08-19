@@ -332,7 +332,7 @@
 			'notifications' => false,
 			'following' => '', #XXX: fix me
 			'verified' => true, #XXX: fix me
-			#'status' => null
+			'status' => null
 		);
 	
 		return $ret;
@@ -612,6 +612,13 @@
 		// get last newtork messages
 //		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` ) ";
 
+		// params
+		$count = (x($_GET,'count')?$_GET['count']:20);
+		$page = (x($_GET,'page')?$_GET['page']:0);
+		
+		$start = $page*$count;
+
+
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
 			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
@@ -624,7 +631,7 @@
 			$sql_extra
 			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
 			intval($user_info['uid']),
-			0,20
+			$start, $count
 		);
 
 		$ret = api_format_items($r,$user_info);
@@ -651,6 +658,13 @@
 		// get last newtork messages
 //		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` ) ";
 
+		// params
+		$count = (x($_GET,'count')?$_GET['count']:20);
+		$page = (x($_GET,'page')?$_GET['page']:0);
+		
+		$start = $page*$count;
+
+
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
 			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
@@ -664,7 +678,7 @@
 			$sql_extra
 			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
 			intval($user_info['uid']),
-			0,20
+			$start, $count
 		);
 
 		$ret = api_format_items($r,$user_info);
@@ -780,6 +794,51 @@
 	}
 	api_register_func('api/account/rate_limit_status','api_account_rate_limit_status',true);
 
+	/**
+	 *  https://dev.twitter.com/docs/api/1/get/statuses/friends 
+	 *  This function is deprecated by Twitter 
+	 **/
+	function api_statuses_f(&$a, $type, $qtype) {
+		if (local_user()===false) return false;
+		$user_info = api_get_user($a);
+		
+		if($qtype == 'friends')
+			$sql_extra = sprintf(" AND ( `rel` = %d OR `rel` = %d ) ", intval(CONTACT_IS_SHARING), intval(CONTACT_IS_FRIEND));
+		if($qtype == 'followers')
+			$sql_extra = sprintf(" AND ( `rel` = %d OR `rel` = %d ) ", intval(CONTACT_IS_FOLLOWER), intval(CONTACT_IS_FRIEND));
+ 
+		$r = q("SELECT id FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 $sql_extra",
+			intval(local_user())
+		);
+
+		$ret = array();
+		foreach($r as $cid){
+			$ret[] = api_get_user($a, $cid['id']);
+		}
+
+		$data = array('$users' => $ret);
+		switch($type){
+			case "atom":
+			case "rss":
+				$data = api_rss_extra($a, $data, $user_info);
+		}
+				
+		return  api_apply_template("friends", $type, $data);
+
+	}
+	function api_statuses_friends(&$a, $type){
+		return api_statuses_f($a,$type,"friends");
+	}
+	function api_statuses_followers(&$a, $type){
+		return api_statuses_f($a,$type,"followers");
+	}
+	api_register_func('api/statuses/friends','api_statuses_friends',true);
+	api_register_func('api/statuses/followers','api_statuses_followers',true);
+
+
+
+
+
 
 	function api_statusnet_config(&$a,$type) {
 		$name = $a->config['sitename'];
@@ -807,7 +866,6 @@
 
 	}
 	api_register_func('api/statusnet/config','api_statusnet_config',false);
-
 
 	function api_statusnet_version(&$a,$type) {
 
@@ -868,4 +926,5 @@
 	}
 	api_register_func('api/friends/ids','api_friends_ids',true);
 	api_register_func('api/followers/ids','api_followers_ids',true);
+
 
