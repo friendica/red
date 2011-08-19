@@ -485,7 +485,7 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 
 	if($diaspora && $diaspora_base && $diaspora_guid) {
 		if($mode == PROBE_DIASPORA || ! $notify)
-			$notify = $diaspora_base . 'receive/post/' . $diaspora_guid;
+			$notify = $diaspora_base . 'receive/users/' . $diaspora_guid;
 		if(strpos($url,'@'))
 			$addr = str_replace('acct:', '', $url);
 	}			
