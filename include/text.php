@@ -147,7 +147,7 @@ if(! function_exists('xmlify')) {
 function xmlify($str) {
 	$buffer = '';
 	
-	for($x = 0; $x < strlen($str); $x ++) {
+	for($x = 0; $x < mb_strlen($str); $x ++) {
 		$char = $str[$x];
         
 		switch( $char ) {
