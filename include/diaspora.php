@@ -325,7 +325,7 @@ function diaspora_request($importer,$xml) {
 		logger('diaspora_request: Cannot resolve diaspora handle ' . $sender_handle . ' for ' . $recipient_handle);
 		return;
 	}
-dbg(1);
+
 	$r = q("INSERT INTO `contact` (`uid`, `network`,`addr`,`created`,`url`,`name`,`nick`,`photo`,`pubkey`,`notify`,`poll`,`blocked`,`priority`)
 		VALUES ( %d, '%s', '%s', '%s','%s','%s','%s','%s','%s','%s','%s',%d,%d) ",
 		intval($importer['uid']),
@@ -351,16 +351,17 @@ dbg(1);
 	
 	if($contact_record) {
 		$ret = q("INSERT INTO `intro` ( `uid`, `contact-id`, `blocked`, `knowyou`, `note`, `hash`, `datetime` )
-			VALUES ( %d, %d, 1, %d, '%s', '%s', '%s' )",
+			VALUES ( %d, %d, %d, %d, '%s', '%s', '%s' )",
 			intval($importer['uid']),
 			intval($contact_record['id']),
+			0,
 			0,
 			dbesc( t('Sharing notification from Diaspora network')),
 			dbesc($hash),
 			dbesc(datetime_convert())
 		);
 	}
-dbg(0);
+
 	return;
 }
 
