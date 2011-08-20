@@ -1,8 +1,9 @@
 <?php
 
-require_once('bbcode.php');
-require_once('oembed.php');
+require_once('include/bbcode.php');
+require_once('include/oembed.php');
 require_once('include/salmon.php');
+require_once('include/crypto.php');
 
 function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) {
 

@@ -141,6 +141,7 @@ function diaspora_decode($importer,$xml) {
 
 	$decrypted = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $outer_key, $ciphertext, MCRYPT_MODE_CBC, $outer_iv);
 
+
 	$decrypted = pkcs5_unpad($decrypted);
 
 	/**
