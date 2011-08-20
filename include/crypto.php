@@ -3,19 +3,20 @@
 require_once('library/ASNValue.class.php');
 require_once('library/asn1.php');
 
+// supported algorithms are 'sha256', 'sha1'
 
-function rsa_sign($data,$key) {
+function rsa_sign($data,$key,$alg = 'sha256') {
 
 	$sig = '';
-	if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
-		openssl_sign($data,$sig,$key,'sha256');
+	if (version_compare(PHP_VERSION, '5.3.0', '>=') || $alg === 'sha1') {
+		openssl_sign($data,$sig,$key,(($alg == 'sha1') ? OPENSSL_ALGO_SHA1 : 'sha256'));
     }
     else {
 		if(strlen($key) < 1024 || extension_loaded('gmp')) {
 			require_once('library/phpsec/Crypt/RSA.php');
 			$rsa = new CRYPT_RSA();
 			$rsa->signatureMode = CRYPT_RSA_SIGNATURE_PKCS1;
-			$rsa->setHash('sha256');
+			$rsa->setHash($alg);
 			$rsa->loadKey($key);
 			$sig = $rsa->sign($data);
 		}
@@ -27,17 +28,17 @@ function rsa_sign($data,$key) {
 	return $sig;
 }
 
-function rsa_verify($data,$sig,$key) {
+function rsa_verify($data,$sig,$key,$alg = 'sha256') {
 
-	if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
-		$verify = openssl_verify($data,$sig,$key,'sha256');
+	if (version_compare(PHP_VERSION, '5.3.0', '>=') || $alg === 'sha1') {
+		$verify = openssl_verify($data,$sig,$key,(($alg == 'sha1') ? OPENSSL_ALGO_SHA1 : 'sha256'));
     }
     else {
 		if(strlen($key) <= 300 || extension_loaded('gmp')) {
 			require_once('library/phpsec/Crypt/RSA.php');
 			$rsa = new CRYPT_RSA();
 			$rsa->signatureMode = CRYPT_RSA_SIGNATURE_PKCS1;
-			$rsa->setHash('sha256');
+			$rsa->setHash($alg);
 			$rsa->loadKey($key);
 			$verify = $rsa->verify($data,$sig);
 		}

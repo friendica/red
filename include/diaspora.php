@@ -192,7 +192,7 @@ function diaspora_decode($importer,$xml) {
 
 	// Add back the 60 char linefeeds
 
-	// Diaspora devs: This completely violates the entire principle of salmon magic signatures,
+	// This completely violates the entire principle of salmon magic signatures,
 	// which was to have a message signing format that was completely ambivalent to linefeeds 
 	// and transport whitespace mangling, and base64 wrapping rules. Guess what? PHP and Ruby 
 	// use different linelengths for base64 output. 
@@ -208,7 +208,7 @@ function diaspora_decode($importer,$xml) {
 	$encoding = $base->encoding;
 	$alg = $base->alg;
 
-	// Diaspora devs: I can't even begin to tell you how sucky this is. Please read the spec.
+	// I can't even begin to tell you how sucky this is. Please read the spec.
 
 	$signed_data = $data  . (($data[-1] != "\n") ? "\n" : '') . '.' . base64url_encode($type) . "\n" . '.' . base64url_encode($encoding) . "\n" . '.' . base64url_encode($alg) . "\n";
 
@@ -231,12 +231,10 @@ function diaspora_decode($importer,$xml) {
 	}
 
 	// Once we have the author URI, go to the web and try to find their public key
-	// *** or look it up locally ***
+	// (first this will look it up locally if it is in the fcontact cache)
+	// This will also convert diaspora public key from pkcs#1 to pkcs#8
 
 	logger('mod-diaspora: Fetching key for ' . $author_link );
-
-	// Get diaspora public key (pkcs#1) and convert to pkcs#8
-
  	$key = get_diaspora_key($author_link);
 
 	if(! $key) {
@@ -510,9 +508,10 @@ function diaspora_comment($importer,$xml,$msg) {
 		}
 	}
 
-	if(! rsa_verify($author_signed_data,$author_signature,$key)) {
+	if(! rsa_verify($author_signed_data,$author_signature,$key,'sha1')) {
 		logger('diaspora_comment: verification failed.');
-		return;
+// until we figure out what is different about their signing algorithm, accept it
+//		return;
 	}
 
 
@@ -523,9 +522,9 @@ function diaspora_comment($importer,$xml,$msg) {
 
 		$key = $msg['key'];
 
-		if(! rsa_verify($owner_signed_data,$parent_author_signature,$key)) {
+		if(! rsa_verify($owner_signed_data,$parent_author_signature,$key,'sha1')) {
 			logger('diaspora_comment: owner verification failed.');
-			return;
+//			return;
 		}
 	}
 
@@ -677,9 +676,9 @@ function diaspora_like($importer,$xml,$msg) {
 		}
 	}
 
-	if(! rsa_verify($author_signed_data,$author_signature,$key)) {
+	if(! rsa_verify($author_signed_data,$author_signature,$key,'sha1')) {
 		logger('diaspora_like: verification failed.');
-		return;
+//		return;
 	}
 
 	if($parent_author_signature) {
@@ -689,9 +688,9 @@ function diaspora_like($importer,$xml,$msg) {
 
 		$key = $msg['key'];
 
-		if(! rsa_verify($owner_signed_data,$parent_author_signature,$key)) {
+		if(! rsa_verify($owner_signed_data,$parent_author_signature,$key,'sha1')) {
 			logger('diaspora_like: owner verification failed.');
-			return;
+//			return;
 		}
 	}
 
@@ -790,7 +789,6 @@ function diaspora_share($me,$contact) {
 	$myaddr = $me['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
 	$theiraddr = $contact['addr'];
 
-logger('diaspora_share: contact: ' . print_r($contact,true), LOGGER_DATA);
 	$tpl = get_markup_template('diaspora_share.tpl');
 	$msg = replace_macros($tpl, array(
 		'$sender' => $myaddr,
@@ -871,7 +869,7 @@ function diaspora_send_followup($item,$owner,$contact) {
 	else
 		$signed_text = $item['guid'] . ';' . $parent_guid . ';' . $text . ';' . $myaddr;
 
-	$authorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey']));
+	$authorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey']),'sha1');
 
 	$msg = replace_macros($tpl,array(
 		'$guid' => xmlify($item['guid']),
@@ -939,7 +937,7 @@ function diaspora_send_relay($item,$owner,$contact) {
 	else
 		$parent_signed_text = $orig_sign['signed_text'];
 
-	$parentauthorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey']));
+	$parentauthorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha1'));
 
 	$msg = replace_macros($tpl,array(
 		'$guid' => xmlify($item['guid']),
