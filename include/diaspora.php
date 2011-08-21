@@ -493,7 +493,7 @@ function diaspora_comment($importer,$xml,$msg) {
 
 	$author_signature = base64_decode($author_signature);
 
-	if(stricmp($diaspora_handle,$msg['author']) == 0) {
+	if(strcasecmp($diaspora_handle,$msg['author']) == 0) {
 		$person = $contact;
 		$key = $msg['key'];
 	}
@@ -662,7 +662,7 @@ function diaspora_like($importer,$xml,$msg) {
 
 	$author_signature = base64_decode($author_signature);
 
-	if(stricmp($diaspora_handle,$msg['author']) == 0) {
+	if(strcasecmp($diaspora_handle,$msg['author']) == 0) {
 		$person = $contact;
 		$key = $msg['key'];
 	}
