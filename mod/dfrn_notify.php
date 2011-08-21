@@ -58,6 +58,9 @@ function dfrn_notify_post(&$a) {
 			break; // NOTREACHED
 	}
 		 
+	// be careful - $importer will contain both the contact information for the contact
+	// sending us the post, and also the user information for the person receiving it.
+	// since they are mixed together, it is easy to get them confused.
 
 	$r = q("SELECT	`contact`.*, `contact`.`uid` AS `importer_uid`, 
 					`contact`.`pubkey` AS `cpubkey`, 
@@ -512,17 +515,19 @@ function dfrn_notify_post(&$a) {
 							$msg['htmlversion']	
 								= html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r","\\n\\n" ,"\\n"), "<br />\n",$datarray['body']))));
 
+							$imgtouse = ((link_compare($datarray['author-link'],$importer['url'])) ? $importer['thumb'] : $datarray['author-avatar']);
+
 							// load the template for private message notifications
 							$tpl = get_intltext_template('cmnt_received_html_body_eml.tpl');
 							$email_html_body_tpl = replace_macros($tpl,array(
 								'$username'     => $importer['username'],
 								'$sitename'		=> $a->config['sitename'],			// name of this site
 								'$siteurl'		=> $a->get_baseurl(),				// descriptive url of this site
-								'$thumb'		=> $datarray['author-avatar'],			// thumbnail url for sender icon
+								'$thumb'		=> $imgtouse,						// thumbnail url for sender icon
 								'$email'		=> $importer['email'],				// email address to send to
-								'$url'			=> $datarray['author-link'],			// full url for the site
-								'$from'			=> $from,					// name of the person sending the message
-								'$body'			=> $msg['htmlversion'],			// html version of the message
+								'$url'			=> $datarray['author-link'],		// full url for the site
+								'$from'			=> $from,							// name of the person sending the message
+								'$body'			=> $msg['htmlversion'],				// html version of the message
 								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id,
 							));
 			
@@ -532,10 +537,10 @@ function dfrn_notify_post(&$a) {
 								'$username'     => $importer['username'],
 								'$sitename'		=> $a->config['sitename'],			// name of this site
 								'$siteurl'		=> $a->get_baseurl(),				// descriptive url of this site
-								'$thumb'		=> $datarray['author-avatar'],			// thumbnail url for sender icon
+								'$thumb'		=> $imgtouse,						// thumbnail url for sender icon
 								'$email'		=> $importer['email'],				// email address to send to
-								'$url'			=> $datarray['author-link'],			// full url for the site
-								'$from'			=> $from,					// name of the person sending the message
+								'$url'			=> $datarray['author-link'],		// full url for the site
+								'$from'			=> $from,							// name of the person sending the message
 								'$body'			=> $msg['textversion'],				// text version of the message
 								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id,
 							));
@@ -643,15 +648,18 @@ function dfrn_notify_post(&$a) {
 							$msg['htmlversion']	
 								= html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r","\\n\\n" ,"\\n"), "<br />\n",$datarray['body']))));
 
+							$imgtouse = ((link_compare($datarray['author-link'],$importer['url'])) ? $importer['thumb'] : $datarray['author-avatar']);
+
+
 							// load the template for private message notifications
 							$tpl = get_intltext_template('cmnt_received_html_body_eml.tpl');
 							$email_html_body_tpl = replace_macros($tpl,array(
 								'$username'     => $importer['username'],
 								'$sitename'		=> $a->config['sitename'],				// name of this site
 								'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
-								'$thumb'		=> $datarray['author-avatar'],				// thumbnail url for sender icon
-								'$url'			=> $datarray['author-link'],				// full url for the site
-								'$from'			=> $from,						// name of the person sending the message
+								'$thumb'		=> $imgtouse,							// thumbnail url for sender icon
+								'$url'			=> $datarray['author-link'],			// full url for the site
+								'$from'			=> $from,								// name of the person sending the message
 								'$body'			=> $msg['htmlversion'],					// html version of the message
 								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id,
 							));
@@ -662,9 +670,9 @@ function dfrn_notify_post(&$a) {
 								'$username'     => $importer['username'],
 								'$sitename'		=> $a->config['sitename'],				// name of this site
 								'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
-								'$thumb'		=> $datarray['author-avatar'],				// thumbnail url for sender icon
-								'$url'			=> $datarray['author-link'],				// full url for the site
-								'$from'			=> $from,						// name of the person sending the message
+								'$thumb'		=> $imgtouse,							// thumbnail url for sender icon
+								'$url'			=> $datarray['author-link'],			// full url for the site
+								'$from'			=> $from,								// name of the person sending the message
 								'$body'			=> $msg['textversion'],					// text version of the message
 								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id,
 							));
