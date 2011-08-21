@@ -9,7 +9,7 @@ function rsa_sign($data,$key,$alg = 'sha256') {
 
 	$sig = '';
 	if (version_compare(PHP_VERSION, '5.3.0', '>=') || $alg === 'sha1') {
-		openssl_sign($data,$sig,$key,(($alg == 'sha1') ? OPENSSL_ALGO_SHA1 : 'sha256'));
+		openssl_sign($data,$sig,$key,(($alg == 'sha1') ? OPENSSL_ALGO_SHA1 : $alg));
     }
     else {
 		if(strlen($key) < 1024 || extension_loaded('gmp')) {
@@ -31,7 +31,7 @@ function rsa_sign($data,$key,$alg = 'sha256') {
 function rsa_verify($data,$sig,$key,$alg = 'sha256') {
 
 	if (version_compare(PHP_VERSION, '5.3.0', '>=') || $alg === 'sha1') {
-		$verify = openssl_verify($data,$sig,$key,(($alg == 'sha1') ? OPENSSL_ALGO_SHA1 : 'sha256'));
+		$verify = openssl_verify($data,$sig,$key,(($alg == 'sha1') ? OPENSSL_ALGO_SHA1 : $alg));
     }
     else {
 		if(strlen($key) <= 300 || extension_loaded('gmp')) {

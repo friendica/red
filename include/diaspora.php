@@ -508,10 +508,9 @@ function diaspora_comment($importer,$xml,$msg) {
 		}
 	}
 
-	if(! rsa_verify($author_signed_data,$author_signature,$key,'sha1')) {
+	if(! rsa_verify($author_signed_data,$author_signature,$key,'sha')) {
 		logger('diaspora_comment: verification failed.');
-// until we figure out what is different about their signing algorithm, accept it
-//		return;
+		return;
 	}
 
 
@@ -522,9 +521,9 @@ function diaspora_comment($importer,$xml,$msg) {
 
 		$key = $msg['key'];
 
-		if(! rsa_verify($owner_signed_data,$parent_author_signature,$key,'sha1')) {
+		if(! rsa_verify($owner_signed_data,$parent_author_signature,$key,'sha')) {
 			logger('diaspora_comment: owner verification failed.');
-//			return;
+			return;
 		}
 	}
 
@@ -677,9 +676,9 @@ function diaspora_like($importer,$xml,$msg) {
 		}
 	}
 
-	if(! rsa_verify($author_signed_data,$author_signature,$key,'sha1')) {
+	if(! rsa_verify($author_signed_data,$author_signature,$key,'sha')) {
 		logger('diaspora_like: verification failed.');
-//		return;
+		return;
 	}
 
 	if($parent_author_signature) {
@@ -689,9 +688,9 @@ function diaspora_like($importer,$xml,$msg) {
 
 		$key = $msg['key'];
 
-		if(! rsa_verify($owner_signed_data,$parent_author_signature,$key,'sha1')) {
+		if(! rsa_verify($owner_signed_data,$parent_author_signature,$key,'sha')) {
 			logger('diaspora_like: owner verification failed.');
-//			return;
+			return;
 		}
 	}
 
@@ -871,7 +870,7 @@ function diaspora_send_followup($item,$owner,$contact) {
 	else
 		$signed_text = $item['guid'] . ';' . $parent_guid . ';' . $text . ';' . $myaddr;
 
-	$authorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey']),'sha1');
+	$authorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey']),'sha');
 
 	$msg = replace_macros($tpl,array(
 		'$guid' => xmlify($item['guid']),
@@ -939,7 +938,7 @@ function diaspora_send_relay($item,$owner,$contact) {
 	else
 		$parent_signed_text = $orig_sign['signed_text'];
 
-	$parentauthorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha1'));
+	$parentauthorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha'));
 
 	$msg = replace_macros($tpl,array(
 		'$guid' => xmlify($item['guid']),
