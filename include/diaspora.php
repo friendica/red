@@ -671,14 +671,14 @@ function diaspora_like($importer,$xml,$msg) {
 		if(is_array($person) && x($person,'pubkey'))
 			$key = $person['pubkey'];
 		else {
-			logger('diaspora_comment: unable to find author details');
+			logger('diaspora_like: unable to find author details');
 			return;
 		}
 	}
 
 	if(! rsa_verify($author_signed_data,$author_signature,$key,'sha')) {
 		logger('diaspora_like: verification failed.');
-		return;
+//		return;
 	}
 
 	if($parent_author_signature) {
@@ -690,7 +690,7 @@ function diaspora_like($importer,$xml,$msg) {
 
 		if(! rsa_verify($owner_signed_data,$parent_author_signature,$key,'sha')) {
 			logger('diaspora_like: owner verification failed.');
-			return;
+//			return;
 		}
 	}
 
