@@ -695,6 +695,7 @@ function item_store($arr,$force_parent = false) {
 	$arr['tag']           = ((x($arr,'tag'))           ? notags(trim($arr['tag']))           : '');
 	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : '');
 	$arr['app']           = ((x($arr,'app'))           ? notags(trim($arr['app']))           : '');
+	$arr['guid']          = ((x($arr,'guid'))          ? notags(trim($arr['guid']))          : get_guid());
 
 	if($arr['parent-uri'] === $arr['uri']) {
 		$parent_id = 0;
@@ -758,7 +759,6 @@ function item_store($arr,$force_parent = false) {
 		}
 	}
 
-	$arr['guid'] = get_guid();
 
 	call_hooks('post_remote',$arr);
 
