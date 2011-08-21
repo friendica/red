@@ -599,6 +599,7 @@ function diaspora_comment($importer,$xml,$msg) {
 
 function diaspora_like($importer,$xml,$msg) {
 
+	$a = get_app();
 	$guid = notags(unxmlify($xml->guid));
 	$parent_guid = notags(unxmlify($xml->parent_guid));
 	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
