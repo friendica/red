@@ -634,7 +634,7 @@ function diaspora_like($importer,$xml,$msg) {
 
 	$parent_item = $r[0];
 
-	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '$s' LIMIT 1",
+	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '%s' LIMIT 1",
 		intval($importer['uid']),
 		dbesc($guid)
 	);
