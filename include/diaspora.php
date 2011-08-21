@@ -722,6 +722,7 @@ EOT;
 
 	$arr['uri'] = $uri;
 	$arr['uid'] = $importer['uid'];
+	$arr['guid'] = $guid;
 	$arr['contact-id'] = $contact['id'];
 	$arr['type'] = 'activity';
 	$arr['wall'] = $parent_item['wall'];
@@ -729,13 +730,13 @@ EOT;
 	$arr['parent'] = $parent_item['id'];
 	$arr['parent-uri'] = $parent_item['uri'];
 
-	$datarray['owner-name'] = $contact['name'];
-	$datarray['owner-link'] = $contact['url'];
-	$datarray['owner-avatar'] = $contact['thumb'];
+	$arr['owner-name'] = $contact['name'];
+	$arr['owner-link'] = $contact['url'];
+	$arr['owner-avatar'] = $contact['thumb'];
 
-	$datarray['author-name'] = $person['name'];
-	$datarray['author-link'] = $person['url'];
-	$datarray['author-avatar'] = ((x($person,'thumb')) ? $person['thumb'] : $person['photo']);
+	$arr['author-name'] = $person['name'];
+	$arr['author-link'] = $person['url'];
+	$arr['author-avatar'] = ((x($person,'thumb')) ? $person['thumb'] : $person['photo']);
 	
 	$ulink = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]';
 	$alink = '[url=' . $parent_item['author-link'] . ']' . $parent_item['author-name'] . '[/url]';
