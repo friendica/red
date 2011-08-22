@@ -802,6 +802,7 @@ function diaspora_share($me,$contact) {
 
 	post_url($contact['notify'] . '/',$slap);
 	$return_code = $a->get_curl_code();
+	logger('diaspora_send_share: returns: ' . $return_code);
 	return $return_code;
 }
 
@@ -890,7 +891,7 @@ function diaspora_send_followup($item,$owner,$contact) {
 
 	post_url($contact['notify'] . '/',$slap);
 	$return_code = $a->get_curl_code();
-	logger('diaspora_send_status: returns: ' . $return_code);
+	logger('diaspora_send_followup: returns: ' . $return_code);
 	return $return_code;
 
 }
@@ -966,7 +967,7 @@ function diaspora_send_relay($item,$owner,$contact) {
 
 	post_url($contact['notify'] . '/',$slap);
 	$return_code = $a->get_curl_code();
-	logger('diaspora_send_status: returns: ' . $return_code);
+	logger('diaspora_send_relay: returns: ' . $return_code);
 	return $return_code;
 
 }
