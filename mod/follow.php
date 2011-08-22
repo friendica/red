@@ -100,9 +100,9 @@ function follow_post(&$a) {
 			$new_relation = CONTACT_IS_FOLLOWER;
 
 		// create contact record 
-		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `addr`, `alias`, `notify`, `poll`, `name`, `nick`, `photo`, `network`, `rel`, `priority`,
+		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `addr`, `alias`, `notify`, `poll`, `name`, `nick`, `photo`, `network`, `pubkey`, `rel`, `priority`,
 			`writable`, `blocked`, `readonly`, `pending` )
-			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, 0, 0, 0 ) ",
+			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, 0, 0, 0 ) ",
 			intval(local_user()),
 			dbesc(datetime_convert()),
 			dbesc($ret['url']),
@@ -114,6 +114,7 @@ function follow_post(&$a) {
 			dbesc($ret['nick']),
 			dbesc($ret['photo']),
 			dbesc($ret['network']),
+			dbesc($ret['pubkey']),
 			intval($new_relation),
 			intval($ret['priority']),
 			intval($writeable)

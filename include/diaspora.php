@@ -77,10 +77,15 @@ EOT;
 	$ciphertext = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $outer_aes_key, $decrypted_header, MCRYPT_MODE_CBC, $outer_iv);
 
 	$outer_json = json_encode(array('iv' => $b_outer_iv,'key' => $b_outer_aes_key));
+
 	$encrypted_outer_key_bundle = '';
 	openssl_public_encrypt($outer_json,$encrypted_outer_key_bundle,$pubkey);
-	
+
+	logger('outer_bundle_encrypt: ' . openssl_error_string());
 	$b64_encrypted_outer_key_bundle = base64_encode($encrypted_outer_key_bundle);
+
+	logger('outer_bundle: ' . $b64_encrypted_outer_key_bundle . ' key: ' . $pubkey);
+
 	$encrypted_header_json_object = json_encode(array('aes_key' => base64_encode($encrypted_outer_key_bundle), 
 		'ciphertext' => base64_encode($ciphertext)));
 	$cipher_json = base64_encode($encrypted_header_json_object);
