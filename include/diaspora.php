@@ -660,7 +660,7 @@ function diaspora_like($importer,$xml,$msg) {
 		return;	
 	}
 
-	$author_signed_data = $guid . ';' . $parent_guid . ';' . $target_type . ';' . $positive . ';' . $diaspora_handle;
+	$author_signed_data = $guid . ';' . $target_type . ';' . $parent_guid . ';' . $positive . ';' . $diaspora_handle;
 
 	$author_signature = base64_decode($author_signature);
 
@@ -680,7 +680,7 @@ function diaspora_like($importer,$xml,$msg) {
 
 	if(! rsa_verify($author_signed_data,$author_signature,$key,'sha')) {
 		logger('diaspora_like: verification failed.');
-//		return;
+		return;
 	}
 
 	if($parent_author_signature) {
@@ -692,7 +692,7 @@ function diaspora_like($importer,$xml,$msg) {
 
 		if(! rsa_verify($owner_signed_data,$parent_author_signature,$key,'sha')) {
 			logger('diaspora_like: owner verification failed.');
-//			return;
+			return;
 		}
 	}
 
