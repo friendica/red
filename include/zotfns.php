@@ -2,6 +2,8 @@
 
 
 require_once('include/salmon.php');
+require_once('include/crypto.php');
+
 
 function zot_get($url,$args) {
 	$argstr = '';

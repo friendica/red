@@ -1,8 +1,9 @@
 <?php
 
-require_once('bbcode.php');
-require_once('oembed.php');
+require_once('include/bbcode.php');
+require_once('include/oembed.php');
 require_once('include/salmon.php');
+require_once('include/crypto.php');
 
 function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) {
 
@@ -694,6 +695,7 @@ function item_store($arr,$force_parent = false) {
 	$arr['tag']           = ((x($arr,'tag'))           ? notags(trim($arr['tag']))           : '');
 	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : '');
 	$arr['app']           = ((x($arr,'app'))           ? notags(trim($arr['app']))           : '');
+	$arr['guid']          = ((x($arr,'guid'))          ? notags(trim($arr['guid']))          : get_guid());
 
 	if($arr['parent-uri'] === $arr['uri']) {
 		$parent_id = 0;
@@ -757,7 +759,6 @@ function item_store($arr,$force_parent = false) {
 		}
 	}
 
-	$arr['guid'] = get_guid();
 
 	call_hooks('post_remote',$arr);
 
@@ -1635,7 +1636,7 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 	$o .= '<published>' . xmlify(datetime_convert('UTC','UTC',$item['created'] . '+00:00',ATOM_TIME)) . '</published>' . "\r\n";
 	$o .= '<updated>' . xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00',ATOM_TIME)) . '</updated>' . "\r\n";
 	$o .= '<dfrn:env>' . base64url_encode($body, true) . '</dfrn:env>' . "\r\n";
-	$o .= '<content type="' . $type . '" >' . xmlify(($type === 'html') ? bbcode($body) : $body) . '</content>' . "\r\n";
+	$o .= '<content type="' . $type . '" >' . xmlify((($type === 'html') ? bbcode($body) : $body)) . '</content>' . "\r\n";
 	$o .= '<link rel="alternate" type="text/html" href="' . xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']) . '" />' . "\r\n";
 	if($comment)
 		$o .= '<dfrn:comment-allow>' . intval($item['last-child']) . '</dfrn:comment-allow>' . "\r\n";

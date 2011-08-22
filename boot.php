@@ -8,9 +8,9 @@ require_once("include/pgettext.php");
 require_once('include/nav.php');
 
 
-define ( 'FRIENDIKA_VERSION',      '2.2.1074' );
+define ( 'FRIENDIKA_VERSION',      '2.2.1079' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
-define ( 'DB_UPDATE_VERSION',      1079      );
+define ( 'DB_UPDATE_VERSION',      1081      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -804,8 +804,12 @@ function profile_load(&$a, $nickname, $profile = 0) {
 	if(! (x($a->page,'aside')))
 		$a->page['aside'] = '';
 
-	$a->page['aside'] .= profile_sidebar($a->profile);
-	$a->page['aside'] .= contact_block();
+	$block = (((get_config('system','block_public')) && (! local_user()) && (! remote_user())) ? true : false);
+
+	$a->page['aside'] .= profile_sidebar($a->profile, $block);
+
+	if(! $block)
+		$a->page['aside'] .= contact_block();
 
 	return;
 }}
@@ -828,7 +832,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 
 
 if(! function_exists('profile_sidebar')) {
-function profile_sidebar($profile) {
+function profile_sidebar($profile, $block = 0) {
 
 	$a = get_app();
 
@@ -847,10 +851,9 @@ function profile_sidebar($profile) {
 
 	$tabs = '';
 
-	$photo = '<div id="profile-photo-wrapper"><img class="photo" src="' . $profile['photo'] . '" alt="' . $profile['name'] . '" /></div>';
+	$photo = '<div id="profile-photo-wrapper"><img class="photo" width="175" height="175" src="' . $profile['photo'] . '" alt="' . $profile['name'] . '" /></div>';
 
 	// don't show connect link to yourself
-	
 	$connect = (($profile['uid'] != local_user()) ? '<li><a id="dfrn-request-link" href="dfrn_request/' . $profile['nickname'] . '">' . t('Connect') . '</a></li>' : '');
 
 	// don't show connect link to authenticated visitors either
@@ -878,6 +881,7 @@ function profile_sidebar($profile) {
 
 	}
 
+
 	$gender = ((x($profile,'gender') == 1) ? '<div class="mf"><span class="gender-label">' . t('Gender:') . '</span> <span class="x-gender">' . $profile['gender'] . '</span></div><div class="profile-clear"></div>' : '');
 
 	$pubkey = ((x($profile,'pubkey') == 1) ? '<div class="key" style="display:none;">' . $profile['pubkey'] . '</div>' : '');
@@ -886,13 +890,13 @@ function profile_sidebar($profile) {
 
 	$homepage = ((x($profile,'homepage') == 1) ? '<div class="homepage"><span class="homepage-label">' . t('Homepage:') . ' </span><span class="homepage-url">' . linkify($profile['homepage']) . '</span></div><div class="profile-clear"></div>' : '');
 
-	if($profile['hidewall'] && (! local_user()) && (! remote_user())) {
-		$location = $gender = $marital = $homepage = '';
+	if(($profile['hidewall'] || $block) && (! local_user()) && (! remote_user())) {
+		$location = $pdesc = $connect = $gender = $marital = $homepage = '';
 	}
 
 	$podloc = $a->get_baseurl();
 	$searchable = (($profile['publish'] && $profile['net-publish']) ? 'true' : 'false' );
-	$nickname = $profile['nick'];
+	$nickname = $profile['nickname'];
 	$photo300 = $a->get_baseurl() . '/photo/custom/300/' . $profile['uid'] . '.jpg';
 	$photo100 = $a->get_baseurl() . '/photo/custom/100/' . $profile['uid'] . '.jpg';
 	$photo50  = $a->get_baseurl() . '/photo/custom/50/'  . $profile['uid'] . '.jpg';
@@ -903,13 +907,19 @@ function profile_sidebar($profile) {
 <dl class='entity_nickname'>
 <dt>Nickname</dt>
 <dd>
-<a class="nickname url uid" href="$podloc" rel="me">$nickname</a>
+<a class="nickname url uid" href="$podloc/" rel="me">$nickname</a>
+</dd>
+</dl>
+<dl class='entity_fn'>
+<dt>Full name</dt>
+<dd>
+<span class='fn'>$fullname</span>
 </dd>
 </dl>
 <dl class="entity_url">
 <dt>URL</dt>
 <dd>
-<a class="url" href="$podloc" id="pod_location" rel="me">$podloc</a>
+<a class="url" href="$podloc/" id="pod_location" rel="me">$podloc/</a>
 </dd>
 </dl>
 <dl class="entity_photo">
@@ -930,10 +940,10 @@ function profile_sidebar($profile) {
 <img class="photo avatar" height="50px" width="50px" src="$photo50">
 </dd>
 </dl>
-<dl class='entity_searchable'>
+<dl class="entity_searchable">
 <dt>Searchable</dt>
 <dd>
-<span class='searchable'>$searchable</span>
+<span class="searchable">$searchable</span>
 </dd>
 </dl>
 </div>
@@ -1034,11 +1044,14 @@ function proc_run($cmd){
 	$a = get_app();
 
 	$args = func_get_args();
-	call_hooks("proc_run", $args);
+	$arr = array('args' => $args, 'run_cmd' => true);
+
+	call_hooks("proc_run", $arr);
+	if(! $arr['run_cmd'])
+		return;
 
 	if(count($args) && $args[0] === 'php')
         $args[0] = ((x($a->config,'php_path')) && (strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
-	
 	foreach ($args as $arg){
 		$arg = escapeshellarg($arg);
 	}

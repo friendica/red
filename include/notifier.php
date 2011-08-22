@@ -502,22 +502,27 @@ function notifier_run($argv, $argc){
 					}
 					break;
 				case NETWORK_DIASPORA:
-					if(get_config('system','dfrn_only') || (! get_config('diaspora_enabled')) || (! $normal_mode))
+					require_once('include/diaspora.php');
+					if(get_config('system','dfrn_only') || (! get_config('system','diaspora_enabled')) || (! $normal_mode))
 						break;
-
-					if($target_item['deleted']) {
-						// diaspora delete, (check for like)
-
+					
+					if($target_item['verb'] === ACTIVITY_DISLIKE) {
+						// unsupported
+						break;
+					}
+					elseif($target_item['deleted'] && (! $parent_item['verb'] === ACTIVITY_LIKE)) {
+						// diaspora delete, 
+						diaspora_send_retraction($target_item,$owner,$contact);
 						break;
 					}
 					elseif($followup) {
-						// send to owner to relay
-
+						// send comments, likes and retractions of likes to owner to relay
+						diaspora_send_followup($target_item,$owner,$contact);
 						break;
 					}
 					elseif($target_item['parent'] != $target_item['id']) {
-						// we are the relay
-
+						// we are the relay - send comments, likes and unlikes to our conversants
+						diaspora_send_relay($target_item,$owner,$contact);
 						break;
 					}		
 					elseif($top_level) {
@@ -571,7 +576,7 @@ function notifier_run($argv, $argc){
 
 		/**
 		 *
-		 * If you have less than 150 dfrn friends and it's a public message,
+		 * If you have less than 999 dfrn friends and it's a public message,
 		 * we'll just go ahead and push them out securely with dfrn/rino.
 		 * If you've got more than that, you'll have to rely on PuSH delivery.
 		 *
@@ -587,8 +592,9 @@ function notifier_run($argv, $argc){
 		 */
 
 		$r = q("SELECT `id`, `name` FROM `contact` 
-			WHERE `network` = NETWORK_DFRN AND `uid` = %d AND `blocked` = 0 AND `pending` = 0
+			WHERE `network` = '%s' AND `uid` = %d AND `blocked` = 0 AND `pending` = 0
 			AND `rel` != %d ",
+			dbesc(NETWORK_DFRN),
 			intval($owner['uid']),
 			intval(CONTACT_IS_SHARING)
 		);

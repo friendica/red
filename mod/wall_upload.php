@@ -55,7 +55,7 @@ function wall_upload_post(&$a) {
 	if(($maximagesize) && ($filesize > $maximagesize)) {
 		echo  sprintf( t('Image exceeds size limit of %d'), $maximagesize) . EOL;
 		@unlink($src);
-		return;
+		killme();
 	}
 
 	$imagedata = @file_get_contents($src);

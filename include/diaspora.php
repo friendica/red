@@ -4,25 +4,11 @@ require_once('include/crypto.php');
 require_once('include/items.php');
 
 function get_diaspora_key($uri) {
-	$key = '';
-
 	logger('Fetching diaspora key for: ' . $uri);
 
-	$arr = lrdd($uri);
-
-	if(is_array($arr)) {
-		foreach($arr as $a) {
-			if($a['@attributes']['rel'] === 'diaspora-public-key') {
-				$key = base64_decode($a['@attributes']['href']);
-			}
-		}
-	}
-	else {
-		return '';
-	}
-
-	if($key)
-		return rsatopem($key);
+	$r = find_diaspora_person_by_handle($uri);
+	if($r)
+		return $r['pubkey'];
 	return '';
 }
 
@@ -40,14 +26,16 @@ function diaspora_base_message($type,$data) {
 function diaspora_msg_build($msg,$user,$contact,$prvkey,$pubkey) {
 	$a = get_app();
 
+	logger('diaspora_msg_build: ' . $msg, LOGGER_DATA);
+
 	$inner_aes_key = random_string(32);
 	$b_inner_aes_key = base64_encode($inner_aes_key);
-	$inner_iv = random_string(32);
+	$inner_iv = random_string(16);
 	$b_inner_iv = base64_encode($inner_iv);
 
 	$outer_aes_key = random_string(32);
 	$b_outer_aes_key = base64_encode($outer_aes_key);
-	$outer_iv = random_string(32);
+	$outer_iv = random_string(16);
 	$b_outer_iv = base64_encode($outer_iv);
 	
 	$handle = 'acct:' . $user['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
@@ -89,13 +77,20 @@ EOT;
 	$ciphertext = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $outer_aes_key, $decrypted_header, MCRYPT_MODE_CBC, $outer_iv);
 
 	$outer_json = json_encode(array('iv' => $b_outer_iv,'key' => $b_outer_aes_key));
+
 	$encrypted_outer_key_bundle = '';
 	openssl_public_encrypt($outer_json,$encrypted_outer_key_bundle,$pubkey);
-	
+
+	logger('outer_bundle_encrypt: ' . openssl_error_string());
 	$b64_encrypted_outer_key_bundle = base64_encode($encrypted_outer_key_bundle);
+
+	logger('outer_bundle: ' . $b64_encrypted_outer_key_bundle . ' key: ' . $pubkey);
+
 	$encrypted_header_json_object = json_encode(array('aes_key' => base64_encode($encrypted_outer_key_bundle), 
 		'ciphertext' => base64_encode($ciphertext)));
-	$encrypted_header = '<encrypted_header>' . base64_encode($encrypted_header_json_object) . '</encrypted_header>';
+	$cipher_json = base64_encode($encrypted_header_json_object);
+
+	$encrypted_header = '<encrypted_header>' . $cipher_json . '</encrypted_header>';
 
 $magic_env = <<< EOT
 <?xml version='1.0' encoding='UTF-8'?>
@@ -110,6 +105,7 @@ $magic_env = <<< EOT
 </entry>
 EOT;
 
+	logger('diaspora_msg_build: magic_env: ' . $magic_env, LOGGER_DATA);
 	return $magic_env;
 
 }
@@ -151,6 +147,7 @@ function diaspora_decode($importer,$xml) {
 	$outer_key = base64_decode($j_outer_key_bundle->key);
 
 	$decrypted = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $outer_key, $ciphertext, MCRYPT_MODE_CBC, $outer_iv);
+
 
 	$decrypted = pkcs5_unpad($decrypted);
 
@@ -202,7 +199,7 @@ function diaspora_decode($importer,$xml) {
 
 	// Add back the 60 char linefeeds
 
-	// Diaspora devs: This completely violates the entire principle of salmon magic signatures,
+	// This completely violates the entire principle of salmon magic signatures,
 	// which was to have a message signing format that was completely ambivalent to linefeeds 
 	// and transport whitespace mangling, and base64 wrapping rules. Guess what? PHP and Ruby 
 	// use different linelengths for base64 output. 
@@ -218,7 +215,7 @@ function diaspora_decode($importer,$xml) {
 	$encoding = $base->encoding;
 	$alg = $base->alg;
 
-	// Diaspora devs: I can't even begin to tell you how sucky this is. Read the freaking spec.
+	// I can't even begin to tell you how sucky this is. Please read the spec.
 
 	$signed_data = $data  . (($data[-1] != "\n") ? "\n" : '') . '.' . base64url_encode($type) . "\n" . '.' . base64url_encode($encoding) . "\n" . '.' . base64url_encode($alg) . "\n";
 
@@ -241,12 +238,10 @@ function diaspora_decode($importer,$xml) {
 	}
 
 	// Once we have the author URI, go to the web and try to find their public key
-	// *** or look it up locally ***
+	// (first this will look it up locally if it is in the fcontact cache)
+	// This will also convert diaspora public key from pkcs#1 to pkcs#8
 
 	logger('mod-diaspora: Fetching key for ' . $author_link );
-
-	// Get diaspora public key (pkcs#1) and convert to pkcs#8
-
  	$key = get_diaspora_key($author_link);
 
 	if(! $key) {
@@ -278,20 +273,32 @@ function diaspora_get_contact_by_handle($uid,$handle) {
 	return false;
 }
 
-function find_person_by_handle($handle) {
-		// we don't care about the uid, we just want to save an expensive webfinger probe
-		$r = q("select * from contact where network = '%s' and addr = '%s' LIMIT 1",
-			dbesc(NETWORK_DIASPORA),
-			dbesc($handle)
-		);
-		if(count($r))
+function find_diaspora_person_by_handle($handle) {
+	$r = q("select * from fcontact where network = '%s' and addr = '%s' limit 1",
+		dbesc(NETWORK_DIASPORA),
+		dbesc($handle)
+	);
+	if(count($r)) {
+		// update record occasionally so it doesn't get stale
+		$d = strtotime($r[0]['updated'] . ' +00:00');
+		if($d < strtotime('now - 14 days')) {
+			q("delete from fcontact where id = %d limit 1",
+				intval($r[0]['id'])
+			);
+		}
+		else
 			return $r[0];
-		$r = probe_url($handle);
-		// need to cached this, perhaps in fcontact
-		if(count($r))
-			return ($r);
-		return false;
+	}
+	require_once('include/Scrape.php');
+	$r = probe_url($handle, PROBE_DIASPORA);
+	if((count($r)) && ($r['network'] === NETWORK_DIASPORA)) {
+		add_fcontact($r);
+		return ($r);
+	}
+	return false;
 }
+
+	
 
 function diaspora_request($importer,$xml) {
 
@@ -310,7 +317,7 @@ function diaspora_request($importer,$xml) {
 		// That makes us friends.
 
 		if($contact['rel'] == CONTACT_IS_FOLLOWER) {
-			q("UPDATE `contact` SET `rel` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			q("UPDATE `contact` SET `rel` = %d, `writable` = 1 WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval(CONTACT_IS_FRIEND),
 				intval($contact['id']),
 				intval($importer['uid'])
@@ -320,8 +327,8 @@ function diaspora_request($importer,$xml) {
 		return;
 	}
 	
-	require_once('include/Scrape.php');
-	$ret = probe_url($sender_handle);
+	$ret = find_diaspora_person_by_handle($sender_handle);
+
 
 	if((! count($ret)) || ($ret['network'] != NETWORK_DIASPORA)) {
 		logger('diaspora_request: Cannot resolve diaspora handle ' . $sender_handle . ' for ' . $recipient_handle);
@@ -352,10 +359,11 @@ function diaspora_request($importer,$xml) {
 	$hash = random_string() . (string) time();   // Generate a confirm_key
 	
 	if($contact_record) {
-		$ret = q("INSERT INTO `intro` ( `uid`, `contact-id`, `blocked`, `knowyou`, `note`, `hash`, `datetime`,`blocked`)
-			VALUES ( %d, %d, 1, %d, '%s', '%s', '%s', 0 )",
+		$ret = q("INSERT INTO `intro` ( `uid`, `contact-id`, `blocked`, `knowyou`, `note`, `hash`, `datetime` )
+			VALUES ( %d, %d, %d, %d, '%s', '%s', '%s' )",
 			intval($importer['uid']),
 			intval($contact_record['id']),
+			0,
 			0,
 			dbesc( t('Sharing notification from Diaspora network')),
 			dbesc($hash),
@@ -483,7 +491,7 @@ function diaspora_comment($importer,$xml,$msg) {
 		dbesc($parent_guid)
 	);
 	if(! count($r)) {
-		logger('diaspora_comment: parent item not found: ' . $guid);
+		logger('diaspora_comment: parent item not found: parent: ' . $parent_guid . ' item: ' . $guid);
 		return;
 	}
 	$parent_item = $r[0];
@@ -492,12 +500,12 @@ function diaspora_comment($importer,$xml,$msg) {
 
 	$author_signature = base64_decode($author_signature);
 
-	if(stricmp($diaspora_handle,$msg['author']) == 0) {
+	if(strcasecmp($diaspora_handle,$msg['author']) == 0) {
 		$person = $contact;
 		$key = $msg['key'];
 	}
 	else {
-		$person = find_person_by_handle($diaspora_handle);	
+		$person = find_diaspora_person_by_handle($diaspora_handle);	
 
 		if(is_array($person) && x($person,'pubkey'))
 			$key = $person['pubkey'];
@@ -507,10 +515,11 @@ function diaspora_comment($importer,$xml,$msg) {
 		}
 	}
 
-	if(! rsa_verify($author_signed_data,$author_signature,$key)) {
+	if(! rsa_verify($author_signed_data,$author_signature,$key,'sha')) {
 		logger('diaspora_comment: verification failed.');
 		return;
 	}
+
 
 	if($parent_author_signature) {
 		$owner_signed_data = $guid . ';' . $parent_guid . ';' . $text . ';' . $msg['author'];
@@ -519,7 +528,7 @@ function diaspora_comment($importer,$xml,$msg) {
 
 		$key = $msg['key'];
 
-		if(! rsa_verify($owner_signed_data,$parent_author_signature,$key)) {
+		if(! rsa_verify($owner_signed_data,$parent_author_signature,$key,'sha')) {
 			logger('diaspora_comment: owner verification failed.');
 			return;
 		}
@@ -578,14 +587,25 @@ function diaspora_comment($importer,$xml,$msg) {
 	$datarray['author-avatar'] = ((x($person,'thumb')) ? $person['thumb'] : $person['photo']);
 	$datarray['body'] = $body;
 
-	item_store($datarray);
+	$message_id = item_store($datarray);
 
+	if(! $parent_author_signature) {
+		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+			intval($message_id),
+			dbesc($author_signed_data),
+			dbesc(base64_encode($author_signature)),
+			dbesc($diaspora_handle)
+		);
+	}
+
+	// notify others
 	return;
 
 }
 
 function diaspora_like($importer,$xml,$msg) {
 
+	$a = get_app();
 	$guid = notags(unxmlify($xml->guid));
 	$parent_guid = notags(unxmlify($xml->parent_guid));
 	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
@@ -621,7 +641,7 @@ function diaspora_like($importer,$xml,$msg) {
 
 	$parent_item = $r[0];
 
-	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '$s' LIMIT 1",
+	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '%s' LIMIT 1",
 		intval($importer['uid']),
 		dbesc($guid)
 	);
@@ -645,25 +665,25 @@ function diaspora_like($importer,$xml,$msg) {
 		return;	
 	}
 
-	$author_signed_data = $guid . ';' . $parent_guid . ';' . $target_type . ';' . $positive . ';' . $diaspora_handle;
+	$author_signed_data = $guid . ';' . $target_type . ';' . $parent_guid . ';' . $positive . ';' . $diaspora_handle;
 
 	$author_signature = base64_decode($author_signature);
 
-	if(stricmp($diaspora_handle,$msg['author']) == 0) {
+	if(strcasecmp($diaspora_handle,$msg['author']) == 0) {
 		$person = $contact;
 		$key = $msg['key'];
 	}
 	else {
-		$person = find_person_by_handle($diaspora_handle);	
+		$person = find_diaspora_person_by_handle($diaspora_handle);	
 		if(is_array($person) && x($person,'pubkey'))
 			$key = $person['pubkey'];
 		else {
-			logger('diaspora_comment: unable to find author details');
+			logger('diaspora_like: unable to find author details');
 			return;
 		}
 	}
 
-	if(! rsa_verify($author_signed_data,$author_signature,$key)) {
+	if(! rsa_verify($author_signed_data,$author_signature,$key,'sha')) {
 		logger('diaspora_like: verification failed.');
 		return;
 	}
@@ -675,7 +695,7 @@ function diaspora_like($importer,$xml,$msg) {
 
 		$key = $msg['key'];
 
-		if(! rsa_verify($owner_signed_data,$parent_author_signature,$key)) {
+		if(! rsa_verify($owner_signed_data,$parent_author_signature,$key,'sha')) {
 			logger('diaspora_like: owner verification failed.');
 			return;
 		}
@@ -708,6 +728,7 @@ EOT;
 
 	$arr['uri'] = $uri;
 	$arr['uid'] = $importer['uid'];
+	$arr['guid'] = $guid;
 	$arr['contact-id'] = $contact['id'];
 	$arr['type'] = 'activity';
 	$arr['wall'] = $parent_item['wall'];
@@ -715,13 +736,13 @@ EOT;
 	$arr['parent'] = $parent_item['id'];
 	$arr['parent-uri'] = $parent_item['uri'];
 
-	$datarray['owner-name'] = $contact['name'];
-	$datarray['owner-link'] = $contact['url'];
-	$datarray['owner-avatar'] = $contact['thumb'];
+	$arr['owner-name'] = $contact['name'];
+	$arr['owner-link'] = $contact['url'];
+	$arr['owner-avatar'] = $contact['thumb'];
 
-	$datarray['author-name'] = $person['name'];
-	$datarray['author-link'] = $person['url'];
-	$datarray['author-avatar'] = ((x($person,'thumb')) ? $person['thumb'] : $person['photo']);
+	$arr['author-name'] = $person['name'];
+	$arr['author-link'] = $person['url'];
+	$arr['author-avatar'] = ((x($person,'thumb')) ? $person['thumb'] : $person['photo']);
 	
 	$ulink = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]';
 	$alink = '[url=' . $parent_item['author-link'] . ']' . $parent_item['author-name'] . '[/url]';
@@ -736,12 +757,20 @@ EOT;
 	$arr['unseen'] = 1;
 	$arr['last-child'] = 0;
 
-	$post_id = item_store($arr);	
+	$message_id = item_store($arr);
 
+	if(! $parent_author_signature) {
+		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+			intval($message_id),
+			dbesc($author_signed_data),
+			dbesc(base64_encode($author_signature)),
+			dbesc($diaspora_handle)
+		);
+	}
 
 	// FIXME send notification
 
-
+	return;
 }
 
 function diaspora_retraction($importer,$xml) {
@@ -770,21 +799,22 @@ function diaspora_share($me,$contact) {
 
 	$tpl = get_markup_template('diaspora_share.tpl');
 	$msg = replace_macros($tpl, array(
-		'$sender' => myaddr,
+		'$sender' => $myaddr,
 		'$recipient' => $theiraddr
 	));
 
-	$slap = 'xml=' . urlencode(diaspora_msg_build($msg,$me,$contact,$me['prvkey'],$contact['pubkey']));
+	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$me,$contact,$me['prvkey'],$contact['pubkey'])));
 
-	post_url($contact['notify'],$slap);
+	post_url($contact['notify'] . '/',$slap);
 	$return_code = $a->get_curl_code();
+	logger('diaspora_send_share: returns: ' . $return_code);
 	return $return_code;
 }
 
 function diaspora_send_status($item,$owner,$contact) {
 
 	$a = get_app();
-	$myaddr = $owner['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+	$myaddr = $owner['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
 	$theiraddr = $contact['addr'];
 	require_once('include/bbcode.php');
 
@@ -805,11 +835,154 @@ function diaspora_send_status($item,$owner,$contact) {
 
 	logger('diaspora_send_status: base message: ' . $msg, LOGGER_DATA);
 
-	$slap = 'xml=' . urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey']));
+	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'])));
 
-	post_url($contact['notify'],$slap);
+	post_url($contact['notify'] . '/',$slap);
 	$return_code = $a->get_curl_code();
 	logger('diaspora_send_status: returns: ' . $return_code);
 	return $return_code;
 }
 
+
+function diaspora_send_followup($item,$owner,$contact) {
+
+	$a = get_app();
+	$myaddr = $owner['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+	$theiraddr = $contact['addr'];
+
+	$p = q("select guid from item where parent = %d limit 1",
+		$item['parent']
+	);
+	if(count($p))
+		$parent_guid = $p[0]['guid'];
+	else
+		return;
+
+	if($item['verb'] === ACTIVITY_LIKE) {
+		$tpl = get_markup_template('diaspora_like.tpl');
+		$like = true;
+		$target_type = 'Post';
+		$positive = (($item['deleted']) ? 'false' : 'true');
+	}
+	else {
+		$tpl = get_markup_template('diaspora_comment.tpl');
+		$like = false;
+	}
+
+	$text = bbcode($item['body']);
+
+	// sign it
+
+	if($like)
+		$signed_text = $item['guid'] . ';' . $target_type . ';' . $positive . ';' . $myaddr;
+	else
+		$signed_text = $item['guid'] . ';' . $parent_guid . ';' . $text . ';' . $myaddr;
+
+	$authorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey']),'sha');
+
+	$msg = replace_macros($tpl,array(
+		'$guid' => xmlify($item['guid']),
+		'$parent_guid' => xmlify($parent_guid),
+		'$target_type' =>xmlify($target_type),
+		'$authorsig' => xmlify($authorsig),
+		'$body' => xmlify($text),
+		'$positive' => xmlify($positive),
+		'$handle' => xmlify($myaddr)
+	));
+
+	logger('diaspora_followup: base message: ' . $msg, LOGGER_DATA);
+
+	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'])));
+
+	post_url($contact['notify'] . '/',$slap);
+	$return_code = $a->get_curl_code();
+	logger('diaspora_send_followup: returns: ' . $return_code);
+	return $return_code;
+
+}
+
+
+function diaspora_send_relay($item,$owner,$contact) {
+
+
+	$a = get_app();
+	$myaddr = $owner['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+	$theiraddr = $contact['addr'];
+
+
+	$p = q("select guid from item where parent = %d limit 1",
+		$item['parent']
+	);
+	if(count($p))
+		$parent_guid = $p[0]['guid'];
+	else
+		return;
+
+	// fetch the original signature	
+	$r = q("select * from sign where iid = %d limit 1",
+		intval($item['id'])
+	);
+	if(! count($r)) 
+		return;
+	$orig_sign = $r[0];
+
+	if($item['verb'] === ACTIVITY_LIKE) {
+		$tpl = get_markup_template('diaspora_like_relay.tpl');
+		$like = true;
+		$target_type = 'Post';
+		$positive = (($item['deleted']) ? 'false' : 'true');
+	}
+	else {
+		$tpl = get_markup_template('diaspora_comment_relay.tpl');
+		$like = false;
+	}
+
+	$text = bbcode($item['body']);
+
+	// sign it
+
+	if($like)
+		$parent_signed_text = $orig_sign['signed_text'];
+	else
+		$parent_signed_text = $orig_sign['signed_text'];
+
+	$parentauthorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha'));
+
+	$msg = replace_macros($tpl,array(
+		'$guid' => xmlify($item['guid']),
+		'$parent_guid' => xmlify($parent_guid),
+		'$target_type' =>xmlify($target_type),
+		'$authorsig' => xmlify($orig_sign['signature']),
+		'$parentsig' => xmlify($parentauthorsig),
+		'$text' => xmlify($text),
+		'$positive' => xmlify($positive),
+		'$diaspora_handle' => xmlify($myaddr)
+	));
+
+	// fetch the original signature	
+	$r = q("select * from sign where iid = %d limit 1",
+		intval($item['id'])
+	);
+	if(! count($r)) 
+		return;
+
+	logger('diaspora_relay_comment: base message: ' . $msg, LOGGER_DATA);
+
+	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'])));
+
+	post_url($contact['notify'] . '/',$slap);
+	$return_code = $a->get_curl_code();
+	logger('diaspora_send_relay: returns: ' . $return_code);
+	return $return_code;
+
+}
+
+
+
+function diaspora_send_retraction($item,$owner,$contact) {
+
+
+
+
+
+}

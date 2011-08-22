@@ -536,7 +536,7 @@ function fetch_xrd_links($url) {
 			$aliases = array($alias);
 		else
 			$aliases = $alias;
-		if(count($aliases)) {
+		if($aliases && count($aliases)) {
 			foreach($aliases as $alias) {
 				$links[]['@attributes'] = array('rel' => 'alias' , 'href' => $alias);
 			}
@@ -693,3 +693,25 @@ function parse_xml_string($s,$strict = true) {
 	}
 	return $x;
 }}
+
+function add_fcontact($arr) {
+
+	$r = q("insert into fcontact ( `url`,`name`,`photo`,`request`,`nick`,`addr`,
+		`notify`,`poll`,`confirm`,`network`,`alias`,`pubkey`,`updated` )
+		values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",
+		dbesc($arr['url']),
+		dbesc($arr['name']),
+		dbesc($arr['photo']),
+		dbesc($arr['request']),
+		dbesc($arr['nick']),
+		dbesc($arr['addr']),
+		dbesc($arr['notify']),
+		dbesc($arr['poll']),
+		dbesc($arr['confirm']),
+		dbesc($arr['network']),
+		dbesc($arr['alias']),
+		dbesc($arr['pubkey']),
+		dbesc(datetime_convert())
+	);
+	return $r;
+}

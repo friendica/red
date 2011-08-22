@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1079 );
+define( 'UPDATE_VERSION' , 1081 );
 
 /**
  *
@@ -645,4 +645,32 @@ function update_1077() {
 
 function update_1078() {
 	q("ALTER TABLE `item` ADD `guid` CHAR( 64 ) NOT NULL AFTER `id` , ADD INDEX ( `guid` ) ");
+}
+
+function update_1079() {
+	q("CREATE TABLE IF NOT EXISTS `sign` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`iid` INT UNSIGNED NOT NULL ,
+	`signed_text` MEDIUMTEXT NOT NULL ,
+	`signature` TEXT NOT NULL ,
+	`signer` CHAR( 255 ) NOT NULL ,
+	INDEX ( `iid` )
+	) ENGINE = MYISAM ");
+
+	q("ALTER TABLE `fcontact` ADD `nick` CHAR( 255 ) NOT NULL ,
+	ADD `addr` CHAR( 255 ) NOT NULL ,
+	ADD `notify` CHAR( 255 ) NOT NULL ,
+	ADD `poll` CHAR( 255 ) NOT NULL ,
+	ADD `confirm` CHAR( 255 ) NOT NULL ,
+	ADD `priority` TINYINT( 1 ) NOT NULL ,
+	ADD `network` CHAR( 32 ) NOT NULL ,
+	ADD `alias` CHAR( 255 ) NOT NULL ,
+	ADD `pubkey` TEXT NOT NULL ,
+	ADD INDEX ( `addr` ) , 
+	ADD INDEX ( `network` ) ");
+
+}
+
+function update_1080() {
+	q("ALTER TABLE `fcontact` ADD `updated` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'");
 }

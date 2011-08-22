@@ -196,6 +196,7 @@
 		$user = null;
 		$extra_query = "";
 
+
 		if(!is_null($contact_id)){
 			$user=$contact_id;
 			$extra_query = "AND `contact`.`id` = %d ";
@@ -332,7 +333,7 @@
 			'notifications' => false,
 			'following' => '', #XXX: fix me
 			'verified' => true, #XXX: fix me
-			#'status' => null
+			'status' => array()
 		);
 	
 		return $ret;
@@ -352,11 +353,15 @@
 				return api_get_user($a,$a->contacts[$normalised]['id']);
 		}
 		// We don't know this person directly.
+		
+		list($nick, $name) = array_map("trim",explode("(",$item['author-name']));
+		$name=str_replace(")","",$name);
+		
 		$ret = array(
 			'uid' => 0,
 			'id' => 0,
-			'name' => $item['author-name'],
-			'screen_name' => $item['author_name'],
+			'name' => $name,
+			'screen_name' => $nick,
 			'location' => '', //$uinfo[0]['default-location'],
 			'profile_image_url' => $item['author-avatar'],
 			'url' => $item['author-link'],
@@ -385,7 +390,7 @@
 			'notifications' => false,
 			'verified' => true, #XXX: fix me
 			'followers' => '', #XXX: fix me
-			#'status' => null
+			'status' => array()
 		);
 
 		return $ret; 
@@ -607,10 +612,17 @@
 	 */
 	function api_statuses_home_timeline(&$a, $type){
 		if (local_user()===false) return false;
-		
+				
 		$user_info = api_get_user($a);
 		// get last newtork messages
-//		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` ) ";
+
+		// params
+		$count = (x($_REQUEST,'count')?$_REQUEST['count']:20);
+		$page = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
+		if ($page<0) $page=0;
+		$since_id = 0;//$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
+		
+		$start = $page*$count;
 
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
@@ -622,9 +634,11 @@
 			AND `contact`.`id` = `item`.`contact-id`
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 			$sql_extra
+			AND `item`.`id`>%d
 			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
 			intval($user_info['uid']),
-			0,20
+			intval($since_id),
+			intval($start),	intval($count)
 		);
 
 		$ret = api_format_items($r,$user_info);
@@ -649,7 +663,15 @@
 		
 		$user_info = api_get_user($a);
 		// get last newtork messages
-//		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` ) ";
+
+		// params
+		$count = (x($_REQUEST,'count')?$_REQUEST['count']:20);
+		$page = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
+		if ($page<0) $page=0;
+		$since_id = 0;//$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
+		
+		$start = $page*$count;
+
 
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
@@ -662,9 +684,11 @@
 			AND `contact`.`id` = `item`.`contact-id`
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 			$sql_extra
+			AND `item`.`id`>%d
 			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
 			intval($user_info['uid']),
-			0,20
+			intval($since_id),
+			intval($start),	intval($count)
 		);
 
 		$ret = api_format_items($r,$user_info);
@@ -688,7 +712,13 @@
 		
 		$user_info = api_get_user($a);
 		// get last newtork messages
-//		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` ) ";
+		
+		// params
+		$count = (x($_GET,'count')?$_GET['count']:20);
+		$page = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
+		if ($page<0) $page=0;
+		
+		$start = $page*$count;
 
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
@@ -703,7 +733,7 @@
 			$sql_extra
 			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
 			intval($user_info['uid']),
-			0,20
+			intval($start),	intval($count)
 		);
 
 		$ret = api_format_items($r,$user_info);
@@ -735,8 +765,8 @@
 			$status_user = (($item['cid']==$user_info['id'])?$user_info: api_item_get_user($a,$item));
 			$status = array(
 				'created_at'=> api_date($item['created']),
-				'published' => datetime_convert('UTC','UTC',$item['created'],ATOM_TIME),
-				'updated'   => datetime_convert('UTC','UTC',$item['edited'],ATOM_TIME),
+				'published' => api_date($item['created']),
+				'updated'   => api_date($item['edited']),
 				'id'		=> intval($item['id']),
 				'message_id' => $item['uri'],
 				'text'		=> strip_tags(bbcode($item['body'])),
@@ -780,6 +810,58 @@
 	}
 	api_register_func('api/account/rate_limit_status','api_account_rate_limit_status',true);
 
+	/**
+	 *  https://dev.twitter.com/docs/api/1/get/statuses/friends 
+	 *  This function is deprecated by Twitter
+	 *  returns: json, xml 
+	 **/
+	function api_statuses_f(&$a, $type, $qtype) {
+		if (local_user()===false) return false;
+		$user_info = api_get_user($a);
+		
+		if (x($_GET,'cursor') && $_GET['cursor']=='undefined'){
+			/* this is to stop Hotot to load friends multiple times
+			*  I'm not sure if I'm missing return something or
+			*  is a bug in hotot. Workaround, meantime
+			*/
+			
+			$ret=Array();
+			$data = array('$users' => $ret);
+			return  api_apply_template("friends", $type, $data);
+		}
+		
+		if($qtype == 'friends')
+			$sql_extra = sprintf(" AND ( `rel` = %d OR `rel` = %d ) ", intval(CONTACT_IS_SHARING), intval(CONTACT_IS_FRIEND));
+		if($qtype == 'followers')
+			$sql_extra = sprintf(" AND ( `rel` = %d OR `rel` = %d ) ", intval(CONTACT_IS_FOLLOWER), intval(CONTACT_IS_FRIEND));
+ 
+		$r = q("SELECT id FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 $sql_extra",
+			intval(local_user())
+		);
+
+		$ret = array();
+		foreach($r as $cid){
+			$ret[] = api_get_user($a, $cid['id']);
+		}
+
+		
+		$data = array('$users' => $ret);
+		return  api_apply_template("friends", $type, $data);
+
+	}
+	function api_statuses_friends(&$a, $type){
+		return api_statuses_f($a,$type,"friends");
+	}
+	function api_statuses_followers(&$a, $type){
+		return api_statuses_f($a,$type,"followers");
+	}
+	api_register_func('api/statuses/friends','api_statuses_friends',true);
+	api_register_func('api/statuses/followers','api_statuses_followers',true);
+
+
+
+
+
 
 	function api_statusnet_config(&$a,$type) {
 		$name = $a->config['sitename'];
@@ -807,7 +889,6 @@
 
 	}
 	api_register_func('api/statusnet/config','api_statusnet_config',false);
-
 
 	function api_statusnet_version(&$a,$type) {
 
@@ -869,3 +950,131 @@
 	api_register_func('api/friends/ids','api_friends_ids',true);
 	api_register_func('api/followers/ids','api_followers_ids',true);
 
+
+	function api_direct_messages_new(&$a, $type) {
+		if (local_user()===false) return false;
+		
+		if (!x($_POST, "text") || !x($_POST,"screen_name")) return;
+		
+		$sender = api_get_user($a);
+		
+		$r = q("SELECT `id` FROM `contact` WHERE `uid`=%d AND `nick`='%s'",
+				intval(local_user()),
+				dbesc($_POST['screen_name']));
+		
+		$recipient = api_get_user($a, $r[0]['id']);			
+		
+
+		require_once("include/message.php");
+		$sub = ( (strlen($_POST['text'])>10)?substr($_POST['text'],0,10)."...":$_POST['text']);
+		$id = send_message($recipient['id'], $_POST['text'], $sub);
+		
+		
+		if ($id>-1) {
+			$r = q("SELECT * FROM `mail` WHERE id=%d", intval($id));
+			$item = $r[0];
+			$ret=Array(
+					'id' => $item['id'],
+					'created_at'=> api_date($item['created']),
+					'sender_id'=> $sender['id'] ,
+					'sender_screen_name'=> $sender['screen_name'],
+					'sender'=> $sender,
+					'recipient_id'=> $recipient['id'],
+					'recipient_screen_name'=> $recipient['screen_name'],
+					'recipient'=> $recipient,
+					
+					'text'=> $item['title']."\n".strip_tags(bbcode($item['body'])) ,
+					
+			);
+		
+		} else {
+			$ret = array("error"=>$id);	
+		}
+		
+		$data = Array('$messages'=>$ret);
+		
+		switch($type){
+			case "atom":
+			case "rss":
+				$data = api_rss_extra($a, $data, $user_info);
+		}
+				
+		return  api_apply_template("direct_messages", $type, $data);
+				
+	}
+	api_register_func('api/direct_messages/new','api_direct_messages_new',true);
+
+    function api_direct_messages_box(&$a, $type, $box) {
+		if (local_user()===false) return false;
+		
+		$user_info = api_get_user($a);
+		
+		// params
+		$count = (x($_GET,'count')?$_GET['count']:20);
+		$page = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
+		if ($page<0) $page=0;
+		
+		$start = $page*$count;
+		
+	
+		if ($box=="sentbox") {
+			$sql_extra = "`from-url`='%s'";
+		} else {
+			$sql_extra = "`from-url`!='%s'";
+		}
+		
+		$r = q("SELECT * FROM `mail` WHERE uid=%d AND $sql_extra ORDER BY created DESC LIMIT %d,%d",
+				intval(local_user()),
+				dbesc( $a->get_baseurl() . '/profile/' . $a->user['nickname'] ),
+				intval($start),	intval($count)
+			   );
+		
+		$ret = Array();
+		foreach($r as $item){
+			switch ($box){
+				case "inbox":
+					$recipient = $user_info;
+					$sender = api_get_user($a,$item['contact-id']);
+					break;
+				case "sentbox":
+					$recipient = api_get_user($a,$item['contact-id']);
+					$sender = $user_info;
+					break;
+			}
+				
+			$ret[]=Array(
+				'id' => $item['id'],
+				'created_at'=> api_date($item['created']),
+				'sender_id'=> $sender['id'] ,
+				'sender_screen_name'=> $sender['screen_name'],
+				'sender'=> $sender,
+				'recipient_id'=> $recipient['id'],
+				'recipient_screen_name'=> $recipient['screen_name'],
+				'recipient'=> $recipient,
+				
+				'text'=> $item['title']."\n".strip_tags(bbcode($item['body'])) ,
+				
+			);
+			
+		}
+		
+
+		$data = array('$messages' => $ret);
+		switch($type){
+			case "atom":
+			case "rss":
+				$data = api_rss_extra($a, $data, $user_info);
+		}
+				
+		return  api_apply_template("direct_messages", $type, $data);
+		
+	}
+
+	function api_direct_messages_sentbox(&$a, $type){
+		return api_direct_messages_box($a, $type, "sentbox");
+	}
+	function api_direct_messages_inbox(&$a, $type){
+		return api_direct_messages_box($a, $type, "inbox");
+	}
+	api_register_func('api/direct_messages/sent','api_direct_messages_sentbox',true);
+	api_register_func('api/direct_messages','api_direct_messages_inbox',true);
