@@ -139,7 +139,7 @@ function notifier_run($argv, $argc){
 	$hub = get_config('system','huburl');
 
 	// If this is a public conversation, notify the feed hub
-	$notify_hub = true;
+	$public_message = true;
 
 	// fill this in with a single salmon slap if applicable
 	$slap = '';
@@ -153,7 +153,7 @@ function notifier_run($argv, $argc){
 		if($parent['wall'] == 0 && (! $expire)) {
 			// local followup to remote post
 			$followup = true;
-			$notify_hub = false; // not public
+			$public_message = false; // not public
 			$conversant_str = dbesc($parent['contact-id']);
 		}
 		else {
@@ -163,7 +163,7 @@ function notifier_run($argv, $argc){
 				|| (strlen($parent['allow_gid'])) 
 				|| (strlen($parent['deny_cid'])) 
 				|| (strlen($parent['deny_gid']))) {
-				$notify_hub = false; // private recipients, not public
+				$public_message = false; // private recipients, not public
 			}
 
 			$allow_people = expand_acl($parent['allow_cid']);
@@ -177,7 +177,7 @@ function notifier_run($argv, $argc){
 				$recipients[] = $item['contact-id'];
 				$conversants[] = $item['contact-id'];
 				// pull out additional tagged people to notify (if public message)
-				if($notify_hub && strlen($item['inform'])) {
+				if($public_message && strlen($item['inform'])) {
 					$people = explode(',',$item['inform']);
 					foreach($people as $person) {
 						if(substr($person,0,4) === 'cid:') {
@@ -241,7 +241,7 @@ function notifier_run($argv, $argc){
 	));
 
 	if($cmd === 'mail') {
-		$notify_hub = false;  // mail is  not public
+		$public_message = false;  // mail is  not public
 
 		$body = fix_private_photos($item['body'],$owner['uid']);
 
@@ -257,7 +257,7 @@ function notifier_run($argv, $argc){
 		));
 	}
 	elseif($cmd === 'suggest') {
-		$notify_hub = false;  // suggestions are not public
+		$public_message = false;  // suggestions are not public
 
 		$sugg_template = get_markup_template('atom_suggest.tpl');
 
@@ -296,7 +296,7 @@ function notifier_run($argv, $argc){
 
 				// private emails may be in included in public conversations. Filter them.
 
-				if(($notify_hub) && $item['private'])
+				if(($public_message) && $item['private'])
 					continue;
 
 				$contact = get_item_contact($item,$contacts);
@@ -305,7 +305,7 @@ function notifier_run($argv, $argc){
 
 				$atom .= atom_entry($item,'text',$contact,$owner,true);
 
-				if(($top_level) && ($notify_hub) && ($item['author-link'] === $item['owner-link']) && (! $expire)) 
+				if(($top_level) && ($public_message) && ($item['author-link'] === $item['owner-link']) && (! $expire)) 
 					$slaps[] = atom_entry($item,'html',$contact,$owner,true);
 			}
 		}
@@ -403,7 +403,7 @@ function notifier_run($argv, $argc){
 						// only send salmon if public - e.g. if it's ok to notify
 						// a public hub, it's ok to send a salmon
 
-						if((count($slaps)) && ($notify_hub) && (! $expire)) {
+						if((count($slaps)) && ($public_message) && (! $expire)) {
 							logger('notifier: slapdelivery: ' . $contact['name']);
 							foreach($slaps as $slappy) {
 								if($contact['notify']) {
@@ -544,7 +544,7 @@ function notifier_run($argv, $argc){
 		
 	// send additional slaps to mentioned remote tags (@foo@example.com)
 
-	if($slap && count($url_recipients) && ($followup || $top_level) && $notify_hub && (! $expire)) {
+	if($slap && count($url_recipients) && ($followup || $top_level) && $public_message && (! $expire)) {
 		if(! get_config('system','dfrn_only')) {
 			foreach($url_recipients as $url) {
 				if($url) {
@@ -556,7 +556,7 @@ function notifier_run($argv, $argc){
 		}
 	}
 
-	if((strlen($hub)) && ($notify_hub)) {
+	if((strlen($hub)) && ($public_message)) {
 		$hubs = explode(',', $hub);
 		if(count($hubs)) {
 			foreach($hubs as $h) {
@@ -572,12 +572,12 @@ function notifier_run($argv, $argc){
 		}
 	}
 
-	if($notify_hub) {
+	if($public_message) {
 
 		/**
 		 *
 		 * If you have less than 999 dfrn friends and it's a public message,
-		 * we'll just go ahead and push them out securely with dfrn/rino.
+		 * we'll just go ahead and push them out securely with dfrn/rino or Diaspora.
 		 * If you've got more than that, you'll have to rely on PuSH delivery.
 		 *
 		 */
@@ -592,9 +592,10 @@ function notifier_run($argv, $argc){
 		 */
 
 		$r = q("SELECT `id`, `name` FROM `contact` 
-			WHERE `network` = '%s' AND `uid` = %d AND `blocked` = 0 AND `pending` = 0
+			WHERE `network` in ('%s','%s') AND `uid` = %d AND `blocked` = 0 AND `pending` = 0
 			AND `rel` != %d ",
 			dbesc(NETWORK_DFRN),
+			dbesc(NETWORK_DIASPORA),
 			intval($owner['uid']),
 			intval(CONTACT_IS_SHARING)
 		);
@@ -607,19 +608,51 @@ function notifier_run($argv, $argc){
 
 				/* Don't deliver to folks who have already been delivered to */
 
-				if(! in_array($rr['id'], $conversants)) {
-					$n = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
-							intval($rr['id'])
-					);
+				if(in_array($rr['id'],$conversants))
+					continue;
 
-					if(count($n)) {
+				$n = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
+						intval($rr['id'])
+				);
+
+				if(count($n)) {
+					switch($n[0]['network']) {
+						case NETWORK_DFRN :
+							logger('notifier: dfrnpubdelivery: ' . $n[0]['name']);
+							$deliver_status = dfrn_deliver($owner,$n[0],$atom);
+							break;
+						case NETWORK_DIASPORA :
+							require_once('include/diaspora.php');
+							if(get_config('system','dfrn_only') || (! get_config('system','diaspora_enabled')) || (! $normal_mode))
+								break;
 					
-						logger('notifier: dfrnpubdelivery: ' . $n[0]['name']);
-						$deliver_status = dfrn_deliver($owner,$n[0],$atom);
+							if($target_item['verb'] === ACTIVITY_DISLIKE) {
+								// unsupported
+								break;
+							}
+							elseif($target_item['deleted'] && (! $parent_item['verb'] === ACTIVITY_LIKE)) {
+								// diaspora delete, 
+								diaspora_send_retraction($target_item,$owner,$n[0]);
+								break;
+							}
+							elseif($followup) {
+								// send comments, likes and retractions of likes to owner to relay
+								diaspora_send_followup($target_item,$owner,$n[0]);
+								break;
+							}
+							elseif($target_item['parent'] != $target_item['id']) {
+								// we are the relay - send comments, likes and unlikes to our conversants
+								diaspora_send_relay($target_item,$owner,$n[0]);
+								break;
+							}		
+							elseif($top_level) {
+								diaspora_send_status($target_item,$owner,$n[0]);
+								break;
+							}
+						default:
+							break;
 					}
 				}
-				else
-					logger('notifier: dfrnpubdelivery: ignoring ' . $rr['name']);
 			}
 		}
 	}
