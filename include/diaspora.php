@@ -845,9 +845,9 @@ function diaspora_send_status($item,$owner,$contact) {
 	$a = get_app();
 	$myaddr = $owner['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
 	$theiraddr = $contact['addr'];
-	require_once('include/bbcode.php');
+	require_once('include/bb2diaspora.php');
 
-	$body = xmlify(bbcode($item['body']));
+	$body = xmlify(bb2diaspora($item['body']));
 	$public = (($item['private']) ? 'false' : 'true');
 
 	require_once('include/datetime.php');
@@ -898,12 +898,12 @@ function diaspora_send_followup($item,$owner,$contact) {
 		$like = false;
 	}
 
-	$text = bbcode($item['body']);
+	$text = bb2diaspora($item['body']);
 
 	// sign it
 
 	if($like)
-		$signed_text = $item['guid'] . ';' . $target_type . ';' . $positive . ';' . $myaddr;
+		$signed_text = $item['guid'] . ';' . $target_type . ';' . $parent_guid . ';' . $positive . ';' . $myaddr;
 	else
 		$signed_text = $item['guid'] . ';' . $parent_guid . ';' . $text . ';' . $myaddr;
 
@@ -966,7 +966,7 @@ function diaspora_send_relay($item,$owner,$contact) {
 		$like = false;
 	}
 
-	$text = bbcode($item['body']);
+	$text = bb2diaspora($item['body']);
 
 	// sign it
 
