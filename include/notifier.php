@@ -506,7 +506,7 @@ function notifier_run($argv, $argc){
 					if(get_config('system','dfrn_only') || (! get_config('system','diaspora_enabled')) || (! $normal_mode))
 						break;
 
-					if(! contact['pubkey'])
+					if(! $contact['pubkey'])
 						break;
 					
 					if($target_item['verb'] === ACTIVITY_DISLIKE) {
@@ -629,7 +629,7 @@ function notifier_run($argv, $argc){
 							if(get_config('system','dfrn_only') || (! get_config('system','diaspora_enabled')) || (! $normal_mode))
 								break;
 
-							if(! contact['pubkey'])
+							if(! $contact['pubkey'])
 								break;
 					
 							if($target_item['verb'] === ACTIVITY_DISLIKE) {
