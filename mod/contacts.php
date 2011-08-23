@@ -163,9 +163,9 @@ function contacts_content(&$a) {
 		if($cmd === 'block') {
 			$blocked = (($orig_record[0]['blocked']) ? 0 : 1);
 			$r = q("UPDATE `contact` SET `blocked` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
-					intval($blocked),
-					intval($contact_id),
-					intval(local_user())
+				intval($blocked),
+				intval($contact_id),
+				intval(local_user())
 			);
 			if($r) {
 				//notice( t('Contact has been ') . (($blocked) ? t('blocked') : t('unblocked')) . EOL );
@@ -178,9 +178,9 @@ function contacts_content(&$a) {
 		if($cmd === 'ignore') {
 			$readonly = (($orig_record[0]['readonly']) ? 0 : 1);
 			$r = q("UPDATE `contact` SET `readonly` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
-					intval($readonly),
-					intval($contact_id),
-					intval(local_user())
+				intval($readonly),
+				intval($contact_id),
+				intval(local_user())
 			);
 			if($r) {
 				info( (($readonly) ? t('Contact has been ignored') : t('Contact has been unignored')) . EOL );
@@ -193,7 +193,7 @@ function contacts_content(&$a) {
 
 			// create an unfollow slap
 
-			if($orig_record[0]['network'] === 'stat') {
+			if($orig_record[0]['network'] === NETWORK_OSTATUS) {
 				$tpl = get_markup_template('follow_slap.tpl');
 				$slap = replace_macros($tpl, array(
 					'$name' => $a->user['username'],
@@ -215,12 +215,14 @@ function contacts_content(&$a) {
 					slapper($a->user,$orig_record[0]['notify'],$slap);
 				}
 			}
-
-			if($orig_record[0]['network'] === 'dfrn') {
+			elseif($orig_record[0]['network'] === NETWORK_DIASPORA) {
+				require_once('include/diaspora.php');
+				diaspora_unshare($a->user,$orig_record[0]);
+			}
+			elseif($orig_record[0]['network'] === NETWORK_DFRN) {
 				require_once('include/items.php');
 				dfrn_deliver($a->user,$orig_record[0],'placeholder', 1);
 			}
-
 
 			contact_remove($orig_record[0]['id']);
 			info( t('Contact has been removed.') . EOL );

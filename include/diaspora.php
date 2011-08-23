@@ -771,19 +771,32 @@ function diaspora_retraction($importer,$xml) {
 
 	$guid = notags(unxmlify($xml->guid));
 	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
+	$type = notags(unxmlify($xml->type));
 
 	$contact = diaspora_get_contact_by_handle($importer['uid'],$diaspora_handle);
 	if(! $contact)
 		return;
 
-//	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
-//		logger('diaspora_retraction: Ignoring this author.');
-//		http_status_exit(202);
-//		// NOTREACHED
-//	}
+	if($type === 'Person') {
+		contact_remove($contact['id']);
+	}
+	elseif($type === 'Post') {
+		$r = q("select * from item where guid = '%s' and uid = %d limit 1",
+			dbesc('guid'),
+			intval($importer['uid'])
+		);
+		if(count($r)) {
+			if(link_compare($r[0]['author-link'],$contact['url'])) {
+				q("update item set `deleted` = 1, `changed` = '%s' where `id` = %d limit 1",
+					dbesc(datetime_convert()),			
+					intval($r[0]['id'])
+				);
+			}
+		}
+	}
 
-
-
+	http_exit_status(202);
+	// NOTREACHED
 }
 
 function diaspora_share($me,$contact) {
@@ -804,6 +817,28 @@ function diaspora_share($me,$contact) {
 	logger('diaspora_send_share: returns: ' . $return_code);
 	return $return_code;
 }
+
+function diaspora_unshare($me,$contact) {
+
+	$a = get_app();
+	$myaddr = $me['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+
+	$tpl = get_markup_template('diaspora_retract.tpl');
+	$msg = replace_macros($tpl, array(
+		'$guid'   => $me['guid'],
+		'$type'   => 'Person',
+		'$handle' => $myaddr
+	));
+
+	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$me,$contact,$me['prvkey'],$contact['pubkey'])));
+
+	post_url($contact['notify'] . '/',$slap);
+	$return_code = $a->get_curl_code();
+	logger('diaspora_send_unshare: returns: ' . $return_code);
+	return $return_code;
+}
+
+
 
 function diaspora_send_status($item,$owner,$contact) {
 
@@ -975,8 +1010,21 @@ function diaspora_send_relay($item,$owner,$contact) {
 
 function diaspora_send_retraction($item,$owner,$contact) {
 
+	$a = get_app();
+	$myaddr = $owner['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
 
+	$tpl = get_markup_template('diaspora_retract.tpl');
+	$msg = replace_macros($tpl, array(
+		'$guid'   => $item['guid'],
+		'$type'   => 'Post',
+		'$handle' => $myaddr
+	));
 
+	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'])));
 
+	post_url($contact['notify'] . '/',$slap);
+	$return_code = $a->get_curl_code();
+	logger('diaspora_send_retraction: returns: ' . $return_code);
+	return $return_code;
 
 }
