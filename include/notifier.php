@@ -513,7 +513,7 @@ function notifier_run($argv, $argc){
 						// unsupported
 						break;
 					}
-					elseif($target_item['deleted'] && (! $parent_item['verb'] === ACTIVITY_LIKE)) {
+					elseif($target_item['deleted'] && (! $target_item['verb'] === ACTIVITY_LIKE)) {
 						// diaspora delete, 
 						diaspora_send_retraction($target_item,$owner,$contact);
 						break;
@@ -628,7 +628,7 @@ function notifier_run($argv, $argc){
 							require_once('include/diaspora.php');
 							if(get_config('system','dfrn_only') || (! get_config('system','diaspora_enabled')) || (! $normal_mode))
 								break;
-
+							
 							if(! $contact['pubkey'])
 								break;
 					
@@ -636,7 +636,7 @@ function notifier_run($argv, $argc){
 								// unsupported
 								break;
 							}
-							elseif($target_item['deleted'] && (! $parent_item['verb'] === ACTIVITY_LIKE)) {
+							elseif($target_item['deleted'] && (! $target_item['verb'] === ACTIVITY_LIKE)) {
 								// diaspora delete, 
 								diaspora_send_retraction($target_item,$owner,$n[0]);
 								break;
