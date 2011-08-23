@@ -505,6 +505,9 @@ function notifier_run($argv, $argc){
 					require_once('include/diaspora.php');
 					if(get_config('system','dfrn_only') || (! get_config('system','diaspora_enabled')) || (! $normal_mode))
 						break;
+
+					if(! contact['pubkey'])
+						break;
 					
 					if($target_item['verb'] === ACTIVITY_DISLIKE) {
 						// unsupported
@@ -624,6 +627,9 @@ function notifier_run($argv, $argc){
 						case NETWORK_DIASPORA :
 							require_once('include/diaspora.php');
 							if(get_config('system','dfrn_only') || (! get_config('system','diaspora_enabled')) || (! $normal_mode))
+								break;
+
+							if(! contact['pubkey'])
 								break;
 					
 							if($target_item['verb'] === ACTIVITY_DISLIKE) {
