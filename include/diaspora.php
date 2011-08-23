@@ -907,7 +907,7 @@ function diaspora_send_followup($item,$owner,$contact) {
 	else
 		$signed_text = $item['guid'] . ';' . $parent_guid . ';' . $text . ';' . $myaddr;
 
-	$authorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey']),'sha');
+	$authorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha'));
 
 	$msg = replace_macros($tpl,array(
 		'$guid' => xmlify($item['guid']),
