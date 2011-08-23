@@ -8,17 +8,63 @@ function ping_init(&$a) {
 		xml_status(0);
 
 	
-	$r = q("SELECT COUNT(*) AS `total` FROM `item` 
-		WHERE `unseen` = 1 AND `visible` = 1 AND `deleted` = 0 AND `uid` = %d AND `wall` = 0 ",
+	$comments = array();
+	$likes = array();
+	$dislikes = array();
+	$friends = array();
+	
+	$r = q("SELECT `item`.`parent`, `item`.`verb`, `item`.`author-name`, 
+			`item`.`author-link`, `item`.`author-avatar`, `item`.`created`, 
+			`pitem`.`author-name` as `pname`, `pitem`.`author-link` as `plink` 
+			FROM `item` INNER JOIN `item` as `pitem` ON  `pitem`.`id`=`item`.`parent`
+			WHERE `item`.`unseen` = 1 AND `item`.`visible` = 1 AND
+			 `item`.`deleted` = 0 AND `item`.`uid` = %d AND `item`.`wall` = 0",
 		intval(local_user())
 	);
-	$network = $r[0]['total'];
+	
+	$network = count($r);
+	foreach ($r as $it) {
+		switch($it['verb']){
+			case 'http://activitystrea.ms/schema/1.0/like':
+				$likes[] = $it;
+				break;
+			case 'http://activitystrea.ms/schema/1.0/dislike':
+				$dislikes[] = $it;
+				break;
+			case 'http://activitystrea.ms/schema/1.0/make-friend':
+				$friends[] = $it;
+				break;
+			default:
+				$comments[] = $it;
+		}
+	}
 
-	$r = q("SELECT COUNT(*) AS `total` FROM `item` 
-		WHERE `unseen` = 1 AND `visible` = 1 AND `deleted` = 0 AND `uid` = %d AND `wall` = 1 ",
+
+	$r = q("SELECT `item`.`parent`, `item`.`verb`, `item`.`author-name`, 
+			`item`.`author-link`, `item`.`author-avatar`, `item`.`created`, 
+			`pitem`.`author-name` as `pname`, `pitem`.`author-link` as `plink` 
+			FROM `item` INNER JOIN `item` as `pitem` ON  `pitem`.`id`=`item`.`parent`
+			WHERE `item`.`unseen` = 1 AND `item`.`visible` = 1 AND
+			 `item`.`deleted` = 0 AND `item`.`uid` = %d AND `item`.`wall` = 1",
 		intval(local_user())
-	);
-	$home = $r[0]['total'];
+	);	
+	$home = count($r);
+	foreach ($r as $it) {
+		switch($it['verb']){
+			case 'http://activitystrea.ms/schema/1.0/like':
+				$likes[] = $it;
+				break;
+			case 'http://activitystrea.ms/schema/1.0/dislike':
+				$dislikes[] = $it;
+				break;
+			case 'http://activitystrea.ms/schema/1.0/make-friend':
+				$friends[] = $it;
+				break;
+			default:
+				$comments[] = $it;
+		}
+	}
+
 
 	$intros1 = q("SELECT COUNT(`intro`.`id`) AS `total`, `intro`.`id`, `intro`.`datetime`, 
 		`fcontact`.`name`, `fcontact`.`url`, `fcontact`.`photo` 
@@ -56,9 +102,12 @@ function ping_init(&$a) {
 	}
 
 
-	$notsxml = '<note href="%s" name="%s" url="%s" photo="%s" date="%s">%s</note>';
-
-	
+	function xmlize($href, $name, $url, $photo, $date, $message){
+		$notsxml = '<note href="%s" name="%s" url="%s" photo="%s" date="%s">%s</note>';
+		return sprintf ( $notsxml,
+				$href, $name, $url, $photo, $date, $message
+			);
+	}
 	
 	header("Content-type: text/xml");
 	echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
@@ -69,26 +118,43 @@ function ping_init(&$a) {
 			<home>$home</home>";
 	if ($register!=0) echo "<register>$register</register>";
 	
-	echo '	<notif count="'.($mail+$intro+$register).'">';
+	$tot = $mail+$intro+$register+count($comments)+count($likes)+count($dislikes)+count($friends);
+	
+	echo '	<notif count="'.$tot.'">';
 	if ($intro>0){
 		foreach ($intros as $i) { 
-			echo sprintf ( $notsxml, 
-				$a->get_baseurl().'/notifications/'.$i['id'], $i['name'], $i['url'], $i['photo'], relative_date($i['datetime']), t("{0} wants to be your friend")
-			);
+			echo xmlize( $a->get_baseurl().'/notifications/'.$i['id'], $i['name'], $i['url'], $i['photo'], relative_date($i['datetime']), t("{0} wants to be your friend") );
 		};
 	}
 	if ($mail>0){
 		foreach ($mails as $i) { 
-			echo sprintf ( $notsxml,
-				$a->get_baseurl().'/message/'.$i['id'], $i['from-name'], $i['from-url'], $i['from-photo'], relative_date($i['created']), t("{0} sent you a message")
-			);
+			echo xmlize( $a->get_baseurl().'/message/'.$i['id'], $i['from-name'], $i['from-url'], $i['from-photo'], relative_date($i['created']), t("{0} sent you a message") );
 		};
 	}
 	if ($register>0){
 		foreach ($regs as $i) { 
-			echo sprintf ( $notsxml,
-				$a->get_baseurl().'/admin/users/', $i['name'], $i['url'], $i['micro'], relative_date($i['created']), t("{0} requested registration")
-			);
+			echo xmlize( $a->get_baseurl().'/admin/users/', $i['name'], $i['url'], $i['micro'], relative_date($i['created']), t("{0} requested registration") );
+		};
+	}
+
+	if (count($comments)){
+		foreach ($comments as $i) {
+			echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), sprintf( t("{0} commented %s's post"), $i['pname'] ) );
+		};
+	}
+	if (count($likes)){
+		foreach ($likes as $i) {
+			echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), sprintf( t("{0} like %s's post"), $i['pname'] ) );
+		};
+	}
+	if (count($dislikes)){
+		foreach ($dislikes as $i) {
+			echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), sprintf( t("{0} dislike %s's post"), $i['pname'] ) );
+		};
+	}
+	if (count($friends)){
+		foreach ($friends as $i) {
+			echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), sprintf( t("{0} is now friend with %s"), $i['pname'] ) );
 		};
 	}
 
