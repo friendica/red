@@ -3,6 +3,43 @@
 require_once('include/crypto.php');
 require_once('include/items.php');
 
+function diaspora_get_contact_by_handle($uid,$handle) {
+	$r = q("SELECT * FROM `contact` WHERE `network` = '%s' AND `uid` = %d AND `addr` = '%s' LIMIT 1",
+		dbesc(NETWORK_DIASPORA),
+		intval($uid),
+		dbesc($handle)
+	);
+	if($r && count($r))
+		return $r[0];
+	return false;
+}
+
+function find_diaspora_person_by_handle($handle) {
+	$r = q("select * from fcontact where network = '%s' and addr = '%s' limit 1",
+		dbesc(NETWORK_DIASPORA),
+		dbesc($handle)
+	);
+	if(count($r)) {
+		// update record occasionally so it doesn't get stale
+		$d = strtotime($r[0]['updated'] . ' +00:00');
+		if($d < strtotime('now - 14 days')) {
+			q("delete from fcontact where id = %d limit 1",
+				intval($r[0]['id'])
+			);
+		}
+		else
+			return $r[0];
+	}
+	require_once('include/Scrape.php');
+	$r = probe_url($handle, PROBE_DIASPORA);
+	if((count($r)) && ($r['network'] === NETWORK_DIASPORA)) {
+		add_fcontact($r);
+		return ($r);
+	}
+	return false;
+}
+
+
 function get_diaspora_key($uri) {
 	logger('Fetching diaspora key for: ' . $uri);
 
@@ -10,16 +47,6 @@ function get_diaspora_key($uri) {
 	if($r)
 		return $r['pubkey'];
 	return '';
-}
-
-
-function diaspora_base_message($type,$data) {
-
-	$tpl = get_markup_template('diaspora_' . $type . '.tpl');
-	if(! $tpl) 
-		return '';
-	return replace_macros($tpl,$data);
-
 }
 
 
@@ -260,42 +287,6 @@ function diaspora_decode($importer,$xml) {
 
 	return array('message' => $inner_decrypted, 'author' => $author_link, 'key' => $key);
 
-}
-
-function diaspora_get_contact_by_handle($uid,$handle) {
-	$r = q("SELECT * FROM `contact` WHERE `network` = '%s' AND `uid` = %d AND `addr` = '%s' LIMIT 1",
-		dbesc(NETWORK_DIASPORA),
-		intval($uid),
-		dbesc($handle)
-	);
-	if($r && count($r))
-		return $r[0];
-	return false;
-}
-
-function find_diaspora_person_by_handle($handle) {
-	$r = q("select * from fcontact where network = '%s' and addr = '%s' limit 1",
-		dbesc(NETWORK_DIASPORA),
-		dbesc($handle)
-	);
-	if(count($r)) {
-		// update record occasionally so it doesn't get stale
-		$d = strtotime($r[0]['updated'] . ' +00:00');
-		if($d < strtotime('now - 14 days')) {
-			q("delete from fcontact where id = %d limit 1",
-				intval($r[0]['id'])
-			);
-		}
-		else
-			return $r[0];
-	}
-	require_once('include/Scrape.php');
-	$r = probe_url($handle, PROBE_DIASPORA);
-	if((count($r)) && ($r['network'] === NETWORK_DIASPORA)) {
-		add_fcontact($r);
-		return ($r);
-	}
-	return false;
 }
 
 	
@@ -599,6 +590,8 @@ function diaspora_comment($importer,$xml,$msg) {
 	}
 
 	// notify others
+	proc_run('php','include/notifier.php','comment',$message_id);
+
 	return;
 
 }
@@ -768,7 +761,8 @@ EOT;
 		);
 	}
 
-	// FIXME send notification
+	// notify others
+	proc_run('php','include/notifier.php','comment',$message_id);
 
 	return;
 }
