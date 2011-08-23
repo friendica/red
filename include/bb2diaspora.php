@@ -39,7 +39,7 @@ function bb2diaspora($Text,$preserve_nl = false) {
 	$Text = preg_replace("(\[url\=([$URLSearchString]*)\](.*?)\[/url\])", '[$2]($1)', $Text);
 
 //	$Text = preg_replace("/\[img\](.*?)\[\/img\]/", t('Image/photo: ') . '$1', $Text);
-	$Text = preg_replace("/\[img\](.*?)\[\/img\]/", '', $Text);
+	$Text = preg_replace("/\[img\](.*?)\[\/img\]/", t('image/photo'), $Text);
 
 	// Perform MAIL Search
 	$Text = preg_replace("(\[mail\]([$MAILSearchString]*)\[/mail\])", '[$1](mailto:$1)', $Text);
