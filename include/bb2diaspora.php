@@ -32,6 +32,8 @@ function bb2diaspora($Text,$preserve_nl = false) {
 
 	// Perform URL Search
 
+	// [img]pathtoimage[/img]
+	$Text = preg_replace("/\[img\](.*?)\[\/img\]/", t('Image/photo: ') . '$1', $Text);
 
 
 	$Text = preg_replace("/\[url\]([$URLSearchString]*)\[\/url\]/", '[$1]($1)', $Text);
@@ -43,6 +45,11 @@ function bb2diaspora($Text,$preserve_nl = false) {
 	$Text = preg_replace("(\[mail\]([$MAILSearchString]*)\[/mail\])", '[$1](mailto:$1)', $Text);
 	$Text = preg_replace("/\[mail\=([$MAILSearchString]*)\](.*?)\[\/mail\]/", '[$2](mailto:$1)', $Text);
          
+	$Text = str_replace('*', '\\*', $Text);
+	$Text = str_replace('_', '\\_', $Text);
+
+	$Text = str_replace('`','\\`', $Text);
+
 	// Check for bold text
 	$Text = preg_replace("(\[b\](.*?)\[\/b\])is",'**$1**',$Text);
 
@@ -92,7 +99,7 @@ function bb2diaspora($Text,$preserve_nl = false) {
 
 //	$CodeLayout = '<code>$1</code>';
 	// Check for [code] text
-//	$Text = preg_replace("/\[code\](.*?)\[\/code\]/is","$CodeLayout", $Text);
+	$Text = preg_replace("/\[code\](.*?)\[\/code\]/is","```$1```", $Text);
 
 
 
@@ -103,8 +110,6 @@ function bb2diaspora($Text,$preserve_nl = false) {
 //	$Text = preg_replace("/\[quote\](.*?)\[\/quote\]/is","$QuoteLayout", $Text);
          
 	// Images
-	// [img]pathtoimage[/img]
-//	$Text = preg_replace("/\[img\](.*?)\[\/img\]/", '<img src="$1" alt="' . t('Image/photo') . '" />', $Text);
 
 	// html5 video and audio
 
