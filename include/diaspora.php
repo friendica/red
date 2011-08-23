@@ -2,6 +2,7 @@
 
 require_once('include/crypto.php');
 require_once('include/items.php');
+require_once('include/bb2diaspora.php');
 
 function diaspora_get_contact_by_handle($uid,$handle) {
 	$r = q("SELECT * FROM `contact` WHERE `network` = '%s' AND `uid` = %d AND `addr` = '%s' LIMIT 1",
@@ -845,7 +846,6 @@ function diaspora_send_status($item,$owner,$contact) {
 	$a = get_app();
 	$myaddr = $owner['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
 	$theiraddr = $contact['addr'];
-	require_once('include/bb2diaspora.php');
 
 	$body = xmlify(bb2diaspora($item['body']));
 	$public = (($item['private']) ? 'false' : 'true');
