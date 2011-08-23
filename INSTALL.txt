@@ -15,20 +15,32 @@ hosting provider prior to installation.
 Before you begin: Choose a domain name or subdomain name for your server.
 Put some thought into this - because changing it is currently not-supported.
 Things will break, and some of your friends may have difficulty communicating
-with you. We plan to address this limitation in a future release. 
+with you. We plan to address this limitation in a future release. Also decide
+if you wish to connect with members of the Diaspora network, as this will 
+impact the installation requirements.
+
+Decide if you will use SSL and obtain an SSL cert. Communications with the
+Diaspora network MAY require both SSL AND an SSL cert signed by a CA which is 
+recognised by the major browsers. Friendika will work with self-signed certs
+but Diaspora communication may not. For best results, install your cert PRIOR
+to installing Friendika and when visiting your site for the initial 
+installation in step 5, please use the https: link. (Use the http: or non-SSL 
+link if your cert is self-signed). 
  
 
 1. Requirements
 	- Apache with mod-rewrite enabled and "Options All" so you can use a 
 local .htaccess file
 
-	- PHP 5.2+. The later the better. You'll need 5.3 for encryption of key
-exchange conversations
+	- PHP 5.2+. The later the better. PHP 5.3 is required for communications 
+with the Diaspora network and improved security.
+
 		- PHP *command line* access with register_argc_argv set to true in the 
-php.ini file
-		- curl, gd, mysql, mbstring, and openssl extensions
+php.ini file [or see 'poormancron' in section 8]
+
+		- curl, gd, mysql, mbstring, mcrypt, and openssl extensions
+
 		- some form of email server or email gateway such that PHP mail() works
-		- mcrypt (optional; used for end-to-end message encryption)
 
 	- Mysql 5.x
 
@@ -36,12 +48,8 @@ php.ini file
 (Windows) [Note: other options are presented in Section 8 of this document]
 
 	- Installation into a top-level domain or sub-domain (without a 
-directory/path component in the URL) is preferred. Directory paths will
-not be as convenient to use and have not been thoroughly tested.  
-
-	[Dreamhost.com offers all of the necessary hosting features at a 
-reasonable price. If your hosting provider doesn't allow Unix shell access, 
-you might have trouble getting everything to work.] 
+directory/path component in the URL) is preferred. This is REQUIRED if
+you wish to communicate with the Diaspora network.
 
 2. Unpack the Friendika files into the root of your web server document area.
 
@@ -58,7 +66,9 @@ write or create files in your web directory, create an empty file called
 .htconfig.php and make it writable by the web server.
 
 5. Visit your website with a web browser and follow the instructions. Please 
-note any error messages and correct these before continuing.
+note any error messages and correct these before continuing. If you are using
+SSL with a known signature authority (recommended), use the https: link to your
+website. If you are using a self-signed cert or no cert, use the http: link. 
 
 6. *If* the automated installation fails for any reason, check the following:
 
@@ -99,7 +109,9 @@ have troubles with this section please contact your hosting provider for
 assistance. Friendika will not work correctly if you cannot perform this step.
   
 Alternative: You may be able to use the 'poormancron' plugin to perform this
-step if you are using a recent Friendika release. To do this, edit the file 
+step if you are using a recent Friendika release. 'poormancron' may result in
+perfomance and memory issues and is only suitable for small sites with one or
+two users and a handful of contacts. To do this, edit the file 
 ".htconfig.php" and look for a line describing your plugins. On a fresh 
 installation, it will look like
 
@@ -114,7 +126,7 @@ $a->config['system']['addon'] = 'js_upload,poormancron';
 and save your changes.
 
 
-
+ 
 #####################################################################
 
 		If things don't work...
