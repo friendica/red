@@ -4,6 +4,36 @@ require_once('include/crypto.php');
 require_once('include/items.php');
 require_once('include/bb2diaspora.php');
 
+function diaspora_dispatch($importer,$msg) {
+
+	$parsed_xml = parse_xml_string($msg['message'],false);
+
+	$xmlbase = $parsed_xml->post;
+
+	if($xmlbase->request) {
+		diaspora_request($importer,$xmlbase->request);
+	}
+	elseif($xmlbase->status_message) {
+		diaspora_post($importer,$xmlbase->status_message);
+	}
+	elseif($xmlbase->comment) {
+		diaspora_comment($importer,$xmlbase->comment,$msg);
+	}
+	elseif($xmlbase->like) {
+		diaspora_like($importer,$xmlbase->like,$msg);
+	}
+	elseif($xmlbase->retraction) {
+		diaspora_retraction($importer,$xmlbase->retraction,$msg);
+	}
+	elseif($xmlbase->photo) {
+		diaspora_photo($importer,$xmlbase->photo,$msg);
+	}
+	else {
+		logger('diaspora_dispatch: unknown message type: ' . print_r($xmlbase,true));
+	}
+	return;
+}
+
 function diaspora_get_contact_by_handle($uid,$handle) {
 	$r = q("SELECT * FROM `contact` WHERE `network` = '%s' AND `uid` = %d AND `addr` = '%s' LIMIT 1",
 		dbesc(NETWORK_DIASPORA),
@@ -866,10 +896,7 @@ function diaspora_share($me,$contact) {
 
 	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$me,$contact,$me['prvkey'],$contact['pubkey'])));
 
-	post_url($contact['notify'] . '/',$slap);
-	$return_code = $a->get_curl_code();
-	logger('diaspora_send_share: returns: ' . $return_code);
-	return $return_code;
+	return(diaspora_transmit($owner,$contact,$slap));
 }
 
 function diaspora_unshare($me,$contact) {
@@ -886,10 +913,8 @@ function diaspora_unshare($me,$contact) {
 
 	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$me,$contact,$me['prvkey'],$contact['pubkey'])));
 
-	post_url($contact['notify'] . '/',$slap);
-	$return_code = $a->get_curl_code();
-	logger('diaspora_send_unshare: returns: ' . $return_code);
-	return $return_code;
+	return(diaspora_transmit($owner,$contact,$slap));
+
 }
 
 
@@ -937,9 +962,7 @@ function diaspora_send_status($item,$owner,$contact) {
 
 	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'])));
 
-	post_url($contact['notify'] . '/',$slap);
-	$return_code = $a->get_curl_code();
-	logger('diaspora_send_status: returns: ' . $return_code);
+	$return_code = diaspora_transmit($owner,$contact,$slap);
 
 	if(count($images)) {
 		diaspora_send_images($item,$owner,$contact,$images);
@@ -979,12 +1002,11 @@ function diaspora_send_images($item,$owner,$contact,$images) {
 			'$created_at' => xmlify(datetime_convert('UTC','UTC',$r[0]['created'],'Y-m-d h:i:s \U\T\C'))
 		));
 
+
 		logger('diaspora_send_photo: base message: ' . $msg, LOGGER_DATA);
 		$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'])));
 
-		post_url($contact['notify'] . '/',$slap);
-		$return_code = $a->get_curl_code();
-		logger('diaspora_send_photo: returns: ' . $return_code);
+		diaspora_transmit($owner,$contact,$slap);
 	}
 
 }
@@ -1039,11 +1061,7 @@ function diaspora_send_followup($item,$owner,$contact) {
 
 	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'])));
 
-	post_url($contact['notify'] . '/',$slap);
-	$return_code = $a->get_curl_code();
-	logger('diaspora_send_followup: returns: ' . $return_code);
-	return $return_code;
-
+	return(diaspora_transmit($owner,$contact,$slap));
 }
 
 
@@ -1115,10 +1133,7 @@ function diaspora_send_relay($item,$owner,$contact) {
 
 	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'])));
 
-	post_url($contact['notify'] . '/',$slap);
-	$return_code = $a->get_curl_code();
-	logger('diaspora_send_relay: returns: ' . $return_code);
-	return $return_code;
+	return(diaspora_transmit($owner,$contact,$slap));
 
 }
 
@@ -1138,9 +1153,30 @@ function diaspora_send_retraction($item,$owner,$contact) {
 
 	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'])));
 
+	return(diaspora_transmit($owner,$contact,$slap));
+}
+
+
+
+function diaspora_transmit($owner,$contact,$slap) {
+
+	$a = get_app();
+
 	post_url($contact['notify'] . '/',$slap);
 	$return_code = $a->get_curl_code();
-	logger('diaspora_send_retraction: returns: ' . $return_code);
-	return $return_code;
+	logger('diaspora_transmit: returns: ' . $return_code);
 
+	if(! $return_code) {
+		logger('diaspora_transmit: queue message');
+		// queue message for redelivery
+		q("INSERT INTO `queue` ( `cid`, `created`, `last`, `content`)
+			VALUES ( %d, '%s', '%s', '%s') ",
+			intval($contact['id']),
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
+			dbesc($slap)
+		);
+	}
+
+	return(($return_code) ? $return_code : (-1));
 }

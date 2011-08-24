@@ -56,6 +56,7 @@ function queue_run($argv, $argc){
 	// delivery loop
 
 	require_once('include/salmon.php');
+	require_once('include/diaspora.php');
 
 	foreach($r as $q_item) {
 
@@ -120,6 +121,18 @@ function queue_run($argv, $argc){
 						remove_queue_item($q_item['id']);
 				}
 				break;
+			case NETWORK_DIASPORA:
+				if($contact['notify']) {
+					logger('queue: diaspora_delivery: item ' . $q_item['id'] . ' for ' . $contact['name']);
+					$deliver_status = diaspora_transmit($owner,$contact['notify'],$data);
+
+					if($deliver_status == (-1))
+						update_queue_time($q_item['id']);
+					else
+						remove_queue_item($q_item['id']);
+				}
+				break;
+
 			default:
 				$params = array('owner' => $owner, 'contact' => $contact, 'queue' => $q_item, 'result' => false);
 				call_hooks('queue_deliver', $a, $params);
