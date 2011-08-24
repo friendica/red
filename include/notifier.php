@@ -150,7 +150,37 @@ function notifier_run($argv, $argc){
 
 		$parent = $items[0];
 
-		if($parent['wall'] == 0 && (! $expire)) {
+		// This is IMPORTANT!!!!
+
+		// We will only send a "notify owner to relay" or followup message if the referenced post
+		// originated on our system by virtue of having our hostname somewhere
+		// in the URI, AND it was a comment (not top_level) AND the parent originated elsewhere.
+		// if $parent['wall'] == 1 we will already have the parent message in our array
+		// and we will relay the whole lot.
+ 
+		// expire sends an entire group of expire messages and cannot be forwarded.
+		// However the conversation owner will be a part of the conversation and will 
+		// be notified during this run.
+		// Other DFRN conversation members will be alerted during polled updates.
+
+		// Diaspora members currently are not notified of expirations, and other networks have
+		// either limited or no ability to process deletions. We should at least fix Diaspora 
+		// by stringing togther an array of retractions and sending them onward.
+		 
+  	
+		$localhost = $a->get_hostname();
+		if(strpos($localhost,':'))
+			$localhost = substr($localhost,0,strpos($localhost,':'));
+
+		/**
+		 *
+		 * Be VERY CAREFUL if you make any changes to the following line. Seemingly innocuous changes 
+		 * have been known to cause runaway conditions which affected several servers, along with 
+		 * permissions issues. 
+		 *
+		 */
+ 
+		if((! $top_level) && ($parent['wall'] == 0) && (! $expire) && (stristr($target_item['uri'],$localhost))) {
 			// local followup to remote post
 			$followup = true;
 			$public_message = false; // not public

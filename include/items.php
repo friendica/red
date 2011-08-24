@@ -1556,7 +1556,7 @@ function subscribe_to_hub($url,$importer,$contact) {
 			intval($importer['uid'])
 		);
 	}
-	if(! count($r))
+	if((! count($r)) || $contact['network'] === NETWORK_DIASPORA)
 		return;
 
 	$push_url = get_config('system','url') . '/pubsub/' . $r[0]['nickname'] . '/' . $contact['id'];

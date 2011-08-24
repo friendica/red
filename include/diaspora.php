@@ -544,7 +544,6 @@ function diaspora_comment($importer,$xml,$msg) {
 
 
 	if($parent_author_signature) {
-//		$owner_signed_data = $guid . ';' . $parent_guid . ';' . $text . ';' . $msg['author'];
 		$owner_signed_data = $guid . ';' . $parent_guid . ';' . $text . ';' . $diaspora_handle;
 
 		$parent_author_signature = base64_decode($parent_author_signature);
@@ -619,13 +618,14 @@ function diaspora_comment($importer,$xml,$msg) {
 			dbesc(base64_encode($author_signature)),
 			dbesc($diaspora_handle)
 		);
+
+		// if the message isn't already being relayed, notify others
+		// the existence of parent_author_signature means the parent_author or owner
+		// is already relaying.
+
+		proc_run('php','include/notifier.php','comment',$message_id);
 	}
-
-	// notify others
-//	proc_run('php','include/notifier.php','comment',$message_id);
-
 	return;
-
 }
 
 function diaspora_photo($importer,$xml,$msg) {
@@ -845,8 +845,12 @@ EOT;
 		);
 	}
 
-	// notify others
-//	proc_run('php','include/notifier.php','comment',$message_id);
+	// if the message isn't already being relayed, notify others
+	// the existence of parent_author_signature means the parent_author or owner
+	// is already relaying.
+
+	if(! $parent_author_signature)
+		proc_run('php','include/notifier.php','comment',$message_id);
 
 	return;
 }
