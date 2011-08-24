@@ -619,17 +619,18 @@ function notifier_run($argv, $argc){
 				);
 
 				if(count($n)) {
-					switch($n[0]['network']) {
+					$contact = $n[0];
+					switch($contact['network']) {
 						case NETWORK_DFRN :
-							logger('notifier: dfrnpubdelivery: ' . $n[0]['name']);
-							$deliver_status = dfrn_deliver($owner,$n[0],$atom);
+							logger('notifier: dfrnpubdelivery: ' . $contact['name']);
+							$deliver_status = dfrn_deliver($owner,$contact,$atom);
 							break;
 						case NETWORK_DIASPORA :
 							require_once('include/diaspora.php');
 							if(get_config('system','dfrn_only') || (! get_config('system','diaspora_enabled')) || (! $normal_mode))
 								break;
 							
-							if(! $n[0]['pubkey'])
+							if(! $contact['pubkey'])
 								break;
 					
 							if($target_item['verb'] === ACTIVITY_DISLIKE) {
@@ -638,21 +639,21 @@ function notifier_run($argv, $argc){
 							}
 							elseif(($target_item['deleted']) && ($target_item['verb'] !== ACTIVITY_LIKE)) {
 								// diaspora delete, 
-								diaspora_send_retraction($target_item,$owner,$n[0]);
+								diaspora_send_retraction($target_item,$owner,$contact);
 								break;
 							}
 							elseif($followup) {
 								// send comments, likes and retractions of likes to owner to relay
-								diaspora_send_followup($target_item,$owner,$n[0]);
+								diaspora_send_followup($target_item,$owner,$contact);
 								break;
 							}
 							elseif($target_item['parent'] != $target_item['id']) {
 								// we are the relay - send comments, likes and unlikes to our conversants
-								diaspora_send_relay($target_item,$owner,$n[0]);
+								diaspora_send_relay($target_item,$owner,$contact);
 								break;
 							}		
 							elseif($top_level) {
-								diaspora_send_status($target_item,$owner,$n[0]);
+								diaspora_send_status($target_item,$owner,$contact);
 								break;
 							}
 						default:
