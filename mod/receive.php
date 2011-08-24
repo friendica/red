@@ -63,6 +63,9 @@ function receive_post(&$a) {
 	elseif($xmlbase->retraction) {
 		diaspora_retraction($importer,$xmlbase->retraction,$msg);
 	}
+	elseif($xmlbase->photo) {
+		diaspora_photo($importer,$xmlbase->photo,$msg);
+	}
 	else {
 		logger('mod-diaspora: unknown message type: ' . print_r($xmlbase,true));
 	}

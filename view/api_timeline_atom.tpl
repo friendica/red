@@ -83,7 +83,7 @@
 				<poco:primary>true</poco:primary>
 			</poco:urls>
 		</author>
-		<link rel="ostatus:conversation" href="$status.url"/> 
+		<link rel="ostatus:conversation" type="text/html" href="$status.url"/> 
 
 	</entry>    
     {{ endfor }}

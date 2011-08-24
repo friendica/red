@@ -597,6 +597,57 @@ function diaspora_comment($importer,$xml,$msg) {
 
 }
 
+function diaspora_photo($importer,$xml,$msg) {
+
+	$remote_photo_path = notags(unxmlify($xml->remote_photo_path));
+
+	$remote_photo_name = notags(unxmlify($xml->remote_photo_name));
+
+	$status_message_guid = notags(unxmlify($xml->status_message_guid));
+
+	$guid = notags(unxmlify($xml->guid));
+
+	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
+
+	$public = notags(unxmlify($xml->public));
+
+	$created_at = notags(unxmlify($xml_created_at));
+
+
+	$contact = diaspora_get_contact_by_handle($importer['uid'],$msg['author']);
+	if(! $contact)
+		return;
+
+	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
+		logger('diaspora_photo: Ignoring this author.');
+		http_status_exit(202);
+		// NOTREACHED
+	}
+
+	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '%s' LIMIT 1",
+		intval($importer['uid']),
+		dbesc($status_message_guid)
+	);
+	if(! count($r)) {
+		logger('diaspora_photo: parent item not found: parent: ' . $parent_guid . ' item: ' . $guid);
+		return;
+	}
+	$parent_item = $r[0];
+
+	$link_text = '[img]' . $remote_photo_path . $remote_photo_name . '[/img]' . "\n";
+
+	$r = q("update item set `body` = '%s' where `id` = %d and `uid` = %d limit 1",
+		dbesc($link_text . $parent_item['body']),
+		intval($parent_item['id']),
+		intval($parent_item['uid'])
+	);
+
+	return;
+}
+
+
+
+
 function diaspora_like($importer,$xml,$msg) {
 
 	$a = get_app();
@@ -847,7 +898,25 @@ function diaspora_send_status($item,$owner,$contact) {
 	$myaddr = $owner['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
 	$theiraddr = $contact['addr'];
 
-	$body = xmlify(bb2diaspora($item['body']));
+	$images = array();
+
+	$body = $item['body'];
+
+	$cnt = preg_match_all('|\[img\](.*?)\[\/img\]|',$body,$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$detail = array();
+			$detail['str'] = $mtch[0];
+			$detail['path'] = dirname($mtch[1]);
+			$detail['file'] = basename($mtch[1]);
+			$detail['guid'] = $item['guid'];
+			$detail['handle'] = $myaddr;
+			$images[] = $detail;
+			$body = str_replace($detail['str'],'',$body);
+		}
+	}	
+
+	$body = xmlify(bb2diaspora($body));
 	$public = (($item['private']) ? 'false' : 'true');
 
 	require_once('include/datetime.php');
@@ -869,9 +938,54 @@ function diaspora_send_status($item,$owner,$contact) {
 	post_url($contact['notify'] . '/',$slap);
 	$return_code = $a->get_curl_code();
 	logger('diaspora_send_status: returns: ' . $return_code);
+
+	if(count($images)) {
+		diaspora_send_images($item,$owner,$contact,$images);
+	}
+
 	return $return_code;
 }
 
+
+function diaspora_send_images($item,$owner,$contact,$images) {
+	$a = get_app();
+	if(! count($images))
+		return;
+	$mysite = substr($a->get_baseurl(),strpos($a->get_baseurl(),'://') + 3) . '/photo';
+
+	$tpl = get_markup_template('diaspora_photo.tpl');
+	foreach($images as $image) {
+		if(! stristr($image['path'],$mysite))
+			continue;
+		$resource = str_replace('.jpg','',$image['file']);
+		$resource = substr($resource,0,strpos($resource,'-'));
+
+		$r = q("select * from photo where `resource-id` = '%s' and `uid` = %d limit 1",
+			dbesc($resource),
+			intval($owner['uid'])
+		);
+		if(! count($r))
+			continue;
+		$public = (($r[0]['allow_cid'] || $r[0]['allow_gid'] || $r[0]['deny_cid'] || $r[0]['deny_gid']) ? 'false' : 'true' );
+		$msg = replace_macros($tpl,array(		
+			'$path' => xmlify($image['path']),
+			'$filename' => xmlify($image['file']),
+			'$msg_guid' => xmlify($image['guid']),
+			'$guid' => xmlify($r[0]['guid']),
+			'$handle' => xmlify($image['handle']),
+			'$public' => xmlify($public),
+			'$created_at' => xmlify('UTC','UTC',$r[0]['created'],'Y-m-d h:i:s \U\T\C')
+		));
+
+		logger('diaspora_send_photo: base message: ' . $msg, LOGGER_DATA);
+		$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'])));
+
+		post_url($contact['notify'] . '/',$slap);
+		$return_code = $a->get_curl_code();
+		logger('diaspora_send_photo: returns: ' . $return_code);
+	}
+
+}
 
 function diaspora_send_followup($item,$owner,$contact) {
 

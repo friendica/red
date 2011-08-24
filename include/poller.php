@@ -82,12 +82,18 @@ function poller_run($argv, $argc){
 	if(! $restart)
 		proc_run('php','include/cronhooks.php');
 
+	// Only poll from those with suitable relationships,
+	// and which have a polling address and ignore Diaspora since 
+	// we are unable to match those posts with a Diaspora GUID and prevent duplicates.
+
 	$contacts = q("SELECT `id` FROM `contact` 
 		WHERE ( `rel` = %d OR `rel` = %d ) AND `poll` != ''
+		AND `network` != '%s'
 		$sql_extra 
 		AND `self` = 0 AND `blocked` = 0 AND `readonly` = 0 ORDER BY RAND()",
 		intval(CONTACT_IS_SHARING),
-		intval(CONTACT_IS_FRIEND)
+		intval(CONTACT_IS_FRIEND),
+		dbesc(NETWORK_DIASPORA)
 	);
 
 	if(! count($contacts)) {

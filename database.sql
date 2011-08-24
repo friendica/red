@@ -267,6 +267,7 @@ CREATE TABLE IF NOT EXISTS `photo` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(10) unsigned NOT NULL,
   `contact-id` int(10) unsigned NOT NULL,
+  `guid` char(64) NOT NULL, 
   `resource-id` char(255) NOT NULL,
   `created` datetime NOT NULL,
   `edited` datetime NOT NULL,
@@ -288,7 +289,8 @@ CREATE TABLE IF NOT EXISTS `photo` (
   KEY `resource-id` (`resource-id`),
   KEY `album` (`album`),
   KEY `scale` (`scale`),
-  KEY `profile` (`profile`)
+  KEY `profile` (`profile`),
+  KEY `guid` (`guid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

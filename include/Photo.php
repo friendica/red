@@ -185,11 +185,20 @@ class Photo {
 
 	public function store($uid, $cid, $rid, $filename, $album, $scale, $profile = 0, $allow_cid = '', $allow_gid = '', $deny_cid = '', $deny_gid = '') {
 
+		$r = q("select `guid` from photo where `resource-id` = '%s' and `guid` != '' limit 1",
+			dbesc($rid)
+		);
+		if(count($r))
+			$guid = $r[0]['guid'];
+		else
+			$guid = get_guid();
+
 		$r = q("INSERT INTO `photo`
-			( `uid`, `contact-id`, `resource-id`, `created`, `edited`, `filename`, `album`, `height`, `width`, `data`, `scale`, `profile`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid` )
-			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, '%s', '%s', '%s', '%s' )",
+			( `uid`, `contact-id`, `guid`, `resource-id`, `created`, `edited`, `filename`, `album`, `height`, `width`, `data`, `scale`, `profile`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid` )
+			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, '%s', '%s', '%s', '%s' )",
 			intval($uid),
 			intval($cid),
+			dbesc($guid),
 			dbesc($rid),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
