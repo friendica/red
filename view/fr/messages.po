@@ -4844,7 +4844,7 @@ msgstr "octets"
 
 #: ../../include/text.php:835
 msgid "Select an alternate language"
-msgstr "Choisir une langue complémentaire"
+msgstr "Choisir une autre langue"
 
 #: ../../include/acl_selectors.php:280
 msgid "show"
