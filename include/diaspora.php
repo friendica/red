@@ -912,7 +912,7 @@ function diaspora_send_status($item,$owner,$contact) {
 			$detail['guid'] = $item['guid'];
 			$detail['handle'] = $myaddr;
 			$images[] = $detail;
-			$body = str_replace($detail['str'],t('link to photo'),$body);
+			$body = str_replace($detail['str'],t('link'),$body);
 		}
 	}	
 
@@ -974,7 +974,7 @@ function diaspora_send_images($item,$owner,$contact,$images) {
 			'$guid' => xmlify($r[0]['guid']),
 			'$handle' => xmlify($image['handle']),
 			'$public' => xmlify($public),
-			'$created_at' => xmlify('UTC','UTC',$r[0]['created'],'Y-m-d h:i:s \U\T\C')
+			'$created_at' => xmlify(datetime_convert('UTC','UTC',$r[0]['created'],'Y-m-d h:i:s \U\T\C'))
 		));
 
 		logger('diaspora_send_photo: base message: ' . $msg, LOGGER_DATA);
