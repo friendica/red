@@ -907,12 +907,12 @@ function diaspora_send_status($item,$owner,$contact) {
 		foreach($matches as $mtch) {
 			$detail = array();
 			$detail['str'] = $mtch[0];
-			$detail['path'] = dirname($mtch[1]);
+			$detail['path'] = dirname($mtch[1]) . '/';
 			$detail['file'] = basename($mtch[1]);
 			$detail['guid'] = $item['guid'];
 			$detail['handle'] = $myaddr;
 			$images[] = $detail;
-			$body = str_replace($detail['str'],'',$body);
+			$body = str_replace($detail['str'],t('link to photo'),$body);
 		}
 	}	
 
@@ -931,7 +931,7 @@ function diaspora_send_status($item,$owner,$contact) {
 		'$created' => $created
 	));
 
-	logger('diaspora_send_status: base message: ' . $msg, LOGGER_DATA);
+	logger('diaspora_send_status: ' . $owner['username'] . ' -> ' . $contact['name'] . ' base message: ' . $msg, LOGGER_DATA);
 
 	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'])));
 
