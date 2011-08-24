@@ -629,7 +629,7 @@ function notifier_run($argv, $argc){
 							if(get_config('system','dfrn_only') || (! get_config('system','diaspora_enabled')) || (! $normal_mode))
 								break;
 							
-							if(! $contact['pubkey'])
+							if(! $n[0]['pubkey'])
 								break;
 					
 							if($target_item['verb'] === ACTIVITY_DISLIKE) {
