@@ -380,8 +380,8 @@ $a->strings["View New Items"] = "Neue Einträge anzeigen";
 $a->strings["View Any Items"] = "Alle Einträge anzeigen";
 $a->strings["View Starred Items"] = "Gesternte Einträge anzeigen";
 $a->strings["Warning: This group contains %s member from an insecure network."] = array(
-	0 => "",
-	1 => "",
+	0 => "Warnung: Diese Gruppe beinhaltet %s Mitglied aus unsicheren Netzwerken.",
+	1 => "Warnung: Diese Gruppe beinhaltet %s Mitglieder aus unsicheren Netzwerken.",
 );
 $a->strings["Private messages to this group are at risk of public disclosure."] = "Private Nachrichten an diese Gruppe könnten an die Öffentlichkeit geraten.";
 $a->strings["No such group"] = "Es gibt keine solche Gruppe";
