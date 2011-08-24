@@ -622,7 +622,7 @@ function diaspora_comment($importer,$xml,$msg) {
 	}
 
 	// notify others
-	proc_run('php','include/notifier.php','comment',$message_id);
+//	proc_run('php','include/notifier.php','comment',$message_id);
 
 	return;
 
@@ -846,7 +846,7 @@ EOT;
 	}
 
 	// notify others
-	proc_run('php','include/notifier.php','comment',$message_id);
+//	proc_run('php','include/notifier.php','comment',$message_id);
 
 	return;
 }
