@@ -422,6 +422,7 @@ function contacts_content(&$a) {
 			$o .= replace_macros($tpl, array(
 				'$img_hover' => sprintf( t('Visit %s\'s profile [%s]'),$rr['name'],$rr['url']),
 				'$edit_hover' => t('Edit contact'),
+				'$contact_photo_menu' => contact_photo_menu($rr),
 				'$id' => $rr['id'],
 				'$alt_text' => $alt_text,
 				'$dir_icon' => $dir_icon,

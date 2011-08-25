@@ -85,3 +85,55 @@ function unmark_for_death($contact) {
 	);
 }}
 
+if(! function_exists('contact_photo_menu')){
+function contact_photo_menu($contact) {
+
+	$a = get_app();
+	
+	$contact_url="";
+	$pm_url="";
+	$status_link="";
+	$photos_link="";
+	$posts_link="";
+
+	$sparkle = false;
+	if($contact['network'] === NETWORK_DFRN) {
+		$sparkle = true;
+		$profile_link = $a->get_baseurl() . '/redir/' . $contact['id'];
+	}
+	else
+		$profile_link = $contact['url'];
+
+	if($profile_link === 'mailbox')
+		$profile_link = '';
+
+	if($sparkle) {
+		$status_link = $profile_link . "?url=status";
+		$photos_link = $profile_link . "?url=photos";
+		$profile_link = $profile_link . "?url=profile";
+		$pm_url = $a->get_baseurl() . '/message/new/' . $contact['id'];
+	}
+
+	$contact_url = $a->get_baseurl() . '/contacts/' . $cid;
+	$posts_link = $a->get_baseurl() . '/network/?cid=' . $cid;
+
+	$menu = Array(
+		t("View status") => $status_link,
+		t("View profile") => $profile_link,
+		t("View photos") => $photos_link,		
+		t("View recent") => $posts_link, 
+		t("Edit contact") => $contact_url,
+		t("Send PM") => $pm_url,
+	);
+	
+	
+	$args = array('contact' => $contact, 'menu' => $menu);
+	
+	call_hooks('contact_photo_menu', $args);
+	
+	$o = "";
+	foreach($menu as $k=>$v){
+		if ($v!="") $o .= "<li><a href='$v'>$k</a></li>\n";
+	}
+	return $o;
+}}

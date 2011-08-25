@@ -744,6 +744,7 @@ input#dfrn-url {
 .contact-entry-wrapper {
 	float: left;
 	width: 180px;
+	height: 120px;
 }
 
 .contact-entry-direction-icon {
@@ -1457,6 +1458,36 @@ input#dfrn-url {
 	margin-top: 20px;
 	/*margin-left: 50px;*/
 }
+
+
+.contact-photo-menu-button {
+	display: block;
+/*	position: absolute; */
+	background-image: url("photo-menu.jpg");
+	background-position: top left; 
+	background-repeat: no-repeat;
+	margin: 0px; padding: 0px;
+	width: 16px;
+	height: 16px;
+	top: 60px; left:10px;
+	overflow: hidden;
+	text-indent: 40px;
+	display: none;
+	
+}
+.contact-photo-menu {
+	width: auto;
+	border: 2px solid #444444;
+	background: #FFFFFF;
+/*	position: absolute; */
+	left: 10px; top: 90px;
+	display: none;
+	z-index: 10000;
+}
+.contact-photo-menu ul { margin:0px; padding: 0px; list-style: none }
+.contact-photo-menu li a { display: block; padding: 2px; }
+.contact-photo-menu li a:hover { color: #FFFFFF; background: #3465A4; text-decoration: none; }
+
 
 #block-message, #ignore-message {
 	margin-top: 20px;
