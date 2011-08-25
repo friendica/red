@@ -427,7 +427,7 @@ function contacts_content(&$a) {
 				'$alt_text' => $alt_text,
 				'$dir_icon' => $dir_icon,
 				'$thumb' => $rr['thumb'], 
-				'$name' => substr($rr['name'],0,20),
+				'$name' => $rr['name'],
 				'$username' => $rr['name'],
 				'$sparkle' => $sparkle,
 				'$url' => $url
