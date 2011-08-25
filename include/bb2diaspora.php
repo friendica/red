@@ -5,6 +5,25 @@ require_once('include/event.php');
 
 
 
+
+function diaspora2bb($s) {
+
+	$s = str_replace(array('\\**','\\__','\\*','\\_'), array('-^doublestar^-','-^doublescore-^','-^star^-','-^score^-'),$s);
+	$s = preg_replace("/\*\*\*(.+?)\*\*\*/", '[b][i]$1[/i][/b]', $s);
+	$s = preg_replace("/\_\_\_(.+?)\_\_\_/", '[b][i]$1[/i][/b]', $s);
+	$s = preg_replace("/\*\*(.+?)\*\*/", '[b]$1[/b]', $s);
+	$s = preg_replace("/\_\_(.+?)\_\_/", '[b]$1[/b]', $s);
+	$s = preg_replace("/\*(.+?)\*/", '[i]$1[/i]', $s);
+	$s = preg_replace("/\_(.+?)\_/", '[i]$1[/i]', $s);
+	$s = str_replace(array('-^doublestar^-','-^doublescore-^','-^star^-','-^score^-'), array('**','__','*','_'), $s);
+	$s = preg_replace('/\[(.+?)\]\((.+?)\)/','[url=$2]$1[/url]',$s);
+
+	$s = escape_tags($s);
+	return $s;
+
+}
+
+
 function stripdcode_br_cb($s) {
 	return '[code]' . str_replace('<br />', '', $s[1]) . '[/code]';
 }

@@ -435,32 +435,7 @@ function diaspora_post($importer,$xml) {
 	$created = unxmlify($xml->created_at);
 	$private = ((unxmlify($xml->public) == 'false') ? 1 : 0);
 
-	$body = unxmlify($xml->raw_message);
-
-	require_once('library/HTMLPurifier.auto.php');
-	require_once('include/html2bbcode.php');
-
-	$maxlen = get_max_import_size();
-	if($maxlen && (strlen($body) > $maxlen))
-		$body = substr($body,0, $maxlen);
-
-	if((strpos($body,'<') !== false) || (strpos($body,'>') !== false)) {
-
-		$body = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
-			'[youtube]$1[/youtube]', $body);
-
-		$body = preg_replace('#<iframe[^>].+?' . 'http://www.youtube.com/embed/([A-Za-z0-9\-_=]+).+?</iframe>#s',
-			'[youtube]$1[/youtube]', $body);
-
-		$body = oembed_html2bbcode($body);
-
-		$config = HTMLPurifier_Config::createDefault();
-		$config->set('Cache.DefinitionImpl', null);
-		$purifier = new HTMLPurifier($config);
-		$body = $purifier->purify($body);
-
-		$body = html2bbcode($body);
-	}
+	$body = diaspora2bb($xml->raw_message);
 
 	$datarray = array();
 	$datarray['uid'] = $importer['uid'];
@@ -558,32 +533,7 @@ function diaspora_comment($importer,$xml,$msg) {
 
 	// Phew! Everything checks out. Now create an item.
 
-	require_once('library/HTMLPurifier.auto.php');
-	require_once('include/html2bbcode.php');
-
-	$body = $text;
-
-	$maxlen = get_max_import_size();
-	if($maxlen && (strlen($body) > $maxlen))
-		$body = substr($body,0, $maxlen);
-
-	if((strpos($body,'<') !== false) || (strpos($body,'>') !== false)) {
-
-		$body = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
-			'[youtube]$1[/youtube]', $body);
-
-		$body = preg_replace('#<iframe[^>].+?' . 'http://www.youtube.com/embed/([A-Za-z0-9\-_=]+).+?</iframe>#s',
-			'[youtube]$1[/youtube]', $body);
-
-		$body = oembed_html2bbcode($body);
-
-		$config = HTMLPurifier_Config::createDefault();
-		$config->set('Cache.DefinitionImpl', null);
-		$purifier = new HTMLPurifier($config);
-		$body = $purifier->purify($body);
-
-		$body = html2bbcode($body);
-	}
+	$body = diaspora2bb($text);
 
 	$message_id = $diaspora_handle . ':' . $guid;
 
