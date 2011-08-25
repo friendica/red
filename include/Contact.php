@@ -114,8 +114,8 @@ function contact_photo_menu($contact) {
 		$pm_url = $a->get_baseurl() . '/message/new/' . $contact['id'];
 	}
 
-	$contact_url = $a->get_baseurl() . '/contacts/' . $cid;
-	$posts_link = $a->get_baseurl() . '/network/?cid=' . $cid;
+	$contact_url = $a->get_baseurl() . '/contacts/' . $contact['id'];
+	$posts_link = $a->get_baseurl() . '/network/?cid=' . $contact['id'];
 
 	$menu = Array(
 		t("View status") => $status_link,

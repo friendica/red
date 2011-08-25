@@ -743,7 +743,7 @@ input#dfrn-url {
 
 .contact-entry-wrapper {
 	float: left;
-	width: 180px;
+	width: 120px;
 	height: 120px;
 }
 
@@ -760,7 +760,7 @@ input#dfrn-url {
 }
 .contact-entry-name {
 	float: left;
-	margin-left: 30px;
+	margin-left: 0px;
 }
 .contact-entry-edit-links {
 	margin-top: 6px;
@@ -778,6 +778,7 @@ input#dfrn-url {
 }
 .contact-entry-photo {
 	float: left;
+	position: relative;
 }
 .contact-entry-end {
 	clear: both;
@@ -1461,15 +1462,14 @@ input#dfrn-url {
 
 
 .contact-photo-menu-button {
-	display: block;
-/*	position: absolute; */
+	position: absolute;
 	background-image: url("photo-menu.jpg");
 	background-position: top left; 
 	background-repeat: no-repeat;
 	margin: 0px; padding: 0px;
 	width: 16px;
 	height: 16px;
-	top: 60px; left:10px;
+	top: 64px; left:0px;
 	overflow: hidden;
 	text-indent: 40px;
 	display: none;
@@ -1479,8 +1479,8 @@ input#dfrn-url {
 	width: auto;
 	border: 2px solid #444444;
 	background: #FFFFFF;
-/*	position: absolute; */
-	left: 10px; top: 90px;
+	position: absolute;
+	left: 0px; top: 90px;
 	display: none;
 	z-index: 10000;
 }
