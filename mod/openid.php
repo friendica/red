@@ -55,7 +55,8 @@ function openid_content(&$a) {
 			} 
 
 
-			$r = q("SELECT * FROM `user` WHERE `openid` = '%s' AND `blocked` = 0 AND `verified` = 1 LIMIT 1",
+			$r = q("SELECT `user`.*, `user`.`pubkey` as `upubkey`, `user`.`prvkey` as `uprvkey` 
+				FROM `user` WHERE `openid` = '%s' AND `blocked` = 0 AND `verified` = 1 LIMIT 1",
 				dbesc($_SESSION['openid'])
 			);
 			if(! count($r)) {

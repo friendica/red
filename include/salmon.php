@@ -73,6 +73,13 @@ function slapper($owner,$url,$slap) {
 	if(! strlen($url))
 		return;
 
+
+	if(! $owner['sprvkey']) {
+		logger(sprintf("slapper: user '%s' (%d) does not have a salmon private key. Send failed.",
+		$owner['username'],$owner['uid']));
+		return;
+	}
+
 	// add all namespaces to item
 
 $namespaces = <<< EOT
