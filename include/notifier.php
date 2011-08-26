@@ -657,11 +657,18 @@ function notifier_run($argv, $argc){
 							break;
 						case NETWORK_DIASPORA :
 							require_once('include/diaspora.php');
-							if(get_config('system','dfrn_only') || (! get_config('system','diaspora_enabled')) || (! $normal_mode))
+
+							logger('notifier: diaspora pubdelivery: ' . $contact['name']);
+
+							if(get_config('system','dfrn_only') || (! get_config('system','diaspora_enabled')) || (! $normal_mode)) {
+								logger('notifier: diaspora pubdelivery not allowed at this time');
 								break;
+							}
 							
-							if(! $contact['pubkey'])
+							if(! $contact['pubkey']) {
+								logger('notifier: diaspora pubdelivery: no pubkey');
 								break;
+							}
 					
 							if($target_item['verb'] === ACTIVITY_DISLIKE) {
 								// unsupported
