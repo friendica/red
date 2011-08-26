@@ -641,15 +641,19 @@ function notifier_run($argv, $argc){
 
 				/* Don't deliver to folks who have already been delivered to */
 
-				if(in_array($rr['id'],$conversants))
+				if(in_array($rr['id'],$conversants)) {
+					logger('notifier: already delivered id=' . $rr['id']);
 					continue;
+				}
 
 				$n = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
-						intval($rr['id'])
+					intval($rr['id'])
 				);
 
 				if(count($n)) {
 					$contact = $n[0];
+					logger('pubdeliver: network: ' . $contact['network']);
+
 					switch($contact['network']) {
 						case NETWORK_DFRN :
 							logger('notifier: dfrnpubdelivery: ' . $contact['name']);

@@ -29,6 +29,11 @@ function queue_run($argv, $argc){
 
 	load_hooks();
 
+	if($argc > 1)
+		$queue_id = intval($argv[1]);
+	else
+		$queue_id = 0;
+
 	$deadguys = array();
 
 	logger('queue: start');
@@ -44,13 +49,19 @@ function queue_run($argv, $argc){
 		q("DELETE FROM `queue` WHERE `created` < UTC_TIMESTAMP() - INTERVAL 3 DAY");
 	}
 		
-	$r = q("SELECT `id` FROM `queue` WHERE `last` < UTC_TIMESTAMP() - INTERVAL 15 MINUTE ");
+	if($queue_id)
+		$r = q("SELECT `id` FROM `queue` WHERE `id` = %d LIMIT 1",
+			intval($queue_id)
+		);
+	else
+		$r = q("SELECT `id` FROM `queue` WHERE `last` < UTC_TIMESTAMP() - INTERVAL 15 MINUTE ");
 
 	if(! count($r)){
 		return;
 	}
 
-	call_hooks('queue_predeliver', $a, $r);
+	if(! $queue_id)
+		call_hooks('queue_predeliver', $a, $r);
 
 
 	// delivery loop
@@ -63,9 +74,16 @@ function queue_run($argv, $argc){
 		// queue_predeliver hooks may have changed the queue db details, 
 		// so check again if this entry still needs processing
 
-		$qi = q("SELECT * FROM `queue` WHERE `id` = %d AND `last` < UTC_TIMESTAMP() - INTERVAL 15 MINUTE ",
-			intval($q_item['id'])
-		);
+		if($queue_id) {
+			$qi = q("select * from queue where `id` = %d limit 1",
+				intval($queue_id)
+			);
+		}
+		else {
+			$qi = q("SELECT * FROM `queue` WHERE `id` = %d AND `last` < UTC_TIMESTAMP() - INTERVAL 15 MINUTE ",
+				intval($q_item['id'])
+			);
+		}
 		if(! count($qi))
 			continue;
 
