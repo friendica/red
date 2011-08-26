@@ -73,6 +73,13 @@ function slapper($owner,$url,$slap) {
 	if(! strlen($url))
 		return;
 
+
+	if(! $owner['sprvkey']) {
+		logger(sprintf("slapper: user '%s' (%d) does not have a salmon private key. Send failed.",
+		$owner['username'],$owner['uid']));
+		return;
+	}
+
 	// add all namespaces to item
 
 $namespaces = <<< EOT
@@ -102,11 +109,11 @@ EOT;
 
 	$precomputed = '.YXBwbGljYXRpb24vYXRvbSt4bWw=.YmFzZTY0dXJs.UlNBLVNIQTI1Ng==';
 
-	$signature   = base64url_encode(rsa_sign(str_replace('=','',$data . $precomputed),true),$owner['sprvkey']);
+	$signature   = base64url_encode(rsa_sign(str_replace('=','',$data . $precomputed),$owner['sprvkey']));
 
-	$signature2  = base64url_encode(rsa_sign($data . $precomputed),$owner['sprvkey']);
+	$signature2  = base64url_encode(rsa_sign($data . $precomputed,$owner['sprvkey']));
 
-	$signature3  = base64url_encode(rsa_sign($data),$owner['sprvkey']);
+	$signature3  = base64url_encode(rsa_sign($data,$owner['sprvkey']));
 
 	$salmon_tpl = get_markup_template('magicsig.tpl');
 

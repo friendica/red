@@ -508,7 +508,7 @@ function fetch_xrd_links($url) {
 
 	$xrd_timeout = intval(get_config('system','xrd_timeout'));
 	$redirects = 0;
-	$xml = fetch_url($url,false,$redirects,(($xrd_timeout) ? $xrd_timeout : 30));
+	$xml = fetch_url($url,false,$redirects,(($xrd_timeout) ? $xrd_timeout : 20));
 
 	logger('fetch_xrd_links: ' . $xml, LOGGER_DATA);
 
@@ -536,7 +536,7 @@ function fetch_xrd_links($url) {
 			$aliases = array($alias);
 		else
 			$aliases = $alias;
-		if($aliases && count($aliases)) {
+		if(is_array($aliases) && count($aliases)) {
 			foreach($aliases as $alias) {
 				$links[]['@attributes'] = array('rel' => 'alias' , 'href' => $alias);
 			}

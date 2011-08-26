@@ -688,12 +688,17 @@ div[id$="wrapper"] br { clear: left; }
  */
 
 .view-contact-wrapper,
-.contact-entry-wrapper { float: left; margin-right: 20px; margin-bottom: 20px; position: relative;}
+.contact-entry-wrapper { float: left; margin-right: 20px; margin-bottom: 20px; width: 120px; height: 120px; position: relative;}
 .contact-entry-direction-wrapper {position: absolute; top: 20px;}
 .contact-entry-edit-links { position: absolute; top: 60px; }
 .contact-entry-photo {
 	margin-left:20px;
 }
+.contact-entry-name { width: 120px; overflow: hidden; }
+.contact-entry-photo {
+	position: relative;
+}
+
 .contact-entry-edit-links .icon {	
 	border: 1px solid #babdb6;
     -webkit-border-radius: 3px;
@@ -718,7 +723,36 @@ div[id$="wrapper"] br { clear: left; }
 #contact-edit-last-update-text { margin-bottom: 15px; }
 #contact-edit-last-updated { font-weight: bold; }
 #contact-edit-poll-text { display: inline; }
-#contact-edit-end { clear: both; }
+#contact-edit-end { clear: both; margin-bottom: 65px;}
+
+.contact-photo-menu-button {
+       position: absolute;
+       background-image: url("photo-menu.jpg");
+       background-position: top left; 
+       background-repeat: no-repeat;
+       margin: 0px; padding: 0px;
+       width: 16px;
+       height: 16px;
+       top: 64px; left:0px;
+       overflow: hidden;
+       text-indent: 40px;
+       display: none;
+       
+}
+.contact-photo-menu {
+       width: auto;
+       border: 2px solid #444444;
+       background: #FFFFFF;
+       position: absolute;
+       left: 0px; top: 90px;
+       display: none;
+       z-index: 10000;
+}
+.contact-photo-menu ul { margin:0px; padding: 0px; list-style: none }
+.contact-photo-menu li a { display: block; padding: 2px; }
+.contact-photo-menu li a:hover { color: #FFFFFF; background: #3465A4; text-decoration: none; }
+
+
 
 /**
  * 	register, settings & profile forms

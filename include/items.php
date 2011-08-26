@@ -12,6 +12,18 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 	if(! strlen($owner_nick))
 		killme();
 
+	$public_feed = (($dfrn_id) ? false : true);
+	$starred = false;
+	$converse = false;
+
+	if($public_feed && $a->argc > 2) {
+		for($x = 2; $x < $a->argc; $x++) {
+			if($a->argv[$x] == 'converse')
+				$converse = true;
+		}
+	}
+
+
 	$sql_extra = " AND `allow_cid` = '' AND `allow_gid` = '' AND `deny_cid`  = '' AND `deny_gid`  = '' ";
 
 	$r = q("SELECT `contact`.*, `user`.`uid` AS `user_uid`, `user`.`nickname`, `user`.`timezone`
@@ -29,7 +41,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 	$birthday = feed_birthday($owner_id,$owner['timezone']);
 
-	if(strlen($dfrn_id)) {
+	if(! $public_feed) {
 
 		$sql_extra = '';
 		switch($direction) {
@@ -81,13 +93,18 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 		);
 	}
 
-	if($dfrn_id === '' || $dfrn_id === '*')
+	if($public_feed)
 		$sort = 'DESC';
 	else
 		$sort = 'ASC';
 
 	if(! strlen($last_update))
 		$last_update = 'now -30 days';
+
+	if($public_feed) {
+		if(! $converse)
+			$sql_extra .= " AND `contact`.`self` = 1 ";
+	}
 
 	$check_date = datetime_convert('UTC','UTC',$last_update,'Y-m-d H:i:s');
 
@@ -152,7 +169,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 		// public feeds get html, our own nodes use bbcode
 
-		if($dfrn_id === '') {
+		if($public_feed) {
 			$type = 'html';
 			// catch any email that's in a public conversation and make sure it doesn't leak
 			if($item['private'])
@@ -1556,7 +1573,7 @@ function subscribe_to_hub($url,$importer,$contact) {
 			intval($importer['uid'])
 		);
 	}
-	if(! count($r))
+	if((! count($r)) || $contact['network'] === NETWORK_DIASPORA)
 		return;
 
 	$push_url = get_config('system','url') . '/pubsub/' . $r[0]['nickname'] . '/' . $contact['id'];

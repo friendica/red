@@ -151,6 +151,8 @@ function fb_get_friends($uid) {
 		logger('facebook: fb_get_friends: ' . $s, LOGGER_DATA);
 		$j = json_decode($s);
 		logger('facebook: fb_get_friends: json: ' . print_r($j,true), LOGGER_DATA);
+		if(! $j->data)
+			return;
 		foreach($j->data as $person) {
 			$s = fetch_url('https://graph.facebook.com/' . $person->id . '?access_token=' . $access_token);
 			if($s) {
