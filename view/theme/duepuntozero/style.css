@@ -788,6 +788,7 @@ input#dfrn-url {
 
 #contact-edit-end {
 	clear: both;
+	margin-bottom: 65px;
 }
 
 #fsuggest-desc, #fsuggest-submit-wrapper {
@@ -1377,6 +1378,12 @@ input#dfrn-url {
 	font-weight: bold;
 	margin-left: 30px;
 }
+
+#contact-edit-nettype {
+	margin-top: 5px;
+	margin-left: 30px;
+}
+
 
 #contact-edit-poll-wrapper {
 	margin-left: 50px;

@@ -292,6 +292,9 @@ function contacts_content(&$a) {
 		$lblsuggest = (($r[0]['network'] === NETWORK_DFRN) 
 			? '<div id="contact-suggest-wrapper"><a href="fsuggest/' . $r[0]['id'] . '" id="contact-suggest">' . t('Suggest friends') . '</a></div>' : '');
 
+		$poll_enabled = (($r[0]['network'] !== NETWORK_DIASPORA) ? true : false);
+
+		$nettype = '<div id="contact-edit-nettype">' . sprintf( t('Network type: %s'),network_to_name($r[0]['network'])) . '</div>';
 
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Contact Editor'),
@@ -312,7 +315,9 @@ function contacts_content(&$a) {
 			'$lblsuggest' => $lblsuggest,
 			'$grps' => $grps,
 			'$delete' => t('Delete contact'),
-			'$poll_interval' => contact_poll_interval($r[0]['priority']),
+			'$nettype' => $nettype,
+			'$poll_interval' => contact_poll_interval($r[0]['priority'],(! $poll_enabled)),
+			'$poll_enabled' => $poll_enabled,
 			'$lastupdtext' => t('Last updated: '),
 			'$updpub' => t('Update public posts: '),
 			'$last_update' => $last_update,

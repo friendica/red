@@ -886,6 +886,7 @@ input#dfrn-url {
 
 #contact-edit-end {
 	clear: both;
+	margin-bottom: 65px;
 }
 
 .contact-photo-menu-button {
@@ -1451,6 +1452,11 @@ padding: 5px 10px 0px;
 	font-weight: bold;
 	margin-left: 30px;
 }
+#contact-edit-nettype {
+	margin-top: 5px;
+	margin-left: 30px;
+}
+
 
 #contact-edit-poll-wrapper {
 	margin-left: 50px;

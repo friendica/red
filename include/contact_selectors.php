@@ -46,10 +46,11 @@ function contact_reputation($current) {
 }
 
 
-function contact_poll_interval($current) {
+function contact_poll_interval($current, $disabled = false) {
 
+	$dis = (($disabled) ? ' disabled="disabled" ' : '');
 	$o = '';
-	$o .= '<select id="contact-poll-interval" name="poll" />' . "\r\n";
+	$o .= "<select id=\"contact-poll-interval\" name=\"poll\" $dis />" . "\r\n";
 
 	$rep = array(
 		0 => t('Frequently'),
@@ -66,4 +67,14 @@ function contact_poll_interval($current) {
 	}
 	$o .= "</select>\r\n";
 	return $o;
+}
+
+
+function network_to_name($s) {
+
+	call_hooks('network_to_name', $s);
+
+	return str_replace(array(NETWORK_DFRN,NETWORK_OSTATUS,NETWORK_FEED,NETWORK_MAIL,NETWORK_DIASPORA,NETWORK_FACEBOOK,NETWORK_ZOT),
+		array(t('Friendika'),t('OStatus'),t('RSS/Atom'),t('Email'),t('Diaspora'),t('Facebook'),t('Zot!')),$s);
+
 }

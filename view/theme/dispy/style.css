@@ -723,7 +723,7 @@ div[id$="wrapper"] br { clear: left; }
 #contact-edit-last-update-text { margin-bottom: 15px; }
 #contact-edit-last-updated { font-weight: bold; }
 #contact-edit-poll-text { display: inline; }
-#contact-edit-end { clear: both; }
+#contact-edit-end { clear: both; margin-bottom: 65px;}
 
 .contact-photo-menu-button {
        position: absolute;
