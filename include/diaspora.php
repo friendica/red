@@ -1035,14 +1035,6 @@ function diaspora_send_relay($item,$owner,$contact) {
 	else
 		return;
 
-	// fetch the original signature	
-	$r = q("select * from sign where iid = %d limit 1",
-		intval($item['id'])
-	);
-	if(! count($r)) 
-		return;
-	$orig_sign = $r[0];
-
 	if($item['verb'] === ACTIVITY_LIKE) {
 		$tpl = get_markup_template('diaspora_like_relay.tpl');
 		$like = true;
@@ -1056,12 +1048,37 @@ function diaspora_send_relay($item,$owner,$contact) {
 
 	$text = bb2diaspora($item['body']);
 
-	// sign it
+	// fetch the original signature	if somebody sent the post to us to relay
+	// if we are relaying for a reply originating here, there wasn't a 'send to relay'
+	// action. It wasn't needed. In that case create the original signature and the 
+	// owner (parent author) signature
 
-	if($like)
-		$parent_signed_text = $orig_sign['signed_text'];
-	else
-		$parent_signed_text = $orig_sign['signed_text'];
+	$r = q("select * from sign where iid = %d limit 1",
+		intval($item['id'])
+	);
+	if(count($r)) { 
+		$orig_sign = $r[0];
+		$signed_text = $orig_sign['signed_text'];
+		$authorsig = $orig_sign['signature'];
+	}
+	else {
+		if($like)
+			$signed_text = $item['guid'] . ';' . $target_type . ';' . $parent_guid . ';' . $positive . ';' . $myaddr;
+		else
+			$signed_text = $item['guid'] . ';' . $parent_guid . ';' . $text . ';' . $myaddr;
+
+		$authorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha'));
+
+		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+			intval($item['id']),
+			dbesc($signed_text),
+			dbesc(base64_encode($authorsig)),
+			dbesc($myaddr)
+		);
+
+	}
+
+	// sign it
 
 	$parentauthorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha'));
 
@@ -1071,17 +1088,10 @@ function diaspora_send_relay($item,$owner,$contact) {
 		'$target_type' =>xmlify($target_type),
 		'$authorsig' => xmlify($orig_sign['signature']),
 		'$parentsig' => xmlify($parentauthorsig),
-		'$text' => xmlify($text),
+		'$body' => xmlify($text),
 		'$positive' => xmlify($positive),
-		'$diaspora_handle' => xmlify($myaddr)
+		'$handle' => xmlify($myaddr)
 	));
-
-	// fetch the original signature	
-	$r = q("select * from sign where iid = %d limit 1",
-		intval($item['id'])
-	);
-	if(! count($r)) 
-		return;
 
 	logger('diaspora_relay_comment: base message: ' . $msg, LOGGER_DATA);
 
