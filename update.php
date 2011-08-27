@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1082 );
+define( 'UPDATE_VERSION' , 1083 );
 
 /**
  *
@@ -676,8 +676,16 @@ function update_1080() {
 }
 
 function update_1081() {
+	// there was a typo in update 1081 so it was corrected and moved up to 1082
+}
+
+function update_1082() {
 	q("ALTER TABLE `photo` ADD `guid` CHAR( 64 ) NOT NULL AFTER `contact-id`,
 		ADD INDEX ( `guid` )  ");
+	// make certain the following code is only executed once
+	$r = q("select `id` from `photo` where `guid` != '' limit 1");
+	if($r && count($r))
+		return;
 	$r = q("SELECT distinct(`resource-id`) FROM `photo` WHERE 1 group by `id`");
 	if(count($r)) {
 		foreach($r as $rr) {
