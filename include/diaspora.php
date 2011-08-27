@@ -453,6 +453,7 @@ function diaspora_post($importer,$xml) {
 	$datarray['author-link'] = $contact['url'];
 	$datarray['author-avatar'] = $contact['thumb'];
 	$datarray['body'] = $body;
+	$datarray['app']  = 'Diaspora';
 
 	item_store($datarray);
 
@@ -481,6 +482,15 @@ function diaspora_comment($importer,$xml,$msg) {
 		logger('diaspora_comment: Ignoring this author.');
 		http_status_exit(202);
 		// NOTREACHED
+	}
+
+	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '%s' LIMIT 1",
+		intval($importer['uid']),
+		dbesc($guid)
+	);
+	if(count($r)) {
+		logger('daspora_comment: our comment just got relayed back to us (or there was a guid collision) : ' . $guid);
+		return;
 	}
 
 	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '%s' LIMIT 1",
@@ -558,6 +568,7 @@ function diaspora_comment($importer,$xml,$msg) {
 	$datarray['author-link'] = $person['url'];
 	$datarray['author-avatar'] = ((x($person,'thumb')) ? $person['thumb'] : $person['photo']);
 	$datarray['body'] = $body;
+	$datarray['app']  = 'Diaspora';
 
 	$message_id = item_store($datarray);
 
@@ -776,6 +787,8 @@ EOT;
 	$plink = '[url=' . $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $parent_item['id'] . ']' . $post_type . '[/url]';
 	$arr['body'] =  sprintf( $bodyverb, $ulink, $alink, $plink );
 
+	$arr['app']  = 'Diaspora';
+
 	$arr['private'] = $parent_item['private'];
 	$arr['verb'] = $activity;
 	$arr['object-type'] = $objtype;
@@ -897,7 +910,8 @@ function diaspora_send_status($item,$owner,$contact) {
 		}
 	}	
 
-	$body = xmlify(bb2diaspora($body));
+	$body = xmlify(html_entity_decode(bb2diaspora($body)));
+
 	$public = (($item['private']) ? 'false' : 'true');
 
 	require_once('include/datetime.php');
@@ -990,7 +1004,7 @@ function diaspora_send_followup($item,$owner,$contact) {
 		$like = false;
 	}
 
-	$text = bb2diaspora($item['body']);
+	$text = html_entity_decode(bb2diaspora($item['body']));
 
 	// sign it
 
@@ -1046,7 +1060,7 @@ function diaspora_send_relay($item,$owner,$contact) {
 		$like = false;
 	}
 
-	$text = bb2diaspora($item['body']);
+	$text = html_entity_decode(bb2diaspora($item['body']));
 
 	// fetch the original signature	if somebody sent the post to us to relay
 	// if we are relaying for a reply originating here, there wasn't a 'send to relay'
