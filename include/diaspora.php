@@ -3,6 +3,7 @@
 require_once('include/crypto.php');
 require_once('include/items.php');
 require_once('include/bb2diaspora.php');
+require_once('include/contact_selectors.php');
 
 function diaspora_dispatch($importer,$msg) {
 
@@ -1060,10 +1061,22 @@ function diaspora_send_relay($item,$owner,$contact) {
 		$like = false;
 	}
 
+	$itemcontact = q("select * from contact where `id` = %d limit 1",
+		intval($item['contact-id'])
+	);
+	if(count($itemcontact)) {
+		if(! $itemcontact[0]['self']) {
+			$prefix = sprintf( t('[Relayed] Comment authored by %s from network %s'),
+				'['. $item['author-name'] . ']' . '(' . $item['author-link'] . ')',  
+				network_to_name($itemcontact['network'])) . "\n";
+			$body = $prefix . $body.
+		}
+	}
+
 	$text = html_entity_decode(bb2diaspora($item['body']));
 
 	// fetch the original signature	if somebody sent the post to us to relay
-	// if we are relaying for a reply originating here, there wasn't a 'send to relay'
+	// If we are relaying for a reply originating here, there wasn't a 'send to relay'
 	// action. It wasn't needed. In that case create the original signature and the 
 	// owner (parent author) signature
 
@@ -1076,6 +1089,10 @@ function diaspora_send_relay($item,$owner,$contact) {
 		$authorsig = $orig_sign['signature'];
 	}
 	else {
+
+
+
+
 		if($like)
 			$signed_text = $item['guid'] . ';' . $target_type . ';' . $parent_guid . ';' . $positive . ';' . $myaddr;
 		else
