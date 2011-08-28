@@ -1061,6 +1061,8 @@ function diaspora_send_relay($item,$owner,$contact) {
 		$like = false;
 	}
 
+	$body = $item['body'];
+
 	$itemcontact = q("select * from contact where `id` = %d limit 1",
 		intval($item['contact-id'])
 	);
@@ -1069,11 +1071,11 @@ function diaspora_send_relay($item,$owner,$contact) {
 			$prefix = sprintf( t('[Relayed] Comment authored by %s from network %s'),
 				'['. $item['author-name'] . ']' . '(' . $item['author-link'] . ')',  
 				network_to_name($itemcontact['network'])) . "\n";
-			$body = $prefix . $body.
+			$body = $prefix . $body;
 		}
 	}
 
-	$text = html_entity_decode(bb2diaspora($item['body']));
+	$text = html_entity_decode(bb2diaspora($body));
 
 	// fetch the original signature	if somebody sent the post to us to relay
 	// If we are relaying for a reply originating here, there wasn't a 'send to relay'
