@@ -112,8 +112,10 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 		`contact`.`name`, `contact`.`photo`, `contact`.`url`, 
 		`contact`.`name-date`, `contact`.`uri-date`, `contact`.`avatar-date`,
 		`contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`, 
-		`contact`.`id` AS `contact-id`, `contact`.`uid` AS `contact-uid`
+		`contact`.`id` AS `contact-id`, `contact`.`uid` AS `contact-uid`,
+		`sign`.`signed_text`, `sign`.`signature`, `sign`.`signer`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
+		LEFT JOIN `sign` ON `sign`.`iid` = `item`.`id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`parent` != 0 
 		AND `item`.`wall` = 1 AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 		AND ( `item`.`edited` > '%s' OR `item`.`changed` > '%s' )
@@ -362,6 +364,18 @@ function get_atom_elements($feed,$item) {
 		if($res['app'] === 'web')
 			$res['app'] = 'OStatus';
 	}		   
+
+	// base64 encoded json structure representing Diaspora signature
+
+	$dsig = $item->get_item_tags(NAMESPACE_DFRN,'diaspora_signature');
+	if($dsig) {
+		$res['dsprsig'] = unxmlify($dsig[0]['data']);
+	}
+
+	$dguid = $item->get_item_tags(NAMESPACE_DFRN,'diaspora_guid');
+	if($dguid)
+		$res['guid'] = unxmlify($dguid[0]['data']);
+
 
 	/**
 	 * If there's a copy of the body content which is guaranteed to have survived mangling in transit, use it.
@@ -659,6 +673,15 @@ function encode_rel_links($links) {
 
 function item_store($arr,$force_parent = false) {
 
+	// If a Diaspora signature structure was passed in, pull it out of the 
+	// item array and set it aside for later storage.
+
+	$dsprsig = null;
+	if(x($arr,'dsprsig')) {
+		$dsprsig = json_decode(base64_decode($arr['dsprsig']));
+		unset($arr['dsprsig']);
+	}
+
 	if($arr['gravity'])
 		$arr['gravity'] = intval($arr['gravity']);
 	elseif($arr['parent-uri'] == $arr['uri'])
@@ -834,6 +857,16 @@ function item_store($arr,$force_parent = false) {
 		intval($parent_deleted),
 		intval($current_post)
 	);
+
+	if($dsprsig) {
+		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+			intval($current_post),
+			dbesc($dsprsig->signed_text),
+			dbesc($dsprsig->signature),
+			dbesc($dsprsig->signer)
+		);
+	}
+
 
 	/**
 	 * If this is now the last-child, force all _other_ children of this parent to *not* be last-child
@@ -1670,10 +1703,19 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 		$o .= '<dfrn:private>1</dfrn:private>' . "\r\n";
 
 	if($item['extid'])
-		$o .= '<dfrn:extid>' . $item['extid'] . '</dfrn:extid>' . "\r\n";
+		$o .= '<dfrn:extid>' . xmlify($item['extid']) . '</dfrn:extid>' . "\r\n";
 
 	if($item['app'])
-		$o .= '<statusnet:notice_info local_id="' . $item['id'] . '" source="' . $item['app'] . '" ></statusnet:notice_info>';
+		$o .= '<statusnet:notice_info local_id="' . $item['id'] . '" source="' . xmlify($item['app']) . '" ></statusnet:notice_info>' . "\r\n";
+
+	if($item['guid'])
+		$o .= '<dfrn:diaspora_guid>' . $item['guid'] . '</dfrn:diaspora_guid>' . "\r\n";
+
+	if($item['signed_text']) {
+		$sign = base64_encode(json_encode(array('signed_text' => $item['signed_text'],'signature' => $item['signature'],'signer' => $item['signer'])));
+		$o .= '<dfrn:diaspora_signature>' . xmlify($sign) . '</dfrn:diaspora_signature>' . "\r\n";
+	}
+
 	$verb = construct_verb($item);
 	$o .= '<as:verb>' . xmlify($verb) . '</as:verb>' . "\r\n";
 	$actobj = construct_activity_object($item);

@@ -1063,18 +1063,6 @@ function diaspora_send_relay($item,$owner,$contact) {
 
 	$body = $item['body'];
 
-	$itemcontact = q("select * from contact where `id` = %d limit 1",
-		intval($item['contact-id'])
-	);
-	if(count($itemcontact)) {
-		if(! $itemcontact[0]['self']) {
-			$prefix = sprintf( t('[Relayed] Comment authored by %s from network %s'),
-				'['. $item['author-name'] . ']' . '(' . $item['author-link'] . ')',  
-				network_to_name($itemcontact['network'])) . "\n";
-			$body = $prefix . $body;
-		}
-	}
-
 	$text = html_entity_decode(bb2diaspora($body));
 
 	// fetch the original signature	if somebody sent the post to us to relay
@@ -1092,23 +1080,34 @@ function diaspora_send_relay($item,$owner,$contact) {
 	}
 	else {
 
-
-
-
-		if($like)
-			$signed_text = $item['guid'] . ';' . $target_type . ';' . $parent_guid . ';' . $positive . ';' . $myaddr;
-		else
-			$signed_text = $item['guid'] . ';' . $parent_guid . ';' . $text . ';' . $myaddr;
-
-		$authorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha'));
-
-		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
-			intval($item['id']),
-			dbesc($signed_text),
-			dbesc(base64_encode($authorsig)),
-			dbesc($myaddr)
+		$itemcontact = q("select * from contact where `id` = %d limit 1",
+			intval($item['contact-id'])
 		);
+		if(count($itemcontact)) {
+			if(! $itemcontact[0]['self']) {
+				$prefix = sprintf( t('[Relayed] Comment authored by %s from network %s'),
+					'['. $item['author-name'] . ']' . '(' . $item['author-link'] . ')',  
+					network_to_name($itemcontact['network'])) . "\n";
+				$body = $prefix . $body;
+			}
+		}
+		else {
 
+			if($like)
+				$signed_text = $item['guid'] . ';' . $target_type . ';' . $parent_guid . ';' . $positive . ';' . $myaddr;
+			else
+				$signed_text = $item['guid'] . ';' . $parent_guid . ';' . $text . ';' . $myaddr;
+
+			$authorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha'));
+
+			q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+				intval($item['id']),
+				dbesc($signed_text),
+				dbesc(base64_encode($authorsig)),
+				dbesc($myaddr)
+			);
+
+		}
 	}
 
 	// sign it
