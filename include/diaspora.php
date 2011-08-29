@@ -1065,9 +1065,11 @@ function diaspora_send_relay($item,$owner,$contact) {
 	$text = html_entity_decode(bb2diaspora($body));
 
 	// fetch the original signature	if somebody sent the post to us to relay
-	// If we are relaying for a reply originating here, there wasn't a 'send to relay'
+	// If we are relaying for a reply originating on our own account, there wasn't a 'send to relay'
 	// action. It wasn't needed. In that case create the original signature and the 
 	// owner (parent author) signature
+	// comments from other networks will be relayed under our name, with a brief 
+	// preamble to describe what's happening and noting the real author
 
 	$r = q("select * from sign where iid = %d limit 1",
 		intval($item['id'])
@@ -1076,6 +1078,7 @@ function diaspora_send_relay($item,$owner,$contact) {
 		$orig_sign = $r[0];
 		$signed_text = $orig_sign['signed_text'];
 		$authorsig = $orig_sign['signature'];
+		$handle = $orig_sign['signer'];
 	}
 	else {
 
@@ -1105,7 +1108,7 @@ function diaspora_send_relay($item,$owner,$contact) {
 				dbesc(base64_encode($authorsig)),
 				dbesc($myaddr)
 			);
-
+			$handle = $myaddr;
 		}
 	}
 
@@ -1121,7 +1124,7 @@ function diaspora_send_relay($item,$owner,$contact) {
 		'$parentsig' => xmlify($parentauthorsig),
 		'$body' => xmlify($text),
 		'$positive' => xmlify($positive),
-		'$handle' => xmlify($myaddr)
+		'$handle' => xmlify($handle)
 	));
 
 	logger('diaspora_relay_comment: base message: ' . $msg, LOGGER_DATA);
