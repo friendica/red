@@ -384,9 +384,7 @@ function notifier_run($argv, $argc){
 
 	require_once('include/salmon.php');
 
-	$interval = intval(get_config('system','delivery_interval'));
-	if(! $interval)
-		$interval = 2;
+	$interval = ((get_config('system','delivery_interval') === false) ? 2 : intval(get_config('system','delivery_interval')));
 
 	// delivery loop
 
@@ -411,7 +409,8 @@ function notifier_run($argv, $argc){
 
 			if((! $mail) && (! $fsuggest) && (! $followup)) {
 				proc_run('php','include/delivery.php',$cmd,$item_id,$contact['id']);
-				@time_sleep_until(microtime(true) + (float) $interval);
+				if($interval)
+					@time_sleep_until(microtime(true) + (float) $interval);
 			}
 
 			$deliver_status = 0;
@@ -661,7 +660,8 @@ function notifier_run($argv, $argc){
 				if((! $mail) && (! $fsuggest) && (! $followup)) {
 					logger('notifier: delivery agent: ' . $rr['name'] . ' ' . $rr['id']); 
 					proc_run('php','include/delivery.php',$cmd,$item_id,$rr['id']);
-					@time_sleep_until(microtime(true) + (float) $interval);
+					if($interval)
+						@time_sleep_until(microtime(true) + (float) $interval);
 				}
 			}
 		}
