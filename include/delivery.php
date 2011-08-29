@@ -37,6 +37,19 @@ function delivery_run($argv, $argc){
 	$item_id    = intval($argv[2]);
 	$contact_id = intval($argv[3]);
 
+	// Some other process may have delivered this item already.
+
+	$r = q("select * from deliverq where cmd = '%s' and item = %d and contact = %d limit 1",
+		dbesc($cmd),
+		dbesc($item_id),
+		dbesc($contact_id)
+	);
+	if(! count($r)) {
+		return;
+	}	
+
+	// It's ours to deliver. Remove it from the queue.
+
 	q("delete from deliverq where cmd = '%s' and item = %d and contact = %d limit 1",
 		dbesc($cmd),
 		dbesc($item_id),
