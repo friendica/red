@@ -125,8 +125,10 @@ function notifier_run($argv, $argc){
 				$item['deleted'] = 1;
 		}
 
-		if(count($items) == 1 && $items[0]['uri'] === $items[0]['parent-uri'])
+		if((count($items) == 1) && ($items[0]['uri'] === $items[0]['parent-uri'])) {
+			logger('notifier: top level post');
 			$top_level = true;
+		}
 	}
 
 	$r = q("SELECT `contact`.*, `user`.`pubkey` AS `upubkey`, `user`.`prvkey` AS `uprvkey`, 
