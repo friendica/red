@@ -140,10 +140,9 @@ EOT;
 	$encrypted_outer_key_bundle = '';
 	openssl_public_encrypt($outer_json,$encrypted_outer_key_bundle,$pubkey);
 
-	logger('outer_bundle_encrypt: ' . openssl_error_string());
 	$b64_encrypted_outer_key_bundle = base64_encode($encrypted_outer_key_bundle);
 
-	logger('outer_bundle: ' . $b64_encrypted_outer_key_bundle . ' key: ' . $pubkey);
+	logger('outer_bundle: ' . $b64_encrypted_outer_key_bundle . ' key: ' . $pubkey, LOGGER_DATA);
 
 	$encrypted_header_json_object = json_encode(array('aes_key' => base64_encode($encrypted_outer_key_bundle), 
 		'ciphertext' => base64_encode($ciphertext)));
@@ -223,7 +222,7 @@ function diaspora_decode($importer,$xml) {
 	 *  </decrypted_header>
 	 */
 
-	logger('decrypted: ' . $decrypted);
+	logger('decrypted: ' . $decrypted, LOGGER_DEBUG);
 	$idom = parse_xml_string($decrypted,false);
 
 	$inner_iv = base64_decode($idom->iv);

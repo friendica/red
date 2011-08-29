@@ -37,6 +37,12 @@ function delivery_run($argv, $argc){
 	$item_id    = intval($argv[2]);
 	$contact_id = intval($argv[3]);
 
+	q("delete from deliverq where cmd = '%s' and item = %d and contact = %d limit 1",
+		dbesc($cmd),
+		dbesc($item_id),
+		dbesc($contact_id)
+	);
+
 	if((! $item_id) || (! $contact_id))
 		return;
 

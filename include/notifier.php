@@ -379,11 +379,27 @@ function notifier_run($argv, $argc){
 		dbesc($recip_str)
 	);
 
-	// delivery loop
 
 	require_once('include/salmon.php');
 
+	$interval = intval(get_config('system','delivery_interval'));
+	if(! $interval)
+		$interval = 2;
+
+	// delivery loop
+
 	if(count($r)) {
+
+		foreach($r as $contact) {
+			if((! $mail) && (! $fsuggest) && (! $followup) && (! $contact['self'])) {
+				q("insert into deliverq ( `cmd`,`item`,`contact` ) values ('%s', %d, %d )",
+					dbesc($cmd),
+					intval($item_id),
+					intval($contact['id'])
+				);
+			}
+		}
+
 		foreach($r as $contact) {
 			if($contact['self'])
 				continue;
@@ -392,13 +408,8 @@ function notifier_run($argv, $argc){
 			// we will deliver single recipient types of message and email receipients here. 
 
 			if((! $mail) && (! $fsuggest) && (! $followup)) {
-				$interval = intval(get_config('system','delivery_interval'));
-				if(! $interval)
-					$interval = 2;
-
 				proc_run('php','include/delivery.php',$cmd,$item_id,$contact['id']);
-				sleep($interval);
-				continue;
+				@time_sleep_until(microtime(true) + (float) $interval);
 			}
 
 			$deliver_status = 0;
@@ -624,6 +635,18 @@ function notifier_run($argv, $argc){
 		if(count($r)) {
 			logger('pubdeliver: ' . print_r($r,true));
 
+			// throw everything into the queue in case we get killed
+
+			foreach($r as $rr) {
+				if((! $mail) && (! $fsuggest) && (! $followup)) {
+					q("insert into deliverq ( `cmd`,`item`,`contact` ) values ('%s', %d, %d )",
+						dbesc($cmd),
+						intval($item_id),
+						intval($rr['id'])
+					);
+				}
+			}
+
 			foreach($r as $rr) {
 
 				/* Don't deliver to folks who have already been delivered to */
@@ -634,13 +657,9 @@ function notifier_run($argv, $argc){
 				}
 
 				if((! $mail) && (! $fsuggest) && (! $followup)) {
-					$interval = intval(get_config('system','delivery_interval'));
-					if(! $interval)
-						$interval = 2;
-
+					logger('notifier: delivery agent: ' . $rr['name'] . ' ' . $rr['id']); 
 					proc_run('php','include/delivery.php',$cmd,$item_id,$rr['id']);
-					sleep($interval);
-					continue;
+					@time_sleep_until(microtime(true) + (float) $interval);
 				}
 			}
 		}

@@ -38,6 +38,20 @@ function queue_run($argv, $argc){
 
 	logger('queue: start');
 
+	$interval = intval(get_config('system','delivery_interval'));
+	if(! $interval)
+		$interval = 2;
+
+
+	$r = q("select * from deliverq where 1");
+	if(count($r)) {
+		foreach($r as $rr) {
+			logger('queue: deliverq');
+			proc_run('php','include/delivery.php',$rr['cmd'],$rr['item'],$rr['contact']);
+			@time_sleep_until(microtime(true) + (float) $interval);
+		}
+	}
+
 	$r = q("SELECT `queue`.*, `contact`.`name`, `contact`.`uid` FROM `queue` 
 		LEFT JOIN `contact` ON `queue`.`cid` = `contact`.`id` 
 		WHERE `queue`.`created` < UTC_TIMESTAMP() - INTERVAL 3 DAY");

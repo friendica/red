@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1083 );
+define( 'UPDATE_VERSION' , 1084 );
 
 /**
  *
@@ -696,4 +696,14 @@ function update_1082() {
 			);
 		}
 	}
+}
+
+function update_1083() {
+	q("CREATE TABLE IF NOT EXISTS `deliverq` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`cmd` CHAR( 32 ) NOT NULL ,
+	`item` INT NOT NULL ,
+	`contact` INT NOT NULL
+	) ENGINE = MYISAM ;");
+
 }

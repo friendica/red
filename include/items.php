@@ -927,7 +927,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	if(! $curl_stat)
 		return(-1); // timed out
 
-	logger('dfrn_deliver: ' . $xml);
+	logger('dfrn_deliver: ' . $xml, LOGGER_DATA);
 
 	if(! $xml)
 		return 3;
@@ -991,7 +991,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 		$key = substr(random_string(),0,16);
 		$data = bin2hex(aes_encrypt($postvars['data'],$key));
 		$postvars['data'] = $data;
-		logger('rino: sent key = ' . $key);	
+		logger('rino: sent key = ' . $key, LOGGER_DEBUG);	
 
 
 		if($dfrn_version >= 2.1) {	
