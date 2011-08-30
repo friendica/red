@@ -417,8 +417,10 @@ function diaspora_post($importer,$xml) {
 		dbesc($message_id),
 		dbesc($guid)
 	);
-	if(count($r))
+	if(count($r)) {
+		logger('diaspora_post: message exists: ' . $guid);
 		return;
+	}
 
     // allocate a guid on our system - we aren't fixing any collisions.
 	// we're ignoring them
@@ -475,8 +477,10 @@ function diaspora_comment($importer,$xml,$msg) {
 	$text = $xml->text;
 
 	$contact = diaspora_get_contact_by_handle($importer['uid'],$msg['author']);
-	if(! $contact)
+	if(! $contact) {
+		logger('diaspora_comment: cannot find contact: ' . $msg['author']);
 		return;
+	}
 
 	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
 		logger('diaspora_comment: Ignoring this author.');
@@ -489,7 +493,7 @@ function diaspora_comment($importer,$xml,$msg) {
 		dbesc($guid)
 	);
 	if(count($r)) {
-		logger('daspora_comment: our comment just got relayed back to us (or there was a guid collision) : ' . $guid);
+		logger('diaspora_comment: our comment just got relayed back to us (or there was a guid collision) : ' . $guid);
 		return;
 	}
 
@@ -658,8 +662,10 @@ function diaspora_like($importer,$xml,$msg) {
 		return;
 
 	$contact = diaspora_get_contact_by_handle($importer['uid'],$msg['author']);
-	if(! $contact)
+	if(! $contact) {
+		logger('diaspora_like: cannot find contact: ' . $msg['author']);
 		return;
+	}
 
 	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
 		logger('diaspora_like: Ignoring this author.');
