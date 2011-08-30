@@ -411,6 +411,7 @@ function notifier_run($argv, $argc){
 				proc_run('php','include/delivery.php',$cmd,$item_id,$contact['id']);
 				if($interval)
 					@time_sleep_until(microtime(true) + (float) $interval);
+				continue;
 			}
 
 			$deliver_status = 0;
