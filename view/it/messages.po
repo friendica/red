@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: friendika\n"
 "Report-Msgid-Bugs-To: http://bugs.friendika.com/\n"
 "POT-Creation-Date: 2011-08-14 21:17-0700\n"
-"PO-Revision-Date: 2011-08-17 17:49+0000\n"
+"PO-Revision-Date: 2011-08-26 14:28+0000\n"
 "Last-Translator: fabrixxm <fabrix.xm@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.net/projects/p/friendika/team/it/)\n"
 "MIME-Version: 1.0\n"
@@ -2158,7 +2158,7 @@ msgstr "Regitrati"
 #: ../../include/diaspora.php:446 ../../include/conversation.php:26
 #: ../../include/conversation.php:35
 msgid "status"
-msgstr "stato"
+msgstr "lo stato"
 
 #: ../../mod/like.php:127 ../../addon/facebook/facebook.php:958
 #: ../../include/diaspora.php:463 ../../include/conversation.php:43
@@ -4420,7 +4420,7 @@ msgstr "Hai un nuovo seguace su "
 
 #: ../../include/conversation.php:23
 msgid "event"
-msgstr "evento"
+msgstr "l'evento"
 
 #: ../../include/conversation.php:213 ../../include/conversation.php:488
 #: ../../include/conversation.php:489

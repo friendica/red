@@ -80,6 +80,9 @@ function localize_item(&$item){
 
 	}
         
+	// fix bad embeds
+	$item['body'] = str_replace('http://www.youtube.com/embed/http:','http:',$item['body']);
+
 }
 
 /**

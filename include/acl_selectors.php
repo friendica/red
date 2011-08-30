@@ -170,7 +170,7 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 		$sql_extra .= " AND `network` IN ( 'dfrn' ) ";
 	}
 	elseif($privatenet) {	
-		$sql_extra .= " AND `network` IN ( 'dfrn', 'mail', 'face' ) ";
+		$sql_extra .= " AND `network` IN ( 'dfrn', 'mail', 'face', 'dspr' ) ";
 	}
 
 

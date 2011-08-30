@@ -15,6 +15,8 @@
  *
  */  
 
+require_once('include/crypto.php');
+
 function item_post(&$a) {
 
 	if((! local_user()) && (! remote_user()))
@@ -674,6 +676,27 @@ function item_post(&$a) {
 
 				pop_lang();
 			}
+
+			// We won't be able to sign Diaspora comments for authenticated visitors - we don't have their private key
+
+			if($self) {
+				require_once('include/bb2diaspora.php');
+				$signed_body = html_entity_decode(bb2diaspora($datarray['body']));
+				$myaddr = $a->user['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+				if($datarray['verb'] === ACTIVITY_LIKE) 
+					$signed_text = $datarray['guid'] . ';' . 'Post' . ';' . $parent_item['guid'] . ';' . 'true' . ';' . $myaddr;
+				else
+			    	$signed_text = $datarray['guid'] . ';' . $parent_item['guid'] . ';' . $signed_body . ';' . $myaddr;
+
+				$authorsig = base64_encode(rsa_sign($signed_text,$a->user['prvkey'],'sha'));
+
+				q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+					intval($post_id),
+            		dbesc($signed_text),
+            		dbesc(base64_encode($authorsig)),
+            		dbesc($myaddr)
+        		);
+			}
 		}
 		else {
 			$parent = $post_id;
@@ -798,6 +821,12 @@ function item_post(&$a) {
 			}
 		}
 	}
+
+
+
+
+
+
 
 	logger('post_complete');
 

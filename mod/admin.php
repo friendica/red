@@ -197,6 +197,7 @@ function admin_page_site_post(&$a){
 	$timeout			=	((x($_POST,'timeout'))			? intval(trim($_POST['timeout']))		: 60);
 	$dfrn_only          =	((x($_POST,'dfrn_only'))	    ? True	:	False);
     $ostatus_disabled   =   !((x($_POST,'ostatus_disabled')) ? True  :   False);
+	$diaspora_enabled   =   ((x($_POST,'diaspora_enabled')) ? True   :  False);
 
 
 	set_config('config','sitename',$sitename);
@@ -241,6 +242,7 @@ function admin_page_site_post(&$a){
 	set_config('system','curl_timeout', $timeout);
 	set_config('system','dfrn_only', $dfrn_only);
 	set_config('system','ostatus_disabled', $ostatus_disabled);
+	set_config('system','diaspora_enabled', $diaspora_enabled);
 
 	info( t('Site settings updated.') . EOL);
 	goaway($a->get_baseurl() . '/admin/site' );
@@ -325,6 +327,7 @@ function admin_page_site(&$a) {
 		'$no_utf'			=> array('no_utf', t("UTF-8 Regular expressions"), !get_config('system','no_utf'), "Use PHP UTF8 regular expressions"),
 		'$no_community_page' => array('no_community_page', t("Show Community Page"), !get_config('system','no_community_page'), "Display a Community page showing all recent public postings on this site."),
 		'$ostatus_disabled' => array('ostatus_disabled', t("Enable OStatus support"), !get_config('system','ostatus_disable'), "Provide built-in OStatus \x28identi.ca, status.net, etc.\x29 compatibility. All communications in OStatus are public, so privacy warnings will be occasionally displayed."),	
+		'$diaspora_enabled' => array('diaspora_enabled', t("Enable Diaspora support"), get_config('system','diaspora_enabled'), "Provide built-in Diaspora network compatibility."),	
 		'$dfrn_only'        => array('dfrn_only', t('Only allow Friendika contacts'), get_config('system','dfrn_only'), "All contacts must use Friendika protocols. All other built-in communication protocols disabled."),
 		'$verifyssl' 		=> array('verifyssl', t("Verify SSL"), get_config('system','verifyssl'), "If you wish, you can turn on strict certificate checking. This will mean you cannot connect (at all) to self-signed SSL sites."),
 		'$proxyuser'		=> array('proxyuser', t("Proxy user"), get_config('system','proxyuser'), ""),

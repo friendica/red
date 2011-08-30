@@ -15,8 +15,6 @@ function receive_post(&$a) {
 	if($a->argc != 3 || $a->argv[1] !== 'users')
 		http_status_exit(500);
 
-	logger('receive: raw input: ' . file_get_contents('php://input'), LOGGER_DATA);
-
 	$guid = $a->argv[2];
 
 	$r = q("SELECT * FROM `user` WHERE `guid` = '%s' LIMIT 1",
@@ -43,29 +41,7 @@ function receive_post(&$a) {
 	if(! is_array($msg))
 		http_status_exit(500);
 
-
-	$parsed_xml = parse_xml_string($msg['message'],false);
-
-	$xmlbase = $parsed_xml->post;
-
-	if($xmlbase->request) {
-		diaspora_request($importer,$xmlbase->request);
-	}
-	elseif($xmlbase->status_message) {
-		diaspora_post($importer,$xmlbase->status_message);
-	}
-	elseif($xmlbase->comment) {
-		diaspora_comment($importer,$xmlbase->comment,$msg);
-	}
-	elseif($xmlbase->like) {
-		diaspora_like($importer,$xmlbase->like,$msg);
-	}
-	elseif($xmlbase->retraction) {
-		diaspora_retraction($importer,$xmlbase->retraction,$msg);
-	}
-	else {
-		logger('mod-diaspora: unknown message type: ' . print_r($xmlbase,true));
-	}
+	diaspora_dispatch($importer,$msg);
 
 	http_status_exit(200);
 	// NOTREACHED

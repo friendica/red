@@ -188,7 +188,7 @@ function network_content(&$a, $update = 0) {
 		if(count($r)) {
 			$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` $star_sql AND `contact-id` IN ( " . intval($cid) . " )) ";
 			$o = '<h2>' . t('Contact: ') . $r[0]['name'] . '</h2>' . $o;
-			if($r[0]['network'] !== NETWORK_MAIL && $r[0]['network'] !== NETWORK_DFRN && $r[0]['network'] !== NETWORK_FACEBOOK && $r[0]['writable'] && (! get_pconfig(local_user(),'system','nowarn_insecure'))) {
+			if($r[0]['network'] !== NETWORK_MAIL && $r[0]['network'] !== NETWORK_DFRN && $r[0]['network'] !== NETWORK_FACEBOOK && $r[0]['network'] !== NETWORK_DIASPORA && $r[0]['writable'] && (! get_pconfig(local_user(),'system','nowarn_insecure'))) {
 				notice( t('Private messages to this person are at risk of public disclosure.') . EOL);
 			}
 

@@ -41,7 +41,7 @@ function bbcode($Text,$preserve_nl = false) {
 	// Perform URL Search
 
 
-	$Text = preg_replace("/([^\]\=]|^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\.\=\_\~\#\'\%\$\!\+\,]+)/", ' <a href="$2" target="external-link">$2</a>', $Text);
+	$Text = preg_replace("/([^\]\=]|^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\.\=\_\~\#\%\$\!\+\,]+)/", '$1<a href="$2" target="external-link">$2</a>', $Text);
 
 	$Text = preg_replace("/\[url\]([$URLSearchString]*)\[\/url\]/", '<a href="$1" target="external-link">$1</a>', $Text);
 	$Text = preg_replace("(\[url\=([$URLSearchString]*)\](.*?)\[/url\])", '<a href="$1" target="external-link">$2</a>', $Text);
@@ -134,7 +134,7 @@ function bbcode($Text,$preserve_nl = false) {
 		// Youtube extensions
         $Text = preg_replace("/\[youtube\]https?:\/\/www.youtube.com\/watch\?v\=(.*?)\[\/youtube\]/",'[youtube]$1[/youtube]',$Text); 
         $Text = preg_replace("/\[youtube\]https?:\/\/youtu.be\/(.*?)\[\/youtube\]/",'[youtube]$1[/youtube]',$Text); 
-		$Text = preg_replace("/\[youtube\](.*?)\[\/youtube\]/", '<iframe width="425" height="349" src="http://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe>', $Text);
+		$Text = preg_replace("/\[youtube\](.*?)\[\/youtube\]/", '<iframe width="425" height="349" src="http://www.youtube.com/embed/$1" frameborder="0" ></iframe>', $Text);
 	}
 //	$Text = preg_replace("/\[youtube\](.*?)\[\/youtube\]/", '<object width="425" height="350" type="application/x-shockwave-flash" data="http://www.youtube.com/v/$1" ><param name="movie" value="http://www.youtube.com/v/$1"></param><!--[if IE]><embed src="http://www.youtube.com/v/$1" type="application/x-shockwave-flash" width="425" height="350" /><![endif]--></object>', $Text);
 
