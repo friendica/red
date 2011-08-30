@@ -915,7 +915,7 @@ function diaspora_send_status($item,$owner,$contact) {
 	$public = (($item['private']) ? 'false' : 'true');
 
 	require_once('include/datetime.php');
-	$created = datetime_convert('UTC','UTC',$item['created'],'Y-m-d h:i:s \U\T\C');
+	$created = datetime_convert('UTC','UTC',$item['created'],'Y-m-d H:i:s \U\T\C');
 
 	$tpl = get_markup_template('diaspora_post.tpl');
 	$msg = replace_macros($tpl, array(
@@ -967,7 +967,7 @@ function diaspora_send_images($item,$owner,$contact,$images) {
 			'$guid' => xmlify($r[0]['guid']),
 			'$handle' => xmlify($image['handle']),
 			'$public' => xmlify($public),
-			'$created_at' => xmlify(datetime_convert('UTC','UTC',$r[0]['created'],'Y-m-d h:i:s \U\T\C'))
+			'$created_at' => xmlify(datetime_convert('UTC','UTC',$r[0]['created'],'Y-m-d H:i:s \U\T\C'))
 		));
 
 
