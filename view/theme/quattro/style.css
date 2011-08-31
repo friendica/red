@@ -7,8 +7,8 @@ body {
   font-size: 12px;
   background-color: #ffffff;
   color: #2d2d2d;
-  margin: 0px;
-  display: table-row;
+  margin: 50px 0px 0px 0px;
+  display: table;
 }
 a, a:link {
   color: #005c94;
@@ -247,11 +247,12 @@ ul.menu-popup .empty {
 aside {
   display: table-cell;
   width: 200px;
-  padding: 50px 10px 0px 20px;
+  padding: 0px 10px 0px 20px;
+  border-right: 1px solid #bdcdd4;
 }
 /* section */
 section {
   display: table-cell;
   width: 800px;
-  padding: 50px 20px 0px 10px;
+  padding: 0px 20px 0px 10px;
 }

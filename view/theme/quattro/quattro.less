@@ -6,8 +6,8 @@ body {
 	font-size: 12px;
 	background-color: @BodyBackground;
 	color: @BodyColor;
-	margin: 0px;
-	display:table-row;
+	margin: 50px 0px 0px 0px;
+	display:table;
 }
 
 .shadow(@x: 0px, @y: 5px){
@@ -175,15 +175,15 @@ ul.menu-popup {
 	
 	.shadow();
 	
-		a { display: block; color: @Grey5; padding: 5px 10px;}
-		a:hover { background-color: @Metalic1; }
-		.menu-sep  { border-top: 1px solid @Metalic2; }
+		a { display: block; color: @MenuItem; padding: 5px 10px;}
+		a:hover { background-color: @MenuItemHoverBg; }
+		.menu-sep  { border-top: 1px solid @MenuItemSeparator; }
 		li { float: none;  overflow: auto; height: auto; display: block; }
 		
 		.empty {
 			padding: 5px;
 			text-align: center;
-			color: @Metalic2;
+			color: @MenuEmpty;
 		}
 }
 
@@ -191,7 +191,7 @@ ul.menu-popup {
 	width: 400px;
 	img { float: left; margin-right: 5px; }
 	.contactname { font-weight: bold; }
-	.notif-when { font-size: 10px; color: @Metalic2; display: block; }
+	.notif-when { font-size: 10px; color: @MenuItemDetail; display: block; }
 }
 
 
@@ -201,12 +201,13 @@ ul.menu-popup {
 aside { 
 	display: table-cell;
 	width: 200px;
-	padding:50px 10px 0px 20px;
+	padding:0px 10px 0px 20px;
+	border-right: 1px solid @AsideBorder;
 }
 
 /* section */
 section { 
 	display: table-cell;
 	width: 800px;
-	padding:50px 20px 0px 10px;
+	padding:0px 20px 0px 10px;
 }
