@@ -17,7 +17,7 @@ function tictac_uninstall() {
 }
 
 function tictac_app_menu($a,&$b) {
-	$b['app_menu'] .= '<div class="app-title"><a href="tictac">' . t('Three Dimensional Tic-Tac-Toe') . '</a></div>'; 
+	$b['app_menu'][] = Array('url'=>'tictac', 'name'=>'Three Dimensional Tic-Tac-Toe'); 
 }
 
 

@@ -246,7 +246,7 @@ class App {
 	public  $timezone;
 	public  $interactive = true;
 	public  $plugins;
-	public  $apps;
+	public  $apps = Array();
 	public  $identities;
 
 	private $scheme;
