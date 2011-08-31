@@ -344,7 +344,7 @@ function admin_page_site(&$a) {
  * Users admin page
  */
 function admin_page_users_post(&$a){
-	$pending = ( x(£_POST, 'pending') ? $_POST['pending'] : Array() );
+	$pending = ( x($_POST, 'pending') ? $_POST['pending'] : Array() );
 	$users = ( x($_POST, 'user') ? $_POST['user'] : Array() );
 	
 	if (x($_POST,'page_users_block')){
