@@ -732,8 +732,8 @@ function diaspora_like($importer,$xml,$msg) {
 	}
 
 	if($parent_author_signature) {
-//		$owner_signed_data = $guid . ';' . $parent_guid . ';' . $target_type . ';' . $positive . ';' . $msg['author'];
-		$owner_signed_data = $guid . ';' . $parent_guid . ';' . $target_type . ';' . $positive . ';' . $diaspora_handle;
+
+		$owner_signed_data = $guid . ';' . $target_type . ';' . $parent_guid . ';' . $positive . ';' . $diaspora_handle;
 
 		$parent_author_signature = base64_decode($parent_author_signature);
 
