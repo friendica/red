@@ -10,11 +10,16 @@ body {
   margin: 0px;
   display: table-row;
 }
-a, a:visited, a:link {
+a, a:link {
+  color: #005c94;
+  text-decoration: none;
+}
+a:visited {
   color: #005c94;
   text-decoration: none;
 }
 a:hover {
+  color: #005c94;
   text-decoration: underline;
 }
 .left {
@@ -57,13 +62,6 @@ header {
   color: #ffffff;
 }
 header #site-location {
-  /*font-size:8px;
-		float:left;
-		background-color: @Metalic3;
-		padding: 1px 5px;
-		margin-left: 20px;
-		.roundbottom()*/
-
   display: none;
 }
 header #banner {
@@ -189,6 +187,9 @@ nav #nav-site-linkmenu .menu-popup {
 }
 nav #nav-notifications-linkmenu.selected .icon.s22.notify {
   background-image: url("../../../images/icons/notify_on_22.png");
+}
+nav #nav-apps-link.selected {
+  background-color: #364e59;
 }
 ul.menu-popup {
   position: absolute;
