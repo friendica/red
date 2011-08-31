@@ -16,8 +16,8 @@ function diaspora2bb($s) {
 	$s = preg_replace("/\*(.+?)\*/", '[i]$1[/i]', $s);
 	$s = preg_replace("/\_(.+?)\_/", '[i]$1[/i]', $s);
 	$s = str_replace(array('-^doublestar^-','-^doublescore-^','-^star^-','-^score^-'), array('**','__','*','_'), $s);
-	$s = preg_replace('/\[(.+?)\]\((.+?)\)/','[url=$2]$1[/url]',$s);
 	$s = preg_replace('/\!\[(.+?)\]\((.+?)\)/','[img]$2[/img]',$s);
+	$s = preg_replace('/\[(.+?)\]\((.+?)\)/','[url=$2]$1[/url]',$s);
 	$s = preg_replace('/\@\{(.+?)\; (.+?)\@(.+?)\}/','@[url=https://$3/u/$2]$1[/url]',$s);
 
 
