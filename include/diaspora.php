@@ -457,7 +457,14 @@ function diaspora_post($importer,$xml) {
 	$datarray['body'] = $body;
 	$datarray['app']  = 'Diaspora';
 
-	item_store($datarray);
+	$message_id = item_store($datarray);
+
+	if($message_id) {
+		q("update item set plink = '%s' where id = %d limit 1",
+			dbesc($a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $message_id),
+			intval($message_id)
+		);
+	}
 
 	return;
 
@@ -575,6 +582,13 @@ function diaspora_comment($importer,$xml,$msg) {
 	$datarray['app']  = 'Diaspora';
 
 	$message_id = item_store($datarray);
+
+	if($message_id) {
+		q("update item set plink = '%s' where id = %d limit 1",
+			dbesc($a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $message_id),
+			intval($message_id)
+		);
+	}
 
 	if(! $parent_author_signature) {
 		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
@@ -804,6 +818,14 @@ EOT;
 	$arr['last-child'] = 0;
 
 	$message_id = item_store($arr);
+
+
+	if($message_id) {
+		q("update item set plink = '%s' where id = %d limit 1",
+			dbesc($a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $message_id),
+			intval($message_id)
+		);
+	}
 
 	if(! $parent_author_signature) {
 		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
