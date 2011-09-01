@@ -20,6 +20,8 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 		for($x = 2; $x < $a->argc; $x++) {
 			if($a->argv[$x] == 'converse')
 				$converse = true;
+			if($a->argv[$x] == 'starred')
+				$starred = true;
 		}
 	}
 

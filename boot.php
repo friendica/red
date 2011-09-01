@@ -674,6 +674,8 @@ function login($register = false) {
 		'$lostlink'      => $lostlink 
 	));
 
+	call_hooks('login_hook',$o);
+
 	return $o;
 }}
 
