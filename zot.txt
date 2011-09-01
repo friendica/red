@@ -227,6 +227,9 @@ provider for the zid webfinger address. It then redirects to the OpenID
 server and requests authentication of the given person. If this is successful,
 access to the protected resource is granted.
 
+A browser cookie may be provided to avoid future authentication redirects
+and allow authenticated browsing to other resources on the website.
+
 Only authentication via OpenID is defined in this version of the specification.
 
 This can be used to provide access control to any web resource to any 
