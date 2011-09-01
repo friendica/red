@@ -1,0 +1,236 @@
+
+This is the Zot! social communications protocol. 
+
+Specification revision: 1
+01 September 2011
+
+Mike Macgirvin
+This specification is public domain.
+
+Zot is a framework for secure delivery of messages on the web based on 
+webfinger and encapsulating salmon.
+
+First read the salmon and salmon magic envelope specifications. Zot also 
+makes use of webfinger and ActivityStreams and several concepts from RFC822
+(email). Zot encompasses the zot delivery framework, and the zid remote
+access protocol.
+
+****************
+* Zot delivery *
+****************
+
+Format of a zot wrapper. This completely encapsulates a salmon magic envelope 
+and provides privacy protection, while defining a delivery envelope - a 
+concept familiar to email systems. All addresses in zot are webfinger 
+resolvable addresses containing both salmon and zot endpoints. 
+
+
+<?xml version='1.0' encoding='UTF-8'?>
+<zot:msg xmlns:zot='http://purl.org/zot/1.0'>
+ <zot:key>((key))</zot:key>
+ <zot:iv>((iv))</zot:iv>
+ <zot:env>((envelope))</zot:env>
+ <zot:alg>AES-256-CBC</zot:alg>
+ <zot:data type='application/magic-envelope+xml'>((salmon))</zot:data>
+</zot:msg>
+
+
+zot:key
+*******
+
+A suitable randomly generated encyption key of length 32 octets for encrypting 
+the envelope and salmon packet. This is then encrypted with the sender's 
+private key and base64url encoded.
+
+zot:iv
+******
+
+A suitable randomly generated initialisation vector of length 16 octets for 
+encrypting the envelope and salmon packet. This is then encrypted with the 
+sender's private key and base64url encoded.
+
+zot:env
+*******
+
+This consists of RFC822-style header fields representing the sender and 
+recipient(s). Example:
+
+From: bob@example.com
+Sender: bob@example.com
+To: alice@example.com
+
+Both "From:" and "Sender:" MUST be provided, and represent a webfinger 
+address of the author and sender respectively. The webfinger address for
+the From address MUST contain a discoverable salmon public key that
+is needed to verify the enclosed salmon data. Sender is used to indicate
+the webfinger identity respnsible for transmitting this message. From
+indicates the message author. 
+
+In web-based social systems, a reply to a message SHOULD be conveyed to all of 
+the original message participants. Only the author of the original message 
+may know all the recipients (such as those contained in Bcc: elements). The 
+author of a message always provides 'From'. They MUST duplicate this 
+information as 'Sender'.
+
+A reply to a given message MUST be sent to the original From address, and MAY
+be sent to any additional addresses in the recipient list. The original author
+MUST send the reply to all known recipients of the original message, with 
+their webfinger identity as Sender, and the comment/reply author as From.   
+
+Receiving agents MUST validate the From identity as the signer of the salmon
+magic envelope, and MAY reject it. They MAY also reject the message if the
+Sender is not allowed in their "friend list", or if they do not have a 
+suitable relationship with the Sender.
+
+
+To: *
+
+indicates a public message with no specifically enumerated recipients.
+
+The fields To:, Cc:, and/or Bcc: MAY be present. At least one recipient field
+MUST be present. These fields may use the entire syntax specified by RFC822,
+for example:
+
+To: "Bob Smith" <bob@example.com>, "Alice Jones" <alice@example.com>
+
+is a valid entry. A zot envelope is UTF-8 encoded, which differs from RFC822.
+The host component MUST be US-ASCII, with punycode translation of 
+internationalised domain names applied.
+
+The entire envelope is encrypted with alg using key and iv. Only AES-256-CBC
+is defined as an algorithm in this specification. The encrypted envelope is
+then base64url encoded for transmission. 
+
+The zot envelope MAY include remote addresses. A zot delivery agent MUST parse
+all addresses and determine whether a delivery address to the current endpoint
+is valid. This may be the result of:
+
+	1. An address contains the public message wildcard '*'
+
+	2. The current endpoint is a personal endpoint and one of the recipients
+listed in the To:, Cc:, or Bcc: addresses matches the webfinger address of
+the "owner" of the endpoint.
+
+	3. The current endpoint is a bulk delivery endpoint. The bulk delivery
+ednpoint is defined elsewhere in this document. The bulk delivery agent
+will deliver to all local addresses found in the address lists. 
+
+zot:alg
+*******
+
+Currently the only valid choice for alg is "AES-256-CBC". 
+
+
+zot:data
+********
+
+The data field is a salmon magic envelope. This is encrypted with alg using 
+key and iv. The result is then base64url encoded for transmission.
+
+For the first release of this specification, the data format of the enclosed
+salmon MUST be 'application/xml+atom' representing an Atom formatted
+ActivityStream. This format MUST be supported. Future revisions MAY allow
+other alternate data formats. 
+
+
+
+Delivery
+********
+
+The zot message is then POSTed to the zot endpoint URL as 
+application/text+xml and can be decoded/decrypted by the recipient using 
+their private key.
+
+The normal salmon endpoint for a service MAY be used as an alternate
+delivery method for non-encrypted (e.g. public) messages. 
+
+Discover of the zot endpoint is based on webfinger XRD:
+
+<link rel="http://purl.org/zot/1.0/post" 
+	href="http://example/org/zot-endpoint" />
+
+
+Bulk Delivery
+*************
+
+A site MAY provide a bulk delivery endpoint, which MAY be used to avoid
+multiple encryptions of the same data for a single destination.
+This is discoverable by providing a zot endpoint with a corresponding
+salmon public key in the site's .well-known/host-meta file.
+A delivery to this endpoint will deliver to all local recipients provided
+within the zot envelope. 
+
+
+Extensibility
+*************
+
+This specification is subject to change. The current version which is in
+effect at a given site may be noted by XRD properties. The following 
+properties MUST be present in the XRD providing the relevant endpoint:
+
+<Property xmlns:zot="http://purl.og/zot/1.0"
+	type="http://purl.org/zot/1.0/version"
+	zot:version="1" />
+
+<Property xmlns:zot="http://purl.og/zot/1.0"
+	type="http://purl.org/zot/1.0/accept"
+	zot:accept="application/atom+xml" />
+
+Version is specified in this document and indicates the current revision.
+Implementations MAY provide compatibility to multiple incompatible versions
+by using this version indication. The "accept" indicates a range of document
+content types which may be enclosed in the underlying salmon magic envelope.
+We anticipate this specification will in the future allow for a close variant
+of "message/rfc822" and which may include MIME. This may also be used to 
+embed alternate message formats and protocols such as 
+"application/x-diaspora+xml". If a delivery agent is unable to provide any
+acceptable data format, the delivery MUST be terminated/cancelled. 
+
+
+**********************
+* Zid authentication *
+**********************
+
+URLs may be present within a zot message which refer to private and/or
+protected resources. Zid uses OpenID to gain access to these protected
+resources. These could be private photos or profile information - or *any*
+web accessible resource. Using zid, these can have access controls which 
+extends to any resolvable webfinger address.
+
+Zid authentication relies on the presence of an OpenID provider element in
+webfinger, and a URL template which is applied to protected resources within
+a zot message.
+
+The template is designated with the characters "{zid=}" within a URL of a zot
+message. When the page is rendered for viewing to an observer, this template
+is replaced with the webfinger address of the viewer (if known), or an empty
+string if the webfinger address of the viewer cannot be determined.
+
+For example in a message body:
+
+http://example.com/photos/bob/picture.jpg?{zid=}
+
+refers to a private photo which is only visible to alice@example.com.
+
+If Alice is viewing the page, the link is rendered with
+
+http://example.com/photos/bob/picture.jpg?zid=alice@example.com
+
+If the page viewer is unknown, it is rendered as
+
+http://example.com/photos/bob/picture.jpg?zid=
+
+
+When the link is visited, the web server at example.com notes the presence of 
+the zid parameter and uses information from webfinger to locate the OpenID 
+provider for the zid webfinger address. It then redirects to the OpenID 
+server and requests authentication of the given person. If this is successful,
+access to the protected resource is granted.
+
+Only authentication via OpenID is defined in this version of the specification.
+
+This can be used to provide access control to any web resource to any 
+webfinger identity on the internet.
+
+
+
