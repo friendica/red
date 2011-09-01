@@ -30,7 +30,7 @@ resolvable addresses containing both salmon and zot endpoints.
  <zot:key>((key))</zot:key>
  <zot:iv>((iv))</zot:iv>
  <zot:env>((envelope))</zot:env>
- <zot:sig key_id="xxx">((envelope signature))</zot:sig>
+ <zot:sig key_id="xxx">((sender signature))</zot:sig>
  <zot:alg>AES-256-CBC</zot:alg>
  <zot:data type='application/magic-envelope+xml'>((salmon))</zot:data>
 </zot:msg>
@@ -78,10 +78,12 @@ be sent to any additional addresses in the recipient list. The original author
 MUST send the reply to all known recipients of the original message, with 
 their webfinger identity as Sender, and the comment/reply author as From.   
 
-Receiving agents MUST validate the From identity as the signer of the salmon
-magic envelope, and MAY reject it. They MAY also reject the message if the
-Sender is not allowed in their "friend list", or if they do not have a 
-suitable relationship with the Sender.
+Receiving agents SHOULD validate the From identity as the signer of the salmon
+magic envelope, and MAY reject it. They SHOULD also verify the Sender signature
+of the zot packet if it is different than the salmon signature. They MAY 
+reject the message if the Sender is not allowed in their "friend list", or if 
+they do not have a suitable relationship with the Sender, or if either
+signature fails to validate.  
 
 
 To: *
