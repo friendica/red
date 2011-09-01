@@ -878,6 +878,7 @@ function profile_sidebar($profile, $block = 0) {
 		'podloc' => $a->get_baseurl(),
 		'searchable' => (($profile['publish'] && $profile['net-publish']) ? 'true' : 'false' ),
 		'nickname ' => $profile['nickname'],
+		'fullname' => $profile['name'],
 		'photo300 ' => $a->get_baseurl() . '/photo/custom/300/' . $profile['uid'] . '.jpg',
 		'photo100 ' => $a->get_baseurl() . '/photo/custom/100/' . $profile['uid'] . '.jpg',
 		'photo50  ' => $a->get_baseurl() . '/photo/custom/50/'  . $profile['uid'] . '.jpg',

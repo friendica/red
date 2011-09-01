@@ -250,6 +250,52 @@ aside {
   padding: 0px 10px 0px 20px;
   border-right: 1px solid #bdcdd4;
 }
+aside .vcard .fn {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+aside .vcard .title {
+  margin-bottom: 5px;
+}
+aside .vcard dl {
+  height: auto;
+  overflow: auto;
+}
+aside .vcard dt {
+  float: left;
+  margin-left: 0px;
+  width: 35%;
+}
+aside .vcard dd {
+  float: left;
+  margin-left: 4px;
+  width: 60%;
+}
+aside #profile-extra-links ul {
+  padding: 0px;
+  margin: 0px;
+}
+aside #profile-extra-links li {
+  padding: 0px;
+  margin: 0px;
+  list-style: none;
+}
+aside #dfrn-request-link {
+  display: block;
+  -moz-border-radius: 5px 5px 5px 5px;
+  -webkit-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
+  color: #ffffff;
+  background: #005c94 url('../../../images/connect-bg.png') no-repeat left center;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 4px 2px 2px 35px;
+}
+aside #dfrn-request-link:hover {
+  text-decoration: none;
+  background-color: #19aeff;
+}
 /* section */
 section {
   display: table-cell;
