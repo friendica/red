@@ -1,4 +1,3 @@
-
 This is the Zot! social communications protocol. 
 
 Specification revision: 1
@@ -247,5 +246,23 @@ Only authentication via OpenID is defined in this version of the specification.
 This can be used to provide access control to any web resource to any 
 webfinger identity on the internet.
 
+*********
+* Links *
+*********
+
+Salmon Protocol
+	http://www.salmon-protocol.org/salmon-protocol-summary
+
+Salmon Magic Envelope
+	http://salmon-protocol.googlecode.com/svn/trunk/draft-panzer-magicsig-01.html
+
+Atom Activity Stream Draft
+	http://activitystrea.ms/specs/atom/1.0/
+
+Activty Stream Base Schema
+	http://activitystrea.ms/head/activity-schema.html
+
+WebFinger Protocol
+	http://code.google.com/p/webfinger/wiki/WebFingerProtocol
 
 
