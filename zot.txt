@@ -128,10 +128,10 @@ The data field is a salmon magic envelope. This is encrypted with alg using
 key and iv. The result is then base64url encoded for transmission.
 
 For the first release of this specification, the data format of the enclosed
-salmon MUST be 'application/xml+atom' representing an Atom formatted
-ActivityStream. This format MUST be supported. Future revisions MAY allow
-other alternate data formats. 
-
+salmon SHOULD be 'application/xml+atom' representing an Atom formatted
+ActivityStream. Future revisions MAY allow other alternate data formats.
+All acceptable formats MUST be listed in an XRD property (described elsewhere
+in this document).  
 
 
 Delivery
