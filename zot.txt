@@ -30,6 +30,7 @@ resolvable addresses containing both salmon and zot endpoints.
  <zot:key>((key))</zot:key>
  <zot:iv>((iv))</zot:iv>
  <zot:env>((envelope))</zot:env>
+ <zot:sig key_id="xxx">((envelope signature))</zot:sig>
  <zot:alg>AES-256-CBC</zot:alg>
  <zot:data type='application/magic-envelope+xml'>((salmon))</zot:data>
 </zot:msg>
@@ -114,6 +115,15 @@ the "owner" of the endpoint.
 	3. The current endpoint is a bulk delivery endpoint. The bulk delivery
 ednpoint is defined elsewhere in this document. The bulk delivery agent
 will deliver to all local addresses found in the address lists. 
+
+zot:sig
+*******
+
+The Sender of the message signs the underlying salmon data in the manner 
+prescribed by salmon. If the Sender and From address are identical, the
+signature will be identical to the signature of the underlying salmon packet. 
+If they are different, this signature is verified with the Sender's public 
+key to verify the Sender. 
 
 zot:alg
 *******
