@@ -63,7 +63,7 @@ Both "From:" and "Sender:" MUST be provided, and represent a webfinger
 address of the author and sender respectively. The webfinger address for
 the From address MUST contain a discoverable salmon public key that
 is needed to verify the enclosed salmon data. Sender is used to indicate
-the webfinger identity respnsible for transmitting this message. From
+the webfinger identity responsible for transmitting this message. From
 indicates the message author. 
 
 In web-based social systems, a reply to a message SHOULD be conveyed to all of 
@@ -128,7 +128,7 @@ The data field is a salmon magic envelope. This is encrypted with alg using
 key and iv. The result is then base64url encoded for transmission.
 
 For the first release of this specification, the data format of the enclosed
-salmon SHOULD be 'application/xml+atom' representing an Atom formatted
+salmon SHOULD be 'application/atom+xml' representing an Atom formatted
 ActivityStream. Future revisions MAY allow other alternate data formats.
 All acceptable formats MUST be listed in an XRD property (described elsewhere
 in this document).  
