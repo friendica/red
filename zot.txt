@@ -11,7 +11,7 @@ webfinger and encapsulating salmon.
 
 First read the salmon and salmon magic envelope specifications. Zot also 
 makes use of webfinger and ActivityStreams and several concepts from RFC822
-(email). Zot encompasses the zot delivery framework, and the zid remote
+(email). Zot encompasses the zot delivery framework and the zid remote
 access protocol.
 
 The current specification revision (1) is frozen until a reference 
@@ -25,7 +25,8 @@ change to the revision number.
 Format of a zot wrapper. This completely encapsulates a salmon magic envelope 
 and provides privacy protection, while defining a delivery envelope - a 
 concept familiar to email systems. All addresses in zot are webfinger 
-resolvable addresses containing both salmon and zot endpoints. 
+resolvable addresses containing zot endpoints and salmon public keys (zot 
+is a superset of salmon). 
 
 
 <?xml version='1.0' encoding='UTF-8'?>
@@ -219,6 +220,17 @@ of "message/rfc822" and which may include MIME. This may also be used to
 embed alternate message formats and protocols such as 
 "application/x-diaspora+xml". If a delivery agent is unable to provide any
 acceptable data format, the delivery MUST be terminated/cancelled. 
+
+Foreign Messages
+****************
+
+Messages MAY be imported from other networks and systems which have no 
+knowledge of salmon signatures. The salmon signature in this case MUST be the
+exact string 'NOTSIGNED' to indicate that the author (From address) cannot be 
+validated using salmon verification. This message MUST be relayed by a Sender
+who can provide a valid salmon signature of the message. Delivery systems MAY
+reject foreign messages.  
+
 
 
 **********************
