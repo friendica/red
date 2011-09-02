@@ -355,7 +355,10 @@ function statusnet_post_hook(&$a,&$b) {
 
         logger('StatusNet post invoked');
 
-	if((local_user()) && (local_user() == $b['uid']) && (! $b['private']) && (!$b['parent']) ) {
+	if((local_user()) && (local_user() == $b['uid']) && (! $b['private'])) {
+
+		// mike 2-9-11 there was a restriction to only allow this for top level posts
+		// now relaxed so should allow one's own comments to be forwarded through the connector as well. 
 
 		// Status.Net is not considered a private network
 		if($b['prvnets'])

@@ -114,7 +114,7 @@ listed in the To:, Cc:, or Bcc: addresses matches the webfinger address of
 the "owner" of the endpoint.
 
 	3. The current endpoint is a bulk delivery endpoint. The bulk delivery
-ednpoint is defined elsewhere in this document. The bulk delivery agent
+endpoint is defined elsewhere in this document. The bulk delivery agent
 will deliver to all local addresses found in the address lists. 
 
 zot:sig
@@ -243,7 +243,7 @@ and allow authenticated browsing to other resources on the website.
 
 Only authentication via OpenID is defined in this version of the specification.
 
-This can be used to provide access control to any web resource to any 
+This can be used to provide access control of any web resource to any 
 webfinger identity on the internet.
 
 *********

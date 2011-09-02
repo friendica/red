@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `network` char(255) NOT NULL,
   `name` char(255) NOT NULL,
   `nick` char(255) NOT NULL,
+  `attag` char(255) NOT NULL,
   `photo` text NOT NULL, 
   `thumb` text NOT NULL,
   `micro` text NOT NULL,

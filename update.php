@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1084 );
+define( 'UPDATE_VERSION' , 1085 );
 
 /**
  *
@@ -706,4 +706,8 @@ function update_1083() {
 	`contact` INT NOT NULL
 	) ENGINE = MYISAM ;");
 
+}
+
+function update_1084() {
+	q("ALTER TABLE `contact` ADD `attag` CHAR( 255 ) NOT NULL AFTER `nick` ");
 }
