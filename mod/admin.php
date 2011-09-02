@@ -632,7 +632,7 @@ function admin_page_logs(&$a){
 
 	$f = get_config('system','logfile');
 	$size = filesize($f);
-	if($size > 5000000)
+	if($size > 5000000 || $size < 0)
 		$size = 5000000;
 
 	$data = '';
