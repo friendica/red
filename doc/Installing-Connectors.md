@@ -12,7 +12,7 @@ All three of these plugins require an account on the target network. In addition
 
 **Site Configuration**
 
-Plugins must be installed by the site administrator before they can be use. This is accomplished through the site
+Plugins must be installed by the site administrator before they can be used. This is accomplished through the site
 configuration file ".htconfig.php".
 
 The configuration directive looks like:
@@ -84,7 +84,7 @@ To get the OAuth Consumer key pair the user has to
 (a) ask her Friendika admin if a pair already exists or 
 (b) has to register the Friendika server as a client application on the StatusNet server. 
 
-This can be done from the account settings under "Settings -> Connections -> Register an OAuth client application -> Register new application".
+This can be done from the account settings under "Settings -> Connections -> Register an OAuth client application -> Register a new application".
 
 During the registration of the OAuth client remember the following:
 
@@ -133,8 +133,8 @@ d. Navigate to Set Web->Site URL & Domain -> Website Settings.  Set Site URL
 to yoursubdomain.yourdomain.com.  Set Site Domain to your yourdomain.com.
 
 
-Visit the Facebook Settings section of the "Settings->Plugin Settings" page.
-and click 'Install Facebook Connector'.
+Visit the Facebook Settings section of the "Settings->Plugin Settings" page. 
+And click 'Install Facebook Connector'.
 
 This will ask you to login to Facebook and grant permission to the
 plugin to do its stuff. Allow it to do so.
