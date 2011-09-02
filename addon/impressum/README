@@ -7,7 +7,7 @@ License: 3-clause BSD license (same as Friendika)
 
 About
   This plugin adds an Impressum block to the /friendika page with informations
-  about the page operator/owner and how to countact you in case of any questions.
+  about the page operator/owner and how to contact you in case of any questions.
 
   In the notes and postal fields you can use HTML tags for formatting.
 
