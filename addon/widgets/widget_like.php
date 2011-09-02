@@ -4,7 +4,7 @@ function like_widget_name() {
 	return "Shows likes";
 }
 function like_widget_help() {
-	return "Search first item wich contains <em>KEY</em> and print like/dislike count";
+	return "Search first item which contains <em>KEY</em> and print like/dislike count";
 }
 
 function like_widget_args(){
