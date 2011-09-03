@@ -43,6 +43,11 @@ function bb2diaspora($Text,$preserve_nl = false) {
 	$Text = str_replace("<", "&lt;", $Text);
 	$Text = str_replace(">", "&gt;", $Text);
 
+	// If we find any event code, turn it into an event.
+	// After we're finished processing the bbcode we'll 
+	// replace all of the event code with a reformatted version.
+
+	$ev = bbtoevent($Text);
 
 	if($preserve_nl)
 		$Text = str_replace(array("\n","\r"), array('',''),$Text);
@@ -164,19 +169,56 @@ function bb2diaspora($Text,$preserve_nl = false) {
 
 	// If we found an event earlier, strip out all the event code and replace with a reformatted version.
 
-//	if(x($ev,'desc') && x($ev,'start')) {
-//		$sub = format_event_html($ev);
+	if(x($ev,'desc') && x($ev,'start')) {
 
-	//	$Text = preg_replace("/\[event\-description\](.*?)\[\/event\-description\]/is",$sub,$Text);
-		//$Text = preg_replace("/\[event\-start\](.*?)\[\/event\-start\]/is",'',$Text);
-//		$Text = preg_replace("/\[event\-finish\](.*?)\[\/event\-finish\]/is",'',$Text);
-//		$Text = preg_replace("/\[event\-location\](.*?)\[\/event\-location\]/is",'',$Text);
-//		$Text = preg_replace("/\[event\-adjust\](.*?)\[\/event\-adjust\]/is",'',$Text);
-//	}
+		$sub = format_event_diaspora($ev);
+	
+		$Text = preg_replace("/\[event\-description\](.*?)\[\/event\-description\]/is",$sub,$Text);
+		$Text = preg_replace("/\[event\-start\](.*?)\[\/event\-start\]/is",'',$Text);
+		$Text = preg_replace("/\[event\-finish\](.*?)\[\/event\-finish\]/is",'',$Text);
+		$Text = preg_replace("/\[event\-location\](.*?)\[\/event\-location\]/is",'',$Text);
+		$Text = preg_replace("/\[event\-adjust\](.*?)\[\/event\-adjust\]/is",'',$Text);
+	}
 
 
 	
 	call_hooks('bb2diaspora',$Text);
 
 	return $Text;
+}
+
+function format_event_diaspora($ev) {
+
+//	require_once('include/bbcode.php');
+
+	if(! ((is_array($ev)) && count($ev)))
+		return '';
+
+	$bd_format = t('l F d, Y \@ g:i A') ; // Friday January 18, 2011 @ 8 AM
+
+	$o = 'Friendika event notification:' . "\n";
+
+	$o .= '**' . bb2diaspora($ev['desc']) .  '**' . "\n";
+
+	$o .= t('Starts:') . ' ' 
+		. (($ev['adjust']) ? day_translate(datetime_convert('UTC', date_default_timezone_get(), 
+			$ev['start'] , $bd_format ))
+			:  day_translate(datetime_convert('UTC', 'UTC', 
+			$ev['start'] , $bd_format)))
+		. "\n";
+
+	if(! $ev['nofinish'])
+		$o .= t('Finishes:') . ' ' 
+			. (($ev['adjust']) ? day_translate(datetime_convert('UTC', date_default_timezone_get(), 
+				$ev['finish'] , $bd_format ))
+				:  day_translate(datetime_convert('UTC', 'UTC', 
+				$ev['finish'] , $bd_format )))
+			. "\n";
+
+	if(strlen($ev['location']))
+		$o .= t('Location:') . bb2diaspora($ev['location']) 
+			. "\n";
+
+	$o .= "\n";
+	return $o;
 }
