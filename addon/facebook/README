@@ -33,3 +33,7 @@ long posts truncated - with a link to view the full post.
 Facebook contacts will not be able to view private photos, as they are not able to
 authenticate to your site to establish identity. We will address this 
 in a future release.
+
+Info: please make sure that you understand all aspects due to Friendika's 
+default licence which is: Creative Commons Attribution 3.0 (further info:
+http://creativecommons.org/licenses/by/3.0/ )
