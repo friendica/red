@@ -1,7 +1,7 @@
 This is the Zot! social communications protocol. 
 
 Specification revision: 1
-01 September 2011
+02 September 2011
 
 Mike Macgirvin
 This specification is public domain.
@@ -11,8 +11,12 @@ webfinger and encapsulating salmon.
 
 First read the salmon and salmon magic envelope specifications. Zot also 
 makes use of webfinger and ActivityStreams and several concepts from RFC822
-(email). Zot encompasses the zot delivery framework, and the zid remote
+(email). Zot encompasses the zot delivery framework and the zid remote
 access protocol.
+
+The current specification revision (1) is frozen until a reference 
+implementation is available. After that, any protocol changes will require a 
+change to the revision number.  
 
 ****************
 * Zot delivery *
@@ -21,13 +25,16 @@ access protocol.
 Format of a zot wrapper. This completely encapsulates a salmon magic envelope 
 and provides privacy protection, while defining a delivery envelope - a 
 concept familiar to email systems. All addresses in zot are webfinger 
-resolvable addresses containing both salmon and zot endpoints. 
+resolvable addresses containing zot endpoints and salmon public keys (zot 
+is a superset of salmon). 
 
 
 <?xml version='1.0' encoding='UTF-8'?>
 <zot:msg xmlns:zot='http://purl.org/zot/1.0'>
  <zot:key>((key))</zot:key>
  <zot:iv>((iv))</zot:iv>
+ <zot:env_key>((env_key))</zot:env_key>
+ <zot:env_iv>((env_iv))</zot:env_iv>
  <zot:env>((envelope))</zot:env>
  <zot:sig key_id="xxx">((sender signature))</zot:sig>
  <zot:alg>AES-256-CBC</zot:alg>
@@ -39,15 +46,33 @@ zot:key
 *******
 
 A suitable randomly generated encyption key of length 32 octets for encrypting 
-the envelope and salmon packet. This is then encrypted with the sender's 
-private key and base64url encoded.
+the salmon packet. This is then encrypted with the sender's private key and 
+base64url encoded.
 
 zot:iv
 ******
 
 A suitable randomly generated initialisation vector of length 16 octets for 
-encrypting the envelope and salmon packet. This is then encrypted with the 
-sender's private key and base64url encoded.
+encrypting the salmon packet. This is then encrypted with the sender's private 
+key and base64url encoded.
+
+zot:env_key
+***********
+
+A suitable randomly generated encyption key of length 32 octets for encrypting 
+the envelope. This is then encrypted with the recipient's public key and 
+base64url encoded. For bulk deliveries, it is encrypted with the site bulk 
+delivery public key.
+
+
+zot:env_iv
+**********
+
+A suitable randomly generated initialisation vector of length 16 octets for 
+encrypting the envelope. This is then encrypted with the recipient's public
+key and base64url encoded. For bulk deliveries, it is encrypted with the site 
+bulk delivery public key.
+
 
 zot:env
 *******
@@ -99,9 +124,8 @@ is a valid entry. A zot envelope is UTF-8 encoded, which differs from RFC822.
 The host component MUST be US-ASCII, with punycode translation of 
 internationalised domain names applied.
 
-The entire envelope is encrypted with alg using key and iv. Only AES-256-CBC
-is defined as an algorithm in this specification. The encrypted envelope is
-then base64url encoded for transmission. 
+The entire envelope is then encrypted using alg with env_key and env_iv and
+base64url encoded for transmission.
 
 The zot envelope MAY include remote addresses. A zot delivery agent MUST parse
 all addresses and determine whether a delivery address to the current endpoint
@@ -197,6 +221,17 @@ embed alternate message formats and protocols such as
 "application/x-diaspora+xml". If a delivery agent is unable to provide any
 acceptable data format, the delivery MUST be terminated/cancelled. 
 
+Foreign Messages
+****************
+
+Messages MAY be imported from other networks and systems which have no 
+knowledge of salmon signatures. The salmon signature in this case MUST be the
+exact string 'NOTSIGNED' to indicate that the author (From address) cannot be 
+validated using salmon verification. This message MUST be relayed by a Sender
+who can provide a valid salmon signature of the message. Delivery systems MAY
+reject foreign messages.  
+
+
 
 **********************
 * Zid authentication *
@@ -245,6 +280,7 @@ Only authentication via OpenID is defined in this version of the specification.
 
 This can be used to provide access control of any web resource to any 
 webfinger identity on the internet.
+
 
 *********
 * Links *
