@@ -201,7 +201,7 @@ function format_event_diaspora($ev) {
 	$o .= '**' . bb2diaspora($ev['desc']) .  '**' . "\n";
 
 	$o .= t('Starts:') . ' ' 
-		. (($ev['adjust']) ? day_translate(datetime_convert('UTC', date_default_timezone_get(), 
+		. (($ev['adjust']) ? day_translate(datetime_convert('UTC', 'UTC', 
 			$ev['start'] , $bd_format ))
 			:  day_translate(datetime_convert('UTC', 'UTC', 
 			$ev['start'] , $bd_format)))
@@ -209,7 +209,7 @@ function format_event_diaspora($ev) {
 
 	if(! $ev['nofinish'])
 		$o .= t('Finishes:') . ' ' 
-			. (($ev['adjust']) ? day_translate(datetime_convert('UTC', date_default_timezone_get(), 
+			. (($ev['adjust']) ? day_translate(datetime_convert('UTC', 'UTC', 
 				$ev['finish'] , $bd_format ))
 				:  day_translate(datetime_convert('UTC', 'UTC', 
 				$ev['finish'] , $bd_format )))
