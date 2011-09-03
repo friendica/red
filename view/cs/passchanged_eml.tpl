@@ -4,9 +4,9 @@ Milý/Milá $username,
  
 Vaše přihlašovací údaje jsou tato:
 
-Adresa webu:		$siteurl
+Adresa webu:	    $siteurl
 Přihlašovací jméno: $email
-Heslo:			 	$new_password
+Heslo:	 	    $new_password
 
 Toto heslo si můžete změnit z vašeho účtu na stránce Nastavení poté, co se přihlásíte.
 
