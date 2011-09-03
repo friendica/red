@@ -398,6 +398,7 @@ function diaspora_request($importer,$xml) {
 
 function diaspora_post($importer,$xml) {
 
+	$a = get_app();
 	$guid = notags(unxmlify($xml->guid));
 	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
 
@@ -472,6 +473,7 @@ function diaspora_post($importer,$xml) {
 
 function diaspora_comment($importer,$xml,$msg) {
 
+	$a = get_app();
 	$guid = notags(unxmlify($xml->guid));
 	$parent_guid = notags(unxmlify($xml->parent_guid));
 	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
@@ -609,6 +611,7 @@ function diaspora_comment($importer,$xml,$msg) {
 
 function diaspora_photo($importer,$xml,$msg) {
 
+	$a = get_app();
 	$remote_photo_path = notags(unxmlify($xml->remote_photo_path));
 
 	$remote_photo_name = notags(unxmlify($xml->remote_photo_name));
