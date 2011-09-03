@@ -16,7 +16,7 @@
                 <td style="padding-top:22px;"><a href="$url">$from</a></td></tr>
         <tr><td style="font-weight:bold;padding-bottom:5px;">$title</td></tr>
         <tr><td style="padding-right:22px;">$htmlversion</td></tr>
-        <tr><td style="padding-top:11px;padding-bottom:11px;" colspan="2">Přihlaste se na <a href="$siteurl">$siteurl$<a/> pro čtení a zaslání odpovědí na Vaše soukromé zprávy.</td></tr>
+        <tr><td style="padding-top:11px;padding-bottom:11px;" colspan="2">Přihlaste se na <a href="$siteurl">$siteurl<a/> pro čtení a zaslání odpovědí na Vaše soukromé zprávy.</td></tr>
         <tr><td></td><td>Díky,</td></tr>
         <tr><td></td><td>$siteName administrátor</td></tr>
         </tbody>

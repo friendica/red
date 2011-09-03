@@ -3,9 +3,9 @@ Na webu $sitename byla vytvořena nová uživatelská registrace, která vyžadu
 
 Přihlašovací údaje jsou tato:
 
-Celé jméno:		 	$username
-Adresa webu:		$siteurl
-Přihlašovací jméno:	$email
+Celé jméno:	    $username
+Adresa webu:	    $siteurl
+Přihlašovací jméno: $email
 
 Pro odsouhlasení tohoto požadavku prosím klikněte na následující odkaz:
 
