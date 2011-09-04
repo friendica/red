@@ -1591,7 +1591,7 @@ input#dfrn-url {
 	float: left;
 	margin: 4px;
 }
-.acl-list-item p { font-size: 10px; margin: 0px; padding: 2px 0px 1px; }
+.acl-list-item p { font-size: 10px; margin: 0px; padding: 2px 0px 1px; overflow: hidden;}
 .acl-list-item a { 
 	font-size: 8px;
 	display: block;
