@@ -2,6 +2,20 @@
 
 require_once("boot.php");
 
+/*
+ * This file was at one time responsible for doing all deliveries, but this caused
+ * big problems on shared hosting systems, where the process might get killed by the 
+ * hosting provider and nothing would get delivered. 
+ * It now only delivers one message under certain cases, and invokes a queued
+ * delivery mechanism (include/deliver.php) to deliver individual contacts at 
+ * controlled intervals.
+ * This has a much better chance of surviving random processes getting killed
+ * by the hosting provider. 
+ * A lot of this code is duplicated in include/deliver.php until we have time to go back
+ * and re-structure the delivery procedure based on the obstacles that have been thrown at 
+ * us by hosting providers. 
+ */
+
 function notifier_run($argv, $argc){
 	global $a, $db;
 
@@ -594,7 +608,8 @@ function notifier_run($argv, $argc){
 						diaspora_send_relay($target_item,$owner,$contact);
 						break;
 					}		
-					elseif($top_level) {
+					elseif(($top_level) && (! $walltowall)) {
+						// currently no workable solution for sending walltowall
 						diaspora_send_status($target_item,$owner,$contact);
 						break;
 					}

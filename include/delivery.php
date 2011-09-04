@@ -419,7 +419,8 @@ function delivery_run($argv, $argc){
 				diaspora_send_relay($target_item,$owner,$contact);
 				break;
 			}		
-			elseif($top_level) {
+			elseif(($top_level) && (! $walltowall)) {
+				// currently no workable solution for sending walltowall
 				logger('delivery: diaspora status: ' . $contact['name']);
 				diaspora_send_status($target_item,$owner,$contact);
 				break;
