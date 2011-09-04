@@ -62,9 +62,9 @@ function bb2diaspora($Text,$preserve_nl = false) {
 	// [img]pathtoimage[/img]
 
 
-	$Text = preg_replace("/\[url\]([$URLSearchString]*)\[\/url\]/", '[$1]($1)', $Text);
-	$Text = preg_replace("/\#\[url\=([$URLSearchString]*)\](.*?)\[\/url\]/", '[#$2]($1)', $Text);
-	$Text = preg_replace("/\[url\=([$URLSearchString]*)\](.*?)\[\/url\]/", '[$2]($1)', $Text);
+	$Text = preg_replace("/\[url\]([$URLSearchString]*)\[\/url\]/ism", '[$1]($1)', $Text);
+	$Text = preg_replace("/\#\[url\=([$URLSearchString]*)\](.*?)\[\/url\]/ism", '[#$2]($1)', $Text);
+	$Text = preg_replace("/\[url\=([$URLSearchString]*)\](.*?)\[\/url\]/ism", '[$2]($1)', $Text);
 
 //	$Text = preg_replace("/\[img\](.*?)\[\/img\]/", t('Image/photo: ') . '$1', $Text);
 //	$Text = preg_replace("/\[img\](.*?)\[\/img\]/", t('image/photo'), $Text);
@@ -165,7 +165,7 @@ function bb2diaspora($Text,$preserve_nl = false) {
 
 
 	// oembed tag
-//	$Text = oembed_bbcode2html($Text);
+	//	$Text = oembed_bbcode2html($Text);
 
 	// If we found an event earlier, strip out all the event code and replace with a reformatted version.
 
@@ -188,8 +188,6 @@ function bb2diaspora($Text,$preserve_nl = false) {
 }
 
 function format_event_diaspora($ev) {
-
-//	require_once('include/bbcode.php');
 
 	if(! ((is_array($ev)) && count($ev)))
 		return '';

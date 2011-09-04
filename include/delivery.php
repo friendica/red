@@ -140,6 +140,8 @@ function delivery_run($argv, $argc){
 
 	$owner = $r[0];
 
+	$walltowall = ((($top_level) && ($owner['id'] != $items[0]['contact-id'])) ? true : false);
+
 	$public_message = true;
 
 	// fill this in with a single salmon slap if applicable

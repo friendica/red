@@ -129,6 +129,7 @@ function notifier_run($argv, $argc){
 			logger('notifier: top level post');
 			$top_level = true;
 		}
+
 	}
 
 	$r = q("SELECT `contact`.*, `user`.`pubkey` AS `upubkey`, `user`.`prvkey` AS `uprvkey`, 
@@ -143,6 +144,8 @@ function notifier_run($argv, $argc){
 		return;
 
 	$owner = $r[0];
+
+	$walltowall = ((($top_level) && ($owner['id'] != $items[0]['contact-id'])) ? true : false);
 
 	$hub = get_config('system','huburl');
 
