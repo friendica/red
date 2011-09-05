@@ -170,7 +170,7 @@ EOT;
 			$selected = (($group_id == $rr['id']) ? ' class="group-selected" ' : '');
 			$o .= '	<li class="sidebar-group-li">' 
 			. (($edit) ? "<a href=\"group/{$rr['id']}\" title=\"" . t('Edit') 
-				. "\" ><img src=\"images/spencil.gif\" alt=\"" . t('Edit') . "\"></a> " : "") 
+				. "\" class=\"groupsideedit\" ><img src=\"images/spencil.gif\" alt=\"" . t('Edit') . "\"></a> " : "") 
 			. (($cid) ? '<input type="checkbox" class="' . (($selected) ? 'ticked' : 'unticked') . '" onclick="contactgroupChangeMember(' . $rr['id'] . ',' . $cid . ');return true;" '
 				. ((in_array($rr['id'],$member_of)) ? ' checked="checked" ' : '') . '/>' : '')
 			. "<a href=\"$each/{$rr['id']}\" class=\"sidebar-group-element\" $selected >{$rr['name']}</a></li>\r\n";

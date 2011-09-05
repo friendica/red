@@ -1871,6 +1871,25 @@ a.mail-list-link {
 	margin-top: 10px;
 }
 
+
+#search-save {
+    margin-left: 5px;
+}
+.groupsideedit {
+    margin-right: 10px;
+}
+#saved-search-ul {
+    list-style-type: none;
+}
+.savedsearchdrop, .savedsearchterm {
+    float: left;
+    margin-top: 10px;
+}
+.savedsearchterm {
+    margin-left: 10px;
+}
+
+
 #side-follow-wrapper {
 	margin-top: 20px;
 }

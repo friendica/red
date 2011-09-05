@@ -602,12 +602,14 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 
 
 if(! function_exists('search')) {
-function search($s,$id='search-box',$url='/search') {
+function search($s,$id='search-box',$url='/search',$save = false) {
 	$a = get_app();
 	$o  = '<div id="' . $id . '">';
 	$o .= '<form action="' . $a->get_baseurl() . $url . '" method="get" >';
 	$o .= '<input type="text" name="search" id="search-text" value="' . $s .'" />';
 	$o .= '<input type="submit" name="submit" id="search-submit" value="' . t('Search') . '" />'; 
+	if($save)
+		$o .= '<input type="submit" name="save" id="search-save" value="' . t('Save') . '" />'; 
 	$o .= '</form></div>';
 	return $o;
 }}
