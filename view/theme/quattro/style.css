@@ -1,6 +1,63 @@
 /**
  * Fabio Comuni <http://kirgroup.com/profile/fabrixxm>
  **/
+/* icons */
+.icon {
+  background-color: transparent ;
+  background-repeat: no-repeat;
+  background-position: center center;
+  display: block;
+  overflow: hidden;
+  text-indent: -9999px;
+  padding: 1px;
+}
+.icon.text {
+  text-indent: 0px;
+}
+.icon.s16 {
+  width: 22px;
+  height: 22px;
+}
+.icon.s16.notify {
+  background-image: url("../../../images/icons/16/notify_off.png");
+}
+.icon.s16.gear {
+  background-image: url("../../../images/icons/16/gear.png");
+}
+.icon.s16.add {
+  background-image: url("../../../images/icons/16/add.png");
+}
+.icon.s16.delete {
+  background-image: url("../../../images/icons/16/delete.png");
+}
+.icon.s16.edit {
+  background-image: url("../../../images/icons/16/edit.png");
+}
+.icon.s16.start {
+  background-image: url("../../../images/icons/16/star.png");
+}
+.icon.s22 {
+  width: 22px;
+  height: 22px;
+}
+.icon.s22.notify {
+  background-image: url("../../../images/icons/22/notify_off.png");
+}
+.icon.s22.gear {
+  background-image: url("../../../images/icons/22/gear.png");
+}
+.icon.s22.add {
+  background-image: url("../../../images/icons/22/add.png");
+}
+.icon.s22.delete {
+  background-image: url("../../../images/icons/22/delete.png");
+}
+.icon.s22.edit {
+  background-image: url("../../../images/icons/22/edit.png");
+}
+.icon.s22.start {
+  background-image: url("../../../images/icons/22/star.png");
+}
 /* global */
 body {
   font-family: Liberation Sans, helvetica, arial, clean, sans-serif;
@@ -28,25 +85,15 @@ a:hover {
 .right {
   float: right;
 }
-/* icons */
-.icon {
-  background-color: transparent ;
-  background-repeat: no-repeat;
-  background-position: center center;
-  display: block;
-  overflow: hidden;
-  text-indent: -9999px;
+.tool {
+  height: auto;
+  overflow: auto;
 }
-.icon.s22 {
-  width: 22px;
-  height: 22px;
-  padding: 1px;
+.tool .label {
+  float: left;
 }
-.icon.s22.notify {
-  background-image: url("../../../images/icons/notify_off_22.png");
-}
-.icon.s22.gear {
-  background-image: url("../../../images/icons/gear_22.png");
+.tool .icon {
+  float: right;
 }
 /* header */
 header {
@@ -186,7 +233,7 @@ nav #nav-site-linkmenu .menu-popup {
   left: auto;
 }
 nav #nav-notifications-linkmenu.selected .icon.s22.notify {
-  background-image: url("../../../images/icons/notify_on_22.png");
+  background-image: url("../../../images/icons/22/notify_on.png");
 }
 nav #nav-apps-link.selected {
   background-color: #364e59;
@@ -295,6 +342,27 @@ aside #dfrn-request-link {
 aside #dfrn-request-link:hover {
   text-decoration: none;
   background-color: #19aeff;
+}
+#contact-block {
+  overflow: auto;
+  height: auto;
+}
+#contact-block .contact-block-h4 {
+  float: left;
+  margin: 5px 0px;
+}
+#contact-block .allcontact-link {
+  float: right;
+  margin: 5px 0px;
+}
+#contact-block .contact-block-content {
+  clear: both;
+  overflow: auto;
+  height: auto;
+}
+#contact-block .contact-block-link {
+  float: left;
+  margin: 0px 2px 2px 0px;
 }
 /* section */
 section {

@@ -1,0 +1,37 @@
+/* icons */
+
+.icons(@size: 22) {
+	&.notify { background-image: url("../../../images/icons/@{size}/notify_off.png"); }
+	&.gear 	 { background-image: url("../../../images/icons/@{size}/gear.png"); }
+	
+	&.add 	 	{ background-image: url("../../../images/icons/@{size}/add.png"); }
+	&.delete 	{ background-image: url("../../../images/icons/@{size}/delete.png"); }
+	&.edit 	 	{ background-image: url("../../../images/icons/@{size}/edit.png"); }
+	&.start	 	{ background-image: url("../../../images/icons/@{size}/star.png"); }
+}
+
+
+.icon {
+	background-color: transparent ;
+	background-repeat: no-repeat;
+	background-position: center center;
+	display: block;
+	overflow: hidden;
+	text-indent: -9999px;
+	padding: 1px;
+
+	&.text {
+		text-indent: 0px;
+	}
+
+	&.s16 {
+		width:22px; height: 22px;
+		.icons(16);
+	}
+	&.s22 {
+		width:22px; height: 22px;
+		.icons(22);
+	}
+	
+	
+}

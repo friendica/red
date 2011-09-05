@@ -32,31 +32,11 @@ a:hover {color: @LinkHover; text-decoration: underline; }
 .left { float: left; }
 .right { float: right; }
 
-/* icons */
-
-
-.icons(@size: 22) {
-	&.notify { background-image: url("../../../images/icons/notify_off_@{size}.png"); }
-	&.gear 	 { background-image: url("../../../images/icons/gear_@{size}.png"); }
+.tool {
+	height: auto; overflow: auto;
+	.label { float: left;}
+	.icon { float: right; }
 }
-
-
-.icon {
-	background-color: transparent ;
-	background-repeat: no-repeat;
-	background-position: center center;
-	display: block;
-	overflow: hidden;
-	text-indent: -9999px;
-
-	&.s22 {
-		width:22px; height: 22px;
-		padding: 1px;
-		.icons(22);
-	}
-	
-}
-
 
 
 /* header */
@@ -156,7 +136,7 @@ nav {
 			.menu-popup{ right: 0px; left: auto; }
 		}
 	
-		#nav-notifications-linkmenu.selected .icon.s22.notify { background-image: url("../../../images/icons/notify_on_22.png") }
+		#nav-notifications-linkmenu.selected .icon.s22.notify { background-image: url("../../../images/icons/22/notify_on.png") }
 		#nav-apps-link.selected { background-color: @NavbarSelectedBg; }
 }
 
@@ -232,6 +212,20 @@ aside {
 
 }
 
+#contact-block {
+	overflow: auto;	height: auto;
+	.contact-block-h4 { float: left; margin: 5px 0px; }
+	.allcontact-link { float: right; margin: 5px 0px; }
+	.contact-block-content {
+		clear: both;
+		overflow: auto;	height: auto;
+	}
+	.contact-block-link {
+		float: left;
+		margin: 0px 2px 2px 0px;
+	}
+}
+
 
 
 
@@ -241,3 +235,6 @@ section {
 	width: 800px;
 	padding:0px 20px 0px 10px;
 }
+
+
+
