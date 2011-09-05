@@ -857,6 +857,14 @@ function profile_sidebar($profile, $block = 0) {
 	if((remote_user()) && ($_SESSION['visitor_visiting'] == $profile['uid']))
 		$connect = False; 
 
+
+	// show edit to yourself
+	if ($profile['uid'] == local_user()) {
+		$profile['edit'] = array($a->get_baseurl(). 'profiles', t('Profiles'),"", t('Manage/edit profiles'));
+	}
+
+
+
 	
 	if((x($profile,'address') == 1) 
 		|| (x($profile,'locality') == 1) 
@@ -889,6 +897,7 @@ function profile_sidebar($profile, $block = 0) {
 	if (!$block){
 		$contact_block = contact_block();
 	}
+
 
 	$tpl = get_markup_template('profile_vcard.tpl');
 

@@ -1,9 +1,11 @@
-<h4 class="contact-h4">$contacts</h4>
+<div id="contact-block">
+<h4 class="contact-block-h4">$contacts</h4>
 {{ if $micropro }}
-	<div id="contact-block">
+		<a class="allcontact-link" href="viewcontacts/$nickname">$viewcontacts</a>
+		<div class='contact-block-content'>
 		{{ for $micropro as $m }}
 			$m
 		{{ endfor }}
-	</div>
-	<div id="viewcontacts"><a id="viewcontacts-link" href="viewcontacts/$nickname">$viewcontacts</a></div>
+		</div>
 {{ endif }}
+</div>
