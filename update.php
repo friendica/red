@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1082 );
+define( 'UPDATE_VERSION' , 1087 );
 
 /**
  *
@@ -676,8 +676,16 @@ function update_1080() {
 }
 
 function update_1081() {
-	q("ALTER TABLE `photo` ADD `guid` CHAR( 64 ) NOT NULL AFTER `contact`id`,
+	// there was a typo in update 1081 so it was corrected and moved up to 1082
+}
+
+function update_1082() {
+	q("ALTER TABLE `photo` ADD `guid` CHAR( 64 ) NOT NULL AFTER `contact-id`,
 		ADD INDEX ( `guid` )  ");
+	// make certain the following code is only executed once
+	$r = q("select `id` from `photo` where `guid` != '' limit 1");
+	if($r && count($r))
+		return;
 	$r = q("SELECT distinct(`resource-id`) FROM `photo` WHERE 1 group by `id`");
 	if(count($r)) {
 		foreach($r as $rr) {
@@ -689,3 +697,32 @@ function update_1081() {
 		}
 	}
 }
+
+function update_1083() {
+	q("CREATE TABLE IF NOT EXISTS `deliverq` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`cmd` CHAR( 32 ) NOT NULL ,
+	`item` INT NOT NULL ,
+	`contact` INT NOT NULL
+	) ENGINE = MYISAM ");
+
+}
+
+function update_1084() {
+	q("ALTER TABLE `contact` ADD `attag` CHAR( 255 ) NOT NULL AFTER `nick` ");
+}
+
+function update_1085() {
+	q("CREATE TABLE IF NOT EXISTS `search` (
+	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`uid` INT NOT NULL ,
+	`term` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+	INDEX ( `uid` ),
+	INDEX ( `term` )
+	) ENGINE = MYISAM ");
+}
+
+function update_1086() {
+	q("ALTER TABLE `item` ADD `bookmark` tinyint(1) NOT NULL DEFAULT '0' AFTER `starred` ");
+}
+

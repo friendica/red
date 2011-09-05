@@ -7,6 +7,10 @@
 <input type="text" id="crepair-nick" name="nick" value="$contact_nick" />
 <div class="clear"></div>
 
+<label id="crepair-attag-label" for="crepair-attag">$label_attag</label>
+<input type="text" id="crepair-attag" name="attag" value="$contact_attag" />
+<div class="clear"></div>
+
 <label id="crepair-url-label" for="crepair-url">$label_url</label>
 <input type="text" id="crepair-url" name="url" value="$contact_url" />
 <div class="clear"></div>

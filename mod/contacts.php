@@ -87,25 +87,15 @@ function contacts_post(&$a) {
 
 
 	$priority = intval($_POST['poll']);
-	if($priority == (-1))
-		
 	if($priority > 5 || $priority < 0)
 		$priority = 0;
 
-	$rating = intval($_POST['reputation']);
-	if($rating > 5 || $rating < 0)
-		$rating = 0;
-
-	$reason = notags(trim($_POST['reason']));
-
 	$info = escape_tags(trim($_POST['info']));
 
-	$r = q("UPDATE `contact` SET `profile-id` = %d, `priority` = %d , `rating` = %d, `reason` = '%s', `info` = '%s'
+	$r = q("UPDATE `contact` SET `profile-id` = %d, `priority` = %d , `info` = '%s'
 		WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		intval($profile_id),
 		intval($priority),
-		intval($rating),
-		dbesc($reason),
 		dbesc($info),
 		intval($contact_id),
 		intval(local_user())
@@ -277,8 +267,6 @@ function contacts_content(&$a) {
 			$sparkle = '';
 		}
 
-		$grps = '';
-
 		$insecure = '<div id="profile-edit-insecure"><p><img src="images/unlock_icon.gif" alt="' . t('Privacy Unavailable') . '" />&nbsp;'
 			. t('Private communications are not available for this contact.') . '</p></div>';
 
@@ -313,7 +301,6 @@ function contacts_content(&$a) {
 			'$lblcrepair' => t("Repair contact URL settings \x28WARNING: Advanced\x29"),
 			'$lblrecent' => t('View conversations'),
 			'$lblsuggest' => $lblsuggest,
-			'$grps' => $grps,
 			'$delete' => t('Delete contact'),
 			'$nettype' => $nettype,
 			'$poll_interval' => contact_poll_interval($r[0]['priority'],(! $poll_enabled)),
@@ -330,9 +317,6 @@ function contacts_content(&$a) {
 			'$info' => $r[0]['info'],
 			'$blocked' => (($r[0]['blocked']) ? '<div id="block-message">' . t('Currently blocked') . '</div>' : ''),
 			'$ignored' => (($r[0]['readonly']) ? '<div id="ignore-message">' . t('Currently ignored') . '</div>' : ''),
-			'$rating' => contact_reputation($r[0]['rating']),
-			'$reason' => $r[0]['reason'],
-			'$groups' => '', // group_selector(),
 			'$photo' => $r[0]['photo'],
 			'$name' => $r[0]['name'],
 			'$dir_icon' => $dir_icon,

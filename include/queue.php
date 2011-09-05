@@ -3,18 +3,18 @@ require_once("boot.php");
 require_once('include/queue_fn.php');
 
 function queue_run($argv, $argc){
-  global $a, $db;
+	global $a, $db;
 
-  if(is_null($a)){
-    $a = new App;
-  }
+	if(is_null($a)){
+		$a = new App;
+	}
   
-  if(is_null($db)){
-    @include(".htconfig.php");
-    require_once("dba.php");
-    $db = new dba($db_host, $db_user, $db_pass, $db_data);
-    unset($db_host, $db_user, $db_pass, $db_data);
-  };
+	if(is_null($db)){
+		@include(".htconfig.php");
+		require_once("dba.php");
+		$db = new dba($db_host, $db_user, $db_pass, $db_data);
+		unset($db_host, $db_user, $db_pass, $db_data);
+	};
 
 
 	require_once("session.php");
@@ -37,6 +37,18 @@ function queue_run($argv, $argc){
 	$deadguys = array();
 
 	logger('queue: start');
+
+	$interval = ((get_config('system','delivery_interval') === false) ? 2 : intval(get_config('system','delivery_interval')));
+
+	$r = q("select * from deliverq where 1");
+	if(count($r)) {
+		foreach($r as $rr) {
+			logger('queue: deliverq');
+			proc_run('php','include/delivery.php',$rr['cmd'],$rr['item'],$rr['contact']);
+			if($interval)
+				@time_sleep_until(microtime(true) + (float) $interval);
+		}
+	}
 
 	$r = q("SELECT `queue`.*, `contact`.`name`, `contact`.`uid` FROM `queue` 
 		LEFT JOIN `contact` ON `queue`.`cid` = `contact`.`id` 

@@ -80,7 +80,7 @@ function initEditor(cb){
 }
 
 </script>
-<script type="text/javascript" src="include/ajaxupload.js" ></script>
+<script type="text/javascript" src="js/ajaxupload.js" ></script>
 <script>
 	var ispublic = '$ispublic';
 	$(document).ready(function() {

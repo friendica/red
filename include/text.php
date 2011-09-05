@@ -539,22 +539,30 @@ function contact_block() {
 		$total = intval($r[0]['total']);
 	}
 	if(! $total) {
-		$o .= '<h4 class="contact-h4">' . t('No contacts') . '</h4>';
-		return $o;
-	}
-	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 and `pending` = 0 ORDER BY RAND() LIMIT %d",
-			intval($a->profile['uid']),
-			intval($shown)
-	);
-	if(count($r)) {
-		$o .= '<h4 class="contact-h4">' .  sprintf( tt('%d Contact','%d Contacts', $total),$total) . '</h4><div id="contact-block">';
-		foreach($r as $rr) {
-			$o .= micropro($rr,true,'mpfriend');
-		}
-		$o .= '</div><div id="contact-block-end"></div>';
-		$o .=  '<div id="viewcontacts"><a id="viewcontacts-link" href="viewcontacts/' . $a->profile['nickname'] . '">' . t('View Contacts') . '</a></div>';
+		$contacts = t('No contacts');
+		$micropro = Null;
 		
+	} else {
+		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 and `pending` = 0 ORDER BY RAND() LIMIT %d",
+				intval($a->profile['uid']),
+				intval($shown)
+		);
+		if(count($r)) {
+			$contacts = sprintf( tt('%d Contact','%d Contacts', $total),$total);
+			$micropro = Array();
+			foreach($r as $rr) {
+				$micropro[] = micropro($rr,true,'mpfriend');
+			}
+		}
 	}
+	
+	$tpl = get_markup_template('contact_block.tpl');
+	$o = replace_macros($tpl, array(
+		'$contacts' => $contacts,
+		'$nickname' => $a->profile['nickname'],
+		'$viewcontacts' => t('View Contacts'),
+		'$micropro' => $micropro,
+	));
 
 	$arr = array('contacts' => $r, 'output' => $o);
 
@@ -602,12 +610,14 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 
 
 if(! function_exists('search')) {
-function search($s,$id='search-box',$url='/search') {
+function search($s,$id='search-box',$url='/search',$save = false) {
 	$a = get_app();
 	$o  = '<div id="' . $id . '">';
 	$o .= '<form action="' . $a->get_baseurl() . $url . '" method="get" >';
 	$o .= '<input type="text" name="search" id="search-text" value="' . $s .'" />';
 	$o .= '<input type="submit" name="submit" id="search-submit" value="' . t('Search') . '" />'; 
+	if($save)
+		$o .= '<input type="submit" name="save" id="search-save" value="' . t('Save') . '" />'; 
 	$o .= '</form></div>';
 	return $o;
 }}

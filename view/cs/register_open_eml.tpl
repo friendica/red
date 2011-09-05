@@ -2,9 +2,9 @@ Milý/milá $username,
 	Díky za registraci na $sitename. Váš účet byl vytvořen.
 Vaše přihlašovací údaje jsou tato:
 
-Adresa webu:		$siteurl
+Adresa webu:	    $siteurl
 Přihlašovací jméno: $email
-Heslo:				$password
+Heslo:		    $password
 
 Toto heslo si můžete změnit z vašeho účtu na stránce "Nastavení" poté, co se přihlásíte.
 

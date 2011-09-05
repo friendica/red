@@ -414,7 +414,8 @@ function photos_post(&$a) {
 								);
 							}
 							else {
-								$r = q("SELECT * FROM `contact` WHERE `nick` = '%s' AND `uid` = %d LIMIT 1",
+								$r = q("SELECT * FROM `contact` WHERE `attag` = '%s' OR `nick` = '%s' AND `uid` = %d ORDER BY `attag` DESC LIMIT 1",
+									dbesc($name),
 									dbesc($name),
 									intval($page_owner_uid)
 								);

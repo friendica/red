@@ -9,37 +9,37 @@ function fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0) {
 
 	$a = get_app();
 
-	$ch = curl_init($url);
+	$ch = @curl_init($url);
 	if(($redirects > 8) || (! $ch)) 
 		return false;
 
-	curl_setopt($ch, CURLOPT_HEADER, true);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-	curl_setopt($ch, CURLOPT_USERAGENT, "Friendika");
+	@curl_setopt($ch, CURLOPT_HEADER, true);
+	@curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+	@curl_setopt($ch, CURLOPT_USERAGENT, "Friendika");
 
 	if(intval($timeout)) {
-		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+		@curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
 	}
 	else {
 		$curl_time = intval(get_config('system','curl_timeout'));
-		curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
+		@curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
 	}
 	// by default we will allow self-signed certs
 	// but you can override this
 
 	$check_cert = get_config('system','verifyssl');
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, (($check_cert) ? true : false));
+	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, (($check_cert) ? true : false));
 
 	$prx = get_config('system','proxy');
 	if(strlen($prx)) {
-		curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
-		curl_setopt($ch, CURLOPT_PROXY, $prx);
-		$prxusr = get_config('system','proxyuser');
+		@curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
+		@curl_setopt($ch, CURLOPT_PROXY, $prx);
+		$prxusr = @get_config('system','proxyuser');
 		if(strlen($prxusr))
-			curl_setopt($ch, CURLOPT_PROXYUSERPWD, $prxusr);
+			@curl_setopt($ch, CURLOPT_PROXYUSERPWD, $prxusr);
 	}
 	if($binary)
-		curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
+		@curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
 
 	$a->set_curl_code(0);
 
@@ -49,7 +49,7 @@ function fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0) {
 	$s = @curl_exec($ch);
 
 	$base = $s;
-	$curl_info = curl_getinfo($ch);
+	$curl_info = @curl_getinfo($ch);
 	$http_code = $curl_info['http_code'];
 
 	$header = '';
@@ -80,7 +80,7 @@ function fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0) {
 
 	$a->set_curl_headers($header);
 
-	curl_close($ch);
+	@curl_close($ch);
 	return($body);
 }}
 

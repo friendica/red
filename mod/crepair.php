@@ -18,15 +18,16 @@ function crepair_post(&$a) {
 
 	$contact = $r[0];
 
-	$nick    = ((x($_POST,'nick')) ? $_POST['nick'] : null);
-	$url     = ((x($_POST,'url')) ? $_POST['url'] : null);
-	$request = ((x($_POST,'request')) ? $_POST['request'] : null);
-	$confirm = ((x($_POST,'confirm')) ? $_POST['confirm'] : null);
-	$notify  = ((x($_POST,'notify')) ? $_POST['notify'] : null);
-	$poll    = ((x($_POST,'poll')) ? $_POST['poll'] : null);
+	$nick    = ((x($_POST,'nick')) ? $_POST['nick'] : '');
+	$url     = ((x($_POST,'url')) ? $_POST['url'] : '');
+	$request = ((x($_POST,'request')) ? $_POST['request'] : '');
+	$confirm = ((x($_POST,'confirm')) ? $_POST['confirm'] : '');
+	$notify  = ((x($_POST,'notify')) ? $_POST['notify'] : '');
+	$poll    = ((x($_POST,'poll')) ? $_POST['poll'] : '');
+	$attag   = ((x($_POST,'attag')) ? $_POST['attag'] : '');
 
 
-	$r = q("UPDATE `contact` SET `nick` = '%s', `url` = '%s', `request` = '%s', `confirm` = '%s', `notify` = '%s', `poll` = '%s'
+	$r = q("UPDATE `contact` SET `nick` = '%s', `url` = '%s', `request` = '%s', `confirm` = '%s', `notify` = '%s', `poll` = '%s', `attag` = '%s' 
 		WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		dbesc($nick),
 		dbesc($url),
@@ -34,6 +35,7 @@ function crepair_post(&$a) {
 		dbesc($confirm),
 		dbesc($notify),
 		dbesc($poll),
+		dbesc($attag),
 		intval($contact['id']),
 		local_user()
 	);
@@ -84,6 +86,7 @@ function crepair_content(&$a) {
 	$o .= replace_macros($tpl, array(
 		'$label_name' => t('Name'),
 		'$label_nick' => t('Account Nickname'),
+		'$label_attag' => t('@Tagname - overrides Name/Nickname'),
 		'$label_url' => t('Account URL'),
 		'$label_request' => t('Friend Request URL'),
 		'$label_confirm' => t('Friend Confirm URL'),
@@ -97,6 +100,7 @@ function crepair_content(&$a) {
 		'$confirm'      => $contact['confirm'],
 		'$notify'       => $contact['notify'],
 		'$poll'         => $contact['poll'],
+		'$contact_attag'  => $contact['attag'],
 		'$lbl_submit'   => t('Submit')
 	));
 

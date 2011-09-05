@@ -344,7 +344,7 @@ function admin_page_site(&$a) {
  * Users admin page
  */
 function admin_page_users_post(&$a){
-	$pending = ( x(£_POST, 'pending') ? $_POST['pending'] : Array() );
+	$pending = ( x($_POST, 'pending') ? $_POST['pending'] : Array() );
 	$users = ( x($_POST, 'user') ? $_POST['user'] : Array() );
 	
 	if (x($_POST,'page_users_block')){
@@ -540,7 +540,7 @@ function admin_page_plugins(&$a){
 		} 
 		
 		$admin_form="";
-		if (in_array($plugin, $a->plugins_admin)){
+		if (is_array($a->plugins_admin) && in_array($plugin, $a->plugins_admin)){
 			@require_once("addon/$plugin/$plugin.php");
 			$func = $plugin.'_plugin_admin';
 			$func($a, $admin_form);
@@ -632,7 +632,7 @@ function admin_page_logs(&$a){
 
 	$f = get_config('system','logfile');
 	$size = filesize($f);
-	if($size > 5000000)
+	if($size > 5000000 || $size < 0)
 		$size = 5000000;
 
 	$data = '';

@@ -3,6 +3,7 @@
 require_once('include/crypto.php');
 require_once('include/items.php');
 require_once('include/bb2diaspora.php');
+require_once('include/contact_selectors.php');
 
 function diaspora_dispatch($importer,$msg) {
 
@@ -139,10 +140,9 @@ EOT;
 	$encrypted_outer_key_bundle = '';
 	openssl_public_encrypt($outer_json,$encrypted_outer_key_bundle,$pubkey);
 
-	logger('outer_bundle_encrypt: ' . openssl_error_string());
 	$b64_encrypted_outer_key_bundle = base64_encode($encrypted_outer_key_bundle);
 
-	logger('outer_bundle: ' . $b64_encrypted_outer_key_bundle . ' key: ' . $pubkey);
+	logger('outer_bundle: ' . $b64_encrypted_outer_key_bundle . ' key: ' . $pubkey, LOGGER_DATA);
 
 	$encrypted_header_json_object = json_encode(array('aes_key' => base64_encode($encrypted_outer_key_bundle), 
 		'ciphertext' => base64_encode($ciphertext)));
@@ -222,7 +222,7 @@ function diaspora_decode($importer,$xml) {
 	 *  </decrypted_header>
 	 */
 
-	logger('decrypted: ' . $decrypted);
+	logger('decrypted: ' . $decrypted, LOGGER_DEBUG);
 	$idom = parse_xml_string($decrypted,false);
 
 	$inner_iv = base64_decode($idom->iv);
@@ -398,6 +398,7 @@ function diaspora_request($importer,$xml) {
 
 function diaspora_post($importer,$xml) {
 
+	$a = get_app();
 	$guid = notags(unxmlify($xml->guid));
 	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
 
@@ -417,8 +418,10 @@ function diaspora_post($importer,$xml) {
 		dbesc($message_id),
 		dbesc($guid)
 	);
-	if(count($r))
+	if(count($r)) {
+		logger('diaspora_post: message exists: ' . $guid);
 		return;
+	}
 
     // allocate a guid on our system - we aren't fixing any collisions.
 	// we're ignoring them
@@ -453,8 +456,16 @@ function diaspora_post($importer,$xml) {
 	$datarray['author-link'] = $contact['url'];
 	$datarray['author-avatar'] = $contact['thumb'];
 	$datarray['body'] = $body;
+	$datarray['app']  = 'Diaspora';
 
-	item_store($datarray);
+	$message_id = item_store($datarray);
+
+	if($message_id) {
+		q("update item set plink = '%s' where id = %d limit 1",
+			dbesc($a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $message_id),
+			intval($message_id)
+		);
+	}
 
 	return;
 
@@ -462,6 +473,7 @@ function diaspora_post($importer,$xml) {
 
 function diaspora_comment($importer,$xml,$msg) {
 
+	$a = get_app();
 	$guid = notags(unxmlify($xml->guid));
 	$parent_guid = notags(unxmlify($xml->parent_guid));
 	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
@@ -474,13 +486,24 @@ function diaspora_comment($importer,$xml,$msg) {
 	$text = $xml->text;
 
 	$contact = diaspora_get_contact_by_handle($importer['uid'],$msg['author']);
-	if(! $contact)
+	if(! $contact) {
+		logger('diaspora_comment: cannot find contact: ' . $msg['author']);
 		return;
+	}
 
 	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
 		logger('diaspora_comment: Ignoring this author.');
 		http_status_exit(202);
 		// NOTREACHED
+	}
+
+	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '%s' LIMIT 1",
+		intval($importer['uid']),
+		dbesc($guid)
+	);
+	if(count($r)) {
+		logger('diaspora_comment: our comment just got relayed back to us (or there was a guid collision) : ' . $guid);
+		return;
 	}
 
 	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '%s' LIMIT 1",
@@ -558,8 +581,16 @@ function diaspora_comment($importer,$xml,$msg) {
 	$datarray['author-link'] = $person['url'];
 	$datarray['author-avatar'] = ((x($person,'thumb')) ? $person['thumb'] : $person['photo']);
 	$datarray['body'] = $body;
+	$datarray['app']  = 'Diaspora';
 
 	$message_id = item_store($datarray);
+
+	if($message_id) {
+		q("update item set plink = '%s' where id = %d limit 1",
+			dbesc($a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $message_id),
+			intval($message_id)
+		);
+	}
 
 	if(! $parent_author_signature) {
 		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
@@ -580,6 +611,7 @@ function diaspora_comment($importer,$xml,$msg) {
 
 function diaspora_photo($importer,$xml,$msg) {
 
+	$a = get_app();
 	$remote_photo_path = notags(unxmlify($xml->remote_photo_path));
 
 	$remote_photo_name = notags(unxmlify($xml->remote_photo_name));
@@ -647,8 +679,10 @@ function diaspora_like($importer,$xml,$msg) {
 		return;
 
 	$contact = diaspora_get_contact_by_handle($importer['uid'],$msg['author']);
-	if(! $contact)
+	if(! $contact) {
+		logger('diaspora_like: cannot find contact: ' . $msg['author']);
 		return;
+	}
 
 	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
 		logger('diaspora_like: Ignoring this author.');
@@ -715,8 +749,8 @@ function diaspora_like($importer,$xml,$msg) {
 	}
 
 	if($parent_author_signature) {
-//		$owner_signed_data = $guid . ';' . $parent_guid . ';' . $target_type . ';' . $positive . ';' . $msg['author'];
-		$owner_signed_data = $guid . ';' . $parent_guid . ';' . $target_type . ';' . $positive . ';' . $diaspora_handle;
+
+		$owner_signed_data = $guid . ';' . $target_type . ';' . $parent_guid . ';' . $positive . ';' . $diaspora_handle;
 
 		$parent_author_signature = base64_decode($parent_author_signature);
 
@@ -776,6 +810,8 @@ EOT;
 	$plink = '[url=' . $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $parent_item['id'] . ']' . $post_type . '[/url]';
 	$arr['body'] =  sprintf( $bodyverb, $ulink, $alink, $plink );
 
+	$arr['app']  = 'Diaspora';
+
 	$arr['private'] = $parent_item['private'];
 	$arr['verb'] = $activity;
 	$arr['object-type'] = $objtype;
@@ -785,6 +821,14 @@ EOT;
 	$arr['last-child'] = 0;
 
 	$message_id = item_store($arr);
+
+
+	if($message_id) {
+		q("update item set plink = '%s' where id = %d limit 1",
+			dbesc($a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $message_id),
+			intval($message_id)
+		);
+	}
 
 	if(! $parent_author_signature) {
 		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
@@ -897,11 +941,12 @@ function diaspora_send_status($item,$owner,$contact) {
 		}
 	}	
 
-	$body = xmlify(bb2diaspora($body));
+	$body = xmlify(html_entity_decode(bb2diaspora($body)));
+
 	$public = (($item['private']) ? 'false' : 'true');
 
 	require_once('include/datetime.php');
-	$created = datetime_convert('UTC','UTC',$item['created'],'Y-m-d h:i:s \U\T\C');
+	$created = datetime_convert('UTC','UTC',$item['created'],'Y-m-d H:i:s \U\T\C');
 
 	$tpl = get_markup_template('diaspora_post.tpl');
 	$msg = replace_macros($tpl, array(
@@ -953,7 +998,7 @@ function diaspora_send_images($item,$owner,$contact,$images) {
 			'$guid' => xmlify($r[0]['guid']),
 			'$handle' => xmlify($image['handle']),
 			'$public' => xmlify($public),
-			'$created_at' => xmlify(datetime_convert('UTC','UTC',$r[0]['created'],'Y-m-d h:i:s \U\T\C'))
+			'$created_at' => xmlify(datetime_convert('UTC','UTC',$r[0]['created'],'Y-m-d H:i:s \U\T\C'))
 		));
 
 
@@ -990,7 +1035,7 @@ function diaspora_send_followup($item,$owner,$contact) {
 		$like = false;
 	}
 
-	$text = bb2diaspora($item['body']);
+	$text = html_entity_decode(bb2diaspora($item['body']));
 
 	// sign it
 
@@ -1035,14 +1080,6 @@ function diaspora_send_relay($item,$owner,$contact) {
 	else
 		return;
 
-	// fetch the original signature	
-	$r = q("select * from sign where iid = %d limit 1",
-		intval($item['id'])
-	);
-	if(! count($r)) 
-		return;
-	$orig_sign = $r[0];
-
 	if($item['verb'] === ACTIVITY_LIKE) {
 		$tpl = get_markup_template('diaspora_like_relay.tpl');
 		$like = true;
@@ -1054,14 +1091,59 @@ function diaspora_send_relay($item,$owner,$contact) {
 		$like = false;
 	}
 
-	$text = bb2diaspora($item['body']);
+	$body = $item['body'];
+
+	$text = html_entity_decode(bb2diaspora($body));
+
+	// fetch the original signature	if somebody sent the post to us to relay
+	// If we are relaying for a reply originating on our own account, there wasn't a 'send to relay'
+	// action. It wasn't needed. In that case create the original signature and the 
+	// owner (parent author) signature
+	// comments from other networks will be relayed under our name, with a brief 
+	// preamble to describe what's happening and noting the real author
+
+	$r = q("select * from sign where iid = %d limit 1",
+		intval($item['id'])
+	);
+	if(count($r)) { 
+		$orig_sign = $r[0];
+		$signed_text = $orig_sign['signed_text'];
+		$authorsig = $orig_sign['signature'];
+		$handle = $orig_sign['signer'];
+	}
+	else {
+
+		$itemcontact = q("select * from contact where `id` = %d limit 1",
+			intval($item['contact-id'])
+		);
+		if(count($itemcontact)) {
+			if(! $itemcontact[0]['self']) {
+				$prefix = sprintf( t('[Relayed] Comment authored by %s from network %s'),
+					'['. $item['author-name'] . ']' . '(' . $item['author-link'] . ')',  
+					network_to_name($itemcontact['network'])) . "\n";
+				$body = $prefix . $body;
+			}
+		}
+		else {
+
+			if($like)
+				$signed_text = $item['guid'] . ';' . $target_type . ';' . $parent_guid . ';' . $positive . ';' . $myaddr;
+			else
+				$signed_text = $item['guid'] . ';' . $parent_guid . ';' . $text . ';' . $myaddr;
+
+			$authorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha'));
+
+			q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+				intval($item['id']),
+				dbesc($signed_text),
+				dbesc(base64_encode($authorsig)),
+				dbesc($myaddr)
+			);
+			$handle = $myaddr;
+		}
+	}
 
 	// sign it
-
-	if($like)
-		$parent_signed_text = $orig_sign['signed_text'];
-	else
-		$parent_signed_text = $orig_sign['signed_text'];
 
 	$parentauthorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha'));
 
@@ -1071,17 +1153,10 @@ function diaspora_send_relay($item,$owner,$contact) {
 		'$target_type' =>xmlify($target_type),
 		'$authorsig' => xmlify($orig_sign['signature']),
 		'$parentsig' => xmlify($parentauthorsig),
-		'$text' => xmlify($text),
+		'$body' => xmlify($text),
 		'$positive' => xmlify($positive),
-		'$diaspora_handle' => xmlify($myaddr)
+		'$handle' => xmlify($handle)
 	));
-
-	// fetch the original signature	
-	$r = q("select * from sign where iid = %d limit 1",
-		intval($item['id'])
-	);
-	if(! count($r)) 
-		return;
 
 	logger('diaspora_relay_comment: base message: ' . $msg, LOGGER_DATA);
 

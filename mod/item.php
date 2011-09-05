@@ -15,6 +15,8 @@
  *
  */  
 
+require_once('include/crypto.php');
+
 function item_post(&$a) {
 
 	if((! local_user()) && (! remote_user()))
@@ -330,6 +332,15 @@ function item_post(&$a) {
 		}
 	}
 
+	// embedded bookmark in post? convert to regular url and set bookmark flag
+
+	$bookmark = 0;
+	if(preg_match_all("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/m",$body,$match)) {
+		$bookmark = 1;
+		$body = preg_replace("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/m",'[url=$1]$2[/url]',$body);
+	}
+
+
 	/**
 	 * Fold multi-line [code] sequences
 	 */
@@ -351,7 +362,7 @@ function item_post(&$a) {
 	 * and we are replying, and there isn't one already
 	 */
 
-	if(($parent_contact) && ($parent_contact['network'] === 'stat') 
+	if(($parent_contact) && ($parent_contact['network'] === NETWORK_OSTATUS) 
 		&& ($parent_contact['nick']) && (! in_array('@' . $parent_contact['nick'],$tags))) {
 		$body = '@' . $parent_contact['nick'] . ' ' . $body;
 		$tags[] = '@' . $parent_contact['nick'];
@@ -402,7 +413,8 @@ function item_post(&$a) {
 						);
 					}
 					else {
-						$r = q("SELECT * FROM `contact` WHERE `nick` = '%s' AND `uid` = %d LIMIT 1",
+						$r = q("SELECT * FROM `contact` WHERE `attag` = '%s' OR `nick` = '%s' AND `uid` = %d ORDER BY `attag` DESC LIMIT 1",
+							dbesc($name),
 							dbesc($name),
 							intval($profile_uid)
 						);
@@ -506,6 +518,7 @@ function item_post(&$a) {
 	$datarray['private']       = $private;
 	$datarray['pubmail']       = $pubmail_enable;
 	$datarray['attach']        = $attachments;
+	$datarray['bookmark']      = intval($bookmark);
 	$datarray['thr-parent']    = $thr_parent;
 
 	/**
@@ -548,8 +561,8 @@ function item_post(&$a) {
 
 	$r = q("INSERT INTO `item` (`guid`, `uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `received`, `changed`, `uri`, `thr-parent`, `title`, `body`, `app`, `location`, `coord`, 
-		`tag`, `inform`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach` )
-		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s' )",
+		`tag`, `inform`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`, `bookmark` )
+		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d )",
 		dbesc($datarray['guid']),
 		intval($datarray['uid']),
 		dbesc($datarray['type']),
@@ -582,7 +595,8 @@ function item_post(&$a) {
 		dbesc($datarray['deny_gid']),
 		intval($datarray['private']),
 		intval($datarray['pubmail']),
-		dbesc($datarray['attach'])
+		dbesc($datarray['attach']),
+		intval($datarray['bookmark'])
 	);
 
 	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
@@ -673,6 +687,27 @@ function item_post(&$a) {
 				);
 
 				pop_lang();
+			}
+
+			// We won't be able to sign Diaspora comments for authenticated visitors - we don't have their private key
+
+			if($self) {
+				require_once('include/bb2diaspora.php');
+				$signed_body = html_entity_decode(bb2diaspora($datarray['body']));
+				$myaddr = $a->user['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+				if($datarray['verb'] === ACTIVITY_LIKE) 
+					$signed_text = $datarray['guid'] . ';' . 'Post' . ';' . $parent_item['guid'] . ';' . 'true' . ';' . $myaddr;
+				else
+			    	$signed_text = $datarray['guid'] . ';' . $parent_item['guid'] . ';' . $signed_body . ';' . $myaddr;
+
+				$authorsig = base64_encode(rsa_sign($signed_text,$a->user['prvkey'],'sha'));
+
+				q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+					intval($post_id),
+            		dbesc($signed_text),
+            		dbesc(base64_encode($authorsig)),
+            		dbesc($myaddr)
+        		);
 			}
 		}
 		else {
@@ -798,6 +833,12 @@ function item_post(&$a) {
 			}
 		}
 	}
+
+
+
+
+
+
 
 	logger('post_complete');
 

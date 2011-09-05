@@ -1,4 +1,4 @@
-<script src="include/jquery.htmlstream.js"></script>
+<script src="js/jquery.htmlstream.js"></script>
 <script>
 	/* ajax updater */
 	function updateEnd(data){

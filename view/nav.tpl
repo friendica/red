@@ -81,7 +81,12 @@
 		
 		{{ if $nav.apps }}
 			<li id="nav-apps-link" class="nav-menu $sel.apps">
-				<a class=" $nav.apps.2" href="$nav.apps.0" title="$nav.apps.3" >$nav.apps.1</a>
+				<a class=" $nav.apps.2" href="#" rel="#nav-apps-menu" title="$nav.apps.3" >$nav.apps.1</a>
+				<ul id="nav-apps-menu" class="menu-popup">
+					{{ for $apps as $ap }}
+					<li><a href="$ap.url">$ap.name</a></li>
+					{{ endfor }}
+				</ul>
 			</li>
 		{{ endif }}
 	</ul>

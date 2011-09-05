@@ -3,30 +3,30 @@ by Tobias Diekershoff
    tobias.diekershoff(at)gmx.net
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!! This addon is currently in under development. If you have any problem    !!
+!! This addon is currently under development. If you have any problem       !!
 !! with it, please contact the Author.                                      !!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 With this addon to Friendika you can give your user the possibility to post
-their public messages to any StatusNet instance like identi.ca for example. The
-messages will be strapped their rich context and shortened to to the character
+their public messages to any StatusNet instance (like identi.ca for example). 
+The messages will be strapped their rich context and shortened to to the character
 limit of the StatusNet instance in question if necessary. If shortening of the
 message was performed a link will be added to the notice pointing to the
 original message on your server.
 
-There is a similar plugin to forward public messages to Twitter Twitter Plugin.
+There is a similar plugin to forward public messages to Twitter: Twitter Plugin.
 
 Online version of this document: http://ur1.ca/35mpb
 
 ___ Requirements ___
 
 Due to the distributed nature of the StatusNet network, each user who wishes to
-forward public messages to a StatusNet account has get the OAuth credentials
-for themselves, which makes this addon a little bit more user unfriendly then
-the Twitter Plugin is. Nothing to geeky though!
+forward public messages to a StatusNet account has to get the OAuth credentials
+for themselves, which makes this addon a little bit more user unfriendly than
+the Twitter Plugin is. Nothing too geeky though!
 
 The inclusion of a shorturl for the original posting in cases when the message
-was longer then the maximal allowed notice length requires it, that you have
+was longer than the maximal allowed notice length requires it, that you have
 PHP5+ and curl on your server.
 Where to find
 
@@ -58,7 +58,7 @@ To get the OAuth Consumer key pair the user has to (a) ask her Friendika admin
 if a pair already exists or (b) has to register the Friendika server as a
 client application on the StatusNet server. This can be done from the account
 settings under "Connect -> Connections -> Register an OAuth client application
--> Register new application".
+-> Register a new application".
 
 During the registration of the OAuth client remember the following:
  * there is no callback url
@@ -69,7 +69,7 @@ During the registration of the OAuth client remember the following:
 After the required credentials for the application are stored in the
 configuration you have to actually connect your Friendika account with
 StatusNet. To do so follow the Sign in with StatusNet button, allow the access
-and copy the security code into the addon configuration. Friendika will then
+and copy the security code into the plugin configuration. Friendika will then
 try to acquire the final OAuth credentials from the API, if successful the
-addon settings will allow you to select to post your public messages to your
+plugin settings will allow you to select to post your public messages to your
 StatusNet account.

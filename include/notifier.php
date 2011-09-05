@@ -1,5 +1,20 @@
 <?php
+
 require_once("boot.php");
+
+/*
+ * This file was at one time responsible for doing all deliveries, but this caused
+ * big problems on shared hosting systems, where the process might get killed by the 
+ * hosting provider and nothing would get delivered. 
+ * It now only delivers one message under certain cases, and invokes a queued
+ * delivery mechanism (include/deliver.php) to deliver individual contacts at 
+ * controlled intervals.
+ * This has a much better chance of surviving random processes getting killed
+ * by the hosting provider. 
+ * A lot of this code is duplicated in include/deliver.php until we have time to go back
+ * and re-structure the delivery procedure based on the obstacles that have been thrown at 
+ * us by hosting providers. 
+ */
 
 function notifier_run($argv, $argc){
 	global $a, $db;
@@ -35,7 +50,6 @@ function notifier_run($argv, $argc){
 	$cmd = $argv[1];
 
 	switch($cmd) {
-
 		case 'mail':
 		default:
 			$item_id = intval($argv[2]);
@@ -46,6 +60,8 @@ function notifier_run($argv, $argc){
 	}
 
 	$expire = false;
+	$mail = false;
+	$fsuggest = false;
 	$top_level = false;
 	$recipients = array();
 	$url_recipients = array();
@@ -54,6 +70,7 @@ function notifier_run($argv, $argc){
 
 	if($cmd === 'mail') {
 		$normal_mode = false;
+		$mail = true;
 		$message = q("SELECT * FROM `mail` WHERE `id` = %d LIMIT 1",
 				intval($item_id)
 		);
@@ -79,6 +96,8 @@ function notifier_run($argv, $argc){
 	}
 	elseif($cmd === 'suggest') {
 		$normal_mode = false;
+		$fsuggest = true;
+
 		$suggest = q("SELECT * FROM `fsuggest` WHERE `id` = %d LIMIT 1",
 			intval($item_id)
 		);
@@ -104,7 +123,8 @@ function notifier_run($argv, $argc){
 		$uid = $r[0]['uid'];
 		$updated = $r[0]['edited'];
 
-		$items = q("SELECT * FROM `item` WHERE `parent` = %d ORDER BY `id` ASC",
+		$items = q("SELECT `item`.*, `sign`.`signed_text`,`sign`.`signature`,`sign`.`signer` 
+			FROM `item` LEFT JOIN `sign` ON `sign`.`iid` = `item`.`id` WHERE `parent` = %d ORDER BY `id` ASC",
 			intval($parent_id)
 		);
 
@@ -119,8 +139,11 @@ function notifier_run($argv, $argc){
 				$item['deleted'] = 1;
 		}
 
-		if(count($items) == 1 && $items[0]['uri'] === $items[0]['parent-uri'])
+		if((count($items) == 1) && ($items[0]['uri'] === $items[0]['parent-uri'])) {
+			logger('notifier: top level post');
 			$top_level = true;
+		}
+
 	}
 
 	$r = q("SELECT `contact`.*, `user`.`pubkey` AS `upubkey`, `user`.`prvkey` AS `uprvkey`, 
@@ -136,6 +159,8 @@ function notifier_run($argv, $argc){
 
 	$owner = $r[0];
 
+	$walltowall = ((($top_level) && ($owner['id'] != $items[0]['contact-id'])) ? true : false);
+
 	$hub = get_config('system','huburl');
 
 	// If this is a public conversation, notify the feed hub
@@ -144,7 +169,7 @@ function notifier_run($argv, $argc){
 	// fill this in with a single salmon slap if applicable
 	$slap = '';
 
-	if($cmd != 'mail' && $cmd != 'suggest') {
+	if(! ($mail || $fsuggest)) {
 
 		require_once('include/group.php');
 
@@ -235,7 +260,6 @@ function notifier_run($argv, $argc){
 
 		$r = q("SELECT * FROM `contact` WHERE `id` IN ( $conversant_str ) AND `blocked` = 0 AND `pending` = 0");
 
-
 		if(count($r))
 			$contacts = $r;
 	}
@@ -270,7 +294,7 @@ function notifier_run($argv, $argc){
 			'$birthday'     => $birthday
 	));
 
-	if($cmd === 'mail') {
+	if($mail) {
 		$public_message = false;  // mail is  not public
 
 		$body = fix_private_photos($item['body'],$owner['uid']);
@@ -286,7 +310,7 @@ function notifier_run($argv, $argc){
 			'$parent_id'    => xmlify($item['parent-uri'])
 		));
 	}
-	elseif($cmd === 'suggest') {
+	elseif($fsuggest) {
 		$public_message = false;  // suggestions are not public
 
 		$sugg_template = get_markup_template('atom_suggest.tpl');
@@ -374,16 +398,42 @@ function notifier_run($argv, $argc){
 		dbesc($recip_str)
 	);
 
-	// delivery loop
 
 	require_once('include/salmon.php');
 
+	$interval = ((get_config('system','delivery_interval') === false) ? 2 : intval(get_config('system','delivery_interval')));
+
+	// delivery loop
+
 	if(count($r)) {
+
+		foreach($r as $contact) {
+			if((! $mail) && (! $fsuggest) && (! $followup) && (! $contact['self'])) {
+				q("insert into deliverq ( `cmd`,`item`,`contact` ) values ('%s', %d, %d )",
+					dbesc($cmd),
+					intval($item_id),
+					intval($contact['id'])
+				);
+			}
+		}
+
 		foreach($r as $contact) {
 			if($contact['self'])
 				continue;
 
+			// potentially more than one recipient. Start a new process and space them out a bit.
+			// we will deliver single recipient types of message and email receipients here. 
+
+			if((! $mail) && (! $fsuggest) && (! $followup)) {
+				proc_run('php','include/delivery.php',$cmd,$item_id,$contact['id']);
+				if($interval)
+					@time_sleep_until(microtime(true) + (float) $interval);
+				continue;
+			}
+
 			$deliver_status = 0;
+
+			logger("main delivery by notifier: followup=$followup mail=$mail fsuggest=$fsuggest");
 
 			switch($contact['network']) {
 				case NETWORK_DFRN:
@@ -558,7 +608,8 @@ function notifier_run($argv, $argc){
 						diaspora_send_relay($target_item,$owner,$contact);
 						break;
 					}		
-					elseif($top_level) {
+					elseif(($top_level) && (! $walltowall)) {
+						// currently no workable solution for sending walltowall
 						diaspora_send_status($target_item,$owner,$contact);
 						break;
 					}
@@ -589,53 +640,32 @@ function notifier_run($argv, $argc){
 		}
 	}
 
-	if((strlen($hub)) && ($public_message)) {
-		$hubs = explode(',', $hub);
-		if(count($hubs)) {
-			foreach($hubs as $h) {
-				$h = trim($h);
-				if(! strlen($h))
-					continue;
-				$params = 'hub.mode=publish&hub.url=' . urlencode($a->get_baseurl() . '/dfrn_poll/' . $owner['nickname'] );
-				post_url($h,$params);
-				logger('pubsub: publish: ' . $h . ' ' . $params . ' returned ' . $a->get_curl_code());
-				if(count($hubs) > 1)
-					sleep(7);				// try and avoid multiple hubs responding at precisely the same time
-			}
-		}
-	}
 
 	if($public_message) {
 
-		/**
-		 *
-		 * If you have less than 999 dfrn friends and it's a public message,
-		 * we'll just go ahead and push them out securely with dfrn/rino or Diaspora.
-		 * If you've got more than that, you'll have to rely on PuSH delivery.
-		 *
-		 */
-
-		$max_allowed = ((get_config('system','maxpubdeliver') === false) ? 999 : intval(get_config('system','maxpubdeliver')));
-				
-		/**
-		 *
-		 * Only get the bare essentials and go back for the full record. 
-		 * If you've got a lot of friends and we grab all the details at once it could exhaust memory. 
-		 *
-		 */
-
 		$r = q("SELECT `id`, `name` FROM `contact` 
 			WHERE `network` in ('%s','%s') AND `uid` = %d AND `blocked` = 0 AND `pending` = 0
-			AND `rel` != %d ",
+			AND `rel` != %d order by rand() ",
 			dbesc(NETWORK_DFRN),
 			dbesc(NETWORK_DIASPORA),
 			intval($owner['uid']),
 			intval(CONTACT_IS_SHARING)
 		);
 
-		if((count($r)) && (($max_allowed == 0) || (count($r) < $max_allowed))) {
-
+		if(count($r)) {
 			logger('pubdeliver: ' . print_r($r,true));
+
+			// throw everything into the queue in case we get killed
+
+			foreach($r as $rr) {
+				if((! $mail) && (! $fsuggest) && (! $followup)) {
+					q("insert into deliverq ( `cmd`,`item`,`contact` ) values ('%s', %d, %d )",
+						dbesc($cmd),
+						intval($item_id),
+						intval($rr['id'])
+					);
+				}
+			}
 
 			foreach($r as $rr) {
 
@@ -646,63 +676,32 @@ function notifier_run($argv, $argc){
 					continue;
 				}
 
-				$n = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
-					intval($rr['id'])
-				);
-
-				if(count($n)) {
-					$contact = $n[0];
-					logger('pubdeliver: network: ' . $contact['network']);
-
-					switch($contact['network']) {
-						case NETWORK_DFRN :
-							logger('notifier: dfrnpubdelivery: ' . $contact['name']);
-							$deliver_status = dfrn_deliver($owner,$contact,$atom);
-							break;
-						case NETWORK_DIASPORA :
-							require_once('include/diaspora.php');
-
-							logger('notifier: diaspora pubdelivery: ' . $contact['name']);
-
-							if(get_config('system','dfrn_only') || (! get_config('system','diaspora_enabled')) || (! $normal_mode)) {
-								logger('notifier: diaspora pubdelivery not allowed at this time');
-								break;
-							}
-							
-							if(! $contact['pubkey']) {
-								logger('notifier: diaspora pubdelivery: no pubkey');
-								break;
-							}
-					
-							if($target_item['verb'] === ACTIVITY_DISLIKE) {
-								// unsupported
-								break;
-							}
-							elseif(($target_item['deleted']) && ($target_item['verb'] !== ACTIVITY_LIKE)) {
-								// diaspora delete, 
-								diaspora_send_retraction($target_item,$owner,$contact);
-								break;
-							}
-							elseif($followup) {
-								// send comments, likes and retractions of likes to owner to relay
-								diaspora_send_followup($target_item,$owner,$contact);
-								break;
-							}
-							elseif($target_item['parent'] != $target_item['id']) {
-								// we are the relay - send comments, likes and unlikes to our conversants
-								diaspora_send_relay($target_item,$owner,$contact);
-								break;
-							}		
-							elseif($top_level) {
-								diaspora_send_status($target_item,$owner,$contact);
-								break;
-							}
-						default:
-							break;
-					}
+				if((! $mail) && (! $fsuggest) && (! $followup)) {
+					logger('notifier: delivery agent: ' . $rr['name'] . ' ' . $rr['id']); 
+					proc_run('php','include/delivery.php',$cmd,$item_id,$rr['id']);
+					if($interval)
+						@time_sleep_until(microtime(true) + (float) $interval);
 				}
 			}
 		}
+
+
+		if(strlen($hub)) {
+			$hubs = explode(',', $hub);
+			if(count($hubs)) {
+				foreach($hubs as $h) {
+					$h = trim($h);
+					if(! strlen($h))
+						continue;
+					$params = 'hub.mode=publish&hub.url=' . urlencode($a->get_baseurl() . '/dfrn_poll/' . $owner['nickname'] );
+					post_url($h,$params);
+					logger('pubsub: publish: ' . $h . ' ' . $params . ' returned ' . $a->get_curl_code());
+					if(count($hubs) > 1)
+						sleep(7);				// try and avoid multiple hubs responding at precisely the same time
+				}
+			}
+		}
+
 	}
 
 	return;

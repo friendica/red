@@ -15,7 +15,7 @@ function convert_uninstall() {
 }
 
 function convert_app_menu($a,&$b) {
-	$b['app_menu'] .= '<div class="app-title"><a href="convert">Units Conversion</a></div>'; 
+	$b['app_menu'][] = Array('url'=>'convert', 'name'=>'Units Conversion'); 
 }
 
 

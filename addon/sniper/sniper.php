@@ -22,7 +22,7 @@ function sniper_uninstall() {
 }
 
 function sniper_app_menu($a,&$b) {
-    $b['app_menu'] .= '<div class="app-title"><a href="sniper">Hot Shot Sniper</a></div>';
+	$b['app_menu'][] = Array('url'=>'sniper', 'name'=>'Hot Shot Sniper'); 
 }
 
 

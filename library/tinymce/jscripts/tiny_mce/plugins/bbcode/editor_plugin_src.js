@@ -70,6 +70,7 @@
 
 
 			// example: <strong> to [b]
+			rep(/<a class=\"bookmark\" href=\"(.*?)\".*?>(.*?)<\/a>/gi,"[bookmark=$1]$2[/bookmark]");
 			rep(/<a.*?href=\"(.*?)\".*?>(.*?)<\/a>/gi,"[url=$1]$2[/url]");
 			rep(/<span style=\"font-size:(.*?);\">(.*?)<\/span>/gi,"[size=$1]$2[/size]");
 			rep(/<span style=\"color:(.*?);\">(.*?)<\/span>/gi,"[color=$1]$2[/color]");
@@ -119,6 +120,7 @@
 			rep(/\[\/i\]/gi,"</em>");
 			rep(/\[u\]/gi,"<u>");
 			rep(/\[\/u\]/gi,"</u>");
+			rep(/\[bookmark=([^\]]+)\](.*?)\[\/bookmark\]/gi,"<a class=\"bookmark\" href=\"$1\">$2</a>");
 			rep(/\[url=([^\]]+)\](.*?)\[\/url\]/gi,"<a href=\"$1\">$2</a>");
 			rep(/\[url\](.*?)\[\/url\]/gi,"<a href=\"$1\">$1</a>");
 			rep(/\[img=(.*?)x(.*?)\](.*?)\[\/img\]/gi,"<img width=\"$1\" height=\"$2\" src=\"$3\" />");
