@@ -860,9 +860,36 @@ function profile_sidebar($profile, $block = 0) {
 		$connect = False; 
 
 
-	// show edit to yourself
+	// show edit profile to yourself
 	if ($profile['uid'] == local_user()) {
 		$profile['edit'] = array($a->get_baseurl(). '/profiles', t('Profiles'),"", t('Manage/edit profiles'));
+		
+		$r = q("SELECT * FROM `profile` WHERE `uid` = %d",
+				local_user());
+		
+		$profile['menu'] = array(
+			'chg_photo' => t('Change profile photo'),
+			'cr_new' => t('Create New Profile'),
+			'entries' => array(),
+		);
+				
+		if(count($r)) {
+
+			foreach($r as $rr) {
+				$profile['menu']['entries'][] = array(
+					'photo' => $rr['thumb'],
+					'id' => $rr['id'],
+					'alt' => t('Profile Image'),
+					'profile_name' => $rr['profile-name'],
+					'visible' => (($rr['is-default']) ? '<strong>' . t('visible to everybody') . '</strong>' 
+						: '<a href="' . $a->get_baseurl() . '/profperm/' . $rr['id'] . '" />' . t('Edit visibility') . '</a>')
+				);
+			}
+
+
+		}
+		
+		
 	}
 
 

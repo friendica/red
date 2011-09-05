@@ -35,7 +35,7 @@ a:hover {color: @LinkHover; text-decoration: underline; }
 .tool {
 	height: auto; overflow: auto;
 	.label { float: left;}
-	.icon { float: right; }
+	.action { float: right; }
 }
 
 /* popup notifications */
@@ -168,11 +168,11 @@ ul.menu-popup {
 	
 	.shadow();
 	
-		a { display: block; color: @MenuItem; padding: 5px 10px;}
+		a { display: block; color: @MenuItem; padding: 5px 10px; text-decoration: none;}
 		a:hover { background-color: @MenuItemHoverBg; }
 		.menu-sep  { border-top: 1px solid @MenuItemSeparator; }
 		li { float: none;  overflow: auto; height: auto; display: block; }
-		
+		li img { float: left; width: 16px; height: 16px; padding-right: 5px;}
 		.empty {
 			padding: 5px;
 			text-align: center;

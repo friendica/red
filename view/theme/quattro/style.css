@@ -92,7 +92,7 @@ a:hover {
 .tool .label {
   float: left;
 }
-.tool .icon {
+.tool .action {
   float: right;
 }
 /* popup notifications */
@@ -268,6 +268,7 @@ ul.menu-popup a {
   display: block;
   color: #2d2d2d;
   padding: 5px 10px;
+  text-decoration: none;
 }
 ul.menu-popup a:hover {
   background-color: #bdcdd4;
@@ -280,6 +281,12 @@ ul.menu-popup li {
   overflow: auto;
   height: auto;
   display: block;
+}
+ul.menu-popup li img {
+  float: left;
+  width: 16px;
+  height: 16px;
+  padding-right: 5px;
 }
 ul.menu-popup .empty {
   padding: 5px;
