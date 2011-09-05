@@ -2435,6 +2435,7 @@ a.mail-list-link {
 }
 
 #crepair-nick-label,
+#crepair-attag-label,
 #crepair-url-label,
 #crepair-request-label,
 #crepair-confirm-label,
@@ -2446,6 +2447,7 @@ a.mail-list-link {
 }
 
 #crepair-nick,
+#crepair-attag,
 #crepair-url,
 #crepair-request,
 #crepair-confirm,
