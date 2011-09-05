@@ -344,7 +344,7 @@ function admin_page_site(&$a) {
  * Users admin page
  */
 function admin_page_users_post(&$a){
-	$pending = ( x(£_POST, 'pending') ? $_POST['pending'] : Array() );
+	$pending = ( x($_POST, 'pending') ? $_POST['pending'] : Array() );
 	$users = ( x($_POST, 'user') ? $_POST['user'] : Array() );
 	
 	if (x($_POST,'page_users_block')){
@@ -632,7 +632,7 @@ function admin_page_logs(&$a){
 
 	$f = get_config('system','logfile');
 	$size = filesize($f);
-	if($size > 5000000)
+	if($size > 5000000 || $size < 0)
 		$size = 5000000;
 
 	$data = '';

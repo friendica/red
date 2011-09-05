@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1084 );
+define( 'UPDATE_VERSION' , 1087 );
 
 /**
  *
@@ -704,6 +704,25 @@ function update_1083() {
 	`cmd` CHAR( 32 ) NOT NULL ,
 	`item` INT NOT NULL ,
 	`contact` INT NOT NULL
-	) ENGINE = MYISAM ;");
+	) ENGINE = MYISAM ");
 
 }
+
+function update_1084() {
+	q("ALTER TABLE `contact` ADD `attag` CHAR( 255 ) NOT NULL AFTER `nick` ");
+}
+
+function update_1085() {
+	q("CREATE TABLE IF NOT EXISTS `search` (
+	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`uid` INT NOT NULL ,
+	`term` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+	INDEX ( `uid` ),
+	INDEX ( `term` )
+	) ENGINE = MYISAM ");
+}
+
+function update_1086() {
+	q("ALTER TABLE `item` ADD `bookmark` tinyint(1) NOT NULL DEFAULT '0' AFTER `starred` ");
+}
+

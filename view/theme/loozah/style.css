@@ -1668,7 +1668,7 @@ padding: 5px 10px 0px;
 	float: left;
 	margin: 4px;
 }
-.acl-list-item p { font-size: 10px; margin: 0px; padding: 2px 0px 1px; }
+.acl-list-item p { height: 12px; font-size: 10px; margin: 0px; padding: 2px 0px 1px; overflow: hidden;}
 .acl-list-item a { 
 	font-size: 8px;
 	display: block;
@@ -1870,6 +1870,25 @@ a.mail-list-link {
 #sidebar-group-list li {
 	margin-top: 10px;
 }
+
+
+#search-save {
+    margin-left: 5px;
+}
+.groupsideedit {
+    margin-right: 10px;
+}
+#saved-search-ul {
+    list-style-type: none;
+}
+.savedsearchdrop, .savedsearchterm {
+    float: left;
+    margin-top: 10px;
+}
+.savedsearchterm {
+    margin-left: 10px;
+}
+
 
 #side-follow-wrapper {
 	margin-top: 20px;
@@ -2384,6 +2403,7 @@ a.mail-list-link {
 }
 
 #crepair-nick-label,
+#crepair-attag-label,
 #crepair-url-label,
 #crepair-request-label,
 #crepair-confirm-label,
@@ -2395,6 +2415,7 @@ a.mail-list-link {
 }
 
 #crepair-nick,
+#crepair-attag,
 #crepair-url,
 #crepair-request,
 #crepair-confirm,
@@ -2405,7 +2426,8 @@ a.mail-list-link {
 }
 
 #netsearch-box {
-	margin-top: 20px;	
+	margin-top: 20px;
+	width: 150px;	
 }
 
 #netsearch-box #search-submit {

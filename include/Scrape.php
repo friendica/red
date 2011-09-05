@@ -332,10 +332,12 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 	if(! $url)
 		return $result;
 
+	$network = null;
 	$diaspora = false;
 	$diaspora_base = '';
 	$diaspora_guid = '';	
 	$diaspora_key = '';
+	$has_lrdd = false;
 	$email_conversant = false;
 
 	$twitter = ((strpos($url,'twitter.com') !== false) ? true : false);
@@ -352,6 +354,8 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 			$links = lrdd($url);
 
 		if(count($links)) {
+			$has_lrdd = true;
+
 			logger('probe_url: found lrdd links: ' . print_r($links,true), LOGGER_DATA);
 			foreach($links as $link) {
 				if($link['@attributes']['rel'] === NAMESPACE_ZOT)
@@ -493,7 +497,7 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 	if($network !== NETWORK_ZOT && $network !== NETWORK_DFRN && $network !== NETWORK_MAIL) {
 		if($diaspora)
 			$network = NETWORK_DIASPORA;
-		else
+		elseif($has_lrdd)
 			$network  = NETWORK_OSTATUS;
 		$priority = 0;
 
@@ -637,7 +641,7 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 					$vcard['nick'] = trim(substr($vcard['nick'],0,strpos($vcard['nick'],' ')));
 			}
 			if(! $network)
-				$network = 'feed';
+				$network = NETWORK_FEED;
 			if(! $priority)
 				$priority = 2;
 		}
@@ -651,10 +655,14 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 	if(! $profile)
 		$profile = $url;
 
+	// No human could be associated with this link, use the URL as the contact name
+
+	if(($network === NETWORK_FEED) && ($poll) && (! x($vcard,'fn')))
+		$vcard['fn'] = $url;
+
 	$vcard['fn'] = notags($vcard['fn']);
 	$vcard['nick'] = str_replace(' ','',notags($vcard['nick']));
-
-
+		
 	$result['name'] = $vcard['fn'];
 	$result['nick'] = $vcard['nick'];
 	$result['url'] = $profile;

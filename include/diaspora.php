@@ -398,6 +398,7 @@ function diaspora_request($importer,$xml) {
 
 function diaspora_post($importer,$xml) {
 
+	$a = get_app();
 	$guid = notags(unxmlify($xml->guid));
 	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
 
@@ -457,7 +458,14 @@ function diaspora_post($importer,$xml) {
 	$datarray['body'] = $body;
 	$datarray['app']  = 'Diaspora';
 
-	item_store($datarray);
+	$message_id = item_store($datarray);
+
+	if($message_id) {
+		q("update item set plink = '%s' where id = %d limit 1",
+			dbesc($a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $message_id),
+			intval($message_id)
+		);
+	}
 
 	return;
 
@@ -465,6 +473,7 @@ function diaspora_post($importer,$xml) {
 
 function diaspora_comment($importer,$xml,$msg) {
 
+	$a = get_app();
 	$guid = notags(unxmlify($xml->guid));
 	$parent_guid = notags(unxmlify($xml->parent_guid));
 	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
@@ -576,6 +585,13 @@ function diaspora_comment($importer,$xml,$msg) {
 
 	$message_id = item_store($datarray);
 
+	if($message_id) {
+		q("update item set plink = '%s' where id = %d limit 1",
+			dbesc($a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $message_id),
+			intval($message_id)
+		);
+	}
+
 	if(! $parent_author_signature) {
 		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
 			intval($message_id),
@@ -595,6 +611,7 @@ function diaspora_comment($importer,$xml,$msg) {
 
 function diaspora_photo($importer,$xml,$msg) {
 
+	$a = get_app();
 	$remote_photo_path = notags(unxmlify($xml->remote_photo_path));
 
 	$remote_photo_name = notags(unxmlify($xml->remote_photo_name));
@@ -732,8 +749,8 @@ function diaspora_like($importer,$xml,$msg) {
 	}
 
 	if($parent_author_signature) {
-//		$owner_signed_data = $guid . ';' . $parent_guid . ';' . $target_type . ';' . $positive . ';' . $msg['author'];
-		$owner_signed_data = $guid . ';' . $parent_guid . ';' . $target_type . ';' . $positive . ';' . $diaspora_handle;
+
+		$owner_signed_data = $guid . ';' . $target_type . ';' . $parent_guid . ';' . $positive . ';' . $diaspora_handle;
 
 		$parent_author_signature = base64_decode($parent_author_signature);
 
@@ -804,6 +821,14 @@ EOT;
 	$arr['last-child'] = 0;
 
 	$message_id = item_store($arr);
+
+
+	if($message_id) {
+		q("update item set plink = '%s' where id = %d limit 1",
+			dbesc($a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $message_id),
+			intval($message_id)
+		);
+	}
 
 	if(! $parent_author_signature) {
 		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",

@@ -262,23 +262,26 @@ function aes_unencapsulate($data,$prvkey) {
 }
 
 
-function zot_encapsulate($data,$sender,$pubkey) {
+// This has been superceded.
+
+function zot_encapsulate($data,$envelope,$pubkey) {
 $res = aes_encapsulate($data,$pubkey);
-openssl_public_encrypt($sender,$s,$pubkey);
-$s1 = base64url_encode($s,true);
 
 return <<< EOT
 <?xml version='1.0' encoding='UTF-8'?>
-<zot:env xmlns:zot='http://purl.org/zot/1.0'>
+<zot:msg xmlns:zot='http://purl.org/zot/1.0'>
  <zot:key>{$res['key']}</zot:key>
  <zot:iv>{$res['iv']}</zot:iv>
- <zot:sender>$s1</zot:sender>
+ <zot:env>$s1</zot:env>
+ <zot:sig key_id="$keyid">$sig</zot:sig>
  <zot:alg>AES-256-CBC</zot:alg>
  <zot:data type='application/magic-envelope+xml'>{$res['data']}</zot:data>
-</zot:env>
+</zot:msg>
 EOT;
 
 }
+
+// so has this
 
 function zot_unencapsulate($data,$prvkey) {
 	$ret = array();

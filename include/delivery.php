@@ -140,6 +140,8 @@ function delivery_run($argv, $argc){
 
 	$owner = $r[0];
 
+	$walltowall = ((($top_level) && ($owner['id'] != $items[0]['contact-id'])) ? true : false);
+
 	$public_message = true;
 
 	// fill this in with a single salmon slap if applicable
@@ -417,7 +419,8 @@ function delivery_run($argv, $argc){
 				diaspora_send_relay($target_item,$owner,$contact);
 				break;
 			}		
-			elseif($top_level) {
+			elseif(($top_level) && (! $walltowall)) {
+				// currently no workable solution for sending walltowall
 				logger('delivery: diaspora status: ' . $contact['name']);
 				diaspora_send_status($target_item,$owner,$contact);
 				break;

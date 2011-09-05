@@ -273,6 +273,10 @@ function facebook_post(&$a) {
 
 		$no_linking = get_pconfig($uid,'facebook','no_linking');
 
+		$no_wall = ((x($_POST,'facebook_no_wall')) ? intval($_POST['facebook_no_wall']) : 0);
+		set__pconfig($uid,'facebook','no_wall',$no_wall);
+	
+
 		$linkvalue = ((x($_POST,'facebook_linking')) ? intval($_POST['facebook_linking']) : 0);
 		set_pconfig($uid,'facebook','no_linking', (($linkvalue) ? 0 : 1));
 
@@ -359,12 +363,11 @@ function facebook_content(&$a) {
 		$checked = (($no_linking) ? '' : ' checked="checked" ');
 		$o .= '<input type="checkbox" name="facebook_linking" value="1"' . $checked . '/>' . ' ' . t('Link all your Facebook friends and conversations') . EOL ;
 
-		$hidden = (($a->user['hidewall'] || get_config('system','block_public')) ? true : false);
-		if(! $hidden) {
-			$o .= EOL;
-			$o .= t('Warning: Your Facebook privacy settings can not be imported.') . EOL;
-			$o .= t('Linked Facebook items <strong>may</strong> be publicly visible, depending on your privacy settings for this website/account.') . EOL;
-		}
+		$no_wall = get_pconfig(local_user(),'facebook','no_wall');
+		$checked = (($no_wall) ? ' checked="checked" ' : '');
+		$o .= '<input type="checkbox" name="facebook_no_wall" value="1"' . $checked . '/>' . ' ' . t('Do not link your Facebook profile wall posts - as these could be visible to people that would not be able to see them on Facebook.') . EOL ;
+
+
 		$o .= '<input type="submit" name="submit" value="' . t('Submit') . '" /></form></div>';
 	}
 
@@ -766,12 +769,13 @@ function fb_consume_all($uid) {
 	if(! $access_token)
 		return;
 	
-
-	$s = fetch_url('https://graph.facebook.com/me/feed?access_token=' . $access_token);
-	if($s) {
-		$j = json_decode($s);
-		logger('fb_consume_stream: wall: ' . print_r($j,true), LOGGER_DATA);
-		fb_consume_stream($uid,$j,true);
+	if(! get_pconfig($uid,'facebook','no_wall')) {
+		$s = fetch_url('https://graph.facebook.com/me/feed?access_token=' . $access_token);
+		if($s) {
+			$j = json_decode($s);
+			logger('fb_consume_stream: wall: ' . print_r($j,true), LOGGER_DATA);
+			fb_consume_stream($uid,$j,true);
+		}
 	}
 	$s = fetch_url('https://graph.facebook.com/me/home?access_token=' . $access_token);
 	if($s) {

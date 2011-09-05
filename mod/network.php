@@ -14,10 +14,31 @@ function network_init(&$a) {
 		$a->page['aside'] = '';
 
 	$search = ((x($_GET,'search')) ? escape_tags($_GET['search']) : '');
-	$srchurl = '/network' . ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') . ((x($_GET,'star')) ? '?star=' . $_GET['star'] : '');
+	$srchurl = '/network' 
+		. ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') 
+		. ((x($_GET,'star')) ? '?star=' . $_GET['star'] : '')
+		. ((x($_GET,'bmark')) ? '?bmark=' . $_GET['bmark'] : '');
 
+	if(x($_GET,'save')) {
+		$r = q("select * from `search` where `uid` = %d and `term` = '%s' limit 1",
+			intval(local_user()),
+			dbesc($search)
+		);
+		if(! count($r)) {
+			q("insert into `search` ( `uid`,`term` ) values ( %d, '%s') ",
+				intval(local_user()),
+				dbesc($search)
+			);
+		}
+	}
+	if(x($_GET,'remove')) {
+		q("delete from `search` where `uid` = %d and `term` = '%s' limit 1",
+			intval(local_user()),
+			dbesc($search)
+		);
+	}
 
-	$a->page['aside'] .= search($search,'netsearch-box',$srchurl);
+	$a->page['aside'] .= search($search,'netsearch-box',$srchurl,true);
 
 	$a->page['aside'] .= '<div id="network-new-link">';
 
@@ -49,7 +70,33 @@ function network_init(&$a) {
 	$a->page['aside'] .= '</div>';
 
 	$a->page['aside'] .= group_side('network','network',true,$group_id);
+
+	$a->page['aside'] .= saved_searches();
+
 }
+
+function saved_searches() {
+
+	$o = '';
+
+	$r = q("select `term` from `search` WHERE `uid` = %d",
+		intval(local_user())
+	);
+
+	if(count($r)) {
+		$o .= '<h3>' . t('Saved Searches') . '</h3>' . "\r\n";
+		$o .= '<div id="saved-search-list"><ul id="saved-search-ul">' . "\r\n";
+		foreach($r as $rr) {
+			$o .= '<li class="saved-search-li clear"><a href="network/?f=&remove=1&search=' . $rr['term'] . '" class="icon drophide savedsearchdrop" title="' . t('Remove term') . '" onclick="return confirmDelete();" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a> <a href="network/?f&search=' . $rr['term'] . '" class="savedsearchterm" >' . $rr['term'] . '</a></li>' . "\r\n";
+		}
+		$o .= '</ul></div>' . "\r\n";
+	}		
+
+	return $o;
+
+}
+
+
 
 
 function network_content(&$a, $update = 0) {
@@ -70,6 +117,7 @@ function network_content(&$a, $update = 0) {
 
 	$cid = ((x($_GET['cid'])) ? intval($_GET['cid']) : 0);
 	$star = ((x($_GET['star'])) ? intval($_GET['star']) : 0);
+	$bmark = ((x($_GET['bmark'])) ? intval($_GET['bmark']) : 0);
 
 	if(($a->argc > 2) && $a->argv[2] === 'new')
 		$nouveau = true;
@@ -130,6 +178,7 @@ function network_content(&$a, $update = 0) {
 				. ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '')
 				. ((x($_GET,'search')) ? '&search=' . $_GET['search'] : '') 
 				. ((x($_GET,'star')) ? '&star=' . $_GET['star'] : '') 
+				. ((x($_GET,'bmark')) ? '&bmark=' . $_GET['bmark'] : '') 
 				. "'; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 
 	}
@@ -150,6 +199,9 @@ function network_content(&$a, $update = 0) {
 	// desired. 
 
 	$star_sql = (($star) ?  " AND `starred` = 1 " : '');
+
+	if($bmark)
+		$star_sql .= " AND `bookmark` = 1 ";
 
 	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` $star_sql ) ";
 

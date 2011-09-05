@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `network` char(255) NOT NULL,
   `name` char(255) NOT NULL,
   `nick` char(255) NOT NULL,
+  `attag` char(255) NOT NULL,
   `photo` text NOT NULL, 
   `thumb` text NOT NULL,
   `micro` text NOT NULL,
@@ -205,6 +206,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `pubmail` tinyint(1) NOT NULL DEFAULT '0',
   `visible` tinyint(1) NOT NULL DEFAULT '0',
   `starred` tinyint(1) NOT NULL DEFAULT '0',
+  `bookmark` tinyint(1) NOT NULL DEFAULT '0',
   `unseen` tinyint(1) NOT NULL DEFAULT '1',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `last-child` tinyint(1) unsigned NOT NULL DEFAULT '1',
@@ -611,4 +613,12 @@ CREATE TABLE IF NOT EXISTS `deliverq` (
 `cmd` CHAR( 32 ) NOT NULL ,
 `item` INT NOT NULL ,
 `contact` INT NOT NULL
+) ENGINE = MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `search` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`uid` INT NOT NULL ,
+`term` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+INDEX ( `uid` ),
+INDEX ( `term` )
 ) ENGINE = MyISAM DEFAULT CHARSET=utf8;

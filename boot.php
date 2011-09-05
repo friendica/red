@@ -8,9 +8,9 @@ require_once("include/pgettext.php");
 require_once('include/nav.php');
 
 
-define ( 'FRIENDIKA_VERSION',      '2.2.1087' );
+define ( 'FRIENDIKA_VERSION',      '2.2.1093' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
-define ( 'DB_UPDATE_VERSION',      1084      );
+define ( 'DB_UPDATE_VERSION',      1087      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -674,6 +674,8 @@ function login($register = false) {
 		'$lostpass'      => $lostpass,
 		'$lostlink'      => $lostlink 
 	));
+
+	call_hooks('login_hook',$o);
 
 	return $o;
 }}
