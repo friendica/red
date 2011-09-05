@@ -2,7 +2,7 @@
 
 	<div class="tool">
 		<div class="fn label">$profile.name</div>
-		{{ if $profile.edit }}<a class="icon s16 edit" href="$profile.edit.0" title="$profile.edit.3"><span>$profile.edit.1</span></a>{{ endif }}
+		{{ if $profile.edit }}<a class="icon s16 edit ttright" href="$profile.edit.0" title="$profile.edit.3"><span>$profile.edit.1</span></a>{{ endif }}
 	</div>
 	
 	{{ if $pdesc }}<div class="title">$profile.pdesc</div>{{ endif }}

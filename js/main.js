@@ -34,7 +34,16 @@
 
 		msie = $.browser.msie ;
 		
-		/* setup navbar menus */
+		/* setup tooltips */
+		$("a,.tt").each(function(){
+			var e = $(this);
+			var pos="bottom";
+			if (e.hasClass("tttop")) pos="top";
+			if (e.hasClass("ttbottom")) pos="bottom";
+			if (e.hasClass("ttleft")) pos="left";
+			if (e.hasClass("ttright")) pos="right";
+			e.tipTip({defaultPosition: pos});
+		});
 		
 		
 		
