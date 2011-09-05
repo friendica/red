@@ -159,8 +159,26 @@ function ping_init(&$a) {
 	}
 
 
-	echo "  </notif>
-		</result>
+	echo "  </notif>";
+	
+	echo " <sysmsgs>";
+		if(x($_SESSION,'sysmsg')){
+			foreach ($_SESSION['sysmsg'] as $m){
+				echo "<notice>".($m)."</notice>";
+			}
+			$_SESSION['sysmsg']=array();
+			unset($_SESSION['sysmsg']);
+		}
+		if(x($_SESSION,'sysmsg_info')){
+			foreach ($_SESSION['sysmsg_info'] as $m){
+				echo "<info>".($m)."</info>";
+			}
+			$_SESSION['sysmsg_info']=array();
+			unset($_SESSION['sysmsg_info']);
+		}
+	
+	echo " </sysmsgs>";
+	echo"</result>
 	";
 
 	killme();

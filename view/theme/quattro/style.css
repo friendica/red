@@ -95,6 +95,17 @@ a:hover {
 .tool .icon {
   float: right;
 }
+/* popup notifications */
+div.jGrowl div.notice {
+  background: #511919 url("../../../images/icons/48/notice.png") no-repeat 5px center;
+  color: #ffffff;
+  padding-left: 58px;
+}
+div.jGrowl div.info {
+  background: #364e59 url("../../../images/icons/48/info.png") no-repeat 5px center;
+  color: #ffffff;
+  padding-left: 58px;
+}
 /* header */
 header {
   position: fixed;

@@ -112,6 +112,16 @@
 			if(notif == 0) { notif = ''; $('#notify-update').removeClass('show') } else { $('#notify-update').addClass('show') }
 			$('#notify-update').html(notif);
 			
+			var eSysmsg = $(data).find('sysmsgs');
+			eSysmsg.children("notice").each(function(){
+				text = $(this).text();
+				$.jGrowl(text, { sticky: true, theme: 'notice' });
+			});
+			eSysmsg.children("info").each(function(){
+				text = $(this).text();
+				$.jGrowl(text, { sticky: false, theme: 'info' });
+			});
+			
 		});
 		
 		

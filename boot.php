@@ -721,14 +721,16 @@ function remote_user() {
 if(! function_exists('notice')) {
 function notice($s) {
 	$a = get_app();
+	if(! x($_SESSION,'sysmsg'))	$_SESSION['sysmsg'] = array();
 	if($a->interactive)
-		$_SESSION['sysmsg'] .= $s;
+		$_SESSION['sysmsg'][] = $s;
 }}
 if(! function_exists('info')) {
 function info($s) {
 	$a = get_app();
+	if(! x($_SESSION,'sysmsg_info')) $_SESSION['sysmsg_info'] = array();
 	if($a->interactive)
-		$_SESSION['sysmsg_info'] .= $s;
+		$_SESSION['sysmsg_info'][] = $s;
 }}
 
 
