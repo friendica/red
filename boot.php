@@ -860,7 +860,7 @@ function profile_sidebar($profile, $block = 0) {
 
 	// show edit to yourself
 	if ($profile['uid'] == local_user()) {
-		$profile['edit'] = array($a->get_baseurl(). 'profiles', t('Profiles'),"", t('Manage/edit profiles'));
+		$profile['edit'] = array($a->get_baseurl(). '/profiles', t('Profiles'),"", t('Manage/edit profiles'));
 	}
 
 
@@ -889,9 +889,9 @@ function profile_sidebar($profile, $block = 0) {
 		'searchable' => (($profile['publish'] && $profile['net-publish']) ? 'true' : 'false' ),
 		'nickname ' => $profile['nickname'],
 		'fullname' => $profile['name'],
-		'photo300 ' => $a->get_baseurl() . '/photo/custom/300/' . $profile['uid'] . '.jpg',
-		'photo100 ' => $a->get_baseurl() . '/photo/custom/100/' . $profile['uid'] . '.jpg',
-		'photo50  ' => $a->get_baseurl() . '/photo/custom/50/'  . $profile['uid'] . '.jpg',
+		'photo300' => $a->get_baseurl() . '/photo/custom/300/' . $profile['uid'] . '.jpg',
+		'photo100' => $a->get_baseurl() . '/photo/custom/100/' . $profile['uid'] . '.jpg',
+		'photo50' => $a->get_baseurl() . '/photo/custom/50/'  . $profile['uid'] . '.jpg',
 	);
 
 	if (!$block){
