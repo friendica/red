@@ -14,7 +14,10 @@ function network_init(&$a) {
 		$a->page['aside'] = '';
 
 	$search = ((x($_GET,'search')) ? escape_tags($_GET['search']) : '');
-	$srchurl = '/network' . ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') . ((x($_GET,'star')) ? '?star=' . $_GET['star'] : '');
+	$srchurl = '/network' 
+		. ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') 
+		. ((x($_GET,'star')) ? '?star=' . $_GET['star'] : '')
+		. ((x($_GET,'bmark')) ? '?bmark=' . $_GET['bmark'] : '');
 
 	if(x($_GET,'save')) {
 		$r = q("select * from `search` where `uid` = %d and `term` = '%s' limit 1",
@@ -114,6 +117,7 @@ function network_content(&$a, $update = 0) {
 
 	$cid = ((x($_GET['cid'])) ? intval($_GET['cid']) : 0);
 	$star = ((x($_GET['star'])) ? intval($_GET['star']) : 0);
+	$bmark = ((x($_GET['bmark'])) ? intval($_GET['bmark']) : 0);
 
 	if(($a->argc > 2) && $a->argv[2] === 'new')
 		$nouveau = true;
@@ -174,6 +178,7 @@ function network_content(&$a, $update = 0) {
 				. ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '')
 				. ((x($_GET,'search')) ? '&search=' . $_GET['search'] : '') 
 				. ((x($_GET,'star')) ? '&star=' . $_GET['star'] : '') 
+				. ((x($_GET,'bmark')) ? '&bmark=' . $_GET['bmark'] : '') 
 				. "'; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 
 	}
@@ -194,6 +199,9 @@ function network_content(&$a, $update = 0) {
 	// desired. 
 
 	$star_sql = (($star) ?  " AND `starred` = 1 " : '');
+
+	if($bmark)
+		$star_sql .= " AND `bookmark` = 1 ";
 
 	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` $star_sql ) ";
 

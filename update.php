@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1086 );
+define( 'UPDATE_VERSION' , 1087 );
 
 /**
  *
@@ -721,3 +721,8 @@ function update_1085() {
 	INDEX ( `term` )
 	) ENGINE = MYISAM ");
 }
+
+function update_1086() {
+	q("ALTER TABLE `item` ADD `bookmark` tinyint(1) NOT NULL DEFAULT '0' AFTER `starred` ");
+}
+

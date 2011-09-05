@@ -206,6 +206,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `pubmail` tinyint(1) NOT NULL DEFAULT '0',
   `visible` tinyint(1) NOT NULL DEFAULT '0',
   `starred` tinyint(1) NOT NULL DEFAULT '0',
+  `bookmark` tinyint(1) NOT NULL DEFAULT '0',
   `unseen` tinyint(1) NOT NULL DEFAULT '1',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `last-child` tinyint(1) unsigned NOT NULL DEFAULT '1',

@@ -13,7 +13,7 @@ function parse_url_content(&$a) {
 
 	$text = null;
 
-	$template = "<br /><a href=\"%s\" >%s</a>%s<br />";
+	$template = "<br /><a class=\"bookmark\" href=\"%s\" >%s</a>%s<br />";
 
 
 	$arr = array('url' => $url, 'text' => '');
@@ -121,6 +121,10 @@ function parse_url_content(&$a) {
 
 	$title = str_replace("\n",'',$title);
 
-	echo sprintf($template,$url,($title) ? $title : $url,$text);
+	$result = sprintf($template,$url,($title) ? $title : $url,$text);
+
+	logger('parse_url: returns: ' . $result); 
+
+	echo $result;
 	killme();
 }

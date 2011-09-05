@@ -332,6 +332,15 @@ function item_post(&$a) {
 		}
 	}
 
+	// embedded bookmark in post? convert to regular url and set bookmark flag
+
+	$bookmark = 0;
+	if(preg_match_all("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/m",$body,$match)) {
+		$bookmark = 1;
+		$body = preg_replace("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/m",'[url=$1]$2[/url]',$body);
+	}
+
+
 	/**
 	 * Fold multi-line [code] sequences
 	 */
@@ -509,6 +518,7 @@ function item_post(&$a) {
 	$datarray['private']       = $private;
 	$datarray['pubmail']       = $pubmail_enable;
 	$datarray['attach']        = $attachments;
+	$datarray['bookmark']      = intval($bookmark);
 	$datarray['thr-parent']    = $thr_parent;
 
 	/**
@@ -551,8 +561,8 @@ function item_post(&$a) {
 
 	$r = q("INSERT INTO `item` (`guid`, `uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `received`, `changed`, `uri`, `thr-parent`, `title`, `body`, `app`, `location`, `coord`, 
-		`tag`, `inform`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach` )
-		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s' )",
+		`tag`, `inform`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`, `bookmark` )
+		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d )",
 		dbesc($datarray['guid']),
 		intval($datarray['uid']),
 		dbesc($datarray['type']),
@@ -585,7 +595,8 @@ function item_post(&$a) {
 		dbesc($datarray['deny_gid']),
 		intval($datarray['private']),
 		intval($datarray['pubmail']),
-		dbesc($datarray['attach'])
+		dbesc($datarray['attach']),
+		intval($datarray['bookmark'])
 	);
 
 	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",

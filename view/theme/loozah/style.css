@@ -2424,7 +2424,8 @@ a.mail-list-link {
 }
 
 #netsearch-box {
-	margin-top: 20px;	
+	margin-top: 20px;
+	width: 150px;	
 }
 
 #netsearch-box #search-submit {
