@@ -14,6 +14,9 @@ function network_init(&$a) {
 		$a->page['aside'] = '';
 
 	$search = ((x($_GET,'search')) ? escape_tags($_GET['search']) : '');
+
+	// We need a better way of managing a growing argument list
+
 	$srchurl = '/network' 
 		. ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') 
 		. ((x($_GET,'star')) ? '?star=' . $_GET['star'] : '')
@@ -44,8 +47,9 @@ function network_init(&$a) {
 
 
 	$a->page['aside'] .= '<div id="network-view-link">';
-	if(($a->argc > 1 && $a->argv[1] === 'new') || ($a->argc > 2 && $a->argv[2] === 'new') || x($_GET,'search'))
+	if(($a->argc > 1 && $a->argv[1] === 'new') || ($a->argc > 2 && $a->argv[2] === 'new') || x($_GET,'search')) {
 		$a->page['aside'] .= '<a href="' . $a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') . '">' . t('View Conversations') . '</a></div>';
+	}
 	else { 
 		$a->page['aside'] .= '<a href="' . $a->get_baseurl() . '/' . $a->cmd . '/new' . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '">' . t('View New Items') . '</a></div>';
 
@@ -64,6 +68,14 @@ function network_init(&$a) {
 				. t('View Starred Items') . '</a>'
 				. '<span class="network-star icon starred"></span>' 
 				. '<div class="clear"></div></div>';
+
+		if(! $_GET['bmark'])
+			$a->page['aside'] .= '<div id="network-bmark-link">'
+				. '<a class="network-bmark" href="' . $a->get_baseurl() . '/' . $a->cmd 
+				. ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '&bmark=1" >' 
+				. t('View Bookmarks') . '</a>'
+				. '<div class="clear"></div></div>';
+
 
 	}
 
