@@ -611,6 +611,9 @@ function dfrn_request_content(&$a) {
 			$myaddr = ((x($_GET,'address')) ? $_GET['address'] : '');
 		}
 
+		$target_addr = $a->profile['nickname'] . '@' . substr(z_root(), strpos(z_root(),'://') + 3 );
+
+
 		/**
 		 *
 		 * The auto_request form only has the profile address
@@ -624,6 +627,11 @@ function dfrn_request_content(&$a) {
 		else
 			$tpl = get_markup_template('auto_request.tpl');
 
+		$page_desc = sprintf( t('Diaspora members: Please do not use this form. Instead, enter "%s" into your Diaspora search bar.'), 
+			$target_addr) . EOL . EOL;
+
+		$page_desc .= t("Please enter your 'Identity Address' from one of the following supported social networks:");
+
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Friend/Connection Request'),
 			'$desc' => t('Examples: jojo@demo.friendika.com, http://demo.friendika.com/profile/jojo, testuser@identi.ca'),
@@ -632,11 +640,11 @@ function dfrn_request_content(&$a) {
 			'$yes' => t('Yes'),
 			'$no' => t('No'),
 			'$add_note' => t('Add a personal note:'),
-			'$page_desc' => t("Please enter your 'Identity Address' from one of the following supported social networks:"),
+			'$page_desc' => $page_desc,
 			'$friendika' => t('Friendika'),
 			'$statusnet' => t('StatusNet/Federated Social Web'),
-			'$private_net' => t("Private \x28secure\x29 network"),
-			'$public_net' => t("Public \x28insecure\x29 network"),
+			'$diaspora' => t('Diaspora'),
+			'$diasnote' => t('- please share from your own site as noted above'),
 			'$your_address' => t('Your Identity Address:'),
 			'$submit' => t('Submit Request'),
 			'$cancel' => t('Cancel'),
