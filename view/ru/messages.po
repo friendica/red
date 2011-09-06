@@ -1,0 +1,4561 @@
+# FRIENDIKA Distributed Social Network
+# Copyright (C) 2010, 2011 Mike Macgirvin
+# This file is distributed under the same license as the Friendika package.
+# 
+#   <mobilpress@gmail.com>, 2011.
+# Pavel Morozov <mobilpress@gmail.com>, 2011.
+msgid ""
+msgstr ""
+"Project-Id-Version: friendika\n"
+"Report-Msgid-Bugs-To: http://bugs.friendika.com/\n"
+"POT-Creation-Date: 2011-08-14 21:17-0700\n"
+"PO-Revision-Date: 2011-09-02 15:00+0000\n"
+"Last-Translator: mobilpress <mobilpress@gmail.com>\n"
+"Language-Team: Russian (http://www.transifex.net/projects/p/friendika/team/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+
+#: ../../mod/oexchange.php:27
+msgid "Post successful."
+msgstr "Успешно добавлено."
+
+#: ../../mod/crepair.php:42
+msgid "Contact settings applied."
+msgstr "Установки контакта приняты."
+
+#: ../../mod/crepair.php:44
+msgid "Contact update failed."
+msgstr "Обновление контакта неудачное."
+
+#: ../../mod/crepair.php:54 ../../mod/wall_attach.php:43
+#: ../../mod/fsuggest.php:78 ../../mod/events.php:102 ../../mod/photos.php:122
+#: ../../mod/photos.php:849 ../../mod/editpost.php:10 ../../mod/install.php:96
+#: ../../mod/notifications.php:62 ../../mod/contacts.php:132
+#: ../../mod/settings.php:41 ../../mod/settings.php:46
+#: ../../mod/settings.php:305 ../../mod/manage.php:75 ../../mod/network.php:6
+#: ../../mod/notes.php:20 ../../mod/attach.php:33 ../../mod/group.php:19
+#: ../../mod/viewcontacts.php:21 ../../mod/register.php:27
+#: ../../mod/regmod.php:111 ../../mod/item.php:110
+#: ../../mod/profile_photo.php:19 ../../mod/profile_photo.php:133
+#: ../../mod/profile_photo.php:144 ../../mod/profile_photo.php:155
+#: ../../mod/message.php:8 ../../mod/message.php:116 ../../mod/admin.php:10
+#: ../../mod/wall_upload.php:42 ../../mod/follow.php:8
+#: ../../mod/display.php:108 ../../mod/profiles.php:7
+#: ../../mod/profiles.php:226 ../../mod/invite.php:13 ../../mod/invite.php:81
+#: ../../mod/dfrn_confirm.php:53 ../../addon/facebook/facebook.php:308
+#: ../../include/items.php:1930 ../../index.php:266
+msgid "Permission denied."
+msgstr "Нет разрешения."
+
+#: ../../mod/crepair.php:68 ../../mod/fsuggest.php:20
+#: ../../mod/fsuggest.php:92 ../../mod/contacts.php:240
+#: ../../mod/dfrn_confirm.php:114
+msgid "Contact not found."
+msgstr "Контакт не найден."
+
+#: ../../mod/crepair.php:74
+msgid "Repair Contact Settings"
+msgstr "Восстановить установки контакта"
+
+#: ../../mod/crepair.php:76
+msgid ""
+"<strong>WARNING: This is highly advanced</strong> and if you enter incorrect"
+" information your communications with this contact will stop working."
+msgstr ""
+"<strong>ВНИМАНИЕ: Это крайне важно</strong> и если вы введете неверную "
+"информацию, ваша связь с этим контактом перестанет работать."
+
+#: ../../mod/crepair.php:77
+msgid ""
+"Please use your browser 'Back' button <strong>now</strong> if you are "
+"uncertain what to do on this page."
+msgstr ""
+"Пожалуйста, нажмите клавишу вашего браузера 'Back' или 'Назад' "
+"<strong>сейчас</strong>, если вы не уверены, что делаете на этой странице."
+
+#: ../../mod/crepair.php:85 ../../mod/admin.php:464 ../../mod/admin.php:473
+msgid "Name"
+msgstr "Имя"
+
+#: ../../mod/crepair.php:86
+msgid "Account Nickname"
+msgstr "Ник аккаунта"
+
+#: ../../mod/crepair.php:87
+msgid "Account URL"
+msgstr "URL аккаунта"
+
+#: ../../mod/crepair.php:88
+msgid "Friend Request URL"
+msgstr "URL запроса в друзья"
+
+#: ../../mod/crepair.php:89
+msgid "Friend Confirm URL"
+msgstr "URL подтверждения друга"
+
+#: ../../mod/crepair.php:90
+msgid "Notification Endpoint URL"
+msgstr "URL эндпоинта уведомления"
+
+#: ../../mod/crepair.php:91
+msgid "Poll/Feed URL"
+msgstr "URL опроса/ленты"
+
+#: ../../mod/crepair.php:100 ../../mod/fsuggest.php:107
+#: ../../mod/events.php:333 ../../mod/photos.php:877 ../../mod/photos.php:934
+#: ../../mod/photos.php:1144 ../../mod/photos.php:1184
+#: ../../mod/photos.php:1223 ../../mod/photos.php:1254
+#: ../../mod/install.php:137 ../../mod/contacts.php:296
+#: ../../mod/settings.php:482 ../../mod/manage.php:106 ../../mod/group.php:84
+#: ../../mod/group.php:167 ../../mod/admin.php:298 ../../mod/admin.php:461
+#: ../../mod/admin.php:587 ../../mod/admin.php:652 ../../mod/profiles.php:372
+#: ../../mod/invite.php:106 ../../addon/facebook/facebook.php:366
+#: ../../addon/randplace/randplace.php:178
+#: ../../addon/impressum/impressum.php:69 ../../addon/oembed/oembed.php:41
+#: ../../addon/statusnet/statusnet.php:274
+#: ../../addon/statusnet/statusnet.php:288
+#: ../../addon/statusnet/statusnet.php:314
+#: ../../addon/statusnet/statusnet.php:321
+#: ../../addon/statusnet/statusnet.php:343
+#: ../../addon/statusnet/statusnet.php:468 ../../addon/piwik/piwik.php:76
+#: ../../addon/twitter/twitter.php:171 ../../addon/twitter/twitter.php:194
+#: ../../addon/twitter/twitter.php:280 ../../include/conversation.php:409
+msgid "Submit"
+msgstr "Подтвердить"
+
+#: ../../mod/help.php:27
+msgid "Help:"
+msgstr "Помощь:"
+
+#: ../../mod/help.php:31 ../../include/nav.php:64
+msgid "Help"
+msgstr "Помощь"
+
+#: ../../mod/wall_attach.php:57
+#, php-format
+msgid "File exceeds size limit of %d"
+msgstr "Файл превышает предельный размер %d"
+
+#: ../../mod/wall_attach.php:87 ../../mod/wall_attach.php:98
+msgid "File upload failed."
+msgstr "Загрузка файла не удалась."
+
+#: ../../mod/fsuggest.php:63
+msgid "Friend suggestion sent."
+msgstr ""
+
+#: ../../mod/fsuggest.php:97
+msgid "Suggest Friends"
+msgstr ""
+
+#: ../../mod/fsuggest.php:99
+#, php-format
+msgid "Suggest a friend for %s"
+msgstr ""
+
+#: ../../mod/events.php:112 ../../mod/photos.php:834 ../../mod/notes.php:46
+#: ../../mod/profile.php:116
+msgid "Status"
+msgstr "Статус"
+
+#: ../../mod/events.php:113 ../../mod/photos.php:835 ../../mod/notes.php:47
+#: ../../mod/profperm.php:103 ../../mod/profile.php:117
+#: ../../include/profile_advanced.php:7
+msgid "Profile"
+msgstr "Профиль"
+
+#: ../../mod/events.php:114 ../../mod/photos.php:836 ../../mod/notes.php:48
+#: ../../mod/profile.php:118
+msgid "Photos"
+msgstr "Фото"
+
+#: ../../mod/events.php:115 ../../mod/events.php:120 ../../mod/photos.php:837
+#: ../../mod/notes.php:49 ../../mod/profile.php:119
+msgid "Events"
+msgstr ""
+
+#: ../../mod/events.php:116 ../../mod/photos.php:838 ../../mod/notes.php:50
+#: ../../mod/notes.php:55 ../../mod/profile.php:120
+msgid "Personal Notes"
+msgstr ""
+
+#: ../../mod/events.php:210
+msgid "Create New Event"
+msgstr ""
+
+#: ../../mod/events.php:213
+msgid "Previous"
+msgstr ""
+
+#: ../../mod/events.php:216
+msgid "Next"
+msgstr ""
+
+#: ../../mod/events.php:223
+msgid "l, F j"
+msgstr ""
+
+#: ../../mod/events.php:235
+msgid "Edit event"
+msgstr ""
+
+#: ../../mod/events.php:237 ../../include/text.php:846
+msgid "link to source"
+msgstr "ссылка на источник"
+
+#: ../../mod/events.php:305
+msgid "hour:minute"
+msgstr ""
+
+#: ../../mod/events.php:314
+msgid "Event details"
+msgstr ""
+
+#: ../../mod/events.php:315
+#, php-format
+msgid "Format is %s %s. Starting date and Description are required."
+msgstr ""
+
+#: ../../mod/events.php:316
+msgid "Event Starts:"
+msgstr ""
+
+#: ../../mod/events.php:319
+msgid "Finish date/time is not known or not relevant"
+msgstr ""
+
+#: ../../mod/events.php:321
+msgid "Event Finishes:"
+msgstr ""
+
+#: ../../mod/events.php:324
+msgid "Adjust for viewer timezone"
+msgstr ""
+
+#: ../../mod/events.php:326
+msgid "Description:"
+msgstr ""
+
+#: ../../mod/events.php:328 ../../include/event.php:37 ../../boot.php:868
+msgid "Location:"
+msgstr "Местоположение:"
+
+#: ../../mod/events.php:330
+msgid "Share this event"
+msgstr ""
+
+#: ../../mod/tagrm.php:11 ../../mod/tagrm.php:94
+#: ../../mod/dfrn_request.php:644 ../../addon/js_upload/js_upload.php:45
+msgid "Cancel"
+msgstr "Отмена"
+
+#: ../../mod/tagrm.php:41
+msgid "Tag removed"
+msgstr "Ключевое слово удалено"
+
+#: ../../mod/tagrm.php:79
+msgid "Remove Item Tag"
+msgstr "Удалить ключевое слово"
+
+#: ../../mod/tagrm.php:81
+msgid "Select a tag to remove: "
+msgstr "Выберите ключевое слово для удаления: "
+
+#: ../../mod/tagrm.php:93
+msgid "Remove"
+msgstr "Удалить"
+
+#: ../../mod/dfrn_poll.php:90 ../../mod/dfrn_poll.php:516
+#, php-format
+msgid "%s welcomes %s"
+msgstr "%s приглашает %s"
+
+#: ../../mod/photos.php:37
+msgid "Photo Albums"
+msgstr "Фотоальбомы"
+
+#: ../../mod/photos.php:45 ../../mod/photos.php:143 ../../mod/photos.php:857
+#: ../../mod/photos.php:926 ../../mod/photos.php:941 ../../mod/photos.php:1332
+#: ../../mod/photos.php:1344
+msgid "Contact Photos"
+msgstr "Фотографии контакта"
+
+#: ../../mod/photos.php:57 ../../mod/settings.php:9
+msgid "everybody"
+msgstr "все"
+
+#: ../../mod/photos.php:132
+msgid "Contact information unavailable"
+msgstr "Контактная информация недоступна"
+
+#: ../../mod/photos.php:143 ../../mod/photos.php:577 ../../mod/photos.php:926
+#: ../../mod/photos.php:941 ../../mod/register.php:316
+#: ../../mod/register.php:323 ../../mod/register.php:330
+#: ../../mod/profile_photo.php:58 ../../mod/profile_photo.php:65
+#: ../../mod/profile_photo.php:72 ../../mod/profile_photo.php:160
+#: ../../mod/profile_photo.php:236 ../../mod/profile_photo.php:245
+msgid "Profile Photos"
+msgstr "Фотографии профиля"
+
+#: ../../mod/photos.php:153
+msgid "Album not found."
+msgstr "Альбом не найден."
+
+#: ../../mod/photos.php:171 ../../mod/photos.php:935
+msgid "Delete Album"
+msgstr "Удалить альбом"
+
+#: ../../mod/photos.php:234 ../../mod/photos.php:1145
+msgid "Delete Photo"
+msgstr "Удалить фото"
+
+#: ../../mod/photos.php:508
+msgid "was tagged in a"
+msgstr "отмечен/а/ в"
+
+#: ../../mod/photos.php:508 ../../mod/like.php:110
+#: ../../include/diaspora.php:446 ../../include/conversation.php:31
+msgid "photo"
+msgstr "фото"
+
+#: ../../mod/photos.php:508
+msgid "by"
+msgstr "от"
+
+#: ../../mod/photos.php:608 ../../addon/js_upload/js_upload.php:310
+msgid "Image exceeds size limit of "
+msgstr "Размер фото превышает лимит "
+
+#: ../../mod/photos.php:616
+msgid "Image file is empty."
+msgstr ""
+
+#: ../../mod/photos.php:630 ../../mod/profile_photo.php:118
+#: ../../mod/wall_upload.php:65
+msgid "Unable to process image."
+msgstr "Невозможно обработать фото."
+
+#: ../../mod/photos.php:650 ../../mod/profile_photo.php:241
+#: ../../mod/wall_upload.php:84
+msgid "Image upload failed."
+msgstr "Загрузка фото неудачная."
+
+#: ../../mod/photos.php:733 ../../mod/community.php:9
+#: ../../mod/dfrn_request.php:591 ../../mod/viewcontacts.php:16
+#: ../../mod/display.php:7 ../../mod/search.php:13 ../../mod/directory.php:20
+msgid "Public access denied."
+msgstr "Свободный доступ закрыт."
+
+#: ../../mod/photos.php:743
+msgid "No photos selected"
+msgstr "Не выбрано фото."
+
+#: ../../mod/photos.php:820
+msgid "Access to this item is restricted."
+msgstr ""
+
+#: ../../mod/photos.php:884
+msgid "Upload Photos"
+msgstr "Загрузить фото"
+
+#: ../../mod/photos.php:887 ../../mod/photos.php:930
+msgid "New album name: "
+msgstr "Название нового альбома: "
+
+#: ../../mod/photos.php:888
+msgid "or existing album name: "
+msgstr "или название существующего альбома: "
+
+#: ../../mod/photos.php:890 ../../mod/photos.php:1140
+msgid "Permissions"
+msgstr "Разрешения"
+
+#: ../../mod/photos.php:945
+msgid "Edit Album"
+msgstr "Редактировать альбом"
+
+#: ../../mod/photos.php:955 ../../mod/photos.php:1362
+msgid "View Photo"
+msgstr "Просмотреть фото"
+
+#: ../../mod/photos.php:984
+msgid "Photo not available"
+msgstr "Фото недоступно"
+
+#: ../../mod/photos.php:1033
+msgid "Edit photo"
+msgstr "Редактировать фото"
+
+#: ../../mod/photos.php:1034
+msgid "Use as profile photo"
+msgstr "Использовать как фото профиля"
+
+#: ../../mod/photos.php:1040 ../../include/conversation.php:342
+msgid "Private Message"
+msgstr "Личное сообщение"
+
+#: ../../mod/photos.php:1051
+msgid "View Full Size"
+msgstr "Просмотреть полный размер"
+
+#: ../../mod/photos.php:1119
+msgid "Tags: "
+msgstr "Ключевые слова: "
+
+#: ../../mod/photos.php:1122
+msgid "[Remove any tag]"
+msgstr "[Удалить любое ключевое слово]"
+
+#: ../../mod/photos.php:1133
+msgid "New album name"
+msgstr "Название нового альбома"
+
+#: ../../mod/photos.php:1136
+msgid "Caption"
+msgstr "Подпись"
+
+#: ../../mod/photos.php:1138
+msgid "Add a Tag"
+msgstr "Добавить ключевое слово"
+
+#: ../../mod/photos.php:1142
+msgid ""
+"Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping"
+msgstr ""
+"Пример: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping"
+
+#: ../../mod/photos.php:1162 ../../include/conversation.php:390
+msgid "I like this (toggle)"
+msgstr "Мне нравится это (флаг)"
+
+#: ../../mod/photos.php:1163 ../../include/conversation.php:391
+msgid "I don't like this (toggle)"
+msgstr "Мне не нравится это (флаг)"
+
+#: ../../mod/photos.php:1164 ../../include/conversation.php:392
+#: ../../include/conversation.php:746
+msgid "Share"
+msgstr "Поделиться"
+
+#: ../../mod/photos.php:1165 ../../mod/editpost.php:99
+#: ../../mod/message.php:190 ../../mod/message.php:324
+#: ../../include/conversation.php:393 ../../include/conversation.php:756
+msgid "Please wait"
+msgstr "Пожалуйста, подождите"
+
+#: ../../mod/photos.php:1181 ../../mod/photos.php:1220
+#: ../../mod/photos.php:1251 ../../include/conversation.php:406
+msgid "This is you"
+msgstr "Это вы"
+
+#: ../../mod/photos.php:1183 ../../mod/photos.php:1222
+#: ../../mod/photos.php:1253 ../../include/conversation.php:408
+#: ../../boot.php:411
+msgid "Comment"
+msgstr "Комментарий"
+
+#: ../../mod/photos.php:1281 ../../mod/group.php:154 ../../mod/admin.php:468
+#: ../../include/conversation.php:427
+msgid "Delete"
+msgstr "Удалить"
+
+#: ../../mod/photos.php:1349
+msgid "Recent Photos"
+msgstr "Последние фото"
+
+#: ../../mod/photos.php:1353
+msgid "Upload New Photos"
+msgstr "Загрузить новые фотографии"
+
+#: ../../mod/photos.php:1366
+msgid "View Album"
+msgstr "Просмотреть альбом"
+
+#: ../../mod/community.php:14
+msgid "Not available."
+msgstr ""
+
+#: ../../mod/community.php:26 ../../include/nav.php:79
+msgid "Community"
+msgstr ""
+
+#: ../../mod/community.php:56 ../../mod/search.php:65
+msgid "No results."
+msgstr "Нет результатов."
+
+#: ../../mod/community.php:83 ../../mod/network.php:302
+#: ../../mod/register.php:504 ../../mod/profile.php:241
+#: ../../mod/display.php:117
+msgid ""
+"Shared content is covered by the <a "
+"href=\"http://creativecommons.org/licenses/by/3.0/\">Creative Commons "
+"Attribution 3.0</a> license."
+msgstr ""
+"Общий контент покрывается лицензией <a "
+"href=\"http://creativecommons.org/licenses/by/3.0/\">Creative Commons "
+"Attribution 3.0</a>."
+
+#: ../../mod/editpost.php:17 ../../mod/editpost.php:27
+msgid "Item not found"
+msgstr "Пункт не найден"
+
+#: ../../mod/editpost.php:32
+msgid "Edit post"
+msgstr "Редактировать сообщение"
+
+#: ../../mod/editpost.php:75 ../../include/conversation.php:732
+msgid "Post to Email"
+msgstr "Отправить на Email"
+
+#: ../../mod/editpost.php:90 ../../include/group.php:171
+#: ../../include/group.php:172 ../../include/conversation.php:417
+msgid "Edit"
+msgstr "Редактировать"
+
+#: ../../mod/editpost.php:91 ../../mod/message.php:188
+#: ../../mod/message.php:322 ../../include/conversation.php:747
+msgid "Upload photo"
+msgstr "Загрузить фото"
+
+#: ../../mod/editpost.php:92 ../../include/conversation.php:748
+msgid "Attach file"
+msgstr "Приложить файл"
+
+#: ../../mod/editpost.php:93 ../../mod/message.php:189
+#: ../../mod/message.php:323 ../../include/conversation.php:749
+msgid "Insert web link"
+msgstr "Вставить веб-ссылку"
+
+#: ../../mod/editpost.php:94 ../../include/conversation.php:750
+msgid "Insert YouTube video"
+msgstr "Вставить видео YouTube"
+
+#: ../../mod/editpost.php:95 ../../include/conversation.php:751
+msgid "Insert Vorbis [.ogg] video"
+msgstr "Вставить Vorbis [.ogg] видео"
+
+#: ../../mod/editpost.php:96 ../../include/conversation.php:752
+msgid "Insert Vorbis [.ogg] audio"
+msgstr "Вставить Vorbis [.ogg] аудио"
+
+#: ../../mod/editpost.php:97 ../../include/conversation.php:753
+msgid "Set your location"
+msgstr "Задать ваше местоположение"
+
+#: ../../mod/editpost.php:98 ../../include/conversation.php:754
+msgid "Clear browser location"
+msgstr "Очистить местоположение браузера"
+
+#: ../../mod/editpost.php:100 ../../include/conversation.php:757
+msgid "Permission settings"
+msgstr "Настройки разрешений"
+
+#: ../../mod/editpost.php:108 ../../include/conversation.php:765
+msgid "CC: email addresses"
+msgstr "CC: адреса электронной почты"
+
+#: ../../mod/editpost.php:109 ../../include/conversation.php:766
+msgid "Public post"
+msgstr "Публичное сообщение"
+
+#: ../../mod/editpost.php:111 ../../include/conversation.php:768
+msgid "Example: bob@example.com, mary@example.com"
+msgstr "Пример: bob@example.com, mary@example.com"
+
+#: ../../mod/dfrn_request.php:96
+msgid "This introduction has already been accepted."
+msgstr "Эта краткая информация уже была принята."
+
+#: ../../mod/dfrn_request.php:120 ../../mod/dfrn_request.php:351
+msgid "Profile location is not valid or does not contain profile information."
+msgstr ""
+"Местоположение профиля является недопустимым или не содержит информацию о "
+"профиле."
+
+#: ../../mod/dfrn_request.php:125 ../../mod/dfrn_request.php:356
+msgid "Warning: profile location has no identifiable owner name."
+msgstr ""
+"Внимание: местоположение профиля не имеет идентифицируемого имени владельца."
+
+#: ../../mod/dfrn_request.php:127 ../../mod/dfrn_request.php:358
+msgid "Warning: profile location has no profile photo."
+msgstr "Внимание: местоположение профиля не имеет еще фотографии профиля."
+
+#: ../../mod/dfrn_request.php:130 ../../mod/dfrn_request.php:361
+#, php-format
+msgid "%d required parameter was not found at the given location"
+msgid_plural "%d required parameters were not found at the given location"
+msgstr[0] "%d требуемый параметр не был найден в заданном месте"
+msgstr[1] "%d требуемые параметры не были найдены в заданном месте"
+msgstr[2] "%d требуемые параметры не были найдены в заданном месте"
+
+#: ../../mod/dfrn_request.php:168
+msgid "Introduction complete."
+msgstr "Краткая информация заполнена."
+
+#: ../../mod/dfrn_request.php:192
+msgid "Unrecoverable protocol error."
+msgstr "Неисправимая ошибка протокола."
+
+#: ../../mod/dfrn_request.php:220
+msgid "Profile unavailable."
+msgstr "Профиль недоступен."
+
+#: ../../mod/dfrn_request.php:245
+#, php-format
+msgid "%s has received too many connection requests today."
+msgstr "К %s пришло сегодня слишком много запросов на подключение."
+
+#: ../../mod/dfrn_request.php:246
+msgid "Spam protection measures have been invoked."
+msgstr "Были применены меры защиты от спама."
+
+#: ../../mod/dfrn_request.php:247
+msgid "Friends are advised to please try again in 24 hours."
+msgstr "Друзья советуют попробовать еще раз в ближайшие 24 часа."
+
+#: ../../mod/dfrn_request.php:277
+msgid "Invalid locator"
+msgstr "Недопустимый локатор"
+
+#: ../../mod/dfrn_request.php:296
+msgid "Unable to resolve your name at the provided location."
+msgstr "Не удается установить ваше имя на предложенном местоположении."
+
+#: ../../mod/dfrn_request.php:309
+msgid "You have already introduced yourself here."
+msgstr "Вы уже ввели информацию о себе здесь."
+
+#: ../../mod/dfrn_request.php:313
+#, php-format
+msgid "Apparently you are already friends with %s."
+msgstr "Похоже, что вы уже друзья с %s."
+
+#: ../../mod/dfrn_request.php:334
+msgid "Invalid profile URL."
+msgstr "Неверный URL профиля."
+
+#: ../../mod/dfrn_request.php:340 ../../mod/follow.php:20
+msgid "Disallowed profile URL."
+msgstr "Запрещенный URL профиля."
+
+#: ../../mod/dfrn_request.php:406 ../../mod/contacts.php:116
+msgid "Failed to update contact record."
+msgstr "Не удалось обновить запись контакта."
+
+#: ../../mod/dfrn_request.php:427
+msgid "Your introduction has been sent."
+msgstr "Ваша краткая информация отправлена."
+
+#: ../../mod/dfrn_request.php:481
+msgid "Please login to confirm introduction."
+msgstr "Пожалуйста, войдите с паролем для подтверждения краткой информации."
+
+#: ../../mod/dfrn_request.php:495
+msgid ""
+"Incorrect identity currently logged in. Please login to "
+"<strong>this</strong> profile."
+msgstr ""
+"Неверно идентифицирован вход. Пожалуйста, войдите в <strong>этот</strong> "
+"профиль."
+
+#: ../../mod/dfrn_request.php:507
+#, php-format
+msgid "Welcome home %s."
+msgstr "Добро пожаловать домой, %s!"
+
+#: ../../mod/dfrn_request.php:508
+#, php-format
+msgid "Please confirm your introduction/connection request to %s."
+msgstr ""
+"Пожалуйста, подтвердите краткую информацию / запрос на подключение к %s."
+
+#: ../../mod/dfrn_request.php:509
+msgid "Confirm"
+msgstr "Подтвердить"
+
+#: ../../mod/dfrn_request.php:542 ../../include/items.php:1519
+msgid "[Name Withheld]"
+msgstr "[Имя не разглашается]"
+
+#: ../../mod/dfrn_request.php:549
+msgid "Introduction received at "
+msgstr "Краткая информация получена "
+
+#: ../../mod/dfrn_request.php:551 ../../mod/lostpass.php:44
+#: ../../mod/lostpass.php:106 ../../mod/register.php:369
+#: ../../mod/register.php:423 ../../mod/regmod.php:54
+#: ../../mod/dfrn_notify.php:291 ../../mod/dfrn_notify.php:547
+#: ../../mod/dfrn_confirm.php:674 ../../include/items.php:1528
+msgid "Administrator"
+msgstr "Администратор"
+
+#: ../../mod/dfrn_request.php:630
+msgid "Friend/Connection Request"
+msgstr "Запрос в друзья / на подключение"
+
+#: ../../mod/dfrn_request.php:631
+msgid ""
+"Examples: jojo@demo.friendika.com, http://demo.friendika.com/profile/jojo, "
+"testuser@identi.ca"
+msgstr ""
+"Примеры: jojo@demo.friendika.com, http://demo.friendika.com/profile/jojo, "
+"testuser@identi.ca"
+
+#: ../../mod/dfrn_request.php:632
+msgid "Please answer the following:"
+msgstr "Пожалуйста, ответьте следующее:"
+
+#: ../../mod/dfrn_request.php:633
+#, php-format
+msgid "Does %s know you?"
+msgstr ""
+
+#: ../../mod/dfrn_request.php:634 ../../mod/settings.php:415
+#: ../../mod/settings.php:421 ../../mod/settings.php:429
+#: ../../mod/settings.php:433 ../../mod/register.php:498
+#: ../../mod/profiles.php:354
+msgid "Yes"
+msgstr "Да"
+
+#: ../../mod/dfrn_request.php:635 ../../mod/settings.php:415
+#: ../../mod/settings.php:421 ../../mod/settings.php:429
+#: ../../mod/settings.php:433 ../../mod/register.php:499
+#: ../../mod/profiles.php:355
+msgid "No"
+msgstr "Нет"
+
+#: ../../mod/dfrn_request.php:636
+msgid "Add a personal note:"
+msgstr "Добавить личную заметку:"
+
+#: ../../mod/dfrn_request.php:637
+msgid ""
+"Please enter your 'Identity Address' from one of the following supported "
+"social networks:"
+msgstr ""
+"Пожалуйста, введите ваш 'идентификационный адрес' одной из следующих "
+"поддерживаемых социальных сетей:"
+
+#: ../../mod/dfrn_request.php:638
+msgid "Friendika"
+msgstr "Friendika"
+
+#: ../../mod/dfrn_request.php:639
+msgid "StatusNet/Federated Social Web"
+msgstr "StatusNet / Federated Social Web"
+
+#: ../../mod/dfrn_request.php:640
+msgid "Private (secure) network"
+msgstr "Частная (защищенная) сеть"
+
+#: ../../mod/dfrn_request.php:641
+msgid "Public (insecure) network"
+msgstr "Общественная (незащищенная) сеть"
+
+#: ../../mod/dfrn_request.php:642
+msgid "Your Identity Address:"
+msgstr "Ваш идентификационный адрес:"
+
+#: ../../mod/dfrn_request.php:643
+msgid "Submit Request"
+msgstr "Отправить запрос"
+
+#: ../../mod/install.php:34
+msgid "Could not create/connect to database."
+msgstr "Не удается создать / подключиться к базе данных."
+
+#: ../../mod/install.php:39
+msgid "Connected to database."
+msgstr "Подключено к базе данных."
+
+#: ../../mod/install.php:75
+msgid "Proceed with Installation"
+msgstr "Приступить к установке"
+
+#: ../../mod/install.php:77
+msgid "Your Friendika site database has been installed."
+msgstr "Ваша база данных сайта Friendika установлена."
+
+#: ../../mod/install.php:78
+msgid ""
+"IMPORTANT: You will need to [manually] setup a scheduled task for the "
+"poller."
+msgstr ""
+"ВАЖНО: Вам нужно будет [вручную] установить запланированное задание для "
+"регистратора."
+
+#: ../../mod/install.php:79 ../../mod/install.php:89 ../../mod/install.php:207
+msgid "Please see the file \"INSTALL.txt\"."
+msgstr "Пожалуйста, смотрите файл \"INSTALL.txt\"."
+
+#: ../../mod/install.php:81
+msgid "Proceed to registration"
+msgstr "Приступить к регистрации"
+
+#: ../../mod/install.php:87
+msgid "Database import failed."
+msgstr "Импорт базы данных неудачный."
+
+#: ../../mod/install.php:88
+msgid ""
+"You may need to import the file \"database.sql\" manually using phpmyadmin "
+"or mysql."
+msgstr ""
+"Вам может понадобиться импортировать файл \"database.sql\" вручную с помощью"
+" PhpMyAdmin или MySQL."
+
+#: ../../mod/install.php:101
+msgid "Welcome to Friendika."
+msgstr "Добро пожаловать в Friendika!"
+
+#: ../../mod/install.php:124
+msgid "Friendika Social Network"
+msgstr "Социальная сеть Friendika"
+
+#: ../../mod/install.php:125
+msgid "Installation"
+msgstr "Установка"
+
+#: ../../mod/install.php:126
+msgid ""
+"In order to install Friendika we need to know how to connect to your "
+"database."
+msgstr ""
+
+#: ../../mod/install.php:127
+msgid ""
+"Please contact your hosting provider or site administrator if you have "
+"questions about these settings."
+msgstr ""
+"Пожалуйста, свяжитесь с вашим хостинг-провайдером или администратором сайта,"
+" если у вас есть вопросы об этих параметрах."
+
+#: ../../mod/install.php:128
+msgid ""
+"The database you specify below should already exist. If it does not, please "
+"create it before continuing."
+msgstr ""
+
+#: ../../mod/install.php:129
+msgid "Database Server Name"
+msgstr "Имя сервера базы данных"
+
+#: ../../mod/install.php:130
+msgid "Database Login Name"
+msgstr "Логин базы данных"
+
+#: ../../mod/install.php:131
+msgid "Database Login Password"
+msgstr "Пароль базы данных"
+
+#: ../../mod/install.php:132
+msgid "Database Name"
+msgstr "Имя базы данных"
+
+#: ../../mod/install.php:133
+msgid "Please select a default timezone for your website"
+msgstr "Пожалуйста, выберите часовой пояс по умолчанию для вашего сайта"
+
+#: ../../mod/install.php:134
+msgid ""
+"Site administrator email address. Your account email address must match this"
+" in order to use the web admin panel."
+msgstr ""
+
+#: ../../mod/install.php:153
+msgid "Could not find a command line version of PHP in the web server PATH."
+msgstr "Не удалось найти PATH веб-сервера в установках PHP."
+
+#: ../../mod/install.php:154
+msgid ""
+"This is required. Please adjust the configuration file .htconfig.php "
+"accordingly."
+msgstr ""
+"Это необходимо. Пожалуйста, измените файл конфигурации .htconfig.php "
+"соответственно."
+
+#: ../../mod/install.php:161
+msgid ""
+"The command line version of PHP on your system does not have "
+"\"register_argc_argv\" enabled."
+msgstr "Не включено \"register_argc_argv\" в установках PHP."
+
+#: ../../mod/install.php:162
+msgid "This is required for message delivery to work."
+msgstr "Это необходимо для работы доставки сообщений."
+
+#: ../../mod/install.php:184
+msgid ""
+"Error: the \"openssl_pkey_new\" function on this system is not able to "
+"generate encryption keys"
+msgstr ""
+"Ошибка: функция \"openssl_pkey_new\" в этой системе не в состоянии "
+"генерировать ключи шифрования"
+
+#: ../../mod/install.php:185
+msgid ""
+"If running under Windows, please see "
+"\"http://www.php.net/manual/en/openssl.installation.php\"."
+msgstr ""
+"Если вы работаете под Windows, см. "
+"\"http://www.php.net/manual/en/openssl.installation.php\"."
+
+#: ../../mod/install.php:194
+msgid ""
+"Error: Apache webserver mod-rewrite module is required but not installed."
+msgstr ""
+"Ошибка: необходим модуль веб-сервера Apache mod-rewrite, но он не "
+"установлен."
+
+#: ../../mod/install.php:196
+msgid "Error: libCURL PHP module required but not installed."
+msgstr "Ошибка: необходим libCURL PHP модуль, но он не установлен."
+
+#: ../../mod/install.php:198
+msgid ""
+"Error: GD graphics PHP module with JPEG support required but not installed."
+msgstr ""
+"Ошибка: необходим PHP модуль GD графики с поддержкой JPEG, но он не "
+"установлен."
+
+#: ../../mod/install.php:200
+msgid "Error: openssl PHP module required but not installed."
+msgstr "Ошибка: необходим PHP модуль OpenSSL, но он не установлен."
+
+#: ../../mod/install.php:202
+msgid "Error: mysqli PHP module required but not installed."
+msgstr "Ошибка: необходим PHP модуль MySQLi, но он не установлен."
+
+#: ../../mod/install.php:204
+msgid "Error: mb_string PHP module required but not installed."
+msgstr ""
+
+#: ../../mod/install.php:216
+msgid ""
+"The web installer needs to be able to create a file called \".htconfig.php\""
+" in the top folder of your web server and it is unable to do so."
+msgstr ""
+"Веб-инсталлятору требуется создать файл с именем \". htconfig.php\" в "
+"верхней папке веб-сервера, но он не в состоянии это сделать."
+
+#: ../../mod/install.php:217
+msgid ""
+"This is most often a permission setting, as the web server may not be able "
+"to write files in your folder - even if you can."
+msgstr ""
+"Это наиболее частые параметры разрешений, когда веб-сервер не может записать"
+" файлы в папке - даже если вы можете."
+
+#: ../../mod/install.php:218
+msgid ""
+"Please check with your site documentation or support people to see if this "
+"situation can be corrected."
+msgstr ""
+"Пожалуйста, посмотрите документацию вашего сайта или обратитесь к другим за "
+"поддержкой, чтобы убедиться, что эта ситуация может быть исправлена."
+
+#: ../../mod/install.php:219
+msgid ""
+"If not, you may be required to perform a manual installation. Please see the"
+" file \"INSTALL.txt\" for instructions."
+msgstr ""
+"Если нет, вам может потребоваться выполнить установку вручную. Пожалуйста, "
+"посмотрите файл \"INSTALL.txt\" для получения инструкций."
+
+#: ../../mod/install.php:228
+msgid ""
+"The database configuration file \".htconfig.php\" could not be written. "
+"Please use the enclosed text to create a configuration file in your web "
+"server root."
+msgstr ""
+"Файл конфигурации базы данных \".htconfig.php\" не могла быть записан. "
+"Пожалуйста, используйте приложенный текст, чтобы создать конфигурационный "
+"файл в корневом каталоге веб-сервера."
+
+#: ../../mod/install.php:243
+msgid "Errors encountered creating database tables."
+msgstr "Обнаружены ошибки при создании таблиц базы данных."
+
+#: ../../mod/update_community.php:18 ../../mod/update_network.php:22
+#: ../../mod/update_profile.php:41
+msgid "[Embedded content - reload page to view]"
+msgstr "[Встроенный контент - перезагрузите страницу для просмотра]"
+
+#: ../../mod/match.php:10
+msgid "Profile Match"
+msgstr "Похожие профили"
+
+#: ../../mod/match.php:18
+msgid "No keywords to match. Please add keywords to your default profile."
+msgstr ""
+
+#: ../../mod/match.php:54
+msgid "No matches"
+msgstr "Нет соответствий"
+
+#: ../../mod/lockview.php:39
+msgid "Remote privacy information not available."
+msgstr "Личная информация удаленно недоступна."
+
+#: ../../mod/lockview.php:43
+msgid "Visible to:"
+msgstr "Кто может видеть:"
+
+#: ../../mod/home.php:23
+#, php-format
+msgid "Welcome to %s"
+msgstr "Добро пожаловать на %s!"
+
+#: ../../mod/notifications.php:26
+msgid "Invalid request identifier."
+msgstr "Неверный идентификатор запроса."
+
+#: ../../mod/notifications.php:35 ../../mod/notifications.php:118
+#: ../../mod/notifications.php:162
+msgid "Discard"
+msgstr "Отказаться"
+
+#: ../../mod/notifications.php:47 ../../mod/notifications.php:117
+#: ../../mod/notifications.php:161
+msgid "Ignore"
+msgstr "Игнорировать"
+
+#: ../../mod/notifications.php:74
+msgid "Pending Friend/Connect Notifications"
+msgstr "Ожидающие друзья / Уведомления о подключении"
+
+#: ../../mod/notifications.php:78
+msgid "Show Ignored Requests"
+msgstr "Показать проигнорированные запросы"
+
+#: ../../mod/notifications.php:78
+msgid "Hide Ignored Requests"
+msgstr "Скрыть проигнорированные запросы"
+
+#: ../../mod/notifications.php:105 ../../mod/notifications.php:148
+msgid "Notification type: "
+msgstr "Тип уведомления: "
+
+#: ../../mod/notifications.php:106
+msgid "Friend Suggestion"
+msgstr ""
+
+#: ../../mod/notifications.php:108
+#, php-format
+msgid "suggested by %s"
+msgstr ""
+
+#: ../../mod/notifications.php:114 ../../mod/notifications.php:159
+#: ../../mod/admin.php:466
+msgid "Approve"
+msgstr "Одобрить"
+
+#: ../../mod/notifications.php:133
+msgid "Claims to be known to you: "
+msgstr "Претензии, о которых должно быть вам известно: "
+
+#: ../../mod/notifications.php:133
+msgid "yes"
+msgstr "да"
+
+#: ../../mod/notifications.php:133
+msgid "no"
+msgstr "нет"
+
+#: ../../mod/notifications.php:139
+msgid "Approve as: "
+msgstr "Утвердить как: "
+
+#: ../../mod/notifications.php:140
+msgid "Friend"
+msgstr "Друг"
+
+#: ../../mod/notifications.php:141
+msgid "Fan/Admirer"
+msgstr "Фанат / Поклонник"
+
+#: ../../mod/notifications.php:149
+msgid "Friend/Connect Request"
+msgstr "Запрос в друзья / на подключение"
+
+#: ../../mod/notifications.php:149
+msgid "New Follower"
+msgstr "Новый фолловер"
+
+#: ../../mod/notifications.php:168
+msgid "No notifications."
+msgstr "Нет уведомлений."
+
+#: ../../mod/contacts.php:26
+msgid "Invite Friends"
+msgstr "Пригласить друзей"
+
+#: ../../mod/contacts.php:32
+#, php-format
+msgid "%d invitation available"
+msgid_plural "%d invitations available"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: ../../mod/contacts.php:41
+msgid "Find People With Shared Interests"
+msgstr "Найти людей с общими интересами"
+
+#: ../../mod/contacts.php:45
+msgid "Connect/Follow"
+msgstr "Подключиться/Следовать"
+
+#: ../../mod/contacts.php:46
+msgid "Example: bob@example.com, http://example.com/barbara"
+msgstr "Пример: bob@example.com, http://example.com/barbara"
+
+#: ../../mod/contacts.php:47
+msgid "Follow"
+msgstr "Следовать"
+
+#: ../../mod/contacts.php:69 ../../mod/contacts.php:150
+msgid "Could not access contact record."
+msgstr "Не удалось получить доступ к записи контакта."
+
+#: ../../mod/contacts.php:83
+msgid "Could not locate selected profile."
+msgstr "Не удается найти выбранный профиль."
+
+#: ../../mod/contacts.php:114
+msgid "Contact updated."
+msgstr "Контакт обновлен."
+
+#: ../../mod/contacts.php:172
+msgid "Contact has been blocked"
+msgstr "Контакт заблокирован"
+
+#: ../../mod/contacts.php:172
+msgid "Contact has been unblocked"
+msgstr "Контакт разблокирован"
+
+#: ../../mod/contacts.php:186
+msgid "Contact has been ignored"
+msgstr "Контакт проигнорирован"
+
+#: ../../mod/contacts.php:186
+msgid "Contact has been unignored"
+msgstr "У контакта отменено игнорирование"
+
+#: ../../mod/contacts.php:207
+msgid "stopped following"
+msgstr "остановлено следование"
+
+#: ../../mod/contacts.php:226
+msgid "Contact has been removed."
+msgstr "Контакт удален."
+
+#: ../../mod/contacts.php:254 ../../mod/contacts.php:397
+msgid "Mutual Friendship"
+msgstr "Взаимная дружба"
+
+#: ../../mod/contacts.php:258 ../../mod/contacts.php:401
+msgid "is a fan of yours"
+msgstr "является вашим поклонником"
+
+#: ../../mod/contacts.php:263 ../../mod/contacts.php:405
+msgid "you are a fan of"
+msgstr "Вы - поклонник"
+
+#: ../../mod/contacts.php:280
+msgid "Privacy Unavailable"
+msgstr "Конфиденциальность невозможна"
+
+#: ../../mod/contacts.php:281
+msgid "Private communications are not available for this contact."
+msgstr "Личные коммуникации недоступны для этого контакта."
+
+#: ../../mod/contacts.php:284
+msgid "Never"
+msgstr "Никогда"
+
+#: ../../mod/contacts.php:288
+msgid "(Update was successful)"
+msgstr "(Обновление было успешным)"
+
+#: ../../mod/contacts.php:288
+msgid "(Update was not successful)"
+msgstr "(Обновление не удалось)"
+
+#: ../../mod/contacts.php:291
+msgid "Suggest friends"
+msgstr ""
+
+#: ../../mod/contacts.php:295
+msgid "Contact Editor"
+msgstr "Редактор контакта"
+
+#: ../../mod/contacts.php:297
+msgid "Profile Visibility"
+msgstr "Видимость профиля"
+
+#: ../../mod/contacts.php:298
+#, php-format
+msgid ""
+"Please choose the profile you would like to display to %s when viewing your "
+"profile securely."
+msgstr ""
+"Пожалуйста, выберите профиль, который вы хотите отображать %s, когда "
+"просмотр вашего профиля безопасен."
+
+#: ../../mod/contacts.php:299
+msgid "Contact Information / Notes"
+msgstr "Контактная информация / Заметки"
+
+#: ../../mod/contacts.php:300
+msgid "Online Reputation"
+msgstr "Репутация в онлайне"
+
+#: ../../mod/contacts.php:301
+msgid ""
+"Occasionally your friends may wish to inquire about this person's online "
+"legitimacy."
+msgstr ""
+"Иногда ваши друзья, возможно, захотят узнать о легитимности в онлайне этого "
+"человека."
+
+#: ../../mod/contacts.php:302
+msgid ""
+"You may help them choose whether or not to interact with this person by "
+"providing a <em>reputation</em> to guide them."
+msgstr ""
+"Вы можете помочь им решить, следует ли общаться с этим человеком, предлагая "
+"<em>репутацию</em> для ознакомления."
+
+#: ../../mod/contacts.php:303
+msgid ""
+"Please take a moment to elaborate on this selection if you feel it could be "
+"helpful to others."
+msgstr ""
+"Пожалуйста, найдите время, чтобы остановиться на этом выборе, если вы "
+"чувствуете, что можете быть полезным для других."
+
+#: ../../mod/contacts.php:304 ../../mod/contacts.php:421
+#: ../../mod/viewcontacts.php:61
+#, php-format
+msgid "Visit %s's profile [%s]"
+msgstr ""
+
+#: ../../mod/contacts.php:305
+msgid "Block/Unblock contact"
+msgstr "Блокировать / Разблокировать контакт"
+
+#: ../../mod/contacts.php:306
+msgid "Ignore contact"
+msgstr "Игнорировать контакт"
+
+#: ../../mod/contacts.php:307
+msgid "Repair contact URL settings"
+msgstr "Восстановить установки URL контакта"
+
+#: ../../mod/contacts.php:308
+msgid "Repair contact URL settings (WARNING: Advanced)"
+msgstr "Восстановить установки URL контакта (ВНИМАНИЕ: Расширено)"
+
+#: ../../mod/contacts.php:309
+msgid "View conversations"
+msgstr "Просмотр общения"
+
+#: ../../mod/contacts.php:312
+msgid "Delete contact"
+msgstr "Удалить контакт"
+
+#: ../../mod/contacts.php:314
+msgid "Last updated: "
+msgstr "Последнее обновление: "
+
+#: ../../mod/contacts.php:315
+msgid "Update public posts: "
+msgstr "Обновить сообщения для всех: "
+
+#: ../../mod/contacts.php:317 ../../mod/admin.php:701
+msgid "Update now"
+msgstr "Обновить сейчас"
+
+#: ../../mod/contacts.php:320
+msgid "Unblock this contact"
+msgstr "Разблокировать этот контакт"
+
+#: ../../mod/contacts.php:320
+msgid "Block this contact"
+msgstr "Блокировать этот контакт"
+
+#: ../../mod/contacts.php:321
+msgid "Unignore this contact"
+msgstr "Не игнорировать этот контакт"
+
+#: ../../mod/contacts.php:321
+msgid "Ignore this contact"
+msgstr "Игнорировать этот контакт"
+
+#: ../../mod/contacts.php:324
+msgid "Currently blocked"
+msgstr "В настоящее время заблокирован"
+
+#: ../../mod/contacts.php:325
+msgid "Currently ignored"
+msgstr "В настоящее время игнорируется"
+
+#: ../../mod/contacts.php:356 ../../include/nav.php:110
+msgid "Contacts"
+msgstr "Контакты"
+
+#: ../../mod/contacts.php:358
+msgid "Show Blocked Connections"
+msgstr "Показать заблокированные подключения"
+
+#: ../../mod/contacts.php:358
+msgid "Hide Blocked Connections"
+msgstr "Скрыть заблокированные подключения"
+
+#: ../../mod/contacts.php:360 ../../mod/directory.php:55
+msgid "Finding: "
+msgstr "Результат поиска: "
+
+#: ../../mod/contacts.php:361 ../../mod/directory.php:57
+msgid "Find"
+msgstr "Найти"
+
+#: ../../mod/contacts.php:422 ../../include/conversation.php:612
+msgid "Edit contact"
+msgstr "Изменить контакт"
+
+#: ../../mod/lostpass.php:16
+msgid "No valid account found."
+msgstr ""
+
+#: ../../mod/lostpass.php:31
+msgid "Password reset request issued. Check your email."
+msgstr "Запрос на сброс пароля принят. Проверьте вашу электронную почту."
+
+#: ../../mod/lostpass.php:42
+#, php-format
+msgid "Password reset requested at %s"
+msgstr "Запрос на сброс пароля получен %s"
+
+#: ../../mod/lostpass.php:64
+msgid ""
+"Request could not be verified. (You may have previously submitted it.) "
+"Password reset failed."
+msgstr ""
+"Запрос не может быть проверен. (Вы, возможно, ранее представляли его.) "
+"Попытка сброса пароля неудачная."
+
+#: ../../mod/lostpass.php:82 ../../boot.php:654
+msgid "Password Reset"
+msgstr "Сброс пароля"
+
+#: ../../mod/lostpass.php:83
+msgid "Your password has been reset as requested."
+msgstr "Ваш пароль был сброшен по требованию."
+
+#: ../../mod/lostpass.php:84
+msgid "Your new password is"
+msgstr "Ваш новый пароль"
+
+#: ../../mod/lostpass.php:85
+msgid "Save or copy your new password - and then"
+msgstr "Сохраните или скопируйте новый пароль - и затем"
+
+#: ../../mod/lostpass.php:86
+msgid "click here to login"
+msgstr "нажмите здесь для входа"
+
+#: ../../mod/lostpass.php:87
+msgid ""
+"Your password may be changed from the <em>Settings</em> page after "
+"successful login."
+msgstr ""
+"Ваш пароль может быть изменен на странице <em>Настройки</em> после успешного"
+" входа."
+
+#: ../../mod/lostpass.php:118
+msgid "Forgot your Password?"
+msgstr "Забыли пароль?"
+
+#: ../../mod/lostpass.php:119
+msgid ""
+"Enter your email address and submit to have your password reset. Then check "
+"your email for further instructions."
+msgstr ""
+"Введите адрес электронной почты и подтвердите, что вы хотите сбросить ваш "
+"пароль. Затем проверьте свою электронную почту для получения дальнейших "
+"инструкций."
+
+#: ../../mod/lostpass.php:120
+msgid "Nickname or Email: "
+msgstr "Ник или E-mail: "
+
+#: ../../mod/lostpass.php:121
+msgid "Reset"
+msgstr "Сброс"
+
+#: ../../mod/settings.php:64
+msgid "Passwords do not match. Password unchanged."
+msgstr "Пароли не совпадают. Пароль не изменен."
+
+#: ../../mod/settings.php:69
+msgid "Empty passwords are not allowed. Password unchanged."
+msgstr "Пустые пароли не допускаются. Пароль не изменен."
+
+#: ../../mod/settings.php:80
+msgid "Password changed."
+msgstr "Пароль изменен."
+
+#: ../../mod/settings.php:82
+msgid "Password update failed. Please try again."
+msgstr "Обновление пароля не удалось. Пожалуйста, попробуйте еще раз."
+
+#: ../../mod/settings.php:161
+msgid "Failed to connect with email account using the settings provided."
+msgstr ""
+
+#: ../../mod/settings.php:188
+msgid " Please use a shorter name."
+msgstr " Пожалуйста, используйте более короткое имя."
+
+#: ../../mod/settings.php:190
+msgid " Name too short."
+msgstr " Имя слишком короткое."
+
+#: ../../mod/settings.php:196
+msgid " Not valid email."
+msgstr " Неверный e-mail."
+
+#: ../../mod/settings.php:198
+msgid " Cannot change to that email."
+msgstr " Невозможно изменить на этот e-mail."
+
+#: ../../mod/settings.php:257 ../../addon/facebook/facebook.php:297
+#: ../../addon/impressum/impressum.php:64 ../../addon/piwik/piwik.php:89
+#: ../../addon/twitter/twitter.php:275
+msgid "Settings updated."
+msgstr "Настройки обновлены."
+
+#: ../../mod/settings.php:311 ../../include/nav.php:108
+msgid "Account settings"
+msgstr ""
+
+#: ../../mod/settings.php:312
+msgid "Plugin settings"
+msgstr ""
+
+#: ../../mod/settings.php:322
+msgid "No Plugin settings configured"
+msgstr "Нет сконфигурированных настроек плагина"
+
+#: ../../mod/settings.php:329 ../../addon/widgets/widgets.php:122
+msgid "Plugin Settings"
+msgstr "Настройки плагина"
+
+#: ../../mod/settings.php:382 ../../mod/admin.php:133 ../../mod/admin.php:443
+msgid "Normal Account"
+msgstr "Обычный аккаунт"
+
+#: ../../mod/settings.php:383
+msgid "This account is a normal personal profile"
+msgstr "Этот аккаунт является обычным персональным профилем"
+
+#: ../../mod/settings.php:386 ../../mod/admin.php:134 ../../mod/admin.php:444
+msgid "Soapbox Account"
+msgstr "Аккаунт Витрина"
+
+#: ../../mod/settings.php:387
+msgid "Automatically approve all connection/friend requests as read-only fans"
+msgstr ""
+"Автоматически одобряются все подключения / запросы в друзья, только для "
+"чтения поклонниками"
+
+#: ../../mod/settings.php:390 ../../mod/admin.php:135 ../../mod/admin.php:445
+msgid "Community/Celebrity Account"
+msgstr "Аккаунт Сообщество / Знаменитость"
+
+#: ../../mod/settings.php:391
+msgid ""
+"Automatically approve all connection/friend requests as read-write fans"
+msgstr ""
+"Автоматически одобряются все подключения / запросы в друзья, для чтения и "
+"записей поклонников"
+
+#: ../../mod/settings.php:394 ../../mod/admin.php:136 ../../mod/admin.php:446
+msgid "Automatic Friend Account"
+msgstr "Аккаунт Автоматический друг"
+
+#: ../../mod/settings.php:395
+msgid "Automatically approve all connection/friend requests as friends"
+msgstr ""
+"Автоматически одобряются все подключения / запросы в друзья, расширяется "
+"список друзей"
+
+#: ../../mod/settings.php:405
+msgid "OpenID:"
+msgstr ""
+
+#: ../../mod/settings.php:405
+msgid "(Optional) Allow this OpenID to login to this account."
+msgstr ""
+
+#: ../../mod/settings.php:415
+msgid "Publish your default profile in your local site directory?"
+msgstr ""
+
+#: ../../mod/settings.php:421
+msgid "Publish your default profile in the global social directory?"
+msgstr ""
+
+#: ../../mod/settings.php:429
+msgid "Hide your contact/friend list from viewers of your default profile?"
+msgstr ""
+
+#: ../../mod/settings.php:433
+msgid "Hide profile details and all your messages from unknown viewers?"
+msgstr "Скрыть детали профиля и все ваши сообщения от неизвестных зрителей?"
+
+#: ../../mod/settings.php:442
+msgid "Profile is <strong>not published</strong>."
+msgstr "Профиль <strong>не публикуется</strong>."
+
+#: ../../mod/settings.php:461 ../../mod/profile_photo.php:196
+msgid "or"
+msgstr "или"
+
+#: ../../mod/settings.php:466
+msgid "Your Identity Address is"
+msgstr "Ваш идентификационный адрес"
+
+#: ../../mod/settings.php:480
+msgid "Account Settings"
+msgstr "Настройки аккаунта"
+
+#: ../../mod/settings.php:487
+msgid "Export Personal Data"
+msgstr "Экспорт личных данных"
+
+#: ../../mod/settings.php:490
+msgid "Password Settings"
+msgstr "Настройка пароля"
+
+#: ../../mod/settings.php:491
+msgid "New Password:"
+msgstr "Новый пароль:"
+
+#: ../../mod/settings.php:492
+msgid "Confirm:"
+msgstr "Подтвердите:"
+
+#: ../../mod/settings.php:492
+msgid "Leave password fields blank unless changing"
+msgstr "Оставьте поля пароля пустыми, если он не изменяется"
+
+#: ../../mod/settings.php:496
+msgid "Basic Settings"
+msgstr "Основные параметры"
+
+#: ../../mod/settings.php:497 ../../include/profile_advanced.php:10
+msgid "Full Name:"
+msgstr "Полное имя:"
+
+#: ../../mod/settings.php:498
+msgid "Email Address:"
+msgstr "Адрес электронной почты:"
+
+#: ../../mod/settings.php:499
+msgid "Your Timezone:"
+msgstr "Ваш часовой пояс:"
+
+#: ../../mod/settings.php:500
+msgid "Default Post Location:"
+msgstr "Местоположение сообщения по умолчанию:"
+
+#: ../../mod/settings.php:501
+msgid "Use Browser Location:"
+msgstr "Использовать определение местоположения браузером:"
+
+#: ../../mod/settings.php:502
+msgid "Display Theme:"
+msgstr "Показать тему:"
+
+#: ../../mod/settings.php:506
+msgid "Security and Privacy Settings"
+msgstr "Параметры безопасности и конфиденциальности"
+
+#: ../../mod/settings.php:508
+msgid "Maximum Friend Requests/Day:"
+msgstr "Максимум запросов в друзья в день:"
+
+#: ../../mod/settings.php:508
+msgid "(to prevent spam abuse)"
+msgstr "(для предотвращения спама)"
+
+#: ../../mod/settings.php:509
+msgid "Default Post Permissions"
+msgstr "По умолчанию разрешения на сообщения"
+
+#: ../../mod/settings.php:510
+msgid "(click to open/close)"
+msgstr "(нажмите, чтобы открыть / закрыть)"
+
+#: ../../mod/settings.php:514
+msgid "Allow friends to post to your profile page:"
+msgstr "Разрешить друзьям оставлять сообщения на странице вашего профиля:"
+
+#: ../../mod/settings.php:515
+msgid "Automatically expire posts after days:"
+msgstr ""
+
+#: ../../mod/settings.php:515
+msgid "If empty, posts will not expire. Expired posts will be deleted"
+msgstr ""
+
+#: ../../mod/settings.php:524
+msgid "Notification Settings"
+msgstr "Настройка уведомлений"
+
+#: ../../mod/settings.php:525
+msgid "Send a notification email when:"
+msgstr "Отправлять уведомление по электронной почте, когда:"
+
+#: ../../mod/settings.php:526
+msgid "You receive an introduction"
+msgstr "Вы получаете краткую информацию"
+
+#: ../../mod/settings.php:527
+msgid "Your introductions are confirmed"
+msgstr "Ваши сообщения с краткой информацией подтверждены"
+
+#: ../../mod/settings.php:528
+msgid "Someone writes on your profile wall"
+msgstr "Кто-то пишет на стене вашего профиля"
+
+#: ../../mod/settings.php:529
+msgid "Someone writes a followup comment"
+msgstr "Кто-то пишет последующий комментарий"
+
+#: ../../mod/settings.php:530
+msgid "You receive a private message"
+msgstr "Вы получаете личное сообщение"
+
+#: ../../mod/settings.php:534
+msgid "Email/Mailbox Setup"
+msgstr "Настройка Email / почтового ящика"
+
+#: ../../mod/settings.php:535
+msgid ""
+"If you wish to communicate with email contacts using this service "
+"(optional), please specify how to connect to your mailbox."
+msgstr ""
+"Если вы хотите общаться с Email контактами, используя этот сервис (по "
+"желанию), пожалуйста, уточните, как подключиться к вашему почтовому ящику."
+
+#: ../../mod/settings.php:536
+msgid "Last successful email check:"
+msgstr ""
+
+#: ../../mod/settings.php:537
+msgid "Email access is disabled on this site."
+msgstr "Email доступ отключен на этом сайте."
+
+#: ../../mod/settings.php:538
+msgid "IMAP server name:"
+msgstr "Имя IMAP сервера:"
+
+#: ../../mod/settings.php:539
+msgid "IMAP port:"
+msgstr "Порт IMAP:"
+
+#: ../../mod/settings.php:540
+msgid "Security:"
+msgstr ""
+
+#: ../../mod/settings.php:540
+msgid "None"
+msgstr ""
+
+#: ../../mod/settings.php:541
+msgid "Email login name:"
+msgstr "Email логин:"
+
+#: ../../mod/settings.php:542
+msgid "Email password:"
+msgstr "Email пароль:"
+
+#: ../../mod/settings.php:543
+msgid "Reply-to address:"
+msgstr ""
+
+#: ../../mod/settings.php:544
+msgid "Send public posts to all email contacts:"
+msgstr "Отправлять открытые сообщения на все контакты электронной почты:"
+
+#: ../../mod/settings.php:549
+msgid "Advanced Page Settings"
+msgstr "Дополнительные параметры страницы"
+
+#: ../../mod/manage.php:37
+#, php-format
+msgid "Welcome back %s"
+msgstr "С возвращением, %s"
+
+#: ../../mod/manage.php:87
+msgid "Manage Identities and/or Pages"
+msgstr "Управление идентификацией и / или страницами"
+
+#: ../../mod/manage.php:90
+msgid ""
+"(Toggle between different identities or community/group pages which share "
+"your account details.)"
+msgstr ""
+"(Переключение между различными идентификациями или страницами сообществ / "
+"групп, которые делают публичными данные своего аккаунта.)"
+
+#: ../../mod/manage.php:92
+msgid "Select an identity to manage: "
+msgstr "Выберите идентификацию для управления: "
+
+#: ../../mod/network.php:27
+msgid "View Conversations"
+msgstr ""
+
+#: ../../mod/network.php:29
+msgid "View New Items"
+msgstr ""
+
+#: ../../mod/network.php:35
+msgid "View Any Items"
+msgstr ""
+
+#: ../../mod/network.php:43
+msgid "View Starred Items"
+msgstr ""
+
+#: ../../mod/network.php:94
+#, php-format
+msgid "Warning: This group contains %s member from an insecure network."
+msgid_plural ""
+"Warning: This group contains %s members from an insecure network."
+msgstr[0] "Внимание: Эта группа содержит %s участника с незащищенной сети."
+msgstr[1] "Внимание: Эта группа содержит %s участников с незащищенной сети."
+msgstr[2] "Внимание: Эта группа содержит %s участников с незащищенной сети."
+
+#: ../../mod/network.php:97
+msgid "Private messages to this group are at risk of public disclosure."
+msgstr "Личные сообщения к этой группе находятся под угрозой обнародования."
+
+#: ../../mod/network.php:164
+msgid "No such group"
+msgstr "Нет такой группы"
+
+#: ../../mod/network.php:175
+msgid "Group is empty"
+msgstr "Группа пуста"
+
+#: ../../mod/network.php:180
+msgid "Group: "
+msgstr "Группа: "
+
+#: ../../mod/network.php:190
+msgid "Contact: "
+msgstr "Контакт: "
+
+#: ../../mod/network.php:192
+msgid "Private messages to this person are at risk of public disclosure."
+msgstr "Личные сообщения этому человеку находятся под угрозой обнародования."
+
+#: ../../mod/network.php:197
+msgid "Invalid contact."
+msgstr "Недопустимый контакт."
+
+#: ../../mod/notes.php:74
+msgid "Save"
+msgstr "Сохранить"
+
+#: ../../mod/newmember.php:6
+msgid "Welcome to Friendika"
+msgstr ""
+
+#: ../../mod/newmember.php:8
+msgid "New Member Checklist"
+msgstr ""
+
+#: ../../mod/newmember.php:12
+msgid ""
+"We would like to offer some tips and links to help make your experience "
+"enjoyable. Click any item to visit the relevant page."
+msgstr ""
+
+#: ../../mod/newmember.php:16
+msgid ""
+"On your <em>Settings</em> page -  change your initial password. Also make a "
+"note of your Identity Address. This will be useful in making friends."
+msgstr ""
+
+#: ../../mod/newmember.php:18
+msgid ""
+"Review the other settings, particularly the privacy settings. An unpublished"
+" directory listing is like having an unlisted phone number. In general, you "
+"should probably publish your listing - unless all of your friends and "
+"potential friends know exactly how to find you."
+msgstr ""
+
+#: ../../mod/newmember.php:20
+msgid ""
+"Upload a profile photo if you have not done so already. Studies have shown "
+"that people with real photos of themselves are ten times more likely to make"
+" friends than people who do not."
+msgstr ""
+
+#: ../../mod/newmember.php:23
+msgid ""
+"Authorise the Facebook Connector if you currently have a Facebook account "
+"and we will (optionally) import all your Facebook friends and conversations."
+msgstr ""
+
+#: ../../mod/newmember.php:28
+msgid ""
+"Enter your email access information on your Settings page if you wish to "
+"import and interact with friends or mailing lists from your email INBOX"
+msgstr ""
+
+#: ../../mod/newmember.php:30
+msgid ""
+"Edit your <strong>default</strong> profile to your liking. Review the "
+"settings for hiding your list of friends and hiding the profile from unknown"
+" visitors."
+msgstr ""
+
+#: ../../mod/newmember.php:32
+msgid ""
+"Set some public keywords for your default profile which describe your "
+"interests. We may be able to find other people with similar interests and "
+"suggest friendships."
+msgstr ""
+
+#: ../../mod/newmember.php:34
+msgid ""
+"Your Contacts page is your gateway to managing friendships and connecting "
+"with friends on other networks. Typically you enter their address or site "
+"URL in the <em>Connect</em> dialog."
+msgstr ""
+
+#: ../../mod/newmember.php:36
+msgid ""
+"The Directory page lets you find other people in this network or other "
+"federated sites. Look for a <em>Connect</em> or <em>Follow</em> link on "
+"their profile page. Provide your own Identity Address if requested."
+msgstr ""
+
+#: ../../mod/newmember.php:38
+msgid ""
+"Once you have made some friends, organize them into private conversation "
+"groups from the sidebar of your Contacts page and then you can interact with"
+" each group privately on your Network page."
+msgstr ""
+
+#: ../../mod/newmember.php:40
+msgid ""
+"Our <strong>help</strong> pages may be consulted for detail on other program"
+" features and resources."
+msgstr ""
+
+#: ../../mod/attach.php:8
+msgid "Item not available."
+msgstr "Пункт не доступен."
+
+#: ../../mod/attach.php:20
+msgid "Item was not found."
+msgstr "Пункт не был найден."
+
+#: ../../mod/group.php:27
+msgid "Group created."
+msgstr "Группа создана."
+
+#: ../../mod/group.php:33
+msgid "Could not create group."
+msgstr "Не удается создать группу."
+
+#: ../../mod/group.php:43 ../../mod/group.php:123
+msgid "Group not found."
+msgstr "Группа не найдена."
+
+#: ../../mod/group.php:56
+msgid "Group name changed."
+msgstr "Название группы изменено."
+
+#: ../../mod/group.php:67 ../../mod/profperm.php:19 ../../index.php:265
+msgid "Permission denied"
+msgstr "Доступ запрещен"
+
+#: ../../mod/group.php:82
+msgid "Create a group of contacts/friends."
+msgstr "Создать группу контактов / друзей."
+
+#: ../../mod/group.php:83 ../../mod/group.php:166
+msgid "Group Name: "
+msgstr "Название группы: "
+
+#: ../../mod/group.php:98
+msgid "Group removed."
+msgstr "Группа удалена."
+
+#: ../../mod/group.php:100
+msgid "Unable to remove group."
+msgstr "Не удается удалить группу."
+
+#: ../../mod/group.php:164 ../../mod/profperm.php:105
+msgid "Click on a contact to add or remove."
+msgstr "Нажмите на контакт, чтобы добавить или удалить."
+
+#: ../../mod/group.php:165
+msgid "Group Editor"
+msgstr "Редактор группы"
+
+#: ../../mod/group.php:180
+msgid "Members"
+msgstr "Участники"
+
+#: ../../mod/group.php:195
+msgid "All Contacts"
+msgstr "Все контакты"
+
+#: ../../mod/profperm.php:25 ../../mod/profperm.php:55
+msgid "Invalid profile identifier."
+msgstr "Недопустимый идентификатор профиля."
+
+#: ../../mod/profperm.php:101
+msgid "Profile Visibility Editor"
+msgstr "Редактор видимости профиля"
+
+#: ../../mod/profperm.php:114
+msgid "Visible To"
+msgstr "Видимый для"
+
+#: ../../mod/profperm.php:128
+msgid "All Contacts (with secure profile access)"
+msgstr "Все контакты (с безопасным доступом к профилю)"
+
+#: ../../mod/viewcontacts.php:25 ../../include/text.php:555
+msgid "View Contacts"
+msgstr "Просмотр контактов"
+
+#: ../../mod/viewcontacts.php:40
+msgid "No contacts."
+msgstr "Нет контактов."
+
+#: ../../mod/register.php:53
+msgid "An invitation is required."
+msgstr ""
+
+#: ../../mod/register.php:58
+msgid "Invitation could not be verified."
+msgstr ""
+
+#: ../../mod/register.php:66
+msgid "Invalid OpenID url"
+msgstr "Неверный URL OpenID"
+
+#: ../../mod/register.php:81
+msgid "Please enter the required information."
+msgstr "Пожалуйста, введите необходимую информацию."
+
+#: ../../mod/register.php:95
+msgid "Please use a shorter name."
+msgstr "Пожалуйста, используйте более короткое имя."
+
+#: ../../mod/register.php:97
+msgid "Name too short."
+msgstr "Имя слишком короткое."
+
+#: ../../mod/register.php:112
+msgid "That doesn't appear to be your full (First Last) name."
+msgstr "Кажется, что это ваше неполное (Имя Фамилия) имя."
+
+#: ../../mod/register.php:117
+msgid "Your email domain is not among those allowed on this site."
+msgstr ""
+"Домен вашего адреса электронной почты не относится к числу разрешенных на "
+"этом сайте."
+
+#: ../../mod/register.php:120
+msgid "Not a valid email address."
+msgstr "Неверный адрес электронной почты."
+
+#: ../../mod/register.php:130
+msgid "Cannot use that email."
+msgstr "Нельзя использовать этот Email."
+
+#: ../../mod/register.php:136
+msgid ""
+"Your \"nickname\" can only contain \"a-z\", \"0-9\", \"-\", and \"_\", and "
+"must also begin with a letter."
+msgstr ""
+"Ваш \"ник\" может содержать только \"a-z\", \"0-9\", \"-\", и \"_\", а также"
+" должен начинаться с буквы."
+
+#: ../../mod/register.php:142 ../../mod/register.php:243
+msgid "Nickname is already registered. Please choose another."
+msgstr "Такой ник уже зарегистрирован. Пожалуйста, выберите другой."
+
+#: ../../mod/register.php:161
+msgid "SERIOUS ERROR: Generation of security keys failed."
+msgstr "СЕРЬЕЗНАЯ ОШИБКА: генерация ключей безопасности не удалась."
+
+#: ../../mod/register.php:229
+msgid "An error occurred during registration. Please try again."
+msgstr "Ошибка при регистрации. Пожалуйста, попробуйте еще раз."
+
+#: ../../mod/register.php:265
+msgid "An error occurred creating your default profile. Please try again."
+msgstr ""
+"Ошибка создания вашего профиля по умолчанию. Пожалуйста, попробуйте еще раз."
+
+#: ../../mod/register.php:367 ../../mod/regmod.php:52
+#, php-format
+msgid "Registration details for %s"
+msgstr "Подробности регистрации для %s"
+
+#: ../../mod/register.php:375
+msgid ""
+"Registration successful. Please check your email for further instructions."
+msgstr ""
+"Регистрация успешна. Пожалуйста, проверьте свою электронную почту для "
+"получения дальнейших инструкций."
+
+#: ../../mod/register.php:379
+msgid "Failed to send email message. Here is the message that failed."
+msgstr ""
+"Невозможно отправить сообщение электронной почтой. Вот сообщение, которое не"
+" удалось."
+
+#: ../../mod/register.php:384
+msgid "Your registration can not be processed."
+msgstr "Ваша регистрация не может быть обработана."
+
+#: ../../mod/register.php:421
+#, php-format
+msgid "Registration request at %s"
+msgstr "Запрос на регистрацию на %s"
+
+#: ../../mod/register.php:430
+msgid "Your registration is pending approval by the site owner."
+msgstr "Ваша регистрация в ожидании одобрения владельцем сайта."
+
+#: ../../mod/register.php:479
+msgid ""
+"You may (optionally) fill in this form via OpenID by supplying your OpenID "
+"and clicking 'Register'."
+msgstr ""
+"Вы можете (по желанию), заполнить эту форму с помощью OpenID, поддерживая "
+"ваш OpenID и нажав клавишу \"Регистрация\"."
+
+#: ../../mod/register.php:480
+msgid ""
+"If you are not familiar with OpenID, please leave that field blank and fill "
+"in the rest of the items."
+msgstr ""
+"Если вы не знакомы с OpenID, пожалуйста, оставьте это поле пустым и "
+"заполните остальные элементы."
+
+#: ../../mod/register.php:481
+msgid "Your OpenID (optional): "
+msgstr "Ваш OpenID (необязательно):"
+
+#: ../../mod/register.php:495
+msgid "Include your profile in member directory?"
+msgstr "Включить ваш профиль в каталог участников?"
+
+#: ../../mod/register.php:511
+msgid "Membership on this site is by invitation only."
+msgstr ""
+
+#: ../../mod/register.php:512
+msgid "Your invitation ID: "
+msgstr ""
+
+#: ../../mod/register.php:515 ../../mod/admin.php:299
+msgid "Registration"
+msgstr "Регистрация"
+
+#: ../../mod/register.php:523
+msgid "Your Full Name (e.g. Joe Smith): "
+msgstr "Ваше полное имя (например, Joe Smith): "
+
+#: ../../mod/register.php:524
+msgid "Your Email Address: "
+msgstr "Ваш адрес электронной почты: "
+
+#: ../../mod/register.php:525
+msgid ""
+"Choose a profile nickname. This must begin with a text character. Your "
+"profile address on this site will then be "
+"'<strong>nickname@$sitename</strong>'."
+msgstr ""
+"Выбор ник профиля. Он должен начинаться с буквы. Адрес вашего профиля на "
+"данном сайте будет в этом случае '<strong>nickname@$sitename</strong>'."
+
+#: ../../mod/register.php:526
+msgid "Choose a nickname: "
+msgstr "Выберите ник: "
+
+#: ../../mod/register.php:529 ../../include/nav.php:59 ../../boot.php:637
+msgid "Register"
+msgstr "Регистрация"
+
+#: ../../mod/like.php:110 ../../addon/facebook/facebook.php:954
+#: ../../include/diaspora.php:446 ../../include/conversation.php:26
+#: ../../include/conversation.php:35
+msgid "status"
+msgstr "статус"
+
+#: ../../mod/like.php:127 ../../addon/facebook/facebook.php:958
+#: ../../include/diaspora.php:463 ../../include/conversation.php:43
+#, php-format
+msgid "%1$s likes %2$s's %3$s"
+msgstr "%1$s нравится %3$s от %2$s "
+
+#: ../../mod/like.php:129 ../../include/diaspora.php:465
+#: ../../include/conversation.php:46
+#, php-format
+msgid "%1$s doesn't like %2$s's %3$s"
+msgstr "%1$s не нравится %3$s от %2$s "
+
+#: ../../mod/friendika.php:42
+msgid "This is Friendika version"
+msgstr "Это версия Friendika"
+
+#: ../../mod/friendika.php:43
+msgid "running at web location"
+msgstr "работает на веб-узле"
+
+#: ../../mod/friendika.php:45
+msgid ""
+"Shared content within the Friendika network is provided under the <a "
+"href=\"http://creativecommons.org/licenses/by/3.0/\">Creative Commons "
+"Attribution 3.0 license</a>"
+msgstr ""
+"Общий контент в сети Friendika предоставляется по лицензии <a "
+"href=\"http://creativecommons.org/licenses/by/3.0/\">Creative Commons "
+"Attribution 3.0</a>"
+
+#: ../../mod/friendika.php:47
+msgid ""
+"Please visit <a "
+"href=\"http://project.friendika.com\">Project.Friendika.com</a> to learn "
+"more about the Friendika project."
+msgstr ""
+"Пожалуйста, посетите <a "
+"href=\"http://project.friendika.com\">Project.Friendika.com</a>, чтобы "
+"узнать больше о проекте Friendika."
+
+#: ../../mod/friendika.php:49
+msgid "Bug reports and issues: please visit"
+msgstr "Отчеты об ошибках и проблемы: пожалуйста, посетите"
+
+#: ../../mod/friendika.php:50
+msgid ""
+"Suggestions, praise, donations, etc. - please email \"Info\" at Friendika - "
+"dot com"
+msgstr ""
+"Предложения, похвалы, пожертвования и т.д. - пожалуйста, напишите Email "
+"\"Info\" на Friendika - dot com"
+
+#: ../../mod/friendika.php:55
+msgid "Installed plugins/addons/apps"
+msgstr "Установленные плагины / добавки / приложения"
+
+#: ../../mod/friendika.php:63
+msgid "No installed plugins/addons/apps"
+msgstr "Нет установленных плагинов / добавок / приложений"
+
+#: ../../mod/regmod.php:61
+msgid "Account approved."
+msgstr "Аккаунт утвержден."
+
+#: ../../mod/regmod.php:93
+#, php-format
+msgid "Registration revoked for %s"
+msgstr "Регистрация отменена для %s"
+
+#: ../../mod/regmod.php:105
+msgid "Please login."
+msgstr "Пожалуйста, войдите с паролем."
+
+#: ../../mod/item.php:81
+msgid "Unable to locate original post."
+msgstr "Не удалось найти оригинальный пост."
+
+#: ../../mod/item.php:196
+msgid "Empty post discarded."
+msgstr "Пустое сообщение отбрасывается."
+
+#: ../../mod/item.php:296 ../../mod/message.php:93
+#: ../../mod/wall_upload.php:81 ../../mod/wall_upload.php:90
+#: ../../mod/wall_upload.php:97
+msgid "Wall Photos"
+msgstr "Фото стены"
+
+#: ../../mod/item.php:623 ../../mod/item.php:668 ../../mod/item.php:691
+#: ../../mod/item.php:734 ../../mod/dfrn_notify.php:293
+#: ../../mod/dfrn_notify.php:503 ../../mod/dfrn_notify.php:548
+#: ../../mod/dfrn_notify.php:634 ../../mod/dfrn_notify.php:677
+msgid "noreply"
+msgstr "без ответа"
+
+#: ../../mod/item.php:667 ../../mod/item.php:733 ../../mod/dfrn_notify.php:676
+msgid "Administrator@"
+msgstr "Администратор @"
+
+#: ../../mod/item.php:670 ../../mod/dfrn_notify.php:550
+#: ../../mod/dfrn_notify.php:679
+#, php-format
+msgid "%s commented on an item at %s"
+msgstr "%s оставил/а/ комментарий на %s"
+
+#: ../../mod/item.php:736
+#, php-format
+msgid "%s posted to your profile wall at %s"
+msgstr "% S. написал/а/ на стене вашего профиля на %s"
+
+#: ../../mod/item.php:765
+msgid "System error. Post not saved."
+msgstr "Системная ошибка. Сообщение не сохранено."
+
+#: ../../mod/item.php:784
+#, php-format
+msgid ""
+"This message was sent to you by %s, a member of the Friendika social "
+"network."
+msgstr ""
+"Это письмо было отправлено вам от %s, участника социальной сети Friendika."
+
+#: ../../mod/item.php:786
+#, php-format
+msgid "You may visit them online at %s"
+msgstr "Вы можете посетить их в онлайне на %s"
+
+#: ../../mod/item.php:787
+msgid ""
+"Please contact the sender by replying to this post if you do not wish to "
+"receive these messages."
+msgstr ""
+"Пожалуйста, свяжитесь с отправителем, ответив на это сообщение, если вы не "
+"хотите получать эти сообщения."
+
+#: ../../mod/item.php:789
+#, php-format
+msgid "%s posted an update."
+msgstr "%s отправил/а/ обновление."
+
+#: ../../mod/profile_photo.php:28
+msgid "Image uploaded but image cropping failed."
+msgstr "Изображение загружено, но обрезка изображения не удалась."
+
+#: ../../mod/profile_photo.php:61 ../../mod/profile_photo.php:68
+#: ../../mod/profile_photo.php:75 ../../mod/profile_photo.php:248
+#, php-format
+msgid "Image size reduction [%s] failed."
+msgstr "Уменьшение размера изображения [%s] не удалось."
+
+#: ../../mod/profile_photo.php:95
+msgid "Unable to process image"
+msgstr "Не удается обработать изображение"
+
+#: ../../mod/profile_photo.php:109 ../../mod/wall_upload.php:56
+#, php-format
+msgid "Image exceeds size limit of %d"
+msgstr "Изображение превышает предельный размер %d"
+
+#: ../../mod/profile_photo.php:193
+msgid "Upload File:"
+msgstr "Загрузить файл:"
+
+#: ../../mod/profile_photo.php:194
+msgid "Upload Profile Photo"
+msgstr "Загрузить фото профиля"
+
+#: ../../mod/profile_photo.php:195
+msgid "Upload"
+msgstr "Загрузить"
+
+#: ../../mod/profile_photo.php:196
+msgid "skip this step"
+msgstr "пропустить этот шаг"
+
+#: ../../mod/profile_photo.php:196
+msgid "select a photo from your photo albums"
+msgstr "выберите фото из ваших фотоальбомов"
+
+#: ../../mod/profile_photo.php:209
+msgid "Crop Image"
+msgstr "Обрезать изображение"
+
+#: ../../mod/profile_photo.php:210
+msgid "Please adjust the image cropping for optimum viewing."
+msgstr "Пожалуйста, настройте обрезку изображения для оптимального просмотра."
+
+#: ../../mod/profile_photo.php:211
+msgid "Done Editing"
+msgstr "Редактирование выполнено"
+
+#: ../../mod/profile_photo.php:239
+msgid "Image uploaded successfully."
+msgstr "Изображение загружено успешно."
+
+#: ../../mod/hcard.php:11 ../../mod/profile.php:11 ../../boot.php:792
+msgid "No profile"
+msgstr "Нет профиля"
+
+#: ../../mod/removeme.php:42 ../../mod/removeme.php:45
+msgid "Remove My Account"
+msgstr "Удалить мой аккаунт"
+
+#: ../../mod/removeme.php:43
+msgid ""
+"This will completely remove your account. Once this has been done it is not "
+"recoverable."
+msgstr ""
+"Это позволит полностью удалить ваш аккаунт. Как только это будет сделано, "
+"аккаунт восстановлению не подлежит."
+
+#: ../../mod/removeme.php:44
+msgid "Please enter your password for verification:"
+msgstr "Пожалуйста, введите свой пароль для проверки:"
+
+#: ../../mod/message.php:18
+msgid "No recipient selected."
+msgstr "Не выбран получатель."
+
+#: ../../mod/message.php:23
+msgid "[no subject]"
+msgstr "[без темы]"
+
+#: ../../mod/message.php:34
+msgid "Unable to locate contact information."
+msgstr "Не удалось найти контактную информацию."
+
+#: ../../mod/message.php:102
+msgid "Message sent."
+msgstr "Сообщение отправлено."
+
+#: ../../mod/message.php:105
+msgid "Message could not be sent."
+msgstr "Сообщение не может быть отправлено."
+
+#: ../../mod/message.php:125 ../../include/nav.php:102
+msgid "Messages"
+msgstr "Сообщения"
+
+#: ../../mod/message.php:126
+msgid "Inbox"
+msgstr "Входящие"
+
+#: ../../mod/message.php:127
+msgid "Outbox"
+msgstr "Исходящие"
+
+#: ../../mod/message.php:128
+msgid "New Message"
+msgstr "Новое сообщение"
+
+#: ../../mod/message.php:142
+msgid "Message deleted."
+msgstr "Сообщение удалено."
+
+#: ../../mod/message.php:158
+msgid "Conversation removed."
+msgstr "История общения удалена."
+
+#: ../../mod/message.php:172 ../../include/conversation.php:699
+msgid "Please enter a link URL:"
+msgstr "Пожалуйста, введите URL ссылки:"
+
+#: ../../mod/message.php:180
+msgid "Send Private Message"
+msgstr "Отправить личное сообщение"
+
+#: ../../mod/message.php:181 ../../mod/message.php:315
+msgid "To:"
+msgstr "Кому:"
+
+#: ../../mod/message.php:182 ../../mod/message.php:316
+msgid "Subject:"
+msgstr "Тема:"
+
+#: ../../mod/message.php:185 ../../mod/message.php:319
+#: ../../mod/invite.php:101
+msgid "Your message:"
+msgstr "Ваше сообщение:"
+
+#: ../../mod/message.php:224
+msgid "No messages."
+msgstr "Нет сообщений."
+
+#: ../../mod/message.php:237
+msgid "Delete conversation"
+msgstr "Удалить историю общения"
+
+#: ../../mod/message.php:240
+msgid "D, d M Y - g:i A"
+msgstr "D, d M Y - g:i A"
+
+#: ../../mod/message.php:267
+msgid "Message not available."
+msgstr "Сообщение не доступно."
+
+#: ../../mod/message.php:304
+msgid "Delete message"
+msgstr "Удалить сообщение"
+
+#: ../../mod/message.php:314
+msgid "Send Reply"
+msgstr "Отправить ответ"
+
+#: ../../mod/admin.php:66 ../../mod/admin.php:297
+msgid "Site"
+msgstr ""
+
+#: ../../mod/admin.php:67 ../../mod/admin.php:460 ../../mod/admin.php:472
+msgid "Users"
+msgstr ""
+
+#: ../../mod/admin.php:68 ../../mod/admin.php:549 ../../mod/admin.php:586
+msgid "Plugins"
+msgstr ""
+
+#: ../../mod/admin.php:69
+msgid "Update"
+msgstr ""
+
+#: ../../mod/admin.php:83 ../../mod/admin.php:651
+msgid "Logs"
+msgstr ""
+
+#: ../../mod/admin.php:88
+msgid "User registrations waiting for confirmation"
+msgstr ""
+
+#: ../../mod/admin.php:118 ../../mod/admin.php:502 ../../mod/display.php:25
+#: ../../mod/display.php:112 ../../include/items.php:1842
+msgid "Item not found."
+msgstr "Пункт не найден."
+
+#: ../../mod/admin.php:151 ../../mod/admin.php:296 ../../mod/admin.php:459
+#: ../../mod/admin.php:548 ../../mod/admin.php:585 ../../mod/admin.php:650
+msgid "Administration"
+msgstr ""
+
+#: ../../mod/admin.php:152
+msgid "Summary"
+msgstr ""
+
+#: ../../mod/admin.php:153
+msgid "Registered users"
+msgstr ""
+
+#: ../../mod/admin.php:155
+msgid "Pending registrations"
+msgstr ""
+
+#: ../../mod/admin.php:156
+msgid "Version"
+msgstr ""
+
+#: ../../mod/admin.php:158
+msgid "Active plugins"
+msgstr ""
+
+#: ../../mod/admin.php:245
+msgid "Site settings updated."
+msgstr ""
+
+#: ../../mod/admin.php:289
+msgid "Closed"
+msgstr ""
+
+#: ../../mod/admin.php:290
+msgid "Requires approval"
+msgstr ""
+
+#: ../../mod/admin.php:291
+msgid "Open"
+msgstr ""
+
+#: ../../mod/admin.php:300
+msgid "File upload"
+msgstr ""
+
+#: ../../mod/admin.php:301
+msgid "Policies"
+msgstr ""
+
+#: ../../mod/admin.php:302
+msgid "Advanced"
+msgstr ""
+
+#: ../../mod/admin.php:306 ../../addon/statusnet/statusnet.php:459
+msgid "Site name"
+msgstr ""
+
+#: ../../mod/admin.php:307
+msgid "Banner/Logo"
+msgstr ""
+
+#: ../../mod/admin.php:308
+msgid "System language"
+msgstr ""
+
+#: ../../mod/admin.php:309
+msgid "System theme"
+msgstr ""
+
+#: ../../mod/admin.php:311
+msgid "Maximum image size"
+msgstr ""
+
+#: ../../mod/admin.php:313
+msgid "Register policy"
+msgstr ""
+
+#: ../../mod/admin.php:314
+msgid "Register text"
+msgstr ""
+
+#: ../../mod/admin.php:315
+msgid "Allowed friend domains"
+msgstr ""
+
+#: ../../mod/admin.php:316
+msgid "Allowed email domains"
+msgstr ""
+
+#: ../../mod/admin.php:317
+msgid "Block public"
+msgstr ""
+
+#: ../../mod/admin.php:318
+msgid "Force publish"
+msgstr ""
+
+#: ../../mod/admin.php:319
+msgid "Global directory update URL"
+msgstr ""
+
+#: ../../mod/admin.php:321
+msgid "Block multiple registrations"
+msgstr ""
+
+#: ../../mod/admin.php:322
+msgid "OpenID support"
+msgstr ""
+
+#: ../../mod/admin.php:323
+msgid "Gravatar support"
+msgstr ""
+
+#: ../../mod/admin.php:324
+msgid "Fullname check"
+msgstr ""
+
+#: ../../mod/admin.php:325
+msgid "UTF-8 Regular expressions"
+msgstr ""
+
+#: ../../mod/admin.php:326
+msgid "Show Community Page"
+msgstr ""
+
+#: ../../mod/admin.php:327
+msgid "Enable OStatus support"
+msgstr ""
+
+#: ../../mod/admin.php:328
+msgid "Only allow Friendika contacts"
+msgstr ""
+
+#: ../../mod/admin.php:329
+msgid "Verify SSL"
+msgstr ""
+
+#: ../../mod/admin.php:330
+msgid "Proxy user"
+msgstr ""
+
+#: ../../mod/admin.php:331
+msgid "Proxy URL"
+msgstr ""
+
+#: ../../mod/admin.php:332
+msgid "Network timeout"
+msgstr ""
+
+#: ../../mod/admin.php:353
+#, php-format
+msgid "%s user blocked"
+msgid_plural "%s users blocked/unblocked"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: ../../mod/admin.php:360
+#, php-format
+msgid "%s user deleted"
+msgid_plural "%s users deleted"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: ../../mod/admin.php:394
+#, php-format
+msgid "User '%s' deleted"
+msgstr ""
+
+#: ../../mod/admin.php:401
+#, php-format
+msgid "User '%s' unblocked"
+msgstr ""
+
+#: ../../mod/admin.php:401
+#, php-format
+msgid "User '%s' blocked"
+msgstr ""
+
+#: ../../mod/admin.php:462
+msgid "select all"
+msgstr ""
+
+#: ../../mod/admin.php:463
+msgid "User registrations waiting for confirm"
+msgstr "Регистрации пользователей, ожидающие подтверждения"
+
+#: ../../mod/admin.php:464
+msgid "Request date"
+msgstr ""
+
+#: ../../mod/admin.php:464 ../../mod/admin.php:473
+msgid "Email"
+msgstr ""
+
+#: ../../mod/admin.php:465
+msgid "No registrations."
+msgstr "Нет регистраций."
+
+#: ../../mod/admin.php:467
+msgid "Deny"
+msgstr "Отклонить"
+
+#: ../../mod/admin.php:469
+msgid "Block"
+msgstr ""
+
+#: ../../mod/admin.php:470
+msgid "Unblock"
+msgstr ""
+
+#: ../../mod/admin.php:473
+msgid "Register date"
+msgstr ""
+
+#: ../../mod/admin.php:473
+msgid "Last login"
+msgstr ""
+
+#: ../../mod/admin.php:473
+msgid "Last item"
+msgstr ""
+
+#: ../../mod/admin.php:473
+msgid "Account"
+msgstr ""
+
+#: ../../mod/admin.php:475
+msgid ""
+"Selected users will be deleted!\\n\\nEverything these users had posted on "
+"this site will be permanently deleted!\\n\\nAre you sure?"
+msgstr ""
+
+#: ../../mod/admin.php:476
+msgid ""
+"The user {0} will be deleted!\\n\\nEverything this user has posted on this "
+"site will be permanently deleted!\\n\\nAre you sure?"
+msgstr ""
+
+#: ../../mod/admin.php:512
+#, php-format
+msgid "Plugin %s disabled."
+msgstr ""
+
+#: ../../mod/admin.php:516
+#, php-format
+msgid "Plugin %s enabled."
+msgstr ""
+
+#: ../../mod/admin.php:526
+msgid "Disable"
+msgstr ""
+
+#: ../../mod/admin.php:528
+msgid "Enable"
+msgstr ""
+
+#: ../../mod/admin.php:550
+msgid "Toggle"
+msgstr ""
+
+#: ../../mod/admin.php:551 ../../include/nav.php:108
+msgid "Settings"
+msgstr "Настройки"
+
+#: ../../mod/admin.php:613
+msgid "Log settings updated."
+msgstr ""
+
+#: ../../mod/admin.php:653
+msgid "Clear"
+msgstr ""
+
+#: ../../mod/admin.php:659
+msgid "Debugging"
+msgstr ""
+
+#: ../../mod/admin.php:660
+msgid "Log file"
+msgstr ""
+
+#: ../../mod/admin.php:660
+msgid "Must be writable by web server. Relative to your Friendika index.php."
+msgstr ""
+
+#: ../../mod/admin.php:661
+msgid "Log level"
+msgstr ""
+
+#: ../../mod/admin.php:702
+msgid "Close"
+msgstr ""
+
+#: ../../mod/admin.php:708
+msgid "FTP Host"
+msgstr ""
+
+#: ../../mod/admin.php:709
+msgid "FTP Path"
+msgstr ""
+
+#: ../../mod/admin.php:710
+msgid "FTP User"
+msgstr ""
+
+#: ../../mod/admin.php:711
+msgid "FTP Password"
+msgstr ""
+
+#: ../../mod/profile.php:102 ../../mod/display.php:63
+msgid "Access to this profile has been restricted."
+msgstr "Доступ к этому профилю ограничен."
+
+#: ../../mod/profile.php:133
+msgid "Tips for New Members"
+msgstr ""
+
+#: ../../mod/openid.php:62 ../../mod/openid.php:122 ../../include/auth.php:120
+#: ../../include/auth.php:145 ../../include/auth.php:198
+msgid "Login failed."
+msgstr "Войти не удалось."
+
+#: ../../mod/openid.php:78 ../../include/auth.php:214
+msgid "Welcome "
+msgstr "Добро пожаловать, "
+
+#: ../../mod/openid.php:79 ../../include/auth.php:215
+msgid "Please upload a profile photo."
+msgstr "Пожалуйста, загрузите фотографию профиля."
+
+#: ../../mod/openid.php:82 ../../include/auth.php:218
+msgid "Welcome back "
+msgstr "Добро пожаловать обратно, "
+
+#: ../../mod/follow.php:39
+msgid ""
+"This site is not configured to allow communications with other networks."
+msgstr ""
+
+#: ../../mod/follow.php:40 ../../mod/follow.php:50
+msgid "No compatible communication protocols or feeds were discovered."
+msgstr "Обнаружены несовместимые протоколы связи или каналы."
+
+#: ../../mod/follow.php:48
+msgid "The profile address specified does not provide adequate information."
+msgstr "Указанный адрес профиля не дает адекватной информации."
+
+#: ../../mod/follow.php:52
+msgid "An author or name was not found."
+msgstr "Автор или имя не найдены."
+
+#: ../../mod/follow.php:54
+msgid "No browser URL could be matched to this address."
+msgstr "Нет URL браузера, который соответствует этому адресу."
+
+#: ../../mod/follow.php:61
+msgid ""
+"The profile address specified belongs to a network which has been disabled "
+"on this site."
+msgstr "Указанный адрес профиля принадлежит сети, недоступной на этом сайта."
+
+#: ../../mod/follow.php:66
+msgid ""
+"Limited profile. This person will be unable to receive direct/personal "
+"notifications from you."
+msgstr ""
+"Ограниченный профиль. Этот человек не сможет получить прямые / личные "
+"уведомления от вас."
+
+#: ../../mod/follow.php:122
+msgid "Unable to retrieve contact information."
+msgstr "Невозможно получить контактную информацию."
+
+#: ../../mod/follow.php:168
+msgid "following"
+msgstr "следует"
+
+#: ../../mod/display.php:105
+msgid "Item has been removed."
+msgstr "Пункт был удален."
+
+#: ../../mod/dfrn_notify.php:353
+msgid "New mail received at "
+msgstr "Новая почта получена "
+
+#: ../../mod/apps.php:6
+msgid "Applications"
+msgstr "Приложения"
+
+#: ../../mod/apps.php:11
+msgid "No installed applications."
+msgstr ""
+
+#: ../../mod/search.php:26 ../../include/text.php:610 ../../include/nav.php:69
+msgid "Search"
+msgstr "Поиск"
+
+#: ../../mod/profiles.php:21 ../../mod/profiles.php:236
+#: ../../mod/profiles.php:341 ../../mod/dfrn_confirm.php:62
+msgid "Profile not found."
+msgstr "Профиль не найден."
+
+#: ../../mod/profiles.php:28
+msgid "Profile Name is required."
+msgstr "Необходимо имя профиля."
+
+#: ../../mod/profiles.php:198
+msgid "Profile updated."
+msgstr "Профиль обновлен."
+
+#: ../../mod/profiles.php:253
+msgid "Profile deleted."
+msgstr "Профиль удален."
+
+#: ../../mod/profiles.php:269 ../../mod/profiles.php:300
+msgid "Profile-"
+msgstr "Профиль-"
+
+#: ../../mod/profiles.php:288 ../../mod/profiles.php:327
+msgid "New profile created."
+msgstr "Новый профиль создан."
+
+#: ../../mod/profiles.php:306
+msgid "Profile unavailable to clone."
+msgstr "Профиль недоступен для клонирования."
+
+#: ../../mod/profiles.php:353
+msgid "Hide your contact/friend list from viewers of this profile?"
+msgstr "Скрывать ваш список контактов / друзей от посетителей этого профиля?"
+
+#: ../../mod/profiles.php:371
+msgid "Edit Profile Details"
+msgstr "Изменить подробности профиля"
+
+#: ../../mod/profiles.php:373
+msgid "View this profile"
+msgstr "Просмотреть этот профиль"
+
+#: ../../mod/profiles.php:374
+msgid "Create a new profile using these settings"
+msgstr "Создать новый профиль, используя эти настройки"
+
+#: ../../mod/profiles.php:375
+msgid "Clone this profile"
+msgstr "Клонировать этот профиль"
+
+#: ../../mod/profiles.php:376
+msgid "Delete this profile"
+msgstr "Удалить этот профиль"
+
+#: ../../mod/profiles.php:377
+msgid "Profile Name:"
+msgstr "Имя профиля:"
+
+#: ../../mod/profiles.php:378
+msgid "Your Full Name:"
+msgstr "Ваше полное имя:"
+
+#: ../../mod/profiles.php:379
+msgid "Title/Description:"
+msgstr "Заголовок / Описание:"
+
+#: ../../mod/profiles.php:380
+msgid "Your Gender:"
+msgstr "Ваш пол:"
+
+#: ../../mod/profiles.php:381
+#, php-format
+msgid "Birthday (%s):"
+msgstr ""
+
+#: ../../mod/profiles.php:382
+msgid "Street Address:"
+msgstr "Адрес:"
+
+#: ../../mod/profiles.php:383
+msgid "Locality/City:"
+msgstr "Город / Населенный пункт:"
+
+#: ../../mod/profiles.php:384
+msgid "Postal/Zip Code:"
+msgstr "Почтовый индекс:"
+
+#: ../../mod/profiles.php:385
+msgid "Country:"
+msgstr "Страна:"
+
+#: ../../mod/profiles.php:386
+msgid "Region/State:"
+msgstr "Район / Область:"
+
+#: ../../mod/profiles.php:387
+msgid "<span class=\"heart\">&hearts;</span> Marital Status:"
+msgstr "<span class=\"heart\">&hearts;</span> Семейное положение:"
+
+#: ../../mod/profiles.php:388
+msgid "Who: (if applicable)"
+msgstr "Кто: (если применимо)"
+
+#: ../../mod/profiles.php:389
+msgid "Examples: cathy123, Cathy Williams, cathy@example.com"
+msgstr "Примеры: cathy123, Кэти Уильямс, cathy@example.com"
+
+#: ../../mod/profiles.php:390 ../../include/profile_advanced.php:90
+msgid "Sexual Preference:"
+msgstr "Сексуальные предпочтения:"
+
+#: ../../mod/profiles.php:391
+msgid "Homepage URL:"
+msgstr "Адрес домашней странички:"
+
+#: ../../mod/profiles.php:392 ../../include/profile_advanced.php:115
+msgid "Political Views:"
+msgstr "Политические взгляды:"
+
+#: ../../mod/profiles.php:393
+msgid "Religious Views:"
+msgstr "Религиозные взгляды:"
+
+#: ../../mod/profiles.php:394
+msgid "Public Keywords:"
+msgstr "Общественные ключевые слова:"
+
+#: ../../mod/profiles.php:395
+msgid "Private Keywords:"
+msgstr "Личные ключевые слова:"
+
+#: ../../mod/profiles.php:396
+msgid "Example: fishing photography software"
+msgstr "Пример: рыбалка фотографии программное обеспечение"
+
+#: ../../mod/profiles.php:397
+msgid "(Used for suggesting potential friends, can be seen by others)"
+msgstr ""
+"(Используется для предложения потенциальным друзьям, могут увидеть другие)"
+
+#: ../../mod/profiles.php:398
+msgid "(Used for searching profiles, never shown to others)"
+msgstr "(Используется для поиска профилей, никогда не показывается другим)"
+
+#: ../../mod/profiles.php:399
+msgid "Tell us about yourself..."
+msgstr "Расскажите нам о себе ..."
+
+#: ../../mod/profiles.php:400
+msgid "Hobbies/Interests"
+msgstr "Хобби / Интересы"
+
+#: ../../mod/profiles.php:401
+msgid "Contact information and Social Networks"
+msgstr "Контактная информация и социальные сети"
+
+#: ../../mod/profiles.php:402
+msgid "Musical interests"
+msgstr "Музыкальные интересы"
+
+#: ../../mod/profiles.php:403
+msgid "Books, literature"
+msgstr "Книги, литература"
+
+#: ../../mod/profiles.php:404
+msgid "Television"
+msgstr "Телевидение"
+
+#: ../../mod/profiles.php:405
+msgid "Film/dance/culture/entertainment"
+msgstr "Кино / танцы / культура / развлечения"
+
+#: ../../mod/profiles.php:406
+msgid "Love/romance"
+msgstr "Любовь / романтика"
+
+#: ../../mod/profiles.php:407
+msgid "Work/employment"
+msgstr "Работа / занятость"
+
+#: ../../mod/profiles.php:408
+msgid "School/education"
+msgstr "Школа / образование"
+
+#: ../../mod/profiles.php:413
+msgid ""
+"This is your <strong>public</strong> profile.<br />It <strong>may</strong> "
+"be visible to anybody using the internet."
+msgstr ""
+"Это ваш <strong>публичный</strong> профиль. <br /> Он <strong>может</strong>"
+" быть виден каждому, используя Интернет."
+
+#: ../../mod/profiles.php:423 ../../mod/directory.php:112
+msgid "Age: "
+msgstr "Возраст: "
+
+#: ../../mod/profiles.php:458 ../../include/nav.php:109
+msgid "Profiles"
+msgstr "Профили"
+
+#: ../../mod/profiles.php:459
+msgid "Change profile photo"
+msgstr "Изменить фото профиля"
+
+#: ../../mod/profiles.php:460
+msgid "Create New Profile"
+msgstr "Создать новый профиль"
+
+#: ../../mod/profiles.php:470
+msgid "Profile Image"
+msgstr "Фото профиля"
+
+#: ../../mod/profiles.php:472
+msgid "visible to everybody"
+msgstr ""
+
+#: ../../mod/profiles.php:473
+msgid "Edit visibility"
+msgstr "Изменить видимость"
+
+#: ../../mod/directory.php:40
+msgid "Global Directory"
+msgstr "Глобальный каталог"
+
+#: ../../mod/directory.php:46
+msgid "Normal site view"
+msgstr "Стандартный вид сайта"
+
+#: ../../mod/directory.php:48
+msgid "View all site entries"
+msgstr "Посмотреть все записи сайта"
+
+#: ../../mod/directory.php:56
+msgid "Site Directory"
+msgstr "Каталог сайта"
+
+#: ../../mod/directory.php:115
+msgid "Gender: "
+msgstr "Пол: "
+
+#: ../../mod/directory.php:141
+msgid "No entries (some entries may be hidden)."
+msgstr "Нет записей (некоторые записи могут быть скрыты)."
+
+#: ../../mod/invite.php:35
+#, php-format
+msgid "%s : Not a valid email address."
+msgstr "%s: Неверный адрес электронной почты."
+
+#: ../../mod/invite.php:59
+#, php-format
+msgid "Please join my network on %s"
+msgstr "Пожалуйста, присоединяйтесь к моей сети на %s"
+
+#: ../../mod/invite.php:69
+#, php-format
+msgid "%s : Message delivery failed."
+msgstr "%s: Доставка сообщения не удалась."
+
+#: ../../mod/invite.php:73
+#, php-format
+msgid "%d message sent."
+msgid_plural "%d messages sent."
+msgstr[0] "%d сообщение отправлено."
+msgstr[1] "%d сообщений отправлено."
+msgstr[2] "%d сообщений отправлено."
+
+#: ../../mod/invite.php:92
+msgid "You have no more invitations available"
+msgstr ""
+
+#: ../../mod/invite.php:99
+msgid "Send invitations"
+msgstr "Отправить приглашения"
+
+#: ../../mod/invite.php:100
+msgid "Enter email addresses, one per line:"
+msgstr "Введите адреса электронной почты, по одному в строке:"
+
+#: ../../mod/invite.php:102
+#, php-format
+msgid "Please join my social network on %s"
+msgstr "Пожалуйста, присоединяйтесь к моей социальной сети на %s"
+
+#: ../../mod/invite.php:103
+msgid "To accept this invitation, please visit:"
+msgstr "Чтобы принять это приглашение, пожалуйста, посетите:"
+
+#: ../../mod/invite.php:104
+msgid "You will need to supply this invitation code: $invite_code"
+msgstr ""
+
+#: ../../mod/invite.php:104
+msgid ""
+"Once you have registered, please connect with me via my profile page at:"
+msgstr ""
+"После того как вы зарегистрировались, пожалуйста, свяжитесь со мной через "
+"мою страницу профиля по адресу:"
+
+#: ../../mod/dfrn_confirm.php:233
+msgid "Response from remote site was not understood."
+msgstr "Ответ от удаленного сайта не был понят."
+
+#: ../../mod/dfrn_confirm.php:242
+msgid "Unexpected response from remote site: "
+msgstr "Неожиданный ответ от удаленного сайта: "
+
+#: ../../mod/dfrn_confirm.php:250
+msgid "Confirmation completed successfully."
+msgstr "Подтверждение успешно завершено."
+
+#: ../../mod/dfrn_confirm.php:252 ../../mod/dfrn_confirm.php:266
+#: ../../mod/dfrn_confirm.php:273
+msgid "Remote site reported: "
+msgstr "Удаленный сайт сообщил: "
+
+#: ../../mod/dfrn_confirm.php:264
+msgid "Temporary failure. Please wait and try again."
+msgstr "Временные неудачи. Подождите и попробуйте еще раз."
+
+#: ../../mod/dfrn_confirm.php:271
+msgid "Introduction failed or was revoked."
+msgstr "Краткая информация ошибочна или была отозвана."
+
+#: ../../mod/dfrn_confirm.php:393
+msgid "Unable to set contact photo."
+msgstr "Не удается установить фото контакта."
+
+#: ../../mod/dfrn_confirm.php:436 ../../include/conversation.php:79
+#, php-format
+msgid "%1$s is now friends with %2$s"
+msgstr "%1$s и %2$s теперь друзья"
+
+#: ../../mod/dfrn_confirm.php:507
+#, php-format
+msgid "No user record found for '%s' "
+msgstr "Не найдено записи пользователя для '%s' "
+
+#: ../../mod/dfrn_confirm.php:517
+msgid "Our site encryption key is apparently messed up."
+msgstr "Наш ключ шифрования сайта, по-видимому, перепутался."
+
+#: ../../mod/dfrn_confirm.php:528
+msgid "Empty site URL was provided or URL could not be decrypted by us."
+msgstr ""
+"Был предоставлен пустой URL сайта ​​или URL не может быть расшифрован нами."
+
+#: ../../mod/dfrn_confirm.php:549
+msgid "Contact record was not found for you on our site."
+msgstr "Запись контакта не найдена для вас на нашем сайте."
+
+#: ../../mod/dfrn_confirm.php:578
+msgid ""
+"The ID provided by your system is a duplicate on our system. It should work "
+"if you try again."
+msgstr ""
+"ID, предложенный вашей системой, является дубликатом в нашей системе. Он "
+"должен работать, если вы повторите попытку."
+
+#: ../../mod/dfrn_confirm.php:589
+msgid "Unable to set your contact credentials on our system."
+msgstr "Не удалось установить ваши учетные данные контакта в нашей системе."
+
+#: ../../mod/dfrn_confirm.php:642
+msgid "Unable to update your contact profile details on our system"
+msgstr "Не удается обновить ваши контактные детали профиля в нашей системе"
+
+#: ../../mod/dfrn_confirm.php:672
+#, php-format
+msgid "Connection accepted at %s"
+msgstr "Подключение принято в %s"
+
+#: ../../addon/facebook/facebook.php:314
+msgid "Facebook disabled"
+msgstr "Facebook недоступен"
+
+#: ../../addon/facebook/facebook.php:319
+msgid "Updating contacts"
+msgstr "Обновление контактов"
+
+#: ../../addon/facebook/facebook.php:328
+msgid "Facebook API key is missing."
+msgstr "Отсутствует ключ Facebook API."
+
+#: ../../addon/facebook/facebook.php:335
+msgid "Facebook Connect"
+msgstr "Facebook Connect"
+
+#: ../../addon/facebook/facebook.php:341
+msgid "Install Facebook connector for this account."
+msgstr "Установить Facebook Connector для этого аккаунта."
+
+#: ../../addon/facebook/facebook.php:348
+msgid "Remove Facebook connector"
+msgstr "Удалить Facebook Connector"
+
+#: ../../addon/facebook/facebook.php:354
+msgid "Post to Facebook by default"
+msgstr "Отправлять на Facebook по умолчанию"
+
+#: ../../addon/facebook/facebook.php:358
+msgid "Link all your Facebook friends and conversations"
+msgstr "Привязать все ваши разговоры и друзей на Facebook"
+
+#: ../../addon/facebook/facebook.php:363
+msgid "Warning: Your Facebook privacy settings can not be imported."
+msgstr ""
+"Внимание: Ваши установки безопасности на Facebook не могут быть "
+"импортированы."
+
+#: ../../addon/facebook/facebook.php:364
+msgid ""
+"Linked Facebook items <strong>may</strong> be publicly visible, depending on"
+" your privacy settings for this website/account."
+msgstr ""
+
+#: ../../addon/facebook/facebook.php:419
+msgid "Facebook"
+msgstr "Facebook"
+
+#: ../../addon/facebook/facebook.php:420
+msgid "Facebook Connector Settings"
+msgstr "Настройки Facebook Connector"
+
+#: ../../addon/facebook/facebook.php:434
+msgid "Post to Facebook"
+msgstr "Отправить на Facebook"
+
+#: ../../addon/facebook/facebook.php:507
+msgid ""
+"Post to Facebook cancelled because of multi-network access permission "
+"conflict."
+msgstr ""
+"Отправка на Facebook отменена из-за конфликта разрешений доступа разных "
+"сетей."
+
+#: ../../addon/facebook/facebook.php:580
+msgid "Image: "
+msgstr "Изображение: "
+
+#: ../../addon/facebook/facebook.php:656
+msgid "View on Friendika"
+msgstr "Просмотреть на Friendika"
+
+#: ../../addon/facebook/facebook.php:687
+msgid "Facebook post failed. Queued for retry."
+msgstr ""
+
+#: ../../addon/widgets/widgets.php:53
+msgid "Generate new key"
+msgstr "Сгенерировать новый ключ"
+
+#: ../../addon/widgets/widgets.php:56
+msgid "Widgets key"
+msgstr ""
+
+#: ../../addon/widgets/widgets.php:58
+msgid "Widgets available"
+msgstr ""
+
+#: ../../addon/widgets/widget_friends.php:30
+msgid "Connect on Friendika!"
+msgstr "Подключись на Friendika!"
+
+#: ../../addon/tictac/tictac.php:20
+msgid "Three Dimensional Tic-Tac-Toe"
+msgstr "Трехмерные крестики-нолики"
+
+#: ../../addon/tictac/tictac.php:53
+msgid "3D Tic-Tac-Toe"
+msgstr "3D Tic-Tac-Toe"
+
+#: ../../addon/tictac/tictac.php:58
+msgid "New game"
+msgstr "Новая игра"
+
+#: ../../addon/tictac/tictac.php:59
+msgid "New game with handicap"
+msgstr "Новая игра с гандикапом"
+
+#: ../../addon/tictac/tictac.php:60
+msgid ""
+"Three dimensional tic-tac-toe is just like the traditional game except that "
+"it is played on multiple levels simultaneously. "
+msgstr ""
+"Трехмерная игра в крестики-нолики точно такая же, как традиционная игра, за "
+"исключением того, что она играется на нескольких уровнях одновременно."
+
+#: ../../addon/tictac/tictac.php:61
+msgid ""
+"In this case there are three levels. You win by getting three in a row on "
+"any level, as well as up, down, and diagonally across the different levels."
+msgstr ""
+"В этом случае существуют три уровня. Вы выиграете, поставив три в ряд на "
+"любом уровне, а также вверх, вниз и по диагонали на разных уровнях."
+
+#: ../../addon/tictac/tictac.php:63
+msgid ""
+"The handicap game disables the center position on the middle level because "
+"the player claiming this square often has an unfair advantage."
+msgstr ""
+"Игра с гандикапом отключает центральное положение на среднем уровне, потому "
+"что игрок, занимающий эту площадь, часто имеет несправедливое преимущество."
+
+#: ../../addon/tictac/tictac.php:182
+msgid "You go first..."
+msgstr "Вы хотите первым..."
+
+#: ../../addon/tictac/tictac.php:187
+msgid "I'm going first this time..."
+msgstr "Я буду первым на этот раз..."
+
+#: ../../addon/tictac/tictac.php:193
+msgid "You won!"
+msgstr "Вы выиграли!"
+
+#: ../../addon/tictac/tictac.php:199 ../../addon/tictac/tictac.php:224
+msgid "\"Cat\" game!"
+msgstr "Игра \"Кошка\"!"
+
+#: ../../addon/tictac/tictac.php:222
+msgid "I won!"
+msgstr "Я выиграл!"
+
+#: ../../addon/randplace/randplace.php:170
+msgid "Randplace Settings"
+msgstr "Настройки Случайного места"
+
+#: ../../addon/randplace/randplace.php:172
+msgid "Enable Randplace Plugin"
+msgstr "Включить плагин Случайное место"
+
+#: ../../addon/js_upload/js_upload.php:43
+msgid "Upload a file"
+msgstr "Загрузить файл"
+
+#: ../../addon/js_upload/js_upload.php:44
+msgid "Drop files here to upload"
+msgstr "Перетащите файлы здесь для загрузки"
+
+#: ../../addon/js_upload/js_upload.php:46
+msgid "Failed"
+msgstr "Ошибка"
+
+#: ../../addon/js_upload/js_upload.php:292
+msgid "No files were uploaded."
+msgstr "Нет загруженных файлов."
+
+#: ../../addon/js_upload/js_upload.php:298
+msgid "Uploaded file is empty"
+msgstr "Загруженный файл пустой"
+
+#: ../../addon/js_upload/js_upload.php:321
+msgid "File has an invalid extension, it should be one of "
+msgstr ""
+"Файл имеет недопустимое расширение, оно должно быть одним из следующих "
+
+#: ../../addon/js_upload/js_upload.php:332
+msgid "Upload was cancelled, or server error encountered"
+msgstr "Загрузка была отменена, или произошла ошибка сервера"
+
+#: ../../addon/impressum/impressum.php:25
+msgid "Impressum"
+msgstr ""
+
+#: ../../addon/impressum/impressum.php:38
+#: ../../addon/impressum/impressum.php:40
+#: ../../addon/impressum/impressum.php:70
+msgid "Site Owner"
+msgstr ""
+
+#: ../../addon/impressum/impressum.php:38
+#: ../../addon/impressum/impressum.php:74
+msgid "Email Address"
+msgstr ""
+
+#: ../../addon/impressum/impressum.php:43
+#: ../../addon/impressum/impressum.php:72
+msgid "Postal Address"
+msgstr ""
+
+#: ../../addon/impressum/impressum.php:49
+msgid ""
+"The impressum addon needs to be configured!<br />Please add at least the "
+"<tt>owner</tt> variable to your config file. For other variables please "
+"refer to the README file of the addon."
+msgstr ""
+
+#: ../../addon/impressum/impressum.php:71
+msgid "Site Owners Profile"
+msgstr ""
+
+#: ../../addon/impressum/impressum.php:73
+msgid "Notes"
+msgstr ""
+
+#: ../../addon/oembed/oembed.php:30
+msgid "OEmbed settings updated"
+msgstr "OEmbed настройки обновлены"
+
+#: ../../addon/oembed/oembed.php:43
+msgid "Use OEmbed for YouTube videos"
+msgstr ""
+
+#: ../../addon/oembed/oembed.php:71
+msgid "URL to embed:"
+msgstr "URL для встраивания:"
+
+#: ../../addon/statusnet/statusnet.php:133
+msgid "Post to StatusNet"
+msgstr "Отправить на StatusNet"
+
+#: ../../addon/statusnet/statusnet.php:175
+msgid ""
+"Please contact your site administrator.<br />The provided API URL is not "
+"valid."
+msgstr ""
+"Пожалуйста, обратитесь к администратору сайта. <br /> Предложенный URL API "
+"недействителен."
+
+#: ../../addon/statusnet/statusnet.php:203
+msgid "We could not contact the StatusNet API with the Path you entered."
+msgstr "Мы не смогли связаться с API StatusNet с маршрутом, который вы ввели."
+
+#: ../../addon/statusnet/statusnet.php:230
+msgid "StatusNet settings updated."
+msgstr "Настройки StatusNet обновлены."
+
+#: ../../addon/statusnet/statusnet.php:253
+msgid "StatusNet Posting Settings"
+msgstr "Настройка отправки сообщений на StatusNet"
+
+#: ../../addon/statusnet/statusnet.php:267
+msgid "Globally Available StatusNet OAuthKeys"
+msgstr "Глобально доступные StatusNet OAuthKeys"
+
+#: ../../addon/statusnet/statusnet.php:268
+msgid ""
+"There are preconfigured OAuth key pairs for some StatusNet servers "
+"available. If you are useing one of them, please use these credentials. If "
+"not feel free to connect to any other StatusNet instance (see below)."
+msgstr ""
+"Есть предварительно сконфигурированные OAuth пары ключей для некоторых "
+"серверов StatusNet. Если вы используете один из них, пожалуйста, используйте"
+" эти учетные данные. Если нет, не стесняйтесь подключиться к любому другому "
+"экземпляру StatusNet (см. ниже)."
+
+#: ../../addon/statusnet/statusnet.php:276
+msgid "Provide your own OAuth Credentials"
+msgstr "Укажите свои собственные полномочия OAuth"
+
+#: ../../addon/statusnet/statusnet.php:277
+msgid ""
+"No consumer key pair for StatusNet found. Register your Friendika Account as"
+" an desktop client on your StatusNet account, copy the consumer key pair "
+"here and enter the API base root.<br />Before you register your own OAuth "
+"key pair ask the administrator if there is already a key pair for this "
+"Friendika installation at your favorited StatusNet installation."
+msgstr ""
+"Не найдено пары ключей для StatusNet. Зарегистрируйте ваш аккаунт Friendika "
+"счета как для клиент настольного ПК на вашем аккаунте StatusNet, скопируйте "
+"пару ключей покупателя здесь и введите корень базы API. <br /> Перед тем, "
+"как вы зарегистрируете свою собственную пару ключей OAuth, спросите "
+"администратора, может уже есть пара ключей для этой инсталляции Friendika в "
+"вашей избранной установке StatusNet."
+
+#: ../../addon/statusnet/statusnet.php:279
+msgid "OAuth Consumer Key"
+msgstr "OAuth Consumer Key"
+
+#: ../../addon/statusnet/statusnet.php:282
+msgid "OAuth Consumer Secret"
+msgstr "OAuth Consumer Secret"
+
+#: ../../addon/statusnet/statusnet.php:285
+msgid "Base API Path (remember the trailing /)"
+msgstr "Путь базы API (помните о слеше /)"
+
+#: ../../addon/statusnet/statusnet.php:306
+msgid ""
+"To connect to your StatusNet account click the button below to get a "
+"security code from StatusNet which you have to copy into the input box below"
+" and submit the form. Only your <strong>public</strong> posts will be posted"
+" to StatusNet."
+msgstr ""
+"Чтобы подключиться к StatusNet аккаунту, нажмите на кнопку ниже, чтобы "
+"получить код безопасности от StatusNet, который нужно скопировать в поле "
+"ввода ниже, и отправить форму. Только ваши <strong>публичные "
+"сообщения</strong> будут отправляться на StatusNet."
+
+#: ../../addon/statusnet/statusnet.php:307
+msgid "Log in with StatusNet"
+msgstr "Войдите со StatusNet"
+
+#: ../../addon/statusnet/statusnet.php:309
+msgid "Copy the security code from StatusNet here"
+msgstr "Скопируйте код безопасности от StatusNet здесь"
+
+#: ../../addon/statusnet/statusnet.php:315
+msgid "Cancel Connection Process"
+msgstr "Отмена процесса подключения"
+
+#: ../../addon/statusnet/statusnet.php:317
+msgid "Current StatusNet API is"
+msgstr "Текущим StatusNet API является"
+
+#: ../../addon/statusnet/statusnet.php:318
+msgid "Cancel StatusNet Connection"
+msgstr "Отмена StatusNet подключения"
+
+#: ../../addon/statusnet/statusnet.php:329 ../../addon/twitter/twitter.php:180
+msgid "Currently connected to: "
+msgstr "В настоящее время соединены с: "
+
+#: ../../addon/statusnet/statusnet.php:330
+msgid ""
+"If enabled all your <strong>public</strong> postings can be posted to the "
+"associated StatusNet account. You can choose to do so by default (here) or "
+"for every posting separately in the posting options when writing the entry."
+msgstr ""
+
+#: ../../addon/statusnet/statusnet.php:332
+msgid "Allow posting to StatusNet"
+msgstr "Разрешить отправку на StatusNet"
+
+#: ../../addon/statusnet/statusnet.php:335
+msgid "Send public postings to StatusNet by default"
+msgstr "Отправлять публичные сообщения на StatusNet по умолчанию"
+
+#: ../../addon/statusnet/statusnet.php:340 ../../addon/twitter/twitter.php:191
+msgid "Clear OAuth configuration"
+msgstr "Очистить конфигурацию OAuth"
+
+#: ../../addon/statusnet/statusnet.php:460
+msgid "API URL"
+msgstr "API URL"
+
+#: ../../addon/statusnet/statusnet.php:461
+msgid "Consumer Secret"
+msgstr "Consumer Secret"
+
+#: ../../addon/statusnet/statusnet.php:462
+msgid "Consumer Key"
+msgstr "Consumer Key"
+
+#: ../../addon/piwik/piwik.php:77
+msgid "Piwik Base URL"
+msgstr ""
+
+#: ../../addon/piwik/piwik.php:78
+msgid "Site ID"
+msgstr ""
+
+#: ../../addon/piwik/piwik.php:79
+msgid "Show opt-out cookie link?"
+msgstr ""
+
+#: ../../addon/twitter/twitter.php:70
+msgid "Post to Twitter"
+msgstr "Отправить в Твиттер"
+
+#: ../../addon/twitter/twitter.php:115
+msgid "Twitter settings updated."
+msgstr ""
+
+#: ../../addon/twitter/twitter.php:137
+msgid "Twitter Posting Settings"
+msgstr "Настройка отправки сообщений в Твиттер"
+
+#: ../../addon/twitter/twitter.php:144
+msgid ""
+"No consumer key pair for Twitter found. Please contact your site "
+"administrator."
+msgstr ""
+"Не найдено пары потребительских ключей для Твиттера. Пожалуйста, обратитесь "
+"к администратору сайта."
+
+#: ../../addon/twitter/twitter.php:163
+msgid ""
+"At this Friendika instance the Twitter plugin was enabled but you have not "
+"yet connected your account to your Twitter account. To do so click the "
+"button below to get a PIN from Twitter which you have to copy into the input"
+" box below and submit the form. Only your <strong>public</strong> posts will"
+" be posted to Twitter."
+msgstr ""
+"В этой установке Friendika плагин Твиттер был включен, но вы еще не "
+"подключили ваш аккаунт к аккаунту Твиттер. Для этого нажмите на кнопку ниже,"
+" чтобы получить PIN-код из Твиттера, который нужно скопировать в поле ввода "
+"ниже, и отправить форму. Только ваши <strong>публичные сообщения</strong> "
+"будут размещены на Твиттере."
+
+#: ../../addon/twitter/twitter.php:164
+msgid "Log in with Twitter"
+msgstr "Войдите с Твиттером"
+
+#: ../../addon/twitter/twitter.php:166
+msgid "Copy the PIN from Twitter here"
+msgstr "Скопируйте PIN с Твиттера здесь"
+
+#: ../../addon/twitter/twitter.php:181
+msgid ""
+"If enabled all your <strong>public</strong> postings can be posted to the "
+"associated Twitter account. You can choose to do so by default (here) or for"
+" every posting separately in the posting options when writing the entry."
+msgstr ""
+
+#: ../../addon/twitter/twitter.php:183
+msgid "Allow posting to Twitter"
+msgstr ""
+
+#: ../../addon/twitter/twitter.php:186
+msgid "Send public postings to Twitter by default"
+msgstr ""
+
+#: ../../addon/twitter/twitter.php:282
+msgid "Consumer key"
+msgstr ""
+
+#: ../../addon/twitter/twitter.php:283
+msgid "Consumer secret"
+msgstr ""
+
+#: ../../include/profile_advanced.php:23 ../../boot.php:880
+msgid "Gender:"
+msgstr "Пол:"
+
+#: ../../include/profile_advanced.php:36 ../../include/items.php:1137
+msgid "Birthday:"
+msgstr "День рождения:"
+
+#: ../../include/profile_advanced.php:45
+msgid "j F, Y"
+msgstr "j F, Y"
+
+#: ../../include/profile_advanced.php:46
+msgid "j F"
+msgstr "j F"
+
+#: ../../include/profile_advanced.php:59
+msgid "Age:"
+msgstr "Возраст:"
+
+#: ../../include/profile_advanced.php:70
+msgid "<span class=\"heart\">&hearts;</span> Status:"
+msgstr "<span class=\"heart\">&hearts;</span> Статус:"
+
+#: ../../include/profile_advanced.php:103 ../../boot.php:886
+msgid "Homepage:"
+msgstr "Домашняя страничка:"
+
+#: ../../include/profile_advanced.php:127
+msgid "Religion:"
+msgstr "Религия:"
+
+#: ../../include/profile_advanced.php:138
+msgid "About:"
+msgstr "Немного о себе:"
+
+#: ../../include/profile_advanced.php:150
+msgid "Hobbies/Interests:"
+msgstr "Хобби / Интересы:"
+
+#: ../../include/profile_advanced.php:162
+msgid "Contact information and Social Networks:"
+msgstr "Контактная информация и социальные сети:"
+
+#: ../../include/profile_advanced.php:174
+msgid "Musical interests:"
+msgstr "Музыкальные интересы:"
+
+#: ../../include/profile_advanced.php:186
+msgid "Books, literature:"
+msgstr "Книги, литература:"
+
+#: ../../include/profile_advanced.php:198
+msgid "Television:"
+msgstr "Телевидение:"
+
+#: ../../include/profile_advanced.php:210
+msgid "Film/dance/culture/entertainment:"
+msgstr "Кино / Танцы / Культура / Развлечения:"
+
+#: ../../include/profile_advanced.php:222
+msgid "Love/Romance:"
+msgstr "Любовь / Романтика:"
+
+#: ../../include/profile_advanced.php:234
+msgid "Work/employment:"
+msgstr "Работа / Занятость:"
+
+#: ../../include/profile_advanced.php:246
+msgid "School/education:"
+msgstr "Школа / Образование:"
+
+#: ../../include/contact_selectors.php:32
+msgid "Unknown | Not categorised"
+msgstr "Неизвестно | Не определено"
+
+#: ../../include/contact_selectors.php:33
+msgid "Block immediately"
+msgstr "Блокировать немедленно"
+
+#: ../../include/contact_selectors.php:34
+msgid "Shady, spammer, self-marketer"
+msgstr "Тролль, спаммер, рассылает рекламу"
+
+#: ../../include/contact_selectors.php:35
+msgid "Known to me, but no opinion"
+msgstr "Известные мне, но нет определенного мнения"
+
+#: ../../include/contact_selectors.php:36
+msgid "OK, probably harmless"
+msgstr "Хорошо, наверное, безвредные"
+
+#: ../../include/contact_selectors.php:37
+msgid "Reputable, has my trust"
+msgstr "Уважаемые, есть мое доверие"
+
+#: ../../include/contact_selectors.php:55
+msgid "Frequently"
+msgstr "Часто"
+
+#: ../../include/contact_selectors.php:56
+msgid "Hourly"
+msgstr "Раз в час"
+
+#: ../../include/contact_selectors.php:57
+msgid "Twice daily"
+msgstr "Два раза в день"
+
+#: ../../include/contact_selectors.php:58
+msgid "Daily"
+msgstr "Ежедневно"
+
+#: ../../include/contact_selectors.php:59
+msgid "Weekly"
+msgstr "Еженедельно"
+
+#: ../../include/contact_selectors.php:60
+msgid "Monthly"
+msgstr "Ежемесячно"
+
+#: ../../include/profile_selectors.php:6
+msgid "Male"
+msgstr "Мужчина"
+
+#: ../../include/profile_selectors.php:6
+msgid "Female"
+msgstr "Женщина"
+
+#: ../../include/profile_selectors.php:6
+msgid "Currently Male"
+msgstr "В настоящее время мужчина"
+
+#: ../../include/profile_selectors.php:6
+msgid "Currently Female"
+msgstr "В настоящее время женщина"
+
+#: ../../include/profile_selectors.php:6
+msgid "Mostly Male"
+msgstr "В основном мужчина"
+
+#: ../../include/profile_selectors.php:6
+msgid "Mostly Female"
+msgstr "В основном женщина"
+
+#: ../../include/profile_selectors.php:6
+msgid "Transgender"
+msgstr "Транссексуал"
+
+#: ../../include/profile_selectors.php:6
+msgid "Intersex"
+msgstr "Интерсексуал"
+
+#: ../../include/profile_selectors.php:6
+msgid "Transsexual"
+msgstr "Транссексуал"
+
+#: ../../include/profile_selectors.php:6
+msgid "Hermaphrodite"
+msgstr "Гермафродит"
+
+#: ../../include/profile_selectors.php:6
+msgid "Neuter"
+msgstr "Средний род"
+
+#: ../../include/profile_selectors.php:6
+msgid "Non-specific"
+msgstr "Не определен"
+
+#: ../../include/profile_selectors.php:6
+msgid "Other"
+msgstr "Другой"
+
+#: ../../include/profile_selectors.php:6
+msgid "Undecided"
+msgstr "Не решено"
+
+#: ../../include/profile_selectors.php:19
+msgid "Males"
+msgstr "Мужчины"
+
+#: ../../include/profile_selectors.php:19
+msgid "Females"
+msgstr "Женщины"
+
+#: ../../include/profile_selectors.php:19
+msgid "Gay"
+msgstr "Гей"
+
+#: ../../include/profile_selectors.php:19
+msgid "Lesbian"
+msgstr "Лесбиянка"
+
+#: ../../include/profile_selectors.php:19
+msgid "No Preference"
+msgstr "Без предпочтений"
+
+#: ../../include/profile_selectors.php:19
+msgid "Bisexual"
+msgstr "Бисексуал"
+
+#: ../../include/profile_selectors.php:19
+msgid "Autosexual"
+msgstr "Автосексуал"
+
+#: ../../include/profile_selectors.php:19
+msgid "Abstinent"
+msgstr "Воздержанный"
+
+#: ../../include/profile_selectors.php:19
+msgid "Virgin"
+msgstr "Девственница"
+
+#: ../../include/profile_selectors.php:19
+msgid "Deviant"
+msgstr "Девиант"
+
+#: ../../include/profile_selectors.php:19
+msgid "Fetish"
+msgstr "Фетиш"
+
+#: ../../include/profile_selectors.php:19
+msgid "Oodles"
+msgstr "Групповой"
+
+#: ../../include/profile_selectors.php:19
+msgid "Nonsexual"
+msgstr "Нет интереса к сексу"
+
+#: ../../include/profile_selectors.php:33
+msgid "Single"
+msgstr "Без пары"
+
+#: ../../include/profile_selectors.php:33
+msgid "Lonely"
+msgstr "Пока никого нет"
+
+#: ../../include/profile_selectors.php:33
+msgid "Available"
+msgstr "Ищу спутника"
+
+#: ../../include/profile_selectors.php:33
+msgid "Unavailable"
+msgstr "Не ищу никого"
+
+#: ../../include/profile_selectors.php:33
+msgid "Dating"
+msgstr "Для знакомства"
+
+#: ../../include/profile_selectors.php:33
+msgid "Unfaithful"
+msgstr "Изменяю супругу"
+
+#: ../../include/profile_selectors.php:33
+msgid "Sex Addict"
+msgstr "Люблю секс"
+
+#: ../../include/profile_selectors.php:33
+msgid "Friends"
+msgstr "Друзья"
+
+#: ../../include/profile_selectors.php:33
+msgid "Friends/Benefits"
+msgstr "Друзья / Предпочтения"
+
+#: ../../include/profile_selectors.php:33
+msgid "Casual"
+msgstr "Случайные связи"
+
+#: ../../include/profile_selectors.php:33
+msgid "Engaged"
+msgstr "Есть спутник"
+
+#: ../../include/profile_selectors.php:33
+msgid "Married"
+msgstr "Женат / Замужем"
+
+#: ../../include/profile_selectors.php:33
+msgid "Partners"
+msgstr "Партнеры"
+
+#: ../../include/profile_selectors.php:33
+msgid "Cohabiting"
+msgstr "Сожительствую с человеком"
+
+#: ../../include/profile_selectors.php:33
+msgid "Happy"
+msgstr "Счастлив/а/"
+
+#: ../../include/profile_selectors.php:33
+msgid "Not Looking"
+msgstr "Не ищу"
+
+#: ../../include/profile_selectors.php:33
+msgid "Swinger"
+msgstr "Свинг"
+
+#: ../../include/profile_selectors.php:33
+msgid "Betrayed"
+msgstr "Преданный"
+
+#: ../../include/profile_selectors.php:33
+msgid "Separated"
+msgstr "Разделенный"
+
+#: ../../include/profile_selectors.php:33
+msgid "Unstable"
+msgstr "Нестабильный"
+
+#: ../../include/profile_selectors.php:33
+msgid "Divorced"
+msgstr "Разведенный"
+
+#: ../../include/profile_selectors.php:33
+msgid "Widowed"
+msgstr "Овдовевший"
+
+#: ../../include/profile_selectors.php:33
+msgid "Uncertain"
+msgstr "Неопределенный"
+
+#: ../../include/profile_selectors.php:33
+msgid "Complicated"
+msgstr "Сложный"
+
+#: ../../include/profile_selectors.php:33
+msgid "Don't care"
+msgstr "Не беспокоить"
+
+#: ../../include/profile_selectors.php:33
+msgid "Ask me"
+msgstr "Спросите меня"
+
+#: ../../include/event.php:11
+msgid "l F d, Y \\@ g:i A"
+msgstr ""
+
+#: ../../include/event.php:17
+msgid "Starts:"
+msgstr ""
+
+#: ../../include/event.php:27
+msgid "Finishes:"
+msgstr ""
+
+#: ../../include/text.php:229
+msgid "prev"
+msgstr "пред."
+
+#: ../../include/text.php:231
+msgid "first"
+msgstr "первый"
+
+#: ../../include/text.php:260
+msgid "last"
+msgstr "последний"
+
+#: ../../include/text.php:263
+msgid "next"
+msgstr "след."
+
+#: ../../include/text.php:542
+msgid "No contacts"
+msgstr "Нет контактов"
+
+#: ../../include/text.php:550
+#, php-format
+msgid "%d Contact"
+msgid_plural "%d Contacts"
+msgstr[0] "%d контакт"
+msgstr[1] "%d контактов"
+msgstr[2] "%d контактов"
+
+#: ../../include/text.php:711
+msgid "Monday"
+msgstr "Понедельник"
+
+#: ../../include/text.php:711
+msgid "Tuesday"
+msgstr "Вторник"
+
+#: ../../include/text.php:711
+msgid "Wednesday"
+msgstr "Среда"
+
+#: ../../include/text.php:711
+msgid "Thursday"
+msgstr "Четверг"
+
+#: ../../include/text.php:711
+msgid "Friday"
+msgstr "Пятница"
+
+#: ../../include/text.php:711
+msgid "Saturday"
+msgstr "Суббота"
+
+#: ../../include/text.php:711
+msgid "Sunday"
+msgstr "Воскресенье"
+
+#: ../../include/text.php:715
+msgid "January"
+msgstr "Январь"
+
+#: ../../include/text.php:715
+msgid "February"
+msgstr "Февраль"
+
+#: ../../include/text.php:715
+msgid "March"
+msgstr "Март"
+
+#: ../../include/text.php:715
+msgid "April"
+msgstr "Апрель"
+
+#: ../../include/text.php:715
+msgid "May"
+msgstr "Май"
+
+#: ../../include/text.php:715
+msgid "June"
+msgstr "Июнь"
+
+#: ../../include/text.php:715
+msgid "July"
+msgstr "Июль"
+
+#: ../../include/text.php:715
+msgid "August"
+msgstr "Август"
+
+#: ../../include/text.php:715
+msgid "September"
+msgstr "Сентябрь"
+
+#: ../../include/text.php:715
+msgid "October"
+msgstr "Октябрь"
+
+#: ../../include/text.php:715
+msgid "November"
+msgstr "Ноябрь"
+
+#: ../../include/text.php:715
+msgid "December"
+msgstr "Декабрь"
+
+#: ../../include/text.php:778
+msgid "bytes"
+msgstr "байт"
+
+#: ../../include/text.php:861
+msgid "Select an alternate language"
+msgstr ""
+
+#: ../../include/diaspora.php:309
+msgid "Sharing notification from Diaspora network"
+msgstr "Делиться уведомлениями из сети Diaspora"
+
+#: ../../include/oembed.php:95
+msgid "Embedding disabled"
+msgstr "Встраивание отключено"
+
+#: ../../include/group.php:146
+msgid "Create a new group"
+msgstr "Создать новую группу"
+
+#: ../../include/group.php:147
+msgid "Everybody"
+msgstr "Все"
+
+#: ../../include/nav.php:41 ../../boot.php:667
+msgid "Logout"
+msgstr "Выход"
+
+#: ../../include/nav.php:41
+msgid "End this session"
+msgstr ""
+
+#: ../../include/nav.php:44 ../../boot.php:645 ../../boot.php:651
+msgid "Login"
+msgstr "Вход"
+
+#: ../../include/nav.php:44
+msgid "Sign in"
+msgstr ""
+
+#: ../../include/nav.php:55 ../../include/nav.php:93
+msgid "Home"
+msgstr "Главная"
+
+#: ../../include/nav.php:55
+msgid "Home Page"
+msgstr ""
+
+#: ../../include/nav.php:59
+msgid "Create an account"
+msgstr ""
+
+#: ../../include/nav.php:64
+msgid "Help and documentation"
+msgstr ""
+
+#: ../../include/nav.php:67
+msgid "Apps"
+msgstr "Приложения"
+
+#: ../../include/nav.php:67
+msgid "Addon applications, utilities, games"
+msgstr ""
+
+#: ../../include/nav.php:69
+msgid "Search site content"
+msgstr ""
+
+#: ../../include/nav.php:79
+msgid "Conversations on this site"
+msgstr ""
+
+#: ../../include/nav.php:81
+msgid "Directory"
+msgstr "Каталог"
+
+#: ../../include/nav.php:81
+msgid "People directory"
+msgstr ""
+
+#: ../../include/nav.php:91
+msgid "Network"
+msgstr "Сеть"
+
+#: ../../include/nav.php:91
+msgid "Conversations from your friends"
+msgstr ""
+
+#: ../../include/nav.php:93
+msgid "Your posts and conversations"
+msgstr ""
+
+#: ../../include/nav.php:99
+msgid "Notifications"
+msgstr "Уведомления"
+
+#: ../../include/nav.php:99
+msgid "Friend requests"
+msgstr ""
+
+#: ../../include/nav.php:102
+msgid "Private mail"
+msgstr ""
+
+#: ../../include/nav.php:105
+msgid "Manage"
+msgstr "Управлять"
+
+#: ../../include/nav.php:105
+msgid "Manage other pages"
+msgstr ""
+
+#: ../../include/nav.php:109
+msgid "Manage/edit profiles"
+msgstr ""
+
+#: ../../include/nav.php:110
+msgid "Manage/edit friends and contacts"
+msgstr ""
+
+#: ../../include/nav.php:117
+msgid "Admin"
+msgstr ""
+
+#: ../../include/nav.php:117
+msgid "Site setup and configuration"
+msgstr ""
+
+#: ../../include/auth.php:27
+msgid "Logged out."
+msgstr "Выход из системы."
+
+#: ../../include/datetime.php:44 ../../include/datetime.php:46
+msgid "Miscellaneous"
+msgstr "Разное"
+
+#: ../../include/datetime.php:105 ../../include/datetime.php:237
+msgid "year"
+msgstr "год"
+
+#: ../../include/datetime.php:110 ../../include/datetime.php:238
+msgid "month"
+msgstr "месяц"
+
+#: ../../include/datetime.php:115 ../../include/datetime.php:240
+msgid "day"
+msgstr "день"
+
+#: ../../include/datetime.php:228
+msgid "never"
+msgstr ""
+
+#: ../../include/datetime.php:234
+msgid "less than a second ago"
+msgstr "менее секунды назад"
+
+#: ../../include/datetime.php:237
+msgid "years"
+msgstr "лет"
+
+#: ../../include/datetime.php:238
+msgid "months"
+msgstr "месяцев"
+
+#: ../../include/datetime.php:239
+msgid "week"
+msgstr "неделя"
+
+#: ../../include/datetime.php:239
+msgid "weeks"
+msgstr "недель"
+
+#: ../../include/datetime.php:240
+msgid "days"
+msgstr "дней"
+
+#: ../../include/datetime.php:241
+msgid "hour"
+msgstr "час"
+
+#: ../../include/datetime.php:241
+msgid "hours"
+msgstr "часов"
+
+#: ../../include/datetime.php:242
+msgid "minute"
+msgstr "минута"
+
+#: ../../include/datetime.php:242
+msgid "minutes"
+msgstr "минут"
+
+#: ../../include/datetime.php:243
+msgid "second"
+msgstr "секунда"
+
+#: ../../include/datetime.php:243
+msgid "seconds"
+msgstr "секунд"
+
+#: ../../include/datetime.php:250
+msgid " ago"
+msgstr " назад"
+
+#: ../../include/poller.php:418
+msgid "From: "
+msgstr "От: "
+
+#: ../../include/bbcode.php:116
+msgid "Image/photo"
+msgstr "Изображение / Фото"
+
+#: ../../include/dba.php:31
+#, php-format
+msgid "Cannot locate DNS info for database server '%s'"
+msgstr "Не могу найти информацию для DNS-сервера базы данных '%s'"
+
+#: ../../include/acl_selectors.php:279
+msgid "Visible to everybody"
+msgstr "Видимо всем"
+
+#: ../../include/acl_selectors.php:280
+msgid "show"
+msgstr ""
+
+#: ../../include/acl_selectors.php:281
+msgid "don't show"
+msgstr ""
+
+#: ../../include/notifier.php:465
+msgid "(no subject)"
+msgstr "(без темы)"
+
+#: ../../include/items.php:1526
+msgid "You have a new follower at "
+msgstr "У вас есть новый фолловер на "
+
+#: ../../include/conversation.php:23
+msgid "event"
+msgstr ""
+
+#: ../../include/conversation.php:213 ../../include/conversation.php:488
+#: ../../include/conversation.php:489
+#, php-format
+msgid "View %s's profile"
+msgstr "Просмотреть профиль %s"
+
+#: ../../include/conversation.php:222 ../../include/conversation.php:501
+#, php-format
+msgid "%s from %s"
+msgstr "%s от %s"
+
+#: ../../include/conversation.php:230
+msgid "View in context"
+msgstr "Смотреть в контексте"
+
+#: ../../include/conversation.php:301
+msgid "See more posts like this"
+msgstr "Просмотреть другие сообщения, похожие на это"
+
+#: ../../include/conversation.php:329
+#, php-format
+msgid "See all %d comments"
+msgstr "Просмотреть все %d комментариев"
+
+#: ../../include/conversation.php:427
+msgid "Select"
+msgstr "Выберите"
+
+#: ../../include/conversation.php:429
+msgid "toggle star status"
+msgstr "переключить статус"
+
+#: ../../include/conversation.php:490
+msgid "to"
+msgstr "к"
+
+#: ../../include/conversation.php:491
+msgid "Wall-to-Wall"
+msgstr "Стена-на-Стену"
+
+#: ../../include/conversation.php:492
+msgid "via Wall-To-Wall:"
+msgstr "через Стена-на-Стену:"
+
+#: ../../include/conversation.php:534
+msgid "Delete Selected Items"
+msgstr "Удалить выбранные позиции"
+
+#: ../../include/conversation.php:608
+msgid "View status"
+msgstr "Просмотреть статус"
+
+#: ../../include/conversation.php:609
+msgid "View profile"
+msgstr "Просмотреть профиль"
+
+#: ../../include/conversation.php:610
+msgid "View photos"
+msgstr "Просмотреть фото"
+
+#: ../../include/conversation.php:611
+msgid "View recent"
+msgstr "Просмотреть последние"
+
+#: ../../include/conversation.php:613
+msgid "Send PM"
+msgstr "Отправить ЛС"
+
+#: ../../include/conversation.php:663
+#, php-format
+msgid "%s likes this."
+msgstr "%s нравится это."
+
+#: ../../include/conversation.php:663
+#, php-format
+msgid "%s doesn't like this."
+msgstr "%s не нравится это."
+
+#: ../../include/conversation.php:667
+#, php-format
+msgid "<span  %1$s>%2$d people</span> like this."
+msgstr "<span  %1$s>%2$d чел.</span> нравится это."
+
+#: ../../include/conversation.php:669
+#, php-format
+msgid "<span  %1$s>%2$d people</span> don't like this."
+msgstr "<span  %1$s>%2$d чел.</span> не нравится это."
+
+#: ../../include/conversation.php:675
+msgid "and"
+msgstr "и"
+
+#: ../../include/conversation.php:678
+#, php-format
+msgid ", and %d other people"
+msgstr ", и %d других чел."
+
+#: ../../include/conversation.php:679
+#, php-format
+msgid "%s like this."
+msgstr "%s нравится это."
+
+#: ../../include/conversation.php:679
+#, php-format
+msgid "%s don't like this."
+msgstr "%s не нравится это."
+
+#: ../../include/conversation.php:698
+msgid "Visible to <strong>everybody</strong>"
+msgstr "Видимое <strong>всем</strong>"
+
+#: ../../include/conversation.php:700
+msgid "Please enter a YouTube link:"
+msgstr "Пожалуйста, введите ссылку YouTube:"
+
+#: ../../include/conversation.php:701
+msgid "Please enter a video(.ogg) link/URL:"
+msgstr "Пожалуйста, введите видео (.ogg) ссылку / URL:"
+
+#: ../../include/conversation.php:702
+msgid "Please enter an audio(.ogg) link/URL:"
+msgstr "Пожалуйста, введите аудио (.ogg) ссылку / URL:"
+
+#: ../../include/conversation.php:703
+msgid "Where are you right now?"
+msgstr "И где вы сейчас?"
+
+#: ../../include/conversation.php:704
+msgid "Enter a title for this item"
+msgstr "Введите название для данного элемента"
+
+#: ../../include/conversation.php:755
+msgid "Set title"
+msgstr "Установить заголовок"
+
+#: ../../boot.php:410
+msgid "Delete this item?"
+msgstr "Удалить этот элемент?"
+
+#: ../../boot.php:636
+msgid "Create a New Account"
+msgstr "Создать новый аккаунт"
+
+#: ../../boot.php:643
+msgid "Nickname or Email address: "
+msgstr "Ник или адрес электронной почты: "
+
+#: ../../boot.php:644
+msgid "Password: "
+msgstr "Пароль: "
+
+#: ../../boot.php:649
+msgid "Nickname/Email/OpenID: "
+msgstr "Ник / Email / OpenID: "
+
+#: ../../boot.php:650
+msgid "Password (if not OpenID): "
+msgstr "Пароль (если не OpenID): "
+
+#: ../../boot.php:653
+msgid "Forgot your password?"
+msgstr "Забыли пароль?"
+
+#: ../../boot.php:853
+msgid "Connect"
+msgstr "Подключиться"
+
+#: ../../boot.php:872
+msgid ", "
+msgstr ", "
+
+#: ../../boot.php:884
+msgid "Status:"
+msgstr "Статус:"
+
+#: ../../boot.php:975
+msgid "g A l F d"
+msgstr "g A l F d"
+
+#: ../../boot.php:993
+msgid "Birthday Reminders"
+msgstr "Напоминания о днях рождения"
+
+#: ../../boot.php:994
+msgid "Birthdays this week:"
+msgstr "Дни рождения на этой неделе:"
+
+#: ../../boot.php:995
+msgid "(Adjusted for local time)"
+msgstr "(С поправкой на местное время)"
+
+#: ../../boot.php:1006
+msgid "[today]"
+msgstr "[сегодня]"
+
+#: ../../index.php:209
+msgid "Not Found"
+msgstr "Не найдено"
+
+#: ../../index.php:210
+msgid "Page not found."
+msgstr "Страница не найдена."
+
+
