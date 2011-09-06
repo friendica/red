@@ -18,7 +18,7 @@ Please provide your full name as you would like it to be displayed on this syste
 
 *Email Address*
 
-Please provide a valid email address. Your email address is **never** published. We need this to send you account information and your login details. You may also occasionally receive notifications of incoming messages or items requiring your attention, but you have the ability to completely disable these once from your Settings page once you have logged in.     
+Please provide a valid email address. Your email address is **never** published. We need this to send you account information and your login details. You may also occasionally receive notifications of incoming messages or items requiring your attention, but you have the ability to completely disable these from your Settings page once you have logged in.     
 
 *Nickname*
 
