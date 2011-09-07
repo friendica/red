@@ -274,7 +274,7 @@ function facebook_post(&$a) {
 		$no_linking = get_pconfig($uid,'facebook','no_linking');
 
 		$no_wall = ((x($_POST,'facebook_no_wall')) ? intval($_POST['facebook_no_wall']) : 0);
-		set__pconfig($uid,'facebook','no_wall',$no_wall);
+		set_pconfig($uid,'facebook','no_wall',$no_wall);
 	
 
 		$linkvalue = ((x($_POST,'facebook_linking')) ? intval($_POST['facebook_linking']) : 0);
