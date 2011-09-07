@@ -277,14 +277,15 @@ function dfrn_request_post(&$a) {
 
 		// Canonicalise email-style profile locator
 
-		$url = webfinger_dfrn($url);
+		$hcard = '';
+		$url = webfinger_dfrn($url,$hcard);
 
 		if(substr($url,0,5) === 'stat:') {
-			$network = 'stat';
+			$network = NETWORK_OSTATUS;
 			$url = substr($url,5);
 		}
 		else {
-			$network = 'dfrn';
+			$network = NETWORK_DFRN;
 		}
 
 		logger('dfrn_request: url: ' . $url);
@@ -342,7 +343,7 @@ function dfrn_request_post(&$a) {
 
 				require_once('Scrape.php');
 
-				$parms = scrape_dfrn($url);
+				$parms = scrape_dfrn(($hcard) ? $hcard : $url);
 
 				if(! count($parms)) {
 					notice( t('Profile location is not valid or does not contain profile information.') . EOL );
