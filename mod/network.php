@@ -320,7 +320,8 @@ function network_content(&$a, $update = 0) {
 			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 			, (SELECT `_com`.`parent`,max(`_com`.`created`) as `created`
 				FROM `item` AS `_com` 
-				WHERE `_com`.`uid`=%d AND `_com`.`parent`!=`id` 
+				WHERE `_com`.`uid`=%d AND
+				(`_com`.`parent`!=`_com`.`id` OR `_com`.`id`  NOT IN (SELECT `__com`.`parent` FROM `item` as `__com` WHERE `__com`.`parent`!=`__com`.`id`))
 				GROUP BY `_com`.`parent` ORDER BY `created` DESC) AS `com` 
 			WHERE `item`.`id`=`com`.`parent` AND
 			`item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
@@ -333,7 +334,6 @@ function network_content(&$a, $update = 0) {
 			intval($a->pager['start']),
 			intval($a->pager['itemspage'])
 		);
-
 		// Then fetch all the children of the parents that are on this page
 
 		$parents_arr = array();
@@ -351,7 +351,8 @@ function network_content(&$a, $update = 0) {
 				FROM `item`, `contact`,
 					(SELECT `_com`.`parent`,max(`_com`.`created`) as `created`
 					FROM `item` AS `_com` 
-					WHERE `_com`.`uid`=%d AND `_com`.`parent`!=`id` 
+					WHERE `_com`.`uid`=%d AND
+					(`_com`.`parent`!=`_com`.`id` OR `_com`.`id`  NOT IN (SELECT `__com`.`parent` FROM `item` as `__com` WHERE `__com`.`parent`!=`__com`.`id`))
 					GROUP BY `_com`.`parent` ORDER BY `created` DESC) AS `com` 
 				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
 				AND `contact`.`id` = `item`.`contact-id`
