@@ -97,9 +97,10 @@
 			var eNotif = $(data).find('notif')
 			notif = eNotif.attr('count');
 			if (notif>0){
+				$("#nav-notifications-linkmenu").addClass("on");
 				nnm = $("#nav-notifications-menu");
 				nnm.html("");
-				nnm.attr('popup','true');
+				//nnm.attr('popup','true');
 				eNotif.children("note").each(function(){
 					e = $(this);
 					text = e.text().format("<span class='contactname'>"+e.attr('name')+"</span>");
@@ -107,6 +108,7 @@
 					nnm.append(html);
 				});
 			} else {
+				$("#nav-notifications-linkmenu").removeClass("on");
 				$("#nav-notifications-menu").html(notifications_empty);
 			}
 			if(notif == 0) { notif = ''; $('#notify-update').removeClass('show') } else { $('#notify-update').addClass('show') }
