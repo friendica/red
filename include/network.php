@@ -259,22 +259,29 @@ function convert_xml_element_to_array($xml_element, &$recursion_depth=0) {
 // or if the resultant personal XRD doesn't contain a supported 
 // subscription/friend-request attribute.
 
+// amended 7/9/2011 to return an hcard which could save potentially loading 
+// a lengthy content page to scrape dfrn attributes
+
 if(! function_exists('webfinger_dfrn')) {
-function webfinger_dfrn($s) {
+function webfinger_dfrn($s,&$hcard) {
 	if(! strstr($s,'@')) {
 		return $s;
 	}
+	$profile_link = '';
+
 	$links = webfinger($s);
 	logger('webfinger_dfrn: ' . $s . ':' . print_r($links,true), LOGGER_DATA);
 	if(count($links)) {
-		foreach($links as $link)
+		foreach($links as $link) {
 			if($link['@attributes']['rel'] === NAMESPACE_DFRN)
-				return $link['@attributes']['href'];
-		foreach($links as $link)
+				$profile_link = $link['@attributes']['href'];
 			if($link['@attributes']['rel'] === NAMESPACE_OSTATUSSUB)
-				return 'stat:' . $link['@attributes']['template'];		
+				$profile_link = 'stat:' . $link['@attributes']['template'];	
+			if($link['@attributes']['rel'] === 'http://microformats.org/profile/hcard')
+				$hcard = $link['@attributes']['href'];				
+		}
 	}
-	return '';
+	return $profile_link;
 }}
 
 // Given an email style address, perform webfinger lookup and 

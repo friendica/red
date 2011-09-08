@@ -29,19 +29,21 @@ You can also use your Identity Address or other people's Identity Addresses to b
 
 If you have supplied your mailbox connection information on your Settings page, you can enter the email address of anybody that has sent you a message recently and have their email messages show up in your social stream. You can also reply to them from within Friendika.  
 
-People can also become friends with you from other networks. If a friend of yours has an identi.ca account, they can become friends with you by putting your Friendika Identity Address into their identi.ca subscription dialog box. 
+People can also become friends with you from other networks. If a friend of yours has an identi.ca account, they can become friends with you by putting your Friendika Identity Address into their identi.ca subscription dialog box. A similar mechanism is available for Diaspora members, by putting your iendtity address into their search bar. 
 
-If this happens you will receive a notification. You will need to approve this before the friendship is complete.
+Note: Some versions of StatusNet software may require the full URL to your profile and may not work with the identity address.
 
-Some networks allow people to send you messages without being friends and without your approval. Friendika does not allow this by default, as it would open a gateway for spam. So when you've approved a friend request from one of these networks, look at your contact page for that person (this will be displayed as soon as you approve the relationship). They might be marked as an "Ignored" contact. 
+When somebody requests friendship you will receive a notification. You will need to approve this before the friendship is complete.
 
-This means they can see some of your posts (your public posts), but they aren't permitted to send you anything. You can "Un-ignore" them if you desire to allow them to contact you directly and to have their status updates appear in your Network feed. 
+Some networks allow people to send you messages without being friends and without your approval. Friendika does not allow this by default, as it would open a gateway for spam. 
 
-When you receive a friendship notification from another Friendika member, you will have the option of allowing them as a "fan" or as a "friend". If they are a fan, they can see what you have to say, including private communications that you send to them, but not vice versa. As a friend, you can both communicate with each other.
+When you receive a friendship notification from another Friendika member, you will have the option of allowing them as a "fan" or as a "friend". If they are a fan, they can see what you have to say, including private communications that you send to them, but not vice versa. As a friend, you can both communicate with each other. 
+
+Diaspora uses a different terminology, and you are given the option of allowing them to "share with you",  or being full friends. 
 
 Once you have become friends, if you find the person constantly sends you spam or worthless information, you can "Ignore" them - without breaking off the friendship or even alerting them to the fact that you aren't interested in anything they are saying. In many ways they are like a "fan" - but they don't know this. They think they are a friend. 
 
-You can also "block" a person. This completely blocks communications with that person. They may still be able to see your public posts, as can anybody in the world, but they cannot communicate with you directly in any way.  They will know or be able to discover that they have been blocked but there's nothing they can do about it. 
+You can also "block" a person. This completely blocks communications with that person. They may still be able to see your public posts, as can anybody in the world, but they cannot communicate with you directly. 
 
 You can also delete a friend no matter what the friendship status - which complete removes everything relating to that person from your website. 
 

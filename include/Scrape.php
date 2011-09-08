@@ -471,7 +471,7 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 		}
 
 		if(strlen($dfrn)) {
-			$ret = scrape_dfrn($dfrn);
+			$ret = scrape_dfrn(($hcard) ? $hcard : $dfrn);
 			if(is_array($ret) && x($ret,'dfrn-request')) {
 				$network = NETWORK_DFRN;
 				$request = $ret['dfrn-request'];

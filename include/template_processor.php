@@ -1,5 +1,6 @@
 <?php
 
+
 	class Template {
 		var $r;
 		var $search;
@@ -8,6 +9,8 @@
 		var $nodes = array();
 		var $done = false;
 		var $d = false;
+		var $lang = null;
+		
 		
 		private function _preg_error(){
 			switch(preg_last_error()){
@@ -156,8 +159,24 @@
 			krsort($this->nodes);
 			return $s;
 		}
+
+		private function _get_lang(){
+			if ($this->lang!=null) return $this->lang;
+			
+			$a = get_app();
+			$this->lang=array();
+			foreach ($a->strings as $k=>$v){
+				$k =  preg_replace("/[^a-z0-9-]/", "", str_replace(" ","-", strtolower($k)));
+				$this->lang[$k] = $v;
+			}
+			return $this->lang;
+		}
+
 		
 		public function replace($s, $r) {
+			if (!x($r,'$lang')){
+				$r['$lang'] = &$this->_get_lang();
+			}
 			$this->r = $r;
 			$this->search = array();
 			$this->replace = array();
@@ -171,7 +190,7 @@
 			
 			// remove comments block
 			$s = preg_replace('/{#[^#]*#}/', "" , $s);
-			
+						
 			// replace strings recursively (limit to 10 loops)
 			$os = ""; $count=0;
 			while($os!=$s && $count<10){

@@ -566,7 +566,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				dbesc($newurl),
 				intval($local_uid)
 			);
-			if(! count($r)) {
+			if(! count($ret)) {
 				// this is either a bogus confirmation (?) or we deleted the original introduction.
 				$message = t('Contact record was not found for you on our site.');
 				xml_status(3,$message);
@@ -580,6 +580,11 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 
 		$foreign_pubkey = $ret[0]['site-pubkey'];
 		$dfrn_record    = $ret[0]['id'];
+
+		if(! $foreign_pubkey) {
+			$message = sprintf( t('Site public key not available in contact record for URL %s.'), $newurl);
+			xml_status(3,$message);
+		}
 
 		$decrypted_dfrn_id = "";
 		openssl_public_decrypt($dfrn_id,$decrypted_dfrn_id,$foreign_pubkey);

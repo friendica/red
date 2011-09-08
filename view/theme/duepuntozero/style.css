@@ -803,6 +803,9 @@ input#dfrn-url {
 	float: left;
 	margin-right: 5px;
 }
+#network-bmark-link {
+	margin-top: 10px;
+}
 
 .wall-item-content-wrapper {
 	margin-top: 10px;

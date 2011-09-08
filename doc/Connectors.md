@@ -20,6 +20,12 @@ Instructions For Connecting To People On Specific Services
 
 You may connect by providing your Identity Address on the 'Connect' page of any Friendika member. You may also put their Identity Address into the Connect box on your [Contacts](contacts) page. 
 
+
+**Diaspora**
+
+Add the Diaspora 'handle' to the 'Connect/Follow' text box on your [Contacts](contacts) page. 
+
+
 **Identi.ca/StatusNet/GNU-Social**
 
 These are described as the "federated social web" or OStatus contacts. 
@@ -44,10 +50,6 @@ This will allow you to _connect_ with millions of pages on the internet. All tha
 **Twitter**
 
 To follow a Twitter member, put the URL of the Twitter member's main page into the Connect box on your [Contacts](contacts) page. To reply, you must have the Twitter connector installed, and reply using your own status editor. Begin the message with @twitterperson replacing with the Twitter username.
-
-**Diaspora**
-
-To follow a Diaspora member, put either the URL or the pod address (Identity Address) of the Diaspora member into the Connect box on your [Contacts](contacts) page. It is not currently possible to reply to Diaspora members. This will be provided in a future release (once the Diaspora communication protocols stabilise and are published). 
 
 **Email**
 
