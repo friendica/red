@@ -243,7 +243,7 @@ nav #nav-site-linkmenu .menu-popup {
   right: 0px;
   left: auto;
 }
-nav #nav-notifications-linkmenu.selected .icon.s22.notify {
+nav #nav-notifications-linkmenu.on .icon.s22.notify, nav #nav-notifications-linkmenu.selected .icon.s22.notify {
   background-image: url("../../../images/icons/22/notify_on.png");
 }
 nav #nav-apps-link.selected {
@@ -331,6 +331,8 @@ aside .vcard dt {
   float: left;
   margin-left: 0px;
   width: 35%;
+  text-align: right;
+  color: #999999;
 }
 aside .vcard dd {
   float: left;
