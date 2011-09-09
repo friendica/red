@@ -1,5 +1,6 @@
 <?php
 
+
 	class Template {
 		var $r;
 		var $search;
@@ -8,6 +9,8 @@
 		var $nodes = array();
 		var $done = false;
 		var $d = false;
+		var $lang = null;
+		
 		
 		private function _preg_error(){
 			switch(preg_last_error()){
@@ -28,6 +31,8 @@
 				foreach ($r as $k => $v ) {
 					if (is_array($v))
 						$this->_build_replace($v, "$prefix$k.");
+					if (is_object($v))
+						$this->_build_replace($v->getKeys(), "$prefix$k.");
 					
 					$this->search[] =  $prefix . $k;
 					$this->replace[] = $v;
@@ -153,19 +158,36 @@
 			krsort($this->nodes);
 			return $s;
 		}
+
+		private function _get_lang(){
+			if ($this->lang!=null) return $this->lang;
+			
+			$a = get_app();
+			$this->lang=array();
+			foreach ($a->strings as $k=>$v){
+				$k =  preg_replace("/[^a-z0-9-]/", "", str_replace(" ","-", strtolower($k)));
+				$this->lang[$k] = $v;
+			}
+			return $this->lang;
+		}
+
 		
 		public function replace($s, $r) {
+			if (!x($r,'$lang')){
+				$r['$lang'] = &$this->_get_lang();
+			}
 			$this->r = $r;
 			$this->search = array();
 			$this->replace = array();
-	
 			$this->_build_replace($r, "");
-			
 			#$s = str_replace(array("\n","\r"),array("§n§","§r§"),$s);
 			$s = $this->_build_nodes($s);
 			$s = preg_replace_callback('/\|\|([0-9]+)\|\|/', array($this, "_replcb_node"), $s);
 			if ($s==Null) $this->_preg_error();
 			
+			// remove comments block
+			$s = preg_replace('/{#[^#]*#}/', "" , $s);
+						
 			// replace strings recursively (limit to 10 loops)
 			$os = ""; $count=0;
 			while($os!=$s && $count<10){
