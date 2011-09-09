@@ -133,7 +133,12 @@ function contact_photo_menu($contact) {
 	
 	$o = "";
 	foreach($menu as $k=>$v){
-		if ($v!="") $o .= "<li><a href='$v'>$k</a></li>\n";
+		if ($v!="") {
+			if(($k !== t("View recent")) && ($k !== t("Send PM")))
+				$o .= "<li><a target=\"redir\" href=\"$v\">$k</a></li>\n";
+			else
+				$o .= "<li><a href=\"$v\">$k</a></li>\n";
+		}
 	}
 	return $o;
 }}

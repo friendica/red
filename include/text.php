@@ -571,11 +571,13 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 
 	$url = $contact['url'];
 	$sparkle = '';
+	$redir = false;
 
 	if($redirect) {
 		$a = get_app();
 		$redirect_url = $a->get_baseurl() . '/redir/' . $contact['id'];
 		if(local_user() && ($contact['uid'] == local_user()) && ($contact['network'] === 'dfrn')) {
+			$redir = true;
 			$url = $redirect_url;
 			$sparkle = ' sparkle';
 		}
@@ -586,6 +588,7 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 	if($textmode) {
 		return '<div class="contact-block-textdiv' . $class . '"><a class="contact-block-link' . $class . $sparkle 
 			. (($click) ? ' fakelink' : '') . '" '
+			. (($redir) ? ' target="redir" ' : '')
 			. (($url) ? ' href="' . $url . '"' : '') . $click
 			. '" title="' . $contact['name'] . ' [' . $contact['url'] . ']" alt="' . $contact['name'] 
 			. '" >'. $contact['name'] . '</a></div>' . "\r\n";
@@ -593,6 +596,7 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 	else {
 		return '<div class="contact-block-div' . $class . '"><a class="contact-block-link' . $class . $sparkle 
 			. (($click) ? ' fakelink' : '') . '" '
+			. (($redir) ? ' target="redir" ' : '')
 			. (($url) ? ' href="' . $url . '"' : '') . $click . ' ><img class="contact-block-img' . $class . $sparkle . '" src="' 
 			. $contact['micro'] . '" title="' . $contact['name'] . ' [' . $contact['url'] . ']" alt="' . $contact['name'] 
 			. '" /></a></div>' . "\r\n";
