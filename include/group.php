@@ -124,7 +124,7 @@ function group_public_members($gid) {
 		$r = q("SELECT `contact`.`id` AS `contact-id` FROM `group_member` 
 			LEFT JOIN `contact` ON `contact`.`id` = `group_member`.`contact-id` 
 			WHERE `gid` = %d AND `group_member`.`uid` = %d 
-			AND ( `contact`.`network` = '%s' OR `contact`.`notify` = '' )",
+			AND  `contact`.`network` = '%s' AND `contact`.`notify` != '' )",
 			intval($gid),
 			intval(local_user()),
 			dbesc(NETWORK_OSTATUS)
