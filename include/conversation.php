@@ -111,7 +111,7 @@ function conversation(&$a, $items, $mode, $update) {
 	}
 
 	if($mode === 'notes') {
-		$profile_owner = $a->profile['profile_uid'];
+		$profile_owner = local_user();
 		$page_writeable = true;
 	}
 
