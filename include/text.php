@@ -656,7 +656,7 @@ if(! function_exists('smilies')) {
 function smilies($s) {
 	$a = get_app();
 
-	return str_replace(
+	$s = str_replace(
 	array( '&lt;3', '&lt;/3', '&lt;\\3', ':-)', ':)', ';-)', ':-(', ':(', ':-P', ':P', ':-"', ':-x', ':-X', ':-D', '8-|', '8-O', 
 		'~friendika', 'Diaspora*' ),
 	array(
@@ -680,6 +680,10 @@ function smilies($s) {
 		'<a href="http://joindiaspora.com">Diaspora<img src="' . $a->get_baseurl() . '/images/diaspora.png" alt="Diaspora*" /></a>',
 
 	), $s);
+
+	call_hooks('smilie', $s);
+	return $s;
+
 }}
 
 
