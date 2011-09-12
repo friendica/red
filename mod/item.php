@@ -38,6 +38,7 @@ function item_post(&$a) {
 	call_hooks('post_local_start', $_POST);
 
 	$api_source = ((x($_POST,'api_source') && $_POST['api_source']) ? true : false);
+	$return_path = ((x($_POST,'return')) ? $_POST['return'] : '');
 
 	/**
 	 * Is this a reply to something?
@@ -834,12 +835,6 @@ function item_post(&$a) {
 		}
 	}
 
-
-
-
-
-
-
 	logger('post_complete');
 
 	// figure out how to return, depending on from whence we came
@@ -847,10 +842,10 @@ function item_post(&$a) {
 	if($api_source)
 		return;
 
-	if((x($_POST,'return')) && strlen($_POST['return'])) {
-		logger('return: ' . $_POST['return']);
-		goaway($a->get_baseurl() . "/" . $_POST['return'] );
+	if($return_path) {
+		goaway($a->get_baseurl() . "/" . $return_path);
 	}
+
 	$json = array('success' => 1);
 	if(x($_POST,'jsreload') && strlen($_POST['jsreload']))
 		$json['reload'] = $a->get_baseurl() . '/' . $_POST['jsreload'];

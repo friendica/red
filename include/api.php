@@ -466,6 +466,7 @@
 		}
 		return null;
 	}
+
 	// TODO - media uploads
 	function api_statuses_update(&$a, $type) {
 		if (local_user()===false) return false;
@@ -475,7 +476,32 @@
 
 		// logger('api_post: ' . print_r($_POST,true));
 
-		$_POST['body'] = urldecode(requestdata('status'));
+		if(requestdata('htmlstatus')) {
+			require_once('library/HTMLPurifier.auto.php');
+			require_once('include/html2bbcode.php');
+
+			$txt = requestdata('htmlstatus');
+			if((strpos($txt,'<') !== false) || (strpos($txt,'>') !== false)) {
+
+				$txt = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
+					'[youtube]$1[/youtube]', $txt);
+
+				$txt = preg_replace('#<iframe[^>].+?' . 'http://www.youtube.com/embed/([A-Za-z0-9\-_=]+).+?</iframe>#s',
+					'[youtube]$1[/youtube]', $txt);
+
+				$config = HTMLPurifier_Config::createDefault();
+				$config->set('Cache.DefinitionImpl', null);
+
+
+				$purifier = new HTMLPurifier($config);
+				$txt = $purifier->purify($txt);
+
+				$_POST['body'] = html2bbcode($txt);
+			}
+
+		}
+		else
+			$_POST['body'] = urldecode(requestdata('status'));
 
 		$parent = requestdata('in_reply_to_status_id');
 		if(ctype_digit($parent))
