@@ -14,7 +14,7 @@ function notes_init(&$a) {
 }
 
 
-function notes_content(&$a,$update) {
+function notes_content(&$a,$update = false) {
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
