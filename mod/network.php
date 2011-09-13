@@ -313,6 +313,23 @@ function network_content(&$a, $update = 0) {
 		// Normal conversation view
 		// Show conversation by activity date
 		
+/* created date order
+$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact_uid`
+FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
+WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+AND `item`.`parent` = `item`.`id`
+$sql_extra
+ORDER BY `item`.`created` DESC LIMIT %d ,%d ",
+intval(local_user()),
+intval($a->pager['start']),
+intval($a->pager['itemspage'])
+);
+*/
+
+
+
+
 		
 		// First fetch a known number of parent items
 
@@ -344,6 +361,24 @@ function network_content(&$a, $update = 0) {
 				$parents_arr[] = $rr['item_id'];
 			$parents_str = implode(', ', $parents_arr);
 
+/* created order
+$r = q("SELECT `item`.*, `item`.`id` AS `item_id`,
+`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`, `contact`.`writable`,
+`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
+`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
+FROM `item`, (SELECT `p`.`id`,`p`.`created` FROM `item` AS `p` WHERE `p`.`parent`=`p`.`id`) as `parentitem`, `contact`
+WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+AND `contact`.`id` = `item`.`contact-id`
+AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+AND `item`.`parent` = `parentitem`.`id` AND `item`.`parent` IN ( %s )
+$sql_extra
+ORDER BY `parentitem`.`created` DESC, `item`.`gravity` ASC, `item`.`created` ASC ",
+intval(local_user()),
+dbesc($parents_str)
+*/
+
+
+
 			$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 				`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`, `contact`.`writable`,
 				`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
@@ -364,6 +399,9 @@ function network_content(&$a, $update = 0) {
 				intval(local_user()),
 				dbesc($parents_str)
 			);
+
+
+
 		}
 	}
 
