@@ -20,6 +20,7 @@ function network_init(&$a) {
 	$srchurl = '/network' 
 		. ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') 
 		. ((x($_GET,'star')) ? '?star=' . $_GET['star'] : '')
+		. ((x($_GET,'order')) ? '?order=' . $_GET['order'] : '')
 		. ((x($_GET,'bmark')) ? '?bmark=' . $_GET['bmark'] : '');
 
 	if(x($_GET,'save')) {
@@ -127,11 +128,11 @@ function network_content(&$a, $update = 0) {
 	$nouveau = false;
 	require_once('include/acl_selectors.php');
 
-	$cid = ((x($_GET['cid'])) ? intval($_GET['cid']) : 0);
-	$star = ((x($_GET['star'])) ? intval($_GET['star']) : 0);
-	$bmark = ((x($_GET['bmark'])) ? intval($_GET['bmark']) : 0);
+	$cid = ((x($_GET,'cid')) ? intval($_GET['cid']) : 0);
+	$star = ((x($_GET,'star')) ? intval($_GET['star']) : 0);
+	$bmark = ((x($_GET,'bmark')) ? intval($_GET['bmark']) : 0);
+	$order = ((x($_GET,'order')) ? notags($_GET['order']) : 'comment');
 
-	$order = 'comment';
 
 	if(($a->argc > 2) && $a->argv[2] === 'new')
 		$nouveau = true;
@@ -192,6 +193,7 @@ function network_content(&$a, $update = 0) {
 				. ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '')
 				. ((x($_GET,'search')) ? '&search=' . $_GET['search'] : '') 
 				. ((x($_GET,'star')) ? '&star=' . $_GET['star'] : '') 
+				. ((x($_GET,'order')) ? '&order=' . $_GET['order'] : '') 
 				. ((x($_GET,'bmark')) ? '&bmark=' . $_GET['bmark'] : '') 
 				. "'; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 
