@@ -7,7 +7,9 @@
 			<a class="icon s16 edit ttright" href="#" rel="#profiles-menu" title="$profile.edit.3"><span>$profile.edit.1</span></a>
 			<ul id="profiles-menu" class="menu-popup">
 				{{ for $profile.menu.entries as $e }}
-				<li><a href="profiles/$e.id"><img src='$e.photo'>$e.profile_name</a></li>
+				<li>
+					<a href="profiles/$e.id"><img src='$e.photo'>$e.profile_name</a>
+				</li>
 				{{ endfor }}
 				<li><a href="profile_photo" >$profile.menu.chg_photo</a></li>
 				<li><a href="profiles/new" id="profile-listing-new-link">$profile.menu.cr_new</a></li>

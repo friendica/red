@@ -881,8 +881,10 @@ function profile_sidebar($profile, $block = 0) {
 					'id' => $rr['id'],
 					'alt' => t('Profile Image'),
 					'profile_name' => $rr['profile-name'],
-					'visible' => (($rr['is-default']) ? '<strong>' . t('visible to everybody') . '</strong>' 
-						: '<a href="' . $a->get_baseurl() . '/profperm/' . $rr['id'] . '" />' . t('Edit visibility') . '</a>')
+					'isdefault' => $rr['is-default'],
+					'visibile_to_everybody' =>  t('visible to everybody'),
+					'edit_visibility' => t('Edit visibility'),
+					
 				);
 			}
 

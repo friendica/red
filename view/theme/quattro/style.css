@@ -61,7 +61,7 @@
 /* global */
 body {
   font-family: Liberation Sans, helvetica, arial, clean, sans-serif;
-  font-size: 12px;
+  font-size: 10px;
   background-color: #ffffff;
   color: #2d2d2d;
   margin: 50px 0px 0px 0px;
@@ -362,6 +362,9 @@ aside #dfrn-request-link {
 aside #dfrn-request-link:hover {
   text-decoration: none;
   background-color: #19aeff;
+}
+aside #profiles-menu {
+  width: 20em;
 }
 #contact-block {
   overflow: auto;
