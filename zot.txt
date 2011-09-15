@@ -228,8 +228,8 @@ Messages MAY be imported from other networks and systems which have no
 knowledge of salmon signatures. The salmon signature in this case MUST be the
 exact string 'NOTSIGNED' to indicate that the author (From address) cannot be 
 validated using salmon verification. This message MUST be relayed by a Sender
-who can provide a valid salmon signature of the message. Delivery systems MAY
-reject foreign messages.  
+who can provide a valid salmon signature of the message via zot:sig. Delivery
+systems MAY reject foreign messages.  
 
 
 

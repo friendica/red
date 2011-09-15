@@ -8,6 +8,10 @@ require_once('include/event.php');
 
 function diaspora2bb($s) {
 
+	// bug #127
+	$s = preg_replace('/\[(.+?)\]\((.+?)[^\\\]_(.+?)\)/','[$1]($2\\_$3)',$s);
+
+
 	$s = str_replace(array('\\**','\\__','\\*','\\_'), array('-^doublestar^-','-^doublescore-^','-^star^-','-^score^-'),$s);
 	$s = preg_replace("/\*\*\*(.+?)\*\*\*/", '[b][i]$1[/i][/b]', $s);
 	$s = preg_replace("/\_\_\_(.+?)\_\_\_/", '[b][i]$1[/i][/b]', $s);
@@ -15,6 +19,7 @@ function diaspora2bb($s) {
 	$s = preg_replace("/\_\_(.+?)\_\_/", '[b]$1[/b]', $s);
 	$s = preg_replace("/\*(.+?)\*/", '[i]$1[/i]', $s);
 	$s = preg_replace("/\_(.+?)\_/", '[i]$1[/i]', $s);
+
 	$s = str_replace(array('-^doublestar^-','-^doublescore-^','-^star^-','-^score^-'), array('**','__','*','_'), $s);
 	$s = preg_replace('/\!\[(.+?)\]\((.+?)\)/','[img]$2[/img]',$s);
 	$s = preg_replace('/\[(.+?)\]\((.+?)\)/','[url=$2]$1[/url]',$s);
