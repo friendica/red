@@ -58,7 +58,9 @@ ACL.prototype.on_search = function(event){
 }
 
 ACL.prototype.on_showall = function(event){
+	event.preventDefault()
 	event.stopPropagation();
+	
 	if (that.showall.hasClass("selected")){
 		return false;
 	}
@@ -69,12 +71,14 @@ ACL.prototype.on_showall = function(event){
 	that.deny_cid  = [];
 	that.deny_gid  = [];
 	
-	that.updateview();
+	that.update_view();
 	
 	return false;
 }
 
 ACL.prototype.on_button_show = function(event){
+	event.preventDefault()
+	event.stopImmediatePropagation()
 	event.stopPropagation();
 
 	/*that.showall.removeClass("selected");
@@ -86,6 +90,8 @@ ACL.prototype.on_button_show = function(event){
 	return false;
 }
 ACL.prototype.on_button_hide = function(event){
+	event.preventDefault()
+	event.stopImmediatePropagation()
 	event.stopPropagation();
 
 	/*that.showall.removeClass("selected");
@@ -118,7 +124,7 @@ ACL.prototype.set_allow = function(itemid){
 			if (that.deny_cid.indexOf(id)>=0) that.deny_cid.remove(id);			
 			break;
 	}
-	that.updateview();
+	that.update_view();
 }
 
 ACL.prototype.set_deny = function(itemid){
@@ -142,10 +148,10 @@ ACL.prototype.set_deny = function(itemid){
 			if (that.allow_cid.indexOf(id)>=0) that.allow_cid.remove(id);
 			break;
 	}
-	that.updateview();
+	that.update_view();
 }
 
-ACL.prototype.updateview = function(){
+ACL.prototype.update_view = function(){
 	if (that.allow_gid.length==0 && that.allow_cid.length==0 &&
 		that.deny_gid.length==0 && that.deny_cid.length==0){
 			that.showall.addClass("selected");
@@ -153,7 +159,7 @@ ACL.prototype.updateview = function(){
 				$('#jot-perms-icon').removeClass('lock').addClass('unlock');
 				$('#jot-public').show();
 				$('.profile-jot-net input').attr('disabled', false);			
-				if(editor != false) {
+				if(typeof editor != 'undefined' && editor != false) {
 					$('#profile-jot-desc').html(ispublic);
 				}
 			
@@ -235,6 +241,6 @@ ACL.prototype.populate = function(data){
 		//console.log(html);
 		that.list_content.append(html);
 	});
-	that.updateview();
+	that.update_view();
 }
 
