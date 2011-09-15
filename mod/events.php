@@ -45,13 +45,20 @@ function events_post(&$a) {
 			$finish = datetime_convert('UTC','UTC',$finish);
 	}
 
+	// Don't allow the event to finish before it begins.
+	// It won't hurt anything, but somebody will file a bug report
+	// and we'll waste a bunch of time responding to it. Time that 
+	// could've been spent doing something else. 
+
+	if(strcmp($finish,$start) < 0)
+		$finish = $start;
 
 	$desc     = escape_tags(trim($_POST['desc']));
 	$location = escape_tags(trim($_POST['location']));
 	$type     = 'event';
 
 	if((! $desc) || (! $start)) {
-		notice('Event description and start time are required.');
+		notice( t('Event description and start time are required.') . EOL);
 		goaway($a->get_baseurl() . '/events/new');
 	}
 
