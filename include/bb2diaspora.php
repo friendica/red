@@ -42,6 +42,8 @@ function stripdcode_br_cb($s) {
 
 function bb2diaspora($Text,$preserve_nl = false) {
 
+	$ev = bbtoevent($Text);
+
 	// Replace any html brackets with HTML Entities to prevent executing HTML or script
 	// Don't use strip_tags here because it breaks [url] search by replacing & with amp
 
@@ -52,7 +54,6 @@ function bb2diaspora($Text,$preserve_nl = false) {
 	// After we're finished processing the bbcode we'll 
 	// replace all of the event code with a reformatted version.
 
-	$ev = bbtoevent($Text);
 
 	if($preserve_nl)
 		$Text = str_replace(array("\n","\r"), array('',''),$Text);
@@ -185,7 +186,10 @@ function bb2diaspora($Text,$preserve_nl = false) {
 		$Text = preg_replace("/\[event\-adjust\](.*?)\[\/event\-adjust\]/is",'',$Text);
 	}
 
+	$Text = preg_replace("/\<(.*?)(src|href)=(.*?)\&amp\;(.*?)\>/ism",'<$1$2=$3&$4>',$Text);
 
+	$Text = preg_replace('/\[(.*?)\\\\_(.*?)\]\((.*?)\)/ism','[$1_$2]($3)',$Text);
+	$Text = preg_replace('/\[(.*?)\\\\\*(.*?)\]\((.*?)\)/ism','[$1*$2]($3)',$Text);
 	
 	call_hooks('bb2diaspora',$Text);
 
