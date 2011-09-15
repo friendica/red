@@ -26,16 +26,21 @@ function localtime_content(&$a) {
 	$o .= '<p>' . t('Friendika provides this service for sharing events with other networks and friends in unknown timezones.') . '</p>';
 
 
+
+	$o .= '<p>' . sprintf( t('UTC time: %s'), $t) . '</p>';
+
+	if($_REQUEST['timezone'])
+		$o .= '<p>' . sprintf( t('Current timezone: %s'), $_REQUEST['timezone']) . '</p>';
+
 	if(x($a->data,'mod-localtime'))
 		$o .= '<p>' . sprintf( t('Converted localtime: %s'),$a->data['mod-localtime']) . '</p>';
 
-	$o .= '<p>' . sprintf( t('UTC time: %s'), $t) . '</p>';
 
 	$o .= '<form action ="' . $a->get_baseurl() . '/localtime?f=&time=' . $t . '" method="post" >';
 
 	$o .= '<p>' . t('Please select your timezone:') . '</p>'; 
 
-	$o .= select_timezone();
+	$o .= select_timezone(($_REQUEST['timezone']) ? $_REQUEST['timezone'] : 'America/Los_Angeles');
 
 	$o .= '<input type="submit" name="submit" value="' . t('Submit') . '" /></form>';
 
