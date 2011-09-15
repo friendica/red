@@ -43,7 +43,7 @@ function bbcode($Text,$preserve_nl = false) {
 	// Perform URL Search
 
 
-	$Text = preg_replace("/([^\]\=]|^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\.\=\_\~\#\%\$\!\+\,]+)/", '$1<a href="$2" target="external-link">$2</a>', $Text);
+	$Text = preg_replace("/([^\]\=]|^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\%\$\!\+\,]+)/", '$1<a href="$2" target="external-link">$2</a>', $Text);
 
 	$Text = preg_replace("/\[url\]([$URLSearchString]*)\[\/url\]/m", '<a href="$1" target="external-link">$1</a>', $Text);
 	$Text = preg_replace("/\[url\=([$URLSearchString]*)\](.*?)\[\/url\]/m", '<a href="$1" target="external-link">$2</a>', $Text);
@@ -159,7 +159,8 @@ function bbcode($Text,$preserve_nl = false) {
 		$Text = preg_replace("/\[event\-adjust\](.*?)\[\/event\-adjust\]/ism",'',$Text);
 	}
 
-
+	// fix any escaped ampersands that may have been converted into links
+	$Text = preg_replace("/\<(.*?)(src|href)=(.*?)\&amp\;(.*?)\>/ism",'<$1$2=$3&$4>',$Text);
 	
 	call_hooks('bbcode',$Text);
 
