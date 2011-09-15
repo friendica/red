@@ -5,34 +5,52 @@ require_once('include/items.php');
 require_once('include/bb2diaspora.php');
 require_once('include/contact_selectors.php');
 
+
+function diaspora_dispatch_public($msg) {
+
+	$r = q("SELECT `user`.* FROM `user` WHERE `user`.`uid` IN ( SELECT `uid` FROM `contact` WHERE `network` = '%s' AND `addr` = '%s' ) ",
+		dbesc(NETWORK_DIASPORA),
+		dbesc($msg['author'])
+	);
+	if(count($r)) {
+		foreach($r as $rr) {
+			diaspora_dispatch($rr,$msg);
+		}
+	}
+}
+
+
+
 function diaspora_dispatch($importer,$msg) {
+
+	$ret = 0;
 
 	$parsed_xml = parse_xml_string($msg['message'],false);
 
 	$xmlbase = $parsed_xml->post;
 
 	if($xmlbase->request) {
-		diaspora_request($importer,$xmlbase->request);
+		$ret = diaspora_request($importer,$xmlbase->request);
 	}
 	elseif($xmlbase->status_message) {
-		diaspora_post($importer,$xmlbase->status_message);
+		$ret = diaspora_post($importer,$xmlbase->status_message);
 	}
 	elseif($xmlbase->comment) {
-		diaspora_comment($importer,$xmlbase->comment,$msg);
+		$ret = diaspora_comment($importer,$xmlbase->comment,$msg);
 	}
 	elseif($xmlbase->like) {
-		diaspora_like($importer,$xmlbase->like,$msg);
+		$ret = diaspora_like($importer,$xmlbase->like,$msg);
 	}
 	elseif($xmlbase->retraction) {
-		diaspora_retraction($importer,$xmlbase->retraction,$msg);
+		$ret = diaspora_retraction($importer,$xmlbase->retraction,$msg);
 	}
 	elseif($xmlbase->photo) {
-		diaspora_photo($importer,$xmlbase->photo,$msg);
+		$ret = diaspora_photo($importer,$xmlbase->photo,$msg);
 	}
 	else {
 		logger('diaspora_dispatch: unknown message type: ' . print_r($xmlbase,true));
 	}
-	return;
+	return $ret;
 }
 
 function diaspora_get_contact_by_handle($uid,$handle) {
@@ -106,16 +124,14 @@ function diaspora_msg_build($msg,$user,$contact,$prvkey,$pubkey) {
 
 
 	$b64url_data = base64url_encode($b64_data);
-	$b64url_stripped = str_replace(array("\n","\r"," ","\t"),array('','','',''),$b64url_data);
-    $lines = str_split($b64url_stripped,60);
-    $data = implode("\n",$lines);
-	$data = $data . (($data[-1] != "\n") ? "\n" : '') ;
+	$data = str_replace(array("\n","\r"," ","\t"),array('','','',''),$b64url_data);
+
 	$type = 'application/atom+xml';
 	$encoding = 'base64url';
 	$alg = 'RSA-SHA256';
 
-	$signable_data = $data  . '.' . base64url_encode($type) . "\n" . '.' 
-		. base64url_encode($encoding) . "\n" . '.' . base64url_encode($alg) . "\n";
+	$signable_data = $data  . '.' . base64url_encode($type) . '.' 
+		. base64url_encode($encoding) . '.' . base64url_encode($alg) ;
 
 	$signature = rsa_sign($signable_data,$prvkey);
 	$sig = base64url_encode($signature);
@@ -157,7 +173,7 @@ $magic_env = <<< EOT
   <me:env xmlns:me="http://salmon-protocol.org/ns/magic-env">
     <me:encoding>base64url</me:encoding>
     <me:alg>RSA-SHA256</me:alg>
-    <me:data type="application/atom+xml">$data</me:data>
+    <me:data type="application/xml">$data</me:data>
     <me:sig>$sig</me:sig>
   </me:env>
 </entry>
@@ -185,50 +201,67 @@ EOT;
 
 function diaspora_decode($importer,$xml) {
 
+	$public = false;
 	$basedom = parse_xml_string($xml);
 
-	$atom = $basedom->children(NAMESPACE_ATOM1);
+	$children = $basedom->children(NAMESPACE_DIASPORA_PROTOCOL);
 
-	// Diaspora devs: This is kind of sucky - 'encrypted_header' does not belong in the atom namespace
+	if($children->header) {
+		$public = true;
+		$author_link = str_replace('acct:','',$children->author_id);
+	}
+	else {
 
-	$encrypted_header = json_decode(base64_decode($atom->encrypted_header));
+		$encrypted_header = json_decode(base64_decode($children->encrypted_header));
 	
-	$encrypted_aes_key_bundle = base64_decode($encrypted_header->aes_key);
-	$ciphertext = base64_decode($encrypted_header->ciphertext);
+		$encrypted_aes_key_bundle = base64_decode($encrypted_header->aes_key);
+		$ciphertext = base64_decode($encrypted_header->ciphertext);
 
-	$outer_key_bundle = '';
-	openssl_private_decrypt($encrypted_aes_key_bundle,$outer_key_bundle,$importer['prvkey']);
+		$outer_key_bundle = '';
+		openssl_private_decrypt($encrypted_aes_key_bundle,$outer_key_bundle,$importer['prvkey']);
 
-	$j_outer_key_bundle = json_decode($outer_key_bundle);
+		$j_outer_key_bundle = json_decode($outer_key_bundle);
 
-	$outer_iv = base64_decode($j_outer_key_bundle->iv);
-	$outer_key = base64_decode($j_outer_key_bundle->key);
+		$outer_iv = base64_decode($j_outer_key_bundle->iv);
+		$outer_key = base64_decode($j_outer_key_bundle->key);
 
-	$decrypted = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $outer_key, $ciphertext, MCRYPT_MODE_CBC, $outer_iv);
+		$decrypted = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $outer_key, $ciphertext, MCRYPT_MODE_CBC, $outer_iv);
 
 
-	$decrypted = pkcs5_unpad($decrypted);
+		$decrypted = pkcs5_unpad($decrypted);
 
-	/**
-	 * $decrypted now contains something like
-	 *
-	 *  <decrypted_header>
-	 *     <iv>8e+G2+ET8l5BPuW0sVTnQw==</iv>
-	 *     <aes_key>UvSMb4puPeB14STkcDWq+4QE302Edu15oaprAQSkLKU=</aes_key>
-	 *     <author>
-	 *       <name>Ryan Hughes</name>
-	 *       <uri>acct:galaxor@diaspora.pirateship.org</uri>
-	 *     </author>
-	 *  </decrypted_header>
-	 */
+		/**
+		 * $decrypted now contains something like
+		 *
+		 *  <decrypted_header>
+		 *     <iv>8e+G2+ET8l5BPuW0sVTnQw==</iv>
+		 *     <aes_key>UvSMb4puPeB14STkcDWq+4QE302Edu15oaprAQSkLKU=</aes_key>
 
-	logger('decrypted: ' . $decrypted, LOGGER_DEBUG);
-	$idom = parse_xml_string($decrypted,false);
+***** OBSOLETE
 
-	$inner_iv = base64_decode($idom->iv);
-	$inner_aes_key = base64_decode($idom->aes_key);
+		 *     <author>
+		 *       <name>Ryan Hughes</name>
+		 *       <uri>acct:galaxor@diaspora.pirateship.org</uri>
+		 *     </author>
 
-	$author_link = str_replace('acct:','',$idom->author->uri);
+***** CURRENT
+
+		 *     <author_id>acct:galaxor@diaspora.priateship.org</author_id>
+
+***** END DIFFS
+
+		 *  </decrypted_header>
+		 */
+
+		logger('decrypted: ' . $decrypted, LOGGER_DEBUG);
+		$idom = parse_xml_string($decrypted,false);
+
+		$inner_iv = base64_decode($idom->iv);
+		$inner_aes_key = base64_decode($idom->aes_key);
+
+		$author_link = str_replace('acct:','',$idom->author_id);
+
+	}
 
 	$dom = $basedom->children(NAMESPACE_SALMON_ME);
 
@@ -262,8 +295,8 @@ function diaspora_decode($importer,$xml) {
 	// and transport whitespace mangling, and base64 wrapping rules. Guess what? PHP and Ruby 
 	// use different linelengths for base64 output. 
 
-    $lines = str_split($data,60);
-    $data = implode("\n",$lines);
+//    $lines = str_split($data,60);
+ //   $data = implode("\n",$lines);
 
 
 	// stash away some other stuff for later
@@ -273,22 +306,25 @@ function diaspora_decode($importer,$xml) {
 	$encoding = $base->encoding;
 	$alg = $base->alg;
 
-	// I can't even begin to tell you how sucky this is. Please read the spec.
 
-	$signed_data = $data  . (($data[-1] != "\n") ? "\n" : '') . '.' . base64url_encode($type) . "\n" . '.' . base64url_encode($encoding) . "\n" . '.' . base64url_encode($alg) . "\n";
+	$signed_data = $data  . '.' . base64url_encode($type) . '.' . base64url_encode($encoding) . '.' . base64url_encode($alg);
 
 
 	// decode the data
 	$data = base64url_decode($data);
 
-	// Now pull out the inner encrypted blob
 
-	$inner_encrypted = base64_decode($data);
+	if($public) {
+		$inner_decrypted = $data;
+	}
+	else {
 
-	$inner_decrypted = 
-	$inner_decrypted = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $inner_aes_key, $inner_encrypted, MCRYPT_MODE_CBC, $inner_iv);
+		// Decode the encrypted blob
 
-	$inner_decrypted = pkcs5_unpad($inner_decrypted);
+		$inner_encrypted = base64_decode($data);
+		$inner_decrypted = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $inner_aes_key, $inner_encrypted, MCRYPT_MODE_CBC, $inner_iv);
+		$inner_decrypted = pkcs5_unpad($inner_decrypted);
+	}
 
 	if(! $author_link) {
 		logger('mod-diaspora: Could not retrieve author URI.');
@@ -321,7 +357,6 @@ function diaspora_decode($importer,$xml) {
 }
 
 	
-
 function diaspora_request($importer,$xml) {
 
 	$sender_handle = unxmlify($xml->sender_handle);
@@ -331,7 +366,6 @@ function diaspora_request($importer,$xml) {
 		return;
 	 
 	$contact = diaspora_get_contact_by_handle($importer['uid'],$sender_handle);
-
 
 	if($contact) {
 
@@ -408,8 +442,7 @@ function diaspora_post($importer,$xml) {
 
 	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
 		logger('diaspora_post: Ignoring this author.');
-		http_status_exit(202);
-		// NOTREACHED
+		return 202;
 	}
 
 	$message_id = $diaspora_handle . ':' . $guid;
@@ -493,8 +526,7 @@ function diaspora_comment($importer,$xml,$msg) {
 
 	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
 		logger('diaspora_comment: Ignoring this author.');
-		http_status_exit(202);
-		// NOTREACHED
+		return 202;
 	}
 
 	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '%s' LIMIT 1",
@@ -535,7 +567,7 @@ function diaspora_comment($importer,$xml,$msg) {
 		}
 	}
 
-	if(! rsa_verify($author_signed_data,$author_signature,$key,'sha')) {
+	if(! rsa_verify($author_signed_data,$author_signature,$key,'sha256')) {
 		logger('diaspora_comment: verification failed.');
 		return;
 	}
@@ -548,7 +580,7 @@ function diaspora_comment($importer,$xml,$msg) {
 
 		$key = $msg['key'];
 
-		if(! rsa_verify($owner_signed_data,$parent_author_signature,$key,'sha')) {
+		if(! rsa_verify($owner_signed_data,$parent_author_signature,$key,'sha256')) {
 			logger('diaspora_comment: owner verification failed.');
 			return;
 		}
@@ -633,8 +665,7 @@ function diaspora_photo($importer,$xml,$msg) {
 
 	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
 		logger('diaspora_photo: Ignoring this author.');
-		http_status_exit(202);
-		// NOTREACHED
+		return 202;
 	}
 
 	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '%s' LIMIT 1",
@@ -686,8 +717,7 @@ function diaspora_like($importer,$xml,$msg) {
 
 	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
 		logger('diaspora_like: Ignoring this author.');
-		http_status_exit(202);
-		// NOTREACHED
+		return 202;
 	}
 
 	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '%s' LIMIT 1",
@@ -743,7 +773,7 @@ function diaspora_like($importer,$xml,$msg) {
 		}
 	}
 
-	if(! rsa_verify($author_signed_data,$author_signature,$key,'sha')) {
+	if(! rsa_verify($author_signed_data,$author_signature,$key,'sha256')) {
 		logger('diaspora_like: verification failed.');
 		return;
 	}
@@ -756,7 +786,7 @@ function diaspora_like($importer,$xml,$msg) {
 
 		$key = $msg['key'];
 
-		if(! rsa_verify($owner_signed_data,$parent_author_signature,$key,'sha')) {
+		if(! rsa_verify($owner_signed_data,$parent_author_signature,$key,'sha256')) {
 			logger('diaspora_like: owner verification failed.');
 			return;
 		}
@@ -877,7 +907,7 @@ function diaspora_retraction($importer,$xml) {
 		}
 	}
 
-	http_exit_status(202);
+	return 202;
 	// NOTREACHED
 }
 
@@ -1044,7 +1074,7 @@ function diaspora_send_followup($item,$owner,$contact) {
 	else
 		$signed_text = $item['guid'] . ';' . $parent_guid . ';' . $text . ';' . $myaddr;
 
-	$authorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha'));
+	$authorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha256'));
 
 	$msg = replace_macros($tpl,array(
 		'$guid' => xmlify($item['guid']),
@@ -1131,7 +1161,7 @@ function diaspora_send_relay($item,$owner,$contact) {
 			else
 				$signed_text = $item['guid'] . ';' . $parent_guid . ';' . $text . ';' . $myaddr;
 
-			$authorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha'));
+			$authorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha256'));
 
 			q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
 				intval($item['id']),
@@ -1145,7 +1175,7 @@ function diaspora_send_relay($item,$owner,$contact) {
 
 	// sign it
 
-	$parentauthorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha'));
+	$parentauthorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha256'));
 
 	$msg = replace_macros($tpl,array(
 		'$guid' => xmlify($item['guid']),

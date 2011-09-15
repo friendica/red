@@ -12,18 +12,26 @@ require_once('include/diaspora.php');
 	
 function receive_post(&$a) {
 
-	if($a->argc != 3 || $a->argv[1] !== 'users')
-		http_status_exit(500);
+	$public = false;
 
-	$guid = $a->argv[2];
+	if(($a->argc == 2) && ($a->argv[1] === 'public')) {
+		$public = true;
+	}
+	else {
 
-	$r = q("SELECT * FROM `user` WHERE `guid` = '%s' LIMIT 1",
-		dbesc($guid)
-	);
-	if(! count($r))
-		http_status_exit(500);
+		if($a->argc != 3 || $a->argv[1] !== 'users')
+			http_status_exit(500);
 
-	$importer = $r[0];
+		$guid = $a->argv[2];
+
+		$r = q("SELECT * FROM `user` WHERE `guid` = '%s' LIMIT 1",
+			dbesc($guid)
+		);
+		if(! count($r))
+			http_status_exit(500);
+
+		$importer = $r[0];
+	}
 
 	// It is an application/x-www-form-urlencoded
 
@@ -41,9 +49,13 @@ function receive_post(&$a) {
 	if(! is_array($msg))
 		http_status_exit(500);
 
-	diaspora_dispatch($importer,$msg);
+	$ret = 0;
+	if($public)
+		diaspora_dispatch_public($msg);
+	else
+		$ret = diaspora_dispatch($importer,$msg);
 
-	http_status_exit(200);
+	http_status_exit(($ret) ? $ret : 200);
 	// NOTREACHED
 }
 
