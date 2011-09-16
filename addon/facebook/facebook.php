@@ -111,7 +111,8 @@ function facebook_init(&$a) {
 				$token = substr($token,0,strpos($token,'&'));
 			set_pconfig($uid,'facebook','access_token',$token);
 			set_pconfig($uid,'facebook','post','1');
-			set_pconfig($uid,'facebook','no_linking',1);
+			if(get_pconfig($uid,'facebook','no_linking') === false)
+				set_pconfig($uid,'facebook','no_linking',1);
 			fb_get_self($uid);
 			fb_get_friends($uid);
 			fb_consume_all($uid);
@@ -275,6 +276,9 @@ function facebook_post(&$a) {
 
 		$no_wall = ((x($_POST,'facebook_no_wall')) ? intval($_POST['facebook_no_wall']) : 0);
 		set_pconfig($uid,'facebook','no_wall',$no_wall);
+
+		$private_wall = ((x($_POST,'facebook_private_wall')) ? intval($_POST['facebook_private_wall']) : 0);
+		set_pconfig($uid,'facebook','private_wall',$private_wall);
 	
 
 		$linkvalue = ((x($_POST,'facebook_linking')) ? intval($_POST['facebook_linking']) : 0);
@@ -352,6 +356,12 @@ function facebook_content(&$a) {
 		$o .= '<div id="facebook-disable-wrapper">';
 
 		$o .= '<a href="' . $a->get_baseurl() . '/facebook/remove' . '">' . t('Remove Facebook connector') . '</a></div>';
+
+		$o .= '<div id="facebook-enable-wrapper">';
+
+		$o .= '<a href="https://www.facebook.com/dialog/oauth?client_id=' . $appid . '&redirect_uri=' 
+			. $a->get_baseurl() . '/facebook/' . $a->user['nickname'] . '&scope=publish_stream,read_stream,offline_access">' . t('Re-authenticate [This is necessary whenever your Facebook password is changed.]') . '</a>';
+		$o .= '</div>';
 	
 		$o .= '<div id="facebook-post-default-form">';
 		$o .= '<form action="facebook" method="post" >';
@@ -361,12 +371,22 @@ function facebook_content(&$a) {
 
 		$no_linking = get_pconfig(local_user(),'facebook','no_linking');
 		$checked = (($no_linking) ? '' : ' checked="checked" ');
-		$o .= '<input type="checkbox" name="facebook_linking" value="1"' . $checked . '/>' . ' ' . t('Link all your Facebook friends and conversations') . EOL ;
+		$o .= '<input type="checkbox" name="facebook_linking" value="1"' . $checked . '/>' . ' ' . t('Link all your Facebook friends and conversations on this website') . EOL ;
+
+		$o .= '<p>' . t('Facebook conversations consist of your <em>profile wall</em> and your friend <em>stream</em>.');
+		$o .= ' ' . t('On this website, your Facebook friend stream is only visible to you.');
+		$o .= ' ' . t('The following settings determine the privacy of your Facebook profile wall on this website.') . '</p>';
+
+		$private_wall = get_pconfig(local_user(),'facebook','private_wall');
+		$checked = (($private_wall) ? ' checked="checked" ' : '');
+		$o .= '<input type="checkbox" name="facebook_private_wall" value="1"' . $checked . '/>' . ' ' . t('On this website your Facebook profile wall conversations will only be visible to you') . EOL ;
+
 
 		$no_wall = get_pconfig(local_user(),'facebook','no_wall');
 		$checked = (($no_wall) ? ' checked="checked" ' : '');
-		$o .= '<input type="checkbox" name="facebook_no_wall" value="1"' . $checked . '/>' . ' ' . t('Do not link your Facebook profile wall posts - as these could be visible to people that would not be able to see them on Facebook.') . EOL ;
+		$o .= '<input type="checkbox" name="facebook_no_wall" value="1"' . $checked . '/>' . ' ' . t('Do not import your Facebook profile wall conversations') . EOL ;
 
+		$o .= '<p>' . t('If you choose to link conversations and leave both of these boxes unchecked, your Facebook profile wall will be merged with your profile wall on this website and your privacy settings on this website will be used to determine who may see the conversations.') . '</p>';
 
 		$o .= '<input type="submit" name="submit" value="' . t('Submit') . '" /></form></div>';
 	}
@@ -770,11 +790,12 @@ function fb_consume_all($uid) {
 		return;
 	
 	if(! get_pconfig($uid,'facebook','no_wall')) {
+		$private_wall = intval(get_pconfig($uid,'facebook','private_wall'));
 		$s = fetch_url('https://graph.facebook.com/me/feed?access_token=' . $access_token);
 		if($s) {
 			$j = json_decode($s);
 			logger('fb_consume_stream: wall: ' . print_r($j,true), LOGGER_DATA);
-			fb_consume_stream($uid,$j,true);
+			fb_consume_stream($uid,$j,($private_wall) ? false : true);
 		}
 	}
 	$s = fetch_url('https://graph.facebook.com/me/home?access_token=' . $access_token);
