@@ -115,7 +115,7 @@ function diaspora_msg_build($msg,$user,$contact,$prvkey,$pubkey) {
 	$outer_iv = random_string(16);
 	$b_outer_iv = base64_encode($outer_iv);
 	
-	$handle = 'acct:' . $user['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+	$handle = $user['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
 
 	$padded_data = pkcs5_pad($msg,16);
 	$inner_encrypted = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $inner_aes_key, $padded_data, MCRYPT_MODE_CBC, $inner_iv);
@@ -126,7 +126,7 @@ function diaspora_msg_build($msg,$user,$contact,$prvkey,$pubkey) {
 	$b64url_data = base64url_encode($b64_data);
 	$data = str_replace(array("\n","\r"," ","\t"),array('','','',''),$b64url_data);
 
-	$type = 'application/atom+xml';
+	$type = 'application/xml';
 	$encoding = 'base64url';
 	$alg = 'RSA-SHA256';
 
@@ -140,10 +140,7 @@ $decrypted_header = <<< EOT
 <decrypted_header>
   <iv>$b_inner_iv</iv>
   <aes_key>$b_inner_aes_key</aes_key>
-  <author>
-    <name>{$user['username']}</name>
-    <uri>$handle</uri>
-  </author>
+  <author_id>$handle</author_id>
 </decrypted_header>
 EOT;
 
@@ -204,7 +201,7 @@ function diaspora_decode($importer,$xml) {
 	$public = false;
 	$basedom = parse_xml_string($xml);
 
-	$children = $basedom->children(NAMESPACE_DIASPORA_PROTOCOL);
+	$children = $basedom->children('https://joindiaspora.com/protocol');
 
 	if($children->header) {
 		$public = true;
@@ -288,16 +285,6 @@ function diaspora_decode($importer,$xml) {
 	// strip whitespace so our data element will return to one big base64 blob
 	$data = str_replace(array(" ","\t","\r","\n"),array("","","",""),$base->data);
 
-	// Add back the 60 char linefeeds
-
-	// This completely violates the entire principle of salmon magic signatures,
-	// which was to have a message signing format that was completely ambivalent to linefeeds 
-	// and transport whitespace mangling, and base64 wrapping rules. Guess what? PHP and Ruby 
-	// use different linelengths for base64 output. 
-
-//    $lines = str_split($data,60);
- //   $data = implode("\n",$lines);
-
 
 	// stash away some other stuff for later
 
@@ -347,7 +334,7 @@ function diaspora_decode($importer,$xml) {
 
 	if(! $verify) {
 		logger('mod-diaspora: Message did not verify. Discarding.');
-		http_status_exit(400);
+//		http_status_exit(400);
 	}
 
 	logger('mod-diaspora: Message verified.');
