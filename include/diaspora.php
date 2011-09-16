@@ -208,7 +208,7 @@ function diaspora_decode($importer,$xml) {
 
 	if($children->header) {
 		$public = true;
-		$author_link = str_replace('acct:','',$children->author_id);
+		$author_link = str_replace('acct:','',$children->header->author_id);
 	}
 	else {
 
