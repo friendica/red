@@ -1,3 +1,4 @@
+// Quattro Theme LESS file
 /* icons */
 
 .icons(@size: 22) {
@@ -7,7 +8,12 @@
 	&.add 	 	{ background-image: url("../../../images/icons/@{size}/add.png"); }
 	&.delete 	{ background-image: url("../../../images/icons/@{size}/delete.png"); }
 	&.edit 	 	{ background-image: url("../../../images/icons/@{size}/edit.png"); }
-	&.start	 	{ background-image: url("../../../images/icons/@{size}/star.png"); }
+	&.star	 	{ background-image: url("../../../images/icons/@{size}/star.png"); }
+	&.menu		{ background-image: url("../../../images/icons/@{size}/menu.png"); }
+	&.link		{ background-image: url("../../../images/icons/@{size}/link.png"); }
+	&.lock		{ background-image: url("../../../images/icons/@{size}/lock.png"); }
+	&.unlock	{ background-image: url("../../../images/icons/@{size}/unlock.png"); }
+	
 }
 
 
@@ -24,12 +30,20 @@
 		text-indent: 0px;
 	}
 
+	&.s10 {
+		width:10px; height: 10px;
+		.icons(10);
+	}
 	&.s16 {
 		width:22px; height: 22px;
 		.icons(16);
 	}
 	&.s22 {
 		width:22px; height: 22px;
+		.icons(22);
+	}
+	&.s48 {
+		width:48px; height: 48px;
 		.icons(22);
 	}
 	
