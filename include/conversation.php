@@ -211,7 +211,7 @@ function conversation(&$a, $items, $mode, $update) {
 				
 				$o .= replace_macros($tpl,array(
 					'$id' => $item['item_id'],
-					'$linktitle' => sprintf( t('View %s\'s profile'), $profile_name),
+					'$linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, ((strlen($item['author-link'])) ? $item['author-link'] : $item['url'])),
 					'$profile_url' => $profile_link,
 					'$item_photo_menu' => item_photo_menu($item),
 					'$name' => $profile_name,
@@ -486,8 +486,8 @@ function conversation(&$a, $items, $mode, $update) {
 
 			$tmp_item = replace_macros($template,array(
 				'$id' => $item['item_id'],
-				'$linktitle' => sprintf( t('View %s\'s profile'), $profile_name),
-				'$olinktitle' => sprintf( t('View %s\'s profile'), $owner_name),
+				'$linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, ((strlen($item['author-link'])) ? $item['author-link'] : $item['url'])),
+				'$olinktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, ((strlen($item['owner-link'])) ? $item['owner-link'] : $item['url'])),
 				'$to' => t('to'),
 				'$wall' => t('Wall-to-Wall'),
 				'$vwall' => t('via Wall-To-Wall:'),
