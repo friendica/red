@@ -71,6 +71,7 @@
 		/* popup menus */
 		$('a[rel^=#]').click(function(e){
 			menu = $( $(this).attr('rel') );
+			e.preventDefault();
 			e.stopPropagation();
 			if (menu.attr('popup')=="false") return false;
 			$(this).parent().toggleClass("selected");
@@ -261,17 +262,22 @@
 	}
 
 	function dostar(ident) {
-		$('#like-rotator-' + ident.toString()).show();
-		$.get('starred/' + ident.toString(), function(data) {
+		ident = ident.toString();
+		$('#like-rotator-' + ident).show();
+		$.get('starred/' + ident, function(data) {
 			if(data.match(/1/)) {
-				$('#starred-' + ident.toString()).addClass('starred');
-				$('#starred-' + ident.toString()).removeClass('unstarred');
+				$('#starred-' + ident).addClass('starred');
+				$('#starred-' + ident).removeClass('hidden');
+				$('#star-' + ident).addClass('hidden');
+				$('#unstar-' + ident).removeClass('hidden');
 			}
 			else {			
-				$('#starred-' + ident.toString()).addClass('unstarred');
-				$('#starred-' + ident.toString()).removeClass('starred');
+				$('#starred-' + ident).addClass('hidden');
+				$('#starred-' + ident).removeClass('starred');
+				$('#star-' + ident).removeClass('hidden');
+				$('#unstar-' + ident).addClass('hidden');
 			}
-			$('#like-rotator-' + ident.toString()).hide();	
+			$('#like-rotator-' + ident).hide();	
 		});
 	}
 

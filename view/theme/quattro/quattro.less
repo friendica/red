@@ -31,6 +31,8 @@ a:hover {color: @LinkHover; text-decoration: underline; }
 
 .left { float: left; }
 .right { float: right; }
+.hidden { display: none; }
+
 
 .tool {
 	height: auto; overflow: auto;
@@ -253,4 +255,55 @@ section {
 	padding:0px 20px 0px 10px;
 }
 
-
+/* wall item */
+.tread-wrapper { 
+	background-color: @ThreadBackgroundColor; 
+	position: relative;
+	padding: 10px;
+	margin-bottom: 20px;
+}
+.wall-item-decor { position: absolute; left: 790px; top: -10px;  width: 16px;}
+.wall-item-container {
+	display: table;
+	width: 780px;
+	margin-bottom: 10px;
+	
+	.wall-item-item,
+	.wall-item-bottom { display: table-row; }
+	.wall-item-info {
+		display: table-cell;
+		vertical-align: top;
+		text-align: left;
+		width: 60px;
+		
+		.wall-item-photo-wrapper { position: relative; }
+		.wall-item-photo { width: 48px; height: 48px; }		
+		
+		.wall-item-photo-menu-button {
+			display: none;
+			position: absolute;
+			left: -4px;
+			top: 28px;
+		}
+		.wall-item-photo-menu { display: none; }
+		
+	} 
+	.wall-item-content {
+		display: table-cell;
+		font-size: 12px;
+		max-width: 720px;
+		word-wrap: break-word;
+	}
+	.wall-item-content img { max-width: 710px; }
+	.wall-item-links,
+	.wall-item-actions { display: table-cell; }
+	
+	.wall-item-ago { padding-right: 40px; }
+}
+.wall-item-container.comment {
+	.wall-item-photo { width: 32px; height: 32px; margin-left: 16px;}	
+	.wall-item-photo-menu-button {
+		top: 13px !important;
+		left: 10px !important;
+	}
+}

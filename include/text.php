@@ -834,9 +834,14 @@ function feed_salmonlinks($nick) {
 if(! function_exists('get_plink')) {
 function get_plink($item) {
 	$a = get_app();	
-	$plink = (((x($item,'plink')) && (! $item['private'])) ? '<div class="wall-item-links-wrapper"><a href="' 
-			. $item['plink'] . '" title="' . t('link to source') . '" target="external-link" class="icon remote-link"></a></div>' : '');
-	return $plink;
+	if (x($item,'plink') && (! $item['private'])){
+		return array(
+			'href' => $item['plink'],
+			'title' => t('link to source'),
+		);
+	} else {
+		return false;
+	}
 }}
 
 if(! function_exists('unamp')) {
