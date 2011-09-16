@@ -15,6 +15,13 @@ function stripcode_br_cb($s) {
 
 function bbcode($Text,$preserve_nl = false) {
 
+	// If we find any event code, turn it into an event.
+	// After we're finished processing the bbcode we'll 
+	// replace all of the event code with a reformatted version.
+
+	$ev = bbtoevent($Text);
+
+
 	// Replace any html brackets with HTML Entities to prevent executing HTML or script
 	// Don't use strip_tags here because it breaks [url] search by replacing & with amp
 
@@ -27,11 +34,6 @@ function bbcode($Text,$preserve_nl = false) {
 	if($preserve_nl)
 		$Text = str_replace(array("\n","\r"), array('',''),$Text);
 
-	// If we find any event code, turn it into an event.
-	// After we're finished processing the bbcode we'll 
-	// replace all of the event code with a reformatted version.
-
-	$ev = bbtoevent($Text);
 
 	// Set up the parameters for a URL search string
 	$URLSearchString = "^\[\]";
@@ -41,7 +43,7 @@ function bbcode($Text,$preserve_nl = false) {
 	// Perform URL Search
 
 
-	$Text = preg_replace("/([^\]\=]|^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\.\=\_\~\#\%\$\!\+\,]+)/", '$1<a href="$2" target="external-link">$2</a>', $Text);
+	$Text = preg_replace("/([^\]\=]|^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\%\$\!\+\,]+)/", '$1<a href="$2" target="external-link">$2</a>', $Text);
 
 	$Text = preg_replace("/\[url\]([$URLSearchString]*)\[\/url\]/m", '<a href="$1" target="external-link">$1</a>', $Text);
 	$Text = preg_replace("/\[url\=([$URLSearchString]*)\](.*?)\[\/url\]/m", '<a href="$1" target="external-link">$2</a>', $Text);
@@ -157,7 +159,8 @@ function bbcode($Text,$preserve_nl = false) {
 		$Text = preg_replace("/\[event\-adjust\](.*?)\[\/event\-adjust\]/ism",'',$Text);
 	}
 
-
+	// fix any escaped ampersands that may have been converted into links
+	$Text = preg_replace("/\<(.*?)(src|href)=(.*?)\&amp\;(.*?)\>/ism",'<$1$2=$3&$4>',$Text);
 	
 	call_hooks('bbcode',$Text);
 

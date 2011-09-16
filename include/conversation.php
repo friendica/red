@@ -111,7 +111,7 @@ function conversation(&$a, $items, $mode, $update) {
 	}
 
 	if($mode === 'notes') {
-		$profile_owner = $a->profile['profile_uid'];
+		$profile_owner = local_user();
 		$page_writeable = true;
 	}
 
@@ -381,12 +381,12 @@ function conversation(&$a, $items, $mode, $update) {
 				}
 			}
 
-
 			$likebuttons = '';
+			$shareable = ((($profile_owner == local_user()) && ($mode != 'display') && (! $item['private'])) ? true : false);
 
 			if($page_writeable) {
 				if($toplevelpost) {
-					$likebuttons = replace_macros((($item['private'] || ($profile_owner != local_user())) ? $noshare_tpl : $like_tpl),array(
+					$likebuttons = replace_macros(((($shareable)) ? $like_tpl : $noshare_tpl),array(
 						'$id' => $item['id'],
 						'$likethis' => t("I like this \x28toggle\x29"),
 						'$nolike' => t("I don't like this \x28toggle\x29"),

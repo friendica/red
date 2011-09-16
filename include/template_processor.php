@@ -165,9 +165,11 @@
 			
 			$a = get_app();
 			$this->lang=array();
-			foreach ($a->strings as $k=>$v){
-				$k =  preg_replace("/[^a-z0-9-]/", "", str_replace(" ","-", strtolower($k)));
-				$this->lang[$k] = $v;
+			if(is_array($a->strings) && count($a->strings)) {
+				foreach ($a->strings as $k=>$v){
+					$k =  preg_replace("/[^a-z0-9-]/", "", str_replace(" ","-", strtolower($k)));
+					$this->lang[$k] = $v;
+				}
 			}
 			return $this->lang;
 		}

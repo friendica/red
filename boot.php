@@ -8,7 +8,7 @@ require_once("include/pgettext.php");
 require_once('include/nav.php');
 
 
-define ( 'FRIENDIKA_VERSION',      '2.2.1096' );
+define ( 'FRIENDIKA_VERSION',      '2.2.1103' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
 define ( 'DB_UPDATE_VERSION',      1087      );
 
@@ -991,7 +991,7 @@ function get_birthdays() {
 				$now = strtotime('now');
 				$today = (((strtotime($rr['start'] . ' +00:00') < $now) && (strtotime($rr['finish'] . ' +00:00') > $now)) ? true : false); 
 	
-				$o .= '<div class="birthday-list" id="birthday-' . $rr['eid'] . '"><a class="sparkle" href="' 
+				$o .= '<div class="birthday-list" id="birthday-' . $rr['eid'] . '"><a class="sparkle" target="redir" href="' 
 				. $a->get_baseurl() . '/redir/'  . $rr['cid'] . '">' . $rr['name'] . '</a> ' 
 				. day_translate(datetime_convert('UTC', $a->timezone, $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '')
 				. '</div>' ;

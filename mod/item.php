@@ -38,6 +38,7 @@ function item_post(&$a) {
 	call_hooks('post_local_start', $_POST);
 
 	$api_source = ((x($_POST,'api_source') && $_POST['api_source']) ? true : false);
+	$return_path = ((x($_POST,'return')) ? $_POST['return'] : '');
 
 	/**
 	 * Is this a reply to something?
@@ -82,7 +83,7 @@ function item_post(&$a) {
 		if(($r === false) || (! count($r))) {
 			notice( t('Unable to locate original post.') . EOL);
 			if(x($_POST,'return')) 
-				goaway($a->get_baseurl() . "/" . $_POST['return'] );
+				goaway($a->get_baseurl() . "/" . $return_path );
 			killme();
 		}
 		$parent_item = $r[0];
@@ -111,7 +112,7 @@ function item_post(&$a) {
 	if(! can_write_wall($a,$profile_uid)) {
 		notice( t('Permission denied.') . EOL) ;
 		if(x($_POST,'return')) 
-			goaway($a->get_baseurl() . "/" . $_POST['return'] );
+			goaway($a->get_baseurl() . "/" . $return_path );
 		killme();
 	}
 
@@ -197,7 +198,7 @@ function item_post(&$a) {
 		if(! strlen($body)) {
 			info( t('Empty post discarded.') . EOL );
 			if(x($_POST,'return')) 
-				goaway($a->get_baseurl() . "/" . $_POST['return'] );
+				goaway($a->get_baseurl() . "/" . $return_path );
 			killme();
 		}
 	}
@@ -549,9 +550,9 @@ function item_post(&$a) {
 		);
 
 		proc_run('php', "include/notifier.php", 'edit_post', "$post_id");
-		if((x($_POST,'return')) && strlen($_POST['return'])) {
-			logger('return: ' . $_POST['return']);
-			goaway($a->get_baseurl() . "/" . $_POST['return'] );
+		if((x($_POST,'return')) && strlen($return_path)) {
+			logger('return: ' . $return_path);
+			goaway($a->get_baseurl() . "/" . $return_path );
 		}
 		killme();
 	}
@@ -798,11 +799,10 @@ function item_post(&$a) {
 	else {
 		logger('mod_item: unable to retrieve post that was just stored.');
 		notify( t('System error. Post not saved.'));
-		goaway($a->get_baseurl() . "/" . $_POST['return'] );
+		goaway($a->get_baseurl() . "/" . $return_path );
 		// NOTREACHED
 	}
 
-	proc_run('php', "include/notifier.php", $notify_type, "$post_id");
 
 	$datarray['id']    = $post_id;
 	$datarray['plink'] = $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id;
@@ -834,11 +834,16 @@ function item_post(&$a) {
 		}
 	}
 
+	// This is a real juggling act on shared hosting services which kill your processes
+	// e.g. dreamhost. We used to start delivery to our native delivery agents in the background
+	// and then run our plugin delivery from the foreground. We're now doing plugin delivery first,
+	// because as soon as you start loading up a bunch of remote delivey processes, *this* page is
+	// likely to get killed off. If you end up looking at an /item URL and a blank page,
+	// it's very likely the delivery got killed before all your friends could be notified.
+	// Currently the only realistic fixes are to use a reliable server - which precludes shared hosting,
+	// or cut back on plugins which do remote deliveries.  
 
-
-
-
-
+	proc_run('php', "include/notifier.php", $notify_type, "$post_id");
 
 	logger('post_complete');
 
@@ -847,10 +852,10 @@ function item_post(&$a) {
 	if($api_source)
 		return;
 
-	if((x($_POST,'return')) && strlen($_POST['return'])) {
-		logger('return: ' . $_POST['return']);
-		goaway($a->get_baseurl() . "/" . $_POST['return'] );
+	if($return_path) {
+		goaway($a->get_baseurl() . "/" . $return_path);
 	}
+
 	$json = array('success' => 1);
 	if(x($_POST,'jsreload') && strlen($_POST['jsreload']))
 		$json['reload'] = $a->get_baseurl() . '/' . $_POST['jsreload'];

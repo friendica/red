@@ -385,6 +385,8 @@ function statusnet_post_hook(&$a,&$b) {
 				$dent = new StatusNetOAuth($api,$ckey,$csecret,$otoken,$osecret);
 				$max_char = $dent->get_maxlength(); // max. length for a dent
 				$msg = strip_tags(bbcode($b['body']));
+				// quotes not working - let's try this
+				$msg = html_entity_decode($msg);
                                 if ( strlen($msg) > $max_char) {
                                         $shortlink = "";
                                         require_once('library/slinky.php');

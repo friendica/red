@@ -155,9 +155,15 @@ function profile_photo_content(&$a) {
 			notice( t('Permission denied.') . EOL );
 			return;
 		}
+		$havescale = false;
+		foreach($r as $rr) {
+			if($rr['scale'] == 5)
+				$havescale = true;
+		}
+
 		// set an already uloaded photo as profile photo
 		// if photo is in 'Profile Photos', change it in db
-		if ($r[0]['album']== t('Profile Photos')){
+		if (($r[0]['album']== t('Profile Photos')) && ($havescale)){
 			$r=q("UPDATE `photo` SET `profile`=0 WHERE `profile`=1 AND `uid`=%d",
 				intval(local_user()));
 			

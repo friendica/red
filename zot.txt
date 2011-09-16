@@ -1,7 +1,7 @@
 This is the Zot! social communications protocol. 
 
 Specification revision: 1
-02 September 2011
+15 September 2011
 
 Mike Macgirvin
 This specification is public domain.
@@ -181,7 +181,7 @@ delivery method for non-encrypted (e.g. public) messages.
 
 Discover of the zot endpoint is based on webfinger XRD:
 
-<link rel="http://purl.org/zot/1.0/post" 
+<Link rel="http://purl.org/zot/1.0/post" 
 	href="http://example/org/zot-endpoint" />
 
 

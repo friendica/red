@@ -482,13 +482,12 @@ function get_tags($s) {
 				// we might be inside a bbcode color tag - leave it alone
 				continue;
 			}
+			if(substr($mtch,-1,1) === '.')
+				$mtch = substr($mtch,0,-1);
 			// ignore strictly numeric tags like #1
 			if((strpos($mtch,'#') === 0) && ctype_digit(substr($mtch,1)))
 				continue;
-			if(substr($mtch,-1,1) === '.')
-				$ret[] = substr($mtch,0,-1);
-			else
-				$ret[] = $mtch;
+			$ret[] = $mtch;
 		}
 	}
 	return $ret;
@@ -579,11 +578,13 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 
 	$url = $contact['url'];
 	$sparkle = '';
+	$redir = false;
 
 	if($redirect) {
 		$a = get_app();
 		$redirect_url = $a->get_baseurl() . '/redir/' . $contact['id'];
 		if(local_user() && ($contact['uid'] == local_user()) && ($contact['network'] === 'dfrn')) {
+			$redir = true;
 			$url = $redirect_url;
 			$sparkle = ' sparkle';
 		}
@@ -594,6 +595,7 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 	if($textmode) {
 		return '<div class="contact-block-textdiv' . $class . '"><a class="contact-block-link' . $class . $sparkle 
 			. (($click) ? ' fakelink' : '') . '" '
+			. (($redir) ? ' target="redir" ' : '')
 			. (($url) ? ' href="' . $url . '"' : '') . $click
 			. '" title="' . $contact['name'] . ' [' . $contact['url'] . ']" alt="' . $contact['name'] 
 			. '" >'. $contact['name'] . '</a></div>' . "\r\n";
@@ -601,6 +603,7 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 	else {
 		return '<div class="contact-block-div' . $class . '"><a class="contact-block-link' . $class . $sparkle 
 			. (($click) ? ' fakelink' : '') . '" '
+			. (($redir) ? ' target="redir" ' : '')
 			. (($url) ? ' href="' . $url . '"' : '') . $click . ' ><img class="contact-block-img' . $class . $sparkle . '" src="' 
 			. $contact['micro'] . '" title="' . $contact['name'] . ' [' . $contact['url'] . ']" alt="' . $contact['name'] 
 			. '" /></a></div>' . "\r\n";
@@ -640,7 +643,8 @@ function valid_email($x){
 
 if(! function_exists('linkify')) {
 function linkify($s) {
-	$s = preg_replace("/(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\.\=\_\~\#\'\%\$\!\+]*)/", ' <a href="$1" target="external-link">$1</a>', $s);
+	$s = preg_replace("/(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\'\%\$\!\+]*)/", ' <a href="$1" target="external-link">$1</a>', $s);
+	$s = preg_replace("/\<(.*?)(src|href)=(.*?)\&amp\;(.*?)\>/ism",'<$1$2=$3&$4>',$s);
 	return($s);
 }}
 
@@ -661,7 +665,7 @@ if(! function_exists('smilies')) {
 function smilies($s) {
 	$a = get_app();
 
-	return str_replace(
+	$s = str_replace(
 	array( '&lt;3', '&lt;/3', '&lt;\\3', ':-)', ':)', ';-)', ':-(', ':(', ':-P', ':P', ':-"', ':-x', ':-X', ':-D', '8-|', '8-O', 
 		'~friendika', 'Diaspora*' ),
 	array(
@@ -685,6 +689,10 @@ function smilies($s) {
 		'<a href="http://joindiaspora.com">Diaspora<img src="' . $a->get_baseurl() . '/images/diaspora.png" alt="Diaspora*" /></a>',
 
 	), $s);
+
+	call_hooks('smilie', $s);
+	return $s;
+
 }}
 
 

@@ -430,7 +430,8 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 						$addr = $orig_url;
 						$network = NETWORK_MAIL;
 						$name = substr($url,0,strpos($url,'@'));
-						$profile = 'http://' . substr($url,strpos($url,'@')+1);
+						$phost = substr($url,strpos($url,'@')+1);
+						$profile = 'http://' . $phost;
 						// fix nick character range
 						$vcard = array('fn' => $name, 'nick' => $name, 'photo' => gravatar_img($url));
 						$notify = 'smtp ' . random_string();
@@ -441,8 +442,15 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 							$adr = imap_rfc822_parse_adrlist($x->from,'');
 						elseif(stristr($x->to,$orig_url))
 							$adr = imap_rfc822_parse_adrlist($x->to,'');
-						if(isset($adr) && strlen($adr[0]->personal))
-							$vcard['fn'] = notags($adr[0]->personal);
+						if(isset($adr)) {
+							foreach($adr as $feadr) {
+								if((strcasecmp($feadr->mailbox,$name) == 0) 
+									&&(strcasecmp($feadr->host,$phost) == 0) 
+									&& (strlen($feadr->personal))) {
+									$vcard['fn'] = notags($feadr->personal);
+								}
+							}
+						}
 					}
 					imap_close($mbox);
 				}
