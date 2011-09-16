@@ -165,15 +165,15 @@ EOT;
 
 $magic_env = <<< EOT
 <?xml version='1.0' encoding='UTF-8'?>
-<entry xmlns='http://www.w3.org/2005/Atom'>
+<diaspora xmlns="https://joindiaspora.org/protocol" xmlns:me="http://salmon-protocol.org/ns/magic-env" >
   $encrypted_header
-  <me:env xmlns:me="http://salmon-protocol.org/ns/magic-env">
+  <me:env>
     <me:encoding>base64url</me:encoding>
     <me:alg>RSA-SHA256</me:alg>
     <me:data type="application/xml">$data</me:data>
     <me:sig>$sig</me:sig>
   </me:env>
-</entry>
+</diaspora>
 EOT;
 
 	logger('diaspora_msg_build: magic_env: ' . $magic_env, LOGGER_DATA);
