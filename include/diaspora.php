@@ -8,15 +8,18 @@ require_once('include/contact_selectors.php');
 
 function diaspora_dispatch_public($msg) {
 
-	$r = q("SELECT `user`.* FROM `user` WHERE `user`.`uid` IN ( SELECT `uid` FROM `contact` WHERE `network` = '%s' AND `addr` = '%s' ) ",
+	$r = q("SELECT `user`.* FROM `user` WHERE `user`.`uid` IN ( SELECT `contact`.`uid` FROM `contact` WHERE `contact`.`network` = '%s' AND `contact`.`addr` = '%s' ) ",
 		dbesc(NETWORK_DIASPORA),
 		dbesc($msg['author'])
 	);
 	if(count($r)) {
 		foreach($r as $rr) {
+			logger('diaspora_public: delivering to: ' . $rr['username']);
 			diaspora_dispatch($rr,$msg);
 		}
 	}
+	else
+		logger('diaspora_public: no subscribers');
 }
 
 
