@@ -865,6 +865,13 @@ function item_store($arr,$force_parent = false) {
 		intval($current_post)
 	);
 
+	// update the timestamp on the parent
+
+	q("UPDATE `item` set `changed` = '%s' WHERE `id` = %d LIMIT 1",
+		dbesc(datetime_convert()),
+		intval($parent_id)
+	);
+
 	if($dsprsig) {
 		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
 			intval($current_post),

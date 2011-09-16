@@ -803,6 +803,12 @@ function item_post(&$a) {
 		// NOTREACHED
 	}
 
+	// update the timestamp on the parent
+
+	q("UPDATE `item` set `changed` = '%s' WHERE `id` = %d LIMIT 1",
+		dbesc(datetime_convert()),
+		intval($parent)
+	);
 
 	$datarray['id']    = $post_id;
 	$datarray['plink'] = $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id;
