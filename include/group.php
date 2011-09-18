@@ -6,8 +6,26 @@ function group_add($uid,$name) {
 	$ret = false;
 	if(x($uid) && x($name)) {
 		$r = group_byname($uid,$name); // check for dups
-		if($r !== false) 
+		if($r !== false) {
+
+			// This could be a problem. 
+			// Let's assume we've just created a group which we once deleted
+			// all the old members are gone, but the group remains so we don't break any security
+			// access lists. What we're doing here is reviving the dead group, but old content which
+			// was restricted to this group may now be seen by the new group members. 
+
+			$z = q("SELECT * FROM `group` WHERE `id` = %d LIMIT 1",
+				intval($r)
+			);
+			if(count($z) && $z[0]['deleted']) {
+				$r = q("UPDATE `group` SET `deleted` = 0 WHERE `uid` = %d AND `name` = '%s' LIMIT 1",
+					intval($uid),
+					dbesc($name)
+				);
+				notice( t('A deleted group with this name was revived. Existing item permissions <strong>may</strong> apply to this group and any future members. If this is not what you intended, please create another group with a different name.') . EOL); 
+			}
 			return true;
+		}
 		$r = q("INSERT INTO `group` ( `uid`, `name` )
 			VALUES( %d, '%s' ) ",
 			intval($uid),
