@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1088 );
+define( 'UPDATE_VERSION' , 1089 );
 
 /**
  *
@@ -743,3 +743,10 @@ function update_1087() {
 		}
 	}
 }
+
+function update_1088() {
+	q("ALTER TABLE `user` ADD `account_expired` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `expire` ,
+		ADD `account_expires_on` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `account_expired` ,
+		ADD `expire_notification_sent` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `account_expires_on` ");
+}
+
