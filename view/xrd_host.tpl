@@ -9,4 +9,17 @@
     <Link rel='http://services.mozilla.com/amcd/0.1' href='$domain/amcd' />
 	<Link rel="http://oexchange.org/spec/0.8/rel/resident-target" type="application/xrd+xml" 
 		href="$domain/oexchange/xrd" />
+
+    <Link rel="http://purl.org/zot/1.0/post" 
+          href="$zot_post" />
+
+    <Property xmlns:zot="http://purl.og/zot/1.0"
+          type="http://purl.org/zot/1.0/version"
+          zot:version="1" />
+
+    <Property xmlns:zot="http://purl.og/zot/1.0"
+        type="http://purl.org/zot/1.0/accept"
+        zot:accept="application/atom+xml" />
+
+
 </XRD>
