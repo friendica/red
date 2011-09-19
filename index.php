@@ -207,7 +207,10 @@ if(strlen($a->module)) {
 
 		logger('index.php: page not found: ' . $_SERVER['REQUEST_URI'] . ' ADDRESS: ' . $_SERVER['REMOTE_ADDR'] . ' QUERY: ' . $_SERVER['QUERY_STRING'], LOGGER_DEBUG);
 		header($_SERVER["SERVER_PROTOCOL"] . ' 404 ' . t('Not Found'));
-		notice( t('Page not found.' ) . EOL);
+		$tpl = get_markup_template("404.tpl");
+		$a->page['content'] = replace_macros($tpl, array(
+			'$message' =>  t('Page not found.' )
+		));
 	}
 }
 

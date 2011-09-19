@@ -36,8 +36,10 @@ function help_content(&$a) {
 	
 	if(! strlen($text)) {
 		header($_SERVER["SERVER_PROTOCOL"] . ' 404 ' . t('Not Found'));
-		notice( t('Page not found.' ) . EOL);
-		return;
+		$tpl = get_markup_template("404.tpl");
+		return replace_macros($tpl, array(
+			'$message' =>  t('Page not found.' )
+		));
 	}
 	
 	return Markdown($text);
