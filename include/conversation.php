@@ -485,6 +485,7 @@ function conversation(&$a, $items, $mode, $update) {
 
 
 			$tmp_item = replace_macros($template,array(
+				'$body' => $body,
 				'$id' => $item['item_id'],
 				'$linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, ((strlen($item['author-link'])) ? $item['author-link'] : $item['url'])),
 				'$olinktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, ((strlen($item['owner-link'])) ? $item['owner-link'] : $item['url'])),
@@ -498,7 +499,6 @@ function conversation(&$a, $items, $mode, $update) {
 				'$osparkle' => $osparkle,
 				'$sparkle' => $sparkle,
 				'$title' => $item['title'],
-				'$body' => $body,
 				'$ago' => ((($item['app']) && ($item['id'] == $item['parent'])) ? sprintf( t('%s from %s'),relative_date($item['created']),$item['app']) : relative_date($item['created'])),
 				'$lock' => $lock,
 				'$location' => $location,
@@ -514,6 +514,7 @@ function conversation(&$a, $items, $mode, $update) {
 				'$like' => $like,
 				'$dislike' => $dislike,
 				'$comment' => $comment
+
 			));
 
 

@@ -807,7 +807,7 @@ function dfrn_notify_content(&$a) {
 			intval(time() + 90 )
 		);
 
-		logger('dfrn_notify: challenge=' . $hash );
+		logger('dfrn_notify: challenge=' . $hash, LOGGER_DEBUG );
 
 		$sql_extra = '';
 		switch($direction) {
@@ -841,14 +841,18 @@ function dfrn_notify_content(&$a) {
 		$encrypted_id = '';
 		$id_str = $my_id . '.' . mt_rand(1000,9999);
 
-		if((($r[0]['duplex']) && strlen($r[0]['prvkey'])) || (! strlen($r[0]['pubkey']))) {
-			openssl_private_encrypt($hash,$challenge,$r[0]['prvkey']);
-			openssl_private_encrypt($id_str,$encrypted_id,$r[0]['prvkey']);
+		if(strlen($r[0]['prvkey']) || strlen($r[0]['pubkey'])) {
+			if(($r[0]['duplex']) || (! strlen($r[0]['pubkey']))) {
+				openssl_private_encrypt($hash,$challenge,$r[0]['prvkey']);
+				openssl_private_encrypt($id_str,$encrypted_id,$r[0]['prvkey']);
+			}
+			else {
+				openssl_public_encrypt($hash,$challenge,$r[0]['pubkey']);
+				openssl_public_encrypt($id_str,$encrypted_id,$r[0]['pubkey']);
+			}
 		}
-		else {
-			openssl_public_encrypt($hash,$challenge,$r[0]['pubkey']);
-			openssl_public_encrypt($id_str,$encrypted_id,$r[0]['pubkey']);
-		}
+		else
+			$status = 1;
 
 		$challenge    = bin2hex($challenge);
 		$encrypted_id = bin2hex($encrypted_id);
