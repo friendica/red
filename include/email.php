@@ -169,6 +169,17 @@ function email_get_part($mbox,$uid,$p,$partno) {
 
 function email_header_encode($in_str, $charset) {
     $out_str = $in_str;
+	$need_to_convert = false;
+
+	for($x = 0; $x < strlen($in_str); $x ++) {
+		if((ord($in_str[$x]) == 0) || ((ord($in_str[$x]) > 128))) {
+			$need_to_convert = true;
+		}
+	}
+
+	if(! $need_to_convert)
+		return $in_str;
+
     if ($out_str && $charset) {
 
         // define start delimimter, end delimiter and spacer
