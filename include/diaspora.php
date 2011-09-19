@@ -8,7 +8,7 @@ require_once('include/contact_selectors.php');
 
 function diaspora_dispatch_public($msg) {
 
-	$r = q("SELECT `user`.* FROM `user` WHERE `user`.`uid` IN ( SELECT `contact`.`uid` FROM `contact` WHERE `contact`.`network` = '%s' AND `contact`.`addr` = '%s' ) ",
+	$r = q("SELECT `user`.* FROM `user` WHERE `user`.`uid` IN ( SELECT `contact`.`uid` FROM `contact` WHERE `contact`.`network` = '%s' AND `contact`.`addr` = '%s' ) AND `account_expired` = 0 ",
 		dbesc(NETWORK_DIASPORA),
 		dbesc($msg['author'])
 	);

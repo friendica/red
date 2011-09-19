@@ -139,6 +139,12 @@ function fb_get_self($uid) {
 
 function fb_get_friends($uid) {
 
+	$r = q("SELECT `id` FROM `user` WHERE `uid` = %d AND `account_expired` = 0 LIMIT 1",
+		intval($uid)
+	);
+	if(! count($r))
+		return;
+
 	$access_token = get_pconfig($uid,'facebook','access_token');
 
 	$no_linking = get_pconfig($uid,'facebook','no_linking');
@@ -808,7 +814,17 @@ function fb_consume_all($uid) {
 }
 
 function fb_consume_stream($uid,$j,$wall = false) {
+
 	$a = get_app();
+
+
+	$user = q("SELECT `nickname`, `blockwall` FROM `user` WHERE `uid` = %d AND `account_expired` = 0 LIMIT 1",
+		intval($uid)
+	);
+	if(! count($user))
+		return;
+
+	$my_local_url = $a->get_baseurl() . '/profile/' . $user[0]['nickname'];
 
 	$no_linking = get_pconfig($uid,'facebook','no_linking');
 	if($no_linking)
@@ -818,11 +834,6 @@ function fb_consume_stream($uid,$j,$wall = false) {
 		intval($uid)
 	);
 
-	$user = q("SELECT `nickname`, `blockwall` FROM `user` WHERE `uid` = %d LIMIT 1",
-		intval($uid)
-	);
-	if(count($user))
-		$my_local_url = $a->get_baseurl() . '/profile/' . $user[0]['nickname'];
 
 	$self_id = get_pconfig($uid,'facebook','self_id');
 	if(! count($j->data) || (! strlen($self_id)))

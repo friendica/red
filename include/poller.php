@@ -86,11 +86,12 @@ function poller_run($argv, $argc){
 	// and which have a polling address and ignore Diaspora since 
 	// we are unable to match those posts with a Diaspora GUID and prevent duplicates.
 
-	$contacts = q("SELECT `id` FROM `contact` 
+	$contacts = q("SELECT `contact`.`id` FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
 		WHERE ( `rel` = %d OR `rel` = %d ) AND `poll` != ''
 		AND `network` != '%s'
 		$sql_extra 
-		AND `self` = 0 AND `blocked` = 0 AND `readonly` = 0 ORDER BY RAND()",
+		AND `self` = 0 AND `contact`.`blocked` = 0 AND `contact`.`readonly` = 0 
+		AND `user`.`account_expired` = 0 ORDER BY RAND()",
 		intval(CONTACT_IS_SHARING),
 		intval(CONTACT_IS_FRIEND),
 		dbesc(NETWORK_DIASPORA)
