@@ -383,7 +383,7 @@ function diaspora_decode($importer,$xml) {
 
 	if(! $verify) {
 		logger('mod-diaspora: Message did not verify. Discarding.');
-//		http_status_exit(400);
+		http_status_exit(400);
 	}
 
 	logger('mod-diaspora: Message verified.');
