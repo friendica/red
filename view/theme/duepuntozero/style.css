@@ -2749,6 +2749,7 @@ a.mail-list-link {
 .off { background-position: 0px -48px; }
 .starred { background-position: -16px -48px; }
 .unstarred { background-position: -32px -48px; }
+.tagged { background-position: -48px -48px; }
 
 
 .icon.dim { opacity: 0.3;filter:alpha(opacity=30); }

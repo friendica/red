@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1089 );
+define( 'UPDATE_VERSION' , 1090 );
 
 /**
  *
@@ -750,3 +750,6 @@ function update_1088() {
 		ADD `expire_notification_sent` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `account_expires_on` ");
 }
 
+function update_1089() {
+	q("ALTER TABLE `user` ADD `blocktags` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `hidewall` ");
+}
