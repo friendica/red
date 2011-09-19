@@ -34,12 +34,14 @@ function photos_init(&$a) {
 			$a->data['albums'] = $albums;
 
 			$o .= '<h4><a href="' . $a->get_baseurl() . '/profile/' . $a->data['user']['nickname'] . '">' . $a->data['user']['username'] . '</a></h4>';
+			$o .= '<div id="profile-photo-wrapper"><img class="photo" style="width: 175px; height: 175px;" src="' . $a->get_baseurl() . '/photo/profile/' . $a->data['user']['uid'] . '.jpg" alt="' . $a->data['user']['username'] . '" /></div>';
+
 			$o .= '<h4>' . '<a href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '">' . t('Photo Albums') . '</a></h4>';
 		
 			$o .= '<ul>';
 			foreach($albums as $album) {
 
-				// don't show contact photos. We once trasnlated this name, but then you could still access it under
+				// don't show contact photos. We once translated this name, but then you could still access it under
 				// a different language setting. Now we store the name in English and check in English (and translated for legacy albums).
 
 				if((! strlen($album['album'])) || ($album['album'] === 'Contact Photos') || ($album['album'] === t('Contact Photos')))
