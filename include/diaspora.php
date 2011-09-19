@@ -103,6 +103,52 @@ function get_diaspora_key($uri) {
 }
 
 
+function diaspora_pubmsg_build($msg,$user,$contact,$prvkey,$pubkey) {
+	$a = get_app();
+
+	logger('diaspora_pubmsg_build: ' . $msg, LOGGER_DATA);
+
+	
+	$handle = $user['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+
+	$b64_data = base64_encode($msg);
+	$b64url_data = base64url_encode($b64_data);
+
+	$data = str_replace(array("\n","\r"," ","\t"),array('','','',''),$b64url_data);
+
+	$type = 'application/xml';
+	$encoding = 'base64url';
+	$alg = 'RSA-SHA256';
+
+	$signable_data = $data  . '.' . base64url_encode($type) . '.' 
+		. base64url_encode($encoding) . '.' . base64url_encode($alg) ;
+
+	$signature = rsa_sign($signable_data,$prvkey);
+	$sig = base64url_encode($signature);
+
+$magic_env = <<< EOT
+<?xml version='1.0' encoding='UTF-8'?>
+<diaspora xmlns="https://joindiaspora.org/protocol" xmlns:me="http://salmon-protocol.org/ns/magic-env" >
+  <header>
+    <author_id>$handle</author_id>
+  </header>
+  <me:env>
+    <me:encoding>base64url</me:encoding>
+    <me:alg>RSA-SHA256</me:alg>
+    <me:data type="application/xml">$data</me:data>
+    <me:sig>$sig</me:sig>
+  </me:env>
+</diaspora>
+EOT;
+
+	logger('diaspora_pubmsg_build: magic_env: ' . $magic_env, LOGGER_DATA);
+	return $magic_env;
+
+}
+
+
+
+
 function diaspora_msg_build($msg,$user,$contact,$prvkey,$pubkey) {
 	$a = get_app();
 
