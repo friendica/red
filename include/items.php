@@ -717,6 +717,7 @@ function item_store($arr,$force_parent = false) {
 	$arr['owner-avatar']  = ((x($arr,'owner-avatar'))  ? notags(trim($arr['owner-avatar']))  : '');
 	$arr['created']       = ((x($arr,'created') !== false) ? datetime_convert('UTC','UTC',$arr['created']) : datetime_convert());
 	$arr['edited']        = ((x($arr,'edited')  !== false) ? datetime_convert('UTC','UTC',$arr['edited'])  : datetime_convert());
+	$arr['commented']     = datetime_convert();
 	$arr['received']      = datetime_convert();
 	$arr['changed']       = datetime_convert();
 	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
@@ -865,9 +866,10 @@ function item_store($arr,$force_parent = false) {
 		intval($current_post)
 	);
 
-	// update the timestamp on the parent
+	// update the commented timestamp on the parent
 
-	q("UPDATE `item` set `changed` = '%s' WHERE `id` = %d LIMIT 1",
+	q("UPDATE `item` set `commented` = '%s', `changed` = '%s' WHERE `id` = %d LIMIT 1",
+		dbesc(datetime_convert()),
 		dbesc(datetime_convert()),
 		intval($parent_id)
 	);

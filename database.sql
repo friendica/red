@@ -174,6 +174,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `thr-parent` char(255) NOT NULL,
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `edited` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `commented` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `received` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `changed` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `owner-name` char(255) NOT NULL,

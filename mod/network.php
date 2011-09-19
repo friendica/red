@@ -315,44 +315,27 @@ function network_content(&$a, $update = 0) {
 	else {
 
 		// Normal conversation view
-		// Show conversation by activity date
 
 
-		if($order === 'post') {
-			$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact_uid`
-				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-				AND `item`.`parent` = `item`.`id`
-				$sql_extra
-				ORDER BY `item`.`created` DESC LIMIT %d ,%d ",
-				intval(local_user()),
-				intval($a->pager['start']),
-				intval($a->pager['itemspage'])
-			);
-		}
-		else {   
-			// $order === 'comment'
-			// First fetch a known number of parent items
+		if($order === 'post')
+				$ordering = "`created`";
+		else
+				$ordering = "`commented`";
 
-			$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact_uid`
-				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-				, (SELECT `_com`.`parent`,max(`_com`.`created`) as `created`
-					FROM `item` AS `_com` 
-					WHERE `_com`.`uid`=%d AND
-					(`_com`.`parent`!=`_com`.`id` OR `_com`.`id`  NOT IN (SELECT `__com`.`parent` FROM `item` as `__com` WHERE `__com`.`parent`!=`__com`.`id`))
-					GROUP BY `_com`.`parent` ORDER BY `created` DESC) AS `com` 
-				WHERE `item`.`id`=`com`.`parent` AND
-				`item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0	
-				$sql_extra
-				ORDER BY `com`.`created` DESC LIMIT %d ,%d ",
-				intval(local_user()),
-				intval(local_user()),
-				intval($a->pager['start']),
-				intval($a->pager['itemspage'])
-			);
-		}
+		// Fetch a page full of parent items for this page
+
+		$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact_uid`
+			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
+			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+			AND `item`.`parent` = `item`.`id`
+			$sql_extra
+			ORDER BY `item`.$ordering DESC LIMIT %d ,%d ",
+			intval(local_user()),
+			intval($a->pager['start']),
+			intval($a->pager['itemspage'])
+		);
+
 		// Then fetch all the children of the parents that are on this page
 
 		$parents_arr = array();
@@ -363,48 +346,21 @@ function network_content(&$a, $update = 0) {
 				$parents_arr[] = $rr['item_id'];
 			$parents_str = implode(', ', $parents_arr);
 
-			if($order === 'post') {
-				// parent created order
-				$r = q("SELECT `item`.*, `item`.`id` AS `item_id`,
-					`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`, `contact`.`writable`,
-					`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
-					`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-					FROM `item`, (SELECT `p`.`id`,`p`.`created` FROM `item` AS `p` WHERE `p`.`parent`=`p`.`id`) as `parentitem`, `contact`
-					WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-					AND `contact`.`id` = `item`.`contact-id`
-					AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-					AND `item`.`parent` = `parentitem`.`id` AND `item`.`parent` IN ( %s )
-					$sql_extra
-					ORDER BY `parentitem`.`created` DESC, `item`.`gravity` ASC, `item`.`created` ASC ",
-					intval(local_user()),
-					dbesc($parents_str)
-				);
-			}	
-			else {
-				// $order === 'comment'
-
-				$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-					`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`, `contact`.`writable`,
-					`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
-					`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-					FROM `item`, `contact`,
-						(SELECT `_com`.`parent`,max(`_com`.`created`) as `created`
-						FROM `item` AS `_com` 
-						WHERE `_com`.`uid`=%d AND
-						(`_com`.`parent`!=`_com`.`id` OR `_com`.`id`  NOT IN (SELECT `__com`.`parent` FROM `item` as `__com` WHERE `__com`.`parent`!=`__com`.`id`))
-						GROUP BY `_com`.`parent` ORDER BY `created` DESC) AS `com` 
-					WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-					AND `contact`.`id` = `item`.`contact-id`
-					AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-					AND `item`.`parent` = `com`.`parent` AND `item`.`parent` IN ( %s )
-					$sql_extra
-					ORDER BY `com`.`created`  DESC, `item`.`gravity` ASC, `item`.`created` ASC ",
-					intval(local_user()),
-					intval(local_user()),
-					dbesc($parents_str)
-				);
-			}
-		}
+			$r = q("SELECT `item`.*, `item`.`id` AS `item_id`,
+				`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`, `contact`.`writable`,
+				`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
+				`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
+				FROM `item`, (SELECT `p`.`id`,`p`.`created`,`p`.`commented` FROM `item` AS `p` WHERE `p`.`parent`=`p`.`id`) as `parentitem`, `contact`
+				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+				AND `contact`.`id` = `item`.`contact-id`
+				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+				AND `item`.`parent` = `parentitem`.`id` AND `item`.`parent` IN ( %s )
+				$sql_extra
+				ORDER BY `parentitem`.$ordering DESC, `item`.`gravity` ASC, `item`.`created` ASC ",
+				intval(local_user()),
+				dbesc($parents_str)
+			);
+		}	
 	}
 
 	// Set this so that the conversation function can find out contact info for our wall-wall items

@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1087 );
+define( 'UPDATE_VERSION' , 1088 );
 
 /**
  *
@@ -726,3 +726,20 @@ function update_1086() {
 	q("ALTER TABLE `item` ADD `bookmark` tinyint(1) NOT NULL DEFAULT '0' AFTER `starred` ");
 }
 
+function update_1087() {
+	q("ALTER TABLE `item` ADD `commented` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `edited` ");
+
+	$r = q("SELECT `id` FROM `item` WHERE `parent` = `id` ");
+	if(count($r)) {
+		foreach($r as $rr) {
+			$x = q("SELECT max(`created`) AS `cdate` FROM `item` WHERE `parent` = %d LIMIT 1",
+				intval($rr['id'])
+			);
+			if(count($x))
+				q("UPDATE `item` SET `commented` = '%s' WHERE `id` = %d LIMIT 1",
+					dbesc($x[0]['cdate']),
+					intval($rr['id'])
+				);
+		}
+	}
+}
