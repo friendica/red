@@ -889,9 +889,9 @@ function photos_content(&$a) {
 			'$nickname' => $a->data['user']['nickname'],
 			'$newalbum' => t('New album name: '),
 			'$existalbumtext' => t('or existing album name: '),
-			'$albumselect' => $albumselect,
+			'$albumselect' => template_escape($albumselect),
 			'$permissions' => t('Permissions'),
-			'$aclselect' => (($visitor) ? '' : populate_acl($a->user, $celeb)),
+			'$aclselect' => (($visitor) ? '' : template_escape(populate_acl($a->user, $celeb))),
 			'$uploader' => $ret['addon_text'],
 			'$default' => (($ret['default_upload']) ? $default_upload : ''),
 			'$uploadurl' => $ret['post_url']
@@ -932,7 +932,7 @@ function photos_content(&$a) {
 					$o .= replace_macros($edit_tpl,array(
 						'$nametext' => t('New album name: '),
 						'$nickname' => $a->data['user']['nickname'],
-						'$album' => $album,
+						'$album' => template_escape($album),
 						'$hexalbum' => bin2hex($album),
 						'$submit' => t('Submit'),
 						'$dropsubmit' => t('Delete Album')
@@ -957,8 +957,8 @@ function photos_content(&$a) {
 					'$photolink' => $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $rr['resource-id'],
 					'$phototitle' => t('View Photo'),
 					'$imgsrc' => $a->get_baseurl() . '/photo/' . $rr['resource-id'] . '-' . $rr['scale'] . '.jpg',
-					'$imgalt' => $rr['filename'],
-					'$desc'=> $rr['desc']
+					'$imgalt' => template_escape($rr['filename']),
+					'$desc'=> template_escape($rr['desc'])
 				));
 
 		}
@@ -1132,16 +1132,16 @@ function photos_content(&$a) {
 			$edit_tpl = get_markup_template('photo_edit.tpl');
 			$edit = replace_macros($edit_tpl, array(
 				'$id' => $ph[0]['id'],
-				'$album' => $ph[0]['album'],
+				'$album' => template_escape($ph[0]['album']),
 				'$newalbum' => t('New album name'), 
 				'$nickname' => $a->data['user']['nickname'],
 				'$resource_id' => $ph[0]['resource-id'],
 				'$capt_label' => t('Caption'),
-				'$caption' => $ph[0]['desc'],
+				'$caption' => template_escape($ph[0]['desc']),
 				'$tag_label' => t('Add a Tag'),
 				'$tags' => $link_item['tag'],
 				'$permissions' => t('Permissions'),
-				'$aclselect' => populate_acl($ph[0]),
+				'$aclselect' => template_escape(populate_acl($ph[0])),
 				'$help_tags' => t('Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping'),
 				'$item_id' => ((count($linked_items)) ? $link_item['id'] : 0),
 				'$submit' => t('Submit'),
@@ -1287,11 +1287,11 @@ function photos_content(&$a) {
 					$comments .= replace_macros($template,array(
 						'$id' => $item['item_id'],
 						'$profile_url' => $profile_link,
-						'$name' => $profile_name,
+						'$name' => template_escape($profile_name),
 						'$thumb' => $profile_avatar,
 						'$sparkle' => $sparkle,
-						'$title' => $item['title'],
-						'$body' => bbcode($item['body']),
+						'$title' => template_escape($item['title']),
+						'$body' => template_escape(bbcode($item['body'])),
 						'$ago' => relative_date($item['created']),
 						'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
 						'$drop' => $drop,
@@ -1306,18 +1306,18 @@ function photos_content(&$a) {
 		$photo_tpl = get_markup_template('photo_view.tpl');
 		$o .= replace_macros($photo_tpl, array(
 			'$id' => $ph[0]['id'],
-			'$album' => array($album_link,$ph[0]['album']),
+			'$album' => array($album_link,template_escape($ph[0]['album'])),
 			'$tools' => $tools,
 			'$lock' => $lock,
 			'$photo' => $photo,
 			'$prevlink' => $prevlink,
 			'$nextlink' => $nextlink,
 			'$desc' => $ph[0]['desc'],
-			'$tags' => $tags,
+			'$tags' => template_escape($tags),
 			'$edit' => $edit,	
 			'$likebuttons' => $likebuttons,
-			'$like' => $like,
-			'$dislike' => $dislike,
+			'$like' => template_escape($like),
+			'$dislike' => template_escape($dislike),
 			'$comments' => $comments,
 			'$paginate' => $paginate,
 		));
@@ -1365,9 +1365,9 @@ function photos_content(&$a) {
 				'$phototitle' => t('View Photo'),
 				'$imgsrc'     => $a->get_baseurl() . '/photo/' . $rr['resource-id'] . '-' . ((($rr['scale']) == 6) ? 4 : $rr['scale']) . '.jpg',
 				'$albumlink'  => $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/album/' . bin2hex($rr['album']),
-				'$albumname'  => $rr['album'],
+				'$albumname'  => template_escape($rr['album']),
 				'$albumalt'   => t('View Album'),
-				'$imgalt'     => $rr['filename']
+				'$imgalt'     => template_escape($rr['filename'])
 			));
 
 		}

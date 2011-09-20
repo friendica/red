@@ -954,16 +954,16 @@ EOT;
 	$tpl = get_markup_template('profile_vcard.tpl');
 
 	$o .= replace_macros($tpl, array(
-		'$fullname' => $fullname,
-		'$pdesc'    => $pdesc,
+		'$fullname' => template_escape($fullname),
+		'$pdesc'    => template_escape($pdesc),
 		'$tabs'     => $tabs,
 		'$photo'    => $photo,
 		'$connect'  => $connect,		
-		'$location' => $location,
+		'$location' => template_escape($location),
 		'$gender'   => $gender,
 		'$pubkey'   => $pubkey,
-		'$marital'  => $marital,
-		'$homepage' => $homepage,
+		'$marital'  => template_escape($marital),
+		'$homepage' => template_escape($homepage),
 		'$diaspora' => $diaspora_vcard
 	));
 
