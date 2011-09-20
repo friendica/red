@@ -496,8 +496,10 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 	}
 
 	if($diaspora && $diaspora_base && $diaspora_guid) {
-		if($mode == PROBE_DIASPORA || ! $notify)
+		if($mode == PROBE_DIASPORA || ! $notify) {
 			$notify = $diaspora_base . 'receive/users/' . $diaspora_guid;
+			$batch  = $diaspora_base . 'receive/public' ;
+		}
 		if(strpos($url,'@'))
 			$addr = str_replace('acct:', '', $url);
 	}			
@@ -675,6 +677,7 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 	$result['nick'] = $vcard['nick'];
 	$result['url'] = $profile;
 	$result['addr'] = $addr;
+	$result['batch'] = $batch;
 	$result['notify'] = $notify;
 	$result['poll'] = $poll;
 	$result['request'] = $request;

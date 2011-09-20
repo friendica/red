@@ -70,6 +70,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `alias` char(255) NOT NULL,
   `pubkey` text NOT NULL,
   `prvkey` text NOT NULL,
+  `batch` char(255) NOT NULL,
   `request` text NOT NULL,
   `notify` text NOT NULL,
   `poll` text NOT NULL,

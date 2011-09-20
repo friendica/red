@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1090 );
+define( 'UPDATE_VERSION' , 1091 );
 
 /**
  *
@@ -753,3 +753,11 @@ function update_1088() {
 function update_1089() {
 	q("ALTER TABLE `user` ADD `blocktags` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `hidewall` ");
 }
+
+function update_1090() {
+	q("ALTER TABLE `contact` ADD `batch` char(255) NOT NULL AFTER `prvkey` ");
+
+	q("UPDATE `contact` SET `batch` = concat(substring_index(`url`,'/',3),'/receive/public') WHERE `network` = 'dspr' ");
+
+}
+

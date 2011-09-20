@@ -68,6 +68,7 @@ function diaspora_get_contact_by_handle($uid,$handle) {
 }
 
 function find_diaspora_person_by_handle($handle) {
+	$update = false;
 	$r = q("select * from fcontact where network = '%s' and addr = '%s' limit 1",
 		dbesc(NETWORK_DIASPORA),
 		dbesc($handle)
@@ -75,18 +76,14 @@ function find_diaspora_person_by_handle($handle) {
 	if(count($r)) {
 		// update record occasionally so it doesn't get stale
 		$d = strtotime($r[0]['updated'] . ' +00:00');
-		if($d < strtotime('now - 14 days')) {
-			q("delete from fcontact where id = %d limit 1",
-				intval($r[0]['id'])
-			);
-		}
-		else
+		if($d > strtotime('now - 14 days'))
 			return $r[0];
+		$update = true;
 	}
 	require_once('include/Scrape.php');
 	$r = probe_url($handle, PROBE_DIASPORA);
 	if((count($r)) && ($r['network'] === NETWORK_DIASPORA)) {
-		add_fcontact($r);
+		add_fcontact($r,$update);
 		return ($r);
 	}
 	return false;
