@@ -336,9 +336,9 @@ function item_post(&$a) {
 	// embedded bookmark in post? convert to regular url and set bookmark flag
 
 	$bookmark = 0;
-	if(preg_match_all("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/m",$body,$match)) {
+	if(preg_match_all("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/ism",$body,$match)) {
 		$bookmark = 1;
-		$body = preg_replace("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/m",'[url=$1]$2[/url]',$body);
+		$body = preg_replace("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/ism",'[url=$1]$2[/url]',$body);
 	}
 
 
@@ -346,7 +346,7 @@ function item_post(&$a) {
 	 * Fold multi-line [code] sequences
 	 */
 
-	$body = preg_replace('/\[\/code\]\s*\[code\]/m',"\n",$body); 
+	$body = preg_replace('/\[\/code\]\s*\[code\]/ism',"\n",$body); 
 
 	/**
 	 * Look for any tags and linkify them

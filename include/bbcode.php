@@ -43,11 +43,11 @@ function bbcode($Text,$preserve_nl = false) {
 	// Perform URL Search
 
 
-	$Text = preg_replace("/([^\]\=]|^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\%\$\!\+\,]+)/", '$1<a href="$2" target="external-link">$2</a>', $Text);
+	$Text = preg_replace("/([^\]\=]|^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\%\$\!\+\,]+)/ism", '$1<a href="$2" target="external-link">$2</a>', $Text);
 
-	$Text = preg_replace("/\[url\]([$URLSearchString]*)\[\/url\]/m", '<a href="$1" target="external-link">$1</a>', $Text);
-	$Text = preg_replace("/\[url\=([$URLSearchString]*)\](.*?)\[\/url\]/m", '<a href="$1" target="external-link">$2</a>', $Text);
-	//$Text = preg_replace("/\[url\=([$URLSearchString]*)\]([$URLSearchString]*)\[\/url\]/m", '<a href="$1" target="_blank">$2</a>', $Text);
+	$Text = preg_replace("/\[url\]([$URLSearchString]*)\[\/url\]/ism", '<a href="$1" target="external-link">$1</a>', $Text);
+	$Text = preg_replace("/\[url\=([$URLSearchString]*)\](.*?)\[\/url\]/ism", '<a href="$1" target="external-link">$2</a>', $Text);
+	//$Text = preg_replace("/\[url\=([$URLSearchString]*)\]([$URLSearchString]*)\[\/url\]/ism", '<a href="$1" target="_blank">$2</a>', $Text);
 
 
 	// Perform MAIL Search
@@ -95,7 +95,7 @@ function bbcode($Text,$preserve_nl = false) {
 //	$Text = str_replace("[*]", "<li>", $Text);
 
 	// Check for font change text
-	$Text = preg_replace("/\[font=(.*?)\](.*?)\[\/font\]/m","<span style=\"font-family: $1;\">$2</span>",$Text);
+	$Text = preg_replace("/\[font=(.*?)\](.*?)\[\/font\]/sm","<span style=\"font-family: $1;\">$2</span>",$Text);
 
 	// Declare the format for [code] layout
 
