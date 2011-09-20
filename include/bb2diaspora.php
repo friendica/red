@@ -3,30 +3,14 @@
 require_once("include/oembed.php");
 require_once('include/event.php');
 
-
-
+require_once('library/markdown.php');
+require_once('include/html2bbcode.php');
 
 function diaspora2bb($s) {
 
-	// bug #127
-	$s = preg_replace('/\[(.+?)\]\((.+?)[^\\\]_(.+?)\)/','[$1]($2\\_$3)',$s);
-
-
-	$s = str_replace(array('\\**','\\__','\\*','\\_'), array('-^doublestar^-','-^doublescore-^','-^star^-','-^score^-'),$s);
-	$s = preg_replace("/\*\*\*(.+?)\*\*\*/", '[b][i]$1[/i][/b]', $s);
-	$s = preg_replace("/\_\_\_(.+?)\_\_\_/", '[b][i]$1[/i][/b]', $s);
-	$s = preg_replace("/\*\*(.+?)\*\*/", '[b]$1[/b]', $s);
-	$s = preg_replace("/\_\_(.+?)\_\_/", '[b]$1[/b]', $s);
-	$s = preg_replace("/\*(.+?)\*/", '[i]$1[/i]', $s);
-	$s = preg_replace("/\_(.+?)\_/", '[i]$1[/i]', $s);
-
-	$s = str_replace(array('-^doublestar^-','-^doublescore-^','-^star^-','-^score^-'), array('**','__','*','_'), $s);
-	$s = preg_replace('/\!\[(.+?)\]\((.+?)\)/','[img]$2[/img]',$s);
-	$s = preg_replace('/\[(.+?)\]\((.+?)\)/','[url=$2]$1[/url]',$s);
 	$s = preg_replace('/\@\{(.+?)\; (.+?)\@(.+?)\}/','@[url=https://$3/u/$2]$1[/url]',$s);
-
-
-	$s = escape_tags($s);
+	$s = Markdown($s);
+	$s = html2bbcode($s);
 	return $s;
 
 }
@@ -188,8 +172,7 @@ function bb2diaspora($Text,$preserve_nl = false) {
 
 	$Text = preg_replace("/\<(.*?)(src|href)=(.*?)\&amp\;(.*?)\>/ism",'<$1$2=$3&$4>',$Text);
 
-	$Text = preg_replace('/\[(.*?)\\\\_(.*?)\]\((.*?)\)/ism','[$1_$2]($3)',$Text);
-	$Text = preg_replace('/\[(.*?)\\\\\*(.*?)\]\((.*?)\)/ism','[$1*$2]($3)',$Text);
+	$Text = preg_replace('/\[(.*?)\]\((.*?)\\\\_(.*?)\)/ism','[$1]($2_$3)',$Text);
 	
 	call_hooks('bb2diaspora',$Text);
 

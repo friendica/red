@@ -7,7 +7,7 @@ require_once('include/text.php');
 require_once("include/pgettext.php");
 
 
-define ( 'FRIENDIKA_VERSION',      '2.3.1109' );
+define ( 'FRIENDIKA_VERSION',      '2.3.1110' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
 define ( 'DB_UPDATE_VERSION',      1091      );
 
