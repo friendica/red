@@ -159,10 +159,10 @@ function message_content(&$a) {
 				'$from_url' => $a->get_baseurl() . '/redir/' . $rr['contact-id'],
 				'$sparkle' => ' sparkle',
 				'$from_photo' => $rr['thumb'],
-				'$subject' => (($rr['mailseen']) ? $rr['title'] : '<strong>' . $rr['title'] . '</strong>'),
+				'$subject' => template_escape((($rr['mailseen']) ? $rr['title'] : '<strong>' . $rr['title'] . '</strong>')),
 				'$delete' => t('Delete conversation'),
-				'$body' => $rr['body'],
-				'$to_name' => $rr['name'],
+				'$body' => template_escape($rr['body']),
+				'$to_name' => template_escape($rr['name']),
 				'$date' => datetime_convert('UTC',date_default_timezone_get(),$rr['mailcreated'], t('D, d M Y - g:i A'))
 			));
 		}
@@ -221,14 +221,14 @@ function message_content(&$a) {
 			}
 			$o .= replace_macros($tpl, array(
 				'$id' => $message['id'],
-				'$from_name' =>$message['from-name'],
+				'$from_name' => template_escape($message['from-name']),
 				'$from_url' => $from_url,
 				'$sparkle' => $sparkle,
 				'$from_photo' => $message['from-photo'],
-				'$subject' => $message['title'],
-				'$body' => smilies(bbcode($message['body'])),
+				'$subject' => template_escape($message['title']),
+				'$body' => template_escape(smilies(bbcode($message['body']))),
 				'$delete' => t('Delete message'),
-				'$to_name' => $message['name'],
+				'$to_name' => template_escape($message['name']),
 				'$date' => datetime_convert('UTC',date_default_timezone_get(),$message['created'],'D, d M Y - g:i A')
 			));
 				
@@ -240,7 +240,7 @@ function message_content(&$a) {
 			'$header' => t('Send Reply'),
 			'$to' => t('To:'),
 			'$subject' => t('Subject:'),
-			'$subjtxt' => $message['title'],
+			'$subjtxt' => template_escape($message['title']),
 			'$readonly' => ' readonly="readonly" style="background: #BBBBBB;" ',
 			'$yourmessage' => t('Your message:'),
 			'$select' => $select,
