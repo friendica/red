@@ -841,18 +841,18 @@ function dfrn_notify_content(&$a) {
 		$encrypted_id = '';
 		$id_str = $my_id . '.' . mt_rand(1000,9999);
 
-		if(strlen($r[0]['prvkey']) || strlen($r[0]['pubkey'])) {
-			if(($r[0]['duplex']) || (! strlen($r[0]['pubkey']))) {
-				openssl_private_encrypt($hash,$challenge,$r[0]['prvkey']);
-				openssl_private_encrypt($id_str,$encrypted_id,$r[0]['prvkey']);
-			}
-			else {
-				openssl_public_encrypt($hash,$challenge,$r[0]['pubkey']);
-				openssl_public_encrypt($id_str,$encrypted_id,$r[0]['pubkey']);
-			}
+		$prv_key = trim($r[0]['prvkey']);
+		$pub_key = trim($r[0]['pubkey']);
+		$dplx = intval($r[0]['duplex']);
+
+		if((($dplx) && (strlen($prv_key))) || ((strlen($prv_key)) && (!(strlen($pub_key))))) {
+			openssl_private_encrypt($hash,$challenge,$prv_key);
+			openssl_private_encrypt($id_str,$encrypted_id,$prv_key);
 		}
-		else
-			$status = 1;
+		else {
+			openssl_public_encrypt($hash,$challenge,$pub_key);
+			openssl_public_encrypt($id_str,$encrypted_id,$pub_key);
+		}
 
 		$challenge    = bin2hex($challenge);
 		$encrypted_id = bin2hex($encrypted_id);
