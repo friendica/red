@@ -3,9 +3,14 @@
 require_once('library/HTML5/Parser.php');
 require_once('library/HTMLPurifier.auto.php');
 
+function arr_add_hashes(&$item,$k) {
+	$item = '#' . $item;
+}
+
 function parse_url_content(&$a) {
 
 	$text = null;
+	$str_tags = '';
 
 	if(x($_GET,'binurl'))
 		$url = trim(hex2bin($_GET['binurl']));
@@ -15,8 +20,16 @@ function parse_url_content(&$a) {
 	if($_GET['title'])
 		$title = strip_tags(trim($_GET['title']));
 
-	if($_GET['desc'])
-		$text = strip_tags(trim($_GET['desc']));
+	if($_GET['description'])
+		$text = strip_tags(trim($_GET['description']));
+
+	if($_GET['tags']) {
+		$arr_tags = str_getcsv($_GET['tags']);
+		if(count($arr_tags)) {
+			array_walk($arr_tags,'arr_add_hashes');
+			$str_tags = '<br />' . implode(' ',$arr_tags) . '<br />'; 		
+		}
+	}
 
 	logger('parse_url: ' . $url);
 
@@ -38,7 +51,7 @@ function parse_url_content(&$a) {
 		$text = '<br /><br /><blockquote>' . $text . '</blockquote><br />';
 		$title = str_replace(array("\r","\n"),array('',''),$title);
 
-		$result = sprintf($template,$url,($title) ? $title : $url,$text);
+		$result = sprintf($template,$url,($title) ? $title : $url,$text) . $str_tags;
 
 		logger('parse_url (unparsed): returns: ' . $result); 
 
@@ -57,7 +70,7 @@ function parse_url_content(&$a) {
 	logger('parse_url: data: ' . $s, LOGGER_DATA);
 
 	if(! $s) {
-		echo sprintf($template,$url,$url,'');
+		echo sprintf($template,$url,$url,'') . $str_tags;
 		killme();
 	}
 
@@ -80,7 +93,7 @@ function parse_url_content(&$a) {
 	$dom = @HTML5_Parser::parse($s);
 
 	if(! $dom) {
-		echo sprintf($template,$url,$url,'');
+		echo sprintf($template,$url,$url,'') . $str_tags;
 		killme();
 	}
 
@@ -148,7 +161,7 @@ function parse_url_content(&$a) {
 
 	$title = str_replace(array("\r","\n"),array('',''),$title);
 
-	$result = sprintf($template,$url,($title) ? $title : $url,$text);
+	$result = sprintf($template,$url,($title) ? $title : $url,$text) . $str_tags;
 
 	logger('parse_url: returns: ' . $result); 
 
