@@ -847,10 +847,16 @@ function lang_selector() {
 	$o .= '<form action="" method="post" ><select name="system_language" onchange="this.form.submit();" >';
 	$langs = glob('view/*/strings.php');
 	if(is_array($langs) && count($langs)) {
+		$langs[] = '';
 		if(! in_array('view/en/strings.php',$langs))
 			$langs[] = 'view/en/';
 		asort($langs);
 		foreach($langs as $l) {
+			if($l == '') {
+				$default_selected = ((! x($_SESSION,'language')) ? ' selected="selected" ' : '');
+				$o .= '<option value="" ' . $default_selected . '>' . t('default') . '</option>';
+				continue;
+			}
 			$ll = substr($l,5);
 			$ll = substr($ll,0,strrpos($ll,'/'));
 			$selected = (($ll === $lang) ? ' selected="selected" ' : '');
