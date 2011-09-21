@@ -849,10 +849,12 @@ function dfrn_notify_content(&$a) {
 			openssl_private_encrypt($hash,$challenge,$prv_key);
 			openssl_private_encrypt($id_str,$encrypted_id,$prv_key);
 		}
-		else {
+		elseif(strlen($pub_key)) {
 			openssl_public_encrypt($hash,$challenge,$pub_key);
 			openssl_public_encrypt($id_str,$encrypted_id,$pub_key);
 		}
+		else
+			$status = 1;
 
 		$challenge    = bin2hex($challenge);
 		$encrypted_id = bin2hex($encrypted_id);

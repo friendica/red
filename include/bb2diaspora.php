@@ -11,6 +11,10 @@ function diaspora2bb($s) {
 	$s = preg_replace('/\@\{(.+?)\; (.+?)\@(.+?)\}/','@[url=https://$3/u/$2]$1[/url]',$s);
 	$s = Markdown($s);
 	$s = html2bbcode($s);
+
+//	$s = preg_replace('/\[url=(.+?)\<em\>(.+?)\]/ism','[url=$1_$2]',$s);
+//	$s = preg_replace('/\[url=(.+?)\<\/em\>(.+?)\]/ism','[url=$1_$2]',$s);
+
 	return $s;
 
 }
