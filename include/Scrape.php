@@ -249,20 +249,6 @@ function scrape_feed($url) {
 		return $ret;
 
 
-	$items = $dom->getElementsByTagName('img');
-
-	// get img elements (twitter)
-
-	if($items) {
-		foreach($items as $item) {
-			$x = $item->getAttribute('id');
-			if($x === 'profile-image') {
-				$ret['photo'] = $item->getAttribute('src');
-			}
-		}
-	}
-
-
 	$head = $dom->getElementsByTagName('base');
 	if($head) {
 		foreach($head as $head0) {
