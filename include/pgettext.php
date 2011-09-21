@@ -119,6 +119,8 @@ function tt($singular, $plural, $count){
 	if(x($a->strings,$singular)) {
 		$t = $a->strings[$singular];
 		$f = 'string_plural_select_' . str_replace('-','_',$lang);
+		if(! function_exists($f))
+			$f = 'string_plural_select_default';
 		$k = $f($count);
 		return is_array($t)?$t[$k]:$t;
 	}
@@ -129,3 +131,12 @@ function tt($singular, $plural, $count){
 		return $singular;
 	}
 }}
+
+// provide a fallback which will not collide with 
+// a function defined in any language file 
+
+if(! function_exists('string_plural_select_default')) {
+function string_plural_select_default($n) {
+	return ($n != 1);
+}}
+
