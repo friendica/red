@@ -90,8 +90,11 @@ if(! function_exists('load_translation_table')) {
 function load_translation_table($lang) {
 	global $a;
 
-	if(file_exists("view/$lang/strings.php"))
+	if(file_exists("view/$lang/strings.php")) {
 		include("view/$lang/strings.php");
+	}
+	else
+		$a->strings = array();
 }}
 
 // translate string if translation exists
@@ -110,12 +113,13 @@ function t($s) {
 
 if(! function_exists('tt')){
 function tt($singular, $plural, $count){
-	
+	global $lang;
 	$a = get_app();
 
 	if(x($a->strings,$singular)) {
 		$t = $a->strings[$singular];
-		$k = string_plural_select($count);
+		$f = 'string_plural_select_' . str_replace('-','_',$lang);
+		$k = $f($count);
 		return is_array($t)?$t[$k]:$t;
 	}
 	
