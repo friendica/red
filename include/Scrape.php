@@ -534,6 +534,9 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 			else
 				$poll = $tapi . '?screen_name=' . $tid;
 			$profile = 'http://twitter.com/#!/' . $tid;
+			$vcard['photo'] = 'https://api.twitter.com/1/users/profile_image/' . $tid;
+			$vcard['nick'] = $tid;
+			$vcar['fn'] = $tid . '@twitter';
 		}
 
 		if(! x($vcard,'fn'))
