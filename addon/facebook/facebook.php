@@ -488,7 +488,9 @@ function facebook_post_hook(&$a,&$b) {
 		if($b['prvnets'] && $b['private'])
 			return;
 
-		if($b['parent']) {
+		$linking = ((get_pconfig(local_user(),'facebook','no_linking')) ? 0 : 1);
+
+		if(($b['parent']) && ($linking)) {
 			$r = q("SELECT * FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval($b['parent']),
 				intval(local_user())
