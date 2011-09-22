@@ -108,8 +108,10 @@ function diaspora_pubmsg_build($msg,$user,$contact,$prvkey,$pubkey) {
 	
 	$handle = $user['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
 
-	$b64_data = base64_encode($msg);
-	$b64url_data = base64url_encode($b64_data);
+//	$b64_data = base64_encode($msg);
+//	$b64url_data = base64url_encode($b64_data);
+
+	$b64url_data = base64url_encode($msg);
 
 	$data = str_replace(array("\n","\r"," ","\t"),array('','','',''),$b64url_data);
 
@@ -125,7 +127,7 @@ function diaspora_pubmsg_build($msg,$user,$contact,$prvkey,$pubkey) {
 
 $magic_env = <<< EOT
 <?xml version='1.0' encoding='UTF-8'?>
-<diaspora xmlns="https://joindiaspora.org/protocol" xmlns:me="http://salmon-protocol.org/ns/magic-env" >
+<diaspora xmlns="https://joindiaspora.com/protocol" xmlns:me="http://salmon-protocol.org/ns/magic-env" >
   <header>
     <author_id>$handle</author_id>
   </header>
@@ -146,8 +148,11 @@ EOT;
 
 
 
-function diaspora_msg_build($msg,$user,$contact,$prvkey,$pubkey) {
+function diaspora_msg_build($msg,$user,$contact,$prvkey,$pubkey,$public = false) {
 	$a = get_app();
+
+	if($public)
+		return diaspora_pubmsg_build($msg,$user,$contact,$prvkey,$pubkey);
 
 	logger('diaspora_msg_build: ' . $msg, LOGGER_DATA);
 
@@ -211,7 +216,7 @@ EOT;
 
 $magic_env = <<< EOT
 <?xml version='1.0' encoding='UTF-8'?>
-<diaspora xmlns="https://joindiaspora.org/protocol" xmlns:me="http://salmon-protocol.org/ns/magic-env" >
+<diaspora xmlns="https://joindiaspora.com/protocol" xmlns:me="http://salmon-protocol.org/ns/magic-env" >
   $encrypted_header
   <me:env>
     <me:encoding>base64url</me:encoding>
@@ -289,7 +294,7 @@ function diaspora_decode($importer,$xml) {
 
 ***** CURRENT
 
-		 *     <author_id>acct:galaxor@diaspora.priateship.org</author_id>
+		 *     <author_id>galaxor@diaspora.priateship.org</author_id>
 
 ***** END DIFFS
 
@@ -424,13 +429,16 @@ function diaspora_request($importer,$xml) {
 		return;
 	}
 
-	$r = q("INSERT INTO `contact` (`uid`, `network`,`addr`,`created`,`url`,`name`,`nick`,`photo`,`pubkey`,`notify`,`poll`,`blocked`,`priority`)
-		VALUES ( %d, '%s', '%s', '%s','%s','%s','%s','%s','%s','%s','%s',%d,%d) ",
+	$batch = (($ret['batch']) ? $ret['batch'] : implode('/', array_slice(explode('/',$ret['url']),0,3)) . '/receive/public');
+
+	$r = q("INSERT INTO `contact` (`uid`, `network`,`addr`,`created`,`url`,`batch`,`name`,`nick`,`photo`,`pubkey`,`notify`,`poll`,`blocked`,`priority`)
+		VALUES ( %d, '%s', '%s', '%s','%s','%s','%s','%s','%s','%s','%s','%s',%d,%d) ",
 		intval($importer['uid']),
 		dbesc($ret['network']),
 		dbesc($ret['addr']),
 		datetime_convert(),
 		dbesc($ret['url']),
+		dbesc($batch),
 		dbesc($ret['name']),
 		dbesc($ret['nick']),
 		dbesc($ret['photo']),
@@ -980,7 +988,7 @@ function diaspora_unshare($me,$contact) {
 
 
 
-function diaspora_send_status($item,$owner,$contact) {
+function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 
 	$a = get_app();
 	$myaddr = $owner['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
@@ -1022,19 +1030,19 @@ function diaspora_send_status($item,$owner,$contact) {
 
 	logger('diaspora_send_status: ' . $owner['username'] . ' -> ' . $contact['name'] . ' base message: ' . $msg, LOGGER_DATA);
 
-	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'])));
+	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],$public_batch)));
 
-	$return_code = diaspora_transmit($owner,$contact,$slap);
+	$return_code = diaspora_transmit($owner,$contact,$slap,$public_batch);
 
 	if(count($images)) {
-		diaspora_send_images($item,$owner,$contact,$images);
+		diaspora_send_images($item,$owner,$contact,$images,$public_batch);
 	}
 
 	return $return_code;
 }
 
 
-function diaspora_send_images($item,$owner,$contact,$images) {
+function diaspora_send_images($item,$owner,$contact,$images,$public_batch = false) {
 	$a = get_app();
 	if(! count($images))
 		return;
@@ -1066,14 +1074,14 @@ function diaspora_send_images($item,$owner,$contact,$images) {
 
 
 		logger('diaspora_send_photo: base message: ' . $msg, LOGGER_DATA);
-		$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'])));
+		$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],$public_batch)));
 
-		diaspora_transmit($owner,$contact,$slap);
+		diaspora_transmit($owner,$contact,$slap,$public_batch);
 	}
 
 }
 
-function diaspora_send_followup($item,$owner,$contact) {
+function diaspora_send_followup($item,$owner,$contact,$public_batch = false) {
 
 	$a = get_app();
 	$myaddr = $owner['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
@@ -1121,13 +1129,13 @@ function diaspora_send_followup($item,$owner,$contact) {
 
 	logger('diaspora_followup: base message: ' . $msg, LOGGER_DATA);
 
-	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'])));
+	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],$public_batch)));
 
-	return(diaspora_transmit($owner,$contact,$slap));
+	return(diaspora_transmit($owner,$contact,$slap,$public_batch));
 }
 
 
-function diaspora_send_relay($item,$owner,$contact) {
+function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 
 
 	$a = get_app();
@@ -1223,15 +1231,15 @@ function diaspora_send_relay($item,$owner,$contact) {
 
 	logger('diaspora_relay_comment: base message: ' . $msg, LOGGER_DATA);
 
-	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'])));
+	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],$public_batch)));
 
-	return(diaspora_transmit($owner,$contact,$slap));
+	return(diaspora_transmit($owner,$contact,$slap,$public_batch));
 
 }
 
 
 
-function diaspora_send_retraction($item,$owner,$contact) {
+function diaspora_send_retraction($item,$owner,$contact,$public_batch = false) {
 
 	$a = get_app();
 	$myaddr = $owner['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
@@ -1243,30 +1251,32 @@ function diaspora_send_retraction($item,$owner,$contact) {
 		'$handle' => $myaddr
 	));
 
-	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'])));
+	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],$public_batch)));
 
-	return(diaspora_transmit($owner,$contact,$slap));
+	return(diaspora_transmit($owner,$contact,$slap,$public_batch));
 }
 
 
 
-function diaspora_transmit($owner,$contact,$slap) {
+function diaspora_transmit($owner,$contact,$slap,$public_batch) {
 
 	$a = get_app();
-
-	post_url($contact['notify'] . '/',$slap);
+	$logid = random_string(4);
+	logger('diaspora_transmit: ' . $logid . ' ' . (($public_batch) ? $contact['batch'] : $contact['notify']));
+	post_url((($public_batch) ? $contact['batch'] : $contact['notify']) . '/',$slap);
 	$return_code = $a->get_curl_code();
-	logger('diaspora_transmit: returns: ' . $return_code);
+	logger('diaspora_transmit: ' . $logid . ' returns: ' . $return_code);
 
 	if(! $return_code) {
 		logger('diaspora_transmit: queue message');
 		// queue message for redelivery
-		q("INSERT INTO `queue` ( `cid`, `created`, `last`, `content`)
+		q("INSERT INTO `queue` ( `cid`, `created`, `last`, `content`,`batch`)
 			VALUES ( %d, '%s', '%s', '%s') ",
 			intval($contact['id']),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
-			dbesc($slap)
+			dbesc($slap),
+			intval($public_batch)
 		);
 	}
 

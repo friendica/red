@@ -1615,13 +1615,18 @@ function lose_follower($importer,$contact,$datarray,$item) {
 }
 
 
-function subscribe_to_hub($url,$importer,$contact) {
+function subscribe_to_hub($url,$importer,$contact,$submode = 'subscribe') {
 
 	if(is_array($importer)) {
 		$r = q("SELECT `nickname` FROM `user` WHERE `uid` = %d LIMIT 1",
 			intval($importer['uid'])
 		);
 	}
+
+	// Diaspora has different message-ids in feeds than they do 
+	// through the direct Diaspora protocol. If we try and use
+	// the feed, we'll get duplicates. So don't.
+
 	if((! count($r)) || $contact['network'] === NETWORK_DIASPORA)
 		return;
 
@@ -1631,7 +1636,7 @@ function subscribe_to_hub($url,$importer,$contact) {
 
 	$verify_token = ((strlen($contact['hub-verify'])) ? $contact['hub-verify'] : random_string());
 
-	$params= 'hub.mode=subscribe&hub.callback=' . urlencode($push_url) . '&hub.topic=' . urlencode($contact['poll']) . '&hub.verify=async&hub.verify_token=' . $verify_token;
+	$params= 'hub.mode=' . $hubmode . '&hub.callback=' . urlencode($push_url) . '&hub.topic=' . urlencode($contact['poll']) . '&hub.verify=async&hub.verify_token=' . $verify_token;
 
 	logger('subscribe_to_hub: subscribing ' . $contact['name'] . ' to hub ' . $url . ' with verifier ' . $verify_token);
 

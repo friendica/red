@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1091 );
+define( 'UPDATE_VERSION' , 1092 );
 
 /**
  *
@@ -758,6 +758,15 @@ function update_1090() {
 	q("ALTER TABLE `contact` ADD `batch` char(255) NOT NULL AFTER `prvkey` ");
 
 	q("UPDATE `contact` SET `batch` = concat(substring_index(`url`,'/',3),'/receive/public') WHERE `network` = 'dspr' ");
+
+}
+
+function update_1091() {
+
+	// catch a few stragglers that may have crept in before we added this on remote connects
+	q("UPDATE `contact` SET `batch` = concat(substring_index(`url`,'/',3),'/receive/public') WHERE `network` = 'dspr' AND `batch` = '' ");
+	q("ALTER TABLE `queue` ADD `batch` TINYINT( 1 ) NOT NULL DEFAULT '0' ");
+	q("ALTER TABLE `fcontact` ADD `batch` char(255) NOT NULL AFTER `addr` ");
 
 }
 

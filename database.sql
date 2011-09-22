@@ -469,7 +469,8 @@ CREATE TABLE IF NOT EXISTS `queue` (
 `network` CHAR( 32 ) NOT NULL,
 `created` DATETIME NOT NULL ,
 `last` DATETIME NOT NULL ,
-`content` MEDIUMTEXT NOT NULL
+`content` MEDIUMTEXT NOT NULL,
+`batch` TINYINT( 1 ) NOT NULL DEFAULT '0'
 ) ENGINE = MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `pconfig` (
@@ -534,6 +535,7 @@ CREATE TABLE IF NOT EXISTS `fcontact` (
 `request` CHAR( 255 ) NOT NULL,
 `nick` CHAR( 255 ) NOT NULL ,
 `addr` CHAR( 255 ) NOT NULL ,
+`batch` CHAR( 255) NOT NULL,
 `notify` CHAR( 255 ) NOT NULL ,
 `poll` CHAR( 255 ) NOT NULL ,
 `confirm` CHAR( 255 ) NOT NULL ,

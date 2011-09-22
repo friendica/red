@@ -9,7 +9,7 @@ require_once("include/pgettext.php");
 
 define ( 'FRIENDIKA_VERSION',      '2.3.1111' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
-define ( 'DB_UPDATE_VERSION',      1091      );
+define ( 'DB_UPDATE_VERSION',      1092      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
