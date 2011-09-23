@@ -358,7 +358,7 @@ function network_content(&$a, $update = 0) {
 				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 				AND `item`.`parent` = `parentitem`.`id` AND `item`.`parent` IN ( %s )
 				$sql_extra
-				ORDER BY `parentitem`.$ordering DESC, `item`.`gravity` ASC, `item`.`created` ASC ",
+				ORDER BY `parentitem`.$ordering DESC, `parentitem`.`id` ASC, `item`.`gravity` ASC, `item`.`created` ASC ",
 				intval(local_user()),
 				dbesc($parents_str)
 			);
