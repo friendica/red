@@ -984,7 +984,15 @@ function photos_content(&$a) {
 		);
 
 		if(! count($ph)) {
-			notice( t('Photo not available') . EOL );
+			$ph = q("SELECT `id` FROM `photo` WHERE `uid` = %d AND `resource-id` = '%s' 
+				LIMIT 1",
+				intval($owner_uid),
+				dbesc($datum)
+			);
+			if(count($ph)) 
+				notice( t('Permission denied. Access to this item may be restricted.'));
+			else
+				notice( t('Photo not available') . EOL );
 			return;
 		}
 
