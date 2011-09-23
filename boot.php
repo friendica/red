@@ -7,7 +7,7 @@ require_once('include/text.php');
 require_once("include/pgettext.php");
 
 
-define ( 'FRIENDIKA_VERSION',      '2.3.1111' );
+define ( 'FRIENDIKA_VERSION',      '2.3.1112' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
 define ( 'DB_UPDATE_VERSION',      1092      );
 
@@ -185,7 +185,9 @@ define ( 'GRAVITY_COMMENT',      6);
 function startup() {
 	error_reporting(E_ERROR | E_WARNING | E_PARSE);
 	set_time_limit(0);
-	ini_set('pcre.backtrack_limit', 250000);
+
+	// This has to be quite large to deal with embedded private photos
+	ini_set('pcre.backtrack_limit', 350000);
 
 
 	if (get_magic_quotes_gpc()) {
