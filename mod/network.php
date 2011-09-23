@@ -132,6 +132,7 @@ function network_content(&$a, $update = 0) {
 	$star = ((x($_GET,'star')) ? intval($_GET['star']) : 0);
 	$bmark = ((x($_GET,'bmark')) ? intval($_GET['bmark']) : 0);
 	$order = ((x($_GET,'order')) ? notags($_GET['order']) : 'comment');
+	$liked = ((x($_GET,'liked')) ? intval($_GET['liked']) : 0);
 
 
 	if(($a->argc > 2) && $a->argv[2] === 'new')
@@ -195,6 +196,7 @@ function network_content(&$a, $update = 0) {
 				. ((x($_GET,'star')) ? '&star=' . $_GET['star'] : '') 
 				. ((x($_GET,'order')) ? '&order=' . $_GET['order'] : '') 
 				. ((x($_GET,'bmark')) ? '&bmark=' . $_GET['bmark'] : '') 
+				. ((x($_GET,'liked')) ? '&liked=' . $_GET['liked'] : '') 
 				. "'; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 
 	}

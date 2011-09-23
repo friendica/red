@@ -730,7 +730,7 @@ function status_editor($a,$x, $notes_cid = 0) {
 
 		if($mail_enabled) {
 	       $selected = (($pubmail_enabled) ? ' checked="checked" ' : '');
-			$jotnets .= '<div class="profile-jot-net"><input type="checkbox" name="pubmail_enable"' . $selected . 'value="1" /> '
+			$jotnets .= '<div class="profile-jot-net"><input type="checkbox" name="pubmail_enable"' . $selected . ' value="1" /> '
            	. t("Post to Email") . '</div>';
 		}
 

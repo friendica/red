@@ -129,7 +129,7 @@ function statusnet_jot_nets(&$a,&$b) {
 	if(intval($statusnet_post) == 1) {
 		$statusnet_defpost = get_pconfig(local_user(),'statusnet','post_by_default');
 		$selected = ((intval($statusnet_defpost) == 1) ? ' checked="checked" ' : '');
-		$b .= '<div class="profile-jot-net"><input type="checkbox" name="statusnet_enable"' . $selected . 'value="1" /> ' 
+		$b .= '<div class="profile-jot-net"><input type="checkbox" name="statusnet_enable"' . $selected . ' value="1" /> ' 
 			. t('Post to StatusNet') . '</div>';	
 	}
 }

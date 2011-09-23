@@ -463,7 +463,7 @@ function facebook_jot_nets(&$a,&$b) {
 	if(intval($fb_post) == 1) {
 		$fb_defpost = get_pconfig(local_user(),'facebook','post_by_default');
 		$selected = ((intval($fb_defpost) == 1) ? ' checked="checked" ' : '');
-		$b .= '<div class="profile-jot-net"><input type="checkbox" name="facebook_enable"' . $selected . 'value="1" /> ' 
+		$b .= '<div class="profile-jot-net"><input type="checkbox" name="facebook_enable"' . $selected . ' value="1" /> ' 
 			. t('Post to Facebook') . '</div>';	
 	}
 }

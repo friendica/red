@@ -164,7 +164,7 @@ function group_side($every="contacts",$each="group",$edit = false, $group_id = 0
 
 	$createtext = t('Create a new group');
 	$linktext= t('Everybody');
-	$selected = (($group_id == 0) ? ' class="group-selected" ' : '');
+	$selected = (($group_id == 0) ? ' group-selected' : '');
 $o .= <<< EOT
 
 <div id="group-sidebar">
@@ -172,7 +172,7 @@ $o .= <<< EOT
 
 <div id="sidebar-group-list">
 	<ul id="sidebar-group-ul">
-	<li class="sidebar-group-li" ><a href="$every" class="sidebar-group-element" $selected >$linktext</a></li>
+	<li class="sidebar-group-li" ><a href="$every" class="sidebar-group-element$selected" >$linktext</a></li>
 
 EOT;
 
@@ -185,13 +185,13 @@ EOT;
 
 	if(count($r)) {
 		foreach($r as $rr) {
-			$selected = (($group_id == $rr['id']) ? ' class="group-selected" ' : '');
+			$selected = (($group_id == $rr['id']) ? ' group-selected' : '');
 			$o .= '	<li class="sidebar-group-li">' 
 			. (($edit) ? "<a href=\"group/{$rr['id']}\" title=\"" . t('Edit') 
 				. "\" class=\"groupsideedit\" ><img src=\"images/spencil.gif\" alt=\"" . t('Edit') . "\"></a> " : "") 
 			. (($cid) ? '<input type="checkbox" class="' . (($selected) ? 'ticked' : 'unticked') . '" onclick="contactgroupChangeMember(' . $rr['id'] . ',' . $cid . ');return true;" '
 				. ((in_array($rr['id'],$member_of)) ? ' checked="checked" ' : '') . '/>' : '')
-			. "<a href=\"$each/{$rr['id']}\" class=\"sidebar-group-element\" $selected >{$rr['name']}</a></li>\r\n";
+			. "<a href=\"$each/{$rr['id']}\" class=\"sidebar-group-element" . $selected ."\"  >{$rr['name']}</a></li>\r\n";
 		}
 	}
 	$o .= "	</ul>\r\n	</div>";
