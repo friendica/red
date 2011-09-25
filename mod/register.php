@@ -501,8 +501,7 @@ function register_content(&$a) {
 	}
 
 
-	$license = cc_license();
-
+	$license = '';
 
 	$o = get_markup_template("register.tpl");
 	$o = replace_macros($o, array(

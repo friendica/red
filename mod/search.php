@@ -145,7 +145,6 @@ function search_content(&$a) {
 	$o .= conversation($a,$r,'search',false);
 
 	$o .= paginate($a);
-	$o .= cc_license();
 
 	return $o;
 }
