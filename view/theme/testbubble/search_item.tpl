@@ -32,9 +32,8 @@
 		</div>			
 		
 	</div>
+	<div class="wall-item-conv" id="wall-item-conv-$id" >$conv</div>
 	<div class="wall-item-wrapper-end"></div>
 </div>
 
 <div class="wall-item-outside-wrapper-end$indent" ></div>
-	<div class="wall-item-conv" id="wall-item-conv-$id" >$conv</div>
-

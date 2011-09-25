@@ -2704,6 +2704,7 @@ margin-left: 90px;
 	width: 130px;
 	padding: 7px;
 	margin-bottom: 10px;
+	margin-left: 170px; ;
 	-moz-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
 	-webkit-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
 	box-shadow:inset 0px 1px 0px 0px #cfcfcf;
@@ -2733,6 +2734,7 @@ margin-left: 90px;
 
 #new-event-link a {
 	color: #efefef;
+	text-align: center;
 }
 
 .edit-event-link, .plink-event-link {
