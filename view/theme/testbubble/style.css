@@ -2017,11 +2017,11 @@ margin-left: 90px;
 	background-color: #ffffff;
 }
 
-#contact-edit-banner-name { font-size: 1.5em; margin-left: 30px; }
+#contact-edit-banner-name { font-size: 1.5em; margin-left: 30px; font-variant: small-caps; }
 #contact-edit-photo-wrapper {position: relative; float: left; padding: 20px;}
 #contact-edit-direction-icon { position: absolute; top: 60px; left:0px;}
 #contact-edit-nav-wrapper { margin-left: 210px; }
-#contact-edit-links { float: left; margin-top: 43px; }
+#contact-edit-links { float: left; margin-top: 23px; }
 #contact-drop-links {/*position: absolute; top: 150px; left: 348px;*/}
 #contact-edit-nav-wrapper .icon {
 	border: 1px solid #babdb6;
