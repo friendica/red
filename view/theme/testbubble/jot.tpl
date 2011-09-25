@@ -52,7 +52,7 @@
 	<div id="profile-jot-submit-wrapper" style="display:none;padding-left: 400px;">
 		<input type="submit" id="profile-jot-submit" name="submit" value="$share" />
 		<div id="profile-jot-perms" class="profile-jot-perms" style="display: $visitor;" >
-            <a href="#profile-jot-acl-wrapper" id="jot-perms-icon" class="icon $lockstate" title="$permset"></a>$bang</div>
+            <a href="#profile-jot-acl-wrapper" id="jot-perms-icon" class="icon $lockstate sharePerms" title="$permset"></a>$bang</div>
 	</div>
 
 	<div id="profile-jot-plugin-wrapper" style="display: none;">

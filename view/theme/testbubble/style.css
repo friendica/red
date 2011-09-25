@@ -695,9 +695,10 @@ ul .sidebar-group-li img{
 }
 
 #profile-jot-perms {
+	width: 30px;
 	overflow: hidden;
 	border: 0px;
-	margin-left:10px;
+	margin-left:5px;
 }
 
 #jot-perms-perms .icon {
@@ -706,9 +707,10 @@ ul .sidebar-group-li img{
 
 #profile-jot-submit {
 	float: left;
-	margin-right: 10px;
+	margin-right:5px;
 	border: 0px;
 	margin-top: 0px;
+	margin-left: -30px;
 }
 
 #profile-jot-perms:hover, #profile-jot-submit:hover {
@@ -2756,6 +2758,7 @@ margin-left: 90px;
 }
 
 .event-list-date {
+	color: #626262;
 	margin-bottom: 10px;
 	font-variant:small-caps;
 	font-stretch:condensed;
@@ -3082,6 +3085,14 @@ tr {
 	background-image: none;
 	width: 70px;
 	height: 20px;
+}
+
+.sharePerms {
+	background-image: url(icons.png);
+	width: 20px;
+	height: 20px;
+	margin: 2px 0px 2px 3px;
+	display: block;
 }
 
 .video 		{ background-position: -110px -40px;}
