@@ -145,11 +145,10 @@ section {
 }
 
 #login-extra-links {
-	width: 110px;
+	width: 90px;
 	margin-top: 20px;
 	border: none;
 	font-size: 0.9em;
-	padding: 5px 0px 5px 5px;
 	-moz-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
 	-webkit-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
 	box-shadow:inset 0px 1px 0px 0px #cfcfcf;
@@ -162,6 +161,15 @@ section {
 	border-radius:5px;
 	color:#efefef;
 	text-align: center;
+}
+
+#login-extra-links a {
+	display: block;
+	margin: 10px;
+	padding: 5px 0px 5px 0px;
+	color: #efefef;
+	text-align: center;
+	margin-right: 20px;	
 }
 
 #login-extra-links:hover {
@@ -178,16 +186,9 @@ section {
 	top:1px;	
 }
 
-#login-extra-links a {
-	color: #efefef;
-	text-align: center;
-}
-
 #login-extra-filler {
 	display: none;
 }
-
-#login-extra-links a { margin-right: 20px; }
 
 /* ========= */
 /* = Panel = */
@@ -861,7 +862,7 @@ a.active {
 	position: absolute;
 	overflow: hidden;
 	height: 20px; width: 90px; 
-	top: 85px;	left: 0px;
+	top: 85px;	left: -1px;
 	-webkit-border-radius: 0px 0px 5px  5px;
 	-moz-border-radius: 0px 0px 5px  5px;
 	border-radius: 0px 0px 5px  5px;	
@@ -2021,7 +2022,7 @@ margin-left: 90px;
 #contact-edit-direction-icon { position: absolute; top: 60px; left:0px;}
 #contact-edit-nav-wrapper { margin-left: 210px; }
 #contact-edit-links { float: left; margin-top: 43px; }
-#contact-drop-links {}
+#contact-drop-links {position: absolute; top: 150px; left: 348px;}
 #contact-edit-nav-wrapper .icon {
 	border: 1px solid #babdb6;
     -webkit-border-radius: 3px;
@@ -2037,10 +2038,10 @@ margin-left: 90px;
 	padding-bottom: 0px;
 }
 
-#contact-edit-poll-wrapper { margin-left: 50px; }
-#contact-edit-last-update-text { margin-bottom: 15px; padding-top: 20px; font-size: 1em; }
+#contact-edit-poll-wrapper { margin-left: 50px; width: 300px;}
+#contact-edit-last-update-text { margin-bottom: 15px; padding-top: 20px; padding-left: 10px; font-size: 0.9em; max-width: 300px; }
 #contact-edit-last-updated { font-weight: bold; }
-#contact-edit-poll-text { display: inline; font-size: 1em; }
+#contact-edit-poll-text { display: inline; font-size: 0.9em; padding-left: 10px; }
 #contact-edit-end { clear: both; margin-bottom: 65px;}
 
 #contact-edit-update-now {
@@ -2056,7 +2057,7 @@ margin-left: 90px;
 	-webkit-border-radius:5px;
 	border-radius:5px;
 	padding: 5px 10px 5px 10px;
-	margin-left: 10px;
+	margin-left: 125px;
 	margin-top: 10px;
 	font-style: bold;
 	color: #efefef;
