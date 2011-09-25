@@ -12,12 +12,12 @@ Red links - #b20202
 Red link hover - #db0503
 Red Gradients (buttons and other gradients) - #b20202 and #d60808
 
-Grey text - #626262
+Grey/body text - #626262
 Grey Gradients (buttons and other gradients) - #bdbdbd and #a2a2a2
 
 Dark Grey Gradients - #7c7d7b and #555753
 
-You can switch out the colors of header, buttons and links by using a find and replace in your text editor.
+You can switch out the colors of the header, buttons and links by using a find and replace in your text editor.
 
  = */
 /* ========== */
@@ -81,7 +81,6 @@ input[type=submit] {
 	margin-top: 10px;
 	border: none;
 	font-size: 0.9em;
-	display: inline;
 	padding: 5px 5px 5px 5px;
 	-moz-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
 	-webkit-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
@@ -120,6 +119,10 @@ section {
 	font-size: 0.9em;
 	line-height: 1.2em;
 	padding-right: 230px;
+}
+
+#wall-item-lock {
+	margin-left: 10px;
 }
 
 /* ========= */
@@ -1216,7 +1219,8 @@ div[id$="wrapper"] br { clear: left; }
 	float: left;
 	display: inline;
 	width: 130px;
-	margin:20px;
+	margin-left:5px;
+	margin-top: 20px;
 	-moz-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
 	-webkit-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
 	box-shadow:inset 0px 1px 0px 0px #cfcfcf;
@@ -1228,7 +1232,6 @@ div[id$="wrapper"] br { clear: left; }
 	-webkit-border-radius:5px;
 	border-radius:5px;
 	padding: 5px 10px 5px 10px;
-	margin-right: 5px;
 	font-style: bold;
 	color:#efefef;
 	text-align: center;
@@ -1818,6 +1821,7 @@ input#photo_edit_form {
 	font-variant:small-caps;
 	font-size: 1em;	
 }
+
 
 #prvmail-submit-wrapper { margin-top: 10px; }
 #prvmail-submit {
@@ -2527,27 +2531,35 @@ margin-left: 90px;
 	display: inline;
 }
 #group-edit-submit-wrapper {
-	margin-bottom: 0px;
+	margin-bottom: 10px;
+	margin-right: 400px;
+	float: right;
 	display: inline;
 }
+#group-delete-icon-11 { position: absolute; left: 360px; top: 103px; }
 #group-edit-desc { margin: 10px 0xp; }
 #group-new-text {font-size: 1.1em;}
 #group-members,
 #prof-members {
-	width: 620px;
+	width: 83%;
 	height: 200px; 
 	overflow: auto;
 	border: none;
-	background-color: #fff;
+	background-color: #f0edf0;
 	color: #555753;
+	border: 1px solid #ccc;
+	margin-bottom: 10px;
+	padding: 10px;
 }
 
 #group-all-contacts,
 #prof-all-contacts { 
-	width: 620px;
+	width: 83%;
 	height: 200px;
     overflow: auto;	
-	border: none;
+	border: 1px solid #ccc;
+	background-color: #f0edf0;
+	padding: 10px;
 }
 
 #group-members h3,
@@ -2578,7 +2590,7 @@ margin-left: 90px;
 	width: 400px;
 	padding: 20px;
 	padding-top: 10px;
-	margin: 0 50px;
+	margin: 0 0px;
 	background-color: #fff;
 	-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
 	-moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
@@ -2644,7 +2656,6 @@ margin-left: 90px;
 #new-event-link{
 	width: 130px;
 	padding: 7px;
-	margin: auto;
 	margin-bottom: 10px;
 	-moz-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
 	-webkit-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
@@ -2854,6 +2865,8 @@ tr {
 
 .admin.link {
 	list-style-position: inside;
+	font-size: 1em;
+	padding: 3px;
 }
 
 #adminpage dl {
@@ -2930,7 +2943,7 @@ tr {
 .field textarea { height: 100px; }
 .field_help {
 	display: block;
-	margin-left: 200px;
+	margin-left: 100px;
 	color: #666666;	
 }
 

@@ -33,11 +33,14 @@ function photos_init(&$a) {
 		if(count($albums)) {
 			$a->data['albums'] = $albums;
 
-			$o .= '<h4><a href="' . $a->get_baseurl() . '/profile/' . $a->data['user']['nickname'] . '">' . $a->data['user']['username'] . '</a></h4>';
+			$o .= '<div class="vcard">';
+			$o .= '<div class="fn">' . $a->data['user']['username'] . '</h4>';
 			$o .= '<div id="profile-photo-wrapper"><img class="photo" style="width: 175px; height: 175px;" src="' . $a->get_baseurl() . '/photo/profile/' . $a->data['user']['uid'] . '.jpg" alt="' . $a->data['user']['username'] . '" /></div>';
-
-			$o .= '<h4>' . '<a href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '">' . t('Photo Albums') . '</a></h4>';
-		
+			$o .= '</div>';
+			
+			$o .= '<div id="side-bar-photos-albums" class="widget">';
+			$o .= '<h3>' . '<a href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '">' . t('Photo Albums') . '</a></h4>';
+					
 			$o .= '<ul>';
 			foreach($albums as $album) {
 

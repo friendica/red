@@ -36,15 +36,16 @@ function contacts_init(&$a) {
 	elseif($a->config['register_policy'] != REGISTER_CLOSED)
 		$a->page['aside'] .= $inv;
 
-
-	$a->page['aside'] .= '<div class="side-link" id="side-match-link"><a href="match" >' 
-		. t('Find People With Shared Interests') . '</a></div>';
-
 	$tpl = get_markup_template('follow.tpl');
+	
+	$findSimilarLink = '<div class="side-link" id="side-match-link"><a href="match" >' 
+		. t('Similar Interests') . '</a></div>';
+	
 	$a->page['aside'] .= replace_macros($tpl,array(
 		'$label' => t('Connect/Follow'),
 		'$hint' => t('Example: bob@example.com, http://example.com/barbara'),
-		'$follow' => t('Follow')
+		'$follow' => t('Follow'),
+		'$findSimilar' => $findSimilarLink
 	));
 
 

@@ -2,6 +2,13 @@ $langselector
 
 <span id="banner">$banner</span>
 
+<div id="notifications">
+	{{ if $nav.network }}<a id="net-update" class="nav-ajax-update" href="$nav.network.0" title="$nav.network.1"></a>{{ endif }}
+	{{ if $nav.home }}<a id="home-update" class="nav-ajax-update" href="$nav.home.0" title="$nav.home.1"></a>{{ endif }}
+	{{ if $nav.notifications }}<a id="notify-update" class="nav-ajax-update" href="$nav.notifications.0" title="$nav.notifications.1"></a>{{ endif }}
+	{{ if $nav.messages }}<a id="mail-update" class="nav-ajax-update" href="$nav.messages.0" title="$nav.messages.1"></a>{{ endif }}
+</div>
+
 <div id="user-menu" >
 	<a id="user-menu-label" onclick="openClose('user-menu-popup'); return false" href="$nav.home.0">$sitelocation</a>
     
@@ -38,14 +45,6 @@ $langselector
 	    {{ if $nav.login }}<li><a id="nav-login-link" class="nav-link $nav.login.2" href="$nav.login.0" title="$nav.login.1">$nav.login.1</a></li> {{ endif }}
 		{{ if $nav.logout }}<li><a id="nav-logout-link" class="nav-commlink nav-sep $nav.logout.2" href="$nav.logout.0">$nav.logout.1</a></li> {{ endif }}
     </ul>
-
-	<div id="notifications">
-    {{ if $nav.network }}<a id="net-update" class="nav-ajax-update" href="$nav.network.0" title="$nav.network.1"></a>{{ endif }}
-    {{ if $nav.home }}<a id="home-update" class="nav-ajax-update" href="$nav.home.0" title="$nav.home.1"></a>{{ endif }}
-    {{ if $nav.notifications }}<a id="notify-update" class="nav-ajax-update" href="$nav.notifications.0" title="$nav.notifications.1"></a>{{ endif }}
-    {{ if $nav.messages }}<a id="mail-update" class="nav-ajax-update" href="$nav.messages.0" title="$nav.messages.1"></a>{{ endif }}
-	</div>
-
 </div>
 
 
