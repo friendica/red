@@ -722,7 +722,8 @@ ul .sidebar-group-li img{
 }
 
 #character-counter {
- float: left; padding: 8px 10px; 
+	/*float: left; padding: 8px 10px;*/ 
+	position: absolute: right: 100px; top:100px;
 }
 #profile-rotator-wrapper {
  float: right; 

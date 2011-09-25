@@ -176,8 +176,8 @@ function group_content(&$a) {
 	if($change) 
 		$o = '';
 
-	$o .= '<div id="group-members">';
 	$o .= '<h3>' . t('Members') . '</h3>';
+	$o .= '<div id="group-members">';
 	$textmode = (($switchtotext && (count($members) > $switchtotext)) ? true : false);
 	foreach($members as $member) {
 		if($member['url']) {
@@ -190,9 +190,10 @@ function group_content(&$a) {
 
 	$o .= '</div><div id="group-members-end"></div>';
 	$o .= '<hr id="group-separator" />';
+	
+	$o .= '<h3>' . t('All Contacts') . '</h3>';
 	$o .= '<div id="group-all-contacts">';
 
-		$o .= '<h3>' . t('All Contacts') . '</h3>';
 		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `blocked` = 0 and `pending` = 0 and `self` = 0 ORDER BY `name` ASC",
 			intval(local_user())
 		);
