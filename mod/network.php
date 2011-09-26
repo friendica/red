@@ -17,12 +17,12 @@ function network_init(&$a) {
 
 	// We need a better way of managing a growing argument list
 
-	$srchurl = '/network' 
-		. ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') 
-		. ((x($_GET,'star')) ? '?star=' . $_GET['star'] : '')
-		. ((x($_GET,'order')) ? '?order=' . $_GET['order'] : '')
-		. ((x($_GET,'bmark')) ? '?bmark=' . $_GET['bmark'] : '');
-
+	// moved into savedsearches()
+	// $srchurl = '/network' 
+	// 		. ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') 
+	// 		. ((x($_GET,'star')) ? '?star=' . $_GET['star'] : '')
+	// 		. ((x($_GET,'bmark')) ? '?bmark=' . $_GET['bmark'] : '');
+	
 	if(x($_GET,'save')) {
 		$r = q("select * from `search` where `uid` = %d and `term` = '%s' limit 1",
 			intval(local_user()),
@@ -42,74 +42,108 @@ function network_init(&$a) {
 		);
 	}
 
-	$a->page['aside'] .= search($search,'netsearch-box',$srchurl,true);
-
-	$a->page['aside'] .= '<div id="network-new-link">';
-
-
-	$a->page['aside'] .= '<div id="network-view-link">';
-	if(($a->argc > 1 && $a->argv[1] === 'new') || ($a->argc > 2 && $a->argv[2] === 'new') || x($_GET,'search')) {
-		$a->page['aside'] .= '<a href="' . $a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') . '">' . t('View Conversations') . '</a></div>';
+	// item filter tabs
+	// TODO: fix this logic, reduce duplication
+	$a->page['content'] .= '<div class="tabs-wrapper">';
+	
+	$starred_active = '';
+	$new_active = '';
+	$bookmarked_active = '';
+	$all_active = '';
+	$search_active = '';
+	
+	if(($a->argc > 1 && $a->argv[1] === 'new') 
+		|| ($a->argc > 2 && $a->argv[2] === 'new')) {
+			$new_active = 'active';
 	}
-	else { 
-		$a->page['aside'] .= '<a href="' . $a->get_baseurl() . '/' . $a->cmd . '/new' . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '">' . t('View New Items') . '</a></div>';
-
-		if(x($_GET,'star'))
-			$a->page['aside'] .= '<div id="network-star-link">'
-				. '<a class="network-star" href="' . $a->get_baseurl() . '/' . $a->cmd 
-				. ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '">' 
-				. t('View Any Items') . '</a>' 
-				. '<span class="network-star icon starred"></span>' 
-				. '<span class="network-star icon unstarred"></span>' 
-				. '<div class="clear"></div></div>';
-		else
-			$a->page['aside'] .= '<div id="network-star-link">'
-				. '<a class="network-star" href="' . $a->get_baseurl() . '/' . $a->cmd 
-				. ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '&star=1" >' 
-				. t('View Starred Items') . '</a>'
-				. '<span class="network-star icon starred"></span>' 
-				. '<div class="clear"></div></div>';
-
-		if(! $_GET['bmark'])
-			$a->page['aside'] .= '<div id="network-bmark-link">'
-				. '<a class="network-bmark" href="' . $a->get_baseurl() . '/' . $a->cmd 
-				. ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '&bmark=1" >' 
-				. t('View Bookmarks') . '</a>'
-				. '<div class="clear"></div></div>';
-
-
+	
+	if(x($_GET,'search')) {
+		$search_active = 'active';
 	}
-
-	$a->page['aside'] .= '</div>';
-
+	
+	if(x($_GET,'star')) {
+		$starred_active = 'active';
+	}
+	
+	if($_GET['bmark']) {
+		$bookmarked_active = 'active';
+	}
+	
+	if (($new_active == '') 
+		&& ($starred_active == '') 
+		&& ($bookmarked_active == '')
+		&& ($search_active == '')) {
+			$all_active = 'active';
+	}
+	
+	// network links moved to content to match other pages
+	// all
+	$a->page['content'] .= '<a class="tabs ' . $all_active . '" href="' . $a->get_baseurl() . '/' 
+		. str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') . '">' 
+		. t('All') . '</a>';
+		
+	// new
+	$a->page['content'] .= '<a class="tabs ' . $new_active . '" href="' . $a->get_baseurl() . '/' 
+		. str_replace('/new', '', $a->cmd) . '/new' 
+		. ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '">' 
+		. t('New') . '</a>';
+	
+	// starred
+	$a->page['content'] .= '<a class="tabs ' . $starred_active . '" href="' . $a->get_baseurl() . '/'
+		. str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '&star=1" >' 
+		. t('Starred') . '</a>';
+	
+	// bookmarks
+	$a->page['content'] .= '<a class="tabs ' . $bookmarked_active . '" href="' . $a->get_baseurl() . '/'
+		. str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '&bmark=1" >' 
+		. t('Bookmarks') . '</a>';
+	
+	$a->page['content'] .= '</div>';
+	// --- end item filter tabs
+	
+	// search terms header
+	if(x($_GET,'search')) {
+		$a->page['content'] .= '<h2>Search Results For: '  . $search . '</h2>';
+	}
+	
 	$a->page['aside'] .= group_side('network','network',true,$group_id);
+	
+	// moved to saved searches to have it in the same div
+	//$a->page['aside'] .= search($search,'netsearch-box',$srchurl,true);
 
-	$a->page['aside'] .= saved_searches();
+	$a->page['aside'] .= saved_searches($search);
 
 }
 
-function saved_searches() {
+function saved_searches($search) {
 
+	$srchurl = '/network' 
+		. ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') 
+		. ((x($_GET,'star')) ? '?star=' . $_GET['star'] : '')
+		. ((x($_GET,'bmark')) ? '?bmark=' . $_GET['bmark'] : '');
+	
 	$o = '';
 
 	$r = q("select `term` from `search` WHERE `uid` = %d",
 		intval(local_user())
 	);
 
+	$o .= '<div id="saved-search-list" class="widget">';
+	$o .= '<h3 id="search">' . t('Saved Searches') . '</h3>' . "\r\n";
+	$o .= search($search,'netsearch-box',$srchurl,true);
+	
 	if(count($r)) {
-		$o .= '<h3>' . t('Saved Searches') . '</h3>' . "\r\n";
-		$o .= '<div id="saved-search-list"><ul id="saved-search-ul">' . "\r\n";
+		$o .= '<ul id="saved-search-ul">' . "\r\n";
 		foreach($r as $rr) {
 			$o .= '<li class="saved-search-li clear"><a href="network/?f=&remove=1&search=' . $rr['term'] . '" class="icon drophide savedsearchdrop" title="' . t('Remove term') . '" onclick="return confirmDelete();" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a> <a href="network/?f&search=' . $rr['term'] . '" class="savedsearchterm" >' . $rr['term'] . '</a></li>' . "\r\n";
 		}
-		$o .= '</ul></div>' . "\r\n";
+		$o .= '</ul>';
 	}		
 
+	$o .= '</div>' . "\r\n";
 	return $o;
 
 }
-
-
 
 
 function network_content(&$a, $update = 0) {

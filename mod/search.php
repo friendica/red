@@ -9,8 +9,9 @@ function search_saved_searches() {
 	);
 
 	if(count($r)) {
+		$o .= '<div id="saved-search-list" class="widget">';
 		$o .= '<h3>' . t('Saved Searches') . '</h3>' . "\r\n";
-		$o .= '<div id="saved-search-list"><ul id="saved-search-ul">' . "\r\n";
+		$o .= '<ul id="saved-search-ul">' . "\r\n";
 		foreach($r as $rr) {
 			$o .= '<li class="saved-search-li clear"><a href="search/?f=&remove=1&search=' . $rr['term'] . '" class="icon drophide savedsearchdrop" title="' . t('Remove term') . '" onclick="return confirmDelete();" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a> <a href="search/?f&search=' . $rr['term'] . '" class="savedsearchterm" >' . $rr['term'] . '</a></li>' . "\r\n";
 		}
@@ -140,7 +141,7 @@ function search_content(&$a) {
 
 	);
 
-
+	$o .= '<h2>Search results for: ' . $search . '</h2>';
 
 	$o .= conversation($a,$r,'search',false);
 

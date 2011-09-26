@@ -167,7 +167,7 @@ function group_side($every="contacts",$each="group",$edit = false, $group_id = 0
 	$selected = (($group_id == 0) ? ' group-selected' : '');
 $o .= <<< EOT
 
-<div id="group-sidebar">
+<div id="group-sidebar" class="widget">
 <h3>Groups</h3>
 
 <div id="sidebar-group-list">
