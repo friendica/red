@@ -501,6 +501,9 @@ section {
   top: -10px;
   width: 16px;
 }
+.unstarred {
+  display: none;
+}
 .wall-item-container {
   display: table;
   width: 780px;
