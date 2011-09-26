@@ -336,27 +336,26 @@ ul#user-menu-popup li a.nav-sep { border-top: 1px solid #989898; border-style:in
 /* ============= */
 
 #notifications {
-	height: 20px;
+	height: 32px;
 	position: absolute;
-	top:32px; left: 600px;
+	top:10px; left: 650px;
 }
 .nav-ajax-update {
-	width: 30px;
-	height: 19px;
+	width: 44px;
+	height: 32px;
 	background: transparent url('notifications.png') 0px 0px no-repeat; 
-	color: #ffffff;
+	color: #efefef;
 	font-weight: bold;
 	font-size: 0.8em;
-	padding-top: 0.2em;
-	text-align: center;
+	padding-top: 0.5em;
 	float: left;
-	margin-right: -4px;
+	padding-left: 11px;
     display: none;
 }
 #net-update { background-position: 0px 0px; }
-#mail-update { background-position: -30px 0px; }
-#notify-update { background-position: -60px 0px; }
-#home-update { background-position: -90px 0px; }
+#mail-update { background-position: 0px -42px; }
+#notify-update { background-position: 0px -84px; }
+#home-update { background-position: 0px -126px; }
 
 #lang-select-icon {
 	cursor: pointer;
@@ -832,16 +831,6 @@ profile-jot-banner-wrapper {
 .tabs:active {
 	position:relative;
 	top:1px;
-	color:#efefef;
-	padding: 5px 10px 5px 10px;
-	margin-right: 5px;
-}
-
-a.active {
-	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #b20202), color-stop(1, #d60808) );
-	background:-moz-linear-gradient( center top, #b20202 5%, #d60808 100% );
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#b20202', endColorstr='#d60808');
-	background-color:#b20202;
 	color:#efefef;
 	padding: 5px 10px 5px 10px;
 	margin-right: 5px;
@@ -2368,7 +2357,7 @@ margin-left: 90px;
 	padding-top: 10px;
 }
 
-#profile-tab-status-link {
+/*#profile-tab-status-link {
 	padding: 5px 10px 5px 10px;
 	margin-right: 5px;
 	margin-top: 10px;
@@ -2384,7 +2373,7 @@ margin-left: 90px;
 	-webkit-border-radius:5px;
 	border-radius:5px;
 	color: #efefef;
-}
+}*/
 
 #profile-tab-status-link:hover {
 	border: 0px;
@@ -2411,24 +2400,6 @@ margin-left: 90px;
 }
 
 #uexport-link a {
-	color: #efefef;
-}
-
-#profile-tab-profile-link {
-	margin-right: 5px;
-	margin-top: 10px;
-	padding: 5px 10px 5px 10px;
-	font-style: bold;
-	-moz-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
-	-webkit-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
-	box-shadow:inset 0px 1px 0px 0px #cfcfcf;
-	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #bdbdbd), color-stop(1, #a2a2a2) );
-	background:-moz-linear-gradient( center top, #bdbdbd 5%, #a2a2a2 100% );
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#bdbdbd', endColorstr='#a2a2a2');
-	background-color:#bdbdbd;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	border-radius:5px;
 	color: #efefef;
 }
 
@@ -3293,4 +3264,14 @@ footer { display: block; margin: 50px 20%; clear: both; }
 
 #global-directory-link {
 	-webkit-padding-start: 0px;
+}
+
+a.active {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #b20202), color-stop(1, #d60808) );
+	background:-moz-linear-gradient( center top, #b20202 5%, #d60808 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#b20202', endColorstr='#d60808');
+	background-color:#b20202;
+	color:#efefef;
+	padding: 5px 10px 5px 10px;
+	margin-right: 5px;
 }
