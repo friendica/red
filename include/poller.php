@@ -38,6 +38,12 @@ function poller_run($argv, $argc){
 
 	proc_run('php',"include/queue.php");
 	
+	// expire any expired accounts
+
+	q("UPDATE user SET `account_expired` = 1 where `account_expired` = 0 
+		AND `account_expires_on` != '0000-00-00 00:00:00' 
+		AND `account_expires_on` < UTC_TIMESTAMP() ");
+  
 	// once daily run expire in background
 
 	$d1 = get_config('system','last_expire_day');
