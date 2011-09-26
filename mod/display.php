@@ -114,8 +114,6 @@ function display_content(&$a) {
 
 	}
 
-	$o .= cc_license();
-
 	return $o;
 }
 

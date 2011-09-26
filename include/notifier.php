@@ -409,6 +409,8 @@ function notifier_run($argv, $argc){
 
 		foreach($r as $contact) {
 			if((! $mail) && (! $fsuggest) && (! $followup) && (! $contact['self'])) {
+				if(($contact['network'] === NETWORK_DIASPORA) && ($public_message))
+					continue;
 				q("insert into deliverq ( `cmd`,`item`,`contact` ) values ('%s', %d, %d )",
 					dbesc($cmd),
 					intval($item_id),
@@ -583,8 +585,18 @@ function notifier_run($argv, $argc){
 					break;
 				case NETWORK_DIASPORA:
 					require_once('include/diaspora.php');
+
 					if(get_config('system','dfrn_only') || (! get_config('system','diaspora_enabled')) || (! $normal_mode))
 						break;
+
+					// special handling for followup to public post
+					// all other public posts processed as public batches further below
+
+					if($public_message) {
+						if($followup)
+							diaspora_send_followup($target_item,$owner,$contact, true);
+						break;
+					}
 
 					if(! $contact['pubkey'])
 						break;
@@ -643,17 +655,25 @@ function notifier_run($argv, $argc){
 
 	if($public_message) {
 
-		$r = q("SELECT `id`, `name` FROM `contact` 
-			WHERE `network` in ('%s','%s') AND `uid` = %d AND `blocked` = 0 AND `pending` = 0
-			AND `rel` != %d order by rand() ",
-			dbesc(NETWORK_DFRN),
+		$r1 = q("SELECT DISTINCT(`batch`), `id`, `name`,`network` FROM `contact` WHERE `network` = '%s' 
+			AND `uid` = %d AND `rel` != %d ORDER BY rand() ",
 			dbesc(NETWORK_DIASPORA),
 			intval($owner['uid']),
 			intval(CONTACT_IS_SHARING)
 		);
+			
+		$r2 = q("SELECT `id`, `name`,`network` FROM `contact` 
+			WHERE `network` = '%s' AND `uid` = %d AND `blocked` = 0 AND `pending` = 0
+			AND `rel` != %d order by rand() ",
+			dbesc(NETWORK_DFRN),
+			intval($owner['uid']),
+			intval(CONTACT_IS_SHARING)
+		);
+
+		$r = array_merge($r2,$r1);
 
 		if(count($r)) {
-			logger('pubdeliver: ' . print_r($r,true));
+			logger('pubdeliver: ' . print_r($r,true), LOGGER_DEBUG);
 
 			// throw everything into the queue in case we get killed
 
@@ -669,9 +689,10 @@ function notifier_run($argv, $argc){
 
 			foreach($r as $rr) {
 
-				/* Don't deliver to folks who have already been delivered to */
+				// except for Diaspora batch jobs
+				// Don't deliver to folks who have already been delivered to
 
-				if(in_array($rr['id'],$conversants)) {
+				if(($rr['network'] !== NETWORK_DIASPORA) && (in_array($rr['id'],$conversants))) {
 					logger('notifier: already delivered id=' . $rr['id']);
 					continue;
 				}

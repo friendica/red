@@ -1,6 +1,6 @@
 <?php
 
-function string_plural_select($n){
+function string_plural_select_de($n){
 	return ($n != 1);
 }
 ;
@@ -380,8 +380,8 @@ $a->strings["View New Items"] = "Neue Einträge anzeigen";
 $a->strings["View Any Items"] = "Alle Einträge anzeigen";
 $a->strings["View Starred Items"] = "Gesternte Einträge anzeigen";
 $a->strings["Warning: This group contains %s member from an insecure network."] = array(
-	0 => "Warnung: Diese Gruppe beinhaltet %s Mitglied aus unsicheren Netzwerken.",
-	1 => "Warnung: Diese Gruppe beinhaltet %s Mitglieder aus unsicheren Netzwerken.",
+	0 => "",
+	1 => "",
 );
 $a->strings["Private messages to this group are at risk of public disclosure."] = "Private Nachrichten an diese Gruppe könnten an die Öffentlichkeit geraten.";
 $a->strings["No such group"] = "Es gibt keine solche Gruppe";
@@ -603,7 +603,7 @@ $a->strings["Log settings updated."] = "Protokolleinstellungen aktualisiert.";
 $a->strings["Clear"] = "löschen";
 $a->strings["Debugging"] = "Protokoll führen";
 $a->strings["Log file"] = "Protokolldatei";
-$a->strings["Must be writable by web server. Relative to your Friendika index.php."] = "Muss schreibbar durch den Webserver sein. Angabe relativ zu Friendikas index.php.";
+$a->strings["Must be writable by web server. Relative to your Friendika index.php."] = "Muss schreibbar durch den Webserver sein. Angabe relativ zu Friendikas indes.php.";
 $a->strings["Log level"] = "Protokollevel";
 $a->strings["Close"] = "Schließen";
 $a->strings["FTP Host"] = "FTP Host";

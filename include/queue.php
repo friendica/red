@@ -123,6 +123,7 @@ function queue_run($argv, $argc){
 		}
 
 		$data      = $qi[0]['content'];
+		$public    = $qi[0]['batch'];
 		$contact   = $c[0];
 		$owner     = $u[0];
 
@@ -155,7 +156,7 @@ function queue_run($argv, $argc){
 			case NETWORK_DIASPORA:
 				if($contact['notify']) {
 					logger('queue: diaspora_delivery: item ' . $q_item['id'] . ' for ' . $contact['name']);
-					$deliver_status = diaspora_transmit($owner,$contact,$data);
+					$deliver_status = diaspora_transmit($owner,$contact,$data,$public);
 
 					if($deliver_status == (-1))
 						update_queue_time($q_item['id']);

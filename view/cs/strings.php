@@ -1,6 +1,6 @@
 <?php
 
-function string_plural_select($n){
+function string_plural_select_cs($n){
 	return ($n==1) ? 0 : ($n>=2 && $n<=4) ? 1 : 2;
 }
 ;

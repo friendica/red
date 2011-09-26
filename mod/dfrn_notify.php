@@ -72,7 +72,7 @@ function dfrn_notify_post(&$a) {
 			FROM `contact` 
 			LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid` 
 			WHERE `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
-				AND `user`.`nickname` = '%s' $sql_extra LIMIT 1",
+				AND `user`.`nickname` = '%s' AND `user`.`account_expired` = 0 $sql_extra LIMIT 1",
 		dbesc($a->argv[1])
 	);
 
@@ -807,7 +807,7 @@ function dfrn_notify_content(&$a) {
 			intval(time() + 90 )
 		);
 
-		logger('dfrn_notify: challenge=' . $hash );
+		logger('dfrn_notify: challenge=' . $hash, LOGGER_DEBUG );
 
 		$sql_extra = '';
 		switch($direction) {
@@ -829,7 +829,8 @@ function dfrn_notify_content(&$a) {
 		}
 
 		$r = q("SELECT `contact`.*, `user`.`nickname` FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
-				WHERE `contact`.`blocked` = 0 AND `contact`.`pending` = 0 AND `user`.`nickname` = '%s' $sql_extra LIMIT 1",
+				WHERE `contact`.`blocked` = 0 AND `contact`.`pending` = 0 AND `user`.`nickname` = '%s' 
+				AND `user`.`account_expired` = 0 $sql_extra LIMIT 1",
 				dbesc($a->argv[1])
 		);
 
@@ -840,14 +841,20 @@ function dfrn_notify_content(&$a) {
 		$encrypted_id = '';
 		$id_str = $my_id . '.' . mt_rand(1000,9999);
 
-		if((($r[0]['duplex']) && strlen($r[0]['prvkey'])) || (! strlen($r[0]['pubkey']))) {
-			openssl_private_encrypt($hash,$challenge,$r[0]['prvkey']);
-			openssl_private_encrypt($id_str,$encrypted_id,$r[0]['prvkey']);
+		$prv_key = trim($r[0]['prvkey']);
+		$pub_key = trim($r[0]['pubkey']);
+		$dplx = intval($r[0]['duplex']);
+
+		if((($dplx) && (strlen($prv_key))) || ((strlen($prv_key)) && (!(strlen($pub_key))))) {
+			openssl_private_encrypt($hash,$challenge,$prv_key);
+			openssl_private_encrypt($id_str,$encrypted_id,$prv_key);
 		}
-		else {
-			openssl_public_encrypt($hash,$challenge,$r[0]['pubkey']);
-			openssl_public_encrypt($id_str,$encrypted_id,$r[0]['pubkey']);
+		elseif(strlen($pub_key)) {
+			openssl_public_encrypt($hash,$challenge,$pub_key);
+			openssl_public_encrypt($id_str,$encrypted_id,$pub_key);
 		}
+		else
+			$status = 1;
 
 		$challenge    = bin2hex($challenge);
 		$encrypted_id = bin2hex($encrypted_id);

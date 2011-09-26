@@ -239,7 +239,6 @@ function profile_content(&$a, $update = 0) {
 
 	if(! $update) {
 		$o .= paginate($a);
-		$o .= cc_license();
 	}
 
 	return $o;

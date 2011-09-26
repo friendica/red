@@ -3,15 +3,36 @@
 require_once('library/HTML5/Parser.php');
 require_once('library/HTMLPurifier.auto.php');
 
+function arr_add_hashes(&$item,$k) {
+	$item = '#' . $item;
+}
+
 function parse_url_content(&$a) {
 
-	logger('parse_url: ' . $_GET['url']);
+	$text = null;
+	$str_tags = '';
 
-	$url = trim(hex2bin($_GET['url']));
+	if(x($_GET,'binurl'))
+		$url = trim(hex2bin($_GET['binurl']));
+	else
+		$url = trim($_GET['url']);
+
+	if($_GET['title'])
+		$title = strip_tags(trim($_GET['title']));
+
+	if($_GET['description'])
+		$text = strip_tags(trim($_GET['description']));
+
+	if($_GET['tags']) {
+		$arr_tags = str_getcsv($_GET['tags']);
+		if(count($arr_tags)) {
+			array_walk($arr_tags,'arr_add_hashes');
+			$str_tags = '<br />' . implode(' ',$arr_tags) . '<br />'; 		
+		}
+	}
 
 	logger('parse_url: ' . $url);
 
-	$text = null;
 
 	$template = "<br /><a class=\"bookmark\" href=\"%s\" >%s</a>%s<br />";
 
@@ -25,6 +46,20 @@ function parse_url_content(&$a) {
 		killme();
 	}
 
+	if($url && $title && $text) {
+
+		$text = '<br /><br /><blockquote>' . $text . '</blockquote><br />';
+		$title = str_replace(array("\r","\n"),array('',''),$title);
+
+		$result = sprintf($template,$url,($title) ? $title : $url,$text) . $str_tags;
+
+		logger('parse_url (unparsed): returns: ' . $result); 
+
+		echo $result;
+		killme();
+	}
+
+
 	if($url) {
 		$s = fetch_url($url);
 	} else {
@@ -35,14 +70,16 @@ function parse_url_content(&$a) {
 	logger('parse_url: data: ' . $s, LOGGER_DATA);
 
 	if(! $s) {
-		echo sprintf($template,$url,$url,'');
+		echo sprintf($template,$url,$url,'') . $str_tags;
 		killme();
 	}
 
-	if(strpos($s,'<title>')) {
-		$title = substr($s,strpos($s,'<title>')+7,64);
-		if(strpos($title,'<') !== false)
-			$title = strip_tags(substr($title,0,strpos($title,'<')));
+	if(! $title) {
+		if(strpos($s,'<title>')) {
+			$title = substr($s,strpos($s,'<title>')+7,64);
+			if(strpos($title,'<') !== false)
+				$title = strip_tags(substr($title,0,strpos($title,'<')));
+		}
 	}
 
 	$config = HTMLPurifier_Config::createDefault();
@@ -56,7 +93,7 @@ function parse_url_content(&$a) {
 	$dom = @HTML5_Parser::parse($s);
 
 	if(! $dom) {
-		echo sprintf($template,$url,$url,'');
+		echo sprintf($template,$url,$url,'') . $str_tags;
 		killme();
 	}
 
@@ -69,48 +106,51 @@ function parse_url_content(&$a) {
 		}
 	}
 
-	$divs = $dom->getElementsByTagName('div');
-	if($divs) {
-		foreach($divs as $div) {
-			$class = $div->getAttribute('class');
-			if($class && (stristr($class,'article') || stristr($class,'content'))) {
-				$items = $div->getElementsByTagName('p');
-				if($items) {
-					foreach($items as $item) {
-						$text = $item->textContent;
-						if(stristr($text,'<script')) {
-							$text = '';
-							continue;
-						}
-						$text = strip_tags($text);
-						if(strlen($text) < 100) {
-							$text = '';
-							continue;
-						}
-						$text = substr($text,0,250) . '...' ;
-						break;
-					}
-				}
-			}
-			if($text)
-				break;
-		}
-	}
 
 	if(! $text) {
-		$items = $dom->getElementsByTagName('p');
-		if($items) {
-			foreach($items as $item) {
-				$text = $item->textContent;
-				if(stristr($text,'<script'))
-					continue;
-				$text = strip_tags($text);
-				if(strlen($text) < 100) {
-					$text = '';
-					continue;
+		$divs = $dom->getElementsByTagName('div');
+		if($divs) {
+			foreach($divs as $div) {
+				$class = $div->getAttribute('class');
+				if($class && (stristr($class,'article') || stristr($class,'content'))) {
+					$items = $div->getElementsByTagName('p');
+					if($items) {
+						foreach($items as $item) {
+							$text = $item->textContent;
+							if(stristr($text,'<script')) {
+								$text = '';
+								continue;
+							}
+							$text = strip_tags($text);
+							if(strlen($text) < 100) {
+								$text = '';
+								continue;
+							}
+							$text = substr($text,0,250) . '...' ;
+							break;
+						}
+					}
 				}
-				$text = substr($text,0,250) . '...' ;
-				break;
+				if($text)
+					break;
+			}
+		}
+
+		if(! $text) {
+			$items = $dom->getElementsByTagName('p');
+			if($items) {
+				foreach($items as $item) {
+					$text = $item->textContent;
+					if(stristr($text,'<script'))
+						continue;
+					$text = strip_tags($text);
+					if(strlen($text) < 100) {
+						$text = '';
+						continue;
+					}
+					$text = substr($text,0,250) . '...' ;
+					break;
+				}
 			}
 		}
 	}
@@ -119,9 +159,9 @@ function parse_url_content(&$a) {
 		$text = '<br /><br /><blockquote>' . $text . '</blockquote><br />';
 	}
 
-	$title = str_replace("\n",'',$title);
+	$title = str_replace(array("\r","\n"),array('',''),$title);
 
-	$result = sprintf($template,$url,($title) ? $title : $url,$text);
+	$result = sprintf($template,$url,($title) ? $title : $url,$text) . $str_tags;
 
 	logger('parse_url: returns: ' . $result); 
 

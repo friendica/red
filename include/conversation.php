@@ -211,21 +211,21 @@ function conversation(&$a, $items, $mode, $update) {
 				
 				$o .= replace_macros($tpl,array(
 					'$id' => $item['item_id'],
-					'$linktitle' => sprintf( t('View %s\'s profile'), $profile_name),
+					'$linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, ((strlen($item['author-link'])) ? $item['author-link'] : $item['url'])),
 					'$profile_url' => $profile_link,
 					'$item_photo_menu' => item_photo_menu($item),
-					'$name' => $profile_name,
+					'$name' => template_escape($profile_name),
 					'$sparkle' => $sparkle,
 					'$lock' => $lock,
 					'$thumb' => $profile_avatar,
-					'$title' => $item['title'],
-					'$body' => $body,
+					'$title' => template_escape($item['title']),
+					'$body' => template_escape($body),
 					'$ago' => (($item['app']) ? sprintf( t('%s from %s'),relative_date($item['created']),$item['app']) : relative_date($item['created'])),
-					'$location' => $location,
+					'$location' => template_escape($location),
 					'$indent' => '',
 					'$owner_url' => $owner_url,
 					'$owner_photo' => $owner_photo,
-					'$owner_name' => $owner_name,
+					'$owner_name' => template_escape($owner_name),
 					'$star' => $star,
 					'$drop' => $drop,
 					'$conv' => '<a href="' . $a->get_baseurl() . '/display/' . $nickname . '/' . $item['id'] . '">' . t('View in context') . '</a>'
@@ -505,27 +505,27 @@ function conversation(&$a, $items, $mode, $update) {
 
 
 			$tmp_item = replace_macros($template,array(
+				'$body' => template_escape($body),
 				'$id' => $item['item_id'],
-				'$linktitle' => sprintf( t('View %s\'s profile'), $profile_name),
-				'$olinktitle' => sprintf( t('View %s\'s profile'), $owner_name),
+				'$linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, ((strlen($item['author-link'])) ? $item['author-link'] : $item['url'])),
+				'$olinktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, ((strlen($item['owner-link'])) ? $item['owner-link'] : $item['url'])),
 				'$to' => t('to'),
 				'$wall' => t('Wall-to-Wall'),
 				'$vwall' => t('via Wall-To-Wall:'),
 				'$profile_url' => $profile_link,
 				'$item_photo_menu' => item_photo_menu($item),
-				'$name' => $profile_name,
+				'$name' => template_escape($profile_name),
 				'$thumb' => $profile_avatar,
 				'$osparkle' => $osparkle,
 				'$sparkle' => $sparkle,
-				'$title' => $item['title'],
-				'$body' => $body,
+				'$title' => template_escape($item['title']),
 				'$ago' => ((($item['app']) && ($item['id'] == $item['parent'])) ? sprintf( t('%s from %s'),relative_date($item['created']),$item['app']) : relative_date($item['created'])),
 				'$lock' => $lock,
-				'$location' => $location,
+				'$location' => template_escape($location),
 				'$indent' => $indent,
 				'$owner_url' => $owner_url,
 				'$owner_photo' => $owner_photo,
-				'$owner_name' => $owner_name,
+				'$owner_name' => template_escape($owner_name),
 				'$plink' => get_plink($item),
 				'$edpost' => $edpost,
 				'$isstarred' => $isstarred,
@@ -535,6 +535,7 @@ function conversation(&$a, $items, $mode, $update) {
 				'$like' => $like,
 				'$dislike' => $dislike,
 				'$comment' => $comment
+
 			));
 
 
@@ -755,7 +756,7 @@ function status_editor($a,$x, $notes_cid = 0) {
 
 		if($mail_enabled) {
 	       $selected = (($pubmail_enabled) ? ' checked="checked" ' : '');
-			$jotnets .= '<div class="profile-jot-net"><input type="checkbox" name="pubmail_enable"' . $selected . 'value="1" /> '
+			$jotnets .= '<div class="profile-jot-net"><input type="checkbox" name="pubmail_enable"' . $selected . ' value="1" /> '
            	. t("Post to Email") . '</div>';
 		}
 

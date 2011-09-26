@@ -199,8 +199,26 @@
 				$os=$s; $count++;
 				$s = str_replace($this->search,$this->replace, $s);
 			}
-			return $s;
+			return template_unescape($s);
 		}
 	}
 	
 	$t = new Template;
+
+
+
+
+function template_escape($s) {
+
+	return str_replace(array('$','{{'),array('!_Doll^Ars1Az_!','!_DoubLe^BraceS4Rw_!'),$s);
+
+
+}
+
+function template_unescape($s) {
+
+	return str_replace(array('!_Doll^Ars1Az_!','!_DoubLe^BraceS4Rw_!'),array('$','{{'),$s);
+
+
+
+}

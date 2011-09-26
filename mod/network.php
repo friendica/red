@@ -17,12 +17,12 @@ function network_init(&$a) {
 
 	// We need a better way of managing a growing argument list
 
-	$srchurl = '/network' 
-		. ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') 
-		. ((x($_GET,'star')) ? '?star=' . $_GET['star'] : '')
-		. ((x($_GET,'order')) ? '?order=' . $_GET['order'] : '')
-		. ((x($_GET,'bmark')) ? '?bmark=' . $_GET['bmark'] : '');
-
+	// moved into savedsearches()
+	// $srchurl = '/network' 
+	// 		. ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') 
+	// 		. ((x($_GET,'star')) ? '?star=' . $_GET['star'] : '')
+	// 		. ((x($_GET,'bmark')) ? '?bmark=' . $_GET['bmark'] : '');
+	
 	if(x($_GET,'save')) {
 		$r = q("select * from `search` where `uid` = %d and `term` = '%s' limit 1",
 			intval(local_user()),
@@ -42,74 +42,108 @@ function network_init(&$a) {
 		);
 	}
 
-	$a->page['aside'] .= search($search,'netsearch-box',$srchurl,true);
-
-	$a->page['aside'] .= '<div id="network-new-link">';
-
-
-	$a->page['aside'] .= '<div id="network-view-link">';
-	if(($a->argc > 1 && $a->argv[1] === 'new') || ($a->argc > 2 && $a->argv[2] === 'new') || x($_GET,'search')) {
-		$a->page['aside'] .= '<a href="' . $a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') . '">' . t('View Conversations') . '</a></div>';
+	// item filter tabs
+	// TODO: fix this logic, reduce duplication
+	$a->page['content'] .= '<div class="tabs-wrapper">';
+	
+	$starred_active = '';
+	$new_active = '';
+	$bookmarked_active = '';
+	$all_active = '';
+	$search_active = '';
+	
+	if(($a->argc > 1 && $a->argv[1] === 'new') 
+		|| ($a->argc > 2 && $a->argv[2] === 'new')) {
+			$new_active = 'active';
 	}
-	else { 
-		$a->page['aside'] .= '<a href="' . $a->get_baseurl() . '/' . $a->cmd . '/new' . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '">' . t('View New Items') . '</a></div>';
-
-		if(x($_GET,'star'))
-			$a->page['aside'] .= '<div id="network-star-link">'
-				. '<a class="network-star" href="' . $a->get_baseurl() . '/' . $a->cmd 
-				. ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '">' 
-				. t('View Any Items') . '</a>' 
-				. '<span class="network-star icon starred"></span>' 
-				. '<span class="network-star icon unstarred"></span>' 
-				. '<div class="clear"></div></div>';
-		else
-			$a->page['aside'] .= '<div id="network-star-link">'
-				. '<a class="network-star" href="' . $a->get_baseurl() . '/' . $a->cmd 
-				. ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '&star=1" >' 
-				. t('View Starred Items') . '</a>'
-				. '<span class="network-star icon starred"></span>' 
-				. '<div class="clear"></div></div>';
-
-		if(! $_GET['bmark'])
-			$a->page['aside'] .= '<div id="network-bmark-link">'
-				. '<a class="network-bmark" href="' . $a->get_baseurl() . '/' . $a->cmd 
-				. ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '&bmark=1" >' 
-				. t('View Bookmarks') . '</a>'
-				. '<div class="clear"></div></div>';
-
-
+	
+	if(x($_GET,'search')) {
+		$search_active = 'active';
 	}
-
-	$a->page['aside'] .= '</div>';
-
+	
+	if(x($_GET,'star')) {
+		$starred_active = 'active';
+	}
+	
+	if($_GET['bmark']) {
+		$bookmarked_active = 'active';
+	}
+	
+	if (($new_active == '') 
+		&& ($starred_active == '') 
+		&& ($bookmarked_active == '')
+		&& ($search_active == '')) {
+			$all_active = 'active';
+	}
+	
+	// network links moved to content to match other pages
+	// all
+	$a->page['content'] .= '<a class="tabs ' . $all_active . '" href="' . $a->get_baseurl() . '/' 
+		. str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') . '">' 
+		. t('All') . '</a>';
+		
+	// new
+	$a->page['content'] .= '<a class="tabs ' . $new_active . '" href="' . $a->get_baseurl() . '/' 
+		. str_replace('/new', '', $a->cmd) . '/new' 
+		. ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '">' 
+		. t('New') . '</a>';
+	
+	// starred
+	$a->page['content'] .= '<a class="tabs ' . $starred_active . '" href="' . $a->get_baseurl() . '/'
+		. str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '&star=1" >' 
+		. t('Starred') . '</a>';
+	
+	// bookmarks
+	$a->page['content'] .= '<a class="tabs ' . $bookmarked_active . '" href="' . $a->get_baseurl() . '/'
+		. str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '&bmark=1" >' 
+		. t('Bookmarks') . '</a>';
+	
+	$a->page['content'] .= '</div>';
+	// --- end item filter tabs
+	
+	// search terms header
+	if(x($_GET,'search')) {
+		$a->page['content'] .= '<h2>Search Results For: '  . $search . '</h2>';
+	}
+	
 	$a->page['aside'] .= group_side('network','network',true,$group_id);
+	
+	// moved to saved searches to have it in the same div
+	//$a->page['aside'] .= search($search,'netsearch-box',$srchurl,true);
 
-	$a->page['aside'] .= saved_searches();
+	$a->page['aside'] .= saved_searches($search);
 
 }
 
-function saved_searches() {
+function saved_searches($search) {
 
+	$srchurl = '/network' 
+		. ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') 
+		. ((x($_GET,'star')) ? '?star=' . $_GET['star'] : '')
+		. ((x($_GET,'bmark')) ? '?bmark=' . $_GET['bmark'] : '');
+	
 	$o = '';
 
 	$r = q("select `term` from `search` WHERE `uid` = %d",
 		intval(local_user())
 	);
 
+	$o .= '<div id="saved-search-list" class="widget">';
+	$o .= '<h3 id="search">' . t('Saved Searches') . '</h3>' . "\r\n";
+	$o .= search($search,'netsearch-box',$srchurl,true);
+	
 	if(count($r)) {
-		$o .= '<h3>' . t('Saved Searches') . '</h3>' . "\r\n";
-		$o .= '<div id="saved-search-list"><ul id="saved-search-ul">' . "\r\n";
+		$o .= '<ul id="saved-search-ul">' . "\r\n";
 		foreach($r as $rr) {
 			$o .= '<li class="saved-search-li clear"><a href="network/?f=&remove=1&search=' . $rr['term'] . '" class="icon drophide savedsearchdrop" title="' . t('Remove term') . '" onclick="return confirmDelete();" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a> <a href="network/?f&search=' . $rr['term'] . '" class="savedsearchterm" >' . $rr['term'] . '</a></li>' . "\r\n";
 		}
-		$o .= '</ul></div>' . "\r\n";
+		$o .= '</ul>';
 	}		
 
+	$o .= '</div>' . "\r\n";
 	return $o;
 
 }
-
-
 
 
 function network_content(&$a, $update = 0) {
@@ -132,6 +166,7 @@ function network_content(&$a, $update = 0) {
 	$star = ((x($_GET,'star')) ? intval($_GET['star']) : 0);
 	$bmark = ((x($_GET,'bmark')) ? intval($_GET['bmark']) : 0);
 	$order = ((x($_GET,'order')) ? notags($_GET['order']) : 'comment');
+	$liked = ((x($_GET,'liked')) ? intval($_GET['liked']) : 0);
 
 
 	if(($a->argc > 2) && $a->argv[2] === 'new')
@@ -195,6 +230,7 @@ function network_content(&$a, $update = 0) {
 				. ((x($_GET,'star')) ? '&star=' . $_GET['star'] : '') 
 				. ((x($_GET,'order')) ? '&order=' . $_GET['order'] : '') 
 				. ((x($_GET,'bmark')) ? '&bmark=' . $_GET['bmark'] : '') 
+				. ((x($_GET,'liked')) ? '&liked=' . $_GET['liked'] : '') 
 				. "'; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 
 	}
@@ -315,44 +351,27 @@ function network_content(&$a, $update = 0) {
 	else {
 
 		// Normal conversation view
-		// Show conversation by activity date
 
 
-		if($order === 'post') {
-			$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact_uid`
-				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-				AND `item`.`parent` = `item`.`id`
-				$sql_extra
-				ORDER BY `item`.`created` DESC LIMIT %d ,%d ",
-				intval(local_user()),
-				intval($a->pager['start']),
-				intval($a->pager['itemspage'])
-			);
-		}
-		else {   
-			// $order === 'comment'
-			// First fetch a known number of parent items
+		if($order === 'post')
+				$ordering = "`created`";
+		else
+				$ordering = "`commented`";
 
-			$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact_uid`
-				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-				, (SELECT `_com`.`parent`,max(`_com`.`created`) as `created`
-					FROM `item` AS `_com` 
-					WHERE `_com`.`uid`=%d AND
-					(`_com`.`parent`!=`_com`.`id` OR `_com`.`id`  NOT IN (SELECT `__com`.`parent` FROM `item` as `__com` WHERE `__com`.`parent`!=`__com`.`id`))
-					GROUP BY `_com`.`parent` ORDER BY `created` DESC) AS `com` 
-				WHERE `item`.`id`=`com`.`parent` AND
-				`item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0	
-				$sql_extra
-				ORDER BY `com`.`created` DESC LIMIT %d ,%d ",
-				intval(local_user()),
-				intval(local_user()),
-				intval($a->pager['start']),
-				intval($a->pager['itemspage'])
-			);
-		}
+		// Fetch a page full of parent items for this page
+
+		$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact_uid`
+			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
+			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+			AND `item`.`parent` = `item`.`id`
+			$sql_extra
+			ORDER BY `item`.$ordering DESC LIMIT %d ,%d ",
+			intval(local_user()),
+			intval($a->pager['start']),
+			intval($a->pager['itemspage'])
+		);
+
 		// Then fetch all the children of the parents that are on this page
 
 		$parents_arr = array();
@@ -363,48 +382,21 @@ function network_content(&$a, $update = 0) {
 				$parents_arr[] = $rr['item_id'];
 			$parents_str = implode(', ', $parents_arr);
 
-			if($order === 'post') {
-				// parent created order
-				$r = q("SELECT `item`.*, `item`.`id` AS `item_id`,
-					`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`, `contact`.`writable`,
-					`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
-					`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-					FROM `item`, (SELECT `p`.`id`,`p`.`created` FROM `item` AS `p` WHERE `p`.`parent`=`p`.`id`) as `parentitem`, `contact`
-					WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-					AND `contact`.`id` = `item`.`contact-id`
-					AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-					AND `item`.`parent` = `parentitem`.`id` AND `item`.`parent` IN ( %s )
-					$sql_extra
-					ORDER BY `parentitem`.`created` DESC, `item`.`gravity` ASC, `item`.`created` ASC ",
-					intval(local_user()),
-					dbesc($parents_str)
-				);
-			}	
-			else {
-				// $order === 'comment'
-
-				$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-					`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`, `contact`.`writable`,
-					`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
-					`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-					FROM `item`, `contact`,
-						(SELECT `_com`.`parent`,max(`_com`.`created`) as `created`
-						FROM `item` AS `_com` 
-						WHERE `_com`.`uid`=%d AND
-						(`_com`.`parent`!=`_com`.`id` OR `_com`.`id`  NOT IN (SELECT `__com`.`parent` FROM `item` as `__com` WHERE `__com`.`parent`!=`__com`.`id`))
-						GROUP BY `_com`.`parent` ORDER BY `created` DESC) AS `com` 
-					WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-					AND `contact`.`id` = `item`.`contact-id`
-					AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-					AND `item`.`parent` = `com`.`parent` AND `item`.`parent` IN ( %s )
-					$sql_extra
-					ORDER BY `com`.`created`  DESC, `item`.`gravity` ASC, `item`.`created` ASC ",
-					intval(local_user()),
-					intval(local_user()),
-					dbesc($parents_str)
-				);
-			}
-		}
+			$r = q("SELECT `item`.*, `item`.`id` AS `item_id`,
+				`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`, `contact`.`writable`,
+				`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
+				`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
+				FROM `item`, (SELECT `p`.`id`,`p`.`created`,`p`.`commented` FROM `item` AS `p` WHERE `p`.`parent`=`p`.`id`) as `parentitem`, `contact`
+				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+				AND `contact`.`id` = `item`.`contact-id`
+				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+				AND `item`.`parent` = `parentitem`.`id` AND `item`.`parent` IN ( %s )
+				$sql_extra
+				ORDER BY `parentitem`.$ordering DESC, `parentitem`.`id` ASC, `item`.`gravity` ASC, `item`.`created` ASC ",
+				intval(local_user()),
+				dbesc($parents_str)
+			);
+		}	
 	}
 
 	// Set this so that the conversation function can find out contact info for our wall-wall items
@@ -416,7 +408,6 @@ function network_content(&$a, $update = 0) {
 
 	if(! $update) {
 		$o .= paginate($a);
-		$o .= cc_license();
 	}
 
 	return $o;

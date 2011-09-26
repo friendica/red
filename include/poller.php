@@ -86,11 +86,12 @@ function poller_run($argv, $argc){
 	// and which have a polling address and ignore Diaspora since 
 	// we are unable to match those posts with a Diaspora GUID and prevent duplicates.
 
-	$contacts = q("SELECT `id` FROM `contact` 
+	$contacts = q("SELECT `contact`.`id` FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
 		WHERE ( `rel` = %d OR `rel` = %d ) AND `poll` != ''
 		AND `network` != '%s'
 		$sql_extra 
-		AND `self` = 0 AND `blocked` = 0 AND `readonly` = 0 ORDER BY RAND()",
+		AND `self` = 0 AND `contact`.`blocked` = 0 AND `contact`.`readonly` = 0 
+		AND `user`.`account_expired` = 0 ORDER BY RAND()",
 		intval(CONTACT_IS_SHARING),
 		intval(CONTACT_IS_FRIEND),
 		dbesc(NETWORK_DIASPORA)
@@ -137,6 +138,8 @@ function poller_run($argv, $argc){
 					if((datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 day")) || $force)
 							$hub_update = true;
 				}
+				else
+					$hub_update = false;
 
 				/**
 				 * Based on $contact['priority'], should we poll this site now? Or later?
@@ -472,20 +475,24 @@ function poller_run($argv, $argc){
 	
 				consume_feed($xml,$importer,$contact,$hub,1);
 
+				$hubmode = 'subscribe';
+				if($contact['network'] === NETWORK_DFRN || $contact['blocked'] || $contact['readonly'])
+					$hubmode = 'unsubscribe';
 
-				if((strlen($hub)) && ($hub_update) && (($contact['rel'] == CONTACT_IS_FRIEND) || (($contact['network'] === NETWORK_OSTATUS) && (! $contact['readonly'])))) {
-					logger('poller: subscribing to hub(s) : ' . $hub . ' contact name : ' . $contact['name'] . ' local user : ' . $importer['name']);
+				if((strlen($hub)) && ($hub_update) && ($contact['rel'] != CONTACT_IS_FOLLOWER)) {
+					logger('poller: hub ' . $hubmode . ' : ' . $hub . ' contact name : ' . $contact['name'] . ' local user : ' . $importer['name']);
 					$hubs = explode(',', $hub);
 					if(count($hubs)) {
 						foreach($hubs as $h) {
 							$h = trim($h);
 							if(! strlen($h))
 								continue;
-							subscribe_to_hub($h,$importer,$contact);
+							subscribe_to_hub($h,$importer,$contact,$hubmode);
 						}
 					}
 				}
 			}
+
 
 			$updated = datetime_convert();
 

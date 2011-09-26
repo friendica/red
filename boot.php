@@ -8,9 +8,9 @@ require_once("include/pgettext.php");
 require_once('include/nav.php');
 
 
-define ( 'FRIENDIKA_VERSION',      '2.2.1103' );
+define ( 'FRIENDIKA_VERSION',      '2.3.1115' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
-define ( 'DB_UPDATE_VERSION',      1087      );
+define ( 'DB_UPDATE_VERSION',      1092      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -165,6 +165,7 @@ define ( 'ACTIVITY_OBJ_PHOTO',   NAMESPACE_ACTIVITY_SCHEMA . 'photo' );
 define ( 'ACTIVITY_OBJ_P_PHOTO', NAMESPACE_ACTIVITY_SCHEMA . 'profile-photo' );
 define ( 'ACTIVITY_OBJ_ALBUM',   NAMESPACE_ACTIVITY_SCHEMA . 'photo-album' );
 define ( 'ACTIVITY_OBJ_EVENT',   NAMESPACE_ACTIVITY_SCHEMA . 'event' );
+define ( 'ACTIVITY_OBJ_TAGTERM', NAMESPACE_DFRN            . '/tagterm' );
 
 /**
  * item weight for query ordering
@@ -185,7 +186,9 @@ define ( 'GRAVITY_COMMENT',      6);
 function startup() {
 	error_reporting(E_ERROR | E_WARNING | E_PARSE);
 	set_time_limit(0);
-	ini_set('pcre.backtrack_limit', 250000);
+
+	// This has to be quite large to deal with embedded private photos
+	ini_set('pcre.backtrack_limit', 350000);
 
 
 	if (get_magic_quotes_gpc()) {
@@ -935,7 +938,7 @@ function profile_sidebar($profile, $block = 0) {
 	$o .= replace_macros($tpl, array(
 		'$profile' => $profile,
 		'$connect'  => $connect,		
-		'$location' => $location,
+		'$location' => template_escape($location),
 		'$gender'   => $gender,
 		'$pdesc'	=> $pdesc,
 		'$marital'  => $marital,

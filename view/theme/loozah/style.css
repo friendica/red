@@ -1587,6 +1587,26 @@ padding: 5px 10px 0px;
 	clear: both;
 }
 
+.tabs {
+	padding: 4px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-right: 5px;
+	/*border: 1px solid #CCC;*/
+	/*background: #F8F8F8;*/
+	font-size: 0.8em;
+	font-weight: bold;
+	background-color: #ECECEC;
+	border: 1px solid #858585;
+}
+.tabs:hover {
+	background-color: #0CBEFE;
+	color: #F5F6FB;
+	border: 1px solid #F5F6FB;
+	/*cursor: pointer;*/
+}
+
+
 .comment-edit-text-empty {
 	color: gray;
 	height: 30px;
@@ -2732,6 +2752,7 @@ a.mail-list-link {
 .off { background-position: 0px -48px; }
 .starred { background-position: -16px -48px; }
 .unstarred { background-position: -32px -48px; }
+.tagged { background-position: -48px -48px; }
 
 .icon.dim { opacity: 0.3;filter:alpha(opacity=30); }
 

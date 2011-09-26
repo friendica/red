@@ -43,11 +43,11 @@ function bbcode($Text,$preserve_nl = false) {
 	// Perform URL Search
 
 
-	$Text = preg_replace("/([^\]\=]|^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\%\$\!\+\,]+)/", '$1<a href="$2" target="external-link">$2</a>', $Text);
+	$Text = preg_replace("/([^\]\=]|^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\%\$\!\+\,]+)/ism", '$1<a href="$2" target="external-link">$2</a>', $Text);
 
-	$Text = preg_replace("/\[url\]([$URLSearchString]*)\[\/url\]/m", '<a href="$1" target="external-link">$1</a>', $Text);
-	$Text = preg_replace("/\[url\=([$URLSearchString]*)\](.*?)\[\/url\]/m", '<a href="$1" target="external-link">$2</a>', $Text);
-	//$Text = preg_replace("/\[url\=([$URLSearchString]*)\]([$URLSearchString]*)\[\/url\]/m", '<a href="$1" target="_blank">$2</a>', $Text);
+	$Text = preg_replace("/\[url\]([$URLSearchString]*)\[\/url\]/ism", '<a href="$1" target="external-link">$1</a>', $Text);
+	$Text = preg_replace("/\[url\=([$URLSearchString]*)\](.*?)\[\/url\]/ism", '<a href="$1" target="external-link">$2</a>', $Text);
+	//$Text = preg_replace("/\[url\=([$URLSearchString]*)\]([$URLSearchString]*)\[\/url\]/ism", '<a href="$1" target="_blank">$2</a>', $Text);
 
 
 	// Perform MAIL Search
@@ -95,7 +95,7 @@ function bbcode($Text,$preserve_nl = false) {
 //	$Text = str_replace("[*]", "<li>", $Text);
 
 	// Check for font change text
-	$Text = preg_replace("/\[font=(.*?)\](.*?)\[\/font\]/m","<span style=\"font-family: $1;\">$2</span>",$Text);
+	$Text = preg_replace("/\[font=(.*?)\](.*?)\[\/font\]/sm","<span style=\"font-family: $1;\">$2</span>",$Text);
 
 	// Declare the format for [code] layout
 
@@ -113,6 +113,9 @@ function bbcode($Text,$preserve_nl = false) {
 	// Check for [quote] text
 	$Text = preg_replace("/\[quote\](.*?)\[\/quote\]/ism","$QuoteLayout", $Text);
          
+	// [img=widthxheight]image source[/img]
+	$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/ism", '<img src="$3" style="height: $2px; width: $1px;" >', $Text);
+
 	// Images
 	// [img]pathtoimage[/img]
 	$Text = preg_replace("/\[img\](.*?)\[\/img\]/ism", '<img src="$1" alt="' . t('Image/photo') . '" />', $Text);
@@ -125,8 +128,6 @@ function bbcode($Text,$preserve_nl = false) {
 
 	$Text = preg_replace("/\[iframe\](.*?)\[\/iframe\]/ism", '<iframe src="$1" width="425" height="350"><a href="$1">$1</a></iframe>', $Text);
          
-	// [img=widthxheight]image source[/img]
-	$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/ism", '<img src="$3" style="height:{$2}px; width:{$1}px;" >', $Text);
 
 	if (get_pconfig(local_user(), 'oembed', 'use_for_youtube' )==1){
 		// use oembed for youtube links

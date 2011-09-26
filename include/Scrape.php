@@ -249,20 +249,6 @@ function scrape_feed($url) {
 		return $ret;
 
 
-	$items = $dom->getElementsByTagName('img');
-
-	// get img elements (twitter)
-
-	if($items) {
-		foreach($items as $item) {
-			$x = $item->getAttribute('id');
-			if($x === 'profile-image') {
-				$ret['photo'] = $item->getAttribute('src');
-			}
-		}
-	}
-
-
 	$head = $dom->getElementsByTagName('base');
 	if($head) {
 		foreach($head as $head0) {
@@ -496,8 +482,10 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 	}
 
 	if($diaspora && $diaspora_base && $diaspora_guid) {
-		if($mode == PROBE_DIASPORA || ! $notify)
+		if($mode == PROBE_DIASPORA || ! $notify) {
 			$notify = $diaspora_base . 'receive/users/' . $diaspora_guid;
+			$batch  = $diaspora_base . 'receive/public' ;
+		}
 		if(strpos($url,'@'))
 			$addr = str_replace('acct:', '', $url);
 	}			
@@ -532,6 +520,9 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 			else
 				$poll = $tapi . '?screen_name=' . $tid;
 			$profile = 'http://twitter.com/#!/' . $tid;
+			$vcard['photo'] = 'https://api.twitter.com/1/users/profile_image/' . $tid;
+			$vcard['nick'] = $tid;
+			$vcard['fn'] = $tid . '@twitter';
 		}
 
 		if(! x($vcard,'fn'))
@@ -675,6 +666,7 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 	$result['nick'] = $vcard['nick'];
 	$result['url'] = $profile;
 	$result['addr'] = $addr;
+	$result['batch'] = $batch;
 	$result['notify'] = $notify;
 	$result['poll'] = $poll;
 	$result['request'] = $request;

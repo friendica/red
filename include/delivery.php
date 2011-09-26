@@ -31,7 +31,7 @@ function delivery_run($argv, $argc){
 
 	$a->set_baseurl(get_config('system','url'));
 
-	logger('delivery: invoked: ' . print_r($argv,true));
+	logger('delivery: invoked: ' . print_r($argv,true), LOGGER_DEBUG);
 
 	$cmd        = $argv[1];
 	$item_id    = intval($argv[2]);
@@ -145,6 +145,7 @@ function delivery_run($argv, $argc){
 	$public_message = true;
 
 	// fill this in with a single salmon slap if applicable
+
 	$slap = '';
 
 	require_once('include/group.php');
@@ -195,8 +196,6 @@ function delivery_run($argv, $argc){
 		$public_message = false; // private recipients, not public
 	}
 
-	$conversant_str = intval($contact_id);
-
 	$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `blocked` = 0 AND `pending` = 0",
 		intval($contact_id)
 	);
@@ -204,61 +203,9 @@ function delivery_run($argv, $argc){
 	if(count($r))
 		$contact = $r[0];
 	
-
-	$feed_template = get_markup_template('atom_feed.tpl');
-	$mail_template = get_markup_template('atom_mail.tpl');
-
-	$atom = '';
-	$slaps = array();
-
 	$hubxml = feed_hublinks();
 
-	$birthday = feed_birthday($owner['uid'],$owner['timezone']);
-
-	if(strlen($birthday))
-		$birthday = '<dfrn:birthday>' . xmlify($birthday) . '</dfrn:birthday>';
-
-	$atom .= replace_macros($feed_template, array(
-			'$version'      => xmlify(FRIENDIKA_VERSION),
-			'$feed_id'      => xmlify($a->get_baseurl() . '/profile/' . $owner['nickname'] ),
-			'$feed_title'   => xmlify($owner['name']),
-			'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', $updated . '+00:00' , ATOM_TIME)) ,
-			'$hub'          => $hubxml,
-			'$salmon'       => '',  // private feed, we don't use salmon here
-			'$name'         => xmlify($owner['name']),
-			'$profile_page' => xmlify($owner['url']),
-			'$photo'        => xmlify($owner['photo']),
-			'$thumb'        => xmlify($owner['thumb']),
-			'$picdate'      => xmlify(datetime_convert('UTC','UTC',$owner['avatar-date'] . '+00:00' , ATOM_TIME)) ,
-			'$uridate'      => xmlify(datetime_convert('UTC','UTC',$owner['uri-date']    . '+00:00' , ATOM_TIME)) ,
-			'$namdate'      => xmlify(datetime_convert('UTC','UTC',$owner['name-date']   . '+00:00' , ATOM_TIME)) ,
-			'$birthday'     => $birthday
-	));
-
-	foreach($items as $item) {
-		if(! $item['parent'])
-			continue;
-
-		// private emails may be in included in public conversations. Filter them.
-		if(($public_message) && $item['private'])
-			continue;
-
-		$item_contact = get_item_contact($item,$icontacts);
-		if(! $item_contact)
-			continue;
-
-		$atom .= atom_entry($item,'text',$item_contact,$owner,true);
-
-		if(($top_level) && ($public_message) && ($item['author-link'] === $item['owner-link']) && (! $expire)) 
-			$slaps[] = atom_entry($item,'html',$item_contact,$owner,true);
-	}
-
-	$atom .= '</feed>' . "\r\n";
-
-	logger('notifier: ' . $atom, LOGGER_DATA);
-
 	logger('notifier: slaps: ' . print_r($slaps,true), LOGGER_DATA);
-
 
 	require_once('include/salmon.php');
 
@@ -271,6 +218,55 @@ function delivery_run($argv, $argc){
 
 		case NETWORK_DFRN :
 			logger('notifier: dfrndelivery: ' . $contact['name']);
+
+			$feed_template = get_markup_template('atom_feed.tpl');
+			$mail_template = get_markup_template('atom_mail.tpl');
+
+			$atom = '';
+
+
+			$birthday = feed_birthday($owner['uid'],$owner['timezone']);
+
+			if(strlen($birthday))
+				$birthday = '<dfrn:birthday>' . xmlify($birthday) . '</dfrn:birthday>';
+
+			$atom .= replace_macros($feed_template, array(
+					'$version'      => xmlify(FRIENDIKA_VERSION),
+					'$feed_id'      => xmlify($a->get_baseurl() . '/profile/' . $owner['nickname'] ),
+					'$feed_title'   => xmlify($owner['name']),
+					'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', $updated . '+00:00' , ATOM_TIME)) ,
+					'$hub'          => $hubxml,
+					'$salmon'       => '',  // private feed, we don't use salmon here
+					'$name'         => xmlify($owner['name']),
+					'$profile_page' => xmlify($owner['url']),
+					'$photo'        => xmlify($owner['photo']),
+					'$thumb'        => xmlify($owner['thumb']),
+					'$picdate'      => xmlify(datetime_convert('UTC','UTC',$owner['avatar-date'] . '+00:00' , ATOM_TIME)) ,
+					'$uridate'      => xmlify(datetime_convert('UTC','UTC',$owner['uri-date']    . '+00:00' , ATOM_TIME)) ,
+					'$namdate'      => xmlify(datetime_convert('UTC','UTC',$owner['name-date']   . '+00:00' , ATOM_TIME)) ,
+					'$birthday'     => $birthday
+			));
+
+			foreach($items as $item) {
+				if(! $item['parent'])
+					continue;
+
+				// private emails may be in included in public conversations. Filter them.
+				if(($public_message) && $item['private'])
+					continue;
+
+				$item_contact = get_item_contact($item,$icontacts);
+				if(! $item_contact)
+					continue;
+
+				$atom .= atom_entry($item,'text',$item_contact,$owner,true);
+
+			}
+
+			$atom .= '</feed>' . "\r\n";
+
+			logger('notifier: ' . $atom, LOGGER_DATA);
+
 			$deliver_status = dfrn_deliver($owner,$contact,$atom);
 
 			logger('notifier: dfrn_delivery returns ' . $deliver_status);
@@ -299,7 +295,25 @@ function delivery_run($argv, $argc){
 			// only send salmon if public - e.g. if it's ok to notify
 			// a public hub, it's ok to send a salmon
 
-			if((count($slaps)) && ($public_message) && (! $expire)) {
+			if(($public_message) && (! $expire)) {
+				$slaps = array();
+
+				foreach($items as $item) {
+					if(! $item['parent'])
+						continue;
+
+					// private emails may be in included in public conversations. Filter them.
+					if(($public_message) && $item['private'])
+						continue;
+
+					$item_contact = get_item_contact($item,$icontacts);
+					if(! $item_contact)
+						continue;
+
+					if(($top_level) && ($public_message) && ($item['author-link'] === $item['owner-link']) && (! $expire)) 
+						$slaps[] = atom_entry($item,'html',$item_contact,$owner,true);
+				}
+
 				logger('notifier: slapdelivery: ' . $contact['name']);
 				foreach($slaps as $slappy) {
 					if($contact['notify']) {
@@ -393,12 +407,17 @@ function delivery_run($argv, $argc){
 			break;
 
 		case NETWORK_DIASPORA :
-			logger('delivery: diaspora deliver: ' . $contact['name']);
+			if($public_message)
+				$loc = 'public batch ' . $contact['batch'];
+			else 
+				$loc = $contact['name'];
+
+			logger('delivery: diaspora batch deliver: ' . $loc);
 
 			if(get_config('system','dfrn_only') || (! get_config('system','diaspora_enabled')) || (! $normal_mode))
 				break;
 
-			if(! $contact['pubkey'])
+			if((! $contact['pubkey']) && (! $public_message))
 				break;
 					
 			if($target_item['verb'] === ACTIVITY_DISLIKE) {
@@ -406,23 +425,23 @@ function delivery_run($argv, $argc){
 				break;
 			}
 			elseif(($target_item['deleted']) && ($target_item['verb'] !== ACTIVITY_LIKE)) {
-			logger('delivery: diaspora retract: ' . $contact['name']);
+			logger('delivery: diaspora retract: ' . $loc);
 				// diaspora delete, 
-				diaspora_send_retraction($target_item,$owner,$contact);
+				diaspora_send_retraction($target_item,$owner,$contact,$public_message);
 				break;
 			}
 			elseif($target_item['parent'] != $target_item['id']) {
 
-			logger('delivery: diaspora relay: ' . $contact['name']);
+			logger('delivery: diaspora relay: ' . $loc);
 
 				// we are the relay - send comments, likes and unlikes to our conversants
-				diaspora_send_relay($target_item,$owner,$contact);
+				diaspora_send_relay($target_item,$owner,$contact,$public_message);
 				break;
 			}		
 			elseif(($top_level) && (! $walltowall)) {
 				// currently no workable solution for sending walltowall
-				logger('delivery: diaspora status: ' . $contact['name']);
-				diaspora_send_status($target_item,$owner,$contact);
+				logger('delivery: diaspora status: ' . $loc);
+				diaspora_send_status($target_item,$owner,$contact,$public_message);
 				break;
 			}
 

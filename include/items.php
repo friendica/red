@@ -717,6 +717,7 @@ function item_store($arr,$force_parent = false) {
 	$arr['owner-avatar']  = ((x($arr,'owner-avatar'))  ? notags(trim($arr['owner-avatar']))  : '');
 	$arr['created']       = ((x($arr,'created') !== false) ? datetime_convert('UTC','UTC',$arr['created']) : datetime_convert());
 	$arr['edited']        = ((x($arr,'edited')  !== false) ? datetime_convert('UTC','UTC',$arr['edited'])  : datetime_convert());
+	$arr['commented']     = datetime_convert();
 	$arr['received']      = datetime_convert();
 	$arr['changed']       = datetime_convert();
 	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
@@ -863,6 +864,14 @@ function item_store($arr,$force_parent = false) {
 		intval($private),
 		intval($parent_deleted),
 		intval($current_post)
+	);
+
+	// update the commented timestamp on the parent
+
+	q("UPDATE `item` set `commented` = '%s', `changed` = '%s' WHERE `id` = %d LIMIT 1",
+		dbesc(datetime_convert()),
+		dbesc(datetime_convert()),
+		intval($parent_id)
 	);
 
 	if($dsprsig) {
@@ -1606,13 +1615,18 @@ function lose_follower($importer,$contact,$datarray,$item) {
 }
 
 
-function subscribe_to_hub($url,$importer,$contact) {
+function subscribe_to_hub($url,$importer,$contact,$submode = 'subscribe') {
 
 	if(is_array($importer)) {
 		$r = q("SELECT `nickname` FROM `user` WHERE `uid` = %d LIMIT 1",
 			intval($importer['uid'])
 		);
 	}
+
+	// Diaspora has different message-ids in feeds than they do 
+	// through the direct Diaspora protocol. If we try and use
+	// the feed, we'll get duplicates. So don't.
+
 	if((! count($r)) || $contact['network'] === NETWORK_DIASPORA)
 		return;
 
@@ -1622,7 +1636,7 @@ function subscribe_to_hub($url,$importer,$contact) {
 
 	$verify_token = ((strlen($contact['hub-verify'])) ? $contact['hub-verify'] : random_string());
 
-	$params= 'hub.mode=subscribe&hub.callback=' . urlencode($push_url) . '&hub.topic=' . urlencode($contact['poll']) . '&hub.verify=async&hub.verify_token=' . $verify_token;
+	$params= 'hub.mode=' . $hubmode . '&hub.callback=' . urlencode($push_url) . '&hub.topic=' . urlencode($contact['poll']) . '&hub.verify=async&hub.verify_token=' . $verify_token;
 
 	logger('subscribe_to_hub: subscribing ' . $contact['name'] . ' to hub ' . $url . ' with verifier ' . $verify_token);
 

@@ -25,12 +25,12 @@ function salmon_post(&$a) {
 
 	$xml = file_get_contents('php://input');
 
-	logger('mod-salmon: new salmon ' . $xml);
+	logger('mod-salmon: new salmon ' . $xml, LOGGER_DATA);
 
 	$nick       = (($a->argc > 1) ? notags(trim($a->argv[1])) : '');
 	$mentions   = (($a->argc > 2 && $a->argv[2] === 'mention') ? true : false);
 
-	$r = q("SELECT * FROM `user` WHERE `nickname` = '%s' LIMIT 1",
+	$r = q("SELECT * FROM `user` WHERE `nickname` = '%s' AND `account_expired` = 0 LIMIT 1",
 		dbesc($nick)
 	);
 	if(! count($r))

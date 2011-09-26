@@ -336,9 +336,9 @@ function item_post(&$a) {
 	// embedded bookmark in post? convert to regular url and set bookmark flag
 
 	$bookmark = 0;
-	if(preg_match_all("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/m",$body,$match)) {
+	if(preg_match_all("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/ism",$body,$match)) {
 		$bookmark = 1;
-		$body = preg_replace("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/m",'[url=$1]$2[/url]',$body);
+		$body = preg_replace("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/ism",'[url=$1]$2[/url]',$body);
 	}
 
 
@@ -346,7 +346,7 @@ function item_post(&$a) {
 	 * Fold multi-line [code] sequences
 	 */
 
-	$body = preg_replace('/\[\/code\]\s*\[code\]/m',"\n",$body); 
+	$body = preg_replace('/\[\/code\]\s*\[code\]/ism',"\n",$body); 
 
 	/**
 	 * Look for any tags and linkify them
@@ -501,6 +501,7 @@ function item_post(&$a) {
 	$datarray['author-avatar'] = $author['thumb'];
 	$datarray['created']       = datetime_convert();
 	$datarray['edited']        = datetime_convert();
+	$datarray['commented']     = datetime_convert();
 	$datarray['received']      = datetime_convert();
 	$datarray['changed']       = datetime_convert();
 	$datarray['uri']           = $uri;
@@ -561,9 +562,9 @@ function item_post(&$a) {
 
 
 	$r = q("INSERT INTO `item` (`guid`, `uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
-		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `received`, `changed`, `uri`, `thr-parent`, `title`, `body`, `app`, `location`, `coord`, 
+		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `commented`, `received`, `changed`, `uri`, `thr-parent`, `title`, `body`, `app`, `location`, `coord`, 
 		`tag`, `inform`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`, `bookmark` )
-		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d )",
+		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d )",
 		dbesc($datarray['guid']),
 		intval($datarray['uid']),
 		dbesc($datarray['type']),
@@ -578,6 +579,7 @@ function item_post(&$a) {
 		dbesc($datarray['author-avatar']),
 		dbesc($datarray['created']),
 		dbesc($datarray['edited']),
+		dbesc($datarray['commented']),
 		dbesc($datarray['received']),
 		dbesc($datarray['changed']),
 		dbesc($datarray['uri']),
@@ -803,6 +805,13 @@ function item_post(&$a) {
 		// NOTREACHED
 	}
 
+	// update the commented timestamp on the parent
+
+	q("UPDATE `item` set `commented` = '%s', `changed` = '%s' WHERE `id` = %d LIMIT 1",
+		dbesc(datetime_convert()),
+		dbesc(datetime_convert()),
+		intval($parent)
+	);
 
 	$datarray['id']    = $post_id;
 	$datarray['plink'] = $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id;

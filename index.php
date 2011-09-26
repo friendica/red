@@ -84,8 +84,12 @@ session_start();
  * We have to do it here because the session was just now opened.
  */
 
-if(x($_POST,'system_language'))
-	$_SESSION['language'] = $_POST['system_language'];
+if(array_key_exists('system_language',$_POST)) {
+	if(strlen($_POST['system_language']))
+		$_SESSION['language'] = $_POST['system_language'];
+	else
+		unset($_SESSION['language']);
+}
 if((x($_SESSION,'language')) && ($_SESSION['language'] !== $lang)) {
 	$lang = $_SESSION['language'];
 	load_translation_table($lang);
