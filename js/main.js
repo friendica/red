@@ -267,12 +267,12 @@
 		$.get('starred/' + ident, function(data) {
 			if(data.match(/1/)) {
 				$('#starred-' + ident).addClass('starred');
-				$('#starred-' + ident).removeClass('hidden');
+				$('#starred-' + ident).removeClass('unstarred');
 				$('#star-' + ident).addClass('hidden');
 				$('#unstar-' + ident).removeClass('hidden');
 			}
 			else {			
-				$('#starred-' + ident).addClass('hidden');
+				$('#starred-' + ident).addClass('unstarred');
 				$('#starred-' + ident).removeClass('starred');
 				$('#star-' + ident).removeClass('hidden');
 				$('#unstar-' + ident).addClass('hidden');

@@ -437,11 +437,12 @@ function conversation(&$a, $items, $mode, $update) {
 			$star = false;
 
 			if ($profile_owner == local_user() && $toplevelpost) {
-				$isstarred = (($item['starred']) ? "starred" : "hidden");
+				$isstarred = (($item['starred']) ? "starred" : "unstarred");
 
 				$star = array(
 					'do' => t("add star"),
 					'undo' => t("remove star"),
+					'toggle' => t("toggle star status"),
 					'classdo' => (($item['starred']) ? "hidden" : ""),
 					'classundo' => (($item['starred']) ? "" : "hidden"),
 					'starred' =>  t('starred'),
