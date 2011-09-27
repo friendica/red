@@ -1,4 +1,4 @@
 <?php
 $a->theme_info = array(
-  'extends' => 'loozah',
+  'extends' => 'duepuntozero',
 );
