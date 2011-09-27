@@ -1271,7 +1271,7 @@ function diaspora_transmit($owner,$contact,$slap,$public_batch) {
 		logger('diaspora_transmit: queue message');
 		// queue message for redelivery
 		q("INSERT INTO `queue` ( `cid`, `created`, `last`, `content`,`batch`)
-			VALUES ( %d, '%s', '%s', '%s') ",
+			VALUES ( %d, '%s', '%s', '%s', %d) ",
 			intval($contact['id']),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
