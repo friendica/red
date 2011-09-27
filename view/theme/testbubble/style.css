@@ -22,6 +22,17 @@ You can switch out the colors of the header, buttons and links by using a find a
  = */
 /* ========== */
 
+/*html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, code, del, dfn, em, img, q, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, dialog, figure, footer, header, hgroup, nav, section {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+	vertical-align: baseline;
+}*/
+
 body {
 	margin: 0px;
 	padding: 0px;
@@ -72,16 +83,17 @@ li {
 input[type=text] {
 	border: 2px solid #b0b0b0;
 	padding: 2px;
+	margin: 0px;
     -webkit-border-radius: 3px 3px 3px 3px;
     -moz-border-radius: 3px 3px 3px 3px;
     border-radius: 3px 3px 3px 3px;	
 }
 
 input[type=submit] {
-	margin-top: 10px;
+	margin: 10px 2px 5px 2px;
 	border: none;
 	font-size: 0.9em;
-	padding: 5px 5px 5px 5px;
+	padding: 5px;
 	-moz-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
 	-webkit-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
 	box-shadow:inset 0px 1px 0px 0px #cfcfcf;
@@ -115,7 +127,7 @@ input[type=submit]:active {
 ::-moz-selection { background:#fdf795; color: #000; /* Firefox */ }
 
 section {
-	margin: 10px 11% 0px 11%;
+	margin: 20px 11% 0px 11%;
 	font-size: 0.9em;
 	line-height: 1.2em;
 	padding-right: 230px;
@@ -268,23 +280,22 @@ nav #user-menu {
     float: right;
 	margin-right:15px;
     margin-top: 10px;
-	padding: 3px;
+	padding: 5px;
     position: relative;
     vertical-align: middle;
-	background:-webk/*	margin-right:10px;*/it-gradient( linear, left top, left bottom, color-stop(0.05, #797979), color-stop(1, #898988) );
-	background:-moz-linear-gradient( center top, #797979 5%, #898988 100% );
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#797979', endColorstr='#898988');
-	background-color:#898988;
+	background:-webk/*	margin-right:10px;*/it-gradient( linear, left top, left bottom, color-stop(0.05, #898988), color-stop(1, #a2a2a2) );
+	background:-moz-linear-gradient( center top, #898988 5%, #a2a2a2 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#898988', endColorstr='#a2a2a2');
+	background-color:#a2a2a2;
 	-moz-border-radius:5px;
 	-webkit-border-radius:5px;
 	border-radius:5px;
 	color:#efefef;
 	text-decoration:none;
 	text-align: center;   
-	border: 1px solid #9a9a9a;
 }
 
-nav #user-menu-label:after{
+nav #user-menu-label::after {
 	content: url("menu-user-pin.png") no-repeat;
 	padding-left: 15px;
 }
@@ -300,12 +311,13 @@ ul#user-menu-popup {
     display: none;
     position: absolute;
 	background:-webk/*	margin-right:10px;*/it-gradient( linear, left top, left bottom, color-stop(0.05, #797979), color-stop(1, #898988) );
-	background:-moz-linear-gradient( center top, #797979 5%, #898988 100% );
+	background:-moz-linear-gradient( center top, #a2a2a2 5%, #898988 100% );
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#797979', endColorstr='#898988');
 	background-color:#898988;
     width: 100%;
     padding: 10px 0px;
     margin: 0px;
+	margin-top: 10px;
     top: 20px;
 	left: 0px;
 	border: 1px solid #9a9a9a;
@@ -409,8 +421,11 @@ ul#user-menu-popup li a.nav-sep { border-top: 1px solid #989898; border-style:in
 
 aside {
     position: absolute;
-	width: 260px;
     right: 11%;
+/*	float: right;
+	margin-right: 11%;*/
+	width: 260px;
+	margin-top: auto;
     font-size: 0.8em;
 	font-style: bold;
 }
@@ -511,7 +526,14 @@ aside #viewcontacts {
 
 #netsearch-box {
 	background-color: #f6f6f6;
-	padding: 10px 10px 10px 20px;
+	/*padding: 10px 10px 10px 20px;*/
+	padding: 10px 8px 10px 8px;
+}
+#netsearch-box input[type="text"] {
+	width: 97%;
+}
+#netsearch-box input[type="submit"] {
+	width: 48%;
 }
 
 h3#search:before {
@@ -650,9 +672,10 @@ ul .sidebar-group-li img{
 	margin-right: 5px;
 }
 
-/**
-* contacts block
-*/
+/* ================== */
+/* = Contacts Block = */
+/* ================== */
+
 .contact-block-img {
 	width: 42px;
 	height: 42px;
@@ -1074,7 +1097,7 @@ profile-jot-banner-wrapper {
 	background-position: 35px center;
 }
 .wall-item-outside-wrapper.comment .wall-item-info { width: 60px; }
-.wall-item-outside-wrapper.comment .wall-item-body { margin-left: 60px; max-width: 600px;}
+.wall-item-outside-wrapper.comment .wall-item-body { margin-left: 60px; max-width: 85%;}
 .wall-item-outside-wrapper.comment .wall-item-author { margin-left: 60px;}
 
 .wall-item-outside-wrapper.comment .wall-item-photo-menu {
@@ -1358,6 +1381,7 @@ div[id$="wrapper"] br { clear: left; }
 
 #side-bar-photos-albums li {
 	font-size: 1.2em;
+	font-variant: none;
 }
 
 #photo-top-links {
@@ -1873,9 +1897,13 @@ margin-left: 90px;
 
 .mail-list-subject {
 	clear: block;
-	font-size: 1.5em;
+	font-size: 1.2em;
 	padding-top: 20px;
 	padding-right: 50px;
+}
+
+.mail-list-subject a {
+	color: #626262;
 }
 
 .mail-list-delete-wrapper { float: left; margin-right:550px; }
@@ -2154,7 +2182,7 @@ margin-left: 90px;
 }
 
 #follow-sidebar input[type="text"] {
-	margin-left: 30px;
+	margin-left: 10px;
 	margin-bottom: 10px;
 }
 
@@ -2357,24 +2385,6 @@ margin-left: 90px;
 	padding-top: 10px;
 }
 
-/*#profile-tab-status-link {
-	padding: 5px 10px 5px 10px;
-	margin-right: 5px;
-	margin-top: 10px;
-	font-style: bold;
-	-moz-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
-	-webkit-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
-	box-shadow:inset 0px 1px 0px 0px #cfcfcf;
-	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #bdbdbd), color-stop(1, #a2a2a2) );
-	background:-moz-linear-gradient( center top, #bdbdbd 5%, #a2a2a2 100% );
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#bdbdbd', endColorstr='#a2a2a2');
-	background-color:#bdbdbd;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	border-radius:5px;
-	color: #efefef;
-}*/
-
 #profile-tab-status-link:hover {
 	border: 0px;
 	padding: 5px 10px 5px 10px;
@@ -2555,6 +2565,41 @@ margin-left: 90px;
 	display: inline;
 }
 #group-delete-icon-11 { position: absolute; left: 360px; top: 103px; }
+.group-delete-wrapper {
+	width: 90px;
+	display: inline;
+	padding: 5px;
+	margin-bottom: 10px;
+	-moz-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
+	box-shadow:inset 0px 1px 0px 0px #cfcfcf;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #bdbdbd), color-stop(1, #a2a2a2) );
+	background:-moz-linear-gradient( center top, #bdbdbd 5%, #a2a2a2 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#bdbdbd', endColorstr='#a2a2a2');
+	background-color:#bdbdbd;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+}
+
+.group-delete-wrapper:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #b20202), color-stop(1, #d60808) );
+	background:-moz-linear-gradient( center top, #b20202 5%, #d60808 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#b20202', endColorstr='#d60808');
+	background-color:#b20202;	
+}
+
+.group-delete-wrapper:active {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #b20202), color-stop(1, #d60808) );
+	background:-moz-linear-gradient( center top, #b20202 5%, #d60808 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#b20202', endColorstr='#d60808');
+	background-color:#b20202;	
+}
+
+.group-delete-wrapper a {
+	color: #efefef;	
+}
+
 #group-edit-desc { margin: 10px 0xp; }
 #group-new-text {font-size: 1.1em;}
 #group-members,
@@ -2749,8 +2794,8 @@ margin-left: 90px;
 }
 
 .calendar {
+	width: 300px;
 	font-family: Helvetica, Arial, sans-serif;
-	padding: 10px;
 	background-color: #f1f1f1;
 	border: 1px solid #dedede;
 	margin-bottom: 10px;
@@ -2764,8 +2809,8 @@ margin-left: 90px;
 	background:-moz-linear-gradient( center top, #d60808 5%, #b20202 100% );
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#d60808', endColorstr='#b20202');
 	background-color: #b20202;
+	padding: 10px 0px 10px 0px;
 	width: 300px;
-	padding: 10px;
 	color: #ffffff;
 	font-weight: bold;
 	text-align:center;

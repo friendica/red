@@ -34,7 +34,7 @@ function photos_init(&$a) {
 			$a->data['albums'] = $albums;
 
 			$o .= '<div class="vcard">';
-			$o .= '<div class="fn">' . $a->data['user']['username'] . '</h4>';
+			$o .= '<div class="fn">' . $a->data['user']['username'] . '</div>';
 			$o .= '<div id="profile-photo-wrapper"><img class="photo" style="width: 175px; height: 175px;" src="' . $a->get_baseurl() . '/photo/profile/' . $a->data['user']['uid'] . '.jpg" alt="' . $a->data['user']['username'] . '" /></div>';
 			$o .= '</div>';
 			
