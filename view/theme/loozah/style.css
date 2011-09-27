@@ -287,6 +287,9 @@ nav {
 	margin-bottom: 5px;
 }
 
+.vcard dl {
+	clear: both;
+}
 
 .powered {
 	font-size: 0.6em;
