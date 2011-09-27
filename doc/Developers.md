@@ -7,7 +7,7 @@ doing development.
 
 Create your own github account.
 
-You may fork/clone the Friendika repository from [https://github.com/friendika/friendika.git](https://github.com/friendika/friendika.git).
+You may fork/clone the Friendika repository from [https://github.com/friendika/Free-Friendika.git](https://github.com/friendika/Free-Friendika.git).
 
 Follow the instructions provided here: [http://help.github.com/fork-a-repo/](http://help.github.com/fork-a-repo/)
 to create and use your own tracking fork on github
