@@ -21,5 +21,9 @@
         type="http://purl.org/zot/1.0/accept"
         zot:accept="application/atom+xml" />
 
+	<Property xmlns:mk="http://salmon-protocol.org/ns/magic-key"
+          type="http://salmon-protocol.org/ns/magic-key"
+          mk:key_id="1">$bigkey</Property>
+
 
 </XRD>

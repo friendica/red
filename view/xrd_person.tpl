@@ -5,7 +5,7 @@
 	<Alias>$accturi</Alias>
     <Alias>$profile_url</Alias>
  
-    <Link rel="http://purl.org/zot/1.0/post" 
+    <Link rel="http://purl.org/zot/1.0/post/$nick" 
           href="$zot_post" />
 
     <Property xmlns:zot="http://purl.og/zot/1.0"
@@ -40,4 +40,8 @@
     <Link rel="magic-public-key" 
           href="$modexp" />
  
+	<Property xmlns:mk="http://salmon-protocol.org/ns/magic-key"
+          type="http://salmon-protocol.org/ns/magic-key"
+          mk:key_id="1">$bigkey</Property>
+
 </XRD>
