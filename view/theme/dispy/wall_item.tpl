@@ -19,10 +19,16 @@
 		</div>
 		<div class="wall-item-lock-wrapper">$lock</div>
 		<div class="wall-item-tools" id="wall-item-tools-$id">
+		{{ if $star }}
+			<a href="#" id="starred-$id" onclick="dostar($id); return false;" class="star-item icon $isstarred" title="$star.toggle"></a>
+		{{ endif }}
 		$vote
-		$plink
+		{{ if $plink }}
+			<div class="wall-item-links-wrapper"><a href="$plink.href" title="$plink.title" target="external-link" class="icon remote-link"></a></div>
+		{{ endif }}
 		$edpost
 		$drop
+		
 		</div>
 		<div class="wall-item-content" id="wall-item-content-$id" >
 			<div class="wall-item-title" id="wall-item-title-$id">$title</div>
