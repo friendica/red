@@ -107,10 +107,18 @@ function delivery_run($argv, $argc){
 			return;
 		}
 
-		$icontacts = q("SELECT * FROM `contact` WHERE `id` IN ( SELECT distinct(`contact-id`) FROM `item` where `parent` = %d ) ",
-			intval($parent_id)
-		);
-		if(! count($icontacts))
+		$icontacts = null;
+		$contacts_arr = array();
+		foreach($items as $item)
+			if(! in_array($item['contact-id'],$contacts_arr))
+				$contacts_arr[] = intval($item['contact-id']);
+		if(count($contacts_arr)) {
+			$str_contacts = implode(',',$contacts_arr); 
+			$icontacts = q("SELECT * FROM `contact` 
+				WHERE `id` IN ( $str_contacts ) "
+			);
+		}
+		if( ! ($icontacts && count($icontacts)))
 			return;
 
 
