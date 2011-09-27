@@ -2205,6 +2205,9 @@ a.mail-list-link {
 	margin-bottom: 5px;
 }
 
+.vcard dl {
+	clear: both;
+}
 
 #birthday-title {
 	float: left;
