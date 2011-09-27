@@ -116,10 +116,10 @@ if(! x($_SESSION,'authenticated'))
 	header('X-Account-Management-Status: none');
 
 if(! x($_SESSION,'sysmsg'))
-	$_SESSION['sysmsg'] = '';
+	$_SESSION['sysmsg'] = array();
 
 if(! x($_SESSION,'sysmsg_info'))
-	$_SESSION['sysmsg_info'] = '';
+	$_SESSION['sysmsg_info'] = array();
 
 /*
  * check_config() is responsible for running update scripts. These automatically 
@@ -199,8 +199,8 @@ if(strlen($a->module)) {
 
 	if(! $a->module_loaded) {
 
-		// Stupid browser tried to pre-fetch our ACL img template. Don't log the event or return anything - just quietly exit.
-		if((x($_SERVER,'QUERY_STRING')) && strpos($_SERVER['QUERY_STRING'],'{0}') !== false) {
+		// Stupid browser tried to pre-fetch our Javascript img template. Don't log the event or return anything - just quietly exit.
+		if((x($_SERVER,'QUERY_STRING')) && preg_match('/{[0-9]}/',$_SERVER['QUERY_STRING']) !== 0) {
 			killme();
 		}
 
@@ -211,7 +211,10 @@ if(strlen($a->module)) {
 
 		logger('index.php: page not found: ' . $_SERVER['REQUEST_URI'] . ' ADDRESS: ' . $_SERVER['REMOTE_ADDR'] . ' QUERY: ' . $_SERVER['QUERY_STRING'], LOGGER_DEBUG);
 		header($_SERVER["SERVER_PROTOCOL"] . ' 404 ' . t('Not Found'));
-		notice( t('Page not found.' ) . EOL);
+		$tpl = get_markup_template("404.tpl");
+		$a->page['content'] = replace_macros($tpl, array(
+			'$message' =>  t('Page not found.' )
+		));
 	}
 }
 
@@ -266,7 +269,7 @@ if(isset($homebase))
 // now that we've been through the module content, see if the page reported
 // a permission problem and if so, a 403 response would seem to be in order.
 
-if(stristr($_SESSION['sysmsg'], t('Permission denied'))) {
+if(stristr( implode("",$_SESSION['sysmsg']), t('Permission denied'))) {
 	header($_SERVER["SERVER_PROTOCOL"] . ' 403 ' . t('Permission denied.'));
 }
 
@@ -276,7 +279,7 @@ if(stristr($_SESSION['sysmsg'], t('Permission denied'))) {
  *
  */
 	
-if(x($_SESSION,'sysmsg')) {
+/*if(x($_SESSION,'sysmsg')) {
 	$a->page['content'] = "<div id=\"sysmsg\" class=\"error-message\">{$_SESSION['sysmsg']}</div>\r\n"
 		. ((x($a->page,'content')) ? $a->page['content'] : '');
 	$_SESSION['sysmsg']="";
@@ -287,7 +290,7 @@ if(x($_SESSION,'sysmsg_info')) {
 		. ((x($a->page,'content')) ? $a->page['content'] : '');
 	$_SESSION['sysmsg_info']="";
 	unset($_SESSION['sysmsg_info']);
-}
+}*/
 
 
 
@@ -310,7 +313,6 @@ $a->page['content'] .=  '<div id="pause"></div>';
  */
 
 if($a->module != 'install') {
-	require_once('nav.php');
 	nav($a);
 }
 

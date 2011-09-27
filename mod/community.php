@@ -25,7 +25,7 @@ function community_content(&$a, $update = 0) {
 
 	$o .= '<h3>' . t('Community') . '</h3>';
 	if(! $update) {
-		$o .= '<script>	$(document).ready(function() { $(\'#nav-community-link\').addClass(\'nav-selected\'); });</script>';
+		nav_set_selected('community');
 		$o .= '<div id="live-community"></div>' . "\r\n";
 		$o .= "<script> var profile_uid = -1; var netargs = '/?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 	}

@@ -36,7 +36,7 @@ function message_post(&$a) {
 function message_content(&$a) {
 
 	$o = '';
-	$o .= '<script>	$(document).ready(function() { $(\'#nav-messages-link\').addClass(\'nav-selected\'); });</script>';
+	nav_set_selected('messages');
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);

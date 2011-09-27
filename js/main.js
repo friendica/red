@@ -34,6 +34,18 @@
 
 		msie = $.browser.msie ;
 		
+		/* setup tooltips */
+		$("a,.tt").each(function(){
+			var e = $(this);
+			var pos="bottom";
+			if (e.hasClass("tttop")) pos="top";
+			if (e.hasClass("ttbottom")) pos="bottom";
+			if (e.hasClass("ttleft")) pos="left";
+			if (e.hasClass("ttright")) pos="right";
+			e.tipTip({defaultPosition: pos});
+		});
+		
+		
 		
 		/* setup onoff widgets */
 		$(".onoff input").each(function(){
@@ -55,34 +67,64 @@
 		
 		/* setup field_richtext */
 		setupFieldRichtext();
+
+		/* popup menus */
+		$('a[rel^=#]').click(function(e){
+			menu = $( $(this).attr('rel') );
+			e.preventDefault();
+			e.stopPropagation();
+			if (menu.attr('popup')=="false") return false;
+			$(this).parent().toggleClass("selected");
+			menu.toggle();
+			return false;
+		});
 		
-		/* load tinyMCE if needed and setup field_richtext */
-		/*if(typeof tinyMCE == "undefined") {
-			window.tinyMCEPreInit = {
-				suffix:"",
-				base: baseurl+"/library/tinymce/jscripts/tiny_mce/",
-				query:"",
-			};
-			$.getScript(baseurl	+"/library/tinymce/jscripts/tiny_mce/tiny_mce_src.js", setupFieldRichtext);
-		} else {
-		}*/
 		
-		
+
+		/* notifications template */
+		var notifications_tpl= unescape($("#nav-notifications-template[rel=template]").html());
+		var notifications_empty = unescape($("#nav-notifications-menu").html());
 		
 		/* nav update event  */
 		$('nav').bind('nav-update', function(e,data){;
 			var net = $(data).find('net').text();
-			if(net == 0) { net = ''; $('#net-update').hide() } else { $('#net-update').show() }
+			if(net == 0) { net = ''; $('#net-update').removeClass('show') } else { $('#net-update').addClass('show') }
 			$('#net-update').html(net);
+
 			var home = $(data).find('home').text();
-			if(home == 0) { home = '';  $('#home-update').hide() } else { $('#home-update').show() }
+			if(home == 0) { home = '';  $('#home-update').removeClass('show') } else { $('#home-update').addClass('show') }
 			$('#home-update').html(home);
-			var mail = $(data).find('mail').text();
-			if(mail == 0) { mail = '';  $('#mail-update').hide() } else { $('#mail-update').show() }
-			$('#mail-update').html(mail);
-			var intro = $(data).find('intro').text();
-			if(intro == 0) { intro = ''; $('#notify-update').hide() } else { $('#notify-update').show() }
-			$('#notify-update').html(intro);
+
+			var eNotif = $(data).find('notif')
+			notif = eNotif.attr('count');
+			if (notif>0){
+				$("#nav-notifications-linkmenu").addClass("on");
+				nnm = $("#nav-notifications-menu");
+				nnm.html("");
+				//nnm.attr('popup','true');
+				eNotif.children("note").each(function(){
+					e = $(this);
+					text = e.text().format("<span class='contactname'>"+e.attr('name')+"</span>");
+					html = notifications_tpl.format(e.attr('href'),e.attr('photo'), text, e.attr('date'));
+					nnm.append(html);
+				});
+			} else {
+				$("#nav-notifications-linkmenu").removeClass("on");
+				$("#nav-notifications-menu").html(notifications_empty);
+			}
+			if(notif == 0) { notif = ''; $('#notify-update').removeClass('show') } else { $('#notify-update').addClass('show') }
+			$('#notify-update').html(notif);
+			
+			var eSysmsg = $(data).find('sysmsgs');
+			eSysmsg.children("notice").each(function(){
+				text = $(this).text();
+				$.jGrowl(text, { sticky: true, theme: 'notice' });
+			});
+			eSysmsg.children("info").each(function(){
+				text = $(this).text();
+				$.jGrowl(text, { sticky: false, theme: 'info' });
+			});
+			
 		});
 		
 		
@@ -220,17 +262,22 @@
 	}
 
 	function dostar(ident) {
-		$('#like-rotator-' + ident.toString()).show();
-		$.get('starred/' + ident.toString(), function(data) {
+		ident = ident.toString();
+		$('#like-rotator-' + ident).show();
+		$.get('starred/' + ident, function(data) {
 			if(data.match(/1/)) {
-				$('#starred-' + ident.toString()).addClass('starred');
-				$('#starred-' + ident.toString()).removeClass('unstarred');
+				$('#starred-' + ident).addClass('starred');
+				$('#starred-' + ident).removeClass('unstarred');
+				$('#star-' + ident).addClass('hidden');
+				$('#unstar-' + ident).removeClass('hidden');
 			}
 			else {			
-				$('#starred-' + ident.toString()).addClass('unstarred');
-				$('#starred-' + ident.toString()).removeClass('starred');
+				$('#starred-' + ident).addClass('unstarred');
+				$('#starred-' + ident).removeClass('starred');
+				$('#star-' + ident).removeClass('hidden');
+				$('#unstar-' + ident).addClass('hidden');
 			}
-			$('#like-rotator-' + ident.toString()).hide();	
+			$('#like-rotator-' + ident).hide();	
 		});
 	}
 

@@ -22,7 +22,7 @@ function directory_content(&$a) {
 	}
 
 	$o = '';
-	$o .= '<script>	$(document).ready(function() { $(\'#nav-directory-link\').addClass(\'nav-selected\'); });</script>';
+	nav_set_selected('directory');
 	if(x($_SESSION,'theme'))
 		unset($_SESSION['theme']);
 

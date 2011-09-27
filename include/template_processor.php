@@ -14,15 +14,18 @@
 		
 		private function _preg_error(){
 			switch(preg_last_error()){
-			    case PREG_INTERNAL_ERROR: die('PREG_INTERNAL_ERROR'); break;
-			    case PREG_BACKTRACK_LIMIT_ERROR: die('PREG_BACKTRACK_LIMIT_ERROR'); break;
-			    case PREG_RECURSION_LIMIT_ERROR: die('PREG_RECURSION_LIMIT_ERROR'); break;
-			    case PREG_BAD_UTF8_ERROR: die('PREG_BAD_UTF8_ERROR'); break;
-			    case PREG_BAD_UTF8_OFFSET_ERROR: die('PREG_BAD_UTF8_OFFSET_ERROR'); break;
+			    case PREG_INTERNAL_ERROR: echo('PREG_INTERNAL_ERROR'); break;
+			    case PREG_BACKTRACK_LIMIT_ERROR: echo('PREG_BACKTRACK_LIMIT_ERROR'); break;
+			    case PREG_RECURSION_LIMIT_ERROR: echo('PREG_RECURSION_LIMIT_ERROR'); break;
+			    case PREG_BAD_UTF8_ERROR: echo('PREG_BAD_UTF8_ERROR'); break;
+			    case PREG_BAD_UTF8_OFFSET_ERROR: echo('PREG_BAD_UTF8_OFFSET_ERROR'); break;
 			    default:
 					//die("Unknown preg error.");
 					return;
 			}
+			echo "<hr><pre>";
+			debug_print_backtrace();
+			die();
 		}
 		
 		private function _build_replace($r, $prefix){
@@ -31,8 +34,6 @@
 				foreach ($r as $k => $v ) {
 					if (is_array($v))
 						$this->_build_replace($v, "$prefix$k.");
-					if (is_object($v))
-						$this->_build_replace($v->getKeys(), "$prefix$k.");
 					
 					$this->search[] =  $prefix . $k;
 					$this->replace[] = $v;
@@ -159,29 +160,14 @@
 			return $s;
 		}
 
-		private function _get_lang(){
-			if ($this->lang!=null) return $this->lang;
-			
-			$a = get_app();
-			$this->lang=array();
-			if(is_array($a->strings) && count($a->strings)) {
-				foreach ($a->strings as $k=>$v){
-					$k =  preg_replace("/[^a-z0-9-]/", "", str_replace(" ","-", strtolower($k)));
-					$this->lang[$k] = $v;
-				}
-			}
-			return $this->lang;
-		}
-
-		
+	
 		public function replace($s, $r) {
-			if (!x($r,'$lang')){
-				$r['$lang'] = &$this->_get_lang();
-			}
 			$this->r = $r;
 			$this->search = array();
 			$this->replace = array();
+	
 			$this->_build_replace($r, "");
+			
 			#$s = str_replace(array("\n","\r"),array("§n§","§r§"),$s);
 			$s = $this->_build_nodes($s);
 			$s = preg_replace_callback('/\|\|([0-9]+)\|\|/', array($this, "_replcb_node"), $s);
