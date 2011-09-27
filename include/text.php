@@ -388,11 +388,13 @@ function get_intltext_template($s) {
 
 if(! function_exists('get_markup_template')) {
 function get_markup_template($s) {
-
+	$a=get_app();
 	$theme = current_theme();
 	
 	if(file_exists("view/theme/$theme/$s"))
 		return file_get_contents("view/theme/$theme/$s");
+	elseif (x($a->theme_info,"extends") && file_exists("view/theme/".$a->theme_info["extends"]."/$s"))
+		return file_get_contents("view/theme/".$a->theme_info["extends"]."/$s");
 	else
 		return file_get_contents("view/$s");
 

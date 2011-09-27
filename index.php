@@ -218,6 +218,13 @@ if(strlen($a->module)) {
 	}
 }
 
+/**
+ * load current theme info
+ */
+$theme_info_file = "view/theme/".current_theme()."/theme.php";
+if (file_exists($theme_info_file)){
+	require_once($theme_info_file);
+}
 
 
 /* initialise content region */
