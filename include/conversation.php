@@ -134,8 +134,6 @@ function conversation(&$a, $items, $mode, $update) {
 
 
 	$cmnt_tpl    = get_markup_template('comment_item.tpl');
-	$like_tpl    = get_markup_template('like.tpl');
-	$noshare_tpl = get_markup_template('like_noshare.tpl');
 	$tpl         = get_markup_template('wall_item.tpl');
 	$wallwall    = get_markup_template('wallwall_item.tpl');
 	$droptpl     = get_markup_template('wall_item_drop.tpl');
@@ -393,13 +391,18 @@ function conversation(&$a, $items, $mode, $update) {
 
 			if($page_writeable) {
 				if($toplevelpost) {
-					$likebuttons = replace_macros(((($shareable)) ? $like_tpl : $noshare_tpl),array(
+					/*$likebuttons = replace_macros(((($shareable)) ? $like_tpl : $noshare_tpl),array(
 						'$id' => $item['id'],
 						'$likethis' => t("I like this \x28toggle\x29"),
 						'$nolike' => t("I don't like this \x28toggle\x29"),
 						'$share' => t('Share'),
 						'$wait' => t('Please wait') 
-					));
+					))*/
+					$likebuttons = array(
+						'like' => array( t("I like this \x28toggle\x29"), t("like")),
+						'dislike' => array( t("I don't like this \x28toggle\x29"), t("dislike")),
+					);
+					if ($shareable) $likebuttons['share'] = array( t('Share this'), t('share'));
 				}
 
 				if(($show_comment_box) || (($show_comment_box == false) && ($override_comment_box == false) && ($item['last-child']))) {
@@ -421,9 +424,8 @@ function conversation(&$a, $items, $mode, $update) {
 			}
 
 			$edpost = (((($profile_owner == local_user()) && ($toplevelpost) && (intval($item['wall']) == 1)) || ($mode === 'notes'))
-					? '<a class="editpost icon pencil" href="' . $a->get_baseurl() . '/editpost/' . $item['id'] 
-						. '" title="' . t('Edit') . '"></a>'
-					: '');
+					? array($a->get_baseurl()."/editpost/".$item['id'], t("Edit"))
+					: False);
 
 
 			$drop = '';
@@ -432,7 +434,11 @@ function conversation(&$a, $items, $mode, $update) {
 			if((intval($item['contact-id']) && $item['contact-id'] == remote_user()) || ($item['uid'] == local_user()))
 				$dropping = true;
 
-            $drop = replace_macros((($dropping)? $droptpl : $fakedrop), array('$id' => $item['id'], '$select' => t('Select'), '$delete' => t('Delete')));
+            $drop = array(
+				'dropping' => $dropping,
+				'select' => t('Select'), 
+				'delete' => t('Delete'),
+			);
 
 			$star = false;
 
@@ -535,7 +541,8 @@ function conversation(&$a, $items, $mode, $update) {
 				'$vote' => $likebuttons,
 				'$like' => $like,
 				'$dislike' => $dislike,
-				'$comment' => $comment
+				'$comment' => $comment,
+				'$wait' => t('Please wait'),
 
 			));
 
