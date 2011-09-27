@@ -6,8 +6,7 @@
   <?php if(x($page,'htmlhead')) echo $page['htmlhead'] ?>
 </head>
 <body>
-	<header><?php if(x($page,'header')) echo $page['header']; ?></header>
-	<nav><div id="top-margin"></div><?php if(x($page,'nav')) echo $page['nav']; ?></nav>
+	<?php if(x($page,'nav')) echo $page['nav']; ?>
 	<aside><?php if(x($page,'aside')) echo $page['aside']; ?></aside>
 	<section><?php if(x($page,'content')) echo $page['content']; ?>
 		<div id="page-footer"></div>

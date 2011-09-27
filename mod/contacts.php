@@ -117,7 +117,7 @@ function contacts_content(&$a) {
 
 	$sort_type = 0;
 	$o = '';
-	$o .= '<script>	$(document).ready(function() { $(\'#nav-contacts-link\').addClass(\'nav-selected\'); });</script>';
+	nav_set_selected('contacts');
 
 	$_SESSION['return_url'] = $a->get_baseurl() . '/' . $a->cmd;
 

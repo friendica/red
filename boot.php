@@ -5,6 +5,7 @@ require_once('include/network.php');
 require_once('include/plugin.php');
 require_once('include/text.php');
 require_once("include/pgettext.php");
+require_once('include/nav.php');
 
 
 define ( 'FRIENDIKA_VERSION',      '2.3.1116' );
@@ -248,7 +249,7 @@ class App {
 	public  $timezone;
 	public  $interactive = true;
 	public  $plugins;
-	public  $apps;
+	public  $apps = Array();
 	public  $identities;
 
 	private $scheme;
@@ -723,14 +724,16 @@ function remote_user() {
 if(! function_exists('notice')) {
 function notice($s) {
 	$a = get_app();
+	if(! x($_SESSION,'sysmsg'))	$_SESSION['sysmsg'] = array();
 	if($a->interactive)
-		$_SESSION['sysmsg'] .= $s;
+		$_SESSION['sysmsg'][] = $s;
 }}
 if(! function_exists('info')) {
 function info($s) {
 	$a = get_app();
+	if(! x($_SESSION,'sysmsg_info')) $_SESSION['sysmsg_info'] = array();
 	if($a->interactive)
-		$_SESSION['sysmsg_info'] .= $s;
+		$_SESSION['sysmsg_info'][] = $s;
 }}
 
 
@@ -812,8 +815,8 @@ function profile_load(&$a, $nickname, $profile = 0) {
 
 	$a->page['aside'] .= profile_sidebar($a->profile, $block);
 
-	if(! $block)
-		$a->page['aside'] .= contact_block();
+	/*if(! $block)
+		$a->page['aside'] .= contact_block();*/
 
 	return;
 }}
@@ -841,132 +844,107 @@ function profile_sidebar($profile, $block = 0) {
 	$a = get_app();
 
 	$o = '';
-	$location = '';
+	$location = false;
 	$address = false;
+	$pdesc = true;
 
 	if((! is_array($profile)) && (! count($profile)))
 		return $o;
 
 	call_hooks('profile_sidebar_enter', $profile);
 
-	$fullname = '<div class="fn">' . $profile['name'] . '</div>';
-
-	$pdesc = '<div class="title">' . $profile['pdesc'] . '</div>';
-
-	$tabs = '';
-
-	$photo = '<div id="profile-photo-wrapper"><img class="photo" width="175" height="175" src="' . $profile['photo'] . '" alt="' . $profile['name'] . '" /></div>';
-
+	
 	// don't show connect link to yourself
-	$connect = (($profile['uid'] != local_user()) ? '<li><a id="dfrn-request-link" href="dfrn_request/' . $profile['nickname'] . '">' . t('Connect') . '</a></li>' : '');
+	$connect = (($profile['uid'] != local_user()) ? t('Connect')  : False);
 
 	// don't show connect link to authenticated visitors either
 
 	if((remote_user()) && ($_SESSION['visitor_visiting'] == $profile['uid']))
-		$connect = ''; 
+		$connect = False; 
 
+
+	// show edit profile to yourself
+	if ($profile['uid'] == local_user()) {
+		$profile['edit'] = array($a->get_baseurl(). '/profiles', t('Profiles'),"", t('Manage/edit profiles'));
+		
+		$r = q("SELECT * FROM `profile` WHERE `uid` = %d",
+				local_user());
+		
+		$profile['menu'] = array(
+			'chg_photo' => t('Change profile photo'),
+			'cr_new' => t('Create New Profile'),
+			'entries' => array(),
+		);
+				
+		if(count($r)) {
+
+			foreach($r as $rr) {
+				$profile['menu']['entries'][] = array(
+					'photo' => $rr['thumb'],
+					'id' => $rr['id'],
+					'alt' => t('Profile Image'),
+					'profile_name' => $rr['profile-name'],
+					'isdefault' => $rr['is-default'],
+					'visibile_to_everybody' =>  t('visible to everybody'),
+					'edit_visibility' => t('Edit visibility'),
+					
+				);
+			}
+
+
+		}
+		
+		
+	}
+
+
+
+	
 	if((x($profile,'address') == 1) 
 		|| (x($profile,'locality') == 1) 
 		|| (x($profile,'region') == 1) 
 		|| (x($profile,'postal-code') == 1) 
 		|| (x($profile,'country-name') == 1))
-		$address = true;
+		$location = t('Location:');
 
-	if($address) {
-		$location .= '<div class="location"><span class="location-label">' . t('Location:') . '</span> <div class="adr">';
-		$location .= ((x($profile,'address') == 1) ? '<div class="street-address">' . $profile['address'] . '</div>' : '');
-		$location .= (((x($profile,'locality') == 1) || (x($profile,'region') == 1) || (x($profile,'postal-code') == 1)) 
-			? '<span class="city-state-zip"><span class="locality">' . $profile['locality'] . '</span>' 
-			. ((x($profile['locality']) == 1) ? t(', ') : '') 
-			. '<span class="region">' . $profile['region'] . '</span>'
-			. ' <span class="postal-code">' . $profile['postal-code'] . '</span></span>' : '');
-		$location .= ((x($profile,'country-name') == 1) ? ' <span class="country-name">' . $profile['country-name'] . '</span>' : '');  
-		$location .= '</div></div><div class="profile-clear"></div>';
-
-	}
+	$gender = ((x($profile,'gender') == 1) ? t('Gender:') : False);
 
 
-	$gender = ((x($profile,'gender') == 1) ? '<div class="mf"><span class="gender-label">' . t('Gender:') . '</span> <span class="x-gender">' . $profile['gender'] . '</span></div><div class="profile-clear"></div>' : '');
+	$marital = ((x($profile,'marital') == 1) ?  t('Status:') : False);
 
-	$pubkey = ((x($profile,'pubkey') == 1) ? '<div class="key" style="display:none;">' . $profile['pubkey'] . '</div>' : '');
-
-	$marital = ((x($profile,'marital') == 1) ? '<div class="marital"><span class="marital-label"><span class="heart">&hearts;</span> ' . t('Status:') . ' </span><span class="marital-text">' . $profile['marital'] . '</span></div><div class="profile-clear"></div>' : '');
-
-	$homepage = ((x($profile,'homepage') == 1) ? '<div class="homepage"><span class="homepage-label">' . t('Homepage:') . ' </span><span class="homepage-url">' . linkify($profile['homepage']) . '</span></div><div class="profile-clear"></div>' : '');
+	$homepage = ((x($profile,'homepage') == 1) ?  t('Homepage:') : False);
 
 	if(($profile['hidewall'] || $block) && (! local_user()) && (! remote_user())) {
-		$location = $pdesc = $connect = $gender = $marital = $homepage = '';
+		$location = $pdesc = $connect = $gender = $marital = $homepage = False;
 	}
 
-	$podloc = $a->get_baseurl();
-	$searchable = (($profile['publish'] && $profile['net-publish']) ? 'true' : 'false' );
-	$nickname = $profile['nickname'];
-	$photo300 = $a->get_baseurl() . '/photo/custom/300/' . $profile['uid'] . '.jpg';
-	$photo100 = $a->get_baseurl() . '/photo/custom/100/' . $profile['uid'] . '.jpg';
-	$photo50  = $a->get_baseurl() . '/photo/custom/50/'  . $profile['uid'] . '.jpg';
+	$diaspora = array(
+		'podloc' => $a->get_baseurl(),
+		'searchable' => (($profile['publish'] && $profile['net-publish']) ? 'true' : 'false' ),
+		'nickname ' => $profile['nickname'],
+		'fullname' => $profile['name'],
+		'photo300' => $a->get_baseurl() . '/photo/custom/300/' . $profile['uid'] . '.jpg',
+		'photo100' => $a->get_baseurl() . '/photo/custom/100/' . $profile['uid'] . '.jpg',
+		'photo50' => $a->get_baseurl() . '/photo/custom/50/'  . $profile['uid'] . '.jpg',
+	);
 
-	$diaspora_vcard = <<< EOT
+	if (!$block){
+		$contact_block = contact_block();
+	}
 
-<div style="display:none;">
-<dl class='entity_nickname'>
-<dt>Nickname</dt>
-<dd>
-<a class="nickname url uid" href="$podloc/" rel="me">$nickname</a>
-</dd>
-</dl>
-<dl class='entity_fn'>
-<dt>Full name</dt>
-<dd>
-<span class='fn'>$fullname</span>
-</dd>
-</dl>
-<dl class="entity_url">
-<dt>URL</dt>
-<dd>
-<a class="url" href="$podloc/" id="pod_location" rel="me">$podloc/</a>
-</dd>
-</dl>
-<dl class="entity_photo">
-<dt>Photo</dt>
-<dd>
-<img class="photo avatar" height="300px" width="300px" src="$photo300">
-</dd>
-</dl>
-<dl class="entity_photo_medium">
-<dt>Photo</dt>
-<dd> 
-<img class="photo avatar" height="100px" width="100px" src="$photo100">
-</dd>
-</dl>
-<dl class="entity_photo_small">
-<dt>Photo</dt>
-<dd>
-<img class="photo avatar" height="50px" width="50px" src="$photo50">
-</dd>
-</dl>
-<dl class="entity_searchable">
-<dt>Searchable</dt>
-<dd>
-<span class="searchable">$searchable</span>
-</dd>
-</dl>
-</div>
-EOT;
 
 	$tpl = get_markup_template('profile_vcard.tpl');
 
 	$o .= replace_macros($tpl, array(
-		'$fullname' => template_escape($fullname),
-		'$pdesc'    => template_escape($pdesc),
-		'$tabs'     => $tabs,
-		'$photo'    => $photo,
+		'$profile' => $profile,
 		'$connect'  => $connect,		
 		'$location' => template_escape($location),
 		'$gender'   => $gender,
-		'$pubkey'   => $pubkey,
-		'$marital'  => template_escape($marital),
-		'$homepage' => template_escape($homepage),
-		'$diaspora' => $diaspora_vcard
+		'$pdesc'	=> $pdesc,
+		'$marital'  => $marital,
+		'$homepage' => $homepage,
+		'$diaspora' => $diaspora,
+		'$contact_block' => $contact_block,
 	));
 
 
@@ -1174,3 +1152,4 @@ function load_contact_links($uid) {
 	$a->contacts = $ret;
 	return;		
 }}
+

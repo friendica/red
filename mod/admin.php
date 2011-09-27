@@ -540,7 +540,7 @@ function admin_page_plugins(&$a){
 		} 
 		
 		$admin_form="";
-		if (in_array($plugin, $a->plugins_admin)){
+		if (is_array($a->plugins_admin) && in_array($plugin, $a->plugins_admin)){
 			@require_once("addon/$plugin/$plugin.php");
 			$func = $plugin.'_plugin_admin';
 			$func($a, $admin_form);

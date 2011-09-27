@@ -27,9 +27,14 @@
 
 		<div class="wall-item-tools" id="wall-item-tools-$id">
 			$vote
-			$plink
+			{{ if $plink }}
+				<div class="wall-item-links-wrapper"><a href="$plink.href" title="$plink.title" target="external-link" class="icon remote-link"></a></div>
+			{{ endif }}
 			$edpost
-			$star
+			 
+			{{ if $star }}
+			<a href="#" id="starred-$id" onclick="dostar($id); return false;" class="star-item icon $isstarred" title="$star.toggle"></a>
+			{{ endif }}
 			$drop
 		</div>
 		

@@ -68,6 +68,8 @@ function search_content(&$a) {
 		notice( t('Public access denied.') . EOL);
 		return;
 	}
+	
+	nav_set_selected('search');
 
 	require_once("include/bbcode.php");
 	require_once('include/security.php');

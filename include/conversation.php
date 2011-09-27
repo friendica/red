@@ -268,6 +268,10 @@ function conversation(&$a, $items, $mode, $update) {
 		$blowhard = 0;
 		$blowhard_count = 0;
 
+		// array with html for each thread (parent+comments)
+		$treads = array();
+		$treadsid = -1;
+
 		foreach($items as $item) {
 
 			$comment = '';
@@ -294,7 +298,7 @@ function conversation(&$a, $items, $mode, $update) {
 				$toplevelprivate = (($toplevelpost && $item['private']) ? true : false);
 				$item_writeable = (($item['writable'] || $item['self']) ? true : false);
 
-				if($blowhard == $item['cid'] && (! $item['self']) && ($mode != 'profile') && ($mode != 'notes')) {
+				/*if($blowhard == $item['cid'] && (! $item['self']) && ($mode != 'profile') && ($mode != 'notes')) {
 					$blowhard_count ++;
 					if($blowhard_count == 3) {
 						$o .= '<div class="icollapse-wrapper fakelink" id="icollapse-wrapper-' . $item['parent'] 
@@ -308,10 +312,13 @@ function conversation(&$a, $items, $mode, $update) {
 					if($blowhard_count >= 3)
 						$o .= '</div>';
 					$blowhard_count = 0;
-				}
+				}*/
 
 				$comments_seen = 0;
 				$comments_collapsed = false;
+				
+				$treadsid++;
+				$treads[$treadsid] = "";
 			}
 			else {
 				// prevent private email from leaking into public conversation
@@ -325,7 +332,7 @@ function conversation(&$a, $items, $mode, $update) {
 
 			if(($comments[$item['parent']] > 2) && ($comments_seen <= ($comments[$item['parent']] - 2)) && ($item['gravity'] == 6)) {
 				if(! $comments_collapsed) {
-					$o .= '<div class="ccollapse-wrapper fakelink" id="ccollapse-wrapper-' . $item['parent'] 
+					$treads[$treadsid] .= '<div class="ccollapse-wrapper fakelink" id="ccollapse-wrapper-' . $item['parent'] 
 						. '" onclick="openClose(' . '\'ccollapse-' . $item['parent'] . '\'); $(\'#ccollapse-wrapper-' . $item['parent'] . '\').hide();" >' 
 						. sprintf( t('See all %d comments'), $comments[$item['parent']]) . '</div>'
 						. '<div class="ccollapse" id="ccollapse-' . $item['parent'] . '" style="display: none;" >';
@@ -333,15 +340,15 @@ function conversation(&$a, $items, $mode, $update) {
 				}
 			}
 			if(($comments[$item['parent']] > 2) && ($comments_seen == ($comments[$item['parent']] - 1))) {
-				$o .= '</div>';
+				$treads[$treadsid] .= '</div>';
 			}
 
 			$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 
 			$lock = ((($item['private']) || (($item['uid'] == local_user()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
 				|| strlen($item['deny_cid']) || strlen($item['deny_gid']))))
-				? '<div class="wall-item-lock"><img src="images/lock_icon.gif" class="lockview" alt="' . t('Private Message') . '" onclick="lockview(event,' . $item['id'] . ');" /></div>'
-				: '<div class="wall-item-lock"></div>');
+				? t('Private Message')
+				: false);
 
 
 			// Top-level wall post not written by the wall owner (wall-to-wall)
@@ -427,7 +434,21 @@ function conversation(&$a, $items, $mode, $update) {
 
             $drop = replace_macros((($dropping)? $droptpl : $fakedrop), array('$id' => $item['id'], '$select' => t('Select'), '$delete' => t('Delete')));
 
-			$star = (($profile_owner == local_user() && $toplevelpost) ? '<a href="#" id="starred-' . $item['id'] . '" onclick="dostar(' . $item['id'] . '); return false;" class="star-item icon ' . (($item['starred']) ? 'starred' : 'unstarred') . '" title="' . t('toggle star status')  . '"></a>' : '');
+			$star = false;
+
+			if ($profile_owner == local_user() && $toplevelpost) {
+				$isstarred = (($item['starred']) ? "starred" : "unstarred");
+
+				$star = array(
+					'do' => t("add star"),
+					'undo' => t("remove star"),
+					'toggle' => t("toggle star status"),
+					'classdo' => (($item['starred']) ? "hidden" : ""),
+					'classundo' => (($item['starred']) ? "" : "hidden"),
+					'starred' =>  t('starred'),
+				);
+			}
+
 
 
 			$photo = $item['photo'];
@@ -508,6 +529,7 @@ function conversation(&$a, $items, $mode, $update) {
 				'$owner_name' => template_escape($owner_name),
 				'$plink' => get_plink($item),
 				'$edpost' => $edpost,
+				'$isstarred' => $isstarred,
 				'$star' => $star,
 				'$drop' => $drop,
 				'$vote' => $likebuttons,
@@ -521,7 +543,7 @@ function conversation(&$a, $items, $mode, $update) {
 			$arr = array('item' => $item, 'output' => $tmp_item);
 			call_hooks('display_item', $arr);
 
-			$o .= $arr['output'];
+			$treads[$treadsid] .= $arr['output'];
 
 		}
 	}
@@ -530,10 +552,15 @@ function conversation(&$a, $items, $mode, $update) {
 	// if author collapsing is in force but didn't get closed, close it off now.
 
 	if($blowhard_count >= 3)
-		$o .= '</div>';
+		$treads[$treadsid] .= '</div>';
 
-	if($dropping)
-		$o .= '<div id="item-delete-selected" class="fakelink" onclick="deleteCheckedItems();"><div id="item-delete-selected-icon" class="icon drophide" title="' . t('Delete Selected Items') . '" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></div><div id="item-delete-selected-desc" >' .  t('Delete Selected Items') . '</div></div><div id="item-delete-selected-end"></div>';
+	$page_template = get_markup_template("conversation.tpl");
+	$o .= replace_macros($page_template, array(
+		'$treads' => $treads,
+		'$dropping' => $dropping,
+	));
+	//if($dropping)
+	//	$o .= '<div id="item-delete-selected" class="fakelink" onclick="deleteCheckedItems();"><div id="item-delete-selected-icon" class="icon drophide" title="' . t('Delete Selected Items') . '" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></div><div id="item-delete-selected-desc" >' .  t('Delete Selected Items') . '</div></div><div id="item-delete-selected-end"></div>';
 
 	return $o;
 } 

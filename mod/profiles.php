@@ -220,7 +220,7 @@ function profiles_post(&$a) {
 function profiles_content(&$a) {
 
 	$o = '';
-	$o .= '<script>	$(document).ready(function() { $(\'#nav-profiles-link\').addClass(\'nav-selected\'); });</script>';
+	nav_set_selected('profiles');
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);

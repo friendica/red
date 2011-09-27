@@ -196,7 +196,7 @@ function network_content(&$a, $update = 0) {
 			}
 		}
 
-		$o .= '<script>	$(document).ready(function() { $(\'#nav-network-link\').addClass(\'nav-selected\'); });</script>';
+		nav_set_selected('network');
 
 		$_SESSION['return_url'] = $a->cmd;
 
