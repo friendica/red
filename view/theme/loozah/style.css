@@ -406,6 +406,7 @@ nav {
 }
 
 #profile-extra-links {
+	clear: both;
 	margin-top: 20px;
 	margin-bottom: 20px;
 	margin-left: 20px;

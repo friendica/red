@@ -507,6 +507,10 @@ input#dfrn-url {
 	margin-bottom: 30px;
 }
 
+#profile-extra-links {
+	clear: both;
+}
+
 #profile-extra-links ul {
 	list-style-type: none;
 	padding: 0px;

@@ -53,12 +53,13 @@ function acl_init(&$a){
 			"photo" => "images/default-group-mm.png",
 			"name"  => $g['name'],
 			"id"	=> intval($g['id']),
-			"uids"  => array_map("intval", explode(",",$g['uids']))
+			"uids"  => array_map("intval", explode(",",$g['uids'])),
+			"link"  => ''
 		);
 	}
 	
 	
-	$r = q("SELECT `id`, `name`, `micro`, `network` FROM `contact` 
+	$r = q("SELECT `id`, `name`, `micro`, `network`, `url` FROM `contact` 
 		WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 AND `notify` != ''
 		$sql_extra
 		ORDER BY `name` ASC ",
@@ -70,7 +71,8 @@ function acl_init(&$a){
 			"photo" => $g['micro'],
 			"name"  => $g['name'],
 			"id"	=> intval($g['id']),
-			"network" => $g['network']
+			"network" => $g['network'],
+			"link" => $g['url'],
 		);
 	}
 		
