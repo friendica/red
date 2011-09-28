@@ -21,7 +21,8 @@
 			</div>
 			<div class="wall-item-photo-end"></div>
 			<div class="wall-item-wrapper" id="wall-item-wrapper-$id" >
-				$lock
+				{{ if $lock }}<div class="wall-item-lock"><img src="images/lock_icon.gif" class="lockview" alt="$lock" onclick="lockview(event,$id);" /></div>
+				{{ else }}<div class="wall-item-lock"></div>{{ endif }}	
 				<div class="wall-item-location" id="wall-item-location-$id">$location</div>
 			</div>
 		</div>
@@ -35,15 +36,30 @@
 			<div class="wall-item-body" id="wall-item-body-$id" >$body</div>
 		</div>
 		<div class="wall-item-tools" id="wall-item-tools-$id">
-		$vote
+			{{ if $vote }}
+			<div class="wall-item-like-buttons" id="wall-item-like-buttons-$id">
+				<a href="#" class="icon like" title="$vote.like.0" onclick="dolike($id,'like'); return false"></a>
+				<a href="#" class="icon dislike" title="$vote.dislike.0" onclick="dolike($id,'dislike'); return false"></a>
+				{{ if $vote.share }}<a href="#" class="icon recycle wall-item-share-buttons" title=""$vote.share.0" onclick="jotShare($id); return false"></a>{{ endif }}
+				<img id="like-rotator-$id" class="like-rotator" src="images/rotator.gif" alt="$wait" title="$wait" style="display: none;" />
+			</div>
+			{{ endif }}
 			{{ if $plink }}
 				<div class="wall-item-links-wrapper"><a href="$plink.href" title="$plink.title" target="external-link" class="icon remote-link"></a></div>
 			{{ endif }}
-		$edpost
+			{{ if $edpost }}
+				<a class="editpost icon pencil" href="$edpost.0" title="$edpost.1"></a>
+			{{ endif }}
+			 
 			{{ if $star }}
 			<a href="#" id="starred-$id" onclick="dostar($id); return false;" class="star-item icon $isstarred" title="$star.toggle"></a>
 			{{ endif }}
-		$drop
+			
+			<div class="wall-item-delete-wrapper" id="wall-item-delete-wrapper-$id" >
+				{{ if $drop.dropping }}<a href="item/drop/$id" onclick="return confirmDelete();" class="icon drophide" title="$drop.delete" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a>{{ endif }}
+			</div>
+				{{ if $drop.dropping }}<input type="checkbox" onclick="checkboxhighlight(this);" title="$drop.select" class="item-select" name="itemselected[]" value="$id" />{{ endif }}
+			<div class="wall-item-delete-end"></div>
 		</div>
 	</div>	
 	<div class="wall-item-wrapper-end"></div>

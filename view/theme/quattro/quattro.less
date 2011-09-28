@@ -21,9 +21,17 @@ body {
 	-webkit-border-radius: @arguments;
 	border-radius: @arguments;
 }
-
 .roundbottom (@radius: 5px){ .rounded(0, 0, @radius, @radius); }
 .roundtop (@radius: 5px){ .rounded(@radius, @radius, 0, 0); }
+
+.opaque(@v: 0.5){
+	opacity: @v;
+	-webkit-transition: all 0.2s ease-in-out;
+	-moz-transition: all 0.2s ease-in-out;
+	-o-transition: all 0.2s ease-in-out;
+	-ms-transition: all 0.2s ease-in-out;
+	transition: all 0.2s ease-in-out;
+}
 
 a, a:link { color: @Link; text-decoration: none; }
 a:visited { color: @LinkVisited; text-decoration: none; }
@@ -257,7 +265,7 @@ section {
 
 /* wall item */
 .tread-wrapper { 
-	background-color: @ThreadBackgroundColor; 
+	background-color: @ThreadBackgroundColor;
 	position: relative;
 	padding: 10px;
 	margin-bottom: 20px;
@@ -268,7 +276,6 @@ section {
 .wall-item-container {
 	display: table;
 	width: 780px;
-	margin-bottom: 10px;
 	
 	.wall-item-item,
 	.wall-item-bottom { display: table-row; }
@@ -290,22 +297,51 @@ section {
 		.wall-item-photo-menu { display: none; }
 		
 	} 
+	.wall-item-location {
+		word-wrap: break-word;
+		width: 50px;
+	}
 	.wall-item-content {
 		display: table-cell;
-		font-size: 12px;
+		font-size: 16px;
 		max-width: 720px;
 		word-wrap: break-word;
 	}
 	.wall-item-content img { max-width: 710px; }
 	.wall-item-links,
-	.wall-item-actions { display: table-cell; }
+	.wall-item-actions { 
+		display: table-cell; 
+		vertical-align: middle; 
+		
+		.icon {
+			.opaque(0.5);
+		}
+		.icon:hover  {
+			.opaque(1.0);
+		}		
+	}
 	
 	.wall-item-ago { padding-right: 40px; }
+	.wall-item-name { font-weight: bold; }
+	
+	.wall-item-actions-author { float: left; width: 25%; margin-top: 0.5em; }
+	.wall-item-actions-social { float: left; width: 50%; margin-top: 0.5em;
+		a { margin-right: 3em; }
+	 }
+	.wall-item-actions-tools { float: right; width: 25%; 
+		a { float: right; }
+		input { float: right; }
+	}
 }
+
+
+
 .wall-item-container.comment {
+	margin-top: 50px;
 	.wall-item-photo { width: 32px; height: 32px; margin-left: 16px;}	
 	.wall-item-photo-menu-button {
 		top: 13px !important;
 		left: 10px !important;
 	}
+	.wall-item-links { padding-left: 12px; }
 }
