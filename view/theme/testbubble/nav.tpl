@@ -29,6 +29,7 @@
 
 			<li><a id="nav-search-link" class="nav-link $nav.search.2" href="$nav.search.0" title="$nav.search.1">$nav.search.1</a></li>
 			<li><a id="nav-directory-link" class="nav-link $nav.directory.2" href="$nav.directory.0" title="$nav.directory.1">$nav.directory.1</a></li>
+			{{ if $nav.apps }}<li><a id="nav-apps-link" class="nav-link $nav.apps.2" href="$nav.apps.0" title="$nav.apps.1">$nav.apps.1</a></li>{{ endif }}
 			
 			{{ if $nav.notifications }}<li><a id="nav-notify-link" class="nav-commlink nav-sep $nav.notifications.2" href="$nav.notifications.0">$nav.notifications.1</a></li>{{ endif }}
 			{{ if $nav.messages }}<li><a id="nav-messages-link" class="nav-commlink $nav.messages.2" href="$nav.messages.0">$nav.messages.1</a></li>{{ endif }}
@@ -49,7 +50,6 @@
 	</div>
 
 
-	{{ if $nav.apps }}<a id="nav-apps-link" class="nav-link $nav.apps.2" href="$nav.apps.0" title="$nav.apps.1">$nav.apps.1</a>{{ endif }}
 
 </nav>
 

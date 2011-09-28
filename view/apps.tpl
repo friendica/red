@@ -2,6 +2,6 @@
 
 <ul>
 	{{ for $apps as $ap }}
-	<li><a href="$ap.url">$ap.name</a></li>
+	<li>$ap</li>
 	{{ endfor }}
 </ul>
