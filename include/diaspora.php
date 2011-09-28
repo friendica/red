@@ -1267,7 +1267,7 @@ function diaspora_transmit($owner,$contact,$slap,$public_batch) {
 	$return_code = $a->get_curl_code();
 	logger('diaspora_transmit: ' . $logid . ' returns: ' . $return_code);
 
-	if(! $return_code) {
+	if((! $return_code) || (($curl_stat == 503) && (stristr($a->get_curl_headers(),'retry-after')))) {
 		logger('diaspora_transmit: queue message');
 		// queue message for redelivery
 		q("INSERT INTO `queue` ( `cid`, `created`, `last`, `content`,`batch`)
@@ -1279,6 +1279,7 @@ function diaspora_transmit($owner,$contact,$slap,$public_batch) {
 			intval($public_batch)
 		);
 	}
+
 
 	return(($return_code) ? $return_code : (-1));
 }

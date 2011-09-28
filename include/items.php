@@ -1042,6 +1042,9 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	if((! $curl_stat) || (! strlen($xml)))
 		return(-1); // timed out
 
+	if(($curl_stat == 503) && (stristr($a->get_curl_headers(),'retry-after')))
+		return(-1);
+
 	if(strpos($xml,'<?xml') === false) {
 		logger('dfrn_deliver: phase 2: no valid XML returned');
 		logger('dfrn_deliver: phase 2: returned XML: ' . $xml, LOGGER_DATA);
