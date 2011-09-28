@@ -18,7 +18,10 @@
 			<div class="wall-item-photo-end"></div>
 			<div class="wall-item-location" id="wall-item-location-$id">{{ if $location }}<span class="icon globe"></span>$location {{ endif }}</div>				
 		</div>
-		<div class="wall-item-lock-wrapper">$lock</div>
+		<div class="wall-item-lock-wrapper">
+				{{ if $lock }}<div class="wall-item-lock"><img src="images/lock_icon.gif" class="lockview" alt="$lock" onclick="lockview(event,$id);" /></div>
+				{{ else }}<div class="wall-item-lock"></div>{{ endif }}
+		</div>
 		<div class="wall-item-content" id="wall-item-content-$id" >
 			<div class="wall-item-title" id="wall-item-title-$id">$title</div>
 			<div class="wall-item-title-end"></div>

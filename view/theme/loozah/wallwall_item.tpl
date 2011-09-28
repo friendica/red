@@ -21,7 +21,8 @@
 			</div>
 			<div class="wall-item-photo-end"></div>
 			<div class="wall-item-wrapper" id="wall-item-wrapper-$id" >
-				$lock
+				{{ if $lock }}<div class="wall-item-lock"><img src="images/lock_icon.gif" class="lockview" alt="$lock" onclick="lockview(event,$id);" /></div>
+				{{ else }}<div class="wall-item-lock"></div>{{ endif }}	
 				<div class="wall-item-location" id="wall-item-location-$id">$location</div>
 			</div>
 		</div>

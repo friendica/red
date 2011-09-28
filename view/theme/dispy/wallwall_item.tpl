@@ -22,7 +22,10 @@
 			<div class="wall-item-photo-end"></div>
 			<div class="wall-item-location" id="wall-item-location-$id">{{ if $location }}<span class="icon globe"></span>$location {{ endif }}</div>				
 		</div>
-		<div class="wall-item-lock-wrapper">$lock</div>
+		<div class="wall-item-lock-wrapper">
+				{{ if $lock }}<div class="wall-item-lock"><img src="images/lock_icon.gif" class="lockview" alt="$lock" onclick="lockview(event,$id);" /></div>
+				{{ else }}<div class="wall-item-lock"></div>{{ endif }}
+		</div>
 		<div class="wall-item-tools" id="wall-item-tools-$id">
 			{{ if $star }}
 				<a href="#" id="starred-$id" onclick="dostar($id); return false;" class="star-item icon $isstarred" title="$star.toggle"></a>
