@@ -509,6 +509,7 @@ input#dfrn-url {
 
 #profile-extra-links {
 	clear: both;
+	margin-top: 10px;
 }
 
 #profile-extra-links ul {
