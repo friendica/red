@@ -32,7 +32,7 @@ function hostxrd_init(&$a) {
 
 	$tpl = file_get_contents('view/xrd_host.tpl');
 	echo str_replace(array(
-		'$zroot','$domain','$zot_post','$bigkey'),array(z_root(),z_path(),z_root() . '/post', salmon_key(get_config('system','site_pubkey'))),$tpl);
+		'$zhost','$zroot','$domain','$zot_post','$bigkey'),array($a->get_hostname(),z_root(),z_path(),z_root() . '/post', salmon_key(get_config('system','site_pubkey'))),$tpl);
 	session_write_close();
 	exit();
 
