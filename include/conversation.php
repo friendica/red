@@ -136,8 +136,6 @@ function conversation(&$a, $items, $mode, $update) {
 	$cmnt_tpl    = get_markup_template('comment_item.tpl');
 	$tpl         = get_markup_template('wall_item.tpl');
 	$wallwall    = get_markup_template('wallwall_item.tpl');
-	$droptpl     = get_markup_template('wall_item_drop.tpl');
-	$fakedrop    = get_markup_template('wall_fake_drop.tpl');
 
 	$alike = array();
 	$dlike = array();
@@ -197,9 +195,9 @@ function conversation(&$a, $items, $mode, $update) {
 
 				localize_item($item);
 				if($mode === 'network-new')
-					$t = $droptpl;
+					$t = "#TODO:drop#"; //$droptpl;
 				else
-					$t = $fakedrop;
+					$t = "#TODO:fakedrop#"; //$fakedrop;
 
 				$drop = replace_macros($t,array('$id' => $item['id']));
 				$lock = '<div class="wall-item-lock"></div>';
@@ -391,13 +389,6 @@ function conversation(&$a, $items, $mode, $update) {
 
 			if($page_writeable) {
 				if($toplevelpost) {
-					/*$likebuttons = replace_macros(((($shareable)) ? $like_tpl : $noshare_tpl),array(
-						'$id' => $item['id'],
-						'$likethis' => t("I like this \x28toggle\x29"),
-						'$nolike' => t("I don't like this \x28toggle\x29"),
-						'$share' => t('Share'),
-						'$wait' => t('Please wait') 
-					))*/
 					$likebuttons = array(
 						'like' => array( t("I like this \x28toggle\x29"), t("like")),
 						'dislike' => array( t("I don't like this \x28toggle\x29"), t("dislike")),
@@ -558,16 +549,14 @@ function conversation(&$a, $items, $mode, $update) {
 
 	// if author collapsing is in force but didn't get closed, close it off now.
 
-	if($blowhard_count >= 3)
-		$treads[$treadsid] .= '</div>';
+	/*if($blowhard_count >= 3)
+		$treads[$treadsid] .= '</div>';*/
 
 	$page_template = get_markup_template("conversation.tpl");
 	$o .= replace_macros($page_template, array(
 		'$treads' => $treads,
-		'$dropping' => $dropping,
+		'$dropping' => ($dropping?t('Delete Selected Items'):False),
 	));
-	//if($dropping)
-	//	$o .= '<div id="item-delete-selected" class="fakelink" onclick="deleteCheckedItems();"><div id="item-delete-selected-icon" class="icon drophide" title="' . t('Delete Selected Items') . '" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></div><div id="item-delete-selected-desc" >' .  t('Delete Selected Items') . '</div></div><div id="item-delete-selected-end"></div>';
 
 	return $o;
 } 
