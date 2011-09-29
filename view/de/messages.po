@@ -2,15 +2,18 @@
 # Copyright (C) 2010, 2011 Mike Macgirvin
 # This file is distributed under the same license as the Friendika package.
 # 
-#   <tobias.diekershoff@gmx.net>, 2011.
+# Translators:
 # bavatar <tobias.diekershoff@gmx.net>, 2011.
+# Erkan Yilmaz <erkan77@gmail.com>, 2011.
+#   <hzuehl@phone-talk.de>, 2011.
+#   <tobias.diekershoff@gmx.net>, 2011.
 msgid ""
 msgstr ""
 "Project-Id-Version: friendika\n"
 "Report-Msgid-Bugs-To: http://bugs.friendika.com/\n"
 "POT-Creation-Date: 2011-08-14 21:17-0700\n"
-"PO-Revision-Date: 2011-08-18 08:02+0000\n"
-"Last-Translator: bavatar <tobias.diekershoff@gmx.net>\n"
+"PO-Revision-Date: 2011-09-26 17:08+0000\n"
+"Last-Translator: hauke <hzuehl@phone-talk.de>\n"
 "Language-Team: German (http://www.transifex.net/projects/p/friendika/team/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -142,7 +145,7 @@ msgstr "Die Datei ist größer als das erlaubte Limit von %d"
 
 #: ../../mod/wall_attach.php:87 ../../mod/wall_attach.php:98
 msgid "File upload failed."
-msgstr "Upload der Datei fehlgeschlagen."
+msgstr "Hochladen der Datei fehlgeschlagen."
 
 #: ../../mod/fsuggest.php:63
 msgid "Friend suggestion sent."
@@ -290,7 +293,7 @@ msgstr "jeder"
 
 #: ../../mod/photos.php:132
 msgid "Contact information unavailable"
-msgstr "Kontakt Informationen nicht verfügbar"
+msgstr "Kontaktinformationen nicht verfügbar"
 
 #: ../../mod/photos.php:143 ../../mod/photos.php:577 ../../mod/photos.php:926
 #: ../../mod/photos.php:941 ../../mod/register.php:316
@@ -356,7 +359,7 @@ msgstr "Keine Bilder ausgewählt"
 
 #: ../../mod/photos.php:820
 msgid "Access to this item is restricted."
-msgstr "Zugriff zu diesem Eintrag wurde eingeschrängt."
+msgstr "Zugriff zu diesem Eintrag wurde eingeschränkt."
 
 #: ../../mod/photos.php:884
 msgid "Upload Photos"
@@ -465,7 +468,7 @@ msgstr "Löschen"
 
 #: ../../mod/photos.php:1349
 msgid "Recent Photos"
-msgstr "Neuste Fotos"
+msgstr "Neueste Fotos"
 
 #: ../../mod/photos.php:1353
 msgid "Upload New Photos"
@@ -573,7 +576,7 @@ msgstr "Diese Vorstellung wurde bereits abgeschlossen."
 #: ../../mod/dfrn_request.php:120 ../../mod/dfrn_request.php:351
 msgid "Profile location is not valid or does not contain profile information."
 msgstr ""
-"Profil Adresse ist ungültig oder stellt einige Profildaten nicht zur "
+"Profiladresse ist ungültig oder stellt einige Profildaten nicht zur "
 "Verfügung."
 
 #: ../../mod/dfrn_request.php:125 ../../mod/dfrn_request.php:356
@@ -620,7 +623,7 @@ msgstr "Maßnahmen zum Spamschutz wurden ergriffen."
 
 #: ../../mod/dfrn_request.php:247
 msgid "Friends are advised to please try again in 24 hours."
-msgstr "Freunde sind angehalten es in 24 Stunden erneut zu versuchen."
+msgstr "Freunde sind angehalten, es in 24 Stunden erneut zu versuchen."
 
 #: ../../mod/dfrn_request.php:277
 msgid "Invalid locator"
@@ -628,7 +631,7 @@ msgstr "Ungültiger Locator"
 
 #: ../../mod/dfrn_request.php:296
 msgid "Unable to resolve your name at the provided location."
-msgstr "Unable to resolve your name at the provided location."
+msgstr "Konnte deinen Namen an der angegebenen Stelle nicht finden."
 
 #: ../../mod/dfrn_request.php:309
 msgid "You have already introduced yourself here."
@@ -657,7 +660,7 @@ msgstr "Deine Vorstellung wurde abgeschickt."
 
 #: ../../mod/dfrn_request.php:481
 msgid "Please login to confirm introduction."
-msgstr "Bitte melde dich an um die Vorstellung zu bestätigen."
+msgstr "Bitte melde dich an, um die Vorstellung zu bestätigen."
 
 #: ../../mod/dfrn_request.php:495
 msgid ""
@@ -675,7 +678,7 @@ msgstr "Willkommen zurück %s."
 #: ../../mod/dfrn_request.php:508
 #, php-format
 msgid "Please confirm your introduction/connection request to %s."
-msgstr "Bitte bestätige deine Vorstellung/Verbindungs Anfrage bei %s."
+msgstr "Bitte bestätige deine Vorstellung/Verbindungsanfrage bei %s."
 
 #: ../../mod/dfrn_request.php:509
 msgid "Confirm"
@@ -699,7 +702,7 @@ msgstr "Administrator"
 
 #: ../../mod/dfrn_request.php:630
 msgid "Friend/Connection Request"
-msgstr "Freundschafts/Kontakt Anfrage"
+msgstr "Freundschafts-/Kontaktanfrage"
 
 #: ../../mod/dfrn_request.php:631
 msgid ""
@@ -771,7 +774,7 @@ msgstr "Anfrage abschicken"
 #: ../../mod/install.php:34
 msgid "Could not create/connect to database."
 msgstr ""
-"Konnte die Verbindung zur Datenbank nicht aufbauen bzw. die Datenbank "
+"Konnte die Verbindung zur Datenbank nicht aufbauen, bzw. die Datenbank "
 "anlegen."
 
 #: ../../mod/install.php:39
@@ -784,7 +787,7 @@ msgstr "Mit der Installation fortfahren"
 
 #: ../../mod/install.php:77
 msgid "Your Friendika site database has been installed."
-msgstr "Die Datenbank deiner Friendika Seite wurde erfolgreich installiert."
+msgstr "Die Datenbank deiner Friendikaseite wurde erfolgreich installiert."
 
 #: ../../mod/install.php:78
 msgid ""
@@ -799,7 +802,7 @@ msgstr "Lies bitte die \"INSTALL.txt\"."
 
 #: ../../mod/install.php:81
 msgid "Proceed to registration"
-msgstr "Mit der Registration fortfahren"
+msgstr "Mit der Registrierung fortfahren"
 
 #: ../../mod/install.php:87
 msgid "Database import failed."
@@ -846,8 +849,9 @@ msgid ""
 "The database you specify below should already exist. If it does not, please "
 "create it before continuing."
 msgstr ""
-"Die Datenbank die du unten angibst sollte bereits existieren. Ist dies noch "
-"nicht der Fall erzeuge sie bitte bevor du mit der Installation vorfährst."
+"Die Datenbank, die du unten angibst, sollte bereits existieren. Ist dies "
+"noch nicht der Fall, erzeuge sie bitte bevor du mit der Installation "
+"vorfährst."
 
 #: ../../mod/install.php:129
 msgid "Database Server Name"
@@ -867,16 +871,15 @@ msgstr "Datenbank Name"
 
 #: ../../mod/install.php:133
 msgid "Please select a default timezone for your website"
-msgstr "Bitte wähle die standard Zeitzone deiner Webseite"
+msgstr "Bitte wähle die Standardzeitzone deiner Webseite"
 
 #: ../../mod/install.php:134
 msgid ""
 "Site administrator email address. Your account email address must match this"
 " in order to use the web admin panel."
 msgstr ""
-"Email Adresse des Seiten Administrators. Die Email Adresse deines Accounts "
-"muss mit dieser übereinstimmen, damit du das Administrationspanel nutzen "
-"kannst."
+"Emailadresse des Seitenadministrators. Die Emailadresse deines Accounts muss"
+" mit dieser übereinstimmen, damit du das Administrationspanel nutzen kannst."
 
 #: ../../mod/install.php:153
 msgid "Could not find a command line version of PHP in the web server PATH."
@@ -956,8 +959,8 @@ msgid ""
 "The web installer needs to be able to create a file called \".htconfig.php\""
 " in the top folder of your web server and it is unable to do so."
 msgstr ""
-"Der Installationswizzard muss in der Lage sein eine Datei im "
-"Stammverzeichnis deines Webservers anzuliegen ist allerdings derzeit nicht "
+"Der Installationswizzard muss in der Lage sein, eine Datei im "
+"Stammverzeichnis deines Webservers anzulegen, ist allerdings derzeit nicht "
 "in der Lage dies zu tun."
 
 #: ../../mod/install.php:217
@@ -996,7 +999,7 @@ msgstr ""
 
 #: ../../mod/install.php:243
 msgid "Errors encountered creating database tables."
-msgstr "Fehler aufgetreten wärend der Erzeugung der Datenbank Tabellen."
+msgstr "Fehler aufgetreten während der Erzeugung der Datenbank Tabellen."
 
 #: ../../mod/update_community.php:18 ../../mod/update_network.php:22
 #: ../../mod/update_profile.php:41
@@ -1005,7 +1008,7 @@ msgstr "[Eingebetteter Inhalt - Seite neu laden zum Betrachten]"
 
 #: ../../mod/match.php:10
 msgid "Profile Match"
-msgstr "Profil Übereinstimmungen"
+msgstr "Profilübereinstimmungen"
 
 #: ../../mod/match.php:18
 msgid "No keywords to match. Please add keywords to your default profile."
@@ -1046,7 +1049,7 @@ msgstr "Ignorieren"
 
 #: ../../mod/notifications.php:74
 msgid "Pending Friend/Connect Notifications"
-msgstr "Anstehende Freundschafts/Kontakt Benachrichtigungen"
+msgstr "Anstehende Freundschafts-/Kontaktbenachrichtigungen"
 
 #: ../../mod/notifications.php:78
 msgid "Show Ignored Requests"
@@ -1058,11 +1061,11 @@ msgstr "Verberge ignorierte Anfragen"
 
 #: ../../mod/notifications.php:105 ../../mod/notifications.php:148
 msgid "Notification type: "
-msgstr "Benachrichtigungs Typ: "
+msgstr "Benachrichtigungstyp: "
 
 #: ../../mod/notifications.php:106
 msgid "Friend Suggestion"
-msgstr "Kontakt Vorschlag"
+msgstr "Kontaktvorschlag"
 
 #: ../../mod/notifications.php:108
 #, php-format
@@ -1143,7 +1146,7 @@ msgstr "Konnte nicht auf die Kontaktdaten zugreifen."
 
 #: ../../mod/contacts.php:83
 msgid "Could not locate selected profile."
-msgstr "Konnte das ausgewählte Profiel nicht finden."
+msgstr "Konnte das ausgewählte Profil nicht finden."
 
 #: ../../mod/contacts.php:114
 msgid "Contact updated."
@@ -1155,7 +1158,7 @@ msgstr "Kontakt wurde blockiert"
 
 #: ../../mod/contacts.php:172
 msgid "Contact has been unblocked"
-msgstr "Kontakt wurde wieder frei gegeben"
+msgstr "Kontakt wurde wieder freigegeben"
 
 #: ../../mod/contacts.php:186
 msgid "Contact has been ignored"
@@ -1376,7 +1379,7 @@ msgstr "Passwort zurücksetzen"
 
 #: ../../mod/lostpass.php:83
 msgid "Your password has been reset as requested."
-msgstr "Dein Passwort wurde wie gewünscht zurück gesetzt."
+msgstr "Dein Passwort wurde wie gewünscht zurückgesetzt."
 
 #: ../../mod/lostpass.php:84
 msgid "Your new password is"
@@ -1508,7 +1511,7 @@ msgstr ""
 
 #: ../../mod/settings.php:394 ../../mod/admin.php:136 ../../mod/admin.php:446
 msgid "Automatic Friend Account"
-msgstr "Automatischer Freundes Account"
+msgstr "Automatischer Freundesaccount"
 
 #: ../../mod/settings.php:395
 msgid "Automatically approve all connection/friend requests as friends"
@@ -1575,7 +1578,7 @@ msgstr "Bestätigen:"
 
 #: ../../mod/settings.php:492
 msgid "Leave password fields blank unless changing"
-msgstr "Lass die Passwort-Felder leer außer du willst das Passwort ändern"
+msgstr "Lass die Passwort-Felder leer, außer du willst das Passwort ändern"
 
 #: ../../mod/settings.php:496
 msgid "Basic Settings"
@@ -1587,7 +1590,7 @@ msgstr "Kompletter Name:"
 
 #: ../../mod/settings.php:498
 msgid "Email Address:"
-msgstr "Email Adresse:"
+msgstr "Emailadresse:"
 
 #: ../../mod/settings.php:499
 msgid "Your Timezone:"
@@ -1964,7 +1967,7 @@ msgstr "Eine Gruppe von Kontakten/Freunden anlegen."
 
 #: ../../mod/group.php:83 ../../mod/group.php:166
 msgid "Group Name: "
-msgstr "Gruppen Name:"
+msgstr "Gruppenname:"
 
 #: ../../mod/group.php:98
 msgid "Group removed."
@@ -1980,7 +1983,7 @@ msgstr "Klicke einen Kontakt an um ihn hinzuzufügen oder zu entfernen"
 
 #: ../../mod/group.php:165
 msgid "Group Editor"
-msgstr "Gruppen Editor"
+msgstr "Gruppeneditor"
 
 #: ../../mod/group.php:180
 msgid "Members"
@@ -2048,11 +2051,11 @@ msgstr "Die Domain deiner EMail Adresse ist nicht erlaubt auf dieser Seite."
 
 #: ../../mod/register.php:120
 msgid "Not a valid email address."
-msgstr "Keine gültige EMail Adresse."
+msgstr "Keine gültige EMailadresse."
 
 #: ../../mod/register.php:130
 msgid "Cannot use that email."
-msgstr "Konnte diese EMail Adresse nicht verwenden."
+msgstr "Konnte diese EMailadresse nicht verwenden."
 
 #: ../../mod/register.php:136
 msgid ""
@@ -2258,7 +2261,7 @@ msgstr "Bitte melde dich an."
 
 #: ../../mod/item.php:81
 msgid "Unable to locate original post."
-msgstr "Konnte das original Posting nicht finden."
+msgstr "Konnte das Originalposting nicht finden."
 
 #: ../../mod/item.php:196
 msgid "Empty post discarded."
@@ -2369,8 +2372,8 @@ msgstr "Bild Zurechtschneiden"
 #: ../../mod/profile_photo.php:210
 msgid "Please adjust the image cropping for optimum viewing."
 msgstr ""
-"Passe bitte den Bildausschnitt an damit das Bild optimal dargestellt werden "
-"kann."
+"Passe bitte den Bildausschnitt an, damit das Bild optimal dargestellt werden"
+" kann."
 
 #: ../../mod/profile_photo.php:211
 msgid "Done Editing"
@@ -2573,7 +2576,7 @@ msgstr "Erweitert"
 
 #: ../../mod/admin.php:306 ../../addon/statusnet/statusnet.php:459
 msgid "Site name"
-msgstr "Seiten Name"
+msgstr "Seitenname"
 
 #: ../../mod/admin.php:307
 msgid "Banner/Logo"
@@ -2581,7 +2584,7 @@ msgstr "Banner/Logo"
 
 #: ../../mod/admin.php:308
 msgid "System language"
-msgstr "System Sprache"
+msgstr "Systemsprache"
 
 #: ../../mod/admin.php:309
 msgid "System theme"
@@ -3022,7 +3025,7 @@ msgstr "Region/Bundesstaat:"
 
 #: ../../mod/profiles.php:387
 msgid "<span class=\"heart\">&hearts;</span> Marital Status:"
-msgstr "<span class=\"heart\">&hearts;</span> Beziehungs Status:"
+msgstr "<span class=\"heart\">&hearts;</span> Beziehungsstatus:"
 
 #: ../../mod/profiles.php:388
 msgid "Who: (if applicable)"
@@ -3212,7 +3215,7 @@ msgstr "Bitte trete meinem Sozialen Netzwerk auf %s bei"
 
 #: ../../mod/invite.php:103
 msgid "To accept this invitation, please visit:"
-msgstr "Um diese Einladung anzunehmen beuche bitte:"
+msgstr "Um diese Einladung anzunehmen besuche bitte:"
 
 #: ../../mod/invite.php:104
 msgid "You will need to supply this invitation code: $invite_code"
@@ -3222,7 +3225,7 @@ msgstr "Du benötigst den folgenden Einladungs Code: $invite_code"
 msgid ""
 "Once you have registered, please connect with me via my profile page at:"
 msgstr ""
-"Sobald du registriert bist kontaktiere mich bitte auf meiner Profilseite:"
+"Sobald du registriert bist, kontaktiere mich bitte auf meiner Profilseite:"
 
 #: ../../mod/dfrn_confirm.php:233
 msgid "Response from remote site was not understood."
@@ -3267,7 +3270,7 @@ msgstr "Für '%s' wurde kein Nutzer gefunden"
 
 #: ../../mod/dfrn_confirm.php:517
 msgid "Our site encryption key is apparently messed up."
-msgstr "Der Verschlüsslungsschlüssel unserer Seite ist anscheinend im Arsch."
+msgstr "Der Verschlüsselungsschlüssel unserer Seite ist anscheinend im Arsch."
 
 #: ../../mod/dfrn_confirm.php:528
 msgid "Empty site URL was provided or URL could not be decrypted by us."
@@ -3290,7 +3293,7 @@ msgstr ""
 #: ../../mod/dfrn_confirm.php:589
 msgid "Unable to set your contact credentials on our system."
 msgstr ""
-"Deine Kontaktreferenzen konnten nicht in unserm System gespeichert werden."
+"Deine Kontaktreferenzen konnten nicht in unserem System gespeichert werden."
 
 #: ../../mod/dfrn_confirm.php:642
 msgid "Unable to update your contact profile details on our system"
@@ -3417,8 +3420,8 @@ msgid ""
 "Three dimensional tic-tac-toe is just like the traditional game except that "
 "it is played on multiple levels simultaneously. "
 msgstr ""
-"Drei dimensionales Tic-Tac-Toe ist genauso wie das herkömmliche Spiel, nur "
-"das man es auf mehreren Ebenen gleichzeitig spielt."
+"3D-Tic-Tac-Toe ist genauso wie das herkömmliche Spiel, nur das man es auf "
+"mehreren Ebenen gleichzeitig spielt."
 
 #: ../../addon/tictac/tictac.php:61
 msgid ""
@@ -3632,7 +3635,7 @@ msgstr "Bei StatusNet anmelden"
 
 #: ../../addon/statusnet/statusnet.php:309
 msgid "Copy the security code from StatusNet here"
-msgstr "Kopiere den Sicherheitscode von StatusNet hier her"
+msgstr "Kopiere den Sicherheitscode von StatusNet hier hin"
 
 #: ../../addon/statusnet/statusnet.php:315
 msgid "Cancel Connection Process"
@@ -3788,7 +3791,7 @@ msgstr "Alter:"
 
 #: ../../include/profile_advanced.php:70
 msgid "<span class=\"heart\">&hearts;</span> Status:"
-msgstr "<span class=\"heart\">&hearts;</span> Bezieungsstatus:"
+msgstr "<span class=\"heart\">&hearts;</span> Beziehungsstatus:"
 
 #: ../../include/profile_advanced.php:103 ../../boot.php:886
 msgid "Homepage:"
@@ -3880,7 +3883,7 @@ msgstr "Täglich"
 
 #: ../../include/contact_selectors.php:59
 msgid "Weekly"
-msgstr "Wöchendlich"
+msgstr "Wöchentlich"
 
 #: ../../include/contact_selectors.php:60
 msgid "Monthly"
@@ -3896,19 +3899,19 @@ msgstr "Weiblich"
 
 #: ../../include/profile_selectors.php:6
 msgid "Currently Male"
-msgstr "Momentan Männlich"
+msgstr "Momentan männlich"
 
 #: ../../include/profile_selectors.php:6
 msgid "Currently Female"
-msgstr "Momentan Weiblich"
+msgstr "Momentan weiblich"
 
 #: ../../include/profile_selectors.php:6
 msgid "Mostly Male"
-msgstr "Hauptsächlich Männlich"
+msgstr "Hauptsächlich männlich"
 
 #: ../../include/profile_selectors.php:6
 msgid "Mostly Female"
-msgstr "Hauptsächlich Weiblich"
+msgstr "Hauptsächlich weiblich"
 
 #: ../../include/profile_selectors.php:6
 msgid "Transgender"
@@ -3920,7 +3923,7 @@ msgstr "Intersex"
 
 #: ../../include/profile_selectors.php:6
 msgid "Transsexual"
-msgstr "Transsexuel"
+msgstr "Transsexuell"
 
 #: ../../include/profile_selectors.php:6
 msgid "Hermaphrodite"
@@ -3964,7 +3967,7 @@ msgstr "Keine Vorlieben"
 
 #: ../../include/profile_selectors.php:19
 msgid "Bisexual"
-msgstr "Bisexuel"
+msgstr "Bisexuell"
 
 #: ../../include/profile_selectors.php:19
 msgid "Autosexual"
@@ -4020,7 +4023,7 @@ msgstr "Untreu"
 
 #: ../../include/profile_selectors.php:33
 msgid "Sex Addict"
-msgstr "Sex Besessen"
+msgstr "Sexbesessen"
 
 #: ../../include/profile_selectors.php:33
 msgid "Friends"
@@ -4028,7 +4031,7 @@ msgstr "Freunde"
 
 #: ../../include/profile_selectors.php:33
 msgid "Friends/Benefits"
-msgstr "Friends/Benefits"
+msgstr "Freunde/Zuwendungen"
 
 #: ../../include/profile_selectors.php:33
 msgid "Casual"
@@ -4259,7 +4262,7 @@ msgstr "Persönlich"
 
 #: ../../include/nav.php:55
 msgid "Home Page"
-msgstr "Home Page"
+msgstr "Homepage"
 
 #: ../../include/nav.php:59
 msgid "Create an account"
