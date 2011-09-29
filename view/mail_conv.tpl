@@ -1,6 +1,6 @@
 <div class="mail-conv-outside-wrapper">
 	<div class="mail-conv-sender" >
-		<a href="$from_url" class="mail-conv-sender-url" ><img class="mail-conv-sender-photo$sparkle" src="$from_photo" alt="$from_name" /></a>
+		<a href="$from_url" class="mail-conv-sender-url" ><img class="mframe mail-conv-sender-photo$sparkle" src="$from_photo" alt="$from_name" /></a>
 	</div>
 	<div class="mail-conv-detail" >
 		<div class="mail-conv-sender-name" >$from_name</div>

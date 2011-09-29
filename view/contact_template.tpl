@@ -1,7 +1,7 @@
 
 <div class="contact-entry-wrapper" id="contact-entry-wrapper-$id" >
 	<div class="contact-entry-photo-wrapper" >
-		<div class="contact-entry-photo" id="contact-entry-photo-$id"
+		<div class="contact-entry-photo mframe" id="contact-entry-photo-$id"
 		onmouseover="if (typeof t$id != 'undefined') clearTimeout(t$id); openMenu('contact-photo-menu-button-$id')" onmouseout="t$id=setTimeout('closeMenu(\'contact-photo-menu-button-$id\'); closeMenu(\'contact-photo-menu-$id\');',200)" >
 
 			<a href="$url" title="$img_hover" /><img src="$thumb" $sparkle alt="$name" /></a>

@@ -1,7 +1,7 @@
 <div class="wall-item-outside-wrapper$indent" id="wall-item-outside-wrapper-$id" >
 	<div class="wall-item-content-wrapper$indent" id="wall-item-content-wrapper-$id" >
 		<div class="wall-item-info" id="wall-item-info-$id">
-			<div class="wall-item-photo-wrapper" id="wall-item-photo-wrapper-$id" 
+			<div class="wall-item-photo-wrapper mframe" id="wall-item-photo-wrapper-$id" 
 				 onmouseover="if (typeof t$id != 'undefined') clearTimeout(t$id); openMenu('wall-item-photo-menu-button-$id')" 
 				 onmouseout="t$id=setTimeout('closeMenu(\'wall-item-photo-menu-button-$id\'); closeMenu(\'wall-item-photo-menu-$id\');',200)">
 				<a href="$profile_url" title="$linktitle" class="wall-item-photo-link" id="wall-item-photo-link-$id">
