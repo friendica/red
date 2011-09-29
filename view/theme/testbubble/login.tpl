@@ -16,7 +16,7 @@
 			<a href="lostpass" title="$lostpass" id="lost-password-link" >$lostlink</a>
 	</div>
 	<div id="login-submit-end"></div>
-	<div id="login-extra-links">
+	<div id="login-extra-links" class=".button">
 		<div id="login-extra-filler">&nbsp;</div>
 		$register_html
 	</div>

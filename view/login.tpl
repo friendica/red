@@ -11,7 +11,7 @@
         <input type="password" maxlength="60" name="password" id="login-password" value="" />
 </div>
 <div id="login-password-end"></div>
-<div id="login-extra-links">
+<div id="login-extra-links" class=".button">
 	<div id="login-extra-filler">&nbsp;</div>
 	$register_html
         <a href="lostpass" title="$lostpass" id="lost-password-link" >$lostlink</a>

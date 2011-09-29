@@ -12,7 +12,7 @@ $nettype
 
 	<div id="contact-edit-photo-wrapper" >
 		<img id="contact-edit-direction-icon" src="$dir_icon" alt="$alt_text" title="$alt_text" />
-		<div id="contact-edit-photo" >
+		<div id="contact-edit-photo" class="lframe">
 			<a href="$url" title="$visit" /><img src="$photo" $sparkle alt="$name" /></a>
 		</div>
 		<div id="contact-edit-photo-end" ></div>
@@ -32,7 +32,7 @@ $nettype
 			<div id="contact-edit-last-update-text">$lastupdtext<span id="contact-edit-last-updated">$last_update</span></div>
 			<div id="contact-edit-poll-text">$updpub</div>
 			$poll_interval
-			<div id="contact-edit-update-now"><a href="contacts/$contact_id/update" >$udnow</a></div>
+			<div id="contact-edit-update-now" class="button"><a href="contacts/$contact_id/update" >$udnow</a></div>
 		</div>
 		{{ endif }}
 	</div>
@@ -42,7 +42,7 @@ $insecure
 $blocked
 $ignored
 
-<div id="view-recent-wrapper"><a href="network/?cid=$contact_id" id="contact-view-recent">$lblrecent</a></div>
+<div id="view-recent-wrapper"><a href="network/?cid=$contact_id" id="contact-view-recent" class="button">$lblrecent</a></div>
 $lblsuggest
 
 <div id="contact-edit-info-wrapper">
