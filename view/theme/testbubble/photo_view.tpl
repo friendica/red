@@ -10,7 +10,7 @@
 {{ if $lock }} - <img src="images/lock_icon.gif" class="lockview" alt="$lock" onclick="lockview(event,'photo$id');" /> {{ endif }}
 </div>
 
-<div id="photo-photo">
+<div id="photo-photo" class="lframe">
 	{{ if $prevlink }}<div id="photo-prev-link"><a href="$prevlink.0">$prevlink.1</a></div>{{ endif }}
 	<a href="$photo.href" title="$photo.title"><img src="$photo.src" /></a>
 	{{ if $nextlink }}<div id="photo-next-link"><a href="$nextlink.0">$nextlink.1</a></div>{{ endif }}

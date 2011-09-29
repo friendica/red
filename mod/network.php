@@ -78,23 +78,25 @@ function network_init(&$a) {
 	
 	// network links moved to content to match other pages
 	// all
-	$a->page['content'] .= '<a class="tabs ' . $all_active . '" href="' . $a->get_baseurl() . '/' 
+	// added 'button' class for easier styling - not the best place for it, should be moved into the tpl like profile_tabs.tpl
+	// once there is a network_tabs.tpl or something
+	$a->page['content'] .= '<a class="button tabs ' . $all_active . '" href="' . $a->get_baseurl() . '/' 
 		. str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') . '">' 
 		. t('All') . '</a>';
 		
 	// new
-	$a->page['content'] .= '<a class="tabs ' . $new_active . '" href="' . $a->get_baseurl() . '/' 
+	$a->page['content'] .= '<a class="button tabs ' . $new_active . '" href="' . $a->get_baseurl() . '/' 
 		. str_replace('/new', '', $a->cmd) . '/new' 
 		. ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '">' 
 		. t('New') . '</a>';
 	
 	// starred
-	$a->page['content'] .= '<a class="tabs ' . $starred_active . '" href="' . $a->get_baseurl() . '/'
+	$a->page['content'] .= '<a class="button tabs ' . $starred_active . '" href="' . $a->get_baseurl() . '/'
 		. str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '&star=1" >' 
 		. t('Starred') . '</a>';
 	
 	// bookmarks
-	$a->page['content'] .= '<a class="tabs ' . $bookmarked_active . '" href="' . $a->get_baseurl() . '/'
+	$a->page['content'] .= '<a class="button tabs ' . $bookmarked_active . '" href="' . $a->get_baseurl() . '/'
 		. str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '&bmark=1" >' 
 		. t('Bookmarks') . '</a>';
 	
