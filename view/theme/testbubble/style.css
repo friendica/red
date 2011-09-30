@@ -7,14 +7,11 @@
 */
 /* ========== */
 /* = Colors
-
 Red links - #b20202
 Red link hover - #db0503
 Red Gradients (buttons and other gradients) - #b20202 and #d60808
-
 Grey/body text - #626262
 Grey Gradients (buttons and other gradients) - #bdbdbd and #a2a2a2
-
 Dark Grey Gradients - #7c7d7b and #555753
 
 You can switch out the colors of the header, buttons and links by using a find and replace in your text editor.
@@ -134,7 +131,7 @@ section {
 .mframe {
 	padding: 5px;
 	background-color: #efefef;
-	border: 2px dotted #eeeeee;
+	border: 2px solid #dddddd;
 	-moz-box-shadow: 3px 3px 4px #959494;
 	-webkit-box-shadow: 3px 3px 4px #959494;
 	box-shadow: 3px 3px 4px #959494;
@@ -452,14 +449,10 @@ aside a{
 	font-variant:small-caps;
 }
 
-.marital {
-	font-size: 1em;
-	font-variant:small-caps;	
-}
-
-.homepage-label {
-	font-size: 1em;
-	font-variant:small-caps;	
+.vcard dd {
+	font-size: 12px;
+	font-variant: normal;
+	-webkit-margin-start: 10px;
 }
 
 .vcard .fn {
@@ -1304,7 +1297,11 @@ div[id$="wrapper"] br { clear: left; }
 }
 
 .photo-top-photo,
-.photo-album-photo {} 
+.photo-album-photo {
+	width: 180px;
+	height: 180px;
+	overflow: hidden;
+}
 
 .photo-top-album-name {
 	position: absolute;
@@ -1587,16 +1584,15 @@ input#photo_edit_form {
 	font-size: 1em;	
 }
 
-
 #prvmail-submit-wrapper { margin-top: 10px; }
 #prvmail-submit {
 	float: right;
 	margin-top: 0px;
-	margin-right: 90px;
+	margin-right: 0px;
 }
 
 #prvmail-upload {
-margin-left: 90px;	
+margin-left: 0px;	
 }
 
 #prvmail-submit-wrapper > div {
@@ -1637,7 +1633,7 @@ margin-left: 90px;
 	float: right;
 	clear: block;
 	display: inline;
-	font-size: 0.8em;
+	font-size: 0.9em;
 	padding-left: 10px;
 	font-stretch:ultra-condensed;
 	font-variant:small-caps;
@@ -1654,9 +1650,13 @@ margin-left: 90px;
 	color: #626262;
 }
 
-.mail-list-delete-wrapper { float: left; margin-right:550px; }
+.mail-list-delete-wrapper { float: right;}
 .mail-list-outside-wrapper-end {
 	clear: both;
+}
+
+.mail-conv-outside-wrapper {
+	margin-bottom: 10px;
 }
 
 .mail-conv-sender {float: left; margin: 0px 5px 5px 0px; }
@@ -1675,13 +1675,20 @@ margin-left: 90px;
 .mail-conv-detail {
 	width: 500px;
 	padding: 30px;
+	padding-bottom: 10px;
 	margin-left: 20px;
+	margin-bottom: 0px;
 	vertical-align: middle;
 	margin: auto;
 	border: 1px solid #dddddd;
 }
 .mail-conv-break { display: none; border: none;}
-.mail-conv-delete-wrapper { margin-top: 5px; width: 650px; text-align: right; }
+.mail-conv-delete-wrapper { padding-top: 10px; width: 510px; text-align: right; }
+
+#prvmail-subject {
+	font-weight: bold;
+	border: none;
+}
 
 /* ================= */
 /* = Notifications = */
@@ -2061,56 +2068,19 @@ margin-left: 90px;
 	padding-top: 10px;
 }
 
-#profile-tab-status-link:hover {
+#profile-tab-status-link {
 	border: 0px;
 	padding: 5px 10px 5px 10px;
 	font-style: bold;
-	color: #efefef;
-	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #b20202), color-stop(1, #d60808) );
-	background:-moz-linear-gradient( center top, #b20202 5%, #d60808 100% );
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#b20202', endColorstr='#d60808');
-	background-color:#b20202;
-}
-
-#profile-tab-status-link:active {
-	border: 0px;
-	padding: 5px 10px 5px 10px;
-	font-style: bold;
-	background-color: #b20202;
-	position:relative;
-	top:1px;
-}
-
-#profile-tab-status-link a {
-	color: #efefef;
 }
 
 #uexport-link a {
 	color: #efefef;
 }
 
-#profile-tab-profile-link:hover {
+#profile-tab-profile-link {
 	border: 0px;
 	padding: 5px 10px 5px 10px;
-	font-style: bold;
-	color: #efefef;
-	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #b20202), color-stop(1, #d60808) );
-	background:-moz-linear-gradient( center top, #b20202 5%, #d60808 100% );
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#b20202', endColorstr='#d60808');
-	background-color:#b20202;
-}
-
-#profile-tab-profile-link:active {
-	border: 0px;
-	padding: 5px 10px 5px 10px;
-	font-style: bold;
-	background-color: #b20202;
-	position:relative;
-	top:1px;
-}
-
-#profile-tab-profile-link a {
-	color: #efefef;
 }
 
 #uexport-link {
@@ -2246,7 +2216,7 @@ margin-left: 90px;
 	display: inline;
 	padding: 5px;
 	margin-bottom: 10px;
-	-moz-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
+/*	-moz-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
 	-webkit-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
 	box-shadow:inset 0px 1px 0px 0px #cfcfcf;
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #bdbdbd), color-stop(1, #a2a2a2) );
@@ -2255,10 +2225,10 @@ margin-left: 90px;
 	background-color:#bdbdbd;
 	-moz-border-radius:5px;
 	-webkit-border-radius:5px;
-	border-radius:5px;
+	border-radius:5px;*/
 }
 
-.group-delete-wrapper:hover {
+/*.group-delete-wrapper:hover {
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #b20202), color-stop(1, #d60808) );
 	background:-moz-linear-gradient( center top, #b20202 5%, #d60808 100% );
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#b20202', endColorstr='#d60808');
@@ -2275,7 +2245,7 @@ margin-left: 90px;
 .group-delete-wrapper a {
 	color: #efefef;
 	font-size: 0.9em;
-}
+}*/
 
 #group-edit-desc { margin: 10px 0xp; }
 #group-new-text {font-size: 1.1em;}
@@ -2602,7 +2572,9 @@ tr {
 .admin.link {
 	list-style-position: inside;
 	font-size: 1em;
-	padding: 3px;
+	padding: 5px;
+	width: 100px;
+	margin: 5px;
 }
 
 #adminpage dl {
