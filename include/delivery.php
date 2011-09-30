@@ -72,7 +72,7 @@ function delivery_run($argv, $argc){
 		$normal_mode = false;
 		$expire = true;
 		$items = q("SELECT * FROM `item` WHERE `uid` = %d AND `wall` = 1 
-			AND `deleted` = 1 AND `changed` > UTC_TIMESTAMP - INTERVAL 30 MINUTE",
+			AND `deleted` = 1 AND `changed` > UTC_TIMESTAMP() - INTERVAL 30 MINUTE",
 			intval($item_id)
 		);
 		$uid = $item_id;
