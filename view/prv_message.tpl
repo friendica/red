@@ -15,7 +15,7 @@ $select
 <div id="prvmail-message-label">$yourmessage</div>
 <textarea rows="8" cols="72" class="prvmail-text" id="prvmail-text" name="body" ></textarea>
 
-</div>
+
 <div id="prvmail-submit-wrapper" >
 	<input type="submit" id="prvmail-submit" name="submit" value="Submit" />
 	<div id="prvmail-upload-wrapper" >
@@ -29,5 +29,6 @@ $select
 	</div> 
 </div>
 <div id="prvmail-end"></div>
+</div>
 </form>
 </div>

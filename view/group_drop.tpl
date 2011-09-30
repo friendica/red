@@ -1,7 +1,6 @@
-<div class="group-delete-wrapper" id="group-delete-wrapper-$id" >
+<div class="group-delete-wrapper button" id="group-delete-wrapper-$id" >
 	<a href="group/drop/$id" 
 		onclick="return confirmDelete();" 
-		title="$delete" 
 		id="group-delete-icon-$id" 
 		class="icon drophide group-delete-icon" 
 		onmouseover="imgbright(this);" 
