@@ -450,7 +450,7 @@ function conversation(&$a, $items, $mode, $update) {
 				);
 
 				$star = false;
-				$starred = "unstarred";
+				$isstarred = "unstarred";
 				if ($profile_owner == local_user() && $toplevelpost) {
 					$isstarred = (($item['starred']) ? "starred" : "unstarred");
 
