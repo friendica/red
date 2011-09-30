@@ -140,7 +140,6 @@ call_hooks('app_menu', $arr);
 
 $a->apps = $arr['app_menu'];
 
-
 /**
  *
  * We have already parsed the server path into $a->argc and $a->argv

@@ -177,7 +177,7 @@ function nav_set_selected($item){
 		'profiles'		=> null,
 		'notifications'	=> null,
 		'messages'		=> null,
-		'directyory'	=> null,
+		'directory'	=> null,
 		'settings'		=> null,
 		'contacts'		=> null,
 	);

@@ -17,18 +17,19 @@
 			 onmouseover="if (typeof tmenu != 'undefined') clearTimeout(tmenu); openMenu('user-menu-popup')" 
 			 onmouseout="tmenu=setTimeout('closeMenu(\'user-menu-popup\');',200)">
 
-			{{ if $nav.register }}<li><a id="nav-register-link" class="nav-commlink $nav.register.2" href="$nav.register.0"  title="$nav.register.1">$nav.register.1</a></li>{{ endif }}
+			{{ if $nav.register }}<li><a id="nav-register-link" class="nav-commlink $nav.register.2" href="$nav.register.0">$nav.register.1</a></li>{{ endif }}
 			
 			{{ if $nav.home }}<li><a id="nav-home-link" class="nav-commlink $nav.home.2" href="$nav.home.0">$nav.home.1</a></li>{{ endif }}
 		
 			{{ if $nav.network }}<li><a id="nav-network-link" class="nav-commlink $nav.network.2" href="$nav.network.0">$nav.network.1</a></li>{{ endif }}
 		
 				{{ if $nav.community }}
-				<li><a id="nav-community-link" class="nav-commlink $nav.community.2" href="$nav.community.0" title="$nav.community.3" >$nav.community.1</a></li>
+				<li><a id="nav-community-link" class="nav-commlink $nav.community.2" href="$nav.community.0">$nav.community.1</a></li>
 				{{ endif }}
 
-			<li><a id="nav-search-link" class="nav-link $nav.search.2" href="$nav.search.0" title="$nav.search.1">$nav.search.1</a></li>
-			<li><a id="nav-directory-link" class="nav-link $nav.directory.2" href="$nav.directory.0" title="$nav.directory.1">$nav.directory.1</a></li>
+			<li><a id="nav-search-link" class="nav-link $nav.search.2" href="$nav.search.0">$nav.search.1</a></li>
+			<li><a id="nav-directory-link" class="nav-link $nav.directory.2" href="$nav.directory.0">$nav.directory.1</a></li>
+			{{ if $nav.apps }}<li><a id="nav-apps-link" class="nav-link $nav.apps.2" href="$nav.apps.0">$nav.apps.1</a></li>{{ endif }}
 			
 			{{ if $nav.notifications }}<li><a id="nav-notify-link" class="nav-commlink nav-sep $nav.notifications.2" href="$nav.notifications.0">$nav.notifications.1</a></li>{{ endif }}
 			{{ if $nav.messages }}<li><a id="nav-messages-link" class="nav-commlink $nav.messages.2" href="$nav.messages.0">$nav.messages.1</a></li>{{ endif }}
@@ -41,15 +42,14 @@
 		
 			{{ if $nav.admin }}<li><a id="nav-admin-link" class="nav-commlink $nav.admin.2" href="$nav.admin.0">$nav.admin.1</a></li>{{ endif }}
 			
-			<li><a id="nav-help-link" class="nav-link $nav.help.2" href="$nav.help.0" title="$nav.help.1">$nav.help.1</a></li>
+			<li><a id="nav-help-link" class="nav-link $nav.help.2" href="$nav.help.0">$nav.help.1</a></li>
 
-			{{ if $nav.login }}<li><a id="nav-login-link" class="nav-link $nav.login.2" href="$nav.login.0" title="$nav.login.1">$nav.login.1</a></li> {{ endif }}
+			{{ if $nav.login }}<li><a id="nav-login-link" class="nav-link $nav.login.2" href="$nav.login.0">$nav.login.1</a></li> {{ endif }}
 			{{ if $nav.logout }}<li><a id="nav-logout-link" class="nav-commlink nav-sep $nav.logout.2" href="$nav.logout.0">$nav.logout.1</a></li> {{ endif }}
 		</ul>
 	</div>
 
 
-	{{ if $nav.apps }}<a id="nav-apps-link" class="nav-link $nav.apps.2" href="$nav.apps.0" title="$nav.apps.1">$nav.apps.1</a>{{ endif }}
 
 </nav>
 

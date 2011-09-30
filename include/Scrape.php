@@ -533,7 +533,7 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 
 		if($twitter || ! $poll)
 			$check_feed = true;
-		if((! isset($vcard)) || (! $profile))
+		if((! isset($vcard)) || (! x($vcard,'fn')) || (! $profile))
 			$check_feed = true;
 		if(($at_addr) && (! count($links)))
 			$check_feed = false;

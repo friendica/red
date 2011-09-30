@@ -1,12 +1,12 @@
 {#<div class="wall-item-outside-wrapper$indent wallwall" id="wall-item-outside-wrapper-$id" >
 	<div class="wall-item-content-wrapper$indent" id="wall-item-content-wrapper-$id" >
 		<div class="wall-item-info wallwall" id="wall-item-info-$id">
-			<div class="wall-item-photo-wrapper wwto" id="wall-item-ownerphoto-wrapper-$id" >
+			<div class="wall-item-photo-wrapper mframe wwto" id="wall-item-ownerphoto-wrapper-$id" >
 				<a href="$owner_url" target="redir" title="$olinktitle" class="wall-item-photo-link" id="wall-item-ownerphoto-link-$id">
 				<img src="$owner_photo" class="wall-item-photo$osparkle" id="wall-item-ownerphoto-$id" style="height: 80px; width: 80px;" alt="$owner_name" /></a>
 			</div>
 			<div class="wall-item-arrowphoto-wrapper" ><img src="images/larrow.gif" alt="$wall" /></div>
-			<div class="wall-item-photo-wrapper wwfrom" id="wall-item-photo-wrapper-$id" 
+			<div class="wall-item-photo-wrapper mframe wwfrom" id="wall-item-photo-wrapper-$id" 
 				onmouseover="if (typeof t$id != 'undefined') clearTimeout(t$id); openMenu('wall-item-photo-menu-button-$id')"
                 onmouseout="t$id=setTimeout('closeMenu(\'wall-item-photo-menu-button-$id\'); closeMenu(\'wall-item-photo-menu-$id\');',200)">
 				<a href="$profile_url" target="redir" title="$linktitle" class="wall-item-photo-link" id="wall-item-photo-link-$id">
