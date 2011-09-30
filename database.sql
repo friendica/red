@@ -424,7 +424,9 @@ CREATE TABLE IF NOT EXISTS `user` (
   `deny_gid` mediumtext NOT NULL,
   `openidserver` text NOT NULL,
   PRIMARY KEY (`uid`), 
-  KEY `nickname` (`nickname`)
+  KEY `nickname` (`nickname`),
+  KEY `account_expired` (`account_expired`),
+  KEY `login_date` (`login_date`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 

@@ -44,6 +44,12 @@ function poller_run($argv, $argc){
 		AND `account_expires_on` != '0000-00-00 00:00:00' 
 		AND `account_expires_on` < UTC_TIMESTAMP() ");
   
+	$abandon_days = intval(get_config('system','account_abandon_days'));
+	if($abandon_days < 1)
+		$abandon_days = 0;
+
+	
+
 	// once daily run expire in background
 
 	$d1 = get_config('system','last_expire_day');
@@ -92,12 +98,17 @@ function poller_run($argv, $argc){
 	// and which have a polling address and ignore Diaspora since 
 	// we are unable to match those posts with a Diaspora GUID and prevent duplicates.
 
+	$abandon_sql = (($abandon_days) 
+		? sprintf(" AND `user`.`login_date` > UTC_TIMESTAMP() - INTERVAL %d DAY ", intval($abandon_days)) 
+		: '' 
+	);
+
 	$contacts = q("SELECT `contact`.`id` FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
 		WHERE ( `rel` = %d OR `rel` = %d ) AND `poll` != ''
 		AND `network` != '%s'
 		$sql_extra 
 		AND `self` = 0 AND `contact`.`blocked` = 0 AND `contact`.`readonly` = 0 
-		AND `user`.`account_expired` = 0 ORDER BY RAND()",
+		AND `user`.`account_expired` = 0 $abandon_sql ORDER BY RAND()",
 		intval(CONTACT_IS_SHARING),
 		intval(CONTACT_IS_FRIEND),
 		dbesc(NETWORK_DIASPORA)

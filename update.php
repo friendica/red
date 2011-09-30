@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1092 );
+define( 'UPDATE_VERSION' , 1093 );
 
 /**
  *
@@ -770,3 +770,7 @@ function update_1091() {
 
 }
 
+function update_1092() {
+	q("ALTER TABLE `user` ADD INDEX ( `login_date` ) ");
+	q("ALTER TABLE `user` ADD INDEX ( `account_expired` ) ");
+}
