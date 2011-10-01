@@ -92,15 +92,11 @@ EOT;
 
 function photos_post(&$a) {
 
-	logger('mod/photos.php: photos_post(): begin' , 'LOGGER_DEBUG');
+	logger('mod-photos: photos_post(): begin' , 'LOGGER_DEBUG');
 
-	foreach($_REQUEST AS $key => $val) {
-		logger('mod/photos.php: photos_post(): $_REQUEST key: ' . $key . ' val: ' . $val , 'LOGGER_DEBUG');
-	}
 
-	foreach($_FILES AS $key => $val) {
-		logger('mod/photos.php: photos_post(): $_FILES key: ' . $key . ' val: ' . $val , 'LOGGER_DEBUG');
-	}
+	logger('mod_photos: REQUEST ' . print_r($_REQUEST,true), LOGGER_DATA);
+	logger('mod_photos: FILES '   . print_r($_FILES,true), LOGGER_DATA);
 
 	$can_post  = false;
 	$visitor   = 0;
@@ -585,7 +581,7 @@ function photos_post(&$a) {
 	else
 		$visible = 0;
 
-	if(intval($_REQUEST,'not_visible'))
+	if(intval($_REQUEST['not_visible']))
 		$visible = 0;
 
 	$str_group_allow   = perms2str(((is_array($_REQUEST['group_allow']))   ? $_REQUEST['group_allow']   : explode(',',$_REQUEST['group_allow'])));
@@ -895,6 +891,7 @@ function photos_content(&$a) {
 			'$nickname' => $a->data['user']['nickname'],
 			'$newalbum' => t('New album name: '),
 			'$existalbumtext' => t('or existing album name: '),
+			'$nosharetext' => t('Do not show a status post for this upload'),
 			'$albumselect' => template_escape($albumselect),
 			'$permissions' => t('Permissions'),
 			'$aclselect' => (($visitor) ? '' : template_escape(populate_acl($a->user, $celeb))),
