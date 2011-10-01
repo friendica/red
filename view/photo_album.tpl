@@ -3,6 +3,5 @@
 		<img src="$imgsrc" alt="$imgalt" title="$phototitle" class="photo-album-photo lframe  resize" id="photo-album-photo-$id" />
 		<p class='caption'>$desc</p>		
 	</a>
-	
 </div>
 <div class="photo-album-image-wrapper-end"></div>
