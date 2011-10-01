@@ -128,6 +128,11 @@ function photo_init(&$a) {
 		}
 	}
 
+	if(function_exists('header_remove')) {
+		header_remove('Pragma');
+		header_remove('pragma');
+	}
+
 	header("Content-type: image/jpeg");
  	header("Expires: " . gmdate("D, d M Y H:i:s", time() + (3600*24)) . " GMT");
 	header("Cache-Control: max-age=" . (3600*24));
