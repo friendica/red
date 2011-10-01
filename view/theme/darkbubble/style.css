@@ -18,10 +18,14 @@ body {
 	background-position: 0 50%;
 	padding-left: 18px;
 	width: 385px;
-	
-/*	background: #FFFFFF;*/
 	color: #000000;
-	
+}
+
+.vevent, .eventcal {
+	color: #000000;
+}
+.event-list-date {
+	color: #DDDDDD;
 }
 
 .fortunate {
