@@ -1250,7 +1250,7 @@ div[id$="wrapper"] br { clear: left; }
 /* ========== */
 
 #side-bar-photos-albums li {
-	font-size: 1.2em;
+	font-size: 14px;
 	font-variant: none;
 }
 
@@ -1279,12 +1279,28 @@ div[id$="wrapper"] br { clear: left; }
 	background-color: #b20202;	
 }
 
-.photo-album-image-wrapper,
-.photo-top-image-wrapper { 
-	float: left; 
+.photo-album-image-wrapper { 
+	float: left;
 	margin: 0px 10px 10px 0px;
 	padding-bottom: 30px;
 	position:relative;	
+}
+
+.photo-top-image-wrapper {
+	float: left;
+	width: 180px;
+	height: 180px;
+	margin: 0px 10px 10px 0px;
+	padding-bottom: 30px;
+	position:relative;
+}
+
+#photo-album-wrapper-inner {
+	position: relative;
+	float: left;
+	width: 180px;
+	height: 180px;
+	overflow: hidden;
 }
 
 #photo-photo { max-width: 100% }
@@ -1296,12 +1312,8 @@ div[id$="wrapper"] br { clear: left; }
 	border-bottom: 0px; 
 }
 
-.photo-top-photo,
-.photo-album-photo {
-	width: 180px;
-	height: 180px;
-	overflow: hidden;
-}
+.photo-top-photo {}
+.photo-album-photo {} 
 
 .photo-top-album-name {
 	position: absolute;
@@ -2216,7 +2228,7 @@ margin-left: 0px;
 	display: inline;
 	padding: 5px;
 	margin-bottom: 10px;
-/*	-moz-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
+	-moz-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
 	-webkit-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
 	box-shadow:inset 0px 1px 0px 0px #cfcfcf;
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #bdbdbd), color-stop(1, #a2a2a2) );
@@ -2228,7 +2240,7 @@ margin-left: 0px;
 	border-radius:5px;*/
 }
 
-/*.group-delete-wrapper:hover {
+.group-delete-wrapper:hover {
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #b20202), color-stop(1, #d60808) );
 	background:-moz-linear-gradient( center top, #b20202 5%, #d60808 100% );
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#b20202', endColorstr='#d60808');
@@ -2245,7 +2257,7 @@ margin-left: 0px;
 .group-delete-wrapper a {
 	color: #efefef;
 	font-size: 0.9em;
-}*/
+}
 
 #group-edit-desc { margin: 10px 0xp; }
 #group-new-text {font-size: 1.1em;}
