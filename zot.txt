@@ -1,7 +1,7 @@
 This is the Zot! social communications protocol. 
 
 Specification revision: 1
-15 September 2011
+2 October 2011
 
 Mike Macgirvin
 This specification is public domain.
@@ -78,16 +78,21 @@ zot:env
 *******
 
 This consists of RFC822-style header fields representing the sender and 
-recipient(s). Example:
+recipient(s). Line lengths have no defined limit and RFC822 continuation
+lines are not supported. If an inbound server is not able to process an
+envelope or post due to size constraints, it SHOULD return a 
+"413 Entity too large" HTTP response. 
 
-From: bob@example.com
-Sender: bob@example.com
-To: alice@example.com
+Example:
 
-Both "From:" and "Sender:" MUST be provided, and represent a webfinger 
-address of the author and sender respectively. The webfinger address for
-the From address MUST contain a discoverable salmon public key that
-is needed to verify the enclosed salmon data. Sender is used to indicate
+Z-From: zot:bob@example.com
+Z-Sender: zot:bob@example.com
+Z-To: zot:alice@example.com
+
+Both "Z-From:" and "Z-Sender:" MUST be provided, and represent a single 
+webfinger address of the author and sender respectively. The webfinger
+address for the From address MUST contain a discoverable salmon public key 
+which is needed to verify the enclosed salmon data. Sender is used to indicate
 the webfinger identity responsible for transmitting this message. From
 indicates the message author. 
 
@@ -95,46 +100,91 @@ In web-based social systems, a reply to a message SHOULD be conveyed to all of
 the original message participants. Only the author of the original message 
 may know all the recipients (such as those contained in Bcc: elements). The 
 author of a message always provides 'From'. They MUST duplicate this 
-information as 'Sender'.
+information as 'Sender' when posting a followup message.
 
-A reply to a given message MUST be sent to the original From address, and MAY
-be sent to any additional addresses in the recipient list. The original author
-MUST send the reply to all known recipients of the original message, with 
-their webfinger identity as Sender, and the comment/reply author as From.   
+A reply to a given message MUST be sent to the From address of the original
+post, and MAY be sent to any additional addresses in the recipient list. The
+original post author MUST send the reply to all known recipients of the 
+original message, with their webfinger identity as Sender, and the 
+comment/reply author as From.   
 
 Receiving agents SHOULD validate the From identity as the signer of the salmon
 magic envelope, and MAY reject it. They SHOULD also verify the Sender signature
 of the zot packet if it is different than the salmon signature. They MAY 
 reject the message if the Sender is not allowed in their "friend list", or if 
 they do not have a suitable relationship with the Sender, or if either
-signature fails to validate.  
+signature fails to validate. Rejected messages for one of these reasons SHOULD 
+be indicated with a "400 Bad Request" HTTP response.   
 
 
-To: *
+Z-To: *
 
 indicates a public message with no specifically enumerated recipients.
 
-The fields To:, Cc:, and/or Bcc: MAY be present. At least one recipient field
-MUST be present. These fields may use the entire syntax specified by RFC822,
-for example:
+The fields Z-To: and/or Z-Bcc: MAY be present. At least one recipient field
+MUST be present.
 
-To: "Bob Smith" <bob@example.com>, "Alice Jones" <alice@example.com>
+Z-To: zot:bob@example.com, zot:alice@example.com, mailto:dave@example.com 
+Z-Bcc: zot:https://example.com/profile/richard
 
-is a valid entry. A zot envelope is UTF-8 encoded, which differs from RFC822.
-The host component MUST be US-ASCII, with punycode translation of 
-internationalised domain names applied.
+are valid entries. Adresses are comma separated and individual entries MUST NOT
+contain commas. There MAY be any number of ASCII space characters between
+entries for legibility. Header lines are terminated with a linefeed character
+(ASCII 0x0A). 
 
-The entire envelope is then encrypted using alg with env_key and env_iv and
+This specification provides the following foreign protocol address prefixes
+for use in Z-To: or Z-Bcc: elements:
+
+zot: - normal zot delivery using webfinger or LRDD resolvable address
+ostatus: - normal OStatus delivery using webfinger or LRDD resovable address
+diaspora: - Diaspora network delivery using webfinger address
+facebook: - Facebook profile page URL
+twitter: - Twitter personal page URL without AJAX '#!' fragment
+mailto: - email RFC822/ESMTP address
+
+Examples:
+
+twitter:http://twitter.com/bjensen
+facebook:http://facebook.com/profile.php?id=000000001
+
+Foreign protocol addresses which have not been defined in this specification 
+or future revisions of this specification and which are unknown to the
+recipient delivery process MAY be ignored.
+
+In cases where an address may contain either a webfinger or LRDD address, the
+webfinger address SHOULD be used preferentially. 
+
+
+Z-Bcc:
+******
+
+The Z-Bcc element may contain one or more addresses which are hidden from end
+user presentation. A zot receiving system MUST NOT store or allow for
+the display of the Bcc information. Implementations which require extreme
+privacy SHOULD send individual posts to each of the Bcc: recipients containing
+only a single address. They MAY send all Bcc: posts using bulk delivery, 
+however this may have privacy implications as there is no guarantee a
+receiving system will not log, store, or otherwise reveal the contents of the
+Bcc recipient list.
+
+Z-To: addresses MAY be shown to an end user.   
+ 
+
+Envelope encryption
+*******************
+
+
+The entire envelope is encrypted using alg with env_key and env_iv and
 base64url encoded for transmission.
 
-The zot envelope MAY include remote addresses. A zot delivery agent MUST parse
-all addresses and determine whether a delivery address to the current endpoint
-is valid. This may be the result of:
+The zot envelope MAY include remote addresses. A zot inbound delivery agent
+MUST parse the envelope and determine whether a delivery address to the
+current endpoint is valid. This may be the result of:
 
 	1. An address contains the public message wildcard '*'
 
 	2. The current endpoint is a personal endpoint and one of the recipients
-listed in the To:, Cc:, or Bcc: addresses matches the webfinger address of
+listed in the Z-To: or Z-Bcc: addresses matches the webfinger address of
 the "owner" of the endpoint.
 
 	3. The current endpoint is a bulk delivery endpoint. The bulk delivery
@@ -219,7 +269,8 @@ We anticipate this specification will in the future allow for a close variant
 of "message/rfc822" and which may include MIME. This may also be used to 
 embed alternate message formats and protocols such as 
 "application/x-diaspora+xml". If a delivery agent is unable to provide any
-acceptable data format, the delivery MUST be terminated/cancelled. 
+acceptable data format to the remote system, the delivery to that system MUST
+be terminated/cancelled. 
 
 Foreign Messages
 ****************
@@ -233,9 +284,18 @@ systems MAY reject foreign messages.
 
 
 
-**********************
-* Zid authentication *
-**********************
+
+
+*******************************
+* Zid (Zot-ID) authentication *
+*******************************
+
+This section of the document is considered separate from the delivery 
+specification precding it and represents a different protocol, which is
+currently incomplete. This will be split off into another document in the
+future, but is presented here as a synergistic component of the Zot network
+model. 
+
 
 URLs may be present within a zot message which refer to private and/or
 protected resources. Zid uses OpenID to gain access to these protected
