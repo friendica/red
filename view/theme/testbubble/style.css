@@ -840,11 +840,16 @@ profile-jot-banner-wrapper {
 /* = Posts = */
 /* ========= */
 
-.wall-item-outside-wrapper { 
-	margin-top: 50px;
+.wall-item-outside-wrapper {
+	max-width: 85%;
+	border-bottom: 1px solid #dedede;
+	margin-top: 20px;
+	padding-right: 10px;
+	overflow: hidden;
 }
+
 .wall-item-outside-wrapper-end { clear: both;}
-.wall-item-content-wrapper { position: relative; max-width: 95%; }
+.wall-item-content-wrapper { position: relative; max-width: 100%; }
 .wall-item-photo-menu { display: none;}
 .wall-item-photo-menu-button {
 	display:none;
@@ -890,12 +895,13 @@ profile-jot-banner-wrapper {
 }
 
 .wall-item-outside-wrapper.comment .wall-item-tools {
-	margin: 5px 5px 10px 60px;
+	margin: 5px 5px 10px 70px;
 	float: left;
 }
 
 .wall-item-like-buttons {
 	float: left;
+	padding-left: 10px;
 }
 .wall-item-like-buttons a.icon {
 	float: left;
@@ -924,9 +930,13 @@ profile-jot-banner-wrapper {
 	float: left;	
 }
 .wall-item-title { font-size: 1.2em; font-weight: bold;}
-.wall-item-body { margin-left: 140px; padding-right: 20px; }
+.wall-item-body {
+	margin-left: 140px;
+	padding-right: 10px;
+	max-width: 85%;
+}
+
 .wall-item-body p {
-	max-width: 600px;
 	font-size: 0.8em;
 }
 .wall-item-lock-wrapper { float: right; }
@@ -936,6 +946,7 @@ profile-jot-banner-wrapper {
 	clear: left;
 	font-size: 0.9em;
 	margin: 4px 0px 0px 140px;
+	padding-left: 10px;
 	font-variant:small-caps;
 }
 
@@ -1042,11 +1053,7 @@ profile-jot-banner-wrapper {
 .icon.drop,
 .icon.drophide { float: left; }
 #item-delete-selected {	overflow: auto;	width: 100%;}
-.wall-item-outside-wrapper {
-	max-width: 83%;
-	border-bottom: 1px solid #dedede;
-	margin-top: 20px;
-}
+
 
 /* ============ */
 /* = Comments = */
@@ -1055,11 +1062,11 @@ profile-jot-banner-wrapper {
  .ccollapse-wrapper {
 	font-size: 0.9em;
 	color: #898989;
-	margin-left: 80px;
+	margin-left: 60px;
 	font-variant:small-caps;
 }
  
-.wall-item-outside-wrapper.comment { margin-left: 80px; }
+.wall-item-outside-wrapper.comment { margin-left: 70px; }
 .wall-item-outside-wrapper.comment .wall-item-photo {
 	width: 40px!important;
 	height: 40px!important;
@@ -1072,7 +1079,13 @@ profile-jot-banner-wrapper {
 	background-position: 35px center;
 }
 .wall-item-outside-wrapper.comment .wall-item-info { width: 60px; }
-.wall-item-outside-wrapper.comment .wall-item-body { margin-left: 60px; max-width: 85%;}
+.wall-item-outside-wrapper.comment .wall-item-body {
+	margin-left: 70px;
+	max-width: 85%;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
 .wall-item-outside-wrapper.comment .wall-item-author { margin-left: 60px;}
 
 .wall-item-outside-wrapper.comment .wall-item-photo-menu {
@@ -1249,9 +1262,18 @@ div[id$="wrapper"] br { clear: left; }
 /* = Photos = */
 /* ========== */
 
+#side-bar-photos-albums h3:before {
+	content: url("photography.png");
+	padding-right: 10px;
+	vertical-align: middle;
+}
+
 #side-bar-photos-albums li {
 	font-size: 14px;
 	font-variant: none;
+	text-align: left;
+	padding-left: 20px;
+	margin-bottom: 5px;
 }
 
 #photo-top-links {
@@ -1303,7 +1325,7 @@ div[id$="wrapper"] br { clear: left; }
 	overflow: hidden;
 }
 
-#photo-photo { max-width: 100% }
+#photo-photo { max-width: 85%; height: auto; }
 #photo-photo img { max-width: 100% }
 
 .photo-top-image-wrapper a:hover,
@@ -1511,16 +1533,6 @@ input#photo_edit_form {
 	margin-left: 190px;
 }
 
-#side-bar-photos-albums h3:before {
-	content: url("photography.png");
-	padding-right: 10px;
-	vertical-align: middle;
-}
-
-#side-bar-photos-albums li {
-	margin-bottom: 5px;
-}
-
 #photo-album-edit-wrapper {
 	margin-bottom: 10px;
 }
@@ -1699,7 +1711,7 @@ margin-left: 0px;
 
 #prvmail-subject {
 	font-weight: bold;
-	border: none;
+	border: 1px solid #dddddd;
 }
 
 /* ================= */
