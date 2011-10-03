@@ -45,13 +45,21 @@ function message_content(&$a) {
 
 	$myprofile = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
 
-
+	if (($a->argc > 1) && ($a->argv[1] === 'new')) {
+		$tab = 'new';
+	} else if ($a->argc == 2 && $a->argv[1] === 'sent') {
+		$tab = 'sent';
+	} else {
+		$tab = 'inbox';
+	}
+	
 	$tpl = get_markup_template('mail_head.tpl');
 	$header = replace_macros($tpl, array(
 		'$messages' => t('Messages'),
 		'$inbox' => t('Inbox'),
 		'$outbox' => t('Outbox'),
-		'$new' => t('New Message')
+		'$new' => t('New Message'),
+		'$activetab' => $tab
 	));
 
 
@@ -90,6 +98,8 @@ function message_content(&$a) {
 
 	if(($a->argc > 1) && ($a->argv[1] === 'new')) {
 		
+		$o .= $header;
+		
 		$tpl = get_markup_template('msg-header.tpl');
 
 		$a->page['htmlhead'] .= replace_macros($tpl, array(
@@ -114,7 +124,6 @@ function message_content(&$a) {
 			'$upload' => t('Upload photo'),
 			'$insert' => t('Insert web link'),
 			'$wait' => t('Please wait')
-
 		));
 
 		return $o;
@@ -248,7 +257,6 @@ function message_content(&$a) {
 			'$upload' => t('Upload photo'),
 			'$insert' => t('Insert web link'),
 			'$wait' => t('Please wait')
-
 		));
 
 		return $o;
