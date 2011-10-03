@@ -153,7 +153,7 @@
 /* global */
 body {
   font-family: Liberation Sans, helvetica, arial, clean, sans-serif;
-  font-size: 10px;
+  font-size: 12px;
   background-color: #ffffff;
   color: #2d2d2d;
   margin: 50px 0px 0px 0px;
@@ -574,12 +574,11 @@ section {
 }
 .wall-item-container .wall-item-actions-author {
   float: left;
-  width: 25%;
+  width: 20em;
   margin-top: 0.5em;
 }
 .wall-item-container .wall-item-actions-social {
   float: left;
-  width: 50%;
   margin-top: 0.5em;
 }
 .wall-item-container .wall-item-actions-social a {
@@ -587,7 +586,7 @@ section {
 }
 .wall-item-container .wall-item-actions-tools {
   float: right;
-  width: 25%;
+  width: 15%;
 }
 .wall-item-container .wall-item-actions-tools a {
   float: right;
@@ -609,4 +608,36 @@ section {
 }
 .wall-item-container.comment .wall-item-links {
   padding-left: 12px;
+}
+.wall-item-comment-wrapper {
+  margin: 30px 2em 2em 60px;
+}
+.wall-item-comment-wrapper .comment-edit-photo {
+  display: none;
+}
+.wall-item-comment-wrapper textarea {
+  height: 1em;
+  width: 100%;
+  font-size: 10px;
+  color: #999999;
+  border: 1px solid #999999;
+  padding: 0.3em;
+}
+.wall-item-comment-wrapper .comment-edit-text-full {
+  font-size: 14px;
+  height: 4em;
+  color: #2d2d2d;
+  border: 1px solid #2d2d2d;
+}
+#profile-jot-wrapper {
+  width: 100%;
+  margin: 0px 2em 20px 0px;
+}
+.profile-jot-text {
+  height: 1em;
+  width: 100%;
+  font-size: 10px;
+  color: #999999;
+  border: 1px solid #999999;
+  padding: 0.3em;
 }
