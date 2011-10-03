@@ -841,11 +841,10 @@ profile-jot-banner-wrapper {
 /* ========= */
 
 .wall-item-outside-wrapper {
-	max-width: 85%;
+	max-width: 83%;
 	border-bottom: 1px solid #dedede;
 	margin-top: 20px;
 	padding-right: 10px;
-	overflow: hidden;
 }
 
 .wall-item-outside-wrapper-end { clear: both;}
@@ -1251,14 +1250,26 @@ div[id$="wrapper"] br { clear: left; }
 }
 
 .profile-match-wrapper {
-	width: 300px;
-	padding: 5px;
+	width: 80%;
+	padding: 15px;
 	margin-bottom:10px;
+	margin-left: 20px;
 	background-color: #f6f6f6;
 	border: 1px solid #dddddd;
 	-moz-box-shadow: 3px 3px 4px #959494;
 	-webkit-box-shadow: 3px 3px 4px #959494;
-	box-shadow: 3px 3px 4px #959494;	
+	box-shadow: 3px 3px 4px #959494;
+	clear: both;	
+}
+
+.profile-match-end {
+	clear: both;
+}
+
+.profile-match-photo {
+	float: left;
+	margin-right: 10px;
+	margin-bottom: 5px;
 }
 
 /* ========== */
@@ -1716,48 +1727,6 @@ margin-left: 0px;
 	font-weight: bold;
 	border: 1px solid #dddddd;
 }
-
-/* ================= */
-/* = Notifications = */
-/* ================= */
-
-/*#notification-show-hide-wrapper {
-	width: 160px;
-	-moz-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
-	-webkit-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
-	box-shadow:inset 0px 1px 0px 0px #cfcfcf;
-	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #bdbdbd), color-stop(1, #a2a2a2) );
-	background:-moz-linear-gradient( center top, #bdbdbd 5%, #a2a2a2 100% );
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#bdbdbd', endColorstr='#a2a2a2');
-	background-color:#bdbdbd;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	border-radius:5px;
-	padding: 5px 10px 5px 10px;
-	margin-right: 5px;
-	margin-top: 10px;
-	font-style: bold;
-	color: #efefef;
-	text-align: center;
-}
-
-#notification-show-hide-wrapper:hover {
-	color: #efefef;
-	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #b20202), color-stop(1, #d60808) );
-	background:-moz-linear-gradient( center top, #b20202 5%, #d60808 100% );
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#b20202', endColorstr='#d60808');
-	background-color:#b20202;
-}
-
-#notification-show-hide-wrapper:active {
-	background-color: #b20202;
-	position:relative;
-	top:1px;
-}
-
-#notification-show-hide-wrapper a {
-	color: #efefef;
-}*/
 
 /* ============ */
 /* = Contacts = */

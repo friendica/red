@@ -22,6 +22,7 @@ function match_content(&$a) {
 
 	$params = array();
 	$tags = trim($r[0]['pub_keywords'] . ' ' . $r[0]['prv_keywords']);
+	
 	if($tags) {
 		$params['s'] = $tags;
 		if($a->pager['page'] != 1)
@@ -40,15 +41,17 @@ function match_content(&$a) {
 		}
 
 		if(count($j->results)) {
+			
+			$tpl = get_markup_template('match.tpl');
 			foreach($j->results as $jj) {
-
-				$o .= '<div class="profile-match-wrapper"><div class="profile-match-photo">';
-				$o .= '<a href="' . $jj->url . '">' . '<img src="' . $jj->photo . '" alt="' . $jj->name . '" title="' . $jj->name . '[' . $jj->tags . ']' . '" /></a></div>';
-				$o .= '<div class="profile-match-break"></div>';
-				$o .= '<div class="profile-match-name"><a href="' . $jj->url . '" title="' . $jj->name . '[' . $jj->url .']' . '">' . $jj->name . '</a></div>';
-				$o .= '<div class="profile-match-end"></div></div>';
+				
+				$o .= replace_macros($tpl,array(
+					'$url' => $jj->url,
+					'$name' => $jj->name,
+					'$photo' => $jj->photo,
+					'$tags' => $jj->tags
+				));
 			}
-			$o .= '<div id="profile-match-wrapper-end"></div>';
 		}
 		else {
 			info( t('No matches') . EOL);
