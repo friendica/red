@@ -164,6 +164,15 @@
 	});
 
 	function NavUpdate() {
+		if(! stopped) {
+			$.get("ping",function(data) {
+				$(data).find('result').each(function() {
+					// send nav-update event
+					$('nav').trigger('nav-update', this);
+				});
+			}) ;
+		}
+
 
 		if($('#live-network').length)   { src = 'network'; liveUpdate(); }
 		if($('#live-profile').length)   { src = 'profile'; liveUpdate(); }
@@ -182,14 +191,6 @@
 			}
 		}
 
-		if(! stopped) {
-			$.get("ping",function(data) {
-				$(data).find('result').each(function() {
-					// send nav-update event
-					$('nav').trigger('nav-update', this);
-				});
-			}) ;
-		}
 		timer = setTimeout(NavUpdate,30000);
 	}
 
