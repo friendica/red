@@ -3,24 +3,22 @@
 
 function tagmatch_content(&$a) {
 
-	$search = $_REQUEST['search'];
+	$search = notags(trim($_REQUEST['search']));
 	
 	$o = '';
-	if(! local_user())
-		return;
 
-	$o .= '<h2>' . t('Tag Match') . ' - ' . notags($search) . '</h2>';
-
+	$o .= '<h2>' . t('Tag Match') . ' - ' . $search . '</h2>';
 	
 	if($search) {
-		$params['s'] = $search;
-		if($a->pager['page'] != 1)
-			$params['p'] = $a->pager['page'];
+
+		$p = (($a->pager['page'] != 1) ? '&p=' . $a->pager['page'] : '');
 			
 		if(strlen(get_config('system','directory_submit_url')))
-			$x = fetch_url('http://dir.friendika.com/lsearch?f=&search=' . urlencode($search));
+			$x = fetch_url('http://dir.friendika.com/lsearch?f=' . $p .  '&search=' . urlencode($search));
+
+//TODO fallback local search if global dir not available.
 //		else
-//			$x = post_url($a->get_baseurl() . '/msearch', $params);
+//			$x = post_url($a->get_baseurl() . '/lsearch', $params);
 
 		$j = json_decode($x);
 
