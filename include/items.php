@@ -807,6 +807,14 @@ function item_store($arr,$force_parent = false) {
 		}
 	}
 
+	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+		dbesc($arr['uri']),
+		dbesc($arr['uid'])
+	);
+	if($r && count($r)) {
+		logger('item-store: duplicate item ignored. ' . print_r($arr,true));
+		return 0;
+	}
 
 	call_hooks('post_remote',$arr);
 
