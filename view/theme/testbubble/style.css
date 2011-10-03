@@ -361,7 +361,7 @@ ul#user-menu-popup li a.nav-sep { border-top: 1px solid #989898; border-style:in
 #notifications {
 	height: 32px;
 	position: absolute;
-	top:10px; left: 650px;
+	top:10px; left: 40%;
 }
 .nav-ajax-update {
 	width: 44px;
@@ -373,10 +373,10 @@ ul#user-menu-popup li a.nav-sep { border-top: 1px solid #989898; border-style:in
 	padding-top: 0.5em;
 	float: left;
 	padding-left: 11px;
-    display: none;
+    /*display: none;*/
 }
 #net-update { background-position: 0px 0px; }
-#mail-update { background-position: 0px -42px; }
+#mail-update { background-position: 0px -40px; }
 #notify-update { background-position: 0px -84px; }
 #home-update { background-position: 0px -126px; }
 
@@ -1146,11 +1146,14 @@ profile-jot-banner-wrapper {
 }
 
 .wall-item-body code {
-    border-color: #CCCCCC;
-    border-style: solid;
+	font-family: Courier, monospace;
+	white-space: pre;
+	display: block;
+	overflow: auto;
+	border: 1px solid #cccccc;
     border-width: 1px 1px 1px 10px;
-    display: block;
-    padding-left: 10px;
+	padding-left: 10px;
+	margin-top: 20px; 
 }
 
 /* =========== */
