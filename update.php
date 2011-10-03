@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1093 );
+define( 'UPDATE_VERSION' , 1094 );
 
 /**
  *
@@ -773,4 +773,17 @@ function update_1091() {
 function update_1092() {
 	q("ALTER TABLE `user` ADD INDEX ( `login_date` ) ");
 	q("ALTER TABLE `user` ADD INDEX ( `account_expired` ) ");
+}
+
+function update_1093() {
+	q("CREATE TABLE IF NOT EXISTS `fserver` (
+	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`server` CHAR( 255 ) NOT NULL ,
+	`posturl` CHAR( 255 ) NOT NULL ,
+	`key` TEXT NOT NULL,
+	INDEX ( `server` )
+	) ENGINE = MYISAM ");
+
+	q("ALTER TABLE `group` ADD `visible` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `uid` ");
+
 }

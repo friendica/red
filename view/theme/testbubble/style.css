@@ -361,7 +361,7 @@ ul#user-menu-popup li a.nav-sep { border-top: 1px solid #989898; border-style:in
 #notifications {
 	height: 32px;
 	position: absolute;
-	top:10px; left: 650px;
+	top:10px; left: 40%;
 }
 .nav-ajax-update {
 	width: 44px;
@@ -373,10 +373,10 @@ ul#user-menu-popup li a.nav-sep { border-top: 1px solid #989898; border-style:in
 	padding-top: 0.5em;
 	float: left;
 	padding-left: 11px;
-    display: none;
+    /*display: none;*/
 }
 #net-update { background-position: 0px 0px; }
-#mail-update { background-position: 0px -42px; }
+#mail-update { background-position: 0px -40px; }
 #notify-update { background-position: 0px -84px; }
 #home-update { background-position: 0px -126px; }
 
@@ -840,11 +840,16 @@ profile-jot-banner-wrapper {
 /* = Posts = */
 /* ========= */
 
-.wall-item-outside-wrapper { 
-	margin-top: 50px;
+.wall-item-outside-wrapper {
+	max-width: 85%;
+	border-bottom: 1px solid #dedede;
+	margin-top: 20px;
+	padding-right: 10px;
+	overflow: hidden;
 }
+
 .wall-item-outside-wrapper-end { clear: both;}
-.wall-item-content-wrapper { position: relative; max-width: 95%; }
+.wall-item-content-wrapper { position: relative; max-width: 100%; }
 .wall-item-photo-menu { display: none;}
 .wall-item-photo-menu-button {
 	display:none;
@@ -890,12 +895,13 @@ profile-jot-banner-wrapper {
 }
 
 .wall-item-outside-wrapper.comment .wall-item-tools {
-	margin: 5px 5px 10px 60px;
+	margin: 5px 5px 10px 70px;
 	float: left;
 }
 
 .wall-item-like-buttons {
 	float: left;
+	padding-left: 10px;
 }
 .wall-item-like-buttons a.icon {
 	float: left;
@@ -924,9 +930,13 @@ profile-jot-banner-wrapper {
 	float: left;	
 }
 .wall-item-title { font-size: 1.2em; font-weight: bold;}
-.wall-item-body { margin-left: 140px; padding-right: 20px; }
+.wall-item-body {
+	margin-left: 140px;
+	padding-right: 10px;
+	max-width: 85%;
+}
+
 .wall-item-body p {
-	max-width: 600px;
 	font-size: 0.8em;
 }
 .wall-item-lock-wrapper { float: right; }
@@ -936,6 +946,7 @@ profile-jot-banner-wrapper {
 	clear: left;
 	font-size: 0.9em;
 	margin: 4px 0px 0px 140px;
+	padding-left: 10px;
 	font-variant:small-caps;
 }
 
@@ -1042,11 +1053,7 @@ profile-jot-banner-wrapper {
 .icon.drop,
 .icon.drophide { float: left; }
 #item-delete-selected {	overflow: auto;	width: 100%;}
-.wall-item-outside-wrapper {
-	max-width: 83%;
-	border-bottom: 1px solid #dedede;
-	margin-top: 20px;
-}
+
 
 /* ============ */
 /* = Comments = */
@@ -1055,11 +1062,11 @@ profile-jot-banner-wrapper {
  .ccollapse-wrapper {
 	font-size: 0.9em;
 	color: #898989;
-	margin-left: 80px;
+	margin-left: 60px;
 	font-variant:small-caps;
 }
  
-.wall-item-outside-wrapper.comment { margin-left: 80px; }
+.wall-item-outside-wrapper.comment { margin-left: 70px; }
 .wall-item-outside-wrapper.comment .wall-item-photo {
 	width: 40px!important;
 	height: 40px!important;
@@ -1072,7 +1079,13 @@ profile-jot-banner-wrapper {
 	background-position: 35px center;
 }
 .wall-item-outside-wrapper.comment .wall-item-info { width: 60px; }
-.wall-item-outside-wrapper.comment .wall-item-body { margin-left: 60px; max-width: 85%;}
+.wall-item-outside-wrapper.comment .wall-item-body {
+	margin-left: 70px;
+	max-width: 85%;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
 .wall-item-outside-wrapper.comment .wall-item-author { margin-left: 60px;}
 
 .wall-item-outside-wrapper.comment .wall-item-photo-menu {
@@ -1133,11 +1146,14 @@ profile-jot-banner-wrapper {
 }
 
 .wall-item-body code {
-    border-color: #CCCCCC;
-    border-style: solid;
+	font-family: Courier, monospace;
+	white-space: pre;
+	display: block;
+	overflow: auto;
+	border: 1px solid #cccccc;
     border-width: 1px 1px 1px 10px;
-    display: block;
-    padding-left: 10px;
+	padding-left: 10px;
+	margin-top: 20px; 
 }
 
 /* =========== */
@@ -1249,9 +1265,18 @@ div[id$="wrapper"] br { clear: left; }
 /* = Photos = */
 /* ========== */
 
+#side-bar-photos-albums h3:before {
+	content: url("photography.png");
+	padding-right: 10px;
+	vertical-align: middle;
+}
+
 #side-bar-photos-albums li {
-	font-size: 1.2em;
+	font-size: 14px;
 	font-variant: none;
+	text-align: left;
+	padding-left: 20px;
+	margin-bottom: 5px;
 }
 
 #photo-top-links {
@@ -1279,15 +1304,31 @@ div[id$="wrapper"] br { clear: left; }
 	background-color: #b20202;	
 }
 
-.photo-album-image-wrapper,
-.photo-top-image-wrapper { 
-	float: left; 
+.photo-album-image-wrapper { 
+	float: left;
 	margin: 0px 10px 10px 0px;
 	padding-bottom: 30px;
 	position:relative;	
 }
 
-#photo-photo { max-width: 100% }
+.photo-top-image-wrapper {
+	float: left;
+	width: 180px;
+	height: 180px;
+	margin: 0px 10px 10px 0px;
+	padding-bottom: 30px;
+	position:relative;
+}
+
+#photo-album-wrapper-inner {
+	position: relative;
+	float: left;
+	width: 180px;
+	height: 180px;
+	overflow: hidden;
+}
+
+#photo-photo { max-width: 85%; height: auto; }
 #photo-photo img { max-width: 100% }
 
 .photo-top-image-wrapper a:hover,
@@ -1296,12 +1337,8 @@ div[id$="wrapper"] br { clear: left; }
 	border-bottom: 0px; 
 }
 
-.photo-top-photo,
-.photo-album-photo {
-	width: 180px;
-	height: 180px;
-	overflow: hidden;
-}
+.photo-top-photo {}
+.photo-album-photo {} 
 
 .photo-top-album-name {
 	position: absolute;
@@ -1499,16 +1536,6 @@ input#photo_edit_form {
 	margin-left: 190px;
 }
 
-#side-bar-photos-albums h3:before {
-	content: url("photography.png");
-	padding-right: 10px;
-	vertical-align: middle;
-}
-
-#side-bar-photos-albums li {
-	margin-bottom: 5px;
-}
-
 #photo-album-edit-wrapper {
 	margin-bottom: 10px;
 }
@@ -1687,7 +1714,7 @@ margin-left: 0px;
 
 #prvmail-subject {
 	font-weight: bold;
-	border: none;
+	border: 1px solid #dddddd;
 }
 
 /* ================= */
@@ -2216,7 +2243,7 @@ margin-left: 0px;
 	display: inline;
 	padding: 5px;
 	margin-bottom: 10px;
-/*	-moz-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
+	-moz-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
 	-webkit-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
 	box-shadow:inset 0px 1px 0px 0px #cfcfcf;
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #bdbdbd), color-stop(1, #a2a2a2) );
@@ -2228,7 +2255,7 @@ margin-left: 0px;
 	border-radius:5px;*/
 }
 
-/*.group-delete-wrapper:hover {
+.group-delete-wrapper:hover {
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #b20202), color-stop(1, #d60808) );
 	background:-moz-linear-gradient( center top, #b20202 5%, #d60808 100% );
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#b20202', endColorstr='#d60808');
@@ -2245,7 +2272,7 @@ margin-left: 0px;
 .group-delete-wrapper a {
 	color: #efefef;
 	font-size: 0.9em;
-}*/
+}
 
 #group-edit-desc { margin: 10px 0xp; }
 #group-new-text {font-size: 1.1em;}

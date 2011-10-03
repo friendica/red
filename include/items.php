@@ -1491,6 +1491,20 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 					lose_follower($importer,$contact,$datarray,$item);
 					return;
 				}
+
+				if(activity_match($datarray['verb'],ACTIVITY_REQ_FRIEND)) {
+					logger('consume-feed: New friend request');
+					new_follower($importer,$contact,$datarray,$item,true);
+					return;
+				}
+				if(activity_match($datarray['verb'],ACTIVITY_UNFRIEND))  {
+					lose_sharer($importer,$contact,$datarray,$item);
+					return;
+				}
+
+
+
+
 				if(! is_array($contact))
 					return;
 
@@ -1522,7 +1536,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 	}
 }
 
-function new_follower($importer,$contact,$datarray,$item) {
+function new_follower($importer,$contact,$datarray,$item,$sharing = false) {
 	$url = notags(trim($datarray['author-link']));
 	$name = notags(trim($datarray['author-name']));
 	$photo = notags(trim($datarray['author-avatar']));
@@ -1532,14 +1546,14 @@ function new_follower($importer,$contact,$datarray,$item) {
 		$nick = $rawtag[0]['child'][NAMESPACE_POCO]['preferredUsername'][0]['data'];
 
 	if(is_array($contact)) {
-		if($contact['network'] == 'stat' && $contact['rel'] == CONTACT_IS_SHARING) {
+		if(($contact['network'] == NETWORK_OSTATUS && $contact['rel'] == CONTACT_IS_SHARING)
+			|| ($sharing && $contact['rel'] == CONTACT_IS_FOLLOWER)) {
 			$r = q("UPDATE `contact` SET `rel` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval(CONTACT_IS_FRIEND),
 				intval($contact['id']),
 				intval($importer['uid'])
 			);
 		}
-
 		// send email notification to owner?
 	}
 	else {
@@ -1555,13 +1569,12 @@ function new_follower($importer,$contact,$datarray,$item) {
 			dbesc($name),
 			dbesc($nick),
 			dbesc($photo),
-			dbesc('stat'),
-			intval(CONTACT_IS_FOLLOWER)
+			dbesc(($sharing) ? NETWORK_ZOT : NETWORK_OSTATUS),
+			intval(($sharing) ? CONTACT_IS_SHARING : CONTACT_IS_FOLLOWER)
 		);
-		$r = q("SELECT `id` FROM `contact` WHERE `uid` = %d AND `url` = '%s' AND `pending` = 1 AND `rel` = %d LIMIT 1",
+		$r = q("SELECT `id` FROM `contact` WHERE `uid` = %d AND `url` = '%s' AND `pending` = 1 LIMIT 1",
 				intval($importer['uid']),
-				dbesc($url),
-				intval(CONTACT_IS_FOLLOWER)
+				dbesc($url)
 		);
 		if(count($r))
 				$contact_record = $r[0];
@@ -1593,7 +1606,7 @@ function new_follower($importer,$contact,$datarray,$item) {
 					'$sitename' => $a->config['sitename']
 				));
 				$res = mail($r[0]['email'], 
-					t("You have a new follower at ") . $a->config['sitename'],
+					(($sharing) ? t('A new person is sharing with you at ') : t("You have a new follower at ")) . $a->config['sitename'],
 					$email,
 					'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
 					. 'Content-type: text/plain; charset=UTF-8' . "\n"
@@ -1609,6 +1622,19 @@ function lose_follower($importer,$contact,$datarray,$item) {
 	if(($contact['rel'] == CONTACT_IS_FRIEND) || ($contact['rel'] == CONTACT_IS_SHARING)) {
 		q("UPDATE `contact` SET `rel` = %d WHERE `id` = %d LIMIT 1",
 			intval(CONTACT_IS_SHARING),
+			intval($contact['id'])
+		);
+	}
+	else {
+		contact_remove($contact['id']);
+	}
+}
+
+function lose_sharer($importer,$contact,$datarray,$item) {
+
+	if(($contact['rel'] == CONTACT_IS_FRIEND) || ($contact['rel'] == CONTACT_IS_FOLLOWER)) {
+		q("UPDATE `contact` SET `rel` = %d WHERE `id` = %d LIMIT 1",
+			intval(CONTACT_IS_FOLLOWER),
 			intval($contact['id'])
 		);
 	}
