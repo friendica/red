@@ -142,8 +142,8 @@ function conversation(&$a, $items, $mode, $update) {
 	
 	
 	// array with html for each thread (parent+comments)
-	$treads = array();
-	$treadsid = -1;
+	$threads = array();
+	$threadsid = -1;
 	
 	if(count($items)) {
 
@@ -155,7 +155,7 @@ function conversation(&$a, $items, $mode, $update) {
 			$tpl = get_markup_template('search_item.tpl');
 
 			foreach($items as $item) {
-				$treadsid++;
+				$threadsid++;
 
 				$comment     = '';
 				$owner_url   = '';
@@ -254,7 +254,7 @@ function conversation(&$a, $items, $mode, $update) {
 				$arr = array('item' => $item, 'output' => $tmp_item);
 				call_hooks('display_item', $arr);
 
-				$treads[$treadsid] .= $arr['output'];
+				$threads[$threadsid] .= $arr['output'];
 
 			}
 
@@ -336,8 +336,8 @@ function conversation(&$a, $items, $mode, $update) {
 					$comments_seen = 0;
 					$comments_collapsed = false;
 					
-					$treadsid++;
-					$treads[$treadsid] = "";
+					$threadsid++;
+					$threads[$threadsid] = "";
 				}
 				else {
 					// prevent private email from leaking into public conversation
@@ -351,7 +351,7 @@ function conversation(&$a, $items, $mode, $update) {
 
 				if(($comments[$item['parent']] > 2) && ($comments_seen <= ($comments[$item['parent']] - 2)) && ($item['gravity'] == 6)) {
 					if(! $comments_collapsed) {
-						$treads[$treadsid] .= '<div class="ccollapse-wrapper fakelink" id="ccollapse-wrapper-' . $item['parent'] 
+						$threads[$threadsid] .= '<div class="ccollapse-wrapper fakelink" id="ccollapse-wrapper-' . $item['parent'] 
 							. '" onclick="openClose(' . '\'ccollapse-' . $item['parent'] . '\'); $(\'#ccollapse-wrapper-' . $item['parent'] . '\').hide();" >' 
 							. sprintf( t('See all %d comments'), $comments[$item['parent']]) . '</div>'
 							. '<div class="ccollapse" id="ccollapse-' . $item['parent'] . '" style="display: none;" >';
@@ -359,7 +359,7 @@ function conversation(&$a, $items, $mode, $update) {
 					}
 				}
 				if(($comments[$item['parent']] > 2) && ($comments_seen == ($comments[$item['parent']] - 1))) {
-					$treads[$treadsid] .= '</div>';
+					$threads[$threadsid] .= '</div>';
 				}
 
 				$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
@@ -564,7 +564,7 @@ function conversation(&$a, $items, $mode, $update) {
 				$arr = array('item' => $item, 'output' => $tmp_item);
 				call_hooks('display_item', $arr);
 
-				$treads[$treadsid] .= $arr['output'];
+				$threads[$threadsid] .= $arr['output'];
 			}
 		}
 	}
@@ -573,11 +573,11 @@ function conversation(&$a, $items, $mode, $update) {
 	// if author collapsing is in force but didn't get closed, close it off now.
 
 	/*if($blowhard_count >= 3)
-		$treads[$treadsid] .= '</div>';*/
+		$threads[$threadsid] .= '</div>';*/
 
 	$page_template = get_markup_template("conversation.tpl");
 	$o .= replace_macros($page_template, array(
-		'$treads' => $treads,
+		'$threads' => $threads,
 		'$dropping' => ($dropping?t('Delete Selected Items'):False),
 	));
 
