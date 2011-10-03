@@ -1,8 +1,9 @@
-{{ for $treads as $tread }}
+{{ for $threads as $thread }}
 <div class="tread-wrapper">
-	$tread
+	$thread
 </div>
 {{ endfor }}
+
 {{ if $dropping }}
 <div id="item-delete-selected" class="fakelink" onclick="deleteCheckedItems();">
 	<div id="item-delete-selected-icon" class="icon drophide" title="$dropping" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></div>
