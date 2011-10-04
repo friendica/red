@@ -6,7 +6,7 @@
 	<div id="notifications">
 		{{ if $nav.network }}<a id="net-update" class="nav-ajax-update" href="$nav.network.0" title="$nav.network.1"></a>{{ endif }}
 		{{ if $nav.home }}<a id="home-update" class="nav-ajax-update" href="$nav.home.0" title="$nav.home.1"></a>{{ endif }}
-		{{ if $nav.notifications }}<a id="notify-update" class="nav-ajax-update" href="$nav.notifications.0" title="$nav.notifications.1"></a>{{ endif }}
+		{{ if $nav.notifications }}<a id="intro-update" class="nav-ajax-update" href="$nav.notifications.0" title="$nav.notifications.1"></a>{{ endif }}
 		{{ if $nav.messages }}<a id="mail-update" class="nav-ajax-update" href="$nav.messages.0" title="$nav.messages.1"></a>{{ endif }}
 	</div>
 
