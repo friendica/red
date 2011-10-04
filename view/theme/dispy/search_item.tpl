@@ -16,9 +16,16 @@
 			<div class="wall-item-photo-end"></div>	
 			<div class="wall-item-location" id="wall-item-location-$id">{{ if $location }}<span class="icon globe"></span>$location {{ endif }}</div>
 		</div>
-		<div class="wall-item-lock-wrapper">$lock</div>
+		<div class="wall-item-lock-wrapper">
+			{{ if $lock }}<div class="wall-item-lock"><img src="images/lock_icon.gif" class="lockview" alt="$lock" onclick="lockview(event,$id);" /></div>
+			{{ else }}<div class="wall-item-lock"></div>{{ endif }}	
+		</div>
 		<div class="wall-item-tools" id="wall-item-tools-$id">
-		$drop
+			<div class="wall-item-delete-wrapper" id="wall-item-delete-wrapper-$id" >
+				{{ if $drop.dropping }}<a href="item/drop/$id" onclick="return confirmDelete();" class="icon drophide" title="$drop.delete" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a>{{ endif }}
+			</div>
+				{{ if $drop.dropping }}<input type="checkbox" onclick="checkboxhighlight(this);" title="$drop.select" class="item-select" name="itemselected[]" value="$id" />{{ endif }}
+			<div class="wall-item-delete-end"></div>
 		</div>
 		<div class="wall-item-content" id="wall-item-content-$id" >
 			<div class="wall-item-title" id="wall-item-title-$id">$title</div>
@@ -36,5 +43,9 @@
 </div>
 
 <div class="wall-item-outside-wrapper-end$indent" ></div>
-	<div class="wall-item-conv" id="wall-item-conv-$id" >$conv</div>
+	<div class="wall-item-conv" id="wall-item-conv-$id" >
+	{{ if $conv }}
+		<a href='$conv.href' id='context-$id' title='$conv.title'>$conv.title</a>
+	{{ endif }}
+	</div>
 

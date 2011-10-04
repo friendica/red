@@ -6,10 +6,10 @@
 		<div class="mail-list-sender-name" >$from_name</div>
 		<div class="mail-list-date">$date</div>
 		<div class="mail-list-subject"><a href="message/$id" class="mail-list-link">$subject</a></div>
+	<div class="mail-list-delete-wrapper" id="mail-list-delete-wrapper-$id" >
+		<a href="message/dropconv/$id" onclick="return confirmDelete();"  title="$delete" class="icon drophide mail-list-		delete-icon" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a>
 	</div>
 </div>
-<div class="mail-list-delete-wrapper" id="mail-list-delete-wrapper-$id" >
-	<a href="message/dropconv/$id" onclick="return confirmDelete();"  title="$delete" class="icon drophide mail-list-delete-icon" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a>
 </div>
 <div class="mail-list-delete-end"></div>
 

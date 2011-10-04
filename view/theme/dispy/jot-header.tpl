@@ -90,7 +90,7 @@ function initEditor(cb) {
     }
 } // initEditor
 </script>
-<script type="text/javascript" src="include/ajaxupload.js" ></script>
+<script type="text/javascript" src="js/ajaxupload.js" ></script>
 <script>
     var ispublic = '$ispublic';
 	$(document).ready(function() {
@@ -163,7 +163,7 @@ function initEditor(cb) {
 		if(reply && reply.length) {
 			reply = bin2hex(reply);
 			$('#profile-rotator').show();
-			$.get('parse_url?url=' + reply, function(data) {
+			$.get('parse_url?binurl=' + reply, function(data) {
 				tinyMCE.execCommand('mceInsertRawHTML',false,data);
 				$('#profile-rotator').hide();
 			});

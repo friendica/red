@@ -23,8 +23,6 @@ function contacts_init(&$a) {
 		$a->page['aside'] = '';
 	$a->page['aside'] .= group_side('contacts','group',false,0,$contact_id);
 
-	$inv = '<div class="side-link" id="side-invite-link" ><a href="invite" >' . t("Invite Friends") . '</a></div>';
-
 	if(get_config('system','invitation_only')) {
 		$x = get_pconfig(local_user(),'system','invites_remaining');
 		if($x || is_site_admin()) {
@@ -33,21 +31,26 @@ function contacts_init(&$a) {
 			. '</div>' . $inv;
 		}
 	}
-	elseif($a->config['register_policy'] != REGISTER_CLOSED)
-		$a->page['aside'] .= $inv;
-
-
-	$a->page['aside'] .= '<div class="side-link" id="side-match-link"><a href="match" >' 
-		. t('Find People With Shared Interests') . '</a></div>';
 
 	$tpl = get_markup_template('follow.tpl');
+	
+	$findSimilarLink = '<div class="side-link" id="side-match-link"><a href="match" >' 
+		. t('Similar Interests') . '</a></div>';
+	
+	$inv = '';
+	if($a->config['register_policy'] != REGISTER_CLOSED) {
+		$inv = '<div class="side-link" id="side-invite-link" ><a href="invite" >' . t("Invite Friends") . '</a></div>';
+	}
+		
 	$a->page['aside'] .= replace_macros($tpl,array(
 		'$label' => t('Connect/Follow'),
 		'$hint' => t('Example: bob@example.com, http://example.com/barbara'),
-		'$follow' => t('Follow')
+		'$follow' => t('Follow'),
+		'$findSimilar' => $findSimilarLink,
+		'$inviteFriends' => $inv
 	));
 
-
+	
 
 }
 
@@ -87,25 +90,15 @@ function contacts_post(&$a) {
 
 
 	$priority = intval($_POST['poll']);
-	if($priority == (-1))
-		
 	if($priority > 5 || $priority < 0)
 		$priority = 0;
 
-	$rating = intval($_POST['reputation']);
-	if($rating > 5 || $rating < 0)
-		$rating = 0;
-
-	$reason = notags(trim($_POST['reason']));
-
 	$info = escape_tags(trim($_POST['info']));
 
-	$r = q("UPDATE `contact` SET `profile-id` = %d, `priority` = %d , `rating` = %d, `reason` = '%s', `info` = '%s'
+	$r = q("UPDATE `contact` SET `profile-id` = %d, `priority` = %d , `info` = '%s'
 		WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		intval($profile_id),
 		intval($priority),
-		intval($rating),
-		dbesc($reason),
 		dbesc($info),
 		intval($contact_id),
 		intval(local_user())
@@ -124,7 +117,7 @@ function contacts_content(&$a) {
 
 	$sort_type = 0;
 	$o = '';
-	$o .= '<script>	$(document).ready(function() { $(\'#nav-contacts-link\').addClass(\'nav-selected\'); });</script>';
+	nav_set_selected('contacts');
 
 	$_SESSION['return_url'] = $a->get_baseurl() . '/' . $a->cmd;
 
@@ -277,8 +270,6 @@ function contacts_content(&$a) {
 			$sparkle = '';
 		}
 
-		$grps = '';
-
 		$insecure = '<div id="profile-edit-insecure"><p><img src="images/unlock_icon.gif" alt="' . t('Privacy Unavailable') . '" />&nbsp;'
 			. t('Private communications are not available for this contact.') . '</p></div>';
 
@@ -292,6 +283,9 @@ function contacts_content(&$a) {
 		$lblsuggest = (($r[0]['network'] === NETWORK_DFRN) 
 			? '<div id="contact-suggest-wrapper"><a href="fsuggest/' . $r[0]['id'] . '" id="contact-suggest">' . t('Suggest friends') . '</a></div>' : '');
 
+		$poll_enabled = (($r[0]['network'] !== NETWORK_DIASPORA) ? true : false);
+
+		$nettype = '<div id="contact-edit-nettype">' . sprintf( t('Network type: %s'),network_to_name($r[0]['network'])) . '</div>';
 
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Contact Editor'),
@@ -310,9 +304,10 @@ function contacts_content(&$a) {
 			'$lblcrepair' => t("Repair contact URL settings \x28WARNING: Advanced\x29"),
 			'$lblrecent' => t('View conversations'),
 			'$lblsuggest' => $lblsuggest,
-			'$grps' => $grps,
 			'$delete' => t('Delete contact'),
-			'$poll_interval' => contact_poll_interval($r[0]['priority']),
+			'$nettype' => $nettype,
+			'$poll_interval' => contact_poll_interval($r[0]['priority'],(! $poll_enabled)),
+			'$poll_enabled' => $poll_enabled,
 			'$lastupdtext' => t('Last updated: '),
 			'$updpub' => t('Update public posts: '),
 			'$last_update' => $last_update,
@@ -325,9 +320,6 @@ function contacts_content(&$a) {
 			'$info' => $r[0]['info'],
 			'$blocked' => (($r[0]['blocked']) ? '<div id="block-message">' . t('Currently blocked') . '</div>' : ''),
 			'$ignored' => (($r[0]['readonly']) ? '<div id="ignore-message">' . t('Currently ignored') . '</div>' : ''),
-			'$rating' => contact_reputation($r[0]['rating']),
-			'$reason' => $r[0]['reason'],
-			'$groups' => '', // group_selector(),
 			'$photo' => $r[0]['photo'],
 			'$name' => $r[0]['name'],
 			'$dir_icon' => $dir_icon,
@@ -422,11 +414,12 @@ function contacts_content(&$a) {
 			$o .= replace_macros($tpl, array(
 				'$img_hover' => sprintf( t('Visit %s\'s profile [%s]'),$rr['name'],$rr['url']),
 				'$edit_hover' => t('Edit contact'),
+				'$contact_photo_menu' => contact_photo_menu($rr),
 				'$id' => $rr['id'],
 				'$alt_text' => $alt_text,
 				'$dir_icon' => $dir_icon,
 				'$thumb' => $rr['thumb'], 
-				'$name' => substr($rr['name'],0,20),
+				'$name' => $rr['name'],
 				'$username' => $rr['name'],
 				'$sparkle' => $sparkle,
 				'$url' => $url

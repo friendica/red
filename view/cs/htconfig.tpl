@@ -24,6 +24,10 @@ $default_timezone = '$timezone';
 
 $a->config['sitename'] = "Moje síť přátel";
 
+// Nastavení defaultního jazyka webu
+
+$a->config['system']['language'] = 'cs';
+
 // Vaše možnosti jsou REGISTER_OPEN, REGISTER_APPROVE, or REGISTER_CLOSED.
 // Ujistěte se, že jste si vytvořili Váš osobníúčet dříve, než nastavíte 
 // REGISTER_CLOSED. 'register_text' (pokud je nastaven) se bude zobrazovat jako první text na 

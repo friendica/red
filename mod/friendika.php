@@ -21,6 +21,7 @@ function friendika_init(&$a) {
 			'register_policy' =>  $register_policy[$a->config['register_policy']],
 			'admin' => $admin,
 			'site_name' => $a->config['sitename'],
+			'platform' => FRIENDIKA_PLATFORM,
 			'info' => ((x($a->config,'info')) ? $a->config['info'] : '')			
 		);
 
@@ -41,8 +42,6 @@ function friendika_content(&$a) {
 
 	$o .= t('This is Friendika version') . ' ' . FRIENDIKA_VERSION . ' ';
 	$o .= t('running at web location') . ' ' . z_root() . '</p><p>';
-
-	$o .= t('Shared content within the Friendika network is provided under the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 license</a>') . '</p><p>';
 
 	$o .= t('Please visit <a href="http://project.friendika.com">Project.Friendika.com</a> to learn more about the Friendika project.') . '</p><p>';	
 

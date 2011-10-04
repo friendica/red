@@ -177,6 +177,8 @@ function admin_page_site_post(&$a){
 	
 	
 	$register_policy	=	((x($_POST,'register_policy'))	? intval(trim($_POST['register_policy']))	:  0);
+	$abandon_days	    =	((x($_POST,'abandon_days'))	    ? intval(trim($_POST['abandon_days']))	    :  0);
+
 	$register_text		=	((x($_POST,'register_text'))	? notags(trim($_POST['register_text']))		: '');	
 	
 	$allowed_sites		=	((x($_POST,'allowed_sites'))	? notags(trim($_POST['allowed_sites']))		: '');
@@ -215,6 +217,7 @@ function admin_page_site_post(&$a){
 	set_config('system','maximagesize', $maximagesize);
 	
 	set_config('config','register_policy', $register_policy);
+	set_config('system','account_abandon_days', $abandon_days);
 	set_config('config','register_text', $register_text);
 	set_config('system','allowed_sites', $allowed_sites);
 	set_config('system','allowed_email', $allowed_email);
@@ -314,6 +317,7 @@ function admin_page_site(&$a) {
 
 		'$register_policy'	=> array('register_policy', t("Register policy"), $a->config['register_policy'], "", $register_choices),
 		'$register_text'	=> array('register_text', t("Register text"), htmlentities($a->config['register_text'], ENT_QUOTES), "Will be displayed prominently on the registration page."),
+		'$abandon_days'     => array('abandon_days', t('Accounts abandoned after x days'), get_config('system','account_abandon_days'), t('Will not waste system resources polling external sites for abandonded accounts. Enter 0 for no time limit.')),
 		'$allowed_sites'	=> array('allowed_sites', t("Allowed friend domains"), get_config('system','allowed_sites'), "Comma separated list of domains which are allowed to establish friendships with this site. Wildcards are accepted. Empty to allow any domains"),
 		'$allowed_email'	=> array('allowed_email', t("Allowed email domains"), get_config('system','allowed_email'), "Comma separated list of domains which are allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains"),
 		'$block_public'		=> array('block_public', t("Block public"), get_config('system','block_public'), "Check to block public access to all otherwise public personal pages on this site unless you are currently logged in."),
@@ -344,7 +348,7 @@ function admin_page_site(&$a) {
  * Users admin page
  */
 function admin_page_users_post(&$a){
-	$pending = ( x(£_POST, 'pending') ? $_POST['pending'] : Array() );
+	$pending = ( x($_POST, 'pending') ? $_POST['pending'] : Array() );
 	$users = ( x($_POST, 'user') ? $_POST['user'] : Array() );
 	
 	if (x($_POST,'page_users_block')){
@@ -540,7 +544,7 @@ function admin_page_plugins(&$a){
 		} 
 		
 		$admin_form="";
-		if (in_array($plugin, $a->plugins_admin)){
+		if (is_array($a->plugins_admin) && in_array($plugin, $a->plugins_admin)){
 			@require_once("addon/$plugin/$plugin.php");
 			$func = $plugin.'_plugin_admin';
 			$func($a, $admin_form);
@@ -632,7 +636,7 @@ function admin_page_logs(&$a){
 
 	$f = get_config('system','logfile');
 	$size = filesize($f);
-	if($size > 5000000)
+	if($size > 5000000 || $size < 0)
 		$size = 5000000;
 
 	$data = '';

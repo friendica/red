@@ -15,7 +15,7 @@ Následně si toto heslo můžete změnit z vašeho účtu na stránce Nastaven�
 
 Přihlašovací údaje jsou tato:
 
-Adresa webu:		 $siteurl
+Adresa webu:	    $siteurl
 Přihlašovací jméno: $email
 
 S pozdravem,

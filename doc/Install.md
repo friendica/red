@@ -36,14 +36,28 @@ you might have trouble getting everything to work.]
 
     - If you are able to do so, we recommend using git to clone the source repository rather than to use a packaged tar or zip file. This makes the software much easier to update. The Linux command to clone the repository into a directory "mywebsite" would be 
 
-    `git clone http://github.com/friendika/friendika.git mywebsite`
+        `git clone https://github.com/friendika/Free-Friendika.git mywebsite`
 
-    and then you can pick up the latest changes at any time with
+    - and then you can pick up the latest changes at any time with
 
-    `git pull`
-
-
- 
+        `git pull`
+    
+    - For installing addons
+    
+        - First you should be **on** your website folder
+        
+            `cd mywebsite`
+            
+        - Then you should clone the addon repository (separtely)
+        
+            `git clone https://github.com/friendika/friendika-addons.git addon`
+            
+        - For keeping the addon tree updated, you should be on you addon tree and issue a git pull
+        
+            `cd mywebsite/addon`
+            
+            `git pull`
+            
     - If you copy the directory tree to your webserver, make sure
     that you also copy .htaccess - as "dot" files are often hidden
     and aren't normally copied.

@@ -388,11 +388,13 @@ function get_intltext_template($s) {
 
 if(! function_exists('get_markup_template')) {
 function get_markup_template($s) {
-
+	$a=get_app();
 	$theme = current_theme();
 	
 	if(file_exists("view/theme/$theme/$s"))
 		return file_get_contents("view/theme/$theme/$s");
+	elseif (x($a->theme_info,"extends") && file_exists("view/theme/".$a->theme_info["extends"]."/$s"))
+		return file_get_contents("view/theme/".$a->theme_info["extends"]."/$s");
 	else
 		return file_get_contents("view/$s");
 
@@ -482,13 +484,12 @@ function get_tags($s) {
 				// we might be inside a bbcode color tag - leave it alone
 				continue;
 			}
+			if(substr($mtch,-1,1) === '.')
+				$mtch = substr($mtch,0,-1);
 			// ignore strictly numeric tags like #1
 			if((strpos($mtch,'#') === 0) && ctype_digit(substr($mtch,1)))
 				continue;
-			if(substr($mtch,-1,1) === '.')
-				$ret[] = substr($mtch,0,-1);
-			else
-				$ret[] = $mtch;
+			$ret[] = $mtch;
 		}
 	}
 	return $ret;
@@ -539,22 +540,30 @@ function contact_block() {
 		$total = intval($r[0]['total']);
 	}
 	if(! $total) {
-		$o .= '<h4 class="contact-h4">' . t('No contacts') . '</h4>';
-		return $o;
-	}
-	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 and `pending` = 0 ORDER BY RAND() LIMIT %d",
-			intval($a->profile['uid']),
-			intval($shown)
-	);
-	if(count($r)) {
-		$o .= '<h4 class="contact-h4">' .  sprintf( tt('%d Contact','%d Contacts', $total),$total) . '</h4><div id="contact-block">';
-		foreach($r as $rr) {
-			$o .= micropro($rr,true,'mpfriend');
-		}
-		$o .= '</div><div id="contact-block-end"></div>';
-		$o .=  '<div id="viewcontacts"><a id="viewcontacts-link" href="viewcontacts/' . $a->profile['nickname'] . '">' . t('View Contacts') . '</a></div>';
+		$contacts = t('No contacts');
+		$micropro = Null;
 		
+	} else {
+		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 and `pending` = 0 ORDER BY RAND() LIMIT %d",
+				intval($a->profile['uid']),
+				intval($shown)
+		);
+		if(count($r)) {
+			$contacts = sprintf( tt('%d Contact','%d Contacts', $total),$total);
+			$micropro = Array();
+			foreach($r as $rr) {
+				$micropro[] = micropro($rr,true,'mpfriend');
+			}
+		}
 	}
+	
+	$tpl = get_markup_template('contact_block.tpl');
+	$o = replace_macros($tpl, array(
+		'$contacts' => $contacts,
+		'$nickname' => $a->profile['nickname'],
+		'$viewcontacts' => t('View Contacts'),
+		'$micropro' => $micropro,
+	));
 
 	$arr = array('contacts' => $r, 'output' => $o);
 
@@ -571,11 +580,13 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 
 	$url = $contact['url'];
 	$sparkle = '';
+	$redir = false;
 
 	if($redirect) {
 		$a = get_app();
 		$redirect_url = $a->get_baseurl() . '/redir/' . $contact['id'];
 		if(local_user() && ($contact['uid'] == local_user()) && ($contact['network'] === 'dfrn')) {
+			$redir = true;
 			$url = $redirect_url;
 			$sparkle = ' sparkle';
 		}
@@ -586,6 +597,7 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 	if($textmode) {
 		return '<div class="contact-block-textdiv' . $class . '"><a class="contact-block-link' . $class . $sparkle 
 			. (($click) ? ' fakelink' : '') . '" '
+			. (($redir) ? ' target="redir" ' : '')
 			. (($url) ? ' href="' . $url . '"' : '') . $click
 			. '" title="' . $contact['name'] . ' [' . $contact['url'] . ']" alt="' . $contact['name'] 
 			. '" >'. $contact['name'] . '</a></div>' . "\r\n";
@@ -593,6 +605,7 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 	else {
 		return '<div class="contact-block-div' . $class . '"><a class="contact-block-link' . $class . $sparkle 
 			. (($click) ? ' fakelink' : '') . '" '
+			. (($redir) ? ' target="redir" ' : '')
 			. (($url) ? ' href="' . $url . '"' : '') . $click . ' ><img class="contact-block-img' . $class . $sparkle . '" src="' 
 			. $contact['micro'] . '" title="' . $contact['name'] . ' [' . $contact['url'] . ']" alt="' . $contact['name'] 
 			. '" /></a></div>' . "\r\n";
@@ -602,12 +615,14 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 
 
 if(! function_exists('search')) {
-function search($s,$id='search-box',$url='/search') {
+function search($s,$id='search-box',$url='/search',$save = false) {
 	$a = get_app();
 	$o  = '<div id="' . $id . '">';
 	$o .= '<form action="' . $a->get_baseurl() . $url . '" method="get" >';
 	$o .= '<input type="text" name="search" id="search-text" value="' . $s .'" />';
 	$o .= '<input type="submit" name="submit" id="search-submit" value="' . t('Search') . '" />'; 
+	if($save)
+		$o .= '<input type="submit" name="save" id="search-save" value="' . t('Save') . '" />'; 
 	$o .= '</form></div>';
 	return $o;
 }}
@@ -630,7 +645,8 @@ function valid_email($x){
 
 if(! function_exists('linkify')) {
 function linkify($s) {
-	$s = preg_replace("/(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\.\=\_\~\#\'\%\$\!\+]*)/", ' <a href="$1" target="external-link">$1</a>', $s);
+	$s = preg_replace("/(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\'\%\$\!\+]*)/", ' <a href="$1" target="external-link">$1</a>', $s);
+	$s = preg_replace("/\<(.*?)(src|href)=(.*?)\&amp\;(.*?)\>/ism",'<$1$2=$3&$4>',$s);
 	return($s);
 }}
 
@@ -651,7 +667,7 @@ if(! function_exists('smilies')) {
 function smilies($s) {
 	$a = get_app();
 
-	return str_replace(
+	$s = str_replace(
 	array( '&lt;3', '&lt;/3', '&lt;\\3', ':-)', ':)', ';-)', ':-(', ':(', ':-P', ':P', ':-"', ':-x', ':-X', ':-D', '8-|', '8-O', 
 		'~friendika', 'Diaspora*' ),
 	array(
@@ -675,6 +691,10 @@ function smilies($s) {
 		'<a href="http://joindiaspora.com">Diaspora<img src="' . $a->get_baseurl() . '/images/diaspora.png" alt="Diaspora*" /></a>',
 
 	), $s);
+
+	call_hooks('smilie', $s);
+	return $s;
+
 }}
 
 
@@ -816,9 +836,14 @@ function feed_salmonlinks($nick) {
 if(! function_exists('get_plink')) {
 function get_plink($item) {
 	$a = get_app();	
-	$plink = (((x($item,'plink')) && (! $item['private'])) ? '<div class="wall-item-links-wrapper"><a href="' 
-			. $item['plink'] . '" title="' . t('link to source') . '" target="external-link" class="icon remote-link"></a></div>' : '');
-	return $plink;
+	if (x($item,'plink') && (! $item['private'])){
+		return array(
+			'href' => $item['plink'],
+			'title' => t('link to source'),
+		);
+	} else {
+		return false;
+	}
 }}
 
 if(! function_exists('unamp')) {
@@ -837,10 +862,16 @@ function lang_selector() {
 	$o .= '<form action="" method="post" ><select name="system_language" onchange="this.form.submit();" >';
 	$langs = glob('view/*/strings.php');
 	if(is_array($langs) && count($langs)) {
+		$langs[] = '';
 		if(! in_array('view/en/strings.php',$langs))
 			$langs[] = 'view/en/';
 		asort($langs);
 		foreach($langs as $l) {
+			if($l == '') {
+				$default_selected = ((! x($_SESSION,'language')) ? ' selected="selected" ' : '');
+				$o .= '<option value="" ' . $default_selected . '>' . t('default') . '</option>';
+				continue;
+			}
 			$ll = substr($l,5);
 			$ll = substr($ll,0,strrpos($ll,'/'));
 			$selected = (($ll === $lang) ? ' selected="selected" ' : '');
@@ -909,6 +940,60 @@ function base64url_decode($s) {
 	return base64_decode(strtr($s,'-_','+/'));
 }
 
-function cc_license() {
-return '<div class="cc-license">' . t('Shared content is covered by the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> license.') . '</div>';
-}
+
+if (!function_exists('str_getcsv')) {
+    function str_getcsv($input, $delimiter = ',', $enclosure = '"', $escape = '\\', $eol = '\n') {
+        if (is_string($input) && !empty($input)) {
+            $output = array();
+            $tmp    = preg_split("/".$eol."/",$input);
+            if (is_array($tmp) && !empty($tmp)) {
+                while (list($line_num, $line) = each($tmp)) {
+                    if (preg_match("/".$escape.$enclosure."/",$line)) {
+                        while ($strlen = strlen($line)) {
+                            $pos_delimiter       = strpos($line,$delimiter);
+                            $pos_enclosure_start = strpos($line,$enclosure);
+                            if (
+                                is_int($pos_delimiter) && is_int($pos_enclosure_start)
+                                && ($pos_enclosure_start < $pos_delimiter)
+                                ) {
+                                $enclosed_str = substr($line,1);
+                                $pos_enclosure_end = strpos($enclosed_str,$enclosure);
+                                $enclosed_str = substr($enclosed_str,0,$pos_enclosure_end);
+                                $output[$line_num][] = $enclosed_str;
+                                $offset = $pos_enclosure_end+3;
+                            } else {
+                                if (empty($pos_delimiter) && empty($pos_enclosure_start)) {
+                                    $output[$line_num][] = substr($line,0);
+                                    $offset = strlen($line);
+                                } else {
+                                    $output[$line_num][] = substr($line,0,$pos_delimiter);
+                                    $offset = (
+                                                !empty($pos_enclosure_start)
+                                                && ($pos_enclosure_start < $pos_delimiter)
+                                                )
+                                                ?$pos_enclosure_start
+                                                :$pos_delimiter+1;
+                                }
+                            }
+                            $line = substr($line,$offset);
+                        }
+                    } else {
+                        $line = preg_split("/".$delimiter."/",$line);
+   
+                        /*
+                         * Validating against pesky extra line breaks creating false rows.
+                         */
+                        if (is_array($line) && !empty($line[0])) {
+                            $output[$line_num] = $line;
+                        } 
+                    }
+                }
+                return $output;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+} 

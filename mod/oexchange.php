@@ -28,9 +28,16 @@ function oexchange_content(&$a) {
 		return;
 	}
 
-	$url = (((x($_GET,'url')) && strlen($_GET['url'])) ? notags(trim($_GET['url'])) : '');
+	$url = (((x($_GET,'url')) && strlen($_GET['url'])) 
+		? urlencode(notags(trim($_GET['url']))) : '');
+	$title = (((x($_GET,'title')) && strlen($_GET['title'])) 
+		? '&title=' . urlencode(notags(trim($_GET['title']))) : '');
+	$description = (((x($_GET,'description')) && strlen($_GET['description'])) 
+		? '&description=' . urlencode(notags(trim($_GET['description']))) : '');
+	$tags = (((x($_GET,'tags')) && strlen($_GET['tags'])) 
+		? '&tags=' . urlencode(notags(trim($_GET['tags']))) : '');
 
-	$s = fetch_url($a->get_baseurl() . '/parse_url&url=' . $url);
+	$s = fetch_url($a->get_baseurl() . '/parse_url?f=&url=' . $url . $title . $description . $tags);
 
 	if(! strlen($s))
 		return;

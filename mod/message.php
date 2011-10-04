@@ -36,7 +36,7 @@ function message_post(&$a) {
 function message_content(&$a) {
 
 	$o = '';
-	$o .= '<script>	$(document).ready(function() { $(\'#nav-messages-link\').addClass(\'nav-selected\'); });</script>';
+	nav_set_selected('messages');
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
@@ -45,13 +45,21 @@ function message_content(&$a) {
 
 	$myprofile = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
 
-
+	if (($a->argc > 1) && ($a->argv[1] === 'new')) {
+		$tab = 'new';
+	} else if ($a->argc == 2 && $a->argv[1] === 'sent') {
+		$tab = 'sent';
+	} else {
+		$tab = 'inbox';
+	}
+	
 	$tpl = get_markup_template('mail_head.tpl');
 	$header = replace_macros($tpl, array(
 		'$messages' => t('Messages'),
 		'$inbox' => t('Inbox'),
 		'$outbox' => t('Outbox'),
-		'$new' => t('New Message')
+		'$new' => t('New Message'),
+		'$activetab' => $tab
 	));
 
 
@@ -90,6 +98,8 @@ function message_content(&$a) {
 
 	if(($a->argc > 1) && ($a->argv[1] === 'new')) {
 		
+		$o .= $header;
+		
 		$tpl = get_markup_template('msg-header.tpl');
 
 		$a->page['htmlhead'] .= replace_macros($tpl, array(
@@ -114,7 +124,6 @@ function message_content(&$a) {
 			'$upload' => t('Upload photo'),
 			'$insert' => t('Insert web link'),
 			'$wait' => t('Please wait')
-
 		));
 
 		return $o;
@@ -159,10 +168,10 @@ function message_content(&$a) {
 				'$from_url' => $a->get_baseurl() . '/redir/' . $rr['contact-id'],
 				'$sparkle' => ' sparkle',
 				'$from_photo' => $rr['thumb'],
-				'$subject' => (($rr['mailseen']) ? $rr['title'] : '<strong>' . $rr['title'] . '</strong>'),
+				'$subject' => template_escape((($rr['mailseen']) ? $rr['title'] : '<strong>' . $rr['title'] . '</strong>')),
 				'$delete' => t('Delete conversation'),
-				'$body' => $rr['body'],
-				'$to_name' => $rr['name'],
+				'$body' => template_escape($rr['body']),
+				'$to_name' => template_escape($rr['name']),
 				'$date' => datetime_convert('UTC',date_default_timezone_get(),$rr['mailcreated'], t('D, d M Y - g:i A'))
 			));
 		}
@@ -221,14 +230,14 @@ function message_content(&$a) {
 			}
 			$o .= replace_macros($tpl, array(
 				'$id' => $message['id'],
-				'$from_name' =>$message['from-name'],
+				'$from_name' => template_escape($message['from-name']),
 				'$from_url' => $from_url,
 				'$sparkle' => $sparkle,
 				'$from_photo' => $message['from-photo'],
-				'$subject' => $message['title'],
-				'$body' => smilies(bbcode($message['body'])),
+				'$subject' => template_escape($message['title']),
+				'$body' => template_escape(smilies(bbcode($message['body']))),
 				'$delete' => t('Delete message'),
-				'$to_name' => $message['name'],
+				'$to_name' => template_escape($message['name']),
 				'$date' => datetime_convert('UTC',date_default_timezone_get(),$message['created'],'D, d M Y - g:i A')
 			));
 				
@@ -240,7 +249,7 @@ function message_content(&$a) {
 			'$header' => t('Send Reply'),
 			'$to' => t('To:'),
 			'$subject' => t('Subject:'),
-			'$subjtxt' => $message['title'],
+			'$subjtxt' => template_escape($message['title']),
 			'$readonly' => ' readonly="readonly" style="background: #BBBBBB;" ',
 			'$yourmessage' => t('Your message:'),
 			'$select' => $select,
@@ -248,7 +257,6 @@ function message_content(&$a) {
 			'$upload' => t('Upload photo'),
 			'$insert' => t('Insert web link'),
 			'$wait' => t('Please wait')
-
 		));
 
 		return $o;

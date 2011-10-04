@@ -90,8 +90,11 @@ if(! function_exists('load_translation_table')) {
 function load_translation_table($lang) {
 	global $a;
 
-	if(file_exists("view/$lang/strings.php"))
+	if(file_exists("view/$lang/strings.php")) {
 		include("view/$lang/strings.php");
+	}
+	else
+		$a->strings = array();
 }}
 
 // translate string if translation exists
@@ -110,12 +113,15 @@ function t($s) {
 
 if(! function_exists('tt')){
 function tt($singular, $plural, $count){
-	
+	global $lang;
 	$a = get_app();
 
 	if(x($a->strings,$singular)) {
 		$t = $a->strings[$singular];
-		$k = string_plural_select($count);
+		$f = 'string_plural_select_' . str_replace('-','_',$lang);
+		if(! function_exists($f))
+			$f = 'string_plural_select_default';
+		$k = $f($count);
 		return is_array($t)?$t[$k]:$t;
 	}
 	
@@ -125,3 +131,12 @@ function tt($singular, $plural, $count){
 		return $singular;
 	}
 }}
+
+// provide a fallback which will not collide with 
+// a function defined in any language file 
+
+if(! function_exists('string_plural_select_default')) {
+function string_plural_select_default($n) {
+	return ($n != 1);
+}}
+

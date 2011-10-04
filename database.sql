@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `network` char(255) NOT NULL,
   `name` char(255) NOT NULL,
   `nick` char(255) NOT NULL,
+  `attag` char(255) NOT NULL,
   `photo` text NOT NULL, 
   `thumb` text NOT NULL,
   `micro` text NOT NULL,
@@ -69,6 +70,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `alias` char(255) NOT NULL,
   `pubkey` text NOT NULL,
   `prvkey` text NOT NULL,
+  `batch` char(255) NOT NULL,
   `request` text NOT NULL,
   `notify` text NOT NULL,
   `poll` text NOT NULL,
@@ -112,6 +114,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
 CREATE TABLE IF NOT EXISTS `group` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(10) unsigned NOT NULL,
+  `visible` tinyint(1) NOT NULL DEFAULT '0',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `name` char(255) NOT NULL,
   PRIMARY KEY (`id`)
@@ -173,6 +176,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `thr-parent` char(255) NOT NULL,
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `edited` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `commented` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `received` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `changed` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `owner-name` char(255) NOT NULL,
@@ -205,6 +209,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `pubmail` tinyint(1) NOT NULL DEFAULT '0',
   `visible` tinyint(1) NOT NULL DEFAULT '0',
   `starred` tinyint(1) NOT NULL DEFAULT '0',
+  `bookmark` tinyint(1) NOT NULL DEFAULT '0',
   `unseen` tinyint(1) NOT NULL DEFAULT '1',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `last-child` tinyint(1) unsigned NOT NULL DEFAULT '1',
@@ -404,19 +409,25 @@ CREATE TABLE IF NOT EXISTS `user` (
   `blocked` tinyint(1) unsigned NOT NULL DEFAULT '0', 
   `blockwall` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `hidewall` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `blocktags` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `notify-flags` int(11) unsigned NOT NULL DEFAULT '65535', 
   `page-flags` int(11) unsigned NOT NULL DEFAULT '0',
   `prvnets` tinyint(1) NOT NULL DEFAULT '0',
   `pwdreset` char(255) NOT NULL,
   `maxreq` int(11) NOT NULL DEFAULT '10',
   `expire` int(11) unsigned NOT NULL DEFAULT '0',
+  `account_expired` tinyint( 1 ) NOT NULL DEFAULT '0',
+  `account_expires_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `expire_notification_sent` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `allow_cid` mediumtext NOT NULL, 
   `allow_gid` mediumtext NOT NULL,
   `deny_cid` mediumtext NOT NULL, 
   `deny_gid` mediumtext NOT NULL,
   `openidserver` text NOT NULL,
   PRIMARY KEY (`uid`), 
-  KEY `nickname` (`nickname`)
+  KEY `nickname` (`nickname`),
+  KEY `account_expired` (`account_expired`),
+  KEY `login_date` (`login_date`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
@@ -461,7 +472,8 @@ CREATE TABLE IF NOT EXISTS `queue` (
 `network` CHAR( 32 ) NOT NULL,
 `created` DATETIME NOT NULL ,
 `last` DATETIME NOT NULL ,
-`content` MEDIUMTEXT NOT NULL
+`content` MEDIUMTEXT NOT NULL,
+`batch` TINYINT( 1 ) NOT NULL DEFAULT '0'
 ) ENGINE = MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `pconfig` (
@@ -526,6 +538,7 @@ CREATE TABLE IF NOT EXISTS `fcontact` (
 `request` CHAR( 255 ) NOT NULL,
 `nick` CHAR( 255 ) NOT NULL ,
 `addr` CHAR( 255 ) NOT NULL ,
+`batch` CHAR( 255) NOT NULL,
 `notify` CHAR( 255 ) NOT NULL ,
 `poll` CHAR( 255 ) NOT NULL ,
 `confirm` CHAR( 255 ) NOT NULL ,
@@ -605,4 +618,27 @@ CREATE TABLE IF NOT EXISTS `sign` (
 INDEX ( `iid` )
 ) ENGINE = MyISAM DEFAULT CHARSET=utf8;
 
+
+CREATE TABLE IF NOT EXISTS `deliverq` (
+`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`cmd` CHAR( 32 ) NOT NULL ,
+`item` INT NOT NULL ,
+`contact` INT NOT NULL
+) ENGINE = MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `search` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`uid` INT NOT NULL ,
+`term` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+INDEX ( `uid` ),
+INDEX ( `term` )
+) ENGINE = MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `fserver` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`server` CHAR( 255 ) NOT NULL ,
+`posturl` CHAR( 255 ) NOT NULL ,
+`key` TEXT NOT NULL,
+INDEX ( `server` )
+) ENGINE = MyISAM DEFAULT CHARSET=utf8;
 

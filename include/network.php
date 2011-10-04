@@ -9,37 +9,37 @@ function fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0) {
 
 	$a = get_app();
 
-	$ch = curl_init($url);
+	$ch = @curl_init($url);
 	if(($redirects > 8) || (! $ch)) 
 		return false;
 
-	curl_setopt($ch, CURLOPT_HEADER, true);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-	curl_setopt($ch, CURLOPT_USERAGENT, "Friendika");
+	@curl_setopt($ch, CURLOPT_HEADER, true);
+	@curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+	@curl_setopt($ch, CURLOPT_USERAGENT, "Friendika");
 
 	if(intval($timeout)) {
-		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+		@curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
 	}
 	else {
 		$curl_time = intval(get_config('system','curl_timeout'));
-		curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
+		@curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
 	}
 	// by default we will allow self-signed certs
 	// but you can override this
 
 	$check_cert = get_config('system','verifyssl');
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, (($check_cert) ? true : false));
+	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, (($check_cert) ? true : false));
 
 	$prx = get_config('system','proxy');
 	if(strlen($prx)) {
-		curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
-		curl_setopt($ch, CURLOPT_PROXY, $prx);
-		$prxusr = get_config('system','proxyuser');
+		@curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
+		@curl_setopt($ch, CURLOPT_PROXY, $prx);
+		$prxusr = @get_config('system','proxyuser');
 		if(strlen($prxusr))
-			curl_setopt($ch, CURLOPT_PROXYUSERPWD, $prxusr);
+			@curl_setopt($ch, CURLOPT_PROXYUSERPWD, $prxusr);
 	}
 	if($binary)
-		curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
+		@curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
 
 	$a->set_curl_code(0);
 
@@ -49,7 +49,7 @@ function fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0) {
 	$s = @curl_exec($ch);
 
 	$base = $s;
-	$curl_info = curl_getinfo($ch);
+	$curl_info = @curl_getinfo($ch);
 	$http_code = $curl_info['http_code'];
 
 	$header = '';
@@ -80,7 +80,7 @@ function fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0) {
 
 	$a->set_curl_headers($header);
 
-	curl_close($ch);
+	@curl_close($ch);
 	return($body);
 }}
 
@@ -259,22 +259,29 @@ function convert_xml_element_to_array($xml_element, &$recursion_depth=0) {
 // or if the resultant personal XRD doesn't contain a supported 
 // subscription/friend-request attribute.
 
+// amended 7/9/2011 to return an hcard which could save potentially loading 
+// a lengthy content page to scrape dfrn attributes
+
 if(! function_exists('webfinger_dfrn')) {
-function webfinger_dfrn($s) {
+function webfinger_dfrn($s,&$hcard) {
 	if(! strstr($s,'@')) {
 		return $s;
 	}
+	$profile_link = '';
+
 	$links = webfinger($s);
 	logger('webfinger_dfrn: ' . $s . ':' . print_r($links,true), LOGGER_DATA);
 	if(count($links)) {
-		foreach($links as $link)
+		foreach($links as $link) {
 			if($link['@attributes']['rel'] === NAMESPACE_DFRN)
-				return $link['@attributes']['href'];
-		foreach($links as $link)
+				$profile_link = $link['@attributes']['href'];
 			if($link['@attributes']['rel'] === NAMESPACE_OSTATUSSUB)
-				return 'stat:' . $link['@attributes']['template'];		
+				$profile_link = 'stat:' . $link['@attributes']['template'];	
+			if($link['@attributes']['rel'] === 'http://microformats.org/profile/hcard')
+				$hcard = $link['@attributes']['href'];				
+		}
 	}
-	return '';
+	return $profile_link;
 }}
 
 // Given an email style address, perform webfinger lookup and 
@@ -536,7 +543,7 @@ function fetch_xrd_links($url) {
 			$aliases = array($alias);
 		else
 			$aliases = $alias;
-		if($aliases && count($aliases)) {
+		if(is_array($aliases) && count($aliases)) {
 			foreach($aliases as $alias) {
 				$links[]['@attributes'] = array('rel' => 'alias' , 'href' => $alias);
 			}
@@ -694,24 +701,59 @@ function parse_xml_string($s,$strict = true) {
 	return $x;
 }}
 
-function add_fcontact($arr) {
+function add_fcontact($arr,$update = false) {
 
-	$r = q("insert into fcontact ( `url`,`name`,`photo`,`request`,`nick`,`addr`,
-		`notify`,`poll`,`confirm`,`network`,`alias`,`pubkey`,`updated` )
-		values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",
-		dbesc($arr['url']),
-		dbesc($arr['name']),
-		dbesc($arr['photo']),
-		dbesc($arr['request']),
-		dbesc($arr['nick']),
-		dbesc($arr['addr']),
-		dbesc($arr['notify']),
-		dbesc($arr['poll']),
-		dbesc($arr['confirm']),
-		dbesc($arr['network']),
-		dbesc($arr['alias']),
-		dbesc($arr['pubkey']),
-		dbesc(datetime_convert())
-	);
+	if($update) {
+		$r = q("UPDATE `fcontact` SET
+			`name` = '%s',
+			`photo` = '%s',
+			`request` = '%s',
+			`nick` = '%s',
+			`addr` = '%s',
+			`batch` = '%s',
+			`notify` = '%s',
+			`poll` = '%s',
+			`confirm` = '%s',
+			`alias` = '%s',
+			`pubkey` = '%s',
+			`updated` = '%s'
+			WHERE `url` = '%s' AND `network` = '%s' LIMIT 1", 
+			dbesc($arr['name']),
+			dbesc($arr['photo']),
+			dbesc($arr['request']),
+			dbesc($arr['nick']),
+			dbesc($arr['addr']),
+			dbesc($arr['batch']),
+			dbesc($arr['notify']),
+			dbesc($arr['poll']),
+			dbesc($arr['confirm']),
+			dbesc($arr['network']),
+			dbesc($arr['alias']),
+			dbesc($arr['pubkey']),
+			dbesc(datetime_convert()),
+			dbesc($arr['url']),
+			dbesc($arr['network'])
+		);
+	}
+	else {
+		$r = q("insert into fcontact ( `url`,`name`,`photo`,`request`,`nick`,`addr`,
+			`batch`, `notify`,`poll`,`confirm`,`network`,`alias`,`pubkey`,`updated` )
+			values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",
+			dbesc($arr['url']),
+			dbesc($arr['name']),
+			dbesc($arr['photo']),
+			dbesc($arr['request']),
+			dbesc($arr['nick']),
+			dbesc($arr['addr']),
+			dbesc($arr['batch']),
+			dbesc($arr['notify']),
+			dbesc($arr['poll']),
+			dbesc($arr['confirm']),
+			dbesc($arr['network']),
+			dbesc($arr['alias']),
+			dbesc($arr['pubkey']),
+			dbesc(datetime_convert())
+		);
+	}
 	return $r;
 }

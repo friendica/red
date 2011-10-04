@@ -287,6 +287,9 @@ nav {
 	margin-bottom: 5px;
 }
 
+.vcard dl {
+	clear: both;
+}
 
 .powered {
 	font-size: 0.6em;
@@ -319,6 +322,7 @@ nav {
 	float: right;
 	margin-left: 0px;
 	margin-right: 3px;
+	margin-top: 20px;
 	padding: 6px;
 	/*border: 2px solid #000000;*/
 	background: #D5D5D5;
@@ -340,6 +344,7 @@ nav {
 .nav-ajax-left {
 	margin-left: 1px;
 	margin-right: 2px;
+	margin-top: 15px;
 	float: left;
 	font-size: 0.6em;
 	font-weight: bold;
@@ -373,6 +378,7 @@ nav {
 	float: left;
 	margin-left: 3px;
 	margin-right: 0px;
+	margin-top: 20px;
 	padding: 6px;
 	/*border: 2px solid #000000;*/
 	background: #D5D5D5;
@@ -400,6 +406,7 @@ nav {
 }
 
 #profile-extra-links {
+	clear: both;
 	margin-top: 20px;
 	margin-bottom: 20px;
 	margin-left: 20px;
@@ -841,7 +848,8 @@ input#dfrn-url {
 
 .contact-entry-wrapper {
 	float: left;
-	width: 180px;
+	width: 120px;
+	height: 120px;
 }
 
 .contact-entry-direction-icon {
@@ -857,7 +865,9 @@ input#dfrn-url {
 }
 .contact-entry-name {
 	float: left;
-	margin-left: 30px;
+	margin-left: 0px;
+	width: 120px;
+	oveflow: hidden;
 }
 .contact-entry-edit-links {
 	margin-top: 6px;
@@ -875,6 +885,7 @@ input#dfrn-url {
 }
 .contact-entry-photo {
 	float: left;
+	position: relative;
 }
 .contact-entry-end {
 	clear: both;
@@ -882,8 +893,36 @@ input#dfrn-url {
 
 #contact-edit-end {
 	clear: both;
+	margin-bottom: 65px;
 }
 
+.contact-photo-menu-button {
+       position: absolute;
+       background-image: url("photo-menu.jpg");
+       background-position: top left; 
+       background-repeat: no-repeat;
+       margin: 0px; padding: 0px;
+       width: 16px;
+       height: 16px;
+       top: 64px; left:0px;
+       overflow: hidden;
+       text-indent: 40px;
+       display: none;
+       
+}
+
+.contact-photo-menu {
+       width: 100px;
+       border: 2px solid #444444;
+       background: #FFFFFF;
+       position: absolute;
+       left: 0px; top: 90px;
+       display: none;
+       z-index: 10000;
+}
+.contact-photo-menu ul { margin:0px; padding: 0px; list-style: none }
+.contact-photo-menu li a { display: block; padding: 2px; }
+.contact-photo-menu li a:hover { color: #FFFFFF; background: #3465A4; text-decoration: none; }
 
 #fsuggest-desc, #fsuggest-submit-wrapper {
 	margin-top: 15px;
@@ -987,6 +1026,10 @@ input#dfrn-url {
 	float: left;
 	margin-right: 5px;
 }
+#network-bmark-link {
+	margin-top: 10px;
+}
+
 
 
 .wall-item-info.wallwall {
@@ -1420,6 +1463,11 @@ padding: 5px 10px 0px;
 	font-weight: bold;
 	margin-left: 30px;
 }
+#contact-edit-nettype {
+	margin-top: 5px;
+	margin-left: 30px;
+}
+
 
 #contact-edit-poll-wrapper {
 	margin-left: 50px;
@@ -1546,6 +1594,26 @@ padding: 5px 10px 0px;
 	clear: both;
 }
 
+.tabs {
+	padding: 4px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-right: 5px;
+	/*border: 1px solid #CCC;*/
+	/*background: #F8F8F8;*/
+	font-size: 0.8em;
+	font-weight: bold;
+	background-color: #ECECEC;
+	border: 1px solid #858585;
+}
+.tabs:hover {
+	background-color: #0CBEFE;
+	color: #F5F6FB;
+	border: 1px solid #F5F6FB;
+	/*cursor: pointer;*/
+}
+
+
 .comment-edit-text-empty {
 	color: gray;
 	height: 30px;
@@ -1631,7 +1699,7 @@ padding: 5px 10px 0px;
 	float: left;
 	margin: 4px;
 }
-.acl-list-item p { font-size: 10px; margin: 0px; padding: 2px 0px 1px; }
+.acl-list-item p { height: 12px; font-size: 10px; margin: 0px; padding: 2px 0px 1px; overflow: hidden;}
 .acl-list-item a { 
 	font-size: 8px;
 	display: block;
@@ -1833,6 +1901,25 @@ a.mail-list-link {
 #sidebar-group-list li {
 	margin-top: 10px;
 }
+
+
+#search-save {
+    margin-left: 5px;
+}
+.groupsideedit {
+    margin-right: 10px;
+}
+#saved-search-ul {
+    list-style-type: none;
+}
+.savedsearchdrop, .savedsearchterm {
+    float: left;
+    margin-top: 10px;
+}
+.savedsearchterm {
+    margin-left: 10px;
+}
+
 
 #side-follow-wrapper {
 	margin-top: 20px;
@@ -2347,6 +2434,7 @@ a.mail-list-link {
 }
 
 #crepair-nick-label,
+#crepair-attag-label,
 #crepair-url-label,
 #crepair-request-label,
 #crepair-confirm-label,
@@ -2358,6 +2446,7 @@ a.mail-list-link {
 }
 
 #crepair-nick,
+#crepair-attag,
 #crepair-url,
 #crepair-request,
 #crepair-confirm,
@@ -2368,7 +2457,8 @@ a.mail-list-link {
 }
 
 #netsearch-box {
-	margin-top: 20px;	
+	margin-top: 20px;
+	width: 150px;	
 }
 
 #netsearch-box #search-submit {
@@ -2669,6 +2759,7 @@ a.mail-list-link {
 .off { background-position: 0px -48px; }
 .starred { background-position: -16px -48px; }
 .unstarred { background-position: -32px -48px; }
+.tagged { background-position: -48px -48px; }
 
 .icon.dim { opacity: 0.3;filter:alpha(opacity=30); }
 

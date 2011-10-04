@@ -19,7 +19,7 @@
 	<div id="photo-edit-tags-end"></div>
 
 	<div id="photo-edit-perms" class="photo-edit-perms" >
-		<a href="#photo-edit-perms-select" id="photo-edit-perms-menu" title="$permissions"/>
+		<a href="#photo-edit-perms-select" id="photo-edit-perms-menu" class="button" title="$permissions"/>
 			<span id="jot-perms-icon" class="icon $lockstate" ></span>$permissions
 		</a>
 		<div id="photo-edit-perms-menu-end"></div>

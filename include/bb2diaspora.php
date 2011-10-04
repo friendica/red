@@ -3,6 +3,21 @@
 require_once("include/oembed.php");
 require_once('include/event.php');
 
+require_once('library/markdown.php');
+require_once('include/html2bbcode.php');
+
+function diaspora2bb($s) {
+
+	$s = preg_replace('/\@\{(.+?)\; (.+?)\@(.+?)\}/','@[url=https://$3/u/$2]$1[/url]',$s);
+	$s = Markdown($s);
+	$s = html2bbcode($s);
+
+//	$s = preg_replace('/\[url=(.+?)\<em\>(.+?)\]/ism','[url=$1_$2]',$s);
+//	$s = preg_replace('/\[url=(.+?)\<\/em\>(.+?)\]/ism','[url=$1_$2]',$s);
+
+	return $s;
+
+}
 
 
 function stripdcode_br_cb($s) {
@@ -15,11 +30,17 @@ function stripdcode_br_cb($s) {
 
 function bb2diaspora($Text,$preserve_nl = false) {
 
+	$ev = bbtoevent($Text);
+
 	// Replace any html brackets with HTML Entities to prevent executing HTML or script
 	// Don't use strip_tags here because it breaks [url] search by replacing & with amp
 
 	$Text = str_replace("<", "&lt;", $Text);
 	$Text = str_replace(">", "&gt;", $Text);
+
+	// If we find any event code, turn it into an event.
+	// After we're finished processing the bbcode we'll 
+	// replace all of the event code with a reformatted version.
 
 
 	if($preserve_nl)
@@ -35,8 +56,9 @@ function bb2diaspora($Text,$preserve_nl = false) {
 	// [img]pathtoimage[/img]
 
 
-	$Text = preg_replace("/\[url\]([$URLSearchString]*)\[\/url\]/", '[$1]($1)', $Text);
-	$Text = preg_replace("(\[url\=([$URLSearchString]*)\](.*?)\[/url\])", '[$2]($1)', $Text);
+	$Text = preg_replace("/\[url\]([$URLSearchString]*)\[\/url\]/ism", '[$1]($1)', $Text);
+	$Text = preg_replace("/\#\[url\=([$URLSearchString]*)\](.*?)\[\/url\]/ism", '[#$2]($1)', $Text);
+	$Text = preg_replace("/\[url\=([$URLSearchString]*)\](.*?)\[\/url\]/ism", '[$2]($1)', $Text);
 
 //	$Text = preg_replace("/\[img\](.*?)\[\/img\]/", t('Image/photo: ') . '$1', $Text);
 //	$Text = preg_replace("/\[img\](.*?)\[\/img\]/", t('image/photo'), $Text);
@@ -137,23 +159,60 @@ function bb2diaspora($Text,$preserve_nl = false) {
 
 
 	// oembed tag
-//	$Text = oembed_bbcode2html($Text);
+	//	$Text = oembed_bbcode2html($Text);
 
 	// If we found an event earlier, strip out all the event code and replace with a reformatted version.
 
-//	if(x($ev,'desc') && x($ev,'start')) {
-//		$sub = format_event_html($ev);
+	if(x($ev,'desc') && x($ev,'start')) {
 
-	//	$Text = preg_replace("/\[event\-description\](.*?)\[\/event\-description\]/is",$sub,$Text);
-		//$Text = preg_replace("/\[event\-start\](.*?)\[\/event\-start\]/is",'',$Text);
-//		$Text = preg_replace("/\[event\-finish\](.*?)\[\/event\-finish\]/is",'',$Text);
-//		$Text = preg_replace("/\[event\-location\](.*?)\[\/event\-location\]/is",'',$Text);
-//		$Text = preg_replace("/\[event\-adjust\](.*?)\[\/event\-adjust\]/is",'',$Text);
-//	}
+		$sub = format_event_diaspora($ev);
+	
+		$Text = preg_replace("/\[event\-description\](.*?)\[\/event\-description\]/is",$sub,$Text);
+		$Text = preg_replace("/\[event\-start\](.*?)\[\/event\-start\]/is",'',$Text);
+		$Text = preg_replace("/\[event\-finish\](.*?)\[\/event\-finish\]/is",'',$Text);
+		$Text = preg_replace("/\[event\-location\](.*?)\[\/event\-location\]/is",'',$Text);
+		$Text = preg_replace("/\[event\-adjust\](.*?)\[\/event\-adjust\]/is",'',$Text);
+	}
 
+	$Text = preg_replace("/\<(.*?)(src|href)=(.*?)\&amp\;(.*?)\>/ism",'<$1$2=$3&$4>',$Text);
 
+	$Text = preg_replace('/\[(.*?)\]\((.*?)\\\\_(.*?)\)/ism','[$1]($2_$3)',$Text);
 	
 	call_hooks('bb2diaspora',$Text);
 
 	return $Text;
+}
+
+function format_event_diaspora($ev) {
+
+	if(! ((is_array($ev)) && count($ev)))
+		return '';
+
+	$bd_format = t('l F d, Y \@ g:i A') ; // Friday January 18, 2011 @ 8 AM
+
+	$o = 'Friendika event notification:' . "\n";
+
+	$o .= '**' . bb2diaspora($ev['desc']) .  '**' . "\n";
+
+	$o .= t('Starts:') . ' ' 
+		. (($ev['adjust']) ? day_translate(datetime_convert('UTC', 'UTC', 
+			$ev['start'] , $bd_format ))
+			:  day_translate(datetime_convert('UTC', 'UTC', 
+			$ev['start'] , $bd_format)))
+		. "\n";
+
+	if(! $ev['nofinish'])
+		$o .= t('Finishes:') . ' ' 
+			. (($ev['adjust']) ? day_translate(datetime_convert('UTC', 'UTC', 
+				$ev['finish'] , $bd_format ))
+				:  day_translate(datetime_convert('UTC', 'UTC', 
+				$ev['finish'] , $bd_format )))
+			. "\n";
+
+	if(strlen($ev['location']))
+		$o .= t('Location:') . bb2diaspora($ev['location']) 
+			. "\n";
+
+	$o .= "\n";
+	return $o;
 }

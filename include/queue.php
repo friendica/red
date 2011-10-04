@@ -3,18 +3,18 @@ require_once("boot.php");
 require_once('include/queue_fn.php');
 
 function queue_run($argv, $argc){
-  global $a, $db;
+	global $a, $db;
 
-  if(is_null($a)){
-    $a = new App;
-  }
+	if(is_null($a)){
+		$a = new App;
+	}
   
-  if(is_null($db)){
-    @include(".htconfig.php");
-    require_once("dba.php");
-    $db = new dba($db_host, $db_user, $db_pass, $db_data);
-    unset($db_host, $db_user, $db_pass, $db_data);
-  };
+	if(is_null($db)){
+		@include(".htconfig.php");
+		require_once("dba.php");
+		$db = new dba($db_host, $db_user, $db_pass, $db_data);
+		unset($db_host, $db_user, $db_pass, $db_data);
+	};
 
 
 	require_once("session.php");
@@ -29,9 +29,26 @@ function queue_run($argv, $argc){
 
 	load_hooks();
 
+	if($argc > 1)
+		$queue_id = intval($argv[1]);
+	else
+		$queue_id = 0;
+
 	$deadguys = array();
 
 	logger('queue: start');
+
+	$interval = ((get_config('system','delivery_interval') === false) ? 2 : intval(get_config('system','delivery_interval')));
+
+	$r = q("select * from deliverq where 1");
+	if(count($r)) {
+		foreach($r as $rr) {
+			logger('queue: deliverq');
+			proc_run('php','include/delivery.php',$rr['cmd'],$rr['item'],$rr['contact']);
+			if($interval)
+				@time_sleep_until(microtime(true) + (float) $interval);
+		}
+	}
 
 	$r = q("SELECT `queue`.*, `contact`.`name`, `contact`.`uid` FROM `queue` 
 		LEFT JOIN `contact` ON `queue`.`cid` = `contact`.`id` 
@@ -44,13 +61,19 @@ function queue_run($argv, $argc){
 		q("DELETE FROM `queue` WHERE `created` < UTC_TIMESTAMP() - INTERVAL 3 DAY");
 	}
 		
-	$r = q("SELECT `id` FROM `queue` WHERE `last` < UTC_TIMESTAMP() - INTERVAL 15 MINUTE ");
+	if($queue_id)
+		$r = q("SELECT `id` FROM `queue` WHERE `id` = %d LIMIT 1",
+			intval($queue_id)
+		);
+	else
+		$r = q("SELECT `id` FROM `queue` WHERE `last` < UTC_TIMESTAMP() - INTERVAL 15 MINUTE ");
 
 	if(! count($r)){
 		return;
 	}
 
-	call_hooks('queue_predeliver', $a, $r);
+	if(! $queue_id)
+		call_hooks('queue_predeliver', $a, $r);
 
 
 	// delivery loop
@@ -63,9 +86,16 @@ function queue_run($argv, $argc){
 		// queue_predeliver hooks may have changed the queue db details, 
 		// so check again if this entry still needs processing
 
-		$qi = q("SELECT * FROM `queue` WHERE `id` = %d AND `last` < UTC_TIMESTAMP() - INTERVAL 15 MINUTE ",
-			intval($q_item['id'])
-		);
+		if($queue_id) {
+			$qi = q("select * from queue where `id` = %d limit 1",
+				intval($queue_id)
+			);
+		}
+		else {
+			$qi = q("SELECT * FROM `queue` WHERE `id` = %d AND `last` < UTC_TIMESTAMP() - INTERVAL 15 MINUTE ",
+				intval($q_item['id'])
+			);
+		}
 		if(! count($qi))
 			continue;
 
@@ -83,7 +113,8 @@ function queue_run($argv, $argc){
 				continue;
 		}
 
-		$u = q("SELECT * FROM `user` WHERE `uid` = %d LIMIT 1",
+		$u = q("SELECT `user`.*, `user`.`pubkey` AS `upubkey`, `user`.`prvkey` AS `uprvkey` 
+			FROM `user` WHERE `uid` = %d LIMIT 1",
 			intval($c[0]['uid'])
 		);
 		if(! count($u)) {
@@ -92,6 +123,7 @@ function queue_run($argv, $argc){
 		}
 
 		$data      = $qi[0]['content'];
+		$public    = $qi[0]['batch'];
 		$contact   = $c[0];
 		$owner     = $u[0];
 
@@ -124,7 +156,7 @@ function queue_run($argv, $argc){
 			case NETWORK_DIASPORA:
 				if($contact['notify']) {
 					logger('queue: diaspora_delivery: item ' . $q_item['id'] . ' for ' . $contact['name']);
-					$deliver_status = diaspora_transmit($owner,$contact['notify'],$data);
+					$deliver_status = diaspora_transmit($owner,$contact,$data,$public);
 
 					if($deliver_status == (-1))
 						update_queue_time($q_item['id']);

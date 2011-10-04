@@ -15,6 +15,8 @@
  *
  */  
 
+require_once('include/crypto.php');
+
 function item_post(&$a) {
 
 	if((! local_user()) && (! remote_user()))
@@ -36,6 +38,7 @@ function item_post(&$a) {
 	call_hooks('post_local_start', $_POST);
 
 	$api_source = ((x($_POST,'api_source') && $_POST['api_source']) ? true : false);
+	$return_path = ((x($_POST,'return')) ? $_POST['return'] : '');
 
 	/**
 	 * Is this a reply to something?
@@ -80,7 +83,7 @@ function item_post(&$a) {
 		if(($r === false) || (! count($r))) {
 			notice( t('Unable to locate original post.') . EOL);
 			if(x($_POST,'return')) 
-				goaway($a->get_baseurl() . "/" . $_POST['return'] );
+				goaway($a->get_baseurl() . "/" . $return_path );
 			killme();
 		}
 		$parent_item = $r[0];
@@ -109,7 +112,7 @@ function item_post(&$a) {
 	if(! can_write_wall($a,$profile_uid)) {
 		notice( t('Permission denied.') . EOL) ;
 		if(x($_POST,'return')) 
-			goaway($a->get_baseurl() . "/" . $_POST['return'] );
+			goaway($a->get_baseurl() . "/" . $return_path );
 		killme();
 	}
 
@@ -195,7 +198,7 @@ function item_post(&$a) {
 		if(! strlen($body)) {
 			info( t('Empty post discarded.') . EOL );
 			if(x($_POST,'return')) 
-				goaway($a->get_baseurl() . "/" . $_POST['return'] );
+				goaway($a->get_baseurl() . "/" . $return_path );
 			killme();
 		}
 	}
@@ -330,11 +333,20 @@ function item_post(&$a) {
 		}
 	}
 
+	// embedded bookmark in post? convert to regular url and set bookmark flag
+
+	$bookmark = 0;
+	if(preg_match_all("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/ism",$body,$match)) {
+		$bookmark = 1;
+		$body = preg_replace("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/ism",'[url=$1]$2[/url]',$body);
+	}
+
+
 	/**
 	 * Fold multi-line [code] sequences
 	 */
 
-	$body = preg_replace('/\[\/code\]\s*\[code\]/m',"\n",$body); 
+	$body = preg_replace('/\[\/code\]\s*\[code\]/ism',"\n",$body); 
 
 	/**
 	 * Look for any tags and linkify them
@@ -351,7 +363,7 @@ function item_post(&$a) {
 	 * and we are replying, and there isn't one already
 	 */
 
-	if(($parent_contact) && ($parent_contact['network'] === 'stat') 
+	if(($parent_contact) && ($parent_contact['network'] === NETWORK_OSTATUS) 
 		&& ($parent_contact['nick']) && (! in_array('@' . $parent_contact['nick'],$tags))) {
 		$body = '@' . $parent_contact['nick'] . ' ' . $body;
 		$tags[] = '@' . $parent_contact['nick'];
@@ -402,7 +414,8 @@ function item_post(&$a) {
 						);
 					}
 					else {
-						$r = q("SELECT * FROM `contact` WHERE `nick` = '%s' AND `uid` = %d LIMIT 1",
+						$r = q("SELECT * FROM `contact` WHERE `attag` = '%s' OR `nick` = '%s' AND `uid` = %d ORDER BY `attag` DESC LIMIT 1",
+							dbesc($name),
 							dbesc($name),
 							intval($profile_uid)
 						);
@@ -488,6 +501,7 @@ function item_post(&$a) {
 	$datarray['author-avatar'] = $author['thumb'];
 	$datarray['created']       = datetime_convert();
 	$datarray['edited']        = datetime_convert();
+	$datarray['commented']     = datetime_convert();
 	$datarray['received']      = datetime_convert();
 	$datarray['changed']       = datetime_convert();
 	$datarray['uri']           = $uri;
@@ -506,6 +520,7 @@ function item_post(&$a) {
 	$datarray['private']       = $private;
 	$datarray['pubmail']       = $pubmail_enable;
 	$datarray['attach']        = $attachments;
+	$datarray['bookmark']      = intval($bookmark);
 	$datarray['thr-parent']    = $thr_parent;
 
 	/**
@@ -536,9 +551,9 @@ function item_post(&$a) {
 		);
 
 		proc_run('php', "include/notifier.php", 'edit_post', "$post_id");
-		if((x($_POST,'return')) && strlen($_POST['return'])) {
-			logger('return: ' . $_POST['return']);
-			goaway($a->get_baseurl() . "/" . $_POST['return'] );
+		if((x($_POST,'return')) && strlen($return_path)) {
+			logger('return: ' . $return_path);
+			goaway($a->get_baseurl() . "/" . $return_path );
 		}
 		killme();
 	}
@@ -547,9 +562,9 @@ function item_post(&$a) {
 
 
 	$r = q("INSERT INTO `item` (`guid`, `uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
-		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `received`, `changed`, `uri`, `thr-parent`, `title`, `body`, `app`, `location`, `coord`, 
-		`tag`, `inform`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach` )
-		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s' )",
+		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `commented`, `received`, `changed`, `uri`, `thr-parent`, `title`, `body`, `app`, `location`, `coord`, 
+		`tag`, `inform`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`, `bookmark` )
+		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d )",
 		dbesc($datarray['guid']),
 		intval($datarray['uid']),
 		dbesc($datarray['type']),
@@ -564,6 +579,7 @@ function item_post(&$a) {
 		dbesc($datarray['author-avatar']),
 		dbesc($datarray['created']),
 		dbesc($datarray['edited']),
+		dbesc($datarray['commented']),
 		dbesc($datarray['received']),
 		dbesc($datarray['changed']),
 		dbesc($datarray['uri']),
@@ -582,7 +598,8 @@ function item_post(&$a) {
 		dbesc($datarray['deny_gid']),
 		intval($datarray['private']),
 		intval($datarray['pubmail']),
-		dbesc($datarray['attach'])
+		dbesc($datarray['attach']),
+		intval($datarray['bookmark'])
 	);
 
 	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
@@ -674,6 +691,27 @@ function item_post(&$a) {
 
 				pop_lang();
 			}
+
+			// We won't be able to sign Diaspora comments for authenticated visitors - we don't have their private key
+
+			if($self) {
+				require_once('include/bb2diaspora.php');
+				$signed_body = html_entity_decode(bb2diaspora($datarray['body']));
+				$myaddr = $a->user['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+				if($datarray['verb'] === ACTIVITY_LIKE) 
+					$signed_text = $datarray['guid'] . ';' . 'Post' . ';' . $parent_item['guid'] . ';' . 'true' . ';' . $myaddr;
+				else
+			    	$signed_text = $datarray['guid'] . ';' . $parent_item['guid'] . ';' . $signed_body . ';' . $myaddr;
+
+				$authorsig = base64_encode(rsa_sign($signed_text,$a->user['prvkey'],'sha'));
+
+				q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+					intval($post_id),
+            		dbesc($signed_text),
+            		dbesc(base64_encode($authorsig)),
+            		dbesc($myaddr)
+        		);
+			}
 		}
 		else {
 			$parent = $post_id;
@@ -741,6 +779,11 @@ function item_post(&$a) {
 			}
 		}
 
+		// fallback so that parent always gets set to non-zero.
+
+		if(! $parent)
+			$parent = $post_id;
+
 		$r = q("UPDATE `item` SET `parent` = %d, `parent-uri` = '%s', `plink` = '%s', `changed` = '%s', `last-child` = 1, `visible` = 1
 			WHERE `id` = %d LIMIT 1",
 			intval($parent),
@@ -763,11 +806,17 @@ function item_post(&$a) {
 	else {
 		logger('mod_item: unable to retrieve post that was just stored.');
 		notify( t('System error. Post not saved.'));
-		goaway($a->get_baseurl() . "/" . $_POST['return'] );
+		goaway($a->get_baseurl() . "/" . $return_path );
 		// NOTREACHED
 	}
 
-	proc_run('php', "include/notifier.php", $notify_type, "$post_id");
+	// update the commented timestamp on the parent
+
+	q("UPDATE `item` set `commented` = '%s', `changed` = '%s' WHERE `id` = %d LIMIT 1",
+		dbesc(datetime_convert()),
+		dbesc(datetime_convert()),
+		intval($parent)
+	);
 
 	$datarray['id']    = $post_id;
 	$datarray['plink'] = $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id;
@@ -799,6 +848,17 @@ function item_post(&$a) {
 		}
 	}
 
+	// This is a real juggling act on shared hosting services which kill your processes
+	// e.g. dreamhost. We used to start delivery to our native delivery agents in the background
+	// and then run our plugin delivery from the foreground. We're now doing plugin delivery first,
+	// because as soon as you start loading up a bunch of remote delivey processes, *this* page is
+	// likely to get killed off. If you end up looking at an /item URL and a blank page,
+	// it's very likely the delivery got killed before all your friends could be notified.
+	// Currently the only realistic fixes are to use a reliable server - which precludes shared hosting,
+	// or cut back on plugins which do remote deliveries.  
+
+	proc_run('php', "include/notifier.php", $notify_type, "$post_id");
+
 	logger('post_complete');
 
 	// figure out how to return, depending on from whence we came
@@ -806,10 +866,10 @@ function item_post(&$a) {
 	if($api_source)
 		return;
 
-	if((x($_POST,'return')) && strlen($_POST['return'])) {
-		logger('return: ' . $_POST['return']);
-		goaway($a->get_baseurl() . "/" . $_POST['return'] );
+	if($return_path) {
+		goaway($a->get_baseurl() . "/" . $return_path);
 	}
+
 	$json = array('success' => 1);
 	if(x($_POST,'jsreload') && strlen($_POST['jsreload']))
 		$json['reload'] = $a->get_baseurl() . '/' . $_POST['jsreload'];

@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1082 );
+define( 'UPDATE_VERSION' , 1094 );
 
 /**
  *
@@ -676,8 +676,16 @@ function update_1080() {
 }
 
 function update_1081() {
-	q("ALTER TABLE `photo` ADD `guid` CHAR( 64 ) NOT NULL AFTER `contact`id`,
+	// there was a typo in update 1081 so it was corrected and moved up to 1082
+}
+
+function update_1082() {
+	q("ALTER TABLE `photo` ADD `guid` CHAR( 64 ) NOT NULL AFTER `contact-id`,
 		ADD INDEX ( `guid` )  ");
+	// make certain the following code is only executed once
+	$r = q("select `id` from `photo` where `guid` != '' limit 1");
+	if($r && count($r))
+		return;
 	$r = q("SELECT distinct(`resource-id`) FROM `photo` WHERE 1 group by `id`");
 	if(count($r)) {
 		foreach($r as $rr) {
@@ -688,4 +696,94 @@ function update_1081() {
 			);
 		}
 	}
+}
+
+function update_1083() {
+	q("CREATE TABLE IF NOT EXISTS `deliverq` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`cmd` CHAR( 32 ) NOT NULL ,
+	`item` INT NOT NULL ,
+	`contact` INT NOT NULL
+	) ENGINE = MYISAM ");
+
+}
+
+function update_1084() {
+	q("ALTER TABLE `contact` ADD `attag` CHAR( 255 ) NOT NULL AFTER `nick` ");
+}
+
+function update_1085() {
+	q("CREATE TABLE IF NOT EXISTS `search` (
+	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`uid` INT NOT NULL ,
+	`term` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+	INDEX ( `uid` ),
+	INDEX ( `term` )
+	) ENGINE = MYISAM ");
+}
+
+function update_1086() {
+	q("ALTER TABLE `item` ADD `bookmark` tinyint(1) NOT NULL DEFAULT '0' AFTER `starred` ");
+}
+
+function update_1087() {
+	q("ALTER TABLE `item` ADD `commented` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `edited` ");
+
+	$r = q("SELECT `id` FROM `item` WHERE `parent` = `id` ");
+	if(count($r)) {
+		foreach($r as $rr) {
+			$x = q("SELECT max(`created`) AS `cdate` FROM `item` WHERE `parent` = %d LIMIT 1",
+				intval($rr['id'])
+			);
+			if(count($x))
+				q("UPDATE `item` SET `commented` = '%s' WHERE `id` = %d LIMIT 1",
+					dbesc($x[0]['cdate']),
+					intval($rr['id'])
+				);
+		}
+	}
+}
+
+function update_1088() {
+	q("ALTER TABLE `user` ADD `account_expired` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `expire` ,
+		ADD `account_expires_on` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `account_expired` ,
+		ADD `expire_notification_sent` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `account_expires_on` ");
+}
+
+function update_1089() {
+	q("ALTER TABLE `user` ADD `blocktags` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `hidewall` ");
+}
+
+function update_1090() {
+	q("ALTER TABLE `contact` ADD `batch` char(255) NOT NULL AFTER `prvkey` ");
+
+	q("UPDATE `contact` SET `batch` = concat(substring_index(`url`,'/',3),'/receive/public') WHERE `network` = 'dspr' ");
+
+}
+
+function update_1091() {
+
+	// catch a few stragglers that may have crept in before we added this on remote connects
+	q("UPDATE `contact` SET `batch` = concat(substring_index(`url`,'/',3),'/receive/public') WHERE `network` = 'dspr' AND `batch` = '' ");
+	q("ALTER TABLE `queue` ADD `batch` TINYINT( 1 ) NOT NULL DEFAULT '0' ");
+	q("ALTER TABLE `fcontact` ADD `batch` char(255) NOT NULL AFTER `addr` ");
+
+}
+
+function update_1092() {
+	q("ALTER TABLE `user` ADD INDEX ( `login_date` ) ");
+	q("ALTER TABLE `user` ADD INDEX ( `account_expired` ) ");
+}
+
+function update_1093() {
+	q("CREATE TABLE IF NOT EXISTS `fserver` (
+	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`server` CHAR( 255 ) NOT NULL ,
+	`posturl` CHAR( 255 ) NOT NULL ,
+	`key` TEXT NOT NULL,
+	INDEX ( `server` )
+	) ENGINE = MYISAM ");
+
+	q("ALTER TABLE `group` ADD `visible` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `uid` ");
+
 }

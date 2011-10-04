@@ -6,8 +6,26 @@ function group_add($uid,$name) {
 	$ret = false;
 	if(x($uid) && x($name)) {
 		$r = group_byname($uid,$name); // check for dups
-		if($r !== false) 
+		if($r !== false) {
+
+			// This could be a problem. 
+			// Let's assume we've just created a group which we once deleted
+			// all the old members are gone, but the group remains so we don't break any security
+			// access lists. What we're doing here is reviving the dead group, but old content which
+			// was restricted to this group may now be seen by the new group members. 
+
+			$z = q("SELECT * FROM `group` WHERE `id` = %d LIMIT 1",
+				intval($r)
+			);
+			if(count($z) && $z[0]['deleted']) {
+				$r = q("UPDATE `group` SET `deleted` = 0 WHERE `uid` = %d AND `name` = '%s' LIMIT 1",
+					intval($uid),
+					dbesc($name)
+				);
+				notice( t('A deleted group with this name was revived. Existing item permissions <strong>may</strong> apply to this group and any future members. If this is not what you intended, please create another group with a different name.') . EOL); 
+			}
 			return true;
+		}
 		$r = q("INSERT INTO `group` ( `uid`, `name` )
 			VALUES( %d, '%s' ) ",
 			intval($uid),
@@ -124,7 +142,7 @@ function group_public_members($gid) {
 		$r = q("SELECT `contact`.`id` AS `contact-id` FROM `group_member` 
 			LEFT JOIN `contact` ON `contact`.`id` = `group_member`.`contact-id` 
 			WHERE `gid` = %d AND `group_member`.`uid` = %d 
-			AND ( `contact`.`network` = '%s' OR `contact`.`notify` = '' )",
+			AND  `contact`.`network` = '%s' AND `contact`.`notify` != '' ",
 			intval($gid),
 			intval(local_user()),
 			dbesc(NETWORK_OSTATUS)
@@ -146,15 +164,15 @@ function group_side($every="contacts",$each="group",$edit = false, $group_id = 0
 
 	$createtext = t('Create a new group');
 	$linktext= t('Everybody');
-	$selected = (($group_id == 0) ? ' class="group-selected" ' : '');
+	$selected = (($group_id == 0) ? ' group-selected' : '');
 $o .= <<< EOT
 
-<div id="group-sidebar">
+<div id="group-sidebar" class="widget">
 <h3>Groups</h3>
 
 <div id="sidebar-group-list">
 	<ul id="sidebar-group-ul">
-	<li class="sidebar-group-li" ><a href="$every" $selected >$linktext</a></li>
+	<li class="sidebar-group-li" ><a href="$every" class="sidebar-group-element$selected" >$linktext</a></li>
 
 EOT;
 
@@ -167,13 +185,13 @@ EOT;
 
 	if(count($r)) {
 		foreach($r as $rr) {
-			$selected = (($group_id == $rr['id']) ? ' class="group-selected" ' : '');
+			$selected = (($group_id == $rr['id']) ? ' group-selected' : '');
 			$o .= '	<li class="sidebar-group-li">' 
 			. (($edit) ? "<a href=\"group/{$rr['id']}\" title=\"" . t('Edit') 
-				. "\" ><img src=\"images/spencil.gif\" alt=\"" . t('Edit') . "\"></a> " : "") 
+				. "\" class=\"groupsideedit\" ><img src=\"images/spencil.gif\" alt=\"" . t('Edit') . "\"></a> " : "") 
 			. (($cid) ? '<input type="checkbox" class="' . (($selected) ? 'ticked' : 'unticked') . '" onclick="contactgroupChangeMember(' . $rr['id'] . ',' . $cid . ');return true;" '
 				. ((in_array($rr['id'],$member_of)) ? ' checked="checked" ' : '') . '/>' : '')
-			. "<a href=\"$each/{$rr['id']}\" $selected >{$rr['name']}</a></li>\r\n";
+			. "<a href=\"$each/{$rr['id']}\" class=\"sidebar-group-element" . $selected ."\"  >{$rr['name']}</a></li>\r\n";
 		}
 	}
 	$o .= "	</ul>\r\n	</div>";

@@ -14,7 +14,7 @@ function notes_init(&$a) {
 }
 
 
-function notes_content(&$a) {
+function notes_content(&$a,$update = false) {
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
@@ -52,31 +52,37 @@ function notes_content(&$a) {
 	));	
 	
 
-	$o .= '<h3>' . t('Personal Notes') . '</h3>';
+	if(! $update) {
+		$o .= '<h3>' . t('Personal Notes') . '</h3>';
 
-	$commpage = false;
-	$commvisitor = false;
+		$commpage = false;
+		$commvisitor = false;
 
-	$celeb = false;
+		$celeb = false;
 
 
 
-	$x = array(
-		'is_owner' => $is_owner,
-       	'allow_location' => (($a->user['allow_location']) ? true : false),
-        'default_location' => $a->user['default-location'],
-        'nickname' => $a->user['nickname'],
-   	    'lockstate' => 'lock',
-       	'acl' => '',
-        'bang' => '',
-        'visitor' => 'block',
-   	    'profile_uid' => local_user(),
-		'button' => t('Save')
+		$x = array(
+			'is_owner' => $is_owner,
+       		'allow_location' => (($a->user['allow_location']) ? true : false),
+	        'default_location' => $a->user['default-location'],
+    	    'nickname' => $a->user['nickname'],
+   	    	'lockstate' => 'lock',
+	       	'acl' => '',
+    	    'bang' => '',
+        	'visitor' => 'block',
+	   	    'profile_uid' => local_user(),
+			'button' => t('Save')
 
-    );
+    	);
 
-    $o .= status_editor($a,$x,$a->contact['id']);
+    	$o .= status_editor($a,$x,$a->contact['id']);
 
+		$o .= '<div id="live-notes"></div>' . "\r\n";
+		$o .= "<script> var profile_uid = " . local_user() 
+			. "; var netargs = '/?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
+
+	}
 
 	// Construct permissions
 

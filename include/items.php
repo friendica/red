@@ -20,6 +20,8 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 		for($x = 2; $x < $a->argc; $x++) {
 			if($a->argv[$x] == 'converse')
 				$converse = true;
+			if($a->argv[$x] == 'starred')
+				$starred = true;
 		}
 	}
 
@@ -112,8 +114,10 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 		`contact`.`name`, `contact`.`photo`, `contact`.`url`, 
 		`contact`.`name-date`, `contact`.`uri-date`, `contact`.`avatar-date`,
 		`contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`, 
-		`contact`.`id` AS `contact-id`, `contact`.`uid` AS `contact-uid`
+		`contact`.`id` AS `contact-id`, `contact`.`uid` AS `contact-uid`,
+		`sign`.`signed_text`, `sign`.`signature`, `sign`.`signer`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
+		LEFT JOIN `sign` ON `sign`.`iid` = `item`.`id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`parent` != 0 
 		AND `item`.`wall` = 1 AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 		AND ( `item`.`edited` > '%s' OR `item`.`changed` > '%s' )
@@ -362,6 +366,22 @@ function get_atom_elements($feed,$item) {
 		if($res['app'] === 'web')
 			$res['app'] = 'OStatus';
 	}		   
+
+	// base64 encoded json structure representing Diaspora signature
+
+	$dsig = $item->get_item_tags(NAMESPACE_DFRN,'diaspora_signature');
+	if($dsig) {
+		$res['dsprsig'] = unxmlify($dsig[0]['data']);
+	}
+
+	$dguid = $item->get_item_tags(NAMESPACE_DFRN,'diaspora_guid');
+	if($dguid)
+		$res['guid'] = unxmlify($dguid[0]['data']);
+
+	$bm = $item->get_item_tags(NAMESPACE_DFRN,'bookmark');
+	if($bm)
+		$res['bookmark'] = ((unxmlify($bm[0]['data']) === 'true') ? 1 : 0);
+
 
 	/**
 	 * If there's a copy of the body content which is guaranteed to have survived mangling in transit, use it.
@@ -659,6 +679,15 @@ function encode_rel_links($links) {
 
 function item_store($arr,$force_parent = false) {
 
+	// If a Diaspora signature structure was passed in, pull it out of the 
+	// item array and set it aside for later storage.
+
+	$dsprsig = null;
+	if(x($arr,'dsprsig')) {
+		$dsprsig = json_decode(base64_decode($arr['dsprsig']));
+		unset($arr['dsprsig']);
+	}
+
 	if($arr['gravity'])
 		$arr['gravity'] = intval($arr['gravity']);
 	elseif($arr['parent-uri'] == $arr['uri'])
@@ -688,6 +717,7 @@ function item_store($arr,$force_parent = false) {
 	$arr['owner-avatar']  = ((x($arr,'owner-avatar'))  ? notags(trim($arr['owner-avatar']))  : '');
 	$arr['created']       = ((x($arr,'created') !== false) ? datetime_convert('UTC','UTC',$arr['created']) : datetime_convert());
 	$arr['edited']        = ((x($arr,'edited')  !== false) ? datetime_convert('UTC','UTC',$arr['edited'])  : datetime_convert());
+	$arr['commented']     = datetime_convert();
 	$arr['received']      = datetime_convert();
 	$arr['changed']       = datetime_convert();
 	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
@@ -708,6 +738,7 @@ function item_store($arr,$force_parent = false) {
 	$arr['deny_cid']      = ((x($arr,'deny_cid'))      ? trim($arr['deny_cid'])              : '');
 	$arr['deny_gid']      = ((x($arr,'deny_gid'))      ? trim($arr['deny_gid'])              : '');
 	$arr['private']       = ((x($arr,'private'))       ? intval($arr['private'])             : 0 );
+	$arr['bookmark']      = ((x($arr,'bookmark'))      ? intval($arr['bookmark'])            : 0 );
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
 	$arr['tag']           = ((x($arr,'tag'))           ? notags(trim($arr['tag']))           : '');
 	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : '');
@@ -776,6 +807,14 @@ function item_store($arr,$force_parent = false) {
 		}
 	}
 
+	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+		dbesc($arr['uri']),
+		dbesc($arr['uid'])
+	);
+	if($r && count($r)) {
+		logger('item-store: duplicate item ignored. ' . print_r($arr,true));
+		return 0;
+	}
 
 	call_hooks('post_remote',$arr);
 
@@ -834,6 +873,24 @@ function item_store($arr,$force_parent = false) {
 		intval($parent_deleted),
 		intval($current_post)
 	);
+
+	// update the commented timestamp on the parent
+
+	q("UPDATE `item` set `commented` = '%s', `changed` = '%s' WHERE `id` = %d LIMIT 1",
+		dbesc(datetime_convert()),
+		dbesc(datetime_convert()),
+		intval($parent_id)
+	);
+
+	if($dsprsig) {
+		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+			intval($current_post),
+			dbesc($dsprsig->signed_text),
+			dbesc($dsprsig->signature),
+			dbesc($dsprsig->signer)
+		);
+	}
+
 
 	/**
 	 * If this is now the last-child, force all _other_ children of this parent to *not* be last-child
@@ -894,7 +951,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	if(! $curl_stat)
 		return(-1); // timed out
 
-	logger('dfrn_deliver: ' . $xml);
+	logger('dfrn_deliver: ' . $xml, LOGGER_DATA);
 
 	if(! $xml)
 		return 3;
@@ -958,7 +1015,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 		$key = substr(random_string(),0,16);
 		$data = bin2hex(aes_encrypt($postvars['data'],$key));
 		$postvars['data'] = $data;
-		logger('rino: sent key = ' . $key);	
+		logger('rino: sent key = ' . $key, LOGGER_DEBUG);	
 
 
 		if($dfrn_version >= 2.1) {	
@@ -992,6 +1049,9 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	$curl_stat = $a->get_curl_code();
 	if((! $curl_stat) || (! strlen($xml)))
 		return(-1); // timed out
+
+	if(($curl_stat == 503) && (stristr($a->get_curl_headers(),'retry-after')))
+		return(-1);
 
 	if(strpos($xml,'<?xml') === false) {
 		logger('dfrn_deliver: phase 2: no valid XML returned');
@@ -1439,6 +1499,20 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 					lose_follower($importer,$contact,$datarray,$item);
 					return;
 				}
+
+				if(activity_match($datarray['verb'],ACTIVITY_REQ_FRIEND)) {
+					logger('consume-feed: New friend request');
+					new_follower($importer,$contact,$datarray,$item,true);
+					return;
+				}
+				if(activity_match($datarray['verb'],ACTIVITY_UNFRIEND))  {
+					lose_sharer($importer,$contact,$datarray,$item);
+					return;
+				}
+
+
+
+
 				if(! is_array($contact))
 					return;
 
@@ -1470,7 +1544,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 	}
 }
 
-function new_follower($importer,$contact,$datarray,$item) {
+function new_follower($importer,$contact,$datarray,$item,$sharing = false) {
 	$url = notags(trim($datarray['author-link']));
 	$name = notags(trim($datarray['author-name']));
 	$photo = notags(trim($datarray['author-avatar']));
@@ -1480,14 +1554,14 @@ function new_follower($importer,$contact,$datarray,$item) {
 		$nick = $rawtag[0]['child'][NAMESPACE_POCO]['preferredUsername'][0]['data'];
 
 	if(is_array($contact)) {
-		if($contact['network'] == 'stat' && $contact['rel'] == CONTACT_IS_SHARING) {
+		if(($contact['network'] == NETWORK_OSTATUS && $contact['rel'] == CONTACT_IS_SHARING)
+			|| ($sharing && $contact['rel'] == CONTACT_IS_FOLLOWER)) {
 			$r = q("UPDATE `contact` SET `rel` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval(CONTACT_IS_FRIEND),
 				intval($contact['id']),
 				intval($importer['uid'])
 			);
 		}
-
 		// send email notification to owner?
 	}
 	else {
@@ -1503,13 +1577,12 @@ function new_follower($importer,$contact,$datarray,$item) {
 			dbesc($name),
 			dbesc($nick),
 			dbesc($photo),
-			dbesc('stat'),
-			intval(CONTACT_IS_FOLLOWER)
+			dbesc(($sharing) ? NETWORK_ZOT : NETWORK_OSTATUS),
+			intval(($sharing) ? CONTACT_IS_SHARING : CONTACT_IS_FOLLOWER)
 		);
-		$r = q("SELECT `id` FROM `contact` WHERE `uid` = %d AND `url` = '%s' AND `pending` = 1 AND `rel` = %d LIMIT 1",
+		$r = q("SELECT `id` FROM `contact` WHERE `uid` = %d AND `url` = '%s' AND `pending` = 1 LIMIT 1",
 				intval($importer['uid']),
-				dbesc($url),
-				intval(CONTACT_IS_FOLLOWER)
+				dbesc($url)
 		);
 		if(count($r))
 				$contact_record = $r[0];
@@ -1541,7 +1614,7 @@ function new_follower($importer,$contact,$datarray,$item) {
 					'$sitename' => $a->config['sitename']
 				));
 				$res = mail($r[0]['email'], 
-					t("You have a new follower at ") . $a->config['sitename'],
+					(($sharing) ? t('A new person is sharing with you at ') : t("You have a new follower at ")) . $a->config['sitename'],
 					$email,
 					'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
 					. 'Content-type: text/plain; charset=UTF-8' . "\n"
@@ -1565,14 +1638,32 @@ function lose_follower($importer,$contact,$datarray,$item) {
 	}
 }
 
+function lose_sharer($importer,$contact,$datarray,$item) {
 
-function subscribe_to_hub($url,$importer,$contact) {
+	if(($contact['rel'] == CONTACT_IS_FRIEND) || ($contact['rel'] == CONTACT_IS_FOLLOWER)) {
+		q("UPDATE `contact` SET `rel` = %d WHERE `id` = %d LIMIT 1",
+			intval(CONTACT_IS_FOLLOWER),
+			intval($contact['id'])
+		);
+	}
+	else {
+		contact_remove($contact['id']);
+	}
+}
+
+
+function subscribe_to_hub($url,$importer,$contact,$submode = 'subscribe') {
 
 	if(is_array($importer)) {
 		$r = q("SELECT `nickname` FROM `user` WHERE `uid` = %d LIMIT 1",
 			intval($importer['uid'])
 		);
 	}
+
+	// Diaspora has different message-ids in feeds than they do 
+	// through the direct Diaspora protocol. If we try and use
+	// the feed, we'll get duplicates. So don't.
+
 	if((! count($r)) || $contact['network'] === NETWORK_DIASPORA)
 		return;
 
@@ -1582,7 +1673,7 @@ function subscribe_to_hub($url,$importer,$contact) {
 
 	$verify_token = ((strlen($contact['hub-verify'])) ? $contact['hub-verify'] : random_string());
 
-	$params= 'hub.mode=subscribe&hub.callback=' . urlencode($push_url) . '&hub.topic=' . urlencode($contact['poll']) . '&hub.verify=async&hub.verify_token=' . $verify_token;
+	$params= 'hub.mode=' . $hubmode . '&hub.callback=' . urlencode($push_url) . '&hub.topic=' . urlencode($contact['poll']) . '&hub.verify=async&hub.verify_token=' . $verify_token;
 
 	logger('subscribe_to_hub: subscribing ' . $contact['name'] . ' to hub ' . $url . ' with verifier ' . $verify_token);
 
@@ -1670,10 +1761,21 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 		$o .= '<dfrn:private>1</dfrn:private>' . "\r\n";
 
 	if($item['extid'])
-		$o .= '<dfrn:extid>' . $item['extid'] . '</dfrn:extid>' . "\r\n";
+		$o .= '<dfrn:extid>' . xmlify($item['extid']) . '</dfrn:extid>' . "\r\n";
+	if($item['bookmark'])
+		$o .= '<dfrn:bookmark>true</dfrn:bookmark>' . "\r\n";
 
 	if($item['app'])
-		$o .= '<statusnet:notice_info local_id="' . $item['id'] . '" source="' . $item['app'] . '" ></statusnet:notice_info>';
+		$o .= '<statusnet:notice_info local_id="' . $item['id'] . '" source="' . xmlify($item['app']) . '" ></statusnet:notice_info>' . "\r\n";
+
+	if($item['guid'])
+		$o .= '<dfrn:diaspora_guid>' . $item['guid'] . '</dfrn:diaspora_guid>' . "\r\n";
+
+	if($item['signed_text']) {
+		$sign = base64_encode(json_encode(array('signed_text' => $item['signed_text'],'signature' => $item['signature'],'signer' => $item['signer'])));
+		$o .= '<dfrn:diaspora_signature>' . xmlify($sign) . '</dfrn:diaspora_signature>' . "\r\n";
+	}
+
 	$verb = construct_verb($item);
 	$o .= '<as:verb>' . xmlify($verb) . '</as:verb>' . "\r\n";
 	$actobj = construct_activity_object($item);

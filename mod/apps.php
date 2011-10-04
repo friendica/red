@@ -1,15 +1,18 @@
 <?php
 
-
 function apps_content(&$a) {
+	$title = t('Applications');
 
-	$o .= '<h3>' . t('Applications') . '</h3>';
-
-	if($a->apps)
-		$o .= $a->apps;
-	else
+	if(count($a->apps)==0)
 		notice( t('No installed applications.') . EOL);
 
-	return $o;
+
+	$tpl = get_markup_template("apps.tpl");
+	return replace_macros($tpl, array(
+		'$title' => $title,
+		'$apps' => $a->apps,
+	));
+
+	
 
 }

@@ -55,6 +55,22 @@ function like_content(&$a) {
 		return;
 	}
 
+	$remote_owner = null;
+
+	if(! $item['wall']) {
+		// The top level post may have been written by somebody on another system
+		$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			intval($item['contact-id']),
+			intval($item['uid'])
+		);
+		if(! count($r))
+			return;
+		if(! $r[0]['self'])
+			$remote_owner = $r[0];
+	}
+
+	// this represents the post owner on this system. 
+
 	$r = q("SELECT `contact`.*, `user`.`nickname` FROM `contact` LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid`
 		WHERE `contact`.`self` = 1 AND `contact`.`uid` = %d LIMIT 1",
 		intval($owner_uid)
@@ -67,6 +83,11 @@ function like_content(&$a) {
 		return;
 	}
 
+	if(! $remote_owner)
+		$remote_owner = $owner;
+
+
+	// This represents the person posting
 
 	if((local_user()) && (local_user() == $owner_uid)) {
 		$contact = $owner;
@@ -137,9 +158,9 @@ EOT;
 	$arr['gravity'] = GRAVITY_LIKE;
 	$arr['parent'] = $item['id'];
 	$arr['parent-uri'] = $item['uri'];
-	$arr['owner-name'] = $owner['name'];
-	$arr['owner-link'] = $owner['url'];
-	$arr['owner-avatar'] = $owner['thumb'];
+	$arr['owner-name'] = $remote_owner['name'];
+	$arr['owner-link'] = $remote_owner['url'];
+	$arr['owner-avatar'] = $remote_owner['thumb'];
 	$arr['author-name'] = $contact['name'];
 	$arr['author-link'] = $contact['url'];
 	$arr['author-avatar'] = $contact['thumb'];

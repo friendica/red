@@ -33,13 +33,18 @@ function photos_init(&$a) {
 		if(count($albums)) {
 			$a->data['albums'] = $albums;
 
-			$o .= '<h4><a href="' . $a->get_baseurl() . '/profile/' . $a->data['user']['nickname'] . '">' . $a->data['user']['username'] . '</a></h4>';
-			$o .= '<h4>' . '<a href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '">' . t('Photo Albums') . '</a></h4>';
-		
+			$o .= '<div class="vcard">';
+			$o .= '<div class="fn">' . $a->data['user']['username'] . '</div>';
+			$o .= '<div id="profile-photo-wrapper"><img class="photo" style="width: 175px; height: 175px;" src="' . $a->get_baseurl() . '/photo/profile/' . $a->data['user']['uid'] . '.jpg" alt="' . $a->data['user']['username'] . '" /></div>';
+			$o .= '</div>';
+			
+			$o .= '<div id="side-bar-photos-albums" class="widget">';
+			$o .= '<h3>' . '<a href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '">' . t('Photo Albums') . '</a></h4>';
+					
 			$o .= '<ul>';
 			foreach($albums as $album) {
 
-				// don't show contact photos. We once trasnlated this name, but then you could still access it under
+				// don't show contact photos. We once translated this name, but then you could still access it under
 				// a different language setting. Now we store the name in English and check in English (and translated for legacy albums).
 
 				if((! strlen($album['album'])) || ($album['album'] === 'Contact Photos') || ($album['album'] === t('Contact Photos')))
@@ -87,15 +92,11 @@ EOT;
 
 function photos_post(&$a) {
 
-	logger('mod/photos.php: photos_post(): begin' , 'LOGGER_DEBUG');
+	logger('mod-photos: photos_post(): begin' , 'LOGGER_DEBUG');
 
-	foreach($_REQUEST AS $key => $val) {
-		logger('mod/photos.php: photos_post(): $_REQUEST key: ' . $key . ' val: ' . $val , 'LOGGER_DEBUG');
-	}
 
-	foreach($_FILES AS $key => $val) {
-		logger('mod/photos.php: photos_post(): $_FILES key: ' . $key . ' val: ' . $val , 'LOGGER_DEBUG');
-	}
+	logger('mod_photos: REQUEST ' . print_r($_REQUEST,true), LOGGER_DATA);
+	logger('mod_photos: FILES '   . print_r($_FILES,true), LOGGER_DATA);
 
 	$can_post  = false;
 	$visitor   = 0;
@@ -414,7 +415,8 @@ function photos_post(&$a) {
 								);
 							}
 							else {
-								$r = q("SELECT * FROM `contact` WHERE `nick` = '%s' AND `uid` = %d LIMIT 1",
+								$r = q("SELECT * FROM `contact` WHERE `attag` = '%s' OR `nick` = '%s' AND `uid` = %d ORDER BY `attag` DESC LIMIT 1",
+									dbesc($name),
 									dbesc($name),
 									intval($page_owner_uid)
 								);
@@ -577,6 +579,9 @@ function photos_post(&$a) {
 	if((! count($r)) || ($album == t('Profile Photos')))
 		$visible = 1;
 	else
+		$visible = 0;
+
+	if(intval($_REQUEST['not_visible']))
 		$visible = 0;
 
 	$str_group_allow   = perms2str(((is_array($_REQUEST['group_allow']))   ? $_REQUEST['group_allow']   : explode(',',$_REQUEST['group_allow'])));
@@ -886,9 +891,10 @@ function photos_content(&$a) {
 			'$nickname' => $a->data['user']['nickname'],
 			'$newalbum' => t('New album name: '),
 			'$existalbumtext' => t('or existing album name: '),
-			'$albumselect' => $albumselect,
+			'$nosharetext' => t('Do not show a status post for this upload'),
+			'$albumselect' => template_escape($albumselect),
 			'$permissions' => t('Permissions'),
-			'$aclselect' => (($visitor) ? '' : populate_acl($a->user, $celeb)),
+			'$aclselect' => (($visitor) ? '' : template_escape(populate_acl($a->user, $celeb))),
 			'$uploader' => $ret['addon_text'],
 			'$default' => (($ret['default_upload']) ? $default_upload : ''),
 			'$uploadurl' => $ret['post_url']
@@ -929,7 +935,7 @@ function photos_content(&$a) {
 					$o .= replace_macros($edit_tpl,array(
 						'$nametext' => t('New album name: '),
 						'$nickname' => $a->data['user']['nickname'],
-						'$album' => $album,
+						'$album' => template_escape($album),
 						'$hexalbum' => bin2hex($album),
 						'$submit' => t('Submit'),
 						'$dropsubmit' => t('Delete Album')
@@ -954,8 +960,8 @@ function photos_content(&$a) {
 					'$photolink' => $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $rr['resource-id'],
 					'$phototitle' => t('View Photo'),
 					'$imgsrc' => $a->get_baseurl() . '/photo/' . $rr['resource-id'] . '-' . $rr['scale'] . '.jpg',
-					'$imgalt' => $rr['filename'],
-					'$desc'=> $rr['desc']
+					'$imgalt' => template_escape($rr['filename']),
+					'$desc'=> template_escape($rr['desc'])
 				));
 
 		}
@@ -981,7 +987,15 @@ function photos_content(&$a) {
 		);
 
 		if(! count($ph)) {
-			notice( t('Photo not available') . EOL );
+			$ph = q("SELECT `id` FROM `photo` WHERE `uid` = %d AND `resource-id` = '%s' 
+				LIMIT 1",
+				intval($owner_uid),
+				dbesc($datum)
+			);
+			if(count($ph)) 
+				notice( t('Permission denied. Access to this item may be restricted.'));
+			else
+				notice( t('Photo not available') . EOL );
 			return;
 		}
 
@@ -1006,8 +1020,9 @@ function photos_content(&$a) {
 					break;
 				}
 			}
-			$prevlink = $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $prvnxt[$prv]['resource-id'] ;
-			$nextlink = $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $prvnxt[$nxt]['resource-id'] ;
+			$edit_suffix = ((($cmd === 'edit') && ($can_post)) ? '/edit' : '');
+			$prevlink = $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $prvnxt[$prv]['resource-id'] . $edit_suffix;
+			$nextlink = $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $prvnxt[$nxt]['resource-id'] . $edit_suffix;
  		}
 
 
@@ -1030,7 +1045,7 @@ function photos_content(&$a) {
  
 		if($can_post && ($ph[0]['uid'] == $owner_uid)) {
 			$tools = array(
-				'edit'	=> array($a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $datum . '/edit', t('Edit photo')),
+				'edit'	=> array($a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $datum . (($cmd === 'edit') ? '' : '/edit'), (($cmd === 'edit') ? t('View photo') : t('Edit photo'))),
 				'profile'=>array($a->get_baseurl() . '/profile_photo/use/'.$ph[0]['resource-id'], t('Use as profile photo')),
 			);
 
@@ -1129,16 +1144,16 @@ function photos_content(&$a) {
 			$edit_tpl = get_markup_template('photo_edit.tpl');
 			$edit = replace_macros($edit_tpl, array(
 				'$id' => $ph[0]['id'],
-				'$album' => $ph[0]['album'],
+				'$album' => template_escape($ph[0]['album']),
 				'$newalbum' => t('New album name'), 
 				'$nickname' => $a->data['user']['nickname'],
 				'$resource_id' => $ph[0]['resource-id'],
 				'$capt_label' => t('Caption'),
-				'$caption' => $ph[0]['desc'],
+				'$caption' => template_escape($ph[0]['desc']),
 				'$tag_label' => t('Add a Tag'),
 				'$tags' => $link_item['tag'],
 				'$permissions' => t('Permissions'),
-				'$aclselect' => populate_acl($ph[0]),
+				'$aclselect' => template_escape(populate_acl($ph[0])),
 				'$help_tags' => t('Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping'),
 				'$item_id' => ((count($linked_items)) ? $link_item['id'] : 0),
 				'$submit' => t('Submit'),
@@ -1284,11 +1299,11 @@ function photos_content(&$a) {
 					$comments .= replace_macros($template,array(
 						'$id' => $item['item_id'],
 						'$profile_url' => $profile_link,
-						'$name' => $profile_name,
+						'$name' => template_escape($profile_name),
 						'$thumb' => $profile_avatar,
 						'$sparkle' => $sparkle,
-						'$title' => $item['title'],
-						'$body' => bbcode($item['body']),
+						'$title' => template_escape($item['title']),
+						'$body' => template_escape(bbcode($item['body'])),
 						'$ago' => relative_date($item['created']),
 						'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
 						'$drop' => $drop,
@@ -1303,18 +1318,18 @@ function photos_content(&$a) {
 		$photo_tpl = get_markup_template('photo_view.tpl');
 		$o .= replace_macros($photo_tpl, array(
 			'$id' => $ph[0]['id'],
-			'$album' => array($album_link,$ph[0]['album']),
+			'$album' => array($album_link,template_escape($ph[0]['album'])),
 			'$tools' => $tools,
 			'$lock' => $lock,
 			'$photo' => $photo,
 			'$prevlink' => $prevlink,
 			'$nextlink' => $nextlink,
 			'$desc' => $ph[0]['desc'],
-			'$tags' => $tags,
+			'$tags' => template_escape($tags),
 			'$edit' => $edit,	
 			'$likebuttons' => $likebuttons,
-			'$like' => $like,
-			'$dislike' => $dislike,
+			'$like' => template_escape($like),
+			'$dislike' => template_escape($dislike),
 			'$comments' => $comments,
 			'$paginate' => $paginate,
 		));
@@ -1362,9 +1377,9 @@ function photos_content(&$a) {
 				'$phototitle' => t('View Photo'),
 				'$imgsrc'     => $a->get_baseurl() . '/photo/' . $rr['resource-id'] . '-' . ((($rr['scale']) == 6) ? 4 : $rr['scale']) . '.jpg',
 				'$albumlink'  => $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/album/' . bin2hex($rr['album']),
-				'$albumname'  => $rr['album'],
+				'$albumname'  => template_escape($rr['album']),
 				'$albumalt'   => t('View Album'),
-				'$imgalt'     => $rr['filename']
+				'$imgalt'     => template_escape($rr['filename'])
 			));
 
 		}

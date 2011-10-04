@@ -1,5 +1,60 @@
 <?php
 
+function search_saved_searches() {
+
+	$o = '';
+
+	$r = q("select `term` from `search` WHERE `uid` = %d",
+		intval(local_user())
+	);
+
+	if(count($r)) {
+		$o .= '<div id="saved-search-list" class="widget">';
+		$o .= '<h3>' . t('Saved Searches') . '</h3>' . "\r\n";
+		$o .= '<ul id="saved-search-ul">' . "\r\n";
+		foreach($r as $rr) {
+			$o .= '<li class="saved-search-li clear"><a href="search/?f=&remove=1&search=' . $rr['term'] . '" class="icon drophide savedsearchdrop" title="' . t('Remove term') . '" onclick="return confirmDelete();" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a> <a href="search/?f=&search=' . $rr['term'] . '" class="savedsearchterm" >' . $rr['term'] . '</a></li>' . "\r\n";
+		}
+		$o .= '</ul></div>' . "\r\n";
+	}		
+
+	return $o;
+
+}
+
+
+function search_init(&$a) {
+
+	$search = ((x($_GET,'search')) ? notags(trim(rawurldecode($_GET['search']))) : '');
+
+	if(local_user()) {
+		if(x($_GET,'save') && $search) {
+			$r = q("select * from `search` where `uid` = %d and `term` = '%s' limit 1",
+				intval(local_user()),
+				dbesc($search)
+			);
+			if(! count($r)) {
+				q("insert into `search` ( `uid`,`term` ) values ( %d, '%s') ",
+					intval(local_user()),
+					dbesc($search)
+				);
+			}
+		}
+		if(x($_GET,'remove') && $search) {
+			q("delete from `search` where `uid` = %d and `term` = '%s' limit 1",
+				intval(local_user()),
+				dbesc($search)
+			);
+		}
+
+		$a->page['aside'] .= search_saved_searches();
+
+	}
+
+
+}
+
+
 
 function search_post(&$a) {
 	if(x($_POST,'search'))
@@ -13,6 +68,8 @@ function search_content(&$a) {
 		notice( t('Public access denied.') . EOL);
 		return;
 	}
+	
+	nav_set_selected('search');
 
 	require_once("include/bbcode.php");
 	require_once('include/security.php');
@@ -30,7 +87,7 @@ function search_content(&$a) {
 	else
 		$search = ((x($_GET,'search')) ? notags(trim(rawurldecode($_GET['search']))) : '');
 
-	$o .= search($search);
+	$o .= search($search,'search-box','/search',((local_user()) ? true : false));
 
 	if(! $search)
 		return $o;
@@ -86,12 +143,11 @@ function search_content(&$a) {
 
 	);
 
-
+	$o .= '<h2>Search results for: ' . $search . '</h2>';
 
 	$o .= conversation($a,$r,'search',false);
 
 	$o .= paginate($a);
-	$o .= cc_license();
 
 	return $o;
 }

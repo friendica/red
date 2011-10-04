@@ -1,6 +1,7 @@
 <?php
 	require_once("bbcode.php");
 	require_once("datetime.php");
+	require_once("conversation.php");
 	
 	/* 
 	 * Twitter-Like API
@@ -8,7 +9,7 @@
 	 */
 
 	$API = Array();
-	 
+	$called_api = Null; 
 
 	function api_date($str){
 		//Wed May 23 06:01:13 +0000 2007
@@ -54,7 +55,7 @@
 		// process normal login request
 
 		$r = q("SELECT * FROM `user` WHERE ( `email` = '%s' OR `nickname` = '%s' ) 
-			AND `password` = '%s' AND `blocked` = 0 AND `verified` = 1 LIMIT 1",
+			AND `password` = '%s' AND `blocked` = 0 AND `account_expired` = 0 AND `verified` = 1 LIMIT 1",
 			dbesc(trim($user)),
 			dbesc(trim($user)),
 			dbesc($encrypted)
@@ -103,9 +104,10 @@
 	 *  MAIN API ENTRY POINT  *
 	 **************************/
 	function api_call(&$a){
-		GLOBAL $API;
+		GLOBAL $API, $called_api;
 		foreach ($API as $p=>$info){
 			if (strpos($a->query_string, $p)===0){
+				$called_api= explode("/",$p);
 				#unset($_SERVER['PHP_AUTH_USER']);
 				if ($info['auth']===true && local_user()===false) {
 						api_login($a);
@@ -131,7 +133,7 @@
 						return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
 						break;
 					case "json": 
-						header ("Content-Type: application/json");  
+						//header ("Content-Type: application/json");  
 						foreach($r as $rr)
 						    return json_encode($rr);
 						break;
@@ -193,6 +195,7 @@
 	 * Returns user info array.
 	 */
 	function api_get_user(&$a, $contact_id = Null){
+		global $called_api;
 		$user = null;
 		$extra_query = "";
 
@@ -209,16 +212,20 @@
 		if(is_null($user) && x($_GET, 'screen_name')) {
 			$user = dbesc($_GET['screen_name']);	
 			$extra_query = "AND `contact`.`nick` = '%s' ";
+			if (local_user()!==false)  $extra_query .= "AND `contact`.`uid`=".intval(local_user());
+			
 		}
 		
-		if (is_null($user) && $a->argc > 3){
-			list($user, $null) = explode(".",$a->argv[3]);
+		if (is_null($user) && $a->argc > (count($called_api)-1)){
+			$argid = count($called_api);
+			list($user, $null) = explode(".",$a->argv[$argid]);
 			if(is_numeric($user)){
 				$user = intval($user);
 				$extra_query = "AND `contact`.`id` = %d ";
 			} else {
 				$user = dbesc($user);
 				$extra_query = "AND `contact`.`nick` = '%s' ";
+				if (local_user()!==false)  $extra_query .= "AND `contact`.`uid`=".intval(local_user());
 			}
 		}
 		
@@ -301,6 +308,7 @@
 		}
 
 		$ret = Array(
+			'self' => intval($uinfo[0]['self']),
 			'uid' => intval($uinfo[0]['uid']),
 			'id' => intval($uinfo[0]['cid']),
 			'name' => $uinfo[0]['name'],
@@ -321,7 +329,7 @@
 			'followers_count' => intval($countfollowers),
 			'favourites_count' => intval($starred),
 			'contributors_enabled' => false,
-			'follow_request_sent' => false,
+			'follow_request_sent' => true,
 			'profile_background_color' => 'cfe8f6',
 			'profile_text_color' => '000000',
 			'profile_link_color' => 'FF8500',
@@ -458,6 +466,7 @@
 		}
 		return null;
 	}
+
 	// TODO - media uploads
 	function api_statuses_update(&$a, $type) {
 		if (local_user()===false) return false;
@@ -467,7 +476,32 @@
 
 		// logger('api_post: ' . print_r($_POST,true));
 
-		$_POST['body'] = urldecode(requestdata('status'));
+		if(requestdata('htmlstatus')) {
+			require_once('library/HTMLPurifier.auto.php');
+			require_once('include/html2bbcode.php');
+
+			$txt = requestdata('htmlstatus');
+			if((strpos($txt,'<') !== false) || (strpos($txt,'>') !== false)) {
+
+				$txt = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
+					'[youtube]$1[/youtube]', $txt);
+
+				$txt = preg_replace('#<iframe[^>].+?' . 'http://www.youtube.com/embed/([A-Za-z0-9\-_=]+).+?</iframe>#s',
+					'[youtube]$1[/youtube]', $txt);
+
+				$config = HTMLPurifier_Config::createDefault();
+				$config->set('Cache.DefinitionImpl', null);
+
+
+				$purifier = new HTMLPurifier($config);
+				$txt = $purifier->purify($txt);
+
+				$_POST['body'] = html2bbcode($txt);
+			}
+
+		}
+		else
+			$_POST['body'] = urldecode(requestdata('status'));
 
 		$parent = requestdata('in_reply_to_status_id');
 		if(ctype_digit($parent))
@@ -616,6 +650,7 @@
 		$user_info = api_get_user($a);
 		// get last newtork messages
 
+
 		// params
 		$count = (x($_REQUEST,'count')?$_REQUEST['count']:20);
 		$page = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
@@ -664,6 +699,12 @@
 		$user_info = api_get_user($a);
 		// get last newtork messages
 
+
+		logger("api_statuses_user_timeline: local_user: ". local_user() .
+			   "\nuser_info: ".print_r($user_info, true) .
+			   "\n_REQUEST:  ".print_r($_REQUEST, true),
+			   LOGGER_DEBUG);
+
 		// params
 		$count = (x($_REQUEST,'count')?$_REQUEST['count']:20);
 		$page = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
@@ -672,6 +713,7 @@
 		
 		$start = $page*$count;
 
+		if ($user_info['self']==1) $sql_extra = "AND `item`.`wall` = 1 ";
 
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
@@ -679,14 +721,15 @@
 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 			FROM `item`, `contact`
 			WHERE `item`.`uid` = %d
+			AND `item`.`contact-id` = %d
 			AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-			AND `item`.`wall` = 1
 			AND `contact`.`id` = `item`.`contact-id`
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 			$sql_extra
 			AND `item`.`id`>%d
 			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
-			intval($user_info['uid']),
+			intval(local_user()),
+			intval($user_info['id']),
 			intval($since_id),
 			intval($start),	intval($count)
 		);
@@ -711,33 +754,41 @@
 		if (local_user()===false) return false;
 		
 		$user_info = api_get_user($a);
-		// get last newtork messages
+		// in friendika starred item are private
+		// return favorites only for self
+		logger('api_favorites: self:' . $user_info['self']);
 		
-		// params
-		$count = (x($_GET,'count')?$_GET['count']:20);
-		$page = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
-		if ($page<0) $page=0;
+		if ($user_info['self']==0) {
+			$ret = array();
+		} else {
+			
+			
+			// params
+			$count = (x($_GET,'count')?$_GET['count']:20);
+			$page = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
+			if ($page<0) $page=0;
+			
+			$start = $page*$count;
+
+			$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
+				`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
+				`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
+				`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
+				FROM `item`, `contact`
+				WHERE `item`.`uid` = %d
+				AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+				AND `item`.`starred` = 1
+				AND `contact`.`id` = `item`.`contact-id`
+				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+				$sql_extra
+				ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
+				intval($user_info['uid']),
+				intval($start),	intval($count)
+			);
+
+			$ret = api_format_items($r,$user_info);
 		
-		$start = $page*$count;
-
-		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
-			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-			FROM `item`, `contact`
-			WHERE `item`.`uid` = %d
-			AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-			AND `item`.`starred` = 1
-			AND `contact`.`id` = `item`.`contact-id`
-			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-			$sql_extra
-			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
-			intval($user_info['uid']),
-			intval($start),	intval($count)
-		);
-
-		$ret = api_format_items($r,$user_info);
-
+		}
 		
 		$data = array('$statuses' => $ret);
 		switch($type){
@@ -762,6 +813,7 @@
 		$ret = Array();
 
 		foreach($r as $item) {
+			localize_item($item);
 			$status_user = (($item['cid']==$user_info['id'])?$user_info: api_item_get_user($a,$item));
 			$status = array(
 				'created_at'=> api_date($item['created']),
@@ -819,15 +871,21 @@
 		if (local_user()===false) return false;
 		$user_info = api_get_user($a);
 		
+		
+		// friends and followers only for self
+		if ($user_info['self']==0){
+			return false;
+		}
+		
 		if (x($_GET,'cursor') && $_GET['cursor']=='undefined'){
 			/* this is to stop Hotot to load friends multiple times
 			*  I'm not sure if I'm missing return something or
 			*  is a bug in hotot. Workaround, meantime
 			*/
 			
-			$ret=Array();
-			$data = array('$users' => $ret);
-			return  api_apply_template("friends", $type, $data);
+			/*$ret=Array();
+			return array('$users' => $ret);*/
+			return false;
 		}
 		
 		if($qtype == 'friends')
@@ -845,15 +903,18 @@
 		}
 
 		
-		$data = array('$users' => $ret);
-		return  api_apply_template("friends", $type, $data);
+		return array('$users' => $ret);
 
 	}
 	function api_statuses_friends(&$a, $type){
-		return api_statuses_f($a,$type,"friends");
+		$data =  api_statuses_f($a,$type,"friends");
+		if ($data===false) return false;
+		return  api_apply_template("friends", $type, $data);
 	}
 	function api_statuses_followers(&$a, $type){
-		return api_statuses_f($a,$type,"followers");
+		$data = api_statuses_f($a,$type,"followers");
+		if ($data===false) return false;
+		return  api_apply_template("friends", $type, $data);
 	}
 	api_register_func('api/statuses/friends','api_statuses_friends',true);
 	api_register_func('api/statuses/followers','api_statuses_followers',true);

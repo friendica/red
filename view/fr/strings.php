@@ -1,6 +1,6 @@
 <?php
 
-function string_plural_select($n){
+function string_plural_select_fr($n){
 	return ($n != 1);
 }
 ;

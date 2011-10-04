@@ -4,7 +4,7 @@ function email_connect($mailbox,$username,$password) {
 	if(! function_exists('imap_open'))
 		return false;
 
-	$mbox = imap_open($mailbox,$username,$password);
+	$mbox = @imap_open($mailbox,$username,$password);
 
 	return $mbox;
 }
@@ -14,19 +14,19 @@ function email_poll($mbox,$email_addr) {
 	if(! ($mbox && $email_addr))
 		return array();
 
-	$search1 = imap_search($mbox,'FROM "' . $email_addr . '"', SE_UID);
+	$search1 = @imap_search($mbox,'FROM "' . $email_addr . '"', SE_UID);
 	if(! $search1)
 		$search1 = array();
 
-	$search2 = imap_search($mbox,'TO "' . $email_addr . '"', SE_UID);
+	$search2 = @imap_search($mbox,'TO "' . $email_addr . '"', SE_UID);
 	if(! $search2)
 		$search2 = array();
 
-	$search3 = imap_search($mbox,'CC "' . $email_addr . '"', SE_UID);
+	$search3 = @imap_search($mbox,'CC "' . $email_addr . '"', SE_UID);
 	if(! $search3)
 		$search3 = array();
 
-	$search4 = imap_search($mbox,'BCC "' . $email_addr . '"', SE_UID);
+	$search4 = @imap_search($mbox,'BCC "' . $email_addr . '"', SE_UID);
 	if(! $search4)
 		$search4 = array();
 
@@ -45,12 +45,12 @@ function construct_mailbox_name($mailacct) {
 
 
 function email_msg_meta($mbox,$uid) {
-	$ret = (($mbox && $uid) ? imap_fetch_overview($mbox,$uid,FT_UID) : array(array()));
+	$ret = (($mbox && $uid) ? @imap_fetch_overview($mbox,$uid,FT_UID) : array(array()));
 	return ((count($ret)) ? $ret[0] : array());
 }
 
 function email_msg_headers($mbox,$uid) {
-	$raw_header = (($mbox && $uid) ? imap_fetchheader($mbox,$uid,FT_UID) : '');
+	$raw_header = (($mbox && $uid) ? @imap_fetchheader($mbox,$uid,FT_UID) : '');
 	$raw_header = str_replace("\r",'',$raw_header);
 	$ret = array();
 	$h = split("\n",$raw_header);
@@ -74,7 +74,7 @@ function email_msg_headers($mbox,$uid) {
 function email_get_msg($mbox,$uid) {
 	$ret = array();
 
-	$struc = (($mbox && $uid) ? imap_fetchstructure($mbox,$uid,FT_UID) : null);
+	$struc = (($mbox && $uid) ? @imap_fetchstructure($mbox,$uid,FT_UID) : null);
 
 	if(! $struc)
 		return $ret;
@@ -103,8 +103,8 @@ function email_get_part($mbox,$uid,$p,$partno) {
 
     // DECODE DATA
     $data = ($partno)
-		? imap_fetchbody($mbox,$uid,$partno, FT_UID|FT_PEEK)
-        : imap_body($mbox,$uid,FT_UID|FT_PEEK);
+		? @imap_fetchbody($mbox,$uid,$partno, FT_UID|FT_PEEK)
+        : @imap_body($mbox,$uid,FT_UID|FT_PEEK);
 
     // Any part may be encoded, even plain text messages, so check everything.
     if ($p->encoding==4)
@@ -169,6 +169,17 @@ function email_get_part($mbox,$uid,$p,$partno) {
 
 function email_header_encode($in_str, $charset) {
     $out_str = $in_str;
+	$need_to_convert = false;
+
+	for($x = 0; $x < strlen($in_str); $x ++) {
+		if((ord($in_str[$x]) == 0) || ((ord($in_str[$x]) > 128))) {
+			$need_to_convert = true;
+		}
+	}
+
+	if(! $need_to_convert)
+		return $in_str;
+
     if ($out_str && $charset) {
 
         // define start delimimter, end delimiter and spacer
@@ -206,3 +217,5 @@ function email_header_encode($in_str, $charset) {
     }
     return $out_str;
 } 
+
+

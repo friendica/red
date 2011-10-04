@@ -220,7 +220,7 @@ function profiles_post(&$a) {
 function profiles_content(&$a) {
 
 	$o = '';
-	$o .= '<script>	$(document).ready(function() { $(\'#nav-profiles-link\').addClass(\'nav-selected\'); });</script>';
+	nav_set_selected('profiles');
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
@@ -359,7 +359,7 @@ function profiles_content(&$a) {
 
 
 		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
-		$a->page['htmlhead'] .= "<script type=\"text/javascript\" src=\"include/country.js\" ></script>";
+		$a->page['htmlhead'] .= "<script type=\"text/javascript\" src=\"js/country.js\" ></script>";
 
 		$f = get_config('system','birthday_input_format');
 		if(! $f)

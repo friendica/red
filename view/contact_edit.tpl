@@ -3,6 +3,8 @@
 
 <div id="contact-edit-banner-name">$name</div>
 
+$nettype
+
 <form action="contacts/$contact_id" method="post" >
 <input type="hidden" name="contact_id" value="$contact_id">
 
@@ -28,21 +30,20 @@
 		</div>
 		<div id="contact-edit-nav-end"></div>
 
-
+		{{ if $poll_enabled }}
 		<div id="contact-edit-poll-wrapper">
 			<div id="contact-edit-last-update-text">$lastupdtext<span id="contact-edit-last-updated">$last_update</span></div>
 			<div id="contact-edit-poll-text">$updpub</div>
 			$poll_interval
-			<div id="contact-edit-update-now"><a href="contacts/$contact_id/update">$udnow</a></div>
+			<div id="contact-edit-update-now" class="button"><a href="contacts/$contact_id/update" >$udnow</a></div>
 		</div>
+		{{ endif }}
 	</div>
 	<div id="contact-edit-end" ></div>
 
 $insecure
 $blocked
 $ignored
-
-$grps
 
 <div id="view-recent-wrapper"><a href="network/?cid=$contact_id" id="contact-view-recent">$lblrecent</a></div>
 $lblsuggest
@@ -65,24 +66,5 @@ $profile_select
 
 <input class="contact-edit-submit" type="submit" name="submit" value="$submit" />
 
-
-<div id="contact-edit-rating-wrapper">
-<h4>$lbl_rep1</h4>
-<p>
-$lbl_rep2 $lbl_rep3
-</p>
-<div id="contact-edit-rating-select-wrapper">
-$rating
-</div>
-<div id="contact-edit-rating-explain">
-<p>
-$lbl_rep4
-</p>
-<textarea id="contact-edit-rating-text" name="reason" rows="3" cols="64" >$reason</textarea>
-</div>
-</div>
-$groups
-
-<input class="contact-edit-submit" type="submit" name="submit" value="$submit" />
 </form>
 </div>

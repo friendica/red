@@ -10,7 +10,14 @@ function po2php_run($argv, $argc) {
 	
 	$pofile = $argv[1];
 	$outfile = dirname($pofile)."/strings.php";
-	
+
+	if(strstr($outfile,'util'))
+		$lang = 'en';
+	else
+		$lang = str_replace('-','_',basename(dirname($pofile)));
+
+
+
 	if (!file_exists($pofile)){
 		print "Unable to find '$pofile'\n";
 		return;
@@ -37,7 +44,7 @@ function po2php_run($argv, $argc) {
 			$match=Array();
 			preg_match("|nplurals=([0-9]*); *plural=(.*)[;\\\\]|", $l, $match);
 			$cond = str_replace('n','$n',$match[2]);
-			$out .= 'function string_plural_select($n){'."\n";
+			$out .= 'function string_plural_select_' . $lang . '($n){'."\n";
 			$out .= '	return '.$cond.';'."\n";
 			$out .= '}'."\n";
 		}

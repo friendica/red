@@ -1,4 +1,7 @@
 <?php
+
+require_once('include/email.php');
+
 class EmailNotification {
 	/**
 	 * Send a multipart/alternative message with Text and HTML versions
@@ -12,6 +15,10 @@ class EmailNotification {
 	 * @param textVersion		text only version of the message
 	 */
 	static public function sendTextHtmlEmail($fromName,$fromEmail,$replyTo,$toEmail,$messageSubject,$htmlVersion,$textVersion) {
+
+		$fromName = email_header_encode($fromName,'UTF-8'); 
+		$messageSubject = email_header_encode($messageSubject,'UTF-8');
+		
 		
 		// generate a mime boundary
 		$mimeBoundary   =rand(0,9)."-"

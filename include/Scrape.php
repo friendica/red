@@ -249,20 +249,6 @@ function scrape_feed($url) {
 		return $ret;
 
 
-	$items = $dom->getElementsByTagName('img');
-
-	// get img elements (twitter)
-
-	if($items) {
-		foreach($items as $item) {
-			$x = $item->getAttribute('id');
-			if($x === 'profile-image') {
-				$ret['photo'] = $item->getAttribute('src');
-			}
-		}
-	}
-
-
 	$head = $dom->getElementsByTagName('base');
 	if($head) {
 		foreach($head as $head0) {
@@ -332,10 +318,12 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 	if(! $url)
 		return $result;
 
+	$network = null;
 	$diaspora = false;
 	$diaspora_base = '';
 	$diaspora_guid = '';	
 	$diaspora_key = '';
+	$has_lrdd = false;
 	$email_conversant = false;
 
 	$twitter = ((strpos($url,'twitter.com') !== false) ? true : false);
@@ -352,6 +340,8 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 			$links = lrdd($url);
 
 		if(count($links)) {
+			$has_lrdd = true;
+
 			logger('probe_url: found lrdd links: ' . print_r($links,true), LOGGER_DATA);
 			foreach($links as $link) {
 				if($link['@attributes']['rel'] === NAMESPACE_ZOT)
@@ -426,7 +416,8 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 						$addr = $orig_url;
 						$network = NETWORK_MAIL;
 						$name = substr($url,0,strpos($url,'@'));
-						$profile = 'http://' . substr($url,strpos($url,'@')+1);
+						$phost = substr($url,strpos($url,'@')+1);
+						$profile = 'http://' . $phost;
 						// fix nick character range
 						$vcard = array('fn' => $name, 'nick' => $name, 'photo' => gravatar_img($url));
 						$notify = 'smtp ' . random_string();
@@ -437,8 +428,15 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 							$adr = imap_rfc822_parse_adrlist($x->from,'');
 						elseif(stristr($x->to,$orig_url))
 							$adr = imap_rfc822_parse_adrlist($x->to,'');
-						if(isset($adr) && strlen($adr[0]->personal))
-							$vcard['fn'] = notags($adr[0]->personal);
+						if(isset($adr)) {
+							foreach($adr as $feadr) {
+								if((strcasecmp($feadr->mailbox,$name) == 0) 
+									&&(strcasecmp($feadr->host,$phost) == 0) 
+									&& (strlen($feadr->personal))) {
+									$vcard['fn'] = notags($feadr->personal);
+								}
+							}
+						}
 					}
 					imap_close($mbox);
 				}
@@ -467,7 +465,7 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 		}
 
 		if(strlen($dfrn)) {
-			$ret = scrape_dfrn($dfrn);
+			$ret = scrape_dfrn(($hcard) ? $hcard : $dfrn);
 			if(is_array($ret) && x($ret,'dfrn-request')) {
 				$network = NETWORK_DFRN;
 				$request = $ret['dfrn-request'];
@@ -484,8 +482,10 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 	}
 
 	if($diaspora && $diaspora_base && $diaspora_guid) {
-		if($mode == PROBE_DIASPORA || ! $notify)
+		if($mode == PROBE_DIASPORA || ! $notify) {
 			$notify = $diaspora_base . 'receive/users/' . $diaspora_guid;
+			$batch  = $diaspora_base . 'receive/public' ;
+		}
 		if(strpos($url,'@'))
 			$addr = str_replace('acct:', '', $url);
 	}			
@@ -493,7 +493,7 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 	if($network !== NETWORK_ZOT && $network !== NETWORK_DFRN && $network !== NETWORK_MAIL) {
 		if($diaspora)
 			$network = NETWORK_DIASPORA;
-		else
+		elseif($has_lrdd)
 			$network  = NETWORK_OSTATUS;
 		$priority = 0;
 
@@ -520,6 +520,9 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 			else
 				$poll = $tapi . '?screen_name=' . $tid;
 			$profile = 'http://twitter.com/#!/' . $tid;
+			$vcard['photo'] = 'https://api.twitter.com/1/users/profile_image/' . $tid;
+			$vcard['nick'] = $tid;
+			$vcard['fn'] = $tid . '@twitter';
 		}
 
 		if(! x($vcard,'fn'))
@@ -530,7 +533,7 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 
 		if($twitter || ! $poll)
 			$check_feed = true;
-		if((! isset($vcard)) || (! $profile))
+		if((! isset($vcard)) || (! x($vcard,'fn')) || (! $profile))
 			$check_feed = true;
 		if(($at_addr) && (! count($links)))
 			$check_feed = false;
@@ -637,7 +640,7 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 					$vcard['nick'] = trim(substr($vcard['nick'],0,strpos($vcard['nick'],' ')));
 			}
 			if(! $network)
-				$network = 'feed';
+				$network = NETWORK_FEED;
 			if(! $priority)
 				$priority = 2;
 		}
@@ -651,14 +654,19 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 	if(! $profile)
 		$profile = $url;
 
+	// No human could be associated with this link, use the URL as the contact name
+
+	if(($network === NETWORK_FEED) && ($poll) && (! x($vcard,'fn')))
+		$vcard['fn'] = $url;
+
 	$vcard['fn'] = notags($vcard['fn']);
 	$vcard['nick'] = str_replace(' ','',notags($vcard['nick']));
-
-
+		
 	$result['name'] = $vcard['fn'];
 	$result['nick'] = $vcard['nick'];
 	$result['url'] = $profile;
 	$result['addr'] = $addr;
+	$result['batch'] = $batch;
 	$result['notify'] = $notify;
 	$result['poll'] = $poll;
 	$result['request'] = $request;

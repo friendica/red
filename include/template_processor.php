@@ -1,5 +1,6 @@
 <?php
 
+
 	class Template {
 		var $r;
 		var $search;
@@ -8,18 +9,23 @@
 		var $nodes = array();
 		var $done = false;
 		var $d = false;
+		var $lang = null;
+		
 		
 		private function _preg_error(){
 			switch(preg_last_error()){
-			    case PREG_INTERNAL_ERROR: die('PREG_INTERNAL_ERROR'); break;
-			    case PREG_BACKTRACK_LIMIT_ERROR: die('PREG_BACKTRACK_LIMIT_ERROR'); break;
-			    case PREG_RECURSION_LIMIT_ERROR: die('PREG_RECURSION_LIMIT_ERROR'); break;
-			    case PREG_BAD_UTF8_ERROR: die('PREG_BAD_UTF8_ERROR'); break;
-			    case PREG_BAD_UTF8_OFFSET_ERROR: die('PREG_BAD_UTF8_OFFSET_ERROR'); break;
+			    case PREG_INTERNAL_ERROR: echo('PREG_INTERNAL_ERROR'); break;
+			    case PREG_BACKTRACK_LIMIT_ERROR: echo('PREG_BACKTRACK_LIMIT_ERROR'); break;
+			    case PREG_RECURSION_LIMIT_ERROR: echo('PREG_RECURSION_LIMIT_ERROR'); break;
+			    case PREG_BAD_UTF8_ERROR: echo('PREG_BAD_UTF8_ERROR'); break;
+			    case PREG_BAD_UTF8_OFFSET_ERROR: echo('PREG_BAD_UTF8_OFFSET_ERROR'); break;
 			    default:
 					//die("Unknown preg error.");
 					return;
 			}
+			echo "<hr><pre>";
+			debug_print_backtrace();
+			die();
 		}
 		
 		private function _build_replace($r, $prefix){
@@ -153,7 +159,8 @@
 			krsort($this->nodes);
 			return $s;
 		}
-		
+
+	
 		public function replace($s, $r) {
 			$this->r = $r;
 			$this->search = array();
@@ -166,14 +173,35 @@
 			$s = preg_replace_callback('/\|\|([0-9]+)\|\|/', array($this, "_replcb_node"), $s);
 			if ($s==Null) $this->_preg_error();
 			
+			// remove comments block
+			$s = preg_replace('/{#[^#]*#}/', "" , $s);
+						
 			// replace strings recursively (limit to 10 loops)
 			$os = ""; $count=0;
 			while($os!=$s && $count<10){
 				$os=$s; $count++;
 				$s = str_replace($this->search,$this->replace, $s);
 			}
-			return $s;
+			return template_unescape($s);
 		}
 	}
 	
 	$t = new Template;
+
+
+
+
+function template_escape($s) {
+
+	return str_replace(array('$','{{'),array('!_Doll^Ars1Az_!','!_DoubLe^BraceS4Rw_!'),$s);
+
+
+}
+
+function template_unescape($s) {
+
+	return str_replace(array('!_Doll^Ars1Az_!','!_DoubLe^BraceS4Rw_!'),array('$','{{'),$s);
+
+
+
+}
