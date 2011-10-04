@@ -1081,7 +1081,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
  *
  */
 
-function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_feed = false) {
+function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) {
 
 	require_once('library/simplepie/simplepie.inc');
 
@@ -1249,7 +1249,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 	// process any deleted entries
 
 	$del_entries = $feed->get_feed_tags(NAMESPACE_TOMB, 'deleted-entry');
-	if(is_array($del_entries) && count($del_entries)) {
+	if(is_array($del_entries) && count($del_entries) && $pass != 2) {
 		foreach($del_entries as $dentry) {
 			$deleted = false;
 			if(isset($dentry['attribs']['']['ref'])) {
@@ -1341,7 +1341,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 				$parent_uri = $rawthread[0]['attribs']['']['ref'];
 			}
 
-			if(($is_reply) && is_array($contact)) {
+			if(($is_reply) && is_array($contact) && $pass != 1) {
 
 				// Have we seen it? If not, import it.
 	
@@ -1393,7 +1393,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 				}
 
 				$force_parent = false;
-				if($contact['network'] === 'stat') {
+				if($contact['network'] === NETWORK_OSTATUS) {
 					$force_parent = true;
 					if(strlen($datarray['title']))
 						unset($datarray['title']);
@@ -1405,7 +1405,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 					$datarray['last-child'] = 1;
 				}
 
-				if(($contact['network'] === 'feed') || (! strlen($contact['notify']))) {
+				if(($contact['network'] === NETWORK_FEED) || (! strlen($contact['notify']))) {
 					// one way feed - no remote comment ability
 					$datarray['last-child'] = 0;
 				}
@@ -1437,6 +1437,8 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 					if(! x($datarray,'author-avatar'))
 						$datarray['author-avatar'] = $contact['thumb'];
 				}
+
+				// special handling for events
 
 				if((x($datarray,'object-type')) && ($datarray['object-type'] === ACTIVITY_OBJ_EVENT)) {
 					$ev = bbtoevent($datarray['body']);
@@ -1511,18 +1513,16 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 				}
 
 
-
-
 				if(! is_array($contact))
 					return;
 
-				if($contact['network'] === 'stat' || stristr($permalink,'twitter.com')) {
+				if($contact['network'] === NETWORK_OSTATUS || stristr($permalink,'twitter.com')) {
 					if(strlen($datarray['title']))
 						unset($datarray['title']);
 					$datarray['last-child'] = 1;
 				}
 
-				if(($contact['network'] === 'feed') || (! strlen($contact['notify']))) {
+				if(($contact['network'] === NETWORK_FEED) || (! strlen($contact['notify']))) {
 					// one way feed - no remote comment ability
 					$datarray['last-child'] = 0;
 				}

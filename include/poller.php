@@ -486,11 +486,11 @@ function poller_run($argv, $argc){
 				}
 
 
-				consume_feed($xml,$importer,$contact,$hub,1, true);
+				consume_feed($xml,$importer,$contact,$hub,1,1);
 
 				// do it twice. Ensures that children of parents which may be later in the stream aren't tossed
 	
-				consume_feed($xml,$importer,$contact,$hub,1);
+				consume_feed($xml,$importer,$contact,$hub,1,2);
 
 				$hubmode = 'subscribe';
 				if($contact['network'] === NETWORK_DFRN || $contact['blocked'] || $contact['readonly'])
