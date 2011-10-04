@@ -377,7 +377,7 @@ ul#user-menu-popup li a.nav-sep { border-top: 1px solid #989898; border-style:in
 }
 #net-update { background-position: 0px 0px; }
 #mail-update { background-position: 0px -40px; }
-#notify-update { background-position: 0px -84px; }
+#intro-update { background-position: 0px -84px; }
 #home-update { background-position: 0px -126px; }
 
 #lang-select-icon {
@@ -848,7 +848,12 @@ profile-jot-banner-wrapper {
 }
 
 .wall-item-outside-wrapper-end { clear: both;}
-.wall-item-content-wrapper { position: relative; max-width: 100%; }
+.wall-item-content-wrapper {
+	position: relative;
+	max-width: 100%;
+	word-wrap: break-word;
+}
+
 .wall-item-photo-menu { display: none;}
 .wall-item-photo-menu-button {
 	display:none;
@@ -1192,7 +1197,8 @@ div[id$="wrapper"] br { clear: left; }
 
 #profile-listing-new-link-wrapper {
 	float: left;
-	display: inline;
+	display: inline-block;
+	clear: right;
 	width: 130px;
 	margin-left:5px;
 	margin-top: 20px;
@@ -2022,7 +2028,7 @@ margin-left: 0px;
 	border-radius:5px;
 	padding: 5px 10px 5px 10px;
 	color: #efefef;
-	font-size: 1.2em;
+	font-size: 1em;
 	text-align: center;	
 }
 
@@ -2181,7 +2187,12 @@ margin-left: 0px;
 
 .settings-submit-wrapper,
 .profile-edit-submit-wrapper { margin: 30px 0px;}
-.profile-listing { float: left; clear: both; margin: 20px 20px 0px 0px}
+.profile-listing {
+	float: left;
+	clear: left;
+	display: inline;
+	margin: 20px 20px 0px 0px;
+}
 
 #profile-edit-links ul { margin: 20px 0px; padding: 0px; list-style: none; }
 
@@ -2245,6 +2256,10 @@ margin-left: 0px;
 
 #group-edit-desc { margin: 10px 0xp; }
 #group-new-text {font-size: 1.1em;}
+#prof-members-title,#prof-all-contcts-title {
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
 #group-members,
 #prof-members {
 	width: 83%;
