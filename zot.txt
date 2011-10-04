@@ -132,10 +132,11 @@ contain commas. There MAY be any number of ASCII space characters between
 entries for legibility. Header lines are terminated with a linefeed character
 (ASCII 0x0A). 
 
-This specification provides the following foreign protocol address prefixes
+This specification provides the following protocol address prefixes
 for use in Z-To: or Z-Bcc: elements:
 
 zot: - normal zot delivery using webfinger or LRDD resolvable address
+dfrn: - legacy DFRN mode delivery using webfinger or LRDD resovable address
 ostatus: - normal OStatus delivery using webfinger or LRDD resovable address
 diaspora: - Diaspora network delivery using webfinger address
 facebook: - Facebook profile page URL
@@ -253,15 +254,12 @@ This specification is subject to change. The current version which is in
 effect at a given site may be noted by XRD properties. The following 
 properties MUST be present in the XRD providing the relevant endpoint:
 
-<Property xmlns:zot="http://purl.og/zot/1.0"
-	type="http://purl.org/zot/1.0/version"
-	zot:version="1" />
+<Property type="http://purl.org/zot/1.0/version">1</Property>
+<Property type="http://purl.org/zot/1.0/accept">application/atom+xml</Property>
 
-<Property xmlns:zot="http://purl.og/zot/1.0"
-	type="http://purl.org/zot/1.0/accept"
-	zot:accept="application/atom+xml" />
 
 Version is specified in this document and indicates the current revision.
+Version is an increasing non-zero integer value. There are no minor versions. 
 Implementations MAY provide compatibility to multiple incompatible versions
 by using this version indication. The "accept" indicates a range of document
 content types which may be enclosed in the underlying salmon magic envelope.
