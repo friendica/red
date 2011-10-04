@@ -1078,7 +1078,18 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
  *             have a contact record.
  * $hub = should we find a hub declation in the feed, pass it back to our calling process, who might (or 
  *        might not) try and subscribe to it.
+ * $datedir sorts in reverse order
+ * $pass - by default ($pass = 0) we cannot guarantee that a parent item has been 
+ *      imported prior to its children being seen in the stream unless we are certain
+ *      of how the feed is arranged/ordered.
+ * With $pass = 1, we only pull parent items out of the stream.
+ * With $pass = 2, we only pull children (comments/likes).
  *
+ * So running this twice, first with pass 1 and then with pass 2 will do the right
+ * thing regardless of feed ordering. This won't be adequate in a fully-threaded
+ * model where comments can have sub-threads. That would require some massive sorting
+ * to get all the feed items into a mostly linear ordering, and might still require
+ * recursion.  
  */
 
 function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) {
