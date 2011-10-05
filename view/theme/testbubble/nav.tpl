@@ -54,5 +54,5 @@
 </nav>
 
 <ul id="nav-notifications-template" style="display:none;" rel="template">
-	<li><a href="{0}">{2} <span class="notif-when">{3}</span></a></li>
+	<a href="{0}"><li>{2} <span class="notif-when">{3}</span></li></a>
 </ul>
