@@ -779,6 +779,11 @@ function item_post(&$a) {
 			}
 		}
 
+		// fallback so that parent always gets set to non-zero.
+
+		if(! $parent)
+			$parent = $post_id;
+
 		$r = q("UPDATE `item` SET `parent` = %d, `parent-uri` = '%s', `plink` = '%s', `changed` = '%s', `last-child` = 1, `visible` = 1
 			WHERE `id` = %d LIMIT 1",
 			intval($parent),

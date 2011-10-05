@@ -3,13 +3,16 @@
 
 	<span id="banner">$banner</span>
 
-	<div id="notifications">
-		{{ if $nav.network }}<a id="net-update" class="nav-ajax-update" href="$nav.network.0" title="$nav.network.1"></a>{{ endif }}
-		{{ if $nav.home }}<a id="home-update" class="nav-ajax-update" href="$nav.home.0" title="$nav.home.1"></a>{{ endif }}
-		{{ if $nav.notifications }}<a id="notify-update" class="nav-ajax-update" href="$nav.notifications.0" title="$nav.notifications.1"></a>{{ endif }}
-		{{ if $nav.messages }}<a id="mail-update" class="nav-ajax-update" href="$nav.messages.0" title="$nav.messages.1"></a>{{ endif }}
+	<div id="notifications">	
+		{{ if $nav.network }}<a rel="#nav-notifications-menu" id="net-update" class="nav-ajax-update" href="$nav.network.0" title="$nav.network.1"></a>{{ endif }}
+		{{ if $nav.home }}<a rel="#nav-notifications-menu" id="home-update" class="nav-ajax-update" href="$nav.home.0" title="$nav.home.1"></a>{{ endif }}
+		{{ if $nav.notifications }}<a rel="#nav-notifications-menu" id="intro-update" class="nav-ajax-update" href="$nav.notifications.0" title="$nav.notifications.1"></a>{{ endif }}
+		{{ if $nav.messages }}<a rel="#nav-notifications-menu" id="mail-update" class="nav-ajax-update" href="$nav.messages.0" title="$nav.messages.1"></a>{{ endif }}
+		<ul id="nav-notifications-menu" class="menu-popup">
+			<li class="empty">$emptynotifications</li>
+		</ul>
 	</div>
-
+	
 	<div id="user-menu" >
 		<a id="user-menu-label" onclick="openClose('user-menu-popup'); return false" href="$nav.home.0">$sitelocation</a>
 		
@@ -48,8 +51,8 @@
 			{{ if $nav.logout }}<li><a id="nav-logout-link" class="nav-commlink nav-sep $nav.logout.2" href="$nav.logout.0">$nav.logout.1</a></li> {{ endif }}
 		</ul>
 	</div>
-
-
-
 </nav>
 
+<ul id="nav-notifications-template" style="display:none;" rel="template">
+	<a href="{0}"><li>{2} <span class="notif-when">{3}</span></li></a>
+</ul>

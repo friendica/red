@@ -66,4 +66,6 @@
 		</div>
 	</div>
 </div>
-
+<div class="wall-item-comment-wrapper" >
+	$comment
+</div>

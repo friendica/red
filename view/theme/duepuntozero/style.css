@@ -1559,6 +1559,8 @@ input#dfrn-url {
 	display:block!important;
 }
 
+
+
 #acl-wrapper {
 	width: 690px;
 	float:left;
@@ -1916,6 +1918,10 @@ a.mail-list-link {
 #photos-upload-newalbum-div {
 	float: left;
 	width: 175px;
+}
+
+#photos-upload-noshare {
+	margin-bottom: 10px;
 }
 #photos-upload-existing-album-text {
 	float: left;

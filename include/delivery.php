@@ -72,7 +72,7 @@ function delivery_run($argv, $argc){
 		$normal_mode = false;
 		$expire = true;
 		$items = q("SELECT * FROM `item` WHERE `uid` = %d AND `wall` = 1 
-			AND `deleted` = 1 AND `changed` > UTC_TIMESTAMP - INTERVAL 30 MINUTE",
+			AND `deleted` = 1 AND `changed` > UTC_TIMESTAMP() - INTERVAL 30 MINUTE",
 			intval($item_id)
 		);
 		$uid = $item_id;
@@ -96,6 +96,8 @@ function delivery_run($argv, $argc){
 		$uid = $r[0]['uid'];
 		$updated = $r[0]['edited'];
 
+		if(! $parent_id)
+			return;
 
 
 		$items = q("SELECT `item`.*, `sign`.`signed_text`,`sign`.`signature`,`sign`.`signer` 
@@ -120,7 +122,6 @@ function delivery_run($argv, $argc){
 		}
 		if( ! ($icontacts && count($icontacts)))
 			return;
-
 
 		// avoid race condition with deleting entries
 
@@ -267,7 +268,12 @@ function delivery_run($argv, $argc){
 				if(! $item_contact)
 					continue;
 
-				$atom .= atom_entry($item,'text',$item_contact,$owner,true);
+				if($normal_mode) {
+					if($item_id == $item['id'] || $item['id'] == $item['parent'])
+						$atom .= atom_entry($item,'text',$item_contact,$owner,true);
+				}
+				else
+					$atom .= atom_entry($item,'text',$item_contact,$owner,true);
 
 			}
 

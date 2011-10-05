@@ -744,7 +744,12 @@ function link_compare($a,$b) {
 if(! function_exists('prepare_body')) {
 function prepare_body($item,$attach = false) {
 
+	call_hooks('prepare_body_init', $item); 
+
 	$s = prepare_text($item['body']);
+
+	call_hooks('prepare_body', $s);
+
 	if(! $attach)
 		return $s;
 
@@ -776,6 +781,7 @@ function prepare_body($item,$attach = false) {
 		}
 		$s .= '<div class="clear"></div></div>';
 	}
+	call_hooks('prepare_body_final', $s);
 	return $s;
 }}
 

@@ -86,7 +86,7 @@ function notifier_run($argv, $argc){
 		$normal_mode = false;
 		$expire = true;
 		$items = q("SELECT * FROM `item` WHERE `uid` = %d AND `wall` = 1 
-			AND `deleted` = 1 AND `changed` > UTC_TIMESTAMP - INTERVAL 10 MINUTE",
+			AND `deleted` = 1 AND `changed` > UTC_TIMESTAMP() - INTERVAL 10 MINUTE",
 			intval($item_id)
 		);
 		$uid = $item_id;
@@ -122,6 +122,9 @@ function notifier_run($argv, $argc){
 		$parent_id = intval($r[0]['parent']);
 		$uid = $r[0]['uid'];
 		$updated = $r[0]['edited'];
+
+		if(! $parent_id)
+			return;
 
 		$items = q("SELECT `item`.*, `sign`.`signed_text`,`sign`.`signature`,`sign`.`signer` 
 			FROM `item` LEFT JOIN `sign` ON `sign`.`iid` = `item`.`id` WHERE `parent` = %d ORDER BY `id` ASC",
@@ -357,7 +360,16 @@ function notifier_run($argv, $argc){
 				if(! $contact)
 					continue;
 
-				$atom .= atom_entry($item,'text',$contact,$owner,true);
+				if($normal_mode) {
+
+					// we only need the current item, but include the parent because without it
+					// older sites without a corresponding dfrn_notify change may do the wrong thing.
+
+				    if($item_id == $item['id'] || $item['id'] == $item['parent'])
+						$atom .= atom_entry($item,'text',$contact,$owner,true);
+				}
+				else
+					$atom .= atom_entry($item,'text',$contact,$owner,true);
 
 				if(($top_level) && ($public_message) && ($item['author-link'] === $item['owner-link']) && (! $expire)) 
 					$slaps[] = atom_entry($item,'html',$contact,$owner,true);

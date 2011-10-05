@@ -450,7 +450,15 @@ function dfrn_notify_post(&$a) {
 		}
 
 		if($is_reply) {
-			if($feed->get_item_quantity() == 1) {
+
+			// was the top-level post for this reply written by somebody on this site? Specifically, the recipient? 
+
+			$r = q("select `id` from `item` where `uri` = '%s' AND `uid` = %d LIMIT 1",
+				dbesc($parent_uri),
+				intval($importer['importer_uid'])
+			);
+			if($r && count($r)) {	
+
 				logger('dfrn_notify: received remote comment');
 				$is_like = false;
 				// remote reply to our post. Import and then notify everybody else.

@@ -109,9 +109,11 @@ function profperm_content(&$a) {
 	$o .= '<div id="prof-update-wrapper">';
 	if($change) 
 		$o = '';
-
-	$o .= '<div id="prof-members">';
+	
+	$o .= '<div id="prof-members-title">';
 	$o .= '<h3>' . t('Visible To') . '</h3>';
+	$o .= '</div>';
+	$o .= '<div id="prof-members">';
 
 	$textmode = (($switchtotext && (count($members) > $switchtotext)) ? true : false);
 
@@ -123,9 +125,12 @@ function profperm_content(&$a) {
 	}
 	$o .= '</div><div id="prof-members-end"></div>';
 	$o .= '<hr id="prof-separator" />';
-	$o .= '<div id="prof-all-contacts">';
 
-		$o .= '<h3>' . t("All Contacts \x28with secure profile access\x29") . '</h3>';
+	$o .= '<div id="prof-all-contcts-title">';
+	$o .= '<h3>' . t("All Contacts \x28with secure profile access\x29") . '</h3>';
+	$o .= '</div>';
+	$o .= '<div id="prof-all-contacts">';
+		
 		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `blocked` = 0 and `pending` = 0 and `self` = 0 
 			AND `network` = 'dfrn' ORDER BY `name` ASC",
 			intval(local_user())

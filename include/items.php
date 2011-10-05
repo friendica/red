@@ -807,6 +807,14 @@ function item_store($arr,$force_parent = false) {
 		}
 	}
 
+	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+		dbesc($arr['uri']),
+		dbesc($arr['uid'])
+	);
+	if($r && count($r)) {
+		logger('item-store: duplicate item ignored. ' . print_r($arr,true));
+		return 0;
+	}
 
 	call_hooks('post_remote',$arr);
 
@@ -1070,10 +1078,21 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
  *             have a contact record.
  * $hub = should we find a hub declation in the feed, pass it back to our calling process, who might (or 
  *        might not) try and subscribe to it.
+ * $datedir sorts in reverse order
+ * $pass - by default ($pass = 0) we cannot guarantee that a parent item has been 
+ *      imported prior to its children being seen in the stream unless we are certain
+ *      of how the feed is arranged/ordered.
+ * With $pass = 1, we only pull parent items out of the stream.
+ * With $pass = 2, we only pull children (comments/likes).
  *
+ * So running this twice, first with pass 1 and then with pass 2 will do the right
+ * thing regardless of feed ordering. This won't be adequate in a fully-threaded
+ * model where comments can have sub-threads. That would require some massive sorting
+ * to get all the feed items into a mostly linear ordering, and might still require
+ * recursion.  
  */
 
-function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_feed = false) {
+function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) {
 
 	require_once('library/simplepie/simplepie.inc');
 
@@ -1241,7 +1260,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 	// process any deleted entries
 
 	$del_entries = $feed->get_feed_tags(NAMESPACE_TOMB, 'deleted-entry');
-	if(is_array($del_entries) && count($del_entries)) {
+	if(is_array($del_entries) && count($del_entries) && $pass != 2) {
 		foreach($del_entries as $dentry) {
 			$deleted = false;
 			if(isset($dentry['attribs']['']['ref'])) {
@@ -1333,7 +1352,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 				$parent_uri = $rawthread[0]['attribs']['']['ref'];
 			}
 
-			if(($is_reply) && is_array($contact)) {
+			if(($is_reply) && is_array($contact) && $pass != 1) {
 
 				// Have we seen it? If not, import it.
 	
@@ -1385,7 +1404,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 				}
 
 				$force_parent = false;
-				if($contact['network'] === 'stat') {
+				if($contact['network'] === NETWORK_OSTATUS) {
 					$force_parent = true;
 					if(strlen($datarray['title']))
 						unset($datarray['title']);
@@ -1397,7 +1416,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 					$datarray['last-child'] = 1;
 				}
 
-				if(($contact['network'] === 'feed') || (! strlen($contact['notify']))) {
+				if(($contact['network'] === NETWORK_FEED) || (! strlen($contact['notify']))) {
 					// one way feed - no remote comment ability
 					$datarray['last-child'] = 0;
 				}
@@ -1429,6 +1448,8 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 					if(! x($datarray,'author-avatar'))
 						$datarray['author-avatar'] = $contact['thumb'];
 				}
+
+				// special handling for events
 
 				if((x($datarray,'object-type')) && ($datarray['object-type'] === ACTIVITY_OBJ_EVENT)) {
 					$ev = bbtoevent($datarray['body']);
@@ -1491,16 +1512,28 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 					lose_follower($importer,$contact,$datarray,$item);
 					return;
 				}
+
+				if(activity_match($datarray['verb'],ACTIVITY_REQ_FRIEND)) {
+					logger('consume-feed: New friend request');
+					new_follower($importer,$contact,$datarray,$item,true);
+					return;
+				}
+				if(activity_match($datarray['verb'],ACTIVITY_UNFRIEND))  {
+					lose_sharer($importer,$contact,$datarray,$item);
+					return;
+				}
+
+
 				if(! is_array($contact))
 					return;
 
-				if($contact['network'] === 'stat' || stristr($permalink,'twitter.com')) {
+				if($contact['network'] === NETWORK_OSTATUS || stristr($permalink,'twitter.com')) {
 					if(strlen($datarray['title']))
 						unset($datarray['title']);
 					$datarray['last-child'] = 1;
 				}
 
-				if(($contact['network'] === 'feed') || (! strlen($contact['notify']))) {
+				if(($contact['network'] === NETWORK_FEED) || (! strlen($contact['notify']))) {
 					// one way feed - no remote comment ability
 					$datarray['last-child'] = 0;
 				}
@@ -1522,7 +1555,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $secure_fee
 	}
 }
 
-function new_follower($importer,$contact,$datarray,$item) {
+function new_follower($importer,$contact,$datarray,$item,$sharing = false) {
 	$url = notags(trim($datarray['author-link']));
 	$name = notags(trim($datarray['author-name']));
 	$photo = notags(trim($datarray['author-avatar']));
@@ -1532,14 +1565,14 @@ function new_follower($importer,$contact,$datarray,$item) {
 		$nick = $rawtag[0]['child'][NAMESPACE_POCO]['preferredUsername'][0]['data'];
 
 	if(is_array($contact)) {
-		if($contact['network'] == 'stat' && $contact['rel'] == CONTACT_IS_SHARING) {
+		if(($contact['network'] == NETWORK_OSTATUS && $contact['rel'] == CONTACT_IS_SHARING)
+			|| ($sharing && $contact['rel'] == CONTACT_IS_FOLLOWER)) {
 			$r = q("UPDATE `contact` SET `rel` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval(CONTACT_IS_FRIEND),
 				intval($contact['id']),
 				intval($importer['uid'])
 			);
 		}
-
 		// send email notification to owner?
 	}
 	else {
@@ -1555,13 +1588,12 @@ function new_follower($importer,$contact,$datarray,$item) {
 			dbesc($name),
 			dbesc($nick),
 			dbesc($photo),
-			dbesc('stat'),
-			intval(CONTACT_IS_FOLLOWER)
+			dbesc(($sharing) ? NETWORK_ZOT : NETWORK_OSTATUS),
+			intval(($sharing) ? CONTACT_IS_SHARING : CONTACT_IS_FOLLOWER)
 		);
-		$r = q("SELECT `id` FROM `contact` WHERE `uid` = %d AND `url` = '%s' AND `pending` = 1 AND `rel` = %d LIMIT 1",
+		$r = q("SELECT `id` FROM `contact` WHERE `uid` = %d AND `url` = '%s' AND `pending` = 1 LIMIT 1",
 				intval($importer['uid']),
-				dbesc($url),
-				intval(CONTACT_IS_FOLLOWER)
+				dbesc($url)
 		);
 		if(count($r))
 				$contact_record = $r[0];
@@ -1593,7 +1625,7 @@ function new_follower($importer,$contact,$datarray,$item) {
 					'$sitename' => $a->config['sitename']
 				));
 				$res = mail($r[0]['email'], 
-					t("You have a new follower at ") . $a->config['sitename'],
+					(($sharing) ? t('A new person is sharing with you at ') : t("You have a new follower at ")) . $a->config['sitename'],
 					$email,
 					'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
 					. 'Content-type: text/plain; charset=UTF-8' . "\n"
@@ -1617,8 +1649,21 @@ function lose_follower($importer,$contact,$datarray,$item) {
 	}
 }
 
+function lose_sharer($importer,$contact,$datarray,$item) {
 
-function subscribe_to_hub($url,$importer,$contact,$submode = 'subscribe') {
+	if(($contact['rel'] == CONTACT_IS_FRIEND) || ($contact['rel'] == CONTACT_IS_FOLLOWER)) {
+		q("UPDATE `contact` SET `rel` = %d WHERE `id` = %d LIMIT 1",
+			intval(CONTACT_IS_FOLLOWER),
+			intval($contact['id'])
+		);
+	}
+	else {
+		contact_remove($contact['id']);
+	}
+}
+
+
+function subscribe_to_hub($url,$importer,$contact,$hubmode = 'subscribe') {
 
 	if(is_array($importer)) {
 		$r = q("SELECT `nickname` FROM `user` WHERE `uid` = %d LIMIT 1",
@@ -1641,7 +1686,7 @@ function subscribe_to_hub($url,$importer,$contact,$submode = 'subscribe') {
 
 	$params= 'hub.mode=' . $hubmode . '&hub.callback=' . urlencode($push_url) . '&hub.topic=' . urlencode($contact['poll']) . '&hub.verify=async&hub.verify_token=' . $verify_token;
 
-	logger('subscribe_to_hub: subscribing ' . $contact['name'] . ' to hub ' . $url . ' with verifier ' . $verify_token);
+	logger('subscribe_to_hub: ' . $hubmode . ' ' . $contact['name'] . ' to hub ' . $url . ' endpoint: '  . $push_url . ' with verifier ' . $verify_token);
 
 	if(! strlen($contact['hub-verify'])) {
 		$r = q("UPDATE `contact` SET `hub-verify` = '%s' WHERE `id` = %d LIMIT 1",

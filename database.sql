@@ -114,6 +114,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
 CREATE TABLE IF NOT EXISTS `group` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(10) unsigned NOT NULL,
+  `visible` tinyint(1) NOT NULL DEFAULT '0',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `name` char(255) NOT NULL,
   PRIMARY KEY (`id`)
@@ -424,7 +425,9 @@ CREATE TABLE IF NOT EXISTS `user` (
   `deny_gid` mediumtext NOT NULL,
   `openidserver` text NOT NULL,
   PRIMARY KEY (`uid`), 
-  KEY `nickname` (`nickname`)
+  KEY `nickname` (`nickname`),
+  KEY `account_expired` (`account_expired`),
+  KEY `login_date` (`login_date`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
@@ -630,3 +633,12 @@ CREATE TABLE IF NOT EXISTS `search` (
 INDEX ( `uid` ),
 INDEX ( `term` )
 ) ENGINE = MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `fserver` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`server` CHAR( 255 ) NOT NULL ,
+`posturl` CHAR( 255 ) NOT NULL ,
+`key` TEXT NOT NULL,
+INDEX ( `server` )
+) ENGINE = MyISAM DEFAULT CHARSET=utf8;
+
