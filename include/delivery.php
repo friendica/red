@@ -123,7 +123,6 @@ function delivery_run($argv, $argc){
 		if( ! ($icontacts && count($icontacts)))
 			return;
 
-
 		// avoid race condition with deleting entries
 
 		if($items[0]['deleted']) {
@@ -269,7 +268,12 @@ function delivery_run($argv, $argc){
 				if(! $item_contact)
 					continue;
 
-				$atom .= atom_entry($item,'text',$item_contact,$owner,true);
+				if($normal_mode) {
+					if($item_id == $item['id'])
+						$atom .= atom_entry($item,'text',$item_contact,$owner,true);
+				}
+				else
+					$atom .= atom_entry($item,'text',$item_contact,$owner,true);
 
 			}
 

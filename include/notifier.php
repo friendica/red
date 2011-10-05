@@ -360,7 +360,12 @@ function notifier_run($argv, $argc){
 				if(! $contact)
 					continue;
 
-				$atom .= atom_entry($item,'text',$contact,$owner,true);
+				if($normal_mode) {
+					if($item_id == $item['id'])
+						$atom .= atom_entry($item,'text',$contact,$owner,true);
+				}
+				else
+					$atom .= atom_entry($item,'text',$contact,$owner,true);
 
 				if(($top_level) && ($public_message) && ($item['author-link'] === $item['owner-link']) && (! $expire)) 
 					$slaps[] = atom_entry($item,'html',$contact,$owner,true);

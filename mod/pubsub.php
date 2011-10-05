@@ -69,8 +69,13 @@ function pubsub_init(&$a) {
 		// We must initiate an unsubscribe request with a verify_token. 
 		// Don't allow outsiders to unsubscribe us.
 
-		if(($hub_mode === 'unsubscribe') && (! strlen($hub_verify))) 
-			hub_return(false, '');
+		if($hub_mode === 'unsubscribe') {
+			if(! strlen($hub_verify)) {
+				logger('pubsub: bogus unsubscribe'); 
+				hub_return(false, '');
+			}
+			logger('pubsub: unsubscribe success');
+		}
 
 		$r = q("UPDATE `contact` SET `subhub` = %d WHERE `id` = %d LIMIT 1",
 			intval($subscribe),

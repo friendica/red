@@ -1663,7 +1663,7 @@ function lose_sharer($importer,$contact,$datarray,$item) {
 }
 
 
-function subscribe_to_hub($url,$importer,$contact,$submode = 'subscribe') {
+function subscribe_to_hub($url,$importer,$contact,$hubmode = 'subscribe') {
 
 	if(is_array($importer)) {
 		$r = q("SELECT `nickname` FROM `user` WHERE `uid` = %d LIMIT 1",
@@ -1686,7 +1686,7 @@ function subscribe_to_hub($url,$importer,$contact,$submode = 'subscribe') {
 
 	$params= 'hub.mode=' . $hubmode . '&hub.callback=' . urlencode($push_url) . '&hub.topic=' . urlencode($contact['poll']) . '&hub.verify=async&hub.verify_token=' . $verify_token;
 
-	logger('subscribe_to_hub: subscribing ' . $contact['name'] . ' to hub ' . $url . ' with verifier ' . $verify_token);
+	logger('subscribe_to_hub: ' . $hubmode . ' ' . $contact['name'] . ' to hub ' . $url . ' endpoint: '  . $push_url . ' with verifier ' . $verify_token);
 
 	if(! strlen($contact['hub-verify'])) {
 		$r = q("UPDATE `contact` SET `hub-verify` = '%s' WHERE `id` = %d LIMIT 1",
