@@ -361,6 +361,10 @@ function notifier_run($argv, $argc){
 					continue;
 
 				if($normal_mode) {
+
+					// we only need the current item, but include the parent because without it
+					// older sites without a corresponding dfrn_notify change may do the wrong thing.
+
 				    if($item_id == $item['id'] || $item['id'] == $item['parent'])
 						$atom .= atom_entry($item,'text',$contact,$owner,true);
 				}
