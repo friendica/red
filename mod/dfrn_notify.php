@@ -453,7 +453,7 @@ function dfrn_notify_post(&$a) {
 
 			// was the top-level post for this reply written by somebody on this site? Specifically, the recipient? 
 
-			$r = q("select `id` from `item` where `uri` = '%s' AND `uid` = %d LIMIT 1",
+			$r = q("select `item`.`id` from `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` where `contact`.`self` = 1 AND `item`.`uri` = '%s' AND `item`.`uid` = %d LIMIT 1",
 				dbesc($parent_uri),
 				intval($importer['importer_uid'])
 			);
