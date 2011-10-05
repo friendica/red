@@ -361,7 +361,7 @@ function notifier_run($argv, $argc){
 					continue;
 
 				if($normal_mode) {
-					if($item_id == $item['id'])
+				    if($item_id == $item['id'] || $item['id'] == $item['parent'])
 						$atom .= atom_entry($item,'text',$contact,$owner,true);
 				}
 				else

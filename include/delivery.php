@@ -269,7 +269,7 @@ function delivery_run($argv, $argc){
 					continue;
 
 				if($normal_mode) {
-					if($item_id == $item['id'])
+					if($item_id == $item['id'] || $item['id'] == $item['parent'])
 						$atom .= atom_entry($item,'text',$item_contact,$owner,true);
 				}
 				else
