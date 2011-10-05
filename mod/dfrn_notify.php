@@ -456,7 +456,7 @@ function dfrn_notify_post(&$a) {
 			$r = q("select `id` from `item` where `uri` = '%s' and AND `uid` = %d LIMIT 1",
 				dbesc($parent_uri),
 				intval($importer['importer_uid'])
-			)
+			);
 			if($r && count($r)) {	
 
 				logger('dfrn_notify: received remote comment');
