@@ -451,9 +451,12 @@ function dfrn_notify_post(&$a) {
 
 		if($is_reply) {
 
-			// was the top-level post for this reply written by somebody on this site? Specifically, the recipient? 
+			// was the top-level post for this reply written by somebody on this site? 
+			// Specifically, the recipient? 
 
-			$r = q("select `item`.`id` from `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` where `contact`.`self` = 1 AND `item`.`uri` = '%s' AND `item`.`uid` = %d LIMIT 1",
+			$r = q("select `item`.`id` from `item` 
+				LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
+				WHERE `contact`.`self` = 1 AND `item`.`uri` = '%s' AND `item`.`uid` = %d LIMIT 1",
 				dbesc($parent_uri),
 				intval($importer['importer_uid'])
 			);

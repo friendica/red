@@ -35,7 +35,7 @@
 	<span id="intro-update" class="nav-ajax-left"></span>
 	{{ endif }}
 	{{ if $nav.messages }}
-	<a id="nav-messages-link" class="nav-commlink $nav.messages.2" href="$nav.messages.0 $sel.messages" title="$nav.messages.3" >$nav.messages.1</a>
+	<a id="nav-messages-link" class="nav-commlink $nav.messages.2 $sel.messages" href="$nav.messages.0" title="$nav.messages.3" >$nav.messages.1</a>
 	<span id="mail-update" class="nav-ajax-left"></span>
 	{{ endif }}
 

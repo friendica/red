@@ -5,5 +5,6 @@
 <li><a href="message" class="button message-link-inbox">$inbox</a></li>
 <li><a href="message/sent" class="button message-link-outbox">$outbox</a></li>
 <li><a href="message/new" class="button message-link-new">$new</a></li>
-<ul>
+</ul>
 </div>
+<div class="message-links-end"></div>

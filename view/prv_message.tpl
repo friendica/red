@@ -19,7 +19,7 @@ $select
 <div id="prvmail-submit-wrapper" >
 	<input type="submit" id="prvmail-submit" name="submit" value="Submit" />
 	<div id="prvmail-upload-wrapper" >
-		<div id="prvmail-upload"class="icon border camera" title="$upload" /></div>
+		<div id="prvmail-upload" class="icon border camera" title="$upload" ></div>
 	</div> 
 	<div id="prvmail-link-wrapper" >
 		<div id="prvmail-link" class="icon border link" title="$insert" onclick="jotGetLink();" ></div>
@@ -29,6 +29,5 @@ $select
 	</div> 
 </div>
 <div id="prvmail-end"></div>
-</div>
 </form>
 </div>

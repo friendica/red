@@ -1805,6 +1805,9 @@ a.mail-list-link {
 	margin-right: 30px;
 	margin-top: 15px;
 }
+.mail-conv-break {
+	clear: both;
+}
 
 .mail-conv-delete-icon {
 	border: none;
@@ -1823,7 +1826,7 @@ a.mail-list-link {
 	padding: 3px 5px;
 }
 
-.message-links ul ul {
+.message-links-end {
 	clear: both;
 }
 

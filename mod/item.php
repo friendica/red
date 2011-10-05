@@ -703,7 +703,7 @@ function item_post(&$a) {
 				else
 			    	$signed_text = $datarray['guid'] . ';' . $parent_item['guid'] . ';' . $signed_body . ';' . $myaddr;
 
-				$authorsig = base64_encode(rsa_sign($signed_text,$a->user['prvkey'],'sha'));
+				$authorsig = base64_encode(rsa_sign($signed_text,$a->user['prvkey'],'sha256'));
 
 				q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
 					intval($post_id),
