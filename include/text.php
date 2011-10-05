@@ -688,7 +688,7 @@ function smilies($s) {
 		'<img src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-|" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-O" />',
 		'<a href="http://project.friendika.com">~friendika <img src="' . $a->get_baseurl() . '/images/friendika-16.png" alt="~friendika" /></a>',
-		'<a href="http://joindiaspora.com">Diaspora<img src="' . $a->get_baseurl() . '/images/diaspora.png" alt="Diaspora*" /></a>',
+		'<a href="http://diasporafoundation.org">Diaspora<img src="' . $a->get_baseurl() . '/images/diaspora.png" alt="Diaspora*" /></a>',
 
 	), $s);
 
