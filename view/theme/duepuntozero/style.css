@@ -2474,6 +2474,7 @@ a.mail-list-link {
 #crepair-request-label,
 #crepair-confirm-label,
 #crepair-notify-label,
+#crepair-photo-label,
 #crepair-poll-label {
 	float: left;
 	width: 200px;
@@ -2486,6 +2487,7 @@ a.mail-list-link {
 #crepair-request,
 #crepair-confirm,
 #crepair-notify,
+#crepair-photo,
 #crepair-poll {
 	float: left;
 	width: 300px;

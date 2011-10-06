@@ -25,7 +25,7 @@ function crepair_post(&$a) {
 	$notify  = ((x($_POST,'notify')) ? $_POST['notify'] : '');
 	$poll    = ((x($_POST,'poll')) ? $_POST['poll'] : '');
 	$attag   = ((x($_POST,'attag')) ? $_POST['attag'] : '');
-
+	$photo   = ((x($_POST,'photo')) ? $_POST['photo'] : '');
 
 	$r = q("UPDATE `contact` SET `nick` = '%s', `url` = '%s', `request` = '%s', `confirm` = '%s', `notify` = '%s', `poll` = '%s', `attag` = '%s' 
 		WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -40,10 +40,35 @@ function crepair_post(&$a) {
 		local_user()
 	);
 
+	if($photo) {
+		logger('mod-crepair: updating photo from ' . $photo);
+		require_once("Photo.php");
+
+		$photos = import_profile_photo($photo,local_user(),$contact['id']);
+
+		$x = q("UPDATE `contact` SET `photo` = '%s',
+			`thumb` = '%s',
+			`micro` = '%s',
+			`name-date` = '%s',
+			`uri-date` = '%s',
+			`avatar-date` = '%s'
+			WHERE `id` = %d LIMIT 1
+			",
+			dbesc($photos[0]),
+			dbesc($photos[1]),
+			dbesc($photos[2]),
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
+			intval($contact['id'])
+		);
+	}
+
 	if($r)
 		info( t('Contact settings applied.') . EOL);
 	else
 		notice( t('Contact update failed.') . EOL);
+
 
 	return;
 }
@@ -92,6 +117,7 @@ function crepair_content(&$a) {
 		'$label_confirm' => t('Friend Confirm URL'),
 		'$label_notify' => t('Notification Endpoint URL'),
 		'$label_poll' => t('Poll/Feed URL'),
+		'$label_photo' => t('New photo from this URL'),
 		'$contact_name' => $contact['name'],
 		'$contact_nick' => $contact['nick'],
 		'$contact_id'   => $contact['id'],

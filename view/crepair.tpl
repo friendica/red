@@ -31,6 +31,10 @@
 <input type="text" id="crepair-poll" name="poll" value="$poll" />
 <div class="clear"></div>
 
+<label id="crepair-photo-label" for="crepair-photo">$label_photo</label>
+<input type="text" id="crepair-photo" name="photo" value="" />
+<div class="clear"></div>
+
 <input type="submit" name="submit" value="$lbl_submit" />
 
 </form>
