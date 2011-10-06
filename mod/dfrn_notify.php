@@ -462,10 +462,18 @@ function dfrn_notify_post(&$a) {
 			);
 			if($r && count($r)) {	
 
+
 				logger('dfrn_notify: received remote comment');
 				$is_like = false;
 				// remote reply to our post. Import and then notify everybody else.
 				$datarray = get_atom_elements($feed,$item);
+
+				if(! link_compare($datarray['author-link'],$importer['url'])) {
+					logger('dfrn_notify: received relay claiming to be from ' . $importer['url'] . ' however comment author url is ' . $datarray['author-link'] ); 
+					// they won't know what to do so don't report an error. Just quietly die.
+					xml_status(0);
+				}					
+
 				$datarray['type'] = 'remote-comment';
 				$datarray['wall'] = 1;
 				$datarray['parent-uri'] = $parent_uri;
