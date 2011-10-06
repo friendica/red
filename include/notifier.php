@@ -183,6 +183,7 @@ function notifier_run($argv, $argc){
 		// We will only send a "notify owner to relay" or followup message if the referenced post
 		// originated on our system by virtue of having our hostname somewhere
 		// in the URI, AND it was a comment (not top_level) AND the parent originated elsewhere.
+
 		// if $parent['wall'] == 1 we will already have the parent message in our array
 		// and we will relay the whole lot.
  
@@ -357,6 +358,7 @@ function notifier_run($argv, $argc){
 					continue;
 
 				$contact = get_item_contact($item,$contacts);
+
 				if(! $contact)
 					continue;
 

@@ -613,7 +613,6 @@ function diaspora_comment($importer,$xml,$msg) {
 		return;
 	}
 
-
 	if($parent_author_signature) {
 		$owner_signed_data = $guid . ';' . $parent_guid . ';' . $text . ';' . $diaspora_handle;
 
@@ -646,9 +645,9 @@ function diaspora_comment($importer,$xml,$msg) {
 	$datarray['created'] = $datarray['edited'] = datetime_convert();
 	$datarray['private'] = $parent_item['private'];
 
-	$datarray['owner-name'] = $contact['name'];
-	$datarray['owner-link'] = $contact['url'];
-	$datarray['owner-avatar'] = $contact['thumb'];
+	$datarray['owner-name'] = $parent_item['owner-name'];
+	$datarray['owner-link'] = $parent_item['owner-link'];
+	$datarray['owner-avatar'] = $parent_item['owner-avatar'];
 
 	$datarray['author-name'] = $person['name'];
 	$datarray['author-link'] = $person['url'];

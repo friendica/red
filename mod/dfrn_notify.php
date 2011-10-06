@@ -454,9 +454,9 @@ function dfrn_notify_post(&$a) {
 			// was the top-level post for this reply written by somebody on this site? 
 			// Specifically, the recipient? 
 
-			$r = q("select `item`.`id` from `item` 
+			$r = q("select `item`.`id`, `contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
 				LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
-				WHERE `contact`.`self` = 1 AND `item`.`uri` = '%s' AND `item`.`uid` = %d LIMIT 1",
+				WHERE `contact`.`self` = 1 AND `item`.`wall` = 1 AND `item`.`uri` = '%s' AND `item`.`uid` = %d LIMIT 1",
 				dbesc($parent_uri),
 				intval($importer['importer_uid'])
 			);
@@ -470,6 +470,9 @@ function dfrn_notify_post(&$a) {
 				$datarray['wall'] = 1;
 				$datarray['parent-uri'] = $parent_uri;
 				$datarray['uid'] = $importer['importer_uid'];
+				$datarray['owner-name'] = $r[0]['name'];
+				$datarray['owner-link'] = $r[0]['url'];
+				$datarray['owner-avatar'] = $r[0]['thumb'];
 				$datarray['contact-id'] = $importer['id'];
 				if(($datarray['verb'] == ACTIVITY_LIKE) || ($datarray['verb'] == ACTIVITY_DISLIKE)) {
 					$is_like = true;
