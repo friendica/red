@@ -762,7 +762,7 @@ function diaspora_photo($importer,$xml,$msg) {
 
 	$link_text = '[img]' . $remote_photo_path . $remote_photo_name . '[/img]' . "\n";
 
-	if(! strstr($parent_item['body'],$link_text)) {
+	if(strpos($parent_item['body'],$link_text) === false) {
 		$r = q("update item set `body` = '%s' where `id` = %d and `uid` = %d limit 1",
 			dbesc($link_text . $parent_item['body']),
 			intval($parent_item['id']),
