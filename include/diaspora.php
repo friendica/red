@@ -515,6 +515,26 @@ function diaspora_post($importer,$xml) {
 	$body = diaspora2bb($xml->raw_message);
 
 	$datarray = array();
+
+	$str_tags = '';
+
+	$tags = get_tags($body);
+
+	if(count($tags)) {
+		foreach($tags as $tag) {
+			if(strpos($tag,'#') === 0) {
+				if(strpos($tag,'[url='))
+					continue;
+				$basetag = str_replace('_',' ',substr($tag,1));
+				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
+				if(strlen($str_tags))
+					$str_tags .= ',';
+				$str_tags .= '#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]';
+				continue;
+			}
+		}
+	}
+	
 	$datarray['uid'] = $importer['uid'];
 	$datarray['contact-id'] = $contact['id'];
 	$datarray['wall'] = 0;
@@ -530,6 +550,7 @@ function diaspora_post($importer,$xml) {
 	$datarray['author-link'] = $contact['url'];
 	$datarray['author-avatar'] = $contact['thumb'];
 	$datarray['body'] = $body;
+	$datarray['tag'] = $str_tags;
 	$datarray['app']  = 'Diaspora';
 
 	$message_id = item_store($datarray);
@@ -633,6 +654,26 @@ function diaspora_comment($importer,$xml,$msg) {
 	$message_id = $diaspora_handle . ':' . $guid;
 
 	$datarray = array();
+
+	$str_tags = '';
+
+	$tags = get_tags($body);
+
+	if(count($tags)) {
+		foreach($tags as $tag) {
+			if(strpos($tag,'#') === 0) {
+				if(strpos($tag,'[url='))
+					continue;
+				$basetag = str_replace('_',' ',substr($tag,1));
+				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
+				if(strlen($str_tags))
+					$str_tags .= ',';
+				$str_tags .= '#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]';
+				continue;
+			}
+		}
+	}
+
 	$datarray['uid'] = $importer['uid'];
 	$datarray['contact-id'] = $contact['id'];
 	$datarray['wall'] = $parent_item['wall'];
@@ -653,6 +694,7 @@ function diaspora_comment($importer,$xml,$msg) {
 	$datarray['author-link'] = $person['url'];
 	$datarray['author-avatar'] = ((x($person,'thumb')) ? $person['thumb'] : $person['photo']);
 	$datarray['body'] = $body;
+	$datarray['tag'] = $str_tags;
 	$datarray['app']  = 'Diaspora';
 
 	$message_id = item_store($datarray);
