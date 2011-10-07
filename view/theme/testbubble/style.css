@@ -25,7 +25,7 @@ body {
 	font-family: freesans,helvetica,arial,clean,sans-serif;
 	font-size: 15px;
 	color: #626262;
-	width: 100%;
+	width: 100%;	
 }
 
 img {  border: 0 none; max-width: 550px; }
@@ -113,10 +113,13 @@ input[type=submit]:active {
 ::-moz-selection { background:#fdf795; color: #000; /* Firefox */ }
 
 section {
-	margin: 20px 11% 0px 11%;
+	float: left;
+	margin-left: 8%;
+	padding-top: 50px;
+	width: 50%;	
+	margin: 20px 0px 30px 10%;
 	font-size: 0.9em;
 	line-height: 1.2em;
-	padding-right: 230px;
 }
 
 .lframe {
@@ -256,9 +259,11 @@ section {
 /* ======= */
 
 nav {
+	z-index: 10000;
 	height: 50px;
 	display: block;
-	position: relative;
+	position: fixed;
+	width: 100%;
 	padding: 0px 10%;
 	color: #efefef;
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #7c7d7b), color-stop(1, #555753) );
@@ -273,7 +278,7 @@ nav a:hover { text-decoration: none;	color: #eeeeec; border:0px;}
 nav #banner {
 	display: block;
 	position: absolute;
-	margin-left: 20px;
+	margin-left: 10px;
 	margin-top: 5px;
 	padding-bottom:5px;	
 }
@@ -288,7 +293,7 @@ nav #user-menu {
     display: block;	
 	width: 250px;
     float: right;
-	margin-right:15px;
+	margin-right:20%;
     margin-top: 10px;
 	padding: 5px;
     position: relative;
@@ -361,7 +366,7 @@ ul#user-menu-popup li a.nav-sep { border-top: 1px solid #989898; border-style:in
 #notifications {
 	height: 32px;
 	position: absolute;
-	top:10px; left: 40%;
+	top:10px; left: 35%;
 }
 .nav-ajax-update {
 	width: 44px;
@@ -431,10 +436,11 @@ ul#user-menu-popup li a.nav-sep { border-top: 1px solid #989898; border-style:in
 /* ================= */
 
 aside {
-    position: absolute;
-    right: 11%;
-	width: 260px;
-	margin-top: auto;
+	float: right;
+    margin-right: 10%;
+	/*width: 21%;*/
+	width: 250px;
+	margin-top: 50px;
     font-size: 0.8em;
 	font-style: bold;
 }
@@ -475,16 +481,15 @@ aside a{
 
 aside h4 { font-size: 1.3em; }
 
-aside #viewcontacts {
+.allcontact-link {
+	color: #626262;
 	text-align: center;
 	font-weight: bold;
 	font-variant:small-caps;
 	font-size: 1.1em;
-	padding-top: 5px;
 }
-
-#viewcontacts a {
-	color: #898989;
+.allcontact-link a {
+	padding-bottom: 10px;
 }
 
 #profile-extra-links ul { margin-left: 0px; padding-left: 0px; list-style: none; }
@@ -841,7 +846,7 @@ profile-jot-banner-wrapper {
 /* ========= */
 
 .wall-item-outside-wrapper {
-	max-width: 83%;
+	max-width: 93%;
 	border-bottom: 1px solid #dedede;
 	margin-top: 20px;
 	padding-right: 10px;
@@ -2341,6 +2346,7 @@ margin-left: 0px;
 	padding: 20px;
 	padding-top: 10px;
 	margin: 0 0px;
+	margin-bottom: 10px;
 	background-color: #fff;
 	-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
 	-moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
@@ -3030,7 +3036,7 @@ ul.menu-popup {
 #nav-notifications-menu {
 	width: 320px;
 	max-height: 400px;
-	overflow-y: scroll;
+	overflow-y: scroll;overflow-style:scrollbar;
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #797979), color-stop(1, #898988) );
 	background:-moz-linear-gradient( center top, #797979 5%, #898988 100% );
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#797979', endColorstr='#898988');
@@ -3049,7 +3055,7 @@ ul.menu-popup {
 #nav-notifications-menu img { float: left; margin-right: 5px; }
 #nav-notifications-menu .notif-when { font-size: 0.8em; display: block; }
 #nav-notifications-menu li {
-	padding: 7px 10px 7px 10px;
+	padding: 7px 0px 7px 10px;
 	word-wrap:normal;
 	border-bottom: 1px solid #626262;
 }
@@ -3059,4 +3065,24 @@ ul.menu-popup {
 	background:-moz-linear-gradient( center top, #b20202 5%, #d60808 100% );
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#b20202', endColorstr='#d60808');
 	background-color:#b20202;
+}
+
+.notif-item a {
+	vertical-align: middle;
+	color: #626262;
+	padding-bottom: 7px;
+}
+
+.notif-item a:hover {
+	color: #b20202;
+}
+
+.notif-image {
+	width: 32px;
+	height: 32px;
+	padding: 7px 7px 0px 0px;
+}
+
+#jGrowl {
+	z-index: 20000;
 }

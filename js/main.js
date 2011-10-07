@@ -95,22 +95,15 @@
 			if(home == 0) { home = '';  $('#home-update').removeClass('show') } else { $('#home-update').addClass('show') }
 			$('#home-update').html(home);
 
-			var intro = $(data).find('intro').text();
-			if(intro == 0) { intro = '';  $('#intro-update').removeClass('show') } else { $('#intro-update').addClass('show') }
-			$('#intro-update').html(intro);
-
-			var mail = $(data).find('mail').text();
-			if(mail == 0) { mail = '';  $('#mail-update').removeClass('show') } else { $('#mail-update').addClass('show') }
-			$('#mail-update').html(mail);
-
-
-
 			var eNotif = $(data).find('notif')
 			notif = eNotif.attr('count');
 			if (notif>0){
 				$("#nav-notifications-linkmenu").addClass("on");
 				nnm = $("#nav-notifications-menu");
-				nnm.html("");
+				
+				//nnm.html("");
+				nnm.html("<li><a href='/notifications/network'>Show All Notifications</a></li>");
+				
 				//nnm.attr('popup','true');
 				eNotif.children("note").each(function(){
 					e = $(this);
@@ -118,6 +111,7 @@
 					html = notifications_tpl.format(e.attr('href'),e.attr('photo'), text, e.attr('date'));
 					nnm.append(html);
 				});
+				
 			} else {
 				$("#nav-notifications-linkmenu").removeClass("on");
 				$("#nav-notifications-menu").html(notifications_empty);
@@ -164,15 +158,6 @@
 	});
 
 	function NavUpdate() {
-		if(! stopped) {
-			$.get("ping",function(data) {
-				$(data).find('result').each(function() {
-					// send nav-update event
-					$('nav').trigger('nav-update', this);
-				});
-			}) ;
-		}
-
 
 		if($('#live-network').length)   { src = 'network'; liveUpdate(); }
 		if($('#live-profile').length)   { src = 'profile'; liveUpdate(); }
@@ -191,6 +176,14 @@
 			}
 		}
 
+		if(! stopped) {
+			$.get("ping",function(data) {
+				$(data).find('result').each(function() {
+					// send nav-update event
+					$('nav').trigger('nav-update', this);
+				});
+			}) ;
+		}
 		timer = setTimeout(NavUpdate,30000);
 	}
 

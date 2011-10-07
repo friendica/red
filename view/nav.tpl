@@ -43,6 +43,7 @@
 			<li  id="nav-notifications-linkmenu" class="nav-menu-icon"><a href="$nav.notifications.0" rel="#nav-notifications-menu" title="$nav.notifications.1"><span class="icon s22 notify">$nav.notifications.1</span></a>
 				<span id="notify-update" class="nav-notify"></span>
 				<ul id="nav-notifications-menu" class="menu-popup">
+					<li id="nav-notifications-see-all"><a href="/notifications/network">See all notifications</a></li>
 					<li class="empty">$emptynotifications</li>
 				</ul>
 			</li>		
