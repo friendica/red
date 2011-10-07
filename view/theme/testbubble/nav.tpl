@@ -9,6 +9,7 @@
 		{{ if $nav.notifications }}<a rel="#nav-notifications-menu" id="intro-update" class="nav-ajax-update" href="$nav.notifications.0" title="$nav.notifications.1"></a>{{ endif }}
 		{{ if $nav.messages }}<a rel="#nav-notifications-menu" id="mail-update" class="nav-ajax-update" href="$nav.messages.0" title="$nav.messages.1"></a>{{ endif }}
 		<ul id="nav-notifications-menu" class="menu-popup">
+			<li id="nav-notifications-see-all"><a href="/notifications/network">See all notifications</a></li>
 			<li class="empty">$emptynotifications</li>
 		</ul>
 	</div>
@@ -54,5 +55,5 @@
 </nav>
 
 <ul id="nav-notifications-template" style="display:none;" rel="template">
-	<a href="{0}"><li>{2} <span class="notif-when">{3}</span></li></a>
+	<li><a href="{0}">{2} <span class="notif-when">{3}</span></a></li>
 </ul>
