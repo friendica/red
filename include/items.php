@@ -1555,14 +1555,14 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 	}
 }
 
-function local_delivery($importer,$xml) {
+function local_delivery($importer,$data) {
 
 	$a = get_app();
 
 	if($importer['readonly']) {
 		// We aren't receiving stuff from this person. But we will quietly ignore them
 		// rather than a blatant "go away" message.
-		logger('dfrn_notify: ignoring');
+		logger('local_delivery: ignoring');
 		return 0;
 		//NOTREACHED
 	}
@@ -1680,7 +1680,7 @@ function local_delivery($importer,$xml) {
 	$rawmail = $feed->get_feed_tags( NAMESPACE_DFRN, 'mail' );
 	if(isset($rawmail[0]['child'][NAMESPACE_DFRN])) {
 
-		logger('dfrn_notify: private message received');
+		logger('local_delivery: private message received');
 
 		$ismail = true;
 		$base = $rawmail[0]['child'][NAMESPACE_DFRN];
@@ -1785,7 +1785,7 @@ function local_delivery($importer,$xml) {
 		// NOTREACHED
 	}	
 	
-	logger('dfrn_notify: feed item count = ' . $feed->get_item_quantity());
+	logger('local_delivery: feed item count = ' . $feed->get_item_quantity());
 
 	// process any deleted entries
 
@@ -1815,7 +1815,7 @@ function local_delivery($importer,$xml) {
 					$item = $r[0];
 
 					if(! $item['deleted'])
-						logger('dfrn_notify: deleting item ' . $item['id'] . ' uri=' . $item['uri'], LOGGER_DEBUG);
+						logger('local_delivery: deleting item ' . $item['id'] . ' uri=' . $item['uri'], LOGGER_DEBUG);
 
 					if($item['uri'] == $item['parent-uri']) {
 						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s'
@@ -1884,13 +1884,13 @@ function local_delivery($importer,$xml) {
 			if($r && count($r)) {	
 
 
-				logger('dfrn_notify: received remote comment');
+				logger('local_delivery: received remote comment');
 				$is_like = false;
 				// remote reply to our post. Import and then notify everybody else.
 				$datarray = get_atom_elements($feed,$item);
 
 				if(! link_compare($datarray['author-link'],$importer['url'])) {
-					logger('dfrn_notify: received relay claiming to be from ' . $importer['url'] . ' however comment author url is ' . $datarray['author-link'] ); 
+					logger('local_delivery: received relay claiming to be from ' . $importer['url'] . ' however comment author url is ' . $datarray['author-link'] ); 
 					// they won't know what to do so don't report an error. Just quietly die.
 					return 0;
 				}					

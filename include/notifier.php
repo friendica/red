@@ -453,6 +453,46 @@ function notifier_run($argv, $argc){
 
 			switch($contact['network']) {
 				case NETWORK_DFRN:
+
+					// perform local delivery if we are on the same site
+
+					$basepath =  implode('/', array_slice(explode('/',$contact['url']),0,3));
+
+					if(link_compare($basepath,$a->get_baseurl())) {
+
+						$nickname = basename($contact['url']);
+						if($contact['issued-id'])
+							$sql_extra = sprintf(" AND `dfrn-id` = '%s' ", dbesc($contact['issued-id']));
+						else
+							$sql_extra = sprintf(" AND `issued-id` = '%s' ", dbesc($contact['dfrn-id']));
+
+						$x = q("SELECT	`contact`.*, `contact`.`uid` AS `importer_uid`, 
+							`contact`.`pubkey` AS `cpubkey`, 
+							`contact`.`prvkey` AS `cprvkey`, 
+							`contact`.`thumb` AS `thumb`, 
+							`contact`.`url` as `url`,
+							`contact`.`name` as `senderName`,
+							`user`.* 
+							FROM `contact` 
+							LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid` 
+							WHERE `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+							AND `contact`.`network` = '%s' AND `user`.`nickname` = '%s'
+							$sql_extra
+							AND `user`.`account_expired` = 0 LIMIT 1",
+							dbesc(NETWORK_DFRN),
+							dbesc($nickname)
+						);
+
+						if(count($x)) {
+							require_once('library/simplepie/simplepie.inc');
+							logger('mod-delivery: local delivery');
+							local_delivery($x[0],$atom);
+							break;					
+						}
+					}
+
+
+
 					logger('notifier: dfrndelivery: ' . $contact['name']);
 					$deliver_status = dfrn_deliver($owner,$contact,$atom);
 
