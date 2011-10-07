@@ -1008,7 +1008,7 @@ function diaspora_share($me,$contact) {
 
 	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$me,$contact,$me['prvkey'],$contact['pubkey'])));
 
-	return(diaspora_transmit($owner,$contact,$slap));
+	return(diaspora_transmit($owner,$contact,$slap, false));
 }
 
 function diaspora_unshare($me,$contact) {
@@ -1025,7 +1025,7 @@ function diaspora_unshare($me,$contact) {
 
 	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$me,$contact,$me['prvkey'],$contact['pubkey'])));
 
-	return(diaspora_transmit($owner,$contact,$slap));
+	return(diaspora_transmit($owner,$contact,$slap, false));
 
 }
 
