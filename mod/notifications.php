@@ -179,7 +179,7 @@ function notifications_content(&$a) {
 		$notif_tpl = get_markup_template('notifications.tpl');
 		
 		$r = q("SELECT `item`.`id`,`item`.`parent`, `item`.`verb`, `item`.`author-name`, 
-				`item`.`author-link`, `item`.`author-avatar`, `item`.`created`, `item`.`object`, 
+				`item`.`author-link`, `item`.`author-avatar`, `item`.`created`, `item`.`object` as `object`, 
 				`pitem`.`author-name` as `pname`, `pitem`.`author-link` as `plink` 
 				FROM `item` INNER JOIN `item` as `pitem` ON  `pitem`.`id`=`item`.`parent`
 				WHERE `item`.`unseen` = 1 AND `item`.`visible` = 1 AND
@@ -217,6 +217,11 @@ function notifications_content(&$a) {
 
 						break;
 					case ACTIVITY_FRIEND:
+					
+						$xmlhead="<"."?xml version='1.0' encoding='UTF-8' ?".">";
+						$obj = parse_xml_string($xmlhead.$it['object']);
+						$it['fname'] = $obj->title;
+						
 						$notif_content .= replace_macros($tpl_item_friends,array(
 							'$item_link' => $a->get_baseurl().'/display/'.$a->user['nickname']."/".$it['parent'],
 							'$item_image' => $it['author-avatar'],
@@ -250,7 +255,7 @@ function notifications_content(&$a) {
 		$notif_tpl = get_markup_template('notifications.tpl');
 		
 		$r = q("SELECT `item`.`id`,`item`.`parent`, `item`.`verb`, `item`.`author-name`, 
-				`item`.`author-link`, `item`.`author-avatar`, `item`.`created`, `item`.`object`, 
+				`item`.`author-link`, `item`.`author-avatar`, `item`.`created`, `item`.`object` as `object`, 
 				`pitem`.`author-name` as `pname`, `pitem`.`author-link` as `plink` 
 				FROM `item` INNER JOIN `item` as `pitem` ON  `pitem`.`id`=`item`.`parent`
 				WHERE `item`.`unseen` = 1 AND `item`.`visible` = 1 AND
@@ -288,6 +293,11 @@ function notifications_content(&$a) {
 
 						break;
 					case ACTIVITY_FRIEND:
+					
+						$xmlhead="<"."?xml version='1.0' encoding='UTF-8' ?".">";
+						$obj = parse_xml_string($xmlhead.$it['object']);
+						$it['fname'] = $obj->title;
+						
 						$notif_content .= replace_macros($tpl_item_friends,array(
 							'$item_link' => $a->get_baseurl().'/display/'.$a->user['nickname']."/".$it['parent'],
 							'$item_image' => $it['author-avatar'],
