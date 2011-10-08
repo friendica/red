@@ -101,8 +101,7 @@
 				$("#nav-notifications-linkmenu").addClass("on");
 				nnm = $("#nav-notifications-menu");
 				
-				//nnm.html("");
-				nnm.html("<li><a href='/notifications/network'>Show All Notifications</a></li>");
+				nnm.html("<li><a href='"+baseurl+"/notifications/network'>Show All Notifications</a></li>");
 				
 				//nnm.attr('popup','true');
 				eNotif.children("note").each(function(){
