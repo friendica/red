@@ -68,10 +68,11 @@
 			</ul>		
 		</li>
 		
-		
+		{{ if $nav.help }} 
 		<li id="nav-help-link" class="nav-menu $sel.help">
 			<a class="$nav.help.2" target="friendika-help" href="$nav.help.0" title="$nav.help.3" >$nav.help.1</a>
 		</li>
+		{{ endif }}
 
 		<li id="nav-search-link" class="nav-menu $sel.search">
 			<a class="$nav.search.2" href="$nav.search.0" title="$nav.search.3" >$nav.search.1</a>

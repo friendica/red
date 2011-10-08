@@ -3,7 +3,7 @@
 
   <span id="banner">$banner</span>
 
-  <a id="nav-help-link" class="nav-link $nav.help.2" href="$nav.help.0" title="$nav.help.1">$nav.help.1</a>
+  {{ if $nav.help }}<a id="nav-help-link" class="nav-link $nav.help.2" href="$nav.help.0" title="$nav.help.1">$nav.help.1</a>{{ endif }}
   {{ if $nav.login }}<a id="nav-login-link" class="nav-link $nav.login.2" href="$nav.login.0" title="$nav.login.1">$nav.login.1</a> {{ endif }}
   <a id="nav-search-link" class="nav-link $nav.search.2" href="$nav.search.0" title="$nav.search.1">$nav.search.1</a>
   <a id="nav-directory-link" class="nav-link $nav.directory.2" href="$nav.directory.0" title="$nav.directory.1">$nav.directory.1</a>
