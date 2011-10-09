@@ -15,13 +15,14 @@ function ping_init(&$a) {
 		$likes = array();
 		$dislikes = array();
 		$friends = array();
+		$posts = array();
 		
 		$r = q("SELECT `item`.`id`,`item`.`parent`, `item`.`verb`, `item`.`author-name`, 
 				`item`.`author-link`, `item`.`author-avatar`, `item`.`created`, `item`.`object`, 
 				`pitem`.`author-name` as `pname`, `pitem`.`author-link` as `plink` 
 				FROM `item` INNER JOIN `item` as `pitem` ON  `pitem`.`id`=`item`.`parent`
 				WHERE `item`.`unseen` = 1 AND `item`.`visible` = 1 AND
-				 `item`.`deleted` = 0 AND `item`.`uid` = %d AND `item`.`wall` = 0",
+				 `item`.`deleted` = 0 AND `item`.`uid` = %d AND `item`.`wall` = 0 ORDER BY `item`.`created` DESC",
 			intval(local_user())
 		);
 		
@@ -33,6 +34,9 @@ function ping_init(&$a) {
 					break;
 				case ACTIVITY_DISLIKE:
 					$dislikes[] = $it;
+					break;
+				case ACTIVITY_POST;
+					$posts[] = $it;
 					break;
 				case ACTIVITY_FRIEND:
 					$xmlhead="<"."?xml version='1.0' encoding='UTF-8' ?".">";
@@ -114,7 +118,7 @@ function ping_init(&$a) {
 		function xmlize($href, $name, $url, $photo, $date, $message){
 			$notsxml = '<note href="%s" name="%s" url="%s" photo="%s" date="%s">%s</note>';
 			return sprintf ( $notsxml,
-					xmlify($href), xmlify($name), xmlify($url), xmlify($photo), xmlify($date), xmlify($message)
+					$href, $name, $url, $photo, $date, $message
 				);
 		}
 		
@@ -151,20 +155,24 @@ function ping_init(&$a) {
 		}
 		if (count($likes)){
 			foreach ($likes as $i) {
-				echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), sprintf( t("{0} like %s's post"), $i['pname'] ) );
+				echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), sprintf( t("{0} liked %s's post"), $i['pname'] ) );
 			};
 		}
 		if (count($dislikes)){
 			foreach ($dislikes as $i) {
-				echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), sprintf( t("{0} dislike %s's post"), $i['pname'] ) );
+				echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), sprintf( t("{0} disliked %s's post"), $i['pname'] ) );
 			};
 		}
 		if (count($friends)){
 			foreach ($friends as $i) {
-				echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), sprintf( t("{0} is now friend with %s"), $i['fname'] ) );
+				echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), sprintf( t("{0} is now friends with %s"), $i['fname'] ) );
 			};
 		}
-
+		if (count($posts)){
+			foreach ($posts as $i) {
+				echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), sprintf( t("{0} posted") ) );
+			};
+		}
 
 		echo "  </notif>";
 	}
