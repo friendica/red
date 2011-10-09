@@ -11,6 +11,19 @@
 			<span class='fn'>$diaspora.fullname</span>
 		</dd>
 	</dl>
+
+	<dl class='entity_given_name'>
+		<dt>First name</dt>
+		<dd>
+		<span class='given_name'>$diaspora.firstname</span>
+		</dd>
+	</dl>
+	<dl class='entity_family_name'>
+		<dt>Family name</dt>
+		<dd>
+		<span class='family_name'>$diaspora.lastname</span>
+		</dd>
+	</dl>
 	<dl class="entity_url">
 		<dt>URL</dt>
 		<dd>

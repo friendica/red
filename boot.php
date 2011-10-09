@@ -8,7 +8,7 @@ require_once("include/pgettext.php");
 require_once('include/nav.php');
 
 define ( 'FRIENDIKA_PLATFORM',     'Free Friendika');
-define ( 'FRIENDIKA_VERSION',      '2.3.1128' );
+define ( 'FRIENDIKA_VERSION',      '2.3.1129' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
 define ( 'DB_UPDATE_VERSION',      1094      );
 
@@ -920,11 +920,17 @@ function profile_sidebar($profile, $block = 0) {
 		$location = $pdesc = $connect = $gender = $marital = $homepage = False;
 	}
 
+	$firstname = ((strpos($profile['name'],' ')) 
+		? trim(substr($profile['name'],0,strpos($profile['name'],' '))) : $profile['name']);
+	$lastname = (($firstname === $profile['name']) ? '' : trim(substr($profile['name'],strlen($firstname))));
+
 	$diaspora = array(
 		'podloc' => $a->get_baseurl(),
 		'searchable' => (($profile['publish'] && $profile['net-publish']) ? 'true' : 'false' ),
 		'nickname ' => $profile['nickname'],
 		'fullname' => $profile['name'],
+		'firstname' => $firstname,
+		'lastname' => $lastname,
 		'photo300' => $a->get_baseurl() . '/photo/custom/300/' . $profile['uid'] . '.jpg',
 		'photo100' => $a->get_baseurl() . '/photo/custom/100/' . $profile['uid'] . '.jpg',
 		'photo50' => $a->get_baseurl() . '/photo/custom/50/'  . $profile['uid'] . '.jpg',
