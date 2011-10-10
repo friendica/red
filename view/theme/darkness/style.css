@@ -26,7 +26,7 @@ input, select {
 	background-color: #000000;
 	color: #FF0000;
 }
-.nav-link:hover, .nav-commlink:hover, .profile-tabs:hover {
+.nav-link:hover, .nav-commlink:hover, .tab:hover {
 	background: #DDDDDD;
 	color: #FF0000;
 }
@@ -49,7 +49,7 @@ input, select {
 	background: #444444;
 }
 
-.profile-tabs {
+.tab {
 	color: #FF0000;
 	background: #444444;
 
@@ -65,7 +65,3 @@ a:hover, .fakelink:hover {
 	text-decoration: underline;
 }
 
-.profile-tabs {
-	color: #FF0000;
-	background: #444444;
-}

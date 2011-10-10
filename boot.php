@@ -1161,3 +1161,47 @@ function load_contact_links($uid) {
 	return;		
 }}
 
+if(! function_exists('profile_tabs')){
+function profile_tabs($a, $is_owner=False){
+	//echo "<pre>"; var_dump($a->user); killme();
+	
+		
+	if(x($_GET,'tab'))
+		$tab = notags(trim($_GET['tab']));
+	
+	$url = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
+
+	$tabs = array(
+		array(
+			'label'=>t('Status'),
+			'url' => $url,
+			'sel' => ((!isset($tab)&&$a->argv[0]=='profile')?'active':''),
+		),
+		array(
+			'label' => t('Profile'),
+			'url' 	=> $url.'/?tab=profile',
+			'sel'	=> (($tab=='profile')?'active':''),
+		),
+		array(
+			'label' => t('Photos'),
+			'url'	=> $a->get_baseurl() . '/photos/' . $a->user['nickname'],
+			'sel'	=> ((!isset($tab)&&$a->argv[0]=='photos')?'active':''),
+		),
+	);
+	
+	if ($is_owner){
+		 $tabs[] = array(
+			'label' => t('Events'),
+			'url'	=> $a->get_baseurl() . '/events',
+			'sel' 	=>((!isset($tab)&&$a->argv[0]=='events')?'active':''),
+		);
+		$tabs[] = array(
+			'label' => t('Personal Notes'),
+			'url'	=> $a->get_baseurl() . '/notes',
+			'sel' 	=>((!isset($tab)&&$a->argv[0]=='notes')?'active':''),
+		);
+	}
+
+	$tpl = get_markup_template('common_tabs.tpl');
+	return replace_macros($tpl,array('$tabs'=>$tabs));
+}}	

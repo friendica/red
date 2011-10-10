@@ -831,18 +831,8 @@ function photos_content(&$a) {
 	$o = "";
 
 	// tabs
-	$tpl = get_markup_template('profile_tabs.tpl');
 	$_is_owner = (local_user() && (local_user() == $owner_uid));
-	$o .= replace_macros($tpl,array(
-		'$url' => $a->get_baseurl() . '/profile/' .$a->data['user']['nickname'],
-		'$phototab' => $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'],
-		'$status' => t('Status'),
-		'$profile' => t('Profile'),
-		'$photos' => t('Photos'),
-		'$events' => (($_is_owner) ? t('Events') : ''),
-		'$notes' => (($_is_owner) ? 	t('Personal Notes') : ''),
-		'$activetab' => "photos",
-	));	
+	$o .= profile_tabs($a,$_is_owner);	
 
 	//
 	// dispatch request
