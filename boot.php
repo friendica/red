@@ -1162,14 +1162,16 @@ function load_contact_links($uid) {
 }}
 
 if(! function_exists('profile_tabs')){
-function profile_tabs($a, $is_owner=False){
+function profile_tabs($a, $is_owner=False, $nickname=Null){
 	//echo "<pre>"; var_dump($a->user); killme();
 	
+	if (is_null($nickname))
+		$nickname  = $a->user['nickname'];
 		
 	if(x($_GET,'tab'))
 		$tab = notags(trim($_GET['tab']));
 	
-	$url = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
+	$url = $a->get_baseurl() . '/profile/' . $nickname;
 
 	$tabs = array(
 		array(
@@ -1184,7 +1186,7 @@ function profile_tabs($a, $is_owner=False){
 		),
 		array(
 			'label' => t('Photos'),
-			'url'	=> $a->get_baseurl() . '/photos/' . $a->user['nickname'],
+			'url'	=> $a->get_baseurl() . '/photos/' . $nickname,
 			'sel'	=> ((!isset($tab)&&$a->argv[0]=='photos')?'active':''),
 		),
 	);
