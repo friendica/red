@@ -248,7 +248,7 @@ function notifications_content(&$a) {
 			
 		} else {
 			
-			$notif_content = 'Nothing new!';
+			$notif_content = t('Nothing new!');
 		}
 		
 		$o .= replace_macros($notif_tpl,array(
@@ -323,7 +323,7 @@ function notifications_content(&$a) {
 			}
 				
 		} else {
-			$notif_content = 'Nothing new!';
+			$notif_content = t('Nothing new!');
 		}
 		
 		$o .= replace_macros($notif_tpl,array(

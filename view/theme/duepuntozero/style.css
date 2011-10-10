@@ -2579,10 +2579,13 @@ a.mail-list-link {
 .notif-image {
 	height: 80px;
 	width: 80px;
+	margin-right: 15px;
 }
 .notification-listing-end {
 	clear: both;
+	margin-bottom: 15px;
 }
+
 
 
 /**
