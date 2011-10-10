@@ -48,7 +48,7 @@ $short_bd_format = t('j F');
 $o .= '<div id="advanced-profile-dob" class="advanced-profile-content">' 
 	. ((intval($a->profile['dob'])) 
 		? day_translate(datetime_convert('UTC','UTC',$a->profile['dob'] . ' 00:00 +00:00',$year_bd_format))
-		: day_translate(datetime_convert('UTC','UTC','2001-' . substr($a->profile['dob'],6) . ' 00:00 +00:00',$short_bd_format))) 
+		: day_translate(datetime_convert('UTC','UTC','2001-' . substr($a->profile['dob'],5) . ' 00:00 +00:00',$short_bd_format))) 
 	. "</div>\r\n</div>";
 
 $o .= '<div id="advanced-profile-dob-end"></div>';
