@@ -17,7 +17,7 @@ aside{ 	background-image: url(border.jpg); padding-bottom: 0px; }
 section { background-color: #333333;	background-image: url(border.jpg); }
 
 
-#profile-tabs-wrapper {	background-image: url(head.jpg); }
+.tabs {	background-image: url(head.jpg); }
 div.wall-item-content-wrapper.shiny {  background-image: url('shiny.png'); }
 
 nav #banner #logo-text a { color: #ffffff; }

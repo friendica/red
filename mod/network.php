@@ -42,66 +42,7 @@ function network_init(&$a) {
 		);
 	}
 
-	// item filter tabs
-	// TODO: fix this logic, reduce duplication
-	$a->page['content'] .= '<div class="tabs-wrapper">';
-	
-	$starred_active = '';
-	$new_active = '';
-	$bookmarked_active = '';
-	$all_active = '';
-	$search_active = '';
-	
-	if(($a->argc > 1 && $a->argv[1] === 'new') 
-		|| ($a->argc > 2 && $a->argv[2] === 'new')) {
-			$new_active = 'active';
-	}
-	
-	if(x($_GET,'search')) {
-		$search_active = 'active';
-	}
-	
-	if(x($_GET,'star')) {
-		$starred_active = 'active';
-	}
-	
-	if($_GET['bmark']) {
-		$bookmarked_active = 'active';
-	}
-	
-	if (($new_active == '') 
-		&& ($starred_active == '') 
-		&& ($bookmarked_active == '')
-		&& ($search_active == '')) {
-			$all_active = 'active';
-	}
-	
-	// network links moved to content to match other pages
-	// all
-	// added 'button' class for easier styling - not the best place for it, should be moved into the tpl like profile_tabs.tpl
-	// once there is a network_tabs.tpl or something
-	$a->page['content'] .= '<a class="button tabs ' . $all_active . '" href="' . $a->get_baseurl() . '/' 
-		. str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') . '">' 
-		. t('All') . '</a>';
-		
-	// new
-	$a->page['content'] .= '<a class="button tabs ' . $new_active . '" href="' . $a->get_baseurl() . '/' 
-		. str_replace('/new', '', $a->cmd) . '/new' 
-		. ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '">' 
-		. t('New') . '</a>';
-	
-	// starred
-	$a->page['content'] .= '<a class="button tabs ' . $starred_active . '" href="' . $a->get_baseurl() . '/'
-		. str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '&star=1" >' 
-		. t('Starred') . '</a>';
-	
-	// bookmarks
-	$a->page['content'] .= '<a class="button tabs ' . $bookmarked_active . '" href="' . $a->get_baseurl() . '/'
-		. str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '&bmark=1" >' 
-		. t('Bookmarks') . '</a>';
-	
-	$a->page['content'] .= '</div>';
-	// --- end item filter tabs
+
 	
 	// search terms header
 	if(x($_GET,'search')) {
@@ -156,6 +97,71 @@ function network_content(&$a, $update = 0) {
     	return login(false);
 
 	$o = '';
+
+	// item filter tabs
+	// TODO: fix this logic, reduce duplication
+	$a->page['content'] .= '<div class="tabs-wrapper">';
+	
+	$starred_active = '';
+	$new_active = '';
+	$bookmarked_active = '';
+	$all_active = '';
+	$search_active = '';
+	
+	if(($a->argc > 1 && $a->argv[1] === 'new') 
+		|| ($a->argc > 2 && $a->argv[2] === 'new')) {
+			$new_active = 'active';
+	}
+	
+	if(x($_GET,'search')) {
+		$search_active = 'active';
+	}
+	
+	if(x($_GET,'star')) {
+		$starred_active = 'active';
+	}
+	
+	if($_GET['bmark']) {
+		$bookmarked_active = 'active';
+	}
+	
+	if (($new_active == '') 
+		&& ($starred_active == '') 
+		&& ($bookmarked_active == '')
+		&& ($search_active == '')) {
+			$all_active = 'active';
+	}
+	
+	// tabs
+	$tabs = array(
+		array(
+			'label' => t('All'),
+			'url'=>$a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : ''), 
+			'sel'=>$all_active,
+		),
+		array(
+			'label' => t('New'),
+			'url' => $a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . '/new' . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : ''),
+			'sel' => $new_active,
+		),
+		array(
+			'label' => t('Starred'),
+			'url'=>$a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '&star=1',
+			'sel'=>$starred_active,
+		),
+		array(
+			'label' => t('Bookmarks'),
+			'url'=>$a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '&bmark=1',
+			'sel'=>$bookmarked_active,
+		),	
+	);
+	$tpl = get_markup_template('common_tabs.tpl');
+	$o .= replace_macros($tpl, array('$tabs'=>$tabs));
+	// --- end item filter tabs
+
+
+
+	
 
 	$contact_id = $a->cid;
 
