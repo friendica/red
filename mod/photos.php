@@ -832,7 +832,7 @@ function photos_content(&$a) {
 
 	// tabs
 	$_is_owner = (local_user() && (local_user() == $owner_uid));
-	$o .= profile_tabs($a,$_is_owner);	
+	$o .= profile_tabs($a,$_is_owner, $a->data['user']['nickname']);	
 
 	//
 	// dispatch request
