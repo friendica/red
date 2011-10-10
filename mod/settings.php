@@ -306,10 +306,22 @@ function settings_content(&$a) {
 		return;
 	}
 	
-	$tabtpl = get_markup_template("settings_tabs.tpl");
+	$tabs = array(
+		array(
+			'label'	=> t('Account settings'),
+			'url' 	=> $a->get_baseurl().'/settings',
+			'sel'	=> (($a->argc == 1)?'active':''),
+		),	
+		array(
+			'label'	=> t('Plugin settings'),
+			'url' 	=> $a->get_baseurl().'/settings/addon',
+			'sel'	=> (($a->argc > 1) && ($a->argv[1] === 'addon')?'active':''),
+		)
+	);
+	
+	$tabtpl = get_markup_template("common_tabs.tpl");
 	$tabs = replace_macros($tabtpl, array(
-		'$account' => array( t('Account settings'), $a->get_baseurl().'/settings'),
-		'$plugins' => array( t('Plugin settings'), $a->get_baseurl().'/settings/addon')
+		'$tabs' => $tabs,
 	));
 		
 	

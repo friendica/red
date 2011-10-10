@@ -822,22 +822,22 @@ profile-jot-banner-wrapper {
 /* = Tabs = */
 /* ======== */
 
-.tabs-wrapper {
+.tabs {
 	width: 450px;
 	list-style: none;
 	padding: 10px;
 	margin: 0px 0px 10px 0px;
 	border-bottom: 1px solid #efefef;
 }
-.tabs-wrapper li { display: inline;}
+.tabs li { display: inline;}
 
-.tabs {
+.tab {
 	padding: 5px 10px 5px 10px;
 	margin-right: 5px;
 	font-style: bold;
 }
 
-.tabs:hover {
+.tab:hover {
 	padding: 5px 10px 5px 10px;
 }
 

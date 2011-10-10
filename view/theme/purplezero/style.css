@@ -7,7 +7,7 @@ a:hover {text-decoration: underline; }
 body { 	background-image: url(head.jpg); }
 aside( 	background-image: url(border.jpg); }
 section { 	background-image: url(border.jpg); }
-#profile-tabs-wrapper {	background-image: url(head.jpg); }
+.tabs {	background-image: url(head.jpg); }
 div.wall-item-content-wrapper.shiny {  background-image: url('shiny.png'); }
 
 

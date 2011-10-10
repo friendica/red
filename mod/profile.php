@@ -110,18 +110,7 @@ function profile_content(&$a, $update = 0) {
 		if(x($_GET,'tab'))
 			$tab = notags(trim($_GET['tab']));
 
-		$tpl = get_markup_template('profile_tabs.tpl');
-
-		$o .= replace_macros($tpl,array(
-			'$url' => $a->get_baseurl() . '/' . $a->cmd,
-			'$phototab' => $a->get_baseurl() . '/photos/' . $a->profile['nickname'],
-			'$status' => t('Status'),
-			'$profile' => t('Profile'),
-			'$photos' => t('Photos'),
-			'$events' => (($is_owner) ? t('Events') : ''),
-			'$notes' => (($is_owner) ? 	t('Personal Notes') : ''),
-			'$activetab' => $tab,
-		));
+		$o.=profile_tabs($a, $is_owner, $a->profile['nickname']);
 
 
 		if($tab === 'profile') {
@@ -130,6 +119,8 @@ function profile_content(&$a, $update = 0) {
 			call_hooks('profile_advanced',$o);
 			return $o;
 		}
+
+
 
 		if(x($_SESSION,'new_member') && $_SESSION['new_member'] && $is_owner)
 			$o .= '<a href="newmember">' . t('Tips for New Members') . '</a>' . EOL;

@@ -349,11 +349,11 @@ aside #viewcontacts { text-align: right;}
 section { margin: 10px 11% 0px 11%; font-size: 0.8em; padding-right: 230px;}
 
 /** tabs **/
-.tabs-wrapper {list-style: none; padding: 0px; margin: 0px; border-bottom: 1px solid #729fcf; }
-.tabs-wrapper li { display: inline;}
-.tabs { padding: 0px 5px; margin-right: 10px; }
-.tabs:hover { background-color: #729fcf; color: #eeeeec; border: 0px; }
-.tabs.active { background-color: #729fcf; color: #eeeeec; border: 0px; }
+.tabs {list-style: none; padding: 0px; margin: 0px; border-bottom: 1px solid #729fcf; }
+.tabs li { display: inline;}
+.tab { padding: 0px 5px; margin-right: 10px; }
+.tab:hover { background-color: #729fcf; color: #eeeeec; border: 0px; }
+.tab.active { background-color: #729fcf; color: #eeeeec; border: 0px; }
 
 
 /**
