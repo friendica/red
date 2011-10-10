@@ -2576,6 +2576,15 @@ a.mail-list-link {
 	filter:alpha(opacity=100);
 }
 
+.notif-image {
+	height: 80px;
+	width: 80px;
+}
+.notification-listing-end {
+	clear: both;
+}
+
+
 /**
  * Plugins settings
  */

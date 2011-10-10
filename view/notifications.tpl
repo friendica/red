@@ -7,6 +7,7 @@
 	<a href="/notifications/intros" class="button tabs {{if $activetab==intros}}active{{endif}}">Introductions</a>
 	<a href="/message" class="button tabs">Messages</a>
 </p>
+<div class="notification-listing-end"></div>
 
 <div class="notif-network-wrapper">
 	$notif_content
