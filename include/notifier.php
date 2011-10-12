@@ -779,6 +779,12 @@ function notifier_run($argv, $argc){
 
 	}
 
+	if($normal_mode)
+		call_hooks('notifier_normal',$target_item);
+
+	call_hooks('notifier_end',$target_item);
+
+
 	return;
 }
 

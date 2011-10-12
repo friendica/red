@@ -414,11 +414,7 @@ function get_atom_elements($feed,$item) {
 
 	if((strpos($res['body'],'<') !== false) || (strpos($res['body'],'>') !== false)) {
 
-		$res['body'] = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
-			'[youtube]$1[/youtube]', $res['body']);
-
-		$res['body'] = preg_replace('#<iframe[^>].+?' . 'http://www.youtube.com/embed/([A-Za-z0-9\-_=]+).+?</iframe>#s',
-			'[youtube]$1[/youtube]', $res['body']);
+		$res['body'] = html2bb_video($res['body']);
 
 		$res['body'] = oembed_html2bbcode($res['body']);
 
@@ -586,12 +582,7 @@ function get_atom_elements($feed,$item) {
 			$res['object'] .= '<orig>' . xmlify($body) . '</orig>' . "\n";
 			if((strpos($body,'<') !== false) || (strpos($body,'>') !== false)) {
 
-				$body = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
-					'[youtube]$1[/youtube]', $body);
-
-		$res['body'] = preg_replace('#<iframe[^>].+?' . 'http://www.youtube.com/embed/([A-Za-z0-9\-_=]+).+?</iframe>#s',
-			'[youtube]$1[/youtube]', $res['body']);
-
+				$body = html2bb_video($body);
 
 				$config = HTMLPurifier_Config::createDefault();
 				$config->set('Cache.DefinitionImpl', null);
@@ -629,11 +620,7 @@ function get_atom_elements($feed,$item) {
 			$res['object'] .= '<orig>' . xmlify($body) . '</orig>' . "\n";
 			if((strpos($body,'<') !== false) || (strpos($body,'>') !== false)) {
 
-				$body = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
-					'[youtube]$1[/youtube]', $body);
-
-		$res['body'] = preg_replace('#<iframe[^>].+?' . 'http://www.youtube.com/embed/([A-Za-z0-9\-_=]+).+?</iframe>#s',
-			'[youtube]$1[/youtube]', $res['body']);
+				$body = html2bb_video($body);
 
 				$config = HTMLPurifier_Config::createDefault();
 				$config->set('Cache.DefinitionImpl', null);

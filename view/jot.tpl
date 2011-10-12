@@ -32,9 +32,6 @@
 	<div id="profile-link-wrapper" style="display: $visitor;" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);" >
 		<a id="profile-link" class="icon link" title="$weblink" ondragenter="return linkdropper(event);" ondragover="return linkdropper(event);" ondrop="linkdrop(event);" onclick="jotGetLink(); return false;"></a>
 	</div> 
-	<div id="profile-youtube-wrapper" style="display: $visitor;" >
-		<a id="profile-youtube" class="icon youtube" title="$youtube" onclick="jotGetVideo();return false;"></a>
-	</div> 
 	<div id="profile-video-wrapper" style="display: $visitor;" >
 		<a id="profile-video" class="icon video" title="$video" onclick="jotVideoURL();return false;"></a>
 	</div> 

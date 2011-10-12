@@ -1,13 +1,13 @@
 <?php
 
 
-function tagmatch_content(&$a) {
+function dirfind_content(&$a) {
 
 	$search = notags(trim($_REQUEST['search']));
 	
 	$o = '';
 
-	$o .= '<h2>' . t('Tag Match') . ' - ' . $search . '</h2>';
+	$o .= '<h2>' . t('People Search') . ' - ' . $search . '</h2>';
 	
 	if($search) {
 

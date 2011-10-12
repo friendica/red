@@ -193,6 +193,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `object` text NOT NULL,
   `target-type` char(255) NOT NULL,
   `target` text NOT NULL,
+  `postopts` text NOT NULL,
   `plink` char(255) NOT NULL, 
   `resource-id` char(255) NOT NULL,
   `event-id` int(10) unsigned NOT NULL,

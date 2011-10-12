@@ -21,6 +21,16 @@ function contacts_init(&$a) {
 	require_once('include/group.php');
 	if(! x($a->page,'aside'))
 		$a->page['aside'] = '';
+
+	$a->page['aside'] .= replace_macros(get_markup_template('follow.tpl'),array(
+		'$connect' => t('Add New Contact'),
+		'$desc' => t('Enter address or web location'),
+		'$hint' => t('Example: bob@example.com, http://example.com/barbara'),
+		'$follow' => t('Connect')
+	));
+
+
+
 	$a->page['aside'] .= group_side('contacts','group',false,0,$contact_id);
 
 	if(get_config('system','invitation_only')) {
@@ -32,22 +42,18 @@ function contacts_init(&$a) {
 		}
 	}
 
-	$tpl = get_markup_template('follow.tpl');
+	$tpl = get_markup_template('peoplefind.tpl');
 	
-	$findSimilarLink = '<div class="side-link" id="side-match-link"><a href="match" >' 
-		. t('Similar Interests') . '</a></div>';
-	
-	$inv = '';
-	if($a->config['register_policy'] != REGISTER_CLOSED) {
-		$inv = '<div class="side-link" id="side-invite-link" ><a href="invite" >' . t("Invite Friends") . '</a></div>';
-	}
-		
+	$inv = (($a->config['register_policy'] != REGISTER_CLOSED) ? t('Invite Friends') : '');
+
 	$a->page['aside'] .= replace_macros($tpl,array(
+		'$findpeople' => t('Find People'),
+		'$desc' => t('Enter name or interest'),
 		'$label' => t('Connect/Follow'),
-		'$hint' => t('Example: bob@example.com, http://example.com/barbara'),
-		'$follow' => t('Follow'),
-		'$findSimilar' => $findSimilarLink,
-		'$inviteFriends' => $inv
+		'$hint' => t('Examples: Robert Morgenstein, Fishing'),
+		'$findthem' => t('Find'),
+		'$similar' => t('Similar Interests'),
+		'$inv' => $inv
 	));
 
 	
@@ -351,6 +357,7 @@ function contacts_content(&$a) {
 		'$hide_url' => ((strlen($sql_extra)) ? 'contacts/all' : 'contacts' ),
 		'$hide_text' => ((strlen($sql_extra)) ? t('Show Blocked Connections') : t('Hide Blocked Connections')),
 		'$search' => $search,
+		'$desc' => t('Search your contacts'),
 		'$finding' => (strlen($search) ? '<h4>' . t('Finding: ') . "'" . $search . "'" . '</h4>' : ""),
 		'$submit' => t('Find'),
 		'$cmd' => $a->cmd

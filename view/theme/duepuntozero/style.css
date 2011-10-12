@@ -145,7 +145,6 @@ nav .nav-link {
 	background-color: transparent !important;
 }
 
-
 .nav-commlink.selected {
 	background-color: #ffffff;
 	border-bottom: 1px solid #ffffff;
@@ -1849,12 +1848,27 @@ a.mail-list-link {
 #side-follow-wrapper {
 	margin-top: 20px;
 }
-#side-follow-url {
+#side-follow-url, #side-peoplefind-url {
 	margin-top: 5px;
 }
-#side-follow-submit {
+#side-follow-submit, #side-peoplefind-submit {
 	margin-top: 15px;
 }
+
+#side-match-link {
+	margin-top: 10px;
+}
+
+.widget {
+	border: 1px solid #DDDDDD;
+	padding: 5px;
+	margin-top: 5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+
+}
+
 
 .photo-album-image-wrapper {
 	float: left;
@@ -2641,8 +2655,8 @@ a.mail-list-link {
 	border-color:#204A87;
 	padding-right: 40px;
 	background-position: right center;
-	background-color: #3465A4;
-	color: #FFFFFF;
+	background-color: #D7E3F1;
+	color: #204A87;
 	text-align: left;
 }
 .hidden { display: none!important; }
