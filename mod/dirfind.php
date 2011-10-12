@@ -1,5 +1,18 @@
 <?php
 
+function dirfind_init(&$a) {
+
+	require_once('include/contact_widgets.php');
+
+	if(! x($a->page,'aside'))
+		$a->page['aside'] = '';
+
+	$a->page['aside'] .= follow_widget();
+
+	$a->page['aside'] .= findpeople_widget();
+}
+
+
 
 function dirfind_content(&$a) {
 

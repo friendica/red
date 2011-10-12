@@ -19,44 +19,16 @@ function contacts_init(&$a) {
 	}
 
 	require_once('include/group.php');
+	require_once('include/contact_widgets.php');
+
 	if(! x($a->page,'aside'))
 		$a->page['aside'] = '';
 
-	$a->page['aside'] .= replace_macros(get_markup_template('follow.tpl'),array(
-		'$connect' => t('Add New Contact'),
-		'$desc' => t('Enter address or web location'),
-		'$hint' => t('Example: bob@example.com, http://example.com/barbara'),
-		'$follow' => t('Connect')
-	));
-
-
+	$a->page['aside'] .= follow_widget();
 
 	$a->page['aside'] .= group_side('contacts','group',false,0,$contact_id);
 
-	if(get_config('system','invitation_only')) {
-		$x = get_pconfig(local_user(),'system','invites_remaining');
-		if($x || is_site_admin()) {
-			$a->page['aside'] .= '<div class="side-link" id="side-invite-remain">' 
-			. sprintf( tt('%d invitation available','%d invitations available',$x), $x) 
-			. '</div>' . $inv;
-		}
-	}
-
-	$tpl = get_markup_template('peoplefind.tpl');
-	
-	$inv = (($a->config['register_policy'] != REGISTER_CLOSED) ? t('Invite Friends') : '');
-
-	$a->page['aside'] .= replace_macros($tpl,array(
-		'$findpeople' => t('Find People'),
-		'$desc' => t('Enter name or interest'),
-		'$label' => t('Connect/Follow'),
-		'$hint' => t('Examples: Robert Morgenstein, Fishing'),
-		'$findthem' => t('Find'),
-		'$similar' => t('Similar Interests'),
-		'$inv' => $inv
-	));
-
-	
+	$a->page['aside'] .= findpeople_widget();
 
 }
 

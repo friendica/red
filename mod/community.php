@@ -1,5 +1,12 @@
 <?php
 
+function community_init(&$a) {
+	if(! local_user())
+		unset($_SESSION['theme']);
+
+
+}
+
 
 function community_content(&$a, $update = 0) {
 
@@ -18,9 +25,6 @@ function community_content(&$a, $update = 0) {
 	require_once("include/bbcode.php");
 	require_once('include/security.php');
 	require_once('include/conversation.php');
-
-	if(x($_SESSION,'theme'))
-		unset($_SESSION['theme']);
 
 
 	$o .= '<h3>' . t('Community') . '</h3>';

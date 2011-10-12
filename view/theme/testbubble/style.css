@@ -2614,6 +2614,10 @@ tr {
 	width: 150px;	
 }
 
+.directory-end {
+	clear: both;
+}
+
 /* ========= */
 /* = Admin = */
 /* ========= */

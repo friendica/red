@@ -15,7 +15,7 @@ function search_saved_searches() {
 		foreach($r as $rr) {
 			$o .= '<li class="saved-search-li clear"><a href="search/?f=&remove=1&search=' . $rr['term'] . '" class="icon drophide savedsearchdrop" title="' . t('Remove term') . '" onclick="return confirmDelete();" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a> <a href="search/?f=&search=' . $rr['term'] . '" class="savedsearchterm" >' . $rr['term'] . '</a></li>' . "\r\n";
 		}
-		$o .= '</ul></div>' . "\r\n";
+		$o .= '</ul><div class="clear"></div></div>' . "\r\n";
 	}		
 
 	return $o;
@@ -50,6 +50,9 @@ function search_init(&$a) {
 		$a->page['aside'] .= search_saved_searches();
 
 	}
+	else
+		unset($_SESSION['theme']);
+
 
 
 }
@@ -75,12 +78,9 @@ function search_content(&$a) {
 	require_once('include/security.php');
 	require_once('include/conversation.php');
 
-	if(x($_SESSION,'theme'))
-		unset($_SESSION['theme']);
-
 	$o = '<div id="live-search"></div>' . "\r\n";
 
-	$o .= '<h3>' . t('Search') . '</h3>';
+	$o .= '<h3>' . t('Search This Site') . '</h3>';
 
 	if(x($a->data,'search'))
 		$search = notags(trim($a->data['search']));

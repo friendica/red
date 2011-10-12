@@ -78,10 +78,12 @@ function saved_searches($search) {
 	if(count($r)) {
 		$o .= '<ul id="saved-search-ul">' . "\r\n";
 		foreach($r as $rr) {
-			$o .= '<li class="saved-search-li clear"><a href="network/?f=&remove=1&search=' . $rr['term'] . '" class="icon drophide savedsearchdrop" title="' . t('Remove term') . '" onclick="return confirmDelete();" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a> <a href="network/?f&search=' . urlencode($rr['term']) . '" class="savedsearchterm" >' . $rr['term'] . '</a></li>' . "\r\n";
+			$o .= '<li class="saved-search-li clear"><a href="network/?f=&remove=1&search=' . $rr['term'] . '" class="icon drophide savedsearchdrop" title="' . t('Remove term') . '" onclick="return confirmDelete();" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a> <a href="network/?f=&search=' . urlencode($rr['term']) . '" class="savedsearchterm" >' . $rr['term'] . '</a></li>' . "\r\n";
 		}
 		$o .= '</ul>';
 	}		
+
+	$o .= '<div class="clear"></div>';
 
 	$o .= '</div>' . "\r\n";
 	return $o;
