@@ -45,21 +45,32 @@ function message_content(&$a) {
 
 	$myprofile = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
 
-	if (($a->argc > 1) && ($a->argv[1] === 'new')) {
-		$tab = 'new';
-	} else if ($a->argc == 2 && $a->argv[1] === 'sent') {
-		$tab = 'sent';
-	} else {
-		$tab = 'inbox';
-	}
-	
+
+	$tabs = array(
+		array(
+			'label' => t('Inbox'),
+			'url'=> $a->get_baseurl() . '/message',
+			'sel'=> (($a->argc == 1) ? 'active' : ''),
+		),
+		array(
+			'label' => t('Outbox'),
+			'url' => $a->get_baseurl() . '/message/sent',
+			'sel'=> (($a->argv[1] == 'sent') ? 'active' : ''),
+		),
+		array(
+			'label' => t('New Message'),
+			'url' => $a->get_baseurl() . '/message/new',
+			'sel'=> (($a->argv[1] == 'new') ? 'active' : ''),
+		),
+	);
+	$tpl = get_markup_template('common_tabs.tpl');
+	$tab_content = replace_macros($tpl, array('$tabs'=>$tabs));
+
+
 	$tpl = get_markup_template('mail_head.tpl');
 	$header = replace_macros($tpl, array(
 		'$messages' => t('Messages'),
-		'$inbox' => t('Inbox'),
-		'$outbox' => t('Outbox'),
-		'$new' => t('New Message'),
-		'$activetab' => $tab
+		'$tab_content' => $tab_content
 	));
 
 

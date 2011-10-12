@@ -63,10 +63,39 @@ function notifications_content(&$a) {
 		return;
 	}
 
+	nav_set_selected('notifications');		
+
 	$o = '';
-	
+	$tabs = array(
+		array(
+			'label' => t('Network'),
+			'url'=>$a->get_baseurl() . '/notifications/network',
+			'sel'=> (($a->argv[1] == 'network') ? 'active' : ''),
+		),
+		array(
+			'label' => t('Home'),
+			'url' => $a->get_baseurl() . '/notifications/home',
+			'sel'=> (($a->argv[1] == 'home') ? 'active' : ''),
+		),
+		array(
+			'label' => t('Introductions'),
+			'url' => $a->get_baseurl() . '/notifications/intros',
+			'sel'=> (($a->argv[1] == 'intros') ? 'active' : ''),
+		),
+		array(
+			'label' => t('Messages'),
+			'url' => $a->get_baseurl() . '/message',
+			'sel'=> '',
+		),
+	);
+	$tpl = get_markup_template('common_tabs.tpl');
+	$tab_content = replace_macros($tpl, array('$tabs'=>$tabs));
+
+
+
+
 	if( (($a->argc > 1) && ($a->argv[1] == 'intros')) || (($a->argc == 1))) {
-		
+		nav_set_selected('introductions');
 		if(($a->argc > 2) && ($a->argv[2] == 'all'))
 			$sql_extra = '';
 		else
@@ -167,6 +196,8 @@ function notifications_content(&$a) {
 			info( t('No notifications.') . EOL);
 		
 		$o .= replace_macros($notif_tpl,array(
+			'$notif_header' => t('Notifications'),
+			'$tabs' => $tab_content,
 			'$notif_content' => $notif_content,
 			'$activetab' => 'intros'
 		));
@@ -175,7 +206,6 @@ function notifications_content(&$a) {
 		return $o;
 				
 	} else if (($a->argc > 1) && ($a->argv[1] == 'network')) {
-		
 		$notif_tpl = get_markup_template('notifications.tpl');
 		
 		$r = q("SELECT `item`.`id`,`item`.`parent`, `item`.`verb`, `item`.`author-name`, 
@@ -252,6 +282,8 @@ function notifications_content(&$a) {
 		}
 		
 		$o .= replace_macros($notif_tpl,array(
+			'$notif_header' => t('Notifications'),
+			'$tabs' => $tab_content,
 			'$notif_content' => $notif_content,
 			'$activetab' => 'network'
 		));
@@ -327,6 +359,8 @@ function notifications_content(&$a) {
 		}
 		
 		$o .= replace_macros($notif_tpl,array(
+			'$notif_header' => t('Notifications'),
+			'$tabs' => $tab_content,
 			'$notif_content' => $notif_content,
 			'$activetab' => 'home'
 		));
