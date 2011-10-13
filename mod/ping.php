@@ -165,7 +165,7 @@ function ping_init(&$a) {
 		}
 		if (count($friends)){
 			foreach ($friends as $i) {
-				echo xmlize($a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'],$i['author-link'], $i['author-avatar'], relative_date($i['created']), sprintf( t("{0} is now friends with %s"), $i['fname'] ) );
+				echo xmlize($a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'],$i['author-name'],$i['author-link'], $i['author-avatar'], relative_date($i['created']), sprintf( t("{0} is now friends with %s"), $i['fname'] ) );
 			};
 		}
 		if (count($posts)){
