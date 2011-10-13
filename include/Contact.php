@@ -46,6 +46,10 @@ function contact_remove($id) {
 	q("DELETE FROM `event` WHERE `cid` = %d ",
 		intval($id)
 	);
+	q("DELETE FROM `queue` WHERE `cid` = %d ",
+		intval($id)
+	);
+
 }
 
 
