@@ -192,6 +192,8 @@ function notifier_run($argv, $argc){
 		// be notified during this run.
 		// Other DFRN conversation members will be alerted during polled updates.
 
+
+
 		// Diaspora members currently are not notified of expirations, and other networks have
 		// either limited or no ability to process deletions. We should at least fix Diaspora 
 		// by stringing togther an array of retractions and sending them onward.
@@ -210,6 +212,7 @@ function notifier_run($argv, $argc){
 		 */
  
 		if((! $top_level) && ($parent['wall'] == 0) && (! $expire) && (stristr($target_item['uri'],$localhost))) {
+			logger('notifier: followup', LOGGER_DEBUG);
 			// local followup to remote post
 			$followup = true;
 			$public_message = false; // not public
@@ -217,6 +220,13 @@ function notifier_run($argv, $argc){
 		}
 		else {
 			$followup = false;
+
+			// don't send deletions onward for other people's stuff
+
+			if($target_item['deleted'] && (! intval($target_item['wall']))) {
+				logger('notifier: ignoring delete notification for non-wall item');
+				return;
+			}
 
 			if((strlen($parent['allow_cid'])) 
 				|| (strlen($parent['allow_gid'])) 
@@ -356,6 +366,7 @@ function notifier_run($argv, $argc){
 
 				if(($public_message) && $item['private'])
 					continue;
+
 
 				$contact = get_item_contact($item,$contacts);
 
