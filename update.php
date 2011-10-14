@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1095 );
+define( 'UPDATE_VERSION' , 1096 );
 
 /**
  *
@@ -790,4 +790,8 @@ function update_1093() {
 
 function update_1094() {
 	q("ALTER TABLE `item` ADD `postopts` TEXT NOT NULL AFTER `target` ");
+}
+
+function update_1095() {
+	q("ALTER TABLE `contact` ADD `bd` DATE NOT NULL AFTER `bdyear` ");
 }

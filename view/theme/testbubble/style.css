@@ -2105,8 +2105,15 @@ margin-left: 0px;
 .openid {
 	background: url(login-bg.gif) no-repeat;
 	background-position: 0 50%;
-	padding-left: 18px;
+	padding-left: 18px !important;
 	width: 385px;
+}
+
+.openid {
+	width: 150px !important;
+}
+#login-password {
+	width: 168px !important;
 }
 
 #profile-tabs-wrapper {

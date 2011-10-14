@@ -96,6 +96,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `info` mediumtext NOT NULL,
   `profile-id` int(11) NOT NULL DEFAULT '0',
   `bdyear` CHAR( 4 ) NOT NULL COMMENT 'birthday notify flag',
+  `bd` date NOT NULL,
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
   KEY `self` (`self`),

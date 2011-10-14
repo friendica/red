@@ -50,12 +50,15 @@ function poller_run($argv, $argc){
 
 	
 
-	// once daily run expire in background
+	// once daily run birthday_updates and then expire in background
 
 	$d1 = get_config('system','last_expire_day');
 	$d2 = intval(datetime_convert('UTC','UTC','now','d'));
 
 	if($d2 != intval($d1)) {
+
+		update_contact_birthdays();
+
 		set_config('system','last_expire_day',$d2);
 		proc_run('php','include/expire.php');
 	}

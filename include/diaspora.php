@@ -1024,9 +1024,11 @@ function diaspora_profile($importer,$xml) {
 
 	$images = import_profile_photo($image_url,$importer['uid'],$contact['id']);
 	
-	// TODO handle birthdays - even though we don't know the original timezone (grrr.)
+	// Generic birthday. We don't know the timezone. The year is irrelevant. 
 
-	$r = q("UPDATE `contact` SET `name` = '%s', `name-date` = '%s', `photo` = '%s', `thumb` = '%s', `micro` = '%s', `avatar-date` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+	$birthday = datetime_convert('UTC','UTC',$birthday,'Y-m-d');
+
+	$r = q("UPDATE `contact` SET `name` = '%s', `name-date` = '%s', `photo` = '%s', `thumb` = '%s', `micro` = '%s', `avatar-date` = '%s' , `bd` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		dbesc($name),
 		dbesc(datetime_convert()),
 		dbesc($images[0]),
@@ -1034,7 +1036,8 @@ function diaspora_profile($importer,$xml) {
 		dbesc($images[2]),
 		dbesc(datetime_convert()),
 		intval($contact['id']),
-		intval($importer['uid'])
+		intval($importer['uid']),
+		dbesc($birthday)
 	); 
 	if($r) {
 		if($oldphotos) {
