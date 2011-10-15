@@ -8,9 +8,9 @@ require_once("include/pgettext.php");
 require_once('include/nav.php');
 
 define ( 'FRIENDIKA_PLATFORM',     'Free Friendika');
-define ( 'FRIENDIKA_VERSION',      '2.3.1133' );
+define ( 'FRIENDIKA_VERSION',      '2.3.1134' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
-define ( 'DB_UPDATE_VERSION',      1096      );
+define ( 'DB_UPDATE_VERSION',      1097      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );

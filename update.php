@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1096 );
+define( 'UPDATE_VERSION' , 1097 );
 
 /**
  *
@@ -795,3 +795,9 @@ function update_1094() {
 function update_1095() {
 	q("ALTER TABLE `contact` ADD `bd` DATE NOT NULL AFTER `bdyear` ");
 }
+
+function update_1096() {
+	q("ALTER TABLE `item` ADD `origin` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `deleted` , ADD INDEX ( `origin` ) ");
+}
+
+

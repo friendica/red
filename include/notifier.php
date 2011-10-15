@@ -142,7 +142,7 @@ function notifier_run($argv, $argc){
 				$item['deleted'] = 1;
 		}
 
-		if((count($items) == 1) && ($items[0]['uri'] === $items[0]['parent-uri'])) {
+		if((count($items) == 1) && ($items[0]['id'] === $target_item['id']) && ($items[0]['uri'] === $items[0]['parent-uri'])) {
 			logger('notifier: top level post');
 			$top_level = true;
 		}
@@ -205,13 +205,20 @@ function notifier_run($argv, $argc){
 
 		/**
 		 *
-		 * Be VERY CAREFUL if you make any changes to the following line. Seemingly innocuous changes 
+		 * Be VERY CAREFUL if you make any changes to the following lines. Seemingly innocuous changes 
 		 * have been known to cause runaway conditions which affected several servers, along with 
 		 * permissions issues. 
 		 *
 		 */
  
+		$relay_to_owner = false;
+
 		if((! $top_level) && ($parent['wall'] == 0) && (! $expire) && (stristr($target_item['uri'],$localhost))) {
+			$relay_to_owner = true;
+		}
+
+
+		if($relay_to_owner) {
 			logger('notifier: followup', LOGGER_DEBUG);
 			// local followup to remote post
 			$followup = true;

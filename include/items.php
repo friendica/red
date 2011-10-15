@@ -818,18 +818,10 @@ function item_store($arr,$force_parent = false) {
 
 	// find the item we just created
 
-	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' AND `uid` = %d ORDER BY `id` ASC LIMIT 1",
+	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' AND `uid` = %d ORDER BY `id` ASC ",
 		$arr['uri'],           // already dbesc'd
 		intval($arr['uid'])
 	);
-	if(! count($r)) {
-		// This is not good, but perhaps we encountered a rare race/cache condition, so back off and try again. 
-		sleep(3);
-		$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' AND `uid` = %d ORDER BY `id` ASC LIMIT 1",
-			$arr['uri'],           // already dbesc'd
-			intval($arr['uid'])
-		);
-	}
 
 	if(count($r)) {
 		$current_post = $r[0]['id'];
@@ -1873,12 +1865,13 @@ function local_delivery($importer,$data) {
 
 			$r = q("select `item`.`id`, `contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
 				LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
-				WHERE `contact`.`self` = 1 AND `item`.`wall` = 1 AND `item`.`uri` = '%s' AND `item`.`uid` = %d LIMIT 1",
+				WHERE `contact`.`self` = 1 AND `item`.`wall` = 1 AND `item`.`uri` = '%s' AND `item`.`parent-uri` = '%s'
+				AND `item`.`uid` = %d LIMIT 1",
+				dbesc($parent_uri),
 				dbesc($parent_uri),
 				intval($importer['importer_uid'])
 			);
 			if($r && count($r)) {	
-
 
 				logger('local_delivery: received remote comment');
 				$is_like = false;
@@ -2387,6 +2380,9 @@ function atom_author($tag,$name,$uri,$h,$w,$photo) {
 function atom_entry($item,$type,$author,$owner,$comment = false) {
 
 	$a = get_app();
+
+	if(! $item['parent'])
+		return;
 
 	if($item['deleted'])
 		return '<at:deleted-entry ref="' . xmlify($item['uri']) . '" when="' . xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00',ATOM_TIME)) . '" />' . "\r\n";
