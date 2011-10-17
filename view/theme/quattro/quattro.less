@@ -433,15 +433,11 @@ section {
 }
 /** buttons **/
 input[type="submit"] {
-    border: 1px solid;
-    background-color: @BodyColor;
-    font: bold 85%;
-    color: @Grey1;
-    height: 20px;
-    padding: 10px 5px;
-    border-radius: 8px;
-    -moz-border-radius: 8px;
-    -webkit-border-radius: 8px;
+	border: 0px;
+    background-color: @ButtonBackgroundColor;
+    color: @ButtonColor;
+    padding: 0px 10px;
+	.rounded(5px);
 }
 
 
@@ -473,10 +469,8 @@ input[type="submit"] {
 	background-position: 7px 7px;
 	background-repeat: no-repeat;
 	padding: 7px 5px 0px 30px;
-	-webkit-border-radius: 5px ;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
 	color: #999999;
+	.rounded(5px);
 }
 #acl-showall.selected {
 	color: #000000;
