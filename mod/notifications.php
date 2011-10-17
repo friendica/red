@@ -88,12 +88,10 @@ function notifications_content(&$a) {
 			'sel'=> '',
 		),
 	);
-	$tpl = get_markup_template('common_tabs.tpl');
-	$tab_content = replace_macros($tpl, array('$tabs'=>$tabs));
+	
+	$o = "";
 
-
-
-
+	
 	if( (($a->argc > 1) && ($a->argv[1] == 'intros')) || (($a->argc == 1))) {
 		nav_set_selected('introductions');
 		if(($a->argc > 2) && ($a->argv[2] == 'all'))
@@ -197,15 +195,15 @@ function notifications_content(&$a) {
 		
 		$o .= replace_macros($notif_tpl,array(
 			'$notif_header' => t('Notifications'),
-			'$tabs' => $tab_content,
+			'$tabs' => $tabs,
 			'$notif_content' => $notif_content,
-			'$activetab' => 'intros'
 		));
 		
 		$o .= paginate($a);
 		return $o;
 				
 	} else if (($a->argc > 1) && ($a->argv[1] == 'network')) {
+		
 		$notif_tpl = get_markup_template('notifications.tpl');
 		
 		$r = q("SELECT `item`.`id`,`item`.`parent`, `item`.`verb`, `item`.`author-name`, 
@@ -283,9 +281,8 @@ function notifications_content(&$a) {
 		
 		$o .= replace_macros($notif_tpl,array(
 			'$notif_header' => t('Notifications'),
-			'$tabs' => $tab_content,
+			'$tabs' => $tabs,
 			'$notif_content' => $notif_content,
-			'$activetab' => 'network'
 		));
 		
 	} else if (($a->argc > 1) && ($a->argv[1] == 'home')) {
@@ -360,9 +357,8 @@ function notifications_content(&$a) {
 		
 		$o .= replace_macros($notif_tpl,array(
 			'$notif_header' => t('Notifications'),
-			'$tabs' => $tab_content,
+			'$tabs' => $tabs,
 			'$notif_content' => $notif_content,
-			'$activetab' => 'home'
 		));
 	}
 

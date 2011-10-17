@@ -27,8 +27,7 @@ input {
 
 img { border :0px; }
 
-#id_openid_url,
-.openid {
+.openid input {
    background: url(login-bg.gif) no-repeat;
    background-position: 0 50%;
    padding-left: 18px;
@@ -332,26 +331,23 @@ div.wall-item-content-wrapper.shiny {
 	margin-top: 10px;
 }
 
-#label-login-name, #label-login-password, #login-extra-filler {
+
+#login_standard {
+	width: 210px;
 	float: left;
-	width: 200px;
-	margin-bottom: 20px;
+}
+#login_openid {
+	width: 210px;
+	margin-left: 250px;
 }
 
-
-#login-password {
-	float: left;
-	width: 170px;
+#login_standard input,
+#login_openid input {
+	width: 180px;
 }
 
-#login-name {
-	float: left;
-	width: 153px;
-}
-
-#login-name.no-openid {
-	float: left;
-	width: 170px;
+#login-extra-links {
+	clear: both;
 }
 
 #register-link, #lost-password-link {

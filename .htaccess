@@ -1,4 +1,4 @@
-Options -Indexes
+#Options -Indexes
 AddType application/x-java-archive .jar
 AddType audio/ogg .oga
 
@@ -8,7 +8,6 @@ Deny from all
 
 <IfModule mod_rewrite.c>
   RewriteEngine on
-
   # Protect repository directory from browsing
   RewriteRule "(^|/)\.git" - [F]
 
