@@ -197,7 +197,6 @@ function notifications_content(&$a) {
 			'$notif_header' => t('Notifications'),
 			'$tabs' => $tabs,
 			'$notif_content' => $notif_content,
-			'$activetab' => 'intros'
 		));
 		
 		$o .= paginate($a);
@@ -284,7 +283,6 @@ function notifications_content(&$a) {
 			'$notif_header' => t('Notifications'),
 			'$tabs' => $tabs,
 			'$notif_content' => $notif_content,
-			'$activetab' => 'network'
 		));
 		
 	} else if (($a->argc > 1) && ($a->argv[1] == 'home')) {
@@ -361,7 +359,6 @@ function notifications_content(&$a) {
 			'$notif_header' => t('Notifications'),
 			'$tabs' => $tabs,
 			'$notif_content' => $notif_content,
-			'$activetab' => 'home'
 		));
 	}
 
