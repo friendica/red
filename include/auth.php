@@ -104,11 +104,12 @@ else {
 	if((x($_POST,'password')) && strlen($_POST['password']))
 		$encrypted = hash('whirlpool',trim($_POST['password']));
 	else {
-		if((x($_POST,'openid_url')) && strlen($_POST['openid_url'])) {
+		if((x($_POST,'openid_url')) && strlen($_POST['openid_url']) ||
+		   (x($_POST,'username')) && strlen($_POST['username'])) {
 
 			$noid = get_config('system','no_openid');
 
-			$openid_url = trim($_POST['openid_url']);
+			$openid_url = trim(  (strlen($_POST['openid_url'])?$_POST['openid_url']:$_POST['username']) );
 
 			// validate_url alters the calling parameter
 
@@ -161,7 +162,7 @@ else {
 		$record = null;
 
 		$addon_auth = array(
-			'username' => trim($_POST['openid_url']), 
+			'username' => trim($_POST['username']), 
 			'password' => trim($_POST['password']),
 			'authenticated' => 0,
 			'user_record' => null
@@ -187,8 +188,8 @@ else {
 			$r = q("SELECT `user`.*, `user`.`pubkey` as `upubkey`, `user`.`prvkey` as `uprvkey`  
 				FROM `user` WHERE ( `email` = '%s' OR `nickname` = '%s' ) 
 				AND `password` = '%s' AND `blocked` = 0 AND `account_expired` = 0 AND `verified` = 1 LIMIT 1",
-				dbesc(trim($_POST['openid_url'])),
-				dbesc(trim($_POST['openid_url'])),
+				dbesc(trim($_POST['username'])),
+				dbesc(trim($_POST['username'])),
 				dbesc($encrypted)
 			);
 			if(count($r))
@@ -196,7 +197,7 @@ else {
 		}
 
 		if((! $record) || (! count($record))) {
-			logger('authenticate: failed login attempt: ' . trim($_POST['openid_url'])); 
+			logger('authenticate: failed login attempt: ' . trim($_POST['username'])); 
 			notice( t('Login failed.') . EOL );
 			goaway(z_root());
   		}

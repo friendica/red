@@ -636,29 +636,16 @@ function get_guid($size=16) {
 if(! function_exists('login')) {
 function login($register = false) {
 	$o = "";
-	$register_tpl = (($register) ? get_markup_template("register-link.tpl") : "");
-	
-	$register_html = replace_macros($register_tpl,array(
-		'$title' => t('Create a New Account'),
-		'$desc' => t('Register')
-	));
+	$reg = false;
+	if ($register) {
+		$reg = array(
+			'title' => t('Create a New Account'),
+			'desc' => t('Register')
+		);
+	}
 
 	$noid = get_config('system','no_openid');
-	if($noid) {
-		$classname = 'no-openid';
-		$namelabel = t('Nickname or Email address: ');
-		$passlabel = t('Password: ');
-		$login     = t('Login');
-	}
-	else {
-		$classname = 'openid';
-		$namelabel = t('Nickname/Email/OpenID: ');
-		$passlabel = t("Password \x28if not OpenID\x29: ");
-		$login     = t('Login');
-	}
-	$lostpass = t('Forgot your password?');
-	$lostlink = t('Password Reset');
-
+	
 	if(local_user()) {
 		$tpl = get_markup_template("logout.tpl");
 	}
@@ -667,17 +654,22 @@ function login($register = false) {
 
 	}
 
-	$o = '<script type="text/javascript"> $(document).ready(function() { $("#login-name").focus();} );</script>';	
 
 	$o .= replace_macros($tpl,array(
 		'$logout'        => t('Logout'),
-		'$register_html' => $register_html, 
-		'$classname'     => $classname,
-		'$namelabel'     => $namelabel,
-		'$passlabel'     => $passlabel,
-		'$login'         => $login,
-		'$lostpass'      => $lostpass,
-		'$lostlink'      => $lostlink 
+		'$login'		 => t('Login'),
+		
+		'$lname'	 	=> array('username', t('Nickname or Email address: ') , '', ''),
+		'$lpassword' 	=> array('password', t('Password: '), '', ''),
+		
+		'$openid'		=> !$noid,
+		'$lopenid'	=> array('openid_url', t('OpenID: '),'',''),
+		
+		
+		'$register'		=> $reg,
+		
+		'$lostpass'      => t('Forgot your password?'),
+		'$lostlink'      => t('Password Reset'),
 	));
 
 	call_hooks('login_hook',$o);
