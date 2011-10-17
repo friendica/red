@@ -2,6 +2,17 @@
 
 function directory_init(&$a) {
 	$a->set_pager_itemspage(60);
+
+	if(local_user()) {
+		require_once('include/contact_widgets.php');
+
+		$a->page['aside'] .= findpeople_widget();
+
+	}
+	else
+		unset($_SESSION['theme']);
+
+
 }
 
 
@@ -23,8 +34,6 @@ function directory_content(&$a) {
 
 	$o = '';
 	nav_set_selected('directory');
-	if(x($_SESSION,'theme'))
-		unset($_SESSION['theme']);
 
 	if(x($a->data,'search'))
 		$search = notags(trim($a->data['search']));
@@ -45,12 +54,13 @@ function directory_content(&$a) {
 		if($everything)
 			$admin =  '<ul><li><div id="directory-admin-link"><a href="' . $a->get_baseurl() . '/directory' . '">' . t('Normal site view') . '</a></div></li></ul>';
 		else
-			$admin = '<ul><li><div id="directory-admin-link"><a href="' . $a->get_baseurl() . '/directory/all' . '">' . t('View all site entries') . '</a></div></li></ul>';
+			$admin = '<ul><li><div id="directory-admin-link"><a href="' . $a->get_baseurl() . '/directory/all' . '">' . t('Admin - View all site entries') . '</a></div></li></ul>';
 	}
 
 	$o .= replace_macros($tpl, array(
 		'$search' => $search,
 		'$globaldir' => $globaldir,
+		'$desc' => t('Find on this site'),
 		'$admin' => $admin,
 		'$finding' => (strlen($search) ? '<h4>' . t('Finding: ') . "'" . $search . "'" . '</h4>' : ""),
 		'$sitedir' => t('Site Directory'),

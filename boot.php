@@ -8,9 +8,9 @@ require_once("include/pgettext.php");
 require_once('include/nav.php');
 
 define ( 'FRIENDIKA_PLATFORM',     'Free Friendika');
-define ( 'FRIENDIKA_VERSION',      '2.3.1129' );
+define ( 'FRIENDIKA_VERSION',      '2.3.1134' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
-define ( 'DB_UPDATE_VERSION',      1094      );
+define ( 'DB_UPDATE_VERSION',      1097      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -974,6 +974,7 @@ function get_birthdays() {
 		return $o;
 
 	$bd_format = t('g A l F d') ; // 8 AM Friday January 18
+	$bd_short = t('F d');
 
 	$r = q("SELECT `event`.*, `event`.`id` AS `eid`, `contact`.* FROM `event` 
 		LEFT JOIN `contact` ON `contact`.`id` = `event`.`cid` 
@@ -993,7 +994,7 @@ function get_birthdays() {
 		if($total) {
 			$o .= '<div id="birthday-notice" class="birthday-notice fakelink" onclick=openClose(\'birthday-wrapper\'); >' . t('Birthday Reminders') . ' ' . '(' . $total . ')' . '</div>'; 
 			$o .= '<div id="birthday-wrapper" style="display: none;" ><div id="birthday-title">' . t('Birthdays this week:') . '</div>'; 
-			$o .= '<div id="birthday-adjust">' . t("\x28Adjusted for local time\x29") . '</div>';
+//			$o .= '<div id="birthday-adjust">' . t("\x28Adjusted for local time\x29") . '</div>';
 			$o .= '<div id="birthday-title-end"></div>';
 
 			foreach($r as $rr) {
@@ -1001,10 +1002,16 @@ function get_birthdays() {
 					continue;
 				$now = strtotime('now');
 				$today = (((strtotime($rr['start'] . ' +00:00') < $now) && (strtotime($rr['finish'] . ' +00:00') > $now)) ? true : false); 
+				$sparkle = '';
+				$url = $rr['url'];
+				if($rr['network'] === NETWORK_DFRN) {
+					$sparkle = " sparkle";
+					$url = $a->get_baseurl() . '/redir/'  . $rr['cid'];
+				}
 	
-				$o .= '<div class="birthday-list" id="birthday-' . $rr['eid'] . '"><a class="sparkle" target="redir" href="' 
-				. $a->get_baseurl() . '/redir/'  . $rr['cid'] . '">' . $rr['name'] . '</a> ' 
-				. day_translate(datetime_convert('UTC', $a->timezone, $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '')
+				$o .= '<div class="birthday-list" id="birthday-' . $rr['eid'] . '"><a class="birthday-link$sparkle" target="redir" href="' 
+				. $url . '">' . $rr['name'] . '</a> ' 
+				. day_translate(datetime_convert('UTC', $a->timezone, $rr['start'], $rr['adjust'] ? $bd_format : $bd_short)) . (($today) ?  ' ' . t('[today]') : '')
 				. '</div>' ;
 			}
 			$o .= '</div></div>';

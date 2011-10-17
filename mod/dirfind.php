@@ -1,13 +1,26 @@
 <?php
 
+function dirfind_init(&$a) {
 
-function tagmatch_content(&$a) {
+	require_once('include/contact_widgets.php');
+
+	if(! x($a->page,'aside'))
+		$a->page['aside'] = '';
+
+	$a->page['aside'] .= follow_widget();
+
+	$a->page['aside'] .= findpeople_widget();
+}
+
+
+
+function dirfind_content(&$a) {
 
 	$search = notags(trim($_REQUEST['search']));
 	
 	$o = '';
 
-	$o .= '<h2>' . t('Tag Match') . ' - ' . $search . '</h2>';
+	$o .= '<h2>' . t('People Search') . ' - ' . $search . '</h2>';
 	
 	if($search) {
 

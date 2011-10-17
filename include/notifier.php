@@ -142,7 +142,7 @@ function notifier_run($argv, $argc){
 				$item['deleted'] = 1;
 		}
 
-		if((count($items) == 1) && ($items[0]['uri'] === $items[0]['parent-uri'])) {
+		if((count($items) == 1) && ($items[0]['id'] === $target_item['id']) && ($items[0]['uri'] === $items[0]['parent-uri'])) {
 			logger('notifier: top level post');
 			$top_level = true;
 		}
@@ -192,6 +192,8 @@ function notifier_run($argv, $argc){
 		// be notified during this run.
 		// Other DFRN conversation members will be alerted during polled updates.
 
+
+
 		// Diaspora members currently are not notified of expirations, and other networks have
 		// either limited or no ability to process deletions. We should at least fix Diaspora 
 		// by stringing togther an array of retractions and sending them onward.
@@ -203,13 +205,21 @@ function notifier_run($argv, $argc){
 
 		/**
 		 *
-		 * Be VERY CAREFUL if you make any changes to the following line. Seemingly innocuous changes 
+		 * Be VERY CAREFUL if you make any changes to the following lines. Seemingly innocuous changes 
 		 * have been known to cause runaway conditions which affected several servers, along with 
 		 * permissions issues. 
 		 *
 		 */
  
+		$relay_to_owner = false;
+
 		if((! $top_level) && ($parent['wall'] == 0) && (! $expire) && (stristr($target_item['uri'],$localhost))) {
+			$relay_to_owner = true;
+		}
+
+
+		if($relay_to_owner) {
+			logger('notifier: followup', LOGGER_DEBUG);
 			// local followup to remote post
 			$followup = true;
 			$public_message = false; // not public
@@ -217,6 +227,13 @@ function notifier_run($argv, $argc){
 		}
 		else {
 			$followup = false;
+
+			// don't send deletions onward for other people's stuff
+
+			if($target_item['deleted'] && (! intval($target_item['wall']))) {
+				logger('notifier: ignoring delete notification for non-wall item');
+				return;
+			}
 
 			if((strlen($parent['allow_cid'])) 
 				|| (strlen($parent['allow_gid'])) 
@@ -356,6 +373,7 @@ function notifier_run($argv, $argc){
 
 				if(($public_message) && $item['private'])
 					continue;
+
 
 				$contact = get_item_contact($item,$contacts);
 
@@ -778,6 +796,12 @@ function notifier_run($argv, $argc){
 		}
 
 	}
+
+	if($normal_mode)
+		call_hooks('notifier_normal',$target_item);
+
+	call_hooks('notifier_end',$target_item);
+
 
 	return;
 }

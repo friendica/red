@@ -59,6 +59,7 @@ function match_content(&$a) {
 
 	}
 
+	$o .= cleardiv();
 	$o .= paginate($a);
 	return $o;
 }

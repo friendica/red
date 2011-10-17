@@ -19,38 +19,16 @@ function contacts_init(&$a) {
 	}
 
 	require_once('include/group.php');
+	require_once('include/contact_widgets.php');
+
 	if(! x($a->page,'aside'))
 		$a->page['aside'] = '';
+
+	$a->page['aside'] .= follow_widget();
+
 	$a->page['aside'] .= group_side('contacts','group',false,0,$contact_id);
 
-	if(get_config('system','invitation_only')) {
-		$x = get_pconfig(local_user(),'system','invites_remaining');
-		if($x || is_site_admin()) {
-			$a->page['aside'] .= '<div class="side-link" id="side-invite-remain">' 
-			. sprintf( tt('%d invitation available','%d invitations available',$x), $x) 
-			. '</div>' . $inv;
-		}
-	}
-
-	$tpl = get_markup_template('follow.tpl');
-	
-	$findSimilarLink = '<div class="side-link" id="side-match-link"><a href="match" >' 
-		. t('Similar Interests') . '</a></div>';
-	
-	$inv = '';
-	if($a->config['register_policy'] != REGISTER_CLOSED) {
-		$inv = '<div class="side-link" id="side-invite-link" ><a href="invite" >' . t("Invite Friends") . '</a></div>';
-	}
-		
-	$a->page['aside'] .= replace_macros($tpl,array(
-		'$label' => t('Connect/Follow'),
-		'$hint' => t('Example: bob@example.com, http://example.com/barbara'),
-		'$follow' => t('Follow'),
-		'$findSimilar' => $findSimilarLink,
-		'$inviteFriends' => $inv
-	));
-
-	
+	$a->page['aside'] .= findpeople_widget();
 
 }
 
@@ -351,6 +329,7 @@ function contacts_content(&$a) {
 		'$hide_url' => ((strlen($sql_extra)) ? 'contacts/all' : 'contacts' ),
 		'$hide_text' => ((strlen($sql_extra)) ? t('Show Blocked Connections') : t('Hide Blocked Connections')),
 		'$search' => $search,
+		'$desc' => t('Search your contacts'),
 		'$finding' => (strlen($search) ? '<h4>' . t('Finding: ') . "'" . $search . "'" . '</h4>' : ""),
 		'$submit' => t('Find'),
 		'$cmd' => $a->cmd

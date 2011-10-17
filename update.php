@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1094 );
+define( 'UPDATE_VERSION' , 1097 );
 
 /**
  *
@@ -787,3 +787,17 @@ function update_1093() {
 	q("ALTER TABLE `group` ADD `visible` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `uid` ");
 
 }
+
+function update_1094() {
+	q("ALTER TABLE `item` ADD `postopts` TEXT NOT NULL AFTER `target` ");
+}
+
+function update_1095() {
+	q("ALTER TABLE `contact` ADD `bd` DATE NOT NULL AFTER `bdyear` ");
+}
+
+function update_1096() {
+	q("ALTER TABLE `item` ADD `origin` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `deleted` , ADD INDEX ( `origin` ) ");
+}
+
+

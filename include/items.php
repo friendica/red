@@ -414,11 +414,7 @@ function get_atom_elements($feed,$item) {
 
 	if((strpos($res['body'],'<') !== false) || (strpos($res['body'],'>') !== false)) {
 
-		$res['body'] = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
-			'[youtube]$1[/youtube]', $res['body']);
-
-		$res['body'] = preg_replace('#<iframe[^>].+?' . 'http://www.youtube.com/embed/([A-Za-z0-9\-_=]+).+?</iframe>#s',
-			'[youtube]$1[/youtube]', $res['body']);
+		$res['body'] = html2bb_video($res['body']);
 
 		$res['body'] = oembed_html2bbcode($res['body']);
 
@@ -586,12 +582,7 @@ function get_atom_elements($feed,$item) {
 			$res['object'] .= '<orig>' . xmlify($body) . '</orig>' . "\n";
 			if((strpos($body,'<') !== false) || (strpos($body,'>') !== false)) {
 
-				$body = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
-					'[youtube]$1[/youtube]', $body);
-
-		$res['body'] = preg_replace('#<iframe[^>].+?' . 'http://www.youtube.com/embed/([A-Za-z0-9\-_=]+).+?</iframe>#s',
-			'[youtube]$1[/youtube]', $res['body']);
-
+				$body = html2bb_video($body);
 
 				$config = HTMLPurifier_Config::createDefault();
 				$config->set('Cache.DefinitionImpl', null);
@@ -629,11 +620,7 @@ function get_atom_elements($feed,$item) {
 			$res['object'] .= '<orig>' . xmlify($body) . '</orig>' . "\n";
 			if((strpos($body,'<') !== false) || (strpos($body,'>') !== false)) {
 
-				$body = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
-					'[youtube]$1[/youtube]', $body);
-
-		$res['body'] = preg_replace('#<iframe[^>].+?' . 'http://www.youtube.com/embed/([A-Za-z0-9\-_=]+).+?</iframe>#s',
-			'[youtube]$1[/youtube]', $res['body']);
+				$body = html2bb_video($body);
 
 				$config = HTMLPurifier_Config::createDefault();
 				$config->set('Cache.DefinitionImpl', null);
@@ -690,7 +677,7 @@ function item_store($arr,$force_parent = false) {
 
 	if($arr['gravity'])
 		$arr['gravity'] = intval($arr['gravity']);
-	elseif($arr['parent-uri'] == $arr['uri'])
+	elseif($arr['parent-uri'] === $arr['uri'])
 		$arr['gravity'] = 0;
 	elseif(activity_match($arr['verb'],ACTIVITY_POST))
 		$arr['gravity'] = 6;
@@ -757,7 +744,7 @@ function item_store($arr,$force_parent = false) {
 		// find the parent and snarf the item id and ACL's
 		// and anything else we need to inherit
 
-		$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+		$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d ORDER BY `id` ASC LIMIT 1",
 			dbesc($arr['parent-uri']),
 			intval($arr['uid'])
 		);
@@ -771,7 +758,8 @@ function item_store($arr,$force_parent = false) {
 			if($r[0]['uri'] != $r[0]['parent-uri']) {
 				$arr['thr-parent'] = $arr['parent-uri'];
 				$arr['parent-uri'] = $r[0]['parent-uri'];
-				$z = q("SELECT `id` FROM `item` WHERE `uri` = '%s' AND `parent-uri` = '%s' AND `uid` = %d LIMIT 1",
+				$z = q("SELECT `id` FROM `item` WHERE `uri` = '%s' AND `parent-uri` = '%s' AND `uid` = %d 
+					ORDER BY `id` ASC LIMIT 1",
 					dbesc($r[0]['parent-uri']),
 					dbesc($r[0]['parent-uri']),
 					intval($arr['uid'])
@@ -809,7 +797,7 @@ function item_store($arr,$force_parent = false) {
 
 	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 		dbesc($arr['uri']),
-		dbesc($arr['uid'])
+		intval($arr['uid'])
 	);
 	if($r && count($r)) {
 		logger('item-store: duplicate item ignored. ' . print_r($arr,true));
@@ -830,18 +818,10 @@ function item_store($arr,$force_parent = false) {
 
 	// find the item we just created
 
-	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' AND `uid` = %d ORDER BY `id` ASC ",
 		$arr['uri'],           // already dbesc'd
 		intval($arr['uid'])
 	);
-	if(! count($r)) {
-		// This is not good, but perhaps we encountered a rare race/cache condition, so back off and try again. 
-		sleep(3);
-		$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
-			$arr['uri'],           // already dbesc'd
-			intval($arr['uid'])
-		);
-	}
 
 	if(count($r)) {
 		$current_post = $r[0]['id'];
@@ -850,6 +830,14 @@ function item_store($arr,$force_parent = false) {
 	else {
 		logger('item_store: could not locate created item');
 		return 0;
+	}
+	if(count($r) > 1) {
+		logger('item_store: duplicated post occurred. Removing duplicates.');
+		q("DELETE FROM `item` WHERE `uri` = '%s' AND `uid` = %d AND `id` != %d ",
+			$arr['uri'],
+			intval($arr['uid']),
+			intval($current_post)
+		);
 	}
 
 	if((! $parent_id) || ($arr['parent-uri'] === $arr['uri']))	
@@ -1877,12 +1865,13 @@ function local_delivery($importer,$data) {
 
 			$r = q("select `item`.`id`, `contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
 				LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
-				WHERE `contact`.`self` = 1 AND `item`.`wall` = 1 AND `item`.`uri` = '%s' AND `item`.`uid` = %d LIMIT 1",
+				WHERE `contact`.`self` = 1 AND `item`.`wall` = 1 AND `item`.`uri` = '%s' AND `item`.`parent-uri` = '%s'
+				AND `item`.`uid` = %d LIMIT 1",
+				dbesc($parent_uri),
 				dbesc($parent_uri),
 				intval($importer['importer_uid'])
 			);
 			if($r && count($r)) {	
-
 
 				logger('local_delivery: received remote comment');
 				$is_like = false;
@@ -2392,6 +2381,9 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 
 	$a = get_app();
 
+	if(! $item['parent'])
+		return;
+
 	if($item['deleted'])
 		return '<at:deleted-entry ref="' . xmlify($item['uri']) . '" when="' . xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00',ATOM_TIME)) . '" />' . "\r\n";
 
@@ -2411,8 +2403,8 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 	if(strlen($item['owner-name']))
 		$o .= atom_author('dfrn:owner',$item['owner-name'],$item['owner-link'],80,80,$item['owner-avatar']);
 
-	if($item['parent'] != $item['id'])
-		$o .= '<thr:in-reply-to ref="' . xmlify($item['parent-uri']) . '" type="text/html" href="' .  xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']) . '" />' . "\r\n";
+	if(($item['parent'] != $item['id']) || ($item['parent-uri'] !== $item['uri']))
+		$o .= '<thr:in-reply-to ref="' . xmlify($item['parent-uri']) . '" type="text/html" href="' .  xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['parent']) . '" />' . "\r\n";
 
 	$o .= '<id>' . xmlify($item['uri']) . '</id>' . "\r\n";
 	$o .= '<title>' . xmlify($item['title']) . '</title>' . "\r\n";

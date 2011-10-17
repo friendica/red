@@ -823,7 +823,7 @@ profile-jot-banner-wrapper {
 /* ======== */
 
 .tabs {
-	width: 450px;
+	width: 600px;
 	list-style: none;
 	padding: 10px;
 	margin: 0px 0px 10px 0px;
@@ -2105,8 +2105,15 @@ margin-left: 0px;
 .openid {
 	background: url(login-bg.gif) no-repeat;
 	background-position: 0 50%;
-	padding-left: 18px;
+	padding-left: 18px !important;
 	width: 385px;
+}
+
+.openid {
+	width: 150px !important;
+}
+#login-password {
+	width: 168px !important;
 }
 
 #profile-tabs-wrapper {
@@ -2209,6 +2216,25 @@ margin-left: 0px;
 	-moz-border-radius: 5px;
     border-radius: 5px;
     padding: 5px;
+}
+
+.settings-block {
+	margin-top: 20px;
+	-moz-box-shadow: 1px 2px 6px 0px #959494;
+	-webkit-box-shadow: 1px 2px 6px 0px #959494;
+	box-shadow: 1px 2px 6px 0px #959494;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f8f8f8), color-stop(1, #f6f6f6) );
+	background:-moz-linear-gradient( center top, #f8f8f8 5%, #f6f6f6 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f8f8f8', endColorstr='#f6f6f6');
+	background-color:#f8f8f8;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	border:1px solid #eee;
+	color:#a6a6a6;
+	text-shadow:-1px 0px 0px #bdbdbd;
+	border: 1px solid #cdcdcd;
+	padding: 5px;
 }
 
 #register-form div,
@@ -2593,6 +2619,10 @@ tr {
 	font-size: 1em;
 	font-variant: small-caps;
 	width: 150px;	
+}
+
+.directory-end {
+	clear: both;
 }
 
 /* ========= */

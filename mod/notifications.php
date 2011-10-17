@@ -62,28 +62,46 @@ function notifications_content(&$a) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
-	
-	$notif_tpl = get_markup_template('notifications.tpl');
-	
-	$tabs = array(
-		'net' 	=> array('label' => t('Network'), 'url'=>$a->get_baseurl().'/notifications/network', 'sel'=>''),
-		'home' 	=> array('label' => t('Home'), 'url'=>$a->get_baseurl().'/notifications/home', 'sel'=>''),
-		'intros'=> array('label' => t('Introductions'), 'url'=>$a->get_baseurl().'/notifications/intros', 'sel'=>''),
-		'msg'	=> array('label' => t('Messages'), 'url'=>$a->get_baseurl().'/message', 'sel'=>''),
-	);
-	
-	
-	
+
+	nav_set_selected('notifications');		
+
 	$o = '';
+	$tabs = array(
+		array(
+			'label' => t('Network'),
+			'url'=>$a->get_baseurl() . '/notifications/network',
+			'sel'=> (($a->argv[1] == 'network') ? 'active' : ''),
+		),
+		array(
+			'label' => t('Home'),
+			'url' => $a->get_baseurl() . '/notifications/home',
+			'sel'=> (($a->argv[1] == 'home') ? 'active' : ''),
+		),
+		array(
+			'label' => t('Introductions'),
+			'url' => $a->get_baseurl() . '/notifications/intros',
+			'sel'=> (($a->argv[1] == 'intros') ? 'active' : ''),
+		),
+		array(
+			'label' => t('Messages'),
+			'url' => $a->get_baseurl() . '/message',
+			'sel'=> '',
+		),
+	);
+	$tpl = get_markup_template('common_tabs.tpl');
+	$tab_content = replace_macros($tpl, array('$tabs'=>$tabs));
+
+
+
 	
 	if( (($a->argc > 1) && ($a->argv[1] == 'intros')) || (($a->argc == 1))) {
-		
+		nav_set_selected('introductions');
 		if(($a->argc > 2) && ($a->argv[2] == 'all'))
 			$sql_extra = '';
 		else
 			$sql_extra = " AND `ignore` = 0 ";
 		
-		
+		$notif_tpl = get_markup_template('notifications.tpl');
 		
 		$notif_content .= '<a href="' . ((strlen($sql_extra)) ? 'notifications/intros/all' : 'notifications/intros' ) . '" id="notifications-show-hide-link" >'
 			. ((strlen($sql_extra)) ? t('Show Ignored Requests') : t('Hide Ignored Requests')) . '</a></div>' . "\r\n";
@@ -175,12 +193,13 @@ function notifications_content(&$a) {
 			}
 		}
 		else
-			$notif_content .= t('<p>No notifications.</p>');
-			
-		$tabs['intros']['sel']='active';
+			info( t('No notifications.') . EOL);
+		
 		$o .= replace_macros($notif_tpl,array(
+			'$notif_header' => t('Notifications'),
+			'$tabs' => $tab_content,
 			'$notif_content' => $notif_content,
-			'$tabs' => $tabs,
+			'$activetab' => 'intros'
 		));
 		
 		$o .= paginate($a);
@@ -188,6 +207,7 @@ function notifications_content(&$a) {
 				
 	} else if (($a->argc > 1) && ($a->argv[1] == 'network')) {
 		
+		$notif_tpl = get_markup_template('notifications.tpl');
 		
 		$r = q("SELECT `item`.`id`,`item`.`parent`, `item`.`verb`, `item`.`author-name`, 
 				`item`.`author-link`, `item`.`author-avatar`, `item`.`created`, `item`.`object` as `object`, 
@@ -262,14 +282,16 @@ function notifications_content(&$a) {
 			$notif_content = t('Nothing new!');
 		}
 		
-		$tabs['net']['sel']='active';
 		$o .= replace_macros($notif_tpl,array(
+			'$notif_header' => t('Notifications'),
+			'$tabs' => $tab_content,
 			'$notif_content' => $notif_content,
-			'$tabs' => $tabs,
+			'$activetab' => 'network'
 		));
 		
 	} else if (($a->argc > 1) && ($a->argv[1] == 'home')) {
 		
+		$notif_tpl = get_markup_template('notifications.tpl');
 		
 		$r = q("SELECT `item`.`id`,`item`.`parent`, `item`.`verb`, `item`.`author-name`, 
 				`item`.`author-link`, `item`.`author-avatar`, `item`.`created`, `item`.`object` as `object`, 
@@ -337,10 +359,11 @@ function notifications_content(&$a) {
 			$notif_content = t('Nothing new!');
 		}
 		
-		$tabs['home']['sel'] = 'active';
 		$o .= replace_macros($notif_tpl,array(
+			'$notif_header' => t('Notifications'),
+			'$tabs' => $tab_content,
 			'$notif_content' => $notif_content,
-			'$tabs' => $tabs,
+			'$activetab' => 'home'
 		));
 	}
 

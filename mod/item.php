@@ -342,6 +342,8 @@ function item_post(&$a) {
 	}
 
 
+	$body = bb_translate_video($body);
+
 	/**
 	 * Fold multi-line [code] sequences
 	 */
@@ -522,6 +524,7 @@ function item_post(&$a) {
 	$datarray['attach']        = $attachments;
 	$datarray['bookmark']      = intval($bookmark);
 	$datarray['thr-parent']    = $thr_parent;
+	$datarray['postopts']      = '';
 
 	/**
 	 * These fields are for the convenience of plugins...
@@ -531,7 +534,7 @@ function item_post(&$a) {
 
 	$datarray['parent']        = $parent;
 	$datarray['self']          = $self;
-	$datarray['prvnets']       = $user['prvnets'];
+//	$datarray['prvnets']       = $user['prvnets'];
 
 	if($orig_post)
 		$datarray['edit']      = true;
@@ -563,8 +566,8 @@ function item_post(&$a) {
 
 	$r = q("INSERT INTO `item` (`guid`, `uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `commented`, `received`, `changed`, `uri`, `thr-parent`, `title`, `body`, `app`, `location`, `coord`, 
-		`tag`, `inform`, `verb`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`, `bookmark` )
-		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d )",
+		`tag`, `inform`, `verb`, `postopts`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`, `bookmark` )
+		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d )",
 		dbesc($datarray['guid']),
 		intval($datarray['uid']),
 		dbesc($datarray['type']),
@@ -592,6 +595,7 @@ function item_post(&$a) {
 		dbesc($datarray['tag']),
 		dbesc($datarray['inform']),
 		dbesc($datarray['verb']),
+		dbesc($datarray['postopts']),
 		dbesc($datarray['allow_cid']),
 		dbesc($datarray['allow_gid']),
 		dbesc($datarray['deny_cid']),

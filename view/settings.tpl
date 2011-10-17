@@ -4,9 +4,6 @@ $tabs
 
 $nickname_block
 
-<div id="uexport-link"><a href="uexport" >$uexport</a></div>
-
-
 <form action="settings" id="settings-form" method="post" autocomplete="off" >
 
 
@@ -94,27 +91,6 @@ $hide_wall
 <div class="settings-submit-wrapper" >
 <input type="submit" name="submit" class="settings-submit" value="$submit" />
 </div>
-
-{{ if $mail_disabled }}
-
-{{ else }}
-	<h3 class="settings-heading">$h_imap</h3>
-	<p>$imap_desc</p>
-	{{inc field_custom.tpl with $field=$imap_lastcheck }}{{endinc}}
-	{{inc field_input.tpl with $field=$mail_server }}{{endinc}}
-	{{inc field_input.tpl with $field=$mail_port }}{{endinc}}
-	{{inc field_select.tpl with $field=$mail_ssl }}{{endinc}}
-	{{inc field_input.tpl with $field=$mail_user }}{{endinc}}
-	{{inc field_password.tpl with $field=$mail_pass }}{{endinc}}
-	{{inc field_input.tpl with $field=$mail_replyto }}{{endinc}}
-	{{inc field_checkbox.tpl with $field=$mail_pubmail }}{{endinc}}
-
-	<div class="settings-submit-wrapper" >
-		<input type="submit" name="submit" class="settings-submit" value="$submit" />
-	</div>
-{{ endif }}
-
-
 
 
 <h3 class="settings-heading">$h_advn</h3>

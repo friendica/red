@@ -52,6 +52,78 @@ function settings_post(&$a) {
 		return;
 	}
 
+	if(($a->argc > 1) && ($a->argv[1] == 'connectors')) {
+
+		if(x($_POST['imap-submit'])) {
+			$mail_server      = ((x($_POST,'mail_server')) ? $_POST['mail_server'] : '');
+			$mail_port        = ((x($_POST,'mail_port')) ? $_POST['mail_port'] : '');
+			$mail_ssl         = ((x($_POST,'mail_ssl')) ? strtolower(trim($_POST['mail_ssl'])) : '');
+			$mail_user        = ((x($_POST,'mail_user')) ? $_POST['mail_user'] : '');
+			$mail_pass        = ((x($_POST,'mail_pass')) ? trim($_POST['mail_pass']) : '');
+			$mail_replyto     = ((x($_POST,'mail_replyto')) ? $_POST['mail_replyto'] : '');
+			$mail_pubmail     = ((x($_POST,'mail_pubmail')) ? $_POST['mail_pubmail'] : '');
+
+
+			$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
+			if(get_config('system','dfrn_only'))
+				$mail_disabled = 1;
+
+			if(! $mail_disabled) {
+				$failed = false;
+				$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",
+					intval(local_user())
+				);
+				if(! count($r)) {
+					q("INSERT INTO `mailacct` (`uid`) VALUES (%d)",
+						intval(local_user())
+					);
+				}
+				if(strlen($mail_pass)) {
+					$pass = '';
+					openssl_public_encrypt($mail_pass,$pass,$a->user['pubkey']);
+					q("UPDATE `mailacct` SET `pass` = '%s' WHERE `uid` = %d LIMIT 1",
+						dbesc(bin2hex($pass)),
+						intval(local_user())
+					);
+				}
+				$r = q("UPDATE `mailacct` SET `server` = '%s', `port` = %d, `ssltype` = '%s', `user` = '%s',
+					`mailbox` = 'INBOX', `reply_to` = '%s', `pubmail` = %d WHERE `uid` = %d LIMIT 1",
+					dbesc($mail_server),
+					intval($mail_port),
+					dbesc($mail_ssl),
+					dbesc($mail_user),
+					dbesc($mail_replyto),
+					intval($mail_pubmail),
+					intval(local_user())
+				);
+				$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",
+					intval(local_user())
+				);
+				if(count($r)) {
+					$eacct = $r[0];
+					require_once('include/email.php');
+					$mb = construct_mailbox_name($eacct);
+					if(strlen($eacct['server'])) {
+						$dcrpass = '';
+						openssl_private_decrypt(hex2bin($eacct['pass']),$dcrpass,$a->user['prvkey']);
+						$mbox = email_connect($mb,$mail_user,$dcrpass);
+						unset($dcrpass);
+						if(! $mbox) {
+							$failed = true;
+							notice( t('Failed to connect with email account using the settings provided.') . EOL);
+						}
+					}
+				}
+				if(! $failed)
+					info( t('Email settings updated.') . EOL);
+			}
+		}
+
+		call_hooks('connector_settings_post', $_POST);
+		return;
+	}
+
+
 	call_hooks('settings_post', $_POST);
 
 	if((x($_POST,'npassword')) || (x($_POST,'confirm'))) {
@@ -102,66 +174,6 @@ function settings_post(&$a) {
 	$hide_friends = (($_POST['hide-friends'] == 1) ? 1: 0);
 	$hidewall = (($_POST['hidewall'] == 1) ? 1: 0);
 
-
-
-
-	$mail_server      = ((x($_POST,'mail_server')) ? $_POST['mail_server'] : '');
-	$mail_port        = ((x($_POST,'mail_port')) ? $_POST['mail_port'] : '');
-	$mail_ssl         = ((x($_POST,'mail_ssl')) ? strtolower(trim($_POST['mail_ssl'])) : '');
-	$mail_user        = ((x($_POST,'mail_user')) ? $_POST['mail_user'] : '');
-	$mail_pass        = ((x($_POST,'mail_pass')) ? trim($_POST['mail_pass']) : '');
-	$mail_replyto     = ((x($_POST,'mail_replyto')) ? $_POST['mail_replyto'] : '');
-	$mail_pubmail     = ((x($_POST,'mail_pubmail')) ? $_POST['mail_pubmail'] : '');
-
-
-	$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
-	if(get_config('system','dfrn_only'))
-		$mail_disabled = 1;
-
-	if(! $mail_disabled) {
-		$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",
-			intval(local_user())
-		);
-		if(! count($r)) {
-			q("INSERT INTO `mailacct` (`uid`) VALUES (%d)",
-				intval(local_user())
-			);
-		}
-		if(strlen($mail_pass)) {
-			$pass = '';
-			openssl_public_encrypt($mail_pass,$pass,$a->user['pubkey']);
-			q("UPDATE `mailacct` SET `pass` = '%s' WHERE `uid` = %d LIMIT 1",
-					dbesc(bin2hex($pass)),
-					intval(local_user())
-			);
-		}
-		$r = q("UPDATE `mailacct` SET `server` = '%s', `port` = %d, `ssltype` = '%s', `user` = '%s',
-			`mailbox` = 'INBOX', `reply_to` = '%s', `pubmail` = %d WHERE `uid` = %d LIMIT 1",
-			dbesc($mail_server),
-			intval($mail_port),
-			dbesc($mail_ssl),
-			dbesc($mail_user),
-			dbesc($mail_replyto),
-			intval($mail_pubmail),
-			intval(local_user())
-		);
-		$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",
-			intval(local_user())
-		);
-		if(count($r)) {
-			$eacct = $r[0];
-			require_once('include/email.php');
-			$mb = construct_mailbox_name($eacct);
-			if(strlen($eacct['server'])) {
-				$dcrpass = '';
-				openssl_private_decrypt(hex2bin($eacct['pass']),$dcrpass,$a->user['prvkey']);
-				$mbox = email_connect($mb,$mail_user,$dcrpass);
-				unset($dcrpass);
-				if(! $mbox)
-					notice( t('Failed to connect with email account using the settings provided.') . EOL);
-			}
-		}
-	}
 
 	$notify = 0;
 
@@ -313,9 +325,19 @@ function settings_content(&$a) {
 			'sel'	=> (($a->argc == 1)?'active':''),
 		),	
 		array(
+			'label'	=> t('Connector settings'),
+			'url' 	=> $a->get_baseurl().'/settings/connectors',
+			'sel'	=> (($a->argc > 1) && ($a->argv[1] === 'connectors')?'active':''),
+		),
+		array(
 			'label'	=> t('Plugin settings'),
 			'url' 	=> $a->get_baseurl().'/settings/addon',
 			'sel'	=> (($a->argc > 1) && ($a->argv[1] === 'addon')?'active':''),
+		),
+		array(
+			'label' => t('Export personal data'),
+			'url' => $a->get_baseurl() . '/uexport',
+			'sel' => ''
 		)
 	);
 	
@@ -344,6 +366,66 @@ function settings_content(&$a) {
 		));
 		return $o;
 	}
+
+	if(($a->argc > 1) && ($a->argv[1] === 'connectors')) {
+
+		$settings_connectors = "";
+		
+		call_hooks('connector_settings', $settings_connectors);
+
+		$diasp_enabled = sprintf( t('Built-in support for %s connectivity is %s'), t('Diaspora'), ((get_config('system','diaspora_enabled')) ? t('enabled') : t('disabled')));
+		$ostat_enabled = sprintf( t('Built-in support for %s connectivity is %s'), t('StatusNet'), ((get_config('system','ostatus_disabled')) ? t('disabled') : t('enabled')));
+
+	$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
+	if(get_config('system','dfrn_only'))
+		$mail_disabled = 1;
+
+	if(! $mail_disabled) {
+		$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",
+			local_user()
+		);
+	}
+	else {
+		$r = null;
+	}
+
+	$mail_server  = ((count($r)) ? $r[0]['server'] : '');
+	$mail_port    = ((count($r) && intval($r[0]['port'])) ? intval($r[0]['port']) : '');
+	$mail_ssl     = ((count($r)) ? $r[0]['ssltype'] : '');
+	$mail_user    = ((count($r)) ? $r[0]['user'] : '');
+	$mail_replyto = ((count($r)) ? $r[0]['reply_to'] : '');
+	$mail_pubmail = ((count($r)) ? $r[0]['pubmail'] : 0);
+	$mail_chk     = ((count($r)) ? $r[0]['last_check'] : '0000-00-00 00:00:00');
+
+		
+	$tpl = get_markup_template("settings_connectors.tpl");
+		$o .= replace_macros($tpl, array(
+			'$title'	=> t('Connector Settings'),
+			'$tabs'		=> $tabs,
+		
+		'$diasp_enabled' => $diasp_enabled,
+		'$ostat_enabled' => $ostat_enabled,
+		
+		'$h_imap' => t('Email/Mailbox Setup'),
+		'$imap_desc' => t("If you wish to communicate with email contacts using this service \x28optional\x29, please specify how to connect to your mailbox."),
+		'$imap_lastcheck' => array('imap_lastcheck', t('Last successful email check:'), $mail_chk,''),
+		'$mail_disabled' => (($mail_disabled) ? t('Email access is disabled on this site.') : ''),
+		'$mail_server'	=> array('mail_server',  t('IMAP server name:'), $mail_server, ''),
+		'$mail_port'	=> array('mail_port', 	 t('IMAP port:'), $mail_port, ''),
+		'$mail_ssl'		=> array('mail_ssl', 	 t('Security:'), strtoupper($mail_ssl), '', array( ''=>t('None'), 'TSL'=>'TSL', 'SSL'=>'SSL')),
+		'$mail_user'	=> array('mail_user',    t('Email login name:'), $mail_user, ''),
+		'$mail_pass'	=> array('mail_pass', 	 t('Email password:'), '', ''),
+		'$mail_replyto'	=> array('mail_replyto', t('Reply-to address:'), '', 'Optional'),
+		'$mail_pubmail'	=> array('mail_pubmail', t('Send public posts to all email contacts:'), $mail_pubmail, ''),
+		'$submit' => t('Submit'),		
+		
+
+
+			'$settings_connectors' => $settings_connectors
+		));
+		return $o;
+	}
+
 		
 	require_once('include/acl_selectors.php');
 
@@ -368,26 +450,6 @@ function settings_content(&$a) {
 		$timezone = date_default_timezone_get();
 
 
-	$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
-	if(get_config('system','dfrn_only'))
-		$mail_disabled = 1;
-
-	if(! $mail_disabled) {
-		$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",
-			local_user()
-		);
-	}
-	else {
-		$r = null;
-	}
-
-	$mail_server  = ((count($r)) ? $r[0]['server'] : '');
-	$mail_port    = ((count($r) && intval($r[0]['port'])) ? intval($r[0]['port']) : '');
-	$mail_ssl     = ((count($r)) ? $r[0]['ssltype'] : '');
-	$mail_user    = ((count($r)) ? $r[0]['user'] : '');
-	$mail_replyto = ((count($r)) ? $r[0]['reply_to'] : '');
-	$mail_pubmail = ((count($r)) ? $r[0]['pubmail'] : 0);
-	$mail_chk     = ((count($r)) ? $r[0]['last_check'] : '0000-00-00 00:00:00');
 
 	$pageset_tpl = get_markup_template('pagetypes.tpl');
 	$pagetype = replace_macros($pageset_tpl,array(
@@ -496,8 +558,6 @@ function settings_content(&$a) {
 		'$uid' => local_user(),
 		
 		'$nickname_block' => $prof_addr,
-		'$uexport' => t('Export Personal Data'),
-		
 		
 		'$h_pass' 	=> t('Password Settings'),
 		'$password1'=> array('npassword', t('New Password:'), '', ''),
@@ -540,21 +600,6 @@ function settings_content(&$a) {
 		'$notify3'	=> array('notify3', t('Someone writes on your profile wall'), ($notify & NOTIFY_WALL), NOTIFY_WALL, ''),
 		'$notify4'	=> array('notify4', t('Someone writes a followup comment'), ($notify & NOTIFY_COMMENT), NOTIFY_COMMENT, ''),
 		'$notify5'	=> array('notify5', t('You receive a private message'), ($notify & NOTIFY_MAIL), NOTIFY_MAIL, ''),
-		
-		
-		
-		'$h_imap' => t('Email/Mailbox Setup'),
-		'$imap_desc' => t("If you wish to communicate with email contacts using this service \x28optional\x29, please specify how to connect to your mailbox."),
-		'$imap_lastcheck' => array('imap_lastcheck', t('Last successful email check:'), $imap_last_check,''),
-		'$mail_disabled' => (($mail_disabled) ? t('Email access is disabled on this site.') : ''),
-		'$mail_server'	=> array('mail_server',  t('IMAP server name:'), $mail_server, ''),
-		'$mail_port'	=> array('mail_port', 	 t('IMAP port:'), $mail_port, ''),
-		'$mail_ssl'		=> array('mail_ssl', 	 t('Security:'), strtoupper($mail_ssl), '', array( ''=>t('None'), 'TSL'=>'TSL', 'SSL'=>'SSL')),
-		'$mail_user'	=> array('mail_user',    t('Email login name:'), $mail_user, ''),
-		'$mail_pass'	=> array('mail_pass', 	 t('Email password:'), '', ''),
-		'$mail_replyto'	=> array('mail_replyto', t('Reply-to address:'), '', 'Optional'),
-		'$mail_pubmail'	=> array('mail_pubmail', t('Send public posts to all email contacts:'), $mail_pubmail, ''),
-		
 		
 		
 		

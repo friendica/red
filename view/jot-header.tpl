@@ -149,13 +149,6 @@ function initEditor(cb){
 		}
 	}
 
-	function jotGetVideo() {
-		reply = prompt("$utubeurl");
-		if(reply && reply.length) {
-			tinyMCE.execCommand('mceInsertRawHTML',false,'[youtube]' + reply + '[/youtube]');
-		}
-	}
-
 	function jotVideoURL() {
 		reply = prompt("$vidurl");
 		if(reply && reply.length) {

@@ -483,11 +483,7 @@
 			$txt = requestdata('htmlstatus');
 			if((strpos($txt,'<') !== false) || (strpos($txt,'>') !== false)) {
 
-				$txt = preg_replace('#<object[^>]+>.+?' . 'http://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+).+?</object>#s',
-					'[youtube]$1[/youtube]', $txt);
-
-				$txt = preg_replace('#<iframe[^>].+?' . 'http://www.youtube.com/embed/([A-Za-z0-9\-_=]+).+?</iframe>#s',
-					'[youtube]$1[/youtube]', $txt);
+				$txt = html2bb_video($txt);
 
 				$config = HTMLPurifier_Config::createDefault();
 				$config->set('Cache.DefinitionImpl', null);

@@ -165,7 +165,7 @@ function ping_init(&$a) {
 		}
 		if (count($friends)){
 			foreach ($friends as $i) {
-				echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), sprintf( t("{0} is now friends with %s"), $i['fname'] ) );
+				echo xmlize($a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'],$i['author-name'],$i['author-link'], $i['author-avatar'], relative_date($i['created']), sprintf( t("{0} is now friends with %s"), $i['fname'] ) );
 			};
 		}
 		if (count($posts)){
@@ -180,16 +180,14 @@ function ping_init(&$a) {
 
 		if(x($_SESSION,'sysmsg')){
 			foreach ($_SESSION['sysmsg'] as $m){
-				echo "<notice>".($m)."</notice>";
+				echo "<notice>".xmlify($m)."</notice>";
 			}
-			//$_SESSION['sysmsg']=array();
 			unset($_SESSION['sysmsg']);
 		}
 		if(x($_SESSION,'sysmsg_info')){
 			foreach ($_SESSION['sysmsg_info'] as $m){
-				echo "<info>".($m)."</info>";
+				echo "<info>".xmlify($m)."</info>";
 			}
-			//$_SESSION['sysmsg_info']=array();
 			unset($_SESSION['sysmsg_info']);
 		}
 	

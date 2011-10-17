@@ -1003,3 +1003,37 @@ if (!function_exists('str_getcsv')) {
         }
     }
 } 
+
+function cleardiv() {
+	return '<div class="clear"></div>';
+}
+
+
+function bb_translate_video($s) {
+
+	$matches = null;
+	$r = preg_match_all("/\[video\](.*?)\[\/video\]/ism",$s,$matches,PREG_SET_ORDER);
+	if($r) {
+		foreach($matches as $mtch) {
+			if((stristr($mtch[1],'youtube')) || (stristr($mtch[1],'youtu.be')))
+				$s = str_replace($mtch[0],'[youtube]' . $mtch[1] . '[/youtube]',$s);
+			elseif(stristr($mtch[1],'vimeo'))
+				$s = str_replace($mtch[0],'[vimeo]' . $mtch[1] . '[/vimeo]',$s);
+		}
+	}
+	return $s;	
+}
+
+function html2bb_video($s) {
+
+	$s = preg_replace('#<object[^>]+>(.*?)https+://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+)(.*?)</object>#ism',
+			'[youtube]$2[/youtube]', $s);
+
+	$s = preg_replace('#<iframe[^>](.*?)https+://www.youtube.com/embed/([A-Za-z0-9\-_=]+)(.*?)</iframe>#ism',
+			'[youtube]$2[/youtube]', $s);
+
+	$s = preg_replace('#<iframe[^>](.*?)https+://player.vimeo.com/video/([0-9]+)(.*?)</iframe>#ism',
+			'[vimeo]$2[/vimeo]', $s);
+
+	return $s;
+}

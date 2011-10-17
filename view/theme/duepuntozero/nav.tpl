@@ -30,8 +30,8 @@
 	{{ if $nav.community }}
 	<a id="nav-community-link" class="nav-commlink $nav.community.2 $sel.community" href="$nav.community.0" title="$nav.community.3" >$nav.community.1</a>
 	{{ endif }}
-	{{ if $nav.notifications }}
-	<a id="nav-notify-link" class="nav-commlink $nav.notifications.2 $sel.notifications" href="$nav.notifications.0" title="$nav.notifications.3" >$nav.notifications.1</a>
+	{{ if $nav.introductions }}
+	<a id="nav-notify-link" class="nav-commlink $nav.introductions.2 $sel.introductions" href="$nav.introductions.0" title="$nav.introductions.3" >$nav.introductions.1</a>
 	<span id="intro-update" class="nav-ajax-left"></span>
 	{{ endif }}
 	{{ if $nav.messages }}

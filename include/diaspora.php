@@ -38,6 +38,9 @@ function diaspora_dispatch($importer,$msg) {
 	elseif($xmlbase->status_message) {
 		$ret = diaspora_post($importer,$xmlbase->status_message);
 	}
+	elseif($xmlbase->profile) {
+		$ret = diaspora_profile($importer,$xmlbase->profile);
+	}
 	elseif($xmlbase->comment) {
 		$ret = diaspora_comment($importer,$xmlbase->comment,$msg);
 	}
@@ -994,6 +997,84 @@ function diaspora_retraction($importer,$xml) {
 	return 202;
 	// NOTREACHED
 }
+
+function diaspora_profile($importer,$xml) {
+
+	$a = get_app();
+	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
+
+	$contact = diaspora_get_contact_by_handle($importer['uid'],$diaspora_handle);
+	if(! $contact)
+		return;
+
+	if($contact['blocked']) {
+		logger('diaspora_post: Ignoring this author.');
+		return 202;
+	}
+
+	$name = unxmlify($xml->first_name) . ((strlen($xml->last_name)) ? ' ' . unxmlify($xml->last_name) : '');
+	$image_url = unxmlify($xml->image_url);
+	$birthday = unxmlify($xml->birthday);
+
+	$r = q("SELECT DISTINCT ( `resource-id` ) FROM `photo` WHERE  `uid` = %d AND `contact-id` = %d AND `album` = 'Contact Photos' ",
+		intval($importer['uid']),
+		intval($contact['id'])
+	);
+	$oldphotos = ((count($r)) ? $r : null);
+
+	$images = import_profile_photo($image_url,$importer['uid'],$contact['id']);
+	
+	// Generic birthday. We don't know the timezone. The year is irrelevant. 
+
+	$birthday = datetime_convert('UTC','UTC',$birthday,'Y-m-d');
+
+	$r = q("UPDATE `contact` SET `name` = '%s', `name-date` = '%s', `photo` = '%s', `thumb` = '%s', `micro` = '%s', `avatar-date` = '%s' , `bd` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+		dbesc($name),
+		dbesc(datetime_convert()),
+		dbesc($images[0]),
+		dbesc($images[1]),
+		dbesc($images[2]),
+		dbesc(datetime_convert()),
+		intval($contact['id']),
+		intval($importer['uid']),
+		dbesc($birthday)
+	); 
+	if($r) {
+		if($oldphotos) {
+			foreach($oldphotos as $ph) {
+				q("DELETE FROM `photo` WHERE `uid` = %d AND `contact-id` = %d AND `album` = 'Contact Photos' AND `resource-id` = '%s' ",
+					intval($importer['uid']),
+					intval($contact['id']),
+					dbesc($ph['resource-id'])
+				);
+			}
+		}
+	}	
+
+	return;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function diaspora_share($me,$contact) {
 	$a = get_app();
