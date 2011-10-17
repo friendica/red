@@ -11,12 +11,7 @@ function diaspora2bb($s) {
 	$s = preg_replace('/\@\{(.+?)\; (.+?)\@(.+?)\}/','@[url=https://$3/u/$2]$1[/url]',$s);
 	$s = Markdown($s);
 	$s = html2bbcode($s);
-
-//	$s = preg_replace('/\[url=(.+?)\<em\>(.+?)\]/ism','[url=$1_$2]',$s);
-//	$s = preg_replace('/\[url=(.+?)\<\/em\>(.+?)\]/ism','[url=$1_$2]',$s);
-
 	return $s;
-
 }
 
 
@@ -185,6 +180,8 @@ function bb2diaspora($Text,$preserve_nl = false) {
 
 function format_event_diaspora($ev) {
 
+	$a = get_app();
+
 	if(! ((is_array($ev)) && count($ev)))
 		return '';
 
@@ -194,20 +191,20 @@ function format_event_diaspora($ev) {
 
 	$o .= '**' . bb2diaspora($ev['desc']) .  '**' . "\n";
 
-	$o .= t('Starts:') . ' ' 
+	$o .= t('Starts:') . ' ' . '['
 		. (($ev['adjust']) ? day_translate(datetime_convert('UTC', 'UTC', 
 			$ev['start'] , $bd_format ))
 			:  day_translate(datetime_convert('UTC', 'UTC', 
 			$ev['start'] , $bd_format)))
-		. "\n";
+		.  '](' . $a->get_baseurl() . '/localtime/?f=&time=' . urlencode(datetime_convert('UTC','UTC',$ev['start'])) . ")\n";
 
 	if(! $ev['nofinish'])
-		$o .= t('Finishes:') . ' ' 
+		$o .= t('Finishes:') . ' ' . '[' 
 			. (($ev['adjust']) ? day_translate(datetime_convert('UTC', 'UTC', 
 				$ev['finish'] , $bd_format ))
 				:  day_translate(datetime_convert('UTC', 'UTC', 
 				$ev['finish'] , $bd_format )))
-			. "\n";
+			. '](' . $a->get_baseurl() . '/localtime/?f=&time=' . urlencode(datetime_convert('UTC','UTC',$ev['finish'])) . ")\n";
 
 	if(strlen($ev['location']))
 		$o .= t('Location:') . bb2diaspora($ev['location']) 

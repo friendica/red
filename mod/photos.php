@@ -348,6 +348,7 @@ function photos_post(&$a) {
 			$arr['deny_gid']      = $p[0]['deny_gid'];
 			$arr['last-child']    = 1;
 			$arr['visible']       = $visibility;
+			$arr['origin']        = 1;
 			
 			$arr['body']          = '[url=' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $p[0]['resource-id'] . ']' 
 						. '[img]' . $a->get_baseurl() . '/photo/' . $p[0]['resource-id'] . '-' . $p[0]['scale'] . '.jpg' . '[/img]' 
@@ -506,7 +507,7 @@ function photos_post(&$a) {
 					$arr['target-type']   = ACTIVITY_OBJ_PHOTO;
 					$arr['tag']           = $tagged[4];
 					$arr['inform']        = $tagged[2];
-
+					$arr['origin']        = 1;
 					$arr['body']          = '[url=' . $tagged[1] . ']' . $tagged[0] . '[/url]' . ' ' . t('was tagged in a') . ' ' . '[url=' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource-id'] . ']' . t('photo') . '[/url]' . ' ' . t('by') . ' ' . '[url=' . $owner_record['url'] . ']' . $owner_record['name'] . '[/url]' ;
 					$arr['body'] .= "\n\n" . '[url=' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource-id'] . ']' . '[img]' . $a->get_baseurl() . "/photo/" . $p[0]['resource-id'] . '-' . $best . '.jpg' . '[/img][/url]' . "\n" ;
 
@@ -695,6 +696,8 @@ function photos_post(&$a) {
 	$arr['deny_gid']      = $str_group_deny;
 	$arr['last-child']    = 1;
 	$arr['visible']       = $visible;
+	$arr['origin']        = 1;
+
 	$arr['body']          = '[url=' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $photo_hash . ']' 
 				. '[img]' . $a->get_baseurl() . "/photo/{$photo_hash}-{$smallest}.jpg" . '[/img]' 
 				. '[/url]';

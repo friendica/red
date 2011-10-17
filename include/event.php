@@ -352,7 +352,7 @@ function event_store($arr) {
 		$item_arr['visible']       = 1;
 		$item_arr['verb']          = ACTIVITY_POST;
 		$item_arr['object-type']   = ACTIVITY_OBJ_EVENT;
-
+		$item_arr['origin']        = ((intval($arr['cid']) == 0) ? 1 : 0);
 		$item_arr['body']          = format_event_bbcode($event);
 
 

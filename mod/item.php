@@ -484,7 +484,12 @@ function item_post(&$a) {
 		$verb = ACTIVITY_POST ;
 
 	$gravity = (($parent) ? 6 : 0 );
- 
+
+	// even if the post arrived via API we are considering that it 
+	// originated on this site by default for determining relayability.
+
+	$origin = ((x($_REQUEST,'origin')) ? intval($_REQUEST['origin']) : 1);
+	
 	$notify_type = (($parent) ? 'comment-new' : 'wall-new' );
 
 	$uri = item_new_uri($a->get_hostname(),$profile_uid);
@@ -525,6 +530,7 @@ function item_post(&$a) {
 	$datarray['bookmark']      = intval($bookmark);
 	$datarray['thr-parent']    = $thr_parent;
 	$datarray['postopts']      = '';
+	$datarray['origin']        = $origin;
 
 	/**
 	 * These fields are for the convenience of plugins...
@@ -566,8 +572,8 @@ function item_post(&$a) {
 
 	$r = q("INSERT INTO `item` (`guid`, `uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `commented`, `received`, `changed`, `uri`, `thr-parent`, `title`, `body`, `app`, `location`, `coord`, 
-		`tag`, `inform`, `verb`, `postopts`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`, `bookmark` )
-		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d )",
+		`tag`, `inform`, `verb`, `postopts`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`, `bookmark`,`origin` )
+		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d )",
 		dbesc($datarray['guid']),
 		intval($datarray['uid']),
 		dbesc($datarray['type']),
@@ -603,7 +609,8 @@ function item_post(&$a) {
 		intval($datarray['private']),
 		intval($datarray['pubmail']),
 		dbesc($datarray['attach']),
-		intval($datarray['bookmark'])
+		intval($datarray['bookmark']),
+		intval($datarray['origin'])
 	);
 
 	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
