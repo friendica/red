@@ -88,10 +88,8 @@ function notifications_content(&$a) {
 			'sel'=> '',
 		),
 	);
-	$tpl = get_markup_template('common_tabs.tpl');
-	$tab_content = replace_macros($tpl, array('$tabs'=>$tabs));
-
-
+	
+	$o = "";
 
 	
 	if( (($a->argc > 1) && ($a->argv[1] == 'intros')) || (($a->argc == 1))) {
@@ -197,7 +195,7 @@ function notifications_content(&$a) {
 		
 		$o .= replace_macros($notif_tpl,array(
 			'$notif_header' => t('Notifications'),
-			'$tabs' => $tab_content,
+			'$tabs' => $tabs,
 			'$notif_content' => $notif_content,
 			'$activetab' => 'intros'
 		));
@@ -284,7 +282,7 @@ function notifications_content(&$a) {
 		
 		$o .= replace_macros($notif_tpl,array(
 			'$notif_header' => t('Notifications'),
-			'$tabs' => $tab_content,
+			'$tabs' => $tabs,
 			'$notif_content' => $notif_content,
 			'$activetab' => 'network'
 		));
@@ -361,7 +359,7 @@ function notifications_content(&$a) {
 		
 		$o .= replace_macros($notif_tpl,array(
 			'$notif_header' => t('Notifications'),
-			'$tabs' => $tab_content,
+			'$tabs' => $tabs,
 			'$notif_content' => $notif_content,
 			'$activetab' => 'home'
 		));
