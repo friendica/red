@@ -133,14 +133,28 @@ function network_content(&$a, $update = 0) {
 		&& ($search_active == '')) {
 			$all_active = 'active';
 	}
+	$postord_active = '';
+
+	if($all_active && x($_GET,'order') && $_GET['order'] !== 'comment') {
+		$all_active = '';
+		$postord_active = 'active';
+	}
+			 
+
 	
 	// tabs
 	$tabs = array(
 		array(
-			'label' => t('All'),
+			'label' => t('Commented Order'),
 			'url'=>$a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : ''), 
 			'sel'=>$all_active,
 		),
+		array(
+			'label' => t('Posted Order'),
+			'url'=>$a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . '?order=post' . ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : ''), 
+			'sel'=>$postord_active,
+		),
+
 		array(
 			'label' => t('New'),
 			'url' => $a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . '/new' . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : ''),
