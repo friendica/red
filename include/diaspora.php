@@ -28,6 +28,14 @@ function diaspora_dispatch($importer,$msg) {
 
 	$ret = 0;
 
+	// php doesn't like dashes in variable names
+
+	$msg['message'] = str_replace(
+			array('<activity_streams-photo>','</activity_streams-photo>'),
+			array('<asphoto>','</asphoto>'),
+			$msg['message']);
+
+
 	$parsed_xml = parse_xml_string($msg['message'],false);
 
 	$xmlbase = $parsed_xml->post;
@@ -46,6 +54,9 @@ function diaspora_dispatch($importer,$msg) {
 	}
 	elseif($xmlbase->like) {
 		$ret = diaspora_like($importer,$xmlbase->like,$msg);
+	}
+	elseif($xmlbase->asphoto) {
+		$ret = diaspora_asphoto($importer,$xmlbase->asphoto);
 	}
 	elseif($xmlbase->retraction) {
 		$ret = diaspora_retraction($importer,$xmlbase->retraction,$msg);
@@ -568,6 +579,96 @@ function diaspora_post($importer,$xml) {
 	return;
 
 }
+
+function diaspora_asphoto($importer,$xml) {
+
+	$a = get_app();
+	$guid = notags(unxmlify($xml->guid));
+	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
+
+	$contact = diaspora_get_contact_by_handle($importer['uid'],$diaspora_handle);
+	if(! $contact)
+		return;
+
+	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
+		logger('diaspora_asphoto: Ignoring this author.');
+		return 202;
+	}
+
+	$message_id = $diaspora_handle . ':' . $guid;
+	$r = q("SELECT `id` FROM `item` WHERE `uid` = %d AND `uri` = '%s' AND `guid` = '%s' LIMIT 1",
+		intval($importer['uid']),
+		dbesc($message_id),
+		dbesc($guid)
+	);
+	if(count($r)) {
+		logger('diaspora_asphoto: message exists: ' . $guid);
+		return;
+	}
+
+    // allocate a guid on our system - we aren't fixing any collisions.
+	// we're ignoring them
+
+	$g = q("select * from guid where guid = '%s' limit 1",
+		dbesc($guid)
+	);
+	if(! count($g)) {
+		q("insert into guid ( guid ) values ( '%s' )",
+			dbesc($guid)
+		);
+	}
+
+	$created = unxmlify($xml->created_at);
+	$private = ((unxmlify($xml->public) == 'false') ? 1 : 0);
+
+	if(strlen($xml->objectId) && ($xml->objectId != 0) && ($xml->image_url))
+		$body = '[url=' . notags(unxmlify($xml->image_url)) . '][img=' . notags(unxmlify($xml->objectId)) . '][/img][/url]' . "\n";
+	elseif($xml->image_url)
+		$body = '[img=' . notags(unxmlify($xml->image_url)) . '][/img]' . "\n";
+	else {
+		logger('diaspora_asphoto: no photo url found.');
+		return;
+	}
+
+
+	$datarray = array();
+
+	
+	$datarray['uid'] = $importer['uid'];
+	$datarray['contact-id'] = $contact['id'];
+	$datarray['wall'] = 0;
+	$datarray['guid'] = $guid;
+	$datarray['uri'] = $datarray['parent-uri'] = $message_id;
+	$datarray['created'] = $datarray['edited'] = datetime_convert('UTC','UTC',$created);
+	$datarray['private'] = $private;
+	$datarray['parent'] = 0;
+	$datarray['owner-name'] = $contact['name'];
+	$datarray['owner-link'] = $contact['url'];
+	$datarray['owner-avatar'] = $contact['thumb'];
+	$datarray['author-name'] = $contact['name'];
+	$datarray['author-link'] = $contact['url'];
+	$datarray['author-avatar'] = $contact['thumb'];
+	$datarray['body'] = $body;
+	
+	$datarray['app']  = 'Diaspora/Cubbi.es';
+
+	$message_id = item_store($datarray);
+
+	if($message_id) {
+		q("update item set plink = '%s' where id = %d limit 1",
+			dbesc($a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $message_id),
+			intval($message_id)
+		);
+	}
+
+	return;
+
+}
+
+
+
+
+
 
 function diaspora_comment($importer,$xml,$msg) {
 
