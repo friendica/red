@@ -58,6 +58,9 @@ function diaspora_dispatch($importer,$msg) {
 	elseif($xmlbase->asphoto) {
 		$ret = diaspora_asphoto($importer,$xmlbase->asphoto);
 	}
+	elseif($xmlbase->reshare) {
+		$ret = diaspora_reshare($importer,$xmlbase->reshare);
+	}
 	elseif($xmlbase->retraction) {
 		$ret = diaspora_retraction($importer,$xmlbase->retraction,$msg);
 	}
@@ -579,6 +582,142 @@ function diaspora_post($importer,$xml) {
 	return;
 
 }
+
+function diaspora_reshare($importer,$xml) {
+
+	$a = get_app();
+	$guid = notags(unxmlify($xml->guid));
+	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
+
+	$contact = diaspora_get_contact_by_handle($importer['uid'],$diaspora_handle);
+	if(! $contact)
+		return;
+
+	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
+		logger('diaspora_reshare: Ignoring this author.');
+		return 202;
+	}
+
+	$message_id = $diaspora_handle . ':' . $guid;
+	$r = q("SELECT `id` FROM `item` WHERE `uid` = %d AND `uri` = '%s' AND `guid` = '%s' LIMIT 1",
+		intval($importer['uid']),
+		dbesc($message_id),
+		dbesc($guid)
+	);
+	if(count($r)) {
+		logger('diaspora_reshare: message exists: ' . $guid);
+		return;
+	}
+
+	$orig_author = notags(unxmlify($xml->root_diaspora_id));
+	$orig_guid = notags(unxmlify($xml->root_guid));
+
+	$source_url = 'https://' . substr($orig_author,strpos($orig_author,'@')+1) . '/p/' . $orig_guid . '.xml';
+	$x = fetch_url($source_url);
+	if(! $x)
+		$x = fetch_url(str_replace('https://','http://',$source_url));
+	if(! $x) {
+		logger('diaspora_reshare: unable to fetch source url ' . $source_url);
+		return;
+	}
+	$x = str_replace(array('<activity_streams-photo>','</activity_streams-photo>'),array('<asphoto>','</asphoto>'),$x);
+	$source_xml = parse_xml_string($x,true);
+
+	if(strlen($source_xml->asphoto->objectId) && ($source_xml->asphoto->objectId != 0) && ($source_xml->asphoto->image_url))
+		$body = '[url=' . notags(unxmlify($source_xml->asphoto->image_url)) . '][img=' . notags(unxmlify($source_xml->asphoto->objectId)) . '][/img][/url]' . "\n";
+	elseif($source_xml->asphoto->image_url)
+		$body = '[img=' . notags(unxmlify($source_xml->asphoto->image_url)) . '][/img]' . "\n";
+	elseif($source_xml->status_message) {
+		$body = diaspora2bb($source_xml->status_message->raw_message);
+	}
+	else {
+		logger('diaspora_reshare: no reshare content found.');
+		return;
+	}
+	if(! $body) {
+		logger('diaspora_reshare: empty body: source= ' . $x);
+		return;
+	}
+
+	$person = find_diaspora_person_by_handle($orig_author);
+
+	if(is_array($person) && x($person,'name') && x($person,'url'))
+		$details = '[url=' . $person['url'] . ']' . $person['name'] . '[/url]';
+	else
+		$details = $orig_author;
+	
+	$prefix = '&#x2672; ' . $details . "\n"; 
+
+
+    // allocate a guid on our system - we aren't fixing any collisions.
+	// we're ignoring them
+
+	$g = q("select * from guid where guid = '%s' limit 1",
+		dbesc($guid)
+	);
+	if(! count($g)) {
+		q("insert into guid ( guid ) values ( '%s' )",
+			dbesc($guid)
+		);
+	}
+
+	$created = unxmlify($xml->created_at);
+	$private = ((unxmlify($xml->public) == 'false') ? 1 : 0);
+
+	$body = diaspora2bb($xml->raw_message);
+
+	$datarray = array();
+
+	$str_tags = '';
+
+	$tags = get_tags($body);
+
+	if(count($tags)) {
+		foreach($tags as $tag) {
+			if(strpos($tag,'#') === 0) {
+				if(strpos($tag,'[url='))
+					continue;
+				$basetag = str_replace('_',' ',substr($tag,1));
+				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
+				if(strlen($str_tags))
+					$str_tags .= ',';
+				$str_tags .= '#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]';
+				continue;
+			}
+		}
+	}
+	
+	$datarray['uid'] = $importer['uid'];
+	$datarray['contact-id'] = $contact['id'];
+	$datarray['wall'] = 0;
+	$datarray['guid'] = $guid;
+	$datarray['uri'] = $datarray['parent-uri'] = $message_id;
+	$datarray['created'] = $datarray['edited'] = datetime_convert('UTC','UTC',$created);
+	$datarray['private'] = $private;
+	$datarray['parent'] = 0;
+	$datarray['owner-name'] = $contact['name'];
+	$datarray['owner-link'] = $contact['url'];
+	$datarray['owner-avatar'] = $contact['thumb'];
+	$datarray['author-name'] = $contact['name'];
+	$datarray['author-link'] = $contact['url'];
+	$datarray['author-avatar'] = $contact['thumb'];
+	$datarray['body'] = $prefix . $body;
+	$datarray['tag'] = $str_tags;
+	$datarray['app']  = 'Diaspora';
+
+	$message_id = item_store($datarray);
+
+	if($message_id) {
+		q("update item set plink = '%s' where id = %d limit 1",
+			dbesc($a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $message_id),
+			intval($message_id)
+		);
+	}
+
+	return;
+
+}
+
 
 function diaspora_asphoto($importer,$xml) {
 	logger('diaspora_asphoto called');
