@@ -1123,9 +1123,13 @@ function diaspora_profile($importer,$xml) {
 	);
 	$oldphotos = ((count($r)) ? $r : null);
 
+	require_once('include/Photo.php');
+
 	$images = import_profile_photo($image_url,$importer['uid'],$contact['id']);
 	
 	// Generic birthday. We don't know the timezone. The year is irrelevant. 
+
+	$birthday = str_replace('1000','1901',$birthday);
 
 	$birthday = datetime_convert('UTC','UTC',$birthday,'Y-m-d');
 
@@ -1136,10 +1140,11 @@ function diaspora_profile($importer,$xml) {
 		dbesc($images[1]),
 		dbesc($images[2]),
 		dbesc(datetime_convert()),
+		dbesc($birthday),
 		intval($contact['id']),
-		intval($importer['uid']),
-		dbesc($birthday)
+		intval($importer['uid'])
 	); 
+
 	if($r) {
 		if($oldphotos) {
 			foreach($oldphotos as $ph) {
