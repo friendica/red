@@ -5,16 +5,9 @@
   */
 require_once("include/remoteupdate.php");
  
-function admin_init(&$a) {
-	if(!is_site_admin()) {
-		notice( t('Permission denied.') . EOL);
-		return;
-	}
-}
-
 function admin_post(&$a){
 	if(!is_site_admin()) {
-		return login(false);
+		return;
 	}
 	
 	// urls
@@ -672,7 +665,7 @@ function admin_page_logs(&$a){
 function admin_page_remoteupdate_post(&$a) {
 	// this function should be called via ajax post
 	if(!is_site_admin()) {
-		return login(false);
+		return;
 	}
 
 	

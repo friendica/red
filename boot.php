@@ -539,6 +539,8 @@ function check_config(&$a) {
 		$current = intval(DB_UPDATE_VERSION);
 		if(($stored < $current) && file_exists('update.php')) {
 
+			load_config('database');
+
 			// We're reporting a different version than what is currently installed.
 			// Run any existing update scripts to bring the database up to current.
 
@@ -552,6 +554,21 @@ function check_config(&$a) {
 
 				for($x = $stored; $x < $current; $x ++) {
 					if(function_exists('update_' . $x)) {
+
+						// There could be a lot of processes running or about to run.
+						// We want exactly one process to run the update command.
+						// So store the fact that we're taking responsibility
+						// after first checking to see if somebody else already has.
+
+						// If the update fails or times-out completely you may need to 
+						// delete the config entry to try again.
+
+						if(get_config('database','update_' . $x))
+							break;
+						set_config('database','update_' . $x, '1');
+
+						// call the specific update
+
 						$func = 'update_' . $x;
 						$func($a);
 					}
