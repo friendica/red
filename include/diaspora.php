@@ -581,6 +581,7 @@ function diaspora_post($importer,$xml) {
 }
 
 function diaspora_asphoto($importer,$xml) {
+	logger('diaspora_asphoto called');
 
 	$a = get_app();
 	$guid = notags(unxmlify($xml->guid));
