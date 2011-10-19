@@ -570,6 +570,10 @@ function diaspora_post($importer,$xml) {
 	$datarray['tag'] = $str_tags;
 	$datarray['app']  = 'Diaspora';
 
+	// if empty content it might be a photo that hasn't arrived yet. If a photo arrives, we'll make it visible.
+
+	$datarray['visible'] = ((strlen($body)) ? 1 : 0);
+
 	$message_id = item_store($datarray);
 
 	if($message_id) {
@@ -1007,7 +1011,7 @@ function diaspora_photo($importer,$xml,$msg) {
 	$link_text = '[img]' . $remote_photo_path . $remote_photo_name . '[/img]' . "\n";
 
 	if(strpos($parent_item['body'],$link_text) === false) {
-		$r = q("update item set `body` = '%s' where `id` = %d and `uid` = %d limit 1",
+		$r = q("update item set `body` = '%s', `visible` = 1 where `id` = %d and `uid` = %d limit 1",
 			dbesc($link_text . $parent_item['body']),
 			intval($parent_item['id']),
 			intval($parent_item['uid'])
