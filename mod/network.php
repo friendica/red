@@ -151,7 +151,7 @@ function network_content(&$a, $update = 0) {
 		),
 		array(
 			'label' => t('Posted Order'),
-			'url'=>$a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . '?order=post' . ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : ''), 
+			'url'=>$a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . '?order=post' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
 			'sel'=>$postord_active,
 		),
 

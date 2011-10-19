@@ -621,7 +621,7 @@ function diaspora_reshare($importer,$xml) {
 		return;
 	}
 	$x = str_replace(array('<activity_streams-photo>','</activity_streams-photo>'),array('<asphoto>','</asphoto>'),$x);
-	$source_xml = parse_xml_string($x,true);
+	$source_xml = parse_xml_string($x,false);
 
 	if(strlen($source_xml->asphoto->objectId) && ($source_xml->asphoto->objectId != 0) && ($source_xml->asphoto->image_url))
 		$body = '[url=' . notags(unxmlify($source_xml->asphoto->image_url)) . '][img]' . notags(unxmlify($source_xml->asphoto->objectId)) . '[/img][/url]' . "\n";
@@ -631,7 +631,7 @@ function diaspora_reshare($importer,$xml) {
 		$body = diaspora2bb($source_xml->status_message->raw_message);
 	}
 	else {
-		logger('diaspora_reshare: no reshare content found.');
+		logger('diaspora_reshare: no reshare content found: ' . print_r($source_xml,true));
 		return;
 	}
 	if(! $body) {
