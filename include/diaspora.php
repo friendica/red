@@ -624,9 +624,9 @@ function diaspora_reshare($importer,$xml) {
 	$source_xml = parse_xml_string($x,true);
 
 	if(strlen($source_xml->asphoto->objectId) && ($source_xml->asphoto->objectId != 0) && ($source_xml->asphoto->image_url))
-		$body = '[url=' . notags(unxmlify($source_xml->asphoto->image_url)) . '][img=' . notags(unxmlify($source_xml->asphoto->objectId)) . '][/img][/url]' . "\n";
+		$body = '[url=' . notags(unxmlify($source_xml->asphoto->image_url)) . '][img]' . notags(unxmlify($source_xml->asphoto->objectId)) . '[/img][/url]' . "\n";
 	elseif($source_xml->asphoto->image_url)
-		$body = '[img=' . notags(unxmlify($source_xml->asphoto->image_url)) . '][/img]' . "\n";
+		$body = '[img]' . notags(unxmlify($source_xml->asphoto->image_url)) . '[/img]' . "\n";
 	elseif($source_xml->status_message) {
 		$body = diaspora2bb($source_xml->status_message->raw_message);
 	}
@@ -762,9 +762,9 @@ function diaspora_asphoto($importer,$xml) {
 	$private = ((unxmlify($xml->public) == 'false') ? 1 : 0);
 
 	if(strlen($xml->objectId) && ($xml->objectId != 0) && ($xml->image_url))
-		$body = '[url=' . notags(unxmlify($xml->image_url)) . '][img=' . notags(unxmlify($xml->objectId)) . '][/img][/url]' . "\n";
+		$body = '[url=' . notags(unxmlify($xml->image_url)) . '][img]' . notags(unxmlify($xml->objectId)) . '[/img][/url]' . "\n";
 	elseif($xml->image_url)
-		$body = '[img=' . notags(unxmlify($xml->image_url)) . '][/img]' . "\n";
+		$body = '[img]' . notags(unxmlify($xml->image_url)) . '[/img]' . "\n";
 	else {
 		logger('diaspora_asphoto: no photo url found.');
 		return;
