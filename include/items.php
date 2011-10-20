@@ -1341,7 +1341,10 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				$parent_uri = $rawthread[0]['attribs']['']['ref'];
 			}
 
-			if(($is_reply) && is_array($contact) && $pass != 1) {
+			if(($is_reply) && is_array($contact)) {
+
+				if($pass == 1)
+					continue;
 
 				// Have we seen it? If not, import it.
 	
