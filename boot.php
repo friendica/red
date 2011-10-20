@@ -8,7 +8,7 @@ require_once("include/pgettext.php");
 require_once('include/nav.php');
 
 define ( 'FRIENDIKA_PLATFORM',     'Free Friendika');
-define ( 'FRIENDIKA_VERSION',      '2.3.1139' );
+define ( 'FRIENDIKA_VERSION',      '2.3.1140' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
 define ( 'DB_UPDATE_VERSION',      1097      );
 
@@ -238,7 +238,7 @@ class App {
 	public  $contacts;
 	public  $page_contact;
 	public  $content;
-	public  $data;
+	public  $data = array();
 	public  $error = false;
 	public  $cmd;
 	public  $argv;
@@ -251,7 +251,7 @@ class App {
 	public  $timezone;
 	public  $interactive = true;
 	public  $plugins;
-	public  $apps = Array();
+	public  $apps = array();
 	public  $identities;
 
 	private $scheme;

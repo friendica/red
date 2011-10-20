@@ -52,7 +52,7 @@ function install_post(&$a) {
 
 	$result = file_put_contents('.htconfig.php', $txt);
 	if(! $result) {
-		$a->data = $txt;
+		$a->data['txt'] = $txt;
 	}
 
 	$errors = load_database($db);
@@ -107,7 +107,7 @@ function install_content(&$a) {
 	if(strlen($o))
 		return $o;
 
-	if(strlen($a->data)) {
+	if(strlen($a->data['txt'])) {
 		$o .= manual_config($a);
 		return;
 	}
@@ -203,7 +203,7 @@ function check_funcs() {
 	if(! function_exists('mb_strlen'))
 		notice( t('Error: mb_string PHP module required but not installed.') . EOL);
 	
-	if((x($_SESSION,'sysmsg')) && strlen($_SESSION['sysmsg']))
+	if((x($_SESSION,'sysmsg')) && is_array($_SESSION['sysmsg']) && count($_SESSION['sysmsg']))
 		notice( t('Please see the file "INSTALL.txt".') . EOL);
 }
 
@@ -224,7 +224,7 @@ function check_htconfig() {
 
 	
 function manual_config(&$a) {
-	$data = htmlentities($a->data);
+	$data = htmlentities($a->data['txt']);
 	$o = t('The database configuration file ".htconfig.php" could not be written. Please use the enclosed text to create a configuration file in your web server root.');
 	$o .= "<textarea rows=\"24\" cols=\"80\" >$data</textarea>";
 	return $o;
