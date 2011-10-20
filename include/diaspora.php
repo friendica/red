@@ -598,7 +598,7 @@ function diaspora_reshare($importer,$xml) {
 		return;
 
 	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
-		logger('diaspora_reshare: Ignoring this author.');
+		logger('diaspora_reshare: Ignoring this author: ' . $diaspora_handle . ' ' . print_r($xml,true));
 		return 202;
 	}
 
