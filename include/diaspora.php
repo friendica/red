@@ -589,9 +589,12 @@ function diaspora_post($importer,$xml) {
 
 function diaspora_reshare($importer,$xml) {
 
+	logger('diaspora_reshare: init: ' . print_r($xml,true));
+
 	$a = get_app();
 	$guid = notags(unxmlify($xml->guid));
 	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
+
 
 	$contact = diaspora_get_contact_by_handle($importer['uid'],$diaspora_handle);
 	if(! $contact)
