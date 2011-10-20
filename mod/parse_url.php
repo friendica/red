@@ -88,9 +88,11 @@ function parse_url_content(&$a) {
 	$purifier = new HTMLPurifier($config);
 	$s = $purifier->purify($s);
 
-//	logger('parse_url: purified: ' . $s, LOGGER_DATA);
-
-	$dom = @HTML5_Parser::parse($s);
+	try {
+		$dom = HTML5_Parser::parse($s);
+	} catch (DOMException $e) {
+		logger('scrape_dfrn: parse error: ' . $e);
+	}
 
 	if(! $dom) {
 		echo sprintf($template,$url,$url,'') . $str_tags;

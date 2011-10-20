@@ -53,7 +53,12 @@ function parse_event($h) {
 
 	$ret = array();
 
-	$dom = HTML5_Parser::parse($h);
+
+	try {
+		$dom = HTML5_Parser::parse($h);
+	} catch (DOMException $e) {
+		logger('parse_event: parse error: ' . $e);
+	}
 
 	if(! $dom)
  		return $ret;

@@ -30,8 +30,11 @@ function scrape_dfrn($url) {
 		}
 	}
 
-
-	$dom = HTML5_Parser::parse($s);
+	try {
+		$dom = HTML5_Parser::parse($s);
+	} catch (DOMException $e) {
+		logger('scrape_dfrn: parse error: ' . $e);
+	}
 
 	if(! $dom)
 		return $ret;
@@ -132,9 +135,11 @@ function scrape_meta($url) {
 		}
 	}
 
-
-
-	$dom = HTML5_Parser::parse($s);
+	try {
+		$dom = HTML5_Parser::parse($s);
+	} catch (DOMException $e) {
+		logger('scrape_meta: parse error: ' . $e);
+	}
 
 	if(! $dom)
 		return $ret;
@@ -177,7 +182,11 @@ function scrape_vcard($url) {
 		}
 	}
 
-	$dom = HTML5_Parser::parse($s);
+	try {
+		$dom = HTML5_Parser::parse($s);
+	} catch (DOMException $e) {
+		logger('scrape_vcard: parse error: ' . $e);
+	}
 
 	if(! $dom)
 		return $ret;
@@ -243,7 +252,11 @@ function scrape_feed($url) {
 		}
 	}
 
-	$dom = HTML5_Parser::parse($s);
+	try {
+		$dom = HTML5_Parser::parse($s);
+	} catch (DOMException $e) {
+		logger('scrape_feed: parse error: ' . $e);
+	}
 
 	if(! $dom)
 		return $ret;

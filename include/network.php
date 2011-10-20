@@ -429,7 +429,12 @@ function lrdd($uri) {
 	// don't try and parse raw xml as html
 	if(! strstr($html,'<?xml')) {
 		require_once('library/HTML5/Parser.php');
-		$dom = @HTML5_Parser::parse($html);
+
+		try {
+			$dom = HTML5_Parser::parse($html);
+		} catch (DOMException $e) {
+			logger('lrdd: parse error: ' . $e);
+		}
 
 		if($dom) {
 			$items = $dom->getElementsByTagName('link');

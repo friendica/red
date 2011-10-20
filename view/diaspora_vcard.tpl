@@ -33,19 +33,19 @@
 	<dl class="entity_photo">
 		<dt>Photo</dt>
 		<dd>
-			<img class="photo avatar" height="300px" width="300px" src="$diaspora.photo300">
+			<img class="photo avatar" height="300" width="300" src="$diaspora.photo300">
 		</dd>
 	</dl>
 	<dl class="entity_photo_medium">
 		<dt>Photo</dt>
 		<dd> 
-			<img class="photo avatar" height="100px" width="100px" src="$diaspora.photo100">
+			<img class="photo avatar" height="100" width="100" src="$diaspora.photo100">
 		</dd>
 	</dl>
 	<dl class="entity_photo_small">
 		<dt>Photo</dt>
 		<dd>
-			<img class="photo avatar" height="50px" width="50px" src="$diaspora.photo50">
+			<img class="photo avatar" height="50" width="50" src="$diaspora.photo50">
 		</dd>
 	</dl>
 	<dl class="entity_searchable">
