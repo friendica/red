@@ -90,6 +90,9 @@ function profile_photo_post(&$a) {
 				$url = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
 				if($url && strlen(get_config('system','directory_submit_url')))
 					proc_run('php',"include/directory.php","$url");
+
+				require_once('include/profile_update.php');
+				profile_change();
 			}
 			else
 				notice( t('Unable to process image') . EOL);

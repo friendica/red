@@ -673,8 +673,6 @@ function diaspora_reshare($importer,$xml) {
 	$created = unxmlify($xml->created_at);
 	$private = ((unxmlify($xml->public) == 'false') ? 1 : 0);
 
-	$body = diaspora2bb($xml->raw_message);
-
 	$datarray = array();
 
 	$str_tags = '';

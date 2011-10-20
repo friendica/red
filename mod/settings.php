@@ -296,9 +296,9 @@ function settings_post(&$a) {
 
 	}
 
-// not yet ready for prime time
-//		require_once('include/profile_update.php');
-//		profile_change();
+
+	require_once('include/profile_update.php');
+	profile_change();
 
 	$_SESSION['theme'] = $theme;
 	if($email_changed && $a->config['register_policy'] == REGISTER_VERIFY) {
