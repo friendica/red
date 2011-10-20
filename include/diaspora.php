@@ -1385,7 +1385,7 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 			$detail['guid'] = $item['guid'];
 			$detail['handle'] = $myaddr;
 			$images[] = $detail;
-			$body = str_replace($detail['str'],t('link'),$body);
+			$body = str_replace($detail['str'],$mtch[1],$body);
 		}
 	}	
 
