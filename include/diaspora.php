@@ -627,6 +627,8 @@ function diaspora_reshare($importer,$xml) {
 		logger('diaspora_reshare: unable to fetch source url ' . $source_url);
 		return;
 	}
+	logger('diaspora_reshare: source: ' . $x);
+
 	$x = str_replace(array('<activity_streams-photo>','</activity_streams-photo>'),array('<asphoto>','</asphoto>'),$x);
 	$source_xml = parse_xml_string($x,false);
 
