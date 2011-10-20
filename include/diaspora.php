@@ -627,12 +627,12 @@ function diaspora_reshare($importer,$xml) {
 	$x = str_replace(array('<activity_streams-photo>','</activity_streams-photo>'),array('<asphoto>','</asphoto>'),$x);
 	$source_xml = parse_xml_string($x,false);
 
-	if(strlen($source_xml->asphoto->objectId) && ($source_xml->asphoto->objectId != 0) && ($source_xml->asphoto->image_url))
-		$body = '[url=' . notags(unxmlify($source_xml->asphoto->image_url)) . '][img]' . notags(unxmlify($source_xml->asphoto->objectId)) . '[/img][/url]' . "\n";
-	elseif($source_xml->asphoto->image_url)
-		$body = '[img]' . notags(unxmlify($source_xml->asphoto->image_url)) . '[/img]' . "\n";
-	elseif($source_xml->status_message) {
-		$body = diaspora2bb($source_xml->status_message->raw_message);
+	if(strlen($source_xml->post->asphoto->objectId) && ($source_xml->post->asphoto->objectId != 0) && ($source_xml->post->asphoto->image_url))
+		$body = '[url=' . notags(unxmlify($source_xml->post->asphoto->image_url)) . '][img]' . notags(unxmlify($source_xml->post->asphoto->objectId)) . '[/img][/url]' . "\n";
+	elseif($source_xml->post->asphoto->image_url)
+		$body = '[img]' . notags(unxmlify($source_xml->post->asphoto->image_url)) . '[/img]' . "\n";
+	elseif($source_xml->post->status_message) {
+		$body = diaspora2bb($source_xml->post->status_message->raw_message);
 	}
 	else {
 		logger('diaspora_reshare: no reshare content found: ' . print_r($source_xml,true));
