@@ -2,7 +2,7 @@
 	require_once("bbcode.php");
 	require_once("datetime.php");
 	require_once("conversation.php");
-	
+	require_once("oauth.php");
 	/* 
 	 * Twitter-Like API
 	 *  
@@ -1135,3 +1135,32 @@
 	}
 	api_register_func('api/direct_messages/sent','api_direct_messages_sentbox',true);
 	api_register_func('api/direct_messages','api_direct_messages_inbox',true);
+
+
+
+	function api_oauth_request_token(&$a, $type){
+		try{
+			$oauth = new FKOAuth1();
+			$r = $oauth->fetch_request_token(OAuthRequest::from_request());
+		}catch(Exception $e){
+			echo "error=". OAuthUtil::urlencode_rfc3986($e->getMessage()); killme();
+		}
+		echo "oauth_token=".$r->key."&oauth_secret=".$r->secret;
+		killme();	
+	}
+	function api_oauth_access_token(&$a, $type){
+		try{
+			$oauth = new FKOAuth1();
+			$r = $oauth->fetch_access_token(OAuthRequest::from_request());
+		}catch(Exception $e){
+			echo "error=". OAuthUtil::urlencode_rfc3986($e->getMessage()); killme();
+		}
+		echo "oauth_token=".$r->key."&oauth_secret=".$r->secret;
+		killme();			
+	}
+	function api_oauth_authorize(&$a, $type){
+	}
+	api_register_func('api/oauth/request_token', 'api_oauth_request_token', false);
+	api_register_func('api/oauth/access_token', 'api_oauth_access_token', false);
+	api_register_func('api/oauth/authorize', 'api_oauth_authorize', false);
+
