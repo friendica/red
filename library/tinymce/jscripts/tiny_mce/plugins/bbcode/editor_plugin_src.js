@@ -53,19 +53,24 @@
 
 			/* oembed */
 			function _h2b_cb(match) {
-				text = bin2hex(match);
 				function s_h2b(data) {
 						match = data;
 				}
 				$.ajax({
-					url: 'oembed/h2b?text=' + text,
+					type:"POST",
+					url: 'oembed/h2b',
+					data: {text: match},
 					async: false,
 					success: s_h2b,
 					dataType: 'html'
 				});
 				return match;
 			}
-			s = s.replace(/<span class=\"oembed(.*?)<\/span>/gi, _h2b_cb);
+			if (s.indexOf('class="oembed')>=0){
+				//alert("request oembed html2bbcode");
+				s = _h2b_cb(s);
+			}
+			
 			/* /oembed */
 
 

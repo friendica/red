@@ -81,16 +81,22 @@ function oembed_format_object($j){
 		}; break;  
 		case "rich": {
 			// not so safe.. 
-			$ret.= "<blockquote>".$j->html."</blockquote>";
+			$ret.= $j->html;
 		}; break;
 	}
 
-	$embedlink = (isset($j->title))?$j->title:$embedurl;
-	$ret .= "<a href='$embedurl' rel='oembed'>$embedlink</a>";
-	if (isset($j->author_name)) $ret.=" by ".$j->author_name;
-	if (isset($j->provider_name)) $ret.=" on ".$j->provider_name;
+	// add link to source if not present in "rich" type
+	if (  $j->type!='rich' || !strpos($ret,$embedurl) ){
+		$embedlink = (isset($j->title))?$j->title:$embedurl;
+		$ret .= "<a href='$embedurl' rel='oembed'>$embedlink</a>";
+		if (isset($j->author_name)) $ret.=" by ".$j->author_name;
+		if (isset($j->provider_name)) $ret.=" on ".$j->provider_name;
+	} else {
+		// add <a> for html2bbcode conversion
+		$ret .= "<a href='$embedurl' rel='oembed'/>";
+	}
 	$ret.="<br style='clear:left'></span>";
-	return $ret;
+	return  mb_convert_encoding($ret, 'HTML-ENTITIES', mb_detect_encoding($ret));
 }
 
 function oembed_bbcode2html($text){
@@ -136,8 +142,8 @@ function oembed_html2bbcode($text) {
 		
 		$xattr = oe_build_xpath("class","oembed");
 		$entries = $xpath->query("//span[$xattr]");
-		
-		$xattr = oe_build_xpath("rel","oembed");
+
+		$xattr = "@rel='oembed'";//oe_build_xpath("rel","oembed");
 		foreach($entries as $e) {
 			$href = $xpath->evaluate("a[$xattr]/@href", $e)->item(0)->nodeValue;
 			if(!is_null($href)) $e->parentNode->replaceChild(new DOMText("[embed]".$href."[/embed]"), $e);
