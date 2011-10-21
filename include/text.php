@@ -195,6 +195,9 @@ function unxmlify($s) {
 
 if(! function_exists('hex2bin')) {
 function hex2bin($s) {
+	if(! (is_string($s) && strlen($s)))
+		return '';
+
 	if(! ctype_xdigit($s)) {
 		logger('hex2bin: illegal input: ' . print_r(debug_backtrace(), true));
 		return($s);
