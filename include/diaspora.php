@@ -4,6 +4,7 @@ require_once('include/crypto.php');
 require_once('include/items.php');
 require_once('include/bb2diaspora.php');
 require_once('include/contact_selectors.php');
+require_once('include/queue_fn.php');
 
 
 function diaspora_dispatch_public($msg) {
@@ -957,7 +958,7 @@ function diaspora_comment($importer,$xml,$msg) {
 		);
 	}
 
-	if(! $parent_author_signature) {
+	if(($parent_item['origin']) && (! $parent_author_signature)) {
 		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
 			intval($message_id),
 			dbesc($author_signed_data),
@@ -1162,9 +1163,9 @@ EOT;
 	$arr['parent'] = $parent_item['id'];
 	$arr['parent-uri'] = $parent_item['uri'];
 
-	$arr['owner-name'] = $contact['name'];
-	$arr['owner-link'] = $contact['url'];
-	$arr['owner-avatar'] = $contact['thumb'];
+	$arr['owner-name'] = $parent_item['name'];
+	$arr['owner-link'] = $parent_item['url'];
+	$arr['owner-avatar'] = $parent_item['thumb'];
 
 	$arr['author-name'] = $person['name'];
 	$arr['author-link'] = $person['url'];
@@ -1206,9 +1207,9 @@ EOT;
 
 	// if the message isn't already being relayed, notify others
 	// the existence of parent_author_signature means the parent_author or owner
-	// is already relaying.
+	// is already relaying. The parent_item['origin'] indicates the message was created on our system
 
-	if(! $parent_author_signature)
+	if(($parent_item['origin']) && (! $parent_author_signature))
 		proc_run('php','include/notifier.php','comment',$message_id);
 
 	return;
@@ -1647,14 +1648,7 @@ function diaspora_transmit($owner,$contact,$slap,$public_batch) {
 	if((! $return_code) || (($curl_stat == 503) && (stristr($a->get_curl_headers(),'retry-after')))) {
 		logger('diaspora_transmit: queue message');
 		// queue message for redelivery
-		q("INSERT INTO `queue` ( `cid`, `created`, `last`, `content`,`batch`)
-			VALUES ( %d, '%s', '%s', '%s', %d) ",
-			intval($contact['id']),
-			dbesc(datetime_convert()),
-			dbesc(datetime_convert()),
-			dbesc($slap),
-			intval($public_batch)
-		);
+		add_to_queue($contact['id'],NETWORK_DIASPORA,$slap,$public_batch);
 	}
 
 

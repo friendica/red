@@ -2,6 +2,7 @@
 
 require_once('include/datetime.php');
 require_once('include/diaspora.php');
+require_once('include/queue_fn.php');
 
 function profile_change() {
 
@@ -81,7 +82,6 @@ function profile_change() {
 
 	$tpl = get_markup_template('diaspora_profile.tpl');
 
-
 	$msg = replace_macros($tpl,array(
 		'$handle' => $handle,
 		'$first' => $first,
@@ -100,14 +100,6 @@ function profile_change() {
 
 	$msgtosend = diaspora_msg_build($msg,$a->user,null,$a->user['prvkey'],null,true);
 	foreach($recips as $recip) {
-		q("insert into queue (`cid`,`network`,`created`,`last`,`content`,`batch`)
-			values(%d,'%s','%s','%s','%s',%d)",
-			intval($recip['id']),
-			dbesc(NETWORK_DIASPORA),
-			dbesc(datetime_convert()),
-			dbesc(datetime_convert()),
-			dbesc($msgtosend),
-			intval(1)
-		);
+		add_to_queue($recip['id'],NETWORK_DIASPORA,$msgtosend,true);
 	}
 }

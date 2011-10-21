@@ -1,5 +1,6 @@
 <?php
 require_once("boot.php");
+require_once('include/queue_fn.php');
 
 function delivery_run($argv, $argc){
 	global $a, $db;
@@ -323,14 +324,7 @@ function delivery_run($argv, $argc){
 	
 			if($deliver_status == (-1)) {
 				logger('notifier: delivery failed: queuing message');
-				// queue message for redelivery
-				q("INSERT INTO `queue` ( `cid`, `created`, `last`, `content`)
-					VALUES ( %d, '%s', '%s', '%s') ",
-					intval($contact['id']),
-					dbesc(datetime_convert()),
-					dbesc(datetime_convert()),
-					dbesc($atom)
-				);
+				add_to_queue($contact['id'],NETWORK_DFRN,$atom);
 			}
 			break;
 
@@ -370,13 +364,7 @@ function delivery_run($argv, $argc){
 						$deliver_status = slapper($owner,$contact['notify'],$slappy);
 						if($deliver_status == (-1)) {
 							// queue message for redelivery
-							q("INSERT INTO `queue` ( `cid`, `created`, `last`, `content`)
-								VALUES ( %d, '%s', '%s', '%s') ",
-								intval($contact['id']),
-								dbesc(datetime_convert()),
-								dbesc(datetime_convert()),
-								dbesc($slappy)
-							);								
+							add_to_queue($contact['id'],NETWORK_OSTATUS,$slappy);
 						}
 					}
 				}

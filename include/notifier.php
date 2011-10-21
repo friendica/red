@@ -1,6 +1,7 @@
 <?php
 
 require_once("boot.php");
+require_once('include/queue_fn.php');
 
 /*
  * This file was at one time responsible for doing all deliveries, but this caused
@@ -519,13 +520,7 @@ function notifier_run($argv, $argc){
 					if($deliver_status == (-1)) {
 						logger('notifier: delivery failed: queuing message');
 						// queue message for redelivery
-						q("INSERT INTO `queue` ( `cid`, `created`, `last`, `content`)
-							VALUES ( %d, '%s', '%s', '%s') ",
-							intval($contact['id']),
-							dbesc(datetime_convert()),
-							dbesc(datetime_convert()),
-							dbesc($atom)
-						);
+						add_to_queue($contact['id'],NETWORK_DFRN,$atom);
 					}
 					break;
 				case NETWORK_OSTATUS:
@@ -542,14 +537,7 @@ function notifier_run($argv, $argc){
 
 						if($deliver_status == (-1)) {
 							// queue message for redelivery
-							q("INSERT INTO `queue` ( `cid`, `created`, `last`, `content`)
-								VALUES ( %d, '%s', '%s', '%s') ",
-								intval($contact['id']),
-								dbesc(datetime_convert()),
-								dbesc(datetime_convert()),
-								dbesc($slap)
-							);
-
+							add_to_queue($contact['id'],NETWORK_OSTATUS,$slap);
 						}
 					}
 					else {
@@ -564,13 +552,7 @@ function notifier_run($argv, $argc){
 									$deliver_status = slapper($owner,$contact['notify'],$slappy);
 									if($deliver_status == (-1)) {
 										// queue message for redelivery
-										q("INSERT INTO `queue` ( `cid`, `created`, `last`, `content`)
-											VALUES ( %d, '%s', '%s', '%s') ",
-											intval($contact['id']),
-											dbesc(datetime_convert()),
-											dbesc(datetime_convert()),
-											dbesc($slappy)
-										);								
+										add_to_queue($contact['id'],NETWORK_OSTATUS,$slappy);
 									}
 								}
 							}
