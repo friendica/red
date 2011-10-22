@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1097 );
+define( 'UPDATE_VERSION' , 1098 );
 
 /**
  *
@@ -800,4 +800,12 @@ function update_1096() {
 	q("ALTER TABLE `item` ADD `origin` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `deleted` , ADD INDEX ( `origin` ) ");
 }
 
+function update_1097() {
+	q("ALTER TABLE `queue` 
+		ADD INDEX (`cid`), 
+		ADD INDEX (`created`), 
+		ADD INDEX (`last`), 
+		ADD INDEX (`network`), 
+		ADD INDEX (`batch`) ");
+}
 

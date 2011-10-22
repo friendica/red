@@ -477,7 +477,12 @@ CREATE TABLE IF NOT EXISTS `queue` (
 `created` DATETIME NOT NULL ,
 `last` DATETIME NOT NULL ,
 `content` MEDIUMTEXT NOT NULL,
-`batch` TINYINT( 1 ) NOT NULL DEFAULT '0'
+`batch` TINYINT( 1 ) NOT NULL DEFAULT '0',
+INDEX ( `cid` ),
+INDEX ( `created` ),
+INDEX ( `last` ),
+INDEX ( `network` ),
+INDEX ( `batch` )
 ) ENGINE = MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `pconfig` (

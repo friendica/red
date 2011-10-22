@@ -784,7 +784,6 @@ function notifier_run($argv, $argc){
 
 	call_hooks('notifier_end',$target_item);
 
-
 	return;
 }
 
