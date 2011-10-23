@@ -617,7 +617,7 @@ function get_atom_elements($feed,$item) {
 			if(! $body)
 				$body = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['summary'][0]['data'];
 			// preserve a copy of the original body content in case we later need to parse out any microformat information, e.g. events
-			$res['object'] .= '<orig>' . xmlify($body) . '</orig>' . "\n";
+			$res['target'] .= '<orig>' . xmlify($body) . '</orig>' . "\n";
 			if((strpos($body,'<') !== false) || (strpos($body,'>') !== false)) {
 
 				$body = html2bb_video($body);
@@ -1806,8 +1806,34 @@ function local_delivery($importer,$data) {
 				if(count($r)) {
 					$item = $r[0];
 
-					if(! $item['deleted'])
-						logger('local_delivery: deleting item ' . $item['id'] . ' uri=' . $item['uri'], LOGGER_DEBUG);
+					if($item['deleted'])
+						continue;
+
+					logger('local_delivery: deleting item ' . $item['id'] . ' uri=' . $item['uri'], LOGGER_DEBUG);
+
+					if(($item['verb'] === ACTIVITY_TAG) && ($item['object-type'] === ACTVITY_OBJ_TAGTERM)) {
+						$xo = parse_xml_string($item['object'],false);
+						$xt = parse_xml_string($item['target'],false);
+						if($xt->type === ACTIVITY_OBJ_NOTE) {
+							$i = q("select * from item where uri = '%s' and uid = %d limit 1",
+								dbesc($xt->id),
+								intval($importer['importer_uid'])
+							);
+							if(count($i)) {
+								$tags = explode(',',$i['tag']);
+								$newtags = array();
+								if(count($tags)) {
+									foreach($tags as $tag)
+										if(trim($tag) !== trim($xo->body))
+											$newtags[] = trim($tag);
+								}
+								q("update item set tag = '%s' where id = %d limit 1",
+									dbesc(implode(',',$newtags)),
+									intval($i[0]['id'])
+								);
+							}
+						}
+					}
 
 					if($item['uri'] == $item['parent-uri']) {
 						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s'
@@ -1896,12 +1922,39 @@ function local_delivery($importer,$data) {
 				$datarray['owner-link'] = $r[0]['url'];
 				$datarray['owner-avatar'] = $r[0]['thumb'];
 				$datarray['contact-id'] = $importer['id'];
-				if(($datarray['verb'] == ACTIVITY_LIKE) || ($datarray['verb'] == ACTIVITY_DISLIKE)) {
+				if(($datarray['verb'] === ACTIVITY_LIKE) || ($datarray['verb'] === ACTIVITY_DISLIKE)) {
 					$is_like = true;
 					$datarray['type'] = 'activity';
 					$datarray['gravity'] = GRAVITY_LIKE;
 					$datarray['last-child'] = 0;
 				}
+
+				if(($datarray['verb'] === ACTIVITY_TAG) && ($datarray['object-type'] === ACTIVITY_OBJ_TAGTERM)) {
+
+
+					$xo = parse_xml_string($datarray['object'],false);
+					$xt = parse_xml_string($datarray['target'],false);
+
+					if(($xt->type == ACTIVITY_OBJ_NOTE) && ($xt->id == $r[0]['uri'])) {
+
+						// extract tag, if not duplicate, and this user allows tags, add to parent item						
+						if($xo->content) {
+
+							if(! (stristr($r[0]['tag'],trim($xo->content)))) {
+								$i = q("SELECT `blocktags` FROM `user` where `uid` = %d LIMIT 1",
+									intval($importer['importer_uid'])
+								);
+								if(count($i) && ! ($i[0]['blocktags'])) {
+									q("UPDATE item SET tag = '%s' WHERE id = %d LIMIT 1",
+										dbesc($r[0]['tag'] . (strlen($r[0]['tag']) ? ',' : '') . '#[url=' . $xo->id . ']'. $xo->content . '[/url]'),
+										intval($r[0]['id'])
+									);
+								}
+							}
+						}													
+					}
+				}
+
 				$posted_id = item_store($datarray);
 				$parent = 0;
 
@@ -2049,6 +2102,32 @@ function local_delivery($importer,$data) {
 					$datarray['type'] = 'activity';
 					$datarray['gravity'] = GRAVITY_LIKE;
 				}
+
+				if(($datarray['verb'] === ACTIVITY_TAG) && ($datarray['object-type'] === ACTIVITY_OBJ_TAGTERM)) {
+
+					$xo = parse_xml_string($datarray['object'],false);
+					$xt = parse_xml_string($datarray['target'],false);
+
+					if($xt->type == ACTIVITY_OBJ_NOTE) {
+						$r = q("select * from item where `uri` = '%s' AND `uid` = %d limit 1",
+							dbesc($xt->id),
+							intval($importer['importer_uid'])
+						);
+						if(! count($r))
+							continue;				
+
+						// extract tag, if not duplicate, add to parent item						
+						if($xo->content) {
+							if(! (stristr($r[0]['tag'],trim($xo->content)))) {
+								q("UPDATE item SET tag = '%s' WHERE id = %d LIMIT 1",
+									dbesc($r[0]['tag'] . (strlen($r[0]['tag']) ? ',' : '') . '#[url=' . $xo->id . ']'. $xo->content . '[/url]'),
+									intval($r[0]['id'])
+								);
+							}
+						}													
+					}
+				}
+
 				$posted_id = item_store($datarray);
 
 				// find out if our user is involved in this conversation and wants to be notified.
