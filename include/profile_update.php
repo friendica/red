@@ -12,8 +12,8 @@ function profile_change() {
 		return;
 
 //   $url = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
- //   if($url && strlen(get_config('system','directory_submit_url')))
-  //      proc_run('php',"include/directory.php","$url");
+//   if($url && strlen(get_config('system','directory_submit_url')))
+//      proc_run('php',"include/directory.php","$url");
 
 	$recips = q("SELECT DISTINCT(`batch`), `id`, `name`,`network` FROM `contact` WHERE `network` = '%s'
 		AND `uid` = %d AND `rel` != %d ORDER BY rand() ",
@@ -34,24 +34,25 @@ function profile_change() {
 		return;
 	$profile = $r[0];
 
-	$handle = $a->user['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
-	$first = ((strpos($profile['name'],' '))
-		? trim(substr($profile['name'],0,strpos($profile['name'],' '))) : $profile['name']);
-	$last = (($first === $profile['name']) ? '' : trim(substr($profile['name'],strlen($first))));
-	$large = $a->get_baseurl() . '/photo/custom/300/' . $profile['uid'] . '.jpg';
-	$medium = $a->get_baseurl() . '/photo/custom/100/' . $profile['uid'] . '.jpg';
-	$small = $a->get_baseurl() . '/photo/custom/50/'  . $profile['uid'] . '.jpg';
-	$searchable = (($profile['publish'] && $profile['net-publish']) ? 'true' : 'false' );
+	$handle = xmlify($a->user['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3));
+	$first = xmlify(((strpos($profile['name'],' '))
+		? trim(substr($profile['name'],0,strpos($profile['name'],' '))) : $profile['name']));
+	$last = xmlify((($first === $profile['name']) ? '' : trim(substr($profile['name'],strlen($first)))));
+	$large = xmlify($a->get_baseurl() . '/photo/custom/300/' . $profile['uid'] . '.jpg');
+	$medium = xmlify($a->get_baseurl() . '/photo/custom/100/' . $profile['uid'] . '.jpg');
+	$small = xmlify($a->get_baseurl() . '/photo/custom/50/'  . $profile['uid'] . '.jpg');
+	$searchable = xmlify((($profile['publish'] && $profile['net-publish']) ? 'true' : 'false' ));
+//	$searchable = 'true';
 
 	if($searchable === 'true') {
 		$dob = '1000-00-00';
 
 		if(($profile['dob']) && ($profile['dob'] != '0000-00-00'))
 			$dob = ((intval($profile['dob'])) ? intval($profile['dob']) : '1000') . '-' . datetime_convert('UTC','UTC',$profile['dob'],'m-d');
-		$gender = $profile['gender'];
-		$about = $profile['about'];
+		$gender = xmlify($profile['gender']);
+		$about = xmlify($profile['about']);
 		require_once('include/bbcode.php');
-		$about = strip_tags(bbcode($about));
+		$about = xmlify(strip_tags(bbcode($about)));
 		$location = '';
 		if($profile['locality'])
 			$location .= $profile['locality'];
@@ -65,6 +66,7 @@ function profile_change() {
 				$location .= ', ';
 			$location .= $profile['country-name'];
 		}
+		$location = xmlify($location);
 		$tags = '';
 		if($profile['pub_keywords']) {
 			$kw = str_replace(',',' ',$profile['pub_keywords']);
@@ -77,7 +79,7 @@ function profile_change() {
 				}
 			}
 		}
-		$tags = trim($tags);
+		$tags = xmlify(trim($tags));
 	}
 
 	$tpl = get_markup_template('diaspora_profile.tpl');
@@ -98,8 +100,8 @@ function profile_change() {
 	));
 	logger('profile_change: ' . $msg, LOGGER_ALL);
 
-	$msgtosend = diaspora_msg_build($msg,$a->user,null,$a->user['prvkey'],null,true);
 	foreach($recips as $recip) {
+		$msgtosend = diaspora_msg_build($msg,$a->user,$recip,$a->user['prvkey'],null,true);
 		add_to_queue($recip['id'],NETWORK_DIASPORA,$msgtosend,true);
 	}
 }

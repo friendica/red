@@ -1376,6 +1376,7 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 
 	$body = $item['body'];
 
+/*
 	$cnt = preg_match_all('|\[img\](.*?)\[\/img\]|',$body,$matches,PREG_SET_ORDER);
 	if($cnt) {
 		foreach($matches as $mtch) {
@@ -1389,6 +1390,7 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 			$body = str_replace($detail['str'],$mtch[1],$body);
 		}
 	}	
+*/
 
 	$body = xmlify(html_entity_decode(bb2diaspora($body)));
 
