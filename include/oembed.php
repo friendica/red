@@ -8,12 +8,9 @@ function oembed_replacecb($matches){
 
 function oembed_fetch_url($embedurl){
 
-	$r = q("SELECT v FROM `cache` WHERE k='%s'",
-				dbesc($embedurl));
+	$txt = Cache::get($embedurl);
 				
-	if(count($r)){
-		$txt = $r[0]['v'];
-	} else {
+	if(is_null($txt)){
 		$txt = "";
 		
 		// try oembed autodiscovery
@@ -44,10 +41,8 @@ function oembed_fetch_url($embedurl){
 		if ($txt[0]!="{") $txt='{"type":"error"}';
 	
 		//save in cache
-		/*q("INSERT INTO `cache` VALUES ('%s','%s','%s')",
-			dbesc($embedurl),
-			dbesc($txt),
-			dbesc(datetime_convert()));*/
+		Cache::set($embedurl,$txt);
+
 	}
 	
 	$j = json_decode($txt);
@@ -154,4 +149,5 @@ function oembed_html2bbcode($text) {
 	} 
 }
 
-?>
+
+

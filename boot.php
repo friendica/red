@@ -6,6 +6,7 @@ require_once('include/plugin.php');
 require_once('include/text.php');
 require_once("include/pgettext.php");
 require_once('include/nav.php');
+require_once('include/cache.php');
 
 define ( 'FRIENDIKA_PLATFORM',     'Free Friendika');
 define ( 'FRIENDIKA_VERSION',      '2.3.1140' );
