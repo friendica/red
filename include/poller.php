@@ -64,8 +64,7 @@ function poller_run($argv, $argc){
 	}
 
 	// clear old cache
-	q("DELETE FROM `cache` WHERE `updated` < '%s'",
-		dbesc(datetime_convert('UTC','UTC',"now - 30 days")));
+	Cache::clear();
 
 	$manual_id  = 0;
 	$generation = 0;

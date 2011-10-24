@@ -338,7 +338,6 @@ function item_post(&$a) {
 	$bookmark = 0;
 	if(preg_match_all("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/ism",$body,$match)) {
 		$bookmark = 1;
-		$body = preg_replace("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/ism",'[url=$1]$2[/url]',$body);
 	}
 
 

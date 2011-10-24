@@ -7,30 +7,27 @@ function oembed_replacecb($matches){
 
 
 function oembed_fetch_url($embedurl){
-
-	$r = q("SELECT v FROM `cache` WHERE k='%s'",
-				dbesc($embedurl));
+	
+	$txt = Cache::get($embedurl);
 				
-	if(count($r)){
-		$txt = $r[0]['v'];
-	} else {
+	if(is_null($txt)){
 		$txt = "";
 		
 		// try oembed autodiscovery
 		$redirects = 0;
 		$html_text = fetch_url($embedurl, false, $redirects, 15);
-		if(! $html_text)
-			return;
-		$dom = @DOMDocument::loadHTML($html_text);
-		if ($dom){
-			$xpath = new DOMXPath($dom);
-			$attr = "oembed";
-		
-			$xattr = oe_build_xpath("class","oembed");
-			$entries = $xpath->query("//link[@type='application/json+oembed']");
-			foreach($entries as $e){
-				$href = $e->getAttributeNode("href")->nodeValue;
-				$txt = fetch_url($href);
+		if($html_text){
+			$dom = @DOMDocument::loadHTML($html_text);
+			if ($dom){
+				$xpath = new DOMXPath($dom);
+				$attr = "oembed";
+			
+				$xattr = oe_build_xpath("class","oembed");
+				$entries = $xpath->query("//link[@type='application/json+oembed']");
+				foreach($entries as $e){
+					$href = $e->getAttributeNode("href")->nodeValue;
+					$txt = fetch_url($href);
+				}
 			}
 		}
 		
@@ -44,10 +41,8 @@ function oembed_fetch_url($embedurl){
 		if ($txt[0]!="{") $txt='{"type":"error"}';
 	
 		//save in cache
-		/*q("INSERT INTO `cache` VALUES ('%s','%s','%s')",
-			dbesc($embedurl),
-			dbesc($txt),
-			dbesc(datetime_convert()));*/
+		Cache::set($embedurl,$txt);
+
 	}
 	
 	$j = json_decode($txt);
@@ -61,12 +56,20 @@ function oembed_format_object($j){
 	switch ($j->type) {
 		case "video": {
 			if (isset($j->thumbnail_url)) {
-				/*$tw = (isset($j->thumbnail_width)) ? $j->thumbnail_width:200;
-				$th = (isset($j->thumbnail_height)) ? $j->thumbnail_height:180;*/
-				$tw=150; $th=120; 
-				$ret.= "<a href='".$embedurl."' onclick='this.innerHTML=unescape(\"".urlencode($j->html)."\").replace(/\+/g,\" \"); return false;' style='float:left; margin: 1em; '>";
-				$ret.= "<img width='$tw' height='$th' src='".$j->thumbnail_url."'>";
-				$ret.= "</a>";
+				$tw = (isset($j->thumbnail_width)) ? $j->thumbnail_width:200;
+				$th = (isset($j->thumbnail_height)) ? $j->thumbnail_height:180;
+				$tr = $tw/$th;
+				
+				$th=120; $tw = $th*$tr;
+				$tpl=get_markup_template('oembed_video.tpl');
+				$ret.=replace_macros($tpl, array(
+					'$embedurl'=>$embedurl,
+					'$escapedhtml'=>urlencode($j->html),
+					'$tw'=>$tw,
+					'$th'=>$th,
+					'$turl'=>$j->thumbnail_url,
+				));
+				
 			} else {
 				$ret=$j->html;
 			}
@@ -154,4 +157,5 @@ function oembed_html2bbcode($text) {
 	} 
 }
 
-?>
+
+
