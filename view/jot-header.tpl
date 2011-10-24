@@ -214,6 +214,19 @@ function initEditor(cb){
 		}
 	}
 
+	function itemTag(id) {
+		$('#like-rotator-' + id).show();
+		reply = prompt("$term");
+		if(reply && reply.length) {
+			reply.replace('#','');
+			if(reply.length) {
+				$.get('tagger/' + id + '?term=' + reply, function(data) {
+					$('#like-rotator-' + id).hide();
+				});
+			}
+		}
+	}
+
 	function jotClearLocation() {
 		$('#jot-coord').val('');
 		$('#profile-nolocation-wrapper').hide();

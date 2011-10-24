@@ -958,6 +958,11 @@ input#dfrn-url {
 	margin-left: 10px;
 	float: left;	
 }
+.tag-item {
+	margin-left: 10px;
+	float: left;	
+}
+
 
 .wall-item-links-wrapper {
 	float: left;

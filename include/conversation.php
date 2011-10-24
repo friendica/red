@@ -466,6 +466,8 @@ function conversation(&$a, $items, $mode, $update) {
 						'classdo' => (($item['starred']) ? "hidden" : ""),
 						'classundo' => (($item['starred']) ? "" : "hidden"),
 						'starred' =>  t('starred'),
+						'tagger' => t("add tag"),
+						'classtagger' => "",
 					);
 				}
 
@@ -747,6 +749,7 @@ function status_editor($a,$x, $notes_cid = 0) {
 			'$linkurl' => t('Please enter a link URL:'),
 			'$vidurl' => t("Please enter a video link/URL:"),
 			'$audurl' => t("Please enter an audio link/URL:"),
+			'$term' => t('Tag term:'),
 			'$whereareu' => t('Where are you right now?'),
 			'$title' => t('Enter a title for this item') 
 		));

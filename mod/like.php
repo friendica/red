@@ -197,5 +197,6 @@ EOT;
 
 	proc_run('php',"include/notifier.php","like","$post_id");
 
-	return; // NOTREACHED
+	killme();
+//	return; // NOTREACHED
 }

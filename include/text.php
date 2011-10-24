@@ -751,7 +751,9 @@ function prepare_body($item,$attach = false) {
 
 	$s = prepare_text($item['body']);
 
-	call_hooks('prepare_body', $s);
+	$prep_arr = array('item' => $item, 'html' => $s);
+	call_hooks('prepare_body', $prep_arr);
+	$s = $prep_arr['html'];
 
 	if(! $attach)
 		return $s;
@@ -784,8 +786,10 @@ function prepare_body($item,$attach = false) {
 		}
 		$s .= '<div class="clear"></div></div>';
 	}
-	call_hooks('prepare_body_final', $s);
-	return $s;
+
+	$prep_arr = array('item' => $item, 'html' => $s);
+	call_hooks('prepare_body_final', $prep_arr);
+	return $prep_arr['html'];
 }}
 
 

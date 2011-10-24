@@ -22,7 +22,6 @@ function tagger_content(&$a) {
 
 
 	$r = q("SELECT * FROM `item` WHERE `id` = '%s' LIMIT 1",
-		dbesc($item_id),
 		dbesc($item_id)
 	);
 
@@ -43,8 +42,8 @@ function tagger_content(&$a) {
 		$blocktags = $r[0]['blocktags'];
 	}
 
-//	if(local_user() != $owner_uid)
-//		return;
+	if(local_user() != $owner_uid)
+		return;
 
 	if(remote_user()) {
 		$r = q("select * from contact where id = %d AND `uid` = %d limit 1",
@@ -188,6 +187,8 @@ EOT;
 	call_hooks('post_local_end', $arr);
 
 	proc_run('php',"include/notifier.php","tag","$post_id");
+
+	killme();
 
 	return; // NOTREACHED
 
