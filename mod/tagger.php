@@ -21,7 +21,7 @@ function tagger_content(&$a) {
 	logger('tagger: tag ' . $term . ' item ' . $item_id);
 
 
-	$r = q("SELECT * FROM `item` WHERE ( `id` = '%s' OR `uri` = '%s') LIMIT 1",
+	$r = q("SELECT * FROM `item` WHERE `id` = '%s' LIMIT 1",
 		dbesc($item_id),
 		dbesc($item_id)
 	);
@@ -35,12 +35,13 @@ function tagger_content(&$a) {
 
 	$owner_uid = $item['uid'];
 
-	$r = q("select `nickname` from user where uid = %d limit 1",
+	$r = q("select `nickname`,`blocktags` from user where uid = %d limit 1",
 		intval($owner_uid)
 	);
-	if(count($r))
+	if(count($r)) {
 		$owner_nick = $r[0]['nickname'];
-
+		$blocktags = $r[0]['blocktags'];
+	}
 
 //	if(local_user() != $owner_uid)
 //		return;
@@ -156,13 +157,37 @@ EOT;
 		);
 	}			
 
+	if((! $blocktags) && (! stristr($item['tag'], ']' . $term . '[' ))) {
+		q("update item set tag = '%s' where id = %d limit 1",
+			dbesc($item['tag'] . (strlen($item['tag']) ? ',' : '') . '#[url=' . $a->get_baseurl() . '/search?search=' . $term . ']'. $term . '[/url]'),
+			intval($item['id'])
+		);
+	}
 
+	// if the original post is on this site, update it.
+
+	$r = q("select `tag`,`id`,`uid` from item where `origin` = 1 AND `uri` = '%s' LIMIT 1",
+		dbesc($item['uri'])
+	);
+	if(count($r)) {
+		$x = q("SELECT `blocktags` FROM `user` WHERE `uid` = %d limit 1",
+			intval($r[0]['uid'])
+		);
+		if(count($x) && !$x[0]['blocktags'] && (! stristr($r[0]['tag'], ']' . $term . '['))) {
+			q("update item set tag = '%s' where id = %d limit 1",
+				dbesc($r[0]['tag'] . (strlen($r[0]['tag']) ? ',' : '') . '#[url=' . $a->get_baseurl() . '/search?search=' . $term . ']'. $term . '[/url]'),
+				intval($r[0]['id'])
+			);
+		}
+
+	}
+		
 
 	$arr['id'] = $post_id;
 
 	call_hooks('post_local_end', $arr);
 
-	proc_run('php',"include/notifier.php","like","$post_id");
+	proc_run('php',"include/notifier.php","tag","$post_id");
 
 	return; // NOTREACHED
 

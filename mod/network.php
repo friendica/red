@@ -333,10 +333,14 @@ function network_content(&$a, $update = 0) {
 
 	$sql_extra2 = (($nouveau) ? '' : " AND `item`.`parent` = `item`.`id` ");
 
-	if(x($_GET,'search'))
-		$sql_extra .= " AND `item`.`body` REGEXP '" . dbesc(escape_tags($_GET['search'])) . "' ";
+	if(x($_GET,'search')) {
+		$search = escape_tags($_GET['search']);
+		$sql_extra .= sprintf(" AND ( `item`.`body` REGEXP '%s' OR `item`.`tag` REGEXP '%s' ) ",
+			dbesc($search),
+			dbesc('\\]' . $search . '\\[')
+		);
+	}
 
-	
 	$r = q("SELECT COUNT(*) AS `total`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0

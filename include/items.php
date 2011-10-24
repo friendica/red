@@ -1263,7 +1263,8 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					$when = datetime_convert('UTC','UTC','now','Y-m-d H:i:s');
 			}
 			if($deleted && is_array($contact)) {
-				$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d AND `contact-id` = %d LIMIT 1",
+				$r = q("SELECT `item`.*, `contact`.`self` FROM `item` left join `contact` on `item`.`contact-id` = `contact`.id` 
+					WHERE `uri` = '%s' AND `uid` = %d AND `contact-id` = %d LIMIT 1",
 					dbesc($uri),
 					intval($importer['uid']),
 					intval($contact['id'])
@@ -1273,6 +1274,41 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 					if(! $item['deleted'])
 						logger('consume_feed: deleting item ' . $item['id'] . ' uri=' . $item['uri'], LOGGER_DEBUG);
+
+					if(($item['verb'] === ACTIVITY_TAG) && ($item['object-type'] === ACTVITY_OBJ_TAGTERM)) {
+						$xo = parse_xml_string($item['object'],false);
+						$xt = parse_xml_string($item['target'],false);
+						if($xt->type === ACTIVITY_OBJ_NOTE) {
+							$i = q("select * from `item` where uri = '%s' and uid = %d limit 1",
+								dbesc($xt->id),
+								intval($importer['importer_uid'])
+							);
+							if(count($i)) {
+
+								// For tags, the owner cannot remove the tag on the author's copy of the post.
+
+								$owner_remove = (($item['contact-id'] == $i[0]['contact-id']) ? true: false);
+								$author_remove = (($item['origin'] && $item['self']) ? true : false);
+								$author_copy = (($item['origin']) ? true : false);
+
+								if($owner_remove && $author_copy)
+									continue;
+								if($author_remove || $owner_remove) {
+									$tags = explode(',',$i[0]['tag']);
+									$newtags = array();
+									if(count($tags)) {
+										foreach($tags as $tag)
+											if(trim($tag) !== trim($xo->body))
+												$newtags[] = trim($tag);
+									}
+									q("update item set tag = '%s' where id = %d limit 1",
+										dbesc(implode(',',$newtags)),
+										intval($i[0]['id'])
+									);
+								}
+							}
+						}
+					}
 
 					if($item['uri'] == $item['parent-uri']) {
 						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s',
@@ -1418,6 +1454,30 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				if((activity_match($datarray['verb'],ACTIVITY_LIKE)) || (activity_match($datarray['verb'],ACTIVITY_DISLIKE))) {
 					$datarray['type'] = 'activity';
 					$datarray['gravity'] = GRAVITY_LIKE;
+				}
+
+				if(($datarray['verb'] === ACTIVITY_TAG) && ($datarray['object-type'] === ACTIVITY_OBJ_TAGTERM)) {
+					$xo = parse_xml_string($datarray['object'],false);
+					$xt = parse_xml_string($datarray['target'],false);
+
+					if($xt->type == ACTIVITY_OBJ_NOTE) {
+						$r = q("select * from item where `uri` = '%s' AND `uid` = %d limit 1",
+							dbesc($xt->id),
+							intval($importer['importer_uid'])
+						);
+						if(! count($r))
+							continue;
+
+						// extract tag, if not duplicate, add to parent item
+						if($xo->content) {
+							if(! (stristr($r[0]['tag'],trim($xo->content)))) {
+								q("UPDATE item SET tag = '%s' WHERE id = %d LIMIT 1",
+									dbesc($r[0]['tag'] . (strlen($r[0]['tag']) ? ',' : '') . '#[url=' . $xo->id . ']'. $xo->content . '[/url]'),
+									intval($r[0]['id'])
+								);
+							}
+						}
+					}
 				}
 
 				$r = item_store($datarray,$force_parent);
@@ -1797,7 +1857,8 @@ function local_delivery($importer,$data) {
 			}
 			if($deleted) {
 
-				$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d AND `contact-id` = %d LIMIT 1",
+				$r = q("SELECT `item`.*, `contact`.`self` FROM `item` left join contact on `item`.`contact-id` = `contact`.`id`
+					WHERE `uri` = '%s' AND `uid` = %d AND `contact-id` = %d LIMIT 1",
 					dbesc($uri),
 					intval($importer['importer_uid']),
 					intval($importer['id'])
@@ -1815,22 +1876,33 @@ function local_delivery($importer,$data) {
 						$xo = parse_xml_string($item['object'],false);
 						$xt = parse_xml_string($item['target'],false);
 						if($xt->type === ACTIVITY_OBJ_NOTE) {
-							$i = q("select * from item where uri = '%s' and uid = %d limit 1",
+							$i = q("select * from `item` where uri = '%s' and uid = %d limit 1",
 								dbesc($xt->id),
 								intval($importer['importer_uid'])
 							);
 							if(count($i)) {
-								$tags = explode(',',$i['tag']);
-								$newtags = array();
-								if(count($tags)) {
-									foreach($tags as $tag)
-										if(trim($tag) !== trim($xo->body))
-											$newtags[] = trim($tag);
+
+								// For tags, the owner cannot remove the tag on the author's copy of the post.
+								
+								$owner_remove = (($item['contact-id'] == $i[0]['contact-id']) ? true: false);
+								$author_remove = (($item['origin'] && $item['self']) ? true : false);
+								$author_copy = (($item['origin']) ? true : false); 
+
+								if($owner_remove && $author_copy)
+									continue;
+								if($author_remove || $owner_remove) {								
+									$tags = explode(',',$i[0]['tag']);
+									$newtags = array();
+									if(count($tags)) {
+										foreach($tags as $tag)
+											if(trim($tag) !== trim($xo->body))
+												$newtags[] = trim($tag);
+									}
+									q("update item set tag = '%s' where id = %d limit 1",
+										dbesc(implode(',',$newtags)),
+										intval($i[0]['id'])
+									);
 								}
-								q("update item set tag = '%s' where id = %d limit 1",
-									dbesc(implode(',',$newtags)),
-									intval($i[0]['id'])
-								);
 							}
 						}
 					}
