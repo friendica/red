@@ -1376,6 +1376,14 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 
 	$body = $item['body'];
 
+/*
+	// We're trying to match Diaspora's split message/photo protocol but
+	// all the photos are displayed on D* as links and not img's - even
+	// though we're sending pretty much precisely what they send us when
+	// doing the same operation.  
+	// Commented out for now, we'll use bb2diaspora to convert photos to markdown
+	// which seems to get through intact.
+
 	$cnt = preg_match_all('|\[img\](.*?)\[\/img\]|',$body,$matches,PREG_SET_ORDER);
 	if($cnt) {
 		foreach($matches as $mtch) {
@@ -1389,6 +1397,7 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 			$body = str_replace($detail['str'],$mtch[1],$body);
 		}
 	}	
+*/
 
 	$body = xmlify(html_entity_decode(bb2diaspora($body)));
 

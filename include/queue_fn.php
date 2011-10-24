@@ -26,7 +26,8 @@ function add_to_queue($cid,$network,$msg,$batch = false) {
 	if($batch_queue < 1)
 		$batch_queue = 1000;
 
-	$r = q("SELECT COUNT(*) AS `total` FROM `queue` left join `contact` WHERE ``queue`.`cid` = %d AND `contact`.`self` = 0 ",
+	$r = q("SELECT COUNT(*) AS `total` FROM `queue` left join `contact` ON `queue`.`cid` = `contact`.`id` 
+		WHERE `queue`.`cid` = %d AND `contact`.`self` = 0 ",
 		intval($cid)
 	);
 	if($r && count($r)) {
@@ -43,9 +44,11 @@ function add_to_queue($cid,$network,$msg,$batch = false) {
 	q("INSERT INTO `queue` ( `cid`, `network`, `created`, `last`, `content`, `batch`)
 		VALUES ( %d, '%s', '%s', '%s', '%s', %d) ",
 		intval($cid),
+		dbesc($network),
 		dbesc(datetime_convert()),
 		dbesc(datetime_convert()),
 		dbesc($msg),
 		intval(($batch) ? 1: 0)
 	);
+
 }
