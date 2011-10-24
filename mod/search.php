@@ -96,12 +96,15 @@ function search_content(&$a) {
 	// Only public wall posts can be shown
 	// OR your own posts if you are a logged in member
 
-	$s_bool  = "AND MATCH (`item`.`body`) AGAINST ( '%s' IN BOOLEAN MODE )";
-	$s_regx  = "AND `item`.`body` REGEXP '%s' ";
 
-	if(mb_strlen($search) >= 3)
-		$search_alg = $s_bool;
-	else
+//	$s_bool  = sprintf("AND MATCH (`item`.`body`) AGAINST ( '%s' IN BOOLEAN MODE )", dbesc($search));
+	$s_regx  = sprintf("AND ( `item`.`body` REGEXP '%s' OR `item`.`tag` REGEXP '%s' )", 
+		dbesc($search), dbesc('\\]' . $search . '\\['));
+
+//	if(mb_strlen($search) >= 3)
+//		$search_alg = $s_bool;
+//	else
+
 		$search_alg = $s_regx;
 
 	$r = q("SELECT COUNT(*) AS `total`
@@ -111,8 +114,7 @@ function search_content(&$a) {
 			OR `item`.`uid` = %d )
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 		$search_alg ",
-		intval(local_user()),
-		dbesc($search)
+		intval(local_user())
 	);
 
 	if(count($r))
@@ -137,7 +139,6 @@ function search_content(&$a) {
 		$search_alg
 		ORDER BY `received` DESC LIMIT %d , %d ",
 		intval(local_user()),
-		dbesc($search),
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
 
