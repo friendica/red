@@ -18,13 +18,14 @@ function ACPopup(elm,backend_url){
 	w = $(elm).width();
 	h = $(elm).height();
 	style.top=style.top+h;
-	style.height = '150px';
+	style['max-height'] = '150px';
 	style.width = w;
 	style.border = '1px solid red';
 	style.background = '#cccccc';
 	style.position = 'absolute';
 	style.overflow = 'auto';
 	style['z-index'] = '100000';
+	style.display = 'none';
 	
 	this.cont = $("<div class='acpopup'></div>");
 	this.cont.css(style);
@@ -36,18 +37,19 @@ ACPopup.prototype.close = function(){
 	this.ready=false;
 }
 ACPopup.prototype.search = function(text){
+	var that = this;
 	this.searchText=text;
-	/*if (this.kp_timer) clearTimeout(this.kp_timer);
-	this.kp_timer = setTimeout( this._search, 1000);*/
-	this._search();
+	if (this.kp_timer) clearTimeout(this.kp_timer);
+	this.kp_timer = setTimeout( function(){that._search();}, 1000);
 }
 ACPopup.prototype._search = function(){	
-
+	console.log("_search");
 	var that = this;
 	var postdata = {
 		start:0,
 		count:100,
 		search:this.searchText,
+		type:'c',
 	}
 	
 	$.ajax({
@@ -57,12 +59,15 @@ ACPopup.prototype._search = function(){
 		dataType: 'json',
 		success:function(data){
 			that.cont.html("");
-			$(data.items).each(function(){
-				if (this.type=="c"){
+			if (data.tot>0){
+				that.cont.show();
+				$(data.items).each(function(){
 					html = "<img src='{0}' height='16px' width='16px'>{1} ({2})".format(this.photo, this.name, this.nick)
 					that.add(html, this.nick);
-				}
-			});			
+				});			
+			} else {
+				that.cont.hide();
+			}
 		}
 	});
 	
