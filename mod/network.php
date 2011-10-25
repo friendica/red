@@ -328,8 +328,10 @@ function network_content(&$a, $update = 0) {
 		}
 	}
 
-	if((! $group) && (! $cid) && (! $update))
+	if((! $group) && (! $cid) && (! $update)) {
 		$o .= get_birthdays();
+		$o .= get_events();
+	}
 
 	$sql_extra2 = (($nouveau) ? '' : " AND `item`.`parent` = `item`.`id` ");
 

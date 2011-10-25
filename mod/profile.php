@@ -223,8 +223,10 @@ function profile_content(&$a, $update = 0) {
 		);
 	}
 
-	if($is_owner && ! $update)
+	if($is_owner && ! $update) {
 		$o .= get_birthdays();
+		$o .= get_events();
+	}
 
 	$o .= conversation($a,$r,'profile',$update);
 

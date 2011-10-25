@@ -1031,6 +1031,57 @@ function get_birthdays() {
 }}
 
 
+if(! function_exists('get_events')) {
+function get_events() {
+
+	require_once('include/bbcode.php');
+
+	$a = get_app();
+	$o = '';
+
+	if(! local_user())
+		return $o;
+
+	$bd_format = t('g A l F d') ; // 8 AM Friday January 18
+	$bd_short = t('F d');
+
+	$r = q("SELECT `event`.* FROM `event` 
+		WHERE `event`.`uid` = %d AND `type` != 'birthday' AND `start` < '%s' AND `finish` > '%s' 
+		ORDER BY `start` DESC ",
+		intval(local_user()),
+		dbesc(datetime_convert('UTC','UTC','now + 6 days')),
+		dbesc(datetime_convert('UTC','UTC','now'))
+	);
+
+	if($r && count($r)) {
+		$o .= '<div id="event-notice" class="birthday-notice fakelink" onclick=openClose(\'event-wrapper\'); >' . t('Event Reminders') . ' ' . '(' . count($r) . ')' . '</div>'; 
+		$o .= '<div id="event-wrapper" style="display: none;" ><div id="event-title">' . t('Events this week:') . '</div>'; 
+		$o .= '<div id="event-title-end"></div>';
+
+		foreach($r as $rr) {
+
+			if($rr['adjust'])
+				$md = datetime_convert('UTC',$a->timezone,$rr['start'],'Y/m\#\l\i\n\k\-j');
+			else
+				$md = datetime_convert('UTC','UTC',$rr['start'],'Y/m\#\l\i\n\k\-j');
+
+			$title = substr(strip_tags(bbcode($rr['desc'])),0,32) . '... ';
+			if(! $title)
+				$title = t('[No description]');
+			$now = strtotime('now');
+			$today = (((strtotime($rr['start'] . ' +00:00') < $now) && (strtotime($rr['finish'] . ' +00:00') > $now)) ? true : false); 
+
+			$o .= '<div class="event-list" id="event-' . $rr['eid'] . '"></a> <a href="events/' . $md . '">' . $title . '</a>' 
+			. day_translate(datetime_convert('UTC', $rr['adjust'] ? $a->timezone : 'UTC', $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '')
+			. '</div>' ;
+		}
+		$o .= '</div></div>';
+	}
+
+	return $o;
+}}
+
+
 /**
  * 
  * Wrap calls to proc_close(proc_open()) and call hook
