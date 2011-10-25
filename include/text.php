@@ -787,6 +787,15 @@ function prepare_body($item,$attach = false) {
 		$s .= '<div class="clear"></div></div>';
 	}
 
+	$arr = explode(',',$item['tag']);
+	if(count($arr)) {
+		$s .= '<div class="body-tag">';
+		foreach($arr as $r) {
+			$s .= bbcode($r) . ' ';
+		}
+		$s .= '</div>';
+	}
+
 	$prep_arr = array('item' => $item, 'html' => $s);
 	call_hooks('prepare_body_final', $prep_arr);
 	return $prep_arr['html'];

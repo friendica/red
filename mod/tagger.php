@@ -11,7 +11,9 @@ function tagger_content(&$a) {
 		return;
 	}
 
-	$term= notags(trim($_GET['term']));
+	$term = notags(trim($_GET['term']));
+	// no commas allowed
+	$term = str_replace(',','',$term);
 
 	if(! $term)
 		return;
