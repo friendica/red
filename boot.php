@@ -1046,10 +1046,11 @@ function get_events() {
 	$bd_short = t('F d');
 
 	$r = q("SELECT `event`.* FROM `event` 
-		WHERE `event`.`uid` = %d AND `type` != 'birthday' AND `start` < '%s' 
+		WHERE `event`.`uid` = %d AND `type` != 'birthday' AND `start` < '%s' AND `start` > '%s'
 		ORDER BY `start` DESC ",
 		intval(local_user()),
-		dbesc(datetime_convert('UTC','UTC','now + 6 days'))
+		dbesc(datetime_convert('UTC','UTC','now + 6 days')),
+		dbesc(datetime_convert('UTC','UTC','now - 1 days'))
 	);
 
 	if($r && count($r)) {
