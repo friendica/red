@@ -51,6 +51,12 @@ $hide_friends
 
 $hide_wall
 
+$blockwall
+
+$blocktags
+
+{{inc field_input.tpl with $field=$expire }}{{endinc}}
+
 <div id="settings-default-perms" class="settings-default-perms" >
 	<div id="settings-default-perms-menu" class="fakelink" onClick="openClose('settings-default-perms-select');" >$permissions $permdesc</div>
 	<div id="settings-default-perms-menu-end"></div>
@@ -62,11 +68,6 @@ $hide_wall
 	</div>
 </div>
 <div id="settings-default-perms-end"></div>
-
-{{inc field_checkbox.tpl with $field=$blockwall }}{{endinc}}
-
-{{inc field_input.tpl with $field=$expire }}{{endinc}}
-
 
 
 <div class="settings-submit-wrapper" >

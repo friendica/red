@@ -170,6 +170,7 @@ function settings_post(&$a) {
 	$old_visibility   = (((x($_POST,'visibility')) && (intval($_POST['visibility']) == 1)) ? 1 : 0);
 	$page_flags       = (((x($_POST,'page-flags')) && (intval($_POST['page-flags']))) ? intval($_POST['page-flags']) : 0);
 	$blockwall        = (((x($_POST,'blockwall')) && (intval($_POST['blockwall']) == 1)) ? 0: 1); // this setting is inverted!
+	$blocktags        = (((x($_POST,'blocktags')) && (intval($_POST['blocktags']) == 1)) ? 0: 1); // this setting is inverted!
 
 	$hide_friends = (($_POST['hide-friends'] == 1) ? 1: 0);
 	$hidewall = (($_POST['hidewall'] == 1) ? 1: 0);
@@ -244,7 +245,7 @@ function settings_post(&$a) {
 			$openidserver = '';
 	}
 
-	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `theme` = '%s', `maxreq` = %d, `expire` = %d, `openidserver` = '%s', `blockwall` = %d, `hidewall` = %d  WHERE `uid` = %d LIMIT 1",
+	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `theme` = '%s', `maxreq` = %d, `expire` = %d, `openidserver` = '%s', `blockwall` = %d, `hidewall` = %d, `blocktags` = %d  WHERE `uid` = %d LIMIT 1",
 			dbesc($username),
 			dbesc($email),
 			dbesc($openid),
@@ -263,6 +264,7 @@ function settings_post(&$a) {
 			dbesc($openidserver),
 			intval($blockwall),
 			intval($hidewall),
+			intval($blocktags),
 			intval(local_user())
 	);
 	if($r)
@@ -450,6 +452,7 @@ function settings_content(&$a) {
 	$maxreq   = $a->user['maxreq'];
 	$expire   = ((intval($a->user['expire'])) ? $a->user['expire'] : '');
 	$blockwall = $a->user['blockwall'];
+	$blocktags = $a->user['blocktags'];
 
 	if(! strlen($a->user['timezone']))
 		$timezone = date_default_timezone_get();
@@ -510,6 +513,17 @@ function settings_content(&$a) {
 
 	$hide_wall = replace_macros($opt_tpl,array(
 			'$field' 	=> array('hidewall',  t('Hide profile details and all your messages from unknown viewers?'), $a->user['hidewall'], '', array(t('No'),t('Yes'))),
+
+	));
+
+	$blockwall = replace_macros($opt_tpl,array(
+			'$field' 	=> array('blockwall',  t('Allow friends to post to your profile page?'), ! $a->user['blockwall'], '', array(t('No'),t('Yes'))),
+
+	));
+ 
+
+	$blocktags = replace_macros($opt_tpl,array(
+			'$field' 	=> array('blocktags',  t('Allow friends to tag your posts?'), ! $a->user['blocktags'], '', array(t('No'),t('Yes'))),
 
 	));
 
@@ -588,7 +602,8 @@ function settings_content(&$a) {
 		'$visibility' => $profile['net-publish'],
 		'$aclselect' => populate_acl($a->user,$celeb),
 
-		'$blockwall'=> array('blockwall', t('Allow friends to post to your profile page:'), !$blockwall, ''),
+		'$blockwall'=> $blockwall, // array('blockwall', t('Allow friends to post to your profile page:'), !$blockwall, ''),
+		'$blocktags'=> $blocktags, // array('blocktags', t('Allow friends to tag your posts:'), !$blocktags, ''),
 		'$expire'	=> array('expire', t("Automatically expire posts after days:"), $expire, t('If empty, posts will not expire. Expired posts will be deleted')),
 
 		'$profile_in_dir' => $profile_in_dir,
