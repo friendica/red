@@ -19,8 +19,7 @@ function tryoembed($match){
 	if ($o->type=="error") return $match[0];
 	
 	$html = oembed_format_object($o);
-	
-	return $html;
+	return oembed_iframe($html,$o->width,$o->height);
 	
 }
 

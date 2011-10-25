@@ -1,8 +1,12 @@
 <?php
 function oembed_replacecb($matches){
+	logger('oembedcb');
 	$embedurl=$matches[1];
 	$j = oembed_fetch_url($embedurl);
-	return oembed_format_object($j);
+	$s =  oembed_format_object($j);
+	return oembed_iframe($s,$j->width,$j->height);
+
+
 }
 
 
@@ -101,6 +105,23 @@ function oembed_format_object($j){
 	$ret.="<br style='clear:left'></span>";
 	return  mb_convert_encoding($ret, 'HTML-ENTITIES', mb_detect_encoding($ret));
 }
+
+function oembed_iframe($src,$width,$height) {
+
+	if(! $width || strstr($width,'%'))
+		$width = '640';
+	if(! $height || strstr($height,'%'))
+		$height = '300';
+	// try and leave some room for the description line. 
+	$height = intval($height) + 80;
+	$width  = intval($width) + 40;
+
+	$s = 'data:text/html;base64,' . base64_encode('<html><body>' . $src . '</body></html>');
+	return '<iframe height="' . $height . '" width="' . $width . '" src="' . $s . '" frameborder="no" >' . t('Embedded content') . '</iframe>'; 
+
+}
+
+
 
 function oembed_bbcode2html($text){
 	$stopoembed = get_config("system","no_oembed");
