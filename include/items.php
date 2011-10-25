@@ -1965,7 +1965,8 @@ function local_delivery($importer,$data) {
 			// was the top-level post for this reply written by somebody on this site? 
 			// Specifically, the recipient? 
 
-			$r = q("select `item`.`id`, `contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
+			$r = q("select `item`.`id`, `item`.`uri`, `item`.`tag`, 
+				`contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
 				LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
 				WHERE `contact`.`self` = 1 AND `item`.`wall` = 1 AND `item`.`uri` = '%s' AND `item`.`parent-uri` = '%s'
 				AND `item`.`uid` = %d LIMIT 1",
