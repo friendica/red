@@ -218,7 +218,7 @@ function initEditor(cb){
 		$('#like-rotator-' + id).show();
 		reply = prompt("$term");
 		if(reply && reply.length) {
-			reply.replace('#','');
+			reply = reply.replace('#','');
 			if(reply.length) {
 				$.get('tagger/' + id + '?term=' + reply, function(data) {
 					$('#like-rotator-' + id).hide();
