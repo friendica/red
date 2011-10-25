@@ -989,7 +989,7 @@ function get_birthdays() {
 	$r = q("SELECT `event`.*, `event`.`id` AS `eid`, `contact`.* FROM `event` 
 		LEFT JOIN `contact` ON `contact`.`id` = `event`.`cid` 
 		WHERE `event`.`uid` = %d AND `type` = 'birthday' AND `start` < '%s' AND `finish` > '%s' 
-		ORDER BY `start` DESC ",
+		ORDER BY `start` ASC ",
 		intval(local_user()),
 		dbesc(datetime_convert('UTC','UTC','now + 6 days')),
 		dbesc(datetime_convert('UTC','UTC','now'))
@@ -1047,7 +1047,7 @@ function get_events() {
 
 	$r = q("SELECT `event`.* FROM `event` 
 		WHERE `event`.`uid` = %d AND `type` != 'birthday' AND `start` < '%s' AND `start` > '%s'
-		ORDER BY `start` DESC ",
+		ORDER BY `start` ASC ",
 		intval(local_user()),
 		dbesc(datetime_convert('UTC','UTC','now + 6 days')),
 		dbesc(datetime_convert('UTC','UTC','now - 1 days'))
