@@ -19,7 +19,7 @@ function diaspora2bb($s) {
 
 
 function stripdcode_br_cb($s) {
-	return '[code]' . str_replace('<br />', '', $s[1]) . '[/code]';
+	return '[code]' . str_replace('<br />', "\n\t", $s[1]) . '[/code]';
 }
 
 
@@ -117,17 +117,17 @@ function bb2diaspora($Text,$preserve_nl = false) {
 
 	$Text = preg_replace_callback("/\[code\](.*?)\[\/code\]/is",'stripdcode_br_cb',$Text);
 
-//	$CodeLayout = '<code>$1</code>';
+	//	$CodeLayout = '<code>$1</code>';
 	// Check for [code] text
-	$Text = preg_replace("/\[code\](.*?)\[\/code\]/is","```$1```", $Text);
+	$Text = preg_replace("/\[code\](.*?)\[\/code\]/is","\t$1\n", $Text);
 
 
 
 
 	// Declare the format for [quote] layout
-//	$QuoteLayout = '<blockquote>$1</blockquote>';                     
+	//	$QuoteLayout = '<blockquote>$1</blockquote>';                     
 	// Check for [quote] text
-//	$Text = preg_replace("/\[quote\](.*?)\[\/quote\]/is","$QuoteLayout", $Text);
+	$Text = preg_replace("/\[quote\](.*?)\[\/quote\]/is",">$1\n\n", $Text);
          
 	// Images
 
