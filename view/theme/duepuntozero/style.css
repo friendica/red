@@ -228,6 +228,9 @@ footer {
 
 }
 
+.birthday-today, .event-today {
+	font-weight: bold;
+}
 
 div.wall-item-content-wrapper.shiny {
   background-image: url('shiny.png');
@@ -2537,6 +2540,16 @@ a.mail-list-link {
 }
 #event-submit {
 	margin-top: 10px;
+}
+
+.body-tag {
+	opacity: 0.5;
+	filter:alpha(opacity=50);
+}
+
+.body-tag:hover {
+	opacity: 1.0 !important;
+	filter:alpha(opacity=100) !important;
 }
 
 .item-select {
