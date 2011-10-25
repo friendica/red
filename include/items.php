@@ -2674,7 +2674,7 @@ function item_getfeedtags($item) {
 	if($cnt) {
 		for($x = 0; $x < count($matches); $x ++) {
 			if($matches[1][$x])
-				$ret[] = array('#',$matches[1][$x], $matches[2][$x]);
+				$ret[] = array('@',$matches[1][$x], $matches[2][$x]);
 		}
 	} 
 	return $ret;
