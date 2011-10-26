@@ -823,7 +823,7 @@ profile-jot-banner-wrapper {
 /* ======== */
 
 .tabs {
-	width: 500px;
+	min-width: 500px;
 	list-style: none;
 	padding: 10px;
 	margin: 0px 0px 10px 0px;
@@ -3085,4 +3085,42 @@ ul.menu-popup {
 
 #jGrowl {
 	z-index: 20000;
+}
+
+/* autocomplete popup */
+.acpopup {
+	max-height:150px;
+	overflow:auto;
+	z-index:100000;
+	
+	color: #2e3436;
+	border-top: 0px;
+	background: #eeeeee;
+	border-right: 1px solid #dddddd;
+	border-left: 1px solid #dddddd;
+	border-bottom: 1px solid #dddddd;
+	-webkit-border-radius: 0px 5px 5px 5px;
+	-moz-border-radius: 0px 5px 5px 5px;
+	border-radius: 0px 5px 5px 5px;
+	-moz-box-shadow: 3px 3px 4px #959494;
+	-webkit-box-shadow: 3px 3px 4px #959494;
+	box-shadow: 3px 3px 4px #959494;
+	
+}
+.acpopupitem {
+	color: #2e3436; padding: 4px;
+	clear:left;
+}
+.acpopupitem img {
+	float: left;
+	margin-right: 4px;
+}
+
+.acpopupitem.selected {
+	color: #efefef;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #b20202), color-stop(1, #d60808) );
+	background:-moz-linear-gradient( center top, #b20202 5%, #d60808 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#b20202', endColorstr='#d60808');
+	background-color:#b20202; 
+	order-bottom: none;
 }

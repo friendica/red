@@ -4,7 +4,7 @@ function oembed_replacecb($matches){
 	$embedurl=$matches[1];
 	$j = oembed_fetch_url($embedurl);
 	$s =  oembed_format_object($j);
-	return oembed_iframe($s,$j->width,$j->height);
+	return $s;//oembed_iframe($s,$j->width,$j->height);
 
 
 }
@@ -56,6 +56,7 @@ function oembed_fetch_url($embedurl){
 	
 function oembed_format_object($j){
 	$embedurl = $j->embedurl;
+	$jhtml = oembed_iframe($j->html,$j->width,$j->height );
 	$ret="<span class='oembed ".$j->type."'>";
 	switch ($j->type) {
 		case "video": {
@@ -68,14 +69,14 @@ function oembed_format_object($j){
 				$tpl=get_markup_template('oembed_video.tpl');
 				$ret.=replace_macros($tpl, array(
 					'$embedurl'=>$embedurl,
-					'$escapedhtml'=>urlencode($j->html),
+					'$escapedhtml'=>base64_encode($jhtml),
 					'$tw'=>$tw,
 					'$th'=>$th,
 					'$turl'=>$j->thumbnail_url,
 				));
 				
 			} else {
-				$ret=$j->html;
+				$ret=$jhtml;
 			}
 			$ret.="<br>";
 		}; break;
@@ -88,12 +89,12 @@ function oembed_format_object($j){
 		}; break;  
 		case "rich": {
 			// not so safe.. 
-			$ret.= $j->html;
+			$ret.= $jhtml;
 		}; break;
 	}
 
 	// add link to source if not present in "rich" type
-	if (  $j->type!='rich' || !strpos($ret,$embedurl) ){
+	if (  $j->type!='rich' || !strpos($j->html,$embedurl) ){
 		$embedlink = (isset($j->title))?$j->title:$embedurl;
 		$ret .= "<a href='$embedurl' rel='oembed'>$embedlink</a>";
 		if (isset($j->author_name)) $ret.=" by ".$j->author_name;
@@ -107,7 +108,6 @@ function oembed_format_object($j){
 }
 
 function oembed_iframe($src,$width,$height) {
-
 	if(! $width || strstr($width,'%'))
 		$width = '640';
 	if(! $height || strstr($height,'%'))
