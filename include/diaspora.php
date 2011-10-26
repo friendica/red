@@ -92,12 +92,14 @@ function find_diaspora_person_by_handle($handle) {
 		dbesc($handle)
 	);
 	if(count($r)) {
+		logger('find_diaspora_person_by handle: in cache ' . print_r($r,true), LOGGER_DEBUG);
 		// update record occasionally so it doesn't get stale
 		$d = strtotime($r[0]['updated'] . ' +00:00');
 		if($d > strtotime('now - 14 days'))
 			return $r[0];
 		$update = true;
 	}
+	logger('find_diaspora_person_by_handle: refresh',LOGGER_DEBUG);
 	require_once('include/Scrape.php');
 	$r = probe_url($handle, PROBE_DIASPORA);
 	if((count($r)) && ($r['network'] === NETWORK_DIASPORA)) {
@@ -947,7 +949,10 @@ function diaspora_comment($importer,$xml,$msg) {
 	$datarray['author-avatar'] = ((x($person,'thumb')) ? $person['thumb'] : $person['photo']);
 	$datarray['body'] = $body;
 	$datarray['tag'] = $str_tags;
-	$datarray['app']  = 'Diaspora';
+
+	// We can't be certain what the original app is if the message is relayed.
+	if(($parent_item['origin']) && (! $parent_author_signature)) 
+		$datarray['app']  = 'Diaspora';
 
 	$message_id = item_store($datarray);
 

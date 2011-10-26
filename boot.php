@@ -9,7 +9,7 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDIKA_PLATFORM',     'Free Friendika');
-define ( 'FRIENDIKA_VERSION',      '2.3.1144' );
+define ( 'FRIENDIKA_VERSION',      '2.3.1145' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
 define ( 'DB_UPDATE_VERSION',      1098      );
 
@@ -989,7 +989,7 @@ function get_birthdays() {
 	$r = q("SELECT `event`.*, `event`.`id` AS `eid`, `contact`.* FROM `event` 
 		LEFT JOIN `contact` ON `contact`.`id` = `event`.`cid` 
 		WHERE `event`.`uid` = %d AND `type` = 'birthday' AND `start` < '%s' AND `finish` > '%s' 
-		ORDER BY `start` DESC ",
+		ORDER BY `start` ASC ",
 		intval(local_user()),
 		dbesc(datetime_convert('UTC','UTC','now + 6 days')),
 		dbesc(datetime_convert('UTC','UTC','now'))
@@ -997,20 +997,23 @@ function get_birthdays() {
 
 	if($r && count($r)) {
 		$total = 0;
-		foreach($r as $rr)
+		$now = strtotime('now');
+		$istoday = false;
+		foreach($r as $rr) {
 			if(strlen($rr['name']))
 				$total ++;
-
+				if((strtotime($rr['start'] . ' +00:00') < $now) && (strtotime($rr['finish'] . ' +00:00') > $now))
+					$istoday = true;
+		}
+		$classtoday = $istoday ? ' birthday-today ' : '';
 		if($total) {
-			$o .= '<div id="birthday-notice" class="birthday-notice fakelink" onclick=openClose(\'birthday-wrapper\'); >' . t('Birthday Reminders') . ' ' . '(' . $total . ')' . '</div>'; 
+			$o .= '<div id="birthday-notice" class="birthday-notice fakelink' . $classtoday . '" onclick=openClose(\'birthday-wrapper\'); >' . t('Birthday Reminders') . ' ' . '(' . $total . ')' . '</div>'; 
 			$o .= '<div id="birthday-wrapper" style="display: none;" ><div id="birthday-title">' . t('Birthdays this week:') . '</div>'; 
-//			$o .= '<div id="birthday-adjust">' . t("\x28Adjusted for local time\x29") . '</div>';
 			$o .= '<div id="birthday-title-end"></div>';
 
 			foreach($r as $rr) {
 				if(! strlen($rr['name']))
 					continue;
-				$now = strtotime('now');
 				$today = (((strtotime($rr['start'] . ' +00:00') < $now) && (strtotime($rr['finish'] . ' +00:00') > $now)) ? true : false); 
 				$sparkle = '';
 				$url = $rr['url'];
@@ -1046,15 +1049,27 @@ function get_events() {
 	$bd_short = t('F d');
 
 	$r = q("SELECT `event`.* FROM `event` 
-		WHERE `event`.`uid` = %d AND `type` != 'birthday' AND `start` < '%s' AND `finish` > '%s' 
-		ORDER BY `start` DESC ",
+		WHERE `event`.`uid` = %d AND `type` != 'birthday' AND `start` < '%s' AND `start` > '%s'
+		ORDER BY `start` ASC ",
 		intval(local_user()),
 		dbesc(datetime_convert('UTC','UTC','now + 6 days')),
-		dbesc(datetime_convert('UTC','UTC','now'))
+		dbesc(datetime_convert('UTC','UTC','now - 1 days'))
 	);
 
 	if($r && count($r)) {
-		$o .= '<div id="event-notice" class="birthday-notice fakelink" onclick=openClose(\'event-wrapper\'); >' . t('Event Reminders') . ' ' . '(' . count($r) . ')' . '</div>'; 
+		$now = strtotime('now');
+		$istoday = false;
+		foreach($r as $rr) {
+			if(strlen($rr['name']))
+				$total ++;
+
+			$strt = datetime_convert('UTC',$rr['convert'] ? $a->timezone : 'UTC',$rr['start'],'Y-m-d');
+			if($strt === datetime_convert('UTC',$a->timezone,'now','Y-m-d'))
+				$istoday = true;
+		}
+		$classtoday = (($istoday) ? ' event-today ' : '');
+
+		$o .= '<div id="event-notice" class="birthday-notice fakelink' . $classtoday . '" onclick=openClose(\'event-wrapper\'); >' . t('Event Reminders') . ' ' . '(' . count($r) . ')' . '</div>'; 
 		$o .= '<div id="event-wrapper" style="display: none;" ><div id="event-title">' . t('Events this week:') . '</div>'; 
 		$o .= '<div id="event-title-end"></div>';
 
@@ -1068,8 +1083,9 @@ function get_events() {
 			$title = substr(strip_tags(bbcode($rr['desc'])),0,32) . '... ';
 			if(! $title)
 				$title = t('[No description]');
-			$now = strtotime('now');
-			$today = (((strtotime($rr['start'] . ' +00:00') < $now) && (strtotime($rr['finish'] . ' +00:00') > $now)) ? true : false); 
+
+			$strt = datetime_convert('UTC',$rr['convert'] ? $a->timezone : 'UTC',$rr['start']);
+			$today = ((substr($strt,0,10) === datetime_convert('UTC',$a->timezone,'now','Y-m-d')) ? true : false);	
 
 			$o .= '<div class="event-list" id="event-' . $rr['eid'] . '"></a> <a href="events/' . $md . '">' . $title . '</a>' 
 			. day_translate(datetime_convert('UTC', $rr['adjust'] ? $a->timezone : 'UTC', $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '')
