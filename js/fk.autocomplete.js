@@ -65,7 +65,7 @@ ACPopup.prototype._search = function(){
 				that.cont.show();
 				$(data.items).each(function(){
 					html = "<img src='{0}' height='16px' width='16px'>{1} ({2})".format(this.photo, this.name, this.nick)
-					that.add(html, this.nick);
+					that.add(html, this.nick + ' - ' + this.link);
 				});			
 			} else {
 				that.cont.hide();
@@ -78,7 +78,7 @@ ACPopup.prototype.add = function(label, value){
 	var that=this;
 	var elm = $("<div class='acpopupitem' title='"+value+"'>"+label+"</div>");
 	elm.click(function(e){
-		t = $(this).attr('title');
+			t = $(this).attr('title').replace(new RegExp(' \- .*'),'');
 		el=$(that.element);
 		sel = el.getSelection();
 		sel.start = sel.start- that.searchText.length;

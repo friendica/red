@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1098 );
+define( 'UPDATE_VERSION' , 1099 );
 
 /**
  *
@@ -806,6 +806,29 @@ function update_1097() {
 		ADD INDEX (`created`), 
 		ADD INDEX (`last`), 
 		ADD INDEX (`network`), 
-		ADD INDEX (`batch`) ");
+		ADD INDEX (`batch`) 
+	");
 }
+
+function update_1098() {
+	q("ALTER TABLE `contact` 
+		ADD INDEX (`network`), 
+		ADD INDEX (`name`), 
+		ADD INDEX (`nick`), 
+		ADD INDEX (`attag`), 
+		ADD INDEX (`url`),
+		ADD INDEX (`addr`), 
+		ADD INDEX (`batch`) 
+	");
+}
+
+
+
+
+
+
+
+
+
+
 

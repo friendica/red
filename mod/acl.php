@@ -15,7 +15,7 @@ function acl_init(&$a){
 
 	if ($search!=""){
 		$sql_extra = "AND `name` LIKE '%%".dbesc($search)."%%'";
-		$sql_extra2 = "AND (`name` LIKE '%%".dbesc($search)."%%' OR `nick` LIKE '%%".dbesc($search)."%%')";
+		$sql_extra2 = "AND (`attag` LIKE '%%".dbesc($search)."%%' OR `name` LIKE '%%".dbesc($search)."%%' OR `nick` LIKE '%%".dbesc($search)."%%')";
 	}
 	
 	// count groups and contacts
@@ -89,7 +89,7 @@ function acl_init(&$a){
 				"id"	=> intval($g['id']),
 				"network" => $g['network'],
 				"link" => $g['url'],
-				"nick" => $g['nick'],
+				"nick" => ($g['attag']) ? $g['attag'] : $g['nick'],
 			);
 		}
 			
