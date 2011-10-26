@@ -18,19 +18,21 @@ function ACPopup(elm,backend_url){
 	w = $(elm).width();
 	h = $(elm).height();
 	style.top=style.top+h;
-	style['max-height'] = '150px';
 	style.width = w;
+	style.position = 'absolute';
+/*	style['max-height'] = '150px';
 	style.border = '1px solid red';
 	style.background = '#cccccc';
-	style.position = 'absolute';
+	
 	style.overflow = 'auto';
 	style['z-index'] = '100000';
+*/
 	style.display = 'none';
 	
 	this.cont = $("<div class='acpopup'></div>");
 	this.cont.css(style);
 	
-	$(elm).after(this.cont);
+	$("body").append(this.cont);
 }
 ACPopup.prototype.close = function(){
 	$(this.cont).remove();
@@ -40,7 +42,7 @@ ACPopup.prototype.search = function(text){
 	var that = this;
 	this.searchText=text;
 	if (this.kp_timer) clearTimeout(this.kp_timer);
-	this.kp_timer = setTimeout( function(){that._search();}, 1000);
+	this.kp_timer = setTimeout( function(){that._search();}, 500);
 }
 ACPopup.prototype._search = function(){	
 	console.log("_search");
@@ -104,8 +106,8 @@ ACPopup.prototype.onkey = function(event){
 	}
 	
 	if (event.keyCode == '38' || event.keyCode == '40' ) {
-		this.cont.children().css({background:'#cccccc'}).removeClass('selected');
-		$(this.cont.children()[this.idsel]).css({background:'#ccccff'}).addClass('selected');
+		this.cont.children().removeClass('selected');
+		$(this.cont.children()[this.idsel]).addClass('selected');
 	}
 	
 	if (event.keyCode == '27') { //ESC
@@ -147,9 +149,11 @@ function ContactAutocomplete(element,backend_url){
  * jQuery plugin 'contact_autocomplete'
  */
 (function( $ ){
+  var map=new Array();
   $.fn.contact_autocomplete = function(backend_url) {
     this.each(function(){
-		new ContactAutocomplete(this, backend_url);
+		if (this in map) return;
+		map[this] = new ContactAutocomplete(this, backend_url);
 	});
   };
 })( jQuery );

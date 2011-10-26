@@ -192,6 +192,29 @@ ul.menu-popup {
 		
 }
 
+/* autocomplete popup */
+.acpopup {
+	max-height:150px;
+	background-color:@MenuBg;
+	color: @Menu;
+	border:1px solid #MenuBorder;
+	overflow:auto;
+	z-index:100000;
+	.shadow();
+}
+.acpopupitem {
+	color: @MenuItem; padding: 4px;
+	clear:left;
+	img {
+		float: left;
+		margin-right: 4px;
+	}
+	&.selected{
+		background-color: @MenuItemHoverBg;
+	}
+}
+
+
 #nav-notifications-menu {
 	width: 400px;
 	img { float: left; margin-right: 5px; }
