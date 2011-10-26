@@ -85,7 +85,8 @@ abstract class OAuthSignatureMethod {
    */
   public function check_signature($request, $consumer, $token, $signature) {
     $built = $this->build_signature($request, $consumer, $token);
-    return $built == $signature;
+    //echo "<pre>"; var_dump($signature, $built, ($built == $signature)); killme();
+    return ($built == $signature);
   }
 }
 
@@ -113,7 +114,9 @@ class OAuthSignatureMethod_HMAC_SHA1 extends OAuthSignatureMethod {
     $key_parts = OAuthUtil::urlencode_rfc3986($key_parts);
     $key = implode('&', $key_parts);
 
-    return base64_encode(hash_hmac('sha1', $base_string, $key, true));
+
+    $r = base64_encode(hash_hmac('sha1', $base_string, $key, true));
+    return $r;
   }
 }
 
@@ -282,7 +285,12 @@ class OAuthRequest {
       }
 
     }
-
+    // fix for friendika redirect system
+    
+    $http_url =  substr($http_url, 0, strpos($http_url,$parameters['q'])+strlen($parameters['q']));
+    unset( $parameters['q'] );
+    
+	//echo "<pre>".__function__."\n"; var_dump($http_method, $http_url, $parameters, $_SERVER['REQUEST_URI']); killme();
     return new OAuthRequest($http_method, $http_url, $parameters);
   }
 
@@ -642,6 +650,7 @@ class OAuthServer {
       $token,
       $signature
     );
+	
 
     if (!$valid_sig) {
       throw new OAuthException("Invalid signature");

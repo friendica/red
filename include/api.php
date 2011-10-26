@@ -1158,9 +1158,8 @@
 		echo "oauth_token=".$r->key."&oauth_secret=".$r->secret;
 		killme();			
 	}
-	function api_oauth_authorize(&$a, $type){
-	}
+
 	api_register_func('api/oauth/request_token', 'api_oauth_request_token', false);
 	api_register_func('api/oauth/access_token', 'api_oauth_access_token', false);
-	api_register_func('api/oauth/authorize', 'api_oauth_authorize', false);
+
 

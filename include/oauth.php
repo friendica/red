@@ -101,6 +101,7 @@ class FKOAuth1 extends OAuthServer {
 	function __construct() {
 		parent::__construct(new FKOAuthDataStore());
 		$this->add_signature_method(new OAuthSignatureMethod_PLAINTEXT());
+		$this->add_signature_method(new OAuthSignatureMethod_HMAC_SHA1());
 	}
 }
 

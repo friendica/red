@@ -340,6 +340,11 @@ function settings_content(&$a) {
 			'sel'	=> (($a->argc > 1) && ($a->argv[1] === 'addon')?'active':''),
 		),
 		array(
+			'label' => t('Connections'),
+			'url' => $a->get_baseurl() . '/settings/oauth',
+			'sel' => (($a->argc > 1) && ($a->argv[1] === 'oauth')?'active':''),
+		),
+		array(
 			'label' => t('Export personal data'),
 			'url' => $a->get_baseurl() . '/uexport',
 			'sel' => ''
@@ -351,8 +356,17 @@ function settings_content(&$a) {
 		'$tabs' => $tabs,
 	));
 		
-	
-
+	if(($a->argc > 1) && ($a->argv[1] === 'oauth')) {
+		
+		$tpl = get_markup_template("settings_oauth.tpl");
+		$o .= replace_macros($tpl, array(
+			'$title'	=> t('Connected Apps'),
+			'$tabs'		=> $tabs,
+			'$settings_addons' => $settings_addons
+		));
+		return $o;
+		
+	}
 	if(($a->argc > 1) && ($a->argv[1] === 'addon')) {
 		$settings_addons = "";
 		
