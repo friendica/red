@@ -78,8 +78,6 @@
 			menu.toggle();
 			return false;
 		});
-		
-		
 
 		/* notifications template */
 		var notifications_tpl= unescape($("#nav-notifications-template[rel=template]").html());
@@ -163,7 +161,9 @@
 				}
 			}
 
-		});					
+		});
+		
+		
 	});
 
 	function NavUpdate() {
@@ -245,6 +245,8 @@
 				commentBusy = false;
 				$('body').css('cursor', 'auto');
 			}
+			/* autocomplete @nicknames */
+			$(".comment-edit-wrapper  textarea").contact_autocomplete(baseurl+"/acl");
 		});
 	}
 
@@ -444,6 +446,7 @@ function setupFieldRichtext(){
 		theme_advanced_path : false,
 	});
 }
+
 
 /** 
  * sprintf in javascript 

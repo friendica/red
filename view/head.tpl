@@ -17,11 +17,14 @@
 <script type="text/javascript" src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
 <script type="text/javascript" src="$baseurl/js/jquery.js" ></script>
+<script type="text/javascript" src="$baseurl/js/jquery.textinputs.js" ></script>
+<script type="text/javascript" src="$baseurl/js/fk.autocomplete.js" ></script>
 <script type="text/javascript" src="$baseurl/library/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="$baseurl/library/tiptip/jquery.tipTip.minified.js"></script>
 <script type="text/javascript" src="$baseurl/library/jgrowl/jquery.jgrowl_minimized.js"></script>
 <script type="text/javascript" src="$baseurl/library/tinymce/jscripts/tiny_mce/tiny_mce_src.js" ></script>
 <script type="text/javascript" src="$baseurl/js/acl.js" ></script>
+<script type="text/javascript" src="$baseurl/js/webtoolkit.base64.js" ></script>
 <script type="text/javascript" src="$baseurl/js/main.js" ></script>
 <script>
 
