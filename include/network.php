@@ -732,7 +732,6 @@ function add_fcontact($arr,$update = false) {
 			dbesc($arr['notify']),
 			dbesc($arr['poll']),
 			dbesc($arr['confirm']),
-			dbesc($arr['network']),
 			dbesc($arr['alias']),
 			dbesc($arr['pubkey']),
 			dbesc(datetime_convert()),
@@ -760,5 +759,6 @@ function add_fcontact($arr,$update = false) {
 			dbesc(datetime_convert())
 		);
 	}
+
 	return $r;
 }
