@@ -823,6 +823,13 @@ function profile_load(&$a, $nickname, $profile = 0) {
 	if(! (x($a->page,'aside')))
 		$a->page['aside'] = '';
 
+	if(local_user() && local_user() == $a->profile['uid']) {
+		$a->page['aside'] .= replace_macros(get_markup_template('profile_edlink.tpl'),array(
+			'$editprofile' => t('Edit profile'),
+			'$profid' => $a->profile['id']
+		));
+	}
+
 	$block = (((get_config('system','block_public')) && (! local_user()) && (! remote_user())) ? true : false);
 
 	$a->page['aside'] .= profile_sidebar($a->profile, $block);

@@ -623,6 +623,10 @@ input#dfrn-url {
 	margin-top: 10px;
 }
 
+.profile-edit-side-div {
+	float: right;
+}
+
 .view-contact-wrapper {
 	margin-top: 20px;
 	float: left;
