@@ -1264,7 +1264,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 			}
 			if($deleted && is_array($contact)) {
 				$r = q("SELECT `item`.*, `contact`.`self` FROM `item` left join `contact` on `item`.`contact-id` = `contact`.id` 
-					WHERE `uri` = '%s' AND `uid` = %d AND `contact-id` = %d LIMIT 1",
+					WHERE `uri` = '%s' AND `item`.`uid` = %d AND `contact-id` = %d LIMIT 1",
 					dbesc($uri),
 					intval($importer['uid']),
 					intval($contact['id'])
