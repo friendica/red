@@ -120,6 +120,9 @@ function ContactAutocomplete(element,backend_url){
 	this.popup=null;
 	var that = this;
 	
+	$(element).unbind('keydown');
+	$(element).unbind('keyup');
+	
 	$(element).keydown(function(event){
 		if (that.popup!==null) that.popup.onkey(event);
 	});
@@ -145,15 +148,14 @@ function ContactAutocomplete(element,backend_url){
 	
 }
 
+
 /**
  * jQuery plugin 'contact_autocomplete'
  */
 (function( $ ){
-  var map=new Array();
   $.fn.contact_autocomplete = function(backend_url) {
     this.each(function(){
-		if (this in map) return;
-		map[this] = new ContactAutocomplete(this, backend_url);
+		new ContactAutocomplete(this, backend_url);
 	});
   };
 })( jQuery );
