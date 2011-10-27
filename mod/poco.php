@@ -7,7 +7,9 @@ function poco_init(&$a) {
 		$user = notags(trim($a->argv[1]));
 	}
 	if(! x($user) || get_config('system','block_public'))
-		killme();
+		http_status_exit(401);
+
+	$format = (($_GET['format']) ? $_GET['format'] : 'json');
 
 	$justme = false;
 
@@ -26,7 +28,7 @@ function poco_init(&$a) {
 		dbesc($user)
 	);
 	if(! count($r) || $r[0]['hidewall'] || $r[0]['hide-friends'])
-		killme();
+		http_status_exit(404);
 
 	$user = $r[0];
 
@@ -57,28 +59,73 @@ function poco_init(&$a) {
 		intval($itemsPerPage)
 	);
 
-	$ret = array(
-		'startIndex' => $startIndex,
-		'itemsPerPage' => $itemsPerPage,
-		'totalResults' => $totalResults,
-		'entry' => array()
+	$ret = array();
+	if(x($_GET,'sorted'))
+		$ret['sorted'] = 'false';
+	if(x($_GET,'filtered'))
+		$ret['filtered'] = 'false';
+	if(x($_GET,'updatedSince'))
+		$ret['updateSince'] = 'false';
+
+	$ret['startIndex']   = $startIndex;
+	$ret['itemsPerPage'] = $itemsPerPage;
+	$ret['totalResults']  = $totalResults;
+	$ret['entry']        = array();
+
+
+	$fields_ret = array(
+		'id' => false,
+		'displayName' => false,
+		'urls' => false,
+		'preferredName' => false,
+		'photos' => false
 	);
 
-	if(count($r)) {
-		foreach($r as $rr) {
-			$entry = array();
-			$entry['id'] = $rr['id'];
-			$entry['displayName'] = $rr['name'];
-			$entry['urls'] = array('value' => $rr['url'], 'type' => 'profile');
-			$entry['preferredUsername'] = $rr['nick'];
-			$entry['photos'] = array('value' => $rr['photo'], 'type' => 'profile');
-			$ret['entry'][] = $entry;
-		}
+	if((! x($_GET,'fields')) || ($_GET['fields'] === '@all'))
+		foreach($fields_ret as $f)
+			$f = true;
+	else {
+		$fields_req = explode(',',$_GET['fields']);
+		foreach($fields_req as $f)
+			$fields_ret[trim($f)] = true;
 	}
-	header('Content-type: application/json');
-	echo json_encode($ret);
-	killme();	
 
+	if(is_array($r)) {
+		if(count($r)) {
+			foreach($r as $rr) {
+				$entry = array();
+				if($fields_ret['id'])
+					$entry['id'] = $rr['id'];
+				if($fields_ret['displayName'])
+					$entry['displayName'] = $rr['name'];
+				if($fields_ret['urls'])
+					$entry['urls'] = array('value' => $rr['url'], 'type' => 'profile');
+				if($fields_ret['preferredUsername'])
+					$entry['preferredUsername'] = $rr['nick'];
+				if($fields_ret['photos'])
+					$entry['photos'] = array('value' => $rr['photo'], 'type' => 'profile');
+				$ret['entry'][] = $entry;
+			}
+		}
+		else
+			$ret['entry'][] = array();
+	}
+	else
+		http_status_exit(500);
+
+	if($format === 'xml') {
+		header('Content-type: text/xml');
+		echo replace_macros(get_markup_template('poco.xml',array('response' => $ret)));
+		http_status_exit(500);
+
+	}
+	if($format === 'json') {
+		header('Content-type: application/json');
+		echo json_encode($ret);
+		killme();	
+	}
+	else
+		http_status_exit(500);
 
 
 }
