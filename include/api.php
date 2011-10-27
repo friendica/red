@@ -404,14 +404,6 @@
 		return $ret; 
 	}
 
-	/**
-	 * apply xmlify() to all values of array $val, recursively
-	 */
-	function api_xmlify($val){
-		if (is_bool($val)) return $val?"true":"false";
-		if (is_array($val)) return array_map('api_xmlify', $val);
-		return xmlify((string) $val);
-	}
 
 	/**
 	 *  load api $templatename for $type and replace $data array
@@ -424,7 +416,7 @@
 			case "atom":
 			case "rss":
 			case "xml":
-				$data = api_xmlify($data);
+				$data = array_xmlify($data);
 				$tpl = get_markup_template("api_".$templatename."_".$type.".tpl");
 				$ret = replace_macros($tpl, $data);
 				break;

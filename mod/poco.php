@@ -1,6 +1,5 @@
 <?php
 
-
 function poco_init(&$a) {
 
 	if($a->argc > 1) {
@@ -67,9 +66,9 @@ function poco_init(&$a) {
 	if(x($_GET,'updatedSince'))
 		$ret['updateSince'] = 'false';
 
-	$ret['startIndex']   = $startIndex;
-	$ret['itemsPerPage'] = $itemsPerPage;
-	$ret['totalResults']  = $totalResults;
+	$ret['startIndex']   = (string) $startIndex;
+	$ret['itemsPerPage'] = (string) $itemsPerPage;
+	$ret['totalResults'] = (string) $totalResults;
 	$ret['entry']        = array();
 
 
@@ -82,8 +81,8 @@ function poco_init(&$a) {
 	);
 
 	if((! x($_GET,'fields')) || ($_GET['fields'] === '@all'))
-		foreach($fields_ret as $f)
-			$f = true;
+		foreach($fields_ret as $k => $v)
+			$fields_ret[$k] = true;
 	else {
 		$fields_req = explode(',',$_GET['fields']);
 		foreach($fields_req as $f)
@@ -115,9 +114,8 @@ function poco_init(&$a) {
 
 	if($format === 'xml') {
 		header('Content-type: text/xml');
-		echo replace_macros(get_markup_template('poco.xml',array('response' => $ret)));
+		echo replace_macros(get_markup_template('poco_xml.tpl',array_xmlify(array('$response' => $ret))));
 		http_status_exit(500);
-
 	}
 	if($format === 'json') {
 		header('Content-type: application/json');

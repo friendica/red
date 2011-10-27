@@ -1053,3 +1053,12 @@ function html2bb_video($s) {
 
 	return $s;
 }
+
+/**
+ * apply xmlify() to all values of array $val, recursively
+ */
+function array_xmlify($val){
+	if (is_bool($val)) return $val?"true":"false";
+	if (is_array($val)) return array_map('array_xmlify', $val);
+	return xmlify((string) $val);
+}
