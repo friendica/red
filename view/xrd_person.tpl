@@ -27,6 +27,8 @@
     <Link rel="http://microformats.org/profile/hcard"
           type="text/html"
           href="$hcard_url" />
+    <Link rel="http://portablecontacts.net/spec/1.0"
+          href="$poco_url" />
     <Link rel="http://webfinger.net/rel/avatar"
           type="image/jpeg"
           href="$photo" />
