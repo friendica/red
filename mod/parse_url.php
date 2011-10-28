@@ -46,6 +46,7 @@ function parse_url_content(&$a) {
 		killme();
 	}
 
+
 	if($url && $title && $text) {
 
 		$text = '<br /><br /><blockquote>' . $text . '</blockquote><br />';
@@ -67,11 +68,24 @@ function parse_url_content(&$a) {
 		killme();
 	}
 
-	logger('parse_url: data: ' . $s, LOGGER_DATA);
+//	logger('parse_url: data: ' . $s, LOGGER_DATA);
 
 	if(! $s) {
 		echo sprintf($template,$url,$url,'') . $str_tags;
 		killme();
+	}
+
+	$matches = '';
+	$c = preg_match('/\<head(.*?)\>(.*?)\<\/head\>/ism',$s,$matches);
+	if($c) {
+//		logger('parse_url: header: ' . $matches[2], LOGGER_DATA);
+		try {
+			$domhead = HTML5_Parser::parse($matches[2]);
+		} catch (DOMException $e) {
+			logger('scrape_dfrn: parse error: ' . $e);
+		}
+		if($domhead)
+			logger('parsed header');
 	}
 
 	if(! $title) {
@@ -84,9 +98,10 @@ function parse_url_content(&$a) {
 
 	$config = HTMLPurifier_Config::createDefault();
 	$config->set('Cache.DefinitionImpl', null);
-
 	$purifier = new HTMLPurifier($config);
 	$s = $purifier->purify($s);
+
+//	logger('purify_output: ' . $s);
 
 	try {
 		$dom = HTML5_Parser::parse($s);
@@ -157,10 +172,63 @@ function parse_url_content(&$a) {
 		}
 	}
 
+	if(! $text) {
+		logger('parsing meta');
+		$items = $domhead->getElementsByTagName('meta');
+		if($items) {
+			foreach($items as $item) {
+				$property = $item->getAttribute('property');
+				if($property && (stristr($property,':description'))) {
+
+					$text = $item->getAttribute('content');
+					if(stristr($text,'<script')) {
+						$text = '';
+						continue;
+					}
+					$text = strip_tags($text);
+
+
+					$text = substr($text,0,250) . '...' ;
+				}
+				if($property && (stristr($property,':image'))) {
+
+					$image = $item->getAttribute('content');
+					if(stristr($text,'<script')) {
+						$image = '';
+						continue;
+					}
+					$image = strip_tags($image);
+					
+					$i = fetch_url($image);
+					if($i) {
+						require_once('include/Photo.php');
+						$ph = new Photo($i);
+						if($ph->is_valid()) {
+							if($ph->getWidth() > 300 || $ph->getHeight() > 300) {
+								$ph->scaleImage(300);
+								$new_width = $ph->getWidth();
+								$new_height = $ph->getHeight();
+								$image = '<br /><br /><img height="' . $new_height . '" width="' . $new_width . '" src="' .$image . '" alt="photo" />';
+							}
+							else
+								$image = '<br /><br /><img src="' . $image . '" alt="photo" />';
+						}
+						else
+							$image = '';
+					
+					}
+				}
+			}
+		}
+	}
+
 	if(strlen($text)) {
 		$text = '<br /><br /><blockquote>' . $text . '</blockquote><br />';
 	}
 
+	if($image) {
+		$text = $image . '<br />' . $text;
+	}
 	$title = str_replace(array("\r","\n"),array('',''),$title);
 
 	$result = sprintf($template,$url,($title) ? $title : $url,$text) . $str_tags;

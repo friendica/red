@@ -635,12 +635,18 @@ function diaspora_reshare($importer,$xml) {
 	$x = str_replace(array('<activity_streams-photo>','</activity_streams-photo>'),array('<asphoto>','</asphoto>'),$x);
 	$source_xml = parse_xml_string($x,false);
 
-	if(strlen($source_xml->post->asphoto->objectId) && ($source_xml->post->asphoto->objectId != 0) && ($source_xml->post->asphoto->image_url))
+	if(strlen($source_xml->post->asphoto->objectId) && ($source_xml->post->asphoto->objectId != 0) && ($source_xml->post->asphoto->image_url)) {
 		$body = '[url=' . notags(unxmlify($source_xml->post->asphoto->image_url)) . '][img]' . notags(unxmlify($source_xml->post->asphoto->objectId)) . '[/img][/url]' . "\n";
-	elseif($source_xml->post->asphoto->image_url)
+		$body = scale_diaspora_images($body,false);
+	}
+	elseif($source_xml->post->asphoto->image_url) {
 		$body = '[img]' . notags(unxmlify($source_xml->post->asphoto->image_url)) . '[/img]' . "\n";
+		$body = scale_diaspora_images($body);
+	}
 	elseif($source_xml->post->status_message) {
 		$body = diaspora2bb($source_xml->post->status_message->raw_message);
+		$body = scale_diaspora_images($body);
+
 	}
 	else {
 		logger('diaspora_reshare: no reshare content found: ' . print_r($source_xml,true));

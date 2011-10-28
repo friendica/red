@@ -22,7 +22,7 @@ function diaspora2bb($s) {
 }
 
 
-function scale_diaspora_images($s) {
+function scale_diaspora_images($s,$include_link = true) {
 
 	$matches = null;
 	$c = preg_match_all('/\[img\](.*?)\[\/img\]/ism',$s,$matches,PREG_SET_ORDER);
@@ -38,7 +38,9 @@ function scale_diaspora_images($s) {
 						$new_width = $ph->getWidth();
 						$new_height = $ph->getHeight();
 						$s = str_replace($mtch[0],'[img=' . $new_width . 'x' . $new_height. ']' . $mtch[1] . '[/img]'
-							. "\n" . '[url=' . $mtch[1] . ']' . t('view full size') . '[/url]' . "\n",$s);
+							. "\n" . ((! $include_link) 
+								? '[url=' . $mtch[1] . ']' . t('view full size') . '[/url]' . "\n"
+								: ''),$s);
 					}
 				}
 			}
