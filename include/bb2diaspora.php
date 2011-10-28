@@ -29,6 +29,7 @@ function scale_diaspora_images($s,$include_link = true) {
 	if($c) {
 		require_once('include/Photo.php');
 		foreach($matches as $mtch) {
+			logger('scale_diaspora_image: ' . $mtch[1]);
 			$i = fetch_url($mtch[1]);
 			if($i) {
 				$ph = new Photo($i);
