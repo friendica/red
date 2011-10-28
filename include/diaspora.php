@@ -777,15 +777,18 @@ function diaspora_asphoto($importer,$xml) {
 	$created = unxmlify($xml->created_at);
 	$private = ((unxmlify($xml->public) == 'false') ? 1 : 0);
 
-	if(strlen($xml->objectId) && ($xml->objectId != 0) && ($xml->image_url))
+	if(strlen($xml->objectId) && ($xml->objectId != 0) && ($xml->image_url)) {
 		$body = '[url=' . notags(unxmlify($xml->image_url)) . '][img]' . notags(unxmlify($xml->objectId)) . '[/img][/url]' . "\n";
-	elseif($xml->image_url)
+		$body = scale_diaspora_images($body,false);
+	}
+	elseif($xml->image_url) {
 		$body = '[img]' . notags(unxmlify($xml->image_url)) . '[/img]' . "\n";
+		$body = scale_diaspora_images($body);
+	}
 	else {
 		logger('diaspora_asphoto: no photo url found.');
 		return;
 	}
-
 
 	$datarray = array();
 
@@ -1024,6 +1027,8 @@ function diaspora_photo($importer,$xml,$msg) {
 	$parent_item = $r[0];
 
 	$link_text = '[img]' . $remote_photo_path . $remote_photo_name . '[/img]' . "\n";
+
+	$link_text = scale_diaspora_images($link_text);
 
 	if(strpos($parent_item['body'],$link_text) === false) {
 		$r = q("update item set `body` = '%s', `visible` = 1 where `id` = %d and `uid` = %d limit 1",
