@@ -17,10 +17,35 @@ function diaspora2bb($s) {
 	$s = preg_replace("/\[url\=?(.*?)\]https?:\/\/vimeo.com\/([0-9]+)(.*?)\[\/url\]/ism",'[vimeo]$2[/vimeo]',$s); 
 	$s = preg_replace("/\[url\=https?:\/\/vimeo.com\/([0-9]+)\](.*?)\[\/url\]/ism",'[vimeo]$1[/vimeo]',$s); 
 	$s = preg_replace("/([^\]\=]|^)(https?\:\/\/)(vimeo|youtu|www\.youtube|soundcloud)([a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\%\$\!\+\,]+)/ism", '$1[url]$2$3$4[/url]',$s);
-
+	$s = scale_diaspora_images($s);
 	return $s;
 }
 
+
+function scale_diaspora_images($s) {
+
+	$matches = null;
+	$c = preg_match_all('/\[img\](.*?)\[\/img\]/ism',$s,$matches,PREG_SET_ORDER);
+	if($c) {
+		require_once('include/Photo.php');
+		foreach($matches as $mtch) {
+			$i = fetch_url($mtch[1]);
+			if($i) {
+				$ph = new Photo($i);
+				if($ph->is_valid()) {
+					if($ph->getWidth() > 600 || $ph->getHeight() > 600) {
+						$ph->scaleImage(600);
+						$new_width = $ph->getWidth();
+						$new_height = $ph->getHeight();
+						$s = str_replace($mtch[0],'[img=' . $new_width . 'x' . $new_height. ']' . $mtch[1] . '[/img]'
+							. "\n" . '[url=' . $mtch[1] . ']' . t('view full size') . '[/url]' . "\n",$s);
+					}
+				}
+			}
+		}
+	}
+	return $s;
+}
 
 function stripdcode_br_cb($s) {
 	return '[code]' . str_replace('<br />', "\n\t", $s[1]) . '[/code]';

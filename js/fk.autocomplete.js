@@ -65,7 +65,7 @@ ACPopup.prototype._search = function(){
 				that.cont.show();
 				$(data.items).each(function(){
 					html = "<img src='{0}' height='16px' width='16px'>{1} ({2})".format(this.photo, this.name, this.nick)
-					that.add(html, this.nick + ' - ' + this.link);
+					that.add(html, this.nick + '+' + this.id + ' - ' + this.link);
 				});			
 			} else {
 				that.cont.hide();

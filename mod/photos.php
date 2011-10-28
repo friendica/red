@@ -408,7 +408,18 @@ function photos_post(&$a) {
 						}
 						else {
 							$newname = $name;
-							if(strstr($name,'_') || strstr($name,' ')) {
+							$alias = '';
+							$tagcid = 0;
+							if(strrpos($newname,'+'))
+								$tagcid = intval(substr($newname,strrpos($newname,'+') + 1));
+
+							if($tagcid) {
+								$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+									intval($tagcid),
+									intval($profile_uid)
+								);
+							}
+							elseif(strstr($name,'_') || strstr($name,' ')) {
 								$newname = str_replace('_',' ',$name);
 								$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `uid` = %d LIMIT 1",
 									dbesc($newname),
