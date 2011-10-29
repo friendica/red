@@ -672,7 +672,7 @@ function smilies($s) {
 
 	$s = str_replace(
 	array( '&lt;3', '&lt;/3', '&lt;\\3', ':-)', ':)', ';-)', ':-(', ':(', ':-P', ':P', ':-"', ':-x', ':-X', ':-D', '8-|', '8-O', 
-		'~friendika', 'Diaspora*' ),
+		'~friendika', '~friendica', 'Diaspora*' ),
 	array(
 		'<img src="' . $a->get_baseurl() . '/images/smiley-heart.gif" alt="<3" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-brokenheart.gif" alt="</3" />',
@@ -691,6 +691,7 @@ function smilies($s) {
 		'<img src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-|" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-O" />',
 		'<a href="http://project.friendika.com">~friendika <img src="' . $a->get_baseurl() . '/images/friendika-16.png" alt="~friendika" /></a>',
+		'<a href="http://friendica.com">~friendica <img src="' . $a->get_baseurl() . '/images/friendika-16.png" alt="~friendica" /></a>',
 		'<a href="http://diasporafoundation.org">Diaspora<img src="' . $a->get_baseurl() . '/images/diaspora.png" alt="Diaspora*" /></a>',
 
 	), $s);
