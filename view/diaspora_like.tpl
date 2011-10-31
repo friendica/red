@@ -1,7 +1,7 @@
 <XML>
   <post>
     <like>
-      <target_type>$type</target_type>
+      <target_type>$target_type</target_type>
       <guid>$guid</guid>
       <parent_guid>$parent_guid</parent_guid>
       <author_signature>$authorsig</author_signature>
