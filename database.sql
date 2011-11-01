@@ -75,6 +75,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `notify` text NOT NULL,
   `poll` text NOT NULL,
   `confirm` text NOT NULL,
+  `poco` text NOT NULL,
   `aes_allow` tinyint(1) NOT NULL DEFAULT '0',
   `ret-aes` tinyint(1) NOT NULL DEFAULT '0',
   `usehub` tinyint(1) NOT NULL DEFAULT '0',
@@ -658,3 +659,23 @@ CREATE TABLE IF NOT EXISTS `fserver` (
 INDEX ( `server` )
 ) ENGINE = MyISAM DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `gcontact` (
+`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`name` CHAR( 255 ) NOT NULL ,
+`url` CHAR( 255 ) NOT NULL ,
+`nurl` CHAR( 255 ) NOT NULL ,
+`photo` CHAR( 255 ) NOT NULL,
+INDEX ( `nurl` ),
+) ENGINE = MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `glink` (
+`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`cid` INT NOT NULL ,
+`uid` INT NOT NULL ,
+`gcid` INT NOT NULL,
+`updated` DATETIME NOT NULL,
+INDEX ( `cid` ),
+INDEX ( `uid` ),
+INDEX ( `gcid` ),
+INDEX ( `updated` )
+) ENGINE = MyISAM DEFAULT CHARSET=utf8;

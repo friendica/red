@@ -369,6 +369,8 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 					$hcard = unamp($link['@attributes']['href']);
 				if($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page')
 					$profile = unamp($link['@attributes']['href']);
+				if($link['@attributes']['rel'] === 'http://portablecontacts.net/spec/1.0')
+					$poco = unamp($link['@attributes']['href']);
 				if($link['@attributes']['rel'] === 'http://joindiaspora.com/seed_location') {
 					$diaspora_base = unamp($link['@attributes']['href']);
 					$diaspora = true;
@@ -684,6 +686,7 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 	$result['poll'] = $poll;
 	$result['request'] = $request;
 	$result['confirm'] = $confirm;
+	$result['poco'] = $poco;
 	$result['photo'] = $vcard['photo'];
 	$result['priority'] = $priority;
 	$result['network'] = $network;

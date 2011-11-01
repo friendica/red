@@ -143,8 +143,8 @@ function dfrn_request_post(&$a) {
 					 */
 
 					$r = q("INSERT INTO `contact` ( `uid`, `created`,`url`, `name`, `nick`, `photo`, `site-pubkey`,
-						`request`, `confirm`, `notify`, `poll`, `network`, `aes_allow`) 
-						VALUES ( %d, '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d)",
+						`request`, `confirm`, `notify`, `poll`, `poco`, `network`, `aes_allow`) 
+						VALUES ( %d, '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d)",
 						intval(local_user()),
 						datetime_convert(),
 						dbesc($dfrn_url),
@@ -156,6 +156,7 @@ function dfrn_request_post(&$a) {
 						$parms['dfrn-confirm'],
 						$parms['dfrn-notify'],
 						$parms['dfrn-poll'],
+						$parms['dfrn-poco'],
 						dbesc(NETWORK_DFRN),
 						intval($aes_allow)
 					);
@@ -371,8 +372,8 @@ function dfrn_request_post(&$a) {
 
 				dbesc_array($parms);
 				$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `name`, `nick`, `issued-id`, `photo`, `site-pubkey`,
-					`request`, `confirm`, `notify`, `poll`, `network` )
-					VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+					`request`, `confirm`, `notify`, `poll`, `poco`, `network` )
+					VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 					intval($uid),
 					datetime_convert(),
 					$parms['url'],
@@ -385,6 +386,7 @@ function dfrn_request_post(&$a) {
 					$parms['dfrn-confirm'],
 					$parms['dfrn-notify'],
 					$parms['dfrn-poll'],
+					$parms['dfrn-poco'],
 					dbesc(NETWORK_DFRN)
 				);
 
@@ -635,14 +637,14 @@ function dfrn_request_content(&$a) {
 
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Friend/Connection Request'),
-			'$desc' => t('Examples: jojo@demo.friendika.com, http://demo.friendika.com/profile/jojo, testuser@identi.ca'),
+			'$desc' => t('Examples: jojo@demo.friendica.com, http://demo.friendica.com/profile/jojo, testuser@identi.ca'),
 			'$pls_answer' => t('Please answer the following:'),
 			'$does_know' => sprintf( t('Does %s know you?'),$a->profile['name']),
 			'$yes' => t('Yes'),
 			'$no' => t('No'),
 			'$add_note' => t('Add a personal note:'),
 			'$page_desc' => $page_desc,
-			'$friendika' => t('Friendika'),
+			'$friendika' => t('Friendica'),
 			'$statusnet' => t('StatusNet/Federated Social Web'),
 			'$diaspora' => t('Diaspora'),
 			'$diasnote' => t('- please share from your own site as noted above'),

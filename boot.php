@@ -8,10 +8,10 @@ require_once("include/pgettext.php");
 require_once('include/nav.php');
 require_once('include/cache.php');
 
-define ( 'FRIENDIKA_PLATFORM',     'Free Friendika');
+define ( 'FRIENDIKA_PLATFORM',     'Friendica');
 define ( 'FRIENDIKA_VERSION',      '2.3.1151' );
-define ( 'DFRN_PROTOCOL_VERSION',  '2.21'    );
-define ( 'DB_UPDATE_VERSION',      1099      );
+define ( 'DFRN_PROTOCOL_VERSION',  '2.22'    );
+define ( 'DB_UPDATE_VERSION',      1100      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -94,7 +94,7 @@ define ( 'PAGE_FREELOVE',          3 );
  */
 
 define ( 'NETWORK_ZOT',              'zot!');    // Zot!
-define ( 'NETWORK_DFRN',             'dfrn');    // Friendika, Mistpark, other DFRN implementations
+define ( 'NETWORK_DFRN',             'dfrn');    // Friendica, Mistpark, other DFRN implementations
 define ( 'NETWORK_OSTATUS',          'stat');    // status.net, identi.ca, GNU-social, other OStatus implementations
 define ( 'NETWORK_FEED',             'feed');    // RSS/Atom feeds with no known "post/notify" protocol
 define ( 'NETWORK_DIASPORA',         'dspr');    // Diaspora

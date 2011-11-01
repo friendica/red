@@ -298,6 +298,13 @@ function poller_run($argv, $argc){
 				if((intval($res->status) != 0) || (! strlen($res->challenge)) || (! strlen($res->dfrn_id)))
 					continue;
 
+				if(((float) $res->dfrn_version > 2.21) && ($contact['poco'] == '')) {
+					q("update contact set poco = '%s' where id = %d limit 1",
+						dbesc(str_replace('/profile/','/poco/', $contact['url'])),
+						intval($contact['id'])
+					);
+				}
+
 				$postvars = array();
 
 				$sent_dfrn_id = hex2bin((string) $res->dfrn_id);

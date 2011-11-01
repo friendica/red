@@ -98,11 +98,11 @@ function poco_init(&$a) {
 				if($fields_ret['displayName'])
 					$entry['displayName'] = $rr['name'];
 				if($fields_ret['urls'])
-					$entry['urls'] = array('value' => $rr['url'], 'type' => 'profile');
+					$entry['urls'] = array(array('value' => $rr['url'], 'type' => 'profile'));
 				if($fields_ret['preferredUsername'])
 					$entry['preferredUsername'] = $rr['nick'];
 				if($fields_ret['photos'])
-					$entry['photos'] = array('value' => $rr['photo'], 'type' => 'profile');
+					$entry['photos'] = array(array('value' => $rr['photo'], 'type' => 'profile'));
 				$ret['entry'][] = $entry;
 			}
 		}

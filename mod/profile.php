@@ -46,6 +46,7 @@ function profile_init(&$a) {
 	$dfrn_pages = array('request', 'confirm', 'notify', 'poll');
 	foreach($dfrn_pages as $dfrn)
 		$a->page['htmlhead'] .= "<link rel=\"dfrn-{$dfrn}\" href=\"".$a->get_baseurl()."/dfrn_{$dfrn}/{$which}\" />\r\n";
+	$a->page['htmlhead'] .= "<link rel=\"dfrn-poco\" href=\"".$a->get_baseurl()."/poco/{$which}\" />\r\n";
 
 }
 

@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1099 );
+define( 'UPDATE_VERSION' , 1100 );
 
 /**
  *
@@ -822,8 +822,29 @@ function update_1098() {
 	");
 }
 
+function update_1099() {
+	q("CREATE TABLE IF NOT EXISTS `gcontact` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`name` CHAR( 255 ) NOT NULL ,
+	`url` CHAR( 255 ) NOT NULL ,
+	`nurl` CHAR( 255 ) NOT NULL ,
+	`photo` CHAR( 255 ) NOT NULL
+	) ENGINE = MYISAM ");
 
+	q("CREATE TABLE IF NOT EXISTS `glink` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`cid` INT NOT NULL ,
+	`uid` INT NOT NULL ,
+	`gcid` INT NOT NULL,
+	`updated` DATETIME NOT NULL,
+	) ENGINE = MYISAM ");
 
+	q("ALTER TABLE `gcontact` ADD INDEX (`nurl`) ");
+	q("ALTER TABLE `glink` ADD INDEX (`cid`), ADD INDEX (`uid`), ADD INDEX (`gcid`), ADD INDEX (`updated`) ");
+
+	q("ALTER TABLE `contact` ADD `poco` TEXT NOT NULL AFTER `confirm` "); 
+
+}
 
 
 
