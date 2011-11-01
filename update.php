@@ -836,7 +836,7 @@ function update_1099() {
 	`cid` INT NOT NULL ,
 	`uid` INT NOT NULL ,
 	`gcid` INT NOT NULL,
-	`updated` DATETIME NOT NULL,
+	`updated` DATETIME NOT NULL
 	) ENGINE = MYISAM ");
 
 	q("ALTER TABLE `gcontact` ADD INDEX (`nurl`) ");
