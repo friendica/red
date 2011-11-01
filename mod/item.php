@@ -333,13 +333,19 @@ function item_post(&$a) {
 		}
 	}
 
-	// embedded bookmark in post? convert to regular url and set bookmark flag
+	// embedded bookmark in post? set bookmark flag
 
 	$bookmark = 0;
-	if(preg_match_all("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/ism",$body,$match)) {
+	if(preg_match_all("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/ism",$body,$match,PREG_SET_ORDER)) {
 		$bookmark = 1;
+//		foreach($match as $mtch) {
+//			$body = str_replace(
+//				'[bookmark=' . $mtch[1] . ']' . $mtch[2] . '[/bookmark]',
+//				'[url=' . $mtch[1] . ']' . $mtch[2] . '[/url]',
+//				$body
+//			);
+//		}
 	}
-
 
 	$body = bb_translate_video($body);
 
