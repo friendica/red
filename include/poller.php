@@ -24,6 +24,7 @@ function poller_run($argv, $argc){
 	require_once('include/items.php');
 	require_once('include/Contact.php');
 	require_once('include/email.php');
+	require_once('include/socgraph.php');
 
 	load_config('config');
 	load_config('system');
@@ -527,6 +528,20 @@ function poller_run($argv, $argc){
 				dbesc($updated),
 				intval($contact['id'])
 			);
+
+
+			// load current friends if possible.
+
+			if($contact['poco']) {	
+				$r = q("SELECT count(*) as total from glink 
+					where `cid` = %d and updated > UTC_TIMESTAMP() - INTERVAL 1 DAY",
+					intval($contact['id'])
+				);
+			}
+			if(count($r)) {
+				if(! $r[0]['total'])
+					poco_load($contact['id'],$importer_uid,$contact['poco']);
+			}
 
 			// loop - next contact
 		}
