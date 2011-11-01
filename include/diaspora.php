@@ -451,13 +451,14 @@ function diaspora_request($importer,$xml) {
 
 	$batch = (($ret['batch']) ? $ret['batch'] : implode('/', array_slice(explode('/',$ret['url']),0,3)) . '/receive/public');
 
-	$r = q("INSERT INTO `contact` (`uid`, `network`,`addr`,`created`,`url`,`batch`,`name`,`nick`,`photo`,`pubkey`,`notify`,`poll`,`blocked`,`priority`)
-		VALUES ( %d, '%s', '%s', '%s','%s','%s','%s','%s','%s','%s','%s','%s',%d,%d) ",
+	$r = q("INSERT INTO `contact` (`uid`, `network`,`addr`,`created`,`url`,`nurl`,`batch`,`name`,`nick`,`photo`,`pubkey`,`notify`,`poll`,`blocked`,`priority`)
+		VALUES ( %d, '%s', '%s', '%s', '%s','%s','%s','%s','%s','%s','%s','%s','%s',%d,%d) ",
 		intval($importer['uid']),
 		dbesc($ret['network']),
 		dbesc($ret['addr']),
 		datetime_convert(),
 		dbesc($ret['url']),
+		dbesc(normalise_link($ret['url'])),
 		dbesc($batch),
 		dbesc($ret['name']),
 		dbesc($ret['nick']),

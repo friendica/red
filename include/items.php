@@ -2388,12 +2388,13 @@ function new_follower($importer,$contact,$datarray,$item,$sharing = false) {
 	
 		// create contact record
 
-		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `name`, `nick`, `photo`, `network`, `rel`, 
+		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `nurl`, `name`, `nick`, `photo`, `network`, `rel`, 
 			`blocked`, `readonly`, `pending`, `writable` )
-			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, 0, 0, 1, 1 ) ",
+			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, 0, 0, 1, 1 ) ",
 			intval($importer['uid']),
 			dbesc(datetime_convert()),
 			dbesc($url),
+			dbesc(normalise_link($url)),
 			dbesc($name),
 			dbesc($nick),
 			dbesc($photo),

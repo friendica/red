@@ -100,12 +100,13 @@ function follow_post(&$a) {
 			$new_relation = CONTACT_IS_FOLLOWER;
 
 		// create contact record 
-		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `addr`, `alias`, `batch`, `notify`, `poll`, `poco`, `name`, `nick`, `photo`, `network`, `pubkey`, `rel`, `priority`,
+		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `nurl`, `addr`, `alias`, `batch`, `notify`, `poll`, `poco`, `name`, `nick`, `photo`, `network`, `pubkey`, `rel`, `priority`,
 			`writable`, `blocked`, `readonly`, `pending` )
-			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, 0, 0, 0 ) ",
+			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, 0, 0, 0 ) ",
 			intval(local_user()),
 			dbesc(datetime_convert()),
 			dbesc($ret['url']),
+			dbesc(normalise_link($ret['url'])),
 			dbesc($ret['addr']),
 			dbesc($ret['alias']),
 			dbesc($ret['batch']),

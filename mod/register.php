@@ -268,9 +268,9 @@ function register_post(&$a) {
 				intval($newuid));
 			return;
 		}
-		$r = q("INSERT INTO `contact` ( `uid`, `created`, `self`, `name`, `nick`, `photo`, `thumb`, `micro`, `blocked`, `pending`, `url`,
-			`request`, `notify`, `poll`, `confirm`, `name-date`, `uri-date`, `avatar-date` )
-			VALUES ( %d, '%s', 1, '%s', '%s', '%s', '%s', '%s', 0, 0, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
+		$r = q("INSERT INTO `contact` ( `uid`, `created`, `self`, `name`, `nick`, `photo`, `thumb`, `micro`, `blocked`, `pending`, `url`, `nurl`,
+			`request`, `notify`, `poll`, `confirm`, `poco`, `name-date`, `uri-date`, `avatar-date` )
+			VALUES ( %d, '%s', 1, '%s', '%s', '%s', '%s', '%s', 0, 0, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 			intval($newuid),
 			datetime_convert(),
 			dbesc($username),
@@ -279,10 +279,12 @@ function register_post(&$a) {
 			dbesc($a->get_baseurl() . "/photo/avatar/{$newuid}.jpg"),
 			dbesc($a->get_baseurl() . "/photo/micro/{$newuid}.jpg"),
 			dbesc($a->get_baseurl() . "/profile/$nickname"),
+			dbesc(normalise_link($a->get_baseurl() . "/profile/$nickname")),
 			dbesc($a->get_baseurl() . "/dfrn_request/$nickname"),
 			dbesc($a->get_baseurl() . "/dfrn_notify/$nickname"),
 			dbesc($a->get_baseurl() . "/dfrn_poll/$nickname"),
 			dbesc($a->get_baseurl() . "/dfrn_confirm/$nickname"),
+			dbesc($a->get_baseurl() . "/poco/$nickname"),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert())

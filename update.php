@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1100 );
+define( 'UPDATE_VERSION' , 1101 );
 
 /**
  *
@@ -846,6 +846,22 @@ function update_1099() {
 
 }
 
+function update_1100() {
+	q("ALTER TABLE `contact` ADD `nurl` CHAR( 255 ) NOT NULL AFTER `url` ");
+	q("alter table contact add index (`nurl`) ");
+
+	require_once('include/text.php');
+
+	$r = q("select id, url from contact where url != '' and nurl = '' ");
+	if(count($r)) {
+		foreach($r as $rr) {
+			q("update contact set nurl = '%s' where id = %d limit 1",
+				dbesc(normalise_link($rr['url'])),
+				intval($rr['id'])
+			); 
+		}
+	}
+}
 
 
 
