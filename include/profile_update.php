@@ -16,7 +16,7 @@ function profile_change() {
 //      proc_run('php',"include/directory.php","$url");
 
 	$recips = q("SELECT DISTINCT(`batch`), `id`, `name`,`network` FROM `contact` WHERE `network` = '%s'
-		AND `uid` = %d AND `rel` != %d ORDER BY rand() ",
+		AND `uid` = %d AND `rel` != %d group by `batch` ORDER BY rand() ",
 		dbesc(NETWORK_DIASPORA),
 		intval(local_user()),
 		intval(CONTACT_IS_SHARING)
@@ -101,7 +101,7 @@ function profile_change() {
 	logger('profile_change: ' . $msg, LOGGER_ALL);
 
 	foreach($recips as $recip) {
-		$msgtosend = diaspora_msg_build($msg,$a->user,$recip,$a->user['prvkey'],null,true);
+		$msgtosend = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$a->user,$recip,$a->user['prvkey'],null,true)));
 		add_to_queue($recip['id'],NETWORK_DIASPORA,$msgtosend,true);
 	}
 }

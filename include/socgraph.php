@@ -118,7 +118,7 @@ function poco_load($cid,$uid = 0,$url = null) {
 
 	}
 
-	q("delete from gcid where `cid` = %d and `uid` = %d and `updated` < UTC_TIMESTAMP - INTERVAL 2 DAY",
+	q("delete from glink where `cid` = %d and `uid` = %d and `updated` < UTC_TIMESTAMP - INTERVAL 2 DAY",
 		intval($cid),
 		intval($uid)
 	);

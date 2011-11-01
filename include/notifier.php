@@ -710,7 +710,7 @@ function notifier_run($argv, $argc){
 	if($public_message) {
 
 		$r1 = q("SELECT DISTINCT(`batch`), `id`, `name`,`network` FROM `contact` WHERE `network` = '%s' 
-			AND `uid` = %d AND `rel` != %d ORDER BY rand() ",
+			AND `uid` = %d AND `rel` != %d group by `batch` ORDER BY rand() ",
 			dbesc(NETWORK_DIASPORA),
 			intval($owner['uid']),
 			intval(CONTACT_IS_SHARING)
