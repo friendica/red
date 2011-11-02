@@ -1,6 +1,7 @@
 <?php
 
 require_once('include/socgraph.php');
+require_once('include/contact_widgets.php');
 
 function suggest_content(&$a) {
 
@@ -9,6 +10,10 @@ function suggest_content(&$a) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
+
+	$a->page['aside'] .= follow_widget();
+	$a->page['aside'] .= findpeople_widget();
+
 
 	$o .= '<h2>' . t('Friend Suggestions') . '</h2>';
 

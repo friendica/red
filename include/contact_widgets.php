@@ -32,9 +32,11 @@ function findpeople_widget() {
 		'$label' => t('Connect/Follow'),
 		'$hint' => t('Examples: Robert Morgenstein, Fishing'),
 		'$findthem' => t('Find'),
+		'$suggest' => t('Friend Suggestions'),
 		'$similar' => t('Similar Interests'),
 		'$inv' => $inv
 	));
 
 }
+
 

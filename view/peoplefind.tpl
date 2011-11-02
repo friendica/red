@@ -5,6 +5,7 @@
 		<input id="side-peoplefind-url" type="text" name="search" size="24" title="$hint" /><input id="side-peoplefind-submit" type="submit" name="submit" value="$findthem" />
 	</form>
 	<div class="side-link" id="side-match-link"><a href="match" >$similar</a></div>
+	<div class="side-link" id="side-suggest-link"><a href="suggest" >$suggest</a></div>
 	{{ if $inv }} 
 	<div class="side-link" id="side-invite-link" ><a href="invite" >$inv</a></div>
 	{{ endif }}
