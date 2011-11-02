@@ -1,6 +1,7 @@
 <?php
 
 require_once('include/Contact.php');
+require_once('include/socgraph.php');
 
 function contacts_init(&$a) {
 	if(! local_user())
@@ -265,6 +266,8 @@ function contacts_content(&$a) {
 
 		$nettype = '<div id="contact-edit-nettype">' . sprintf( t('Network type: %s'),network_to_name($r[0]['network'])) . '</div>';
 
+		$common = count_common_friends(local_user(),$r[0]['id']);
+		$common_text = (($common) ? sprintf( tt('%d friends in common','%d friends in common', $common),$common) : '');
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Contact Editor'),
 			'$submit' => t('Submit'),
@@ -275,6 +278,8 @@ function contacts_content(&$a) {
 			'$lbl_rep2' => t('Occasionally your friends may wish to inquire about this person\'s online legitimacy.'),
 			'$lbl_rep3' => t('You may help them choose whether or not to interact with this person by providing a <em>reputation</em> to guide them.'),
 			'$lbl_rep4' => t('Please take a moment to elaborate on this selection if you feel it could be helpful to others.'),
+			'$common_text' => $common_text,
+			'$common_link' => $a->get_baseurl() . '/common/' . $r[0]['id'],
 			'$visit' => sprintf( t('Visit %s\'s profile [%s]'),$r[0]['name'],$r[0]['url']),
 			'$blockunblock' => t('Block/Unblock contact'),
 			'$ignorecont' => t('Ignore contact'),

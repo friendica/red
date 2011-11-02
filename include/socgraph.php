@@ -124,3 +124,39 @@ function poco_load($cid,$uid = 0,$url = null) {
 	);
 
 }
+
+
+function count_common_friends($uid,$cid) {
+
+	$r = q("SELECT count(*) as `total`
+		FROM `glink` left join `gcontact` on `glink`.`gcid` = `gcontact`.`id`
+		where `glink`.`cid` = %d and `glink`.`uid` = %d
+		and `gcontact`.`nurl` in (select nurl from contact where uid = %d and self = 0 and id != %d ) ",
+		intval($cid),
+		intval($uid),
+		intval($uid),
+		intval($cid)
+	);
+
+	if(count($r))
+		return $r[0]['total'];
+	return 0;
+
+}
+
+
+function common_friends($uid,$cid) {
+
+	$r = q("SELECT `gcontact`.* 
+		FROM `glink` left join `gcontact` on `glink`.`gcid` = `gcontact`.`id`
+		where `glink`.`cid` = %d and `glink`.`uid` = %d
+		and `gcontact`.`nurl` in (select nurl from contact where uid = %d and self = 0 and id != %d ) ",
+		intval($cid),
+		intval($uid),
+		intval($uid),
+		intval($cid)
+	);
+
+	return $r;
+
+}

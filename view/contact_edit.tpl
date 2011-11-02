@@ -19,6 +19,7 @@ $nettype
 	</div>
 	<div id="contact-edit-nav-wrapper" >
 
+
 		<div id="contact-edit-links" >
 			<a href="contacts/$contact_id/block" class="icon block" id="contact-edit-block-link" title="$block_text"></a>
 			<a href="contacts/$contact_id/ignore" class="icon no" id="contact-edit-ignore-link" title="$ignore_text"></a>
@@ -40,6 +41,14 @@ $nettype
 		{{ endif }}
 	</div>
 	<div id="contact-edit-end" ></div>
+
+
+	{{ if $common_text }}
+	<div id="contact-edit-common">
+	<a href="$common_link">$common_text</a>
+	</a>
+	{{ endif }}
+
 
 $insecure
 $blocked
