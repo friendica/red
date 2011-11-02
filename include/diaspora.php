@@ -1418,6 +1418,17 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 
 	$body = xmlify(html_entity_decode(bb2diaspora($body)));
 
+	if($item['attach']) {
+		$cnt = preg_match_all('/href=\"(.*?)\"(.*?)title=\"(.*?)\"/ism',$item['attach'],$matches,PREG_SET_ORDER);
+		if(cnt) {
+			$body .= "\n" . t('Attachments:') . "\n";
+			foreach($matches as $mtch) {
+				$body .= '[' . $mtch[3] . '](' . $mtch[1] . ')' . "\n";
+			}
+		}
+	}	
+
+
 	$public = (($item['private']) ? 'false' : 'true');
 
 	require_once('include/datetime.php');
