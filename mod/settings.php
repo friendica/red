@@ -362,7 +362,6 @@ function settings_content(&$a) {
 		$o .= replace_macros($tpl, array(
 			'$title'	=> t('Connected Apps'),
 			'$tabs'		=> $tabs,
-			'$settings_addons' => $settings_addons
 		));
 		return $o;
 		

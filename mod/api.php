@@ -52,18 +52,15 @@ function api_content(&$a) {
 			$app = oauth_get_client();
 			if (is_null($app)) return "Invalid request. Unknown token.";
 			$consumer = new OAuthConsumer($app['key'], $app['secret']);
-			
-			// Rev A change
-			$request = OAuthRequest::from_request();
-			$callback = $request->get_parameter('oauth_callback');
-			$datastore = new FKOAuthDataStore();
-			$new_token = $datastore->new_request_token($consumer, $callback);
+
+			$verifier = md5($app['secret'].local_user());
+			set_pconfig(local_user(), "oauth", "verifier", $verifier);
 			
 			$tpl = get_markup_template("oauth_authorize_done.tpl");
 			$o = replace_macros($tpl, array(
 				'$title' => t('Authorize application connection'),
 				'$info' => t('Return to your app and insert this Securty Code:'),
-				'$code' => $new_token->key,
+				'$code' => $verifier,
 			));
 		
 			return $o;

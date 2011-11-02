@@ -5,7 +5,8 @@
  * 
  */
 
-define('TOKEN_DURATION', 300);
+define('REQUEST_TOKEN_DURATION', 300);
+define('ACCESS_TOKEN_DURATION', 31536000);
 
 require_once("library/OAuth1.php");
 require_once("library/oauth2-php/lib/OAuth2.inc");
@@ -62,7 +63,7 @@ class FKOAuthDataStore extends OAuthDataStore {
 				dbesc($sec),
 				dbesc($consumer->key),
 				'request',
-				intval(TOKEN_DURATION));
+				intval(REQUEST_TOKEN_DURATION));
 		if (!$r) return null;
 		return new OAuthToken($key,$sec);
   }
@@ -75,7 +76,11 @@ class FKOAuthDataStore extends OAuthDataStore {
     
     $ret=Null;
     
-    if (!is_null($token) && $token->expires > time()){
+    // get verifier for this user
+    $uverifier = get_pconfig(local_user(), "oauth", "verifier");
+    
+    
+    if (is_null($verifier) || ($verifier==$uverifier)){
 		
 		$key = $this->gen_token();
 		$sec = $this->gen_token();
@@ -84,13 +89,22 @@ class FKOAuthDataStore extends OAuthDataStore {
 				dbesc($sec),
 				dbesc($consumer->$key),
 				'access',
-				intval(TOKEN_DURATION));
+				intval(ACCESS_TOKEN_DURATION));
 		if ($r)
 			$ret = new OAuthToken($key,$sec);		
 	}
 		
 		
-	q("DELETE FROM tokens WHERE id='%s'", $token->key);
+	//q("DELETE FROM tokens WHERE id='%s'", $token->key);
+	
+	
+	if (!is_null($ret)){
+		//del_pconfig(local_user(), "oauth", "verifier");
+		$apps = get_pconfig(local_user(), "oauth", "apps");
+		if ($apps===false) $apps=array();
+		$apps[] = $consumer->key;
+		//set_pconfig(local_user(), "oauth", "apps", $apps);
+	}
 		
     return $ret;
     
