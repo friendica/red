@@ -458,7 +458,7 @@ function profiles_content(&$a) {
 
 			$tpl_header = get_markup_template('profile_listing_header.tpl');
 			$o .= replace_macros($tpl_header,array(
-				'$header' => t('Profiles'),
+				'$header' => t('Edit/Manage Profiles'),
 				'$chg_photo' => t('Change profile photo'),
 				'$cr_new' => t('Create New Profile')
 			));

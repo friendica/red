@@ -47,16 +47,7 @@
 					<li class="empty">$emptynotifications</li>
 				</ul>
 			</li>		
-		{{ endif }}
-
-
-
-		
-	
-
-
-		
-		
+		{{ endif }}		
 		
 		<li id="nav-site-linkmenu" class="nav-menu-icon"><a href="#" rel="#nav-site-menu"><span class="icon s22 gear">Site</span></a>
 			<ul id="nav-site-menu" class="menu-popup">

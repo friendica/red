@@ -506,7 +506,7 @@ function admin_page_plugins(&$a){
 		if (x($_GET,"a") && $_GET['a']=="t"){
 			// Toggle plugin status
 			$idx = array_search($plugin, $a->plugins);
-			if ($idx){
+			if ($idx !== false){
 				unset($a->plugins[$idx]);
 				uninstall_plugin($plugin);
 				info( sprintf( t("Plugin %s disabled."), $plugin ) );
