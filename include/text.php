@@ -465,7 +465,7 @@ function get_tags($s) {
 	// Match full names against @tags including the space between first and last
 	// We will look these up afterward to see if they are full names or not recognisable.
 
-	if(preg_match_all('/(@[^ \x0D\x0A,:?]+ [^ \x0D\x0A,:?]+)([ \x0D\x0A,:?]|$)/',$s,$match)) {
+	if(preg_match_all('/(@[^ \x0D\x0A,:?]+ [^ \x0D\x0A@,:?]+)([ \x0D\x0A@,:?]|$)/',$s,$match)) {
 		foreach($match[1] as $mtch) {
 			if(strstr($mtch,"]")) {
 				// we might be inside a bbcode color tag - leave it alone

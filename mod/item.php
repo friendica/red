@@ -378,6 +378,7 @@ function item_post(&$a) {
 
 	if(count($tags)) {
 		foreach($tags as $tag) {
+			
 			if(isset($profile))
 				unset($profile);
 			if(strpos($tag,'#') === 0) {
