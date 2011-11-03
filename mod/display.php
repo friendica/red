@@ -15,6 +15,9 @@ function display_content(&$a) {
 
 	$o = '<div id="live-display"></div>' . "\r\n";
 
+	$a->page['htmlhead'] .= '<script>$(document).ready(function() {	$(".comment-edit-wrapper  textarea").contact_autocomplete(baseurl+"/acl"); });</script>';
+
+
 	$nick = (($a->argc > 1) ? $a->argv[1] : '');
 	profile_load($a,$nick);
 
