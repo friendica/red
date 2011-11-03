@@ -592,8 +592,8 @@ function photos_post(&$a) {
 		$visible = 1;
 	else
 		$visible = 0;
-
-	if(intval($_REQUEST['not_visible']))
+	
+	if(intval($_REQUEST['not_visible']) || $_REQUEST['not_visible'] === 'true')
 		$visible = 0;
 
 	$str_group_allow   = perms2str(((is_array($_REQUEST['group_allow']))   ? $_REQUEST['group_allow']   : explode(',',$_REQUEST['group_allow'])));
