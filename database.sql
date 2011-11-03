@@ -667,7 +667,7 @@ CREATE TABLE IF NOT EXISTS `gcontact` (
 `url` CHAR( 255 ) NOT NULL ,
 `nurl` CHAR( 255 ) NOT NULL ,
 `photo` CHAR( 255 ) NOT NULL,
-INDEX ( `nurl` ),
+INDEX ( `nurl` )
 ) ENGINE = MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `glink` (
@@ -681,3 +681,12 @@ INDEX ( `uid` ),
 INDEX ( `gcid` ),
 INDEX ( `updated` )
 ) ENGINE = MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `gcign` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`uid` INT NOT NULL ,
+`gcid` INT NOT NULL,
+INDEX ( `uid` ),
+INDEX ( `gcid` )
+) ENGINE = MyISAM DEFAULT CHARSET=utf8;
+

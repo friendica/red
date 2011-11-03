@@ -3,6 +3,24 @@
 require_once('include/socgraph.php');
 require_once('include/contact_widgets.php');
 
+
+function suggest_init(&$a) {
+	if(! local_user())
+		return;
+
+	if(x($_GET,'ignore') && intval($_GET['ignore'])) {
+		q("insert into gcign ( uid, gcid ) values ( %d, %d ) ",
+			intval(local_user()),
+			intval($_GET['ignore'])
+		);
+	}
+
+}
+		
+
+
+
+
 function suggest_content(&$a) {
 
 	$o = '';
@@ -25,7 +43,7 @@ function suggest_content(&$a) {
 		return $o;
 	}
 
-	$tpl = get_markup_template('common_friends.tpl');
+	$tpl = get_markup_template('suggest_friends.tpl');
 
 	foreach($r as $rr) {
 			
@@ -33,7 +51,8 @@ function suggest_content(&$a) {
 			'$url' => $rr['url'],
 			'$name' => $rr['name'],
 			'$photo' => $rr['photo'],
-			'$tags' => ''
+			'$ignlnk' => $a->get_baseurl() . '/suggest?ignore=' . $rr['id'],
+			'$ignore' => t('Ignore/Hide')
 		));
 	}
 

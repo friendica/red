@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1101 );
+define( 'UPDATE_VERSION' , 1102 );
 
 /**
  *
@@ -861,6 +861,17 @@ function update_1100() {
 			); 
 		}
 	}
+}
+
+
+function update_1101() {
+	q("CREATE TABLE IF NOT EXISTS `gcign` (
+	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`uid` INT NOT NULL ,
+	`gcid` INT NOT NULL
+	) ENGINE = MYISAM ");
+
+	q("ALTER TABLE `gcign` ADD INDEX (`uid`), ADD INDEX (`gcid`) ");
 }
 
 

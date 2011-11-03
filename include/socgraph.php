@@ -171,7 +171,9 @@ function suggestion_query($uid, $start = 0, $limit = 40) {
 	$r = q("SELECT count(glink.gcid) as `total`, gcontact.* from gcontact 
 		left join glink on glink.gcid = gcontact.id 
 		where uid = %d and not gcontact.nurl in ( select nurl from contact where uid = %d)
+		and not gcontact.id in ( select gcid from gcign where uid = %d )
 		group by glink.gcid order by total desc limit %d, %d ",
+		intval($uid),
 		intval($uid),
 		intval($uid),
 		intval($start),
