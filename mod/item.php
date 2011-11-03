@@ -455,17 +455,23 @@ function item_post(&$a) {
 				if($profile) {
 					$body = str_replace('@' . $name, '@' . '[url=' . $profile . ']' . $newname	. '[/url]', $body);
 					$profile = str_replace(',','%2c',$profile);
-					if(strlen($str_tags))
-						$str_tags .= ',';
-					$str_tags .= '@[url=' . $profile . ']' . $newname	. '[/url]';
+					$newtag = '@[url=' . $profile . ']' . $newname	. '[/url]';
+					if(! stristr($str_tags,$newtag)) {
+						if(strlen($str_tags))
+							$str_tags .= ',';
+						$str_tags .= $newtag;
+					}
 
 					// Status.Net seems to require the numeric ID URL in a mention if the person isn't 
 					// subscribed to you. But the nickname URL is OK if they are. Grrr. We'll tag both. 
 
 					if(strlen($alias)) {
-						if(strlen($str_tags))
-							$str_tags .= ',';
-						$str_tags .= '@[url=' . $alias . ']' . $newname	. '[/url]';
+						$newtag = '@[url=' . $alias . ']' . $newname	. '[/url]';
+						if(! stristr($str_tags,$newtag)) {
+							if(strlen($str_tags))
+								$str_tags .= ',';
+							$str_tags .= $newtag;
+						}
 					}
 				}
 			}
