@@ -30,9 +30,26 @@ function initEditor(cb){
 			content_css: "$baseurl/view/custom_tinymce.css",
 			theme_advanced_path : false,
 			setup : function(ed) {
-				 //Character count
+				cPopup = null;
+				ed.onKeyDown.add(function(ed,e) {
+					if(cPopup !== null)
+						cPopup.onkey(e);
+				});
+
 				ed.onKeyUp.add(function(ed, e) {
 					var txt = tinyMCE.activeEditor.getContent();
+					match = txt.match(/@([^ \n]+)$/);
+					if(match!==null) {
+						if(cPopup === null) {
+							cPopup = new ACPopup(this,baseurl+"/acl");
+						}
+						if(cPopup.ready && match[1]!==cPopup.searchText) cPopup.search(match[1]);
+						if(! cPopup.ready) cPopup = null;
+					}
+					else {
+						if(cPopup !== null) { cPopup.close(); cPopup = null; }
+					}
+
 					textlen = txt.length;
 					if(textlen != 0 && $('#jot-perms-icon').is('.unlock')) {
 						$('#profile-jot-desc').html(ispublic);
@@ -40,6 +57,8 @@ function initEditor(cb){
 					else {
 						$('#profile-jot-desc').html('&nbsp;');
 					}	 
+
+				 //Character count
 
 					if(textlen <= 140) {
 						$('#character-counter').removeClass('red');
@@ -71,8 +90,8 @@ function initEditor(cb){
 		editor = true;
 		// setup acl popup
 		$("a#jot-perms-icon").fancybox({
-			'transitionIn' : 'none',
-			'transitionOut' : 'none'
+			'transitionIn' : 'elastic',
+			'transitionOut' : 'elastic'
 		}); 
 	} else {
 		if (typeof cb!="undefined") cb();

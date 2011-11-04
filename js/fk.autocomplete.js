@@ -13,20 +13,28 @@ function ACPopup(elm,backend_url){
 	this.ready=true;
 	this.kp_timer = false;
 	this.url = backend_url;
-	
-	style = $(elm).offset();
-	w = $(elm).width();
-	h = $(elm).height();
+
+	if(typeof elm.editorId == "undefined") {	
+		style = $(elm).offset();
+		w = $(elm).width();
+		h = $(elm).height();
+	}
+	else {
+		style = $('.profile-jot-text').offset();
+		w = 300;
+		h = 150;
+
+	} 
 	style.top=style.top+h;
 	style.width = w;
 	style.position = 'absolute';
-/*	style['max-height'] = '150px';
-	style.border = '1px solid red';
-	style.background = '#cccccc';
+	/*	style['max-height'] = '150px';
+		style.border = '1px solid red';
+		style.background = '#cccccc';
 	
-	style.overflow = 'auto';
-	style['z-index'] = '100000';
-*/
+		style.overflow = 'auto';
+		style['z-index'] = '100000';
+	*/
 	style.display = 'none';
 	
 	this.cont = $("<div class='acpopup'></div>");
