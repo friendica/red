@@ -95,6 +95,10 @@ function bbcode($Text,$preserve_nl = false) {
 	$Text = preg_replace("(\[size=(.*?)\](.*?)\[\/size\])ism","<span style=\"font-size: $1;\">$2</span>",$Text);
 
 	// Check for list text
+
+	if(stristr($Text,'[/list]'))
+		$Text = str_replace("[*]", "<li>", $Text);
+
 	$Text = preg_replace("/\[list\](.*?)\[\/list\]/ism", '<ul class="listbullet">$1</ul>' ,$Text);
 	$Text = preg_replace("/\[list=1\](.*?)\[\/list\]/ism", '<ul class="listdecimal">$1</ul>' ,$Text);
 	$Text = preg_replace("/\[list=i\](.*?)\[\/list\]/sm",'<ul class="listlowerroman">$1</ul>' ,$Text);
@@ -111,7 +115,6 @@ function bbcode($Text,$preserve_nl = false) {
 	$Text = preg_replace("/\[table border=0\](.*?)\[\/table\]/sm", '<table border="0" >$1</table>' ,$Text);
 
 	
-//	$Text = str_replace("[*]", "<li>", $Text);
 
 	// Check for font change text
 	$Text = preg_replace("/\[font=(.*?)\](.*?)\[\/font\]/sm","<span style=\"font-family: $1;\">$2</span>",$Text);
