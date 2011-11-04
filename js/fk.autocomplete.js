@@ -13,20 +13,28 @@ function ACPopup(elm,backend_url){
 	this.ready=true;
 	this.kp_timer = false;
 	this.url = backend_url;
-	
-	style = $(elm).offset();
-	w = $(elm).width();
-	h = $(elm).height();
+
+	if(typeof elm.editorId == "undefined") {	
+		style = $(elm).offset();
+		w = $(elm).width();
+		h = $(elm).height();
+	}
+	else {
+		style = $(elm.container).offset();
+		w = elm.container.offsetWidth;
+		h = elm.container.offsetHeight;
+	}
+
 	style.top=style.top+h;
 	style.width = w;
 	style.position = 'absolute';
-/*	style['max-height'] = '150px';
-	style.border = '1px solid red';
-	style.background = '#cccccc';
+	/*	style['max-height'] = '150px';
+		style.border = '1px solid red';
+		style.background = '#cccccc';
 	
-	style.overflow = 'auto';
-	style['z-index'] = '100000';
-*/
+		style.overflow = 'auto';
+		style['z-index'] = '100000';
+	*/
 	style.display = 'none';
 	
 	this.cont = $("<div class='acpopup'></div>");
@@ -65,7 +73,7 @@ ACPopup.prototype._search = function(){
 				that.cont.show();
 				$(data.items).each(function(){
 					html = "<img src='{0}' height='16px' width='16px'>{1} ({2})".format(this.photo, this.name, this.nick)
-					that.add(html, this.nick + '+' + this.id + ' - ' + this.link);
+						that.add(html, this.nick + '+' + this.id + ' - ' + this.link);
 				});			
 			} else {
 				that.cont.hide();
@@ -74,16 +82,25 @@ ACPopup.prototype._search = function(){
 	});
 	
 }
-ACPopup.prototype.add = function(label, value){
+	ACPopup.prototype.add = function(label, value){
 	var that=this;
 	var elm = $("<div class='acpopupitem' title='"+value+"'>"+label+"</div>");
 	elm.click(function(e){
-			t = $(this).attr('title').replace(new RegExp(' \- .*'),'');
-		el=$(that.element);
-		sel = el.getSelection();
-		sel.start = sel.start- that.searchText.length;
-		el.setSelection(sel.start,sel.end).replaceSelectedText(t).collapseSelection(false);
-		that.close();
+		t = $(this).attr('title').replace(new RegExp(' \- .*'),'');
+		if(typeof(that.element.container) === "undefined") {
+			el=$(that.element);
+			sel = el.getSelection();
+			sel.start = sel.start- that.searchText.length;
+			el.setSelection(sel.start,sel.end).replaceSelectedText(t+' ').collapseSelection(false);
+			that.close();
+		}
+		else {
+			txt = tinyMCE.activeEditor.getContent();
+			newtxt = txt.replace(that.searchText,t+' ');
+			tinyMCE.activeEditor.setContent(newtxt);
+			tinyMCE.activeEditor.focus();
+			that.close();
+		}
 	});
 	$(this.cont).append(elm);
 }
