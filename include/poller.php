@@ -108,13 +108,14 @@ function poller_run($argv, $argc){
 
 	$contacts = q("SELECT `contact`.`id` FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
 		WHERE ( `rel` = %d OR `rel` = %d ) AND `poll` != ''
-		AND `network` != '%s'
+		AND NOT `network` IN ( '%s', '%s' )
 		$sql_extra 
 		AND `self` = 0 AND `contact`.`blocked` = 0 AND `contact`.`readonly` = 0 
 		AND `user`.`account_expired` = 0 $abandon_sql ORDER BY RAND()",
 		intval(CONTACT_IS_SHARING),
 		intval(CONTACT_IS_FRIEND),
-		dbesc(NETWORK_DIASPORA)
+		dbesc(NETWORK_DIASPORA),
+		dbesc(NETWORK_FACEBOOK)
 	);
 
 	if(! count($contacts)) {
@@ -136,6 +137,9 @@ function poller_run($argv, $argc){
 
 			if($manual_id)
 				$contact['last-update'] = '0000-00-00 00:00:00';
+
+			if($contact['network'] === NETWORK_DFRN)
+				$contact['priority'] = 2;
 
 			if($contact['priority'] || $contact['subhub']) {
 
@@ -218,7 +222,7 @@ function poller_run($argv, $argc){
 
 			$importer = $r[0];
 
-			logger("poller: poll: IMPORTER: {$importer['name']}, CONTACT: {$contact['name']}");
+			logger("poller: poll: ({$contact['id']}) IMPORTER: {$importer['name']}, CONTACT: {$contact['name']}");
 
 			$last_update = (($contact['last-update'] === '0000-00-00 00:00:00') 
 				? datetime_convert('UTC','UTC','now - 30 days', ATOM_TIME)
@@ -539,8 +543,9 @@ function poller_run($argv, $argc){
 				);
 			}
 			if(count($r)) {
-				if(! $r[0]['total'])
+				if(! $r[0]['total']) {
 					poco_load($contact['id'],$importer_uid,$contact['poco']);
+				}
 			}
 
 			// loop - next contact
