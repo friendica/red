@@ -65,6 +65,9 @@ function diaspora_dispatch($importer,$msg) {
 	elseif($xmlbase->retraction) {
 		$ret = diaspora_retraction($importer,$xmlbase->retraction,$msg);
 	}
+	elseif($xmlbase->signed_retraction) {
+		$ret = diaspora_signed_retraction($importer,$xmlbase->retraction,$msg);
+	}
 	elseif($xmlbase->photo) {
 		$ret = diaspora_photo($importer,$xmlbase->photo,$msg);
 	}
@@ -1264,6 +1267,51 @@ function diaspora_retraction($importer,$xml) {
 	// NOTREACHED
 }
 
+function diaspora_signed_retraction($importer,$xml) {
+
+	$guid = notags(unxmlify($xml->target_guid));
+	$diaspora_handle = notags(unxmlify($xml->sender_handle));
+	$type = notags(unxmlify($xml->target_type));
+	$sig = notags(unxmlify($xml->target_author_signature));
+
+	$contact = diaspora_get_contact_by_handle($importer['uid'],$diaspora_handle);
+	if(! $contact)
+		return;
+
+	// this may not yet work for comments. Need to see how the relaying works
+	// and figure out who signs it.
+
+
+	$signed_data = $guid . ';' . $type ;
+
+	$sig = base64_decode($sig);
+
+	$key = $msg['key'];
+
+	if(! rsa_verify($signed_data,$sig,$key,'sha256')) {
+		logger('diaspora_signed_retraction: owner verification failed.' . print_r($msg,true));
+		return;
+	}
+
+	if($type === 'StatusMessage') {
+		$r = q("select * from item where guid = '%s' and uid = %d limit 1",
+			dbesc('guid'),
+			intval($importer['uid'])
+		);
+		if(count($r)) {
+			if(link_compare($r[0]['author-link'],$contact['url'])) {
+				q("update item set `deleted` = 1, `changed` = '%s' where `id` = %d limit 1",
+					dbesc(datetime_convert()),			
+					intval($r[0]['id'])
+				);
+			}
+		}
+	}
+
+	return 202;
+	// NOTREACHED
+}
+
 function diaspora_profile($importer,$xml) {
 
 	$a = get_app();
@@ -1659,11 +1707,14 @@ function diaspora_send_retraction($item,$owner,$contact,$public_batch = false) {
 	$a = get_app();
 	$myaddr = $owner['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
 
-	$tpl = get_markup_template('diaspora_retract.tpl');
+	$signed_text = $item['guid'] . ';' . 'StatusMessage';
+
+	$tpl = get_markup_template('diaspora_signed_retract.tpl');
 	$msg = replace_macros($tpl, array(
 		'$guid'   => $item['guid'],
-		'$type'   => 'Post',
-		'$handle' => $myaddr
+		'$type'   => 'StatusMessage',
+		'$handle' => $myaddr,
+		'$signature' => base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha256'))
 	));
 
 	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],$public_batch)));
