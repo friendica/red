@@ -415,9 +415,11 @@ function item_post(&$a) {
 					$newname = $name;
 					$alias = '';
 					$tagcid = 0;
-					if(strrpos($newname,'+'))
+					if(strrpos($newname,'+')) {
 						$tagcid = intval(substr($newname,strrpos($newname,'+') + 1));
-
+						if(strpos($name,' '))
+							$name = substr($name,0,strpos($name,' '));
+					}	
 					if($tagcid) {
 						$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 							intval($tagcid),
