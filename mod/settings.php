@@ -56,7 +56,7 @@ function settings_post(&$a) {
 		return;			
 	}
 
-	if(($a->argc > 2) && ($a->argv[1] === 'oauth')  && ($a->argv[2] === 'edit') && x($_POST,'submit')) {
+	if(($a->argc > 2) && ($a->argv[1] === 'oauth')  && ($a->argv[2] === 'edit'||($a->argv[2] === 'add')) && x($_POST,'submit')) {
 		
 		$name   	= ((x($_POST,'name')) ? $_POST['name'] : '');
 		$key		= ((x($_POST,'key')) ? $_POST['key'] : '');
