@@ -1728,15 +1728,35 @@ function diaspora_transmit($owner,$contact,$slap,$public_batch) {
 
 	$a = get_app();
 	$logid = random_string(4);
-	logger('diaspora_transmit: ' . $logid . ' ' . (($public_batch) ? $contact['batch'] : $contact['notify']));
-	post_url((($public_batch) ? $contact['batch'] : $contact['notify']) . '/',$slap);
+	$dest_url = (($public_batch) ? $contact['batch'] : $contact['notify']);
+	if(! $dest_url) {
+		logger('diaspora_transmit: no url for contact: ' . $contact['id'] . ' batch mode =' . $public_batch);
+		return 0;
+	} 
+
+	logger('diaspora_transmit: ' . $logid . ' ' . $dest_url);
+
+	post_url($dest_url . '/', $slap);
+
 	$return_code = $a->get_curl_code();
 	logger('diaspora_transmit: ' . $logid . ' returns: ' . $return_code);
 
-	if((! $return_code) || (($curl_stat == 503) && (stristr($a->get_curl_headers(),'retry-after')))) {
+	if((! $return_code) || (($return_code == 503) && (stristr($a->get_curl_headers(),'retry-after')))) {
 		logger('diaspora_transmit: queue message');
-		// queue message for redelivery
-		add_to_queue($contact['id'],NETWORK_DIASPORA,$slap,$public_batch);
+
+		$r = q("SELECT id from queue where cid = %d and network = '%s' and content = '%s' and batch = %d limit 1",
+			intval($contact['id']),
+			dbesc(NETWORK_DIASPORA),
+			dbesc($slap),
+			intval($public_batch)
+		);
+		if(count($r)) {
+			logger('diaspora_transmit: add_to_queue ignored - identical item already in queue');
+		}
+		else {
+			// queue message for redelivery
+			add_to_queue($contact['id'],NETWORK_DIASPORA,$slap,$public_batch);
+		}
 	}
 
 

@@ -206,7 +206,7 @@ function notifier_run($argv, $argc){
 
 		/**
 		 *
-		 * Be VERY CAREFUL if you make any changes to the following lines. Seemingly innocuous changes 
+		 * Be VERY CAREFUL if you make any changes to the following several lines. Seemingly innocuous changes 
 		 * have been known to cause runaway conditions which affected several servers, along with 
 		 * permissions issues. 
 		 *
@@ -217,6 +217,17 @@ function notifier_run($argv, $argc){
 		if((! $top_level) && ($parent['wall'] == 0) && (! $expire) && (stristr($target_item['uri'],$localhost))) {
 			$relay_to_owner = true;
 		}
+
+		// until the 'origin' flag has been in use for several months
+		// we will just use it as a fallback test
+		// later we will be able to use it as the primary test of whether or not to relay.
+
+		if(! $target_item['origin'])
+			$relay_to_owner = false;
+
+		if($parent['origin'])
+			$relay_to_owner = false;
+
 
 
 		if($relay_to_owner) {
