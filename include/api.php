@@ -27,6 +27,23 @@
 	 * Simple HTTP Login
 	 */
 	function api_login(&$a){
+		// login with oauth
+		try{
+			$oauth = new FKOAuth1();
+			list($consumer,$token) = $oauth->verify_request(OAuthRequest::from_request());
+			if (!is_null($token)){
+				$oauth->loginUser($token->uid);
+				call_hooks('logged_in', $a->user);
+				return;
+			}
+			echo __file__.__line__.__function__."<pre>"; var_dump($consumer, $token); die();
+		}catch(Exception $e){
+			logger(__file__.__line__.__function__."\n".$e);
+			//die(__file__.__line__.__function__."<pre>".$e); die();
+		}
+
+		
+		
 		// workaround for HTTP-auth in CGI mode
 		if(x($_SERVER,'REDIRECT_REMOTE_USER')) {
 		 	$userpass = base64_decode(substr($_SERVER["REDIRECT_REMOTE_USER"],6)) ;
@@ -1145,7 +1162,7 @@
 		}catch(Exception $e){
 			echo "error=". OAuthUtil::urlencode_rfc3986($e->getMessage()); killme();
 		}
-		echo "oauth_token=".$r->key."&oauth_secret=".$r->secret;
+		echo $r;
 		killme();	
 	}
 	function api_oauth_access_token(&$a, $type){
@@ -1155,7 +1172,7 @@
 		}catch(Exception $e){
 			echo "error=". OAuthUtil::urlencode_rfc3986($e->getMessage()); killme();
 		}
-		echo "oauth_token=".$r->key."&oauth_secret=".$r->secret;
+		echo $r;
 		killme();			
 	}
 
