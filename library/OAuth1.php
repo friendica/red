@@ -27,6 +27,10 @@ class OAuthToken {
   public $key;
   public $secret;
 
+  public $expires;
+  public $scope;
+  public $uid;
+
   /**
    * key = the token
    * secret = the token secret
@@ -552,6 +556,7 @@ class OAuthServer {
   public function verify_request(&$request) {
     $this->get_version($request);
     $consumer = $this->get_consumer($request);
+    //echo __file__.__line__.__function__."<pre>"; var_dump($consumer); die();
     $token = $this->get_token($request, $consumer, "access");
     $this->check_signature($request, $consumer, $token);
     return array($consumer, $token);

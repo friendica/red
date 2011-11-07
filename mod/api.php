@@ -2,13 +2,8 @@
 
 require_once('include/api.php');
 
-function oauth_get_client(){
-	// get consumer/client from request token
-	try {
-		$request = OAuthRequest::from_request();
-	} catch(Exception $e) {
-		echo "<pre>"; var_dump($e); killme();
-	}
+function oauth_get_client($request){
+
 	
 	$params = $request->get_parameters();
 	$token = $params['oauth_token'];
@@ -45,16 +40,36 @@ function api_content(&$a) {
 		 * api/oauth/authorize interact with the user. return a standard page
 		 */
 		
+		$a->page['template'] = "minimal";
+		
+		
+		// get consumer/client from request token
+		try {
+			$request = OAuthRequest::from_request();
+		} catch(Exception $e) {
+			echo "<pre>"; var_dump($e); killme();
+		}
+		
 		
 		if (x($_POST,'oauth_yes')){
 		
-		
-			$app = oauth_get_client();
+			$app = oauth_get_client($request);
 			if (is_null($app)) return "Invalid request. Unknown token.";
-			$consumer = new OAuthConsumer($app['key'], $app['secret']);
+			$consumer = new OAuthConsumer($app['client_id'], $app['pw'], $app['redirect_uri']);
 
 			$verifier = md5($app['secret'].local_user());
-			set_pconfig(local_user(), "oauth", "verifier", $verifier);
+			set_config("oauth", $verifier, local_user());
+			
+			
+			if ($consumer->callback_url!=null) {
+				$params = $request->get_parameters();
+				$glue="?";
+				if (strstr($consumer->callback_url,$glue)) $glue="?";
+				goaway($consumer->callback_url.$glue."oauth_token=".OAuthUtil::urlencode_rfc3986($params['oauth_token'])."&oauth_verifier=".OAuthUtil::urlencode_rfc3986($verifier));
+				killme();
+			}
+			
+			
 			
 			$tpl = get_markup_template("oauth_authorize_done.tpl");
 			$o = replace_macros($tpl, array(
@@ -67,18 +82,20 @@ function api_content(&$a) {
 		
 		
 		}
-	
 		
 		
 		if(! local_user()) {
 			//TODO: we need login form to redirect to this page
 			notice( t('Please login to continue.') . EOL );
-			return login(false);
+			return login(false,$request->get_parameters());
 		}
+		//FKOAuth1::loginUser(4);
 		
-		$app = oauth_get_client();
+		$app = oauth_get_client($request);
 		if (is_null($app)) return "Invalid request. Unknown token.";
 		
+		
+
 		
 		$tpl = get_markup_template('oauth_authorize.tpl');
 		$o = replace_macros($tpl, array(

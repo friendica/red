@@ -17,6 +17,7 @@ class FKOAuthDataStore extends OAuthDataStore {
   }
 	
   function lookup_consumer($consumer_key) {
+		logger(__function__.":".$consumer_key);
       //echo "<pre>"; var_dump($consumer_key); killme();
 	  
 		$r = q("SELECT client_id, pw, redirect_uri FROM clients WHERE client_id='%s'",
@@ -28,8 +29,8 @@ class FKOAuthDataStore extends OAuthDataStore {
   }
 
   function lookup_token($consumer, $token_type, $token) {
-		//echo __file__.":".__line__."<pre>"; var_dump($consumer, $token_type, $token); killme();
-		$r = q("SELECT id, secret,scope, expires  FROM tokens WHERE client_id='%s' AND scope='%s' AND id='%s'",
+		logger(__function__.":".$consumer.", ". $token_type.", ".$token);
+		$r = q("SELECT id, secret,scope, expires, uid  FROM tokens WHERE client_id='%s' AND scope='%s' AND id='%s'",
 			dbesc($consumer->key),
 			dbesc($token_type),
 			dbesc($token)
@@ -38,6 +39,7 @@ class FKOAuthDataStore extends OAuthDataStore {
 			$ot=new OAuthToken($r[0]['id'],$r[0]['secret']);
 			$ot->scope=$r[0]['scope'];
 			$ot->expires = $r[0]['expires'];
+			$ot->uid = $r[0]['uid'];
 			return $ot;
 		}
 		return null;
@@ -56,12 +58,20 @@ class FKOAuthDataStore extends OAuthDataStore {
   }
 
   function new_request_token($consumer, $callback = null) {
+		logger(__function__.":".$consumer.", ". $callback);
 		$key = $this->gen_token();
 		$sec = $this->gen_token();
+		
+		if ($consumer->key){
+			$k = $consumer->key;
+		} else {
+			$k = $consumer;
+		}
+		
 		$r = q("INSERT INTO tokens (id, secret, client_id, scope, expires) VALUES ('%s','%s','%s','%s', UNIX_TIMESTAMP()+%d)",
 				dbesc($key),
 				dbesc($sec),
-				dbesc($consumer->key),
+				dbesc($k),
 				'request',
 				intval(REQUEST_TOKEN_DURATION));
 		if (!$r) return null;
@@ -69,6 +79,8 @@ class FKOAuthDataStore extends OAuthDataStore {
   }
 
   function new_access_token($token, $consumer, $verifier = null) {
+    logger(__function__.":".$token.", ". $consumer.", ". $verifier);
+    
     // return a new access token attached to this consumer
     // for the user associated with this token if the request token
     // is authorized
@@ -76,34 +88,34 @@ class FKOAuthDataStore extends OAuthDataStore {
     
     $ret=Null;
     
-    // get verifier for this user
-    $uverifier = get_pconfig(local_user(), "oauth", "verifier");
-    
-    
-    if (is_null($verifier) || ($verifier==$uverifier)){
+    // get user for this verifier
+    $uverifier = get_config("oauth", $verifier);
+    logger(__function__.":".$verifier.",".$uverifier);
+    if (is_null($verifier) || ($uverifier!==false)){
 		
 		$key = $this->gen_token();
 		$sec = $this->gen_token();
-		$r = q("INSERT INTO tokens (id, secret, client_id, scope, expires) VALUES ('%s','%s','%s','%s', UNIX_TIMESTAMP()+%d)",
+		$r = q("INSERT INTO tokens (id, secret, client_id, scope, expires, uid) VALUES ('%s','%s','%s','%s', UNIX_TIMESTAMP()+%d, %d)",
 				dbesc($key),
 				dbesc($sec),
-				dbesc($consumer->$key),
+				dbesc($consumer->key),
 				'access',
-				intval(ACCESS_TOKEN_DURATION));
+				intval(ACCESS_TOKEN_DURATION),
+				intval($uverifier));
 		if ($r)
 			$ret = new OAuthToken($key,$sec);		
 	}
 		
 		
-	//q("DELETE FROM tokens WHERE id='%s'", $token->key);
+	q("DELETE FROM tokens WHERE id='%s'", $token->key);
 	
 	
-	if (!is_null($ret)){
-		//del_pconfig(local_user(), "oauth", "verifier");
-		$apps = get_pconfig(local_user(), "oauth", "apps");
+	if (!is_null($ret) && $uverifier!==false){
+		del_config("oauth", $verifier);
+	/*	$apps = get_pconfig($uverifier, "oauth", "apps");
 		if ($apps===false) $apps=array();
 		$apps[] = $consumer->key;
-		//set_pconfig(local_user(), "oauth", "apps", $apps);
+		set_pconfig($uverifier, "oauth", "apps", $apps);*/
 	}
 		
     return $ret;
@@ -117,8 +129,52 @@ class FKOAuth1 extends OAuthServer {
 		$this->add_signature_method(new OAuthSignatureMethod_PLAINTEXT());
 		$this->add_signature_method(new OAuthSignatureMethod_HMAC_SHA1());
 	}
-}
+	
+	function loginUser($uid){
+		logger("FKOAuth1::loginUser $uid");
+		$a = get_app();
+		$r = q("SELECT * FROM `user` WHERE uid=%d AND `blocked` = 0 AND `account_expired` = 0 AND `verified` = 1 LIMIT 1",
+			intval($uid)
+		);
+		if(count($r)){
+			$record = $r[0];
+		} else {
+		   logger('FKOAuth1::loginUser failure: ' . print_r($_SERVER,true), LOGGER_DEBUG);
+		    header('HTTP/1.0 401 Unauthorized');
+		    die('This api requires login');
+		}
+		$_SESSION['uid'] = $record['uid'];
+		$_SESSION['theme'] = $record['theme'];
+		$_SESSION['authenticated'] = 1;
+		$_SESSION['page_flags'] = $record['page-flags'];
+		$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $record['nickname'];
+		$_SESSION['addr'] = $_SERVER['REMOTE_ADDR'];
 
+		//notice( t("Welcome back ") . $record['username'] . EOL);
+		$a->user = $record;
+
+		if(strlen($a->user['timezone'])) {
+			date_default_timezone_set($a->user['timezone']);
+			$a->timezone = $a->user['timezone'];
+		}
+
+		$r = q("SELECT * FROM `contact` WHERE `uid` = %s AND `self` = 1 LIMIT 1",
+			intval($_SESSION['uid']));
+		if(count($r)) {
+			$a->contact = $r[0];
+			$a->cid = $r[0]['id'];
+			$_SESSION['cid'] = $a->cid;
+		}
+		q("UPDATE `user` SET `login_date` = '%s' WHERE `uid` = %d LIMIT 1",
+			dbesc(datetime_convert()),
+			intval($_SESSION['uid'])
+		);
+
+		call_hooks('logged_in', $a->user);		
+	}
+	
+}
+/*
 class FKOAuth2 extends OAuth2 {
 
 	private function db_secret($client_secret){
@@ -207,3 +263,4 @@ class FKOAuth2 extends OAuth2 {
 	}	
 	
 }
+*/
