@@ -875,7 +875,7 @@ function update_1101() {
 }
 
 function update_1102() {
-	q("ALTER TABLE `clients` ADD `name` TEXT NULL DEFAULT NULL AFTER `redirect` "); 
+	q("ALTER TABLE `clients` ADD `name` TEXT NULL DEFAULT NULL AFTER `redirect_uri` "); 
 	q("ALTER TABLE `clients` ADD `icon` TEXT NULL DEFAULT NULL AFTER `name` "); 
 	q("ALTER TABLE `clients` ADD `uid` INT NOT NULL DEFAULT 0 AFTER `icon` "); 
 
