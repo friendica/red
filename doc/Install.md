@@ -1,8 +1,8 @@
-Friendika Installation
+Friendica Installation
 
-We've tried very hard to ensure that Friendika will run on commodity hosting platforms - such as those used to host Wordpress blogs and Drupal websites. But be aware that Friendika is more than a simple web application. It is a complex communications system which more closely resembles an email server than a web server. For reliability and performance, messages are delivered in the background and are queued for later delivery when sites are down. This kind of functionality requires a bit more of the host system than the typical blog. Not every PHP/MySQL hosting provider will be able to support Friendika. Many will. But **please** review the requirements and confirm these with your hosting provider prior to installation.
+We've tried very hard to ensure that Friendica will run on commodity hosting platforms - such as those used to host Wordpress blogs and Drupal websites. But be aware that Friendica is more than a simple web application. It is a complex communications system which more closely resembles an email server than a web server. For reliability and performance, messages are delivered in the background and are queued for later delivery when sites are down. This kind of functionality requires a bit more of the host system than the typical blog. Not every PHP/MySQL hosting provider will be able to support Friendica. Many will. But **please** review the requirements and confirm these with your hosting provider prior to installation.
 
-Also if you encounter installation issues, please let us know via the forums at http://groups.google.com/group/friendika or file an issue at http://bugs.friendica.com . Please be as clear as you can about your operating environment and provide as much detail as possible about any error messages you may see, so that we can prevent it from happening in the future. Due to the large variety of operating systems and PHP platforms in existence we may have only limited ability to debug your PHP installation or acquire any missing modules - but we will do our best to solve any general code issues.   
+Also if you encounter installation issues, please let us know via the forums at http://groups.google.com/group/friendica or file an issue at http://bugs.friendica.com . Please be as clear as you can about your operating environment and provide as much detail as possible about any error messages you may see, so that we can prevent it from happening in the future. Due to the large variety of operating systems and PHP platforms in existence we may have only limited ability to debug your PHP installation or acquire any missing modules - but we will do our best to solve any general code issues.   
 
 Before you begin: Choose a domain name or subdomain name for your server. Put some thought into this - because changing it after installation is currently not-supported. Things will break, and some of your friends may have difficulty communicating with you. We plan to address this limitation in a future release.
 
@@ -32,7 +32,7 @@ not be as convenient to use and have not been thoroughly tested.
 reasonable price. If your hosting provider doesn't allow Unix shell access,
 you might have trouble getting everything to work.]
 
-2. Unpack the Friendika files into the root of your web server document area.
+2. Unpack the Friendica files into the root of your web server document area.
 
     - If you are able to do so, we recommend using git to clone the source repository rather than to use a packaged tar or zip file. This makes the software much easier to update. The Linux command to clone the repository into a directory "mywebsite" would be 
 
@@ -95,10 +95,10 @@ one shown, substituting for your unique paths and settings:
 
 You can generally find the location of PHP by executing "which php". If you
 have troubles with this section please contact your hosting provider for
-assistance. Friendika will not work correctly if you cannot perform this step.
+assistance. Friendica will not work correctly if you cannot perform this step.
 
 Alternative: You may be able to use the 'poormancron' plugin to perform this step 
-if you are using a recent Friendika release. To do this, edit the file ".htconfig.php"
+if you are using a recent Friendica release. To do this, edit the file ".htconfig.php"
 and look for a line describing your plugins. On a fresh installation, it will look like
 
 `$a->config['system']['addon'] = 'js_upload';`

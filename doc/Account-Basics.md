@@ -6,11 +6,11 @@ Account Basics
 
 **Registration**
 
-Not all Friendika sites allow open registration. If registration is allowed, you will see a "Register" link immediately below the login prompts on the site home page. Following this link will take you to the site Registration page.
+Not all Friendica sites allow open registration. If registration is allowed, you will see a "Register" link immediately below the login prompts on the site home page. Following this link will take you to the site Registration page.
 
 *OpenID*
 
-The first field on the Registration page is for an OpenID address. If you do not have an OpenID address or do not wish to use OpenID, leave this field blank. If you have an OpenID account elsewhere and wish to use it, enter the address into this field and click 'Register'. Friendika will attempt to extract as much information as possible from your OpenID provider and return to this page with those items already filled in.
+The first field on the Registration page is for an OpenID address. If you do not have an OpenID address or do not wish to use OpenID, leave this field blank. If you have an OpenID account elsewhere and wish to use it, enter the address into this field and click 'Register'. Friendica will attempt to extract as much information as possible from your OpenID provider and return to this page with those items already filled in.
 
 *Your Full Name*
 

@@ -15,10 +15,10 @@ If the following network connectors are installed on your system, select the fol
 Instructions For Connecting To People On Specific Services
 ==========================================================
 
-**Friendika**
+**Friendica**
 
 
-You may connect by providing your Identity Address on the 'Connect' page of any Friendika member. You may also put their Identity Address into the Connect box on your [Contacts](contacts) page. 
+You may connect by providing your Identity Address on the 'Connect' page of any Friendica member. You may also put their Identity Address into the Connect box on your [Contacts](contacts) page. 
 
 
 **Diaspora**
@@ -38,7 +38,7 @@ To connect with an OStatus member insert their profile URL or Identity address i
 
 The StatusNet connector may be used if you wish posts to appear on an OStatus site using an existing OStatus account. 
 
-It is not necessary to do this, as you may 'follow' OStatus members from Friendika and they may follow you (by placing their own Identity Address into your 'Connect' page).
+It is not necessary to do this, as you may 'follow' OStatus members from Friendica and they may follow you (by placing their own Identity Address into your 'Connect' page).
 
 **Blogger, Wordpress, RSS feeds, arbitrary web pages**
 
@@ -57,7 +57,7 @@ Configure the email connector from your [Settings](settings) page. Once this has
 
 **Facebook**
 
-The Facebook connector is a plugin/addon which allows you to interact with friends on Facebook from within Friendika. If enabled, your Facebook friend list will be imported, and you will see and be able to respond to Facebook posts. Facebook members may also be added to private conversation groups. You will not be able to connect with individual Facebook accounts - but will have your entire friend list imported and updated if new friends are added. 
+The Facebook connector is a plugin/addon which allows you to interact with friends on Facebook from within Friendica. If enabled, your Facebook friend list will be imported, and you will see and be able to respond to Facebook posts. Facebook members may also be added to private conversation groups. You will not be able to connect with individual Facebook accounts - but will have your entire friend list imported and updated if new friends are added. 
 
 Assuming the Facebook plugin/addon has been installed on your system, it can be enabled by going to your [Plugin Settings](settings/addon) page, and then select "Facebook Connector Settings" on that page. This will only appear if the Facebook plugin/addon has been installed. Follow the instruction to install or remove the Facebook connector.
 

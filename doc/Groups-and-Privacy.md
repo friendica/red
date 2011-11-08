@@ -4,9 +4,9 @@ Groups and Privacy
 * [Home](help)
 
 
-Groups are merely collections of friends. But Friendika uses these to unlock some very powerful features. 
+Groups are merely collections of friends. But Friendica uses these to unlock some very powerful features. 
 
-To create a group, visit your Friendika "Contacts" page and select "Create a new group". Give the group a name.
+To create a group, visit your Friendica "Contacts" page and select "Create a new group". Give the group a name.
 
 This brings you to a page where you can select the group members. 
 
@@ -30,7 +30,7 @@ But it isn't as clear cut when dealing with status.net, identi.ca and other netw
 
 On your "Settings" page, you may create a set of default permissions which apply to every post that you create. 
 
-Once you have created a post, you can not change the permissions assigned. Within seconds it has been delivered to lots of people - and perhaps everybody it was addressed to. If you mistakenly created a message and wish you could take it back, the best you can do is to delete it. We will send out a delete notification to everybody who received the message - and this should wipe out the message with the same speed it was initially propagated. In most cases it will be completely wiped from the Internet - in under a minute. Again, this applies to Friendika networks. Once a message spreads to other networks, it may not be removed quickly and in some cases it may not be removed at all. 
+Once you have created a post, you can not change the permissions assigned. Within seconds it has been delivered to lots of people - and perhaps everybody it was addressed to. If you mistakenly created a message and wish you could take it back, the best you can do is to delete it. We will send out a delete notification to everybody who received the message - and this should wipe out the message with the same speed it was initially propagated. In most cases it will be completely wiped from the Internet - in under a minute. Again, this applies to Friendica networks. Once a message spreads to other networks, it may not be removed quickly and in some cases it may not be removed at all. 
 
-In case you haven't yet figured this out, we are encouraging you to encourage your friends to use Friendika - because all these privacy features work much better within a privacy-aware network. Many of the other social networks Friendika can connect to have no privacy controls. 
+In case you haven't yet figured this out, we are encouraging you to encourage your friends to use Friendica - because all these privacy features work much better within a privacy-aware network. Many of the other social networks Friendica can connect to have no privacy controls. 
 

@@ -4,9 +4,9 @@ Pages
 * [Home](help)
 
 
-Friendika also lets you create group and/or celebrity pages. 
+Friendica also lets you create group and/or celebrity pages. 
 
-Every page in Friendika has a nickname and these must all be unique. This applies to all pages, whether they are normal profiles or group pages. 
+Every page in Friendica has a nickname and these must all be unique. This applies to all pages, whether they are normal profiles or group pages. 
 
 Therefore the first thing you need to do to create a new page is to register a new account for the page. Please note that the site administrator can restrict and/or regulate the registration of new accounts. 
 

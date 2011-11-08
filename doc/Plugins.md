@@ -1,4 +1,4 @@
-**Friendika Addon/Plugin development**
+**Friendica Addon/Plugin development**
 
 This is an early specification and hook details may be subject to change.
 
@@ -16,9 +16,9 @@ Register your plugin hooks during installation.
 
     register_hook($hookname, $file, $function);
 
-$hookname is a string and corresponds to a known Friendika hook.
+$hookname is a string and corresponds to a known Friendica hook.
 
-$file is a pathname relative to the top-level Friendika directory. This *should* be 'addon/plugin_name/plugin_name.php' in most cases.
+$file is a pathname relative to the top-level Friendica directory. This *should* be 'addon/plugin_name/plugin_name.php' in most cases.
 
 $function is a string and is the name of the function which will be executed when the hook is called.
 
@@ -35,8 +35,8 @@ Your hook callback functions will be called with at least one and possibly two a
 If you wish to make changes to the calling data, you must declare them as
 reference variables (with '&') during function declaration.
 
-$a is the Friendika 'App' class - which contains a wealth of information
-about the current state of Friendika, such as which module has been called,
+$a is the Friendica 'App' class - which contains a wealth of information
+about the current state of Friendica, such as which module has been called,
 configuration info, the page contents at the point the hook was invoked, profile
 and user information, etc. It is recommeded you call this '$a' to match its usage
 elsewhere.

@@ -1,4 +1,4 @@
-Friendika Documentation and Resources
+Friendica Documentation and Resources
 =====================================
 
 
@@ -26,11 +26,11 @@ Friendika Documentation and Resources
 
 **External Resources**
 
-* [Main Website](http://friendika.com)
-* [Forums](http://groups.google.com/group/friendika)
-* [Developer Forums](http://groups.google.com/group/friendika-dev)
+* [Main Website](http://friendica.com)
+* [Forums](http://groups.google.com/group/friendica)
+* [Developer Forums](http://groups.google.com/group/friendica-dev)
 
 **About**
 
-* [Site/Version Info](friendika)
+* [Site/Version Info](friendica)
 

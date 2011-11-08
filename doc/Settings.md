@@ -2,7 +2,7 @@ Here are some of the built-in features which don't have an exposed interface or 
 
 **Hot Keys**
 
-Friendika traps the following keyboard events:
+Friendica traps the following keyboard events:
 
 * [Pause] - Pauses "Ajax" update activity. This is the process that provides updates without reloading the page. You may wish to pause it to reduce network usage and/or as a debugging aid for javascript developers. A pause indicator will appear at the lower right hand corner of the page. Hit the [pause] key once again to resume. 
 
@@ -44,7 +44,7 @@ $a->config['system']['theme'] = 'theme-name';
 
 Security setting
 
-By default Friendika allows SSL communication between websites that have "self-signed" SSL certificates. For the widest compatibility with browsers and other networks we do not recommend using self-signed certificates, but we will not prevent you from using them. SSL encrypts all the data transmitted between sites (and to your browser) and this allows you to have completely encrypted communications, and also protect your login session from hijacking. Self-signed certificates can be generated for free, without paying top-dollar for a website SSL certificate - however these aren't looked upon favourably in the security community because they can be subject to so-called "man-in-the-middle" attacks.  If you wish, you can turn on strict certificate checking. This will mean you cannot connect (at all) to self-signed SSL sites.
+By default Friendica allows SSL communication between websites that have "self-signed" SSL certificates. For the widest compatibility with browsers and other networks we do not recommend using self-signed certificates, but we will not prevent you from using them. SSL encrypts all the data transmitted between sites (and to your browser) and this allows you to have completely encrypted communications, and also protect your login session from hijacking. Self-signed certificates can be generated for free, without paying top-dollar for a website SSL certificate - however these aren't looked upon favourably in the security community because they can be subject to so-called "man-in-the-middle" attacks.  If you wish, you can turn on strict certificate checking. This will mean you cannot connect (at all) to self-signed SSL sites.
 
 Config:
 ```
@@ -79,7 +79,7 @@ $a->config['system']['allowed_email'] = "sitea.com, *siteb.com";
 
 Corporate/Edu enhancement
 
-Set to true to block public access to all otherwise public personal pages on this site unless you are currently logged in. This blocks the viewing of profiles, friends, photos, the site directory and search pages to unauthorised persons. A side effect is that entries from this site will not appear in the global directory. We recommend specifically disabling that also (setting is described elsewhere on this page). Note: this is specifically for sites that desire to be "standalone" and do not wish to be connected to any other Friendika sites. Unauthorised persons will also not be able to request friendship with site members. Default is false. Available in version 2.2 or greater.
+Set to true to block public access to all otherwise public personal pages on this site unless you are currently logged in. This blocks the viewing of profiles, friends, photos, the site directory and search pages to unauthorised persons. A side effect is that entries from this site will not appear in the global directory. We recommend specifically disabling that also (setting is described elsewhere on this page). Note: this is specifically for sites that desire to be "standalone" and do not wish to be connected to any other Friendica sites. Unauthorised persons will also not be able to request friendship with site members. Default is false. Available in version 2.2 or greater.
  
 Config:
 ```
@@ -107,7 +107,7 @@ Corporate/Edu enhancement
 This configures the URL to update the global directory, and is supplied in the default configuration. The undocumented part is that if this is not set, the global directory is completely unavailable to the application. This allows a private community to be completely isolated from the global mistpark network. 
 
 ```
-$a->config['system']['directory_submit_url'] = 'http://dir.friendika.com/submit';
+$a->config['system']['directory_submit_url'] = 'http://dir.friendica.com/submit';
 ```
 
 
@@ -134,7 +134,7 @@ $a->config['system']['curl_timeout'] = 60;
 
 **Banner/Logo**
 
-Set the content for the site banner. Default is the Friendika logo and name. You may wish to provide HTML/CSS to style and/or position this content, as it may not be themed by default. 
+Set the content for the site banner. Default is the Friendica logo and name. You may wish to provide HTML/CSS to style and/or position this content, as it may not be themed by default. 
 
 Config:
 ```
