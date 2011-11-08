@@ -4,12 +4,8 @@ This is an early specification and hook details may be subject to change.
 
 Please see the sample addon 'randplace' for a working example of using some of these features. The facebook addon provides an example of integrating both "addon" and "module" functionality. Addons work by intercepting event hooks - which must be registered. Modules work by intercepting specific page requests (by URL path). 
 
-You must register all addons/plugins with the system in the .htconfig.php file.
-
-     $a->config['system']['addon'] = 'plugin1name, plugin2name, another_name';
 
 Plugin names cannot contain spaces and are used as filenames. Each addon must contain both an install and an uninstall function based on the addon/plugin name. For instance "plugin1name_install()". These two functions take no arguments and are usually responsible for registering (and unregistering) event hooks that your plugin will require. The install and uninstall functions will also be called (i.e. re-installed) if the plugin changes after installation - therefore your uninstall should not destroy data and install should consider that data may already exist. Future extensions may provide for "setup" amd "remove". 
-
 
 
 Register your plugin hooks during installation.
@@ -164,126 +160,173 @@ Your module functions will often contain the function plugin_name_content(&$a), 
     $b is (string) HTML of content div
 
 
-*** = subject to change
+A complete list of all hook callbacks with file locations (generated 09-Nov-2011): Please see the source for details of any hooks not documented above.
 
-Not yet documented (you may view these within the source code):
+boot.php:	call_hooks('login_hook',$o);
 
-**'atom_feed'** ***
+boot.php:	call_hooks('profile_sidebar_enter', $profile);
 
-**'atom_feed_end'** ***
+boot.php:	call_hooks('profile_sidebar', $arr);
 
-**'parse_atom'** ***
+boot.php:	call_hooks("proc_run", $arr);
 
-**'atom_author'** ***
+include/contact_selectors.php:	call_hooks('network_to_name', $s);
 
-**'atom_entry'** ***
+include/api.php:				call_hooks('logged_in', $a->user);
 
-A complete list of all hook callbacks with file locations (generated 22-Feb-2011): Please see the source for details of any hooks not documented above.
+include/api.php:		call_hooks('logged_in', $a->user);
 
-boot.php:       call_hooks('contact_block_end', $arr);
+include/queue.php:		call_hooks('queue_predeliver', $a, $r);
 
-boot.php:       call_hooks('profile_sidebar_enter', $profile);
+include/queue.php:				call_hooks('queue_deliver', $a, $params);
 
-boot.php:       call_hooks('profile_sidebar', $arr);
+include/text.php:	call_hooks('contact_block_end', $arr);
 
-boot.php:       call_hooks("proc_run", $args);
+include/text.php:	call_hooks('smilie', $s);
 
-include/nav.php:        call_hooks('page_header', $a->page['nav']);
+include/text.php:	call_hooks('prepare_body_init', $item); 
 
-include/auth.php:               call_hooks('authenticate', $addon_auth);
+include/text.php:	call_hooks('prepare_body', $prep_arr);
 
-include/auth.php:               call_hooks('logged_in', $a->user);
+include/text.php:	call_hooks('prepare_body_final', $prep_arr);
 
-include/bbcode.php:     call_hooks('bbcode',$Text);
+include/nav.php:	call_hooks('page_header', $a->page['nav']);
 
-include/acl_selectors.php:      call_hooks($a->module . '_pre_' . $selname, $arr);
+include/auth.php:		call_hooks('authenticate', $addon_auth);
 
-include/acl_selectors.php:      call_hooks($a->module . '_post_' . $selname, $o);
+include/auth.php:		call_hooks('logged_in', $a->user);
 
-include/acl_selectors.php:      call_hooks($a->module . '_pre_' . $selname, $arr);
+include/bbcode.php:	call_hooks('bbcode',$Text);
 
-include/acl_selectors.php:      call_hooks($a->module . '_post_' . $selname, $o);
+include/oauth.php:		call_hooks('logged_in', $a->user);		
 
-include/items.php:      call_hooks('atom_feed', $atom);
+include/acl_selectors.php:	call_hooks($a->module . '_pre_' . $selname, $arr);
 
-include/items.php:              call_hooks('atom_feed_end', $atom);
+include/acl_selectors.php:	call_hooks($a->module . '_post_' . $selname, $o);
 
-include/items.php:      call_hooks('atom_feed_end', $atom);
+include/acl_selectors.php:	call_hooks('contact_select_options', $x);
 
-include/items.php:      call_hooks('parse_atom', $arr);
+include/acl_selectors.php:	call_hooks($a->module . '_pre_' . $selname, $arr);
 
-include/items.php:      call_hooks('post_remote',$arr);
+include/acl_selectors.php:	call_hooks($a->module . '_post_' . $selname, $o);
 
-include/items.php:      call_hooks('atom_author', $o);
+include/acl_selectors.php:	call_hooks($a->module . '_pre_' . $selname, $arr);
 
-include/items.php:      call_hooks('atom_entry', $o);
+include/acl_selectors.php:	call_hooks($a->module . '_post_' . $selname, $o);
 
-include/html2bbcode.php:        call_hooks('html2bbcode', $text);
+include/notifier.php:		call_hooks('notifier_normal',$target_item);
 
-index.php:      call_hooks('init_1');
+include/notifier.php:	call_hooks('notifier_end',$target_item);
+
+include/items.php:	call_hooks('atom_feed', $atom);
+
+include/items.php:		call_hooks('atom_feed_end', $atom);
+
+include/items.php:	call_hooks('atom_feed_end', $atom);
+
+include/items.php:	call_hooks('parse_atom', $arr);
+
+include/items.php:	call_hooks('post_remote',$arr);
+
+include/items.php:	call_hooks('atom_author', $o);
+
+include/items.php:	call_hooks('atom_entry', $o);
+
+include/bb2diaspora.php:	call_hooks('bb2diaspora',$Text);
+
+include/cronhooks.php:	call_hooks('cron', $d);
+
+include/html2bbcode.php:	call_hooks('html2bbcode', $text);
+
+include/Contact.php:	call_hooks('contact_photo_menu', $args);
+
+include/conversation.php:				call_hooks('display_item', $arr);
+
+include/conversation.php:				call_hooks('display_item', $arr);
+
+include/conversation.php:	call_hooks('item_photo_menu', $args);
+
+include/conversation.php:		call_hooks('jot_tool', $jotplugins);
+
+include/conversation.php:		call_hooks('jot_networks', $jotnets);
+
+include/plugin.php:if(! function_exists('call_hooks')) {
+
+include/plugin.php:function call_hooks($name, &$data = null) {
+
+index.php:	call_hooks('init_1');
 
 index.php:call_hooks('app_menu', $arr);
 
 index.php:call_hooks('page_end', $a->page['content']);
 
-mod/photos.php: call_hooks('photo_post_init', $_POST);
+mod/photos.php:	call_hooks('photo_post_init', $_POST);
 
-mod/photos.php: call_hooks('photo_post_file',$ret);
+mod/photos.php:	call_hooks('photo_post_file',$ret);
 
-mod/photos.php: call_hooks('photo_post_end',intval($item_id));
+mod/photos.php:		call_hooks('photo_post_end',$foo);
 
-mod/photos.php:         call_hooks('photo_upload_form',$ret);
+mod/photos.php:		call_hooks('photo_post_end',$foo);
 
-mod/parse_url.php:      call_hooks('parse_link', $arr);
+mod/photos.php:		call_hooks('photo_post_end',$foo);
 
-mod/home.php:   call_hooks("home_content",$o);
+mod/photos.php:	call_hooks('photo_post_end',intval($item_id));
 
-mod/contacts.php:       call_hooks('contact_edit_post', $_POST);
+mod/photos.php:		call_hooks('photo_upload_form',$ret);
 
-mod/contacts.php:               call_hooks('contact_edit', $arr);
+mod/friendica.php:	call_hooks('about_hook', $o); 	
 
-mod/settings.php:               call_hooks('plugin_settings_post', $_POST);
+mod/editpost.php:	call_hooks('jot_tool', $jotplugins);
 
-mod/settings.php:       call_hooks('settings_post', $_POST);
+mod/editpost.php:	call_hooks('jot_networks', $jotnets);
 
-mod/settings.php:               call_hooks('plugin_settings', $o);
+mod/parse_url.php:	call_hooks('parse_link', $arr);
 
-mod/settings.php:       call_hooks('settings_form',$o);
+mod/home.php:	call_hooks("home_content",$o);
 
-mod/network.php:                call_hooks('jot_tool', $jotplugins);
+mod/contacts.php:	call_hooks('contact_edit_post', $_POST);
 
-mod/network.php:                call_hooks('jot_networks', $jotnets);
+mod/contacts.php:		call_hooks('contact_edit', $arr);
 
-mod/network.php:                        call_hooks('display_item', $arr);
+mod/settings.php:		call_hooks('plugin_settings_post', $_POST);
 
-mod/xrd.php:    call_hooks('personal_xrd', $arr);
+mod/settings.php:		call_hooks('connector_settings_post', $_POST);
 
-mod/item.php:   call_hooks('post_local_start', $_POST);
+mod/settings.php:	call_hooks('settings_post', $_POST);
 
-mod/item.php:   call_hooks('post_local',$datarray);
+mod/settings.php:		call_hooks('plugin_settings', $settings_addons);
 
-mod/item.php:   call_hooks('post_local_end', $datarray);
+mod/settings.php:		call_hooks('connector_settings', $settings_connectors);
 
-mod/profile.php:                        call_hooks('profile_advanced',$o);
+mod/settings.php:	call_hooks('settings_form',$o);
 
-mod/profile.php:                        call_hooks('jot_tool', $jotplugins); 
+mod/register.php:	call_hooks('register_account', $newuid);
 
-mod/profile.php:                        call_hooks('jot_networks', $jotnets);
+mod/like.php:	call_hooks('post_local_end', $arr);
 
-mod/profile.php:                        call_hooks('display_item', $arr);
+mod/xrd.php:	call_hooks('personal_xrd', $arr);
 
-mod/display.php:                        call_hooks('display_item', $arr);
+mod/item.php:	call_hooks('post_local_start', $_POST);
 
-mod/profiles.php:       call_hooks('profile_post', $_POST);
+mod/item.php:	call_hooks('post_local',$datarray);
 
-mod/profiles.php:               call_hooks('profile_edit', $arr);
+mod/item.php:	call_hooks('post_local_end', $datarray);
 
-mod/cb.php:     call_hooks('cb_init');
+mod/profile.php:			call_hooks('profile_advanced',$o);
 
-mod/cb.php:     call_hooks('cb_post', $_POST);
+mod/profiles.php:	call_hooks('profile_post', $_POST);
 
-mod/cb.php:     call_hooks('cb_afterpost');
+mod/profiles.php:		call_hooks('profile_edit', $arr);
 
-mod/cb.php:     call_hooks('cb_content', $o);
+mod/tagger.php:	call_hooks('post_local_end', $arr);
 
-mod/directory.php:                      call_hooks('directory_item', $arr);
+mod/cb.php:	call_hooks('cb_init');
+
+mod/cb.php:	call_hooks('cb_post', $_POST);
+
+mod/cb.php:	call_hooks('cb_afterpost');
+
+mod/cb.php:	call_hooks('cb_content', $o);
+
+mod/directory.php:			call_hooks('directory_item', $arr);
+

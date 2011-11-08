@@ -149,13 +149,11 @@ function bb2diaspora($Text,$preserve_nl = false) {
 	// Check for font change text
 //	$Text = preg_replace("(\[font=(.*?)\](.*?)\[\/font\])","<span style=\"font-family: $1;\">$2</span>",$Text);
 
-	// Declare the format for [code] layout
 
-	$Text = preg_replace_callback("/\[code\](.*?)\[\/code\]/is",'stripdcode_br_cb',$Text);
+    $Text = preg_replace_callback("/\[code\](.*?)\[\/code\]/is",'stripdcode_br_cb',$Text);
 
-	//	$CodeLayout = '<code>$1</code>';
 	// Check for [code] text
-	$Text = preg_replace("/\[code\](.*?)\[\/code\]/is","\t$1\n", $Text);
+	$Text = preg_replace("/(\[code\])+(.*?)(\[\/code\])+/is","\t$2\n", $Text);
 
 
 
