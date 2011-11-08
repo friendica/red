@@ -40,7 +40,7 @@ function scale_diaspora_images($s,$include_link = true) {
 						$new_height = $ph->getHeight();
 						logger('scale_diaspora_image: ' . $new_width . 'w ' . $new_height . 'h' . 'match: ' . $mtch[0], LOGGER_DEBUG);
 						$s = str_replace($mtch[0],'[img=' . $new_width . 'x' . $new_height. ']' . $mtch[1] . '[/img]'
-							. "\n" . ((! $include_link) 
+							. "\n" . (($include_link) 
 								? '[url=' . $mtch[1] . ']' . t('view full size') . '[/url]' . "\n"
 								: ''),$s);
 						logger('scale_diaspora_image: new string: ' . $s, LOGGER_DEBUG);
