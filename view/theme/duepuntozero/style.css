@@ -1396,13 +1396,12 @@ input#dfrn-url {
 }
 
 #contact-edit-wrapper {
-	margin-top: 50px;
+	margin-top: 10px;
 }
 
 #contact-edit-banner-name {
 	font-size: 1.4em;
 	font-weight: bold;
-	margin-left: 30px;
 }
 
 #contact-edit-nettype {
@@ -1427,25 +1426,22 @@ input#dfrn-url {
 #contact-edit-photo-wrapper {
 	margin-bottom: 20px;
 }
-#contact-edit-links {
-	float: left;
+
+#contact-edit-links{
+	clear: both;
 }
-#contact-edit-links a {
-	float: left;
+
+#contact-edit-drop-link {
+	float: right;
+	margin-right: 20px;
 }
-#contact-edit-links img {
+
+/*
+#contact-edit-drop-link img {
 	margin-left: 20px;
 	border: none;
 }
-
-#contact-drop-links {
-	float: left;
-}
-
-#contact-drop-links img {
-	margin-left: 20px;
-	border: none;
-}
+*/
 
 #contact-edit-nav-end {
 	clear: both;
@@ -1469,7 +1465,11 @@ input#dfrn-url {
 	float: left;
 }
 
+#contact-edit-wrapper {
+	width: 100%;
+}
 #contact-edit-nav-wrapper {
+/*	width: 450px; */
 	float: left;
 }
 
@@ -1479,14 +1479,6 @@ input#dfrn-url {
 
 #contact-profile-selector {
 	width: 175px;
-	margin-left: 175px;
-}
-
-#contact-reputation-selector {
-	margin-left: 175px;
-}
-
-#contact-edit-rating-text {
 	margin-left: 175px;
 }
 

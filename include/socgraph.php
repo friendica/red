@@ -161,6 +161,36 @@ function common_friends($uid,$cid) {
 
 }
 
+function count_all_friends($uid,$cid) {
+
+	$r = q("SELECT count(*) as `total`
+		FROM `glink` left join `gcontact` on `glink`.`gcid` = `gcontact`.`id`
+		where `glink`.`cid` = %d and `glink`.`uid` = %d ",
+		intval($cid),
+		intval($uid)
+	);
+
+	if(count($r))
+		return $r[0]['total'];
+	return 0;
+
+}
+
+
+function all_friends($uid,$cid,$start = 0, $limit = 80) {
+
+	$r = q("SELECT `gcontact`.* 
+		FROM `glink` left join `gcontact` on `glink`.`gcid` = `gcontact`.`id`
+		where `glink`.`cid` = %d and `glink`.`uid` = %d LIMIT %d, %d ",
+		intval($cid),
+		intval($uid),
+		intval($start),
+		intval($limit)
+	);
+
+	return $r;
+}
+
 
 
 function suggestion_query($uid, $start = 0, $limit = 40) {

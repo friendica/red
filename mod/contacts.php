@@ -259,15 +259,16 @@ function contacts_content(&$a) {
 		if($r[0]['last-update'] !== '0000-00-00 00:00:00')
 			$last_update .= ' ' . (($r[0]['last-update'] == $r[0]['success_update']) ? t("\x28Update was successful\x29") : t("\x28Update was not successful\x29"));
 
-		$lblsuggest = (($r[0]['network'] === NETWORK_DFRN) 
-			? '<div id="contact-suggest-wrapper"><a href="fsuggest/' . $r[0]['id'] . '" id="contact-suggest">' . t('Suggest friends') . '</a></div>' : '');
+		$lblsuggest = (($r[0]['network'] === NETWORK_DFRN) ? t('Suggest friends') : '');
 
 		$poll_enabled = (($r[0]['network'] !== NETWORK_DIASPORA) ? true : false);
 
-		$nettype = '<div id="contact-edit-nettype">' . sprintf( t('Network type: %s'),network_to_name($r[0]['network'])) . '</div>';
+		$nettype = sprintf( t('Network type: %s'),network_to_name($r[0]['network']));
 
 		$common = count_common_friends(local_user(),$r[0]['id']);
-		$common_text = (($common) ? sprintf( tt('%d friends in common','%d friends in common', $common),$common) : '');
+		$common_text = (($common) ? sprintf( tt('%d contacts in common','%d contacts in common', $common),$common) : '');
+		$common_view = t('View');
+		$all_friends = t('View all contacts');
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Contact Editor'),
 			'$submit' => t('Submit'),
@@ -280,11 +281,12 @@ function contacts_content(&$a) {
 			'$lbl_rep4' => t('Please take a moment to elaborate on this selection if you feel it could be helpful to others.'),
 			'$common_text' => $common_text,
 			'$common_link' => $a->get_baseurl() . '/common/' . $r[0]['id'],
+			'$all_friends' => $all_friends,
 			'$visit' => sprintf( t('Visit %s\'s profile [%s]'),$r[0]['name'],$r[0]['url']),
 			'$blockunblock' => t('Block/Unblock contact'),
 			'$ignorecont' => t('Ignore contact'),
 			'$altcrepair' => t('Repair contact URL settings'),
-			'$lblcrepair' => t("Repair contact URL settings \x28WARNING: Advanced\x29"),
+			'$lblcrepair' => t("Repair contact URL settings"),
 			'$lblrecent' => t('View conversations'),
 			'$lblsuggest' => $lblsuggest,
 			'$delete' => t('Delete contact'),
