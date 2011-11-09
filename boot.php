@@ -823,6 +823,14 @@ function profile_load(&$a, $nickname, $profile = 0) {
 	$a->page['title'] = $a->profile['name'] . " @ " . $a->config['sitename'];
 	$_SESSION['theme'] = $a->profile['theme'];
 
+	/**
+	 * load/reload current theme info
+	 */
+	$theme_info_file = "view/theme/".current_theme()."/theme.php";
+	if (file_exists($theme_info_file)){
+		require_once($theme_info_file);
+	}
+
 	if(! (x($a->page,'aside')))
 		$a->page['aside'] = '';
 
