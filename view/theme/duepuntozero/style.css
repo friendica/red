@@ -1412,12 +1412,15 @@ input#dfrn-url {
 	margin-top: 15px;
 }
 
-#contact-edit-photo-wrapper {
-	margin-bottom: 20px;
-}
-
 #contact-edit-links{
 	clear: both;
+}
+
+#contact-edit-links ul {
+	list-style: none;
+}
+#contact-edit-links li {
+	margin-top: 5px;
 }
 
 #contact-edit-drop-link {
@@ -1429,28 +1432,8 @@ input#dfrn-url {
 	clear: both;
 }
 
-#contact-edit-photo {
-	float: left;
-}
-
-#contact-edit-photo-end {
-	clear: both;
-}
-
-#contact-edit-photo-wrapper {
-	float: left;
-}
-
 #contact-edit-wrapper {
 	width: 100%;
-}
-#contact-edit-nav-wrapper {
-/*	width: 450px; */
-	float: left;
-}
-
-#contact-edit-info-links div {
-	margin-left: 30px;
 }
 
 #contact-edit-end {
@@ -1464,7 +1447,6 @@ input#dfrn-url {
 
 .contact-edit-submit {
 	margin-top: 20px;
-	/*margin-left: 50px;*/
 }
 
 
@@ -2473,10 +2455,6 @@ a.mail-list-link {
 #crepair-poll {
 	float: left;
 	width: 300px;
-}
-
-#contact-edit-links .icon, #contact-drop-links .icon {
-	margin: 0px 3px 0px 3px;
 }
 
 

@@ -8,6 +8,7 @@ function contacts_init(&$a) {
 		return;
 
 	$contact_id = 0;
+
 	if(($a->argc == 2) && intval($a->argv[1])) {
 		$contact_id = intval($a->argv[1]);
 		$r = q("SELECT * FROM `contact` WHERE `uid` = %d and `id` = %d LIMIT 1",
@@ -25,7 +26,15 @@ function contacts_init(&$a) {
 	if(! x($a->page,'aside'))
 		$a->page['aside'] = '';
 
-	$a->page['aside'] .= follow_widget();
+	if($contact_id) {
+			$a->data['contact'] = $r[0];
+			$o .= '<div class="vcard">';
+			$o .= '<div class="fn">' . $a->data['contact']['name'] . '</div>';
+			$o .= '<div id="profile-photo-wrapper"><img class="photo" style="width: 175px; height: 175px;" src="' . $a->data['contact']['photo'] . '" alt="' . $a->data['contact']['name'] . '" /></div>';
+			$o .= '</div>';
+			$a->page['aside'] .= $o;
+
+	}	
 
 	$a->page['aside'] .= group_side('contacts','group',false,0,$contact_id);
 
@@ -240,7 +249,7 @@ function contacts_content(&$a) {
 				break;
 		}
 
-		$relation_text = t('Relationship:') . ' ' . sprintf($relation_text,$r[0]['name']);
+		$relation_text = sprintf($relation_text,$r[0]['name']);
 
 		if(($r[0]['network'] === 'dfrn') && ($r[0]['rel'])) {
 			$url = "redir/{$r[0]['id']}";
@@ -288,22 +297,21 @@ function contacts_content(&$a) {
 			'$visit' => sprintf( t('Visit %s\'s profile [%s]'),$r[0]['name'],$r[0]['url']),
 			'$blockunblock' => t('Block/Unblock contact'),
 			'$ignorecont' => t('Ignore contact'),
-			'$altcrepair' => t('Repair contact URL settings'),
-			'$lblcrepair' => t("Repair contact URL settings"),
+			'$lblcrepair' => t("Repair URL settings"),
 			'$lblrecent' => t('View conversations'),
 			'$lblsuggest' => $lblsuggest,
 			'$delete' => t('Delete contact'),
 			'$nettype' => $nettype,
 			'$poll_interval' => contact_poll_interval($r[0]['priority'],(! $poll_enabled)),
 			'$poll_enabled' => $poll_enabled,
-			'$lastupdtext' => t('Last updated: '),
-			'$updpub' => t('Update public posts: '),
+			'$lastupdtext' => t('Last update:'),
+			'$updpub' => t('Update public posts'),
 			'$last_update' => $last_update,
 			'$udnow' => t('Update now'),
-			'$profile_select' => contact_profile_assign($r[0]['profile-id'],(($r[0]['network'] !== 'dfrn') ? true : false)),
+			'$profile_select' => contact_profile_assign($r[0]['profile-id'],(($r[0]['network'] !== NETWORK_DFRN) ? true : false)),
 			'$contact_id' => $r[0]['id'],
-			'$block_text' => (($r[0]['blocked']) ? t('Unblock this contact') : t('Block this contact') ),
-			'$ignore_text' => (($r[0]['readonly']) ? t('Unignore this contact') : t('Ignore this contact') ),
+			'$block_text' => (($r[0]['blocked']) ? t('Unblock') : t('Block') ),
+			'$ignore_text' => (($r[0]['readonly']) ? t('Unignore') : t('Ignore') ),
 			'$insecure' => (($r[0]['network'] !== NETWORK_DFRN && $r[0]['network'] !== NETWORK_MAIL && $r[0]['network'] !== NETWORK_FACEBOOK && $r[0]['network'] !== NETWORK_DIASPORA) ? $insecure : ''),
 			'$info' => $r[0]['info'],
 			'$blocked' => (($r[0]['blocked']) ? t('Currently blocked') : ''),

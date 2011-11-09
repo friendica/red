@@ -1830,41 +1830,30 @@ margin-left: 0px;
 }
 
 #contact-edit-banner-name { font-size: 1.5em; margin-left: 30px; font-variant: small-caps; }
-#contact-edit-photo-wrapper {position: relative; float: left; padding: 20px;}
-#contact-edit-direction-icon { position: absolute; top: 60px; left:0px;}
-#contact-edit-nav-wrapper { margin-left: 210px; }
-#contact-edit-links { float: left; margin-top: 23px; }
-#contact-edit-nav-wrapper .icon {
-	border: 1px solid #babdb6;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;	
-}
 
-#contact-edit-nettype {
-	font-size: 1em;
-	font-variant: small-caps;
-	margin-left: 30px;
-	margin-bottom: 0px;
-	padding-bottom: 0px;
-}
-
-#contact-edit-poll-wrapper { margin-left: 50px; width: 300px;}
-#contact-edit-last-update-text { margin-bottom: 15px; padding-top: 20px; padding-left: 10px; font-size: 0.9em; max-width: 300px; }
-#contact-edit-last-updated { font-weight: bold; }
-#contact-edit-poll-text { display: inline; font-size: 0.9em; padding-left: 10px; }
-#contact-edit-end { clear: both; margin-bottom: 65px;}
 
 #contact-edit-update-now {
-	width: 80px;
-	padding: 5px 10px 5px 10px;
-	margin-left: 125px;
-	margin-top: 10px;
-	font-style: bold;
+	padding:7px;
+	width: 165px;
+	margin: auto;
+	margin-left: 40px;
+	-moz-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
+	box-shadow:inset 0px 1px 0px 0px #cfcfcf;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #bdbdbd), color-stop(1, #a2a2a2) );
+	background:-moz-linear-gradient( center top, #bdbdbd 5%, #a2a2a2 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#bdbdbd', endColorstr='#a2a2a2');
+	background-color:#bdbdbd;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	display:inline-block;
+	color:#efefef;
+	text-decoration:none;
+	text-align: center;
 }
 
 #contact-edit-update-now:hover {
-	color: #efefef;
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #b20202), color-stop(1, #d60808) );
 	background:-moz-linear-gradient( center top, #b20202 5%, #d60808 100% );
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#b20202', endColorstr='#d60808');
@@ -1872,19 +1861,17 @@ margin-left: 0px;
 }
 
 #contact-edit-update-now:active {
-	background-color: #b20202;
 	position:relative;
 	top:1px;
 }
 
 #contact-edit-update-now a {
 	color: #efefef;
+	font-size: 14px;
+	text-align: center;
+	margin: auto;
 }
 
-
-#contact-edit-profile-select-text > p {
-	font-size: 1em;
-}
 
 .contact-photo-menu-button {
 	position: absolute;
@@ -2094,13 +2081,6 @@ margin-left: 0px;
 	font-variant: normal;	
 }
 
-#contact-view-recent {
-	float: left;
-	width: 150px;
-	padding: 5px;
-	margin-bottom: 20px;
-}
-
 #contact-suggest {
 	float: left;
 	margin-left: 10px;
@@ -2141,9 +2121,6 @@ margin-left: 0px;
 	color: #efefef;
 }
 
-#contact-edit-info-wrapper {
-	clear: both;
-}
 
 /* ===================================== */
 /* = Register, Settings, Profile Forms = */
