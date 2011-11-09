@@ -222,8 +222,9 @@ function initEditor(cb){
 		event.target.textContent = reply;
 		event.preventDefault();
 		if(reply && reply.length) {
+			reply = bin2hex(reply);
 			$('#profile-rotator').show();
-			$.get('parse_url?url=' + reply, function(data) {
+			$.get('parse_url?binurl=' + reply, function(data) {
 				if (!editor) $("#profile-jot-text").val("");
 				initEditor(function(){
 					tinyMCE.execCommand('mceInsertRawHTML',false,data);

@@ -30,9 +30,6 @@
 	<div id="profile-link-wrapper" class="jot-tool" style="display: none;" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);" >
 		<a id="profile-link" class="icon border  link" title="$weblink" ondragenter="return linkdropper(event);" ondragover="return linkdropper(event);" ondrop="linkdrop(event);" onclick="jotGetLink(); return false;"></a>
 	</div> 
-	<div id="profile-youtube-wrapper" class="jot-tool" style="display: none;" >
-		<a id="profile-youtube" class="icon border  youtube" title="$youtube" onclick="jotGetVideo(); return false;"></a>
-	</div> 
 	<div id="profile-video-wrapper" class="jot-tool" style="display: none;" >
 		<a id="profile-video" class="icon border  video" title="$video" onclick="jotVideoURL(); return false;"></a>
 	</div> 
