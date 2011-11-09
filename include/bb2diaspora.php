@@ -6,6 +6,11 @@ require_once('include/event.php');
 require_once('library/markdown.php');
 require_once('include/html2bbcode.php');
 
+// we don't want to support a bbcode specific markdown interpreter
+// and the markdown library we have is pretty good, but provides HTML output.
+// So we'll use that to convert to HTML, then convert the HTML back to bbcode, 
+// and then clean up a few Diaspora specific constructs.
+
 function diaspora2bb($s) {
 
 	$s = preg_replace('/\@\{(.+?)\; (.+?)\@(.+?)\}/','@[url=https://$3/u/$2]$1[/url]',$s);
@@ -57,8 +62,6 @@ function stripdcode_br_cb($s) {
 }
 
 
-	// BBcode 2 HTML was written by WAY2WEB.net
-	// extended to work with Mistpark/Friendika - Mike Macgirvin
 
 function bb2diaspora($Text,$preserve_nl = false) {
 
@@ -95,7 +98,6 @@ function bb2diaspora($Text,$preserve_nl = false) {
 	$Text = preg_replace("/\[url\=([$URLSearchString]*)\](.*?)\[\/url\]/ism", '[$2]($1)', $Text);
 
 	$Text = preg_replace("/\[img\](.*?)\[\/img\]/", '![' . t('image/photo') . '](' . '$1' . ')', $Text);
-//	$Text = preg_replace("/\[img\](.*?)\[\/img\]/", t('image/photo'), $Text);
 
 	// Perform MAIL Search
 	$Text = preg_replace("(\[mail\]([$MAILSearchString]*)\[/mail\])", '[$1](mailto:$1)', $Text);

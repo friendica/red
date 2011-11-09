@@ -1671,9 +1671,9 @@ function local_delivery($importer,$data) {
 
 		// Does our member already have a friend matching this description?
 
-		$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `url` = '%s' AND `uid` = %d LIMIT 1",
+		$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `nurl` = '%s' AND `uid` = %d LIMIT 1",
 			dbesc($fsugg['name']),
-			dbesc($fsugg['url']),
+			dbesc(normalise_link($fsugg['url'])),
 			intval($fsugg['uid'])
 		);
 		if(count($r))
