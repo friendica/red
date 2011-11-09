@@ -804,11 +804,6 @@ input#dfrn-url {
 	clear: both;
 }
 
-#contact-edit-end {
-	clear: both;
-	margin-bottom: 65px;
-}
-
 #fsuggest-desc, #fsuggest-submit-wrapper {
 	margin-top: 15px;
 	margin-bottom: 15px;
@@ -1404,16 +1399,10 @@ input#dfrn-url {
 	font-weight: bold;
 }
 
-#contact-edit-nettype {
-	margin-top: 5px;
-	margin-left: 30px;
-}
-
-
 #contact-edit-poll-wrapper {
-	margin-left: 50px;
-	margin-top: 30px;
+	margin-top: 15px;
 }
+
 #contact-edit-poll-text {
 	margin-top: 15px;
 	margin-bottom: 5px;
@@ -1436,21 +1425,8 @@ input#dfrn-url {
 	margin-right: 20px;
 }
 
-/*
-#contact-edit-drop-link img {
-	margin-left: 20px;
-	border: none;
-}
-*/
-
 #contact-edit-nav-end {
 	clear: both;
-}
-
-#contact-edit-direction-icon {
-	float: left;
-	margin-top: 70px;
-	margin-right: 2px;
 }
 
 #contact-edit-photo {
@@ -1471,6 +1447,10 @@ input#dfrn-url {
 #contact-edit-nav-wrapper {
 /*	width: 450px; */
 	float: left;
+}
+
+#contact-edit-info-links div {
+	margin-left: 30px;
 }
 
 #contact-edit-end {
@@ -1517,12 +1497,7 @@ input#dfrn-url {
 
 
 #block-message, #ignore-message {
-	margin-top: 20px;
 	color: #FF0000;
-	font-size: 1.1em;
-	border: 1px solid #FF8888;
-	background-color: #FFEEEE;
-	padding: 10px;
 }
 
 #profile-edit-insecure {
@@ -1534,10 +1509,6 @@ input#dfrn-url {
 	padding-left: 5px;
 	/*: 3px 3px 3px 5px; */
 	width: 587px;
-}
-
-#block-message, #ignore-message {
-	width: 180px;
 }
 
 #profile-jot-text {

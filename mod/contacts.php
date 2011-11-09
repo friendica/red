@@ -225,20 +225,22 @@ function contacts_content(&$a) {
 		switch($r[0]['rel']) {
 			case CONTACT_IS_FRIEND:
 				$dir_icon = 'images/lrarrow.gif';
-				$alt_text = t('Mutual Friendship');
+				$relation_text = t('You are mutual friends with %s');
 				break;
 			case CONTACT_IS_FOLLOWER;
 				$dir_icon = 'images/larrow.gif';
-				$alt_text = t('is a fan of yours');
+				$relation_text = t('You are sharing with %s');
 				break;
 	
 			case CONTACT_IS_SHARING;
 				$dir_icon = 'images/rarrow.gif';
-				$alt_text = t('you are a fan of');
+				$relation_text = t('%s is sharing with you');
 				break;
 			default:
 				break;
 		}
+
+		$relation_text = t('Relationship:') . ' ' . sprintf($relation_text,$r[0]['name']);
 
 		if(($r[0]['network'] === 'dfrn') && ($r[0]['rel'])) {
 			$url = "redir/{$r[0]['id']}";
@@ -249,8 +251,7 @@ function contacts_content(&$a) {
 			$sparkle = '';
 		}
 
-		$insecure = '<div id="profile-edit-insecure"><p><img src="images/unlock_icon.gif" alt="' . t('Privacy Unavailable') . '" />&nbsp;'
-			. t('Private communications are not available for this contact.') . '</p></div>';
+		$insecure = t('Private communications are not available for this contact.');
 
 		$last_update = (($r[0]['last-update'] == '0000-00-00 00:00:00') 
 				? t('Never') 
@@ -266,22 +267,24 @@ function contacts_content(&$a) {
 		$nettype = sprintf( t('Network type: %s'),network_to_name($r[0]['network']));
 
 		$common = count_common_friends(local_user(),$r[0]['id']);
-		$common_text = (($common) ? sprintf( tt('%d contacts in common','%d contacts in common', $common),$common) : '');
-		$common_view = t('View');
-		$all_friends = t('View all contacts');
+		$common_text = (($common) ? sprintf( tt('%d contact in common','%d contacts in common', $common),$common) : '');
+
+		$polling = (($r[0]['network'] === NETWORK_MAIL | $r[0]['network'] === NETWORK_FEED) ? 'polling' : ''); 
+
+		$x = count_all_friends(local_user(), $r[0]['id']);
+		$all_friends = (($x) ? t('View all contacts') : '');
+
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Contact Editor'),
 			'$submit' => t('Submit'),
 			'$lbl_vis1' => t('Profile Visibility'),
 			'$lbl_vis2' => sprintf( t('Please choose the profile you would like to display to %s when viewing your profile securely.'), $r[0]['name']),
 			'$lbl_info1' => t('Contact Information / Notes'),
-			'$lbl_rep1' => t('Online Reputation'),
-			'$lbl_rep2' => t('Occasionally your friends may wish to inquire about this person\'s online legitimacy.'),
-			'$lbl_rep3' => t('You may help them choose whether or not to interact with this person by providing a <em>reputation</em> to guide them.'),
-			'$lbl_rep4' => t('Please take a moment to elaborate on this selection if you feel it could be helpful to others.'),
+			'$infedit' => t('Edit contact notes'),
 			'$common_text' => $common_text,
 			'$common_link' => $a->get_baseurl() . '/common/' . $r[0]['id'],
 			'$all_friends' => $all_friends,
+			'$relation_text' => $relation_text,
 			'$visit' => sprintf( t('Visit %s\'s profile [%s]'),$r[0]['name'],$r[0]['url']),
 			'$blockunblock' => t('Block/Unblock contact'),
 			'$ignorecont' => t('Ignore contact'),
@@ -303,8 +306,8 @@ function contacts_content(&$a) {
 			'$ignore_text' => (($r[0]['readonly']) ? t('Unignore this contact') : t('Ignore this contact') ),
 			'$insecure' => (($r[0]['network'] !== NETWORK_DFRN && $r[0]['network'] !== NETWORK_MAIL && $r[0]['network'] !== NETWORK_FACEBOOK && $r[0]['network'] !== NETWORK_DIASPORA) ? $insecure : ''),
 			'$info' => $r[0]['info'],
-			'$blocked' => (($r[0]['blocked']) ? '<div id="block-message">' . t('Currently blocked') . '</div>' : ''),
-			'$ignored' => (($r[0]['readonly']) ? '<div id="ignore-message">' . t('Currently ignored') . '</div>' : ''),
+			'$blocked' => (($r[0]['blocked']) ? t('Currently blocked') : ''),
+			'$ignored' => (($r[0]['readonly']) ? t('Currently ignored') : ''),
 			'$photo' => $r[0]['photo'],
 			'$name' => $r[0]['name'],
 			'$dir_icon' => $dir_icon,
