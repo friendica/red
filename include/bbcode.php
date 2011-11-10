@@ -99,12 +99,16 @@ function bbcode($Text,$preserve_nl = false) {
 	if(stristr($Text,'[/list]'))
 		$Text = str_replace("[*]", "<li>", $Text);
 
-	$Text = preg_replace("/\[list\](.*?)\[\/list\]/ism", '<ul class="listbullet">$1</ul>' ,$Text);
-	$Text = preg_replace("/\[list=1\](.*?)\[\/list\]/ism", '<ul class="listdecimal">$1</ul>' ,$Text);
-	$Text = preg_replace("/\[list=i\](.*?)\[\/list\]/sm",'<ul class="listlowerroman">$1</ul>' ,$Text);
-	$Text = preg_replace("/\[list=I\](.*?)\[\/list\]/sm", '<ul class="listupperroman">$1</ul>' ,$Text);
-	$Text = preg_replace("/\[list=a\](.*?)\[\/list\]/sm", '<ul class="listloweralpha">$1</ul>' ,$Text);
-	$Text = preg_replace("/\[list=A\](.*?)\[\/list\]/sm", '<ul class="listupperalpha">$1</ul>' ,$Text);
+	if(stristr($Text,'[/list]'))
+		$Text = str_replace("[*]", "<li>", $Text);
+
+	$Text = preg_replace("/\[list\](.*?)\[\/list\]/ism", '<ul class="listbullet" style="list-style-type: circle;">$1</ul>' ,$Text);
+	$Text = preg_replace("/\[list=\](.*?)\[\/list\]/ism", '<ul class="listnone" style="list-style-type: none;">$1</ul>' ,$Text);
+	$Text = preg_replace("/\[list=1\](.*?)\[\/list\]/ism", '<ul class="listdecimal" style="list-style-type: decimal;">$1</ul>' ,$Text);
+	$Text = preg_replace("/\[list=i\](.*?)\[\/list\]/sm",'<ul class="listlowerroman" style="list-style-type: lower-roman;">$1</ul>' ,$Text);
+	$Text = preg_replace("/\[list=I\](.*?)\[\/list\]/sm", '<ul class="listupperroman" style="list-style-type: upper-roman;">$1</ul>' ,$Text);
+	$Text = preg_replace("/\[list=a\](.*?)\[\/list\]/sm", '<ul class="listloweralpha" style="list-style-type: lower-alpha;">$1</ul>' ,$Text);
+	$Text = preg_replace("/\[list=A\](.*?)\[\/list\]/sm", '<ul class="listupperalpha" style="list-style-type: upper-alpha;">$1</ul>' ,$Text);
 	$Text = preg_replace("/\[li\](.*?)\[\/li\]/sm", '<li>$1</li>' ,$Text);
 
 	$Text = preg_replace("/\[td\](.*?)\[\/td\]/sm", '<td>$1</td>' ,$Text);
