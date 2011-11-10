@@ -32,16 +32,37 @@ function initEditor(cb) {
                 content_css: "$baseurl/view/custom_tinymce.css",
                 theme_advanced_path : false,
                 setup : function(ed) {
-                     //Character count
-                        ed.onKeyUp.add(function(ed, e) {
-                                var txt = tinyMCE.activeEditor.getContent();
-                                textlen = txt.length;
-                                if(textlen != 0 && $('#jot-perms-icon').is('.unlock')) {
-                                        $('#profile-jot-desc').html(ispublic);
-                                }
-                                else {
-                                        $('#profile-jot-desc').html('&nbsp;');
-                                }
+					cPopup = null;
+					ed.onKeyDown.add(function(ed,e) {
+						if(cPopup !== null)
+							cPopup.onkey(e);
+					});
+
+
+
+					ed.onKeyUp.add(function(ed, e) {
+						var txt = tinyMCE.activeEditor.getContent();
+						match = txt.match(/@([^ \n]+)$/);
+						if(match!==null) {
+							if(cPopup === null) {
+								cPopup = new ACPopup(this,baseurl+"/acl");
+							}
+							if(cPopup.ready && match[1]!==cPopup.searchText) cPopup.search(match[1]);
+							if(! cPopup.ready) cPopup = null;
+						}
+						else {
+							if(cPopup !== null) { cPopup.close(); cPopup = null; }
+						}
+
+						textlen = txt.length;
+						if(textlen != 0 && $('#jot-perms-icon').is('.unlock')) {
+							$('#profile-jot-desc').html(ispublic);
+						}
+                        else {
+                            $('#profile-jot-desc').html('&nbsp;');
+                        }
+
+								//Character count
 
                                 if(textlen <= 140) {
                                         $('#character-counter').removeClass('red');
@@ -67,7 +88,6 @@ function initEditor(cb) {
                                 $("#profile-upload-wrapper").show();
                                 $("#profile-attach-wrapper").show();
                                 $("#profile-link-wrapper").show();
-                                $("#profile-youtube-wrapper").show();
                                 $("#profile-video-wrapper").show();
                                 $("#profile-audio-wrapper").show();
                                 $("#profile-location-wrapper").show();
@@ -163,17 +183,10 @@ function initEditor(cb) {
 		if(reply && reply.length) {
 			reply = bin2hex(reply);
 			$('#profile-rotator').show();
-			$.get('parse_url?url=' + reply, function(data) {
+			$.get('parse_url?binurl=' + reply, function(data) {
 				tinyMCE.execCommand('mceInsertRawHTML',false,data);
 				$('#profile-rotator').hide();
 			});
-		}
-	}
-
-	function jotGetVideo() {
-		reply = prompt("$utubeurl");
-		if(reply && reply.length) {
-			tinyMCE.execCommand('mceInsertRawHTML',false,'[youtube]' + reply + '[/youtube]');
 		}
 	}
 
@@ -229,8 +242,9 @@ function initEditor(cb) {
 		event.target.textContent = reply;
 		event.preventDefault();
 		if(reply && reply.length) {
+			reply = bin2hex(reply);
 			$('#profile-rotator').show();
-			$.get('parse_url?url=' + reply, function(data) {
+			$.get('parse_url?binurl=' + reply, function(data) {
 				if (!editor) $("#profile-jot-text").val("");
 				initEditor(function(){
 					tinyMCE.execCommand('mceInsertRawHTML',false,data);

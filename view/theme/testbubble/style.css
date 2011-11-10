@@ -823,10 +823,9 @@ profile-jot-banner-wrapper {
 /* ======== */
 
 .tabs {
-	min-width: 500px;
+	min-width: 400px;
 	list-style: none;
 	padding: 10px;
-	margin: 0px 0px 10px 0px;
 	border-bottom: 1px solid #efefef;
 	font-size: 0.9em;
 }
@@ -834,6 +833,8 @@ profile-jot-banner-wrapper {
 
 .tab {
 	padding: 5px 10px 5px 10px;
+	display: inline-block;
+	margin-bottom: 5px;
 	margin-right: 5px;
 	font-style: bold;
 }
@@ -848,7 +849,7 @@ profile-jot-banner-wrapper {
 
 .wall-item-outside-wrapper {
 	max-width: 93%;
-	border-bottom: 1px solid #dedede;
+	border-bottom: 1px solid #dedede; 
 	margin-top: 20px;
 	padding-right: 10px;
 	padding-left: 12px;

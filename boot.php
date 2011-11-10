@@ -9,7 +9,7 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDIKA_PLATFORM',     'Friendica');
-define ( 'FRIENDIKA_VERSION',      '2.3.1159' );
+define ( 'FRIENDIKA_VERSION',      '2.3.1160' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.22'    );
 define ( 'DB_UPDATE_VERSION',      1103      );
 
@@ -822,6 +822,14 @@ function profile_load(&$a, $nickname, $profile = 0) {
 
 	$a->page['title'] = $a->profile['name'] . " @ " . $a->config['sitename'];
 	$_SESSION['theme'] = $a->profile['theme'];
+
+	/**
+	 * load/reload current theme info
+	 */
+	$theme_info_file = "view/theme/".current_theme()."/theme.php";
+	if (file_exists($theme_info_file)){
+		require_once($theme_info_file);
+	}
 
 	if(! (x($a->page,'aside')))
 		$a->page['aside'] = '';
