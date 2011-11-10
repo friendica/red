@@ -583,6 +583,7 @@ input#dfrn-url {
 #profile-photo-wrapper img {
 	width:175px;
 	height:175px;
+	padding: 12px;
 }
 
 #profile-edit-profile-name-label,
@@ -2174,13 +2175,14 @@ a.mail-list-link {
 	
 
 .fn {
-	padding: 0px 0px 5px 0px;
+	padding: 0px 0px 5px 12px;
 	font-size: 120%;
 	font-weight: bold;
 }
 
 .vcard .title {
 	margin-bottom: 5px;
+	margin-left: 12px;
 }
 
 .vcard dl {
