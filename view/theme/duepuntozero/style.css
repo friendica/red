@@ -1419,7 +1419,11 @@ input#dfrn-url {
 
 #contact-edit-links ul {
 	list-style: none;
+	list-style-type: none;
+	margin-left: 0px;
+	padding-left: 0px;
 }
+
 #contact-edit-links li {
 	margin-top: 5px;
 }

@@ -150,7 +150,8 @@ function common_friends($uid,$cid) {
 	$r = q("SELECT `gcontact`.* 
 		FROM `glink` left join `gcontact` on `glink`.`gcid` = `gcontact`.`id`
 		where `glink`.`cid` = %d and `glink`.`uid` = %d
-		and `gcontact`.`nurl` in (select nurl from contact where uid = %d and self = 0 and id != %d ) ",
+		and `gcontact`.`nurl` in (select nurl from contact where uid = %d and self = 0 and id != %d ) 
+		order by `gcontact`.`name` asc ",
 		intval($cid),
 		intval($uid),
 		intval($uid),
@@ -181,7 +182,8 @@ function all_friends($uid,$cid,$start = 0, $limit = 80) {
 
 	$r = q("SELECT `gcontact`.* 
 		FROM `glink` left join `gcontact` on `glink`.`gcid` = `gcontact`.`id`
-		where `glink`.`cid` = %d and `glink`.`uid` = %d LIMIT %d, %d ",
+		where `glink`.`cid` = %d and `glink`.`uid` = %d 
+		order by `gcontact`.`name` asc LIMIT %d, %d ",
 		intval($cid),
 		intval($uid),
 		intval($start),

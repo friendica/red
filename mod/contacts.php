@@ -212,17 +212,10 @@ function contacts_content(&$a) {
 		}
 	}
 
-	if(($a->argc == 2) && intval($a->argv[1])) {
+	if((x($a->data,'contact')) && (is_array($a->data['contact']))) {
 
-		$contact_id = intval($a->argv[1]);
-		$r = q("SELECT * FROM `contact` WHERE `uid` = %d and `id` = %d LIMIT 1",
-			intval(local_user()),
-			intval($contact_id)
-		);
-		if(! count($r)) {
-			notice( t('Contact not found.') . EOL);
-			return;
-		}
+		$contact_id = $a->data['contact']['id'];
+		$contact = $a->data['contact'];
 
 		$tpl = get_markup_template('contact_head.tpl');
 		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
@@ -231,7 +224,7 @@ function contacts_content(&$a) {
 
 		$tpl = get_markup_template("contact_edit.tpl");
 
-		switch($r[0]['rel']) {
+		switch($contact['rel']) {
 			case CONTACT_IS_FRIEND:
 				$dir_icon = 'images/lrarrow.gif';
 				$relation_text = t('You are mutual friends with %s');
@@ -249,52 +242,75 @@ function contacts_content(&$a) {
 				break;
 		}
 
-		$relation_text = sprintf($relation_text,$r[0]['name']);
+		$relation_text = sprintf($relation_text,$contact['name']);
 
-		if(($r[0]['network'] === 'dfrn') && ($r[0]['rel'])) {
-			$url = "redir/{$r[0]['id']}";
+		if(($contact['network'] === NETWORK_DFRN) && ($contact['rel'])) {
+			$url = "redir/{$contact['id']}";
 			$sparkle = ' class="sparkle" ';
 		}
 		else { 
-			$url = $r[0]['url'];
+			$url = $contact['url'];
 			$sparkle = '';
 		}
 
 		$insecure = t('Private communications are not available for this contact.');
 
-		$last_update = (($r[0]['last-update'] == '0000-00-00 00:00:00') 
+		$last_update = (($contact['last-update'] == '0000-00-00 00:00:00') 
 				? t('Never') 
-				: datetime_convert('UTC',date_default_timezone_get(),$r[0]['last-update'],'D, j M Y, g:i A'));
+				: datetime_convert('UTC',date_default_timezone_get(),$contact['last-update'],'D, j M Y, g:i A'));
 
-		if($r[0]['last-update'] !== '0000-00-00 00:00:00')
-			$last_update .= ' ' . (($r[0]['last-update'] == $r[0]['success_update']) ? t("\x28Update was successful\x29") : t("\x28Update was not successful\x29"));
+		if($contact['last-update'] !== '0000-00-00 00:00:00')
+			$last_update .= ' ' . (($contact['last-update'] == $contact['success_update']) ? t("\x28Update was successful\x29") : t("\x28Update was not successful\x29"));
 
-		$lblsuggest = (($r[0]['network'] === NETWORK_DFRN) ? t('Suggest friends') : '');
+		$lblsuggest = (($contact['network'] === NETWORK_DFRN) ? t('Suggest friends') : '');
 
-		$poll_enabled = (($r[0]['network'] !== NETWORK_DIASPORA) ? true : false);
+		$poll_enabled = (($contact['network'] !== NETWORK_DIASPORA) ? true : false);
 
-		$nettype = sprintf( t('Network type: %s'),network_to_name($r[0]['network']));
+		$nettype = sprintf( t('Network type: %s'),network_to_name($contact['network']));
 
-		$common = count_common_friends(local_user(),$r[0]['id']);
+		$common = count_common_friends(local_user(),$contact['id']);
 		$common_text = (($common) ? sprintf( tt('%d contact in common','%d contacts in common', $common),$common) : '');
 
-		$polling = (($r[0]['network'] === NETWORK_MAIL | $r[0]['network'] === NETWORK_FEED) ? 'polling' : ''); 
+		$polling = (($contact['network'] === NETWORK_MAIL | $contact['network'] === NETWORK_FEED) ? 'polling' : ''); 
 
-		$x = count_all_friends(local_user(), $r[0]['id']);
+		$x = count_all_friends(local_user(), $contact['id']);
 		$all_friends = (($x) ? t('View all contacts') : '');
+
+		// tabs
+		$tabs = array(
+			array(
+				'label' => (($contact['blocked']) ? t('Unblock') : t('Block') ),
+				'url'   => $a->get_baseurl() . '/contacts/' . $contact_id . '/block',
+				'sel'   => '',
+			),
+			array(
+				'label' => (($contact['readonly']) ? t('Unignore') : t('Ignore') ),
+				'url'   => $a->get_baseurl() . '/contacts/' . $contact_id . '/ignore',
+				'sel'   => '',
+			),
+			array(
+				'label' => t('Repair'),
+				'url'   => $a->get_baseurl() . '/crepair/' . $contact_id,
+				'sel'   => '',
+			)
+		);
+		$tab_tpl = get_markup_template('common_tabs.tpl');
+		$tab_str = replace_macros($tab_tpl, array('$tabs' => $tabs));
+
 
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Contact Editor'),
+			'$tab_str' => $tab_str,
 			'$submit' => t('Submit'),
 			'$lbl_vis1' => t('Profile Visibility'),
-			'$lbl_vis2' => sprintf( t('Please choose the profile you would like to display to %s when viewing your profile securely.'), $r[0]['name']),
+			'$lbl_vis2' => sprintf( t('Please choose the profile you would like to display to %s when viewing your profile securely.'), $contact['name']),
 			'$lbl_info1' => t('Contact Information / Notes'),
 			'$infedit' => t('Edit contact notes'),
 			'$common_text' => $common_text,
-			'$common_link' => $a->get_baseurl() . '/common/' . $r[0]['id'],
+			'$common_link' => $a->get_baseurl() . '/common/' . $contact['id'],
 			'$all_friends' => $all_friends,
 			'$relation_text' => $relation_text,
-			'$visit' => sprintf( t('Visit %s\'s profile [%s]'),$r[0]['name'],$r[0]['url']),
+			'$visit' => sprintf( t('Visit %s\'s profile [%s]'),$contact['name'],$contact['url']),
 			'$blockunblock' => t('Block/Unblock contact'),
 			'$ignorecont' => t('Ignore contact'),
 			'$lblcrepair' => t("Repair URL settings"),
@@ -302,22 +318,22 @@ function contacts_content(&$a) {
 			'$lblsuggest' => $lblsuggest,
 			'$delete' => t('Delete contact'),
 			'$nettype' => $nettype,
-			'$poll_interval' => contact_poll_interval($r[0]['priority'],(! $poll_enabled)),
+			'$poll_interval' => contact_poll_interval($contact['priority'],(! $poll_enabled)),
 			'$poll_enabled' => $poll_enabled,
 			'$lastupdtext' => t('Last update:'),
 			'$updpub' => t('Update public posts'),
 			'$last_update' => $last_update,
 			'$udnow' => t('Update now'),
-			'$profile_select' => contact_profile_assign($r[0]['profile-id'],(($r[0]['network'] !== NETWORK_DFRN) ? true : false)),
-			'$contact_id' => $r[0]['id'],
-			'$block_text' => (($r[0]['blocked']) ? t('Unblock') : t('Block') ),
-			'$ignore_text' => (($r[0]['readonly']) ? t('Unignore') : t('Ignore') ),
-			'$insecure' => (($r[0]['network'] !== NETWORK_DFRN && $r[0]['network'] !== NETWORK_MAIL && $r[0]['network'] !== NETWORK_FACEBOOK && $r[0]['network'] !== NETWORK_DIASPORA) ? $insecure : ''),
-			'$info' => $r[0]['info'],
-			'$blocked' => (($r[0]['blocked']) ? t('Currently blocked') : ''),
-			'$ignored' => (($r[0]['readonly']) ? t('Currently ignored') : ''),
-			'$photo' => $r[0]['photo'],
-			'$name' => $r[0]['name'],
+			'$profile_select' => contact_profile_assign($contact['profile-id'],(($contact['network'] !== NETWORK_DFRN) ? true : false)),
+			'$contact_id' => $contact['id'],
+			'$block_text' => (($contact['blocked']) ? t('Unblock') : t('Block') ),
+			'$ignore_text' => (($contact['readonly']) ? t('Unignore') : t('Ignore') ),
+			'$insecure' => (($contact['network'] !== NETWORK_DFRN && $contact['network'] !== NETWORK_MAIL && $contact['network'] !== NETWORK_FACEBOOK && $contact['network'] !== NETWORK_DIASPORA) ? $insecure : ''),
+			'$info' => $contact['info'],
+			'$blocked' => (($contact['blocked']) ? t('Currently blocked') : ''),
+			'$ignored' => (($contact['readonly']) ? t('Currently ignored') : ''),
+			'$photo' => $contact['photo'],
+			'$name' => $contact['name'],
 			'$dir_icon' => $dir_icon,
 			'$alt_text' => $alt_text,
 			'$sparkle' => $sparkle,
@@ -325,7 +341,7 @@ function contacts_content(&$a) {
 
 		));
 
-		$arr = array('contact' => $r[0],'output' => $o);
+		$arr = array('contact' => $contact,'output' => $o);
 
 		call_hooks('contact_edit', $arr);
 

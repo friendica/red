@@ -1,5 +1,37 @@
 <?php
 
+function crepair_init(&$a) {
+	if(! local_user())
+		return;
+
+	$contact_id = 0;
+
+	if(($a->argc == 2) && intval($a->argv[1])) {
+		$contact_id = intval($a->argv[1]);
+		$r = q("SELECT * FROM `contact` WHERE `uid` = %d and `id` = %d LIMIT 1",
+			intval(local_user()),
+			intval($contact_id)
+		);
+		if(! count($r)) {
+			$contact_id = 0;
+		}
+	}
+
+	if(! x($a->page,'aside'))
+		$a->page['aside'] = '';
+
+	if($contact_id) {
+			$a->data['contact'] = $r[0];
+			$o .= '<div class="vcard">';
+			$o .= '<div class="fn">' . $a->data['contact']['name'] . '</div>';
+			$o .= '<div id="profile-photo-wrapper"><img class="photo" style="width: 175px; height: 175px;" src="' . $a->data['contact']['photo'] . '" alt="' . $a->data['contact']['name'] . '" /></div>';
+			$o .= '</div>';
+			$a->page['aside'] .= $o;
+
+	}	
+}
+
+
 function crepair_post(&$a) {
 	if(! local_user())
 		return;
@@ -100,7 +132,7 @@ function crepair_content(&$a) {
 
 	$msg1 = t('Repair Contact Settings');
 
-	$msg2 = t('<strong>WARNING: This is highly advanced</strong> and if you enter incorrect information your communications with this contact will stop working.');
+	$msg2 = t('<strong>WARNING: This is highly advanced</strong> and if you enter incorrect information your communications with this contact may stop working.');
 	$msg3 = t('Please use your browser \'Back\' button <strong>now</strong> if you are uncertain what to do on this page.');
 
 	$o .= '<h2>' . $msg1 . '</h2>';

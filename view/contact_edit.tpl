@@ -3,11 +3,14 @@
 
 <div id="contact-edit-wrapper" >
 
+	$tab_str
+
 	<div id="contact-edit-drop-link" >
 		<a href="contacts/$contact_id/drop" class="icon drophide" id="contact-edit-drop-link" onclick="return confirmDelete();"  title="$delete" onmouseover="imgbright(this);" onmouseout="imgdull(this);"></a>
 	</div>
 
 	<div id="contact-edit-drop-link-end"></div>
+
 
 	<div id="contact-edit-nav-wrapper" >
 		<div id="contact-edit-links">
@@ -23,6 +26,9 @@
 				{{ if $ignored }}
 					<li><div id="ignore-message">$ignored</div></li>
 				{{ endif }}
+
+				<li>&nbsp;</li>
+
 				{{ if $common_text }}
 					<li><div id="contact-edit-common"><a href="common/$contact_id">$common_text</a></div></li>
 				{{ endif }}
@@ -30,15 +36,12 @@
 					<li><div id="contact-edit-allfriends"><a href="allfriends/$contact_id">$all_friends</a></div></li>
 				{{ endif }}
 
-				<li>&nbsp;</li>
 
 				<li><a href="network/?cid=$contact_id" id="contact-edit-view-recent">$lblrecent</a></li>
 				{{ if $lblsuggest }}
 					<li><a href="fsuggest/$contact_id" id="contact-edit-suggest">$lblsuggest</a></li>
 				{{ endif }}
-				<li><a href="contacts/$contact_id/block" id="contact-edit-block-link" title="$block_text">$block_text</a></li>
-				<li><a href="contacts/$contact_id/ignore" id="contact-edit-ignore-link" title="$ignore_text">$ignore_text</a></li>
-				<li><a href="crepair/$contact_id" id="contact-edit-repair" title="$lblcrepair">$lblcrepair</a></li>
+
 			</ul>
 		</div>
 	</div>
