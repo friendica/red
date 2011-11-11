@@ -1878,6 +1878,11 @@ a.mail-list-link {
 	margin-top: 10px;
 }
 
+#sidebar-group-list .icon {
+	display: inline-block;
+	height: 12px;
+	width: 12px;
+}
 
 #search-save {
     margin-left: 5px;

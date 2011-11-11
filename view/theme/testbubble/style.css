@@ -615,6 +615,7 @@ h3#search:before {
 	text-align: center;
 }
 
+
 #sidebar-new-group:hover {
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #b20202), color-stop(1, #d60808) );
 	background:-moz-linear-gradient( center top, #b20202 5%, #d60808 100% );
@@ -625,6 +626,25 @@ h3#search:before {
 #sidebar-new-group:active {
 	position:relative;
 	top:1px;
+}
+
+.group-selected {
+	padding-bottom: 0px;
+	padding-left: 2px;
+	padding-right: 2px;
+	-moz-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
+	box-shadow:inset 0px 1px 0px 0px #cfcfcf;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #bdbdbd), color-stop(1, #a2a2a2) );
+	background:-moz-linear-gradient( center top, #bdbdbd 5%, #a2a2a2 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#bdbdbd', endColorstr='#a2a2a2');
+	background-color:#bdbdbd;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	display:inline-block;
+	color:#efefef;
+	text-decoration:none;
 }
 
 #sidebar-new-group a {
@@ -640,8 +660,10 @@ ul .sidebar-group-li{
 	padding-bottom: 5px;
 }
 
-ul .sidebar-group-li img{
-	display: none;
+ul .sidebar-group-li .icon{
+	display: inline-block;
+	height: 12px;
+	width: 12px;
 }
 
 .widget h3{
