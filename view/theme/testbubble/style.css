@@ -703,6 +703,14 @@ ul .sidebar-group-li .icon{
 	margin-right: 5px;
 }
 
+.birthday-today, .event-today {
+	font-weight: bold;
+}
+
+#birthday-wrapper, #event-wrapper {
+	margin-left: 15px;
+}
+
 /* ================== */
 /* = Contacts Block = */
 /* ================== */
