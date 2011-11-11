@@ -35,6 +35,8 @@ function contacts_init(&$a) {
 			$a->page['aside'] .= $o;
 
 	}	
+	else
+		$a->page['aside'] .= follow_widget();
 
 	$a->page['aside'] .= group_side('contacts','group',false,0,$contact_id);
 
