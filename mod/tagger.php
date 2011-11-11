@@ -105,7 +105,7 @@ EOT;
 	if(! isset($bodyverb))
 			return; 
 
-	$termlink = '#[url=' . $a->get_baseurl() . '/search?search=' . urlencode($term) . ']'. $term . '[/url]';
+	$termlink = '&#x2317;[url=' . $a->get_baseurl() . '/search?search=' . urlencode($term) . ']'. $term . '[/url]';
 
 	$arr = array();
 

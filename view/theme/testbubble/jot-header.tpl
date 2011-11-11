@@ -254,6 +254,23 @@ function initEditor(cb) {
 		}
 	}
 
+	function itemTag(id) {
+		reply = prompt("$term");
+		if(reply && reply.length) {
+			reply = reply.replace('#','');
+			if(reply.length) {
+
+				commentBusy = true;
+				$('body').css('cursor', 'wait');
+
+				$.get('tagger/' + id + '?term=' + reply);
+				if(timer) clearTimeout(timer);
+				timer = setTimeout(NavUpdate,3000);
+				liking = 1;
+			}
+		}
+	}
+
 	function jotClearLocation() {
 		$('#jot-coord').val('');
 		$('#profile-nolocation-wrapper').hide();

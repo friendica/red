@@ -937,6 +937,11 @@ profile-jot-banner-wrapper {
 	margin-right: 2px;
 	float: left;	
 }
+.tag-item {
+	margin-left: 5px;
+	margin-right: 2px;
+	float: left;	
+}
 .wall-item-title { font-size: 1.2em; font-weight: bold;}
 .wall-item-body {
 	margin-left: 140px;
@@ -2836,7 +2841,8 @@ tr {
 .on 		{ background-position: -50px  -60px;}
 .off 		{ background-position: -70px  -60px;}
 .prev 		{ background-position: -90px  -60px;}
-.next 		{ background-position: -110px  -60px;}
+.next 		{ background-position: -110px -60px;}
+.tagged     { background-position: -130px -60px;}
 
 .icon.dim { opacity: 0.3;filter:alpha(opacity=30); }
 

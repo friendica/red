@@ -235,14 +235,18 @@ function initEditor(cb){
 	}
 
 	function itemTag(id) {
-		$('#like-rotator-' + id).show();
 		reply = prompt("$term");
 		if(reply && reply.length) {
 			reply = reply.replace('#','');
 			if(reply.length) {
-				$.get('tagger/' + id + '?term=' + reply, function(data) {
-					$('#like-rotator-' + id).hide();
-				});
+
+				commentBusy = true;
+				$('body').css('cursor', 'wait');
+
+				$.get('tagger/' + id + '?term=' + reply);
+				if(timer) clearTimeout(timer);
+				timer = setTimeout(NavUpdate,3000);
+				liking = 1;
 			}
 		}
 	}
