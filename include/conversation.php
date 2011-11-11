@@ -742,6 +742,7 @@ function status_editor($a,$x, $notes_cid = 0) {
 		$tpl = get_markup_template('jot-header.tpl');
 	
 		$a->page['htmlhead'] .= replace_macros($tpl, array(
+			'$newpost' => 'true',
 			'$baseurl' => $a->get_baseurl(),
 			'$geotag' => $geotag,
 			'$nickname' => $x['nickname'],

@@ -83,18 +83,20 @@ function initEditor(cb) {
                         });
                         ed.onInit.add(function(ed) {
                                 ed.pasteAsPlainText = true;
-                                $("#profile-jot-text-loading").hide();
-                                $("#profile-jot-submit-wrapper").show();
-                                $("#profile-upload-wrapper").show();
-                                $("#profile-attach-wrapper").show();
-                                $("#profile-link-wrapper").show();
-                                $("#profile-video-wrapper").show();
-                                $("#profile-audio-wrapper").show();
-                                $("#profile-location-wrapper").show();
-                                $("#profile-nolocation-wrapper").show();
-                                $("#profile-title-wrapper").show();
-                                $("#profile-jot-plugin-wrapper").show();
-                                $("#character-counter").show();
+								$("#profile-jot-text-loading").hide();
+	                            $("#profile-jot-submit-wrapper").show();
+								{{ if $newpost }}
+    	                            $("#profile-upload-wrapper").show();
+        	                        $("#profile-attach-wrapper").show();
+            	                    $("#profile-link-wrapper").show();
+                	                $("#profile-video-wrapper").show();
+                    	            $("#profile-audio-wrapper").show();
+                        	        $("#profile-location-wrapper").show();
+                            	    $("#profile-nolocation-wrapper").show();
+                                	$("#profile-title-wrapper").show();
+	                                $("#profile-jot-plugin-wrapper").show();
+								{{ endif }}   
+                             $("#character-counter").show();
                                 if (typeof cb!="undefined") cb();
                         });
                 }
