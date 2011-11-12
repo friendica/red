@@ -42,7 +42,7 @@
 			if (e.hasClass("ttbottom")) pos="bottom";
 			if (e.hasClass("ttleft")) pos="left";
 			if (e.hasClass("ttright")) pos="right";
-			e.tipTip({defaultPosition: pos});
+			e.tipTip({defaultPosition: pos, edgeOffset: 8});
 		});
 		
 		
