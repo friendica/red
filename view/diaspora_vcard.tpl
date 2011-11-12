@@ -2,7 +2,7 @@
 	<dl class='entity_nickname'>
 		<dt>Nickname</dt>
 		<dd>		
-			<a class="nickname url uid" href="$podloc/" rel="me">$diaspora.nickname</a>
+			<a class="nickname url uid" href="$diaspora.podloc/" rel="me">$diaspora.nickname</a>
 		</dd>
 	</dl>
 	<dl class='entity_fn'>

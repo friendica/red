@@ -9,7 +9,7 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDIKA_PLATFORM',     'Friendica');
-define ( 'FRIENDIKA_VERSION',      '2.3.1162' );
+define ( 'FRIENDIKA_VERSION',      '2.3.1163' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.22'    );
 define ( 'DB_UPDATE_VERSION',      1103      );
 
@@ -955,7 +955,7 @@ function profile_sidebar($profile, $block = 0) {
 	$diaspora = array(
 		'podloc' => $a->get_baseurl(),
 		'searchable' => (($profile['publish'] && $profile['net-publish']) ? 'true' : 'false' ),
-		'nickname ' => $profile['nickname'],
+		'nickname' => $profile['nickname'],
 		'fullname' => $profile['name'],
 		'firstname' => $firstname,
 		'lastname' => $lastname,

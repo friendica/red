@@ -180,9 +180,11 @@ function nav_set_selected($item){
 		'introductions' => null,
 		'notifications'	=> null,
 		'messages'		=> null,
-		'directory'	=> null,
+		'directory'	    => null,
 		'settings'		=> null,
 		'contacts'		=> null,
+		'manage'        => null,
+		'register'      => null,
 	);
 	$a->nav_sel[$item] = 'selected';
 }

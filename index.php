@@ -133,6 +133,7 @@ if($install)
 else
 	check_config($a);
 
+nav_set_selected('nothing');
 
 $arr = array('app_menu' => $a->apps);
 
