@@ -420,6 +420,8 @@ function diaspora_decode($importer,$xml) {
 	
 function diaspora_request($importer,$xml) {
 
+	$a = get_app();
+
 	$sender_handle = unxmlify($xml->sender_handle);
 	$recipient_handle = unxmlify($xml->recipient_handle);
 
@@ -440,7 +442,60 @@ function diaspora_request($importer,$xml) {
 				intval($importer['uid'])
 			);
 		}
-		// send notification?
+		// send notification
+
+		$r = q("SELECT `hide-friends` FROM `profile` WHERE `uid` = %d AND `is-default` = 1 LIMIT 1",
+			intval($importer['uid'])
+		);
+
+		if((count($r)) && ($r[0]['hide-friends'] == 0)) {
+			require_once('include/items.php');
+
+			$self = q("SELECT * FROM `contact` WHERE `self` = 1 AND `uid` = %d LIMIT 1",
+				intval($importer['uid'])
+			);
+
+			if(count($self)) {
+
+				$arr = array();
+				$arr['uri'] = $arr['parent-uri'] = item_new_uri($a->get_hostname(), $importer['uid']); 
+				$arr['uid'] = $importer['uid'];
+				$arr['contact-id'] = $self[0]['id'];
+				$arr['wall'] = 1;
+				$arr['type'] = 'wall';
+				$arr['gravity'] = 0;
+				$arr['origin'] = 1;
+				$arr['author-name'] = $arr['owner-name'] = $self[0]['name'];
+				$arr['author-link'] = $arr['owner-link'] = $self[0]['url'];
+				$arr['author-avatar'] = $arr['owner-avatar'] = $self[0]['thumb'];
+				$arr['verb'] = ACTIVITY_FRIEND;
+				$arr['object-type'] = ACTIVITY_OBJ_PERSON;
+				
+				$A = '[url=' . $self[0]['url'] . ']' . $self[0]['name'] . '[/url]';
+				$B = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]';
+				$BPhoto = '[url=' . $contact['url'] . ']' . '[img]' . $contact['thumb'] . '[/img][/url]';
+				$arr['body'] =  sprintf( t('%1$s is now friends with %2$s'), $A, $B)."\n\n\n".$Bphoto;
+
+				$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PERSON . '</type><title>' . $contact['name'] . '</title>'
+					. '<id>' . $contact['url'] . '/' . $contact['name'] . '</id>';
+				$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $contact['url'] . '" />' . "\n");
+				$arr['object'] .= xmlify('<link rel="photo" type="image/jpeg" href="' . $contact['thumb'] . '" />' . "\n");
+				$arr['object'] .= '</link></object>' . "\n";
+				$arr['last-child'] = 1;
+
+				$arr['allow_cid'] = $user[0]['allow_cid'];
+				$arr['allow_gid'] = $user[0]['allow_gid'];
+				$arr['deny_cid']  = $user[0]['deny_cid'];
+				$arr['deny_gid']  = $user[0]['deny_gid'];
+
+				$i = item_store($arr);
+				if($i)
+			    	proc_run('php',"include/notifier.php","activity","$i");
+
+			}
+
+		}
+
 		return;
 	}
 	

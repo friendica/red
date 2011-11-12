@@ -446,6 +446,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				$arr['wall'] = 1;
 				$arr['type'] = 'wall';
 				$arr['gravity'] = 0;
+				$arr['origin'] = 1;
 				$arr['author-name'] = $arr['owner-name'] = $self[0]['name'];
 				$arr['author-link'] = $arr['owner-link'] = $self[0]['url'];
 				$arr['author-avatar'] = $arr['owner-avatar'] = $self[0]['thumb'];
