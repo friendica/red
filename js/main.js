@@ -133,7 +133,7 @@
 			});
 			eSysmsg.children("info").each(function(){
 				text = $(this).text();
-				$.jGrowl(text, { sticky: false, theme: 'info' });
+				$.jGrowl(text, { sticky: false, theme: 'info', life: 10000 });
 			});
 			
 		});
