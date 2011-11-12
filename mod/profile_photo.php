@@ -86,6 +86,7 @@ function profile_photo_post(&$a) {
 					intval(local_user())
 				);
 
+				info( t('Shift-reload the page or clear browser cache if the new photo does not display immediately.') . EOL);
 				// Update global directory in background
 				$url = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
 				if($url && strlen(get_config('system','directory_submit_url')))
