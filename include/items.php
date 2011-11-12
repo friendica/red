@@ -2666,7 +2666,7 @@ function item_getfeedtags($item) {
 	$matches = false;
 	$cnt = preg_match_all('|\#\[url\=(.*?)\](.*?)\[\/url\]|',$item['tag'],$matches);
 	if($cnt) {
-		for($x = 0; $x < count($matches); $x ++) {
+		for($x = 0; $x < $cnt; $x ++) {
 			if($matches[1][$x])
 				$ret[] = array('#',$matches[1][$x], $matches[2][$x]);
 		}
@@ -2674,7 +2674,7 @@ function item_getfeedtags($item) {
 	$matches = false; 
 	$cnt = preg_match_all('|\@\[url\=(.*?)\](.*?)\[\/url\]|',$item['tag'],$matches);
 	if($cnt) {
-		for($x = 0; $x < count($matches); $x ++) {
+		for($x = 0; $x < $cnt; $x ++) {
 			if($matches[1][$x])
 				$ret[] = array('@',$matches[1][$x], $matches[2][$x]);
 		}
