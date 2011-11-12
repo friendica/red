@@ -2,7 +2,7 @@
 
 /**
  *
- * Friendika
+ * Friendica
  *
  */
 
