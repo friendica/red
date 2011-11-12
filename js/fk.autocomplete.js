@@ -23,6 +23,13 @@ function ACPopup(elm,backend_url){
 		style = $(elm.container).offset();
 		w = elm.container.offsetWidth;
 		h = elm.container.offsetHeight;
+		// Quick fix for chrome until I get a tool to inspect the dom
+		// Chrome returns 0x0
+		if(! w)
+			w = 530;
+		if(! h)
+			h = 130;
+
 	}
 
 	style.top=style.top+h;
@@ -105,9 +112,13 @@ ACPopup.prototype._search = function(){
 	$(this.cont).append(elm);
 }
 ACPopup.prototype.onkey = function(event){
-	if (event.keyCode == '13' && this.idsel>-1) {
-		this.cont.children()[this.idsel].click();
-		event.preventDefault();
+	if (event.keyCode == '13') {
+		if(this.idsel>-1) {
+			this.cont.children()[this.idsel].click();
+			event.preventDefault();
+		}
+		else
+			this.close();
 	}
 	if (event.keyCode == '38') { //cursor up
 		cmax = this.cont.children().size()-1;
@@ -115,14 +126,14 @@ ACPopup.prototype.onkey = function(event){
 		if (this.idsel<0) this.idsel=cmax;
 		event.preventDefault();
 	}
-	if (event.keyCode == '40') { //cursor down
+	if (event.keyCode == '40' || event.keyCode == '9') { //cursor down
 		cmax = this.cont.children().size()-1;
 		this.idsel++;
 		if (this.idsel>cmax) this.idsel=0;
 		event.preventDefault();
 	}
 	
-	if (event.keyCode == '38' || event.keyCode == '40' ) {
+	if (event.keyCode == '38' || event.keyCode == '40' || event.keyCode == '9') {
 		this.cont.children().removeClass('selected');
 		$(this.cont.children()[this.idsel]).addClass('selected');
 	}
