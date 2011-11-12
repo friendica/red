@@ -3043,7 +3043,7 @@ class HTML5_TreeBuilder {
             foreach($token['attr'] as $attr) {
 				// mike@macgirvin.com 2011-10-21, stray double quotes and/or numeric tags cause everything to abort
 				$attr['name'] = str_replace('"','',$attr['name']);
-                if(!$el->hasAttribute($attr['name']) && (! is_numeric($attr['name']))) {
+                if($attr['name'] && (!$el->hasAttribute($attr['name'])) && (! is_numeric($attr['name']))) {
                     $el->setAttribute($attr['name'], $attr['value']);
                 }
             }
