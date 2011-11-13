@@ -796,17 +796,17 @@ function profile_load(&$a, $nickname, $profile = 0) {
 
 	if($profile) {
 		$profile_int = intval($profile);
-		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `user`.* FROM `profile` 
-			LEFT JOIN `user` ON `profile`.`uid` = `user`.`uid`
-			WHERE `user`.`nickname` = '%s' AND `profile`.`id` = %d LIMIT 1",
+		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `contact`.`avatar-date` AS picdate, `user`.* FROM `profile` 
+			left join `contact` on `contact`.`uid` = `profile`.`uid` LEFT JOIN `user` ON `profile`.`uid` = `user`.`uid`
+			WHERE `user`.`nickname` = '%s' AND `profile`.`id` = %d and `contact`.`self` = 1 LIMIT 1",
 			dbesc($nickname),
 			intval($profile_int)
 		);
 	}
 	if(! count($r)) {	
-		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `user`.* FROM `profile` 
-			LEFT JOIN `user` ON `profile`.`uid` = `user`.`uid`
-			WHERE `user`.`nickname` = '%s' AND `profile`.`is-default` = 1 LIMIT 1",
+		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `contact`.`avatar-date` AS picdate, `user`.* FROM `profile` 
+			left join `contact` on `contact`.`uid` = `profile`.`uid` LEFT JOIN `user` ON `profile`.`uid` = `user`.`uid`
+			WHERE `user`.`nickname` = '%s' AND `profile`.`is-default` = 1 and `contact`.`self` = 1 LIMIT 1",
 			dbesc($nickname)
 		);
 	}
@@ -880,6 +880,8 @@ function profile_sidebar($profile, $block = 0) {
 
 	if((! is_array($profile)) && (! count($profile)))
 		return $o;
+
+	$profile['picdate'] = urlencode($profile['picdate']);
 
 	call_hooks('profile_sidebar_enter', $profile);
 

@@ -5,7 +5,7 @@
 				
 	
 	{{ if $pdesc }}<div class="title">$profile.pdesc</div>{{ endif }}
-	<div id="profile-photo-wrapper"><img class="photo" width="175" height="175" src="$profile.photo" alt="$profile.name"></div>
+	<div id="profile-photo-wrapper"><img class="photo" width="175" height="175" src="$profile.photo?rev=$profile.picdate" alt="$profile.name"></div>
 
 
 
