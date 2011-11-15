@@ -62,7 +62,7 @@
 			<div class="wall-item-actions-tools">
 
 				{{ if $drop.dropping }}
-					<input type="checkbox" title="$drop.select" name="itemselected[]" value="$id" />
+					<input type="checkbox" title="$drop.select" name="itemselected[]" class="item-select" value="$id" />
 					<a href="item/drop/$id" onclick="return confirmDelete();" class="icon delete s16" title="$drop.delete">$drop.delete</a>
 				{{ endif }}
 				{{ if $edpost }}
