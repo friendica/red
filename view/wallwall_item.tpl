@@ -34,6 +34,15 @@
 	</div>
 	<div class="wall-item-bottom">
 		<div class="wall-item-links">
+		</div>
+		<div class="wall-item-tags">
+			{{ for $tags as $tag }}
+				<span class='tag'>$tag</span>
+			{{ endfor }}
+		</div>
+	</div>	
+	<div class="wall-item-bottom">
+		<div class="wall-item-links">
 			{{ if $plink }}<a class="icon s16 link" title="$plink.title" href="$plink.href">$plink.title</a>{{ endif }}
 		</div>
 		<div class="wall-item-actions">
@@ -72,6 +81,11 @@
 			
 		</div>
 	</div>
+	<div class="wall-item-bottom">
+		<div class="wall-item-links"></div>
+		<div class="wall-item-like" id="wall-item-like-$id">$like</div>
+		<div class="wall-item-dislike" id="wall-item-dislike-$id">$dislike</div>	
+	</div>	
 </div>
 <div class="wall-item-comment-wrapper" >
 	$comment
