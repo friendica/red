@@ -644,7 +644,7 @@ function settings_content(&$a) {
 	));
 
 	$hide_wall = replace_macros($opt_tpl,array(
-			'$field' 	=> array('hidewall',  t('Hide profile details and all your messages from unknown viewers?'), $a->user['hidewall'], '', array(t('No'),t('Yes'))),
+			'$field' 	=> array('hidewall',  t('Hide your profile details from unknown viewers?'), $a->user['hidewall'], '', array(t('No'),t('Yes'))),
 
 	));
 
