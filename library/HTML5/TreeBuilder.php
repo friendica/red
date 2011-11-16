@@ -3041,9 +3041,13 @@ class HTML5_TreeBuilder {
 
         if (!empty($token['attr'])) {
             foreach($token['attr'] as $attr) {
-				// mike@macgirvin.com 2011-10-21, stray double quotes and/or numeric tags cause everything to abort
-				$attr['name'] = str_replace('"','',$attr['name']);
-                if($attr['name'] && (!$el->hasAttribute($attr['name'])) && (! is_numeric($attr['name']))) {
+
+				// mike@macgirvin.com 2011-11-17, check attribute name for
+				// validity (ignoring extenders and combiners) as illegal chars in names
+				// causes everything to abort
+
+ 				$valid = preg_match('/^[a-zA-Z\_\:]([\-a-zA-Z0-9\_\:\.]+$)/',$attr['name'],$matches);
+                if($attr['name'] && (!$el->hasAttribute($attr['name'])) && ($valid)) {
                     $el->setAttribute($attr['name'], $attr['value']);
                 }
             }
