@@ -893,6 +893,8 @@ function item_store($arr,$force_parent = false) {
 		);
 	}
 
+	tgroup_deliver($arr['uid'],$current_post);
+
 	return $current_post;
 }
 
@@ -907,6 +909,64 @@ function get_item_contact($item,$contacts) {
 	}
 	return false;
 }
+
+
+function tgroup_deliver($uid,$item_id) {
+
+	$a = get_app();
+
+	$deliver_to_tgroup = false;
+
+	$u = q("select * from user where uid = %d and `page-flags` = %d limit 1",
+		intval($uid),
+		intval(PAGE_COMMUNITY)
+	);
+	if(! count($u))
+		return;
+
+	// We will only forward public tgroup posts, as this opens a second delivery chain
+	// and privacy can only be controlled by the first chain.
+
+	$i = q("select * from item where id = %d and uid = %d and private = 0 limit 1",
+		intval($item_id),
+		intval($uid)
+	);
+	if(! count($i))
+		return;
+
+	$item = $i[0];
+
+	// prevent delivery looping - only proceed
+	// if the message originated elsewhere
+
+	if(($item['wall']) || ($item['origin']))
+		return;
+
+
+	$link = normalise_link($a->get_baseurl() . '/profile/' . $u[0]['nickname']);
+
+	$cnt = preg_match_all('/\@\[url\=(.*?)\](.*?)\[\/url\]/ism',$item['body'],$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			if(link_compare($link,$mtch[1])) {
+				$deliver_to_tgroup = true;
+				logger('tgroup_deliver: local group mention found: ' . $mtch[2]);
+			}
+		}
+	}
+
+	if(! $deliver_to_tgroup)
+		return;
+
+	// now deliver to all the tgroup members
+
+	proc_run('php','include/notifier.php','tgroup',$item_id);			
+
+}
+
+
+
+
 
 
 function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
@@ -1962,18 +2022,31 @@ function local_delivery($importer,$data) {
 
 		if($is_reply) {
 
+			$community = false;
+
+			if($importer['page-flags'] == PAGE_COMMUNITY) {
+				$sql_extra = '';
+				$community = true;
+				logger('local_delivery: community reply');
+			}
+			else
+				$sql_extra = " and contact.self = 1 and item.wall = 1 ";
+ 
 			// was the top-level post for this reply written by somebody on this site? 
 			// Specifically, the recipient? 
-
+dbg(1);
 			$r = q("select `item`.`id`, `item`.`uri`, `item`.`tag`, 
 				`contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
 				LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
-				WHERE `contact`.`self` = 1 AND `item`.`wall` = 1 AND `item`.`uri` = '%s' AND `item`.`parent-uri` = '%s'
-				AND `item`.`uid` = %d LIMIT 1",
+				WHERE `item`.`uri` = '%s' AND `item`.`parent-uri` = '%s'
+				AND `item`.`uid` = %d 
+				$sql_extra
+				LIMIT 1",
 				dbesc($parent_uri),
 				dbesc($parent_uri),
 				intval($importer['importer_uid'])
 			);
+dbg(0);
 			if($r && count($r)) {	
 
 				logger('local_delivery: received remote comment');
@@ -1981,7 +2054,7 @@ function local_delivery($importer,$data) {
 				// remote reply to our post. Import and then notify everybody else.
 				$datarray = get_atom_elements($feed,$item);
 
-				if(! link_compare($datarray['author-link'],$importer['url'])) {
+				if((! link_compare($datarray['author-link'],$importer['url'])) && (! $community)) {
 					logger('local_delivery: received relay claiming to be from ' . $importer['url'] . ' however comment author url is ' . $datarray['author-link'] ); 
 					// they won't know what to do so don't report an error. Just quietly die.
 					return 0;
@@ -2027,6 +2100,16 @@ function local_delivery($importer,$data) {
 						}													
 					}
 				}
+
+				if($community) {
+					$newtag = '@[url=' . $a->get_baseurl() . '/profile/' . $importer['nickname'] . ']' . $importer['username'] . '[/url]';
+					if(! stristr($datarray['tag'],$newtag)) {
+						if(strlen($datarray['tag']))
+							$datarray['tag'] .= ',';
+						$datarray['tag'] .= $newtag;
+					}
+				}
+
 
 				$posted_id = item_store($datarray);
 				$parent = 0;
