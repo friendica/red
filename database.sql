@@ -113,7 +113,8 @@ CREATE TABLE IF NOT EXISTS `contact` (
   KEY `issued-id` (`issued-id`),
   KEY `dfrn-id` (`dfrn-id`),
   KEY `blocked` (`blocked`),
-  KEY `readonly` (`readonly`)  
+  KEY `readonly` (`readonly`),
+  KEY `pending` (`pending`)  
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -245,8 +246,10 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `origin`  (`origin`),
   KEY `last-child` (`last-child`),
   KEY `unseen` (`unseen`),
+  KEY `wall` (`wall`),
   FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `body` (`body`),
+  FULLTEXT KEY `tag` (`tag`),
   FULLTEXT KEY `allow_cid` (`allow_cid`),
   FULLTEXT KEY `allow_gid` (`allow_gid`),
   FULLTEXT KEY `deny_cid` (`deny_cid`),
@@ -441,6 +444,10 @@ CREATE TABLE IF NOT EXISTS `user` (
   PRIMARY KEY (`uid`), 
   KEY `nickname` (`nickname`),
   KEY `account_expired` (`account_expired`),
+  KEY `hidewall` (`hidewall`),
+  KEY `blockwall` (`blockwall`),
+  KEY `blocked` (`blocked`),
+  KEY `verified` (`verified`),
   KEY `login_date` (`login_date`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
