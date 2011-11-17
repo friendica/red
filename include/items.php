@@ -2733,14 +2733,11 @@ function item_expire($uid,$days) {
 	$expire_photos = get_pconfig($uid, 'expire','photos');
 	$expire_photos = (($expire_photos===false)?0:intval($expire_photos)); // default if not set: 0
  
-	logger('expire: # items=' . count($r) );
-	logger("expire: items: $expire_items, notes: $expire_notes, photos: $expire_photos");
+	logger('expire: # items=' . count($r). "; expire items: $expire_items, expire notes: $expire_notes, expire photos: $expire_photos");
 
 	foreach($r as $item) {
 
 		// Only expire posts, not photos and photo comments
-
-		logger('expire: item '.$item['type'].' id '.intval($item['id']).' "'.$item['body'].'" '.$item['resource-id']);
 
 		if($expire_photos==0 && strlen($item['resource-id']))
 			continue;
@@ -2748,8 +2745,6 @@ function item_expire($uid,$days) {
 			continue;
 		if($expire_items==0 && $item['type']!='note')
 			continue;
-
-		logger('expire');
 
 		$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s' WHERE `id` = %d LIMIT 1",
 			dbesc(datetime_convert()),
