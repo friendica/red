@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1103 );
+define( 'UPDATE_VERSION' , 1104 );
 
 /**
  *
@@ -884,6 +884,15 @@ function update_1102() {
 }
 
 
+function update_1103() {
+	q("ALTER TABLE `item` ADD INDEX ( `wall` ) ");
+	q("ALTER TABLE `item` ADD FULLTEXT ( `tag` ) "); 
+	q("ALTER TABLE `contact` ADD INDEX ( `pending` ) ");
+	q("ALTER TABLE `user` ADD INDEX ( `hidewall` ) ");
+	q("ALTER TABLE `user` ADD INDEX ( `blockwall` ) ");
+	q("ALTER TABLE `user` ADD INDEX ( `blocked` ) ");
+	q("ALTER TABLE `user` ADD INDEX ( `verified` ) ");
 
+}
 
 

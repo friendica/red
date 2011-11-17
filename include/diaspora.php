@@ -455,7 +455,9 @@ function diaspora_request($importer,$xml) {
 				intval($importer['uid'])
 			);
 
-			if(count($self)) {
+			// they are not CONTACT_IS_FOLLOWER anymore but that's what we have in the array
+
+			if(count($self) && $contact['rel'] == CONTACT_IS_FOLLOWER) {
 
 				$arr = array();
 				$arr['uri'] = $arr['parent-uri'] = item_new_uri($a->get_hostname(), $importer['uid']); 

@@ -1469,10 +1469,11 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 							continue;
 
 						// extract tag, if not duplicate, add to parent item
-						if($xo->content) {
-							if(! (stristr($r[0]['tag'],trim($xo->content)))) {
+						if($xo->id && $xo->content) {
+							$newtag = '#[url=' . $xo->id . ']'. $xo->content . '[/url]';
+							if(! (stristr($r[0]['tag'],$newtag))) {
 								q("UPDATE item SET tag = '%s' WHERE id = %d LIMIT 1",
-									dbesc($r[0]['tag'] . (strlen($r[0]['tag']) ? ',' : '') . '#[url=' . $xo->id . ']'. $xo->content . '[/url]'),
+									dbesc($r[0]['tag'] . (strlen($r[0]['tag']) ? ',' : '') . $newtag),
 									intval($r[0]['id'])
 								);
 							}
@@ -2011,15 +2012,17 @@ function local_delivery($importer,$data) {
 					if(($xt->type == ACTIVITY_OBJ_NOTE) && ($xt->id == $r[0]['uri'])) {
 
 						// extract tag, if not duplicate, and this user allows tags, add to parent item						
-						if($xo->content) {
 
-							if(! (stristr($r[0]['tag'],trim($xo->content)))) {
+						if($xo->id && $xo->content) {
+							$newtag = '#[url=' . $xo->id . ']'. $xo->content . '[/url]';
+
+							if(! (stristr($r[0]['tag'],$newtag))) {
 								$i = q("SELECT `blocktags` FROM `user` where `uid` = %d LIMIT 1",
 									intval($importer['importer_uid'])
 								);
 								if(count($i) && ! ($i[0]['blocktags'])) {
 									q("UPDATE item SET tag = '%s' WHERE id = %d LIMIT 1",
-										dbesc($r[0]['tag'] . (strlen($r[0]['tag']) ? ',' : '') . '#[url=' . $xo->id . ']'. $xo->content . '[/url]'),
+										dbesc($r[0]['tag'] . (strlen($r[0]['tag']) ? ',' : '') . $newtag),
 										intval($r[0]['id'])
 									);
 								}

@@ -43,7 +43,7 @@ $a->config['twitter']['consumersecret'] = 'your consumer_secret here';
 ```
 
 After this, your user can configure their Twitter account settings
-from "Settings -> Plugin Settings".
+from "Settings -> Connector Settings".
 
 Documentation: http://diekershoff.homeunix.net/redmine/wiki/friendikaplugin/Twitter_Plugin
 
@@ -67,7 +67,7 @@ To get the OAuth Consumer key pair the user has to
 (a) ask her Friendica admin if a pair already exists or 
 (b) has to register the Friendica server as a client application on the StatusNet server. 
 
-This can be done from the account settings under "Settings -> Connections -> Register an OAuth client application -> Register a new application".
+This can be done from the account settings under "Settings -> Connections -> Register an OAuth client application -> Register a new application" on the StatusNet server.
 
 During the registration of the OAuth client remember the following:
 
@@ -77,7 +77,7 @@ During the registration of the OAuth client remember the following:
 * with read & write access
 * the Source URL should be the URL of your Friendica server
 
-After the required credentials for the application are stored in the configuration you have to actually connect your Friendica account with StatusNet. This is done from the Settings -> Plugin Settings page. Follow the Sign in with StatusNet button, allow access and then copy the security code into the box provided. Friendica will then try to acquire the final OAuth credentials from the API. 
+After the required credentials for the application are stored in the configuration you have to actually connect your Friendica account with StatusNet. This is done from the Settings -> Connector Settings page. Follow the Sign in with StatusNet button, allow access and then copy the security code into the box provided. Friendica will then try to acquire the final OAuth credentials from the API. 
 
 If successful the addon settings will allow you to select to post your public messages to your StatusNet account (have a look behind the little lock symbol beneath the status "editor" on your Home or Network pages).
 
@@ -113,12 +113,12 @@ d. Navigate to Set Web->Site URL & Domain -> Website Settings.  Set Site URL
 to yoursubdomain.yourdomain.com.  Set Site Domain to your yourdomain.com.
 
 
-On Friendica, visit the Facebook Settings section of the "Settings->Plugin Settings" page. And click 'Install Facebook Connector'.
+On Friendica, visit the Facebook Settings section of the "Settings->Connector Settings" page. And click 'Install Facebook Connector'.
 
 This will ask you to login to Facebook and grant permission to the
 plugin to do its stuff. Allow it to do so.
 
-You're done. To turn it off visit the Plugin Settings page again and
+You're done. To turn it off visit the Connector Settings page again and
 'Remove Facebook posting'.
 
 Videos and embeds will not be posted if there is no other content. Links
