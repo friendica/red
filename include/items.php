@@ -927,10 +927,7 @@ function tgroup_deliver($uid,$item_id) {
 	if(! count($u))
 		return;
 
-	// We will only forward public tgroup posts, as this opens a second delivery chain
-	// and privacy can only be controlled by the first chain.
-
-	$i = q("select * from item where id = %d and uid = %d and private = 0 limit 1",
+	$i = q("select * from item where id = %d and uid = %d limit 1",
 		intval($item_id),
 		intval($uid)
 	);
@@ -961,7 +958,7 @@ function tgroup_deliver($uid,$item_id) {
 	if(! $deliver_to_tgroup)
 		return;
 
-	// now change this post to a forum head message and deliver to all the tgroup members
+	// now change this copy of the post to a forum head message and deliver to all the tgroup members
 
 
 	q("update item set wall = 1, origin = 1, forum_mode = 1 where id = %d limit 1",
