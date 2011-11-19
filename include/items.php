@@ -913,6 +913,9 @@ function get_item_contact($item,$contacts) {
 
 function tgroup_deliver($uid,$item_id) {
 
+
+	// setup a second delivery chain for forum/community posts if appropriate
+
 	$a = get_app();
 
 	$deliver_to_tgroup = false;
@@ -937,9 +940,9 @@ function tgroup_deliver($uid,$item_id) {
 	$item = $i[0];
 
 	// prevent delivery looping - only proceed
-	// if the message originated elsewhere
+	// if the message originated elsewhere and is a top-level post
 
-	if(($item['wall']) || ($item['origin']))
+	if(($item['wall']) || ($item['origin']) || ($item['id'] != $item['parent']))
 		return;
 
 
@@ -958,7 +961,12 @@ function tgroup_deliver($uid,$item_id) {
 	if(! $deliver_to_tgroup)
 		return;
 
-	// now deliver to all the tgroup members
+	// now change this post to a forum head message and deliver to all the tgroup members
+
+
+	q("update item set wall = 1, origin = 1, forum_mode = 1 where id = %d limit 1",
+		intval($item_id)
+	);
 
 	proc_run('php','include/notifier.php','tgroup',$item_id);			
 
@@ -2025,17 +2033,18 @@ function local_delivery($importer,$data) {
 
 			$community = false;
 
-			if($importer['page-flags'] == PAGE_COMMUNITY) {
-				$sql_extra = '';
-				$community = true;
-				logger('local_delivery: community reply');
-			}
-			else
+//			if($importer['page-flags'] == PAGE_COMMUNITY) {
+//				$sql_extra = '';
+//				$community = true;
+//				logger('local_delivery: community reply');
+//			}
+//			else
+
 				$sql_extra = " and contact.self = 1 and item.wall = 1 ";
  
 			// was the top-level post for this reply written by somebody on this site? 
 			// Specifically, the recipient? 
-dbg(1);
+//dbg(1);
 			$r = q("select `item`.`id`, `item`.`uri`, `item`.`tag`, 
 				`contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
 				LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
@@ -2047,7 +2056,7 @@ dbg(1);
 				dbesc($parent_uri),
 				intval($importer['importer_uid'])
 			);
-dbg(0);
+//dbg(0);
 			if($r && count($r)) {	
 
 				logger('local_delivery: received remote comment');
@@ -2055,11 +2064,11 @@ dbg(0);
 				// remote reply to our post. Import and then notify everybody else.
 				$datarray = get_atom_elements($feed,$item);
 
-				if((! link_compare($datarray['author-link'],$importer['url'])) && (! $community)) {
-					logger('local_delivery: received relay claiming to be from ' . $importer['url'] . ' however comment author url is ' . $datarray['author-link'] ); 
+//				if((! link_compare($datarray['author-link'],$importer['url'])) && (! $community)) {
+//					logger('local_delivery: received relay claiming to be from ' . $importer['url'] . ' however comment author url is ' . $datarray['author-link'] ); 
 					// they won't know what to do so don't report an error. Just quietly die.
-					return 0;
-				}					
+//					return 0;
+//				}					
 
 				$datarray['type'] = 'remote-comment';
 				$datarray['wall'] = 1;
