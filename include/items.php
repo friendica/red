@@ -2033,13 +2033,12 @@ function local_delivery($importer,$data) {
 
 			$community = false;
 
-//			if($importer['page-flags'] == PAGE_COMMUNITY) {
-//				$sql_extra = '';
-//				$community = true;
-//				logger('local_delivery: community reply');
-//			}
-//			else
-
+			if($importer['page-flags'] == PAGE_COMMUNITY) {
+				$sql_extra = '';
+				$community = true;
+				logger('local_delivery: community reply');
+			}
+			else
 				$sql_extra = " and contact.self = 1 and item.wall = 1 ";
  
 			// was the top-level post for this reply written by somebody on this site? 
@@ -2113,14 +2112,14 @@ function local_delivery($importer,$data) {
 					}
 				}
 
-				if($community) {
-					$newtag = '@[url=' . $a->get_baseurl() . '/profile/' . $importer['nickname'] . ']' . $importer['username'] . '[/url]';
-					if(! stristr($datarray['tag'],$newtag)) {
-						if(strlen($datarray['tag']))
-							$datarray['tag'] .= ',';
-						$datarray['tag'] .= $newtag;
-					}
-				}
+// 				if($community) {
+//					$newtag = '@[url=' . $a->get_baseurl() . '/profile/' . $importer['nickname'] . ']' . $importer['username'] . '[/url]';
+//					if(! stristr($datarray['tag'],$newtag)) {
+//						if(strlen($datarray['tag']))
+//							$datarray['tag'] .= ',';
+//						$datarray['tag'] .= $newtag;
+//					}
+//				}
 
 
 				$posted_id = item_store($datarray);

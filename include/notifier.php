@@ -218,6 +218,11 @@ function notifier_run($argv, $argc){
 			$relay_to_owner = true;
 		}
 
+
+		if(($cmd === 'uplink') && (intval($parent['forum_mode'])) && (! $top_level)) {
+			$relay_to_owner = true;			
+		} 
+
 		// until the 'origin' flag has been in use for several months
 		// we will just use it as a fallback test
 		// later we will be able to use it as the primary test of whether or not to relay.
@@ -258,6 +263,13 @@ function notifier_run($argv, $argc){
 			$allow_groups = expand_groups(expand_acl($parent['allow_gid']));
 			$deny_people  = expand_acl($parent['deny_cid']);
 			$deny_groups  = expand_groups(expand_acl($parent['deny_gid']));
+
+			// if our parent is a forum, uplink to the origonal author causing
+			// a delivery fork
+
+			if(intval($parent['forum_mode']) && (! $top_level) && ($cmd !== 'uplink')) {
+				proc_run('php','include/notifier','uplink',$item_id);
+			}
 
 			$conversants = array();
 
