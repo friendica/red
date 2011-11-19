@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1103 );
+define( 'UPDATE_VERSION' , 1105 );
 
 /**
  *
@@ -883,6 +883,22 @@ function update_1102() {
 	q("ALTER TABLE `tokens` ADD `uid` INT NOT NULL AFTER `scope` "); 
 }
 
+
+function update_1103() {
+	q("ALTER TABLE `item` ADD INDEX ( `wall` ) ");
+	q("ALTER TABLE `item` ADD FULLTEXT ( `tag` ) "); 
+	q("ALTER TABLE `contact` ADD INDEX ( `pending` ) ");
+	q("ALTER TABLE `user` ADD INDEX ( `hidewall` ) ");
+	q("ALTER TABLE `user` ADD INDEX ( `blockwall` ) ");
+	q("ALTER TABLE `user` ADD INDEX ( `blocked` ) ");
+	q("ALTER TABLE `user` ADD INDEX ( `verified` ) ");
+
+}
+
+function update_1104() {
+	q("ALTER TABLE `item` ADD `forum_mode` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `origin` , ADD INDEX ( `forum_mode` ) ");
+
+}
 
 
 

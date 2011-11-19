@@ -75,8 +75,6 @@ $a->timezone = (($default_timezone) ? $default_timezone : 'UTC');
 
 date_default_timezone_set($a->timezone);
 
-$a->init_pagehead();
-
 session_start();
 
 /**
@@ -95,6 +93,12 @@ if((x($_SESSION,'language')) && ($_SESSION['language'] !== $lang)) {
 	load_translation_table($lang);
 }
 
+/*
+ * Create the page head after setting the language
+ *
+ */
+
+$a->init_pagehead();
 
 /**
  *

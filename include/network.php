@@ -5,7 +5,7 @@
 // results. 
 
 if(! function_exists('fetch_url')) {
-function fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0) {
+function fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0, $accept_content=Null) {
 
 	$a = get_app();
 
@@ -14,8 +14,16 @@ function fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0) {
 		return false;
 
 	@curl_setopt($ch, CURLOPT_HEADER, true);
+	
+	if (!is_null($accept_content)){
+		curl_setopt($ch,CURLOPT_HTTPHEADER, array (
+			"Accept: "+$accept_content
+		));
+	}
+	
 	@curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-	@curl_setopt($ch, CURLOPT_USERAGENT, "Friendika");
+	@curl_setopt($ch, CURLOPT_USERAGENT, "Friendica");
+
 
 	if(intval($timeout)) {
 		@curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
@@ -97,7 +105,7 @@ function post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0) 
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 	curl_setopt($ch, CURLOPT_POST,1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
-	curl_setopt($ch, CURLOPT_USERAGENT, "Friendika");
+	curl_setopt($ch, CURLOPT_USERAGENT, "Friendica");
 
 	if(intval($timeout)) {
 		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
