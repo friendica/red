@@ -22,7 +22,7 @@ function fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0, $accept_
 	}
 	
 	@curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-	@curl_setopt($ch, CURLOPT_USERAGENT, "Friendika");
+	@curl_setopt($ch, CURLOPT_USERAGENT, "Friendica");
 
 
 	if(intval($timeout)) {
@@ -105,7 +105,7 @@ function post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0) 
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 	curl_setopt($ch, CURLOPT_POST,1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
-	curl_setopt($ch, CURLOPT_USERAGENT, "Friendika");
+	curl_setopt($ch, CURLOPT_USERAGENT, "Friendica");
 
 	if(intval($timeout)) {
 		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
