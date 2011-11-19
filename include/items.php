@@ -2040,7 +2040,7 @@ function local_delivery($importer,$data) {
  
 			// was the top-level post for this reply written by somebody on this site? 
 			// Specifically, the recipient? 
-//dbg(1);
+
 			$r = q("select `item`.`id`, `item`.`uri`, `item`.`tag`, 
 				`contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
 				LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
@@ -2052,13 +2052,16 @@ function local_delivery($importer,$data) {
 				dbesc($parent_uri),
 				intval($importer['importer_uid'])
 			);
-//dbg(0);
+
 			if($r && count($r)) {	
 
 				logger('local_delivery: received remote comment');
 				$is_like = false;
 				// remote reply to our post. Import and then notify everybody else.
 				$datarray = get_atom_elements($feed,$item);
+
+
+		// TODO: make this next part work against both delivery threads of a community post
 
 //				if((! link_compare($datarray['author-link'],$importer['url'])) && (! $community)) {
 //					logger('local_delivery: received relay claiming to be from ' . $importer['url'] . ' however comment author url is ' . $datarray['author-link'] ); 
