@@ -63,7 +63,6 @@ $blocktags
 			<h3>$expire.advanced</h3>
 			{{ inc field_yesno.tpl with $field=$expire.items }}{{endinc}}
 			{{ inc field_yesno.tpl with $field=$expire.notes }}{{endinc}}
-			{{ inc field_yesno.tpl with $field=$expire.photos }}{{endinc}}			
 		</div>
 	</div>
 
