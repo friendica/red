@@ -893,6 +893,8 @@ function item_store($arr,$force_parent = false) {
 		);
 	}
 
+	tgroup_deliver($arr['uid'],$current_post);
+
 	return $current_post;
 }
 
@@ -907,6 +909,69 @@ function get_item_contact($item,$contacts) {
 	}
 	return false;
 }
+
+
+function tgroup_deliver($uid,$item_id) {
+
+
+	// setup a second delivery chain for forum/community posts if appropriate
+
+	$a = get_app();
+
+	$deliver_to_tgroup = false;
+
+	$u = q("select * from user where uid = %d and `page-flags` = %d limit 1",
+		intval($uid),
+		intval(PAGE_COMMUNITY)
+	);
+	if(! count($u))
+		return;
+
+	$i = q("select * from item where id = %d and uid = %d limit 1",
+		intval($item_id),
+		intval($uid)
+	);
+	if(! count($i))
+		return;
+
+	$item = $i[0];
+
+	// prevent delivery looping - only proceed
+	// if the message originated elsewhere and is a top-level post
+
+	if(($item['wall']) || ($item['origin']) || ($item['id'] != $item['parent']))
+		return;
+
+
+	$link = normalise_link($a->get_baseurl() . '/profile/' . $u[0]['nickname']);
+
+	$cnt = preg_match_all('/\@\[url\=(.*?)\](.*?)\[\/url\]/ism',$item['body'],$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			if(link_compare($link,$mtch[1])) {
+				$deliver_to_tgroup = true;
+				logger('tgroup_deliver: local group mention found: ' . $mtch[2]);
+			}
+		}
+	}
+
+	if(! $deliver_to_tgroup)
+		return;
+
+	// now change this copy of the post to a forum head message and deliver to all the tgroup members
+
+
+	q("update item set wall = 1, origin = 1, forum_mode = 1 where id = %d limit 1",
+		intval($item_id)
+	);
+
+	proc_run('php','include/notifier.php','tgroup',$item_id);			
+
+}
+
+
+
+
 
 
 function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
@@ -1963,18 +2028,31 @@ function local_delivery($importer,$data) {
 
 		if($is_reply) {
 
+			$community = false;
+
+			if($importer['page-flags'] == PAGE_COMMUNITY) {
+				$sql_extra = '';
+				$community = true;
+				logger('local_delivery: community reply');
+			}
+			else
+				$sql_extra = " and contact.self = 1 and item.wall = 1 ";
+ 
 			// was the top-level post for this reply written by somebody on this site? 
 			// Specifically, the recipient? 
 
 			$r = q("select `item`.`id`, `item`.`uri`, `item`.`tag`, 
 				`contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
 				LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
-				WHERE `contact`.`self` = 1 AND `item`.`wall` = 1 AND `item`.`uri` = '%s' AND `item`.`parent-uri` = '%s'
-				AND `item`.`uid` = %d LIMIT 1",
+				WHERE `item`.`uri` = '%s' AND `item`.`parent-uri` = '%s'
+				AND `item`.`uid` = %d 
+				$sql_extra
+				LIMIT 1",
 				dbesc($parent_uri),
 				dbesc($parent_uri),
 				intval($importer['importer_uid'])
 			);
+
 			if($r && count($r)) {	
 
 				logger('local_delivery: received remote comment');
@@ -1982,11 +2060,14 @@ function local_delivery($importer,$data) {
 				// remote reply to our post. Import and then notify everybody else.
 				$datarray = get_atom_elements($feed,$item);
 
-				if(! link_compare($datarray['author-link'],$importer['url'])) {
-					logger('local_delivery: received relay claiming to be from ' . $importer['url'] . ' however comment author url is ' . $datarray['author-link'] ); 
+
+		// TODO: make this next part work against both delivery threads of a community post
+
+//				if((! link_compare($datarray['author-link'],$importer['url'])) && (! $community)) {
+//					logger('local_delivery: received relay claiming to be from ' . $importer['url'] . ' however comment author url is ' . $datarray['author-link'] ); 
 					// they won't know what to do so don't report an error. Just quietly die.
-					return 0;
-				}					
+//					return 0;
+//				}					
 
 				$datarray['type'] = 'remote-comment';
 				$datarray['wall'] = 1;
@@ -2030,6 +2111,16 @@ function local_delivery($importer,$data) {
 						}													
 					}
 				}
+
+// 				if($community) {
+//					$newtag = '@[url=' . $a->get_baseurl() . '/profile/' . $importer['nickname'] . ']' . $importer['username'] . '[/url]';
+//					if(! stristr($datarray['tag'],$newtag)) {
+//						if(strlen($datarray['tag']))
+//							$datarray['tag'] .= ',';
+//						$datarray['tag'] .= $newtag;
+//					}
+//				}
+
 
 				$posted_id = item_store($datarray);
 				$parent = 0;

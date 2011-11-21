@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1104 );
+define( 'UPDATE_VERSION' , 1105 );
 
 /**
  *
@@ -894,5 +894,12 @@ function update_1103() {
 	q("ALTER TABLE `user` ADD INDEX ( `verified` ) ");
 
 }
+
+function update_1104() {
+	q("ALTER TABLE `item` ADD `forum_mode` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `origin` , ADD INDEX ( `forum_mode` ) ");
+
+}
+
+
 
 
