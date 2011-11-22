@@ -57,12 +57,13 @@ $blocktags
 
 {{inc field_input.tpl with $field=$expire.days }}{{endinc}}
 <div class="field input">
-	<span class="field_help"><a href="#advaced-expire-popup" id="advenced-expire" class='popupbox' title="$expire.advanced">Advanced</a></span>
+	<span class="field_help"><a href="#advaced-expire-popup" id="advenced-expire" class='popupbox' title="$expire.advanced">$expire.label</a></span>
 	<div style="display: none;">
 		<div id="advaced-expire-popup" style="width:auto;height:auto;overflow:auto;">
 			<h3>$expire.advanced</h3>
 			{{ inc field_yesno.tpl with $field=$expire.items }}{{endinc}}
 			{{ inc field_yesno.tpl with $field=$expire.notes }}{{endinc}}
+			{{ inc field_yesno.tpl with $field=$expire.starred }}{{endinc}}
 		</div>
 	</div>
 

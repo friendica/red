@@ -2820,17 +2820,22 @@ function item_expire($uid,$days) {
 	
 	$expire_notes = get_pconfig($uid, 'expire','notes');
 	$expire_notes = (($expire_notes===false)?1:intval($expire_notes)); // default if not set: 1
+
+	$expire_starred = get_pconfig($uid, 'expire','starred');
+	$expire_starred = (($expire_starred===false)?1:intval($expire_starred)); // default if not set: 1
 	
 	$expire_photos = get_pconfig($uid, 'expire','photos');
 	$expire_photos = (($expire_photos===false)?0:intval($expire_photos)); // default if not set: 0
  
-	logger('expire: # items=' . count($r). "; expire items: $expire_items, expire notes: $expire_notes, expire photos: $expire_photos");
+	logger('expire: # items=' . count($r). "; expire items: $expire_items, expire notes: $expire_notes, expire starred: $expire_starred, expire photos: $expire_photos");
 
 	foreach($r as $item) {
 
 		// Only expire posts, not photos and photo comments
 
 		if($expire_photos==0 && strlen($item['resource-id']))
+			continue;
+		if($expire_starred==0 && intval($item['starred']))
 			continue;
 		if($expire_notes==0 && $item['type']=='note')
 			continue;

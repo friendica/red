@@ -25,4 +25,10 @@ The "Automatic Friend Account" is typically used for personal profile pages wher
 We recommend that you create group pages with the same email address and password as your normal account. If you do this, you will find a new "Manage" tab on the menu bar which lets you toggle identities easily and manage your pages. You are not required to do this, but the alternative is to logout and log back into the other account to manage alternate pages - and this could get cumbersome if you manage several different pages/identities. 
 
 
+**Posting to Community Pages**
 
+If you are a member of a community page/forum, you may post to the page by including an @-tag in the post mentioning the forum. For example @bicycle would send my post to all members of the group "bicycle" in addition to the normal recipients. If your post is private you must also explicitly include the group in the post permissions (to allow the forum "contact" to see the post) **and** mention it in a tag (which redistributes the post to the forum members).  
+
+You may also post to a community page/forum by posting a "wall-to-wall" post using secure cross-site authentication.   
+
+Comments which are relayed to community pages will be relayed back to the original post creator. Mentioning the forum/group with an @-tag in a comment does not relay the message, as distribution is controlled entirely by the original post creator. 

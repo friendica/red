@@ -219,6 +219,7 @@ function settings_post(&$a) {
 	
 	$expire_items     = ((x($_POST,'expire_items')) ? intval($_POST['expire_items'])	 : 0);
 	$expire_notes     = ((x($_POST,'expire_notes')) ? intval($_POST['expire_notes'])	 : 0);
+	$expire_starred   = ((x($_POST,'expire_starred')) ? intval($_POST['expire_starred']) : 0);
 	$expire_photos    = ((x($_POST,'expire_photos'))? intval($_POST['expire_photos'])	 : 0);
 	
 
@@ -305,6 +306,7 @@ function settings_post(&$a) {
 
 	set_pconfig(local_user(),'expire','items', $expire_items);
 	set_pconfig(local_user(),'expire','notes', $expire_notes);
+	set_pconfig(local_user(),'expire','starred', $expire_starred);
 	set_pconfig(local_user(),'expire','photos', $expire_photos);
 
 	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `theme` = '%s', `maxreq` = %d, `expire` = %d, `openidserver` = '%s', `blockwall` = %d, `hidewall` = %d, `blocktags` = %d  WHERE `uid` = %d LIMIT 1",
@@ -601,6 +603,9 @@ function settings_content(&$a) {
 	
 	$expire_notes = get_pconfig(local_user(), 'expire','notes');
 	$expire_notes = (($expire_notes===false)?1:$expire_notes); // default if not set: 1
+
+	$expire_starred = get_pconfig(local_user(), 'expire','starred');
+	$expire_starred = (($expire_starred===false)?1:$expire_starred); // default if not set: 1
 	
 	$expire_photos = get_pconfig(local_user(), 'expire','photos');
 	$expire_photos = (($expire_photos===false)?0:$expire_photos); // default if not set: 0
@@ -719,9 +724,11 @@ function settings_content(&$a) {
 
 	$expire_arr = array(
 		'days' => array('expire',  t("Automatically expire posts after days:"), $expire, t('If empty, posts will not expire. Expired posts will be deleted')),
-		'advanced' => t('Advanced expire settings'),
+		'advanced' => t('Advanced expiration settings'),
+		'label' => t('Advanced Expiration'),
 		'items' => array('expire_items',  t("Expire posts:"), $expire_items, '', array(t('No'),t('Yes'))),
 		'notes' => array('expire_notes',  t("Expire personal notes:"), $expire_notes, '', array(t('No'),t('Yes'))),
+		'starred' => array('expire_starred',  t("Expire starred posts:"), $expire_starred, '', array(t('No'),t('Yes'))),
 		'photos' => array('expire_photos',  t("Expire photos:"), $expire_photos, '', array(t('No'),t('Yes'))),		
 	);
 
