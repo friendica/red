@@ -109,7 +109,7 @@ function group_add_member($uid,$name,$member) {
 	);
 	if(count($r))
 		return true;	// You might question this, but 
-				// we indicate success because the group was in fact created
+				// we indicate success because the group member was in fact created
 				// -- It was just created at another time
  	if(! count($r))
 		$r = q("INSERT INTO `group_member` (`uid`, `gid`, `contact-id`)
