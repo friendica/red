@@ -61,6 +61,10 @@ blockquote {
 	padding: 5px;
 }
 
+.hide-comments {
+	margin-left: 15px;
+}
+
 #panel {
 	background-color: ivory;
 	position: absolute;

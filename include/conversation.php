@@ -172,6 +172,7 @@ function conversation(&$a, $items, $mode, $update) {
 	$cmnt_tpl    = get_markup_template('comment_item.tpl');
 	$tpl         = get_markup_template('wall_item.tpl');
 	$wallwall    = get_markup_template('wallwall_item.tpl');
+	$hide_comments_tpl = get_markup_template('hide_comments.tpl');
 
 	$alike = array();
 	$dlike = array();
@@ -385,12 +386,20 @@ function conversation(&$a, $items, $mode, $update) {
 				$override_comment_box = ((($page_writeable) && ($item_writeable)) ? true : false);
 				$show_comment_box = ((($page_writeable) && ($item_writeable) && ($comments_seen == $comments[$item['parent']])) ? true : false);
 
+
 				if(($comments[$item['parent']] > 2) && ($comments_seen <= ($comments[$item['parent']] - 2)) && ($item['gravity'] == 6)) {
 					if(! $comments_collapsed) {
-						$threads[$threadsid] .= '<div class="ccollapse-wrapper fakelink" id="ccollapse-wrapper-' . $item['parent'] 
-							. '" onclick="openClose(' . '\'ccollapse-' . $item['parent'] . '\'); $(\'#ccollapse-wrapper-' . $item['parent'] . '\').hide();" >' 
-							. sprintf( t('See all %d comments'), $comments[$item['parent']]) . '</div>'
-							. '<div class="ccollapse" id="ccollapse-' . $item['parent'] . '" style="display: none;" >';
+
+						// IMPORTANT: the closing </div> in the hide_comments template
+						// is supplied below in code. 
+
+						$threads[$threadsid] .= replace_macros($hide_comments_tpl,array(
+							'$id' => $item['parent'],
+							'$num_comments' => sprintf( tt('%d comment','%d comments',$comments[$item['parent']]),
+								$comments[$item['parent']]),
+							'$display' => 'none',
+							'$hide_text' => t('show more')
+						));
 						$comments_collapsed = true;
 					}
 				}

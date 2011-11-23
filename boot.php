@@ -9,7 +9,7 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDIKA_PLATFORM',     'Friendica');
-define ( 'FRIENDIKA_VERSION',      '2.3.1172' );
+define ( 'FRIENDIKA_VERSION',      '2.3.1173' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.22'    );
 define ( 'DB_UPDATE_VERSION',      1105      );
 
@@ -417,7 +417,9 @@ class App {
 			'$baseurl' => $this->get_baseurl(), // FIXME for z_path!!!!
 			'$generator' => 'Friendika' . ' ' . FRIENDIKA_VERSION,
 			'$delitem' => t('Delete this item?'),
-			'$comment' => t('Comment')
+			'$comment' => t('Comment'),
+			'$showmore' => t('show more'),
+			'$showfewer' => t('show fewer')
 		));
 	}
 

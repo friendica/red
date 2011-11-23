@@ -44,6 +44,18 @@
 		}
 	}
 
+	function showHideComments(id) {
+		if( $('#collapsed-comments-' + id).is(':visible')) {
+			$('#collapsed-comments-' + id).hide();
+			$('#hide-comments-' + id).html('$showmore');
+		}
+		else {
+			$('#collapsed-comments-' + id).show();
+			$('#hide-comments-' + id).html('$showfewer');
+		}
+	}
+
+
 </script>
 
 
