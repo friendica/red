@@ -8,8 +8,8 @@ require_once("include/pgettext.php");
 require_once('include/nav.php');
 require_once('include/cache.php');
 
-define ( 'FRIENDIKA_PLATFORM',     'Friendica');
-define ( 'FRIENDIKA_VERSION',      '2.3.1174' );
+define ( 'FRIENDICA_PLATFORM',     'Friendica');
+define ( 'FRIENDICA_VERSION',      '2.3.1174' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.22'    );
 define ( 'DB_UPDATE_VERSION',      1105      );
 
@@ -100,6 +100,8 @@ define ( 'NETWORK_FEED',             'feed');    // RSS/Atom feeds with no known
 define ( 'NETWORK_DIASPORA',         'dspr');    // Diaspora
 define ( 'NETWORK_MAIL',             'mail');    // IMAP/POP
 define ( 'NETWORK_FACEBOOK',         'face');    // Facebook API     
+define ( 'NETWORK_LINKEDIN',         'lnkd');    // LinkedIn
+define ( 'NETWORK_XMPP',             'xmpp');    // XMPP     
 
 
 /**
@@ -415,7 +417,7 @@ class App {
 		$tpl = file_get_contents('view/head.tpl');
 		$this->page['htmlhead'] = replace_macros($tpl,array(
 			'$baseurl' => $this->get_baseurl(), // FIXME for z_path!!!!
-			'$generator' => 'Friendika' . ' ' . FRIENDIKA_VERSION,
+			'$generator' => 'Friendica' . ' ' . FRIENDICA_VERSION,
 			'$delitem' => t('Delete this item?'),
 			'$comment' => t('Comment'),
 			'$showmore' => t('show more'),

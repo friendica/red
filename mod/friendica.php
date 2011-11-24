@@ -15,13 +15,13 @@ function friendica_init(&$a) {
 		}
 
 		$data = Array(
-			'version' => FRIENDIKA_VERSION,
+			'version' => FRIENDICA_VERSION,
 			'url' => z_root(),
 			'plugins' => $a->plugins,
 			'register_policy' =>  $register_policy[$a->config['register_policy']],
 			'admin' => $admin,
 			'site_name' => $a->config['sitename'],
-			'platform' => FRIENDIKA_PLATFORM,
+			'platform' => FRIENDICA_PLATFORM,
 			'info' => ((x($a->config,'info')) ? $a->config['info'] : '')			
 		);
 
@@ -40,7 +40,7 @@ function friendica_content(&$a) {
 
 	$o .= '<p></p><p>';
 
-	$o .= t('This is Friendica, version') . ' ' . FRIENDIKA_VERSION . ' ';
+	$o .= t('This is Friendica, version') . ' ' . FRIENDICA_VERSION . ' ';
 	$o .= t('running at web location') . ' ' . z_root() . '</p><p>';
 
 	$o .= t('Please visit <a href="http://project.friendika.com">Project.Friendika.com</a> to learn more about the Friendica project.') . '</p><p>';	

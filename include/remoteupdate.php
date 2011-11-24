@@ -1,7 +1,7 @@
 <?php
-/* update friendika */
+/* update friendica */
 define('APIBASE', 'http://github.com/api/v2/');
-define('F9KREPO', 'friendika/friendika');
+define('F9KREPO', 'friendica/friendica');
 
 $up_totalfiles = 0;
 $up_countfiles = 0;
@@ -19,14 +19,14 @@ function checkUpdate(){
 	
 	if ($tag==0.0) return false;
 	$f = fetch_url("https://raw.github.com/".F9KREPO."/".$tag."/boot.php","r");
-	preg_match("|'FRIENDIKA_VERSION', *'([^']*)'|", $f, $m);
+	preg_match("|'FRIENDICA_VERSION', *'([^']*)'|", $f, $m);
 	$version =  $m[1];
 	
-	$lv = explode(".", FRIENDIKA_VERSION);
+	$lv = explode(".", FRIENDICA_VERSION);
 	$rv = explode(".",$version);
 	foreach($lv as $i=>$v){
 		if ((int)$lv[$i] < (int)$rv[$i]) {
-			return array($tag, $version, "https://github.com/friendika/friendika/zipball/".$tag);
+			return array($tag, $version, "https://github.com/friendica/friendica/zipball/".$tag);
 			break;
 		}
 	}

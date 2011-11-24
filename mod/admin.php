@@ -146,7 +146,7 @@ function admin_page_summary(&$a) {
 		'$users' => Array( t('Registered users'), $users),
 		'$accounts' => $accounts,
 		'$pending' => Array( t('Pending registrations'), $pending),
-		'$version' => Array( t('Version'), FRIENDIKA_VERSION),
+		'$version' => Array( t('Version'), FRIENDICA_VERSION),
 		'$build' =>  get_config('system','build'),
 		'$plugins' => Array( t('Active plugins'), $a->plugins )
 	));
@@ -700,7 +700,7 @@ function admin_page_remoteupdate(&$a) {
 		'$baseurl' => $a->get_baseurl(),
 		'$submit' => t("Update now"),
 		'$close' => t("Close"),
-		'$localversion' => FRIENDIKA_VERSION,
+		'$localversion' => FRIENDICA_VERSION,
 		'$remoteversion' => $u[1],
 		'$needupdate' => $needupdate,
 		'$canwrite' => $canwrite,

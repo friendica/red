@@ -224,7 +224,7 @@
 
 		$.get(update_url,function(data) {
 			in_progress = false;
-			$('.ccollapse-wrapper',data).each(function() {
+			$('.collapsed-comments',data).each(function() {
 				var ident = $(this).attr('id');
 				var is_hidden = $('#' + ident).is(':hidden');
 				if($('#' + ident).length) {

@@ -323,7 +323,7 @@ function notifier_run($argv, $argc){
 		$birthday = '<dfrn:birthday>' . xmlify($birthday) . '</dfrn:birthday>';
 
 	$atom .= replace_macros($feed_template, array(
-			'$version'      => xmlify(FRIENDIKA_VERSION),
+			'$version'      => xmlify(FRIENDICA_VERSION),
 			'$feed_id'      => xmlify($a->get_baseurl() . '/profile/' . $owner['nickname'] ),
 			'$feed_title'   => xmlify($owner['name']),
 			'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', $updated . '+00:00' , ATOM_TIME)) ,
