@@ -233,6 +233,9 @@
 			//			$('#' + ident).hide();
 			//	}
 			//});
+
+			// add a new thread
+
 			$('.tread-wrapper',data).each(function() {
 				var ident = $(this).attr('id');
 				if($('#' + ident).length == 0) {
@@ -241,22 +244,35 @@
 					});
 					$('#' + prev).after($(this));
 				}
+				prev = ident;
+			});
+
+			// reset vars for inserting individual items
+
+			prev = 'live-' + src;
+
+			$('.wall-item-outside-wrapper',data).each(function() {
+				var ident = $(this).attr('id');
+				if($('#' + ident).length == 0) {
+					$('img',this).each(function() {
+						$(this).attr('src',$(this).attr('dst'));
+					});
+					$('#' + prev).after($(this));
+				}
 				else { 
-					$(this).find('.wall-item-outside-wrapper').each(function() {
-						var iident = $(this).attr('id');
-						$('#' + iident + ' ' + '.wall-item-ago').replaceWith($(this).find('.wall-item-ago')); 
-						if($('#' + iident + ' ' + '.comment-edit-text-empty').length)
-							$('#' + iident + ' ' + '.wall-item-comment-wrapper').replaceWith($(this).find('.wall-item-comment-wrapper'));
-						$('#' + iident + ' ' + '.hide-comments-total').replaceWith($(this).find('.hide-comments-total'));
-						$('#' + iident + ' ' + '.wall-item-like').replaceWith($(this).find('.wall-item-like'));
-						$('#' + iident + ' ' + '.wall-item-dislike').replaceWith($(this).find('.wall-item-dislike'));
-						$('#' + iident + ' ' + '.my-comment-photo').each(function() {
-							$(this).attr('src',$(this).attr('dst'));
-						});
+					$('#' + ident + ' ' + '.wall-item-ago').replaceWith($(this).find('.wall-item-ago')); 
+					if($('#' + ident + ' ' + '.comment-edit-text-empty').length)
+						$('#' + ident + ' ' + '.wall-item-comment-wrapper').replaceWith($(this).find('.wall-item-comment-wrapper'));
+					$('#' + ident + ' ' + '.hide-comments-total').replaceWith($(this).find('.hide-comments-total'));
+					$('#' + ident + ' ' + '.wall-item-like').replaceWith($(this).find('.wall-item-like'));
+					$('#' + ident + ' ' + '.wall-item-dislike').replaceWith($(this).find('.wall-item-dislike'));
+					$('#' + ident + ' ' + '.my-comment-photo').each(function() {
+						$(this).attr('src',$(this).attr('dst'));
 					});
 				}
 				prev = ident; 
 			});
+
 			$('.like-rotator').hide();
 			if(commentBusy) {
 				commentBusy = false;

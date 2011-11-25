@@ -291,7 +291,7 @@ function conversation(&$a, $items, $mode, $update) {
 				$arr = array('item' => $item, 'output' => $tmp_item);
 				call_hooks('display_item', $arr);
 
-				$threads[$threadsid]['id'] = $threadsid;
+				$threads[$threadsid]['id'] = $arr[$item['item_id']];
 				$threads[$threadsid]['html'] .= $arr['output'];
 
 			}
@@ -375,7 +375,7 @@ function conversation(&$a, $items, $mode, $update) {
 					$comments_collapsed = false;
 					
 					$threadsid++;
-					$threads[$threadsid]['id'] = $threadsid;
+					$threads[$threadsid]['id'] = $item['item_id'];
 					$threads[$threadsid]['html'] = "";
 
 				}
