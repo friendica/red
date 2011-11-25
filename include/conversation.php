@@ -291,7 +291,8 @@ function conversation(&$a, $items, $mode, $update) {
 				$arr = array('item' => $item, 'output' => $tmp_item);
 				call_hooks('display_item', $arr);
 
-				$threads[$threadsid] .= $arr['output'];
+				$threads[$threadsid]['id'] = $threadsid;
+				$threads[$threadsid]['html'] .= $arr['output'];
 
 			}
 
@@ -374,7 +375,9 @@ function conversation(&$a, $items, $mode, $update) {
 					$comments_collapsed = false;
 					
 					$threadsid++;
-					$threads[$threadsid] = "";
+					$threads[$threadsid]['id'] = $threadsid;
+					$threads[$threadsid]['html'] = "";
+
 				}
 				else {
 					// prevent private email from leaking into public conversation
@@ -393,7 +396,7 @@ function conversation(&$a, $items, $mode, $update) {
 						// IMPORTANT: the closing </div> in the hide_comments template
 						// is supplied below in code. 
 
-						$threads[$threadsid] .= replace_macros($hide_comments_tpl,array(
+						$threads[$threadsid]['html'] .= replace_macros($hide_comments_tpl,array(
 							'$id' => $item['parent'],
 							'$num_comments' => sprintf( tt('%d comment','%d comments',$comments[$item['parent']]),
 								$comments[$item['parent']]),
@@ -404,7 +407,7 @@ function conversation(&$a, $items, $mode, $update) {
 					}
 				}
 				if(($comments[$item['parent']] > 2) && ($comments_seen == ($comments[$item['parent']] - 1))) {
-					$threads[$threadsid] .= '</div>';
+					$threads[$threadsid]['html'] .= '</div>';
 				}
 
 				$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
@@ -621,16 +624,11 @@ function conversation(&$a, $items, $mode, $update) {
 				$arr = array('item' => $item, 'output' => $tmp_item);
 				call_hooks('display_item', $arr);
 
-				$threads[$threadsid] .= $arr['output'];
+				$threads[$threadsid]['html'] .= $arr['output'];
 			}
 		}
 	}
 
-
-	// if author collapsing is in force but didn't get closed, close it off now.
-
-	/*if($blowhard_count >= 3)
-		$threads[$threadsid] .= '</div>';*/
 
 	$page_template = get_markup_template("conversation.tpl");
 	$o .= replace_macros($page_template, array(

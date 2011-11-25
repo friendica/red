@@ -1,6 +1,6 @@
 {{ for $threads as $thread }}
-<div class="tread-wrapper">
-	$thread
+<div id="tread-wrapper-$thread.id" class="tread-wrapper">
+	$thread.html
 </div>
 {{ endfor }}
 
