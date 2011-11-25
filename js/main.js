@@ -242,7 +242,7 @@
 					$('#' + prev).after($(this));
 				}
 				else { 
-					$('.wall-item-outside-wrapper').each(function() {
+					$(this).find('.wall-item-outside-wrapper').each(function() {
 						var iident = $(this).attr('id');
 						$('#' + iident + ' ' + '.wall-item-ago').replaceWith($(this).find('.wall-item-ago')); 
 						if($('#' + iident + ' ' + '.comment-edit-text-empty').length)
