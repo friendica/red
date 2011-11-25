@@ -249,23 +249,6 @@ function network_content(&$a, $update = 0) {
 
 		$o .= status_editor($a,$x);
 
-		// The special div is needed for liveUpdate to kick in for this page.
-		// We only launch liveUpdate if you are on the front page, you aren't
-		// filtering by group and also you aren't writing a comment (the last
-		// criteria is discovered in javascript).
-
-			$o .= '<div id="live-network"></div>' . "\r\n";
-			$o .= "<script> var profile_uid = " . $_SESSION['uid'] 
-				. "; var netargs = '" . substr($a->cmd,8)
-				. '?f='
-				. ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '')
-				. ((x($_GET,'search')) ? '&search=' . $_GET['search'] : '') 
-				. ((x($_GET,'star')) ? '&star=' . $_GET['star'] : '') 
-				. ((x($_GET,'order')) ? '&order=' . $_GET['order'] : '') 
-				. ((x($_GET,'bmark')) ? '&bmark=' . $_GET['bmark'] : '') 
-				. ((x($_GET,'liked')) ? '&liked=' . $_GET['liked'] : '') 
-				. "'; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
-
 	}
 
 	// We aren't going to try and figure out at the item, group, and page
