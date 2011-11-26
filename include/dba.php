@@ -36,11 +36,19 @@ class dba {
 			}
 		}
 
-		$this->db = @new mysqli($server,$user,$pass,$db);
-		if(! mysqli_connect_errno()) {
-			$this->connected = true;
+		if(class_exists('mysqli')) {
+			$this->db = @new mysqli($server,$user,$pass,$db);
+			if(! mysqli_connect_errno()) {
+				$this->connected = true;
+			}
 		}
 		else {
+			$this->db = mysql_connect($server,$user,$pass);
+			if($this->db && mysql_select_db($db,$this->db)) {
+				$this->connected = true;
+			}
+		}
+		if(! $this->connected) {
 			$this->db = null;
 			if(! $install)
 				system_unavailable();
@@ -56,14 +64,19 @@ class dba {
 		if((! $this->db) || (! $this->connected))
 			return false;
 		
-		$result = @$this->db->query($sql);
+		if(class_exists('mysqli'))
+			$result = @$this->db->query($sql);
+		else
+			$result = @mysql_query($sql,$this->db);
 
 		if($this->debug) {
 
 			$mesg = '';
 
-			if($this->db->errno)
+			if(class_exists('mysqli') && $this->db->errno)
 				logger('dba: ' . $this->db->error);
+			else
+				logger('dba: ' . mysql_error($this->db));
 
 			if($result === false)
 				$mesg = 'false';

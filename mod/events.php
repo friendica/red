@@ -228,6 +228,9 @@ function events_content(&$a) {
 				if($d !== $last_date)
 					$o .= '<hr /><a name="link-' . $j . '" ><div class="event-list-date">' . $d . '</div></a>';
 				$last_date = $d;
+				if($rr['author-name']) {
+					$o .= '<a href="' . $rr['author-link'] . '" ><img src="' . $rr['author-avatar'] . '" height="32" width="32" />' . $rr['author-name'] . '</a>';
+				}
 				$o .= format_event_html($rr);
 				$o .= ((! $rr['cid']) ? '<a href="' . $a->get_baseurl() . '/events/event/' . $rr['id'] . '" title="' . t('Edit event') . '" class="edit-event-link icon pencil"></a>' : '');
 				if($rr['plink'])
