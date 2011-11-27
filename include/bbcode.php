@@ -31,9 +31,10 @@ function tryoembed($match){
 function bbcode($Text,$preserve_nl = false) {
 
 
-	// extract a single private image which uses data url's since preg has issues with 
-	// large data sizes. Put it back in after we've done all the regex matching.
- 
+	// Extract a single private image which uses data url's since preg has issues with 
+	// large data sizes. Stash it away while we do bbcode conversion, and then put it back 
+	// in after we've done all the regex matching. We cannot use any preg functions to do this.
+
 	$saved_image = '';
 	$img_start = strpos($Text,'[img]data:');
 	$img_end = strpos($Text,'[/img]');
@@ -41,7 +42,7 @@ function bbcode($Text,$preserve_nl = false) {
 	if($img_start !== false && $img_end !== false && $img_end > $img_start) {
 		$start_fragment = substr($Text,0,$img_start);
 		$img_start += strlen('[img]');
-		$saved_image = substr($Text,$img_start,strpos($Text,'[/img]'));
+		$saved_image = substr($Text,$img_start,$img_end - $img_start);
 		$end_fragment = substr($Text,$img_end + strlen('[/img]'));		
 //		logger('saved_image: ' . $saved_image,LOGGER_DEBUG);
 		$Text = $start_fragment . '[$#saved_image#$]' . $end_fragment;
