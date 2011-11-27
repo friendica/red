@@ -30,6 +30,24 @@ function tryoembed($match){
 
 function bbcode($Text,$preserve_nl = false) {
 
+
+	// extract a single private image which uses data url's since preg has issues with 
+	// large data sizes. Put it back in after we've done all the regex matching.
+ 
+	$saved_image = '';
+	$img_start = strpos($Text,'[img]data:');
+	if($img_start !== false) {
+		$start_fragment = substr($Text,0,$img_start);
+		$img_start += strlen('[img]');
+		$saved_image = substr($Text,$img_start);		
+		$img_end = strpos($saved_image,'[/img]');
+		$saved_image = substr($saved_image,0,$img_end);
+		logger('saved_image: ' . $saved_image);
+		$img_end += strlen('[/img]');
+		$Text = $start_fragment . '[$#saved_image#$]' . substr($Text,strlen($start_fragment) + strlen('[img]') + $img_end);
+ 
+	}
+
 	// If we find any event code, turn it into an event.
 	// After we're finished processing the bbcode we'll 
 	// replace all of the event code with a reformatted version.
@@ -206,7 +224,9 @@ function bbcode($Text,$preserve_nl = false) {
 
 	// fix any escaped ampersands that may have been converted into links
 	$Text = preg_replace("/\<(.*?)(src|href)=(.*?)\&amp\;(.*?)\>/ism",'<$1$2=$3&$4>',$Text);
-	
+	if(strlen($saved_image))
+		$Text = str_replace('[$#saved_image#$]','<img src="' . $saved_image .'" alt="' . t('Image/photo') . '" />',$Text);
+
 	call_hooks('bbcode',$Text);
 
 	return $Text;

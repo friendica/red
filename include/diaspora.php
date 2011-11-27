@@ -1303,6 +1303,7 @@ function diaspora_retraction($importer,$xml) {
 		return;
 
 	if($type === 'Person') {
+		require_once('include/Contact.php');
 		contact_remove($contact['id']);
 	}
 	elseif($type === 'Post') {
