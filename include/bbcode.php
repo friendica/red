@@ -36,16 +36,15 @@ function bbcode($Text,$preserve_nl = false) {
  
 	$saved_image = '';
 	$img_start = strpos($Text,'[img]data:');
-	if($img_start !== false) {
+	$img_end = strpos($Text,'[/img]');
+
+	if($img_start !== false && $img_end !== false && $img_end > $img_start) {
 		$start_fragment = substr($Text,0,$img_start);
 		$img_start += strlen('[img]');
-		$saved_image = substr($Text,$img_start);		
-		$img_end = strpos($saved_image,'[/img]');
-		$saved_image = substr($saved_image,0,$img_end);
-		logger('saved_image: ' . $saved_image);
-		$img_end += strlen('[/img]');
-		$Text = $start_fragment . '[$#saved_image#$]' . substr($Text,strlen($start_fragment) + strlen('[img]') + $img_end);
- 
+		$saved_image = substr($Text,$img_start,strpos($Text,'[/img]'));
+		$end_fragment = substr($Text,$img_end + strlen('[/img]'));		
+//		logger('saved_image: ' . $saved_image,LOGGER_DEBUG);
+		$Text = $start_fragment . '[$#saved_image#$]' . $end_fragment;
 	}
 
 	// If we find any event code, turn it into an event.
