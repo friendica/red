@@ -2,11 +2,21 @@
 
 function poco_init(&$a) {
 
+	$system_mode = false;
+
+	if(intval(get_config('system','block_public')))
+		http_status_exit(401);
+
+
 	if($a->argc > 1) {
 		$user = notags(trim($a->argv[1]));
 	}
-	if(! x($user) || get_config('system','block_public'))
-		http_status_exit(401);
+	if(! x($user)) {
+		$c = q("select * from pconfig where cat = 'system' and k = 'suggestme' and v = 1");
+		if(! count($c))
+			http_status_exit(401);
+		$system_mode = true;
+	}
 
 	$format = (($_GET['format']) ? $_GET['format'] : 'json');
 
@@ -22,14 +32,16 @@ function poco_init(&$a) {
 		$cid = intval($a->argv[4]);
  		
 
-	$r = q("SELECT `user`.*,`profile`.`hide-friends` from user left join profile on `user`.`uid` = `profile`.`uid`
-		where `user`.`nickname` = '%s' and `profile`.`is-default` = 1 limit 1",
-		dbesc($user)
-	);
-	if(! count($r) || $r[0]['hidewall'] || $r[0]['hide-friends'])
-		http_status_exit(404);
+	if(! $system_mode) {
+		$r = q("SELECT `user`.*,`profile`.`hide-friends` from user left join profile on `user`.`uid` = `profile`.`uid`
+			where `user`.`nickname` = '%s' and `profile`.`is-default` = 1 limit 1",
+			dbesc($user)
+		);
+		if(! count($r) || $r[0]['hidewall'] || $r[0]['hide-friends'])
+			http_status_exit(404);
 
-	$user = $r[0];
+		$user = $r[0];
+	}
 
 	if($justme)
 		$sql_extra = " and `contact`.`self` = 1 ";
@@ -37,10 +49,16 @@ function poco_init(&$a) {
 	if($cid)
 		$sql_extra = sprintf(" and `contact`.`id` = %d ",intval($cid));
 
-	$r = q("SELECT count(*) as `total` from `contact` where `uid` = %d and blocked = 0 and pending = 0
-		$sql_extra ",
-		intval($user['uid'])
-	);
+	if($system_mode) {
+		$r = q("SELECT count(*) as `total` from `contact` where self = 1 
+			and uid in (select uid from pconfig where cat = 'system' and k = 'suggestme' and v = 1) ");
+	}
+	else {
+		$r = q("SELECT count(*) as `total` from `contact` where `uid` = %d and blocked = 0 and pending = 0
+			$sql_extra ",
+			intval($user['uid'])
+		);
+	}
 	if(count($r))
 		$totalResults = intval($r[0]['total']);
 	else
@@ -51,13 +69,23 @@ function poco_init(&$a) {
 		$startIndex = 0;
 	$itemsPerPage = ((x($_GET,'count') && intval($_GET['count'])) ? intval($_GET['count']) : $totalResults);
 
-	$r = q("SELECT * from `contact` where `uid` = %d and blocked = 0 and pending = 0
-		$sql_extra LIMIT %d, %d",
-		intval($user['uid']),
-		intval($startIndex),
-		intval($itemsPerPage)
-	);
 
+	if($system_mode) {
+		$r = q("SELECT * from contact where self = 1 
+			and uid in (select uid from pconfig where cat = 'system' and k = 'suggestme' and v = 1) limit %d, %d ",
+			intval($startIndex),
+			intval($itemsPerPage)
+		);
+	}
+	else {
+
+		$r = q("SELECT * from `contact` where `uid` = %d and blocked = 0 and pending = 0
+			$sql_extra LIMIT %d, %d",
+			intval($user['uid']),
+			intval($startIndex),
+			intval($itemsPerPage)
+		);
+	}
 	$ret = array();
 	if(x($_GET,'sorted'))
 		$ret['sorted'] = 'false';

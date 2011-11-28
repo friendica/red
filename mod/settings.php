@@ -6,6 +6,8 @@ function settings_init(&$a) {
 		profile_load($a,$a->user['nickname']);
 	}
 
+	// These lines provide the javascript needed by the acl selector
+
 	$a->page['htmlhead'] .= "<script> var ispublic = '" . t('everybody') . "';" ;
 
 	$a->page['htmlhead'] .= <<< EOT
@@ -231,8 +233,9 @@ function settings_post(&$a) {
 	$blockwall        = (((x($_POST,'blockwall')) && (intval($_POST['blockwall']) == 1)) ? 0: 1); // this setting is inverted!
 	$blocktags        = (((x($_POST,'blocktags')) && (intval($_POST['blocktags']) == 1)) ? 0: 1); // this setting is inverted!
 
-	$hide_friends = (($_POST['hide-friends'] == 1) ? 1: 0);
-	$hidewall = (($_POST['hidewall'] == 1) ? 1: 0);
+	$suggestme        = ((x($_POST,'suggestme')) ? intval($_POST['suggestme'])  : 0);  
+	$hide_friends     = (($_POST['hide-friends'] == 1) ? 1: 0);
+	$hidewall         = (($_POST['hidewall'] == 1) ? 1: 0);
 
 
 	$notify = 0;
@@ -308,6 +311,8 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'expire','notes', $expire_notes);
 	set_pconfig(local_user(),'expire','starred', $expire_starred);
 	set_pconfig(local_user(),'expire','photos', $expire_photos);
+
+	set_pconfig(local_user(),'system','suggestme', $suggestme);
 
 	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `theme` = '%s', `maxreq` = %d, `expire` = %d, `openidserver` = '%s', `blockwall` = %d, `hidewall` = %d, `blocktags` = %d  WHERE `uid` = %d LIMIT 1",
 			dbesc($username),
