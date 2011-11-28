@@ -71,6 +71,9 @@ function diaspora_dispatch($importer,$msg) {
 	elseif($xmlbase->photo) {
 		$ret = diaspora_photo($importer,$xmlbase->photo,$msg);
 	}
+	elseif($xmlbase->conversation) {
+		$ret = diaspora_conversation($importer,$xmlbase->conversation,$msg);
+	}
 	else {
 		logger('diaspora_dispatch: unknown message type: ' . print_r($xmlbase,true));
 	}
@@ -902,8 +905,6 @@ function diaspora_comment($importer,$xml,$msg) {
 
 	$parent_author_signature = (($xml->parent_author_signature) ? notags(unxmlify($xml->parent_author_signature)) : '');
 
-	$text = $xml->text;
-
 	$contact = diaspora_get_contact_by_handle($importer['uid'],$msg['author']);
 	if(! $contact) {
 		logger('diaspora_comment: cannot find contact: ' . $msg['author']);
@@ -1049,6 +1050,169 @@ function diaspora_comment($importer,$xml,$msg) {
 	}
 	return;
 }
+
+
+
+
+function diaspora_conversation($importer,$xml,$msg) {
+
+	$a = get_app();
+
+	$guid = notags(unxmlify($xml->guid));
+	$subject = notags(unxmlify($xml->subject));
+	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
+	$participant_handles = notags(unxmlify($xml->participant_handles));
+	$created_at = datetime_convert('UTC','UTC',notags(unxmlify($xml->created_at)));
+
+	$parent_uri = $diaspora_handle . ':' . $guid;
+ 
+	$messages = $xml->message;
+
+	if(! count($messages)) {
+		logger('diaspora_conversation: empty conversation');
+		return;
+	}
+
+	$contact = diaspora_get_contact_by_handle($importer['uid'],$msg['author']);
+	if(! $contact) {
+		logger('diaspora_conversation: cannot find contact: ' . $msg['author']);
+		return;
+	}
+
+	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
+		logger('diaspora_conversation: Ignoring this author.');
+		return 202;
+	}
+
+	foreach($messages as $msg) {
+		$msg_guid = notags(unxmlify($msg->guid));
+		$msg_parent_guid = notags(unxmlify($msg->parent_guid));
+		$msg_parent_author_signature = notags(unxmlify($msg->parent_author_signature));
+		$msg_author_signature = notags(unxmlify($msg->author_signature));
+		$msg_text = unxmlify($msg->text);
+		$msg_created_at = datetime_convert('UTC','UTC',notags(unxmlify($msg->created_at)));
+		$msg_diaspora_handle = notags(unxmlify($msg->diaspora_handle));
+		$msg_conversation_guid = notags(unxmlify($msg->conversation_guid));
+		if($msg_conversation_guid != $guid) {
+			logger('diaspora_conversation: message conversation guid does not belong to the current conversation. ' . $xml);
+			continue;
+		}
+
+
+		$body = diaspora2bb($msg_text);
+		$message_id = $msg_diaspora_handle . ':' . $msg_guid;
+
+		$person = find_diaspora_person_by_handle($msg_diaspora_handle);	
+		if(is_array($person) && x($person,'pubkey'))
+			$key = $person['pubkey'];
+		else {
+			logger('diaspora_conversation: unable to find author details');
+			continue;
+		}
+
+		$r = q("select id from mail where `uri` = '%s' limit 1",
+			dbesc($message_id)
+		);
+		if(count($r)) {
+			logger('diaspora_conversation: duplicate message already delivered.', LOGGER_DEBUG);
+			continue;
+		}
+
+
+		// don't forget guid, convid!!!
+
+		q("insert into mail ( `uid`, `from-name`,`from-photo`,`from-url`,`contact-id`,`title`,`body`,`seen`,`replied`,`uri`,`parent-uri`,`created`) values ( %d, '%s', '%s', '%s', %d, '%s', '%s', %d, %d, '%s','%s','%s')",
+			intval($importer['uid']),
+			dbesc($person['name']),
+			dbesc($person['photo']),
+			dbesc($person['url']),
+			intval($contact['id']),	 
+			dbesc($subject),
+			dbesc($body),
+			0,
+			0,
+			dbesc($message_id),
+			dbesc($parent_uri),
+			dbesc($msg_created_at)
+		);			
+
+	}	
+
+
+/*
+	$author_signed_data = $guid . ';' . $parent_guid . ';' . $text . ';' . $diaspora_handle;
+
+	$author_signature = base64_decode($author_signature);
+
+	if(strcasecmp($diaspora_handle,$msg['author']) == 0) {
+		$person = $contact;
+		$key = $msg['key'];
+	}
+	else {
+		$person = find_diaspora_person_by_handle($diaspora_handle);	
+
+		if(is_array($person) && x($person,'pubkey'))
+			$key = $person['pubkey'];
+		else {
+			logger('diaspora_comment: unable to find author details');
+			return;
+		}
+	}
+
+	if(! rsa_verify($author_signed_data,$author_signature,$key,'sha256')) {
+		logger('diaspora_comment: verification failed.');
+		return;
+	}
+
+	if($parent_author_signature) {
+		$owner_signed_data = $guid . ';' . $parent_guid . ';' . $text . ';' . $diaspora_handle;
+
+		$parent_author_signature = base64_decode($parent_author_signature);
+
+		$key = $msg['key'];
+
+		if(! rsa_verify($owner_signed_data,$parent_author_signature,$key,'sha256')) {
+			logger('diaspora_comment: owner verification failed.');
+			return;
+		}
+	}
+
+	// Phew! Everything checks out. Now create an item.
+
+	$body = diaspora2bb($text);
+
+	$message_id = $diaspora_handle . ':' . $guid;
+
+	$datarray = array();
+
+	$str_tags = '';
+
+	$tags = get_tags($body);
+
+	if(count($tags)) {
+		foreach($tags as $tag) {
+			if(strpos($tag,'#') === 0) {
+				if(strpos($tag,'[url='))
+					continue;
+				$basetag = str_replace('_',' ',substr($tag,1));
+				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
+				if(strlen($str_tags))
+					$str_tags .= ',';
+				$str_tags .= '#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]';
+				continue;
+			}
+		}
+	}
+
+*/
+
+	return;
+}
+
+
+
+
+
 
 function diaspora_photo($importer,$xml,$msg) {
 

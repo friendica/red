@@ -266,10 +266,12 @@ CREATE TABLE IF NOT EXISTS `item` (
 CREATE TABLE IF NOT EXISTS `mail` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(10) unsigned NOT NULL,
+  `guid` char(64) NOT NULL,
   `from-name` char(255) NOT NULL,
   `from-photo` char(255) NOT NULL,
   `from-url` char(255) NOT NULL,
   `contact-id` char(255) NOT NULL,
+  `convid` int(10) unsigned NOT NULL,
   `title` char(255) NOT NULL,
   `body` mediumtext NOT NULL,
   `seen` tinyint(1) NOT NULL,
@@ -703,3 +705,10 @@ INDEX ( `uid` ),
 INDEX ( `gcid` )
 ) ENGINE = MyISAM DEFAULT CHARSET=utf8;
 
+
+CREATE TABLE IF NOT EXISTS `conv` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+  `guid` CHAR( 64 ) NOT NULL ,
+  `recips` MEDIUMTEXT NOT NULL ,
+  `uid` INT NOT NULL
+) ENGINE = MyISAM DEFAULT CHARSET=utf8;

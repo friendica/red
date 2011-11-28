@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1105 );
+define( 'UPDATE_VERSION' , 1106 );
 
 /**
  *
@@ -900,6 +900,17 @@ function update_1104() {
 
 }
 
+function update_1105() {
+	q("ALTER TABLE `mail` ADD `convid` INT NOT NULL AFTER `contact-id` ");
+	q("ALTER TABLE `mail` ADD `guid` CHAR( 64 ) NOT NULL AFTER `uid` ");
+
+	q("CREATE TABLE IF NOT EXISTS `conv` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`guid` CHAR( 64 ) NOT NULL ,
+	`recips` MEDIUMTEXT NOT NULL ,
+	`uid` INT NOT NULL
+	) ENGINE = MYISAM ");
+}
 
 
 

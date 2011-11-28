@@ -16,7 +16,9 @@ class dba {
 
 	private $debug = 0;
 	private $db;
+	public  $mysqli = true;
 	public  $connected = false;
+
 
 	function __construct($server,$user,$pass,$db,$install = false) {
 
@@ -43,6 +45,7 @@ class dba {
 			}
 		}
 		else {
+			$this->mysqli = false;
 			$this->db = mysql_connect($server,$user,$pass);
 			if($this->db && mysql_select_db($db,$this->db)) {
 				$this->connected = true;
@@ -64,7 +67,7 @@ class dba {
 		if((! $this->db) || (! $this->connected))
 			return false;
 		
-		if(class_exists('mysqli'))
+		if($this->mysqli)
 			$result = @$this->db->query($sql);
 		else
 			$result = @mysql_query($sql,$this->db);
@@ -73,7 +76,7 @@ class dba {
 
 			$mesg = '';
 
-			if(class_exists('mysqli') && $this->db->errno)
+			if($this->mysqli && $this->db->errno)
 				logger('dba: ' . $this->db->error);
 			else
 				logger('dba: ' . mysql_error($this->db));
@@ -82,9 +85,13 @@ class dba {
 				$mesg = 'false';
 			elseif($result === true)
 				$mesg = 'true';
-			else
-				$mesg = $result->num_rows . ' results' . EOL;
-        
+			else {
+				if($this->mysqli)
+					$mesg = $result->num_rows . ' results' . EOL;
+    			else
+					$mesg = mysql_num_rows($result) . ' results' . EOL;
+			}
+    
 			$str =  'SQL = ' . printable($sql) . EOL . 'SQL returned ' . $mesg . EOL;
 
 			logger('dba: ' . $str );
@@ -108,11 +115,21 @@ class dba {
 			return $result;
 
 		$r = array();
-		if($result->num_rows) {
-			while($x = $result->fetch_array(MYSQL_ASSOC))
-				$r[] = $x;
-			$result->free_result();
+		if($this->mysqli) {
+			if($result->num_rows) {
+				while($x = $result->fetch_array(MYSQL_ASSOC))
+					$r[] = $x;
+				$result->free_result();
+			}
 		}
+		else {
+			if(mysql_num_rows($result)) {
+				while($x = mysql_fetch_array($result, MYSQL_ASSOC))
+					$r[] = $x;
+				mysql_free_result($result);
+			}
+		}
+
     
 		if($this->debug)
 			logger('dba: ' . printable(print_r($r, true)), LOGGER_DATA);
@@ -124,12 +141,19 @@ class dba {
 	}
 
 	public function escape($str) {
-		if($this->db && $this->connected)
-			return @$this->db->real_escape_string($str);
+		if($this->db && $this->connected) {
+			if($this->mysqli)
+				return @$this->db->real_escape_string($str);
+			else
+				return @mysql_real_escape_string($str,$this->db);
+		}
 	}
 
 	function __destruct() {
-		@$this->db->close();
+		if($this->mysqli)
+			@$this->db->close();
+		else
+			@mysql_close($this->db);
 	}
 }}
 
