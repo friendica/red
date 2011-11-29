@@ -9,7 +9,7 @@
 	</div>
 
 	<form id="profile-jot-form" action="$action" method="post" >
-		<input type="hidden" name="type" value="wall" />
+		<input type="hidden" name="type" value="$ptyp" />
 		<input type="hidden" name="profile_uid" value="$profile_uid" />
 		<input type="hidden" name="return" value="$return_path" />
 		<input type="hidden" name="location" id="jot-location" value="$defloc" />
