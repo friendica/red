@@ -63,7 +63,8 @@ function saved_searches($search) {
 	$srchurl = '/network' 
 		. ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') 
 		. ((x($_GET,'star')) ? '?star=' . $_GET['star'] : '')
-		. ((x($_GET,'bmark')) ? '?bmark=' . $_GET['bmark'] : '');
+		. ((x($_GET,'bmark')) ? '?bmark=' . $_GET['bmark'] : '')
+		. ((x($_GET,'conv')) ? '?conv=' . $_GET['conv'] : '');
 	
 	$o = '';
 
@@ -118,7 +119,8 @@ function network_content(&$a, $update = 0) {
 	$bookmarked_active = '';
 	$all_active = '';
 	$search_active = '';
-	
+	$conv_active = '';
+
 	if(($a->argc > 1 && $a->argv[1] === 'new') 
 		|| ($a->argc > 2 && $a->argv[2] === 'new')) {
 			$new_active = 'active';
@@ -135,13 +137,21 @@ function network_content(&$a, $update = 0) {
 	if($_GET['bmark']) {
 		$bookmarked_active = 'active';
 	}
+
+	if($_GET['conv']) {
+		$conv_active = 'active';
+	}
+
 	
 	if (($new_active == '') 
 		&& ($starred_active == '') 
 		&& ($bookmarked_active == '')
+		&& ($conv_active == '')
 		&& ($search_active == '')) {
 			$all_active = 'active';
 	}
+
+
 	$postord_active = '';
 
 	if($all_active && x($_GET,'order') && $_GET['order'] !== 'comment') {
@@ -164,6 +174,11 @@ function network_content(&$a, $update = 0) {
 			'sel'=>$postord_active,
 		),
 
+		array(
+			'label' => t('Personal'),
+			'url' => $a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '&conv=1',
+			'sel' => $conv_active,
+		),
 		array(
 			'label' => t('New'),
 			'url' => $a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . '/new' . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : ''),
@@ -200,6 +215,7 @@ function network_content(&$a, $update = 0) {
 	$bmark = ((x($_GET,'bmark')) ? intval($_GET['bmark']) : 0);
 	$order = ((x($_GET,'order')) ? notags($_GET['order']) : 'comment');
 	$liked = ((x($_GET,'liked')) ? intval($_GET['liked']) : 0);
+	$conv = ((x($_GET,'conv')) ? intval($_GET['conv']) : 0);
 
 
 	if(($a->argc > 2) && $a->argv[2] === 'new')
@@ -340,6 +356,7 @@ function network_content(&$a, $update = 0) {
 			. ((x($_GET,'order')) ? '&order=' . $_GET['order'] : '') 
 			. ((x($_GET,'bmark')) ? '&bmark=' . $_GET['bmark'] : '') 
 			. ((x($_GET,'liked')) ? '&liked=' . $_GET['liked'] : '') 
+			. ((x($_GET,'conv')) ? '&conv=' . $_GET['conv'] : '') 
 			. "'; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 	}
 
@@ -352,6 +369,17 @@ function network_content(&$a, $update = 0) {
 			dbesc('\\]' . $search . '\\[')
 		);
 	}
+
+	if($conv) {
+		$myurl = $a->get_baseurl() . '/profile/'. $a->user['nickname'];
+		$myurl = substr($myurl,strpos($myurl,'://')+3);
+		$myurl = str_replace('www.','',$myurl);
+		$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where `author-link` regexp '%s') ",
+			dbesc($myurl)
+		);
+	}
+
+
 
 	$r = q("SELECT COUNT(*) AS `total`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`

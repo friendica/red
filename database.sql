@@ -248,6 +248,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `last-child` (`last-child`),
   KEY `unseen` (`unseen`),
   KEY `wall` (`wall`),
+  KEY `author-link` (`author-link`),
   FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `body` (`body`),
   FULLTEXT KEY `tag` (`tag`),

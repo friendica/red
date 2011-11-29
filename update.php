@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1106 );
+define( 'UPDATE_VERSION' , 1107 );
 
 /**
  *
@@ -912,5 +912,10 @@ function update_1105() {
 	) ENGINE = MYISAM ");
 }
 
+
+function update_1106() {
+	q("ALTER TABLE `item` ADD INDEX ( `author-link` ) ");
+
+}
 
 
