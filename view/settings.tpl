@@ -55,6 +55,8 @@ $blockwall
 
 $blocktags
 
+$suggestme
+
 {{inc field_input.tpl with $field=$expire.days }}{{endinc}}
 <div class="field input">
 	<span class="field_help"><a href="#advaced-expire-popup" id="advenced-expire" class='popupbox' title="$expire.advanced">$expire.label</a></span>

@@ -22,17 +22,26 @@ require_once('include/datetime.php');
 
 function poco_load($cid,$uid = 0,$url = null) {
 	$a = get_app();
-	if((! $url) || (! $uid)) {
-		$r = q("select `poco`, `uid` from `contact` where `id` = %d limit 1",
-			intval($cid)
-		);
-		if(count($r)) {
-			$url = $r[0]['poco'];
-			$uid = $r[0]['uid'];
+
+	if($cid) {
+		if((! $url) || (! $uid)) {
+			$r = q("select `poco`, `uid` from `contact` where `id` = %d limit 1",
+				intval($cid)
+			);
+			if(count($r)) {
+				$url = $r[0]['poco'];
+				$uid = $r[0]['uid'];
+			}
 		}
+		if(! $uid)
+			return;
 	}
-	if((! $url) || (! $uid))
+
+	if(! $url)
 		return;
+
+	logger('poco_load: ' . $url, LOGGER_DATA);
+
 	$s = fetch_url($url . '/@me/@all?fields=displayName,urls,photos');
 
 	if(($a->get_curl_code() > 299) || (! $s))
@@ -65,6 +74,7 @@ function poco_load($cid,$uid = 0,$url = null) {
 		$x = q("select * from `gcontact` where `nurl` = '%s' limit 1",
 			dbesc(normalise_link($profile_url))
 		);
+
 		if(count($x)) {
 			$gcid = $x[0]['id'];
 
@@ -212,6 +222,56 @@ function suggestion_query($uid, $start = 0, $limit = 40) {
 		intval($limit)
 	);
 
+	if(count($r))
+		return $r;
+
+	$r = q("SELECT gcontact.* from gcontact 
+		left join glink on glink.gcid = gcontact.id 
+		where uid = 0 and cid = 0 and not gcontact.nurl in ( select nurl from contact where uid = %d)
+		and not gcontact.id in ( select gcid from gcign where uid = %d )
+		order by rand limit %d, %d ",
+		intval($uid),
+		intval($start),
+		intval($limit)
+	);
+
 	return $r;
 
+}
+
+function update_suggestions() {
+
+	$a = get_app();
+
+	$done = array();
+
+	poco_load(0,0,$a->get_baseurl() . '/poco');
+
+	$done[] = $a->get_baseurl() . '/poco';
+
+	if(strlen(get_config('system','directory_submit_url'))) {
+		$x = fetch_url('http://dir.friendica.com/pubsites');
+		if($x) {
+			$j = json_decode($x);
+			if($j->entries) {
+				foreach($j->entries as $entry) {
+					$url = $entry->url . '/poco';
+					if(! in_array($url,$done))
+						poco_load(0,0,$entry->url . '/poco');
+				}
+			}
+		}
+	}
+
+	$r = q("select distinct(poco) as poco from contact where network = '%s'",
+		dbesc(NETWORK_DFRN)
+	);
+
+	if(count($r)) {
+		foreach($r as $rr) {
+			$base = substr($rr['poco'],0,strrpos($rr['poco'],'/'));
+			if(! in_array($base,$done))
+				poco_load(0,0,$base);
+		}
+	}
 }

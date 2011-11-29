@@ -76,9 +76,11 @@ class dba {
 
 			$mesg = '';
 
-			if($this->mysqli && $this->db->errno)
-				logger('dba: ' . $this->db->error);
-			else
+			if($this->mysqli) {
+				if($this->db->errno)
+					logger('dba: ' . $this->db->error);
+			}
+			elseif(mysql_errno($this->db))
 				logger('dba: ' . mysql_error($this->db));
 
 			if($result === false)

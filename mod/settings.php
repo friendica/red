@@ -614,6 +614,10 @@ function settings_content(&$a) {
 	
 	$expire_photos = get_pconfig(local_user(), 'expire','photos');
 	$expire_photos = (($expire_photos===false)?0:$expire_photos); // default if not set: 0
+
+
+	$suggestme = get_pconfig(local_user(), 'system','suggestme');
+	$suggestme = (($suggestme===false)?0:$suggestme); // default if not set: 0
 	
 	if(! strlen($a->user['timezone']))
 		$timezone = date_default_timezone_get();
@@ -685,6 +689,12 @@ function settings_content(&$a) {
 
 	$blocktags = replace_macros($opt_tpl,array(
 			'$field' 	=> array('blocktags',  t('Allow friends to tag your posts?'), ! $a->user['blocktags'], '', array(t('No'),t('Yes'))),
+
+	));
+
+
+	$suggestme = replace_macros($opt_tpl,array(
+			'$field' 	=> array('suggestme',  t('Allow us to suggest you as a potential friend to new members?'), $suggestme, '', array(t('No'),t('Yes'))),
 
 	));
 
@@ -770,7 +780,7 @@ function settings_content(&$a) {
 		'$permdesc' => t("\x28click to open/close\x29"),
 		'$visibility' => $profile['net-publish'],
 		'$aclselect' => populate_acl($a->user,$celeb),
-
+		'$suggestme' => $suggestme,
 		'$blockwall'=> $blockwall, // array('blockwall', t('Allow friends to post to your profile page:'), !$blockwall, ''),
 		'$blocktags'=> $blocktags, // array('blocktags', t('Allow friends to tag your posts:'), !$blocktags, ''),
 		'$expire'	=> $expire_arr,
