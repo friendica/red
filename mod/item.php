@@ -139,6 +139,17 @@ function item_post(&$a) {
 	if(count($r))
 		$user = $r[0];
 	
+	if(($api_source) 
+		&& (! array_key_exists('allow_cid',$_REQUEST))
+		&& (! array_key_exists('allow_gid',$_REQUEST))
+		&& (! array_key_exists('deny_cid',$_REQUEST))
+		&& (! array_key_exists('deny_gid',$_REQUEST))) {
+		$str_group_allow   = $user['allow_gid'];
+		$str_contact_allow = $user['allow_cid'];
+		$str_group_deny    = $user['deny_gid'];
+		$str_contact_deny  = $user['deny_cid'];
+	}
+
 	if($orig_post) {
 		$str_group_allow   = $orig_post['allow_gid'];
 		$str_contact_allow = $orig_post['allow_cid'];
