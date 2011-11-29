@@ -1084,7 +1084,38 @@ function diaspora_conversation($importer,$xml,$msg) {
 		return 202;
 	}
 
+	$conversation = null;
+
+	$c = q("select * from conv where uid = %d and guid = '%s' limit 1",
+		intval($importer['uid']),
+		dbesc($guid)
+	);
+	if(count($c))
+		$conversation = $c[0];
+	else {
+		$r = q("insert into conv (uid,guid,recips) values('%d, '%s', '%s') ",
+			intval($importer['uid']),
+			dbesc($guid),
+			dbesc($participant_handles)
+		);
+		if($r)
+			$c = q("select * from conv where uid = %d and guid = '%s' limit 1",
+	        intval($importer['uid']),
+    	    dbesc($guid)
+    	);
+	    if(count($c))
+    	    $conversation = $c[0];
+	}
+	if(! $conversation) {
+		logger('diaspora_conversation: unable to create conversation.');
+		return;
+	}
+
+
 	foreach($messages as $msg) {
+
+		$reply = 0;
+
 		$msg_guid = notags(unxmlify($msg->guid));
 		$msg_parent_guid = notags(unxmlify($msg->parent_guid));
 		$msg_parent_author_signature = notags(unxmlify($msg->parent_author_signature));
@@ -1098,7 +1129,11 @@ function diaspora_conversation($importer,$xml,$msg) {
 			continue;
 		}
 
+		// Is this right?
 
+		if($msg_parent_guid != $guid)
+			$reply = 1;
+			
 		$body = diaspora2bb($msg_text);
 		$message_id = $msg_diaspora_handle . ':' . $msg_guid;
 
@@ -1118,11 +1153,10 @@ function diaspora_conversation($importer,$xml,$msg) {
 			continue;
 		}
 
-
-		// don't forget guid, convid!!!
-
-		q("insert into mail ( `uid`, `from-name`,`from-photo`,`from-url`,`contact-id`,`title`,`body`,`seen`,`replied`,`uri`,`parent-uri`,`created`) values ( %d, '%s', '%s', '%s', %d, '%s', '%s', %d, %d, '%s','%s','%s')",
+		q("insert into mail ( `uid`, `guid`, `convid`, `from-name`,`from-photo`,`from-url`,`contact-id`,`title`,`body`,`seen`,`replied`,`uri`,`parent-uri`,`created`) values ( %d, '%s', %d, '%s', '%s', '%s', %d, '%s', '%s', %d, %d, '%s','%s','%s')",
 			intval($importer['uid']),
+			dbesc($msg_guid),
+			intval($conversation['id']),
 			dbesc($person['name']),
 			dbesc($person['photo']),
 			dbesc($person['url']),
@@ -1130,7 +1164,7 @@ function diaspora_conversation($importer,$xml,$msg) {
 			dbesc($subject),
 			dbesc($body),
 			0,
-			0,
+			intval($reply),
 			dbesc($message_id),
 			dbesc($parent_uri),
 			dbesc($msg_created_at)
