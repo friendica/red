@@ -373,10 +373,10 @@ function network_content(&$a, $update = 0) {
 	if($conv) {
 		$myurl = $a->get_baseurl() . '/profile/'. $a->user['nickname'];
 		$myurl = substr($myurl,strpos($myurl,'://')+3);
-		$myurl = str_replace('www.','',$myurl);
+		$myurl = str_replace(array('www.','.'),array('','\\.'),$myurl);
 		$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where ( `author-link` regexp '%s' or `tag` regexp '%s' )) ",
-			dbesc($myurl),
-			dbesc($myurl)
+			dbesc($myurl . '$'),
+			dbesc($myurl . '\\]')
 		);
 	}
 
