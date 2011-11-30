@@ -187,7 +187,7 @@ function message_content(&$a) {
 			$o .= replace_macros($tpl, array(
 				'$id' => $rr['id'],
 				'$from_name' =>$rr['from-name'],
-				'$from_url' => $a->get_baseurl() . '/redir/' . $rr['contact-id'],
+				'$from_url' => (($rr['network'] === NETWORK_DFRN) ? $a->get_baseurl() . '/redir/' . $rr['contact-id'] : $rr['url'],
 				'$sparkle' => ' sparkle',
 				'$from_photo' => $rr['thumb'],
 				'$subject' => template_escape((($rr['mailseen']) ? $rr['title'] : '<strong>' . $rr['title'] . '</strong>')),
