@@ -89,16 +89,27 @@ function message_content(&$a) {
 			goaway($a->get_baseurl() . '/message' );
 		}
 		else {
-			$r = q("SELECT `parent-uri` FROM `mail` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			$r = q("SELECT `parent-uri`,`convid` FROM `mail` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval($a->argv[2]),
 				intval(local_user())
 			);
 			if(count($r)) {
 				$parent = $r[0]['parent-uri'];
+				$convid = $r[0]['convid'];
+
 				$r = q("DELETE FROM `mail` WHERE `parent-uri` = '%s' AND `uid` = %d ",
 					dbesc($parent),
 					intval(local_user())
 				);
+
+				// remove diaspora conversation pointer
+
+				if($convid) {
+					q("delete from conv where id = %d limit 1",
+						intval($convid)
+					);
+				}
+
 				if($r)
 					info( t('Conversation removed.') . EOL );
 			} 
