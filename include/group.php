@@ -166,6 +166,7 @@ function group_side($every="contacts",$each="group",$edit = false, $group_id = 0
 	
 	$groups[] = array(
 		'text' 	=> t('Everybody'),
+		'id' => 0,
 		'selected' => (($group_id == 0) ? 'group-selected' : ''),
 		'href' 	=> $every,
 	);
