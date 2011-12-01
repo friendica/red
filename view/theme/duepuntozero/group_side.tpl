@@ -13,9 +13,9 @@
 					/>
 				{{ endif }}			
 				{{ if $group.edit }}
-					<a class="groupsideedit" href="$group.edit.href"><span class="icon small-pencil"></span></a>
+					<a class="groupsideedit" href="$group.edit.href"><span id="group-side-editicon-$group.id" class="icon small-pencil"></span></a>
 				{{ endif }}
-				<a class="sidebar-group-element {{ if $group.selected }}group-selected{{ endif }}" href="$group.href">$group.text</a>
+				<a id="sidebar-group-element-$group.id" class="sidebar-group-element {{ if $group.selected }}group-selected{{ endif }}" href="$group.href">$group.text</a>
 			</li>
 		{{ endfor }}
 	</ul>
