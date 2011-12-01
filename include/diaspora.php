@@ -41,6 +41,9 @@ function diaspora_dispatch($importer,$msg) {
 
 	$xmlbase = $parsed_xml->post;
 
+	logger('diaspora_dispatch: ' . print_r($xmlbase,true), LOGGER_DEBUG);
+
+
 	if($xmlbase->request) {
 		$ret = diaspora_request($importer,$xmlbase->request);
 	}
