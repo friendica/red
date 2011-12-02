@@ -23,6 +23,7 @@ input {
 	border: 1px solid #666666;
 	-moz-border-radius: 3px;
 	border-radius: 3px;	
+	padding: 3px;
 }
 
 img { border :0px; }
@@ -55,6 +56,10 @@ blockquote {
 	border-left: 4px solid #dae4ee;
 	padding: 0.4em;
 }
+
+/*input[type=text] {
+	padding: 5px;
+}*/
 
 .icollapse-wrapper, .ccollapse-wrapper {
 	border: 1px solid #CCC;
@@ -281,6 +286,8 @@ div.wall-item-content-wrapper.shiny {
 
 .group-selected {
 	padding: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;	
 	border: 1px solid #CCCCCC;
 	background: #F8F8F8;
 	font-weight: bold;
@@ -829,6 +836,9 @@ input#dfrn-url {
 	margin-top: 10px;
 	border: 1px solid #CCC;
 	position: relative;
+	-moz-border-radius: 3px;
+	border-radius: 3px;	
+
 }
 
 .wall-item-content-wrapper.comment {
@@ -1507,6 +1517,9 @@ input#dfrn-url {
 	color:#cccccc;
 	border: 1px solid #cccccc;
 	padding: 3px 0px 0px 5px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;	
+
 }
 
 
@@ -1835,7 +1848,7 @@ a.mail-list-link {
 }
 
 aside input[type='text'] {
- width: 180px;
+ width: 174px;
 }
 
 .widget {
