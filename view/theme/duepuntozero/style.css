@@ -1086,6 +1086,10 @@ input#dfrn-url {
 .comment-edit-text-empty, .comment-edit-text-full {
 	float: left;
 	margin-top: 10px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;	
+	border: 1px solid #cccccc;
+	padding: 3px 1px 1px 3px;
 }
 .comment-edit-text-end {
 	clear: both;
