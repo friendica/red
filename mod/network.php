@@ -68,17 +68,16 @@ function saved_searches($search) {
 	
 	$o = '';
 
-	$r = q("select `term` from `search` WHERE `uid` = %d",
+	$r = q("select `id`,`term` from `search` WHERE `uid` = %d",
 		intval(local_user())
 	);
 
 	$saved = array();
 
-
-	
 	if(count($r)) {
 		foreach($r as $rr) {
 			$saved[] = array(
+				'id'            => $rr['id'],
 				'term'			=> $rr['term'],
 				'encodedterm' 	=> urlencode($rr['term']),
 				'delete'		=> t('Remove term'),

@@ -4,7 +4,7 @@ function search_saved_searches() {
 
 	$o = '';
 
-	$r = q("select `term` from `search` WHERE `uid` = %d",
+	$r = q("select `id`,`term` from `search` WHERE `uid` = %d",
 		intval(local_user())
 	);
 

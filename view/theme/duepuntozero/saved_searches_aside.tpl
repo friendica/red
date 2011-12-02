@@ -5,8 +5,8 @@
 	<ul id="saved-search-ul">
 		{{ for $saved as $search }}
 		<li class="saved-search-li clear">
-			<a onmouseout="imgdull(this);" onmouseover="imgbright(this);" onclick="return confirmDelete();" class="icon savedsearchdrop drophide" href="network/?f=&amp;remove=1&amp;search=$search.encodedterm"></a>
-			<a class="savedsearchterm" href="network/?f=&amp;search=$search.encodedterm">$search.term</a>
+			<a title="$search.delete" onclick="return confirmDelete();" id="drop-saved-search-term-$search.id" class="iconspacer savedsearchdrop " href="network/?f=&amp;remove=1&amp;search=$search.encodedterm"></a>
+			<a id="saved-search-term-$search.id" class="savedsearchterm" href="network/?f=&amp;search=$search.encodedterm">$search.term</a>
 		</li>
 		{{ endfor }}
 	</ul>
