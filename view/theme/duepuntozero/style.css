@@ -1792,7 +1792,7 @@ a.mail-list-link {
 	list-style-type: none;
 }
 
-#sidebar-group-list .icon {
+#sidebar-group-list .icon, #sidebar-group-list .iconspacer {
 	display: inline-block;
 	height: 12px;
 	width: 12px;
@@ -2766,6 +2766,10 @@ aside input[type='text'] {
 /**
  * ICONS
  */
+.iconspacer {
+	display: block; width: 16px; height: 16px;
+}
+
 .icon {
 	display: block; width: 16px; height: 16px;
 	background-image: url('../../../images/icons.png');
