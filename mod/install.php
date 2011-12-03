@@ -18,10 +18,10 @@ function install_post(&$a) {
 	unset($db);
 	$db = new dba($dbhost, $dbuser, $dbpass, $dbdata, true);
 
-	if(mysqli_connect_errno()) {
+	if(get_db_errno()) {
 		unset($db);
 		$db = new dba($dbhost, $dbuser, $dbpass, '', true);
-		if(! mysqli_connect_errno()) {
+		if(! get_db_errno()) {
 			$r = q("CREATE DATABASE '%s'",
 					dbesc($dbdata)
 			);
@@ -30,7 +30,7 @@ function install_post(&$a) {
 				$db = new dba($dbhost, $dbuser, $dbpass, $dbdata, true);
 			}
 		}
-		if(mysqli_connect_errno()) {
+		if(get_db_errno()) {
 			notice( t('Could not create/connect to database.') . EOL);
 			return;
 		}
@@ -65,6 +65,12 @@ function install_post(&$a) {
 	return;
 }
 
+function get_db_errno() {
+	if(class_exists('mysqli'))
+		return mysqli_connect_errno();
+	else
+		return mysql_errno();
+}		
 
 function install_content(&$a) {
 
@@ -74,7 +80,7 @@ function install_content(&$a) {
 	if(x($a->data,'db_installed')) {
 		$o .= '<h2>' . t('Proceed with Installation') . '</h2>';
 		$o .= '<p style="font-size: 130%;">';
-		$o .= t('Your Friendika site database has been installed.') . EOL;
+		$o .= t('Your Friendica site database has been installed.') . EOL;
 		$o .= t('IMPORTANT: You will need to [manually] setup a scheduled task for the poller.') . EOL ;
 		$o .= t('Please see the file "INSTALL.txt".') . EOL ;
 		$o .= '<br />';
@@ -98,7 +104,7 @@ function install_content(&$a) {
 		}
 	}
 
-	info( t('Welcome to Friendika.') . EOL);
+	info( t('Welcome to Friendica.') . EOL);
 
 
 	check_funcs();
@@ -121,9 +127,9 @@ function install_content(&$a) {
 
 	$tpl = get_markup_template('install_db.tpl');
 	$o .= replace_macros($tpl, array(
-		'$lbl_01' => t('Friendika Social Network'),
+		'$lbl_01' => t('Friendica Social Communications Server'),
 		'$lbl_02' => t('Installation'),
-		'$lbl_03' => t('In order to install Friendika we need to know how to connect to your database.'),
+		'$lbl_03' => t('In order to install Friendica we need to know how to connect to your database.'),
 		'$lbl_04' => t('Please contact your hosting provider or site administrator if you have questions about these settings.'),
 		'$lbl_05' => t('The database you specify below should already exist. If it does not, please create it before continuing.'),
 		'$lbl_06' => t('Database Server Name'),
