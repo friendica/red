@@ -242,6 +242,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `received` (`received`),
   KEY `visible` (`visible`),
   KEY `starred` (`starred`),
+  KEY `bookmark` (`bookmark`),
   KEY `deleted` (`deleted`),
   KEY `origin`  (`origin`),
   KEY `forum_mode` (`forum_mode`),

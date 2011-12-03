@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1107 );
+define( 'UPDATE_VERSION' , 1108 );
 
 /**
  *
@@ -915,6 +915,11 @@ function update_1105() {
 
 function update_1106() {
 	q("ALTER TABLE `item` ADD INDEX ( `author-link` ) ");
+
+}
+
+function update_1107() {
+	q("ALTER TABLE `item` ADD INDEX ( `bookmark` ) ");
 
 }
 
