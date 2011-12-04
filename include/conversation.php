@@ -211,8 +211,8 @@ function conversation(&$a, $items, $mode, $update) {
 				
 			
 				$profile_name   = ((strlen($item['author-name']))   ? $item['author-name']   : $item['name']);
-				if($author-link && (! $author-name))
-					$profile-name = $author-link;
+				if($item['author-link'] && (! $item['author-name']))
+					$profile_name = $item['author-link'];
 
 				$sp = false;
 				$profile_link = best_link_url($item,$sp);
