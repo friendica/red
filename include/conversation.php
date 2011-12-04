@@ -208,8 +208,11 @@ function conversation(&$a, $items, $mode, $update) {
 				}
 				else
 					$nickname = $a->user['nickname'];
+				
 			
 				$profile_name   = ((strlen($item['author-name']))   ? $item['author-name']   : $item['name']);
+				if($author-link && (! $author-name))
+					$profile-name = $author-link;
 
 				$sp = false;
 				$profile_link = best_link_url($item,$sp);
