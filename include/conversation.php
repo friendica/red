@@ -533,6 +533,10 @@ function conversation(&$a, $items, $mode, $update) {
 
 				$profile_name   = (((strlen($item['author-name']))   && $diff_author) ? $item['author-name']   : $item['name']);
 
+				if($item['author-link'] && (! $item['author-name']))
+					$profile_name = $item['author-link'];
+
+
 				$sp = false;
 				$profile_link = best_link_url($item,$sp);
 				if($sp)
