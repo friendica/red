@@ -305,7 +305,10 @@ class App {
 		if(x($_GET,'q'))
 			$this->cmd = trim($_GET['q'],'/\\');
 
+		// unix style "homedir"
 
+		if(substr($this->cmd,0,1) === '~')
+			$this->cmd = 'profile/' . substr($this->cmd,1);
 
 		/**
 		 *
