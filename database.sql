@@ -92,6 +92,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `blocked` tinyint(1) NOT NULL DEFAULT '1',
   `readonly` tinyint(1) NOT NULL DEFAULT '0',
   `writable` tinyint(1) NOT NULL DEFAULT '0',
+  `hidden` tinyint(1) NOT NULL DEFAULT '0',
   `pending` tinyint(1) NOT NULL DEFAULT '1',
   `rating` tinyint(1) NOT NULL DEFAULT '0',
   `reason` text NOT NULL,
@@ -114,6 +115,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   KEY `dfrn-id` (`dfrn-id`),
   KEY `blocked` (`blocked`),
   KEY `readonly` (`readonly`),
+  KET `hidden` (`hidden`),
   KEY `pending` (`pending`)  
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 

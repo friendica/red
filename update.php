@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1108 );
+define( 'UPDATE_VERSION' , 1109 );
 
 /**
  *
@@ -923,4 +923,8 @@ function update_1107() {
 
 }
 
+function update_1108() { 
+	q("ALTER TABLE `contact` ADD `hidden` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `writable` ,
+ADD INDEX ( `hidden` ) ");
 
+}
