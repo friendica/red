@@ -27,6 +27,10 @@ function message_post(&$a) {
 			break;
 		case -3:
 			notice( t('Message could not be sent.') . EOL );
+			break;
+		case -4:
+			notice( t('Message collection failure.') . EOL );
+			break;
 		default:
 			info( t('Message sent.') . EOL );
 	}
