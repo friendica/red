@@ -189,6 +189,17 @@ a:hover {
 .hidden {
   display: none;
 }
+code {
+  font-family: Courier, monospace;
+  white-space: pre;
+  display: block;
+  overflow: auto;
+  border: 1px solid #444;
+  background: #EEE;
+  color: #444;
+  padding: 10px;
+  margin-top: 20px;
+}
 /* tool */
 .tool {
   height: auto;
