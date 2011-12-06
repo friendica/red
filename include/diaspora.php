@@ -1096,9 +1096,13 @@ function diaspora_conversation($importer,$xml,$msg) {
 	if(count($c))
 		$conversation = $c[0];
 	else {
-		$r = q("insert into conv (uid,guid,recips) values(%d, '%s', '%s') ",
+		$r = q("insert into conv (uid,guid,creator,created,updated,subject,recips) values(%d, '%s', '%s', '%s', '%s', '%s', '%s') ",
 			intval($importer['uid']),
 			dbesc($guid),
+			dbesc($diaspora_handle),
+			dbesc(datetime_convert('UTC','UTC',$created_at)),
+			dbesc(datetime_convert()),
+			dbesc($subject),
 			dbesc($participant_handles)
 		);
 		if($r)
@@ -1203,6 +1207,10 @@ function diaspora_conversation($importer,$xml,$msg) {
 			dbesc($msg_created_at)
 		);			
 
+		q("updated conv set updated = '%s' where id = %d limit 1",
+			dbesc(datetime_convert()),
+			intval($conversation['id'])
+		);		
 	}	
 
 	return;
@@ -1943,7 +1951,73 @@ function diaspora_send_retraction($item,$owner,$contact,$public_batch = false) {
 	return(diaspora_transmit($owner,$contact,$slap,$public_batch));
 }
 
+function diaspora_send_mail($item,$owner,$contact) {
 
+	$a = get_app();
+	$myaddr = $owner['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+
+	$r = q("select * from conv where id = %d and uid = %d limit 1",
+		intval($item['convid']),
+		intval($item['uid'])
+	);
+
+	if(! count($r)) {
+		logger('diaspora_send_mail: conversation not found.');
+		return;
+	}
+	$cnv = $r[0];
+
+	$parent = null;
+
+	if($item['parent-uri'] != $item['uri']) {
+		$r = q("select * from mail where uri = '%s' and uid = %d limit 1",
+			dbesc($item['parent-uri']),
+			intval($item['uid'])
+		);
+		$parent = $r[0];
+	}
+
+	$conv = array(
+		'guid' => xmlify($cnv['guid']),
+		'subject' => xmlify($cnv['subject']),
+		'created_at' => xmlify(datetime_convert('UTC','UTC',$cnv['created'],'Y-m-d H:i:s \U\T\C')),
+		'diaspora_handle' => xmlify($cnv['creator']),
+		'participant_handles' => xmlify($cnv['recips'])
+	);
+
+	$body = bb2diaspora($item['body']);
+	$created = datetime_convert('UTC','UTC',$item['created'],'Y-m-d H:i:s \U\T\C');
+	$parent_guid = (($item['parent-uri'] == $item['uri']) ? $cnv['guid'] : $parent['guid']);
+ 
+	$signed_text =  $item['guid'] . ';' . $parent_guid . ';' . $body .  ';' 
+		. $created . ';' . $myaddr . ';' . $cnv['guid'];
+
+	$sig = base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha256'));
+
+	$msg = array(
+		'guid' => xmlify($item['guid']),
+		'parent_guid' => (($item['parent-uri'] == $item['uri']) ? xmlify($cnv['guid']) : xmlify($parent['guid'])),
+		'parent_author_signature' => (($item['parent-uri'] == $item['uri']) ? xmlify($sig) : null),
+		'author_signature' => xmlify($sig),
+		'text' => xmlify($body),
+		'created_at' => xmlify($created),
+		'diaspora_handle' => xmlify($myaddr),
+		'conversation_guid' => xmlify($cnv['guid'])
+	);
+
+	$conv['messages'] = array($msg);
+
+	$tpl = get_markup_template('diaspora_conversation.tpl');
+	$msg = replace_macros($tpl, array('$conv' => $conv));
+
+	logger('diaspora_conversation: ' . print_r($msg,true));
+
+	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],false)));
+
+	return(diaspora_transmit($owner,$contact,$slap,false));
+
+
+}
 
 function diaspora_transmit($owner,$contact,$slap,$public_batch) {
 

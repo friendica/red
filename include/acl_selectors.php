@@ -167,7 +167,7 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 	}
 
 	if($privmail) {
-		$sql_extra .= " AND `network` IN ( 'dfrn' ) ";
+		$sql_extra .= " AND `network` IN ( 'dfrn', 'dspr' ) ";
 	}
 	elseif($privatenet) {	
 		$sql_extra .= " AND `network` IN ( 'dfrn', 'mail', 'face', 'dspr' ) ";

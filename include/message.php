@@ -58,11 +58,16 @@ function send_message($recipient=0, $body='', $subject='', $replyto=''){
 
 		$handles = $recip_handle . ';' . $sender_handle;
 
-		$r = q("insert into conv (uid,guid,recips) values (%d, '%s', '%s') ",
+		$r = q("insert into conv (uid,guid,creator,created,updated,subject,recips) values(%d, '%s', '%s', '%s', '%s', '%s', '%s') ",
 			intval(local_user()),
 			dbesc($conv_guid),
+			dbesc($sender_handle),
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
+			dbesc($subject),
 			dbesc($handles)
 		);
+
 		$r = q("select * from conv where guid = '%s' and uid = %d limit 1",
 			dbesc($conv_guid),
 			intval(local_user())
@@ -76,10 +81,11 @@ function send_message($recipient=0, $body='', $subject='', $replyto=''){
 		return -4;
 	}
 
-	$r = q("INSERT INTO `mail` ( `uid`, `convid`, `from-name`, `from-photo`, `from-url`, 
+	$r = q("INSERT INTO `mail` ( `uid`, `guid`, `convid`, `from-name`, `from-photo`, `from-url`, 
 		`contact-id`, `title`, `body`, `seen`, `replied`, `uri`, `parent-uri`, `created`)
-		VALUES ( %d, %d, '%s', '%s', '%s', %d, '%s', '%s', %d, %d, '%s', '%s', '%s' )",
+		VALUES ( %d, '%s', %d, '%s', '%s', '%s', %d, '%s', '%s', %d, %d, '%s', '%s', '%s' )",
 		intval(local_user()),
+		dbesc(get_guid()),
 		intval($convid),
 		dbesc($me[0]['name']),
 		dbesc($me[0]['thumb']),

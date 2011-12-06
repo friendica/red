@@ -11,7 +11,7 @@ require_once('include/cache.php');
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
 define ( 'FRIENDICA_VERSION',      '2.3.1186' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.22'    );
-define ( 'DB_UPDATE_VERSION',      1109      );
+define ( 'DB_UPDATE_VERSION',      1110      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -21,8 +21,9 @@ define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
  *
  * Image storage quality. Lower numbers save space at cost of image detail.
  * For ease of upgrade, please do not change here. Change jpeg quality with 
- * set_config('system','jpeg_quality',n) in .htconfig.php
- * where n is netween 1 and 100, and with very poor results below about 50 
+ * $a->config['system']['jpeg_quality'] = n; 
+ * in .htconfig.php, where n is netween 1 and 100, and with very poor results 
+ * below about 50 
  *
  */
 

@@ -663,7 +663,15 @@ function notifier_run($argv, $argc){
 				case NETWORK_DIASPORA:
 					require_once('include/diaspora.php');
 
-					if(get_config('system','dfrn_only') || (! get_config('system','diaspora_enabled')) || (! $normal_mode))
+					if(get_config('system','dfrn_only') || (! get_config('system','diaspora_enabled')))
+						break;
+
+					if($mail) {
+						diaspora_send_mail($item,$owner,$contact);
+						break;
+					}
+
+					if(! $normal_mode)
 						break;
 
 					// special handling for followup to public post

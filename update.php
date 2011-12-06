@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1109 );
+define( 'UPDATE_VERSION' , 1110 );
 
 /**
  *
@@ -928,3 +928,12 @@ function update_1108() {
 ADD INDEX ( `hidden` ) ");
 
 }
+
+function update_1109() {
+	q("ALTER TABLE `conv` ADD `creator` CHAR( 255 ) NOT NULL ,
+		ADD `created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+		ADD `updated` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+		ADD `subject` MEDIUMTEXT NOT NULL,
+		ADD INDEX ( `created` ), ADD INDEX ( `updated` ) ");
+}
+
