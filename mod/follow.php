@@ -67,6 +67,8 @@ function follow_post(&$a) {
 	}
 
 	$writeable = ((($ret['network'] === NETWORK_OSTATUS) && ($ret['notify'])) ? 1 : 0);
+	$hidden = (($ret['network'] === NETWORK_MAIL) ? 1 : 0);
+
 	if($ret['network'] === NETWORK_MAIL) {
 		$writeable = 1;
 		
@@ -101,8 +103,8 @@ function follow_post(&$a) {
 
 		// create contact record 
 		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `nurl`, `addr`, `alias`, `batch`, `notify`, `poll`, `poco`, `name`, `nick`, `photo`, `network`, `pubkey`, `rel`, `priority`,
-			`writable`, `blocked`, `readonly`, `pending` )
-			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, 0, 0, 0 ) ",
+			`writable`, `hidden`, `blocked`, `readonly`, `pending` )
+			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, 0, 0, 0 ) ",
 			intval(local_user()),
 			dbesc(datetime_convert()),
 			dbesc($ret['url']),
@@ -120,7 +122,8 @@ function follow_post(&$a) {
 			dbesc($ret['pubkey']),
 			intval($new_relation),
 			intval($ret['priority']),
-			intval($writeable)
+			intval($writeable),
+			intval($hidden)
 		);
 	}
 

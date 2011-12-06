@@ -27,8 +27,26 @@ function send_message($recipient=0, $body='', $subject='', $replyto=''){
 	$hash = random_string();
  	$uri = 'urn:X-dfrn:' . $a->get_baseurl() . ':' . local_user() . ':' . $hash ;
 
-	if(! strlen($replyto)) {
+	$convid = 0;
+
+	// look for any existing conversation structure
+
+	if(strlen($replyto)) {
+		$r = q("select convid from mail where uid = %d and uri = '%s' limit 1",
+			intval(local_user()),
+			dbesc($replyto)
+		);
+		if(count($r))
+			$convid = $r[0]['convid'];
+	}		
+
+	if(! strlen($replyto))
 		$replyto = $uri;
+
+
+	if(! $convid) {
+
+		// create a new conversation
 
 		$conv_guid = get_guid();
 
@@ -52,14 +70,6 @@ function send_message($recipient=0, $body='', $subject='', $replyto=''){
 		if(count($r))
 			$convid = $r[0]['id'];
 	}
-	else {
-		$r = q("select convid from mail where uid = %d and uri = '%s' limit 1",
-			intval(local_user()),
-			dbesc($replyto)
-		);
-		if(count($r))
-			$convid = $r[0]['convid'];
-	}		
 
 	if(! $convid) {
 		logger('send message: conversation not found.');
