@@ -9,7 +9,7 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1186' );
+define ( 'FRIENDICA_VERSION',      '2.3.1187' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.22'    );
 define ( 'DB_UPDATE_VERSION',      1110      );
 
@@ -310,6 +310,11 @@ class App {
 
 		if(substr($this->cmd,0,1) === '~')
 			$this->cmd = 'profile/' . substr($this->cmd,1);
+
+		// Diaspora style profile url
+
+		if(substr($this->cmd,0,2) === 'u/')
+			$this->cmd = 'profile/' . substr($this->cmd,2);
 
 		/**
 		 *

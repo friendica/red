@@ -297,9 +297,11 @@ function notifications_content(&$a) {
 		$myurl = $a->get_baseurl() . '/profile/'. $a->user['nickname'];
 		$myurl = substr($myurl,strpos($myurl,'://')+3);
 		$myurl = str_replace(array('www.','.'),array('','\\.'),$myurl);
-		$sql_extra .= sprintf(" AND ( `item`.`author-link` regexp '%s' or `item`.`tag` regexp '%s' ) ",
+		$diasp_url = str_replace('/profile/','/u/',$myurl);
+		$sql_extra .= sprintf(" AND ( `item`.`author-link` regexp '%s' or `item`.`tag` regexp '%s' or `item`.`tag` regexp '%s' ) ",
 			dbesc($myurl . '$'),
-			dbesc($myurl . '\\]')
+			dbesc($myurl . '\\]'),
+			dbesc($diasp_url . '\\]')
 		);
 
 

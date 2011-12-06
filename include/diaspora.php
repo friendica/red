@@ -621,7 +621,16 @@ function diaspora_post($importer,$xml) {
 			}
 		}
 	}
-	
+
+	$cnt = preg_match_all('/@\[url=(.*?)\[\/url\]/ism',$body,$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			if(strlen($str_tags))
+				$str_tags .= ',';
+			$str_tags .= '@[url=' . $mtch[1] . '[/url]';	
+		}
+	}
+
 	$datarray['uid'] = $importer['uid'];
 	$datarray['contact-id'] = $contact['id'];
 	$datarray['wall'] = 0;
