@@ -78,6 +78,7 @@ function contacts_post(&$a) {
 		}
 	}
 
+	$hidden = intval($_POST['hidden']);
 
 	$priority = intval($_POST['poll']);
 	if($priority > 5 || $priority < 0)
@@ -85,11 +86,12 @@ function contacts_post(&$a) {
 
 	$info = escape_tags(trim($_POST['info']));
 
-	$r = q("UPDATE `contact` SET `profile-id` = %d, `priority` = %d , `info` = '%s'
-		WHERE `id` = %d AND `uid` = %d LIMIT 1",
+	$r = q("UPDATE `contact` SET `profile-id` = %d, `priority` = %d , `info` = '%s',
+		`hidden` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		intval($profile_id),
 		intval($priority),
 		dbesc($info),
+		intval($hidden),
 		intval($contact_id),
 		intval(local_user())
 	);
@@ -334,6 +336,7 @@ function contacts_content(&$a) {
 			'$info' => $contact['info'],
 			'$blocked' => (($contact['blocked']) ? t('Currently blocked') : ''),
 			'$ignored' => (($contact['readonly']) ? t('Currently ignored') : ''),
+			'$hidden' => array('hidden', t('Hide this contact from others'), ($contact['hidden'] == 1), t('Replies/likes to your public posts <strong>may</strong> still be visible')),
 			'$photo' => $contact['photo'],
 			'$name' => $contact['name'],
 			'$dir_icon' => $dir_icon,
