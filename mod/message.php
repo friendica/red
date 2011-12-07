@@ -217,11 +217,19 @@ function message_content(&$a) {
 		);
 		if(count($r)) { 
 			$contact_id = $r[0]['contact-id'];
+			$convid = $r[0]['convid'];
+
+			$sql_extra = sprintf(" and `mail`.`parent-uri` = '%s' ", dbesc($r[0]['parent-uri']));
+			if($convid)
+				$sql_extra = sprintf(" and ( `mail`.`parent-uri` = '%s' OR `mail`.`convid` = '%d' ) ",
+					dbesc($r[0]['parent-uri']),
+					intval($convid)
+				);  
+
 			$messages = q("SELECT `mail`.*, `contact`.`name`, `contact`.`url`, `contact`.`thumb` 
 				FROM `mail` LEFT JOIN `contact` ON `mail`.`contact-id` = `contact`.`id` 
-				WHERE `mail`.`uid` = %d AND `mail`.`parent-uri` = '%s' ORDER BY `mail`.`created` ASC",
-				intval(local_user()),
-				dbesc($r[0]['parent-uri'])
+				WHERE `mail`.`uid` = %d $sql_extra ORDER BY `mail`.`created` ASC",
+				intval(local_user())
 			);
 		}
 		if(! count($messages)) {

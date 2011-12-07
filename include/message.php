@@ -5,6 +5,7 @@
 
 
 function send_message($recipient=0, $body='', $subject='', $replyto=''){ 
+
 	$a = get_app();
 
 	if(! $recipient) return -1;
@@ -28,21 +29,20 @@ function send_message($recipient=0, $body='', $subject='', $replyto=''){
  	$uri = 'urn:X-dfrn:' . $a->get_baseurl() . ':' . local_user() . ':' . $hash ;
 
 	$convid = 0;
+	$reply = false;
 
 	// look for any existing conversation structure
 
 	if(strlen($replyto)) {
-		$r = q("select convid from mail where uid = %d and uri = '%s' limit 1",
+		$reply = true;
+		$r = q("select convid from mail where uid = %d and ( uri = '%s' or `parent-uri` = '%s' ) limit 1",
 			intval(local_user()),
+			dbesc($replyto),
 			dbesc($replyto)
 		);
 		if(count($r))
 			$convid = $r[0]['convid'];
 	}		
-
-	if(! strlen($replyto))
-		$replyto = $uri;
-
 
 	if(! $convid) {
 
@@ -81,9 +81,14 @@ function send_message($recipient=0, $body='', $subject='', $replyto=''){
 		return -4;
 	}
 
+	if(! strlen($replyto)) {
+		$replyto = $uri;
+	}
+
+
 	$r = q("INSERT INTO `mail` ( `uid`, `guid`, `convid`, `from-name`, `from-photo`, `from-url`, 
-		`contact-id`, `title`, `body`, `seen`, `replied`, `uri`, `parent-uri`, `created`)
-		VALUES ( %d, '%s', %d, '%s', '%s', '%s', %d, '%s', '%s', %d, %d, '%s', '%s', '%s' )",
+		`contact-id`, `title`, `body`, `seen`, `reply`, `replied`, `uri`, `parent-uri`, `created`)
+		VALUES ( %d, '%s', %d, '%s', '%s', '%s', %d, '%s', '%s', %d, %d, %d, '%s', '%s', '%s' )",
 		intval(local_user()),
 		dbesc(get_guid()),
 		intval($convid),
@@ -94,11 +99,14 @@ function send_message($recipient=0, $body='', $subject='', $replyto=''){
 		dbesc($subject),
 		dbesc($body),
 		1,
+		intval($reply),
 		0,
 		dbesc($uri),
 		dbesc($replyto),
 		datetime_convert()
 	);
+
+
 	$r = q("SELECT * FROM `mail` WHERE `uri` = '%s' and `uid` = %d LIMIT 1",
 		dbesc($uri),
 		intval(local_user())

@@ -279,11 +279,19 @@ CREATE TABLE IF NOT EXISTS `mail` (
   `title` char(255) NOT NULL,
   `body` mediumtext NOT NULL,
   `seen` tinyint(1) NOT NULL,
+  `reply` tinyint(1) NOT NULL DEFAULT '0',
   `replied` tinyint(1) NOT NULL,
   `uri` char(255) NOT NULL,
   `parent-uri` char(255) NOT NULL,
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `uid` (`uid`),
+  KEY `guid` (`guid`),
+  KEY `convid` (`convid`),
+  KEY `reply` (`reply`),
+  KEY `uri` (`uri`),
+  KEY `parent-uri` (`parent-uri`),
+  KEY `created` (`created`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

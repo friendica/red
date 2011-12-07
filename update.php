@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1110 );
+define( 'UPDATE_VERSION' , 1111 );
 
 /**
  *
@@ -935,5 +935,12 @@ function update_1109() {
 		ADD `updated` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 		ADD `subject` MEDIUMTEXT NOT NULL,
 		ADD INDEX ( `created` ), ADD INDEX ( `updated` ) ");
+}
+
+function update_1110() {
+	q("ALTER TABLE `mail` ADD `reply` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `seen`,
+		ADD INDEX ( `reply` ), ADD INDEX ( `uid` ), ADD INDEX ( `guid` ), ADD INDEX ( `seen` ),
+		ADD INDEX ( `uri` ), ADD INDEX ( `parent-uri`), ADD INDEX ( `created` ), ADD INDEX ( `convid` ) ");
+
 }
 
