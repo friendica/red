@@ -39,7 +39,7 @@ function photos_init(&$a) {
 			$o .= '</div>';
 			
 			$o .= '<div id="side-bar-photos-albums" class="widget">';
-			$o .= '<h3>' . '<a href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '">' . t('Photo Albums') . '</a></h4>';
+			$o .= '<h3>' . '<a href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '">' . t('Photo Albums') . '</a></h3>';
 					
 			$o .= '<ul>';
 			foreach($albums as $album) {
@@ -49,9 +49,11 @@ function photos_init(&$a) {
 
 				if((! strlen($album['album'])) || ($album['album'] === 'Contact Photos') || ($album['album'] === t('Contact Photos')))
 					continue;
-				$o .= '<li>' . '<a href="photos/' . $a->argv[1] . '/album/' . bin2hex($album['album']) . '" />' . $album['album'] . '</a></li>'; 
+				$o .= '<li>' . '<a href="photos/' . $a->argv[1] . '/album/' . bin2hex($album['album']) . '" >' . $album['album'] . '</a></li>'; 
 			}
 			$o .= '</ul>';
+
+			$o .= '</div>';
 		}
 
 		if(! x($a->page,'aside'))
