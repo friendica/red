@@ -364,8 +364,8 @@ function network_content(&$a, $update = 0) {
 	if(x($_GET,'search')) {
 		$search = escape_tags($_GET['search']);
 		$sql_extra .= sprintf(" AND ( `item`.`body` REGEXP '%s' OR `item`.`tag` REGEXP '%s' ) ",
-			dbesc($search),
-			dbesc('\\]' . $search . '\\[')
+			dbesc(preg_quote($search)),
+			dbesc('\\]' . preg_quote($search) . '\\[')
 		);
 	}
 

@@ -96,17 +96,10 @@ function search_content(&$a) {
 	// Only public wall posts can be shown
 	// OR your own posts if you are a logged in member
 
-	$escaped_search = str_replace(array('[',']'),array('\\[','\\]'),$search);
-
-//	$s_bool  = sprintf("AND MATCH (`item`.`body`) AGAINST ( '%s' IN BOOLEAN MODE )", dbesc($search));
 	$s_regx  = sprintf("AND ( `item`.`body` REGEXP '%s' OR `item`.`tag` REGEXP '%s' )", 
-		dbesc($escaped_search), dbesc('\\]' . $escaped_search . '\\['));
+		dbesc(preg_quote($search)), dbesc('\\]' . preg_quote($search) . '\\['));
 
-//	if(mb_strlen($search) >= 3)
-//		$search_alg = $s_bool;
-//	else
-
-		$search_alg = $s_regx;
+	$search_alg = $s_regx;
 
 	$r = q("SELECT COUNT(*) AS `total`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` LEFT JOIN `user` ON `user`.`uid` = `item`.`uid`
