@@ -9,7 +9,7 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1187' );
+define ( 'FRIENDICA_VERSION',      '2.3.1188' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.22'    );
 define ( 'DB_UPDATE_VERSION',      1111      );
 
