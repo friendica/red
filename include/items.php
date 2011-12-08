@@ -1824,6 +1824,21 @@ function local_delivery($importer,$data) {
 
 		// send email notification if requested.
 
+		$notif_params = array(
+			'type' => NOTIFY_MAIL,
+			'notify_flags' => $importer['notify_flags'],
+			'language' => $importer['language'],
+			'to_name' => $importer['username'],
+			'to_email' => $importer['email'],
+			'title' => $msg['title'],
+			'body' => $msg['body'],
+			'source_name' => $msg['from-name'],
+			'source_link' => $importer['url'],
+			'source_photo' => $importer['thumb'],
+		);
+			
+		//notification($notif_params);
+
 		require_once('bbcode.php');
 		if($importer['notify-flags'] & NOTIFY_MAIL) {
 

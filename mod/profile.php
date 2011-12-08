@@ -7,9 +7,15 @@ function profile_init(&$a) {
 	if($a->argc > 1)
 		$which = $a->argv[1];
 	else {
-		notice( t('No profile') . EOL );
-		$a->error = 404;
-		return;
+		$r = q("select nickname from user where blocked = 0 and account_expired = 0 and verified = 1 order by rand() limit 1");
+		if(count($r)) {
+			$which = $r[0]['nickname'];
+		}
+		else {
+			notice( t('Requested profile is not available.') . EOL );
+			$a->error = 404;
+			return;
+		}
 	}
 
 	$profile = 0;

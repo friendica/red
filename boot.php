@@ -825,7 +825,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 	}
 
 	if(($r === false) || (! count($r))) {
-		notice( t('No profile') . EOL );
+		notice( t('Requested profile is not available.') . EOL );
 		$a->error = 404;
 		return;
 	}

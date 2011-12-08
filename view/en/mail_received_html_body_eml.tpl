@@ -17,7 +17,7 @@
 		<td style="padding-top:22px;"><a href="$url">$from</a></td></tr>
 	<tr><td style="font-weight:bold;padding-bottom:5px;">$title</td></tr>
 	<tr><td style="padding-right:22px;">$htmlversion</td></tr>
-	<tr><td style="padding-top:11px;padding-bottom:11px;" colspan="2">Please login at <a href="$siteurl">$siteurl</a> to read and reply to your private messages.</td></tr>
+	<tr><td style="padding-top:11px;padding-bottom:11px;" colspan="2">Please login at <a href="$siteurl/message">$siteurl/message</a> to read and reply to your private messages.</td></tr>
 	<tr><td></td><td>Thank You,</td></tr>
 	<tr><td></td><td>$siteName Administrator</td></tr>
 	</tbody>
