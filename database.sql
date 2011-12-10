@@ -115,7 +115,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   KEY `dfrn-id` (`dfrn-id`),
   KEY `blocked` (`blocked`),
   KEY `readonly` (`readonly`),
-  KET `hidden` (`hidden`),
+  KEY `hidden` (`hidden`),
   KEY `pending` (`pending`)  
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
