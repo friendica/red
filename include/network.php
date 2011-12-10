@@ -535,6 +535,9 @@ function fetch_xrd_links($url) {
 	if ((! $xml) || (! stristr($xml,'<xrd')))
 		return array();
 
+	// fix diaspora's bad xml
+	$xml = str_replace(array('href=&quot;','&quot;/>'),array('href="','"/>'),$xml);
+
 	$h = parse_xml_string($xml);
 	if(! $h)
 		return array();
