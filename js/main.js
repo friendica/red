@@ -235,7 +235,7 @@
 
 			$('.tread-wrapper',data).each(function() {
 				var ident = $(this).attr('id');
-				if($('#' + ident).length == 0) {
+				if($('#' + ident).length == 0 && profile_page == 1) {
 					$('img',this).each(function() {
 						$(this).attr('src',$(this).attr('dst'));
 					});
