@@ -204,7 +204,7 @@
 				});
 			}) ;
 		}
-		timer = setTimeout(NavUpdate,30000);
+		timer = setTimeout(NavUpdate,updateInterval);
 	}
 
 	function liveUpdate() {

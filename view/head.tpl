@@ -28,6 +28,8 @@
 <script type="text/javascript" src="$baseurl/js/main.js" ></script>
 <script>
 
+	var updateInterval = $update_interval;
+
 	function confirmDelete() { return confirm("$delitem"); }
 	function commentOpen(obj,id) {
 		if(obj.value == '$comment') {

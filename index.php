@@ -93,12 +93,6 @@ if((x($_SESSION,'language')) && ($_SESSION['language'] !== $lang)) {
 	load_translation_table($lang);
 }
 
-/*
- * Create the page head after setting the language
- *
- */
-
-$a->init_pagehead();
 
 /**
  *
@@ -118,6 +112,16 @@ if((x($_SESSION,'authenticated')) || (x($_POST,'auth-params')) || ($a->module ==
 
 if(! x($_SESSION,'authenticated'))
 	header('X-Account-Management-Status: none');
+
+
+/*
+ * Create the page head after setting the language
+ * and getting any auth credentials
+ */
+
+$a->init_pagehead();
+
+
 
 if(! x($_SESSION,'sysmsg'))
 	$_SESSION['sysmsg'] = array();
