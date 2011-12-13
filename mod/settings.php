@@ -626,7 +626,7 @@ function settings_content(&$a) {
 	$suggestme = (($suggestme===false)?0:$suggestme); // default if not set: 0
 
 	$browser_update = intval(get_pconfig(local_user(), 'system','update_interval'));
-	$browser_update = (($browser_update===false)? 40 : $browser_update / 1000); // default if not set: 40 seconds
+	$browser_update = (($browser_update == 0) ? 40 : $browser_update / 1000); // default if not set: 40 seconds
 	
 	if(! strlen($a->user['timezone']))
 		$timezone = date_default_timezone_get();
