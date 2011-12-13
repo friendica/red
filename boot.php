@@ -9,7 +9,7 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1192' );
+define ( 'FRIENDICA_VERSION',      '2.3.1193' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.22'    );
 define ( 'DB_UPDATE_VERSION',      1111      );
 
@@ -422,6 +422,10 @@ class App {
 	} 
 
 	function init_pagehead() {
+		$interval = ((local_user()) ? get_pconfig(local_user(),'system','update_interval') : 40000);
+		if($interval < 10000)
+			$interval = 40000;
+
 		$this->page['title'] = $this->config['sitename'];
 		$tpl = file_get_contents('view/head.tpl');
 		$this->page['htmlhead'] = replace_macros($tpl,array(
@@ -430,7 +434,8 @@ class App {
 			'$delitem' => t('Delete this item?'),
 			'$comment' => t('Comment'),
 			'$showmore' => t('show more'),
-			'$showfewer' => t('show fewer')
+			'$showfewer' => t('show fewer'),
+			'$update_interval' => $interval
 		));
 	}
 

@@ -204,15 +204,21 @@
 				});
 			}) ;
 		}
-		timer = setTimeout(NavUpdate,30000);
+		timer = setTimeout(NavUpdate,updateInterval);
 	}
 
 	function liveUpdate() {
 		if((src == null) || (stopped) || (! profile_uid)) { $('.like-rotator').hide(); return; }
 		if(($('.comment-edit-text-full').length) || (in_progress)) {
+			if(livetime) {
+				clearTimeout(livetime);
+			}
 			livetime = setTimeout(liveUpdate, 10000);
 			return;
 		}
+		if(livetime != null)
+			livetime = null;
+
 		prev = 'live-' + src;
 
 		in_progress = true;
@@ -235,7 +241,7 @@
 
 			$('.tread-wrapper',data).each(function() {
 				var ident = $(this).attr('id');
-				if($('#' + ident).length == 0) {
+				if($('#' + ident).length == 0 && profile_page == 1) {
 					$('img',this).each(function() {
 						$(this).attr('src',$(this).attr('dst'));
 					});

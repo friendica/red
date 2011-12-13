@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 // Nastavte následující pro Vaši instalaci MySQL
 // Zkopírujte nebo přejmenujte tento soubor na .htconfig.php
@@ -70,9 +70,4 @@ $a->config['system']['rino_encrypt'] = true;
 
 $a->config['system']['theme'] = 'duepuntozero';
 
-// Addony or pluginy se nastavují zde.
-// Toto je list čárkou oddělených addonů, které jsou povoleny. Příklad:
-// $a->config['system']['addon'] = 'js_upload,randplace,oembed';
-
-$a->config['system']['addon'] = 'js_upload';
 

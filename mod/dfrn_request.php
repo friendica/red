@@ -252,12 +252,16 @@ function dfrn_request_post(&$a) {
 		 *
 		 * Cleanup old introductions that remain blocked. 
 		 * Also remove the contact record, but only if there is no existing relationship
-		 *
+		 * Do not remove email contacts as these may be awaiting email verification
 		 */
 
 		$r = q("SELECT `intro`.*, `intro`.`id` AS `iid`, `contact`.`id` AS `cid`, `contact`.`rel` 
 			FROM `intro` LEFT JOIN `contact` on `intro`.`contact-id` = `contact`.`id`
-			WHERE `intro`.`blocked` = 1 AND `contact`.`self` = 0 AND `intro`.`datetime` < UTC_TIMESTAMP() - INTERVAL 30 MINUTE ");
+			WHERE `intro`.`blocked` = 1 AND `contact`.`self` = 0 
+			AND `contact`.`network` != '%s'
+			AND `intro`.`datetime` < UTC_TIMESTAMP() - INTERVAL 30 MINUTE ",
+			dbesc(NETWORK_MAIL)
+		);
 		if(count($r)) {
 			foreach($r as $rr) {
 				if(! $rr['rel']) {
@@ -270,6 +274,32 @@ function dfrn_request_post(&$a) {
 				);
 			}
 		}
+
+		/**
+		 *
+		 * Cleanup any old email intros - which will have a greater lifetime
+		 */
+
+		$r = q("SELECT `intro`.*, `intro`.`id` AS `iid`, `contact`.`id` AS `cid`, `contact`.`rel` 
+			FROM `intro` LEFT JOIN `contact` on `intro`.`contact-id` = `contact`.`id`
+			WHERE `intro`.`blocked` = 1 AND `contact`.`self` = 0 
+			AND `contact`.`network` = '%s'
+			AND `intro`.`datetime` < UTC_TIMESTAMP() - INTERVAL 3 DAY ",
+			dbesc(NETWORK_MAIL)
+		);
+		if(count($r)) {
+			foreach($r as $rr) {
+				if(! $rr['rel']) {
+					q("DELETE FROM `contact` WHERE `id` = %d LIMIT 1",
+						intval($rr['cid'])
+					);
+				}
+				q("DELETE FROM `intro` WHERE `id` = %d LIMIT 1",
+					intval($rr['iid'])
+				);
+			}
+		}
+
 
 		$url = trim($_POST['dfrn_url']);
 		if(! strlen($url)) {

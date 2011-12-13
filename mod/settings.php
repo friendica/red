@@ -223,7 +223,12 @@ function settings_post(&$a) {
 	$expire_notes     = ((x($_POST,'expire_notes')) ? intval($_POST['expire_notes'])	 : 0);
 	$expire_starred   = ((x($_POST,'expire_starred')) ? intval($_POST['expire_starred']) : 0);
 	$expire_photos    = ((x($_POST,'expire_photos'))? intval($_POST['expire_photos'])	 : 0);
-	
+
+	$browser_update   = ((x($_POST,'browser_update')) ? intval($_POST['browser_update']) : 0);
+	$browser_update   = $browser_update * 1000;
+	if($browser_update < 10000)
+		$browser_update = 40000;
+
 
 	$allow_location   = (((x($_POST,'allow_location')) && (intval($_POST['allow_location']) == 1)) ? 1: 0);
 	$publish          = (((x($_POST,'profile_in_directory')) && (intval($_POST['profile_in_directory']) == 1)) ? 1: 0);
@@ -313,6 +318,7 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'expire','photos', $expire_photos);
 
 	set_pconfig(local_user(),'system','suggestme', $suggestme);
+	set_pconfig(local_user(),'system','update_interval', $browser_update);
 
 	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `theme` = '%s', `maxreq` = %d, `expire` = %d, `openidserver` = '%s', `blockwall` = %d, `hidewall` = %d, `blocktags` = %d  WHERE `uid` = %d LIMIT 1",
 			dbesc($username),
@@ -618,6 +624,9 @@ function settings_content(&$a) {
 
 	$suggestme = get_pconfig(local_user(), 'system','suggestme');
 	$suggestme = (($suggestme===false)?0:$suggestme); // default if not set: 0
+
+	$browser_update = intval(get_pconfig(local_user(), 'system','update_interval'));
+	$browser_update = (($browser_update == 0) ? 40 : $browser_update / 1000); // default if not set: 40 seconds
 	
 	if(! strlen($a->user['timezone']))
 		$timezone = date_default_timezone_get();
@@ -770,8 +779,7 @@ function settings_content(&$a) {
 		'$defloc'	=> array('defloc', t('Default Post Location:'), $defloc, ''),
 		'$allowloc' => array('allow_location', t('Use Browser Location:'), ($a->user['allow_location'] == 1), ''),
 		'$theme'	=> array('theme', t('Display Theme:'), $theme_selected, '', $themes),
-
-
+		'$ajaxint'   => array('browser_update',  t("Update browser every xx seconds"), $browser_update, t('Minimum of 10 seconds, no maximum')),
 
 		'$h_prv' 	=> t('Security and Privacy Settings'),
 

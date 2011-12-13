@@ -266,16 +266,6 @@ function network_content(&$a, $update = 0) {
 
 	}
 
-	// We aren't going to try and figure out at the item, group, and page
-	// level which items you've seen and which you haven't. If you're looking
-	// at the top level network page just mark everything seen. 
-	
-	if((! $group) && (! $cid) && (! $star)) {
-		$r = q("UPDATE `item` SET `unseen` = 0 
-			WHERE `unseen` = 1 AND `uid` = %d",
-			intval($_SESSION['uid'])
-		);
-	}
 
 	// We don't have to deal with ACL's on this page. You're looking at everything
 	// that belongs to you, hence you can see all of it. We will filter by group if
@@ -382,21 +372,30 @@ function network_content(&$a, $update = 0) {
 	}
 
 
+	if($update) {
 
-	$r = q("SELECT COUNT(*) AS `total`
-		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-		$sql_extra2
-		$sql_extra ",
-		intval($_SESSION['uid'])
-	);
+		// only setup pagination on initial page view
+		$pager_sql = '';
 
-	if(count($r)) {
-		$a->set_pager_total($r[0]['total']);
-		$a->set_pager_itemspage(40);
+	}
+	else {
+		$r = q("SELECT COUNT(*) AS `total`
+			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
+			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+			$sql_extra2
+			$sql_extra ",
+			intval($_SESSION['uid'])
+		);
+
+		if(count($r)) {
+			$a->set_pager_total($r[0]['total']);
+			$a->set_pager_itemspage(40);
+		}
+		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
 	}
 
+	$simple_update = (($update) ? " and `item`.`unseen` = 1 " : '');
 
 	if($nouveau) {
 
@@ -408,13 +407,12 @@ function network_content(&$a, $update = 0) {
 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 			FROM `item`, `contact`
 			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+			$simple_update
 			AND `contact`.`id` = `item`.`contact-id`
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 			$sql_extra
-			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
-			intval($_SESSION['uid']),
-			intval($a->pager['start']),
-			intval($a->pager['itemspage'])
+			ORDER BY `item`.`received` DESC $pager_sql ",
+			intval($_SESSION['uid'])
 		);
 		
 	}
@@ -430,17 +428,27 @@ function network_content(&$a, $update = 0) {
 
 		// Fetch a page full of parent items for this page
 
-		$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact_uid`
-			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-			AND `item`.`parent` = `item`.`id`
-			$sql_extra
-			ORDER BY `item`.$ordering DESC LIMIT %d ,%d ",
-			intval(local_user()),
-			intval($a->pager['start']),
-			intval($a->pager['itemspage'])
-		);
+		if($update) {
+			$r = q("SELECT distinct(`parent`) AS `item_id`, `contact`.`uid` AS `contact_uid`
+				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
+				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+				and `item`.`parent` in ( select parent from item where unseen = 1 )
+				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+				$sql_extra ",
+				intval(local_user())
+			);
+		}
+		else {
+			$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact_uid`
+				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
+				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+				AND `item`.`parent` = `item`.`id`
+				$sql_extra
+				ORDER BY `item`.$ordering DESC $pager_sql ",
+				intval(local_user())
+			);
+		}
 
 		// Then fetch all the children of the parents that are on this page
 
@@ -452,7 +460,7 @@ function network_content(&$a, $update = 0) {
 				$parents_arr[] = $rr['item_id'];
 			$parents_str = implode(', ', $parents_arr);
 
-			$r = q("SELECT `item`.*, `item`.`id` AS `item_id`,
+			$items = q("SELECT `item`.*, `item`.`id` AS `item_id`,
 				`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`, `contact`.`writable`,
 				`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
 				`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
@@ -469,12 +477,24 @@ function network_content(&$a, $update = 0) {
 		}	
 	}
 
+
+	// We aren't going to try and figure out at the item, group, and page
+	// level which items you've seen and which you haven't. If you're looking
+	// at the top level network page just mark everything seen. 
+	
+	if((! $group) && (! $cid) && (! $star)) {
+		$r = q("UPDATE `item` SET `unseen` = 0 
+			WHERE `unseen` = 1 AND `uid` = %d",
+			intval(local_user())
+		);
+	}
+
 	// Set this so that the conversation function can find out contact info for our wall-wall items
 	$a->page_contact = $a->contact;
 
 	$mode = (($nouveau) ? 'network-new' : 'network');
 
-	$o .= conversation($a,$r,$mode,$update);
+	$o .= conversation($a,$items,$mode,$update);
 
 	if(! $update) {
 		$o .= paginate($a);

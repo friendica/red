@@ -154,12 +154,6 @@ function profile_content(&$a, $update = 0) {
 
 	}
 
-	if($is_owner) {
-		$r = q("UPDATE `item` SET `unseen` = 0 
-			WHERE `wall` = 1 AND `unseen` = 1 AND `uid` = %d",
-			intval(local_user())
-		);
-	}
 
 	/**
 	 * Get permissions SQL - if $remote_contact is true, our remote user has been pre-verified and we already have fetched his/her groups
@@ -168,33 +162,49 @@ function profile_content(&$a, $update = 0) {
 	$sql_extra = permissions_sql($a->profile['profile_uid'],$remote_contact,$groups);
 
 
-	$r = q("SELECT COUNT(*) AS `total`
-		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
-		AND `item`.`id` = `item`.`parent` AND `item`.`wall` = 1
-		$sql_extra ",
-		intval($a->profile['profile_uid'])
+	if($update) {
 
-	);
+		$r = q("SELECT distinct(parent) AS `item_id`, `contact`.`uid` AS `contact-uid`
+			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
+			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+			and `item`.`parent` in (select parent from item where unseen = 1 )
+			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+			AND `item`.`wall` = 1
+			$sql_extra
+			ORDER BY `item`.`created` DESC",
+			intval($a->profile['profile_uid'])
+		);
 
-	if(count($r)) {
-		$a->set_pager_total($r[0]['total']);
-		$a->set_pager_itemspage(40);
 	}
+	else {
 
-	$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact-uid`
-		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-		AND `item`.`id` = `item`.`parent` AND `item`.`wall` = 1
-		$sql_extra
-		ORDER BY `item`.`created` DESC LIMIT %d ,%d ",
-		intval($a->profile['profile_uid']),
-		intval($a->pager['start']),
-		intval($a->pager['itemspage'])
+		$r = q("SELECT COUNT(*) AS `total`
+			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
+			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
+			AND `item`.`id` = `item`.`parent` AND `item`.`wall` = 1
+			$sql_extra ",
+			intval($a->profile['profile_uid'])
+		);
 
-	);
+		if(count($r)) {
+			$a->set_pager_total($r[0]['total']);
+			$a->set_pager_itemspage(40);
+		}
+
+		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
+
+		$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact-uid`
+			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
+			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+			AND `item`.`id` = `item`.`parent` AND `item`.`wall` = 1
+			$sql_extra
+			ORDER BY `item`.`created` DESC $pager_sql ",
+			intval($a->profile['profile_uid'])
+
+		);
+	}
 
 	$parents_arr = array();
 	$parents_str = '';
@@ -204,7 +214,7 @@ function profile_content(&$a, $update = 0) {
 			$parents_arr[] = $rr['item_id'];
 		$parents_str = implode(', ', $parents_arr);
  
-		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
+		$items = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`network`, `contact`.`rel`, 
 			`contact`.`thumb`, `contact`.`self`, `contact`.`writable`, 
 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
@@ -232,10 +242,18 @@ function profile_content(&$a, $update = 0) {
 
 		$o .= '<div id="live-profile"></div>' . "\r\n";
 		$o .= "<script> var profile_uid = " . $a->profile['profile_uid'] 
-			. "; var netargs = '/?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
+			. "; var netargs = '?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 	}
 
-	$o .= conversation($a,$r,'profile',$update);
+
+	if($is_owner) {
+		$r = q("UPDATE `item` SET `unseen` = 0 
+			WHERE `wall` = 1 AND `unseen` = 1 AND `uid` = %d",
+			intval(local_user())
+		);
+	}
+
+	$o .= conversation($a,$items,'profile',$update);
 
 	if(! $update) {
 		$o .= paginate($a);
