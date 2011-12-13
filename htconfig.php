@@ -69,14 +69,3 @@ $a->config['system']['rino_encrypt'] = true;
 $a->config['system']['theme'] = 'duepuntozero';
 
 
-// Addons or plugins are configured here.
-// This is a comma seperated list of addons to enable. Example:
-// $a->config['system']['addon'] = 'js_upload,randplace,oembed';
-
-$a->config['system']['addon'] = 'js_upload';
-
-
-// Disable oembed embedding
-// This disable the conversion of [embed]$url[/embed] tag in html
-// $a->config['system']['no_oembed'] = true;
-
