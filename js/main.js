@@ -210,9 +210,15 @@
 	function liveUpdate() {
 		if((src == null) || (stopped) || (! profile_uid)) { $('.like-rotator').hide(); return; }
 		if(($('.comment-edit-text-full').length) || (in_progress)) {
+			if(livetime) {
+				clearTimeout(livetime);
+			}
 			livetime = setTimeout(liveUpdate, 10000);
 			return;
 		}
+		if(livetime != null)
+			livetime = null;
+
 		prev = 'live-' + src;
 
 		in_progress = true;
