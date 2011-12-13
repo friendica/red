@@ -376,7 +376,6 @@ function network_content(&$a, $update = 0) {
 
 		// only setup pagination on initial page view
 		$pager_sql = '';
-		$update_sql = " AND unseen = 1 ";
 
 	}
 	else {
@@ -393,10 +392,10 @@ function network_content(&$a, $update = 0) {
 			$a->set_pager_total($r[0]['total']);
 			$a->set_pager_itemspage(40);
 		}
-
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
-		$update_sql = '';
 	}
+
+	$simple_update = (($update) ? " and `item`.`unseen` = 1 " : '');
 
 	if($nouveau) {
 
@@ -408,7 +407,7 @@ function network_content(&$a, $update = 0) {
 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 			FROM `item`, `contact`
 			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-			$update_sql
+			$simple_update
 			AND `contact`.`id` = `item`.`contact-id`
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 			$sql_extra
@@ -429,16 +428,27 @@ function network_content(&$a, $update = 0) {
 
 		// Fetch a page full of parent items for this page
 
-		$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact_uid`
-			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-			$update_sql
-			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-			AND `item`.`parent` = `item`.`id`
-			$sql_extra
-			ORDER BY `item`.$ordering DESC $pager_sql ",
-			intval(local_user())
-		);
+		if($update) {
+			$r = q("SELECT distinct(`parent`) AS `item_id`, `contact`.`uid` AS `contact_uid`
+				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
+				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+				and `item`.`parent` in ( select parent from item where unseen = 1 )
+				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+				$sql_extra ",
+				intval(local_user())
+			);
+		}
+		else {
+			$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact_uid`
+				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
+				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+				AND `item`.`parent` = `item`.`id`
+				$sql_extra
+				ORDER BY `item`.$ordering DESC $pager_sql ",
+				intval(local_user())
+			);
+		}
 
 		// Then fetch all the children of the parents that are on this page
 

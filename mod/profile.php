@@ -158,9 +158,16 @@ function profile_content(&$a, $update = 0) {
 
 	if($update) {
 
-		// only setup pagination on initial page view
-		$pager_sql = '';
-		$update_sql = " AND unseen = 1 ";
+		$r = q("SELECT distinct(parent) AS `item_id`, `contact`.`uid` AS `contact-uid`
+			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
+			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+			and `item`.`parent` in (select parent from item where unseen = 1 )
+			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+			AND `item`.`wall` = 1
+			$sql_extra
+			ORDER BY `item`.`created` DESC",
+			intval($a->profile['profile_uid'])
+		);
 
 	}
 	else {
@@ -180,22 +187,18 @@ function profile_content(&$a, $update = 0) {
 		}
 
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
-		$update_sql = '';
 
+		$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact-uid`
+			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
+			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+			AND `item`.`id` = `item`.`parent` AND `item`.`wall` = 1
+			$sql_extra
+			ORDER BY `item`.`created` DESC $pager_sql ",
+			intval($a->profile['profile_uid'])
+
+		);
 	}
-
-
-	$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact-uid`
-		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-		$update_sql
-		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-		AND `item`.`id` = `item`.`parent` AND `item`.`wall` = 1
-		$sql_extra
-		ORDER BY `item`.`created` DESC $pager_sql ",
-		intval($a->profile['profile_uid'])
-
-	);
 
 	$parents_arr = array();
 	$parents_str = '';
