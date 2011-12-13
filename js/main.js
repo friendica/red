@@ -256,7 +256,8 @@
 
 			$('.wall-item-outside-wrapper',data).each(function() {
 				var ident = $(this).attr('id');
-				if($('#' + ident).length == 0) {
+				// If not on page 1, only add new conversation items to existing conversations on this page
+				if($('#' + ident).length == 0 && (profile_page == 1 || prev != 'live-' + src)) {
 					$('img',this).each(function() {
 						$(this).attr('src',$(this).attr('dst'));
 					});
