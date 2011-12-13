@@ -227,7 +227,7 @@ function settings_post(&$a) {
 	$browser_update   = ((x($_POST,'browser_update')) ? intval($_POST['browser_update']) : 0);
 	$browser_update   = $browser_update * 1000;
 	if($browser_update < 10000)
-		$browser_update = 30000;
+		$browser_update = 40000;
 
 
 	$allow_location   = (((x($_POST,'allow_location')) && (intval($_POST['allow_location']) == 1)) ? 1: 0);
@@ -625,8 +625,8 @@ function settings_content(&$a) {
 	$suggestme = get_pconfig(local_user(), 'system','suggestme');
 	$suggestme = (($suggestme===false)?0:$suggestme); // default if not set: 0
 
-	$browser_update = get_pconfig(local_user(), 'system','update_interval');
-	$browser_update = (($browser_update===false)? 30 : $browser_update / 1000); // default if not set: 30 seconds
+	$browser_update = intval(get_pconfig(local_user(), 'system','update_interval'));
+	$browser_update = (($browser_update===false)? 40 : $browser_update / 1000); // default if not set: 40 seconds
 	
 	if(! strlen($a->user['timezone']))
 		$timezone = date_default_timezone_get();

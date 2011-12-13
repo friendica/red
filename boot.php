@@ -422,9 +422,9 @@ class App {
 	} 
 
 	function init_pagehead() {
-		$interval = ((local_user()) ? get_pconfig(local_user(),'system','update_interval') : 30000);
+		$interval = ((local_user()) ? get_pconfig(local_user(),'system','update_interval') : 40000);
 		if($interval < 10000)
-			$interval = 30000;
+			$interval = 40000;
 
 		$this->page['title'] = $this->config['sitename'];
 		$tpl = file_get_contents('view/head.tpl');
