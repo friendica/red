@@ -254,16 +254,14 @@
 
 			prev = 'live-' + src;
 
-			$('.wall-item-outside-wrapper',data).each(function() {
+			$('.wall-item-outside-wrapper.comment',data).each(function() {
 				var ident = $(this).attr('id');
-				// If not on page 1, only add new conversation items to existing conversations on this page
+
 				if($('#' + ident).length == 0) {
-					if(profile_page == 1 || prev != 'live-' + src) {
 						$('img',this).each(function() {
 							$(this).attr('src',$(this).attr('dst'));
 						});
 						$('#' + prev).after($(this));
-					}
 				}
 				else { 
 					$('#' + ident + ' ' + '.wall-item-ago').replaceWith($(this).find('.wall-item-ago')); 
