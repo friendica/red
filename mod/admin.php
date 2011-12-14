@@ -1,7 +1,7 @@
 <?php
 
  /**
-  * Friendika admin
+  * Friendica admin
   */
 require_once("include/remoteupdate.php");
  
@@ -277,7 +277,7 @@ function admin_page_site(&$a) {
 	/* Banner */
 	$banner = get_config('system','banner');
 	if($banner == false) 
-		$banner = '<a href="http://project.friendika.com"><img id="logo-img" src="images/friendika-32.png" alt="logo" /></a><span id="logo-text"><a href="http://project.friendika.com">Friendika</a></span>';
+		$banner = '<a href="http://friendica.com"><img id="logo-img" src="images/friendica-32.png" alt="logo" /></a><span id="logo-text"><a href="http://friendica.com">Friendica</a></span>';
 	$banner = htmlspecialchars($banner);
 	
 	//echo "<pre>"; var_dump($lang_choices); die("</pre>");
@@ -325,7 +325,7 @@ function admin_page_site(&$a) {
 		'$no_community_page' => array('no_community_page', t("Show Community Page"), !get_config('system','no_community_page'), "Display a Community page showing all recent public postings on this site."),
 		'$ostatus_disabled' => array('ostatus_disabled', t("Enable OStatus support"), !get_config('system','ostatus_disable'), "Provide built-in OStatus \x28identi.ca, status.net, etc.\x29 compatibility. All communications in OStatus are public, so privacy warnings will be occasionally displayed."),	
 		'$diaspora_enabled' => array('diaspora_enabled', t("Enable Diaspora support"), get_config('system','diaspora_enabled'), "Provide built-in Diaspora network compatibility."),	
-		'$dfrn_only'        => array('dfrn_only', t('Only allow Friendika contacts'), get_config('system','dfrn_only'), "All contacts must use Friendika protocols. All other built-in communication protocols disabled."),
+		'$dfrn_only'        => array('dfrn_only', t('Only allow Friendica contacts'), get_config('system','dfrn_only'), "All contacts must use Friendica protocols. All other built-in communication protocols disabled."),
 		'$verifyssl' 		=> array('verifyssl', t("Verify SSL"), get_config('system','verifyssl'), "If you wish, you can turn on strict certificate checking. This will mean you cannot connect (at all) to self-signed SSL sites."),
 		'$proxyuser'		=> array('proxyuser', t("Proxy user"), get_config('system','proxyuser'), ""),
 		'$proxy'			=> array('proxy', t("Proxy URL"), get_config('system','proxy'), ""),
@@ -657,7 +657,7 @@ function admin_page_logs(&$a){
 		
 									// name, label, value, help string, extra data...
 		'$debugging' 		=> array('debugging', t("Debugging"),get_config('system','debugging'), ""),
-		'$logfile'			=> array('logfile', t("Log file"), get_config('system','logfile'), t("Must be writable by web server. Relative to your Friendika index.php.")),
+		'$logfile'			=> array('logfile', t("Log file"), get_config('system','logfile'), t("Must be writable by web server. Relative to your Friendica top-level directory.")),
 		'$loglevel' 		=> array('loglevel', t("Log level"), get_config('system','loglevel'), "", $log_choices),
 	));
 }
