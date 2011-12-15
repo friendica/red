@@ -241,18 +241,25 @@
 
 			$('.tread-wrapper',data).each(function() {
 				var ident = $(this).attr('id');
+
 				if($('#' + ident).length == 0 && profile_page == 1) {
 					$('img',this).each(function() {
 						$(this).attr('src',$(this).attr('dst'));
 					});
 					$('#' + prev).after($(this));
 				}
+				else {
+					$('img',this).each(function() {
+						$(this).attr('src',$(this).attr('dst'));
+					});
+					$('#' + ident).replaceWith($(this));
+				}
 				prev = ident;
 			});
 
 			// reset vars for inserting individual items
 
-			prev = 'live-' + src;
+			/*			prev = 'live-' + src;
 
 			$('.wall-item-outside-wrapper',data).each(function() {
 				var ident = $(this).attr('id');
@@ -276,7 +283,7 @@
 				}
 				prev = ident; 
 			});
-
+			*/
 			$('.like-rotator').hide();
 			if(commentBusy) {
 				commentBusy = false;
