@@ -254,10 +254,10 @@
 
 			prev = 'live-' + src;
 
-			$('.wall-item-outside-wrapper.comment',data).each(function() {
+			$('.wall-item-outside-wrapper',data).each(function() {
 				var ident = $(this).attr('id');
 
-				if($('#' + ident).length == 0) {
+				if($('#' + ident).length == 0 && prev != 'live-' + src) {
 						$('img',this).each(function() {
 							$(this).attr('src',$(this).attr('dst'));
 						});
