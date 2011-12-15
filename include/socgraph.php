@@ -42,7 +42,8 @@ function poco_load($cid,$uid = 0,$url = null) {
 
 	logger('poco_load: ' . $url, LOGGER_DATA);
 
-	$s = fetch_url($url . '/@me/@all?fields=displayName,urls,photos');
+
+	$s = fetch_url($url . ($uid) ? '/@me/@all?fields=displayName,urls,photos' : '?fields=displayName,urls,photos' );
 
 	if(($a->get_curl_code() > 299) || (! $s))
 		return;
