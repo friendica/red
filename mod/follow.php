@@ -10,7 +10,7 @@ function follow_post(&$a) {
 		// NOTREACHED
 	}
 
-	$url = $orig_url = notags(trim($_POST['url']));
+	$url = $orig_url = notags(trim($_REQUEST['url']));
 
 	// remove ajax junk, e.g. Twitter
 

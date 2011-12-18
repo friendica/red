@@ -9,5 +9,8 @@
 	<div class="profile-match-name">
 		<a href="$url" title="$name">$name</a>
 	</div>
+	{{ if $connlnk }}
+	<div class="profile-match-connect"><a href="$connlnk" title="$conntxt">$conntxt</a></div>
+	{{ endif }}
 	<div class="profile-match-end"></div>
 </div>
