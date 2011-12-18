@@ -54,6 +54,7 @@ function match_content(&$a) {
 					'$url' => $jj->url,
 					'$name' => $jj->name,
 					'$photo' => $jj->photo,
+					'$inttxt' => ' ' . t('is interested in:'),
 					'$conntxt' => t('Connect'),
 					'$connlnk' => $connlnk,
 					'$tags' => $jj->tags

@@ -22,6 +22,14 @@ function follow_init(&$a) {
 		// NOTREACHED
 	}
 
+
+	if(! $url) {
+		notice( t('Connect URL missing.') . EOL);
+		goaway($_SESSION['return_url']);
+		// NOTREACHED
+	}
+
+
 	$ret = probe_url($url);
 
 	if($ret['network'] === NETWORK_DFRN) {
