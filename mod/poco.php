@@ -129,6 +129,7 @@ function poco_init(&$a) {
 					$entry['urls'] = array(array('value' => $rr['url'], 'type' => 'profile'));
 					if($rr['addr'] && ($rr['network'] !== NETWORK_MAIL))
 						$entry['urls'][] = array('value' => 'acct:' . $rr['addr'], 'type' => 'webfinger');  
+				}
 				if($fields_ret['preferredUsername'])
 					$entry['preferredUsername'] = $rr['nick'];
 				if($fields_ret['photos'])
