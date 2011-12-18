@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1111 );
+define( 'UPDATE_VERSION' , 1112 );
 
 /**
  *
@@ -942,5 +942,9 @@ function update_1110() {
 		ADD INDEX ( `reply` ), ADD INDEX ( `uid` ), ADD INDEX ( `guid` ), ADD INDEX ( `seen` ),
 		ADD INDEX ( `uri` ), ADD INDEX ( `parent-uri`), ADD INDEX ( `created` ), ADD INDEX ( `convid` ) ");
 
+}
+
+function update_1111() {
+	q("ALTER TABLE `gcontact` ADD `connect` CHAR( 255 ) NOT NULL ");
 }
 

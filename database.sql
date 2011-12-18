@@ -694,6 +694,7 @@ CREATE TABLE IF NOT EXISTS `gcontact` (
 `url` CHAR( 255 ) NOT NULL ,
 `nurl` CHAR( 255 ) NOT NULL ,
 `photo` CHAR( 255 ) NOT NULL,
+`connect` CHAR( 255 ) NOT NULL,
 INDEX ( `nurl` )
 ) ENGINE = MyISAM DEFAULT CHARSET=utf8;
 

@@ -52,6 +52,7 @@ function poco_load($cid,$uid = 0,$url = null) {
 
 		$profile_url = '';
 		$profile_photo = '';
+		$connect_url = '';
 		$name = '';
 
 		$name = $entry->displayName;
@@ -59,13 +60,18 @@ function poco_load($cid,$uid = 0,$url = null) {
 		foreach($entry->urls as $url) {
 			if($url->type == 'profile') {
 				$profile_url = $url->value;
-				break;
+				continue;
 			}
+			if($url->type == 'webfinger') {
+				$connect_url = str_replace('acct:' , '', $url->value);
+				continue;
+			}
+
 		} 
 		foreach($entry->photos as $photo) {
 			if($photo->type == 'profile') {
 				$profile_photo = $photo->value;
-				break;
+				continue;
 			}
 		}
 
@@ -80,21 +86,23 @@ function poco_load($cid,$uid = 0,$url = null) {
 			$gcid = $x[0]['id'];
 
 			if($x[0]['name'] != $name || $x[0]['photo'] != $profile_photo) {
-				q("update gcontact set `name` = '%s', `photo` = '%s' where
-					`nurl` = '%s' limit 1",
+				q("update gcontact set `name` = '%s', `photo` = '%s', `connect` = '%s' 
+					where `nurl` = '%s' limit 1",
 					dbesc($name),
 					dbesc($profile_photo),
+					dbesc($connect_url),
 					dbesc(normalise_link($profile_url))
 				);
 			}
 		}
 		else {
-			q("insert into `gcontact` (`name`,`url`,`nurl`,`photo`)
-				values ( '%s', '%s', '%s', '%s') ",
+			q("insert into `gcontact` (`name`,`url`,`nurl`,`photo`,`connect`)
+				values ( '%s', '%s', '%s', '%s','%s') ",
 				dbesc($name),
 				dbesc($profile_url),
 				dbesc(normalise_link($profile_url)),
-				dbesc($profile_photo)
+				dbesc($profile_photo),
+				dbesc($connect_url)
 			);
 			$x = q("select * from `gcontact` where `nurl` = '%s' limit 1",
 				dbesc(normalise_link($profile_url))
