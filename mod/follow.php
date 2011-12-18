@@ -2,7 +2,7 @@
 
 require_once('Scrape.php');
 
-function follow_post(&$a) {
+function follow_init(&$a) {
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
@@ -202,7 +202,9 @@ function follow_post(&$a) {
 		}
 	}
 
-	goaway($a->get_baseurl() . '/contacts/' . $contact_id);
-//	goaway($_SESSION['return_url']);
+	if(strstr($_SESSION['return_url'],'contacts'))
+		goaway($a->get_baseurl() . '/contacts/' . $contact_id);
+
+	goaway($_SESSION['return_url']);
 	// NOTREACHED
 }
