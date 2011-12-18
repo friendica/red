@@ -231,20 +231,22 @@ function suggestion_query($uid, $start = 0, $limit = 40) {
 		intval($limit)
 	);
 
-	if(count($r))
+	if(count($r) && count($r) >= ($limit -1))
 		return $r;
 
-	$r = q("SELECT gcontact.* from gcontact 
+	$r2 = q("SELECT gcontact.* from gcontact 
 		left join glink on glink.gcid = gcontact.id 
-		where uid = 0 and cid = 0 and not gcontact.nurl in ( select nurl from contact where uid = %d)
+		where glink.uid = 0 and glink.cid = 0 and not gcontact.nurl in ( select nurl from contact where uid = %d)
 		and not gcontact.id in ( select gcid from gcign where uid = %d )
-		order by rand limit %d, %d ",
+		order by rand() limit %d, %d ",
+		intval($uid),
 		intval($uid),
 		intval($start),
 		intval($limit)
 	);
 
-	return $r;
+
+	return array_merge($r,$r2);
 
 }
 
