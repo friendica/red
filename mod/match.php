@@ -7,6 +7,8 @@ function match_content(&$a) {
 	if(! local_user())
 		return;
 
+	$_SESSION['return_url'] = $a->get_baseurl() . '/' . $a->cmd;
+
 	$o .= '<h2>' . t('Profile Match') . '</h2>';
 
 	$r = q("SELECT `pub_keywords`, `prv_keywords` FROM `profile` WHERE `is-default` = 1 AND `uid` = %d LIMIT 1",
@@ -41,14 +43,19 @@ function match_content(&$a) {
 		}
 
 		if(count($j->results)) {
+
+
 			
 			$tpl = get_markup_template('match.tpl');
 			foreach($j->results as $jj) {
 				
+				$connlnk = $a->get_baseurl() . '/follow/?url=' . $jj->url;
 				$o .= replace_macros($tpl,array(
 					'$url' => $jj->url,
 					'$name' => $jj->name,
 					'$photo' => $jj->photo,
+					'$conntxt' => t('Connect'),
+					'$connlnk' => $connlnk,
 					'$tags' => $jj->tags
 				));
 			}

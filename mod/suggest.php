@@ -29,6 +29,8 @@ function suggest_content(&$a) {
 		return;
 	}
 
+	$_SESSION['return_url'] = $a->get_baseurl() . '/' . $a->cmd;
+
 	$a->page['aside'] .= follow_widget();
 	$a->page['aside'] .= findpeople_widget();
 
@@ -47,7 +49,7 @@ function suggest_content(&$a) {
 
 	foreach($r as $rr) {
 
-		$connlink = $a->get_baseurl() . '/follow/?url=' . (($rr['connect']) ? $rr['connect'] : $rr['url']);			
+		$connlnk = $a->get_baseurl() . '/follow/?url=' . (($rr['connect']) ? $rr['connect'] : $rr['url']);			
 
 		$o .= replace_macros($tpl,array(
 			'$url' => $rr['url'],
