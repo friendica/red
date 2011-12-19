@@ -40,17 +40,31 @@ function poco_load($cid,$uid = 0,$url = null) {
 	if(! $url)
 		return;
 
-	logger('poco_load: ' . $url, LOGGER_DATA);
+	$url = $url . (($uid) ? '/@me/@all?fields=displayName,urls,photos' : '?fields=displayName,urls,photos') ;
 
-	$s = fetch_url($url . '/@me/@all?fields=displayName,urls,photos');
+	logger('poco_load: ' . $url, LOGGER_DEBUG);
+
+	$s = fetch_url($url);
+
+	logger('poco_load: returns ' . $s, LOGGER_DATA);
+
+	logger('poco_load: return code: ' . $a->get_curl_code(), LOGGER_DEBUG);
 
 	if(($a->get_curl_code() > 299) || (! $s))
 		return;
+
+
 	$j = json_decode($s);
+
+	logger('poco_load: json: ' . print_r($j,true),LOGGER_DATA);
+
+	$total = 0;
 	foreach($j->entry as $entry) {
 
+		$total ++;
 		$profile_url = '';
 		$profile_photo = '';
+		$connect_url = '';
 		$name = '';
 
 		$name = $entry->displayName;
@@ -58,13 +72,18 @@ function poco_load($cid,$uid = 0,$url = null) {
 		foreach($entry->urls as $url) {
 			if($url->type == 'profile') {
 				$profile_url = $url->value;
-				break;
+				continue;
 			}
+			if($url->type == 'webfinger') {
+				$connect_url = str_replace('acct:' , '', $url->value);
+				continue;
+			}
+
 		} 
 		foreach($entry->photos as $photo) {
 			if($photo->type == 'profile') {
 				$profile_photo = $photo->value;
-				break;
+				continue;
 			}
 		}
 
@@ -79,21 +98,23 @@ function poco_load($cid,$uid = 0,$url = null) {
 			$gcid = $x[0]['id'];
 
 			if($x[0]['name'] != $name || $x[0]['photo'] != $profile_photo) {
-				q("update gcontact set `name` = '%s', `photo` = '%s' where
-					`nurl` = '%s' limit 1",
+				q("update gcontact set `name` = '%s', `photo` = '%s', `connect` = '%s' 
+					where `nurl` = '%s' limit 1",
 					dbesc($name),
 					dbesc($profile_photo),
+					dbesc($connect_url),
 					dbesc(normalise_link($profile_url))
 				);
 			}
 		}
 		else {
-			q("insert into `gcontact` (`name`,`url`,`nurl`,`photo`)
-				values ( '%s', '%s', '%s', '%s') ",
+			q("insert into `gcontact` (`name`,`url`,`nurl`,`photo`,`connect`)
+				values ( '%s', '%s', '%s', '%s','%s') ",
 				dbesc($name),
 				dbesc($profile_url),
 				dbesc(normalise_link($profile_url)),
-				dbesc($profile_photo)
+				dbesc($profile_photo),
+				dbesc($connect_url)
 			);
 			$x = q("select * from `gcontact` where `nurl` = '%s' limit 1",
 				dbesc(normalise_link($profile_url))
@@ -127,6 +148,7 @@ function poco_load($cid,$uid = 0,$url = null) {
 		}
 
 	}
+	logger("poco_load: loaded $total entries",LOGGER_DEBUG);
 
 	q("delete from glink where `cid` = %d and `uid` = %d and `updated` < UTC_TIMESTAMP - INTERVAL 2 DAY",
 		intval($cid),
@@ -222,20 +244,22 @@ function suggestion_query($uid, $start = 0, $limit = 40) {
 		intval($limit)
 	);
 
-	if(count($r))
+	if(count($r) && count($r) >= ($limit -1))
 		return $r;
 
-	$r = q("SELECT gcontact.* from gcontact 
+	$r2 = q("SELECT gcontact.* from gcontact 
 		left join glink on glink.gcid = gcontact.id 
-		where uid = 0 and cid = 0 and not gcontact.nurl in ( select nurl from contact where uid = %d)
+		where glink.uid = 0 and glink.cid = 0 and not gcontact.nurl in ( select nurl from contact where uid = %d)
 		and not gcontact.id in ( select gcid from gcign where uid = %d )
-		order by rand limit %d, %d ",
+		order by rand() limit %d, %d ",
+		intval($uid),
 		intval($uid),
 		intval($start),
 		intval($limit)
 	);
 
-	return $r;
+
+	return array_merge($r,$r2);
 
 }
 

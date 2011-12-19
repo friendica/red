@@ -3,7 +3,7 @@
 function newmember_content(&$a) {
 
 
-	$o = '<h3>' . t('Welcome to Friendika') . '</h3>';
+	$o = '<h3>' . t('Welcome to Friendica') . '</h3>';
 
 	$o .= '<h3>' . t('New Member Checklist') . '</h3>';
 
@@ -25,13 +25,13 @@ function newmember_content(&$a) {
     $mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
 	
 	if(! $mail_disabled)
-		$o .= '<li>' . '<a href="settings">' .  t('Enter your email access information on your Settings page if you wish to import and interact with friends or mailing lists from your email INBOX') . '</a></li>' . EOL;
+		$o .= '<li>' . '<a href="settings/connectors">' .  t('Enter your email access information on your Connector Settings page if you wish to import and interact with friends or mailing lists from your email INBOX') . '</a></li>' . EOL;
 
 	$o .= '<li>' . '<a href="profiles">' . t('Edit your <strong>default</strong> profile to your liking. Review the settings for hiding your list of friends and hiding the profile from unknown visitors.') . '</a></li>' . EOL;
 
 	$o .= '<li>' . '<a href="profiles">' . t('Set some public keywords for your default profile which describe your interests. We may be able to find other people with similar interests and suggest friendships.') . '</a></li>' . EOL;
 
-	$o .= '<li>' . '<a href="contacts">' . t('Your Contacts page is your gateway to managing friendships and connecting with friends on other networks. Typically you enter their address or site URL in the <em>Connect</em> dialog.') . '</a></li>' . EOL;
+	$o .= '<li>' . '<a href="contacts">' . t('Your Contacts page is your gateway to managing friendships and connecting with friends on other networks. Typically you enter their address or site URL in the <em>Add New Contact</em> dialog.') . '</a></li>' . EOL;
 
 	$o .= '<li>' . '<a href="directory">' . t('The Directory page lets you find other people in this network or other federated sites. Look for a <em>Connect</em> or <em>Follow</em> link on their profile page. Provide your own Identity Address if requested.') . '</a></li>' . EOL;
 
