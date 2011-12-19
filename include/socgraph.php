@@ -40,16 +40,28 @@ function poco_load($cid,$uid = 0,$url = null) {
 	if(! $url)
 		return;
 
-	logger('poco_load: ' . $url, LOGGER_DATA);
+	$url = $url . (($uid) ? '/@me/@all?fields=displayName,urls,photos' : '?fields=displayName,urls,photos') ;
 
+	logger('poco_load: ' . $url, LOGGER_DEBUG);
 
-	$s = fetch_url($url . ($uid) ? '/@me/@all?fields=displayName,urls,photos' : '?fields=displayName,urls,photos' );
+	$s = fetch_url($url);
+
+	logger('poco_load: returns ' . $s, LOGGER_DATA);
+
+	logger('poco_load: return code: ' . $a->get_curl_code(), LOGGER_DEBUG);
 
 	if(($a->get_curl_code() > 299) || (! $s))
 		return;
+
+
 	$j = json_decode($s);
+
+	logger('poco_load: json: ' . print_r($j,true),LOGGER_DATA);
+
+	$total = 0;
 	foreach($j->entry as $entry) {
 
+		$total ++;
 		$profile_url = '';
 		$profile_photo = '';
 		$connect_url = '';
@@ -136,6 +148,7 @@ function poco_load($cid,$uid = 0,$url = null) {
 		}
 
 	}
+	logger("poco_load: loaded $total entries",LOGGER_DEBUG);
 
 	q("delete from glink where `cid` = %d and `uid` = %d and `updated` < UTC_TIMESTAMP - INTERVAL 2 DAY",
 		intval($cid),
