@@ -9,6 +9,7 @@ body {
 	margin: 50px 0px 0px 0px;
 	display:table;
 }
+h4 { font-size: 1.1em }
 
 .shadow(@x: 0px, @y: 5px){
    -webkit-box-shadow:@x @y 10px rgba(0, 0, 0, 0.7);
@@ -40,6 +41,7 @@ a:hover {color: @LinkHover; text-decoration: underline; }
 .left { float: left; }
 .right { float: right; }
 .hidden { display: none; }
+.clear { clear: both; }
 
 code {
 	font-family: Courier, monospace;
@@ -338,6 +340,7 @@ section {
 	position: relative;
 	padding: 10px;
 	margin-bottom: 20px;
+	width: 780px;
 }
 .wall-item-decor { position: absolute; left: 790px; top: -10px;  width: 16px;}
 .unstarred { display: none; }
@@ -457,77 +460,85 @@ section {
 	}
 }
 
+/* editor */
 
+#jot {
 
-#profile-jot-wrapper {
 	width: 100%;
 	margin: 0px 2em 20px 0px;
 	
 	
-}
-.profile-jot-text {
-	height: 1em; width: 100%; font-size: 10px;
-	color: @CommentBoxEmptyColor;
-	border: 1px solid @CommentBoxEmptyBorderColor;
-	padding:0.3em;
-}
-#profile-jot-plugin-wrapper,
-#profile-jot-submit-wrapper {
-	margin-top: 10px;
+	.profile-jot-text {
+		height: 1em; width: 99%; font-size: 10px;
+		color: @CommentBoxEmptyColor;
+		border: 1px solid @CommentBoxEmptyBorderColor;
+		padding:0.3em;
+	}
+
+	#jot-tools {
+		margin: 0px; padding: 0px;
+		height: 40px; overflow: none;
+		width: 800px;
+		background-color: @JotToolsBackgroundColor;
+		border-bottom: 2px solid @JotToolsBorderColor;
+		li {
+			list-style: none;
+			float: left;
+			width: 80px;
+			height: 40px;
+			border-bottom: 2px solid @JotToolsBorderColor;
+			a {
+				display: block;
+				color: @JotToolsText;
+				width: 100%;
+				height:40px;
+				text-align: center;
+				line-height: 40px;
+				overflow: hidden;
+			}
+		}
+		li:hover {
+			background-color: @JotToolsOverBackgroundColor;
+			border-bottom: 2px solid @JotToolsOverBorderColor;
+		}
+		li.perms {
+			float: right;
+			width: 40px;
+			a.unlock {
+				width: 30px;
+				border-left: 10px solid @JotPermissionUnlockBackgroundColor;
+				background-color: @JotPermissionUnlockBackgroundColor;
+			}
+			a.lock {
+				width: 30px;
+				border-left: 10px solid @JotPermissionLockBackgroundColor;
+				background-color: @JotPermissionLockBackgroundColor;
+			}
+			
+		}
+		li.submit {
+			float: right;
+			background-color: @JotSubmitBackgroundColor;
+			border-bottom: 2px solid @JotSubmitBackgroundColor;
+			border-right: 1px solid @Grey4;
+			border-left: 1px solid @Grey4;
+			input {
+				border: 0px; margin: 0px; padding: 0px;
+				background-color: @JotSubmitBackgroundColor;
+				color: @JotSubmitText;
+				width: 80px; height: 40px;
+				line-height: 40px;
+			}
+			input:hover {
+				background-color: @JotSubmitOverBackgroundColor;
+				color: @JotSubmitOverText;
+			}
+		}
+	}
+
 }
 
 
-#profile-jot-submit {
-	float: left;
-}
-#profile-upload-wrapper{
-	float: left;
-	margin-left: 10px;
-}
-#profile-attach-wrapper,
-#profile-rotator,
-#profile-link-wrapper,
-#profile-youtube-wrapper,
-#profile-video-wrapper,
-#profile-audio-wrapper,
-#profile-location-wrapper,
-#profile-nolocation-wrapper,
-#profile-title-wrapper {
-	float: left;
-	margin-left: 20px;
-}
-
-#profile-jot-perms {
-	float: left;
-	margin-left: 35px;
-	margin-right: 35px;
-}
-
-#profile-jot-perms-end {
-	/*clear: left;*/
-	height: 20px;
-}
-
-#profile-jot-plugin-end{
-  clear: both;
-}
-.profile-jot-net {
-	float: left;
-	margin-right: 10px;
-	margin-top: 5px;
-	margin-bottom: 5px;
-}
-
-#profile-jot-networks-end {
-	clear: both;
-}
-
-#profile-jot-end, #about-jot-end {
-	margin-bottom: 15px;
-}
-#about-jot-submit-wrapper {
-	margin-top: 15px;
-}
 /** buttons **/
 /*input[type="submit"] {
 	border: 0px;
@@ -715,6 +726,31 @@ ul.tabs {
 	.hidden { display: none!important; }
 
 	&.radio .field_help { margin-left: 0px; }
+}
+
+#profile-edit-links li {
+	list-style: none;
+}
+
+/* oauth */
+.oauthapp {
+	height: auto; overflow: auto;
+	border-bottom: 2px solid #cccccc;
+	padding-bottom: 1em;
+	margin-bottom: 1em;	
+}
+.oauthapp img {
+	float: left;
+	width: 48px; height: 48px;
+	margin: 10px;
+}
+.oauthapp img.noicon {
+	background-image: url("../../../images/icons/48/plugin.png");
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+.oauthapp a {
+	float: left;
 }
 
 

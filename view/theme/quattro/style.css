@@ -168,6 +168,9 @@ body {
   margin: 50px 0px 0px 0px;
   display: table;
 }
+h4 {
+  font-size: 1.1em;
+}
 a, a:link {
   color: #005c94;
   text-decoration: none;
@@ -188,6 +191,9 @@ a:hover {
 }
 .hidden {
   display: none;
+}
+.clear {
+  clear: both;
 }
 code {
   font-family: Courier, monospace;
@@ -609,6 +615,7 @@ section {
   position: relative;
   padding: 10px;
   margin-bottom: 20px;
+  width: 780px;
 }
 .wall-item-decor {
   position: absolute;
@@ -779,67 +786,82 @@ section {
   background: url("../../../images/tag.png") no-repeat center right;
   color: #ffffff;
 }
-#profile-jot-wrapper {
+/* editor */
+#jot {
   width: 100%;
   margin: 0px 2em 20px 0px;
 }
-.profile-jot-text {
+#jot .profile-jot-text {
   height: 1em;
-  width: 100%;
+  width: 99%;
   font-size: 10px;
   color: #999999;
   border: 1px solid #999999;
   padding: 0.3em;
 }
-#profile-jot-plugin-wrapper, #profile-jot-submit-wrapper {
-  margin-top: 10px;
+#jot #jot-tools {
+  margin: 0px;
+  padding: 0px;
+  height: 40px;
+  overflow: none;
+  width: 800px;
+  background-color: #0e232e;
+  border-bottom: 2px solid #9eabb0;
 }
-#profile-jot-submit {
+#jot #jot-tools li {
+  list-style: none;
   float: left;
+  width: 80px;
+  height: 40px;
+  border-bottom: 2px solid #9eabb0;
 }
-#profile-upload-wrapper {
-  float: left;
-  margin-left: 10px;
+#jot #jot-tools li a {
+  display: block;
+  color: #cccccc;
+  width: 100%;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  overflow: hidden;
 }
-#profile-attach-wrapper,
-#profile-rotator,
-#profile-link-wrapper,
-#profile-youtube-wrapper,
-#profile-video-wrapper,
-#profile-audio-wrapper,
-#profile-location-wrapper,
-#profile-nolocation-wrapper,
-#profile-title-wrapper {
-  float: left;
-  margin-left: 20px;
+#jot #jot-tools li:hover {
+  background-color: #364e59;
+  border-bottom: 2px solid #bdcdd4;
 }
-#profile-jot-perms {
-  float: left;
-  margin-left: 35px;
-  margin-right: 35px;
+#jot #jot-tools li.perms {
+  float: right;
+  width: 40px;
 }
-#profile-jot-perms-end {
-  /*clear: left;*/
-
-  height: 20px;
+#jot #jot-tools li.perms a.unlock {
+  width: 30px;
+  border-left: 10px solid #cccccc;
+  background-color: #cccccc;
 }
-#profile-jot-plugin-end {
-  clear: both;
+#jot #jot-tools li.perms a.lock {
+  width: 30px;
+  border-left: 10px solid #666666;
+  background-color: #666666;
 }
-.profile-jot-net {
-  float: left;
-  margin-right: 10px;
-  margin-top: 5px;
-  margin-bottom: 5px;
+#jot #jot-tools li.submit {
+  float: right;
+  background-color: #cccccc;
+  border-bottom: 2px solid #cccccc;
+  border-right: 1px solid #666666;
+  border-left: 1px solid #666666;
 }
-#profile-jot-networks-end {
-  clear: both;
+#jot #jot-tools li.submit input {
+  border: 0px;
+  margin: 0px;
+  padding: 0px;
+  background-color: #cccccc;
+  color: #666666;
+  width: 80px;
+  height: 40px;
+  line-height: 40px;
 }
-#profile-jot-end, #about-jot-end {
-  margin-bottom: 15px;
-}
-#about-jot-submit-wrapper {
-  margin-top: 15px;
+#jot #jot-tools li.submit input:hover {
+  background-color: #bdcdd4;
+  color: #666666;
 }
 /** buttons **/
 /*input[type="submit"] {
@@ -1024,6 +1046,31 @@ ul.tabs li .active {
 }
 .field.radio .field_help {
   margin-left: 0px;
+}
+#profile-edit-links li {
+  list-style: none;
+}
+/* oauth */
+.oauthapp {
+  height: auto;
+  overflow: auto;
+  border-bottom: 2px solid #cccccc;
+  padding-bottom: 1em;
+  margin-bottom: 1em;
+}
+.oauthapp img {
+  float: left;
+  width: 48px;
+  height: 48px;
+  margin: 10px;
+}
+.oauthapp img.noicon {
+  background-image: url("../../../images/icons/48/plugin.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+.oauthapp a {
+  float: left;
 }
 /* page footer */
 footer {

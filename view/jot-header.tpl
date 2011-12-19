@@ -81,7 +81,7 @@ function initEditor(cb){
 				ed.onInit.add(function(ed) {
 					ed.pasteAsPlainText = true;
 					$("#profile-jot-text-loading").hide();
-					$("#profile-jot-submit-wrapper").show();
+					$(".jothidden").show();
 					if (typeof cb!="undefined") cb();
 				});
 
@@ -98,19 +98,21 @@ function initEditor(cb){
 	}
 }
 
+function enableOnUser(){
+	if (editor) return;
+	$(this).val("");
+	initEditor();
+}
+
 </script>
 <script type="text/javascript" src="js/ajaxupload.js" ></script>
 <script>
 	var ispublic = '$ispublic';
 	$(document).ready(function() {
 		
-		/* enable tinymce on focus */
-		$("#profile-jot-text").focus(function(){
-			if (editor) return;
-			$(this).val("");
-			initEditor();
-		});
-		
+		/* enable tinymce on focus and click */
+		$("#profile-jot-text").focus(enableOnUser);
+		$("#profile-jot-text").click(enableOnUser);
 	
 		var uploader = new window.AjaxUpload(
 			'wall-image-upload',
