@@ -294,7 +294,7 @@ function conversation(&$a, $items, $mode, $update) {
 				$arr = array('item' => $item, 'output' => $tmp_item);
 				call_hooks('display_item', $arr);
 
-				$threads[$threadsid]['id'] = $arr[$item['item_id']];
+				$threads[$threadsid]['id'] = $item['item_id'];
 				$threads[$threadsid]['html'] .= $arr['output'];
 
 			}

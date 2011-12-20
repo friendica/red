@@ -1,6 +1,6 @@
 @import url('../duepuntozero/style.css');
 
-a, a:visited { color: #7433af; text-decoration: none; }
+a, a:link, a:visited { color: #7433af; text-decoration: none; }
 a:hover {text-decoration: underline; }
 
 

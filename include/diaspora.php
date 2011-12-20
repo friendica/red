@@ -188,6 +188,13 @@ function diaspora_msg_build($msg,$user,$contact,$prvkey,$pubkey,$public = false)
 
 	logger('diaspora_msg_build: ' . $msg, LOGGER_DATA);
 
+	// without a public key nothing will work
+
+	if(! $pubkey) {
+		logger('diaspora_msg_build: pubkey missing: contact id: ' . $contact['id']);
+		return '';
+	}
+
 	$inner_aes_key = random_string(32);
 	$b_inner_aes_key = base64_encode($inner_aes_key);
 	$inner_iv = random_string(16);
@@ -1671,6 +1678,12 @@ function diaspora_profile($importer,$xml) {
 	$birthday = str_replace('1000','1901',$birthday);
 
 	$birthday = datetime_convert('UTC','UTC',$birthday,'Y-m-d');
+
+	// this is to prevent multiple birthday notifications in a single year
+	// if we already have a stored birthday and the 'm-d' part hasn't changed, preserve the entry, which will preserve the notify year
+
+	if(substr($birthday,5) === substr($contact['bd'],5))
+		$birthday = $contact['bd'];
 
 	$r = q("UPDATE `contact` SET `name` = '%s', `name-date` = '%s', `photo` = '%s', `thumb` = '%s', `micro` = '%s', `avatar-date` = '%s' , `bd` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		dbesc($name),

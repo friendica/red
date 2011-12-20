@@ -9,7 +9,7 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1199' );
+define ( 'FRIENDICA_VERSION',      '2.3.1200' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.22'    );
 define ( 'DB_UPDATE_VERSION',      1112      );
 
@@ -1036,6 +1036,8 @@ function get_birthdays() {
 	if($r && count($r)) {
 		$total = 0;
 		$now = strtotime('now');
+		$cids = array();
+
 		$istoday = false;
 		foreach($r as $rr) {
 			if(strlen($rr['name']))
@@ -1052,6 +1054,13 @@ function get_birthdays() {
 			foreach($r as $rr) {
 				if(! strlen($rr['name']))
 					continue;
+
+				// avoid duplicates
+
+				if(in_array($rr['cid'],$cids))
+					continue;
+				$cids[] = $rr['cid'];
+
 				$today = (((strtotime($rr['start'] . ' +00:00') < $now) && (strtotime($rr['finish'] . ' +00:00') > $now)) ? true : false); 
 				$sparkle = '';
 				$url = $rr['url'];
