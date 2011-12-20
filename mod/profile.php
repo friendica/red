@@ -32,7 +32,7 @@ function profile_init(&$a) {
 
 	if(! $blocked) {
 		$keywords = ((x($a->profile,'pub_keywords')) ? $a->profile['pub_keywords'] : '');
-		$keywords = str_replace(array(',',' ',',,'),array(' ',',',','),$keywords);
+		$keywords = str_replace(array('#',',',' ',',,'),array('',' ',',',','),$keywords);
 		if(strlen($keywords))
 			$a->page['htmlhead'] .= '<meta name="keywords" content="' . $keywords . '" />' . "\r\n" ;
 	}
