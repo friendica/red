@@ -58,6 +58,9 @@ function poco_load($cid,$uid = 0,$url = null) {
 
 	logger('poco_load: json: ' . print_r($j,true),LOGGER_DATA);
 
+	if(! isset($j->entry))
+		return;
+
 	$total = 0;
 	foreach($j->entry as $entry) {
 
