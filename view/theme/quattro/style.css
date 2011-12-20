@@ -787,6 +787,9 @@ section {
   color: #ffffff;
 }
 /* editor */
+.jothidden {
+  display: none;
+}
 #jot {
   width: 100%;
   margin: 0px 2em 20px 0px;
@@ -862,6 +865,34 @@ section {
 #jot #jot-tools li.submit input:hover {
   background-color: #bdcdd4;
   color: #666666;
+}
+#jot #jot-title {
+  border: 0px;
+  margin: 0px;
+  height: 20px;
+  width: 700px;
+  font-weight: bold;
+  border: 1px solid #ffffff;
+}
+#jot #jot-title:-webkit-input-placeholder {
+  font-weight: normal;
+}
+#jot #jot-title:-moz-placeholder {
+  font-weight: normal;
+}
+#jot #jot-title:hover {
+  border: 1px solid #999999;
+}
+#jot #jot-title:focus {
+  border: 1px solid #999999;
+}
+#jot #character-counter {
+  width: 80px;
+  float: right;
+  text-align: right;
+  height: 20px;
+  line-height: 20px;
+  padding-right: 20px;
 }
 /** buttons **/
 /*input[type="submit"] {

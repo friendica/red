@@ -1,8 +1,8 @@
 <form action="$action" method="post">
 	<div id="jot">
-		<div id="profile-jot-desc" >&nbsp;</div>
-		<input name="title" id="jot-title" type="text" placeholder="$titleplaceholder" value="$title" class="jothidden" style="display:none">
-		<div id="character-counter" class="grey"></div>
+		<div id="profile-jot-desc" class="jothidden" >&nbsp;</div>
+		<input name="title" id="jot-title" type="text" placeholder="$placeholdertitle" value="$title" class="jothidden" style="display:none">
+		<div id="character-counter" class="grey jothidden"></div>
 		
 		<input type="hidden" name="type" value="$ptyp" />
 		<input type="hidden" name="profile_uid" value="$profile_uid" />

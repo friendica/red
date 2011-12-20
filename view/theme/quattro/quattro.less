@@ -34,6 +34,7 @@ h4 { font-size: 1.1em }
 	transition: all 0.2s ease-in-out;
 }
 
+
 a, a:link { color: @Link; text-decoration: none; }
 a:visited { color: @LinkVisited; text-decoration: none; }
 a:hover {color: @LinkHover; text-decoration: underline; }
@@ -461,7 +462,7 @@ section {
 }
 
 /* editor */
-
+.jothidden { display: none; }
 #jot {
 
 	width: 100%;
@@ -534,6 +535,35 @@ section {
 				color: @JotSubmitOverText;
 			}
 		}
+	}
+
+	#jot-title {
+		border: 0px;
+		margin: 0px;
+		height: 20px;
+		width: 700px;
+		font-weight: bold;
+		border: 1px solid @BodyBackground;
+
+		&:-webkit-input-placeholder {
+			font-weight: normal;
+		}
+
+		&:-moz-placeholder {
+			font-weight: normal;
+		}		
+	
+		&:hover { border: 1px solid @CommentBoxEmptyBorderColor }
+		&:focus { border: 1px solid @CommentBoxEmptyBorderColor }
+	}
+	
+	#character-counter {
+		width: 80px;
+		float: right;
+		text-align: right;
+		height: 20px;
+		line-height: 20px;
+		padding-right: 20px;
 	}
 
 }
