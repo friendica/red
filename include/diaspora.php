@@ -1679,6 +1679,12 @@ function diaspora_profile($importer,$xml) {
 
 	$birthday = datetime_convert('UTC','UTC',$birthday,'Y-m-d');
 
+	// this is to prevent multiple birthday notifications in a single year
+	// if we already have a stored birthday and the 'm-d' part hasn't changed, preserve the entry, which will preserve the notify year
+
+	if(substr($birthday,5) === substr($contact['bd'],5))
+		$birthday = $contact['bd'];
+
 	$r = q("UPDATE `contact` SET `name` = '%s', `name-date` = '%s', `photo` = '%s', `thumb` = '%s', `micro` = '%s', `avatar-date` = '%s' , `bd` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		dbesc($name),
 		dbesc(datetime_convert()),
