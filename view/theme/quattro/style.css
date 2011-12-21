@@ -866,6 +866,18 @@ section {
   background-color: #bdcdd4;
   color: #666666;
 }
+#jot #jot-tools li.loading {
+  float: right;
+  background-color: #ffffff;
+  width: 20px;
+  vertical-align: center;
+  text-align: center;
+  border-top: 2px solid #9eabb0;
+  height: 38px;
+}
+#jot #jot-tools li.loading img {
+  margin-top: 10px;
+}
 #jot #jot-title {
   border: 0px;
   margin: 0px;

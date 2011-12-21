@@ -27,6 +27,7 @@
 
 			<li class="perms"><a id="jot-perms-icon" href="#profile-jot-acl-wrapper" class="icon s22 $lockstate $bang"  title="$permset" ></a></li>
 			<li class="submit"><input type="submit" id="profile-jot-submit" name="submit" value="$share" /></li>
+			<li id="profile-rotator" class="loading" style="display: none"><img src="images/rotator.gif" alt="$wait" title="$wait"  /></li>
 		</ul>
 	</div>
 	
