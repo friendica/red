@@ -173,9 +173,9 @@ function bb2diaspora($Text,$preserve_nl = false) {
 
 	// html5 video and audio
 
-//	$Text = preg_replace("/\[video\](.*?)\[\/video\]/", '<video src="$1" controls="controls" width="425" height="350"><a href="$1">$1</a></video>', $Text);
+	$Text = preg_replace("/\[video\](.*?)\[\/video\]/", '$1', $Text);
 
-//	$Text = preg_replace("/\[audio\](.*?)\[\/audio\]/", '<audio src="$1" controls="controls"><a href="$1">$1</a></audio>', $Text);
+	$Text = preg_replace("/\[audio\](.*?)\[\/audio\]/", '$1', $Text);
 
 //	$Text = preg_replace("/\[iframe\](.*?)\[\/iframe\]/", '<iframe src="$1" width="425" height="350"><a href="$1">$1</a></iframe>', $Text);
          

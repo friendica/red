@@ -60,8 +60,8 @@ function acl_init(&$a){
 			intval($count)
 		);
 
-		
 		foreach($r as $g){
+//		logger('acl: group: ' . $g['name'] . ' members: ' . $g['uids']);		
 			$groups[] = array(
 				"type"  => "g",
 				"photo" => "images/default-group-mm.png",

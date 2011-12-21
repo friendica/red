@@ -193,7 +193,8 @@ ACL.prototype.update_view = function(){
 					bthide.addClass("selected");
 					uclass="grouphide";
 				}
-				
+
+
 				$(that.group_uids[id]).each(function(i,v){
 					$("#c"+v).removeClass("groupshow grouphide").addClass(uclass);
 				});
@@ -208,6 +209,8 @@ ACL.prototype.update_view = function(){
 					btshow.removeClass("selected");
 					bthide.addClass("selected");
 				}			
+			default:
+				break;
 		}
 		
 	});
