@@ -171,6 +171,9 @@ ACL.prototype.update_view = function(){
 				$('.profile-jot-net input').attr('disabled', 'disabled');			
 				$('#profile-jot-desc').html('&nbsp;');
 	}
+	$("#acl-list-content .acl-list-item").each(function(){
+		$(this).removeClass("groupshow grouphide");
+	});
 	
 	$("#acl-list-content .acl-list-item").each(function(){
 		itemid = $(this).attr('id');
@@ -193,10 +196,12 @@ ACL.prototype.update_view = function(){
 					bthide.addClass("selected");
 					uclass="grouphide";
 				}
-
-
-				$(that.group_uids[id]).each(function(i,v){
-					$("#c"+v).removeClass("groupshow grouphide").addClass(uclass);
+				
+				$(that.group_uids[id]).each(function(i,v) {
+					if(uclass == "grouphide")
+						$("#c"+v).removeClass("groupshow");
+					if(uclass != "")
+						$("#c"+v).addClass(uclass);
 				});
 				
 				break;
@@ -209,8 +214,6 @@ ACL.prototype.update_view = function(){
 					btshow.removeClass("selected");
 					bthide.addClass("selected");
 				}			
-			default:
-				break;
 		}
 		
 	});
