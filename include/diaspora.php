@@ -69,7 +69,7 @@ function diaspora_dispatch($importer,$msg) {
 		$ret = diaspora_retraction($importer,$xmlbase->retraction,$msg);
 	}
 	elseif($xmlbase->signed_retraction) {
-		$ret = diaspora_signed_retraction($importer,$xmlbase->retraction,$msg);
+		$ret = diaspora_signed_retraction($importer,$xmlbase->signed_retraction,$msg);
 	}
 	elseif($xmlbase->photo) {
 		$ret = diaspora_photo($importer,$xmlbase->photo,$msg);
@@ -1569,6 +1569,7 @@ EOT;
 
 function diaspora_retraction($importer,$xml) {
 
+
 	$guid = notags(unxmlify($xml->guid));
 	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
 	$type = notags(unxmlify($xml->type));
@@ -1600,7 +1601,8 @@ function diaspora_retraction($importer,$xml) {
 	// NOTREACHED
 }
 
-function diaspora_signed_retraction($importer,$xml) {
+function diaspora_signed_retraction($importer,$xml,$msg) {
+
 
 	$guid = notags(unxmlify($xml->target_guid));
 	$diaspora_handle = notags(unxmlify($xml->sender_handle));
@@ -1608,8 +1610,10 @@ function diaspora_signed_retraction($importer,$xml) {
 	$sig = notags(unxmlify($xml->target_author_signature));
 
 	$contact = diaspora_get_contact_by_handle($importer['uid'],$diaspora_handle);
-	if(! $contact)
+	if(! $contact) {
+		logger('diaspora_signed_retraction: no contact');
 		return;
+	}
 
 	// this may not yet work for comments. Need to see how the relaying works
 	// and figure out who signs it.
@@ -1628,7 +1632,7 @@ function diaspora_signed_retraction($importer,$xml) {
 
 	if($type === 'StatusMessage') {
 		$r = q("select * from item where guid = '%s' and uid = %d limit 1",
-			dbesc('guid'),
+			dbesc($guid),
 			intval($importer['uid'])
 		);
 		if(count($r)) {
@@ -1640,6 +1644,8 @@ function diaspora_signed_retraction($importer,$xml) {
 			}
 		}
 	}
+	else
+		logger('diaspora_signed_retraction: unknown type: ' . $type);
 
 	return 202;
 	// NOTREACHED
