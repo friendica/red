@@ -16,13 +16,13 @@
 		
 		
 		<ul id="jot-tools" class="jothidden" style="display:none">
-			<li><a href="#" onclick="return false;" id="wall-image-upload">$upload</a></li>
-			<li><a href="#" onclick="return false;" id="wall-file-upload" >$attach</a></li>
-			<li><a id="profile-link"  ondragenter="return linkdropper(event);" ondragover="return linkdropper(event);" ondrop="linkdrop(event);" onclick="jotGetLink(); return false;">$weblink</a></li>
-			<li><a id="profile-video" onclick="jotVideoURL();return false;">$video</a></li>
-			<li><a id="profile-audio" onclick="jotAudioURL();return false;">$audio</a></li>
-			<li><a id="profile-location" onclick="jotGetLocation();return false;">$setloc</a></li>
-			<li><a id="profile-nolocation" onclick="jotClearLocation();return false;">$noloc</a></li>
+			<li><a href="#" onclick="return false;" id="wall-image-upload" title="$upload">$shortupload</a></a></li>
+			<li><a href="#" onclick="return false;" id="wall-file-upload"  title="$attach">$shortattach</a></li>
+			<li><a id="profile-link"  ondragenter="return linkdropper(event);" ondragover="return linkdropper(event);" ondrop="linkdrop(event);" onclick="jotGetLink(); return false;" title="$weblink">$shortweblink</a></li>
+			<li><a id="profile-video" onclick="jotVideoURL();return false;" title="$gvideo">$shortvideo</a></li>
+			<li><a id="profile-audio" onclick="jotAudioURL();return false;" title="$audio">$shortaudio</a></li>
+			<li><a id="profile-location" onclick="jotGetLocation();return false;" title="$setloc">$shortsetloc</a></li>
+			<li><a id="profile-nolocation" onclick="jotClearLocation();return false;" title="$noloc">$shortnoloc</a></li>
 			$jotplugins
 
 			<li class="perms"><a id="jot-perms-icon" href="#profile-jot-acl-wrapper" class="icon s22 $lockstate $bang"  title="$permset" ></a></li>
