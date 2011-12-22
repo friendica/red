@@ -200,8 +200,14 @@ ACL.prototype.update_view = function(){
 				$(that.group_uids[id]).each(function(i,v) {
 					if(uclass == "grouphide")
 						$("#c"+v).removeClass("groupshow");
-					if(uclass != "")
-						$("#c"+v).addClass(uclass);
+					if(uclass != "") {
+						var cls = $("#c"+v).attr('class');
+						if( cls == undefined)
+							return true;
+						var hiding = cls.indexOf('grouphide');
+						if(hiding == -1)
+							$("#c"+v).addClass(uclass);
+					}
 				});
 				
 				break;
