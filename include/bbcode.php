@@ -11,6 +11,7 @@ function stripcode_br_cb($s) {
 
 function tryoembed($match){
 	$url = ((count($match)==2)?$match[1]:$match[2]);
+	logger("tryoembed: $url");
 	
 	$o = oembed_fetch_url($url);
 
@@ -180,22 +181,18 @@ function bbcode($Text,$preserve_nl = false) {
 	$Text = preg_replace("/\[iframe\](.*?)\[\/iframe\]/ism", '<iframe src="$1" width="425" height="350"><a href="$1">$1</a></iframe>', $Text);
          
 
-	/*if (get_pconfig(local_user(), 'oembed', 'use_for_youtube' )==1){
-		// use oembed for youtube links
-		$Text = preg_replace("/\[youtube\]/",'[embed]',$Text); 
-		$Text = preg_replace("/\[\/youtube\]/",'[/embed]',$Text); 
-	} else {*/
-		// Youtube extensions
-        $Text = preg_replace_callback("/\[youtube\](https?:\/\/www.youtube.com\/watch\?v\=.*?)\[\/youtube\]/ism", 'tryoembed', $Text);        
-        $Text = preg_replace_callback("/\[youtube\](https?:\/\/youtu.be\/.*?)\[\/youtube\]/ism",'tryoembed',$Text); 
+	// Youtube extensions
+	$Text = preg_replace_callback("/\[youtube\](https?:\/\/www.youtube.com\/watch\?v\=.*?)\[\/youtube\]/ism", 'tryoembed', $Text);        
+	$Text = preg_replace_callback("/\[youtube\](www.youtube.com\/watch\?v\=.*?)\[\/youtube\]/ism", 'tryoembed', $Text);        
+	$Text = preg_replace_callback("/\[youtube\](https?:\/\/youtu.be\/.*?)\[\/youtube\]/ism",'tryoembed',$Text); 
         
-        $Text = preg_replace("/\[youtube\]https?:\/\/www.youtube.com\/watch\?v\=(.*?)\[\/youtube\]/ism",'[youtube]$1[/youtube]',$Text); 
-        $Text = preg_replace("/\[youtube\]https?:\/\/www.youtube.com\/embed\/(.*?)\[\/youtube\]/ism",'[youtube]$1[/youtube]',$Text); 
-        $Text = preg_replace("/\[youtube\]https?:\/\/youtu.be\/(.*?)\[\/youtube\]/ism",'[youtube]$1[/youtube]',$Text); 
+	$Text = preg_replace("/\[youtube\]https?:\/\/www.youtube.com\/watch\?v\=(.*?)\[\/youtube\]/ism",'[youtube]$1[/youtube]',$Text); 
+	$Text = preg_replace("/\[youtube\]https?:\/\/www.youtube.com\/embed\/(.*?)\[\/youtube\]/ism",'[youtube]$1[/youtube]',$Text); 
+	$Text = preg_replace("/\[youtube\]https?:\/\/youtu.be\/(.*?)\[\/youtube\]/ism",'[youtube]$1[/youtube]',$Text); 
 		
         
-		$Text = preg_replace("/\[youtube\]([A-Za-z0-9\-_=]+)(.*?)\[\/youtube\]/ism", '<iframe width="425" height="350" src="http://www.youtube.com/embed/$1" frameborder="0" ></iframe>', $Text);
-	//}
+	$Text = preg_replace("/\[youtube\]([A-Za-z0-9\-_=]+)(.*?)\[\/youtube\]/ism", '<iframe width="425" height="350" src="http://www.youtube.com/embed/$1" frameborder="0" ></iframe>', $Text);
+
 
 	$Text = preg_replace_callback("/\[vimeo\](https?:\/\/player.vimeo.com\/video\/[0-9]+).*?\[\/vimeo\]/ism",'tryoembed',$Text); 
 	$Text = preg_replace_callback("/\[vimeo\](https?:\/\/vimeo.com\/[0-9]+).*?\[\/vimeo\]/ism",'tryoembed',$Text); 

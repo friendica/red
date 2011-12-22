@@ -3,6 +3,9 @@
 if(! function_exists('home_init')) {
 function home_init(&$a) {
 
+	$ret = array();
+	call_hooks('home_init',$ret);
+
 	if(local_user() && ($a->user['nickname']))
 		goaway( $a->get_baseurl() . "/profile/" . $a->user['nickname'] );
 

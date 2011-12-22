@@ -69,7 +69,7 @@ function diaspora_dispatch($importer,$msg) {
 		$ret = diaspora_retraction($importer,$xmlbase->retraction,$msg);
 	}
 	elseif($xmlbase->signed_retraction) {
-		$ret = diaspora_signed_retraction($importer,$xmlbase->retraction,$msg);
+		$ret = diaspora_signed_retraction($importer,$xmlbase->signed_retraction,$msg);
 	}
 	elseif($xmlbase->photo) {
 		$ret = diaspora_photo($importer,$xmlbase->photo,$msg);
@@ -187,6 +187,13 @@ function diaspora_msg_build($msg,$user,$contact,$prvkey,$pubkey,$public = false)
 		return diaspora_pubmsg_build($msg,$user,$contact,$prvkey,$pubkey);
 
 	logger('diaspora_msg_build: ' . $msg, LOGGER_DATA);
+
+	// without a public key nothing will work
+
+	if(! $pubkey) {
+		logger('diaspora_msg_build: pubkey missing: contact id: ' . $contact['id']);
+		return '';
+	}
 
 	$inner_aes_key = random_string(32);
 	$b_inner_aes_key = base64_encode($inner_aes_key);
@@ -1562,6 +1569,7 @@ EOT;
 
 function diaspora_retraction($importer,$xml) {
 
+
 	$guid = notags(unxmlify($xml->guid));
 	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
 	$type = notags(unxmlify($xml->type));
@@ -1593,7 +1601,8 @@ function diaspora_retraction($importer,$xml) {
 	// NOTREACHED
 }
 
-function diaspora_signed_retraction($importer,$xml) {
+function diaspora_signed_retraction($importer,$xml,$msg) {
+
 
 	$guid = notags(unxmlify($xml->target_guid));
 	$diaspora_handle = notags(unxmlify($xml->sender_handle));
@@ -1601,8 +1610,10 @@ function diaspora_signed_retraction($importer,$xml) {
 	$sig = notags(unxmlify($xml->target_author_signature));
 
 	$contact = diaspora_get_contact_by_handle($importer['uid'],$diaspora_handle);
-	if(! $contact)
+	if(! $contact) {
+		logger('diaspora_signed_retraction: no contact');
 		return;
+	}
 
 	// this may not yet work for comments. Need to see how the relaying works
 	// and figure out who signs it.
@@ -1621,7 +1632,7 @@ function diaspora_signed_retraction($importer,$xml) {
 
 	if($type === 'StatusMessage') {
 		$r = q("select * from item where guid = '%s' and uid = %d limit 1",
-			dbesc('guid'),
+			dbesc($guid),
 			intval($importer['uid'])
 		);
 		if(count($r)) {
@@ -1633,6 +1644,8 @@ function diaspora_signed_retraction($importer,$xml) {
 			}
 		}
 	}
+	else
+		logger('diaspora_signed_retraction: unknown type: ' . $type);
 
 	return 202;
 	// NOTREACHED
@@ -1671,6 +1684,12 @@ function diaspora_profile($importer,$xml) {
 	$birthday = str_replace('1000','1901',$birthday);
 
 	$birthday = datetime_convert('UTC','UTC',$birthday,'Y-m-d');
+
+	// this is to prevent multiple birthday notifications in a single year
+	// if we already have a stored birthday and the 'm-d' part hasn't changed, preserve the entry, which will preserve the notify year
+
+	if(substr($birthday,5) === substr($contact['bd'],5))
+		$birthday = $contact['bd'];
 
 	$r = q("UPDATE `contact` SET `name` = '%s', `name-date` = '%s', `photo` = '%s', `thumb` = '%s', `micro` = '%s', `avatar-date` = '%s' , `bd` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		dbesc($name),

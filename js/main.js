@@ -241,26 +241,34 @@
 
 			$('.tread-wrapper',data).each(function() {
 				var ident = $(this).attr('id');
+
 				if($('#' + ident).length == 0 && profile_page == 1) {
 					$('img',this).each(function() {
 						$(this).attr('src',$(this).attr('dst'));
 					});
 					$('#' + prev).after($(this));
 				}
+				else {
+					$('img',this).each(function() {
+						$(this).attr('src',$(this).attr('dst'));
+					});
+					$('#' + ident).replaceWith($(this));
+				}
 				prev = ident;
 			});
 
 			// reset vars for inserting individual items
 
-			prev = 'live-' + src;
+			/*			prev = 'live-' + src;
 
 			$('.wall-item-outside-wrapper',data).each(function() {
 				var ident = $(this).attr('id');
-				if($('#' + ident).length == 0) {
-					$('img',this).each(function() {
-						$(this).attr('src',$(this).attr('dst'));
-					});
-					$('#' + prev).after($(this));
+
+				if($('#' + ident).length == 0 && prev != 'live-' + src) {
+						$('img',this).each(function() {
+							$(this).attr('src',$(this).attr('dst'));
+						});
+						$('#' + prev).after($(this));
 				}
 				else { 
 					$('#' + ident + ' ' + '.wall-item-ago').replaceWith($(this).find('.wall-item-ago')); 
@@ -275,7 +283,7 @@
 				}
 				prev = ident; 
 			});
-
+			*/
 			$('.like-rotator').hide();
 			if(commentBusy) {
 				commentBusy = false;

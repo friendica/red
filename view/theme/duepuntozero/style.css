@@ -2383,6 +2383,11 @@ aside input[type='text'] {
 	clear: both;
 }
 
+.profile-match-connect {
+	text-align: center;
+	font-weight: bold;
+}
+
 .profile-match-wrapper {
 	float: left;
 	padding: 10px;

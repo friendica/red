@@ -301,7 +301,8 @@ function network_content(&$a, $update = 0) {
 		}
 
 
-		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` $star_sql AND ( `contact-id` IN ( $contact_str ) OR `allow_gid` REGEXP '<" . intval($group) . ">' )) ";
+//		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` $star_sql AND ( `contact-id` IN ( $contact_str ) OR `allow_gid` REGEXP '<" . intval($group) . ">' )) ";
+		$sql_extra = " AND `item`.`parent` IN ( SELECT DISTINCT(`parent`) FROM `item` WHERE 1 $star_sql AND ( `contact-id` IN ( $contact_str ) OR `allow_gid` REGEXP '<" . intval($group) . ">' )) ";
 		$o = '<h2>' . t('Group: ') . $r[0]['name'] . '</h2>' . $o;
 	}
 	elseif($cid) {
@@ -398,10 +399,9 @@ function network_content(&$a, $update = 0) {
 	$simple_update = (($update) ? " and `item`.`unseen` = 1 " : '');
 
 	if($nouveau) {
-
 		// "New Item View" - show all items unthreaded in reverse created date order
 
-		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
+		$items = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`, `contact`.`writable`,
 			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
@@ -414,7 +414,7 @@ function network_content(&$a, $update = 0) {
 			ORDER BY `item`.`received` DESC $pager_sql ",
 			intval($_SESSION['uid'])
 		);
-		
+
 	}
 	else {
 

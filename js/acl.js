@@ -171,6 +171,9 @@ ACL.prototype.update_view = function(){
 				$('.profile-jot-net input').attr('disabled', 'disabled');			
 				$('#profile-jot-desc').html('&nbsp;');
 	}
+	$("#acl-list-content .acl-list-item").each(function(){
+		$(this).removeClass("groupshow grouphide");
+	});
 	
 	$("#acl-list-content .acl-list-item").each(function(){
 		itemid = $(this).attr('id');
@@ -194,8 +197,17 @@ ACL.prototype.update_view = function(){
 					uclass="grouphide";
 				}
 				
-				$(that.group_uids[id]).each(function(i,v){
-					$("#c"+v).removeClass("groupshow grouphide").addClass(uclass);
+				$(that.group_uids[id]).each(function(i,v) {
+					if(uclass == "grouphide")
+						$("#c"+v).removeClass("groupshow");
+					if(uclass != "") {
+						var cls = $("#c"+v).attr('class');
+						if( cls == undefined)
+							return true;
+						var hiding = cls.indexOf('grouphide');
+						if(hiding == -1)
+							$("#c"+v).addClass(uclass);
+					}
 				});
 				
 				break;

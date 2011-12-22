@@ -398,9 +398,13 @@ function item_post(&$a) {
 					continue;
 				$basetag = str_replace('_',' ',substr($tag,1));
 				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
-				if(strlen($str_tags))
-					$str_tags .= ',';
-				$str_tags .= '#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]';
+
+				$newtag = '#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]';
+				if(! stristr($str_tags,$newtag)) {
+					if(strlen($str_tags))
+						$str_tags .= ',';
+					$str_tags .= $newtag;
+				} 
 				continue;
 			}
 			if(strpos($tag,'@') === 0) {
