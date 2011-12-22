@@ -535,6 +535,10 @@ aside #profiles-menu {
   float: left;
   margin: 0px 2px 2px 0px;
 }
+#contact-block .contact-block-link img {
+  widht: 48px;
+  height: 58px;
+}
 /* widget */
 .widget {
   margin-bottom: 2em;
@@ -655,26 +659,6 @@ section {
   text-align: left;
   width: 60px;
 }
-.wall-item-container .wall-item-info .wall-item-photo-wrapper {
-  position: relative;
-}
-.wall-item-container .wall-item-info .wall-item-photo {
-  width: 48px;
-  height: 48px;
-  overflow: hidden;
-  text-indent: -9999px;
-  display: block;
-  background: url(../../../images/icons/48/user.png) no-repeat center center;
-}
-.wall-item-container .wall-item-info .wall-item-photo-menu-button {
-  display: none;
-  position: absolute;
-  left: -4px;
-  top: 28px;
-}
-.wall-item-container .wall-item-info .wall-item-photo-menu {
-  display: none;
-}
 .wall-item-container .wall-item-location {
   word-wrap: break-word;
   width: 50px;
@@ -740,15 +724,16 @@ section {
   /*margin-top: 50px;*/
 
 }
-.wall-item-container.comment .wall-item-photo {
+.wall-item-container.comment .contact-photo {
   width: 32px;
   height: 32px;
   margin-left: 16px;
-  background: url(../../../images/icons/22/user.png) no-repeat center center;
+  /*background: url(../../../images/icons/22/user.png) no-repeat center center;*/
+
 }
-.wall-item-container.comment .wall-item-photo-menu-button {
-  top: 13px !important;
-  left: 10px !important;
+.wall-item-container.comment .contact-photo-menu-button {
+  top: 15px !important;
+  left: 15px !important;
 }
 .wall-item-container.comment .wall-item-links {
   padding-left: 12px;
@@ -785,6 +770,63 @@ section {
   padding-right: 8px;
   background: url("../../../images/tag.png") no-repeat center right;
   color: #ffffff;
+}
+/* contacts menu */
+.contact-photo-wrapper {
+  position: relative;
+}
+.contact-photo {
+  width: 48px;
+  height: 48px;
+  overflow: hidden;
+  display: block;
+}
+.contact-photo img {
+  width: 48px;
+  height: 48px;
+}
+.contact-photo-menu-button {
+  display: none;
+  position: absolute;
+  left: -2px;
+  top: 31px;
+}
+.contact-wrapper {
+  float: left;
+  width: 90px;
+  height: 90px;
+}
+.contact-wrapper .contact-photo {
+  width: 80px;
+  height: 80px;
+}
+.contact-wrapper .contact-photo img {
+  width: 80px;
+  height: 80px;
+}
+.contact-wrapper .contact-photo-menu-button {
+  left: 0px;
+  top: 63px;
+}
+.directory-item {
+  float: left;
+  width: 200px;
+  height: 200px;
+}
+.directory-item .contact-photo {
+  width: 175px;
+  height: 175px;
+}
+.directory-item .contact-photo img {
+  width: 175px;
+  height: 175px;
+}
+.contact-name {
+  text-align: center;
+  font-weight: bold;
+}
+.contact-details {
+  color: #999999;
 }
 /* editor */
 .jothidden {
@@ -1114,6 +1156,16 @@ ul.tabs li .active {
 }
 .oauthapp a {
   float: left;
+}
+/* contacts */
+.contact-entry-wrapper {
+  width: 50px;
+  float: left;
+}
+/* photo */
+.lframe {
+  float: left;
+  margin: 0px 10px 10px 0px;
 }
 /* page footer */
 footer {
