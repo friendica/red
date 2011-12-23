@@ -300,21 +300,19 @@ function network_content(&$a, $update = 0) {
 				info( t('Group is empty'));
 		}
 
-
-//		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` $star_sql AND ( `contact-id` IN ( $contact_str ) OR `allow_gid` REGEXP '<" . intval($group) . ">' )) ";
 		$sql_extra = " AND `item`.`parent` IN ( SELECT DISTINCT(`parent`) FROM `item` WHERE 1 $star_sql AND ( `contact-id` IN ( $contact_str ) OR `allow_gid` REGEXP '<" . intval($group) . ">' )) ";
 		$o = '<h2>' . t('Group: ') . $r[0]['name'] . '</h2>' . $o;
 	}
 	elseif($cid) {
 
-		$r = q("SELECT `id`,`name`,`network`,`writable` FROM `contact` WHERE `id` = %d 
+		$r = q("SELECT `id`,`name`,`network`,`writable`,`nurl` FROM `contact` WHERE `id` = %d 
 				AND `blocked` = 0 AND `pending` = 0 LIMIT 1",
 			intval($cid)
 		);
 		if(count($r)) {
-			$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` $star_sql AND `contact-id` IN ( " . intval($cid) . " )) ";
+			$sql_extra = " AND `item`.`parent` IN ( SELECT DISTINCT(`parent`) FROM `item` WHERE 1 $star_sql AND `contact-id` = " . intval($cid) . " ) ";
 			$o = '<h2>' . t('Contact: ') . $r[0]['name'] . '</h2>' . $o;
-			if($r[0]['network'] !== NETWORK_MAIL && $r[0]['network'] !== NETWORK_DFRN && $r[0]['network'] !== NETWORK_FACEBOOK && $r[0]['network'] !== NETWORK_DIASPORA && $r[0]['writable'] && (! get_pconfig(local_user(),'system','nowarn_insecure'))) {
+			if($r[0]['network'] === NETWORK_OSTATUS && $r[0]['writable'] && (! get_pconfig(local_user(),'system','nowarn_insecure'))) {
 				notice( t('Private messages to this person are at risk of public disclosure.') . EOL);
 			}
 
