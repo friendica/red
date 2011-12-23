@@ -626,7 +626,13 @@ function notifier_run($argv, $argc){
 							$reply_to = $r1[0]['reply_to'];
 	
 						$subject  = (($it['title']) ? $it['title'] : t("\x28no subject\x29")) ;
-						$headers  = 'From: ' . $local_user[0]['username'] . ' <' . $local_user[0]['email'] . '>' . "\n";
+
+						// only expose our real email address to true friends
+
+						if($contact['rel'] == CONTACT_IS_FRIEND)
+							$headers  = 'From: ' . $local_user[0]['username'] . ' <' . $local_user[0]['email'] . '>' . "\n";
+						else
+							$headers  = 'From: ' . $local_user[0]['username'] . ' <' . t('noreply') . '@' . $a->get_hostname() . '>' . "\n";
 
 						if($reply_to)
 							$headers .= 'Reply-to: ' . $reply_to . "\n";
