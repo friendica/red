@@ -38,10 +38,10 @@ function notification($params) {
 
 		$subject = 	sprintf( t('New mail received at %s'),$sitename);
 
-		$new_email = sprintf( t('%s sent you a new private message at %s.'),$params['source_name'],$sitename);
-		$email_visit = t('Please visit %s to view and/or reply to your private messages.');
-		$email_tlink = sprintf( $email_visit, $siteurl . '/message' );
-		$email_hlink = sprintf( $email_visit, '<a href="' . $siteurl . '/message">' . $sitename . '</a>');
+		$preamble = sprintf( t('%s sent you a new private message at %s.'),$params['source_name'],$sitename);
+		$sitelink = t('Please visit %s to view and/or reply to your private messages.');
+		$tsitelink = sprintf( $email_visit, $siteurl . '/message' );
+		$hsitelink = sprintf( $email_visit, '<a href="' . $siteurl . '/message">' . $sitename . '</a>');
 
 	}
 
@@ -53,14 +53,13 @@ function notification($params) {
 
 		push_lang($params['language']);
 
-		$msg['notificationfromname']	= $sender_name;
-		$msg['notificationfromemail']	= $sender_email;
+		$msg = array();
+		$msg['fromname']	= $sender_name;
+		$msg['fromemail']	= $sender_email;
 
-		$msg['textversion']
-				= strip_tags(html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r", "\\n"), "\n",
+		$msg['textversion'] = strip_tags(html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r", "\\n"), "\n",
 					$body))),ENT_QUOTES,'UTF-8'));
-		$msg['htmlversion']	
-				= html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r","\\n\\n" ,"\\n"), 
+		$msg['htmlversion']	= html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r","\\n\\n" ,"\\n"), 
 						"<br />\n",$body))));
 
 		// load the template for private message notifications
