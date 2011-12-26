@@ -15,8 +15,13 @@ function notification($params) {
 	$sender_name = t('Administrator');
 	$sender_email = t('noreply') . '@' . $a->get_hostname();
 
-	$title = $params['item']['title'];
-	$body = $params['item']['body'];
+	if(in_array('item',$params)) {
+		$title = $params['item']['title'];
+		$body = $params['item']['body'];
+	}
+	else {
+		$title = $body = '';
+	}
 
 	if($params['type'] == NOTIFY_MAIL) {
 
@@ -48,6 +53,24 @@ function notification($params) {
 		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '">' . $sitename . '</a>');
 		$itemlink =  $params['link'];
 	}
+
+	if($params['type'] == NOTIFY_INTRO) {
+		$subject = sprintf( t('Introduction received at %s'), $sitename);
+		$preamble = sprintf( t('You\'ve received an introduction from \'%s\' at %s'), $params['source_name'], $sitename); 
+		$body = sprintf( t('You may visit their profile at %s'),$params['source_link']);
+
+		$sitelink = t('Please visit %s to approve or reject the introduction.');
+		$tsitelink = sprintf( $sitelink, $siteurl );
+		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '">' . $sitename . '</a>');
+		$itemlink =  $params['link'];
+	}
+
+	if($params['type'] == NOTIFY_CONFIRM) {
+
+	}
+
+	// TODO - create notification entry in DB
+
 
 
 	// send email notification if notification preferences permit

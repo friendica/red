@@ -701,7 +701,7 @@ function login($register = false, $hiddens=false) {
 		'$lpassword' 	=> array('password', t('Password: '), '', ''),
 		
 		'$openid'		=> !$noid,
-		'$lopenid'	=> array('openid_url', t('OpenID: '),'',''),
+		'$lopenid'	=> array('openid_url', t('Or login using OpenID: '),'',''),
 		
 		'$hiddens'	=> $hiddens,
 		

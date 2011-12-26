@@ -568,24 +568,22 @@ function dfrn_request_content(&$a) {
 			if(count($r)) {
 				if($r[0]['page-flags'] != PAGE_NORMAL)
 					$auto_confirm = true;				
-				if(($r[0]['notify-flags'] & NOTIFY_INTRO) && (! $auto_confirm)) {
-					$email_tpl = get_intltext_template('request_notify_eml.tpl');
-					$email = replace_macros($email_tpl, array(
-						'$requestor' => ((strlen(stripslashes($r[0]['name']))) ? stripslashes($r[0]['name']) : t('[Name Withheld]')),
-						'$url' => stripslashes($r[0]['url']),
-						'$myname' => $r[0]['username'],
-						'$siteurl' => $a->get_baseurl(),
-						'$sitename' => $a->config['sitename']
-					));
-					$res = mail($r[0]['email'], 
-					    t("Introduction received at ") . $a->config['sitename'],
-						$email,
-						'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
-						. 'Content-type: text/plain; charset=UTF-8' . "\n"
-						. 'Content-transfer-encoding: 8bit' );
 
-					// This is a redundant notification - no point throwing errors if it fails.
+				if(! $auto_confirm) {
+					require_once('include/enotify.php');
+					notification(array(
+						'type'         => NOTIFY_INTRO,
+						'notify_flags' => $r[0]['notify-flags'],
+						'language'     => $r[0]['language'],
+						'to_name'      => $r[0]['username'],
+						'to_email'     => $r[0]['email'],
+						'link'		   => $a->get_baseurl() . '/notifications/intros',
+						'source_name'  => ((strlen(stripslashes($r[0]['name']))) ? stripslashes($r[0]['name']) : t('[Name Withheld]')),
+						'source_link'  => $r[0]['url'],
+						'source_photo' => $r[0]['photo']
+					));
 				}
+
 				if($auto_confirm) {
 					require_once('mod/dfrn_confirm.php');
 					$handsfree = array(
