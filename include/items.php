@@ -1822,11 +1822,13 @@ function local_delivery($importer,$data) {
 		$r = dbq("INSERT INTO `mail` (`" . implode("`, `", array_keys($msg)) 
 			. "`) VALUES ('" . implode("', '", array_values($msg)) . "')" );
 
-		// send email notification if requested.
+		// send notifications.
+
+		require_once('include/enotify.php');
 
 		$notif_params = array(
 			'type' => NOTIFY_MAIL,
-			'notify_flags' => $importer['notify_flags'],
+			'notify_flags' => $importer['notify-flags'],
 			'language' => $importer['language'],
 			'to_name' => $importer['username'],
 			'to_email' => $importer['email'],
@@ -1836,84 +1838,9 @@ function local_delivery($importer,$data) {
 			'source_photo' => $importer['thumb'],
 		);
 			
-		//notification($notif_params);
-
-		require_once('bbcode.php');
-		if($importer['notify-flags'] & NOTIFY_MAIL) {
-
-			push_lang($importer['language']);
-
-			// name of the automated email sender
-			$msg['notificationfromname']	= t('Administrator');
-			// noreply address to send from
-			$msg['notificationfromemail']	= t('noreply') . '@' . $a->get_hostname();				
-
-			// text version
-			// process the message body to display properly in text mode
-			// 		1) substitute a \n character for the "\" then "n", so it behaves properly (it doesn't come in as a \n character)
-			//		2) remove escape slashes
-			//		3) decode any bbcode from the message editor
-			//		4) decode any encoded html tags
-			//		5) remove html tags
-			$msg['textversion']
-				= strip_tags(html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r", "\\n"), "\n",$msg['body']))),ENT_QUOTES,'UTF-8'));
-				
-			// html version
-			// process the message body to display properly in text mode
-			// 		1) substitute a <br /> tag for the "\" then "n", so it behaves properly (it doesn't come in as a \n character)
-			//		2) remove escape slashes
-			//		3) decode any bbcode from the message editor
-			//		4) decode any encoded html tags
-			$msg['htmlversion']	
-				= html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r","\\n\\n" ,"\\n"), "<br />\n",$msg['body']))));
-
-			// load the template for private message notifications
-			$tpl = get_intltext_template('mail_received_html_body_eml.tpl');
-			$email_html_body_tpl = replace_macros($tpl,array(
-				'$username'     => $importer['username'],
-				'$siteName'		=> $a->config['sitename'],			// name of this site
-				'$siteurl'		=> $a->get_baseurl(),				// descriptive url of this site
-				'$thumb'		=> $importer['thumb'],				// thumbnail url for sender icon
-				'$email'		=> $importer['email'],				// email address to send to
-				'$url'			=> $importer['url'],				// full url for the site
-				'$from'			=> $msg['from-name'],				// name of the person sending the message
-				'$title'		=> stripslashes($msg['title']),			// subject of the message
-				'$htmlversion'	=> $msg['htmlversion'],					// html version of the message
-				'$mimeboundary'	=> $msg['mimeboundary'],				// mime message divider
-				'$hostname'		=> $a->get_hostname()				// name of this host
-			));
-			
-			// load the template for private message notifications
-			$tpl = get_intltext_template('mail_received_text_body_eml.tpl');
-			$email_text_body_tpl = replace_macros($tpl,array(
-				'$username'     => $importer['username'],
-				'$siteName'		=> $a->config['sitename'],			// name of this site
-				'$siteurl'		=> $a->get_baseurl(),				// descriptive url of this site
-				'$thumb'		=> $importer['thumb'],				// thumbnail url for sender icon
-				'$email'		=> $importer['email'],				// email address to send to
-				'$url'			=> $importer['url'],				// full url for the site
-				'$from'			=> $msg['from-name'],				// name of the person sending the message
-				'$title'		=> stripslashes($msg['title']),			// subject of the message
-				'$textversion'	=> $msg['textversion'],					// text version of the message
-				'$mimeboundary'	=> $msg['mimeboundary'],				// mime message divider
-				'$hostname'		=> $a->get_hostname()				// name of this host
-			));
-
-			// use the EmailNotification library to send the message
-			require_once("include/EmailNotification.php");
-			EmailNotification::sendTextHtmlEmail(
-				$msg['notificationfromname'],
-				$msg['notificationfromemail'],
-				$msg['notificationfromemail'],
-				$importer['email'],
-				t('New mail received at ') . $a->config['sitename'],
-				$email_html_body_tpl,
-				$email_text_body_tpl
-			);
-
-			pop_lang();
-		}
+		notification($notif_params);
 		return 0;
+
 		// NOTREACHED
 	}	
 	
