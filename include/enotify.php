@@ -1,23 +1,5 @@
 <?php
 
-
-		// send email notification if requested.
-/*
-		$notif_params = array(
-			'type' => NOTIFY_MAIL,
-			'notify_flags' => $importer['notify-flags'],
-			'language' => $importer['language'],
-			'to_name' => $importer['username'],
-			'to_email' => $importer['email'],
-			'item' => $msg,
-			'source_name' => $msg['from-name'],
-			'source_link' => $importer['url'],
-			'source_photo' => $importer['thumb'],
-		);
-*/			
-		//notification($notif_params);
-
-
 function notification($params) {
 
 	logger('notification: entry');
@@ -38,8 +20,6 @@ function notification($params) {
 
 	if($params['type'] == NOTIFY_MAIL) {
 
-		logger('notification: email');
-
 		$subject = 	sprintf( t('New mail received at %s'),$sitename);
 
 		$preamble = sprintf( t('%s sent you a new private message at %s.'),$params['source_name'],$sitename);
@@ -47,6 +27,26 @@ function notification($params) {
 		$sitelink = t('Please visit %s to view and/or reply to your private messages.');
 		$tsitelink = sprintf( $sitelink, $siteurl . '/message' );
 		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '/message">' . $sitename . '</a>');
+		$itemlink = '';
+	}
+
+	if($params['type'] == NOTIFY_COMMENT) {
+
+		$preamble = $subject = sprintf( t('%s commented on an item at %s'), $params['source_name'], $sitename);
+
+		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
+		$tsitelink = sprintf( $sitelink, $siteurl );
+		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '">' . $sitename . '</a>');
+		$itemlink =  $params['link'];
+	}
+
+	if($params['type'] == NOTIFY_WALL) {
+		$preamble = $subject =	sprintf( t('%s posted to your profile wall at %s') , $params['source_name'], $sitename);
+
+		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
+		$tsitelink = sprintf( $sitelink, $siteurl );
+		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '">' . $sitename . '</a>');
+		$itemlink =  $params['link'];
 	}
 
 
@@ -77,6 +77,7 @@ function notification($params) {
 			'$source_photo' => $params['source_photo'],
 			'$username'     => $params['to_name'],
 			'$hsitelink'    => $hsitelink,
+			'$itemlink'     => $itemlink,
 			'$thanks'       => $thanks,
 			'$site_admin'   => $site_admin,
 			'$title'		=> stripslashes($title),
@@ -96,6 +97,7 @@ function notification($params) {
 			'$source_photo' => $params['source_photo'],
 			'$username'     => $params['to_name'],
 			'$tsitelink'    => $tsitelink,
+			'$itemlink'     => $itemlink,
 			'$thanks'       => $thanks,
 			'$site_admin'   => $site_admin,
 			'$title'		=> stripslashes($title),
@@ -135,10 +137,8 @@ class enotify {
 	 */
 	static public function send($params) {
 
-		logger('enotify: send: ' . print_r($params,true));
 		$fromName = email_header_encode($params['fromName'],'UTF-8'); 
 		$messageSubject = email_header_encode($params['messageSubject'],'UTF-8');
-		
 		
 		// generate a mime boundary
 		$mimeBoundary   =rand(0,9)."-"
@@ -174,7 +174,7 @@ class enotify {
 			$multipartMessageBody,	 						// message body
 			$messageHeader									// message headers
 		);
-		logger("sendTextHtmlEmail: returns " . $res, LOGGER_DEBUG);
+		logger("enotify::send returns " . $res, LOGGER_DEBUG);
 	}
 }
 ?>

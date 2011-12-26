@@ -679,68 +679,21 @@ function item_post(&$a) {
 				intval($post_id)
 			);
 
-			// Send a notification email to the conversation owner, unless the owner is me and I wrote this item
-			if(($user['notify-flags'] & NOTIFY_COMMENT) && ($contact_record != $author)) {
-				push_lang($user['language']);
-				require_once('bbcode.php');
-				$from = $author['name'];
-
-				// name of the automated email sender
-				$msg['notificationfromname']	= stripslashes($datarray['author-name']);;
-				// noreply address to send from
-				$msg['notificationfromemail']	= t('noreply') . '@' . $a->get_hostname();				
-
-				// text version
-				// process the message body to display properly in text mode
-				$msg['textversion']
-					= html_entity_decode(strip_tags(bbcode(stripslashes($datarray['body']))), ENT_QUOTES, 'UTF-8');
-				
-				// html version
-				// process the message body to display properly in text mode
-				$msg['htmlversion']	
-					= html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r","\\n\\n" ,"\\n"), "<br />\n",$datarray['body']))));
-
-				// load the template for private message notifications
-				$tpl = get_intltext_template('cmnt_received_html_body_eml.tpl');
-				$email_html_body_tpl = replace_macros($tpl,array(
-					'$username'     => $user['username'],
-					'$sitename'		=> $a->config['sitename'],				// name of this site
-					'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
-					'$thumb'		=> $author['thumb'],					// thumbnail url for sender icon
-					'$email'		=> $importer['email'],					// email address to send to
-					'$url'			=> $author['url'],						// full url for the site
-					'$from'			=> $from,								// name of the person sending the message
-					'$body'			=> $msg['htmlversion'],					// html version of the message
-					'$display'		=> $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
+			if($contact_record != $author) {
+				require_once('include/enotify.php');
+				notification(array(
+					'type'         => NOTIFY_COMMENT,
+					'notify_flags' => $user['notify-flags'],
+					'language'     => $user['language'],
+					'to_name'      => $user['username'],
+					'to_email'     => $user['email'],
+					'item'         => $datarray,
+					'link'		   => $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
+					'source_name'  => $datarray['author-name'],
+					'source_link'  => $datarray['author-link'],
+					'source_photo' => $datarray['author-avatar']
 				));
 			
-				// load the template for private message notifications
-				$tpl = get_intltext_template('cmnt_received_text_body_eml.tpl');
-				$email_text_body_tpl = replace_macros($tpl,array(
-					'$username'     => $user['username'],
-					'$sitename'		=> $a->config['sitename'],				// name of this site
-					'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
-					'$thumb'		=> $author['thumb'],					// thumbnail url for sender icon
-					'$email'		=> $importer['email'],					// email address to send to
-					'$url'			=> $author['url'],						// profile url for the author
-					'$from'			=> $from,								// name of the person sending the message
-					'$body'			=> $msg['textversion'],					// text version of the message
-					'$display'		=> $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
-				));
-
-				// use the EmailNotification library to send the message
-				require_once("include/EmailNotification.php");
-				EmailNotification::sendTextHtmlEmail(
-					$msg['notificationfromname'],
-					t("Administrator@") . $a->get_hostname(),
-					t("noreply") . '@' . $a->get_hostname(),
-					$user['email'],
-					sprintf( t('%s commented on an item at %s'), $from , $a->config['sitename']),
-					$email_html_body_tpl,
-					$email_text_body_tpl
-				);
-
-				pop_lang();
 			}
 
 			// We won't be able to sign Diaspora comments for authenticated visitors - we don't have their private key
@@ -767,66 +720,19 @@ function item_post(&$a) {
 		else {
 			$parent = $post_id;
 
-			// let me know if somebody did a wall-to-wall post on my profile
-
-			if(($user['notify-flags'] & NOTIFY_WALL) && ($contact_record != $author)) {
-				push_lang($user['language']);
-				require_once('bbcode.php');
-				$from = $author['name'];
-							
-				// name of the automated email sender
-				$msg['notificationfromname']	= $from;
-				// noreply address to send from
-				$msg['notificationfromemail']	= t('noreply') . '@' . $a->get_hostname();				
-
-				// text version
-				// process the message body to display properly in text mode
-				$msg['textversion']
-					= html_entity_decode(strip_tags(bbcode(stripslashes($datarray['body']))), ENT_QUOTES, 'UTF-8');
-				
-				// html version
-				// process the message body to display properly in text mode
-				$msg['htmlversion']	
-					= html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r","\\n\\n" ,"\\n"), "<br />\n",$datarray['body']))));
-
-				// load the template for private message notifications
-				$tpl = load_view_file('view/wall_received_html_body_eml.tpl');
-				$email_html_body_tpl = replace_macros($tpl,array(
-					'$username'     => $user['username'],
-					'$sitename'		=> $a->config['sitename'],				// name of this site
-					'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
-					'$thumb'		=> $author['thumb'],					// thumbnail url for sender icon
-					'$url'			=> $author['url'],						// full url for the site
-					'$from'			=> $from,								// name of the person sending the message
-					'$body'			=> $msg['htmlversion'],					// html version of the message
-					'$display'		=> $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
+			if($contact_record != $author) {
+				notification(array(
+					'type'         => NOTIFY_WALL,
+					'notify_flags' => $user['notify-flags'],
+					'language'     => $user['language'],
+					'to_name'      => $user['username'],
+					'to_email'     => $user['email'],
+					'item'         => $datarray,
+					'link'		   => $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
+					'source_name'  => $datarray['author-name'],
+					'source_link'  => $datarray['author-link'],
+					'source_photo' => $datarray['author-avatar']
 				));
-			
-				// load the template for private message notifications
-				$tpl = load_view_file('view/wall_received_text_body_eml.tpl');
-				$email_text_body_tpl = replace_macros($tpl,array(
-					'$username'     => $user['username'],
-					'$sitename'		=> $a->config['sitename'],				// name of this site
-					'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
-					'$thumb'		=> $author['thumb'],					// thumbnail url for sender icon
-					'$url'			=> $author['url'],						// full url for the site
-					'$from'			=> $from,								// name of the person sending the message
-					'$body'			=> $msg['textversion'],					// text version of the message
-					'$display'		=> $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
-				));
-
-				// use the EmailNotification library to send the message
-				require_once("include/EmailNotification.php");
-				EmailNotification::sendTextHtmlEmail(
-					$msg['notificationfromname'],
-					t("Administrator@") . $a->get_hostname(),
-					t("noreply") . '@' . $a->get_hostname(),
-					$user['email'],
-					sprintf( t('%s posted to your profile wall at %s') , $from , $a->config['sitename']),
-					$email_html_body_tpl,
-					$email_text_body_tpl
-				);
-				pop_lang();
 			}
 		}
 

@@ -17,7 +17,8 @@
 		<td style="padding-top:22px;"><a href="$source_link">$source_name</a></td></tr>
 	<tr><td style="font-weight:bold;padding-bottom:5px;">$title</td></tr>
 	<tr><td style="padding-right:22px;">$htmlversion</td></tr>
-	<tr><td style="padding-top:11px;padding-bottom:11px;" colspan="2">$hsitelink</td></tr>
+	<tr><td style="padding-top:11px;" colspan="2">$hsitelink</td></tr>
+	<tr><td style="padding-bottom:11px;" colspan="2">$itemlink</td></tr>
 	<tr><td></td><td>$thanks</td></tr>
 	<tr><td></td><td>$site_admin</td></tr>
 	</tbody>
