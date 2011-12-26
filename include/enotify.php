@@ -63,19 +63,21 @@ function notification($params) {
 						"<br />\n",$body))));
 
 		// load the template for private message notifications
-		$tpl = get_intltext_template('mail_received_html_body_eml.tpl');
+		$tpl = get_view_template('email_notify_html.tpl');
 		$email_html_body_tpl = replace_macros($tpl,array(
-			'$username'     => $importer['username'],
-			'$siteName'		=> $a->config['sitename'],			// name of this site
-			'$siteurl'		=> $a->get_baseurl(),				// descriptive url of this site
-			'$thumb'		=> $importer['thumb'],				// thumbnail url for sender icon
-			'$email'		=> $importer['email'],				// email address to send to
-			'$url'			=> $importer['url'],				// full url for the site
-			'$from'			=> $msg['from-name'],				// name of the person sending the message
+			'$banner' => $banner,
+			'$product' => $product,
+			'$preamble' => $preamble,
+			'$source_name' => $parama['source_name'],
+			'$source_link' => $params['source_link'],
+			'$source_photo' => $params['source_photo'],
+			'$username'     => $params['to_name'],
+			'$hsitelink'    => $hsitelink,
+			'$thanks'       => $thanks,
+			'$site_admin'   => $site_admin,
 			'$title'		=> stripslashes($msg['title']),			// subject of the message
 			'$htmlversion'	=> $msg['htmlversion'],					// html version of the message
-			'$mimeboundary'	=> $msg['mimeboundary'],				// mime message divider
-			'$hostname'		=> $a->get_hostname()				// name of this host
+
 		));
 		
 		// load the template for private message notifications
