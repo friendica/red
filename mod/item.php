@@ -16,6 +16,7 @@
  */  
 
 require_once('include/crypto.php');
+require_once('include/enotify.php');
 
 function item_post(&$a) {
 
@@ -680,7 +681,6 @@ function item_post(&$a) {
 			);
 
 			if($contact_record != $author) {
-				require_once('include/enotify.php');
 				notification(array(
 					'type'         => NOTIFY_COMMENT,
 					'notify_flags' => $user['notify-flags'],

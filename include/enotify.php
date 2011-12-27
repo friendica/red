@@ -2,7 +2,7 @@
 
 function notification($params) {
 
-	logger('notification: entry');
+	logger('notification: entry', LOGGER_DEBUG);
 
 	$a = get_app();
 	$banner = t('Friendica Notification');
@@ -12,10 +12,10 @@ function notification($params) {
 	$sitename = get_config('config','sitename');
 	$site_admin = sprintf( t('%s Administrator'), $sitename);
 
-	$sender_name = t('Administrator');
+	$sender_name = $product;
 	$sender_email = t('noreply') . '@' . $a->get_hostname();
 
-	if(in_array('item',$params)) {
+	if(array_key_exists('item',$params)) {
 		$title = $params['item']['title'];
 		$body = $params['item']['body'];
 	}
@@ -78,7 +78,7 @@ function notification($params) {
 	require_once('bbcode.php');
 	if(intval($params['notify_flags']) & intval($params['type'])) {
 
-		logger('notification: sending email');
+		logger('notification: sending notification email');
 
 		push_lang($params['language']);
 
@@ -100,7 +100,7 @@ function notification($params) {
 			'$source_photo' => $params['source_photo'],
 			'$username'     => $params['to_name'],
 			'$hsitelink'    => $hsitelink,
-			'$itemlink'     => $itemlink,
+			'$itemlink'     => '<a href="' . $itemlink . '">' . $itemlink . '</a>',
 			'$thanks'       => $thanks,
 			'$site_admin'   => $site_admin,
 			'$title'		=> stripslashes($title),
@@ -127,7 +127,7 @@ function notification($params) {
 			'$textversion'	=> $textversion,	
 		));
 
-		logger('text: ' . $email_text_body);
+//		logger('text: ' . $email_text_body);
 
 		// use the EmailNotification library to send the message
 
@@ -172,7 +172,7 @@ class enotify {
 		// generate a multipart/alternative message header
 		$messageHeader =
 			"From: {$params['fromName']} <{$params['fromEmail']}>\n" . 
-			"Reply-To: {$params['replyTo']}\n" .
+			"Reply-To: {$params['fromName']} <{$params['replyTo']}>\n" .
 			"MIME-Version: 1.0\n" .
 			"Content-Type: multipart/alternative; boundary=\"{$mimeBoundary}\"";
 
@@ -197,7 +197,7 @@ class enotify {
 			$multipartMessageBody,	 						// message body
 			$messageHeader									// message headers
 		);
-		logger("enotify::send returns " . $res, LOGGER_DEBUG);
+		logger("notification: enotify::send returns " . $res, LOGGER_DEBUG);
 	}
 }
 ?>
