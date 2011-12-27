@@ -1223,6 +1223,19 @@ function diaspora_conversation($importer,$xml,$msg) {
 			dbesc(datetime_convert()),
 			intval($conversation['id'])
 		);		
+
+		require_once('include/enotify.php');
+		notification(array(			
+			'type' => NOTIFY_MAIL,
+			'notify_flags' => $importer['notify-flags'],
+			'language' => $importer['language'],
+			'to_name' => $importer['username'],
+			'to_email' => $importer['email'],
+			'item' => array('subject' => $subject, 'body' => $body),
+			'source_name' => $person['name'],
+			'source_link' => $person['url'],
+			'source_photo' => $person['thumb'],
+		));
 	}	
 
 	return;
