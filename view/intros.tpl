@@ -14,6 +14,7 @@
 <div class="intro-form-end"></div>
 
 <form class="intro-approve-form" action="dfrn_confirm" method="post">
+{{inc field_checkbox.tpl with $field=$hidden }}{{endinc}}
 <input type="hidden" name="dfrn_id" value="$dfrn_id" >
 <input type="hidden" name="intro_id" value="$intro_id" >
 <input type="hidden" name="contact_id" value="$contact_id" >

@@ -71,12 +71,14 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			$dfrn_id   = $handsfree['dfrn_id'];
 			$intro_id  = $handsfree['intro_id'];
 			$duplex    = $handsfree['duplex'];
+			$hidden    = ((array_key_exists('hidden',$handsfree)) ? intval($handsfree['hidden']) : 0 );
 		}
 		else {
 			$dfrn_id  = ((x($_POST,'dfrn_id'))    ? notags(trim($_POST['dfrn_id'])) : "");
 			$intro_id = ((x($_POST,'intro_id'))   ? intval($_POST['intro_id'])      : 0 );
 			$duplex   = ((x($_POST,'duplex'))     ? intval($_POST['duplex'])        : 0 );
 			$cid      = ((x($_POST,'contact_id')) ? intval($_POST['contact_id'])    : 0 );
+			$hidden   = ((x($_POST,'hidden'))     ? intval($_POST['hidden'])        : 0 );
 		}
 
 		/**
@@ -122,7 +124,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		$site_pubkey  = $contact['site-pubkey'];
 		$dfrn_confirm = $contact['confirm'];
 		$aes_allow    = $contact['aes_allow'];
-
+		
 		$network = ((strlen($contact['issued-id'])) ? NETWORK_DFRN : NETWORK_OSTATUS);
 
 		if($contact['network'])
@@ -316,7 +318,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			if(($relation == CONTACT_IS_SHARING) && ($duplex))
 				$duplex = 0;
 
-			$r = q("UPDATE `contact` SET `photo` = '%s', 
+			$r = q("UPDATE `contact` SET 
+				`photo` = '%s', 
 				`thumb` = '%s',
 				`micro` = '%s', 
 				`rel` = %d, 
@@ -326,6 +329,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				`blocked` = 0, 
 				`pending` = 0,
 				`duplex` = %d,
+				`hidden` = %d,
 				`network` = 'dfrn' WHERE `id` = %d LIMIT 1
 			",
 				dbesc($photos[0]),
@@ -336,6 +340,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				dbesc(datetime_convert()),
 				dbesc(datetime_convert()),
 				intval($duplex),
+				intval($hidden),
 				intval($contact_id)
 			);
 		}
@@ -387,6 +392,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				`pending` = 0,
 				`network` = '%s',
 				`writable` = %d,
+				`hidden` = %d,
 				`rel` = %d
 				WHERE `id` = %d LIMIT 1
 			",
@@ -400,6 +406,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				dbesc($poll),
 				dbesc($network),
 				intval($writable),
+				intval($hidden),
 				intval($new_relation),
 				intval($contact_id)
 			);			
@@ -423,7 +430,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		$r = q("SELECT `hide-friends` FROM `profile` WHERE `uid` = %d AND `is-default` = 1 LIMIT 1",
 			intval($uid)
 		);
-		if((count($r)) && ($r[0]['hide-friends'] == 0) && (is_array($contact)) &&  isset($new_relation) && ($new_relation == CONTACT_IS_FRIEND)) {
+		if((count($r)) && (! $hidden) && ($r[0]['hide-friends'] == 0) && (is_array($contact)) &&  isset($new_relation) && ($new_relation == CONTACT_IS_FRIEND)) {
 
 			if($r[0]['network'] === NETWORK_DIASPORA) {
 				require_once('include/diaspora.php');
