@@ -2092,68 +2092,22 @@ function local_delivery($importer,$data) {
 				
 						proc_run('php',"include/notifier.php","comment-import","$posted_id");
 					
-						if((! $is_like) && ($importer['notify-flags'] & NOTIFY_COMMENT) && (! $importer['self'])) {
-							push_lang($importer['language']);
-							require_once('bbcode.php');
-							$from = stripslashes($datarray['author-name']);
+						if((! $is_like) && (! $importer['self'])) {
 
-							// name of the automated email sender
-							$msg['notificationfromname']	= stripslashes($datarray['author-name']);;
-							// noreply address to send from
-							$msg['notificationfromemail']	= t('noreply') . '@' . $a->get_hostname();				
-
-							// text version
-							// process the message body to display properly in text mode
-							$msg['textversion']
-								= html_entity_decode(strip_tags(bbcode(stripslashes($datarray['body']))), ENT_QUOTES, 'UTF-8');
-				
-							// html version
-							// process the message body to display properly in text mode
-							$msg['htmlversion']	
-								= html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r","\\n\\n" ,"\\n"), "<br />\n",$datarray['body']))));
-
-							$imgtouse = ((link_compare($datarray['author-link'],$importer['url'])) ? $importer['thumb'] : $datarray['author-avatar']);
-
-							// load the template for private message notifications
-							$tpl = get_intltext_template('cmnt_received_html_body_eml.tpl');
-							$email_html_body_tpl = replace_macros($tpl,array(
-								'$username'     => $importer['username'],
-								'$sitename'		=> $a->config['sitename'],			// name of this site
-								'$siteurl'		=> $a->get_baseurl(),				// descriptive url of this site
-								'$thumb'		=> $imgtouse,						// thumbnail url for sender icon
-								'$email'		=> $importer['email'],				// email address to send to
-								'$url'			=> $datarray['author-link'],		// full url for the site
-								'$from'			=> $from,							// name of the person sending the message
-								'$body'			=> $msg['htmlversion'],				// html version of the message
-								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id,
-							));
-			
-							// load the template for private message notifications
-							$tpl = get_intltext_template('cmnt_received_text_body_eml.tpl');
-							$email_text_body_tpl = replace_macros($tpl,array(
-								'$username'     => $importer['username'],
-								'$sitename'		=> $a->config['sitename'],			// name of this site
-								'$siteurl'		=> $a->get_baseurl(),				// descriptive url of this site
-								'$thumb'		=> $imgtouse,						// thumbnail url for sender icon
-								'$email'		=> $importer['email'],				// email address to send to
-								'$url'			=> $datarray['author-link'],		// full url for the site
-								'$from'			=> $from,							// name of the person sending the message
-								'$body'			=> $msg['textversion'],				// text version of the message
-								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id,
+							notification(array(
+								'type'         => NOTIFY_COMMENT,
+								'notify_flags' => $importer['notify-flags'],
+								'language'     => $importer['language'],
+								'to_name'      => $importer['username'],
+								'to_email'     => $importer['email'],
+								'item'         => $datarray,
+								'link'		   => $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id,
+								'source_name'  => stripslashes($datarray['author-name']),
+								'source_link'  => $datarray['author-link'],
+								'source_photo' => ((link_compare($datarray['author-link'],$importer['url'])) 
+									? $importer['thumb'] : $datarray['author-avatar'])
 							));
 
-							// use the EmailNotification library to send the message
-							require_once("include/EmailNotification.php");
-							EmailNotification::sendTextHtmlEmail(
-								$msg['notificationfromname'],
-								t("Administrator") . '@' . $a->get_hostname(),
-								t("noreply") . '@' . $a->get_hostname(),
-								$importer['email'],
-								sprintf( t('%s commented on an item at %s'), $from , $a->config['sitename']),
-								$email_html_body_tpl,
-								$email_text_body_tpl
-							);
-							pop_lang();
 						}
 					}
 					return 0;
@@ -2240,78 +2194,34 @@ function local_delivery($importer,$data) {
 
 				// find out if our user is involved in this conversation and wants to be notified.
 			
-				if(($datarray['type'] != 'activity') && ($importer['notify-flags'] & NOTIFY_COMMENT)) {
+				if($datarray['type'] != 'activity') {
 
 					$myconv = q("SELECT `author-link`, `author-avatar` FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `parent` != 0 ",
 						dbesc($parent_uri),
 						intval($importer['importer_uid'])
 					);
+
 					if(count($myconv)) {
 						$importer_url = $a->get_baseurl() . '/profile/' . $importer['nickname'];
 						foreach($myconv as $conv) {
+
 							if(! link_compare($conv['author-link'],$importer_url))
 								continue;
 
-							push_lang($importer['language']);
-							require_once('bbcode.php');
-							$from = stripslashes($datarray['author-name']);
-							
-							// name of the automated email sender
-							$msg['notificationfromname']	= stripslashes($datarray['author-name']);;
-							// noreply address to send from
-							$msg['notificationfromemail']	= t('noreply') . '@' . $a->get_hostname();				
-
-							// text version
-							// process the message body to display properly in text mode
-							$msg['textversion']
-								= html_entity_decode(strip_tags(bbcode(stripslashes($datarray['body']))), ENT_QUOTES, 'UTF-8');
-				
-							// html version
-							// process the message body to display properly in text mode
-							$msg['htmlversion']	
-								= html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r","\\n\\n" ,"\\n"), "<br />\n",$datarray['body']))));
-
-							$imgtouse = ((link_compare($datarray['author-link'],$importer['url'])) ? $importer['thumb'] : $datarray['author-avatar']);
-
-
-							// load the template for private message notifications
-							$tpl = get_intltext_template('cmnt_received_html_body_eml.tpl');
-							$email_html_body_tpl = replace_macros($tpl,array(
-								'$username'     => $importer['username'],
-								'$sitename'		=> $a->config['sitename'],				// name of this site
-								'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
-								'$thumb'		=> $imgtouse,							// thumbnail url for sender icon
-								'$url'			=> $datarray['author-link'],			// full url for the site
-								'$from'			=> $from,								// name of the person sending the message
-								'$body'			=> $msg['htmlversion'],					// html version of the message
-								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id,
-							));
-			
-							// load the template for private message notifications
-							$tpl = get_intltext_template('cmnt_received_text_body_eml.tpl');
-							$email_text_body_tpl = replace_macros($tpl,array(
-								'$username'     => $importer['username'],
-								'$sitename'		=> $a->config['sitename'],				// name of this site
-								'$siteurl'		=> $a->get_baseurl(),					// descriptive url of this site
-								'$thumb'		=> $imgtouse,							// thumbnail url for sender icon
-								'$url'			=> $datarray['author-link'],			// full url for the site
-								'$from'			=> $from,								// name of the person sending the message
-								'$body'			=> $msg['textversion'],					// text version of the message
-								'$display'		=> $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id,
+							notification(array(
+								'type'         => NOTIFY_COMMENT,
+								'notify_flags' => $importer['notify-flags'],
+								'language'     => $importer['language'],
+								'to_name'      => $importer['username'],
+								'to_email'     => $importer['email'],
+								'item'         => $datarray,
+								'link'		   => $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id,
+								'source_name'  => stripslashes($datarray['author-name']),
+								'source_link'  => $datarray['author-link'],
+								'source_photo' => ((link_compare($datarray['author-link'],$importer['url'])) 
+									? $importer['thumb'] : $datarray['author-avatar'])
 							));
 
-							// use the EmailNotification library to send the message
-							require_once("include/EmailNotification.php");
-							EmailNotification::sendTextHtmlEmail(
-								$msg['notificationfromname'],
-								t("Administrator@") . $a->get_hostname(),
-								t("noreply") . '@' . $a->get_hostname(),
-								$importer['email'],
-								sprintf( t('%s commented on an item at %s'), $from , $a->config['sitename']),
-								$email_html_body_tpl,
-								$email_text_body_tpl
-							);
-							pop_lang();
 							break;
 						}
 					}
