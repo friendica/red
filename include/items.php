@@ -2094,6 +2094,8 @@ function local_delivery($importer,$data) {
 					
 						if((! $is_like) && (! $importer['self'])) {
 
+							require_once('include/enotify.php');
+
 							notification(array(
 								'type'         => NOTIFY_COMMENT,
 								'notify_flags' => $importer['notify-flags'],
@@ -2207,6 +2209,8 @@ function local_delivery($importer,$data) {
 
 							if(! link_compare($conv['author-link'],$importer_url))
 								continue;
+
+							require_once('include/enotify.php');
 
 							notification(array(
 								'type'         => NOTIFY_COMMENT,
