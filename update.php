@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1112 );
+define( 'UPDATE_VERSION' , 1113 );
 
 /**
  *
@@ -948,3 +948,22 @@ function update_1111() {
 	q("ALTER TABLE `gcontact` ADD `connect` CHAR( 255 ) NOT NULL ");
 }
 
+
+function update_1112() {
+
+	q("CREATE TABLE IF NOT EXISTS `notify` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`type` INT( 11 ) NOT NULL ,
+`name` CHAR( 255 ) NOT NULL ,
+`url` CHAR( 255 ) NOT NULL ,
+`photo` CHAR( 255 ) NOT NULL ,
+`date` DATETIME NOT NULL ,
+`msg` MEDIUMTEXT NOT NULL ,
+`uid` INT NOT NULL ,
+`link` CHAR( 255 ) NOT NULL ,
+`seen` TINYINT( 1 ) NOT NULL DEFAULT '0'
+) ENGINE = MYISAM ");
+
+	q("ALTER TABLE `notify` ADD INDEX ( `type` ), ADD INDEX ( `uid`), ADD INDEX (`seen`), ADD INDEX (`date`) ");
+
+}

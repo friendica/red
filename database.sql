@@ -731,3 +731,21 @@ CREATE TABLE IF NOT EXISTS `conv` (
   INDEX ( `created` ),
   INDEX ( `updated` )
 ) ENGINE = MyISAM DEFAULT CHARSET=utf8;
+
+
+CREAT TABLE IF NOT EXISTS `notify` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`type` INT( 11 ) NOT NULL ,
+`name` CHAR( 255 ) NOT NULL ,
+`url` CHAR( 255 ) NOT NULL ,
+`photo` CHAR( 255 ) NOT NULL ,
+`date` DATETIME NOT NULL ,
+`msg` MEDIUMTEXT NOT NULL ,
+`uid` INT NOT NULL ,
+`link` CHAR( 255 ) NOT NULL ,
+`seen` TINYINT( 1 ) NOT NULL DEFAULT '0',
+INDEX ( `type` ),
+INDEX ( `uid` ),
+INDEX ( `seen` ),
+INDEX ( `date` )
+) ENGINE = MyISAM DEFAULT CHARSET=utf8;
