@@ -271,12 +271,17 @@ function network_content(&$a, $update = 0) {
 	// that belongs to you, hence you can see all of it. We will filter by group if
 	// desired. 
 
-	$star_sql = (($star) ?  " AND `starred` = 1 " : '');
 
-	if($bmark)
-		$star_sql .= " AND `bookmark` = 1 ";
+	$sql_options  = (($star) ? " and starred = 1 " : '');
+	$sql_options .= (($bmark) ? " and bookmark = 1 " : '');
 
-	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` $star_sql ) ";
+
+	$sql_new = '';
+	$sql_items = '';
+	$sql_update = '';
+
+
+	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` $sql_options ) ";
 
 	if($group) {
 		$r = q("SELECT `name`, `id` FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -300,7 +305,7 @@ function network_content(&$a, $update = 0) {
 				info( t('Group is empty'));
 		}
 
-		$sql_extra = " AND `item`.`parent` IN ( SELECT DISTINCT(`parent`) FROM `item` WHERE 1 $star_sql AND ( `contact-id` IN ( $contact_str ) OR `allow_gid` REGEXP '<" . intval($group) . ">' )) ";
+		$sql_extra = " AND `item`.`parent` IN ( SELECT DISTINCT(`parent`) FROM `item` WHERE 1 $sql_options AND ( `contact-id` IN ( $contact_str ) OR `allow_gid` REGEXP '<" . intval($group) . ">' )) ";
 		$o = '<h2>' . t('Group: ') . $r[0]['name'] . '</h2>' . $o;
 	}
 	elseif($cid) {
@@ -310,7 +315,7 @@ function network_content(&$a, $update = 0) {
 			intval($cid)
 		);
 		if(count($r)) {
-			$sql_extra = " AND `item`.`parent` IN ( SELECT DISTINCT(`parent`) FROM `item` WHERE 1 $star_sql AND `contact-id` = " . intval($cid) . " ) ";
+			$sql_extra = " AND `item`.`parent` IN ( SELECT DISTINCT(`parent`) FROM `item` WHERE 1 $sql_options AND `contact-id` = " . intval($cid) . " ) ";
 			$o = '<h2>' . t('Contact: ') . $r[0]['name'] . '</h2>' . $o;
 			if($r[0]['network'] === NETWORK_OSTATUS && $r[0]['writable'] && (! get_pconfig(local_user(),'system','nowarn_insecure'))) {
 				notice( t('Private messages to this person are at risk of public disclosure.') . EOL);
@@ -430,7 +435,7 @@ function network_content(&$a, $update = 0) {
 			$r = q("SELECT distinct(`parent`) AS `item_id`, `contact`.`uid` AS `contact_uid`
 				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-				and `item`.`parent` in ( select parent from item where unseen = 1 )
+				and `item`.`unseen` = 1
 				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 				$sql_extra ",
 				intval(local_user())
