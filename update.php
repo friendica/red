@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1113 );
+define( 'UPDATE_VERSION' , 1114 );
 
 /**
  *
@@ -966,4 +966,9 @@ function update_1112() {
 
 	q("ALTER TABLE `notify` ADD INDEX ( `type` ), ADD INDEX ( `uid`), ADD INDEX (`seen`), ADD INDEX (`date`) ");
 
+}
+
+function update_1113() {
+	q("ALTER TABLE `notify` ADD `verb` CHAR( 255 ) NOT NULL ,
+ADD `otype` CHAR( 16 ) NOT NULL");
 }

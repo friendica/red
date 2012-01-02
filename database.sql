@@ -744,6 +744,8 @@ CREAT TABLE IF NOT EXISTS `notify` (
 `uid` INT NOT NULL ,
 `link` CHAR( 255 ) NOT NULL ,
 `seen` TINYINT( 1 ) NOT NULL DEFAULT '0',
+`verb` CHAR( 255 ) NOT NULL,
+`otype` CHAR( 16 ) NOT NULL,
 INDEX ( `type` ),
 INDEX ( `uid` ),
 INDEX ( `seen` ),
