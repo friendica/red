@@ -892,3 +892,63 @@ function status_editor($a,$x, $notes_cid = 0) {
 
 	return $o;
 }
+
+
+function conv_sort($arr,$order) {
+
+	if((!(is_array($arr) && count($arr))))
+		return array();
+
+	$parents = array();
+
+	foreach($arr as $x)
+		if($x['id'] == $x['parent'])
+				$parents[] = $x;
+
+	if(stristr($order,'created'))
+		usort($parents,'sort_thr_created');
+	elseif(stristr($order,'commented'))
+		usort($parents,'sort_thr_commented');
+
+	foreach($parents as $x) 
+		$x['children'] = array();
+
+	foreach($arr as $x) {
+		if($x['id'] != $x['parent']) {
+			$p = find_thread_parent_index($parents,$x);
+			$parents[$p]['children'][] = $x;
+		}
+	}
+	foreach($parents as $x)
+		if(count($x['children']))
+			usort($x['children'],'sort_thr_created_rev');
+
+	$ret = array();
+	foreach($parents as $x) {
+		$ret[] = $x;
+		if(count($x['children']))
+			foreach($x['children'] as $y)
+				$ret[] = $y;
+	}
+
+	return $ret;
+}
+
+
+function sort_thr_created($a,$b) {
+	return strcmp($b['created'],$a['created']);
+}
+
+function sort_thr_created_rev($a,$b) {
+	return strcmp($a['created'],$b['created']);
+}
+
+function sort_thr_commented($a,$b) {
+	return strcmp($b['commented'],$a['commented']);
+}
+
+function find_thread_parent_index($arr,$x) {
+	foreach($arr as $k => $v)
+		if($v['id'] == $x['parent'])
+			return $k;
+}

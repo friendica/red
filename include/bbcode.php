@@ -27,7 +27,7 @@ function tryoembed($match){
 
 
 	// BBcode 2 HTML was written by WAY2WEB.net
-	// extended to work with Mistpark/Friendika - Mike Macgirvin
+	// extended to work with Mistpark/Friendica - Mike Macgirvin
 
 function bbcode($Text,$preserve_nl = false) {
 

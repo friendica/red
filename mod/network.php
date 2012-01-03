@@ -15,14 +15,6 @@ function network_init(&$a) {
 
 	$search = ((x($_GET,'search')) ? escape_tags($_GET['search']) : '');
 
-	// We need a better way of managing a growing argument list
-
-	// moved into savedsearches()
-	// $srchurl = '/network' 
-	// 		. ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') 
-	// 		. ((x($_GET,'star')) ? '?star=' . $_GET['star'] : '')
-	// 		. ((x($_GET,'bmark')) ? '?bmark=' . $_GET['bmark'] : '');
-	
 	if(x($_GET,'save')) {
 		$r = q("select * from `search` where `uid` = %d and `term` = '%s' limit 1",
 			intval(local_user()),
@@ -46,14 +38,10 @@ function network_init(&$a) {
 	
 	// search terms header
 	if(x($_GET,'search')) {
-		$a->page['content'] .= '<h2>Search Results For: '  . $search . '</h2>';
+		$a->page['content'] .= '<h2>' . t('Search Results For:') . ' '  . $search . '</h2>';
 	}
 	
 	$a->page['aside'] .= group_side('network','network',true,$group_id);
-	
-	// moved to saved searches to have it in the same div
-	//$a->page['aside'] .= search($search,'netsearch-box',$srchurl,true);
-
 	$a->page['aside'] .= saved_searches($search);
 
 }
@@ -275,13 +263,11 @@ function network_content(&$a, $update = 0) {
 	$sql_options  = (($star) ? " and starred = 1 " : '');
 	$sql_options .= (($bmark) ? " and bookmark = 1 " : '');
 
+	// We'll need the following line if starred/bookmarks are allowed in comments in the future
+	//	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` $sql_options ) ";
 
-	$sql_new = '';
-	$sql_items = '';
-	$sql_update = '';
-
-
-	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` $sql_options ) ";
+	// Otherwise, this is a bit faster:
+	$sql_extra = $sql_options;
 
 	if($group) {
 		$r = q("SELECT `name`, `id` FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -432,7 +418,7 @@ function network_content(&$a, $update = 0) {
 		// Fetch a page full of parent items for this page
 
 		if($update) {
-			$r = q("SELECT distinct(`parent`) AS `item_id`, `contact`.`uid` AS `contact_uid`
+			$r = q("SELECT `parent` AS `item_id`, `contact`.`uid` AS `contact_uid`
 				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
 				and `item`.`unseen` = 1
@@ -460,23 +446,26 @@ function network_content(&$a, $update = 0) {
 
 		if(count($r)) {
 			foreach($r as $rr)
-				$parents_arr[] = $rr['item_id'];
+				if(! array_key_exists($rr['item_id'],$parents_arr))
+					$parents_arr[] = $rr['item_id'];
 			$parents_str = implode(', ', $parents_arr);
 
 			$items = q("SELECT `item`.*, `item`.`id` AS `item_id`,
 				`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`, `contact`.`writable`,
 				`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
 				`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-				FROM `item`, (SELECT `p`.`id`,`p`.`created`,`p`.`commented` FROM `item` AS `p` WHERE `p`.`parent`=`p`.`id`) as `parentitem`, `contact`
+				FROM `item`, `contact`
 				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
 				AND `contact`.`id` = `item`.`contact-id`
 				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-				AND `item`.`parent` = `parentitem`.`id` AND `item`.`parent` IN ( %s )
-				$sql_extra
-				ORDER BY `parentitem`.$ordering DESC, `parentitem`.`id` ASC, `item`.`gravity` ASC, `item`.`created` ASC ",
+				AND `item`.`parent` IN ( %s )
+				$sql_extra ",
 				intval(local_user()),
 				dbesc($parents_str)
 			);
+
+			$items = conv_sort($items,$ordering);
+
 		}	
 	}
 
