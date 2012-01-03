@@ -263,7 +263,11 @@ function network_content(&$a, $update = 0) {
 	$sql_options  = (($star) ? " and starred = 1 " : '');
 	$sql_options .= (($bmark) ? " and bookmark = 1 " : '');
 
-	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` $sql_options ) ";
+	// We'll need the following line if starred/bookmarks are allowed in comments in the future
+	//	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` $sql_options ) ";
+
+	// Otherwise, this is a bit faster:
+	$sql_extra = $sql_options;
 
 	if($group) {
 		$r = q("SELECT `name`, `id` FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -414,7 +418,7 @@ function network_content(&$a, $update = 0) {
 		// Fetch a page full of parent items for this page
 
 		if($update) {
-			$r = q("SELECT distinct(`parent`) AS `item_id`, `contact`.`uid` AS `contact_uid`
+			$r = q("SELECT `parent` AS `item_id`, `contact`.`uid` AS `contact_uid`
 				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
 				and `item`.`unseen` = 1
@@ -442,7 +446,8 @@ function network_content(&$a, $update = 0) {
 
 		if(count($r)) {
 			foreach($r as $rr)
-				$parents_arr[] = $rr['item_id'];
+				if(! array_key_exists($rr['item_id'],$parents_arr))
+					$parents_arr[] = $rr['item_id'];
 			$parents_str = implode(', ', $parents_arr);
 
 			$items = q("SELECT `item`.*, `item`.`id` AS `item_id`,
