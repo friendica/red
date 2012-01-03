@@ -945,7 +945,7 @@ function tgroup_deliver($uid,$item_id) {
 
 	$link = normalise_link($a->get_baseurl() . '/profile/' . $u[0]['nickname']);
 
-	$cnt = preg_match_all('/\@\[url\=(.*?)\](.*?)\[\/url\]/ism',$item['body'],$matches,PREG_SET_ORDER);
+	$cnt = preg_match_all('/[\@\!]\[url\=(.*?)\](.*?)\[\/url\]/ism',$item['body'],$matches,PREG_SET_ORDER);
 	if($cnt) {
 		foreach($matches as $mtch) {
 			if(link_compare($link,$mtch[1])) {

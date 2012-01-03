@@ -911,9 +911,13 @@ function conv_sort($arr,$order) {
 			$parents[$p]['children'][] = $x;
 		}
 	}
-	foreach($parents as $x)
-		if(count($x['children']))
-			usort($x['children'],'sort_thr_created_rev');
+	foreach($parents as $k => $v) {
+		if(count($parents[$k]['children'])) {
+			$y = $parents[$k]['children'];
+			usort($y,'sort_thr_created_rev');
+			$parents[$k]['children'] = $y;
+		}
+	}
 
 	$ret = array();
 	foreach($parents as $x) {
