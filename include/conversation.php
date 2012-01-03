@@ -918,8 +918,9 @@ function conv_sort($arr,$order) {
 	$ret = array();
 	foreach($parents as $x) {
 		$ret[] = $x;
-		foreach($x['children'] as $y)
-			$ret[] = $y;
+		if(count($x['children']))
+			foreach($x['children'] as $y)
+				$ret[] = $y;
 	}
 
 	return $ret;
