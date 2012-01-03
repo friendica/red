@@ -167,7 +167,7 @@ function profile_content(&$a, $update = 0) {
 		$r = q("SELECT distinct(parent) AS `item_id`, `contact`.`uid` AS `contact-uid`
 			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-			and `item`.`parent` in (select parent from item where unseen = 1 )
+			and `item`.`unseen` = 1
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 			AND `item`.`wall` = 1
 			$sql_extra
@@ -218,17 +218,18 @@ function profile_content(&$a, $update = 0) {
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`network`, `contact`.`rel`, 
 			`contact`.`thumb`, `contact`.`self`, `contact`.`writable`, 
 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-			FROM `item`, (SELECT `p`.`id`,`p`.`created` FROM `item` AS `p` WHERE `p`.`parent` = `p`.`id`) AS `parentitem`, `contact`
+			FROM `item`, `contact`
 			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
 			AND `contact`.`id` = `item`.`contact-id`
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-			AND `item`.`parent` = `parentitem`.`id` AND `item`.`parent` IN ( %s )
-			$sql_extra
-			ORDER BY `parentitem`.`created` DESC, `gravity` ASC, `item`.`created` ASC ",
+			AND `item`.`parent` IN ( %s )
+			$sql_extra ",
 			intval($a->profile['profile_uid']),
 			dbesc($parents_str)
 		);
 	}
+
+	$items = conv_sort($items,'created');
 
 	if($is_owner && ! $update) {
 		$o .= get_birthdays();
