@@ -902,29 +902,35 @@ function conv_sort($arr,$order) {
 	elseif(stristr($order,'commented'))
 		usort($parents,'sort_thr_commented');
 
-	foreach($parents as $x) 
-		$x['children'] = array();
+	if(count($parents))
+		foreach($parents as $x) 
+			$x['children'] = array();
 
 	foreach($arr as $x) {
 		if($x['id'] != $x['parent']) {
 			$p = find_thread_parent_index($parents,$x);
-			$parents[$p]['children'][] = $x;
+			if($p !== false)
+				$parents[$p]['children'][] = $x;
 		}
 	}
-	foreach($parents as $k => $v) {
-		if(count($parents[$k]['children'])) {
-			$y = $parents[$k]['children'];
-			usort($y,'sort_thr_created_rev');
-			$parents[$k]['children'] = $y;
-		}
+	if(count($parents)) {
+		foreach($parents as $k => $v) {
+			if(count($parents[$k]['children'])) {
+				$y = $parents[$k]['children'];
+				usort($y,'sort_thr_created_rev');
+				$parents[$k]['children'] = $y;
+			}
+		}	
 	}
 
 	$ret = array();
-	foreach($parents as $x) {
-		$ret[] = $x;
-		if(count($x['children']))
-			foreach($x['children'] as $y)
-				$ret[] = $y;
+	if(count($parents)) {
+		foreach($parents as $x) {
+			$ret[] = $x;
+			if(count($x['children']))
+				foreach($x['children'] as $y)
+					$ret[] = $y;
+		}
 	}
 
 	return $ret;
@@ -947,4 +953,5 @@ function find_thread_parent_index($arr,$x) {
 	foreach($arr as $k => $v)
 		if($v['id'] == $x['parent'])
 			return $k;
+	return false;
 }

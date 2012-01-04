@@ -1788,7 +1788,18 @@ function local_delivery($importer,$data) {
 			intval(0)
 		);
 
-		// TODO - send email notify (which may require a new notification preference)
+		notification(array(
+			'type'         => NOTIFY_SUGGEST,
+			'notify_flags' => $importer['notify-flags'],
+			'language'     => $importer['language'],
+			'to_name'      => $importer['username'],
+			'to_email'     => $importer['email'],
+			'item'         => $fsugg,
+			'link'         => $a->get_baseurl() . '/notifications/intros',
+			'source_name'  => $importer['name'],
+			'source_link'  => $importer['url'],
+			'source_photo' => $importer['photo']
+		));
 
 		return 0;
 	}

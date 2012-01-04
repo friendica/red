@@ -127,6 +127,9 @@ define ( 'NOTIFY_CONFIRM', 0x0002 );
 define ( 'NOTIFY_WALL',    0x0004 );
 define ( 'NOTIFY_COMMENT', 0x0008 );
 define ( 'NOTIFY_MAIL',    0x0010 );
+define ( 'NOTIFY_SUGGEST', 0x0020 );
+define ( 'NOTIFY_PROFILE', 0x0040 );
+
 
 /**
  * various namespaces we may need to parse

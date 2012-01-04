@@ -255,6 +255,10 @@ function settings_post(&$a) {
 		$notify += intval($_POST['notify4']);
 	if(x($_POST,'notify5'))
 		$notify += intval($_POST['notify5']);
+	if(x($_POST,'notify6'))
+		$notify += intval($_POST['notify6']);
+	if(x($_POST,'notify7'))
+		$notify += intval($_POST['notify7']);
 
 	$email_changed = false;
 
@@ -807,7 +811,7 @@ function settings_content(&$a) {
 		'$notify3'	=> array('notify3', t('Someone writes on your profile wall'), ($notify & NOTIFY_WALL), NOTIFY_WALL, ''),
 		'$notify4'	=> array('notify4', t('Someone writes a followup comment'), ($notify & NOTIFY_COMMENT), NOTIFY_COMMENT, ''),
 		'$notify5'	=> array('notify5', t('You receive a private message'), ($notify & NOTIFY_MAIL), NOTIFY_MAIL, ''),
-		
+		'$notify6'  => array('notify6', t('You receive a friend suggestion'), ($notify & NOTIFY_SUGGEST), NOTIFY_SUGGEST, ''),		
 		
 		
 		'$h_advn' => t('Advanced Page Settings'),
