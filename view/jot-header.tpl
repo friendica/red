@@ -7,6 +7,7 @@ var textlen = 0;
 function initEditor(cb){
 	if (editor==false){
 		$("#profile-jot-text-loading").show();	
+//		$("#jot-title").show();
 		tinyMCE.init({
 			theme : "advanced",
 			mode : "specific_textareas",
