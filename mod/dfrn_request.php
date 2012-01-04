@@ -580,7 +580,9 @@ function dfrn_request_content(&$a) {
 						'link'		   => $a->get_baseurl() . '/notifications/intros',
 						'source_name'  => ((strlen(stripslashes($r[0]['name']))) ? stripslashes($r[0]['name']) : t('[Name Withheld]')),
 						'source_link'  => $r[0]['url'],
-						'source_photo' => $r[0]['photo']
+						'source_photo' => $r[0]['photo'],
+						'verb'         => ACTIVITY_REQ_FRIEND,
+						'otype'        => 'intro'
 					));
 				}
 

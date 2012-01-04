@@ -691,7 +691,9 @@ function item_post(&$a) {
 					'link'		   => $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
 					'source_name'  => $datarray['author-name'],
 					'source_link'  => $datarray['author-link'],
-					'source_photo' => $datarray['author-avatar']
+					'source_photo' => $datarray['author-avatar'],
+					'verb'         => ACTIVITY_POST,
+					'otype'        => 'item'
 				));
 			
 			}
@@ -731,7 +733,9 @@ function item_post(&$a) {
 					'link'		   => $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
 					'source_name'  => $datarray['author-name'],
 					'source_link'  => $datarray['author-link'],
-					'source_photo' => $datarray['author-avatar']
+					'source_photo' => $datarray['author-avatar'],
+					'verb'         => ACTIVITY_POST,
+					'otype'        => 'item'
 				));
 			}
 		}

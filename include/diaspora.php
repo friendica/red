@@ -1235,6 +1235,8 @@ function diaspora_conversation($importer,$xml,$msg) {
 			'source_name' => $person['name'],
 			'source_link' => $person['url'],
 			'source_photo' => $person['thumb'],
+			'verb' => ACTIVITY_POST,
+			'otype' => 'mail'
 		));
 	}	
 

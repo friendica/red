@@ -1798,7 +1798,9 @@ function local_delivery($importer,$data) {
 			'link'         => $a->get_baseurl() . '/notifications/intros',
 			'source_name'  => $importer['name'],
 			'source_link'  => $importer['url'],
-			'source_photo' => $importer['photo']
+			'source_photo' => $importer['photo'],
+			'verb'         => ACTIVITY_REQ_FRIEND,
+			'otype'        => 'intro'
 		));
 
 		return 0;
@@ -1847,6 +1849,8 @@ function local_delivery($importer,$data) {
 			'source_name' => $msg['from-name'],
 			'source_link' => $importer['url'],
 			'source_photo' => $importer['thumb'],
+			'verb' => ACTIVITY_POST,
+			'otype' => 'mail'
 		);
 			
 		notification($notif_params);
@@ -2118,7 +2122,10 @@ function local_delivery($importer,$data) {
 								'source_name'  => stripslashes($datarray['author-name']),
 								'source_link'  => $datarray['author-link'],
 								'source_photo' => ((link_compare($datarray['author-link'],$importer['url'])) 
-									? $importer['thumb'] : $datarray['author-avatar'])
+									? $importer['thumb'] : $datarray['author-avatar']),
+								'verb'         => ACTIVITY_POST,
+								'otype'        => 'item'
+
 							));
 
 						}
@@ -2234,7 +2241,10 @@ function local_delivery($importer,$data) {
 								'source_name'  => stripslashes($datarray['author-name']),
 								'source_link'  => $datarray['author-link'],
 								'source_photo' => ((link_compare($datarray['author-link'],$importer['url'])) 
-									? $importer['thumb'] : $datarray['author-avatar'])
+									? $importer['thumb'] : $datarray['author-avatar']),
+								'verb'         => ACTIVITY_POST,
+								'otype'        => 'item'
+
 							));
 
 							break;
