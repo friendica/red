@@ -276,6 +276,9 @@ div.wall-item-content-wrapper.shiny {
 #jot-title-wrapper {
 	margin-bottom: 5px;
 }
+#jot-title-display {
+	font-weight: bold;
+}
 
 #jot-title {
 	border: 1px solid #cccccc;

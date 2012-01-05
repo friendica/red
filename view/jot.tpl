@@ -15,6 +15,7 @@
 		<input type="hidden" name="post_id" value="$post_id" />
 		<div id="jot-title-wrapper">
 		<span id="jot-title-desc" style="display: none;">$addtitle</span>
+		<span id="jot-title-display" style="display: none;"></span>
 		<input type="text" name="title" id="jot-title" value="" style="display: none;" />
 		</div>
 

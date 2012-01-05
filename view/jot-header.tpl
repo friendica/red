@@ -117,9 +117,20 @@ function initEditor(cb){
 		$("#jot-title").mouseout(function() {
 			$("#jot-title").hide();
 			var ttl = $("#jot-title").val();
-			$("#jot-title-desc").html((ttl.length) ? "<strong>" + ttl + "</strong>" : addtitle );
-			$("#jot-title-desc").show();
+			$('#jot-title-display').html(ttl);
+			if(ttl.length) {
+				$("#jot-title-display").show();
+			}
+			else {
+				$("#jot-title-desc").show();
+			}
 		});
+
+		$("#jot-title-display").click(function() {
+			$("#jot-title-display").hide();
+			$("#jot-title").show();
+			$("#jot-title").focus();
+		});		
 
 		$("#jot-title-desc").click(function() {
 			$("#jot-title-desc").hide();
