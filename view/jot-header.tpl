@@ -126,7 +126,7 @@ function initEditor(cb){
 			}
 		});
 
-		$("#jot-title-display").click(function() {
+		$("#jot-title-display").hover(function() {
 			$("#jot-title-display").hide();
 			$("#jot-title").show();
 			$("#jot-title").focus();
