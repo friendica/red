@@ -128,9 +128,9 @@ function ping_init(&$a) {
 		);
 		$mail = $mails[0]['total'];
 		
-		if ($a->config['register_policy'] == REGISTER_APPROVE && is_site_admin()){
-			$regs = q("SELECT `contact`.`name`, `contact`.`url`, `contact`.`micro`, `register`.`created`, COUNT(*) as `total` FROM `contact` RIGHT JOIN `register` ON `register`.`uid`=`contact`.`uid` WHERE `contact`.`self`=1");
-			$register = $regs[0]['total'];
+		if ($a->config['register_policy'] == REGISTER_APPROVE && is_site_admin()) {
+			$regs = q("select register.created, contact.name, contact.url, contact.micro from register left join contact on register.uid = contact.uid where contact.self = 1");
+			$register = count($regs);
 		} else {
 			$register = "0";
 		}
