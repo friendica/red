@@ -103,6 +103,8 @@ function initEditor(cb){
 <script type="text/javascript" src="js/ajaxupload.js" ></script>
 <script>
 	var ispublic = '$ispublic';
+	var addtitle = '$addtitle';
+
 	$(document).ready(function() {
 		
 		/* enable tinymce on focus */
@@ -112,9 +114,17 @@ function initEditor(cb){
 			initEditor();
 		});
 
+		$("#jot-title").mouseout(function() {
+			$("#jot-title").hide();
+			var ttl = $("#jot-title").val();
+			$("#jot-title-desc").html((ttl.length) ? "<strong>" + ttl + "</strong>" : addtitle );
+			$("#jot-title-desc").show();
+		});
+
 		$("#jot-title-desc").click(function() {
 			$("#jot-title-desc").hide();
 			$("#jot-title").show();
+			$("#jot-title").focus();
 		});		
 	
 		var uploader = new window.AjaxUpload(
