@@ -13,6 +13,7 @@
 		<input type="hidden" name="location" id="jot-location" value="$defloc" />
 		<input type="hidden" name="coord" id="jot-coord" value="" />
 		<input type="hidden" name="post_id" value="$post_id" />
+		<input type="hidden" name="preview" id="jot-preview" value="0" />
 		<div id="jot-title-wrapper">
 		<span id="jot-title-desc" style="display: none;">$addtitle</span>
 		<span id="jot-title-display" style="display: none;"></span>

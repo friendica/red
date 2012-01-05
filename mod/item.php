@@ -54,6 +54,8 @@ function item_post(&$a) {
 	$parid = 0;
 	$r = false;
 
+	$preview = ((x($_POST,'preview')) ? intval($_POST['preview']) : 0);
+
 	if($parent || $parent_uri) {
 
 		if(! x($_POST,'type'))
@@ -280,7 +282,7 @@ function item_post(&$a) {
 
 	$match = null;
 
-	if(preg_match_all("/\[img\](.*?)\[\/img\]/",$body,$match)) {
+	if((! $preview) && preg_match_all("/\[img\](.*?)\[\/img\]/",$body,$match)) {
 		$images = $match[1];
 		if(count($images)) {
 			foreach($images as $image) {
@@ -323,7 +325,7 @@ function item_post(&$a) {
 
 	$match = false;
 
-	if(preg_match_all("/\[attachment\](.*?)\[\/attachment\]/",$body,$match)) {
+	if((! $preview) && preg_match_all("/\[attachment\](.*?)\[\/attachment\]/",$body,$match)) {
 		$attaches = $match[1];
 		if(count($attaches)) {
 			foreach($attaches as $attach) {
@@ -351,13 +353,6 @@ function item_post(&$a) {
 	$bookmark = 0;
 	if(preg_match_all("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/ism",$body,$match,PREG_SET_ORDER)) {
 		$bookmark = 1;
-//		foreach($match as $mtch) {
-//			$body = str_replace(
-//				'[bookmark=' . $mtch[1] . ']' . $mtch[2] . '[/bookmark]',
-//				'[url=' . $mtch[1] . ']' . $mtch[2] . '[/url]',
-//				$body
-//			);
-//		}
 	}
 
 	$body = bb_translate_video($body);
@@ -587,6 +582,17 @@ function item_post(&$a) {
 		$datarray['edit']      = true;
 	else
 		$datarray['guid']      = get_guid();
+
+	// preview mode - prepare the body for display and send it via json
+
+	if($preview) {
+		$b = prepare_body($datarray,true);
+		require_once('include/conversation.php');
+		$o = conversation(&$a,array(array_merge($datarray,$contact_record)),'search',false);
+		$json = array('preview' => $o);
+		echo json_encode($json);
+		killme();
+	}
 
 
 	call_hooks('post_local',$datarray);
