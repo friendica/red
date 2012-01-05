@@ -269,6 +269,19 @@ div.wall-item-content-wrapper.shiny {
 	float: left;
 }
 
+#jot-title-desc {
+	color: #cccccc;
+}
+
+#jot-title-wrapper {
+	margin-bottom: 5px;
+}
+
+#jot-title {
+	border: 1px solid #cccccc;
+	width: 530px;
+}
+
 .fakelink, .fakelink:visited, .fakelink:link {
 	color: #3465a4;
 	text-decoration: none;

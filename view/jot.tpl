@@ -14,6 +14,7 @@
 		<input type="hidden" name="coord" id="jot-coord" value="" />
 		<input type="hidden" name="post_id" value="$post_id" />
 		<div id="jot-title-wrapper">
+		<span id="jot-title-desc" style="display: none;">$addtitle</span>
 		<input type="text" name="title" id="jot-title" value="" style="display: none;" />
 		</div>
 
@@ -45,9 +46,6 @@
 	</div> 
 	<div id="profile-nolocation-wrapper" style="display: none;" >
 		<a id="profile-nolocation" class="icon noglobe" title="$noloc" onclick="jotClearLocation();return false;"></a>
-	</div> 
-	<div id="profile-title-wrapper" style="display: $visitor;" >
-		<a id="profile-title" class="icon article" title="$title" onclick="jotTitle();return false;"></a>
 	</div> 
 
 	<div id="profile-jot-plugin-wrapper">

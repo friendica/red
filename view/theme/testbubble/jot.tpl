@@ -14,8 +14,12 @@
 		<input type="hidden" name="return" value="$return_path" />
 		<input type="hidden" name="location" id="jot-location" value="$defloc" />
 		<input type="hidden" name="coord" id="jot-coord" value="" />
-		<input type="hidden" name="title" id="jot-title" value="" />
 		<input type="hidden" name="post_id" value="$post_id" />
+
+		<div id="jot-title-wrapper">
+        <span id="jot-title-desc" style="display: none;">$addtitle</span>
+        <input type="text" name="title" id="jot-title" value="" style="display: none;" />
+        </div>
 
                 <img id="profile-jot-text-loading" src="images/rotator.gif" alt="$wait" title="$wait" style="display: none;" />
                 <textarea rows="5" cols="64" class="profile-jot-text" id="profile-jot-text" name="body" >{{ if $content }}$content{{ else }}$share{{ endif }}</textarea>
@@ -41,9 +45,6 @@
 	</div> 
 	<div id="profile-nolocation-wrapper" class="jot-tool" style="display: none;" >
 		<a id="profile-nolocation" class="icon border  noglobe" title="$noloc" onclick="jotClearLocation(); return false;"></a>
-	</div> 
-	<div id="profile-title-wrapper" class="jot-tool" style="display: none;" >
-		<a id="profile-title" class="icon border  article" title="$title" onclick="jotTitle(); return false;"></a>
 	</div> 
 
 	<div id="profile-jot-submit-wrapper" style="display:none;padding-left: 400px;">

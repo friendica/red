@@ -7,7 +7,6 @@ function ping_init(&$a) {
 	header("Content-type: text/xml");
 	echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
 		<result>";
-	
 
 	$xmlhead="<"."?xml version='1.0' encoding='UTF-8' ?".">";
 	if(local_user()){
@@ -18,11 +17,10 @@ function ping_init(&$a) {
 		$dislikes = array();
 		$friends = array();
 		$posts = array();
-		$cit = array();
 		
 
 		$r = q("SELECT `item`.`id`,`item`.`parent`, `item`.`verb`, `item`.`author-name`, 
-				`item`.`author-link`, `item`.`author-avatar`, `item`.`created`, `item`.`object`, `item`.`body`, 
+				`item`.`author-link`, `item`.`author-avatar`, `item`.`created`, `item`.`object`, 
 				`pitem`.`author-name` as `pname`, `pitem`.`author-link` as `plink` 
 				FROM `item` INNER JOIN `item` as `pitem` ON  `pitem`.`id`=`item`.`parent`
 				WHERE `item`.`unseen` = 1 AND `item`.`visible` = 1 AND
@@ -30,8 +28,6 @@ function ping_init(&$a) {
 				ORDER BY `item`.`created` DESC",
 			intval(local_user())
 		);
-		
-		
 		
 		$network = count($r);
 		foreach ($r as $it) {
@@ -53,11 +49,8 @@ function ping_init(&$a) {
 					$friends[] = $it;
 					break;
 				default:
-					$reg = "|@\[url=".$a->get_baseurl()."/profile/".$a->user['nickname']."|";
 					if ($it['parent']!=$it['id']) { 
 						$comments[] = $it;
-					} else if(preg_match( $reg, $it['body'])){
-						$cit[] = $it;
 					} else {
 						$posts[] = $it;
 					}
@@ -93,9 +86,6 @@ function ping_init(&$a) {
 					break;
 				default:
 					if ($it['parent']!=$it['id']) $comments[] = $it;
-					if(preg_match("/@\[[^]]*\]".$a->user['username']."/", $it['body'])){
-						$cit[] = $it;
-					}					
 			}
 		}
 
@@ -128,9 +118,9 @@ function ping_init(&$a) {
 		);
 		$mail = $mails[0]['total'];
 		
-		if ($a->config['register_policy'] == REGISTER_APPROVE && is_site_admin()) {
-			$regs = q("select register.created, contact.name, contact.url, contact.micro from register left join contact on register.uid = contact.uid where contact.self = 1");
-			$register = count($regs);
+		if ($a->config['register_policy'] == REGISTER_APPROVE && is_site_admin()){
+			$regs = q("SELECT `contact`.`name`, `contact`.`url`, `contact`.`micro`, `register`.`created`, COUNT(*) as `total` FROM `contact` RIGHT JOIN `register` ON `register`.`uid`=`contact`.`uid` WHERE `contact`.`self`=1");
+			$register = $regs[0]['total'];
 		} else {
 			$register = "0";
 		}
@@ -150,12 +140,12 @@ function ping_init(&$a) {
 				<home>$home</home>";
 		if ($register!=0) echo "<register>$register</register>";
 		
-		$tot = $mail+$intro+$register+count($comments)+count($likes)+count($dislikes)+count($friends)+count($posts)+count($tags)+count($cit);
+		$tot = $mail+$intro+$register+count($comments)+count($likes)+count($dislikes)+count($friends)+count($posts)+count($tags);
 		
 		echo '	<notif count="'.$tot.'">';
 		if ($intro>0){
 			foreach ($intros as $i) { 
-				echo xmlize( $a->get_baseurl().'/notifications/intros/'.$i['id'], $i['name'], $i['url'], $i['photo'], relative_date($i['datetime']), t("{0} wants to be your friend") );
+				echo xmlize( $a->get_baseurl().'/notifications/'.$i['id'], $i['name'], $i['url'], $i['photo'], relative_date($i['datetime']), t("{0} wants to be your friend") );
 			};
 		}
 		if ($mail>0){
@@ -191,17 +181,12 @@ function ping_init(&$a) {
 		}
 		if (count($posts)){
 			foreach ($posts as $i) {
-				echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']),  t("{0} posted")  );
+				echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), sprintf( t("{0} posted") ) );
 			};
 		}
 		if (count($tags)){
 			foreach ($tags as $i) {
 				echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), sprintf( t("{0} tagged %s's post with #%s"), $i['pname'], $i['tname'] ) );
-			};
-		}
-		if (count($cit)){
-			foreach ($cit as $i) {
-				echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), t("{0} mentioned you in a post") );
 			};
 		}
 

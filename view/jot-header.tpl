@@ -7,7 +7,7 @@ var textlen = 0;
 function initEditor(cb){
 	if (editor==false){
 		$("#profile-jot-text-loading").show();	
-//		$("#jot-title").show();
+		$("#jot-title-desc").show();
 		tinyMCE.init({
 			theme : "advanced",
 			mode : "specific_textareas",
@@ -111,7 +111,11 @@ function initEditor(cb){
 			$(this).val("");
 			initEditor();
 		});
-		
+
+		$("#jot-title-desc").click(function() {
+			$("#jot-title-desc").hide();
+			$("#jot-title").show();
+		});		
 	
 		var uploader = new window.AjaxUpload(
 			'wall-image-upload',

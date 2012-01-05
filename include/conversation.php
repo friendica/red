@@ -812,7 +812,8 @@ function status_editor($a,$x, $notes_cid = 0) {
 			'$audurl' => t("Please enter an audio link/URL:"),
 			'$term' => t('Tag term:'),
 			'$whereareu' => t('Where are you right now?'),
-			'$title' => t('Enter a title for this item') 
+			'$title' => t('Enter a title for this item'),
+			'$addtitle' => t('click here to add a title') 
 		));
 
 
@@ -880,6 +881,8 @@ function status_editor($a,$x, $notes_cid = 0) {
 			'$acl' => $x['acl'],
 			'$bang' => $x['bang'],
 			'$profile_uid' => $x['profile_uid'],
+			'$addtitle' => t('click here to add a title') 
+
 		));
 
 	return $o;
