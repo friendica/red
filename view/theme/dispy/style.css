@@ -354,6 +354,9 @@ aside #viewcontacts { text-align: right;}
 	border: 1px solid #cccccc;
 	width: 530px;
 }
+#jot-title-display {
+	font-weight: bold;
+}
 
 
 /**

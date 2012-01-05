@@ -757,6 +757,9 @@ ul .sidebar-group-li .icon{
 	width: 460px;
 }
 
+#jot-title-display {
+	font-weight: bold;
+}
 
 #profile-jot-perms, #profile-jot-submit {
 	width: 60px;

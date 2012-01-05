@@ -144,6 +144,9 @@ blockquote:before {
 	width: 530px;
 }
 
+#jot-title-display {
+	font-weight: bold;
+}
 
 .fakelink, .fakelink:visited {
 	color: #15607B;
