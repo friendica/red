@@ -610,6 +610,10 @@ function diaspora_request($importer,$xml) {
 			dbesc(datetime_convert()),
 			intval($contact_record['id'])
 		);
+
+		$u = q("select * from user where id = %d limit 1",intval($importer['uid']));
+		if($u)
+			$ret = diaspora_share($u[0],$contact_record);
 	}
 
 	return;
@@ -1780,27 +1784,6 @@ function diaspora_profile($importer,$xml) {
 	return;
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function diaspora_share($me,$contact) {
 	$a = get_app();
