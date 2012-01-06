@@ -389,6 +389,7 @@
 		unpause();
 		commentBusy = true;
 		$('body').css('cursor', 'wait');
+		$("#comment-preview-inp-" + id).val("0");
 		$.post(  
              "item",  
              $("#comment-edit-form-" + id).serialize(),
@@ -410,6 +411,28 @@
          );  
          return false;  
 	}
+
+
+	function preview_comment(id) {
+		$("#comment-preview-inp-" + id).val("1");
+		$("#comment-edit-preview-" + id).show();
+		$.post(  
+             "item",  
+             $("#comment-edit-form-" + id).serialize(),
+			function(data) {
+				if(data.preview) {
+						
+					$("#comment-edit-preview-" + id).html(data.preview);
+					$("#comment-edit-preview-" + id + " a").removeAttr('href');
+				}
+			},
+			"json"  
+         );  
+         return true;  
+	}
+
+
+
 
 	function unpause() {
 		// unpause auto reloads if they are currently stopped

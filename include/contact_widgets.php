@@ -40,3 +40,36 @@ function findpeople_widget() {
 }
 
 
+function networks_widget($baseurl,$selected = '') {
+
+	$a = get_app();
+
+	if(! local_user())
+		return '';
+
+	
+	$r = q("select distinct(network) from contact where uid = %d",
+		intval(local_user())
+	);
+
+	$nets = array();
+	if(count($r)) {
+		require_once('include/contact_selectors.php');
+		foreach($r as $rr) {
+				if($rr['network'])
+					$nets[] = array('ref' => $rr['network'], 'name' => network_to_name($rr['network']), 'selected' => (($selected == $rr['network']) ? 'selected' : '' ));
+		}
+	}
+
+	return replace_macros(get_markup_template('nets.tpl'),array(
+		'$title' => t('Networks'),
+		'$desc' => '',
+		'$sel_all' => (($selected == '') ? 'selected' : ''),
+		'$all' => t('All Networks'),
+		'$nets' => $nets,
+		'$base' => $baseurl,
+
+	));
+}
+
+

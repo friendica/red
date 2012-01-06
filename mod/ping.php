@@ -190,6 +190,12 @@ function ping_init(&$a) {
 			};
 		}
 
+		if (count($cit)){
+			foreach ($cit as $i) {
+				echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), t("{0} mentioned you in a post") );
+			};
+		}
+
 		echo "  </notif>";
 	}
 	echo " <sysmsgs>";
