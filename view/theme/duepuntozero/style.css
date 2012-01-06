@@ -1904,6 +1904,11 @@ aside input[type='text'] {
 }
 
 
+.photos {
+	height: auto;
+	overflow: auto;
+}
+
 .photo-album-image-wrapper {
 	float: left;
 	margin-top: 15px;
