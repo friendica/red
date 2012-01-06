@@ -10,6 +10,8 @@ function network_init(&$a) {
 	$group_id = (($a->argc > 1 && intval($a->argv[1])) ? intval($a->argv[1]) : 0);
 		  
 	require_once('include/group.php');
+	require_once('include/contact_widgets.php');
+
 	if(! x($a->page,'aside'))
 		$a->page['aside'] = '';
 
@@ -42,6 +44,7 @@ function network_init(&$a) {
 	}
 	
 	$a->page['aside'] .= group_side('network','network',true,$group_id);
+	$a->page['aside'] .= networks_widget($a->get_baseurl() . '/network',(($_GET['nets']) ? $_GET['nets'] : ''));
 	$a->page['aside'] .= saved_searches($search);
 
 }

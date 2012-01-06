@@ -300,7 +300,7 @@ div.wall-item-content-wrapper.shiny {
 	margin-bottom: 10px;
 }
 
-.group-selected {
+.group-selected, .nets-selected {
 	padding: 3px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;	
@@ -1834,6 +1834,21 @@ a.mail-list-link {
 
 #sidebar-group-list li {
 	margin-top: 10px;
+}
+
+.nets-ul {
+	list-style-type: none;
+}
+
+.nets-ul li {
+	margin-top: 10px;
+}
+
+.nets-link {
+	margin-left: 24px;
+}
+.nets-all {
+	margin-left: 42px;
 }
 
 #search-save {
