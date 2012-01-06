@@ -466,7 +466,7 @@ function network_content(&$a, $update = 0) {
 				AND `contact`.`id` = `item`.`contact-id`
 				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 				AND `item`.`parent` IN ( %s )
-				$sql_extra $sql_nets",
+				$sql_extra ",
 				intval(local_user()),
 				dbesc($parents_str)
 			);

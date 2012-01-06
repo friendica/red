@@ -61,6 +61,9 @@ function networks_widget($baseurl,$selected = '') {
 		}
 	}
 
+	if(count($nets) < 2)
+		return '';
+
 	return replace_macros(get_markup_template('nets.tpl'),array(
 		'$title' => t('Networks'),
 		'$desc' => '',
