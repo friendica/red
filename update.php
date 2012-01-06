@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1114 );
+define( 'UPDATE_VERSION' , 1115 );
 
 /**
  *
@@ -971,4 +971,22 @@ function update_1112() {
 function update_1113() {
 	q("ALTER TABLE `notify` ADD `verb` CHAR( 255 ) NOT NULL ,
 ADD `otype` CHAR( 16 ) NOT NULL");
+}
+
+function update_1114() {
+	q("CREATE TABLE IF NOT EXISTS `item_id` (
+`iid` INT NOT NULL ,
+`uid` INT NOT NULL ,
+`face` CHAR( 255 ) NOT NULL ,
+`dspr` CHAR( 255 ) NOT NULL ,
+`twit` CHAR( 255 ) NOT NULL ,
+`stat` CHAR( 255 ) NOT NULL ,
+PRIMARY KEY ( `iid` ),
+INDEX ( `uid` ),
+INDEX ( `face` ),
+INDEX ( `dspr` ),
+INDEX ( `twit` ),
+INDEX ( `stat` )
+) ENGINE = MYISAM ");
+
 }

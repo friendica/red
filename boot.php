@@ -4,14 +4,14 @@ require_once('include/config.php');
 require_once('include/network.php');
 require_once('include/plugin.php');
 require_once('include/text.php');
-require_once("include/pgettext.php");
+require_once('include/pgettext.php');
 require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1214' );
+define ( 'FRIENDICA_VERSION',      '2.3.1217' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.22'    );
-define ( 'DB_UPDATE_VERSION',      1114      );
+define ( 'DB_UPDATE_VERSION',      1115      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -103,7 +103,7 @@ define ( 'NETWORK_MAIL',             'mail');    // IMAP/POP
 define ( 'NETWORK_FACEBOOK',         'face');    // Facebook API     
 define ( 'NETWORK_LINKEDIN',         'lnkd');    // LinkedIn
 define ( 'NETWORK_XMPP',             'xmpp');    // XMPP     
-
+define ( 'NETWORK_MYSPACE',          'mysp');    // MySpace
 
 /**
  * Maximum number of "people who like (or don't like) this"  that we will list by name
@@ -127,6 +127,9 @@ define ( 'NOTIFY_CONFIRM', 0x0002 );
 define ( 'NOTIFY_WALL',    0x0004 );
 define ( 'NOTIFY_COMMENT', 0x0008 );
 define ( 'NOTIFY_MAIL',    0x0010 );
+define ( 'NOTIFY_SUGGEST', 0x0020 );
+define ( 'NOTIFY_PROFILE', 0x0040 );
+
 
 /**
  * various namespaces we may need to parse

@@ -8,6 +8,7 @@ var textlen = 0;
 function initEditor(cb) {
     if (editor==false) {
         $("#profile-jot-text-loading").show();
+		$("#jot-title-desc").show();
         tinyMCE.init({
                 theme : "advanced",
                 mode : "specific_textareas",
@@ -100,6 +101,31 @@ function initEditor(cb) {
                     $(this).val("");
                     initEditor();
                 }); 
+
+		$("#jot-title").mouseout(function() {
+			$("#jot-title").hide();
+			var ttl = $("#jot-title").val();
+			$('#jot-title-display').html(ttl);
+			if(ttl.length) {
+				$("#jot-title-display").show();
+			}
+			else {
+				$("#jot-title-desc").show();
+			}
+		});
+
+		$("#jot-title-display").hover(function() {
+			$("#jot-title-display").hide();
+			$("#jot-title").show();
+			$("#jot-title").focus();
+		});		
+
+		$("#jot-title-desc").click(function() {
+			$("#jot-title-desc").hide();
+			$("#jot-title").show();
+			$("#jot-title").focus();
+		});		
+
 		var uploader = new window.AjaxUpload(
 			'wall-image-upload',
 			{ action: 'wall_upload/$nickname',

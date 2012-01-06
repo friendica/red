@@ -945,10 +945,15 @@ function tgroup_deliver($uid,$item_id) {
 
 	$link = normalise_link($a->get_baseurl() . '/profile/' . $u[0]['nickname']);
 
-	$cnt = preg_match_all('/\@\[url\=(.*?)\](.*?)\[\/url\]/ism',$item['body'],$matches,PREG_SET_ORDER);
+	// Diaspora uses their own hardwired link URL in @-tags
+	// instead of the one we supply with webfinger
+
+	$dlink = normalise_link($a->get_baseurl() . '/u/' . $u[0]['nickname']);
+
+	$cnt = preg_match_all('/[\@\!]\[url\=(.*?)\](.*?)\[\/url\]/ism',$item['body'],$matches,PREG_SET_ORDER);
 	if($cnt) {
 		foreach($matches as $mtch) {
-			if(link_compare($link,$mtch[1])) {
+			if(link_compare($link,$mtch[1]) || link_compare($dlink,$mtch[1])) {
 				$deliver_to_tgroup = true;
 				logger('tgroup_deliver: local group mention found: ' . $mtch[2]);
 			}
@@ -1788,7 +1793,20 @@ function local_delivery($importer,$data) {
 			intval(0)
 		);
 
-		// TODO - send email notify (which may require a new notification preference)
+		notification(array(
+			'type'         => NOTIFY_SUGGEST,
+			'notify_flags' => $importer['notify-flags'],
+			'language'     => $importer['language'],
+			'to_name'      => $importer['username'],
+			'to_email'     => $importer['email'],
+			'item'         => $fsugg,
+			'link'         => $a->get_baseurl() . '/notifications/intros',
+			'source_name'  => $importer['name'],
+			'source_link'  => $importer['url'],
+			'source_photo' => $importer['photo'],
+			'verb'         => ACTIVITY_REQ_FRIEND,
+			'otype'        => 'intro'
+		));
 
 		return 0;
 	}
@@ -1836,6 +1854,8 @@ function local_delivery($importer,$data) {
 			'source_name' => $msg['from-name'],
 			'source_link' => $importer['url'],
 			'source_photo' => $importer['thumb'],
+			'verb' => ACTIVITY_POST,
+			'otype' => 'mail'
 		);
 			
 		notification($notif_params);
@@ -2107,7 +2127,10 @@ function local_delivery($importer,$data) {
 								'source_name'  => stripslashes($datarray['author-name']),
 								'source_link'  => $datarray['author-link'],
 								'source_photo' => ((link_compare($datarray['author-link'],$importer['url'])) 
-									? $importer['thumb'] : $datarray['author-avatar'])
+									? $importer['thumb'] : $datarray['author-avatar']),
+								'verb'         => ACTIVITY_POST,
+								'otype'        => 'item'
+
 							));
 
 						}
@@ -2223,7 +2246,10 @@ function local_delivery($importer,$data) {
 								'source_name'  => stripslashes($datarray['author-name']),
 								'source_link'  => $datarray['author-link'],
 								'source_photo' => ((link_compare($datarray['author-link'],$importer['url'])) 
-									? $importer['thumb'] : $datarray['author-avatar'])
+									? $importer['thumb'] : $datarray['author-avatar']),
+								'verb'         => ACTIVITY_POST,
+								'otype'        => 'item'
+
 							));
 
 							break;

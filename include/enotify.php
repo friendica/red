@@ -65,6 +65,19 @@ function notification($params) {
 		$itemlink =  $params['link'];
 	}
 
+	if($params['type'] == NOTIFY_SUGGEST) {
+		$subject = sprintf( t('Friend suggestion received at %s'), $sitename);
+		$preamble = sprintf( t('You\'ve received a friend suggestion from \'%s\' at %s'), $params['source_name'], $sitename); 
+		$body = t('Name:') . ' ' . $params['item']['name'] . "\n";
+		$body .= t('Photo:') . ' ' . $params['item']['photo'] . "\n";
+		$body .= sprintf( t('You may visit their profile at %s'),$params['item']['url']);
+
+		$sitelink = t('Please visit %s to approve or reject the suggestion.');
+		$tsitelink = sprintf( $sitelink, $siteurl );
+		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '">' . $sitename . '</a>');
+		$itemlink =  $params['link'];
+	}
+
 	if($params['type'] == NOTIFY_CONFIRM) {
 
 	}

@@ -131,6 +131,23 @@ blockquote:before {
 	float: left;
 }
 
+#jot-title-desc {
+	color: #cccccc;
+}
+
+#jot-title-wrapper {
+	margin-bottom: 5px;
+}
+
+#jot-title {
+	border: 1px solid #cccccc;
+	width: 530px;
+}
+
+#jot-title-display {
+	font-weight: bold;
+}
+
 .fakelink, .fakelink:visited {
 	color: #15607B;
 	text-decoration: none;

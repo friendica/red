@@ -744,6 +744,23 @@ ul .sidebar-group-li .icon{
 #profile-jot-submit-wrapper { 
 }
 
+#jot-title-desc {
+	color: #cccccc;
+}
+
+#jot-title-wrapper {
+	margin-bottom: 5px;
+}
+
+#jot-title {
+	border: 1px solid #cccccc;
+	width: 460px;
+}
+
+#jot-title-display {
+	font-weight: bold;
+}
+
 #profile-jot-perms, #profile-jot-submit {
 	width: 60px;
 	font-size: 12px;

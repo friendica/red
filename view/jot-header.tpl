@@ -7,6 +7,7 @@ var textlen = 0;
 function initEditor(cb){
 	if (editor==false){
 		$("#profile-jot-text-loading").show();	
+		$("#jot-title-desc").show();
 		tinyMCE.init({
 			theme : "advanced",
 			mode : "specific_textareas",
@@ -108,11 +109,46 @@ function enableOnUser(){
 <script type="text/javascript" src="js/ajaxupload.js" ></script>
 <script>
 	var ispublic = '$ispublic';
+	var addtitle = '$addtitle';
+
 	$(document).ready(function() {
 		
+<<<<<<< HEAD
 		/* enable tinymce on focus and click */
 		$("#profile-jot-text").focus(enableOnUser);
 		$("#profile-jot-text").click(enableOnUser);
+=======
+		/* enable tinymce on focus */
+		$("#profile-jot-text").focus(function(){
+			if (editor) return;
+			$(this).val("");
+			initEditor();
+		});
+
+		$("#jot-title").mouseout(function() {
+			$("#jot-title").hide();
+			var ttl = $("#jot-title").val();
+			$('#jot-title-display').html(ttl);
+			if(ttl.length) {
+				$("#jot-title-display").show();
+			}
+			else {
+				$("#jot-title-desc").show();
+			}
+		});
+
+		$("#jot-title-display").hover(function() {
+			$("#jot-title-display").hide();
+			$("#jot-title").show();
+			$("#jot-title").focus();
+		});		
+
+		$("#jot-title-desc").click(function() {
+			$("#jot-title-desc").hide();
+			$("#jot-title").show();
+			$("#jot-title").focus();
+		});		
+>>>>>>> friendica/master
 	
 		var uploader = new window.AjaxUpload(
 			'wall-image-upload',

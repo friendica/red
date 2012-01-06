@@ -464,7 +464,7 @@ function diaspora_request($importer,$xml) {
 			intval($importer['uid'])
 		);
 
-		if((count($r)) && ($r[0]['hide-friends'] == 0)) {
+		if((count($r)) && (! $r[0]['hide-friends']) && (! $contact['hidden'])) {
 			require_once('include/items.php');
 
 			$self = q("SELECT * FROM `contact` WHERE `self` = 1 AND `uid` = %d LIMIT 1",
@@ -527,6 +527,8 @@ function diaspora_request($importer,$xml) {
 
 	$batch = (($ret['batch']) ? $ret['batch'] : implode('/', array_slice(explode('/',$ret['url']),0,3)) . '/receive/public');
 
+
+
 	$r = q("INSERT INTO `contact` (`uid`, `network`,`addr`,`created`,`url`,`nurl`,`batch`,`name`,`nick`,`photo`,`pubkey`,`notify`,`poll`,`blocked`,`priority`)
 		VALUES ( %d, '%s', '%s', '%s', '%s','%s','%s','%s','%s','%s','%s','%s','%s',%d,%d) ",
 		intval($importer['uid']),
@@ -550,9 +552,15 @@ function diaspora_request($importer,$xml) {
 
 	$contact_record = diaspora_get_contact_by_handle($importer['uid'],$sender_handle);
 
-	$hash = random_string() . (string) time();   // Generate a confirm_key
+	if(! $contact_record) {
+		logger('diaspora_request: unable to locate newly created contact record.');
+		return;
+	}
+
+	if($importer['page-flags'] == PAGE_NORMAL) {
+
+		$hash = random_string() . (string) time();   // Generate a confirm_key
 	
-	if($contact_record) {
 		$ret = q("INSERT INTO `intro` ( `uid`, `contact-id`, `blocked`, `knowyou`, `note`, `hash`, `datetime` )
 			VALUES ( %d, %d, %d, %d, '%s', '%s', '%s' )",
 			intval($importer['uid']),
@@ -563,6 +571,49 @@ function diaspora_request($importer,$xml) {
 			dbesc($hash),
 			dbesc(datetime_convert())
 		);
+	}
+	else {
+
+		// automatic friend approval
+
+		require_once('include/Photo.php');
+
+		$photos = import_profile_photo($contact_record['photo'],$importer['uid'],$contact_record['id']);
+		
+		// technically they are sharing with us (CONTACT_IS_SHARING), 
+		// but if our page-type is PAGE_COMMUNITY or PAGE_SOAPBOX
+		// we are going to change the relationship and make them a follower.
+
+		if($importer['page-flags'] == PAGE_FREELOVE)
+			$new_relation = CONTACT_IS_FRIEND;
+		else
+			$new_relation = CONTACT_IS_FOLLOWER;
+
+		$r = q("UPDATE `contact` SET 
+			`photo` = '%s', 
+			`thumb` = '%s',
+			`micro` = '%s', 
+			`rel` = %d, 
+			`name-date` = '%s', 
+			`uri-date` = '%s', 
+			`avatar-date` = '%s', 
+			`blocked` = 0, 
+			`pending` = 0,
+			WHERE `id` = %d LIMIT 1
+			",
+			dbesc($photos[0]),
+			dbesc($photos[1]),
+			dbesc($photos[2]),
+			intval($new_relation),
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
+			intval($contact_record['id'])
+		);
+
+		$u = q("select * from user where id = %d limit 1",intval($importer['uid']));
+		if($u)
+			$ret = diaspora_share($u[0],$contact_record);
 	}
 
 	return;
@@ -1235,6 +1286,8 @@ function diaspora_conversation($importer,$xml,$msg) {
 			'source_name' => $person['name'],
 			'source_link' => $person['url'],
 			'source_photo' => $person['thumb'],
+			'verb' => ACTIVITY_POST,
+			'otype' => 'mail'
 		));
 	}	
 
@@ -1731,27 +1784,6 @@ function diaspora_profile($importer,$xml) {
 	return;
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function diaspora_share($me,$contact) {
 	$a = get_app();
