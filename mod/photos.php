@@ -1203,6 +1203,7 @@ function photos_content(&$a) {
 							'$myphoto' => $contact['thumb'],
 							'$comment' => t('Comment'),
 							'$submit' => t('Submit'),
+							'$preview' => t('Preview'),
 							'$ww' => ''
 						));
 					}

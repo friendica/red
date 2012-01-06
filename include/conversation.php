@@ -129,7 +129,7 @@ function localize_item(&$item){
  * that are based on unique features of the calling module.
  *
  */
-function conversation(&$a, $items, $mode, $update) {
+function conversation(&$a, $items, $mode, $update, $preview = false) {
 
 	require_once('bbcode.php');
 
@@ -287,7 +287,7 @@ function conversation(&$a, $items, $mode, $update) {
 					'$like' => '',
 					'$dislike' => '',
 					'$comment' => '',
-					'$conv' => array('href'=> $a->get_baseurl() . '/display/' . $nickname . '/' . $item['id'], 'title'=> t('View in context')),
+					'$conv' => (($preview) ? '' : array('href'=> $a->get_baseurl() . '/display/' . $nickname . '/' . $item['id'], 'title'=> t('View in context'))),
 					'$wait' => t('Please wait'),
 				));
 
@@ -483,6 +483,7 @@ function conversation(&$a, $items, $mode, $update) {
 							'$myphoto' => $a->contact['thumb'],
 							'$comment' => t('Comment'),
 							'$submit' => t('Submit'),
+							'$preview' => t('Preview'),
 							'$ww' => (($mode === 'network') ? $commentww : '')
 						));
 					}

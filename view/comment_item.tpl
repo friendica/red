@@ -5,6 +5,7 @@
 				<input type="hidden" name="parent" value="$parent" />
 				<input type="hidden" name="return" value="$return_path" />
 				<input type="hidden" name="jsreload" value="$jsreload" />
+				<input type="hidden" name="preview" id="comment-preview-inp-$id" value="0" />
 
 				<div class="comment-edit-photo" id="comment-edit-photo-$id" >
 					<a class="comment-edit-photo-link" href="$mylink" title="$mytitle"><img class="my-comment-photo" src="$myphoto" alt="$mytitle" title="$mytitle" /></a>
@@ -15,6 +16,8 @@
 				<div class="comment-edit-text-end"></div>
 				<div class="comment-edit-submit-wrapper" id="comment-edit-submit-wrapper-$id" style="display: none;" >
 					<input type="submit" onclick="post_comment($id); return false;" id="comment-edit-submit-$id" class="comment-edit-submit" name="submit" value="$submit" />
+					<span onclick="preview_comment($id);" id="comment-edit-preview-link-$id" class="fakelink">$preview</span>
+					<div id="comment-edit-preview-$id" style="display:none;"></div>
 				</div>
 
 				<div class="comment-edit-end"></div>
