@@ -113,42 +113,10 @@ function enableOnUser(){
 
 	$(document).ready(function() {
 		
-<<<<<<< HEAD
 		/* enable tinymce on focus and click */
 		$("#profile-jot-text").focus(enableOnUser);
 		$("#profile-jot-text").click(enableOnUser);
-=======
-		/* enable tinymce on focus */
-		$("#profile-jot-text").focus(function(){
-			if (editor) return;
-			$(this).val("");
-			initEditor();
-		});
 
-		$("#jot-title").mouseout(function() {
-			$("#jot-title").hide();
-			var ttl = $("#jot-title").val();
-			$('#jot-title-display').html(ttl);
-			if(ttl.length) {
-				$("#jot-title-display").show();
-			}
-			else {
-				$("#jot-title-desc").show();
-			}
-		});
-
-		$("#jot-title-display").hover(function() {
-			$("#jot-title-display").hide();
-			$("#jot-title").show();
-			$("#jot-title").focus();
-		});		
-
-		$("#jot-title-desc").click(function() {
-			$("#jot-title-desc").hide();
-			$("#jot-title").show();
-			$("#jot-title").focus();
-		});		
->>>>>>> friendica/master
 	
 		var uploader = new window.AjaxUpload(
 			'wall-image-upload',

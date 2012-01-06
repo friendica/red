@@ -873,6 +873,7 @@ function status_editor($a,$x, $notes_cid = 0) {
 			'$placeholdertitle' => t('Set title'),
 			'$wait' => t('Please wait'),
 			'$permset' => t('Permission settings'),
+			'$shortpermset' => t('permissions'),
 			'$ptyp' => (($notes_cid) ? 'note' : 'wall'),
 			'$content' => '',
 			'$post_id' => '',
