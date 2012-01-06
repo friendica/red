@@ -52,7 +52,8 @@ function saved_searches($search) {
 		. ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') 
 		. ((x($_GET,'star')) ? '?star=' . $_GET['star'] : '')
 		. ((x($_GET,'bmark')) ? '?bmark=' . $_GET['bmark'] : '')
-		. ((x($_GET,'conv')) ? '?conv=' . $_GET['conv'] : '');
+		. ((x($_GET,'conv')) ? '?conv=' . $_GET['conv'] : '')
+		. ((x($_GET,'nets')) ? '?nets=' . $_GET['nets'] : '');
 	
 	$o = '';
 
@@ -203,7 +204,7 @@ function network_content(&$a, $update = 0) {
 	$order = ((x($_GET,'order')) ? notags($_GET['order']) : 'comment');
 	$liked = ((x($_GET,'liked')) ? intval($_GET['liked']) : 0);
 	$conv = ((x($_GET,'conv')) ? intval($_GET['conv']) : 0);
-
+	$nets = ((x($_GET,'nets')) ? $_GET['nets'] : '');
 
 	if(($a->argc > 2) && $a->argv[2] === 'new')
 		$nouveau = true;
@@ -259,9 +260,11 @@ function network_content(&$a, $update = 0) {
 	// that belongs to you, hence you can see all of it. We will filter by group if
 	// desired. 
 
-
+	
 	$sql_options  = (($star) ? " and starred = 1 " : '');
 	$sql_options .= (($bmark) ? " and bookmark = 1 " : '');
+
+	$sql_nets = (($nets) ? sprintf(" and `contact`.`network` = '%s' ", dbesc($nets)) : '');
 
 	// We'll need the following line if starred/bookmarks are allowed in comments in the future
 	//	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` $sql_options ) ";
@@ -336,6 +339,7 @@ function network_content(&$a, $update = 0) {
 			. ((x($_GET,'bmark')) ? '&bmark=' . $_GET['bmark'] : '') 
 			. ((x($_GET,'liked')) ? '&liked=' . $_GET['liked'] : '') 
 			. ((x($_GET,'conv')) ? '&conv=' . $_GET['conv'] : '') 
+			. ((x($_GET,'nets')) ? '&nets=' . $_GET['nets'] : '') 
 			. "'; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 	}
 
@@ -374,7 +378,7 @@ function network_content(&$a, $update = 0) {
 			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 			$sql_extra2
-			$sql_extra ",
+			$sql_extra $sql_nets ",
 			intval($_SESSION['uid'])
 		);
 
@@ -399,7 +403,7 @@ function network_content(&$a, $update = 0) {
 			$simple_update
 			AND `contact`.`id` = `item`.`contact-id`
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-			$sql_extra
+			$sql_extra $sql_nets
 			ORDER BY `item`.`received` DESC $pager_sql ",
 			intval($_SESSION['uid'])
 		);
@@ -423,7 +427,7 @@ function network_content(&$a, $update = 0) {
 				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
 				and `item`.`unseen` = 1
 				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-				$sql_extra ",
+				$sql_extra $sql_nets ",
 				intval(local_user())
 			);
 		}
@@ -433,7 +437,7 @@ function network_content(&$a, $update = 0) {
 				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
 				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 				AND `item`.`parent` = `item`.`id`
-				$sql_extra
+				$sql_extra $sql_nets
 				ORDER BY `item`.$ordering DESC $pager_sql ",
 				intval(local_user())
 			);
@@ -459,7 +463,7 @@ function network_content(&$a, $update = 0) {
 				AND `contact`.`id` = `item`.`contact-id`
 				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 				AND `item`.`parent` IN ( %s )
-				$sql_extra ",
+				$sql_extra $sql_nets",
 				intval(local_user()),
 				dbesc($parents_str)
 			);

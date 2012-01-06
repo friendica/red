@@ -586,11 +586,9 @@ function item_post(&$a) {
 	// preview mode - prepare the body for display and send it via json
 
 	if($preview) {
-		$b = prepare_body($datarray,true);
 		require_once('include/conversation.php');
 		$o = conversation(&$a,array(array_merge($contact_record,$datarray)),'search',false,true);
-		$json = array('preview' => $o);
-		echo json_encode($json);
+		echo json_encode(array('preview' => $o));
 		killme();
 	}
 
