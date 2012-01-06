@@ -761,21 +761,23 @@ ul .sidebar-group-li .icon{
 #profile-jot-submit-wrapper { 
 }
 
-#jot-title-desc {
-	color: #cccccc;
-}
-
-#jot-title-wrapper {
-	margin-bottom: 5px;
-}
 
 #jot-title {
-	border: 1px solid #cccccc;
-	width: 460px;
+	border: 0px;
+	margin: 0px;
+	height: 20px;
+	width: 462px;
+	font-weight: bold;
+	border: 1px solid #ffffff;
 }
 
-#jot-title-display {
-	font-weight: bold;
+#jot-title::-webkit-input-placeholder{font-weight: normal;}
+#jot-title:-moz-placeholder{font-weight: normal;}
+		
+	
+#jot-title:hover,
+#jot-title:focus {
+	border: 1px solid #cccccc; 
 }
 
 #profile-jot-perms, #profile-jot-submit {

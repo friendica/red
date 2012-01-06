@@ -21,6 +21,8 @@
 		{{ if $content }}<script>initEditor();</script>{{ endif }}
 
 <div id="profile-jot-submit-wrapper" class="jothidden">
+	<input type="submit" id="profile-jot-submit" name="submit" value="$share" />
+
 	<div id="profile-upload-wrapper" style="display: $visitor;" >
 		<div id="wall-image-upload-div" ><a href="#" onclick="return false;" id="wall-image-upload" class="icon camera" title="$upload"></a></div>
 	</div> 
@@ -46,7 +48,6 @@
 	<div id="profile-jot-perms" class="profile-jot-perms" style="display: $pvisit;" >
 		<a href="#profile-jot-acl-wrapper" id="jot-perms-icon" class="icon $lockstate"  title="$permset" ></a>$bang
 	</div>
-<input type="submit" id="profile-jot-submit" name="submit" value="$share" />
 	<div id="profile-jot-perms-end"></div>
 
 	<div id="profile-jot-plugin-wrapper">

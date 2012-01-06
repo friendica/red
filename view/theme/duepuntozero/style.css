@@ -274,7 +274,8 @@ div.wall-item-content-wrapper.shiny {
 	border: 0px;
 	margin: 0px;
 	height: 20px;
-	width: 465px;
+	width: 530px;
+	margin-bottom: 5px;
 	font-weight: bold;
 	border: 1px solid #ffffff;
 }

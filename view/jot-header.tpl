@@ -7,7 +7,6 @@ var textlen = 0;
 function initEditor(cb){
 	if (editor==false){
 		$("#profile-jot-text-loading").show();	
-		$("#jot-title-desc").show();
 		tinyMCE.init({
 			theme : "advanced",
 			mode : "specific_textareas",
@@ -195,14 +194,6 @@ function enableOnUser(){
 			$('#jot-location').val(reply);
 		}
 	}
-
-	function jotTitle() {
-		reply = prompt("$title", $('#jot-title').val());
-		if(reply && reply.length) {
-			$('#jot-title').val(reply);
-		}
-	}
-
 
 	function jotShare(id) {
 		$('#like-rotator-' + id).show();
