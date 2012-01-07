@@ -74,7 +74,7 @@ function network_to_name($s) {
 
 	call_hooks('network_to_name', $s);
 
-	return str_replace(array(NETWORK_DFRN,NETWORK_OSTATUS,NETWORK_FEED,NETWORK_MAIL,NETWORK_DIASPORA,NETWORK_FACEBOOK,NETWORK_ZOT),
-		array(t('Friendica'),t('OStatus'),t('RSS/Atom'),t('Email'),t('Diaspora'),t('Facebook'),t('Zot!')),$s);
+	return str_replace(array(NETWORK_DFRN,NETWORK_OSTATUS,NETWORK_FEED,NETWORK_MAIL,NETWORK_DIASPORA,NETWORK_FACEBOOK,NETWORK_ZOT,NETWORK_LINKEDIN,NETWORK_XMPP,NETWORK_MYSPACE),
+		array( t('Friendica'), t('OStatus'), t('RSS/Atom'), t('Email'), t('Diaspora'), t('Facebook'), t('Zot!'), t('LinkedIn'), t('XMPP/IM'), t('MySpace')),$s);
 
 }
