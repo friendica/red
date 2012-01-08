@@ -72,9 +72,24 @@ function contact_poll_interval($current, $disabled = false) {
 
 function network_to_name($s) {
 
-	call_hooks('network_to_name', $s);
+	$nets = array(
+		NETWORK_DFRN     => t('Friendica'),
+		NETWORK_OSTATUS  => t('OStatus'),
+		NETWORK_FEED     => t('RSS/Atom'),
+		NETWORK_MAIL     => t('Email'),
+		NETWORK_DIASPORA => t('Diaspora'),
+		NETWORK_FACEBOOK => t('Facebook'),
+		NETWORK_ZOT      => t('Zot!'),
+		NETWORK_LINKEDIN => t('LinkedIn'),
+		NETWORK_XMPP     => t('XMPP/IM'),
+		NETWORK_MYSPACE  => t('MySpace'),
+	);
 
-	return str_replace(array(NETWORK_DFRN,NETWORK_OSTATUS,NETWORK_FEED,NETWORK_MAIL,NETWORK_DIASPORA,NETWORK_FACEBOOK,NETWORK_ZOT,NETWORK_LINKEDIN,NETWORK_XMPP,NETWORK_MYSPACE),
-		array( t('Friendica'), t('OStatus'), t('RSS/Atom'), t('Email'), t('Diaspora'), t('Facebook'), t('Zot!'), t('LinkedIn'), t('XMPP/IM'), t('MySpace')),$s);
+	call_hooks('network_to_name', $nets);
+
+	$search  = array_keys($nets);
+	$replace = array_values($nets);
+
+	return str_replace($search,$replace,$s);
 
 }
