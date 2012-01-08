@@ -463,7 +463,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				$A = '[url=' . $self[0]['url'] . ']' . $self[0]['name'] . '[/url]';
 				$B = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]';
 				$BPhoto = '[url=' . $contact['url'] . ']' . '[img]' . $contact['thumb'] . '[/img][/url]';
-				$arr['body'] =  sprintf( t('%1$s is now friends with %2$s'), $A, $B)."\n\n\n".$Bphoto;
+				$arr['body'] =  sprintf( t('%1$s is now friends with %2$s'), $A, $B)."\n\n\n".$BPhoto;
 
 				$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PERSON . '</type><title>' . $contact['name'] . '</title>'
 					. '<id>' . $contact['url'] . '/' . $contact['name'] . '</id>';
