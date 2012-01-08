@@ -569,6 +569,14 @@ input#dfrn-url {
 	margin-left: 20px;
 	width: 180px;
 }
+
+.contact-wrapper {
+	float: left;
+	width: 150px;
+	height: 150px;
+	overflow: auto;
+}
+
 #view-contact-end {
 	clear: both;
 }
