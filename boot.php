@@ -9,7 +9,7 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1219' );
+define ( 'FRIENDICA_VERSION',      '2.3.1220' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.22'    );
 define ( 'DB_UPDATE_VERSION',      1115      );
 
@@ -968,7 +968,7 @@ function profile_sidebar($profile, $block = 0) {
 	$homepage = ((x($profile,'homepage') == 1) ?  t('Homepage:') : False);
 
 	if(($profile['hidewall'] || $block) && (! local_user()) && (! remote_user())) {
-		$location = $pdesc = $connect = $gender = $marital = $homepage = False;
+		$location = $pdesc = $gender = $marital = $homepage = False;
 	}
 
 	$firstname = ((strpos($profile['name'],' ')) 
