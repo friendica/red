@@ -94,6 +94,9 @@ function bb2diaspora($Text,$preserve_nl = false) {
 
 	// [img]pathtoimage[/img]
 
+//	$Text = preg_replace("/\[url\=([$URLSearchString]*)\]\[img\](.*?)\[\/img\]\[\/url\]/ism", 
+//		'![' . t('image/photo') . '](' . '$2' . ')' . "\n" . '[' . t('link') . '](' . '$1' . ')', $Text);
+
 	$Text = preg_replace("/\[bookmark\]([$URLSearchString]*)\[\/bookmark\]/ism", '[$1]($1)', $Text);
 	$Text = preg_replace("/\[bookmark\=([$URLSearchString]*)\](.*?)\[\/bookmark\]/ism", '[$2]($1)', $Text);
 
@@ -101,8 +104,6 @@ function bb2diaspora($Text,$preserve_nl = false) {
 	$Text = preg_replace("/\#\[url\=([$URLSearchString]*)\](.*?)\[\/url\]/ism", '[#$2]($1)', $Text);
 	$Text = preg_replace("/\[url\=([$URLSearchString]*)\](.*?)\[\/url\]/ism", '[$2]($1)', $Text);
 
-	$Text = preg_replace("/\[url\=([$URLSearchString]*)\]\[img\](.*?)\[\/img\]\[\/url\]/ism", 
-		'![' . t('image/photo') . '](' . '$2' . ')' . "\n" . '[' . t('link') . '](' . '$1' . ')', $Text);
 
 	$Text = preg_replace("/\[img\](.*?)\[\/img\]/", '![' . t('image/photo') . '](' . '$1' . ')', $Text);
 
