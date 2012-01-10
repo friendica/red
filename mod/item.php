@@ -38,6 +38,8 @@ function item_post(&$a) {
 
 	call_hooks('post_local_start', $_POST);
 
+	logger('postvars' . print_r($_POST,true));
+
 	$api_source = ((x($_POST,'api_source') && $_POST['api_source']) ? true : false);
 	$return_path = ((x($_POST,'return')) ? $_POST['return'] : '');
 

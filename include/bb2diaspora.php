@@ -94,8 +94,12 @@ function bb2diaspora($Text,$preserve_nl = false) {
 
 	// [img]pathtoimage[/img]
 
-//	$Text = preg_replace("/\[url\=([$URLSearchString]*)\]\[img\](.*?)\[\/img\]\[\/url\]/ism", 
-//		'![' . t('image/photo') . '](' . '$2' . ')' . "\n" . '[' . t('link') . '](' . '$1' . ')', $Text);
+	// the following was added on 10-January-2012 due to an inability of Diaspora's
+	// new javascript markdown processor to handle links with images as the link "text"
+	// It is not optimal and may be removed if this ability is restored in the future
+
+	$Text = preg_replace("/\[url\=([$URLSearchString]*)\]\[img\](.*?)\[\/img\]\[\/url\]/ism", 
+		'![' . t('image/photo') . '](' . '$2' . ')' . "\n" . '[' . t('link') . '](' . '$1' . ')', $Text);
 
 	$Text = preg_replace("/\[bookmark\]([$URLSearchString]*)\[\/bookmark\]/ism", '[$1]($1)', $Text);
 	$Text = preg_replace("/\[bookmark\=([$URLSearchString]*)\](.*?)\[\/bookmark\]/ism", '[$2]($1)', $Text);

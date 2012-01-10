@@ -68,6 +68,9 @@
 		</div>
 	</div>
 
+	<span onclick="preview_post();" id="jot-preview-link" class="fakelink">$preview</span>
+	<div id="jot-preview-content" style="display:none;"></div>
+
 </div>
 
 <div id="profile-jot-end"></div>

@@ -433,6 +433,25 @@
 
 
 
+	function preview_post() {
+		$("#jot-preview").val("1");
+		$("#jot-preview-content").show();
+		tinyMCE.triggerSave();
+		$.post(  
+			"item",  
+			$("#profile-jot-form").serialize(),
+			function(data) {
+				if(data.preview) {			
+					$("#jot-preview-content").html(data.preview);
+					$("#jot-preview-content" + " a").removeAttr('href');
+				}
+			},
+			"json"  
+		);  
+		$("#jot-preview").val("1");
+		return true;  
+	}
+
 
 	function unpause() {
 		// unpause auto reloads if they are currently stopped
