@@ -423,7 +423,7 @@
 				if(data.preview) {
 						
 					$("#comment-edit-preview-" + id).html(data.preview);
-					$("#comment-edit-preview-" + id + " a").removeAttr('href');
+					$("#comment-edit-preview-" + id + " a").click(function() { return false; });
 				}
 			},
 			"json"  
@@ -443,12 +443,12 @@
 			function(data) {
 				if(data.preview) {			
 					$("#jot-preview-content").html(data.preview);
-					$("#jot-preview-content" + " a").removeAttr('href');
+					$("#jot-preview-content" + " a").click(function() { return false; });
 				}
 			},
 			"json"  
 		);  
-		$("#jot-preview").val("1");
+		$("#jot-preview").val("0");
 		return true;  
 	}
 

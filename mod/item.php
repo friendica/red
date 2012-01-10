@@ -201,6 +201,8 @@ function item_post(&$a) {
 
 
 		if(! strlen($body)) {
+			if($preview)
+				killme();
 			info( t('Empty post discarded.') . EOL );
 			if(x($_POST,'return')) 
 				goaway($a->get_baseurl() . "/" . $return_path );
@@ -590,6 +592,7 @@ function item_post(&$a) {
 	if($preview) {
 		require_once('include/conversation.php');
 		$o = conversation(&$a,array(array_merge($contact_record,$datarray)),'search',false,true);
+		logger('preview: ' . $o);
 		echo json_encode(array('preview' => $o));
 		killme();
 	}

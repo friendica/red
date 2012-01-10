@@ -247,6 +247,10 @@ div.wall-item-content-wrapper.shiny {
   background-repeat:no-repeat;
 }
 
+.preview {
+	background: #FFFFC8;
+}
+
 /* from default */
 #jot-perms-icon, 
 #profile-location,

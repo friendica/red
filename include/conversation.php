@@ -136,6 +136,8 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 	$profile_owner = 0;
 	$page_writeable      = false;
 
+	$previewing = (($preview) ? ' preview ' : '');
+
 	if($mode === 'network') {
 		$profile_owner = local_user();
 		$page_writeable = true;
@@ -261,7 +263,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				$body = prepare_body($item,true);
 				
 				$tmp_item = replace_macros($tpl,array(
-					'$id' => $item['item_id'],
+					'$id' => (($preview) ? 'P0' : $item['item_id']),
 					'$linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, ((strlen($item['author-link'])) ? $item['author-link'] : $item['url'])),
 					'$profile_url' => $profile_link,
 					'$item_photo_menu' => item_photo_menu($item),
@@ -288,6 +290,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 					'$dislike' => '',
 					'$comment' => '',
 					'$conv' => (($preview) ? '' : array('href'=> $a->get_baseurl() . '/display/' . $nickname . '/' . $item['id'], 'title'=> t('View in context'))),
+					'$previewing' => $previewing,
 					'$wait' => t('Please wait'),
 				));
 
@@ -624,6 +627,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 					'$like' => $like,
 					'$dislike' => $dislike,
 					'$comment' => $comment,
+					'$previewing' => $previewing,
 					'$wait' => t('Please wait'),
 
 				));
@@ -890,6 +894,7 @@ function status_editor($a,$x, $notes_cid = 0) {
 			'$acl' => $x['acl'],
 			'$bang' => $x['bang'],
 			'$profile_uid' => $x['profile_uid'],
+			'$preview' => t('Preview'),
 		));
 
 	return $o;
