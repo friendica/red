@@ -45,10 +45,15 @@
 	<div id="profile-nolocation-wrapper" style="display: none;" >
 		<a id="profile-nolocation" class="icon noglobe" title="$noloc" onclick="jotClearLocation();return false;"></a>
 	</div> 
+
 	<div id="profile-jot-perms" class="profile-jot-perms" style="display: $pvisit;" >
 		<a href="#profile-jot-acl-wrapper" id="jot-perms-icon" class="icon $lockstate"  title="$permset" ></a>$bang
 	</div>
+
+	<span onclick="preview_post();" id="jot-preview-link" class="fakelink">$preview</span>
+
 	<div id="profile-jot-perms-end"></div>
+
 
 	<div id="profile-jot-plugin-wrapper">
   	$jotplugins
@@ -58,6 +63,8 @@
 		<img id="profile-rotator" src="images/rotator.gif" alt="$wait" title="$wait" style="display: none;" />
 	</div> 
 	
+	<div id="jot-preview-content" style="display:none;"></div>
+
 	<div style="display: none;">
 		<div id="profile-jot-acl-wrapper" style="width:auto;height:auto;overflow:auto;">
 			$acl
@@ -68,8 +75,6 @@
 		</div>
 	</div>
 
-	<span onclick="preview_post();" id="jot-preview-link" class="fakelink">$preview</span>
-	<div id="jot-preview-content" style="display:none;"></div>
 
 </div>
 
