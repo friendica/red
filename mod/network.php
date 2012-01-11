@@ -96,8 +96,10 @@ function network_content(&$a, $update = 0) {
 
 	require_once('include/conversation.php');
 
-	if(! local_user())
+	if(! local_user()) {
+		$_SESSION['return_url'] = $a->query_string;
     	return login(false);
+	}
 
 	$o = '';
 
