@@ -13,6 +13,7 @@
 		<input type="hidden" name="location" id="jot-location" value="$defloc" />
 		<input type="hidden" name="coord" id="jot-coord" value="" />
 		<input type="hidden" name="title" id="jot-title" value="" />
+		<input type="hidden" name="preview" id="jot-preview" value="0" />
 		<input type="hidden" name="post_id" value="$post_id" />
 
 		<img id="profile-jot-text-loading" src="images/rotator.gif" alt="$wait" title="$wait" style="display: none;" />
@@ -58,7 +59,13 @@
 	<div id="profile-jot-perms" class="profile-jot-perms" style="display: $pvisit;" >
 		<a href="#profile-jot-acl-wrapper" id="jot-perms-icon" class="icon $lockstate"  title="$permset" ></a>$bang
 	</div>
+
+	<span onclick="preview_post();" id="jot-preview-link" class="fakelink">$preview</span>
+
+
 	<div id="profile-jot-perms-end"></div>
+
+	<div id="jot-preview-content" style="display:none;"></div>
 	
 	<div style="display: none;">
 		<div id="profile-jot-acl-wrapper" style="width:auto;height:auto;overflow:auto;">

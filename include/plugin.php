@@ -19,7 +19,7 @@ function uninstall_plugin($plugin){
 if (! function_exists('install_plugin')){
 function install_plugin($plugin){
 	logger("Addons: installing " . $plugin);
-	$t = filemtime('addon/' . $plugin . '/' . $plugin . '.php');
+	$t = @filemtime('addon/' . $plugin . '/' . $plugin . '.php');
 	@include_once('addon/' . $plugin . '/' . $plugin . '.php');
 	if(function_exists($plugin . '_install')) {
 		$func = $plugin . '_install';
@@ -33,6 +33,10 @@ function install_plugin($plugin){
 			$plugin_admin
 		);
 	}
+	else {
+		logger("Addons: FAILED installing " . $plugin);
+	}
+
 }}
 
 // reload all updated plugins

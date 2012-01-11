@@ -170,6 +170,10 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 
 	load_contact_links(local_user());
 
+	$cb = array('items' => $items, 'mode' => $mode, 'update' => $update, 'preview' => $preview);
+	call_hooks('conversation_start',$cb);
+
+	$items = $cb['items'];
 
 	$cmnt_tpl    = get_markup_template('comment_item.tpl');
 	$tpl         = get_markup_template('wall_item.tpl');

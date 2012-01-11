@@ -1216,6 +1216,16 @@ padding: 5px 10px 0px;
 	font-size: 1.2em;
 }
 
+#jot-preview-link {
+	margin-left: 45px;
+}
+
+.preview {
+	background: #FFFFC8;
+}
+
+
+
 #profile-jot-perms-end {
 	clear: both;
 }
