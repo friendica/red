@@ -64,7 +64,7 @@ function acl_init(&$a){
 //		logger('acl: group: ' . $g['name'] . ' members: ' . $g['uids']);		
 			$groups[] = array(
 				"type"  => "g",
-				"photo" => "images/default-group-mm.png",
+				"photo" => "images/twopeople.png",
 				"name"  => $g['name'],
 				"id"	=> intval($g['id']),
 				"uids"  => array_map("intval", explode(",",$g['uids'])),
