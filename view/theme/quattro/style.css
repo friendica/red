@@ -868,6 +868,7 @@ section {
   float: left;
   width: 90px;
   height: 90px;
+  margin-bottom: 15px;
 }
 .contact-wrapper .contact-photo {
   width: 80px;
@@ -1239,6 +1240,25 @@ ul.tabs li .active {
 .lframe {
   float: left;
   margin: 0px 10px 10px 0px;
+}
+/* profile match wrapper */
+.profile-match-wrapper {
+  float: left;
+  width: 90px;
+  height: 90px;
+  margin-bottom: 20px;
+}
+.profile-match-wrapper .contact-photo {
+  width: 80px;
+  height: 80px;
+}
+.profile-match-wrapper .contact-photo img {
+  width: 80px;
+  height: 80px;
+}
+.profile-match-wrapper .contact-photo-menu-button {
+  left: 0px;
+  top: 63px;
 }
 /* page footer */
 footer {
