@@ -22,7 +22,7 @@ function diaspora2bb($s) {
 
 	// we seem to get a lot of text smushed together with links from Diaspora.
 	// if it's a url that we haven't already parsed into a bbcode structure, put a space before it.
-  	$s = preg_replace("/([^=])(https?:\/\/)/ism",'$1 $2',$s);
+  	$s = preg_replace("/([^=\"\]])(https?:\/\/)/ism",'$1 $2',$s);
 
     $s = preg_replace("/\[url\=?(.*?)\]https?:\/\/www.youtube.com\/watch\?v\=(.*?)\[\/url\]/ism",'[youtube]$2[/youtube]',$s); 
     $s = preg_replace("/\[url\=https?:\/\/www.youtube.com\/watch\?v\=(.*?)\].*?\[\/url\]/ism",'[youtube]$1[/youtube]',$s); 
