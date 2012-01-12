@@ -733,10 +733,12 @@ function item_photo_menu($item){
 	);
 	
 	
-	$args = array($item, &$menu);
+	$args = array('item' => $item, 'menu' => $menu);
 	
 	call_hooks('item_photo_menu', $args);
-	
+
+	$menu = $args['menu'];	
+
 	$o = "";
 	foreach($menu as $k=>$v){
 		if ($v!="") $o .= "<li><a href='$v'>$k</a></li>\n";
