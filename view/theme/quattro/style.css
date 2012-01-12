@@ -195,6 +195,15 @@ a:hover {
 .clear {
   clear: both;
 }
+.fakelink {
+  color: #005c94;
+  text-decoration: none;
+  cursor: pointer;
+}
+.fakelink:hover {
+  color: #005c94;
+  text-decoration: underline;
+}
 code {
   font-family: Courier, monospace;
   white-space: pre;
