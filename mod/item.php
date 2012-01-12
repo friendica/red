@@ -37,8 +37,8 @@ function item_post(&$a) {
 	}
 
 	call_hooks('post_local_start', $_POST);
-
-	logger('postvars' . print_r($_POST,true));
+//	logger('postinput ' . file_get_contents('php://input'));
+	logger('postvars' . print_r($_POST,true), LOGGER_DATA);
 
 	$api_source = ((x($_POST,'api_source') && $_POST['api_source']) ? true : false);
 	$return_path = ((x($_POST,'return')) ? $_POST['return'] : '');
@@ -211,10 +211,10 @@ function item_post(&$a) {
 	}
 
 	if(($api_source) 
-		&& (! array_key_exists('allow_cid',$_REQUEST))
-		&& (! array_key_exists('allow_gid',$_REQUEST))
-		&& (! array_key_exists('deny_cid',$_REQUEST))
-		&& (! array_key_exists('deny_gid',$_REQUEST))) {
+		&& (! array_key_exists('contact_allow',$_REQUEST))
+		&& (! array_key_exists('group_allow',$_REQUEST))
+		&& (! array_key_exists('contact_deny',$_REQUEST))
+		&& (! array_key_exists('group_deny',$_REQUEST))) {
 		$str_group_allow   = $user['allow_gid'];
 		$str_contact_allow = $user['allow_cid'];
 		$str_group_deny    = $user['deny_gid'];
