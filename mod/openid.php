@@ -65,59 +65,13 @@ function openid_content(&$a) {
   			}
 			unset($_SESSION['openid']);
 
-			$_SESSION['uid'] = $r[0]['uid'];
-			$_SESSION['theme'] = $r[0]['theme'];
-			$_SESSION['authenticated'] = 1;
-			$_SESSION['page_flags'] = $r[0]['page-flags'];
-			$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $r[0]['nickname'];
+			require_once('include/security.php');
+			authenticate_success($r[0],true,true);
 
-			$a->user = $r[0];
+			// just in case there was no return url set 
+			// and we fell through
 
-			if($a->user['login_date'] === '0000-00-00 00:00:00') {
-				$_SESSION['return_url'] = 'profile_photo/new';
-				$a->module = 'profile_photo';
-				info( t("Welcome ") . $a->user['username'] . EOL);
-				info( t('Please upload a profile photo.') . EOL);
-			}
-			else
-				info( t("Welcome back ") . $a->user['username'] . EOL);
-
-
-			if(strlen($a->user['timezone'])) {
-				date_default_timezone_set($a->user['timezone']);
-				$a->timezone = $a->user['timezone'];
-			}
-
-			$r = q("SELECT `uid`,`username` FROM `user` WHERE `password` = '%s' AND `email` = '%s'",
-				dbesc($a->user['password']),
-				dbesc($a->user['email'])
-			);
-			if(count($r))
-				$a->identities = $r;
-
-			$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
-				intval($_SESSION['uid'])
-			);
-			if(count($r)) {
-				$a->contact = $r[0];
-				$a->cid = $r[0]['id'];
-				$_SESSION['cid'] = $a->cid;
-			}
-
-			$l = get_language();
-
-			q("UPDATE `user` SET `login_date` = '%s', `language` = '%s' WHERE `uid` = %d LIMIT 1",
-				dbesc(datetime_convert()),
-				dbesc($l),
-				intval($_SESSION['uid'])
-			);
-
-
-			header('X-Account-Management-Status: active; name="' . $a->user['username'] . '"; id="' . $a->user['nickname'] .'"');
-			if(($a->module !== 'home') && isset($_SESSION['return_url']))
-				goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
-			else
-				goaway(z_root());
+			goaway(z_root());
 		}
 	}
 	notice( t('Login failed.') . EOL);

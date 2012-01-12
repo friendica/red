@@ -1,6 +1,8 @@
 <?php
 
 
+require_once('include/security.php');
+
 function nuke_session() {
 	unset($_SESSION['authenticated']);
 	unset($_SESSION['uid']);
@@ -58,41 +60,7 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 			goaway(z_root());
 		}
 
-		// initialise user environment
-
-		$a->user = $r[0];
-		$_SESSION['theme'] = $a->user['theme'];
-		$_SESSION['page_flags'] = $a->user['page-flags'];
-
-		$member_since = strtotime($a->user['register_date']);
-		if(time() < ($member_since + ( 60 * 60 * 24 * 14)))
-			$_SESSION['new_member'] = true;
-		else
-			$_SESSION['new_member'] = false;
-
-		if(strlen($a->user['timezone'])) {
-			date_default_timezone_set($a->user['timezone']);
-			$a->timezone = $a->user['timezone'];
-		}
-
-		$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
-
-		$r = q("SELECT `uid`,`username` FROM `user` WHERE `password` = '%s' AND `email` = '%s'",
-			dbesc($a->user['password']),
-			dbesc($a->user['email'])
-		);
-		if(count($r))
-			$a->identities = $r;
-
-		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
-			intval($_SESSION['uid']));
-		if(count($r)) {
-			$a->contact = $r[0];
-			$a->cid = $r[0]['id'];
-			$_SESSION['cid'] = $a->cid;
-
-		}
-		header('X-Account-Management-Status: active; name="' . $a->user['username'] . '"; id="' . $a->user['nickname'] .'"');
+		authenticate_success($r[0]);
 	}
 }
 else {
@@ -202,65 +170,9 @@ else {
 			goaway(z_root());
   		}
 
-		$_SESSION['uid'] = $record['uid'];
-		$_SESSION['theme'] = $record['theme'];
-		$_SESSION['authenticated'] = 1;
-		$_SESSION['page_flags'] = $record['page-flags'];
-		$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $record['nickname'];
-		$_SESSION['addr'] = $_SERVER['REMOTE_ADDR'];
+		// if we haven't failed up this point, log them in.
 
-		$a->user = $record;
-
-		if($a->user['login_date'] === '0000-00-00 00:00:00') {
-			$_SESSION['return_url'] = 'profile_photo/new';
-			$a->module = 'profile_photo';
-			info( t("Welcome ") . $a->user['username'] . EOL);
-			info( t('Please upload a profile photo.') . EOL);
-		}
-		else
-			info( t("Welcome back ") . $a->user['username'] . EOL);
-
-
-		$member_since = strtotime($a->user['register_date']);
-		if(time() < ($member_since + ( 60 * 60 * 24 * 14)))
-			$_SESSION['new_member'] = true;
-		else
-			$_SESSION['new_member'] = false;
-
-		if(strlen($a->user['timezone'])) {
-			date_default_timezone_set($a->user['timezone']);
-			$a->timezone = $a->user['timezone'];
-		}
-
-		$r = q("SELECT `uid`,`username` FROM `user` WHERE `password` = '%s' AND `email` = '%s'",
-			dbesc($a->user['password']),
-			dbesc($a->user['email'])
-		);
-		if(count($r))
-			$a->identities = $r;
-
-
-		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
-			intval($_SESSION['uid']));
-		if(count($r)) {
-			$a->contact = $r[0];
-			$a->cid = $r[0]['id'];
-			$_SESSION['cid'] = $a->cid;
-		}
-
-		$l = get_language();
-
-		q("UPDATE `user` SET `login_date` = '%s', `language` = '%s' WHERE `uid` = %d LIMIT 1",
-			dbesc(datetime_convert()),
-			dbesc($l),
-			intval($_SESSION['uid'])
-		);
-
-		call_hooks('logged_in', $a->user);
-
-		header('X-Account-Management-Status: active; name="' . $a->user['username'] . '"; id="' . $a->user['nickname'] .'"');
-		if(($a->module !== 'home') && isset($_SESSION['return_url']))
-			goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
+		authenticate_success($record, true, true);
 	}
 }
 

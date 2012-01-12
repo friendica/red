@@ -85,36 +85,12 @@
 		    header('HTTP/1.0 401 Unauthorized');
 		    die('This api requires login');
 		}
-		$_SESSION['uid'] = $record['uid'];
-		$_SESSION['theme'] = $record['theme'];
-		$_SESSION['authenticated'] = 1;
-		$_SESSION['page_flags'] = $record['page-flags'];
-		$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $record['nickname'];
-		$_SESSION['addr'] = $_SERVER['REMOTE_ADDR'];
 
-		//notice( t("Welcome back ") . $record['username'] . EOL);
-		$a->user = $record;
-
-		if(strlen($a->user['timezone'])) {
-			date_default_timezone_set($a->user['timezone']);
-			$a->timezone = $a->user['timezone'];
-		}
-
-		$r = q("SELECT * FROM `contact` WHERE `uid` = %s AND `self` = 1 LIMIT 1",
-			intval($_SESSION['uid']));
-		if(count($r)) {
-			$a->contact = $r[0];
-			$a->cid = $r[0]['id'];
-			$_SESSION['cid'] = $a->cid;
-		}
-		q("UPDATE `user` SET `login_date` = '%s' WHERE `uid` = %d LIMIT 1",
-			dbesc(datetime_convert()),
-			intval($_SESSION['uid'])
-		);
+		require_once('include/security.php');
+		authenticate_success($record);
 
 		call_hooks('logged_in', $a->user);
 
-		header('X-Account-Management-Status: active; name="' . $a->user['username'] . '"; id="' . $a->user['nickname'] .'"');
 	}
 	
 	/**************************
@@ -125,7 +101,7 @@
 		foreach ($API as $p=>$info){
 			if (strpos($a->query_string, $p)===0){
 				$called_api= explode("/",$p);
-				#unset($_SERVER['PHP_AUTH_USER']);
+				//unset($_SERVER['PHP_AUTH_USER']);
 				if ($info['auth']===true && local_user()===false) {
 						api_login($a);
 				}

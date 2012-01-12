@@ -1,5 +1,76 @@
 <?php
 
+function authenticate_success($user_record, $login_initial = false, $interactive = false) {
+
+	$a = get_app();
+
+	$_SESSION['uid'] = $user_record['uid'];
+	$_SESSION['theme'] = $user_record['theme'];
+	$_SESSION['authenticated'] = 1;
+	$_SESSION['page_flags'] = $user_record['page-flags'];
+	$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $user_record['nickname'];
+	$_SESSION['addr'] = $_SERVER['REMOTE_ADDR'];
+
+	$a->user = $user_record;
+
+	if($interactive) {
+		if($a->user['login_date'] === '0000-00-00 00:00:00') {
+			$_SESSION['return_url'] = 'profile_photo/new';
+			$a->module = 'profile_photo';
+			info( t("Welcome ") . $a->user['username'] . EOL);
+			info( t('Please upload a profile photo.') . EOL);
+		}
+		else
+			info( t("Welcome back ") . $a->user['username'] . EOL);
+	}
+
+	$member_since = strtotime($a->user['register_date']);
+	if(time() < ($member_since + ( 60 * 60 * 24 * 14)))
+		$_SESSION['new_member'] = true;
+	else
+		$_SESSION['new_member'] = false;
+	if(strlen($a->user['timezone'])) {
+		date_default_timezone_set($a->user['timezone']);
+		$a->timezone = $a->user['timezone'];
+	}
+
+	$r = q("SELECT `uid`,`username` FROM `user` WHERE `password` = '%s' AND `email` = '%s'",
+		dbesc($a->user['password']),
+		dbesc($a->user['email'])
+	);
+	if(count($r))
+		$a->identities = $r;
+
+
+	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
+		intval($_SESSION['uid']));
+	if(count($r)) {
+		$a->contact = $r[0];
+		$a->cid = $r[0]['id'];
+		$_SESSION['cid'] = $a->cid;
+	}
+
+	header('X-Account-Management-Status: active; name="' . $a->user['username'] . '"; id="' . $a->user['nickname'] .'"');
+
+	if($login_initial) {
+		$l = get_language();
+
+		q("UPDATE `user` SET `login_date` = '%s', `language` = '%s' WHERE `uid` = %d LIMIT 1",
+			dbesc(datetime_convert()),
+			dbesc($l),
+			intval($_SESSION['uid'])
+		);
+
+		call_hooks('logged_in', $a->user);
+
+		if(($a->module !== 'home') && isset($_SESSION['return_url']))
+			goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
+	}
+
+}
+
+
+
 function can_write_wall(&$a,$owner) {
 
 	static $verified = 0;
