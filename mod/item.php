@@ -27,28 +27,28 @@ function item_post(&$a) {
 
 	$uid = local_user();
 
-	if(x($_POST,'dropitems')) {
+	if(x($_REQUEST,'dropitems')) {
 		require_once('include/items.php');
-		$arr_drop = explode(',',$_POST['dropitems']);
+		$arr_drop = explode(',',$_REQUEST['dropitems']);
 		drop_items($arr_drop);
 		$json = array('success' => 1);
 		echo json_encode($json);
 		killme();
 	}
 
-	call_hooks('post_local_start', $_POST);
+	call_hooks('post_local_start', $_REQUEST);
 //	logger('postinput ' . file_get_contents('php://input'));
-	logger('postvars' . print_r($_POST,true), LOGGER_DATA);
+	logger('postvars' . print_r($_REQUEST,true), LOGGER_DATA);
 
-	$api_source = ((x($_POST,'api_source') && $_POST['api_source']) ? true : false);
-	$return_path = ((x($_POST,'return')) ? $_POST['return'] : '');
+	$api_source = ((x($_REQUEST,'api_source') && $_REQUEST['api_source']) ? true : false);
+	$return_path = ((x($_REQUEST,'return')) ? $_REQUEST['return'] : '');
 
 	/**
 	 * Is this a reply to something?
 	 */
 
-	$parent = ((x($_POST,'parent')) ? intval($_POST['parent']) : 0);
-	$parent_uri = ((x($_POST,'parent_uri')) ? trim($_POST['parent_uri']) : '');
+	$parent = ((x($_REQUEST,'parent')) ? intval($_REQUEST['parent']) : 0);
+	$parent_uri = ((x($_REQUEST,'parent_uri')) ? trim($_REQUEST['parent_uri']) : '');
 
 	$parent_item = null;
 	$parent_contact = null;
@@ -56,12 +56,12 @@ function item_post(&$a) {
 	$parid = 0;
 	$r = false;
 
-	$preview = ((x($_POST,'preview')) ? intval($_POST['preview']) : 0);
+	$preview = ((x($_REQUEST,'preview')) ? intval($_REQUEST['preview']) : 0);
 
 	if($parent || $parent_uri) {
 
-		if(! x($_POST,'type'))
-			$_POST['type'] = 'net-comment';
+		if(! x($_REQUEST,'type'))
+			$_REQUEST['type'] = 'net-comment';
 
 		if($parent) {
 			$r = q("SELECT * FROM `item` WHERE `id` = %d LIMIT 1",
@@ -87,7 +87,7 @@ function item_post(&$a) {
 
 		if(($r === false) || (! count($r))) {
 			notice( t('Unable to locate original post.') . EOL);
-			if(x($_POST,'return')) 
+			if(x($_REQUEST,'return')) 
 				goaway($a->get_baseurl() . "/" . $return_path );
 			killme();
 		}
@@ -110,13 +110,13 @@ function item_post(&$a) {
 
 	if($parent) logger('mod_post: parent=' . $parent);
 
-	$profile_uid = ((x($_POST,'profile_uid')) ? intval($_POST['profile_uid']) : 0);
-	$post_id     = ((x($_POST['post_id']))    ? intval($_POST['post_id'])     : 0);
-	$app         = ((x($_POST['source']))     ? strip_tags($_POST['source'])  : '');
+	$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid']) : 0);
+	$post_id     = ((x($_REQUEST,'post_id'))     ? intval($_REQUEST['post_id'])     : 0);
+	$app         = ((x($_REQUEST,'source'))      ? strip_tags($_REQUEST['source'])  : '');
 
 	if(! can_write_wall($a,$profile_uid)) {
 		notice( t('Permission denied.') . EOL) ;
-		if(x($_POST,'return')) 
+		if(x($_REQUEST,'return')) 
 			goaway($a->get_baseurl() . "/" . $return_path );
 		killme();
 	}
@@ -156,22 +156,43 @@ function item_post(&$a) {
 		$emailcc           = $orig_post['emailcc'];
 		$app			   = $orig_post['app'];
 
-		$body              = escape_tags(trim($_POST['body']));
+		$body              = escape_tags(trim($_REQUEST['body']));
 		$private           = $orig_post['private'];
 		$pubmail_enable    = $orig_post['pubmail'];
 	}
 	else {
-		$str_group_allow   = perms2str($_POST['group_allow']);
-		$str_contact_allow = perms2str($_POST['contact_allow']);
-		$str_group_deny    = perms2str($_POST['group_deny']);
-		$str_contact_deny  = perms2str($_POST['contact_deny']);
-		$title             = notags(trim($_POST['title']));
-		$location          = notags(trim($_POST['location']));
-		$coord             = notags(trim($_POST['coord']));
-		$verb              = notags(trim($_POST['verb']));
-		$emailcc           = notags(trim($_POST['emailcc']));
 
-		$body              = escape_tags(trim($_POST['body']));
+		// if coming from the API and no privacy settings are set, 
+		// use the user default permissions - as they won't have
+		// been supplied via a form.
+
+		if(($api_source) 
+			&& (! array_key_exists('contact_allow',$_REQUEST))
+			&& (! array_key_exists('group_allow',$_REQUEST))
+			&& (! array_key_exists('contact_deny',$_REQUEST))
+			&& (! array_key_exists('group_deny',$_REQUEST))) {
+			$str_group_allow   = $user['allow_gid'];
+			$str_contact_allow = $user['allow_cid'];
+			$str_group_deny    = $user['deny_gid'];
+			$str_contact_deny  = $user['deny_cid'];
+		}
+		else {
+
+			// use the posted permissions
+
+			$str_group_allow   = perms2str($_REQUEST['group_allow']);
+			$str_contact_allow = perms2str($_REQUEST['contact_allow']);
+			$str_group_deny    = perms2str($_REQUEST['group_deny']);
+			$str_contact_deny  = perms2str($_REQUEST['contact_deny']);
+		}
+
+		$title             = notags(trim($_REQUEST['title']));
+		$location          = notags(trim($_REQUEST['location']));
+		$coord             = notags(trim($_REQUEST['coord']));
+		$verb              = notags(trim($_REQUEST['verb']));
+		$emailcc           = notags(trim($_REQUEST['emailcc']));
+
+		$body              = escape_tags(trim($_REQUEST['body']));
 		$private = ((strlen($str_group_allow) || strlen($str_contact_allow) || strlen($str_group_deny) || strlen($str_contact_deny)) ? 1 : 0);
 
 		if(($parent_item) && 
@@ -184,7 +205,7 @@ function item_post(&$a) {
 			$private = 1;
 		}
 	
-		$pubmail_enable    = ((x($_POST,'pubmail_enable') && intval($_POST['pubmail_enable']) && (! $private)) ? 1 : 0);
+		$pubmail_enable    = ((x($_REQUEST,'pubmail_enable') && intval($_REQUEST['pubmail_enable']) && (! $private)) ? 1 : 0);
 
 		// if using the API, we won't see pubmail_enable - figure out if it should be set
 
@@ -204,22 +225,12 @@ function item_post(&$a) {
 			if($preview)
 				killme();
 			info( t('Empty post discarded.') . EOL );
-			if(x($_POST,'return')) 
+			if(x($_REQUEST,'return')) 
 				goaway($a->get_baseurl() . "/" . $return_path );
 			killme();
 		}
 	}
 
-	if(($api_source) 
-		&& (! array_key_exists('contact_allow',$_REQUEST))
-		&& (! array_key_exists('group_allow',$_REQUEST))
-		&& (! array_key_exists('contact_deny',$_REQUEST))
-		&& (! array_key_exists('group_deny',$_REQUEST))) {
-		$str_group_allow   = $user['allow_gid'];
-		$str_contact_allow = $user['allow_cid'];
-		$str_group_deny    = $user['deny_gid'];
-		$str_contact_deny  = $user['deny_cid'];
-	}
 
 
 	// get contact info for poster
@@ -261,7 +272,7 @@ function item_post(&$a) {
 
 
 
-	$post_type = notags(trim($_POST['type']));
+	$post_type = notags(trim($_REQUEST['type']));
 
 	if($post_type === 'net-comment') {
 		if($parent_item !== null) {
@@ -610,7 +621,7 @@ function item_post(&$a) {
 		);
 
 		proc_run('php', "include/notifier.php", 'edit_post', "$post_id");
-		if((x($_POST,'return')) && strlen($return_path)) {
+		if((x($_REQUEST,'return')) && strlen($return_path)) {
 			logger('return: ' . $return_path);
 			goaway($a->get_baseurl() . "/" . $return_path );
 		}
@@ -841,8 +852,8 @@ function item_post(&$a) {
 	}
 
 	$json = array('success' => 1);
-	if(x($_POST,'jsreload') && strlen($_POST['jsreload']))
-		$json['reload'] = $a->get_baseurl() . '/' . $_POST['jsreload'];
+	if(x($_REQUEST,'jsreload') && strlen($_REQUEST['jsreload']))
+		$json['reload'] = $a->get_baseurl() . '/' . $_REQUEST['jsreload'];
 
 	logger('post_json: ' . print_r($json,true), LOGGER_DEBUG);
 
