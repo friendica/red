@@ -28,7 +28,7 @@ input {
 
 img { border :0px; }
 
-.openid input {
+#id_openid_url, .openid input {
    background: url(login-bg.gif) no-repeat;
    background-position: 0 50%;
    padding-left: 18px;
