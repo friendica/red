@@ -26,43 +26,12 @@ function manage_post(&$a) {
 	unset($_SESSION['cid']);
 	unset($_SESSION['theme']);
 	unset($_SESSION['page_flags']);
+	unset($_SESSION['return_url']);
 
 
-	$_SESSION['uid'] = $r[0]['uid'];
-	$_SESSION['theme'] = $r[0]['theme'];
-	$_SESSION['authenticated'] = 1;
-	$_SESSION['page_flags'] = $r[0]['page-flags'];
-	$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $r[0]['nickname'];
+	require_once('include/security.php');
+	authenticate_success($r[0],true,true);
 
-	info( sprintf( t("Welcome back %s") , $r[0]['username']) . EOL);
-	$a->user = $r[0];
-
-	if(strlen($a->user['timezone'])) {
-		date_default_timezone_set($a->user['timezone']);
-		$a->timezone = $a->user['timezone'];
-	}
-
-	$r = q("SELECT `uid`,`username` FROM `user` WHERE `password` = '%s' AND `email` = '%s'",
-		dbesc($a->user['password']),
-		dbesc($a->user['email'])
-	);
-	if(count($r))
-		$a->identities = $r;
-
-	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
-		intval($_SESSION['uid']));
-	if(count($r)) {
-		$a->contact = $r[0];
-		$a->cid = $r[0]['id'];
-		$_SESSION['cid'] = $a->cid;
-	}
-
-	q("UPDATE `user` SET `login_date` = '%s' WHERE `uid` = %d LIMIT 1",
-		dbesc(datetime_convert()),
-		intval($_SESSION['uid'])
-	);
-
-	header('X-Account-Management-Status: active; name="' . $a->user['username'] . '"; id="' . $a->user['nickname'] .'"');
 	goaway($a->get_baseurl() . '/profile/' . $a->user['nickname']);
 	// NOTREACHED
 }
