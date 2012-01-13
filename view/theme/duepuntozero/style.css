@@ -37,6 +37,10 @@ img { border :0px; }
 
 }
 
+#id_openid_url {
+	width: 384px;
+}
+
 code {
 	font-family: Courier, monospace;
 	white-space: pre;
