@@ -780,7 +780,11 @@ ul .sidebar-group-li .icon{
 	border: 1px solid #cccccc; 
 }
 
-#profile-jot-perms, #profile-jot-submit {
+.preview {
+	background: #FFFFC8;
+}
+
+#profile-jot-perms, #profile-jot-submit, #jot-preview-link {
 	width: 60px;
 	font-size: 12px;
 	-moz-box-shadow:inset 0px 1px 0px 0px #cfcfcf;
@@ -818,13 +822,13 @@ ul .sidebar-group-li .icon{
 	margin-left: -30px;
 }
 
-#profile-jot-perms:hover, #profile-jot-submit:hover {
+#profile-jot-perms:hover, #profile-jot-submit:hover, #jot-preview-link:hover {
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #b20202), color-stop(1, #d60808) );
 	background:-moz-linear-gradient( center top, #b20202 5%, #d60808 100% );
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#b20202', endColorstr='#d60808');
 	background-color:#b20202;
 }
-#profile-jot-perms:active, #profile-jot-submit:active {
+#profile-jot-perms:active, #profile-jot-submit:active, #jot-preview-link:active {
 	position:relative;
 	top:1px;
 }

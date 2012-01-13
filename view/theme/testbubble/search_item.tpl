@@ -1,4 +1,4 @@
-<div class="wall-item-outside-wrapper$indent" id="wall-item-outside-wrapper-$id" >
+<div class="wall-item-outside-wrapper$indent$previewing" id="wall-item-outside-wrapper-$id" >
 	<div class="wall-item-content-wrapper$indent" id="wall-item-content-wrapper-$id" >
 		<div class="wall-item-info" id="wall-item-info-$id">
 			<div class="wall-item-photo-wrapper mframe" id="wall-item-photo-wrapper-$id" 

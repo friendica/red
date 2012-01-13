@@ -44,6 +44,8 @@
 		<a id="profile-nolocation" class="icon border  noglobe" title="$noloc" onclick="jotClearLocation(); return false;"></a>
 	</div> 
 
+	<span onclick="preview_post();" id="jot-preview-link" class="fakelink" style="display: none;" >$preview</span>
+
 	<div id="profile-jot-submit-wrapper" style="display:none;padding-left: 400px;">
 		<input type="submit" id="profile-jot-submit" name="submit" value="$share" />
 		<div id="profile-jot-perms" class="profile-jot-perms" style="display: $visitor;" >
@@ -55,6 +57,8 @@
 	</div>
 	<div id="profile-jot-tools-end"></div>
 	
+	<div id="jot-preview-content" style="display:none;"></div>
+
         <div style="display: none;">
             <div id="profile-jot-acl-wrapper" style="width:auto;height:auto;overflow:auto;">
                 $acl

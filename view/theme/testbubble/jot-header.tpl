@@ -96,6 +96,7 @@ function initEditor(cb) {
                             	    $("#profile-nolocation-wrapper").show();
                                 	$("#profile-title-wrapper").show();
 	                                $("#profile-jot-plugin-wrapper").show();
+	                                $("#jot-preview-link").show();
 								{{ endif }}   
                              $("#character-counter").show();
                                 if (typeof cb!="undefined") cb();
