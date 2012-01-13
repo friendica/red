@@ -50,6 +50,7 @@ function crepair_post(&$a) {
 
 	$contact = $r[0];
 
+	$name    = ((x($_POST,'name')) ? $_POST['name'] : $contact['name']);
 	$nick    = ((x($_POST,'nick')) ? $_POST['nick'] : '');
 	$url     = ((x($_POST,'url')) ? $_POST['url'] : '');
 	$request = ((x($_POST,'request')) ? $_POST['request'] : '');
@@ -59,8 +60,9 @@ function crepair_post(&$a) {
 	$attag   = ((x($_POST,'attag')) ? $_POST['attag'] : '');
 	$photo   = ((x($_POST,'photo')) ? $_POST['photo'] : '');
 
-	$r = q("UPDATE `contact` SET `nick` = '%s', `url` = '%s', `request` = '%s', `confirm` = '%s', `notify` = '%s', `poll` = '%s', `attag` = '%s' 
+	$r = q("UPDATE `contact` SET `name` = '%s', `nick` = '%s', `url` = '%s', `request` = '%s', `confirm` = '%s', `notify` = '%s', `poll` = '%s', `attag` = '%s' 
 		WHERE `id` = %d AND `uid` = %d LIMIT 1",
+		dbesc($name),
 		dbesc($nick),
 		dbesc($url),
 		dbesc($request),
@@ -138,6 +140,8 @@ function crepair_content(&$a) {
 	$o .= '<h2>' . $msg1 . '</h2>';
 
 	$o .= '<div class="error-message">' . $msg2 . EOL . EOL. $msg3 . '</div>';
+
+	$o .= EOL . '<a href="contacts/' . $cid . '">' . t('Return to contact editor') . '</a>' . EOL;
 
 	$tpl = get_markup_template('crepair.tpl');
 	$o .= replace_macros($tpl, array(

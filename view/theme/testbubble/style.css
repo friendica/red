@@ -2211,6 +2211,17 @@ margin-left: 0px;
 	color: #efefef;
 }
 
+.crepair-label {
+	margin-top: 10px;
+	float: left;
+	width: 250px;
+}
+
+.crepair-input {
+	margin-top: 10px;
+	float: left;
+	width: 200px;
+}
 
 /* ===================================== */
 /* = Register, Settings, Profile Forms = */
