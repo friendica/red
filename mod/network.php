@@ -240,7 +240,7 @@ function network_content(&$a, $update = 0) {
 
 		nav_set_selected('network');
 
-		$_SESSION['return_url'] = $a->cmd;
+		$_SESSION['return_url'] = $a->query_string;
 
 		$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
 
@@ -299,7 +299,7 @@ function network_content(&$a, $update = 0) {
 				info( t('Group is empty'));
 		}
 
-		$sql_extra = " AND `item`.`parent` IN ( SELECT DISTINCT(`parent`) FROM `item` WHERE 1 $sql_options AND ( `contact-id` IN ( $contact_str ) OR `allow_gid` REGEXP '<" . intval($group) . ">' )) ";
+		$sql_extra = " AND `item`.`parent` IN ( SELECT DISTINCT(`parent`) FROM `item` WHERE 1 $sql_options AND ( `contact-id` IN ( $contact_str ) OR `allow_gid` REGEXP '<" . intval($group) . ">' ) and deleted = 0 ) ";
 		$o = '<h2>' . t('Group: ') . $r[0]['name'] . '</h2>' . $o;
 	}
 	elseif($cid) {
@@ -309,7 +309,7 @@ function network_content(&$a, $update = 0) {
 			intval($cid)
 		);
 		if(count($r)) {
-			$sql_extra = " AND `item`.`parent` IN ( SELECT DISTINCT(`parent`) FROM `item` WHERE 1 $sql_options AND `contact-id` = " . intval($cid) . " ) ";
+			$sql_extra = " AND `item`.`parent` IN ( SELECT DISTINCT(`parent`) FROM `item` WHERE 1 $sql_options AND `contact-id` = " . intval($cid) . " and deleted = 0 ) ";
 			$o = '<h2>' . t('Contact: ') . $r[0]['name'] . '</h2>' . $o;
 			if($r[0]['network'] === NETWORK_OSTATUS && $r[0]['writable'] && (! get_pconfig(local_user(),'system','nowarn_insecure'))) {
 				notice( t('Private messages to this person are at risk of public disclosure.') . EOL);
