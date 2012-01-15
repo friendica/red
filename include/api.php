@@ -26,6 +26,7 @@
 	/**
 	 * Simple HTTP Login
 	 */
+
 	function api_login(&$a){
 		// login with oauth
 		try{
@@ -56,7 +57,7 @@
 
 		if (!isset($_SERVER['PHP_AUTH_USER'])) {
 		   logger('API_login: ' . print_r($_SERVER,true), LOGGER_DEBUG);
-		    header('WWW-Authenticate: Basic realm="Friendika"');
+		    header('WWW-Authenticate: Basic realm="Friendica"');
 		    header('HTTP/1.0 401 Unauthorized');
 		    die('This api requires login');
 		}
@@ -454,7 +455,10 @@
 
 	// TODO - media uploads
 	function api_statuses_update(&$a, $type) {
-		if (local_user()===false) return false;
+		if (local_user()===false) {
+			logger('api_statuses_update: no user');
+			return false;
+		}
 		$user_info = api_get_user($a);
 
 		// convert $_POST array items to the form we use for web posts.
@@ -477,30 +481,30 @@
 				$purifier = new HTMLPurifier($config);
 				$txt = $purifier->purify($txt);
 
-				$_POST['body'] = html2bbcode($txt);
+				$_REQUEST['body'] = html2bbcode($txt);
 			}
 
 		}
 		else
-			$_POST['body'] = urldecode(requestdata('status'));
+			$_REQUEST['body'] = urldecode(requestdata('status'));
 
 		$parent = requestdata('in_reply_to_status_id');
 		if(ctype_digit($parent))
-			$_POST['parent'] = $parent;
+			$_REQUEST['parent'] = $parent;
 		else
-			$_POST['parent_uri'] = $parent;
+			$_REQUEST['parent_uri'] = $parent;
 
 		if(requestdata('lat') && requestdata('long'))
-			$_POST['coord'] = sprintf("%s %s",requestdata('lat'),requestdata('long'));
-		$_POST['profile_uid'] = local_user();
+			$_REQUEST['coord'] = sprintf("%s %s",requestdata('lat'),requestdata('long'));
+		$_REQUEST['profile_uid'] = local_user();
 		if(requestdata('parent'))
-			$_POST['type'] = 'net-comment';
+			$_REQUEST['type'] = 'net-comment';
 		else
-			$_POST['type'] = 'wall';
+			$_REQUEST['type'] = 'wall';
 
 		// set this so that the item_post() function is quiet and doesn't redirect or emit json
 
-		$_POST['api_source'] = true;
+		$_REQUEST['api_source'] = true;
 
 		// call out normal post function
 
