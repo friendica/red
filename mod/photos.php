@@ -53,6 +53,10 @@ function photos_init(&$a) {
 			}
 			$o .= '</ul>';
 
+			if(local_user() && $a->data['user']['uid'] == local_user()) {
+				$o .= '<div id="photo-albums-upload-link"><a href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/upload" >' .t('Upload New Photos') . '</a></div>';
+			}
+
 			$o .= '</div>';
 		}
 
@@ -94,7 +98,7 @@ EOT;
 
 function photos_post(&$a) {
 
-	logger('mod-photos: photos_post(): begin' , 'LOGGER_DEBUG');
+	logger('mod-photos: photos_post: begin' , 'LOGGER_DEBUG');
 
 
 	logger('mod_photos: REQUEST ' . print_r($_REQUEST,true), LOGGER_DATA);
@@ -744,6 +748,7 @@ function photos_content(&$a) {
 	// URLs:
 	// photos/name
 	// photos/name/upload
+	// photos/name/upload/xxxxx (xxxxx is album name)
 	// photos/name/album/xxxxx
 	// photos/name/album/xxxxx/edit
 	// photos/name/image/xxxxx
@@ -860,14 +865,21 @@ function photos_content(&$a) {
 			notice( t('Permission denied.'));
 			return;
 		}
+
+
+		$selname = (($datum) ? hex2bin($datum) : '');
+
+
 		$albumselect = '<select id="photos-upload-album-select" name="album" size="4">';
 
-		$albumselect .= '<option value="" selected="selected" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>';
+		
+		$albumselect .= '<option value="" ' . ((! $selname) ? ' selected="selected" ' : '') . '>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>';
 		if(count($a->data['albums'])) {
 			foreach($a->data['albums'] as $album) {
 				if(($album['album'] === '') || ($album['album'] === 'Contact Photos') || ($album['album'] === t('Contact Photos')))
 					continue;
-				$albumselect .= '<option value="' . $album['album'] . '">' . $album['album'] . '</option>';
+				$selected = (($selname === $album['album']) ? ' selected="selected" ' : '');
+				$albumselect .= '<option value="' . $album['album'] . '"' . $selected . '>' . $album['album'] . '</option>';
 			}
 		}
 
@@ -958,6 +970,11 @@ function photos_content(&$a) {
  				}
 			}
 		}
+
+		if($can_post) {
+			$o .= '<div class="photos-upload-link" ><a href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/upload/' . bin2hex($album) . '" >' . t('Upload New Photos') . '</a></div>';
+		}
+
 		$tpl = get_markup_template('photo_album.tpl');
 		if(count($r))
 			foreach($r as $rr) {
