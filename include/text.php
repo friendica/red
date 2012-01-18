@@ -1065,3 +1065,37 @@ function array_xmlify($val){
 	if (is_array($val)) return array_map('array_xmlify', $val);
 	return xmlify((string) $val);
 }
+
+
+function reltoabs($text, $base)
+{
+  if (empty($base))
+    return $text;
+
+  $base = rtrim($base,'/');
+
+  $base2 = $base . "/";
+ 	
+  // Replace links
+  $pattern = "/<a([^>]*) href=\"(?!http|https|\/)([^\"]*)\"/";
+  $replace = "<a\${1} href=\"" . $base2 . "\${2}\"";
+  $text = preg_replace($pattern, $replace, $text);
+
+  $pattern = "/<a([^>]*) href=\"(?!http|https)([^\"]*)\"/";
+  $replace = "<a\${1} href=\"" . $base . "\${2}\"";
+  $text = preg_replace($pattern, $replace, $text);
+
+  // Replace images
+  $pattern = "/<img([^>]*) src=\"(?!http|https|\/)([^\"]*)\"/";
+  $replace = "<img\${1} src=\"" . $base2 . "\${2}\"";
+  $text = preg_replace($pattern, $replace, $text); 
+
+  $pattern = "/<img([^>]*) src=\"(?!http|https)([^\"]*)\"/";
+  $replace = "<img\${1} src=\"" . $base . "\${2}\"";
+  $text = preg_replace($pattern, $replace, $text); 
+
+
+  // Done
+  return $text;
+}
+

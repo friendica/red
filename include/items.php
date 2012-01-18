@@ -295,6 +295,11 @@ function get_atom_elements($feed,$item) {
 	$res['body'] = unxmlify($item->get_content());
 	$res['plink'] = unxmlify($item->get_link(0));
 
+	if($res['plink'])
+		$base_url = implode('/', array_slice(explode('/',$res['plink']),0,3));
+	else
+		$base_url = '';
+
 	// look for a photo. We should check media size and find the best one,
 	// but for now let's just find any author photo
 
@@ -413,6 +418,8 @@ function get_atom_elements($feed,$item) {
 	// html.
 
 	if((strpos($res['body'],'<') !== false) || (strpos($res['body'],'>') !== false)) {
+
+		$res['body'] = reltoabs($res['body'],$base_url);
 
 		$res['body'] = html2bb_video($res['body']);
 
