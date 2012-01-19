@@ -10,6 +10,12 @@ function user_remove($uid) {
 		return;
 	$a = get_app();
 	logger('Removing user: ' . $uid);
+
+	$r = q("select * from user where uid = %d limit 1", intval($uid));
+
+	call_hooks('remove_user',$r[0]);
+
+
 	q("DELETE FROM `contact` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `group` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `group_member` WHERE `uid` = %d", intval($uid));
