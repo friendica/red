@@ -125,7 +125,7 @@ class dba {
 		$r = array();
 		if($this->mysqli) {
 			if($result->num_rows) {
-				while($x = $result->fetch_array(MYSQL_ASSOC))
+				while($x = $result->fetch_array(MYSQLI_ASSOC))
 					$r[] = $x;
 				$result->free_result();
 			}
