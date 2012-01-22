@@ -1394,6 +1394,9 @@ function diaspora_message($importer,$xml,$msg) {
 function diaspora_photo($importer,$xml,$msg) {
 
 	$a = get_app();
+
+	logger('diaspora_photo: init',LOGGER_DEBUG);
+
 	$remote_photo_path = notags(unxmlify($xml->remote_photo_path));
 
 	$remote_photo_name = notags(unxmlify($xml->remote_photo_name));
@@ -1408,10 +1411,13 @@ function diaspora_photo($importer,$xml,$msg) {
 
 	$created_at = notags(unxmlify($xml_created_at));
 
+	logger('diaspora_photo: status_message_guid: ' . $status_message_guid, LOGGER_DEBUG);
 
 	$contact = diaspora_get_contact_by_handle($importer['uid'],$msg['author']);
-	if(! $contact)
+	if(! $contact) {
+		logger('diaspora_photo: contact record not found: ' . $msg['author'] . ' handle: ' . $diaspora_handle);
 		return;
+	}
 
 	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
 		logger('diaspora_photo: Ignoring this author.');
@@ -1426,6 +1432,7 @@ function diaspora_photo($importer,$xml,$msg) {
 		logger('diaspora_photo: parent item not found: parent: ' . $parent_guid . ' item: ' . $guid);
 		return;
 	}
+
 	$parent_item = $r[0];
 
 	$link_text = '[img]' . $remote_photo_path . $remote_photo_name . '[/img]' . "\n";
