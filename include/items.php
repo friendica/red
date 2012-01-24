@@ -118,7 +118,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 		`sign`.`signed_text`, `sign`.`signature`, `sign`.`signer`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		LEFT JOIN `sign` ON `sign`.`iid` = `item`.`id`
-		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`parent` != 0 
+		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`parent` != 0 
 		AND `item`.`wall` = 1 AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 		AND ( `item`.`edited` > '%s' OR `item`.`changed` > '%s' )
 		$sql_extra
@@ -1414,7 +1414,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 								intval($item['uid'])
 							);
 							// who is the last child now? 
-							$r = q("SELECT `id` FROM `item` WHERE `parent-uri` = '%s' AND `type` != 'activity' AND `deleted` = 0 AND `uid` = %d 
+							$r = q("SELECT `id` FROM `item` WHERE `parent-uri` = '%s' AND `type` != 'activity' AND `deleted` = 0 AND `moderated` = 0 AND `uid` = %d 
 								ORDER BY `created` DESC LIMIT 1",
 									dbesc($item['parent-uri']),
 									intval($importer['uid'])

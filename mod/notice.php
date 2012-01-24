@@ -1,5 +1,5 @@
 <?php
-	/* identi.ca -> friendika items permanent-url compatibility */
+	/* identi.ca -> friendica items permanent-url compatibility */
 	
 	function notice_init(&$a){
 		$id = $a->argv[1];

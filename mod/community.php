@@ -47,7 +47,7 @@ function community_content(&$a, $update = 0) {
 
 	$r = q("SELECT COUNT(*) AS `total`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` LEFT JOIN `user` ON `user`.`uid` = `item`.`uid`
-		WHERE `item`.`visible` = 1 AND `item`.`deleted` = 0
+		WHERE `item`.`visible` = 1 AND `item`.`deleted` = 0 and `item`.`moderated` = 0
 		AND `wall` = 1 AND `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' 
 		AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND `user`.`hidewall` = 0 
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0 "
@@ -68,7 +68,7 @@ function community_content(&$a, $update = 0) {
 		`user`.`nickname`, `user`.`hidewall`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		LEFT JOIN `user` ON `user`.`uid` = `item`.`uid`
-		WHERE `item`.`visible` = 1 AND `item`.`deleted` = 0
+		WHERE `item`.`visible` = 1 AND `item`.`deleted` = 0 and `item`.`moderated` = 0
 		AND `wall` = 1 AND `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' 
 		AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND `user`.`hidewall` = 0 
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
@@ -84,7 +84,7 @@ function community_content(&$a, $update = 0) {
 
 	$o .= paginate($a);
 
-	$o .= '<div class="cc-license">' . t('Shared content is covered by the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> license.') . '</div>';
+//	$o .= '<div class="cc-license">' . t('Shared content is covered by the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> license.') . '</div>';
 
 	return $o;
 }

@@ -167,7 +167,7 @@ function profile_content(&$a, $update = 0) {
 		$r = q("SELECT distinct(parent) AS `item_id`, `contact`.`uid` AS `contact-uid`
 			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-			and `item`.`unseen` = 1
+			and `item`.`moderated` = 0 and `item`.`unseen` = 1
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 			AND `item`.`wall` = 1
 			$sql_extra
@@ -181,7 +181,7 @@ function profile_content(&$a, $update = 0) {
 		$r = q("SELECT COUNT(*) AS `total`
 			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
+			and `item`.`moderated` = 0 AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
 			AND `item`.`id` = `item`.`parent` AND `item`.`wall` = 1
 			$sql_extra ",
 			intval($a->profile['profile_uid'])
@@ -197,7 +197,7 @@ function profile_content(&$a, $update = 0) {
 		$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact-uid`
 			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+			and `item`.`moderated` = 0 AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 			AND `item`.`id` = `item`.`parent` AND `item`.`wall` = 1
 			$sql_extra
 			ORDER BY `item`.`created` DESC $pager_sql ",
@@ -220,6 +220,7 @@ function profile_content(&$a, $update = 0) {
 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 			FROM `item`, `contact`
 			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+			and `item`.`moderated` = 0
 			AND `contact`.`id` = `item`.`contact-id`
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 			AND `item`.`parent` IN ( %s )

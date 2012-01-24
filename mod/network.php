@@ -404,7 +404,8 @@ function network_content(&$a, $update = 0) {
 			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 			FROM `item`, `contact`
-			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 
+			AND `item`.`deleted` = 0 and `item`.`moderated` = 0
 			$simple_update
 			AND `contact`.`id` = `item`.`contact-id`
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
@@ -430,7 +431,7 @@ function network_content(&$a, $update = 0) {
 			$r = q("SELECT `parent` AS `item_id`, `contact`.`uid` AS `contact_uid`
 				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-				and `item`.`unseen` = 1
+				and `item`.`moderated` = 0 and `item`.`unseen` = 1
 				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 				$sql_extra $sql_nets ",
 				intval(local_user())
@@ -440,7 +441,7 @@ function network_content(&$a, $update = 0) {
 			$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact_uid`
 				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+				AND `item`.`moderated` = 0 AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 				AND `item`.`parent` = `item`.`id`
 				$sql_extra $sql_nets
 				ORDER BY `item`.$ordering DESC $pager_sql ",
@@ -465,7 +466,7 @@ function network_content(&$a, $update = 0) {
 				`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 				FROM `item`, `contact`
 				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-				AND `contact`.`id` = `item`.`contact-id`
+				AND `item`.`moderated` = 0 AND `contact`.`id` = `item`.`contact-id`
 				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 				AND `item`.`parent` IN ( %s )
 				$sql_extra ",

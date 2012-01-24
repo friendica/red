@@ -75,6 +75,7 @@ function display_content(&$a) {
 		`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+		and `item`.`moderated` = 0
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 		AND `item`.`parent` = ( SELECT `parent` FROM `item` WHERE ( `id` = '%s' OR `uri` = '%s' ))
 		$sql_extra

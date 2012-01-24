@@ -18,6 +18,7 @@ function viewsrc_content(&$a) {
 
 	$r = q("SELECT `item`.`body` FROM `item` 
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+		and `item`.`moderated` = 0
 		AND `item`.`id` = '%s' LIMIT 1",
 		intval(local_user()),
 		dbesc($item_id)

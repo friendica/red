@@ -103,7 +103,7 @@ function search_content(&$a) {
 
 	$r = q("SELECT COUNT(*) AS `total`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` LEFT JOIN `user` ON `user`.`uid` = `item`.`uid`
-		WHERE `item`.`visible` = 1 AND `item`.`deleted` = 0
+		WHERE `item`.`visible` = 1 AND `item`.`deleted` = 0 and `item`.`moderated` = 0
 		AND (( `wall` = 1 AND `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND `user`.`hidewall` = 0) 
 			OR `item`.`uid` = %d )
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
@@ -126,7 +126,7 @@ function search_content(&$a) {
 		`user`.`nickname`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		LEFT JOIN `user` ON `user`.`uid` = `item`.`uid`
-		WHERE `item`.`visible` = 1 AND `item`.`deleted` = 0
+		WHERE `item`.`visible` = 1 AND `item`.`deleted` = 0 and `item`.`moderated` = 0
 		AND (( `wall` = 1 AND `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND `user`.`hidewall` = 0 ) 
 			OR `item`.`uid` = %d )
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0

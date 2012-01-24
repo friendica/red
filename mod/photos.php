@@ -1103,7 +1103,7 @@ function photos_content(&$a) {
 			$link_item = $linked_items[0];
 			$r = q("SELECT COUNT(*) AS `total`
 				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-				WHERE `parent-uri` = '%s' AND `uri` != '%s' AND `item`.`deleted` = 0
+				WHERE `parent-uri` = '%s' AND `uri` != '%s' AND `item`.`deleted` = 0 and `item`.`moderated` = 0
 				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 				AND `item`.`uid` = %d 
 				$sql_extra ",
@@ -1122,7 +1122,7 @@ function photos_content(&$a) {
 				`contact`.`rel`, `contact`.`thumb`, `contact`.`self`, 
 				`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-				WHERE `parent-uri` = '%s' AND `uri` != '%s' AND `item`.`deleted` = 0
+				WHERE `parent-uri` = '%s' AND `uri` != '%s' AND `item`.`deleted` = 0 and `item`.`moderated` = 0
 				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 				AND `item`.`uid` = %d
 				$sql_extra

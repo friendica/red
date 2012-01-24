@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1115 );
+define( 'UPDATE_VERSION' , 1116 );
 
 /**
  *
@@ -989,4 +989,9 @@ INDEX ( `twit` ),
 INDEX ( `stat` )
 ) ENGINE = MYISAM ");
 
+}
+
+function update_1115() {
+	q("ALTER TABLE `item` ADD `moderated` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `pubmail`, 
+		ADD INDEX (`moderated`) ");
 }

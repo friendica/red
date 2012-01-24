@@ -111,7 +111,7 @@ function notifier_run($argv, $argc){
 	else {
 
 		// find ancestors
-		$r = q("SELECT * FROM `item` WHERE `id` = %d LIMIT 1",
+		$r = q("SELECT * FROM `item` WHERE `id` = %d and visible = 1 and moderated = 0 LIMIT 1",
 			intval($item_id)
 		);
 
@@ -128,7 +128,7 @@ function notifier_run($argv, $argc){
 			return;
 
 		$items = q("SELECT `item`.*, `sign`.`signed_text`,`sign`.`signature`,`sign`.`signer` 
-			FROM `item` LEFT JOIN `sign` ON `sign`.`iid` = `item`.`id` WHERE `parent` = %d ORDER BY `id` ASC",
+			FROM `item` LEFT JOIN `sign` ON `sign`.`iid` = `item`.`id` WHERE `parent` = %d and visible = 1 and moderated = 0 ORDER BY `id` ASC",
 			intval($parent_id)
 		);
 

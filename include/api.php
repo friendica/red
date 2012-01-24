@@ -650,7 +650,7 @@
 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 			FROM `item`, `contact`
 			WHERE `item`.`uid` = %d
-			AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+			AND `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
 			AND `contact`.`id` = `item`.`contact-id`
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 			$sql_extra
@@ -707,7 +707,7 @@
 			FROM `item`, `contact`
 			WHERE `item`.`uid` = %d
 			AND `item`.`contact-id` = %d
-			AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+			AND `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
 			AND `contact`.`id` = `item`.`contact-id`
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 			$sql_extra
@@ -761,7 +761,7 @@
 				`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 				FROM `item`, `contact`
 				WHERE `item`.`uid` = %d
-				AND `item`.`visible` = 1 AND `item`.`deleted` = 0
+				AND `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
 				AND `item`.`starred` = 1
 				AND `contact`.`id` = `item`.`contact-id`
 				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
