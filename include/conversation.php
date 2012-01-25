@@ -116,6 +116,34 @@ function localize_item(&$item){
 		$item['body'] = sprintf( t('%1$s tagged %2$s\'s %3$s with %4$s'), $author, $objauthor, $plink, $tag );
 		
 	}
+	if ($item['verb']=== ACTIVITY_FAVORITE){
+
+		if ($item['object-type']== "")
+			return;
+
+		$Aname = $item['author-name'];
+		$Alink = $item['author-link'];
+		
+		$xmlhead="<"."?xml version='1.0' encoding='UTF-8' ?".">";
+		
+		$obj = parse_xml_string($xmlhead.$item['object']);
+		if(strlen($obj->id)) {
+			$r = q("select * from item where uri = '%s' and uid = %d limit 1",
+					dbesc($obj->id),
+					intval($item['uid'])
+			);
+			if(count($r) && $r[0]['plink']) {
+				$target = $r[0];
+				$Bname = $target['author-name'];
+				$Blink = $target['author-link'];
+				$A = '[url=' . $Alink . ']' . $Aname . '[/url]';
+				$B = '[url=' . $Blink . ']' . $Bname . '[/url]';
+				$P = '[url=' . $target['plink'] . ']' . t('post/item') . '[/url]';
+				$item['body'] = sprintf( t('%1$s marked %2$s\'s %3$s as favorite'), $A, $B, $P)."\n";
+
+			}
+		}
+	}
 
 }
 

@@ -9,7 +9,7 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1233' );
+define ( 'FRIENDICA_VERSION',      '2.3.1234' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.22'    );
 define ( 'DB_UPDATE_VERSION',      1116      );
 
@@ -89,6 +89,7 @@ define ( 'PAGE_NORMAL',            0 );
 define ( 'PAGE_SOAPBOX',           1 );
 define ( 'PAGE_COMMUNITY',         2 );
 define ( 'PAGE_FREELOVE',          3 );
+define ( 'PAGE_BLOG',              4 );
 
 /**
  * Network and protocol family types 
@@ -166,6 +167,7 @@ define ( 'ACTIVITY_UNFOLLOW',    NAMESPACE_ACTIVITY_SCHEMA . 'stop-following' );
 define ( 'ACTIVITY_POST',        NAMESPACE_ACTIVITY_SCHEMA . 'post' );
 define ( 'ACTIVITY_UPDATE',      NAMESPACE_ACTIVITY_SCHEMA . 'update' );
 define ( 'ACTIVITY_TAG',         NAMESPACE_ACTIVITY_SCHEMA . 'tag' );
+define ( 'ACTIVITY_FAVORITE',    NAMESPACE_ACTIVITY_SCHEMA . 'favorite' );
 
 define ( 'ACTIVITY_OBJ_COMMENT', NAMESPACE_ACTIVITY_SCHEMA . 'comment' );
 define ( 'ACTIVITY_OBJ_NOTE',    NAMESPACE_ACTIVITY_SCHEMA . 'note' );
