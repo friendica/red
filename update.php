@@ -992,6 +992,8 @@ INDEX ( `stat` )
 }
 
 function update_1115() {
-	q("ALTER TABLE `item` ADD `moderated` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `pubmail`, 
+	q("ALTER TABLE `item` ADD `moderated` 
+		TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `pubmail`, 
 		ADD INDEX (`moderated`) ");
 }
+

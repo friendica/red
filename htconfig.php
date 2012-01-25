@@ -69,3 +69,6 @@ $a->config['system']['rino_encrypt'] = true;
 $a->config['system']['theme'] = 'duepuntozero';
 
 
+// By default allow pseudonyms
+
+$a->config['system']['no_regfullname'] = true;
