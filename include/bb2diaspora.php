@@ -115,6 +115,7 @@ function bb2diaspora($Text,$preserve_nl = false) {
 
 
 	$Text = preg_replace("/\[img\](.*?)\[\/img\]/", '![' . t('image/photo') . '](' . '$1' . ')', $Text);
+	$Text = preg_replace("/\[img\=(.*?)\](.*?)\[\/img\]/", '![' . t('image/photo') . '](' . '$2' . ')', $Text);
 
 	// Perform MAIL Search
 	$Text = preg_replace("(\[mail\]([$MAILSearchString]*)\[/mail\])", '[$1](mailto:$1)', $Text);
@@ -241,7 +242,7 @@ function format_event_diaspora($ev) {
 
 	$bd_format = t('l F d, Y \@ g:i A') ; // Friday January 18, 2011 @ 8 AM
 
-	$o = 'Friendika event notification:' . "\n";
+	$o = 'Friendica event notification:' . "\n";
 
 	$o .= '**' . bb2diaspora($ev['desc']) .  '**' . "\n";
 
