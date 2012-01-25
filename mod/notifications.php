@@ -42,12 +42,12 @@ function notifications_post(&$a) {
 					intval(local_user())
 				);
 			}
-			return;
+			goaway($a->get_baseurl() . '/notifications/intros');
 		}
 		if($_POST['submit'] == t('Ignore')) {
 			$r = q("UPDATE `intro` SET `ignore` = 1 WHERE `id` = %d LIMIT 1",
 				intval($intro_id));
-			return;
+			goaway($a->get_baseurl() . '/notifications/intros');
 		}
 	}
 }

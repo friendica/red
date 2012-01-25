@@ -20,7 +20,7 @@ require_once('include/enotify.php');
 
 function item_post(&$a) {
 
-	if((! local_user()) && (! remote_user()))
+	if((! local_user()) && (! remote_user()) && (! x($_REQUEST,'commenter')))
 		return;
 
 	require_once('include/security.php');
@@ -110,11 +110,35 @@ function item_post(&$a) {
 
 	if($parent) logger('mod_post: parent=' . $parent);
 
+
+
 	$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid']) : 0);
 	$post_id     = ((x($_REQUEST,'post_id'))     ? intval($_REQUEST['post_id'])     : 0);
 	$app         = ((x($_REQUEST,'source'))      ? strip_tags($_REQUEST['source'])  : '');
 
-	if(! can_write_wall($a,$profile_uid)) {
+	$allow_moderated = false;
+
+	// here is where we are going to check for permission to post a moderated comment.
+
+	// First check that the parent exists and it is a wall item.
+
+	if((x($_REQUEST,'commenter')) && ((! $parent) || (! $parent_item['wall']))) {
+		notice( t('Permission denied.') . EOL) ;
+		if(x($_REQUEST,'return')) 
+			goaway($a->get_baseurl() . "/" . $return_path );
+		killme();
+	}
+
+	// Now check that it is a page_type of PAGE_BLOG, and that valid personal details
+	// have been provided, and run any anti-spam plugins
+
+
+	// TODO
+
+
+
+
+	if((! can_write_wall($a,$profile_uid)) && (! $allow_moderated)) {
 		notice( t('Permission denied.') . EOL) ;
 		if(x($_REQUEST,'return')) 
 			goaway($a->get_baseurl() . "/" . $return_path );

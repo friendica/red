@@ -2755,6 +2755,9 @@ function item_expire($uid,$days) {
 function drop_items($items) {
 	$uid = 0;
 
+	if((! local_user()) && (! $remote_user()))
+		return;
+
 	if(count($items)) {
 		foreach($items as $item) {
 			$owner = drop_item($item,false);
