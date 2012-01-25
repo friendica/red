@@ -948,6 +948,11 @@ function base64url_encode($s, $strip_padding = false) {
 
 function base64url_decode($s) {
 
+	if(is_array($s)) {
+		logger('base64url_decode: illegal input: ' . print_r(debug_backtrace(), true));
+		return $s;
+	}
+
 /*
  *  // Placeholder for new rev of salmon which strips base64 padding.
  *  // PHP base64_decode handles the un-padded input without requiring this step
