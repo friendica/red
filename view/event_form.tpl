@@ -38,6 +38,7 @@ $f_dsel $f_tsel
 
 $acl
 
+<div class="clear"></div>
 <input id="event-submit" type="submit" name="submit" value="$submit" />
 </form>
 

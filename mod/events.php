@@ -279,9 +279,9 @@ function events_content(&$a) {
 		$sdt = ((x($orig_event)) ? $orig_event['start'] : 'now');
 		$fdt = ((x($orig_event)) ? $orig_event['finish'] : 'now');
 
-		$tz = ((x($orig_event) && $orig_event['adjust']) ? date_default_timezone_get() : 'UTC');
- 
-
+		$tz = date_default_timezone_get();
+		if(x($orig_event))
+			$tz = (($orig_event['adjust']) ? date_default_timezone_get() : 'UTC');
 
 		$syear = datetime_convert('UTC', $tz, $sdt, 'Y');
 		$smonth = datetime_convert('UTC', $tz, $sdt, 'm');
