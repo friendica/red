@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1116 );
+define( 'UPDATE_VERSION' , 1117 );
 
 /**
  *
@@ -995,5 +995,17 @@ function update_1115() {
 	q("ALTER TABLE `item` ADD `moderated` 
 		TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `pubmail`, 
 		ADD INDEX (`moderated`) ");
+}
+
+
+function update_1116() {
+q("create table if not exists `manage` {
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`uid` INT NOT NULL ,
+`mid` INT NOT NULL,
+INDEX ( `uid` ),
+INDEX ( `mid` )
+) ENGINE = MYISAM ");
+
 }
 

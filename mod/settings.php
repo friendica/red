@@ -39,10 +39,11 @@ EOT;
 
 function settings_post(&$a) {
 
-	if(! local_user()) {
-		notice( t('Permission denied.') . EOL);
+	if(! local_user())
 		return;
-	}
+
+	if(x($_SESSION,'submanage') && intval($_SESSION['submanage']))
+		return;
 
 	if(count($a->user) && x($a->user,'uid') && $a->user['uid'] != local_user()) {
 		notice( t('Permission denied.') . EOL);
@@ -400,6 +401,11 @@ function settings_content(&$a) {
 	nav_set_selected('settings');
 
 	if(! local_user()) {
+		notice( t('Permission denied.') . EOL );
+		return;
+	}
+
+	if(x($_SESSION,'submanage') && intval($_SESSION['submanage'])) {
 		notice( t('Permission denied.') . EOL );
 		return;
 	}

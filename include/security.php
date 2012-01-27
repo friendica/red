@@ -34,13 +34,30 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 		$a->timezone = $a->user['timezone'];
 	}
 
-	$r = q("SELECT `uid`,`username` FROM `user` WHERE `password` = '%s' AND `email` = '%s'",
-		dbesc($a->user['password']),
-		dbesc($a->user['email'])
+	$master_record = $a->user;	
+	if((x($_SESSION,'submanage')) && intval($_SESSION['submanage'])) {
+		$r = q("select * from user where uid = %d limit 1",
+			intval($_SESSION['submanage'])
+		);
+		if(count($r))
+			$master_record = $r[0];
+	}
+
+	$r = q("SELECT `uid`,`username`,`nickname` FROM `user` WHERE `password` = '%s' AND `email` = '%s'",
+		dbesc($master_record['password']),
+		dbesc($master_record['email'])
 	);
 	if(count($r))
 		$a->identities = $r;
+	else
+		$a->identities = array();
 
+	$r = q("select `user`.`uid`, `user`.`username`, `user`.`nickname` from manage left join user on manage.mid = user.uid 
+		where `manage`.`uid` = %d",
+		intval($master_record['uid'])
+	);
+	if(count($r))
+		$a->identities = array_merge($a->identities,$r);
 
 	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
 		intval($_SESSION['uid']));
