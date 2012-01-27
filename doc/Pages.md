@@ -4,13 +4,13 @@ Pages
 * [Home](help)
 
 
-Friendica also lets you create group and/or celebrity pages. 
+Friendica also lets you create forum and/or celebrity pages. 
 
-Every page in Friendica has a nickname and these must all be unique. This applies to all pages, whether they are normal profiles or group pages. 
+Every page in Friendica has a nickname and these must all be unique. This applies to all pages, whether they are normal profiles or forum pages. 
 
 Therefore the first thing you need to do to create a new page is to register a new account for the page. Please note that the site administrator can restrict and/or regulate the registration of new accounts. 
 
-If you create a second account on a system and use the same email address or OpenID account, you will no longer be able to use the email address (or OpenID) to login to the account. You should login using the account nickname instead. 
+If you create a second account on a system and use the same email address or OpenID account as an existing account, you will no longer be able to use the email address (or OpenID) to login to the account. You should login using the account nickname instead. 
 
 On the new account, visit the 'Settings' page. Towards the end of the page are "Advanced Page Settings". Typically you would use "Normal Account" for a normal personal account. This is the default selection. Group pages provide the ability for people to become friends/fans of the page without requiring approval.
 
@@ -23,6 +23,8 @@ The "Automatic Friend Account" is typically used for personal profile pages wher
 **Managing Multiple Pages**
 
 We recommend that you create group pages with the same email address and password as your normal account. If you do this, you will find a new "Manage" tab on the menu bar which lets you toggle identities easily and manage your pages. You are not required to do this, but the alternative is to logout and log back into the other account to manage alternate pages - and this could get cumbersome if you manage several different pages/identities. 
+
+You may also appoint a delegate to manage your page. Do this by visiting the [Delegation Setup Page](/delegate). This will provide you with a list of contacts on this system under "Potential Delegates". Selecting one or more persons will give them access to manage your page. They will be able to edit contacts, profiles, and all content for this account/page. Please use this facility wisely. Delegated managers will not be able to alter basic account settings such as passwords or page types and/or remove the account.  
 
 
 **Posting to Community Pages**

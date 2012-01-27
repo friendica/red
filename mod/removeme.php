@@ -5,6 +5,9 @@ function removeme_post(&$a) {
 	if(! local_user())
 		return;
 
+	if(x($_SESSION,'submanage') && intval($_SESSION['submanage']))
+		return;
+
 	if((! x($_POST,'qxz_password')) || (! strlen(trim($_POST['qxz_password']))))
 		return;
 
