@@ -54,8 +54,7 @@ function delegate_content(&$a) {
 
 	// These people can manage this account/page with full privilege
 
-	$r = q("SELECT * FROM `user` WHERE `uid` = %d AND `email` = '%s' AND `password` = '%s' LIMIT 1",
-		intval(local_user()),
+	$r = q("SELECT * FROM `user` WHERE `email` = '%s' AND `password` = '%s' ",
 		dbesc($a->user['email']),
 		dbesc($a->user['password'])
 	);

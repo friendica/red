@@ -9,7 +9,7 @@
 
 <div class="contact-block-div">
 <a class="contact-block-link" href="#" >
-<img class="contact-block-img" src="$base/photo/thumb/$x.uid" title="$x.username" />
+<img class="contact-block-img" src="$base/photo/thumb/$x.uid" title="$x.username ($x.nickname)" />
 </a>
 </div>
 
@@ -26,7 +26,7 @@
 
 <div class="contact-block-div">
 <a class="contact-block-link" href="$base/delegate/remove/$x.uid" >
-<img class="contact-block-img" src="$base/photo/thumb/$x.uid" title="$x.username" />
+<img class="contact-block-img" src="$base/photo/thumb/$x.uid" title="$x.username ($x.nickname)" />
 </a>
 </div>
 
@@ -44,7 +44,7 @@ $none
 
 <div class="contact-block-div">
 <a class="contact-block-link" href="$base/delegate/add/$x.uid" >
-<img class="contact-block-img" src="$base/photo/thumb/$x.uid" title="$x.username" />
+<img class="contact-block-img" src="$base/photo/thumb/$x.uid" title="$x.username ($x.nickname)" />
 </a>
 </div>
 
