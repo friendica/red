@@ -35,6 +35,7 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 	}
 
 	$master_record = $a->user;	
+
 	if((x($_SESSION,'submanage')) && intval($_SESSION['submanage'])) {
 		$r = q("select * from user where uid = %d limit 1",
 			intval($_SESSION['submanage'])
@@ -47,17 +48,21 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 		dbesc($master_record['password']),
 		dbesc($master_record['email'])
 	);
-	if(count($r))
+	if($r && count($r))
 		$a->identities = $r;
 	else
 		$a->identities = array();
 
-	$r = q("select `user`.`uid`, `user`.`username`, `user`.`nickname` from manage left join user on manage.mid = user.uid 
+	$r = q("select `user`.`uid`, `user`.`username`, `user`.`nickname` 
+		from manage left join user on manage.mid = user.uid 
 		where `manage`.`uid` = %d",
 		intval($master_record['uid'])
 	);
 	if($r && count($r))
 		$a->identities = array_merge($a->identities,$r);
+
+	if($login_initial)
+		logger('auth_identities: ' . print_r($a->identities,true), LOGGER_DEBUG);
 
 	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
 		intval($_SESSION['uid']));
