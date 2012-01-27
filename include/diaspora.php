@@ -2193,7 +2193,12 @@ function diaspora_transmit($owner,$contact,$slap,$public_batch) {
 
 	logger('diaspora_transmit: ' . $logid . ' ' . $dest_url);
 
-	post_url($dest_url . '/', $slap);
+	if(! intval(get_config('system','diaspora_test')))
+		post_url($dest_url . '/', $slap);
+	else {
+		logger('diaspora_transmit: test_mode');
+		return 200;
+	}
 
 	$return_code = $a->get_curl_code();
 	logger('diaspora_transmit: ' . $logid . ' returns: ' . $return_code);
