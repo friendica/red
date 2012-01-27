@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1117 );
+define( 'UPDATE_VERSION' , 1118 );
 
 /**
  *
@@ -997,9 +997,12 @@ function update_1115() {
 		ADD INDEX (`moderated`) ");
 }
 
-
 function update_1116() {
-q("create table if not exists `manage` {
+	//typo! corrected update was rolled forward
+}
+
+function update_1117() {
+q("create table if not exists `manage` (
 `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 `uid` INT NOT NULL ,
 `mid` INT NOT NULL,

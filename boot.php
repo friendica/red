@@ -11,7 +11,7 @@ require_once('include/cache.php');
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
 define ( 'FRIENDICA_VERSION',      '2.3.1236' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.22'    );
-define ( 'DB_UPDATE_VERSION',      1117      );
+define ( 'DB_UPDATE_VERSION',      1118      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
