@@ -56,7 +56,7 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 		where `manage`.`uid` = %d",
 		intval($master_record['uid'])
 	);
-	if(count($r))
+	if($r && count($r))
 		$a->identities = array_merge($a->identities,$r);
 
 	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
