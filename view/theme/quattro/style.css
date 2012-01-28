@@ -1265,3 +1265,7 @@ footer {
   height: 100px;
   display: table-row;
 }
+.pager {
+  margin-top: 25px;
+  clear: both;
+}
