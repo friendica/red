@@ -4,7 +4,7 @@
  *
  * This is the POST destination for most all locally posted
  * text stuff. This function handles status, wall-to-wall status, 
- * local comments, and remote coments - that are posted on this site 
+ * local comments, and remote coments that are posted on this site 
  * (as opposed to being delivered in a feed).
  * Also processed here are posts and comments coming through the 
  * statusnet/twitter API. 
@@ -42,6 +42,7 @@ function item_post(&$a) {
 
 	$api_source = ((x($_REQUEST,'api_source') && $_REQUEST['api_source']) ? true : false);
 	$return_path = ((x($_REQUEST,'return')) ? $_REQUEST['return'] : '');
+	$preview = ((x($_REQUEST,'preview')) ? intval($_REQUEST['preview']) : 0);
 
 	/**
 	 * Is this a reply to something?
@@ -55,8 +56,6 @@ function item_post(&$a) {
 	$thr_parent = '';
 	$parid = 0;
 	$r = false;
-
-	$preview = ((x($_REQUEST,'preview')) ? intval($_REQUEST['preview']) : 0);
 
 	if($parent || $parent_uri) {
 
@@ -109,8 +108,6 @@ function item_post(&$a) {
 	}
 
 	if($parent) logger('mod_post: parent=' . $parent);
-
-
 
 	$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid']) : 0);
 	$post_id     = ((x($_REQUEST,'post_id'))     ? intval($_REQUEST['post_id'])     : 0);
@@ -606,6 +603,7 @@ function item_post(&$a) {
 	$datarray['thr-parent']    = $thr_parent;
 	$datarray['postopts']      = '';
 	$datarray['origin']        = $origin;
+	$datarray['moderated']     = $allow_moderated;
 
 	/**
 	 * These fields are for the convenience of plugins...
@@ -657,8 +655,8 @@ function item_post(&$a) {
 
 	$r = q("INSERT INTO `item` (`guid`, `uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `commented`, `received`, `changed`, `uri`, `thr-parent`, `title`, `body`, `app`, `location`, `coord`, 
-		`tag`, `inform`, `verb`, `postopts`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`, `bookmark`,`origin` )
-		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d )",
+		`tag`, `inform`, `verb`, `postopts`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`, `bookmark`,`origin`, `moderated` )
+		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, %d )",
 		dbesc($datarray['guid']),
 		intval($datarray['uid']),
 		dbesc($datarray['type']),
@@ -695,7 +693,8 @@ function item_post(&$a) {
 		intval($datarray['pubmail']),
 		dbesc($datarray['attach']),
 		intval($datarray['bookmark']),
-		intval($datarray['origin'])
+		intval($datarray['origin']),
+		intval($datarry['moderated'])
 	);
 
 	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
