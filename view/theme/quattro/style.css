@@ -1233,12 +1233,15 @@ ul.tabs li .active {
 #profile-edit-religion-label,
 #profile-edit-pubkeywords-label,
 #profile-edit-prvkeywords-label,
+#profile-edit-gender-select,
 #profile-edit-homepage-label {
   float: left;
   width: 175px;
+  padding-top: 7px;
 }
 #profile-edit-profile-name,
 #profile-edit-name,
+#gender-select,
 #profile-edit-pdesc,
 #profile-edit-gender,
 #profile-edit-dob,
