@@ -757,7 +757,7 @@ function settings_content(&$a) {
 	$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
 
 	$expire_arr = array(
-		'days' => array('expire',  t("Automatically expire posts after days:"), $expire, t('If empty, posts will not expire. Expired posts will be deleted')),
+		'days' => array('expire',  t("Automatically expire posts after this many days:"), $expire, t('If empty, posts will not expire. Expired posts will be deleted')),
 		'advanced' => t('Advanced expiration settings'),
 		'label' => t('Advanced Expiration'),
 		'items' => array('expire_items',  t("Expire posts:"), $expire_items, '', array(t('No'),t('Yes'))),
