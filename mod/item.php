@@ -633,6 +633,20 @@ function item_post(&$a) {
 
 	call_hooks('post_local',$datarray);
 
+	if(x($datarray,'cancel')) {
+		logger('mod_item: post cancelled by plugin.');
+		if($return_path) {
+			goaway($a->get_baseurl() . "/" . $return_path);
+		}
+
+		$json = array('cancel' => 1);
+		if(x($_REQUEST,'jsreload') && strlen($_REQUEST['jsreload']))
+			$json['reload'] = $a->get_baseurl() . '/' . $_REQUEST['jsreload'];
+
+		echo json_encode($json);
+		killme();
+	}
+
 
 	if($orig_post) {
 		$r = q("UPDATE `item` SET `body` = '%s', `edited` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",

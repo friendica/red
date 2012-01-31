@@ -814,6 +814,11 @@ function item_store($arr,$force_parent = false) {
 
 	call_hooks('post_remote',$arr);
 
+	if(x($arr,'cancel')) {
+		logger('item_store: post cancelled by plugin.');
+		return 0;
+	}
+
 	dbesc_array($arr);
 
 	logger('item_store: ' . print_r($arr,true), LOGGER_DATA);
