@@ -584,6 +584,7 @@ function notifier_run($argv, $argc){
 					break;
 
 				case NETWORK_MAIL:
+				case NETWORK_MAIL2:
 						
 					if(get_config('system','dfrn_only'))
 						break;
@@ -629,7 +630,7 @@ function notifier_run($argv, $argc){
 
 						// only expose our real email address to true friends
 
-						if($contact['rel'] == CONTACT_IS_FRIEND)
+						if(($contact['rel'] == CONTACT_IS_FRIEND) && (! $contact['blocked']))
 							$headers  = 'From: ' . $local_user[0]['username'] . ' <' . $local_user[0]['email'] . '>' . "\n";
 						else
 							$headers  = 'From: ' . $local_user[0]['username'] . ' <' . t('noreply') . '@' . $a->get_hostname() . '>' . "\n";
@@ -754,9 +755,10 @@ function notifier_run($argv, $argc){
 		);
 			
 		$r2 = q("SELECT `id`, `name`,`network` FROM `contact` 
-			WHERE `network` = '%s' AND `uid` = %d AND `blocked` = 0 AND `pending` = 0
+			WHERE `network` in ( '%s', '%s')  AND `uid` = %d AND `blocked` = 0 AND `pending` = 0
 			AND `rel` != %d order by rand() ",
 			dbesc(NETWORK_DFRN),
+			dbesc(NETWORK_MAIL2),
 			intval($owner['uid']),
 			intval(CONTACT_IS_SHARING)
 		);

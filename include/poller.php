@@ -369,7 +369,7 @@ function poller_run($argv, $argc){
 
 				$xml = fetch_url($contact['poll']);
 			}
-			elseif($contact['network'] === NETWORK_MAIL) {
+			elseif($contact['network'] === NETWORK_MAIL || $contact['network'] === NETWORK_MAIL2) {
 
 				$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
 				if($mail_disabled)
@@ -462,7 +462,7 @@ function poller_run($argv, $argc){
 							$datarray['contact-id'] = $contact['id'];
 							if($datarray['parent-uri'] === $datarray['uri'])
 								$datarray['private'] = 1;
-							if(! get_pconfig($importer_uid,'system','allow_public_email_replies')) {
+							if(($contact['network'] === NETWORK_MAIL) && (! get_pconfig($importer_uid,'system','allow_public_email_replies'))) {
 								$datarray['private'] = 1;
 								$datarray['allow_cid'] = '<' . $contact['id'] . '>';
 							}
