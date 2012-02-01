@@ -96,6 +96,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `pending` tinyint(1) NOT NULL DEFAULT '1',
   `rating` tinyint(1) NOT NULL DEFAULT '0',
   `reason` text NOT NULL,
+  `closeness` tinyint(2) NOT NULL DEFAULT '99',
   `info` mediumtext NOT NULL,
   `profile-id` int(11) NOT NULL DEFAULT '0',
   `bdyear` CHAR( 4 ) NOT NULL COMMENT 'birthday notify flag',
@@ -116,7 +117,8 @@ CREATE TABLE IF NOT EXISTS `contact` (
   KEY `blocked` (`blocked`),
   KEY `readonly` (`readonly`),
   KEY `hidden` (`hidden`),
-  KEY `pending` (`pending`)  
+  KEY `pending` (`pending`),
+  KEY `closeness` (`closeness`)  
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
