@@ -71,10 +71,10 @@ abstract class b8_storage_base
 	 * @return mixed Returns TRUE if everything is okay, otherwise an error code.
 	 */
 
-	protected function check_database($uid)
+	protected function check_database()
 	{
 
-		$internals = $this->get_internals($uid);
+		$internals = $this->get_internals();
 
 		if(isset($internals['dbversion'])) {
 			if($internals['dbversion'] == "2") {
@@ -122,7 +122,7 @@ abstract class b8_storage_base
 	 * @return array Returns an array of all internals.
 	 */
 
-	public function get_internals($uid)
+	public function get_internals()
 	{
 
 		$internals = $this->_get_query(
@@ -130,8 +130,7 @@ abstract class b8_storage_base
 				self::INTERNALS_TEXTS_HAM,
 				self::INTERNALS_TEXTS_SPAM,
 				self::INTERNALS_DBVERSION
-			),
-			$uid
+			)
 		);
 
 		return array(
@@ -150,7 +149,7 @@ abstract class b8_storage_base
 	 * @return mixed Returns FALSE on failure, otherwise returns array of returned data in the format array('tokens' => array(token => count), 'degenerates' => array(token => array(degenerate => count))).
 	 */
 
-	public function get($tokens, $uid)
+	public function get($tokens)
 	{
 
 		# Validate the startup
@@ -161,7 +160,7 @@ abstract class b8_storage_base
 			return $started_up;
 
 		# First we see what we have in the database.
-		$token_data = $this->_get_query($tokens, $uid);
+		$token_data = $this->_get_query($tokens);
 
 		# Check if we have to degenerate some tokens
 
@@ -204,7 +203,7 @@ abstract class b8_storage_base
 				$return_data_tokens[$token] = $this->_parse_count($token_data[$token]);
 
 				# ... and update it's lastseen parameter
-				$this->_update($token, "{$return_data_tokens[$token]['count_ham']} {$return_data_tokens[$token]['count_spam']} " . $this->b8_config['today'], $uid );
+				$this->_update($token, "{$return_data_tokens[$token]['count_ham']} {$return_data_tokens[$token]['count_spam']} " . $this->b8_config['today']);
 
 			}
 
@@ -225,7 +224,7 @@ abstract class b8_storage_base
 						$return_data_degenerates[$token][$degenerate] = $this->_parse_count($token_data[$degenerate]);
 
 						# ... and update it's lastseen parameter
-						$this->_update($degenerate, "{$return_data_degenerates[$token][$degenerate]['count_ham']} {$return_data_degenerates[$token][$degenerate]['count_spam']} " . $this->b8_config['today'], $uid);
+						$this->_update($degenerate, "{$return_data_degenerates[$token][$degenerate]['count_ham']} {$return_data_degenerates[$token][$degenerate]['count_spam']} " . $this->b8_config['today']);
 
 					}
 
@@ -259,7 +258,7 @@ abstract class b8_storage_base
 	 * @return void
 	 */
 
-	public function process_text($tokens, $category, $action, $uid)
+	public function process_text($tokens, $category, $action)
 	{
 
 		# Validate the startup
@@ -272,10 +271,10 @@ abstract class b8_storage_base
 		# No matter what we do, we first have to check what data we have.
 
 		# First get the internals, including the ham texts and spam texts counter
-		$internals = $this->get_internals($uid);
+		$internals = $this->get_internals();
 
 		# Then, fetch all data for all tokens we have (and update their lastseen parameters)
-		$token_data = $this->_get_query(array_keys($tokens), $uid);
+		$token_data = $this->_get_query(array_keys($tokens));
 
 		# Process all tokens to learn/unlearn
 
@@ -316,7 +315,7 @@ abstract class b8_storage_base
 
 				# Now let's see if we have to update or delete the token
 				if($count_ham !== 0 or $count_spam !== 0)
-					$this->_update($token, "$count_ham $count_spam " . $this->b8_config['today'], $uid);
+					$this->_update($token, "$count_ham $count_spam " . $this->b8_config['today']);
 				else
 					$this->_del($token);
 
@@ -336,7 +335,7 @@ abstract class b8_storage_base
 
 					$data .= $this->b8_config['today'];
 
-					$this->_put($token, $data, $uid);
+					$this->_put($token, $data);
 
 				}
 
@@ -350,12 +349,12 @@ abstract class b8_storage_base
 
 			if($category === b8::HAM) {
 				$internals['texts_ham']++;
-				$this->_update(self::INTERNALS_TEXTS_HAM, $internals['texts_ham'], $uid);
+				$this->_update(self::INTERNALS_TEXTS_HAM, $internals['texts_ham']);
 			}
 
 			elseif($category === b8::SPAM) {
 				$internals['texts_spam']++;
-				$this->_update(self::INTERNALS_TEXTS_SPAM, $internals['texts_spam'], $uid);
+				$this->_update(self::INTERNALS_TEXTS_SPAM, $internals['texts_spam']);
 			}
 
 		}
@@ -369,7 +368,7 @@ abstract class b8_storage_base
 				if($internals['texts_ham'] < 0)
 					$internals['texts_ham'] = 0;
 
-				$this->_update(self::INTERNALS_TEXTS_HAM, $internals['texts_ham'], $uid);
+				$this->_update(self::INTERNALS_TEXTS_HAM, $internals['texts_ham']);
 
 			}
 
@@ -380,7 +379,7 @@ abstract class b8_storage_base
 				if($internals['texts_spam'] < 0)
 					$internals['texts_spam'] = 0;
 
-				$this->_update(self::INTERNALS_TEXTS_SPAM, $internals['texts_spam'], $uid);
+				$this->_update(self::INTERNALS_TEXTS_SPAM, $internals['texts_spam']);
 
 			}
 

@@ -205,7 +205,7 @@ class b8
 	 * @return float The rating between 0 (ham) and 1 (spam)
 	 */
 
-	public function classify($uid,$text)
+	public function classify($text)
 	{
 
 		# Validate the startup
@@ -217,7 +217,7 @@ class b8
 
 		# Get the internal database variables, containing the number of ham and
 		# spam texts so the spam probability can be calculated in relation to them
-		$internals = $this->_database->get_internals($uid);
+		$internals = $this->_database->get_internals();
 
 		# Calculate the spamminess of all tokens
 
@@ -231,7 +231,7 @@ class b8
 			return $tokens;
 
 		# Fetch all availible data for the token set from the database
-		$this->_token_data = $this->_database->get(array_keys($tokens),$uid);
+		$this->_token_data = $this->_database->get(array_keys($tokens));
 
 		# Calculate the spamminess and importance for each token (or a degenerated form of it)
 
@@ -441,9 +441,9 @@ class b8
 	 * @return void
 	 */
 
-	public function learn($text, $category, $uid)
+	public function learn($text, $category)
 	{
-		return $this->_process_text($text, $category, self::LEARN, $uid);
+		return $this->_process_text($text, $category, self::LEARN);
 	}
 
 	/**
@@ -455,9 +455,9 @@ class b8
 	 * @return void
 	 */
 
-	public function unlearn($text, $category, $uid)
+	public function unlearn($text, $category)
 	{
-		return $this->_process_text($text, $category, self::UNLEARN, $uid);
+		return $this->_process_text($text, $category, self::UNLEARN);
 	}
 
 	/**
@@ -470,7 +470,7 @@ class b8
 	 * @return void
 	 */
 
-	private function _process_text($text, $category, $action, $uid = 0)
+	private function _process_text($text, $category, $action)
 	{
 
 		# Validate the startup
@@ -494,7 +494,7 @@ class b8
 			return $tokens;
 
 		# Pass the tokens and what to do with it to the storage backend
-		return $this->_database->process_text($tokens, $category, $action, $uid);
+		return $this->_database->process_text($tokens, $category, $action);
 
 	}
 
