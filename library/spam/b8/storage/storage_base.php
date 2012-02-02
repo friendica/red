@@ -318,7 +318,7 @@ abstract class b8_storage_base
 				if($count_ham !== 0 or $count_spam !== 0)
 					$this->_update($token, "$count_ham $count_spam " . $this->b8_config['today'], $uid);
 				else
-					$this->_del($token);
+					$this->_del($token, $uid);
 
 			}
 
@@ -387,7 +387,7 @@ abstract class b8_storage_base
 		}
 
 		# We're done and can commit all changes to the database now
-		$this->_commit();
+		$this->_commit($uid);
 
 	}
 

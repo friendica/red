@@ -29,7 +29,7 @@
  * @author Tobias Leupold
  */
 
-class b8_storage_mysql extends b8_storage_base
+class b8_storage_frndc extends b8_storage_base
 {
 
 	public $config = array(
@@ -50,6 +50,7 @@ class b8_storage_mysql extends b8_storage_base
 	private $_deletes                      = array();
 	private $_puts                         = array();
 	private $_updates                      = array();
+	private $uid                           = 0;
 
 	const DATABASE_CONNECTION_FAIL         = 'DATABASE_CONNECTION_FAIL';
 	const DATABASE_CONNECTION_ERROR        = 'DATABASE_CONNECTION_ERROR';
@@ -146,6 +147,8 @@ class b8_storage_mysql extends b8_storage_base
 	public function connect()
 	{
 
+		return TRUE;
+
 		# Are we already connected?
 		if($this->connected === TRUE)
 			return TRUE;
@@ -207,7 +210,7 @@ class b8_storage_mysql extends b8_storage_base
 	 * @return mixed Returns an array of the returned data in the format array(token => data) or an empty array if there was no data.
 	 */
 
-	protected function _get_query($tokens)
+	protected function _get_query($tokens, $uid)
 	{
 
 		# Construct the query ...
@@ -217,7 +220,7 @@ class b8_storage_mysql extends b8_storage_base
 			$where = array();
 
 			foreach ($tokens as $token) {
-				$token = mysql_real_escape_string($token, $this->_connection);
+				$token = dbesc($token);
 				array_push($where, $token);
 			}
 
@@ -225,26 +228,18 @@ class b8_storage_mysql extends b8_storage_base
 		}
 
 		else {
-			$token = mysql_real_escape_string($token, $this->_connection);
+			$token = dbesc($token);
 			$where = 'token = "' . $token . '"';
 		}
 
 		# ... and fetch the data
 
-		$result = mysql_query('
+		$result = q('
 			SELECT token, count
 			FROM ' . $this->config['table_name'] . '
-			WHERE ' . $where . ';
-		', $this->_connection);
+			WHERE ' . $where . ' AND uid = ' . $uid );
 
-		$data = array();
-
-		while ($row = mysql_fetch_array($result, MYSQL_ASSOC))
-			$data[$row['token']] = $row['count'];
-
-		mysql_free_result($result);
-
-		return $data;
+		return $result;
 
 	}
 
@@ -257,10 +252,11 @@ class b8_storage_mysql extends b8_storage_base
 	 * @return void
 	 */
 
-	protected function _put($token, $count) {
-		$token = mysql_real_escape_string($token, $this->_connection);
-		$count = mysql_real_escape_string($count, $this->_connection);;
-		array_push($this->_puts, '("' . $token . '", "' . $count . '")');
+	protected function _put($token, $count, $uid) {
+		$token = dbesc($token);
+		$count = dbesc($count);
+		$uid = dbesc($uid);
+		array_push($this->_puts, '("' . $token . '", "' . $count . '", '"' . $uid .'")');
 	}
 
 	/**
@@ -272,11 +268,12 @@ class b8_storage_mysql extends b8_storage_base
 	 * @return void
 	 */
 
-	protected function _update($token, $count)
+	protected function _update($token, $count, $uid)
 	{
-		$token = mysql_real_escape_string($token, $this->_connection);
-		$count = mysql_real_escape_string($count, $this->_connection);
-		array_push($this->_updates, '("' . $token . '", "' . $count . '")');
+		$token = dbesc($token);
+		$count = dbesc($count);
+		$uid = dbesc($uid);
+		array_push($this->_puts, '("' . $token . '", "' . $count . '", '"' . $uid .'")');
 	}
 
 	/**
@@ -287,9 +284,11 @@ class b8_storage_mysql extends b8_storage_base
 	 * @return void
 	 */
 
-	protected function _del($token)
+	protected function _del($token, $uid)
 	{
-		$token = mysql_real_escape_string($token, $this->_connection);
+		$token = dbesc($token);
+		$uid = dbesc($uid);
+		$this->uid = $uid;
 		array_push($this->_deletes, $token);
 	}
 
@@ -300,18 +299,14 @@ class b8_storage_mysql extends b8_storage_base
 	 * @return void
 	 */
 
-	protected function _commit()
+	protected function _commit($uid)
 	{
 
 		if(count($this->_deletes) > 0) {
 
-			$result = mysql_query('
+			$result = q('
 				DELETE FROM ' . $this->config['table_name'] . '
-				WHERE token IN ("' . implode('", "', $this->_deletes) . '");
-			', $this->_connection);
-
-			if(is_resource($result) === TRUE)
-				mysql_free_result($result);
+				WHERE token IN ("' . implode('", "', $this->_deletes) . '") AND uid = ' . $this->uid);
 
 			$this->_deletes = array();
 
@@ -319,12 +314,9 @@ class b8_storage_mysql extends b8_storage_base
 
 		if(count($this->_puts) > 0) {
 
-			$result = mysql_query('
-				INSERT INTO ' . $this->config['table_name'] . '(token, count)
-				VALUES ' . implode(', ', $this->_puts) . ';', $this->_connection);
-
-			if(is_resource($result) === TRUE)
-				mysql_free_result($result);
+			$result = q('
+				INSERT INTO ' . $this->config['table_name'] . '(token, count, uid)
+				VALUES ' . implode(', ', $this->_puts));
 
 			$this->_puts = array();
 
@@ -332,13 +324,14 @@ class b8_storage_mysql extends b8_storage_base
 
 		if(count($this->_updates) > 0) {
 
-			$result = mysql_query('
-				INSERT INTO ' . $this->config['table_name'] . '(token, count)
-				VALUES ' . implode(', ', $this->_updates) . '
-				ON DUPLICATE KEY UPDATE ' . $this->config['table_name'] . '.count = VALUES(count);', $this->_connection);
+			// this still needs work
+			$result = q("select * from " . $this->config['table_name'] . ' where token = ';
 
-			if(is_resource($result) === TRUE)
-				mysql_free_result($result);
+			
+			$result = q('
+				INSERT INTO ' . $this->config['table_name'] . '(token, count, uid)
+				VALUES ' . implode(', ', $this->_updates) . ', ' . $uid . '
+				ON DUPLICATE KEY UPDATE ' . $this->config['table_name'] . '.count = VALUES(count);', $this->_connection);
 
 			$this->_updates = array();
 
