@@ -14,9 +14,17 @@ require_once('include/html2bbcode.php');
 function diaspora2bb($s) {
 
 	$s = html_entity_decode($s,ENT_COMPAT,'UTF-8');
+    $s = str_replace("\r","\n",$s);
 
 	$s = preg_replace('/\@\{(.+?)\; (.+?)\@(.+?)\}/','@[url=https://$3/u/$2]$1[/url]',$s);
+
+    $s = preg_replace('/\#([^\s\#])/','\\#$1',$s);
+
 	$s = Markdown($s);
+
+    $s = str_replace('&#35;','#',$s);
+    $s = str_replace("\n",'<br />',$s);
+
 	$s = html2bbcode($s);
 //	$s = str_replace('&#42;','*',$s);
 
@@ -29,11 +37,6 @@ function diaspora2bb($s) {
 	// remove duplicate adjacent code tags
 	$s = preg_replace("/(\[code\])+(.*?)(\[\/code\])+/ism","[code]$2[/code]", $s);
 	$s = scale_diaspora_images($s);
-
-	// we seem to get a lot of text smushed together with links from Diaspora.
-
-	$s = preg_replace('/[^ ]\[url\=(.*?)\]/',' [url=$1]' ,$s);
-	$s = preg_replace('/\[\/url\][^ ]/','[/url] ',$s);
 
 	return $s;
 }
