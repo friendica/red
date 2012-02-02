@@ -9,9 +9,9 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1241' );
+define ( 'FRIENDICA_VERSION',      '2.3.1242' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.22'    );
-define ( 'DB_UPDATE_VERSION',      1118      );
+define ( 'DB_UPDATE_VERSION',      1119      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -101,10 +101,12 @@ define ( 'NETWORK_OSTATUS',          'stat');    // status.net, identi.ca, GNU-s
 define ( 'NETWORK_FEED',             'feed');    // RSS/Atom feeds with no known "post/notify" protocol
 define ( 'NETWORK_DIASPORA',         'dspr');    // Diaspora
 define ( 'NETWORK_MAIL',             'mail');    // IMAP/POP
+define ( 'NETWORK_MAIL2',            'mai2');    // extended IMAP/POP
 define ( 'NETWORK_FACEBOOK',         'face');    // Facebook API     
 define ( 'NETWORK_LINKEDIN',         'lnkd');    // LinkedIn
 define ( 'NETWORK_XMPP',             'xmpp');    // XMPP     
 define ( 'NETWORK_MYSPACE',          'mysp');    // MySpace
+define ( 'NETWORK_GPLUS',            'goog');    // Google+
 
 /**
  * Maximum number of "people who like (or don't like) this"  that we will list by name

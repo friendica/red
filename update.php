@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1118 );
+define( 'UPDATE_VERSION' , 1119 );
 
 /**
  *
@@ -1012,3 +1012,11 @@ INDEX ( `mid` )
 
 }
 
+function update_1118() {
+q("ALTER TABLE `contact` ADD `closeness` TINYINT( 2 ) NOT NULL DEFAULT '99' AFTER `reason` , ADD INDEX (`closensss`) ");
+q("update contact set closeness = 0 where self = 1");
+}
+
+function update_1119() {
+q("ALTER TABLE `item` ADD `spam` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `visible` , ADD INDEX (`spam`) ");
+}

@@ -113,6 +113,7 @@ function network_content(&$a, $update = 0) {
 	$all_active = '';
 	$search_active = '';
 	$conv_active = '';
+	$spam_active = '';
 
 	if(($a->argc > 1 && $a->argv[1] === 'new') 
 		|| ($a->argc > 2 && $a->argv[2] === 'new')) {
@@ -135,12 +136,17 @@ function network_content(&$a, $update = 0) {
 		$conv_active = 'active';
 	}
 
+	if($_GET['spam']) {
+		$spam_active = 'active';
+	}
+
 	
 	if (($new_active == '') 
 		&& ($starred_active == '') 
 		&& ($bookmarked_active == '')
 		&& ($conv_active == '')
-		&& ($search_active == '')) {
+		&& ($search_active == '')
+		&& ($spam_active == '')) {
 			$all_active = 'active';
 	}
 
@@ -151,9 +157,7 @@ function network_content(&$a, $update = 0) {
 		$all_active = '';
 		$postord_active = 'active';
 	}
-			 
-
-	
+			 	
 	// tabs
 	$tabs = array(
 		array(
@@ -187,6 +191,13 @@ function network_content(&$a, $update = 0) {
 			'url'=>$a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '&bmark=1',
 			'sel'=>$bookmarked_active,
 		),	
+//		array(
+//			'label' => t('Spam'),
+//			'url'=>$a->get_baseurl() . '/network?f=&spam=1'
+//			'sel'=> $spam_active,
+//		),	
+
+
 	);
 	$tpl = get_markup_template('common_tabs.tpl');
 	$o .= replace_macros($tpl, array('$tabs'=>$tabs));
@@ -209,6 +220,7 @@ function network_content(&$a, $update = 0) {
 	$order = ((x($_GET,'order')) ? notags($_GET['order']) : 'comment');
 	$liked = ((x($_GET,'liked')) ? intval($_GET['liked']) : 0);
 	$conv = ((x($_GET,'conv')) ? intval($_GET['conv']) : 0);
+	$spam = ((x($_GET,'spam')) ? intval($_GET['spam']) : 0);
 	$nets = ((x($_GET,'nets')) ? $_GET['nets'] : '');
 
 	if(($a->argc > 2) && $a->argv[2] === 'new')
@@ -337,14 +349,16 @@ function network_content(&$a, $update = 0) {
 		$o .= "<script> var profile_uid = " . $_SESSION['uid'] 
 			. "; var netargs = '" . substr($a->cmd,8)
 			. '?f='
-			. ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '')
+			. ((x($_GET,'cid'))    ? '&cid='    . $_GET['cid']    : '')
 			. ((x($_GET,'search')) ? '&search=' . $_GET['search'] : '') 
-			. ((x($_GET,'star')) ? '&star=' . $_GET['star'] : '') 
-			. ((x($_GET,'order')) ? '&order=' . $_GET['order'] : '') 
-			. ((x($_GET,'bmark')) ? '&bmark=' . $_GET['bmark'] : '') 
-			. ((x($_GET,'liked')) ? '&liked=' . $_GET['liked'] : '') 
-			. ((x($_GET,'conv')) ? '&conv=' . $_GET['conv'] : '') 
-			. ((x($_GET,'nets')) ? '&nets=' . $_GET['nets'] : '') 
+			. ((x($_GET,'star'))   ? '&star='   . $_GET['star']   : '') 
+			. ((x($_GET,'order'))  ? '&order='  . $_GET['order']  : '') 
+			. ((x($_GET,'bmark'))  ? '&bmark='  . $_GET['bmark']  : '') 
+			. ((x($_GET,'liked'))  ? '&liked='  . $_GET['liked']  : '') 
+			. ((x($_GET,'conv'))   ? '&conv='   . $_GET['conv']   : '') 
+			. ((x($_GET,'spam'))   ? '&spam='   . $_GET['spam']   : '') 
+			. ((x($_GET,'nets'))   ? '&nets='   . $_GET['nets']   : '') 
+
 			. "'; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 	}
 
