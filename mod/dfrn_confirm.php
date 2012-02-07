@@ -72,6 +72,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			$intro_id  = $handsfree['intro_id'];
 			$duplex    = $handsfree['duplex'];
 			$hidden    = ((array_key_exists('hidden',$handsfree)) ? intval($handsfree['hidden']) : 0 );
+			$activity  = ((array_key_exists('activity',$handsfree)) ? intval($handsfree['activity']) : 0 );
 		}
 		else {
 			$dfrn_id  = ((x($_POST,'dfrn_id'))    ? notags(trim($_POST['dfrn_id'])) : "");
@@ -79,6 +80,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			$duplex   = ((x($_POST,'duplex'))     ? intval($_POST['duplex'])        : 0 );
 			$cid      = ((x($_POST,'contact_id')) ? intval($_POST['contact_id'])    : 0 );
 			$hidden   = ((x($_POST,'hidden'))     ? intval($_POST['hidden'])        : 0 );
+			$activity = ((x($_POST,'activity'))   ? intval($_POST['activity'])      : 0 );
 		}
 
 		/**
@@ -428,64 +430,65 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		else
 			$contact = null;
 
-		// Send a new friend post if we are allowed to...
+		if(isset($new_relation) && $new_relation == CONTACT_IS_FRIEND) {
 
-		$r = q("SELECT `hide-friends` FROM `profile` WHERE `uid` = %d AND `is-default` = 1 LIMIT 1",
-			intval($uid)
-		);
-		if((count($r)) && (! $hidden) && ($r[0]['hide-friends'] == 0) && (is_array($contact)) &&  isset($new_relation) && ($new_relation == CONTACT_IS_FRIEND)) {
-
-			if($r[0]['network'] === NETWORK_DIASPORA) {
+			if(($contact) && ($contact['network'] === NETWORK_DIASPORA)) {
 				require_once('include/diaspora.php');
 				$ret = diaspora_share($user[0],$r[0]);
 				logger('mod_follow: diaspora_share returns: ' . $ret);
 			}
 
-			require_once('include/items.php');
+			// Send a new friend post if we are allowed to...
 
-			$self = q("SELECT * FROM `contact` WHERE `self` = 1 AND `uid` = %d LIMIT 1",
+			$r = q("SELECT `hide-friends` FROM `profile` WHERE `uid` = %d AND `is-default` = 1 LIMIT 1",
 				intval($uid)
 			);
+			if((count($r)) && ($activity) && (! $hidden)) {
 
-			if(count($self)) {
+				require_once('include/items.php');
 
-				$arr = array();
-				$arr['uri'] = $arr['parent-uri'] = item_new_uri($a->get_hostname(), $uid); 
-				$arr['uid'] = $uid;
-				$arr['contact-id'] = $self[0]['id'];
-				$arr['wall'] = 1;
-				$arr['type'] = 'wall';
-				$arr['gravity'] = 0;
-				$arr['origin'] = 1;
-				$arr['author-name'] = $arr['owner-name'] = $self[0]['name'];
-				$arr['author-link'] = $arr['owner-link'] = $self[0]['url'];
-				$arr['author-avatar'] = $arr['owner-avatar'] = $self[0]['thumb'];
-				$arr['verb'] = ACTIVITY_FRIEND;
-				$arr['object-type'] = ACTIVITY_OBJ_PERSON;
+				$self = q("SELECT * FROM `contact` WHERE `self` = 1 AND `uid` = %d LIMIT 1",
+					intval($uid)
+				);
+
+				if(count($self)) {
+
+					$arr = array();
+					$arr['uri'] = $arr['parent-uri'] = item_new_uri($a->get_hostname(), $uid); 
+					$arr['uid'] = $uid;
+					$arr['contact-id'] = $self[0]['id'];
+					$arr['wall'] = 1;
+					$arr['type'] = 'wall';
+					$arr['gravity'] = 0;
+					$arr['origin'] = 1;
+					$arr['author-name'] = $arr['owner-name'] = $self[0]['name'];
+					$arr['author-link'] = $arr['owner-link'] = $self[0]['url'];
+					$arr['author-avatar'] = $arr['owner-avatar'] = $self[0]['thumb'];
+					$arr['verb'] = ACTIVITY_FRIEND;
+					$arr['object-type'] = ACTIVITY_OBJ_PERSON;
 				
-				$A = '[url=' . $self[0]['url'] . ']' . $self[0]['name'] . '[/url]';
-				$B = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]';
-				$BPhoto = '[url=' . $contact['url'] . ']' . '[img]' . $contact['thumb'] . '[/img][/url]';
-				$arr['body'] =  sprintf( t('%1$s is now friends with %2$s'), $A, $B)."\n\n\n".$BPhoto;
+					$A = '[url=' . $self[0]['url'] . ']' . $self[0]['name'] . '[/url]';
+					$B = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]';
+					$BPhoto = '[url=' . $contact['url'] . ']' . '[img]' . $contact['thumb'] . '[/img][/url]';
+					$arr['body'] =  sprintf( t('%1$s is now friends with %2$s'), $A, $B)."\n\n\n".$BPhoto;
 
-				$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PERSON . '</type><title>' . $contact['name'] . '</title>'
-					. '<id>' . $contact['url'] . '/' . $contact['name'] . '</id>';
-				$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $contact['url'] . '" />' . "\n");
-				$arr['object'] .= xmlify('<link rel="photo" type="image/jpeg" href="' . $contact['thumb'] . '" />' . "\n");
-				$arr['object'] .= '</link></object>' . "\n";
-				$arr['last-child'] = 1;
+					$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PERSON . '</type><title>' . $contact['name'] . '</title>'
+						. '<id>' . $contact['url'] . '/' . $contact['name'] . '</id>';
+					$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $contact['url'] . '" />' . "\n");
+					$arr['object'] .= xmlify('<link rel="photo" type="image/jpeg" href="' . $contact['thumb'] . '" />' . "\n");
+					$arr['object'] .= '</link></object>' . "\n";
+					$arr['last-child'] = 1;
 
-				$arr['allow_cid'] = $user[0]['allow_cid'];
-				$arr['allow_gid'] = $user[0]['allow_gid'];
-				$arr['deny_cid']  = $user[0]['deny_cid'];
-				$arr['deny_gid']  = $user[0]['deny_gid'];
+					$arr['allow_cid'] = $user[0]['allow_cid'];
+					$arr['allow_gid'] = $user[0]['allow_gid'];
+					$arr['deny_cid']  = $user[0]['deny_cid'];
+					$arr['deny_gid']  = $user[0]['deny_gid'];
 
-				$i = item_store($arr);
-				if($i)
-			    	proc_run('php',"include/notifier.php","activity","$i");
-
+					$i = item_store($arr);
+					if($i)
+				    	proc_run('php',"include/notifier.php","activity","$i");
+				}
 			}
-
 		}
 		// Let's send our user to the contact editor in case they want to
 		// do anything special with this new friend.
