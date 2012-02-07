@@ -673,6 +673,14 @@ function diaspora_post($importer,$xml) {
 			if(strpos($tag,'#') === 0) {
 				if(strpos($tag,'[url='))
 					continue;
+
+				// don't link tags that are already embedded in links
+
+				if(preg_match('/\[(.*?)' . preg_quote($tag) . '(.*?)\]/',$body))
+					continue;
+				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag) . '(.*?)\)/',$body))
+					continue;
+
 				$basetag = str_replace('_',' ',substr($tag,1));
 				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
 				if(strlen($str_tags))
@@ -830,6 +838,15 @@ function diaspora_reshare($importer,$xml) {
 			if(strpos($tag,'#') === 0) {
 				if(strpos($tag,'[url='))
 					continue;
+
+				// don't link tags that are already embedded in links
+
+				if(preg_match('/\[(.*?)' . preg_quote($tag) . '(.*?)\]/',$body))
+					continue;
+				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag) . '(.*?)\)/',$body))
+					continue;
+
+
 				$basetag = str_replace('_',' ',substr($tag,1));
 				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
 				if(strlen($str_tags))
@@ -1062,6 +1079,15 @@ function diaspora_comment($importer,$xml,$msg) {
 			if(strpos($tag,'#') === 0) {
 				if(strpos($tag,'[url='))
 					continue;
+
+				// don't link tags that are already embedded in links
+
+				if(preg_match('/\[(.*?)' . preg_quote($tag) . '(.*?)\]/',$body))
+					continue;
+				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag) . '(.*?)\)/',$body))
+					continue;
+
+
 				$basetag = str_replace('_',' ',substr($tag,1));
 				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
 				if(strlen($str_tags))
