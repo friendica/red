@@ -838,98 +838,102 @@ function status_editor($a,$x, $notes_cid = 0) {
 		
 	$geotag = (($x['allow_location']) ? get_markup_template('jot_geotag.tpl') : '');
 
-		$tpl = get_markup_template('jot-header.tpl');
+	$plaintext = false;
+	if(local_user() && intval(get_pconfig(local_user(),'system','plaintext')))
+		$plaintext = true;
+
+	$tpl = get_markup_template('jot-header.tpl');
 	
-		$a->page['htmlhead'] .= replace_macros($tpl, array(
-			'$newpost' => 'true',
-			'$baseurl' => $a->get_baseurl(),
-			'$geotag' => $geotag,
-			'$nickname' => $x['nickname'],
-			'$ispublic' => t('Visible to <strong>everybody</strong>'),
-			'$linkurl' => t('Please enter a link URL:'),
-			'$vidurl' => t("Please enter a video link/URL:"),
-			'$audurl' => t("Please enter an audio link/URL:"),
-			'$term' => t('Tag term:'),
-			'$whereareu' => t('Where are you right now?'),
-			'$title' => t('Enter a title for this item') 
-		));
+	$a->page['htmlhead'] .= replace_macros($tpl, array(
+		'$newpost' => 'true',
+		'$baseurl' => $a->get_baseurl(),
+		'$editselect' => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
+		'$geotag' => $geotag,
+		'$nickname' => $x['nickname'],
+		'$ispublic' => t('Visible to <strong>everybody</strong>'),
+		'$linkurl' => t('Please enter a link URL:'),
+		'$vidurl' => t("Please enter a video link/URL:"),
+		'$audurl' => t("Please enter an audio link/URL:"),
+		'$term' => t('Tag term:'),
+		'$whereareu' => t('Where are you right now?'),
+		'$title' => t('Enter a title for this item') 
+	));
 
 
-		$tpl = get_markup_template("jot.tpl");
+	$tpl = get_markup_template("jot.tpl");
 		
-		$jotplugins = '';
-		$jotnets = '';
+	$jotplugins = '';
+	$jotnets = '';
 
-		$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
+	$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
 
-		$mail_enabled = false;
-		$pubmail_enabled = false;
+	$mail_enabled = false;
+	$pubmail_enabled = false;
 
-		if(($x['is_owner']) && (! $mail_disabled)) {
-			$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d AND `server` != '' LIMIT 1",
-				intval(local_user())
-			);
-			if(count($r)) {
-				$mail_enabled = true;
-				if(intval($r[0]['pubmail']))
-					$pubmail_enabled = true;
-			}
+	if(($x['is_owner']) && (! $mail_disabled)) {
+		$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d AND `server` != '' LIMIT 1",
+			intval(local_user())
+		);
+		if(count($r)) {
+			$mail_enabled = true;
+			if(intval($r[0]['pubmail']))
+				$pubmail_enabled = true;
 		}
+	}
 
-		if($mail_enabled) {
-	       $selected = (($pubmail_enabled) ? ' checked="checked" ' : '');
-			$jotnets .= '<div class="profile-jot-net"><input type="checkbox" name="pubmail_enable"' . $selected . ' value="1" /> '
-           	. t("Post to Email") . '</div>';
-		}
+	if($mail_enabled) {
+		$selected = (($pubmail_enabled) ? ' checked="checked" ' : '');
+		$jotnets .= '<div class="profile-jot-net"><input type="checkbox" name="pubmail_enable"' . $selected . ' value="1" /> ' . t("Post to Email") . '</div>';
+	}
 
-		call_hooks('jot_tool', $jotplugins);
-		call_hooks('jot_networks', $jotnets);
+	call_hooks('jot_tool', $jotplugins);
+	call_hooks('jot_networks', $jotnets);
 
-		if($notes_cid)
-			$jotnets .= '<input type="hidden" name="contact_allow[]" value="' . $notes_cid .'" />';
+	if($notes_cid)
+		$jotnets .= '<input type="hidden" name="contact_allow[]" value="' . $notes_cid .'" />';
 
-		$tpl = replace_macros($tpl,array('$jotplugins' => $jotplugins));	
+	$tpl = replace_macros($tpl,array('$jotplugins' => $jotplugins));	
 
-		$o .= replace_macros($tpl,array(
-			'$return_path' => $a->cmd,
-			'$action' => 'item',
-			'$share' => (($x['button']) ? $x['button'] : t('Share')),
-			'$upload' => t('Upload photo'),
-			'$shortupload' => t('upload photo'),
-			'$attach' => t('Attach file'),
-			'$shortattach' => t('attach file'),
-			'$weblink' => t('Insert web link'),
-			'$shortweblink' => t('web link'),
-			'$video' => t('Insert video link'),
-			'$shortvideo' => t('video link'),
-			'$audio' => t('Insert audio link'),
-			'$shortaudio' => t('audio link'),
-			'$setloc' => t('Set your location'),
-			'$shortsetloc' => t('set location'),
-			'$noloc' => t('Clear browser location'),
-			'$shortnoloc' => t('clear location'),
-			'$title' => "",
-			'$placeholdertitle' => t('Set title'),
-			'$wait' => t('Please wait'),
-			'$permset' => t('Permission settings'),
-			'$shortpermset' => t('permissions'),
-			'$ptyp' => (($notes_cid) ? 'note' : 'wall'),
-			'$content' => '',
-			'$post_id' => '',
-			'$baseurl' => $a->get_baseurl(),
-			'$defloc' => $x['default_location'],
-			'$visitor' => $x['visitor'],
-			'$pvisit' => (($notes_cid) ? 'none' : $x['visitor']),
-			'$emailcc' => t('CC: email addresses'),
-			'$public' => t('Public post'),
-			'$jotnets' => $jotnets,
-			'$emtitle' => t('Example: bob@example.com, mary@example.com'),
-			'$lockstate' => $x['lockstate'],
-			'$acl' => $x['acl'],
-			'$bang' => $x['bang'],
-			'$profile_uid' => $x['profile_uid'],
-			'$preview' => t('Preview'),
-		));
+	$o .= replace_macros($tpl,array(
+		'$return_path' => $a->cmd,
+		'$action' => 'item',
+		'$share' => (($x['button']) ? $x['button'] : t('Share')),
+		'$upload' => t('Upload photo'),
+		'$shortupload' => t('upload photo'),
+		'$attach' => t('Attach file'),
+		'$shortattach' => t('attach file'),
+		'$weblink' => t('Insert web link'),
+		'$shortweblink' => t('web link'),
+		'$video' => t('Insert video link'),
+		'$shortvideo' => t('video link'),
+		'$audio' => t('Insert audio link'),
+		'$shortaudio' => t('audio link'),
+		'$setloc' => t('Set your location'),
+		'$shortsetloc' => t('set location'),
+		'$noloc' => t('Clear browser location'),
+		'$shortnoloc' => t('clear location'),
+		'$title' => "",
+		'$placeholdertitle' => t('Set title'),
+		'$wait' => t('Please wait'),
+		'$permset' => t('Permission settings'),
+		'$shortpermset' => t('permissions'),
+		'$ptyp' => (($notes_cid) ? 'note' : 'wall'),
+		'$content' => '',
+		'$post_id' => '',
+		'$baseurl' => $a->get_baseurl(),
+		'$defloc' => $x['default_location'],
+		'$visitor' => $x['visitor'],
+		'$pvisit' => (($notes_cid) ? 'none' : $x['visitor']),
+		'$emailcc' => t('CC: email addresses'),
+		'$public' => t('Public post'),
+		'$jotnets' => $jotnets,
+		'$emtitle' => t('Example: bob@example.com, mary@example.com'),
+		'$lockstate' => $x['lockstate'],
+		'$acl' => $x['acl'],
+		'$bang' => $x['bang'],
+		'$profile_uid' => $x['profile_uid'],
+		'$preview' => t('Preview'),
+	));
 
 	return $o;
 }
