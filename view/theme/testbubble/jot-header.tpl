@@ -4,10 +4,38 @@
 
 var editor=false;
 var textlen = 0;
+var plaintext = '$editselect';
 
 function initEditor(cb) {
     if (editor==false) {
         $("#profile-jot-text-loading").show();
+ if(plaintext == 'none') {
+            $("#profile-jot-text-loading").hide();
+            $("#profile-jot-text").css({ 'height': 200, 'color': '#000' });
+            $(".jothidden").show();
+            editor = true;
+            $("a#jot-perms-icon").fancybox({
+                'transitionIn' : 'elastic',
+                'transitionOut' : 'elastic'
+            });
+	                            $("#profile-jot-submit-wrapper").show();
+								{{ if $newpost }}
+    	                            $("#profile-upload-wrapper").show();
+        	                        $("#profile-attach-wrapper").show();
+            	                    $("#profile-link-wrapper").show();
+                	                $("#profile-video-wrapper").show();
+                    	            $("#profile-audio-wrapper").show();
+                        	        $("#profile-location-wrapper").show();
+                            	    $("#profile-nolocation-wrapper").show();
+                                	$("#profile-title-wrapper").show();
+	                                $("#profile-jot-plugin-wrapper").show();
+	                                $("#jot-preview-link").show();
+								{{ endif }}   
+
+
+            if (typeof cb!="undefined") cb();
+            return;
+        }
         tinyMCE.init({
                 theme : "advanced",
                 mode : "specific_textareas",
@@ -132,7 +160,7 @@ function initEditor(cb) {
 				name: 'userfile',
 				onSubmit: function(file,ext) { $('#profile-rotator').show(); },
 				onComplete: function(file,response) {
-					tinyMCE.execCommand('mceInsertRawHTML',false,response);
+					addeditortext(response);
 					$('#profile-rotator').hide();
 				}				 
 			}
@@ -143,7 +171,7 @@ function initEditor(cb) {
 				name: 'userfile',
 				onSubmit: function(file,ext) { $('#profile-rotator').show(); },
 				onComplete: function(file,response) {
-					tinyMCE.execCommand('mceInsertRawHTML',false,response);
+					addeditortext(response);
 					$('#profile-rotator').hide();
 				}				 
 			}
@@ -190,7 +218,7 @@ function initEditor(cb) {
 			reply = bin2hex(reply);
 			$('#profile-rotator').show();
 			$.get('parse_url?binurl=' + reply, function(data) {
-				tinyMCE.execCommand('mceInsertRawHTML',false,data);
+				addeditortext(data);
 				$('#profile-rotator').hide();
 			});
 		}
@@ -199,14 +227,14 @@ function initEditor(cb) {
 	function jotVideoURL() {
 		reply = prompt("$vidurl");
 		if(reply && reply.length) {
-			tinyMCE.execCommand('mceInsertRawHTML',false,'[video]' + reply + '[/video]');
+			addeditortext('[video]' + reply + '[/video]');
 		}
 	}
 
 	function jotAudioURL() {
 		reply = prompt("$audurl");
 		if(reply && reply.length) {
-			tinyMCE.execCommand('mceInsertRawHTML',false,'[audio]' + reply + '[/audio]');
+			addeditortext('[audio]' + reply + '[/audio]');
 		}
 	}
 
@@ -230,7 +258,7 @@ function initEditor(cb) {
 		$.get('share/' + id, function(data) {
 				if (!editor) $("#profile-jot-text").val("");
 				initEditor(function(){
-					tinyMCE.execCommand('mceInsertRawHTML',false,data);
+					addeditortext(data);
 					$('#like-rotator-' + id).hide();
 					$(window).scrollTop(0);
 				});
@@ -253,7 +281,7 @@ function initEditor(cb) {
 			$.get('parse_url?binurl=' + reply, function(data) {
 				if (!editor) $("#profile-jot-text").val("");
 				initEditor(function(){
-					tinyMCE.execCommand('mceInsertRawHTML',false,data);
+					addeditortext(data);
 					$('#profile-rotator').hide();
 				});
 			});
@@ -281,6 +309,16 @@ function initEditor(cb) {
 		$('#jot-coord').val('');
 		$('#profile-nolocation-wrapper').hide();
 	}
+
+  function addeditortext(data) {
+        if(plaintext == 'none') {
+            var currentText = $("#profile-jot-text").val();
+            $("#profile-jot-text").val(currentText + data);
+        }
+        else
+            tinyMCE.execCommand('mceInsertRawHTML',false,data);
+    }
+
 
 	$geotag
 
