@@ -679,7 +679,7 @@ function smilies($s) {
 
 	$s = str_replace(
 	array( '&lt;3', '&lt;/3', '&lt;\\3', ':-)', ':)', ';-)', ':-(', ':(', ':-P', ':P', ':-"', ':-x', ':-X', ':-D', '8-|', '8-O', '\\o/', 'o.O', 'O.o', '\\.../', '\\ooo/', 
-// ':beer', ':homebrew', 
+ ':beer', ':homebrew', 
 		'~friendika', '~friendica', 'Diaspora*' ),
 	array(
 		'<img src="' . $a->get_baseurl() . '/images/smiley-heart.gif" alt="<3" />',
@@ -703,8 +703,8 @@ function smilies($s) {
 		'<img src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="O.o" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-shaka.gif" alt="\\.../" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-shaka.gif" alt="\\ooo/" />',
-//		'<img src="' . $a->get_baseurl() . '/images/beer_mug.gif" alt=":beer" />',
-//		'<img src="' . $a->get_baseurl() . '/images/beer_mug.gif" alt=":homebrew" />',
+		'<img src="' . $a->get_baseurl() . '/images/beer_mug.gif" alt=":beer" />',
+		'<img src="' . $a->get_baseurl() . '/images/beer_mug.gif" alt=":homebrew" />',
 
 		'<a href="http://project.friendika.com">~friendika <img src="' . $a->get_baseurl() . '/images/friendika-16.png" alt="~friendika" /></a>',
 		'<a href="http://friendica.com">~friendica <img src="' . $a->get_baseurl() . '/images/friendika-16.png" alt="~friendica" /></a>',
