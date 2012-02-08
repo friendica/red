@@ -568,10 +568,36 @@ aside #profiles-menu {
   float: right;
   margin-right: 20px;
 }
+#contact-edit-drop-link .drophide {
+  background-image: url('../../../images/icons/22/delete.png');
+  display: block;
+  width: 22px;
+  height: 22px;
+  opacity: 0.3;
+}
+#contact-edit-drop-link .drop {
+  background-image: url('../../../images/icons/22/delete.png');
+  display: block;
+  width: 22px;
+  height: 22px;
+}
 /* group member */
 .group-delete-wrapper {
   float: right;
   margin-right: 50px;
+}
+.group-delete-wrapper .drophide {
+  background-image: url('../../../images/icons/22/delete.png');
+  display: block;
+  width: 22px;
+  height: 22px;
+  opacity: 0.3;
+}
+.group-delete-wrapper .drop {
+  background-image: url('../../../images/icons/22/delete.png');
+  display: block;
+  width: 22px;
+  height: 22px;
 }
 #group-members {
   margin-top: 20px;
