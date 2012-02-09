@@ -56,7 +56,9 @@ function saved_searches($search) {
 		. ((x($_GET,'star')) ? '?star=' . $_GET['star'] : '')
 		. ((x($_GET,'bmark')) ? '?bmark=' . $_GET['bmark'] : '')
 		. ((x($_GET,'conv')) ? '?conv=' . $_GET['conv'] : '')
-		. ((x($_GET,'nets')) ? '?nets=' . $_GET['nets'] : '');
+		. ((x($_GET,'nets')) ? '?nets=' . $_GET['nets'] : '')
+		. ((x($_GET,'cmin')) ? '?cmin=' . $_GET['cmin'] : '')
+		. ((x($_GET,'cmax')) ? '?cmax=' . $_GET['cmax'] : '');
 	
 	$o = '';
 
@@ -222,6 +224,8 @@ function network_content(&$a, $update = 0) {
 	$conv = ((x($_GET,'conv')) ? intval($_GET['conv']) : 0);
 	$spam = ((x($_GET,'spam')) ? intval($_GET['spam']) : 0);
 	$nets = ((x($_GET,'nets')) ? $_GET['nets'] : '');
+	$cmin = ((x($_GET,'cmin')) ? intval($_GET['cmin']) : 0);
+	$cmax = ((x($_GET,'cmax')) ? intval($_GET['cmax']) : 99);
 
 	if(($a->argc > 2) && $a->argv[2] === 'new')
 		$nouveau = true;
@@ -358,6 +362,8 @@ function network_content(&$a, $update = 0) {
 			. ((x($_GET,'conv'))   ? '&conv='   . $_GET['conv']   : '') 
 			. ((x($_GET,'spam'))   ? '&spam='   . $_GET['spam']   : '') 
 			. ((x($_GET,'nets'))   ? '&nets='   . $_GET['nets']   : '') 
+			. ((x($_GET,'cmin'))   ? '&cmin='   . $_GET['cmin']   : '') 
+			. ((x($_GET,'cmax'))   ? '&cmax='   . $_GET['cmax']   : '') 
 
 			. "'; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 	}
