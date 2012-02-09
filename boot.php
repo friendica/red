@@ -9,7 +9,7 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1246' );
+define ( 'FRIENDICA_VERSION',      '2.3.1247' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.22'    );
 define ( 'DB_UPDATE_VERSION',      1120      );
 
@@ -125,14 +125,15 @@ define ( 'ZCURL_TIMEOUT' , (-1));
  * email notification options
  */
 
-define ( 'NOTIFY_INTRO',   0x0001 );
-define ( 'NOTIFY_CONFIRM', 0x0002 );
-define ( 'NOTIFY_WALL',    0x0004 );
-define ( 'NOTIFY_COMMENT', 0x0008 );
-define ( 'NOTIFY_MAIL',    0x0010 );
-define ( 'NOTIFY_SUGGEST', 0x0020 );
-define ( 'NOTIFY_PROFILE', 0x0040 );
-
+define ( 'NOTIFY_INTRO',    0x0001 );
+define ( 'NOTIFY_CONFIRM',  0x0002 );
+define ( 'NOTIFY_WALL',     0x0004 );
+define ( 'NOTIFY_COMMENT',  0x0008 );
+define ( 'NOTIFY_MAIL',     0x0010 );
+define ( 'NOTIFY_SUGGEST',  0x0020 );
+define ( 'NOTIFY_PROFILE',  0x0040 );
+define ( 'NOTIFY_TAGSELF',  0x0080 );
+define ( 'NOTIFY_TAGSHARE', 0x0100 );
 
 /**
  * various namespaces we may need to parse
