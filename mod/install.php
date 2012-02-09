@@ -210,6 +210,7 @@ function install_content(&$a) {
 				'$next' => t('Next'),
 				'$reload' => t('Check again'),
 				'$phpath' => $phpath,
+				'$baseurl' => $a->get_baseurl(),
 			));
 			return $o;
 		}; break;
