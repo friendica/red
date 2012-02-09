@@ -111,7 +111,6 @@ function contacts_content(&$a) {
 	$o = '';
 	nav_set_selected('contacts');
 
-	$_SESSION['return_url'] = $a->get_baseurl() . '/' . $a->cmd;
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
@@ -211,7 +210,10 @@ function contacts_content(&$a) {
 
 			contact_remove($orig_record[0]['id']);
 			info( t('Contact has been removed.') . EOL );
-			goaway($a->get_baseurl() . '/contacts');
+			if(x($_SESSION,'return_url'))
+				goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
+			else
+				goaway($a->get_baseurl() . '/contacts');
 			return; // NOTREACHED
 		}
 	}
@@ -354,6 +356,7 @@ function contacts_content(&$a) {
 
 	}
 
+	$_SESSION['return_url'] = $a->query_string;
 
 	if(($a->argc == 2) && ($a->argv[1] === 'all'))
 		$sql_extra = '';
