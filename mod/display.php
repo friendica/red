@@ -66,6 +66,10 @@ function display_content(&$a) {
 		notice( t('Access to this profile has been restricted.') . EOL);
 		return;
 	}
+	
+	if ($is_owner)
+		$o .= status_editor($a,$x,0,true);
+
 
 	$sql_extra = permissions_sql($a->profile['uid'],$remote_contact,$groups);
 

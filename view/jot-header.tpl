@@ -215,6 +215,9 @@ function enableOnUser(){
 			initEditor(function(){
 				addeditortext(data);
 				$('#like-rotator-' + id).hide();
+				if ($('#jot-popup').length != 0){
+					$('#jot-popup').show();
+				} 
 				$(window).scrollTop(0);
 			});
 
