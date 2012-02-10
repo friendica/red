@@ -985,6 +985,7 @@ function tag_deliver($uid,$item_id) {
 		'verb'         => ACTIVITY_TAG,
 		'otype'        => 'item'
 	));
+
 	if(! $community_page)
 		return;
 
