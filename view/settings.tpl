@@ -108,6 +108,7 @@ $suggestme
 {{inc field_intcheckbox.tpl with $field=$notify4 }}{{endinc}}
 {{inc field_intcheckbox.tpl with $field=$notify5 }}{{endinc}}
 {{inc field_intcheckbox.tpl with $field=$notify6 }}{{endinc}}
+{{inc field_intcheckbox.tpl with $field=$notify7 }}{{endinc}}
 </div>
 
 

@@ -905,7 +905,7 @@ function item_store($arr,$force_parent = false) {
 		);
 	}
 
-	tgroup_deliver($arr['uid'],$current_post);
+	tag_deliver($arr['uid'],$current_post);
 
 	return $current_post;
 }
@@ -923,21 +923,21 @@ function get_item_contact($item,$contacts) {
 }
 
 
-function tgroup_deliver($uid,$item_id) {
+function tag_deliver($uid,$item_id) {
 
-
-	// setup a second delivery chain for forum/community posts if appropriate
+	// look for mention tags and setup a second delivery chain for forum/community posts if appropriate
 
 	$a = get_app();
 
-	$deliver_to_tgroup = false;
+	$mention = false;
 
-	$u = q("select * from user where uid = %d and `page-flags` = %d limit 1",
-		intval($uid),
-		intval(PAGE_COMMUNITY)
+	$u = q("select uid, nickname, language, username, email, `page-flags`, `notify-flags` from user where uid = %d limit 1",
+		intval($uid)
 	);
 	if(! count($u))
 		return;
+
+	$community_page = (($u[0]['page-flags'] == PAGE_COMMUNITY) ? true : false);
 
 	$i = q("select * from item where id = %d and uid = %d limit 1",
 		intval($item_id),
@@ -947,13 +947,6 @@ function tgroup_deliver($uid,$item_id) {
 		return;
 
 	$item = $i[0];
-
-	// prevent delivery looping - only proceed
-	// if the message originated elsewhere and is a top-level post
-
-	if(($item['wall']) || ($item['origin']) || ($item['id'] != $item['parent']))
-		return;
-
 
 	$link = normalise_link($a->get_baseurl() . '/profile/' . $u[0]['nickname']);
 
@@ -966,24 +959,49 @@ function tgroup_deliver($uid,$item_id) {
 	if($cnt) {
 		foreach($matches as $mtch) {
 			if(link_compare($link,$mtch[1]) || link_compare($dlink,$mtch[1])) {
-				$deliver_to_tgroup = true;
-				logger('tgroup_deliver: local group mention found: ' . $mtch[2]);
+				$mention = true;
+				logger('tag_deliver: mention found: ' . $mtch[2]);
 			}
 		}
 	}
 
-	if(! $deliver_to_tgroup)
+	if(! $mention)
 		return;
 
-	// now change this copy of the post to a forum head message and deliver to all the tgroup members
+	if(! $community_page) {
+		require_once('include/enotify.php');
+		notification(array(
+			'type'         => NOTIFY_TAGSELF,
+			'notify_flags' => $u[0]['notify-flags'],
+			'language'     => $u[0]['language'],
+			'to_name'      => $u[0]['username'],
+			'to_email'     => $u[0]['email'],
+			'item'         => $item,
+			'link'         => $a->get_baseurl() . '/display/' . $u[0]['nickname'] . '/' . $item['id'],
+			'source_name'  => $item['author-name'],
+			'source_link'  => $item['author-link'],
+			'source_photo' => $item['author-avatar'],
+			'verb'         => ACTIVITY_TAG,
+			'otype'        => 'item'
+		));
+		return;
+	}
+	else {
+		// prevent delivery looping - only proceed
+		// if the message originated elsewhere and is a top-level post
+
+		if(($item['wall']) || ($item['origin']) || ($item['id'] != $item['parent']))
+			return;
+
+		// now change this copy of the post to a forum head message and deliver to all the tgroup members
 
 
-	q("update item set wall = 1, origin = 1, forum_mode = 1 where id = %d limit 1",
-		intval($item_id)
-	);
+		q("update item set wall = 1, origin = 1, forum_mode = 1 where id = %d limit 1",
+			intval($item_id)
+		);
 
-	proc_run('php','include/notifier.php','tgroup',$item_id);			
-
+		proc_run('php','include/notifier.php','tgroup',$item_id);			
+	}
 }
 
 
