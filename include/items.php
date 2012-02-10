@@ -968,40 +968,42 @@ function tag_deliver($uid,$item_id) {
 	if(! $mention)
 		return;
 
-	if(! $community_page) {
-		require_once('include/enotify.php');
-		notification(array(
-			'type'         => NOTIFY_TAGSELF,
-			'notify_flags' => $u[0]['notify-flags'],
-			'language'     => $u[0]['language'],
-			'to_name'      => $u[0]['username'],
-			'to_email'     => $u[0]['email'],
-			'item'         => $item,
-			'link'         => $a->get_baseurl() . '/display/' . $u[0]['nickname'] . '/' . $item['id'],
-			'source_name'  => $item['author-name'],
-			'source_link'  => $item['author-link'],
-			'source_photo' => $item['author-avatar'],
-			'verb'         => ACTIVITY_TAG,
-			'otype'        => 'item'
-		));
+	// send a notification
+
+	require_once('include/enotify.php');
+	notification(array(
+		'type'         => NOTIFY_TAGSELF,
+		'notify_flags' => $u[0]['notify-flags'],
+		'language'     => $u[0]['language'],
+		'to_name'      => $u[0]['username'],
+		'to_email'     => $u[0]['email'],
+		'item'         => $item,
+		'link'         => $a->get_baseurl() . '/display/' . $u[0]['nickname'] . '/' . $item['id'],
+		'source_name'  => $item['author-name'],
+		'source_link'  => $item['author-link'],
+		'source_photo' => $item['author-avatar'],
+		'verb'         => ACTIVITY_TAG,
+		'otype'        => 'item'
+	));
+	if(! $community_page)
 		return;
-	}
-	else {
-		// prevent delivery looping - only proceed
-		// if the message originated elsewhere and is a top-level post
 
-		if(($item['wall']) || ($item['origin']) || ($item['id'] != $item['parent']))
-			return;
+	// tgroup delivery - setup a second delivery chain
+	// prevent delivery looping - only proceed
+	// if the message originated elsewhere and is a top-level post
 
-		// now change this copy of the post to a forum head message and deliver to all the tgroup members
+	if(($item['wall']) || ($item['origin']) || ($item['id'] != $item['parent']))
+		return;
+
+	// now change this copy of the post to a forum head message and deliver to all the tgroup members
 
 
-		q("update item set wall = 1, origin = 1, forum_mode = 1 where id = %d limit 1",
-			intval($item_id)
-		);
+	q("update item set wall = 1, origin = 1, forum_mode = 1 where id = %d limit 1",
+		intval($item_id)
+	);
 
-		proc_run('php','include/notifier.php','tgroup',$item_id);			
-	}
+	proc_run('php','include/notifier.php','tgroup',$item_id);			
+
 }
 
 
@@ -1065,7 +1067,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	$final_dfrn_id = '';
 
 
-	if(($contact['duplex'] && strlen($contact['pubkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
+	if(($contact['duplex'] && strlen($contact['pubkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY && strlen($contact['pubkey']))) {
 		openssl_public_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['pubkey']);
 		openssl_public_decrypt($challenge,$postvars['challenge'],$contact['pubkey']);
 	}
@@ -1108,7 +1110,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 
 
 		if($dfrn_version >= 2.1) {	
-			if(($contact['duplex'] && strlen($contact['pubkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
+			if(($contact['duplex'] && strlen($contact['pubkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY && strlen($contact['pubkey']))) {
 				openssl_public_encrypt($key,$postvars['key'],$contact['pubkey']);
 			}
 			else {
