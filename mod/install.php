@@ -186,8 +186,8 @@ function install_content(&$a) {
 
 			check_keys($checks);
 			
-			if(x($_POST,'phppath'))
-				$phpath = notags(trim($_POST['phppath']));
+			if(x($_POST,'phpath'))
+				$phpath = notags(trim($_POST['phpath']));
 
 			check_php($phpath, $checks);
 
@@ -221,7 +221,7 @@ function install_content(&$a) {
 			$dbuser = notags(trim($_POST['dbuser']));
 			$dbpass = notags(trim($_POST['dbpass']));
 			$dbdata = notags(trim($_POST['dbdata']));
-			$phpath = notags(trim($_POST['phppath']));
+			$phpath = notags(trim($_POST['phpath']));
 			
 
 			$tpl = get_markup_template('install_db.tpl');
@@ -259,7 +259,7 @@ function install_content(&$a) {
 			$dbuser = notags(trim($_POST['dbuser']));
 			$dbpass = notags(trim($_POST['dbpass']));
 			$dbdata = notags(trim($_POST['dbdata']));
-			$phpath = notags(trim($_POST['phppath']));
+			$phpath = notags(trim($_POST['phpath']));
 			
 			$adminmail = notags(trim($_POST['adminmail']));
 			$timezone = ((x($_POST,'timezone')) ? ($_POST['timezone']) : 'America/Los_Angeles');
@@ -323,7 +323,7 @@ function check_php(&$phpath, &$checks) {
 		$help .= t('Could not find a command line version of PHP in the web server PATH.'). EOL;
 		$tpl = get_markup_template('field_input.tpl');
 		$help .= replace_macros($tpl, array(
-			'$field' => array('phppath', t('PHP executable path'), $phpath, t('Enter full path to php executable')),
+			'$field' => array('phpath', t('PHP executable path'), $phpath, t('Enter full path to php executable')),
 		));
 		$phpath="";
 	}
