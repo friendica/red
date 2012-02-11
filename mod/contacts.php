@@ -356,20 +356,29 @@ function contacts_content(&$a) {
 
 	}
 
+	$blocked = false;
+
 	$_SESSION['return_url'] = $a->query_string;
 
 	if(($a->argc == 2) && ($a->argv[1] === 'all'))
 		$sql_extra = '';
-	else
-		$sql_extra = " AND `blocked` = 0 ";
-
+	else {
+		if(($a->argc == 2) && ($a->argv[1] === 'blocked')) {
+			$sql_extra = " AND `blocked` = 1 ";
+			$blocked = true;
+		}
+		else
+			$sql_extra = " AND `blocked` = 0 ";
+	}
 	$search = ((x($_GET,'search')) ? notags(trim($_GET['search'])) : '');
 
 	$tpl = get_markup_template("contacts-top.tpl");
 	$o .= replace_macros($tpl,array(
 		'$header' => t('Contacts'),
-		'$hide_url' => ((strlen($sql_extra)) ? 'contacts/all' : 'contacts' ),
-		'$hide_text' => ((strlen($sql_extra)) ? t('Show Blocked Connections') : t('Hide Blocked Connections')),
+		'$hide_url' => (($blocked) ? 'contacts' : 'contacts/blocked'),
+		'$hide_text' => (($blocked) ? t('Show Unblocked Contacts') : t('Show Blocked Contacts')),
+		'$all_url' => 'contacts/all',
+		'$all_text' => t('Show All Contacts'),
 		'$search' => $search,
 		'$desc' => t('Search your contacts'),
 		'$finding' => (strlen($search) ? '<h4>' . t('Finding: ') . "'" . $search . "'" . '</h4>' : ""),
