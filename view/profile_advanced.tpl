@@ -40,6 +40,13 @@
 </dl>
 {{ endif }}
 
+{{ if $profile.pub_keywords }}
+<dl id="aprofile-tags" class="aprofile">
+ <dt>$profile.pub_keywords.0</dt>
+ <dd>$profile.pub_keywords.1</dd>
+</dl>
+{{ endif }}
+
 {{ if $profile.homepage }}
 <dl id="aprofile-homepage" class="aprofile">
  <dt>$profile.homepage.0</dt>
