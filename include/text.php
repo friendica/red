@@ -538,8 +538,10 @@ function contact_block() {
 	$a = get_app();
 
 	$shown = get_pconfig($a->profile['uid'],'system','display_friend_count');
-	if(! $shown)
+	if($shown === false)
 		$shown = 24;
+	if($shown == 0)
+		return;
 
 	if((! is_array($a->profile)) || ($a->profile['hide-friends']))
 		return $o;
