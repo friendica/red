@@ -138,6 +138,8 @@ function bbcode($Text,$preserve_nl = false) {
 	$Text = preg_replace("(\[color=(.*?)\](.*?)\[\/color\])ism","<span style=\"color: $1;\">$2</span>",$Text);
 
 	// Check for sized text
+        // [size=50] --> font-size: 50px (with the unit).
+	$Text = preg_replace("(\[size=(\d*?)\](.*?)\[\/size\])ism","<span style=\"font-size: $1px;\">$2</span>",$Text);
 	$Text = preg_replace("(\[size=(.*?)\](.*?)\[\/size\])ism","<span style=\"font-size: $1;\">$2</span>",$Text);
 
 	// Check for list text
