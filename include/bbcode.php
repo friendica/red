@@ -24,12 +24,39 @@ function tryoembed($match){
 	
 }
 
+// [noparse][i]italic[/i][/noparse] turns into 
+// [noparse][ i ]italic[ /i ][/noparse], 
+// to hide them from parser.
 
+function bb_spacefy($st) {
+  $whole_match = $st[0];
+  $captured = $st[1];
+  $spacefied = preg_replace("/\[(.*?)\]/", "[ $1 ]", $captured);
+  $new_str = str_replace($captured, $spacefied, $whole_match);
+  return $new_str;
+}
+
+// The previously spacefied [noparse][ i ]italic[ /i ][/noparse], 
+// now turns back and the [noparse] tags are trimed
+// returning [i]italic[/i]
+
+function bb_unspacefy_and_trim($st) {
+  $whole_match = $st[0];
+  $captured = $st[1];
+  $unspacefied = preg_replace("/\[ (.*?)\ ]/", "[$1]", $captured);
+  return $unspacefied;
+}
 
 	// BBcode 2 HTML was written by WAY2WEB.net
 	// extended to work with Mistpark/Friendica - Mike Macgirvin
 
 function bbcode($Text,$preserve_nl = false) {
+
+	// Hide all [noparse] contained bbtags spacefying them
+
+	$Text = preg_replace_callback("/\[noparse\](.*?)\[\/noparse\]/ism", 'bb_spacefy',$Text);
+	$Text = preg_replace_callback("/\[nobb\](.*?)\[\/nobb\]/ism", 'bb_spacefy',$Text);
+	$Text = preg_replace_callback("/\[pre\](.*?)\[\/pre\]/ism", 'bb_spacefy',$Text);
 
 
 	// Extract a single private image which uses data url's since preg has issues with 
@@ -226,6 +253,13 @@ upper-alpha;">$2</ul>' ,$Text);
 		$Text = preg_replace("/\[event\-location\](.*?)\[\/event\-location\]/ism",'',$Text);
 		$Text = preg_replace("/\[event\-adjust\](.*?)\[\/event\-adjust\]/ism",'',$Text);
 	}
+
+	// Unhide all [noparse] contained bbtags unspacefying them 
+	// and triming the [noparse] tag.
+
+	$Text = preg_replace_callback("/\[noparse\](.*?)\[\/noparse\]/ism", 'bb_unspacefy_and_trim',$Text);
+	$Text = preg_replace_callback("/\[nobb\](.*?)\[\/nobb\]/ism", 'bb_unspacefy_and_trim',$Text);
+	$Text = preg_replace_callback("/\[pre\](.*?)\[\/pre\]/ism", 'bb_unspacefy_and_trim',$Text);
 
 	// fix any escaped ampersands that may have been converted into links
 	$Text = preg_replace("/\<(.*?)(src|href)=(.*?)\&amp\;(.*?)\>/ism",'<$1$2=$3&$4>',$Text);
