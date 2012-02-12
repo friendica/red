@@ -100,6 +100,14 @@ function contacts_post(&$a) {
 		info( t('Contact updated.') . EOL);
 	else
 		notice( t('Failed to update contact record.') . EOL);
+
+	$r = q("select * from contact where id = %d and uid = %d limit 1",
+		intval($contact_id),
+		intval(local_user())
+	);
+	if($r && count($r))
+		$a->data['contact'] = $r[0];
+
 	return;
 
 }
