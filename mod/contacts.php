@@ -42,6 +42,7 @@ function contacts_init(&$a) {
 
 	$a->page['aside'] .= findpeople_widget();
 
+	$a->page['aside'] .= networks_widget('contacts',$_GET['nets']);
 }
 
 function contacts_post(&$a) {
@@ -371,10 +372,11 @@ function contacts_content(&$a) {
 			$sql_extra = " AND `blocked` = 0 ";
 	}
 	$search = ((x($_GET,'search')) ? notags(trim($_GET['search'])) : '');
+	$nets = ((x($_GET,'nets')) ? notags(trim($_GET['nets'])) : '');
 
 	$tpl = get_markup_template("contacts-top.tpl");
 	$o .= replace_macros($tpl,array(
-		'$header' => t('Contacts'),
+		'$header' => t('Contacts') . (($nets) ? ' - ' . network_to_name($nets) : ''),
 		'$hide_url' => (($blocked) ? 'contacts' : 'contacts/blocked'),
 		'$hide_text' => (($blocked) ? t('Show Unblocked Contacts') : t('Show Blocked Contacts')),
 		'$all_url' => 'contacts/all',
@@ -392,6 +394,9 @@ function contacts_content(&$a) {
 		$search = dbesc($search.'*');
 	$sql_extra .= ((strlen($search)) ? " AND MATCH `name` AGAINST ('$search' IN BOOLEAN MODE) " : "");
 
+	if($nets)
+		$sql_extra .= sprintf(" AND network = '%s' ", dbesc($nets));
+ 
 	$sql_extra2 = ((($sort_type > 0) && ($sort_type <= CONTACT_IS_FRIEND)) ? sprintf(" AND `rel` = %d ",intval($sort_type)) : ''); 
 
 	
