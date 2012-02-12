@@ -115,13 +115,15 @@ function bbcode($Text,$preserve_nl = false) {
 
 	// Check for list text
 
-	if(stristr($Text,'[/list]'))
+	if(stristr($Text,'[/(list|ul|ol)]'))
 		$Text = str_replace("[*]", "<li>", $Text);
 
 	if(stristr($Text,'[/list]'))
 		$Text = str_replace("[*]", "<li>", $Text);
 
 	$Text = preg_replace("/\[list\](.*?)\[\/list\]/ism", '<ul class="listbullet" style="list-style-type: circle;">$1</ul>' ,$Text);
+	$Text = preg_replace("/\[ul\](.*?)\[\/ul\]/ism", '<ul class="listbullet" style="list-style-type: circle;">$1</ul>' 
+,$Text);
 	$Text = preg_replace("/\[list=\](.*?)\[\/list\]/ism", '<ul class="listnone" style="list-style-type: none;">$1</ul>' ,$Text);
 	$Text = preg_replace("/\[list=1\](.*?)\[\/list\]/ism", '<ul class="listdecimal" style="list-style-type: decimal;">$1</ul>' ,$Text);
 	$Text = preg_replace("/\[list=((?-i)i)\](.*?)\[\/list\]/ism",'<ul class="listlowerroman" style="list-style-type: 
