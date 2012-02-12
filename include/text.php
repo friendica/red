@@ -678,7 +678,7 @@ function smilies($s) {
 	$a = get_app();
 
 	$s = str_replace(
-	array( '&lt;3', '&lt;/3', '&lt;\\3', ':-)', ':)', ';-)', ':-(', ':(', ':-P', ':P', ':-"', ':-x', ':-X', ':-D', '8-|', '8-O', '\\o/', 'o.O', 'O.o', '\\.../', '\\ooo/', 
+	array( '&lt;3', '&lt;/3', '&lt;\\3', ':-)', ':)', ';-)', ':-(', ':(', ':-P', ':P', ':-"', ':-&quot;', ':-x', ':-X', ':-D', '8-|', '8-O', '\\o/', 'o.O', 'O.o', '\\.../', '\\ooo/', 
  ':beer', ':homebrew', ':coffee', 
 		'~friendika', '~friendica', 'Diaspora*' ),
 	array(
@@ -692,6 +692,7 @@ function smilies($s) {
 		'<img src="' . $a->get_baseurl() . '/images/smiley-frown.gif" alt=":(" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-tongue-out.gif" alt=":-P" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-tongue-out.gif" alt=":P" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-\"" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-\"" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-x" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-X" />',
