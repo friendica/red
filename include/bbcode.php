@@ -142,6 +142,9 @@ function bbcode($Text,$preserve_nl = false) {
 	$Text = preg_replace("(\[size=(\d*?)\](.*?)\[\/size\])ism","<span style=\"font-size: $1px;\">$2</span>",$Text);
 	$Text = preg_replace("(\[size=(.*?)\](.*?)\[\/size\])ism","<span style=\"font-size: $1;\">$2</span>",$Text);
 
+	// Check for centered text
+	$Text = preg_replace("(\[center\](.*?)\[\/center\])ism","<div style=\"text-align:center;\">$1</div>",$Text);
+
 	// Check for list text
 
 	if(stristr($Text,'[/(list|ul|ol)]'))
