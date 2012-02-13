@@ -118,7 +118,7 @@ function enableOnUser(){
 }
 
 </script>
-<script type="text/javascript" src="js/ajaxupload.js" ></script>
+<script type="text/javascript" src="$baseurl/js/ajaxupload.js" ></script>
 <script>
 	var ispublic = '$ispublic';
 	var addtitle = '$addtitle';
