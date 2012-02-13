@@ -172,15 +172,15 @@ h4 {
   font-size: 1.1em;
 }
 a, a:link {
-  color: #005c94;
+  color: #009100;
   text-decoration: none;
 }
 a:visited {
-  color: #005c94;
+  color: #009100;
   text-decoration: none;
 }
 a:hover {
-  color: #005c94;
+  color: #009100;
   text-decoration: underline;
 }
 .left {
@@ -196,12 +196,12 @@ a:hover {
   clear: both;
 }
 .fakelink {
-  color: #005c94;
+  color: #009100;
   text-decoration: none;
   cursor: pointer;
 }
 .fakelink:hover {
-  color: #005c94;
+  color: #009100;
   text-decoration: underline;
 }
 code {
@@ -297,7 +297,7 @@ nav {
   left: 0px;
   top: 0px;
   padding: 0px;
-  background-color: #0e232e;
+  background-color: #009100;
   color: #ffffff;
   z-index: 100;
   -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
@@ -352,7 +352,7 @@ nav .nav-menu {
   padding: 5px;
   margin: 3px 15px 0px;
   font-size: 14px;
-  border-bottom: 3px solid #0e232e;
+  border-bottom: 3px solid #009100;
 }
 nav .nav-menu.selected {
   border-bottom: 3px solid #9eabb0;
@@ -360,7 +360,7 @@ nav .nav-menu.selected {
 nav .nav-notify {
   display: none;
   position: absolute;
-  background-color: #19aeff;
+  background-color: #dc0000;
   -moz-border-radius: 5px 5px 5px 5px;
   -webkit-border-radius: 5px 5px 5px 5px;
   border-radius: 5px 5px 5px 5px;
@@ -417,7 +417,7 @@ ul.menu-popup a {
   text-decoration: none;
 }
 ul.menu-popup a:hover {
-  background-color: #bdcdd4;
+  background-color: #ccff42;
 }
 ul.menu-popup .menu-sep {
   border-top: 1px solid #9eabb0;
@@ -461,7 +461,7 @@ ul.menu-popup .empty {
   margin-right: 4px;
 }
 .acpopupitem.selected {
-  background-color: #bdcdd4;
+  background-color: #ccff42;
 }
 #nav-notifications-menu {
   width: 400px;
@@ -527,14 +527,14 @@ aside #dfrn-request-link {
   -webkit-border-radius: 5px 5px 5px 5px;
   border-radius: 5px 5px 5px 5px;
   color: #ffffff;
-  background: #005c94 url('../../../images/connect-bg.png') no-repeat left center;
+  background: #009100 url('../../../images/connect-bg.png') no-repeat left center;
   font-weight: bold;
   text-transform: uppercase;
   padding: 4px 2px 2px 35px;
 }
 aside #dfrn-request-link:hover {
   text-decoration: none;
-  background-color: #19aeff;
+  background-color: #ccff42;
 }
 aside #profiles-menu {
   width: 20em;
@@ -976,7 +976,7 @@ section {
   height: 40px;
   overflow: none;
   width: 800px;
-  background-color: #0e232e;
+  background-color: #009100;
   border-bottom: 2px solid #9eabb0;
 }
 #jot #jot-tools li {
@@ -988,7 +988,7 @@ section {
 }
 #jot #jot-tools li a {
   display: block;
-  color: #cccccc;
+  color: #2d2d2d;
   width: 100%;
   height: 40px;
   text-align: center;
@@ -996,7 +996,7 @@ section {
   overflow: hidden;
 }
 #jot #jot-tools li:hover {
-  background-color: #364e59;
+  background-color: #9ade00;
   border-bottom: 2px solid #bdcdd4;
 }
 #jot #jot-tools li.perms {
@@ -1031,7 +1031,7 @@ section {
   line-height: 40px;
 }
 #jot #jot-tools li.submit input:hover {
-  background-color: #bdcdd4;
+  background-color: #ccff42;
   color: #666666;
 }
 #jot #jot-tools li.loading {
@@ -1197,7 +1197,7 @@ ul.tabs li {
   margin-left: 20px;
 }
 ul.tabs li .active {
-  border-bottom: 1px solid #005c94;
+  border-bottom: 1px solid #009100;
 }
 /**
  * Form fields
