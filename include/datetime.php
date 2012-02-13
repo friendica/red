@@ -260,10 +260,11 @@ function relative_date($posted_date) {
 	);
     
 	foreach ($a as $secs => $str) {
-	$d = $etime / $secs;
-	if ($d >= 1) {
-		$r = round($d);
-		return $r . ' ' . (($r == 1) ? $str[0] : $str[1]) . t(' ago');
+		$d = $etime / $secs;
+		if ($d >= 1) {
+			$r = round($d);
+			// translators - e.g. 22 hours ago, 1 minute ago
+			return sprintf( t('%1$d %2$s ago'),$r, (($r == 1) ? $str[0] : $str[1]));
         }
     }
 }}
