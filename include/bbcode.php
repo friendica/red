@@ -146,12 +146,8 @@ function bbcode($Text,$preserve_nl = false) {
 	$Text = preg_replace("(\[center\](.*?)\[\/center\])ism","<div style=\"text-align:center;\">$1</div>",$Text);
 
 	// Check for list text
-
-	if(stristr($Text,'[/(list|ul|ol)]'))
-		$Text = str_replace("[*]", "<li>", $Text);
-
-	if(stristr($Text,'[/list]'))
-		$Text = str_replace("[*]", "<li>", $Text);
+	$Text = str_replace("[*]", "<li>", $Text);
+	$Text = preg_replace("/\[li\](.*?)\[\/li\]/ism", '<li>$1</li>' ,$Text);
 
 	$Text = preg_replace("/\[list\](.*?)\[\/list\]/ism", '<ul class="listbullet" style="list-style-type: circle;">$1</ul>' ,$Text);
 	$Text = preg_replace("/\[ul\](.*?)\[\/ul\]/ism", '<ul class="listbullet" style="list-style-type: circle;">$1</ul>' 
@@ -168,7 +164,6 @@ upper-roman;">$2</ul>' ,$Text);
 lower-alpha;">$2</ul>' ,$Text);
 	$Text = preg_replace("/\[list=((?-i)A)\](.*?)\[\/list\]/ism", '<ul class="listupperalpha" style="list-style-type: 
 upper-alpha;">$2</ul>' ,$Text);
-	$Text = preg_replace("/\[li\](.*?)\[\/li\]/sm", '<li>$1</li>' ,$Text);
 
 	$Text = preg_replace("/\[td\](.*?)\[\/td\]/sm", '<td>$1</td>' ,$Text);
 	$Text = preg_replace("/\[tr\](.*?)\[\/tr\]/sm", '<tr>$1</tr>' ,$Text);
