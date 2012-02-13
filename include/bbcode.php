@@ -195,9 +195,11 @@ upper-alpha;">$2</ul>' ,$Text);
 	$Text = preg_replace("/\[quote\](.*?)\[\/quote\]/ism","$QuoteLayout", $Text);
 
 	// Check for [quote=Author] text
-        $t_wrote = t("wrote");
+
+	$t_wrote = t('$1 wrote:');
+
 	$Text = preg_replace("/\[quote=[\"\']*(.*?)[\"\']*\](.*?)\[\/quote\]/ism", 
-                             "<blockquote><strong>$1 wrote:</strong> $2</blockquote>", 
+                             "<blockquote><strong>" . $t_wrote . "</strong> $2</blockquote>", 
                              $Text);         
 
 	// [img=widthxheight]image source[/img]
