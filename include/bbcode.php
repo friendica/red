@@ -173,6 +173,7 @@ upper-alpha;">$2</ul>' ,$Text);
 	$Text = preg_replace("/\[table border=1\](.*?)\[\/table\]/sm", '<table border="1" >$1</table>' ,$Text);
 	$Text = preg_replace("/\[table border=0\](.*?)\[\/table\]/sm", '<table border="0" >$1</table>' ,$Text);
 
+	$Text = str_replace('[hr]','<hr />', $Text);
 	
 
 	// Check for font change text
