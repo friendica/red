@@ -197,7 +197,13 @@ upper-alpha;">$2</ul>' ,$Text);
 	$QuoteLayout = '<blockquote>$1</blockquote>';                     
 	// Check for [quote] text
 	$Text = preg_replace("/\[quote\](.*?)\[\/quote\]/ism","$QuoteLayout", $Text);
-         
+
+	// Check for [quote=Author] text
+        $t_wrote = t("wrote");
+	$Text = preg_replace("/\[quote=[\"\']*(.*?)[\"\']*\](.*?)\[\/quote\]/ism", 
+                             "<blockquote><strong>$1 wrote:</strong> $2</blockquote>", 
+                             $Text);         
+
 	// [img=widthxheight]image source[/img]
 	$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/ism", '<img src="$3" style="height: $2px; width: $1px;" >', $Text);
 
