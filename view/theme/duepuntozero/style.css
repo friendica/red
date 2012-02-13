@@ -824,6 +824,7 @@ input#dfrn-url {
 .contact-entry-name {
 	float: left;
 	margin-left: 0px;
+	margin-right: 10px;
 	width: 120px;
 	overflow: hidden;
 }

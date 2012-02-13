@@ -35,6 +35,7 @@ function editpost_content(&$a) {
 	
 	$a->page['htmlhead'] .= replace_macros($tpl, array(
 		'$baseurl' => $a->get_baseurl(),
+		'$editselect' =>  (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 		'$ispublic' => '&nbsp;', // t('Visible to <strong>everybody</strong>'),
 		'$geotag' => $geotag,
 		'$nickname' => $a->user['nickname']
@@ -108,11 +109,14 @@ function editpost_content(&$a) {
 		'$emailcc' => t('CC: email addresses'),
 		'$public' => t('Public post'),
 		'$jotnets' => $jotnets,
+		'$title' => $itm[0]['title'],
+		'$placeholdertitle' => t('Set title'),
 		'$emtitle' => t('Example: bob@example.com, mary@example.com'),
 		'$lockstate' => $lockstate,
 		'$acl' => '', // populate_acl((($group) ? $group_acl : $a->user), $celeb),
 		'$bang' => (($group) ? '!' : ''),
 		'$profile_uid' => $_SESSION['uid'],
+		'$preview' => t('Preview'),
 		'$jotplugins' => $jotplugins,
 	));
 

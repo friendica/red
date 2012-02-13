@@ -42,6 +42,7 @@ function contacts_init(&$a) {
 
 	$a->page['aside'] .= findpeople_widget();
 
+	$a->page['aside'] .= networks_widget('contacts',$_GET['nets']);
 }
 
 function contacts_post(&$a) {
@@ -99,6 +100,14 @@ function contacts_post(&$a) {
 		info( t('Contact updated.') . EOL);
 	else
 		notice( t('Failed to update contact record.') . EOL);
+
+	$r = q("select * from contact where id = %d and uid = %d limit 1",
+		intval($contact_id),
+		intval(local_user())
+	);
+	if($r && count($r))
+		$a->data['contact'] = $r[0];
+
 	return;
 
 }
@@ -111,7 +120,6 @@ function contacts_content(&$a) {
 	$o = '';
 	nav_set_selected('contacts');
 
-	$_SESSION['return_url'] = $a->get_baseurl() . '/' . $a->cmd;
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
@@ -211,7 +219,10 @@ function contacts_content(&$a) {
 
 			contact_remove($orig_record[0]['id']);
 			info( t('Contact has been removed.') . EOL );
-			goaway($a->get_baseurl() . '/contacts');
+			if(x($_SESSION,'return_url'))
+				goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
+			else
+				goaway($a->get_baseurl() . '/contacts');
 			return; // NOTREACHED
 		}
 	}
@@ -354,19 +365,30 @@ function contacts_content(&$a) {
 
 	}
 
+	$blocked = false;
+
+	$_SESSION['return_url'] = $a->query_string;
 
 	if(($a->argc == 2) && ($a->argv[1] === 'all'))
 		$sql_extra = '';
-	else
-		$sql_extra = " AND `blocked` = 0 ";
-
+	else {
+		if(($a->argc == 2) && ($a->argv[1] === 'blocked')) {
+			$sql_extra = " AND `blocked` = 1 ";
+			$blocked = true;
+		}
+		else
+			$sql_extra = " AND `blocked` = 0 ";
+	}
 	$search = ((x($_GET,'search')) ? notags(trim($_GET['search'])) : '');
+	$nets = ((x($_GET,'nets')) ? notags(trim($_GET['nets'])) : '');
 
 	$tpl = get_markup_template("contacts-top.tpl");
 	$o .= replace_macros($tpl,array(
-		'$header' => t('Contacts'),
-		'$hide_url' => ((strlen($sql_extra)) ? 'contacts/all' : 'contacts' ),
-		'$hide_text' => ((strlen($sql_extra)) ? t('Show Blocked Connections') : t('Hide Blocked Connections')),
+		'$header' => t('Contacts') . (($nets) ? ' - ' . network_to_name($nets) : ''),
+		'$hide_url' => (($blocked) ? 'contacts' : 'contacts/blocked'),
+		'$hide_text' => (($blocked) ? t('Show Unblocked Contacts') : t('Show Blocked Contacts')),
+		'$all_url' => 'contacts/all',
+		'$all_text' => t('Show All Contacts'),
 		'$search' => $search,
 		'$desc' => t('Search your contacts'),
 		'$finding' => (strlen($search) ? '<h4>' . t('Finding: ') . "'" . $search . "'" . '</h4>' : ""),
@@ -380,6 +402,9 @@ function contacts_content(&$a) {
 		$search = dbesc($search.'*');
 	$sql_extra .= ((strlen($search)) ? " AND MATCH `name` AGAINST ('$search' IN BOOLEAN MODE) " : "");
 
+	if($nets)
+		$sql_extra .= sprintf(" AND network = '%s' ", dbesc($nets));
+ 
 	$sql_extra2 = ((($sort_type > 0) && ($sort_type <= CONTACT_IS_FRIEND)) ? sprintf(" AND `rel` = %d ",intval($sort_type)) : ''); 
 
 	

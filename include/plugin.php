@@ -56,25 +56,29 @@ function reload_plugins() {
 		if(count($parr)) {
 			foreach($parr as $pl) {
 				$pl = trim($pl);
-				
-				$t = filemtime('addon/' . $pl . '/' . $pl . '.php');
-				foreach($installed as $i) {
-					if(($i['name'] == $pl) && ($i['timestamp'] != $t)) {	
-						logger('Reloading plugin: ' . $i['name']);
-						@include_once('addon/' . $pl . '/' . $pl . '.php');
 
-						if(function_exists($pl . '_uninstall')) {
-							$func = $pl . '_uninstall';
-							$func();
+				$fname = 'addon/' . $pl . '/' . $pl . '.php';
+				
+				if(file_exists($fname)) {
+					$t = @filemtime($fname);
+					foreach($installed as $i) {
+						if(($i['name'] == $pl) && ($i['timestamp'] != $t)) {	
+							logger('Reloading plugin: ' . $i['name']);
+							@include_once($fname);
+
+							if(function_exists($pl . '_uninstall')) {
+								$func = $pl . '_uninstall';
+								$func();
+							}
+							if(function_exists($pl . '_install')) {
+								$func = $pl . '_install';
+								$func();
+							}
+							q("UPDATE `addon` SET `timestamp` = %d WHERE `id` = %d LIMIT 1",
+								intval($t),
+								intval($i['id'])
+							);
 						}
-						if(function_exists($pl . '_install')) {
-							$func = $pl . '_install';
-							$func();
-						}
-						q("UPDATE `addon` SET `timestamp` = %d WHERE `id` = %d LIMIT 1",
-							intval($t),
-							intval($i['id'])
-						);
 					}
 				}
 			}

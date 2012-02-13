@@ -54,6 +54,24 @@ function notification($params) {
 		$itemlink =  $params['link'];
 	}
 
+	if($params['type'] == NOTIFY_TAGSELF) {
+		$preamble = $subject =	sprintf( t('%s tagged you at %s') , $params['source_name'], $sitename);
+
+		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
+		$tsitelink = sprintf( $sitelink, $siteurl );
+		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '">' . $sitename . '</a>');
+		$itemlink =  $params['link'];
+	}
+
+	if($params['type'] == NOTIFY_TAGSHARE) {
+		$preamble = $subject =	sprintf( t('%s tagged your post at %s') , $params['source_name'], $sitename);
+
+		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
+		$tsitelink = sprintf( $sitelink, $siteurl );
+		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '">' . $sitename . '</a>');
+		$itemlink =  $params['link'];
+	}
+
 	if($params['type'] == NOTIFY_INTRO) {
 		$subject = sprintf( t('Introduction received at %s'), $sitename);
 		$preamble = sprintf( t('You\'ve received an introduction from \'%s\' at %s'), $params['source_name'], $sitename); 

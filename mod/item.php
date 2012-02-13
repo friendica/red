@@ -649,7 +649,8 @@ function item_post(&$a) {
 
 
 	if($orig_post) {
-		$r = q("UPDATE `item` SET `body` = '%s', `edited` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+		$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			dbesc($title),
 			dbesc($body),
 			dbesc(datetime_convert()),
 			intval($post_id),

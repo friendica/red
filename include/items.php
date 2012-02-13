@@ -905,7 +905,7 @@ function item_store($arr,$force_parent = false) {
 		);
 	}
 
-	tgroup_deliver($arr['uid'],$current_post);
+	tag_deliver($arr['uid'],$current_post);
 
 	return $current_post;
 }
@@ -923,21 +923,21 @@ function get_item_contact($item,$contacts) {
 }
 
 
-function tgroup_deliver($uid,$item_id) {
+function tag_deliver($uid,$item_id) {
 
-
-	// setup a second delivery chain for forum/community posts if appropriate
+	// look for mention tags and setup a second delivery chain for forum/community posts if appropriate
 
 	$a = get_app();
 
-	$deliver_to_tgroup = false;
+	$mention = false;
 
-	$u = q("select * from user where uid = %d and `page-flags` = %d limit 1",
-		intval($uid),
-		intval(PAGE_COMMUNITY)
+	$u = q("select uid, nickname, language, username, email, `page-flags`, `notify-flags` from user where uid = %d limit 1",
+		intval($uid)
 	);
 	if(! count($u))
 		return;
+
+	$community_page = (($u[0]['page-flags'] == PAGE_COMMUNITY) ? true : false);
 
 	$i = q("select * from item where id = %d and uid = %d limit 1",
 		intval($item_id),
@@ -947,13 +947,6 @@ function tgroup_deliver($uid,$item_id) {
 		return;
 
 	$item = $i[0];
-
-	// prevent delivery looping - only proceed
-	// if the message originated elsewhere and is a top-level post
-
-	if(($item['wall']) || ($item['origin']) || ($item['id'] != $item['parent']))
-		return;
-
 
 	$link = normalise_link($a->get_baseurl() . '/profile/' . $u[0]['nickname']);
 
@@ -966,13 +959,41 @@ function tgroup_deliver($uid,$item_id) {
 	if($cnt) {
 		foreach($matches as $mtch) {
 			if(link_compare($link,$mtch[1]) || link_compare($dlink,$mtch[1])) {
-				$deliver_to_tgroup = true;
-				logger('tgroup_deliver: local group mention found: ' . $mtch[2]);
+				$mention = true;
+				logger('tag_deliver: mention found: ' . $mtch[2]);
 			}
 		}
 	}
 
-	if(! $deliver_to_tgroup)
+	if(! $mention)
+		return;
+
+	// send a notification
+
+	require_once('include/enotify.php');
+	notification(array(
+		'type'         => NOTIFY_TAGSELF,
+		'notify_flags' => $u[0]['notify-flags'],
+		'language'     => $u[0]['language'],
+		'to_name'      => $u[0]['username'],
+		'to_email'     => $u[0]['email'],
+		'item'         => $item,
+		'link'         => $a->get_baseurl() . '/display/' . $u[0]['nickname'] . '/' . $item['id'],
+		'source_name'  => $item['author-name'],
+		'source_link'  => $item['author-link'],
+		'source_photo' => $item['author-avatar'],
+		'verb'         => ACTIVITY_TAG,
+		'otype'        => 'item'
+	));
+
+	if(! $community_page)
+		return;
+
+	// tgroup delivery - setup a second delivery chain
+	// prevent delivery looping - only proceed
+	// if the message originated elsewhere and is a top-level post
+
+	if(($item['wall']) || ($item['origin']) || ($item['id'] != $item['parent']))
 		return;
 
 	// now change this copy of the post to a forum head message and deliver to all the tgroup members
@@ -1047,7 +1068,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	$final_dfrn_id = '';
 
 
-	if(($contact['duplex'] && strlen($contact['pubkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
+	if(($contact['duplex'] && strlen($contact['pubkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY && strlen($contact['pubkey']))) {
 		openssl_public_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['pubkey']);
 		openssl_public_decrypt($challenge,$postvars['challenge'],$contact['pubkey']);
 	}
@@ -1090,7 +1111,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 
 
 		if($dfrn_version >= 2.1) {	
-			if(($contact['duplex'] && strlen($contact['pubkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
+			if(($contact['duplex'] && strlen($contact['pubkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY && strlen($contact['pubkey']))) {
 				openssl_public_encrypt($key,$postvars['key'],$contact['pubkey']);
 			}
 			else {
@@ -1486,7 +1507,8 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 				if(count($r)) {
 					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
-						$r = q("UPDATE `item` SET `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+							dbesc($datarray['title']),
 							dbesc($datarray['body']),
 							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
 							dbesc($item_id),
@@ -1616,7 +1638,8 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 				if(count($r)) {
 					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
-						$r = q("UPDATE `item` SET `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+							dbesc($datarray['title']),
 							dbesc($datarray['body']),
 							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
 							dbesc($item_id),
@@ -2167,7 +2190,8 @@ function local_delivery($importer,$data) {
 
 				if(count($r)) {
 					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
-						$r = q("UPDATE `item` SET `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+							dbesc($datarray['title']),
 							dbesc($datarray['body']),
 							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
 							dbesc($item_id),
@@ -2309,7 +2333,8 @@ function local_delivery($importer,$data) {
 
 			if(count($r)) {
 				if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
-					$r = q("UPDATE `item` SET `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+					$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						dbesc($datarray['title']),
 						dbesc($datarray['body']),
 						dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
 						dbesc($item_id),
@@ -2805,7 +2830,7 @@ function drop_item($id,$interactive = true) {
 
 		// delete the item
 
-		$r = q("UPDATE `item` SET `deleted` = 1, `body` = '', `edited` = '%s', `changed` = '%s' WHERE `id` = %d LIMIT 1",
+		$r = q("UPDATE `item` SET `deleted` = 1, `title` = '', `body` = '', `edited` = '%s', `changed` = '%s' WHERE `id` = %d LIMIT 1",
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
 			intval($item['id'])
@@ -2838,7 +2863,7 @@ function drop_item($id,$interactive = true) {
 		// If it's the parent of a comment thread, kill all the kids
 
 		if($item['uri'] == $item['parent-uri']) {
-			$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s', `body` = '' 
+			$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s', `body` = '' , `title` = ''
 				WHERE `parent-uri` = '%s' AND `uid` = %d ",
 				dbesc(datetime_convert()),
 				dbesc(datetime_convert()),

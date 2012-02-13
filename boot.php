@@ -9,9 +9,9 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1245' );
+define ( 'FRIENDICA_VERSION',      '2.3.1250' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.22'    );
-define ( 'DB_UPDATE_VERSION',      1120      );
+define ( 'DB_UPDATE_VERSION',      1121      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -125,14 +125,15 @@ define ( 'ZCURL_TIMEOUT' , (-1));
  * email notification options
  */
 
-define ( 'NOTIFY_INTRO',   0x0001 );
-define ( 'NOTIFY_CONFIRM', 0x0002 );
-define ( 'NOTIFY_WALL',    0x0004 );
-define ( 'NOTIFY_COMMENT', 0x0008 );
-define ( 'NOTIFY_MAIL',    0x0010 );
-define ( 'NOTIFY_SUGGEST', 0x0020 );
-define ( 'NOTIFY_PROFILE', 0x0040 );
-
+define ( 'NOTIFY_INTRO',    0x0001 );
+define ( 'NOTIFY_CONFIRM',  0x0002 );
+define ( 'NOTIFY_WALL',     0x0004 );
+define ( 'NOTIFY_COMMENT',  0x0008 );
+define ( 'NOTIFY_MAIL',     0x0010 );
+define ( 'NOTIFY_SUGGEST',  0x0020 );
+define ( 'NOTIFY_PROFILE',  0x0040 );
+define ( 'NOTIFY_TAGSELF',  0x0080 );
+define ( 'NOTIFY_TAGSHARE', 0x0100 );
 
 /**
  * various namespaces we may need to parse
@@ -818,7 +819,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 	} 
 
 	$r = null;
-
+                          
 	if($profile) {
 		$profile_int = intval($profile);
 		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `contact`.`avatar-date` AS picdate, `user`.* FROM `profile` 
@@ -828,7 +829,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 			intval($profile_int)
 		);
 	}
-	if(! count($r)) {	
+	if((! $r) && (!  count($r))) {	
 		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `contact`.`avatar-date` AS picdate, `user`.* FROM `profile` 
 			left join `contact` on `contact`.`uid` = `profile`.`uid` LEFT JOIN `user` ON `profile`.`uid` = `user`.`uid`
 			WHERE `user`.`nickname` = '%s' AND `profile`.`is-default` = 1 and `contact`.`self` = 1 LIMIT 1",
@@ -840,6 +841,16 @@ function profile_load(&$a, $nickname, $profile = 0) {
 		notice( t('Requested profile is not available.') . EOL );
 		$a->error = 404;
 		return;
+	}
+	
+	// fetch user tags if this isn't the default profile
+
+	if(! $r[0]['is-default']) {
+		$x = q("select `pub_keywords` from `profile` where uid = %d and `is-default` = 1 limit 1",
+			intval($profile_uid)
+		);
+		if($x && count($x))
+			$r[0]['pub_keywords'] = $x[0]['pub_keywords'];
 	}
 
 	$a->profile = $r[0];

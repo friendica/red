@@ -14,5 +14,6 @@ $finding
 
 
 <div id="contacts-main" >
-<a href="$hide_url" id="contacts-show-hide-link">$hide_text</a>
+<a href="$hide_url" id="contacts-show-hide-link">$hide_text</a><br />
+<a href="$all_url" id="contacts-show-all-link">$all_text</a><br />
 </div>

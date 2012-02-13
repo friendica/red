@@ -428,8 +428,10 @@ if(! function_exists('logger')) {
 function logger($msg,$level = 0) {
 	// turn off logger in install mode
 	global $a;
-	if ($a->module == 'install') return;
-	
+	global $db;
+
+	if(($a->module == 'install') || (! ($db && $db->connected))) return;
+
 	$debugging = get_config('system','debugging');
 	$loglevel  = intval(get_config('system','loglevel'));
 	$logfile   = get_config('system','logfile');
@@ -538,8 +540,10 @@ function contact_block() {
 	$a = get_app();
 
 	$shown = get_pconfig($a->profile['uid'],'system','display_friend_count');
-	if(! $shown)
+	if($shown === false)
 		$shown = 24;
+	if($shown == 0)
+		return;
 
 	if((! is_array($a->profile)) || ($a->profile['hide-friends']))
 		return $o;
@@ -678,9 +682,9 @@ function smilies($s) {
 	$a = get_app();
 
 	$s = str_replace(
-	array( '&lt;3', '&lt;/3', '&lt;\\3', ':-)', ':)', ';-)', ':-(', ':(', ':-P', ':P', ':-"', ':-x', ':-X', ':-D', '8-|', '8-O', '\\o/', 'o.O', 'O.o', '\\.../', '\\ooo/', 
+                         array( '&lt;3', '&lt;/3', '&lt;\\3', ':-)', ':)', ';-)', ';)', ':-(', ':(', ':-P', ':P', ':-"', ':-&quot;', ':-x', ':-X', ':-D', ':D', '8-|', '8-O', ':-O', '\\o/', 'o.O', 'O.o', '\\.../', '\\ooo/',
  ':beer', ':homebrew', ':coffee', 
-		'~friendika', '~friendica', 'Diaspora*' ),
+               '~friendika', '~friendica', 'Diaspora*' ),
 	array(
 		'<img src="' . $a->get_baseurl() . '/images/smiley-heart.gif" alt="<3" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-brokenheart.gif" alt="</3" />',
@@ -688,21 +692,26 @@ function smilies($s) {
 		'<img src="' . $a->get_baseurl() . '/images/smiley-smile.gif" alt=":-)" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-smile.gif" alt=":)" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-wink.gif" alt=";-)" />',
+                '<img src="' . $a->get_baseurl() . '/images/smiley-wink.gif" alt=";)"/>',                
 		'<img src="' . $a->get_baseurl() . '/images/smiley-frown.gif" alt=":-(" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-frown.gif" alt=":(" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-tongue-out.gif" alt=":-P" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-tongue-out.gif" alt=":P" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-\"" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-\"" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-x" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-X" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-laughing.gif" alt=":-D" />',
+                '<img src="' . $a->get_baseurl() . '/images/smiley-laughing.gif" alt=":D"/>',                
 		'<img src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-|" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-O" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt=":-O" />',                
 		'<img src="' . $a->get_baseurl() . '/images/smiley-thumbsup.gif" alt="\\o/" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="o.O" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="O.o" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-shaka.gif" alt="\\.../" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-shaka.gif" alt="\\ooo/" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-shaka.gif" alt="\\ooo/" />',                
+                
 		'<img src="' . $a->get_baseurl() . '/images/beer_mug.gif" alt=":beer" />',
 		'<img src="' . $a->get_baseurl() . '/images/beer_mug.gif" alt=":homebrew" />',
 		'<img src="' . $a->get_baseurl() . '/images/coffee.gif" alt=":coffee" />',
