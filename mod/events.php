@@ -241,10 +241,8 @@ function events_content(&$a) {
 				$start = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['start'], 'c') : datetime_convert('UTC','UTC',$rr['start'],'c'));
 				if ($rr['nofinish']){
 					$end = null;
-					$allday=true;
 				} else {
 					$end = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['finish'], 'c') : datetime_convert('UTC','UTC',$rr['finish'],'c'));
-					$allday=false;
 				}
 				
 				
@@ -253,26 +251,31 @@ function events_content(&$a) {
 				$last_date = $d;
 				$edit = ((! $rr['cid']) ? array($a->get_baseurl().'/events/event/'.$rr['id'],t('Edit event'),'','') : null);
 
+				list($title, $_trash) = explode("<br",bbcode($rr['desc']),2);
+				$title = strip_tags($title);
+				$html = format_event_html($rr);
+				$rr['desc'] = bbcode($rr['desc']);
+				$rr['location'] = bbcode($rr['location']);
 				$events[] = array(
 					'id'=>$rr['id'],
 					'start'=> $start,
 					'end' => $end,
-					'allDay' => $allday,
-					'title' => strip_tags(bbcode($rr['desc'])),
+					'allDay' => false,
+					'title' => $title,
 					
 					'j' => $j,
 					'd' => $d,
 					'edit' => $edit,
 					'is_first'=>$is_first,
 					'item'=>$rr,
-					'html'=>format_event_html($rr),
+					'html'=>$html,
 					'plink' => array($rr['plink'],t('link to source'),'',''),
 				);
 
 
 			}
 		}
-		
+		 
 		if ($a->argv[1] === 'json'){
 			echo json_encode($events); killme();
 		}
