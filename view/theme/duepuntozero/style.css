@@ -809,6 +809,9 @@ input#dfrn-url {
 	width: 120px;
 	height: 120px;
 }
+#contacts-search-end {
+	margin-bottom: 10px;
+}
 
 .contact-entry-direction-icon {
 	margin-top: 24px;

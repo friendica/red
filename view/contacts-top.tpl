@@ -1,6 +1,8 @@
-<h1>$header</h1>
+<h1>$header{{ if $total }} ($total){{ endif }}</h1>
 
 $finding
+
+$tabs
 
 <div id="contacts-search-wrapper">
 <form id="contacts-search-form" action="$cmd" method="get" >
@@ -13,7 +15,3 @@ $finding
 
 
 
-<div id="contacts-main" >
-<a href="$hide_url" id="contacts-show-hide-link">$hide_text</a><br />
-<a href="$all_url" id="contacts-show-all-link">$all_text</a><br />
-</div>

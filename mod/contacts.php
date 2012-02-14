@@ -366,37 +366,58 @@ function contacts_content(&$a) {
 	}
 
 	$blocked = false;
+	$hidden = false;
+	$all = false;
 
 	$_SESSION['return_url'] = $a->query_string;
 
-	if(($a->argc == 2) && ($a->argv[1] === 'all'))
+	if(($a->argc == 2) && ($a->argv[1] === 'all')) {
 		$sql_extra = '';
-	else {
-		if(($a->argc == 2) && ($a->argv[1] === 'blocked')) {
-			$sql_extra = " AND `blocked` = 1 ";
-			$blocked = true;
-		}
-		else
-			$sql_extra = " AND `blocked` = 0 ";
+		$all = true;
 	}
+	elseif(($a->argc == 2) && ($a->argv[1] === 'blocked')) {
+		$sql_extra = " AND `blocked` = 1 ";
+		$blocked = true;
+	}
+	elseif(($a->argc == 2) && ($a->argv[1] === 'hidden')) {
+		$sql_extra = " AND `hidden` = 1 ";
+		$hidden = true;
+	}
+	else
+		$sql_extra = " AND `blocked` = 0 ";
+
 	$search = ((x($_GET,'search')) ? notags(trim($_GET['search'])) : '');
 	$nets = ((x($_GET,'nets')) ? notags(trim($_GET['nets'])) : '');
 
-	$tpl = get_markup_template("contacts-top.tpl");
-	$o .= replace_macros($tpl,array(
-		'$header' => t('Contacts') . (($nets) ? ' - ' . network_to_name($nets) : ''),
-		'$hide_url' => (($blocked) ? 'contacts' : 'contacts/blocked'),
-		'$hide_text' => (($blocked) ? t('Show Unblocked Contacts') : t('Show Blocked Contacts')),
-		'$all_url' => 'contacts/all',
-		'$all_text' => t('Show All Contacts'),
-		'$search' => $search,
-		'$desc' => t('Search your contacts'),
-		'$finding' => (strlen($search) ? '<h4>' . t('Finding: ') . "'" . $search . "'" . '</h4>' : ""),
-		'$submit' => t('Find'),
-		'$cmd' => $a->cmd
+	$tabs = array(
+		array(
+			'label' => t('All Contacts'),
+			'url'   => $a->get_baseurl() . '/contacts/all', 
+			'sel'   => ($all) ? 'active' : '',
+		),
+		array(
+			'label' => t('Unblocked Contacts'),
+			'url'   => $a->get_baseurl() . '/contacts',
+			'sel'   => ((! $all) && (! $blocked) && (! $hidden)) ? 'active' : '',
+		),
+
+		array(
+			'label' => t('Blocked Contacts'),
+			'url'   => $a->get_baseurl() . '/contacts/blocked',
+			'sel'   => ($blocked) ? 'active' : '',
+		),
+		array(
+			'label' => t('Hidden Contacts'),
+			'url'   => $a->get_baseurl() . '/contacts/hidden',
+			'sel'   => ($hidden) ? 'active' : '',
+		),
+	);
+
+	$tab_tpl = get_markup_template('common_tabs.tpl');
+	$t = replace_macros($tab_tpl, array('$tabs'=>$tabs));
 
 
-	)); 
+
 
 	if($search)
 		$search = dbesc($search.'*');
@@ -413,6 +434,21 @@ function contacts_content(&$a) {
 		intval($_SESSION['uid']));
 	if(count($r))
 		$a->set_pager_total($r[0]['total']);
+
+
+	$tpl = get_markup_template("contacts-top.tpl");
+	$o .= replace_macros($tpl,array(
+		'$header' => t('Contacts') . (($nets) ? ' - ' . network_to_name($nets) : ''),
+		'$tabs' => $t,
+		'$total' => $r[0]['total'],
+		'$search' => $search,
+		'$desc' => t('Search your contacts'),
+		'$finding' => (strlen($search) ? '<h4>' . t('Finding: ') . "'" . $search . "'" . '</h4>' : ""),
+		'$submit' => t('Find'),
+		'$cmd' => $a->cmd
+
+
+	)); 
 
 	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `pending` = 0 $sql_extra $sql_extra2 ORDER BY `name` ASC LIMIT %d , %d ",
 		intval($_SESSION['uid']),
