@@ -398,7 +398,7 @@ function contacts_content(&$a) {
 		array(
 			'label' => t('Unblocked Contacts'),
 			'url'   => $a->get_baseurl() . '/contacts',
-			'sel'   => ((! $all) && (! $blocked) && (! $hidden)) ? 'active' : '',
+			'sel'   => ((! $all) && (! $blocked) && (! $hidden) && (! $search) && (! $nets)) ? 'active' : '',
 		),
 
 		array(
