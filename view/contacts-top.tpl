@@ -2,8 +2,6 @@
 
 $finding
 
-$tabs
-
 <div id="contacts-search-wrapper">
 <form id="contacts-search-form" action="$cmd" method="get" >
 <span class="contacts-search-desc">$desc</span>
@@ -12,6 +10,9 @@ $tabs
 </form>
 </div>
 <div id="contacts-search-end"></div>
+
+$tabs
+
 
 
 

@@ -367,6 +367,7 @@ function contacts_content(&$a) {
 
 	$blocked = false;
 	$hidden = false;
+	$ignored = false;
 	$all = false;
 
 	$_SESSION['return_url'] = $a->query_string;
@@ -383,6 +384,10 @@ function contacts_content(&$a) {
 		$sql_extra = " AND `hidden` = 1 ";
 		$hidden = true;
 	}
+	elseif(($a->argc == 2) && ($a->argv[1] === 'ignored')) {
+		$sql_extra = " AND `readonly` = 1 ";
+		$ignored = true;
+	}
 	else
 		$sql_extra = " AND `blocked` = 0 ";
 
@@ -398,7 +403,7 @@ function contacts_content(&$a) {
 		array(
 			'label' => t('Unblocked Contacts'),
 			'url'   => $a->get_baseurl() . '/contacts',
-			'sel'   => ((! $all) && (! $blocked) && (! $hidden) && (! $search) && (! $nets)) ? 'active' : '',
+			'sel'   => ((! $all) && (! $blocked) && (! $hidden) && (! $search) && (! $nets) && (! $ignored)) ? 'active' : '',
 		),
 
 		array(
@@ -406,11 +411,19 @@ function contacts_content(&$a) {
 			'url'   => $a->get_baseurl() . '/contacts/blocked',
 			'sel'   => ($blocked) ? 'active' : '',
 		),
+
+		array(
+			'label' => t('Ignored Contacts'),
+			'url'   => $a->get_baseurl() . '/contacts/ignored',
+			'sel'   => ($ignored) ? 'active' : '',
+		),
+
 		array(
 			'label' => t('Hidden Contacts'),
 			'url'   => $a->get_baseurl() . '/contacts/hidden',
 			'sel'   => ($hidden) ? 'active' : '',
 		),
+
 	);
 
 	$tab_tpl = get_markup_template('common_tabs.tpl');
@@ -419,8 +432,10 @@ function contacts_content(&$a) {
 
 
 
-	if($search)
+	if($search) {
+		$search_hdr = $search;
 		$search = dbesc($search.'*');
+	}
 	$sql_extra .= ((strlen($search)) ? " AND MATCH `name` AGAINST ('$search' IN BOOLEAN MODE) " : "");
 
 	if($nets)
@@ -441,7 +456,7 @@ function contacts_content(&$a) {
 		'$header' => t('Contacts') . (($nets) ? ' - ' . network_to_name($nets) : ''),
 		'$tabs' => $t,
 		'$total' => $r[0]['total'],
-		'$search' => $search,
+		'$search' => $search_hdr,
 		'$desc' => t('Search your contacts'),
 		'$finding' => (strlen($search) ? '<h4>' . t('Finding: ') . "'" . $search . "'" . '</h4>' : ""),
 		'$submit' => t('Find'),
