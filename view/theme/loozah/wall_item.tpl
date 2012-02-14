@@ -36,7 +36,7 @@
 			<div class="wall-item-like-buttons" id="wall-item-like-buttons-$id">
 				<a href="#" class="icon like" title="$vote.like.0" onclick="dolike($id,'like'); return false"></a>
 				<a href="#" class="icon dislike" title="$vote.dislike.0" onclick="dolike($id,'dislike'); return false"></a>
-				{{ if $vote.share }}<a href="#" class="icon recycle wall-item-share-buttons" title=""$vote.share.0" onclick="jotShare($id); return false"></a>{{ endif }}
+				{{ if $vote.share }}<a href="#" class="icon recycle wall-item-share-buttons" title="$vote.share.0" onclick="jotShare($id); return false"></a>{{ endif }}
 				<img id="like-rotator-$id" class="like-rotator" src="images/rotator.gif" alt="$wait" title="$wait" style="display: none;" />
 			</div>
 			{{ endif }}
