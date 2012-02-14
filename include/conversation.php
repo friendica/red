@@ -609,7 +609,6 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 					if ($tag!="") $tags[] = bbcode($tag);
 				}
 
-
 				// Build the HTML
 
 				$body = prepare_body($item,true);
