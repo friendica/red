@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1121 );
+define( 'UPDATE_VERSION' , 1122 );
 
 /**
  *
@@ -1037,3 +1037,31 @@ function update_1120() {
 	q("ALTER TABLE `item` ADD `spam` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `visible` , ADD INDEX (`spam`) ");
 
 }
+
+function update_1121() {
+	q("CREATE TABLE IF NOT EXISTS `poll_result` (
+	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`poll_id` INT NOT NULL ,
+	`choice` INT NOT NULL ,
+	INDEX ( `poll_id` ),
+	INDEX ( `choice` )
+	) ENGINE = MYISAM ");
+
+	q("CREATE TABLE IF NOT EXISTS `poll` (
+	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	`uid` INT NOT NULL ,
+	`q0` MEDIUMTEXT NOT NULL ,
+	`q1` MEDIUMTEXT NOT NULL ,
+	`q2` MEDIUMTEXT NOT NULL ,
+	`q3` MEDIUMTEXT NOT NULL ,
+	`q4` MEDIUMTEXT NOT NULL ,
+	`q5` MEDIUMTEXT NOT NULL ,
+	`q6` MEDIUMTEXT NOT NULL ,
+	`q7` MEDIUMTEXT NOT NULL ,
+	`q8` MEDIUMTEXT NOT NULL ,
+	`q9` MEDIUMTEXT NOT NULL ,
+	INDEX ( `uid` )
+	) ENGINE = MYISAM ");
+
+}
+
