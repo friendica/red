@@ -287,11 +287,7 @@ function network_content(&$a, $update = 0) {
 
 	$sql_nets = (($nets) ? sprintf(" and `contact`.`network` = '%s' ", dbesc($nets)) : '');
 
-	// We'll need the following line if starred/bookmarks are allowed in comments in the future
-	//	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` $sql_options ) ";
-
-	// Otherwise, this is a bit faster:
-	$sql_extra = $sql_options;
+	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` $sql_options ) ";
 
 	if($group) {
 		$r = q("SELECT `name`, `id` FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
