@@ -174,7 +174,10 @@ upper-alpha;">$2</ul>' ,$Text);
 	$Text = preg_replace("/\[table border=0\](.*?)\[\/table\]/sm", '<table border="0" >$1</table>' ,$Text);
 
 	$Text = str_replace('[hr]','<hr />', $Text);
-	
+
+	// This is actually executed in prepare_body()
+
+	$Text = str_replace('[nosmile]','',$Text);
 
 	// Check for font change text
 	$Text = preg_replace("/\[font=(.*?)\](.*?)\[\/font\]/sm","<span style=\"font-family: $1;\">$2</span>",$Text);

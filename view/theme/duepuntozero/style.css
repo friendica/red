@@ -2953,3 +2953,17 @@ div.jGrowl div.info {
   color: #ffffff;
   padding-left: 58px;
 }
+
+.qcomment {
+	border: 1px solid #EEE;
+	padding: 3px;
+}
+
+.qcomment {
+	opacity: 0;
+	filter:alpha(opacity=0);
+}
+.qcomment:hover {
+	opacity: 1.0;
+	filter:alpha(opacity=100);
+}

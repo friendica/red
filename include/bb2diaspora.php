@@ -212,7 +212,7 @@ function bb2diaspora($Text,$preserve_nl = false) {
 	$Text = preg_replace("/\[vimeo\]([0-9]+)(.*?)\[\/vimeo\]/ism", 'http://vimeo.com/$1',$Text);
 
 
-
+	$Text = str_replace('[nosmile]','',$Text);
 
 	// oembed tag
 	//	$Text = oembed_bbcode2html($Text);

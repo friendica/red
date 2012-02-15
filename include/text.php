@@ -878,7 +878,10 @@ function prepare_text($text) {
 
 	require_once('include/bbcode.php');
 
-	$s = smilies(bbcode($text));
+	if(stristr($text,'[nosmile]'))
+		$s = bbcode($text);
+	else
+		$s = smilies(bbcode($text));
 
 	return $s;
 }}

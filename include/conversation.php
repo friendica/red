@@ -522,6 +522,9 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 						if ($shareable) $likebuttons['share'] = array( t('Share this'), t('share'));
 					}
 
+//				$qcomment = array(':-)','LOL','ROTFL','[smile]');				
+					$qcomment = null;
+
 					if(($show_comment_box) || (($show_comment_box == false) && ($override_comment_box == false) && ($item['last-child']))) {
 						$comment = replace_macros($cmnt_tpl,array(
 							'$return_path' => '', 
@@ -529,6 +532,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 							'$type' => (($mode === 'profile') ? 'wall-comment' : 'net-comment'),
 							'$id' => $item['item_id'],
 							'$parent' => $item['parent'],
+							'$qcomment' => $qcomment,
 							'$profile_uid' =>  $profile_owner,
 							'$mylink' => $a->contact['url'],
 							'$mytitle' => t('This is you'),
@@ -634,7 +638,6 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				// Build the HTML
 
 				$body = prepare_body($item,true);
-				
 
 				$tmp_item = replace_macros($template,array(
 					'$type' => implode("",array_slice(split("/",$item['verb']),-1)),
