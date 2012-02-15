@@ -17,6 +17,7 @@
 
 require_once('include/crypto.php');
 require_once('include/enotify.php');
+require_once('include/email.php');
 
 function item_post(&$a) {
 
@@ -854,8 +855,8 @@ function item_post(&$a) {
 				$disclaimer .= sprintf( t('You may visit them online at %s'), $a->get_baseurl() . '/profile/' . $a->user['nickname']) . EOL;
 				$disclaimer .= t('Please contact the sender by replying to this post if you do not wish to receive these messages.') . EOL; 
 
-				$subject  = '[Friendica]' . ' ' . sprintf( t('%s posted an update.'),$a->user['username']);
-				$headers  = 'From: ' . $a->user['username'] . ' <' . $a->user['email'] . '>' . "\n";
+				$subject  = email_header_encode('[Friendica]' . ' ' . sprintf( t('%s posted an update.'),$a->user['username']),'UTF-8');
+				$headers  = 'From: ' . email_header_encode($a->user['username'],'UTF-8') . ' <' . $a->user['email'] . '>' . "\n";
 				$headers .= 'MIME-Version: 1.0' . "\n";
 				$headers .= 'Content-Type: text/html; charset=UTF-8' . "\n";
 				$headers .= 'Content-Transfer-Encoding: 8bit' . "\n\n";

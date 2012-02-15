@@ -35,7 +35,7 @@ function notifier_run($argv, $argc){
 	require_once("datetime.php");
 	require_once('include/items.php');
 	require_once('include/bbcode.php');
-
+	require_once('include/email.php');
 	load_config('config');
 	load_config('system');
 
@@ -626,14 +626,14 @@ function notifier_run($argv, $argc){
 						if($r1 && $r1[0]['reply_to'])
 							$reply_to = $r1[0]['reply_to'];
 	
-						$subject  = (($it['title']) ? $it['title'] : t("\x28no subject\x29")) ;
+						$subject  = (($it['title']) ? email_header_encode($it['title'],'UTF-8') : t("\x28no subject\x29")) ;
 
 						// only expose our real email address to true friends
 
 						if(($contact['rel'] == CONTACT_IS_FRIEND) && (! $contact['blocked']))
-							$headers  = 'From: ' . $local_user[0]['username'] . ' <' . $local_user[0]['email'] . '>' . "\n";
+							$headers  = 'From: ' . email_header_encode($local_user[0]['username'],'UTF-8') . ' <' . $local_user[0]['email'] . '>' . "\n";
 						else
-							$headers  = 'From: ' . $local_user[0]['username'] . ' <' . t('noreply') . '@' . $a->get_hostname() . '>' . "\n";
+							$headers  = 'From: ' . email_header_encode($local_user[0]['username'],'UTF-8') . ' <' . t('noreply') . '@' . $a->get_hostname() . '>' . "\n";
 
 						if($reply_to)
 							$headers .= 'Reply-to: ' . $reply_to . "\n";
