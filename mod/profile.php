@@ -128,7 +128,7 @@ function profile_content(&$a, $update = 0) {
 		}
 
 		if(x($_SESSION,'new_member') && $_SESSION['new_member'] && $is_owner)
-			$o .= '<a href="newmember">' . t('Tips for New Members') . '</a>' . EOL;
+			$o .= '<a href="newmember" id="newmember-tips" style="font-size: 1.2em;"><b>' . t('Tips for New Members') . '</b></a>' . EOL;
 
 		$commpage = (($a->profile['page-flags'] == PAGE_COMMUNITY) ? true : false);
 		$commvisitor = (($commpage && $remote_contact == true) ? true : false);
