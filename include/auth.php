@@ -165,7 +165,7 @@ else {
 		}
 
 		if((! $record) || (! count($record))) {
-			logger('authenticate: failed login attempt: ' . trim($_POST['username'])); 
+			logger('authenticate: failed login attempt: ' . notags(trim($_POST['username']))); 
 			notice( t('Login failed.') . EOL );
 			goaway(z_root());
   		}

@@ -598,7 +598,7 @@ function diaspora_request($importer,$xml) {
 			`uri-date` = '%s', 
 			`avatar-date` = '%s', 
 			`blocked` = 0, 
-			`pending` = 0,
+			`pending` = 0
 			WHERE `id` = %d LIMIT 1
 			",
 			dbesc($photos[0]),
