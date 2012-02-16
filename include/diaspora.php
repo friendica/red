@@ -611,7 +611,7 @@ function diaspora_request($importer,$xml) {
 			intval($contact_record['id'])
 		);
 
-		$u = q("select * from user where id = %d limit 1",intval($importer['uid']));
+		$u = q("select * from user where uid = %d limit 1",intval($importer['uid']));
 		if($u)
 			$ret = diaspora_share($u[0],$contact_record);
 	}
