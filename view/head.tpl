@@ -55,7 +55,12 @@
 			$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
 			openMenu("comment-edit-submit-wrapper-" + id);
 		}
-		$("#comment-edit-text-" + id).val(tmpStr + $(obj).html());
+		var ins = $(obj).html();
+		ins = ins.replace('&lt;','<');
+		ins = ins.replace('&gt;','>');
+		ins = ins.replace('&amp;','&');
+		ins = ins.replace('&quot;','"');
+		$("#comment-edit-text-" + id).val(tmpStr + ins);
 	}
 
 	function showHideComments(id) {

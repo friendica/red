@@ -522,8 +522,9 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 						if ($shareable) $likebuttons['share'] = array( t('Share this'), t('share'));
 					}
 
-//				$qcomment = array(':-)','LOL','ROTFL','[smile]');				
-					$qcomment = null;
+
+					$qc = ((local_user()) ? get_pconfig(local_user(),'qcomment','words') : null);
+					$qcomment = (($qc) ? explode("\n",$qc) : null);
 
 					if(($show_comment_box) || (($show_comment_box == false) && ($override_comment_box == false) && ($item['last-child']))) {
 						$comment = replace_macros($cmnt_tpl,array(

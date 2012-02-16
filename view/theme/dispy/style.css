@@ -1291,3 +1291,11 @@ footer { display: block; margin: 50px 20%; clear: both; }
 .acpopupitem.selected {
 	color: #2e3436; background-color: #eeeeec;
 }
+.qcomment {
+	opacity: 0;
+	filter:alpha(opacity=0);
+}
+.qcomment:hover {
+	opacity: 1.0;
+	filter:alpha(opacity=100);
+}
