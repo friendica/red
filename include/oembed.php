@@ -12,6 +12,11 @@ function oembed_replacecb($matches){
 
 function oembed_fetch_url($embedurl){
 	
+	if(! strpos('://',$embedurl)) {
+		// this may be wrong but it's already wrong, we can only guess
+		$embedurl = 'http://' . $embedurl;
+	}
+
 	$txt = Cache::get($embedurl);
 
 	$noexts = array("mp3","mp4","ogg","ogv","oga","ogm","webm");
