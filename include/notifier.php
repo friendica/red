@@ -264,7 +264,7 @@ function notifier_run($argv, $argc){
 			$deny_people  = expand_acl($parent['deny_cid']);
 			$deny_groups  = expand_groups(expand_acl($parent['deny_gid']));
 
-			// if our parent is a forum, uplink to the origonal author causing
+			// if our parent is a forum, uplink to the origional author causing
 			// a delivery fork
 
 			if(intval($parent['forum_mode']) && (! $top_level) && ($cmd !== 'uplink')) {
@@ -526,6 +526,14 @@ function notifier_run($argv, $argc){
 						);
 
 						if(count($x)) {
+
+							if($owner['page-flags'] == PAGE_COMMUNITY && ! $x[0]['writable']) {
+								q("update contact set writable = 1 where id = %d limit 1",
+									intval($x[0]['id'])
+								);
+								$x[0]['writable'] = 1;
+							}
+
 							require_once('library/simplepie/simplepie.inc');
 							logger('mod-delivery: local delivery');
 							local_delivery($x[0],$atom);

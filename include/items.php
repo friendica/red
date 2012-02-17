@@ -999,7 +999,16 @@ function tag_deliver($uid,$item_id) {
 	// now change this copy of the post to a forum head message and deliver to all the tgroup members
 
 
-	q("update item set wall = 1, origin = 1, forum_mode = 1 where id = %d limit 1",
+	$c = q("select name, url, thumb from contact where self = 1 and uid = %d limit 1",
+		intval($u[0]['uid'])
+	);
+	if(! count($c))
+		return;
+
+	q("update item set wall = 1, origin = 1, forum_mode = 1, `owner-name` = '%s', `owner-link` = '%s', `owner-avatar` = '%s'  where id = %d limit 1",
+		dbesc($c[0]['name']),
+		dbesc($c[0]['url']),
+		dbesc($c[0]['thumb']),
 		intval($item_id)
 	);
 
@@ -1016,8 +1025,8 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 
 	$a = get_app();
 
-	if((! strlen($contact['issued-id'])) && (! $contact['duplex']) && (! ($owner['page-flags'] == PAGE_COMMUNITY)))
-		return 3;
+//	if((! strlen($contact['issued-id'])) && (! $contact['duplex']) && (! ($owner['page-flags'] == PAGE_COMMUNITY)))
+//		return 3;
 
 	$idtosend = $orig_id = (($contact['dfrn-id']) ? $contact['dfrn-id'] : $contact['issued-id']);
 
@@ -1068,7 +1077,9 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	$final_dfrn_id = '';
 
 
-	if(($contact['duplex'] && strlen($contact['pubkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY && strlen($contact['pubkey']))) {
+	if(($contact['duplex'] && strlen($contact['pubkey'])) 
+		|| ($owner['page-flags'] == PAGE_COMMUNITY && strlen($contact['pubkey']))
+		|| ($contact['rel'] == CONTACT_IS_SHARING && strlen($contact['pubkey']))) {
 		openssl_public_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['pubkey']);
 		openssl_public_decrypt($challenge,$postvars['challenge'],$contact['pubkey']);
 	}
@@ -1111,7 +1122,10 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 
 
 		if($dfrn_version >= 2.1) {	
-			if(($contact['duplex'] && strlen($contact['pubkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY && strlen($contact['pubkey']))) {
+			if(($contact['duplex'] && strlen($contact['pubkey'])) 
+				|| ($owner['page-flags'] == PAGE_COMMUNITY && strlen($contact['pubkey']))
+				|| ($contact['rel'] == CONTACT_IS_SHARING && strlen($contact['pubkey']))) {
+
 				openssl_public_encrypt($key,$postvars['key'],$contact['pubkey']);
 			}
 			else {

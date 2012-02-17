@@ -312,6 +312,13 @@ function delivery_run($argv, $argc){
 				);
 
 				if(count($x)) {
+					if($owner['page-flags'] == PAGE_COMMUNITY && ! $x[0]['writable']) {
+						q("update contact set writable = 1 where id = %d limit 1",
+							intval($x[0]['id'])
+						);
+						$x[0]['writable'] = 1;
+					}
+
 					require_once('library/simplepie/simplepie.inc');
 					logger('mod-delivery: local delivery');
 					local_delivery($x[0],$atom);
