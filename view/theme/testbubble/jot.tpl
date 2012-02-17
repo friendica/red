@@ -20,7 +20,6 @@
 
                 <img id="profile-jot-text-loading" src="images/rotator.gif" alt="$wait" title="$wait" style="display: none;" />
                 <textarea rows="5" cols="64" class="profile-jot-text" id="profile-jot-text" name="body" >{{ if $content }}$content{{ else }}$share{{ endif }}</textarea>
-                {{ if $content }}<script>initEditor();</script>{{ endif }}
 
 	<div id="profile-upload-wrapper" class="jot-tool" style="display: none;" >
 		<div id="wall-image-upload-div" ><a onclick="return false;" id="wall-image-upload" class="icon border camera" title="$upload"></a></div>
@@ -72,3 +71,4 @@
 <div id="profile-jot-end"></div>
 </form>
 </div>
+                {{ if $content }}<script>initEditor();</script>{{ endif }}

@@ -28,6 +28,10 @@ function editpost_content(&$a) {
 		return;
 	}
 
+	$plaintext = false;
+	if(local_user() && intval(get_pconfig(local_user(),'system','plaintext')))
+		$plaintext = true;
+
 
 	$o .= '<h2>' . t('Edit post') . '</h2>';
 

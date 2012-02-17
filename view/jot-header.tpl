@@ -11,12 +11,12 @@ function initEditor(cb){
 		if(plaintext == 'none') {
 			$("#profile-jot-text-loading").hide();
 			$("#profile-jot-text").css({ 'height': 200, 'color': '#000' });
-			$(".jothidden").show();
 			editor = true;
 			$("a#jot-perms-icon").fancybox({
 				'transitionIn' : 'elastic',
 				'transitionOut' : 'elastic'
 			}); 
+			$(".jothidden").show();
 			if (typeof cb!="undefined") cb();
 			return;
 		}	
