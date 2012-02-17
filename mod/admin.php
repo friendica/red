@@ -9,6 +9,10 @@ function admin_post(&$a){
 	if(!is_site_admin()) {
 		return;
 	}
+
+
+	if(x($_SESSION,'submanage') && intval($_SESSION['submanage']))
+		return;
 	
 	// urls
 	if ($a->argc > 1){
@@ -49,6 +53,9 @@ function admin_content(&$a) {
 	if(!is_site_admin()) {
 		return login(false);
 	}
+
+	if(x($_SESSION,'submanage') && intval($_SESSION['submanage']))
+		return;
 
 	/**
 	 * Side bar links
