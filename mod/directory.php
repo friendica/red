@@ -26,6 +26,8 @@ function directory_post(&$a) {
 function directory_content(&$a) {
 
 	$everything = (($a->argc > 1 && $a->argv[1] === 'all' && is_site_admin()) ? true : false);
+	if(x($_SESSION,'submanage') && intval($_SESSION['submanage']))
+		$everything = false;
 
 	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
 		notice( t('Public access denied.') . EOL);
