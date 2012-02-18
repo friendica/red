@@ -1308,6 +1308,7 @@ function diaspora_conversation($importer,$xml,$msg) {
 			'language' => $importer['language'],
 			'to_name' => $importer['username'],
 			'to_email' => $importer['email'],
+			'uid' =>$importer['importer_uid'],
 			'item' => array('subject' => $subject, 'body' => $body),
 			'source_name' => $person['name'],
 			'source_link' => $person['url'],

@@ -32,7 +32,7 @@ function notification($params) {
 		$sitelink = t('Please visit %s to view and/or reply to your private messages.');
 		$tsitelink = sprintf( $sitelink, $siteurl . '/message' );
 		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '/message">' . $sitename . '</a>');
-		$itemlink = '';
+		$itemlink = $siteurl . '/message';
 	}
 
 	if($params['type'] == NOTIFY_COMMENT) {
@@ -100,9 +100,27 @@ function notification($params) {
 
 	}
 
-	// TODO - create notification entry in DB
+	// from here on everything is in the recipients language
 
+	push_lang($params['language']);
 
+	require_once('include/html2bbcode.php');	
+
+	// create notification entry in DB
+
+	$r = q("insert into notify (name,url,photo,date,msg,uid,link,type,verb,otype)
+		values('%s','%s','%s','%s','%s',%d,'%s',%d,'%s','%s')",
+		dbesc($params['source_name']),
+		dbesc($params['source_link']),
+		dbesc($params['source_photo']),
+		dbesc(datetime_convert()),
+		dbesc($preamble),
+		intval($params['uid']),
+		dbesc($itemlink),
+		intval($params['type']),
+		dbesc($params['verb']),
+		dbesc($params['otype'])
+	);
 
 	// send email notification if notification preferences permit
 
@@ -111,7 +129,6 @@ function notification($params) {
 
 		logger('notification: sending notification email');
 
-		push_lang($params['language']);
 
 		$textversion = strip_tags(html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r", "\\n"), "\n",
 			$body))),ENT_QUOTES,'UTF-8'));
@@ -126,7 +143,7 @@ function notification($params) {
 			'$preamble'     => $preamble,
 			'$sitename'     => $sitename,
 			'$siteurl'      => $siteurl,
-			'$source_name'  => $parama['source_name'],
+			'$source_name'  => $params['source_name'],
 			'$source_link'  => $params['source_link'],
 			'$source_photo' => $params['source_photo'],
 			'$username'     => $params['to_name'],
@@ -146,7 +163,7 @@ function notification($params) {
 			'$preamble'     => $preamble,
 			'$sitename'     => $sitename,
 			'$siteurl'      => $siteurl,
-			'$source_name'  => $parama['source_name'],
+			'$source_name'  => $params['source_name'],
 			'$source_link'  => $params['source_link'],
 			'$source_photo' => $params['source_photo'],
 			'$username'     => $params['to_name'],
@@ -171,8 +188,10 @@ function notification($params) {
 			'htmlVersion' => $email_html_body,
 			'textVersion' => $email_text_body
 		));
-		pop_lang();
 	}
+
+	pop_lang();
+
 }
 
 require_once('include/email.php');
