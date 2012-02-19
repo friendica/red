@@ -1,4 +1,4 @@
-<h1>$header</h1>
+<h1>$header{{ if $total }} ($total){{ endif }}</h1>
 
 $finding
 
@@ -11,8 +11,8 @@ $finding
 </div>
 <div id="contacts-search-end"></div>
 
+$tabs
 
 
-<div id="contacts-main" >
-<a href="$hide_url" id="contacts-show-hide-link">$hide_text</a>
-</div>
+
+

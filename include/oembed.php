@@ -11,7 +11,7 @@ function oembed_replacecb($matches){
 
 
 function oembed_fetch_url($embedurl){
-	
+
 	$txt = Cache::get($embedurl);
 
 	$noexts = array("mp3","mp4","ogg","ogv","oga","ogm","webm");

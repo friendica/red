@@ -1,11 +1,20 @@
 **Friendica Addon/Plugin development**
 
-This is an early specification and hook details may be subject to change.
-
 Please see the sample addon 'randplace' for a working example of using some of these features. The facebook addon provides an example of integrating both "addon" and "module" functionality. Addons work by intercepting event hooks - which must be registered. Modules work by intercepting specific page requests (by URL path). 
 
 
-Plugin names cannot contain spaces and are used as filenames. Each addon must contain both an install and an uninstall function based on the addon/plugin name. For instance "plugin1name_install()". These two functions take no arguments and are usually responsible for registering (and unregistering) event hooks that your plugin will require. The install and uninstall functions will also be called (i.e. re-installed) if the plugin changes after installation - therefore your uninstall should not destroy data and install should consider that data may already exist. Future extensions may provide for "setup" amd "remove". 
+Plugin names cannot contain spaces or other punctuation and are used as filenames and function names. You may supply a "friendly" name within the comment block. Each addon must contain both an install and an uninstall function based on the addon/plugin name. For instance "plugin1name_install()". These two functions take no arguments and are usually responsible for registering (and unregistering) event hooks that your plugin will require. The install and uninstall functions will also be called (i.e. re-installed) if the plugin changes after installation - therefore your uninstall should not destroy data and install should consider that data may already exist. Future extensions may provide for "setup" amd "remove". 
+
+Plugins should contain a comment block with the four following parameters: 
+
+	/*
+	* Name: My Great Plugin 
+ 	* Description: This is what my plugin does. It's really cool
+ 	* Version: 1.0
+ 	* Author: John Q. Public <john@myfriendicasite.com>
+	*/
+
+
 
 
 Register your plugin hooks during installation.
@@ -160,7 +169,8 @@ Your module functions will often contain the function plugin_name_content(&$a), 
     $b is (string) HTML of content div
 
 
-A complete list of all hook callbacks with file locations (generated 09-Nov-2011): Please see the source for details of any hooks not documented above.
+A complete list of all hook callbacks with file locations (generated 14-Feb-2012): Please see the source for details of any hooks not documented above.
+
 
 boot.php:	call_hooks('login_hook',$o);
 
@@ -170,7 +180,7 @@ boot.php:	call_hooks('profile_sidebar', $arr);
 
 boot.php:	call_hooks("proc_run", $arr);
 
-include/contact_selectors.php:	call_hooks('network_to_name', $s);
+include/contact_selectors.php:	call_hooks('network_to_name', $nets);
 
 include/api.php:				call_hooks('logged_in', $a->user);
 
@@ -193,8 +203,6 @@ include/text.php:	call_hooks('prepare_body_final', $prep_arr);
 include/nav.php:	call_hooks('page_header', $a->page['nav']);
 
 include/auth.php:		call_hooks('authenticate', $addon_auth);
-
-include/auth.php:		call_hooks('logged_in', $a->user);
 
 include/bbcode.php:	call_hooks('bbcode',$Text);
 
@@ -236,19 +244,29 @@ include/bb2diaspora.php:	call_hooks('bb2diaspora',$Text);
 
 include/cronhooks.php:	call_hooks('cron', $d);
 
+include/security.php:		call_hooks('logged_in', $a->user);
+
 include/html2bbcode.php:	call_hooks('html2bbcode', $text);
+
+include/Contact.php:	call_hooks('remove_user',$r[0]);
 
 include/Contact.php:	call_hooks('contact_photo_menu', $args);
 
+include/conversation.php:	call_hooks('conversation_start',$cb);
+
+include/conversation.php:				call_hooks('render_location',$locate);
+
 include/conversation.php:				call_hooks('display_item', $arr);
+
+include/conversation.php:				call_hooks('render_location',$locate);
 
 include/conversation.php:				call_hooks('display_item', $arr);
 
 include/conversation.php:	call_hooks('item_photo_menu', $args);
 
-include/conversation.php:		call_hooks('jot_tool', $jotplugins);
+include/conversation.php:	call_hooks('jot_tool', $jotplugins);
 
-include/conversation.php:		call_hooks('jot_networks', $jotnets);
+include/conversation.php:	call_hooks('jot_networks', $jotnets);
 
 include/plugin.php:if(! function_exists('call_hooks')) {
 
@@ -282,6 +300,8 @@ mod/editpost.php:	call_hooks('jot_networks', $jotnets);
 
 mod/parse_url.php:	call_hooks('parse_link', $arr);
 
+mod/home.php:	call_hooks('home_init',$ret);
+
 mod/home.php:	call_hooks("home_content",$o);
 
 mod/contacts.php:	call_hooks('contact_edit_post', $_POST);
@@ -306,7 +326,7 @@ mod/like.php:	call_hooks('post_local_end', $arr);
 
 mod/xrd.php:	call_hooks('personal_xrd', $arr);
 
-mod/item.php:	call_hooks('post_local_start', $_POST);
+mod/item.php:	call_hooks('post_local_start', $_REQUEST);
 
 mod/item.php:	call_hooks('post_local',$datarray);
 

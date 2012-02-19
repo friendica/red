@@ -80,11 +80,9 @@ function community_content(&$a, $update = 0) {
 
 	// we behave the same in message lists as the search module
 
-	$o .= conversation($a,$r,'community',false);
+	$o .= conversation($a,$r,'community',$update);
 
 	$o .= paginate($a);
-
-//	$o .= '<div class="cc-license">' . t('Shared content is covered by the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> license.') . '</div>';
 
 	return $o;
 }

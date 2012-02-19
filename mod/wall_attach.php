@@ -61,8 +61,6 @@ function wall_attach_post(&$a) {
 
 	$filedata = @file_get_contents($src);
 	$mimetype = z_mime_content_type($filename);
-	if(((! strlen($mimetype)) || ($mimetype === 'application/octet-stream')) && function_exists('mime_content_type'))
-		$mimetype = mime_content_type($filename);
 	$hash = random_string();
 	$created = datetime_convert();
 	$r = q("INSERT INTO `attach` ( `uid`, `hash`, `filename`, `filetype`, `filesize`, `data`, `created`, `edited`, `allow_cid`, `allow_gid`,`deny_cid`, `deny_gid` )

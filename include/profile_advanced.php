@@ -44,6 +44,8 @@ function advanced_profile(&$a) {
 
 		if($a->profile['homepage']) $profile['homepage'] = array( t('Homepage:'), linkify($a->profile['homepage']) );
 
+		if($a->profile['pub_keywords']) $profile['pub_keywords'] = array( t('Tags:'), $a->profile['pub_keywords']);
+
 		if($a->profile['politic']) $profile['politic'] = array( t('Political Views:'), $a->profile['politic']);
 
 		if($a->profile['religion']) $profile['religion'] = array( t('Religion:'), $a->profile['religion']);

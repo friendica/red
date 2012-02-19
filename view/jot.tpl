@@ -13,9 +13,7 @@
 		<input type="hidden" name="preview" id="jot-preview" value="0" />
 		
 		<textarea rows="5" cols="64" class="profile-jot-text" id="profile-jot-text" name="body" >{{ if $content }}$content{{ else }}$share{{ endif }}</textarea>		
-		{{ if $content }}<script>initEditor();</script>{{ endif }}
-		
-		
+				
 		<ul id="jot-tools" class="jothidden" style="display:none">
 			<li><a href="#" onclick="return false;" id="wall-image-upload" title="$upload">$shortupload</a></a></li>
 			<li><a href="#" onclick="return false;" id="wall-file-upload"  title="$attach">$shortattach</a></li>
@@ -45,6 +43,7 @@
 	
 </form>
 
+{{ if $content }}<script>initEditor();</script>{{ endif }}
 
 
 

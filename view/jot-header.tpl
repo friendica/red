@@ -3,14 +3,27 @@
 
 var editor=false;
 var textlen = 0;
+var plaintext = '$editselect';
 
 function initEditor(cb){
 	if (editor==false){
-		$("#profile-jot-text-loading").show();	
+		$("#profile-jot-text-loading").show();
+		if(plaintext == 'none') {
+			$("#profile-jot-text-loading").hide();
+			$("#profile-jot-text").css({ 'height': 200, 'color': '#000' });
+			editor = true;
+			$("a#jot-perms-icon").fancybox({
+				'transitionIn' : 'elastic',
+				'transitionOut' : 'elastic'
+			}); 
+			$(".jothidden").show();
+			if (typeof cb!="undefined") cb();
+			return;
+		}	
 		tinyMCE.init({
 			theme : "advanced",
 			mode : "specific_textareas",
-			editor_selector: /(profile-jot-text|prvmail-text)/,
+			editor_selector: $editselect,
 			auto_focus: "profile-jot-text",
 			plugins : "bbcode,paste,autoresize",
 			theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,forecolor,formatselect,code",
@@ -105,7 +118,7 @@ function enableOnUser(){
 }
 
 </script>
-<script type="text/javascript" src="js/ajaxupload.js" ></script>
+<script type="text/javascript" src="$baseurl/js/ajaxupload.js" ></script>
 <script>
 	var ispublic = '$ispublic';
 	var addtitle = '$addtitle';
@@ -123,7 +136,7 @@ function enableOnUser(){
 				name: 'userfile',
 				onSubmit: function(file,ext) { $('#profile-rotator').show(); },
 				onComplete: function(file,response) {
-					tinyMCE.execCommand('mceInsertRawHTML',false,response);
+					addeditortext(response);
 					$('#profile-rotator').hide();
 				}				 
 			}
@@ -134,7 +147,7 @@ function enableOnUser(){
 				name: 'userfile',
 				onSubmit: function(file,ext) { $('#profile-rotator').show(); },
 				onComplete: function(file,response) {
-					tinyMCE.execCommand('mceInsertRawHTML',false,response);
+					addeditortext(response);
 					$('#profile-rotator').hide();
 				}				 
 			}
@@ -167,7 +180,7 @@ function enableOnUser(){
 			reply = bin2hex(reply);
 			$('#profile-rotator').show();
 			$.get('parse_url?binurl=' + reply, function(data) {
-				tinyMCE.execCommand('mceInsertRawHTML',false,data);
+				addeditortext(data);
 				$('#profile-rotator').hide();
 			});
 		}
@@ -176,14 +189,14 @@ function enableOnUser(){
 	function jotVideoURL() {
 		reply = prompt("$vidurl");
 		if(reply && reply.length) {
-			tinyMCE.execCommand('mceInsertRawHTML',false,'[video]' + reply + '[/video]');
+			addeditortext('[video]' + reply + '[/video]');
 		}
 	}
 
 	function jotAudioURL() {
 		reply = prompt("$audurl");
 		if(reply && reply.length) {
-			tinyMCE.execCommand('mceInsertRawHTML',false,'[audio]' + reply + '[/audio]');
+			addeditortext('[audio]' + reply + '[/audio]');
 		}
 	}
 
@@ -196,11 +209,13 @@ function enableOnUser(){
 	}
 
 	function jotShare(id) {
+		if ($('#jot-popup').length != 0) $('#jot-popup').show();
+
 		$('#like-rotator-' + id).show();
 		$.get('share/' + id, function(data) {
 			if (!editor) $("#profile-jot-text").val("");
 			initEditor(function(){
-				tinyMCE.execCommand('mceInsertRawHTML',false,data);
+				addeditortext(data);
 				$('#like-rotator-' + id).hide();
 				$(window).scrollTop(0);
 			});
@@ -224,7 +239,7 @@ function enableOnUser(){
 			$.get('parse_url?binurl=' + reply, function(data) {
 				if (!editor) $("#profile-jot-text").val("");
 				initEditor(function(){
-					tinyMCE.execCommand('mceInsertRawHTML',false,data);
+					addeditortext(data);
 					$('#profile-rotator').hide();
 				});
 			});
@@ -252,6 +267,15 @@ function enableOnUser(){
 		$('#jot-coord').val('');
 		$('#profile-nolocation-wrapper').hide();
 	}
+
+	function addeditortext(data) {
+		if(plaintext == 'none') {
+			var currentText = $("#profile-jot-text").val();
+			$("#profile-jot-text").val(currentText + data);
+		}
+		else
+			tinyMCE.execCommand('mceInsertRawHTML',false,data);
+	}	
 
 	$geotag
 

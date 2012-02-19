@@ -21,6 +21,7 @@ function delivery_run($argv, $argc){
 	require_once('include/items.php');
 	require_once('include/bbcode.php');
 	require_once('include/diaspora.php');
+	require_once('include/email.php');
 
 	load_config('config');
 	load_config('system');
@@ -311,6 +312,13 @@ function delivery_run($argv, $argc){
 				);
 
 				if(count($x)) {
+					if($owner['page-flags'] == PAGE_COMMUNITY && ! $x[0]['writable']) {
+						q("update contact set writable = 1 where id = %d limit 1",
+							intval($x[0]['id'])
+						);
+						$x[0]['writable'] = 1;
+					}
+
 					require_once('library/simplepie/simplepie.inc');
 					logger('mod-delivery: local delivery');
 					local_delivery($x[0],$atom);
@@ -373,7 +381,8 @@ function delivery_run($argv, $argc){
 			break;
 
 		case NETWORK_MAIL :
-						
+		case NETWORK_MAIL2:
+				
 			if(get_config('system','dfrn_only'))
 				break;
 			// WARNING: does not currently convert to RFC2047 header encodings, etc.
@@ -412,8 +421,15 @@ function delivery_run($argv, $argc){
 				if($r1 && $r1[0]['reply_to'])
 					$reply_to = $r1[0]['reply_to'];
 
-				$subject  = (($it['title']) ? $it['title'] : t("\x28no subject\x29")) ;
-				$headers  = 'From: ' . $local_user[0]['username'] . ' <' . $local_user[0]['email'] . '>' . "\n";
+				$subject  = (($it['title']) ? email_header_encode($it['title'],'UTF-8') : t("\x28no subject\x29")) ;
+
+				// only expose our real email address to true friends
+
+				if(($contact['rel'] == CONTACT_IS_FRIEND) && (! $contact['blocked']))
+					$headers  = 'From: ' . email_header_encode($local_user[0]['username'],'UTF-8') . ' <' . $local_user[0]['email'] . '>' . "\n";
+				else
+					$headers  = 'From: ' . email_header_encode($local_user[0]['username'],'UTF-8') . ' <' . t('noreply') . '@' . $a->get_hostname() . '>' . "\n";
+
 				if($reply_to)
 					$headers .= 'Reply-to: ' . $reply_to . "\n";
 				$headers .= 'Message-id: <' . $it['uri'] . '>' . "\n";

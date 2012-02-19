@@ -318,7 +318,51 @@ aside {
 	}
 }
 
-
+/* group member */
+#contact-edit-drop-link,
+.mail-list-delete-wrapper,
+.group-delete-wrapper {
+	float: right;
+	margin-right: 50px;
+        .drophide {
+            background-image: url('../../../images/icons/22/delete.png');
+            display: block; width: 22px; height: 22px;
+            opacity: 0.3;
+            position: relative;
+            top: -50px;
+        }
+        .drop {
+            background-image: url('../../../images/icons/22/delete.png');
+            display: block; width: 22px; height: 22px;
+            position: relative;
+            top: -50px;
+        }
+}
+#group-members {
+	margin-top: 20px;
+	padding: 10px;
+	height: 250px;
+	overflow: auto;
+	border: 1px solid #ddd;
+}
+#group-members-end {
+	clear: both;
+}
+#group-all-contacts {
+	padding: 10px;
+	height: 450px;
+	overflow: auto;
+	border: 1px solid #ddd;
+}
+#group-all-contacts-end {
+	clear: both;
+	margin-bottom: 10px;
+}
+.contact-block-div {
+	float: left;
+	width: 52px;
+	height: 52px;
+}
 /* widget */
 .widget {
 	margin-bottom: 2em;
@@ -502,6 +546,13 @@ section {
     .shadow(0px, 0px)
 }
 .wwto .contact-photo { width: 25px; height: 25px; }
+
+
+#pause {
+ position: fixed;
+ bottom: 5px;
+ right: 5px;
+}
 
 /* contacts menu */
 .contact-photo-wrapper { position: relative; }
@@ -852,6 +903,58 @@ ul.tabs {
 
 #profile-edit-links li {
 	list-style: none;
+        margin-top: 10px;
+}
+
+#profile-edit-default-desc {
+	color: #FF0000;
+	border: 1px solid #FF8888;
+	background-color: #FFEEEE;
+	padding: 7px;
+}
+#profile-edit-profile-name-label,
+#profile-edit-name-label,
+#profile-edit-pdesc-label,
+#profile-edit-gender-label,
+#profile-edit-dob-label,
+#profile-edit-address-label,
+#profile-edit-locality-label,
+#profile-edit-region-label,
+#profile-edit-postal-code-label,
+#profile-edit-country-name-label,
+#profile-edit-marital-label,
+#profile-edit-with-label,
+#profile-edit-sexual-label,
+#profile-edit-politic-label,
+#profile-edit-religion-label,
+#profile-edit-pubkeywords-label,
+#profile-edit-prvkeywords-label,
+#profile-edit-gender-select,
+#profile-edit-homepage-label {
+	float: left;
+	width: 175px;
+        padding-top: 7px;
+}
+#profile-edit-profile-name,
+#profile-edit-name,
+#gender-select, 
+#profile-edit-pdesc,
+#profile-edit-gender,
+#profile-edit-dob,
+#profile-edit-address,
+#profile-edit-locality,
+#profile-edit-region,
+#profile-edit-postal-code,
+#profile-edit-country-name,
+#profile-edit-marital,
+#profile-edit-with,
+#profile-edit-sexual,
+#profile-edit-politic,
+#profile-edit-religion,
+#profile-edit-pubkeywords,
+#profile-edit-prvkeywords,
+#profile-edit-homepage {
+    margin-top: 5px;
 }
 
 /* oauth */
@@ -910,3 +1013,4 @@ footer { height: 100px; display: table-row; }
     margin-top: 25px;
     clear: both;
 }
+

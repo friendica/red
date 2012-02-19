@@ -809,6 +809,9 @@ input#dfrn-url {
 	width: 120px;
 	height: 120px;
 }
+#contacts-search-end {
+	margin-bottom: 10px;
+}
 
 .contact-entry-direction-icon {
 	margin-top: 24px;
@@ -824,6 +827,7 @@ input#dfrn-url {
 .contact-entry-name {
 	float: left;
 	margin-left: 0px;
+	margin-right: 10px;
 	width: 120px;
 	overflow: hidden;
 }
@@ -2535,6 +2539,7 @@ aside input[type='text'] {
 	margin-top: 15px;
 }
 
+#crepair-name-label,
 #crepair-nick-label,
 #crepair-attag-label,
 #crepair-url-label,
@@ -2548,6 +2553,7 @@ aside input[type='text'] {
 	margin-bottom: 15px;
 }
 
+#crepair-name,
 #crepair-nick,
 #crepair-attag,
 #crepair-url,
@@ -2946,4 +2952,18 @@ div.jGrowl div.info {
   background: #364e59 url("../../../images/icons/48/info.png") no-repeat 5px center;
   color: #ffffff;
   padding-left: 58px;
+}
+
+.qcomment {
+	border: 1px solid #EEE;
+	padding: 3px;
+}
+
+.qcomment {
+	opacity: 0;
+	filter:alpha(opacity=0);
+}
+.qcomment:hover {
+	opacity: 1.0;
+	filter:alpha(opacity=100);
 }

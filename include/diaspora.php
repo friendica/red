@@ -598,7 +598,7 @@ function diaspora_request($importer,$xml) {
 			`uri-date` = '%s', 
 			`avatar-date` = '%s', 
 			`blocked` = 0, 
-			`pending` = 0,
+			`pending` = 0
 			WHERE `id` = %d LIMIT 1
 			",
 			dbesc($photos[0]),
@@ -611,7 +611,7 @@ function diaspora_request($importer,$xml) {
 			intval($contact_record['id'])
 		);
 
-		$u = q("select * from user where id = %d limit 1",intval($importer['uid']));
+		$u = q("select * from user where uid = %d limit 1",intval($importer['uid']));
 		if($u)
 			$ret = diaspora_share($u[0],$contact_record);
 	}
@@ -673,6 +673,14 @@ function diaspora_post($importer,$xml) {
 			if(strpos($tag,'#') === 0) {
 				if(strpos($tag,'[url='))
 					continue;
+
+				// don't link tags that are already embedded in links
+
+				if(preg_match('/\[(.*?)' . preg_quote($tag) . '(.*?)\]/',$body))
+					continue;
+				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag) . '(.*?)\)/',$body))
+					continue;
+
 				$basetag = str_replace('_',' ',substr($tag,1));
 				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
 				if(strlen($str_tags))
@@ -830,6 +838,15 @@ function diaspora_reshare($importer,$xml) {
 			if(strpos($tag,'#') === 0) {
 				if(strpos($tag,'[url='))
 					continue;
+
+				// don't link tags that are already embedded in links
+
+				if(preg_match('/\[(.*?)' . preg_quote($tag) . '(.*?)\]/',$body))
+					continue;
+				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag) . '(.*?)\)/',$body))
+					continue;
+
+
 				$basetag = str_replace('_',' ',substr($tag,1));
 				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
 				if(strlen($str_tags))
@@ -1062,6 +1079,15 @@ function diaspora_comment($importer,$xml,$msg) {
 			if(strpos($tag,'#') === 0) {
 				if(strpos($tag,'[url='))
 					continue;
+
+				// don't link tags that are already embedded in links
+
+				if(preg_match('/\[(.*?)' . preg_quote($tag) . '(.*?)\]/',$body))
+					continue;
+				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag) . '(.*?)\)/',$body))
+					continue;
+
+
 				$basetag = str_replace('_',' ',substr($tag,1));
 				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
 				if(strlen($str_tags))
@@ -1282,6 +1308,7 @@ function diaspora_conversation($importer,$xml,$msg) {
 			'language' => $importer['language'],
 			'to_name' => $importer['username'],
 			'to_email' => $importer['email'],
+			'uid' =>$importer['importer_uid'],
 			'item' => array('subject' => $subject, 'body' => $body),
 			'source_name' => $person['name'],
 			'source_link' => $person['url'],

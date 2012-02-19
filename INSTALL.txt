@@ -107,6 +107,11 @@ one shown, substituting for your unique paths and settings:
 You can generally find the location of PHP by executing "which php". If you 
 have troubles with this section please contact your hosting provider for 
 assistance. Friendika will not work correctly if you cannot perform this step.
+
+You should also be sure that $a->config['php_path'] is set correctly, it should
+look like (changing it to the correct PHP location)
+
+$a->config['php_path'] = '/usr/local/php53/bin/php'
   
 Alternative: You may be able to use the 'poormancron' plugin to perform this
 step if you are using a recent Friendika release. 'poormancron' may result in

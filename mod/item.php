@@ -4,7 +4,7 @@
  *
  * This is the POST destination for most all locally posted
  * text stuff. This function handles status, wall-to-wall status, 
- * local comments, and remote coments - that are posted on this site 
+ * local comments, and remote coments that are posted on this site 
  * (as opposed to being delivered in a feed).
  * Also processed here are posts and comments coming through the 
  * statusnet/twitter API. 
@@ -17,6 +17,7 @@
 
 require_once('include/crypto.php');
 require_once('include/enotify.php');
+require_once('include/email.php');
 
 function item_post(&$a) {
 
@@ -42,6 +43,7 @@ function item_post(&$a) {
 
 	$api_source = ((x($_REQUEST,'api_source') && $_REQUEST['api_source']) ? true : false);
 	$return_path = ((x($_REQUEST,'return')) ? $_REQUEST['return'] : '');
+	$preview = ((x($_REQUEST,'preview')) ? intval($_REQUEST['preview']) : 0);
 
 	/**
 	 * Is this a reply to something?
@@ -55,8 +57,6 @@ function item_post(&$a) {
 	$thr_parent = '';
 	$parid = 0;
 	$r = false;
-
-	$preview = ((x($_REQUEST,'preview')) ? intval($_REQUEST['preview']) : 0);
 
 	if($parent || $parent_uri) {
 
@@ -109,8 +109,6 @@ function item_post(&$a) {
 	}
 
 	if($parent) logger('mod_post: parent=' . $parent);
-
-
 
 	$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid']) : 0);
 	$post_id     = ((x($_REQUEST,'post_id'))     ? intval($_REQUEST['post_id'])     : 0);
@@ -606,6 +604,7 @@ function item_post(&$a) {
 	$datarray['thr-parent']    = $thr_parent;
 	$datarray['postopts']      = '';
 	$datarray['origin']        = $origin;
+	$datarray['moderated']     = $allow_moderated;
 
 	/**
 	 * These fields are for the convenience of plugins...
@@ -635,9 +634,24 @@ function item_post(&$a) {
 
 	call_hooks('post_local',$datarray);
 
+	if(x($datarray,'cancel')) {
+		logger('mod_item: post cancelled by plugin.');
+		if($return_path) {
+			goaway($a->get_baseurl() . "/" . $return_path);
+		}
+
+		$json = array('cancel' => 1);
+		if(x($_REQUEST,'jsreload') && strlen($_REQUEST['jsreload']))
+			$json['reload'] = $a->get_baseurl() . '/' . $_REQUEST['jsreload'];
+
+		echo json_encode($json);
+		killme();
+	}
+
 
 	if($orig_post) {
-		$r = q("UPDATE `item` SET `body` = '%s', `edited` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+		$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			dbesc($title),
 			dbesc($body),
 			dbesc(datetime_convert()),
 			intval($post_id),
@@ -657,8 +671,8 @@ function item_post(&$a) {
 
 	$r = q("INSERT INTO `item` (`guid`, `uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `commented`, `received`, `changed`, `uri`, `thr-parent`, `title`, `body`, `app`, `location`, `coord`, 
-		`tag`, `inform`, `verb`, `postopts`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`, `bookmark`,`origin` )
-		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d )",
+		`tag`, `inform`, `verb`, `postopts`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`, `bookmark`,`origin`, `moderated` )
+		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, %d )",
 		dbesc($datarray['guid']),
 		intval($datarray['uid']),
 		dbesc($datarray['type']),
@@ -695,7 +709,8 @@ function item_post(&$a) {
 		intval($datarray['pubmail']),
 		dbesc($datarray['attach']),
 		intval($datarray['bookmark']),
-		intval($datarray['origin'])
+		intval($datarray['origin']),
+		intval($datarry['moderated'])
 	);
 
 	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
@@ -731,6 +746,7 @@ function item_post(&$a) {
 					'language'     => $user['language'],
 					'to_name'      => $user['username'],
 					'to_email'     => $user['email'],
+					'uid'          => $user['uid'],
 					'item'         => $datarray,
 					'link'		   => $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
 					'source_name'  => $datarray['author-name'],
@@ -773,6 +789,7 @@ function item_post(&$a) {
 					'language'     => $user['language'],
 					'to_name'      => $user['username'],
 					'to_email'     => $user['email'],
+					'uid'          => $user['uid'],
 					'item'         => $datarray,
 					'link'		   => $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
 					'source_name'  => $datarray['author-name'],
@@ -840,8 +857,8 @@ function item_post(&$a) {
 				$disclaimer .= sprintf( t('You may visit them online at %s'), $a->get_baseurl() . '/profile/' . $a->user['nickname']) . EOL;
 				$disclaimer .= t('Please contact the sender by replying to this post if you do not wish to receive these messages.') . EOL; 
 
-				$subject  = '[Friendica]' . ' ' . sprintf( t('%s posted an update.'),$a->user['username']);
-				$headers  = 'From: ' . $a->user['username'] . ' <' . $a->user['email'] . '>' . "\n";
+				$subject  = email_header_encode('[Friendica]' . ' ' . sprintf( t('%s posted an update.'),$a->user['username']),'UTF-8');
+				$headers  = 'From: ' . email_header_encode($a->user['username'],'UTF-8') . ' <' . $a->user['email'] . '>' . "\n";
 				$headers .= 'MIME-Version: 1.0' . "\n";
 				$headers .= 'Content-Type: text/html; charset=UTF-8' . "\n";
 				$headers .= 'Content-Transfer-Encoding: 8bit' . "\n\n";

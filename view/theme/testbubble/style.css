@@ -3259,3 +3259,12 @@ ul.menu-popup {
 	background-color:#b20202; 
 	order-bottom: none;
 }
+
+.qcomment {
+	opacity: 0;
+	filter:alpha(opacity=0);
+}
+.qcomment:hover {
+	opacity: 1.0;
+	filter:alpha(opacity=100);
+}

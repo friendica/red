@@ -96,6 +96,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `pending` tinyint(1) NOT NULL DEFAULT '1',
   `rating` tinyint(1) NOT NULL DEFAULT '0',
   `reason` text NOT NULL,
+  `closeness` tinyint(2) NOT NULL DEFAULT '99',
   `info` mediumtext NOT NULL,
   `profile-id` int(11) NOT NULL DEFAULT '0',
   `bdyear` CHAR( 4 ) NOT NULL COMMENT 'birthday notify flag',
@@ -116,7 +117,8 @@ CREATE TABLE IF NOT EXISTS `contact` (
   KEY `blocked` (`blocked`),
   KEY `readonly` (`readonly`),
   KEY `hidden` (`hidden`),
-  KEY `pending` (`pending`)  
+  KEY `pending` (`pending`),
+  KEY `closeness` (`closeness`)  
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -224,6 +226,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `pubmail` tinyint(1) NOT NULL DEFAULT '0',
   `moderated` tinyint(1) NOT NULL DEFAULT '0',
   `visible` tinyint(1) NOT NULL DEFAULT '0',
+  `spam` tinyint(1) NOT NULL DEFAULT '0',
   `starred` tinyint(1) NOT NULL DEFAULT '0',
   `bookmark` tinyint(1) NOT NULL DEFAULT '0',
   `unseen` tinyint(1) NOT NULL DEFAULT '1',
@@ -245,6 +248,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `received` (`received`),
   KEY `moderated` (`moderated`),
   KEY `visible` (`visible`),
+  KEY `spam` (`spam`),
   KEY `starred` (`starred`),
   KEY `bookmark` (`bookmark`),
   KEY `deleted` (`deleted`),
@@ -776,4 +780,32 @@ CREATE TABLE IF NOT EXISTS `manage` (
 INDEX ( `uid` ),
 INDEX ( `mid` )
 ) ENGINE = MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `poll_result` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`poll_id` INT NOT NULL ,
+`choice` INT NOT NULL ,
+INDEX ( `poll_id` ),
+INDEX ( `choice` )
+) ENGINE = MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `poll` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`uid` INT NOT NULL ,
+`q0` MEDIUMTEXT NOT NULL ,
+`q1` MEDIUMTEXT NOT NULL ,
+`q2` MEDIUMTEXT NOT NULL ,
+`q3` MEDIUMTEXT NOT NULL ,
+`q4` MEDIUMTEXT NOT NULL ,
+`q5` MEDIUMTEXT NOT NULL ,
+`q6` MEDIUMTEXT NOT NULL ,
+`q7` MEDIUMTEXT NOT NULL ,
+`q8` MEDIUMTEXT NOT NULL ,
+`q9` MEDIUMTEXT NOT NULL ,
+INDEX ( `uid` )
+) ENGINE = MyISAM DEFAULT CHARSET=utf8;
+
+
+
 

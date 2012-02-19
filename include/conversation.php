@@ -4,6 +4,28 @@
  * Render actions localized
  */
 function localize_item(&$item){
+
+	$Text = $item['body'];
+	$saved_image = '';
+	$img_start = strpos($Text,'[img]data:');
+	$img_end = strpos($Text,'[/img]');
+
+	if($img_start !== false && $img_end !== false && $img_end > $img_start) {
+		$start_fragment = substr($Text,0,$img_start);
+		$img_start += strlen('[img]');
+		$saved_image = substr($Text,$img_start,$img_end - $img_start);
+		$end_fragment = substr($Text,$img_end + strlen('[/img]'));		
+		$Text = $start_fragment . '[!#saved_image#!]' . $end_fragment;
+		$search = '/\[url\=(.*?)\]\[!#saved_image#!\]\[\/url\]' . '/is';
+		$replace = '[url=' . z_path() . '/redir/' . $item['contact-id'] 
+			. '?f=1&url=' . '$1' . '][!#saved_image#!][/url]' ;
+
+		$Text = preg_replace($search,$replace,$Text);
+
+		if(strlen($saved_image))
+			$item['body'] = str_replace('[!#saved_image#!]', '[img]' . $saved_image . '[/img]',$Text);
+	}
+
 	$xmlhead="<"."?xml version='1.0' encoding='UTF-8' ?".">";
 	if ($item['verb']=== ACTIVITY_LIKE || $item['verb']=== ACTIVITY_DISLIKE){
 
@@ -262,15 +284,10 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				else
 					$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $item['thumb']);
 
-				$location = (($item['location']) ? '<a target="map" title="' . $item['location'] . '" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : '');
-				$coord = (($item['coord']) ? '<a target="map" title="' . $item['coord'] . '" href="http://maps.google.com/?q=' . urlencode($item['coord']) . '">' . $item['coord'] . '</a>' : '');
-				if($coord) {
-					if($location)
-						$location .= '<br /><span class="smalltext">(' . $coord . ')</span>';
-					else
-						$location = '<span class="smalltext">' . $coord . '</span>';
-				}
+				$locate = array('location' => $item['location'], 'coord' => $item['coord'], 'html' => '');
+				call_hooks('render_location',$locate);
 
+				$location = ((strlen($locate['html'])) ? $locate['html'] : render_location_google($locate));
 
 				localize_item($item);
 				if($mode === 'network-new')
@@ -494,7 +511,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				}
 
 				$likebuttons = '';
-				$shareable = ((($profile_owner == local_user()) && ($mode != 'display') && (! $item['private'])) ? true : false);
+				$shareable = ((($profile_owner == local_user()) &&  (! $item['private'])) ? true : false); //($mode != 'display') &&
 
 				if($page_writeable) {
 					if($toplevelpost) {
@@ -505,6 +522,10 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 						if ($shareable) $likebuttons['share'] = array( t('Share this'), t('share'));
 					}
 
+
+					$qc = ((local_user()) ? get_pconfig(local_user(),'qcomment','words') : null);
+					$qcomment = (($qc) ? explode("\n",$qc) : null);
+
 					if(($show_comment_box) || (($show_comment_box == false) && ($override_comment_box == false) && ($item['last-child']))) {
 						$comment = replace_macros($cmnt_tpl,array(
 							'$return_path' => '', 
@@ -512,6 +533,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 							'$type' => (($mode === 'profile') ? 'wall-comment' : 'net-comment'),
 							'$id' => $item['item_id'],
 							'$parent' => $item['parent'],
+							'$qcomment' => $qcomment,
 							'$profile_uid' =>  $profile_owner,
 							'$mylink' => $a->contact['url'],
 							'$mytitle' => t('This is you'),
@@ -594,16 +616,10 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				$like    = ((x($alike,$item['id'])) ? format_like($alike[$item['id']],$alike[$item['id'] . '-l'],'like',$item['id']) : '');
 				$dislike = ((x($dlike,$item['id'])) ? format_like($dlike[$item['id']],$dlike[$item['id'] . '-l'],'dislike',$item['id']) : '');
 
-				$location = (($item['location']) ? '<a target="map" title="' . $item['location'] 
-					. '" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : '');
-				$coord = (($item['coord']) ? '<a target="map" title="' . $item['coord'] 
-					. '" href="http://maps.google.com/?q=' . urlencode($item['coord']) . '">' . $item['coord'] . '</a>' : '');
-				if($coord) {
-					if($location)
-						$location .= '<br /><span class="smalltext">(' . $coord . ')</span>';
-					else
-						$location = '<span class="smalltext">' . $coord . '</span>';
-				}
+				$locate = array('location' => $item['location'], 'coord' => $item['coord'], 'html' => '');
+				call_hooks('render_location',$locate);
+
+				$location = ((strlen($locate['html'])) ? $locate['html'] : render_location_google($locate));
 
 				$indent = (($toplevelpost) ? '' : ' comment');
 
@@ -620,11 +636,9 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 					if ($tag!="") $tags[] = bbcode($tag);
 				}
 
-
 				// Build the HTML
 
 				$body = prepare_body($item,true);
-				
 
 				$tmp_item = replace_macros($template,array(
 					'$type' => implode("",array_slice(split("/",$item['verb']),-1)),
@@ -832,104 +846,114 @@ function format_like($cnt,$arr,$type,$id) {
 }}
 
 
-function status_editor($a,$x, $notes_cid = 0) {
+function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 
 	$o = '';
 		
 	$geotag = (($x['allow_location']) ? get_markup_template('jot_geotag.tpl') : '');
 
-		$tpl = get_markup_template('jot-header.tpl');
+	$plaintext = false;
+	if(local_user() && intval(get_pconfig(local_user(),'system','plaintext')))
+		$plaintext = true;
+
+	$tpl = get_markup_template('jot-header.tpl');
 	
-		$a->page['htmlhead'] .= replace_macros($tpl, array(
-			'$newpost' => 'true',
-			'$baseurl' => $a->get_baseurl(),
-			'$geotag' => $geotag,
-			'$nickname' => $x['nickname'],
-			'$ispublic' => t('Visible to <strong>everybody</strong>'),
-			'$linkurl' => t('Please enter a link URL:'),
-			'$vidurl' => t("Please enter a video link/URL:"),
-			'$audurl' => t("Please enter an audio link/URL:"),
-			'$term' => t('Tag term:'),
-			'$whereareu' => t('Where are you right now?'),
-			'$title' => t('Enter a title for this item') 
-		));
+	$a->page['htmlhead'] .= replace_macros($tpl, array(
+		'$newpost' => 'true',
+		'$baseurl' => $a->get_baseurl(),
+		'$editselect' => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
+		'$geotag' => $geotag,
+		'$nickname' => $x['nickname'],
+		'$ispublic' => t('Visible to <strong>everybody</strong>'),
+		'$linkurl' => t('Please enter a link URL:'),
+		'$vidurl' => t("Please enter a video link/URL:"),
+		'$audurl' => t("Please enter an audio link/URL:"),
+		'$term' => t('Tag term:'),
+		'$whereareu' => t('Where are you right now?'),
+		'$title' => t('Enter a title for this item') 
+	));
 
 
-		$tpl = get_markup_template("jot.tpl");
+	$tpl = get_markup_template("jot.tpl");
 		
-		$jotplugins = '';
-		$jotnets = '';
+	$jotplugins = '';
+	$jotnets = '';
 
-		$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
+	$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
 
-		$mail_enabled = false;
-		$pubmail_enabled = false;
+	$mail_enabled = false;
+	$pubmail_enabled = false;
 
-		if(($x['is_owner']) && (! $mail_disabled)) {
-			$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d AND `server` != '' LIMIT 1",
-				intval(local_user())
-			);
-			if(count($r)) {
-				$mail_enabled = true;
-				if(intval($r[0]['pubmail']))
-					$pubmail_enabled = true;
-			}
+	if(($x['is_owner']) && (! $mail_disabled)) {
+		$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d AND `server` != '' LIMIT 1",
+			intval(local_user())
+		);
+		if(count($r)) {
+			$mail_enabled = true;
+			if(intval($r[0]['pubmail']))
+				$pubmail_enabled = true;
 		}
+	}
 
-		if($mail_enabled) {
-	       $selected = (($pubmail_enabled) ? ' checked="checked" ' : '');
-			$jotnets .= '<div class="profile-jot-net"><input type="checkbox" name="pubmail_enable"' . $selected . ' value="1" /> '
-           	. t("Post to Email") . '</div>';
-		}
+	if($mail_enabled) {
+		$selected = (($pubmail_enabled) ? ' checked="checked" ' : '');
+		$jotnets .= '<div class="profile-jot-net"><input type="checkbox" name="pubmail_enable"' . $selected . ' value="1" /> ' . t("Post to Email") . '</div>';
+	}
 
-		call_hooks('jot_tool', $jotplugins);
-		call_hooks('jot_networks', $jotnets);
+	call_hooks('jot_tool', $jotplugins);
+	call_hooks('jot_networks', $jotnets);
 
-		if($notes_cid)
-			$jotnets .= '<input type="hidden" name="contact_allow[]" value="' . $notes_cid .'" />';
+	if($notes_cid)
+		$jotnets .= '<input type="hidden" name="contact_allow[]" value="' . $notes_cid .'" />';
 
-		$tpl = replace_macros($tpl,array('$jotplugins' => $jotplugins));	
+	$tpl = replace_macros($tpl,array('$jotplugins' => $jotplugins));	
 
-		$o .= replace_macros($tpl,array(
-			'$return_path' => $a->cmd,
-			'$action' => 'item',
-			'$share' => (($x['button']) ? $x['button'] : t('Share')),
-			'$upload' => t('Upload photo'),
-			'$shortupload' => t('upload photo'),
-			'$attach' => t('Attach file'),
-			'$shortattach' => t('attach file'),
-			'$weblink' => t('Insert web link'),
-			'$shortweblink' => t('web link'),
-			'$video' => t('Insert video link'),
-			'$shortvideo' => t('video link'),
-			'$audio' => t('Insert audio link'),
-			'$shortaudio' => t('audio link'),
-			'$setloc' => t('Set your location'),
-			'$shortsetloc' => t('set location'),
-			'$noloc' => t('Clear browser location'),
-			'$shortnoloc' => t('clear location'),
-			'$title' => "",
-			'$placeholdertitle' => t('Set title'),
-			'$wait' => t('Please wait'),
-			'$permset' => t('Permission settings'),
-			'$shortpermset' => t('permissions'),
-			'$ptyp' => (($notes_cid) ? 'note' : 'wall'),
-			'$content' => '',
-			'$post_id' => '',
-			'$baseurl' => $a->get_baseurl(),
-			'$defloc' => $x['default_location'],
-			'$visitor' => $x['visitor'],
-			'$pvisit' => (($notes_cid) ? 'none' : $x['visitor']),
-			'$emailcc' => t('CC: email addresses'),
-			'$public' => t('Public post'),
-			'$jotnets' => $jotnets,
-			'$emtitle' => t('Example: bob@example.com, mary@example.com'),
-			'$lockstate' => $x['lockstate'],
-			'$acl' => $x['acl'],
-			'$bang' => $x['bang'],
-			'$profile_uid' => $x['profile_uid'],
-			'$preview' => t('Preview'),
-		));
+	$o .= replace_macros($tpl,array(
+		'$return_path' => $a->cmd,
+		'$action' =>  $a->get_baseurl().'/item',
+		'$share' => (($x['button']) ? $x['button'] : t('Share')),
+		'$upload' => t('Upload photo'),
+		'$shortupload' => t('upload photo'),
+		'$attach' => t('Attach file'),
+		'$shortattach' => t('attach file'),
+		'$weblink' => t('Insert web link'),
+		'$shortweblink' => t('web link'),
+		'$video' => t('Insert video link'),
+		'$shortvideo' => t('video link'),
+		'$audio' => t('Insert audio link'),
+		'$shortaudio' => t('audio link'),
+		'$setloc' => t('Set your location'),
+		'$shortsetloc' => t('set location'),
+		'$noloc' => t('Clear browser location'),
+		'$shortnoloc' => t('clear location'),
+		'$title' => "",
+		'$placeholdertitle' => t('Set title'),
+		'$wait' => t('Please wait'),
+		'$permset' => t('Permission settings'),
+		'$shortpermset' => t('permissions'),
+		'$ptyp' => (($notes_cid) ? 'note' : 'wall'),
+		'$content' => '',
+		'$post_id' => '',
+		'$baseurl' => $a->get_baseurl(),
+		'$defloc' => $x['default_location'],
+		'$visitor' => $x['visitor'],
+		'$pvisit' => (($notes_cid) ? 'none' : $x['visitor']),
+		'$emailcc' => t('CC: email addresses'),
+		'$public' => t('Public post'),
+		'$jotnets' => $jotnets,
+		'$emtitle' => t('Example: bob@example.com, mary@example.com'),
+		'$lockstate' => $x['lockstate'],
+		'$acl' => $x['acl'],
+		'$bang' => $x['bang'],
+		'$profile_uid' => $x['profile_uid'],
+		'$preview' => t('Preview'),
+	));
+
+
+	if ($popup==true){
+		$o = '<div id="jot-popup" style="display: none;">'.$o.'</div>';
+		
+	}
 
 	return $o;
 }
@@ -1004,3 +1028,17 @@ function find_thread_parent_index($arr,$x) {
 			return $k;
 	return false;
 }
+
+function render_location_google($item) {
+	$location = '';
+	$location = (($item['location']) ? '<a target="map" title="' . $item['location'] . '" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : '');
+	$coord = (($item['coord']) ? '<a target="map" title="' . $item['coord'] . '" href="http://maps.google.com/?q=' . urlencode($item['coord']) . '">' . $item['coord'] . '</a>' : '');
+	if($coord) {
+		if($location)
+			$location .= '<br /><span class="smalltext">(' . $coord . ')</span>';
+		else
+			$location = '<span class="smalltext">' . $coord . '</span>';
+	}
+	return $location;
+}
+

@@ -12,6 +12,13 @@ function parse_url_content(&$a) {
 	$text = null;
 	$str_tags = '';
 
+	$textmode = false;
+	if(local_user() && intval(get_pconfig(local_user(),'system','plaintext')))
+		$textmode = true;
+
+	if($textmode)
+	$br = (($textmode) ? "\n" : '<br /?');
+
 	if(x($_GET,'binurl'))
 		$url = trim(hex2bin($_GET['binurl']));
 	else
@@ -27,14 +34,17 @@ function parse_url_content(&$a) {
 		$arr_tags = str_getcsv($_GET['tags']);
 		if(count($arr_tags)) {
 			array_walk($arr_tags,'arr_add_hashes');
-			$str_tags = '<br />' . implode(' ',$arr_tags) . '<br />'; 		
+			$str_tags = $br . implode(' ',$arr_tags) . $br;
 		}
 	}
 
 	logger('parse_url: ' . $url);
 
 
-	$template = "<br /><a class=\"bookmark\" href=\"%s\" >%s</a>%s<br />";
+	if($textmode)
+		$template = $br . '[bookmark=%s]%s[/bookmark]%s' . $br;
+	else
+		$template = "<br /><a class=\"bookmark\" href=\"%s\" >%s</a>%s<br />";
 
 
 	$arr = array('url' => $url, 'text' => '');
@@ -49,7 +59,11 @@ function parse_url_content(&$a) {
 
 	if($url && $title && $text) {
 
-		$text = '<br /><br /><blockquote>' . $text . '</blockquote><br />';
+		if($textmode)
+			$text = $br . $br . '[quote]' . $text . '[/quote]' . $br;
+		else
+			$text = '<br /><br /><blockquote>' . $text . '</blockquote><br />';
+
 		$title = str_replace(array("\r","\n"),array('',''),$title);
 
 		$result = sprintf($template,$url,($title) ? $title : $url,$text) . $str_tags;
@@ -208,10 +222,17 @@ function parse_url_content(&$a) {
 								$ph->scaleImage(300);
 								$new_width = $ph->getWidth();
 								$new_height = $ph->getHeight();
-								$image = '<br /><br /><img height="' . $new_height . '" width="' . $new_width . '" src="' .$image . '" alt="photo" />';
+								if($textmode)
+									$image = $br . $br . '[img=' . $new_width . 'x' . $new_height . ']' . $image . '[/img]';
+								else
+									$image = '<br /><br /><img height="' . $new_height . '" width="' . $new_width . '" src="' .$image . '" alt="photo" />';
 							}
-							else
-								$image = '<br /><br /><img src="' . $image . '" alt="photo" />';
+							else {
+								if($textmode) 
+									$image = $br . $br . '[img]' . $image . '[/img]';
+								else
+									$image = '<br /><br /><img src="' . $image . '" alt="photo" />';
+							}
 						}
 						else
 							$image = '';
@@ -223,11 +244,14 @@ function parse_url_content(&$a) {
 	}
 
 	if(strlen($text)) {
-		$text = '<br /><br /><blockquote>' . $text . '</blockquote><br />';
+		if($textmode)
+			$text = $br .$br . '[quote]' . $text . '[/quote]' . $br ;
+		else
+			$text = '<br /><br /><blockquote>' . $text . '</blockquote><br />';
 	}
 
 	if($image) {
-		$text = $image . '<br />' . $text;
+		$text = $image . $br . $text;
 	}
 	$title = str_replace(array("\r","\n"),array('',''),$title);
 

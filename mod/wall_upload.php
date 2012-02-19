@@ -100,7 +100,11 @@ function wall_upload_post(&$a) {
 	}
 
 	$basename = basename($filename);
-	echo  '<br /><br /><a href="' . $a->get_baseurl() . '/photos/' . $page_owner_nick . '/image/' . $hash . '" ><img src="' . $a->get_baseurl() . "/photo/{$hash}-{$smallest}.jpg\" alt=\"$basename\" /></a><br /><br />";
+
+	if(local_user() && intval(get_pconfig(local_user(),'system','plaintext')))
+		echo  "\n\n" . '[url=' . $a->get_baseurl() . '/photos/' . $page_owner_nick . '/image/' . $hash . '][img]' . $a->get_baseurl() . "/photo/{$hash}-{$smallest}.jpg[/img][/url]\n\n";
+	else
+		echo  '<br /><br /><a href="' . $a->get_baseurl() . '/photos/' . $page_owner_nick . '/image/' . $hash . '" ><img src="' . $a->get_baseurl() . "/photo/{$hash}-{$smallest}.jpg\" alt=\"$basename\" /></a><br /><br />";
 
 	killme();
 	// NOTREACHED

@@ -28,17 +28,19 @@ function notification($params) {
 		$subject = 	sprintf( t('New mail received at %s'),$sitename);
 
 		$preamble = sprintf( t('%s sent you a new private message at %s.'),$params['source_name'],$sitename);
-
+		$epreamble = sprintf( t('%s sent you a private message.'),'[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]');
 		$sitelink = t('Please visit %s to view and/or reply to your private messages.');
 		$tsitelink = sprintf( $sitelink, $siteurl . '/message' );
 		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '/message">' . $sitename . '</a>');
-		$itemlink = '';
+		$itemlink = $siteurl . '/message';
 	}
 
 	if($params['type'] == NOTIFY_COMMENT) {
 
 		$subject = sprintf( t('%s commented on an item at %s'), $params['source_name'], $sitename);
 		$preamble = sprintf( t('%s commented on an item/conversation you have been following.'), $params['source_name']); 
+		$epreamble = sprintf( t('%s commented on an item/conversation you have been following.'), '[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]'); 
+
 		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
 		$tsitelink = sprintf( $sitelink, $siteurl );
 		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '">' . $sitename . '</a>');
@@ -47,6 +49,27 @@ function notification($params) {
 
 	if($params['type'] == NOTIFY_WALL) {
 		$preamble = $subject =	sprintf( t('%s posted to your profile wall at %s') , $params['source_name'], $sitename);
+		$epreamble = sprintf( t('%s posted to your profile wall') , '[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]'); 
+		
+		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
+		$tsitelink = sprintf( $sitelink, $siteurl );
+		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '">' . $sitename . '</a>');
+		$itemlink =  $params['link'];
+	}
+
+	if($params['type'] == NOTIFY_TAGSELF) {
+		$preamble = $subject =	sprintf( t('%s tagged you at %s') , $params['source_name'], $sitename);
+		$epreamble = sprintf( t('%s tagged you') , '[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]'); 
+
+		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
+		$tsitelink = sprintf( $sitelink, $siteurl );
+		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '">' . $sitename . '</a>');
+		$itemlink =  $params['link'];
+	}
+
+	if($params['type'] == NOTIFY_TAGSHARE) {
+		$preamble = $subject =	sprintf( t('%s tagged your post at %s') , $params['source_name'], $sitename);
+		$epreamble = sprintf( t('%s tagged your post') , '[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]'); 
 
 		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
 		$tsitelink = sprintf( $sitelink, $siteurl );
@@ -57,6 +80,7 @@ function notification($params) {
 	if($params['type'] == NOTIFY_INTRO) {
 		$subject = sprintf( t('Introduction received at %s'), $sitename);
 		$preamble = sprintf( t('You\'ve received an introduction from \'%s\' at %s'), $params['source_name'], $sitename); 
+		$epreamble = sprintf( t('You\'ve received an introduction from %s'), '[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]'); 
 		$body = sprintf( t('You may visit their profile at %s'),$params['source_link']);
 
 		$sitelink = t('Please visit %s to approve or reject the introduction.');
@@ -68,6 +92,9 @@ function notification($params) {
 	if($params['type'] == NOTIFY_SUGGEST) {
 		$subject = sprintf( t('Friend suggestion received at %s'), $sitename);
 		$preamble = sprintf( t('You\'ve received a friend suggestion from \'%s\' at %s'), $params['source_name'], $sitename); 
+		$epreamble = sprintf( t('You\'ve received a friend suggestion for %s from %s'),
+			'[url=' . $params['item']['url'] . ']' . $params['item']['name'] . '[/url]', 
+			'[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]'); 
 		$body = t('Name:') . ' ' . $params['item']['name'] . "\n";
 		$body .= t('Photo:') . ' ' . $params['item']['photo'] . "\n";
 		$body .= sprintf( t('You may visit their profile at %s'),$params['item']['url']);
@@ -82,9 +109,27 @@ function notification($params) {
 
 	}
 
-	// TODO - create notification entry in DB
+	// from here on everything is in the recipients language
 
+	push_lang($params['language']);
 
+	require_once('include/html2bbcode.php');	
+
+	// create notification entry in DB
+
+	$r = q("insert into notify (name,url,photo,date,msg,uid,link,type,verb,otype)
+		values('%s','%s','%s','%s','%s',%d,'%s',%d,'%s','%s')",
+		dbesc($params['source_name']),
+		dbesc($params['source_link']),
+		dbesc($params['source_photo']),
+		dbesc(datetime_convert()),
+		dbesc($epreamble),
+		intval($params['uid']),
+		dbesc($itemlink),
+		intval($params['type']),
+		dbesc($params['verb']),
+		dbesc($params['otype'])
+	);
 
 	// send email notification if notification preferences permit
 
@@ -93,7 +138,6 @@ function notification($params) {
 
 		logger('notification: sending notification email');
 
-		push_lang($params['language']);
 
 		$textversion = strip_tags(html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r", "\\n"), "\n",
 			$body))),ENT_QUOTES,'UTF-8'));
@@ -108,7 +152,7 @@ function notification($params) {
 			'$preamble'     => $preamble,
 			'$sitename'     => $sitename,
 			'$siteurl'      => $siteurl,
-			'$source_name'  => $parama['source_name'],
+			'$source_name'  => $params['source_name'],
 			'$source_link'  => $params['source_link'],
 			'$source_photo' => $params['source_photo'],
 			'$username'     => $params['to_name'],
@@ -128,7 +172,7 @@ function notification($params) {
 			'$preamble'     => $preamble,
 			'$sitename'     => $sitename,
 			'$siteurl'      => $siteurl,
-			'$source_name'  => $parama['source_name'],
+			'$source_name'  => $params['source_name'],
 			'$source_link'  => $params['source_link'],
 			'$source_photo' => $params['source_photo'],
 			'$username'     => $params['to_name'],
@@ -153,8 +197,10 @@ function notification($params) {
 			'htmlVersion' => $email_html_body,
 			'textVersion' => $email_text_body
 		));
-		pop_lang();
 	}
+
+	pop_lang();
+
 }
 
 require_once('include/email.php');

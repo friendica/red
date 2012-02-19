@@ -26,12 +26,23 @@
 				{{ if $lock }}<div class="wall-item-lock"><img src="images/lock_icon.gif" class="lockview" alt="$lock" onclick="lockview(event,$id);" /></div>
 				{{ else }}<div class="wall-item-lock"></div>{{ endif }}
 		</div>
+		<div class="wall-item-content" id="wall-item-content-$id" >
+			<div class="wall-item-title" id="wall-item-title-$id">$title</div>
+			<div class="wall-item-title-end"></div>
+			<div class="wall-item-body" id="wall-item-body-$id" >$body
+					<div class="body-tag">
+						{{ for $tags as $tag }}
+							<span class='tag'>$tag</span>
+						{{ endfor }}
+					</div>
+			</div>
+		</div>
 		<div class="wall-item-tools" id="wall-item-tools-$id">
 			{{ if $vote }}
 			<div class="wall-item-like-buttons" id="wall-item-like-buttons-$id">
 				<a href="#" class="icon like" title="$vote.like.0" onclick="dolike($id,'like'); return false"></a>
 				<a href="#" class="icon dislike" title="$vote.dislike.0" onclick="dolike($id,'dislike'); return false"></a>
-				{{ if $vote.share }}<a href="#" class="icon recycle wall-item-share-buttons" title=""$vote.share.0" onclick="jotShare($id); return false"></a>{{ endif }}
+				{{ if $vote.share }}<a href="#" class="icon recycle wall-item-share-buttons" title="$vote.share.0" onclick="jotShare($id); return false"></a>{{ endif }}
 				<img id="like-rotator-$id" class="like-rotator" src="images/rotator.gif" alt="$wait" title="$wait" style="display: none;" />
 			</div>
 			{{ endif }}
@@ -52,17 +63,6 @@
 			</div>
 				{{ if $drop.dropping }}<input type="checkbox" onclick="checkboxhighlight(this);" title="$drop.select" class="item-select" name="itemselected[]" value="$id" />{{ endif }}
 			<div class="wall-item-delete-end"></div>
-		</div>
-		<div class="wall-item-content" id="wall-item-content-$id" >
-			<div class="wall-item-title" id="wall-item-title-$id">$title</div>
-			<div class="wall-item-title-end"></div>
-			<div class="wall-item-body" id="wall-item-body-$id" >$body
-					<div class="body-tag">
-						{{ for $tags as $tag }}
-							<span class='tag'>$tag</span>
-						{{ endfor }}
-					</div>
-			</div>
 		</div>
 		<div class="wall-item-author">
 			<a href="$profile_url" title="$linktitle" class="wall-item-name-link"><span class="wall-item-name$sparkle" id="wall-item-name-$id" >$name</span></a>

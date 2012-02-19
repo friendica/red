@@ -11,8 +11,6 @@ function oexchange_init(&$a) {
 		killme();
 	}
 
-		
-
 
 }
 
@@ -28,14 +26,14 @@ function oexchange_content(&$a) {
 		return;
 	}
 
-	$url = (((x($_GET,'url')) && strlen($_GET['url'])) 
-		? urlencode(notags(trim($_GET['url']))) : '');
-	$title = (((x($_GET,'title')) && strlen($_GET['title'])) 
-		? '&title=' . urlencode(notags(trim($_GET['title']))) : '');
-	$description = (((x($_GET,'description')) && strlen($_GET['description'])) 
-		? '&description=' . urlencode(notags(trim($_GET['description']))) : '');
-	$tags = (((x($_GET,'tags')) && strlen($_GET['tags'])) 
-		? '&tags=' . urlencode(notags(trim($_GET['tags']))) : '');
+	$url = (((x($_REQUEST,'url')) && strlen($_REQUEST['url'])) 
+		? urlencode(notags(trim($_REQUEST['url']))) : '');
+	$title = (((x($_REQUEST,'title')) && strlen($_REQUEST['title'])) 
+		? '&title=' . urlencode(notags(trim($_REQUEST['title']))) : '');
+	$description = (((x($_REQUEST,'description')) && strlen($_REQUEST['description'])) 
+		? '&description=' . urlencode(notags(trim($_REQUEST['description']))) : '');
+	$tags = (((x($_REQUEST,'tags')) && strlen($_REQUEST['tags'])) 
+		? '&tags=' . urlencode(notags(trim($_REQUEST['tags']))) : '');
 
 	$s = fetch_url($a->get_baseurl() . '/parse_url?f=&url=' . $url . $title . $description . $tags);
 
@@ -51,7 +49,7 @@ function oexchange_content(&$a) {
 	$post['body'] = html2bbcode($s);
 	$post['type'] = 'wall';
 
-	$_POST = $post;
+	$_REQUEST = $post;
 	require_once('mod/item.php');
 	item_post($a);
 

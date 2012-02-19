@@ -29,6 +29,11 @@ function expire_run($argv, $argc){
 	$a->set_baseurl(get_config('system','url'));
 
 
+	// physically remove anything that has been deleted for more than two months
+
+	$r = q("delete from item where deleted = 1 and changed < UTC_TIMESTAMP() - INTERVAL 60 DAY");
+	q("optimize table item");
+
 	logger('expire: start');
 	
 	$r = q("SELECT `uid`,`username`,`expire` FROM `user` WHERE `expire` != 0");

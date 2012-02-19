@@ -46,6 +46,23 @@
 		}
 	}
 
+
+	function commentInsert(obj,id) {
+		var tmpStr = $("#comment-edit-text-" + id).val();
+		if(tmpStr == '$comment') {
+			tmpStr = '';
+			$("#comment-edit-text-" + id).addClass("comment-edit-text-full");
+			$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
+			openMenu("comment-edit-submit-wrapper-" + id);
+		}
+		var ins = $(obj).html();
+		ins = ins.replace('&lt;','<');
+		ins = ins.replace('&gt;','>');
+		ins = ins.replace('&amp;','&');
+		ins = ins.replace('&quot;','"');
+		$("#comment-edit-text-" + id).val(tmpStr + ins);
+	}
+
 	function showHideComments(id) {
 		if( $('#collapsed-comments-' + id).is(':visible')) {
 			$('#collapsed-comments-' + id).hide();

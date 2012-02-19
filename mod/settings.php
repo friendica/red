@@ -734,8 +734,11 @@ function settings_content(&$a) {
 	if($files) {
 		foreach($files as $file) {
 			$f = basename($file);
-			$theme_name = ((file_exists($file . '/experimental')) ?  sprintf("%s - \x28Experimental\x29", $f) : $f);
-			$themes[$f]=$theme_name;
+			$is_experimental = file_exists($file . '/experimental');
+			if (!$is_experimental or ($is_experimental && (get_config('experimentals','exp_themes')==1 or get_config('experimentals','exp_themes')===false))){ 
+				$theme_name = (($is_experimental) ?  sprintf("%s - \x28Experimental\x29", $f) : $f);
+				$themes[$f]=$theme_name;
+			}
 		}
 	}
 	$theme_selected = (!x($_SESSION,'theme')? $default_theme : $_SESSION['theme']);
@@ -757,7 +760,7 @@ function settings_content(&$a) {
 	$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
 
 	$expire_arr = array(
-		'days' => array('expire',  t("Automatically expire posts after days:"), $expire, t('If empty, posts will not expire. Expired posts will be deleted')),
+		'days' => array('expire',  t("Automatically expire posts after this many days:"), $expire, t('If empty, posts will not expire. Expired posts will be deleted')),
 		'advanced' => t('Advanced expiration settings'),
 		'label' => t('Advanced Expiration'),
 		'items' => array('expire_items',  t("Expire posts:"), $expire_items, '', array(t('No'),t('Yes'))),
@@ -818,6 +821,7 @@ function settings_content(&$a) {
 		'$notify4'	=> array('notify4', t('Someone writes a followup comment'), ($notify & NOTIFY_COMMENT), NOTIFY_COMMENT, ''),
 		'$notify5'	=> array('notify5', t('You receive a private message'), ($notify & NOTIFY_MAIL), NOTIFY_MAIL, ''),
 		'$notify6'  => array('notify6', t('You receive a friend suggestion'), ($notify & NOTIFY_SUGGEST), NOTIFY_SUGGEST, ''),		
+		'$notify7'  => array('notify7', t('You are tagged in a post'), ($notify & NOTIFY_TAGSELF), NOTIFY_TAGSELF, ''),		
 		
 		
 		'$h_advn' => t('Advanced Page Settings'),

@@ -105,6 +105,7 @@
 			rep(/<u>/gi,"[u]");
 			rep(/<blockquote[^>]*>/gi,"[quote]");
 			rep(/<\/blockquote>/gi,"[/quote]");
+			rep(/<hr \/>/gi,"[hr]");
 			rep(/<br \/>/gi,"\n\n");
 			rep(/<br\/>/gi,"\n\n");
 			rep(/<br>/gi,"\n");
@@ -135,6 +136,7 @@
 			rep(/\[\/i\]/gi,"</em>");
 			rep(/\[u\]/gi,"<u>");
 			rep(/\[\/u\]/gi,"</u>");
+			rep(/\[hr\]/gi,"<hr />");
 			rep(/\[bookmark=([^\]]+)\](.*?)\[\/bookmark\]/gi,"<a class=\"bookmark\" href=\"$1\">$2</a>");
 			rep(/\[url=([^\]]+)\](.*?)\[\/url\]/gi,"<a href=\"$1\">$2</a>");
 			rep(/\[url\](.*?)\[\/url\]/gi,"<a href=\"$1\">$1</a>");

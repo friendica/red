@@ -48,6 +48,21 @@
 .icon.s10.unlock {
   background-image: url("../../../images/icons/10/unlock.png");
 }
+.icon.s10.type-unkn {
+  background-image: url("../../../images/icons/10/zip.png");
+}
+.icon.s10.type-audio {
+  background-image: url("../../../images/icons/10/audio.png");
+}
+.icon.s10.type-video {
+  background-image: url("../../../images/icons/10/video.png");
+}
+.icon.s10.type-image {
+  background-image: url("../../../images/icons/10/image.png");
+}
+.icon.s10.type-text {
+  background-image: url("../../../images/icons/10/text.png");
+}
 .icon.s10.text {
   padding: 2px 0px 0px 15px;
 }
@@ -84,6 +99,21 @@
 }
 .icon.s16.unlock {
   background-image: url("../../../images/icons/16/unlock.png");
+}
+.icon.s16.type-unkn {
+  background-image: url("../../../images/icons/16/zip.png");
+}
+.icon.s16.type-audio {
+  background-image: url("../../../images/icons/16/audio.png");
+}
+.icon.s16.type-video {
+  background-image: url("../../../images/icons/16/video.png");
+}
+.icon.s16.type-image {
+  background-image: url("../../../images/icons/16/image.png");
+}
+.icon.s16.type-text {
+  background-image: url("../../../images/icons/16/text.png");
 }
 .icon.s16.text {
   padding: 4px 0px 0px 20px;
@@ -122,6 +152,21 @@
 .icon.s22.unlock {
   background-image: url("../../../images/icons/22/unlock.png");
 }
+.icon.s22.type-unkn {
+  background-image: url("../../../images/icons/22/zip.png");
+}
+.icon.s22.type-audio {
+  background-image: url("../../../images/icons/22/audio.png");
+}
+.icon.s22.type-video {
+  background-image: url("../../../images/icons/22/video.png");
+}
+.icon.s22.type-image {
+  background-image: url("../../../images/icons/22/image.png");
+}
+.icon.s22.type-text {
+  background-image: url("../../../images/icons/22/text.png");
+}
 .icon.s22.text {
   padding: 10px 0px 0px 25px;
 }
@@ -158,6 +203,21 @@
 }
 .icon.s48.unlock {
   background-image: url("../../../images/icons/48/unlock.png");
+}
+.icon.s48.type-unkn {
+  background-image: url("../../../images/icons/48/zip.png");
+}
+.icon.s48.type-audio {
+  background-image: url("../../../images/icons/48/audio.png");
+}
+.icon.s48.type-video {
+  background-image: url("../../../images/icons/48/video.png");
+}
+.icon.s48.type-image {
+  background-image: url("../../../images/icons/48/image.png");
+}
+.icon.s48.type-text {
+  background-image: url("../../../images/icons/48/text.png");
 }
 /* global */
 body {
@@ -564,6 +624,53 @@ aside #profiles-menu {
   widht: 48px;
   height: 58px;
 }
+/* group member */
+#contact-edit-drop-link, .mail-list-delete-wrapper, .group-delete-wrapper {
+  float: right;
+  margin-right: 50px;
+}
+#contact-edit-drop-link .drophide, .mail-list-delete-wrapper .drophide, .group-delete-wrapper .drophide {
+  background-image: url('../../../images/icons/22/delete.png');
+  display: block;
+  width: 22px;
+  height: 22px;
+  opacity: 0.3;
+  position: relative;
+  top: -50px;
+}
+#contact-edit-drop-link .drop, .mail-list-delete-wrapper .drop, .group-delete-wrapper .drop {
+  background-image: url('../../../images/icons/22/delete.png');
+  display: block;
+  width: 22px;
+  height: 22px;
+  position: relative;
+  top: -50px;
+}
+#group-members {
+  margin-top: 20px;
+  padding: 10px;
+  height: 250px;
+  overflow: auto;
+  border: 1px solid #ddd;
+}
+#group-members-end {
+  clear: both;
+}
+#group-all-contacts {
+  padding: 10px;
+  height: 450px;
+  overflow: auto;
+  border: 1px solid #ddd;
+}
+#group-all-contacts-end {
+  clear: both;
+  margin-bottom: 10px;
+}
+.contact-block-div {
+  float: left;
+  width: 52px;
+  height: 52px;
+}
 /* widget */
 .widget {
   margin-bottom: 2em;
@@ -843,6 +950,11 @@ section {
 .wwto .contact-photo {
   width: 25px;
   height: 25px;
+}
+#pause {
+  position: fixed;
+  bottom: 5px;
+  right: 5px;
 }
 /* contacts menu */
 .contact-photo-wrapper {
@@ -1208,6 +1320,57 @@ ul.tabs li .active {
 }
 #profile-edit-links li {
   list-style: none;
+  margin-top: 10px;
+}
+#profile-edit-default-desc {
+  color: #FF0000;
+  border: 1px solid #FF8888;
+  background-color: #FFEEEE;
+  padding: 7px;
+}
+#profile-edit-profile-name-label,
+#profile-edit-name-label,
+#profile-edit-pdesc-label,
+#profile-edit-gender-label,
+#profile-edit-dob-label,
+#profile-edit-address-label,
+#profile-edit-locality-label,
+#profile-edit-region-label,
+#profile-edit-postal-code-label,
+#profile-edit-country-name-label,
+#profile-edit-marital-label,
+#profile-edit-with-label,
+#profile-edit-sexual-label,
+#profile-edit-politic-label,
+#profile-edit-religion-label,
+#profile-edit-pubkeywords-label,
+#profile-edit-prvkeywords-label,
+#profile-edit-gender-select,
+#profile-edit-homepage-label {
+  float: left;
+  width: 175px;
+  padding-top: 7px;
+}
+#profile-edit-profile-name,
+#profile-edit-name,
+#gender-select,
+#profile-edit-pdesc,
+#profile-edit-gender,
+#profile-edit-dob,
+#profile-edit-address,
+#profile-edit-locality,
+#profile-edit-region,
+#profile-edit-postal-code,
+#profile-edit-country-name,
+#profile-edit-marital,
+#profile-edit-with,
+#profile-edit-sexual,
+#profile-edit-politic,
+#profile-edit-religion,
+#profile-edit-pubkeywords,
+#profile-edit-prvkeywords,
+#profile-edit-homepage {
+  margin-top: 5px;
 }
 /* oauth */
 .oauthapp {

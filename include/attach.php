@@ -38,6 +38,7 @@ function z_mime_content_type($filename) {
 
 		// audio/video
 		'mp3' => 'audio/mpeg',
+		'wav' => 'audio/wav',
 		'qt' => 'video/quicktime',
 		'mov' => 'video/quicktime',
 		'ogg' => 'application/ogg',
@@ -68,12 +69,13 @@ function z_mime_content_type($filename) {
 			return $mime_types[$ext];
 		}
 	}
-	elseif (function_exists('finfo_open')) {
-		$finfo = finfo_open(FILEINFO_MIME);
-		$mimetype = finfo_file($finfo, $filename);
-		finfo_close($finfo);
-		return $mimetype;
-	}
+// can't use this because we're just passing a name, e.g. not a file that can be opened
+//	elseif (function_exists('finfo_open')) {
+//		$finfo = @finfo_open(FILEINFO_MIME);
+//		$mimetype = @finfo_file($finfo, $filename);
+//		@finfo_close($finfo);
+//		return $mimetype;
+//	}
 	else {
 		return 'application/octet-stream';
 	}

@@ -35,7 +35,7 @@ function notifier_run($argv, $argc){
 	require_once("datetime.php");
 	require_once('include/items.php');
 	require_once('include/bbcode.php');
-
+	require_once('include/email.php');
 	load_config('config');
 	load_config('system');
 
@@ -264,7 +264,7 @@ function notifier_run($argv, $argc){
 			$deny_people  = expand_acl($parent['deny_cid']);
 			$deny_groups  = expand_groups(expand_acl($parent['deny_gid']));
 
-			// if our parent is a forum, uplink to the origonal author causing
+			// if our parent is a forum, uplink to the origional author causing
 			// a delivery fork
 
 			if(intval($parent['forum_mode']) && (! $top_level) && ($cmd !== 'uplink')) {
@@ -526,6 +526,14 @@ function notifier_run($argv, $argc){
 						);
 
 						if(count($x)) {
+
+							if($owner['page-flags'] == PAGE_COMMUNITY && ! $x[0]['writable']) {
+								q("update contact set writable = 1 where id = %d limit 1",
+									intval($x[0]['id'])
+								);
+								$x[0]['writable'] = 1;
+							}
+
 							require_once('library/simplepie/simplepie.inc');
 							logger('mod-delivery: local delivery');
 							local_delivery($x[0],$atom);
@@ -584,6 +592,7 @@ function notifier_run($argv, $argc){
 					break;
 
 				case NETWORK_MAIL:
+				case NETWORK_MAIL2:
 						
 					if(get_config('system','dfrn_only'))
 						break;
@@ -625,14 +634,14 @@ function notifier_run($argv, $argc){
 						if($r1 && $r1[0]['reply_to'])
 							$reply_to = $r1[0]['reply_to'];
 	
-						$subject  = (($it['title']) ? $it['title'] : t("\x28no subject\x29")) ;
+						$subject  = (($it['title']) ? email_header_encode($it['title'],'UTF-8') : t("\x28no subject\x29")) ;
 
 						// only expose our real email address to true friends
 
-						if($contact['rel'] == CONTACT_IS_FRIEND)
-							$headers  = 'From: ' . $local_user[0]['username'] . ' <' . $local_user[0]['email'] . '>' . "\n";
+						if(($contact['rel'] == CONTACT_IS_FRIEND) && (! $contact['blocked']))
+							$headers  = 'From: ' . email_header_encode($local_user[0]['username'],'UTF-8') . ' <' . $local_user[0]['email'] . '>' . "\n";
 						else
-							$headers  = 'From: ' . $local_user[0]['username'] . ' <' . t('noreply') . '@' . $a->get_hostname() . '>' . "\n";
+							$headers  = 'From: ' . email_header_encode($local_user[0]['username'],'UTF-8') . ' <' . t('noreply') . '@' . $a->get_hostname() . '>' . "\n";
 
 						if($reply_to)
 							$headers .= 'Reply-to: ' . $reply_to . "\n";
@@ -754,9 +763,10 @@ function notifier_run($argv, $argc){
 		);
 			
 		$r2 = q("SELECT `id`, `name`,`network` FROM `contact` 
-			WHERE `network` = '%s' AND `uid` = %d AND `blocked` = 0 AND `pending` = 0
+			WHERE `network` in ( '%s', '%s')  AND `uid` = %d AND `blocked` = 0 AND `pending` = 0
 			AND `rel` != %d order by rand() ",
 			dbesc(NETWORK_DFRN),
+			dbesc(NETWORK_MAIL2),
 			intval($owner['uid']),
 			intval(CONTACT_IS_SHARING)
 		);
