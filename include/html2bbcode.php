@@ -187,9 +187,13 @@ function html2bbcode($message)
 
 	node2bbcode($doc, 'hr', array(), "[hr]", "");
 
-	node2bbcode($doc, 'table', array(), "", "");
-	node2bbcode($doc, 'tr', array(), "\n", "");
-	node2bbcode($doc, 'td', array(), "\t", "");
+	//node2bbcode($doc, 'table', array(), "", "");
+	//node2bbcode($doc, 'tr', array(), "\n", "");
+	//node2bbcode($doc, 'td', array(), "\t", "");
+	node2bbcode($doc, 'table', array(), "[table]", "[/table]");
+	node2bbcode($doc, 'th', array(), "[th]", "[/th]");
+	node2bbcode($doc, 'tr', array(), "[tr]", "[/tr]");
+	node2bbcode($doc, 'td', array(), "[td]", "[/td]");
 
 	node2bbcode($doc, 'h1', array(), "\n\n[size=xx-large][b]", "[/b][/size]\n");
 	node2bbcode($doc, 'h2', array(), "\n\n[size=x-large][b]", "[/b][/size]\n");
@@ -246,27 +250,30 @@ function html2bbcode($message)
 		$message = str_replace("\n\n\n", "\n\n", $message);
 	} while ($oldmessage != $message);
 
-	$message = str_replace(array(
+	do {
+		$oldmessage = $message;
+		$message = str_replace(array(
 					"[/size]\n\n",
-					"\n\n[hr]\n",
-					"\n[hr]\n\n",
-					"\n\n[list",
-					"[/list]\n\n",
+					"\n[hr]",
+					"[hr]\n",
+					"\n[list",
+					"[/list]\n",
 					"\n[/list]",
 					"[list]\n",
 					"[list=1]\n",
-					"\n\n[*]"),
+					"\n[*]"),
 				array(
 					"[/size]\n",
-					"\n[hr]\n",
-					"\n[hr]\n",
-					"\n[list",
-					"[/list]\n",
+					"[hr]",
+					"[hr]",
+					"[list",
+					"[/list]",
 					"[/list]",
 					"[list]",
 					"[list=1]",
-					"\n[*]"),
+					"[*]"),
 				$message);
+	} while ($message != $oldmessage);
 
 	$message = str_replace(array('[b][b]', '[/b][/b]', '[i][i]', '[/i][/i]'),
 		array('[b]', '[/b]', '[i]', '[/i]'), $message);
