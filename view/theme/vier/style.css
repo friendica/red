@@ -200,15 +200,9 @@
 .icon.s16.delete {
   background-image: url("../../../images/icons/16/delete.png");
 }
-<<<<<<< HEAD
 /*.icon.s16.edit {
   background-image: url("../../../images/icons/16/edit.png");
 }*/
-=======
-.icon.s16.edit {
-  background-image: url("../../../images/icons/16/edit.png");
-}
->>>>>>> upstream/master
 .icon.s16.star {
   background-image: url("../../../images/icons/16/star.png");
 }
@@ -919,11 +913,7 @@ section {
 }
 .wall-item-container .wall-item-actions-tools {
   float: right;
-<<<<<<< HEAD
   width: 80px;
-=======
-  width: 60px;
->>>>>>> upstream/master
 }
 .wall-item-container .wall-item-actions-tools a {
   float: right;
@@ -1038,7 +1028,6 @@ section {
 /* contacts menu */
 .contact-photo-wrapper {
   position: relative;
-<<<<<<< HEAD
   width: 80px;
 }
 
@@ -1046,9 +1035,6 @@ section {
   width: 25px;
 }
 
-=======
-}
->>>>>>> upstream/master
 .contact-photo {
   width: 48px;
   height: 48px;
@@ -1410,7 +1396,6 @@ ul.tabs li .active {
 .field.radio .field_help {
   margin-left: 0px;
 }
-<<<<<<< HEAD
 
 #profile-edit-links-end {
         clear: both;
@@ -1439,11 +1424,6 @@ ul.tabs li .active {
   color: #B20202;
 }
 
-=======
-#profile-edit-links li {
-  list-style: none;
-}
->>>>>>> upstream/master
 /* oauth */
 .oauthapp {
   height: auto;
@@ -1500,7 +1480,6 @@ footer {
   height: 100px;
   display: table-row;
 }
-<<<<<<< HEAD
 
 blockquote {
     border-left: 1px solid #D2D2D2;
@@ -1536,5 +1515,3 @@ blockquote {
 #group-separator,
 #prof-separator { display: none;}
 */
-=======
->>>>>>> upstream/master
