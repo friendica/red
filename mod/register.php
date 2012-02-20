@@ -324,7 +324,7 @@ function register_post(&$a) {
 		require_once('include/Photo.php');
 
 		if(($use_gravatar) && (! strlen($photo))) 
-			$photo = gravatar_img($email);
+			$photo = avatar_img($email);
 		$photo_failure = false;
 
 		$filename = basename($photo);
@@ -333,7 +333,7 @@ function register_post(&$a) {
 		if($img->is_valid()) {
 
 			$img->scaleImageSquare(175);
-					
+
 			$hash = photo_new_resource();
 
 			$r = $img->store($newuid, 0, $hash, $filename, t('Profile Photos'), 4 );
