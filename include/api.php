@@ -148,6 +148,7 @@
 				//echo "<pre>"; var_dump($r); die();
 			}
 		}
+		logger('API call not implemented: '.$a->query_string." - ".print_r($_REQUEST,true));
 		$r = '<status><error>not implemented</error></status>';
 		switch($type){
 			case "xml":

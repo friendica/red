@@ -14,7 +14,7 @@ require_once('include/html2bbcode.php');
 function diaspora2bb($s) {
 
 	// for testing purposes: Collect raw markdown articles
-	$file = tempnam("/tmp/", "markdown");
+	$file = tempnam("/tmp/friendica/", "markdown");
 	file_put_contents($file, $s);
 
 	$s = html_entity_decode($s,ENT_COMPAT,'UTF-8');
