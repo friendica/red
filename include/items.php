@@ -2045,7 +2045,7 @@ function local_delivery($importer,$data) {
 			if($importer['page-flags'] == PAGE_COMMUNITY) {
 				$sql_extra = '';
 				$community = true;
-				logger('local_delivery: community reply');
+				logger('local_delivery: possible community reply');
 			}
 			else
 				$sql_extra = " and contact.self = 1 and item.wall = 1 ";
@@ -2055,7 +2055,7 @@ function local_delivery($importer,$data) {
 
 			$is_a_remote_comment = false;
 
-			$r = q("select `item`.`id`, `item`.`uri`, `item`.`tag`, `item`.`forum_mode`,`item`.`origin`, 
+			$r = q("select `item`.`id`, `item`.`uri`, `item`.`tag`, `item`.`forum_mode`,`item`.`origin`,`item`.`wall`, 
 				`contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
 				LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
 				WHERE `item`.`uri` = '%s' AND `item`.`parent-uri` = '%s'
@@ -2069,8 +2069,17 @@ function local_delivery($importer,$data) {
 			if($r && count($r))
 				$is_a_remote_comment = true;			
 
-			if(($community) && (! $r[0]['forum_mode']))
-				$is_a_remote_comment = false;
+			// Does this have the characteristics of a community comment?
+			// If it's a reply to a wall post on a community page it's a 
+			// valid community comment. Also forum_mode makes it valid for sure. 
+			// If neither, it's not.
+
+			if($is_a_remote_comment && $community) {
+				if((! $r[0]['forum_mode']) && (! $r[0]['wall'])) {
+					$is_a_remote_comment = false;
+					logger('local_delivery: not a community reply');
+				}
+			}
 
 			if($is_a_remote_comment) {
 				logger('local_delivery: received remote comment');
