@@ -116,10 +116,23 @@ function notification($params) {
 
 	require_once('include/html2bbcode.php');	
 
+	do {
+		$dups = false;
+		$hash = random_string();
+        $r = q("SELECT `id` FROM `notify` WHERE `hash` = '%s' LIMIT 1",
+			dbesc($hash));
+		if(count($r))
+			$dups = true;
+	} while($dups == true);
+
+
+
+
 	// create notification entry in DB
 
-	$r = q("insert into notify (name,url,photo,date,msg,uid,link,type,verb,otype)
-		values('%s','%s','%s','%s','%s',%d,'%s',%d,'%s','%s')",
+	$r = q("insert into notify (hash,name,url,photo,date,msg,uid,link,type,verb,otype)
+		values('%s','%s','%s','%s','%s','%s',%d,'%s',%d,'%s','%s')",
+		dbesc($hash),
 		dbesc($params['source_name']),
 		dbesc($params['source_link']),
 		dbesc($params['source_photo']),
@@ -131,6 +144,17 @@ function notification($params) {
 		dbesc($params['verb']),
 		dbesc($params['otype'])
 	);
+
+	$r = q("select id from notify where hash = '%s' and uid = %d limit 1",
+		dbesc($hash),
+		intval($params['uid'])
+	);
+	if($r)
+		$notify_id = $r[0]['id'];
+	else
+		return;
+
+	$itemlink = $a->get_baseurl() . '/notify/view/' . $notify_id;
 
 	// send email notification if notification preferences permit
 

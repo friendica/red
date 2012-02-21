@@ -2040,7 +2040,6 @@ function local_delivery($importer,$data) {
 		}
 
 		if($is_reply) {
-
 			$community = false;
 
 			if($importer['page-flags'] == PAGE_COMMUNITY) {
@@ -2054,7 +2053,9 @@ function local_delivery($importer,$data) {
 			// was the top-level post for this reply written by somebody on this site? 
 			// Specifically, the recipient? 
 
-			$r = q("select `item`.`id`, `item`.`uri`, `item`.`tag`, 
+			$is_a_remote_comment = false;
+
+			$r = q("select `item`.`id`, `item`.`uri`, `item`.`tag`, `item`.`forum_mode`,`item`.`origin`, 
 				`contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
 				LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
 				WHERE `item`.`uri` = '%s' AND `item`.`parent-uri` = '%s'
@@ -2065,9 +2066,13 @@ function local_delivery($importer,$data) {
 				dbesc($parent_uri),
 				intval($importer['importer_uid'])
 			);
+			if($r && count($r))
+				$is_a_remote_comment = true;			
 
-			if($r && count($r)) {	
+			if(($community) && (! $r[0]['forum_mode']))
+				$is_a_remote_comment = false;
 
+			if($is_a_remote_comment) {
 				logger('local_delivery: received remote comment');
 				$is_like = false;
 				// remote reply to our post. Import and then notify everybody else.
@@ -2188,6 +2193,7 @@ function local_delivery($importer,$data) {
 
 						}
 					}
+
 					return 0;
 					// NOTREACHED
 				}

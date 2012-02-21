@@ -741,6 +741,7 @@ CREATE TABLE IF NOT EXISTS `conv` (
 
 CREATE TABLE IF NOT EXISTS `notify` (
 `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`hash` CHAR( 64 ) NOT NULL,
 `type` INT( 11 ) NOT NULL ,
 `name` CHAR( 255 ) NOT NULL ,
 `url` CHAR( 255 ) NOT NULL ,
@@ -752,6 +753,7 @@ CREATE TABLE IF NOT EXISTS `notify` (
 `seen` TINYINT( 1 ) NOT NULL DEFAULT '0',
 `verb` CHAR( 255 ) NOT NULL,
 `otype` CHAR( 16 ) NOT NULL,
+INDEX ( `hash` ),
 INDEX ( `type` ),
 INDEX ( `uid` ),
 INDEX ( `seen` ),
