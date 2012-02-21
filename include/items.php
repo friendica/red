@@ -1700,7 +1700,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				if(! is_array($contact))
 					return;
 
-				if($contact['network'] === NETWORK_OSTATUS || stristr($permalink,'twitter.com')) {
+				if($contact['network'] === NETWORK_OSTATUS || stristr($contact['url'],'twitter.com')) {
 					if(strlen($datarray['title']))
 						unset($datarray['title']);
 					$datarray['last-child'] = 1;
@@ -2074,7 +2074,7 @@ function local_delivery($importer,$data) {
 				$datarray = get_atom_elements($feed,$item);
 
 
-		// TODO: make this next part work against both delivery threads of a community post
+				// TODO: make this next part work against both delivery threads of a community post
 
 //				if((! link_compare($datarray['author-link'],$importer['url'])) && (! $community)) {
 //					logger('local_delivery: received relay claiming to be from ' . $importer['url'] . ' however comment author url is ' . $datarray['author-link'] ); 

@@ -776,12 +776,10 @@ function smilies($s, $sample = false) {
 	else {
 		$s = str_replace($params['texts'],$params['icons'],$params['string']);
 	}
-             
+
 	return $s;
 
 }}
-
-
 
 if(! function_exists('day_translate')) {
 function day_translate($s) {
