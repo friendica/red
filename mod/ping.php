@@ -12,6 +12,13 @@ function ping_init(&$a) {
 	$xmlhead="<"."?xml version='1.0' encoding='UTF-8' ?".">";
 	if(local_user()){
 
+		$z = q("select * from notify where seen = 0 and uid = %d
+			order by date desc",
+			intval(local_user())
+		);
+
+
+
 		$tags = array();
 		$comments = array();
 		$likes = array();
@@ -142,6 +149,22 @@ function ping_init(&$a) {
 		$tot = $mail+$intro+$register+count($comments)+count($likes)+count($dislikes)+count($friends)+count($posts)+count($tags);
 		
 		echo '	<notif count="'.$tot.'">';
+
+		require_once('include/bbcode.php');
+
+		if(count($z)) {
+			foreach($z as $zz) {
+				echo xmlize($a->get_baseurl() . '/notify/' . $zz['id'], $zz['name'],$zz['url'],$zz['photo'],relative_date($zz['date']), bbcode($zz['msg']));
+
+			}
+		}
+
+
+
+
+
+/*
+
 		if ($intro>0){
 			foreach ($intros as $i) { 
 				echo xmlize( $a->get_baseurl().'/notifications/intros/'.$i['id'], $i['name'], $i['url'], $i['photo'], relative_date($i['datetime']), t("{0} wants to be your friend") );
@@ -194,6 +217,8 @@ function ping_init(&$a) {
 				echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), t("{0} mentioned you in a post") );
 			};
 		}
+
+*/
 
 		echo "  </notif>";
 	}
