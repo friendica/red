@@ -675,6 +675,15 @@ function linkify($s) {
  * @Parameter: string $s
  *
  * Returns string
+ *
+ * It is expected that this function will be called using HTML text.
+ * We will escape text between HTML pre and code blocks from being 
+ * processed. 
+ * 
+ * At a higher level, the bbcode [nosmile] tag can be used to prevent this 
+ * function from being executed by the prepare_text() routine when preparing
+ * bbcode source for HTML display
+ *
  */
 
 if(! function_exists('smilies')) {
