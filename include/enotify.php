@@ -30,9 +30,9 @@ function notification($params) {
 		$preamble = sprintf( t('%s sent you a new private message at %s.'),$params['source_name'],$sitename);
 		$epreamble = sprintf( t('%s sent you %s.'),'[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]', '[url=$itemlink]' . t('a private message') . '[/url]');
 		$sitelink = t('Please visit %s to view and/or reply to your private messages.');
-		$tsitelink = sprintf( $sitelink, $siteurl . '/message' );
-		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '/message">' . $sitename . '</a>');
-		$itemlink = $siteurl . '/message';
+		$tsitelink = sprintf( $sitelink, $siteurl . '/message/' . $params['item']['id'] );
+		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '/message/' . $params['item']['id'] . '">' . $sitename . '</a>');
+		$itemlink = $siteurl . '/message/' . $params['item']['id'];
 	}
 
 	if($params['type'] == NOTIFY_COMMENT) {
