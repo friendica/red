@@ -3202,6 +3202,10 @@ ul.menu-popup {
 	background-color:#b20202;
 }
 
+#nav-notifications-menu a:hover {
+	text-decoration: underline;
+}
+
 .notif-item a {
 	vertical-align: middle;
 	color: #626262;
