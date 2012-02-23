@@ -20,6 +20,16 @@ function notify_init(&$a) {
 
 		goaway($a->get_baseurl());
 	}
+
+	if($a->argc > 2 && $a->argv[1] === 'mark' && $a->argv[2] === 'all' ) {
+		$r = q("update notify set seen = 1 where uid = %d",
+			intval(local_user())
+		);
+		$j = json_encode(array('result' => ($r) ? 'success' : 'fail'));
+		echo $j;
+		killme();
+	}
+
 }
 
 

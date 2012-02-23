@@ -1551,8 +1551,9 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				}
 
 				$force_parent = false;
-				if($contact['network'] === NETWORK_OSTATUS) {
-					$force_parent = true;
+				if($contact['network'] === NETWORK_OSTATUS || stristr($contact['url'],'twitter.com')) {
+					if($contact['network'] === NETWORK_OSTATUS)
+						$force_parent = true;
 					if(strlen($datarray['title']))
 						unset($datarray['title']);
 					$r = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d",

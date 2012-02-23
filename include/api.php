@@ -99,6 +99,10 @@
 	 **************************/
 	function api_call(&$a){
 		GLOBAL $API, $called_api;
+
+		// preset
+		$type="json";
+
 		foreach ($API as $p=>$info){
 			if (strpos($a->query_string, $p)===0){
 				$called_api= explode("/",$p);
@@ -109,14 +113,14 @@
 
 				load_contact_links(local_user());
 
-				logger('API call for ' . $a->user['username'] . ': ' . $a->query_string);		
+				logger('API call for ' . $a->user['username'] . ': ' . $a->query_string);
 				logger('API parameters: ' . print_r($_REQUEST,true));
-				$type="json";		
+				$type="json";
 				if (strpos($a->query_string, ".xml")>0) $type="xml";
 				if (strpos($a->query_string, ".json")>0) $type="json";
 				if (strpos($a->query_string, ".rss")>0) $type="rss";
-				if (strpos($a->query_string, ".atom")>0) $type="atom";				
-				
+				if (strpos($a->query_string, ".atom")>0) $type="atom";
+
 				$r = call_user_func($info['func'], $a, $type);
 				if ($r===false) return;
 
@@ -126,8 +130,8 @@
 						header ("Content-Type: text/xml");
 						return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
 						break;
-					case "json": 
-						//header ("Content-Type: application/json");  
+					case "json":
+						//header ("Content-Type: application/json");
 						foreach($r as $rr)
 						    return json_encode($rr);
 						break;
@@ -139,19 +143,20 @@
 						header ("Content-Type: application/atom+xml");
 						return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
 						break;
-						
+
 				}
 				//echo "<pre>"; var_dump($r); die();
 			}
 		}
+		logger('API call not implemented: '.$a->query_string." - ".print_r($_REQUEST,true));
 		$r = '<status><error>not implemented</error></status>';
 		switch($type){
 			case "xml":
 				header ("Content-Type: text/xml");
 				return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
 				break;
-			case "json": 
-				header ("Content-Type: application/json");  
+			case "json":
+				header ("Content-Type: application/json");
 			    return json_encode(array('error' => 'not implemented'));
 				break;
 			case "rss":
@@ -162,7 +167,6 @@
 				header ("Content-Type: application/atom+xml");
 				return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
 				break;
-				
 		}
 	}
 
@@ -453,7 +457,49 @@
 		return null;
 	}
 
-	// TODO - media uploads
+/*Waitman Gobble Mod*/
+        function api_statuses_mediap(&$a, $type) {
+                if (local_user()===false) {
+                        logger('api_statuses_update: no user');
+                        return false;
+                }
+                $user_info = api_get_user($a);
+
+                $_REQUEST['type'] = 'wall';
+                $_REQUEST['profile_uid'] = local_user();
+                $_REQUEST['api_source'] = true;
+                $txt = urldecode(requestdata('status'));
+
+                require_once('library/HTMLPurifier.auto.php');
+                require_once('include/html2bbcode.php');
+
+                if((strpos($txt,'<') !== false) || (strpos($txt,'>') !== false)) {
+			$txt = html2bb_video($txt);
+			$config = HTMLPurifier_Config::createDefault();
+                        $config->set('Cache.DefinitionImpl', null);
+			$purifier = new HTMLPurifier($config);
+                        $txt = $purifier->purify($txt);
+		}
+		$txt = html2bbcode($txt);
+		
+                $a->argv[1]=$user_info['screen_name']; //should be set to username?
+		
+		$_REQUEST['hush']='yeah'; //tell wall_upload function to return img info instead of echo
+                require_once('mod/wall_upload.php');
+		$bebop = wall_upload_post($a);
+                
+		//now that we have the img url in bbcode we can add it to the status and insert the wall item.
+                $_REQUEST['body']=$txt."\n\n".$bebop;
+                require_once('mod/item.php');
+                item_post($a);
+
+                // this should output the last post (the one we just posted).
+                return api_status_show($a,$type);
+        }
+        api_register_func('api/statuses/mediap','api_statuses_mediap', true);
+/*Waitman Gobble Mod*/
+
+
 	function api_statuses_update(&$a, $type) {
 		if (local_user()===false) {
 			logger('api_statuses_update: no user');

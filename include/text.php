@@ -675,11 +675,23 @@ function linkify($s) {
  * @Parameter: string $s
  *
  * Returns string
+ *
+ * It is expected that this function will be called using HTML text.
+ * We will escape text between HTML pre and code blocks from being 
+ * processed. 
+ * 
+ * At a higher level, the bbcode [nosmile] tag can be used to prevent this 
+ * function from being executed by the prepare_text() routine when preparing
+ * bbcode source for HTML display
+ *
  */
 
 if(! function_exists('smilies')) {
 function smilies($s, $sample = false) {
 	$a = get_app();
+
+	$s = preg_replace_callback('/<pre>(.*?)<\/pre>/ism','smile_encode',$s);
+	$s = preg_replace_callback('/<code>(.*?)<\/code>/ism','smile_encode',$s);
 
 	$texts =  array( 
 		'&lt;3', 
@@ -777,9 +789,23 @@ function smilies($s, $sample = false) {
 		$s = str_replace($params['texts'],$params['icons'],$params['string']);
 	}
 
+	$s = preg_replace_callback('/<pre>(.*?)<\/pre>/ism','smile_decode',$s);
+	$s = preg_replace_callback('/<code>(.*?)<\/code>/ism','smile_decode',$s);
+
 	return $s;
 
 }}
+
+function smile_encode($m) {
+	return(str_replace($m[1],base64url_encode($m[1]),$m[0]));
+}
+
+function smile_decode($m) {
+	return(str_replace($m[1],base64url_decode($m[1]),$m[0]));
+}
+
+
+
 
 if(! function_exists('day_translate')) {
 function day_translate($s) {

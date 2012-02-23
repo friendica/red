@@ -101,10 +101,24 @@ function wall_upload_post(&$a) {
 
 	$basename = basename($filename);
 
-	if(local_user() && intval(get_pconfig(local_user(),'system','plaintext')))
-		echo  "\n\n" . '[url=' . $a->get_baseurl() . '/photos/' . $page_owner_nick . '/image/' . $hash . '][img]' . $a->get_baseurl() . "/photo/{$hash}-{$smallest}.jpg[/img][/url]\n\n";
-	else
-		echo  '<br /><br /><a href="' . $a->get_baseurl() . '/photos/' . $page_owner_nick . '/image/' . $hash . '" ><img src="' . $a->get_baseurl() . "/photo/{$hash}-{$smallest}.jpg\" alt=\"$basename\" /></a><br /><br />";
+
+/* mod Waitman Gobble NO WARRANTY */
+
+//if we get the signal then return the image url info in BBCODE, otherwise this outputs the info and bails (for the ajax image uploader on wall post)
+        if ($_REQUEST['hush']!='yeah') {
+
+		/*existing code*/
+		if(local_user() && intval(get_pconfig(local_user(),'system','plaintext')))
+			echo  "\n\n" . '[url=' . $a->get_baseurl() . '/photos/' . $page_owner_nick . '/image/' . $hash . '][img]' . $a->get_baseurl() . "/photo/{$hash}-{$smallest}.jpg[/img][/url]\n\n";
+		else
+			echo  '<br /><br /><a href="' . $a->get_baseurl() . '/photos/' . $page_owner_nick . '/image/' . $hash . '" ><img src="' . $a->get_baseurl() . "/photo/{$hash}-{$smallest}.jpg\" alt=\"$basename\" /></a><br /><br />";
+		/*existing code*/
+		
+	} else {
+                $m = '[url=' . $a->get_baseurl() . '/photos/' . $page_owner_nick . '/image/' . $hash . '][img]' . $a->get_baseurl() . "/photo/{$hash}-{$smallest}.jpg[/img][/url]";
+		return($m);
+        }
+/* mod Waitman Gobble NO WARRANTY */
 
 	killme();
 	// NOTREACHED
