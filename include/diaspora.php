@@ -451,7 +451,7 @@ function diaspora_request($importer,$xml) {
 		// perhaps we were already sharing with this person. Now they're sharing with us.
 		// That makes us friends.
 
-		if($contact['rel'] == CONTACT_IS_FOLLOWER) {
+		if($contact['rel'] == CONTACT_IS_FOLLOWER && $importer['page-flags'] != PAGE_COMMUNITY) {
 			q("UPDATE `contact` SET `rel` = %d, `writable` = 1 WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval(CONTACT_IS_FRIEND),
 				intval($contact['id']),
@@ -619,6 +619,18 @@ function diaspora_request($importer,$xml) {
 	return;
 }
 
+function diaspora_post_allow($importer,$contact) {
+	if(($contact['blocked']) || ($contact['readonly']))
+		return false;
+	if($contact['rel'] == CONTACT_IS_SHARING || $contact['rel'] == CONTACT_IS_FRIEND)
+		return true;
+	if($contact['rel'] == CONTACT_IS_FOLLOWER)
+		if($importer['page-flags'] == PAGE_COMMUNITY)
+			return true;
+	return false;
+}
+
+
 function diaspora_post($importer,$xml) {
 
 	$a = get_app();
@@ -629,7 +641,7 @@ function diaspora_post($importer,$xml) {
 	if(! $contact)
 		return;
 
-	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
+	if(! diaspora_post_allow($importer,$contact)) {
 		logger('diaspora_post: Ignoring this author.');
 		return 202;
 	}
@@ -748,7 +760,7 @@ function diaspora_reshare($importer,$xml) {
 	if(! $contact)
 		return;
 
-	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
+	if(! diaspora_post_allow($importer,$contact)) {
 		logger('diaspora_reshare: Ignoring this author: ' . $diaspora_handle . ' ' . print_r($xml,true));
 		return 202;
 	}
@@ -900,7 +912,7 @@ function diaspora_asphoto($importer,$xml) {
 	if(! $contact)
 		return;
 
-	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
+	if(! diaspora_post_allow($importer,$contact)) {
 		logger('diaspora_asphoto: Ignoring this author.');
 		return 202;
 	}
@@ -1001,7 +1013,7 @@ function diaspora_comment($importer,$xml,$msg) {
 		return;
 	}
 
-	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
+	if(! diaspora_post_allow($importer,$contact)) {
 		logger('diaspora_comment: Ignoring this author.');
 		return 202;
 	}
@@ -1446,7 +1458,7 @@ function diaspora_photo($importer,$xml,$msg) {
 		return;
 	}
 
-	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
+	if(! diaspora_post_allow($importer,$contact)) {
 		logger('diaspora_photo: Ignoring this author.');
 		return 202;
 	}
@@ -1503,7 +1515,7 @@ function diaspora_like($importer,$xml,$msg) {
 		return;
 	}
 
-	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
+	if(! diaspora_post_allow($importer,$contact)) {
 		logger('diaspora_like: Ignoring this author.');
 		return 202;
 	}
