@@ -116,7 +116,8 @@ function nav(&$a) {
 		if($_SESSION['page_flags'] == PAGE_NORMAL) {
 			$nav['introductions'] = array('notifications/intros',	t('Introductions'), "", t('Friend Requests'));
 			$nav['notifications'] = array('notifications',	t('Notifications'), "", t('Notifications'));
-			$nav['notifications']['all']=array('notifications/network', t('See all notifications', "", ""));
+			$nav['notifications']['all']=array('notifications/system', t('See all notifications'), "", "");
+			$nav['notifications']['mark'] = array('', t('Mark all system notifications seen'), '','');
 
 		}
 
@@ -148,7 +149,7 @@ function nav(&$a) {
 	$banner = get_config('system','banner');
 
 	if($banner === false) 
-		$banner .= '<a href="http://friendica.com"><img id="logo-img" src="images/friendika-32.png" alt="logo" /></a><span id="logo-text"><a href="http://friendica.com">Friendica</a></span>';
+		$banner .= '<a href="http://friendica.com"><img id="logo-img" src="images/friendica-32.png" alt="logo" /></a><span id="logo-text"><a href="http://friendica.com">Friendica</a></span>';
 
 
 	$tpl = get_markup_template('nav.tpl');

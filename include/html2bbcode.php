@@ -204,7 +204,7 @@ function html2bbcode($message)
 
 	node2bbcode($doc, 'a', array('href'=>'/(.+)/'), '[url=$1]', '[/url]');
 
-	node2bbcode($doc, 'img', array('src'=>'/(.+)/', 'width'=>'/(\d+)/', 'height'=>'/(\d+)/'), '[img$2x$3]$1', '[/img]');
+	node2bbcode($doc, 'img', array('src'=>'/(.+)/', 'width'=>'/(\d+)/', 'height'=>'/(\d+)/'), '[img=$2x$3]$1', '[/img]');
 	node2bbcode($doc, 'img', array('src'=>'/(.+)/'), '[img]$1', '[/img]');
 
 

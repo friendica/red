@@ -194,8 +194,8 @@ function poller_run($argv, $argc){
 							$update = true;
 						break;
 				}
-//				if((! $update) && (! $force))
-//					continue;
+				if((! $update) && (! $force))
+					continue;
 			}
 
 			// Check to see if we are running out of memory - if so spawn a new process and kill this one
@@ -349,7 +349,7 @@ function poller_run($argv, $argc){
 				|| ($contact['network'] === NETWORK_DIASPORA)
 				|| ($contact['network'] === NETWORK_FEED) ) {
 
-				// Upgrading DB fields from an older Friendika version
+				// Upgrading DB fields from an older Friendica version
 				// Will only do this once per notify-enabled OStatus contact
 				// or if relationship changes
 

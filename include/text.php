@@ -675,11 +675,23 @@ function linkify($s) {
  * @Parameter: string $s
  *
  * Returns string
+ *
+ * It is expected that this function will be called using HTML text.
+ * We will escape text between HTML pre and code blocks from being 
+ * processed. 
+ * 
+ * At a higher level, the bbcode [nosmile] tag can be used to prevent this 
+ * function from being executed by the prepare_text() routine when preparing
+ * bbcode source for HTML display
+ *
  */
 
 if(! function_exists('smilies')) {
 function smilies($s, $sample = false) {
 	$a = get_app();
+
+	$s = preg_replace_callback('/<pre>(.*?)<\/pre>/ism','smile_encode',$s);
+	$s = preg_replace_callback('/<code>(.*?)<\/code>/ism','smile_encode',$s);
 
 	$texts =  array( 
 		'&lt;3', 
@@ -759,7 +771,7 @@ function smilies($s, $sample = false) {
 		'<img src="' . $a->get_baseurl() . '/images/smiley-facepalm.gif" alt=":facepalm" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-bangheaddesk.gif" alt=":headdesk" />',
 		'<a href="http://project.friendika.com">~friendika <img src="' . $a->get_baseurl() . '/images/friendika-16.png" alt="~friendika" /></a>',
-		'<a href="http://friendica.com">~friendica <img src="' . $a->get_baseurl() . '/images/friendika-16.png" alt="~friendica" /></a>',
+		'<a href="http://friendica.com">~friendica <img src="' . $a->get_baseurl() . '/images/friendica-16.png" alt="~friendica" /></a>',
 		'<a href="http://diasporafoundation.org">Diaspora<img src="' . $a->get_baseurl() . '/images/diaspora.png" alt="Diaspora*" /></a>',
 
 	);
@@ -776,10 +788,22 @@ function smilies($s, $sample = false) {
 	else {
 		$s = str_replace($params['texts'],$params['icons'],$params['string']);
 	}
-             
+
+	$s = preg_replace_callback('/<pre>(.*?)<\/pre>/ism','smile_decode',$s);
+	$s = preg_replace_callback('/<code>(.*?)<\/code>/ism','smile_decode',$s);
+
 	return $s;
 
 }}
+
+function smile_encode($m) {
+	return(str_replace($m[1],base64url_encode($m[1]),$m[0]));
+}
+
+function smile_decode($m) {
+	return(str_replace($m[1],base64url_decode($m[1]),$m[0]));
+}
+
 
 
 

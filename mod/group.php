@@ -68,7 +68,7 @@ function group_content(&$a) {
 		return;
 	}
 
-	// Switch to text mod interface if we have more than 'n' contacts or group members
+	// Switch to text mode interface if we have more than 'n' contacts or group members
 
 	$switchtotext = get_pconfig(local_user(),'system','groupedit_image_limit');
 	if($switchtotext === false)

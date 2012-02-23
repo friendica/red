@@ -183,7 +183,7 @@
 			'updated' => api_date(null),
 			'atom_updated' => datetime_convert('UTC','UTC','now',ATOM_TIME),
 			'language' => $user_info['language'],
-			'logo'	=> $a->get_baseurl()."/images/friendika-32.png",
+			'logo'	=> $a->get_baseurl()."/images/friendica-32.png",
 		);
 		
 		return $arr;
@@ -457,7 +457,49 @@
 		return null;
 	}
 
-	// TODO - media uploads
+/*Waitman Gobble Mod*/
+        function api_statuses_mediap(&$a, $type) {
+                if (local_user()===false) {
+                        logger('api_statuses_update: no user');
+                        return false;
+                }
+                $user_info = api_get_user($a);
+
+                $_REQUEST['type'] = 'wall';
+                $_REQUEST['profile_uid'] = local_user();
+                $_REQUEST['api_source'] = true;
+                $txt = urldecode(requestdata('status'));
+
+                require_once('library/HTMLPurifier.auto.php');
+                require_once('include/html2bbcode.php');
+
+                if((strpos($txt,'<') !== false) || (strpos($txt,'>') !== false)) {
+			$txt = html2bb_video($txt);
+			$config = HTMLPurifier_Config::createDefault();
+                        $config->set('Cache.DefinitionImpl', null);
+			$purifier = new HTMLPurifier($config);
+                        $txt = $purifier->purify($txt);
+		}
+		$txt = html2bbcode($txt);
+		
+                $a->argv[1]=$user_info['screen_name']; //should be set to username?
+		
+		$_REQUEST['hush']='yeah'; //tell wall_upload function to return img info instead of echo
+                require_once('mod/wall_upload.php');
+		$bebop = wall_upload_post($a);
+                
+		//now that we have the img url in bbcode we can add it to the status and insert the wall item.
+                $_REQUEST['body']=$txt."\n\n".$bebop;
+                require_once('mod/item.php');
+                item_post($a);
+
+                // this should output the last post (the one we just posted).
+                return api_status_show($a,$type);
+        }
+        api_register_func('api/statuses/mediap','api_statuses_mediap', true);
+/*Waitman Gobble Mod*/
+
+
 	function api_statuses_update(&$a, $type) {
 		if (local_user()===false) {
 			logger('api_statuses_update: no user');
@@ -743,7 +785,7 @@
 		if (local_user()===false) return false;
 		
 		$user_info = api_get_user($a);
-		// in friendika starred item are private
+		// in friendica starred item are private
 		// return favorites only for self
 		logger('api_favorites: self:' . $user_info['self']);
 		
@@ -916,7 +958,7 @@
 	function api_statusnet_config(&$a,$type) {
 		$name = $a->config['sitename'];
 		$server = $a->get_hostname();
-		$logo = $a->get_baseurl() . '/images/friendika-64.png';
+		$logo = $a->get_baseurl() . '/images/friendica-64.png';
 		$email = $a->config['admin_email'];
 		$closed = (($a->config['register_policy'] == REGISTER_CLOSED) ? 'true' : 'false');
 		$private = (($a->config['system']['block_public']) ? 'true' : 'false');

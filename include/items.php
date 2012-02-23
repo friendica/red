@@ -1551,8 +1551,9 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				}
 
 				$force_parent = false;
-				if($contact['network'] === NETWORK_OSTATUS) {
-					$force_parent = true;
+				if($contact['network'] === NETWORK_OSTATUS || stristr($contact['url'],'twitter.com')) {
+					if($contact['network'] === NETWORK_OSTATUS)
+						$force_parent = true;
 					if(strlen($datarray['title']))
 						unset($datarray['title']);
 					$r = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d",
@@ -1700,7 +1701,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				if(! is_array($contact))
 					return;
 
-				if($contact['network'] === NETWORK_OSTATUS || stristr($permalink,'twitter.com')) {
+				if($contact['network'] === NETWORK_OSTATUS || stristr($contact['url'],'twitter.com')) {
 					if(strlen($datarray['title']))
 						unset($datarray['title']);
 					$datarray['last-child'] = 1;
@@ -2040,13 +2041,12 @@ function local_delivery($importer,$data) {
 		}
 
 		if($is_reply) {
-
 			$community = false;
 
 			if($importer['page-flags'] == PAGE_COMMUNITY) {
 				$sql_extra = '';
 				$community = true;
-				logger('local_delivery: community reply');
+				logger('local_delivery: possible community reply');
 			}
 			else
 				$sql_extra = " and contact.self = 1 and item.wall = 1 ";
@@ -2054,7 +2054,9 @@ function local_delivery($importer,$data) {
 			// was the top-level post for this reply written by somebody on this site? 
 			// Specifically, the recipient? 
 
-			$r = q("select `item`.`id`, `item`.`uri`, `item`.`tag`, 
+			$is_a_remote_comment = false;
+
+			$r = q("select `item`.`id`, `item`.`uri`, `item`.`tag`, `item`.`forum_mode`,`item`.`origin`,`item`.`wall`, 
 				`contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
 				LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
 				WHERE `item`.`uri` = '%s' AND `item`.`parent-uri` = '%s'
@@ -2065,16 +2067,29 @@ function local_delivery($importer,$data) {
 				dbesc($parent_uri),
 				intval($importer['importer_uid'])
 			);
+			if($r && count($r))
+				$is_a_remote_comment = true;			
 
-			if($r && count($r)) {	
+			// Does this have the characteristics of a community comment?
+			// If it's a reply to a wall post on a community page it's a 
+			// valid community comment. Also forum_mode makes it valid for sure. 
+			// If neither, it's not.
 
+			if($is_a_remote_comment && $community) {
+				if((! $r[0]['forum_mode']) && (! $r[0]['wall'])) {
+					$is_a_remote_comment = false;
+					logger('local_delivery: not a community reply');
+				}
+			}
+
+			if($is_a_remote_comment) {
 				logger('local_delivery: received remote comment');
 				$is_like = false;
 				// remote reply to our post. Import and then notify everybody else.
 				$datarray = get_atom_elements($feed,$item);
 
 
-		// TODO: make this next part work against both delivery threads of a community post
+				// TODO: make this next part work against both delivery threads of a community post
 
 //				if((! link_compare($datarray['author-link'],$importer['url'])) && (! $community)) {
 //					logger('local_delivery: received relay claiming to be from ' . $importer['url'] . ' however comment author url is ' . $datarray['author-link'] ); 
@@ -2188,6 +2203,7 @@ function local_delivery($importer,$data) {
 
 						}
 					}
+
 					return 0;
 					// NOTREACHED
 				}

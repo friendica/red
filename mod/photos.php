@@ -98,7 +98,7 @@ EOT;
 
 function photos_post(&$a) {
 
-	logger('mod-photos: photos_post: begin' , 'LOGGER_DEBUG');
+	logger('mod-photos: photos_post: begin' , LOGGER_DEBUG);
 
 
 	logger('mod_photos: REQUEST ' . print_r($_REQUEST,true), LOGGER_DATA);
@@ -571,7 +571,7 @@ function photos_post(&$a) {
 	$album    = notags(trim($_REQUEST['album']));
 	$newalbum = notags(trim($_REQUEST['newalbum']));
 
-	logger('mod/photos.php: photos_post(): album= ' . $album . ' newalbum= ' . $newalbum , 'LOGGER_DEBUG');
+	logger('mod/photos.php: photos_post(): album= ' . $album . ' newalbum= ' . $newalbum , LOGGER_DEBUG);
 
 	if(! strlen($album)) {
 		if(strlen($newalbum))
@@ -643,13 +643,13 @@ function photos_post(&$a) {
 		return;
 	}
 
-	logger('mod/photos.php: photos_post(): loading the contents of ' . $src , 'LOGGER_DEBUG');
+	logger('mod/photos.php: photos_post(): loading the contents of ' . $src , LOGGER_DEBUG);
 
 	$imagedata = @file_get_contents($src);
 	$ph = new Photo($imagedata);
 
 	if(! $ph->is_valid()) {
-		logger('mod/photos.php: photos_post(): unable to process image' , 'LOGGER_DEBUG');
+		logger('mod/photos.php: photos_post(): unable to process image' , LOGGER_DEBUG);
 		notice( t('Unable to process image.') . EOL );
 		@unlink($src);
 		$foo = 0;
@@ -669,7 +669,7 @@ function photos_post(&$a) {
 	$r = $ph->store($page_owner_uid, $visitor, $photo_hash, $filename, $album, 0 , 0, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny);
 
 	if(! $r) {
-		logger('mod/photos.php: photos_post(): image store failed' , 'LOGGER_DEBUG');
+		logger('mod/photos.php: photos_post(): image store failed' , LOGGER_DEBUG);
 		notice( t('Image upload failed.') . EOL );
 		killme();
 	}
