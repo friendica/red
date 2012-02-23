@@ -117,7 +117,7 @@ function nav(&$a) {
 			$nav['introductions'] = array('notifications/intros',	t('Introductions'), "", t('Friend Requests'));
 			$nav['notifications'] = array('notifications',	t('Notifications'), "", t('Notifications'));
 			$nav['notifications']['all']=array('notifications/system', t('See all notifications'), "", "");
-			$nav['notifications']['mark'] = array('', t('Mark all notifications seen'), '','');
+			$nav['notifications']['mark'] = array('', t('Mark all system notifications seen'), '','');
 
 		}
 
