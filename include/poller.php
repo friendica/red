@@ -194,8 +194,8 @@ function poller_run($argv, $argc){
 							$update = true;
 						break;
 				}
-//				if((! $update) && (! $force))
-//					continue;
+				if((! $update) && (! $force))
+					continue;
 			}
 
 			// Check to see if we are running out of memory - if so spawn a new process and kill this one
