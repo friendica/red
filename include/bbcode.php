@@ -194,11 +194,7 @@ function bbcode($Text,$preserve_nl = false) {
 	// Check for [quote] text
 	// handle nested quotes
 	$endlessloop = 0;
-<<<<<<< HEAD
 	while ((strpos($Text, "[/quote]") !== false) and (strpos($Text, "[quote]") !== false) and (++$endlessloop < 20))
-=======
-	while (strpos($Text, "[/quote]") !== false and strpos($Text, "[quote]") !== false and (++$endlessloop < 20))
->>>>>>> upstream/master
 		$Text = preg_replace("/\[quote\](.*?)\[\/quote\]/ism","$QuoteLayout", $Text);
 
 	// Check for [quote=Author] text
@@ -207,11 +203,7 @@ function bbcode($Text,$preserve_nl = false) {
 
 	// handle nested quotes
 	$endlessloop = 0;
-<<<<<<< HEAD
 	while ((strpos($Text, "[/quote]")!== false)  and (strpos($Text, "[quote=") !== false) and (++$endlessloop < 20))
-=======
-	while (strpos($Text, "[/quote]") !== false and strpos($Text, "[quote=") !== false and (++$endlessloop < 20))
->>>>>>> upstream/master
 		$Text = preg_replace("/\[quote=[\"\']*(.*?)[\"\']*\](.*?)\[\/quote\]/ism",
         	                     "<blockquote><strong>" . $t_wrote . "</strong> $2</blockquote>",
                 	             $Text);
@@ -293,3 +285,4 @@ function bbcode($Text,$preserve_nl = false) {
 
 	return $Text;
 }
+
