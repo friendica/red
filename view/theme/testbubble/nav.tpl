@@ -10,6 +10,7 @@
 		{{ if $nav.introductions }}<a rel="#nav-notifications-menu" id="intro-update" class="nav-ajax-update" href="$nav.introductions.0" title="$nav.introductions.1"></a>{{ endif }}
 		{{ if $nav.messages }}<a rel="#nav-notifications-menu" id="mail-update" class="nav-ajax-update" href="$nav.messages.0" title="$nav.messages.1"></a>{{ endif }}
 		<ul id="nav-notifications-menu" class="menu-popup">
+			<li id="nav-notifications-mark-all"><a href="#" onclick="notifyMarkAll(); return false;">$nav.notifications.mark.1</a></li>
 			<li id="nav-notifications-see-all"><a href="$nav.notifications.all.0">$nav.notifications.all.1</a></li>
 			<li class="empty">$emptynotifications</li>
 		</ul>

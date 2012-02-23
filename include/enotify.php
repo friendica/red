@@ -39,7 +39,7 @@ function notification($params) {
 
 		$subject = sprintf( t('%s commented on an item at %s'), $params['source_name'], $sitename);
 		$preamble = sprintf( t('%s commented on an item/conversation you have been following.'), $params['source_name']); 
-		$epreamble = sprintf( t('%s commented on %s you have been following.'), '[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]', '[url=$itemlink]' . t('an item/conversation') . '[/url]'); 
+		$epreamble = sprintf( t('%s commented in %s.'), '[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]', '[url=$itemlink]' . t('a watched conversation') . '[/url]'); 
 
 		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
 		$tsitelink = sprintf( $sitelink, $siteurl );

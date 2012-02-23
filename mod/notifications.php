@@ -68,6 +68,11 @@ function notifications_content(&$a) {
 	$o = '';
 	$tabs = array(
 		array(
+			'label' => t('System'),
+			'url'=>$a->get_baseurl() . '/notifications/system',
+			'sel'=> (($a->argv[1] == 'system') ? 'active' : ''),
+		),
+		array(
 			'label' => t('Network'),
 			'url'=>$a->get_baseurl() . '/notifications/network',
 			'sel'=> (($a->argv[1] == 'network') ? 'active' : ''),
@@ -295,6 +300,36 @@ function notifications_content(&$a) {
 			'$notif_content' => $notif_content,
 		));
 		
+	} else if (($a->argc > 1) && ($a->argv[1] == 'system')) {
+		
+		$notif_tpl = get_markup_template('notifications.tpl');
+		
+		$not_tpl = get_markup_template('notify.tpl');
+		require_once('include/bbcode.php');
+
+		$r = q("SELECT * from notify where uid = %d and seen = 0 order by date desc",
+			intval(local_user())
+		);
+		
+		if (count($r) > 0) {
+			foreach ($r as $it) {
+				$notif_content .= replace_macros($not_tpl,array(
+					'$item_link' => $a->get_baseurl().'/notify/view/'. $it['id'],
+					'$item_image' => $it['photo'],
+					'$item_text' => strip_tags(bbcode($it['msg'])),
+					'$item_when' => relative_date($it['date'])
+				));
+			}
+		} else {
+			$notif_content .= t('No more system notifications.');
+		}
+		
+		$o .= replace_macros($notif_tpl,array(
+			'$notif_header' => t('System'),
+			'$tabs' => $tabs,
+			'$notif_content' => $notif_content,
+		));
+
 	} else if (($a->argc > 1) && ($a->argv[1] == 'personal')) {
 		
 		$notif_tpl = get_markup_template('notifications.tpl');

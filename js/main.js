@@ -89,6 +89,7 @@
 		/* notifications template */
 		var notifications_tpl= unescape($("#nav-notifications-template[rel=template]").html());
 		var notifications_all = unescape($('<div>').append( $("#nav-notifications-see-all").clone() ).html()); //outerHtml hack
+		var notifications_mark = unescape($('<div>').append( $("#nav-notifications-mark-all").clone() ).html()); //outerHtml hack
 		var notifications_empty = unescape($("#nav-notifications-menu").html());
 		
 		/* nav update event  */
@@ -117,7 +118,7 @@
 				$("#nav-notifications-linkmenu").addClass("on");
 				nnm = $("#nav-notifications-menu");
 				
-				nnm.html(notifications_all);
+				nnm.html(notifications_all + notifications_mark);
 				
 				//nnm.attr('popup','true');
 				eNotif.children("note").each(function(){
@@ -517,6 +518,14 @@ function checkboxhighlight(box) {
 	$(box).removeClass('checkeditem');
   }
 }
+
+function notifyMarkAll() {
+	$.get('notify/mark/all', function(data) {
+		if(timer) clearTimeout(timer);
+		timer = setTimeout(NavUpdate,1000);
+	});
+}
+
 
 function setupFieldRichtext(){
 	tinyMCE.init({
