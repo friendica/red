@@ -1,6 +1,7 @@
 <?php
 
 require_once("boot.php");
+require_once("include/quoteconvert.php");
 
 
 function poller_run($argv, $argc){
@@ -455,7 +456,19 @@ function poller_run($argv, $argc){
 								}
 								continue;
 							}
-							$datarray['title'] = notags(trim($meta->subject));
+
+							// Decoding the header
+							$subject = imap_mime_header_decode($meta->subject);
+							$datarray['title'] = "";
+							foreach($subject as $subpart)
+								if ($subpart->charset != "default")
+									$datarray['title'] .= iconv($subpart->charset, 'UTF-8//IGNORE', $subpart->text);
+								else
+									$datarray['title'] .= $subpart->text;
+
+							$datarray['title'] = notags(trim($datarray['title']));
+
+							//$datarray['title'] = notags(trim($meta->subject));
 							$datarray['created'] = datetime_convert('UTC','UTC',$meta->date);
 
 							$r = email_get_msg($mbox,$msg_uid);
@@ -463,15 +476,24 @@ function poller_run($argv, $argc){
 								logger("Mail: can't fetch msg ".$msg_uid);
 								continue;
 							}
-							$datarray['body'] = escape_tags($r['body']);
+							$datarray['body'] = escape_tags(convertquote($r['body'], false));
 
 							logger("Mail: Importing ".$msg_uid);
 
 							// some mailing lists have the original author as 'from' - add this sender info to msg body.
 							// todo: adding a gravatar for the original author would be cool
 
-							if(! stristr($meta->from,$contact['addr']))
-								$datarray['body'] = t('From: ') . escape_tags($meta->from) . "\n\n" . $datarray['body'];
+							if(! stristr($meta->from,$contact['addr'])) {
+								$from = imap_mime_header_decode($meta->from);
+								$fromdecoded = "";
+								foreach($from as $frompart)
+									if ($frompart->charset != "default")
+										$fromdecoded .= iconv($frompart->charset, 'UTF-8//IGNORE', $frompart->text);
+									else
+										$fromdecoded .= $frompart->text;
+
+								$datarray['body'] = "[b]".t('From: ') . escape_tags($fromdecoded) . "[/b]\n\n" . $datarray['body'];
+							}
 
 							$datarray['uid'] = $importer_uid;
 							$datarray['contact-id'] = $contact['id'];
