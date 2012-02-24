@@ -438,14 +438,14 @@ function delivery_run($argv, $argc){
 				$file = tempnam("/tmp/friendica/", "mail-out-");
 				file_put_contents($file, json_encode($it));
 
-				$headers .= 'Message-Id: <' . cleanupmessageid($it['uri']). '>' . "\n";
+				$headers .= 'Message-Id: <' . email_cleanupmessageid($it['uri']). '>' . "\n";
 
 				//logger("Mail: uri: ".$it['uri']." parent-uri ".$it['parent-uri'], LOGGER_DEBUG);
 				//logger("Mail: Data: ".print_r($it, true), LOGGER_DEBUG);
 				//logger("Mail: Data: ".print_r($it, true), LOGGER_DATA);
 
 				if($it['uri'] !== $it['parent-uri']) {
-					$headers .= 'References: <' . cleanupmessageid($it['parent-uri']) . '>' . "\n";
+					$headers .= 'References: <' . email_cleanupmessageid($it['parent-uri']) . '>' . "\n";
 					if(! strlen($it['title'])) {
 						$r = q("SELECT `title` FROM `item` WHERE `parent-uri` = '%s' LIMIT 1",
 							dbesc($it['parent-uri'])
@@ -461,7 +461,7 @@ function delivery_run($argv, $argc){
 						}
 					}
 				}
-				$headers .= 'MIME-Version: 1.0' . "\n";
+				/*$headers .= 'MIME-Version: 1.0' . "\n";
 				//$headers .= 'Content-Type: text/html; charset=UTF-8' . "\n";
 				$headers .= 'Content-Type: text/plain; charset=UTF-8' . "\n";
 				$headers .= 'Content-Transfer-Encoding: 8bit' . "\n\n";
@@ -469,7 +469,8 @@ function delivery_run($argv, $argc){
 				//$message = '<html><body>' . $html . '</body></html>';
 				$message = html2plain($html);
 				logger('notifier: email delivery to ' . $addr);
-				mail($addr, $subject, $message, $headers);
+				mail($addr, $subject, $message, $headers);*/
+				email_send($addr, $subject, $headers, $it);
 			}
 			break;
 
@@ -525,14 +526,6 @@ function delivery_run($argv, $argc){
 	}
 
 	return;
-}
-
-function cleanupmessageid($messageid) {
-	global $a;
-
-	if (!strpos($messageid, '@'))
-		$messageid = str_replace(":", ".", $messageid).'@'.$a->get_hostname();
-	return($messageid);
 }
 
 if (array_search(__file__,get_included_files())===0){

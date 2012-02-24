@@ -1,4 +1,5 @@
 <?php
+require_once('include/html2plain.php');
 
 function email_connect($mailbox,$username,$password) {
 	if(! function_exists('imap_open'))
@@ -224,6 +225,44 @@ function email_header_encode($in_str, $charset) {
         $out_str = $start . $out_str . $end;
     }
     return $out_str;
-} 
+}
 
+function email_send($addr, $subject, $headers, $item) {
+	//$headers .= 'MIME-Version: 1.0' . "\n";
+	//$headers .= 'Content-Type: text/html; charset=UTF-8' . "\n";
+	//$headers .= 'Content-Type: text/plain; charset=UTF-8' . "\n";
+	//$headers .= 'Content-Transfer-Encoding: 8bit' . "\n\n";
+	$html    = prepare_body($item);
+
+	$headers .= "Mime-Version: 1.0\n";
+	$headers .= 'Content-Type: multipart/alternative; boundary="=_1f5dbdf8dbd0a060ea5bc3050bb14c6a"'."\n\n";
+
+	$body = "--=_1f5dbdf8dbd0a060ea5bc3050bb14c6a\n";
+	$body .= "Content-Transfer-Encoding: quoted-printable\n";
+	$body .= "Content-Type: text/plain; charset=utf-8; format=flowed\n\n";
+
+	$body .= html2plain($html)."\n";
+
+	$body .= "--=_1f5dbdf8dbd0a060ea5bc3050bb14c6a\n";
+	$body .= "Content-Transfer-Encoding: quoted-printable\n";
+	$body .= "Content-Type: text/html; charset=utf-8\n\n";
+
+	$body .= $html."\n\n";
+
+	$body .= "--=_1f5dbdf8dbd0a060ea5bc3050bb14c6a--\n";
+
+	//$message = '<html><body>' . $html . '</body></html>';
+	//$message = html2plain($html);
+	logger('notifier: email delivery to ' . $addr);
+	mail($addr, $subject, $body, $headers);
+}
+
+function email_cleanupmessageid($messageid) {
+	global $a;
+
+	if (!strpos($messageid, '@'))
+		$messageid = str_replace(":", ".", $messageid).'@'.$a->get_hostname();
+
+	return($messageid);
+}
 

@@ -651,10 +651,10 @@ function notifier_run($argv, $argc){
 						$file = tempnam("/tmp/friendica/", "mail-out2-");
 						file_put_contents($file, json_encode($it));
 
-						$headers .= 'Message-Id: <' . cleanupmessageid($it['uri']) . '>' . "\n";
+						$headers .= 'Message-Id: <' . email_cleanupmessageid($it['uri']) . '>' . "\n";
 
 						if($it['uri'] !== $it['parent-uri']) {
-							$headers .= 'References: <' . cleanupmessageid($it['parent-uri']) . '>' . "\n";
+							$headers .= 'References: <' . email_cleanupmessageid($it['parent-uri']) . '>' . "\n";
 							if(! strlen($it['title'])) {
 								$r = q("SELECT `title` FROM `item` WHERE `parent-uri` = '%s' LIMIT 1",
 									dbesc($it['parent-uri'])
@@ -671,7 +671,7 @@ function notifier_run($argv, $argc){
 							}
 						}
 
-						$headers .= 'MIME-Version: 1.0' . "\n";
+						/*$headers .= 'MIME-Version: 1.0' . "\n";
 						//$headers .= 'Content-Type: text/html; charset=UTF-8' . "\n";
 						$headers .= 'Content-Type: text/plain; charset=UTF-8' . "\n";
 						$headers .= 'Content-Transfer-Encoding: 8bit' . "\n\n";
@@ -679,7 +679,8 @@ function notifier_run($argv, $argc){
 						//$message = '<html><body>' . $html . '</body></html>';
 						$message = html2plain($html);
 						logger('notifier: email delivery to ' . $addr);
-						mail($addr, $subject, $message, $headers);
+						mail($addr, $subject, $message, $headers);*/
+						email_send($addr, $subject, $headers, $it);
 					}
 					break;
 				case NETWORK_DIASPORA:
@@ -726,7 +727,7 @@ function notifier_run($argv, $argc){
 						// we are the relay - send comments, likes and unlikes to our conversants
 						diaspora_send_relay($target_item,$owner,$contact);
 						break;
-					}		
+					}
 					elseif(($top_level) && (! $walltowall)) {
 						// currently no workable solution for sending walltowall
 						diaspora_send_status($target_item,$owner,$contact);
@@ -839,15 +840,6 @@ function notifier_run($argv, $argc){
 	call_hooks('notifier_end',$target_item);
 
 	return;
-}
-
-function cleanupmessageid($messageid) {
-	global $a;
-
-	if (!strpos($messageid, '@'))
-		$messageid = str_replace(":", ".", $messageid).'@'.$a->get_hostname();
-
-	return($messageid);
 }
 
 if (array_search(__file__,get_included_files())===0){
