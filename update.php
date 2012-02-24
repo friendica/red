@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1123 );
+define( 'UPDATE_VERSION' , 1124 );
 
 /**
  *
@@ -1068,4 +1068,8 @@ function update_1121() {
 function update_1122() {
 q("ALTER TABLE `notify` ADD `hash` CHAR( 64 ) NOT NULL AFTER `id` ,
 ADD INDEX ( `hash` ) ");
+}
+
+function update_1123() {
+set_config('system','allowed_themes','dispy,quattro,testbubble,vier,darkbubble,darkzero,duepuntozero,greenzero,purplezero,quattro-green,slackr');
 }
