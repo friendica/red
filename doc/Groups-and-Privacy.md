@@ -34,3 +34,20 @@ Once you have created a post, you can not change the permissions assigned. Withi
 
 In case you haven't yet figured this out, we are encouraging you to encourage your friends to use Friendica - because all these privacy features work much better within a privacy-aware network. Many of the other social networks Friendica can connect to have no privacy controls. 
 
+
+Profiles, Privacy, and Photos
+=============================
+
+The decentralised nature of Friendica (many websites exchanging information rather than one website which controls everything) has some implications with privacy as it relates to people on other sites. These are things you should be aware of, so you can decide best how to interact privately.
+
+Sharing photos privately is a problem. We can only share them __privately__ with Friendica members. In order to share with other people, we need to prove who they are. We can prove the identity of Friendica members, as we have a mechanism to do so. Your friends on other networks will be blocked from viewing these private photos because we cannot prove that they should be allowed to see them.
+
+Our developers are working on solutions to allow access to your friends - no matter what network they are on. However we take privacy seriously and don't behave like some networks that __pretend__ your photos are private, but make them available to others without proof of identity.
+
+Your profile and "wall" may also be visited by your friends from other networks, and you can block access to these by web visitors that Friendica doesn't know. Be aware that this could include some of your friends on other networks.
+
+This may produce undesired results when posting a long status message to (for instance) Twitter and even Facebook. When Friendica sends a post to these networks which exceeds the service length limit, we truncate it and provide a link to the original. The original is a link back to your Friendica profile. As Friendica cannot prove who they are, it may not be possible for these people to view your post in full.    
+
+For people in this situation we would recommend providing a "Twitter-length" summary, with more detail for friends on other networks.
+
+Blocking your profile or entire Friendica site from unknown web visitors also has serious implications for communicating with StatusNet/identi.ca members. These networks communicate with others via public protocols that are not authenticated. In order to view your posts, these networks have to access them as an "unknown web visitor". If we allowed this, it would mean anybody could in fact see your posts, and you've instructed Friendica not to allow this. So be aware that the act of blocking your profile to unknown visitors has the effect of blocking communication with public networks (such as identi.ca) and feed readers such as Google Reader.   
