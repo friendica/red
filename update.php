@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1124 );
+define( 'UPDATE_VERSION' , 1125 );
 
 /**
  *
@@ -1072,4 +1072,8 @@ ADD INDEX ( `hash` ) ");
 
 function update_1123() {
 set_config('system','allowed_themes','dispy,quattro,testbubble,vier,darkbubble,darkzero,duepuntozero,greenzero,purplezero,quattro-green,slackr');
+}
+
+function update_1124() {
+q("alter table item add index (`author-name`) ");
 }

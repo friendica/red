@@ -1308,12 +1308,28 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 	}
 
 	if((is_array($contact)) && ($name_updated) && (strlen($new_name)) && ($name_updated > $contact['name-date'])) {
-		q("UPDATE `contact` SET `name` = '%s', `name-date` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
+		$r = q("select * from contact where uid = %d and id = %d limit 1",
+			intval($contact['uid']),
+			intval($contact['id'])
+		);
+
+		$x = q("UPDATE `contact` SET `name` = '%s', `name-date` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
 			dbesc(notags(trim($new_name))),
 			dbesc(datetime_convert()),
 			intval($contact['uid']),
 			intval($contact['id'])
 		);
+
+		// do our best to update the name on content items
+
+		if(count($r)) {
+			q("update item set `author-name` = '%s' where `author-name` = '%s' and `author-link` = '%s' and uid = %d",
+				dbesc(notags(trim($new_name))),
+				dbesc($r[0]['name']),
+				dbesc($r[0]['url']),
+				intval($contact['uid'])
+			);
+		}
 	}
 
 	if(strlen($birthday)) {
