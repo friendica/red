@@ -13,7 +13,7 @@
 
 	{{ if $admin_form }}
 	<h3>$settings</h3>
-	<form method="post" action="$baseurl/admin/plugins/$plugin/">
+	<form method="post" action="$baseurl/admin/$function/$plugin/">
 		$admin_form
 	</form>
 	{{ endif }}

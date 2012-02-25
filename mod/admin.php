@@ -573,7 +573,7 @@ function admin_page_plugins(&$a){
 			'$info' => get_plugin_info($plugin),
 		
 			'$admin_form' => $admin_form,
-			'$function' => $plugins,			
+			'$function' => 'plugins',
 			'$readme' => $readme
 		));
 	} 
