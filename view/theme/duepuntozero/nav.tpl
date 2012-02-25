@@ -39,7 +39,21 @@
 	<span id="mail-update" class="nav-ajax-left"></span>
 	{{ endif }}
 
+
+
 	{{ if $nav.manage }}<a id="nav-manage-link" class="nav-commlink $nav.manage.2 $sel.manage" href="$nav.manage.0" title="$nav.manage.3">$nav.manage.1</a>{{ endif }}
+
+
+		{{ if $nav.notifications }}
+			<li  id="nav-notifications-linkmenu" class="nav-commlink"><a href="$nav.notifications.0" rel="#nav-notifications-menu" title="$nav.notifications.1">$nav.notifications.1</a>
+				<span id="notify-update" class="nav-notify"></span>
+				<ul id="nav-notifications-menu" class="menu-popup">
+					<li id="nav-notifications-mark-all"><a href="#" onclick="notifyMarkAll(); return false;">$nav.notifications.mark.1</a></li>
+					<li id="nav-notifications-see-all"><a href="$nav.notifications.all.0">$nav.notifications.all.1</a></li>
+					<li class="empty">$emptynotifications</li>
+				</ul>
+			</li>		
+		{{ endif }}		
 
 	{{ if $nav.settings }}<a id="nav-settings-link" class="nav-link $nav.settings.2" href="$nav.settings.0" title="$nav.settings.3">$nav.settings.1</a>{{ endif }}
 	{{ if $nav.profiles }}<a id="nav-profiles-link" class="nav-link $nav.profiles.2" href="$nav.profiles.0" title="$nav.profiles.3" >$nav.profiles.1</a>{{ endif }}
@@ -49,3 +63,7 @@
 	<span id="nav-end"></span>
 	<span id="banner">$banner</span>
 </nav>
+
+<ul id="nav-notifications-template" style="display:none;" rel="template">
+	<li><a href="{0}">{2} <span class="notif-when">{3}</span></a></li>
+</ul>

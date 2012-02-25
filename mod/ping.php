@@ -14,8 +14,8 @@ function ping_init(&$a) {
 
 		$firehose = intval(get_pconfig(local_user(),'system','notify_full'));
 
-		$z = q("select * from notify where seen = 0 and uid = %d
-			order by date desc",
+		$z = q("select * from notify where uid = %d
+			order by seen asc, date desc limit 0, 50",
 			intval(local_user())
 		);
 
@@ -135,7 +135,7 @@ function ping_init(&$a) {
 			echo '	<notif count="'. count($z) .'">';
 			if(count($z)) {
 				foreach($z as $zz) {
-					echo xmlize($a->get_baseurl() . '/notify/view' . $zz['id'], $zz['name'],$zz['url'],$zz['photo'],relative_date($zz['date']), strip_tags(bbcode($zz['msg'])));
+					echo xmlize($a->get_baseurl() . '/notify/view/' . $zz['id'], $zz['name'],$zz['url'],$zz['photo'],relative_date($zz['date']), ($zz['seen'] ? '' : '! ') .strip_tags(bbcode($zz['msg'])));
 				}
 			}
 		}
