@@ -651,10 +651,10 @@ function notifier_run($argv, $argc){
 						$file = tempnam("/tmp/friendica/", "mail-out2-");
 						file_put_contents($file, json_encode($it));
 
-						$headers .= 'Message-Id: <' . email_cleanupmessageid($it['uri']) . '>' . "\n";
+						$headers .= 'Message-Id: <' . iri2msgid($it['uri']) . '>' . "\n";
 
 						if($it['uri'] !== $it['parent-uri']) {
-							$headers .= 'References: <' . email_cleanupmessageid($it['parent-uri']) . '>' . "\n";
+							$headers .= 'References: <' . iri2msgid($it['parent-uri']) . '>' . "\n";
 							if(! strlen($it['title'])) {
 								$r = q("SELECT `title` FROM `item` WHERE `parent-uri` = '%s' LIMIT 1",
 									dbesc($it['parent-uri'])

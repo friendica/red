@@ -420,13 +420,13 @@ function poller_run($argv, $argc){
 							// look for a 'references' header and try and match with a parent item we have locally.
 
 							$raw_refs = ((x($headers,'references')) ? str_replace("\t",'',$headers['references']) : '');
-							$datarray['uri'] = trim($meta->message_id,'<>');
+							$datarray['uri'] = msgid2iri(trim($meta->message_id,'<>'));
 
 							if($raw_refs) {
 								$refs_arr = explode(' ', $raw_refs);
 								if(count($refs_arr)) {
 									for($x = 0; $x < count($refs_arr); $x ++)
-										$refs_arr[$x] = "'" . str_replace(array('<','>',' '),array('','',''),dbesc($refs_arr[$x])) . "'";
+										$refs_arr[$x] = "'" . msgid2iri(str_replace(array('<','>',' '),array('','',''),dbesc($refs_arr[$x]))) . "'";
 								}
 								$qstr = implode(',',$refs_arr);
 								$r = q("SELECT `uri` , `parent-uri` FROM `item` WHERE `uri` IN ( $qstr ) AND `uid` = %d LIMIT 1",

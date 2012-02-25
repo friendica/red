@@ -232,24 +232,27 @@ function email_send($addr, $subject, $headers, $item) {
 	//$headers .= 'Content-Type: text/html; charset=UTF-8' . "\n";
 	//$headers .= 'Content-Type: text/plain; charset=UTF-8' . "\n";
 	//$headers .= 'Content-Transfer-Encoding: 8bit' . "\n\n";
+
+	$part = uniqid("", true);
+
 	$html    = prepare_body($item);
 
 	$headers .= "Mime-Version: 1.0\n";
-	$headers .= 'Content-Type: multipart/alternative; boundary="=_1f5dbdf8dbd0a060ea5bc3050bb14c6a"'."\n\n";
+	$headers .= 'Content-Type: multipart/alternative; boundary="=_'.$part.'"'."\n\n";
 
-	$body = "--=_1f5dbdf8dbd0a060ea5bc3050bb14c6a\n";
-	$body .= "Content-Transfer-Encoding: quoted-printable\n";
+	$body = "\n--=_".$part."\n";
+	$body .= "Content-Transfer-Encoding: 8bit\n";
 	$body .= "Content-Type: text/plain; charset=utf-8; format=flowed\n\n";
 
 	$body .= html2plain($html)."\n";
 
-	$body .= "--=_1f5dbdf8dbd0a060ea5bc3050bb14c6a\n";
-	$body .= "Content-Transfer-Encoding: quoted-printable\n";
+	$body .= "--=_".$part."\n";
+	$body .= "Content-Transfer-Encoding: 8bit\n";
 	$body .= "Content-Type: text/html; charset=utf-8\n\n";
 
-	$body .= $html."\n\n";
+	$body .= '<html><head></head><body style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space; ">'.$html."</body></html>\n";
 
-	$body .= "--=_1f5dbdf8dbd0a060ea5bc3050bb14c6a--\n";
+	$body .= "--=_".$part."--";
 
 	//$message = '<html><body>' . $html . '</body></html>';
 	//$message = html2plain($html);
@@ -257,12 +260,18 @@ function email_send($addr, $subject, $headers, $item) {
 	mail($addr, $subject, $body, $headers);
 }
 
-function email_cleanupmessageid($messageid) {
-	global $a;
-
-	if (!strpos($messageid, '@'))
-		$messageid = str_replace(":", ".", $messageid).'@'.$a->get_hostname();
-
-	return($messageid);
+function iri2msgid($iri) {
+	if (!strpos($iri, "@"))
+		$msgid = preg_replace("/urn:(\S+):(\S+)\.(\S+):(\d+):(\S+)/i", "urn!$1!$4!$5@$2.$3", $iri);
+	else
+		$msgid = $iri;
+	return($msgid);
 }
 
+function msgid2iri($msgid) {
+	if (strpos($msgid, "@"))
+		$iri = preg_replace("/urn!(\S+)!(\d+)!(\S+)@(\S+)\.(\S+)/i", "urn:$1:$4.$5:$2:$3", $msgid);
+	else
+		$iri = $msgid;
+	return($iri);
+}
