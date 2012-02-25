@@ -272,10 +272,10 @@ function delivery_run($argv, $argc){
 
 				if($normal_mode) {
 					if($item_id == $item['id'] || $item['id'] == $item['parent'])
-						$atom .= atom_entry($item,'text',$item_contact,$owner,true);
+						$atom .= atom_entry($item,'text',null,$owner,true);
 				}
 				else
-					$atom .= atom_entry($item,'text',$item_contact,$owner,true);
+					$atom .= atom_entry($item,'text',null,$owner,true);
 
 			}
 
@@ -363,7 +363,7 @@ function delivery_run($argv, $argc){
 						continue;
 
 					if(($top_level) && ($public_message) && ($item['author-link'] === $item['owner-link']) && (! $expire)) 
-						$slaps[] = atom_entry($item,'html',$item_contact,$owner,true);
+						$slaps[] = atom_entry($item,'html',null,$owner,true);
 				}
 
 				logger('notifier: slapdelivery: ' . $contact['name']);

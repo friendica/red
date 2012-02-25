@@ -1505,13 +1505,18 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				$item_id  = $item->get_id();
 				$datarray = get_atom_elements($feed,$item);
 
-				if(! x($datarray,'author-name'))
+
+				if((! x($datarray,'author-name')) && ($contact['network'] != NETWORK_DFRN))
 					$datarray['author-name'] = $contact['name'];
-				if(! x($datarray,'author-link'))
+				if((! x($datarray,'author-link')) && ($contact['network'] != NETWORK_DFRN))
 					$datarray['author-link'] = $contact['url'];
-				if(! x($datarray,'author-avatar'))
+				if((! x($datarray,'author-avatar')) && ($contact['network'] != NETWORK_DFRN))
 					$datarray['author-avatar'] = $contact['thumb'];
 
+				if((! x($datarray,'author-name')) || (! x($datarray,'author-link'))) {
+					logger('consume_feed: no author information! ' . print_r($datarray,true));
+					continue;
+				}
 
 				$r = q("SELECT `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
@@ -1614,12 +1619,17 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				$datarray = get_atom_elements($feed,$item);
 
 				if(is_array($contact)) {
-					if(! x($datarray,'author-name'))
+					if((! x($datarray,'author-name')) && ($contact['network'] != NETWORK_DFRN))
 						$datarray['author-name'] = $contact['name'];
-					if(! x($datarray,'author-link'))
+					if((! x($datarray,'author-link')) && ($contact['network'] != NETWORK_DFRN))
 						$datarray['author-link'] = $contact['url'];
-					if(! x($datarray,'author-avatar'))
+					if((! x($datarray,'author-avatar')) && ($contact['network'] != NETWORK_DFRN))
 						$datarray['author-avatar'] = $contact['thumb'];
+				}
+
+				if((! x($datarray,'author-name')) || (! x($datarray,'author-link'))) {
+					logger('consume_feed: no author information! ' . print_r($datarray,true));
+					continue;
 				}
 
 				// special handling for events
