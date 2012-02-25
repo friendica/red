@@ -574,7 +574,7 @@ nav #nav-apps-link.selected {
 ul.menu-popup {
   position: absolute;
   display: none;
-  width: 10em;
+  width: 11em;
   background: #ffffff;
   color: #2d2d2d;
   margin: 0px;
@@ -1485,7 +1485,7 @@ ul.tabs li .active {
 
 .contact-photo-menu-button {
         position: relative;
-        background-image: url("photo-menu.jpg");
+        background-image: url("../../../images/icons/16/menu.png");
         background-position: top left; 
         background-repeat: no-repeat;
         margin: 0px 0px -16px 0px; 
@@ -1499,8 +1499,9 @@ ul.tabs li .active {
         
 }
 .contact-photo-menu {
-        width: auto;
-        border: 2px solid #444444;
+        width: 11em;
+        border: 3px solid #364e59;
+	color: #2d2d2d;
         background: #FFFFFF;
 /*        position: absolute;*/
         position: relative;
@@ -1509,8 +1510,15 @@ ul.tabs li .active {
         z-index: 10000;
 }
 .contact-photo-menu ul { margin:0px; padding: 0px; list-style: none }
-.contact-photo-menu li a { display: block; padding: 2px; }
-.contact-photo-menu li a:hover { color: #FFFFFF; background: #3465A4; text-decoration: none; }
+.contact-photo-menu li a {
+	display: block; 
+	padding: 5px 10px; 
+	color: #2d2d2d;
+	text-decoration: none;
+}
+.contact-photo-menu li a:hover {
+	background-color: #bdcdd4; 
+}
 
 /* page footer */
 footer {
