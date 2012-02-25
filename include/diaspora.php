@@ -1803,6 +1803,9 @@ function diaspora_profile($importer,$xml) {
 	if(substr($birthday,5) === substr($contact['bd'],5))
 		$birthday = $contact['bd'];
 
+	// TODO: update name on item['author-name'] if the name changed. See consume_feed()
+	// Not doing this currently because D* protocol is scheduled for revision soon. 
+
 	$r = q("UPDATE `contact` SET `name` = '%s', `name-date` = '%s', `photo` = '%s', `thumb` = '%s', `micro` = '%s', `avatar-date` = '%s' , `bd` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		dbesc($name),
 		dbesc(datetime_convert()),
