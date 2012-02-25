@@ -111,10 +111,10 @@ function ping_init(&$a) {
 		}
 
 
-		function xmlize($href, $name, $url, $photo, $date, $message){
-			$notsxml = '<note href="%s" name="%s" url="%s" photo="%s" date="%s">%s</note>';
+		function xmlize($href, $name, $url, $photo, $date, $seen, $message){
+			$notsxml = '<note href="%s" name="%s" url="%s" photo="%s" date="%s" seen="%s" >%s</note>';
 			return sprintf ( $notsxml,
-				xmlify($href), xmlify($name), xmlify($url), xmlify($photo), xmlify($date), xmlify($message)
+				xmlify($href), xmlify($name), xmlify($url), xmlify($photo), xmlify($date), xmlify($seen), xmlify($message)
 			);
 		}
 		
@@ -135,7 +135,7 @@ function ping_init(&$a) {
 			echo '	<notif count="'. count($z) .'">';
 			if(count($z)) {
 				foreach($z as $zz) {
-					echo xmlize($a->get_baseurl() . '/notify/view/' . $zz['id'], $zz['name'],$zz['url'],$zz['photo'],relative_date($zz['date']), ($zz['seen'] ? '' : '! ') .strip_tags(bbcode($zz['msg'])));
+					echo xmlize($a->get_baseurl() . '/notify/view/' . $zz['id'], $zz['name'],$zz['url'],$zz['photo'],relative_date($zz['date']), ($zz['seen'] ? 'notify-seen' : 'notify-unseen'), ($zz['seen'] ? '' : '&rarr; ') .strip_tags(bbcode($zz['msg'])));
 				}
 			}
 		}
@@ -143,54 +143,54 @@ function ping_init(&$a) {
 		if($firehose) {
 			if ($intro>0){
 				foreach ($intros as $i) { 
-					echo xmlize( $a->get_baseurl().'/notifications/intros/'.$i['id'], $i['name'], $i['url'], $i['photo'], relative_date($i['datetime']), t("{0} wants to be your friend") );
+					echo xmlize( $a->get_baseurl().'/notifications/intros/'.$i['id'], $i['name'], $i['url'], $i['photo'], relative_date($i['datetime']), 'notify-unseen',t("{0} wants to be your friend") );
 				};
 			}
 			if ($mail>0){
 				foreach ($mails as $i) { 
-					echo xmlize( $a->get_baseurl().'/message/'.$i['id'], $i['from-name'], $i['from-url'], $i['from-photo'], relative_date($i['created']), t("{0} sent you a message") );
+					echo xmlize( $a->get_baseurl().'/message/'.$i['id'], $i['from-name'], $i['from-url'], $i['from-photo'], relative_date($i['created']), 'notify-unseen',t("{0} sent you a message") );
 				};
 			}
 			if ($register>0){
 				foreach ($regs as $i) { 
-					echo xmlize( $a->get_baseurl().'/admin/users/', $i['name'], $i['url'], $i['micro'], relative_date($i['created']), t("{0} requested registration") );
+					echo xmlize( $a->get_baseurl().'/admin/users/', $i['name'], $i['url'], $i['micro'], relative_date($i['created']), 'notify-unseen',t("{0} requested registration") );
 				};
 			}
 
 			if (count($comments)){
 				foreach ($comments as $i) {
-					echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), sprintf( t("{0} commented %s's post"), $i['pname'] ) );
+					echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), 'notify-unseen',sprintf( t("{0} commented %s's post"), $i['pname'] ) );
 				};
 			}
 			if (count($likes)){
 				foreach ($likes as $i) {
-					echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), sprintf( t("{0} liked %s's post"), $i['pname'] ) );
+					echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), 'notify-unseen',sprintf( t("{0} liked %s's post"), $i['pname'] ) );
 				};
 			}
 			if (count($dislikes)){
 				foreach ($dislikes as $i) {
-					echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), sprintf( t("{0} disliked %s's post"), $i['pname'] ) );
+					echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), 'notify-unseen',sprintf( t("{0} disliked %s's post"), $i['pname'] ) );
 				};
 			}
 			if (count($friends)){
 				foreach ($friends as $i) {
-					echo xmlize($a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'],$i['author-name'],$i['author-link'], $i['author-avatar'], relative_date($i['created']), sprintf( t("{0} is now friends with %s"), $i['fname'] ) );
+					echo xmlize($a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'],$i['author-name'],$i['author-link'], $i['author-avatar'], relative_date($i['created']), 'notify-unseen',sprintf( t("{0} is now friends with %s"), $i['fname'] ) );
 				};
 			}
 			if (count($posts)){
 				foreach ($posts as $i) {
-					echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), sprintf( t("{0} posted") ) );
+					echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), 'notify-unseen',sprintf( t("{0} posted") ) );
 				};
 			}
 			if (count($tags)){
 				foreach ($tags as $i) {
-					echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), sprintf( t("{0} tagged %s's post with #%s"), $i['pname'], $i['tname'] ) );
+					echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), 'notify-unseen',sprintf( t("{0} tagged %s's post with #%s"), $i['pname'], $i['tname'] ) );
 				};
 			}
 
 			if (count($cit)){
 				foreach ($cit as $i) {
-					echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), t("{0} mentioned you in a post") );
+					echo xmlize( $a->get_baseurl().'/display/'.$a->user['nickname']."/".$i['parent'], $i['author-name'], $i['author-link'], $i['author-avatar'], relative_date($i['created']), 'notify-unseen',t("{0} mentioned you in a post") );
 				};
 			}
 		}

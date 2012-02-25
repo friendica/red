@@ -124,7 +124,7 @@
 				eNotif.children("note").each(function(){
 					e = $(this);
 					text = e.text().format("<span class='contactname'>"+e.attr('name')+"</span>");
-					html = notifications_tpl.format(e.attr('href'),e.attr('photo'), text, e.attr('date'));
+					html = notifications_tpl.format(e.attr('href'),e.attr('photo'), text, e.attr('date'), e.attr('seen'));
 					nnm.append(html);
 				});
 				
