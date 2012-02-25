@@ -454,6 +454,11 @@ function poller_run($argv, $argc){
 										intval($r[0]['id'])
 									);
 								}
+								//logger("Mail: Deleting ".$msg_uid);
+								//imap_delete($mbox, $msg_uid, FT_UID);
+								imap_setflag_full($mbox, $msg_uid, "\\Seen", ST_UID);
+								logger("Mail: Moving ".$msg_uid);
+								imap_mail_move($mbox, $msg_uid, "Archiv", FT_UID);
 								continue;
 							}
 
@@ -515,6 +520,11 @@ function poller_run($argv, $argc){
 							q("UPDATE `item` SET `last-child` = 1 WHERE `id` = %d LIMIT 1",
 								intval($stored_item)
 							);
+							//logger("Mail: Deleting ".$msg_uid);
+							//imap_delete($mbox, $msg_uid, FT_UID);
+							imap_setflag_full($mbox, $msg_uid, "\\Seen", ST_UID);
+							logger("Mail: Moving ".$msg_uid);
+							imap_mail_move($mbox, $msg_uid, "Archiv", FT_UID);
 						}
 					}
 
@@ -523,7 +533,7 @@ function poller_run($argv, $argc){
 			}
 			elseif($contact['network'] === NETWORK_FACEBOOK) {
 				// This is picked up by the Facebook plugin on a cron hook.
-				// Ignored here.			
+				// Ignored here.
 			}
 
 			if($xml) {

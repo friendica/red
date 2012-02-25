@@ -496,7 +496,7 @@ nav ul {
 nav ul li {
   list-style: none;
   margin: 0px;
-  padding: 0px;
+  padding: 1px 1px 3px 1px;
   float: left;
 }
 nav ul li .menu-popup {
@@ -571,6 +571,18 @@ nav #nav-notifications-linkmenu.on .icon.s22.notify, nav #nav-notifications-link
 nav #nav-apps-link.selected {
   background-color: #364e59;
 }
+
+#nav-notifications-mark-all {
+	padding: 1px 1px 2px 1px;
+	border-bottom: 1px solid #364E59;
+	margin: 0px 0px 2px 26px;
+}
+
+#nav-notifications-see-all {
+	padding: 1px;
+	margin: 0px 0px 2px 26px;
+}
+
 ul.menu-popup {
   position: absolute;
   display: none;
@@ -587,9 +599,9 @@ ul.menu-popup {
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
 }
 ul.menu-popup a {
-  display: block;
+  /* display: block; */
   color: #2d2d2d;
-  padding: 5px 10px;
+  /* padding: 5px 10px; */
   text-decoration: none;
 }
 ul.menu-popup a:hover {
@@ -656,6 +668,13 @@ ul.menu-popup .empty {
   color: #9eabb0;
   display: block;
 }
+
+.notif-image {
+        width: 32px;
+        height: 32px;
+        padding: 7px 7px 0px 0px;
+}
+
 /* aside */
 aside {
   display: table-cell;
