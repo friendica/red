@@ -85,14 +85,27 @@ function email_get_msg($mbox,$uid) {
 	// file_put_contents($file, json_encode($struc));
 
 	if(! $struc->parts) {
-		$ret['body'] = email_get_part($mbox,$uid,$struc,0);
+		$ret['body'] = email_get_part($mbox,$uid,$struc,0, 'html');
+
+		if (trim($ret['body']) == '')
+			$ret['body'] = email_get_part($mbox,$uid,$struc,0, 'plain');
+		else
+			$ret['body'] = html2bbcode($ret['body']);
 	}
 	else {
+		$text = '';
+		$html = '';
 		foreach($struc->parts as $ptop => $p) {
-			$x = email_get_part($mbox,$uid,$p,$ptop + 1);
-			if($x)
-				$ret['body'] = $x;
+			$x = email_get_part($mbox,$uid,$p,$ptop + 1, 'plain');
+			if($x)	$text .= $x;
+
+			$x = email_get_part($mbox,$uid,$p,$ptop + 1, 'html');
+			if($x)	$html .= $x;
 		}
+		if (trim($html) != '')
+			$ret['body'] = html2bbcode($html);
+		else
+			$ret['body'] = $text;
 	}
 	return $ret;
 }
@@ -100,78 +113,81 @@ function email_get_msg($mbox,$uid) {
 // At the moment - only return plain/text.
 // Later we'll repackage inline images as data url's and make the HTML safe
 
-function email_get_part($mbox,$uid,$p,$partno) {
-    // $partno = '1', '2', '2.1', '2.1.3', etc for multipart, 0 if simple
-    global $htmlmsg,$plainmsg,$charset,$attachments;
+function email_get_part($mbox,$uid,$p,$partno, $subtype) {
+	// $partno = '1', '2', '2.1', '2.1.3', etc for multipart, 0 if simple
+	global $htmlmsg,$plainmsg,$charset,$attachments;
 
-	//echo $partno;
+	//echo $partno."\n";
 
-    // DECODE DATA
-    $data = ($partno)
+	// DECODE DATA
+	$data = ($partno)
 		? @imap_fetchbody($mbox,$uid,$partno, FT_UID|FT_PEEK)
-        : @imap_body($mbox,$uid,FT_UID|FT_PEEK);
+	: @imap_body($mbox,$uid,FT_UID|FT_PEEK);
 
 	// for testing purposes: Collect imported mails
 	// $file = tempnam("/tmp/friendica2/", "mail-body-");
 	// file_put_contents($file, $data);
 
-    // Any part may be encoded, even plain text messages, so check everything.
-    if ($p->encoding==4)
-        $data = quoted_printable_decode($data);
-    elseif ($p->encoding==3)
-        $data = base64_decode($data);
+	// Any part may be encoded, even plain text messages, so check everything.
+	if ($p->encoding==4)
+		$data = quoted_printable_decode($data);
+	elseif ($p->encoding==3)
+		$data = base64_decode($data);
 
-    // PARAMETERS
-    // get all parameters, like charset, filenames of attachments, etc.
-    $params = array();
-    if ($p->parameters)
-        foreach ($p->parameters as $x)
-            $params[strtolower($x->attribute)] = $x->value;
-    if ($p->dparameters)
-        foreach ($p->dparameters as $x)
-            $params[strtolower($x->attribute)] = $x->value;
+	// PARAMETERS
+	// get all parameters, like charset, filenames of attachments, etc.
+	$params = array();
+	if ($p->parameters)
+		foreach ($p->parameters as $x)
+			$params[strtolower($x->attribute)] = $x->value;
+	if (isset($p->dparameters) and $p->dparameters)
+		foreach ($p->dparameters as $x)
+			$params[strtolower($x->attribute)] = $x->value;
 
-    // ATTACHMENT
-    // Any part with a filename is an attachment,
-    // so an attached text file (type 0) is not mistaken as the message.
+	// ATTACHMENT
+	// Any part with a filename is an attachment,
+	// so an attached text file (type 0) is not mistaken as the message.
 
-    if ($params['filename'] || $params['name']) {
-        // filename may be given as 'Filename' or 'Name' or both
-        $filename = ($params['filename'])? $params['filename'] : $params['name'];
-        // filename may be encoded, so see imap_mime_header_decode()
-        $attachments[$filename] = $data;  // this is a problem if two files have same name
-    }
+	if ((isset($params['filename']) and $params['filename']) || (isset($params['name']) and $params['name'])) {
+		// filename may be given as 'Filename' or 'Name' or both
+		$filename = ($params['filename'])? $params['filename'] : $params['name'];
+		// filename may be encoded, so see imap_mime_header_decode()
+		$attachments[$filename] = $data;  // this is a problem if two files have same name
+	}
 
-    // TEXT
-    if ($p->type == 0 && $data) {
-        // Messages may be split in different parts because of inline attachments,
-        // so append parts together with blank row.
-        if (strtolower($p->subtype)=='plain')
-            return (trim($data) ."\n\n");
-        else
+	// TEXT
+	if ($p->type == 0 && $data) {
+		// Messages may be split in different parts because of inline attachments,
+		// so append parts together with blank row.
+		if (strtolower($p->subtype)==$subtype) {
+			$data = iconv($params['charset'], 'UTF-8//IGNORE', $data);
+			return (trim($data) ."\n\n");
+		} else
 			$data = '';
 
  //           $htmlmsg .= $data ."<br><br>";
-        $charset = $params['charset'];  // assume all parts are same charset
-    }
+		$charset = $params['charset'];  // assume all parts are same charset
+	}
 
-    // EMBEDDED MESSAGE
-    // Many bounce notifications embed the original message as type 2,
-    // but AOL uses type 1 (multipart), which is not handled here.
-    // There are no PHP functions to parse embedded messages,
-    // so this just appends the raw source to the main message.
-//    elseif ($p->type==2 && $data) {
-//        $plainmsg .= $data."\n\n";
-//    }
+	// EMBEDDED MESSAGE
+	// Many bounce notifications embed the original message as type 2,
+	// but AOL uses type 1 (multipart), which is not handled here.
+	// There are no PHP functions to parse embedded messages,
+	// so this just appends the raw source to the main message.
+//	elseif ($p->type==2 && $data) {
+//		$plainmsg .= $data."\n\n";
+//	}
 
-    // SUBPART RECURSION
-    if ($p->parts) {
-        foreach ($p->parts as $partno0=>$p2) {
-            $x =  email_get_part($mbox,$uid,$p2,$partno . '.' . ($partno0+1));  // 1.2, 1.2.1, etc.
-			if($x)
-				return $x;
+	// SUBPART RECURSION
+	if (isset($p->parts) and $p->parts) {
+		$x = "";
+		foreach ($p->parts as $partno0=>$p2) {
+			$x .=  email_get_part($mbox,$uid,$p2,$partno . '.' . ($partno0+1), $subtype);  // 1.2, 1.2.1, etc.
+			//if($x)
+			//	return $x;
 		}
-    }
+		return $x;
+	}
 }
 
 
