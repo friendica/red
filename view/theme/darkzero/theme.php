@@ -1,4 +1,11 @@
 <?php
+
+/*
+ * Name: Darkzero
+ * Version: 1.0
+ * Author: Mike Macgirvin <mike@macgirvin.com>
+ */
+
 $a->theme_info = array(
   'extends' => 'duepuntozero',
 );

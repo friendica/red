@@ -741,7 +741,7 @@ function admin_page_themes(&$a){
 			'$plugin' => $theme,
 			'$status' => $status,
 			'$action' => $action,
-			'$info' => array('name' => $theme,'version' => '','description' => ''),	
+			'$info' => get_theme_info($theme),
 			'$function' => 'themes',		
 			'$admin_form' => $admin_form,
 			
@@ -758,7 +758,7 @@ function admin_page_themes(&$a){
 	$xthemes = array();
 	if($themes) {
 		foreach($themes as $th) {
-			$xthemes[] = array($th['name'],(($th['allowed']) ? "on" : "off"),array('name' => $th['name'],'version' => '','description' => ''));	
+			$xthemes[] = array($th['name'],(($th['allowed']) ? "on" : "off"), get_theme_info($th['name']));
 		}
 	}
 	

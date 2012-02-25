@@ -166,17 +166,17 @@ function call_hooks($name, &$data = null) {
 
 if (! function_exists('get_plugin_info')){
 function get_plugin_info($plugin){
-	if (!is_file("addon/$plugin/$plugin.php")) return false;
-	
-	$f = file_get_contents("addon/$plugin/$plugin.php");
-	$r = preg_match("|/\*.*\*/|msU", $f, $m);
-	
 	$info=Array(
 		'name' => $plugin,
 		'description' => "",
 		'author' => array(),
 		'version' => ""
 	);
+	
+	if (!is_file("addon/$plugin/$plugin.php")) return $info;
+	
+	$f = file_get_contents("addon/$plugin/$plugin.php");
+	$r = preg_match("|/\*.*\*/|msU", $f, $m);
 	
 	if ($r){
 		$ll = explode("\n", $m[0]);
@@ -191,6 +191,70 @@ function get_plugin_info($plugin){
 						$info['author'][] = array('name'=>$m[1], 'link'=>$m[2]);
 					} else {
 						$info['author'][] = array('name'=>$v);
+					}
+				} else {
+					if (array_key_exists($k,$info)){
+						$info[$k]=$v;
+					}
+				}
+				
+			}
+		}
+		
+	}
+	return $info;
+}}
+
+
+/*
+ * parse theme comment in search of theme infos.
+ * like
+ * 	
+ * 	 * Name: My Theme
+ *   * Description: My Cool Theme
+ * 	 * Version: 1.2.3
+ *   * Author: John <profile url>
+ *   * Maintainer: Jane <profile url>
+ *   *
+ */
+
+if (! function_exists('get_theme_info')){
+function get_theme_info($theme){
+	$info=Array(
+		'name' => $theme,
+		'description' => "",
+		'author' => array(),
+		'maintainer' => array(),
+		'version' => ""
+	);
+
+	if (!is_file("view/theme/$theme/theme.php")) return $info;
+	
+	$f = file_get_contents("view/theme/$theme/theme.php");
+	$r = preg_match("|/\*.*\*/|msU", $f, $m);
+	
+	
+	if ($r){
+		$ll = explode("\n", $m[0]);
+		foreach( $ll as $l ) {
+			$l = trim($l,"\t\n\r */");
+			if ($l!=""){
+				list($k,$v) = array_map("trim", explode(":",$l,2));
+				$k= strtolower($k);
+				if ($k=="author"){
+					$r=preg_match("|([^<]+)<([^>]+)>|", $v, $m);
+					if ($r) {
+						$info['author'][] = array('name'=>$m[1], 'link'=>$m[2]);
+					} else {
+						$info['author'][] = array('name'=>$v);
+					}
+				}
+				elseif ($k=="maintainer"){
+					$r=preg_match("|([^<]+)<([^>]+)>|", $v, $m);
+					if ($r) {
+						$info['maintainer'][] = array('name'=>$m[1], 'link'=>$m[2]);
+					} else {
+						$info['maintainer'][] = array('name'=>$v);
 					}
 				} else {
 					if (array_key_exists($k,$info)){
