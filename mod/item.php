@@ -400,6 +400,8 @@ function item_post(&$a) {
 
 	$body = preg_replace('/\[\/code\]\s*\[code\]/ism',"\n",$body); 
 
+	$body = scale_external_images($body,false);
+
 	/**
 	 * Look for any tags and linkify them
 	 */

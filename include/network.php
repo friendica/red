@@ -776,3 +776,43 @@ function add_fcontact($arr,$update = false) {
 
 	return $r;
 }
+
+
+function scale_external_images($s,$include_link = true) {
+
+	$a = get_app();
+
+	$matches = null;
+	$c = preg_match_all('/\[img\](.*?)\[\/img\]/ism',$s,$matches,PREG_SET_ORDER);
+	if($c) {
+		require_once('include/Photo.php');
+		foreach($matches as $mtch) {
+			logger('scale_external_image: ' . $mtch[1]);
+			$hostname = str_replace('www.','',substr($a->get_baseurl(),strpos($a->get_baseurl(),'://')+3));
+			if(stristr($mtch[1],$hostname))
+				continue;
+			$i = fetch_url($mtch[1]);
+			if($i) {
+				$ph = new Photo($i);
+				if($ph->is_valid()) {
+					$orig_width = $ph->getWidth();
+					$orig_height = $ph->getHeight();
+
+					if($orig_width > 640 || $orig_height > 640) {
+
+						$ph->scaleImage(640);
+						$new_width = $ph->getWidth();
+						$new_height = $ph->getHeight();
+						logger('scale_external_images: ' . $orig_width . '->' . $new_width . 'w ' . $orig_height . '->' . $new_height . 'h' . ' match: ' . $mtch[0], LOGGER_DEBUG);
+						$s = str_replace($mtch[0],'[img=' . $new_width . 'x' . $new_height. ']' . $mtch[1] . '[/img]'
+							. "\n" . (($include_link) 
+								? '[url=' . $mtch[1] . ']' . t('view full size') . '[/url]' . "\n"
+								: ''),$s);
+						logger('scale_external_images: new string: ' . $s, LOGGER_DEBUG);
+					}
+				}
+			}
+		}
+	}
+	return $s;
+}
