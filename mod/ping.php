@@ -127,12 +127,20 @@ function ping_init(&$a) {
 		$tot = $mail+$intro+$register+count($comments)+count($likes)+count($dislikes)+count($friends)+count($posts)+count($tags);
 
 		require_once('include/bbcode.php');
-		
+		$sysnotify = 0;
+
 		if($firehose) {
 			echo '	<notif count="'.$tot.'">';
 		}
 		else {
-			echo '	<notif count="'. count($z) .'">';
+			if(count($z)) {
+				foreach($z as $zz) {
+					if($zz['seen'] == 0)
+						$sysnotify ++;
+				}
+			}						
+
+			echo '	<notif count="'. $sysnotify .'">';
 			if(count($z)) {
 				foreach($z as $zz) {
 					echo xmlize($a->get_baseurl() . '/notify/view/' . $zz['id'], $zz['name'],$zz['url'],$zz['photo'],relative_date($zz['date']), ($zz['seen'] ? 'notify-seen' : 'notify-unseen'), ($zz['seen'] ? '' : '&rarr; ') .strip_tags(bbcode($zz['msg'])));
