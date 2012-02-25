@@ -946,7 +946,7 @@ section {
   /*background: url(../../../images/icons/22/user.png) no-repeat center center;*/
 
 }
-.wall-item-container.comment .contact-photo-menu-button {
+.wall-item-container.comment {
   top: 15px !important;
   left: 15px !important;
 }
@@ -985,7 +985,7 @@ section {
   /*background: url(../../../images/icons/22/user.png) no-repeat center center;*/
 
 }
-.comment-edit-preview .contact-photo-menu-button {
+.comment-edit-preview {
   top: 15px !important;
   left: 15px !important;
 }
@@ -1056,12 +1056,7 @@ section {
   width: 48px;
   height: 48px;
 }
-.contact-photo-menu-button {
-  display: none;
-  position: absolute;
-  left: -2px;
-  top: 31px;
-}
+
 .contact-wrapper {
   float: left;
   width: 90px;
@@ -1076,7 +1071,7 @@ section {
   width: 80px;
   height: 80px;
 }
-.contact-wrapper .contact-photo-menu-button {
+.contact-wrapper {
   left: 0px;
   top: 63px;
 }
@@ -1459,7 +1454,8 @@ ul.tabs li .active {
 }
 /* contacts */
 .contact-entry-wrapper {
-  width: 50px;
+  width: 120px;
+  height: 120px;
   float: left;
 }
 /* photo */
@@ -1482,10 +1478,40 @@ ul.tabs li .active {
   width: 80px;
   height: 80px;
 }
-.profile-match-wrapper .contact-photo-menu-button {
+.profile-match-wrapper {
   left: 0px;
   top: 63px;
 }
+
+.contact-photo-menu-button {
+        position: relative;
+        background-image: url("photo-menu.jpg");
+        background-position: top left; 
+        background-repeat: no-repeat;
+        margin: 0px 0px -16px 0px; 
+	padding: 0px;
+        width: 16px;
+        height: 16px;
+        top: -20px; left:0px;
+        overflow: hidden;
+        text-indent: 40px;
+        display: none;
+        
+}
+.contact-photo-menu {
+        width: auto;
+        border: 2px solid #444444;
+        background: #FFFFFF;
+/*        position: absolute;*/
+        position: relative;
+        left: 0px; top: 0px;
+        display: none;
+        z-index: 10000;
+}
+.contact-photo-menu ul { margin:0px; padding: 0px; list-style: none }
+.contact-photo-menu li a { display: block; padding: 2px; }
+.contact-photo-menu li a:hover { color: #FFFFFF; background: #3465A4; text-decoration: none; }
+
 /* page footer */
 footer {
   height: 100px;
