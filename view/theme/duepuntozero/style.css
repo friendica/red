@@ -2991,18 +2991,17 @@ ul.menu-popup {
 	list-style: none;
 	z-index: 100000;
 	top: 90px;
+	left: 400px;
 }
 #nav-notifications-menu {
 	width: 320px;
 	max-height: 400px;
 	overflow-y: scroll;overflow-style:scrollbar;
 	background-color:#FFFFFF;
-	-moz-border-radius:0px 0px 5px 5px;
-	-webkit-border-radius:0px 0px 5px 5px;
-	border-radius:0px 0px 5px 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius:5px;
 	border: 1px solid #888;
-	border-top: none;
-
 }
 #nav-notifications-menu .contactname { font-weight: bold; font-size: 0.9em; }
 #nav-notifications-menu img { float: left; margin-right: 5px; }
