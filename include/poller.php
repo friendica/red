@@ -454,11 +454,24 @@ function poller_run($argv, $argc){
 										intval($r[0]['id'])
 									);
 								}
-								//logger("Mail: Deleting ".$msg_uid);
-								//imap_delete($mbox, $msg_uid, FT_UID);
-								imap_setflag_full($mbox, $msg_uid, "\\Seen", ST_UID);
-								logger("Mail: Moving ".$msg_uid);
-								imap_mail_move($mbox, $msg_uid, "Archiv", FT_UID);
+								switch ($mailconf[0]['action']) {
+									case 0:
+										break;
+									case 1:
+										logger("Mail: Deleting ".$msg_uid);
+										imap_delete($mbox, $msg_uid, FT_UID);
+										break;
+									case 2:
+										logger("Mail: Mark as seen ".$msg_uid);
+										imap_setflag_full($mbox, $msg_uid, "\\Seen", ST_UID);
+										break;
+									case 3:
+										logger("Mail: Moving ".$msg_uid." to ".$mailconf[0]['movetofolder']);
+										imap_setflag_full($mbox, $msg_uid, "\\Seen", ST_UID);
+										if ($mailconf[0]['movetofolder'] != "")
+											imap_mail_move($mbox, $msg_uid, $mailconf[0]['movetofolder'], FT_UID);
+										break;
+								}
 								continue;
 							}
 
@@ -520,11 +533,24 @@ function poller_run($argv, $argc){
 							q("UPDATE `item` SET `last-child` = 1 WHERE `id` = %d LIMIT 1",
 								intval($stored_item)
 							);
-							//logger("Mail: Deleting ".$msg_uid);
-							//imap_delete($mbox, $msg_uid, FT_UID);
-							imap_setflag_full($mbox, $msg_uid, "\\Seen", ST_UID);
-							logger("Mail: Moving ".$msg_uid);
-							imap_mail_move($mbox, $msg_uid, "Archiv", FT_UID);
+							switch ($mailconf[0]['action']) {
+								case 0:
+									break;
+								case 1:
+									logger("Mail: Deleting ".$msg_uid);
+									imap_delete($mbox, $msg_uid, FT_UID);
+									break;
+								case 2:
+									logger("Mail: Mark as seen ".$msg_uid);
+									imap_setflag_full($mbox, $msg_uid, "\\Seen", ST_UID);
+									break;
+								case 3:
+									logger("Mail: Moving ".$msg_uid." to ".$mailconf[0]['movetofolder']);
+									imap_setflag_full($mbox, $msg_uid, "\\Seen", ST_UID);
+									if ($mailconf[0]['movetofolder'] != "")
+										imap_mail_move($mbox, $msg_uid, $mailconf[0]['movetofolder'], FT_UID);
+									break;
+							}
 						}
 					}
 
