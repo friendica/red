@@ -1,9 +1,10 @@
 <?php
 
 /*
- * Name: Darkzero
+ * Name: Darkzero-NS
+ * Description: Darkzero theme with posts that do not scroll
  * Version: 1.0
- * Author: Fabio Communi <fabrix.xm@gmail.com>
+ * Author: Mike Macgirvin <mike@macgirvin.com>
  */
 
 $a->theme_info = array(
