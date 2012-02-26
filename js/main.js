@@ -129,8 +129,8 @@
 				});
 				
 			} else {
-				$("#nav-notifications-linkmenu").removeClass("on");
-				$("#nav-notifications-menu").html(notifications_empty);
+				//				$("#nav-notifications-linkmenu").removeClass("on");
+				//              $("#nav-notifications-menu").html(notifications_empty);
 			}
 			if(notif == 0) { notif = ''; $('#notify-update').removeClass('show') } else { $('#notify-update').addClass('show') }
 			$('#notify-update').html(notif);
