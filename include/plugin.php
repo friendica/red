@@ -225,8 +225,15 @@ function get_theme_info($theme){
 		'description' => "",
 		'author' => array(),
 		'maintainer' => array(),
-		'version' => ""
+		'version' => "",
+		'experimental' => false,
+		'unsupported' => false
 	);
+
+	if(file_exists("view/theme/$theme/experimental"))
+		$info['experimental'] = true;
+	if(file_exists("view/theme/$theme/unsupported"))
+		$info['unsupported'] = true;
 
 	if (!is_file("view/theme/$theme/theme.php")) return $info;
 	
