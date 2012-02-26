@@ -93,3 +93,7 @@ input#dfrn-url {
 	max-height: 20000px;
 	overflow: inherit;
 }
+blockquote {
+	background: #ddd;
+	color: #000;
+}
