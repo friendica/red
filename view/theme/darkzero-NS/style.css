@@ -91,7 +91,7 @@ input#dfrn-url {
 
 .wall-item-content {
 	max-height: 20000px;
-	overflow: inherit;
+	overflow: none;
 }
 blockquote {
 	background: #ddd;
