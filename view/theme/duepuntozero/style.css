@@ -2967,3 +2967,73 @@ div.jGrowl div.info {
 	opacity: 1.0;
 	filter:alpha(opacity=100);
 }
+
+/* notifications popup menu */
+.nav-notify {
+	display: none;
+	position: absolute;
+	font-size: 10px;
+	padding: 1px 3px;
+	top: 0px;
+	right: -10px;
+	min-width: 15px;
+	text-align: right;
+}
+.nav-notify.show {
+	display: block;
+}
+ul.menu-popup {
+	position: absolute;
+	display: none;
+	width: 10em;
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+	z-index: 100000;
+	top: 90px;
+	left: 400px;
+}
+#nav-notifications-menu {
+	width: 320px;
+	max-height: 400px;
+	overflow-y: scroll;overflow-style:scrollbar;
+	background-color:#FFFFFF;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius:5px;
+	border: 1px solid #888;
+}
+#nav-notifications-menu .contactname { font-weight: bold; font-size: 0.9em; }
+#nav-notifications-menu img { float: left; margin-right: 5px; }
+#nav-notifications-menu .notif-when { font-size: 0.8em; display: block; }
+#nav-notifications-menu li {
+	padding: 7px 0px 7px 10px;
+	word-wrap:normal;
+	border-bottom: 1px solid #000;
+}
+
+#nav-notifications-menu li:hover {
+
+}
+
+#nav-notifications-menu a:hover {
+	text-decoration: underline;
+}
+
+.notif-item a {
+	color: #000000;
+}
+
+.notif-item a:hover {
+	text-decoration: underline;
+}
+
+.notif-image {
+	width: 32px;
+	height: 32px;
+	padding: 7px 7px 0px 0px;
+}
+
+.notify-seen {
+	background: #DDDDDD;
+}

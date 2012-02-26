@@ -114,7 +114,7 @@
 
 			var eNotif = $(data).find('notif')
 			notif = eNotif.attr('count');
-			if (notif>0){
+			if (notif>=0){
 				$("#nav-notifications-linkmenu").addClass("on");
 				nnm = $("#nav-notifications-menu");
 				
@@ -124,13 +124,13 @@
 				eNotif.children("note").each(function(){
 					e = $(this);
 					text = e.text().format("<span class='contactname'>"+e.attr('name')+"</span>");
-					html = notifications_tpl.format(e.attr('href'),e.attr('photo'), text, e.attr('date'));
+					html = notifications_tpl.format(e.attr('href'),e.attr('photo'), text, e.attr('date'), e.attr('seen'));
 					nnm.append(html);
 				});
 				
 			} else {
-				$("#nav-notifications-linkmenu").removeClass("on");
-				$("#nav-notifications-menu").html(notifications_empty);
+				//				$("#nav-notifications-linkmenu").removeClass("on");
+				//              $("#nav-notifications-menu").html(notifications_empty);
 			}
 			if(notif == 0) { notif = ''; $('#notify-update').removeClass('show') } else { $('#notify-update').addClass('show') }
 			$('#notify-update').html(notif);

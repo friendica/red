@@ -88,6 +88,11 @@ input#dfrn-url {
 #jot-title:focus {
 	border: 1px solid #cccccc; 
 }
+
+.wall-item-content {
+	max-height: 20000px;
+	overflow: none;
+}
 blockquote {
 	background: #ddd;
 	color: #000;

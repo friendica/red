@@ -383,8 +383,8 @@ function notifier_run($argv, $argc){
 					continue;
 				if($item['id'] == $item_id) {
 					logger('notifier: followup: item: ' . print_r($item,true), LOGGER_DATA);
-					$slap  = atom_entry($item,'html',$owner,$owner,false);
-					$atom .= atom_entry($item,'text',$owner,$owner,false);
+					$slap  = atom_entry($item,'html',null,$owner,false);
+					$atom .= atom_entry($item,'text',null,$owner,false);
 				}
 			}
 		}
@@ -411,13 +411,13 @@ function notifier_run($argv, $argc){
 					// older sites without a corresponding dfrn_notify change may do the wrong thing.
 
 				    if($item_id == $item['id'] || $item['id'] == $item['parent'])
-						$atom .= atom_entry($item,'text',$contact,$owner,true);
+						$atom .= atom_entry($item,'text',null,$owner,true);
 				}
 				else
-					$atom .= atom_entry($item,'text',$contact,$owner,true);
+					$atom .= atom_entry($item,'text',null,$owner,true);
 
 				if(($top_level) && ($public_message) && ($item['author-link'] === $item['owner-link']) && (! $expire)) 
-					$slaps[] = atom_entry($item,'html',$contact,$owner,true);
+					$slaps[] = atom_entry($item,'html',null,$owner,true);
 			}
 		}
 	}

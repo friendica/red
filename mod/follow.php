@@ -49,6 +49,11 @@ function follow_init(&$a) {
 			goaway($_SESSION['return_url']);
 		}
 	}
+	
+	// This just confuses things, remove it
+	if($ret['network'] === NETWORK_DIASPORA)
+		$ret['url'] = str_replace('?absolute=true','',$ret['url']);
+
 
 	// do we have enough information?
 	

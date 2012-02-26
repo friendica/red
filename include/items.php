@@ -1308,12 +1308,28 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 	}
 
 	if((is_array($contact)) && ($name_updated) && (strlen($new_name)) && ($name_updated > $contact['name-date'])) {
-		q("UPDATE `contact` SET `name` = '%s', `name-date` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
+		$r = q("select * from contact where uid = %d and id = %d limit 1",
+			intval($contact['uid']),
+			intval($contact['id'])
+		);
+
+		$x = q("UPDATE `contact` SET `name` = '%s', `name-date` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
 			dbesc(notags(trim($new_name))),
 			dbesc(datetime_convert()),
 			intval($contact['uid']),
 			intval($contact['id'])
 		);
+
+		// do our best to update the name on content items
+
+		if(count($r)) {
+			q("update item set `author-name` = '%s' where `author-name` = '%s' and `author-link` = '%s' and uid = %d",
+				dbesc(notags(trim($new_name))),
+				dbesc($r[0]['name']),
+				dbesc($r[0]['url']),
+				intval($contact['uid'])
+			);
+		}
 	}
 
 	if(strlen($birthday)) {
@@ -1505,13 +1521,18 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				$item_id  = $item->get_id();
 				$datarray = get_atom_elements($feed,$item);
 
-				if(! x($datarray,'author-name'))
+
+				if((! x($datarray,'author-name')) && ($contact['network'] != NETWORK_DFRN))
 					$datarray['author-name'] = $contact['name'];
-				if(! x($datarray,'author-link'))
+				if((! x($datarray,'author-link')) && ($contact['network'] != NETWORK_DFRN))
 					$datarray['author-link'] = $contact['url'];
-				if(! x($datarray,'author-avatar'))
+				if((! x($datarray,'author-avatar')) && ($contact['network'] != NETWORK_DFRN))
 					$datarray['author-avatar'] = $contact['thumb'];
 
+				if((! x($datarray,'author-name')) || (! x($datarray,'author-link'))) {
+					logger('consume_feed: no author information! ' . print_r($datarray,true));
+					continue;
+				}
 
 				$r = q("SELECT `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
@@ -1614,12 +1635,17 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				$datarray = get_atom_elements($feed,$item);
 
 				if(is_array($contact)) {
-					if(! x($datarray,'author-name'))
+					if((! x($datarray,'author-name')) && ($contact['network'] != NETWORK_DFRN))
 						$datarray['author-name'] = $contact['name'];
-					if(! x($datarray,'author-link'))
+					if((! x($datarray,'author-link')) && ($contact['network'] != NETWORK_DFRN))
 						$datarray['author-link'] = $contact['url'];
-					if(! x($datarray,'author-avatar'))
+					if((! x($datarray,'author-avatar')) && ($contact['network'] != NETWORK_DFRN))
 						$datarray['author-avatar'] = $contact['thumb'];
+				}
+
+				if((! x($datarray,'author-name')) || (! x($datarray,'author-link'))) {
+					logger('consume_feed: no author information! ' . print_r($datarray,true));
+					continue;
 				}
 
 				// special handling for events
@@ -2197,7 +2223,8 @@ function local_delivery($importer,$data) {
 								'source_photo' => ((link_compare($datarray['author-link'],$importer['url'])) 
 									? $importer['thumb'] : $datarray['author-avatar']),
 								'verb'         => ACTIVITY_POST,
-								'otype'        => 'item'
+								'otype'        => 'item',
+								'parent'       => $parent,
 
 							));
 
@@ -2291,7 +2318,7 @@ function local_delivery($importer,$data) {
 			
 				if($datarray['type'] != 'activity') {
 
-					$myconv = q("SELECT `author-link`, `author-avatar` FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `parent` != 0 ",
+					$myconv = q("SELECT `author-link`, `author-avatar`, `parent` FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `parent` != 0 ",
 						dbesc($parent_uri),
 						intval($importer['importer_uid'])
 					);
@@ -2304,6 +2331,8 @@ function local_delivery($importer,$data) {
 								continue;
 
 							require_once('include/enotify.php');
+							
+							$conv_parent = $conv['parent'];
 
 							notification(array(
 								'type'         => NOTIFY_COMMENT,
@@ -2319,7 +2348,8 @@ function local_delivery($importer,$data) {
 								'source_photo' => ((link_compare($datarray['author-link'],$importer['url'])) 
 									? $importer['thumb'] : $datarray['author-avatar']),
 								'verb'         => ACTIVITY_POST,
-								'otype'        => 'item'
+								'otype'        => 'item',
+								'parent'       => $conv_parent,
 
 							));
 

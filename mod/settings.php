@@ -210,7 +210,7 @@ function settings_post(&$a) {
 		}
 	}
 
-	$theme            = ((x($_POST,'theme'))      ? notags(trim($_POST['theme']))        : '');
+	$theme            = ((x($_POST,'theme'))      ? notags(trim($_POST['theme']))        : $a->user['theme']);
 	$username         = ((x($_POST,'username'))   ? notags(trim($_POST['username']))     : '');
 	$email            = ((x($_POST,'email'))      ? notags(trim($_POST['email']))        : '');
 	$timezone         = ((x($_POST,'timezone'))   ? notags(trim($_POST['timezone']))     : '');
@@ -728,13 +728,23 @@ function settings_content(&$a) {
 	$default_theme = get_config('system','theme');
 	if(! $default_theme)
 		$default_theme = 'default';
+
+	$allowed_themes_str = get_config('system','allowed_themes');
+	$allowed_themes_raw = explode(',',$allowed_themes_str);
+	$allowed_themes = array();
+	if(count($allowed_themes_raw))
+		foreach($allowed_themes_raw as $x)
+			if(strlen(trim($x)))
+				$allowed_themes[] = trim($x);
+
 	
 	$themes = array();
 	$files = glob('view/theme/*');
-	if($files) {
-		foreach($files as $file) {
-			$f = basename($file);
-			$is_experimental = file_exists($file . '/experimental');
+	if($allowed_themes) {
+		foreach($allowed_themes as $th) {
+			$f = $th;
+			$is_experimental = file_exists('view/theme/' . $th . '/experimental');
+			$unsupported = file_exists('view/theme/' . $th . '/unsupported');
 			if (!$is_experimental or ($is_experimental && (get_config('experimentals','exp_themes')==1 or get_config('experimentals','exp_themes')===false))){ 
 				$theme_name = (($is_experimental) ?  sprintf("%s - \x28Experimental\x29", $f) : $f);
 				$themes[$f]=$theme_name;

@@ -1,7 +1,7 @@
 <div id='adminpage'>
 	<h1>$title - $page</h1>
 	
-	<p><span class='toggleplugin icon $status'></span> $info.name - $info.version : <a href="$baseurl/admin/plugins/$plugin/?a=t">$action</a></p>
+	<p><span class='toggleplugin icon $status'></span> $info.name - $info.version : <a href="$baseurl/admin/$function/$plugin/?a=t">$action</a></p>
 	<p>$info.description</p>
 	
 	<p class="author">
@@ -13,7 +13,7 @@
 
 	{{ if $admin_form }}
 	<h3>$settings</h3>
-	<form method="post" action="$baseurl/admin/plugins/$plugin/">
+	<form method="post" action="$baseurl/admin/$function/$plugin/">
 		$admin_form
 	</form>
 	{{ endif }}

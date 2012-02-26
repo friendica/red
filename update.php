@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1123 );
+define( 'UPDATE_VERSION' , 1126 );
 
 /**
  *
@@ -1069,3 +1069,24 @@ function update_1122() {
 q("ALTER TABLE `notify` ADD `hash` CHAR( 64 ) NOT NULL AFTER `id` ,
 ADD INDEX ( `hash` ) ");
 }
+
+function update_1123() {
+set_config('system','allowed_themes','dispy,quattro,testbubble,vier,darkbubble,darkzero,duepuntozero,greenzero,purplezero,quattro-green,slackr');
+}
+
+function update_1124() {
+q("alter table item add index (`author-name`) ");
+}
+
+function update_1125() {
+  q("CREATE TABLE IF NOT EXISTS `notify-threads` (
+  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+  `notify-id` INT NOT NULL,
+  `master-parent-item` INT( 10 ) unsigned NOT NULL DEFAULT '0',
+  `parent-item` INT( 10 ) unsigned NOT NULL DEFAULT '0',
+  `receiver-uid` INT NOT NULL,
+  INDEX ( `master-parent-item` ),
+  INDEX ( `receiver-uid` )
+  ) ENGINE = MyISAM DEFAULT CHARSET=utf8");
+}
+

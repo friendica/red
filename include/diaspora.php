@@ -794,15 +794,15 @@ function diaspora_reshare($importer,$xml) {
 
 	if(strlen($source_xml->post->asphoto->objectId) && ($source_xml->post->asphoto->objectId != 0) && ($source_xml->post->asphoto->image_url)) {
 		$body = '[url=' . notags(unxmlify($source_xml->post->asphoto->image_url)) . '][img]' . notags(unxmlify($source_xml->post->asphoto->objectId)) . '[/img][/url]' . "\n";
-		$body = scale_diaspora_images($body,false);
+		$body = scale_external_images($body,false);
 	}
 	elseif($source_xml->post->asphoto->image_url) {
 		$body = '[img]' . notags(unxmlify($source_xml->post->asphoto->image_url)) . '[/img]' . "\n";
-		$body = scale_diaspora_images($body);
+		$body = scale_external_images($body);
 	}
 	elseif($source_xml->post->status_message) {
 		$body = diaspora2bb($source_xml->post->status_message->raw_message);
-		$body = scale_diaspora_images($body);
+		$body = scale_external_images($body);
 
 	}
 	else {
@@ -945,11 +945,11 @@ function diaspora_asphoto($importer,$xml) {
 
 	if(strlen($xml->objectId) && ($xml->objectId != 0) && ($xml->image_url)) {
 		$body = '[url=' . notags(unxmlify($xml->image_url)) . '][img]' . notags(unxmlify($xml->objectId)) . '[/img][/url]' . "\n";
-		$body = scale_diaspora_images($body,false);
+		$body = scale_external_images($body,false);
 	}
 	elseif($xml->image_url) {
 		$body = '[img]' . notags(unxmlify($xml->image_url)) . '[/img]' . "\n";
-		$body = scale_diaspora_images($body);
+		$body = scale_external_images($body);
 	}
 	else {
 		logger('diaspora_asphoto: no photo url found.');
@@ -1476,7 +1476,7 @@ function diaspora_photo($importer,$xml,$msg) {
 
 	$link_text = '[img]' . $remote_photo_path . $remote_photo_name . '[/img]' . "\n";
 
-	$link_text = scale_diaspora_images($link_text);
+	$link_text = scale_external_images($link_text);
 
 	if(strpos($parent_item['body'],$link_text) === false) {
 		$r = q("update item set `body` = '%s', `visible` = 1 where `id` = %d and `uid` = %d limit 1",
@@ -1802,6 +1802,9 @@ function diaspora_profile($importer,$xml) {
 
 	if(substr($birthday,5) === substr($contact['bd'],5))
 		$birthday = $contact['bd'];
+
+	// TODO: update name on item['author-name'] if the name changed. See consume_feed()
+	// Not doing this currently because D* protocol is scheduled for revision soon. 
 
 	$r = q("UPDATE `contact` SET `name` = '%s', `name-date` = '%s', `photo` = '%s', `thumb` = '%s', `micro` = '%s', `avatar-date` = '%s' , `bd` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		dbesc($name),

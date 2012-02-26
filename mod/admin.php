@@ -6,14 +6,19 @@
 require_once("include/remoteupdate.php");
  
 function admin_post(&$a){
+
+
 	if(!is_site_admin()) {
 		return;
 	}
 
+	// do not allow a page manager to access the admin panel at all.
 
 	if(x($_SESSION,'submanage') && intval($_SESSION['submanage']))
 		return;
 	
+
+
 	// urls
 	if ($a->argc > 1){
 		switch ($a->argv[1]){
@@ -66,6 +71,7 @@ function admin_content(&$a) {
 		'site'	 =>	Array($a->get_baseurl()."/admin/site/", t("Site") , "site"),
 		'users'	 =>	Array($a->get_baseurl()."/admin/users/", t("Users") , "users"),
 		'plugins'=>	Array($a->get_baseurl()."/admin/plugins/", t("Plugins") , "plugins"),
+		'themes' =>	Array($a->get_baseurl()."/admin/themes/", t("Themes") , "themes"),
 		'update' =>	Array($a->get_baseurl()."/admin/update/", t("Update") , "update")
 	);
 	
@@ -107,6 +113,9 @@ function admin_content(&$a) {
 				break;
 			case 'plugins':
 				$o = admin_page_plugins($a);
+				break;
+			case 'themes':
+				$o = admin_page_themes($a);
 				break;
 			case 'logs':
 				$o = admin_page_logs($a);
@@ -564,7 +573,7 @@ function admin_page_plugins(&$a){
 			'$info' => get_plugin_info($plugin),
 		
 			'$admin_form' => $admin_form,
-			
+			'$function' => 'plugins',
 			'$readme' => $readme
 		));
 	} 
@@ -593,8 +602,176 @@ function admin_page_plugins(&$a){
 		'$page' => t('Plugins'),
 		'$submit' => t('Submit'),
 		'$baseurl' => $a->get_baseurl(),
-	
+		'$function' => 'plugins',	
 		'$plugins' => $plugins
+	));
+}
+
+function toggle_theme(&$themes,$th,&$result) {
+	for($x = 0; $x < count($themes); $x ++) {
+		if($themes[$x]['name'] === $th) {
+			if($themes[$x]['allowed']) {
+				$themes[$x]['allowed'] = 0;
+				$result = 0;
+			}
+			else {
+				$themes[$x]['allowed'] = 1;
+				$result = 1;
+			}
+		}
+	}
+}
+
+function theme_status($themes,$th) {
+	for($x = 0; $x < count($themes); $x ++) {
+		if($themes[$x]['name'] === $th) {
+			if($themes[$x]['allowed']) {
+				return 1;
+			}
+			else {
+				return 0;
+			}
+		}
+	}
+	return 0;
+}
+	
+
+
+function rebuild_theme_table($themes) {
+	$o = '';
+	if(count($themes)) {
+		foreach($themes as $th) {
+			if($th['allowed']) {
+				if(strlen($o))
+					$o .= ',';
+				$o .= $th['name'];
+			}
+		}
+	}
+	return $o;
+}
+
+	
+/*
+ * Themes admin page
+ */
+
+function admin_page_themes(&$a){
+	
+	$allowed_themes_str = get_config('system','allowed_themes');
+	$allowed_themes_raw = explode(',',$allowed_themes_str);
+	$allowed_themes = array();
+	if(count($allowed_themes_raw))
+		foreach($allowed_themes_raw as $x)
+			if(strlen(trim($x)))
+				$allowed_themes[] = trim($x);
+
+	$themes = array();
+    $files = glob('view/theme/*');
+    if($files) {
+        foreach($files as $file) {
+            $f = basename($file);
+            $is_experimental = intval(file_exists($file . '/experimental'));
+			$is_unsupported = 1-(intval(file_exists($file . '/unsupported')));
+			$is_allowed = intval(in_array($f,$allowed_themes));
+			$themes[] = array('name' => $f, 'experimental' => $is_experimental, 'supported' => $is_supported, 'allowed' => $is_allowed);
+        }
+    }
+
+	if(! count($themes)) {
+		notice( t('No themes found.'));
+		return;
+	}
+
+	/**
+	 * Single theme
+	 */
+
+	if ($a->argc == 3){
+		$theme = $a->argv[2];
+		if(! is_dir("view/theme/$theme")){
+			notice( t("Item not found.") );
+			return;
+		}
+		
+		if (x($_GET,"a") && $_GET['a']=="t"){
+
+			// Toggle theme status
+
+			toggle_theme($themes,$theme,$result);
+			$s = rebuild_theme_table($themes);
+			if($result)
+				info( sprintf('Theme %s enabled.',$theme));
+			else
+				info( sprintf('Theme %s disabled.',$theme));
+
+			set_config('system','allowed_themes',$s);
+			goaway($a->get_baseurl() . '/admin/themes' );
+			return; // NOTREACHED	
+		}
+
+		// display theme details
+		require_once('library/markdown.php');
+
+		if (theme_status($themes,$theme)) {
+			$status="on"; $action= t("Disable");
+		} else {
+			$status="off"; $action= t("Enable");
+		}
+		
+		$readme=Null;
+		if (is_file("view/$theme/README.md")){
+			$readme = file_get_contents("view/$theme/README.md");
+			$readme = Markdown($readme);
+		} else if (is_file("view/$theme/README")){
+			$readme = "<pre>". file_get_contents("view/$theme/README") ."</pre>";
+		} 
+		
+		$admin_form="";
+		
+		$t = get_markup_template("admin_plugins_details.tpl");
+		return replace_macros($t, array(
+			'$title' => t('Administration'),
+			'$page' => t('Themes'),
+			'$toggle' => t('Toggle'),
+			'$settings' => t('Settings'),
+			'$baseurl' => $a->get_baseurl(),
+		
+			'$plugin' => $theme,
+			'$status' => $status,
+			'$action' => $action,
+			'$info' => get_theme_info($theme),
+			'$function' => 'themes',		
+			'$admin_form' => $admin_form,
+			
+			'$readme' => $readme
+		));
+	} 
+	 
+	 
+	
+	/**
+	 * List plugins
+	 */
+	
+	$xthemes = array();
+	if($themes) {
+		foreach($themes as $th) {
+			$xthemes[] = array($th['name'],(($th['allowed']) ? "on" : "off"), get_theme_info($th['name']));
+		}
+	}
+	
+	$t = get_markup_template("admin_plugins.tpl");
+	return replace_macros($t, array(
+		'$title' => t('Administration'),
+		'$page' => t('Themes'),
+		'$submit' => t('Submit'),
+		'$baseurl' => $a->get_baseurl(),
+		'$function' => 'themes',
+		'$plugins' => $xthemes,
+		'$experimental' => t('[Experimental]'),
+		'$unsupported' => t('[Unsupported]')
 	));
 }
 
