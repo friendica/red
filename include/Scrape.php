@@ -230,11 +230,16 @@ function scrape_feed($url) {
 	$ret = array();
 	$s = fetch_url($url);
 
-	if(! $s) 
-		return $ret;
-
 	$headers = $a->get_curl_headers();
-	logger('scrape_feed: headers=' . $headers, LOGGER_DEBUG);
+	$code = $a->get_curl_code();
+
+	logger('scrape_feed: returns: ' . $code . ' headers=' . $headers, LOGGER_DEBUG);
+
+	if(! $s) {
+		logger('scrape_feed: no data returned for ' . $url); 
+		return $ret;
+	}
+
 
 	$lines = explode("\n",$headers);
 	if(count($lines)) {
@@ -258,8 +263,10 @@ function scrape_feed($url) {
 		logger('scrape_feed: parse error: ' . $e);
 	}
 
-	if(! $dom)
+	if(! $dom) {
+		logger('scrape_feed: failed to parse.');
 		return $ret;
+	}
 
 
 	$head = $dom->getElementsByTagName('base');
@@ -565,7 +572,7 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 		if($check_feed) {
 
 			$feedret = scrape_feed(($poll) ? $poll : $url);
-			logger('probe_url: scrape_feed returns: ' . print_r($feedret,true), LOGGER_DATA);
+			logger('probe_url: scrape_feed ' . (($poll)? $poll : $url) . ' returns: ' . print_r($feedret,true), LOGGER_DATA);
 			if(count($feedret) && ($feedret['feed_atom'] || $feedret['feed_rss'])) {
 				$poll = ((x($feedret,'feed_atom')) ? unamp($feedret['feed_atom']) : unamp($feedret['feed_rss']));
 				if(! x($vcard)) 
