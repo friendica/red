@@ -6,7 +6,9 @@
 # bavatar <tobias.diekershoff@gmx.net>, 2011.
 # Erkan Yilmaz <erkan77@gmail.com>, 2011.
 #   <friends@dostmusik.de>, 2012.
+#   <greeneyedred@googlemail.com>, 2012.
 #   <hzuehl@phone-talk.de>, 2011.
+#   <marmor69@web.de>, 2012.
 #   <tobias.diekershoff@gmx.net>, 2011, 2012.
 #   <transifex@zottel.net>, 2011, 2012.
 #   <ts+transifex@ml.tschlotfeldt.de>, 2011.
@@ -15,8 +17,8 @@ msgstr ""
 "Project-Id-Version: friendica\n"
 "Report-Msgid-Bugs-To: http://bugs.friendica.com/\n"
 "POT-Creation-Date: 2012-02-24 22:44-0800\n"
-"PO-Revision-Date: 2012-02-26 14:36+0000\n"
-"Last-Translator: bavatar <tobias.diekershoff@gmx.net>\n"
+"PO-Revision-Date: 2012-02-26 15:58+0000\n"
+"Last-Translator: marmor <marmor69@web.de>\n"
 "Language-Team: German (http://www.transifex.net/projects/p/friendica/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1365,11 +1367,11 @@ msgstr "Kontakt wurde wieder freigegeben"
 
 #: ../../mod/contacts.php:179
 msgid "Contact has been ignored"
-msgstr "Der Kontakt wurde ignoriert"
+msgstr "Kontakt wurde ignoriert"
 
 #: ../../mod/contacts.php:179
 msgid "Contact has been unignored"
-msgstr "Kontakt wurde ignoriert"
+msgstr "Kontakt wird nicht mehr ignoriert"
 
 #: ../../mod/contacts.php:200
 msgid "stopped following"
@@ -1692,7 +1694,7 @@ msgstr " Keine gültige E-Mail."
 
 #: ../../mod/settings.php:283
 msgid " Cannot change to that email."
-msgstr " Cannot change to that email."
+msgstr "Ändern der E-Mail nicht möglich. "
 
 #: ../../mod/settings.php:351 ../../addon/facebook/facebook.php:321
 #: ../../addon/impressum/impressum.php:64
@@ -2050,15 +2052,15 @@ msgstr "Eine deiner Kontaktanfragen akzeptiert wurde"
 
 #: ../../mod/settings.php:830
 msgid "Someone writes on your profile wall"
-msgstr "Jemand etwas auf deine Pinnwand schreibt"
+msgstr "Jemand schreibt etwas auf deine Pinnwand"
 
 #: ../../mod/settings.php:831
 msgid "Someone writes a followup comment"
-msgstr "Jemand auch einen Kommentar verfasst"
+msgstr "Jemand verfasst auch einen Kommentar"
 
 #: ../../mod/settings.php:832
 msgid "You receive a private message"
-msgstr "Du eine private Nachricht erhältst"
+msgstr "Du erhältst eine private Nachricht"
 
 #: ../../mod/settings.php:833
 msgid "You receive a friend suggestion"
@@ -2258,7 +2260,7 @@ msgid ""
 "interest, and provide suggestions based on network relationships. On a brand"
 " new site, friend suggestions will usually begin to be populated within 24 "
 "hours."
-msgstr "Im Seitenpanel auf der Kontakte-Seite findest du einige Werkzeuge um neue Freunde zu finden. Du kannst deine Interessen mit denen anderer Nutzer abgleichen lassen oder nach Namen und Interessen suchen. Außerdem kannst du Nach Personen aufgrund der Netzwerkbeziehungen suchen lassen. Auf einem neuen Server werden Kontaktvorschläge normalerweise innerhalb von 24 Stunden gefüllt."
+msgstr "Im seitlichen Bedienfeld der Kontakte-Seite gibt es diverse Werkzeuge, um neue Freunde zu finden. Wir können Menschen mit den gleichen Interessen finden, anhand von Namen oder Interessen suchen oder aber aufgrund vorhandener Kontakte neue Freunde vorschlagen.\nAuf einer brandneuen - soeben erstellten - Seite starten die Kontaktvorschläge innerhalb von 24 Stunden."
 
 #: ../../mod/newmember.php:42
 msgid ""
@@ -2411,7 +2413,7 @@ msgstr "Dieser Spitzname ist bereits vergeben. Bitte wähle einen anderen."
 
 #: ../../mod/register.php:170
 msgid "SERIOUS ERROR: Generation of security keys failed."
-msgstr "SERIOUS ERROR: Generation of security keys failed."
+msgstr "FATALER FEHLER: Sicherheitsschlüssel konnten nicht erzeugt werden."
 
 #: ../../mod/register.php:238
 msgid "An error occurred during registration. Please try again."
