@@ -1110,7 +1110,7 @@ div[id$="wrapper"] br { clear: left; }
 
 .tagged {
 	background-image: url("tag.png");
-	repaet: no-repeat;
+	repeat: no-repeat;
 }
 
 
