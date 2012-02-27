@@ -838,4 +838,16 @@ INDEX ( `master-parent-item` ),
 INDEX ( `receiver-uid` )
 ) ENGINE = MyISAM DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `spam` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`uid` INT NOT NULL,
+`spam` INT NOT NULL DEFAULT '0',
+`ham` INT NOT NULL DEFAULT '0',
+`term` CHAR(255) NOT NULL,
+INDEX ( `uid` ),
+INDEX ( `spam` ),
+INDEX ( `ham` ),
+INDEX ( `term` )
+) ENGINE = MyISAM DEFAULT CHARSET=utf8;
+
 

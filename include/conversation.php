@@ -6,6 +6,11 @@
 function localize_item(&$item){
 
 	$Text = $item['body'];
+
+
+	// find private image (w/data url) if present and convert image 
+	// link to a magic-auth redirect.
+
 	$saved_image = '';
 	$img_start = strpos($Text,'[img]data:');
 	$img_end = strpos($Text,'[/img]');
@@ -403,6 +408,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				$toplevelprivate = false;
 
 				// Take care of author collapsing and comment collapsing
+				// (author collapsing is currently disabled)
 				// If a single author has more than 3 consecutive top-level posts, squash the remaining ones.
 				// If there are more than two comments, squash all but the last 2.
 			
@@ -410,7 +416,9 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 					$toplevelprivate = (($toplevelpost && $item['private']) ? true : false);
 					$item_writeable = (($item['writable'] || $item['self']) ? true : false);
 
-					/*if($blowhard == $item['cid'] && (! $item['self']) && ($mode != 'profile') && ($mode != 'notes')) {
+					// DISABLED
+					/*
+					if($blowhard == $item['cid'] && (! $item['self']) && ($mode != 'profile') && ($mode != 'notes')) {
 						$blowhard_count ++;
 						if($blowhard_count == 3) {
 							$o .= '<div class="icollapse-wrapper fakelink" id="icollapse-wrapper-' . $item['parent'] 
@@ -424,7 +432,9 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 						if($blowhard_count >= 3)
 							$o .= '</div>';
 						$blowhard_count = 0;
-					}*/
+					}
+					// END DISABLED
+					*/
 
 					$comments_seen = 0;
 					$comments_collapsed = false;
