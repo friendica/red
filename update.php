@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1127 );
+define( 'UPDATE_VERSION' , 1128 );
 
 /**
  *
@@ -1094,3 +1094,18 @@ function update_1126() {
 	q("ALTER TABLE `mailacct` ADD `action` INT NOT NULL AFTER `pass`,
 		ADD `movetofolder` CHAR(255) NOT NULL AFTER `action`");
 }
+
+function update_1127() {
+	q("CREATE TABLE IF NOT EXISTS `spam` (
+  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+  `uid` INT NOT NULL,
+  `spam` INT NOT NULL DEFAULT '0',
+  `ham` INT NOT NULL DEFAULT '0',
+  `term` CHAR(255) NOT NULL,
+  INDEX ( `uid` ),
+  INDEX ( `spam` ),
+  INDEX ( `ham` ),
+  INDEX ( `term` )
+  ) ENGINE = MyISAM DEFAULT CHARSET=utf8");
+}
+
