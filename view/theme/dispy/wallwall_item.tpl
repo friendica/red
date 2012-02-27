@@ -29,6 +29,7 @@
 		<div class="wall-item-tools" id="wall-item-tools-$id">
 			{{ if $star }}
 				<a href="#" id="starred-$id" onclick="dostar($id); return false;" class="star-item icon $isstarred" title="$star.toggle"></a>
+				<a href="#" id="tagger-$id" onclick="itemTag($id); return false;" class="tag-item icon tagged" title="$star.tagger"></a>
 			{{ endif }}
 			{{ if $vote }}
 			<div class="wall-item-like-buttons" id="wall-item-like-buttons-$id">
