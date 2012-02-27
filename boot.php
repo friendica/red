@@ -1335,7 +1335,7 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 		array(
 			'label' => t('Profile'),
 			'url' 	=> $url.'/?tab=profile',
-			'sel'	=> (($tab=='profile')?'active':''),
+			'sel'	=> ((isset($tab) && $tab=='profile')?'active':''),
 		),
 		array(
 			'label' => t('Photos'),
