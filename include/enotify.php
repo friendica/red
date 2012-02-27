@@ -135,20 +135,34 @@ function notification($params) {
 	} while($dups == true);
 
 
+	$datarray = array();
+	$datarray['hash']  = $hash;
+	$datarray['name']  = $params['source_name'];
+	$datarray['url']   = $params['source_link'];
+	$datarray['photo'] = $params['source_photo'];
+	$datarray['date']  = datetime_convert();
+	$datarray['uid']   = $params['uid'];
+	$datarray['link']  = $itemlink;
+	$datarray['type']  = $params['type'];
+	$datarray['verb']  = $params['verb'];
+	$datarray['otype'] = $params['otype'];
+ 
+	call_hooks('enotify_store', $datarray);
+
 	// create notification entry in DB
 
 	$r = q("insert into notify (hash,name,url,photo,date,uid,link,type,verb,otype)
 		values('%s','%s','%s','%s','%s',%d,'%s',%d,'%s','%s')",
-		dbesc($hash),
-		dbesc($params['source_name']),
-		dbesc($params['source_link']),
-		dbesc($params['source_photo']),
-		dbesc(datetime_convert()),
-		intval($params['uid']),
-		dbesc($itemlink),
-		intval($params['type']),
-		dbesc($params['verb']),
-		dbesc($params['otype'])
+		dbesc($datarray['hash']),
+		dbesc($datarray['name']),
+		dbesc($datarray['url']),
+		dbesc($datarray['photo']),
+		dbesc($datarray['date']),
+		intval($datarray['uid']),
+		dbesc($datarray['link']),
+		intval($datarray['type']),
+		dbesc($datarray['verb']),
+		dbesc($datarray['otype'])
 	);
 
 	$r = q("select id from notify where hash = '%s' and uid = %d limit 1",
@@ -217,44 +231,68 @@ intval($params['uid']), LOGGER_DEBUG);
 		$htmlversion = html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r","\\n\\n" ,"\\n"), 
 			"<br />\n",$body))));
 
+		$datarray = array();
+		$datarray['banner'] = $banner;
+		$datarray['product'] = $product;
+		$datarray['preamble'] = $preamble;
+		$datarray['sitename'] = $sitename;
+		$datarray['siteurl'] = $siteurl;
+		$datarray['source_name'] = $params['source_name'];
+		$datarray['source_link'] = $params['source_link'];
+		$datarray['source_photo'] = $params['source_photo'];
+		$datarray['username'] = $params['to_name'];
+		$datarray['hsitelink'] = $hsitelink;
+		$datarray['tsitelink'] = $tsitelink;
+		$datarray['hitemlink'] = '<a href="' . $itemlink . '">' . $itemlink . '</a>';
+		$datarray['titemlink'] = $itemlink;
+		$datarray['thanks'] = $thanks;
+		$datarray['site_admin'] = $site_admin;
+		$datarray['title'] = stripslashes($title);
+		$datarray['htmlversion'] = $htmlversion;
+		$datarray['textversion'] = $textversion;
+		$datarray['subject'] = $subject;
+		$datarray['headers'] = $additional_mail_header;
+
+		call_hooks('enotify_mail', $datarray);
+
 		// load the template for private message notifications
 		$tpl = get_markup_template('email_notify_html.tpl');
 		$email_html_body = replace_macros($tpl,array(
-			'$banner'       => $banner,
-			'$product'      => $product,
-			'$preamble'     => $preamble,
-			'$sitename'     => $sitename,
-			'$siteurl'      => $siteurl,
-			'$source_name'  => $params['source_name'],
-			'$source_link'  => $params['source_link'],
-			'$source_photo' => $params['source_photo'],
-			'$username'     => $params['to_name'],
-			'$hsitelink'    => $hsitelink,
-			'$itemlink'     => '<a href="' . $itemlink . '">' . $itemlink . '</a>',
-			'$thanks'       => $thanks,
-			'$site_admin'   => $site_admin,
-			'$title'		=> stripslashes($title),
-			'$htmlversion'	=> $htmlversion,	
+			'$banner'       => $datarray['banner'],
+			'$product'      => $datarray['product'],
+			'$preamble'     => $datarray['preamble'],
+			'$sitename'     => $datarray['sitename'],
+			'$siteurl'      => $datarray['siteurl'],
+			'$source_name'  => $datarray['source_name'],
+			'$source_link'  => $datarray['source_link'],
+			'$source_photo' => $datarray['source_photo'],
+			'$username'     => $datarray['to_name'],
+			'$hsitelink'    => $datarray['hsitelink'],
+			'$hitemlink'    => $datarray['hitemlink'],
+			'$thanks'       => $datarray['thanks'],
+			'$site_admin'   => $datarray['site_admin'],
+			'$title'		=> $datarray['title'],
+			'$htmlversion'	=> $datarray['htmlversion'],	
 		));
 		
 		// load the template for private message notifications
 		$tpl = get_markup_template('email_notify_text.tpl');
 		$email_text_body = replace_macros($tpl,array(
-			'$banner'       => $banner,
-			'$product'      => $product,
-			'$preamble'     => $preamble,
-			'$sitename'     => $sitename,
-			'$siteurl'      => $siteurl,
-			'$source_name'  => $params['source_name'],
-			'$source_link'  => $params['source_link'],
-			'$source_photo' => $params['source_photo'],
-			'$username'     => $params['to_name'],
-			'$tsitelink'    => $tsitelink,
-			'$itemlink'     => $itemlink,
-			'$thanks'       => $thanks,
-			'$site_admin'   => $site_admin,
-			'$title'		=> stripslashes($title),
-			'$textversion'	=> $textversion,	
+			'$banner'       => $datarray['banner'],
+			'$product'      => $datarray['product'],
+			'$preamble'     => $datarray['preamble'],
+			'$sitename'     => $datarray['sitename'],
+			'$siteurl'      => $datarray['siteurl'],
+			'$source_name'  => $datarray['source_name'],
+			'$source_link'  => $datarray['source_link'],
+			'$source_photo' => $datarray['source_photo'],
+			'$username'     => $datarray['to_name'],
+			'$tsitelink'    => $datarray['tsitelink'],
+			'$titemlink'    => $datarray['titemlink'],
+			'$thanks'       => $datarray['thanks'],
+			'$site_admin'   => $datarray['site_admin'],
+			'$title'		=> $datarray['title'],
+			'$textversion'	=> $datarray['textversion'],	
 		));
 
 //		logger('text: ' . $email_text_body);
@@ -266,10 +304,10 @@ intval($params['uid']), LOGGER_DEBUG);
 			'fromEmail' => $sender_email,
 			'replyTo' => $sender_email,
 			'toEmail' => $params['to_email'],
-			'messageSubject' => $subject,
+			'messageSubject' => $datarray['subject'],
 			'htmlVersion' => $email_html_body,
 			'textVersion' => $email_text_body,
-			'additionalMailHeader' => $additional_mail_header,
+			'additionalMailHeader' => $datarray['headers'],
 		));
 	}
 
