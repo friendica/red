@@ -682,7 +682,7 @@ function item_store($arr,$force_parent = false) {
 		unset($arr['dsprsig']);
 	}
 
-	if($arr['gravity'])
+	if(x($arr, 'gravity'))
 		$arr['gravity'] = intval($arr['gravity']);
 	elseif($arr['parent-uri'] === $arr['uri'])
 		$arr['gravity'] = 0;
@@ -800,6 +800,8 @@ function item_store($arr,$force_parent = false) {
 				logger('item_store: item parent was not found - ignoring item');
 				return 0;
 			}
+			
+			$parent_deleted = 0;
 		}
 	}
 
