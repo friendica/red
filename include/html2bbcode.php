@@ -10,7 +10,7 @@ Originally made for the syncom project: http://wiki.piratenpartei.de/Syncom
 function node2bbcode(&$doc, $oldnode, $attributes, $startbb, $endbb)
 {
 	do {
-		$done = node2bbcodesub(&$doc, $oldnode, $attributes, $startbb, $endbb);
+		$done = node2bbcodesub($doc, $oldnode, $attributes, $startbb, $endbb);
 	} while ($done);
 }
 
