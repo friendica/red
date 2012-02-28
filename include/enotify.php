@@ -27,7 +27,7 @@ function notification($params) {
 
 	if($params['type'] == NOTIFY_MAIL) {
 
-		$subject = 	sprintf( t('New mail received at %s'),$sitename);
+		$subject = 	sprintf( t('[Friendica:Notify] New mail received at %s'),$sitename);
 
 		$preamble = sprintf( t('%s sent you a new private message at %s.'),$params['source_name'],$sitename);
 		$epreamble = sprintf( t('%s sent you %s.'),'[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]', '[url=$itemlink]' . t('a private message') . '[/url]');
@@ -38,7 +38,7 @@ function notification($params) {
 	}
 
 	if($params['type'] == NOTIFY_COMMENT) {
-		logger("notification: params = " . print_r($params, true), LOGGER_DEBUG);
+//		logger("notification: params = " . print_r($params, true), LOGGER_DEBUG);
 
 		$parent_id = $params['parent'];
 		
@@ -46,7 +46,8 @@ function notification($params) {
 		// So, we cannot have different subjects for notifications of the same thread.
 		// Before this we have the name of the replier on the subject rendering 
 		// differents subjects for messages on the same thread.
-		$subject = sprintf( t('Someone commented on item #%d at %s'), $parent_id, $sitename);
+
+		$subject = sprintf( t('[Friendica:Notify] Comment to conversation #%d by %s'), $parent_id, $params['source_name']);
 		$preamble = sprintf( t('%s commented on an item/conversation you have been following.'), $params['source_name']); 
 		$epreamble = sprintf( t('%s commented in %s.'), '[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]', '[url=$itemlink]' . t('a watched conversation') . '[/url]'); 
 
@@ -57,7 +58,10 @@ function notification($params) {
 	}
 
 	if($params['type'] == NOTIFY_WALL) {
-		$preamble = $subject =	sprintf( t('%s posted to your profile wall at %s') , $params['source_name'], $sitename);
+		$subject = sprintf( t('[Friendica:Notify] %s posted to your profile wall') , $params['source_name']);
+
+		$preamble = sprintf( t('%s posted to your profile wall at %s') , $params['source_name'], $sitename);
+		
 		$epreamble = sprintf( t('%s posted to %s') , '[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]', '[url=$itemlink]' . t('your profile wall.') . '[/url]'); 
 		
 		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
@@ -67,7 +71,8 @@ function notification($params) {
 	}
 
 	if($params['type'] == NOTIFY_TAGSELF) {
-		$preamble = $subject =	sprintf( t('%s tagged you at %s') , $params['source_name'], $sitename);
+		$subject =	sprintf( t('[Friendica:Notify] %s tagged you') , $params['source_name']);
+		$preamble = sprintf( t('%s tagged you at %s') , $params['source_name'], $sitename);
 		$epreamble = sprintf( t('%s %s.') , '[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]', '[url=' . $params['link'] . ']' . t('tagged you') . '[/url]'); 
 
 		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
@@ -77,7 +82,8 @@ function notification($params) {
 	}
 
 	if($params['type'] == NOTIFY_TAGSHARE) {
-		$preamble = $subject =	sprintf( t('%s tagged your post at %s') , $params['source_name'], $sitename);
+		$subject =	sprintf( t('[Friendica:Notify] %s tagged your post') , $params['source_name']);
+		$preamble = sprintf( t('%s tagged your post at %s') , $params['source_name'], $sitename);
 		$epreamble = sprintf( t('%s tagged %s') , '[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]', '[url=$itemlink]' . t('your post') . '[/url]' ); 
 
 		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
@@ -87,7 +93,7 @@ function notification($params) {
 	}
 
 	if($params['type'] == NOTIFY_INTRO) {
-		$subject = sprintf( t('Introduction received at %s'), $sitename);
+		$subject = sprintf( t('[Friendica:Notify] Introduction received'));
 		$preamble = sprintf( t('You\'ve received an introduction from \'%s\' at %s'), $params['source_name'], $sitename); 
 		$epreamble = sprintf( t('You\'ve received %s from %s.'), '[url=$itemlink]' . t('an introduction') . '[/url]' , '[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]'); 
 		$body = sprintf( t('You may visit their profile at %s'),$params['source_link']);
@@ -99,7 +105,7 @@ function notification($params) {
 	}
 
 	if($params['type'] == NOTIFY_SUGGEST) {
-		$subject = sprintf( t('Friend suggestion received at %s'), $sitename);
+		$subject = sprintf( t('[Friendica:Notify] Friend suggestion received'));
 		$preamble = sprintf( t('You\'ve received a friend suggestion from \'%s\' at %s'), $params['source_name'], $sitename); 
 		$epreamble = sprintf( t('You\'ve received %s for %s from %s.'),
 			'[url=$itemlink]' . t('a friend suggestion') . '[/url]',
@@ -135,20 +141,34 @@ function notification($params) {
 	} while($dups == true);
 
 
+	$datarray = array();
+	$datarray['hash']  = $hash;
+	$datarray['name']  = $params['source_name'];
+	$datarray['url']   = $params['source_link'];
+	$datarray['photo'] = $params['source_photo'];
+	$datarray['date']  = datetime_convert();
+	$datarray['uid']   = $params['uid'];
+	$datarray['link']  = $itemlink;
+	$datarray['type']  = $params['type'];
+	$datarray['verb']  = $params['verb'];
+	$datarray['otype'] = $params['otype'];
+ 
+	call_hooks('enotify_store', $datarray);
+
 	// create notification entry in DB
 
 	$r = q("insert into notify (hash,name,url,photo,date,uid,link,type,verb,otype)
 		values('%s','%s','%s','%s','%s',%d,'%s',%d,'%s','%s')",
-		dbesc($hash),
-		dbesc($params['source_name']),
-		dbesc($params['source_link']),
-		dbesc($params['source_photo']),
-		dbesc(datetime_convert()),
-		intval($params['uid']),
-		dbesc($itemlink),
-		intval($params['type']),
-		dbesc($params['verb']),
-		dbesc($params['otype'])
+		dbesc($datarray['hash']),
+		dbesc($datarray['name']),
+		dbesc($datarray['url']),
+		dbesc($datarray['photo']),
+		dbesc($datarray['date']),
+		intval($datarray['uid']),
+		dbesc($datarray['link']),
+		intval($datarray['type']),
+		dbesc($datarray['verb']),
+		dbesc($datarray['otype'])
 	);
 
 	$r = q("select id from notify where hash = '%s' and uid = %d limit 1",
@@ -217,44 +237,71 @@ intval($params['uid']), LOGGER_DEBUG);
 		$htmlversion = html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r","\\n\\n" ,"\\n"), 
 			"<br />\n",$body))));
 
+		$datarray = array();
+		$datarray['banner'] = $banner;
+		$datarray['product'] = $product;
+		$datarray['preamble'] = $preamble;
+		$datarray['sitename'] = $sitename;
+		$datarray['siteurl'] = $siteurl;
+		$datarray['type'] = $params['type'];
+		$datarray['parent'] = $params['parent'];
+		$datarray['source_name'] = $params['source_name'];
+		$datarray['source_link'] = $params['source_link'];
+		$datarray['source_photo'] = $params['source_photo'];
+		$datarray['uid'] = $params['uid'];
+		$datarray['username'] = $params['to_name'];
+		$datarray['hsitelink'] = $hsitelink;
+		$datarray['tsitelink'] = $tsitelink;
+		$datarray['hitemlink'] = '<a href="' . $itemlink . '">' . $itemlink . '</a>';
+		$datarray['titemlink'] = $itemlink;
+		$datarray['thanks'] = $thanks;
+		$datarray['site_admin'] = $site_admin;
+		$datarray['title'] = stripslashes($title);
+		$datarray['htmlversion'] = $htmlversion;
+		$datarray['textversion'] = $textversion;
+		$datarray['subject'] = $subject;
+		$datarray['headers'] = $additional_mail_header;
+
+		call_hooks('enotify_mail', $datarray);
+
 		// load the template for private message notifications
 		$tpl = get_markup_template('email_notify_html.tpl');
 		$email_html_body = replace_macros($tpl,array(
-			'$banner'       => $banner,
-			'$product'      => $product,
-			'$preamble'     => $preamble,
-			'$sitename'     => $sitename,
-			'$siteurl'      => $siteurl,
-			'$source_name'  => $params['source_name'],
-			'$source_link'  => $params['source_link'],
-			'$source_photo' => $params['source_photo'],
-			'$username'     => $params['to_name'],
-			'$hsitelink'    => $hsitelink,
-			'$itemlink'     => '<a href="' . $itemlink . '">' . $itemlink . '</a>',
-			'$thanks'       => $thanks,
-			'$site_admin'   => $site_admin,
-			'$title'		=> stripslashes($title),
-			'$htmlversion'	=> $htmlversion,	
+			'$banner'       => $datarray['banner'],
+			'$product'      => $datarray['product'],
+			'$preamble'     => $datarray['preamble'],
+			'$sitename'     => $datarray['sitename'],
+			'$siteurl'      => $datarray['siteurl'],
+			'$source_name'  => $datarray['source_name'],
+			'$source_link'  => $datarray['source_link'],
+			'$source_photo' => $datarray['source_photo'],
+			'$username'     => $datarray['to_name'],
+			'$hsitelink'    => $datarray['hsitelink'],
+			'$hitemlink'    => $datarray['hitemlink'],
+			'$thanks'       => $datarray['thanks'],
+			'$site_admin'   => $datarray['site_admin'],
+			'$title'		=> $datarray['title'],
+			'$htmlversion'	=> $datarray['htmlversion'],	
 		));
 		
 		// load the template for private message notifications
 		$tpl = get_markup_template('email_notify_text.tpl');
 		$email_text_body = replace_macros($tpl,array(
-			'$banner'       => $banner,
-			'$product'      => $product,
-			'$preamble'     => $preamble,
-			'$sitename'     => $sitename,
-			'$siteurl'      => $siteurl,
-			'$source_name'  => $params['source_name'],
-			'$source_link'  => $params['source_link'],
-			'$source_photo' => $params['source_photo'],
-			'$username'     => $params['to_name'],
-			'$tsitelink'    => $tsitelink,
-			'$itemlink'     => $itemlink,
-			'$thanks'       => $thanks,
-			'$site_admin'   => $site_admin,
-			'$title'		=> stripslashes($title),
-			'$textversion'	=> $textversion,	
+			'$banner'       => $datarray['banner'],
+			'$product'      => $datarray['product'],
+			'$preamble'     => $datarray['preamble'],
+			'$sitename'     => $datarray['sitename'],
+			'$siteurl'      => $datarray['siteurl'],
+			'$source_name'  => $datarray['source_name'],
+			'$source_link'  => $datarray['source_link'],
+			'$source_photo' => $datarray['source_photo'],
+			'$username'     => $datarray['to_name'],
+			'$tsitelink'    => $datarray['tsitelink'],
+			'$titemlink'    => $datarray['titemlink'],
+			'$thanks'       => $datarray['thanks'],
+			'$site_admin'   => $datarray['site_admin'],
+			'$title'		=> $datarray['title'],
+			'$textversion'	=> $datarray['textversion'],	
 		));
 
 //		logger('text: ' . $email_text_body);
@@ -266,10 +313,10 @@ intval($params['uid']), LOGGER_DEBUG);
 			'fromEmail' => $sender_email,
 			'replyTo' => $sender_email,
 			'toEmail' => $params['to_email'],
-			'messageSubject' => $subject,
+			'messageSubject' => $datarray['subject'],
 			'htmlVersion' => $email_html_body,
 			'textVersion' => $email_text_body,
-			'additionalMailHeader' => $additional_mail_header,
+			'additionalMailHeader' => $datarray['headers'],
 		));
 	}
 

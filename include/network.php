@@ -17,7 +17,7 @@ function fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0, $accept_
 	
 	if (!is_null($accept_content)){
 		curl_setopt($ch,CURLOPT_HTTPHEADER, array (
-			"Accept: "+$accept_content
+			"Accept: " . $accept_content
 		));
 	}
 	
@@ -60,6 +60,7 @@ function fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0, $accept_
 	$curl_info = @curl_getinfo($ch);
 	$http_code = $curl_info['http_code'];
 
+//	logger('fetch_url:' . $http_code . ' data: ' . $s);
 	$header = '';
 
 	// Pull out multiple headers, e.g. proxy and continuation headers
@@ -74,11 +75,13 @@ function fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0, $accept_
 	if($http_code == 301 || $http_code == 302 || $http_code == 303 || $http_code == 307) {
         $matches = array();
         preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
-        $url = trim(array_pop($matches));
-        $url_parsed = @parse_url($url);
+        $newurl = trim(array_pop($matches));
+		if(strpos($newurl,'/') === 0)
+			$newurl = $url . $newurl;
+        $url_parsed = @parse_url($newurl);
         if (isset($url_parsed)) {
             $redirects++;
-            return fetch_url($url,$binary,$redirects,$timeout);
+            return fetch_url($newurl,$binary,$redirects,$timeout);
         }
     }
 
@@ -163,11 +166,13 @@ function post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0) 
 	if($http_code == 301 || $http_code == 302 || $http_code == 303) {
         $matches = array();
         preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
-        $url = trim(array_pop($matches));
-        $url_parsed = @parse_url($url);
+        $newurl = trim(array_pop($matches));
+		if(strpos($newurl,'/') === 0)
+			$newurl = $url . $newurl;
+        $url_parsed = @parse_url($newurl);
         if (isset($url_parsed)) {
             $redirects++;
-            return post_url($url,$params,$headers,$redirects,$timeout);
+            return fetch_url($newurl,$binary,$redirects,$timeout);
         }
     }
 	$a->set_curl_code($http_code);

@@ -1,7 +1,7 @@
 {{ if $indent }}{{ else }}
 <div class="wall-item-decor">
-	<span class="icon s22 star $isstarred" id="starred-$id" title="$star.starred">$star.starred</span>
-	{{ if $lock }}<span class="icon s22 lock fakelink" onclick="lockview(event,$id);" title="$lock">$lock</span>{{ endif }}	
+	<span class="icon star $isstarred" id="starred-$id" title="$star.starred">$star.starred</span>
+	{{ if $lock }}<span class="icon lock fakelink" onclick="lockview(event,$id);" title="$lock">$lock</span>{{ endif }}	
 	<img id="like-rotator-$id" class="like-rotator" src="images/rotator.gif" alt="$wait" title="$wait" style="display: none;" />
 </div>
 {{ endif }}
@@ -32,6 +32,7 @@
 				$to <a href="$owner_url" target="redir" title="$olinktitle" class="wall-item-name-link"><span class="wall-item-name$osparkle" id="wall-item-ownername-$id">$owner_name</span></a>
 				 $vwall <span class="wall-item-ago">- &nbsp;
 					{{ if $plink }}<a class="link" title="$plink.title" href="$plink.href" style="color: #999">$ago</a>{{ else }} $ago {{ endif }}
+					{{ if $lock }} - <span class="fakelink" style="color: #999" onclick="lockview(event,$id);">$lock</span> {{ endif }}
 				</span>
 			</div>
 
@@ -61,6 +62,7 @@
 			{{ if $star }}
 				<a href="#" id="star-$id" onclick="dostar($id); return false;"  class="$star.classdo"  title="$star.do">$star.do</a>
 				<a href="#" id="unstar-$id" onclick="dostar($id); return false;"  class="$star.classundo"  title="$star.undo">$star.undo</a>
+				<a href="#" id="tagger-$id" onclick="itemTag($id); return false;" class="$star.classtagger" title="$star.tagger">$star.tagger</a>
 			{{ endif }}
 			
 			{{ if $vote }}
