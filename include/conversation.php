@@ -976,8 +976,8 @@ function conv_sort($arr,$order) {
 		usort($parents,'sort_thr_commented');
 
 	if(count($parents))
-		foreach($parents as $x) 
-			$x['children'] = array();
+		foreach($parents as $i=>$_x) 
+			$parents[$i]['children'] = array();
 
 	foreach($arr as $x) {
 		if($x['id'] != $x['parent']) {
