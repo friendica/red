@@ -373,7 +373,8 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 						$comments[$item['parent']] = 1;
 					else
 						$comments[$item['parent']] += 1;
-				}
+				} elseif(! x($comments,$item['parent'])) 
+					$comments[$item['parent']] = 0; // avoid notices later on
 			}
 
 			// map all the like/dislike activities for each parent item 
@@ -921,7 +922,7 @@ function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 	$o .= replace_macros($tpl,array(
 		'$return_path' => $a->cmd,
 		'$action' =>  $a->get_baseurl().'/item',
-		'$share' => (($x['button']) ? $x['button'] : t('Share')),
+		'$share' => (x($x,'button') ? $x['button'] : t('Share')),
 		'$upload' => t('Upload photo'),
 		'$shortupload' => t('upload photo'),
 		'$attach' => t('Attach file'),
