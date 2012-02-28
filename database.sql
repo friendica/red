@@ -844,6 +844,7 @@ CREATE TABLE IF NOT EXISTS `spam` (
 `spam` INT NOT NULL DEFAULT '0',
 `ham` INT NOT NULL DEFAULT '0',
 `term` CHAR(255) NOT NULL,
+`date` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 INDEX ( `uid` ),
 INDEX ( `spam` ),
 INDEX ( `ham` ),

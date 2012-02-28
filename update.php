@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1128 );
+define( 'UPDATE_VERSION' , 1129 );
 
 /**
  *
@@ -1107,5 +1107,10 @@ function update_1127() {
   INDEX ( `ham` ),
   INDEX ( `term` )
   ) ENGINE = MyISAM DEFAULT CHARSET=utf8");
+}
+
+
+function update_1128() {
+	q("alter table spam add `date` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `term` ");
 }
 
