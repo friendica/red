@@ -2424,7 +2424,7 @@ function local_delivery($importer,$data) {
 			// This is my contact on another system, but it's really me.
 			// Turn this into a wall post.
 
-			if($contact['remote_self'])
+			if($importer['remote_self'])
 				$datarray['wall'] = 1;
 
 			$datarray['parent-uri'] = $item_id;
