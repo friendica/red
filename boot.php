@@ -9,9 +9,9 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1260' );
+define ( 'FRIENDICA_VERSION',      '2.3.1266' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.22'    );
-define ( 'DB_UPDATE_VERSION',      1123      );
+define ( 'DB_UPDATE_VERSION',      1129      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );

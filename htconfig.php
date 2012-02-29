@@ -32,6 +32,9 @@ $a->config['sitename'] = "Friendica Social Network";
 // to the email address of an already registered person who can authorise
 // and/or approve/deny the request. 
 
+// In order to perform system administration via the admin panel, admin_email
+// must precisely match the email address of the person logged in.
+
 $a->config['register_policy'] = REGISTER_OPEN;
 $a->config['register_text'] = '';
 $a->config['admin_email'] = '';
@@ -63,6 +66,10 @@ $a->config['system']['huburl'] = 'http://pubsubhubbub.appspot.com';
 // PHP mcrypt extension is installed on both systems 
 
 $a->config['system']['rino_encrypt'] = true;
+
+// allowed themes (change this from admin panel after installation)
+
+$a->config['system']['allowed_themes'] = 'dispy,quattro,testbubble,vier,darkbubble,darkzero,duepuntozero,greenzero,purplezero,quattro-green,slackr';
 
 // default system theme
 

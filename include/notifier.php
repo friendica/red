@@ -2,6 +2,7 @@
 
 require_once("boot.php");
 require_once('include/queue_fn.php');
+require_once('include/html2plain.php');
 
 /*
  * This file was at one time responsible for doing all deliveries, but this caused
@@ -382,8 +383,8 @@ function notifier_run($argv, $argc){
 					continue;
 				if($item['id'] == $item_id) {
 					logger('notifier: followup: item: ' . print_r($item,true), LOGGER_DATA);
-					$slap  = atom_entry($item,'html',$owner,$owner,false);
-					$atom .= atom_entry($item,'text',$owner,$owner,false);
+					$slap  = atom_entry($item,'html',null,$owner,false);
+					$atom .= atom_entry($item,'text',null,$owner,false);
 				}
 			}
 		}
@@ -410,13 +411,13 @@ function notifier_run($argv, $argc){
 					// older sites without a corresponding dfrn_notify change may do the wrong thing.
 
 				    if($item_id == $item['id'] || $item['id'] == $item['parent'])
-						$atom .= atom_entry($item,'text',$contact,$owner,true);
+						$atom .= atom_entry($item,'text',null,$owner,true);
 				}
 				else
-					$atom .= atom_entry($item,'text',$contact,$owner,true);
+					$atom .= atom_entry($item,'text',null,$owner,true);
 
 				if(($top_level) && ($public_message) && ($item['author-link'] === $item['owner-link']) && (! $expire)) 
-					$slaps[] = atom_entry($item,'html',$contact,$owner,true);
+					$slaps[] = atom_entry($item,'html',null,$owner,true);
 			}
 		}
 	}
@@ -633,7 +634,7 @@ function notifier_run($argv, $argc){
 						);
 						if($r1 && $r1[0]['reply_to'])
 							$reply_to = $r1[0]['reply_to'];
-	
+
 						$subject  = (($it['title']) ? email_header_encode($it['title'],'UTF-8') : t("\x28no subject\x29")) ;
 
 						// only expose our real email address to true friends
@@ -646,10 +647,14 @@ function notifier_run($argv, $argc){
 						if($reply_to)
 							$headers .= 'Reply-to: ' . $reply_to . "\n";
 
-						$headers .= 'Message-id: <' . $it['uri'] . '>' . "\n";
+						// for testing purposes: Collect exported mails
+						$file = tempnam("/tmp/friendica/", "mail-out2-");
+						file_put_contents($file, json_encode($it));
+
+						$headers .= 'Message-Id: <' . iri2msgid($it['uri']) . '>' . "\n";
 
 						if($it['uri'] !== $it['parent-uri']) {
-							$header .= 'References: <' . $it['parent-uri'] . '>' . "\n";
+							$headers .= 'References: <' . iri2msgid($it['parent-uri']) . '>' . "\n";
 							if(! strlen($it['title'])) {
 								$r = q("SELECT `title` FROM `item` WHERE `parent-uri` = '%s' LIMIT 1",
 									dbesc($it['parent-uri'])
@@ -666,13 +671,16 @@ function notifier_run($argv, $argc){
 							}
 						}
 
-						$headers .= 'MIME-Version: 1.0' . "\n";
-						$headers .= 'Content-Type: text/html; charset=UTF-8' . "\n";
+						/*$headers .= 'MIME-Version: 1.0' . "\n";
+						//$headers .= 'Content-Type: text/html; charset=UTF-8' . "\n";
+						$headers .= 'Content-Type: text/plain; charset=UTF-8' . "\n";
 						$headers .= 'Content-Transfer-Encoding: 8bit' . "\n\n";
 						$html    = prepare_body($it);
-						$message = '<html><body>' . $html . '</body></html>';
+						//$message = '<html><body>' . $html . '</body></html>';
+						$message = html2plain($html);
 						logger('notifier: email delivery to ' . $addr);
-						mail($addr, $subject, $message, $headers);
+						mail($addr, $subject, $message, $headers);*/
+						email_send($addr, $subject, $headers, $it);
 					}
 					break;
 				case NETWORK_DIASPORA:
@@ -719,7 +727,7 @@ function notifier_run($argv, $argc){
 						// we are the relay - send comments, likes and unlikes to our conversants
 						diaspora_send_relay($target_item,$owner,$contact);
 						break;
-					}		
+					}
 					elseif(($top_level) && (! $walltowall)) {
 						// currently no workable solution for sending walltowall
 						diaspora_send_status($target_item,$owner,$contact);

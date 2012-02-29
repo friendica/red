@@ -1,4 +1,11 @@
 <?php
+
+/*
+ * Name: Darkzero
+ * Version: 1.0
+ * Author: Fabio Communi <fabrix.xm@gmail.com>
+ */
+
 $a->theme_info = array(
   'extends' => 'duepuntozero',
 );

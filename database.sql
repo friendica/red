@@ -257,6 +257,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `last-child` (`last-child`),
   KEY `unseen` (`unseen`),
   KEY `wall` (`wall`),
+  KEY `author-name` (`author-name`),
   KEY `author-link` (`author-link`),
   FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `body` (`body`),
@@ -633,7 +634,8 @@ CREATE TABLE IF NOT EXISTS `mailacct` (
 `mailbox` CHAR( 255 ) NOT NULL,
 `user` CHAR( 255 ) NOT NULL ,
 `pass` TEXT NOT NULL ,
-`reply_to` CHAR( 255 ) NOT NULL ,
+`action` INT NOT NULL ,
+`movetofolder` CHAR(255) NOT NULL ,
 `pubmail` TINYINT(1) NOT NULL DEFAULT '0',
 `last_check` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE = MyISAM DEFAULT CHARSET=utf8;
@@ -809,5 +811,44 @@ INDEX ( `uid` )
 ) ENGINE = MyISAM DEFAULT CHARSET=utf8;
 
 
+--
+-- Table structure for table `notify-threads`
+--
+-- notify-id:          notify.id of the first notification of this thread
+-- master-parent-item: item.id of the parent item
+-- parent-item:        item.id of the imediate parent (only for multi-thread)
+--                     not used yet.
+-- receiver-uid: user.uid of the receiver of this notification.
+--
+-- If we query for a master-parent-item and receiver-uid...
+--   * Returns 1 item: this is not the parent notification, 
+--     so just "follow" the thread (references to this notification)
+--   * Returns no item: this is the first notification related to
+--     this parent item. So, create the record and use the message-id 
+--     header.
+
+
+CREATE TABLE IF NOT EXISTS `notify-threads` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`notify-id` INT NOT NULL,
+`master-parent-item` INT( 10 ) unsigned NOT NULL DEFAULT '0',
+`parent-item` INT( 10 ) unsigned NOT NULL DEFAULT '0',
+`receiver-uid` INT NOT NULL,
+INDEX ( `master-parent-item` ),
+INDEX ( `receiver-uid` )
+) ENGINE = MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `spam` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`uid` INT NOT NULL,
+`spam` INT NOT NULL DEFAULT '0',
+`ham` INT NOT NULL DEFAULT '0',
+`term` CHAR(255) NOT NULL,
+`date` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+INDEX ( `uid` ),
+INDEX ( `spam` ),
+INDEX ( `ham` ),
+INDEX ( `term` )
+) ENGINE = MyISAM DEFAULT CHARSET=utf8;
 
 

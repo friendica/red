@@ -147,58 +147,8 @@ class b8_storage_frndc extends b8_storage_base
 	public function connect()
 	{
 
-		return TRUE;
-
-		# Are we already connected?
-		if($this->connected === TRUE)
-			return TRUE;
-
-		# Are we using an existing passed resource?
-		if($this->config['connection'] === FALSE) {
-			# ... yes we are, but the connection is not a resource, so return an error
-			$this->connected = FALSE;
-			return self::DATABASE_CONNECTION_BAD_RESOURCE;
-		}
-
-		elseif($this->config['connection'] === NULL) {
-
-			# ... no we aren't so we have to connect.
-
-			if($this->_connection = mysql_connect($this->config['host'], $this->config['user'], $this->config['pass'])) {
-				if(mysql_select_db($this->config['database'], $this->_connection) === FALSE) {
-					$this->connected = FALSE;
-					return self::DATABASE_SELECT_ERROR . ": " . mysql_error();
-				}
-			}
-			else {
-				$this->connected = FALSE;
-				return self::DATABASE_CONNECTION_ERROR;
-			}
-
-		}
-
-		else {
-			# ... yes we are
-			$this->_connection = $this->config['connection'];
-		}
-
-		# Just in case ...
-		if($this->_connection === NULL) {
-			$this->connected = FALSE;
-			return self::DATABASE_CONNECTION_FAIL;
-		}
-
-		# Check to see if the wordlist table exists
-		if(mysql_query('DESCRIBE ' . $this->config['table_name'], $this->_connection) === FALSE) {
-			$this->connected = FALSE;
-			return self::DATABASE_TABLE_ACCESS_FAIL . ": " . mysql_error();
-		}
-
-		# Everything is okay and connected
 		$this->connected = TRUE;
-
-		# Let's see if this is a b8 database and the version is okay
-		return $this->check_database();
+		return TRUE;
 
 	}
 
@@ -235,7 +185,7 @@ class b8_storage_frndc extends b8_storage_base
 		# ... and fetch the data
 
 		$result = q('
-			SELECT token, count
+			SELECT *
 			FROM ' . $this->config['table_name'] . '
 			WHERE ' . $where . ' AND uid = ' . $uid );
 
@@ -256,7 +206,7 @@ class b8_storage_frndc extends b8_storage_base
 		$token = dbesc($token);
 		$count = dbesc($count);
 		$uid = dbesc($uid);
-		array_push($this->_puts, '("' . $token . '", "' . $count . '", '"' . $uid .'")');
+		array_push($this->_puts, '("' . $token . '", "' . $count . '", "' . $uid .'")');
 	}
 
 	/**
@@ -273,7 +223,7 @@ class b8_storage_frndc extends b8_storage_base
 		$token = dbesc($token);
 		$count = dbesc($count);
 		$uid = dbesc($uid);
-		array_push($this->_puts, '("' . $token . '", "' . $count . '", '"' . $uid .'")');
+		array_push($this->_puts, '("' . $token . '", "' . $count . '", "' . $uid .'")');
 	}
 
 	/**
@@ -325,7 +275,7 @@ class b8_storage_frndc extends b8_storage_base
 		if(count($this->_updates) > 0) {
 
 			// this still needs work
-			$result = q("select * from " . $this->config['table_name'] . ' where token = ';
+			$result = q("select * from " . $this->config['table_name'] . ' where token = ');
 
 			
 			$result = q('

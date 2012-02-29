@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1123 );
+define( 'UPDATE_VERSION' , 1129 );
 
 /**
  *
@@ -1069,3 +1069,48 @@ function update_1122() {
 q("ALTER TABLE `notify` ADD `hash` CHAR( 64 ) NOT NULL AFTER `id` ,
 ADD INDEX ( `hash` ) ");
 }
+
+function update_1123() {
+set_config('system','allowed_themes','dispy,quattro,testbubble,vier,darkbubble,darkzero,duepuntozero,greenzero,purplezero,quattro-green,slackr');
+}
+
+function update_1124() {
+q("alter table item add index (`author-name`) ");
+}
+
+function update_1125() {
+  q("CREATE TABLE IF NOT EXISTS `notify-threads` (
+  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+  `notify-id` INT NOT NULL,
+  `master-parent-item` INT( 10 ) unsigned NOT NULL DEFAULT '0',
+  `parent-item` INT( 10 ) unsigned NOT NULL DEFAULT '0',
+  `receiver-uid` INT NOT NULL,
+  INDEX ( `master-parent-item` ),
+  INDEX ( `receiver-uid` )
+  ) ENGINE = MyISAM DEFAULT CHARSET=utf8");
+}
+
+function update_1126() {
+	q("ALTER TABLE `mailacct` ADD `action` INT NOT NULL AFTER `pass`,
+		ADD `movetofolder` CHAR(255) NOT NULL AFTER `action`");
+}
+
+function update_1127() {
+	q("CREATE TABLE IF NOT EXISTS `spam` (
+  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+  `uid` INT NOT NULL,
+  `spam` INT NOT NULL DEFAULT '0',
+  `ham` INT NOT NULL DEFAULT '0',
+  `term` CHAR(255) NOT NULL,
+  INDEX ( `uid` ),
+  INDEX ( `spam` ),
+  INDEX ( `ham` ),
+  INDEX ( `term` )
+  ) ENGINE = MyISAM DEFAULT CHARSET=utf8");
+}
+
+
+function update_1128() {
+	q("alter table spam add `date` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `term` ");
+}
+

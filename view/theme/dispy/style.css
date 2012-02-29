@@ -1099,6 +1099,21 @@ div[id$="wrapper"] br { clear: left; }
 	border-bottom: 0px;
 }*/
 
+.starred { 
+	background-image: url("star.png"); 
+	repeat: no-repeat;
+}
+.unstarred { 
+	background-image: url("premium.png");
+	repeat: no-repeat;
+}
+
+.tagged {
+	background-image: url("tag.png");
+	repeat: no-repeat;
+}
+
+
 
 .border {
 	border: 1px solid #babdb6;

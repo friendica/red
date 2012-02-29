@@ -10,7 +10,7 @@ Originally made for the syncom project: http://wiki.piratenpartei.de/Syncom
 function node2bbcode(&$doc, $oldnode, $attributes, $startbb, $endbb)
 {
 	do {
-		$done = node2bbcodesub(&$doc, $oldnode, $attributes, $startbb, $endbb);
+		$done = node2bbcodesub($doc, $oldnode, $attributes, $startbb, $endbb);
 	} while ($done);
 }
 
@@ -258,7 +258,7 @@ function html2bbcode($message)
 					"[hr]\n",
 					"\n[list",
 					"[/list]\n",
-					"\n[/list]",
+					"\n[/",
 					"[list]\n",
 					"[list=1]\n",
 					"\n[*]"),
@@ -268,7 +268,7 @@ function html2bbcode($message)
 					"[hr]",
 					"[list",
 					"[/list]",
-					"[/list]",
+					"[/",
 					"[list]",
 					"[list=1]",
 					"[*]"),

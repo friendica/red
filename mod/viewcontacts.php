@@ -63,7 +63,8 @@ function viewcontacts_content(&$a) {
 			'username' => $rr['name'],
 			'url' => $url,
 			'sparkle' => '',
-			'item' => $rr,
+			'itemurl' => $rr['url'],
+			'network' => network_to_name($rr['network']),
 		);
 	}
 

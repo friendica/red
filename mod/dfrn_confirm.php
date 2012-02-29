@@ -107,7 +107,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		 *
 		 */
 
-		$r = q("SELECT * FROM `contact` WHERE ( ( `issued-id` != '' AND `issued-id` = '%s' ) OR ( `id` = %d AND `id` != 0 ) ) AND `uid` = %d LIMIT 1",
+		$r = q("SELECT * FROM `contact` WHERE ( ( `issued-id` != '' AND `issued-id` = '%s' ) OR ( `id` = %d AND `id` != 0 ) ) AND `uid` = %d AND `duplex` = 0 LIMIT 1",
 			dbesc($dfrn_id),
 			intval($cid),
 			intval($uid)
@@ -116,6 +116,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		if(! count($r)) {
 			logger('dfrn_confirm: Contact not found in DB.'); 
 			notice( t('Contact not found.') . EOL );
+			notice( t('This may occasionally happen if contact was requested by both persons and it has already been approved.') . EOL );
 			return;
 		}
 
@@ -629,6 +630,15 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		if(! count($r)) {
 			$message = t('Unable to set your contact credentials on our system.');
 			xml_status(3,$message);
+		}
+
+		// It's possible that the other person also requested friendship.
+		// If it is a duplex relationship, ditch the issued-id if one exists. 
+
+		if($duplex) {
+			$r = q("UPDATE `contact` SET `issued-id` = '' WHERE `id` = %d LIMIT 1",
+				intval($dfrn_record)
+			);
 		}
 
 		// We're good but now we have to scrape the profile photo and send notifications.
