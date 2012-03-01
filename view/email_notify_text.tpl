@@ -6,7 +6,7 @@ $title
 $textversion
 				
 $tsitelink
-$itemlink
+$titemlink
 
 $thanks
 $site_admin

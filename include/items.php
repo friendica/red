@@ -308,7 +308,7 @@ function get_atom_elements($feed,$item) {
 	if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
 		$base = $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
 		foreach($base as $link) {
-			if(! $res['author-avatar']) {
+			if(!x($res, 'author-avatar') || !$res['author-avatar']) {
 				if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar')
 					$res['author-avatar'] = unxmlify($link['attribs']['']['href']);
 			}
@@ -323,7 +323,7 @@ function get_atom_elements($feed,$item) {
 			foreach($base as $link) {
 				if($link['attribs']['']['rel'] === 'alternate' && (! $res['author-link']))
 					$res['author-link'] = unxmlify($link['attribs']['']['href']);
-				if(! $res['author-avatar']) {
+				if(!x($res, 'author-avatar') || !$res['author-avatar']) {
 					if($link['attribs']['']['rel'] === 'avatar' || $link['attribs']['']['rel'] === 'photo')
 						$res['author-avatar'] = unxmlify($link['attribs']['']['href']);
 				}
@@ -503,7 +503,7 @@ function get_atom_elements($feed,$item) {
 		$base = $rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
 
 		foreach($base as $link) {
-			if(! $res['owner-avatar']) {
+			if(!x($res, 'owner-avatar') || !$res['owner-avatar']) {
 				if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar')			
 					$res['owner-avatar'] = unxmlify($link['attribs']['']['href']);
 			}
@@ -2223,7 +2223,8 @@ function local_delivery($importer,$data) {
 								'source_photo' => ((link_compare($datarray['author-link'],$importer['url'])) 
 									? $importer['thumb'] : $datarray['author-avatar']),
 								'verb'         => ACTIVITY_POST,
-								'otype'        => 'item'
+								'otype'        => 'item',
+								'parent'       => $parent,
 
 							));
 
@@ -2317,39 +2318,51 @@ function local_delivery($importer,$data) {
 			
 				if($datarray['type'] != 'activity') {
 
-					$myconv = q("SELECT `author-link`, `author-avatar` FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `parent` != 0 ",
+					$myconv = q("SELECT `author-link`, `author-avatar`, `parent` FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `parent` != 0 ",
 						dbesc($parent_uri),
 						intval($importer['importer_uid'])
 					);
 
 					if(count($myconv)) {
 						$importer_url = $a->get_baseurl() . '/profile/' . $importer['nickname'];
-						foreach($myconv as $conv) {
 
-							if(! link_compare($conv['author-link'],$importer_url))
-								continue;
+						// first make sure this isn't our own post coming back to us from a wall-to-wall event
+						if(! link_compare($datarray['author-link'],$importer_url)) {
 
-							require_once('include/enotify.php');
+							
+							foreach($myconv as $conv) {
 
-							notification(array(
-								'type'         => NOTIFY_COMMENT,
-								'notify_flags' => $importer['notify-flags'],
-								'language'     => $importer['language'],
-								'to_name'      => $importer['username'],
-								'to_email'     => $importer['email'],
-								'uid'          => $importer['importer_uid'],
-								'item'         => $datarray,
-								'link'		   => $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id,
-								'source_name'  => stripslashes($datarray['author-name']),
-								'source_link'  => $datarray['author-link'],
-								'source_photo' => ((link_compare($datarray['author-link'],$importer['url'])) 
-									? $importer['thumb'] : $datarray['author-avatar']),
-								'verb'         => ACTIVITY_POST,
-								'otype'        => 'item'
+								// now if we find a match, it means we're in this conversation
+	
+								if(! link_compare($conv['author-link'],$importer_url))
+									continue;
 
-							));
+								require_once('include/enotify.php');
+								
+								$conv_parent = $conv['parent'];
 
-							break;
+								notification(array(
+									'type'         => NOTIFY_COMMENT,
+									'notify_flags' => $importer['notify-flags'],
+									'language'     => $importer['language'],
+									'to_name'      => $importer['username'],
+									'to_email'     => $importer['email'],
+									'uid'          => $importer['importer_uid'],
+									'item'         => $datarray,
+									'link'		   => $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id,
+									'source_name'  => stripslashes($datarray['author-name']),
+									'source_link'  => $datarray['author-link'],
+									'source_photo' => ((link_compare($datarray['author-link'],$importer['url'])) 
+										? $importer['thumb'] : $datarray['author-avatar']),
+									'verb'         => ACTIVITY_POST,
+									'otype'        => 'item',
+									'parent'       => $conv_parent,
+
+								));
+
+								// only send one notification
+								break;
+							}
 						}
 					}
 				}
@@ -2420,7 +2433,7 @@ function local_delivery($importer,$data) {
 			// This is my contact on another system, but it's really me.
 			// Turn this into a wall post.
 
-			if($contact['remote_self'])
+			if($importer['remote_self'])
 				$datarray['wall'] = 1;
 
 			$datarray['parent-uri'] = $item_id;

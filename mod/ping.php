@@ -14,10 +14,29 @@ function ping_init(&$a) {
 
 		$firehose = intval(get_pconfig(local_user(),'system','notify_full'));
 
-		$z = q("select * from notify where uid = %d
-			order by seen asc, date desc limit 0, 50",
+		$t = q("select count(*) as total from notify where uid = %d and seen = 0",
 			intval(local_user())
 		);
+		if($t && intval($t[0]['total']) > 49) {
+			$z = q("select * from notify where uid = %d
+				and seen = 0 order by date desc limit 0, 50",
+				intval(local_user())
+			);
+		}
+		else {
+			$z1 = q("select * from notify where uid = %d
+				and seen = 0 order by date desc limit 0, 50",
+				intval(local_user())
+			);
+
+			$z2 = q("select * from notify where uid = %d
+				and seen = 1 order by date desc limit 0, %d",
+				intval(local_user()),
+				intval(50 - intval($t[0]['total']))
+			);
+			$z = array_merge($z1,$z2);
+		}
+
 
 
 		$tags = array();
@@ -26,9 +45,10 @@ function ping_init(&$a) {
 		$dislikes = array();
 		$friends = array();
 		$posts = array();
-		
+		$home = 0;
+		$network = 0;
 
-		$r = q("SELECT `item`.`id`,`item`.`parent`, `item`.`verb`, `item`.`author-name`, 
+		$r = q("SELECT `item`.`id`,`item`.`parent`, `item`.`verb`, `item`.`wall`, `item`.`author-name`, 
 				`item`.`author-link`, `item`.`author-avatar`, `item`.`created`, `item`.`object`, 
 				`pitem`.`author-name` as `pname`, `pitem`.`author-link` as `plink` 
 				FROM `item` INNER JOIN `item` as `pitem` ON  `pitem`.`id`=`item`.`parent`

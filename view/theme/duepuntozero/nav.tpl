@@ -48,8 +48,8 @@
 			<a id="nav-notifications-linkmenu" class="nav-commlink" href="$nav.notifications.0" rel="#nav-notifications-menu" title="$nav.notifications.1">$nav.notifications.1</a>
 				<span id="notify-update" class="nav-ajax-left"></span>
 				<ul id="nav-notifications-menu" class="menu-popup">
-					<li id="nav-notifications-mark-all"><a href="#" onclick="notifyMarkAll(); return false;">$nav.notifications.mark.1</a></li>
 					<li id="nav-notifications-see-all"><a href="$nav.notifications.all.0">$nav.notifications.all.1</a></li>
+					<li id="nav-notifications-mark-all"><a href="#" onclick="notifyMarkAll(); return false;">$nav.notifications.mark.1</a></li>
 					<li class="empty">$emptynotifications</li>
 				</ul>
 		{{ endif }}		

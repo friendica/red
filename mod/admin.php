@@ -711,7 +711,7 @@ function admin_page_themes(&$a){
 			return; // NOTREACHED	
 		}
 
-		// display plugin details
+		// display theme details
 		require_once('library/markdown.php');
 
 		if (theme_status($themes,$theme)) {
@@ -769,7 +769,9 @@ function admin_page_themes(&$a){
 		'$submit' => t('Submit'),
 		'$baseurl' => $a->get_baseurl(),
 		'$function' => 'themes',
-		'$plugins' => $xthemes
+		'$plugins' => $xthemes,
+		'$experimental' => t('[Experimental]'),
+		'$unsupported' => t('[Unsupported]')
 	));
 }
 

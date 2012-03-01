@@ -3,7 +3,7 @@
 /*
  * Name: Darkzero
  * Version: 1.0
- * Author: Mike Macgirvin <mike@macgirvin.com>
+ * Author: Fabio Communi <fabrix.xm@gmail.com>
  */
 
 $a->theme_info = array(

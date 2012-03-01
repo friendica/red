@@ -11,8 +11,10 @@ function notify_init(&$a) {
 			intval(local_user())
 		);
 		if(count($r)) {
-			q("update notify set seen = 1 where id = %d and uid = %d limit 1",
-				intval($a->argv[2]),
+			q("update notify set seen = 1 where ( link = '%s' or ( parent != 0 and parent = %d and otype = '%s' )) and uid = %d",
+				dbesc($r[0]['link']),
+				intval($r[0]['parent']),
+				dbesc($r[0]['otype']),
 				intval(local_user())
 			);
 			goaway($r[0]['link']);

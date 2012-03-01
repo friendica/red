@@ -996,7 +996,7 @@ function lang_selector() {
 			}
 			$ll = substr($l,5);
 			$ll = substr($ll,0,strrpos($ll,'/'));
-			$selected = (($ll === $lang && (x($_SESSION['language']))) ? ' selected="selected" ' : '');
+			$selected = (($ll === $lang && (x($_SESSION, 'language'))) ? ' selected="selected" ' : '');
 			$o .= '<option value="' . $ll . '"' . $selected . '>' . $ll . '</option>';
 		}
 	}
@@ -1200,4 +1200,17 @@ function reltoabs($text, $base)
   // Done
   return $text;
 }
+
+function item_post_type($item) {
+	if(intval($item['event-id']))
+		return t('event');
+	if(strlen($item['resource-id']))
+		return t('photo');
+	if(strlen($item['verb']) && $item['verb'] !== ACTIVITY_POST)
+		return t('activity');
+	if($item['id'] != $item['parent'])
+		return t('comment');
+	return t('post');
+}
+
 

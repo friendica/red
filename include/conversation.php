@@ -6,6 +6,11 @@
 function localize_item(&$item){
 
 	$Text = $item['body'];
+
+
+	// find private image (w/data url) if present and convert image 
+	// link to a magic-auth redirect.
+
 	$saved_image = '';
 	$img_start = strpos($Text,'[img]data:');
 	$img_end = strpos($Text,'[/img]');
@@ -232,7 +237,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 
 	$alike = array();
 	$dlike = array();
-	
+	$o = "";
 	
 	// array with html for each thread (parent+comments)
 	$threads = array();
@@ -403,6 +408,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				$toplevelprivate = false;
 
 				// Take care of author collapsing and comment collapsing
+				// (author collapsing is currently disabled)
 				// If a single author has more than 3 consecutive top-level posts, squash the remaining ones.
 				// If there are more than two comments, squash all but the last 2.
 			
@@ -410,7 +416,9 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 					$toplevelprivate = (($toplevelpost && $item['private']) ? true : false);
 					$item_writeable = (($item['writable'] || $item['self']) ? true : false);
 
-					/*if($blowhard == $item['cid'] && (! $item['self']) && ($mode != 'profile') && ($mode != 'notes')) {
+					// DISABLED
+					/*
+					if($blowhard == $item['cid'] && (! $item['self']) && ($mode != 'profile') && ($mode != 'notes')) {
 						$blowhard_count ++;
 						if($blowhard_count == 3) {
 							$o .= '<div class="icollapse-wrapper fakelink" id="icollapse-wrapper-' . $item['parent'] 
@@ -424,7 +432,9 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 						if($blowhard_count >= 3)
 							$o .= '</div>';
 						$blowhard_count = 0;
-					}*/
+					}
+					// END DISABLED
+					*/
 
 					$comments_seen = 0;
 					$comments_collapsed = false;
@@ -436,7 +446,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				}
 				else {
 					// prevent private email from leaking into public conversation
-					if((! $toplevelpost) && (! toplevelprivate) && ($item['private']) && ($profile_owner != local_user()))
+					if((! $toplevelpost) && (! $toplevelprivate) && ($item['private']) && ($profile_owner != local_user()))
 						continue;
 					$comments_seen ++;
 				}	
@@ -641,7 +651,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				$body = prepare_body($item,true);
 
 				$tmp_item = replace_macros($template,array(
-					'$type' => implode("",array_slice(split("/",$item['verb']),-1)),
+					'$type' => implode("",array_slice(explode("/",$item['verb']),-1)),
 					'$tags' => $tags,
 					'$body' => template_escape($body),
 					'$id' => $item['item_id'],

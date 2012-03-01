@@ -55,41 +55,11 @@ function diaspora2bb($s) {
 	$s = preg_replace("/(\[code\])+(.*?)(\[\/code\])+/ism","[code]$2[/code]", $s);
 
 	// Don't show link to full picture (until it is fixed)
-	$s = scale_diaspora_images($s, false);
+	$s = scale_external_images($s, false);
 
 	return $s;
 }
 
-
-function scale_diaspora_images($s,$include_link = true) {
-
-	$matches = null;
-	$c = preg_match_all('/\[img\](.*?)\[\/img\]/ism',$s,$matches,PREG_SET_ORDER);
-	if($c) {
-		require_once('include/Photo.php');
-		foreach($matches as $mtch) {
-			logger('scale_diaspora_image: ' . $mtch[1]);
-			$i = fetch_url($mtch[1]);
-			if($i) {
-				$ph = new Photo($i);
-				if($ph->is_valid()) {
-					if($ph->getWidth() > 600 || $ph->getHeight() > 600) {
-						$ph->scaleImage(600);
-						$new_width = $ph->getWidth();
-						$new_height = $ph->getHeight();
-						logger('scale_diaspora_image: ' . $new_width . 'w ' . $new_height . 'h' . 'match: ' . $mtch[0], LOGGER_DEBUG);
-						$s = str_replace($mtch[0],'[img=' . $new_width . 'x' . $new_height. ']' . $mtch[1] . '[/img]'
-							. "\n" . (($include_link) 
-								? '[url=' . $mtch[1] . ']' . t('view full size') . '[/url]' . "\n"
-								: ''),$s);
-						logger('scale_diaspora_image: new string: ' . $s, LOGGER_DEBUG);
-					}
-				}
-			}
-		}
-	}
-	return $s;
-}
 
 function stripdcode_br_cb($s) {
 	return '[code]' . str_replace('<br />', "\n\t", $s[1]) . '[/code]';

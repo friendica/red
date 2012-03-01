@@ -88,3 +88,7 @@ input#dfrn-url {
 #jot-title:focus {
 	border: 1px solid #cccccc; 
 }
+blockquote {
+	background: #ddd;
+	color: #000;
+}

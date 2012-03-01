@@ -134,6 +134,7 @@ EOT;
 	$arr['target'] = $target;
 	$arr['object-type'] = $objtype;
 	$arr['object'] = $obj;
+	$arr['private'] = $item['private'];
 	$arr['allow_cid'] = $item['allow_cid'];
 	$arr['allow_gid'] = $item['allow_gid'];
 	$arr['deny_cid'] = $item['deny_cid'];
