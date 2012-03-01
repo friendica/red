@@ -2325,35 +2325,44 @@ function local_delivery($importer,$data) {
 
 					if(count($myconv)) {
 						$importer_url = $a->get_baseurl() . '/profile/' . $importer['nickname'];
-						foreach($myconv as $conv) {
 
-							if(! link_compare($conv['author-link'],$importer_url))
-								continue;
+						// first make sure this isn't our own post coming back to us from a wall-to-wall event
+						if(! link_compare($datarray['author-link'],$importer_url)) {
 
-							require_once('include/enotify.php');
 							
-							$conv_parent = $conv['parent'];
+							foreach($myconv as $conv) {
 
-							notification(array(
-								'type'         => NOTIFY_COMMENT,
-								'notify_flags' => $importer['notify-flags'],
-								'language'     => $importer['language'],
-								'to_name'      => $importer['username'],
-								'to_email'     => $importer['email'],
-								'uid'          => $importer['importer_uid'],
-								'item'         => $datarray,
-								'link'		   => $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id,
-								'source_name'  => stripslashes($datarray['author-name']),
-								'source_link'  => $datarray['author-link'],
-								'source_photo' => ((link_compare($datarray['author-link'],$importer['url'])) 
-									? $importer['thumb'] : $datarray['author-avatar']),
-								'verb'         => ACTIVITY_POST,
-								'otype'        => 'item',
-								'parent'       => $conv_parent,
+								// now if we find a match, it means we're in this conversation
+	
+								if(! link_compare($conv['author-link'],$importer_url))
+									continue;
 
-							));
+								require_once('include/enotify.php');
+								
+								$conv_parent = $conv['parent'];
 
-							break;
+								notification(array(
+									'type'         => NOTIFY_COMMENT,
+									'notify_flags' => $importer['notify-flags'],
+									'language'     => $importer['language'],
+									'to_name'      => $importer['username'],
+									'to_email'     => $importer['email'],
+									'uid'          => $importer['importer_uid'],
+									'item'         => $datarray,
+									'link'		   => $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id,
+									'source_name'  => stripslashes($datarray['author-name']),
+									'source_link'  => $datarray['author-link'],
+									'source_photo' => ((link_compare($datarray['author-link'],$importer['url'])) 
+										? $importer['thumb'] : $datarray['author-avatar']),
+									'verb'         => ACTIVITY_POST,
+									'otype'        => 'item',
+									'parent'       => $conv_parent,
+
+								));
+
+								// only send one notification
+								break;
+							}
 						}
 					}
 				}
