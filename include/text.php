@@ -1201,3 +1201,16 @@ function reltoabs($text, $base)
   return $text;
 }
 
+function item_post_type($item) {
+	if(intval($item['event-id']))
+		return t('event');
+	if(strlen($item['resource-id']))
+		return t('photo');
+	if(strlen($item['verb']) && $item['verb'] !== ACTIVITY_POST)
+		return t('activity');
+	if($item['id'] != $item['parent'])
+		return t('comment');
+	return t('post');
+}
+
+

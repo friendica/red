@@ -25,11 +25,8 @@ function notification($params) {
 		$title = $body = '';
 	}
 
-	if($params['otype'] === 'item')
-		$possess_desc = t('%s post');
-	if($params['otype'] == 'photo')
-		$possess_desc = t('%s photo');
-
+	// e.g. "your post", "David's photo", etc.
+	$possess_desc = t('%s <!item_type!>');
 
 	if($params['type'] == NOTIFY_MAIL) {
 
@@ -60,10 +57,16 @@ function notification($params) {
 			);
 		}
 
+		$possess_desc = str_replace('<!item_type!>',item_post_type($p[0]),$possess_desc);
+
+		// "a post"
 		$dest_str = sprintf($possess_desc,'a');
+
+		// "George Bull's post"
 		if($p)
 			$dest_str = sprintf($possess_desc,sprintf( t("%s's"),$p[0]['author-name']));
 		
+		// "your post"
 		if($p[0]['owner-name'] == $p[0]['author-name'] && $p[0]['wall'])
 			$dest_str = sprintf($possess_desc, t('your') );
 
