@@ -752,14 +752,18 @@ CREATE TABLE IF NOT EXISTS `notify` (
 `msg` MEDIUMTEXT NOT NULL ,
 `uid` INT NOT NULL ,
 `link` CHAR( 255 ) NOT NULL ,
+`parent` INT( 11 ) NOT NULL,
 `seen` TINYINT( 1 ) NOT NULL DEFAULT '0',
 `verb` CHAR( 255 ) NOT NULL,
 `otype` CHAR( 16 ) NOT NULL,
 INDEX ( `hash` ),
 INDEX ( `type` ),
 INDEX ( `uid` ),
+INDEX ( `link` ),
+INDEX ( `parent` ),
 INDEX ( `seen` ),
-INDEX ( `date` )
+INDEX ( `date` ),
+INDEX ( `otype` )
 ) ENGINE = MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `item_id` (
