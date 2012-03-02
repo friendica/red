@@ -10,7 +10,7 @@ Originally made for the syncom project: http://wiki.piratenpartei.de/Syncom
 function node2bbcode(&$doc, $oldnode, $attributes, $startbb, $endbb)
 {
 	do {
-		$done = node2bbcodesub(&$doc, $oldnode, $attributes, $startbb, $endbb);
+		$done = node2bbcodesub($doc, $oldnode, $attributes, $startbb, $endbb);
 	} while ($done);
 }
 
@@ -150,10 +150,14 @@ function html2bbcode($message)
 	node2bbcode($doc, 'font', array('size'=>'/(\d+)/'), '[size=$1]', '[/size]');
 	node2bbcode($doc, 'font', array('color'=>'/(.+)/'), '[color=$1]', '[/color]');
 
-	node2bbcode($doc, 'span', array('style'=>'/.*color:\s*(.+?)[,;].*/'), '[color="$1"]', '[/color]');
-	node2bbcode($doc, 'span', array('style'=>'/.*font-size:\s*(\d+)/'), '[size=$1]', '[/size]');
+	// Untested
+	//node2bbcode($doc, 'span', array('style'=>'/.*font-size:\s*(.+?)[,;].*font-family:\s*(.+?)[,;].*color:\s*(.+?)[,;].*/'), '[size=$1][font=$2][color=$3]', '[/color][/font][/size]');
+	//node2bbcode($doc, 'span', array('style'=>'/.*font-size:\s*(\d+)[,;].*/'), '[size=$1]', '[/size]');
+	//node2bbcode($doc, 'span', array('style'=>'/.*font-size:\s*(.+?)[,;].*/'), '[size=$1]', '[/size]');
 
+	node2bbcode($doc, 'span', array('style'=>'/.*color:\s*(.+?)[,;].*/'), '[color="$1"]', '[/color]');
 	//node2bbcode($doc, 'span', array('style'=>'/.*font-family:\s*(.+?)[,;].*/'), '[font=$1]', '[/font]');
+
 	//node2bbcode($doc, 'div', array('style'=>'/.*font-family:\s*(.+?)[,;].*font-size:\s*(\d+?)pt.*/'), '[font=$1][size=$2]', '[/size][/font]');
 	//node2bbcode($doc, 'div', array('style'=>'/.*font-family:\s*(.+?)[,;].*font-size:\s*(\d+?)px.*/'), '[font=$1][size=$2]', '[/size][/font]');
 	//node2bbcode($doc, 'div', array('style'=>'/.*font-family:\s*(.+?)[,;].*/'), '[font=$1]', '[/font]');
