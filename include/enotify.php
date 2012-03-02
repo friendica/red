@@ -25,9 +25,12 @@ function notification($params) {
 		$title = $body = '';
 	}
 
+	// e.g. "your post", "David's photo", etc.
+	$possess_desc = t('%s <!item_type!>');
+
 	if($params['type'] == NOTIFY_MAIL) {
 
-		$subject = 	sprintf( t('New mail received at %s'),$sitename);
+		$subject = 	sprintf( t('[Friendica:Notify] New mail received at %s'),$sitename);
 
 		$preamble = sprintf( t('%s sent you a new private message at %s.'),$params['source_name'],$sitename);
 		$epreamble = sprintf( t('%s sent you %s.'),'[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]', '[url=$itemlink]' . t('a private message') . '[/url]');
@@ -38,17 +41,43 @@ function notification($params) {
 	}
 
 	if($params['type'] == NOTIFY_COMMENT) {
-		logger("notification: params = " . print_r($params, true), LOGGER_DEBUG);
+//		logger("notification: params = " . print_r($params, true), LOGGER_DEBUG);
 
 		$parent_id = $params['parent'];
+
+
+		// if it's a post figure out who's post it is.
+
+		$p = null;
+
+		if($params['otype'] === 'item' && $parent_id) {
+			$p = q("select * from item where id = %d and uid = %d limit 1",
+				intval($parent_id),
+				intval($params['uid'])
+			);
+		}
+
+		$possess_desc = str_replace('<!item_type!>',item_post_type($p[0]),$possess_desc);
+
+		// "a post"
+		$dest_str = sprintf($possess_desc,'a');
+
+		// "George Bull's post"
+		if($p)
+			$dest_str = sprintf($possess_desc,sprintf( t("%s's"),$p[0]['author-name']));
 		
+		// "your post"
+		if($p[0]['owner-name'] == $p[0]['author-name'] && $p[0]['wall'])
+			$dest_str = sprintf($possess_desc, t('your') );
+
 		// Some mail softwares relies on subject field for threading.
 		// So, we cannot have different subjects for notifications of the same thread.
 		// Before this we have the name of the replier on the subject rendering 
 		// differents subjects for messages on the same thread.
-		$subject = sprintf( t('Someone commented on item #%d at %s'), $parent_id, $sitename);
+
+		$subject = sprintf( t('[Friendica:Notify] Comment to conversation #%d by %s'), $parent_id, $params['source_name']);
 		$preamble = sprintf( t('%s commented on an item/conversation you have been following.'), $params['source_name']); 
-		$epreamble = sprintf( t('%s commented in %s.'), '[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]', '[url=$itemlink]' . t('a watched conversation') . '[/url]'); 
+		$epreamble = sprintf( t('%s commented on %s.'), '[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]', '[url=$itemlink]' . $dest_str . '[/url]'); 
 
 		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
 		$tsitelink = sprintf( $sitelink, $siteurl );
@@ -57,7 +86,10 @@ function notification($params) {
 	}
 
 	if($params['type'] == NOTIFY_WALL) {
-		$preamble = $subject =	sprintf( t('%s posted to your profile wall at %s') , $params['source_name'], $sitename);
+		$subject = sprintf( t('[Friendica:Notify] %s posted to your profile wall') , $params['source_name']);
+
+		$preamble = sprintf( t('%s posted to your profile wall at %s') , $params['source_name'], $sitename);
+		
 		$epreamble = sprintf( t('%s posted to %s') , '[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]', '[url=$itemlink]' . t('your profile wall.') . '[/url]'); 
 		
 		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
@@ -67,7 +99,8 @@ function notification($params) {
 	}
 
 	if($params['type'] == NOTIFY_TAGSELF) {
-		$preamble = $subject =	sprintf( t('%s tagged you at %s') , $params['source_name'], $sitename);
+		$subject =	sprintf( t('[Friendica:Notify] %s tagged you') , $params['source_name']);
+		$preamble = sprintf( t('%s tagged you at %s') , $params['source_name'], $sitename);
 		$epreamble = sprintf( t('%s %s.') , '[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]', '[url=' . $params['link'] . ']' . t('tagged you') . '[/url]'); 
 
 		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
@@ -77,7 +110,8 @@ function notification($params) {
 	}
 
 	if($params['type'] == NOTIFY_TAGSHARE) {
-		$preamble = $subject =	sprintf( t('%s tagged your post at %s') , $params['source_name'], $sitename);
+		$subject =	sprintf( t('[Friendica:Notify] %s tagged your post') , $params['source_name']);
+		$preamble = sprintf( t('%s tagged your post at %s') , $params['source_name'], $sitename);
 		$epreamble = sprintf( t('%s tagged %s') , '[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]', '[url=$itemlink]' . t('your post') . '[/url]' ); 
 
 		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
@@ -87,7 +121,7 @@ function notification($params) {
 	}
 
 	if($params['type'] == NOTIFY_INTRO) {
-		$subject = sprintf( t('Introduction received at %s'), $sitename);
+		$subject = sprintf( t('[Friendica:Notify] Introduction received'));
 		$preamble = sprintf( t('You\'ve received an introduction from \'%s\' at %s'), $params['source_name'], $sitename); 
 		$epreamble = sprintf( t('You\'ve received %s from %s.'), '[url=$itemlink]' . t('an introduction') . '[/url]' , '[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]'); 
 		$body = sprintf( t('You may visit their profile at %s'),$params['source_link']);
@@ -99,7 +133,7 @@ function notification($params) {
 	}
 
 	if($params['type'] == NOTIFY_SUGGEST) {
-		$subject = sprintf( t('Friend suggestion received at %s'), $sitename);
+		$subject = sprintf( t('[Friendica:Notify] Friend suggestion received'));
 		$preamble = sprintf( t('You\'ve received a friend suggestion from \'%s\' at %s'), $params['source_name'], $sitename); 
 		$epreamble = sprintf( t('You\'ve received %s for %s from %s.'),
 			'[url=$itemlink]' . t('a friend suggestion') . '[/url]',
@@ -143,6 +177,7 @@ function notification($params) {
 	$datarray['date']  = datetime_convert();
 	$datarray['uid']   = $params['uid'];
 	$datarray['link']  = $itemlink;
+	$datarray['parent'] = $parent_id;
 	$datarray['type']  = $params['type'];
 	$datarray['verb']  = $params['verb'];
 	$datarray['otype'] = $params['otype'];
@@ -151,8 +186,8 @@ function notification($params) {
 
 	// create notification entry in DB
 
-	$r = q("insert into notify (hash,name,url,photo,date,uid,link,type,verb,otype)
-		values('%s','%s','%s','%s','%s',%d,'%s',%d,'%s','%s')",
+	$r = q("insert into notify (hash,name,url,photo,date,uid,link,parent,type,verb,otype)
+		values('%s','%s','%s','%s','%s',%d,'%s',%d,%d,'%s','%s')",
 		dbesc($datarray['hash']),
 		dbesc($datarray['name']),
 		dbesc($datarray['url']),
@@ -160,6 +195,7 @@ function notification($params) {
 		dbesc($datarray['date']),
 		intval($datarray['uid']),
 		dbesc($datarray['link']),
+		intval($datarray['parent']),
 		intval($datarray['type']),
 		dbesc($datarray['verb']),
 		dbesc($datarray['otype'])
@@ -237,9 +273,12 @@ intval($params['uid']), LOGGER_DEBUG);
 		$datarray['preamble'] = $preamble;
 		$datarray['sitename'] = $sitename;
 		$datarray['siteurl'] = $siteurl;
+		$datarray['type'] = $params['type'];
+		$datarray['parent'] = $params['parent'];
 		$datarray['source_name'] = $params['source_name'];
 		$datarray['source_link'] = $params['source_link'];
 		$datarray['source_photo'] = $params['source_photo'];
+		$datarray['uid'] = $params['uid'];
 		$datarray['username'] = $params['to_name'];
 		$datarray['hsitelink'] = $hsitelink;
 		$datarray['tsitelink'] = $tsitelink;
