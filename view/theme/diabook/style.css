@@ -673,6 +673,10 @@ nav #nav-apps-link.selected {
 	padding: 5px 10px; */
 }
 
+.notify-seen {
+	background: none repeat scroll 0 0 #DDDDDD;
+	}
+
 ul.menu-popup {
   position: absolute;
   display: none;
