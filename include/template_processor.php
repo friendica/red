@@ -160,13 +160,15 @@
 
 		private function var_replace($s){
 			$m = array();
-			if (preg_match_all('/\$([a-zA-Z0-9-_]+\.*)+/', $s,$m)){
+			if (preg_match_all('/\$\[{0,1}([a-zA-Z0-9-_]+\.*)+\]{0,1}/', $s,$m)){
 				foreach($m[0] as $var){
-					$val = $this->_get_var($var, true);
+					$varn = str_replace(array("[","]"), array("",""), $var);
+					$val = $this->_get_var($varn, true);
 					if ($val!=KEY_NOT_EXISTS)
 						$s = str_replace($var, $val, $s);
 				}
 			}
+			
 			return $s;
 		}
 	
