@@ -1,5 +1,5 @@
 <?php
-
+	define ("KEY_NOT_EXISTS", '^R_key_not_Exists^');
 
 	class Template {
 		var $r;
@@ -43,15 +43,16 @@
 		} 
 		
 		private function _push_stack(){
-			$this->stack[] = array($this->r, $this->search, $this->replace, $this->nodes);
+			$this->stack[] = array($this->r, $this->nodes);
 		}
 		private function _pop_stack(){
-			list($this->r, $this->search, $this->replace, $this->nodes) = array_pop($this->stack);
+			list($this->r, $this->nodes) = array_pop($this->stack);
 			
 		}
 		
-		private function _get_var($name){
-			$keys = array_map('trim',explode(".",$name));		
+		private function _get_var($name, $retNoKey=false){
+			$keys = array_map('trim',explode(".",$name));
+			if ($retNoKey && !array_key_exists($keys[0], $this->r)) return KEY_NOT_EXISTS;
 			$val = $this->r;
 			foreach($keys as $k) {
 				$val = (isset($val[$k]) ? $val[$k] : null);
@@ -194,13 +195,24 @@
 			return str_replace($this->search,$this->replace, $str);
 		}*/
 
+		private function var_replace($s){
+			$m = array();
+			if (preg_match_all('/\$([a-zA-Z0-9-_]+\.*)+/', $s,$m)){
+				foreach($m[0] as $var){
+					$val = $this->_get_var($var, true);
+					if ($val!=KEY_NOT_EXISTS)
+						$s = str_replace($var, $val, $s);
+				}
+			}
+			return $s;
+		}
 	
 		public function replace($s, $r) {
 			$this->r = $r;
-			$this->search = array();
-			$this->replace = array();
+			/*$this->search = array();
+			$this->replace = array();*/
 
-			$this->_build_replace($r, "");
+			//$this->_build_replace($r, "");
 			
 			#$s = str_replace(array("\n","\r"),array("§n§","§r§"),$s);
 			$s = $this->_build_nodes($s);
@@ -215,7 +227,8 @@
 			while($os!=$s && $count<10){
 				$os=$s; $count++;
 				//$s = $this->_str_replace($s);
-				$s = str_replace($this->search, $this->replace, $s);
+				$s = $this->var_replace($s);
+				//$s = str_replace($this->search, $this->replace, $s);
 			}
 			return template_unescape($s);
 		}
