@@ -5,6 +5,9 @@
 	<img id="like-rotator-$item.id" class="like-rotator" src="images/rotator.gif" alt="$item.wait" title="$item.wait" style="display: none;" />
 </div>
 {{ endif }}
+
+
+
 <div class="wall-item-container $item.indent">
 	<div class="wall-item-item">
 		<div class="wall-item-info">

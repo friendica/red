@@ -103,6 +103,7 @@
 .icon.unstarred    { background-image: url("../../../view/theme/diabook/icons/unstarred.png");}
 .icon.star    { background-image: url("../../../view/theme/diabook/icons/star.png");}
 .icon.link		{ background-image: url("../../../view/theme/diabook/icons/link.png");}
+.icon.lock		{ background-image: url("../../../view/theme/diabook/icons/lock.png");}
 
 .article	{ background-position: -50px  0px;}
 .audio 		{ background-position: -70px  0px;}
@@ -127,7 +128,7 @@
 .share 		{ background-position: -230px -20px;}
 
 .tools 		{ background-position: -50px  -40px;}
-.lock 		{ background-position: -70px  -40px;}
+/*.lock 		{ background-position: -70px  -40px;}*/
 
 .video          { background-position: -110px -40px;}
 .youtube        { background-position: -130px -40px;}
@@ -614,7 +615,7 @@ nav .nav-notify {
   border-radius: 5px 5px 5px 5px;
   font-size: 10px;
   font-weight: 900;
-  padding: 1px 3px;
+  padding: 1px 4px;
   top: 0px;
   right: -6px;
   min-width: 10px;
@@ -1167,15 +1168,15 @@ section {
   padding-bottom: 2px;
 }
 .tag {
-  background: url("../../../images/tag_b.png") repeat-x center left;
-  color: #ffffff;
+  /*background: url("../../../images/tag_b.png") repeat-x center left;*/
+  color: #3465A4;
   padding-left: 3px;
-  font-size: 10px;
+  font-size: 12px;
 }
 .tag a {
-  padding-right: 8px;
-  background: url("../../../images/tag.png") no-repeat center right;
-  color: #ffffff;
+  padding-right: 5px;
+  /*background: url("../../../images/tag.png") no-repeat center right;*/
+  color: #3465A4;
 }
 .wwto {
   position: absolute !important;
