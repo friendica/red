@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: friendica\n"
 "Report-Msgid-Bugs-To: http://bugs.friendica.com/\n"
 "POT-Creation-Date: 2012-02-24 22:44-0800\n"
-"PO-Revision-Date: 2012-02-26 15:58+0000\n"
-"Last-Translator: marmor <marmor69@web.de>\n"
+"PO-Revision-Date: 2012-02-28 20:51+0000\n"
+"Last-Translator: greeneyedred <greeneyedred@googlemail.com>\n"
 "Language-Team: German (http://www.transifex.net/projects/p/friendica/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,13 +78,13 @@ msgstr "Kontakt-Einstellungen reparieren"
 msgid ""
 "<strong>WARNING: This is highly advanced</strong> and if you enter incorrect"
 " information your communications with this contact may stop working."
-msgstr "<strong>ACHTUNG: Das sind Experten-Einstellungen!</strong> Wenn Du etwas falsches eingibst, funktioniert die Kommunikation mit diesem Kontakt evtl. nicht mehr."
+msgstr "<strong>ACHTUNG: Das sind Experten-Einstellungen!</strong> Wenn Du etwas Falsches eingibst, funktioniert die Kommunikation mit diesem Kontakt evtl. nicht mehr."
 
 #: ../../mod/crepair.php:138
 msgid ""
 "Please use your browser 'Back' button <strong>now</strong> if you are "
 "uncertain what to do on this page."
-msgstr "Bitte nutze den Zurück-Button deines Browsers <strong>jetzt</strong>, wenn du dir unsicher bist, was auf dieser Seite gemacht wird."
+msgstr "Bitte nutze den Zurück-Button deines Browsers <strong>jetzt</strong>, wenn du dir unsicher bist, was du tun willst."
 
 #: ../../mod/crepair.php:144
 msgid "Return to contact editor"
@@ -303,7 +303,7 @@ msgstr "%s heißt %s herzlich willkommen"
 
 #: ../../mod/api.php:76 ../../mod/api.php:102
 msgid "Authorize application connection"
-msgstr "Verbindung der Applikation authorisieren"
+msgstr "Verbindung der Applikation autorisieren"
 
 #: ../../mod/api.php:77
 msgid "Return to your app and insert this Securty Code:"
@@ -317,7 +317,7 @@ msgstr "Bitte melde dich an um fortzufahren."
 msgid ""
 "Do you want to authorize this application to access your posts and contacts,"
 " and/or create new posts for you?"
-msgstr "Möchtest du dieser Anwendung den Zugriff auf deine Beiträge und Kontakte sowie die Erstellung neuer Beiträge in deinem Namen gestatten?"
+msgstr "Möchtest du dieser Anwendung den Zugriff auf deine Beiträge und Kontakte, sowie das Erstellen neuer Beiträge in deinem Namen gestatten?"
 
 #: ../../mod/api.php:105 ../../mod/dfrn_request.php:676
 #: ../../mod/settings.php:681 ../../mod/settings.php:687
@@ -576,7 +576,7 @@ msgstr "Keine Ergebnisse."
 
 #: ../../mod/friendica.php:43
 msgid "This is Friendica, version"
-msgstr "Dies ist Friendica version"
+msgstr "Dies ist Friendica, Version"
 
 #: ../../mod/friendica.php:44
 msgid "running at web location"
@@ -740,7 +740,7 @@ msgstr "Du hast dich hier bereits vorgestellt."
 #: ../../mod/dfrn_request.php:343
 #, php-format
 msgid "Apparently you are already friends with %s."
-msgstr "Es scheint so, als ob du bereits ein Freund von %s bist."
+msgstr "Es scheint so, als ob du bereits mit %s befreundet bist."
 
 #: ../../mod/dfrn_request.php:364
 msgid "Invalid profile URL."
@@ -766,7 +766,7 @@ msgstr "Bitte melde dich an, um die Kontaktanfrage zu bestätigen."
 msgid ""
 "Incorrect identity currently logged in. Please login to "
 "<strong>this</strong> profile."
-msgstr "Incorrect identity currently logged in. Please login to <strong>this</strong> profile."
+msgstr "Momentan bist du mit einer anderen Identität angemeldet. Bitte melde Dich mit <strong>diesem</strong> Profil an."
 
 #: ../../mod/dfrn_request.php:539
 #, php-format
@@ -784,7 +784,7 @@ msgstr "Bestätigen"
 
 #: ../../mod/dfrn_request.php:582 ../../include/items.php:2504
 msgid "[Name Withheld]"
-msgstr "[Name Zurückgehalten]"
+msgstr "[Name unterdrückt]"
 
 #: ../../mod/dfrn_request.php:666
 #, php-format
@@ -811,7 +811,7 @@ msgstr "Beispiele: jojo@demo.friendica.com, http://demo.friendica.com/profile/jo
 
 #: ../../mod/dfrn_request.php:674
 msgid "Please answer the following:"
-msgstr "Bitte beantworte folgende Fragen:"
+msgstr "Bitte beantworte Folgendes:"
 
 #: ../../mod/dfrn_request.php:675
 #, php-format
@@ -820,7 +820,7 @@ msgstr "Kennt %s dich?"
 
 #: ../../mod/dfrn_request.php:678
 msgid "Add a personal note:"
-msgstr "Eine persönliche Notiz anfügen:"
+msgstr "Eine persönliche Notiz beifügen:"
 
 #: ../../mod/dfrn_request.php:680 ../../include/contact_selectors.php:76
 msgid "Friendica"
@@ -909,7 +909,7 @@ msgstr "Noch einmal testen"
 msgid ""
 "In order to install Friendica we need to know how to connect to your "
 "database."
-msgstr "Um Friendica installieren zu können müssen wir wissen wie wir zu deiner Datenbank Kontakt aufnehmen können."
+msgstr "Um Friendica installieren zu können, müssen wir wissen, wie wir zu deiner Datenbank Kontakt aufnehmen können."
 
 #: ../../mod/install.php:232
 msgid ""
@@ -947,7 +947,7 @@ msgstr "E-Mail-Adresse des Administrators"
 msgid ""
 "Your account email address must match this in order to use the web admin "
 "panel."
-msgstr "Die E-Mail-Adresse, die in deinem Friendica-Account eingetragen, muss mit dieser Adresse übereinstimmen, damit du das Admin-Panel benutzen kannst."
+msgstr "Die E-Mail-Adresse, die in deinem Friendica-Account eingetragen ist, muss mit dieser Adresse übereinstimmen, damit du das Admin-Panel benutzen kannst."
 
 #: ../../mod/install.php:245 ../../mod/install.php:283
 msgid "Please select a default timezone for your website"
@@ -971,7 +971,7 @@ msgstr "Kompletter Pfad zum PHP-Executable"
 
 #: ../../mod/install.php:331
 msgid "Command line PHP"
-msgstr "Kommadozeilen-PHP"
+msgstr "Kommandozeilen-PHP"
 
 #: ../../mod/install.php:340
 msgid ""
@@ -1105,7 +1105,7 @@ msgstr "Zeitumrechnung"
 msgid ""
 "Friendika provides this service for sharing events with other networks and "
 "friends in unknown timezones."
-msgstr "Friendica bietet diese Funktion an, um das teilen von Events mit Kontakten zu vereinfachen, deren Zeitzone nicht ermittelt werden kann."
+msgstr "Friendica bietet diese Funktion an, um das Teilen von Events mit den Kontakten zu vereinfachen, deren Zeitzone nicht ermittelt werden kann."
 
 #: ../../mod/localtime.php:30
 #, php-format
@@ -1602,7 +1602,7 @@ msgstr "Administrator"
 msgid ""
 "Request could not be verified. (You may have previously submitted it.) "
 "Password reset failed."
-msgstr "Anfrage konnte nicht verifiziert werden. (Eventuell hast du bereits ähnliche Anfrage gestellt.) Zurücksetzen des Passworts gescheitert."
+msgstr "Anfrage konnte nicht verifiziert werden. (Eventuell hast du bereits eine ähnliche Anfrage gestellt.) Zurücksetzen des Passworts gescheitert."
 
 #: ../../mod/lostpass.php:82 ../../boot.php:723
 msgid "Password Reset"
@@ -1628,7 +1628,7 @@ msgstr "hier klicken, um dich anzumelden"
 msgid ""
 "Your password may be changed from the <em>Settings</em> page after "
 "successful login."
-msgstr "Du kannst das Passwort in den <em>Einstellungen</em> ändern sobald du dich erfolgreich angemeldet hast."
+msgstr "Du kannst das Passwort in den <em>Einstellungen</em> ändern, sobald du dich erfolgreich angemeldet hast."
 
 #: ../../mod/lostpass.php:118
 msgid "Forgot your Password?"
@@ -1764,7 +1764,7 @@ msgstr "Kein Name"
 
 #: ../../mod/settings.php:516
 msgid "Remove authorization"
-msgstr "Authorisierung entziehen"
+msgstr "Autorisierung entziehen"
 
 #: ../../mod/settings.php:528
 msgid "No Plugin settings configured"
@@ -2044,31 +2044,31 @@ msgstr "Benachrichtigungs-E-Mail senden wenn:"
 
 #: ../../mod/settings.php:828
 msgid "You receive an introduction"
-msgstr "Du eine Kontaktanfrage erhältst"
+msgstr "- du eine Kontaktanfrage erhältst"
 
 #: ../../mod/settings.php:829
 msgid "Your introductions are confirmed"
-msgstr "Eine deiner Kontaktanfragen akzeptiert wurde"
+msgstr "- eine deiner Kontaktanfragen akzeptiert wurde"
 
 #: ../../mod/settings.php:830
 msgid "Someone writes on your profile wall"
-msgstr "Jemand schreibt etwas auf deine Pinnwand"
+msgstr "- jemand etwas auf deine Pinnwand schreibt"
 
 #: ../../mod/settings.php:831
 msgid "Someone writes a followup comment"
-msgstr "Jemand verfasst auch einen Kommentar"
+msgstr "- jemand auch einen Kommentar verfasst"
 
 #: ../../mod/settings.php:832
 msgid "You receive a private message"
-msgstr "Du erhältst eine private Nachricht"
+msgstr "- du eine private Nachricht erhältst"
 
 #: ../../mod/settings.php:833
 msgid "You receive a friend suggestion"
-msgstr "Du eine Empfehlung erhältst"
+msgstr "- du eine Empfehlung erhältst"
 
 #: ../../mod/settings.php:834
 msgid "You are tagged in a post"
-msgstr "Du wurdest in einem Beitrag erwähnt"
+msgstr "- du in einem Beitrag erwähnt wurdest"
 
 #: ../../mod/settings.php:837
 msgid "Advanced Page Settings"
@@ -2082,7 +2082,7 @@ msgstr "Verwalte Identitäten und/oder Seiten"
 msgid ""
 "Toggle between different identities or community/group pages which share "
 "your account details or which you have been granted \"manage\" permissions"
-msgstr "Wechsle zwischen verschiedenen Identitäten oder Gemeinschafts-/Gruppen Seiten die deine Zugangsdetails teilen oder zu denen du \"Manage\" Befugnisse bekommen hast."
+msgstr "Wechsle zwischen verschiedenen Identitäten oder Gemeinschafts-/Gruppen-Seiten, die deine Zugangsdetails teilen oder zu denen du \"Manage\" Befugnisse bekommen hast."
 
 #: ../../mod/manage.php:95
 msgid "Select an identity to manage: "
@@ -2182,14 +2182,14 @@ msgid ""
 "enjoyable. Click any item to visit the relevant page. A link to this page "
 "will be visible from your home page for two weeks after your initial "
 "registration and then will quietly disappear."
-msgstr "Wir möchten Dir einige Tipps und Links anbieten, die Dir helfen könnten, den Einstieg angenehmer zu machen. Klicke auf ein Element, um die entsprechende Seite zu besuchen. Ein Link zu dieser Seite hier bleibt sichtbar über Deine Pinnwand für zwei Wochen nach dem Registrierungsdatum und wird dann verschwinden."
+msgstr "Wir möchten Dir einige Tipps und Links anbieten, die Dir helfen könnten, den Einstieg angenehmer zu machen. Klicke auf ein Element, um die entsprechende Seite zu besuchen. Ein Link zu dieser Seite hier bleibt für Dich an Deiner Pinnwand für zwei Wochen nach dem Registrierungsdatum sichtbar und wird dann verschwinden."
 
 #: ../../mod/newmember.php:16
 msgid ""
 "On your <em>Settings</em> page -  change your initial password. Also make a "
 "note of your Identity Address. This looks just like an email address - and "
 "will be useful in making friends on the free social web."
-msgstr "Ändere bitte unter <em>Einstellungen</em> Dein Passwort. Außerdem merke Dir Deine Indentifikations Adresse. Diese sieht aus wie eine E-Mail Adresse und wird benötig um Freunschaften mit anderen im Friendica Netzwerk zu schliessen."
+msgstr "Ändere bitte unter <em>Einstellungen</em> Dein Passwort. Außerdem merke Dir Deine Indentifikations-Adresse. Diese sieht aus wie eine E-Mail-Adresse und wird benötigt, um Freundschaften mit anderen im Friendica Netzwerk zu schliessen."
 
 #: ../../mod/newmember.php:18
 msgid ""
@@ -2197,14 +2197,14 @@ msgid ""
 " directory listing is like having an unlisted phone number. In general, you "
 "should probably publish your listing - unless all of your friends and "
 "potential friends know exactly how to find you."
-msgstr "Überprüfe die restlichen Einstellungen, insbesondere die Einstellungen zur Privatsphäre. Wenn du dein Profil nicht veröffentlichst ist das wie wenn niemand deine Telefonnummer kennt. Im Allgemeinen solltest du es veröffentlichen - außer all deine Freunde und potentiellen Freunde wissen wie man dich findet."
+msgstr "Überprüfe die restlichen Einstellungen, insbesondere die Einstellungen zur Privatsphäre. Wenn du dein Profil nicht veröffentlichst, ist das als wenn Du Deine Telefonnummer nicht ins Telefonbuch einträgst. Im Allgemeinen solltest du es veröffentlichen - außer all deine Freunde und potentiellen Freunde wissen genau, wie sie dich finden können."
 
 #: ../../mod/newmember.php:20
 msgid ""
 "Upload a profile photo if you have not done so already. Studies have shown "
 "that people with real photos of themselves are ten times more likely to make"
 " friends than people who do not."
-msgstr "Lade ein Profilbild hoch falls du es noch nicht getan hast. Studien haben gezeigt, dass es zehnmal wahrscheinlicher ist neue Freunde zu finden, wenn du ein Bild von dir selbst verwendest als wenn du dies nicht tust."
+msgstr "Lade ein Profilbild hoch falls du es noch nicht getan hast. Studien haben gezeigt, dass es zehnmal wahrscheinlicher ist neue Freunde zu finden, wenn du ein Bild von dir selbst verwendest, als wenn du dies nicht tust."
 
 #: ../../mod/newmember.php:23
 msgid ""
@@ -2216,7 +2216,7 @@ msgstr "Richte die Verbindung zu Facebook ein, wenn du im Augenblick ein Faceboo
 msgid ""
 "<em>If</em> this is your own personal server, installing the Facebook addon "
 "may ease your transition to the free social web."
-msgstr "<em>Wenn</em> dies dein privater Server ist könnte die Installation des Facebook Connectors deinen Umzug ins freie Soziale Netz angenehmer gestalten."
+msgstr "<em>Wenn</em> dies dein privater Server ist, könnte die Installation des Facebook Connectors deinen Umzug ins freie soziale Netz angenehmer gestalten."
 
 #: ../../mod/newmember.php:30
 msgid ""
@@ -2251,7 +2251,7 @@ msgid ""
 "The Directory page lets you find other people in this network or other "
 "federated sites. Look for a <em>Connect</em> or <em>Follow</em> link on "
 "their profile page. Provide your own Identity Address if requested."
-msgstr "Über die Verzeichnisseite kannst du andere Personen auf diesem Server oder anderen verteilten Seiten finden. Halte nach einem <em>Verbinden</em> oder <em>Folgen</em> Link auf deren Profilseiten Ausschau und gib deine eigene Profiladresse an falls du danach gefragt wirst."
+msgstr "Über die Verzeichnisseite kannst du andere Personen auf diesem Server oder anderen verknüpften Seiten finden. Halte nach einem <em>Verbinden</em> oder <em>Folgen</em> Link auf deren Profilseiten Ausschau und gib deine eigene Profiladresse an, falls du danach gefragt wirst."
 
 #: ../../mod/newmember.php:40
 msgid ""
@@ -2835,7 +2835,7 @@ msgstr "Geschlossen"
 
 #: ../../mod/admin.php:304
 msgid "Requires approval"
-msgstr "Bedarf Zustimmung"
+msgstr "Bedarf der Zustimmung"
 
 #: ../../mod/admin.php:305
 msgid "Open"
@@ -2889,7 +2889,7 @@ msgstr "Accounts gelten nach x Tagen als unbenutzt"
 msgid ""
 "Will not waste system resources polling external sites for abandonded "
 "accounts. Enter 0 for no time limit."
-msgstr "Verschwende keine System-Ressourcen fürs Pollen externer Seiten, wenn Accounts nicht mehr benutzt werden. 0 eingeben für kein Limit."
+msgstr "Verschwende keine System-Ressourcen auf das Pollen externer Seiten, wenn Accounts nicht mehr benutzt werden. 0 eingeben für kein Limit."
 
 #: ../../mod/admin.php:330
 msgid "Allowed friend domains"
@@ -2925,7 +2925,7 @@ msgstr "Gravatar Unterstützung"
 
 #: ../../mod/admin.php:339
 msgid "Fullname check"
-msgstr "Name auf Vollständigkeit überprüfen"
+msgstr "Namen auf Vollständigkeit überprüfen"
 
 #: ../../mod/admin.php:340
 msgid "UTF-8 Regular expressions"
@@ -3095,11 +3095,11 @@ msgstr "Protokolldatei"
 msgid ""
 "Must be writable by web server. Relative to your Friendica top-level "
 "directory."
-msgstr "Webserver muss Schreibrechte besitzen. Relativ zum Friendica-Installationsverzeichnis."
+msgstr "Webserver muss Schreibrechte besitzen. Abhängig vom Friendica-Installationsverzeichnis."
 
 #: ../../mod/admin.php:856
 msgid "Log level"
-msgstr "Protokollevel"
+msgstr "Protokoll-Level"
 
 #: ../../mod/admin.php:897
 msgid "Close"
@@ -3123,7 +3123,7 @@ msgstr "FTP Passwort"
 
 #: ../../mod/profile.php:15 ../../boot.php:845
 msgid "Requested profile is not available."
-msgstr "Profil nicht vorhanden."
+msgstr "Das angefragte Profil ist nicht vorhanden."
 
 #: ../../mod/profile.php:111 ../../mod/display.php:67
 msgid "Access to this profile has been restricted."
@@ -3212,7 +3212,7 @@ msgstr "Zu dieser Adresse konnte keine passende Browser URL gefunden werden."
 msgid ""
 "The profile address specified belongs to a network which has been disabled "
 "on this site."
-msgstr "Die Adresse dieses Profils gehört zu einem Netzwerk mit dem die Kommunikation auf dieser Seite ausgeschaltet wurde."
+msgstr "Die Adresse dieses Profils gehört zu einem Netzwerk, mit dem die Kommunikation auf dieser Seite ausgeschaltet wurde."
 
 #: ../../mod/follow.php:79
 msgid ""
@@ -3475,7 +3475,7 @@ msgstr "%1$s hat %2$ss %3$s mit %4$s getaggt"
 
 #: ../../mod/delegate.php:95
 msgid "No potential page delegates located."
-msgstr "Keine potentiellen Bevollmächtigte für die Seite gefunden."
+msgstr "Keine potentiellen Bevollmächtigten für die Seite gefunden."
 
 #: ../../mod/delegate.php:121
 msgid "Delegate Page Management"
@@ -3486,7 +3486,7 @@ msgid ""
 "Delegates are able to manage all aspects of this account/page except for "
 "basic account settings. Please do not delegate your personal account to "
 "anybody that you do not trust completely."
-msgstr "Bevollmächtigte sind in der Lage alle Aspekte dieses Accounts/dieser Seite zu verwalten, abgesehen von den Grundeinstellungen des Accounts. Bitte gib Niemandem eine Bevollmächtigung für deinen privaten Account dem du nicht absolut vertraust."
+msgstr "Bevollmächtigte sind in der Lage alle Aspekte dieses Accounts/dieser Seite zu verwalten, abgesehen von den Grundeinstellungen des Accounts. Bitte gib niemandem eine Bevollmächtigung für deinen privaten Account, dem du nicht absolut vertraust."
 
 #: ../../mod/delegate.php:124
 msgid "Existing Page Managers"
@@ -3595,7 +3595,7 @@ msgstr "Um diese Einladung anzunehmen besuche bitte:"
 
 #: ../../mod/invite.php:104
 msgid "You will need to supply this invitation code: $invite_code"
-msgstr "Du benötigst den folgenden Einladungs Code: $invite_code"
+msgstr "Du benötigst den folgenden Einladungscode: $invite_code"
 
 #: ../../mod/invite.php:104
 msgid ""
@@ -3604,7 +3604,7 @@ msgstr "Sobald du registriert bist, kontaktiere mich bitte auf meiner Profilseit
 
 #: ../../mod/dfrn_confirm.php:238
 msgid "Response from remote site was not understood."
-msgstr "Antwort der entfernten Gegenstelle unverständlich."
+msgstr "Antwort der Gegenstelle unverständlich."
 
 #: ../../mod/dfrn_confirm.php:247
 msgid "Unexpected response from remote site: "
@@ -3617,7 +3617,7 @@ msgstr "Bestätigung erfolgreich abgeschlossen."
 #: ../../mod/dfrn_confirm.php:257 ../../mod/dfrn_confirm.php:271
 #: ../../mod/dfrn_confirm.php:278
 msgid "Remote site reported: "
-msgstr "Entfernte Seite meldet: "
+msgstr "Gegenstelle meldet: "
 
 #: ../../mod/dfrn_confirm.php:269
 msgid "Temporary failure. Please wait and try again."
@@ -3663,7 +3663,7 @@ msgstr "Die Kontaktdaten für URL %s enthalten keinen Public Key für den Server
 msgid ""
 "The ID provided by your system is a duplicate on our system. It should work "
 "if you try again."
-msgstr "Die ID die uns dein System angeboten hat ist hier bereits vergeben. Bitte versuche es noch einmal."
+msgstr "Die ID, die uns dein System angeboten hat, ist hier bereits vergeben. Bitte versuche es noch einmal."
 
 #: ../../mod/dfrn_confirm.php:630
 msgid "Unable to set your contact credentials on our system."
@@ -3720,7 +3720,7 @@ msgstr "All meine Facebook-Kontakte und -Konversationen hier auf diese Website i
 msgid ""
 "Facebook conversations consist of your <em>profile wall</em> and your friend"
 " <em>stream</em>."
-msgstr "Facebook-Konversationen sind alles, was auf deiner <em>Pinnwand</em> erscheint, und die Beiträge deiner Freunde <em>(Stream).</em>"
+msgstr "Facebook-Konversationen bestehen aus deinen Beiträgen auf deiner<em>Pinnwand</em>, sowie den Beiträgen deiner Freunde <em>Stream</em>."
 
 #: ../../addon/facebook/facebook.php:391
 msgid "On this website, your Facebook friend stream is only visible to you."
@@ -3752,7 +3752,7 @@ msgstr "Wenn Du Facebook-Konversationen importierst und diese beiden Häkchen ni
 
 #: ../../addon/facebook/facebook.php:408
 msgid "Comma separated applications to ignore"
-msgstr "Komma separierte Liste von Anwendungen die ignoriert werden sollen"
+msgstr "Komma separiert Anwendungen, die ignoriert werden sollen"
 
 #: ../../addon/facebook/facebook.php:476
 #: ../../include/contact_selectors.php:81
@@ -3858,7 +3858,7 @@ msgstr "Wörter, die gefiltert werden sollen (durch Kommas getrennt)"
 
 #: ../../addon/nsfw/nsfw.php:58
 msgid "Use /expression/ to provide regular expressions"
-msgstr "Verwende /expression/ um Reguläre Ausdrücke zu verwenden"
+msgstr "Verwende /expression/ um reguläre Ausdrücke zu verwenden"
 
 #: ../../addon/nsfw/nsfw.php:74
 msgid "NSFW Settings saved."
@@ -3907,7 +3907,7 @@ msgid ""
 " storage (like ownCloud). See <a "
 "href=\"http://www.w3.org/community/unhosted/wiki/RemoteStorage#WebFinger\">RemoteStorage"
 " WebFinger</a>"
-msgstr "Ermöglicht es deine friendica id (%s) mit externen unhosted-fähigen Speichern (z.B. ownCloud) zu verbinden. Siehe <a href=\"http://www.w3.org/community/unhosted/wiki/RemoteStorage#WebFinger\">RemoteStorage WebFinger</a>"
+msgstr "Ermöglicht dir, deine friendica id (%s) mit externen unhosted-fähigen Speichern (z.B. ownCloud) zu verbinden. Siehe <a href=\"http://www.w3.org/community/unhosted/wiki/RemoteStorage#WebFinger\">RemoteStorage WebFinger</a>"
 
 #: ../../addon/uhremotestorage/uhremotestorage.php:85
 msgid "Template URL (with {category})"
@@ -3957,7 +3957,7 @@ msgstr "In diesem Fall sind es drei Ebenen. Man gewinnt indem man drei in einer 
 msgid ""
 "The handicap game disables the center position on the middle level because "
 "the player claiming this square often has an unfair advantage."
-msgstr "Beim Handicap-Spiel wird die zentrale Position der mittleren Ebene gesperrt da der Spieler der diese Ebene besitzt oft einen unfairen Vorteil genießt."
+msgstr "Beim Handicap-Spiel wird die zentrale Position der mittleren Ebene gesperrt, da der Spieler, der diese Ebene besitzt, oft einen unfairen Vorteil genießt."
 
 #: ../../addon/tictac/tictac.php:182
 msgid "You go first..."
@@ -4046,7 +4046,7 @@ msgstr "Datei hochladen"
 
 #: ../../addon/js_upload/js_upload.php:44
 msgid "Drop files here to upload"
-msgstr "Ziehe die Dateien hierher die du hochladen willst"
+msgstr "Ziehe Dateien hierher, um sie hochzuladen"
 
 #: ../../addon/js_upload/js_upload.php:46
 msgid "Failed"
@@ -4166,7 +4166,7 @@ msgstr "Schnell-Kommentar Einstellungen"
 
 #: ../../addon/qcomment/qcomment.php:56
 msgid "Enter quick comments, one per line"
-msgstr "Gibt ein Schnell-Kommentar pro Zeile ein"
+msgstr "Gib einen Schnell-Kommentar pro Zeile ein"
 
 #: ../../addon/qcomment/qcomment.php:74
 msgid "Quick Comment settings saved."
@@ -4188,7 +4188,7 @@ msgstr "Standard Zoom"
 
 #: ../../addon/openstreetmap/openstreetmap.php:72
 msgid "The default zoom level. (1:world, 18:highest)"
-msgstr "Standard Zoo,level (1: Welt; 18: höchstes)"
+msgstr "Standard Zoomlevel (1: Welt; 18: höchstes)"
 
 #: ../../addon/editplain/editplain.php:46
 msgid "Editplain settings updated."
@@ -4245,7 +4245,7 @@ msgid ""
 "There are preconfigured OAuth key pairs for some StatusNet servers "
 "available. If you are useing one of them, please use these credentials. If "
 "not feel free to connect to any other StatusNet instance (see below)."
-msgstr "Für einige StatusNet Server sind OAuth Schlüsselpaare verfügbar. Solltest du einen dieser Server benutzen, dann verwende doch bitte diese Schlüssel. Falls nicht kannst du weiter unten deine eigenen OAuth Schlüssel eintragen."
+msgstr "Für einige StatusNet Server sind voreingestellt OAuth Schlüsselpaare verfügbar. Solltest du einen dieser Server benutzen, dann verwende bitte diese Schlüssel. Falls nicht, stellen stattdessen eine Verbindung zu irgend einem anderen StatusNet Server her (siehe unten)."
 
 #: ../../addon/statusnet/statusnet.php:275
 msgid "Provide your own OAuth Credentials"
@@ -4309,7 +4309,7 @@ msgid ""
 "If enabled all your <strong>public</strong> postings can be posted to the "
 "associated StatusNet account. You can choose to do so by default (here) or "
 "for every posting separately in the posting options when writing the entry."
-msgstr "Wenn aktiviert können all deine <strong>öffentlichen</strong> Einträge auf dem verbundenen StatusNet Konto veröffentlicht werden. Du kannst das (hier) als Standardverhalten einstellen oder beim Schreiben eines Beitrags in den Beitragsoptionen festlegen."
+msgstr "Wenn aktiviert, so können all deine <strong>öffentlichen</strong> Einträge auf dem verbundenen StatusNet Konto veröffentlicht werden. Du kannst das (hier) als Standardverhalten einstellen oder beim Schreiben eines Beitrags in den Beitragsoptionen festlegen."
 
 #: ../../addon/statusnet/statusnet.php:331
 msgid ""
@@ -4317,7 +4317,7 @@ msgid ""
 "details from unknown viewers?</em>) the link potentially included in public "
 "postings relayed to StatusNet will lead the visitor to a blank page "
 "informing the visitor that the access to your profile has been restricted."
-msgstr "<strong>Hinweis</strong>: Aufgrund deiner Privatsphären Einstellungen (<em>Profil-Details vor unbekannten Betrachtern verbergen?</em>) wird der Link der eventuell an an deinen StatusNet Account weitergeleitete angehangen wird um auf den original Artikel zu verweisen den Betrachter auf eine leere Seite führen, auf der er darüber informiert wird, dass der Zugriff eingeschränkt wurde."
+msgstr "<strong>Hinweis</strong>: Aufgrund deiner Privatsphären-Einstellungen (<em>Profil-Details vor unbekannten Betrachtern verbergen?</em>) wird der Link, der eventuell an deinen StatusNet Account angehängt wird, um auf den original Artikel zu verweisen, den Betrachter auf eine leere Seite führen, die ihn darüber informiert, dass der Zugriff eingeschränkt wurde."
 
 #: ../../addon/statusnet/statusnet.php:334
 msgid "Allow posting to StatusNet"
@@ -4409,7 +4409,7 @@ msgstr "Aktiviere \"Mehr zeigen\""
 
 #: ../../addon/showmore/showmore.php:44
 msgid "Cutting posts after how much characters"
-msgstr "Begrenze Beiträge nach der Anzahl der Buchstaben"
+msgstr "Begrenze Beiträge nach einer bestimmten Anzahl an Buchstaben"
 
 #: ../../addon/showmore/showmore.php:64
 msgid "Show More Settings saved."
@@ -4441,7 +4441,7 @@ msgstr "Piwik Basis URL"
 msgid ""
 "Absolute path to your Piwik installation. (without protocol (http/s), with "
 "trailing slash)"
-msgstr "Absoluter Pfad zu deiner Piwik Installation (ohen Protokoll (http/s) und mit abschließendem Schrägstrich)"
+msgstr "Absoluter Pfad zu deiner Piwik Installation (ohne Protokoll (http/s) und mit abschließendem Schrägstrich)"
 
 #: ../../addon/piwik/piwik.php:91
 msgid "Site ID"
@@ -4453,7 +4453,7 @@ msgstr "Link zum Setzen des Opt-Out Cookies anzeigen?"
 
 #: ../../addon/piwik/piwik.php:93
 msgid "Asynchronous tracking"
-msgstr "Asynchroned Tracken"
+msgstr "Asynchrones Tracken"
 
 #: ../../addon/twitter/twitter.php:73
 msgid "Post to Twitter"
@@ -4480,7 +4480,7 @@ msgid ""
 "button below to get a PIN from Twitter which you have to copy into the input"
 " box below and submit the form. Only your <strong>public</strong> posts will"
 " be posted to Twitter."
-msgstr "Auf diesem Friendica-Server wurde das Twitter-Plugin aktiviert, aber du hast deinen Account noch nicht mit deinem Twitter-Account verbunden. Klicke dazu die Schaltfläche unten. Du erhältst dann eine PIN von Twitter, die du in das Eingabefeld unten kopieren musst. Nicht vergessen, den Senden-Knopf zu drücken! Nur <strong>öffentliche</strong> Beiträge werden bei Twitter veröffentlicht."
+msgstr "Auf diesem Friendica-Server wurde das Twitter-Plugin aktiviert, aber du hast deinen Account noch nicht mit deinem Twitter-Account verbunden. Klicke dazu auf die Schaltfläche unten. Du erhältst dann eine PIN von Twitter, die du dann in das Eingabefeld unten einfügst. Denk daran, den Senden-Knopf zu drücken! Nur <strong>öffentliche</strong> Beiträge werden bei Twitter veröffentlicht."
 
 #: ../../addon/twitter/twitter.php:168
 msgid "Log in with Twitter"
@@ -4495,7 +4495,7 @@ msgid ""
 "If enabled all your <strong>public</strong> postings can be posted to the "
 "associated Twitter account. You can choose to do so by default (here) or for"
 " every posting separately in the posting options when writing the entry."
-msgstr "Wenn aktiviert können all deine <strong>öffentlichen</strong> Einträge auf dem verbundenen Twitter Konto veröffentlicht werden. Du kannst dies (hier) als Standardverhalten einstellen oder beim Schreiben eines Beitrags in den Beitragsoptionen festlegen."
+msgstr "Wenn aktiviert, so können all deine <strong>öffentlichen</strong> Einträge auf dem verbundenen Twitter Konto veröffentlicht werden. Du kannst dies (hier) als Standardverhalten einstellen oder beim Schreiben eines Beitrags in den Beitragsoptionen festlegen."
 
 #: ../../addon/twitter/twitter.php:187
 msgid ""
@@ -4503,7 +4503,7 @@ msgid ""
 "details from unknown viewers?</em>) the link potentially included in public "
 "postings relayed to Twitter will lead the visitor to a blank page informing "
 "the visitor that the access to your profile has been restricted."
-msgstr "<strong>Hinweis</strong>: Aufgrund deiner Privatsphären Einstellungen (<em>Profil-Details vor unbekannten Betrachtern verbergen?</em>) wird der Link der eventuell an an deinen Twitter Account weitergeleitete angehangen wird um auf den original Artikel zu verweisen den Betrachter auf eine leere Seite führen, auf der er darüber informiert wird, dass der Zugriff eingeschränkt wurde."
+msgstr "<strong>Hinweis</strong>: Aufgrund deiner Privatsphären-Einstellungen (<em>Profil-Details vor unbekannten Betrachtern verbergen?</em>) wird der Link, der eventuell an an deinen Twitter Account angehängt wird, um auf den original Artikel zu verweisen, den Betrachter auf eine leere Seite führen, die ihn darüber informiert, dass der Zugriff eingeschränkt wurde."
 
 #: ../../addon/twitter/twitter.php:190
 msgid "Allow posting to Twitter"
@@ -4648,7 +4648,7 @@ msgstr "Seriös, hat mein Vertrauen"
 
 #: ../../include/contact_selectors.php:56
 msgid "Frequently"
-msgstr "Häufig"
+msgstr "immer wieder"
 
 #: ../../include/contact_selectors.php:57
 msgid "Hourly"
@@ -4656,7 +4656,7 @@ msgstr "Stündlich"
 
 #: ../../include/contact_selectors.php:58
 msgid "Twice daily"
-msgstr "Zweimal Täglich"
+msgstr "Zweimal täglich"
 
 #: ../../include/contact_selectors.php:59
 msgid "Daily"
@@ -4856,7 +4856,7 @@ msgstr "Partner"
 
 #: ../../include/profile_selectors.php:33
 msgid "Cohabiting"
-msgstr "kohabitierend"
+msgstr "zusammenlebend"
 
 #: ../../include/profile_selectors.php:33
 msgid "Happy"
@@ -5068,7 +5068,7 @@ msgid ""
 "A deleted group with this name was revived. Existing item permissions "
 "<strong>may</strong> apply to this group and any future members. If this is "
 "not what you intended, please create another group with a different name."
-msgstr "Eine gelöschte Gruppe mit diesem Namen wurde wiederbelebt. Bestehende Berechtigungseinstellungen <strong>könnten</strong> auf diese Gruppe oder zukünftige Mitglieder angewandt werden. Falls du dies nicht möchtest erstelle bitte eine andere Gruppe mit einem anderen Namen."
+msgstr "Eine gelöschte Gruppe mit diesem Namen wurde wiederbelebt. Bestehende Berechtigungseinstellungen <strong>könnten</strong> auf diese Gruppe oder zukünftige Mitglieder angewandt werden. Falls du dies nicht möchtest, erstelle bitte eine andere Gruppe mit einem anderen Namen."
 
 #: ../../include/group.php:168
 msgid "Everybody"
@@ -5184,7 +5184,7 @@ msgstr "Alle Benachrichtigungen anzeigen"
 
 #: ../../include/nav.php:120
 msgid "Mark all system notifications seen"
-msgstr "Markiere alle System Benachrichtigungen als gelesen"
+msgstr "Markiere alle System-Benachrichtigungen als gelesen"
 
 #: ../../include/nav.php:124
 msgid "Private mail"
@@ -5356,7 +5356,7 @@ msgstr "Von: "
 
 #: ../../include/bbcode.php:202
 msgid "$1 wrote:"
-msgstr "$1 geschrieben:"
+msgstr "$1 hat geschrieben:"
 
 #: ../../include/bbcode.php:216 ../../include/bbcode.php:282
 msgid "Image/photo"
@@ -5648,7 +5648,7 @@ msgstr "mag ich nicht"
 
 #: ../../include/conversation.php:522
 msgid "Share this"
-msgstr "Teilen"
+msgstr "Teile dieses"
 
 #: ../../include/conversation.php:522
 msgid "share"
@@ -5676,7 +5676,7 @@ msgstr "Tag hinzufügen"
 
 #: ../../include/conversation.php:650
 msgid "to"
-msgstr "to"
+msgstr "zu"
 
 #: ../../include/conversation.php:651
 msgid "Wall-to-Wall"
@@ -5731,7 +5731,7 @@ msgstr "%s mögen das nicht."
 
 #: ../../include/conversation.php:867
 msgid "Visible to <strong>everybody</strong>"
-msgstr "Für <strong>Jedermann</strong> sichtbar"
+msgstr "Für <strong>jedermann</strong> sichtbar"
 
 #: ../../include/conversation.php:869
 msgid "Please enter a video link/URL:"
