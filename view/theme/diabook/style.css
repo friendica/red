@@ -102,6 +102,7 @@
 .icon.tagged    { background-image: url("../../../view/theme/diabook/icons/tagged.png");}
 .icon.unstarred    { background-image: url("../../../view/theme/diabook/icons/unstarred.png");}
 .icon.star    { background-image: url("../../../view/theme/diabook/icons/star.png");}
+.icon.link		{ background-image: url("../../../view/theme/diabook/icons/link.png");}
 
 .article	{ background-position: -50px  0px;}
 .audio 		{ background-position: -70px  0px;}
@@ -112,7 +113,7 @@
 .camera 	{ background-position: -170px 0px;}
 /*.dislike 	{ background-position: -190px 0px;}*/
 /*.like 		{ background-position: -210px 0px;}*/
-.link 		{ background-position: -230px 0px;}
+/*.link 		{ background-position: -230px 0px;}*/
 
 .globe 		{ background-position: -50px  -20px;}
 .noglobe 	{ background-position: -70px  -20px;}
@@ -160,7 +161,7 @@
   display: block;
   width: 20px;
   height: 20px;
-  background-image: url('icons.png');
+  /*background-image: url('icons.png');*/
 }
 
 .icon {
