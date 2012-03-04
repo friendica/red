@@ -1005,24 +1005,24 @@ section {
   display: table-cell;
   vertical-align: top;
   width: 800px;
-  padding: 0px 0px 0px 10px;
+  padding: 0px 0px 0px 12px;
 }
 .tabs {
     
     background-position: 0 -20px;
     background-repeat: repeat-x;
-    
     height: 27px;
     padding: 0;
  }
 .tab.button {
-    margin-right: 15px; 
-    margin-left: 15px;	
-    background: none repeat scroll 0 0 #F8F8F8;
+    margin-right: 5px; 
+    margin-left: 5px;	
+    /*background: none repeat scroll 0 0 #F8F8F8;*/
     border: 1px solid #CCCCCC;
     border-radius: 3px 3px 3px 3px;
-    font-weight: bold;
+    font-weight: normal;
     padding: 3px;
+    color:  #333333;
 	}
 /* wall item */
 .tread-wrapper {
@@ -1663,15 +1663,14 @@ section {
 ul.tabs {
   list-style-type: none;
   padding-bottom: 10px;
-  font-size: 13px;
+  font-size: 12px;
 }
 ul.tabs li {
   float: left;
-  margin-left: 7px;
+  margin-left: 5px;
 }
 ul.tabs li .active {
-  background-color: #33ACFF;
-    background-image: -moz-linear-gradient(center top , #66C1FF 0%, #0097FF 100%);
+    background-color: #333333;
     border: 1px solid #777777;
     color: white;
     border-radius: 3px 3px 3px 3px;
