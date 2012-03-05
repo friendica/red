@@ -382,7 +382,8 @@ ul#user-menu-popup li a.nav-sep { border-top: 1px solid #989898; border-style:in
 	padding-left: 11px;
     /*display: none;*/
 }
-#net-update { background-position: 0px -126px; }
+#notify-update { background-position: 0px -168px; }
+#net-update { background-position: 0px -126px }
 #mail-update { background-position: 0px -40px; }
 #intro-update { background-position: 0px -84px; }
 #home-update { background-position: 0px 0px; }
@@ -2887,6 +2888,10 @@ tr {
 	repeat: no-repeat;
 }
 
+.notify {
+  background-image: url("notify.png");}
+  repeat: no-repeat;
+}
 
 .border {
 	border: 1px solid #c1c1c1;
