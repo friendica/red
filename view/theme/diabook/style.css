@@ -384,9 +384,7 @@ body {
   font-size: 13px;
   background-color: #ffffff;
   color: #2d2d2d;
-  margin-left: : auto;
-  margin-right: auto;
-  margin-top: 50px;
+  margin: 50px auto auto;
   display: table;
 }
 h4 {
@@ -1045,6 +1043,8 @@ section {
   display: table;
   width: 780px;
 }
+
+
 .wall-item-container .wall-item-item, .wall-item-container .wall-item-bottom {
   display: table-row;
 }
@@ -1221,8 +1221,12 @@ section {
 	border-right: 1px solid #A7C7F7;
 	padding-right: 12px;
 }
+
+#jot-preview-content{
+	margin-top: 30px;}
+	
 #jot-preview-content .tread-wrapper {
-  background-color: #fce94f;
+  background-color: #fff797;
 }
 
 .wall-item-tags {
@@ -1663,7 +1667,7 @@ section {
 ul.tabs {
   list-style-type: none;
   padding-bottom: 10px;
-  font-size: 12px;
+  font-size: 13px;
 }
 ul.tabs li {
   float: left;
