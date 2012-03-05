@@ -108,14 +108,18 @@ function can_write_wall(&$a,$owner) {
 
 	if(remote_user()) {
 
-		// user remembered decision and avoid a DB lookup for each and every display item
+		// use remembered decision and avoid a DB lookup for each and every display item
 		// DO NOT use this function if there are going to be multiple owners
+
+		// We have a contact-id for an authenticated remote user, this block determines if the contact
+		// belongs to this page owner, and has the necessary permissions to post content
 
 		if($verified === 2)
 			return true;
 		elseif($verified === 1)
 			return false;
 		else {
+
 			$r = q("SELECT `contact`.*, `user`.`page-flags` FROM `contact` LEFT JOIN `user` on `user`.`uid` = `contact`.`uid` 
 				WHERE `contact`.`uid` = %d AND `contact`.`id` = %d AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
 				AND `user`.`blockwall` = 0 AND `readonly` = 0  AND ( `contact`.`rel` IN ( %d , %d ) OR `user`.`page-flags` = %d ) LIMIT 1",
@@ -125,6 +129,7 @@ function can_write_wall(&$a,$owner) {
 				intval(CONTACT_IS_FRIEND),
 				intval(PAGE_COMMUNITY)
 			);
+
 			if(count($r)) {
 				$verified = 2;
 				return true;
