@@ -217,7 +217,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 	if($update)
 		$return_url = $_SESSION['return_url'];
 	else
-		$return_url = $_SESSION['return_url'] = $a->cmd;
+		$return_url = $_SESSION['return_url'] = $a->query_string;
 
 	load_contact_links(local_user());
 
