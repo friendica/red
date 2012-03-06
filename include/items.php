@@ -1595,6 +1595,14 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				if((activity_match($datarray['verb'],ACTIVITY_LIKE)) || (activity_match($datarray['verb'],ACTIVITY_DISLIKE))) {
 					$datarray['type'] = 'activity';
 					$datarray['gravity'] = GRAVITY_LIKE;
+					// only one like or dislike per person
+					$r = q("select id from item where uid = %d and `contact-id` = %d and verb ='%s' and deleted = 0 limit 1",
+						intval($datarray['uid']),
+						intval($datarray['contact-id']),
+						dbesc($datarray['verb'])
+					);
+					if($r && count($r))
+						continue; 
 				}
 
 				if(($datarray['verb'] === ACTIVITY_TAG) && ($datarray['object-type'] === ACTIVITY_OBJ_TAGTERM)) {
@@ -2148,6 +2156,14 @@ function local_delivery($importer,$data) {
 					$datarray['type'] = 'activity';
 					$datarray['gravity'] = GRAVITY_LIKE;
 					$datarray['last-child'] = 0;
+					// only one like or dislike per person
+					$r = q("select id from item where uid = %d and `contact-id` = %d and verb ='%s' and deleted = 0 limit 1",
+						intval($datarray['uid']),
+						intval($datarray['contact-id']),
+						dbesc($datarray['verb'])
+					);
+					if($r && count($r))
+						continue; 
 				}
 
 				if(($datarray['verb'] === ACTIVITY_TAG) && ($datarray['object-type'] === ACTIVITY_OBJ_TAGTERM)) {
@@ -2297,6 +2313,15 @@ function local_delivery($importer,$data) {
 				if(($datarray['verb'] == ACTIVITY_LIKE) || ($datarray['verb'] == ACTIVITY_DISLIKE)) {
 					$datarray['type'] = 'activity';
 					$datarray['gravity'] = GRAVITY_LIKE;
+					// only one like or dislike per person
+					$r = q("select id from item where uid = %d and `contact-id` = %d and verb ='%s' and deleted = 0 limit 1",
+						intval($datarray['uid']),
+						intval($datarray['contact-id']),
+						dbesc($datarray['verb'])
+					);
+					if($r && count($r))
+						continue; 
+
 				}
 
 				if(($datarray['verb'] === ACTIVITY_TAG) && ($datarray['object-type'] === ACTIVITY_OBJ_TAGTERM)) {
