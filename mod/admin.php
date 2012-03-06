@@ -145,9 +145,10 @@ function admin_page_summary(&$a) {
 		Array( t('Automatic Friend Account'), 0)
 	);
 	$users=0;
-	foreach ($r as $u){ $accounts[$u['page-flags']][1] = $u['count']; $users+=$u['count']; }
+	foreach ($r as $u){ $accounts[$u['page-flags']][1] = $u['count']; $users+= $u['count']; }
 
-	
+	logger('accounts: ' . print_r($accounts,true));
+
 	$r = q("SELECT COUNT(id) as `count` FROM `register`");
 	$pending = $r[0]['count'];
 	
@@ -574,6 +575,8 @@ function admin_page_plugins(&$a){
 			'$status' => $status,
 			'$action' => $action,
 			'$info' => get_plugin_info($plugin),
+			'$str_author' => t('Author: '),
+			'$str_maintainer' => t('Maintainer: '),			
 		
 			'$admin_form' => $admin_form,
 			'$function' => 'plugins',
@@ -747,7 +750,8 @@ function admin_page_themes(&$a){
 			'$info' => get_theme_info($theme),
 			'$function' => 'themes',		
 			'$admin_form' => $admin_form,
-			
+			'$str_author' => t('Author: '),
+			'$str_maintainer' => t('Maintainer: '),			
 			'$readme' => $readme
 		));
 	} 
