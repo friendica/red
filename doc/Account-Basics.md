@@ -8,7 +8,7 @@ Account Basics
 
 Not all Friendica sites allow open registration. If registration is allowed, you will see a "Register" link immediately below the login prompts on the site home page. Following this link will take you to the site registration page.  The strength of our network is that lots of different sites are all completely compatible with each other.  If the site you're visting doesn't allow registration, or you think you might prefer another one, you can find a <a href ="http://dir.friendica.com/siteinfo">list of public servers here</a>, and find one that meets your needs.  
 
-If you'd like to have your own server, you can do that too.  Visit <a href = "http://friendica.com/download">the Friendica website</a>to download the code with setup instructions.  It's a very simple install process that anybody experienced in hosting websites, or with basic Linux experience can handle easily.
+If you'd like to have your own server, you can do that too.  Visit <a href = "http://friendica.com/download">the Friendica website</a> to download the code with setup instructions.  It's a very simple install process that anybody experienced in hosting websites, or with basic Linux experience can handle easily.
 
 *OpenID*
 
