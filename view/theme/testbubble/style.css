@@ -55,7 +55,7 @@ p {
 }
 
 label {
-	font-variant:small-caps;
+/*	font-variant:small-caps; */
 }
 
 li {
@@ -382,7 +382,8 @@ ul#user-menu-popup li a.nav-sep { border-top: 1px solid #989898; border-style:in
 	padding-left: 11px;
     /*display: none;*/
 }
-#net-update { background-position: 0px -126px; }
+#notify-update { background-position: 0px -168px; }
+#net-update { background-position: 0px -126px }
 #mail-update { background-position: 0px -40px; }
 #intro-update { background-position: 0px -84px; }
 #home-update { background-position: 0px 0px; }
@@ -454,7 +455,7 @@ aside a{
 
 .vcard {
 	font-size: 1em;
-	font-variant:small-caps;
+/*	font-variant:small-caps; */
 }
 
 .vcard dd {
@@ -487,7 +488,7 @@ aside h4 { font-size: 1.3em; }
 	color: #626262;
 	text-align: center;
 	font-weight: bold;
-	font-variant:small-caps;
+/*	font-variant:small-caps; */
 	font-size: 1.1em;
 }
 .allcontact-link a {
@@ -1040,7 +1041,7 @@ profile-jot-banner-wrapper {
 	font-size: 0.9em;
 	margin: 4px 0px 0px 140px;
 	padding-left: 10px;
-	font-variant:small-caps;
+/*	font-variant:small-caps; */
 }
 
 .wall-item-author a {
@@ -1062,7 +1063,7 @@ profile-jot-banner-wrapper {
 	margin-left: 25px;
 	font-size: 0.9em;
 	display: block;
-	font-variant:small-caps;
+/*	font-variant:small-caps; */
 	color: #898989;
 }
 
@@ -1071,7 +1072,7 @@ profile-jot-banner-wrapper {
 .wall-item-conv a{
 	font-size: 0.9em;
 	color: #898989;
-	font-variant:small-caps;
+/*	font-variant:small-caps; */
 }
 
 .wallwall .wwto {
@@ -1156,7 +1157,7 @@ profile-jot-banner-wrapper {
 	font-size: 0.9em;
 	color: #898989;
 	margin-left: 60px;
-	font-variant:small-caps;
+/*	font-variant:small-caps; */
 }
  
 .wall-item-outside-wrapper.comment { margin-left: 70px; }
@@ -1188,7 +1189,7 @@ profile-jot-banner-wrapper {
 .icollapse-wrapper {
 	font-size: 0.9em;
 	color: #898989;
-	font-variant:small-caps;	
+/*	font-variant:small-caps;	*/
 }
 
 .comment-wwedit-wrapper,
@@ -1265,7 +1266,7 @@ profile-jot-banner-wrapper {
 	margin-bottom: 0px;
 	padding-bottom: 5px;
 	font-size: 18px;
-	font-variant:small-caps;
+/*	font-variant:small-caps; */
 }
  
 div[id$="wrapper"] { height: 100%;} 
@@ -1297,7 +1298,7 @@ div[id$="wrapper"] br { clear: left; }
 
 .profile-listing-name {
 	font-size: 1em;
-	font-variant: small-caps;
+/*	font-variant: small-caps;*/
 }
 .profile-listing-name a {
 	color: #898989;
@@ -1341,7 +1342,7 @@ div[id$="wrapper"] br { clear: left; }
 
 .profile-match-name a{
 	color: #999;
-	font-variant: small-caps;
+/*	font-variant: small-caps; */
 	font-size: 1em;
 }
 
@@ -1461,7 +1462,7 @@ div[id$="wrapper"] br { clear: left; }
 	padding: 0px 5px;
 	font-weight: bold;
 	font-stretch:semi-expanded;
-	font-variant:small-caps;
+/*	font-variant:small-caps; */
 } 
 
 .photo-top-album-name a{
@@ -1475,7 +1476,7 @@ div[id$="wrapper"] br { clear: left; }
 	text-align: center;
 	color: #6e6e6e;
 	font-size: 0.9em;
-	font-variant: small-caps;
+/*	font-variant: small-caps; */
 }
 
 #photo-photo{
@@ -1486,7 +1487,7 @@ div[id$="wrapper"] br { clear: left; }
 #photo-caption {
 	margin-top: 10px;
 	color: #6E6E6E;
-	font-variant:small-caps;
+/*	font-variant:small-caps; */
 	font-size: 1.1em;
 }
 
@@ -1711,18 +1712,18 @@ input#photo_edit_form {
 }
 
 #prvmail-subject-label {
-	font-variant:small-caps;
+/*	font-variant:small-caps; */
 }
 
 #prvmail-to {
 	padding-left: 10px;
 }
 #prvmail-to-label {
-	font-variant:small-caps;
+/*	font-variant:small-caps; */
 }
 
 #prvmail-message-label {
-	font-variant:small-caps;
+/*	font-variant:small-caps; */
 	font-size: 1em;	
 }
 
@@ -1768,7 +1769,7 @@ margin-left: 0px;
 .mail-list-sender-name {
 	font-size: 1.1em;
 	display: inline;
-	font-variant:small-caps;
+/*	font-variant:small-caps; */
 }
 
 .mail-list-date {
@@ -1778,7 +1779,7 @@ margin-left: 0px;
 	font-size: 0.9em;
 	padding-left: 10px;
 	font-stretch:ultra-condensed;
-	font-variant:small-caps;
+/*	font-variant:small-caps; */
 }
 
 .mail-list-subject {
@@ -1807,8 +1808,8 @@ margin-left: 0px;
 	height: 64px;
 }
 
-.mail-conv-sender-name { float: left; font-variant:small-caps; font-style: bold; }
-.mail-conv-date { float: right; font-variant:small-caps; }
+.mail-conv-sender-name { float: left; font-style: bold; }
+.mail-conv-date { float: right; }
 .mail-conv-subject { clear: right; font-weight: bold; font-size: 1.2em }
 .mail-conv-body {
 	clear: both;
@@ -1902,7 +1903,7 @@ margin-left: 0px;
 	font: #999;
 	font-size: 12px;
 	text-align:center;
-	font-variant:small-caps;
+/*	font-variant:small-caps; */
 	font-weight: bold;
 	margin-top:5px;
 }
@@ -1919,7 +1920,7 @@ margin-left: 0px;
 	background-color: #ffffff;
 }
 
-#contact-edit-banner-name { font-size: 1.5em; margin-left: 30px; font-variant: small-caps; }
+#contact-edit-banner-name { font-size: 1.5em; margin-left: 30px; }
 
 
 #contact-edit-update-now {
@@ -2002,7 +2003,7 @@ margin-left: 0px;
 }
 
 .view-contact-name {
-	font-variant: small-caps;
+/*	font-variant: small-caps; */
 }
 
 #div.side-link {
@@ -2539,7 +2540,7 @@ margin-left: 0px;
 	margin-bottom: 2px;
 	margin-top: 2px;
 	font-size: 0.9em;
-	font-variant: small-caps;
+/*	font-variant: small-caps; */
 	text-align: left;
 }
 
@@ -2605,7 +2606,7 @@ margin-left: 0px;
 .event-list-date {
 	color: #626262;
 	margin-bottom: 10px;
-	font-variant:small-caps;
+/*	font-variant:small-caps; */
 	font-stretch:condensed;
 }
 
@@ -2641,7 +2642,7 @@ margin-left: 0px;
 	color: #ffffff;
 	font-weight: bold;
 	text-align:center;
-	font-variant:small-caps;
+/*	font-variant:small-caps; */
 	-moz-box-shadow: 5px 2px 8px #959494;
 	-webkit-box-shadow: 5px 2px 8px #959494;
 	box-shadow: 5px 2px 8px #959494;
@@ -2719,13 +2720,13 @@ tr {
 
 .directory-details {
 	font-size: 0.9em;
-	font-variant: small-caps;
+/*	font-variant: small-caps; */
 	width: 160px;
 }
 
 .directory-name {
 	font-size: 1em;
-	font-variant: small-caps;
+/*	font-variant: small-caps; */
 	width: 150px;	
 }
 
@@ -2887,6 +2888,10 @@ tr {
 	repeat: no-repeat;
 }
 
+.notify {
+  background-image: url("notify.png");}
+  repeat: no-repeat;
+}
 
 .border {
 	border: 1px solid #c1c1c1;
@@ -3271,4 +3276,7 @@ ul.menu-popup {
 .qcomment:hover {
 	opacity: 1.0;
 	filter:alpha(opacity=100);
+}
+.notify-seen {
+	background: #000;
 }

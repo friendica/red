@@ -160,24 +160,23 @@
 
 		private function var_replace($s){
 			$m = array();
-			if (preg_match_all('/(\$\[{0,1}([a-zA-Z0-9-_]+\.*)+)(\|[a-zA-Z0-9-_]+)*\]{0,1}/', $s,$m)){
-				foreach($m[1] as $id=>$var){
-					$var = str_replace("[", "", $var);
-					$val = $this->_get_var($var, true);
-					
-					// apply filters
-					if ($m[3][$id]!=""){
-						$filters = explode("|",trim($m[3][$id],"|"));
-						foreach($filters as $filter)
-							if (function_exists($filter)) 
-								$val=$filter($val);
-					}
+			/** regexp:
+			 * \$ 						literal $
+			 * (\[)?					optional open square bracket
+			 * ([a-zA-Z0-9-_]+\.?)+		var name, followed by optional
+			 * 							dot, repeated at least 1 time
+			 * (?(1)\])					if there was opened square bracket
+			 * 							(subgrup 1), match close bracket
+			 */
+			if (preg_match_all('/\$(\[)?([a-zA-Z0-9-_]+\.?)+(?(1)\])/', $s,$m)){
+				
+				foreach($m[0] as $var){
+					$varn = str_replace(array("[","]"), array("",""), $var);
+					$val = $this->_get_var($varn, true);
 					if ($val!=KEY_NOT_EXISTS)
-						$s = str_replace($m[0][$id], $val, $s);
+						$s = str_replace($var, $val, $s);
 				}
 			}
-			
-			
 			
 			return $s;
 		}
