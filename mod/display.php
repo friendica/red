@@ -34,7 +34,7 @@ function display_content(&$a) {
 
 	$contact = null;
 	$remote_contact = false;
-
+dbg(1);
 	if(remote_user()) {
 		$contact_id = $_SESSION['visitor_id'];
 		$groups = init_groups_visitor($contact_id);
@@ -87,6 +87,9 @@ function display_content(&$a) {
 
 	$sql_extra = permissions_sql($a->profile['uid'],$remote_contact,$groups);
 
+	if(! local_user() && ! remote_user())
+		$sql_extra .= " and `item`.`private` = 0 ";
+
 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 		`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
 		`contact`.`network`, `contact`.`thumb`, `contact`.`self`, `contact`.`writable`, 
@@ -135,7 +138,7 @@ function display_content(&$a) {
 		}
 
 	}
-
+dbg(0);
 	return $o;
 }
 
