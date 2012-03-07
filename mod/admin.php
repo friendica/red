@@ -145,9 +145,10 @@ function admin_page_summary(&$a) {
 		Array( t('Automatic Friend Account'), 0)
 	);
 	$users=0;
-	foreach ($r as $u){ $accounts[$u['page-flags']][1] = $u['count']; $users+=$u['count']; }
+	foreach ($r as $u){ $accounts[$u['page-flags']][1] = $u['count']; $users+= $u['count']; }
 
-	
+	logger('accounts: ' . print_r($accounts,true));
+
 	$r = q("SELECT COUNT(id) as `count` FROM `register`");
 	$pending = $r[0]['count'];
 	
@@ -320,32 +321,32 @@ function admin_page_site(&$a) {
 		'$sitename' 		=> array('sitename', t("Site name"), htmlentities($a->config['sitename'], ENT_QUOTES), ""),
 		'$banner'			=> array('banner', t("Banner/Logo"), $banner, ""),
 		'$language' 		=> array('language', t("System language"), get_config('system','language'), "", $lang_choices),
-		'$theme' 			=> array('theme', t("System theme"), get_config('system','theme'), "Default system theme (which may be over-ridden by user profiles)", $theme_choices),
+		'$theme' 			=> array('theme', t("System theme"), get_config('system','theme'), t("Default system theme - may be over-ridden by user profiles"), $theme_choices),
 
-		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), get_config('system','maximagesize'), "Maximum size in bytes of uploaded images. Default is 0, which means no limits."),
+		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), get_config('system','maximagesize'), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
 
 		'$register_policy'	=> array('register_policy', t("Register policy"), $a->config['register_policy'], "", $register_choices),
-		'$register_text'	=> array('register_text', t("Register text"), htmlentities($a->config['register_text'], ENT_QUOTES), "Will be displayed prominently on the registration page."),
+		'$register_text'	=> array('register_text', t("Register text"), htmlentities($a->config['register_text'], ENT_QUOTES), t("Will be displayed prominently on the registration page.")),
 		'$abandon_days'     => array('abandon_days', t('Accounts abandoned after x days'), get_config('system','account_abandon_days'), t('Will not waste system resources polling external sites for abandonded accounts. Enter 0 for no time limit.')),
-		'$allowed_sites'	=> array('allowed_sites', t("Allowed friend domains"), get_config('system','allowed_sites'), "Comma separated list of domains which are allowed to establish friendships with this site. Wildcards are accepted. Empty to allow any domains"),
-		'$allowed_email'	=> array('allowed_email', t("Allowed email domains"), get_config('system','allowed_email'), "Comma separated list of domains which are allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains"),
-		'$block_public'		=> array('block_public', t("Block public"), get_config('system','block_public'), "Check to block public access to all otherwise public personal pages on this site unless you are currently logged in."),
-		'$force_publish'	=> array('publish_all', t("Force publish"), get_config('system','publish_all'), "Check to force all profiles on this site to be listed in the site directory."),
-		'$global_directory'	=> array('directory_submit_url', t("Global directory update URL"), get_config('system','directory_submit_url'), "URL to update the global directory. If this is not set, the global directory is completely unavailable to the application."),
+		'$allowed_sites'	=> array('allowed_sites', t("Allowed friend domains"), get_config('system','allowed_sites'), t("Comma separated list of domains which are allowed to establish friendships with this site. Wildcards are accepted. Empty to allow any domains")),
+		'$allowed_email'	=> array('allowed_email', t("Allowed email domains"), get_config('system','allowed_email'), t("Comma separated list of domains which are allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains")),
+		'$block_public'		=> array('block_public', t("Block public"), get_config('system','block_public'), t("Check to block public access to all otherwise public personal pages on this site unless you are currently logged in.")),
+		'$force_publish'	=> array('publish_all', t("Force publish"), get_config('system','publish_all'), t("Check to force all profiles on this site to be listed in the site directory.")),
+		'$global_directory'	=> array('directory_submit_url', t("Global directory update URL"), get_config('system','directory_submit_url'), t("URL to update the global directory. If this is not set, the global directory is completely unavailable to the application.")),
 			
-		'$no_multi_reg'		=> array('no_multi_reg', t("Block multiple registrations"),  get_config('system','block_extended_register'), "Disallow users to register additional accounts for use as pages."),
-		'$no_openid'		=> array('no_openid', t("OpenID support"), !get_config('system','no_openid'), "OpenID support for registration and logins."),
-		'$no_gravatar'		=> array('no_gravatar', t("Gravatar support"), !get_config('system','no_gravatar'), "Search new user's photo on Gravatar."),
-		'$no_regfullname'	=> array('no_regfullname', t("Fullname check"), !get_config('system','no_regfullname'), "Force users to register with a space between firstname and lastname in Full name, as an antispam measure"),
-		'$no_utf'			=> array('no_utf', t("UTF-8 Regular expressions"), !get_config('system','no_utf'), "Use PHP UTF8 regular expressions"),
-		'$no_community_page' => array('no_community_page', t("Show Community Page"), !get_config('system','no_community_page'), "Display a Community page showing all recent public postings on this site."),
-		'$ostatus_disabled' => array('ostatus_disabled', t("Enable OStatus support"), !get_config('system','ostatus_disable'), "Provide built-in OStatus \x28identi.ca, status.net, etc.\x29 compatibility. All communications in OStatus are public, so privacy warnings will be occasionally displayed."),	
-		'$diaspora_enabled' => array('diaspora_enabled', t("Enable Diaspora support"), get_config('system','diaspora_enabled'), "Provide built-in Diaspora network compatibility."),	
-		'$dfrn_only'        => array('dfrn_only', t('Only allow Friendica contacts'), get_config('system','dfrn_only'), "All contacts must use Friendica protocols. All other built-in communication protocols disabled."),
-		'$verifyssl' 		=> array('verifyssl', t("Verify SSL"), get_config('system','verifyssl'), "If you wish, you can turn on strict certificate checking. This will mean you cannot connect (at all) to self-signed SSL sites."),
+		'$no_multi_reg'		=> array('no_multi_reg', t("Block multiple registrations"),  get_config('system','block_extended_register'), t("Disallow users to register additional accounts for use as pages.")),
+		'$no_openid'		=> array('no_openid', t("OpenID support"), !get_config('system','no_openid'), t("OpenID support for registration and logins.")),
+		'$no_gravatar'		=> array('no_gravatar', t("Gravatar support"), !get_config('system','no_gravatar'), t("Search new user's photo on Gravatar.")),
+		'$no_regfullname'	=> array('no_regfullname', t("Fullname check"), !get_config('system','no_regfullname'), t("Force users to register with a space between firstname and lastname in Full name, as an antispam measure")),
+		'$no_utf'			=> array('no_utf', t("UTF-8 Regular expressions"), !get_config('system','no_utf'), t("Use PHP UTF8 regular expressions")),
+		'$no_community_page' => array('no_community_page', t("Show Community Page"), !get_config('system','no_community_page'), t("Display a Community page showing all recent public postings on this site.")),
+		'$ostatus_disabled' => array('ostatus_disabled', t("Enable OStatus support"), !get_config('system','ostatus_disable'), t("Provide built-in OStatus \x28identi.ca, status.net, etc.\x29 compatibility. All communications in OStatus are public, so privacy warnings will be occasionally displayed.")),	
+		'$diaspora_enabled' => array('diaspora_enabled', t("Enable Diaspora support"), get_config('system','diaspora_enabled'), t("Provide built-in Diaspora network compatibility.")),	
+		'$dfrn_only'        => array('dfrn_only', t('Only allow Friendica contacts'), get_config('system','dfrn_only'), t("All contacts must use Friendica protocols. All other built-in communication protocols disabled.")),
+		'$verifyssl' 		=> array('verifyssl', t("Verify SSL"), get_config('system','verifyssl'), t("If you wish, you can turn on strict certificate checking. This will mean you cannot connect (at all) to self-signed SSL sites.")),
 		'$proxyuser'		=> array('proxyuser', t("Proxy user"), get_config('system','proxyuser'), ""),
 		'$proxy'			=> array('proxy', t("Proxy URL"), get_config('system','proxy'), ""),
-		'$timeout'			=> array('timeout', t("Network timeout"), (x(get_config('system','curl_timeout'))?get_config('system','curl_timeout'):60), "Value is in seconds. Set to 0 for unlimited (not recommended)."),
+		'$timeout'			=> array('timeout', t("Network timeout"), (x(get_config('system','curl_timeout'))?get_config('system','curl_timeout'):60), t("Value is in seconds. Set to 0 for unlimited (not recommended).")),
 
 			
 	));
@@ -574,6 +575,8 @@ function admin_page_plugins(&$a){
 			'$status' => $status,
 			'$action' => $action,
 			'$info' => get_plugin_info($plugin),
+			'$str_author' => t('Author: '),
+			'$str_maintainer' => t('Maintainer: '),			
 		
 			'$admin_form' => $admin_form,
 			'$function' => 'plugins',
@@ -747,7 +750,8 @@ function admin_page_themes(&$a){
 			'$info' => get_theme_info($theme),
 			'$function' => 'themes',		
 			'$admin_form' => $admin_form,
-			
+			'$str_author' => t('Author: '),
+			'$str_maintainer' => t('Maintainer: '),			
 			'$readme' => $readme
 		));
 	} 

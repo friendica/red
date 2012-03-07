@@ -1,6 +1,7 @@
 <header>
-	{# $langselector version 0.01#}
-
+	
+	
+	
 	<div id="site-location">$sitelocation</div>
 	<div id="banner">$banner</div>
 </header>
@@ -24,7 +25,7 @@
 				<span class="icon contacts">$nav.contacts.1</span></a>
 				<span id="intro-update" class="nav-notify"></span>
 				<ul id="nav-contacts-menu" class="menu-popup">
-					<li id="nav-contacts-see-intro"><a href="$nav.notifications.0">Kontaktanfragen</a><span id="intro-update" class="nav-notify"></span></li>
+					<li id="nav-contacts-see-intro"><a href="$nav.notifications.0">$nav.introductions.1</a><span id="intro-update" class="nav-notify"></span></li>
 					<li id="nav-contacts-all"><a href="contacts">$nav.contacts.1</a></li> 
 				</ul>
 			</li>	
@@ -37,9 +38,9 @@
 				<span id="mail-update" class="nav-notify"></span>
 				<ul id="nav-messages-menu" class="menu-popup">
 					<li id="nav-messages-see-all"><a href="$nav.messages.0">$nav.messages.1</a></li>
-					<li id="nav-messages-inbox"><a href="$nav.messages.0">Eingang</a></li>
-					<li id="nav-messages-outbox"><a href="message/sent">Ausgang</a></li>
-					<li id="nav-messages-new"><a href="message/new">Neue Nachricht</a></li>
+					<li id="nav-messages-see-all"><a href="$nav.messages.inbox.0">$nav.messages.inbox.1</a></li>
+					<li id="nav-messages-see-all"><a href="$nav.messages.outbox.0">$nav.messages.outbox.1</a></li>
+					<li id="nav-messages-see-all"><a href="$nav.messages.new.0">$nav.messages.new.1</a></li>
 				</ul>
 			</li>		
 			{{ endif }}
@@ -53,7 +54,15 @@
 					<li class="empty">$emptynotifications</li>
 				</ul>
 			</li>		
-		{{ endif }}					
+		{{ endif }}	
+			
+		{{ if $nav.search}}
+		<li id="search-box">
+			<form method="get" action="$nav.search.0">
+				<input id="search-text" class="nav-menu-search" type="text" value="" name="search">
+			</form>
+		</li>		
+		{{ endif }}	
 		
 		<li id="nav-site-linkmenu" class="nav-menu-icon"><a href="#" rel="#nav-site-menu"><span class="icon s22 gear">Site</span></a>
 			<ul id="nav-site-menu" class="menu-popup">
@@ -61,7 +70,13 @@
 
 				{{ if $nav.help }} <li><a class="$nav.help.2" target="friendika-help" href="$nav.help.0" title="$nav.help.3" >$nav.help.1</a></li>{{ endif }}
 
-										 <li><a class="$nav.search.2" href="$nav.search.0" title="$nav.search.3" >$nav.search.1</a></li>
+
+										<li ><a class="$nav.community.2" href="$nav.community.0" title="$nav.community.3" >$nav.community.1</a></li>
+
+
+										<li><a class="$nav.search.2" href="$nav.search.0" title="$nav.search.3" >$nav.search.1</a></li>
+										
+										<li><a class="$nav.search.2" href="friendica" title="About" >About</a></li>
 
 				{{ if $nav.settings }}<li><a class="menu-sep $nav.settings.2" href="$nav.settings.0" title="$nav.settings.3">$nav.settings.1</a></li>{{ endif }}
 				{{ if $nav.admin }}<li><a class="$nav.admin.2" href="$nav.admin.0" title="$nav.admin.3" >$nav.admin.1</a></li>{{ endif }}
@@ -121,13 +136,21 @@
 		
 	</ul>	
 
+
+	
 </nav>
 
 
 
 <ul id="nav-notifications-template" style="display:none;" rel="template">
-	<li class="{4}"><a href="{0}"><img src="{1}" height="24" width="24" alt="" />{2} <span class="notif-when">{3}</span></a></li>
+	<li class="{4}"><a href="{0}"><img src="{1}">{2} <span class="notif-when">{3}</span></a></li>
 </ul>
+
+
+<ul id="nav-notifications-template" style="display:none;" rel="template">
+	<li><a href="{0}"><img src="{1}">{2} <span class="notif-when">{3}</span></a></li>
+</ul>
+
 
 {#
 

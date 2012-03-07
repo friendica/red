@@ -737,7 +737,10 @@ function smilies($s, $sample = false) {
 		':headdesk',
 		'~friendika', 
 		'~friendica', 
-		'Diaspora*' 
+//		'Diaspora*' 
+		':beard',
+		':whitebeard'
+
 	);
 
 	$icons = array(
@@ -778,8 +781,9 @@ function smilies($s, $sample = false) {
 		'<img src="' . $a->get_baseurl() . '/images/smiley-bangheaddesk.gif" alt=":headdesk" />',
 		'<a href="http://project.friendika.com">~friendika <img src="' . $a->get_baseurl() . '/images/friendika-16.png" alt="~friendika" /></a>',
 		'<a href="http://friendica.com">~friendica <img src="' . $a->get_baseurl() . '/images/friendica-16.png" alt="~friendica" /></a>',
-		'<a href="http://diasporafoundation.org">Diaspora<img src="' . $a->get_baseurl() . '/images/diaspora.png" alt="Diaspora*" /></a>',
-
+//		'<a href="http://diasporafoundation.org">Diaspora<img src="' . $a->get_baseurl() . '/images/diaspora.png" alt="Diaspora*" /></a>',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-beard.png" alt=":beard" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-whitebeard.png" alt=":whitebeard" />'
 	);
 
 	$params = array('texts' => $texts, 'icons' => $icons, 'string' => $s);

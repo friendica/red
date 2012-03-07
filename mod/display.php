@@ -85,7 +85,7 @@ function display_content(&$a) {
 		$o .= status_editor($a,$x,0,true);
 
 
-	$sql_extra = permissions_sql($a->profile['uid'],$remote_contact,$groups);
+	$sql_extra = item_permissions_sql($a->profile['uid'],$remote_contact,$groups);
 
 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 		`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,

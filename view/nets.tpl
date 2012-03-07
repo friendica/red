@@ -5,7 +5,7 @@
 	<ul class="nets-ul">
 		<li class="tool {{ if $sel_all }}selected{{ endif }}"><a href="$base" class="nets-link nets-all">$all</a>
 		{{ for $nets as $net }}
-			<li class="tool {{ if $net.selected }}selected{{ endif }}"><a href="$base?nets=$net.ref" class="nets-link">$net.name</a></li>
+			<li class="tool {{ if $net.selected }}selected{{ endif }}"><a href="$base?f=&nets=$net.ref" class="nets-link">$net.name</a></li>
 		{{ endfor }}
 	</ul>
 	
