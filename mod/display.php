@@ -34,7 +34,7 @@ function display_content(&$a) {
 
 	$contact = null;
 	$remote_contact = false;
-dbg(1);
+
 	if(remote_user()) {
 		$contact_id = $_SESSION['visitor_id'];
 		$groups = init_groups_visitor($contact_id);
@@ -138,7 +138,7 @@ dbg(1);
 		}
 
 	}
-dbg(0);
+
 	return $o;
 }
 
