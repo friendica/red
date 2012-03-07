@@ -159,6 +159,7 @@ function permissions_sql($owner_id,$remote_verified = false,$groups = null) {
 			 AND allow_gid = '' 
 			 AND deny_cid  = '' 
 			 AND deny_gid  = '' 
+			 AND private = 0
 	";
 
 	/**
@@ -199,10 +200,11 @@ function permissions_sql($owner_id,$remote_verified = false,$groups = null) {
 			} 
 
 			$sql = sprintf(
-				" AND ( allow_cid = '' OR allow_cid REGEXP '<%d>' ) 
+				" AND (( allow_cid = '' OR allow_cid REGEXP '<%d>' ) 
 				  AND ( deny_cid  = '' OR  NOT deny_cid REGEXP '<%d>' ) 
 				  AND ( allow_gid = '' OR allow_gid REGEXP '%s' )
 				  AND ( deny_gid  = '' OR NOT deny_gid REGEXP '%s') 
+					OR private = 0 )
 				",
 				intval($remote_user),
 				intval($remote_user),
