@@ -14,7 +14,13 @@ if(! function_exists('replace_macros')) {
 function replace_macros($s,$r) {
 	global $t;
 	
-	return $t->replace($s,$r);
+	//$ts = microtime();
+	$r =  $t->replace($s,$r);
+	//$tt = microtime() - $ts;
+	
+	//$a = get_app();
+	//$a->page['debug'] .= "$tt <br>\n";
+	return $r;
 
 }}
 
@@ -786,6 +792,7 @@ function smilies($s, $sample = false) {
 		}
 	}
 	else {
+		$params['string'] = preg_replace_callback('/&lt;(3+)/','preg_heart',$params['string']);
 		$s = str_replace($params['texts'],$params['icons'],$params['string']);
 	}
 
@@ -804,7 +811,18 @@ function smile_decode($m) {
 	return(str_replace($m[1],base64url_decode($m[1]),$m[0]));
 }
 
+// expand <3333 to the correct number of hearts
 
+function preg_heart($x) {
+	$a = get_app();
+	if(strlen($x[1]) == 1)
+		return $x[0];
+	$t = '';
+	for($cnt = 0; $cnt < strlen($x[1]); $cnt ++)
+		$t .= '<img src="' . $a->get_baseurl() . '/images/smiley-heart.gif" alt="<3" />';
+	$r =  str_replace($x[0],$t,$x[0]);
+	return $r;
+}
 
 
 if(! function_exists('day_translate')) {
