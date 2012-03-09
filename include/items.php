@@ -1756,7 +1756,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $contact['id'];
 
-				if(x($datarray,'owner-link') && strlen($datarray['owner-link']) && (! link_compare($datarray['owner-link'],$contact['url']))) {
+				if(! link_compare($datarray['owner-link'],$contact['url'])) {
 					// The item owner info is not our contact. It's OK and is to be expected if this is a tgroup delivery, 
 					// but otherwise there's a possible data mixup on the sender's system.
 					// the tgroup delivery code called from item_store will correct it if it's a forum,
@@ -2477,7 +2477,7 @@ function local_delivery($importer,$data) {
 			$datarray['uid'] = $importer['importer_uid'];
 			$datarray['contact-id'] = $importer['id'];
 
-			if(x($datarray,'owner-link') && strlen($datarray['owner-link']) && (! link_compare($datarray['owner-link'],$importer['url']))) {
+			if(! link_compare($datarray['owner-link'],$contact['url'])) {
 				// The item owner info is not our contact. It's OK and is to be expected if this is a tgroup delivery, 
 				// but otherwise there's a possible data mixup on the sender's system.
 				// the tgroup delivery code called from item_store will correct it if it's a forum,

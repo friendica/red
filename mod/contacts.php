@@ -447,9 +447,10 @@ function contacts_content(&$a) {
 	$r = q("SELECT COUNT(*) AS `total` FROM `contact` 
 		WHERE `uid` = %d AND `pending` = 0 $sql_extra $sql_extra2 ",
 		intval($_SESSION['uid']));
-	if(count($r))
+	if(count($r)) {
 		$a->set_pager_total($r[0]['total']);
-
+		$total = $r[0]['total'];
+	}
 
 
 
@@ -518,7 +519,7 @@ function contacts_content(&$a) {
 	$o .= replace_macros($tpl,array(
 		'$header' => t('Contacts') . (($nets) ? ' - ' . network_to_name($nets) : ''),
 		'$tabs' => $t,
-		'$total' => $r[0]['total'],
+		'$total' => $total,
 		'$search' => $search_hdr,
 		'$desc' => t('Search your contacts'),
 		'$finding' => (strlen($search) ? t('Finding: ') . "'" . $search . "'" : ""),

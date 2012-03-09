@@ -45,12 +45,18 @@ body {
     font-size: 16px;
     line-height: 1.1em;
 }
-
 body, button, input, select, textarea {
     font-family: sans-serif;
     color: #222;
     background-color: rgb(254,254,254);
-    background-color: rgba(254,254,254,255);
+}
+select {
+	border: 1px #555 dotted;
+	padding: 3px;
+	margin: 2px;
+}
+option {
+	padding: 3px;
 }
 /* remember to define focus styles! */
 :focus {
@@ -143,7 +149,10 @@ a:hover {
 }
 .required {
     display: inline;
-    color: #ff0000;
+    color: #ff0;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 3px;
 }
 .fakelink, .lockview {
     color: #3465a4;
@@ -341,6 +350,12 @@ nav .nav-link {
 #nav-home-link:hover {
     background-position: -66px -132px;
 }
+#nav-intro-link {
+	background-position: 0px -190px;
+}
+#nav-intro-link:hover {
+	background-position: -44px -190px;
+}
 #nav-login-link {
 	background-position: 0 -88px;
 }
@@ -501,6 +516,9 @@ nav #nav-notifications-linkmenu.on .icon.s22.notify, nav #nav-notifications-link
 #home-update {
 	background-position: -90px 0px;
 }
+#intro-update {
+	background-position: -120px 0px;
+}
 #lang-select-icon {
 	cursor: pointer;
 	position: absolute;
@@ -511,7 +529,6 @@ nav #nav-notifications-linkmenu.on .icon.s22.notify, nav #nav-notifications-link
     position: absolute;
     top: 0;
     left: 16px;
-    padding-right: 50px;
 }
 .menu-popup {
     position: absolute;
@@ -584,26 +601,26 @@ nav #nav-notifications-linkmenu.on .icon.s22.notify, nav #nav-notifications-link
 	border:2px solid #f8911b;
 	border-bottom:0;
 	padding-bottom: 50px;
-	z-index:1000;
+	z-index: 1000;
 }
 #sysmsg {
-	position:fixed;
-	bottom:0;
-	-moz-box-shadow:0 0 5px #888;
-	-webkit-box-shadow:0 0 5px #888;
-	box-shadow:0 0 5px #888;
+	position: fixed;
+	bottom: 0;
+	-moz-box-shadow: 0 0 5px #888;
+	-webkit-box-shadow: 0 0 5px #888;
+	box-shadow: 0 0 5px #888;
     padding: 10px;
-	background-color:#fcaf3e;
-	border:2px solid #f8911b;
-	border-bottom:0;
+	background-color: #fcaf3e;
+	border: 2px solid #f8911b;
+	border-bottom: 0;
 	padding-bottom: 50px;
-	z-index:1000;
+	z-index: 1000;
 }
 #sysmsg_info br,
 #sysmsg br {
-	display:block;
-	margin:2px 0px;
-	border-top:1px solid #ccccce;
+	display: block;
+	margin: 2px 0px;
+	border-top: 1px solid #ccccce;
 }
 
 
@@ -613,7 +630,8 @@ nav #nav-notifications-linkmenu.on .icon.s22.notify, nav #nav-notifications-link
 aside {
     position: absolute;
     right: 15px;
-    width: 230px;
+    width: 245px;
+	padding-top: 15px;
     font-size: smaller;
 }
 .vcard .fn {
@@ -687,7 +705,7 @@ aside #viewcontacts {
 #jot #jot-tools {
   margin: 0px;
   padding: 0px;
-  height: 40px;
+  height: 35px;
   overflow: none;
   width: 100%;
   /*background-color: #0e232e;*/
@@ -757,28 +775,21 @@ aside #viewcontacts {
     margin-top: 10px;
 }
 #jot #jot-title {
-    border: 0px;
+	border: 1px solid #ccc;
     margin: 0 0 5px;
     height: 20px;
     width: 90%;
     font-weight: bold;
     border-radius: 5px;
 	vertical-align: middle;
-	padding: 5px 1px;
-}
-#jot #jot-title:hover,
-#jot #jot-title:focus {
-  border: 1px solid #999;
-  border-radius: 5px;
 }
 #jot #character-counter {
-  width: 40px;
-  float: right;
-  text-align: right;
-  height: 20px;
-  line-height: 20px;
-  padding: 5px;
-  margin: 0 0 5px;
+	width: 6%;
+	float: right;
+	text-align: right;
+	height: 15px;
+	line-height: 20px;
+	padding: 2px 20px 5px 0;
 }
 #profile-jot-text_tbl {
 	margin-bottom: 10px;
@@ -787,15 +798,15 @@ aside #viewcontacts {
 	width:99.900002% !important;
 }
 #profile-attach-wrapper,
-#profile-audio,
+#profile-audio-wrapper,
 #profile-link-wrapper,
-#profile-location,
-#profile-nolocation,
+#profile-location-wrapper,
+#profile-nolocation-wrapper,
 #profile-title-wrapper,
 #profile-upload-wrapper,
-#profile-video {
+#profile-video-wrapper {
     float: left;
-    margin-left: 10px;
+	margin: 0 20px 0 0;
 }
 #profile-rotator-wrapper {
 	float: right; 
@@ -826,9 +837,10 @@ aside #viewcontacts {
 	padding: 5px;
 }
 #jot-preview-link {
-    margin: 0 0 0 25px;
+    margin: 0 0 0 10px;
     border: 0;
     text-decoration: none;
+	float: right;
 }
 .icon-text-preview {
 	margin: 0 0 -18px 0;
@@ -838,9 +850,10 @@ aside #viewcontacts {
     background: url(icons.png) no-repeat -128px -40px;
     border: 0;
     text-decoration: none;
+	float: right;
 }
 #profile-jot-perms { 
-	/*float: right;*/
+	float: right;
     background-color: #555753;
     height: 22px;
     width: 20px;
@@ -851,16 +864,17 @@ aside #viewcontacts {
     border: 0px;
     margin: 0 -4px 0 10px;
 }
+#profile-jot-plugin-wrapper {
+	width: 1px;
+	margin: 10px 0 0 0;
+	float: right;
+}
 #profile-jot-submit-wrapper {
 	float: right;
-	width: 30%;
+	width: 100%;
 	list-style: none;
 	margin: 10px 0 0 0;
 	padding: 0;
-}
-#profile-jot-submit-wrapper li {
-	display: inline-block;
-	vertical-align: middle;
 }
 #profile-jot-submit {
 	height: 22px;
@@ -871,6 +885,7 @@ aside #viewcontacts {
 	border-radius: 0 5px 5px 0;
 	border: 0;
 	margin: 0;
+	float: right;
 }
 #jot-perms-icons {
 	background-color: #555753;
@@ -932,10 +947,6 @@ aside #viewcontacts {
 #jot-title-wrapper {
 	margin-bottom: 5px;
 }
-#jot-title {
-	border: 1px solid #cccccc;
-	width: 90%;
-}
 #jot-title-display {
 	font-weight: bold;
 }
@@ -956,7 +967,7 @@ aside #viewcontacts {
 section {
     margin: 20px 6% 0 4%;
     font-size: 0.8em;
-    padding-right: 220px;
+    padding-right: 230px;
 	min-width: 475px;
 }
 
@@ -1013,12 +1024,12 @@ section {
 .wall-item-content {
 	overflow-x: auto;
 }
+/* removing it from here, vs. putting it in .wall-item-content
+ * might break things for people. we shall see ;) */
 [id^="tread-wrapper"], [class^="tread-wrapper"] {
     margin: 15px 0 0 0;
-	/*border: 1px #aaa solid;*/
-	/*border-radius: 5px;*/
     padding: 0px;
-	overflow-x: auto;
+	/*overflow-x: auto;*/
 }
 .wall-item-photo-menu {
     display: none;
@@ -1106,7 +1117,7 @@ section {
 	clear:both;
 }
 .wall-item-location {
-    margin-top: 10px;
+    margin-top: 15px;
     width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1159,7 +1170,7 @@ section {
 	position: absolute;
 	left: -2px; top: 101px;
 	display: none;
-	z-index: 10000;
+	z-index: 10003;
 	-webkit-border-radius: 0px 5px 5px 5px;
 	-moz-border-radius: 0px 5px 5px 5px;
 	border-radius: 0px 5px 5px 5px;
@@ -1731,11 +1742,11 @@ div[id$="wrapper"] br {
     margin: 30px 0px;
 }
 .profile-edit-side-div {
-    margin-top: 0px;
+    margin: 5px 2px 0 0;
 }
 .profile-edit-side-link {
+	margin: 0 20px -18px 0;
     float: right;
-    margin: 0px 20px -18px 0;
 }
 .profile-listing {
     float: left;
@@ -1987,7 +1998,9 @@ div[id$="wrapper"] br {
     text-decoration: none;
     text-align: center;
 }
-
+#peoplefind-sidebar form {
+	margin-bottom: 10px;
+}
 #sidebar-new-group:hover {
     /*background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #b20202), color-stop(1, #d60808) );*/
     /*background: -moz-linear-gradient( center top, #b20202 5%, #d60808 100% );*/
@@ -1997,6 +2010,18 @@ div[id$="wrapper"] br {
 #sidebar-new-group:active {
     position: relative;
     top: 1px;
+}
+#side-peoplefind-url {
+    background-color: #e5e0cf;
+    color: #666;
+	border: 1px 666 solid;
+	margin-right: 3px;
+	width: 75%;
+}
+#side-peoplefind-url:hover, #side-peoplefind-url:focus {
+    background-color: #efefef;
+    color: #222;
+	border: 1px 333 solid;
 }
 .nets-ul {
     list-style-type: none;
@@ -2105,7 +2130,7 @@ div[id$="wrapper"] br {
     overflow: auto;
     width: 100%;
 }
-.field label {
+.field label, label {
     float: left;
     width: 275px;
 	display: block;
@@ -2117,15 +2142,13 @@ div[id$="wrapper"] br {
 	background: #eee;
 	vertical-align: middle;
 }
-.field input {
+.field input, input[type="text"] {
 	width: 250px;
 	height: 25px;
 	border: 1px #999 solid;
 }
 .field textarea {
     width: 80%;
-}
-.field textarea {
     height: 100px;
 }
 .field_help {
@@ -2157,7 +2180,6 @@ div[id$="wrapper"] br {
 .hidden {
     display:none !important;
 }
-
 .field.radio .field_help {
     margin-left: 0;
 }
@@ -2285,12 +2307,12 @@ div[id$="wrapper"] br {
 .icon.drophide, .icon.delete {
     float: left;
 }
-.icon.s22 {
+/*.icon.s22 {
 	display: block;
 	background: url(icons.png) no-repeat;
 	width: 22px;
 	height: 22px;
-}
+}*/
 .icon.s22.delete {
 	display: block;
 	background-position: -110px 0;
@@ -2581,17 +2603,17 @@ footer {
 
 /* autocomplete popup */
 .acpopup {
-	max-height:150px;
-	background-color:#555753;
-	color: #FFFFFF;
-	overflow:auto;
-	z-index:100000;
-	border:1px solid #cccccc;
+	max-height: 150px;
+	background-color: #555753;
+	color: #fff;
+	overflow: auto;
+	z-index: 100000;
+	border: 1px solid #cccccc;
 }
 .acpopupitem {
-	background-color:#555753;
+	background-color: #555753;
     padding: 4px;
-	clear:left;
+	clear: left;
 }
 .acpopupitem img {
 	float: left;

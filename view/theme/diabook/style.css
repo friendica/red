@@ -101,13 +101,12 @@
 .icon.pencil 	{ background-image: url("../../../view/theme/diabook/icons/pencil.png");}
 .icon.recycle 	{ background-image: url("../../../view/theme/diabook/icons/recycle.png");}
 .icon.remote-link { background-image: url("../../../view/theme/diabook/icons/remote.png");}
-.icon.tagged    { background-image: url("../../../view/theme/diabook/icons/tagged.png");}
-.icon.unstarred    { background-image: url("../../../view/theme/diabook/icons/star.png");}
-.icon.star    { background-image: url("../../../view/theme/diabook/icons/star.png");}
+.icon.tagged    { background-image: url("../../../view/theme/diabook/icons/tagged.png");}  
+.star-item.icon.unstarred { background-image: url("../../../view/theme/diabook/icons/unstarred.png");}
+.star-item.icon.starred { background-image: url("../../../view/theme/diabook/icons/starred.png");}
 .icon.link		{ background-image: url("../../../view/theme/diabook/icons/link.png");}
 .icon.lock		{ background-image: url("../../../view/theme/diabook/icons/lock.png");}
 .icon.unlock		{ background-image: url("../../../view/theme/diabook/icons/unlock.png");}
-.icon.isstar    { background-image: url("../../../view/theme/diabook/icons/isstar.png");}
 .icon.language    { background-image: url("../../../view/theme/diabook/icons/language.png");}
 
 
@@ -213,6 +212,17 @@
   text-indent: -9999px;
   padding: 1px;
 }
+
+.icon.border.camera{
+  background-image: url("../../../view/theme/diabook/icons/camera.png"); 
+  display: block; width: 28px; height: 28px; background-repeat: no-repeat;
+	}
+	
+.icon.border.link{
+  background-image: url("../../../view/theme/diabook/icons/weblink.png"); 
+  display: block; width: 28px; height: 28px; background-repeat: no-repeat;
+  margin-left: 10px;
+	}
 
 .icon.text {
   text-indent: 0px;
@@ -537,7 +547,8 @@ header #banner #logo-img {
 }
 header #banner #logo-text {
   font-size: 22px;
-  
+  position: absolute;
+  top: 15%;
 }
 /* nav */
 nav {
@@ -615,12 +626,20 @@ nav #logo-text {
 }
 nav .nav-menu-search {
   position: relative;
-  
+
   margin: 3px 17px;
   margin-right: 0px;
   height: 17px;
-  width: 205px;
+  width: 180px;
+  
 }
+
+nav #search-box #search-text {
+  background-image:  url('icons/lupe.png');
+  background-repeat:no-repeat;
+  padding-left:20px;
+	}
+
 
 nav .nav-menu-icon {
   position: relative;
@@ -871,14 +890,14 @@ aside .vcard dl {
 aside .vcard dt {
   float: left;
   margin-left: 0px;
-  width: 35%;
+  /*width: 35%;*/
   text-align: right;
   color: #999999;
 }
 aside .vcard dd {
   float: left;
-  margin-left: 4px;
-  width: 60%;
+  margin-left: 5px;
+  /*width: 60%;*/
 }
 aside #profile-extra-links ul {
   padding: 0px;
@@ -1016,6 +1035,12 @@ section {
   width: 800px;
   padding: 0px 0px 0px 12px;
 }
+.pager {
+   padding: 10px;
+	text-align: center;
+	font-size: 1.0em;
+}	
+
 .tabs {
     
     background-position: 0 -20px;
@@ -1033,6 +1058,10 @@ section {
     padding: 3px;
     color:  #333333;
 	}
+	
+#birthday-notice, #event-notice, #birthday-wrapper, #event-wrapper{
+	margin-bottom: 10px;
+	}
 /* wall item */
 .tread-wrapper {
   border-bottom: 1px solid #D2D2D2;
@@ -1047,9 +1076,7 @@ section {
   top: -10px;
   width: 16px;
 }
-.unstarred {
-  display: none;
-}
+
 .wall-item-container {
   display: table;
   width: 780px;
@@ -1914,6 +1941,9 @@ box-shadow: 1px 1px 5px 0;
 #group-members-end {
         clear: both;
 }
+#group-edit-desc {
+ margin-top: 15px;
+}
 
 /*
 #group-separator,
@@ -2121,10 +2151,23 @@ a.mail-list-link {
 #photo-photo {
         float: left;
 }
+#photo-like-div .wall-item-like-buttons {
+	float: left;
+   margin-right: 10px;
+	}
+.wall-item-like-buttons .icon.like {
+float: left;
+}
 
 #photo-photo-end {
         clear: both;
 }
+
+.tabs .comment-wwedit-wrapper {
+	display: block;
+   margin-top: 30px;
+   margin-left: 50px;
+	}
 
 .profile-match-photo {
         float: left;

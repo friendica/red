@@ -1,7 +1,4 @@
 <header>
-	
-	
-	
 	<div id="site-location">$sitelocation</div>
 	<div id="banner">$banner</div>
 </header>
@@ -76,7 +73,7 @@
 
 										<li><a class="$nav.search.2" href="$nav.search.0" title="$nav.search.3" >$nav.search.1</a></li>
 										
-										<li><a class="$nav.search.2" href="friendica" title="About" >About</a></li>
+										<li><a class="$nav.search.2" href="friendica" title="Site Info / Impressum" >Info/Impressum</a></li>
 
 				{{ if $nav.settings }}<li><a class="menu-sep $nav.settings.2" href="$nav.settings.0" title="$nav.settings.3">$nav.settings.1</a></li>{{ endif }}
 				{{ if $nav.admin }}<li><a class="$nav.admin.2" href="$nav.admin.0" title="$nav.admin.3" >$nav.admin.1</a></li>{{ endif }}
@@ -119,7 +116,8 @@
 						<li><a class="$usermenu.2" href="$usermenu.0" title="$usermenu.3">$usermenu.1</a></li>
 					{{ endfor }}
 					
-					{{ if $nav.notifications }}<li><a class="menu-sep $nav.notifications.2" href="$nav.notifications.0" title="$nav.notifications.3" >$nav.notifications.1</a></li>{{ endif }}
+					{{ if $nav.profiles }}<li><a class="menu-sep $nav.profiles.2" href="$nav.profiles.0" title="$nav.profiles.3" >$nav.profiles.3</a></li>{{ endif }}
+					{{ if $nav.notifications }}<li><a class="$nav.notifications.2" href="$nav.notifications.0" title="$nav.notifications.3" >$nav.notifications.1</a></li>{{ endif }}
 					{{ if $nav.messages }}<li><a class="$nav.messages.2" href="$nav.messages.0" title="$nav.messages.3" >$nav.messages.1</a></li>{{ endif }}
 					{{ if $nav.contacts }}<li><a class="$nav.contacts.2" href="$nav.contacts.0" title="$nav.contacts.3" >$nav.contacts.1</a></li>{{ endif }}	
 				</ul>
@@ -139,6 +137,11 @@
 
 	
 </nav>
+
+
+<div style="position: fixed; bottom: 5px; right: 10px;"><a href="javascript:scroll(0,0); "><img src="view/theme/diabook/icons/scroll_top.png" title="scroll to top"></a></div>
+<div style="position: fixed; bottom: 5px; left: 25px;">$langselector</div>
+<div style="position: fixed; bottom: 25px; left: 5px;"><a href="http://pad.toktan.org/p/diabook" target="blank" ><img src="view/theme/diabook/icons/bluebug.png" title="report bugs for the theme diabook"/></a></div>
 
 
 
