@@ -283,6 +283,7 @@ function item_permissions_sql($owner_id,$remote_verified = false,$groups = null)
 			);
 		}
 	}
+
 	return $sql;
 }
 

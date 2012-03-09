@@ -179,8 +179,10 @@ function localize_item(&$item){
  * that are based on unique features of the calling module.
  *
  */
- if(!function_exists('conversation')){
+
+if(!function_exists('conversation')) {
 function conversation(&$a, $items, $mode, $update, $preview = false) {
+
 
 	require_once('bbcode.php');
 
@@ -418,26 +420,6 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 					$toplevelprivate = (($toplevelpost && $item['private']) ? true : false);
 					$item_writeable = (($item['writable'] || $item['self']) ? true : false);
 
-					// DISABLED
-					/*
-					if($blowhard == $item['cid'] && (! $item['self']) && ($mode != 'profile') && ($mode != 'notes')) {
-						$blowhard_count ++;
-						if($blowhard_count == 3) {
-							$o .= '<div class="icollapse-wrapper fakelink" id="icollapse-wrapper-' . $item['parent'] 
-								. '" onclick="openClose(' . '\'icollapse-' . $item['parent'] . '\'); $(\'#icollapse-wrapper-' . $item['parent'] . '\').hide();" >' 
-								. t('See more posts like this') . '</div>' . '<div class="icollapse" id="icollapse-' 
-								. $item['parent'] . '" style="display: none;" >';
-						}
-					}
-					else {
-						$blowhard = $item['cid'];					
-						if($blowhard_count >= 3)
-							$o .= '</div>';
-						$blowhard_count = 0;
-					}
-					// END DISABLED
-					*/
-
 					$comments_seen = 0;
 					$comments_collapsed = false;
 					$comment_lastcollapsed  = false;
@@ -445,13 +427,16 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 					
 					$threadsid++;
 					$threads[$threadsid]['id'] = $item['item_id'];
+					$threads[$threadsid]['private'] = $item['private'];
 					$threads[$threadsid]['items'] = array();
 
 				}
 				else {
-					// prevent private email from leaking into public conversation
-					if((! $toplevelpost) && (! $toplevelprivate) && ($item['private']) && ($profile_owner != local_user()))
+
+					// prevent private email reply to public conversation from leaking.
+					if($item['private'] && ! $threads[$threadsid]['private'])
 						continue;
+
 					$comments_seen ++;
 					$comment_lastcollapsed  = false;
 					$comment_firstcollapsed = false;
