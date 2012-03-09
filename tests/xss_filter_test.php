@@ -225,11 +225,11 @@ class AntiXSSTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	public function testGetTagsPersonOnly() {
-		$text="@Mike I saw the Theme Dev group was created."; 
+		$text="@Test I saw the Theme Dev group was created."; 
 		
 		$tags=get_tags($text);
 		
-		$this->assertEquals("@Mike", $tags[0]);
+		$this->assertEquals("@Test", $tags[0]);
 	}
 	
 	public function testGetTags2Persons1TagSpecialChars() {
