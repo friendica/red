@@ -1,6 +1,5 @@
 <?php
 /**
- * Tests, without pHPUnit by now
  * @package test.util
  */
 
@@ -187,93 +186,6 @@ class AntiXSSTest extends PHPUnit_Framework_TestCase {
 		$this->assertFalse(attribute_contains($testAttr, "class2"));
 	}
 
-	/**
-	 * test get_tags
-	 */
-	public function testGetTagsShortPerson() {
-		$text="hi @Mike"; 
-		
-		$tags=get_tags($text);
-		
-		$this->assertEquals("@Mike", $tags[0]);
-	}
-	
-	public function testGetTagsShortTag() {
-		$text="This is a #test_case";
-	
-		$tags=get_tags($text);
-	
-		$this->assertEquals("#test_case", $tags[0]);
-	}
-	
-	public function testGetTagsShortTagAndPerson() {
-		$text="hi @Mike This is a #test_case";
-	
-		$tags=get_tags($text);
-	
-		$this->assertEquals("@Mike", $tags[0]);
-		$this->assertEquals("#test_case", $tags[1]);
-	}
-	
-	public function testGetTagsShortTagAndPersonSpecialChars() {
-		$text="hi @Mike, This is a #test_case.";
-	
-		$tags=get_tags($text);
-	
-		$this->assertEquals("@Mike", $tags[0]);
-		$this->assertEquals("#test_case", $tags[1]);
-	}
-	
-	public function testGetTagsPersonOnly() {
-		$text="@Test I saw the Theme Dev group was created."; 
-		
-		$tags=get_tags($text);
-		
-		$this->assertEquals("@Test", $tags[0]);
-	}
-	
-	public function testGetTags2Persons1TagSpecialChars() {
-		$text="hi @Mike, I'm just writing #test_cases, so"
-		." so @somebody@friendica.com may change #things.";
-	
-		$tags=get_tags($text);
-	
-		$this->assertEquals("@Mike", $tags[0]);
-		$this->assertEquals("#test_cases", $tags[1]);
-		$this->assertEquals("@somebody@friendica.com", $tags[2]);
-		$this->assertEquals("#things", $tags[3]);
-	}
-	
-	public function testGetTags() {
-		$text="hi @Mike, I'm just writing #test_cases, "
-		." so @somebody@friendica.com may change #things. Of course I "
-		."look for a lot of #pitfalls, like #tags at the end of a sentence "
-		."@comment. I hope noone forgets about @fullstops.because that might"
-		." break #things. @Mike@campino@friendica.eu is also #nice, isn't it? "
-		."Now, add a @first_last tag. ";
-		//check whether this are all variants (no, auto-stuff is missing).
-
-		$tags=get_tags($text);
-
-		$this->assertEquals("@Mike", $tags[0]);
-		$this->assertEquals("#test_cases", $tags[1]);
-		$this->assertEquals("@somebody@friendica.com", $tags[2]);
-		$this->assertEquals("#things", $tags[3]);
-		$this->assertEquals("#pitfalls", $tags[4]);
-		$this->assertEquals("#tags", $tags[5]);
-		$this->assertEquals("@comment", $tags[6]);
-		$this->assertEquals("@fullstops", $tags[7]);
-		$this->assertEquals("#things", $tags[8]);
-		$this->assertEquals("@Mike", $tags[9]);
-		$this->assertEquals("@campino@friendica.eu", $tags[10]);
-		$this->assertEquals("#nice", $tags[11]);
-		$this->assertEquals("@first_last", $tags[12]);
-	}
-
-	public function testGetTagsEmpty() {
-		$tags=get_tags("");
-		$this->assertEquals(0, count($tags));
-	}
 	//function qp, quick and dirty??
 	//get_mentions
 	//get_contact_block, bis Zeile 538
