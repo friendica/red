@@ -201,7 +201,7 @@ function notifier_run($argv, $argc){
 		// by stringing togther an array of retractions and sending them onward.
 		 
   	
-		$localhost = $a->get_hostname();
+		$localhost = str_replace('www.','',$a->get_hostname());
 		if(strpos($localhost,':'))
 			$localhost = substr($localhost,0,strpos($localhost,':'));
 

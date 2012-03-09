@@ -1595,6 +1595,14 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				if((activity_match($datarray['verb'],ACTIVITY_LIKE)) || (activity_match($datarray['verb'],ACTIVITY_DISLIKE))) {
 					$datarray['type'] = 'activity';
 					$datarray['gravity'] = GRAVITY_LIKE;
+					// only one like or dislike per person
+					$r = q("select id from item where uid = %d and `contact-id` = %d and verb ='%s' and deleted = 0 limit 1",
+						intval($datarray['uid']),
+						intval($datarray['contact-id']),
+						dbesc($datarray['verb'])
+					);
+					if($r && count($r))
+						continue; 
 				}
 
 				if(($datarray['verb'] === ACTIVITY_TAG) && ($datarray['object-type'] === ACTIVITY_OBJ_TAGTERM)) {
@@ -1747,6 +1755,18 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				$datarray['parent-uri'] = $item_id;
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $contact['id'];
+
+				if(! link_compare($datarray['owner-link'],$contact['url'])) {
+					// The item owner info is not our contact. It's OK and is to be expected if this is a tgroup delivery, 
+					// but otherwise there's a possible data mixup on the sender's system.
+					// the tgroup delivery code called from item_store will correct it if it's a forum,
+					// but we're going to unconditionally correct it here so that the post will always be owned by our contact. 
+					logger('local_delivery: Correcting item owner.', LOGGER_DEBUG);
+					$datarray['owner-name']   = $contact['name'];
+					$datarray['owner-link']   = $contact['url'];
+					$datarray['owner-avatar'] = $contact['thumb'];
+				}
+
 				$r = item_store($datarray);
 				continue;
 
@@ -2136,6 +2156,14 @@ function local_delivery($importer,$data) {
 					$datarray['type'] = 'activity';
 					$datarray['gravity'] = GRAVITY_LIKE;
 					$datarray['last-child'] = 0;
+					// only one like or dislike per person
+					$r = q("select id from item where uid = %d and `contact-id` = %d and verb ='%s' and deleted = 0 limit 1",
+						intval($datarray['uid']),
+						intval($datarray['contact-id']),
+						dbesc($datarray['verb'])
+					);
+					if($r && count($r))
+						continue; 
 				}
 
 				if(($datarray['verb'] === ACTIVITY_TAG) && ($datarray['object-type'] === ACTIVITY_OBJ_TAGTERM)) {
@@ -2285,6 +2313,15 @@ function local_delivery($importer,$data) {
 				if(($datarray['verb'] == ACTIVITY_LIKE) || ($datarray['verb'] == ACTIVITY_DISLIKE)) {
 					$datarray['type'] = 'activity';
 					$datarray['gravity'] = GRAVITY_LIKE;
+					// only one like or dislike per person
+					$r = q("select id from item where uid = %d and `contact-id` = %d and verb ='%s' and deleted = 0 limit 1",
+						intval($datarray['uid']),
+						intval($datarray['contact-id']),
+						dbesc($datarray['verb'])
+					);
+					if($r && count($r))
+						continue; 
+
 				}
 
 				if(($datarray['verb'] === ACTIVITY_TAG) && ($datarray['object-type'] === ACTIVITY_OBJ_TAGTERM)) {
@@ -2325,35 +2362,44 @@ function local_delivery($importer,$data) {
 
 					if(count($myconv)) {
 						$importer_url = $a->get_baseurl() . '/profile/' . $importer['nickname'];
-						foreach($myconv as $conv) {
 
-							if(! link_compare($conv['author-link'],$importer_url))
-								continue;
+						// first make sure this isn't our own post coming back to us from a wall-to-wall event
+						if(! link_compare($datarray['author-link'],$importer_url)) {
 
-							require_once('include/enotify.php');
 							
-							$conv_parent = $conv['parent'];
+							foreach($myconv as $conv) {
 
-							notification(array(
-								'type'         => NOTIFY_COMMENT,
-								'notify_flags' => $importer['notify-flags'],
-								'language'     => $importer['language'],
-								'to_name'      => $importer['username'],
-								'to_email'     => $importer['email'],
-								'uid'          => $importer['importer_uid'],
-								'item'         => $datarray,
-								'link'		   => $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id,
-								'source_name'  => stripslashes($datarray['author-name']),
-								'source_link'  => $datarray['author-link'],
-								'source_photo' => ((link_compare($datarray['author-link'],$importer['url'])) 
-									? $importer['thumb'] : $datarray['author-avatar']),
-								'verb'         => ACTIVITY_POST,
-								'otype'        => 'item',
-								'parent'       => $conv_parent,
+								// now if we find a match, it means we're in this conversation
+	
+								if(! link_compare($conv['author-link'],$importer_url))
+									continue;
 
-							));
+								require_once('include/enotify.php');
+								
+								$conv_parent = $conv['parent'];
 
-							break;
+								notification(array(
+									'type'         => NOTIFY_COMMENT,
+									'notify_flags' => $importer['notify-flags'],
+									'language'     => $importer['language'],
+									'to_name'      => $importer['username'],
+									'to_email'     => $importer['email'],
+									'uid'          => $importer['importer_uid'],
+									'item'         => $datarray,
+									'link'		   => $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id,
+									'source_name'  => stripslashes($datarray['author-name']),
+									'source_link'  => $datarray['author-link'],
+									'source_photo' => ((link_compare($datarray['author-link'],$importer['url'])) 
+										? $importer['thumb'] : $datarray['author-avatar']),
+									'verb'         => ACTIVITY_POST,
+									'otype'        => 'item',
+									'parent'       => $conv_parent,
+
+								));
+
+								// only send one notification
+								break;
+							}
 						}
 					}
 				}
@@ -2424,12 +2470,24 @@ function local_delivery($importer,$data) {
 			// This is my contact on another system, but it's really me.
 			// Turn this into a wall post.
 
-			if($contact['remote_self'])
+			if($importer['remote_self'])
 				$datarray['wall'] = 1;
 
 			$datarray['parent-uri'] = $item_id;
 			$datarray['uid'] = $importer['importer_uid'];
 			$datarray['contact-id'] = $importer['id'];
+
+			if(! link_compare($datarray['owner-link'],$contact['url'])) {
+				// The item owner info is not our contact. It's OK and is to be expected if this is a tgroup delivery, 
+				// but otherwise there's a possible data mixup on the sender's system.
+				// the tgroup delivery code called from item_store will correct it if it's a forum,
+				// but we're going to unconditionally correct it here so that the post will always be owned by our contact. 
+				logger('local_delivery: Correcting item owner.', LOGGER_DEBUG);
+				$datarray['owner-name']   = $importer['senderName'];
+				$datarray['owner-link']   = $importer['url'];
+				$datarray['owner-avatar'] = $importer['thumb'];
+			}
+
 			$r = item_store($datarray);
 			continue;
 		}

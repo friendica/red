@@ -50,6 +50,8 @@ function settings_post(&$a) {
 		return;
 	}
 
+	$old_page_flags = $a->user['page-flags'];
+
 	if(($a->argc > 1) && ($a->argv[1] === 'oauth') && x($_POST,'remove')){
 		$key = $_POST['remove'];
 		q("DELETE FROM tokens WHERE id='%s' AND uid=%d",
@@ -375,7 +377,7 @@ function settings_post(&$a) {
 		);
 	}		
 
-	if($old_visibility != $net_publish) {
+	if(($old_visibility != $net_publish) || ($page_flags != $old_page_flags)) {
 		// Update global directory in background
 		$url = $_SESSION['my_url'];
 		if($url && strlen(get_config('system','directory_submit_url')))

@@ -69,7 +69,7 @@ $a->config['system']['rino_encrypt'] = true;
 
 // allowed themes (change this from admin panel after installation)
 
-$a->config['system']['allowed_themes'] = 'dispy,quattro,testbubble,vier,darkbubble,darkzero,duepuntozero,greenzero,purplezero,quattro-green,slackr';
+$a->config['system']['allowed_themes'] = 'dispy,quattro,testbubble,vier,darkbubble,darkzero,duepuntozero,greenzero,purplezero,quattro-green,slackr,diabook,diabook-blue';
 
 // default system theme
 

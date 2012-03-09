@@ -51,14 +51,14 @@ function network_init(&$a) {
 
 function saved_searches($search) {
 
-	$srchurl = '/network' 
-		. ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : '') 
-		. ((x($_GET,'star')) ? '?star=' . $_GET['star'] : '')
-		. ((x($_GET,'bmark')) ? '?bmark=' . $_GET['bmark'] : '')
-		. ((x($_GET,'conv')) ? '?conv=' . $_GET['conv'] : '')
-		. ((x($_GET,'nets')) ? '?nets=' . $_GET['nets'] : '')
-		. ((x($_GET,'cmin')) ? '?cmin=' . $_GET['cmin'] : '')
-		. ((x($_GET,'cmax')) ? '?cmax=' . $_GET['cmax'] : '');
+	$srchurl = '/network?f=' 
+		. ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') 
+		. ((x($_GET,'star')) ? '&star=' . $_GET['star'] : '')
+		. ((x($_GET,'bmark')) ? '&bmark=' . $_GET['bmark'] : '')
+		. ((x($_GET,'conv')) ? '&conv=' . $_GET['conv'] : '')
+		. ((x($_GET,'nets')) ? '&nets=' . $_GET['nets'] : '')
+		. ((x($_GET,'cmin')) ? '&cmin=' . $_GET['cmin'] : '')
+		. ((x($_GET,'cmax')) ? '&cmax=' . $_GET['cmax'] : '');
 	
 	$o = '';
 
@@ -164,33 +164,33 @@ function network_content(&$a, $update = 0) {
 	$tabs = array(
 		array(
 			'label' => t('Commented Order'),
-			'url'=>$a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '?cid=' . $_GET['cid'] : ''), 
+			'url'=>$a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '?f=&cid=' . $_GET['cid'] : ''), 
 			'sel'=>$all_active,
 		),
 		array(
 			'label' => t('Posted Order'),
-			'url'=>$a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . '?order=post' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
+			'url'=>$a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . '?f=&order=post' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
 			'sel'=>$postord_active,
 		),
 
 		array(
 			'label' => t('Personal'),
-			'url' => $a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '&conv=1',
+			'url' => $a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&conv=1',
 			'sel' => $conv_active,
 		),
 		array(
 			'label' => t('New'),
-			'url' => $a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . '/new' . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : ''),
+			'url' => $a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . '/new' . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : ''),
 			'sel' => $new_active,
 		),
 		array(
 			'label' => t('Starred'),
-			'url'=>$a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '&star=1',
+			'url'=>$a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&star=1',
 			'sel'=>$starred_active,
 		),
 		array(
 			'label' => t('Bookmarks'),
-			'url'=>$a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?cid=' . $_GET['cid'] : '') . '&bmark=1',
+			'url'=>$a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&bmark=1',
 			'sel'=>$bookmarked_active,
 		),	
 //		array(
@@ -256,14 +256,12 @@ function network_content(&$a, $update = 0) {
 
 		nav_set_selected('network');
 
-		$_SESSION['return_url'] = $a->query_string;
-
 		$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
 
 		$x = array(
 			'is_owner' => true,
 			'allow_location' => $a->user['allow_location'],
-			'default_location' => $a->user['default_location'],
+			'default_location' => $a->user['default-location'],
 			'nickname' => $a->user['nickname'],
 			'lockstate' => ((($group) || (is_array($a->user) && ((strlen($a->user['allow_cid'])) || (strlen($a->user['allow_gid'])) || (strlen($a->user['deny_cid'])) || (strlen($a->user['deny_gid']))))) ? 'lock' : 'unlock'),
 			'acl' => populate_acl((($group || $cid) ? $def_acl : $a->user), $celeb),
@@ -472,7 +470,7 @@ function network_content(&$a, $update = 0) {
 
 		if(count($r)) {
 			foreach($r as $rr)
-				if(! array_key_exists($rr['item_id'],$parents_arr))
+				if(! in_array($rr['item_id'],$parents_arr))
 					$parents_arr[] = $rr['item_id'];
 			$parents_str = implode(', ', $parents_arr);
 

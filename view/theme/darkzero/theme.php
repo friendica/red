@@ -4,6 +4,8 @@
  * Name: Darkzero
  * Version: 1.0
  * Author: Fabio Communi <fabrix.xm@gmail.com>
+ * Maintainer: Fabio Communi <fabrix.xm@gmail.com>
+ * Maintainer: Mike Macgirvin <mike@macgirvin.com>
  */
 
 $a->theme_info = array(
