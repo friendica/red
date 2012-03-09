@@ -129,10 +129,16 @@ function message_content(&$a) {
 		
 		$o .= $header;
 		
+		$plaintext = false;
+		if(intval(get_pconfig(local_user(),'system','plaintext')))
+			$plaintext = true;
+
+
 		$tpl = get_markup_template('msg-header.tpl');
 
 		$a->page['htmlhead'] .= replace_macros($tpl, array(
 			'$baseurl' => $a->get_baseurl(),
+			'$editselect' => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 			'$nickname' => $a->user['nickname'],
 			'$linkurl' => t('Please enter a link URL:')
 		));
