@@ -255,6 +255,11 @@ function scrape_feed($url) {
 				}
 			}
 		}
+		// perhaps an RSS version 1 feed with a generic or incorrect content-type?
+		if(stristr($s,'</item>')) {
+			$ret['feed_rss'] = $url;
+			return $ret;
+		}
 	}
 
 	try {

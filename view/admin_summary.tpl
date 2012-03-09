@@ -13,7 +13,7 @@
 	{{ for $accounts as $p }}
 		<dl>
 			<dt>$p.0</dt>
-			<dd>$p.1</dd>
+			<dd>{{ if $p.1 }}$p.1{{ else }}0{{ endif }}</dd>
 		</dl>
 	{{ endfor }}
 

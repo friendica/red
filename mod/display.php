@@ -74,18 +74,18 @@ function display_content(&$a) {
 		$x = array(
 			'is_owner' => true,
 			'allow_location' => $a->user['allow_location'],
-			'default_location' => $a->user['default_location'],
+			'default_location' => $a->user['default-location'],
 			'nickname' => $a->user['nickname'],
-			'lockstate' => ((($group) || (is_array($a->user) && ((strlen($a->user['allow_cid'])) || (strlen($a->user['allow_gid'])) || (strlen($a->user['deny_cid'])) || (strlen($a->user['deny_gid']))))) ? 'lock' : 'unlock'),
-			'acl' => populate_acl((($group || $cid) ? $def_acl : $a->user), $celeb),
-			'bang' => (($group || $cid) ? '!' : ''),
+			'lockstate' => ( (is_array($a->user)) && ((strlen($a->user['allow_cid'])) || (strlen($a->user['allow_gid'])) || (strlen($a->user['deny_cid'])) || (strlen($a->user['deny_gid']))) ? 'lock' : 'unlock'),
+			'acl' => populate_acl($a->user, $celeb),
+			'bang' => '',
 			'visitor' => 'block',
 			'profile_uid' => local_user()
 		);	
 		$o .= status_editor($a,$x,0,true);
 
 
-	$sql_extra = permissions_sql($a->profile['uid'],$remote_contact,$groups);
+	$sql_extra = item_permissions_sql($a->profile['uid'],$remote_contact,$groups);
 
 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 		`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,

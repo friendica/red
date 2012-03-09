@@ -216,6 +216,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `tag` mediumtext NOT NULL,
   `attach` mediumtext NOT NULL,
   `inform` mediumtext NOT NULL,
+  `file` mediumtext NOT NULL,
   `location` char(255) NOT NULL,
   `coord` char(255) NOT NULL,
   `allow_cid` mediumtext NOT NULL,
@@ -262,6 +263,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `body` (`body`),
   FULLTEXT KEY `tag` (`tag`),
+  FULLTEXT KEY `file` (`file`),
   FULLTEXT KEY `allow_cid` (`allow_cid`),
   FULLTEXT KEY `allow_gid` (`allow_gid`),
   FULLTEXT KEY `deny_cid` (`deny_cid`),
@@ -752,14 +754,18 @@ CREATE TABLE IF NOT EXISTS `notify` (
 `msg` MEDIUMTEXT NOT NULL ,
 `uid` INT NOT NULL ,
 `link` CHAR( 255 ) NOT NULL ,
+`parent` INT( 11 ) NOT NULL,
 `seen` TINYINT( 1 ) NOT NULL DEFAULT '0',
 `verb` CHAR( 255 ) NOT NULL,
 `otype` CHAR( 16 ) NOT NULL,
 INDEX ( `hash` ),
 INDEX ( `type` ),
 INDEX ( `uid` ),
+INDEX ( `link` ),
+INDEX ( `parent` ),
 INDEX ( `seen` ),
-INDEX ( `date` )
+INDEX ( `date` ),
+INDEX ( `otype` )
 ) ENGINE = MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `item_id` (

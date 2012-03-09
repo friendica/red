@@ -1,0 +1,6127 @@
+# FRIENDICA Distributed Social Network
+# Copyright (C) 2010, 2011 the Friendica Project
+# This file is distributed under the same license as the Friendica package.
+# 
+# Translators:
+# Rafael GARAU ESPINÓS <transifex@macadamia.es>, 2012.
+msgid ""
+msgstr ""
+"Project-Id-Version: friendica\n"
+"Report-Msgid-Bugs-To: http://bugs.friendica.com/\n"
+"POT-Creation-Date: 2012-03-06 15:09-0800\n"
+"PO-Revision-Date: 2012-03-08 21:58+0000\n"
+"Last-Translator: Rafael GARAU ESPINÓS <transifex@macadamia.es>\n"
+"Language-Team: Catalan (http://www.transifex.net/projects/p/friendica/language/ca/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ca\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+#: ../../mod/oexchange.php:25
+msgid "Post successful."
+msgstr "Publicat amb éxit."
+
+#: ../../mod/update_notes.php:41 ../../mod/update_community.php:18
+#: ../../mod/update_network.php:22 ../../mod/update_profile.php:41
+msgid "[Embedded content - reload page to view]"
+msgstr "[Contingut embegut - recarrega la pàgina per a veure-ho]"
+
+#: ../../mod/crepair.php:102
+msgid "Contact settings applied."
+msgstr "Ajustos de Contacte aplicats."
+
+#: ../../mod/crepair.php:104
+msgid "Contact update failed."
+msgstr "Fracassà l'actualització de Contacte"
+
+#: ../../mod/crepair.php:115 ../../mod/wall_attach.php:43
+#: ../../mod/fsuggest.php:78 ../../mod/events.php:110 ../../mod/api.php:26
+#: ../../mod/api.php:31 ../../mod/photos.php:129 ../../mod/photos.php:865
+#: ../../mod/editpost.php:10 ../../mod/install.php:171
+#: ../../mod/notifications.php:62 ../../mod/contacts.php:125
+#: ../../mod/settings.php:49 ../../mod/settings.php:411
+#: ../../mod/settings.php:416 ../../mod/manage.php:86 ../../mod/network.php:6
+#: ../../mod/notes.php:20 ../../mod/attach.php:33 ../../mod/group.php:19
+#: ../../mod/viewcontacts.php:22 ../../mod/register.php:36
+#: ../../mod/regmod.php:111 ../../mod/item.php:124 ../../mod/item.php:140
+#: ../../mod/profile_photo.php:19 ../../mod/profile_photo.php:137
+#: ../../mod/profile_photo.php:148 ../../mod/profile_photo.php:159
+#: ../../mod/message.php:9 ../../mod/message.php:46 ../../mod/allfriends.php:9
+#: ../../mod/wall_upload.php:42 ../../mod/follow.php:8 ../../mod/common.php:9
+#: ../../mod/display.php:133 ../../mod/profiles.php:7
+#: ../../mod/profiles.php:229 ../../mod/delegate.php:6
+#: ../../mod/suggest.php:28 ../../mod/invite.php:13 ../../mod/invite.php:81
+#: ../../mod/dfrn_confirm.php:53 ../../addon/facebook/facebook.php:332
+#: ../../include/items.php:3030 ../../index.php:288
+msgid "Permission denied."
+msgstr "Permís denegat."
+
+#: ../../mod/crepair.php:129 ../../mod/fsuggest.php:20
+#: ../../mod/fsuggest.php:92 ../../mod/dfrn_confirm.php:118
+msgid "Contact not found."
+msgstr "Contacte no trobat"
+
+#: ../../mod/crepair.php:135
+msgid "Repair Contact Settings"
+msgstr "Reposar els ajustos de Contacte"
+
+#: ../../mod/crepair.php:137
+msgid ""
+"<strong>WARNING: This is highly advanced</strong> and if you enter incorrect"
+" information your communications with this contact may stop working."
+msgstr "<strong>ADVERTÈNCIA: Això és molt avançat </strong> i si s'introdueix informació incorrecta la seva comunicació amb aquest contacte pot deixar de funcionar."
+
+#: ../../mod/crepair.php:138
+msgid ""
+"Please use your browser 'Back' button <strong>now</strong> if you are "
+"uncertain what to do on this page."
+msgstr "Si us plau, prem el botó 'Tornar' <strong>ara</strong> si no saps segur que has de fer aqui."
+
+#: ../../mod/crepair.php:144
+msgid "Return to contact editor"
+msgstr "Tornar al editor de contactes"
+
+#: ../../mod/crepair.php:148 ../../mod/settings.php:462
+#: ../../mod/settings.php:488 ../../mod/admin.php:484 ../../mod/admin.php:493
+msgid "Name"
+msgstr "Nom"
+
+#: ../../mod/crepair.php:149
+msgid "Account Nickname"
+msgstr "Malnom de Compte"
+
+#: ../../mod/crepair.php:150
+msgid "@Tagname - overrides Name/Nickname"
+msgstr "@Tagname - té prel·lació sobre Nom/Malnom"
+
+#: ../../mod/crepair.php:151
+msgid "Account URL"
+msgstr "Adreça URL del Compte"
+
+#: ../../mod/crepair.php:152
+msgid "Friend Request URL"
+msgstr "Adreça URL de sol·licitud d'Amistat"
+
+#: ../../mod/crepair.php:153
+msgid "Friend Confirm URL"
+msgstr "Adreça URL de confirmació d'Amic"
+
+#: ../../mod/crepair.php:154
+msgid "Notification Endpoint URL"
+msgstr "Adreça URL de Notificació"
+
+#: ../../mod/crepair.php:155
+msgid "Poll/Feed URL"
+msgstr "Adreça de Enquesta/Alimentador"
+
+#: ../../mod/crepair.php:156
+msgid "New photo from this URL"
+msgstr "Nova foto d'aquesta URL"
+
+#: ../../mod/crepair.php:166 ../../mod/fsuggest.php:107
+#: ../../mod/events.php:400 ../../mod/photos.php:900 ../../mod/photos.php:958
+#: ../../mod/photos.php:1182 ../../mod/photos.php:1222
+#: ../../mod/photos.php:1262 ../../mod/photos.php:1293
+#: ../../mod/install.php:251 ../../mod/install.php:289
+#: ../../mod/localtime.php:45 ../../mod/contacts.php:319
+#: ../../mod/settings.php:460 ../../mod/settings.php:603
+#: ../../mod/settings.php:797 ../../mod/manage.php:109 ../../mod/group.php:80
+#: ../../mod/admin.php:313 ../../mod/admin.php:481 ../../mod/admin.php:609
+#: ../../mod/admin.php:776 ../../mod/admin.php:856 ../../mod/profiles.php:375
+#: ../../mod/invite.php:106 ../../addon/facebook/facebook.php:411
+#: ../../addon/yourls/yourls.php:76 ../../addon/ljpost/ljpost.php:92
+#: ../../addon/nsfw/nsfw.php:57
+#: ../../addon/uhremotestorage/uhremotestorage.php:89
+#: ../../addon/randplace/randplace.php:179 ../../addon/dwpost/dwpost.php:92
+#: ../../addon/drpost/drpost.php:110 ../../addon/geonames/geonames.php:187
+#: ../../addon/oembed.old/oembed.php:41 ../../addon/impressum/impressum.php:69
+#: ../../addon/blockem/blockem.php:57 ../../addon/qcomment/qcomment.php:61
+#: ../../addon/openstreetmap/openstreetmap.php:70
+#: ../../addon/editplain/editplain.php:84 ../../addon/blackout/blackout.php:94
+#: ../../addon/pageheader/pageheader.php:52
+#: ../../addon/statusnet/statusnet.php:273
+#: ../../addon/statusnet/statusnet.php:287
+#: ../../addon/statusnet/statusnet.php:313
+#: ../../addon/statusnet/statusnet.php:320
+#: ../../addon/statusnet/statusnet.php:345
+#: ../../addon/statusnet/statusnet.php:532 ../../addon/tumblr/tumblr.php:90
+#: ../../addon/numfriends/numfriends.php:85 ../../addon/gnot/gnot.php:88
+#: ../../addon/wppost/wppost.php:102 ../../addon/showmore/showmore.php:48
+#: ../../addon/piwik/piwik.php:89 ../../addon/twitter/twitter.php:175
+#: ../../addon/twitter/twitter.php:201 ../../addon/twitter/twitter.php:355
+#: ../../addon/posterous/posterous.php:90
+#: ../../view/theme/quattro/theme.php:15 ../../include/conversation.php:552
+msgid "Submit"
+msgstr "Enviar"
+
+#: ../../mod/help.php:30
+msgid "Help:"
+msgstr "Ajuda:"
+
+#: ../../mod/help.php:34 ../../include/nav.php:82
+msgid "Help"
+msgstr "Ajuda"
+
+#: ../../mod/help.php:38 ../../index.php:221
+msgid "Not Found"
+msgstr "No trobat"
+
+#: ../../mod/help.php:41 ../../index.php:224
+msgid "Page not found."
+msgstr "Pàgina no trobada."
+
+#: ../../mod/wall_attach.php:57
+#, php-format
+msgid "File exceeds size limit of %d"
+msgstr "L'arxiu excedeix la mida límit de %d"
+
+#: ../../mod/wall_attach.php:85 ../../mod/wall_attach.php:96
+msgid "File upload failed."
+msgstr "La càrrega de fitxers ha fallat."
+
+#: ../../mod/fsuggest.php:63
+msgid "Friend suggestion sent."
+msgstr "Enviat suggeriment d'amic."
+
+#: ../../mod/fsuggest.php:97
+msgid "Suggest Friends"
+msgstr "Suggerir Amics"
+
+#: ../../mod/fsuggest.php:99
+#, php-format
+msgid "Suggest a friend for %s"
+msgstr "Suggerir una amic per a %s"
+
+#: ../../mod/events.php:62
+msgid "Event description and start time are required."
+msgstr "Es requereix descripció de l'esdeveniment i l'hora d'inici."
+
+#: ../../mod/events.php:230
+msgid "l, F j"
+msgstr "l, F j"
+
+#: ../../mod/events.php:252
+msgid "Edit event"
+msgstr "Editar esdeveniment"
+
+#: ../../mod/events.php:272 ../../include/text.php:982
+msgid "link to source"
+msgstr "Enllaç al origen"
+
+#: ../../mod/events.php:296 ../../include/nav.php:50 ../../boot.php:1349
+msgid "Events"
+msgstr "Esdeveniments"
+
+#: ../../mod/events.php:297
+msgid "Create New Event"
+msgstr "Crear un nou esdeveniment"
+
+#: ../../mod/events.php:298
+msgid "Previous"
+msgstr "Previ"
+
+#: ../../mod/events.php:299 ../../mod/install.php:210
+msgid "Next"
+msgstr "Proper"
+
+#: ../../mod/events.php:371
+msgid "hour:minute"
+msgstr "hora:minut"
+
+#: ../../mod/events.php:380
+msgid "Event details"
+msgstr "Detalls del esdeveniment"
+
+#: ../../mod/events.php:381
+#, php-format
+msgid "Format is %s %s. Starting date and Description are required."
+msgstr "El format és %s %s. Es requereix Data d'inici i Descripció."
+
+#: ../../mod/events.php:383
+msgid "Event Starts:"
+msgstr "Inici d'Esdeveniment:"
+
+#: ../../mod/events.php:386
+msgid "Finish date/time is not known or not relevant"
+msgstr "La data/hora de finalització no es coneixen o no són relevants"
+
+#: ../../mod/events.php:388
+msgid "Event Finishes:"
+msgstr "L'esdeveniment Finalitza:"
+
+#: ../../mod/events.php:391
+msgid "Adjust for viewer timezone"
+msgstr "Ajustar a la zona horaria de l'espectador"
+
+#: ../../mod/events.php:393
+msgid "Description:"
+msgstr "Descripció:"
+
+#: ../../mod/events.php:395 ../../include/event.php:37
+#: ../../include/bb2diaspora.php:260 ../../boot.php:980
+msgid "Location:"
+msgstr "Ubicació:"
+
+#: ../../mod/events.php:397
+msgid "Share this event"
+msgstr "Compartir aquest esdeveniment"
+
+#: ../../mod/tagrm.php:11 ../../mod/tagrm.php:94
+#: ../../mod/dfrn_request.php:686 ../../mod/settings.php:461
+#: ../../mod/settings.php:487 ../../addon/js_upload/js_upload.php:45
+msgid "Cancel"
+msgstr "Cancel·lar"
+
+#: ../../mod/tagrm.php:41
+msgid "Tag removed"
+msgstr "Etiqueta eliminada"
+
+#: ../../mod/tagrm.php:79
+msgid "Remove Item Tag"
+msgstr "Esborrar etiqueta del element"
+
+#: ../../mod/tagrm.php:81
+msgid "Select a tag to remove: "
+msgstr "Selecciona etiqueta a esborrar:"
+
+#: ../../mod/tagrm.php:93 ../../mod/delegate.php:130
+msgid "Remove"
+msgstr "Esborrar"
+
+#: ../../mod/dfrn_poll.php:91 ../../mod/dfrn_poll.php:517
+#, php-format
+msgid "%s welcomes %s"
+msgstr "%s Benvingut %s"
+
+#: ../../mod/api.php:76 ../../mod/api.php:102
+msgid "Authorize application connection"
+msgstr "Autoritzi la connexió de aplicacions"
+
+#: ../../mod/api.php:77
+msgid "Return to your app and insert this Securty Code:"
+msgstr "Torni a la seva aplicació i inserti aquest Codi de Seguretat:"
+
+#: ../../mod/api.php:89
+msgid "Please login to continue."
+msgstr "Per favor, accedeixi per a continuar."
+
+#: ../../mod/api.php:104
+msgid ""
+"Do you want to authorize this application to access your posts and contacts,"
+" and/or create new posts for you?"
+msgstr "Vol autoritzar a aquesta aplicació per accedir als teus missatges i contactes, i/o crear nous enviaments per a vostè?"
+
+#: ../../mod/api.php:105 ../../mod/dfrn_request.php:676
+#: ../../mod/settings.php:692 ../../mod/settings.php:698
+#: ../../mod/settings.php:706 ../../mod/settings.php:710
+#: ../../mod/settings.php:715 ../../mod/settings.php:721
+#: ../../mod/settings.php:727 ../../mod/settings.php:787
+#: ../../mod/settings.php:788 ../../mod/settings.php:789
+#: ../../mod/settings.php:790 ../../mod/register.php:524
+#: ../../mod/profiles.php:357
+msgid "Yes"
+msgstr "Si"
+
+#: ../../mod/api.php:106 ../../mod/dfrn_request.php:677
+#: ../../mod/settings.php:692 ../../mod/settings.php:698
+#: ../../mod/settings.php:706 ../../mod/settings.php:710
+#: ../../mod/settings.php:715 ../../mod/settings.php:721
+#: ../../mod/settings.php:727 ../../mod/settings.php:787
+#: ../../mod/settings.php:788 ../../mod/settings.php:789
+#: ../../mod/settings.php:790 ../../mod/register.php:525
+#: ../../mod/profiles.php:358
+msgid "No"
+msgstr "No"
+
+#: ../../mod/photos.php:42
+msgid "Photo Albums"
+msgstr "Àlbum de Fotos"
+
+#: ../../mod/photos.php:50 ../../mod/photos.php:150 ../../mod/photos.php:879
+#: ../../mod/photos.php:950 ../../mod/photos.php:965 ../../mod/photos.php:1371
+#: ../../mod/photos.php:1383 ../../addon/communityhome/communityhome.php:110
+msgid "Contact Photos"
+msgstr "Fotos de Contacte"
+
+#: ../../mod/photos.php:57 ../../mod/photos.php:975 ../../mod/photos.php:1413
+msgid "Upload New Photos"
+msgstr "Actualitzar Noves Fotos"
+
+#: ../../mod/photos.php:68 ../../mod/settings.php:11
+msgid "everybody"
+msgstr "tothom"
+
+#: ../../mod/photos.php:139
+msgid "Contact information unavailable"
+msgstr "Informació del Contacte no disponible"
+
+#: ../../mod/photos.php:150 ../../mod/photos.php:597 ../../mod/photos.php:950
+#: ../../mod/photos.php:965 ../../mod/register.php:327
+#: ../../mod/register.php:334 ../../mod/register.php:341
+#: ../../mod/profile_photo.php:58 ../../mod/profile_photo.php:65
+#: ../../mod/profile_photo.php:72 ../../mod/profile_photo.php:170
+#: ../../mod/profile_photo.php:246 ../../mod/profile_photo.php:255
+#: ../../addon/communityhome/communityhome.php:111
+msgid "Profile Photos"
+msgstr "Fotos del Perfil"
+
+#: ../../mod/photos.php:160
+msgid "Album not found."
+msgstr "Àlbum no trobat."
+
+#: ../../mod/photos.php:178 ../../mod/photos.php:959
+msgid "Delete Album"
+msgstr "Eliminar Àlbum"
+
+#: ../../mod/photos.php:241 ../../mod/photos.php:1183
+msgid "Delete Photo"
+msgstr "Eliminar Foto"
+
+#: ../../mod/photos.php:528
+msgid "was tagged in a"
+msgstr "Fou etiquetat a un"
+
+#: ../../mod/photos.php:528 ../../mod/like.php:127 ../../mod/tagger.php:70
+#: ../../addon/communityhome/communityhome.php:163 ../../include/text.php:1226
+#: ../../include/diaspora.php:1600 ../../include/conversation.php:53
+#: ../../include/conversation.php:126
+msgid "photo"
+msgstr "foto"
+
+#: ../../mod/photos.php:528
+msgid "by"
+msgstr "per"
+
+#: ../../mod/photos.php:631 ../../addon/js_upload/js_upload.php:315
+msgid "Image exceeds size limit of "
+msgstr "La imatge excedeix el límit de "
+
+#: ../../mod/photos.php:639
+msgid "Image file is empty."
+msgstr "El fitxer de imatge és buit."
+
+#: ../../mod/photos.php:653 ../../mod/profile_photo.php:122
+#: ../../mod/wall_upload.php:65
+msgid "Unable to process image."
+msgstr "Incapaç de processar la imatge."
+
+#: ../../mod/photos.php:673 ../../mod/profile_photo.php:251
+#: ../../mod/wall_upload.php:84
+msgid "Image upload failed."
+msgstr "Actualització de la imatge fracassada."
+
+#: ../../mod/photos.php:759 ../../mod/community.php:16
+#: ../../mod/dfrn_request.php:625 ../../mod/viewcontacts.php:17
+#: ../../mod/display.php:7 ../../mod/search.php:71 ../../mod/directory.php:33
+msgid "Public access denied."
+msgstr "Accés públic denegat."
+
+#: ../../mod/photos.php:769
+msgid "No photos selected"
+msgstr "No s'han seleccionat fotos"
+
+#: ../../mod/photos.php:846
+msgid "Access to this item is restricted."
+msgstr "L'accés a aquest element està restringit."
+
+#: ../../mod/photos.php:907
+msgid "Upload Photos"
+msgstr "Carregar Fotos"
+
+#: ../../mod/photos.php:910 ../../mod/photos.php:954
+msgid "New album name: "
+msgstr "Nou nom d'àlbum:"
+
+#: ../../mod/photos.php:911
+msgid "or existing album name: "
+msgstr "o nom d'àlbum existent:"
+
+#: ../../mod/photos.php:912
+msgid "Do not show a status post for this upload"
+msgstr "No tornis a mostrar un missatge d'estat d'aquesta pujada"
+
+#: ../../mod/photos.php:914 ../../mod/photos.php:1178
+msgid "Permissions"
+msgstr "Permisos"
+
+#: ../../mod/photos.php:969
+msgid "Edit Album"
+msgstr "Editar Àlbum"
+
+#: ../../mod/photos.php:984 ../../mod/photos.php:1396
+msgid "View Photo"
+msgstr "Veure Foto"
+
+#: ../../mod/photos.php:1019
+msgid "Permission denied. Access to this item may be restricted."
+msgstr "Permís denegat. L'accés a aquest element pot estar restringit."
+
+#: ../../mod/photos.php:1021
+msgid "Photo not available"
+msgstr "Foto no disponible"
+
+#: ../../mod/photos.php:1071
+msgid "View photo"
+msgstr "Veure foto"
+
+#: ../../mod/photos.php:1071
+msgid "Edit photo"
+msgstr "Editar foto"
+
+#: ../../mod/photos.php:1072
+msgid "Use as profile photo"
+msgstr "Emprar com a foto del perfil"
+
+#: ../../mod/photos.php:1078 ../../include/conversation.php:482
+msgid "Private Message"
+msgstr "Missatge Privat"
+
+#: ../../mod/photos.php:1089
+msgid "View Full Size"
+msgstr "Veure'l a Mida Completa"
+
+#: ../../mod/photos.php:1157
+msgid "Tags: "
+msgstr "Etiquetes:"
+
+#: ../../mod/photos.php:1160
+msgid "[Remove any tag]"
+msgstr "Treure etiquetes"
+
+#: ../../mod/photos.php:1171
+msgid "New album name"
+msgstr "Nou nom d'àlbum"
+
+#: ../../mod/photos.php:1174
+msgid "Caption"
+msgstr "Títol"
+
+#: ../../mod/photos.php:1176
+msgid "Add a Tag"
+msgstr "Afegir una etiqueta"
+
+#: ../../mod/photos.php:1180
+msgid ""
+"Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping"
+msgstr "Exemple: @bob, @Barbara_jensen, @jim@example.com,  #California, #camping"
+
+#: ../../mod/photos.php:1200 ../../include/conversation.php:529
+msgid "I like this (toggle)"
+msgstr "M'agrada això (canviar)"
+
+#: ../../mod/photos.php:1201 ../../include/conversation.php:530
+msgid "I don't like this (toggle)"
+msgstr "No m'agrada això (canviar)"
+
+#: ../../mod/photos.php:1202 ../../include/conversation.php:933
+msgid "Share"
+msgstr "Compartir"
+
+#: ../../mod/photos.php:1203 ../../mod/editpost.php:104
+#: ../../mod/message.php:155 ../../mod/message.php:296
+#: ../../include/conversation.php:348 ../../include/conversation.php:694
+#: ../../include/conversation.php:950
+msgid "Please wait"
+msgstr "Si us plau esperi"
+
+#: ../../mod/photos.php:1219 ../../mod/photos.php:1259
+#: ../../mod/photos.php:1290 ../../include/conversation.php:549
+msgid "This is you"
+msgstr "Aquest ets tu"
+
+#: ../../mod/photos.php:1221 ../../mod/photos.php:1261
+#: ../../mod/photos.php:1292 ../../include/conversation.php:551
+#: ../../boot.php:447
+msgid "Comment"
+msgstr "Comentari"
+
+#: ../../mod/photos.php:1223 ../../mod/editpost.php:123
+#: ../../include/conversation.php:553 ../../include/conversation.php:968
+msgid "Preview"
+msgstr "Vista prèvia"
+
+#: ../../mod/photos.php:1320 ../../mod/settings.php:520
+#: ../../mod/settings.php:601 ../../mod/group.php:158 ../../mod/admin.php:488
+#: ../../include/conversation.php:304 ../../include/conversation.php:573
+msgid "Delete"
+msgstr "Esborrar"
+
+#: ../../mod/photos.php:1402
+msgid "View Album"
+msgstr "Veure Àlbum"
+
+#: ../../mod/photos.php:1411
+msgid "Recent Photos"
+msgstr "Fotos Recents"
+
+#: ../../mod/community.php:21
+msgid "Not available."
+msgstr "No disponible."
+
+#: ../../mod/community.php:30 ../../include/nav.php:97
+msgid "Community"
+msgstr "Comunitat"
+
+#: ../../mod/community.php:60 ../../mod/search.php:118
+msgid "No results."
+msgstr "Sense resultats."
+
+#: ../../mod/friendica.php:43
+msgid "This is Friendica, version"
+msgstr "Això és Friendica, versió"
+
+#: ../../mod/friendica.php:44
+msgid "running at web location"
+msgstr "funcionant en la ubicació web"
+
+#: ../../mod/friendica.php:46
+msgid ""
+"Please visit <a href=\"http://friendica.com\">Friendica.com</a> to learn "
+"more about the Friendica project."
+msgstr "Si us plau, visiteu <a href=\"http://friendica.com\">Friendica.com</a> per obtenir més informació sobre el projecte Friendica."
+
+#: ../../mod/friendica.php:48
+msgid "Bug reports and issues: please visit"
+msgstr "Pels informes d'error i problemes: si us plau, visiteu"
+
+#: ../../mod/friendica.php:49
+msgid ""
+"Suggestions, praise, donations, etc. - please email \"Info\" at Friendica - "
+"dot com"
+msgstr "Suggeriments, elogis, donacions, etc si us plau escrigui a \"Info\" en Friendica - dot com"
+
+#: ../../mod/friendica.php:54
+msgid "Installed plugins/addons/apps"
+msgstr "plugins/addons/apps instal·lats"
+
+#: ../../mod/friendica.php:62
+msgid "No installed plugins/addons/apps"
+msgstr "plugins/addons/apps no instal·lats"
+
+#: ../../mod/editpost.php:17 ../../mod/editpost.php:27
+msgid "Item not found"
+msgstr "Element no trobat"
+
+#: ../../mod/editpost.php:36
+msgid "Edit post"
+msgstr "Editar Enviament"
+
+#: ../../mod/editpost.php:80 ../../include/conversation.php:919
+msgid "Post to Email"
+msgstr "Correu per enviar"
+
+#: ../../mod/editpost.php:95 ../../mod/settings.php:519
+#: ../../include/conversation.php:560
+msgid "Edit"
+msgstr "Editar"
+
+#: ../../mod/editpost.php:96 ../../mod/message.php:153
+#: ../../mod/message.php:294 ../../include/conversation.php:934
+msgid "Upload photo"
+msgstr "Carregar foto"
+
+#: ../../mod/editpost.php:97 ../../include/conversation.php:936
+msgid "Attach file"
+msgstr "Adjunta fitxer"
+
+#: ../../mod/editpost.php:98 ../../mod/message.php:154
+#: ../../mod/message.php:295 ../../include/conversation.php:938
+msgid "Insert web link"
+msgstr "Inserir enllaç web"
+
+#: ../../mod/editpost.php:99
+msgid "Insert YouTube video"
+msgstr "Serà mostrat de forma preeminent a la pagina durant el procés de registre."
+
+#: ../../mod/editpost.php:100
+msgid "Insert Vorbis [.ogg] video"
+msgstr "Inserir video Vorbis [.ogg]"
+
+#: ../../mod/editpost.php:101
+msgid "Insert Vorbis [.ogg] audio"
+msgstr "Inserir audio Vorbis [.ogg]"
+
+#: ../../mod/editpost.php:102 ../../include/conversation.php:944
+msgid "Set your location"
+msgstr "Canvia la teva ubicació"
+
+#: ../../mod/editpost.php:103 ../../include/conversation.php:946
+msgid "Clear browser location"
+msgstr "neteja adreçes del navegador"
+
+#: ../../mod/editpost.php:105 ../../include/conversation.php:951
+msgid "Permission settings"
+msgstr "Configuració de permisos"
+
+#: ../../mod/editpost.php:113 ../../include/conversation.php:960
+msgid "CC: email addresses"
+msgstr "CC: Adreça de correu"
+
+#: ../../mod/editpost.php:114 ../../include/conversation.php:961
+msgid "Public post"
+msgstr "Enviament públic"
+
+#: ../../mod/editpost.php:117 ../../include/conversation.php:949
+msgid "Set title"
+msgstr "Canviar títol"
+
+#: ../../mod/editpost.php:118 ../../include/conversation.php:963
+msgid "Example: bob@example.com, mary@example.com"
+msgstr "Exemple: bob@example.com, mary@example.com"
+
+#: ../../mod/dfrn_request.php:92
+msgid "This introduction has already been accepted."
+msgstr "Aquesta presentació ha estat acceptada."
+
+#: ../../mod/dfrn_request.php:116 ../../mod/dfrn_request.php:381
+msgid "Profile location is not valid or does not contain profile information."
+msgstr "El perfil de situació no és vàlid o no contè informació de perfil"
+
+#: ../../mod/dfrn_request.php:121 ../../mod/dfrn_request.php:386
+msgid "Warning: profile location has no identifiable owner name."
+msgstr "Atenció: El perfil de situació no te nom de propietari identificable."
+
+#: ../../mod/dfrn_request.php:123 ../../mod/dfrn_request.php:388
+msgid "Warning: profile location has no profile photo."
+msgstr "Atenció: El perfil de situació no te foto de perfil"
+
+#: ../../mod/dfrn_request.php:126 ../../mod/dfrn_request.php:391
+#, php-format
+msgid "%d required parameter was not found at the given location"
+msgid_plural "%d required parameters were not found at the given location"
+msgstr[0] "%d el paràmetre requerit no es va trobar al lloc indicat"
+msgstr[1] "%d els paràmetres requerits no es van trobar allloc indicat"
+
+#: ../../mod/dfrn_request.php:167
+msgid "Introduction complete."
+msgstr "Completada la presentació."
+
+#: ../../mod/dfrn_request.php:191
+msgid "Unrecoverable protocol error."
+msgstr "Error de protocol irrecuperable."
+
+#: ../../mod/dfrn_request.php:219
+msgid "Profile unavailable."
+msgstr "Perfil no disponible"
+
+#: ../../mod/dfrn_request.php:244
+#, php-format
+msgid "%s has received too many connection requests today."
+msgstr "%s avui ha rebut excesives peticions de connexió. "
+
+#: ../../mod/dfrn_request.php:245
+msgid "Spam protection measures have been invoked."
+msgstr "Mesures de protecció contra spam han estat invocades."
+
+#: ../../mod/dfrn_request.php:246
+msgid "Friends are advised to please try again in 24 hours."
+msgstr "S'aconsellà els amics que probin pasades 24 hores."
+
+#: ../../mod/dfrn_request.php:306
+msgid "Invalid locator"
+msgstr "Localitzador no vàlid"
+
+#: ../../mod/dfrn_request.php:326
+msgid "Unable to resolve your name at the provided location."
+msgstr "Incapaç de resoldre el teu nom al lloc facilitat."
+
+#: ../../mod/dfrn_request.php:339
+msgid "You have already introduced yourself here."
+msgstr "Has fer la teva presentació aquí."
+
+#: ../../mod/dfrn_request.php:343
+#, php-format
+msgid "Apparently you are already friends with %s."
+msgstr "Aparentment, ja tens amistat amb %s"
+
+#: ../../mod/dfrn_request.php:364
+msgid "Invalid profile URL."
+msgstr "Perfil URL no vàlid."
+
+#: ../../mod/dfrn_request.php:370 ../../mod/follow.php:20
+msgid "Disallowed profile URL."
+msgstr "Perfil URL no permès."
+
+#: ../../mod/dfrn_request.php:439 ../../mod/contacts.php:102
+msgid "Failed to update contact record."
+msgstr "Error en actualitzar registre de contacte."
+
+#: ../../mod/dfrn_request.php:460
+msgid "Your introduction has been sent."
+msgstr "La teva presentació ha estat enviada."
+
+#: ../../mod/dfrn_request.php:513
+msgid "Please login to confirm introduction."
+msgstr "Si us plau, entri per confirmar la presentació."
+
+#: ../../mod/dfrn_request.php:527
+msgid ""
+"Incorrect identity currently logged in. Please login to "
+"<strong>this</strong> profile."
+msgstr "Sesió iniciada amb la identificació incorrecta. Entra en <strong>aquest</strong> perfil."
+
+#: ../../mod/dfrn_request.php:539
+#, php-format
+msgid "Welcome home %s."
+msgstr "Benvingut de nou %s"
+
+#: ../../mod/dfrn_request.php:540
+#, php-format
+msgid "Please confirm your introduction/connection request to %s."
+msgstr "Si us plau, confirmi la seva sol·licitud de Presentació/Amistat a %s."
+
+#: ../../mod/dfrn_request.php:541
+msgid "Confirm"
+msgstr "Confirmar"
+
+#: ../../mod/dfrn_request.php:582 ../../include/items.php:2566
+msgid "[Name Withheld]"
+msgstr "[Nom Amagat]"
+
+#: ../../mod/dfrn_request.php:666
+#, php-format
+msgid ""
+"Diaspora members: Please do not use this form. Instead, enter \"%s\" into "
+"your Diaspora search bar."
+msgstr "Membres de Diàspora: Si us plau, no utilitzi aquest formulari. Pel contrari, escriviu \"%s\" a la barra de cerca de Diàspora."
+
+#: ../../mod/dfrn_request.php:669
+msgid ""
+"Please enter your 'Identity Address' from one of the following supported "
+"social networks:"
+msgstr "Si us plau, introdueixi la seva \"Adreça Identificativa\" d'una de les següents xarxes socials suportades:"
+
+#: ../../mod/dfrn_request.php:672
+msgid "Friend/Connection Request"
+msgstr "Sol·licitud d'Amistat"
+
+#: ../../mod/dfrn_request.php:673
+msgid ""
+"Examples: jojo@demo.friendica.com, http://demo.friendica.com/profile/jojo, "
+"testuser@identi.ca"
+msgstr "Exemples: jojo@demo.friendica.com, http://demo.friendica.com/profile/jojo, testuser@identi.ca"
+
+#: ../../mod/dfrn_request.php:674
+msgid "Please answer the following:"
+msgstr "Si us plau, contesti les següents preguntes:"
+
+#: ../../mod/dfrn_request.php:675
+#, php-format
+msgid "Does %s know you?"
+msgstr "%s et coneix?"
+
+#: ../../mod/dfrn_request.php:678
+msgid "Add a personal note:"
+msgstr "Afegir una nota personal:"
+
+#: ../../mod/dfrn_request.php:680 ../../include/contact_selectors.php:76
+msgid "Friendica"
+msgstr "Friendica"
+
+#: ../../mod/dfrn_request.php:681
+msgid "StatusNet/Federated Social Web"
+msgstr "Web Social StatusNet/Federated "
+
+#: ../../mod/dfrn_request.php:682 ../../mod/settings.php:555
+#: ../../include/contact_selectors.php:80
+msgid "Diaspora"
+msgstr "Diaspora"
+
+#: ../../mod/dfrn_request.php:683
+msgid "- please share from your own site as noted above"
+msgstr "- si us plau, Comparteix des del teu propi lloc tal com s'ha dit abans."
+
+#: ../../mod/dfrn_request.php:684
+msgid "Your Identity Address:"
+msgstr "La Teva Adreça Identificativa:"
+
+#: ../../mod/dfrn_request.php:685
+msgid "Submit Request"
+msgstr "Sol·licitud Enviada"
+
+#: ../../mod/install.php:111
+msgid "Friendica Social Communications Server - Setup"
+msgstr "Friendica Social Communications Server - Ajustos"
+
+#: ../../mod/install.php:117 ../../mod/install.php:157
+#: ../../mod/install.php:230
+msgid "Database connection"
+msgstr "Conexió a la base de dades"
+
+#: ../../mod/install.php:124
+msgid "Could not connect to database."
+msgstr "No puc connectar a la base de dades."
+
+#: ../../mod/install.php:128
+msgid "Could not create table."
+msgstr "No puc creat taula."
+
+#: ../../mod/install.php:133
+msgid "Your Friendica site database has been installed."
+msgstr "La base de dades del teu lloc Friendica ha estat instal·lada."
+
+#: ../../mod/install.php:134
+msgid ""
+"IMPORTANT: You will need to [manually] setup a scheduled task for the "
+"poller."
+msgstr "IMPORTANT: necessitarà configurar [manualment] el programar una tasca pel sondejador (poller.php)"
+
+#: ../../mod/install.php:135 ../../mod/install.php:151
+#: ../../mod/install.php:209
+msgid "Please see the file \"INSTALL.txt\"."
+msgstr "Per favor, consulti l'arxiu \"INSTALL.txt\"."
+
+#: ../../mod/install.php:137
+msgid "Proceed to registration"
+msgstr "Procedir a la inscripció"
+
+#: ../../mod/install.php:143
+msgid "Proceed with Installation"
+msgstr "Procedeixi amb la Instal·lació"
+
+#: ../../mod/install.php:150
+msgid ""
+"You may need to import the file \"database.sql\" manually using phpmyadmin "
+"or mysql."
+msgstr "Pot ser que hagi d'importar l'arxiu \"database.sql\" manualment amb phpmyadmin o mysql."
+
+#: ../../mod/install.php:158
+msgid "Database import failed."
+msgstr "La importació de base de dades ha fallat."
+
+#: ../../mod/install.php:206
+msgid "System check"
+msgstr "Comprovació del Sistema"
+
+#: ../../mod/install.php:211
+msgid "Check again"
+msgstr "Comprovi de nou"
+
+#: ../../mod/install.php:231
+msgid ""
+"In order to install Friendica we need to know how to connect to your "
+"database."
+msgstr "Per a instal·lar Friendica necessitem conèixer com connectar amb la deva base de dades."
+
+#: ../../mod/install.php:232
+msgid ""
+"Please contact your hosting provider or site administrator if you have "
+"questions about these settings."
+msgstr "Per favor, posi's en contacte amb el seu proveïdor de hosting o administrador del lloc si té alguna pregunta sobre aquestes opcions."
+
+#: ../../mod/install.php:233
+msgid ""
+"The database you specify below should already exist. If it does not, please "
+"create it before continuing."
+msgstr "La base de dades que especifiques ja hauria d'existir. Si no és així, crea-la abans de continuar."
+
+#: ../../mod/install.php:237
+msgid "Database Server Name"
+msgstr "Nom del Servidor de base de Dades"
+
+#: ../../mod/install.php:238
+msgid "Database Login Name"
+msgstr "Nom d'Usuari de la base de Dades"
+
+#: ../../mod/install.php:239
+msgid "Database Login Password"
+msgstr "Contrasenya d'Usuari de la base de Dades"
+
+#: ../../mod/install.php:240
+msgid "Database Name"
+msgstr "Nom de la base de Dades"
+
+#: ../../mod/install.php:241 ../../mod/install.php:280
+msgid "Site administrator email address"
+msgstr "Adreça de correu del administrador del lloc"
+
+#: ../../mod/install.php:241 ../../mod/install.php:280
+msgid ""
+"Your account email address must match this in order to use the web admin "
+"panel."
+msgstr "El seu compte d'adreça electrònica ha de coincidir per tal d'utilitzar el panell d'administració web."
+
+#: ../../mod/install.php:245 ../../mod/install.php:283
+msgid "Please select a default timezone for your website"
+msgstr "Per favor, seleccioni una zona horària per defecte per al seu lloc web"
+
+#: ../../mod/install.php:270
+msgid "Site settings"
+msgstr "Configuracions del lloc"
+
+#: ../../mod/install.php:323
+msgid "Could not find a command line version of PHP in the web server PATH."
+msgstr "No es va poder trobar una versió de línia de comandos de PHP en la ruta del servidor web."
+
+#: ../../mod/install.php:326
+msgid "PHP executable path"
+msgstr "Direcció del executable PHP"
+
+#: ../../mod/install.php:326
+msgid "Enter full path to php executable"
+msgstr "Introdueixi el camí complet del executable php"
+
+#: ../../mod/install.php:331
+msgid "Command line PHP"
+msgstr "Linia de comandos PHP"
+
+#: ../../mod/install.php:340
+msgid ""
+"The command line version of PHP on your system does not have "
+"\"register_argc_argv\" enabled."
+msgstr "La versió de línia de comandos de PHP en el seu sistema no té \"register_argc_argv\" habilitat."
+
+#: ../../mod/install.php:341
+msgid "This is required for message delivery to work."
+msgstr "Això és necessari perquè funcioni el lliurament de missatges."
+
+#: ../../mod/install.php:343
+msgid "PHP \"register_argc_argv\""
+msgstr "PHP \"register_argc_argv\""
+
+#: ../../mod/install.php:364
+msgid ""
+"Error: the \"openssl_pkey_new\" function on this system is not able to "
+"generate encryption keys"
+msgstr "Error: la funció \"openssl_pkey_new\" en aquest sistema no és capaç de generar claus de xifrat"
+
+#: ../../mod/install.php:365
+msgid ""
+"If running under Windows, please see "
+"\"http://www.php.net/manual/en/openssl.installation.php\"."
+msgstr "Si s'executa en Windows, per favor consulti la secció \"http://www.php.net/manual/en/openssl.installation.php\"."
+
+#: ../../mod/install.php:367
+msgid "Generate encryption keys"
+msgstr "Generar claus d'encripció"
+
+#: ../../mod/install.php:374
+msgid "libCurl PHP module"
+msgstr "Mòdul libCurl de PHP"
+
+#: ../../mod/install.php:375
+msgid "GD graphics PHP module"
+msgstr "Mòdul GD de gràfics de PHP"
+
+#: ../../mod/install.php:376
+msgid "OpenSSL PHP module"
+msgstr "Mòdul OpenSSl de PHP"
+
+#: ../../mod/install.php:377
+msgid "mysqli PHP module"
+msgstr "Mòdul mysqli de PHP"
+
+#: ../../mod/install.php:378
+msgid "mb_string PHP module"
+msgstr "Mòdul mb_string de PHP"
+
+#: ../../mod/install.php:383 ../../mod/install.php:385
+msgid "Apace mod_rewrite module"
+msgstr "Mòdul mod_rewrite de Apache"
+
+#: ../../mod/install.php:383
+msgid ""
+"Error: Apache webserver mod-rewrite module is required but not installed."
+msgstr "Error: el mòdul mod-rewrite del servidor web Apache és necessari però no està instal·lat."
+
+#: ../../mod/install.php:390
+msgid "Error: libCURL PHP module required but not installed."
+msgstr "Error: El mòdul libCURL de PHP és necessari però no està instal·lat."
+
+#: ../../mod/install.php:394
+msgid ""
+"Error: GD graphics PHP module with JPEG support required but not installed."
+msgstr "Error: el mòdul gràfic GD de PHP amb support per JPEG és necessari però no està instal·lat."
+
+#: ../../mod/install.php:398
+msgid "Error: openssl PHP module required but not installed."
+msgstr "Error: El mòdul enssl de PHP és necessari però no està instal·lat."
+
+#: ../../mod/install.php:402
+msgid "Error: mysqli PHP module required but not installed."
+msgstr "Error: El mòdul mysqli de PHP és necessari però no està instal·lat."
+
+#: ../../mod/install.php:406
+msgid "Error: mb_string PHP module required but not installed."
+msgstr "Error: mòdul mb_string de PHP requerit però no instal·lat."
+
+#: ../../mod/install.php:423
+msgid ""
+"The web installer needs to be able to create a file called \".htconfig.php\""
+" in the top folder of your web server and it is unable to do so."
+msgstr "L'instal·lador web necessita crear un arxiu anomenat \".htconfig.php\" en la carpeta superior del seu servidor web però alguna cosa ho va impedir."
+
+#: ../../mod/install.php:424
+msgid ""
+"This is most often a permission setting, as the web server may not be able "
+"to write files in your folder - even if you can."
+msgstr "Això freqüentment és a causa d'una configuració de permisos; el servidor web no pot escriure arxius en la carpeta - encara que sigui possible."
+
+#: ../../mod/install.php:425
+msgid ""
+"Please check with your site documentation or support people to see if this "
+"situation can be corrected."
+msgstr "Per favor, consulti amb la documentació del seu lloc o persones de suport per veure si aquesta situació es pot corregir."
+
+#: ../../mod/install.php:426
+msgid ""
+"If not, you may be required to perform a manual installation. Please see the"
+" file \"INSTALL.txt\" for instructions."
+msgstr "Si no, vostè pot ser requerit per realitzar una instal·lació manual. Per favor, consulti l'arxiu \"INSTALL.txt\" per obtenir instruccions."
+
+#: ../../mod/install.php:429
+msgid ".htconfig.php is writable"
+msgstr ".htconfig.php és escribible"
+
+#: ../../mod/install.php:436
+msgid ""
+"The database configuration file \".htconfig.php\" could not be written. "
+"Please use the enclosed text to create a configuration file in your web "
+"server root."
+msgstr "L'arxiu per a la configuració de la base de dades \".htconfig.php\" no es pot escriure. Per favor, usi el text adjunt per crear un arxiu de configuració en l'arrel del servidor web."
+
+#: ../../mod/install.php:461
+msgid "Errors encountered creating database tables."
+msgstr "Trobats errors durant la creació de les taules de la base de dades."
+
+#: ../../mod/localtime.php:12 ../../include/event.php:11
+#: ../../include/bb2diaspora.php:238
+msgid "l F d, Y \\@ g:i A"
+msgstr "l F d, Y \\@ g:i A"
+
+#: ../../mod/localtime.php:24
+msgid "Time Conversion"
+msgstr "Temps de Conversió"
+
+#: ../../mod/localtime.php:26
+msgid ""
+"Friendika provides this service for sharing events with other networks and "
+"friends in unknown timezones."
+msgstr "Friendica ofereix aquest servei per compartir esdeveniments amb altres xarxes i amics a les zones horàries desconegudes."
+
+#: ../../mod/localtime.php:30
+#, php-format
+msgid "UTC time: %s"
+msgstr "hora UTC: %s"
+
+#: ../../mod/localtime.php:33
+#, php-format
+msgid "Current timezone: %s"
+msgstr "Zona horària actual: %s"
+
+#: ../../mod/localtime.php:36
+#, php-format
+msgid "Converted localtime: %s"
+msgstr "Conversión de hora local: %s"
+
+#: ../../mod/localtime.php:41
+msgid "Please select your timezone:"
+msgstr "Si us plau, seleccioneu la vostra zona horària:"
+
+#: ../../mod/match.php:12
+msgid "Profile Match"
+msgstr "Perfil Aconseguit"
+
+#: ../../mod/match.php:20
+msgid "No keywords to match. Please add keywords to your default profile."
+msgstr "No hi ha paraules clau que coincideixin. Si us plau, afegeixi paraules clau al teu perfil predeterminat."
+
+#: ../../mod/match.php:57
+msgid "is interested in:"
+msgstr "està interessat en:"
+
+#: ../../mod/match.php:58 ../../mod/suggest.php:59
+#: ../../include/contact_widgets.php:9 ../../boot.php:930
+msgid "Connect"
+msgstr "Connexió"
+
+#: ../../mod/match.php:65 ../../mod/dirfind.php:57
+msgid "No matches"
+msgstr "No hi ha coincidències"
+
+#: ../../mod/lockview.php:39
+msgid "Remote privacy information not available."
+msgstr "Informació de privacitat remota no disponible."
+
+#: ../../mod/lockview.php:43
+msgid "Visible to:"
+msgstr "Visible per a:"
+
+#: ../../mod/home.php:26 ../../addon/communityhome/communityhome.php:179
+#, php-format
+msgid "Welcome to %s"
+msgstr "Benvingut a %s"
+
+#: ../../mod/notifications.php:26
+msgid "Invalid request identifier."
+msgstr "Sol·licitud d'identificació no vàlida."
+
+#: ../../mod/notifications.php:35 ../../mod/notifications.php:157
+#: ../../mod/notifications.php:203
+msgid "Discard"
+msgstr "Descartar"
+
+#: ../../mod/notifications.php:47 ../../mod/notifications.php:156
+#: ../../mod/notifications.php:202 ../../mod/contacts.php:302
+#: ../../mod/contacts.php:345
+msgid "Ignore"
+msgstr "Ignorar"
+
+#: ../../mod/notifications.php:71
+msgid "System"
+msgstr "Sistema"
+
+#: ../../mod/notifications.php:76 ../../include/nav.php:109
+msgid "Network"
+msgstr "Xarxa"
+
+#: ../../mod/notifications.php:81 ../../mod/network.php:177
+msgid "Personal"
+msgstr "Personal"
+
+#: ../../mod/notifications.php:86 ../../include/nav.php:73
+#: ../../include/nav.php:111
+msgid "Home"
+msgstr "Inici"
+
+#: ../../mod/notifications.php:91 ../../include/nav.php:117
+msgid "Introductions"
+msgstr "Presentacions"
+
+#: ../../mod/notifications.php:96 ../../mod/message.php:76
+#: ../../include/nav.php:124
+msgid "Messages"
+msgstr "Missatges"
+
+#: ../../mod/notifications.php:115
+msgid "Show Ignored Requests"
+msgstr "Mostra les Sol·licituds Ignorades"
+
+#: ../../mod/notifications.php:115
+msgid "Hide Ignored Requests"
+msgstr "Amaga les Sol·licituds Ignorades"
+
+#: ../../mod/notifications.php:141 ../../mod/notifications.php:187
+msgid "Notification type: "
+msgstr "Tipus de Notificació:"
+
+#: ../../mod/notifications.php:142
+msgid "Friend Suggestion"
+msgstr "Amics Suggerits "
+
+#: ../../mod/notifications.php:144
+#, php-format
+msgid "suggested by %s"
+msgstr "sugerit per %s"
+
+#: ../../mod/notifications.php:149 ../../mod/notifications.php:196
+#: ../../mod/contacts.php:350
+msgid "Hide this contact from others"
+msgstr "Amaga aquest contacte dels altres"
+
+#: ../../mod/notifications.php:150 ../../mod/notifications.php:197
+msgid "Post a new friend activity"
+msgstr "Publica una activitat  d'amic nova"
+
+#: ../../mod/notifications.php:150 ../../mod/notifications.php:197
+msgid "if applicable"
+msgstr "si es pot aplicar"
+
+#: ../../mod/notifications.php:153 ../../mod/notifications.php:200
+#: ../../mod/admin.php:486
+msgid "Approve"
+msgstr "Aprovar"
+
+#: ../../mod/notifications.php:173
+msgid "Claims to be known to you: "
+msgstr "Diu que et coneix:"
+
+#: ../../mod/notifications.php:173
+msgid "yes"
+msgstr "sí"
+
+#: ../../mod/notifications.php:173
+msgid "no"
+msgstr "no"
+
+#: ../../mod/notifications.php:180
+msgid "Approve as: "
+msgstr "Aprovat com:"
+
+#: ../../mod/notifications.php:181
+msgid "Friend"
+msgstr "Amic"
+
+#: ../../mod/notifications.php:182
+msgid "Sharer"
+msgstr "Partícip"
+
+#: ../../mod/notifications.php:182
+msgid "Fan/Admirer"
+msgstr "Fan/Admirador"
+
+#: ../../mod/notifications.php:188
+msgid "Friend/Connect Request"
+msgstr "Sol·licitud d'Amistat/Connexió"
+
+#: ../../mod/notifications.php:188
+msgid "New Follower"
+msgstr "Nou Seguidor"
+
+#: ../../mod/notifications.php:209
+msgid "No introductions."
+msgstr "Sense presentacions."
+
+#: ../../mod/notifications.php:212 ../../include/nav.php:118
+msgid "Notifications"
+msgstr "Notificacions"
+
+#: ../../mod/notifications.php:249 ../../mod/notifications.php:374
+#: ../../mod/notifications.php:461
+#, php-format
+msgid "%s liked %s's post"
+msgstr "A %s li agrada l'enviament de %s"
+
+#: ../../mod/notifications.php:258 ../../mod/notifications.php:383
+#: ../../mod/notifications.php:470
+#, php-format
+msgid "%s disliked %s's post"
+msgstr "A %s no li agrada l'enviament de %s"
+
+#: ../../mod/notifications.php:272 ../../mod/notifications.php:397
+#: ../../mod/notifications.php:484
+#, php-format
+msgid "%s is now friends with %s"
+msgstr "%s es ara amic de %s"
+
+#: ../../mod/notifications.php:279 ../../mod/notifications.php:404
+#, php-format
+msgid "%s created a new post"
+msgstr "%s ha creat un enviament nou"
+
+#: ../../mod/notifications.php:280 ../../mod/notifications.php:405
+#: ../../mod/notifications.php:493
+#, php-format
+msgid "%s commented on %s's post"
+msgstr "%s va comentar en l'enviament de %s"
+
+#: ../../mod/notifications.php:294
+msgid "No more network notifications."
+msgstr "No més notificacions de xarxa."
+
+#: ../../mod/notifications.php:298
+msgid "Network Notifications"
+msgstr "Notificacions de la Xarxa"
+
+#: ../../mod/notifications.php:324 ../../mod/notify.php:61
+msgid "No more system notifications."
+msgstr "No més notificacions del sistema."
+
+#: ../../mod/notifications.php:328 ../../mod/notify.php:65
+msgid "System Notifications"
+msgstr "Notificacions del Sistema"
+
+#: ../../mod/notifications.php:419
+msgid "No more personal notifications."
+msgstr "No més notificacions personals."
+
+#: ../../mod/notifications.php:423
+msgid "Personal Notifications"
+msgstr "Notificacions Personals"
+
+#: ../../mod/notifications.php:500
+msgid "No more home notifications."
+msgstr "No més notificacions d'inici."
+
+#: ../../mod/notifications.php:504
+msgid "Home Notifications"
+msgstr "Notificacions d'Inici"
+
+#: ../../mod/contacts.php:63 ../../mod/contacts.php:143
+msgid "Could not access contact record."
+msgstr "No puc accedir al registre del contacte."
+
+#: ../../mod/contacts.php:77
+msgid "Could not locate selected profile."
+msgstr "No puc localitzar el perfil seleccionat."
+
+#: ../../mod/contacts.php:100
+msgid "Contact updated."
+msgstr "Contacte actualitzat."
+
+#: ../../mod/contacts.php:165
+msgid "Contact has been blocked"
+msgstr "Elcontacte ha estat bloquejat"
+
+#: ../../mod/contacts.php:165
+msgid "Contact has been unblocked"
+msgstr "El contacte ha estat desbloquejat"
+
+#: ../../mod/contacts.php:179
+msgid "Contact has been ignored"
+msgstr "El contacte ha estat ignorat"
+
+#: ../../mod/contacts.php:179
+msgid "Contact has been unignored"
+msgstr "El contacte ha estat recordat"
+
+#: ../../mod/contacts.php:200
+msgid "stopped following"
+msgstr "Deixar de seguir"
+
+#: ../../mod/contacts.php:221
+msgid "Contact has been removed."
+msgstr "El contacte ha estat tret"
+
+#: ../../mod/contacts.php:245
+#, php-format
+msgid "You are mutual friends with %s"
+msgstr "Ara te una amistat mutua amb %s"
+
+#: ../../mod/contacts.php:249
+#, php-format
+msgid "You are sharing with %s"
+msgstr "Estas compartint amb %s"
+
+#: ../../mod/contacts.php:254
+#, php-format
+msgid "%s is sharing with you"
+msgstr "%s esta compartint amb tú"
+
+#: ../../mod/contacts.php:271
+msgid "Private communications are not available for this contact."
+msgstr "Comunicacions privades no disponibles per aquest contacte."
+
+#: ../../mod/contacts.php:274
+msgid "Never"
+msgstr "Mai"
+
+#: ../../mod/contacts.php:278
+msgid "(Update was successful)"
+msgstr "(L'actualització fou exitosa)"
+
+#: ../../mod/contacts.php:278
+msgid "(Update was not successful)"
+msgstr "(L'actualització fracassà)"
+
+#: ../../mod/contacts.php:280
+msgid "Suggest friends"
+msgstr "Suggerir amics"
+
+#: ../../mod/contacts.php:284
+#, php-format
+msgid "Network type: %s"
+msgstr "Xarxa tipus: %s"
+
+#: ../../mod/contacts.php:287
+#, php-format
+msgid "%d contact in common"
+msgid_plural "%d contacts in common"
+msgstr[0] "%d contacte en comú"
+msgstr[1] "%d contactes en comú"
+
+#: ../../mod/contacts.php:292
+msgid "View all contacts"
+msgstr "Veure tots els contactes"
+
+#: ../../mod/contacts.php:297 ../../mod/contacts.php:344
+#: ../../mod/admin.php:490
+msgid "Unblock"
+msgstr "Desbloquejar"
+
+#: ../../mod/contacts.php:297 ../../mod/contacts.php:344
+#: ../../mod/admin.php:489
+msgid "Block"
+msgstr "Bloquejar"
+
+#: ../../mod/contacts.php:302 ../../mod/contacts.php:345
+msgid "Unignore"
+msgstr "Treure d'Ignorats"
+
+#: ../../mod/contacts.php:307
+msgid "Repair"
+msgstr "Reparar"
+
+#: ../../mod/contacts.php:317
+msgid "Contact Editor"
+msgstr "Editor de Contactes"
+
+#: ../../mod/contacts.php:320
+msgid "Profile Visibility"
+msgstr "Perfil de Visibilitat"
+
+#: ../../mod/contacts.php:321
+#, php-format
+msgid ""
+"Please choose the profile you would like to display to %s when viewing your "
+"profile securely."
+msgstr "Si us plau triï el perfil que voleu mostrar a %s quan estigui veient el teu de forma segura."
+
+#: ../../mod/contacts.php:322
+msgid "Contact Information / Notes"
+msgstr "Informació/Notes del contacte"
+
+#: ../../mod/contacts.php:323
+msgid "Edit contact notes"
+msgstr "Editar notes de contactes"
+
+#: ../../mod/contacts.php:328 ../../mod/contacts.php:497
+#: ../../mod/viewcontacts.php:60
+#, php-format
+msgid "Visit %s's profile [%s]"
+msgstr "Visitar perfil de %s [%s]"
+
+#: ../../mod/contacts.php:329
+msgid "Block/Unblock contact"
+msgstr "Bloquejar/Alliberar contacte"
+
+#: ../../mod/contacts.php:330
+msgid "Ignore contact"
+msgstr "Ignore contacte"
+
+#: ../../mod/contacts.php:331
+msgid "Repair URL settings"
+msgstr "Restablir configuració de URL"
+
+#: ../../mod/contacts.php:332
+msgid "View conversations"
+msgstr "Veient conversacions"
+
+#: ../../mod/contacts.php:334
+msgid "Delete contact"
+msgstr "Esborrar contacte"
+
+#: ../../mod/contacts.php:338
+msgid "Last update:"
+msgstr "Última actualització:"
+
+#: ../../mod/contacts.php:339
+msgid "Update public posts"
+msgstr "Actualitzar enviament públic"
+
+#: ../../mod/contacts.php:341 ../../mod/admin.php:905
+msgid "Update now"
+msgstr "Actualitza ara"
+
+#: ../../mod/contacts.php:348
+msgid "Currently blocked"
+msgstr "Bloquejat actualment"
+
+#: ../../mod/contacts.php:349
+msgid "Currently ignored"
+msgstr "Ignorat actualment"
+
+#: ../../mod/contacts.php:350
+msgid ""
+"Replies/likes to your public posts <strong>may</strong> still be visible"
+msgstr "Répliques/agraiments per als teus missatges públics <strong>poden</strong> romandre visibles"
+
+#: ../../mod/contacts.php:399 ../../mod/group.php:179
+msgid "All Contacts"
+msgstr "Tots els Contactes"
+
+#: ../../mod/contacts.php:404
+msgid "Unblocked Contacts"
+msgstr "Contactes Desbloquejats"
+
+#: ../../mod/contacts.php:410
+msgid "Blocked Contacts"
+msgstr "Contactes Bloquejats"
+
+#: ../../mod/contacts.php:416
+msgid "Ignored Contacts"
+msgstr "Contactes Ignorats"
+
+#: ../../mod/contacts.php:422
+msgid "Hidden Contacts"
+msgstr "Contactes Amagats"
+
+#: ../../mod/contacts.php:473
+msgid "Mutual Friendship"
+msgstr "Amistat Mutua"
+
+#: ../../mod/contacts.php:477
+msgid "is a fan of yours"
+msgstr "Es un fan teu"
+
+#: ../../mod/contacts.php:481
+msgid "you are a fan of"
+msgstr "ets fan de"
+
+#: ../../mod/contacts.php:498 ../../include/Contact.php:135
+#: ../../include/conversation.php:792
+msgid "Edit contact"
+msgstr "Editar contacte"
+
+#: ../../mod/contacts.php:519 ../../include/nav.php:132
+msgid "Contacts"
+msgstr "Contactes"
+
+#: ../../mod/contacts.php:523
+msgid "Search your contacts"
+msgstr "Cercant el seus contactes"
+
+#: ../../mod/contacts.php:524 ../../mod/directory.php:67
+msgid "Finding: "
+msgstr "Cercant:"
+
+#: ../../mod/contacts.php:525 ../../mod/directory.php:69
+#: ../../include/contact_widgets.php:34
+msgid "Find"
+msgstr "Cercar"
+
+#: ../../mod/lostpass.php:16
+msgid "No valid account found."
+msgstr "compte no vàlid trobat."
+
+#: ../../mod/lostpass.php:31
+msgid "Password reset request issued. Check your email."
+msgstr "Sol·licitut de restabliment de contrasenya enviat. Comprovi el seu correu."
+
+#: ../../mod/lostpass.php:42
+#, php-format
+msgid "Password reset requested at %s"
+msgstr "Contrasenya restablerta enviada a %s"
+
+#: ../../mod/lostpass.php:44 ../../mod/lostpass.php:106
+#: ../../mod/register.php:380 ../../mod/register.php:434
+#: ../../mod/regmod.php:54 ../../mod/dfrn_confirm.php:726
+#: ../../include/items.php:2575
+msgid "Administrator"
+msgstr "Administrador"
+
+#: ../../mod/lostpass.php:64
+msgid ""
+"Request could not be verified. (You may have previously submitted it.) "
+"Password reset failed."
+msgstr "La sol·licitut no pot ser verificada. (Hauries de presentar-la abans). Restabliment de contrasenya fracassat."
+
+#: ../../mod/lostpass.php:82 ../../boot.php:723
+msgid "Password Reset"
+msgstr "Restabliment de Contrasenya"
+
+#: ../../mod/lostpass.php:83
+msgid "Your password has been reset as requested."
+msgstr "La teva contrasenya fou restablerta com vas demanar."
+
+#: ../../mod/lostpass.php:84
+msgid "Your new password is"
+msgstr "La teva nova contrasenya es"
+
+#: ../../mod/lostpass.php:85
+msgid "Save or copy your new password - and then"
+msgstr "Guarda o copia la nova contrasenya - i llavors"
+
+#: ../../mod/lostpass.php:86
+msgid "click here to login"
+msgstr "clica aquí per identificarte"
+
+#: ../../mod/lostpass.php:87
+msgid ""
+"Your password may be changed from the <em>Settings</em> page after "
+"successful login."
+msgstr "Pots camviar la contrasenya des de la pàgina de <em>Configuración</em> desprès d'accedir amb èxit."
+
+#: ../../mod/lostpass.php:118
+msgid "Forgot your Password?"
+msgstr "Has Oblidat la Contrasenya?"
+
+#: ../../mod/lostpass.php:119
+msgid ""
+"Enter your email address and submit to have your password reset. Then check "
+"your email for further instructions."
+msgstr "Introdueixi la seva adreça de correu i enivii-la per restablir la seva contrasenya. Llavors comprovi el seu correu per a les següents instruccións. "
+
+#: ../../mod/lostpass.php:120
+msgid "Nickname or Email: "
+msgstr "Malnom o Correu:"
+
+#: ../../mod/lostpass.php:121
+msgid "Reset"
+msgstr "Restablir"
+
+#: ../../mod/settings.php:72
+msgid "Missing some important data!"
+msgstr "Perdudes algunes dades importants!"
+
+#: ../../mod/settings.php:75 ../../mod/settings.php:486 ../../mod/admin.php:75
+msgid "Update"
+msgstr "Actualitzar"
+
+#: ../../mod/settings.php:175
+msgid "Failed to connect with email account using the settings provided."
+msgstr "Connexió fracassada amb el compte de correu emprant la configuració proveïda."
+
+#: ../../mod/settings.php:180
+msgid "Email settings updated."
+msgstr "Configuració del correu electrònic actualitzada."
+
+#: ../../mod/settings.php:198
+msgid "Passwords do not match. Password unchanged."
+msgstr "Les contrasenyes no coincideixen. Contrasenya no canviada."
+
+#: ../../mod/settings.php:203
+msgid "Empty passwords are not allowed. Password unchanged."
+msgstr "No es permeten contasenyes buides. Contrasenya no canviada"
+
+#: ../../mod/settings.php:214
+msgid "Password changed."
+msgstr "Contrasenya canviada."
+
+#: ../../mod/settings.php:216
+msgid "Password update failed. Please try again."
+msgstr "Ha fallat l'actualització de la Contrasenya. Per favor, intenti-ho de nou."
+
+#: ../../mod/settings.php:280
+msgid " Please use a shorter name."
+msgstr "Si us plau, faci servir un nom més curt."
+
+#: ../../mod/settings.php:282
+msgid " Name too short."
+msgstr "Nom massa curt."
+
+#: ../../mod/settings.php:288
+msgid " Not valid email."
+msgstr "Correu no vàlid."
+
+#: ../../mod/settings.php:290
+msgid " Cannot change to that email."
+msgstr "No puc canviar a aquest correu."
+
+#: ../../mod/settings.php:358 ../../addon/facebook/facebook.php:321
+#: ../../addon/impressum/impressum.php:64
+#: ../../addon/openstreetmap/openstreetmap.php:80
+#: ../../addon/piwik/piwik.php:105 ../../addon/twitter/twitter.php:350
+msgid "Settings updated."
+msgstr "Ajustos actualitzats."
+
+#: ../../mod/settings.php:422 ../../include/nav.php:130
+msgid "Account settings"
+msgstr "Configuració del compte"
+
+#: ../../mod/settings.php:427
+msgid "Connector settings"
+msgstr "Configuració dels connectors"
+
+#: ../../mod/settings.php:432
+msgid "Plugin settings"
+msgstr "Configuració del plugin"
+
+#: ../../mod/settings.php:437
+msgid "Connections"
+msgstr "Connexions"
+
+#: ../../mod/settings.php:442
+msgid "Export personal data"
+msgstr "Exportar dades personals"
+
+#: ../../mod/settings.php:459 ../../mod/settings.php:485
+#: ../../mod/settings.php:518
+msgid "Add application"
+msgstr "Afegir aplicació"
+
+#: ../../mod/settings.php:463 ../../mod/settings.php:489
+#: ../../addon/statusnet/statusnet.php:526
+msgid "Consumer Key"
+msgstr "Consumer Key"
+
+#: ../../mod/settings.php:464 ../../mod/settings.php:490
+#: ../../addon/statusnet/statusnet.php:525
+msgid "Consumer Secret"
+msgstr "Consumer Secret"
+
+#: ../../mod/settings.php:465 ../../mod/settings.php:491
+msgid "Redirect"
+msgstr "Redirigir"
+
+#: ../../mod/settings.php:466 ../../mod/settings.php:492
+msgid "Icon url"
+msgstr "icona de url"
+
+#: ../../mod/settings.php:477
+msgid "You can't edit this application."
+msgstr "No pots editar aquesta aplicació."
+
+#: ../../mod/settings.php:517
+msgid "Connected Apps"
+msgstr "Aplicacions conectades"
+
+#: ../../mod/settings.php:521
+msgid "Client key starts with"
+msgstr "Les claus de client comançen amb"
+
+#: ../../mod/settings.php:522
+msgid "No name"
+msgstr "Sense nom"
+
+#: ../../mod/settings.php:523
+msgid "Remove authorization"
+msgstr "retirar l'autorització"
+
+#: ../../mod/settings.php:535
+msgid "No Plugin settings configured"
+msgstr "No s'han configurat ajustos de Plugin"
+
+#: ../../mod/settings.php:542 ../../addon/widgets/widgets.php:122
+msgid "Plugin Settings"
+msgstr "Ajustos de Plugin"
+
+#: ../../mod/settings.php:555 ../../mod/settings.php:556
+#, php-format
+msgid "Built-in support for %s connectivity is %s"
+msgstr "El suport integrat per a la connectivitat de %s és %s"
+
+#: ../../mod/settings.php:555 ../../mod/settings.php:556
+msgid "enabled"
+msgstr "habilitat"
+
+#: ../../mod/settings.php:555 ../../mod/settings.php:556
+msgid "disabled"
+msgstr "deshabilitat"
+
+#: ../../mod/settings.php:556
+msgid "StatusNet"
+msgstr "StatusNet"
+
+#: ../../mod/settings.php:584
+msgid "Connector Settings"
+msgstr "Configuració de connectors"
+
+#: ../../mod/settings.php:590
+msgid "Email/Mailbox Setup"
+msgstr "Preparació de Correu/Bústia"
+
+#: ../../mod/settings.php:591
+msgid ""
+"If you wish to communicate with email contacts using this service "
+"(optional), please specify how to connect to your mailbox."
+msgstr "Si vol comunicar-se amb els contactes de correu emprant aquest servei (opcional), Si us plau, especifiqui com connectar amb la seva bústia."
+
+#: ../../mod/settings.php:592
+msgid "Last successful email check:"
+msgstr "Última comprovació de correu amb èxit:"
+
+#: ../../mod/settings.php:593
+msgid "Email access is disabled on this site."
+msgstr "L'accés al correu està deshabilitat en aquest lloc."
+
+#: ../../mod/settings.php:594
+msgid "IMAP server name:"
+msgstr "Nom del servidor IMAP:"
+
+#: ../../mod/settings.php:595
+msgid "IMAP port:"
+msgstr "Port IMAP:"
+
+#: ../../mod/settings.php:596
+msgid "Security:"
+msgstr "Seguretat:"
+
+#: ../../mod/settings.php:596 ../../mod/settings.php:601
+msgid "None"
+msgstr "Cap"
+
+#: ../../mod/settings.php:597
+msgid "Email login name:"
+msgstr "Nom d'usuari del correu"
+
+#: ../../mod/settings.php:598
+msgid "Email password:"
+msgstr "Contrasenya del correu:"
+
+#: ../../mod/settings.php:599
+msgid "Reply-to address:"
+msgstr "Adreça de resposta:"
+
+#: ../../mod/settings.php:600
+msgid "Send public posts to all email contacts:"
+msgstr "Enviar correu públic a tots els contactes del correu:"
+
+#: ../../mod/settings.php:601
+msgid "Action after import:"
+msgstr "Acció després d'importar:"
+
+#: ../../mod/settings.php:601
+msgid "Mark as seen"
+msgstr "Marcar com a vist"
+
+#: ../../mod/settings.php:601
+msgid "Move to folder"
+msgstr "Moure a la carpeta"
+
+#: ../../mod/settings.php:602
+msgid "Move to folder:"
+msgstr "Moure a la carpeta:"
+
+#: ../../mod/settings.php:659 ../../mod/admin.php:142 ../../mod/admin.php:462
+msgid "Normal Account"
+msgstr "Compte Normal"
+
+#: ../../mod/settings.php:660
+msgid "This account is a normal personal profile"
+msgstr "Aques compte es un compte personal normal"
+
+#: ../../mod/settings.php:663 ../../mod/admin.php:143 ../../mod/admin.php:463
+msgid "Soapbox Account"
+msgstr "Compte Tribuna"
+
+#: ../../mod/settings.php:664
+msgid "Automatically approve all connection/friend requests as read-only fans"
+msgstr "Aprova automàticament totes les sol·licituds de amistat/connexió com a fans de només lectura."
+
+#: ../../mod/settings.php:667 ../../mod/admin.php:144 ../../mod/admin.php:464
+msgid "Community/Celebrity Account"
+msgstr "Compte de Comunitat/Celebritat"
+
+#: ../../mod/settings.php:668
+msgid ""
+"Automatically approve all connection/friend requests as read-write fans"
+msgstr "Aprova automàticament totes les sol·licituds de amistat/connexió com a fans de lectura-escriptura"
+
+#: ../../mod/settings.php:671 ../../mod/admin.php:145 ../../mod/admin.php:465
+msgid "Automatic Friend Account"
+msgstr "Compte d'Amistat Automàtic"
+
+#: ../../mod/settings.php:672
+msgid "Automatically approve all connection/friend requests as friends"
+msgstr "Aprova totes les sol·licituds de amistat/connexió com a amic automàticament"
+
+#: ../../mod/settings.php:682
+msgid "OpenID:"
+msgstr "OpenID:"
+
+#: ../../mod/settings.php:682
+msgid "(Optional) Allow this OpenID to login to this account."
+msgstr "(Opcional) Permetre a aquest OpenID iniciar sessió en aquest compte."
+
+#: ../../mod/settings.php:692
+msgid "Publish your default profile in your local site directory?"
+msgstr "Publicar el teu perfil predeterminat en el directori del lloc local?"
+
+#: ../../mod/settings.php:698
+msgid "Publish your default profile in the global social directory?"
+msgstr "Publicar el teu perfil predeterminat al directori social global?"
+
+#: ../../mod/settings.php:706
+msgid "Hide your contact/friend list from viewers of your default profile?"
+msgstr "Amaga la teva llista de contactes/amics dels espectadors del seu perfil per defecte?"
+
+#: ../../mod/settings.php:710
+msgid "Hide your profile details from unknown viewers?"
+msgstr "Amagar els detalls del seu perfil a espectadors desconeguts?"
+
+#: ../../mod/settings.php:715
+msgid "Allow friends to post to your profile page?"
+msgstr "Permet als amics publicar en la seva pàgina de perfil?"
+
+#: ../../mod/settings.php:721
+msgid "Allow friends to tag your posts?"
+msgstr "Permet als amics d'etiquetar els teus missatges?"
+
+#: ../../mod/settings.php:727
+msgid "Allow us to suggest you as a potential friend to new members?"
+msgstr "Permeteu-nos suggerir-li com un amic potencial dels nous membres?"
+
+#: ../../mod/settings.php:736
+msgid "Profile is <strong>not published</strong>."
+msgstr "El  Perfil <strong>no està publicat</strong>."
+
+#: ../../mod/settings.php:768 ../../mod/profile_photo.php:206
+msgid "or"
+msgstr "o"
+
+#: ../../mod/settings.php:773
+msgid "Your Identity Address is"
+msgstr "La seva Adreça d'Identitat és"
+
+#: ../../mod/settings.php:784
+msgid "Automatically expire posts after this many days:"
+msgstr "Després de aquests nombre de dies, els missatges caduquen automàticament:"
+
+#: ../../mod/settings.php:784
+msgid "If empty, posts will not expire. Expired posts will be deleted"
+msgstr "Si està buit, els missatges no caducarà. Missatges caducats s'eliminaran"
+
+#: ../../mod/settings.php:785
+msgid "Advanced expiration settings"
+msgstr "Configuració avançada d'expiració"
+
+#: ../../mod/settings.php:786
+msgid "Advanced Expiration"
+msgstr "Expiració Avançada"
+
+#: ../../mod/settings.php:787
+msgid "Expire posts:"
+msgstr "Expiració d'enviaments"
+
+#: ../../mod/settings.php:788
+msgid "Expire personal notes:"
+msgstr "Expiració de notes personals"
+
+#: ../../mod/settings.php:789
+msgid "Expire starred posts:"
+msgstr "Expiració de enviaments de favorits"
+
+#: ../../mod/settings.php:790
+msgid "Expire photos:"
+msgstr "Expiració de fotos"
+
+#: ../../mod/settings.php:795
+msgid "Account Settings"
+msgstr "Ajustos de Compte"
+
+#: ../../mod/settings.php:803
+msgid "Password Settings"
+msgstr "Ajustos de Contrasenya"
+
+#: ../../mod/settings.php:804
+msgid "New Password:"
+msgstr "Nova Contrasenya:"
+
+#: ../../mod/settings.php:805
+msgid "Confirm:"
+msgstr "Confirmar:"
+
+#: ../../mod/settings.php:805
+msgid "Leave password fields blank unless changing"
+msgstr "Deixi els camps de contrasenya buits per a no fer canvis"
+
+#: ../../mod/settings.php:809
+msgid "Basic Settings"
+msgstr "Ajustos Basics"
+
+#: ../../mod/settings.php:810 ../../include/profile_advanced.php:15
+msgid "Full Name:"
+msgstr "Nom Complet:"
+
+#: ../../mod/settings.php:811
+msgid "Email Address:"
+msgstr "Adreça de Correu:"
+
+#: ../../mod/settings.php:812
+msgid "Your Timezone:"
+msgstr "La teva zona Horària:"
+
+#: ../../mod/settings.php:813
+msgid "Default Post Location:"
+msgstr "Localització per Defecte del Missatge:"
+
+#: ../../mod/settings.php:814
+msgid "Use Browser Location:"
+msgstr "Ubicar-se amb el Navegador:"
+
+#: ../../mod/settings.php:815
+msgid "Display Theme:"
+msgstr "Visualitzar el Tema:"
+
+#: ../../mod/settings.php:816
+msgid "Update browser every xx seconds"
+msgstr "Actualitzar navegador cada xx segons"
+
+#: ../../mod/settings.php:816
+msgid "Minimum of 10 seconds, no maximum"
+msgstr "Mínim cada 10 segons, no hi ha màxim"
+
+#: ../../mod/settings.php:818
+msgid "Security and Privacy Settings"
+msgstr "Ajustos de Seguretat i Privacitat"
+
+#: ../../mod/settings.php:820
+msgid "Maximum Friend Requests/Day:"
+msgstr "Nombre Màxim de Sol·licituds per Dia"
+
+#: ../../mod/settings.php:820
+msgid "(to prevent spam abuse)"
+msgstr "(per a prevenir abusos de spam)"
+
+#: ../../mod/settings.php:821
+msgid "Default Post Permissions"
+msgstr "Permisos de Correu per Defecte"
+
+#: ../../mod/settings.php:822
+msgid "(click to open/close)"
+msgstr "(clicar per a obrir/tancar)"
+
+#: ../../mod/settings.php:837
+msgid "Notification Settings"
+msgstr "Ajustos de Notificació"
+
+#: ../../mod/settings.php:838
+msgid "Send a notification email when:"
+msgstr "Envia un correu notificant quan:"
+
+#: ../../mod/settings.php:839
+msgid "You receive an introduction"
+msgstr "Has rebut una presentació"
+
+#: ../../mod/settings.php:840
+msgid "Your introductions are confirmed"
+msgstr "La teva presentació està confirmada"
+
+#: ../../mod/settings.php:841
+msgid "Someone writes on your profile wall"
+msgstr "Algú ha escrit en el teu mur de perfil"
+
+#: ../../mod/settings.php:842
+msgid "Someone writes a followup comment"
+msgstr "Algú ha escrit un comentari de seguiment"
+
+#: ../../mod/settings.php:843
+msgid "You receive a private message"
+msgstr "Has rebut un missatge privat"
+
+#: ../../mod/settings.php:844
+msgid "You receive a friend suggestion"
+msgstr "Has rebut una suggerencia d'un amic"
+
+#: ../../mod/settings.php:845
+msgid "You are tagged in a post"
+msgstr "Estàs etiquetat en un enviament"
+
+#: ../../mod/settings.php:848
+msgid "Advanced Page Settings"
+msgstr "Ajustos Avançats de Pàgina"
+
+#: ../../mod/manage.php:90
+msgid "Manage Identities and/or Pages"
+msgstr "Administrar Identitats i/o  Pàgines"
+
+#: ../../mod/manage.php:93
+msgid ""
+"Toggle between different identities or community/group pages which share "
+"your account details or which you have been granted \"manage\" permissions"
+msgstr "Alternar entre les diferents identitats o les pàgines de comunitats/grups que comparteixen les dades del seu compte o que se li ha concedit els permisos de \"administrar\""
+
+#: ../../mod/manage.php:95
+msgid "Select an identity to manage: "
+msgstr "Seleccionar identitat a administrar:"
+
+#: ../../mod/network.php:43
+msgid "Search Results For:"
+msgstr "Resultats de la Cerca Per a:"
+
+#: ../../mod/network.php:77 ../../mod/search.php:16
+msgid "Remove term"
+msgstr "Traieu termini"
+
+#: ../../mod/network.php:86 ../../mod/search.php:13
+msgid "Saved Searches"
+msgstr "Cerques Guardades"
+
+#: ../../mod/network.php:87 ../../include/group.php:216
+msgid "add"
+msgstr "afegir"
+
+#: ../../mod/network.php:166
+msgid "Commented Order"
+msgstr "Ordre dels Comentaris"
+
+#: ../../mod/network.php:171
+msgid "Posted Order"
+msgstr "Ordre dels Enviaments"
+
+#: ../../mod/network.php:182
+msgid "New"
+msgstr "Nou"
+
+#: ../../mod/network.php:187
+msgid "Starred"
+msgstr "Favorits"
+
+#: ../../mod/network.php:192
+msgid "Bookmarks"
+msgstr "Marcadors"
+
+#: ../../mod/network.php:250
+#, php-format
+msgid "Warning: This group contains %s member from an insecure network."
+msgid_plural ""
+"Warning: This group contains %s members from an insecure network."
+msgstr[0] "Advertència: Aquest grup conté el membre %s en una xarxa insegura."
+msgstr[1] "Advertència: Aquest grup conté %s membres d'una xarxa insegura."
+
+#: ../../mod/network.php:253
+msgid "Private messages to this group are at risk of public disclosure."
+msgstr "Els missatges privats a aquest grup es troben en risc de divulgació pública."
+
+#: ../../mod/network.php:298
+msgid "No such group"
+msgstr "Cap grup com"
+
+#: ../../mod/network.php:309
+msgid "Group is empty"
+msgstr "El Grup es buit"
+
+#: ../../mod/network.php:313
+msgid "Group: "
+msgstr "Grup:"
+
+#: ../../mod/network.php:323
+msgid "Contact: "
+msgstr "Contacte:"
+
+#: ../../mod/network.php:325
+msgid "Private messages to this person are at risk of public disclosure."
+msgstr "Els missatges privats a aquesta persona es troben en risc de divulgació pública."
+
+#: ../../mod/network.php:330
+msgid "Invalid contact."
+msgstr "Contacte no vàlid."
+
+#: ../../mod/notes.php:44 ../../boot.php:1354
+msgid "Personal Notes"
+msgstr "Notes Personals"
+
+#: ../../mod/notes.php:63 ../../include/text.php:645
+msgid "Save"
+msgstr "Guardar"
+
+#: ../../mod/newmember.php:6
+msgid "Welcome to Friendica"
+msgstr "Benvingut a Friendica"
+
+#: ../../mod/newmember.php:8
+msgid "New Member Checklist"
+msgstr "Llista de Verificació dels Nous Membres"
+
+#: ../../mod/newmember.php:12
+msgid ""
+"We would like to offer some tips and links to help make your experience "
+"enjoyable. Click any item to visit the relevant page. A link to this page "
+"will be visible from your home page for two weeks after your initial "
+"registration and then will quietly disappear."
+msgstr "Ens agradaria oferir alguns consells i enllaços per ajudar a fer la seva experiència agradable. Feu clic a qualsevol element per visitar la pàgina corresponent. Un enllaç a aquesta pàgina serà visible des de la pàgina d'inici durant dues setmanes després de la seva inscripció inicial i després desapareixerà en silenci."
+
+#: ../../mod/newmember.php:16
+msgid ""
+"On your <em>Settings</em> page -  change your initial password. Also make a "
+"note of your Identity Address. This looks just like an email address - and "
+"will be useful in making friends on the free social web."
+msgstr "En la  de la seva <em>configuració</em> de la pàgina - canviï la contrasenya inicial. També prengui nota de la Adreça d'Identitat. Això s'assembla a una adreça de correu electrònic - i serà útil per fer amics a la xarxa social lliure."
+
+#: ../../mod/newmember.php:18
+msgid ""
+"Review the other settings, particularly the privacy settings. An unpublished"
+" directory listing is like having an unlisted phone number. In general, you "
+"should probably publish your listing - unless all of your friends and "
+"potential friends know exactly how to find you."
+msgstr "Reviseu les altres configuracions, en particular la configuració de privadesa. Una llista de directoris no publicada és com tenir un número de telèfon no llistat. Normalment, hauria de publicar la seva llista - a menys que tots els seus amics i els amics potencials sàpiguen exactament com trobar-li."
+
+#: ../../mod/newmember.php:20
+msgid ""
+"Upload a profile photo if you have not done so already. Studies have shown "
+"that people with real photos of themselves are ten times more likely to make"
+" friends than people who do not."
+msgstr "Puji una foto del seu perfil si encara no ho ha fet. Els estudis han demostrat que les persones amb fotos reals de ells mateixos tenen deu vegades més probabilitats de fer amics que les persones que no ho fan."
+
+#: ../../mod/newmember.php:23
+msgid ""
+"Authorise the Facebook Connector if you currently have a Facebook account "
+"and we will (optionally) import all your Facebook friends and conversations."
+msgstr "Autoritzi el connector de Facebook si vostè té un compte al Facebook i nosaltres (opcionalment) importarem tots els teus amics de Facebook i les converses."
+
+#: ../../mod/newmember.php:25
+msgid ""
+"<em>If</em> this is your own personal server, installing the Facebook addon "
+"may ease your transition to the free social web."
+msgstr "<em>Si </em> aquesta és el seu servidor personal, la instal·lació del complement de Facebook pot facilitar la transició a la web social lliure."
+
+#: ../../mod/newmember.php:30
+msgid ""
+"Enter your email access information on your Connector Settings page if you "
+"wish to import and interact with friends or mailing lists from your email "
+"INBOX"
+msgstr "Introduïu les dades d'accés al correu electrònic a la seva pàgina de configuració de connector, si es desitja importar i relacionar-se amb amics o llistes de correu de la seva bústia d'email"
+
+#: ../../mod/newmember.php:32
+msgid ""
+"Edit your <strong>default</strong> profile to your liking. Review the "
+"settings for hiding your list of friends and hiding the profile from unknown"
+" visitors."
+msgstr "Editi  el perfil per <strong>defecte</strong> al seu gust. Reviseu la configuració per ocultar la seva llista d'amics i ocultar el perfil dels visitants desconeguts."
+
+#: ../../mod/newmember.php:34
+msgid ""
+"Set some public keywords for your default profile which describe your "
+"interests. We may be able to find other people with similar interests and "
+"suggest friendships."
+msgstr "Estableix algunes paraules clau públiques al teu perfil predeterminat que descriguin els teus interessos. Podem ser capaços de trobar altres persones amb interessos similars i suggerir amistats."
+
+#: ../../mod/newmember.php:36
+msgid ""
+"Your Contacts page is your gateway to managing friendships and connecting "
+"with friends on other networks. Typically you enter their address or site "
+"URL in the <em>Add New Contact</em> dialog."
+msgstr "La seva pàgina de Contactes és la seva porta d'entrada a la gestió de l'amistat i la connexió amb amics d'altres xarxes. Normalment, vostè entrar en la seva direcció o URL del lloc al  diàleg <em>Afegir Nou Contacte</em>."
+
+#: ../../mod/newmember.php:38
+msgid ""
+"The Directory page lets you find other people in this network or other "
+"federated sites. Look for a <em>Connect</em> or <em>Follow</em> link on "
+"their profile page. Provide your own Identity Address if requested."
+msgstr "La pàgina del Directori li permet trobar altres persones en aquesta xarxa o altres llocs federats. Busqui un enllaç <em>Connectar</em> o <em>Seguir</em> a la seva pàgina de perfil. Proporcioni la seva pròpia Adreça de Identitat si així ho sol·licita."
+
+#: ../../mod/newmember.php:40
+msgid ""
+"On the side panel of the Contacts page are several tools to find new "
+"friends. We can match people by interest, look up people by name or "
+"interest, and provide suggestions based on network relationships. On a brand"
+" new site, friend suggestions will usually begin to be populated within 24 "
+"hours."
+msgstr "Al tauler lateral de la pàgina de contacte Hi ha diverses eines per trobar nous amics. Podem coincidir amb les persones per interesos, buscar persones pel nom o per interès, i oferir suggeriments basats en les relacions de la xarxa. En un nou lloc, els suggeriments d'amics, en general comencen a poblar el lloc a les 24 hores."
+
+#: ../../mod/newmember.php:42
+msgid ""
+"Once you have made some friends, organize them into private conversation "
+"groups from the sidebar of your Contacts page and then you can interact with"
+" each group privately on your Network page."
+msgstr "Una vegada que s'han fet alguns amics, organitzi'ls en grups de conversa privada a la barra lateral de la seva pàgina de contactes i després pot interactuar amb cada grup de forma privada a la pàgina de la xarxa."
+
+#: ../../mod/newmember.php:44
+msgid ""
+"Our <strong>help</strong> pages may be consulted for detail on other program"
+" features and resources."
+msgstr "A les nostres pàgines <strong>d'ajuda</strong> es poden consultar detalls sobre les característiques d'altres programes i recursos."
+
+#: ../../mod/attach.php:8
+msgid "Item not available."
+msgstr "Element no disponible"
+
+#: ../../mod/attach.php:20
+msgid "Item was not found."
+msgstr "Element no trobat."
+
+#: ../../mod/group.php:27
+msgid "Group created."
+msgstr "Grup creat."
+
+#: ../../mod/group.php:33
+msgid "Could not create group."
+msgstr "No puc crear grup."
+
+#: ../../mod/group.php:43 ../../mod/group.php:127
+msgid "Group not found."
+msgstr "Grup no trobat"
+
+#: ../../mod/group.php:56
+msgid "Group name changed."
+msgstr "Nom de Grup canviat."
+
+#: ../../mod/group.php:67 ../../mod/profperm.php:19 ../../index.php:287
+msgid "Permission denied"
+msgstr "Permís denegat"
+
+#: ../../mod/group.php:85
+msgid "Create a group of contacts/friends."
+msgstr "Crear un grup de contactes/amics."
+
+#: ../../mod/group.php:86 ../../mod/group.php:166
+msgid "Group Name: "
+msgstr "Nom del Grup:"
+
+#: ../../mod/group.php:102
+msgid "Group removed."
+msgstr "Grup esborrat."
+
+#: ../../mod/group.php:104
+msgid "Unable to remove group."
+msgstr "Incapaç de esborrar Grup."
+
+#: ../../mod/group.php:165
+msgid "Group Editor"
+msgstr "Editor de Grup:"
+
+#: ../../mod/group.php:177
+msgid "Members"
+msgstr "Membres"
+
+#: ../../mod/group.php:209 ../../mod/profperm.php:105
+msgid "Click on a contact to add or remove."
+msgstr "Clicar sobre el contacte per afegir o esborrar."
+
+#: ../../mod/profperm.php:25 ../../mod/profperm.php:55
+msgid "Invalid profile identifier."
+msgstr "Identificador del perfil no vàlid."
+
+#: ../../mod/profperm.php:101
+msgid "Profile Visibility Editor"
+msgstr "Editor de Visibilitat del Perfil"
+
+#: ../../mod/profperm.php:103 ../../include/profile_advanced.php:7
+#: ../../include/profile_advanced.php:76 ../../include/nav.php:48
+#: ../../boot.php:1336
+msgid "Profile"
+msgstr "Perfil"
+
+#: ../../mod/profperm.php:114
+msgid "Visible To"
+msgstr "Visible Per"
+
+#: ../../mod/profperm.php:130
+msgid "All Contacts (with secure profile access)"
+msgstr "Tots els Contactes (amb accés segur al perfil)"
+
+#: ../../mod/viewcontacts.php:39
+msgid "No contacts."
+msgstr "Sense Contactes"
+
+#: ../../mod/viewcontacts.php:74 ../../include/text.php:584
+msgid "View Contacts"
+msgstr "Veure Contactes"
+
+#: ../../mod/register.php:62
+msgid "An invitation is required."
+msgstr "Es requereix invitació."
+
+#: ../../mod/register.php:67
+msgid "Invitation could not be verified."
+msgstr "La invitació no ha pogut ser verificada."
+
+#: ../../mod/register.php:75
+msgid "Invalid OpenID url"
+msgstr "OpenID url no vàlid"
+
+#: ../../mod/register.php:90
+msgid "Please enter the required information."
+msgstr "Per favor, introdueixi la informació requerida."
+
+#: ../../mod/register.php:104
+msgid "Please use a shorter name."
+msgstr "Per favor, empri un nom més curt."
+
+#: ../../mod/register.php:106
+msgid "Name too short."
+msgstr "Nom massa curt."
+
+#: ../../mod/register.php:121
+msgid "That doesn't appear to be your full (First Last) name."
+msgstr "Això no sembla ser el teu nom complet."
+
+#: ../../mod/register.php:126
+msgid "Your email domain is not among those allowed on this site."
+msgstr "El seu domini de correu electrònic no es troba entre els permesos en aquest lloc."
+
+#: ../../mod/register.php:129
+msgid "Not a valid email address."
+msgstr "Adreça de correu no vàlida."
+
+#: ../../mod/register.php:139
+msgid "Cannot use that email."
+msgstr "No es pot utilitzar aquest correu electrònic."
+
+#: ../../mod/register.php:145
+msgid ""
+"Your \"nickname\" can only contain \"a-z\", \"0-9\", \"-\", and \"_\", and "
+"must also begin with a letter."
+msgstr "El teu sobrenom nomes pot contenir \"a-z\", \"0-9\", \"-\", i \"_\", i començar amb lletra."
+
+#: ../../mod/register.php:151 ../../mod/register.php:252
+msgid "Nickname is already registered. Please choose another."
+msgstr "malnom ja registrat. Tria un altre."
+
+#: ../../mod/register.php:170
+msgid "SERIOUS ERROR: Generation of security keys failed."
+msgstr "ERROR IMPORTANT: La generació de claus de seguretat ha fallat."
+
+#: ../../mod/register.php:238
+msgid "An error occurred during registration. Please try again."
+msgstr "Un error ha succeït durant el registre. Intenta-ho de nou."
+
+#: ../../mod/register.php:274
+msgid "An error occurred creating your default profile. Please try again."
+msgstr "Un error ha succeit durant la creació del teu perfil per defecte. Intenta-ho de nou."
+
+#: ../../mod/register.php:378 ../../mod/regmod.php:52
+#, php-format
+msgid "Registration details for %s"
+msgstr "Detalls del registre per a %s"
+
+#: ../../mod/register.php:386
+msgid ""
+"Registration successful. Please check your email for further instructions."
+msgstr "Registrat amb èxit. Per favor, comprovi el seu correu per a posteriors instruccions."
+
+#: ../../mod/register.php:390
+msgid "Failed to send email message. Here is the message that failed."
+msgstr "Error en enviar missatge de correu electrònic. Aquí està el missatge que ha fallat."
+
+#: ../../mod/register.php:395
+msgid "Your registration can not be processed."
+msgstr "El seu registre no pot ser processat."
+
+#: ../../mod/register.php:432
+#, php-format
+msgid "Registration request at %s"
+msgstr "Sol·licitud de registre a %s"
+
+#: ../../mod/register.php:441
+msgid "Your registration is pending approval by the site owner."
+msgstr "El seu registre està pendent d'aprovació pel propietari del lloc."
+
+#: ../../mod/register.php:479
+msgid ""
+"This site has exceeded the number of allowed daily account registrations. "
+"Please try again tomorrow."
+msgstr "Aquest lloc excedeix el nombre diari de registres de comptes. Per favor, provi de nou demà."
+
+#: ../../mod/register.php:505
+msgid ""
+"You may (optionally) fill in this form via OpenID by supplying your OpenID "
+"and clicking 'Register'."
+msgstr "Vostè pot (opcionalment), omplir aquest formulari a través de OpenID mitjançant el subministrament de la seva OpenID i fent clic a 'Registrar'."
+
+#: ../../mod/register.php:506
+msgid ""
+"If you are not familiar with OpenID, please leave that field blank and fill "
+"in the rest of the items."
+msgstr "Si vostè no està familiaritzat amb Twitter, si us plau deixi aquest camp en blanc i completi la resta dels elements."
+
+#: ../../mod/register.php:507
+msgid "Your OpenID (optional): "
+msgstr "El seu OpenID (opcional):"
+
+#: ../../mod/register.php:521
+msgid "Include your profile in member directory?"
+msgstr "Incloc el seu perfil al directori de membres?"
+
+#: ../../mod/register.php:536
+msgid "Membership on this site is by invitation only."
+msgstr "Lloc accesible mitjançant invitació."
+
+#: ../../mod/register.php:537
+msgid "Your invitation ID: "
+msgstr "El teu ID de invitació:"
+
+#: ../../mod/register.php:540 ../../mod/admin.php:314
+msgid "Registration"
+msgstr "Procés de Registre"
+
+#: ../../mod/register.php:548
+msgid "Your Full Name (e.g. Joe Smith): "
+msgstr "El seu nom complet (per exemple, Joan Ningú):"
+
+#: ../../mod/register.php:549
+msgid "Your Email Address: "
+msgstr "La Seva Adreça de Correu:"
+
+#: ../../mod/register.php:550
+msgid ""
+"Choose a profile nickname. This must begin with a text character. Your "
+"profile address on this site will then be "
+"'<strong>nickname@$sitename</strong>'."
+msgstr "Tria un nom de perfil. Això ha de començar amb un caràcter de text. La seva adreça de perfil en aquest lloc serà '<strong>malnom@$sitename</strong>'."
+
+#: ../../mod/register.php:551
+msgid "Choose a nickname: "
+msgstr "Tria un malnom:"
+
+#: ../../mod/register.php:554 ../../include/nav.php:77 ../../boot.php:693
+msgid "Register"
+msgstr "Registrar"
+
+#: ../../mod/dirfind.php:23
+msgid "People Search"
+msgstr "Cercant Gent"
+
+#: ../../mod/like.php:127 ../../mod/tagger.php:70
+#: ../../addon/facebook/facebook.php:1092
+#: ../../addon/communityhome/communityhome.php:158
+#: ../../addon/communityhome/communityhome.php:167
+#: ../../include/diaspora.php:1600 ../../include/conversation.php:48
+#: ../../include/conversation.php:57 ../../include/conversation.php:121
+#: ../../include/conversation.php:130
+msgid "status"
+msgstr "estatus"
+
+#: ../../mod/like.php:144 ../../addon/facebook/facebook.php:1096
+#: ../../addon/communityhome/communityhome.php:172
+#: ../../include/diaspora.php:1616 ../../include/conversation.php:65
+#, php-format
+msgid "%1$s likes %2$s's %3$s"
+msgstr "a %1$s agrada %2$s de %3$s"
+
+#: ../../mod/like.php:146 ../../include/conversation.php:68
+#, php-format
+msgid "%1$s doesn't like %2$s's %3$s"
+msgstr "a %1$s no agrada %2$s de %3$s"
+
+#: ../../mod/notice.php:15 ../../mod/viewsrc.php:15 ../../mod/admin.php:127
+#: ../../mod/admin.php:522 ../../mod/admin.php:700 ../../mod/display.php:29
+#: ../../mod/display.php:137 ../../mod/viewd.php:14
+#: ../../include/items.php:2942
+msgid "Item not found."
+msgstr "Article no trobat."
+
+#: ../../mod/viewsrc.php:7 ../../mod/viewd.php:6
+msgid "Access denied."
+msgstr "Accés denegat."
+
+#: ../../mod/regmod.php:61
+msgid "Account approved."
+msgstr "Compte aprovat."
+
+#: ../../mod/regmod.php:93
+#, php-format
+msgid "Registration revoked for %s"
+msgstr "Procés de Registre revocat per a %s"
+
+#: ../../mod/regmod.php:105
+msgid "Please login."
+msgstr "Si us plau, ingressa."
+
+#: ../../mod/item.php:89
+msgid "Unable to locate original post."
+msgstr "No es pot localitzar post original."
+
+#: ../../mod/item.php:249
+msgid "Empty post discarded."
+msgstr "Buidat després de rebutjar."
+
+#: ../../mod/item.php:351 ../../mod/wall_upload.php:81
+#: ../../mod/wall_upload.php:90 ../../mod/wall_upload.php:97
+#: ../../include/message.php:143
+msgid "Wall Photos"
+msgstr "Fotos del Mur"
+
+#: ../../mod/item.php:833
+msgid "System error. Post not saved."
+msgstr "Error del sistema. Publicació no guardada."
+
+#: ../../mod/item.php:858
+#, php-format
+msgid ""
+"This message was sent to you by %s, a member of the Friendica social "
+"network."
+msgstr "Aquest missatge va ser enviat a vostè per %s, un membre de la xarxa social Friendica."
+
+#: ../../mod/item.php:860
+#, php-format
+msgid "You may visit them online at %s"
+msgstr "El pot visitar en línia a %s"
+
+#: ../../mod/item.php:861
+msgid ""
+"Please contact the sender by replying to this post if you do not wish to "
+"receive these messages."
+msgstr "Si us plau, poseu-vos en contacte amb el remitent responent a aquest missatge si no voleu rebre aquests missatges."
+
+#: ../../mod/item.php:863
+#, php-format
+msgid "%s posted an update."
+msgstr "%s ha publicat una actualització."
+
+#: ../../mod/profile_photo.php:28
+msgid "Image uploaded but image cropping failed."
+msgstr "Imatge pujada però no es va poder retallar."
+
+#: ../../mod/profile_photo.php:61 ../../mod/profile_photo.php:68
+#: ../../mod/profile_photo.php:75 ../../mod/profile_photo.php:258
+#, php-format
+msgid "Image size reduction [%s] failed."
+msgstr "La reducció de la imatge [%s] va fracassar."
+
+#: ../../mod/profile_photo.php:89
+msgid ""
+"Shift-reload the page or clear browser cache if the new photo does not "
+"display immediately."
+msgstr "Recarregui la pàgina o netegi la caché del navegador si la nova foto no apareix immediatament."
+
+#: ../../mod/profile_photo.php:99
+msgid "Unable to process image"
+msgstr "No es pot processar la imatge"
+
+#: ../../mod/profile_photo.php:113 ../../mod/wall_upload.php:56
+#, php-format
+msgid "Image exceeds size limit of %d"
+msgstr "La imatge sobrepassa el límit de mida de %d"
+
+#: ../../mod/profile_photo.php:203
+msgid "Upload File:"
+msgstr "Pujar arxiu:"
+
+#: ../../mod/profile_photo.php:204
+msgid "Upload Profile Photo"
+msgstr "Pujar Foto del Perfil"
+
+#: ../../mod/profile_photo.php:205
+msgid "Upload"
+msgstr "Pujar"
+
+#: ../../mod/profile_photo.php:206
+msgid "skip this step"
+msgstr "saltar aquest pas"
+
+#: ../../mod/profile_photo.php:206
+msgid "select a photo from your photo albums"
+msgstr "tria una foto dels teus àlbums"
+
+#: ../../mod/profile_photo.php:219
+msgid "Crop Image"
+msgstr "retallar imatge"
+
+#: ../../mod/profile_photo.php:220
+msgid "Please adjust the image cropping for optimum viewing."
+msgstr "Per favor, ajusta la retallada d'imatge per a una optima visualització."
+
+#: ../../mod/profile_photo.php:221
+msgid "Done Editing"
+msgstr "Edició Feta"
+
+#: ../../mod/profile_photo.php:249
+msgid "Image uploaded successfully."
+msgstr "Carregada de la imatge amb èxit."
+
+#: ../../mod/hcard.php:10
+msgid "No profile"
+msgstr "Sense perfil"
+
+#: ../../mod/removeme.php:45 ../../mod/removeme.php:48
+msgid "Remove My Account"
+msgstr "Eliminar el Meu Compte"
+
+#: ../../mod/removeme.php:46
+msgid ""
+"This will completely remove your account. Once this has been done it is not "
+"recoverable."
+msgstr "Això eliminarà per complet el seu compte. Quan s'hagi fet això, no serà recuperable."
+
+#: ../../mod/removeme.php:47
+msgid "Please enter your password for verification:"
+msgstr "Si us plau, introduïu la contrasenya per a la verificació:"
+
+#: ../../mod/message.php:23
+msgid "No recipient selected."
+msgstr "No s'ha seleccionat destinatari."
+
+#: ../../mod/message.php:26
+msgid "Unable to locate contact information."
+msgstr "No es pot trobar informació de contacte."
+
+#: ../../mod/message.php:29
+msgid "Message could not be sent."
+msgstr "El Missatge no ha estat enviat."
+
+#: ../../mod/message.php:32
+msgid "Message collection failure."
+msgstr "Ha fallat la recollida del missatge."
+
+#: ../../mod/message.php:35
+msgid "Message sent."
+msgstr "Missatge enviat."
+
+#: ../../mod/message.php:55
+msgid "Inbox"
+msgstr "Safata d'entrada"
+
+#: ../../mod/message.php:60
+msgid "Outbox"
+msgstr "Safata de sortida"
+
+#: ../../mod/message.php:65
+msgid "New Message"
+msgstr "Nou Missatge"
+
+#: ../../mod/message.php:91
+msgid "Message deleted."
+msgstr "Missatge eliminat."
+
+#: ../../mod/message.php:121
+msgid "Conversation removed."
+msgstr "Conversació esborrada."
+
+#: ../../mod/message.php:137 ../../include/conversation.php:887
+msgid "Please enter a link URL:"
+msgstr "Sius plau, entri l'enllaç URL:"
+
+#: ../../mod/message.php:145
+msgid "Send Private Message"
+msgstr "Enviant Missatge Privat"
+
+#: ../../mod/message.php:146 ../../mod/message.php:287
+msgid "To:"
+msgstr "Per a:"
+
+#: ../../mod/message.php:147 ../../mod/message.php:288
+msgid "Subject:"
+msgstr "Assumpte::"
+
+#: ../../mod/message.php:150 ../../mod/message.php:291
+#: ../../mod/invite.php:101
+msgid "Your message:"
+msgstr "El teu missatge:"
+
+#: ../../mod/message.php:188
+msgid "No messages."
+msgstr "Sense missatges."
+
+#: ../../mod/message.php:201
+msgid "Delete conversation"
+msgstr "Esborrar conversació"
+
+#: ../../mod/message.php:204
+msgid "D, d M Y - g:i A"
+msgstr "D, d M Y - g:i A"
+
+#: ../../mod/message.php:239
+msgid "Message not available."
+msgstr "Missatge no disponible."
+
+#: ../../mod/message.php:276
+msgid "Delete message"
+msgstr "Esborra missatge"
+
+#: ../../mod/message.php:286
+msgid "Send Reply"
+msgstr "Enviar Resposta"
+
+#: ../../mod/allfriends.php:34
+#, php-format
+msgid "Friends of %s"
+msgstr "Amics de %s"
+
+#: ../../mod/allfriends.php:40
+msgid "No friends to display."
+msgstr "No hi ha amics que mostrar"
+
+#: ../../mod/admin.php:71 ../../mod/admin.php:312
+msgid "Site"
+msgstr "Lloc"
+
+#: ../../mod/admin.php:72 ../../mod/admin.php:480 ../../mod/admin.php:492
+msgid "Users"
+msgstr "Usuaris"
+
+#: ../../mod/admin.php:73 ../../mod/admin.php:569 ../../mod/admin.php:608
+msgid "Plugins"
+msgstr "Plugins"
+
+#: ../../mod/admin.php:74 ../../mod/admin.php:742 ../../mod/admin.php:775
+msgid "Themes"
+msgstr "Temes"
+
+#: ../../mod/admin.php:89 ../../mod/admin.php:855
+msgid "Logs"
+msgstr "Transcripcions"
+
+#: ../../mod/admin.php:94
+msgid "User registrations waiting for confirmation"
+msgstr "Registre d'usuari a l'espera de confirmació"
+
+#: ../../mod/admin.php:161 ../../mod/admin.php:311 ../../mod/admin.php:479
+#: ../../mod/admin.php:568 ../../mod/admin.php:607 ../../mod/admin.php:741
+#: ../../mod/admin.php:774 ../../mod/admin.php:854
+msgid "Administration"
+msgstr "Administració"
+
+#: ../../mod/admin.php:162
+msgid "Summary"
+msgstr "Sumari"
+
+#: ../../mod/admin.php:163
+msgid "Registered users"
+msgstr "Usuaris registrats"
+
+#: ../../mod/admin.php:165
+msgid "Pending registrations"
+msgstr "Registres d'usuari pendents"
+
+#: ../../mod/admin.php:166
+msgid "Version"
+msgstr "Versió"
+
+#: ../../mod/admin.php:168
+msgid "Active plugins"
+msgstr "Plugins actius"
+
+#: ../../mod/admin.php:260
+msgid "Site settings updated."
+msgstr "Ajustos del lloc actualitzats."
+
+#: ../../mod/admin.php:304
+msgid "Closed"
+msgstr "Tancat"
+
+#: ../../mod/admin.php:305
+msgid "Requires approval"
+msgstr "Requereix aprovació"
+
+#: ../../mod/admin.php:306
+msgid "Open"
+msgstr "Obert"
+
+#: ../../mod/admin.php:315
+msgid "File upload"
+msgstr "Fitxer carregat"
+
+#: ../../mod/admin.php:316
+msgid "Policies"
+msgstr "Polítiques"
+
+#: ../../mod/admin.php:317
+msgid "Advanced"
+msgstr "Avançat"
+
+#: ../../mod/admin.php:321 ../../addon/statusnet/statusnet.php:523
+msgid "Site name"
+msgstr "Nom del lloc"
+
+#: ../../mod/admin.php:322
+msgid "Banner/Logo"
+msgstr "Senyera/Logo"
+
+#: ../../mod/admin.php:323
+msgid "System language"
+msgstr "Idioma del Systema"
+
+#: ../../mod/admin.php:324
+msgid "System theme"
+msgstr "Tema del sistema"
+
+#: ../../mod/admin.php:324
+msgid "Default system theme - may be over-ridden by user profiles"
+msgstr "Tema per defecte del sitema - pot ser canviat als perfils dels usuaris"
+
+#: ../../mod/admin.php:326
+msgid "Maximum image size"
+msgstr "Mida màxima de les imatges"
+
+#: ../../mod/admin.php:326
+msgid ""
+"Maximum size in bytes of uploaded images. Default is 0, which means no "
+"limits."
+msgstr "Mida màxima en bytes de les imatges a pujar. Per defecte es 0, que vol dir sense límits."
+
+#: ../../mod/admin.php:328
+msgid "Register policy"
+msgstr "Política per a registrar"
+
+#: ../../mod/admin.php:329
+msgid "Register text"
+msgstr "Text al registrar"
+
+#: ../../mod/admin.php:329
+msgid "Will be displayed prominently on the registration page."
+msgstr "Sea mostrat de forma peminent a la pagina durant el procés de registre."
+
+#: ../../mod/admin.php:330
+msgid "Accounts abandoned after x days"
+msgstr "Comptes abandonats després de x dies"
+
+#: ../../mod/admin.php:330
+msgid ""
+"Will not waste system resources polling external sites for abandonded "
+"accounts. Enter 0 for no time limit."
+msgstr "No gastará recursos del sistema creant enquestes des de llocs externos per a comptes abandonats. Introdueixi 0 per a cap límit temporal."
+
+#: ../../mod/admin.php:331
+msgid "Allowed friend domains"
+msgstr "Dominis amics permesos"
+
+#: ../../mod/admin.php:331
+msgid ""
+"Comma separated list of domains which are allowed to establish friendships "
+"with this site. Wildcards are accepted. Empty to allow any domains"
+msgstr "Llista de dominis separada per comes, de adreçes de correu que són permeses per establir amistats. S'admeten comodins. Deixa'l buit per a acceptar tots els dominis."
+
+#: ../../mod/admin.php:332
+msgid "Allowed email domains"
+msgstr "Dominis de correu permesos"
+
+#: ../../mod/admin.php:332
+msgid ""
+"Comma separated list of domains which are allowed in email addresses for "
+"registrations to this site. Wildcards are accepted. Empty to allow any "
+"domains"
+msgstr "Llista de dominis separada per comes, de adreçes de correu que són permeses per registrtar-se. S'admeten comodins. Deixa'l buit per a acceptar tots els dominis."
+
+#: ../../mod/admin.php:333
+msgid "Block public"
+msgstr "Bloqueig públic"
+
+#: ../../mod/admin.php:333
+msgid ""
+"Check to block public access to all otherwise public personal pages on this "
+"site unless you are currently logged in."
+msgstr "Bloqueija l'accés públic a qualsevol pàgina del lloc fins que t'hagis identificat."
+
+#: ../../mod/admin.php:334
+msgid "Force publish"
+msgstr "Forçar publicació"
+
+#: ../../mod/admin.php:334
+msgid ""
+"Check to force all profiles on this site to be listed in the site directory."
+msgstr "Obliga a que tots el perfils en aquest lloc siguin mostrats en el directori del lloc."
+
+#: ../../mod/admin.php:335
+msgid "Global directory update URL"
+msgstr "Actualitzar URL del directori global"
+
+#: ../../mod/admin.php:335
+msgid ""
+"URL to update the global directory. If this is not set, the global directory"
+" is completely unavailable to the application."
+msgstr "URL per actualitzar el directori global. Si no es configura, el directori global serà completament inaccesible per a l'aplicació. "
+
+#: ../../mod/admin.php:337
+msgid "Block multiple registrations"
+msgstr "Bloquejar multiples registracions"
+
+#: ../../mod/admin.php:337
+msgid "Disallow users to register additional accounts for use as pages."
+msgstr "Inhabilita als usuaris el crear comptes adicionals per a usar com a pàgines."
+
+#: ../../mod/admin.php:338
+msgid "OpenID support"
+msgstr "Suport per a OpenID"
+
+#: ../../mod/admin.php:338
+msgid "OpenID support for registration and logins."
+msgstr "Suport per a registre i validació a OpenID."
+
+#: ../../mod/admin.php:339
+msgid "Gravatar support"
+msgstr "Suport per a gravatar"
+
+#: ../../mod/admin.php:339
+msgid "Search new user's photo on Gravatar."
+msgstr "Cerca la nova foto d'usuari a Gravatar."
+
+#: ../../mod/admin.php:340
+msgid "Fullname check"
+msgstr "Comprobació de nom complet"
+
+#: ../../mod/admin.php:340
+msgid ""
+"Force users to register with a space between firstname and lastname in Full "
+"name, as an antispam measure"
+msgstr "Obliga els usuaris a col·locar un espai en blanc entre nom i cognoms, com a mesura antifemater"
+
+#: ../../mod/admin.php:341
+msgid "UTF-8 Regular expressions"
+msgstr "expresions regulars UTF-8"
+
+#: ../../mod/admin.php:341
+msgid "Use PHP UTF8 regular expressions"
+msgstr "Empri expresions regulars de PHP amb format UTF8"
+
+#: ../../mod/admin.php:342
+msgid "Show Community Page"
+msgstr "Mostra la Pàgina de Comunitat"
+
+#: ../../mod/admin.php:342
+msgid ""
+"Display a Community page showing all recent public postings on this site."
+msgstr "Mostra a la pàgina de comunitat tots els missatges públics recents, d'aquest lloc."
+
+#: ../../mod/admin.php:343
+msgid "Enable OStatus support"
+msgstr "Activa el suport per a OStatus"
+
+#: ../../mod/admin.php:343
+msgid ""
+"Provide built-in OStatus (identi.ca, status.net, etc.) compatibility. All "
+"communications in OStatus are public, so privacy warnings will be "
+"occasionally displayed."
+msgstr "Proveeix de compatibilitat integrada amb OStatus (identi.ca, status.net, etc). Totes les comunicacions a OStatus són públiques amb el que ocasionalment pots veure advertències."
+
+#: ../../mod/admin.php:344
+msgid "Enable Diaspora support"
+msgstr "Habilitar suport per Diaspora"
+
+#: ../../mod/admin.php:344
+msgid "Provide built-in Diaspora network compatibility."
+msgstr "Proveeix compatibilitat integrada amb la xarxa Diaspora"
+
+#: ../../mod/admin.php:345
+msgid "Only allow Friendica contacts"
+msgstr "Només permetre contactes de Friendica"
+
+#: ../../mod/admin.php:345
+msgid ""
+"All contacts must use Friendica protocols. All other built-in communication "
+"protocols disabled."
+msgstr "Tots els contactes "
+
+#: ../../mod/admin.php:346
+msgid "Verify SSL"
+msgstr "Verificar SSL"
+
+#: ../../mod/admin.php:346
+msgid ""
+"If you wish, you can turn on strict certificate checking. This will mean you"
+" cannot connect (at all) to self-signed SSL sites."
+msgstr "Si ho vols, pots comprovar el certificat estrictament. Això farà que no puguis connectar (de cap manera) amb llocs amb certificats SSL autosignats."
+
+#: ../../mod/admin.php:347
+msgid "Proxy user"
+msgstr "proxy d'usuari"
+
+#: ../../mod/admin.php:348
+msgid "Proxy URL"
+msgstr "URL del proxy"
+
+#: ../../mod/admin.php:349
+msgid "Network timeout"
+msgstr "Temps excedit a la xarxa"
+
+#: ../../mod/admin.php:349
+msgid "Value is in seconds. Set to 0 for unlimited (not recommended)."
+msgstr "Valor en segons. Canviat a 0 es sense límits (no recomenat)"
+
+#: ../../mod/admin.php:370
+#, php-format
+msgid "%s user blocked/unblocked"
+msgid_plural "%s users blocked/unblocked"
+msgstr[0] "%s usuari bloquejar/desbloquejar"
+msgstr[1] "%s usuaris bloquejar/desbloquejar"
+
+#: ../../mod/admin.php:377
+#, php-format
+msgid "%s user deleted"
+msgid_plural "%s users deleted"
+msgstr[0] "%s usuari esborrat"
+msgstr[1] "%s usuaris esborrats"
+
+#: ../../mod/admin.php:411
+#, php-format
+msgid "User '%s' deleted"
+msgstr "Usuari %s' esborrat"
+
+#: ../../mod/admin.php:418
+#, php-format
+msgid "User '%s' unblocked"
+msgstr "Usuari %s' desbloquejat"
+
+#: ../../mod/admin.php:418
+#, php-format
+msgid "User '%s' blocked"
+msgstr "L'usuari '%s' és bloquejat"
+
+#: ../../mod/admin.php:482
+msgid "select all"
+msgstr "Seleccionar tot"
+
+#: ../../mod/admin.php:483
+msgid "User registrations waiting for confirm"
+msgstr "Registre d'usuari esperant confirmació"
+
+#: ../../mod/admin.php:484
+msgid "Request date"
+msgstr "Data de sol·licitud"
+
+#: ../../mod/admin.php:484 ../../mod/admin.php:493
+#: ../../include/contact_selectors.php:79
+msgid "Email"
+msgstr "Correu"
+
+#: ../../mod/admin.php:485
+msgid "No registrations."
+msgstr "Sense registres."
+
+#: ../../mod/admin.php:487
+msgid "Deny"
+msgstr "Denegar"
+
+#: ../../mod/admin.php:493
+msgid "Register date"
+msgstr "Data de registre"
+
+#: ../../mod/admin.php:493
+msgid "Last login"
+msgstr "Últim accés"
+
+#: ../../mod/admin.php:493
+msgid "Last item"
+msgstr "Últim element"
+
+#: ../../mod/admin.php:493
+msgid "Account"
+msgstr "Compte"
+
+#: ../../mod/admin.php:495
+msgid ""
+"Selected users will be deleted!\\n\\nEverything these users had posted on "
+"this site will be permanently deleted!\\n\\nAre you sure?"
+msgstr "Els usuaris seleccionats seran esborrats!\\n\\nqualsevol cosa que aquests usuaris hagin publicat en aquest lloc s'esborrarà!\\n\\nEsteu segur?"
+
+#: ../../mod/admin.php:496
+msgid ""
+"The user {0} will be deleted!\\n\\nEverything this user has posted on this "
+"site will be permanently deleted!\\n\\nAre you sure?"
+msgstr "L'usuari {0} s'eliminarà!\\n\\nQualsevol cosa que aquest usuari hagi publicat en aquest lloc s'esborrarà!\\n\\nEsteu segur?"
+
+#: ../../mod/admin.php:532
+#, php-format
+msgid "Plugin %s disabled."
+msgstr "Plugin %s deshabilitat."
+
+#: ../../mod/admin.php:536
+#, php-format
+msgid "Plugin %s enabled."
+msgstr "Plugin %s habilitat."
+
+#: ../../mod/admin.php:546 ../../mod/admin.php:724
+msgid "Disable"
+msgstr "Deshabilitar"
+
+#: ../../mod/admin.php:548 ../../mod/admin.php:726
+msgid "Enable"
+msgstr "Habilitar"
+
+#: ../../mod/admin.php:570 ../../mod/admin.php:743
+msgid "Toggle"
+msgstr "Canviar"
+
+#: ../../mod/admin.php:571 ../../mod/admin.php:744 ../../include/nav.php:130
+msgid "Settings"
+msgstr "Ajustos"
+
+#: ../../mod/admin.php:578 ../../mod/admin.php:753
+msgid "Author: "
+msgstr "Autor:"
+
+#: ../../mod/admin.php:579 ../../mod/admin.php:754
+msgid "Maintainer: "
+msgstr "Encarregat:"
+
+#: ../../mod/admin.php:689
+msgid "No themes found."
+msgstr "No s'ha trobat temes."
+
+#: ../../mod/admin.php:780
+msgid "[Experimental]"
+msgstr "[Experimental]"
+
+#: ../../mod/admin.php:781
+msgid "[Unsupported]"
+msgstr "[No soportat]"
+
+#: ../../mod/admin.php:804
+msgid "Log settings updated."
+msgstr "Configuració del transcriptor actualitzada."
+
+#: ../../mod/admin.php:857
+msgid "Clear"
+msgstr "Netejar"
+
+#: ../../mod/admin.php:863
+msgid "Debugging"
+msgstr "Esplugar"
+
+#: ../../mod/admin.php:864
+msgid "Log file"
+msgstr "Arxiu de transcripció"
+
+#: ../../mod/admin.php:864
+msgid ""
+"Must be writable by web server. Relative to your Friendica top-level "
+"directory."
+msgstr "Ha de tenir permisos d'escriptura pel servidor web. En relació amb el seu directori Friendica de nivell superior."
+
+#: ../../mod/admin.php:865
+msgid "Log level"
+msgstr "Nivell de transcripció"
+
+#: ../../mod/admin.php:906
+msgid "Close"
+msgstr "Tancar"
+
+#: ../../mod/admin.php:912
+msgid "FTP Host"
+msgstr "Amfitrió FTP"
+
+#: ../../mod/admin.php:913
+msgid "FTP Path"
+msgstr "Direcció FTP"
+
+#: ../../mod/admin.php:914
+msgid "FTP User"
+msgstr "Usuari FTP"
+
+#: ../../mod/admin.php:915
+msgid "FTP Password"
+msgstr "Contrasenya FTP"
+
+#: ../../mod/profile.php:15 ../../boot.php:845
+msgid "Requested profile is not available."
+msgstr "El perfil sol·licitat no està disponible."
+
+#: ../../mod/profile.php:111 ../../mod/display.php:67
+msgid "Access to this profile has been restricted."
+msgstr "L'accés a aquest perfil ha estat restringit."
+
+#: ../../mod/profile.php:131
+msgid "Tips for New Members"
+msgstr "Consells per a nous membres"
+
+#: ../../mod/ping.php:174
+msgid "{0} wants to be your friend"
+msgstr "{0} vol ser el teu amic"
+
+#: ../../mod/ping.php:179
+msgid "{0} sent you a message"
+msgstr "{0} t'ha enviat un missatge de"
+
+#: ../../mod/ping.php:184
+msgid "{0} requested registration"
+msgstr "{0} solicituts de registre"
+
+#: ../../mod/ping.php:190
+#, php-format
+msgid "{0} commented %s's post"
+msgstr "{0} va comentar l'enviament de %s"
+
+#: ../../mod/ping.php:195
+#, php-format
+msgid "{0} liked %s's post"
+msgstr "A {0} l'ha agradat l'enviament de %s"
+
+#: ../../mod/ping.php:200
+#, php-format
+msgid "{0} disliked %s's post"
+msgstr "A {0} no l'ha agradat l'enviament de %s"
+
+#: ../../mod/ping.php:205
+#, php-format
+msgid "{0} is now friends with %s"
+msgstr "{0} ara és amic de %s"
+
+#: ../../mod/ping.php:210
+msgid "{0} posted"
+msgstr "{0} publicat"
+
+#: ../../mod/ping.php:215
+#, php-format
+msgid "{0} tagged %s's post with #%s"
+msgstr "{0} va etiquetar la publicació de %s com #%s"
+
+#: ../../mod/ping.php:221
+msgid "{0} mentioned you in a post"
+msgstr "{0} et menciona en un missatge"
+
+#: ../../mod/openid.php:63 ../../mod/openid.php:77 ../../include/auth.php:90
+#: ../../include/auth.php:115 ../../include/auth.php:169
+msgid "Login failed."
+msgstr "Error d'accés."
+
+#: ../../mod/follow.php:27
+msgid "Connect URL missing."
+msgstr "URL del connector perduda."
+
+#: ../../mod/follow.php:47
+msgid ""
+"This site is not configured to allow communications with other networks."
+msgstr "Aquest lloc no està configurat per permetre les comunicacions amb altres xarxes."
+
+#: ../../mod/follow.php:48 ../../mod/follow.php:63
+msgid "No compatible communication protocols or feeds were discovered."
+msgstr "Protocol de comunnicació no compatible o alimentador descobert."
+
+#: ../../mod/follow.php:61
+msgid "The profile address specified does not provide adequate information."
+msgstr "L'adreça de perfil especificada no proveeix informació adient."
+
+#: ../../mod/follow.php:65
+msgid "An author or name was not found."
+msgstr "Un autor o nom no va ser trobat"
+
+#: ../../mod/follow.php:67
+msgid "No browser URL could be matched to this address."
+msgstr "Cap direcció URL del navegador coincideix amb aquesta adreça."
+
+#: ../../mod/follow.php:74
+msgid ""
+"The profile address specified belongs to a network which has been disabled "
+"on this site."
+msgstr "La direcció del perfil especificat pertany a una xarxa que ha estat desactivada en aquest lloc."
+
+#: ../../mod/follow.php:79
+msgid ""
+"Limited profile. This person will be unable to receive direct/personal "
+"notifications from you."
+msgstr "Perfil limitat. Aquesta persona no podrà rebre notificacions personals/directes de tu."
+
+#: ../../mod/follow.php:149
+msgid "Unable to retrieve contact information."
+msgstr "No es pot recuperar la informació de contacte."
+
+#: ../../mod/follow.php:195
+msgid "following"
+msgstr "seguint"
+
+#: ../../mod/common.php:34
+msgid "Common Friends"
+msgstr "Amics Comuns"
+
+#: ../../mod/common.php:42
+msgid "No friends in common."
+msgstr "No hi ha amics en comú."
+
+#: ../../mod/display.php:130
+msgid "Item has been removed."
+msgstr "El element ha estat esborrat."
+
+#: ../../mod/apps.php:4
+msgid "Applications"
+msgstr "Aplicacions"
+
+#: ../../mod/apps.php:7
+msgid "No installed applications."
+msgstr "Aplicacions no instal·lades."
+
+#: ../../mod/search.php:83
+msgid "Search This Site"
+msgstr "Cerca en Aquest Lloc"
+
+#: ../../mod/profiles.php:21 ../../mod/profiles.php:239
+#: ../../mod/profiles.php:344 ../../mod/dfrn_confirm.php:62
+msgid "Profile not found."
+msgstr "Perfil no trobat."
+
+#: ../../mod/profiles.php:28
+msgid "Profile Name is required."
+msgstr "Nom de perfil requerit."
+
+#: ../../mod/profiles.php:198
+msgid "Profile updated."
+msgstr "Perfil actualitzat."
+
+#: ../../mod/profiles.php:256
+msgid "Profile deleted."
+msgstr "Perfil esborrat."
+
+#: ../../mod/profiles.php:272 ../../mod/profiles.php:303
+msgid "Profile-"
+msgstr "Perfil-"
+
+#: ../../mod/profiles.php:291 ../../mod/profiles.php:330
+msgid "New profile created."
+msgstr "Nou perfil creat."
+
+#: ../../mod/profiles.php:309
+msgid "Profile unavailable to clone."
+msgstr "No es pot clonar el perfil."
+
+#: ../../mod/profiles.php:356
+msgid "Hide your contact/friend list from viewers of this profile?"
+msgstr "Amaga la llista de contactes/amics en la vista d'aquest perfil?"
+
+#: ../../mod/profiles.php:374
+msgid "Edit Profile Details"
+msgstr "Editor de Detalls del Perfil"
+
+#: ../../mod/profiles.php:376
+msgid "View this profile"
+msgstr "Veure aquest perfil"
+
+#: ../../mod/profiles.php:377
+msgid "Create a new profile using these settings"
+msgstr "Crear un nou perfil amb aquests ajustos"
+
+#: ../../mod/profiles.php:378
+msgid "Clone this profile"
+msgstr "Clonar aquest perfil"
+
+#: ../../mod/profiles.php:379
+msgid "Delete this profile"
+msgstr "Esborrar aquest perfil"
+
+#: ../../mod/profiles.php:380
+msgid "Profile Name:"
+msgstr "Nom de Perfil:"
+
+#: ../../mod/profiles.php:381
+msgid "Your Full Name:"
+msgstr "El Teu Nom Complet."
+
+#: ../../mod/profiles.php:382
+msgid "Title/Description:"
+msgstr "Títol/Descripció:"
+
+#: ../../mod/profiles.php:383
+msgid "Your Gender:"
+msgstr "Gènere:"
+
+#: ../../mod/profiles.php:384
+#, php-format
+msgid "Birthday (%s):"
+msgstr "Aniversari (%s)"
+
+#: ../../mod/profiles.php:385
+msgid "Street Address:"
+msgstr "Direcció:"
+
+#: ../../mod/profiles.php:386
+msgid "Locality/City:"
+msgstr "Localitat/Ciutat:"
+
+#: ../../mod/profiles.php:387
+msgid "Postal/Zip Code:"
+msgstr "Codi Postal:"
+
+#: ../../mod/profiles.php:388
+msgid "Country:"
+msgstr "País"
+
+#: ../../mod/profiles.php:389
+msgid "Region/State:"
+msgstr "Región/Estat:"
+
+#: ../../mod/profiles.php:390
+msgid "<span class=\"heart\">&hearts;</span> Marital Status:"
+msgstr "<span class=\"heart\">&hearts;</span> Estat Civil:"
+
+#: ../../mod/profiles.php:391
+msgid "Who: (if applicable)"
+msgstr "Qui? (si és aplicable)"
+
+#: ../../mod/profiles.php:392
+msgid "Examples: cathy123, Cathy Williams, cathy@example.com"
+msgstr "Exemples: cathy123, Cathy Williams, cathy@example.com"
+
+#: ../../mod/profiles.php:393 ../../include/profile_advanced.php:43
+msgid "Sexual Preference:"
+msgstr "Preferència Sexual:"
+
+#: ../../mod/profiles.php:394
+msgid "Homepage URL:"
+msgstr "Pàgina web URL:"
+
+#: ../../mod/profiles.php:395 ../../include/profile_advanced.php:49
+msgid "Political Views:"
+msgstr "Idees Polítiques:"
+
+#: ../../mod/profiles.php:396
+msgid "Religious Views:"
+msgstr "Creencies Religioses:"
+
+#: ../../mod/profiles.php:397
+msgid "Public Keywords:"
+msgstr "Paraules Clau Públiques"
+
+#: ../../mod/profiles.php:398
+msgid "Private Keywords:"
+msgstr "Paraules Clau Privades:"
+
+#: ../../mod/profiles.php:399
+msgid "Example: fishing photography software"
+msgstr "Exemple: pesca fotografia programari"
+
+#: ../../mod/profiles.php:400
+msgid "(Used for suggesting potential friends, can be seen by others)"
+msgstr "(Emprat per suggerir potencials amics, Altres poden veure-ho)"
+
+#: ../../mod/profiles.php:401
+msgid "(Used for searching profiles, never shown to others)"
+msgstr "(Emprat durant la cerca de perfils, mai mostrat a ningú)"
+
+#: ../../mod/profiles.php:402
+msgid "Tell us about yourself..."
+msgstr "Parla'ns de tú....."
+
+#: ../../mod/profiles.php:403
+msgid "Hobbies/Interests"
+msgstr "Aficions/Interessos"
+
+#: ../../mod/profiles.php:404
+msgid "Contact information and Social Networks"
+msgstr "Informació de contacte i Xarxes Socials"
+
+#: ../../mod/profiles.php:405
+msgid "Musical interests"
+msgstr "Gustos musicals"
+
+#: ../../mod/profiles.php:406
+msgid "Books, literature"
+msgstr "Llibres, Literatura"
+
+#: ../../mod/profiles.php:407
+msgid "Television"
+msgstr "Televisió"
+
+#: ../../mod/profiles.php:408
+msgid "Film/dance/culture/entertainment"
+msgstr "Cinema/ball/cultura/entreteniments"
+
+#: ../../mod/profiles.php:409
+msgid "Love/romance"
+msgstr "Amor/sentiments"
+
+#: ../../mod/profiles.php:410
+msgid "Work/employment"
+msgstr "Treball/ocupació"
+
+#: ../../mod/profiles.php:411
+msgid "School/education"
+msgstr "Ensenyament/estudis"
+
+#: ../../mod/profiles.php:416
+msgid ""
+"This is your <strong>public</strong> profile.<br />It <strong>may</strong> "
+"be visible to anybody using the internet."
+msgstr "Aquest és el teu perfil <strong>públic</strong>.<br />El qual <strong>pot</strong> ser visible per qualsevol qui faci servir Internet."
+
+#: ../../mod/profiles.php:426 ../../mod/directory.php:124
+msgid "Age: "
+msgstr "Edat:"
+
+#: ../../mod/profiles.php:461
+msgid "Edit/Manage Profiles"
+msgstr "Editar/Gestionar Perfils"
+
+#: ../../mod/profiles.php:462 ../../boot.php:946
+msgid "Change profile photo"
+msgstr "Canviar la foto del perfil"
+
+#: ../../mod/profiles.php:463 ../../boot.php:947
+msgid "Create New Profile"
+msgstr "Crear un Nou Perfil"
+
+#: ../../mod/profiles.php:473 ../../boot.php:957
+msgid "Profile Image"
+msgstr "Imatge del Perfil"
+
+#: ../../mod/profiles.php:475 ../../boot.php:960
+msgid "visible to everybody"
+msgstr "Visible per tothom"
+
+#: ../../mod/profiles.php:476 ../../boot.php:961
+msgid "Edit visibility"
+msgstr "Editar visibilitat"
+
+#: ../../mod/tagger.php:103 ../../include/conversation.php:138
+#, php-format
+msgid "%1$s tagged %2$s's %3$s with %4$s"
+msgstr "%1$s etiquetats %2$s %3$s amb %4$s"
+
+#: ../../mod/delegate.php:95
+msgid "No potential page delegates located."
+msgstr "No es troben pàgines potencialment delegades."
+
+#: ../../mod/delegate.php:121
+msgid "Delegate Page Management"
+msgstr "Gestió de les Pàgines Delegades"
+
+#: ../../mod/delegate.php:123
+msgid ""
+"Delegates are able to manage all aspects of this account/page except for "
+"basic account settings. Please do not delegate your personal account to "
+"anybody that you do not trust completely."
+msgstr "Els delegats poden gestionar tots els aspectes d'aquest compte/pàgina, excepte per als ajustaments bàsics del compte. Si us plau, no deleguin el seu compte personal a ningú que no confiïn completament."
+
+#: ../../mod/delegate.php:124
+msgid "Existing Page Managers"
+msgstr "Actuals Administradors de Pàgina"
+
+#: ../../mod/delegate.php:126
+msgid "Existing Page Delegates"
+msgstr "Actuals Delegats de Pàgina"
+
+#: ../../mod/delegate.php:128
+msgid "Potential Delegates"
+msgstr "Delegats Potencials"
+
+#: ../../mod/delegate.php:131
+msgid "Add"
+msgstr "Afegir"
+
+#: ../../mod/delegate.php:132
+msgid "No entries."
+msgstr "Sense entrades"
+
+#: ../../mod/suggest.php:38 ../../include/contact_widgets.php:35
+msgid "Friend Suggestions"
+msgstr "Amics Suggerits"
+
+#: ../../mod/suggest.php:44
+msgid ""
+"No suggestions available. If this is a new site, please try again in 24 "
+"hours."
+msgstr "Cap suggeriment disponible. Si això és un nou lloc, si us plau torna a intentar en 24 hores."
+
+#: ../../mod/suggest.php:61
+msgid "Ignore/Hide"
+msgstr "Ignorar/Amagar"
+
+#: ../../mod/directory.php:51
+msgid "Global Directory"
+msgstr "Directori Global"
+
+#: ../../mod/directory.php:57
+msgid "Normal site view"
+msgstr "Vista normal del lloc"
+
+#: ../../mod/directory.php:59
+msgid "Admin - View all site entries"
+msgstr "Admin- Veure totes les entrades del lloc"
+
+#: ../../mod/directory.php:65
+msgid "Find on this site"
+msgstr "Trobat en aquest lloc"
+
+#: ../../mod/directory.php:68
+msgid "Site Directory"
+msgstr "Directori Local"
+
+#: ../../mod/directory.php:127
+msgid "Gender: "
+msgstr "Gènere:"
+
+#: ../../mod/directory.php:153
+msgid "No entries (some entries may be hidden)."
+msgstr "No hi ha entrades (algunes de les entrades poden estar amagades)."
+
+#: ../../mod/invite.php:35
+#, php-format
+msgid "%s : Not a valid email address."
+msgstr "%s : No es una adreça de correu vàlida"
+
+#: ../../mod/invite.php:59
+#, php-format
+msgid "Please join my network on %s"
+msgstr "Si us plau, uneix-te a la meva xarxa en %s"
+
+#: ../../mod/invite.php:69
+#, php-format
+msgid "%s : Message delivery failed."
+msgstr "%s : Ha fallat l'entrega del missatge."
+
+#: ../../mod/invite.php:73
+#, php-format
+msgid "%d message sent."
+msgid_plural "%d messages sent."
+msgstr[0] "%d missatge enviat"
+msgstr[1] "%d missatges enviats."
+
+#: ../../mod/invite.php:92
+msgid "You have no more invitations available"
+msgstr "No te més invitacions disponibles"
+
+#: ../../mod/invite.php:99
+msgid "Send invitations"
+msgstr "Enviant Invitacions"
+
+#: ../../mod/invite.php:100
+msgid "Enter email addresses, one per line:"
+msgstr "Entri adreçes de correu, una per línia:"
+
+#: ../../mod/invite.php:102
+#, php-format
+msgid "Please join my social network on %s"
+msgstr "Per favor, uneix-te a la meva xarxa social en %s"
+
+#: ../../mod/invite.php:103
+msgid "To accept this invitation, please visit:"
+msgstr "Per acceptar aquesta invitació, si us plau, visiti:"
+
+#: ../../mod/invite.php:104
+msgid "You will need to supply this invitation code: $invite_code"
+msgstr "Vostè haurà de proporcionar aquest codi d'invitació: $invite_code"
+
+#: ../../mod/invite.php:104
+msgid ""
+"Once you have registered, please connect with me via my profile page at:"
+msgstr "Un cop registrat, si us plau contactar amb mi a través de la meva pàgina de perfil a:"
+
+#: ../../mod/dfrn_confirm.php:119
+msgid ""
+"This may occasionally happen if contact was requested by both persons and it"
+" has already been approved."
+msgstr "Això pot ocorre ocasionalment si el contacte fa una petició per ambdues persones i ja han estat aprovades."
+
+#: ../../mod/dfrn_confirm.php:239
+msgid "Response from remote site was not understood."
+msgstr "La resposta des del lloc remot no s'entenia."
+
+#: ../../mod/dfrn_confirm.php:248
+msgid "Unexpected response from remote site: "
+msgstr "Resposta inesperada de lloc remot:"
+
+#: ../../mod/dfrn_confirm.php:256
+msgid "Confirmation completed successfully."
+msgstr "La confirmació s'ha completat correctament."
+
+#: ../../mod/dfrn_confirm.php:258 ../../mod/dfrn_confirm.php:272
+#: ../../mod/dfrn_confirm.php:279
+msgid "Remote site reported: "
+msgstr "El lloc remot informa:"
+
+#: ../../mod/dfrn_confirm.php:270
+msgid "Temporary failure. Please wait and try again."
+msgstr "Fallada temporal. Si us plau, espereu i torneu a intentar."
+
+#: ../../mod/dfrn_confirm.php:277
+msgid "Introduction failed or was revoked."
+msgstr "La presentació va fallar o va ser revocada."
+
+#: ../../mod/dfrn_confirm.php:422
+msgid "Unable to set contact photo."
+msgstr "No es pot canviar la foto de contacte."
+
+#: ../../mod/dfrn_confirm.php:474 ../../include/diaspora.php:495
+#: ../../include/conversation.php:101
+#, php-format
+msgid "%1$s is now friends with %2$s"
+msgstr "%1$s és ara amic amb %2$s"
+
+#: ../../mod/dfrn_confirm.php:544
+#, php-format
+msgid "No user record found for '%s' "
+msgstr "No es troben registres d'usuari per a '%s'"
+
+#: ../../mod/dfrn_confirm.php:554
+msgid "Our site encryption key is apparently messed up."
+msgstr "La nostra clau de xifrat del lloc pel que sembla en mal estat."
+
+#: ../../mod/dfrn_confirm.php:565
+msgid "Empty site URL was provided or URL could not be decrypted by us."
+msgstr "Es va proporcionar una URL del lloc buida o la URL no va poder ser desxifrada per nosaltres."
+
+#: ../../mod/dfrn_confirm.php:586
+msgid "Contact record was not found for you on our site."
+msgstr "No s'han trobat registres del contacte al nostre lloc."
+
+#: ../../mod/dfrn_confirm.php:600
+#, php-format
+msgid "Site public key not available in contact record for URL %s."
+msgstr "la clau pública del lloc no disponible en les dades del contacte per URL %s."
+
+#: ../../mod/dfrn_confirm.php:620
+msgid ""
+"The ID provided by your system is a duplicate on our system. It should work "
+"if you try again."
+msgstr "La ID proporcionada pel seu sistema és un duplicat en el nostre sistema. Hauria de treballar si intenta de nou."
+
+#: ../../mod/dfrn_confirm.php:631
+msgid "Unable to set your contact credentials on our system."
+msgstr "No es pot canviar les seves credencials de contacte en el nostre sistema."
+
+#: ../../mod/dfrn_confirm.php:694
+msgid "Unable to update your contact profile details on our system"
+msgstr "No es pot actualitzar els detalls del seu perfil de contacte en el nostre sistema"
+
+#: ../../mod/dfrn_confirm.php:724
+#, php-format
+msgid "Connection accepted at %s"
+msgstr "Connexió acceptada en %s"
+
+#: ../../addon/facebook/facebook.php:338
+msgid "Facebook disabled"
+msgstr "Facebook deshabilitat"
+
+#: ../../addon/facebook/facebook.php:343
+msgid "Updating contacts"
+msgstr "Actualitzant contactes"
+
+#: ../../addon/facebook/facebook.php:352
+msgid "Facebook API key is missing."
+msgstr "La clau del API de Facebook s'ha perdut."
+
+#: ../../addon/facebook/facebook.php:359
+msgid "Facebook Connect"
+msgstr "Facebook Connectat"
+
+#: ../../addon/facebook/facebook.php:365
+msgid "Install Facebook connector for this account."
+msgstr "Instal·lar el connector de Facebook per aquest compte."
+
+#: ../../addon/facebook/facebook.php:372
+msgid "Remove Facebook connector"
+msgstr "Eliminar el connector de Faceboook"
+
+#: ../../addon/facebook/facebook.php:377
+msgid ""
+"Re-authenticate [This is necessary whenever your Facebook password is "
+"changed.]"
+msgstr "Re-autentificar [Això és necessari cada vegada que la contrasenya de Facebook canvia.]"
+
+#: ../../addon/facebook/facebook.php:384
+msgid "Post to Facebook by default"
+msgstr "Enviar a Facebook per defecte"
+
+#: ../../addon/facebook/facebook.php:388
+msgid "Link all your Facebook friends and conversations on this website"
+msgstr "Enllaça tots els teus amics i les converses de Facebook en aquest lloc web"
+
+#: ../../addon/facebook/facebook.php:390
+msgid ""
+"Facebook conversations consist of your <em>profile wall</em> and your friend"
+" <em>stream</em>."
+msgstr "Les converses de Facebook consisteixen en el <em>perfil del mur</em> i en el<em> stream </em> del seu amic."
+
+#: ../../addon/facebook/facebook.php:391
+msgid "On this website, your Facebook friend stream is only visible to you."
+msgstr "En aquesta pàgina web, el stream del seu amic a Facebook només és visible per a vostè."
+
+#: ../../addon/facebook/facebook.php:392
+msgid ""
+"The following settings determine the privacy of your Facebook profile wall "
+"on this website."
+msgstr "Les següents opcions determinen la privacitat del mur del seu perfil de Facebook en aquest lloc web."
+
+#: ../../addon/facebook/facebook.php:396
+msgid ""
+"On this website your Facebook profile wall conversations will only be "
+"visible to you"
+msgstr "En aquesta pàgina web les seves converses al mur del perfil de Facebook només seran visible per a vostè"
+
+#: ../../addon/facebook/facebook.php:401
+msgid "Do not import your Facebook profile wall conversations"
+msgstr "No importi les seves converses del mur del perfil de Facebook"
+
+#: ../../addon/facebook/facebook.php:403
+msgid ""
+"If you choose to link conversations and leave both of these boxes unchecked,"
+" your Facebook profile wall will be merged with your profile wall on this "
+"website and your privacy settings on this website will be used to determine "
+"who may see the conversations."
+msgstr "Si opta per vincular les converses i deixar ambdues caselles sense marcar, el mur del seu perfil de Facebook es fusionarà amb el mur del seu perfil en aquest lloc web i la seva configuració de privacitat en aquest website serà utilitzada per determinar qui pot veure les converses."
+
+#: ../../addon/facebook/facebook.php:408
+msgid "Comma separated applications to ignore"
+msgstr "Separats per comes les aplicacions a ignorar"
+
+#: ../../addon/facebook/facebook.php:476
+#: ../../include/contact_selectors.php:81
+msgid "Facebook"
+msgstr "Facebook"
+
+#: ../../addon/facebook/facebook.php:477
+msgid "Facebook Connector Settings"
+msgstr "Ajustos del Connector de Facebook"
+
+#: ../../addon/facebook/facebook.php:491
+msgid "Post to Facebook"
+msgstr "Enviament a Facebook"
+
+#: ../../addon/facebook/facebook.php:582
+msgid ""
+"Post to Facebook cancelled because of multi-network access permission "
+"conflict."
+msgstr "Enviament a Facebook cancel·lat perque hi ha un conflicte de permisos d'accés multi-xarxa."
+
+#: ../../addon/facebook/facebook.php:651
+msgid "Image: "
+msgstr "Imatge:"
+
+#: ../../addon/facebook/facebook.php:728
+msgid "View on Friendica"
+msgstr "Vist en Friendica"
+
+#: ../../addon/facebook/facebook.php:752
+msgid "Facebook post failed. Queued for retry."
+msgstr "Enviament a Facebook fracassat. En cua per a reintent."
+
+#: ../../addon/facebook/facebook.php:877 ../../addon/facebook/facebook.php:886
+#: ../../include/bb2diaspora.php:102
+msgid "link"
+msgstr "enllaç"
+
+#: ../../addon/widgets/widget_like.php:58
+#, php-format
+msgid "%d person likes this"
+msgid_plural "%d people like this"
+msgstr[0] "%d persona li agrada això"
+msgstr[1] "%d persones els agrada això"
+
+#: ../../addon/widgets/widget_like.php:61
+#, php-format
+msgid "%d person doesn't like this"
+msgid_plural "%d people don't like this"
+msgstr[0] "%d persona no li agrada això"
+msgstr[1] "%d persones no els agrada això"
+
+#: ../../addon/widgets/widgets.php:55
+msgid "Generate new key"
+msgstr "Generar nova clau"
+
+#: ../../addon/widgets/widgets.php:58
+msgid "Widgets key"
+msgstr "Ginys clau"
+
+#: ../../addon/widgets/widgets.php:60
+msgid "Widgets available"
+msgstr "Ginys disponibles"
+
+#: ../../addon/widgets/widget_friends.php:40
+msgid "Connect on Friendica!"
+msgstr "Connectar en Friendica"
+
+#: ../../addon/yourls/yourls.php:55
+msgid "YourLS Settings"
+msgstr "La Teva Configuració de LS"
+
+#: ../../addon/yourls/yourls.php:57
+msgid "URL: http://"
+msgstr "URL: http://"
+
+#: ../../addon/yourls/yourls.php:62
+msgid "Username:"
+msgstr "Nom d'usuari:"
+
+#: ../../addon/yourls/yourls.php:67
+msgid "Password:"
+msgstr "Contrasenya:"
+
+#: ../../addon/yourls/yourls.php:72
+msgid "Use SSL "
+msgstr "Emprar SSL"
+
+#: ../../addon/yourls/yourls.php:92
+msgid "yourls Settings saved."
+msgstr "Guardar la seva configuració."
+
+#: ../../addon/ljpost/ljpost.php:38
+msgid "Post to LiveJournal"
+msgstr "Missatge a Livejournal"
+
+#: ../../addon/ljpost/ljpost.php:69
+msgid "LiveJournal Post Settings"
+msgstr "Configuració d'enviaments a Livejournal"
+
+#: ../../addon/ljpost/ljpost.php:71
+msgid "Enable LiveJournal Post Plugin"
+msgstr "Habilitat el plugin d'enviaments a Livejournal"
+
+#: ../../addon/ljpost/ljpost.php:76
+msgid "LiveJournal username"
+msgstr "Nom d'usuari a Livejournal"
+
+#: ../../addon/ljpost/ljpost.php:81
+msgid "LiveJournal password"
+msgstr "Contrasenya a Livejournal"
+
+#: ../../addon/ljpost/ljpost.php:86
+msgid "Post to LiveJournal by default"
+msgstr "Enviar per defecte a Livejournal"
+
+#: ../../addon/nsfw/nsfw.php:47
+msgid "\"Not Safe For Work\" Settings"
+msgstr "Configuració de \"Not Safe For Work\""
+
+#: ../../addon/nsfw/nsfw.php:50
+msgid "Enable NSFW filter"
+msgstr "Habilitar el filtre NSFW"
+
+#: ../../addon/nsfw/nsfw.php:53
+msgid "Comma separated words to treat as NSFW"
+msgstr "Tractar com NSFW les paraules separades per comes  "
+
+#: ../../addon/nsfw/nsfw.php:58
+msgid "Use /expression/ to provide regular expressions"
+msgstr "Emprar /expressió/  per a proporcionar expressions regulars"
+
+#: ../../addon/nsfw/nsfw.php:74
+msgid "NSFW Settings saved."
+msgstr "Configuració NSFW guardada."
+
+#: ../../addon/nsfw/nsfw.php:120
+#, php-format
+msgid "%s - Click to open/close"
+msgstr "%s - Clicar per obrir/tancar"
+
+#: ../../addon/communityhome/communityhome.php:28
+#: ../../addon/communityhome/communityhome.php:34
+#: ../../addon/communityhome/twillingham/communityhome.php:28
+#: ../../addon/communityhome/twillingham/communityhome.php:34
+#: ../../include/nav.php:62 ../../boot.php:710
+msgid "Login"
+msgstr "Identifica't"
+
+#: ../../addon/communityhome/communityhome.php:29
+#: ../../addon/communityhome/twillingham/communityhome.php:29
+msgid "OpenID"
+msgstr "OpenID"
+
+#: ../../addon/communityhome/communityhome.php:38
+msgid "Last users"
+msgstr "Últims usuaris"
+
+#: ../../addon/communityhome/communityhome.php:81
+#: ../../addon/communityhome/twillingham/communityhome.php:81
+msgid "Most active users"
+msgstr "Usuaris més actius"
+
+#: ../../addon/communityhome/communityhome.php:98
+msgid "Last photos"
+msgstr "Últimes fotos"
+
+#: ../../addon/communityhome/communityhome.php:133
+msgid "Last likes"
+msgstr "Últims \"m'agrada\""
+
+#: ../../addon/communityhome/communityhome.php:155 ../../include/text.php:1224
+#: ../../include/conversation.php:45 ../../include/conversation.php:118
+msgid "event"
+msgstr "esdeveniment"
+
+#: ../../addon/communityhome/twillingham/communityhome.php:38
+msgid "Latest users"
+msgstr "Últims usuaris"
+
+#: ../../addon/uhremotestorage/uhremotestorage.php:84
+#, php-format
+msgid ""
+"Allow to use your friendica id (%s) to connecto to external unhosted-enabled"
+" storage (like ownCloud). See <a "
+"href=\"http://www.w3.org/community/unhosted/wiki/RemoteStorage#WebFinger\">RemoteStorage"
+" WebFinger</a>"
+msgstr "Permetre l'ús del seu ID de friendica (%s) per Connectar a l'emmagatzematge extern (com ownCloud). Veure <a href=\"http://www.w3.org/community/unhosted/wiki/RemoteStorage#WebFinger\"> WebFinger RemoteStorage </a>"
+
+#: ../../addon/uhremotestorage/uhremotestorage.php:85
+msgid "Template URL (with {category})"
+msgstr "Plantilles de URL (amb {categoria})"
+
+#: ../../addon/uhremotestorage/uhremotestorage.php:86
+msgid "OAuth end-point"
+msgstr "OAuth end-point"
+
+#: ../../addon/uhremotestorage/uhremotestorage.php:87
+msgid "Api"
+msgstr "Api"
+
+#: ../../addon/membersince/membersince.php:18
+msgid "Member since:"
+msgstr "Membre des de:"
+
+#: ../../addon/tictac/tictac.php:20
+msgid "Three Dimensional Tic-Tac-Toe"
+msgstr "Tres en línia Tridimensional"
+
+#: ../../addon/tictac/tictac.php:53
+msgid "3D Tic-Tac-Toe"
+msgstr "Tres en línia 3D"
+
+#: ../../addon/tictac/tictac.php:58
+msgid "New game"
+msgstr "Nou joc"
+
+#: ../../addon/tictac/tictac.php:59
+msgid "New game with handicap"
+msgstr "Nou joc modificat"
+
+#: ../../addon/tictac/tictac.php:60
+msgid ""
+"Three dimensional tic-tac-toe is just like the traditional game except that "
+"it is played on multiple levels simultaneously. "
+msgstr "El joc del tres en línia tridimensional és com el joc tradicional, excepte que es juga en diversos nivells simultàniament."
+
+#: ../../addon/tictac/tictac.php:61
+msgid ""
+"In this case there are three levels. You win by getting three in a row on "
+"any level, as well as up, down, and diagonally across the different levels."
+msgstr "En aquest cas hi ha tres nivells. Vostè guanya per aconseguir tres en una fila en qualsevol nivell, així com dalt, baix i en diagonal a través dels diferents nivells."
+
+#: ../../addon/tictac/tictac.php:63
+msgid ""
+"The handicap game disables the center position on the middle level because "
+"the player claiming this square often has an unfair advantage."
+msgstr "El joc modificat desactiva la posició central en el nivell mitjà perquè el jugador en aquesta posició té sovint un avantatge injust."
+
+#: ../../addon/tictac/tictac.php:182
+msgid "You go first..."
+msgstr "Vostè va primer ..."
+
+#: ../../addon/tictac/tictac.php:187
+msgid "I'm going first this time..."
+msgstr "Vaig primer aquesta vegada ..."
+
+#: ../../addon/tictac/tictac.php:193
+msgid "You won!"
+msgstr "Has guanyat!"
+
+#: ../../addon/tictac/tictac.php:199 ../../addon/tictac/tictac.php:224
+msgid "\"Cat\" game!"
+msgstr "Empat!"
+
+#: ../../addon/tictac/tictac.php:222
+msgid "I won!"
+msgstr "Vaig guanyar!"
+
+#: ../../addon/randplace/randplace.php:171
+msgid "Randplace Settings"
+msgstr "Configuració de Randplace"
+
+#: ../../addon/randplace/randplace.php:173
+msgid "Enable Randplace Plugin"
+msgstr "Habilitar el Plugin de Randplace"
+
+#: ../../addon/dwpost/dwpost.php:38
+msgid "Post to Dreamwidth"
+msgstr "Missatge a Dreamwidth"
+
+#: ../../addon/dwpost/dwpost.php:69
+msgid "Dreamwidth Post Settings"
+msgstr "Configuració d'enviaments a Dreamwidth"
+
+#: ../../addon/dwpost/dwpost.php:71
+msgid "Enable dreamwidth Post Plugin"
+msgstr "Habilitat el plugin d'enviaments a Dreamwidth"
+
+#: ../../addon/dwpost/dwpost.php:76
+msgid "dreamwidth username"
+msgstr "Nom d'usuari a Dreamwidth"
+
+#: ../../addon/dwpost/dwpost.php:81
+msgid "dreamwidth password"
+msgstr "Contrasenya a Dreamwidth"
+
+#: ../../addon/dwpost/dwpost.php:86
+msgid "Post to dreamwidth by default"
+msgstr "Enviar per defecte a Dreamwidth"
+
+#: ../../addon/drpost/drpost.php:35
+msgid "Post to Drupal"
+msgstr "Missatge a Drupal"
+
+#: ../../addon/drpost/drpost.php:72
+msgid "Drupal Post Settings"
+msgstr "Configuració d'enviaments a Drupal"
+
+#: ../../addon/drpost/drpost.php:74
+msgid "Enable Drupal Post Plugin"
+msgstr "Habilitar el Plugin d'Enviaments de Drupal"
+
+#: ../../addon/drpost/drpost.php:79
+msgid "Drupal username"
+msgstr "Nom d'usuari de Drupal"
+
+#: ../../addon/drpost/drpost.php:84
+msgid "Drupal password"
+msgstr "Contrasenya de Drupal"
+
+#: ../../addon/drpost/drpost.php:89
+msgid "Post Type - article,page,or blog"
+msgstr "Tipus d'Enviament- article,pàgina, o blog"
+
+#: ../../addon/drpost/drpost.php:94
+msgid "Drupal site URL"
+msgstr "URL del lloc Drupal"
+
+#: ../../addon/drpost/drpost.php:99
+msgid "Drupal site uses clean URLS"
+msgstr "el Lloc Drupal empra URLS netes"
+
+#: ../../addon/drpost/drpost.php:104
+msgid "Post to Drupal by default"
+msgstr "Enviar a Drupal per defecte"
+
+#: ../../addon/drpost/drpost.php:184 ../../addon/wppost/wppost.php:172
+#: ../../addon/posterous/posterous.php:173
+msgid "Post from Friendica"
+msgstr "Enviament des de Friendica"
+
+#: ../../addon/geonames/geonames.php:143
+msgid "Geonames settings updated."
+msgstr "Actualitzada la configuració de Geonames."
+
+#: ../../addon/geonames/geonames.php:179
+msgid "Geonames Settings"
+msgstr "Configuració de Geonames"
+
+#: ../../addon/geonames/geonames.php:181
+msgid "Enable Geonames Plugin"
+msgstr "Habilitar Plugin de Geonames"
+
+#: ../../addon/js_upload/js_upload.php:43
+msgid "Upload a file"
+msgstr "Carrega un arxiu"
+
+#: ../../addon/js_upload/js_upload.php:44
+msgid "Drop files here to upload"
+msgstr "Deixa aquí el arxiu a carregar"
+
+#: ../../addon/js_upload/js_upload.php:46
+msgid "Failed"
+msgstr "Fracassar"
+
+#: ../../addon/js_upload/js_upload.php:297
+msgid "No files were uploaded."
+msgstr "No hi ha arxius carregats."
+
+#: ../../addon/js_upload/js_upload.php:303
+msgid "Uploaded file is empty"
+msgstr "L'arxiu carregat està buit"
+
+#: ../../addon/js_upload/js_upload.php:326
+msgid "File has an invalid extension, it should be one of "
+msgstr "Arxiu té una extensió no vàlida, ha de ser una de"
+
+#: ../../addon/js_upload/js_upload.php:337
+msgid "Upload was cancelled, or server error encountered"
+msgstr "La pujada va ser cancel.lada, o es va trobar un error de servidor"
+
+#: ../../addon/oembed.old/oembed.php:30
+msgid "OEmbed settings updated"
+msgstr "Actualitzar la configuració OEmbed"
+
+#: ../../addon/oembed.old/oembed.php:43
+msgid "Use OEmbed for YouTube videos"
+msgstr "Empreu OEmbed per videos YouTube"
+
+#: ../../addon/oembed.old/oembed.php:71
+msgid "URL to embed:"
+msgstr "Adreça URL del recurs"
+
+#: ../../addon/impressum/impressum.php:25
+msgid "Impressum"
+msgstr "Impressum"
+
+#: ../../addon/impressum/impressum.php:38
+#: ../../addon/impressum/impressum.php:40
+#: ../../addon/impressum/impressum.php:70
+msgid "Site Owner"
+msgstr "Propietari del lloc"
+
+#: ../../addon/impressum/impressum.php:38
+#: ../../addon/impressum/impressum.php:74
+msgid "Email Address"
+msgstr "Adreça de correu"
+
+#: ../../addon/impressum/impressum.php:43
+#: ../../addon/impressum/impressum.php:72
+msgid "Postal Address"
+msgstr "Adreça postal"
+
+#: ../../addon/impressum/impressum.php:49
+msgid ""
+"The impressum addon needs to be configured!<br />Please add at least the "
+"<tt>owner</tt> variable to your config file. For other variables please "
+"refer to the README file of the addon."
+msgstr "El complement impressum s'ha de configurar!<br />Si us plau afegiu almenys la variable <tt>propietari </tt> al fitxer de configuració. Per a les altres variables, consulteu el fitxer README del complement."
+
+#: ../../addon/impressum/impressum.php:71
+msgid "Site Owners Profile"
+msgstr "Perfil del Propietari del Lloc"
+
+#: ../../addon/impressum/impressum.php:73
+msgid "Notes"
+msgstr "Notes"
+
+#: ../../addon/buglink/buglink.php:15
+msgid "Report Bug"
+msgstr "Informar de problema"
+
+#: ../../addon/blockem/blockem.php:51
+msgid "\"Blockem\" Settings"
+msgstr "Configuració de \"Bloqueig\""
+
+#: ../../addon/blockem/blockem.php:53
+msgid "Comma separated profile URLS to block"
+msgstr "URLS dels perfils a bloquejar, separats per comes"
+
+#: ../../addon/blockem/blockem.php:70
+msgid "BLOCKEM Settings saved."
+msgstr "Guardada la configuració de BLOQUEIG."
+
+#: ../../addon/blockem/blockem.php:105
+#, php-format
+msgid "Blocked %s - Click to open/close"
+msgstr "Bloquejar %s - Clica per obrir/tancar"
+
+#: ../../addon/blockem/blockem.php:160
+msgid "Unblock Author"
+msgstr "Desbloquejar Autor"
+
+#: ../../addon/blockem/blockem.php:162
+msgid "Block Author"
+msgstr "Bloquejar Autor"
+
+#: ../../addon/blockem/blockem.php:194
+msgid "blockem settings updated"
+msgstr "Actualitzar la Configuració de bloqueig"
+
+#: ../../addon/qcomment/qcomment.php:51
+msgid ":-)"
+msgstr ":-)"
+
+#: ../../addon/qcomment/qcomment.php:51
+msgid ":-("
+msgstr ":-("
+
+#: ../../addon/qcomment/qcomment.php:51
+msgid "lol"
+msgstr "lol"
+
+#: ../../addon/qcomment/qcomment.php:54
+msgid "Quick Comment Settings"
+msgstr "Configuració Ràpida dels Comentaris"
+
+#: ../../addon/qcomment/qcomment.php:56
+msgid ""
+"Quick comments are found near comment boxes, sometimes hidden. Click them to"
+" provide simple replies."
+msgstr "Comentaris ràpids es troben prop de les caixes de comentaris, de vegades ocults. Feu clic a ells per donar respostes simples."
+
+#: ../../addon/qcomment/qcomment.php:57
+msgid "Enter quick comments, one per line"
+msgstr "Introduïu els comentaris ràpids, un per línia"
+
+#: ../../addon/qcomment/qcomment.php:75
+msgid "Quick Comment settings saved."
+msgstr "Guardada la configuració de comentaris ràpids."
+
+#: ../../addon/openstreetmap/openstreetmap.php:71
+msgid "Tile Server URL"
+msgstr "URL del servidor, del mosaico de servidores"
+
+#: ../../addon/openstreetmap/openstreetmap.php:71
+msgid ""
+"A list of <a href=\"http://wiki.openstreetmap.org/wiki/TMS\" "
+"target=\"_blank\">public tile servers</a>"
+msgstr "Una llista de  <a href=\"http://wiki.openstreetmap.org/wiki/TMS\" target=\"_blank\"> un mosaic de servidors públics</a>"
+
+#: ../../addon/openstreetmap/openstreetmap.php:72
+msgid "Default zoom"
+msgstr "Zoom per defecte"
+
+#: ../../addon/openstreetmap/openstreetmap.php:72
+msgid "The default zoom level. (1:world, 18:highest)"
+msgstr "Nivell de zoom per defecte. (1: el món, 18: el més alt)"
+
+#: ../../addon/editplain/editplain.php:46
+msgid "Editplain settings updated."
+msgstr "Actualitzar la configuració de Editplain."
+
+#: ../../addon/editplain/editplain.php:76
+msgid "Editplain Settings"
+msgstr "Configuració de Editplain"
+
+#: ../../addon/editplain/editplain.php:78
+msgid "Disable richtext status editor"
+msgstr "Deshabilitar l'editor d'estatus de texte enriquit"
+
+#: ../../addon/pageheader/pageheader.php:47
+msgid "\"pageheader\" Settings"
+msgstr "Configuració de la capçalera de pàgina."
+
+#: ../../addon/pageheader/pageheader.php:65
+msgid "pageheader Settings saved."
+msgstr "guardada la configuració de la capçalera de pàgina."
+
+#: ../../addon/viewsrc/viewsrc.php:25
+msgid "View Source"
+msgstr "Veure les Fonts"
+
+#: ../../addon/statusnet/statusnet.php:134
+msgid "Post to StatusNet"
+msgstr "Publica-ho a StatusNet"
+
+#: ../../addon/statusnet/statusnet.php:175
+msgid ""
+"Please contact your site administrator.<br />The provided API URL is not "
+"valid."
+msgstr "Si us plau, poseu-vos en contacte amb l'administrador del lloc. <br /> L'adreça URL de l'API proporcionada no és vàlida."
+
+#: ../../addon/statusnet/statusnet.php:203
+msgid "We could not contact the StatusNet API with the Path you entered."
+msgstr "No hem pogut posar-nos en contacte amb l'API StatusNet amb la ruta que has introduït."
+
+#: ../../addon/statusnet/statusnet.php:229
+msgid "StatusNet settings updated."
+msgstr "La configuració StatusNet actualitzada."
+
+#: ../../addon/statusnet/statusnet.php:252
+msgid "StatusNet Posting Settings"
+msgstr "Configuració d'Enviaments per a StatusNet"
+
+#: ../../addon/statusnet/statusnet.php:266
+msgid "Globally Available StatusNet OAuthKeys"
+msgstr "OAuthKeys de StatusNet Globalment Disponible"
+
+#: ../../addon/statusnet/statusnet.php:267
+msgid ""
+"There are preconfigured OAuth key pairs for some StatusNet servers "
+"available. If you are useing one of them, please use these credentials. If "
+"not feel free to connect to any other StatusNet instance (see below)."
+msgstr "Hi ha preconfigurats parells clau OAuth per a alguns servidors StatusNet disponibles. Si està emprant un d'ells, utilitzi aquestes credencials. Si no és així no dubteu a connectar-se a qualsevol altra instància StatusNet (veure a baix)."
+
+#: ../../addon/statusnet/statusnet.php:275
+msgid "Provide your own OAuth Credentials"
+msgstr "Proporcioneu les vostres credencials de OAuth"
+
+#: ../../addon/statusnet/statusnet.php:276
+msgid ""
+"No consumer key pair for StatusNet found. Register your Friendica Account as"
+" an desktop client on your StatusNet account, copy the consumer key pair "
+"here and enter the API base root.<br />Before you register your own OAuth "
+"key pair ask the administrator if there is already a key pair for this "
+"Friendica installation at your favorited StatusNet installation."
+msgstr "no s'ha trobat cap parell \"consumer key\" per StatusNet. Registra el teu compte Friendica com un client d'escriptori en el seu compte StatusNet, copieu el parell de \"consumer key\" aquí i entri a l'arrel de la base de l'API. <br /> Abans de registrar el seu parell de claus OAuth demani a l'administrador si ja hi ha un parell de claus per a aquesta instal·lació de Friendica en la instal·lació del teu favorit StatusNet."
+
+#: ../../addon/statusnet/statusnet.php:278
+msgid "OAuth Consumer Key"
+msgstr "OAuth Consumer Key"
+
+#: ../../addon/statusnet/statusnet.php:281
+msgid "OAuth Consumer Secret"
+msgstr "OAuth Consumer Secret"
+
+#: ../../addon/statusnet/statusnet.php:284
+msgid "Base API Path (remember the trailing /)"
+msgstr "Base API Path (recorda deixar / al final)"
+
+#: ../../addon/statusnet/statusnet.php:305
+msgid ""
+"To connect to your StatusNet account click the button below to get a "
+"security code from StatusNet which you have to copy into the input box below"
+" and submit the form. Only your <strong>public</strong> posts will be posted"
+" to StatusNet."
+msgstr "Per connectar al seu compte StatusNet, feu clic al botó de sota per obtenir un codi de seguretat StatusNet, que has de copiar a la casella de sota, i enviar el formulari. Només els missatges <strong> públics </strong> es publicaran en StatusNet."
+
+#: ../../addon/statusnet/statusnet.php:306
+msgid "Log in with StatusNet"
+msgstr "Accedeixi com en  StatusNet"
+
+#: ../../addon/statusnet/statusnet.php:308
+msgid "Copy the security code from StatusNet here"
+msgstr "Copieu el codi de seguretat StatusNet aquí"
+
+#: ../../addon/statusnet/statusnet.php:314
+msgid "Cancel Connection Process"
+msgstr "Cancel·lar el procés de connexió"
+
+#: ../../addon/statusnet/statusnet.php:316
+msgid "Current StatusNet API is"
+msgstr "L'Actual StatusNet API és"
+
+#: ../../addon/statusnet/statusnet.php:317
+msgid "Cancel StatusNet Connection"
+msgstr "Cancel·lar la connexió amb StatusNet"
+
+#: ../../addon/statusnet/statusnet.php:328 ../../addon/twitter/twitter.php:184
+msgid "Currently connected to: "
+msgstr "Actualment connectat a: "
+
+#: ../../addon/statusnet/statusnet.php:329
+msgid ""
+"If enabled all your <strong>public</strong> postings can be posted to the "
+"associated StatusNet account. You can choose to do so by default (here) or "
+"for every posting separately in the posting options when writing the entry."
+msgstr "Si està activat, tots els seus anuncis <strong>públics</strong> poden ser publicats en el compte StatusNet associat. Vostè pot optar per fer-ho per defecte (en aquest cas) o per cada missatge per separat en les opcions de comptabilització en escriure l'entrada."
+
+#: ../../addon/statusnet/statusnet.php:331
+msgid ""
+"<strong>Note</strong>: Due your privacy settings (<em>Hide your profile "
+"details from unknown viewers?</em>) the link potentially included in public "
+"postings relayed to StatusNet will lead the visitor to a blank page "
+"informing the visitor that the access to your profile has been restricted."
+msgstr "<strong>Nota</strong>: A causa de les seves opcions de privacitat (<em>Amaga els detalls del teu perfil dels espectadors desconeguts? </em>)  el vincle potencialment inclòs en anuncis públics transmesos a StatusNet conduirà el visitant a una pàgina en blanc en la que informarà al visitants que l'accés al seu perfil s'ha restringit."
+
+#: ../../addon/statusnet/statusnet.php:334
+msgid "Allow posting to StatusNet"
+msgstr "Permetre enviaments a StatusNet"
+
+#: ../../addon/statusnet/statusnet.php:337
+msgid "Send public postings to StatusNet by default"
+msgstr "Enviar missatges públics a StatusNet per defecte"
+
+#: ../../addon/statusnet/statusnet.php:342 ../../addon/twitter/twitter.php:198
+msgid "Clear OAuth configuration"
+msgstr "Esborrar configuració de OAuth"
+
+#: ../../addon/statusnet/statusnet.php:524
+msgid "API URL"
+msgstr "API URL"
+
+#: ../../addon/tumblr/tumblr.php:36
+msgid "Post to Tumblr"
+msgstr "Publica-ho al Tumblr"
+
+#: ../../addon/tumblr/tumblr.php:67
+msgid "Tumblr Post Settings"
+msgstr "Configuració d'Enviaments de Tumblr"
+
+#: ../../addon/tumblr/tumblr.php:69
+msgid "Enable Tumblr Post Plugin"
+msgstr "Habilita el plugin de enviaments de Tumblr"
+
+#: ../../addon/tumblr/tumblr.php:74
+msgid "Tumblr login"
+msgstr "Inici de sessió de Tumblr"
+
+#: ../../addon/tumblr/tumblr.php:79
+msgid "Tumblr password"
+msgstr "Caontrasenya de Tumblr"
+
+#: ../../addon/tumblr/tumblr.php:84
+msgid "Post to Tumblr by default"
+msgstr "Enviar a Tumblr per defecte"
+
+#: ../../addon/numfriends/numfriends.php:46
+msgid "Numfriends settings updated."
+msgstr "Actualitzar la configuració de Numfriends."
+
+#: ../../addon/numfriends/numfriends.php:77
+msgid "Numfriends Settings"
+msgstr "Configuració de Numfriends"
+
+#: ../../addon/numfriends/numfriends.php:79
+msgid "How many contacts to display on profile sidebar"
+msgstr "Quants contactes per mostrar a la barra lateral el perfil"
+
+#: ../../addon/gnot/gnot.php:48
+msgid "Gnot settings updated."
+msgstr "Configuració de Gnot actualitzada"
+
+#: ../../addon/gnot/gnot.php:79
+msgid "Gnot Settings"
+msgstr "Configuració de Gnot"
+
+#: ../../addon/gnot/gnot.php:81
+msgid ""
+"Allows threading of email comment notifications on Gmail and anonymising the"
+" subject line."
+msgstr "Permet crear fils de les notificacions de comentaris de correu electrònic a Gmail i anonimat de la línia d'assumpte."
+
+#: ../../addon/gnot/gnot.php:82
+msgid "Enable this plugin/addon?"
+msgstr "Activar aquest plugin/aplicació?"
+
+#: ../../addon/gnot/gnot.php:97
+#, php-format
+msgid "[Friendica:Notify] Comment to conversation #%d"
+msgstr "[Friendica: Notifica] Conversació comentada #%d"
+
+#: ../../addon/wppost/wppost.php:42
+msgid "Post to Wordpress"
+msgstr "Publica-ho al Wordpress"
+
+#: ../../addon/wppost/wppost.php:74
+msgid "WordPress Post Settings"
+msgstr "Configuració d'enviaments a WordPress"
+
+#: ../../addon/wppost/wppost.php:76
+msgid "Enable WordPress Post Plugin"
+msgstr "Habilitar Configuració d'Enviaments a WordPress"
+
+#: ../../addon/wppost/wppost.php:81
+msgid "WordPress username"
+msgstr "Nom d'usuari de WordPress"
+
+#: ../../addon/wppost/wppost.php:86
+msgid "WordPress password"
+msgstr "Contrasenya de WordPress"
+
+#: ../../addon/wppost/wppost.php:91
+msgid "WordPress API URL"
+msgstr "WordPress API URL"
+
+#: ../../addon/wppost/wppost.php:96
+msgid "Post to WordPress by default"
+msgstr "Enviar a WordPress per defecte"
+
+#: ../../addon/showmore/showmore.php:38
+msgid "\"Show more\" Settings"
+msgstr "Configuració de \"Mostrar més\""
+
+#: ../../addon/showmore/showmore.php:41
+msgid "Enable Show More"
+msgstr "Habilita Mostrar Més"
+
+#: ../../addon/showmore/showmore.php:44
+msgid "Cutting posts after how much characters"
+msgstr "Tallar els missatges després de quants caràcters"
+
+#: ../../addon/showmore/showmore.php:64
+msgid "Show More Settings saved."
+msgstr "Guardada la configuració de \"Mostra Més\"."
+
+#: ../../addon/showmore/showmore.php:86
+msgid "Show More"
+msgstr "Mostra Més"
+
+#: ../../addon/piwik/piwik.php:79
+msgid ""
+"This website is tracked using the <a href='http://www.piwik.org'>Piwik</a> "
+"analytics tool."
+msgstr "Aquest lloc web realitza un seguiment mitjançant la eina d'anàlisi <a href='http://www.piwik.org'>Piwik</a>."
+
+#: ../../addon/piwik/piwik.php:82
+#, php-format
+msgid ""
+"If you do not want that your visits are logged this way you <a href='%s'>can"
+" set a cookie to prevent Piwik from tracking further visits of the site</a> "
+"(opt-out)."
+msgstr "Si no vol que les seves visites es transcribin d'aquesta manera vostè <a href='%s'> pot establir una cookie per evitar a Piwik a partir de noves visites del lloc web </a> (opt-out)."
+
+#: ../../addon/piwik/piwik.php:90
+msgid "Piwik Base URL"
+msgstr "URL Piwik Base"
+
+#: ../../addon/piwik/piwik.php:90
+msgid ""
+"Absolute path to your Piwik installation. (without protocol (http/s), with "
+"trailing slash)"
+msgstr "Trajectoria absoluta per a la instal·lació de Piwik (sense el protocol (http/s), amb la barra final )"
+
+#: ../../addon/piwik/piwik.php:91
+msgid "Site ID"
+msgstr "Lloc ID"
+
+#: ../../addon/piwik/piwik.php:92
+msgid "Show opt-out cookie link?"
+msgstr "Mostra l'enllaç cookie opt-out?"
+
+#: ../../addon/piwik/piwik.php:93
+msgid "Asynchronous tracking"
+msgstr "Seguiment asíncrono"
+
+#: ../../addon/twitter/twitter.php:73
+msgid "Post to Twitter"
+msgstr "Publica-ho al Twitter"
+
+#: ../../addon/twitter/twitter.php:119
+msgid "Twitter settings updated."
+msgstr "La configuració de Twitter actualitzada."
+
+#: ../../addon/twitter/twitter.php:141
+msgid "Twitter Posting Settings"
+msgstr "Configuració d'Enviaments per a Twitter"
+
+#: ../../addon/twitter/twitter.php:148
+msgid ""
+"No consumer key pair for Twitter found. Please contact your site "
+"administrator."
+msgstr "No s'ha pogut emparellar cap clau \"consumer key\" per a Twitter. Si us plau, poseu-vos en contacte amb l'administrador del lloc."
+
+#: ../../addon/twitter/twitter.php:167
+msgid ""
+"At this Friendica instance the Twitter plugin was enabled but you have not "
+"yet connected your account to your Twitter account. To do so click the "
+"button below to get a PIN from Twitter which you have to copy into the input"
+" box below and submit the form. Only your <strong>public</strong> posts will"
+" be posted to Twitter."
+msgstr "En aquesta instància Friendica el plugin Twitter va ser habilitat, però encara no ha connectat el compte al seu compte de Twitter. Per a això feu clic al botó de sota per obtenir un PIN de Twitter que ha de copiar a la casella de sota i enviar el formulari. Només els missatges <strong> públics </strong> es publicaran a Twitter."
+
+#: ../../addon/twitter/twitter.php:168
+msgid "Log in with Twitter"
+msgstr "Accedeixi com en  Twitter"
+
+#: ../../addon/twitter/twitter.php:170
+msgid "Copy the PIN from Twitter here"
+msgstr "Copieu el codi PIN de Twitter aquí"
+
+#: ../../addon/twitter/twitter.php:185
+msgid ""
+"If enabled all your <strong>public</strong> postings can be posted to the "
+"associated Twitter account. You can choose to do so by default (here) or for"
+" every posting separately in the posting options when writing the entry."
+msgstr "Si està activat, tots els seus anuncis <strong> públics </strong> poden ser publicats en el corresponent compte de Twitter. Vostè pot optar per fer-ho per defecte (en aquest cas) o per cada missatge per separat en les opcions de comptabilització en escriure l'entrada."
+
+#: ../../addon/twitter/twitter.php:187
+msgid ""
+"<strong>Note</strong>: Due your privacy settings (<em>Hide your profile "
+"details from unknown viewers?</em>) the link potentially included in public "
+"postings relayed to Twitter will lead the visitor to a blank page informing "
+"the visitor that the access to your profile has been restricted."
+msgstr "<strong>Nota</strong>: donada la seva configuració de privacitat (<em> Amaga els detalls del teu perfil dels espectadors desconeguts? </em>) el vincle potencialment inclòs en anuncis públics retransmesos a Twitter conduirà al visitant a una pàgina en blanc informar als visitants que l'accés al seu perfil s'ha restringit."
+
+#: ../../addon/twitter/twitter.php:190
+msgid "Allow posting to Twitter"
+msgstr "Permetre anunci a Twitter"
+
+#: ../../addon/twitter/twitter.php:193
+msgid "Send public postings to Twitter by default"
+msgstr "Enviar anuncis públics a Twitter per defecte"
+
+#: ../../addon/twitter/twitter.php:357
+msgid "Consumer key"
+msgstr "Consumer key"
+
+#: ../../addon/twitter/twitter.php:358
+msgid "Consumer secret"
+msgstr "Consumer secret"
+
+#: ../../addon/irc/irc.php:20
+msgid "irc Chatroom"
+msgstr "irc Chatroom"
+
+#: ../../addon/posterous/posterous.php:36
+msgid "Post to Posterous"
+msgstr "enviament a Posterous"
+
+#: ../../addon/posterous/posterous.php:67
+msgid "Posterous Post Settings"
+msgstr "Configuració d'Enviaments a Posterous"
+
+#: ../../addon/posterous/posterous.php:69
+msgid "Enable Posterous Post Plugin"
+msgstr "Habilitar plugin d'Enviament de Posterous"
+
+#: ../../addon/posterous/posterous.php:74
+msgid "Posterous login"
+msgstr "Inici de sessió a Posterous"
+
+#: ../../addon/posterous/posterous.php:79
+msgid "Posterous password"
+msgstr "Contrasenya a Posterous"
+
+#: ../../addon/posterous/posterous.php:84
+msgid "Post to Posterous by default"
+msgstr "Enviar a Posterous per defecte"
+
+#: ../../view/theme/quattro/theme.php:17
+msgid "Theme settings"
+msgstr "Configuració de Temes"
+
+#: ../../view/theme/quattro/theme.php:18
+msgid "Alignment"
+msgstr "Adaptació"
+
+#: ../../view/theme/quattro/theme.php:18
+msgid "Left"
+msgstr "Esquerra"
+
+#: ../../view/theme/quattro/theme.php:18
+msgid "Center"
+msgstr "Centre"
+
+#: ../../include/profile_advanced.php:17 ../../boot.php:982
+msgid "Gender:"
+msgstr "Gènere:"
+
+#: ../../include/profile_advanced.php:22
+msgid "j F, Y"
+msgstr "j F, Y"
+
+#: ../../include/profile_advanced.php:23
+msgid "j F"
+msgstr "j F"
+
+#: ../../include/profile_advanced.php:30 ../../include/datetime.php:438
+#: ../../include/items.php:1349
+msgid "Birthday:"
+msgstr "Aniversari:"
+
+#: ../../include/profile_advanced.php:34
+msgid "Age:"
+msgstr "Edat:"
+
+#: ../../include/profile_advanced.php:37 ../../boot.php:985
+msgid "Status:"
+msgstr "Estatus:"
+
+#: ../../include/profile_advanced.php:45 ../../boot.php:987
+msgid "Homepage:"
+msgstr "Pàgina web:"
+
+#: ../../include/profile_advanced.php:47
+msgid "Tags:"
+msgstr "Etiquetes:"
+
+#: ../../include/profile_advanced.php:51
+msgid "Religion:"
+msgstr "Religió:"
+
+#: ../../include/profile_advanced.php:53
+msgid "About:"
+msgstr "Acerca de:"
+
+#: ../../include/profile_advanced.php:55
+msgid "Hobbies/Interests:"
+msgstr "Aficiones/Intereses:"
+
+#: ../../include/profile_advanced.php:57
+msgid "Contact information and Social Networks:"
+msgstr "Informació de contacte i Xarxes Socials:"
+
+#: ../../include/profile_advanced.php:59
+msgid "Musical interests:"
+msgstr "Gustos musicals:"
+
+#: ../../include/profile_advanced.php:61
+msgid "Books, literature:"
+msgstr "Llibres, literatura:"
+
+#: ../../include/profile_advanced.php:63
+msgid "Television:"
+msgstr "Televisió:"
+
+#: ../../include/profile_advanced.php:65
+msgid "Film/dance/culture/entertainment:"
+msgstr "Cinema/ball/cultura/entreteniments:"
+
+#: ../../include/profile_advanced.php:67
+msgid "Love/Romance:"
+msgstr "Amor/sentiments:"
+
+#: ../../include/profile_advanced.php:69
+msgid "Work/employment:"
+msgstr "Treball/ocupació:"
+
+#: ../../include/profile_advanced.php:71
+msgid "School/education:"
+msgstr "Escola/formació"
+
+#: ../../include/contact_selectors.php:32
+msgid "Unknown | Not categorised"
+msgstr "Desconegut/No categoritzat"
+
+#: ../../include/contact_selectors.php:33
+msgid "Block immediately"
+msgstr "Bloquejar immediatament"
+
+#: ../../include/contact_selectors.php:34
+msgid "Shady, spammer, self-marketer"
+msgstr "Sospitós, Femater, auto-publicitat"
+
+#: ../../include/contact_selectors.php:35
+msgid "Known to me, but no opinion"
+msgstr "Conegut per mi, però sense opinió"
+
+#: ../../include/contact_selectors.php:36
+msgid "OK, probably harmless"
+msgstr "Bé, probablement inofensiu"
+
+#: ../../include/contact_selectors.php:37
+msgid "Reputable, has my trust"
+msgstr "Bona reputació, té la meva confiança"
+
+#: ../../include/contact_selectors.php:56
+msgid "Frequently"
+msgstr "Freqüentment"
+
+#: ../../include/contact_selectors.php:57
+msgid "Hourly"
+msgstr "Cada hora"
+
+#: ../../include/contact_selectors.php:58
+msgid "Twice daily"
+msgstr "Dues vegades al dia"
+
+#: ../../include/contact_selectors.php:59
+msgid "Daily"
+msgstr "Diari"
+
+#: ../../include/contact_selectors.php:60
+msgid "Weekly"
+msgstr "Setmanal"
+
+#: ../../include/contact_selectors.php:61
+msgid "Monthly"
+msgstr "Mensual"
+
+#: ../../include/contact_selectors.php:77
+msgid "OStatus"
+msgstr "OStatus"
+
+#: ../../include/contact_selectors.php:78
+msgid "RSS/Atom"
+msgstr "RSS/Atom"
+
+#: ../../include/contact_selectors.php:82
+msgid "Zot!"
+msgstr "Zot!"
+
+#: ../../include/contact_selectors.php:83
+msgid "LinkedIn"
+msgstr "LinkedIn"
+
+#: ../../include/contact_selectors.php:84
+msgid "XMPP/IM"
+msgstr "XMPP/IM"
+
+#: ../../include/contact_selectors.php:85
+msgid "MySpace"
+msgstr "MySpace"
+
+#: ../../include/profile_selectors.php:6
+msgid "Male"
+msgstr "Home"
+
+#: ../../include/profile_selectors.php:6
+msgid "Female"
+msgstr "Dona"
+
+#: ../../include/profile_selectors.php:6
+msgid "Currently Male"
+msgstr "Actualment Home"
+
+#: ../../include/profile_selectors.php:6
+msgid "Currently Female"
+msgstr "Actualment Dona"
+
+#: ../../include/profile_selectors.php:6
+msgid "Mostly Male"
+msgstr "Habitualment Home"
+
+#: ../../include/profile_selectors.php:6
+msgid "Mostly Female"
+msgstr "Habitualment Dona"
+
+#: ../../include/profile_selectors.php:6
+msgid "Transgender"
+msgstr "Transgènere"
+
+#: ../../include/profile_selectors.php:6
+msgid "Intersex"
+msgstr "Bisexual"
+
+#: ../../include/profile_selectors.php:6
+msgid "Transsexual"
+msgstr "Transexual"
+
+#: ../../include/profile_selectors.php:6
+msgid "Hermaphrodite"
+msgstr "Hermafrodita"
+
+#: ../../include/profile_selectors.php:6
+msgid "Neuter"
+msgstr "Neutre"
+
+#: ../../include/profile_selectors.php:6
+msgid "Non-specific"
+msgstr "No específicat"
+
+#: ../../include/profile_selectors.php:6
+msgid "Other"
+msgstr "Altres"
+
+#: ../../include/profile_selectors.php:6
+msgid "Undecided"
+msgstr "No Decidit"
+
+#: ../../include/profile_selectors.php:19
+msgid "Males"
+msgstr "Home"
+
+#: ../../include/profile_selectors.php:19
+msgid "Females"
+msgstr "Dona"
+
+#: ../../include/profile_selectors.php:19
+msgid "Gay"
+msgstr "Gay"
+
+#: ../../include/profile_selectors.php:19
+msgid "Lesbian"
+msgstr "Lesbiana"
+
+#: ../../include/profile_selectors.php:19
+msgid "No Preference"
+msgstr "Sense Preferències"
+
+#: ../../include/profile_selectors.php:19
+msgid "Bisexual"
+msgstr "Bisexual"
+
+#: ../../include/profile_selectors.php:19
+msgid "Autosexual"
+msgstr "Autosexual"
+
+#: ../../include/profile_selectors.php:19
+msgid "Abstinent"
+msgstr "Abstinent/a"
+
+#: ../../include/profile_selectors.php:19
+msgid "Virgin"
+msgstr "Verge"
+
+#: ../../include/profile_selectors.php:19
+msgid "Deviant"
+msgstr "Desviat/da"
+
+#: ../../include/profile_selectors.php:19
+msgid "Fetish"
+msgstr "Fetixiste"
+
+#: ../../include/profile_selectors.php:19
+msgid "Oodles"
+msgstr "Orgies"
+
+#: ../../include/profile_selectors.php:19
+msgid "Nonsexual"
+msgstr "Asexual"
+
+#: ../../include/profile_selectors.php:33
+msgid "Single"
+msgstr "Solter/a"
+
+#: ../../include/profile_selectors.php:33
+msgid "Lonely"
+msgstr "Solitari"
+
+#: ../../include/profile_selectors.php:33
+msgid "Available"
+msgstr "Disponible"
+
+#: ../../include/profile_selectors.php:33
+msgid "Unavailable"
+msgstr "No Disponible"
+
+#: ../../include/profile_selectors.php:33
+msgid "Dating"
+msgstr "De cites"
+
+#: ../../include/profile_selectors.php:33
+msgid "Unfaithful"
+msgstr "Infidel"
+
+#: ../../include/profile_selectors.php:33
+msgid "Sex Addict"
+msgstr "Adicte al sexe"
+
+#: ../../include/profile_selectors.php:33
+msgid "Friends"
+msgstr "Amics/Amigues"
+
+#: ../../include/profile_selectors.php:33
+msgid "Friends/Benefits"
+msgstr "Amics íntims"
+
+#: ../../include/profile_selectors.php:33
+msgid "Casual"
+msgstr "Oportunista"
+
+#: ../../include/profile_selectors.php:33
+msgid "Engaged"
+msgstr "Promès"
+
+#: ../../include/profile_selectors.php:33
+msgid "Married"
+msgstr "Casat"
+
+#: ../../include/profile_selectors.php:33
+msgid "Partners"
+msgstr "Socis"
+
+#: ../../include/profile_selectors.php:33
+msgid "Cohabiting"
+msgstr "Cohabitant"
+
+#: ../../include/profile_selectors.php:33
+msgid "Happy"
+msgstr "Feliç"
+
+#: ../../include/profile_selectors.php:33
+msgid "Not Looking"
+msgstr "No Cerco"
+
+#: ../../include/profile_selectors.php:33
+msgid "Swinger"
+msgstr "Parella Liberal"
+
+#: ../../include/profile_selectors.php:33
+msgid "Betrayed"
+msgstr "Traït/da"
+
+#: ../../include/profile_selectors.php:33
+msgid "Separated"
+msgstr "Separat/da"
+
+#: ../../include/profile_selectors.php:33
+msgid "Unstable"
+msgstr "Inestable"
+
+#: ../../include/profile_selectors.php:33
+msgid "Divorced"
+msgstr "Divorciat/da"
+
+#: ../../include/profile_selectors.php:33
+msgid "Widowed"
+msgstr "Vidu/a"
+
+#: ../../include/profile_selectors.php:33
+msgid "Uncertain"
+msgstr "Incert"
+
+#: ../../include/profile_selectors.php:33
+msgid "Complicated"
+msgstr "Complicat"
+
+#: ../../include/profile_selectors.php:33
+msgid "Don't care"
+msgstr "No t'interessa"
+
+#: ../../include/profile_selectors.php:33
+msgid "Ask me"
+msgstr "Pregunta'm"
+
+#: ../../include/event.php:17 ../../include/bb2diaspora.php:244
+msgid "Starts:"
+msgstr "Inici:"
+
+#: ../../include/event.php:27 ../../include/bb2diaspora.php:252
+msgid "Finishes:"
+msgstr "Acaba:"
+
+#: ../../include/delivery.php:425 ../../include/notifier.php:638
+msgid "(no subject)"
+msgstr "(sense assumpte)"
+
+#: ../../include/delivery.php:432 ../../include/enotify.php:17
+#: ../../include/notifier.php:645
+msgid "noreply"
+msgstr "no contestar"
+
+#: ../../include/text.php:238
+msgid "prev"
+msgstr "Prev"
+
+#: ../../include/text.php:240
+msgid "first"
+msgstr "primer"
+
+#: ../../include/text.php:269
+msgid "last"
+msgstr "Últim"
+
+#: ../../include/text.php:272
+msgid "next"
+msgstr "Proper"
+
+#: ../../include/text.php:563
+msgid "No contacts"
+msgstr "Sense contactes"
+
+#: ../../include/text.php:572
+#, php-format
+msgid "%d Contact"
+msgid_plural "%d Contacts"
+msgstr[0] "%d Contacte"
+msgstr[1] "%d Contactes"
+
+#: ../../include/text.php:643 ../../include/nav.php:87
+msgid "Search"
+msgstr "Cercar"
+
+#: ../../include/text.php:831
+msgid "Monday"
+msgstr "Dilluns"
+
+#: ../../include/text.php:831
+msgid "Tuesday"
+msgstr "Dimarts"
+
+#: ../../include/text.php:831
+msgid "Wednesday"
+msgstr "Dimecres"
+
+#: ../../include/text.php:831
+msgid "Thursday"
+msgstr "Dijous"
+
+#: ../../include/text.php:831
+msgid "Friday"
+msgstr "Divendres"
+
+#: ../../include/text.php:831
+msgid "Saturday"
+msgstr "Dissabte"
+
+#: ../../include/text.php:831
+msgid "Sunday"
+msgstr "Diumenge"
+
+#: ../../include/text.php:835
+msgid "January"
+msgstr "Gener"
+
+#: ../../include/text.php:835
+msgid "February"
+msgstr "Febrer"
+
+#: ../../include/text.php:835
+msgid "March"
+msgstr "Març"
+
+#: ../../include/text.php:835
+msgid "April"
+msgstr "Abril"
+
+#: ../../include/text.php:835
+msgid "May"
+msgstr "Maig"
+
+#: ../../include/text.php:835
+msgid "June"
+msgstr "Juny"
+
+#: ../../include/text.php:835
+msgid "July"
+msgstr "Juliol"
+
+#: ../../include/text.php:835
+msgid "August"
+msgstr "Agost"
+
+#: ../../include/text.php:835
+msgid "September"
+msgstr "Setembre"
+
+#: ../../include/text.php:835
+msgid "October"
+msgstr "Octubre"
+
+#: ../../include/text.php:835
+msgid "November"
+msgstr "Novembre"
+
+#: ../../include/text.php:835
+msgid "December"
+msgstr "Desembre"
+
+#: ../../include/text.php:905
+msgid "bytes"
+msgstr "bytes"
+
+#: ../../include/text.php:1000
+msgid "Select an alternate language"
+msgstr "Sel·lecciona un idioma alternatiu"
+
+#: ../../include/text.php:1012
+msgid "default"
+msgstr "per defecte"
+
+#: ../../include/text.php:1228
+msgid "activity"
+msgstr "activitat"
+
+#: ../../include/text.php:1230
+msgid "comment"
+msgstr "comentari"
+
+#: ../../include/text.php:1231
+msgid "post"
+msgstr "missatge"
+
+#: ../../include/diaspora.php:570
+msgid "Sharing notification from Diaspora network"
+msgstr "Compartint la notificació de la xarxa Diàspora"
+
+#: ../../include/diaspora.php:1911
+msgid "Attachments:"
+msgstr "Adjunts:"
+
+#: ../../include/diaspora.php:2094
+#, php-format
+msgid "[Relayed] Comment authored by %s from network %s"
+msgstr "[Retransmès] Comentari escrit per %s  des de la xarxa %s"
+
+#: ../../include/network.php:814
+msgid "view full size"
+msgstr "Veure a mida completa"
+
+#: ../../include/oembed.php:128
+msgid "Embedded content"
+msgstr "Contingut incrustat"
+
+#: ../../include/oembed.php:137
+msgid "Embedding disabled"
+msgstr "Incrustacions deshabilitades"
+
+#: ../../include/group.php:25
+msgid ""
+"A deleted group with this name was revived. Existing item permissions "
+"<strong>may</strong> apply to this group and any future members. If this is "
+"not what you intended, please create another group with a different name."
+msgstr "Un grup eliminat amb aquest nom va ser restablert. Els permisos dels elements existents <strong>poden</strong> aplicar-se a aquest grup i tots els futurs membres. Si això no és el que pretén, si us plau, crei un altre grup amb un nom diferent."
+
+#: ../../include/group.php:168
+msgid "Everybody"
+msgstr "Tothom"
+
+#: ../../include/group.php:191
+msgid "edit"
+msgstr "editar"
+
+#: ../../include/group.php:212
+msgid "Groups"
+msgstr "Grups"
+
+#: ../../include/group.php:213
+msgid "Edit group"
+msgstr "Editar grup"
+
+#: ../../include/group.php:214
+msgid "Create a new group"
+msgstr "Crear un nou grup"
+
+#: ../../include/nav.php:44 ../../boot.php:709
+msgid "Logout"
+msgstr "Sortir"
+
+#: ../../include/nav.php:44
+msgid "End this session"
+msgstr "Termina sessió"
+
+#: ../../include/nav.php:47 ../../boot.php:1331
+msgid "Status"
+msgstr "Estatus"
+
+#: ../../include/nav.php:47 ../../include/nav.php:111
+msgid "Your posts and conversations"
+msgstr "Els teus anuncis i converses"
+
+#: ../../include/nav.php:48
+msgid "Your profile page"
+msgstr "La seva pàgina de perfil"
+
+#: ../../include/nav.php:49 ../../boot.php:1341
+msgid "Photos"
+msgstr "Fotos"
+
+#: ../../include/nav.php:49
+msgid "Your photos"
+msgstr "Les seves fotos"
+
+#: ../../include/nav.php:50
+msgid "Your events"
+msgstr "Els seus esdeveniments"
+
+#: ../../include/nav.php:51
+msgid "Personal notes"
+msgstr "Notes personals"
+
+#: ../../include/nav.php:51
+msgid "Your personal photos"
+msgstr "Les seves fotos personals"
+
+#: ../../include/nav.php:62
+msgid "Sign in"
+msgstr "Accedeix"
+
+#: ../../include/nav.php:73
+msgid "Home Page"
+msgstr "Pàgina d'Inici"
+
+#: ../../include/nav.php:77
+msgid "Create an account"
+msgstr "Crear un compte"
+
+#: ../../include/nav.php:82
+msgid "Help and documentation"
+msgstr "Ajuda i documentació"
+
+#: ../../include/nav.php:85
+msgid "Apps"
+msgstr "Aplicacions"
+
+#: ../../include/nav.php:85
+msgid "Addon applications, utilities, games"
+msgstr "Afegits: aplicacions, utilitats, jocs"
+
+#: ../../include/nav.php:87
+msgid "Search site content"
+msgstr "Busca contingut en el lloc"
+
+#: ../../include/nav.php:97
+msgid "Conversations on this site"
+msgstr "Converses en aquest lloc"
+
+#: ../../include/nav.php:99
+msgid "Directory"
+msgstr "Directori"
+
+#: ../../include/nav.php:99
+msgid "People directory"
+msgstr "Directori de gent"
+
+#: ../../include/nav.php:109
+msgid "Conversations from your friends"
+msgstr "Converses dels teus amics"
+
+#: ../../include/nav.php:117
+msgid "Friend Requests"
+msgstr "Sol·licitud d'Amistat"
+
+#: ../../include/nav.php:119
+msgid "See all notifications"
+msgstr "Veure totes les notificacions"
+
+#: ../../include/nav.php:120
+msgid "Mark all system notifications seen"
+msgstr "Marcar totes les notificacions del sistema com a vistes"
+
+#: ../../include/nav.php:124
+msgid "Private mail"
+msgstr "Correu privat"
+
+#: ../../include/nav.php:127
+msgid "Manage"
+msgstr "Gestionar"
+
+#: ../../include/nav.php:127
+msgid "Manage other pages"
+msgstr "Gestiona altres pàgines"
+
+#: ../../include/nav.php:131 ../../boot.php:940
+msgid "Profiles"
+msgstr "Perfils"
+
+#: ../../include/nav.php:131 ../../boot.php:940
+msgid "Manage/edit profiles"
+msgstr "Gestiona/edita perfils"
+
+#: ../../include/nav.php:132
+msgid "Manage/edit friends and contacts"
+msgstr "Gestiona/edita amics i contactes"
+
+#: ../../include/nav.php:139
+msgid "Admin"
+msgstr "Admin"
+
+#: ../../include/nav.php:139
+msgid "Site setup and configuration"
+msgstr "Ajustos i configuració del lloc"
+
+#: ../../include/nav.php:162
+msgid "Nothing new here"
+msgstr "Res nou aquí"
+
+#: ../../include/contact_widgets.php:6
+msgid "Add New Contact"
+msgstr "Afegir Nou Contacte"
+
+#: ../../include/contact_widgets.php:7
+msgid "Enter address or web location"
+msgstr "Introdueixi adreça o ubicació web"
+
+#: ../../include/contact_widgets.php:8
+msgid "Example: bob@example.com, http://example.com/barbara"
+msgstr "Exemple: bob@example.com, http://example.com/barbara"
+
+#: ../../include/contact_widgets.php:18
+msgid "Invite Friends"
+msgstr "Invita Amics"
+
+#: ../../include/contact_widgets.php:24
+#, php-format
+msgid "%d invitation available"
+msgid_plural "%d invitations available"
+msgstr[0] "%d invitació disponible"
+msgstr[1] "%d invitacions disponibles"
+
+#: ../../include/contact_widgets.php:30
+msgid "Find People"
+msgstr "Trobar Gent"
+
+#: ../../include/contact_widgets.php:31
+msgid "Enter name or interest"
+msgstr "Introdueixi nom o aficions"
+
+#: ../../include/contact_widgets.php:32
+msgid "Connect/Follow"
+msgstr "Connectar/Seguir"
+
+#: ../../include/contact_widgets.php:33
+msgid "Examples: Robert Morgenstein, Fishing"
+msgstr "Exemples: Robert Morgenstein, Pescar"
+
+#: ../../include/contact_widgets.php:36
+msgid "Similar Interests"
+msgstr "Aficions Similars"
+
+#: ../../include/contact_widgets.php:68
+msgid "Networks"
+msgstr "Xarxes"
+
+#: ../../include/contact_widgets.php:71
+msgid "All Networks"
+msgstr "totes les Xarxes"
+
+#: ../../include/auth.php:29
+msgid "Logged out."
+msgstr "Has sortit"
+
+#: ../../include/datetime.php:43 ../../include/datetime.php:45
+msgid "Miscellaneous"
+msgstr "Miscel·lania"
+
+#: ../../include/datetime.php:121 ../../include/datetime.php:253
+msgid "year"
+msgstr "any"
+
+#: ../../include/datetime.php:126 ../../include/datetime.php:254
+msgid "month"
+msgstr "mes"
+
+#: ../../include/datetime.php:131 ../../include/datetime.php:256
+msgid "day"
+msgstr "dia"
+
+#: ../../include/datetime.php:244
+msgid "never"
+msgstr "mai"
+
+#: ../../include/datetime.php:250
+msgid "less than a second ago"
+msgstr "Fa menys d'un segon"
+
+#: ../../include/datetime.php:253
+msgid "years"
+msgstr "anys"
+
+#: ../../include/datetime.php:254
+msgid "months"
+msgstr "mesos"
+
+#: ../../include/datetime.php:255
+msgid "week"
+msgstr "setmana"
+
+#: ../../include/datetime.php:255
+msgid "weeks"
+msgstr "setmanes"
+
+#: ../../include/datetime.php:256
+msgid "days"
+msgstr "dies"
+
+#: ../../include/datetime.php:257
+msgid "hour"
+msgstr "hora"
+
+#: ../../include/datetime.php:257
+msgid "hours"
+msgstr "hores"
+
+#: ../../include/datetime.php:258
+msgid "minute"
+msgstr "minut"
+
+#: ../../include/datetime.php:258
+msgid "minutes"
+msgstr "minuts"
+
+#: ../../include/datetime.php:259
+msgid "second"
+msgstr "segon"
+
+#: ../../include/datetime.php:259
+msgid "seconds"
+msgstr "segons"
+
+#: ../../include/datetime.php:267
+#, php-format
+msgid "%1$d %2$s ago"
+msgstr " fa %1$d %2$s"
+
+#: ../../include/poller.php:513
+msgid "From: "
+msgstr "Des de:"
+
+#: ../../include/bbcode.php:202
+msgid "$1 wrote:"
+msgstr "$1 va escrivir:"
+
+#: ../../include/bbcode.php:216 ../../include/bbcode.php:282
+msgid "Image/photo"
+msgstr "Imatge/foto"
+
+#: ../../include/dba.php:39
+#, php-format
+msgid "Cannot locate DNS info for database server '%s'"
+msgstr "No put trobar informació de DNS  del servidor de base de dades '%s'"
+
+#: ../../include/message.php:14
+msgid "[no subject]"
+msgstr "[Sense assumpte]"
+
+#: ../../include/acl_selectors.php:284
+msgid "Visible to everybody"
+msgstr "Visible per tothom"
+
+#: ../../include/acl_selectors.php:285
+msgid "show"
+msgstr "mostra"
+
+#: ../../include/acl_selectors.php:286
+msgid "don't show"
+msgstr "no mostris"
+
+#: ../../include/enotify.php:8
+msgid "Friendica Notification"
+msgstr "Notificacions de Friendica"
+
+#: ../../include/enotify.php:11
+msgid "Thank You,"
+msgstr "Gràcies,"
+
+#: ../../include/enotify.php:13
+#, php-format
+msgid "%s Administrator"
+msgstr "%s Administrador"
+
+#: ../../include/enotify.php:29
+#, php-format
+msgid "%s <!item_type!>"
+msgstr "%s <!item_type!>"
+
+#: ../../include/enotify.php:33
+#, php-format
+msgid "[Friendica:Notify] New mail received at %s"
+msgstr "[Friendica: Notifica] nou correu rebut a %s"
+
+#: ../../include/enotify.php:35
+#, php-format
+msgid "%s sent you a new private message at %s."
+msgstr "%s t'ha enviat un nou missatge privat en %s"
+
+#: ../../include/enotify.php:36
+#, php-format
+msgid "%s sent you %s."
+msgstr "%s t'ha enviat %s."
+
+#: ../../include/enotify.php:36
+msgid "a private message"
+msgstr "un missatge privat"
+
+#: ../../include/enotify.php:37
+#, php-format
+msgid "Please visit %s to view and/or reply to your private messages."
+msgstr "Per favor, visiteu %s per a veure i/o respondre els teus missatges privats."
+
+#: ../../include/enotify.php:67
+#, php-format
+msgid "%s's"
+msgstr "%s's"
+
+#: ../../include/enotify.php:71
+msgid "your"
+msgstr "tu"
+
+#: ../../include/enotify.php:78
+#, php-format
+msgid "[Friendica:Notify] Comment to conversation #%d by %s"
+msgstr "[Friendica:Notifica] Conversació comentada #%d per %s"
+
+#: ../../include/enotify.php:79
+#, php-format
+msgid "%s commented on an item/conversation you have been following."
+msgstr "%s ha comentat un element/conversació que estas seguint."
+
+#: ../../include/enotify.php:80
+#, php-format
+msgid "%s commented on %s."
+msgstr "%s comentat a %s."
+
+#: ../../include/enotify.php:82 ../../include/enotify.php:95
+#: ../../include/enotify.php:106 ../../include/enotify.php:117
+#, php-format
+msgid "Please visit %s to view and/or reply to the conversation."
+msgstr "Si us pau, visiteu %s per a veure i/o respondre la conversació."
+
+#: ../../include/enotify.php:89
+#, php-format
+msgid "[Friendica:Notify] %s posted to your profile wall"
+msgstr "[Friendica:Notifica] %s enviat al teu mur del perfil"
+
+#: ../../include/enotify.php:91
+#, php-format
+msgid "%s posted to your profile wall at %s"
+msgstr "%s enviat al teu mur de perfil %s"
+
+#: ../../include/enotify.php:93
+#, php-format
+msgid "%s posted to %s"
+msgstr "%s enviat a %s"
+
+#: ../../include/enotify.php:93
+msgid "your profile wall."
+msgstr "El teu perfil del mur."
+
+#: ../../include/enotify.php:102
+#, php-format
+msgid "[Friendica:Notify] %s tagged you"
+msgstr "[Friendica:Notifica] %s t'ha etiquetat"
+
+#: ../../include/enotify.php:103
+#, php-format
+msgid "%s tagged you at %s"
+msgstr "%s t'ha etiquetat en %s"
+
+#: ../../include/enotify.php:104
+#, php-format
+msgid "%s %s."
+msgstr "%s %s."
+
+#: ../../include/enotify.php:104
+msgid "tagged you"
+msgstr "Etiquetat"
+
+#: ../../include/enotify.php:113
+#, php-format
+msgid "[Friendica:Notify] %s tagged your post"
+msgstr "[Friendica:Notifica] %s ha etiquetat el teu missatge"
+
+#: ../../include/enotify.php:114
+#, php-format
+msgid "%s tagged your post at %s"
+msgstr "%s Ha etiquetat un missatge teu en %s"
+
+#: ../../include/enotify.php:115
+#, php-format
+msgid "%s tagged %s"
+msgstr "%s etiquetat %s"
+
+#: ../../include/enotify.php:115
+msgid "your post"
+msgstr "El teu missatge"
+
+#: ../../include/enotify.php:124
+msgid "[Friendica:Notify] Introduction received"
+msgstr "[Friendica:Notifica] Presentacio rebuda"
+
+#: ../../include/enotify.php:125
+#, php-format
+msgid "You've received an introduction from '%s' at %s"
+msgstr "Has rebut una presentació de %s en %s"
+
+#: ../../include/enotify.php:126
+#, php-format
+msgid "You've received %s from %s."
+msgstr "Has rebut %s de %s"
+
+#: ../../include/enotify.php:126
+msgid "an introduction"
+msgstr "Una presentació"
+
+#: ../../include/enotify.php:127 ../../include/enotify.php:144
+#, php-format
+msgid "You may visit their profile at %s"
+msgstr "Pot visitar el seu perfil en %s"
+
+#: ../../include/enotify.php:129
+#, php-format
+msgid "Please visit %s to approve or reject the introduction."
+msgstr "Si us plau visiteu %s per aprovar o rebutjar la presentació."
+
+#: ../../include/enotify.php:136
+msgid "[Friendica:Notify] Friend suggestion received"
+msgstr "[Friendica:Notifica] Suggerencia d'amistat rebuda"
+
+#: ../../include/enotify.php:137
+#, php-format
+msgid "You've received a friend suggestion from '%s' at %s"
+msgstr "Has rebut una suggerencia d'amistat de %s en %s"
+
+#: ../../include/enotify.php:138
+#, php-format
+msgid "You've received %s for %s from %s."
+msgstr "Has rebut %s per %s de %s."
+
+#: ../../include/enotify.php:139
+msgid "a friend suggestion"
+msgstr "Un suggerencia d'amistat"
+
+#: ../../include/enotify.php:142
+msgid "Name:"
+msgstr "Nom:"
+
+#: ../../include/enotify.php:143
+msgid "Photo:"
+msgstr "Foto:"
+
+#: ../../include/enotify.php:146
+#, php-format
+msgid "Please visit %s to approve or reject the suggestion."
+msgstr "Si us plau, visiteu %s per aprovar o rebutjar la suggerencia."
+
+#: ../../include/items.php:2573
+msgid "A new person is sharing with you at "
+msgstr "Una persona nova està compartint amb tú en"
+
+#: ../../include/items.php:2573
+msgid "You have a new follower at "
+msgstr "Tens un nou seguidor a "
+
+#: ../../include/bb2diaspora.php:102 ../../include/bb2diaspora.php:112
+#: ../../include/bb2diaspora.php:113
+msgid "image/photo"
+msgstr "Imatge/foto"
+
+#: ../../include/security.php:20
+msgid "Welcome "
+msgstr "Benvingut"
+
+#: ../../include/security.php:21
+msgid "Please upload a profile photo."
+msgstr "Per favor, carrega una foto per al perfil"
+
+#: ../../include/security.php:24
+msgid "Welcome back "
+msgstr "Benvingut de nou "
+
+#: ../../include/Contact.php:131 ../../include/conversation.php:788
+msgid "View status"
+msgstr "Veure estatus"
+
+#: ../../include/Contact.php:132 ../../include/conversation.php:789
+msgid "View profile"
+msgstr "Veure perfil"
+
+#: ../../include/Contact.php:133 ../../include/conversation.php:790
+msgid "View photos"
+msgstr "Veure fotos"
+
+#: ../../include/Contact.php:134 ../../include/Contact.php:147
+#: ../../include/conversation.php:791
+msgid "View recent"
+msgstr "Veure recent"
+
+#: ../../include/Contact.php:136 ../../include/Contact.php:147
+#: ../../include/conversation.php:793
+msgid "Send PM"
+msgstr "Enviar Missatge Privat"
+
+#: ../../include/conversation.php:163
+msgid "post/item"
+msgstr "anunci/element"
+
+#: ../../include/conversation.php:164
+#, php-format
+msgid "%1$s marked %2$s's %3$s as favorite"
+msgstr "%1$s marcat %2$s's %3$s com favorit"
+
+#: ../../include/conversation.php:303 ../../include/conversation.php:572
+msgid "Select"
+msgstr "Selecionar"
+
+#: ../../include/conversation.php:320 ../../include/conversation.php:665
+#: ../../include/conversation.php:666
+#, php-format
+msgid "View %s's profile @ %s"
+msgstr "Veure perfil de %s @ %s"
+
+#: ../../include/conversation.php:330 ../../include/conversation.php:677
+#, php-format
+msgid "%s from %s"
+msgstr "%s des de %s"
+
+#: ../../include/conversation.php:346
+msgid "View in context"
+msgstr "Veure en context"
+
+#: ../../include/conversation.php:467
+#, php-format
+msgid "%d comment"
+msgid_plural "%d comments"
+msgstr[0] "%d comentari"
+msgstr[1] "%d comentaris"
+
+#: ../../include/conversation.php:468 ../../boot.php:448
+msgid "show more"
+msgstr "Mostrar més"
+
+#: ../../include/conversation.php:529
+msgid "like"
+msgstr "Agrada"
+
+#: ../../include/conversation.php:530
+msgid "dislike"
+msgstr "Desagrada"
+
+#: ../../include/conversation.php:532
+msgid "Share this"
+msgstr "Compartir això"
+
+#: ../../include/conversation.php:532
+msgid "share"
+msgstr "Compartir"
+
+#: ../../include/conversation.php:582
+msgid "add star"
+msgstr "Afegir a favorits"
+
+#: ../../include/conversation.php:583
+msgid "remove star"
+msgstr "Esborrar favorit"
+
+#: ../../include/conversation.php:584
+msgid "toggle star status"
+msgstr "Canviar estatus de favorit"
+
+#: ../../include/conversation.php:587
+msgid "starred"
+msgstr "favorit"
+
+#: ../../include/conversation.php:588
+msgid "add tag"
+msgstr "afegir etiqueta"
+
+#: ../../include/conversation.php:667
+msgid "to"
+msgstr "a"
+
+#: ../../include/conversation.php:668
+msgid "Wall-to-Wall"
+msgstr "Mur-a-Mur"
+
+#: ../../include/conversation.php:669
+msgid "via Wall-To-Wall:"
+msgstr "via Mur-a-Mur"
+
+#: ../../include/conversation.php:713
+msgid "Delete Selected Items"
+msgstr "Esborra els Elements Seleccionats"
+
+#: ../../include/conversation.php:845
+#, php-format
+msgid "%s likes this."
+msgstr "a %s agrada això."
+
+#: ../../include/conversation.php:845
+#, php-format
+msgid "%s doesn't like this."
+msgstr "a %s desagrada això."
+
+#: ../../include/conversation.php:849
+#, php-format
+msgid "<span  %1$s>%2$d people</span> like this."
+msgstr "Li agrada a<span  %1$s>%2$d persones</span> ."
+
+#: ../../include/conversation.php:851
+#, php-format
+msgid "<span  %1$s>%2$d people</span> don't like this."
+msgstr "No li agrada<span  %1$s>%2$d persones</span> ."
+
+#: ../../include/conversation.php:857
+msgid "and"
+msgstr "i"
+
+#: ../../include/conversation.php:860
+#, php-format
+msgid ", and %d other people"
+msgstr ", i altres %d persones"
+
+#: ../../include/conversation.php:861
+#, php-format
+msgid "%s like this."
+msgstr "a %s le gusta esto."
+
+#: ../../include/conversation.php:861
+#, php-format
+msgid "%s don't like this."
+msgstr "a %s no le gusta esto."
+
+#: ../../include/conversation.php:886
+msgid "Visible to <strong>everybody</strong>"
+msgstr "Visible per a <strong>tothom</strong>"
+
+#: ../../include/conversation.php:888
+msgid "Please enter a video link/URL:"
+msgstr "Per favor , introdueixi el enllaç/URL del video"
+
+#: ../../include/conversation.php:889
+msgid "Please enter an audio link/URL:"
+msgstr "Per favor , introdueixi el enllaç/URL del audio:"
+
+#: ../../include/conversation.php:890
+msgid "Tag term:"
+msgstr "Terminis de l'etiqueta:"
+
+#: ../../include/conversation.php:891
+msgid "Where are you right now?"
+msgstr "On ets ara?"
+
+#: ../../include/conversation.php:892
+msgid "Enter a title for this item"
+msgstr "Escriviu un títol per a aquest article"
+
+#: ../../include/conversation.php:935
+msgid "upload photo"
+msgstr "carregar fotos"
+
+#: ../../include/conversation.php:937
+msgid "attach file"
+msgstr "adjuntar arxiu"
+
+#: ../../include/conversation.php:939
+msgid "web link"
+msgstr "enllaç de web"
+
+#: ../../include/conversation.php:940
+msgid "Insert video link"
+msgstr "Insertar enllaç de video"
+
+#: ../../include/conversation.php:941
+msgid "video link"
+msgstr "enllaç de video"
+
+#: ../../include/conversation.php:942
+msgid "Insert audio link"
+msgstr "Insertar enllaç de audio"
+
+#: ../../include/conversation.php:943
+msgid "audio link"
+msgstr "enllaç de audio"
+
+#: ../../include/conversation.php:945
+msgid "set location"
+msgstr "establir la ubicació"
+
+#: ../../include/conversation.php:947
+msgid "clear location"
+msgstr "netejar ubicació"
+
+#: ../../include/conversation.php:952
+msgid "permissions"
+msgstr "Permissos"
+
+#: ../../boot.php:446
+msgid "Delete this item?"
+msgstr "Esborrar aquest element?"
+
+#: ../../boot.php:449
+msgid "show fewer"
+msgstr "Mostrar menys"
+
+#: ../../boot.php:692
+msgid "Create a New Account"
+msgstr "Crear un Nou Compte"
+
+#: ../../boot.php:712
+msgid "Nickname or Email address: "
+msgstr "Malnom o Adreça de correu:"
+
+#: ../../boot.php:713
+msgid "Password: "
+msgstr "Contrasenya:"
+
+#: ../../boot.php:716
+msgid "Or login using OpenID: "
+msgstr "O accedixi emprant OpenID:"
+
+#: ../../boot.php:722
+msgid "Forgot your password?"
+msgstr "Oblidà la contrasenya?"
+
+#: ../../boot.php:879
+msgid "Edit profile"
+msgstr "Editar perfil"
+
+#: ../../boot.php:1046 ../../boot.php:1117
+msgid "g A l F d"
+msgstr "g A l F d"
+
+#: ../../boot.php:1047 ../../boot.php:1118
+msgid "F d"
+msgstr "F d"
+
+#: ../../boot.php:1072
+msgid "Birthday Reminders"
+msgstr "Recordatori d'Aniversaris"
+
+#: ../../boot.php:1073
+msgid "Birthdays this week:"
+msgstr "Aniversari aquesta setmana"
+
+#: ../../boot.php:1096 ../../boot.php:1160
+msgid "[today]"
+msgstr "[avui]"
+
+#: ../../boot.php:1141
+msgid "Event Reminders"
+msgstr "Recordatori d'Esdeveniments"
+
+#: ../../boot.php:1142
+msgid "Events this week:"
+msgstr "Esdeveniments aquesta setmana"
+
+#: ../../boot.php:1154
+msgid "[No description]"
+msgstr "[sense descripció]"

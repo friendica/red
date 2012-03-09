@@ -174,20 +174,44 @@ class b8_storage_frndc extends b8_storage_base
 				array_push($where, $token);
 			}
 
-			$where = 'token IN ("' . implode('", "', $where) . '")';
+			$where = 'term IN ("' . implode('", "', $where) . '")';
 		}
 
 		else {
 			$token = dbesc($token);
-			$where = 'token = "' . $token . '"';
+			$where = 'term = "' . $token . '"';
 		}
 
 		# ... and fetch the data
 
 		$result = q('
-			SELECT *
-			FROM ' . $this->config['table_name'] . '
-			WHERE ' . $where . ' AND uid = ' . $uid );
+			SELECT * FROM spam WHERE ' . $where . ' AND uid = ' . $uid );
+
+
+		$returned_tokens = array();
+		if(count($result)) {
+			foreach($result as $rr)
+				$returned_tokens[] = $rr['term'];
+		}
+		$to_create = array();
+
+		if(count($tokens) > 0) {
+			foreach($tokens as $token)
+				if(! in_array($token,$returned_tokens))
+					$to_create[] = str_tolower($token); 
+		}
+		if(count($to_create)) {
+			$sql = '';
+			foreach($to_create as $term) {
+				if(strlen($sql))
+					$sql .= ',';
+				$sql .= sprintf("(term,datetime,uid) values('%s','%s',%d)",
+					dbesc(str_tolower($term))
+					dbesc(datetime_convert()),
+					intval($uid)
+				);
+			q("insert into spam " . $sql);
+		}
 
 		return $result;
 

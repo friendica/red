@@ -10,7 +10,7 @@ Originally made for the syncom project: http://wiki.piratenpartei.de/Syncom
 function node2bbcode(&$doc, $oldnode, $attributes, $startbb, $endbb)
 {
 	do {
-		$done = node2bbcodesub(&$doc, $oldnode, $attributes, $startbb, $endbb);
+		$done = node2bbcodesub($doc, $oldnode, $attributes, $startbb, $endbb);
 	} while ($done);
 }
 
@@ -212,7 +212,7 @@ function html2bbcode($message)
 	node2bbcode($doc, 'audio', array('src'=>'/(.+)/'), '[audio]$1', '[/audio]');
 	node2bbcode($doc, 'iframe', array('src'=>'/(.+)/'), '[iframe]$1', '[/iframe]');
 
-	node2bbcode($doc, 'code', array(), '[code]$1', '[/code]');
+	node2bbcode($doc, 'code', array(), '[code]', '[/code]');
 
 	$message = $doc->saveHTML();
 

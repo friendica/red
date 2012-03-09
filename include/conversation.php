@@ -6,11 +6,6 @@
 function localize_item(&$item){
 
 	$Text = $item['body'];
-
-
-	// find private image (w/data url) if present and convert image 
-	// link to a magic-auth redirect.
-
 	$saved_image = '';
 	$img_start = strpos($Text,'[img]data:');
 	$img_end = strpos($Text,'[/img]');
@@ -184,7 +179,10 @@ function localize_item(&$item){
  * that are based on unique features of the calling module.
  *
  */
+
+if(!function_exists('conversation')) {
 function conversation(&$a, $items, $mode, $update, $preview = false) {
+
 
 	require_once('bbcode.php');
 
@@ -221,7 +219,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 	if($update)
 		$return_url = $_SESSION['return_url'];
 	else
-		$return_url = $_SESSION['return_url'] = $a->cmd;
+		$return_url = $_SESSION['return_url'] = $a->query_string;
 
 	load_contact_links(local_user());
 
@@ -231,13 +229,13 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 	$items = $cb['items'];
 
 	$cmnt_tpl    = get_markup_template('comment_item.tpl');
-	$tpl         = get_markup_template('wall_item.tpl');
-	$wallwall    = get_markup_template('wallwall_item.tpl');
+	$tpl         = 'wall_item.tpl';
+	$wallwall    = 'wallwall_item.tpl';
 	$hide_comments_tpl = get_markup_template('hide_comments.tpl');
 
 	$alike = array();
 	$dlike = array();
-	$o = "";
+	
 	
 	// array with html for each thread (parent+comments)
 	$threads = array();
@@ -250,7 +248,8 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 			// "New Item View" on network page or search page results 
 			// - just loop through the items and format them minimally for display
 
-			$tpl = get_markup_template('search_item.tpl');
+			//$tpl = get_markup_template('search_item.tpl');
+			$tpl = 'search_item.tpl';
 
 			foreach($items as $item) {
 				$threadsid++;
@@ -316,43 +315,46 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 
 				$body = prepare_body($item,true);
 				
-				$tmp_item = replace_macros($tpl,array(
-					'$id' => (($preview) ? 'P0' : $item['item_id']),
-					'$linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, ((strlen($item['author-link'])) ? $item['author-link'] : $item['url'])),
-					'$profile_url' => $profile_link,
-					'$item_photo_menu' => item_photo_menu($item),
-					'$name' => template_escape($profile_name),
-					'$sparkle' => $sparkle,
-					'$lock' => $lock,
-					'$thumb' => $profile_avatar,
-					'$title' => template_escape($item['title']),
-					'$body' => template_escape($body),
-					'$ago' => (($item['app']) ? sprintf( t('%s from %s'),relative_date($item['created']),$item['app']) : relative_date($item['created'])),
-					'$lock' => $lock,
-					'$location' => template_escape($location),
-					'$indent' => '',
-					'$owner_name' => template_escape($owner_name),
-					'$owner_url' => $owner_url,
-					'$owner_photo' => $owner_photo,
-					'$plink' => get_plink($item),
-					'$edpost' => false,
-					'$isstarred' => $isstarred,
-					'$star' => $star,
-					'$drop' => $drop,
-					'$vote' => $likebuttons,
-					'$like' => '',
-					'$dislike' => '',
-					'$comment' => '',
-					'$conv' => (($preview) ? '' : array('href'=> $a->get_baseurl() . '/display/' . $nickname . '/' . $item['id'], 'title'=> t('View in context'))),
-					'$previewing' => $previewing,
-					'$wait' => t('Please wait'),
-				));
+				//$tmp_item = replace_macros($tpl,array(
+				$tmp_item = array(
+					'template' => $tpl,
+					'id' => (($preview) ? 'P0' : $item['item_id']),
+					'linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, ((strlen($item['author-link'])) ? $item['author-link'] : $item['url'])),
+					'profile_url' => $profile_link,
+					'item_photo_menu' => item_photo_menu($item),
+					'name' => template_escape($profile_name),
+					'sparkle' => $sparkle,
+					'lock' => $lock,
+					'thumb' => $profile_avatar,
+					'title' => template_escape($item['title']),
+					'body' => template_escape($body),
+					'text' => strip_tags(template_escape($body)),
+					'ago' => (($item['app']) ? sprintf( t('%s from %s'),relative_date($item['created']),$item['app']) : relative_date($item['created'])),
+					'lock' => $lock,
+					'location' => template_escape($location),
+					'indent' => '',
+					'owner_name' => template_escape($owner_name),
+					'owner_url' => $owner_url,
+					'owner_photo' => $owner_photo,
+					'plink' => get_plink($item),
+					'edpost' => false,
+					'isstarred' => $isstarred,
+					'star' => $star,
+					'drop' => $drop,
+					'vote' => $likebuttons,
+					'like' => '',
+					'dislike' => '',
+					'comment' => '',
+					'conv' => (($preview) ? '' : array('href'=> $a->get_baseurl() . '/display/' . $nickname . '/' . $item['id'], 'title'=> t('View in context'))),
+					'previewing' => $previewing,
+					'wait' => t('Please wait'),
+				);
 
 				$arr = array('item' => $item, 'output' => $tmp_item);
 				call_hooks('display_item', $arr);
 
 				$threads[$threadsid]['id'] = $item['item_id'];
-				$threads[$threadsid]['html'] .= $arr['output'];
+				$threads[$threadsid]['items'] = array($arr['output']);
 
 			}
 
@@ -386,6 +388,8 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 			}
 
 			$comments_collapsed = false;
+			$comment_lastcollapsed = false;
+			$comment_firstcollapsed = false;
 			$blowhard = 0;
 			$blowhard_count = 0;
 
@@ -417,39 +421,26 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 					$toplevelprivate = (($toplevelpost && $item['private']) ? true : false);
 					$item_writeable = (($item['writable'] || $item['self']) ? true : false);
 
-					// DISABLED
-					/*
-					if($blowhard == $item['cid'] && (! $item['self']) && ($mode != 'profile') && ($mode != 'notes')) {
-						$blowhard_count ++;
-						if($blowhard_count == 3) {
-							$o .= '<div class="icollapse-wrapper fakelink" id="icollapse-wrapper-' . $item['parent'] 
-								. '" onclick="openClose(' . '\'icollapse-' . $item['parent'] . '\'); $(\'#icollapse-wrapper-' . $item['parent'] . '\').hide();" >' 
-								. t('See more posts like this') . '</div>' . '<div class="icollapse" id="icollapse-' 
-								. $item['parent'] . '" style="display: none;" >';
-						}
-					}
-					else {
-						$blowhard = $item['cid'];					
-						if($blowhard_count >= 3)
-							$o .= '</div>';
-						$blowhard_count = 0;
-					}
-					// END DISABLED
-					*/
-
 					$comments_seen = 0;
 					$comments_collapsed = false;
+					$comment_lastcollapsed  = false;
+					$comment_firstcollapsed = false;
 					
 					$threadsid++;
 					$threads[$threadsid]['id'] = $item['item_id'];
-					$threads[$threadsid]['html'] = "";
+					$threads[$threadsid]['private'] = $item['private'];
+					$threads[$threadsid]['items'] = array();
 
 				}
 				else {
-					// prevent private email from leaking into public conversation
-					if((! $toplevelpost) && (! $toplevelprivate) && ($item['private']) && ($profile_owner != local_user()))
+
+					// prevent private email reply to public conversation from leaking.
+					if($item['private'] && ! $threads[$threadsid]['private'])
 						continue;
+
 					$comments_seen ++;
+					$comment_lastcollapsed  = false;
+					$comment_firstcollapsed = false;
 				}	
 
 				$override_comment_box = ((($page_writeable) && ($item_writeable)) ? true : false);
@@ -457,23 +448,17 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 
 
 				if(($comments[$item['parent']] > 2) && ($comments_seen <= ($comments[$item['parent']] - 2)) && ($item['gravity'] == 6)) {
-					if(! $comments_collapsed) {
 
-						// IMPORTANT: the closing </div> in the hide_comments template
-						// is supplied below in code. 
-
-						$threads[$threadsid]['html'] .= replace_macros($hide_comments_tpl,array(
-							'$id' => $item['parent'],
-							'$num_comments' => sprintf( tt('%d comment','%d comments',$comments[$item['parent']]),
-								$comments[$item['parent']]),
-							'$display' => 'none',
-							'$hide_text' => t('show more')
-						));
+					if (!$comments_collapsed){
+						$threads[$threadsid]['num_comments'] = sprintf( tt('%d comment','%d comments',$comments[$item['parent']]),$comments[$item['parent']] );
+						$threads[$threadsid]['hide_text'] = t('show more');
 						$comments_collapsed = true;
+						$comment_firstcollapsed = true;
 					}
 				}
 				if(($comments[$item['parent']] > 2) && ($comments_seen == ($comments[$item['parent']] - 1))) {
-					$threads[$threadsid]['html'] .= '</div>';
+
+					$comment_lastcollapsed = true;
 				}
 
 				$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
@@ -503,7 +488,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 						$template = $wallwall;
 						$commentww = 'ww';	
 					}
-					if((! $item['wall']) && (strlen($item['owner-link'])) && ($item['owner-link'] != $item['author-link'])) {
+					if((! $item['wall']) && (strlen($item['owner-link'])) && (! link_compare($item['owner-link'],$item['author-link']))) {
 
 						// Could be anybody. 
 
@@ -650,63 +635,72 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				// Build the HTML
 
 				$body = prepare_body($item,true);
+				//$tmp_item = replace_macros($template,
+				$tmp_item = array(
+					// collapse comments in template. I don't like this much...
+					'comment_firstcollapsed' => $comment_firstcollapsed,
+					'comment_lastcollapsed' => $comment_lastcollapsed,
+					// template to use to render item (wall, walltowall, search)
+					'template' => $template,
+					
+					'type' => implode("",array_slice(split("/",$item['verb']),-1)),
+					'tags' => $tags,
+					'body' => template_escape($body),
+					'text' => strip_tags(template_escape($body)),
+					'id' => $item['item_id'],
+					'linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, ((strlen($item['author-link'])) ? $item['author-link'] : $item['url'])),
+					'olinktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, ((strlen($item['owner-link'])) ? $item['owner-link'] : $item['url'])),
+					'to' => t('to'),
+					'wall' => t('Wall-to-Wall'),
+					'vwall' => t('via Wall-To-Wall:'),
+					'profile_url' => $profile_link,
+					'item_photo_menu' => item_photo_menu($item),
+					'name' => template_escape($profile_name),
+					'thumb' => $profile_avatar,
+					'osparkle' => $osparkle,
+					'sparkle' => $sparkle,
+					'title' => template_escape($item['title']),
+					'ago' => (($item['app']) ? sprintf( t('%s from %s'),relative_date($item['created']),$item['app']) : relative_date($item['created'])),
+					'lock' => $lock,
+					'location' => template_escape($location),
+					'indent' => $indent,
+					'owner_url' => $owner_url,
+					'owner_photo' => $owner_photo,
+					'owner_name' => template_escape($owner_name),
+					'plink' => get_plink($item),
+					'edpost' => $edpost,
+					'isstarred' => $isstarred,
+					'star' => $star,
+					'drop' => $drop,
+					'vote' => $likebuttons,
+					'like' => $like,
+					'dislike' => $dislike,
+					'comment' => $comment,
+					'previewing' => $previewing,
+					'wait' => t('Please wait'),
 
-				$tmp_item = replace_macros($template,array(
-					'$type' => implode("",array_slice(explode("/",$item['verb']),-1)),
-					'$tags' => $tags,
-					'$body' => template_escape($body),
-					'$id' => $item['item_id'],
-					'$linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, ((strlen($item['author-link'])) ? $item['author-link'] : $item['url'])),
-					'$olinktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, ((strlen($item['owner-link'])) ? $item['owner-link'] : $item['url'])),
-					'$to' => t('to'),
-					'$wall' => t('Wall-to-Wall'),
-					'$vwall' => t('via Wall-To-Wall:'),
-					'$profile_url' => $profile_link,
-					'$item_photo_menu' => item_photo_menu($item),
-					'$name' => template_escape($profile_name),
-					'$thumb' => $profile_avatar,
-					'$osparkle' => $osparkle,
-					'$sparkle' => $sparkle,
-					'$title' => template_escape($item['title']),
-					'$ago' => (($item['app']) ? sprintf( t('%s from %s'),relative_date($item['created']),$item['app']) : relative_date($item['created'])),
-					'$lock' => $lock,
-					'$location' => template_escape($location),
-					'$indent' => $indent,
-					'$owner_url' => $owner_url,
-					'$owner_photo' => $owner_photo,
-					'$owner_name' => template_escape($owner_name),
-					'$plink' => get_plink($item),
-					'$edpost' => $edpost,
-					'$isstarred' => $isstarred,
-					'$star' => $star,
-					'$drop' => $drop,
-					'$vote' => $likebuttons,
-					'$like' => $like,
-					'$dislike' => $dislike,
-					'$comment' => $comment,
-					'$previewing' => $previewing,
-					'$wait' => t('Please wait'),
-
-				));
+				);
 
 
 				$arr = array('item' => $item, 'output' => $tmp_item);
 				call_hooks('display_item', $arr);
 
-				$threads[$threadsid]['html'] .= $arr['output'];
+				$threads[$threadsid]['items'][] = $arr['output'];
 			}
 		}
 	}
 
-
 	$page_template = get_markup_template("conversation.tpl");
 	$o .= replace_macros($page_template, array(
+		'$baseurl' => $a->get_baseurl(),
+		'$mode' => $mode,
+		'$user' => $a->user,
 		'$threads' => $threads,
 		'$dropping' => ($dropping?t('Delete Selected Items'):False),
 	));
 
 	return $o;
-} 
+}}
 
 function best_link_url($item,&$sparkle) {
 

@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1129 );
+define( 'UPDATE_VERSION' , 1131 );
 
 /**
  *
@@ -1112,5 +1112,13 @@ function update_1127() {
 
 function update_1128() {
 	q("alter table spam add `date` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `term` ");
+}
+
+function update_1129() {
+	q("ALTER TABLE `notify` ADD `parent` INT NOT NULL AFTER `link` , ADD INDEX ( `parent` ), ADD INDEX ( `link` ), ADD INDEX ( `otype` ) ");
+}
+
+function update_1130() {
+	q("ALTER TABLE `item` ADD `file` MEDIUMTEXT NOT NULL AFTER `inform`, ADD FULLTEXT KEY (`file`) ");
 }
 

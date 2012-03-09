@@ -14,7 +14,13 @@ if(! function_exists('replace_macros')) {
 function replace_macros($s,$r) {
 	global $t;
 	
-	return $t->replace($s,$r);
+	//$ts = microtime();
+	$r =  $t->replace($s,$r);
+	//$tt = microtime() - $ts;
+	
+	//$a = get_app();
+	//$a->page['debug'] .= "$tt <br>\n";
+	return $r;
 
 }}
 
@@ -731,7 +737,10 @@ function smilies($s, $sample = false) {
 		':headdesk',
 		'~friendika', 
 		'~friendica', 
-		'Diaspora*' 
+//		'Diaspora*' 
+		':beard',
+		':whitebeard'
+
 	);
 
 	$icons = array(
@@ -772,8 +781,9 @@ function smilies($s, $sample = false) {
 		'<img src="' . $a->get_baseurl() . '/images/smiley-bangheaddesk.gif" alt=":headdesk" />',
 		'<a href="http://project.friendika.com">~friendika <img src="' . $a->get_baseurl() . '/images/friendika-16.png" alt="~friendika" /></a>',
 		'<a href="http://friendica.com">~friendica <img src="' . $a->get_baseurl() . '/images/friendica-16.png" alt="~friendica" /></a>',
-		'<a href="http://diasporafoundation.org">Diaspora<img src="' . $a->get_baseurl() . '/images/diaspora.png" alt="Diaspora*" /></a>',
-
+//		'<a href="http://diasporafoundation.org">Diaspora<img src="' . $a->get_baseurl() . '/images/diaspora.png" alt="Diaspora*" /></a>',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-beard.png" alt=":beard" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-whitebeard.png" alt=":whitebeard" />'
 	);
 
 	$params = array('texts' => $texts, 'icons' => $icons, 'string' => $s);
@@ -786,6 +796,7 @@ function smilies($s, $sample = false) {
 		}
 	}
 	else {
+		$params['string'] = preg_replace_callback('/&lt;(3+)/','preg_heart',$params['string']);
 		$s = str_replace($params['texts'],$params['icons'],$params['string']);
 	}
 
@@ -804,7 +815,18 @@ function smile_decode($m) {
 	return(str_replace($m[1],base64url_decode($m[1]),$m[0]));
 }
 
+// expand <3333 to the correct number of hearts
 
+function preg_heart($x) {
+	$a = get_app();
+	if(strlen($x[1]) == 1)
+		return $x[0];
+	$t = '';
+	for($cnt = 0; $cnt < strlen($x[1]); $cnt ++)
+		$t .= '<img src="' . $a->get_baseurl() . '/images/smiley-heart.gif" alt="<3" />';
+	$r =  str_replace($x[0],$t,$x[0]);
+	return $r;
+}
 
 
 if(! function_exists('day_translate')) {
@@ -1200,4 +1222,17 @@ function reltoabs($text, $base)
   // Done
   return $text;
 }
+
+function item_post_type($item) {
+	if(intval($item['event-id']))
+		return t('event');
+	if(strlen($item['resource-id']))
+		return t('photo');
+	if(strlen($item['verb']) && $item['verb'] !== ACTIVITY_POST)
+		return t('activity');
+	if($item['id'] != $item['parent'])
+		return t('comment');
+	return t('post');
+}
+
 

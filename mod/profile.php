@@ -159,7 +159,7 @@ function profile_content(&$a, $update = 0) {
 	 * Get permissions SQL - if $remote_contact is true, our remote user has been pre-verified and we already have fetched his/her groups
 	 */
 
-	$sql_extra = permissions_sql($a->profile['profile_uid'],$remote_contact,$groups);
+	$sql_extra = item_permissions_sql($a->profile['profile_uid'],$remote_contact,$groups);
 
 
 	if($update) {
