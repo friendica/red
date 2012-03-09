@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="friendica" default="test">
-	<!-- set up include directories, this is necessary for the tests to work -->
-	<php>
-		set_include_path(
-					get_include_path() . PATH_SEPARATOR
-					. 'include' . PATH_SEPARATOR 
-					. 'library' . PATH_SEPARATOR 
-					. 'library/phpsec' . PATH_SEPARATOR 
-					. '.' );
-	</php>
-	
 	<!-- ====================================================== -->
 	<!-- Target: clean-test -->
 	<!-- deletes directories with old test reports -->
@@ -32,16 +22,17 @@
 	<!-- this target runs all test files -->
 	<!-- =================================== -->
 	<target name="test" depends="prepare-test">
-		<coverage-setup database="./report/coverage-database">
+		<!-- coverage-setup database="./report/coverage-database">
 			<fileset dir=".">
 				<include name="**/*.php" />
 				<exclude name="*test.php"/>
-				<exclude name="./index.php"/>
-				<exclude name="./library/**"/>
+				<exclude name="index.php"/>
+				<exclude name="library/**"/>
 				<exclude name="doc/**"/>
+				<exclude name=".."/>
 			</fileset>
-		</coverage-setup>
-		<phpunit printsummary="true" >
+		</coverage-setup -->
+		<phpunit printsummary="true">
 			<batchtest>
 				<fileset dir="tests">
 					<include name="*test.php" />
@@ -50,9 +41,9 @@
 			<formatter type="xml" todir="report" outfile="testlog.xml" />
 		</phpunit>
 		<phpunitreport infile="report/testlog.xml" todir="report" />
-		<coverage-report outfile="report/coverage-database">
+		<!-- coverage-report outfile="report/coverage-database">
 		      <report todir="report" styledir="/home/phing/etc" />
-		    </coverage-report>
+		    </coverage-report -->
 	</target>
 
 	<!-- ===================================================== -->
@@ -75,6 +66,9 @@
 		<docblox title="Friendica API" destdir="./doc/api">
 			<fileset dir=".">
 				<include name="**/*.php" />
+				<include name="README"/>
+				<include name="INSTALL.txt"/>
+				<include name="LICENSE"/>
 			</fileset>
 		</docblox>
 	</target>
