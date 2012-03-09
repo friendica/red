@@ -502,7 +502,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 						$template = $wallwall;
 						$commentww = 'ww';	
 					}
-					if((! $item['wall']) && (strlen($item['owner-link'])) && ($item['owner-link'] != $item['author-link'])) {
+					if((! $item['wall']) && (strlen($item['owner-link'])) && (! link_compare($item['owner-link'],$item['author-link']))) {
 
 						// Could be anybody. 
 
