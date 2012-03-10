@@ -10,17 +10,19 @@ function message_post(&$a) {
 		return;
 	}
 
-	$replyto   = ((x($_POST,'replyto'))   ? notags(trim($_POST['replyto']))   : '');
-	$subject   = ((x($_POST,'subject'))   ? notags(trim($_POST['subject']))   : '');
-	$body      = ((x($_POST,'body'))      ? escape_tags(trim($_POST['body'])) : '');
-	$recipient = ((x($_POST,'messageto')) ? intval($_POST['messageto'])       : 0 );
+	$replyto   = ((x($_REQUEST,'replyto'))   ? notags(trim($_REQUEST['replyto']))   : '');
+	$subject   = ((x($_REQUEST,'subject'))   ? notags(trim($_REQUEST['subject']))   : '');
+	$body      = ((x($_REQUEST,'body'))      ? escape_tags(trim($_REQUEST['body'])) : '');
+	$recipient = ((x($_REQUEST,'messageto')) ? intval($_REQUEST['messageto'])       : 0 );
 
 	
 	$ret = send_message($recipient, $body, $subject, $replyto);
+	$norecip = false;
 
 	switch($ret){
 		case -1:
 			notice( t('No recipient selected.') . EOL );
+			$norecip = true;
 			break;
 		case -2:
 			notice( t('Unable to locate contact information.') . EOL );
@@ -33,6 +35,13 @@ function message_post(&$a) {
 			break;
 		default:
 			info( t('Message sent.') . EOL );
+	}
+
+	// fake it to go back to the input form if no recipient listed
+
+	if($norecip) {
+		$a->argc = 2;
+		$a->argv[1] = 'new';
 	}
 
 }
@@ -151,7 +160,8 @@ function message_content(&$a) {
 			'$header' => t('Send Private Message'),
 			'$to' => t('To:'),
 			'$subject' => t('Subject:'),
-			'$subjtxt' => '',
+			'$subjtxt' => ((x($_REQUEST,'subject')) ? strip_tags($_REQUEST['subject']) : ''),
+			'$text' => ((x($_REQUEST,'body')) ? escape_tags(htmlspecialchars($_REQUEST['body'])) : ''),
 			'$readonly' => '',
 			'$yourmessage' => t('Your message:'),
 			'$select' => $select,
