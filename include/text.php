@@ -874,6 +874,14 @@ function link_compare($a,$b) {
 if(! function_exists('prepare_body')) {
 function prepare_body($item,$attach = false) {
 
+	$cache = get_config('system','itemcache');
+
+	if (($cache != '')) {
+		$cachefile = $cache."/".$item["guid"]."-".strtotime($item["edited"])."-".$attach;
+		if (file_exists($cachefile))
+			return(file_get_contents($cachefile));
+	}
+
 	call_hooks('prepare_body_init', $item); 
 
 	$s = prepare_text($item['body']);
@@ -882,8 +890,11 @@ function prepare_body($item,$attach = false) {
 	call_hooks('prepare_body', $prep_arr);
 	$s = $prep_arr['html'];
 
-	if(! $attach)
+	if(! $attach) {
+		if ($cache != '')
+			file_put_contents($cachefile, $s);
 		return $s;
+	}
 
 	$arr = explode(',',$item['attach']);
 	if(count($arr)) {
@@ -917,6 +928,10 @@ function prepare_body($item,$attach = false) {
 
 	$prep_arr = array('item' => $item, 'html' => $s);
 	call_hooks('prepare_body_final', $prep_arr);
+
+	if ($cache != '')
+		file_put_contents($cachefile, $prep_arr['html']);
+
 	return $prep_arr['html'];
 }}
 
