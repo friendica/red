@@ -305,6 +305,7 @@ function message_content(&$a) {
 			'$subjtxt' => template_escape($message['title']),
 			'$readonly' => ' readonly="readonly" style="background: #BBBBBB;" ',
 			'$yourmessage' => t('Your message:'),
+			'$text' => '',
 			'$select' => $select,
 			'$parent' => $parent,
 			'$upload' => t('Upload photo'),
