@@ -1,7 +1,6 @@
 <?php
 
 require_once("boot.php");
-require_once("include/quoteconvert.php");
 
 
 function poller_run($argv, $argc){
@@ -494,7 +493,7 @@ function poller_run($argv, $argc){
 								logger("Mail: can't fetch msg ".$msg_uid);
 								continue;
 							}
-							$datarray['body'] = escape_tags(convertquote($r['body'], false));
+							$datarray['body'] = escape_tags($r['body']);
 
 							logger("Mail: Importing ".$msg_uid);
 
