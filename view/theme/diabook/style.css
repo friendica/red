@@ -484,6 +484,9 @@ code {
 #sidebar-group-list .tool:hover {
 	background: #EEE;
 }
+#sidebar-pages-list .tool:hover {
+	background: #EEE;
+}
 .tool .label {
   float: left;
 }
