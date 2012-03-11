@@ -879,7 +879,7 @@ function prepare_body($item,$attach = false) {
 	$cache = get_config('system','itemcache');
 
 	if (($cache != '')) {
-		$cachefile = $cache."/".$item["guid"]."-".strtotime($item["edited"])."-".$attach."-".hash("crc32", $item['body']);
+		$cachefile = $cache."/".$item["guid"]."-".strtotime($item["edited"])."-".hash("crc32", $item['body']);
 
 		if (file_exists($cachefile))
 			$s = file_get_contents($cachefile);

@@ -69,6 +69,19 @@ function poller_run($argv, $argc){
 	// clear old cache
 	Cache::clear();
 
+	// clear item cache files if they are older than one day
+	$cache = get_config('system','itemcache');
+	if (($cache != '') and is_dir($cache)) {
+		if ($dh = opendir($cache)) {
+			while (($file = readdir($dh)) !== false) {
+				$fullpath = $cache."/".$file;
+				if ((filetype($fullpath) == "file") and filectime($fullpath) < (time() - 1800))
+					unlink($fullpath);
+			}
+			closedir($dh);
+		}
+	}
+
 	$manual_id  = 0;
 	$generation = 0;
 	$hub_update = false;

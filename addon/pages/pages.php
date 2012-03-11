@@ -55,7 +55,7 @@ function pages_getpages($uid) {
 	// Look if the profile is a community page
 	foreach($contacts as $contact) {
 		if (pages_iscommunity($contact["url"], $pagelist))
-			$pages[] = array("url"=>$contact["url"], "Name"=>$contact["Name"]);
+			$pages[] = array("url"=>$contact["url"], "Name"=>$contact["Name"], "id"=>$contact["id"]);
 	}
 
 	// Write back cached pagelist
@@ -76,7 +76,8 @@ function pages_page_end($a,&$b) {
 	$contacts = pages_getpages($a->user['uid']);
 
 	foreach($contacts as $contact) {
-		$pages .= '<li class="tool"><a href="'.$contact["url"].'" class="label" target="external-link">'.$contact["Name"]."</a></li>";
+		$pages .= '<li class="tool"><a href="'.$a->get_baseurl().'/redir/'.$contact["id"].'" class="label" target="external-link">'.
+				$contact["Name"]."</a></li>";
 	}
 	$pages .= "</ul></div></div>";
 	if (sizeof($contacts) > 0)
