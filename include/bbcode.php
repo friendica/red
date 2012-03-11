@@ -216,6 +216,9 @@ function bbcode($Text,$preserve_nl = false) {
 	$Text = preg_replace("/\[img\](.*?)\[\/img\]/ism", '<img src="$1" alt="' . t('Image/photo') . '" />', $Text);
 
 
+	$Text = preg_replace("/\[video\](.*?\.(ogg|ogv|oga|ogm|webm|mp4))\[\/video\]/ism", '<video src="$1" controls="controls" width="425" height="350"><a href="$1">$1</a></video>', $Text);
+
+	$Text = preg_replace("/\[audio\](.*?\.(ogg|ogv|oga|ogm|webm|mp4|mp3))\[\/audio\]/ism", '<audio src="$1" controls="controls"><a href="$1">$1</a></audio>', $Text);
 
 	// Try to Oembed
 	$Text = preg_replace_callback("/\[video\](.*?)\[\/video\]/ism", 'tryoembed', $Text);
@@ -224,9 +227,6 @@ function bbcode($Text,$preserve_nl = false) {
 
 	// html5 video and audio
 
-	$Text = preg_replace("/\[video\](.*?)\[\/video\]/ism", '<video src="$1" controls="controls" width="425" height="350"><a href="$1">$1</a></video>', $Text);
-
-	$Text = preg_replace("/\[audio\](.*?)\[\/audio\]/ism", '<audio src="$1" controls="controls"><a href="$1">$1</a></audio>', $Text);
 
 	$Text = preg_replace("/\[iframe\](.*?)\[\/iframe\]/ism", '<iframe src="$1" width="425" height="350"><a href="$1">$1</a></iframe>', $Text);
          

@@ -52,6 +52,10 @@
 
 		</div>
 		<div class="wall-item-actions">
+<<<<<<< HEAD:view/theme/diabook/wallwall_item.tpl
+=======
+
+>>>>>>> upstream/master:view/theme/diabook/wallwall_item.tpl
 			<div class="wall-item-actions-social">
 			
 			
@@ -88,7 +92,10 @@
 				{{ endif }}
 			</div>
 			<div class="wall-item-location">$item.location&nbsp;</div>
+<<<<<<< HEAD:view/theme/diabook/wallwall_item.tpl
 
+=======
+>>>>>>> upstream/master:view/theme/diabook/wallwall_item.tpl
 		</div>
 	</div>
 	<div class="wall-item-bottom">

@@ -46,6 +46,10 @@
 
 		</div>
 		<div class="wall-item-actions">
+<<<<<<< HEAD:view/theme/diabook/wall_item.tpl
+=======
+
+>>>>>>> upstream/master:view/theme/diabook/wall_item.tpl
 			<div class="wall-item-actions-social">
 			
 			
@@ -81,7 +85,11 @@
 					<a class="icon pencil" href="$item.edpost.0" title="$item.edpost.1"></a>
 				{{ endif }}
 			</div>
+<<<<<<< HEAD:view/theme/diabook/wall_item.tpl
 			<div class="wall-item-location">$item.location&nbsp;</div>			
+=======
+			<div class="wall-item-location">$item.location&nbsp;</div>
+>>>>>>> upstream/master:view/theme/diabook/wall_item.tpl
 		</div>
 	</div>
 	<div class="wall-item-bottom">
