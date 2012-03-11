@@ -13,7 +13,7 @@ $select
 <input type="text" size="64" maxlength="255" id="prvmail-subject" name="subject" value="$subjtxt" $readonly />
 
 <div id="prvmail-message-label">$yourmessage</div>
-<textarea rows="8" cols="72" class="prvmail-text" id="prvmail-text" name="body" ></textarea>
+<textarea rows="8" cols="72" class="prvmail-text" id="prvmail-text" name="body" >$text</textarea>
 
 
 <div id="prvmail-submit-wrapper" >
