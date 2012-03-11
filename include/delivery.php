@@ -435,8 +435,8 @@ function delivery_run($argv, $argc){
 					$headers .= 'Reply-to: ' . $reply_to . "\n";
 
 				// for testing purposes: Collect exported mails
-				$file = tempnam("/tmp/friendica/", "mail-out-");
-				file_put_contents($file, json_encode($it));
+				// $file = tempnam("/tmp/friendica/", "mail-out-");
+				// file_put_contents($file, json_encode($it));
 
 				$headers .= 'Message-Id: <' . iri2msgid($it['uri']). '>' . "\n";
 
