@@ -117,10 +117,15 @@ else {
 					// NOTREACHED
 				}
 				// new account
-				$_SESSION['register'] = 1;
-				$openid->required = array('namePerson/friendly', 'contact/email', 'namePerson');
-				$openid->optional = array('namePerson/first','media/image/aspect11','media/image/default');
-				goaway($openid->authUrl());
+                                try {
+                                    $_SESSION['register'] = 1;
+                                    $openid->required = array('namePerson/friendly', 'contact/email', 'namePerson');
+                                    $openid->optional = array('namePerson/first','media/image/aspect11','media/image/default');
+                                    goaway($openid->authUrl());
+                                } catch (Exception $e) {
+                                    // if the OpenID is misspelled we land here
+                                    notice( t('We encountered a problem while logging in with the OpenID you provided. Please check the correct spelling of the ID.<br /><br />The error message was: ').$e->getMessage() );
+                                } 
 				// NOTREACHED	
 			}
 		}
