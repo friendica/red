@@ -75,7 +75,7 @@ function poller_run($argv, $argc){
 		if ($dh = opendir($cache)) {
 			while (($file = readdir($dh)) !== false) {
 				$fullpath = $cache."/".$file;
-				if ((filetype($fullpath) == "file") and filectime($fullpath) < (time() - 1800))
+				if ((filetype($fullpath) == "file") and filectime($fullpath) < (time() - 86400))
 					unlink($fullpath);
 			}
 			closedir($dh);
