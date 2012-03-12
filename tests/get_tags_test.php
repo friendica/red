@@ -8,11 +8,45 @@ require_once 'include/text.php';
 require_once 'mod/item.php';
 
 function q($sql) {
-	return array(array('id'=>15, 'network'=>'stat', 'alias'=>'Mike', 'nick'=>'Mike', 'url'=>"http://justatest.de"));
+	
+	$result=array(array('id'=>15, 
+			'attag'=>'', 'network'=>'dfrn', 
+			'name'=>'Mike Lastname', 'alias'=>'Mike', 
+			'nick'=>'Mike', 'url'=>"http://justatest.de")); 
+	
+	$args=func_get_args(); 
 
+	$str="";
+	foreach($args as $arg) {
+		$str.=", ".$arg; 
+	}
+	
+	//last parameter is always (in this test) uid, so, it should be 11
+	if($args[count($args)-1]!=11) {
+		throw new Exception("q from get_tags_test was used and uid was not 11. "); 
+	}
+	
+	if(2==count($args)) {
+		//first call in handle_body, id only
+		if($result[0]['id']===$args[1]) {
+			return $result; 
+		}
+	throw new Exception($str); 
+		//second call in handle_body, name
+		if($result[0]['name']===$args[1]) {
+			return $result;
+		}
+	}
+	throw new Exception($str);
+	//third call in handle_body, nick or attag
+	if($result[0]['nick']===$args[2] || $result[0]['attag']===$args[1]) {
+		return $result;
+	}
+// 	throw new Exception("Nothing fitted: ".$args[1].", ".$args[2]); 
 }
+
 function dbesc($str) {
-	echo $str; 
+	return $str; 
 }
 
 class GetTagsTest extends PHPUnit_Framework_TestCase {
@@ -39,7 +73,7 @@ class GetTagsTest extends PHPUnit_Framework_TestCase {
 		handle_body($text, $inform, $str_tags, 11, $tags[0]);
 
 		$this->assertEquals("@Mike", $tags[0]);
-		$this->assertEquals($text, "hi @[url=http://justatest.de]Mike[/url]");
+		$this->assertEquals("hi @[url=http://justatest.de]Mike Lastname[/url]", $text);
 	}
 
 	/**

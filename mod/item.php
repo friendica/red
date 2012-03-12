@@ -820,33 +820,54 @@ function item_content(&$a) {
 	}
 }
 
+/**
+ * This function removes the tag $tag from the text $body and replaces it with 
+ * the appropiate link. 
+ * 
+ * @param unknown_type $body the text to replace the tag in
+ * @param unknown_type $inform a comma-seperated string containing everybody to inform
+ * @param unknown_type $str_tags string to add the tag to
+ * @param unknown_type $profile_uid
+ * @param unknown_type $tag the tag to replace
+ */
 function handle_body(&$body, &$inform, &$str_tags, $profile_uid, $tag) {
-	$profile=null; 
-	if(isset($profile))
-		unset($profile);
+	//is it a hash tag? 
 	if(strpos($tag,'#') === 0) {
+		//if the tag is replaced...
 		if(strpos($tag,'[url='))
+			//...do nothing
 			continue;
+		//base tag has the tags name only
 		$basetag = str_replace('_',' ',substr($tag,1));
-		$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
-	
+		//create text for link
 		$newtag = '#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]';
+		//replace tag by the link
+		$body = str_replace($tag, $newtag, $body);
+	
+		//is the link already in str_tags?
 		if(! stristr($str_tags,$newtag)) {
+			//append or set str_tags
 			if(strlen($str_tags))
 				$str_tags .= ',';
 			$str_tags .= $newtag;
 		}
 		continue;
 	}
+	//is it a person tag? 
 	if(strpos($tag,'@') === 0) {
+		//is it already replaced? 
 		if(strpos($tag,'[url='))
 			continue;
 		$stat = false;
+		//get the person's name
 		$name = substr($tag,1);
+		//is it a link or a full dfrn address? 
 		if((strpos($name,'@')) || (strpos($name,'http://'))) {
 			$newname = $name;
+			//get the profile links
 			$links = @lrdd($name);
 			if(count($links)) {
+				//for all links, collect how is to inform and how's profile is to link
 				foreach($links as $link) {
 					if($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page')
 						$profile = $link['@attributes']['href'];
@@ -857,38 +878,44 @@ function handle_body(&$body, &$inform, &$str_tags, $profile_uid, $tag) {
 					}
 				}
 			}
-		}
-		else {
+		} else { //if it is a name rather than an address
 			$newname = $name;
 			$alias = '';
 			$tagcid = 0;
+			//is it some generated name?
 			if(strrpos($newname,'+')) {
+				//get the id
 				$tagcid = intval(substr($newname,strrpos($newname,'+') + 1));
+				//remove the next word from tag's name
 				if(strpos($name,' '))
 					$name = substr($name,0,strpos($name,' '));
 			}
-			if($tagcid) {
+			if($tagcid) { //if there was an id
+				//select contact with that id from the logged in user's contact list
 				$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 						intval($tagcid),
 						intval($profile_uid)
 				);
-			}
-			elseif(strstr($name,'_') || strstr($name,' ')) {
+			} elseif(strstr($name,'_') || strstr($name,' ')) { //no id
+				//get the real name
 				$newname = str_replace('_',' ',$name);
+				//select someone from this user's contacts by name
 				$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `uid` = %d LIMIT 1",
 						dbesc($newname),
 						intval($profile_uid)
 				);
-			}
-			else {
+			} else {
+				//select someone by attag or nick and the name passed in
 				$r = q("SELECT * FROM `contact` WHERE `attag` = '%s' OR `nick` = '%s' AND `uid` = %d ORDER BY `attag` DESC LIMIT 1",
 						dbesc($name),
 						dbesc($name),
 						intval($profile_uid)
 				);
 			}
+			//$r is set, if someone could be selected
 			if(count($r)) {
 				$profile = $r[0]['url'];
+				//set newname to nick, find alias
 				if($r[0]['network'] === 'stat') {
 					$newname = $r[0]['nick'];
 					$stat = true;
@@ -897,15 +924,19 @@ function handle_body(&$body, &$inform, &$str_tags, $profile_uid, $tag) {
 				}
 				else
 					$newname = $r[0]['name'];
+				//add person's id to $inform
 				if(strlen($inform))
 					$inform .= ',';
 				$inform .= 'cid:' . $r[0]['id'];
 			}
 		}
-		if($profile) {
-			$body = str_replace('@' . $name, '@' . '[url=' . $profile . ']' . $newname	. '[/url]', $body);
+		//if there is an url for this persons profile
+		if(isset($profile)) {
+			//create profile link
 			$profile = str_replace(',','%2c',$profile);
 			$newtag = '@[url=' . $profile . ']' . $newname	. '[/url]';
+			$body = str_replace('@' . $name, $newtag, $body);
+			//append tag to str_tags
 			if(! stristr($str_tags,$newtag)) {
 				if(strlen($str_tags))
 					$str_tags .= ',';
