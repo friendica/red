@@ -1255,3 +1255,57 @@ function file_tag_file_query($table,$s,$type = 'file') {
 		$str = preg_quote( '<' . file_tag_encode($s) . '>' );
 	return " AND " . (($table) ? dbesc($table) . '.' : '') . "file regexp '" . dbesc($str) . "' ";
 }
+
+function file_tag_save_file($uid,$item,$file) {
+	$result = false;
+	if(! intval($uid))
+		return false;
+	$r = q("select file from item where id = %d and uid = %d limit 1",
+		intval($item),
+		intval($uid)
+	);
+	if(count($r)) {
+		if(! stristr($r[0]['file'],'[' . file_tag_encode($file) . ']'))
+			q("update item set file = '%s' where id = %d and uid = %d limit 1",
+				dbesc($r[0]['file'] . '[' . $file_tag_encode($file) . ']'),
+				intval($item),
+				intval($uid)
+			);
+		$saved = get_pconfig($uid,'system','filetags');
+		if((! strlen($saved)) || (! stristr($saved,'[' . file_tag_encode($file) . ']')))
+			set_pconfig($uid,'system','filetags',$saved . '[' . file_tag_encode($file) . ']');
+	}
+	return true;
+}
+
+function file_tag_unsave_file($uid,$item,$file) {
+	$result = false;
+	if(! intval($uid))
+		return false;
+
+	$pattern = '[' . file_tag_encode($file) . ']' ;
+
+	$r = q("select file from item where id = %d and uid = %d limit 1",
+		intval($item),
+		intval($uid)
+	);
+	if(! count($r))
+		return false;
+
+	q("update item set file = '%s' where id = %d and uid = %d limit 1",
+		dbesc(str_replace($pattern,'',$r[0]['file'])),
+		intval($item),
+		intval($uid)
+	);
+
+	$r = q("select file from item where uid = %d " . file_tag_file_query('item',$file),
+		intval($uid)
+	);
+
+	if(! count($r)) {
+		$saved = get_pconfig($uid,'system','filetags');
+		set_pconfig($uid,'system','filetags',str_replace($pattern,'',$saved));
+	}
+	return true;
+}
+
