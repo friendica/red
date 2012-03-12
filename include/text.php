@@ -1235,4 +1235,23 @@ function item_post_type($item) {
 	return t('post');
 }
 
+// post categories and "save to file" use the same item.file table for storage.
+// We will differentiate the different uses by wrapping categories in angle brackets
+// and save to file categories in square brackets.
+// To do this we need to escape these characters if they appear in our tag. 
 
+function file_tag_encode($s) {
+	return str_replace(array('<','>','[',']'),array('%3c','%3e','%5b','%5d'),$s);
+}
+
+function file_tag_decode($s) {
+	return str_replace(array('%3c','%3e','%5b','%5d'),array('<','>','[',']'),$s);
+}
+
+function file_tag_file_query($table,$s,$type = 'file') {
+	if($type == 'file')
+		$str = preg_quote( '[' . file_tag_encode($s) . ']' );
+	else
+		$str = preg_quote( '<' . file_tag_encode($s) . '>' );
+	return " AND " . (($table) ? dbesc($table) . '.' : '') . "file regexp '" . dbesc($str) . "' ";
+}
