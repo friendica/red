@@ -1,8 +1,8 @@
 <?php
 
 /*
- * Name: Diabook
- * Description: Diabook: report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
+ * Name: Diabook-blue
+ * Description: Diabook-blue: report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
  * Version: 
  * Author: 
  */
@@ -12,7 +12,9 @@ $a->theme_info = array(
 );
 
 $a->page['htmlhead'] .= <<< EOT
+
 <script>
+
 //contacts
 $('html').click(function() {
  $('#nav-contacts-linkmenu').removeClass('selected');
@@ -62,5 +64,20 @@ $('html').click(function() {
  $('#nav-site-linkmenu').click(function(event){
      event.stopPropagation();
  });
-</script>
+ //appsmenu
+ $('html').click(function() {
+ $('#nav-apps-link').removeClass('selected');
+ document.getElementById( "nav-apps-menu" ).style.display = "none";
+ });
+
+ $('#nav-apps-link').click(function(event){
+     event.stopPropagation();
+ });
+ 
+ $(function() {
+	$('a.lightbox').fancybox(); // Select all links with lightbox class
+});
+
+ 
+ </script>
 EOT;
