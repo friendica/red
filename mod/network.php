@@ -46,6 +46,7 @@ function network_init(&$a) {
 	$a->page['aside'] .= group_side('network','network',true,$group_id);
 	$a->page['aside'] .= networks_widget($a->get_baseurl() . '/network',(x($_GET, 'nets') ? $_GET['nets'] : ''));
 	$a->page['aside'] .= saved_searches($search);
+	$a->page['aside'] .= fileas_widget($a->get_baseurl() . '/network',(x($_GET, 'file') ? $_GET['file'] : ''));
 
 }
 

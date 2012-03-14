@@ -1294,7 +1294,7 @@ function file_tag_save_file($uid,$item,$file) {
 	if(count($r)) {
 		if(! stristr($r[0]['file'],'[' . file_tag_encode($file) . ']'))
 			q("update item set file = '%s' where id = %d and uid = %d limit 1",
-				dbesc($r[0]['file'] . '[' . $file_tag_encode($file) . ']'),
+				dbesc($r[0]['file'] . '[' . file_tag_encode($file) . ']'),
 				intval($item),
 				intval($uid)
 			);
