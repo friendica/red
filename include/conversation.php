@@ -560,23 +560,26 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				);
 
 				$star = false;
+				$filer = false;
+
 				$isstarred = "unstarred";
-				if ($profile_owner == local_user() && $toplevelpost) {
-					$isstarred = (($item['starred']) ? "starred" : "unstarred");
+				if ($profile_owner == local_user()) {
+					if($toplevelpost) {
+						$isstarred = (($item['starred']) ? "starred" : "unstarred");
 
-					$star = array(
-						'do' => t("add star"),
-						'undo' => t("remove star"),
-						'toggle' => t("toggle star status"),
-						'classdo' => (($item['starred']) ? "hidden" : ""),
-						'classundo' => (($item['starred']) ? "" : "hidden"),
-						'starred' =>  t('starred'),
-						'tagger' => t("add tag"),
-						'filer' => t("file as"),
-						'classtagger' => "",
-					);
+						$star = array(
+							'do' => t("add star"),
+							'undo' => t("remove star"),
+							'toggle' => t("toggle star status"),
+							'classdo' => (($item['starred']) ? "hidden" : ""),
+							'classundo' => (($item['starred']) ? "" : "hidden"),
+							'starred' =>  t('starred'),
+							'tagger' => t("add tag"),
+							'classtagger' => "",
+						);
+					}
+					$filer = t("file as");
 				}
-
 
 
 				$photo = $item['photo'];
@@ -672,6 +675,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 					'edpost' => $edpost,
 					'isstarred' => $isstarred,
 					'star' => $star,
+					'filer' => $filer,
 					'drop' => $drop,
 					'vote' => $likebuttons,
 					'like' => $like,
