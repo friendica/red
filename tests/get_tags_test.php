@@ -281,8 +281,7 @@ class GetTagsTest extends PHPUnit_Framework_TestCase {
 		."@comment. I hope noone forgets about @fullstops.because that might"
 		." break #things. @Mike@campino@friendica.eu is also #nice, isn't it? "
 		."Now, add a @first_last tag. ";
-		//TODO check whether this are all variants (no, auto-stuff is missing).
-
+		
 		$tags=get_tags($text);
 
 		$this->assertTrue(in_array("@Mike", $tags));
