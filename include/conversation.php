@@ -375,7 +375,8 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 						$comments[$item['parent']] = 1;
 					else
 						$comments[$item['parent']] += 1;
-				}
+				} elseif(! x($comments,$item['parent'])) 
+					$comments[$item['parent']] = 0; // avoid notices later on
 			}
 
 			// map all the like/dislike activities for each parent item 
@@ -559,22 +560,26 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				);
 
 				$star = false;
+				$filer = false;
+
 				$isstarred = "unstarred";
-				if ($profile_owner == local_user() && $toplevelpost) {
-					$isstarred = (($item['starred']) ? "starred" : "unstarred");
+				if ($profile_owner == local_user()) {
+					if($toplevelpost) {
+						$isstarred = (($item['starred']) ? "starred" : "unstarred");
 
-					$star = array(
-						'do' => t("add star"),
-						'undo' => t("remove star"),
-						'toggle' => t("toggle star status"),
-						'classdo' => (($item['starred']) ? "hidden" : ""),
-						'classundo' => (($item['starred']) ? "" : "hidden"),
-						'starred' =>  t('starred'),
-						'tagger' => t("add tag"),
-						'classtagger' => "",
-					);
+						$star = array(
+							'do' => t("add star"),
+							'undo' => t("remove star"),
+							'toggle' => t("toggle star status"),
+							'classdo' => (($item['starred']) ? "hidden" : ""),
+							'classundo' => (($item['starred']) ? "" : "hidden"),
+							'starred' =>  t('starred'),
+							'tagger' => t("add tag"),
+							'classtagger' => "",
+						);
+					}
+					$filer = t("file as");
 				}
-
 
 
 				$photo = $item['photo'];
@@ -670,6 +675,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 					'edpost' => $edpost,
 					'isstarred' => $isstarred,
 					'star' => $star,
+					'filer' => $filer,
 					'drop' => $drop,
 					'vote' => $likebuttons,
 					'like' => $like,
@@ -873,6 +879,7 @@ function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 		'$vidurl' => t("Please enter a video link/URL:"),
 		'$audurl' => t("Please enter an audio link/URL:"),
 		'$term' => t('Tag term:'),
+		'$fileas' => t('File as:'),
 		'$whereareu' => t('Where are you right now?'),
 		'$title' => t('Enter a title for this item') 
 	));
@@ -915,7 +922,7 @@ function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 	$o .= replace_macros($tpl,array(
 		'$return_path' => $a->cmd,
 		'$action' =>  $a->get_baseurl().'/item',
-		'$share' => (($x['button']) ? $x['button'] : t('Share')),
+		'$share' => (x($x,'button') ? $x['button'] : t('Share')),
 		'$upload' => t('Upload photo'),
 		'$shortupload' => t('upload photo'),
 		'$attach' => t('Attach file'),
@@ -980,8 +987,8 @@ function conv_sort($arr,$order) {
 		usort($parents,'sort_thr_commented');
 
 	if(count($parents))
-		foreach($parents as $x) 
-			$x['children'] = array();
+		foreach($parents as $i=>$_x) 
+			$parents[$i]['children'] = array();
 
 	foreach($arr as $x) {
 		if($x['id'] != $x['parent']) {
