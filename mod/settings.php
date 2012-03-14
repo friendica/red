@@ -559,7 +559,7 @@ function settings_content(&$a) {
 		
 		$tpl = get_markup_template("settings_addons.tpl");
 		$o .= replace_macros($tpl, array(
-			'$form_security_token' => get_form_security_token("settings_addons"),
+			'$form_security_token' => get_form_security_token("settings_addon"),
 			'$title'	=> t('Plugin Settings'),
 			'$tabs'		=> $tabs,
 			'$settings_addons' => $settings_addons

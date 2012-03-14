@@ -192,7 +192,7 @@ function network_content(&$a, $update = 0) {
 			'sel'=>$starred_active,
 		),
 		array(
-			'label' => t('Bookmarks'),
+			'label' => t('Shared Links'),
 			'url'=>$a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&bmark=1',
 			'sel'=>$bookmarked_active,
 		),	
