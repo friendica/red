@@ -21,7 +21,7 @@ function hcard_init(&$a) {
 	profile_load($a,$which,$profile);
 
 	if((x($a->profile,'page-flags')) && ($a->profile['page-flags'] == PAGE_COMMUNITY)) {
-		$a->page['htmlhead'] .= '<meta name="friendika.community" content="true" />';
+		$a->page['htmlhead'] .= '<meta name="friendica.community" content="true" />';
 	}
 	if(x($a->profile,'openidserver'))				
 		$a->page['htmlhead'] .= '<link rel="openid.server" href="' . $a->profile['openidserver'] . '" />' . "\r\n";

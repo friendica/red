@@ -177,8 +177,8 @@
 
 .icon.on             { background-image: url("../../../view/theme/diabook/icons/toogle_on.png"); background-repeat: no-repeat;}
 .icon.off            { background-image: url("../../../view/theme/diabook/icons/toogle_off.png"); background-repeat: no-repeat;}
-.prev           { background-position: -90px  -60px;}
-.next           { background-position: -110px -60px;}
+.icon.prev           { background-image: url("../../../view/theme/diabook/icons/prev.png"); background-repeat: no-repeat;}
+.icon.next           { background-image: url("../../../view/theme/diabook/icons/next.png"); background-repeat: no-repeat;}
 /*.tagged     { background-position: -130px -60px;}*/
 
 .attachtype {
@@ -247,7 +247,7 @@
   background-image: url("../../../images/icons/10/edit.png");
 }
 .icon.s10.star {
-  background-image: url("../../../images/icons/10/star.png");
+  background-image: url("../../../images/star_dummy.png");
 }
 .icon.s10.menu {
   background-image: url("../../../images/icons/10/menu.png");
@@ -285,7 +285,7 @@
   background-image: url("../../../images/icons/16/edit.png");
 }*/
 .icon.s16.star {
-  background-image: url("../../../images/icons/16/star.png");
+  background-image: url("../../../images/star_dummy.png");
 }
 .icon.s16.menu {
   background-image: url("../../../images/icons/16/menu.png");
@@ -323,7 +323,7 @@
   background-image: url("../../../images/icons/22/edit.png");
 }
 .icon.s22.star {
-  background-image: url("../../../images/icons/22/star.png");
+  background-image: url("../../../images/star_dummy.png");
 }
 .icon.s22.menu {
   background-image: url("../../../images/icons/22/menu.png");
@@ -361,7 +361,7 @@
   background-image: url("../../../images/icons/48/edit.png");
 }
 .icon.s48.star {
-  background-image: url("../../../images/icons/48/star.png");
+  background-image: url("../../../images/star_dummy.png");
 }
 .icon.s48.menu {
   background-image: url("../../../images/icons/48/menu.png");
@@ -400,6 +400,7 @@ body {
   margin: 50px auto auto;
   display: table;
 }
+
 h4 {
   font-size: 1.1em;
 }
@@ -515,7 +516,7 @@ header {
   top: 0px;
   margin: 0px;
   padding: 0px;
-  width: 20%;
+  width: 22%;
   height: 32px;
   background: #000;
   z-index: 100;
@@ -528,8 +529,9 @@ header #site-location {
 }
 header #banner {
   overflow: hidden;
-  text-align: center;
-  width: 100%;
+  text-align: left;
+  width: 82%%;
+  margin-left: 25%;
 }
 header #banner a,
 header #banner a:active,
@@ -555,12 +557,12 @@ nav {
   width: 80%;
   height: 32px;
   position: fixed;
-  left: 20%;
+  left: 22%;
   top: 0px;
   padding: 0px;
   background: #000;
   color: #ffffff;
-  z-index: 100;
+  z-index: 99;
   -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
   -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
@@ -703,21 +705,17 @@ nav #nav-user-linkmenu
 nav #nav-user-linkmenu{
 	margin-right: 0px;
 	}
-nav #nav-home-link{
+nav #nav-home-link, #nav-directory-link, #nav-apps-link{
 	margin-left: 0px;
+	margin-right: 0px;
 	font-weight: bold;
+	margin: 3px 5px;
 	}
 nav #nav-directory-link{
-	margin-left: 0px;
-	margin-right: 0px;
-	font-weight: bold;
-	margin: 3px 15px;
+  margin-right: 0px;	
 	}
-nav #nav-apps-link{
-	margin-left: 0px;
-	margin-right: 0px;
-	font-weight: bold;
-	margin: 3px 15px;
+nav #nav-home-link{
+  margin-left: 0px;	
 	}
 nav #nav-help-link .menu-popup,
 nav #nav-search-link .menu-popup,
@@ -865,6 +863,43 @@ ul.menu-popup .empty {
         padding: 7px 7px 0px 0px;
 }
 
+/*profile_side*/
+#profile_side {
+  margin-bottom: 30px;
+}
+#ps-usericon{
+	height: 25px	
+	}
+#ps-username{
+  font-size: 1.17em;
+  font-weight: bold;
+  vertical-align: top;
+  position: absolute;
+  padding-top: 4px;
+  padding-left: 5px;	
+  color: #2D2D2D;
+	}
+#ps-username:hover{
+  text-decoration: none;	
+	}
+.menu-profile-side{
+	list-style: none;	
+  padding-left: 16px;
+  min-height: 16px;
+	}
+.menu-profile-list{
+  height: auto;
+  overflow: auto;
+  padding-top: 3px;
+  padding-bottom: 3px;
+	}
+.menu-profile-list:hover{
+	background: #EEE;
+	}
+.menu-profile-list-item:hover{	
+	text-decoration: none;	
+   }
+
 /* aside */
 aside {
   display: table-cell;
@@ -875,6 +910,7 @@ aside {
   float: left;
   /* background: #F1F1F1; */
 }
+
 aside .vcard .fn {
   font-size: 18px;
   font-weight: bold;
@@ -961,6 +997,10 @@ aside #side-peoplefind-url {
   widht: 55px;
   height: 55px;
 }
+#lost-password-link {
+  float: left;
+  margin-right: 20px;	
+	}
 /* widget */
 .widget {
   margin-bottom: 2em;
@@ -1035,12 +1075,31 @@ section {
   width: 800px;
   padding: 0px 0px 0px 12px;
 }
+
+body .pageheader{
+  text-align: center;
+  margin-top: 25px;
+  font-size: 0px;
+	}
+
+#id_username {
+  width: 173px;	
+	}
+#id_password {
+  width: 173px;		
+	}
+#id_openid_url {
+  width: 173px;	
+	}
+#contact-edit-end {
+	}
 .pager {
    padding: 10px;
 	text-align: center;
 	font-size: 1.0em;
+	clear: both;
+	display: block;
 }	
-
 .tabs {
     
     background-position: 0 -20px;
@@ -1113,6 +1172,7 @@ section {
 }
 .wall-item-container .wall-item-location {
   padding-right: 40px;
+  display: table-cell;
 }
 .wall-item-container .wall-item-ago {
   word-wrap: break-word;
@@ -1168,6 +1228,7 @@ section {
 .wall-item-container .wall-item-actions-social {
   float: left;
   margin-bottom: 1px;
+  display: table-cell;
 }
 .wall-item-container .wall-item-actions-social a {
   margin-right: 1em;
@@ -1178,6 +1239,7 @@ section {
 .wall-item-container .wall-item-actions-tools {
   float: right;
   width: 80px;
+  display: table-cell;
 }
 .wall-item-container .wall-item-actions-tools a {
   float: right;
@@ -1956,10 +2018,22 @@ box-shadow: 1px 1px 5px 0;
 }
 
 #prvmail-submit {
-	float: left;
+	float: right;
 	margin-top: 10px;
-	margin-right: 30px;
 }
+#prvmail-subject
+{
+background: none repeat scroll 0 0 #FFFFFF;
+border: 1px solid #CCCCCC;
+border-radius: 5px 5px 5px 5px;
+font-weight: bold;
+height: 20px;
+margin: 0 0 5px;
+vertical-align: middle;
+}
+#prvmail-form{
+ width: 597px;	
+	}
 #prvmail-upload-wrapper,
 #prvmail-link-wrapper,
 #prvmail-rotator-wrapper {
@@ -2147,14 +2221,25 @@ a.mail-list-link {
         padding: 10px;
         float: left;
 }
+.lightbox{
+	float: left;
+	}
 
 #photo-photo {
         float: left;
 }
 #photo-like-div .wall-item-like-buttons {
-	float: left;
-   margin-right: 10px;
+	 float: left;
+    margin-right: 5px;
+    margin-top: 30px;
 	}
+.comment-edit-text-empty {
+    margin: 10px 0 0;
+    width: 85%;
+}
+.comment-edit-photo {
+    margin: 10px 0 0;
+}
 .wall-item-like-buttons .icon.like {
 float: left;
 }
@@ -2297,4 +2382,3 @@ float: left;
         float: left;
         width: 175px;
 }
-
