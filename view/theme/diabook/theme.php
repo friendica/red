@@ -11,6 +11,43 @@ $a->theme_info = array(
   'extends' => 'diabook',
 );
 
+//profile_side
+
+
+
+$nav['usermenu']=array();
+$userinfo = null;
+
+if(local_user()) {
+	
+
+
+$r = q("SELECT micro FROM contact WHERE uid=%d AND self=1", intval($a->user['uid']));
+		
+$userinfo = array(
+			'icon' => (count($r) ? $r[0]['micro']: $a->get_baseurl()."/images/default-profile-mm.jpg"),
+			'name' => $a->user['username'],
+		);	
+	
+$ps['usermenu'][status] = Array('profile/' . $a->user['nickname'], t('Home'), "", t('Your posts and conversations'));
+$ps['usermenu'][profile] = Array('profile/' . $a->user['nickname']. '?tab=profile', t('Profile'), "", t('Your profile page'));
+$ps['usermenu'][photos] = Array('photos/' . $a->user['nickname'], t('Photos'), "", t('Your photos'));
+$ps['usermenu'][events] = Array('events/', t('Events'), "", t('Your events'));
+$ps['usermenu'][notes] = Array('notes/', t('Personal notes'), "", t('Your personal photos'));
+
+
+if($is_url = preg_match ("/\bnetwork\b/i", $_SERVER['REQUEST_URI'])) {
+$tpl = get_markup_template('profile_side.tpl');
+
+$a->page['aside'] .= replace_macros($tpl, array(
+		'$userinfo' => $userinfo,
+		'$ps' => $ps,
+	));
+}
+}
+
+//js script
+
 $a->page['htmlhead'] .= <<< EOT
 
 <script>

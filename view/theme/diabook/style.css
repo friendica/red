@@ -863,7 +863,42 @@ ul.menu-popup .empty {
         padding: 7px 7px 0px 0px;
 }
 
-
+/*profile_side*/
+#profile_side {
+  margin-bottom: 30px;
+}
+#ps-usericon{
+	height: 25px	
+	}
+#ps-username{
+  font-size: 1.17em;
+  font-weight: bold;
+  vertical-align: top;
+  position: absolute;
+  padding-top: 4px;
+  padding-left: 5px;	
+  color: #2D2D2D;
+	}
+#ps-username:hover{
+  text-decoration: none;	
+	}
+.menu-profile-side{
+	list-style: none;	
+  padding-left: 16px;
+  min-height: 16px;
+	}
+.menu-profile-list{
+  height: auto;
+  overflow: auto;
+  padding-top: 3px;
+  padding-bottom: 3px;
+	}
+.menu-profile-list:hover{
+	background: #EEE;
+	}
+.menu-profile-list-item:hover{	
+	text-decoration: none;	
+   }
 
 /* aside */
 aside {
@@ -2347,4 +2382,3 @@ float: left;
         float: left;
         width: 175px;
 }
-
