@@ -1,14 +1,41 @@
 <?php
 /**
+ * This file contains the tests for get_tags and the tag handling in item.php
+ * 
  * @package test.util
  */
 
-require_once 'include/template_processor.php';
+/**
+ * required, because it contains the get_tags() function
+ */
 require_once 'include/text.php';
+/**
+ * required, because it contains the tag handling
+ */
 require_once 'mod/item.php';
 
+/**
+ * A class which can be used as replacement for an app if
+ * only get_baseurl is used. 
+ * 
+ * @author Alexander Kampmann
+ * @package test.util
+ */
+class MockApp {
+	function get_baseurl() {
+		return "baseurl"; 
+	}
+}; 
+
+/**
+ * the test should not rely on a database, 
+ * so this is a replacement for the database access method q. 
+ * 
+ * It simulates the user with uid 11 has one contact, named Mike Lastname. 
+ * 
+ * @param string $sql
+ */
 function q($sql) {
-	
 	$result=array(array('id'=>15, 
 			'attag'=>'', 'network'=>'dfrn', 
 			'name'=>'Mike Lastname', 'alias'=>'Mike', 
@@ -16,48 +43,59 @@ function q($sql) {
 	
 	$args=func_get_args(); 
 
-	$str="";
-	foreach($args as $arg) {
-		$str.=", ".$arg; 
-	}
-	
 	//last parameter is always (in this test) uid, so, it should be 11
 	if($args[count($args)-1]!=11) {
-		throw new Exception("q from get_tags_test was used and uid was not 11. "); 
+		return; 
 	}
 	
-	if(2==count($args)) {
+	
+	if(3==count($args)) {
 		//first call in handle_body, id only
-		if($result[0]['id']===$args[1]) {
+		if($result[0]['id']==$args[1]) {
 			return $result; 
 		}
-	throw new Exception($str); 
 		//second call in handle_body, name
 		if($result[0]['name']===$args[1]) {
 			return $result;
 		}
 	}
-	throw new Exception($str);
 	//third call in handle_body, nick or attag
 	if($result[0]['nick']===$args[2] || $result[0]['attag']===$args[1]) {
 		return $result;
 	}
-// 	throw new Exception("Nothing fitted: ".$args[1].", ".$args[2]); 
 }
 
+/**
+ * replacement for dbesc. 
+ * I don't want to test dbesc here, so
+ * I just return the input. It won't be a problem, because 
+ * the test does not use a real database. 
+ * 
+ * DON'T USE HAT FUNCTION OUTSIDE A TEST!
+ * 
+ * @param string $str
+ * @return input
+ */
 function dbesc($str) {
 	return $str; 
 }
 
+/**
+ * TestCase for tag handling. 
+ * 
+ * @author alexander
+ * @package test.util
+ */
 class GetTagsTest extends PHPUnit_Framework_TestCase {
+	/** the mock to use as app */
+	private $a; 
 
+	/**
+	 * initialize the test. That's a phpUnit function, 
+	 * don't change its name.
+	 */
 	public function setUp() {
-		set_include_path(
-				get_include_path() . PATH_SEPARATOR
-				. 'include' . PATH_SEPARATOR
-				. 'library' . PATH_SEPARATOR
-				. 'library/phpsec' . PATH_SEPARATOR
-				. '.' );
+		$this->a=new MockApp(); 
 	}
 
 	/**
@@ -70,10 +108,54 @@ class GetTagsTest extends PHPUnit_Framework_TestCase {
 
 		$inform=''; 
 		$str_tags='';
-		handle_body($text, $inform, $str_tags, 11, $tags[0]);
+		foreach($tags as $tag) {
+			handle_tag($this->a, $text, $inform, $str_tags, 11, $tag);
+		}
 
-		$this->assertEquals("@Mike", $tags[0]);
+		//correct tags found?
+		$this->assertEquals(1, count($tags)); 
+		$this->assertTrue(in_array("@Mike", $tags));
+		
+		//correct output from handle_tag?
+		$this->assertEquals("cid:15", $inform); 
+		$this->assertEquals("@[url=http://justatest.de]Mike Lastname[/url]", $str_tags);
 		$this->assertEquals("hi @[url=http://justatest.de]Mike Lastname[/url]", $text);
+	}
+	
+	/**
+	 * test with one Person tag. 
+	 * There's a minor spelling mistake...
+	 */
+	public function testGetTagsShortPersonSpelling() {
+		$text="hi @Mike.because";
+	
+		$tags=get_tags($text);
+	
+		//correct tags found?
+		$this->assertEquals(1, count($tags));
+		$this->assertTrue(in_array("@Mike.because", $tags));
+		
+		$inform='';
+		$str_tags='';
+		handle_tag($this->a, $text, $inform, $str_tags, 11, $tags[0]);
+	
+		$this->assertEquals("cid:15", $inform); 
+		$this->assertEquals("@[url=http://justatest.de]Mike Lastname[/url]", $str_tags);
+		$this->assertEquals("hi @[url=http://justatest.de]Mike Lastname[/url].because", $text);
+	}
+	
+	/**
+	 * test with two Person tags. 
+	 * There's a minor spelling mistake...
+	 */
+	public function testGetTagsPerson2Spelling() {
+		$text="hi @Mike@campino@friendica.eu";
+	
+		$tags=get_tags($text);
+	
+		$this->assertEquals(2, count($tags)); 
+		$this->assertTrue(in_array("@Mike", $tags));
+		$this->assertTrue(in_array("@campino@friendica.eu", $tags));
 	}
 
 	/**
@@ -84,7 +166,8 @@ class GetTagsTest extends PHPUnit_Framework_TestCase {
 
 		$tags=get_tags($text);
 
-		$this->assertEquals("#test_case", $tags[0]);
+		$this->assertEquals(1, count($tags));
+		$this->assertTrue(in_array("#test_case", $tags));
 	}
 
 	/**
@@ -95,13 +178,21 @@ class GetTagsTest extends PHPUnit_Framework_TestCase {
 
 		$tags=get_tags($text);
 
+		$this->assertEquals(3, count($tags));
+		$this->assertTrue(in_array("@Mike", $tags));
+		$this->assertTrue(in_array("@Mike This", $tags));
+		$this->assertTrue(in_array("#test_case", $tags));
+
 		$inform='';
 		$str_tags='';
-		handle_body($text, $inform, $str_tags, 11, $tags[0]);
+		foreach($tags as $tag) {
+			handle_tag($this->a, $text, $inform, $str_tags, 11, $tag);
+		}
 		
-		$this->assertEquals("hi @[url=http://justatest.de]Mike[/url] This is a #test_case", $text); 
-		$this->assertEquals("@Mike", $tags[0]);
-		$this->assertEquals("#test_case", $tags[1]);
+		$this->assertEquals("cid:15", $inform); 
+		$this->assertEquals("@[url=http://justatest.de]Mike Lastname[/url],#[url=baseurl/search?search=test%20case]test case[/url]", $str_tags);
+		$this->assertEquals("hi @[url=http://justatest.de]Mike Lastname[/url] This is a #[url=baseurl/search?search=test%20case]test case[/url]", $text); 
+		
 	}
 
 	/**
@@ -112,8 +203,9 @@ class GetTagsTest extends PHPUnit_Framework_TestCase {
 
 		$tags=get_tags($text);
 
-		$this->assertEquals("@Mike", $tags[0]);
-		$this->assertEquals("#test_case", $tags[1]);
+		$this->assertEquals(2, count($tags));
+		$this->assertTrue(in_array("@Mike", $tags));
+		$this->assertTrue(in_array("#test_case", $tags));
 	}
 
 	/**
@@ -124,9 +216,44 @@ class GetTagsTest extends PHPUnit_Framework_TestCase {
 
 		$tags=get_tags($text);
 
-		$this->assertEquals("@Test", $tags[0]);
+		$this->assertEquals(2, count($tags));
+		$this->assertTrue(in_array("@Test I", $tags));
+		$this->assertTrue(in_array("@Test", $tags));
 	}
 
+	/**
+	 * this test demonstrates strange behaviour by intval. 
+	 * It makes the next test fail. 
+	 */
+	public function testIntval() {
+		$this->assertEquals(15, intval("15 it")); 
+	}
+	
+	/**
+	 * test a tag with an id in it
+	 */
+	public function testIdTag() {
+		$text="Test with @mike+15 id tag"; 
+		
+		$tags=get_tags($text); 
+		
+		$this->assertEquals(2, count($tags)); 
+		$this->assertTrue(in_array("@mike+15", $tags));
+		
+		//happens right now, but it shouldn't be necessary
+		$this->assertTrue(in_array("@mike+15 id", $tags));
+		
+		$inform='';
+		$str_tags='';
+		foreach($tags as $tag) {
+			handle_tag($this->a, $text, $inform, $str_tags, 11, $tag);
+		}
+		
+		$this->assertEquals("Test with @[url=http://justatest.de]Mike Lastname[/url] id tag", $text);
+		$this->assertEquals("@[url=http://justatest.de]Mike Lastname[/url]", $str_tags);
+		$this->assertEquals("cid:15", $inform);
+	}
+	
 	/**
 	 * test with two persons and one special tag.
 	 */
@@ -136,10 +263,12 @@ class GetTagsTest extends PHPUnit_Framework_TestCase {
 
 		$tags=get_tags($text);
 
-		$this->assertEquals("@Mike", $tags[0]);
-		$this->assertEquals("#test_cases", $tags[1]);
-		$this->assertEquals("@somebody@friendica.com", $tags[2]);
-		$this->assertEquals("#things", $tags[3]);
+		$this->assertEquals(5, count($tags));
+		$this->assertTrue(in_array("@Mike", $tags));
+		$this->assertTrue(in_array("#test_cases", $tags));
+		$this->assertTrue(in_array("@somebody@friendica.com", $tags));
+		$this->assertTrue(in_array("@somebody@friendica.com may", $tags));
+		$this->assertTrue(in_array("#things", $tags));
 	}
 
 	/**
@@ -156,19 +285,23 @@ class GetTagsTest extends PHPUnit_Framework_TestCase {
 
 		$tags=get_tags($text);
 
-		$this->assertEquals("@Mike", $tags[0]);
-		$this->assertEquals("#test_cases", $tags[1]);
-		$this->assertEquals("@somebody@friendica.com", $tags[2]);
-		$this->assertEquals("#things", $tags[3]);
-		$this->assertEquals("#pitfalls", $tags[4]);
-		$this->assertEquals("#tags", $tags[5]);
-		$this->assertEquals("@comment", $tags[6]);
-		$this->assertEquals("@fullstops", $tags[7]);
-		$this->assertEquals("#things", $tags[8]);
-		$this->assertEquals("@Mike", $tags[9]);
-		$this->assertEquals("@campino@friendica.eu", $tags[10]);
-		$this->assertEquals("#nice", $tags[11]);
-		$this->assertEquals("@first_last", $tags[12]);
+		$this->assertTrue(in_array("@Mike", $tags));
+		$this->assertTrue(in_array("#test_cases", $tags));
+		$this->assertTrue(in_array("@somebody@friendica.com", $tags));
+		$this->assertTrue(in_array("#things", $tags));
+		$this->assertTrue(in_array("#pitfalls", $tags));
+		$this->assertTrue(in_array("#tags", $tags));
+		$this->assertTrue(in_array("@comment", $tags));
+		$this->assertTrue(in_array("@fullstops.because", $tags));
+		$this->assertTrue(in_array("#things", $tags));
+		$this->assertTrue(in_array("@Mike", $tags));
+		$this->assertTrue(in_array("#nice", $tags));
+		$this->assertTrue(in_array("@first_last", $tags));
+		
+		//right now, none of the is matched
+		$this->assertFalse(in_array("@Mike@campino@friendica.eu", $tags));
+		$this->assertTrue(in_array("@campino@friendica.eu", $tags));
+		$this->assertTrue(in_array("@campino@friendica.eu is", $tags));
 	}
 
 	/**

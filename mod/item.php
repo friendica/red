@@ -425,7 +425,7 @@ function item_post(&$a) {
 
 	if(count($tags)) {
 		foreach($tags as $tag) {
-			handle_tag($body, $inform, $str_tags, $profile_uid, $tag); 
+			handle_tag($a, $body, $inform, $str_tags, $profile_uid, $tag); 
 		}
 	}
 
@@ -830,7 +830,7 @@ function item_content(&$a) {
  * @param unknown_type $profile_uid
  * @param unknown_type $tag the tag to replace
  */
-function handle_body(&$body, &$inform, &$str_tags, $profile_uid, $tag) {
+function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 	//is it a hash tag? 
 	if(strpos($tag,'#') === 0) {
 		//if the tag is replaced...
@@ -851,7 +851,7 @@ function handle_body(&$body, &$inform, &$str_tags, $profile_uid, $tag) {
 				$str_tags .= ',';
 			$str_tags .= $newtag;
 		}
-		continue;
+		return;
 	}
 	//is it a person tag? 
 	if(strpos($tag,'@') === 0) {
@@ -887,8 +887,9 @@ function handle_body(&$body, &$inform, &$str_tags, $profile_uid, $tag) {
 				//get the id
 				$tagcid = intval(substr($newname,strrpos($newname,'+') + 1));
 				//remove the next word from tag's name
-				if(strpos($name,' '))
+				if(strpos($name,' ')) {
 					$name = substr($name,0,strpos($name,' '));
+				}
 			}
 			if($tagcid) { //if there was an id
 				//select contact with that id from the logged in user's contact list
