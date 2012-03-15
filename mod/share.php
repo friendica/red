@@ -17,7 +17,7 @@ function share_init(&$a) {
 	$o = '';
 
 	if(local_user() && intval(get_pconfig(local_user(),'system','plaintext'))) {
-		$o .= "\xE2\x99\xb2" . ' [url=' . $r[0]['author-link'] . ']' . $r[0]['author-name'] . '[/url]';
+		$o .= "\xE2\x99\xb2" . ' [url=' . $r[0]['author-link'] . ']' . $r[0]['author-name'] . '[/url]' . "\n";
 		if($r[0]['title'])
 			$o .= '[b]' . $r[0]['title'] . '[/b]' . "\n";
 		$o .= $r[0]['body'] . "\n";
