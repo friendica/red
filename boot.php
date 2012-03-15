@@ -379,11 +379,22 @@ class App {
 
 		$scheme = $this->scheme;
 
-		if(x($this->config,'ssl_policy')) {
-			if(($ssl) || ($this->config['ssl_policy'] == SSL_POLICY_FULL)) 
+		if((x($this->config,'system')) && (x($this->config['system'],'ssl_policy'))) {
+			if($this->config['system']['ssl_policy'] == SSL_POLICY_FULL) 
 				$scheme = 'https';
-			if(($this->config['ssl_policy'] == SSL_POLICY_SELFSIGN) && (local_user() || x($_POST,'auth-params')))
-				$scheme = 'https';
+
+//			We need to populate the $ssl flag across the entire program before turning this on.
+//			Basically, we'll have $ssl = true on any links which can only be seen by a logged in user
+//			(and also the login link). Anything seen by an outsider will have it turned off.
+//			At present, setting SSL_POLICY_SELFSIGN will only force remote contacts to update their 
+//			contact links to this site with "http:" if they are currently using "https:"
+
+//			if($this->config['system']['ssl_policy'] == SSL_POLICY_SELFSIGN) {
+//				if($ssl)
+//					$scheme = 'https';
+//				else
+//					$scheme = 'http';
+//			}
 		}
 
 		$this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );

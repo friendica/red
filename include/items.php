@@ -1046,6 +1046,21 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	if(! $rino_enable)
 		$rino = 0;
 
+	$ssl_val = intval(get_config('system','ssl_policy'));
+	$ssl_policy = '';
+	switch($ssl_val){
+		case SSL_POLICY_FULL:
+			$ssl_policy = 'full';
+			break;
+		case SSL_POLICY_SELFSIGN:
+			$ssl_policy = 'self';
+			break;			
+		case SSL_POLICY_NONE:
+		default:
+			$ssl_policy = 'none';
+			break;
+	}
+
 	$url = $contact['notify'] . '&dfrn_id=' . $idtosend . '&dfrn_version=' . DFRN_PROTOCOL_VERSION . (($rino) ? '&rino=1' : '');
 
 	logger('dfrn_deliver: ' . $url);
@@ -1117,6 +1132,8 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 		$postvars['data'] = str_replace('<dfrn:comment-allow>1','<dfrn:comment-allow>0',$atom);
 		$postvars['perm'] = 'r';
 	}
+
+	$postvars['ssl_policy'] = $ssl_policy;
 
 	if($rino && $rino_allowed && (! $dissolve)) {
 		$key = substr(random_string(),0,16);

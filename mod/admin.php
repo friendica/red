@@ -151,11 +151,7 @@ function admin_page_summary(&$a) {
 
 	$r = q("SELECT COUNT(id) as `count` FROM `register`");
 	$pending = $r[0]['count'];
-	
-	
-	
-	
-	
+		
 	$t = get_markup_template("admin_summary.tpl");
 	return replace_macros($t, array(
 		'$title' => t('Administration'),
@@ -210,7 +206,7 @@ function admin_page_site_post(&$a){
 	$dfrn_only          =	((x($_POST,'dfrn_only'))	    ? True	:	False);
     $ostatus_disabled   =   !((x($_POST,'ostatus_disabled')) ? True  :   False);
 	$diaspora_enabled   =   ((x($_POST,'diaspora_enabled')) ? True   :  False);
-
+	$ssl_policy         =   ((x($_POST,'ssl_policy')) ? intval($_POST['ssl_policy']) : 0);
 
 	set_config('config','sitename',$sitename);
 	if ($banner==""){
@@ -222,6 +218,7 @@ function admin_page_site_post(&$a){
 	} else {
 		set_config('system','banner', $banner);
 	}
+	set_config('system','ssl_policy',$ssl_policy);
 	set_config('system','language', $language);
 	set_config('system','theme', $theme);
 	set_config('system','maximagesize', $maximagesize);
@@ -305,6 +302,12 @@ function admin_page_site(&$a) {
 		REGISTER_APPROVE => t("Requires approval"),
 		REGISTER_OPEN => t("Open")
 	); 
+
+	$ssl_choices = array(
+		SSL_POLICY_NONE => t("No SSL policy, links will track page SSL state"),
+		SSL_POLICY_FULL => t("Force all links to use SSL"),
+		SSL_POLICY_SELFSIGN => t("Self-signed certificate, use SSL for local links only (discouraged)")
+	);
 	
 	$t = get_markup_template("admin_site.tpl");
 	return replace_macros($t, array(
@@ -322,7 +325,7 @@ function admin_page_site(&$a) {
 		'$banner'			=> array('banner', t("Banner/Logo"), $banner, ""),
 		'$language' 		=> array('language', t("System language"), get_config('system','language'), "", $lang_choices),
 		'$theme' 			=> array('theme', t("System theme"), get_config('system','theme'), t("Default system theme - may be over-ridden by user profiles"), $theme_choices),
-
+		'$ssl_policy'       => array('ssl_policy', t("SSL link policy"), get_config('system','ssl_policy'), t("Determines whether generated links should be forced to use SSL"), $ssl_choices),
 		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), get_config('system','maximagesize'), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
 
 		'$register_policy'	=> array('register_policy', t("Register policy"), $a->config['register_policy'], "", $register_choices),
