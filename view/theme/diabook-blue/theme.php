@@ -34,7 +34,7 @@ $ps['usermenu'][profile] = Array('profile/' . $a->user['nickname']. '?tab=profil
 $ps['usermenu'][photos] = Array('photos/' . $a->user['nickname'], t('Photos'), "", t('Your photos'));
 $ps['usermenu'][events] = Array('events/', t('Events'), "", t('Your events'));
 $ps['usermenu'][notes] = Array('notes/', t('Personal notes'), "", t('Your personal photos'));
-
+$ps['usermenu'][community] = Array('community/', t('Community'), "", "");
 
 if($is_url = preg_match ("/\bnetwork\b/i", $_SERVER['REQUEST_URI'])) {
 $tpl = get_markup_template('profile_side.tpl');
