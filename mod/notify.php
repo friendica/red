@@ -20,7 +20,7 @@ function notify_init(&$a) {
 			goaway($r[0]['link']);
 		}
 
-		goaway($a->get_baseurl());
+		goaway($a->get_baseurl(true));
 	}
 
 	if($a->argc > 2 && $a->argv[1] === 'mark' && $a->argv[2] === 'all' ) {
@@ -51,7 +51,7 @@ function notify_content(&$a) {
 		if (count($r) > 0) {
 			foreach ($r as $it) {
 				$notif_content .= replace_macros($not_tpl,array(
-					'$item_link' => $a->get_baseurl().'/notify/view/'. $it['id'],
+					'$item_link' => $a->get_baseurl(true).'/notify/view/'. $it['id'],
 					'$item_image' => $it['photo'],
 					'$item_text' => strip_tags(bbcode($it['msg'])),
 					'$item_when' => relative_date($it['date'])
