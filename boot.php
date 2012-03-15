@@ -696,6 +696,7 @@ function get_guid($size=16) {
 
 if(! function_exists('login')) {
 function login($register = false, $hiddens=false) {
+	$a = get_app();
 	$o = "";
 	$reg = false;
 	if ($register) {
@@ -715,23 +716,26 @@ function login($register = false, $hiddens=false) {
 
 	}
 
+	$dest_url = $a->get_baseurl(true) . '/' . $a->query_string;
 
 	$o .= replace_macros($tpl,array(
-		'$logout'        => t('Logout'),
-		'$login'		 => t('Login'),
+
+		'$dest_url'     => $dest_url,
+		'$logout'       => t('Logout'),
+		'$login'        => t('Login'),
 		
 		'$lname'	 	=> array('username', t('Nickname or Email address: ') , '', ''),
 		'$lpassword' 	=> array('password', t('Password: '), '', ''),
 		
 		'$openid'		=> !$noid,
-		'$lopenid'	=> array('openid_url', t('Or login using OpenID: '),'',''),
+		'$lopenid'      => array('openid_url', t('Or login using OpenID: '),'',''),
 		
-		'$hiddens'	=> $hiddens,
+		'$hiddens'      => $hiddens,
 		
-		'$register'		=> $reg,
+		'$register'     => $reg,
 		
-		'$lostpass'      => t('Forgot your password?'),
-		'$lostlink'      => t('Password Reset'),
+		'$lostpass'     => t('Forgot your password?'),
+		'$lostlink'     => t('Password Reset'),
 	));
 
 	call_hooks('login_hook',$o);
