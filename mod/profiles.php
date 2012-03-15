@@ -240,7 +240,7 @@ function profiles_content(&$a) {
 		);
 		if(! count($r)) {
 			notice( t('Profile not found.') . EOL);
-			goaway($a->get_baseurl() . '/profiles');
+			goaway($a->get_baseurl(true) . '/profiles');
 			return; // NOTREACHED
 		}
 		
@@ -260,7 +260,7 @@ function profiles_content(&$a) {
 		if($r)
 			info( t('Profile deleted.') . EOL);
 
-		goaway($a->get_baseurl() . '/profiles');
+		goaway($a->get_baseurl(true) . '/profiles');
 		return; // NOTREACHED
 	}
 
@@ -297,9 +297,9 @@ function profiles_content(&$a) {
 
 		info( t('New profile created.') . EOL);
 		if(count($r3) == 1)
-			goaway($a->get_baseurl() . '/profiles/' . $r3[0]['id']);
+			goaway($a->get_baseurl(true) . '/profiles/' . $r3[0]['id']);
 		
-		goaway($a->get_baseurl() . '/profiles');
+		goaway($a->get_baseurl(true) . '/profiles');
 	} 
 
 	if(($a->argc > 2) && ($a->argv[1] === 'clone')) {
@@ -339,9 +339,9 @@ function profiles_content(&$a) {
 		);
 		info( t('New profile created.') . EOL);
 		if(count($r3) == 1)
-			goaway($a->get_baseurl() . '/profiles/' . $r3[0]['id']);
+			goaway($a->get_baseurl(true) . '/profiles/' . $r3[0]['id']);
 		
-		goaway($a->get_baseurl() . '/profiles');
+		goaway($a->get_baseurl(true) . '/profiles');
 		
 		return; // NOTREACHED
 	}
@@ -373,7 +373,7 @@ function profiles_content(&$a) {
 		));
 
 
-		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
+		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl(true)));
 		$a->page['htmlhead'] .= "<script type=\"text/javascript\" src=\"js/country.js\" ></script>";
 
 		$f = get_config('system','birthday_input_format');
@@ -425,7 +425,7 @@ function profiles_content(&$a) {
 			'$lbl_work' => t('Work/employment'),
 			'$lbl_school' => t('School/education'),
 			'$disabled' => (($is_default) ? 'onclick="return false;" style="color: #BBBBFF;"' : ''),
-			'$baseurl' => $a->get_baseurl(),
+			'$baseurl' => $a->get_baseurl(true),
 			'$profile_id' => $r[0]['id'],
 			'$profile_name' => $r[0]['profile-name'],
 			'$default' => (($is_default) ? '<p id="profile-edit-default-desc">' . t('This is your <strong>public</strong> profile.<br />It <strong>may</strong> be visible to anybody using the internet.') . '</p>' : ""),
@@ -489,7 +489,7 @@ function profiles_content(&$a) {
 					'$alt' => t('Profile Image'),
 					'$profile_name' => $rr['profile-name'],
 					'$visible' => (($rr['is-default']) ? '<strong>' . t('visible to everybody') . '</strong>' 
-						: '<a href="' . $a->get_baseurl() . '/profperm/' . $rr['id'] . '" />' . t('Edit visibility') . '</a>')
+						: '<a href="' . $a->get_baseurl(true) . '/profperm/' . $rr['id'] . '" />' . t('Edit visibility') . '</a>')
 				));
 			}
 		}
