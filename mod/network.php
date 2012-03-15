@@ -44,21 +44,26 @@ function network_init(&$a) {
 	}
 	
 	$a->page['aside'] .= group_side('network','network',true,$group_id);
-	$a->page['aside'] .= networks_widget($a->get_baseurl() . '/network',(($_GET['nets']) ? $_GET['nets'] : ''));
+	$a->page['aside'] .= networks_widget($a->get_baseurl(true) . '/network',(x($_GET, 'nets') ? $_GET['nets'] : ''));
 	$a->page['aside'] .= saved_searches($search);
+	$a->page['aside'] .= fileas_widget($a->get_baseurl(true) . '/network',(x($_GET, 'file') ? $_GET['file'] : ''));
 
 }
 
 function saved_searches($search) {
 
+	$a = get_app();
+
 	$srchurl = '/network?f=' 
-		. ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') 
-		. ((x($_GET,'star')) ? '&star=' . $_GET['star'] : '')
+		. ((x($_GET,'cid'))   ? '&cid='   . $_GET['cid']   : '') 
+		. ((x($_GET,'star'))  ? '&star='  . $_GET['star']  : '')
 		. ((x($_GET,'bmark')) ? '&bmark=' . $_GET['bmark'] : '')
-		. ((x($_GET,'conv')) ? '&conv=' . $_GET['conv'] : '')
-		. ((x($_GET,'nets')) ? '&nets=' . $_GET['nets'] : '')
-		. ((x($_GET,'cmin')) ? '&cmin=' . $_GET['cmin'] : '')
-		. ((x($_GET,'cmax')) ? '&cmax=' . $_GET['cmax'] : '');
+		. ((x($_GET,'conv'))  ? '&conv='  . $_GET['conv']  : '')
+		. ((x($_GET,'nets'))  ? '&nets='  . $_GET['nets']  : '')
+		. ((x($_GET,'cmin'))  ? '&cmin='  . $_GET['cmin']  : '')
+		. ((x($_GET,'cmax'))  ? '&cmax='  . $_GET['cmax']  : '')
+		. ((x($_GET,'file'))  ? '&file='  . $_GET['file']  : '');
+	;
 	
 	$o = '';
 
@@ -85,7 +90,7 @@ function saved_searches($search) {
 	$o = replace_macros($tpl, array(
 		'$title'	 => t('Saved Searches'),
 		'$add'		 => t('add'),
-		'$searchbox' => search($search,'netsearch-box',$srchurl,true),
+		'$searchbox' => search($search,'netsearch-box',$a->get_baseurl(true) . $srchurl,true),
 		'$saved' 	 => $saved,
 	));
 	
@@ -130,15 +135,15 @@ function network_content(&$a, $update = 0) {
 		$starred_active = 'active';
 	}
 	
-	if($_GET['bmark']) {
+	if(x($_GET,'bmark')) {
 		$bookmarked_active = 'active';
 	}
 
-	if($_GET['conv']) {
+	if(x($_GET,'conv')) {
 		$conv_active = 'active';
 	}
 
-	if($_GET['spam']) {
+	if(x($_GET,'spam')) {
 		$spam_active = 'active';
 	}
 
@@ -164,38 +169,38 @@ function network_content(&$a, $update = 0) {
 	$tabs = array(
 		array(
 			'label' => t('Commented Order'),
-			'url'=>$a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '?f=&cid=' . $_GET['cid'] : ''), 
+			'url'=>$a->get_baseurl(true) . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '?f=&cid=' . $_GET['cid'] : ''), 
 			'sel'=>$all_active,
 		),
 		array(
 			'label' => t('Posted Order'),
-			'url'=>$a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . '?f=&order=post' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
+			'url'=>$a->get_baseurl(true) . '/' . str_replace('/new', '', $a->cmd) . '?f=&order=post' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
 			'sel'=>$postord_active,
 		),
 
 		array(
 			'label' => t('Personal'),
-			'url' => $a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&conv=1',
+			'url' => $a->get_baseurl(true) . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&conv=1',
 			'sel' => $conv_active,
 		),
 		array(
 			'label' => t('New'),
-			'url' => $a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . '/new' . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : ''),
+			'url' => $a->get_baseurl(true) . '/' . str_replace('/new', '', $a->cmd) . '/new' . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : ''),
 			'sel' => $new_active,
 		),
 		array(
 			'label' => t('Starred'),
-			'url'=>$a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&star=1',
+			'url'=>$a->get_baseurl(true) . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&star=1',
 			'sel'=>$starred_active,
 		),
 		array(
-			'label' => t('Bookmarks'),
-			'url'=>$a->get_baseurl() . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&bmark=1',
+			'label' => t('Shared Links'),
+			'url'=>$a->get_baseurl(true) . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&bmark=1',
 			'sel'=>$bookmarked_active,
 		),	
 //		array(
 //			'label' => t('Spam'),
-//			'url'=>$a->get_baseurl() . '/network?f=&spam=1'
+//			'url'=>$a->get_baseurl(true) . '/network?f=&spam=1'
 //			'sel'=> $spam_active,
 //		),	
 
@@ -226,6 +231,7 @@ function network_content(&$a, $update = 0) {
 	$nets = ((x($_GET,'nets')) ? $_GET['nets'] : '');
 	$cmin = ((x($_GET,'cmin')) ? intval($_GET['cmin']) : 0);
 	$cmax = ((x($_GET,'cmax')) ? intval($_GET['cmax']) : 99);
+	$file = ((x($_GET,'file')) ? $_GET['file'] : '');
 
 	if(($a->argc > 2) && $a->argv[2] === 'new')
 		$nouveau = true;
@@ -239,13 +245,13 @@ function network_content(&$a, $update = 0) {
 		}
 	}
 
-	if(x($_GET,'search'))
+	if(x($_GET,'search') || x($_GET,'file'))
 		$nouveau = true;
 	if($cid)
 		$def_acl = array('allow_cid' => '<' . intval($cid) . '>');
 
 	if(! $update) {
-		if(group) {
+		if($group) {
 			if(($t = group_public_members($group)) && (! get_pconfig(local_user(),'system','nowarn_insecure'))) {
 				notice( sprintf( tt('Warning: This group contains %s member from an insecure network.',
 									'Warning: This group contains %s members from an insecure network.',
@@ -296,7 +302,7 @@ function network_content(&$a, $update = 0) {
 			if($update)
 				killme();
 			notice( t('No such group') . EOL );
-			goaway($a->get_baseurl() . '/network');
+			goaway($a->get_baseurl(true) . '/network');
 			// NOTREACHED
 		}
 
@@ -328,7 +334,7 @@ function network_content(&$a, $update = 0) {
 		}
 		else {
 			notice( t('Invalid contact.') . EOL);
-			goaway($a->get_baseurl() . '/network');
+			goaway($a->get_baseurl(true) . '/network');
 			// NOTREACHED
 		}
 	}
@@ -358,6 +364,7 @@ function network_content(&$a, $update = 0) {
 			. ((x($_GET,'nets'))   ? '&nets='   . $_GET['nets']   : '') 
 			. ((x($_GET,'cmin'))   ? '&cmin='   . $_GET['cmin']   : '') 
 			. ((x($_GET,'cmax'))   ? '&cmax='   . $_GET['cmax']   : '') 
+			. ((x($_GET,'file'))   ? '&file='   . $_GET['file']   : '') 
 
 			. "'; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 	}
@@ -370,6 +377,9 @@ function network_content(&$a, $update = 0) {
 			dbesc(preg_quote($search)),
 			dbesc('\\]' . preg_quote($search) . '\\[')
 		);
+	}
+	if(strlen($file)) {
+		$sql_extra .= file_tag_file_query('item',$file);
 	}
 
 	if($conv) {
@@ -491,7 +501,9 @@ function network_content(&$a, $update = 0) {
 
 			$items = conv_sort($items,$ordering);
 
-		}	
+		} else {
+			$items = array();
+		}
 	}
 
 

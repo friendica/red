@@ -53,15 +53,19 @@ function settings_post(&$a) {
 	$old_page_flags = $a->user['page-flags'];
 
 	if(($a->argc > 1) && ($a->argv[1] === 'oauth') && x($_POST,'remove')){
+		check_form_security_token_redirectOnErr('/settings/oauth', 'settings_oauth');
+		
 		$key = $_POST['remove'];
 		q("DELETE FROM tokens WHERE id='%s' AND uid=%d",
 			dbesc($key),
 			local_user());
-		goaway($a->get_baseurl()."/settings/oauth/");
+		goaway($a->get_baseurl(true)."/settings/oauth/");
 		return;			
 	}
 
 	if(($a->argc > 2) && ($a->argv[1] === 'oauth')  && ($a->argv[2] === 'edit'||($a->argv[2] === 'add')) && x($_POST,'submit')) {
+		
+		check_form_security_token_redirectOnErr('/settings/oauth', 'settings_oauth');
 		
 		$name   	= ((x($_POST,'name')) ? $_POST['name'] : '');
 		$key		= ((x($_POST,'key')) ? $_POST['key'] : '');
@@ -100,18 +104,23 @@ function settings_post(&$a) {
 						local_user());
 			}
 		}
-		goaway($a->get_baseurl()."/settings/oauth/");
+		goaway($a->get_baseurl(true)."/settings/oauth/");
 		return;
 	}
 
 	if(($a->argc > 1) && ($a->argv[1] == 'addon')) {
+		check_form_security_token_redirectOnErr('/settings/addon', 'settings_addon');
+		
 		call_hooks('plugin_settings_post', $_POST);
 		return;
 	}
 
 	if(($a->argc > 1) && ($a->argv[1] == 'connectors')) {
-
-		if(x($_POST['imap-submit'])) {
+		
+		check_form_security_token_redirectOnErr('/settings/connectors', 'settings_connectors');
+		
+		if(x($_POST, 'imap-submit')) {
+			
 			$mail_server       = ((x($_POST,'mail_server')) ? $_POST['mail_server'] : '');
 			$mail_port         = ((x($_POST,'mail_port')) ? $_POST['mail_port'] : '');
 			$mail_ssl          = ((x($_POST,'mail_ssl')) ? strtolower(trim($_POST['mail_ssl'])) : '');
@@ -185,7 +194,8 @@ function settings_post(&$a) {
 		return;
 	}
 
-
+	check_form_security_token_redirectOnErr('/settings', 'settings');
+	
 	call_hooks('settings_post', $_POST);
 
 	if((x($_POST,'npassword')) || (x($_POST,'confirm'))) {
@@ -401,7 +411,7 @@ function settings_post(&$a) {
 
 	}
 
-	goaway($a->get_baseurl() . '/settings' );
+	goaway($a->get_baseurl(true) . '/settings' );
 	return; // NOTREACHED
 }
 		
@@ -425,27 +435,27 @@ function settings_content(&$a) {
 	$tabs = array(
 		array(
 			'label'	=> t('Account settings'),
-			'url' 	=> $a->get_baseurl().'/settings',
+			'url' 	=> $a->get_baseurl(true).'/settings',
 			'sel'	=> (($a->argc == 1)?'active':''),
 		),	
 		array(
 			'label'	=> t('Connector settings'),
-			'url' 	=> $a->get_baseurl().'/settings/connectors',
+			'url' 	=> $a->get_baseurl(true).'/settings/connectors',
 			'sel'	=> (($a->argc > 1) && ($a->argv[1] === 'connectors')?'active':''),
 		),
 		array(
 			'label'	=> t('Plugin settings'),
-			'url' 	=> $a->get_baseurl().'/settings/addon',
+			'url' 	=> $a->get_baseurl(true).'/settings/addon',
 			'sel'	=> (($a->argc > 1) && ($a->argv[1] === 'addon')?'active':''),
 		),
 		array(
 			'label' => t('Connections'),
-			'url' => $a->get_baseurl() . '/settings/oauth',
+			'url' => $a->get_baseurl(true) . '/settings/oauth',
 			'sel' => (($a->argc > 1) && ($a->argv[1] === 'oauth')?'active':''),
 		),
 		array(
 			'label' => t('Export personal data'),
-			'url' => $a->get_baseurl() . '/uexport',
+			'url' => $a->get_baseurl(true) . '/uexport',
 			'sel' => ''
 		)
 	);
@@ -460,6 +470,7 @@ function settings_content(&$a) {
 		if(($a->argc > 2) && ($a->argv[2] === 'add')) {
 			$tpl = get_markup_template("settings_oauth_edit.tpl");
 			$o .= replace_macros($tpl, array(
+				'$form_security_token' => get_form_security_token("settings_oauth"),
 				'$tabs'		=> $tabs,
 				'$title'	=> t('Add application'),
 				'$submit'	=> t('Submit'),
@@ -486,6 +497,7 @@ function settings_content(&$a) {
 			
 			$tpl = get_markup_template("settings_oauth_edit.tpl");
 			$o .= replace_macros($tpl, array(
+				'$form_security_token' => get_form_security_token("settings_oauth"),
 				'$tabs'		=> $tabs,
 				'$title'	=> t('Add application'),
 				'$submit'	=> t('Update'),
@@ -500,10 +512,12 @@ function settings_content(&$a) {
 		}
 		
 		if(($a->argc > 3) && ($a->argv[2] === 'delete')) {
+			check_form_security_token_redirectOnErr('/settings/oauth', 'settings_oauth', 't');
+		
 			$r = q("DELETE FROM clients WHERE client_id='%s' AND uid=%d",
 					dbesc($a->argv[3]),
 					local_user());
-			goaway($a->get_baseurl()."/settings/oauth/");
+			goaway($a->get_baseurl(true)."/settings/oauth/");
 			return;			
 		}
 		
@@ -518,7 +532,8 @@ function settings_content(&$a) {
 		
 		$tpl = get_markup_template("settings_oauth.tpl");
 		$o .= replace_macros($tpl, array(
-			'$baseurl'	=> $a->get_baseurl(),
+			'$form_security_token' => get_form_security_token("settings_oauth"),
+			'$baseurl'	=> $a->get_baseurl(true),
 			'$title'	=> t('Connected Apps'),
 			'$add'		=> t('Add application'),
 			'$edit'		=> t('Edit'),
@@ -544,6 +559,7 @@ function settings_content(&$a) {
 		
 		$tpl = get_markup_template("settings_addons.tpl");
 		$o .= replace_macros($tpl, array(
+			'$form_security_token' => get_form_security_token("settings_addon"),
 			'$title'	=> t('Plugin Settings'),
 			'$tabs'		=> $tabs,
 			'$settings_addons' => $settings_addons
@@ -586,28 +602,28 @@ function settings_content(&$a) {
 
 	$tpl = get_markup_template("settings_connectors.tpl");
 		$o .= replace_macros($tpl, array(
+			'$form_security_token' => get_form_security_token("settings_connectors"),
+			
 			'$title'	=> t('Connector Settings'),
 			'$tabs'		=> $tabs,
 
-		'$diasp_enabled' => $diasp_enabled,
-		'$ostat_enabled' => $ostat_enabled,
+			'$diasp_enabled' => $diasp_enabled,
+			'$ostat_enabled' => $ostat_enabled,
 
-		'$h_imap' => t('Email/Mailbox Setup'),
-		'$imap_desc' => t("If you wish to communicate with email contacts using this service \x28optional\x29, please specify how to connect to your mailbox."),
-		'$imap_lastcheck' => array('imap_lastcheck', t('Last successful email check:'), $mail_chk,''),
-		'$mail_disabled' => (($mail_disabled) ? t('Email access is disabled on this site.') : ''),
-		'$mail_server'	=> array('mail_server',  t('IMAP server name:'), $mail_server, ''),
-		'$mail_port'	=> array('mail_port', 	 t('IMAP port:'), $mail_port, ''),
-		'$mail_ssl'		=> array('mail_ssl', 	 t('Security:'), strtoupper($mail_ssl), '', array( ''=>t('None'), 'TLS'=>'TLS', 'SSL'=>'SSL')),
-		'$mail_user'	=> array('mail_user',    t('Email login name:'), $mail_user, ''),
-		'$mail_pass'	=> array('mail_pass', 	 t('Email password:'), '', ''),
-		'$mail_replyto'	=> array('mail_replyto', t('Reply-to address:'), '', 'Optional'),
-		'$mail_pubmail'	=> array('mail_pubmail', t('Send public posts to all email contacts:'), $mail_pubmail, ''),
-		'$mail_action'	=> array('mail_action',	 t('Action after import:'), $mail_action, '', array(0=>t('None'), 1=>t('Delete'), 2=>t('Mark as seen'), 3=>t('Move to folder'))),
-		'$mail_movetofolder'	=> array('mail_movetofolder',	 t('Move to folder:'), $mail_movetofolder, ''),
-		'$submit' => t('Submit'),
-
-
+			'$h_imap' => t('Email/Mailbox Setup'),
+			'$imap_desc' => t("If you wish to communicate with email contacts using this service \x28optional\x29, please specify how to connect to your mailbox."),
+			'$imap_lastcheck' => array('imap_lastcheck', t('Last successful email check:'), $mail_chk,''),
+			'$mail_disabled' => (($mail_disabled) ? t('Email access is disabled on this site.') : ''),
+			'$mail_server'	=> array('mail_server',  t('IMAP server name:'), $mail_server, ''),
+			'$mail_port'	=> array('mail_port', 	 t('IMAP port:'), $mail_port, ''),
+			'$mail_ssl'		=> array('mail_ssl', 	 t('Security:'), strtoupper($mail_ssl), '', array( ''=>t('None'), 'TLS'=>'TLS', 'SSL'=>'SSL')),
+			'$mail_user'	=> array('mail_user',    t('Email login name:'), $mail_user, ''),
+			'$mail_pass'	=> array('mail_pass', 	 t('Email password:'), '', ''),
+			'$mail_replyto'	=> array('mail_replyto', t('Reply-to address:'), '', 'Optional'),
+			'$mail_pubmail'	=> array('mail_pubmail', t('Send public posts to all email contacts:'), $mail_pubmail, ''),
+			'$mail_action'	=> array('mail_action',	 t('Action after import:'), $mail_action, '', array(0=>t('None'), 1=>t('Delete'), 2=>t('Mark as seen'), 3=>t('Move to folder'))),
+			'$mail_movetofolder'	=> array('mail_movetofolder',	 t('Move to folder:'), $mail_movetofolder, ''),
+			'$submit' => t('Submit'),
 
 			'$settings_connectors' => $settings_connectors
 		));
@@ -773,7 +789,7 @@ function settings_content(&$a) {
 	$theme_selected = (!x($_SESSION,'theme')? $default_theme : $_SESSION['theme']);
 
 
-	$subdir = ((strlen($a->get_path())) ? '<br />' . t('or') . ' ' . $a->get_baseurl() . '/profile/' . $nickname : '');
+	$subdir = ((strlen($a->get_path())) ? '<br />' . t('or') . ' ' . $a->get_baseurl(true) . '/profile/' . $nickname : '');
 
 	$tpl_addr = get_markup_template("settings_nick_set.tpl");
 
@@ -803,8 +819,9 @@ function settings_content(&$a) {
 		'$ptitle' 	=> t('Account Settings'),
 
 		'$submit' 	=> t('Submit'),
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => $a->get_baseurl(true),
 		'$uid' => local_user(),
+		'$form_security_token' => get_form_security_token("settings"),
 		
 		'$nickname_block' => $prof_addr,
 		

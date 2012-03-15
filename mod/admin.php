@@ -37,7 +37,7 @@ function admin_post(&$a){
 							$func($a);
 						}
 				}
-				goaway($a->get_baseurl() . '/admin/plugins/' . $a->argv[2] );
+				goaway($a->get_baseurl(true) . '/admin/plugins/' . $a->argv[2] );
 				return; // NOTREACHED
 				break;
 			case 'logs':
@@ -49,7 +49,7 @@ function admin_post(&$a){
 		}
 	}
 
-	goaway($a->get_baseurl() . '/admin' );
+	goaway($a->get_baseurl(true) . '/admin' );
 	return; // NOTREACHED	
 }
 
@@ -68,11 +68,11 @@ function admin_content(&$a) {
 
 	// array( url, name, extra css classes )
 	$aside = Array(
-		'site'	 =>	Array($a->get_baseurl()."/admin/site/", t("Site") , "site"),
-		'users'	 =>	Array($a->get_baseurl()."/admin/users/", t("Users") , "users"),
-		'plugins'=>	Array($a->get_baseurl()."/admin/plugins/", t("Plugins") , "plugins"),
-		'themes' =>	Array($a->get_baseurl()."/admin/themes/", t("Themes") , "themes"),
-		'update' =>	Array($a->get_baseurl()."/admin/update/", t("Update") , "update")
+		'site'	 =>	Array($a->get_baseurl(true)."/admin/site/", t("Site") , "site"),
+		'users'	 =>	Array($a->get_baseurl(true)."/admin/users/", t("Users") , "users"),
+		'plugins'=>	Array($a->get_baseurl(true)."/admin/plugins/", t("Plugins") , "plugins"),
+		'themes' =>	Array($a->get_baseurl(true)."/admin/themes/", t("Themes") , "themes"),
+		'update' =>	Array($a->get_baseurl(true)."/admin/update/", t("Update") , "update")
 	);
 	
 	/* get plugins admin page */
@@ -81,18 +81,18 @@ function admin_content(&$a) {
 	$aside['plugins_admin']=Array();
 	foreach ($r as $h){
 		$plugin =$h['name'];
-		$aside['plugins_admin'][] = Array($a->get_baseurl()."/admin/plugins/".$plugin, $plugin, "plugin");
+		$aside['plugins_admin'][] = Array($a->get_baseurl(true)."/admin/plugins/".$plugin, $plugin, "plugin");
 		// temp plugins with admin
 		$a->plugins_admin[] = $plugin;
 	}
 		
-	$aside['logs'] = Array($a->get_baseurl()."/admin/logs/", t("Logs"), "logs");
+	$aside['logs'] = Array($a->get_baseurl(true)."/admin/logs/", t("Logs"), "logs");
 
 	$t = get_markup_template("admin_aside.tpl");
 	$a->page['aside'] = replace_macros( $t, array(
 			'$admin' => $aside, 
 			'$h_pending' => t('User registrations waiting for confirmation'),
-			'$admurl'=> $a->get_baseurl()."/admin/"
+			'$admurl'=> $a->get_baseurl(true)."/admin/"
 	));
 
 
@@ -151,11 +151,7 @@ function admin_page_summary(&$a) {
 
 	$r = q("SELECT COUNT(id) as `count` FROM `register`");
 	$pending = $r[0]['count'];
-	
-	
-	
-	
-	
+		
 	$t = get_markup_template("admin_summary.tpl");
 	return replace_macros($t, array(
 		'$title' => t('Administration'),
@@ -210,7 +206,7 @@ function admin_page_site_post(&$a){
 	$dfrn_only          =	((x($_POST,'dfrn_only'))	    ? True	:	False);
     $ostatus_disabled   =   !((x($_POST,'ostatus_disabled')) ? True  :   False);
 	$diaspora_enabled   =   ((x($_POST,'diaspora_enabled')) ? True   :  False);
-
+	$ssl_policy         =   ((x($_POST,'ssl_policy')) ? intval($_POST['ssl_policy']) : 0);
 
 	set_config('config','sitename',$sitename);
 	if ($banner==""){
@@ -222,6 +218,7 @@ function admin_page_site_post(&$a){
 	} else {
 		set_config('system','banner', $banner);
 	}
+	set_config('system','ssl_policy',$ssl_policy);
 	set_config('system','language', $language);
 	set_config('system','theme', $theme);
 	set_config('system','maximagesize', $maximagesize);
@@ -258,7 +255,7 @@ function admin_page_site_post(&$a){
 	set_config('system','diaspora_enabled', $diaspora_enabled);
 
 	info( t('Site settings updated.') . EOL);
-	goaway($a->get_baseurl() . '/admin/site' );
+	goaway($a->get_baseurl(true) . '/admin/site' );
 	return; // NOTREACHED	
 	
 }
@@ -305,6 +302,12 @@ function admin_page_site(&$a) {
 		REGISTER_APPROVE => t("Requires approval"),
 		REGISTER_OPEN => t("Open")
 	); 
+
+	$ssl_choices = array(
+		SSL_POLICY_NONE => t("No SSL policy, links will track page SSL state"),
+		SSL_POLICY_FULL => t("Force all links to use SSL"),
+		SSL_POLICY_SELFSIGN => t("Self-signed certificate, use SSL for local links only (discouraged)")
+	);
 	
 	$t = get_markup_template("admin_site.tpl");
 	return replace_macros($t, array(
@@ -316,13 +319,13 @@ function admin_page_site(&$a) {
 		'$corporate' => t('Policies'),
 		'$advanced' => t('Advanced'),
 		
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => $a->get_baseurl(true),
 									// name, label, value, help string, extra data...
 		'$sitename' 		=> array('sitename', t("Site name"), htmlentities($a->config['sitename'], ENT_QUOTES), ""),
 		'$banner'			=> array('banner', t("Banner/Logo"), $banner, ""),
 		'$language' 		=> array('language', t("System language"), get_config('system','language'), "", $lang_choices),
 		'$theme' 			=> array('theme', t("System theme"), get_config('system','theme'), t("Default system theme - may be over-ridden by user profiles"), $theme_choices),
-
+		'$ssl_policy'       => array('ssl_policy', t("SSL link policy"), get_config('system','ssl_policy'), t("Determines whether generated links should be forced to use SSL"), $ssl_choices),
 		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), get_config('system','maximagesize'), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
 
 		'$register_policy'	=> array('register_policy', t("Register policy"), $a->config['register_policy'], "", $register_choices),
@@ -389,7 +392,7 @@ function admin_page_users_post(&$a){
 			user_deny($hash);
 		}
 	}
-	goaway($a->get_baseurl() . '/admin/users' );
+	goaway($a->get_baseurl(true) . '/admin/users' );
 	return; // NOTREACHED	
 }
  
@@ -399,7 +402,7 @@ function admin_page_users(&$a){
 		$user = q("SELECT * FROM `user` WHERE `uid`=%d", intval($uid));
 		if (count($user)==0){
 			notice( 'User not found' . EOL);
-			goaway($a->get_baseurl() . '/admin/users' );
+			goaway($a->get_baseurl(true) . '/admin/users' );
 			return; // NOTREACHED						
 		}		
 		switch($a->argv[2]){
@@ -418,7 +421,7 @@ function admin_page_users(&$a){
 				notice( sprintf( ($user[0]['blocked']?t("User '%s' unblocked"):t("User '%s' blocked")) , $user[0]['username']) . EOL);
 			}; break;
 		}
-		goaway($a->get_baseurl() . '/admin/users' );
+		goaway($a->get_baseurl(true) . '/admin/users' );
 		return; // NOTREACHED	
 		
 	}
@@ -497,7 +500,7 @@ function admin_page_users(&$a){
 
 
 		// values //
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => $a->get_baseurl(true),
 
 		'$pending' => $pending,
 		'$users' => $users,
@@ -536,7 +539,7 @@ function admin_page_plugins(&$a){
 				info( sprintf( t("Plugin %s enabled."), $plugin ) );
 			}
 			set_config("system","addon", implode(", ",$a->plugins));
-			goaway($a->get_baseurl() . '/admin/plugins' );
+			goaway($a->get_baseurl(true) . '/admin/plugins' );
 			return; // NOTREACHED	
 		}
 		// display plugin details
@@ -569,7 +572,7 @@ function admin_page_plugins(&$a){
 			'$page' => t('Plugins'),
 			'$toggle' => t('Toggle'),
 			'$settings' => t('Settings'),
-			'$baseurl' => $a->get_baseurl(),
+			'$baseurl' => $a->get_baseurl(true),
 		
 			'$plugin' => $plugin,
 			'$status' => $status,
@@ -607,7 +610,7 @@ function admin_page_plugins(&$a){
 		'$title' => t('Administration'),
 		'$page' => t('Plugins'),
 		'$submit' => t('Submit'),
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => $a->get_baseurl(true),
 		'$function' => 'plugins',	
 		'$plugins' => $plugins
 	));
@@ -713,7 +716,7 @@ function admin_page_themes(&$a){
 				info( sprintf('Theme %s disabled.',$theme));
 
 			set_config('system','allowed_themes',$s);
-			goaway($a->get_baseurl() . '/admin/themes' );
+			goaway($a->get_baseurl(true) . '/admin/themes' );
 			return; // NOTREACHED	
 		}
 
@@ -742,7 +745,7 @@ function admin_page_themes(&$a){
 			'$page' => t('Themes'),
 			'$toggle' => t('Toggle'),
 			'$settings' => t('Settings'),
-			'$baseurl' => $a->get_baseurl(),
+			'$baseurl' => $a->get_baseurl(true),
 		
 			'$plugin' => $theme,
 			'$status' => $status,
@@ -774,7 +777,7 @@ function admin_page_themes(&$a){
 		'$title' => t('Administration'),
 		'$page' => t('Themes'),
 		'$submit' => t('Submit'),
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => $a->get_baseurl(true),
 		'$function' => 'themes',
 		'$plugins' => $xthemes,
 		'$experimental' => t('[Experimental]'),
@@ -802,7 +805,7 @@ function admin_page_logs_post(&$a) {
 	}
 
 	info( t("Log settings updated.") );
-	goaway($a->get_baseurl() . '/admin/logs' );
+	goaway($a->get_baseurl(true) . '/admin/logs' );
 	return; // NOTREACHED	
 }
  
@@ -856,7 +859,7 @@ readable.");
 		'$submit' => t('Submit'),
 		'$clear' => t('Clear'),
 		'$data' => $data,
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => $a->get_baseurl(true),
 		'$logname' =>  get_config('system','logfile'),
 		
 									// name, label, value, help string, extra data...
@@ -901,7 +904,7 @@ function admin_page_remoteupdate(&$a) {
 	
 	$tpl = get_markup_template("admin_remoteupdate.tpl");
 	return replace_macros($tpl, array(
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => $a->get_baseurl(true),
 		'$submit' => t("Update now"),
 		'$close' => t("Close"),
 		'$localversion' => FRIENDICA_VERSION,

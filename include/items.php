@@ -682,7 +682,7 @@ function item_store($arr,$force_parent = false) {
 		unset($arr['dsprsig']);
 	}
 
-	if($arr['gravity'])
+	if(x($arr, 'gravity'))
 		$arr['gravity'] = intval($arr['gravity']);
 	elseif($arr['parent-uri'] === $arr['uri'])
 		$arr['gravity'] = 0;
@@ -742,6 +742,7 @@ function item_store($arr,$force_parent = false) {
 
 	if($arr['parent-uri'] === $arr['uri']) {
 		$parent_id = 0;
+		$parent_deleted = 0;
 		$allow_cid = $arr['allow_cid'];
 		$allow_gid = $arr['allow_gid'];
 		$deny_cid  = $arr['deny_cid'];
@@ -800,6 +801,8 @@ function item_store($arr,$force_parent = false) {
 				logger('item_store: item parent was not found - ignoring item');
 				return 0;
 			}
+			
+			$parent_deleted = 0;
 		}
 	}
 
@@ -1043,6 +1046,21 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	if(! $rino_enable)
 		$rino = 0;
 
+	$ssl_val = intval(get_config('system','ssl_policy'));
+	$ssl_policy = '';
+	switch($ssl_val){
+		case SSL_POLICY_FULL:
+			$ssl_policy = 'full';
+			break;
+		case SSL_POLICY_SELFSIGN:
+			$ssl_policy = 'self';
+			break;			
+		case SSL_POLICY_NONE:
+		default:
+			$ssl_policy = 'none';
+			break;
+	}
+
 	$url = $contact['notify'] . '&dfrn_id=' . $idtosend . '&dfrn_version=' . DFRN_PROTOCOL_VERSION . (($rino) ? '&rino=1' : '');
 
 	logger('dfrn_deliver: ' . $url);
@@ -1114,6 +1132,8 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 		$postvars['data'] = str_replace('<dfrn:comment-allow>1','<dfrn:comment-allow>0',$atom);
 		$postvars['perm'] = 'r';
 	}
+
+	$postvars['ssl_policy'] = $ssl_policy;
 
 	if($rino && $rino_allowed && (! $dissolve)) {
 		$key = substr(random_string(),0,16);
