@@ -1,24 +1,12 @@
 <?php
 function microtime_float()
 {
-	list($usec, $sec) = explode(" ", microtime());
-	return ((float)$usec + (float)$sec);
+	return microtime(true);
 }
 
 function tick_event() {
-	static $time = NULL; 
-	
-	if(NULL===$time) {
-		//initialise time with now
-		$time=microtime_float(); 
-		
-		q("INSERT INTO `profiling` (`function`, `file`, `line`, `class`, `time`) VALUES ('initialization', 'index.php', '-1', NULL, '%f'); ",
-				floatval($time-$_SERVER['REQUEST_TIME']));
-	}
-	
-	$elapsed=microtime_float()-$time; 
-	
-	$db_info=array_shift(debug_backtrace()); 
+	$db_info=debug_backtrace(); 
+	$db_info=$db_info[1]; 
 	$function=$db_info['function']; 
 	$file=$db_info['file'];
 	$line=$db_info['line'];
@@ -26,11 +14,8 @@ function tick_event() {
 	
 	//save results
 	q("INSERT INTO `profiling` (`function`, `file`, `line`, `class`, `time`) VALUES ('%s', '%s', '%d', '%s', '%f'); ", 
-			dbesc($function), dbesc($file), intval($line), dbesc($class), floatval($time)); 
-	
-	//set time to now
-	$time=microtime_float();
+			dbesc($function), dbesc($file), intval($line), dbesc($class), microtime_float()*1000); 
 }
 
-declare(ticks=1);
 register_tick_function('tick_event');
+declare(ticks=50);

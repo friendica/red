@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1131 );
+define( 'UPDATE_VERSION' , 1132 );
 
 /**
  *
@@ -1125,16 +1125,16 @@ function update_1130() {
 /**
  * CREATE TABLE for profiling
  */
-function update_1132() {
+function update_1131() {
 	q("CREATE TABLE IF NOT EXISTS `profiling` (
-`id` INT NOT NULL AUTO_INCREMENT PRIMARY_KEY , 
-`function` VARCHAR(255) NOT NULL, 
-`file` VARCHAR(255) NOT NULL, 
-`line` INT NOT NULL DEFAULT '-1', 
-`class` VARCHAR(255), 
-`time` FLOAT(10, 2) NOT NULL, 
-INDEX(`function`), 
-INDEX(`file`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8; ");
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`function` VARCHAR( 255 ) NOT NULL ,
+`file` VARCHAR( 255 ) NOT NULL ,
+`line` INT NOT NULL DEFAULT '-1',
+`class` VARCHAR( 255 ) NOT NULL ,
+`time` FLOAT( 10, 2 ) NOT NULL ,
+INDEX ( `function` ) ,
+INDEX ( `file` )
+) ENGINE = MyISAM DEFAULT CHARSET=utf8;");
 }
 
