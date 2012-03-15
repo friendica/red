@@ -857,4 +857,13 @@ INDEX ( `ham` ),
 INDEX ( `term` )
 ) ENGINE = MyISAM DEFAULT CHARSET=utf8;
 
-
+CREATE TABLE IF NOT EXISTS `profiling` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY_KEY , 
+`function` VARCHAR(255) NOT NULL, 
+`file` VARCHAR(255) NOT NULL, 
+`line` INT NOT NULL DEFAULT '-1', 
+`class` VARCHAR(255), 
+`time` FLOAT(10, 2) NOT NULL, 
+INDEX(`function`), 
+INDEX(`file`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8; 
