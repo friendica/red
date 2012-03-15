@@ -8,10 +8,11 @@
 	
 <ul id="profile-side-menu" class="menu-profile-side">
 	<li id="profile-side-status" class="menu-profile-list"><a class="menu-profile-list-item" href="$ps.usermenu.status.0">$ps.usermenu.status.1</a></li>
-	<li id="profile-side-profile" class="menu-profile-list"><a class="menu-profile-list-item" href="$ps.usermenu.profile.0">$ps.usermenu.profile.1</a></li>
 	<li id="profile-side-photos" class="menu-profile-list"><a class="menu-profile-list-item" href="$ps.usermenu.photos.0">$ps.usermenu.photos.1</a></li>
 	<li id="profile-side-events" class="menu-profile-list"><a class="menu-profile-list-item" href="$ps.usermenu.events.0">$ps.usermenu.events.1</a></li>
 	<li id="profile-side-notes" class="menu-profile-list"><a class="menu-profile-list-item" href="$ps.usermenu.notes.0">$ps.usermenu.notes.1</a></li>
+	<li id="profile-side-foren" class="menu-profile-list"><a class="menu-profile-list-item" href="http://dir.friendika.com/directory/forum" target="blanc">Public Groups</a></li>
+	<li id="profile-side-foren" class="menu-profile-list"><a class="menu-profile-list-item" href="$ps.usermenu.community.0">$ps.usermenu.community.1</a></li>
 </ul>
 
 </div>
