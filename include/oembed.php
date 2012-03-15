@@ -1,6 +1,6 @@
 <?php
 function oembed_replacecb($matches){
-	logger('oembedcb');
+//	logger('oembedcb');
 	$embedurl=$matches[1];
 	$j = oembed_fetch_url($embedurl);
 	$s =  oembed_format_object($j);
@@ -13,6 +13,9 @@ function oembed_replacecb($matches){
 function oembed_fetch_url($embedurl){
 
 	$txt = Cache::get($embedurl);
+
+	// These media files should now be caught in bbcode.php
+	// left here as a fallback in case this is called from another source
 
 	$noexts = array("mp3","mp4","ogg","ogv","oga","ogm","webm");
 	$ext = pathinfo(strtolower($embedurl),PATHINFO_EXTENSION);

@@ -874,6 +874,7 @@ function link_compare($a,$b) {
 if(! function_exists('prepare_body')) {
 function prepare_body($item,$attach = false) {
 
+	$a = get_app();
 	call_hooks('prepare_body_init', $item); 
 
 	$s = prepare_text($item['body']);
@@ -916,7 +917,7 @@ function prepare_body($item,$attach = false) {
 	$matches = false;
 	$cnt = preg_match_all('/<(.*?)>/',$item['file'],$matches,PREG_SET_ORDER);
 	if($cnt) {
-		logger('prepare_text: categories: ' . print_r($matches,true), LOGGER_DEBUG);
+//		logger('prepare_text: categories: ' . print_r($matches,true), LOGGER_DEBUG);
 		foreach($matches as $mtch) {
 			if(strlen($x))
 				$x .= ',';
@@ -931,11 +932,11 @@ function prepare_body($item,$attach = false) {
 	$x = '';
 	$cnt = preg_match_all('/\[(.*?)\]/',$item['file'],$matches,PREG_SET_ORDER);
 	if($cnt) {
-		logger('prepare_text: filed_under: ' . print_r($matches,true), LOGGER_DEBUG);
+//		logger('prepare_text: filed_under: ' . print_r($matches,true), LOGGER_DEBUG);
 		foreach($matches as $mtch) {
 			if(strlen($x))
-				$x .= ',';
-			$x .= file_tag_decode($mtch[1]);
+				$x .= '&nbsp;&nbsp;&nbsp;';
+			$x .= file_tag_decode($mtch[1]). ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&term=' . file_tag_decode($mtch[1]) . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>';
 		}
 		if(strlen($x) && (local_user() == $item['uid']))
 			$s .= '<div class="filesavetags"><span>' . t('Filed under:') . ' </span>' . $x . '</div>'; 

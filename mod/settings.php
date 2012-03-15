@@ -59,7 +59,7 @@ function settings_post(&$a) {
 		q("DELETE FROM tokens WHERE id='%s' AND uid=%d",
 			dbesc($key),
 			local_user());
-		goaway($a->get_baseurl()."/settings/oauth/");
+		goaway($a->get_baseurl(true)."/settings/oauth/");
 		return;			
 	}
 
@@ -104,7 +104,7 @@ function settings_post(&$a) {
 						local_user());
 			}
 		}
-		goaway($a->get_baseurl()."/settings/oauth/");
+		goaway($a->get_baseurl(true)."/settings/oauth/");
 		return;
 	}
 
@@ -411,7 +411,7 @@ function settings_post(&$a) {
 
 	}
 
-	goaway($a->get_baseurl() . '/settings' );
+	goaway($a->get_baseurl(true) . '/settings' );
 	return; // NOTREACHED
 }
 		
@@ -435,27 +435,27 @@ function settings_content(&$a) {
 	$tabs = array(
 		array(
 			'label'	=> t('Account settings'),
-			'url' 	=> $a->get_baseurl().'/settings',
+			'url' 	=> $a->get_baseurl(true).'/settings',
 			'sel'	=> (($a->argc == 1)?'active':''),
 		),	
 		array(
 			'label'	=> t('Connector settings'),
-			'url' 	=> $a->get_baseurl().'/settings/connectors',
+			'url' 	=> $a->get_baseurl(true).'/settings/connectors',
 			'sel'	=> (($a->argc > 1) && ($a->argv[1] === 'connectors')?'active':''),
 		),
 		array(
 			'label'	=> t('Plugin settings'),
-			'url' 	=> $a->get_baseurl().'/settings/addon',
+			'url' 	=> $a->get_baseurl(true).'/settings/addon',
 			'sel'	=> (($a->argc > 1) && ($a->argv[1] === 'addon')?'active':''),
 		),
 		array(
 			'label' => t('Connections'),
-			'url' => $a->get_baseurl() . '/settings/oauth',
+			'url' => $a->get_baseurl(true) . '/settings/oauth',
 			'sel' => (($a->argc > 1) && ($a->argv[1] === 'oauth')?'active':''),
 		),
 		array(
 			'label' => t('Export personal data'),
-			'url' => $a->get_baseurl() . '/uexport',
+			'url' => $a->get_baseurl(true) . '/uexport',
 			'sel' => ''
 		)
 	);
@@ -517,7 +517,7 @@ function settings_content(&$a) {
 			$r = q("DELETE FROM clients WHERE client_id='%s' AND uid=%d",
 					dbesc($a->argv[3]),
 					local_user());
-			goaway($a->get_baseurl()."/settings/oauth/");
+			goaway($a->get_baseurl(true)."/settings/oauth/");
 			return;			
 		}
 		
@@ -533,7 +533,7 @@ function settings_content(&$a) {
 		$tpl = get_markup_template("settings_oauth.tpl");
 		$o .= replace_macros($tpl, array(
 			'$form_security_token' => get_form_security_token("settings_oauth"),
-			'$baseurl'	=> $a->get_baseurl(),
+			'$baseurl'	=> $a->get_baseurl(true),
 			'$title'	=> t('Connected Apps'),
 			'$add'		=> t('Add application'),
 			'$edit'		=> t('Edit'),
@@ -559,7 +559,7 @@ function settings_content(&$a) {
 		
 		$tpl = get_markup_template("settings_addons.tpl");
 		$o .= replace_macros($tpl, array(
-			'$form_security_token' => get_form_security_token("settings_addons"),
+			'$form_security_token' => get_form_security_token("settings_addon"),
 			'$title'	=> t('Plugin Settings'),
 			'$tabs'		=> $tabs,
 			'$settings_addons' => $settings_addons
@@ -789,7 +789,7 @@ function settings_content(&$a) {
 	$theme_selected = (!x($_SESSION,'theme')? $default_theme : $_SESSION['theme']);
 
 
-	$subdir = ((strlen($a->get_path())) ? '<br />' . t('or') . ' ' . $a->get_baseurl() . '/profile/' . $nickname : '');
+	$subdir = ((strlen($a->get_path())) ? '<br />' . t('or') . ' ' . $a->get_baseurl(true) . '/profile/' . $nickname : '');
 
 	$tpl_addr = get_markup_template("settings_nick_set.tpl");
 
@@ -819,7 +819,7 @@ function settings_content(&$a) {
 		'$ptitle' 	=> t('Account Settings'),
 
 		'$submit' 	=> t('Submit'),
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => $a->get_baseurl(true),
 		'$uid' => local_user(),
 		'$form_security_token' => get_form_security_token("settings"),
 		

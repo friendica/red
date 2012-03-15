@@ -186,6 +186,8 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 
 	require_once('bbcode.php');
 
+	$ssl_state = ((local_user()) ? true : false);
+
 	$profile_owner = 0;
 	$page_writeable      = false;
 
@@ -345,7 +347,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 					'like' => '',
 					'dislike' => '',
 					'comment' => '',
-					'conv' => (($preview) ? '' : array('href'=> $a->get_baseurl() . '/display/' . $nickname . '/' . $item['id'], 'title'=> t('View in context'))),
+					'conv' => (($preview) ? '' : array('href'=> $a->get_baseurl($ssl_state) . '/display/' . $nickname . '/' . $item['id'], 'title'=> t('View in context'))),
 					'previewing' => $previewing,
 					'wait' => t('Please wait'),
 				);
@@ -461,7 +463,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 					$comment_lastcollapsed = true;
 				}
 
-				$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
+				$redirect_url = $a->get_baseurl($ssl_state) . '/redir/' . $item['cid'] ;
 
 				$lock = ((($item['private']) || (($item['uid'] == local_user()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
 					|| strlen($item['deny_cid']) || strlen($item['deny_gid']))))
@@ -543,7 +545,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				}
 
 				$edpost = (((($profile_owner == local_user()) && ($toplevelpost) && (intval($item['wall']) == 1)) || ($mode === 'notes'))
-						? array($a->get_baseurl()."/editpost/".$item['id'], t("Edit"))
+						? array($a->get_baseurl($ssl_state)."/editpost/".$item['id'], t("Edit"))
 						: False);
 
 
@@ -560,23 +562,26 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				);
 
 				$star = false;
+				$filer = false;
+
 				$isstarred = "unstarred";
-				if ($profile_owner == local_user() && $toplevelpost) {
-					$isstarred = (($item['starred']) ? "starred" : "unstarred");
+				if ($profile_owner == local_user()) {
+					if($toplevelpost) {
+						$isstarred = (($item['starred']) ? "starred" : "unstarred");
 
-					$star = array(
-						'do' => t("add star"),
-						'undo' => t("remove star"),
-						'toggle' => t("toggle star status"),
-						'classdo' => (($item['starred']) ? "hidden" : ""),
-						'classundo' => (($item['starred']) ? "" : "hidden"),
-						'starred' =>  t('starred'),
-						'tagger' => t("add tag"),
-						'filer' => t("file as"),
-						'classtagger' => "",
-					);
+						$star = array(
+							'do' => t("add star"),
+							'undo' => t("remove star"),
+							'toggle' => t("toggle star status"),
+							'classdo' => (($item['starred']) ? "hidden" : ""),
+							'classundo' => (($item['starred']) ? "" : "hidden"),
+							'starred' =>  t('starred'),
+							'tagger' => t("add tag"),
+							'classtagger' => "",
+						);
+					}
+					$filer = t("file as");
 				}
-
 
 
 				$photo = $item['photo'];
@@ -672,6 +677,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 					'edpost' => $edpost,
 					'isstarred' => $isstarred,
 					'star' => $star,
+					'filer' => $filer,
 					'drop' => $drop,
 					'vote' => $likebuttons,
 					'like' => $like,
@@ -693,7 +699,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 
 	$page_template = get_markup_template("conversation.tpl");
 	$o .= replace_macros($page_template, array(
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => $a->get_baseurl($ssl_state),
 		'$mode' => $mode,
 		'$user' => $a->user,
 		'$threads' => $threads,
@@ -703,7 +709,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 	return $o;
 }}
 
-function best_link_url($item,&$sparkle) {
+function best_link_url($item,&$sparkle,$ssl_state = false) {
 
 	$a = get_app();
 
@@ -715,7 +721,7 @@ function best_link_url($item,&$sparkle) {
 	if((local_user()) && (local_user() == $item['uid'])) {
 		if(isset($a->contacts) && x($a->contacts,$clean_url)) {
 			if($a->contacts[$clean_url]['network'] === NETWORK_DFRN) {
-				$best_url = $a->get_baseurl() . '/redir/' . $a->contacts[$clean_url]['id'];
+				$best_url = $a->get_baseurl($ssl_state) . '/redir/' . $a->contacts[$clean_url]['id'];
 				$sparkle = true;
 			}
 			else
@@ -736,10 +742,14 @@ function best_link_url($item,&$sparkle) {
 if(! function_exists('item_photo_menu')){
 function item_photo_menu($item){
 	$a = get_app();
-	
-	if (local_user() && (! count($a->contacts)))
-		load_contact_links(local_user());
 
+	$ssl_state = false;
+
+	if(local_user()) {
+		$ssl_state = true;
+		 if(! count($a->contacts))
+			load_contact_links(local_user());
+	}
 	$contact_url="";
 	$pm_url="";
 	$status_link="";
@@ -747,7 +757,7 @@ function item_photo_menu($item){
 	$posts_link="";
 
 	$sparkle = false;
-    $profile_link = best_link_url($item,$sparkle);
+    $profile_link = best_link_url($item,$sparkle,$ssl_state);
 	if($profile_link === 'mailbox')
 		$profile_link = '';
 
@@ -756,7 +766,7 @@ function item_photo_menu($item){
 		$status_link = $profile_link . "?url=status";
 		$photos_link = $profile_link . "?url=photos";
 		$profile_link = $profile_link . "?url=profile";
-		$pm_url = $a->get_baseurl() . '/message/new/' . $cid;
+		$pm_url = $a->get_baseurl($ssl_state) . '/message/new/' . $cid;
 	}
 	else {
 		if(local_user() && local_user() == $item['uid'] && link_compare($item['url'],$item['author-link'])) {
@@ -767,8 +777,8 @@ function item_photo_menu($item){
 		}
 	}
 	if(($cid) && (! $item['self'])) {
-		$contact_url = $a->get_baseurl() . '/contacts/' . $cid;
-		$posts_link = $a->get_baseurl() . '/network/?cid=' . $cid;
+		$contact_url = $a->get_baseurl($ssl_state) . '/contacts/' . $cid;
+		$posts_link = $a->get_baseurl($ssl_state) . '/network/?cid=' . $cid;
 	}
 
 	$menu = Array(
@@ -804,7 +814,7 @@ function like_puller($a,$item,&$arr,$mode) {
 	if((activity_match($item['verb'],$verb)) && ($item['id'] != $item['parent'])) {
 		$url = $item['author-link'];
 		if((local_user()) && (local_user() == $item['uid']) && ($item['network'] === 'dfrn') && (! $item['self']) && (link_compare($item['author-link'],$item['url']))) {
-			$url = $a->get_baseurl() . '/redir/' . $item['contact-id'];
+			$url = $a->get_baseurl(true) . '/redir/' . $item['contact-id'];
 			$sparkle = ' class="sparkle" ';
 		}
 		if(! ((isset($arr[$item['parent'] . '-l'])) && (is_array($arr[$item['parent'] . '-l']))))
@@ -866,7 +876,7 @@ function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 	
 	$a->page['htmlhead'] .= replace_macros($tpl, array(
 		'$newpost' => 'true',
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => $a->get_baseurl(true),
 		'$editselect' => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 		'$geotag' => $geotag,
 		'$nickname' => $x['nickname'],
@@ -917,7 +927,7 @@ function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 
 	$o .= replace_macros($tpl,array(
 		'$return_path' => $a->cmd,
-		'$action' =>  $a->get_baseurl().'/item',
+		'$action' =>  $a->get_baseurl(true) . '/item',
 		'$share' => (x($x,'button') ? $x['button'] : t('Share')),
 		'$upload' => t('Upload photo'),
 		'$shortupload' => t('upload photo'),
@@ -941,7 +951,7 @@ function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 		'$ptyp' => (($notes_cid) ? 'note' : 'wall'),
 		'$content' => '',
 		'$post_id' => '',
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => $a->get_baseurl(true),
 		'$defloc' => $x['default_location'],
 		'$visitor' => $x['visitor'],
 		'$pvisit' => (($notes_cid) ? 'none' : $x['visitor']),
