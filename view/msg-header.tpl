@@ -32,7 +32,6 @@ if(plaintext != 'none') {
 				ed.pasteAsPlainText = true;
 				var editorId = ed.editorId;
 				var textarea = $('#'+editorId);
-				console.log(textarea);
 				if (typeof(textarea.attr('tabindex')) != "undefined") {
 					$('#'+editorId+'_ifr').attr('tabindex', textarea.attr('tabindex'));
 					textarea.attr('tabindex', null);
