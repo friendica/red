@@ -779,6 +779,17 @@ function item_photo_menu($item){
 	if(($cid) && (! $item['self'])) {
 		$contact_url = $a->get_baseurl($ssl_state) . '/contacts/' . $cid;
 		$posts_link = $a->get_baseurl($ssl_state) . '/network/?cid=' . $cid;
+
+		$clean_url = normalise_link($item['author-link']);
+
+		if((local_user()) && (local_user() == $item['uid'])) {
+			if(isset($a->contacts) && x($a->contacts,$clean_url)) {
+				if($a->contacts[$clean_url]['network'] === NETWORK_DIASPORA) {
+					$pm_url = $a->get_baseurl($ssl_state) . '/message/new/' . $cid;
+				}
+			}
+		}
+
 	}
 
 	$menu = Array(
