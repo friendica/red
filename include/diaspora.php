@@ -1187,7 +1187,7 @@ function diaspora_comment($importer,$xml,$msg) {
 				'to_email'     => $importer['email'],
 				'uid'          => $importer['uid'],
 				'item'         => $datarray,
-				'link'		   => $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id,
+				'link'		   => $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $message_id,
 				'source_name'  => $datarray['author-name'],
 				'source_link'  => $datarray['author-link'],
 				'source_photo' => $datarray['author-avatar'],
