@@ -195,13 +195,15 @@ input[type=submit] {
     color: #fff;
 }
 
+
 /**
  * global
  */
 /* .tool .action */
 .action {
-    float: right;
+	margin: 5px 0;
 }
+
 
 /**
  * 	login
@@ -210,9 +212,10 @@ input[type=submit] {
     margin-right: 20px;
 }
 
-/*********
-* nav
-*********/
+
+/**
+ * nav
+ */
 nav {
 	height: 60px;
 	display: block;
@@ -690,7 +693,9 @@ aside #viewcontacts {
 #netsearch-box {
 	margin: 30px 0px;
 }
-
+.ttright {
+	margin: 0px 0px 0px 0px;
+}
 
 /**
 * contacts block
@@ -830,6 +835,7 @@ aside #viewcontacts {
     border: 0;
     text-decoration: none;
 	float: right;
+	cursor: pointer;
 }
 #profile-jot-perms { 
 	float: right;
@@ -916,7 +922,7 @@ aside #viewcontacts {
 	clear: both;
 }
 #jot-title-desc {
-	color: #cccccc;
+	color: #ccc;
 }
 #profile-jot-desc {
 	color: #ff2000;
@@ -1097,7 +1103,7 @@ section {
 	clear: left;
 	font-size: 0.8em;
 	color: #878883;
-	margin: 20px 0 0 110px;
+	margin: 20px 20px 0 110px;
 }
 .wall-item-ago {
 	display: inline;
@@ -1484,6 +1490,8 @@ div[id$="wrapper"] br {
 }
 #prvmail-subject {
     width: 100%;
+	color: #2e2f2e;
+	background: #eec;
 }
 #prvmail-submit-wrapper {
     margin-top: 10px;
@@ -1697,7 +1705,6 @@ div[id$="wrapper"] br {
 }
 
 
-
 /**
  * 	register, settings & profile forms
  */
@@ -1744,25 +1751,43 @@ div[id$="wrapper"] br {
     margin: 30px 0px;
 }
 .profile-edit-side-div {
-	background: #2e2f2e;
-	border-radius: 5px 5px 0 0;
-	width: 175px;
-	height: 20px;
-	position: relative;
-    margin: -25px -30px 0px 0px;
-	display: none;
-}
-.profile-edit-side-div:hover {
+	/*background: #111;*/
+	/*border-radius: 5px 5px 0px 0px;*/
 	/*margin: 0px 0px 0px 0px;*/
-	display: inline;
+	/*width: 100px;*/
+	/*height: 25px;*/
+	/*position: absolute;*/
+	display: none;
+	/*left: 35%;*/
+	/*top: 41%;*/
+	/*cursor: pointer;*/
 }
-.profile-edit-side-link {
-	margin: 0 0px 0px 155px;
-	/*float: right;*/
+/*.profile-edit-side-div:hover {*/
+	/*display: block;*/
+/*}*/
+/*.profile-edit-side-link {*/
+	/*margin: 3px 0px 0px 70px;*/
+/*}*/
+#profiles-menu-trigger {
+	margin: 0px 0px 0px 25px;
 }
 .profile-listing {
     float: left;
     margin: 20px 20px 0px 0px;
+}
+.icon-profile-edit {
+    background: url("icons.png") -150px 0px no-repeat;
+    border: 0;
+	cursor: pointer;
+    display: block;
+    float: right;
+	width: 20px;
+    height: 20px;
+    margin: 0 0 -18px;
+	position: absolute;
+    text-decoration: none;
+	top: 18px;
+	right: 226px;
 }
 #profile-edit-links ul {
     margin: 20px 0;
@@ -1780,6 +1805,10 @@ div[id$="wrapper"] br {
 	background: #2e2f2e;
 	color: #eec;
 }
+#id_ssl_policy {
+	width: 374px;
+}
+
 
 /**
  * 	contacts selector
