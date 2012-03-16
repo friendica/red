@@ -1048,6 +1048,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 
 	$ssl_val = intval(get_config('system','ssl_policy'));
 	$ssl_policy = '';
+
 	switch($ssl_val){
 		case SSL_POLICY_FULL:
 			$ssl_policy = 'full';
@@ -1092,6 +1093,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	$challenge    = hex2bin((string) $res->challenge);
 	$dfrn_version = (float) (($res->dfrn_version) ? $res->dfrn_version : 2.0);
 	$rino_allowed = ((intval($res->rino) === 1) ? 1 : 0);
+	$page         = (($owner['page-flags'] == PAGE_COMMUNITY) ? 1 : 0);
 
 	$final_dfrn_id = '';
 
@@ -1135,6 +1137,9 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 
 	$postvars['ssl_policy'] = $ssl_policy;
 
+	if($page)
+		$postvars['page'] = '1';
+	
 	if($rino && $rino_allowed && (! $dissolve)) {
 		$key = substr(random_string(),0,16);
 		$data = bin2hex(aes_encrypt($postvars['data'],$key));

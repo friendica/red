@@ -15,6 +15,7 @@ function dfrn_notify_post(&$a) {
 	$dissolve     = ((x($_POST,'dissolve'))     ? intval($_POST['dissolve'])        :  0);
 	$perm         = ((x($_POST,'perm'))         ? notags(trim($_POST['perm']))      : 'r');
 	$ssl_policy   = ((x($_POST,'ssl_policy'))   ? notags(trim($_POST['ssl_policy'])): 'none');
+	$page         = ((x($_POST,'page'))         ? intval($_POST['page'])            :  0);
 
 	$writable = (-1);
 	if($dfrn_version >= 2.21) {
@@ -87,12 +88,15 @@ function dfrn_notify_post(&$a) {
 
 	$importer = $r[0];
 
-	if(($writable != (-1)) && ($writable != $importer['writable'])) {
-		q("UPDATE `contact` SET `writable` = %d WHERE `id` = %d LIMIT 1",
-			intval($writable),
+	if((($writable != (-1)) && ($writable != $importer['writable'])) || ($importer['forum'] != $page)) {
+		q("UPDATE `contact` SET `writable` = %d, forum = %d WHERE `id` = %d LIMIT 1",
+			intval(($writable == (-1)) ? $importer['writable'] : $writable),
+			intval($page),
 			intval($importer['id'])
 		);
-		$importer['writable'] = $writable;
+		if($writable != (-1))
+			$importer['writable'] = $writable;
+		$importer['forum'] = $page;
 	}
 
 	// if contact's ssl policy changed, update our links

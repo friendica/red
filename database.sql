@@ -92,6 +92,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `blocked` tinyint(1) NOT NULL DEFAULT '1',
   `readonly` tinyint(1) NOT NULL DEFAULT '0',
   `writable` tinyint(1) NOT NULL DEFAULT '0',
+  `forum` tinyint(1) NOT NULL DEFAULT '0',
   `hidden` tinyint(1) NOT NULL DEFAULT '0',
   `pending` tinyint(1) NOT NULL DEFAULT '1',
   `rating` tinyint(1) NOT NULL DEFAULT '0',
@@ -116,6 +117,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   KEY `dfrn-id` (`dfrn-id`),
   KEY `blocked` (`blocked`),
   KEY `readonly` (`readonly`),
+  KEY `forum` (`forum`),
   KEY `hidden` (`hidden`),
   KEY `pending` (`pending`),
   KEY `closeness` (`closeness`)  
@@ -636,6 +638,7 @@ CREATE TABLE IF NOT EXISTS `mailacct` (
 `mailbox` CHAR( 255 ) NOT NULL,
 `user` CHAR( 255 ) NOT NULL ,
 `pass` TEXT NOT NULL ,
+`reply_to` CHAR( 255 ) NOT NULL ,
 `action` INT NOT NULL ,
 `movetofolder` CHAR(255) NOT NULL ,
 `pubmail` TINYINT(1) NOT NULL DEFAULT '0',

@@ -1,8 +1,8 @@
 <?php
 
 /*
- * Name: Diabook
- * Description: Diabook: report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
+ * Name: Diabook-blue
+ * Description: Diabook-blue: report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
  * Version: 
  * Author: 
  */
@@ -34,7 +34,7 @@ $ps['usermenu'][profile] = Array('profile/' . $a->user['nickname']. '?tab=profil
 $ps['usermenu'][photos] = Array('photos/' . $a->user['nickname'], t('Photos'), "", t('Your photos'));
 $ps['usermenu'][events] = Array('events/', t('Events'), "", t('Your events'));
 $ps['usermenu'][notes] = Array('notes/', t('Personal notes'), "", t('Your personal photos'));
-
+$ps['usermenu'][community] = Array('community/', t('Community'), "", "");
 
 if($is_url = preg_match ("/\bnetwork\b/i", $_SERVER['REQUEST_URI'])) {
 $tpl = get_markup_template('profile_side.tpl');
@@ -46,8 +46,7 @@ $a->page['aside'] .= replace_macros($tpl, array(
 }
 }
 
-//js script
-
+//js scripts
 $a->page['htmlhead'] .= <<< EOT
 
 <script>
