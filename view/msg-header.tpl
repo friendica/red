@@ -37,7 +37,7 @@ if(plaintext != 'none') {
 					textarea.attr('tabindex', null);
 				}
 			});
-		},
+		}
 	});
 }
 
