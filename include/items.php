@@ -2026,6 +2026,7 @@ function local_delivery($importer,$data) {
 					if(($item['verb'] === ACTIVITY_TAG) && ($item['object-type'] === ACTVITY_OBJ_TAGTERM)) {
 						$xo = parse_xml_string($item['object'],false);
 						$xt = parse_xml_string($item['target'],false);
+
 						if($xt->type === ACTIVITY_OBJ_NOTE) {
 							$i = q("select * from `item` where uri = '%s' and uid = %d limit 1",
 								dbesc($xt->id),
