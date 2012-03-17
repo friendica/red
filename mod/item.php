@@ -836,7 +836,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 		//if the tag is replaced...
 		if(strpos($tag,'[url='))
 			//...do nothing
-			continue;
+			return;
 		//base tag has the tags name only
 		$basetag = str_replace('_',' ',substr($tag,1));
 		//create text for link

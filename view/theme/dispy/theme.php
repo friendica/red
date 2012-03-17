@@ -64,7 +64,7 @@ $(document).ready(function() {
             $('#drop-' + id).addClass('iconspacer'); }
         );
 
-	// notifications
+	// click outside notifications menu closes it
 	$('html').click(function() {
 		$('#nav-notifications-linkmenu').removeClass('selected');
 		document.getElementById("nav-notifications-menu").style.display = "none";
@@ -73,17 +73,17 @@ $(document).ready(function() {
 	$('#nav-notifications-linkmenu').click(function(event) {
 		event.stopPropagation();
 	});
-
-	// usermenu
+	// click outside profiles menu closes it
 	$('html').click(function() {
-		$('#nav-user-linkmenu').removeClass('selected');
-		document.getElementById("nav-user-menu").style.display = "none";
+		$('#profiles-menu-trigger').removeClass('selected');
+		document.getElementById("profiles-menu").style.display = "none";
 	});
 
-	$('#nav-user-linkmenu').click(function(event) {
+	$('#profiles-menu').click(function(event) {
 		event.stopPropagation();
 	});
 
+	// main function in toolbar functioning
     function toggleToolbar() {
         if ( $('#nav-floater').is(':visible') ) {
             $('#nav-floater').slideUp('fast');
@@ -97,17 +97,35 @@ $(document).ready(function() {
             });
         }
     };
+	// our trigger for the toolbar button
     $('.floaterflip').click(function() {
         toggleToolbar();
         return false;
     });
-});
-</script>
-<script>
-$(document).ready(function() {
+
+	// (attempt) to change the text colour in a top post
 	$('#profile-jot-text').focusin(function() {
-		$(this).css('color: #eec;');
+		$(this).css({color: '#eec'});
 	});
+
+	// make auto-complete work in more places
+	$(".wall-item-comment-wrapper textarea").contact_autocomplete(baseurl+"/acl");
+
+/*	$('#profile-photo-wrapper').mouseover(function() {
+		$('.profile-edit-side-div').css({display: 'block'});
+	}).mouseout(function() {
+		$('.profile-edit-side-div').css({display: 'none'});
+		return false;
+	});
+
+	$('img.photo').mouseover(function() {
+		$('.profile-edit-side-div').css({display: 'block'});
+	}).mouseout(function() {
+		$('.profile-edit-side-div').css({display: 'none'});
+		return false;
+	});*/
+
 });
 </script>
 EOT;
+
