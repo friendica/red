@@ -1159,6 +1159,48 @@ function diaspora_comment($importer,$xml,$msg) {
 
 		proc_run('php','include/notifier.php','comment',$message_id);
 	}
+
+	$myconv = q("SELECT `author-link`, `author-avatar`, `parent` FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `parent` != 0 ",
+		dbesc($parent_item['uri']),
+		intval($importer['uid'])
+	);
+
+	if(count($myconv)) {
+		$importer_url = $a->get_baseurl() . '/profile/' . $importer['nickname'];
+
+		foreach($myconv as $conv) {
+
+			// now if we find a match, it means we're in this conversation
+	
+			if(! link_compare($conv['author-link'],$importer_url))
+				continue;
+
+			require_once('include/enotify.php');
+								
+			$conv_parent = $conv['parent'];
+
+			notification(array(
+				'type'         => NOTIFY_COMMENT,
+				'notify_flags' => $importer['notify-flags'],
+				'language'     => $importer['language'],
+				'to_name'      => $importer['username'],
+				'to_email'     => $importer['email'],
+				'uid'          => $importer['uid'],
+				'item'         => $datarray,
+				'link'		   => $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $message_id,
+				'source_name'  => $datarray['author-name'],
+				'source_link'  => $datarray['author-link'],
+				'source_photo' => $datarray['author-avatar'],
+				'verb'         => ACTIVITY_POST,
+				'otype'        => 'item',
+				'parent'       => $conv_parent,
+
+			));
+
+			// only send one notification
+			break;
+		}
+	}
 	return;
 }
 

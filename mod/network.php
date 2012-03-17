@@ -90,7 +90,7 @@ function saved_searches($search) {
 	$o = replace_macros($tpl, array(
 		'$title'	 => t('Saved Searches'),
 		'$add'		 => t('add'),
-		'$searchbox' => search($search,'netsearch-box',$a->get_baseurl(true) . $srchurl,true),
+		'$searchbox' => search($search,'netsearch-box',$srchurl,true),
 		'$saved' 	 => $saved,
 	));
 	

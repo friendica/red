@@ -836,7 +836,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 		//if the tag is replaced...
 		if(strpos($tag,'[url='))
 			//...do nothing
-			continue;
+			return;
 		//base tag has the tags name only
 		$basetag = str_replace('_',' ',substr($tag,1));
 		//create text for link
@@ -857,7 +857,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 	if(strpos($tag,'@') === 0) {
 		//is it already replaced? 
 		if(strpos($tag,'[url='))
-			continue;
+			return;
 		$stat = false;
 		//get the person's name
 		$name = substr($tag,1);
