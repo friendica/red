@@ -385,7 +385,7 @@ class App {
 		$scheme = $this->scheme;
 
 		if((x($this->config,'system')) && (x($this->config['system'],'ssl_policy'))) {
-			if($this->config['system']['ssl_policy'] == SSL_POLICY_FULL) 
+			if(intval($this->config['system']['ssl_policy']) === intval(SSL_POLICY_FULL)) 
 				$scheme = 'https';
 
 //			We need to populate the $ssl flag across the entire program before turning this on.
