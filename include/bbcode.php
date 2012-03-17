@@ -198,6 +198,17 @@ function bbcode($Text,$preserve_nl = false) {
 	while ((strpos($Text, "[/spoiler]") !== false) and (strpos($Text, "[spoiler]") !== false) and (++$endlessloop < 20))
 		$Text = preg_replace("/\[spoiler\](.*?)\[\/spoiler\]/ism","$SpoilerLayout", $Text);
 
+	// Check for [spoiler=Author] text
+
+	$t_wrote = t('$1 wrote:');
+
+	// handle nested quotes
+	$endlessloop = 0;
+	while ((strpos($Text, "[/spoiler]")!== false)  and (strpos($Text, "[spoiler=") !== false) and (++$endlessloop < 20))
+		$Text = preg_replace("/\[spoiler=[\"\']*(.*?)[\"\']*\](.*?)\[\/spoiler\]/ism",
+        	                     "<br /><strong class=".'"spoiler"'.">" . $t_wrote . "</strong><blockquote class=".'"spoiler"'.">$2</blockquote>",
+                	             $Text);
+
 	// Declare the format for [quote] layout
 	$QuoteLayout = '<blockquote>$1</blockquote>';
 
@@ -215,7 +226,7 @@ function bbcode($Text,$preserve_nl = false) {
 	$endlessloop = 0;
 	while ((strpos($Text, "[/quote]")!== false)  and (strpos($Text, "[quote=") !== false) and (++$endlessloop < 20))
 		$Text = preg_replace("/\[quote=[\"\']*(.*?)[\"\']*\](.*?)\[\/quote\]/ism",
-        	                     "<blockquote><strong>" . $t_wrote . "</strong> $2</blockquote>",
+        	                     "<br /><strong class=".'"author"'.">" . $t_wrote . "</strong><blockquote class=".'"author"'.">$2</blockquote>",
                 	             $Text);
 
 	// [img=widthxheight]image source[/img]
