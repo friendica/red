@@ -189,8 +189,18 @@ function bbcode($Text,$preserve_nl = false) {
 	// Check for [code] text
 	$Text = preg_replace("/\[code\](.*?)\[\/code\]/ism","$CodeLayout", $Text);
 
+	// Declare the format for [spoiler] layout
+	$SpoilerLayout = '<blockquote class="spoiler">$1</blockquote>';
+
+	// Check for [spoiler] text
+	// handle nested quotes
+	$endlessloop = 0;
+	while ((strpos($Text, "[/spoiler]") !== false) and (strpos($Text, "[spoiler]") !== false) and (++$endlessloop < 20))
+		$Text = preg_replace("/\[spoiler\](.*?)\[\/spoiler\]/ism","$SpoilerLayout", $Text);
+
 	// Declare the format for [quote] layout
 	$QuoteLayout = '<blockquote>$1</blockquote>';
+
 	// Check for [quote] text
 	// handle nested quotes
 	$endlessloop = 0;

@@ -955,6 +955,25 @@ function prepare_body($item,$attach = false) {
 			$s .= '<div class="filesavetags"><span>' . t('Filed under:') . ' </span>' . $x . '</div>'; 
 	}
 
+	// Look for spoiler
+	$spoilersearch = '<blockquote class="spoiler">';
+
+	// Remove line breaks before the spoiler
+	while ((strpos($s, "\n".$spoilersearch) !== false))
+		$s = str_replace("\n".$spoilersearch, $spoilersearch, $s);
+	while ((strpos($s, "<br />".$spoilersearch) !== false))
+		$s = str_replace("<br />".$spoilersearch, $spoilersearch, $s);
+
+	while ((strpos($s, $spoilersearch) !== false)) {
+
+		$pos = strpos($s, $spoilersearch);
+		$rnd = random_string(8);
+		$spoilerreplace = '<span id="spoiler-wrap-'.$rnd.'" style="white-space:nowrap;" class="fakelink" onclick="openClose(\'spoiler-'.$rnd.'\');">'.sprintf(t('Click to open/close')).'</span>'.
+	                                '<blockquote class="spoiler" id="spoiler-'.$rnd.'" style="display: none;">';
+		//$s = str_replace($spoilersearch, $spoilerreplace, $s);
+		$s = substr($s, 0, $pos).$spoilerreplace.substr($s, $pos+strlen($spoilersearch));
+	}
+
 	$prep_arr = array('item' => $item, 'html' => $s);
 	call_hooks('prepare_body_final', $prep_arr);
 
