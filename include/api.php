@@ -702,11 +702,15 @@
 		$page = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
 		if ($page<0) $page=0;
 		$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
+		$max_id = (x($_REQUEST,'max_id')?$_REQUEST['max_id']:0);
 		//$since_id = 0;//$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
 		
 		$start = $page*$count;
 
 		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
+
+		if ($max_id > 0)
+			$sql_extra = 'AND `item`.`id` <= '.intval($max_id);
 
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
@@ -741,8 +745,6 @@
 	api_register_func('api/statuses/friends_timeline','api_statuses_home_timeline', true);
 
 	/**
-	 * 
-	 * http://developer.twitter.com/doc/get/statuses/show
 	 * 
 	 */
 	function api_statuses_show(&$a, $type){
@@ -781,6 +783,8 @@
 		return  api_apply_template("status", $type, $data);
 	}
 	api_register_func('api/statuses/show','api_statuses_show', true);
+
+	//api_register_func('api/statuses/mentions','api_statuses_mentions', true);
 
 
 	function api_statuses_user_timeline(&$a, $type){
