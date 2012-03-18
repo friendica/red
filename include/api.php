@@ -908,22 +908,30 @@
 			$status_user = (($item['cid']==$user_info['id'])?$user_info: api_item_get_user($a,$item));
 
 			if ($item['parent']!=$item['id']) {
+				$r = q("select id from item where parent=%s and id<%s order by id desc limit 1", 
+					intval($item['parent']), intval($item['id']));
+				if ($r)
+					$in_reply_to_status_id = $r[0]['id'];
+				else
+					$in_reply_to_status_id = $item['parent'];
 
-				$r = q("select `item`.`contact-id`, `contact`.nick from item, contact 
-					where `contact`.`id` = `item`.`contact-id` and `item`.id=%d", intval($item['parent']));
+				$r = q("select `item`.`contact-id`, `contact`.nick, `item`.`author-name` from item, contact 
+					where `contact`.`id` = `item`.`contact-id` and `item`.id=%d", intval($in_reply_to_status_id));
 
-				$in_reply_to_screen_name = $r[0]['nick'];
+				$in_reply_to_screen_name = $r[0]['author-name'];
 				$in_reply_to_user_id = $r[0]['contact-id'];
+
 			} else {
 				$in_reply_to_screen_name = '';
 				$in_reply_to_user_id = 0;
+				$in_reply_to_status_id = 0;
 			}
 
 			$status = array(
 				'text'		=> html2plain(bbcode($item['body']), 0),
 				'truncated' => False,
 				'created_at'=> api_date($item['created']),
-				'in_reply_to_status_id' => ($item['parent']!=$item['id']? intval($item['parent']):''),
+				'in_reply_to_status_id' => $in_reply_to_status_id,
 				'source'    => (($item['app']) ? $item['app'] : 'web'),
 				'id'		=> intval($item['id']),
 				'in_reply_to_user_id' => $in_reply_to_user_id,
