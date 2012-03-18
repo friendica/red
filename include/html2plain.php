@@ -1,9 +1,13 @@
 <?php
 require_once "html2bbcode.php";
 
-function breaklines($line, $level)
+function breaklines($line, $level, $wraplength = 75)
 {
-	$wraplen = 75-$level;
+
+	if ($wraplength == 0)
+		return($line);
+
+	$wraplen = $wraplength-$level;
 
 	$newlines = array();
 
@@ -37,7 +41,7 @@ function breaklines($line, $level)
 	return(implode($newlines, "\n"));
 }
 
-function quotelevel($message)
+function quotelevel($message, $wraplength = 75)
 {
 	$lines = explode("\n", $message);
 
@@ -65,12 +69,12 @@ function quotelevel($message)
 		}
 
 		if (!$startquote or ($line != ''))
-			$newlines[] = breaklines($line, $currlevel);
+			$newlines[] = breaklines($line, $currlevel, $wraplength);
 	}
 	return(implode($newlines, "\n"));
 }
 
-function html2plain($html)
+function html2plain($html, $wraplength = 75)
 {
 	global $lang;
 
@@ -99,7 +103,7 @@ function html2plain($html)
 
 	foreach ($result as $treffer) {
 		if ($treffer[1] == $treffer[2]) {
-			$search = '<a href="'.$treffer[1].'" target="_blank">'.$treffer[1].'</a>';
+			$search = '<a href="'.$treffer[1].'" target="external-link">'.$treffer[1].'</a>';
 			$message = str_replace($search, $treffer[1], $message);
 		}
 	}
@@ -109,6 +113,7 @@ function html2plain($html)
 	node2bbcode($doc, 'body', array(), '', '');
 
 	// MyBB-Auszeichnungen
+	/*
 	node2bbcode($doc, 'span', array('style'=>'text-decoration: underline;'), '_', '_');
 	node2bbcode($doc, 'span', array('style'=>'font-style: italic;'), '/', '/');
 	node2bbcode($doc, 'span', array('style'=>'font-weight: bold;'), '*', '*');
@@ -117,6 +122,7 @@ function html2plain($html)
 	node2bbcode($doc, 'b', array(), '*', '*');
 	node2bbcode($doc, 'i', array(), '/', '/');
 	node2bbcode($doc, 'u', array(), '_', '_');
+	*/
 
 	node2bbcode($doc, 'blockquote', array(), '[quote]', "[/quote]\n");
 
@@ -143,10 +149,11 @@ function html2plain($html)
 	node2bbcode($doc, 'h5', array(), "\n\n*", "*\n");
 	node2bbcode($doc, 'h6', array(), "\n\n*", "*\n");
 
-	node2bbcode($doc, 'a', array('href'=>'/(.+)/'), ' $1', '', true);
-	node2bbcode($doc, 'img', array('alt'=>'/(.+)/'), '$1', '');
-	node2bbcode($doc, 'img', array('title'=>'/(.+)/'), '$1', '');
-	node2bbcode($doc, 'img', array(), '', '');
+	// Problem: there is no reliable way to detect if it is a link to a tag or profile
+	//node2bbcode($doc, 'a', array('href'=>'/(.+)/'), ' $1 ', '', true);
+	//node2bbcode($doc, 'img', array('alt'=>'/(.+)/'), '$1', '');
+	//node2bbcode($doc, 'img', array('title'=>'/(.+)/'), '$1', '');
+	//node2bbcode($doc, 'img', array(), '', '');
 	node2bbcode($doc, 'img', array('src'=>'/(.+)/'), '[img]$1', '[/img]');
 
 	$message = $doc->saveHTML();
@@ -173,7 +180,7 @@ function html2plain($html)
 		$message = str_replace("\n\n\n", "\n\n", $message);
 	} while ($oldmessage != $message);
 
-	$message = quotelevel(trim($message));
+	$message = quotelevel(trim($message), $wraplength);
 
 	return(trim($message));
 }
