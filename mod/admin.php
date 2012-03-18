@@ -308,7 +308,7 @@ function admin_page_site(&$a) {
 		SSL_POLICY_FULL => t("Force all links to use SSL"),
 		SSL_POLICY_SELFSIGN => t("Self-signed certificate, use SSL for local links only (discouraged)")
 	);
-	
+
 	$t = get_markup_template("admin_site.tpl");
 	return replace_macros($t, array(
 		'$title' => t('Administration'),
@@ -325,7 +325,7 @@ function admin_page_site(&$a) {
 		'$banner'			=> array('banner', t("Banner/Logo"), $banner, ""),
 		'$language' 		=> array('language', t("System language"), get_config('system','language'), "", $lang_choices),
 		'$theme' 			=> array('theme', t("System theme"), get_config('system','theme'), t("Default system theme - may be over-ridden by user profiles"), $theme_choices),
-		'$ssl_policy'       => array('ssl_policy', t("SSL link policy"), get_config('system','ssl_policy'), t("Determines whether generated links should be forced to use SSL"), $ssl_choices),
+		'$ssl_policy'       => array('ssl_policy', t("SSL link policy"), (string) intval(get_config('system','ssl_policy')), t("Determines whether generated links should be forced to use SSL"), $ssl_choices),
 		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), get_config('system','maximagesize'), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
 
 		'$register_policy'	=> array('register_policy', t("Register policy"), $a->config['register_policy'], "", $register_choices),

@@ -96,7 +96,7 @@
 				$this->_push_stack();
 				$r = $this->r;
 				$r[$varname] = $v;
-				if ($keyname!='') $r[$keyname] = $k;
+				if ($keyname!='') $r[$keyname] = (($k === 0) ? '0' : $k);
 				$ret .=  $this->replace($args[3], $r);
 				$this->_pop_stack();
 			}
