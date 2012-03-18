@@ -45,7 +45,33 @@
 			s = tinymce.trim(s);
 
 			function rep(re, str) {
-				s = s.replace(re, str);
+
+				//modify code to keep stuff intact within [code][/code] blocks
+				//Waitman Gobble NO WARRANTY
+
+
+				var o = new Array();
+				var x = s.split("[code]");
+				var i = 0;
+
+				var si = "";
+				si = x.shift();
+				si = si.replace(re,str);
+				o.push(si);
+
+				for (i = 0; i < x.length; i++) {
+					var no = new Array();
+					var j = x.shift();
+					var g = j.split("[/code]");
+					no.push(g.shift());
+					si = g.shift();
+					si = si.replace(re,str);
+					no.push(si);
+					o.push(no.join("[/code]"));
+				}
+
+				s = o.join("[code]");
+
 			};
 
 
@@ -53,6 +79,7 @@
 
 			/* oembed */
 			function _h2b_cb(match) {
+				/*
 				function s_h2b(data) {
 						match = data;
 				}
@@ -64,6 +91,23 @@
 					success: s_h2b,
 					dataType: 'html'
 				});
+				*/
+				
+				var f, g, tof = [], tor = [];
+				var find_spanc = /<span [^>]*class *= *[\"'](?:[^\"']* )*oembed(?: [^\"']*)*[\"'][^>]*>(.*?(?:<span[^>]*>(.*?)<\/span *>)*.*?)<\/span *>/ig;
+				while (f = find_spanc.exec(match)) {
+					var find_a = /<a([^>]* rel=[\"']oembed[\"'][^>]*)>.*?<\/a *>/ig;
+					if (g = find_a.exec(f[1])) {
+						var find_href = /href=[\"']([^\"']*)[\"']/ig;
+						var m2 = find_href.exec(g[1]);
+						if (m2[1]) {
+							tof.push(f[0]);
+							tor.push("[EMBED]" + m2[1] + "[/EMBED]");
+						}
+					}
+				}
+				for (var i = 0; i < tof.length; i++) match = match.replace(tof[i], tor[i]);
+				
 				return match;
 			}
 			if (s.indexOf('class="oembed')>=0){
@@ -124,9 +168,40 @@
 		_dfrn_bbcode2html : function(s) {
 			s = tinymce.trim(s);
 
-			function rep(re, str) {
-				s = s.replace(re, str);
-			};
+
+                        function rep(re, str) {
+
+                                //modify code to keep stuff intact within [code][/code] blocks
+                                //Waitman Gobble NO WARRANTY
+
+
+                                var o = new Array();
+                                var x = s.split("[code]");
+                                var i = 0;
+
+                                var si = "";
+                                si = x.shift();
+                                si = si.replace(re,str);
+                                o.push(si);
+
+                                for (i = 0; i < x.length; i++) {
+                                        var no = new Array();
+                                        var j = x.shift();
+                                        var g = j.split("[/code]");
+                                        no.push(g.shift());
+                                        si = g.shift();
+                                        si = si.replace(re,str);
+                                        no.push(si);
+                                        o.push(no.join("[/code]"));
+                                }
+
+                                s = o.join("[code]");
+
+                        };
+
+
+
+
 
 			// example: [b] to <strong>
 			rep(/\n/gi,"<br />");
