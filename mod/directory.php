@@ -25,10 +25,6 @@ function directory_post(&$a) {
 
 function directory_content(&$a) {
 
-	$everything = (($a->argc > 1 && $a->argv[1] === 'all' && is_site_admin()) ? true : false);
-	if(x($_SESSION,'submanage') && intval($_SESSION['submanage']))
-		$everything = false;
-
 	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
 		notice( t('Public access denied.') . EOL);
 		return;
@@ -52,12 +48,6 @@ function directory_content(&$a) {
 	}
 
 	$admin = '';
-	if(is_site_admin()) {
-		if($everything)
-			$admin =  '<ul><li><div id="directory-admin-link"><a href="' . $a->get_baseurl() . '/directory' . '">' . t('Normal site view') . '</a></div></li></ul>';
-		else
-			$admin = '<ul><li><div id="directory-admin-link"><a href="' . $a->get_baseurl() . '/directory/all' . '">' . t('Admin - View all site entries') . '</a></div></li></ul>';
-	}
 
 	$o .= replace_macros($tpl, array(
 		'$search' => $search,
@@ -73,17 +63,14 @@ function directory_content(&$a) {
 		$search = dbesc($search);
 	$sql_extra = ((strlen($search)) ? " AND MATCH (`profile`.`name`, `user`.`nickname`, `pdesc`, `locality`,`region`,`country-name`,`gender`,`marital`,`sexual`,`about`,`romance`,`work`,`education`,`pub_keywords`,`prv_keywords` ) AGAINST ('$search' IN BOOLEAN MODE) " : "");
 
-	$publish = ((get_config('system','publish_all') || $everything) ? '' : " AND `publish` = 1 " );
+	$publish = ((get_config('system','publish_all')) ? '' : " AND `publish` = 1 " );
 
 
 	$r = q("SELECT COUNT(*) AS `total` FROM `profile` LEFT JOIN `user` ON `user`.`uid` = `profile`.`uid` WHERE `is-default` = 1 $publish AND `user`.`blocked` = 0 $sql_extra ");
 	if(count($r))
 		$a->set_pager_total($r[0]['total']);
 
-	if($everything)
-		$order = " ORDER BY `register_date` DESC ";
-	else
-		$order = " ORDER BY `name` ASC "; 
+	$order = " ORDER BY `name` ASC "; 
 
 
 	$r = q("SELECT `profile`.*, `profile`.`uid` AS `profile_uid`, `user`.`nickname`, `user`.`timezone` FROM `profile` LEFT JOIN `user` ON `user`.`uid` = `profile`.`uid` WHERE `is-default` = 1 $publish AND `user`.`blocked` = 0 $sql_extra $order LIMIT %d , %d ",
