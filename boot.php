@@ -286,7 +286,12 @@ class App {
 
 		startup();
 
-		$this->scheme = ((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']))	?  'https' : 'http' );
+		$this->scheme = 'http';
+		if(x($_SERVER,'HTTPS') && $_SERVER['HTTPS'])
+			$this->scheme = 'https';
+		elseif(x($_SERVER,'SERVER_PORT') && (intval($_SERVER['SERVER_PORT']) == 443)) 
+			$this->scheme = 'https';
+
 
 		if(x($_SERVER,'SERVER_NAME')) {
 			$this->hostname = $_SERVER['SERVER_NAME'];
@@ -380,7 +385,7 @@ class App {
 		$scheme = $this->scheme;
 
 		if((x($this->config,'system')) && (x($this->config['system'],'ssl_policy'))) {
-			if($this->config['system']['ssl_policy'] == SSL_POLICY_FULL) 
+			if(intval($this->config['system']['ssl_policy']) === intval(SSL_POLICY_FULL)) 
 				$scheme = 'https';
 
 //			We need to populate the $ssl flag across the entire program before turning this on.
