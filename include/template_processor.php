@@ -203,7 +203,7 @@
 				$os=$s; $count++;
 				$s = $this->var_replace($s);
 			}
-			return template_unescape($s);
+			return $s;
 		}
 	}
 	

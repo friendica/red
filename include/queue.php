@@ -61,13 +61,18 @@ function queue_run($argv, $argc){
 		q("DELETE FROM `queue` WHERE `created` < UTC_TIMESTAMP() - INTERVAL 3 DAY");
 	}
 		
-	if($queue_id)
+	if($queue_id) {
 		$r = q("SELECT `id` FROM `queue` WHERE `id` = %d LIMIT 1",
 			intval($queue_id)
 		);
-	else
-		$r = q("SELECT `id` FROM `queue` WHERE `last` < UTC_TIMESTAMP() - INTERVAL 15 MINUTE ");
+	}
+	else {
 
+		// For the first 12 hours we'll try to deliver every 15 minutes
+		// After that, we'll only attempt delivery once per hour. 
+
+		$r = q("SELECT `id` FROM `queue` WHERE (( `created` > UTC_TIMESTAMP() - INTERVAL 12 HOUR && `last` < UTC_TIMESTAMP() - INTERVAL 15 MINUTE ) OR ( `last` < UTC_TIMESTAMP() - INTERVAL 1 HOUR ))");
+	}
 	if(! count($r)){
 		return;
 	}

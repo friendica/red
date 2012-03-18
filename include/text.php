@@ -20,7 +20,7 @@ function replace_macros($s,$r) {
 	
 	//$a = get_app();
 	//$a->page['debug'] .= "$tt <br>\n";
-	return $r;
+	return template_unescape($r);
 
 }}
 

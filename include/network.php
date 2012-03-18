@@ -303,7 +303,7 @@ function webfinger_dfrn($s,&$hcard) {
 
 
 if(! function_exists('webfinger')) {
-function webfinger($s) {
+function webfinger($s, $debug = false) {
 	$host = '';
 	if(strstr($s,'@')) {
 		$host = substr($s,strpos($s,'@') + 1);
@@ -328,7 +328,7 @@ function webfinger($s) {
 }}
 
 if(! function_exists('lrdd')) {
-function lrdd($uri) {
+function lrdd($uri, $debug = false) {
 
 	$a = get_app();
 
