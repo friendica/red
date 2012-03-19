@@ -694,7 +694,12 @@ function linkify($s) {
 
 if(! function_exists('smilies')) {
 function smilies($s, $sample = false) {
+
 	$a = get_app();
+
+	if(intval(get_config('system','no_smilies')) 
+		|| (local_user() && intval(get_pconfig(local_user(),'system','no_smilies'))))
+		return $s;
 
 	$s = preg_replace_callback('/<pre>(.*?)<\/pre>/ism','smile_encode',$s);
 	$s = preg_replace_callback('/<code>(.*?)<\/code>/ism','smile_encode',$s);
