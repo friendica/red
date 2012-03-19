@@ -1069,7 +1069,7 @@ function photos_content(&$a) {
 		if($can_post && ($ph[0]['uid'] == $owner_uid)) {
 			$tools = array(
 				'edit'	=> array($a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $datum . (($cmd === 'edit') ? '' : '/edit'), (($cmd === 'edit') ? t('View photo') : t('Edit photo'))),
-				'profile'=>array($a->get_baseurl() . '/profile_photo/use/'.$ph[0]['resource-id'] . '?form_security_token=' . get_form_security_token('profile_photo'), t('Use as profile photo')),
+				'profile'=>array($a->get_baseurl() . '/profile_photo/use/'.$ph[0]['resource-id'], t('Use as profile photo')),
 			);
 
 			// lock
@@ -1079,6 +1079,17 @@ function photos_content(&$a) {
 					: Null);
 	  		
 			
+		}
+
+		if(! $cmd !== 'edit') {
+			$a->page['htmlhead'] .= '<script>
+				$(document).keydown(function(event) {' . "\n";
+
+			if($prevlink)
+				$a->page['htmlhead'] .= 'if(event.ctrlKey && event.keyCode == 37) { event.preventDefault(); window.location.href = \'' . $prevlink . '\'; }' . "\n";
+			if($nextlink)
+				$a->page['htmlhead'] .= 'if(event.ctrlKey && event.keyCode == 39) { event.preventDefault(); window.location.href = \'' . $nextlink . '\'; }' . "\n";
+			$a->page['htmlhead'] .= '});</script>';
 		}
 
 		if($prevlink)
