@@ -713,15 +713,16 @@ function login($register = false, $hiddens=false) {
 
 	$noid = get_config('system','no_openid');
 	
+	$dest_url = $a->get_baseurl(true) . '/' . $a->query_string;
+
 	if(local_user()) {
 		$tpl = get_markup_template("logout.tpl");
 	}
 	else {
 		$tpl = get_markup_template("login.tpl");
-
+		$_SESSION['return_url'] = $a->query_string;
 	}
 
-	$dest_url = $a->get_baseurl(true) . '/' . $a->query_string;
 
 	$o .= replace_macros($tpl,array(
 
