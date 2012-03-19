@@ -322,6 +322,7 @@ function settings_post(&$a) {
 	$str_contact_deny  = perms2str($_POST['contact_deny']);
 
 	$openidserver = $a->user['openidserver'];
+	$openid = normalise_openid($openid);
 
 	// If openid has changed or if there's an openid but no openidserver, try and discover it.
 

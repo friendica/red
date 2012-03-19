@@ -1355,3 +1355,6 @@ function file_tag_unsave_file($uid,$item,$file) {
 	return true;
 }
 
+function normalise_openid($s) {
+	return trim(str_replace(array('http://','https://'),array('',''),$s),'/');
+}
