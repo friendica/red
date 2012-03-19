@@ -13,6 +13,7 @@ function openid_content(&$a) {
 	logger('mod_openid ' . print_r($_REQUEST,true), LOGGER_DATA);
 
 	if((x($_GET,'openid_mode')) && (x($_SESSION,'openid'))) {
+
 		$openid = new LightOpenID;
 
 		if($openid->validate()) {
@@ -31,6 +32,9 @@ function openid_content(&$a) {
 			);
 
 			if($r && count($r)) {
+
+				// successful OpenID login
+
 				unset($_SESSION['openid']);
 
 				require_once('include/security.php');
@@ -42,7 +46,8 @@ function openid_content(&$a) {
 				goaway(z_root());
 			}
 
-			// new registration?
+			// Successful OpenID login - but we can't match it to an existing account.
+			// New registration?
 
 			if($a->config['register_policy'] == REGISTER_CLOSED) {
 				notice( t('Account not found and OpenID registration is not permitted on this site.') . EOL);
