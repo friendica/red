@@ -20,7 +20,7 @@ function replace_macros($s,$r) {
 	
 	//$a = get_app();
 	//$a->page['debug'] .= "$tt <br>\n";
-	return $r;
+	return template_unescape($r);
 
 }}
 
@@ -638,7 +638,7 @@ if(! function_exists('search')) {
 function search($s,$id='search-box',$url='/search',$save = false) {
 	$a = get_app();
 	$o  = '<div id="' . $id . '">';
-	$o .= '<form action="' . $a->get_baseurl() . $url . '" method="get" >';
+	$o .= '<form action="' . $a->get_baseurl((stristr($url,'network')) ? true : false) . $url . '" method="get" >';
 	$o .= '<input type="text" name="search" id="search-text" value="' . $s .'" />';
 	$o .= '<input type="submit" name="submit" id="search-submit" value="' . t('Search') . '" />'; 
 	if($save)
@@ -694,7 +694,12 @@ function linkify($s) {
 
 if(! function_exists('smilies')) {
 function smilies($s, $sample = false) {
+
 	$a = get_app();
+
+	if(intval(get_config('system','no_smilies')) 
+		|| (local_user() && intval(get_pconfig(local_user(),'system','no_smilies'))))
+		return $s;
 
 	$s = preg_replace_callback('/<pre>(.*?)<\/pre>/ism','smile_encode',$s);
 	$s = preg_replace_callback('/<code>(.*?)<\/code>/ism','smile_encode',$s);
@@ -874,16 +879,30 @@ function link_compare($a,$b) {
 if(! function_exists('prepare_body')) {
 function prepare_body($item,$attach = false) {
 
+	$a = get_app();
 	call_hooks('prepare_body_init', $item); 
 
-	$s = prepare_text($item['body']);
+	$cache = get_config('system','itemcache');
+
+	if (($cache != '')) {
+		$cachefile = $cache."/".$item["guid"]."-".strtotime($item["edited"])."-".hash("crc32", $item['body']);
+
+		if (file_exists($cachefile))
+			$s = file_get_contents($cachefile);
+		else {
+			$s = prepare_text($item['body']);
+			file_put_contents($cachefile, $s);
+		}
+	} else
+		$s = prepare_text($item['body']);
 
 	$prep_arr = array('item' => $item, 'html' => $s);
 	call_hooks('prepare_body', $prep_arr);
 	$s = $prep_arr['html'];
 
-	if(! $attach)
+	if(! $attach) {
 		return $s;
+	}
 
 	$arr = explode(',',$item['attach']);
 	if(count($arr)) {
@@ -913,10 +932,37 @@ function prepare_body($item,$attach = false) {
 		}
 		$s .= '<div class="clear"></div></div>';
 	}
+	$matches = false;
+	$cnt = preg_match_all('/<(.*?)>/',$item['file'],$matches,PREG_SET_ORDER);
+	if($cnt) {
+//		logger('prepare_text: categories: ' . print_r($matches,true), LOGGER_DEBUG);
+		foreach($matches as $mtch) {
+			if(strlen($x))
+				$x .= ',';
+			$x .= file_tag_decode($mtch[1]);
+		}
+		if(strlen($x))
+			$s .= '<div class="categorytags"><span>' . t('Categories:') . ' </span>' . $x . '</div>'; 
 
+
+	}
+	$matches = false;
+	$x = '';
+	$cnt = preg_match_all('/\[(.*?)\]/',$item['file'],$matches,PREG_SET_ORDER);
+	if($cnt) {
+//		logger('prepare_text: filed_under: ' . print_r($matches,true), LOGGER_DEBUG);
+		foreach($matches as $mtch) {
+			if(strlen($x))
+				$x .= '&nbsp;&nbsp;&nbsp;';
+			$x .= file_tag_decode($mtch[1]). ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&term=' . file_tag_decode($mtch[1]) . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>';
+		}
+		if(strlen($x) && (local_user() == $item['uid']))
+			$s .= '<div class="filesavetags"><span>' . t('Filed under:') . ' </span>' . $x . '</div>'; 
+	}
 
 	$prep_arr = array('item' => $item, 'html' => $s);
 	call_hooks('prepare_body_final', $prep_arr);
+
 	return $prep_arr['html'];
 }}
 
@@ -1235,4 +1281,80 @@ function item_post_type($item) {
 	return t('post');
 }
 
+// post categories and "save to file" use the same item.file table for storage.
+// We will differentiate the different uses by wrapping categories in angle brackets
+// and save to file categories in square brackets.
+// To do this we need to escape these characters if they appear in our tag. 
 
+function file_tag_encode($s) {
+	return str_replace(array('<','>','[',']'),array('%3c','%3e','%5b','%5d'),$s);
+}
+
+function file_tag_decode($s) {
+	return str_replace(array('%3c','%3e','%5b','%5d'),array('<','>','[',']'),$s);
+}
+
+function file_tag_file_query($table,$s,$type = 'file') {
+	if($type == 'file')
+		$str = preg_quote( '[' . file_tag_encode($s) . ']' );
+	else
+		$str = preg_quote( '<' . file_tag_encode($s) . '>' );
+	return " AND " . (($table) ? dbesc($table) . '.' : '') . "file regexp '" . dbesc($str) . "' ";
+}
+
+function file_tag_save_file($uid,$item,$file) {
+	$result = false;
+	if(! intval($uid))
+		return false;
+	$r = q("select file from item where id = %d and uid = %d limit 1",
+		intval($item),
+		intval($uid)
+	);
+	if(count($r)) {
+		if(! stristr($r[0]['file'],'[' . file_tag_encode($file) . ']'))
+			q("update item set file = '%s' where id = %d and uid = %d limit 1",
+				dbesc($r[0]['file'] . '[' . file_tag_encode($file) . ']'),
+				intval($item),
+				intval($uid)
+			);
+		$saved = get_pconfig($uid,'system','filetags');
+		if((! strlen($saved)) || (! stristr($saved,'[' . file_tag_encode($file) . ']')))
+			set_pconfig($uid,'system','filetags',$saved . '[' . file_tag_encode($file) . ']');
+	}
+	return true;
+}
+
+function file_tag_unsave_file($uid,$item,$file) {
+	$result = false;
+	if(! intval($uid))
+		return false;
+
+	$pattern = '[' . file_tag_encode($file) . ']' ;
+
+	$r = q("select file from item where id = %d and uid = %d limit 1",
+		intval($item),
+		intval($uid)
+	);
+	if(! count($r))
+		return false;
+
+	q("update item set file = '%s' where id = %d and uid = %d limit 1",
+		dbesc(str_replace($pattern,'',$r[0]['file'])),
+		intval($item),
+		intval($uid)
+	);
+
+	$r = q("select file from item where uid = %d " . file_tag_file_query('item',$file),
+		intval($uid)
+	);
+
+	if(! count($r)) {
+		$saved = get_pconfig($uid,'system','filetags');
+		set_pconfig($uid,'system','filetags',str_replace($pattern,'',$saved));
+	}
+	return true;
+}
+
+function normalise_openid($s) {
+	return trim(str_replace(array('http://','https://'),array('',''),$s),'/');
+}

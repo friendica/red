@@ -61,7 +61,7 @@ function contacts_post(&$a) {
 
 	if(! count($orig_record)) {
 		notice( t('Could not access contact record.') . EOL);
-		goaway($a->get_baseurl() . '/contacts');
+		goaway($a->get_baseurl(true) . '/contacts');
 		return; // NOTREACHED
 	}
 
@@ -141,7 +141,7 @@ function contacts_content(&$a) {
 
 		if(! count($orig_record)) {
 			notice( t('Could not access contact record.') . EOL);
-			goaway($a->get_baseurl() . '/contacts');
+			goaway($a->get_baseurl(true) . '/contacts');
 			return; // NOTREACHED
 		}
 
@@ -149,7 +149,7 @@ function contacts_content(&$a) {
 
 			// pull feed and consume it, which should subscribe to the hub.
 			proc_run('php',"include/poller.php","$contact_id");
-			goaway($a->get_baseurl() . '/contacts/' . $contact_id);
+			goaway($a->get_baseurl(true) . '/contacts/' . $contact_id);
 			// NOTREACHED
 		}
 
@@ -164,7 +164,7 @@ function contacts_content(&$a) {
 				//notice( t('Contact has been ') . (($blocked) ? t('blocked') : t('unblocked')) . EOL );
 				info( (($blocked) ? t('Contact has been blocked') : t('Contact has been unblocked')) . EOL );
 			}
-			goaway($a->get_baseurl() . '/contacts/' . $contact_id);
+			goaway($a->get_baseurl(true) . '/contacts/' . $contact_id);
 			return; // NOTREACHED
 		}
 
@@ -178,7 +178,7 @@ function contacts_content(&$a) {
 			if($r) {
 				info( (($readonly) ? t('Contact has been ignored') : t('Contact has been unignored')) . EOL );
 			}
-			goaway($a->get_baseurl() . '/contacts/' . $contact_id);
+			goaway($a->get_baseurl(true) . '/contacts/' . $contact_id);
 			return; // NOTREACHED
 		}
 
@@ -220,9 +220,9 @@ function contacts_content(&$a) {
 			contact_remove($orig_record[0]['id']);
 			info( t('Contact has been removed.') . EOL );
 			if(x($_SESSION,'return_url'))
-				goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
+				goaway($a->get_baseurl(true) . '/' . $_SESSION['return_url']);
 			else
-				goaway($a->get_baseurl() . '/contacts');
+				goaway($a->get_baseurl(true) . '/contacts');
 			return; // NOTREACHED
 		}
 	}
@@ -233,7 +233,7 @@ function contacts_content(&$a) {
 		$contact = $a->data['contact'];
 
 		$tpl = get_markup_template('contact_head.tpl');
-		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
+		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl(true)));
 
 		require_once('include/contact_selectors.php');
 
@@ -295,17 +295,17 @@ function contacts_content(&$a) {
 		$tabs = array(
 			array(
 				'label' => (($contact['blocked']) ? t('Unblock') : t('Block') ),
-				'url'   => $a->get_baseurl() . '/contacts/' . $contact_id . '/block',
+				'url'   => $a->get_baseurl(true) . '/contacts/' . $contact_id . '/block',
 				'sel'   => '',
 			),
 			array(
 				'label' => (($contact['readonly']) ? t('Unignore') : t('Ignore') ),
-				'url'   => $a->get_baseurl() . '/contacts/' . $contact_id . '/ignore',
+				'url'   => $a->get_baseurl(true) . '/contacts/' . $contact_id . '/ignore',
 				'sel'   => '',
 			),
 			array(
 				'label' => t('Repair'),
-				'url'   => $a->get_baseurl() . '/crepair/' . $contact_id,
+				'url'   => $a->get_baseurl(true) . '/crepair/' . $contact_id,
 				'sel'   => '',
 			)
 		);
@@ -322,7 +322,7 @@ function contacts_content(&$a) {
 			'$lbl_info1' => t('Contact Information / Notes'),
 			'$infedit' => t('Edit contact notes'),
 			'$common_text' => $common_text,
-			'$common_link' => $a->get_baseurl() . '/common/' . $contact['id'],
+			'$common_link' => $a->get_baseurl(true) . '/common/' . $contact['id'],
 			'$all_friends' => $all_friends,
 			'$relation_text' => $relation_text,
 			'$visit' => sprintf( t('Visit %s\'s profile [%s]'),$contact['name'],$contact['url']),
@@ -397,30 +397,30 @@ function contacts_content(&$a) {
 	$tabs = array(
 		array(
 			'label' => t('All Contacts'),
-			'url'   => $a->get_baseurl() . '/contacts/all', 
+			'url'   => $a->get_baseurl(true) . '/contacts/all', 
 			'sel'   => ($all) ? 'active' : '',
 		),
 		array(
 			'label' => t('Unblocked Contacts'),
-			'url'   => $a->get_baseurl() . '/contacts',
+			'url'   => $a->get_baseurl(true) . '/contacts',
 			'sel'   => ((! $all) && (! $blocked) && (! $hidden) && (! $search) && (! $nets) && (! $ignored)) ? 'active' : '',
 		),
 
 		array(
 			'label' => t('Blocked Contacts'),
-			'url'   => $a->get_baseurl() . '/contacts/blocked',
+			'url'   => $a->get_baseurl(true) . '/contacts/blocked',
 			'sel'   => ($blocked) ? 'active' : '',
 		),
 
 		array(
 			'label' => t('Ignored Contacts'),
-			'url'   => $a->get_baseurl() . '/contacts/ignored',
+			'url'   => $a->get_baseurl(true) . '/contacts/ignored',
 			'sel'   => ($ignored) ? 'active' : '',
 		),
 
 		array(
 			'label' => t('Hidden Contacts'),
-			'url'   => $a->get_baseurl() . '/contacts/hidden',
+			'url'   => $a->get_baseurl(true) . '/contacts/hidden',
 			'sel'   => ($hidden) ? 'active' : '',
 		),
 
@@ -445,15 +445,16 @@ function contacts_content(&$a) {
 
 	
 	$r = q("SELECT COUNT(*) AS `total` FROM `contact` 
-		WHERE `uid` = %d AND `pending` = 0 $sql_extra $sql_extra2 ",
+		WHERE `uid` = %d AND `self` = 0 AND `pending` = 0 $sql_extra $sql_extra2 ",
 		intval($_SESSION['uid']));
-	if(count($r))
+	if(count($r)) {
 		$a->set_pager_total($r[0]['total']);
+		$total = $r[0]['total'];
+	}
 
 
 
-
-	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `pending` = 0 $sql_extra $sql_extra2 ORDER BY `name` ASC LIMIT %d , %d ",
+	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `pending` = 0 $sql_extra $sql_extra2 ORDER BY `name` ASC LIMIT %d , %d ",
 		intval($_SESSION['uid']),
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
@@ -464,8 +465,6 @@ function contacts_content(&$a) {
 	if(count($r)) {
 
 		foreach($r as $rr) {
-			if($rr['self'])
-				continue;
 
 			switch($rr['rel']) {
 				case CONTACT_IS_FRIEND:
@@ -518,7 +517,7 @@ function contacts_content(&$a) {
 	$o .= replace_macros($tpl,array(
 		'$header' => t('Contacts') . (($nets) ? ' - ' . network_to_name($nets) : ''),
 		'$tabs' => $t,
-		'$total' => $r[0]['total'],
+		'$total' => $total,
 		'$search' => $search_hdr,
 		'$desc' => t('Search your contacts'),
 		'$finding' => (strlen($search) ? t('Finding: ') . "'" . $search . "'" : ""),

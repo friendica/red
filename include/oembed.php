@@ -1,6 +1,6 @@
 <?php
 function oembed_replacecb($matches){
-	logger('oembedcb');
+//	logger('oembedcb');
 	$embedurl=$matches[1];
 	$j = oembed_fetch_url($embedurl);
 	$s =  oembed_format_object($j);
@@ -13,6 +13,9 @@ function oembed_replacecb($matches){
 function oembed_fetch_url($embedurl){
 
 	$txt = Cache::get($embedurl);
+
+	// These media files should now be caught in bbcode.php
+	// left here as a fallback in case this is called from another source
 
 	$noexts = array("mp3","mp4","ogg","ogv","oga","ogm","webm");
 	$ext = pathinfo(strtolower($embedurl),PATHINFO_EXTENSION);
@@ -62,7 +65,7 @@ function oembed_fetch_url($embedurl){
 	
 function oembed_format_object($j){
 	$embedurl = $j->embedurl;
-	$jhtml = oembed_iframe($j->embedurl,$j->width,$j->height );
+	$jhtml = oembed_iframe($j->embedurl,(isset($j->width) ? $j->width : null), (isset($j->height) ? $j->height : null) );
 	$ret="<span class='oembed ".$j->type."'>";
 	switch ($j->type) {
 		case "video": {

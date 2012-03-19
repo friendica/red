@@ -10,17 +10,19 @@ function message_post(&$a) {
 		return;
 	}
 
-	$replyto   = ((x($_POST,'replyto'))   ? notags(trim($_POST['replyto']))   : '');
-	$subject   = ((x($_POST,'subject'))   ? notags(trim($_POST['subject']))   : '');
-	$body      = ((x($_POST,'body'))      ? escape_tags(trim($_POST['body'])) : '');
-	$recipient = ((x($_POST,'messageto')) ? intval($_POST['messageto'])       : 0 );
+	$replyto   = ((x($_REQUEST,'replyto'))   ? notags(trim($_REQUEST['replyto']))   : '');
+	$subject   = ((x($_REQUEST,'subject'))   ? notags(trim($_REQUEST['subject']))   : '');
+	$body      = ((x($_REQUEST,'body'))      ? escape_tags(trim($_REQUEST['body'])) : '');
+	$recipient = ((x($_REQUEST,'messageto')) ? intval($_REQUEST['messageto'])       : 0 );
 
 	
 	$ret = send_message($recipient, $body, $subject, $replyto);
+	$norecip = false;
 
 	switch($ret){
 		case -1:
 			notice( t('No recipient selected.') . EOL );
+			$norecip = true;
 			break;
 		case -2:
 			notice( t('Unable to locate contact information.') . EOL );
@@ -35,6 +37,13 @@ function message_post(&$a) {
 			info( t('Message sent.') . EOL );
 	}
 
+	// fake it to go back to the input form if no recipient listed
+
+	if($norecip) {
+		$a->argc = 2;
+		$a->argv[1] = 'new';
+	}
+
 }
 
 function message_content(&$a) {
@@ -47,23 +56,23 @@ function message_content(&$a) {
 		return;
 	}
 
-	$myprofile = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
+	$myprofile = $a->get_baseurl(true) . '/profile/' . $a->user['nickname'];
 
 
 	$tabs = array(
 		array(
 			'label' => t('Inbox'),
-			'url'=> $a->get_baseurl() . '/message',
+			'url'=> $a->get_baseurl(true) . '/message',
 			'sel'=> (($a->argc == 1) ? 'active' : ''),
 		),
 		array(
 			'label' => t('Outbox'),
-			'url' => $a->get_baseurl() . '/message/sent',
+			'url' => $a->get_baseurl(true) . '/message/sent',
 			'sel'=> (($a->argv[1] == 'sent') ? 'active' : ''),
 		),
 		array(
 			'label' => t('New Message'),
-			'url' => $a->get_baseurl() . '/message/new',
+			'url' => $a->get_baseurl(true) . '/message/new',
 			'sel'=> (($a->argv[1] == 'new') ? 'active' : ''),
 		),
 	);
@@ -90,7 +99,7 @@ function message_content(&$a) {
 			if($r) {
 				info( t('Message deleted.') . EOL );
 			}
-			goaway($a->get_baseurl() . '/message' );
+			goaway($a->get_baseurl(true) . '/message' );
 		}
 		else {
 			$r = q("SELECT `parent-uri`,`convid` FROM `mail` WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -120,7 +129,7 @@ function message_content(&$a) {
 				if($r)
 					info( t('Conversation removed.') . EOL );
 			} 
-			goaway($a->get_baseurl() . '/message' );
+			goaway($a->get_baseurl(true) . '/message' );
 		}	
 	
 	}
@@ -129,23 +138,30 @@ function message_content(&$a) {
 		
 		$o .= $header;
 		
+		$plaintext = false;
+		if(intval(get_pconfig(local_user(),'system','plaintext')))
+			$plaintext = true;
+
+
 		$tpl = get_markup_template('msg-header.tpl');
 
 		$a->page['htmlhead'] .= replace_macros($tpl, array(
-			'$baseurl' => $a->get_baseurl(),
+			'$baseurl' => $a->get_baseurl(true),
+			'$editselect' => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 			'$nickname' => $a->user['nickname'],
 			'$linkurl' => t('Please enter a link URL:')
 		));
 	
 		$preselect = (isset($a->argv[2])?array($a->argv[2]):false);
 	
-		$select = contact_select('messageto','message-to-select', $preselect, 4, true);
+		$select = contact_select('messageto','message-to-select', $preselect, 4, true, false, false, 10);
 		$tpl = get_markup_template('prv_message.tpl');
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Send Private Message'),
 			'$to' => t('To:'),
 			'$subject' => t('Subject:'),
-			'$subjtxt' => '',
+			'$subjtxt' => ((x($_REQUEST,'subject')) ? strip_tags($_REQUEST['subject']) : ''),
+			'$text' => ((x($_REQUEST,'body')) ? escape_tags(htmlspecialchars($_REQUEST['body'])) : ''),
 			'$readonly' => '',
 			'$yourmessage' => t('Your message:'),
 			'$select' => $select,
@@ -176,9 +192,9 @@ function message_content(&$a) {
 			$a->set_pager_total($r[0]['total']);
 	
 		$r = q("SELECT max(`mail`.`created`) AS `mailcreated`, min(`mail`.`seen`) AS `mailseen`, 
-			`mail`.* , `contact`.`name`, `contact`.`url`, `contact`.`thumb` 
+			`mail`.* , `contact`.`name`, `contact`.`url`, `contact`.`thumb` , `contact`.`network`  
 			FROM `mail` LEFT JOIN `contact` ON `mail`.`contact-id` = `contact`.`id` 
-			WHERE `mail`.`uid` = %d AND `from-url` $eq '%s' GROUP BY `parent-uri` ORDER BY `created` DESC  LIMIT %d , %d ",
+			WHERE `mail`.`uid` = %d AND `from-url` $eq '%s' GROUP BY `parent-uri` ORDER BY `mailcreated` DESC  LIMIT %d , %d ",
 			intval(local_user()),
 			dbesc($myprofile),
 			intval($a->pager['start']),
@@ -194,7 +210,7 @@ function message_content(&$a) {
 			$o .= replace_macros($tpl, array(
 				'$id' => $rr['id'],
 				'$from_name' =>$rr['from-name'],
-				'$from_url' => (($rr['network'] === NETWORK_DFRN) ? $a->get_baseurl() . '/redir/' . $rr['contact-id'] : $rr['url']),
+				'$from_url' => (($rr['network'] === NETWORK_DFRN) ? $a->get_baseurl(true) . '/redir/' . $rr['contact-id'] : $rr['url']),
 				'$sparkle' => ' sparkle',
 				'$from_photo' => $rr['thumb'],
 				'$subject' => template_escape((($rr['mailseen']) ? $rr['title'] : '<strong>' . $rr['title'] . '</strong>')),
@@ -251,7 +267,7 @@ function message_content(&$a) {
 	
 		$a->page['htmlhead'] .= replace_macros($tpl, array(
 			'$nickname' => $a->user['nickname'],
-			'$baseurl' => $a->get_baseurl()
+			'$baseurl' => $a->get_baseurl(true)
 		));
 
 
@@ -262,7 +278,7 @@ function message_content(&$a) {
 				$sparkle = '';
 			}
 			else {
-				$from_url = $a->get_baseurl() . '/redir/' . $message['contact-id'];
+				$from_url = $a->get_baseurl(true) . '/redir/' . $message['contact-id'];
 				$sparkle = ' sparkle';
 			}
 			$o .= replace_macros($tpl, array(
@@ -289,6 +305,7 @@ function message_content(&$a) {
 			'$subjtxt' => template_escape($message['title']),
 			'$readonly' => ' readonly="readonly" style="background: #BBBBBB;" ',
 			'$yourmessage' => t('Your message:'),
+			'$text' => '',
 			'$select' => $select,
 			'$parent' => $parent,
 			'$upload' => t('Upload photo'),

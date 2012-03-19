@@ -8,6 +8,8 @@ function nav(&$a) {
 	 *
 	 */
 
+	$ssl_state = ((local_user()) ? true : false);
+
 	if(!(x($a->page,'nav')))
 		$a->page['nav'] = '';
 
@@ -27,7 +29,7 @@ function nav(&$a) {
 
 	$myident = ((is_array($a->user) && isset($a->user['nickname'])) ? $a->user['nickname'] . '@' : '');
 		
-	$sitelocation = $myident . substr($a->get_baseurl(),strpos($a->get_baseurl(),'//') + 2 );
+	$sitelocation = $myident . substr($a->get_baseurl($ssl_state),strpos($a->get_baseurl($ssl_state),'//') + 2 );
 
 
 	// nav links: array of array('href', 'text', 'extra css classes', 'title')
@@ -53,7 +55,7 @@ function nav(&$a) {
 		// user info
 		$r = q("SELECT micro FROM contact WHERE uid=%d AND self=1", intval($a->user['uid']));
 		$userinfo = array(
-			'icon' => (count($r) ? $r[0]['micro']: $a->get_baseurl()."/images/default-profile-mm.jpg"),
+			'icon' => (count($r) ? $r[0]['micro']: $a->get_baseurl($ssl_state)."/images/default-profile-mm.jpg"),
 			'name' => $a->user['username'],
 		);
 		
@@ -76,7 +78,7 @@ function nav(&$a) {
 	if(($a->config['register_policy'] == REGISTER_OPEN) && (! local_user()) && (! remote_user()))
 		$nav['register'] = array('register',t('Register'), "", t('Create an account'));
 
-	$help_url = $a->get_baseurl() . '/help';
+	$help_url = $a->get_baseurl($ssl_state) . '/help';
 
 	if(! get_config('system','hide_help'))
 		$nav['help'] = array($help_url, t('Help'), "", t('Help and documentation'));

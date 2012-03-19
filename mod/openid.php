@@ -10,6 +10,8 @@ function openid_content(&$a) {
 	if($noid)
 		goaway(z_root());
 
+	logger('mod_openid ' . print_r($_REQUEST,true), LOGGER_DATA);
+
 	if((x($_GET,'openid_mode')) && (x($_SESSION,'openid'))) {
 		$openid = new LightOpenID;
 
@@ -54,11 +56,16 @@ function openid_content(&$a) {
 				// NOTREACHED
 			} 
 
+			$authid = normalise_openid($_REQUEST['openid_identity']);
+			if(! strlen($authid))
+				goaway(z_root());
+
 
 			$r = q("SELECT `user`.*, `user`.`pubkey` as `upubkey`, `user`.`prvkey` as `uprvkey` 
 				FROM `user` WHERE `openid` = '%s' AND `blocked` = 0 AND `account_expired` = 0 AND `verified` = 1 LIMIT 1",
-				dbesc($_SESSION['openid'])
+				dbesc($authid)
 			);
+
 			if(! count($r)) {
 				notice( t('Login failed.') . EOL );
 				goaway(z_root());

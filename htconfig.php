@@ -69,7 +69,7 @@ $a->config['system']['rino_encrypt'] = true;
 
 // allowed themes (change this from admin panel after installation)
 
-$a->config['system']['allowed_themes'] = 'dispy,quattro,testbubble,vier,darkbubble,darkzero,duepuntozero,greenzero,purplezero,quattro-green,slackr,diabook';
+$a->config['system']['allowed_themes'] = 'dispy,quattro,testbubble,vier,darkbubble,darkzero,duepuntozero,greenzero,purplezero,quattro-green,slackr,diabook,diabook-blue';
 
 // default system theme
 
@@ -79,3 +79,9 @@ $a->config['system']['theme'] = 'duepuntozero';
 // By default allow pseudonyms
 
 $a->config['system']['no_regfullname'] = true;
+
+// If set to true the priority settings of ostatus contacts are used
+$a->config['system']['ostatus_use_priority'] = false;
+
+// If enabled all items are cached in the given directory
+$a->config['system']['itemcache'] = "";

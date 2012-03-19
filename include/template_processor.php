@@ -80,8 +80,13 @@
 		 */
 		private function _replcb_for($args){
 			$m = array_map('trim', explode(" as ", $args[2]));
-			list($keyname, $varname) = explode("=>",$m[1]);
-			if (is_null($varname)) { $varname=$keyname; $keyname=""; }
+			$x = explode("=>",$m[1]);
+			if (count($x) == 1) {
+				$varname = $x[0];
+				$keyname = "";
+			} else {
+				list($keyname, $varname) = $x;
+			}
 			if ($m[0]=="" || $varname=="" || is_null($varname)) die("template error: 'for ".$m[0]." as ".$varname."'") ;
 			//$vals = $this->r[$m[0]];
 			$vals = $this->_get_var($m[0]);
@@ -91,7 +96,7 @@
 				$this->_push_stack();
 				$r = $this->r;
 				$r[$varname] = $v;
-				if ($keyname!='') $r[$keyname] = $k;
+				if ($keyname!='') $r[$keyname] = (($k === 0) ? '0' : $k);
 				$ret .=  $this->replace($args[3], $r);
 				$this->_pop_stack();
 			}
@@ -198,7 +203,7 @@
 				$os=$s; $count++;
 				$s = $this->var_replace($s);
 			}
-			return template_unescape($s);
+			return $s;
 		}
 	}
 	
