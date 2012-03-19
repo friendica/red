@@ -16,6 +16,7 @@
   <link rel="license" href="http://creativecommons.org/licenses/by/3.0/" />
   $hub
   $salmon
+  $community
 
   <updated>$feed_updated</updated>
 
