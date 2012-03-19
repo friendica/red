@@ -21,6 +21,9 @@ function profiles_post(&$a) {
 			notice( t('Profile not found.') . EOL);
 			return;
 		}
+		
+		check_form_security_token_redirectOnErr('/profiles', 'profile_edit');
+		
 		$is_default = (($orig[0]['is-default']) ? 1 : 0);
 
 		$profile_name = notags(trim($_POST['profile_name']));
@@ -237,9 +240,11 @@ function profiles_content(&$a) {
 		);
 		if(! count($r)) {
 			notice( t('Profile not found.') . EOL);
-			goaway($a->get_baseurl() . '/profiles');
+			goaway($a->get_baseurl(true) . '/profiles');
 			return; // NOTREACHED
 		}
+		
+		check_form_security_token_redirectOnErr('/profiles', 'profile_drop', 't');
 
 		// move every contact using this profile as their default to the user default
 
@@ -255,7 +260,7 @@ function profiles_content(&$a) {
 		if($r)
 			info( t('Profile deleted.') . EOL);
 
-		goaway($a->get_baseurl() . '/profiles');
+		goaway($a->get_baseurl(true) . '/profiles');
 		return; // NOTREACHED
 	}
 
@@ -264,6 +269,8 @@ function profiles_content(&$a) {
 
 
 	if(($a->argc > 1) && ($a->argv[1] === 'new')) {
+		
+		check_form_security_token_redirectOnErr('/profiles', 'profile_new', 't');
 
 		$r0 = q("SELECT `id` FROM `profile` WHERE `uid` = %d",
 			intval(local_user()));
@@ -290,11 +297,14 @@ function profiles_content(&$a) {
 
 		info( t('New profile created.') . EOL);
 		if(count($r3) == 1)
-			goaway($a->get_baseurl() . '/profiles/' . $r3[0]['id']);
-		goaway($a->get_baseurl() . '/profiles');
-	}		 
+			goaway($a->get_baseurl(true) . '/profiles/' . $r3[0]['id']);
+		
+		goaway($a->get_baseurl(true) . '/profiles');
+	} 
 
 	if(($a->argc > 2) && ($a->argv[1] === 'clone')) {
+		
+		check_form_security_token_redirectOnErr('/profiles', 'profile_clone', 't');
 
 		$r0 = q("SELECT `id` FROM `profile` WHERE `uid` = %d",
 			intval(local_user()));
@@ -329,10 +339,12 @@ function profiles_content(&$a) {
 		);
 		info( t('New profile created.') . EOL);
 		if(count($r3) == 1)
-			goaway($a->get_baseurl() . '/profiles/' . $r3[0]['id']);
-	goaway($a->get_baseurl() . '/profiles');
-	return; // NOTREACHED
-	}		 
+			goaway($a->get_baseurl(true) . '/profiles/' . $r3[0]['id']);
+		
+		goaway($a->get_baseurl(true) . '/profiles');
+		
+		return; // NOTREACHED
+	}
 
 
 	if(($a->argc > 1) && (intval($a->argv[1]))) {
@@ -361,7 +373,7 @@ function profiles_content(&$a) {
 		));
 
 
-		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl()));
+		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl(true)));
 		$a->page['htmlhead'] .= "<script type=\"text/javascript\" src=\"js/country.js\" ></script>";
 
 		$f = get_config('system','birthday_input_format');
@@ -371,6 +383,9 @@ function profiles_content(&$a) {
 		$is_default = (($r[0]['is-default']) ? 1 : 0);
 		$tpl = get_markup_template("profile_edit.tpl");
 		$o .= replace_macros($tpl,array(
+			'$form_security_token' => get_form_security_token("profile_edit"),
+			'$profile_clone_link' => 'profiles/clone/' . $r[0]['id'] . '?t=' . get_form_security_token("profile_clone"),
+			'$profile_drop_link' => 'profiles/drop/' . $r[0]['id'] . '?t=' . get_form_security_token("profile_drop"),
 			'$banner' => t('Edit Profile Details'),
 			'$submit' => t('Submit'),
 			'$viewprof' => t('View this profile'),
@@ -410,7 +425,7 @@ function profiles_content(&$a) {
 			'$lbl_work' => t('Work/employment'),
 			'$lbl_school' => t('School/education'),
 			'$disabled' => (($is_default) ? 'onclick="return false;" style="color: #BBBBFF;"' : ''),
-			'$baseurl' => $a->get_baseurl(),
+			'$baseurl' => $a->get_baseurl(true),
 			'$profile_id' => $r[0]['id'],
 			'$profile_name' => $r[0]['profile-name'],
 			'$default' => (($is_default) ? '<p id="profile-edit-default-desc">' . t('This is your <strong>public</strong> profile.<br />It <strong>may</strong> be visible to anybody using the internet.') . '</p>' : ""),
@@ -460,7 +475,8 @@ function profiles_content(&$a) {
 			$o .= replace_macros($tpl_header,array(
 				'$header' => t('Edit/Manage Profiles'),
 				'$chg_photo' => t('Change profile photo'),
-				'$cr_new' => t('Create New Profile')
+				'$cr_new' => t('Create New Profile'),
+				'$cr_new_link' => 'profiles/new?t=' . get_form_security_token("profile_new")
 			));
 
 
@@ -473,7 +489,7 @@ function profiles_content(&$a) {
 					'$alt' => t('Profile Image'),
 					'$profile_name' => $rr['profile-name'],
 					'$visible' => (($rr['is-default']) ? '<strong>' . t('visible to everybody') . '</strong>' 
-						: '<a href="' . $a->get_baseurl() . '/profperm/' . $rr['id'] . '" />' . t('Edit visibility') . '</a>')
+						: '<a href="' . $a->get_baseurl(true) . '/profperm/' . $rr['id'] . '" />' . t('Edit visibility') . '</a>')
 				));
 			}
 		}

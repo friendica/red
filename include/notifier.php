@@ -337,7 +337,9 @@ function notifier_run($argv, $argc){
 			'$picdate'      => xmlify(datetime_convert('UTC','UTC',$owner['avatar-date'] . '+00:00' , ATOM_TIME)) ,
 			'$uridate'      => xmlify(datetime_convert('UTC','UTC',$owner['uri-date']    . '+00:00' , ATOM_TIME)) ,
 			'$namdate'      => xmlify(datetime_convert('UTC','UTC',$owner['name-date']   . '+00:00' , ATOM_TIME)) ,
-			'$birthday'     => $birthday
+			'$birthday'     => $birthday,
+			'$community'    => (($owner['page-flags'] == PAGE_COMMUNITY) ? '<dfrn:community>1</dfrn:community>' : '')
+
 	));
 
 	if($mail) {
@@ -648,38 +650,23 @@ function notifier_run($argv, $argc){
 							$headers .= 'Reply-to: ' . $reply_to . "\n";
 
 						// for testing purposes: Collect exported mails
-						$file = tempnam("/tmp/friendica/", "mail-out2-");
-						file_put_contents($file, json_encode($it));
+						//$file = tempnam("/tmp/friendica/", "mail-out2-");
+						//file_put_contents($file, json_encode($it));
 
 						$headers .= 'Message-Id: <' . iri2msgid($it['uri']) . '>' . "\n";
 
 						if($it['uri'] !== $it['parent-uri']) {
 							$headers .= 'References: <' . iri2msgid($it['parent-uri']) . '>' . "\n";
-							if(! strlen($it['title'])) {
+							if(!strlen($it['title'])) {
 								$r = q("SELECT `title` FROM `item` WHERE `parent-uri` = '%s' LIMIT 1",
-									dbesc($it['parent-uri'])
-								);
-								if(count($r)) {
-									$subtitle = $r[0]['title'];
-									if($subtitle) {
-										if(strncasecmp($subtitle,'RE:',3))
-											$subject = $subtitle;
-										else
-											$subject = 'Re: ' . $subtitle;
-									}
-								}
-							}
-						}
+									dbesc($it['parent-uri']));
 
-						/*$headers .= 'MIME-Version: 1.0' . "\n";
-						//$headers .= 'Content-Type: text/html; charset=UTF-8' . "\n";
-						$headers .= 'Content-Type: text/plain; charset=UTF-8' . "\n";
-						$headers .= 'Content-Transfer-Encoding: 8bit' . "\n\n";
-						$html    = prepare_body($it);
-						//$message = '<html><body>' . $html . '</body></html>';
-						$message = html2plain($html);
-						logger('notifier: email delivery to ' . $addr);
-						mail($addr, $subject, $message, $headers);*/
+								if(count($r) AND ($r[0]['title'] != ''))  
+									$subject = $r[0]['title'];
+							}
+							if(strncasecmp($subject,'RE:',3))
+								$subject = 'Re: '.$subject;
+						}
 						email_send($addr, $subject, $headers, $it);
 					}
 					break;

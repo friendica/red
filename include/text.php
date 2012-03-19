@@ -20,7 +20,7 @@ function replace_macros($s,$r) {
 	
 	//$a = get_app();
 	//$a->page['debug'] .= "$tt <br>\n";
-	return $r;
+	return template_unescape($r);
 
 }}
 
@@ -638,7 +638,7 @@ if(! function_exists('search')) {
 function search($s,$id='search-box',$url='/search',$save = false) {
 	$a = get_app();
 	$o  = '<div id="' . $id . '">';
-	$o .= '<form action="' . $a->get_baseurl() . $url . '" method="get" >';
+	$o .= '<form action="' . $a->get_baseurl((stristr($url,'network')) ? true : false) . $url . '" method="get" >';
 	$o .= '<input type="text" name="search" id="search-text" value="' . $s .'" />';
 	$o .= '<input type="submit" name="submit" id="search-submit" value="' . t('Search') . '" />'; 
 	if($save)
@@ -694,7 +694,12 @@ function linkify($s) {
 
 if(! function_exists('smilies')) {
 function smilies($s, $sample = false) {
+
 	$a = get_app();
+
+	if(intval(get_config('system','no_smilies')) 
+		|| (local_user() && intval(get_pconfig(local_user(),'system','no_smilies'))))
+		return $s;
 
 	$s = preg_replace_callback('/<pre>(.*?)<\/pre>/ism','smile_encode',$s);
 	$s = preg_replace_callback('/<code>(.*?)<\/code>/ism','smile_encode',$s);
@@ -874,16 +879,30 @@ function link_compare($a,$b) {
 if(! function_exists('prepare_body')) {
 function prepare_body($item,$attach = false) {
 
+	$a = get_app();
 	call_hooks('prepare_body_init', $item); 
 
-	$s = prepare_text($item['body']);
+	$cache = get_config('system','itemcache');
+
+	if (($cache != '')) {
+		$cachefile = $cache."/".$item["guid"]."-".strtotime($item["edited"])."-".hash("crc32", $item['body']);
+
+		if (file_exists($cachefile))
+			$s = file_get_contents($cachefile);
+		else {
+			$s = prepare_text($item['body']);
+			file_put_contents($cachefile, $s);
+		}
+	} else
+		$s = prepare_text($item['body']);
 
 	$prep_arr = array('item' => $item, 'html' => $s);
 	call_hooks('prepare_body', $prep_arr);
 	$s = $prep_arr['html'];
 
-	if(! $attach)
+	if(! $attach) {
 		return $s;
+	}
 
 	$arr = explode(',',$item['attach']);
 	if(count($arr)) {
@@ -913,10 +932,37 @@ function prepare_body($item,$attach = false) {
 		}
 		$s .= '<div class="clear"></div></div>';
 	}
+	$matches = false;
+	$cnt = preg_match_all('/<(.*?)>/',$item['file'],$matches,PREG_SET_ORDER);
+	if($cnt) {
+//		logger('prepare_text: categories: ' . print_r($matches,true), LOGGER_DEBUG);
+		foreach($matches as $mtch) {
+			if(strlen($x))
+				$x .= ',';
+			$x .= file_tag_decode($mtch[1]);
+		}
+		if(strlen($x))
+			$s .= '<div class="categorytags"><span>' . t('Categories:') . ' </span>' . $x . '</div>'; 
 
+
+	}
+	$matches = false;
+	$x = '';
+	$cnt = preg_match_all('/\[(.*?)\]/',$item['file'],$matches,PREG_SET_ORDER);
+	if($cnt) {
+//		logger('prepare_text: filed_under: ' . print_r($matches,true), LOGGER_DEBUG);
+		foreach($matches as $mtch) {
+			if(strlen($x))
+				$x .= '&nbsp;&nbsp;&nbsp;';
+			$x .= file_tag_decode($mtch[1]). ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&term=' . file_tag_decode($mtch[1]) . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>';
+		}
+		if(strlen($x) && (local_user() == $item['uid']))
+			$s .= '<div class="filesavetags"><span>' . t('Filed under:') . ' </span>' . $x . '</div>'; 
+	}
 
 	$prep_arr = array('item' => $item, 'html' => $s);
 	call_hooks('prepare_body_final', $prep_arr);
+
 	return $prep_arr['html'];
 }}
 
@@ -1267,7 +1313,7 @@ function file_tag_save_file($uid,$item,$file) {
 	if(count($r)) {
 		if(! stristr($r[0]['file'],'[' . file_tag_encode($file) . ']'))
 			q("update item set file = '%s' where id = %d and uid = %d limit 1",
-				dbesc($r[0]['file'] . '[' . $file_tag_encode($file) . ']'),
+				dbesc($r[0]['file'] . '[' . file_tag_encode($file) . ']'),
 				intval($item),
 				intval($uid)
 			);

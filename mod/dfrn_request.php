@@ -43,7 +43,7 @@ function dfrn_request_post(&$a) {
 		return;
 
 
-	if($_POST['cancel']) {
+	if(x($_POST, 'cancel')) {
 		goaway(z_root());
 	} 
 
@@ -77,9 +77,10 @@ function dfrn_request_post(&$a) {
 				 * Lookup the contact based on their URL (which is the only unique thing we have at the moment)
 				 */
 	
-				$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `url` = '%s' AND `self` = 0 LIMIT 1",
+				$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND (`url` = '%s' OR `nurl` = '%s') AND `self` = 0 LIMIT 1",
 					intval(local_user()),
-					dbesc($dfrn_url)
+					dbesc($dfrn_url),
+					dbesc(normalise_link($dfrn_url))
 				);
 	
 				if(count($r)) {
@@ -666,7 +667,25 @@ function dfrn_request_content(&$a) {
 		$page_desc = sprintf( t('Diaspora members: Please do not use this form. Instead, enter "%s" into your Diaspora search bar.'), 
 			$target_addr) . EOL . EOL;
 
-		$page_desc .= t("Please enter your 'Identity Address' from one of the following supported social networks:");
+		$page_desc .= t("Please enter your 'Identity Address' from one of the following supported communications networks:");
+
+		// see if we are allowed to have NETWORK_MAIL2 contacts
+
+		$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
+		if(get_config('system','dfrn_only'))
+			$mail_disabled = 1;
+
+		if(! $mail_disabled) {
+			$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",
+				intval($a->profile['uid'])
+			);
+			if(! count($r))
+				$mail_disabled = 1;
+		}
+
+		$emailnet = (($mail_disabled) ? '' : t("<strike>Connect as an email follower</strike> \x28Coming soon\x29"));
+
+		$invite_desc = t('If you are not yet a member of the free social web, <a href="http://dir.friendica.com/siteinfo">follow this link to find a public Friendica site and join us today</a>.');
 
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Friend/Connection Request'),
@@ -682,6 +701,8 @@ function dfrn_request_content(&$a) {
 			'$diaspora' => t('Diaspora'),
 			'$diasnote' => t('- please share from your own site as noted above'),
 			'$your_address' => t('Your Identity Address:'),
+			'$invite_desc' => $invite_desc,
+			'$emailnet' => $emailnet,
 			'$submit' => t('Submit Request'),
 			'$cancel' => t('Cancel'),
 			'$nickname' => $a->argv[1],
