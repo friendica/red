@@ -104,6 +104,7 @@ else {
 			// NOTREACHED
 		}
 	}
+
 	if((x($_POST,'auth-params')) && $_POST['auth-params'] === 'login') {
 
 		$record = null;
@@ -144,7 +145,7 @@ else {
 		}
 
 		if((! $record) || (! count($record))) {
-			logger('authenticate: failed login attempt: ' . notags(trim($_POST['username']))); 
+			logger('authenticate: failed login attempt: ' . notags(trim($_POST['username'])) . ' from IP ' . $_SERVER['REMOTE_ADDR']); 
 			notice( t('Login failed.') . EOL );
 			goaway(z_root());
   		}
