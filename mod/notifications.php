@@ -191,7 +191,7 @@ function notifications_content(&$a) {
 					'$uid' => $_SESSION['uid'],
 					'$intro_id' => $rr['intro_id'],
 					'$contact_id' => $rr['contact-id'],
-					'$photo' => ((x($rr,'photo')) ? $rr['photo'] : "images/default-profile.jpg"),
+					'$photo' => ((x($rr,'photo')) ? $rr['photo'] : "images/person-175.jpg"),
 					'$fullname' => $rr['name'],
 					'$hidden' => array('hidden', t('Hide this contact from others'), ($rr['hidden'] == 1), ''),
 					'$activity' => array('activity', t('Post a new friend activity'), 1, t('if applicable')),
