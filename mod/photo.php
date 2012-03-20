@@ -23,7 +23,7 @@ function photo_init(&$a) {
 			// NOTREACHED
 	}
 
-	$default = 'images/default-profile.jpg';
+	$default = 'images/person-175.jpg';
 
 	if(isset($type)) {
 
@@ -39,12 +39,12 @@ function photo_init(&$a) {
 				break;
 			case 'micro':
 				$resolution = 6;
-				$default = 'images/default-profile-mm.jpg';
+				$default = 'images/person-48.jpg';
 				break;
 			case 'avatar':
 			default:
 				$resolution = 5;
-				$default = 'images/default-profile-sm.jpg';
+				$default = 'images/person-80.jpg';
 				break;
 		}
 
