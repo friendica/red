@@ -115,8 +115,24 @@ function photo_init(&$a) {
 	}
 
 	if(! isset($data)) {
-		killme();
-		// NOTREACHED
+		if(isset($resolution)) {
+			switch($resolution) {
+
+				case 4:
+					$data = file_get_contents('images/person-175.jpg');
+					break;
+				case 5:
+					$data = file_get_contents('images/person-80.jpg');
+					break;
+				case 6:
+					$data = file_get_contents('images/person-48.jpg');
+					break;
+				default:
+					killme();
+					// NOTREACHED
+					break;
+			}
+		}
 	}
 
 	if(isset($customres) && $customres > 0 && $customres < 500) {
