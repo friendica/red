@@ -1081,6 +1081,17 @@ function photos_content(&$a) {
 			
 		}
 
+		if(! $cmd !== 'edit') {
+			$a->page['htmlhead'] .= '<script>
+				$(document).keydown(function(event) {' . "\n";
+
+			if($prevlink)
+				$a->page['htmlhead'] .= 'if(event.ctrlKey && event.keyCode == 37) { event.preventDefault(); window.location.href = \'' . $prevlink . '\'; }' . "\n";
+			if($nextlink)
+				$a->page['htmlhead'] .= 'if(event.ctrlKey && event.keyCode == 39) { event.preventDefault(); window.location.href = \'' . $nextlink . '\'; }' . "\n";
+			$a->page['htmlhead'] .= '});</script>';
+		}
+
 		if($prevlink)
 			$prevlink = array($prevlink, '<div class="icon prev"></div>') ;
 

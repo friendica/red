@@ -42,12 +42,12 @@ function notifications_post(&$a) {
 					intval(local_user())
 				);
 			}
-			goaway($a->get_baseurl() . '/notifications/intros');
+			goaway($a->get_baseurl(true) . '/notifications/intros');
 		}
 		if($_POST['submit'] == t('Ignore')) {
 			$r = q("UPDATE `intro` SET `ignore` = 1 WHERE `id` = %d LIMIT 1",
 				intval($intro_id));
-			goaway($a->get_baseurl() . '/notifications/intros');
+			goaway($a->get_baseurl(true) . '/notifications/intros');
 		}
 	}
 }
@@ -69,32 +69,32 @@ function notifications_content(&$a) {
 	$tabs = array(
 		array(
 			'label' => t('System'),
-			'url'=>$a->get_baseurl() . '/notifications/system',
+			'url'=>$a->get_baseurl(true) . '/notifications/system',
 			'sel'=> (($a->argv[1] == 'system') ? 'active' : ''),
 		),
 		array(
 			'label' => t('Network'),
-			'url'=>$a->get_baseurl() . '/notifications/network',
+			'url'=>$a->get_baseurl(true) . '/notifications/network',
 			'sel'=> (($a->argv[1] == 'network') ? 'active' : ''),
 		),
 		array(
 			'label' => t('Personal'),
-			'url'=>$a->get_baseurl() . '/notifications/personal',
+			'url'=>$a->get_baseurl(true) . '/notifications/personal',
 			'sel'=> (($a->argv[1] == 'personal') ? 'active' : ''),
 		),
 		array(
 			'label' => t('Home'),
-			'url' => $a->get_baseurl() . '/notifications/home',
+			'url' => $a->get_baseurl(true) . '/notifications/home',
 			'sel'=> (($a->argv[1] == 'home') ? 'active' : ''),
 		),
 		array(
 			'label' => t('Introductions'),
-			'url' => $a->get_baseurl() . '/notifications/intros',
+			'url' => $a->get_baseurl(true) . '/notifications/intros',
 			'sel'=> (($a->argv[1] == 'intros') ? 'active' : ''),
 		),
 		array(
 			'label' => t('Messages'),
-			'url' => $a->get_baseurl() . '/message',
+			'url' => $a->get_baseurl(true) . '/message',
 			'sel'=> '',
 		),
 	);
@@ -143,7 +143,7 @@ function notifications_content(&$a) {
 						'$intro_id' => $rr['intro_id'],
 						'$madeby' => sprintf( t('suggested by %s'),$rr['name']),
 						'$contact_id' => $rr['contact-id'],
-						'$photo' => ((x($rr,'fphoto')) ? $rr['fphoto'] : "images/default-profile.jpg"),
+						'$photo' => ((x($rr,'fphoto')) ? $rr['fphoto'] : "images/person-175.jpg"),
 						'$fullname' => $rr['fname'],
 						'$url' => $rr['furl'],
 						'$hidden' => array('hidden', t('Hide this contact from others'), ($rr['hidden'] == 1), ''),
@@ -191,7 +191,7 @@ function notifications_content(&$a) {
 					'$uid' => $_SESSION['uid'],
 					'$intro_id' => $rr['intro_id'],
 					'$contact_id' => $rr['contact-id'],
-					'$photo' => ((x($rr,'photo')) ? $rr['photo'] : "images/default-profile.jpg"),
+					'$photo' => ((x($rr,'photo')) ? $rr['photo'] : "images/person-175.jpg"),
 					'$fullname' => $rr['name'],
 					'$hidden' => array('hidden', t('Hide this contact from others'), ($rr['hidden'] == 1), ''),
 					'$activity' => array('activity', t('Post a new friend activity'), 1, t('if applicable')),
@@ -244,7 +244,7 @@ function notifications_content(&$a) {
 				switch($it['verb']){
 					case ACTIVITY_LIKE:
 						$notif_content .= replace_macros($tpl_item_likes,array(
-							'$item_link' => $a->get_baseurl().'/display/'.$a->user['nickname']."/".$it['parent'],
+							'$item_link' => $a->get_baseurl(true).'/display/'.$a->user['nickname']."/".$it['parent'],
 							'$item_image' => $it['author-avatar'],
 							'$item_text' => sprintf( t("%s liked %s's post"), $it['author-name'], $it['pname']),
 							'$item_when' => relative_date($it['created'])
@@ -253,7 +253,7 @@ function notifications_content(&$a) {
 						
 					case ACTIVITY_DISLIKE:
 						$notif_content .= replace_macros($tpl_item_dislikes,array(
-							'$item_link' => $a->get_baseurl().'/display/'.$a->user['nickname']."/".$it['parent'],
+							'$item_link' => $a->get_baseurl(true).'/display/'.$a->user['nickname']."/".$it['parent'],
 							'$item_image' => $it['author-avatar'],
 							'$item_text' => sprintf( t("%s disliked %s's post"), $it['author-name'], $it['pname']),
 							'$item_when' => relative_date($it['created'])
@@ -267,7 +267,7 @@ function notifications_content(&$a) {
 						$it['fname'] = $obj->title;
 						
 						$notif_content .= replace_macros($tpl_item_friends,array(
-							'$item_link' => $a->get_baseurl().'/display/'.$a->user['nickname']."/".$it['parent'],
+							'$item_link' => $a->get_baseurl(true).'/display/'.$a->user['nickname']."/".$it['parent'],
 							'$item_image' => $it['author-avatar'],
 							'$item_text' => sprintf( t("%s is now friends with %s"), $it['author-name'], $it['fname']),
 							'$item_when' => relative_date($it['created'])
@@ -281,7 +281,7 @@ function notifications_content(&$a) {
 						$tpl = (($it['id'] == $it['parent']) ? $tpl_item_posts : $tpl_item_comments);
 
 						$notif_content .= replace_macros($tpl,array(
-							'$item_link' => $a->get_baseurl().'/display/'.$a->user['nickname']."/".$it['parent'],
+							'$item_link' => $a->get_baseurl(true).'/display/'.$a->user['nickname']."/".$it['parent'],
 							'$item_image' => $it['author-avatar'],
 							'$item_text' => $item_text,
 							'$item_when' => relative_date($it['created'])
@@ -314,7 +314,7 @@ function notifications_content(&$a) {
 		if (count($r) > 0) {
 			foreach ($r as $it) {
 				$notif_content .= replace_macros($not_tpl,array(
-					'$item_link' => $a->get_baseurl().'/notify/view/'. $it['id'],
+					'$item_link' => $a->get_baseurl(true).'/notify/view/'. $it['id'],
 					'$item_image' => $it['photo'],
 					'$item_text' => strip_tags(bbcode($it['msg'])),
 					'$item_when' => relative_date($it['date'])
@@ -334,7 +334,7 @@ function notifications_content(&$a) {
 		
 		$notif_tpl = get_markup_template('notifications.tpl');
 		
-		$myurl = $a->get_baseurl() . '/profile/'. $a->user['nickname'];
+		$myurl = $a->get_baseurl(true) . '/profile/'. $a->user['nickname'];
 		$myurl = substr($myurl,strpos($myurl,'://')+3);
 		$myurl = str_replace(array('www.','.'),array('','\\.'),$myurl);
 		$diasp_url = str_replace('/profile/','/u/',$myurl);
@@ -369,7 +369,7 @@ function notifications_content(&$a) {
 				switch($it['verb']){
 					case ACTIVITY_LIKE:
 						$notif_content .= replace_macros($tpl_item_likes,array(
-							'$item_link' => $a->get_baseurl().'/display/'.$a->user['nickname']."/".$it['parent'],
+							'$item_link' => $a->get_baseurl(true).'/display/'.$a->user['nickname']."/".$it['parent'],
 							'$item_image' => $it['author-avatar'],
 							'$item_text' => sprintf( t("%s liked %s's post"), $it['author-name'], $it['pname']),
 							'$item_when' => relative_date($it['created'])
@@ -378,7 +378,7 @@ function notifications_content(&$a) {
 						
 					case ACTIVITY_DISLIKE:
 						$notif_content .= replace_macros($tpl_item_dislikes,array(
-							'$item_link' => $a->get_baseurl().'/display/'.$a->user['nickname']."/".$it['parent'],
+							'$item_link' => $a->get_baseurl(true).'/display/'.$a->user['nickname']."/".$it['parent'],
 							'$item_image' => $it['author-avatar'],
 							'$item_text' => sprintf( t("%s disliked %s's post"), $it['author-name'], $it['pname']),
 							'$item_when' => relative_date($it['created'])
@@ -392,7 +392,7 @@ function notifications_content(&$a) {
 						$it['fname'] = $obj->title;
 						
 						$notif_content .= replace_macros($tpl_item_friends,array(
-							'$item_link' => $a->get_baseurl().'/display/'.$a->user['nickname']."/".$it['parent'],
+							'$item_link' => $a->get_baseurl(true).'/display/'.$a->user['nickname']."/".$it['parent'],
 							'$item_image' => $it['author-avatar'],
 							'$item_text' => sprintf( t("%s is now friends with %s"), $it['author-name'], $it['fname']),
 							'$item_when' => relative_date($it['created'])
@@ -406,7 +406,7 @@ function notifications_content(&$a) {
 						$tpl = (($it['id'] == $it['parent']) ? $tpl_item_posts : $tpl_item_comments);
 
 						$notif_content .= replace_macros($tpl,array(
-							'$item_link' => $a->get_baseurl().'/display/'.$a->user['nickname']."/".$it['parent'],
+							'$item_link' => $a->get_baseurl(true).'/display/'.$a->user['nickname']."/".$it['parent'],
 							'$item_image' => $it['author-avatar'],
 							'$item_text' => $item_text,
 							'$item_when' => relative_date($it['created'])
@@ -456,7 +456,7 @@ function notifications_content(&$a) {
 				switch($it['verb']){
 					case ACTIVITY_LIKE:
 						$notif_content .= replace_macros($tpl_item_likes,array(
-							'$item_link' => $a->get_baseurl().'/display/'.$a->user['nickname']."/".$it['parent'],
+							'$item_link' => $a->get_baseurl(true).'/display/'.$a->user['nickname']."/".$it['parent'],
 							'$item_image' => $it['author-avatar'],
 							'$item_text' => sprintf( t("%s liked %s's post"), $it['author-name'], $it['pname']),
 							'$item_when' => relative_date($it['created'])
@@ -465,7 +465,7 @@ function notifications_content(&$a) {
 						break;
 					case ACTIVITY_DISLIKE:
 						$notif_content .= replace_macros($tpl_item_dislikes,array(
-							'$item_link' => $a->get_baseurl().'/display/'.$a->user['nickname']."/".$it['parent'],
+							'$item_link' => $a->get_baseurl(true).'/display/'.$a->user['nickname']."/".$it['parent'],
 							'$item_image' => $it['author-avatar'],
 							'$item_text' => sprintf( t("%s disliked %s's post"), $it['author-name'], $it['pname']),
 							'$item_when' => relative_date($it['created'])
@@ -479,7 +479,7 @@ function notifications_content(&$a) {
 						$it['fname'] = $obj->title;
 						
 						$notif_content .= replace_macros($tpl_item_friends,array(
-							'$item_link' => $a->get_baseurl().'/display/'.$a->user['nickname']."/".$it['parent'],
+							'$item_link' => $a->get_baseurl(true).'/display/'.$a->user['nickname']."/".$it['parent'],
 							'$item_image' => $it['author-avatar'],
 							'$item_text' => sprintf( t("%s is now friends with %s"), $it['author-name'], $it['fname']),
 							'$item_when' => relative_date($it['created'])
@@ -488,7 +488,7 @@ function notifications_content(&$a) {
 						break;
 					default:
 						$notif_content .= replace_macros($tpl_item_comments,array(
-							'$item_link' => $a->get_baseurl().'/display/'.$a->user['nickname']."/".$it['parent'],
+							'$item_link' => $a->get_baseurl(true).'/display/'.$a->user['nickname']."/".$it['parent'],
 							'$item_image' => $it['author-avatar'],
 							'$item_text' => sprintf( t("%s commented on %s's post"), $it['author-name'], $it['pname']),
 							'$item_when' => relative_date($it['created'])

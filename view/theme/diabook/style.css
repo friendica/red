@@ -462,7 +462,7 @@ code {
 }
 #panel {
   position: absolute;
-  width: 10em;
+  width: 12em;
   background: #ffffff;
   color: #2d2d2d;
   margin: 0px;
@@ -769,8 +769,6 @@ ul.menu-popup {
   margin: 0px;
   padding: 0px;
   list-style: none;
-  border: 1px solid #364e59;
-  border-top-color: transparent;
   z-index: 100000;
   -webkit-box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
   -moz-box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
@@ -863,7 +861,42 @@ ul.menu-popup .empty {
         padding: 7px 7px 0px 0px;
 }
 
-
+/*profile_side*/
+#profile_side {
+  margin-bottom: 30px;
+}
+#ps-usericon{
+	height: 25px	
+	}
+#ps-username{
+  font-size: 1.17em;
+  font-weight: bold;
+  vertical-align: top;
+  position: absolute;
+  padding-top: 4px;
+  padding-left: 5px;	
+  color: #2D2D2D;
+	}
+#ps-username:hover{
+  text-decoration: none;	
+	}
+.menu-profile-side{
+	list-style: none;	
+  padding-left: 16px;
+  min-height: 16px;
+	}
+.menu-profile-list{
+  height: auto;
+  overflow: auto;
+  padding-top: 3px;
+  padding-bottom: 3px;
+	}
+.menu-profile-list:hover{
+	background: #EEE;
+	}
+.menu-profile-list-item:hover{	
+	text-decoration: none;	
+   }
 
 /* aside */
 aside {
@@ -1869,7 +1902,6 @@ ul.tabs li .active {
 /* photo */
 .lframe {
   float: left;
-  margin: 0px 10px 10px 0px;
 }
 /* profile match wrapper */
 .profile-match-wrapper {
@@ -2317,7 +2349,36 @@ float: left;
   color: #999999;
 }
 
-.photo-top-image-wrapper {
+#side-bar-photos-albums{
+	margin-top: 15px;	
+	}
+.photo-top-photo, .photo-album-photo {
+  -webkit-border-radius: 5px 5px 0 0;
+  -moz-border-radius: 5px 5px 0 0;
+  border-radius: 5px 5px 0 0;
+}
+.photo-album-image-wrapper, .photo-top-image-wrapper {
+  float: left;
+   -moz-box-shadow: 0 0 5px #888;
+   -webkit-box-shadow: 0 0 5px #888;
+   box-shadow: 0 0 5px #888;
+  background-color: #EEE;
+   -webkit-border-radius: 5px;
+   -moz-border-radius: 5px;
+  border-radius: 5px;
+  padding-bottom: 20px;
+  position: relative;
+  margin: 0 10px 10px 0;
+}
+.photo-top-album-name {
+  position: absolute;
+  bottom: 0;
+  padding: 0 5px;
+}
+.photo-top-album-link{
+  color: #1872A2;
+	}
+/*.photo-top-image-wrapper {
         position: relative;
         float: left;
         margin-top: 15px;
@@ -2333,7 +2394,7 @@ float: left;
         padding: 0px 3px;
         padding-top: 0.5em;
         background-color: rgb(255, 255, 255);
-}
+}*/
 #photo-top-end {
         clear: both;
 }
@@ -2347,4 +2408,3 @@ float: left;
         float: left;
         width: 175px;
 }
-

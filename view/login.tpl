@@ -1,5 +1,5 @@
 
-<form action="" method="post" >
+<form action="$dest_url" method="post" >
 	<input type="hidden" name="auth-params" value="login" />
 
 	<div id="login_standard">

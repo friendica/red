@@ -9,9 +9,9 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1280' );
-define ( 'DFRN_PROTOCOL_VERSION',  '2.22'    );
-define ( 'DB_UPDATE_VERSION',      1131      );
+define ( 'FRIENDICA_VERSION',      '2.3.1287' );
+define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
+define ( 'DB_UPDATE_VERSION',      1132      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -286,7 +286,12 @@ class App {
 
 		startup();
 
-		$this->scheme = ((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']))	?  'https' : 'http' );
+		$this->scheme = 'http';
+		if(x($_SERVER,'HTTPS') && $_SERVER['HTTPS'])
+			$this->scheme = 'https';
+		elseif(x($_SERVER,'SERVER_PORT') && (intval($_SERVER['SERVER_PORT']) == 443)) 
+			$this->scheme = 'https';
+
 
 		if(x($_SERVER,'SERVER_NAME')) {
 			$this->hostname = $_SERVER['SERVER_NAME'];
@@ -379,11 +384,22 @@ class App {
 
 		$scheme = $this->scheme;
 
-		if(x($this->config,'ssl_policy')) {
-			if(($ssl) || ($this->config['ssl_policy'] == SSL_POLICY_FULL)) 
+		if((x($this->config,'system')) && (x($this->config['system'],'ssl_policy'))) {
+			if(intval($this->config['system']['ssl_policy']) === intval(SSL_POLICY_FULL)) 
 				$scheme = 'https';
-			if(($this->config['ssl_policy'] == SSL_POLICY_SELFSIGN) && (local_user() || x($_POST,'auth-params')))
-				$scheme = 'https';
+
+//			We need to populate the $ssl flag across the entire program before turning this on.
+//			Basically, we'll have $ssl = true on any links which can only be seen by a logged in user
+//			(and also the login link). Anything seen by an outsider will have it turned off.
+//			At present, setting SSL_POLICY_SELFSIGN will only force remote contacts to update their 
+//			contact links to this site with "http:" if they are currently using "https:"
+
+//			if($this->config['system']['ssl_policy'] == SSL_POLICY_SELFSIGN) {
+//				if($ssl)
+//					$scheme = 'https';
+//				else
+//					$scheme = 'http';
+//			}
 		}
 
 		$this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
@@ -685,6 +701,7 @@ function get_guid($size=16) {
 
 if(! function_exists('login')) {
 function login($register = false, $hiddens=false) {
+	$a = get_app();
 	$o = "";
 	$reg = false;
 	if ($register) {
@@ -696,31 +713,35 @@ function login($register = false, $hiddens=false) {
 
 	$noid = get_config('system','no_openid');
 	
+	$dest_url = $a->get_baseurl(true) . '/' . $a->query_string;
+
 	if(local_user()) {
 		$tpl = get_markup_template("logout.tpl");
 	}
 	else {
 		$tpl = get_markup_template("login.tpl");
-
+		$_SESSION['return_url'] = $a->query_string;
 	}
 
 
 	$o .= replace_macros($tpl,array(
-		'$logout'        => t('Logout'),
-		'$login'		 => t('Login'),
+
+		'$dest_url'     => $dest_url,
+		'$logout'       => t('Logout'),
+		'$login'        => t('Login'),
 		
 		'$lname'	 	=> array('username', t('Nickname or Email address: ') , '', ''),
 		'$lpassword' 	=> array('password', t('Password: '), '', ''),
 		
 		'$openid'		=> !$noid,
-		'$lopenid'	=> array('openid_url', t('Or login using OpenID: '),'',''),
+		'$lopenid'      => array('openid_url', t('Or login using OpenID: '),'',''),
 		
-		'$hiddens'	=> $hiddens,
+		'$hiddens'      => $hiddens,
 		
-		'$register'		=> $reg,
+		'$register'     => $reg,
 		
-		'$lostpass'      => t('Forgot your password?'),
-		'$lostlink'      => t('Password Reset'),
+		'$lostpass'     => t('Forgot your password?'),
+		'$lostlink'     => t('Password Reset'),
 	));
 
 	call_hooks('login_hook',$o);

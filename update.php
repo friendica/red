@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1131 );
+define( 'UPDATE_VERSION' , 1132 );
 
 /**
  *
@@ -1121,4 +1121,9 @@ function update_1129() {
 function update_1130() {
 	q("ALTER TABLE `item` ADD `file` MEDIUMTEXT NOT NULL AFTER `inform`, ADD FULLTEXT KEY (`file`) ");
 }
+
+function update_1131() {
+	q("ALTER TABLE `contact` ADD `forum` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `writable` , ADD INDEX ( `forum` ) ");
+}
+
 

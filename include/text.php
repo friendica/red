@@ -20,7 +20,7 @@ function replace_macros($s,$r) {
 	
 	//$a = get_app();
 	//$a->page['debug'] .= "$tt <br>\n";
-	return $r;
+	return template_unescape($r);
 
 }}
 
@@ -638,7 +638,7 @@ if(! function_exists('search')) {
 function search($s,$id='search-box',$url='/search',$save = false) {
 	$a = get_app();
 	$o  = '<div id="' . $id . '">';
-	$o .= '<form action="' . $a->get_baseurl() . $url . '" method="get" >';
+	$o .= '<form action="' . $a->get_baseurl((stristr($url,'network')) ? true : false) . $url . '" method="get" >';
 	$o .= '<input type="text" name="search" id="search-text" value="' . $s .'" />';
 	$o .= '<input type="submit" name="submit" id="search-submit" value="' . t('Search') . '" />'; 
 	if($save)
@@ -694,7 +694,12 @@ function linkify($s) {
 
 if(! function_exists('smilies')) {
 function smilies($s, $sample = false) {
+
 	$a = get_app();
+
+	if(intval(get_config('system','no_smilies')) 
+		|| (local_user() && intval(get_pconfig(local_user(),'system','no_smilies'))))
+		return $s;
 
 	$s = preg_replace_callback('/<pre>(.*?)<\/pre>/ism','smile_encode',$s);
 	$s = preg_replace_callback('/<code>(.*?)<\/code>/ism','smile_encode',$s);
@@ -704,27 +709,20 @@ function smilies($s, $sample = false) {
 		'&lt;/3', 
 		'&lt;\\3', 
 		':-)', 
-//		':)', 
 		';-)', 
-//		';)', 
 		':-(', 
-//		':(', 
 		':-P', 
-//		':P', 
 		':-"', 
 		':-&quot;', 
 		':-x', 
 		':-X', 
 		':-D', 
-//		':D', 
 		'8-|', 
 		'8-O', 
 		':-O', 
 		'\\o/', 
 		'o.O', 
 		'O.o', 
-		'\\.../', 
-		'\\ooo/', 
 		":'(", 
 		":-!", 
 		":-/", 
@@ -734,12 +732,8 @@ function smilies($s, $sample = false) {
 		':homebrew', 
 		':coffee', 
 		':facepalm',
-		':headdesk',
 		'~friendika', 
-		'~friendica', 
-//		'Diaspora*' 
-		':beard',
-		':whitebeard'
+		'~friendica'
 
 	);
 
@@ -748,27 +742,20 @@ function smilies($s, $sample = false) {
 		'<img src="' . $a->get_baseurl() . '/images/smiley-brokenheart.gif" alt="</3" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-brokenheart.gif" alt="<\\3" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-smile.gif" alt=":-)" />',
-//		'<img src="' . $a->get_baseurl() . '/images/smiley-smile.gif" alt=":)" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-wink.gif" alt=";-)" />',
-//		'<img src="' . $a->get_baseurl() . '/images/smiley-wink.gif" alt=";)"/>',                
 		'<img src="' . $a->get_baseurl() . '/images/smiley-frown.gif" alt=":-(" />',
-//		'<img src="' . $a->get_baseurl() . '/images/smiley-frown.gif" alt=":(" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-tongue-out.gif" alt=":-P" />',
-//		'<img src="' . $a->get_baseurl() . '/images/smiley-tongue-out.gif" alt=":P" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-\"" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-\"" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-x" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-X" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-laughing.gif" alt=":-D" />',
-//		'<img src="' . $a->get_baseurl() . '/images/smiley-laughing.gif" alt=":D"/>',                
 		'<img src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-|" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-O" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt=":-O" />',                
 		'<img src="' . $a->get_baseurl() . '/images/smiley-thumbsup.gif" alt="\\o/" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="o.O" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="O.o" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-shaka.gif" alt="\\.../" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-shaka.gif" alt="\\ooo/" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-cry.gif" alt=":\'(" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-foot-in-mouth.gif" alt=":-!" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-undecided.gif" alt=":-/" />',
@@ -778,12 +765,8 @@ function smilies($s, $sample = false) {
 		'<img src="' . $a->get_baseurl() . '/images/beer_mug.gif" alt=":homebrew" />',
 		'<img src="' . $a->get_baseurl() . '/images/coffee.gif" alt=":coffee" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-facepalm.gif" alt=":facepalm" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-bangheaddesk.gif" alt=":headdesk" />',
 		'<a href="http://project.friendika.com">~friendika <img src="' . $a->get_baseurl() . '/images/friendika-16.png" alt="~friendika" /></a>',
-		'<a href="http://friendica.com">~friendica <img src="' . $a->get_baseurl() . '/images/friendica-16.png" alt="~friendica" /></a>',
-//		'<a href="http://diasporafoundation.org">Diaspora<img src="' . $a->get_baseurl() . '/images/diaspora.png" alt="Diaspora*" /></a>',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-beard.png" alt=":beard" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-whitebeard.png" alt=":whitebeard" />'
+		'<a href="http://friendica.com">~friendica <img src="' . $a->get_baseurl() . '/images/friendica-16.png" alt="~friendica" /></a>'
 	);
 
 	$params = array('texts' => $texts, 'icons' => $icons, 'string' => $s);
@@ -874,16 +857,30 @@ function link_compare($a,$b) {
 if(! function_exists('prepare_body')) {
 function prepare_body($item,$attach = false) {
 
+	$a = get_app();
 	call_hooks('prepare_body_init', $item); 
 
-	$s = prepare_text($item['body']);
+	$cache = get_config('system','itemcache');
+
+	if (($cache != '')) {
+		$cachefile = $cache."/".$item["guid"]."-".strtotime($item["edited"])."-".hash("crc32", $item['body']);
+
+		if (file_exists($cachefile))
+			$s = file_get_contents($cachefile);
+		else {
+			$s = prepare_text($item['body']);
+			file_put_contents($cachefile, $s);
+		}
+	} else
+		$s = prepare_text($item['body']);
 
 	$prep_arr = array('item' => $item, 'html' => $s);
 	call_hooks('prepare_body', $prep_arr);
 	$s = $prep_arr['html'];
 
-	if(! $attach)
+	if(! $attach) {
 		return $s;
+	}
 
 	$arr = explode(',',$item['attach']);
 	if(count($arr)) {
@@ -916,7 +913,7 @@ function prepare_body($item,$attach = false) {
 	$matches = false;
 	$cnt = preg_match_all('/<(.*?)>/',$item['file'],$matches,PREG_SET_ORDER);
 	if($cnt) {
-		logger('prepare_text: categories: ' . print_r($matches,true), LOGGER_DEBUG);
+//		logger('prepare_text: categories: ' . print_r($matches,true), LOGGER_DEBUG);
 		foreach($matches as $mtch) {
 			if(strlen($x))
 				$x .= ',';
@@ -931,19 +928,19 @@ function prepare_body($item,$attach = false) {
 	$x = '';
 	$cnt = preg_match_all('/\[(.*?)\]/',$item['file'],$matches,PREG_SET_ORDER);
 	if($cnt) {
-		logger('prepare_text: filed_under: ' . print_r($matches,true), LOGGER_DEBUG);
+//		logger('prepare_text: filed_under: ' . print_r($matches,true), LOGGER_DEBUG);
 		foreach($matches as $mtch) {
 			if(strlen($x))
-				$x .= ',';
-			$x .= file_tag_decode($mtch[1]);
+				$x .= '&nbsp;&nbsp;&nbsp;';
+			$x .= file_tag_decode($mtch[1]). ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&term=' . file_tag_decode($mtch[1]) . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>';
 		}
 		if(strlen($x) && (local_user() == $item['uid']))
 			$s .= '<div class="filesavetags"><span>' . t('Filed under:') . ' </span>' . $x . '</div>'; 
 	}
 
-
 	$prep_arr = array('item' => $item, 'html' => $s);
 	call_hooks('prepare_body_final', $prep_arr);
+
 	return $prep_arr['html'];
 }}
 
@@ -1336,3 +1333,6 @@ function file_tag_unsave_file($uid,$item,$file) {
 	return true;
 }
 
+function normalise_openid($s) {
+	return trim(str_replace(array('http://','https://'),array('',''),$s),'/');
+}

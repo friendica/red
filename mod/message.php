@@ -56,23 +56,23 @@ function message_content(&$a) {
 		return;
 	}
 
-	$myprofile = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
+	$myprofile = $a->get_baseurl(true) . '/profile/' . $a->user['nickname'];
 
 
 	$tabs = array(
 		array(
 			'label' => t('Inbox'),
-			'url'=> $a->get_baseurl() . '/message',
+			'url'=> $a->get_baseurl(true) . '/message',
 			'sel'=> (($a->argc == 1) ? 'active' : ''),
 		),
 		array(
 			'label' => t('Outbox'),
-			'url' => $a->get_baseurl() . '/message/sent',
+			'url' => $a->get_baseurl(true) . '/message/sent',
 			'sel'=> (($a->argv[1] == 'sent') ? 'active' : ''),
 		),
 		array(
 			'label' => t('New Message'),
-			'url' => $a->get_baseurl() . '/message/new',
+			'url' => $a->get_baseurl(true) . '/message/new',
 			'sel'=> (($a->argv[1] == 'new') ? 'active' : ''),
 		),
 	);
@@ -99,7 +99,7 @@ function message_content(&$a) {
 			if($r) {
 				info( t('Message deleted.') . EOL );
 			}
-			goaway($a->get_baseurl() . '/message' );
+			goaway($a->get_baseurl(true) . '/message' );
 		}
 		else {
 			$r = q("SELECT `parent-uri`,`convid` FROM `mail` WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -129,7 +129,7 @@ function message_content(&$a) {
 				if($r)
 					info( t('Conversation removed.') . EOL );
 			} 
-			goaway($a->get_baseurl() . '/message' );
+			goaway($a->get_baseurl(true) . '/message' );
 		}	
 	
 	}
@@ -146,7 +146,7 @@ function message_content(&$a) {
 		$tpl = get_markup_template('msg-header.tpl');
 
 		$a->page['htmlhead'] .= replace_macros($tpl, array(
-			'$baseurl' => $a->get_baseurl(),
+			'$baseurl' => $a->get_baseurl(true),
 			'$editselect' => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 			'$nickname' => $a->user['nickname'],
 			'$linkurl' => t('Please enter a link URL:')
@@ -154,7 +154,7 @@ function message_content(&$a) {
 	
 		$preselect = (isset($a->argv[2])?array($a->argv[2]):false);
 	
-		$select = contact_select('messageto','message-to-select', $preselect, 4, true);
+		$select = contact_select('messageto','message-to-select', $preselect, 4, true, false, false, 10);
 		$tpl = get_markup_template('prv_message.tpl');
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Send Private Message'),
@@ -210,7 +210,7 @@ function message_content(&$a) {
 			$o .= replace_macros($tpl, array(
 				'$id' => $rr['id'],
 				'$from_name' =>$rr['from-name'],
-				'$from_url' => (($rr['network'] === NETWORK_DFRN) ? $a->get_baseurl() . '/redir/' . $rr['contact-id'] : $rr['url']),
+				'$from_url' => (($rr['network'] === NETWORK_DFRN) ? $a->get_baseurl(true) . '/redir/' . $rr['contact-id'] : $rr['url']),
 				'$sparkle' => ' sparkle',
 				'$from_photo' => $rr['thumb'],
 				'$subject' => template_escape((($rr['mailseen']) ? $rr['title'] : '<strong>' . $rr['title'] . '</strong>')),
@@ -267,7 +267,7 @@ function message_content(&$a) {
 	
 		$a->page['htmlhead'] .= replace_macros($tpl, array(
 			'$nickname' => $a->user['nickname'],
-			'$baseurl' => $a->get_baseurl()
+			'$baseurl' => $a->get_baseurl(true)
 		));
 
 
@@ -278,7 +278,7 @@ function message_content(&$a) {
 				$sparkle = '';
 			}
 			else {
-				$from_url = $a->get_baseurl() . '/redir/' . $message['contact-id'];
+				$from_url = $a->get_baseurl(true) . '/redir/' . $message['contact-id'];
 				$sparkle = ' sparkle';
 			}
 			$o .= replace_macros($tpl, array(

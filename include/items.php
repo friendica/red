@@ -28,7 +28,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 	$sql_extra = " AND `allow_cid` = '' AND `allow_gid` = '' AND `deny_cid`  = '' AND `deny_gid`  = '' ";
 
-	$r = q("SELECT `contact`.*, `user`.`uid` AS `user_uid`, `user`.`nickname`, `user`.`timezone`
+	$r = q("SELECT `contact`.*, `user`.`uid` AS `user_uid`, `user`.`nickname`, `user`.`timezone`, `user`.`page-flags`
 		FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid`
 		WHERE `contact`.`self` = 1 AND `user`.`nickname` = '%s' LIMIT 1",
 		dbesc($owner_nick)
@@ -156,7 +156,8 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 		'$picdate'      => xmlify(datetime_convert('UTC','UTC',$owner['avatar-date'] . '+00:00' , ATOM_TIME)) ,
 		'$uridate'      => xmlify(datetime_convert('UTC','UTC',$owner['uri-date']    . '+00:00' , ATOM_TIME)) ,
 		'$namdate'      => xmlify(datetime_convert('UTC','UTC',$owner['name-date']   . '+00:00' , ATOM_TIME)) , 
-		'$birthday'     => ((strlen($birthday)) ? '<dfrn:birthday>' . xmlify($birthday) . '</dfrn:birthday>' : '')
+		'$birthday'     => ((strlen($birthday)) ? '<dfrn:birthday>' . xmlify($birthday) . '</dfrn:birthday>' : ''),
+		'$community'    => (($owner['page-flags'] == PAGE_COMMUNITY) ? '<dfrn:community>1</dfrn:community>' : '')
 	));
 
 	call_hooks('atom_feed', $atom);
@@ -1046,6 +1047,22 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	if(! $rino_enable)
 		$rino = 0;
 
+	$ssl_val = intval(get_config('system','ssl_policy'));
+	$ssl_policy = '';
+
+	switch($ssl_val){
+		case SSL_POLICY_FULL:
+			$ssl_policy = 'full';
+			break;
+		case SSL_POLICY_SELFSIGN:
+			$ssl_policy = 'self';
+			break;			
+		case SSL_POLICY_NONE:
+		default:
+			$ssl_policy = 'none';
+			break;
+	}
+
 	$url = $contact['notify'] . '&dfrn_id=' . $idtosend . '&dfrn_version=' . DFRN_PROTOCOL_VERSION . (($rino) ? '&rino=1' : '');
 
 	logger('dfrn_deliver: ' . $url);
@@ -1077,6 +1094,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	$challenge    = hex2bin((string) $res->challenge);
 	$dfrn_version = (float) (($res->dfrn_version) ? $res->dfrn_version : 2.0);
 	$rino_allowed = ((intval($res->rino) === 1) ? 1 : 0);
+	$page         = (($owner['page-flags'] == PAGE_COMMUNITY) ? 1 : 0);
 
 	$final_dfrn_id = '';
 
@@ -1118,6 +1136,11 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 		$postvars['perm'] = 'r';
 	}
 
+	$postvars['ssl_policy'] = $ssl_policy;
+
+	if($page)
+		$postvars['page'] = '1';
+	
 	if($rino && $rino_allowed && (! $dissolve)) {
 		$key = substr(random_string(),0,16);
 		$data = bin2hex(aes_encrypt($postvars['data'],$key));
@@ -1380,6 +1403,19 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 			$contact['bdyear'] = substr($birthday,0,4);
 		}
 
+	}
+
+	$community_page = 0;
+	$rawtags = $feed->get_feed_tags( NAMESPACE_DFRN, 'community');
+	if($rawtags) {
+		$community_page = intval($rawtags[0]['data']);
+	}
+	if(is_array($contact) && intval($contact['forum']) != $community_page) {
+		q("update contact set forum = %d where id = %d limit 1",
+			intval($community_page),
+			intval($contact['id'])
+		);
+		$contact['forum'] = (string) $community_page;
 	}
 
 
@@ -1965,6 +2001,19 @@ function local_delivery($importer,$data) {
 
 		// NOTREACHED
 	}	
+
+	$community_page = 0;
+	$rawtags = $feed->get_feed_tags( NAMESPACE_DFRN, 'community');
+	if($rawtags) {
+		$community_page = intval($rawtags[0]['data']);
+	}
+	if(intval($importer['forum']) != $community_page) {
+		q("update contact set forum = %d where id = %d limit 1",
+			intval($community_page),
+			intval($importer['id'])
+		);
+		$importer['forum'] = (string) $community_page;
+	}
 	
 	logger('local_delivery: feed item count = ' . $feed->get_item_quantity());
 
@@ -2004,6 +2053,7 @@ function local_delivery($importer,$data) {
 					if(($item['verb'] === ACTIVITY_TAG) && ($item['object-type'] === ACTVITY_OBJ_TAGTERM)) {
 						$xo = parse_xml_string($item['object'],false);
 						$xt = parse_xml_string($item['target'],false);
+
 						if($xt->type === ACTIVITY_OBJ_NOTE) {
 							$i = q("select * from `item` where uri = '%s' and uid = %d limit 1",
 								dbesc($xt->id),

@@ -59,7 +59,7 @@ function settings_post(&$a) {
 		q("DELETE FROM tokens WHERE id='%s' AND uid=%d",
 			dbesc($key),
 			local_user());
-		goaway($a->get_baseurl()."/settings/oauth/");
+		goaway($a->get_baseurl(true)."/settings/oauth/");
 		return;			
 	}
 
@@ -104,7 +104,7 @@ function settings_post(&$a) {
 						local_user());
 			}
 		}
-		goaway($a->get_baseurl()."/settings/oauth/");
+		goaway($a->get_baseurl(true)."/settings/oauth/");
 		return;
 	}
 
@@ -322,6 +322,7 @@ function settings_post(&$a) {
 	$str_contact_deny  = perms2str($_POST['contact_deny']);
 
 	$openidserver = $a->user['openidserver'];
+	$openid = normalise_openid($openid);
 
 	// If openid has changed or if there's an openid but no openidserver, try and discover it.
 
@@ -411,7 +412,7 @@ function settings_post(&$a) {
 
 	}
 
-	goaway($a->get_baseurl() . '/settings' );
+	goaway($a->get_baseurl(true) . '/settings' );
 	return; // NOTREACHED
 }
 		
@@ -435,27 +436,27 @@ function settings_content(&$a) {
 	$tabs = array(
 		array(
 			'label'	=> t('Account settings'),
-			'url' 	=> $a->get_baseurl().'/settings',
+			'url' 	=> $a->get_baseurl(true).'/settings',
 			'sel'	=> (($a->argc == 1)?'active':''),
 		),	
 		array(
 			'label'	=> t('Connector settings'),
-			'url' 	=> $a->get_baseurl().'/settings/connectors',
+			'url' 	=> $a->get_baseurl(true).'/settings/connectors',
 			'sel'	=> (($a->argc > 1) && ($a->argv[1] === 'connectors')?'active':''),
 		),
 		array(
 			'label'	=> t('Plugin settings'),
-			'url' 	=> $a->get_baseurl().'/settings/addon',
+			'url' 	=> $a->get_baseurl(true).'/settings/addon',
 			'sel'	=> (($a->argc > 1) && ($a->argv[1] === 'addon')?'active':''),
 		),
 		array(
 			'label' => t('Connections'),
-			'url' => $a->get_baseurl() . '/settings/oauth',
+			'url' => $a->get_baseurl(true) . '/settings/oauth',
 			'sel' => (($a->argc > 1) && ($a->argv[1] === 'oauth')?'active':''),
 		),
 		array(
 			'label' => t('Export personal data'),
-			'url' => $a->get_baseurl() . '/uexport',
+			'url' => $a->get_baseurl(true) . '/uexport',
 			'sel' => ''
 		)
 	);
@@ -517,7 +518,7 @@ function settings_content(&$a) {
 			$r = q("DELETE FROM clients WHERE client_id='%s' AND uid=%d",
 					dbesc($a->argv[3]),
 					local_user());
-			goaway($a->get_baseurl()."/settings/oauth/");
+			goaway($a->get_baseurl(true)."/settings/oauth/");
 			return;			
 		}
 		
@@ -533,7 +534,7 @@ function settings_content(&$a) {
 		$tpl = get_markup_template("settings_oauth.tpl");
 		$o .= replace_macros($tpl, array(
 			'$form_security_token' => get_form_security_token("settings_oauth"),
-			'$baseurl'	=> $a->get_baseurl(),
+			'$baseurl'	=> $a->get_baseurl(true),
 			'$title'	=> t('Connected Apps'),
 			'$add'		=> t('Add application'),
 			'$edit'		=> t('Edit'),
@@ -559,7 +560,7 @@ function settings_content(&$a) {
 		
 		$tpl = get_markup_template("settings_addons.tpl");
 		$o .= replace_macros($tpl, array(
-			'$form_security_token' => get_form_security_token("settings_addons"),
+			'$form_security_token' => get_form_security_token("settings_addon"),
 			'$title'	=> t('Plugin Settings'),
 			'$tabs'		=> $tabs,
 			'$settings_addons' => $settings_addons
@@ -652,20 +653,20 @@ function settings_content(&$a) {
 	$blocktags = $a->user['blocktags'];
 
 	$expire_items = get_pconfig(local_user(), 'expire','items');
-	$expire_items = (($expire_items===false)?1:$expire_items); // default if not set: 1
+	$expire_items = (($expire_items===false)? '1' : $expire_items); // default if not set: 1
 	
 	$expire_notes = get_pconfig(local_user(), 'expire','notes');
-	$expire_notes = (($expire_notes===false)?1:$expire_notes); // default if not set: 1
+	$expire_notes = (($expire_notes===false)? '1' : $expire_notes); // default if not set: 1
 
 	$expire_starred = get_pconfig(local_user(), 'expire','starred');
-	$expire_starred = (($expire_starred===false)?1:$expire_starred); // default if not set: 1
+	$expire_starred = (($expire_starred===false)? '1' : $expire_starred); // default if not set: 1
 	
 	$expire_photos = get_pconfig(local_user(), 'expire','photos');
-	$expire_photos = (($expire_photos===false)?0:$expire_photos); // default if not set: 0
+	$expire_photos = (($expire_photos===false)? '0' : $expire_photos); // default if not set: 0
 
 
 	$suggestme = get_pconfig(local_user(), 'system','suggestme');
-	$suggestme = (($suggestme===false)?0:$suggestme); // default if not set: 0
+	$suggestme = (($suggestme===false)? '0': $suggestme); // default if not set: 0
 
 	$browser_update = intval(get_pconfig(local_user(), 'system','update_interval'));
 	$browser_update = (($browser_update == 0) ? 40 : $browser_update / 1000); // default if not set: 40 seconds
@@ -736,13 +737,13 @@ function settings_content(&$a) {
 	));
 
 	$blockwall = replace_macros($opt_tpl,array(
-			'$field' 	=> array('blockwall',  t('Allow friends to post to your profile page?'), ! $a->user['blockwall'], '', array(t('No'),t('Yes'))),
+			'$field' 	=> array('blockwall',  t('Allow friends to post to your profile page?'), (intval($a->user['blockwall']) ? '0' : '1'), '', array(t('No'),t('Yes'))),
 
 	));
  
 
 	$blocktags = replace_macros($opt_tpl,array(
-			'$field' 	=> array('blocktags',  t('Allow friends to tag your posts?'), ! $a->user['blocktags'], '', array(t('No'),t('Yes'))),
+			'$field' 	=> array('blocktags',  t('Allow friends to tag your posts?'), (intval($a->user['blocktags']) ? '0' : '1'), '', array(t('No'),t('Yes'))),
 
 	));
 
@@ -789,7 +790,7 @@ function settings_content(&$a) {
 	$theme_selected = (!x($_SESSION,'theme')? $default_theme : $_SESSION['theme']);
 
 
-	$subdir = ((strlen($a->get_path())) ? '<br />' . t('or') . ' ' . $a->get_baseurl() . '/profile/' . $nickname : '');
+	$subdir = ((strlen($a->get_path())) ? '<br />' . t('or') . ' ' . $a->get_baseurl(true) . '/profile/' . $nickname : '');
 
 	$tpl_addr = get_markup_template("settings_nick_set.tpl");
 
@@ -819,7 +820,7 @@ function settings_content(&$a) {
 		'$ptitle' 	=> t('Account Settings'),
 
 		'$submit' 	=> t('Submit'),
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => $a->get_baseurl(true),
 		'$uid' => local_user(),
 		'$form_security_token' => get_form_security_token("settings"),
 		

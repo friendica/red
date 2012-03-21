@@ -461,7 +461,7 @@ code {
 }
 #panel {
   position: absolute;
-  width: 10em;
+  width: 12em;
   background: #ffffff;
   color: #2d2d2d;
   margin: 0px;
@@ -780,8 +780,6 @@ ul.menu-popup {
   margin: 0px;
   padding: 0px;
   list-style: none;
-  border: 1px solid #364e59;
-  border-top-color: transparent;
   z-index: 100000;
   -webkit-box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
   -moz-box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
@@ -874,6 +872,66 @@ ul.menu-popup .empty {
         padding: 7px 7px 0px 0px;
 }
 
+/*profile_side*/
+#profile_side {
+  margin-bottom: 30px;
+}
+#ps-usericon{
+	height: 25px	
+	}
+#ps-username{
+  font-size: 1.17em;
+  font-weight: bold;
+  vertical-align: top;
+  position: absolute;
+  padding-top: 4px;
+  padding-left: 5px;	
+	}
+#ps-username:hover{
+  text-decoration: none;	
+	}
+.menu-profile-side{
+  list-style: none;	
+  padding-left: 0px;
+  min-height: 0px;
+	}
+.menu-profile-list{
+  height: auto;
+  overflow: auto;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  padding-left: 16px;
+  min-height: 16px;
+  list-style: none;
+	}
+.menu-profile-list:hover{
+	background: #EEE;
+	}
+.menu-profile-list-item{
+	padding-left: 5px;
+	}	
+.menu-profile-list-item:hover{	
+	text-decoration: none;
+   }
+/*http://prothemedesign.com/circular-icons/*/
+.menu-profile-list.home{
+	background: url("../../../view/theme/diabook-blue/icons/home.png") no-repeat;
+	}
+.menu-profile-list.photos{
+	background: url("../../../view/theme/diabook-blue/icons/mess_side.png") no-repeat;
+	}
+.menu-profile-list.events{
+	background: url("../../../view/theme/diabook-blue/icons/events.png") no-repeat;
+	}
+.menu-profile-list.notes{
+	background: url("../../../view/theme/diabook-blue/icons/notes.png") no-repeat;
+	}
+.menu-profile-list.foren{
+	background: url("../../../view/theme/diabook-blue/icons/pubgroups.png") no-repeat;
+	}
+.menu-profile-list.com_side{
+	background: url("../../../view/theme/diabook-blue/icons/com_side.png") no-repeat;
+	}
 /* aside */
 aside {
   display: table-cell;
@@ -1032,6 +1090,16 @@ aside #side-peoplefind-url {
   padding-left: 16px;
   min-height: 16px;
   list-style: none;
+}
+#side-bar-photos-albums li{
+list-style-type: disc;
+}
+#side-bar-photos-albums ul li{
+  margin-left: 30px;
+  padding-left: 0px;
+	}
+#side-bar-photos-albums ul li a{
+  color: #1872A2;
 }
 .widget .tool.selected {
   background: url("../../../view/theme/diabook-blue/icons/selected.png") no-repeat left center;
@@ -1879,9 +1947,15 @@ ul.tabs li .active {
   float: left;
 }
 /* photo */
+.photo {
+box-shadow: 2px 2px 5px 0px #000000;
+margin: 2px 5px 2px 5px;
+max-height: 85%;
+max-width: 85%;
+}
 .lframe {
   float: left;
-  margin: 0px 10px 10px 0px;
+  /*margin: 0px 10px 10px 0px;*/
 }
 /* profile match wrapper */
 .profile-match-wrapper {
@@ -2168,6 +2242,9 @@ a.mail-list-link {
 .calendar {
         font-family: Courier, monospace;
 }
+.calendar.eventcal a {
+  color: #1872A2;	
+	}
 .today {
         font-weight: bold;
         color: #FF0000;
@@ -2321,8 +2398,42 @@ float: left;
 .contact-details {
   color: #999999;
 }
-
-.photo-top-image-wrapper {
+#side-bar-photos-albums{
+	margin-top: 15px;	
+	}
+.photo-top-photo, .photo-album-photo {
+  -webkit-border-radius: 5px 5px 0 0;
+  -moz-border-radius: 5px 5px 0 0;
+  border-radius: 5px 5px 0 0;
+}
+.photo-album-image-wrapper, .photo-top-image-wrapper {
+  float: left;
+   -moz-box-shadow: 0 0 5px #888;
+   -webkit-box-shadow: 0 0 5px #888;
+   box-shadow: 0 0 5px #888;
+  background-color: #EEE;
+   -webkit-border-radius: 5px;
+   -moz-border-radius: 5px;
+  border-radius: 5px;
+  padding-bottom: 20px;
+  position: relative;
+  margin: 0 10px 10px 0;
+  overflow: hidden;
+  float: left;
+  position: relative;
+}
+.photo-top-album-name {
+  position: absolute;
+  bottom: 0;
+  padding: 0 5px;
+}
+.photo-top-album-link{
+  color: #1872A2;
+	}
+.photo-top-album-img{
+	
+	}
+/*.photo-top-image-wrapper {
         position: relative;
         float: left;
         margin-top: 15px;
@@ -2338,7 +2449,7 @@ float: left;
         padding: 0px 3px;
         padding-top: 0.5em;
         background-color: rgb(255, 255, 255);
-}
+}*/
 #photo-top-end {
         clear: both;
 }
