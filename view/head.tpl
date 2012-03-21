@@ -7,7 +7,7 @@
 
 <link rel="stylesheet" type="text/css" href="$stylesheet" media="all" />
 
-<link rel="shortcut icon" href="$baseurl/images/friendika-32.png" />
+<link rel="shortcut icon" href="$baseurl/images/friendica-32.png" />
 <link rel="search"
          href="$baseurl/opensearch" 
          type="application/opensearchdescription+xml" 
