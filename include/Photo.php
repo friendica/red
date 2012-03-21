@@ -268,9 +268,9 @@ function import_profile_photo($photo,$uid,$cid) {
 		$photo_failure = true;
 
 	if($photo_failure) {
-		$photo = $a->get_baseurl() . '/images/default-profile.jpg';
-		$thumb = $a->get_baseurl() . '/images/default-profile-sm.jpg';
-		$micro = $a->get_baseurl() . '/images/default-profile-mm.jpg';
+		$photo = $a->get_baseurl() . '/images/person-175.jpg';
+		$thumb = $a->get_baseurl() . '/images/person-80.jpg';
+		$micro = $a->get_baseurl() . '/images/person-48.jpg';
 	}
 
 	return(array($photo,$thumb,$micro));

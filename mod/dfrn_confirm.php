@@ -655,7 +655,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		if(count($r))
 			$photo = $r[0]['photo'];
 		else
-			$photo = $a->get_baseurl() . '/images/default-profile.jpg';
+			$photo = $a->get_baseurl() . '/images/person-175.jpg';
 				
 		require_once("Photo.php");
 
