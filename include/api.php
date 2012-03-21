@@ -785,6 +785,7 @@
 	api_register_func('api/statuses/show','api_statuses_show', true);
 
 	//api_register_func('api/statuses/mentions','api_statuses_mentions', true);
+	//api_register_func('api/statuses/replies','api_statuses_mentions', true);
 
 
 	function api_statuses_user_timeline(&$a, $type){
@@ -932,7 +933,7 @@
 			}
 
 			$status = array(
-				'text'		=> html2plain(bbcode($item['body']), 0),
+				'text'		=> trim($item['title']." \n".html2plain(bbcode($item['body']), 0)),
 				'truncated' => False,
 				'created_at'=> api_date($item['created']),
 				'in_reply_to_status_id' => $in_reply_to_status_id,
@@ -1306,4 +1307,36 @@
 	api_register_func('api/oauth/request_token', 'api_oauth_request_token', false);
 	api_register_func('api/oauth/access_token', 'api_oauth_access_token', false);
 
+/*
+Not implemented by now:
+statuses/public_timeline
+statuses/mentions
+statuses/replies
+statuses/retweets_of_me
+statuses/destroy
+statuses/retweet
+friendships/create
+friendships/destroy
+friendships/exists
+friendships/show
+account/update_location
+account/update_profile_background_image
+account/update_profile_image
+favorites
+favorites/create
+favorites/destroy
+blocks/create
+blocks/destroy
+oauth/authorize
 
+Not implemented in status.net:
+statuses/retweeted_to_me
+statuses/retweeted_by_me
+direct_messages/destroy
+account/end_session
+account/update_delivery_device
+notifications/follow
+notifications/leave
+blocks/exists
+blocks/blocking
+*/
