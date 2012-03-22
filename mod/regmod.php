@@ -64,6 +64,11 @@ function user_allow($hash) {
 
 }
 
+
+// This does not have to go through user_remove() and save the nickname
+// permanently against re-registration, as the person was not yet
+// allowed to have friends on this system
+
 function user_deny($hash) {
 
 	$register = q("SELECT * FROM `register` WHERE `hash` = '%s' LIMIT 1",
