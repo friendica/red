@@ -28,7 +28,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 	$sql_extra = " AND `allow_cid` = '' AND `allow_gid` = '' AND `deny_cid`  = '' AND `deny_gid`  = '' ";
 
-	$r = q("SELECT `contact`.*, `user`.`uid` AS `user_uid`, `user`.`nickname`, `user`.`timezone`
+	$r = q("SELECT `contact`.*, `user`.`uid` AS `user_uid`, `user`.`nickname`, `user`.`timezone`, `user`.`page-flags`
 		FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid`
 		WHERE `contact`.`self` = 1 AND `user`.`nickname` = '%s' LIMIT 1",
 		dbesc($owner_nick)
@@ -156,7 +156,8 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 		'$picdate'      => xmlify(datetime_convert('UTC','UTC',$owner['avatar-date'] . '+00:00' , ATOM_TIME)) ,
 		'$uridate'      => xmlify(datetime_convert('UTC','UTC',$owner['uri-date']    . '+00:00' , ATOM_TIME)) ,
 		'$namdate'      => xmlify(datetime_convert('UTC','UTC',$owner['name-date']   . '+00:00' , ATOM_TIME)) , 
-		'$birthday'     => ((strlen($birthday)) ? '<dfrn:birthday>' . xmlify($birthday) . '</dfrn:birthday>' : '')
+		'$birthday'     => ((strlen($birthday)) ? '<dfrn:birthday>' . xmlify($birthday) . '</dfrn:birthday>' : ''),
+		'$community'    => (($owner['page-flags'] == PAGE_COMMUNITY) ? '<dfrn:community>1</dfrn:community>' : '')
 	));
 
 	call_hooks('atom_feed', $atom);
@@ -1404,6 +1405,19 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 	}
 
+	$community_page = 0;
+	$rawtags = $feed->get_feed_tags( NAMESPACE_DFRN, 'community');
+	if($rawtags) {
+		$community_page = intval($rawtags[0]['data']);
+	}
+	if(is_array($contact) && intval($contact['forum']) != $community_page) {
+		q("update contact set forum = %d where id = %d limit 1",
+			intval($community_page),
+			intval($contact['id'])
+		);
+		$contact['forum'] = (string) $community_page;
+	}
+
 
 	// process any deleted entries
 
@@ -1987,6 +2001,19 @@ function local_delivery($importer,$data) {
 
 		// NOTREACHED
 	}	
+
+	$community_page = 0;
+	$rawtags = $feed->get_feed_tags( NAMESPACE_DFRN, 'community');
+	if($rawtags) {
+		$community_page = intval($rawtags[0]['data']);
+	}
+	if(intval($importer['forum']) != $community_page) {
+		q("update contact set forum = %d where id = %d limit 1",
+			intval($community_page),
+			intval($importer['id'])
+		);
+		$importer['forum'] = (string) $community_page;
+	}
 	
 	logger('local_delivery: feed item count = ' . $feed->get_item_quantity());
 

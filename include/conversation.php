@@ -649,7 +649,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 					// template to use to render item (wall, walltowall, search)
 					'template' => $template,
 					
-					'type' => implode("",array_slice(split("/",$item['verb']),-1)),
+					'type' => implode("",array_slice(explode("/",$item['verb']),-1)),
 					'tags' => $tags,
 					'body' => template_escape($body),
 					'text' => strip_tags(template_escape($body)),
@@ -897,8 +897,7 @@ function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 		'$audurl' => t("Please enter an audio link/URL:"),
 		'$term' => t('Tag term:'),
 		'$fileas' => t('File as:'),
-		'$whereareu' => t('Where are you right now?'),
-		'$title' => t('Enter a title for this item') 
+		'$whereareu' => t('Where are you right now?')
 	));
 
 
