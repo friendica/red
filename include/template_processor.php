@@ -80,7 +80,7 @@
 		 */
 		private function _replcb_for($args){
 			$m = array_map('trim', explode(" as ", $args[2]));
-			list($keyname, $varname) = explode("=>",$m[1]);
+			@list($keyname, $varname) = explode("=>",$m[1]);
 			if (is_null($varname)) { $varname=$keyname; $keyname=""; }
 			if ($m[0]=="" || $varname=="" || is_null($varname)) die("template error: 'for ".$m[0]." as ".$varname."'") ;
 			//$vals = $this->r[$m[0]];
