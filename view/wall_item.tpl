@@ -52,7 +52,7 @@
 				<a href="#" id="tagger-$item.id" onclick="itemTag($item.id); return false;" class="$item.star.classtagger" title="$item.star.tagger">$item.star.tagger</a>
 			{{ endif }}
 			{{ if $item.filer }}
-                                <a href="#" id="filer-$item.id" onclick="itemFiler($item.id); return false;" class="filer-item filer-icon" title="$item.star.filer">$item.star.filer</a>
+                                <a href="#" id="filer-$item.id" onclick="itemFiler($item.id); return false;" class="filer-item filer-icon" title="$item.filer">$item.filer</a>
 			{{ endif }}			
 			
 			{{ if $item.vote }}
