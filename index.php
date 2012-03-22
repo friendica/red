@@ -41,8 +41,6 @@ require_once("dba.php");
 $db = new dba($db_host, $db_user, $db_pass, $db_data, $install);
         unset($db_host, $db_user, $db_pass, $db_data);
 
-require_once('util/profiler.php'); 
-
 if(! $install) {
 
 	/**
