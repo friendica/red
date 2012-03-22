@@ -897,8 +897,7 @@ function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 		'$audurl' => t("Please enter an audio link/URL:"),
 		'$term' => t('Tag term:'),
 		'$fileas' => t('File as:'),
-		'$whereareu' => t('Where are you right now?'),
-		'$title' => t('Enter a title for this item') 
+		'$whereareu' => t('Where are you right now?')
 	));
 
 

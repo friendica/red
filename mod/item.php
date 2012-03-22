@@ -243,6 +243,7 @@ function item_post(&$a) {
 		}
 
 
+
 		if(! strlen($body)) {
 			if($preview)
 				killme();
@@ -253,6 +254,15 @@ function item_post(&$a) {
 		}
 	}
 
+	// Work around doubled linefeeds in Tinymce 3.5b2
+	// First figure out if it's a status post that would've been
+	// created using tinymce. Otherwise leave it alone. 
+
+	$plaintext = (local_user() ? intval(get_pconfig(local_user(),'system','plaintext')) : 0);
+	if((! $parent) && (! $api_source) && (! $plaintext)) {
+		$body = str_replace("\r\n","\n",$body);
+		$body = str_replace("\n\n","\n",$body);
+	}
 
 
 	// get contact info for poster

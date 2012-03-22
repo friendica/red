@@ -102,6 +102,7 @@
 .icon.recycle 	{ background-image: url("../../../view/theme/diabook-blue/icons/recycle.png");}
 .icon.remote-link { background-image: url("../../../view/theme/diabook-blue/icons/remote.png");}
 .icon.tagged    { background-image: url("../../../view/theme/diabook-blue/icons/tagged.png");}
+.icon.file-as { background-image: url("../../../view/theme/diabook-blue/icons/file_as.png");}
 .star-item.icon.unstarred { background-image: url("../../../view/theme/diabook-blue/icons/unstarred.png");}
 .star-item.icon.starred { background-image: url("../../../view/theme/diabook-blue/icons/starred.png");}
 .icon.link		{ background-image: url("../../../view/theme/diabook-blue/icons/link.png");}
@@ -2411,21 +2412,22 @@ float: left;
    -moz-box-shadow: 0 0 5px #888;
    -webkit-box-shadow: 0 0 5px #888;
    box-shadow: 0 0 5px #888;
-  background-color: #EEE;
+  background-color: #000;
    -webkit-border-radius: 5px;
    -moz-border-radius: 5px;
   border-radius: 5px;
   padding-bottom: 20px;
   position: relative;
   margin: 0 10px 10px 0;
-  overflow: hidden;
-  float: left;
-  position: relative;
+  width: 200px; height: 140px;
+  overflow: hidden;  
 }
 .photo-top-album-name {
-  position: absolute;
-  bottom: 0;
-  padding: 0 5px;
+        width: 100%;
+        position: absolute; 
+        bottom: 0px; 
+        padding-left: 3px;
+        background-color: #EEE;
 }
 .photo-top-album-link{
   color: #1872A2;
