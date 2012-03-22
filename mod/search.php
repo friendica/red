@@ -93,8 +93,9 @@ function search_content(&$a) {
 		return $o;
 
 	// Here is the way permissions work in the search module...
-	// Only public wall posts can be shown
+	// Only public posts can be shown
 	// OR your own posts if you are a logged in member
+	// No items will be shown if the member has a blocked profile wall. 
 
 	$s_regx  = sprintf("AND ( `item`.`body` REGEXP '%s' OR `item`.`tag` REGEXP '%s' )", 
 		dbesc(preg_quote($search)), dbesc('\\]' . preg_quote($search) . '\\['));
@@ -104,7 +105,7 @@ function search_content(&$a) {
 	$r = q("SELECT COUNT(*) AS `total`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` LEFT JOIN `user` ON `user`.`uid` = `item`.`uid`
 		WHERE `item`.`visible` = 1 AND `item`.`deleted` = 0 and `item`.`moderated` = 0
-		AND (( `wall` = 1 AND `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND `user`.`hidewall` = 0) 
+		AND (( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND `item`.`private` = 0 AND `user`.`hidewall` = 0) 
 			OR `item`.`uid` = %d )
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 		$search_alg ",
@@ -127,7 +128,7 @@ function search_content(&$a) {
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		LEFT JOIN `user` ON `user`.`uid` = `item`.`uid`
 		WHERE `item`.`visible` = 1 AND `item`.`deleted` = 0 and `item`.`moderated` = 0
-		AND (( `wall` = 1 AND `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND `item`.`private` = 0 AND `user`.`hidewall` = 0 ) 
+		AND (( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND `item`.`private` = 0 AND `user`.`hidewall` = 0 ) 
 			OR `item`.`uid` = %d )
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 		$search_alg

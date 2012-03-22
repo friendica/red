@@ -20,7 +20,7 @@ $info_03
 
 {{ inc field_input.tpl with $field=$dbhost }}{{endinc}}
 {{ inc field_input.tpl with $field=$dbuser }}{{endinc}}
-{{ inc field_input.tpl with $field=$dbpass }}{{endinc}}
+{{ inc field_password.tpl with $field=$dbpass }}{{endinc}}
 {{ inc field_input.tpl with $field=$dbdata }}{{endinc}}
 
 

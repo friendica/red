@@ -150,6 +150,16 @@ function register_post(&$a) {
 	if(count($r))
 		$err .= t('Nickname is already registered. Please choose another.') . EOL;
 
+	// Check deleted accounts that had this nickname. Doesn't matter to us,
+	// but could be a security issue for federated platforms.
+
+	$r = q("SELECT * FROM `userd`
+               	WHERE `username` = '%s' LIMIT 1",
+               	dbesc($nickname)
+	);
+	if(count($r))
+		$err .= t('Nickname was once registered here and may not be re-used. Please choose another.') . EOL;
+
 	if(strlen($err)) {
 		notice( $err );
 		return;

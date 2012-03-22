@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1132 );
+define( 'UPDATE_VERSION' , 1133 );
 
 /**
  *
@@ -1126,4 +1126,13 @@ function update_1131() {
 	q("ALTER TABLE `contact` ADD `forum` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `writable` , ADD INDEX ( `forum` ) ");
 }
 
+
+function update_1132() {
+	q("CREATE TABLE IF NOT EXISTS `userd` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`username` CHAR( 255 ) NOT NULL,
+INDEX ( `username` )
+) ENGINE = MYISAM ");
+
+}
 

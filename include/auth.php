@@ -77,7 +77,7 @@ else {
 
 			$noid = get_config('system','no_openid');
 
-			$openid_url = trim(  (strlen($_POST['openid_url'])?$_POST['openid_url']:$_POST['username']) );
+			$openid_url = trim((strlen($_POST['openid_url'])?$_POST['openid_url']:$_POST['username']) );
 
 			// validate_url alters the calling parameter
 
@@ -99,32 +99,12 @@ else {
 			$openid->identity = $openid_url;
 			$_SESSION['openid'] = $openid_url;
 			$a = get_app();
-			$openid->returnUrl = $a->get_baseurl() . '/openid'; 
-
-			$r = q("SELECT `uid` FROM `user` WHERE `openid` = '%s' LIMIT 1",
-				dbesc($openid_url)
-			);
-			if(count($r)) { 
-				// existing account
-				goaway($openid->authUrl());
-				// NOTREACHED	
-			}
-			else {
-				if($a->config['register_policy'] == REGISTER_CLOSED) {
-					$a = get_app();
-					notice( t('Login failed.') . EOL);
-					goaway(z_root());
-					// NOTREACHED
-				}
-				// new account
-				$_SESSION['register'] = 1;
-				$openid->required = array('namePerson/friendly', 'contact/email', 'namePerson');
-				$openid->optional = array('namePerson/first','media/image/aspect11','media/image/default');
-				goaway($openid->authUrl());
-				// NOTREACHED	
-			}
+			$openid->returnUrl = $a->get_baseurl(true) . '/openid'; 
+			goaway($openid->authUrl());
+			// NOTREACHED
 		}
 	}
+
 	if((x($_POST,'auth-params')) && $_POST['auth-params'] === 'login') {
 
 		$record = null;
@@ -165,7 +145,7 @@ else {
 		}
 
 		if((! $record) || (! count($record))) {
-			logger('authenticate: failed login attempt: ' . notags(trim($_POST['username']))); 
+			logger('authenticate: failed login attempt: ' . notags(trim($_POST['username'])) . ' from IP ' . $_SERVER['REMOTE_ADDR']); 
 			notice( t('Login failed.') . EOL );
 			goaway(z_root());
   		}
