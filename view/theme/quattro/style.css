@@ -787,7 +787,7 @@ section {
 }
 .wall-item-decor {
   position: absolute;
-  left: 790px;
+  left: 97%;
   top: -10px;
   width: 16px;
 }
@@ -967,6 +967,10 @@ section {
   padding-right: 8px;
   background: url("../../../images/tag.png") no-repeat center right;
   color: #ffffff;
+}
+.filesavetags {
+  padding: 3px 0px 3px 0px;
+  opacity: 0.5;
 }
 .wwto {
   position: absolute !important;
