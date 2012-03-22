@@ -62,7 +62,7 @@
 			<a href="#" id="tagger-$item.id" onclick="itemTag($item.id); return false;" class="tag-item icon tagged" title="$item.star.tagger"></a>
 			{{ endif }}
 			{{ if $item.filer }}
-			<a href="#" id="filer-$item.id" onclick="itemFiler($item.id); return false;" class="filer-item filer-icon" title="$item.star.filer"></a>
+			<a href="#" id="filer-$item.id" onclick="itemFiler($item.id); return false;" class="filer-item filer-icon" title="$item.filer"></a>
 			{{ endif }}			
 			
 			<div class="wall-item-delete-wrapper" id="wall-item-delete-wrapper-$item.id" >

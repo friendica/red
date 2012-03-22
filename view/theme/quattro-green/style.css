@@ -615,7 +615,7 @@ aside #profiles-menu {
 }
 #contact-block .contact-block-content {
   clear: both;
-  overflow: idden;
+  overflow: hidden;
   height: auto;
 }
 #contact-block .contact-block-link {
@@ -623,7 +623,7 @@ aside #profiles-menu {
   margin: 0px 2px 2px 0px;
 }
 #contact-block .contact-block-link img {
-  widht: 48px;
+  width: 48px;
   height: 48px;
 }
 /* mail view */
@@ -787,7 +787,7 @@ section {
 }
 .wall-item-decor {
   position: absolute;
-  left: 790px;
+  left: 97%;
   top: -10px;
   width: 16px;
 }
@@ -967,6 +967,10 @@ section {
   padding-right: 8px;
   background: url("../../../images/tag.png") no-repeat center right;
   color: #ffffff;
+}
+.filesavetags {
+  padding: 3px 0px 3px 0px;
+  opacity: 0.5;
 }
 .wwto {
   position: absolute !important;
@@ -1304,6 +1308,37 @@ ul.tabs li {
 ul.tabs li .active {
   border-bottom: 1px solid #009100;
 }
+/** group editor **/
+#group-edit-desc {
+  margin-top: 1em;
+  color: #999999;
+}
+#group-update-wrapper {
+  height: auto;
+  overflow: auto;
+}
+#group-update-wrapper #group {
+  width: 300px;
+  float: left;
+  margin-right: 20px;
+}
+#group-update-wrapper #contacts {
+  width: 300px;
+  float: left;
+}
+#group-update-wrapper #group-separator {
+  display: none;
+}
+#group-update-wrapper .contact_list {
+  height: 300px;
+  border: 1px solid #364e59;
+  overflow: auto;
+}
+#group-update-wrapper .contact_list .contact-block-div {
+  width: 50px;
+  height: 50px;
+  float: left;
+}
 /**
  * Form fields
  */
@@ -1326,7 +1361,7 @@ ul.tabs li .active {
 .field .field_help {
   display: block;
   margin-left: 200px;
-  color: #666666;
+  color: #999999;
 }
 .field .onoff {
   float: left;
