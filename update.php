@@ -1,6 +1,7 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1132 );
+
+define( 'UPDATE_VERSION' , 1133 );
 
 /**
  *
@@ -1122,19 +1123,17 @@ function update_1130() {
 	q("ALTER TABLE `item` ADD `file` MEDIUMTEXT NOT NULL AFTER `inform`, ADD FULLTEXT KEY (`file`) ");
 }
 
-/**
- * CREATE TABLE for profiling
- */
 function update_1131() {
-	q("CREATE TABLE IF NOT EXISTS `profiling` (
+	q("ALTER TABLE `contact` ADD `forum` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `writable` , ADD INDEX ( `forum` ) ");
+}
+
+
+function update_1132() {
+	q("CREATE TABLE IF NOT EXISTS `userd` (
 `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-`function` VARCHAR( 255 ) NOT NULL ,
-`file` VARCHAR( 255 ) NOT NULL ,
-`line` INT NOT NULL DEFAULT '-1',
-`class` VARCHAR( 255 ) NOT NULL ,
-`time` FLOAT( 10, 2 ) NOT NULL ,
-INDEX ( `function` ) ,
-INDEX ( `file` )
-) ENGINE = MyISAM DEFAULT CHARSET=utf8;");
+`username` CHAR( 255 ) NOT NULL,
+INDEX ( `username` )
+) ENGINE = MYISAM ");
+
 }
 

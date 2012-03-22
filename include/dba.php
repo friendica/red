@@ -1,5 +1,7 @@
 <?php
 
+require_once('include/datetime.php');
+
 /**
  *
  * MySQL database class
@@ -104,19 +106,17 @@ class dba {
 
 			logger('dba: ' . $str );
 		}
-		else {
 
-			/**
-			 * If dbfail.out exists, we will write any failed calls directly to it,
-			 * regardless of any logging that may or may nor be in effect.
-			 * These usually indicate SQL syntax errors that need to be resolved.
-			 */
+		/**
+		 * If dbfail.out exists, we will write any failed calls directly to it,
+		 * regardless of any logging that may or may nor be in effect.
+		 * These usually indicate SQL syntax errors that need to be resolved.
+		 */
 
-			if($result === false) {
-				logger('dba: ' . printable($sql) . ' returned false.');
-				if(file_exists('dbfail.out'))
-					file_put_contents('dbfail.out', printable($sql) . ' returned false' . "\n", FILE_APPEND);
-			}
+		if($result === false) {
+			logger('dba: ' . printable($sql) . ' returned false.');
+			if(file_exists('dbfail.out'))
+				file_put_contents('dbfail.out', datetime_convert() . "\n" . printable($sql) . ' returned false' . "\n", FILE_APPEND);
 		}
 
 		if(($result === true) || ($result === false))
@@ -140,7 +140,7 @@ class dba {
 
     
 		if($this->debug)
-			logger('dba: ' . printable(print_r($r, true)), LOGGER_DATA);
+			logger('dba: ' . printable(print_r($r, true)));
 		return($r);
 	}
 

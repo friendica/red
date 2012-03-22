@@ -3,13 +3,13 @@
 
 function lostpass_post(&$a) {
 
-	$email = notags(trim($_POST['login-name']));
-	if(! $email)
+	$loginame = notags(trim($_POST['login-name']));
+	if(! $loginame)
 		goaway(z_root());
 
 	$r = q("SELECT * FROM `user` WHERE ( `email` = '%s' OR `nickname` = '%s' ) AND `verified` = 1 AND `blocked` = 0 LIMIT 1",
-		dbesc($email),
-		dbesc($email)
+		dbesc($loginame),
+		dbesc($loginame)
 	);
 
 	if(! count($r)) {
@@ -19,6 +19,7 @@ function lostpass_post(&$a) {
 
 	$uid = $r[0]['uid'];
 	$username = $r[0]['username'];
+	$email = $r[0]['email'];
 
 	$new_password = autoname(12) . mt_rand(100,9999);
 	$new_password_encoded = hash('whirlpool',$new_password);

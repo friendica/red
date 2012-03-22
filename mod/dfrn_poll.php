@@ -199,7 +199,7 @@ function dfrn_poll_post(&$a) {
 	$ptype        = ((x($_POST,'type'))         ? $_POST['type']                 : '');
 	$dfrn_version = ((x($_POST,'dfrn_version')) ? (float) $_POST['dfrn_version'] : 2.0);
 	$perm         = ((x($_POST,'perm'))         ? $_POST['perm']                 : 'r');
-
+          
 	if($ptype === 'profile-check') {
 
 		if((strlen($challenge)) && (strlen($sec))) {
@@ -358,8 +358,8 @@ function dfrn_poll_post(&$a) {
 					intval($contact_id)
 				);
 			}
-		}				
-
+		}
+				
 		header("Content-type: application/atom+xml");
 		$o = get_feed_for($a,$dfrn_id, $a->argv[1], $last_update, $direction);
 		echo $o;

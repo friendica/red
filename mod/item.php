@@ -243,6 +243,7 @@ function item_post(&$a) {
 		}
 
 
+
 		if(! strlen($body)) {
 			if($preview)
 				killme();
@@ -253,6 +254,15 @@ function item_post(&$a) {
 		}
 	}
 
+	// Work around doubled linefeeds in Tinymce 3.5b2
+	// First figure out if it's a status post that would've been
+	// created using tinymce. Otherwise leave it alone. 
+
+	$plaintext = (local_user() ? intval(get_pconfig(local_user(),'system','plaintext')) : 0);
+	if((! $parent) && (! $api_source) && (! $plaintext)) {
+		$body = str_replace("\r\n","\n",$body);
+		$body = str_replace("\n\n","\n",$body);
+	}
 
 
 	// get contact info for poster
@@ -524,7 +534,7 @@ function item_post(&$a) {
 
 	if($preview) {
 		require_once('include/conversation.php');
-		$o = conversation(&$a,array(array_merge($contact_record,$datarray)),'search',false,true);
+		$o = conversation($a,array(array_merge($contact_record,$datarray)),'search',false,true);
 		logger('preview: ' . $o);
 		echo json_encode(array('preview' => $o));
 		killme();
@@ -836,7 +846,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 		//if the tag is replaced...
 		if(strpos($tag,'[url='))
 			//...do nothing
-			continue;
+			return;
 		//base tag has the tags name only
 		$basetag = str_replace('_',' ',substr($tag,1));
 		//create text for link
@@ -857,7 +867,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 	if(strpos($tag,'@') === 0) {
 		//is it already replaced? 
 		if(strpos($tag,'[url='))
-			continue;
+			return;
 		$stat = false;
 		//get the person's name
 		$name = substr($tag,1);

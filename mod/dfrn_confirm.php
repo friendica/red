@@ -207,6 +207,9 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			if($duplex == 1)
 				$params['duplex'] = 1;
 
+			if($user['page-flags'] == PAGE_COMMUNITY)
+				$params['page'] = 1;
+
 			logger('dfrn_confirm: Confirm: posting data to ' . $dfrn_confirm . ': ' . print_r($params,true), LOGGER_DATA);
 
 			/**
@@ -522,6 +525,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		$source_url = ((x($_POST,'source_url'))   ? hex2bin($_POST['source_url'])  : '');
 		$aes_key    = ((x($_POST,'aes_key'))      ? $_POST['aes_key']              : '');
 		$duplex     = ((x($_POST,'duplex'))       ? intval($_POST['duplex'])       : 0 );
+		$page       = ((x($_POST,'page'))         ? intval($_POST['page'])         : 0 );
 		$version_id = ((x($_POST,'dfrn_version')) ? (float) $_POST['dfrn_version'] : 2.0);
 	
 		logger('dfrn_confirm: requestee contacted: ' . $node);
@@ -651,7 +655,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		if(count($r))
 			$photo = $r[0]['photo'];
 		else
-			$photo = $a->get_baseurl() . '/images/default-profile.jpg';
+			$photo = $a->get_baseurl() . '/images/person-175.jpg';
 				
 		require_once("Photo.php");
 
@@ -677,6 +681,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			`blocked` = 0, 
 			`pending` = 0,
 			`duplex` = %d, 
+			`forum` = %d,
 			`network` = '%s' WHERE `id` = %d LIMIT 1
 		",
 			dbesc($photos[0]),
@@ -687,6 +692,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
 			intval($duplex),
+			intval($page),
 			dbesc(NETWORK_DFRN),
 			intval($dfrn_record)
 		);

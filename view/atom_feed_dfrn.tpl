@@ -12,10 +12,11 @@
 
   <id>$feed_id</id>
   <title>$feed_title</title>
-  <generator uri="http://friendika.com" version="$version">Friendika</generator>
+  <generator uri="http://friendica.com" version="$version">Friendica</generator>
   <link rel="license" href="http://creativecommons.org/licenses/by/3.0/" />
   $hub
   $salmon
+  $community
 
   <updated>$feed_updated</updated>
 

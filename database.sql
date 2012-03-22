@@ -92,6 +92,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `blocked` tinyint(1) NOT NULL DEFAULT '1',
   `readonly` tinyint(1) NOT NULL DEFAULT '0',
   `writable` tinyint(1) NOT NULL DEFAULT '0',
+  `forum` tinyint(1) NOT NULL DEFAULT '0',
   `hidden` tinyint(1) NOT NULL DEFAULT '0',
   `pending` tinyint(1) NOT NULL DEFAULT '1',
   `rating` tinyint(1) NOT NULL DEFAULT '0',
@@ -116,6 +117,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   KEY `dfrn-id` (`dfrn-id`),
   KEY `blocked` (`blocked`),
   KEY `readonly` (`readonly`),
+  KEY `forum` (`forum`),
   KEY `hidden` (`hidden`),
   KEY `pending` (`pending`),
   KEY `closeness` (`closeness`)  
@@ -636,6 +638,7 @@ CREATE TABLE IF NOT EXISTS `mailacct` (
 `mailbox` CHAR( 255 ) NOT NULL,
 `user` CHAR( 255 ) NOT NULL ,
 `pass` TEXT NOT NULL ,
+`reply_to` CHAR( 255 ) NOT NULL ,
 `action` INT NOT NULL ,
 `movetofolder` CHAR(255) NOT NULL ,
 `pubmail` TINYINT(1) NOT NULL DEFAULT '0',
@@ -857,13 +860,9 @@ INDEX ( `ham` ),
 INDEX ( `term` )
 ) ENGINE = MyISAM DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `profiling` (
+CREATE TABLE IF NOT EXISTS `userd` (
 `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-`function` VARCHAR( 255 ) NOT NULL ,
-`file` VARCHAR( 255 ) NOT NULL ,
-`line` INT NOT NULL DEFAULT '-1',
-`class` VARCHAR( 255 ) NOT NULL ,
-`time` FLOAT( 10, 2 ) NOT NULL ,
-INDEX ( `function` ) ,
-INDEX ( `file` )
+`username` CHAR( 255 ) NOT NULL,
+INDEX ( `username` )
 ) ENGINE = MyISAM DEFAULT CHARSET=utf8;
+

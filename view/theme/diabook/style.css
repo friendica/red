@@ -102,6 +102,7 @@
 .icon.recycle 	{ background-image: url("../../../view/theme/diabook/icons/recycle.png");}
 .icon.remote-link { background-image: url("../../../view/theme/diabook/icons/remote.png");}
 .icon.tagged    { background-image: url("../../../view/theme/diabook/icons/tagged.png");}  
+.icon.file-as { background-image: url("../../../view/theme/diabook/icons/file_as.png");}
 .star-item.icon.unstarred { background-image: url("../../../view/theme/diabook/icons/unstarred.png");}
 .star-item.icon.starred { background-image: url("../../../view/theme/diabook/icons/starred.png");}
 .icon.link		{ background-image: url("../../../view/theme/diabook/icons/link.png");}
@@ -462,7 +463,7 @@ code {
 }
 #panel {
   position: absolute;
-  width: 10em;
+  width: 12em;
   background: #ffffff;
   color: #2d2d2d;
   margin: 0px;
@@ -769,8 +770,6 @@ ul.menu-popup {
   margin: 0px;
   padding: 0px;
   list-style: none;
-  border: 1px solid #364e59;
-  border-top-color: transparent;
   z-index: 100000;
   -webkit-box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
   -moz-box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
@@ -883,22 +882,47 @@ ul.menu-popup .empty {
   text-decoration: none;	
 	}
 .menu-profile-side{
-	list-style: none;	
-  padding-left: 16px;
-  min-height: 16px;
+  list-style: none;	
+  padding-left: 0px;
+  min-height: 0px;
 	}
 .menu-profile-list{
   height: auto;
   overflow: auto;
   padding-top: 3px;
   padding-bottom: 3px;
+  padding-left: 16px;
+  min-height: 16px;
+  list-style: none;
 	}
 .menu-profile-list:hover{
 	background: #EEE;
 	}
+.menu-profile-list-item{
+	padding-left: 5px;
+	}	
 .menu-profile-list-item:hover{	
-	text-decoration: none;	
+	text-decoration: none;
    }
+/*http://prothemedesign.com/circular-icons/*/
+.menu-profile-list.home{
+	background: url("../../../view/theme/diabook-blue/icons/home.png") no-repeat;
+	}
+.menu-profile-list.photos{
+	background: url("../../../view/theme/diabook-blue/icons/mess_side.png") no-repeat;
+	}
+.menu-profile-list.events{
+	background: url("../../../view/theme/diabook-blue/icons/events.png") no-repeat;
+	}
+.menu-profile-list.notes{
+	background: url("../../../view/theme/diabook-blue/icons/notes.png") no-repeat;
+	}
+.menu-profile-list.foren{
+	background: url("../../../view/theme/diabook-blue/icons/pubgroups.png") no-repeat;
+	}
+.menu-profile-list.com_side{
+	background: url("../../../view/theme/diabook-blue/icons/com_side.png") no-repeat;
+	}
 
 /* aside */
 aside {
@@ -1904,7 +1928,6 @@ ul.tabs li .active {
 /* photo */
 .lframe {
   float: left;
-  margin: 0px 10px 10px 0px;
 }
 /* profile match wrapper */
 .profile-match-wrapper {
@@ -2351,24 +2374,60 @@ float: left;
 .contact-details {
   color: #999999;
 }
-
-.photo-top-image-wrapper {
+#side-bar-photos-albums li{
+list-style-type: disc;
+}
+#side-bar-photos-albums ul li{
+  margin-left: 30px;
+  padding-left: 0px;
+	}
+#side-bar-photos-albums{
+	margin-top: 15px;	
+	}
+.photo-top-photo, .photo-album-photo {
+  -webkit-border-radius: 5px 5px 0 0;
+  -moz-border-radius: 5px 5px 0 0;
+  border-radius: 5px 5px 0 0;
+}
+.photo-album-image-wrapper, .photo-top-image-wrapper {
+  float: left;
+   -moz-box-shadow: 0 0 5px #888;
+   -webkit-box-shadow: 0 0 5px #888;
+   box-shadow: 0 0 5px #888;
+  background-color: #000;
+   -webkit-border-radius: 5px;
+   -moz-border-radius: 5px;
+  border-radius: 5px;
+  padding-bottom: 20px;
+  position: relative;
+  margin: 0 10px 10px 0;
+  width: 200px; height: 140px;
+  overflow: hidden;  
+}
+/*
+.photo-top-album-name {
+  position: absolute;
+  bottom: 0;
+  padding: 0 5px;
+}*/
+/*.photo-top-image-wrapper {
         position: relative;
         float: left;
         margin-top: 15px;
         margin-right: 15px;
         width: 200px; height: 200px; 
-        overflow: hidden; 
-}
+        
+}*/
 .photo-top-album-name {
         width: 100%;
-        min-height: 2em;
         position: absolute; 
         bottom: 0px; 
-        padding: 0px 3px;
-        padding-top: 0.5em;
-        background-color: rgb(255, 255, 255);
+        padding-left: 3px;
+        background-color: #EEE;
 }
+.photo-top-album-link{
+  color: #3465A4;
+	}
 #photo-top-end {
         clear: both;
 }

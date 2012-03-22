@@ -230,7 +230,7 @@ function all_friends($uid,$cid,$start = 0, $limit = 80) {
 
 
 
-function suggestion_query($uid, $start = 0, $limit = 40) {
+function suggestion_query($uid, $start = 0, $limit = 80) {
 
 	if(! $uid)
 		return array();
