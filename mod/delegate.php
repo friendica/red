@@ -86,7 +86,7 @@ function delegate_content(&$a) {
 
 	$r = q("select nurl from contact where substring_index(contact.nurl,'/',3) = '%s' 
 		and contact.uid = %d and contact.self = 0 and network = '%s' ",
-		dbesc($a->get_baseurl()),
+		dbesc(normalise_link($a->get_baseurl())),
 		intval(local_user()),
 		dbesc(NETWORK_DFRN)
 	); 
