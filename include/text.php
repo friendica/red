@@ -1338,3 +1338,16 @@ function file_tag_unsave_file($uid,$item,$file) {
 function normalise_openid($s) {
 	return trim(str_replace(array('http://','https://'),array('',''),$s),'/');
 }
+
+
+function undo_post_tagging($s) {
+	$matches = null;
+	$cnt = preg_match_all('/([@#])\[url=(.*?)\](.*?)\[\/url\]/ism',$s,$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$s = str_replace($mtch[0], $mtch[1] . $mtch[3],$s);
+		}
+	}
+	return $s;
+}
+
