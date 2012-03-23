@@ -4,6 +4,7 @@
 <a href="https://letstalk.pyxis.uberspace.de/profile/letstalk" style="margin-left: 10px; color:#000;" title="Let's talk" target="blank">Let's talk</a><br>
 <a href="http://kakste.com/profile/newhere" title="#NewHere" style="margin-left: 10px; color:#000;" target="blank">NewHere</a>
 {{ endif }}
+
 {{ if $lastusers_title }}
 <h3>$lastusers_title</h3>
 <div class='items-wrapper'>
