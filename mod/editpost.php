@@ -104,7 +104,7 @@ function editpost_content(&$a) {
 		'$wait' => t('Please wait'),
 		'$permset' => t('Permission settings'),
 		'$ptyp' => $itm[0]['type'],
-		'$content' => $itm[0]['body'],
+		'$content' => undo_post_tagging($itm[0]['body']),
 		'$post_id' => $post_id,
 		'$baseurl' => $a->get_baseurl(),
 		'$defloc' => $a->user['default-location'],
