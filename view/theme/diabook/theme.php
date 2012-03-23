@@ -274,8 +274,23 @@ if($is_url = preg_match ("/\bprofile\b/i", $_SERVER['REQUEST_URI'])) {
 	
 }
 
+//change css on network and profilepages
+$cssFile = null;
+
+if($is_url = preg_match ("/\bnetwork\b/i", $_SERVER['REQUEST_URI'])) {
+	$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook/style-network.css";
+	}
+	
+if($is_url = preg_match ("/\bprofile\b/i", $_SERVER['REQUEST_URI'])) {
+		$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook/style-profile.css";
+		}
+		
+
+
 //js scripts
 $a->page['htmlhead'] .= <<< EOT
+
+<link rel="stylesheet" type="text/css" href="$cssFile" />
 
 <script>
 
