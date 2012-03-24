@@ -7,7 +7,7 @@
 
 {{ if $lastusers_title }}
 <h3>Connectable Services</h3>
-<div id="right_service_icons" style="margin-left: 10px; margin-top: 5px;">
+<div id="right_service_icons" style="margin-left: 11px; margin-top: 5px;">
 <a href="$url/facebook"><img alt="Facebook" src="view/theme/diabook-blue/icons/facebook.png" title="Facebook"></a>
 <a href="$url/settings/connectors"><img alt="StatusNet" src="view/theme/diabook-blue/icons/StatusNet.png?" title="StatusNet"></a>
 <a href="$url/settings/connectors"><img alt="LiveJournal" src="view/theme/diabook-blue/icons/livejournal.png?" title="LiveJournal"></a>

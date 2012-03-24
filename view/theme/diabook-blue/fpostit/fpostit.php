@@ -21,7 +21,7 @@ if (($_POST["friendika_acct_name"] != '') && ($_POST["friendika_password"] != ''
 		}
 		.wrap1 {
 			padding: 2px 5px;
-			background-color: #729FCF;
+			background-color: #000;
 			margin-bottom: 10px;
 		}
 		.wrap2 {
