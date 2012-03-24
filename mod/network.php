@@ -250,6 +250,20 @@ function network_content(&$a, $update = 0) {
 	if($cid)
 		$def_acl = array('allow_cid' => '<' . intval($cid) . '>');
 
+	if($nets) {
+		$r = q("select id from contact where uid = %d and network = '%s' and self = 0",
+			intval(local_user()),
+			dbesc($nets)
+		);
+
+		$str = '';
+		if(count($r))
+			foreach($r as $rr)
+				$str .= '<' . $rr['id'] . '>';
+		if(strlen($str))
+			$def_acl = array('allow_cid' => $str);
+	}
+
 	if(! $update) {
 		if($group) {
 			if(($t = group_public_members($group)) && (! get_pconfig(local_user(),'system','nowarn_insecure'))) {
@@ -270,7 +284,7 @@ function network_content(&$a, $update = 0) {
 			'default_location' => $a->user['default-location'],
 			'nickname' => $a->user['nickname'],
 			'lockstate' => ((($group) || (is_array($a->user) && ((strlen($a->user['allow_cid'])) || (strlen($a->user['allow_gid'])) || (strlen($a->user['deny_cid'])) || (strlen($a->user['deny_gid']))))) ? 'lock' : 'unlock'),
-			'acl' => populate_acl((($group || $cid) ? $def_acl : $a->user), $celeb),
+			'acl' => populate_acl((($group || $cid || $nets) ? $def_acl : $a->user), $celeb),
 			'bang' => (($group || $cid) ? '!' : ''),
 			'visitor' => 'block',
 			'profile_uid' => local_user()
