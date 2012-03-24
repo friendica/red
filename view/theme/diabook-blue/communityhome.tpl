@@ -8,14 +8,14 @@
 {{ if $lastusers_title }}
 <h3>Connectable Services</h3>
 <div id="right_service_icons" style="margin-left: 11px; margin-top: 5px;">
-<a href="$url/facebook"><img alt="Facebook" src="view/theme/diabook/icons/facebook.png" title="Facebook"></a>
-<a href="$url/settings/connectors"><img alt="StatusNet" src="view/theme/diabook/icons/StatusNet.png?" title="StatusNet"></a>
-<a href="$url/settings/connectors"><img alt="LiveJournal" src="view/theme/diabook/icons/livejournal.png?" title="LiveJournal"></a>
-<a href="$url/settings/connectors"><img alt="Posterous" src="view/theme/diabook/icons/posterous.png?" title="Posterous"></a>
-<a href="$url/settings/connectors"><img alt="Tumblr" src="view/theme/diabook/icons/tumblr.png?" title="Tumblr"></a>
-<a href="$url/settings/connectors"><img alt="Twitter" src="view/theme/diabook/icons/twitter.png?" title="Twitter"></a>
-<a href="$url/settings/connectors"><img alt="WordPress" src="view/theme/diabook/icons/wordpress.png?" title="WordPress"></a>
-<a href="$url/settings/connectors"><img alt="E-Mail" src="view/theme/diabook/icons/email.png?" title="E-Mail"></a>
+<a href="$url/facebook"><img alt="Facebook" src="view/theme/diabook-blue/icons/facebook.png" title="Facebook"></a>
+<a href="$url/settings/connectors"><img alt="StatusNet" src="view/theme/diabook-blue/icons/StatusNet.png?" title="StatusNet"></a>
+<a href="$url/settings/connectors"><img alt="LiveJournal" src="view/theme/diabook-blue/icons/livejournal.png?" title="LiveJournal"></a>
+<a href="$url/settings/connectors"><img alt="Posterous" src="view/theme/diabook-blue/icons/posterous.png?" title="Posterous"></a>
+<a href="$url/settings/connectors"><img alt="Tumblr" src="view/theme/diabook-blue/icons/tumblr.png?" title="Tumblr"></a>
+<a href="$url/settings/connectors"><img alt="Twitter" src="view/theme/diabook-blue/icons/twitter.png?" title="Twitter"></a>
+<a href="$url/settings/connectors"><img alt="WordPress" src="view/theme/diabook-blue/icons/wordpress.png?" title="WordPress"></a>
+<a href="$url/settings/connectors"><img alt="E-Mail" src="view/theme/diabook-blue/icons/email.png?" title="E-Mail"></a>
 </div>
 {{ endif }}
 

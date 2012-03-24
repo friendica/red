@@ -1737,7 +1737,7 @@ function diaspora_retraction($importer,$xml) {
 		contact_remove($contact['id']);
 	}
 	elseif($type === 'Post') {
-		$r = q("select * from item where guid = '%s' and uid = %d limit 1",
+		$r = q("select * from item where guid = '%s' and uid = %d and not file like '%%[%%' limit 1",
 			dbesc('guid'),
 			intval($importer['uid'])
 		);
@@ -1785,7 +1785,7 @@ function diaspora_signed_retraction($importer,$xml,$msg) {
 	}
 
 	if($type === 'StatusMessage') {
-		$r = q("select * from item where guid = '%s' and uid = %d limit 1",
+		$r = q("select * from item where guid = '%s' and uid = %d and not file like '%%[%%' limit 1",
 			dbesc($guid),
 			intval($importer['uid'])
 		);
