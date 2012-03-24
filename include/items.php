@@ -1898,6 +1898,14 @@ function local_delivery($importer,$data) {
 		);
 		if(count($r)) {
 			$fid = $r[0]['id'];
+
+			// OK, we do. Do we already have an introduction for this person ?
+			$r = q("select id from intro where uid = %d and fid = %d limit 1",
+				intval($fsugg['uid']),
+				intval($fid)
+			);
+			if(count($r))
+				return 0;
 		}
 		if(! $fid)
 			$r = q("INSERT INTO `fcontact` ( `name`,`url`,`photo`,`request` ) VALUES ( '%s', '%s', '%s', '%s' ) ",
@@ -1917,6 +1925,7 @@ function local_delivery($importer,$data) {
 		// database record did not get created. Quietly give up.
 		else
 			return 0;
+
 
 		$hash = random_string();
  
