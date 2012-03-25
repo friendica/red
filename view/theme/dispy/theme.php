@@ -131,7 +131,7 @@ function dispy_community_info() {
 	$a = get_app();
 
 	$fostitJS = "javascript: (function() {
-		the_url = '".$a->get_baseurl($ssl_state)."/view/theme/dispy-dark/fpostit/fpostit.php?url=' +
+		the_url = '".$a->get_baseurl($ssl_state)."/view/theme/dispy/fpostit/fpostit.php?url=' +
 		encodeURIComponent(window.location.href) + '&title=' + encodeURIComponent(document.title) + '&text=' +
 		encodeURIComponent(''+(window.getSelection ? window.getSelection() : document.getSelection ?
 		document.getSelection() : document.selection.createRange().text));
