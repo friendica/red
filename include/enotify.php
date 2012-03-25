@@ -153,6 +153,11 @@ function notification($params) {
 
 	}
 
+	if($params['type'] == NOTIFY_SYSTEM) {
+
+
+	}
+
 	// from here on everything is in the recipients language
 
 	push_lang($params['language']);
@@ -223,7 +228,7 @@ function notification($params) {
 	// send email notification if notification preferences permit
 
 	require_once('bbcode.php');
-	if(intval($params['notify_flags']) & intval($params['type'])) {
+	if((intval($params['notify_flags']) & intval($params['type'])) || $params['type'] == NOTIFY_SYSTEM) {
 
 		logger('notification: sending notification email');
 

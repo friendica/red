@@ -135,6 +135,9 @@ define ( 'NOTIFY_PROFILE',  0x0040 );
 define ( 'NOTIFY_TAGSELF',  0x0080 );
 define ( 'NOTIFY_TAGSHARE', 0x0100 );
 
+define ( 'NOTIFY_SYSTEM',   0x8000 );
+
+
 /**
  * various namespaces we may need to parse
  */
