@@ -36,7 +36,7 @@ function diabook_community_info(){
 			FROM `profile` LEFT JOIN `user` ON `user`.`uid` = `profile`.`uid` 
 			WHERE `is-default` = 1 $publish AND `user`.`blocked` = 0 $sql_extra $order LIMIT %d , %d ",
 		0,
-		12
+		9
 	);
 	$tpl = file_get_contents( dirname(__file__).'/directory_item.tpl');
 	if(count($r)) {
@@ -64,7 +64,7 @@ function diabook_community_info(){
 			WHERE `T1`.`liker-link` LIKE '%s%%' OR `item`.`author-link` LIKE '%s%%'
 			GROUP BY `uri`
 			ORDER BY `T1`.`created` DESC
-			LIMIT 0,10",
+			LIMIT 0,5",
 			$a->get_baseurl(),$a->get_baseurl()
 			);
 
@@ -112,7 +112,7 @@ function diabook_community_info(){
 				AND `user`.`blockwall`=0
 				AND `user`.`hidewall`=0
 				ORDER BY `photo`.`edited` DESC
-				LIMIT 0, 12",
+				LIMIT 0, 9",
 				dbesc(t('Contact Photos')),
 				dbesc(t('Profile Photos'))
 				);
@@ -189,7 +189,7 @@ function diabook_community_info(){
 
 
 //profile_side at networkpages
-if ($a->argv[0] === "network"){
+if ($a->argv[0] === "network" && local_user()){
 
 	// USER MENU
 	if(local_user()) {
@@ -251,6 +251,14 @@ $a->page['htmlhead'] .= <<< EOT
  $(function() {
 	$('a.lightbox').fancybox(); // Select all links with lightbox class
  });
+ 
+ $(document).ready(function ()
+$('iframe').each(function()
+var url = $(this).attr("src");
+$(this).attr("src",url+"?wmode=transparent");
+);
+);
+ 
  </script>
 EOT;
 
