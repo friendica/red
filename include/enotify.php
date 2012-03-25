@@ -154,9 +154,31 @@ function notification($params) {
 	}
 
 	if($params['type'] == NOTIFY_SYSTEM) {
-
-
+		
 	}
+
+	$h = array(
+		'params'    => $params, 
+		'subject'   => $subject,
+		'preamble'  => $preamble, 
+		'epreamble' => $epreamble, 
+		'body'      => $body, 
+		'sitelink'  => $sitelink,
+		'tsitelink' => $tsitelink,
+		'hsitelink' => $hsitelink,
+		'itemlink'  => $itemlink
+	);
+		
+	call_hooks('enotify',$h);
+
+	$subject   = $h['subject'];
+	$preamble  = $h['preamble'];
+	$epreamble = $h['epreamble'];
+	$body      = $h['body'];
+	$sitelink  = $h['sitelink'];
+	$tsitelink = $h['tsitelink'];
+	$hsitelink = $h['hsitelink'];
+	$itemlink  = $h['itemlink']; 
 
 	// from here on everything is in the recipients language
 
