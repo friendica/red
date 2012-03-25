@@ -3,7 +3,7 @@
 /*
  * Name: Dispy
  * Description: Dispy, Friendica theme
- * Version: 0.9
+ * Version: 1.0
  * Author: unknown
  * Maintainer: Simon <http://simon.kisikew.org/>
  */

@@ -3,9 +3,10 @@
 /*
  * Name: Dispy Dark
  * Description: Dispy Dark, Friendica theme
- * Version: 0.9
+ * Version: 1.0
  * Author: Simon <http://simon.kisikew.org/>
  * Maintainer: Simon <http://simon.kisikew.org/>
+ * Screenshot: <a href="screenshot.png">screenshot</a>
  */
 
 
