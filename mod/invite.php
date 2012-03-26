@@ -56,7 +56,7 @@ function invite_post(&$a) {
 		else
 			$nmessage = $message;
 
-		$res = mail($recip, sprintf( t('Please join my close friends on Friendica'), $a->config['sitename']), 
+		$res = mail($recip, sprintf( t('Please join us on Friendica'), $a->config['sitename']), 
 			$nmessage, 
 			"From: " . $a->user['email'] . "\n"
 			. 'Content-type: text/plain; charset=UTF-8' . "\n"
@@ -97,9 +97,10 @@ function invite_content(&$a) {
 	$dirloc = get_config('system','directory_submit_url');
 	if(strlen($dirloc)) {
 		if($a->config['register_policy'] == REGISTER_CLOSED)
-			$linktxt = sprintf( t('Visit %s for a list of public sites you can join. Friendica members on other sites can all connect with each other, as well as with members of many other social networks.'), dirname($dirloc) . '/siteinfo');
+			$linktxt = sprintf( t('Visit %s for a list of public sites that you can join. Friendica members on other sites can all connect with each other, as well as with members of many other social networks.'), dirname($dirloc) . '/siteinfo');
 		elseif($a->config['register_policy'] != REGISTER_CLOSED)
-			$linktxt = sprintf( t('To accept this invitation, please visit and register at %s or any other public Friendica website. They all inter-connect to create a huge privacy-enhanced social web that is owned and controlled by its members. They can also connect with many traditional social networks. See %s for a list of alternate Friendica sites.'),$a->get_baseurl(),dirname($dirloc) . '/siteinfo');
+			$linktxt = sprintf( t('To accept this invitation, please visit and register at %s or any other public Friendica website.'), $a->get_baseurl())
+			. "\r\n" . "\r\n" . sprintf( t('Friendica sites all inter-connect to create a huge privacy-enhanced social web that is owned and controlled by its members. They can also connect with many traditional social networks. See %s for a list of alternate Friendica sites you can join.'),dirname($dirloc) . '/siteinfo');
 	}
 	else {
 		$o = t('Our apologies. This system is not currently configured to connect with other public sites or invite members.');
@@ -110,7 +111,7 @@ function invite_content(&$a) {
 		'$invite' => t('Send invitations'),
 		'$addr_text' => t('Enter email addresses, one per line:'),
 		'$msg_text' => t('Your message:'),
-		'$default_message' => t('Please join my close friends on Friendica, and help us to build a better social web.') . "\r\n" . "\r\n"
+		'$default_message' => t('You are cordially invited to join me and other close friends on Friendica - and help us to create a better social web.') . "\r\n" . "\r\n"
 			. $linktxt
 			. "\r\n" . "\r\n" . (($invonly) ? t('You will need to supply this invitation code: $invite_code') . "\r\n" . "\r\n" : '') .t('Once you have registered, please connect with me via my profile page at:') 
 			. "\r\n" . "\r\n" . $a->get_baseurl() . '/profile/' . $a->user['nickname']
