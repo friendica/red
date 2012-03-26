@@ -178,8 +178,8 @@
 
 .icon.on             { background-image: url("../../../view/theme/diabook-blue/icons/toogle_on.png"); background-repeat: no-repeat;}
 .icon.off            { background-image: url("../../../view/theme/diabook-blue/icons/toogle_off.png"); background-repeat: no-repeat;}
-.prev           { background-position: -90px  -60px;}
-.next           { background-position: -110px -60px;}
+.icon.prev           { background-image: url("../../../view/theme/diabook-blue/icons/prev.png"); background-repeat: no-repeat;}
+.icon.next           { background-image: url("../../../view/theme/diabook-blue/icons/next.png"); background-repeat: no-repeat;}
 /*.tagged     { background-position: -130px -60px;}*/
 
 .attachtype {

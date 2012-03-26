@@ -1,3 +1,7 @@
+{{ if $page }}
+<div>$page</div>
+{{ endif }}
+
 {{ if $lastusers_title }}
 <h3 style="margin-top:0px;">Help or @NewHere ?</h3>
 <a href="https://helpers.pyxis.uberspace.de/profile/helpers" style="margin-left: 10px; " title="Friendica Support" target="blank">Friendica Support</a><br>
@@ -18,6 +22,11 @@
 <a href="$url/settings/connectors"><img alt="WordPress" src="view/theme/diabook/icons/wordpress.png?" title="WordPress"></a>
 <a href="$url/settings/connectors"><img alt="E-Mail" src="view/theme/diabook/icons/email.png?" title="E-Mail"></a>
 </div>
+{{ endif }}
+
+{{ if $lastusers_title }}
+<h3>PostIt to Friendica</h3>
+<div style="padding-left: 8px;"><span ><a href="$fostitJS" title="PostIt">Post to Friendica</a> from anywhere by bookmarking this Link.</span></div>
 {{ endif }}
 
 {{ if $lastusers_title }}
@@ -45,15 +54,6 @@
 	$i
 {{ endfor }}
 </div>
-{{ endif }}
-
-{{ if $page }}
-<div>$page</div>
-{{ endif }}
-
-{{ if $lastusers_title }}
-<h3>PostIt to Friendica</h3>
-<div style="padding-left: 8px;"><span ><a href="$fostitJS" title="PostIt">Post to Friendica</a> from anywhere by bookmarking this Link.</span></div>
 {{ endif }}
 
 {{ if $like_title }}

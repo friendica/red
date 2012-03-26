@@ -7,9 +7,6 @@
  * Author: 
  */
 
-$a->theme_info = array(
-  'extends' => 'diabook',
-);
 
 //change css on network and profilepages
 $cssFile = null;
