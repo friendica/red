@@ -5,6 +5,12 @@ function notification($params) {
 	logger('notification: entry', LOGGER_DEBUG);
 
 	$a = get_app();
+
+	// from here on everything is in the recipients language
+
+	push_lang($params['language']);
+
+
 	$banner = t('Friendica Notification');
 	$product = FRIENDICA_PLATFORM;
 	$siteurl = z_path();
@@ -180,9 +186,6 @@ function notification($params) {
 	$hsitelink = $h['hsitelink'];
 	$itemlink  = $h['itemlink']; 
 
-	// from here on everything is in the recipients language
-
-	push_lang($params['language']);
 
 	require_once('include/html2bbcode.php');	
 
@@ -234,8 +237,10 @@ function notification($params) {
 	);
 	if($r)
 		$notify_id = $r[0]['id'];
-	else
+	else {
+		pop_lang();
 		return;
+	}
 
 	$itemlink = $a->get_baseurl() . '/notify/view/' . $notify_id;
 	$msg = replace_macros($epreamble,array('$itemlink' => $itemlink));
@@ -245,7 +250,6 @@ function notification($params) {
 		intval($params['uid'])
 	);
 		
-
 
 	// send email notification if notification preferences permit
 
