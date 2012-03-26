@@ -251,9 +251,7 @@ $a->page['htmlhead'] .= <<< EOT
  $(function() {
 	$('a.lightbox').fancybox(); // Select all links with lightbox class
  });
- 
- 
- 
+  
  </script>
 EOT;
 
