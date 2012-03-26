@@ -46,7 +46,7 @@
 </div>
 {{ endif }}
 
-{{ if $lastusers_title }}
+{{ if $page }}
 <div>$page</div>
 {{ endif }}
 
