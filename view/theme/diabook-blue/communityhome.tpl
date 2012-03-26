@@ -2,6 +2,7 @@
 <h3 style="margin-top:0px;">Help or @NewHere ?</h3>
 <a href="https://helpers.pyxis.uberspace.de/profile/helpers" style="margin-left: 10px; " title="Friendica Support" target="blank">Friendica Support</a><br>
 <a href="https://letstalk.pyxis.uberspace.de/profile/letstalk" style="margin-left: 10px; " title="Let's talk" target="blank">Let's talk</a><br>
+<a href="http://newzot.hydra.uberspace.de/profile/newzot" title="Local Friendica" style="margin-left: 10px; " target="blank">Local Friendica</a>
 <a href="http://kakste.com/profile/newhere" title="#NewHere" style="margin-left: 10px; " target="blank">NewHere</a>
 {{ endif }}
 
