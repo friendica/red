@@ -7,9 +7,6 @@
  * Author: 
  */
 
-$a->theme_info = array(
-  //'extends' => 'diabook',  //it's diabook, don't need to extend himself...
-);
 
 //change css on network and profilepages
 $cssFile = null;

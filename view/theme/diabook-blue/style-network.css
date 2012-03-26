@@ -384,11 +384,10 @@
 
 .hide-comments-outer {
   margin-left: 80px;
-  margin-bottom: 5px;
+  margin-bottom: 1px;
   width: 484px;
   border-bottom: 1px solid #BDCDD4;
-  border-top: 1px solid #BDCDD4;
-
+  background-color: #E4EEF7;
   padding: 8px;
 }
 
@@ -936,7 +935,9 @@ ul.menu-popup .empty {
 .menu-profile-list.com_side{
 	background: url("../../../view/theme/diabook-blue/icons/com_side.png") no-repeat;
 	}
-
+.menu-profile-list.pscontacts{
+	background: url("../../../view/theme/diabook-blue/icons/pscontacts.png") no-repeat;
+	}
 /* aside */
 aside {
   display: table-cell;
@@ -1189,7 +1190,7 @@ right_aside #likes { margin: 0px; padding: 0px; list-style: none; }
 right_aside .items-wrapper{ overflow: auto;	width: 100%; }
 right_aside #lastusers-wrapper { padding-left: 6px; padding-top: 3px; overflow: auto;	width: 100%; }
 right_aside #ra-photos-wrapper { padding-left: 5px; padding-top: 3px; overflow: auto;	width: 100%; }
-#page-sidebar-right_aside{margin-top: 30px;}
+#page-sidebar-right_aside{margin-top: 0px; margin-bottom: 30px;}
 #page-sidebar-right_aside ul {margin-top: 0px;}
 /* wall item */
 .tread-wrapper {
@@ -1271,7 +1272,7 @@ right_aside #ra-photos-wrapper { padding-left: 5px; padding-top: 3px; overflow: 
 }
 
 .wall-item-container .wall-item-content img {
-  max-width: 500px;
+  max-width: 400px;
 }
 .wall-item-container .wall-item-links, .wall-item-container .wall-item-actions {
   display: table-cell;
@@ -1323,11 +1324,12 @@ right_aside #ra-photos-wrapper { padding-left: 5px; padding-top: 3px; overflow: 
   float: right;
 }
 .wall-item-container.comment {
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin-top: 0px;
+  margin-bottom: 0px;
   margin-left: 80px;
   width: 500px;
   border-bottom: 1px solid hsl(198, 21%, 79%);
+  background-color: #E4EEF7;
 }
 .wall-item-container.comment .contact-photo {
   width: 32px;
@@ -1343,20 +1345,31 @@ right_aside #ra-photos-wrapper { padding-left: 5px; padding-top: 3px; overflow: 
 .wall-item-container.comment .wall-item-links {
   padding-left: 12px;
 }
+.wall-item-like {
+	background-color: #E4EEF7;
+	
+	}
+.wall-item-dislike{
+	background-color: #E4EEF7;
+   border-bottom: 1px solid #BECED5;
+	}
 .wall-item-comment-wrapper {
-  margin: 1px 5px 1px 80px;
+  margin: 1px 0px 0px 80px;
+  background-color: #E4EEF7;
+  width: 500px;
 }
 .wall-item-comment-wrapper .comment-edit-photo {
   display: none;
 }
 .wall-item-comment-wrapper textarea {
   height: 2.0em;
-  width: 100%;
+  width: 93%;
   font-size: 10px;
   color: #999999;
   border: 1px solid #DDD;
   padding: 0.3em;
   font-size: 14px;
+  margin-left: 20px;
 }
 .wall-item-comment-wrapper .comment-edit-text-full {
   font-size: 14px;

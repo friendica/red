@@ -1,3 +1,7 @@
+{{ if $page }}
+<div>$page</div>
+{{ endif }}
+
 {{ if $lastusers_title }}
 <h3 style="margin-top:0px;">Help or @NewHere ?</h3>
 <a href="https://helpers.pyxis.uberspace.de/profile/helpers" style="margin-left: 10px; " title="Friendica Support" target="blank">Friendica Support</a><br>
@@ -18,6 +22,19 @@
 <a href="$url/settings/connectors"><img alt="WordPress" src="view/theme/diabook-blue/icons/wordpress.png?" title="WordPress"></a>
 <a href="$url/settings/connectors"><img alt="E-Mail" src="view/theme/diabook-blue/icons/email.png?" title="E-Mail"></a>
 </div>
+{{ endif }}
+
+{{ if $lastusers_title }}
+<h3>Find Friends</h3>
+<a class="$nv.directory.2" href="$nv.directory.0" style="margin-left: 10px; " title="$nv.directory.3" >$nv.directory.1</a><br>
+<a class="$nv.match.2" href="$nv.match.0" style="margin-left: 10px; " title="$nv.match.3" >$nv.match.1</a><br>
+<a class="$nv.suggest.2" href="$nv.suggest.0" style="margin-left: 10px; " title="$nv.suggest.3" >$nv.suggest.1</a>
+<a class="$nv.invite.2" href="$nv.invite.0" style="margin-left: 10px; " title="$nav.invite.3" >$nv.invite.1</a>			
+{{ endif }}
+
+{{ if $lastusers_title }}
+<h3>PostIt to Friendica</h3>
+<div style="padding-left: 8px;"><span ><a href="$fostitJS" title="PostIt">Post to Friendica</a> from anywhere by bookmarking the Link.</span></div>
 {{ endif }}
 
 {{ if $lastusers_title }}
@@ -47,14 +64,6 @@
 </div>
 {{ endif }}
 
-{{ if $page }}
-<div>$page</div>
-{{ endif }}
-
-{{ if $lastusers_title }}
-<h3>PostIt to Friendica</h3>
-<div style="padding-left: 8px;"><span ><a href="$fostitJS" title="PostIt">Post to Friendica</a> from anywhere by bookmarking the Link.</span></div>
-{{ endif }}
 
 {{ if $like_title }}
 <h3>$like_title</h3>
