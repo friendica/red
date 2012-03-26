@@ -583,6 +583,7 @@ function admin_page_plugins(&$a){
 		
 			'$admin_form' => $admin_form,
 			'$function' => 'plugins',
+			'$screenshot' => '',
 			'$readme' => $readme
 		));
 	} 
@@ -738,7 +739,11 @@ function admin_page_themes(&$a){
 		} 
 		
 		$admin_form="";
-		
+
+		$screenshot = array( get_theme_screenshot($theme), t('Screenshot'));
+		if(! stristr($screenshot[0],$theme))
+			$screenshot = null;		
+
 		$t = get_markup_template("admin_plugins_details.tpl");
 		return replace_macros($t, array(
 			'$title' => t('Administration'),
@@ -755,6 +760,7 @@ function admin_page_themes(&$a){
 			'$admin_form' => $admin_form,
 			'$str_author' => t('Author: '),
 			'$str_maintainer' => t('Maintainer: '),			
+			'$screenshot' => $screenshot,
 			'$readme' => $readme
 		));
 	} 
