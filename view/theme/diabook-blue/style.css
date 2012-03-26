@@ -387,8 +387,6 @@
   margin-bottom: 5px;
   width: 684px;
   border-bottom: 1px solid #BDCDD4;
-  border-top: 1px solid #BDCDD4;
-
   padding: 8px;
 }
 
@@ -934,6 +932,9 @@ ul.menu-popup .empty {
 	}
 .menu-profile-list.com_side{
 	background: url("../../../view/theme/diabook-blue/icons/com_side.png") no-repeat;
+	}
+.menu-profile-list.pscontacts{
+	background: url("../../../view/theme/diabook-blue/icons/pscontacts.png") no-repeat;
 	}
 /* aside */
 aside {
