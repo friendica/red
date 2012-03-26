@@ -18,7 +18,7 @@ $cssFile = null;
 /**
  * prints last community activity
  */
-function diabook_community_info(){
+function diabook_blue_community_info(){
 	$a = get_app();
 	//right_aside at networkpages
 
@@ -170,6 +170,7 @@ function diabook_community_info(){
 	if (sizeof($contacts) > 0)
 		
 		$aside['$page'] = $page;
+		
   //END Community Page		   
    
    
@@ -214,7 +215,7 @@ if ($a->argv[0] === "network" && local_user()){
 	}
 	
 	// COMMUNITY
-	diabook_community_info();
+	diabook_blue_community_info();
 	
 	// CUSTOM CSS
 	$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook-blue/style-network.css";
@@ -227,7 +228,7 @@ if ($a->argv[0] === "network" && local_user()){
 if ($a->argv[0] === "profile"){
 	
 	// COMMUNITY
-	diabook_community_info();
+	diabook_blue_community_info();
 	
 	// CUSTOM CSS
 	$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook-blue/style-profile.css";
