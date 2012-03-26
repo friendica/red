@@ -251,14 +251,7 @@ $a->page['htmlhead'] .= <<< EOT
  $(function() {
 	$('a.lightbox').fancybox(); // Select all links with lightbox class
  });
- 
- $(document).ready(function ()
-$('iframe').each(function()
-var url = $(this).attr("src");
-$(this).attr("src",url+"?wmode=transparent");
-);
-);
- 
+  
  </script>
 EOT;
 
