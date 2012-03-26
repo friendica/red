@@ -48,7 +48,7 @@ body {
 body, button, input, select, textarea {
     font-family: sans-serif;
     color: #222;
-    background-color: rgb(254,254,254);
+    background-color: #efefef;
 }
 select {
 	border: 1px #555 dotted;
@@ -152,10 +152,11 @@ a:hover {
     color: #729fcf;
 }
 input[type=submit] {
+    background-color: #555753;
+	color: #eeeeec;
+	font-weight: bold;
     margin-top: 10px;
     height: 22px;
-    background-color: #555753;
-    color: #eeeeec;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
@@ -198,6 +199,10 @@ input[type=submit] {
 .action {
 	margin: 5px 0;
 }
+.tool {
+	margin: 5px 0;
+	list-style: none;
+}
 
 
 /**
@@ -212,7 +217,7 @@ input[type=submit] {
  * nav
  */
 nav {
-	height: 60px;
+	height: 80px;
 	display: block;
 	background-color: #2e3436;
 	color: #eeeeec;
@@ -480,6 +485,20 @@ nav #nav-notifications-linkmenu.on .icon.s22.notify, nav #nav-notifications-link
 	overflow: hidden;
 	margin: 0px;
 	background: transparent url(icons.png) -190px -60px no-repeat;
+}
+.search-box {
+	display: inline-block;
+	height: 40px;
+	margin: 12px 0 0 -3px;
+	position: relative;
+	right: -12px;
+	top: 17px;
+	width: 0;
+}
+#search-text {
+	border: 1px #eec solid;
+	background: #2e3436;
+	color: #eec;
 }
 .nav-ajax-update, .nav-ajax-left {
 	width: 30px;
@@ -1494,6 +1513,8 @@ div[id$="wrapper"] br {
 }
 #prvmail-subject {
     width: 100%;
+	color: #eec;
+	background: #444;
 }
 #prvmail-submit-wrapper {
     margin-top: 10px;
@@ -1859,6 +1880,71 @@ div[id$="wrapper"] br {
     clear:both;
 }
 
+
+/**
+ * intros
+ */
+.intro-wrapper {
+    margin-top: 20px;
+}
+
+.intro-fullname {
+    font-size: 1.1em;
+    font-weight: bold;
+
+}
+.intro-desc {
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.intro-note {
+    padding: 10px;
+}
+
+.intro-end {
+    padding: 30px;
+}
+
+.intro-form {
+    float: left;
+}
+.intro-approve-form {
+    clear: both;
+}
+.intro-approve-as-friend-end {
+    clear: both;
+}
+.intro-submit-approve, .intro-submit-ignore {
+    margin-right: 20px;
+}
+.intro-submit-approve {
+    margin-top: 15px;
+}
+
+.intro-approve-as-friend-label, .intro-approve-as-fan-label {
+    float: left;
+}
+.intro-approve-as-friend, .intro-approve-as-fan {
+    float: left;
+}
+.intro-form-end {
+    clear: both;
+    margin-bottom: 10px;
+}
+.intro-approve-as-friend-desc {
+    margin-top: 10px;
+}
+.intro-approve-as-end {
+    clear: both;
+    margin-bottom: 10px;
+}
+
+.intro-end {
+    clear: both;
+}
+
+
 /**
  * events
  **/
@@ -1955,6 +2041,16 @@ div[id$="wrapper"] br {
 	opacity: 1.0 !important;
 	filter:alpha(opacity=100) !important;
 }
+.filesavetags {
+	margin: 20px 0;
+	opacity: 0.5;
+	filter:alpha(opacity=50);
+}
+.filesavetags:hover {
+	margin: 20px 0;
+	opacity: 1.0 !important;
+	filter:alpha(opacity=100) !important;
+}
 .item-select {
 	opacity: 0.1;
 	filter:alpha(opacity=10);
@@ -2008,13 +2104,13 @@ div[id$="wrapper"] br {
 #group-sidebar {
     margin-bottom: 10px;
 }
-.group-selected, .nets-selected {
+.group-selected, .nets-selected, .fileas-selected {
     padding: 3px;
 	color: #111;
     background: #f8f8f8;
     font-weight: bold;
 }
-.group-selected:hover, .nets-selected:hover {
+.group-selected:hover, .nets-selected:hover, .fileas-selected:hover {
 	color: #111;
 }
 .groupsideedit {
@@ -2162,10 +2258,15 @@ div[id$="wrapper"] br {
     width: 16px; height: 16px;
 }
 #adminpage table tr:hover {
-    background-color:#bbc7d7;
+/*	color: ;*/
+    background-color: #bbc7d7;
 }
 #adminpage .selectall {
     text-align: right;
+}
+#adminpage #users a {
+/*	color: #;*/
+	text-decoration: underline;
 }
 
 /**
@@ -2400,6 +2501,9 @@ div[id$="wrapper"] br {
 }
 .dislike {
 	background-position: -190px 0;
+}
+.file-as {
+	background-position: -230px -60px;
 }
 .like {
 	background-position: -211px 0;
@@ -2697,6 +2801,29 @@ footer {
 }
 .network-star.icon.starred {
     display: inline-block;
+}
+#fileas-sidebar {
+	
+}
+.fileas-ul {
+	padding: 0;
+}
+
+
+
+/*
+ * ADDONS THEMING
+ */
+
+#sidebar-page-list {
+	
+}
+#sidebar-page-list ul {
+	padding: 0;
+	margin: 5px 0;
+}
+#sidebar-page-list li {
+	list-style: none;
 }
 
 

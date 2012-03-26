@@ -85,11 +85,7 @@
 		</li>
 		
 		
-		{{ if $nav.directory }}
-		<li id="nav-directory-link" class="nav-menu $sel.directory">
-			<a class="$nav.directory.2" href="$nav.directory.0" title="$nav.directory.3" >$nav.directory.1</a>
-		</li>
-		{{ endif }}
+		
 		
 		{{ if $nav.apps }}
 			<li id="nav-apps-link" class="nav-menu $sel.apps">

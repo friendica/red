@@ -396,6 +396,11 @@ function contacts_content(&$a) {
 
 	$tabs = array(
 		array(
+			'label' => t('Suggestions'),
+			'url'   => $a->get_baseurl(true) . '/suggest', 
+			'sel'   => '',
+		),
+		array(
 			'label' => t('All Contacts'),
 			'url'   => $a->get_baseurl(true) . '/contacts/all', 
 			'sel'   => ($all) ? 'active' : '',
