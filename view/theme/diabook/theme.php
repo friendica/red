@@ -154,7 +154,7 @@ function diabook_community_info(){
    if(local_user()) {
    $page = '<div id="page-sidebar-right_aside" class="widget">
 			<div class="title tool">
-			<h3>'.t("Community Pages").'<a id="close_pages_icon"  onClick="close_pages()" class="icon close_box"></a></h3></div>
+			<h3>'.t("Community Pages").'<a id="close_pages_icon"  onClick="close_pages()" class="icon close_box" title="close"></a></h3></div>
 			<div id="sidebar-page-list"><ul>';
 
 	$pagelist = array();
@@ -218,7 +218,7 @@ if ($a->argv[0] === "network" && local_user()){
 		$ps['usermenu']['events'] = Array('events/', t('Events'), "", t('Your events'));
 		$ps['usermenu']['notes'] = Array('notes/', t('Personal notes'), "", t('Your personal photos'));
 		$ps['usermenu']['community'] = Array('community/', t('Community'), "", "");
-		$ps['usermenu']['pgroups'] = Array('http://dir.friendica.com/directory/forum', t('Public Groups'), "", "");
+		$ps['usermenu']['pgroups'] = Array('http://dir.friendica.com/directory/forum', t('Community Pages'), "", "");
 
 		$tpl = get_markup_template('profile_side.tpl');
 
@@ -357,6 +357,21 @@ function close_lastlikes(){
  document.getElementById( "close_lastlikes" ).style.display = "none";
  $.cookie('close_lastlikes','1', { expires: 365, path: '/' });
  };
+ 
+ 
+
+function restore_boxes(){
+	$.cookie('close_pages','2', { expires: 365, path: '/' });
+	$.cookie('close_helpers','2', { expires: 365, path: '/' });
+	$.cookie('close_services','2', { expires: 365, path: '/' });
+	$.cookie('close_friends','2', { expires: 365, path: '/' });
+	$.cookie('close_postit','2', { expires: 365, path: '/' });
+	$.cookie('close_lastusers','2', { expires: 365, path: '/' });
+	$.cookie('close_lastphotos','2', { expires: 365, path: '/' });
+	$.cookie('close_lastlikes','2', { expires: 365, path: '/' });
+	alert('right column was restored');
+  };
+
  
 </script>
  

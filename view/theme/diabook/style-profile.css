@@ -1173,6 +1173,18 @@ right_aside .icon {width: 10px; height: 10px;}
 		background-image: url("../../../view/theme/diabook-blue/icons/close_box.png");
 		float: right;
 		cursor: pointer;
+		opacity: 0.1;
+		}
+.close_box:hover	{ 
+		background-image: url("../../../view/theme/diabook-blue/icons/close_box.png");
+		float: right;
+		cursor: pointer;
+		opacity: 1;
+-webkit-transition: all 0.2s ease-in-out;
+-moz-transition: all 0.2s ease-in-out;
+-o-transition: all 0.2s ease-in-out;
+-ms-transition: all 0.2s ease-in-out;
+transition: all 0.2s ease-in-out;
 		}
 /* wall item */
 .tread-wrapper {
