@@ -387,7 +387,7 @@
   margin-bottom: 1px;
   width: 484px;
   border-bottom: 1px solid #BDCDD4;
-  background-color: #E4EEF7;
+  background-color: #fff;
   padding: 8px;
 }
 
@@ -1324,12 +1324,11 @@ right_aside #ra-photos-wrapper { padding-left: 5px; padding-top: 3px; overflow: 
   float: right;
 }
 .wall-item-container.comment {
-  margin-top: 0px;
-  margin-bottom: 0px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   margin-left: 80px;
   width: 500px;
   border-bottom: 1px solid hsl(198, 21%, 79%);
-  background-color: #E4EEF7;
 }
 .wall-item-container.comment .contact-photo {
   width: 32px;
@@ -1345,17 +1344,10 @@ right_aside #ra-photos-wrapper { padding-left: 5px; padding-top: 3px; overflow: 
 .wall-item-container.comment .wall-item-links {
   padding-left: 12px;
 }
-.wall-item-like {
-	background-color: #E4EEF7;
-	
-	}
-.wall-item-dislike{
-	background-color: #E4EEF7;
-   border-bottom: 1px solid #BECED5;
-	}
+
 .wall-item-comment-wrapper {
   margin: 1px 0px 0px 80px;
-  background-color: #E4EEF7;
+  background-color: #fff;
   width: 500px;
 }
 .wall-item-comment-wrapper .comment-edit-photo {

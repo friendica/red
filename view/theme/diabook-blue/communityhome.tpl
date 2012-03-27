@@ -24,7 +24,7 @@
 </div>
 {{ endif }}
 
-{{ if $lastusers_title }}
+{{ if $nv }}
 <h3>Find Friends</h3>
 <a class="$nv.directory.2" href="$nv.directory.0" style="margin-left: 10px; " title="$nv.directory.3" >$nv.directory.1</a><br>
 <a class="$nv.match.2" href="$nv.match.0" style="margin-left: 10px; " title="$nv.match.3" >$nv.match.1</a><br>
