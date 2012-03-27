@@ -139,6 +139,17 @@ function diabook_community_info(){
   
    $aside['$fostitJS'] = $fostitJS;
    
+   //right_aside FIND FRIENDS
+	if(local_user()) {
+	$nv = array();
+	$nv['directory'] = Array('directory', t('Directory'), "", "");
+	$nv['match'] = Array('match', t('Similar Interests'), "", "");
+	$nv['suggest'] = Array('suggest', t('Friend Suggestions'), "", "");
+	$nv['invite'] = Array('invite', t('Invite Friends'), "", "");
+	
+	$aside['$nv'] = $nv;
+	};
+   
    //Community Page
    $page = '<div id="page-sidebar-right_aside" class="widget">
 			<div class="title tool">
@@ -200,6 +211,7 @@ if ($a->argv[0] === "network" && local_user()){
 		$ps = array('usermenu'=>array());
 		$ps['usermenu']['status'] = Array('profile/' . $a->user['nickname'], t('Home'), "", t('Your posts and conversations'));
 		$ps['usermenu']['profile'] = Array('profile/' . $a->user['nickname']. '?tab=profile', t('Profile'), "", t('Your profile page'));
+		$ps['usermenu']['contacts'] = Array('contacts' , t('Contacts'), "", t('Your contacts'));				
 		$ps['usermenu']['photos'] = Array('photos/' . $a->user['nickname'], t('Photos'), "", t('Your photos'));
 		$ps['usermenu']['events'] = Array('events/', t('Events'), "", t('Your events'));
 		$ps['usermenu']['notes'] = Array('notes/', t('Personal notes'), "", t('Your personal photos'));
