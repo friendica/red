@@ -137,7 +137,7 @@ function diabook_blue_community_info(){
    $aside['$fostitJS'] = $fostitJS;
    
    //nav FIND FRIENDS
-	
+	if(local_user()) {
 	$nv = array();
 	$nv['directory'] = Array('directory', t('Directory'), "", "");
 	$nv['match'] = Array('match', t('Similar Interests'), "", "");
@@ -145,7 +145,7 @@ function diabook_blue_community_info(){
 	$nv['invite'] = Array('invite', t('Invite Friends'), "", "");
 	
 	$aside['$nv'] = $nv;
-	
+	};
 	//Community Page
    $page = '<div id="page-sidebar-right_aside" class="widget">
 			<div class="title tool">
