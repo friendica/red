@@ -7,10 +7,10 @@ function acl_init(&$a){
 		return "";
 
 
-	$start = (x($_POST,'start')?$_POST['start']:0);
-	$count = (x($_POST,'count')?$_POST['count']:100);
-	$search = (x($_POST,'search')?$_POST['search']:"");
-	$type = (x($_POST,'type')?$_POST['type']:"");
+	$start = (x($_REQUEST,'start')?$_REQUEST['start']:0);
+	$count = (x($_REQUEST,'count')?$_REQUEST['count']:100);
+	$search = (x($_REQUEST,'search')?$_REQUEST['search']:"");
+	$type = (x($_REQUEST,'type')?$_REQUEST['type']:"");
 	
 
 	if ($search!=""){
@@ -34,7 +34,7 @@ function acl_init(&$a){
 		$r = q("SELECT COUNT(`id`) AS c FROM `contact` 
 				WHERE `uid` = %d AND `self` = 0 
 				AND `blocked` = 0 AND `pending` = 0 
-				AND `notify` != '' $sql_extra" ,
+				AND `notify` != '' $sql_extra2" ,
 			intval(local_user())
 		);
 		$contact_count = (int)$r[0]['c'];
