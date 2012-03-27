@@ -2978,11 +2978,13 @@ div.jGrowl div.info {
 .qcomment {
 	border: 1px solid #EEE;
 	padding: 3px;
+	margin-top: 15px;
+	margin-left: 25px;
 }
 
 .qcomment {
-	opacity: 0;
-	filter:alpha(opacity=0);
+	opacity: 0.3;
+	filter:alpha(opacity=30);
 }
 .qcomment:hover {
 	opacity: 1.0;
