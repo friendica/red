@@ -38,21 +38,22 @@ function photos_init(&$a) {
 			$o .= '<div id="profile-photo-wrapper"><img class="photo" style="width: 175px; height: 175px;" src="' . $a->get_baseurl() . '/photo/profile/' . $a->data['user']['uid'] . '.jpg" alt="' . $a->data['user']['username'] . '" /></div>';
 			$o .= '</div>';
 			
-			$o .= '<div id="side-bar-photos-albums" class="widget">';
-			$o .= '<h3>' . '<a href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '">' . t('Photo Albums') . '</a></h3>';
+			if(! intval($a->data['user']['hidewall'])) {
+				$o .= '<div id="side-bar-photos-albums" class="widget">';
+				$o .= '<h3>' . '<a href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '">' . t('Photo Albums') . '</a></h3>';
 					
-			$o .= '<ul>';
-			foreach($albums as $album) {
+				$o .= '<ul>';
+				foreach($albums as $album) {
 
-				// don't show contact photos. We once translated this name, but then you could still access it under
-				// a different language setting. Now we store the name in English and check in English (and translated for legacy albums).
+					// don't show contact photos. We once translated this name, but then you could still access it under
+					// a different language setting. Now we store the name in English and check in English (and translated for legacy albums).
 
-				if((! strlen($album['album'])) || ($album['album'] === 'Contact Photos') || ($album['album'] === t('Contact Photos')))
-					continue;
-				$o .= '<li>' . '<a href="photos/' . $a->argv[1] . '/album/' . bin2hex($album['album']) . '" >' . $album['album'] . '</a></li>'; 
+					if((! strlen($album['album'])) || ($album['album'] === 'Contact Photos') || ($album['album'] === t('Contact Photos')))
+						continue;
+					$o .= '<li>' . '<a href="photos/' . $a->argv[1] . '/album/' . bin2hex($album['album']) . '" >' . $album['album'] . '</a></li>'; 
+				}
+				$o .= '</ul>';
 			}
-			$o .= '</ul>';
-
 			if(local_user() && $a->data['user']['uid'] == local_user()) {
 				$o .= '<div id="photo-albums-upload-link"><a href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/upload" >' .t('Upload New Photos') . '</a></div>';
 			}

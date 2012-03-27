@@ -2936,6 +2936,11 @@ function item_expire($uid,$days) {
 
 	foreach($r as $item) {
 
+		// don't expire filed items
+
+		if(strpos($item['file'],'[') !== false)
+			continue;
+
 		// Only expire posts, not photos and photo comments
 
 		if($expire_photos==0 && strlen($item['resource-id']))
