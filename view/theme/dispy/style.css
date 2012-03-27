@@ -469,7 +469,7 @@ nav #nav-notifications-linkmenu.on .icon.s22.notify, nav #nav-notifications-link
 	width: 170px;
 	position: absolute;
 	top: -19px;
-	left: 4px;
+	left: 15px;
 }
 #nav-floater {
     position: fixed;
@@ -1037,7 +1037,7 @@ section {
     border: 1px solid #729fcf;
 	padding: 4px;
 }
-.tab:hover {
+.tab:hover, .tab.active:hover {
     background: #729fcf;
     color: #eeeeec;
 }
@@ -1050,7 +1050,7 @@ section {
     color: #eeeeec;
 }
 .tab.active a {
-	
+	color: #729fcf;
 }
 .tab a {
 	border: 0;
@@ -2336,7 +2336,6 @@ div[id$="wrapper"] br {
     width: 275px;
 	display: block;
 	font-size: 1.077em;
-	/*font-weight: bold;*/
 	margin: 0 10px 0.5em 0;
 	border: 1px #999 solid;
 	padding: 5px;

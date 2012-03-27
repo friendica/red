@@ -469,7 +469,7 @@ nav #nav-notifications-linkmenu.on .icon.s22.notify, nav #nav-notifications-link
 	width: 170px;
 	position: absolute;
 	top: -19px;
-	left: 4px;
+	left: 15px;
 }
 #nav-floater {
     position: fixed;
@@ -2328,7 +2328,7 @@ div[id$="wrapper"] br {
 .field {
 	/*margin-bottom: 10px;*/
 	/*padding-bottom: 10px;*/
-	/*overflow: auto;*/
+	overflow: auto;
     width: 100%;
 }
 .field label, label {
@@ -2336,7 +2336,6 @@ div[id$="wrapper"] br {
     width: 275px;
 	display: block;
 	font-size: 1.077em;
-	/*font-weight: bold;*/
 	margin: 0 10px 0.5em 0;
 	border: 1px #2e2f2e solid;
 	padding: 5px;
