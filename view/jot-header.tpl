@@ -32,6 +32,7 @@ function initEditor(cb){
 			theme_advanced_toolbar_location : "top",
 			theme_advanced_toolbar_align : "center",
 			theme_advanced_blockformats : "blockquote,code",
+			gecko_spellcheck : true,
 			paste_text_sticky : true,
 			entity_encoding : "raw",
 			add_unload_trigger : false,
