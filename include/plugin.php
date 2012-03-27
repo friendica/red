@@ -249,6 +249,7 @@ function get_theme_info($theme){
 				list($k,$v) = array_map("trim", explode(":",$l,2));
 				$k= strtolower($k);
 				if ($k=="author"){
+
 					$r=preg_match("|([^<]+)<([^>]+)>|", $v, $m);
 					if ($r) {
 						$info['author'][] = array('name'=>$m[1], 'link'=>$m[2]);
