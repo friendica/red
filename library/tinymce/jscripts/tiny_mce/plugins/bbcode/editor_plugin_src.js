@@ -150,7 +150,7 @@
 			rep(/<blockquote[^>]*>/gi,"[quote]");
 			rep(/<\/blockquote>/gi,"[/quote]");
 			rep(/<hr \/>/gi,"[hr]");
-			rep(/<br \/>/gi,"\n\n");
+			rep(/<br (.*?)\/>/gi,"\n\n");
 			rep(/<br\/>/gi,"\n\n");
 			rep(/<br>/gi,"\n");
 			rep(/<p>/gi,"");

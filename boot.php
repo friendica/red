@@ -9,7 +9,7 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1289' );
+define ( 'FRIENDICA_VERSION',      '2.3.1293' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
 define ( 'DB_UPDATE_VERSION',      1133      );
 
@@ -134,6 +134,9 @@ define ( 'NOTIFY_SUGGEST',  0x0020 );
 define ( 'NOTIFY_PROFILE',  0x0040 );
 define ( 'NOTIFY_TAGSELF',  0x0080 );
 define ( 'NOTIFY_TAGSHARE', 0x0100 );
+
+define ( 'NOTIFY_SYSTEM',   0x8000 );
+
 
 /**
  * various namespaces we may need to parse

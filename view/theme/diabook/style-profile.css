@@ -395,7 +395,7 @@
 /* global */
 body {
   font-family: 'Lato', "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 13px;
+  font-size: 12.5px;
   background-color: #ffffff;
   color: #2d2d2d;
   margin: 50px auto auto;
@@ -877,6 +877,8 @@ ul.menu-popup .empty {
   padding-top: 4px;
   padding-left: 5px;	
   color: #2D2D2D;
+  word-wrap: break-word;
+  width: 130px;
 	}
 #ps-username:hover{
   text-decoration: none;	
@@ -1018,8 +1020,8 @@ aside #side-peoplefind-url {
   margin: 0px 2px 2px 0px;
 }
 #contact-block .contact-block-link img {
-  widht: 55px;
-  height: 55px;
+  widht: 48px;
+  height: 48px;
 }
 #lost-password-link {
   float: left;
@@ -1096,7 +1098,7 @@ aside #side-peoplefind-url {
 section {
   display: table-cell;
   vertical-align: top;
-  width: auto;
+  width: 610px;
   padding: 0px 0px 0px 12px;
 }
 
@@ -1161,8 +1163,11 @@ right_aside .directory-item {	width: 50px; height: 50px; vertical-align: center;
 right_aside .directory-photo { margin: 0px; }
 right_aside .directory-photo-img { max-width: 45px; max-height: 45px; }
 right_aside #likes { margin: 0px; padding: 0px; list-style: none; }
-right_aside .items-wrapper{ overflow: auto;	width: 100%; border-bottom: 1px solid #D2D2D2;}
-
+right_aside .items-wrapper{ overflow: auto;	width: 100%; }
+right_aside #lastusers-wrapper { padding-left: 6px; padding-top: 3px; overflow: auto;	width: 100%; }
+right_aside #ra-photos-wrapper { padding-left: 5px; padding-top: 3px; overflow: auto;	width: 100%; }
+#page-sidebar-right_aside{margin-top: 0px; margin-bottom: 30px;}
+#page-sidebar-right_aside ul {margin-top: 0px;}
 /* wall item */
 .tread-wrapper {
   border-bottom: 1px solid #D2D2D2;
@@ -1187,6 +1192,7 @@ right_aside .items-wrapper{ overflow: auto;	width: 100%; border-bottom: 1px soli
 .wall-item-container .wall-item-item, .wall-item-container .wall-item-bottom {
   display: table-row;
 }
+
 .wall-item-bottom {
   font-size: 13px;
 }
@@ -1231,14 +1237,14 @@ right_aside .items-wrapper{ overflow: auto;	width: 100%; border-bottom: 1px soli
 }
 
 .wall-item-container .wall-item-content {
-  font-size: 13px;
-  max-width: 720px;
+  font-size: 12.5px;
+  max-width: 420px;
   word-wrap: break-word;
-  line-height: 1.4;
+  line-height: 1.2;
 }
 
 .wall-item-container .wall-item-content img {
-  max-width: 700px;
+  max-width: 400px;
 }
 .wall-item-container .wall-item-links, .wall-item-container .wall-item-actions {
   display: table-cell;
@@ -2026,8 +2032,8 @@ box-shadow: 1px 1px 5px 0;
 /* ================== */
 
 .contact-block-img {
-        width: 55px;
-        height: 55px;
+        width: 48px;
+        height: 48px;
         padding-right: 3px;
 }
 .contact-block-div {

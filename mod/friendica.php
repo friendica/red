@@ -51,15 +51,20 @@ function friendica_content(&$a) {
 	$o .= '<p></p>';
 
 	if(count($a->plugins)) {
-		$o .= '<p>' . t('Installed plugins/addons/apps') . '</p>';
-		$o .= '<ul>';
-		foreach($a->plugins as $p)
-			if(strlen($p))
-				$o .= '<li>' . $p . '</li>';
-		$o .= '</ul>';
+		$o .= '<p>' . t('Installed plugins/addons/apps:') . '</p>';
+		$sorted = $a->plugins;
+		$s = '';
+		sort($sorted);
+		foreach($sorted as $p) {
+			if(strlen($p)) {
+				if(strlen($s)) $s .= ', ';
+				$s .= $p;
+			}
+		}
+		$o .= '<div style="margin-left: 25px; margin-right: 25px;">' . $s . '</div>';
 	}
 	else
-		$o .= '<p>' . t('No installed plugins/addons/apps');
+		$o .= '<p>' . t('No installed plugins/addons/apps') . '</p>';
 
 	call_hooks('about_hook', $o); 	
 

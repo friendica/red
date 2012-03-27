@@ -38,7 +38,8 @@ function oembed_fetch_url($embedurl){
 					$entries = $xpath->query("//link[@type='application/json+oembed']");
 					foreach($entries as $e){
 						$href = $e->getAttributeNode("href")->nodeValue;
-						$txt = fetch_url($href);
+						$txt = fetch_url($href . '&maxwidth=425');
+						break;
 					}
 				}
 			}
@@ -46,7 +47,7 @@ function oembed_fetch_url($embedurl){
 		
 		if ($txt==false || $txt==""){
 			// try oohembed service
-			$ourl = "http://oohembed.com/oohembed/?url=".urlencode($embedurl);  
+			$ourl = "http://oohembed.com/oohembed/?url=".urlencode($embedurl).'&maxwidth=425';  
 			$txt = fetch_url($ourl);
 		}
 		
