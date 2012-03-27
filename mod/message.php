@@ -15,6 +15,13 @@ function message_post(&$a) {
 	$body      = ((x($_REQUEST,'body'))      ? escape_tags(trim($_REQUEST['body'])) : '');
 	$recipient = ((x($_REQUEST,'messageto')) ? intval($_REQUEST['messageto'])       : 0 );
 
+	// Work around doubled linefeeds in Tinymce 3.5b2
+
+	$plaintext = intval(get_pconfig(local_user(),'system','plaintext'));
+	if(! $plaintext) {
+		$body = str_replace("\r\n","\n",$body);
+		$body = str_replace("\n\n","\n",$body);
+	}
 	
 	$ret = send_message($recipient, $body, $subject, $replyto);
 	$norecip = false;

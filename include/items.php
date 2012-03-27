@@ -7,14 +7,11 @@ require_once('include/crypto.php');
 
 function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) {
 
-	// default permissions - anonymous user
 
-	if(! strlen($owner_nick))
-		killme();
-
+	$sitefeed    = ((strlen($owner_nick)) ? false : true); // not yet implemented, need to rewrite huge chunks of following logic
 	$public_feed = (($dfrn_id) ? false : true);
-	$starred = false;
-	$converse = false;
+	$starred     = false;   // not yet implemented, possible security issues
+	$converse    = false;
 
 	if($public_feed && $a->argc > 2) {
 		for($x = 2; $x < $a->argc; $x++) {
@@ -25,6 +22,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 		}
 	}
 
+	// default permissions - anonymous user
 
 	$sql_extra = " AND `allow_cid` = '' AND `allow_gid` = '' AND `deny_cid`  = '' AND `deny_gid`  = '' ";
 
