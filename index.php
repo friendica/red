@@ -342,13 +342,13 @@ $profile = $a->profile;
 
 header("Content-type: text/html; charset=utf-8");
 
-$template = 'view/' . $lang . '/' 
+$template = 'view/' . current_theme() . '/' 
 	. ((x($a->page,'template')) ? $a->page['template'] : 'default' ) . '.php';
 
 if(file_exists($template))
 	require_once($template);
 else
-	require_once(str_replace($lang . '/', '', $template));
+	require_once(str_replace(current_theme() . '/', '', $template));
 
 session_write_close();
 exit;
