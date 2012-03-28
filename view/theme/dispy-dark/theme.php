@@ -91,11 +91,13 @@ $(document).ready(function() {
             $('.floaterflip').css({
                 backgroundPosition: '-210px -60px' 
             });
+			$('.search-box').slideUp('fast');
         } else {
             $('#nav-floater').slideDown('fast');
             $('.floaterflip').css({
                 backgroundPosition: '-190px -60px'
             });
+			$('.search-box').slideDown('fast');
         }
     };
 	// our trigger for the toolbar button
@@ -144,13 +146,17 @@ function dispydark_community_info() {
 			} else {
 				a_funct();
 			}
-		})();" ;
+		})();";
 
 	$aside['$fostitJS'] = $fostitJS;
 	$url = $a->get_baseurl($ssl_state);
 	$aside['$url'] = $url;
 
     $tpl = file_get_contents(dirname(__file__).'/communityhome.tpl');
-	$a->page['aside'] = replace_macros($tpl, $aside);
+	$a->page['aside_bottom'] = replace_macros($tpl, $aside);
 }
 
+// aside on profile page
+if ($a->argv[0] === "profile") {
+	dispydark_community_info();
+}
