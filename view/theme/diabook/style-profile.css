@@ -1090,6 +1090,32 @@ aside #side-peoplefind-url {
   background: url("../../../view/theme/diabook/icons/selected.png") no-repeat left center;
 }
 /* widget: search */
+span.sbox_l  {
+	background: white url('../../../view/theme/diabook/icons/srch_l.gif') no-repeat top left;
+	float: left;
+	width: 19px; height: 19px;
+	margin-left: 10px;
+	margin-top: 5px;
+	
+}
+
+span.sbox_r  {
+	background: white url('../../../view/theme/diabook/icons/srch_r.gif') no-repeat top left;
+	float: left;
+	width: 19px; height: 19px;
+	margin-top: 5px;
+}
+
+span.sbox input {
+	background: white url('../../../view/theme/diabook/icons/srch_bg.gif') repeat-x top left;
+	float: left;
+	margin-top: 5px;
+	border: 0;
+	height: 13px; width: 100px;
+	padding: 3px;
+	font: 11px/13px arial;
+	color: #000;
+}
 #add-search-popup {
   width: 200px;
   top: 18px;

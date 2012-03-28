@@ -150,7 +150,7 @@ function diabook_blue_community_info(){
 	if(local_user()) {
    $page = '<div id="page-sidebar-right_aside" class="widget">
 			<div class="title tool">
-			<h3>'.t("Community Pages").'<a id="close_pages_icon"  onClick="close_pages()" class="icon close_box"></a></h3></div>
+			<h3>'.t("Community Pages").'<a id="close_pages_icon"  onClick="close_pages()" class="icon close_box" title="close"></a></h3></div>
 			<div id="sidebar-page-list"><ul>';
 
 	$pagelist = array();
@@ -212,7 +212,7 @@ if ($a->argv[0] === "network" && local_user()){
 		$ps['usermenu']['events'] = Array('events/', t('Events'), "", t('Your events'));
 		$ps['usermenu']['notes'] = Array('notes/', t('Personal notes'), "", t('Your personal photos'));
 		$ps['usermenu']['community'] = Array('community/', t('Community'), "", "");
-		$ps['usermenu']['pgroups'] = Array('http://dir.friendika.com/directory/forum', t('Public Groups'), "", "");
+		$ps['usermenu']['pgroups'] = Array('http://dir.friendika.com/directory/forum', t('Community Pages'), "", "");
 
 		$tpl = get_markup_template('profile_side.tpl');
 
@@ -237,7 +237,7 @@ if ($a->argv[0] === "network" && local_user()){
 
 
 //right_aside at profile pages
-if ($a->argv[0] === "profile"){
+if ($a->argv[0].$a->argv[1] === "profile".$a->user['nickname']){
 	if($ccCookie != "8") {
 	// COMMUNITY
 	diabook_blue_community_info();
