@@ -41,6 +41,9 @@ if(plaintext != 'none') {
 		}
 	});
 }
+else
+	$("#prvmail-text").contact_autocomplete(baseurl+"/acl");
+
 
 </script>
 <script type="text/javascript" src="js/ajaxupload.js" ></script>
