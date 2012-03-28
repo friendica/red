@@ -243,16 +243,17 @@ if ($a->argv[0] === "network" && local_user()){
 
 
 //right_aside at profile pages
-if ($a->argv[0] === "profile"){
+if ($a->argv[0].$a->argv[1] === "profile".$a->user['nickname']){
 	if($ccCookie != "8") {
 	// COMMUNITY
 	diabook_community_info();
 	
 	// CUSTOM CSS
 	$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook/style-profile.css";
+	
+	
 	}
 }
-
 
 // custom css
 if (!is_null($cssFile)) $a->page['htmlhead'] .= sprintf('<link rel="stylesheet" type="text/css" href="%s" />', $cssFile);
