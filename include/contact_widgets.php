@@ -46,7 +46,7 @@ function networks_widget($baseurl,$selected = '') {
 		return '';
 
 	
-	$r = q("select distinct(network) from contact where uid = %d",
+	$r = q("select distinct(network) from contact where uid = %d and self = 0",
 		intval(local_user())
 	);
 

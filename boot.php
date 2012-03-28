@@ -1381,6 +1381,11 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 		);
 	}
 
+
+	$arr = array('is_owner' => $is_owner, 'nickname' => $nickname, 'tab' => (($tab) ? $tab : false), 'tabs' => $tabs);
+	call_hooks('profile_tabs', $arr);
+	
 	$tpl = get_markup_template('common_tabs.tpl');
-	return replace_macros($tpl,array('$tabs'=>$tabs));
+
+	return replace_macros($tpl,array('$tabs' => $arr['tabs']));
 }}	
