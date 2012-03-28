@@ -147,6 +147,13 @@ function diabook_community_info(){
 	$nv['suggest'] = Array('suggest', t('Friend Suggestions'), "", "");
 	$nv['invite'] = Array('invite', t('Invite Friends'), "", "");
 	
+	$nv['search'] = '<form name="simple_bar" method="get" action="http://dir.friendika.com/directory">
+						<span class="sbox_l"></span>
+						<span class="sbox">
+						<input type="text" name="search" size="13" maxlength="50">
+						</span>
+						<span class="sbox_r" id="srch_clear"></span>';
+	
 	$aside['$nv'] = $nv;
 	};
    

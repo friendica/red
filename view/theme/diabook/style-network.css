@@ -1095,6 +1095,32 @@ aside #side-peoplefind-url {
   background: url("../../../view/theme/diabook/icons/selected.png") no-repeat left center;
 }
 /* widget: search */
+span.sbox_l  {
+	background: white url('../../../view/theme/diabook/icons/srch_l.gif') no-repeat top left;
+	float: left;
+	width: 19px; height: 19px;
+	margin-left: 10px;
+	margin-top: 5px;
+	
+}
+
+span.sbox_r  {
+	background: white url('../../../view/theme/diabook/icons/srch_r.gif') no-repeat top left;
+	float: left;
+	width: 19px; height: 19px;
+	margin-top: 5px;
+}
+
+span.sbox input {
+	background: white url('../../../view/theme/diabook/icons/srch_bg.gif') repeat-x top left;
+	float: left;
+	margin-top: 5px;
+	border: 0;
+	height: 13px; width: 100px;
+	padding: 3px;
+	font: 11px/13px arial;
+	color: #000;
+}
 #add-search-popup {
   width: 200px;
   top: 18px;
@@ -1725,12 +1751,13 @@ transition: all 0.2s ease-in-out;
     margin-left: 5px;
 }
 /*input[type="submit"] {
-	border: 0px;
-    background-color: @ButtonBackgroundColor;
-    color: @ButtonColor;
-    padding: 0px 10px;
-	.rounded(5px);
-    height: 18px;
+    background-color: #33ACFF;
+    background-image: -moz-linear-gradient(center top , #66C1FF 0%, #0097FF 100%);
+    border: 1px solid #777777;
+    color: white;
+    border-radius: 3px 3px 3px 3px;
+    box-shadow: 0 1px 1px #CFCFCF;
+    margin-left: 5px;
 }*/
 /** acl **/
 #photo-edit-perms-select, #photos-upload-permissions-wrapper, #profile-jot-acl-wrapper {
