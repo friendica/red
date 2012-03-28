@@ -5,7 +5,7 @@
 <!-- yes, they're going the other way. seems that's how the template renderer
 works -->
 
-    <div id="nav-floater">
+<div id="nav-floater">
     <div id="nav-buttons">
     {{ if $nav.help }}
     <a id="nav-help-link" class="nav-link $nav.help.2" href="$nav.help.0" title="$nav.help.1">$nav.help.1</a>
@@ -33,19 +33,19 @@ works -->
     {{ endif }}
     {{ if $nav.network }}
     <a id="nav-network-link" class="nav-link $nav.network.2"
-    href="$nav.network.0" title="$nav.network.1">$nav.network.1</a>
+		href="$nav.network.0" title="$nav.network.1">$nav.network.1</a>
     {{ endif }}
     {{ if $nav.home }}
     <a id="nav-home-link" class="nav-link $nav.home.2"
-    href="$nav.home.0" title="$nav.home.1">$nav.home.1</a>
+		href="$nav.home.0" title="$nav.home.1">$nav.home.1</a>
     {{ endif }}
     {{ if $nav.login }}
     <a id="nav-login-link" class="nav-login-link $nav.login.2"
-    href="$nav.login.0" title="$nav.login.3" >$nav.login.1</a>
+		href="$nav.login.0" title="$nav.login.3" >$nav.login.1</a>
     {{ endif }}
-    </div>
+	</div>
 
-    <div id="user-menu">
+	<div id="user-menu">
         <a id="user-menu-label" onclick="openClose('user-menu-popup'); return false" href="$nav.home.0">$sitelocation</a>
         <ul id="user-menu-popup"
             onmouseover="if (typeof tmenu != 'undefined') clearTimeout(tmenu); openMenu('user-menu-popup')"
@@ -117,6 +117,12 @@ works -->
 
 <div id="lang-sel-wrap">
 $langselector
+</div>
+
+<div class="search-box">
+	<form method="get" action="$nav.search.0">
+		<input id="search-text" class="nav-menu-search" type="search" placeholder="Search" value="" id="search" name="search" />
+	</form>
 </div>
 
 <ul id="nav-notifications-template" style="display:none;" rel="template">

@@ -15,8 +15,6 @@ function findpeople_widget() {
 
 	$a = get_app();
 
-	$inv = (($a->config['register_policy'] != REGISTER_CLOSED) ? t('Invite Friends') : '');
-
 	if(get_config('system','invitation_only')) {
 		$x = get_pconfig(local_user(),'system','invites_remaining');
 		if($x || is_site_admin()) {
@@ -34,7 +32,7 @@ function findpeople_widget() {
 		'$findthem' => t('Find'),
 		'$suggest' => t('Friend Suggestions'),
 		'$similar' => t('Similar Interests'),
-		'$inv' => $inv
+		'$inv' => t('Invite Friends')
 	));
 
 }
@@ -48,7 +46,7 @@ function networks_widget($baseurl,$selected = '') {
 		return '';
 
 	
-	$r = q("select distinct(network) from contact where uid = %d",
+	$r = q("select distinct(network) from contact where uid = %d and self = 0",
 		intval(local_user())
 	);
 

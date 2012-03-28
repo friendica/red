@@ -263,7 +263,7 @@ function settings_post(&$a) {
 	$suggestme        = ((x($_POST,'suggestme')) ? intval($_POST['suggestme'])  : 0);  
 	$hide_friends     = (($_POST['hide-friends'] == 1) ? 1: 0);
 	$hidewall         = (($_POST['hidewall'] == 1) ? 1: 0);
-
+	$nosmile          = ((x($_POST,'nosmile')) ? intval($_POST['nosmile'])  : 0);  
 
 	$notify = 0;
 
@@ -322,6 +322,7 @@ function settings_post(&$a) {
 	$str_contact_deny  = perms2str($_POST['contact_deny']);
 
 	$openidserver = $a->user['openidserver'];
+	$openid = normalise_openid($openid);
 
 	// If openid has changed or if there's an openid but no openidserver, try and discover it.
 
@@ -346,6 +347,7 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'system','suggestme', $suggestme);
 	set_pconfig(local_user(),'system','update_interval', $browser_update);
 	set_pconfig(local_user(),'system','itemspage_network', $itemspage_network);
+	set_pconfig(local_user(),'system','no_smilies',$nosmile);
 
 	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `theme` = '%s', `maxreq` = %d, `expire` = %d, `openidserver` = '%s', `blockwall` = %d, `hidewall` = %d, `blocktags` = %d  WHERE `uid` = %d LIMIT 1",
 			dbesc($username),
@@ -652,26 +654,29 @@ function settings_content(&$a) {
 	$blocktags = $a->user['blocktags'];
 
 	$expire_items = get_pconfig(local_user(), 'expire','items');
-	$expire_items = (($expire_items===false)?1:$expire_items); // default if not set: 1
+	$expire_items = (($expire_items===false)? '1' : $expire_items); // default if not set: 1
 	
 	$expire_notes = get_pconfig(local_user(), 'expire','notes');
-	$expire_notes = (($expire_notes===false)?1:$expire_notes); // default if not set: 1
+	$expire_notes = (($expire_notes===false)? '1' : $expire_notes); // default if not set: 1
 
 	$expire_starred = get_pconfig(local_user(), 'expire','starred');
-	$expire_starred = (($expire_starred===false)?1:$expire_starred); // default if not set: 1
+	$expire_starred = (($expire_starred===false)? '1' : $expire_starred); // default if not set: 1
 	
 	$expire_photos = get_pconfig(local_user(), 'expire','photos');
-	$expire_photos = (($expire_photos===false)?0:$expire_photos); // default if not set: 0
+	$expire_photos = (($expire_photos===false)? '0' : $expire_photos); // default if not set: 0
 
 
 	$suggestme = get_pconfig(local_user(), 'system','suggestme');
-	$suggestme = (($suggestme===false)?0:$suggestme); // default if not set: 0
+	$suggestme = (($suggestme===false)? '0': $suggestme); // default if not set: 0
 
 	$browser_update = intval(get_pconfig(local_user(), 'system','update_interval'));
 	$browser_update = (($browser_update == 0) ? 40 : $browser_update / 1000); // default if not set: 40 seconds
 
 	$itemspage_network = intval(get_pconfig(local_user(), 'system','itemspage_network'));
 	$itemspage_network = (($itemspage_network > 0 && $itemspage_network < 101) ? $itemspage_network : 40); // default if not set: 40 items
+	
+	$nosmile = get_pconfig(local_user(),'system','no_smilies');
+	$nosmile = (($nosmile===false)? '0': $nosmile); // default if not set: 0
 	
 	if(! strlen($a->user['timezone']))
 		$timezone = date_default_timezone_get();
@@ -736,13 +741,13 @@ function settings_content(&$a) {
 	));
 
 	$blockwall = replace_macros($opt_tpl,array(
-			'$field' 	=> array('blockwall',  t('Allow friends to post to your profile page?'), ! $a->user['blockwall'], '', array(t('No'),t('Yes'))),
+			'$field' 	=> array('blockwall',  t('Allow friends to post to your profile page?'), (intval($a->user['blockwall']) ? '0' : '1'), '', array(t('No'),t('Yes'))),
 
 	));
  
 
 	$blocktags = replace_macros($opt_tpl,array(
-			'$field' 	=> array('blocktags',  t('Allow friends to tag your posts?'), ! $a->user['blocktags'], '', array(t('No'),t('Yes'))),
+			'$field' 	=> array('blocktags',  t('Allow friends to tag your posts?'), (intval($a->user['blocktags']) ? '0' : '1'), '', array(t('No'),t('Yes'))),
 
 	));
 
@@ -840,6 +845,7 @@ function settings_content(&$a) {
 		'$theme'	=> array('theme', t('Display Theme:'), $theme_selected, '', $themes),
 		'$ajaxint'   => array('browser_update',  t("Update browser every xx seconds"), $browser_update, t('Minimum of 10 seconds, no maximum')),
 		'$itemspage_network'   => array('itemspage_network',  t("Number of items to display on the network page:"), $itemspage_network, t('Maximum of 100 items')),
+		'$nosmile'	=> array('nosmile', t("Don't show emoticons"), $nosmile, ''),
 
 		'$h_prv' 	=> t('Security and Privacy Settings'),
 

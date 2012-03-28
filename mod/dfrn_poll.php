@@ -26,21 +26,24 @@ function dfrn_poll_init(&$a) {
 		$dfrn_id   = substr($dfrn_id,2);
 	}
 
-	if(($dfrn_id === '') && (! x($_POST,'dfrn_id')) && ($a->argc > 1)) {
+	if(($dfrn_id === '') && (! x($_POST,'dfrn_id'))) {
 		if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
 			killme();
 		}
 
-		$r = q("SELECT `hidewall` FROM `user` WHERE `user`.`nickname` = '%s' LIMIT 1",
-			dbesc($a->argv[1])
-		);
-		if(count($r) && $r[0]['hidewall'])
-			killme();
+		$user = '';
+		if($a->argc > 1) {
+			$r = q("SELECT `hidewall` FROM `user` WHERE `user`.`nickname` = '%s' LIMIT 1",
+				dbesc($a->argv[1])
+			);
+			if((! count($r)) || (count($r) && $r[0]['hidewall']))
+				killme();
+			$user = $r[0]['nickname'];
+		}
  
-		logger('dfrn_poll: public feed request from ' . $_SERVER['REMOTE_ADDR'] );
+		logger('dfrn_poll: public feed request from ' . $_SERVER['REMOTE_ADDR'] . ' for ' . $user);
 		header("Content-type: application/atom+xml");
-		$o = get_feed_for($a, '', $a->argv[1],$last_update);
-		echo $o;
+		echo get_feed_for($a, '', $user,$last_update);
 		killme();
 	}
 
@@ -199,7 +202,7 @@ function dfrn_poll_post(&$a) {
 	$ptype        = ((x($_POST,'type'))         ? $_POST['type']                 : '');
 	$dfrn_version = ((x($_POST,'dfrn_version')) ? (float) $_POST['dfrn_version'] : 2.0);
 	$perm         = ((x($_POST,'perm'))         ? $_POST['perm']                 : 'r');
-
+          
 	if($ptype === 'profile-check') {
 
 		if((strlen($challenge)) && (strlen($sec))) {
@@ -358,8 +361,8 @@ function dfrn_poll_post(&$a) {
 					intval($contact_id)
 				);
 			}
-		}				
-
+		}
+				
 		header("Content-type: application/atom+xml");
 		$o = get_feed_for($a,$dfrn_id, $a->argv[1], $last_update, $direction);
 		echo $o;

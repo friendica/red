@@ -151,7 +151,7 @@ function profile_photo_content(&$a) {
 			return;
 		};
 		
-		check_form_security_token_redirectOnErr('/profile_photo', 'profile_photo');
+//		check_form_security_token_redirectOnErr('/profile_photo', 'profile_photo');
         
 		$resource_id = $a->argv[2];
 		//die(":".local_user());

@@ -684,7 +684,7 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 
 	if(! x($vcard,'photo')) {
 		$a = get_app();
-		$vcard['photo'] = $a->get_baseurl() . '/images/default-profile.jpg' ; 
+		$vcard['photo'] = $a->get_baseurl() . '/images/person-175.jpg' ; 
 	}
 
 	if(! $profile)

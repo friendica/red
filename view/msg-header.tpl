@@ -16,6 +16,7 @@ if(plaintext != 'none') {
 		theme_advanced_toolbar_location : "top",
 		theme_advanced_toolbar_align : "center",
 		theme_advanced_blockformats : "blockquote,code",
+		gecko_spellcheck : true,
 		paste_text_sticky : true,
 		entity_encoding : "raw",
 		add_unload_trigger : false,
@@ -30,10 +31,19 @@ if(plaintext != 'none') {
 		setup : function(ed) {
 			ed.onInit.add(function(ed) {
 				ed.pasteAsPlainText = true;
+				var editorId = ed.editorId;
+				var textarea = $('#'+editorId);
+				if (typeof(textarea.attr('tabindex')) != "undefined") {
+					$('#'+editorId+'_ifr').attr('tabindex', textarea.attr('tabindex'));
+					textarea.attr('tabindex', null);
+				}
 			});
 		}
 	});
 }
+else
+	$("#prvmail-text").contact_autocomplete(baseurl+"/acl");
+
 
 </script>
 <script type="text/javascript" src="js/ajaxupload.js" ></script>

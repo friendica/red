@@ -20,7 +20,7 @@ function replace_macros($s,$r) {
 	
 	//$a = get_app();
 	//$a->page['debug'] .= "$tt <br>\n";
-	return $r;
+	return template_unescape($r);
 
 }}
 
@@ -638,7 +638,7 @@ if(! function_exists('search')) {
 function search($s,$id='search-box',$url='/search',$save = false) {
 	$a = get_app();
 	$o  = '<div id="' . $id . '">';
-	$o .= '<form action="' . $a->get_baseurl() . $url . '" method="get" >';
+	$o .= '<form action="' . $a->get_baseurl((stristr($url,'network')) ? true : false) . $url . '" method="get" >';
 	$o .= '<input type="text" name="search" id="search-text" value="' . $s .'" />';
 	$o .= '<input type="submit" name="submit" id="search-submit" value="' . t('Search') . '" />'; 
 	if($save)
@@ -694,7 +694,12 @@ function linkify($s) {
 
 if(! function_exists('smilies')) {
 function smilies($s, $sample = false) {
+
 	$a = get_app();
+
+	if(intval(get_config('system','no_smilies')) 
+		|| (local_user() && intval(get_pconfig(local_user(),'system','no_smilies'))))
+		return $s;
 
 	$s = preg_replace_callback('/<pre>(.*?)<\/pre>/ism','smile_encode',$s);
 	$s = preg_replace_callback('/<code>(.*?)<\/code>/ism','smile_encode',$s);
@@ -704,27 +709,21 @@ function smilies($s, $sample = false) {
 		'&lt;/3', 
 		'&lt;\\3', 
 		':-)', 
-//		':)', 
 		';-)', 
-//		';)', 
 		':-(', 
-//		':(', 
 		':-P', 
-//		':P', 
+		':-p', 
 		':-"', 
 		':-&quot;', 
 		':-x', 
 		':-X', 
 		':-D', 
-//		':D', 
 		'8-|', 
 		'8-O', 
 		':-O', 
 		'\\o/', 
 		'o.O', 
 		'O.o', 
-		'\\.../', 
-		'\\ooo/', 
 		":'(", 
 		":-!", 
 		":-/", 
@@ -734,12 +733,8 @@ function smilies($s, $sample = false) {
 		':homebrew', 
 		':coffee', 
 		':facepalm',
-		':headdesk',
 		'~friendika', 
-		'~friendica', 
-//		'Diaspora*' 
-		':beard',
-		':whitebeard'
+		'~friendica'
 
 	);
 
@@ -748,27 +743,21 @@ function smilies($s, $sample = false) {
 		'<img src="' . $a->get_baseurl() . '/images/smiley-brokenheart.gif" alt="</3" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-brokenheart.gif" alt="<\\3" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-smile.gif" alt=":-)" />',
-//		'<img src="' . $a->get_baseurl() . '/images/smiley-smile.gif" alt=":)" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-wink.gif" alt=";-)" />',
-//		'<img src="' . $a->get_baseurl() . '/images/smiley-wink.gif" alt=";)"/>',                
 		'<img src="' . $a->get_baseurl() . '/images/smiley-frown.gif" alt=":-(" />',
-//		'<img src="' . $a->get_baseurl() . '/images/smiley-frown.gif" alt=":(" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-tongue-out.gif" alt=":-P" />',
-//		'<img src="' . $a->get_baseurl() . '/images/smiley-tongue-out.gif" alt=":P" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-tongue-out.gif" alt=":-p" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-\"" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-\"" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-x" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-X" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-laughing.gif" alt=":-D" />',
-//		'<img src="' . $a->get_baseurl() . '/images/smiley-laughing.gif" alt=":D"/>',                
 		'<img src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-|" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-O" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt=":-O" />',                
 		'<img src="' . $a->get_baseurl() . '/images/smiley-thumbsup.gif" alt="\\o/" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="o.O" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="O.o" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-shaka.gif" alt="\\.../" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-shaka.gif" alt="\\ooo/" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-cry.gif" alt=":\'(" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-foot-in-mouth.gif" alt=":-!" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-undecided.gif" alt=":-/" />',
@@ -778,12 +767,8 @@ function smilies($s, $sample = false) {
 		'<img src="' . $a->get_baseurl() . '/images/beer_mug.gif" alt=":homebrew" />',
 		'<img src="' . $a->get_baseurl() . '/images/coffee.gif" alt=":coffee" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-facepalm.gif" alt=":facepalm" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-bangheaddesk.gif" alt=":headdesk" />',
 		'<a href="http://project.friendika.com">~friendika <img src="' . $a->get_baseurl() . '/images/friendika-16.png" alt="~friendika" /></a>',
-		'<a href="http://friendica.com">~friendica <img src="' . $a->get_baseurl() . '/images/friendica-16.png" alt="~friendica" /></a>',
-//		'<a href="http://diasporafoundation.org">Diaspora<img src="' . $a->get_baseurl() . '/images/diaspora.png" alt="Diaspora*" /></a>',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-beard.png" alt=":beard" />',
-		'<img src="' . $a->get_baseurl() . '/images/smiley-whitebeard.png" alt=":whitebeard" />'
+		'<a href="http://friendica.com">~friendica <img src="' . $a->get_baseurl() . '/images/friendica-16.png" alt="~friendica" /></a>'
 	);
 
 	$params = array('texts' => $texts, 'icons' => $icons, 'string' => $s);
@@ -1345,6 +1330,7 @@ function file_tag_save_file($uid,$item,$file) {
 		$saved = get_pconfig($uid,'system','filetags');
 		if((! strlen($saved)) || (! stristr($saved,'[' . file_tag_encode($file) . ']')))
 			set_pconfig($uid,'system','filetags',$saved . '[' . file_tag_encode($file) . ']');
+		info( t('Item filed') );
 	}
 	return true;
 }
@@ -1378,5 +1364,21 @@ function file_tag_unsave_file($uid,$item,$file) {
 		set_pconfig($uid,'system','filetags',str_replace($pattern,'',$saved));
 	}
 	return true;
+}
+
+function normalise_openid($s) {
+	return trim(str_replace(array('http://','https://'),array('',''),$s),'/');
+}
+
+
+function undo_post_tagging($s) {
+	$matches = null;
+	$cnt = preg_match_all('/([@#])\[url=(.*?)\](.*?)\[\/url\]/ism',$s,$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$s = str_replace($mtch[0], $mtch[1] . $mtch[3],$s);
+		}
+	}
+	return $s;
 }
 

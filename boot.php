@@ -9,9 +9,9 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1281' );
+define ( 'FRIENDICA_VERSION',      '2.3.1294' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
-define ( 'DB_UPDATE_VERSION',      1131      );
+define ( 'DB_UPDATE_VERSION',      1133      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -134,6 +134,9 @@ define ( 'NOTIFY_SUGGEST',  0x0020 );
 define ( 'NOTIFY_PROFILE',  0x0040 );
 define ( 'NOTIFY_TAGSELF',  0x0080 );
 define ( 'NOTIFY_TAGSHARE', 0x0100 );
+
+define ( 'NOTIFY_SYSTEM',   0x8000 );
+
 
 /**
  * various namespaces we may need to parse
@@ -286,7 +289,12 @@ class App {
 
 		startup();
 
-		$this->scheme = ((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']))	?  'https' : 'http' );
+		$this->scheme = 'http';
+		if(x($_SERVER,'HTTPS') && $_SERVER['HTTPS'])
+			$this->scheme = 'https';
+		elseif(x($_SERVER,'SERVER_PORT') && (intval($_SERVER['SERVER_PORT']) == 443)) 
+			$this->scheme = 'https';
+
 
 		if(x($_SERVER,'SERVER_NAME')) {
 			$this->hostname = $_SERVER['SERVER_NAME'];
@@ -380,7 +388,7 @@ class App {
 		$scheme = $this->scheme;
 
 		if((x($this->config,'system')) && (x($this->config['system'],'ssl_policy'))) {
-			if($this->config['system']['ssl_policy'] == SSL_POLICY_FULL) 
+			if(intval($this->config['system']['ssl_policy']) === intval(SSL_POLICY_FULL)) 
 				$scheme = 'https';
 
 //			We need to populate the $ssl flag across the entire program before turning this on.
@@ -555,6 +563,10 @@ function absurl($path) {
 	return $path;
 }
 
+function is_ajax() {
+	return (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+}
+
 
 // Primarily involved with database upgrade, but also sets the 
 // base url for use in cmdline programs which don't have
@@ -708,15 +720,16 @@ function login($register = false, $hiddens=false) {
 
 	$noid = get_config('system','no_openid');
 	
+	$dest_url = $a->get_baseurl(true) . '/' . $a->query_string;
+
 	if(local_user()) {
 		$tpl = get_markup_template("logout.tpl");
 	}
 	else {
 		$tpl = get_markup_template("login.tpl");
-
+		$_SESSION['return_url'] = $a->query_string;
 	}
 
-	$dest_url = $a->get_baseurl(true) . '/' . $a->query_string;
 
 	$o .= replace_macros($tpl,array(
 
@@ -1372,6 +1385,11 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 		);
 	}
 
+
+	$arr = array('is_owner' => $is_owner, 'nickname' => $nickname, 'tab' => (($tab) ? $tab : false), 'tabs' => $tabs);
+	call_hooks('profile_tabs', $arr);
+	
 	$tpl = get_markup_template('common_tabs.tpl');
-	return replace_macros($tpl,array('$tabs'=>$tabs));
+
+	return replace_macros($tpl,array('$tabs' => $arr['tabs']));
 }}	

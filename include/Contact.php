@@ -15,6 +15,12 @@ function user_remove($uid) {
 
 	call_hooks('remove_user',$r[0]);
 
+	// save username (actually the nickname as it is guaranteed 
+	// unique), so it cannot be re-registered in the future.
+
+	q("insert into userd ( username ) values ( '%s' )",
+		$r[0]['nickname']
+	);
 
 	q("DELETE FROM `contact` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `group` WHERE `uid` = %d", intval($uid));

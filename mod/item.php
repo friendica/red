@@ -171,16 +171,17 @@ function item_post(&$a) {
 		$str_contact_allow = $orig_post['allow_cid'];
 		$str_group_deny    = $orig_post['deny_gid'];
 		$str_contact_deny  = $orig_post['deny_cid'];
-		$title             = $orig_post['title'];
 		$location          = $orig_post['location'];
 		$coord             = $orig_post['coord'];
 		$verb              = $orig_post['verb'];
 		$emailcc           = $orig_post['emailcc'];
 		$app			   = $orig_post['app'];
-
+		$categories        = $orig_post['file'];
+		$title             = notags(trim($_REQUEST['title']));
 		$body              = escape_tags(trim($_REQUEST['body']));
 		$private           = $orig_post['private'];
 		$pubmail_enable    = $orig_post['pubmail'];
+
 	}
 	else {
 
@@ -213,8 +214,10 @@ function item_post(&$a) {
 		$coord             = notags(trim($_REQUEST['coord']));
 		$verb              = notags(trim($_REQUEST['verb']));
 		$emailcc           = notags(trim($_REQUEST['emailcc']));
-
 		$body              = escape_tags(trim($_REQUEST['body']));
+
+		// $categories = TODO
+
 		$private = ((strlen($str_group_allow) || strlen($str_contact_allow) || strlen($str_group_deny) || strlen($str_contact_deny)) ? 1 : 0);
 
 		if(($parent_item) && 
@@ -242,7 +245,6 @@ function item_post(&$a) {
 			}
 		}
 
-
 		if(! strlen($body)) {
 			if($preview)
 				killme();
@@ -253,6 +255,15 @@ function item_post(&$a) {
 		}
 	}
 
+	// Work around doubled linefeeds in Tinymce 3.5b2
+	// First figure out if it's a status post that would've been
+	// created using tinymce. Otherwise leave it alone. 
+
+	$plaintext = (local_user() ? intval(get_pconfig(local_user(),'system','plaintext')) : 0);
+	if((! $parent) && (! $api_source) && (! $plaintext)) {
+		$body = str_replace("\r\n","\n",$body);
+		$body = str_replace("\n\n","\n",$body);
+	}
 
 
 	// get contact info for poster
@@ -490,6 +501,7 @@ function item_post(&$a) {
 	$datarray['location']      = $location;
 	$datarray['coord']         = $coord;
 	$datarray['tag']           = $str_tags;
+	$datarray['file']          = $categories;
 	$datarray['inform']        = $inform;
 	$datarray['verb']          = $verb;
 	$datarray['allow_cid']     = $str_contact_allow;
@@ -549,9 +561,12 @@ function item_post(&$a) {
 
 
 	if($orig_post) {
-		$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			dbesc($title),
-			dbesc($body),
+		$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `attach` = '%s', `file` = '%s', `edited` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			dbesc($datarray['title']),
+			dbesc($datarray['body']),
+			dbesc($datarray['tag']),
+			dbesc($datarray['attach']),
+			dbesc($datarray['file']),
 			dbesc(datetime_convert()),
 			intval($post_id),
 			intval($profile_uid)
@@ -609,7 +624,7 @@ function item_post(&$a) {
 		dbesc($datarray['attach']),
 		intval($datarray['bookmark']),
 		intval($datarray['origin']),
-		intval($datarry['moderated'])
+		intval($datarray['moderated'])
 	);
 
 	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
@@ -836,7 +851,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 		//if the tag is replaced...
 		if(strpos($tag,'[url='))
 			//...do nothing
-			continue;
+			return;
 		//base tag has the tags name only
 		$basetag = str_replace('_',' ',substr($tag,1));
 		//create text for link
@@ -857,7 +872,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 	if(strpos($tag,'@') === 0) {
 		//is it already replaced? 
 		if(strpos($tag,'[url='))
-			continue;
+			return;
 		$stat = false;
 		//get the person's name
 		$name = substr($tag,1);

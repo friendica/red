@@ -7,14 +7,11 @@ require_once('include/crypto.php');
 
 function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) {
 
-	// default permissions - anonymous user
 
-	if(! strlen($owner_nick))
-		killme();
-
+	$sitefeed    = ((strlen($owner_nick)) ? false : true); // not yet implemented, need to rewrite huge chunks of following logic
 	$public_feed = (($dfrn_id) ? false : true);
-	$starred = false;
-	$converse = false;
+	$starred     = false;   // not yet implemented, possible security issues
+	$converse    = false;
 
 	if($public_feed && $a->argc > 2) {
 		for($x = 2; $x < $a->argc; $x++) {
@@ -25,10 +22,11 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 		}
 	}
 
+	// default permissions - anonymous user
 
 	$sql_extra = " AND `allow_cid` = '' AND `allow_gid` = '' AND `deny_cid`  = '' AND `deny_gid`  = '' ";
 
-	$r = q("SELECT `contact`.*, `user`.`uid` AS `user_uid`, `user`.`nickname`, `user`.`timezone`
+	$r = q("SELECT `contact`.*, `user`.`uid` AS `user_uid`, `user`.`nickname`, `user`.`timezone`, `user`.`page-flags`
 		FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid`
 		WHERE `contact`.`self` = 1 AND `user`.`nickname` = '%s' LIMIT 1",
 		dbesc($owner_nick)
@@ -156,7 +154,8 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 		'$picdate'      => xmlify(datetime_convert('UTC','UTC',$owner['avatar-date'] . '+00:00' , ATOM_TIME)) ,
 		'$uridate'      => xmlify(datetime_convert('UTC','UTC',$owner['uri-date']    . '+00:00' , ATOM_TIME)) ,
 		'$namdate'      => xmlify(datetime_convert('UTC','UTC',$owner['name-date']   . '+00:00' , ATOM_TIME)) , 
-		'$birthday'     => ((strlen($birthday)) ? '<dfrn:birthday>' . xmlify($birthday) . '</dfrn:birthday>' : '')
+		'$birthday'     => ((strlen($birthday)) ? '<dfrn:birthday>' . xmlify($birthday) . '</dfrn:birthday>' : ''),
+		'$community'    => (($owner['page-flags'] == PAGE_COMMUNITY) ? '<dfrn:community>1</dfrn:community>' : '')
 	));
 
 	call_hooks('atom_feed', $atom);
@@ -1048,6 +1047,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 
 	$ssl_val = intval(get_config('system','ssl_policy'));
 	$ssl_policy = '';
+
 	switch($ssl_val){
 		case SSL_POLICY_FULL:
 			$ssl_policy = 'full';
@@ -1092,6 +1092,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	$challenge    = hex2bin((string) $res->challenge);
 	$dfrn_version = (float) (($res->dfrn_version) ? $res->dfrn_version : 2.0);
 	$rino_allowed = ((intval($res->rino) === 1) ? 1 : 0);
+	$page         = (($owner['page-flags'] == PAGE_COMMUNITY) ? 1 : 0);
 
 	$final_dfrn_id = '';
 
@@ -1135,6 +1136,9 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 
 	$postvars['ssl_policy'] = $ssl_policy;
 
+	if($page)
+		$postvars['page'] = '1';
+	
 	if($rino && $rino_allowed && (! $dissolve)) {
 		$key = substr(random_string(),0,16);
 		$data = bin2hex(aes_encrypt($postvars['data'],$key));
@@ -1399,6 +1403,19 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 	}
 
+	$community_page = 0;
+	$rawtags = $feed->get_feed_tags( NAMESPACE_DFRN, 'community');
+	if($rawtags) {
+		$community_page = intval($rawtags[0]['data']);
+	}
+	if(is_array($contact) && intval($contact['forum']) != $community_page) {
+		q("update contact set forum = %d where id = %d limit 1",
+			intval($community_page),
+			intval($contact['id'])
+		);
+		$contact['forum'] = (string) $community_page;
+	}
+
 
 	// process any deleted entries
 
@@ -1418,7 +1435,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 			}
 			if($deleted && is_array($contact)) {
 				$r = q("SELECT `item`.*, `contact`.`self` FROM `item` left join `contact` on `item`.`contact-id` = `contact`.`id` 
-					WHERE `uri` = '%s' AND `item`.`uid` = %d AND `contact-id` = %d LIMIT 1",
+					WHERE `uri` = '%s' AND `item`.`uid` = %d AND `contact-id` = %d AND NOT `item`.`file` LIKE '%%[%%' LIMIT 1",
 					dbesc($uri),
 					intval($importer['uid']),
 					intval($contact['id'])
@@ -1563,9 +1580,10 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 				if(count($r)) {
 					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
-						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($datarray['title']),
 							dbesc($datarray['body']),
+							dbesc($datarray['tag']),
 							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
 							dbesc($item_id),
 							intval($importer['uid'])
@@ -1708,9 +1726,10 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 				if(count($r)) {
 					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
-						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($datarray['title']),
 							dbesc($datarray['body']),
+							dbesc($datarray['tag']),
 							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
 							dbesc($item_id),
 							intval($importer['uid'])
@@ -1781,7 +1800,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					// but otherwise there's a possible data mixup on the sender's system.
 					// the tgroup delivery code called from item_store will correct it if it's a forum,
 					// but we're going to unconditionally correct it here so that the post will always be owned by our contact. 
-					logger('local_delivery: Correcting item owner.', LOGGER_DEBUG);
+					logger('consume_feed: Correcting item owner.', LOGGER_DEBUG);
 					$datarray['owner-name']   = $contact['name'];
 					$datarray['owner-link']   = $contact['url'];
 					$datarray['owner-avatar'] = $contact['thumb'];
@@ -1877,6 +1896,14 @@ function local_delivery($importer,$data) {
 		);
 		if(count($r)) {
 			$fid = $r[0]['id'];
+
+			// OK, we do. Do we already have an introduction for this person ?
+			$r = q("select id from intro where uid = %d and fid = %d limit 1",
+				intval($fsugg['uid']),
+				intval($fid)
+			);
+			if(count($r))
+				return 0;
 		}
 		if(! $fid)
 			$r = q("INSERT INTO `fcontact` ( `name`,`url`,`photo`,`request` ) VALUES ( '%s', '%s', '%s', '%s' ) ",
@@ -1896,6 +1923,7 @@ function local_delivery($importer,$data) {
 		// database record did not get created. Quietly give up.
 		else
 			return 0;
+
 
 		$hash = random_string();
  
@@ -1982,6 +2010,19 @@ function local_delivery($importer,$data) {
 
 		// NOTREACHED
 	}	
+
+	$community_page = 0;
+	$rawtags = $feed->get_feed_tags( NAMESPACE_DFRN, 'community');
+	if($rawtags) {
+		$community_page = intval($rawtags[0]['data']);
+	}
+	if(intval($importer['forum']) != $community_page) {
+		q("update contact set forum = %d where id = %d limit 1",
+			intval($community_page),
+			intval($importer['id'])
+		);
+		$importer['forum'] = (string) $community_page;
+	}
 	
 	logger('local_delivery: feed item count = ' . $feed->get_item_quantity());
 
@@ -2004,7 +2045,7 @@ function local_delivery($importer,$data) {
 			if($deleted) {
 
 				$r = q("SELECT `item`.*, `contact`.`self` FROM `item` left join contact on `item`.`contact-id` = `contact`.`id`
-					WHERE `uri` = '%s' AND `item`.`uid` = %d AND `contact-id` = %d LIMIT 1",
+					WHERE `uri` = '%s' AND `item`.`uid` = %d AND `contact-id` = %d AND NOT `item`.`file` LIKE '%%[%%' LIMIT 1",
 					dbesc($uri),
 					intval($importer['importer_uid']),
 					intval($importer['id'])
@@ -2021,6 +2062,7 @@ function local_delivery($importer,$data) {
 					if(($item['verb'] === ACTIVITY_TAG) && ($item['object-type'] === ACTVITY_OBJ_TAGTERM)) {
 						$xo = parse_xml_string($item['object'],false);
 						$xt = parse_xml_string($item['target'],false);
+
 						if($xt->type === ACTIVITY_OBJ_NOTE) {
 							$i = q("select * from `item` where uri = '%s' and uid = %d limit 1",
 								dbesc($xt->id),
@@ -2299,9 +2341,10 @@ function local_delivery($importer,$data) {
 
 				if(count($r)) {
 					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
-						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($datarray['title']),
 							dbesc($datarray['body']),
+							dbesc($datarray['tag']),
 							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
 							dbesc($item_id),
 							intval($importer['importer_uid'])
@@ -2464,9 +2507,10 @@ function local_delivery($importer,$data) {
 
 			if(count($r)) {
 				if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
-					$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+					$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 						dbesc($datarray['title']),
 						dbesc($datarray['body']),
+						dbesc($datarray['tag']),
 						dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
 						dbesc($item_id),
 						intval($importer['importer_uid'])
@@ -2891,6 +2935,11 @@ function item_expire($uid,$days) {
 	logger('expire: # items=' . count($r). "; expire items: $expire_items, expire notes: $expire_notes, expire starred: $expire_starred, expire photos: $expire_photos");
 
 	foreach($r as $item) {
+
+		// don't expire filed items
+
+		if(strpos($item['file'],'[') !== false)
+			continue;
 
 		// Only expire posts, not photos and photo comments
 

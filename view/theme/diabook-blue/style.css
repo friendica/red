@@ -102,6 +102,7 @@
 .icon.recycle 	{ background-image: url("../../../view/theme/diabook-blue/icons/recycle.png");}
 .icon.remote-link { background-image: url("../../../view/theme/diabook-blue/icons/remote.png");}
 .icon.tagged    { background-image: url("../../../view/theme/diabook-blue/icons/tagged.png");}
+.icon.file-as { background-image: url("../../../view/theme/diabook-blue/icons/file_as.png");}
 .star-item.icon.unstarred { background-image: url("../../../view/theme/diabook-blue/icons/unstarred.png");}
 .star-item.icon.starred { background-image: url("../../../view/theme/diabook-blue/icons/starred.png");}
 .icon.link		{ background-image: url("../../../view/theme/diabook-blue/icons/link.png");}
@@ -177,8 +178,8 @@
 
 .icon.on             { background-image: url("../../../view/theme/diabook-blue/icons/toogle_on.png"); background-repeat: no-repeat;}
 .icon.off            { background-image: url("../../../view/theme/diabook-blue/icons/toogle_off.png"); background-repeat: no-repeat;}
-.prev           { background-position: -90px  -60px;}
-.next           { background-position: -110px -60px;}
+.icon.prev           { background-image: url("../../../view/theme/diabook-blue/icons/prev.png"); background-repeat: no-repeat;}
+.icon.next           { background-image: url("../../../view/theme/diabook-blue/icons/next.png"); background-repeat: no-repeat;}
 /*.tagged     { background-position: -130px -60px;}*/
 
 .attachtype {
@@ -386,15 +387,13 @@
   margin-bottom: 5px;
   width: 684px;
   border-bottom: 1px solid #BDCDD4;
-  border-top: 1px solid #BDCDD4;
-
   padding: 8px;
 }
 
 /* global */
 body {
   font-family: 'Lato', "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 13px;
+  font-size: 12.5px;
   background-color: #ffffff;
   color: #2d2d2d;
   margin: 50px auto auto;
@@ -886,27 +885,57 @@ ul.menu-popup .empty {
   position: absolute;
   padding-top: 4px;
   padding-left: 5px;	
+  word-wrap: break-word;
+  width: 130px;
 	}
 #ps-username:hover{
   text-decoration: none;	
 	}
 .menu-profile-side{
-	list-style: none;	
-  padding-left: 16px;
-  min-height: 16px;
+  list-style: none;	
+  padding-left: 0px;
+  min-height: 0px;
 	}
 .menu-profile-list{
   height: auto;
   overflow: auto;
   padding-top: 3px;
   padding-bottom: 3px;
+  padding-left: 16px;
+  min-height: 16px;
+  list-style: none;
 	}
 .menu-profile-list:hover{
 	background: #EEE;
 	}
+.menu-profile-list-item{
+	padding-left: 5px;
+	}	
 .menu-profile-list-item:hover{	
-	text-decoration: none;	
+	text-decoration: none;
    }
+/*http://prothemedesign.com/circular-icons/*/
+.menu-profile-list.home{
+	background: url("../../../view/theme/diabook-blue/icons/home.png") no-repeat;
+	}
+.menu-profile-list.photos{
+	background: url("../../../view/theme/diabook-blue/icons/mess_side.png") no-repeat;
+	}
+.menu-profile-list.events{
+	background: url("../../../view/theme/diabook-blue/icons/events.png") no-repeat;
+	}
+.menu-profile-list.notes{
+	background: url("../../../view/theme/diabook-blue/icons/notes.png") no-repeat;
+	}
+.menu-profile-list.foren{
+	background: url("../../../view/theme/diabook-blue/icons/pubgroups.png") no-repeat;
+	}
+.menu-profile-list.com_side{
+	background: url("../../../view/theme/diabook-blue/icons/com_side.png") no-repeat;
+	}
+.menu-profile-list.pscontacts{
+	background: url("../../../view/theme/diabook-blue/icons/pscontacts.png") no-repeat;
+	}
 /* aside */
 aside {
   display: table-cell;
@@ -1066,6 +1095,16 @@ aside #side-peoplefind-url {
   min-height: 16px;
   list-style: none;
 }
+#side-bar-photos-albums li{
+list-style-type: disc;
+}
+#side-bar-photos-albums ul li{
+  margin-left: 30px;
+  padding-left: 0px;
+	}
+#side-bar-photos-albums ul li a{
+  color: #1872A2;
+}
 .widget .tool.selected {
   background: url("../../../view/theme/diabook-blue/icons/selected.png") no-repeat left center;
 }
@@ -1199,10 +1238,10 @@ body .pageheader{
 }
 
 .wall-item-container .wall-item-content {
-  font-size: 13px;
+  font-size: 12.5px;
   max-width: 720px;
   word-wrap: break-word;
-  line-height: 1.4;
+  line-height: 1.2;
 }
 
 .wall-item-container .wall-item-content img {
@@ -2207,6 +2246,9 @@ a.mail-list-link {
 .calendar {
         font-family: Courier, monospace;
 }
+.calendar.eventcal a {
+  color: #1872A2;	
+	}
 .today {
         font-weight: bold;
         color: #FF0000;
@@ -2373,21 +2415,28 @@ float: left;
    -moz-box-shadow: 0 0 5px #888;
    -webkit-box-shadow: 0 0 5px #888;
    box-shadow: 0 0 5px #888;
-  background-color: #EEE;
+  background-color: #000;
    -webkit-border-radius: 5px;
    -moz-border-radius: 5px;
   border-radius: 5px;
   padding-bottom: 20px;
   position: relative;
   margin: 0 10px 10px 0;
+  width: 200px; height: 140px;
+  overflow: hidden;  
 }
 .photo-top-album-name {
-  position: absolute;
-  bottom: 0;
-  padding: 0 5px;
+        width: 100%;
+        position: absolute; 
+        bottom: 0px; 
+        padding-left: 3px;
+        background-color: #EEE;
 }
 .photo-top-album-link{
   color: #1872A2;
+	}
+.photo-top-album-img{
+	
 	}
 /*.photo-top-image-wrapper {
         position: relative;

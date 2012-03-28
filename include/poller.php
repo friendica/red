@@ -232,7 +232,7 @@ function poller_run($argv, $argc){
 
 			$importer_uid = $contact['uid'];
 		
-			$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
+			$r = q("SELECT `contact`.*, `user`.`page-flags` FROM `contact` LEFT JOIN `user` on `contact`.`uid` = `user`.`uid` WHERE `user`.`uid` = %d AND `contact`.`self` = 1 LIMIT 1",
 				intval($importer_uid)
 			);
 			if(! count($r))
