@@ -144,6 +144,13 @@ function diabook_blue_community_info(){
 	$nv['suggest'] = Array('suggest', t('Friend Suggestions'), "", "");
 	$nv['invite'] = Array('invite', t('Invite Friends'), "", "");
 	
+	$nv['search'] = '<form name="simple_bar" method="get" action="http://dir.friendika.com/directory">
+						<span class="sbox_l"></span>
+						<span class="sbox">
+						<input type="text" name="search" size="13" maxlength="50">
+						</span>
+						<span class="sbox_r" id="srch_clear"></span>';
+						
 	$aside['$nv'] = $nv;
 	};
 	//Community Page
@@ -353,6 +360,18 @@ function close_lastlikes(){
  document.getElementById( "close_lastlikes" ).style.display = "none";
  $.cookie('close_lastlikes','1', { expires: 365, path: '/' });
  };
+
+function restore_boxes(){
+	$.cookie('close_pages','2', { expires: 365, path: '/' });
+	$.cookie('close_helpers','2', { expires: 365, path: '/' });
+	$.cookie('close_services','2', { expires: 365, path: '/' });
+	$.cookie('close_friends','2', { expires: 365, path: '/' });
+	$.cookie('close_postit','2', { expires: 365, path: '/' });
+	$.cookie('close_lastusers','2', { expires: 365, path: '/' });
+	$.cookie('close_lastphotos','2', { expires: 365, path: '/' });
+	$.cookie('close_lastlikes','2', { expires: 365, path: '/' });
+	alert('Right-hand column was restored. Please refresh your browser');
+  }; 
  
 </script>
 
