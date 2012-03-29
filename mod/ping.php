@@ -22,7 +22,7 @@ function ping_init(&$a) {
 				and seen = 0 order by date desc limit 0, 50",
 				intval(local_user())
 			);
-			$sysnotify = $r[0]['total'];
+			$sysnotify = $t[0]['total'];
 		}
 		else {
 			$z1 = q("select * from notify where uid = %d
