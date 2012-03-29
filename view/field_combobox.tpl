@@ -1,6 +1,6 @@
 	
 	<div class='field combobox'>
-		<label for='id_$field.0'>$field.1</label>
+		<label for='id_$field.0' id='id_$field.0_label'>$field.1</label>
 		{# html5 don't work on Chrome, Safari and IE9
 		<input id="id_$field.0" type="text" list="data_$field.0" >
 		<datalist id="data_$field.0" >
