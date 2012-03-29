@@ -377,7 +377,7 @@ function restore_boxes(){
 	$.cookie('close_lastusers','2', { expires: 365, path: '/' });
 	$.cookie('close_lastphotos','2', { expires: 365, path: '/' });
 	$.cookie('close_lastlikes','2', { expires: 365, path: '/' });
-	alert('Right-hand column was restored');
+	alert('Right-hand column was restored. Please refresh your browser');
   };
 
  
@@ -385,4 +385,3 @@ function restore_boxes(){
  
  
 EOT;
-

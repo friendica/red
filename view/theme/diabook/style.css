@@ -640,6 +640,10 @@ nav #search-box #search-text {
   background-image:  url('icons/lupe.png');
   background-repeat:no-repeat;
   padding-left:20px;
+  border-top-left-radius: 15px;
+border-top-right-radius: 15px;
+border-bottom-right-radius: 15px;
+border-bottom-left-radius: 15px;
 	}
 
 
