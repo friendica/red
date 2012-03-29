@@ -95,8 +95,8 @@ define ( 'PAGE_BLOG',              4 );
  * Network and protocol family types 
  */
 
-define ( 'NETWORK_ZOT',              'zot!');    // Zot!
 define ( 'NETWORK_DFRN',             'dfrn');    // Friendica, Mistpark, other DFRN implementations
+define ( 'NETWORK_ZOT',              'zot!');    // Zot!
 define ( 'NETWORK_OSTATUS',          'stat');    // status.net, identi.ca, GNU-social, other OStatus implementations
 define ( 'NETWORK_FEED',             'feed');    // RSS/Atom feeds with no known "post/notify" protocol
 define ( 'NETWORK_DIASPORA',         'dspr');    // Diaspora
@@ -107,6 +107,28 @@ define ( 'NETWORK_LINKEDIN',         'lnkd');    // LinkedIn
 define ( 'NETWORK_XMPP',             'xmpp');    // XMPP     
 define ( 'NETWORK_MYSPACE',          'mysp');    // MySpace
 define ( 'NETWORK_GPLUS',            'goog');    // Google+
+
+/*
+ * These numbers are used in stored permissions
+ * and existing allocations MUST NEVER BE CHANGED
+ * OR RE-ASSIGNED! You may only add to them.
+ */
+
+$netgroup_ids = array(
+	NETWORK_DFRN     => (-1),
+	NETWORK_ZOT      => (-2),
+	NETWORK_OSTATUS  => (-3),
+	NETWORK_FEED     => (-4),
+	NETWORK_DIASPORA => (-5),
+	NETWORK_MAIL     => (-6),
+	NETWORK_MAIL2    => (-7),
+	NETWORK_FACEBOOK => (-8),
+	NETWORK_LINKEDIN => (-9),
+	NETWORK_XMPP     => (-10),
+	NETWORK_MYSPACE  => (-11),
+	NETWORK_GPLUS    => (-12),
+);
+
 
 /**
  * Maximum number of "people who like (or don't like) this"  that we will list by name
