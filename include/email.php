@@ -74,7 +74,7 @@ function email_msg_headers($mbox,$uid) {
 }
 
 
-function email_get_msg($mbox,$uid) {
+function email_get_msg($mbox,$uid, $reply) {
 	$ret = array();
 
 	$struc = (($mbox && $uid) ? @imap_fetchstructure($mbox,$uid,FT_UID) : null);
@@ -114,7 +114,7 @@ function email_get_msg($mbox,$uid) {
 	$ret['body'] = removegpg($ret['body']);
 	$msg = removesig($ret['body']);
 	$ret['body'] = $msg['body'];
-	$ret['body'] = convertquote($ret['body'], false);
+	$ret['body'] = convertquote($ret['body'], $reply);
 
 	if (trim($html) != '')
 		$ret['body'] = removelinebreak($ret['body']);
@@ -250,7 +250,7 @@ function email_header_encode($in_str, $charset) {
 
         // remove trailing spacer and
         // add start and end delimiters
-        $spacer = preg_quote($spacer);
+        $spacer = preg_quote($spacer,'/');
         $out_str = preg_replace("/" . $spacer . "$/", "", $out_str);
         $out_str = $start . $out_str . $end;
     }

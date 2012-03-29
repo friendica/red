@@ -207,7 +207,10 @@ function q($sql) {
 	unset($args[0]);
 
 	if($db && $db->connected) {
-		$ret = $db->q(vsprintf($sql,$args));
+		$stmt = vsprintf($sql,$args);
+		if($stmt === false)
+			logger('dba: vsprintf error: ' . print_r(debug_bracktrace(),true));
+		$ret = $db->q($stmt);
 		return $ret;
 	}
 

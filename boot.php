@@ -9,7 +9,7 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1293' );
+define ( 'FRIENDICA_VERSION',      '2.3.1295' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
 define ( 'DB_UPDATE_VERSION',      1133      );
 
@@ -95,8 +95,8 @@ define ( 'PAGE_BLOG',              4 );
  * Network and protocol family types 
  */
 
-define ( 'NETWORK_ZOT',              'zot!');    // Zot!
 define ( 'NETWORK_DFRN',             'dfrn');    // Friendica, Mistpark, other DFRN implementations
+define ( 'NETWORK_ZOT',              'zot!');    // Zot!
 define ( 'NETWORK_OSTATUS',          'stat');    // status.net, identi.ca, GNU-social, other OStatus implementations
 define ( 'NETWORK_FEED',             'feed');    // RSS/Atom feeds with no known "post/notify" protocol
 define ( 'NETWORK_DIASPORA',         'dspr');    // Diaspora
@@ -107,6 +107,28 @@ define ( 'NETWORK_LINKEDIN',         'lnkd');    // LinkedIn
 define ( 'NETWORK_XMPP',             'xmpp');    // XMPP     
 define ( 'NETWORK_MYSPACE',          'mysp');    // MySpace
 define ( 'NETWORK_GPLUS',            'goog');    // Google+
+
+/*
+ * These numbers are used in stored permissions
+ * and existing allocations MUST NEVER BE CHANGED
+ * OR RE-ASSIGNED! You may only add to them.
+ */
+
+$netgroup_ids = array(
+	NETWORK_DFRN     => (-1),
+	NETWORK_ZOT      => (-2),
+	NETWORK_OSTATUS  => (-3),
+	NETWORK_FEED     => (-4),
+	NETWORK_DIASPORA => (-5),
+	NETWORK_MAIL     => (-6),
+	NETWORK_MAIL2    => (-7),
+	NETWORK_FACEBOOK => (-8),
+	NETWORK_LINKEDIN => (-9),
+	NETWORK_XMPP     => (-10),
+	NETWORK_MYSPACE  => (-11),
+	NETWORK_GPLUS    => (-12),
+);
+
 
 /**
  * Maximum number of "people who like (or don't like) this"  that we will list by name
@@ -561,6 +583,10 @@ function absurl($path) {
 	if(strpos($path,'/') === 0)
 		return z_path() . $path;
 	return $path;
+}
+
+function is_ajax() {
+	return (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
 }
 
 
@@ -1381,6 +1407,11 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 		);
 	}
 
+
+	$arr = array('is_owner' => $is_owner, 'nickname' => $nickname, 'tab' => (($tab) ? $tab : false), 'tabs' => $tabs);
+	call_hooks('profile_tabs', $arr);
+	
 	$tpl = get_markup_template('common_tabs.tpl');
-	return replace_macros($tpl,array('$tabs'=>$tabs));
+
+	return replace_macros($tpl,array('$tabs' => $arr['tabs']));
 }}	

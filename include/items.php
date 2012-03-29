@@ -1090,12 +1090,23 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	$postvars     = array();
 	$sent_dfrn_id = hex2bin((string) $res->dfrn_id);
 	$challenge    = hex2bin((string) $res->challenge);
+	$perm         = (($res->perm) ? $res->perm : null);
 	$dfrn_version = (float) (($res->dfrn_version) ? $res->dfrn_version : 2.0);
 	$rino_allowed = ((intval($res->rino) === 1) ? 1 : 0);
 	$page         = (($owner['page-flags'] == PAGE_COMMUNITY) ? 1 : 0);
 
 	$final_dfrn_id = '';
 
+	if($perm) {
+		if((($perm == 'rw') && (! intval($contact['writable']))) 
+		|| (($perm == 'r') && (intval($contact['writable'])))) {
+			q("update contact set writable = %d where id = %d limit 1",
+				intval(($perm == 'rw') ? 1 : 0),
+				intval($contact['id'])
+			);
+			$contact['writable'] = (string) 1 - intval($contact['writable']);			
+		}
+	}
 
 	if(($contact['duplex'] && strlen($contact['pubkey'])) 
 		|| ($owner['page-flags'] == PAGE_COMMUNITY && strlen($contact['pubkey']))

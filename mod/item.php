@@ -171,13 +171,13 @@ function item_post(&$a) {
 		$str_contact_allow = $orig_post['allow_cid'];
 		$str_group_deny    = $orig_post['deny_gid'];
 		$str_contact_deny  = $orig_post['deny_cid'];
-		$title             = $orig_post['title'];
 		$location          = $orig_post['location'];
 		$coord             = $orig_post['coord'];
 		$verb              = $orig_post['verb'];
 		$emailcc           = $orig_post['emailcc'];
 		$app			   = $orig_post['app'];
 		$categories        = $orig_post['file'];
+		$title             = notags(trim($_REQUEST['title']));
 		$body              = escape_tags(trim($_REQUEST['body']));
 		$private           = $orig_post['private'];
 		$pubmail_enable    = $orig_post['pubmail'];
