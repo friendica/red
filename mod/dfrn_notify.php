@@ -158,6 +158,7 @@ function dfrn_notify_post(&$a) {
 		);
 	}
 			
+
 	logger('dfrn_notify: received notify from ' . $importer['name'] . ' for ' . $importer['username']);
 	logger('dfrn_notify: data: ' . $data, LOGGER_DATA);
 
@@ -173,6 +174,13 @@ function dfrn_notify_post(&$a) {
 		xml_status(0);
 
 	}
+
+
+	// If we are setup as a soapbox we aren't accepting input from this person
+
+	if($importer['page-flags'] == PAGE_SOAPBOX)
+		xml_status(0);
+
 
 	if(strlen($key)) {
 		$rawkey = hex2bin(trim($key));
@@ -261,7 +269,7 @@ function dfrn_notify_content(&$a) {
 				break; // NOTREACHED
 		}
 
-		$r = q("SELECT `contact`.*, `user`.`nickname` FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
+		$r = q("SELECT `contact`.*, `user`.`nickname`, `user`.`page-flags` FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
 				WHERE `contact`.`blocked` = 0 AND `contact`.`pending` = 0 AND `user`.`nickname` = '%s' 
 				AND `user`.`account_expired` = 0 $sql_extra LIMIT 1",
 				dbesc($a->argv[1])
@@ -299,6 +307,12 @@ function dfrn_notify_content(&$a) {
 		if(! $rino_enable)
 			$rino = 0;
 
+		if((($r[0]['rel']) && ($r[0]['rel'] != CONTACT_IS_SHARING)) || ($r[0]['page-flags'] == PAGE_COMMUNITY)) {
+			$perm = 'rw';
+		}
+		else {
+			$perm = 'r';
+		}
 
 		header("Content-type: text/xml");
 
@@ -306,7 +320,8 @@ function dfrn_notify_content(&$a) {
 			. '<dfrn_notify>' . "\r\n"
 			. "\t" . '<status>' . $status . '</status>' . "\r\n"
 			. "\t" . '<dfrn_version>' . DFRN_PROTOCOL_VERSION . '</dfrn_version>' . "\r\n"
-			. "\t" . '<rino>' . $rino . '</rino>' . "\r\n" 
+			. "\t" . '<rino>' . $rino . '</rino>' . "\r\n"
+			. "\t" . '<perm>' . $perm . '</perm>' . "\r\n" 
 			. "\t" . '<dfrn_id>' . $encrypted_id . '</dfrn_id>' . "\r\n" 
 			. "\t" . '<challenge>' . $challenge . '</challenge>' . "\r\n"
 			. '</dfrn_notify>' . "\r\n" ;
