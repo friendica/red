@@ -688,9 +688,9 @@ function diaspora_post($importer,$xml) {
 
 				// don't link tags that are already embedded in links
 
-				if(preg_match('/\[(.*?)' . preg_quote($tag) . '(.*?)\]/',$body))
+				if(preg_match('/\[(.*?)' . preg_quote($tag,'/') . '(.*?)\]/',$body))
 					continue;
-				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag) . '(.*?)\)/',$body))
+				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag,'/') . '(.*?)\)/',$body))
 					continue;
 
 				$basetag = str_replace('_',' ',substr($tag,1));
@@ -853,9 +853,9 @@ function diaspora_reshare($importer,$xml) {
 
 				// don't link tags that are already embedded in links
 
-				if(preg_match('/\[(.*?)' . preg_quote($tag) . '(.*?)\]/',$body))
+				if(preg_match('/\[(.*?)' . preg_quote($tag,'/') . '(.*?)\]/',$body))
 					continue;
-				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag) . '(.*?)\)/',$body))
+				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag,'/') . '(.*?)\)/',$body))
 					continue;
 
 
@@ -1094,9 +1094,9 @@ function diaspora_comment($importer,$xml,$msg) {
 
 				// don't link tags that are already embedded in links
 
-				if(preg_match('/\[(.*?)' . preg_quote($tag) . '(.*?)\]/',$body))
+				if(preg_match('/\[(.*?)' . preg_quote($tag,'/') . '(.*?)\]/',$body))
 					continue;
-				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag) . '(.*?)\)/',$body))
+				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag,'/') . '(.*?)\)/',$body))
 					continue;
 
 
