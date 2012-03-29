@@ -22,6 +22,7 @@ function ping_init(&$a) {
 				and seen = 0 order by date desc limit 0, 50",
 				intval(local_user())
 			);
+			$sysnotify = $r[0]['total'];
 		}
 		else {
 			$z1 = q("select * from notify where uid = %d
@@ -35,6 +36,7 @@ function ping_init(&$a) {
 				intval(50 - intval($t[0]['total']))
 			);
 			$z = array_merge($z1,$z2);
+			$sysnotify = 0; // we will update this in a moment
 		}
 
 
@@ -147,13 +149,12 @@ function ping_init(&$a) {
 		$tot = $mail+$intro+$register+count($comments)+count($likes)+count($dislikes)+count($friends)+count($posts)+count($tags);
 
 		require_once('include/bbcode.php');
-		$sysnotify = 0;
 
 		if($firehose) {
 			echo '	<notif count="'.$tot.'">';
 		}
 		else {
-			if(count($z)) {
+			if(count($z) && (! $sysnotify)) {
 				foreach($z as $zz) {
 					if($zz['seen'] == 0)
 						$sysnotify ++;
