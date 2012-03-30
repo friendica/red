@@ -532,9 +532,12 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 						if ($shareable) $likebuttons['share'] = array( t('Share this'), t('share'));
 					}
 
+					$qc = $qcomment =  null;
 
-					$qc = ((local_user()) ? get_pconfig(local_user(),'qcomment','words') : null);
-					$qcomment = (($qc) ? explode("\n",$qc) : null);
+					if(in_array('qcomment',$a->plugins)) {
+						$qc = ((local_user()) ? get_pconfig(local_user(),'qcomment','words') : null);
+						$qcomment = (($qc) ? explode("\n",$qc) : null);
+					}
 
 					if(($show_comment_box) || (($show_comment_box == false) && ($override_comment_box == false) && ($item['last-child']))) {
 						$comment = replace_macros($cmnt_tpl,array(
@@ -592,7 +595,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 							'classtagger' => "",
 						);
 					}
-					$filer = t("file as");
+					$filer = t("save to folder");
 				}
 
 
@@ -912,7 +915,7 @@ function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 		'$vidurl' => t("Please enter a video link/URL:"),
 		'$audurl' => t("Please enter an audio link/URL:"),
 		'$term' => t('Tag term:'),
-		'$fileas' => t('File as:'),
+		'$fileas' => t('Save to Folder:'),
 		'$whereareu' => t('Where are you right now?')
 	));
 
