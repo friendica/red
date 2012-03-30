@@ -167,9 +167,10 @@ function localize_item(&$item){
 		}
 	}
 	$matches = null;
-	if(preg_match_all('/@[url=(.*?)]/is',$item['body'],$matches,PREG_SET_ORDER)) {
+	if(preg_match_all('/@\[url=(.*?)\]/is',$item['body'],$matches,PREG_SET_ORDER)) {
 		foreach($matches as $mtch) {
-			$item['body'] = str_replace($mtch[0],'@[url=' . zrl($mtch[1]). ']',$item['body']);
+			if(! strpos($mtch[1],'zrl='))
+				$item['body'] = str_replace($mtch[0],'@[url=' . zrl($mtch[1]). ']',$item['body']);
 		}
 	}
 
