@@ -557,6 +557,7 @@ header #banner a:hover {
   outline: none;
   vertical-align: middle;
   font-weight: bolder;
+  
 }
 header #banner #logo-img {
   height: 25px;
@@ -566,6 +567,7 @@ header #banner #logo-text {
   font-size: 20px;
   position: absolute;
   top: 10%;
+  margin-left: 3px;
 }
 /* nav */
 nav {
@@ -657,7 +659,7 @@ nav #logo-text {
 nav .nav-menu-search {
   position: relative;
 
-  margin: 3px 17px;
+  margin: 4px 17px;
   margin-right: 0px;
   height: 17px;
   width: 180px;
@@ -1037,6 +1039,8 @@ aside #profiles-menu {
 }
 aside #search-text {
 	width: 150px;
+	height: 17px;
+	padding-left: 10px;
 	border-top-left-radius: 15px;
 border-top-right-radius: 15px;
 border-bottom-right-radius: 15px;
@@ -1244,7 +1248,7 @@ right_aside {
   
   /* background: #F1F1F1; */
 }
-right_aside a{color: #ff500f;}
+right_aside a{color: red;}
 right_aside h3 {border-bottom: 1px solid #D2D2D2; padding-top: 5px; padding-bottom: 0px; padding-left: 5px; margin-bottom: 0px; 
 margin-top:30px;}
 right_aside .directory-item {	width: 50px; height: 50px; vertical-align: center; text-align: center; }
@@ -1256,6 +1260,7 @@ right_aside #lastusers-wrapper { padding-left: 6px; padding-top: 3px; overflow: 
 right_aside #ra-photos-wrapper { padding-left: 5px; padding-top: 3px; overflow: auto;	width: 100%; }
 #page-sidebar-right_aside{margin-top: 0px; margin-bottom: 30px;}
 #page-sidebar-right_aside ul {margin-top: 0px;}
+#page-sidebar-right_aside .label {max-width: 128px;}
 right_aside .icon {width: 10px; height: 10px;}
 .close_box		{ 
 		background-image: url("../../../view/theme/diabook-red/icons/close_box.png");
@@ -1793,7 +1798,7 @@ transition: all 0.2s ease-in-out;
 	float: right;
 	margin-left: 10px;
 	margin-top: 2px;
-	font-size: 10px;
+	font-size: 9px;
 	font-weight: bolder;
 	cursor: pointer;
 }
@@ -1822,12 +1827,14 @@ transition: all 0.2s ease-in-out;
     font-weight: bolder;
 }
 /*input[type="submit"] {
-	border: 0px;
-    background-color: @ButtonBackgroundColor;
-    color: @ButtonColor;
-    padding: 0px 10px;
-	.rounded(5px);
-    height: 18px;
+	background-color: #FF500F;
+    border: 1px solid #777777;
+    color: white;
+    border-radius: 3px 3px 3px 3px;
+    box-shadow: 0 1px 1px #CFCFCF;
+    margin-left: 5px;
+    cursor: pointer;
+    font-weight: bolder;
 }*/
 /** acl **/
 #photo-edit-perms-select, #photos-upload-permissions-wrapper, #profile-jot-acl-wrapper {

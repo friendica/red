@@ -1038,6 +1038,8 @@ aside #profiles-menu {
 }
 aside #search-text {
 	width: 150px;
+	height: 17px;
+	padding-left: 10px;
 	border-top-left-radius: 15px;
 border-top-right-radius: 15px;
 border-bottom-right-radius: 15px;
@@ -1260,6 +1262,7 @@ right_aside #lastusers-wrapper { padding-left: 6px; padding-top: 3px; overflow: 
 right_aside #ra-photos-wrapper { padding-left: 5px; padding-top: 3px; overflow: auto;	width: 100%; }
 #page-sidebar-right_aside{margin-top: 0px; margin-bottom: 30px;}
 #page-sidebar-right_aside ul {margin-top: 0px;}
+#page-sidebar-right_aside .label {max-width: 128px;}
 right_aside .icon {width: 10px; height: 10px;}
 .close_box		{ 
 		background-image: url("../../../view/theme/diabook-aerith/icons/close_box.png");

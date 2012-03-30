@@ -564,6 +564,7 @@ header #banner #logo-text {
   font-size: 20px;
   position: absolute;
   top: 10%;
+  margin-left: 3px;
 }
 /* nav */
 nav {
@@ -655,7 +656,7 @@ nav #logo-text {
 nav .nav-menu-search {
   position: relative;
 
-  margin: 3px 17px;
+  margin: 4px 17px;
   margin-right: 0px;
   height: 17px;
   width: 180px;
@@ -1034,6 +1035,8 @@ aside #profiles-menu {
 }
 aside #search-text {
 	width: 173px;
+	height: 17px;
+	padding-left: 10px;
 	border-top-left-radius: 15px;
 border-top-right-radius: 15px;
 border-bottom-right-radius: 15px;
@@ -1717,7 +1720,7 @@ body .pageheader{
 	float: right;
 	margin-left: 10px;
 	margin-top: 2px;
-	font-size: 10px;
+	font-size: 9px;
 	font-weight: bolder;
 	cursor: pointer;
 }
