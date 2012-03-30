@@ -1,6 +1,7 @@
 <?php
 /*
  * Name: quattro-green
+ * Description: Green variation of the quattro theme
  * Version: 1.0
  * Author: Fabio Communi <fabrix.xm@gmail.com>
  * Maintainer: Tobias Diekershoff
