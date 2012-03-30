@@ -69,9 +69,9 @@ function nav(&$a) {
 	 * "Home" should also take you home from an authenticated remote profile connection
 	 */
 
-	$homelink = ((x($_SESSION,'visitor_home')) ? $_SESSION['visitor_home'] : '');
-	if(get_my_url())
-		$homelink = get_my_url();
+	$homelink = get_my_url();
+	if(! $homelink)
+		$homelink = ((x($_SESSION,'visitor_home')) ? $_SESSION['visitor_home'] : '');
 
 	if(($a->module != 'home') && (! (local_user()))) 
 		$nav['home'] = array($homelink, t('Home'), "", t('Home Page'));

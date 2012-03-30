@@ -93,8 +93,8 @@ if((x($_SESSION,'language')) && ($_SESSION['language'] !== $lang)) {
 	load_translation_table($lang);
 }
 
-if(x($_GET,'zurl')) {
-	$_SESSION['my_url'] = $_GET['zurl'];
+if(x($_GET,'zrl')) {
+	$_SESSION['my_url'] = $_GET['zrl'];
 }
 
 /**
