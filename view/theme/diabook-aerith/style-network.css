@@ -439,7 +439,7 @@ a:hover {
   clear: both;
 }
 .fakelink {
-  color: #1872A2;
+  color: #3465A4;
   /* color: #3e3e8c; */
   text-decoration: none;
   cursor: pointer;
@@ -557,13 +557,14 @@ header #banner a:hover {
   outline: none;
   vertical-align: middle;
   font-weight: bolder;
+  margin-left: 3px;
 }
 header #banner #logo-img {
   height: 25px;
   margin-top: 3px;
 }
 header #banner #logo-text {
-  font-size: 21px;
+  font-size: 20px;
   position: absolute;
   top: 10%;
 }
@@ -657,7 +658,7 @@ nav #logo-text {
 nav .nav-menu-search {
   position: relative;
 
-  margin: 3px 17px;
+  margin: 4px 17px;
   margin-right: 0px;
   height: 17px;
   width: 180px;
@@ -718,7 +719,7 @@ nav .nav-menu.selected {
 nav .nav-notify {
   display: none;
   position: absolute;
-  background-color: #ff0000;
+  background-color: #fff;
   /* background-color: #19aeff; */
   -moz-border-radius: 5px 5px 5px 5px;
   -webkit-border-radius: 5px 5px 5px 5px;
@@ -730,6 +731,7 @@ nav .nav-notify {
   right: -6px;
   min-width: 10px;
   text-align: center;
+  border: 1px solid black;
 }
 nav .nav-notify.show {
   display: block;
@@ -752,7 +754,7 @@ nav #nav-home-link, #nav-directory-link, #nav-apps-link{
 	margin-right: 0px;
 	font-weight: bold;
 	margin: 3px 5px;
-	font-size: 15px;
+	font-size: 14px;
 	}
 nav #nav-directory-link{
   margin-right: 0px;	
@@ -1037,6 +1039,8 @@ aside #profiles-menu {
 }
 aside #search-text {
 	width: 150px;
+	height: 17px;
+	padding-left: 10px;
 	border-top-left-radius: 15px;
 border-top-right-radius: 15px;
 border-bottom-right-radius: 15px;
@@ -1234,6 +1238,9 @@ body .pageheader{
 #birthday-notice, #event-notice, #birthday-wrapper, #event-wrapper{
 	margin-bottom: 10px;
 	}
+#birthday-wrapper a {
+	color: #3465A4;
+	}
 
 right_aside {
   display: table-cell;
@@ -1256,6 +1263,7 @@ right_aside #lastusers-wrapper { padding-left: 6px; padding-top: 3px; overflow: 
 right_aside #ra-photos-wrapper { padding-left: 5px; padding-top: 3px; overflow: auto;	width: 100%; }
 #page-sidebar-right_aside{margin-top: 0px; margin-bottom: 30px;}
 #page-sidebar-right_aside ul {margin-top: 0px;}
+#page-sidebar-right_aside .label {max-width: 128px;}
 right_aside .icon {width: 10px; height: 10px;}
 .close_box		{ 
 		background-image: url("../../../view/theme/diabook-aerith/icons/close_box.png");
@@ -1741,6 +1749,7 @@ transition: all 0.2s ease-in-out;
 #profile-jot-submit {
 	float: right;
 	margin-top: 2px;
+	font-size: 14px;
 	
 }
 #profile-upload-wrapper {
@@ -1793,7 +1802,7 @@ transition: all 0.2s ease-in-out;
 	float: right;
 	margin-left: 10px;
 	margin-top: 2px;
-	font-size: 10px;
+	font-size: 9px;
 	font-weight: bolder;
 	cursor: pointer;
 }
@@ -1806,7 +1815,6 @@ transition: all 0.2s ease-in-out;
 .button.creation1 {
     background-color: #fff;
     border: 1px solid #777777;
-    background-image: -moz-linear-gradient(center top , white 0%, #DDDDDD 100%);
     border-radius: 3px 3px 3px 3px;
     box-shadow: 0 1px 1px #CFCFCF;
     cursor: pointer;
@@ -1814,7 +1822,6 @@ transition: all 0.2s ease-in-out;
 }
 .button.creation2 {
     background-color: #3465A4;
-    background-image: -moz-linear-gradient(center top , #66C1FF 0%, #0097FF 100%);
     border: 1px solid #777777;
     color: white;
     border-radius: 3px 3px 3px 3px;
