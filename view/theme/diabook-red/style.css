@@ -561,9 +561,10 @@ header #banner #logo-img {
   margin-top: 3px;
 }
 header #banner #logo-text {
-  font-size: 21px;
+  font-size: 20px;
   position: absolute;
   top: 10%;
+  margin-left: 3px;
 }
 /* nav */
 nav {
@@ -655,7 +656,7 @@ nav #logo-text {
 nav .nav-menu-search {
   position: relative;
 
-  margin: 3px 17px;
+  margin: 4px 17px;
   margin-right: 0px;
   height: 17px;
   width: 180px;
@@ -1034,6 +1035,8 @@ aside #profiles-menu {
 }
 aside #search-text {
 	width: 173px;
+	height: 17px;
+	padding-left: 10px;
 	border-top-left-radius: 15px;
 border-top-right-radius: 15px;
 border-bottom-right-radius: 15px;
@@ -1665,7 +1668,7 @@ body .pageheader{
 #profile-jot-submit {
 	float: right;
 	margin-top: 2px;
-	
+	font-size: 14px;
 }
 #profile-upload-wrapper {
 	float: left;
@@ -1717,7 +1720,7 @@ body .pageheader{
 	float: right;
 	margin-left: 10px;
 	margin-top: 2px;
-	font-size: 10px;
+	font-size: 9px;
 	font-weight: bolder;
 	cursor: pointer;
 }
@@ -1730,7 +1733,6 @@ body .pageheader{
 .button.creation1 {
     background-color: #fff;
     border: 1px solid #777777;
-    background-image: -moz-linear-gradient(center top , white 0%, #DDDDDD 100%);
     border-radius: 3px 3px 3px 3px;
     box-shadow: 0 1px 1px #CFCFCF;
     font-weight: bolder;
@@ -1738,7 +1740,6 @@ body .pageheader{
 }
 .button.creation2 {
     background-color: #FF500F;
-    background-image: -moz-linear-gradient(center top , #66C1FF 0%, #0097FF 100%);
     border: 1px solid #777777;
     color: white;
     border-radius: 3px 3px 3px 3px;
