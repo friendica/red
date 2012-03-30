@@ -145,7 +145,7 @@ function notifications_content(&$a) {
 						'$contact_id' => $rr['contact-id'],
 						'$photo' => ((x($rr,'fphoto')) ? $rr['fphoto'] : "images/person-175.jpg"),
 						'$fullname' => $rr['fname'],
-						'$url' => $rr['furl'],
+						'$url' => zrl($rr['furl']),
 						'$hidden' => array('hidden', t('Hide this contact from others'), ($rr['hidden'] == 1), ''),
 						'$activity' => array('activity', t('Post a new friend activity'), 1, t('if applicable')),
 
@@ -195,7 +195,7 @@ function notifications_content(&$a) {
 					'$fullname' => $rr['name'],
 					'$hidden' => array('hidden', t('Hide this contact from others'), ($rr['hidden'] == 1), ''),
 					'$activity' => array('activity', t('Post a new friend activity'), 1, t('if applicable')),
-					'$url' => $rr['url'],
+					'$url' => zrl($rr['url']),
 					'$knowyou' => $knowyou,
 					'$approve' => t('Approve'),
 					'$note' => $rr['note'],

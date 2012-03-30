@@ -66,14 +66,12 @@
 			<ul id="nav-site-menu" class="menu-popup">
 				{{ if $nav.manage }}<li><a class="$nav.manage.2" href="$nav.manage.0" title="$nav.manage.3">$nav.manage.1</a></li>{{ endif }}				
 
-				{{ if $nav.help }} <li><a class="$nav.help.2" target="friendika-help" href="$nav.help.0" title="$nav.help.3" >$nav.help.1</a></li>{{ endif }}
-
-										<li><a class="$nav.search.2" href="$nav.search.0" title="$nav.search.3" >$nav.search.1</a></li>
+				{{ if $nav.settings }} <li><a class="$nav.search.2" onClick="restore_boxes()" title="Restore right-hand column" style="cursor: pointer;">Restore right-hand column</a></li>{{ endif }}
 										
-										<li><a class="$nav.search.2" href="friendica" title="Site Info / Impressum" >Info/Impressum</a></li>
+				{{ if $nav.help }} <li><a class="$nav.help.2" target="friendika-help" href="$nav.help.0" title="$nav.help.3" >$nav.help.1</a></li>{{ endif }}									
 										
-										<li><a class="$nav.search.2" onClick="restore_boxes()" title="restore third column" style="cursor: pointer;">Restore right-hand column</a></li>
-
+										 <li><a class="$nav.search.2" href="friendica" title="Site Info / Impressum" >Info/Impressum</a></li>
+										
 				{{ if $nav.settings }}<li><a class="menu-sep $nav.settings.2" href="$nav.settings.0" title="$nav.settings.3">$nav.settings.1</a></li>{{ endif }}
 				{{ if $nav.admin }}<li><a class="$nav.admin.2" href="$nav.admin.0" title="$nav.admin.3" >$nav.admin.1</a></li>{{ endif }}
 
@@ -101,7 +99,7 @@
 			</li>	
 		{{ endif }}		
 		
-      {{ if $nav.home }}
+      {{ if $nav.settings }}
 			<li id="nav-home-link" class="nav-menu $sel.home">
 				<a class="$nav.home.2" href="$nav.home.0" title="$nav.home.3" >$nav.home.1</a>
 				<span id="home-update" class="nav-notify"></span>

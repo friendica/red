@@ -3059,3 +3059,10 @@ ul.menu-popup {
 .notify-seen {
 	background: #DDDDDD;
 }
+
+#id_term_label {
+	width:75px;
+}
+#id_term {
+	width:100px;
+}

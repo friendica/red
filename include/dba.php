@@ -209,9 +209,8 @@ function q($sql) {
 	if($db && $db->connected) {
 		$stmt = vsprintf($sql,$args);
 		if($stmt === false)
-			logger('dba: vsprintf error: ' . print_r(debug_bracktrace(),true));
-		$ret = $db->q($stmt);
-		return $ret;
+			logger('dba: vsprintf error: ' . print_r(debug_backtrace(),true));
+		return $db->q($stmt);
 	}
 
 	/**

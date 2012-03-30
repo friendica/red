@@ -610,6 +610,8 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 			$url = $redirect_url;
 			$sparkle = ' sparkle';
 		}
+		else
+			$url = zrl($url);
 	}
 	$click = ((x($contact,'click')) ? ' onclick="' . $contact['click'] . '" ' : '');
 	if($click)
