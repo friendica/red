@@ -1415,3 +1415,21 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 
 	return replace_macros($tpl,array('$tabs' => $arr['tabs']));
 }}	
+
+function get_my_url() {
+	if(x($_SESSION,'my_url'))
+		return $_SESSION['my_url'];
+	return false;
+}
+
+function zrl($s) {
+	if(! strlen($s))
+		return $s;
+	if(! strpos($s,'/profile/'))
+		return $s;	
+	$achar = strpos($s,'?') ? '&' : '?';
+	$mine = get_my_url();
+	if($mine and ! link_compare($mine,$s))
+		return $s . $achar . 'zrl=' . urlencode($mine);
+	return $s;
+}

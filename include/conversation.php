@@ -94,9 +94,9 @@ function localize_item(&$item){
 			
 		}
 		
-		$A = '[url=' . $Alink . ']' . $Aname . '[/url]';
-		$B = '[url=' . $Blink . ']' . $Bname . '[/url]';
-		if ($Bphoto!="") $Bphoto = '[url=' . $Blink . '][img]' . $Bphoto . '[/img][/url]';
+		$A = '[url=' . zrl($Alink) . ']' . $Aname . '[/url]';
+		$B = '[url=' . zrl($Blink) . ']' . $Bname . '[/url]';
+		if ($Bphoto!="") $Bphoto = '[url=' . zrl($Blink) . '][img]' . $Bphoto . '[/img][/url]';
 
 		$item['body'] = sprintf( t('%1$s is now friends with %2$s'), $A, $B)."\n\n\n".$Bphoto;
 
@@ -108,8 +108,8 @@ function localize_item(&$item){
 		if(count($r)==0) return;
 		$obj=$r[0];
 		
-		$author	 = '[url=' . $item['author-link'] . ']' . $item['author-name'] . '[/url]';
-		$objauthor =  '[url=' . $obj['author-link'] . ']' . $obj['author-name'] . '[/url]';
+		$author	 = '[url=' . zrl($item['author-link']) . ']' . $item['author-name'] . '[/url]';
+		$objauthor =  '[url=' . zrl($obj['author-link']) . ']' . $obj['author-name'] . '[/url]';
 		
 		switch($obj['verb']){
 			case ACTIVITY_POST:
@@ -158,8 +158,8 @@ function localize_item(&$item){
 				$target = $r[0];
 				$Bname = $target['author-name'];
 				$Blink = $target['author-link'];
-				$A = '[url=' . $Alink . ']' . $Aname . '[/url]';
-				$B = '[url=' . $Blink . ']' . $Bname . '[/url]';
+				$A = '[url=' . zrl($Alink) . ']' . $Aname . '[/url]';
+				$B = '[url=' . zrl($Blink) . ']' . $Bname . '[/url]';
 				$P = '[url=' . $target['plink'] . ']' . t('post/item') . '[/url]';
 				$item['body'] = sprintf( t('%1$s marked %2$s\'s %3$s as favorite'), $A, $B, $P)."\n";
 
@@ -276,13 +276,16 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				if($item['author-link'] && (! $item['author-name']))
 					$profile_name = $item['author-link'];
 
+
+
 				$sp = false;
 				$profile_link = best_link_url($item,$sp);
-				if($sp)
-					$sparkle = ' sparkle';
 				if($profile_link === 'mailbox')
 					$profile_link = '';
-
+				if($sp)
+					$sparkle = ' sparkle';
+				else
+					$profile_link = zrl($profile_link);					
 
 				$normalised = normalise_link((strlen($item['author-link'])) ? $item['author-link'] : $item['url']);
 				if(($normalised != 'mailbox') && (x($a->contacts[$normalised])))
@@ -484,7 +487,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 						// This will have been stored in $a->page_contact by our calling page.
 						// Put this person on the left of the wall-to-wall notice.
 
-						$owner_url = $a->page_contact['url'];
+						$owner_url = zrl($a->page_contact['url']);
 						$owner_photo = $a->page_contact['thumb'];
 						$owner_name = $a->page_contact['name'];
 						$template = $wallwall;
@@ -501,10 +504,12 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 						$commentww = 'ww';
 						// If it is our contact, use a friendly redirect link
 						if((link_compare($item['owner-link'],$item['url'])) 
-							&& ($item['network'] === 'dfrn')) {
+							&& ($item['network'] === NETWORK_DFRN)) {
 							$owner_url = $redirect_url;
 							$osparkle = ' sparkle';
 						}
+						else
+							$owner_url = zrl($owner_url);
 					}
 				}
 
@@ -596,14 +601,14 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				if($item['author-link'] && (! $item['author-name']))
 					$profile_name = $item['author-link'];
 
-
 				$sp = false;
 				$profile_link = best_link_url($item,$sp);
-				if($sp)
-					$sparkle = ' sparkle';
-
 				if($profile_link === 'mailbox')
 					$profile_link = '';
+				if($sp)
+					$sparkle = ' sparkle';
+				else
+					$profile_link = zrl($profile_link);					
 
 				$normalised = normalise_link((strlen($item['author-link'])) ? $item['author-link'] : $item['url']);
 				if(($normalised != 'mailbox') && (x($a->contacts,$normalised)))
@@ -767,8 +772,10 @@ function item_photo_menu($item){
 		$photos_link = $profile_link . "?url=photos";
 		$profile_link = $profile_link . "?url=profile";
 		$pm_url = $a->get_baseurl($ssl_state) . '/message/new/' . $cid;
+		$zurl = '';
 	}
 	else {
+		$profile_link = zrl($profile_link);
 		if(local_user() && local_user() == $item['uid'] && link_compare($item['url'],$item['author-link'])) {
 			$cid = $item['contact-id'];
 		}		
@@ -795,7 +802,7 @@ function item_photo_menu($item){
 	$menu = Array(
 		t("View status") => $status_link,
 		t("View profile") => $profile_link,
-		t("View photos") => $photos_link,		
+		t("View photos") => $photos_link,
 		t("View recent") => $posts_link, 
 		t("Edit contact") => $contact_url,
 		t("Send PM") => $pm_url,
@@ -828,6 +835,8 @@ function like_puller($a,$item,&$arr,$mode) {
 			$url = $a->get_baseurl(true) . '/redir/' . $item['contact-id'];
 			$sparkle = ' class="sparkle" ';
 		}
+		else
+			$url = zrl($url);
 		if(! ((isset($arr[$item['parent'] . '-l'])) && (is_array($arr[$item['parent'] . '-l']))))
 			$arr[$item['parent'] . '-l'] = array();
 		if(! isset($arr[$item['parent']]))

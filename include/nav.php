@@ -70,6 +70,8 @@ function nav(&$a) {
 	 */
 
 	$homelink = ((x($_SESSION,'visitor_home')) ? $_SESSION['visitor_home'] : '');
+	if(get_my_url())
+		$homelink = get_my_url();
 
 	if(($a->module != 'home') && (! (local_user()))) 
 		$nav['home'] = array($homelink, t('Home'), "", t('Home Page'));
