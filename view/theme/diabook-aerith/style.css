@@ -437,7 +437,7 @@ a:hover {
   clear: both;
 }
 .fakelink {
-  color: #1872A2;
+  color: #3465A4;
   /* color: #3e3e8c; */
   text-decoration: none;
   cursor: pointer;
@@ -655,7 +655,7 @@ nav #logo-text {
 nav .nav-menu-search {
   position: relative;
 
-  margin: 3px 17px;
+  margin: 4px 17px;
   margin-right: 0px;
   height: 17px;
   width: 180px;
@@ -1203,6 +1203,10 @@ body .pageheader{
 	
 #birthday-notice, #event-notice, #birthday-wrapper, #event-wrapper{
 	margin-bottom: 10px;
+	}
+
+#birthday-wrapper a {
+	color: #3465A4;
 	}
 /* wall item */
 .tread-wrapper {
