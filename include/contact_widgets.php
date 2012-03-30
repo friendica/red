@@ -93,7 +93,7 @@ function fileas_widget($baseurl,$selected = '') {
 	}
 
 	return replace_macros(get_markup_template('fileas_widget.tpl'),array(
-		'$title' => t('File Selections'),
+		'$title' => t('Saved Folders'),
 		'$desc' => '',
 		'$sel_all' => (($selected == '') ? 'selected' : ''),
 		'$all' => t('Everything'),

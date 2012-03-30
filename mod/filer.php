@@ -25,7 +25,7 @@ function filer_content(&$a) {
 		$filetags = explode("][", trim($filetags,"[]"));
 		$tpl = get_markup_template("filer_dialog.tpl");
 		$o = replace_macros($tpl, array(
-			'$field' => array('term', t("File as:"), '', '', $filetags, t('- select -')),
+			'$field' => array('term', t("Save to Folder:"), '', '', $filetags, t('- select -')),
 			'$submit' => t('Save'),
 		));
 		

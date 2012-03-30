@@ -595,7 +595,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 							'classtagger' => "",
 						);
 					}
-					$filer = t("file as");
+					$filer = t("save to folder");
 				}
 
 
@@ -915,7 +915,7 @@ function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 		'$vidurl' => t("Please enter a video link/URL:"),
 		'$audurl' => t("Please enter an audio link/URL:"),
 		'$term' => t('Tag term:'),
-		'$fileas' => t('File as:'),
+		'$fileas' => t('Save to Folder:'),
 		'$whereareu' => t('Where are you right now?')
 	));
 
