@@ -563,7 +563,7 @@ header #banner #logo-img {
   margin-top: 3px;
 }
 header #banner #logo-text {
-  font-size: 21px;
+  font-size: 20px;
   position: absolute;
   top: 10%;
 }
@@ -1741,7 +1741,7 @@ transition: all 0.2s ease-in-out;
 #profile-jot-submit {
 	float: right;
 	margin-top: 2px;
-	
+	font-size: 14px;
 }
 #profile-upload-wrapper {
 	float: left;
@@ -1806,7 +1806,6 @@ transition: all 0.2s ease-in-out;
 .button.creation1 {
     background-color: #fff;
     border: 1px solid #777777;
-    background-image: -moz-linear-gradient(center top , white 0%, #DDDDDD 100%);
     border-radius: 3px 3px 3px 3px;
     box-shadow: 0 1px 1px #CFCFCF;
     cursor: pointer;
@@ -1814,7 +1813,6 @@ transition: all 0.2s ease-in-out;
 }
 .button.creation2 {
     background-color: #FF500F;
-    background-image: -moz-linear-gradient(center top , #66C1FF 0%, #0097FF 100%);
     border: 1px solid #777777;
     color: white;
     border-radius: 3px 3px 3px 3px;
