@@ -1,3 +1,5 @@
+{{inc field_select.tpl with $field=$color}}{{endinc}}
+
 {{inc field_select.tpl with $field=$align}}{{endinc}}
 
 <div class="settings-submit-wrapper">
