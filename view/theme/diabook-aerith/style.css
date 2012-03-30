@@ -1036,6 +1036,8 @@ aside #profiles-menu {
 }
 aside #search-text {
 	width: 173px;
+	height: 17px;
+	padding-left: 10px;
 	border-top-left-radius: 15px;
 border-top-right-radius: 15px;
 border-bottom-right-radius: 15px;
