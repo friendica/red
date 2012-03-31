@@ -205,7 +205,6 @@ function hex2bin($s) {
 		return '';
 
 	if(! ctype_xdigit($s)) {
-		logger('hex2bin: illegal input: ' . print_r(debug_backtrace(), true));
 		return($s);
 	}
 
