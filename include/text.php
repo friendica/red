@@ -1306,6 +1306,10 @@ function file_tag_decode($s) {
 }
 
 function file_tag_file_query($table,$s,$type = 'file') {
+
+	// this is ultimately going into a vsprintf
+	$s = str_replace('%','%%',$s);
+
 	if($type == 'file')
 		$str = preg_quote( '[' . file_tag_encode($s) . ']' );
 	else
