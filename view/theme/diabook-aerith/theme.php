@@ -256,7 +256,7 @@ if ($a->argv[0].$a->argv[1] === "profile".$a->user['nickname']){
 
 
 // custom css
-//if (!is_null($cssFile)) $a->page['htmlhead'] .= sprintf('<link rel="stylesheet" type="text/css" href="%s" />', $cssFile);
+if (!is_null($cssFile)) $a->page['htmlhead'] .= sprintf('<link rel="stylesheet" type="text/css" href="%s" />', $cssFile);
 
 //load jquery.cookie.js
 $cookieJS = $a->get_baseurl($ssl_state)."/view/theme/diabook-aerith/js/jquery.cookie.js";
