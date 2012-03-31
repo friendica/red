@@ -1313,7 +1313,11 @@ function feed_birthday($uid,$tz) {
 	 *
 	 */
 
+	
 	$birthday = '';
+
+	if(! strlen($tz))
+		$tz = 'UTC';
 
 	$p = q("SELECT `dob` FROM `profile` WHERE `is-default` = 1 AND `uid` = %d LIMIT 1",
 		intval($uid)

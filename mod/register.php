@@ -220,8 +220,8 @@ function register_post(&$a) {
 	$spubkey = $spkey["key"];
 
 	$r = q("INSERT INTO `user` ( `guid`, `username`, `password`, `email`, `openid`, `nickname`,
-		`pubkey`, `prvkey`, `spubkey`, `sprvkey`, `register_date`, `verified`, `blocked` )
-		VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d )",
+		`pubkey`, `prvkey`, `spubkey`, `sprvkey`, `register_date`, `verified`, `blocked`, `timezone` )
+		VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, 'UTC' )",
 		dbesc(generate_user_guid()),
 		dbesc($username),
 		dbesc($new_password_encoded),
