@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1133 );
+define( 'UPDATE_VERSION' , 1134 );
 
 /**
  *
@@ -1136,3 +1136,8 @@ INDEX ( `username` )
 
 }
 
+function update_1133() {
+	q("ALTER TABLE `user` ADD `unkmail` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `blocktags` , ADD INDEX ( `unkmail` ) ");
+	q("ALTER TABLE `user` ADD `cntunkmail` INT NOT NULL DEFAULT '10' AFTER `unkmail` , ADD INDEX ( `cntunkmail` ) ");
+	q("ALTER TABLE `mail` ADD `unknown` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `replied` , ADD INDEX ( `unknown` ) ");
+}

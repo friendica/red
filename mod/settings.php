@@ -303,7 +303,8 @@ function settings_post(&$a) {
 	$page_flags       = (((x($_POST,'page-flags')) && (intval($_POST['page-flags']))) ? intval($_POST['page-flags']) : 0);
 	$blockwall        = (((x($_POST,'blockwall')) && (intval($_POST['blockwall']) == 1)) ? 0: 1); // this setting is inverted!
 	$blocktags        = (((x($_POST,'blocktags')) && (intval($_POST['blocktags']) == 1)) ? 0: 1); // this setting is inverted!
-
+	$unkmail          = (((x($_POST,'unkmail')) && (intval($_POST['unkmail']) == 1)) ? 1: 0);
+	$cntunkmail       = ((x($_POST,'cntunkmail')) ? intval($_POST['cntunkmail']) : 0);
 	$suggestme        = ((x($_POST,'suggestme')) ? intval($_POST['suggestme'])  : 0);  
 	$hide_friends     = (($_POST['hide-friends'] == 1) ? 1: 0);
 	$hidewall         = (($_POST['hidewall'] == 1) ? 1: 0);
@@ -391,7 +392,7 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'system','suggestme', $suggestme);
 
 
-	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `maxreq` = %d, `expire` = %d, `openidserver` = '%s', `blockwall` = %d, `hidewall` = %d, `blocktags` = %d  WHERE `uid` = %d LIMIT 1",
+	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `maxreq` = %d, `expire` = %d, `openidserver` = '%s', `blockwall` = %d, `hidewall` = %d, `blocktags` = %d, `unkmail` = %d, `cntunkmail` = %d  WHERE `uid` = %d LIMIT 1",
 			dbesc($username),
 			dbesc($email),
 			dbesc($openid),
@@ -410,6 +411,8 @@ function settings_post(&$a) {
 			intval($blockwall),
 			intval($hidewall),
 			intval($blocktags),
+			intval($unkmail),
+			intval($cntunkmail),
 			intval(local_user())
 	);
 	if($r)
@@ -760,17 +763,19 @@ function settings_content(&$a) {
 	if(count($p))
 		$profile = $p[0];
 
-	$username = $a->user['username'];
-	$email    = $a->user['email'];
-	$nickname = $a->user['nickname'];
-	$timezone = $a->user['timezone'];
-	$notify   = $a->user['notify-flags'];
-	$defloc   = $a->user['default-location'];
-	$openid   = $a->user['openid'];
-	$maxreq   = $a->user['maxreq'];
-	$expire   = ((intval($a->user['expire'])) ? $a->user['expire'] : '');
-	$blockwall = $a->user['blockwall'];
-	$blocktags = $a->user['blocktags'];
+	$username   = $a->user['username'];
+	$email      = $a->user['email'];
+	$nickname   = $a->user['nickname'];
+	$timezone   = $a->user['timezone'];
+	$notify     = $a->user['notify-flags'];
+	$defloc     = $a->user['default-location'];
+	$openid     = $a->user['openid'];
+	$maxreq     = $a->user['maxreq'];
+	$expire     = ((intval($a->user['expire'])) ? $a->user['expire'] : '');
+	$blockwall  = $a->user['blockwall'];
+	$blocktags  = $a->user['blocktags'];
+	$unkmail    = $a->user['unkmail'];
+	$cntunkmail = $a->user['cntunkmail'];
 
 	$expire_items = get_pconfig(local_user(), 'expire','items');
 	$expire_items = (($expire_items===false)? '1' : $expire_items); // default if not set: 1
@@ -870,6 +875,12 @@ function settings_content(&$a) {
 	));
 
 
+	$unkmail = replace_macros($opt_tpl,array(
+			'$field' 	=> array('unkmail',  t('Permit unknown people to send you private messages?'), $unkmail, '', array(t('No'),t('Yes'))),
+
+	));
+
+
 	$invisible = (((! $profile['publish']) && (! $profile['net-publish']))
 		? true : false);
 
@@ -946,7 +957,8 @@ function settings_content(&$a) {
 		'$profile_in_net_dir' => $profile_in_net_dir,
 		'$hide_friends' => $hide_friends,
 		'$hide_wall' => $hide_wall,
-		
+		'$unkmail' => $unkmail,		
+		'$cntunkmail' 	=> array('cntunkmail', t('Maximum private messages per day from unknown people:'), $cntunkmail ,t("\x28to prevent spam abuse\x29")),
 		
 		
 		'$h_not' 	=> t('Notification Settings'),
