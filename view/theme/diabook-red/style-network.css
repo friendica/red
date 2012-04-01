@@ -1447,13 +1447,12 @@ transition: all 0.2s ease-in-out;
 }
 .wall-item-comment-wrapper textarea {
   height: 2.0em;
-  width: 93%;
+  width: 100%;
   font-size: 10px;
   color: #999999;
   border: 1px solid #DDD;
   padding: 0.3em;
   font-size: 14px;
-  margin-left: 20px;
 }
 .wall-item-comment-wrapper .comment-edit-text-full {
   font-size: 14px;
@@ -2119,7 +2118,7 @@ max-width: 85%;
 	padding: 0px;
         width: 16px;
         height: 16px;
-        top: -20px; left:0px;
+        top: -16px; left:0px;
         overflow: hidden;
         text-indent: 40px;
         display: none;
@@ -2498,8 +2497,8 @@ float: left;
   display: none;
   /* position: absolute; */
   /* position: absolute; */
-  left: -2px;
-  top: -20px;
+  left: 0px;
+  top: -16px;
 }
 .contact-wrapper {
   float: left;
