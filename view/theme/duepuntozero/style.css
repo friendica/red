@@ -194,6 +194,16 @@ aside {
 	font-weight: bold;
 	background: #3465a4 url('friendika-16.png') no-repeat 95% center;
 }
+#wallmessage-link {
+	display: block;
+	color: #FFFFFF;
+	-webkit-border-radius: 5px ;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	padding: 5px;
+	font-weight: bold;
+	background-color: #3465a4;
+}
 
 /* section */
 section {

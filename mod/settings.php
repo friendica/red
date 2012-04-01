@@ -876,7 +876,7 @@ function settings_content(&$a) {
 
 
 	$unkmail = replace_macros($opt_tpl,array(
-			'$field' 	=> array('unkmail',  t('Permit unknown people to send you private messages?'), $unkmail, '', array(t('No'),t('Yes'))),
+			'$field' 	=> array('unkmail',  t('Permit unknown people to send you private mail?'), $unkmail, '', array(t('No'),t('Yes'))),
 
 	));
 

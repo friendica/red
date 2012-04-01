@@ -984,6 +984,12 @@ function profile_sidebar($profile, $block = 0) {
 	if((remote_user()) && ($_SESSION['visitor_visiting'] == $profile['uid']))
 		$connect = False; 
 
+	if(get_my_url() && $profile['unkmail'])
+		$wallmessage = t('Message');
+	else
+		$wallmessage = false;
+
+
 
 	// show edit profile to yourself
 	if ($profile['uid'] == local_user()) {
@@ -1066,6 +1072,7 @@ function profile_sidebar($profile, $block = 0) {
 	$o .= replace_macros($tpl, array(
 		'$profile' => $profile,
 		'$connect'  => $connect,		
+		'$wallmessage' => $wallmessage,
 		'$location' => template_escape($location),
 		'$gender'   => $gender,
 		'$pdesc'	=> $pdesc,

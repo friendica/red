@@ -1,4 +1,5 @@
 <?php
+
 	// send a private message
 	
 
@@ -153,5 +154,89 @@ function send_message($recipient=0, $body='', $subject='', $replyto=''){
 	} else {
 		return -3;
 	}
+
+}
+
+
+
+
+
+function send_wallmessage($recipient='', $body='', $subject='', $replyto=''){ 
+
+	$a = get_app();
+
+	if(! $recipient) return -1;
+	
+	if(! strlen($subject))
+		$subject = t('[no subject]');
+
+	$hash = random_string();
+ 	$uri = 'urn:X-dfrn:' . $a->get_baseurl() . ':' . local_user() . ':' . $hash ;
+
+	$convid = 0;
+	$reply = false;
+
+	require_once('include/Scrape.php');
+
+	$me = probe_url($replyto);
+
+	if(! $me['name'])
+		return -2;
+
+	$conv_guid = get_guid();
+
+	$recip_handle = $recipient['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+
+	$sender_nick = basename($replyto);
+	$sender_host = substr($replyto,strpos($replyto,'://')+3);
+	$sender_host = substr($sender_host,0,strpos($sender_host,'/'));
+	$sender_handle = $sender_nick . '@' . $sender_host;
+
+	$handles = $recip_handle . ';' . $sender_handle;
+
+	$r = q("insert into conv (uid,guid,creator,created,updated,subject,recips) values(%d, '%s', '%s', '%s', '%s', '%s', '%s') ",
+		intval(local_user()),
+		dbesc($conv_guid),
+		dbesc($sender_handle),
+		dbesc(datetime_convert()),
+		dbesc(datetime_convert()),
+		dbesc($subject),
+		dbesc($handles)
+	);
+
+	$r = q("select * from conv where guid = '%s' and uid = %d limit 1",
+		dbesc($conv_guid),
+		intval($recipient['uid'])
+	);
+	if(count($r))
+		$convid = $r[0]['id'];
+
+	if(! $convid) {
+		logger('send message: conversation not found.');
+		return -4;
+	}
+
+	$r = q("INSERT INTO `mail` ( `uid`, `guid`, `convid`, `from-name`, `from-photo`, `from-url`, 
+		`contact-id`, `title`, `body`, `seen`, `reply`, `replied`, `uri`, `parent-uri`, `created`, `unknown`)
+		VALUES ( %d, '%s', %d, '%s', '%s', '%s', %d, '%s', '%s', %d, %d, %d, '%s', '%s', '%s', %d )",
+		intval($recipient['uid']),
+		dbesc(get_guid()),
+		intval($convid),
+		dbesc($me['name']),
+		dbesc($me['photo']),
+		dbesc($me['url']),
+		0,
+		dbesc($subject),
+		dbesc($body),
+		0,
+		0,
+		0,
+		dbesc($uri),
+		dbesc($replyto),
+		datetime_convert(),
+		1
+	);
+
+	return 0;
 
 }

@@ -223,9 +223,13 @@ function message_content(&$a) {
 
 		$tpl = get_markup_template('mail_list.tpl');
 		foreach($r as $rr) {
-			if (link_compare($rr['from-url'],$myprofile)){
+			if($rr['unknown']) {
+				$partecipants = sprintf( t("Unknown sender - %s"),$rr['from-name']);
+			}
+			elseif (link_compare($rr['from-url'],$myprofile)){
 				$partecipants = sprintf( t("You and %s"), $rr['name']);
-			} else {
+			}
+			else {
 				$partecipants = sprintf( t("%s and You"), $rr['from-name']);
 			}
 			
@@ -234,7 +238,7 @@ function message_content(&$a) {
 				'$from_name' => $partecipants,
 				'$from_url' => (($rr['network'] === NETWORK_DFRN) ? $a->get_baseurl(true) . '/redir/' . $rr['contact-id'] : $rr['url']),
 				'$sparkle' => ' sparkle',
-				'$from_photo' => $rr['thumb'],
+				'$from_photo' => (($rr['thumb']) ? $rr['thumb'] : $rr['from-photo']),
 				'$subject' => template_escape((($rr['mailseen']) ? $rr['title'] : '<strong>' . $rr['title'] . '</strong>')),
 				'$delete' => t('Delete conversation'),
 				'$body' => template_escape($rr['body']),
@@ -297,7 +301,11 @@ function message_content(&$a) {
 
 		$mails = array();
 		$seen = 0;
+		$unknown = false;
+
 		foreach($messages as $message) {
+			if($message['unknown'])
+				$unknown = true;
 			if($message['from-url'] == $myprofile) {
 				$from_url = $myprofile;
 				$sparkle = '';
@@ -323,7 +331,7 @@ function message_content(&$a) {
 		}
 		$select = $message['name'] . '<input type="hidden" name="messageto" value="' . $contact_id . '" />';
 		$parent = '<input type="hidden" name="replyto" value="' . $message['parent-uri'] . '" />';
-		
+			
 
 		$tpl = get_markup_template('mail_display.tpl');
 		$o = replace_macros($tpl, array(
@@ -331,7 +339,8 @@ function message_content(&$a) {
 			'$thread_subject' => $message['title'],
 			'$thread_seen' => $seen,
 			'$delete' =>  t('Delete conversation'),
-			
+			'$canreply' => (($unknown) ? false : '1'),
+			'$unknown_text' => t("No secure communications available. You <strong>may</strong> be able to respond from the sender's profile page."),			
 			'$mails' => $mails,
 			
 			// reply
