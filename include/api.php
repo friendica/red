@@ -83,7 +83,7 @@
 			$record = $r[0];
 		} else {
 		   logger('API_login failure: ' . print_r($_SERVER,true), LOGGER_DEBUG);
-		    header('WWW-Authenticate: Basic realm="Friendika"');
+		    header('WWW-Authenticate: Basic realm="Friendica"');
 		    header('HTTP/1.0 401 Unauthorized');
 		    die('This api requires login');
 		}
