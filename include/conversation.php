@@ -250,7 +250,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 	$threads = array();
 	$threadsid = -1;
 	
-	if(count($items)) {
+	if($items && count($items)) {
 
 		if($mode === 'network-new' || $mode === 'search' || $mode === 'community') {
 

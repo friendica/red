@@ -16,6 +16,7 @@
       document.getElementById(theID).style.display = "none" 
   }
 
+
 	var src = null;
 	var prev = null;
 	var livetime = null;
@@ -88,10 +89,12 @@
 			return false;
 		});
 		$('html').click(function() {
-			last_popup_menu.hide();
-			last_popup_button.removeClass("selected");
-			last_popup_menu = null;
-			last_popup_button = null;
+			if(last_popup_menu) {
+				last_popup_menu.hide();
+				last_popup_button.removeClass("selected");
+				last_popup_menu = null;
+				last_popup_button = null;
+			}
 		});
 		
 		// fancyboxes
@@ -166,6 +169,12 @@
  		NavUpdate(); 
 		// Allow folks to stop the ajax page updates with the pause/break key
 		$(document).keydown(function(event) {
+			if(event.keyCode == '8') {
+				var target = event.target || event.srcElement;
+				if (!/input|textarea/i.test(target.nodeName)) {
+					return false;
+				}
+			}
 			if(event.keyCode == '19' || (event.ctrlKey && event.which == '32')) {
 				event.preventDefault();
 				if(stopped == false) {

@@ -9,9 +9,9 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1297' );
+define ( 'FRIENDICA_VERSION',      '2.3.1298' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
-define ( 'DB_UPDATE_VERSION',      1133      );
+define ( 'DB_UPDATE_VERSION',      1134      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -1313,7 +1313,11 @@ function feed_birthday($uid,$tz) {
 	 *
 	 */
 
+	
 	$birthday = '';
+
+	if(! strlen($tz))
+		$tz = 'UTC';
 
 	$p = q("SELECT `dob` FROM `profile` WHERE `is-default` = 1 AND `uid` = %d LIMIT 1",
 		intval($uid)

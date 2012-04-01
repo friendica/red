@@ -8,6 +8,8 @@ function register_post(&$a) {
 	$verified = 0;
 	$blocked  = 1;
 
+	$arr = array('post' => $_POST);
+	call_hooks('register_post', $arr);
 
 	$max_dailies = intval(get_config('system','max_daily_registrations'));
 	if($max_dailes) {
@@ -218,8 +220,8 @@ function register_post(&$a) {
 	$spubkey = $spkey["key"];
 
 	$r = q("INSERT INTO `user` ( `guid`, `username`, `password`, `email`, `openid`, `nickname`,
-		`pubkey`, `prvkey`, `spubkey`, `sprvkey`, `register_date`, `verified`, `blocked` )
-		VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d )",
+		`pubkey`, `prvkey`, `spubkey`, `sprvkey`, `register_date`, `verified`, `blocked`, `timezone` )
+		VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, 'UTC' )",
 		dbesc(generate_user_guid()),
 		dbesc($username),
 		dbesc($new_password_encoded),
@@ -540,6 +542,11 @@ function register_content(&$a) {
 	$license = '';
 
 	$o = get_markup_template("register.tpl");
+
+	$arr = array('template' => $o);
+
+	call_hooks('register_form',$arr);
+
 	$o = replace_macros($o, array(
 		'$oidhtml' => $oidhtml,
 		'$invitations' => get_config('system','invitation_only'),
