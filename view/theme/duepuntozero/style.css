@@ -2989,6 +2989,14 @@ div.jGrowl div.info {
 	padding: 3px;
 	margin-top: 15px;
 	margin-left: 25px;
+	width: 125px;
+	overflow-y: auto;
+}
+
+
+.qcomment option {
+	width: 125px;
+	overflow-x: hidden;
 }
 
 .qcomment {
