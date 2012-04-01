@@ -9,9 +9,9 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1295' );
+define ( 'FRIENDICA_VERSION',      '2.3.1299' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
-define ( 'DB_UPDATE_VERSION',      1133      );
+define ( 'DB_UPDATE_VERSION',      1134      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -984,6 +984,12 @@ function profile_sidebar($profile, $block = 0) {
 	if((remote_user()) && ($_SESSION['visitor_visiting'] == $profile['uid']))
 		$connect = False; 
 
+	if(get_my_url() && $profile['unkmail'])
+		$wallmessage = t('Message');
+	else
+		$wallmessage = false;
+
+
 
 	// show edit profile to yourself
 	if ($profile['uid'] == local_user()) {
@@ -1066,6 +1072,7 @@ function profile_sidebar($profile, $block = 0) {
 	$o .= replace_macros($tpl, array(
 		'$profile' => $profile,
 		'$connect'  => $connect,		
+		'$wallmessage' => $wallmessage,
 		'$location' => template_escape($location),
 		'$gender'   => $gender,
 		'$pdesc'	=> $pdesc,
@@ -1261,17 +1268,20 @@ function current_theme(){
 	$system_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : '');
 	$theme_name = ((isset($_SESSION) && x($_SESSION,'theme')) ? $_SESSION['theme'] : $system_theme);
 	
-	if($theme_name && file_exists('view/theme/' . $theme_name . '/style.css'))
+	if($theme_name && 
+		(file_exists('view/theme/' . $theme_name . '/style.css') ||
+		file_exists('view/theme/' . $theme_name . '/style.php')))
 		return($theme_name);
 	
 	foreach($app_base_themes as $t) {
-		if(file_exists('view/theme/' . $t . '/style.css'))
+		if(file_exists('view/theme/' . $t . '/style.css')||
+		   file_exists('view/theme/' . $t . '/style.php'))
 			return($t);
 	}
 	
-	$fallback = glob('view/theme/*/style.css');
+	$fallback = glob('view/theme/*/style.[css|php]');
 	if(count($fallback))
-		return (str_replace('view/theme/','', str_replace("/style.css","",$fallback[0])));
+		return (str_replace('view/theme/','', substr($fallback[0],0,-10)));
 
 }}
 
@@ -1283,6 +1293,8 @@ if(! function_exists('current_theme_url')) {
 function current_theme_url() {
 	global $a;
 	$t = current_theme();
+	if (file_exists('view/theme/' . $t . '/style.php'))
+		return($a->get_baseurl() . '/view/theme/' . $t . '/style.pcss');
 	return($a->get_baseurl() . '/view/theme/' . $t . '/style.css');
 }}
 
@@ -1308,7 +1320,11 @@ function feed_birthday($uid,$tz) {
 	 *
 	 */
 
+	
 	$birthday = '';
+
+	if(! strlen($tz))
+		$tz = 'UTC';
 
 	$p = q("SELECT `dob` FROM `profile` WHERE `is-default` = 1 AND `uid` = %d LIMIT 1",
 		intval($uid)
@@ -1415,3 +1431,21 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 
 	return replace_macros($tpl,array('$tabs' => $arr['tabs']));
 }}	
+
+function get_my_url() {
+	if(x($_SESSION,'my_url'))
+		return $_SESSION['my_url'];
+	return false;
+}
+
+function zrl($s) {
+	if(! strlen($s))
+		return $s;
+	if(! strpos($s,'/profile/'))
+		return $s;	
+	$achar = strpos($s,'?') ? '&' : '?';
+	$mine = get_my_url();
+	if($mine and ! link_compare($mine,$s))
+		return $s . $achar . 'zrl=' . urlencode($mine);
+	return $s;
+}

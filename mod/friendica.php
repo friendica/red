@@ -4,8 +4,12 @@ function friendica_init(&$a) {
 	if ($a->argv[1]=="json"){
 		$register_policy = Array('REGISTER_CLOSED', 'REGISTER_APPROVE', 'REGISTER_OPEN');
 
+		$sql_extra = '';
+		if(x($a->config,'admin_nickname')) {
+			$sql_extra = sprintf(" AND nickname = '%s' ",dbesc($a->config['admin_nickname']));
+		}
 		if (isset($a->config['admin_email']) && $a->config['admin_email']!=''){
-			$r = q("SELECT username, nickname FROM user WHERE email='%s'", $a->config['admin_email']);
+			$r = q("SELECT username, nickname FROM user WHERE email='%s' $sql_extra", dbesc($a->config['admin_email']));
 			$admin = array(
 				'name' => $r[0]['username'],
 				'profile'=> $a->get_baseurl().'/profile/'.$r[0]['nickname'],

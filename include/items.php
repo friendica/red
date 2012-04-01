@@ -416,7 +416,7 @@ function get_atom_elements($feed,$item) {
 	// the wild, by sanitising it and converting supported tags to bbcode before we rip out any remaining 
 	// html.
 
-	if((strpos($res['body'],'<') !== false) || (strpos($res['body'],'>') !== false)) {
+	if((strpos($res['body'],'<') !== false) && (strpos($res['body'],'>') !== false)) {
 
 		$res['body'] = reltoabs($res['body'],$base_url);
 
@@ -429,13 +429,21 @@ function get_atom_elements($feed,$item) {
 
 		// we shouldn't need a whitelist, because the bbcode converter
 		// will strip out any unsupported tags.
-		// $config->set('HTML.Allowed', 'p,b,a[href],i'); 
 
 		$purifier = new HTMLPurifier($config);
 		$res['body'] = $purifier->purify($res['body']);
 
-		$res['body'] = html2bbcode($res['body']);
+		$res['body'] = @html2bbcode($res['body']);
 	}
+	elseif(! $have_real_body) {
+
+		// it's not one of our messages and it has no tags
+		// so it's probably just text. We'll escape it just to be safe.
+
+		$res['body'] = escape_tags($res['body']);
+	}
+
+	// this tag is obsolete but we keep it for really old sites
 
 	$allow = $item->get_item_tags(NAMESPACE_DFRN,'comment-allow');
 	if($allow && $allow[0]['data'] == 1)

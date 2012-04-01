@@ -54,10 +54,14 @@ select {
 	border: 1px #555 dotted;
 	padding: 3px;
 	margin: 2px;
+	color: #222;
+	background: #efefef;
 }
 option {
 	padding: 3px;
 	vertical-align: middle;
+	color: #222;
+	background: #efefef;
 }
 li {
 	padding: 0 0 0 2px;
@@ -142,7 +146,7 @@ a:hover {
 }
 .required {
     display: inline;
-    color: #ff0;
+    color: #f00;
     font-size: 16px;
     font-weight: bold;
     margin: 3px;
@@ -211,39 +215,51 @@ input[type=submit] {
 /**
  * 	login
  */
+aside .field {
+	overflow: hidden;
+	width: 200px;
+}
 #login-extra-links {
-    overflow: auto;
-    padding-top: 140px !important;
-    width: 100%;
+    overflow: auto !important;
+    padding-top: 60px !important;
+    width: 100% !important;
 }
 #login-extra-links a {
     margin-right: 20px;
 }
 #login_standard {
-    display: block;
-    float: none;
-    height: 100px;
-    position: absolute;
-	width: 100%;
+    display: block !important;
+    float: none !important;
+    height: 100% !important;
+    position: relative !important;
+	width: 100% !important;
 }
 #login_standard .field label {
-	width: 200px;
+	width: 200px !important;
 }
 #login_standard input, #login_standard input[type="text"] {
-	margin: 0 0 8px;
-    width: 210px;
+	margin: 0 0 8px !important;
+    width: 210px !important;
 }
 #login-submit-wrapper {
-	margin: 0;
+	margin: 0 !important;
 }
 #login-submit-button {
     margin-left: 0px !important;
 }
+aside #login_openid {
+	position: relative !important;
+	float: none !important;
+	margin-left: 0px !important;
+	height: auto !important;
+	width: 200px !important;
+}
 #login_openid #id_openid_url {
-	width: 200px;
+	width: 180px !important;
+	overflow: hidden !important;
 }
 #login_openid label {
-	width: 208px;
+	width: 180px !important;
 }
 
 
@@ -525,7 +541,7 @@ nav #nav-notifications-linkmenu.on .icon.s22.notify, nav #nav-notifications-link
 	width: 10em;
 	color: #eec;
 }
-nav #user-menu {
+#user-menu {
     display: block;	
     width: 75%;
     margin: 3px 0 0 0;
@@ -538,8 +554,12 @@ nav #user-menu {
     clear: both;
 	top: 4px;
 	left: 10px;
+	padding: 2px;
 }
-nav #user-menu-label {
+#user-menu > a {
+	vertical-align: top;
+}
+#user-menu-label {
    	font-size: 12px;
     padding: 3px 20px 9px 5px;
     height: 10px;
@@ -1031,6 +1051,7 @@ section {
     font-size: 0.8em;
     padding-right: 230px;
 	min-width: 475px;
+	width: 65%;
 }
 
 /** tabs **/
@@ -1041,6 +1062,8 @@ section {
 }
 .tabs li {
     display: inline;
+	font-size: smaller;
+	font-weight: bold;
 }
 .tab {
     border: 1px solid #729fcf;
@@ -1099,6 +1122,7 @@ section {
 }
 .wall-item-content {
 	overflow-x: auto;
+	margin: 0px 15px 0px 5px;
 }
 /* removing it from here, vs. putting it in .wall-item-content
  * might break things for people. we shall see ;) */
@@ -1161,10 +1185,18 @@ section {
     transition: all 1s ease-in-out;
 }
 .wall-item-subtools1 {
-	list-style: none;
+    height: 30px;
+    list-style: none outside none;
+    margin: 20px 0 30px -20px;
+    padding: 0;
+    width: 30px;
 }
 .wall-item-subtools2 {
-	list-style: none;
+    height: 25px;
+    list-style: none outside none;
+    margin: -75px 0 0 5px;
+    padding: 0;
+    width: 25px;
 }
 .wall-item-title {
 	font-size: 1.2em;
@@ -1172,11 +1204,16 @@ section {
     margin-bottom: 1em;
 }
 .wall-item-body {
-	margin: 10px 10px 10px 0px;
+	margin: 20px 20px 10px 0px;
     text-align: left;
+	overflow-x: auto;
 }
 .wall-item-lock-wrapper {
 	float: right;
+    height: 22px;
+    margin: 0 -5px 0 0;
+    width: 22px;
+	opacity: 1;
 }
 .wall-item-dislike,
 .wall-item-like {
@@ -2142,7 +2179,6 @@ div[id$="wrapper"] br {
 	filter:alpha(opacity=10);
 	float: right;
 	margin-right: 10px;
-
 }
 .item-select:hover, .checkeditem {
 	opacity: 1;
@@ -2862,13 +2898,7 @@ footer {
 }
 .qcomment-wrapper {
     padding: 0px;
-    margin: 2px;
-    list-style-type: none;
-}
-.qcomment, .qcomment:hover {
-    display: inline;
-    padding: 5px;
-    margin: 5px;
+    margin: 5px 5px 5px 81%;
 }
 .qcomment {
 	opacity: 0.5;

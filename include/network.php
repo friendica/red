@@ -364,6 +364,9 @@ function lrdd($uri, $debug = false) {
 
 	logger('lrdd: host_meta: ' . $xml, LOGGER_DATA);
 
+	if(! stristr($xml,'<xrd'))
+		return array();
+
 	$h = parse_xml_string($xml);
 	if(! $h)
 		return array();
