@@ -435,8 +435,8 @@ function get_atom_elements($feed,$item) {
 
 		$res['body'] = @html2bbcode($res['body']);
 	}
-	else
-		$res['body'] = escape_tags($res['body']);
+//	else
+//		$res['body'] = escape_tags($res['body']);
 
 	$allow = $item->get_item_tags(NAMESPACE_DFRN,'comment-allow');
 	if($allow && $allow[0]['data'] == 1)
