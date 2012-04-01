@@ -139,7 +139,8 @@ function diabook_aerith_community_info(){
    //nav FIND FRIENDS
 	if(local_user()) {
 	$nv = array();
-	$nv['directory'] = Array('directory', t('Directory'), "", "");
+	$nv['directory'] = Array('directory', t('Local').' '.t('Directory'), "", "");
+	$nv['global_directory'] = Array('http://dir.friendica.com/', t('Global Directory'), "", "");
 	$nv['match'] = Array('match', t('Similar Interests'), "", "");
 	$nv['suggest'] = Array('suggest', t('Friend Suggestions'), "", "");
 	$nv['invite'] = Array('invite', t('Invite Friends'), "", "");
