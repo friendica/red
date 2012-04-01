@@ -11,8 +11,8 @@ function filer_content(&$a) {
 		killme();
 	}
 
-	$term = notags(trim($_GET['term']));
-	$item_id = (($a->argc > 1) ? notags(trim($a->argv[1])) : 0);
+	$term = unxmlify(trim($_GET['term']));
+	$item_id = (($a->argc > 1) ? intval($a->argv[1]) : 0);
 
 	logger('filer: tag ' . $term . ' item ' . $item_id);
 
@@ -25,7 +25,7 @@ function filer_content(&$a) {
 		$filetags = explode("][", trim($filetags,"[]"));
 		$tpl = get_markup_template("filer_dialog.tpl");
 		$o = replace_macros($tpl, array(
-			'$field' => array('term', t("File as:"), '', '', $filetags, t('- select -')),
+			'$field' => array('term', t("Save to Folder:"), '', '', $filetags, t('- select -')),
 			'$submit' => t('Save'),
 		));
 		

@@ -38,6 +38,9 @@
 			{{ if $connect }}
 				<li><a id="dfrn-request-link" href="dfrn_request/$profile.nickname">$connect</a></li>
 			{{ endif }}
+			{{ if $wallmessage }}
+				<li><a id="wallmessage-link" href="wallmessage/$profile.nickname">$wallmessage</a></li>
+			{{ endif }}
 		</ul>
 	</div>
 </div>

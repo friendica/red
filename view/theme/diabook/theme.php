@@ -7,6 +7,9 @@
  * Author: 
  */
 
+$a->theme_info = array(
+  'extends' => 'duepuntozero',
+);
 
 //change css on network and profilepages
 $cssFile = null;
@@ -147,6 +150,13 @@ function diabook_community_info(){
 	$nv['suggest'] = Array('suggest', t('Friend Suggestions'), "", "");
 	$nv['invite'] = Array('invite', t('Invite Friends'), "", "");
 	
+	$nv['search'] = '<form name="simple_bar" method="get" action="http://dir.friendika.com/directory">
+						<span class="sbox_l"></span>
+						<span class="sbox">
+						<input type="text" name="search" size="13" maxlength="50">
+						</span>
+						<span class="sbox_r" id="srch_clear"></span>';
+	
 	$aside['$nv'] = $nv;
 	};
    
@@ -243,16 +253,67 @@ if ($a->argv[0] === "network" && local_user()){
 
 
 //right_aside at profile pages
-if ($a->argv[0] === "profile"){
+if ($a->argv[0].$a->argv[1] === "profile".$a->user['nickname']){
 	if($ccCookie != "8") {
 	// COMMUNITY
 	diabook_community_info();
 	
 	// CUSTOM CSS
 	$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook/style-profile.css";
+	
+	
 	}
 }
 
+//tabs at right_aside on settings page
+if ($a->argv[0] === "settings"){
+	
+	$tabs = array(
+		array(
+			'label'	=> t('Account settings'),
+			'url' 	=> $a->get_baseurl(true).'/settings',
+			'sel'	=> (($a->argc == 1)?'active':''),
+		),	
+		array(
+			'label'	=> t('Display settings'),
+			'url' 	=> $a->get_baseurl(true).'/settings/display',
+			'sel'	=> (($a->argc > 1) && ($a->argv[1] === 'display')?'active':''),
+		),	
+		array(
+			'label'	=> t('Edit/Manage Profiles'),
+			'url' 	=> $a->get_baseurl(true).'/profiles',
+		),	
+		array(
+			'label'	=> t('Connector settings'),
+			'url' 	=> $a->get_baseurl(true).'/settings/connectors',
+			'sel'	=> (($a->argc > 1) && ($a->argv[1] === 'connectors')?'active':''),
+		),
+		array(
+			'label'	=> t('Plugin settings'),
+			'url' 	=> $a->get_baseurl(true).'/settings/addon',
+			'sel'	=> (($a->argc > 1) && ($a->argv[1] === 'addon')?'active':''),
+		),
+		array(
+			'label' => t('Connections'),
+			'url' => $a->get_baseurl(true) . '/settings/oauth',
+			'sel' => (($a->argc > 1) && ($a->argv[1] === 'oauth')?'active':''),
+		),
+		array(
+			'label' => t('Export personal data'),
+			'url' => $a->get_baseurl(true) . '/uexport',
+			'sel' => ''
+		)
+	);
+	$tabtpl = file_get_contents(dirname(__file__).'/rs_common_tabs.tpl') ;
+	$a->page['aside'] = replace_macros($tabtpl, array(
+		'$tabs' => $tabs,
+	));
+	
+	
+	// CUSTOM CSS
+	$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook/style-settings.css";
+	
+}
 
 // custom css
 if (!is_null($cssFile)) $a->page['htmlhead'] .= sprintf('<link rel="stylesheet" type="text/css" href="%s" />', $cssFile);
@@ -369,7 +430,7 @@ function restore_boxes(){
 	$.cookie('close_lastusers','2', { expires: 365, path: '/' });
 	$.cookie('close_lastphotos','2', { expires: 365, path: '/' });
 	$.cookie('close_lastlikes','2', { expires: 365, path: '/' });
-	alert('Right-hand column was restored');
+	alert('Right-hand column was restored. Please refresh your browser');
   };
 
  
@@ -377,4 +438,3 @@ function restore_boxes(){
  
  
 EOT;
-

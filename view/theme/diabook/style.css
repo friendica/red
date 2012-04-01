@@ -640,6 +640,10 @@ nav #search-box #search-text {
   background-image:  url('icons/lupe.png');
   background-repeat:no-repeat;
   padding-left:20px;
+  border-top-left-radius: 15px;
+border-top-right-radius: 15px;
+border-bottom-right-radius: 15px;
+border-bottom-left-radius: 15px;
 	}
 
 
@@ -1157,6 +1161,7 @@ body .pageheader{
   margin-bottom: 0px;
   width: 775px;
 }
+
 .wall-item-decor {
   position: absolute;
   left: 790px;
@@ -1168,7 +1173,6 @@ body .pageheader{
   display: table;
   width: 780px;
 }
-
 
 .wall-item-container .wall-item-item, .wall-item-container .wall-item-bottom {
   display: table-row;

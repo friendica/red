@@ -87,13 +87,13 @@ function fileas_widget($baseurl,$selected = '') {
     $cnt = preg_match_all('/\[(.*?)\]/',$saved,$matches,PREG_SET_ORDER);
     if($cnt) {
 		foreach($matches as $mtch) {
-			$unescaped = file_tag_decode($mtch[1]);
+			$unescaped = xmlify(file_tag_decode($mtch[1]));
 			$terms[] = array('name' => $unescaped,'selected' => (($selected == $unescaped) ? 'selected' : ''));
 		}
 	}
 
 	return replace_macros(get_markup_template('fileas_widget.tpl'),array(
-		'$title' => t('File Selections'),
+		'$title' => t('Saved Folders'),
 		'$desc' => '',
 		'$sel_all' => (($selected == '') ? 'selected' : ''),
 		'$all' => t('Everything'),

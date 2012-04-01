@@ -6,13 +6,8 @@
  * Version: 1.0
  * Author: Simon <http://simon.kisikew.org/>
  * Maintainer: Simon <http://simon.kisikew.org/>
- * Screenshot: <a href="screenshot.png">screenshot</a>
+ * Screenshot: <a href="screenshot.jpg">Screenshot</a>
  */
-
-
-$a->theme_info = array(
-	'extends' => 'dispy-dark'
-);
 
 $a->page['htmlhead'] .= <<< EOT
 <script>
@@ -111,26 +106,16 @@ $(document).ready(function() {
 		$(this).css({color: '#eec'});
 	});
 
-/*	$('#profile-photo-wrapper').mouseover(function() {
-		$('.profile-edit-side-div').css({display: 'block'});
-	}).mouseout(function() {
-		$('.profile-edit-side-div').css({display: 'none'});
-		return false;
-	});
-
-	$('img.photo').mouseover(function() {
-		$('.profile-edit-side-div').css({display: 'block'});
-	}).mouseout(function() {
-		$('.profile-edit-side-div').css({display: 'none'});
-		return false;
-	});*/
-
 });
 </script>
 EOT;
 
 function dispydark_community_info() {
 	$a = get_app();
+
+	$aside['$lastusers_title'] = t('Last users');
+    $aside['$lastusers_items'] = array();
+	$publish = (get_config('system','publish_all') ? '' : " AND `publish` = 1 " );
 
 	$fostitJS = "javascript: (function() {
 		the_url = '".$a->get_baseurl($ssl_state)."/view/theme/dispy-dark/fpostit/fpostit.php?url=' +
@@ -157,6 +142,7 @@ function dispydark_community_info() {
 }
 
 // aside on profile page
-if ($a->argv[0] === "profile") {
+//if (($a->argv[0] . $a->argv[1]) === ("profile" . $a->user['nickname'])) {
 	dispydark_community_info();
-}
+//}
+

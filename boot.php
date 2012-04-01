@@ -9,9 +9,9 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1294' );
+define ( 'FRIENDICA_VERSION',      '2.3.1298' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
-define ( 'DB_UPDATE_VERSION',      1133      );
+define ( 'DB_UPDATE_VERSION',      1134      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -95,8 +95,8 @@ define ( 'PAGE_BLOG',              4 );
  * Network and protocol family types 
  */
 
-define ( 'NETWORK_ZOT',              'zot!');    // Zot!
 define ( 'NETWORK_DFRN',             'dfrn');    // Friendica, Mistpark, other DFRN implementations
+define ( 'NETWORK_ZOT',              'zot!');    // Zot!
 define ( 'NETWORK_OSTATUS',          'stat');    // status.net, identi.ca, GNU-social, other OStatus implementations
 define ( 'NETWORK_FEED',             'feed');    // RSS/Atom feeds with no known "post/notify" protocol
 define ( 'NETWORK_DIASPORA',         'dspr');    // Diaspora
@@ -107,6 +107,28 @@ define ( 'NETWORK_LINKEDIN',         'lnkd');    // LinkedIn
 define ( 'NETWORK_XMPP',             'xmpp');    // XMPP     
 define ( 'NETWORK_MYSPACE',          'mysp');    // MySpace
 define ( 'NETWORK_GPLUS',            'goog');    // Google+
+
+/*
+ * These numbers are used in stored permissions
+ * and existing allocations MUST NEVER BE CHANGED
+ * OR RE-ASSIGNED! You may only add to them.
+ */
+
+$netgroup_ids = array(
+	NETWORK_DFRN     => (-1),
+	NETWORK_ZOT      => (-2),
+	NETWORK_OSTATUS  => (-3),
+	NETWORK_FEED     => (-4),
+	NETWORK_DIASPORA => (-5),
+	NETWORK_MAIL     => (-6),
+	NETWORK_MAIL2    => (-7),
+	NETWORK_FACEBOOK => (-8),
+	NETWORK_LINKEDIN => (-9),
+	NETWORK_XMPP     => (-10),
+	NETWORK_MYSPACE  => (-11),
+	NETWORK_GPLUS    => (-12),
+);
+
 
 /**
  * Maximum number of "people who like (or don't like) this"  that we will list by name
@@ -962,6 +984,12 @@ function profile_sidebar($profile, $block = 0) {
 	if((remote_user()) && ($_SESSION['visitor_visiting'] == $profile['uid']))
 		$connect = False; 
 
+	if(get_my_url() && $profile['unkmail'])
+		$wallmessage = t('Message');
+	else
+		$wallmessage = false;
+
+
 
 	// show edit profile to yourself
 	if ($profile['uid'] == local_user()) {
@@ -1044,6 +1072,7 @@ function profile_sidebar($profile, $block = 0) {
 	$o .= replace_macros($tpl, array(
 		'$profile' => $profile,
 		'$connect'  => $connect,		
+		'$wallmessage' => $wallmessage,
 		'$location' => template_escape($location),
 		'$gender'   => $gender,
 		'$pdesc'	=> $pdesc,
@@ -1239,17 +1268,20 @@ function current_theme(){
 	$system_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : '');
 	$theme_name = ((isset($_SESSION) && x($_SESSION,'theme')) ? $_SESSION['theme'] : $system_theme);
 	
-	if($theme_name && file_exists('view/theme/' . $theme_name . '/style.css'))
+	if($theme_name && 
+		(file_exists('view/theme/' . $theme_name . '/style.css') ||
+		file_exists('view/theme/' . $theme_name . '/style.php')))
 		return($theme_name);
 	
 	foreach($app_base_themes as $t) {
-		if(file_exists('view/theme/' . $t . '/style.css'))
+		if(file_exists('view/theme/' . $t . '/style.css')||
+		   file_exists('view/theme/' . $t . '/style.php'))
 			return($t);
 	}
 	
-	$fallback = glob('view/theme/*/style.css');
+	$fallback = glob('view/theme/*/style.[css|php]');
 	if(count($fallback))
-		return (str_replace('view/theme/','', str_replace("/style.css","",$fallback[0])));
+		return (str_replace('view/theme/','', substr($fallback[0],0,-10)));
 
 }}
 
@@ -1261,6 +1293,8 @@ if(! function_exists('current_theme_url')) {
 function current_theme_url() {
 	global $a;
 	$t = current_theme();
+	if (file_exists('view/theme/' . $t . '/style.php'))
+		return($a->get_baseurl() . '/view/theme/' . $t . '/style.pcss');
 	return($a->get_baseurl() . '/view/theme/' . $t . '/style.css');
 }}
 
@@ -1286,7 +1320,11 @@ function feed_birthday($uid,$tz) {
 	 *
 	 */
 
+	
 	$birthday = '';
+
+	if(! strlen($tz))
+		$tz = 'UTC';
 
 	$p = q("SELECT `dob` FROM `profile` WHERE `is-default` = 1 AND `uid` = %d LIMIT 1",
 		intval($uid)
@@ -1393,3 +1431,21 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 
 	return replace_macros($tpl,array('$tabs' => $arr['tabs']));
 }}	
+
+function get_my_url() {
+	if(x($_SESSION,'my_url'))
+		return $_SESSION['my_url'];
+	return false;
+}
+
+function zrl($s) {
+	if(! strlen($s))
+		return $s;
+	if(! strpos($s,'/profile/'))
+		return $s;	
+	$achar = strpos($s,'?') ? '&' : '?';
+	$mine = get_my_url();
+	if($mine and ! link_compare($mine,$s))
+		return $s . $achar . 'zrl=' . urlencode($mine);
+	return $s;
+}

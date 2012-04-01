@@ -205,7 +205,6 @@ function hex2bin($s) {
 		return '';
 
 	if(! ctype_xdigit($s)) {
-		logger('hex2bin: illegal input: ' . print_r(debug_backtrace(), true));
 		return($s);
 	}
 
@@ -610,6 +609,8 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 			$url = $redirect_url;
 			$sparkle = ' sparkle';
 		}
+		else
+			$url = zrl($url);
 	}
 	$click = ((x($contact,'click')) ? ' onclick="' . $contact['click'] . '" ' : '');
 	if($click)
@@ -919,7 +920,7 @@ function prepare_body($item,$attach = false) {
 		foreach($matches as $mtch) {
 			if(strlen($x))
 				$x .= ',';
-			$x .= file_tag_decode($mtch[1]);
+			$x .= xmlify(file_tag_decode($mtch[1]));
 		}
 		if(strlen($x))
 			$s .= '<div class="categorytags"><span>' . t('Categories:') . ' </span>' . $x . '</div>'; 
@@ -934,7 +935,7 @@ function prepare_body($item,$attach = false) {
 		foreach($matches as $mtch) {
 			if(strlen($x))
 				$x .= '&nbsp;&nbsp;&nbsp;';
-			$x .= file_tag_decode($mtch[1]). ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&term=' . file_tag_decode($mtch[1]) . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>';
+			$x .= xmlify(file_tag_decode($mtch[1])) . ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&term=' . xmlify(file_tag_decode($mtch[1])) . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>';
 		}
 		if(strlen($x) && (local_user() == $item['uid']))
 			$s .= '<div class="filesavetags"><span>' . t('Filed under:') . ' </span>' . $x . '</div>'; 
@@ -1305,10 +1306,11 @@ function file_tag_decode($s) {
 }
 
 function file_tag_file_query($table,$s,$type = 'file') {
+
 	if($type == 'file')
-		$str = preg_quote( '[' . file_tag_encode($s) . ']' );
+		$str = preg_quote( '[' . str_replace('%','%%',file_tag_encode($s)) . ']' );
 	else
-		$str = preg_quote( '<' . file_tag_encode($s) . '>' );
+		$str = preg_quote( '<' . str_replace('%','%%',file_tag_encode($s)) . '>' );
 	return " AND " . (($table) ? dbesc($table) . '.' : '') . "file regexp '" . dbesc($str) . "' ";
 }
 

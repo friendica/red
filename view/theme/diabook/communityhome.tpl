@@ -7,10 +7,10 @@
 <div id="close_helpers">
 {{ if $lastusers_title }}
 <h3 style="margin-top:0px;">Help or @NewHere ?<a id="close_helpers_icon"  onClick="close_helpers()" class="icon close_box" title="close"></a></h3>
+<a href="http://kakste.com/profile/newhere" title="@NewHere" style="margin-left: 10px; " target="blank">NewHere</a><br>
 <a href="https://helpers.pyxis.uberspace.de/profile/helpers" style="margin-left: 10px; " title="Friendica Support" target="blank">Friendica Support</a><br>
 <a href="https://letstalk.pyxis.uberspace.de/profile/letstalk" style="margin-left: 10px; " title="Let's talk" target="blank">Let's talk</a><br>
-<a href="http://newzot.hydra.uberspace.de/profile/newzot" title="Local Friendica" style="margin-left: 10px; " target="blank">Local Friendica</a><br>
-<a href="http://kakste.com/profile/newhere" title="@NewHere" style="margin-left: 10px; " target="blank">NewHere</a>
+<a href="http://newzot.hydra.uberspace.de/profile/newzot" title="Local Friendica" style="margin-left: 10px; " target="blank">Local Friendica</a>
 {{ endif }}
 </div>
 
@@ -30,13 +30,14 @@
 {{ endif }}
 </div>
 
-<div id="close_friends">
+<div id="close_friends" style="margin-bottom:53px;">
 {{ if $nv }}
 <h3>Find Friends<a id="close_friends_icon" onClick="close_friends()"  class="icon close_box" title="close"></a></h3>
 <a class="$nv.directory.2" href="$nv.directory.0" style="margin-left: 10px; " title="$nv.directory.3" >$nv.directory.1</a><br>
 <a class="$nv.match.2" href="$nv.match.0" style="margin-left: 10px; " title="$nv.match.3" >$nv.match.1</a><br>
-<a class="$nv.suggest.2" href="$nv.suggest.0" style="margin-left: 10px; " title="$nv.suggest.3" >$nv.suggest.1</a>
-<a class="$nv.invite.2" href="$nv.invite.0" style="margin-left: 10px; " title="$nav.invite.3" >$nv.invite.1</a>			
+<a class="$nv.suggest.2" href="$nv.suggest.0" style="margin-left: 10px; " title="$nv.suggest.3" >$nv.suggest.1</a><br>
+<a class="$nv.invite.2" href="$nv.invite.0" style="margin-left: 10px; " title="$nv.invite.3" >$nv.invite.1</a>
+$nv.search
 {{ endif }}
 </div>
 
