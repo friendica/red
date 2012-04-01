@@ -568,8 +568,8 @@ header #banner #logo-text {
 }
 /* messages */
 #message-new {
-  background: #19aeff;
-  border: 1px solid #005c94;
+  background: ;
+  border: 1px solid #333;
   width: 150px;
 }
 #message-new a {
@@ -578,6 +578,7 @@ header #banner #logo-text {
   display: block;
   font-weight: bold;
   padding: 1em 0px;
+  text-decoration: none;
 }
 .mail-list-wrapper {
   background-color: #f6f7f8;

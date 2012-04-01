@@ -1451,13 +1451,12 @@ transition: all 0.2s ease-in-out;
 }
 .wall-item-comment-wrapper textarea {
   height: 2.0em;
-  width: 93%;
+  width: 100%;
   font-size: 10px;
   color: #999999;
   border: 1px solid #DDD;
   padding: 0.3em;
   font-size: 14px;
-  margin-left: 20px;
 }
 .wall-item-comment-wrapper .comment-edit-text-full {
   font-size: 14px;

@@ -564,6 +564,7 @@ header #banner #logo-text {
   display: block;
   font-weight: bold;
   padding: 1em 0px;
+  text-decoration: none;
 }
 .mail-list-wrapper {
   background-color: #f6f7f8;
