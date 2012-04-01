@@ -192,15 +192,12 @@ function message_content(&$a) {
 		return $o;
 	}
 
-	if(($a->argc == 1) || ($a->argc == 2 && $a->argv[1] === 'sent')) {
+	if($a->argc == 1) {
+
+		// list messages
 
 		$o .= $header;
 		
-		if($a->argc == 2)
-			$eq = sprintf( "AND `from-url` = '%s'", dbesc($myprofile)); 
-		else
-			$eq = '';
-
 		$r = q("SELECT count(*) AS `total` FROM `mail` 
 			WHERE `mail`.`uid` = %d AND `from-url` $eq '%s' GROUP BY `parent-uri` ORDER BY `created` DESC",
 			intval(local_user()),
@@ -213,7 +210,7 @@ function message_content(&$a) {
 			`mail`.* , `contact`.`name`, `contact`.`url`, `contact`.`thumb` , `contact`.`network`,
 			count( * ) as count
 			FROM `mail` LEFT JOIN `contact` ON `mail`.`contact-id` = `contact`.`id` 
-			WHERE `mail`.`uid` = %d  $eq GROUP BY `parent-uri` ORDER BY `mailcreated` DESC  LIMIT %d , %d ",
+			WHERE `mail`.`uid` = %d GROUP BY `parent-uri` ORDER BY `mailcreated` DESC  LIMIT %d , %d ",
 			intval(local_user()),
 			//
 			intval($a->pager['start']),
@@ -226,7 +223,7 @@ function message_content(&$a) {
 
 		$tpl = get_markup_template('mail_list.tpl');
 		foreach($r as $rr) {
-			if ($rr['from-url'] == $myprofile){
+			if (link_compare($rr['from-url'],$myprofile)){
 				$partecipants = sprintf( t("You and %s"), $rr['name']);
 			} else {
 				$partecipants = sprintf( t("%s and You"), $rr['from-name']);
