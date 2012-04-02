@@ -435,8 +435,15 @@ function get_atom_elements($feed,$item) {
 
 		$res['body'] = @html2bbcode($res['body']);
 	}
-	else
+	elseif(! $have_real_body) {
+
+		// it's not one of our messages and it has no tags
+		// so it's probably just text. We'll escape it just to be safe.
+
 		$res['body'] = escape_tags($res['body']);
+	}
+
+	// this tag is obsolete but we keep it for really old sites
 
 	$allow = $item->get_item_tags(NAMESPACE_DFRN,'comment-allow');
 	if($allow && $allow[0]['data'] == 1)

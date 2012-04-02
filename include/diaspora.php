@@ -1920,6 +1920,7 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 
 	$images = array();
 
+	$title = $item['title'];
 	$body = $item['body'];
 
 /*
@@ -1944,8 +1945,11 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 		}
 	}	
 */
-
 	$body = xmlify(html_entity_decode(bb2diaspora($body)));
+
+	if(strlen($title))
+		$body = xmlify('**' . html_entity_decode($title) . '**' . "\n") . $body;
+
 
 	if($item['attach']) {
 		$cnt = preg_match_all('/href=\"(.*?)\"(.*?)title=\"(.*?)\"/ism',$item['attach'],$matches,PREG_SET_ORDER);

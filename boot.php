@@ -9,7 +9,7 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1298' );
+define ( 'FRIENDICA_VERSION',      '2.3.1299' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
 define ( 'DB_UPDATE_VERSION',      1134      );
 
@@ -293,6 +293,8 @@ class App {
 	
 	public $nav_sel;
 
+	public $category;
+
 	private $scheme;
 	private $hostname;
 	private $baseurl;
@@ -377,6 +379,9 @@ class App {
 		$this->argc = count($this->argv);
 		if((array_key_exists('0',$this->argv)) && strlen($this->argv[0])) {
 			$this->module = str_replace(".", "_", $this->argv[0]);
+			if(array_key_exists('2',$this->argv)) {
+			    $this->category = $this->argv[2];
+			}
 		}
 		else {
 			$this->argc = 1;

@@ -34,6 +34,7 @@
 {{ if $nv }}
 <h3>Find Friends<a id="close_friends_icon" onClick="close_friends()"  class="icon close_box" title="close"></a></h3>
 <a class="$nv.directory.2" href="$nv.directory.0" style="margin-left: 10px; " title="$nv.directory.3" >$nv.directory.1</a><br>
+<a class="$nv.global_directory.2" href="$nv.global_directory.0" style="margin-left: 10px; " title="$nv.global_directory.3" >$nv.global_directory.1</a><br>
 <a class="$nv.match.2" href="$nv.match.0" style="margin-left: 10px; " title="$nv.match.3" >$nv.match.1</a><br>
 <a class="$nv.suggest.2" href="$nv.suggest.0" style="margin-left: 10px; " title="$nv.suggest.3" >$nv.suggest.1</a><br>
 <a class="$nv.invite.2" href="$nv.invite.0" style="margin-left: 10px; " title="$nv.invite.3" >$nv.invite.1</a>

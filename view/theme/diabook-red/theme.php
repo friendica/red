@@ -3,7 +3,7 @@
 /*
  * Name: Diabook-red
  * Description: Diabook-red: report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
- * Version: 
+ * Version: (Version: 1.011)
  * Author: 
  */
 
@@ -139,7 +139,8 @@ function diabook_red_community_info(){
    //nav FIND FRIENDS
 	if(local_user()) {
 	$nv = array();
-	$nv['directory'] = Array('directory', t('Directory'), "", "");
+	$nv['directory'] = Array('directory', t('Local').' '.t('Directory'), "", "");
+	$nv['global_directory'] = Array('http://dir.friendica.com/', t('Global Directory'), "", "");
 	$nv['match'] = Array('match', t('Similar Interests'), "", "");
 	$nv['suggest'] = Array('suggest', t('Friend Suggestions'), "", "");
 	$nv['invite'] = Array('invite', t('Invite Friends'), "", "");
@@ -163,7 +164,8 @@ function diabook_red_community_info(){
 	$pagelist = array();
 
 	$contacts = q("SELECT `id`, `url`, `name`, `micro`FROM `contact`
-			WHERE `network`= 'dfrn' AND `forum` = 1 AND `uid` = %d",
+			WHERE `network`= 'dfrn' AND `forum` = 1 AND `uid` = %d
+			ORDER BY `name` ASC",
 			intval($a->user['uid'])
 	);
 
@@ -311,61 +313,63 @@ if (!is_null($cssFile)) $a->page['htmlhead'] .= sprintf('<link rel="stylesheet" 
 
 //load jquery.cookie.js
 $cookieJS = $a->get_baseurl($ssl_state)."/view/theme/diabook-red/js/jquery.cookie.js";
-$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" />', $cookieJS);
+$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $cookieJS);
 
 
 //js scripts
 
-$a->page['htmlhead'] .= <<< EOT
+$a->page['htmlhead'] .= '
 
 <script>
  $(function() {
-	$('a.lightbox').fancybox(); // Select all links with lightbox class
-	
+	$("a.lightbox").fancybox(); // Select all links with lightbox class
  });
+  
+ </script>';
 
-</script>
 
+if ($a->argv[0].$a->argv[1] === "profile".$a->user['nickname'] or $a->argv[0] === "network" && local_user()){
+$a->page['htmlhead'] .= '
 <script>
 
 $("right_aside").ready(function(){
 	
-	if($.cookie('close_pages') == '1') 
+	if($.cookie("close_pages") == "1") 
 		{
 		document.getElementById( "close_pages" ).style.display = "none";
 			};
 	
-	if($.cookie('close_helpers') == '1') 
+	if($.cookie("close_helpers") == "1") 
 		{
 		document.getElementById( "close_helpers" ).style.display = "none";
 			};
 			
-	if($.cookie('close_services') == '1') 
+	if($.cookie("close_services") == "1") 
 		{
 		document.getElementById( "close_services" ).style.display = "none";
 			};
 			
-	if($.cookie('close_friends') == '1') 
+	if($.cookie("close_friends") == "1") 
 		{
 		document.getElementById( "close_friends" ).style.display = "none";
 			};
 	
-	if($.cookie('close_postit') == '1') 
+	if($.cookie("close_postit") == "1") 
 		{
 		document.getElementById( "close_postit" ).style.display = "none";
 			};
 			
-	if($.cookie('close_lastusers') == '1') 
+	if($.cookie("close_lastusers") == "1") 
 		{
 		document.getElementById( "close_lastusers" ).style.display = "none";
 			};
 			
-	if($.cookie('close_lastphotos') == '1') 
+	if($.cookie("close_lastphotos") == "1") 
 		{
 		document.getElementById( "close_lastphotos" ).style.display = "none";
 			};
 			
-	if($.cookie('close_lastlikes') == '1') 
+	if($.cookie("close_lastlikes") == "1") 
 		{
 		document.getElementById( "close_lastlikes" ).style.display = "none";
 			};}
@@ -374,57 +378,55 @@ $("right_aside").ready(function(){
 
 function close_pages(){
  document.getElementById( "close_pages" ).style.display = "none";
- $.cookie('close_pages','1', { expires: 365, path: '/' });
+ $.cookie("close_pages","1", { expires: 365, path: "/" });
  };
  
 function close_helpers(){
  document.getElementById( "close_helpers" ).style.display = "none";
-  $.cookie('close_helpers','1', { expires: 365, path: '/' });
+  $.cookie("close_helpers","1", { expires: 365, path: "/" });
  };
 
 function close_services(){
  document.getElementById( "close_services" ).style.display = "none";
- $.cookie('close_services','1', { expires: 365, path: '/' });
+ $.cookie("close_services","1", { expires: 365, path: "/" });
  };
  
 function close_friends(){
  document.getElementById( "close_friends" ).style.display = "none";
- $.cookie('close_friends','1', { expires: 365, path: '/' });
+ $.cookie("close_friends","1", { expires: 365, path: "/" });
  };
 
 function close_postit(){
  document.getElementById( "close_postit" ).style.display = "none";
- $.cookie('close_postit','1', { expires: 365, path: '/' });
+ $.cookie("close_postit","1", { expires: 365, path: "/" });
  };
  
 function close_lastusers(){
  document.getElementById( "close_lastusers" ).style.display = "none";
- $.cookie('close_lastusers','1', { expires: 365, path: '/' });
+ $.cookie("close_lastusers","1", { expires: 365, path: "/" });
  };
 
 function close_lastphotos(){
  document.getElementById( "close_lastphotos" ).style.display = "none";
- $.cookie('close_lastphotos','1', { expires: 365, path: '/' });
+ $.cookie("close_lastphotos","1", { expires: 365, path: "/" });
  };
  
 function close_lastlikes(){
  document.getElementById( "close_lastlikes" ).style.display = "none";
- $.cookie('close_lastlikes','1', { expires: 365, path: '/' });
+ $.cookie("close_lastlikes","1", { expires: 365, path: "/" });
  };
+ 
+ 
 
 function restore_boxes(){
-	$.cookie('close_pages','2', { expires: 365, path: '/' });
-	$.cookie('close_helpers','2', { expires: 365, path: '/' });
-	$.cookie('close_services','2', { expires: 365, path: '/' });
-	$.cookie('close_friends','2', { expires: 365, path: '/' });
-	$.cookie('close_postit','2', { expires: 365, path: '/' });
-	$.cookie('close_lastusers','2', { expires: 365, path: '/' });
-	$.cookie('close_lastphotos','2', { expires: 365, path: '/' });
-	$.cookie('close_lastlikes','2', { expires: 365, path: '/' });
-	alert('Right-hand column was restored. Please refresh your browser');
-  }; 
- 
-</script>
-
-EOT;
-
+	$.cookie("close_pages","2", { expires: 365, path: "/" });
+	$.cookie("close_helpers","2", { expires: 365, path: "/" });
+	$.cookie("close_services","2", { expires: 365, path: "/" });
+	$.cookie("close_friends","2", { expires: 365, path: "/" });
+	$.cookie("close_postit","2", { expires: 365, path: "/" });
+	$.cookie("close_lastusers","2", { expires: 365, path: "/" });
+	$.cookie("close_lastphotos","2", { expires: 365, path: "/" });
+	$.cookie("close_lastlikes","2", { expires: 365, path: "/" });
+	alert("Right-hand column was restored. Please refresh your browser");
+  };
+</script>';}

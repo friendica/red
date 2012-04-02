@@ -1198,10 +1198,14 @@ section {
 
 body .pageheader{
   text-align: center;
-  margin-top: 25px;
-  font-size: 0px;
+  font-size: 20px;
+  margin-bottom: 20px;
+  margin-top: 0px;
+  max-width: 575px;
 	}
-
+.qcomment{
+  max-width: 122px;	
+	}
 #id_username {
   width: 173px;	
 	}
@@ -1253,7 +1257,7 @@ right_aside {
   /* background: #F1F1F1; */
 }
 right_aside a{color: red;}
-right_aside h3 {border-bottom: 1px solid #D2D2D2; padding-top: 5px; padding-bottom: 0px; padding-left: 5px; margin-bottom: 0px; 
+right_aside h3 {border-bottom: 1px solid #D2D2D2; padding-top: 5px; padding-bottom: 0px; padding-left: 3px; margin-bottom: 0px; 
 margin-top:30px;}
 right_aside .directory-item {	width: 50px; height: 50px; vertical-align: center; text-align: center; }
 right_aside .directory-photo { margin: 0px; }
@@ -1447,13 +1451,12 @@ transition: all 0.2s ease-in-out;
 }
 .wall-item-comment-wrapper textarea {
   height: 2.0em;
-  width: 93%;
+  width: 100%;
   font-size: 10px;
   color: #999999;
   border: 1px solid #DDD;
   padding: 0.3em;
   font-size: 14px;
-  margin-left: 20px;
 }
 .wall-item-comment-wrapper .comment-edit-text-full {
   font-size: 14px;
@@ -1610,6 +1613,11 @@ transition: all 0.2s ease-in-out;
   padding: 0.3em;
   margin-bottom: 10px;
 }
+.grey
+{
+  display: inline;
+  float: right;	
+	}
 #jot #jot-tools {
   margin: 0px;
   padding: 0px;
@@ -2119,7 +2127,7 @@ max-width: 85%;
 	padding: 0px;
         width: 16px;
         height: 16px;
-        top: -20px; left:0px;
+        top: -16px; left:0px;
         overflow: hidden;
         text-indent: 40px;
         display: none;
@@ -2498,8 +2506,8 @@ float: left;
   display: none;
   /* position: absolute; */
   /* position: absolute; */
-  left: -2px;
-  top: -20px;
+  left: 0px;
+  top: -16px;
 }
 .contact-wrapper {
   float: left;
