@@ -2014,6 +2014,9 @@ ul.tabs li .active {
   float: left;
 }
 /* photo */
+.photo {
+border-radius: 10px;	
+	}
 .lframe {
   float: left;
 }

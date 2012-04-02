@@ -169,7 +169,8 @@ function diabook_community_info(){
 	$pagelist = array();
 
 	$contacts = q("SELECT `id`, `url`, `name`, `micro`FROM `contact`
-			WHERE `network`= 'dfrn' AND `forum` = 1 AND `uid` = %d",
+			WHERE `network`= 'dfrn' AND `forum` = 1 AND `uid` = %d
+			ORDER BY `name` ASC",
 			intval($a->user['uid'])
 	);
 
