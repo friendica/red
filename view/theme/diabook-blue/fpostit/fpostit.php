@@ -113,12 +113,12 @@ function showForm($error, $content) {
 	echo <<<EOF
 	<div class='wrap1'>
 		<h2><img class='logo' src='friendika-32.png' align='middle';/>
-		Friendika Bookmarklet</h2>
+		Friendica Bookmarklet</h2>
 	</div>
 
 	<div class="wrap2">
 		<form method="post" action="{$_SERVER['PHP_SELF']}">
-			Enter the email address of the Friendika Account that you want to cross-post to:(example: user@friendika.org)<br /><br />
+			Enter the email address of the Friendica Account that you want to cross-post to:(example: user@friendica.org)<br /><br />
 			Account ID: <input type="text" name="friendika_acct_name" value="{$username_cookie}" size="50"/><br />
 			Password: <input type="password" name="friendika_password" value="{$password_cookie}" size="50"/><br />
 			<textarea name="content" id="content" rows="6" cols="70">{$content}</textarea><br />
