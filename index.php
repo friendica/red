@@ -95,6 +95,7 @@ if((x($_SESSION,'language')) && ($_SESSION['language'] !== $lang)) {
 
 if(x($_GET,'zrl')) {
 	$_SESSION['my_url'] = $_GET['zrl'];
+	$a->query_string = preg_replace('/[\?&]zrl=(.*?)([\?&]|$)/is','',$a->query_string);
 }
 
 /**
