@@ -250,7 +250,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 	$threads = array();
 	$threadsid = -1;
 	
-	if(count($items)) {
+	if($items && count($items)) {
 
 		if($mode === 'network-new' || $mode === 'search' || $mode === 'community') {
 
@@ -974,6 +974,8 @@ function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 		'$shortnoloc' => t('clear location'),
 		'$title' => "",
 		'$placeholdertitle' => t('Set title'),
+		'$category' => "",
+		'$placeholdercategory' => t('Categories (comma-separated list)'),
 		'$wait' => t('Please wait'),
 		'$permset' => t('Permission settings'),
 		'$shortpermset' => t('permissions'),

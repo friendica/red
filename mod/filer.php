@@ -11,8 +11,8 @@ function filer_content(&$a) {
 		killme();
 	}
 
-	$term = notags(trim($_GET['term']));
-	$item_id = (($a->argc > 1) ? notags(trim($a->argv[1])) : 0);
+	$term = unxmlify(trim($_GET['term']));
+	$item_id = (($a->argc > 1) ? intval($a->argv[1]) : 0);
 
 	logger('filer: tag ' . $term . ' item ' . $item_id);
 

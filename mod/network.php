@@ -393,7 +393,7 @@ function network_content(&$a, $update = 0) {
 		);
 	}
 	if(strlen($file)) {
-		$sql_extra .= file_tag_file_query('item',$file);
+		$sql_extra .= file_tag_file_query('item',unxmlify($file));
 	}
 
 	if($conv) {

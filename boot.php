@@ -9,9 +9,9 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1297' );
+define ( 'FRIENDICA_VERSION',      '2.3.1299' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
-define ( 'DB_UPDATE_VERSION',      1133      );
+define ( 'DB_UPDATE_VERSION',      1134      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -293,6 +293,8 @@ class App {
 	
 	public $nav_sel;
 
+	public $category;
+
 	private $scheme;
 	private $hostname;
 	private $baseurl;
@@ -377,6 +379,9 @@ class App {
 		$this->argc = count($this->argv);
 		if((array_key_exists('0',$this->argv)) && strlen($this->argv[0])) {
 			$this->module = str_replace(".", "_", $this->argv[0]);
+			if(array_key_exists('2',$this->argv)) {
+			    $this->category = $this->argv[2];
+			}
 		}
 		else {
 			$this->argc = 1;
@@ -984,6 +989,12 @@ function profile_sidebar($profile, $block = 0) {
 	if((remote_user()) && ($_SESSION['visitor_visiting'] == $profile['uid']))
 		$connect = False; 
 
+	if(get_my_url() && $profile['unkmail'])
+		$wallmessage = t('Message');
+	else
+		$wallmessage = false;
+
+
 
 	// show edit profile to yourself
 	if ($profile['uid'] == local_user()) {
@@ -1066,6 +1077,7 @@ function profile_sidebar($profile, $block = 0) {
 	$o .= replace_macros($tpl, array(
 		'$profile' => $profile,
 		'$connect'  => $connect,		
+		'$wallmessage' => $wallmessage,
 		'$location' => template_escape($location),
 		'$gender'   => $gender,
 		'$pdesc'	=> $pdesc,
@@ -1313,7 +1325,11 @@ function feed_birthday($uid,$tz) {
 	 *
 	 */
 
+	
 	$birthday = '';
+
+	if(! strlen($tz))
+		$tz = 'UTC';
 
 	$p = q("SELECT `dob` FROM `profile` WHERE `is-default` = 1 AND `uid` = %d LIMIT 1",
 		intval($uid)

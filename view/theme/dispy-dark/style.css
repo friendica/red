@@ -54,10 +54,14 @@ select {
 	border: 1px #555 dotted;
 	padding: 3px;
 	margin: 2px;
+	color: #eec;
+	background: #2e2f2e;
 }
 option {
 	padding: 3px;
 	vertical-align: middle;
+	color: #eec;
+	background: #2e2f2e;
 }
 li {
 	padding: 0 0 0 2px;
@@ -211,39 +215,51 @@ input[type=submit] {
 /**
  * 	login
  */
+aside .field {
+	overflow: hidden;
+	width: 200px;
+}
 #login-extra-links {
-    overflow: auto;
-    padding-top: 140px !important;
-    width: 100%;
+    overflow: auto !important;
+    padding-top: 60px !important;
+    width: 100% !important;
 }
 #login-extra-links a {
     margin-right: 20px;
 }
 #login_standard {
-    display: block;
-    float: none;
-    height: 100px;
-    position: absolute;
-	width: 100%;
+    display: block !important;
+    float: none !important;
+    height: 100% !important;
+    position: relative !important;
+	width: 100% !important;
 }
 #login_standard .field label {
-	width: 200px;
+	width: 200px !important;
 }
 #login_standard input, #login_standard input[type="text"] {
-	margin: 0 0 8px;
-    width: 210px;
+	margin: 0 0 8px !important;
+    width: 210px !important;
 }
 #login-submit-wrapper {
-	margin: 0;
+	margin: 0 !important;
 }
 #login-submit-button {
     margin-left: 0px !important;
 }
+aside #login_openid {
+	position: relative !important;
+	float: none !important;
+	margin-left: 0px !important;
+	height: auto !important;
+	width: 200px !important;
+}
 #login_openid #id_openid_url {
-	width: 200px;
+	width: 180px !important;
+	overflow: hidden !important;
 }
 #login_openid label {
-	width: 208px;
+	width: 180px !important;
 }
 
 
@@ -525,7 +541,7 @@ nav #nav-notifications-linkmenu.on .icon.s22.notify, nav #nav-notifications-link
 	width: 10em;
 	color: #eec;
 }
-nav #user-menu {
+#user-menu {
     display: block;	
     width: 75%;
     margin: 3px 0 0 0;
@@ -538,8 +554,12 @@ nav #user-menu {
     clear: both;
 	top: 4px;
 	left: 10px;
+	padding: 2px;
 }
-nav #user-menu-label {
+#user-menu > a {
+	vertical-align: top;
+}
+#user-menu-label {
    	font-size: 12px;
     padding: 3px 20px 9px 5px;
     height: 10px;
@@ -1042,6 +1062,8 @@ section {
 }
 .tabs li {
     display: inline;
+	font-size: smaller;
+	font-weight: bold;
 }
 .tab {
     border: 1px solid #729fcf;
@@ -1100,6 +1122,7 @@ section {
 }
 .wall-item-content {
 	overflow-x: auto;
+	margin: 0px 15px 0px 5px;
 }
 /* removing it from here, vs. putting it in .wall-item-content
  * might break things for people. we shall see ;) */
@@ -1183,6 +1206,7 @@ section {
 .wall-item-body {
 	margin: 20px 20px 10px 0px;
     text-align: left;
+	overflow-x: auto;
 }
 .wall-item-lock-wrapper {
 	float: right;
@@ -2052,6 +2076,9 @@ div[id$="wrapper"] br {
     float:left;
     font-size:20px;
 }
+.event {
+	background: #2e2f2e;
+}
 .vevent {
     border:1px solid #ccc;
 }
@@ -2063,15 +2090,14 @@ div[id$="wrapper"] br {
 	margin-left: 10px;
 	margin-right: 10px;
 }
-
 #new-event-link {
 	margin-bottom: 10px;
 }
 .edit-event-link, .plink-event-link {
-	float: left;
-	margin-top: 4px;
-	margin-right: 4px;
-	margin-bottom: 15px;
+	/*float: left;      */
+	/*margin-top: 4px;  */
+	/*margin-right: 4px;*/
+	/*margin-bottom: 15px;*/
 }
 .event-description:before {
 	content: url('../../../images/calendar.png');
@@ -2080,6 +2106,7 @@ div[id$="wrapper"] br {
 .event-start, .event-end {
 	margin-left: 10px;
 	width: 330px;
+	font-size: smaller;
 }
 .event-start .dtstart, .event-end .dtend {
 	float: right;
@@ -2179,6 +2206,10 @@ div[id$="wrapper"] br {
 }
 #item-delete-selected-desc:hover {
 	text-decoration: underline;
+}
+.fc-state-highlight {
+    background: #eec;
+    color: #2e2f2e;
 }
 
 
@@ -2874,13 +2905,7 @@ footer {
 }
 .qcomment-wrapper {
     padding: 0px;
-    margin: 2px;
-    list-style-type: none;
-}
-.qcomment, .qcomment:hover {
-    display: inline;
-    padding: 5px;
-    margin: 5px;
+    margin: 5px 5px 5px 81%;
 }
 .qcomment {
 	opacity: 0.5;

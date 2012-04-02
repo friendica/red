@@ -87,13 +87,41 @@ function fileas_widget($baseurl,$selected = '') {
     $cnt = preg_match_all('/\[(.*?)\]/',$saved,$matches,PREG_SET_ORDER);
     if($cnt) {
 		foreach($matches as $mtch) {
-			$unescaped = file_tag_decode($mtch[1]);
+			$unescaped = xmlify(file_tag_decode($mtch[1]));
 			$terms[] = array('name' => $unescaped,'selected' => (($selected == $unescaped) ? 'selected' : ''));
 		}
 	}
 
 	return replace_macros(get_markup_template('fileas_widget.tpl'),array(
 		'$title' => t('Saved Folders'),
+		'$desc' => '',
+		'$sel_all' => (($selected == '') ? 'selected' : ''),
+		'$all' => t('Everything'),
+		'$terms' => $terms,
+		'$base' => $baseurl,
+
+	));
+}
+
+function categories_widget($baseurl,$selected = '') {
+	$a = get_app();
+
+	$saved = get_pconfig($a->profile['profile_uid'],'system','filetags');
+	if(! strlen($saved))
+		return;
+
+	$matches = false;
+	$terms = array();
+        $cnt = preg_match_all('/<(.*?)>/',$saved,$matches,PREG_SET_ORDER);
+        if($cnt) {
+                foreach($matches as $mtch) {
+		        $unescaped = xmlify(file_tag_decode($mtch[1]));
+			$terms[] = array('name' => $unescaped,'selected' => (($selected == $unescaped) ? 'selected' : ''));
+		}
+	}
+
+	return replace_macros(get_markup_template('categories_widget.tpl'),array(
+		'$title' => t('Categories'),
 		'$desc' => '',
 		'$sel_all' => (($selected == '') ? 'selected' : ''),
 		'$all' => t('Everything'),

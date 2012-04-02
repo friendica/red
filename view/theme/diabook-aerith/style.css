@@ -1,4 +1,4 @@
-/**
+/opt/lampp/htdocs/friendica/view/theme/diabook/search_item.tpl/**
  * Fabio Comuni <http://kirgroup.com/profile/fabrixxm>
  * Additional Changes: Michael Vogel <icarus@dabo.de>
  **/
@@ -566,6 +566,86 @@ header #banner #logo-text {
   position: absolute;
   top: 10%;
 }
+/* messages */
+#message-new {
+  background: #3465A4;
+  border: 1px solid #333;
+  width: 150px;
+}
+#message-new a {
+  color: #ffffff;
+  text-align: center;
+  display: block;
+  font-weight: bold;
+  padding: 1em 0px;
+    text-decoration: none;
+}
+.mail-list-wrapper {
+  background-color: #f6f7f8;
+  margin-bottom: 5px;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+.mail-list-wrapper span {
+  display: block;
+  float: left;
+  width: 20%;
+  overflow: hidden;
+}
+.mail-list-wrapper .mail-subject {
+  width: 30%;
+  padding: 4px 0px 0px 4px;
+}
+.mail-list-wrapper .mail-subject a {
+  display: block;
+}
+.mail-list-wrapper .mail-subject.unseen a {
+  font-weight: bold;
+}
+.mail-list-wrapper .mail-date {
+  padding: 4px 4px 0px 4px;
+}
+.mail-list-wrapper .mail-from {
+  padding: 4px 4px 0px 4px;
+}
+.mail-list-wrapper .mail-count {
+  padding: 4px 4px 0px 4px;
+  text-align: right;
+}
+.mail-list-wrapper .mail-delete {
+  float: right;
+}
+#mail-display-subject {
+  background-color: #f6f7f8;
+  color: #2d2d2d;
+  margin-bottom: 10px;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+#mail-display-subject span {
+  float: left;
+  overflow: hidden;
+  padding: 4px 0px 0px 10px;
+}
+#mail-display-subject .mail-delete {
+  float: right;
+  opacity: 0.5;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+#mail-display-subject:hover .mail-delete {
+  opacity: 1;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
 /* nav */
 nav {
   width: 80%;
@@ -1053,6 +1133,16 @@ aside #side-peoplefind-url {
   overflow: auto;
   height: auto;
 }
+aside #likes a, a:visited, a:link {
+		color: #3465A4;
+		text-decoration: none;
+		cursor: pointer;
+		
+}
+aside #likes a:hover{
+	text-decoration: underline;
+	}
+
 #contact-block .contact-block-h4 {
   float: left;
   margin: 5px 0px;
@@ -1223,7 +1313,6 @@ body .pageheader{
 .tread-wrapper a{
   color: #3465A4;
 }
-
 .wall-item-decor {
   position: absolute;
   left: 790px;
@@ -2041,7 +2130,7 @@ max-width: 85%;
 	padding: 0px;
         width: 16px;
         height: 16px;
-        top: -20px; left:0px;
+        top: -16px; left:0px;
         overflow: hidden;
         text-indent: 40px;
         display: none;
@@ -2411,8 +2500,8 @@ float: left;
   display: none;
   /* position: absolute; */
   /* position: absolute; */
-  left: -2px;
-  top: -20px;
+  left: 0px;
+  top: -16px;
 }
 .contact-wrapper {
   float: left;
