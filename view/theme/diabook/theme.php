@@ -3,7 +3,7 @@
 /*
  * Name: Diabook
  * Description: Diabook: report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
- * Version: 
+ * Version: (Version: 0.010)
  * Author: 
  */
 
