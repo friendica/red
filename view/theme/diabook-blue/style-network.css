@@ -1165,7 +1165,9 @@ body .pageheader{
   margin-top: 0px;
   max-width: 575px;
 	}
-
+.qcomment{
+  max-width: 122px;	
+	}
 #id_username {
   width: 173px;	
 	}
@@ -1573,6 +1575,11 @@ transition: all 0.2s ease-in-out;
   padding: 0.3em;
   margin-bottom: 10px;
 }
+.grey
+{
+  display: inline;
+  float: right;	
+	}
 #jot #jot-tools {
   margin: 0px;
   padding: 0px;

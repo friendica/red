@@ -1,4 +1,4 @@
-/opt/lampp/htdocs/friendica/view/theme/diabook/search_item.tpl/**
+/**
  * Fabio Comuni <http://kirgroup.com/profile/fabrixxm>
  * Additional Changes: Michael Vogel <icarus@dabo.de>
  **/
@@ -1062,6 +1062,7 @@ aside {
   float: left;
   /* background: #F1F1F1; */
 }
+aside #page-sidebar{display: none;}
 aside .vcard .fn {
   font-size: 18px;
   font-weight: bold;
@@ -1259,7 +1260,9 @@ body .pageheader{
   margin-top: 0px;
   max-width: 575px;
 	}
-
+.qcomment{
+  max-width: 122px;	
+	}
 #id_username {
   width: 173px;	
 	}
@@ -1624,6 +1627,11 @@ body .pageheader{
   padding: 0.3em;
   margin-bottom: 10px;
 }
+.grey
+{
+  display: inline;
+  float: right;	
+	}
 #jot #jot-tools {
   margin: 0px;
   padding: 0px;
