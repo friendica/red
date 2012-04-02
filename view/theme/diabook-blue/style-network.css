@@ -1160,8 +1160,10 @@ section {
 
 body .pageheader{
   text-align: center;
-  margin-top: 25px;
-  font-size: 0px;
+  font-size: 20px;
+  margin-bottom: 20px;
+  margin-top: 0px;
+  max-width: 575px;
 	}
 
 #id_username {
