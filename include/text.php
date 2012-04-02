@@ -225,6 +225,9 @@ if(! function_exists('paginate')) {
 function paginate(&$a) {
 	$o = '';
 	$stripped = preg_replace('/(&page=[0-9]*)/','',$a->query_string);
+
+//	$stripped = preg_replace('/&zrl=(.*?)([\?&]|$)/ism','',$stripped);
+
 	$stripped = str_replace('q=','',$stripped);
 	$stripped = trim($stripped,'/');
 	$pagenum = $a->pager['page'];
@@ -725,6 +728,8 @@ function smilies($s, $sample = false) {
 		'\\o/', 
 		'o.O', 
 		'O.o', 
+		'o_O', 
+		'O_o', 
 		":'(", 
 		":-!", 
 		":-/", 
@@ -759,6 +764,8 @@ function smilies($s, $sample = false) {
 		'<img src="' . $a->get_baseurl() . '/images/smiley-thumbsup.gif" alt="\\o/" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="o.O" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="O.o" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="o_O" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="O_o" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-cry.gif" alt=":\'(" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-foot-in-mouth.gif" alt=":-!" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-undecided.gif" alt=":-/" />',
