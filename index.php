@@ -243,6 +243,8 @@ if (file_exists($theme_info_file)){
 if(! x($a->page,'content'))
 	$a->page['content'] = '';
 
+if(! $install)
+	call_hooks('page_content_top',$a->page['content']);
 
 /**
  * Call module functions
