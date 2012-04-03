@@ -537,6 +537,56 @@ function notifier_run($argv, $argc){
 								$x[0]['writable'] = 1;
 							}
 
+							$ssl_policy = get_config('system','ssl_policy');
+							// if contact's ssl policy changed, update our links
+
+							$ssl_changed = false;
+
+							if($ssl_policy == SSL_POLICY_SELFSIGN && strstr($x[0]['url'],'https:')) {
+								$ssl_changed = true;
+								$x[0]['url']     = 	str_replace('https:','http:',$x[0]['url']);
+								$x[0]['request'] = 	str_replace('https:','http:',$x[0]['request']);
+								$x[0]['notify']  = 	str_replace('https:','http:',$x[0]['notify']);
+								$x[0]['poll']    = 	str_replace('https:','http:',$x[0]['poll']);
+								$x[0]['confirm'] = 	str_replace('https:','http:',$x[0]['confirm']);
+								$x[0]['poco']    = 	str_replace('https:','http:',$x[0]['poco']);
+							}
+
+							if($ssl_policy == SSL_POLICY_FULL && strstr($x[0]['url'],'http:')) {
+								$ssl_changed = true;
+								$x[0]['url']     = 	str_replace('http:','https:',$x[0]['url']);
+								$x[0]['request'] = 	str_replace('http:','https:',$x[0]['request']);
+								$x[0]['notify']  = 	str_replace('http:','https:',$x[0]['notify']);
+								$x[0]['poll']    = 	str_replace('http:','https:',$x[0]['poll']);
+								$x[0]['confirm'] = 	str_replace('http:','https:',$x[0]['confirm']);
+								$x[0]['poco']    = 	str_replace('http:','https:',$x[0]['poco']);
+							}
+
+							if($ssl_changed) {
+								q("update contact set 
+									url = '%s', 
+									request = '%s',
+									notify = '%s',
+									poll = '%s',
+									confirm = '%s',
+									poco = '%s'
+									where id = %d limit 1",
+									dbesc($x[0]['url']),
+									dbesc($x[0]['request']),
+									dbesc($x[0]['notify']),
+									dbesc($x[0]['poll']),
+									dbesc($x[0]['confirm']),
+									dbesc($x[0]['poco']),
+									intval($x[0]['id'])
+								);
+							}
+			
+							// If we are setup as a soapbox we aren't accepting input from this person
+
+							if($x[0]['page-flags'] == PAGE_SOAPBOX)
+								break;
+
+
 							require_once('library/simplepie/simplepie.inc');
 							logger('mod-delivery: local delivery');
 							local_delivery($x[0],$atom);

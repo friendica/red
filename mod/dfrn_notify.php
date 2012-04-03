@@ -106,7 +106,6 @@ function dfrn_notify_post(&$a) {
 	if($ssl_policy == 'self' && strstr($importer['url'],'https:')) {
 		$ssl_changed = true;
 		$importer['url']     = 	str_replace('https:','http:',$importer['url']);
-		$importer['nurl']    = normalise_link($importer['url']);
 		$importer['request'] = 	str_replace('https:','http:',$importer['request']);
 		$importer['notify']  = 	str_replace('https:','http:',$importer['notify']);
 		$importer['poll']    = 	str_replace('https:','http:',$importer['poll']);
@@ -117,7 +116,6 @@ function dfrn_notify_post(&$a) {
 	if($ssl_policy == 'full' && strstr($importer['url'],'http:')) {
 		$ssl_changed = true;
 		$importer['url']     = 	str_replace('http:','https:',$importer['url']);
-		$importer['nurl']    = normalise_link($importer['url']);
 		$importer['request'] = 	str_replace('http:','https:',$importer['request']);
 		$importer['notify']  = 	str_replace('http:','https:',$importer['notify']);
 		$importer['poll']    = 	str_replace('http:','https:',$importer['poll']);
@@ -129,9 +127,6 @@ function dfrn_notify_post(&$a) {
 		q("update contact set 
 			url = '%s', 
 			nurl = '%s',
-			photo = '%s',
-			thumb = '%s',
-			micro = '%s',
 			request = '%s',
 			notify = '%s',
 			poll = '%s',
