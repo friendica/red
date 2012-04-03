@@ -107,9 +107,6 @@ function dfrn_notify_post(&$a) {
 		$ssl_changed = true;
 		$importer['url']     = 	str_replace('https:','http:',$importer['url']);
 		$importer['nurl']    = normalise_link($importer['url']);
-		$importer['photo']   = 	str_replace('https:','http:',$importer['photo']);
-		$importer['thumb']   = 	str_replace('https:','http:',$importer['thumb']);
-		$importer['micro']   = 	str_replace('https:','http:',$importer['micro']);
 		$importer['request'] = 	str_replace('https:','http:',$importer['request']);
 		$importer['notify']  = 	str_replace('https:','http:',$importer['notify']);
 		$importer['poll']    = 	str_replace('https:','http:',$importer['poll']);
@@ -121,9 +118,6 @@ function dfrn_notify_post(&$a) {
 		$ssl_changed = true;
 		$importer['url']     = 	str_replace('http:','https:',$importer['url']);
 		$importer['nurl']    = normalise_link($importer['url']);
-		$importer['photo']   = 	str_replace('http:','https:',$importer['photo']);
-		$importer['thumb']   = 	str_replace('http:','https:',$importer['thumb']);
-		$importer['micro']   = 	str_replace('http:','https:',$importer['micro']);
 		$importer['request'] = 	str_replace('http:','https:',$importer['request']);
 		$importer['notify']  = 	str_replace('http:','https:',$importer['notify']);
 		$importer['poll']    = 	str_replace('http:','https:',$importer['poll']);
@@ -146,9 +140,6 @@ function dfrn_notify_post(&$a) {
 			where id = %d limit 1",
 			dbesc($importer['url']),
 			dbesc($importer['nurl']),
-			dbesc($importer['photo']),
-			dbesc($importer['thumb']),
-			dbesc($importer['micro']),
 			dbesc($importer['request']),
 			dbesc($importer['notify']),
 			dbesc($importer['poll']),
