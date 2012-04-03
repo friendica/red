@@ -284,11 +284,11 @@ function events_content(&$a) {
 		if (x($_GET,'id')){
 			$tpl =  get_markup_template("event.tpl");
 		} else {
-			if (get_config('experimentals','new_calendar')==1){
+//			if (get_config('experimentals','new_calendar')==1){
 				$tpl = get_markup_template("events-js.tpl");
-			} else {
-				$tpl = get_markup_template("events.tpl");
-			}
+//			} else {
+//				$tpl = get_markup_template("events.tpl");
+//			}
 		}
 		$o = replace_macros($tpl, array(
 			'$baseurl'	=> $a->get_baseurl(),

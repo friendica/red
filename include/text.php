@@ -225,6 +225,9 @@ if(! function_exists('paginate')) {
 function paginate(&$a) {
 	$o = '';
 	$stripped = preg_replace('/(&page=[0-9]*)/','',$a->query_string);
+
+//	$stripped = preg_replace('/&zrl=(.*?)([\?&]|$)/ism','',$stripped);
+
 	$stripped = str_replace('q=','',$stripped);
 	$stripped = trim($stripped,'/');
 	$pagenum = $a->pager['page'];
