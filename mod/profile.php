@@ -124,6 +124,8 @@ function profile_content(&$a, $update = 0) {
 		return;
 	}
 
+	require_once('include/contact_widgets.php');
+
 	$a->page['aside'] .= categories_widget($a->get_baseurl(true) . '/profile/' . $a->profile['nickname'],(x($category) ? xmlify($category) : ''));
 
 	if(! $update) {
