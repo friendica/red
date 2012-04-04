@@ -229,7 +229,7 @@ function settings_post(&$a) {
 
 
 		if ($theme == $a->user['theme']){
-			// call theme_post only if theme has not benn changed
+			// call theme_post only if theme has not been changed
 			if( ($themeconfigfile = get_theme_config_file($theme)) != null){
 				require_once($themeconfigfile);
 				theme_post($a);
@@ -242,6 +242,7 @@ function settings_post(&$a) {
 				intval(local_user())
 		);
 	
+		call_hooks('display_settings_post', $_POST);
 		goaway($a->get_baseurl(true) . '/settings/display' );
 		return; // NOTREACHED
 	}
@@ -679,6 +680,8 @@ function settings_content(&$a) {
 
 			'$settings_connectors' => $settings_connectors
 		));
+
+		call_hooks('display_settings', $o);
 		return $o;
 	}
 
