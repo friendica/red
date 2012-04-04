@@ -222,6 +222,11 @@ function admin_page_site_post(&$a){
 				`poco`    = replace(`poco`   , 'http:' , 'https:')
 				where `self` = 1"
 			);
+			q("update `profile` set 
+				`photo`   = replace(`photo`  , 'http:' , 'https:'),
+				`thumb`   = replace(`thumb`  , 'http:' , 'https:')
+				where 1 "
+			);
 		}
 		elseif($ssl_policy == SSL_POLICY_SELFSIGN) {
 			q("update `contact` set 
@@ -235,6 +240,11 @@ function admin_page_site_post(&$a){
 				`confirm` = replace(`confirm`, 'https:' , 'http:'),
 				`poco`    = replace(`poco`   , 'https:' , 'http:')
 				where `self` = 1"
+			);
+			q("update `profile` set 
+				`photo`   = replace(`photo`  , 'https:' , 'http:'),
+				`thumb`   = replace(`thumb`  , 'https:' , 'http:')
+				where 1 "
 			);
 		}
 	}
