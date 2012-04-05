@@ -12,6 +12,13 @@ require_once('include/diaspora.php');
 	
 function receive_post(&$a) {
 
+
+	$enabled = intval(get_config('system','diaspora_enabled'));
+	if(! $enabled) {
+		logger('mod-diaspora: disabled');
+		http_status_exit(500);
+	}
+
 	$public = false;
 
 	if(($a->argc == 2) && ($a->argv[1] === 'public')) {
