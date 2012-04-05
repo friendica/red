@@ -856,6 +856,16 @@ aside #viewcontacts {
     border-radius: 5px;
 	vertical-align: middle;
 }
+#jot-category {
+	margin: 5px 0;
+	border-radius: 5px;
+	border: 1px #999 solid;
+	color: #aaa;
+	font-size: smaller;
+}
+#jot-category:focus {
+	color: #eee;
+}
 #jot #character-counter {
 	width: 6%;
 	float: right;
