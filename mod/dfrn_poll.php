@@ -33,7 +33,7 @@ function dfrn_poll_init(&$a) {
 
 		$user = '';
 		if($a->argc > 1) {
-			$r = q("SELECT `hidewall` FROM `user` WHERE `user`.`nickname` = '%s' LIMIT 1",
+			$r = q("SELECT `hidewall`,`nickname` FROM `user` WHERE `user`.`nickname` = '%s' LIMIT 1",
 				dbesc($a->argv[1])
 			);
 			if((! count($r)) || (count($r) && $r[0]['hidewall']))
