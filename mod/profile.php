@@ -124,9 +124,9 @@ function profile_content(&$a, $update = 0) {
 		return;
 	}
 
-	$a->page['aside'] .= categories_widget($a->get_baseurl(true) . '/profile/' . $a->profile['nickname'],(x($category) ? xmlify($category) : ''));
-
 	if(! $update) {
+
+
 		if(x($_GET,'tab'))
 			$tab = notags(trim($_GET['tab']));
 
@@ -148,6 +148,7 @@ function profile_content(&$a, $update = 0) {
 
 		$celeb = ((($a->profile['page-flags'] == PAGE_SOAPBOX) || ($a->profile['page-flags'] == PAGE_COMMUNITY)) ? true : false);
 
+		$a->page['aside'] .= categories_widget($a->get_baseurl(true) . '/profile/' . $a->profile['nickname'],(x($category) ? xmlify($category) : ''));
 
 		if(can_write_wall($a,$a->profile['profile_uid'])) {
 

@@ -2987,7 +2987,10 @@ div.jGrowl div.info {
   color: #ffffff;
   padding-left: 58px;
 }
-
+#jGrowl.top-right {
+	top: 15px;
+	right: 15px;
+}
 .qcomment {
 	border: 1px solid #EEE;
 	padding: 3px;
