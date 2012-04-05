@@ -340,7 +340,7 @@ function check_php(&$phpath, &$checks) {
 			$help .= t('The command line version of PHP on your system does not have "register_argc_argv" enabled.'). EOL;
 			$help .= t('This is required for message delivery to work.');
 		}
-		check_add($checks, t('PHP "register_argc_argv"'), $passed, true, $help);
+		check_add($checks, t('PHP register_argc_argv'), $passed, true, $help);
 	}
 	
 
