@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1133 );
+define( 'UPDATE_VERSION' , 1134 );
 
 /**
  *
@@ -1136,3 +1136,17 @@ INDEX ( `username` )
 
 }
 
+function update_1133() {
+	//there can't be indexes with more than 1000 bytes in mysql, 
+	//so change charset to be smaller
+	q("ALTER TABLE `config` CHANGE `cat` `cat` CHAR( 255 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL ,
+CHANGE `k` `k` CHAR( 255 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL"); 
+	//and add the index
+	q("ALTER TABLE `friendica`.`config` ADD UNIQUE `access` ( `cat` , `k` ) "); 
+	
+	//same thing for pconfig
+	q("ALTER TABLE `pconfig` CHANGE `cat` `cat` CHAR( 255 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL ,
+	CHANGE `k` `k` CHAR( 255 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL"); 
+	
+	q("ALTER TABLE `friendica`.`pconfig` ADD UNIQUE `access` ( `uid` , `cat` , `k` )"); 
+}
