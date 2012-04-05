@@ -10,8 +10,10 @@ require_once('include/queue_fn.php');
 function diaspora_dispatch_public($msg) {
 
 	$enabled = intval(get_config('system','diaspora_enabled'));
-	if(! $enabled)
+	if(! $enabled) {
+		logger('mod-diaspora: disabled');
 		return;
+	}
 
 	$r = q("SELECT `user`.* FROM `user` WHERE `user`.`uid` IN ( SELECT `contact`.`uid` FROM `contact` WHERE `contact`.`network` = '%s' AND `contact`.`addr` = '%s' ) AND `account_expired` = 0 ",
 		dbesc(NETWORK_DIASPORA),
@@ -34,8 +36,10 @@ function diaspora_dispatch($importer,$msg) {
 	$ret = 0;
 
 	$enabled = intval(get_config('system','diaspora_enabled'));
-	if(! $enabled)
+	if(! $enabled) {
+		logger('mod-diaspora: disabled');
 		return;
+	}
 
 	// php doesn't like dashes in variable names
 

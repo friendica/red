@@ -80,6 +80,7 @@ function set_config($family,$key,$value) {
 	
 	// manage array value
 	$dbvalue = (is_array($value)?serialize($value):$value);
+	$dbvalue = (is_bool($value) ? intval($value) : $value);
 
 	if(get_config($family,$key,true) === false) {
 		$a->config[$family][$key] = $value;
