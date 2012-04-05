@@ -249,6 +249,7 @@ function get_theme_info($theme){
 				list($k,$v) = array_map("trim", explode(":",$l,2));
 				$k= strtolower($k);
 				if ($k=="author"){
+
 					$r=preg_match("|([^<]+)<([^>]+)>|", $v, $m);
 					if ($r) {
 						$info['author'][] = array('name'=>$m[1], 'link'=>$m[2]);
@@ -276,3 +277,13 @@ function get_theme_info($theme){
 	return $info;
 }}
 
+
+function get_theme_screenshot($theme) {
+	$a = get_app();
+	$exts = array('.png','.jpg');
+	foreach($exts as $ext) {
+		if(file_exists('view/theme/' . $theme . '/screenshot' . $ext))
+			return($a->get_baseurl() . '/view/theme/' . $theme . '/screenshot' . $ext);
+	}
+	return($a->get_baseurl() . '/images/blank.png');
+}

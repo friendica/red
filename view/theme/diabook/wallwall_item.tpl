@@ -1,6 +1,5 @@
 {{ if $item.indent }}{{ else }}
 <div class="wall-item-decor">
-	{{ if $item.lock }}<span class="icon lock fakelink" onclick="lockview(event,$item.id);" title="$item.lock">$item.lock</span>{{ endif }}	
 	<img id="like-rotator-$item.id" class="like-rotator" src="images/rotator.gif" alt="$item.wait" title="$item.wait" style="display: none;" />
 </div>
 {{ endif }}
@@ -70,6 +69,10 @@
 				<a href="#" id="starred-$item.id" onclick="dostar($item.id); return false;" class="star-item icon $item.isstarred" title="$item.star.toggle">
 				<img src="images/star_dummy.png" class="icon star" alt="$item.star.do" /> </a>
 				<a href="#" id="tagger-$item.id" onclick="itemTag($item.id); return false;" class="tag-item icon tagged" title="$item.star.tagger"></a>
+			{{ endif }}	
+			
+			{{ if $item.filer }}
+			<a href="#" id="filer-$item.id" onclick="itemFiler($item.id); return false;" class="filer-item icon file-as" title="$item.star.filer"></a>
 			{{ endif }}	
 			
 			{{ if $item.plink }}<a class="icon link" title="$item.plink.title" href="$item.plink.href">$item.plink.title</a>{{ endif }}

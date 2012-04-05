@@ -11,16 +11,16 @@
 			{{ if $nav.network }}
 			<li id="nav-network-link" class="nav-menu-icon">
 				<a class="$nav.network.2" href="$nav.network.0" title="$nav.network.3" >
-				<span class="icon notifications">Benachrichtigungen</span></a>
-				<span id="net-update" class="nav-notify"></span>
+				<span class="icon notifications">Benachrichtigungen</span>
+				<span id="net-update" class="nav-notify"></span></a>
 			</li>
 		    {{ endif }}
 	
 			{{ if $nav.contacts }}
 			<li class="nav-menu-icon" id="nav-contacts-linkmenu">
 				<a href="$nav.contacts.0" rel="#nav-contacts-menu" title="$nav.contacts.1">
-				<span class="icon contacts">$nav.contacts.1</span></a>
-				<span id="intro-update" class="nav-notify"></span>
+				<span class="icon contacts">$nav.contacts.1</span>
+				<span id="intro-update" class="nav-notify"></span></a>
 				<ul id="nav-contacts-menu" class="menu-popup">
 					<li id="nav-contacts-see-intro"><a href="$nav.notifications.0">$nav.introductions.1</a><span id="intro-update" class="nav-notify"></span></li>
 					<li id="nav-contacts-all"><a href="contacts">$nav.contacts.1</a></li> 
@@ -32,8 +32,8 @@
 			{{ if $nav.messages }}
 			<li  id="nav-messages-linkmenu" class="nav-menu-icon">
 			  <a href="$nav.messages.0" rel="#nav-messages-menu" title="$nav.messages.1">
-			  <span class="icon messages">$nav.messages.1</span></a>
-				<span id="mail-update" class="nav-notify"></span>
+			  <span class="icon messages">$nav.messages.1</span>
+				<span id="mail-update" class="nav-notify"></span></a>
 				<ul id="nav-messages-menu" class="menu-popup">
 					<li id="nav-messages-see-all"><a href="$nav.messages.0">$nav.messages.1</a></li>
 					<li id="nav-messages-see-all"><a href="$nav.messages.inbox.0">$nav.messages.inbox.1</a></li>
@@ -44,8 +44,10 @@
 			{{ endif }}
 		
       {{ if $nav.notifications }}
-			<li  id="nav-notifications-linkmenu" class="nav-menu-icon"><a href="$nav.notifications.0" rel="#nav-notifications-menu" title="$nav.notifications.1"><span class="icon notify">$nav.notifications.1</span></a>
-				<span id="notify-update" class="nav-notify"></span>
+			<li  id="nav-notifications-linkmenu" class="nav-menu-icon">
+			<a href="$nav.notifications.0" rel="#nav-notifications-menu" title="$nav.notifications.1">
+			<span class="icon notify">$nav.notifications.1</span>
+				<span id="notify-update" class="nav-notify"></span></a>
 				<ul id="nav-notifications-menu" class="menu-popup">
 					<li id="nav-notifications-mark-all"><a href="#" onclick="notifyMarkAll(); return false;">$nav.notifications.mark.1</a></li>
 					<li id="nav-notifications-see-all"><a href="$nav.notifications.all.0">$nav.notifications.all.1</a></li>
@@ -66,16 +68,12 @@
 			<ul id="nav-site-menu" class="menu-popup">
 				{{ if $nav.manage }}<li><a class="$nav.manage.2" href="$nav.manage.0" title="$nav.manage.3">$nav.manage.1</a></li>{{ endif }}				
 
-				{{ if $nav.help }} <li><a class="$nav.help.2" target="friendika-help" href="$nav.help.0" title="$nav.help.3" >$nav.help.1</a></li>{{ endif }}
-
-
-										<li ><a class="$nav.community.2" href="$nav.community.0" title="$nav.community.3" >$nav.community.1</a></li>
-
-
-										<li><a class="$nav.search.2" href="$nav.search.0" title="$nav.search.3" >$nav.search.1</a></li>
+				{{ if $nav.settings }} <li><a class="$nav.search.2" onClick="restore_boxes()" title="Restore right-hand column" style="cursor: pointer;">Restore right-hand column</a></li>{{ endif }}
 										
-										<li><a class="$nav.search.2" href="friendica" title="Site Info / Impressum" >Info/Impressum</a></li>
-
+				{{ if $nav.help }} <li><a class="$nav.help.2" target="friendika-help" href="$nav.help.0" title="$nav.help.3" >$nav.help.1</a></li>{{ endif }}									
+										
+										 <li><a class="$nav.search.2" href="friendica" title="Site Info / Impressum" >Info/Impressum</a></li>
+										
 				{{ if $nav.settings }}<li><a class="menu-sep $nav.settings.2" href="$nav.settings.0" title="$nav.settings.3">$nav.settings.1</a></li>{{ endif }}
 				{{ if $nav.admin }}<li><a class="$nav.admin.2" href="$nav.admin.0" title="$nav.admin.3" >$nav.admin.1</a></li>{{ endif }}
 
@@ -103,10 +101,10 @@
 			</li>	
 		{{ endif }}		
 		
-      {{ if $nav.home }}
+      {{ if $nav.settings }}
 			<li id="nav-home-link" class="nav-menu $sel.home">
-				<a class="$nav.home.2" href="$nav.home.0" title="$nav.home.3" >$nav.home.1</a>
-				<span id="home-update" class="nav-notify"></span>
+				<a class="$nav.home.2" href="$nav.home.0" title="$nav.home.3" >$nav.home.1
+				<span id="home-update" class="nav-notify"></span></a>
 			</li>
 		{{ endif }}		
 		

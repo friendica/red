@@ -37,7 +37,11 @@ function notifications_post(&$a) {
 				intval($intro_id)
 			);	
 			if(! $fid) {
-				$r = q("DELETE FROM `contact` WHERE `id` = %d AND `uid` = %d AND `self` = 0 LIMIT 1", 
+
+				// The check for blocked and pending is in case the friendship was already approved
+				// and we just want to get rid of the now pointless notification
+
+				$r = q("DELETE FROM `contact` WHERE `id` = %d AND `uid` = %d AND `self` = 0 AND `blocked` = 1 AND `pending` = 1 LIMIT 1", 
 					intval($contact_id),
 					intval(local_user())
 				);
@@ -145,7 +149,7 @@ function notifications_content(&$a) {
 						'$contact_id' => $rr['contact-id'],
 						'$photo' => ((x($rr,'fphoto')) ? $rr['fphoto'] : "images/person-175.jpg"),
 						'$fullname' => $rr['fname'],
-						'$url' => $rr['furl'],
+						'$url' => zrl($rr['furl']),
 						'$hidden' => array('hidden', t('Hide this contact from others'), ($rr['hidden'] == 1), ''),
 						'$activity' => array('activity', t('Post a new friend activity'), 1, t('if applicable')),
 
@@ -195,7 +199,7 @@ function notifications_content(&$a) {
 					'$fullname' => $rr['name'],
 					'$hidden' => array('hidden', t('Hide this contact from others'), ($rr['hidden'] == 1), ''),
 					'$activity' => array('activity', t('Post a new friend activity'), 1, t('if applicable')),
-					'$url' => $rr['url'],
+					'$url' => zrl($rr['url']),
 					'$knowyou' => $knowyou,
 					'$approve' => t('Approve'),
 					'$note' => $rr['note'],

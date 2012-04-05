@@ -99,65 +99,11 @@ function dfrn_notify_post(&$a) {
 		$importer['forum'] = $page;
 	}
 
+
 	// if contact's ssl policy changed, update our links
 
-	$ssl_changed = false;
+	fix_contact_ssl_policy($importer,$ssl_policy);
 
-	if($ssl_policy == 'self' && strstr($importer['url'],'https:')) {
-		$ssl_changed = true;
-		$importer['url']     = 	str_replace('https:','http:',$importer['url']);
-		$importer['nurl']    = normalise_link($importer['url']);
-		$importer['photo']   = 	str_replace('https:','http:',$importer['photo']);
-		$importer['thumb']   = 	str_replace('https:','http:',$importer['thumb']);
-		$importer['micro']   = 	str_replace('https:','http:',$importer['micro']);
-		$importer['request'] = 	str_replace('https:','http:',$importer['request']);
-		$importer['notify']  = 	str_replace('https:','http:',$importer['notify']);
-		$importer['poll']    = 	str_replace('https:','http:',$importer['poll']);
-		$importer['confirm'] = 	str_replace('https:','http:',$importer['confirm']);
-		$importer['poco']    = 	str_replace('https:','http:',$importer['poco']);
-	}
-
-	if($ssl_policy == 'full' && strstr($importer['url'],'http:')) {
-		$ssl_changed = true;
-		$importer['url']     = 	str_replace('http:','https:',$importer['url']);
-		$importer['nurl']    = normalise_link($importer['url']);
-		$importer['photo']   = 	str_replace('http:','https:',$importer['photo']);
-		$importer['thumb']   = 	str_replace('http:','https:',$importer['thumb']);
-		$importer['micro']   = 	str_replace('http:','https:',$importer['micro']);
-		$importer['request'] = 	str_replace('http:','https:',$importer['request']);
-		$importer['notify']  = 	str_replace('http:','https:',$importer['notify']);
-		$importer['poll']    = 	str_replace('http:','https:',$importer['poll']);
-		$importer['confirm'] = 	str_replace('http:','https:',$importer['confirm']);
-		$importer['poco']    = 	str_replace('http:','https:',$importer['poco']);
-	}
-
-	if($ssl_changed) {
-		q("update contact set 
-			url = '%s', 
-			nurl = '%s',
-			photo = '%s',
-			thumb = '%s',
-			micro = '%s',
-			request = '%s',
-			notify = '%s',
-			poll = '%s',
-			confirm = '%s',
-			poco = '%s'
-			where id = %d limit 1",
-			dbesc($importer['url']),
-			dbesc($importer['nurl']),
-			dbesc($importer['photo']),
-			dbesc($importer['thumb']),
-			dbesc($importer['micro']),
-			dbesc($importer['request']),
-			dbesc($importer['notify']),
-			dbesc($importer['poll']),
-			dbesc($importer['confirm']),
-			dbesc($importer['poco']),
-			intval($importer['id'])
-		);
-	}
-			
 	logger('dfrn_notify: received notify from ' . $importer['name'] . ' for ' . $importer['username']);
 	logger('dfrn_notify: data: ' . $data, LOGGER_DATA);
 
@@ -173,6 +119,13 @@ function dfrn_notify_post(&$a) {
 		xml_status(0);
 
 	}
+
+
+	// If we are setup as a soapbox we aren't accepting input from this person
+
+	if($importer['page-flags'] == PAGE_SOAPBOX)
+		xml_status(0);
+
 
 	if(strlen($key)) {
 		$rawkey = hex2bin(trim($key));
@@ -261,7 +214,7 @@ function dfrn_notify_content(&$a) {
 				break; // NOTREACHED
 		}
 
-		$r = q("SELECT `contact`.*, `user`.`nickname` FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
+		$r = q("SELECT `contact`.*, `user`.`nickname`, `user`.`page-flags` FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
 				WHERE `contact`.`blocked` = 0 AND `contact`.`pending` = 0 AND `user`.`nickname` = '%s' 
 				AND `user`.`account_expired` = 0 $sql_extra LIMIT 1",
 				dbesc($a->argv[1])
@@ -299,6 +252,12 @@ function dfrn_notify_content(&$a) {
 		if(! $rino_enable)
 			$rino = 0;
 
+		if((($r[0]['rel']) && ($r[0]['rel'] != CONTACT_IS_SHARING)) || ($r[0]['page-flags'] == PAGE_COMMUNITY)) {
+			$perm = 'rw';
+		}
+		else {
+			$perm = 'r';
+		}
 
 		header("Content-type: text/xml");
 
@@ -306,7 +265,8 @@ function dfrn_notify_content(&$a) {
 			. '<dfrn_notify>' . "\r\n"
 			. "\t" . '<status>' . $status . '</status>' . "\r\n"
 			. "\t" . '<dfrn_version>' . DFRN_PROTOCOL_VERSION . '</dfrn_version>' . "\r\n"
-			. "\t" . '<rino>' . $rino . '</rino>' . "\r\n" 
+			. "\t" . '<rino>' . $rino . '</rino>' . "\r\n"
+			. "\t" . '<perm>' . $perm . '</perm>' . "\r\n" 
 			. "\t" . '<dfrn_id>' . $encrypted_id . '</dfrn_id>' . "\r\n" 
 			. "\t" . '<challenge>' . $challenge . '</challenge>' . "\r\n"
 			. '</dfrn_notify>' . "\r\n" ;

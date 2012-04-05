@@ -208,6 +208,48 @@ function admin_page_site_post(&$a){
 	$diaspora_enabled   =   ((x($_POST,'diaspora_enabled')) ? True   :  False);
 	$ssl_policy         =   ((x($_POST,'ssl_policy')) ? intval($_POST['ssl_policy']) : 0);
 
+	if($ssl_policy != intval(get_config('system','ssl_policy'))) {
+		if($ssl_policy == SSL_POLICY_FULL) {
+			q("update `contact` set 
+				`url`     = replace(`url`    , 'http:' , 'https:'),
+				`photo`   = replace(`photo`  , 'http:' , 'https:'),
+				`thumb`   = replace(`thumb`  , 'http:' , 'https:'),
+				`micro`   = replace(`micro`  , 'http:' , 'https:'),
+				`request` = replace(`request`, 'http:' , 'https:'),
+				`notify`  = replace(`notify` , 'http:' , 'https:'),
+				`poll`    = replace(`poll`   , 'http:' , 'https:'),
+				`confirm` = replace(`confirm`, 'http:' , 'https:'),
+				`poco`    = replace(`poco`   , 'http:' , 'https:')
+				where `self` = 1"
+			);
+			q("update `profile` set 
+				`photo`   = replace(`photo`  , 'http:' , 'https:'),
+				`thumb`   = replace(`thumb`  , 'http:' , 'https:')
+				where 1 "
+			);
+		}
+		elseif($ssl_policy == SSL_POLICY_SELFSIGN) {
+			q("update `contact` set 
+				`url`     = replace(`url`    , 'https:' , 'http:'),
+				`photo`   = replace(`photo`  , 'https:' , 'http:'),
+				`thumb`   = replace(`thumb`  , 'https:' , 'http:'),
+				`micro`   = replace(`micro`  , 'https:' , 'http:'),
+				`request` = replace(`request`, 'https:' , 'http:'),
+				`notify`  = replace(`notify` , 'https:' , 'http:'),
+				`poll`    = replace(`poll`   , 'https:' , 'http:'),
+				`confirm` = replace(`confirm`, 'https:' , 'http:'),
+				`poco`    = replace(`poco`   , 'https:' , 'http:')
+				where `self` = 1"
+			);
+			q("update `profile` set 
+				`photo`   = replace(`photo`  , 'https:' , 'http:'),
+				`thumb`   = replace(`thumb`  , 'https:' , 'http:')
+				where 1 "
+			);
+		}
+	}
+	set_config('system','ssl_policy',$ssl_policy);
+
 	set_config('config','sitename',$sitename);
 	if ($banner==""){
 		// don't know why, but del_config doesn't work...
@@ -218,7 +260,6 @@ function admin_page_site_post(&$a){
 	} else {
 		set_config('system','banner', $banner);
 	}
-	set_config('system','ssl_policy',$ssl_policy);
 	set_config('system','language', $language);
 	set_config('system','theme', $theme);
 	set_config('system','maximagesize', $maximagesize);
@@ -583,6 +624,7 @@ function admin_page_plugins(&$a){
 		
 			'$admin_form' => $admin_form,
 			'$function' => 'plugins',
+			'$screenshot' => '',
 			'$readme' => $readme
 		));
 	} 
@@ -738,7 +780,11 @@ function admin_page_themes(&$a){
 		} 
 		
 		$admin_form="";
-		
+
+		$screenshot = array( get_theme_screenshot($theme), t('Screenshot'));
+		if(! stristr($screenshot[0],$theme))
+			$screenshot = null;		
+
 		$t = get_markup_template("admin_plugins_details.tpl");
 		return replace_macros($t, array(
 			'$title' => t('Administration'),
@@ -755,6 +801,7 @@ function admin_page_themes(&$a){
 			'$admin_form' => $admin_form,
 			'$str_author' => t('Author: '),
 			'$str_maintainer' => t('Maintainer: '),			
+			'$screenshot' => $screenshot,
 			'$readme' => $readme
 		));
 	} 

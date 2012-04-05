@@ -94,13 +94,17 @@ else {
 
 			// Otherwise it's probably an openid.
 
+                        try {
 			require_once('library/openid.php');
 			$openid = new LightOpenID;
 			$openid->identity = $openid_url;
 			$_SESSION['openid'] = $openid_url;
 			$a = get_app();
 			$openid->returnUrl = $a->get_baseurl(true) . '/openid'; 
-			goaway($openid->authUrl());
+                        goaway($openid->authUrl());
+                        } catch (Exception $e) {
+                            notice( t('We encountered a problem while logging in with the OpenID you provided. Please check the correct spelling of the ID.').'<br /><br >'. t('The error message was:').' '.$e->getMessage());
+                        }
 			// NOTREACHED
 		}
 	}

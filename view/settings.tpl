@@ -28,9 +28,6 @@ $nickname_block
 {{inc field_custom.tpl with $field=$timezone }}{{endinc}}
 {{inc field_input.tpl with $field=$defloc }}{{endinc}}
 {{inc field_checkbox.tpl with $field=$allowloc }}{{endinc}}
-{{inc field_select.tpl with $field=$theme }}{{endinc}}
-{{inc field_input.tpl with $field=$ajaxint }}{{endinc}}
-{{inc field_input.tpl with $field=$itemspage_network }}{{endinc}}
 
 
 <div class="settings-submit-wrapper" >
@@ -58,6 +55,10 @@ $blockwall
 $blocktags
 
 $suggestme
+
+$unkmail
+
+{{inc field_input.tpl with $field=$cntunkmail }}{{endinc}}
 
 {{inc field_input.tpl with $field=$expire.days }}{{endinc}}
 <div class="field input">

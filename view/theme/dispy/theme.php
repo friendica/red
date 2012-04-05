@@ -3,15 +3,11 @@
 /*
  * Name: Dispy
  * Description: Dispy, Friendica theme
- * Version: 0.9
+ * Version: 1.0
  * Author: unknown
  * Maintainer: Simon <http://simon.kisikew.org/>
+ * Screenshot: <a href="screenshot.jpg">Screenshot</a>
  */
-
-
-$a->theme_info = array(
-	'extends' => 'dispy'
-);
 
 $a->page['htmlhead'] .= <<< EOT
 <script>
@@ -90,11 +86,13 @@ $(document).ready(function() {
             $('.floaterflip').css({
                 backgroundPosition: '-210px -60px' 
             });
+			$('.search-box').slideUp('fast');
         } else {
             $('#nav-floater').slideDown('fast');
             $('.floaterflip').css({
                 backgroundPosition: '-190px -60px'
             });
+			$('.search-box').slideDown('fast');
         }
     };
 	// our trigger for the toolbar button
@@ -108,21 +106,38 @@ $(document).ready(function() {
 		$(this).css({color: '#eec'});
 	});
 
-/*	$('#profile-photo-wrapper').mouseover(function() {
-		$('.profile-edit-side-div').css({display: 'block'});
-	}).mouseout(function() {
-		$('.profile-edit-side-div').css({display: 'none'});
-		return false;
-	});
-
-	$('img.photo').mouseover(function() {
-		$('.profile-edit-side-div').css({display: 'block'});
-	}).mouseout(function() {
-		$('.profile-edit-side-div').css({display: 'none'});
-		return false;
-	});*/
-
 });
 </script>
 EOT;
 
+function dispy_community_info() {
+	$a = get_app();
+
+	$fostitJS = "javascript: (function() {
+		the_url = '".$a->get_baseurl($ssl_state)."/view/theme/dispy-dark/fpostit/fpostit.php?url=' +
+		encodeURIComponent(window.location.href) + '&title=' + encodeURIComponent(document.title) + '&text=' +
+		encodeURIComponent(''+(window.getSelection ? window.getSelection() : document.getSelection ?
+		document.getSelection() : document.selection.createRange().text));
+		a_funct = function() {
+			if (!window.open(the_url, 'fpostit', 'location=yes,links=no,scrollbars=no,toolbar=no,width=600,height=300')) {
+				location.href = the_url;
+			}
+			if (/Firefox/.test(navigator.userAgent)) {
+				setTimeout(a_funct, 0)
+			} else {
+				a_funct();
+			}
+		})();";
+
+	$aside['$fostitJS'] = $fostitJS;
+	$url = $a->get_baseurl($ssl_state);
+	$aside['$url'] = $url;
+
+    $tpl = file_get_contents(dirname(__file__).'/communityhome.tpl');
+	$a->page['aside_bottom'] = replace_macros($tpl, $aside);
+}
+
+// aside on profile page
+if (($a->argv[0] . $a->argv[1]) === ("profile" . $a->user['nickname'])) {
+	dispy_community_info();
+}

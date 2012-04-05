@@ -171,16 +171,17 @@ function item_post(&$a) {
 		$str_contact_allow = $orig_post['allow_cid'];
 		$str_group_deny    = $orig_post['deny_gid'];
 		$str_contact_deny  = $orig_post['deny_cid'];
-		$title             = $orig_post['title'];
 		$location          = $orig_post['location'];
 		$coord             = $orig_post['coord'];
 		$verb              = $orig_post['verb'];
 		$emailcc           = $orig_post['emailcc'];
 		$app			   = $orig_post['app'];
-
+		$categories        = $orig_post['file'];
+		$title             = notags(trim($_REQUEST['title']));
 		$body              = escape_tags(trim($_REQUEST['body']));
 		$private           = $orig_post['private'];
 		$pubmail_enable    = $orig_post['pubmail'];
+
 	}
 	else {
 
@@ -213,8 +214,8 @@ function item_post(&$a) {
 		$coord             = notags(trim($_REQUEST['coord']));
 		$verb              = notags(trim($_REQUEST['verb']));
 		$emailcc           = notags(trim($_REQUEST['emailcc']));
-
 		$body              = escape_tags(trim($_REQUEST['body']));
+
 		$private = ((strlen($str_group_allow) || strlen($str_contact_allow) || strlen($str_group_deny) || strlen($str_contact_deny)) ? 1 : 0);
 
 		if(($parent_item) && 
@@ -242,8 +243,6 @@ function item_post(&$a) {
 			}
 		}
 
-
-
 		if(! strlen($body)) {
 			if($preview)
 				killme();
@@ -252,6 +251,19 @@ function item_post(&$a) {
 				goaway($a->get_baseurl() . "/" . $return_path );
 			killme();
 		}
+	}
+
+        if(strlen($categories)) {
+	        // get the "fileas" tags for this post
+                $filedas = file_tag_file_to_list($categories, 'file');
+	}
+        // save old and new categories, so we can determine what needs to be deleted from pconfig
+        $categories_old = $categories;
+        $categories = file_tag_list_to_file(trim($_REQUEST['category']), 'category');
+        $categories_new = $categories;
+        if(strlen($filedas)) {
+	        // append the fileas stuff to the new categories list
+	        $categories .= file_tag_list_to_file($filedas, 'file');
 	}
 
 	// Work around doubled linefeeds in Tinymce 3.5b2
@@ -500,6 +512,7 @@ function item_post(&$a) {
 	$datarray['location']      = $location;
 	$datarray['coord']         = $coord;
 	$datarray['tag']           = $str_tags;
+	$datarray['file']          = $categories;
 	$datarray['inform']        = $inform;
 	$datarray['verb']          = $verb;
 	$datarray['allow_cid']     = $str_contact_allow;
@@ -559,13 +572,19 @@ function item_post(&$a) {
 
 
 	if($orig_post) {
-		$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			dbesc($title),
-			dbesc($body),
+		$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `attach` = '%s', `file` = '%s', `edited` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			dbesc($datarray['title']),
+			dbesc($datarray['body']),
+			dbesc($datarray['tag']),
+			dbesc($datarray['attach']),
+			dbesc($datarray['file']),
 			dbesc(datetime_convert()),
 			intval($post_id),
 			intval($profile_uid)
 		);
+
+		// update filetags in pconfig
+                file_tag_update_pconfig($uid,$categories_old,$categories_new,'category');
 
 		proc_run('php', "include/notifier.php", 'edit_post', "$post_id");
 		if((x($_REQUEST,'return')) && strlen($return_path)) {
@@ -580,8 +599,8 @@ function item_post(&$a) {
 
 	$r = q("INSERT INTO `item` (`guid`, `uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `commented`, `received`, `changed`, `uri`, `thr-parent`, `title`, `body`, `app`, `location`, `coord`, 
-		`tag`, `inform`, `verb`, `postopts`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`, `bookmark`,`origin`, `moderated` )
-		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, %d )",
+		`tag`, `inform`, `verb`, `postopts`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`, `bookmark`,`origin`, `moderated`, `file` )
+		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, %d, '%s' )",
 		dbesc($datarray['guid']),
 		intval($datarray['uid']),
 		dbesc($datarray['type']),
@@ -619,14 +638,18 @@ function item_post(&$a) {
 		dbesc($datarray['attach']),
 		intval($datarray['bookmark']),
 		intval($datarray['origin']),
-		intval($datarry['moderated'])
-	);
+	        intval($datarray['moderated']),
+	        dbesc($datarray['file'])
+	       );
 
 	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
 		dbesc($datarray['uri']));
 	if(count($r)) {
 		$post_id = $r[0]['id'];
 		logger('mod_item: saved item ' . $post_id);
+
+		// update filetags in pconfig
+                file_tag_update_pconfig($uid,$categories_old,$categories_new,'category');
 
 		if($parent) {
 

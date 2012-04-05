@@ -81,11 +81,13 @@ if(! function_exists('get_config')) {
  * Return the value, or false if the database update failed
  */
 if(! function_exists('set_config')) {
-	function set_config($family,$key,$value) {
-		global $a;
 
-		// manage array value
-		$dbvalue = (is_array($value)?serialize($value):$value);
+function set_config($family,$key,$value) {
+	global $a;
+	
+	// manage array value
+	$dbvalue = (is_array($value)?serialize($value):$value);
+	$dbvalue = (is_bool($value) ? intval($value) : $value);
 
 		$a->config[$family][$key] = $value;
 		$ret = q("REPLACE INTO `config` ( `cat`, `k`, `v` ) VALUES ( '%s', '%s', '%s' ) ",
@@ -191,6 +193,7 @@ if(! function_exists('set_pconfig')) {
 
 		// manage array value
 		$dbvalue = (is_array($value)?serialize($value):$value);
+		$dbvalue = (is_bool($value)?serialize($value):$value);
 
 
 		$a->config[$uid][$family][$key] = $value;

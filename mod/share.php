@@ -16,18 +16,18 @@ function share_init(&$a) {
 
 	$o = '';
 
-	if(local_user() && intval(get_pconfig(local_user(),'system','plaintext'))) {
+//	if(local_user() && intval(get_pconfig(local_user(),'system','plaintext'))) {
 		$o .= "\xE2\x99\xb2" . ' [url=' . $r[0]['author-link'] . ']' . $r[0]['author-name'] . '[/url]' . "\n";
 		if($r[0]['title'])
 			$o .= '[b]' . $r[0]['title'] . '[/b]' . "\n";
 		$o .= $r[0]['body'] . "\n";
-	}
-	else {
-		$o .= '&#x2672; <a href="' . $r[0]['author-link'] . '">' . $r[0]['author-name'] . '</a><br />';
-		if($r[0]['title'])
-			$o .= '<strong>' . $r[0]['title'] . '</strong><br />';
-		$o .= bbcode($r[0]['body'], true) . '<br />';
-	}
+//	}
+//	else {
+//		$o .= '&#x2672; <a href="' . $r[0]['author-link'] . '">' . $r[0]['author-name'] . '</a><br />';
+//		if($r[0]['title'])
+//			$o .= '<strong>' . $r[0]['title'] . '</strong><br />';
+//		$o .= $r[0]['body'] . "\n";
+//	}
 	echo $o;
 	killme();  
 }

@@ -93,6 +93,10 @@ if((x($_SESSION,'language')) && ($_SESSION['language'] !== $lang)) {
 	load_translation_table($lang);
 }
 
+if(x($_GET,'zrl')) {
+	$_SESSION['my_url'] = $_GET['zrl'];
+	$a->query_string = preg_replace('/[\?&]zrl=(.*?)([\?&]|$)/is','',$a->query_string);
+}
 
 /**
  *
@@ -240,6 +244,8 @@ if (file_exists($theme_info_file)){
 if(! x($a->page,'content'))
 	$a->page['content'] = '';
 
+if(! $install)
+	call_hooks('page_content_top',$a->page['content']);
 
 /**
  * Call module functions
@@ -342,13 +348,13 @@ $profile = $a->profile;
 
 header("Content-type: text/html; charset=utf-8");
 
-$template = 'view/' . $lang . '/' 
+$template = 'view/' . current_theme() . '/' 
 	. ((x($a->page,'template')) ? $a->page['template'] : 'default' ) . '.php';
 
 if(file_exists($template))
 	require_once($template);
 else
-	require_once(str_replace($lang . '/', '', $template));
+	require_once(str_replace(current_theme() . '/', '', $template));
 
 session_write_close();
 exit;

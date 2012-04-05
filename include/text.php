@@ -205,7 +205,6 @@ function hex2bin($s) {
 		return '';
 
 	if(! ctype_xdigit($s)) {
-		logger('hex2bin: illegal input: ' . print_r(debug_backtrace(), true));
 		return($s);
 	}
 
@@ -226,6 +225,9 @@ if(! function_exists('paginate')) {
 function paginate(&$a) {
 	$o = '';
 	$stripped = preg_replace('/(&page=[0-9]*)/','',$a->query_string);
+
+//	$stripped = preg_replace('/&zrl=(.*?)([\?&]|$)/ism','',$stripped);
+
 	$stripped = str_replace('q=','',$stripped);
 	$stripped = trim($stripped,'/');
 	$pagenum = $a->pager['page'];
@@ -610,6 +612,8 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 			$url = $redirect_url;
 			$sparkle = ' sparkle';
 		}
+		else
+			$url = zrl($url);
 	}
 	$click = ((x($contact,'click')) ? ' onclick="' . $contact['click'] . '" ' : '');
 	if($click)
@@ -724,6 +728,8 @@ function smilies($s, $sample = false) {
 		'\\o/', 
 		'o.O', 
 		'O.o', 
+		'o_O', 
+		'O_o', 
 		":'(", 
 		":-!", 
 		":-/", 
@@ -758,6 +764,8 @@ function smilies($s, $sample = false) {
 		'<img src="' . $a->get_baseurl() . '/images/smiley-thumbsup.gif" alt="\\o/" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="o.O" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="O.o" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="o_O" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="O_o" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-cry.gif" alt=":\'(" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-foot-in-mouth.gif" alt=":-!" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-undecided.gif" alt=":-/" />',
@@ -919,7 +927,7 @@ function prepare_body($item,$attach = false) {
 		foreach($matches as $mtch) {
 			if(strlen($x))
 				$x .= ',';
-			$x .= file_tag_decode($mtch[1]);
+			$x .= xmlify(file_tag_decode($mtch[1]));
 		}
 		if(strlen($x))
 			$s .= '<div class="categorytags"><span>' . t('Categories:') . ' </span>' . $x . '</div>'; 
@@ -934,10 +942,40 @@ function prepare_body($item,$attach = false) {
 		foreach($matches as $mtch) {
 			if(strlen($x))
 				$x .= '&nbsp;&nbsp;&nbsp;';
-			$x .= file_tag_decode($mtch[1]). ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&term=' . file_tag_decode($mtch[1]) . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>';
+			$x .= xmlify(file_tag_decode($mtch[1])) . ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&term=' . xmlify(file_tag_decode($mtch[1])) . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>';
 		}
 		if(strlen($x) && (local_user() == $item['uid']))
 			$s .= '<div class="filesavetags"><span>' . t('Filed under:') . ' </span>' . $x . '</div>'; 
+	}
+
+	// Look for spoiler
+	$spoilersearch = '<blockquote class="spoiler">';
+
+	// Remove line breaks before the spoiler
+	while ((strpos($s, "\n".$spoilersearch) !== false))
+		$s = str_replace("\n".$spoilersearch, $spoilersearch, $s);
+	while ((strpos($s, "<br />".$spoilersearch) !== false))
+		$s = str_replace("<br />".$spoilersearch, $spoilersearch, $s);
+
+	while ((strpos($s, $spoilersearch) !== false)) {
+
+		$pos = strpos($s, $spoilersearch);
+		$rnd = random_string(8);
+		$spoilerreplace = '<br /> <span id="spoiler-wrap-'.$rnd.'" style="white-space:nowrap;" class="fakelink" onclick="openClose(\'spoiler-'.$rnd.'\');">'.sprintf(t('Click to open/close')).'</span>'.
+	                                '<blockquote class="spoiler" id="spoiler-'.$rnd.'" style="display: none;">';
+		$s = substr($s, 0, $pos).$spoilerreplace.substr($s, $pos+strlen($spoilersearch));
+	}
+
+	// Look for quote with author
+	$authorsearch = '<blockquote class="author">';
+
+	while ((strpos($s, $authorsearch) !== false)) {
+
+		$pos = strpos($s, $authorsearch);
+		$rnd = random_string(8);
+		$authorreplace = '<br /> <span id="author-wrap-'.$rnd.'" style="white-space:nowrap;" class="fakelink" onclick="openClose(\'author-'.$rnd.'\');">'.sprintf(t('Click to open/close')).'</span>'.
+	                                '<blockquote class="author" id="author-'.$rnd.'" style="display: block;">';
+		$s = substr($s, 0, $pos).$authorreplace.substr($s, $pos+strlen($authorsearch));
 	}
 
 	$prep_arr = array('item' => $item, 'html' => $s);
@@ -1275,11 +1313,124 @@ function file_tag_decode($s) {
 }
 
 function file_tag_file_query($table,$s,$type = 'file') {
+
 	if($type == 'file')
-		$str = preg_quote( '[' . file_tag_encode($s) . ']' );
+		$str = preg_quote( '[' . str_replace('%','%%',file_tag_encode($s)) . ']' );
 	else
-		$str = preg_quote( '<' . file_tag_encode($s) . '>' );
+		$str = preg_quote( '<' . str_replace('%','%%',file_tag_encode($s)) . '>' );
 	return " AND " . (($table) ? dbesc($table) . '.' : '') . "file regexp '" . dbesc($str) . "' ";
+}
+
+// ex. given music,video return <music><video> or [music][video]
+function file_tag_list_to_file($list,$type = 'file') {
+        $tag_list = '';
+        if(strlen($list)) {
+                $list_array = explode(",",$list);
+                if($type == 'file') {
+	                $lbracket = '[';
+	                $rbracket = ']';
+	        }
+                else {
+	                $lbracket = '<';
+        	        $rbracket = '>';
+	        }
+
+                foreach($list_array as $item) {
+		  if(strlen($item)) {
+		                $tag_list .= $lbracket . file_tag_encode(trim($item))  . $rbracket;
+			}
+                }
+	}
+        return $tag_list;
+}
+
+// ex. given <music><video>[friends], return music,video or friends
+function file_tag_file_to_list($file,$type = 'file') {
+        $matches = false;
+        $list = '';
+        if($type == 'file') {
+                $cnt = preg_match_all('/\[(.*?)\]/',$file,$matches,PREG_SET_ORDER);
+	}
+        else {
+                $cnt = preg_match_all('/<(.*?)>/',$file,$matches,PREG_SET_ORDER);
+	}
+	if($cnt) {
+		foreach($matches as $mtch) {
+			if(strlen($list))
+				$list .= ',';
+			$list .= file_tag_decode($mtch[1]);
+		}
+	}
+
+        return $list;
+}
+
+function file_tag_update_pconfig($uid,$file_old,$file_new,$type = 'file') {
+        // $file_old - categories previously associated with an item
+        // $file_new - new list of categories for an item
+
+	if(! intval($uid))
+		return false;
+
+        if($file_old == $file_new)
+	        return true;
+
+	$saved = get_pconfig($uid,'system','filetags');
+        if(strlen($saved)) {
+                if($type == 'file') {
+	                $lbracket = '[';
+	                $rbracket = ']';
+	        }
+                else {
+	                $lbracket = '<';
+        	        $rbracket = '>';
+	        }
+
+                $filetags_updated = $saved;
+
+		// check for new tags to be added as filetags in pconfig
+                $new_tags = array();
+                $check_new_tags = explode(",",file_tag_file_to_list($file_new,$type));
+
+	        foreach($check_new_tags as $tag) {
+		        if(! stristr($saved,$lbracket . file_tag_encode($tag) . $rbracket))
+			        $new_tags[] = $tag;
+	        }
+
+		$filetags_updated .= file_tag_list_to_file(implode(",",$new_tags),$type);
+
+		// check for deleted tags to be removed from filetags in pconfig
+                $deleted_tags = array();
+                $check_deleted_tags = explode(",",file_tag_file_to_list($file_old,$type));
+
+	        foreach($check_deleted_tags as $tag) {
+		        if(! stristr($file_new,$lbracket . file_tag_encode($tag) . $rbracket))
+		                $deleted_tags[] = $tag;
+	        }
+
+                foreach($deleted_tags as $key => $tag) {
+		        $r = q("select file from item where uid = %d " . file_tag_file_query('item',$tag,$type),
+		                intval($uid)
+	                );
+
+	                if(count($r)) {
+			        unset($deleted_tags[$key]);
+	                }
+			else {
+			        $filetags_updated = str_replace($lbracket . file_tag_encode($tag) . $rbracket,'',$filetags_updated);
+			}
+		}
+
+                if($saved != $filetags_updated) {
+		        set_pconfig($uid,'system','filetags', $filetags_updated);
+                }
+		return true;
+	}
+        else
+                if(strlen($file_new)) {
+		        set_pconfig($uid,'system','filetags', $file_new);
+                }
+		return true;
 }
 
 function file_tag_save_file($uid,$item,$file) {
@@ -1300,6 +1451,7 @@ function file_tag_save_file($uid,$item,$file) {
 		$saved = get_pconfig($uid,'system','filetags');
 		if((! strlen($saved)) || (! stristr($saved,'[' . file_tag_encode($file) . ']')))
 			set_pconfig($uid,'system','filetags',$saved . '[' . file_tag_encode($file) . ']');
+		info( t('Item filed') );
 	}
 	return true;
 }
@@ -1338,3 +1490,16 @@ function file_tag_unsave_file($uid,$item,$file) {
 function normalise_openid($s) {
 	return trim(str_replace(array('http://','https://'),array('',''),$s),'/');
 }
+
+
+function undo_post_tagging($s) {
+	$matches = null;
+	$cnt = preg_match_all('/([@#])\[url=(.*?)\](.*?)\[\/url\]/ism',$s,$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$s = str_replace($mtch[0], $mtch[1] . $mtch[3],$s);
+		}
+	}
+	return $s;
+}
+
