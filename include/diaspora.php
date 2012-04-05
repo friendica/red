@@ -2283,6 +2283,11 @@ function diaspora_send_mail($item,$owner,$contact) {
 
 function diaspora_transmit($owner,$contact,$slap,$public_batch) {
 
+	$enabled = intval(get_config('system','diaspora_enabled'));
+	if(! $enabled) {
+		return 200;
+	}
+
 	$a = get_app();
 	$logid = random_string(4);
 	$dest_url = (($public_batch) ? $contact['batch'] : $contact['notify']);
