@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.3.1302\n"
+"Project-Id-Version: 2.3.1303\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-04 15:51-0700\n"
+"POT-Creation-Date: 2012-04-05 10:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -402,7 +402,7 @@ msgstr ""
 #: ../../view/theme/diabook-blue/theme.php:82
 #: ../../view/theme/diabook/theme.php:86
 #: ../../view/theme/diabook-aerith/theme.php:82 ../../include/text.php:1294
-#: ../../include/diaspora.php:1650 ../../include/conversation.php:53
+#: ../../include/diaspora.php:1654 ../../include/conversation.php:53
 #: ../../include/conversation.php:126
 msgid "photo"
 msgstr ""
@@ -1010,7 +1010,7 @@ msgid "This is required for message delivery to work."
 msgstr ""
 
 #: ../../mod/install.php:343
-msgid "PHP \"register_argc_argv\""
+msgid "PHP register_argc_argv"
 msgstr ""
 
 #: ../../mod/install.php:364
@@ -2262,7 +2262,7 @@ msgstr ""
 msgid "Personal Notes"
 msgstr ""
 
-#: ../../mod/notes.php:63 ../../mod/filer.php:29
+#: ../../mod/notes.php:63 ../../mod/filer.php:30
 #: ../../addon/facebook/facebook.php:673 ../../include/text.php:649
 msgid "Save"
 msgstr ""
@@ -2701,7 +2701,7 @@ msgstr ""
 #: ../../view/theme/diabook/theme.php:81 ../../view/theme/diabook/theme.php:90
 #: ../../view/theme/diabook-aerith/theme.php:77
 #: ../../view/theme/diabook-aerith/theme.php:86
-#: ../../include/diaspora.php:1650 ../../include/conversation.php:48
+#: ../../include/diaspora.php:1654 ../../include/conversation.php:48
 #: ../../include/conversation.php:57 ../../include/conversation.php:121
 #: ../../include/conversation.php:130
 msgid "status"
@@ -2713,7 +2713,7 @@ msgstr ""
 #: ../../view/theme/diabook-blue/theme.php:91
 #: ../../view/theme/diabook/theme.php:95
 #: ../../view/theme/diabook-aerith/theme.php:91
-#: ../../include/diaspora.php:1666 ../../include/conversation.php:65
+#: ../../include/diaspora.php:1670 ../../include/conversation.php:65
 #, php-format
 msgid "%1$s likes %2$s's %3$s"
 msgstr ""
@@ -3785,11 +3785,11 @@ msgstr ""
 msgid "Edit visibility"
 msgstr ""
 
-#: ../../mod/filer.php:28 ../../include/conversation.php:918
+#: ../../mod/filer.php:29 ../../include/conversation.php:918
 msgid "Save to Folder:"
 msgstr ""
 
-#: ../../mod/filer.php:28
+#: ../../mod/filer.php:29
 msgid "- select -"
 msgstr ""
 
@@ -3993,7 +3993,7 @@ msgstr ""
 msgid "Unable to set contact photo."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:477 ../../include/diaspora.php:503
+#: ../../mod/dfrn_confirm.php:477 ../../include/diaspora.php:507
 #: ../../include/conversation.php:101
 #, php-format
 msgid "%1$s is now friends with %2$s"
@@ -5838,15 +5838,15 @@ msgstr ""
 msgid "Item filed"
 msgstr ""
 
-#: ../../include/diaspora.php:578
+#: ../../include/diaspora.php:582
 msgid "Sharing notification from Diaspora network"
 msgstr ""
 
-#: ../../include/diaspora.php:1965
+#: ../../include/diaspora.php:1969
 msgid "Attachments:"
 msgstr ""
 
-#: ../../include/diaspora.php:2148
+#: ../../include/diaspora.php:2152
 #, php-format
 msgid "[Relayed] Comment authored by %s from network %s"
 msgstr ""
