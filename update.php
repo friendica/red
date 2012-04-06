@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1135 );
+define( 'UPDATE_VERSION' , 1136 );
 
 /**
  *
@@ -1143,16 +1143,21 @@ q("ALTER TABLE `mail` ADD `unknown` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `rep
 }
 
 function update_1134() {
+	// faulty update merged forward
+	// had a hardwired tablename of 'friendica' which isn't the right name on most systems
+}
+
+function update_1135() {
 	//there can't be indexes with more than 1000 bytes in mysql, 
 	//so change charset to be smaller
 	q("ALTER TABLE `config` CHANGE `cat` `cat` CHAR( 255 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL ,
 CHANGE `k` `k` CHAR( 255 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL"); 
 	//and add the index
-	q("ALTER TABLE `friendica`.`config` ADD UNIQUE `access` ( `cat` , `k` ) "); 
+	q("ALTER TABLE `config` ADD UNIQUE `access` ( `cat` , `k` ) "); 
 	
 	//same thing for pconfig
 	q("ALTER TABLE `pconfig` CHANGE `cat` `cat` CHAR( 255 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL ,
 	CHANGE `k` `k` CHAR( 255 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL"); 
 	
-	q("ALTER TABLE `friendica`.`pconfig` ADD UNIQUE `access` ( `uid` , `cat` , `k` )"); 
+	q("ALTER TABLE `pconfig` ADD UNIQUE `access` ( `uid` , `cat` , `k` )"); 
 }
