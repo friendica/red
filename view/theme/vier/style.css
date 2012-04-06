@@ -609,6 +609,10 @@ nav #nav-apps-link.selected {
 	padding: 5px 10px; */
 }
 
+.notify-seen {
+        background: none repeat scroll 0 0 #DDDDDD;
+        }
+
 ul.menu-popup {
   position: absolute;
   display: none;
@@ -1641,6 +1645,12 @@ blockquote {
     border-left: 1px solid #D2D2D2;
     padding-left: 9px;
     margin: 0 0 0 .8ex;
+    color: #777;
+}
+
+.oembed {
+    font-size: large;
+    font-weight: bold;
 }
 
 /* ================== */
