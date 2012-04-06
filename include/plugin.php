@@ -34,7 +34,7 @@ function install_plugin($plugin){
 		);
 	}
 	else {
-		logger("Addons: FAILED installing " . $plugin);
+//		logger("Addons: FAILED installing " . $plugin);
 	}
 
 }}
