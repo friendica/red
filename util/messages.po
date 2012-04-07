@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.3.1303\n"
+"Project-Id-Version: 2.3.1304\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-05 10:00-0700\n"
+"POT-Creation-Date: 2012-04-06 10:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -207,7 +207,7 @@ msgstr ""
 msgid "Edit event"
 msgstr ""
 
-#: ../../mod/events.php:272 ../../include/text.php:1050
+#: ../../mod/events.php:272 ../../include/text.php:1053
 msgid "link to source"
 msgstr ""
 
@@ -401,7 +401,7 @@ msgstr ""
 #: ../../view/theme/diabook-red/theme.php:82
 #: ../../view/theme/diabook-blue/theme.php:82
 #: ../../view/theme/diabook/theme.php:86
-#: ../../view/theme/diabook-aerith/theme.php:82 ../../include/text.php:1294
+#: ../../view/theme/diabook-aerith/theme.php:82 ../../include/text.php:1297
 #: ../../include/diaspora.php:1654 ../../include/conversation.php:53
 #: ../../include/conversation.php:126
 msgid "photo"
@@ -2222,7 +2222,7 @@ msgstr ""
 msgid "Shared Links"
 msgstr ""
 
-#: ../../mod/network.php:270
+#: ../../mod/network.php:274
 #, php-format
 msgid "Warning: This group contains %s member from an insecure network."
 msgid_plural ""
@@ -2230,31 +2230,31 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../mod/network.php:273
+#: ../../mod/network.php:277
 msgid "Private messages to this group are at risk of public disclosure."
 msgstr ""
 
-#: ../../mod/network.php:318
+#: ../../mod/network.php:322
 msgid "No such group"
 msgstr ""
 
-#: ../../mod/network.php:329
+#: ../../mod/network.php:333
 msgid "Group is empty"
 msgstr ""
 
-#: ../../mod/network.php:333
+#: ../../mod/network.php:337
 msgid "Group: "
 msgstr ""
 
-#: ../../mod/network.php:343
+#: ../../mod/network.php:347
 msgid "Contact: "
 msgstr ""
 
-#: ../../mod/network.php:345
+#: ../../mod/network.php:349
 msgid "Private messages to this person are at risk of public disclosure."
 msgstr ""
 
-#: ../../mod/network.php:350
+#: ../../mod/network.php:354
 msgid "Invalid contact."
 msgstr ""
 
@@ -2263,7 +2263,7 @@ msgid "Personal Notes"
 msgstr ""
 
 #: ../../mod/notes.php:63 ../../mod/filer.php:30
-#: ../../addon/facebook/facebook.php:673 ../../include/text.php:649
+#: ../../addon/facebook/facebook.php:673 ../../include/text.php:652
 msgid "Save"
 msgstr ""
 
@@ -2526,7 +2526,7 @@ msgstr ""
 msgid "No contacts."
 msgstr ""
 
-#: ../../mod/viewcontacts.php:76 ../../include/text.php:586
+#: ../../mod/viewcontacts.php:76 ../../include/text.php:589
 msgid "View Contacts"
 msgstr ""
 
@@ -4386,7 +4386,7 @@ msgstr ""
 #: ../../view/theme/diabook-red/theme.php:74
 #: ../../view/theme/diabook-blue/theme.php:74
 #: ../../view/theme/diabook/theme.php:78
-#: ../../view/theme/diabook-aerith/theme.php:74 ../../include/text.php:1292
+#: ../../view/theme/diabook-aerith/theme.php:74 ../../include/text.php:1295
 #: ../../include/conversation.php:45 ../../include/conversation.php:118
 msgid "event"
 msgstr ""
@@ -5683,158 +5683,158 @@ msgstr ""
 msgid "noreply"
 msgstr ""
 
-#: ../../include/text.php:240
+#: ../../include/text.php:243
 msgid "prev"
 msgstr ""
 
-#: ../../include/text.php:242
+#: ../../include/text.php:245
 msgid "first"
 msgstr ""
 
-#: ../../include/text.php:271
+#: ../../include/text.php:274
 msgid "last"
 msgstr ""
 
-#: ../../include/text.php:274
+#: ../../include/text.php:277
 msgid "next"
 msgstr ""
 
-#: ../../include/text.php:565
+#: ../../include/text.php:568
 msgid "No contacts"
 msgstr ""
 
-#: ../../include/text.php:574
+#: ../../include/text.php:577
 #, php-format
 msgid "%d Contact"
 msgid_plural "%d Contacts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../include/text.php:647 ../../include/nav.php:91
+#: ../../include/text.php:650 ../../include/nav.php:91
 msgid "Search"
 msgstr ""
 
-#: ../../include/text.php:828
+#: ../../include/text.php:831
 msgid "Monday"
 msgstr ""
 
-#: ../../include/text.php:828
+#: ../../include/text.php:831
 msgid "Tuesday"
 msgstr ""
 
-#: ../../include/text.php:828
+#: ../../include/text.php:831
 msgid "Wednesday"
 msgstr ""
 
-#: ../../include/text.php:828
+#: ../../include/text.php:831
 msgid "Thursday"
 msgstr ""
 
-#: ../../include/text.php:828
+#: ../../include/text.php:831
 msgid "Friday"
 msgstr ""
 
-#: ../../include/text.php:828
+#: ../../include/text.php:831
 msgid "Saturday"
 msgstr ""
 
-#: ../../include/text.php:828
+#: ../../include/text.php:831
 msgid "Sunday"
 msgstr ""
 
-#: ../../include/text.php:832
+#: ../../include/text.php:835
 msgid "January"
 msgstr ""
 
-#: ../../include/text.php:832
+#: ../../include/text.php:835
 msgid "February"
 msgstr ""
 
-#: ../../include/text.php:832
+#: ../../include/text.php:835
 msgid "March"
 msgstr ""
 
-#: ../../include/text.php:832
+#: ../../include/text.php:835
 msgid "April"
 msgstr ""
 
-#: ../../include/text.php:832
+#: ../../include/text.php:835
 msgid "May"
 msgstr ""
 
-#: ../../include/text.php:832
+#: ../../include/text.php:835
 msgid "June"
 msgstr ""
 
-#: ../../include/text.php:832
+#: ../../include/text.php:835
 msgid "July"
 msgstr ""
 
-#: ../../include/text.php:832
+#: ../../include/text.php:835
 msgid "August"
 msgstr ""
 
-#: ../../include/text.php:832
+#: ../../include/text.php:835
 msgid "September"
 msgstr ""
 
-#: ../../include/text.php:832
+#: ../../include/text.php:835
 msgid "October"
 msgstr ""
 
-#: ../../include/text.php:832
+#: ../../include/text.php:835
 msgid "November"
 msgstr ""
 
-#: ../../include/text.php:832
+#: ../../include/text.php:835
 msgid "December"
 msgstr ""
 
-#: ../../include/text.php:916
+#: ../../include/text.php:919
 msgid "bytes"
 msgstr ""
 
-#: ../../include/text.php:933
+#: ../../include/text.php:936
 msgid "Categories:"
 msgstr ""
 
-#: ../../include/text.php:945
+#: ../../include/text.php:948
 msgid "remove"
 msgstr ""
 
-#: ../../include/text.php:945
+#: ../../include/text.php:948
 msgid "[remove]"
 msgstr ""
 
-#: ../../include/text.php:948
+#: ../../include/text.php:951
 msgid "Filed under:"
 msgstr ""
 
-#: ../../include/text.php:964 ../../include/text.php:976
+#: ../../include/text.php:967 ../../include/text.php:979
 msgid "Click to open/close"
 msgstr ""
 
-#: ../../include/text.php:1068
+#: ../../include/text.php:1071
 msgid "Select an alternate language"
 msgstr ""
 
-#: ../../include/text.php:1080
+#: ../../include/text.php:1083
 msgid "default"
 msgstr ""
 
-#: ../../include/text.php:1296
+#: ../../include/text.php:1299
 msgid "activity"
 msgstr ""
 
-#: ../../include/text.php:1298
+#: ../../include/text.php:1301
 msgid "comment"
 msgstr ""
 
-#: ../../include/text.php:1299
+#: ../../include/text.php:1302
 msgid "post"
 msgstr ""
 
-#: ../../include/text.php:1454
+#: ../../include/text.php:1457
 msgid "Item filed"
 msgstr ""
 

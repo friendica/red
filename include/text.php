@@ -80,7 +80,7 @@ function escape_tags($string) {
 if(! function_exists('autoname')) {
 function autoname($len) {
 
-	if(! $len)
+	if($len <= 0)
 		return '';
 
 	$vowels = array('a','a','ai','au','e','e','e','ee','ea','i','ie','o','ou','u'); 

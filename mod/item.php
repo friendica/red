@@ -959,6 +959,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 				else
 					$newname = $r[0]['name'];
 				//add person's id to $inform
+				$inform_id = 'cid:' . $r[0]['id'];
 				if(strlen($inform))
 					$inform .= ',';
 				$inform .= 'cid:' . $r[0]['id'];
