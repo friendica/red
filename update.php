@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1135 );
+define( 'UPDATE_VERSION' , 1137 );
 
 /**
  *
@@ -1143,16 +1143,66 @@ q("ALTER TABLE `mail` ADD `unknown` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `rep
 }
 
 function update_1134() {
+	// faulty update merged forward
+	// had a hardwired tablename of 'friendica' which isn't the right name on most systems
+}
+
+function update_1135() {
 	//there can't be indexes with more than 1000 bytes in mysql, 
 	//so change charset to be smaller
 	q("ALTER TABLE `config` CHANGE `cat` `cat` CHAR( 255 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL ,
 CHANGE `k` `k` CHAR( 255 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL"); 
-	//and add the index
-	q("ALTER TABLE `friendica`.`config` ADD UNIQUE `access` ( `cat` , `k` ) "); 
 	
 	//same thing for pconfig
 	q("ALTER TABLE `pconfig` CHANGE `cat` `cat` CHAR( 255 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL ,
 	CHANGE `k` `k` CHAR( 255 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL"); 
-	
-	q("ALTER TABLE `friendica`.`pconfig` ADD UNIQUE `access` ( `uid` , `cat` , `k` )"); 
+	// faulty update merged forward. Bad update in 1134 caused duplicate k,cat pairs
+	// these have to be cleared before the unique keys can be added.	
+}
+
+function update_1136() {
+
+	$arr = array();
+
+	// order in reverse so that we save the newest entry
+
+	$r = q("select * from config where 1 order by id desc");
+	if(count($r)) {
+		foreach($r as $rr) {
+			$found = false;
+			foreach($arr as $x) {
+				if($x['cat'] == $rr['cat'] && $x['k'] == $rr['k']) {
+					$found = true;
+					q("delete from config where id = %d limit 1",
+						intval($rr['id'])
+					);
+				}
+			}
+			if(! $found) {
+				$arr[] = $rr;
+			}
+		}
+	}
+			
+	$arr = array();
+	$r = q("select * from pconfig where 1 order by id desc");
+	if(count($r)) {
+		foreach($r as $rr) {
+			$found = false;
+			foreach($arr as $x) {
+				if($x['uid'] == $rr['uid'] && $x['cat'] == $rr['cat'] && $x['k'] == $rr['k']) {
+					$found = true;
+					q("delete from pconfig where id = %d limit 1",
+						intval($rr['id'])
+					);
+				}
+			}
+			if(! $found) {
+				$arr[] = $rr;
+			}
+		}
+	}
+	q("ALTER TABLE `config` ADD UNIQUE `access` ( `cat` , `k` ) "); 
+	q("ALTER TABLE `pconfig` ADD UNIQUE `access` ( `uid` , `cat` , `k` )"); 
+
 }
