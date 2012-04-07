@@ -264,7 +264,7 @@ class GetTagsTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals("Test with @[url=http://justatest.de]Mike Lastname[/url] id tag", $text);
 		$this->assertEquals("@[url=http://justatest.de]Mike Lastname[/url]", $str_tags);
 		// this test may produce two cid:15 entries - which is OK because duplicates are pruned before delivery
-		$this->assertContains($inform,"cid:15");
+		$this->assertContains("cid:15",$inform);
 	}
 	
 	/**
