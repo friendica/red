@@ -262,6 +262,13 @@ if($a->module_loaded) {
 		$func = str_replace('-','_',current_theme()) . '_init';
 		$func($a);
 	}
+//	elseif (x($a->theme_info,"extends") && file_exists("view/theme/".$a->theme_info["extends"]."/theme.php")) {
+//		require_once("view/theme/".$a->theme_info["extends"]."/theme.php");
+//		if(function_exists(str_replace('-','_',$a->theme_info["extends"]) . '_init')) {
+//			$func = str_replace('-','_',$a->theme_info["extends"]) . '_init';
+//			$func($a);
+//		}
+//	}
 
 	if(($_SERVER['REQUEST_METHOD'] === 'POST') && (! $a->error)
 		&& (function_exists($a->module . '_post'))
