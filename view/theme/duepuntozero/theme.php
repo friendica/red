@@ -1,6 +1,7 @@
 <?php
 $a->theme_info = array();
 
+function duepuntozero_init(&$a) {
 $a->page['htmlhead'] .= <<< EOT
 <script>
 $(document).ready(function() {
@@ -47,3 +48,4 @@ $('.savedsearchterm').hover(
 
 </script>
 EOT;
+}
