@@ -17,7 +17,12 @@ function uninstall_plugin($plugin){
 }}
 
 if (! function_exists('install_plugin')){
-function install_plugin($plugin){
+function install_plugin($plugin) {
+
+	// silently fail if plugin was removed
+
+	if(! file_exists('addon/' . $plugin . '/' . $plugin . '.php'))
+		return false;
 	logger("Addons: installing " . $plugin);
 	$t = @filemtime('addon/' . $plugin . '/' . $plugin . '.php');
 	@include_once('addon/' . $plugin . '/' . $plugin . '.php');
@@ -32,9 +37,11 @@ function install_plugin($plugin){
 			intval($t),
 			$plugin_admin
 		);
+		return true;
 	}
 	else {
 		logger("Addons: FAILED installing " . $plugin);
+		return false;
 	}
 
 }}
