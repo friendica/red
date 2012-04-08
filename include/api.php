@@ -747,6 +747,8 @@
 				break;
 			case "as":
 				$as = api_format_as($a, $ret, $user_info);
+				$as['title'] = $a->config['sitename']." Home Timeline";
+				$as['link']['url'] = $a->get_baseurl()."/".$user_info["screen_name"]."/all";
 				return($as);
 				break;
 		}
@@ -755,6 +757,85 @@
 	}
 	api_register_func('api/statuses/home_timeline','api_statuses_home_timeline', true);
 	api_register_func('api/statuses/friends_timeline','api_statuses_home_timeline', true);
+
+	function api_statuses_public_timeline(&$a, $type){
+		if (local_user()===false) return false;
+				
+		$user_info = api_get_user($a);
+		// get last newtork messages
+
+
+		// params
+		$count = (x($_REQUEST,'count')?$_REQUEST['count']:20);
+		$page = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
+		if ($page<0) $page=0;
+		$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
+		$max_id = (x($_REQUEST,'max_id')?$_REQUEST['max_id']:0);
+		//$since_id = 0;//$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
+		
+		$start = $page*$count;
+
+		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
+
+		if ($max_id > 0)
+			$sql_extra = 'AND `item`.`id` <= '.intval($max_id);
+
+		/*$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
+			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
+			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
+			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
+			FROM `item`, `contact`
+			WHERE `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
+			AND `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' 
+			AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' 
+			AND `item`.`private` = 0 AND `item`.`wall` = 1 AND `user`.`hidewall` = 0
+			AND `contact`.`id` = `item`.`contact-id`
+			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+			$sql_extra
+			AND `item`.`id`>%d
+			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
+			intval($since_id),
+			intval($start),	intval($count)
+		);*/
+	        $r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
+	                `contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
+        	        `contact`.`network`, `contact`.`thumb`, `contact`.`self`, `contact`.`writable`, 
+                	`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`,
+                	`user`.`nickname`, `user`.`hidewall`
+                	FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
+                	LEFT JOIN `user` ON `user`.`uid` = `item`.`uid`
+                	WHERE `item`.`visible` = 1 AND `item`.`deleted` = 0 and `item`.`moderated` = 0
+                	AND `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' 
+                	AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' 
+                	AND `item`.`private` = 0 AND `item`.`wall` = 1 AND `user`.`hidewall` = 0 
+                	AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+			$sql_extra
+			AND `item`.`id`>%d
+                	ORDER BY `received` DESC LIMIT %d, %d ",
+			intval($since_id),
+                	intval($start),
+                	intval($count));
+
+		$ret = api_format_items($r,$user_info);
+
+		
+		$data = array('$statuses' => $ret);
+		switch($type){
+			case "atom":
+			case "rss":
+				$data = api_rss_extra($a, $data, $user_info);
+				break;
+			case "as":
+				$as = api_format_as($a, $ret, $user_info);
+				$as['title'] = $a->config['sitename']." Public Timeline";
+				$as['link']['url'] = $a->get_baseurl()."/";
+				return($as);
+				break;
+		}
+				
+		return  api_apply_template("timeline", $type, $data);
+	}
+	api_register_func('api/statuses/public_timeline','api_statuses_public_timeline', true);
 
 	/**
 	 * 
@@ -933,6 +1014,7 @@
 			case "as":
 				$as = api_format_as($a, $ret, $user_info);
 				$as["title"] = $a->config['sitename']." Mentions";
+				$as['link']['url'] = $a->get_baseurl()."/";
 				return($as);
 				break;
 		}
@@ -1112,10 +1194,9 @@
 				$items[] = $singleitem;
 		}
 		$as['items'] = $items;
-		$link->url = $a->get_baseurl()."/".$user_info["screen_name"]."/all";
-		$link->rel = "alternate";
-		$link->type = "text/html";
-		$as['link'][] = $link;
+		$as['link']['url'] = $a->get_baseurl()."/".$user_info["screen_name"]."/all";
+		$as['link']['rel'] = "alternate";
+		$as['link']['type'] = "text/html";
 		return($as);
 	}
 	
@@ -1532,7 +1613,6 @@ Not implemented by now:
 favorites
 favorites/create
 favorites/destroy
-statuses/public_timeline
 statuses/retweets_of_me
 friendships/create
 friendships/destroy
