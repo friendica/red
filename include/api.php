@@ -746,67 +746,7 @@
 				$data = api_rss_extra($a, $data, $user_info);
 				break;
 			case "as":
-				$as = array();
-				$as['title'] = $a->config['sitename']." Public Timeline";
-				$items = array();
-				foreach ($ret as $item) {
-					$singleitem["actor"]["displayName"] = $item["user"]["name"];
-					$singleitem["actor"]["id"] = $item["user"]["contact_url"];
-					$avatar[0]["url"] = $item["user"]["profile_image_url"];
-					$avatar[0]["rel"] = "avatar";
-					$avatar[0]["type"] = "";
-					$avatar[0]["width"] = 96;
-					$avatar[0]["height"] = 96;
-					$avatar[1]["url"] = $item["user"]["profile_image_url"];
-					$avatar[1]["rel"] = "avatar";
-					$avatar[1]["type"] = "";
-					$avatar[1]["width"] = 48;
-					$avatar[1]["height"] = 48;
-					$avatar[2]["url"] = $item["user"]["profile_image_url"];
-					$avatar[2]["rel"] = "avatar";
-					$avatar[2]["type"] = "";
-					$avatar[2]["width"] = 24;
-					$avatar[2]["height"] = 24;
-					$singleitem["actor"]["avatarLinks"] = $avatar;
-
-					$singleitem["actor"]["image"]["url"] = $item["user"]["profile_image_url"];
-					$singleitem["actor"]["image"]["rel"] = "avatar";
-					$singleitem["actor"]["image"]["type"] = "";
-					$singleitem["actor"]["image"]["width"] = 96;
-					$singleitem["actor"]["image"]["height"] = 96;
-					$singleitem["actor"]["type"] = "person";
-					$singleitem["actor"]["url"] = $item["person"]["contact_url"];
-					$singleitem["actor"]["statusnet:profile_info"]["local_id"] = $item["user"]["id"];
-					$singleitem["actor"]["statusnet:profile_info"]["following"] = "false"; // $item["user"]["following"]
-					$singleitem["actor"]["statusnet:profile_info"]["blocking"] = "false";
-					$singleitem["actor"]["contact"]["preferredUsername"] = $item["user"]["screen_name"];
-					$singleitem["actor"]["contact"]["displayName"] = $item["user"]["name"];
-					$singleitem["actor"]["contact"]["addresses"] = "";
-
-					$singleitem["body"] = $item["text"];
-					$singleitem["object"]["displayName"] = $item["text"];
-					$singleitem["object"]["id"] = $item["url"];
-					$singleitem["object"]["type"] = "note";
-					$singleitem["object"]["url"] = $item["url"];
-					//$singleitem["context"] =;
-					$singleitem["postedTime"] = date("c", strtotime($item["published"]));
-					$singleitem["provider"]["objectType"] = "service";
-					$singleitem["provider"]["displayName"] = "Test";
-					$singleitem["provider"]["url"] = "http://test.tld";
-					$singleitem["title"] = $item["text"];
-					$singleitem["verb"] = "post";
-					$singleitem["statusnet:notice_info"]["local_id"] = $item["id"];
-					$singleitem["statusnet:notice_info"]["source"] = $item["source"];
-					$singleitem["statusnet:notice_info"]["favorite"] = "false";
-					$singleitem["statusnet:notice_info"]["repeated"] = "false";
-					//$singleitem["original"] = $item;
-					$items[] = $singleitem;
-				}
-				$as['items'] = $items;
-				$link->url = $a->get_baseurl()."/".$user_info["screen_name"]."/all";
-				$link->rel = "alternate";
-				$link->type = "text/html";
-				$as['link'][] = $link;
+				$as = api_format_as($a, $ret, $user_info);
 				return($as);
 				break;
 		}
@@ -989,6 +929,12 @@
 			case "atom":
 			case "rss":
 				$data = api_rss_extra($a, $data, $user_info);
+				break;
+			case "as":
+				$as = api_format_as($a, $ret, $user_info);
+				$as["title"] = $a->config['sitename']." Mentions";
+				return($as);
+				break;
 		}
 				
 		return  api_apply_template("timeline", $type, $data);
@@ -1107,6 +1053,71 @@
 
 	api_register_func('api/favorites','api_favorites', true);
 
+	function api_format_as($a, $ret, $user_info) {
+
+		$as = array();
+		$as['title'] = $a->config['sitename']." Public Timeline";
+		$items = array();
+		foreach ($ret as $item) {
+			$singleitem["actor"]["displayName"] = $item["user"]["name"];
+			$singleitem["actor"]["id"] = $item["user"]["contact_url"];
+			$avatar[0]["url"] = $item["user"]["profile_image_url"];
+			$avatar[0]["rel"] = "avatar";
+			$avatar[0]["type"] = "";
+			$avatar[0]["width"] = 96;
+			$avatar[0]["height"] = 96;
+			$avatar[1]["url"] = $item["user"]["profile_image_url"];
+			$avatar[1]["rel"] = "avatar";
+			$avatar[1]["type"] = "";
+			$avatar[1]["width"] = 48;
+			$avatar[1]["height"] = 48;
+			$avatar[2]["url"] = $item["user"]["profile_image_url"];
+			$avatar[2]["rel"] = "avatar";
+			$avatar[2]["type"] = "";
+			$avatar[2]["width"] = 24;
+			$avatar[2]["height"] = 24;
+			$singleitem["actor"]["avatarLinks"] = $avatar;
+
+			$singleitem["actor"]["image"]["url"] = $item["user"]["profile_image_url"];
+			$singleitem["actor"]["image"]["rel"] = "avatar";
+			$singleitem["actor"]["image"]["type"] = "";
+			$singleitem["actor"]["image"]["width"] = 96;
+			$singleitem["actor"]["image"]["height"] = 96;
+			$singleitem["actor"]["type"] = "person";
+			$singleitem["actor"]["url"] = $item["person"]["contact_url"];
+			$singleitem["actor"]["statusnet:profile_info"]["local_id"] = $item["user"]["id"];
+			$singleitem["actor"]["statusnet:profile_info"]["following"] = $item["user"]["following"] ? "true" : "false";
+			$singleitem["actor"]["statusnet:profile_info"]["blocking"] = "false";
+			$singleitem["actor"]["contact"]["preferredUsername"] = $item["user"]["screen_name"];
+			$singleitem["actor"]["contact"]["displayName"] = $item["user"]["name"];
+			$singleitem["actor"]["contact"]["addresses"] = "";
+
+			$singleitem["body"] = $item["text"];
+			$singleitem["object"]["displayName"] = $item["text"];
+			$singleitem["object"]["id"] = $item["url"];
+			$singleitem["object"]["type"] = "note";
+			$singleitem["object"]["url"] = $item["url"];
+			//$singleitem["context"] =;
+			$singleitem["postedTime"] = date("c", strtotime($item["published"]));
+			$singleitem["provider"]["objectType"] = "service";
+			$singleitem["provider"]["displayName"] = "Test";
+			$singleitem["provider"]["url"] = "http://test.tld";
+			$singleitem["title"] = $item["text"];
+			$singleitem["verb"] = "post";
+			$singleitem["statusnet:notice_info"]["local_id"] = $item["id"];
+				$singleitem["statusnet:notice_info"]["source"] = $item["source"];
+				$singleitem["statusnet:notice_info"]["favorite"] = "false";
+				$singleitem["statusnet:notice_info"]["repeated"] = "false";
+				//$singleitem["original"] = $item;
+				$items[] = $singleitem;
+		}
+		$as['items'] = $items;
+		$link->url = $a->get_baseurl()."/".$user_info["screen_name"]."/all";
+		$link->rel = "alternate";
+		$link->type = "text/html";
+		$as['link'][] = $link;
+		return($as);
+	}
 	
 	function api_format_items($r,$user_info) {
 
