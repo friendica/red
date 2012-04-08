@@ -258,6 +258,11 @@ if($a->module_loaded) {
 		$func($a);
 	}
 
+	if(function_exists(str_replace('-','_',current_theme()) . '_init')) {
+		$func = str_replace('-','_',current_theme()) . '_init';
+		$func($a);
+	}
+
 	if(($_SERVER['REQUEST_METHOD'] === 'POST') && (! $a->error)
 		&& (function_exists($a->module . '_post'))
 		&& (! x($_POST,'auth-params'))) {
