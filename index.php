@@ -11,6 +11,7 @@
  * bootstrap the application
  *
  */
+try {
 
 require_once('boot.php');
 
@@ -370,3 +371,9 @@ else
 
 session_write_close();
 exit;
+} catch(Exception $ex) {
+// it may fail because logger uses the db, 
+// but give it a try: 
+logger('exception caught at index.php: '.$ex->getMessage()); 
+system_unavailable(); 
+}

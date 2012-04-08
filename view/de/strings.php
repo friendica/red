@@ -1511,3 +1511,4 @@ $a->strings["[today]"] = "[heute]";
 $a->strings["Event Reminders"] = "Veranstaltungserinnerungen";
 $a->strings["Events this week:"] = "Veranstaltungen diese Woche";
 $a->strings["[No description]"] = "[keine Beschreibung]";
+$a->strings['Update Error at %s'] = 'Fehler beim Updaten von %s'; 
