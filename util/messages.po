@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.3.1306\n"
+"Project-Id-Version: 2.3.1307\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-08 10:00-0700\n"
+"POT-Creation-Date: 2012-04-09 10:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,7 +34,7 @@ msgstr ""
 msgid "Contact update failed."
 msgstr ""
 
-#: ../../mod/crepair.php:115 ../../mod/wall_attach.php:43
+#: ../../mod/crepair.php:115 ../../mod/wall_attach.php:44
 #: ../../mod/fsuggest.php:78 ../../mod/events.php:110 ../../mod/api.php:26
 #: ../../mod/api.php:31 ../../mod/photos.php:130 ../../mod/photos.php:866
 #: ../../mod/editpost.php:10 ../../mod/install.php:171
@@ -50,7 +50,7 @@ msgstr ""
 #: ../../mod/profile_photo.php:139 ../../mod/profile_photo.php:150
 #: ../../mod/profile_photo.php:163 ../../mod/message.php:38
 #: ../../mod/message.php:91 ../../mod/allfriends.php:9
-#: ../../mod/wall_upload.php:42 ../../mod/follow.php:8 ../../mod/common.php:9
+#: ../../mod/wall_upload.php:46 ../../mod/follow.php:8 ../../mod/common.php:9
 #: ../../mod/display.php:138 ../../mod/profiles.php:7
 #: ../../mod/profiles.php:232 ../../mod/delegate.php:6
 #: ../../mod/suggest.php:28 ../../mod/invite.php:13 ../../mod/invite.php:81
@@ -173,12 +173,12 @@ msgstr ""
 msgid "Page not found."
 msgstr ""
 
-#: ../../mod/wall_attach.php:57
+#: ../../mod/wall_attach.php:58
 #, php-format
 msgid "File exceeds size limit of %d"
 msgstr ""
 
-#: ../../mod/wall_attach.php:85 ../../mod/wall_attach.php:96
+#: ../../mod/wall_attach.php:86 ../../mod/wall_attach.php:97
 msgid "File upload failed."
 msgstr ""
 
@@ -420,12 +420,12 @@ msgid "Image file is empty."
 msgstr ""
 
 #: ../../mod/photos.php:654 ../../mod/profile_photo.php:124
-#: ../../mod/wall_upload.php:65
+#: ../../mod/wall_upload.php:69
 msgid "Unable to process image."
 msgstr ""
 
 #: ../../mod/photos.php:674 ../../mod/profile_photo.php:257
-#: ../../mod/wall_upload.php:84
+#: ../../mod/wall_upload.php:88
 msgid "Image upload failed."
 msgstr ""
 
@@ -2753,8 +2753,8 @@ msgstr ""
 msgid "Empty post discarded."
 msgstr ""
 
-#: ../../mod/item.php:373 ../../mod/wall_upload.php:81
-#: ../../mod/wall_upload.php:90 ../../mod/wall_upload.php:97
+#: ../../mod/item.php:373 ../../mod/wall_upload.php:85
+#: ../../mod/wall_upload.php:94 ../../mod/wall_upload.php:101
 #: ../../include/message.php:144
 msgid "Wall Photos"
 msgstr ""
@@ -2805,7 +2805,7 @@ msgstr ""
 msgid "Unable to process image"
 msgstr ""
 
-#: ../../mod/profile_photo.php:115 ../../mod/wall_upload.php:56
+#: ../../mod/profile_photo.php:115 ../../mod/wall_upload.php:60
 #, php-format
 msgid "Image exceeds size limit of %d"
 msgstr ""
@@ -5339,7 +5339,7 @@ msgstr ""
 msgid "j F"
 msgstr ""
 
-#: ../../include/profile_advanced.php:30 ../../include/datetime.php:438
+#: ../../include/profile_advanced.php:30 ../../include/datetime.php:448
 #: ../../include/items.php:1392
 msgid "Birthday:"
 msgstr ""
@@ -6097,71 +6097,71 @@ msgstr ""
 msgid "Miscellaneous"
 msgstr ""
 
-#: ../../include/datetime.php:121 ../../include/datetime.php:253
+#: ../../include/datetime.php:131 ../../include/datetime.php:263
 msgid "year"
 msgstr ""
 
-#: ../../include/datetime.php:126 ../../include/datetime.php:254
+#: ../../include/datetime.php:136 ../../include/datetime.php:264
 msgid "month"
 msgstr ""
 
-#: ../../include/datetime.php:131 ../../include/datetime.php:256
+#: ../../include/datetime.php:141 ../../include/datetime.php:266
 msgid "day"
 msgstr ""
 
-#: ../../include/datetime.php:244
+#: ../../include/datetime.php:254
 msgid "never"
 msgstr ""
 
-#: ../../include/datetime.php:250
+#: ../../include/datetime.php:260
 msgid "less than a second ago"
 msgstr ""
 
-#: ../../include/datetime.php:253
+#: ../../include/datetime.php:263
 msgid "years"
 msgstr ""
 
-#: ../../include/datetime.php:254
+#: ../../include/datetime.php:264
 msgid "months"
 msgstr ""
 
-#: ../../include/datetime.php:255
+#: ../../include/datetime.php:265
 msgid "week"
 msgstr ""
 
-#: ../../include/datetime.php:255
+#: ../../include/datetime.php:265
 msgid "weeks"
 msgstr ""
 
-#: ../../include/datetime.php:256
+#: ../../include/datetime.php:266
 msgid "days"
 msgstr ""
 
-#: ../../include/datetime.php:257
+#: ../../include/datetime.php:267
 msgid "hour"
 msgstr ""
 
-#: ../../include/datetime.php:257
+#: ../../include/datetime.php:267
 msgid "hours"
 msgstr ""
 
-#: ../../include/datetime.php:258
+#: ../../include/datetime.php:268
 msgid "minute"
 msgstr ""
 
-#: ../../include/datetime.php:258
+#: ../../include/datetime.php:268
 msgid "minutes"
 msgstr ""
 
-#: ../../include/datetime.php:259
+#: ../../include/datetime.php:269
 msgid "second"
 msgstr ""
 
-#: ../../include/datetime.php:259
+#: ../../include/datetime.php:269
 msgid "seconds"
 msgstr ""
 
-#: ../../include/datetime.php:267
+#: ../../include/datetime.php:277
 #, php-format
 msgid "%1$d %2$s ago"
 msgstr ""
