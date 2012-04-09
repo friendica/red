@@ -180,7 +180,7 @@ function dfrn_request_post(&$a) {
 				
 				// (ignore reply, nothing we can do it failed)
 
-				goaway($dfrn_url);
+				goaway(zrl($dfrn_url));
 				return; // NOTREACHED
 
 			}
