@@ -447,7 +447,7 @@ function item_post(&$a) {
 
 	if(count($tags)) {
 		foreach($tags as $tag) {
-			handle_tag($a, $body, $inform, $str_tags, $profile_uid, $tag); 
+			handle_tag($a, $body, $inform, $str_tags, (local_user()) ? local_user() : $profile_uid , $tag); 
 		}
 	}
 
