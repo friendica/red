@@ -21,6 +21,8 @@ if(! class_exists('dba')) {
 
 		private $debug = 0;
 		private $db;
+		private $exceptions; 
+		
 		public  $mysqli = true;
 		public  $connected = false;
 		public  $error = false;
@@ -68,6 +70,10 @@ if(! class_exists('dba')) {
 			}
 		}
 
+		public function excep($excep) {
+			$this->exceptions=$excep; 
+		}
+		
 		public function getdb() {
 			return $this->db;
 		}
@@ -75,7 +81,8 @@ if(! class_exists('dba')) {
 		public function q($sql) {
 
 			if((! $this->db) || (! $this->connected)) {
-				throw new RuntimeException(t("There is no db connection. "));
+				throwOrLog(new RuntimeException(t("There is no db connection. ")));
+				return;
 			}
 
 			if($this->mysqli) {
@@ -114,7 +121,8 @@ if(! class_exists('dba')) {
 				}
 				logger('dba: ' . $str );
 				if(FALSE===$result) {
-					throw new RuntimeException('dba: ' . $str);
+					throwOrLog(new RuntimeException('dba: ' . $str));
+					return; 
 				}
 			}
 				
@@ -155,6 +163,19 @@ if(! class_exists('dba')) {
 			}
 		}
 		
+		private function throwOrLog(Exception $ex) {
+			if($this->exceptions) {
+				throw $ex; 
+			} else {
+				logger('dba: '.$ex->getMessage()); 
+			}
+		}
+		
+		/**
+		 * starts a transaction. Transactions need to be finished with 
+		 * commit() or rollback(). Please mind that the db table engine may
+		 * not support this. 
+		 */
 		public function beginTransaction() {
 			if($this->mysqli) {
 				return $this->db->autocommit(false);
@@ -164,6 +185,10 @@ if(! class_exists('dba')) {
 			}
 		}
 		
+		/**
+		 * rollback a transaction. So, rollback anything that was done since the last call 
+		 * to beginTransaction(). 
+		 */
 		public function rollback() {
 			if($this->mysqli) {
 				return $this->db->rollback();
@@ -174,6 +199,9 @@ if(! class_exists('dba')) {
 			$this->stopTransaction(); 
 		}
 
+		/**
+		 * commit a transaction. So, write any query to the database. 
+		 */
 		public function commit() {
 			if($this->mysqli) {
 				return $this->db->commit();
