@@ -109,25 +109,25 @@ define ( 'NETWORK_XMPP',             'xmpp');    // XMPP
 define ( 'NETWORK_MYSPACE',          'mysp');    // MySpace
 define ( 'NETWORK_GPLUS',            'goog');    // Google+
 
-/*
+/**
  * These numbers are used in stored permissions
-* and existing allocations MUST NEVER BE CHANGED
-* OR RE-ASSIGNED! You may only add to them.
-*/
+ * and existing allocations MUST NEVER BE CHANGED
+ * OR RE-ASSIGNED! You may only add to them.
+ */
 
 $netgroup_ids = array(
-		NETWORK_DFRN     => (-1),
-		NETWORK_ZOT      => (-2),
-		NETWORK_OSTATUS  => (-3),
-		NETWORK_FEED     => (-4),
-		NETWORK_DIASPORA => (-5),
-		NETWORK_MAIL     => (-6),
-		NETWORK_MAIL2    => (-7),
-		NETWORK_FACEBOOK => (-8),
-		NETWORK_LINKEDIN => (-9),
-		NETWORK_XMPP     => (-10),
-		NETWORK_MYSPACE  => (-11),
-		NETWORK_GPLUS    => (-12),
+	NETWORK_DFRN     => (-1),
+	NETWORK_ZOT      => (-2),
+	NETWORK_OSTATUS  => (-3),
+	NETWORK_FEED     => (-4),
+	NETWORK_DIASPORA => (-5),
+	NETWORK_MAIL     => (-6),
+	NETWORK_MAIL2    => (-7),
+	NETWORK_FACEBOOK => (-8),
+	NETWORK_LINKEDIN => (-9),
+	NETWORK_XMPP     => (-10),
+	NETWORK_MYSPACE  => (-11),
+	NETWORK_GPLUS    => (-12),
 );
 
 
@@ -291,7 +291,7 @@ if(! class_exists('App')) {
 		public  $plugins;
 		public  $apps = array();
 		public  $identities;
-
+	
 		public $nav_sel;
 
 		public $category;
@@ -427,67 +427,67 @@ if(! class_exists('App')) {
 
 				//			if($this->config['system']['ssl_policy'] == SSL_POLICY_SELFSIGN) {
 				//				if($ssl)
-					//					$scheme = 'https';
+				//					$scheme = 'https';
 				//				else
-					//					$scheme = 'http';
-				//			}
-			}
-
-			$this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
-			return $this->baseurl;
-	}
-
-	function set_baseurl($url) {
-		$parsed = @parse_url($url);
-
-		$this->baseurl = $url;
-
-		if($parsed) {
-			$this->scheme = $parsed['scheme'];
-
-			$this->hostname = $parsed['host'];
-			if(x($parsed,'port'))
-				$this->hostname .= ':' . $parsed['port'];
-			if(x($parsed,'path'))
-				$this->path = trim($parsed['path'],'\\/');
+				//					$scheme = 'http';
+					//			}
 		}
 
-	}
+				$this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
+				return $this->baseurl;
+		}
 
-	function get_hostname() {
-		return $this->hostname;
-	}
+		function set_baseurl($url) {
+			$parsed = @parse_url($url);
 
-	function set_hostname($h) {
-		$this->hostname = $h;
-	}
+			$this->baseurl = $url;
 
-	function set_path($p) {
-		$this->path = trim(trim($p),'/');
-	}
+			if($parsed) {
+				$this->scheme = $parsed['scheme'];
 
-	function get_path() {
-		return $this->path;
-	}
+				$this->hostname = $parsed['host'];
+				if(x($parsed,'port'))
+					$this->hostname .= ':' . $parsed['port'];
+				if(x($parsed,'path'))
+					$this->path = trim($parsed['path'],'\\/');
+			}
 
-	function set_pager_total($n) {
-		$this->pager['total'] = intval($n);
-	}
+		}
 
-	function set_pager_itemspage($n) {
-		$this->pager['itemspage'] = intval($n);
-		$this->pager['start'] = ($this->pager['page'] * $this->pager['itemspage']) - $this->pager['itemspage'];
+		function get_hostname() {
+			return $this->hostname;
+		}
 
-	}
+		function set_hostname($h) {
+			$this->hostname = $h;
+		}
 
-	function init_pagehead() {
-		$interval = ((local_user()) ? get_pconfig(local_user(),'system','update_interval') : 40000);
-		if($interval < 10000)
-			$interval = 40000;
+		function set_path($p) {
+			$this->path = trim(trim($p),'/');
+		}
 
-		$this->page['title'] = $this->config['sitename'];
-		$tpl = file_get_contents('view/head.tpl');
-		$this->page['htmlhead'] = replace_macros($tpl,array(
+		function get_path() {
+			return $this->path;
+		}
+
+		function set_pager_total($n) {
+			$this->pager['total'] = intval($n);
+		}
+
+		function set_pager_itemspage($n) {
+			$this->pager['itemspage'] = intval($n);
+			$this->pager['start'] = ($this->pager['page'] * $this->pager['itemspage']) - $this->pager['itemspage'];
+
+		}
+
+		function init_pagehead() {
+			$interval = ((local_user()) ? get_pconfig(local_user(),'system','update_interval') : 40000);
+			if($interval < 10000)
+				$interval = 40000;
+
+			$this->page['title'] = $this->config['sitename'];
+			$tpl = file_get_contents('view/head.tpl');
+			$this->page['htmlhead'] = replace_macros($tpl,array(
 				'$baseurl' => $this->get_baseurl(), // FIXME for z_path!!!!
 				'$generator' => 'Friendica' . ' ' . FRIENDICA_VERSION,
 				'$delitem' => t('Delete this item?'),
@@ -495,27 +495,27 @@ if(! class_exists('App')) {
 				'$showmore' => t('show more'),
 				'$showfewer' => t('show fewer'),
 				'$update_interval' => $interval
-		));
+			));
+		}
+
+		function set_curl_code($code) {
+			$this->curl_code = $code;
+		}
+
+		function get_curl_code() {
+			return $this->curl_code;
+		}
+
+		function set_curl_headers($headers) {
+			$this->curl_headers = $headers;
+		}
+
+		function get_curl_headers() {
+			return $this->curl_headers;
+		}
+
+
 	}
-
-	function set_curl_code($code) {
-		$this->curl_code = $code;
-	}
-
-	function get_curl_code() {
-		return $this->curl_code;
-	}
-
-	function set_curl_headers($headers) {
-		$this->curl_headers = $headers;
-	}
-
-	function get_curl_headers() {
-		return $this->curl_headers;
-	}
-
-
-}
 }
 
 // retrieve the App structure
@@ -542,7 +542,7 @@ if(! function_exists('x')) {
 				if($s[$k])
 					return (int) 1;
 				return (int) 0;
-			}
+		}
 			return false;
 		}
 		else {
@@ -573,7 +573,7 @@ function clean_urls() {
 	global $a;
 	//	if($a->config['system']['clean_urls'])
 	return true;
-		//	return false;
+	//	return false;
 }
 
 function z_path() {
@@ -669,10 +669,10 @@ if(! function_exists('check_config')) {
 								//send the administrator an e-mail
 								$email_tpl = get_intltext_template("update_fail_eml.tpl");
 								$email_tpl = replace_macros($email_tpl, array(
-										'$sitename' => $a->config['sitename'],
-										'$siteurl' =>  $a->get_baseurl(),
-										'$update' => $x,
-										'$error' => $ex->getMessage()));
+									'$sitename' => $a->config['sitename'],
+									'$siteurl' =>  $a->get_baseurl(),
+									'$update' => $x,
+									'$error' => $ex->getMessage()));
 								$subject=sprintf(t('Update Error at %s'), $a->get_baseurl());
 									
 								mail($a->config['admin_email'], $subject, $text,
@@ -724,7 +724,7 @@ if(! function_exists('check_config')) {
 			foreach($installed as $i) {
 				if(! in_array($i['name'],$plugins_arr)) {
 					uninstall_plugin($i['name']);
-				}
+			}
 				else
 					$installed_arr[] = $i['name'];
 			}
@@ -770,13 +770,13 @@ if(! function_exists('login')) {
 		$reg = false;
 		if ($register) {
 			$reg = array(
-					'title' => t('Create a New Account'),
-					'desc' => t('Register')
+				'title' => t('Create a New Account'),
+				'desc' => t('Register')
 			);
 		}
 
 		$noid = get_config('system','no_openid');
-
+	
 		$dest_url = $a->get_baseurl(true) . '/' . $a->query_string;
 
 		if(local_user()) {
@@ -790,22 +790,22 @@ if(! function_exists('login')) {
 
 		$o .= replace_macros($tpl,array(
 
-				'$dest_url'     => $dest_url,
-				'$logout'       => t('Logout'),
-				'$login'        => t('Login'),
-
-				'$lname'	 	=> array('username', t('Nickname or Email address: ') , '', ''),
-				'$lpassword' 	=> array('password', t('Password: '), '', ''),
-
-				'$openid'		=> !$noid,
-				'$lopenid'      => array('openid_url', t('Or login using OpenID: '),'',''),
-
-				'$hiddens'      => $hiddens,
-
-				'$register'     => $reg,
-
-				'$lostpass'     => t('Forgot your password?'),
-				'$lostlink'     => t('Password Reset'),
+			'$dest_url'     => $dest_url,
+			'$logout'       => t('Logout'),
+			'$login'        => t('Login'),
+	
+			'$lname'	 	=> array('username', t('Nickname or Email address: ') , '', ''),
+			'$lpassword' 	=> array('password', t('Password: '), '', ''),
+	
+			'$openid'		=> !$noid,
+			'$lopenid'      => array('openid_url', t('Or login using OpenID: '),'',''),
+	
+			'$hiddens'      => $hiddens,
+	
+			'$register'     => $reg,
+	
+			'$lostpass'     => t('Forgot your password?'),
+			'$lostlink'     => t('Password Reset'),
 		));
 
 		call_hooks('login_hook',$o);
@@ -916,7 +916,7 @@ if(! function_exists('profile_load')) {
 		}
 
 		$r = null;
-
+                          
 		if($profile) {
 			$profile_int = intval($profile);
 			$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `contact`.`avatar-date` AS picdate, `user`.* FROM `profile`
@@ -939,7 +939,7 @@ if(! function_exists('profile_load')) {
 			$a->error = 404;
 			return;
 		}
-
+	
 		// fetch user tags if this isn't the default profile
 
 		if(! $r[0]['is-default']) {
@@ -970,8 +970,8 @@ if(! function_exists('profile_load')) {
 
 		if(local_user() && local_user() == $a->profile['uid']) {
 			$a->page['aside'] .= replace_macros(get_markup_template('profile_edlink.tpl'),array(
-					'$editprofile' => t('Edit profile'),
-					'$profid' => $a->profile['id']
+				'$editprofile' => t('Edit profile'),
+				'$profid' => $a->profile['id']
 			));
 		}
 
@@ -1020,7 +1020,7 @@ if(! function_exists('profile_sidebar')) {
 
 		call_hooks('profile_sidebar_enter', $profile);
 
-
+	
 		// don't show connect link to yourself
 		$connect = (($profile['uid'] != local_user()) ? t('Connect')  : False);
 
@@ -1039,28 +1039,28 @@ if(! function_exists('profile_sidebar')) {
 		// show edit profile to yourself
 		if ($profile['uid'] == local_user()) {
 			$profile['edit'] = array($a->get_baseurl(). '/profiles', t('Profiles'),"", t('Manage/edit profiles'));
-
+		
 			$r = q("SELECT * FROM `profile` WHERE `uid` = %d",
 					local_user());
-
+		
 			$profile['menu'] = array(
-					'chg_photo' => t('Change profile photo'),
-					'cr_new' => t('Create New Profile'),
-					'entries' => array(),
+				'chg_photo' => t('Change profile photo'),
+				'cr_new' => t('Create New Profile'),
+				'entries' => array(),
 			);
 
 			if(count($r)) {
 
 				foreach($r as $rr) {
 					$profile['menu']['entries'][] = array(
-							'photo' => $rr['thumb'],
-							'id' => $rr['id'],
-							'alt' => t('Profile Image'),
-							'profile_name' => $rr['profile-name'],
-							'isdefault' => $rr['is-default'],
-							'visibile_to_everybody' =>  t('visible to everybody'),
-							'edit_visibility' => t('Edit visibility'),
-								
+						'photo' => $rr['thumb'],
+						'id' => $rr['id'],
+						'alt' => t('Profile Image'),
+						'profile_name' => $rr['profile-name'],
+						'isdefault' => $rr['is-default'],
+						'visibile_to_everybody' =>  t('visible to everybody'),
+						'edit_visibility' => t('Edit visibility'),
+
 					);
 				}
 
@@ -1072,7 +1072,7 @@ if(! function_exists('profile_sidebar')) {
 
 
 
-
+	
 		if((x($profile,'address') == 1)
 				|| (x($profile,'locality') == 1)
 				|| (x($profile,'region') == 1)
@@ -1096,15 +1096,15 @@ if(! function_exists('profile_sidebar')) {
 		$lastname = (($firstname === $profile['name']) ? '' : trim(substr($profile['name'],strlen($firstname))));
 
 		$diaspora = array(
-				'podloc' => $a->get_baseurl(),
-				'searchable' => (($profile['publish'] && $profile['net-publish']) ? 'true' : 'false' ),
-				'nickname' => $profile['nickname'],
-				'fullname' => $profile['name'],
-				'firstname' => $firstname,
-				'lastname' => $lastname,
-				'photo300' => $a->get_baseurl() . '/photo/custom/300/' . $profile['uid'] . '.jpg',
-				'photo100' => $a->get_baseurl() . '/photo/custom/100/' . $profile['uid'] . '.jpg',
-				'photo50' => $a->get_baseurl() . '/photo/custom/50/'  . $profile['uid'] . '.jpg',
+			'podloc' => $a->get_baseurl(),
+			'searchable' => (($profile['publish'] && $profile['net-publish']) ? 'true' : 'false' ),
+			'nickname' => $profile['nickname'],
+			'fullname' => $profile['name'],
+			'firstname' => $firstname,
+			'lastname' => $lastname,
+			'photo300' => $a->get_baseurl() . '/photo/custom/300/' . $profile['uid'] . '.jpg',
+			'photo100' => $a->get_baseurl() . '/photo/custom/100/' . $profile['uid'] . '.jpg',
+			'photo50' => $a->get_baseurl() . '/photo/custom/50/'  . $profile['uid'] . '.jpg',
 		);
 
 		if (!$block){
@@ -1115,16 +1115,16 @@ if(! function_exists('profile_sidebar')) {
 		$tpl = get_markup_template('profile_vcard.tpl');
 
 		$o .= replace_macros($tpl, array(
-				'$profile' => $profile,
-				'$connect'  => $connect,
-				'$wallmessage' => $wallmessage,
-				'$location' => template_escape($location),
-				'$gender'   => $gender,
-				'$pdesc'	=> $pdesc,
-				'$marital'  => $marital,
-				'$homepage' => $homepage,
-				'$diaspora' => $diaspora,
-				'$contact_block' => $contact_block,
+			'$profile' => $profile,
+			'$connect'  => $connect,
+			'$wallmessage' => $wallmessage,
+			'$location' => template_escape($location),
+			'$gender'   => $gender,
+			'$pdesc'	=> $pdesc,
+			'$marital'  => $marital,
+			'$homepage' => $homepage,
+			'$diaspora' => $diaspora,
+			'$contact_block' => $contact_block,
 		));
 
 
@@ -1193,7 +1193,7 @@ if(! function_exists('get_birthdays')) {
 						$sparkle = " sparkle";
 						$url = $a->get_baseurl() . '/redir/'  . $rr['cid'];
 					}
-
+	
 					$o .= '<div class="birthday-list" id="birthday-' . $rr['eid'] . '"><a class="birthday-link$sparkle" target="redir" href="'
 					. $url . '">' . $rr['name'] . '</a> '
 					. day_translate(datetime_convert('UTC', $a->timezone, $rr['start'], $rr['adjust'] ? $bd_format : $bd_short)) . (($today) ?  ' ' . t('[today]') : '')
@@ -1311,27 +1311,27 @@ if(! function_exists('proc_run')) {
 if(! function_exists('current_theme')) {
 	function current_theme(){
 		$app_base_themes = array('duepuntozero', 'loozah');
-
+	
 		$a = get_app();
-
+	
 		$system_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : '');
 		$theme_name = ((isset($_SESSION) && x($_SESSION,'theme')) ? $_SESSION['theme'] : $system_theme);
-
+	
 		if($theme_name &&
 				(file_exists('view/theme/' . $theme_name . '/style.css') ||
 						file_exists('view/theme/' . $theme_name . '/style.php')))
 			return($theme_name);
-
+	
 		foreach($app_base_themes as $t) {
 			if(file_exists('view/theme/' . $t . '/style.css')||
-		   file_exists('view/theme/' . $t . '/style.php'))
+					file_exists('view/theme/' . $t . '/style.php'))
 				return($t);
 		}
-
+	
 		$fallback = glob('view/theme/*/style.[css|php]');
 		if(count($fallback))
 			return (str_replace('view/theme/','', substr($fallback[0],0,-10)));
-
+	
 	}
 }
 
@@ -1371,7 +1371,7 @@ if(! function_exists('feed_birthday')) {
 		 *
 		 */
 
-
+	
 		$birthday = '';
 
 		if(! strlen($tz))
@@ -1437,50 +1437,50 @@ if(! function_exists('load_contact_links')) {
 if(! function_exists('profile_tabs')){
 	function profile_tabs($a, $is_owner=False, $nickname=Null){
 		//echo "<pre>"; var_dump($a->user); killme();
-
+	
 		if (is_null($nickname))
 			$nickname  = $a->user['nickname'];
-
+		
 		if(x($_GET,'tab'))
 			$tab = notags(trim($_GET['tab']));
-
+	
 		$url = $a->get_baseurl() . '/profile/' . $nickname;
 
 		$tabs = array(
-				array(
-						'label'=>t('Status'),
-						'url' => $url,
-						'sel' => ((!isset($tab)&&$a->argv[0]=='profile')?'active':''),
-				),
-				array(
-						'label' => t('Profile'),
-						'url' 	=> $url.'/?tab=profile',
-						'sel'	=> ((isset($tab) && $tab=='profile')?'active':''),
-				),
-				array(
-						'label' => t('Photos'),
-						'url'	=> $a->get_baseurl() . '/photos/' . $nickname,
-						'sel'	=> ((!isset($tab)&&$a->argv[0]=='photos')?'active':''),
-				),
+			array(
+				'label'=>t('Status'),
+				'url' => $url,
+				'sel' => ((!isset($tab)&&$a->argv[0]=='profile')?'active':''),
+			),
+			array(
+				'label' => t('Profile'),
+				'url' 	=> $url.'/?tab=profile',
+				'sel'	=> ((isset($tab) && $tab=='profile')?'active':''),
+			),
+			array(
+				'label' => t('Photos'),
+				'url'	=> $a->get_baseurl() . '/photos/' . $nickname,
+				'sel'	=> ((!isset($tab)&&$a->argv[0]=='photos')?'active':''),
+			),
 		);
-
+	
 		if ($is_owner){
-		 $tabs[] = array(
-		 		'label' => t('Events'),
-		 		'url'	=> $a->get_baseurl() . '/events',
-		 		'sel' 	=>((!isset($tab)&&$a->argv[0]=='events')?'active':''),
-		 );
-		 $tabs[] = array(
-		 		'label' => t('Personal Notes'),
-		 		'url'	=> $a->get_baseurl() . '/notes',
-		 		'sel' 	=>((!isset($tab)&&$a->argv[0]=='notes')?'active':''),
-		 );
+			$tabs[] = array(
+				'label' => t('Events'),
+				'url'	=> $a->get_baseurl() . '/events',
+				'sel' 	=>((!isset($tab)&&$a->argv[0]=='events')?'active':''),
+			);
+			$tabs[] = array(
+				'label' => t('Personal Notes'),
+				'url'	=> $a->get_baseurl() . '/notes',
+				'sel' 	=>((!isset($tab)&&$a->argv[0]=='notes')?'active':''),
+			);
 		}
 
 
 		$arr = array('is_owner' => $is_owner, 'nickname' => $nickname, 'tab' => (($tab) ? $tab : false), 'tabs' => $tabs);
 		call_hooks('profile_tabs', $arr);
-
+	
 		$tpl = get_markup_template('common_tabs.tpl');
 
 		return replace_macros($tpl,array('$tabs' => $arr['tabs']));
