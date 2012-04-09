@@ -80,12 +80,15 @@ function field_timezone($name='timezone', $label='', $current = 'America/Los_Ang
 if(! function_exists('datetime_convert')) {
 function datetime_convert($from = 'UTC', $to = 'UTC', $s = 'now', $fmt = "Y-m-d H:i:s") {
 
-	// Defaults to UTC if nothing is set, but not if set to empty string.
+	// Defaults to UTC if nothing is set, but throws an exception if set to empty string.
+	// Provide some sane defaults regardless.
 
-	if($from == '')
+	if($from === '')
 		$from = 'UTC';
-	if($to == '')
+	if($to === '')
 		$to = 'UTC';
+	if($s === '')
+		$s = 'now';
 
 	// Slight hackish adjustment so that 'zero' datetime actually returns what is intended
 	// otherwise we end up with -0001-11-30 ...
