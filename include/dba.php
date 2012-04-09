@@ -54,10 +54,10 @@ if(! class_exists('dba')) {
 
 			if(class_exists('mysqli')) {
 				$this->db = new mysqli($server,$user,$pass,$db);
-				if(NULL === $this->db->connect_error()) {
+				if(NULL === $this->db->connect_error) {
 					$this->connected = true;
 				} else {
-					throw new RuntimeException($this->db->connect_error());
+					throw new RuntimeException($this->db->connect_error);
 				}
 			} else {
 				$this->mysqli = false;
@@ -81,7 +81,7 @@ if(! class_exists('dba')) {
 		public function q($sql) {
 
 			if((! $this->db) || (! $this->connected)) {
-				throwOrLog(new RuntimeException(t("There is no db connection. ")));
+				$this->throwOrLog(new RuntimeException(t("There is no db connection. ")));
 				return;
 			}
 
@@ -121,7 +121,7 @@ if(! class_exists('dba')) {
 				}
 				logger('dba: ' . $str );
 				if(FALSE===$result) {
-					throwOrLog(new RuntimeException('dba: ' . $str));
+					$this->throwOrLog(new RuntimeException('dba: ' . $str));
 					return; 
 				}
 			}

@@ -672,7 +672,7 @@ if(! function_exists('check_config')) {
 										'$sitename' => $a->config['sitename'],
 										'$siteurl' =>  $a->get_baseurl(),
 										'$update' => $x,
-										'$error' => $ex->getMessage());
+										'$error' => $ex->getMessage()));
 								$subject=sprintf(t('Update Error at %s'), $a->get_baseurl());
 									
 								mail($a->config['admin_email'], $subject, $text,
