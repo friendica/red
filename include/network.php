@@ -694,13 +694,20 @@ function allowed_email($email) {
 
 if(! function_exists('avatar_img')) {
 function avatar_img($email) {
+
+	$a = get_app();
+
 	$avatar['size'] = 175;
 	$avatar['email'] = $email;
 	$avatar['url'] = '';
+	$avatar['success'] = false;
 
 	call_hooks('avatar_lookup', $avatar);
 
-	logger('Avatar: ' . $avatar['email'] . ' ' . $avatar['url']);
+	if(! $avatar['success'])
+		$avatar['url'] = $a->get_baseurl() . '/images/person-175.jpg';
+
+	logger('Avatar: ' . $avatar['email'] . ' ' . $avatar['url'], LOGGER_DEBUG);
 	return $avatar['url'];
 }}
 
