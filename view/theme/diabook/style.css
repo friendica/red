@@ -83,6 +83,14 @@
 #adminpage .selectall { text-align: right; }
 /* icons */
 
+.icon.bb-url{
+  background-image: url("../../../view/theme/diabook/icons/bb-url.png");
+  float: right;
+  margin-top: 2px;}
+.icon.quote{
+  background-image: url("../../../view/theme/diabook/icons/quote.png");
+  float: right;
+  margin-top: 2px;}
 .icon.bold{
   background-image: url("../../../view/theme/diabook/icons/bold.png");
   float: right;
