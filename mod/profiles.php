@@ -121,16 +121,17 @@ function profiles_post(&$a) {
 		$politic = notags(trim($_POST['politic']));
 		$religion = notags(trim($_POST['religion']));
 
-		$about = escape_tags(trim($_POST['about']));
-		$interest = escape_tags(trim($_POST['interest']));
-		$contact = escape_tags(trim($_POST['contact']));
-		$music = escape_tags(trim($_POST['music']));
-		$book = escape_tags(trim($_POST['book']));
-		$tv = escape_tags(trim($_POST['tv']));
-		$film = escape_tags(trim($_POST['film']));
-		$romance = escape_tags(trim($_POST['romance']));
-		$work = escape_tags(trim($_POST['work']));
-		$education = escape_tags(trim($_POST['education']));
+		$about = fix_mce_lf(escape_tags(trim($_POST['about'])));
+		$interest = fix_mce_lf(escape_tags(trim($_POST['interest'])));
+		$contact = fix_mce_lf(escape_tags(trim($_POST['contact'])));
+		$music = fix_mce_lf(escape_tags(trim($_POST['music'])));
+		$book = fix_mce_lf(escape_tags(trim($_POST['book'])));
+		$tv = fix_mce_lf(escape_tags(trim($_POST['tv'])));
+		$film = fix_mce_lf(escape_tags(trim($_POST['film'])));
+		$romance = fix_mce_lf(escape_tags(trim($_POST['romance'])));
+		$work = fix_mce_lf(escape_tags(trim($_POST['work'])));
+		$education = fix_mce_lf(escape_tags(trim($_POST['education'])));
+
 		$hide_friends = (($_POST['hide-friends'] == 1) ? 1: 0);
 
 		$r = q("UPDATE `profile` 
