@@ -82,6 +82,15 @@
 #adminpage table tr:hover { background-color: #eeeeee; }
 #adminpage .selectall { text-align: right; }
 /* icons */
+
+.icon.bb-url{
+  background-image: url("../../../view/theme/diabook-aerith/icons/bb-url.png");
+  float: right;
+  margin-top: 2px;}
+.icon.quote{
+  background-image: url("../../../view/theme/diabook-aerith/icons/quote.png");
+  float: right;
+  margin-top: 2px;}
 .icon.bold{
   background-image: url("../../../view/theme/diabook-aerith/icons/bold.png");
   float: right;

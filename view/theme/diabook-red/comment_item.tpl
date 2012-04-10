@@ -13,7 +13,9 @@
 				<div class="comment-edit-photo-end"></div>
 				<textarea id="comment-edit-text-$id" class="comment-edit-text-empty" name="body" onFocus="commentOpen(this,$id);" onBlur="commentClose(this,$id);" >$comment</textarea>
 				<a class="icon bb-video" onclick="insertFormatting('video',$id);">video</a>													
-				<a class="icon bb-image" onclick="insertFormatting('img',$id);">img</a>										
+				<a class="icon bb-image" onclick="insertFormatting('img',$id);">img</a>
+				<a class="icon bb-url" onclick="insertFormatting('url',$id);">url</a>	
+				<a class="icon quote" onclick="insertFormatting('quote',$id);">quote</a>											
 				<a class="icon italic" onclick="insertFormatting('i',$id);">i</a>
 				<a class="icon underline" onclick="insertFormatting('u',$id);">u</a>
 				<a class="icon bold" onclick="insertFormatting('b',$id);">b</a>
