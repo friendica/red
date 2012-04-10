@@ -85,7 +85,7 @@ function contacts_post(&$a) {
 	if($priority > 5 || $priority < 0)
 		$priority = 0;
 
-	$info = escape_tags(trim($_POST['info']));
+	$info = fix_mce_lf(escape_tags(trim($_POST['info'])));
 
 	$r = q("UPDATE `contact` SET `profile-id` = %d, `priority` = %d , `info` = '%s',
 		`hidden` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
