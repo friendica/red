@@ -1233,8 +1233,17 @@
 				$in_reply_to_status_id = 0;
 			}
 
+			// Workaround for ostatus messages where the title is identically to the body
+			$statusbody = trim(html2plain(bbcode($item['body']), 0));
+			$statustitle = trim($item['title']);
+
+			if (($statustitle != '') and (strpos($statusbody, $statustitle) !== false))
+				$statustext = trim($statusbody);
+			else
+				$statustext = trim($statustitle."\n\n".$statusbody);
+
 			$status = array(
-				'text'		=> trim($item['title']." \n".html2plain(bbcode($item['body']), 0)),
+				'text'		=> $statustext,
 				'truncated' => False,
 				'created_at'=> api_date($item['created']),
 				'in_reply_to_status_id' => $in_reply_to_status_id,
@@ -1245,8 +1254,8 @@
 				'geo' => '',
 				'favorited' => $item['starred'] ? true : false,
 				'user' =>  $status_user ,
-				'statusnet_html'		=> bbcode($item['body']),
-				'statusnet_conversation_id'	=> 0,
+				'statusnet_html'		=> trim(bbcode($item['body'])),
+				'statusnet_conversation_id'	=> $item['parent'],
 			);
 
 			// Seesmic doesn't like the following content
