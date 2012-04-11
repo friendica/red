@@ -158,3 +158,11 @@ function contact_photo_menu($contact) {
 	}
 	return $o;
 }}
+
+
+function random_profile() {
+	$r = q("select url from gcontact where url like '%%://%%/profile/%%' order by rand() limit 1");
+	if(count($r))
+		return dirname($r[0]['url']);
+	return '';
+}
