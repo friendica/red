@@ -134,11 +134,11 @@ function contact_photo_menu($contact) {
 	$posts_link = $a->get_baseurl() . '/network/?cid=' . $contact['id'];
 
 	$menu = Array(
-		t("View status") => $status_link,
-		t("View profile") => $profile_link,
-		t("View photos") => $photos_link,		
-		t("View recent") => $posts_link, 
-		t("Edit contact") => $contact_url,
+		t("View Status") => $status_link,
+		t("View Profile") => $profile_link,
+		t("View Photos") => $photos_link,		
+		t("Network Posts") => $posts_link, 
+		t("Edit Contact") => $contact_url,
 		t("Send PM") => $pm_url,
 	);
 	
@@ -150,7 +150,7 @@ function contact_photo_menu($contact) {
 	$o = "";
 	foreach($menu as $k=>$v){
 		if ($v!="") {
-			if(($k !== t("View recent")) && ($k !== t("Send PM")))
+			if(($k !== t("Network Posts")) && ($k !== t("Send PM")))
 				$o .= "<li><a target=\"redir\" href=\"$v\">$k</a></li>\n";
 			else
 				$o .= "<li><a href=\"$v\">$k</a></li>\n";
@@ -158,3 +158,11 @@ function contact_photo_menu($contact) {
 	}
 	return $o;
 }}
+
+
+function random_profile() {
+	$r = q("select url from gcontact where url like '%%://%%/profile/%%' order by rand() limit 1");
+	if(count($r))
+		return dirname($r[0]['url']);
+	return '';
+}

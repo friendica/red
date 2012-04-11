@@ -3,13 +3,13 @@
 /*
  * Name: Diabook-red
  * Description: Diabook-red: report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
- * Version: (Version: 1.014)
+ * Version: (Version: 1.016)
  * Author: 
  */
 
 
 //print diabook-version for debugging
-$diabook_version = "Diabook-red (Version: 1.014)";
+$diabook_version = "Diabook-red (Version: 1.016)";
 $a->page['htmlhead'] .= sprintf('<script "%s" ></script>', $diabook_version);
 
 //change css on network and profilepages
@@ -367,15 +367,50 @@ $a->page['htmlhead'] .= '
   
  </script>';
 
+$a->page['htmlhead'] .= '
+ <script>
+ 
+$(document).ready(function() {
+    $("iframe").each(function(){
+        var ifr_source = $(this).attr("src");
+        var wmode = "wmode=transparent";
+        if(ifr_source.indexOf("?") != -1) {
+            var getQString = ifr_source.split("?");
+            var oldString = getQString[1];
+            var newString = getQString[0];
+            $(this).attr("src",newString+"?"+wmode+"&"+oldString);
+        }
+        else $(this).attr("src",ifr_source+"?"+wmode);
+    });
+      
+
+});
+
+function yt_iframe() {
+	
+	$("iframe").load(function() { 
+	var ifr_src = $(this).contents().find("body iframe").attr("src");
+	$("iframe").contents().find("body iframe").attr("src", ifr_src+"&wmode=transparent");
+    });
+
+	};
+  
+ </script>';
+
 
 if ($a->argv[0].$a->argv[1] === "profile".$a->user['nickname'] or $a->argv[0] === "network" && local_user()){
 $a->page['htmlhead'] .= '
 <script>
 
-$(function() {
+ $(function() {
 	$(".oembed.photo img").aeImageResize({height: 400, width: 400});
   });
+</script>';
 
+
+	if($ccCookie != "8") {
+$a->page['htmlhead'] .= '
+<script>
 $("right_aside").ready(function(){
 	
 	if($.cookie("close_pages") == "1") 
@@ -459,9 +494,10 @@ function close_lastlikes(){
  document.getElementById( "close_lastlikes" ).style.display = "none";
  $.cookie("close_lastlikes","1", { expires: 365, path: "/" });
  };
- 
- 
+</script>';}
 
+$a->page['htmlhead'] .= ' 
+<script>
 function restore_boxes(){
 	$.cookie("close_pages","2", { expires: 365, path: "/" });
 	$.cookie("close_helpers","2", { expires: 365, path: "/" });
@@ -472,5 +508,38 @@ function restore_boxes(){
 	$.cookie("close_lastphotos","2", { expires: 365, path: "/" });
 	$.cookie("close_lastlikes","2", { expires: 365, path: "/" });
 	alert("Right-hand column was restored. Please refresh your browser");
-  };
+  }
 </script>';}
+
+$a->page['htmlhead'] .= ' 
+
+<script type="text/javascript">
+function insertFormatting(BBcode,id) {
+	
+		var tmpStr = $("#comment-edit-text-" + id).val();
+		if(tmpStr == "Kommentar") {
+			tmpStr = "";
+			$("#comment-edit-text-" + id).addClass("comment-edit-text-full");
+			$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
+			openMenu("comment-edit-submit-wrapper-" + id);
+											}
+
+	textarea = document.getElementById("comment-edit-text-" +id);
+	if (document.selection) {
+		textarea.focus();
+		selected = document.selection.createRange();
+		if (BBcode == "url"){
+			selected.text = "["+BBcode+"]" + "http://" +  selected.text + "[/"+BBcode+"]";
+			} else			
+		selected.text = "["+BBcode+"]" + selected.text + "[/"+BBcode+"]";
+	} else if (textarea.selectionStart || textarea.selectionStart == "0") {
+		var start = textarea.selectionStart;
+		var end = textarea.selectionEnd;
+		if (BBcode == "url"){
+			textarea.value = textarea.value.substring(0, start) + "["+BBcode+"]" + "http://" + textarea.value.substring(start, end) + "[/"+BBcode+"]" + textarea.value.substring(end, textarea.value.length);
+			} else
+		textarea.value = textarea.value.substring(0, start) + "["+BBcode+"]" + textarea.value.substring(start, end) + "[/"+BBcode+"]" + textarea.value.substring(end, textarea.value.length);
+	}
+	return true;
+}
+</script> ';

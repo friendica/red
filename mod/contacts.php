@@ -85,7 +85,7 @@ function contacts_post(&$a) {
 	if($priority > 5 || $priority < 0)
 		$priority = 0;
 
-	$info = escape_tags(trim($_POST['info']));
+	$info = fix_mce_lf(escape_tags(trim($_POST['info'])));
 
 	$r = q("UPDATE `contact` SET `profile-id` = %d, `priority` = %d , `info` = '%s',
 		`hidden` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -232,8 +232,14 @@ function contacts_content(&$a) {
 		$contact_id = $a->data['contact']['id'];
 		$contact = $a->data['contact'];
 
-		$tpl = get_markup_template('contact_head.tpl');
-		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl(true)));
+		$editselect = 'exact';
+		if(intval(get_pconfig(local_user(),'system','plaintext')))
+			$editselect = 'none';
+
+		$a->page['htmlhead'] .= replace_macros(get_markup_template('contact_head.tpl'), array(
+			'$baseurl' => $a->get_baseurl(true),
+			'$editselect' => $editselect,
+		));
 
 		require_once('include/contact_selectors.php');
 

@@ -12,6 +12,7 @@ function follow_widget() {
 }
 
 function findpeople_widget() {
+	require_once('include/Contact.php');
 
 	$a = get_app();
 
@@ -32,6 +33,7 @@ function findpeople_widget() {
 		'$findthem' => t('Find'),
 		'$suggest' => t('Friend Suggestions'),
 		'$similar' => t('Similar Interests'),
+		'$random' => t('Random Profile'),
 		'$inv' => t('Invite Friends')
 	));
 

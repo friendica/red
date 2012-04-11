@@ -14,7 +14,7 @@ function profile_init(&$a) {
 	else {
 		$r = q("select nickname from user where blocked = 0 and account_expired = 0 and verified = 1 order by rand() limit 1");
 		if(count($r)) {
-			$which = $r[0]['nickname'];
+			goaway($a->get_baseurl() . '/profile/' . $r[0]['nickname']);
 		}
 		else {
 			notice( t('Requested profile is not available.') . EOL );

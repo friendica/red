@@ -1856,6 +1856,8 @@ function local_delivery($importer,$data) {
 	$feed->enable_order_by_date(false);
 	$feed->init();
 
+/*
+	// Currently unsupported - needs a lot of work
 	$reloc = $feed->get_feed_tags( NAMESPACE_DFRN, 'relocate' );
 	if(isset($reloc[0]['child'][NAMESPACE_DFRN])) {
 		$base = $reloc[0]['child'][NAMESPACE_DFRN];
@@ -1880,6 +1882,7 @@ function local_delivery($importer,$data) {
 		// schedule a scan?
 
 	}
+*/
 
 	// handle friend suggestion notification
 

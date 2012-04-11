@@ -692,18 +692,23 @@ function allowed_email($email) {
 }}
 
 
-if(! function_exists('gravatar_img')) {
-function gravatar_img($email) {
-	$size = 175;
-	$opt = 'identicon';   // psuedo-random geometric pattern if not found
-	$rating = 'pg';
-	$hash = md5(trim(strtolower($email)));
-	
-	$url = 'http://www.gravatar.com/avatar/' . $hash . '.jpg' 
-		. '?s=' . $size . '&d=' . $opt . '&r=' . $rating;
+if(! function_exists('avatar_img')) {
+function avatar_img($email) {
 
-	logger('gravatar: ' . $email . ' ' . $url);
-	return $url;
+	$a = get_app();
+
+	$avatar['size'] = 175;
+	$avatar['email'] = $email;
+	$avatar['url'] = '';
+	$avatar['success'] = false;
+
+	call_hooks('avatar_lookup', $avatar);
+
+	if(! $avatar['success'])
+		$avatar['url'] = $a->get_baseurl() . '/images/person-175.jpg';
+
+	logger('Avatar: ' . $avatar['email'] . ' ' . $avatar['url'], LOGGER_DEBUG);
+	return $avatar['url'];
 }}
 
 
