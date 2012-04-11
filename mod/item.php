@@ -272,8 +272,7 @@ function item_post(&$a) {
 
 	$plaintext = (local_user() ? intval(get_pconfig(local_user(),'system','plaintext')) : 0);
 	if((! $parent) && (! $api_source) && (! $plaintext)) {
-		$body = str_replace("\r\n","\n",$body);
-		$body = str_replace("\n\n","\n",$body);
+		$body = fix_mce_lf($body);
 	}
 
 
@@ -351,7 +350,7 @@ function item_post(&$a) {
 				$image_uri = substr($image_uri,0, strpos($image_uri,'-'));
 				if(! strlen($image_uri))
 					continue;
-				$srch = '<' . intval($profile_uid) . '>';
+				$srch = '<' . intval($contact_record['id']) . '>';
 				$r = q("SELECT `id` FROM `photo` WHERE `allow_cid` = '%s' AND `allow_gid` = '' AND `deny_cid` = '' AND `deny_gid` = ''
 					AND `resource-id` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($srch),
@@ -447,7 +446,7 @@ function item_post(&$a) {
 
 	if(count($tags)) {
 		foreach($tags as $tag) {
-			handle_tag($a, $body, $inform, $str_tags, $profile_uid, $tag); 
+			handle_tag($a, $body, $inform, $str_tags, (local_user()) ? local_user() : $profile_uid , $tag); 
 		}
 	}
 
