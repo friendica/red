@@ -362,7 +362,16 @@ function profiles_content(&$a) {
 
 		require_once('include/profile_selectors.php');
 
-		$tpl = get_markup_template('profed_head.tpl');
+
+		$editselect = 'textareas';
+		if(intval(get_pconfig(local_user(),'system','plaintext')))
+			$editselect = 'none';
+
+		$a->page['htmlhead'] .= replace_macros(get_markup_template('profed_head.tpl'), array(
+			'$baseurl' => $a->get_baseurl(true),
+			'$editselect' => $editselect,
+		));
+
 
 		$opt_tpl = get_markup_template("profile-hide-friends.tpl");
 		$hide_friends = replace_macros($opt_tpl,array(
@@ -373,9 +382,11 @@ function profiles_content(&$a) {
 			'$no_selected' => (($r[0]['hide-friends'] == 0) ? " checked=\"checked\" " : "")
 		));
 
-
-		$a->page['htmlhead'] .= replace_macros($tpl, array('$baseurl' => $a->get_baseurl(true)));
 		$a->page['htmlhead'] .= "<script type=\"text/javascript\" src=\"js/country.js\" ></script>";
+
+
+
+
 
 		$f = get_config('system','birthday_input_format');
 		if(! $f)

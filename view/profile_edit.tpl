@@ -159,7 +159,7 @@ $sexual
 $lbl_about
 </p>
 
-<textarea rows="10" cols="72" id="profile-jot-text" name="about" >$about</textarea>
+<textarea rows="10" cols="72" id="profile-about-text" name="about" >$about</textarea>
 
 </div>
 <div id="about-jot-end"></div>
