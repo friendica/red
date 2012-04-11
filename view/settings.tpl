@@ -5,7 +5,7 @@ $tabs
 $nickname_block
 
 <form action="settings" id="settings-form" method="post" autocomplete="off" >
-
+<input type='hidden' name='form_security_token' value='$form_security_token'>
 
 <h3 class="settings-heading">$h_pass</h3>
 
@@ -28,8 +28,6 @@ $nickname_block
 {{inc field_custom.tpl with $field=$timezone }}{{endinc}}
 {{inc field_input.tpl with $field=$defloc }}{{endinc}}
 {{inc field_checkbox.tpl with $field=$allowloc }}{{endinc}}
-{{inc field_select.tpl with $field=$theme }}{{endinc}}
-{{inc field_input.tpl with $field=$ajaxint }}{{endinc}}
 
 
 <div class="settings-submit-wrapper" >
@@ -58,11 +56,15 @@ $blocktags
 
 $suggestme
 
+$unkmail
+
+{{inc field_input.tpl with $field=$cntunkmail }}{{endinc}}
+
 {{inc field_input.tpl with $field=$expire.days }}{{endinc}}
 <div class="field input">
-	<span class="field_help"><a href="#advaced-expire-popup" id="advenced-expire" class='popupbox' title="$expire.advanced">$expire.label</a></span>
+	<span class="field_help"><a href="#advanced-expire-popup" id="advanced-expire" class='popupbox' title="$expire.advanced">$expire.label</a></span>
 	<div style="display: none;">
-		<div id="advaced-expire-popup" style="width:auto;height:auto;overflow:auto;">
+		<div id="advanced-expire-popup" style="width:auto;height:auto;overflow:auto;">
 			<h3>$expire.advanced</h3>
 			{{ inc field_yesno.tpl with $field=$expire.items }}{{endinc}}
 			{{ inc field_yesno.tpl with $field=$expire.notes }}{{endinc}}

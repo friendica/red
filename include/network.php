@@ -303,7 +303,7 @@ function webfinger_dfrn($s,&$hcard) {
 
 
 if(! function_exists('webfinger')) {
-function webfinger($s) {
+function webfinger($s, $debug = false) {
 	$host = '';
 	if(strstr($s,'@')) {
 		$host = substr($s,strpos($s,'@') + 1);
@@ -328,7 +328,7 @@ function webfinger($s) {
 }}
 
 if(! function_exists('lrdd')) {
-function lrdd($uri) {
+function lrdd($uri, $debug = false) {
 
 	$a = get_app();
 
@@ -363,6 +363,9 @@ function lrdd($uri) {
 		return array();
 
 	logger('lrdd: host_meta: ' . $xml, LOGGER_DATA);
+
+	if(! stristr($xml,'<xrd'))
+		return array();
 
 	$h = parse_xml_string($xml);
 	if(! $h)
@@ -821,3 +824,48 @@ function scale_external_images($s,$include_link = true) {
 	}
 	return $s;
 }
+
+
+function fix_contact_ssl_policy(&$contact,$new_policy) {
+
+	$ssl_changed = false;
+	if((intval($new_policy) == SSL_POLICY_SELFSIGN || $new_policy === 'self') && strstr($contact['url'],'https:')) {
+		$ssl_changed = true;
+		$contact['url']     = 	str_replace('https:','http:',$contact['url']);
+		$contact['request'] = 	str_replace('https:','http:',$contact['request']);
+		$contact['notify']  = 	str_replace('https:','http:',$contact['notify']);
+		$contact['poll']    = 	str_replace('https:','http:',$contact['poll']);
+		$contact['confirm'] = 	str_replace('https:','http:',$contact['confirm']);
+		$contact['poco']    = 	str_replace('https:','http:',$contact['poco']);
+	}
+
+	if((intval($new_policy) == SSL_POLICY_FULL || $new_policy === 'full') && strstr($contact['url'],'http:')) {
+		$ssl_changed = true;
+		$contact['url']     = 	str_replace('http:','https:',$contact['url']);
+		$contact['request'] = 	str_replace('http:','https:',$contact['request']);
+		$contact['notify']  = 	str_replace('http:','https:',$contact['notify']);
+		$contact['poll']    = 	str_replace('http:','https:',$contact['poll']);
+		$contact['confirm'] = 	str_replace('http:','https:',$contact['confirm']);
+		$contact['poco']    = 	str_replace('http:','https:',$contact['poco']);
+	}
+
+	if($ssl_changed) {
+		q("update contact set 
+			url = '%s', 
+			request = '%s',
+			notify = '%s',
+			poll = '%s',
+			confirm = '%s',
+			poco = '%s'
+			where id = %d limit 1",
+			dbesc($contact['url']),
+			dbesc($contact['request']),
+			dbesc($contact['notify']),
+			dbesc($contact['poll']),
+			dbesc($contact['confirm']),
+			dbesc($contact['poco']),
+			intval($contact['id'])
+		);
+	}
+}
+

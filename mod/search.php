@@ -93,33 +93,30 @@ function search_content(&$a) {
 		return $o;
 
 	// Here is the way permissions work in the search module...
-	// Only public wall posts can be shown
+	// Only public posts can be shown
 	// OR your own posts if you are a logged in member
+	// No items will be shown if the member has a blocked profile wall. 
 
-	$s_regx  = sprintf("AND ( `item`.`body` REGEXP '%s' OR `item`.`tag` REGEXP '%s' )", 
-		dbesc(preg_quote($search)), dbesc('\\]' . preg_quote($search) . '\\['));
-
-	$search_alg = $s_regx;
-
-	$r = q("SELECT COUNT(*) AS `total`
+	$r = q("SELECT distinct(`item`.`uri`) as `total`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` LEFT JOIN `user` ON `user`.`uid` = `item`.`uid`
 		WHERE `item`.`visible` = 1 AND `item`.`deleted` = 0 and `item`.`moderated` = 0
-		AND (( `wall` = 1 AND `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND `user`.`hidewall` = 0) 
+		AND (( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND `item`.`private` = 0 AND `user`.`hidewall` = 0) 
 			OR `item`.`uid` = %d )
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-		$search_alg ",
-		intval(local_user())
+		AND ( `item`.`body` REGEXP '%s' OR `item`.`tag` REGEXP '%s' ) group by `item`.`uri` ", 
+		intval(local_user()),
+		dbesc(preg_quote($search)), 
+		dbesc('\\]' . preg_quote($search) . '\\[')
 	);
 
 	if(count($r))
-		$a->set_pager_total($r[0]['total']);
-
-	if(! $r[0]['total']) {
+		$a->set_pager_total(count($r));
+	if(! count($r)) {
 		info( t('No results.') . EOL);
 		return $o;
 	}
 
-	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
+	$r = q("SELECT distinct(`item`.`uri`), `item`.*, `item`.`id` AS `item_id`, 
 		`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
 		`contact`.`network`, `contact`.`thumb`, `contact`.`self`, `contact`.`writable`, 
 		`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`,
@@ -127,12 +124,15 @@ function search_content(&$a) {
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		LEFT JOIN `user` ON `user`.`uid` = `item`.`uid`
 		WHERE `item`.`visible` = 1 AND `item`.`deleted` = 0 and `item`.`moderated` = 0
-		AND (( `wall` = 1 AND `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND `user`.`hidewall` = 0 ) 
+		AND (( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND `item`.`private` = 0 AND `user`.`hidewall` = 0 ) 
 			OR `item`.`uid` = %d )
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-		$search_alg
+		AND ( `item`.`body` REGEXP '%s' OR `item`.`tag` REGEXP '%s' )
+		group by `item`.`uri`	
 		ORDER BY `received` DESC LIMIT %d , %d ",
 		intval(local_user()),
+		dbesc(preg_quote($search)), 
+		dbesc('\\]' . preg_quote($search) . '\\['),
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
 

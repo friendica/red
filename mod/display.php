@@ -16,7 +16,15 @@ function display_content(&$a) {
 
 	$o = '<div id="live-display"></div>' . "\r\n";
 
-	$a->page['htmlhead'] .= '<script>$(document).ready(function() {	$(".comment-edit-wrapper  textarea").contact_autocomplete(baseurl+"/acl"); });</script>';
+	$a->page['htmlhead'] .= <<<EOT
+<script>
+$(document).ready(function() {
+	$(".comment-edit-wrapper textarea").contact_autocomplete(baseurl+"/acl");
+	// make auto-complete work in more places
+	$(".wall-item-comment-wrapper textarea").contact_autocomplete(baseurl+"/acl");
+});
+</script>
+EOT;
 
 
 	$nick = (($a->argc > 1) ? $a->argv[1] : '');
@@ -85,7 +93,7 @@ function display_content(&$a) {
 		$o .= status_editor($a,$x,0,true);
 
 
-	$sql_extra = permissions_sql($a->profile['uid'],$remote_contact,$groups);
+	$sql_extra = item_permissions_sql($a->profile['uid'],$remote_contact,$groups);
 
 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 		`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,

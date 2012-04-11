@@ -8,6 +8,8 @@ function nav(&$a) {
 	 *
 	 */
 
+	$ssl_state = ((local_user()) ? true : false);
+
 	if(!(x($a->page,'nav')))
 		$a->page['nav'] = '';
 
@@ -27,7 +29,7 @@ function nav(&$a) {
 
 	$myident = ((is_array($a->user) && isset($a->user['nickname'])) ? $a->user['nickname'] . '@' : '');
 		
-	$sitelocation = $myident . substr($a->get_baseurl(),strpos($a->get_baseurl(),'//') + 2 );
+	$sitelocation = $myident . substr($a->get_baseurl($ssl_state),strpos($a->get_baseurl($ssl_state),'//') + 2 );
 
 
 	// nav links: array of array('href', 'text', 'extra css classes', 'title')
@@ -53,7 +55,7 @@ function nav(&$a) {
 		// user info
 		$r = q("SELECT micro FROM contact WHERE uid=%d AND self=1", intval($a->user['uid']));
 		$userinfo = array(
-			'icon' => (count($r) ? $r[0]['micro']: $a->get_baseurl()."/images/default-profile-mm.jpg"),
+			'icon' => (count($r) ? $r[0]['micro']: $a->get_baseurl($ssl_state)."/images/person-48.jpg"),
 			'name' => $a->user['username'],
 		);
 		
@@ -67,7 +69,9 @@ function nav(&$a) {
 	 * "Home" should also take you home from an authenticated remote profile connection
 	 */
 
-	$homelink = ((x($_SESSION,'visitor_home')) ? $_SESSION['visitor_home'] : '');
+	$homelink = get_my_url();
+	if(! $homelink)
+		$homelink = ((x($_SESSION,'visitor_home')) ? $_SESSION['visitor_home'] : '');
 
 	if(($a->module != 'home') && (! (local_user()))) 
 		$nav['home'] = array($homelink, t('Home'), "", t('Home Page'));
@@ -76,7 +80,7 @@ function nav(&$a) {
 	if(($a->config['register_policy'] == REGISTER_OPEN) && (! local_user()) && (! remote_user()))
 		$nav['register'] = array('register',t('Register'), "", t('Create an account'));
 
-	$help_url = $a->get_baseurl() . '/help';
+	$help_url = $a->get_baseurl($ssl_state) . '/help';
 
 	if(! get_config('system','hide_help'))
 		$nav['help'] = array($help_url, t('Help'), "", t('Help and documentation'));
@@ -122,6 +126,9 @@ function nav(&$a) {
 		}
 
 		$nav['messages'] = array('message', t('Messages'), "", t('Private mail'));
+		$nav['messages']['inbox'] = array('message', t('Inbox'), "", t('Inbox'));
+		$nav['messages']['outbox']= array('message/sent', t('Outbox'), "", t('Outbox'));
+		$nav['messages']['new'] = array('message/new', t('New Message'), "", t('New Message'));
 		
 		if(is_array($a->identities) && count($a->identities) > 1) {
 			$nav['manage'] = array('manage', t('Manage'), "", t('Manage other pages'));

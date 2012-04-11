@@ -9,6 +9,12 @@ require_once('include/queue_fn.php');
 
 function diaspora_dispatch_public($msg) {
 
+	$enabled = intval(get_config('system','diaspora_enabled'));
+	if(! $enabled) {
+		logger('mod-diaspora: disabled');
+		return;
+	}
+
 	$r = q("SELECT `user`.* FROM `user` WHERE `user`.`uid` IN ( SELECT `contact`.`uid` FROM `contact` WHERE `contact`.`network` = '%s' AND `contact`.`addr` = '%s' ) AND `account_expired` = 0 ",
 		dbesc(NETWORK_DIASPORA),
 		dbesc($msg['author'])
@@ -28,6 +34,12 @@ function diaspora_dispatch_public($msg) {
 function diaspora_dispatch($importer,$msg) {
 
 	$ret = 0;
+
+	$enabled = intval(get_config('system','diaspora_enabled'));
+	if(! $enabled) {
+		logger('mod-diaspora: disabled');
+		return;
+	}
 
 	// php doesn't like dashes in variable names
 
@@ -688,9 +700,9 @@ function diaspora_post($importer,$xml) {
 
 				// don't link tags that are already embedded in links
 
-				if(preg_match('/\[(.*?)' . preg_quote($tag) . '(.*?)\]/',$body))
+				if(preg_match('/\[(.*?)' . preg_quote($tag,'/') . '(.*?)\]/',$body))
 					continue;
-				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag) . '(.*?)\)/',$body))
+				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag,'/') . '(.*?)\)/',$body))
 					continue;
 
 				$basetag = str_replace('_',' ',substr($tag,1));
@@ -853,9 +865,9 @@ function diaspora_reshare($importer,$xml) {
 
 				// don't link tags that are already embedded in links
 
-				if(preg_match('/\[(.*?)' . preg_quote($tag) . '(.*?)\]/',$body))
+				if(preg_match('/\[(.*?)' . preg_quote($tag,'/') . '(.*?)\]/',$body))
 					continue;
-				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag) . '(.*?)\)/',$body))
+				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag,'/') . '(.*?)\)/',$body))
 					continue;
 
 
@@ -1094,9 +1106,9 @@ function diaspora_comment($importer,$xml,$msg) {
 
 				// don't link tags that are already embedded in links
 
-				if(preg_match('/\[(.*?)' . preg_quote($tag) . '(.*?)\]/',$body))
+				if(preg_match('/\[(.*?)' . preg_quote($tag,'/') . '(.*?)\]/',$body))
 					continue;
-				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag) . '(.*?)\)/',$body))
+				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag,'/') . '(.*?)\)/',$body))
 					continue;
 
 
@@ -1158,6 +1170,48 @@ function diaspora_comment($importer,$xml,$msg) {
 		// is already relaying.
 
 		proc_run('php','include/notifier.php','comment',$message_id);
+	}
+
+	$myconv = q("SELECT `author-link`, `author-avatar`, `parent` FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `parent` != 0 ",
+		dbesc($parent_item['uri']),
+		intval($importer['uid'])
+	);
+
+	if(count($myconv)) {
+		$importer_url = $a->get_baseurl() . '/profile/' . $importer['nickname'];
+
+		foreach($myconv as $conv) {
+
+			// now if we find a match, it means we're in this conversation
+	
+			if(! link_compare($conv['author-link'],$importer_url))
+				continue;
+
+			require_once('include/enotify.php');
+								
+			$conv_parent = $conv['parent'];
+
+			notification(array(
+				'type'         => NOTIFY_COMMENT,
+				'notify_flags' => $importer['notify-flags'],
+				'language'     => $importer['language'],
+				'to_name'      => $importer['username'],
+				'to_email'     => $importer['email'],
+				'uid'          => $importer['uid'],
+				'item'         => $datarray,
+				'link'		   => $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $message_id,
+				'source_name'  => $datarray['author-name'],
+				'source_link'  => $datarray['author-link'],
+				'source_photo' => $datarray['author-avatar'],
+				'verb'         => ACTIVITY_POST,
+				'otype'        => 'item',
+				'parent'       => $conv_parent,
+
+			));
+
+			// only send one notification
+			break;
+		}
 	}
 	return;
 }
@@ -1695,7 +1749,7 @@ function diaspora_retraction($importer,$xml) {
 		contact_remove($contact['id']);
 	}
 	elseif($type === 'Post') {
-		$r = q("select * from item where guid = '%s' and uid = %d limit 1",
+		$r = q("select * from item where guid = '%s' and uid = %d and not file like '%%[%%' limit 1",
 			dbesc('guid'),
 			intval($importer['uid'])
 		);
@@ -1743,7 +1797,7 @@ function diaspora_signed_retraction($importer,$xml,$msg) {
 	}
 
 	if($type === 'StatusMessage') {
-		$r = q("select * from item where guid = '%s' and uid = %d limit 1",
+		$r = q("select * from item where guid = '%s' and uid = %d and not file like '%%[%%' limit 1",
 			dbesc($guid),
 			intval($importer['uid'])
 		);
@@ -1878,6 +1932,7 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 
 	$images = array();
 
+	$title = $item['title'];
 	$body = $item['body'];
 
 /*
@@ -1902,8 +1957,11 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 		}
 	}	
 */
-
 	$body = xmlify(html_entity_decode(bb2diaspora($body)));
+
+	if(strlen($title))
+		$body = xmlify('**' . html_entity_decode($title) . '**' . "\n") . $body;
+
 
 	if($item['attach']) {
 		$cnt = preg_match_all('/href=\"(.*?)\"(.*?)title=\"(.*?)\"/ism',$item['attach'],$matches,PREG_SET_ORDER);
@@ -2224,6 +2282,11 @@ function diaspora_send_mail($item,$owner,$contact) {
 }
 
 function diaspora_transmit($owner,$contact,$slap,$public_batch) {
+
+	$enabled = intval(get_config('system','diaspora_enabled'));
+	if(! $enabled) {
+		return 200;
+	}
 
 	$a = get_app();
 	$logid = random_string(4);

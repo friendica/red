@@ -14,22 +14,22 @@ function ACPopup(elm,backend_url){
 	this.kp_timer = false;
 	this.url = backend_url;
 
+	var w = 530;
+	var h = 130;
+
+
 	if(typeof elm.editorId == "undefined") {	
 		style = $(elm).offset();
 		w = $(elm).width();
 		h = $(elm).height();
 	}
 	else {
-		style = $(elm.container).offset();
-		w = elm.container.offsetWidth;
-		h = elm.container.offsetHeight;
-		// Quick fix for chrome until I get a tool to inspect the dom
-		// Chrome returns 0x0
-		if(! w)
-			w = 530;
-		if(! h)
-			h = 130;
-
+		var container = elm.getContainer();
+		if(typeof container != "undefined") {
+			style = $(container).offset();
+			w = $(container).width();
+	    	h = $(container).height();
+		}
 	}
 
 	style.top=style.top+h;
@@ -103,6 +103,7 @@ ACPopup.prototype._search = function(){
 		}
 		else {
 			txt = tinyMCE.activeEditor.getContent();
+			//			alert(that.searchText + ':' + t);
 			newtxt = txt.replace(that.searchText,t+' ');
 			tinyMCE.activeEditor.setContent(newtxt);
 			tinyMCE.activeEditor.focus();

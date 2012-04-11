@@ -3,6 +3,35 @@
 require_once('include/acl_selectors.php');
 require_once('include/message.php');
 
+function message_init(&$a) {
+	$tabs = array(
+	/*
+		array(
+			'label' => t('All'),
+			'url'=> $a->get_baseurl(true) . '/message',
+			'sel'=> ($a->argc == 1),
+		),
+		array(
+			'label' => t('Sent'),
+			'url' => $a->get_baseurl(true) . '/message/sent',
+			'sel'=> ($a->argv[1] == 'sent'),
+		),
+	*/
+	);
+	$new = array(
+		'label' => t('New Message'),
+		'url' => $a->get_baseurl(true) . '/message/new',
+		'sel'=> ($a->argv[1] == 'new'),
+	);
+	
+	$tpl = get_markup_template('message_side.tpl');
+	$a->page['aside'] = replace_macros($tpl, array(
+		'$tabs'=>$tabs,
+		'$new'=>$new,
+	));
+	
+}
+
 function message_post(&$a) {
 
 	if(! local_user()) {
@@ -10,17 +39,26 @@ function message_post(&$a) {
 		return;
 	}
 
-	$replyto   = ((x($_POST,'replyto'))   ? notags(trim($_POST['replyto']))   : '');
-	$subject   = ((x($_POST,'subject'))   ? notags(trim($_POST['subject']))   : '');
-	$body      = ((x($_POST,'body'))      ? escape_tags(trim($_POST['body'])) : '');
-	$recipient = ((x($_POST,'messageto')) ? intval($_POST['messageto'])       : 0 );
+	$replyto   = ((x($_REQUEST,'replyto'))   ? notags(trim($_REQUEST['replyto']))   : '');
+	$subject   = ((x($_REQUEST,'subject'))   ? notags(trim($_REQUEST['subject']))   : '');
+	$body      = ((x($_REQUEST,'body'))      ? escape_tags(trim($_REQUEST['body'])) : '');
+	$recipient = ((x($_REQUEST,'messageto')) ? intval($_REQUEST['messageto'])       : 0 );
 
+	// Work around doubled linefeeds in Tinymce 3.5b2
+
+	$plaintext = intval(get_pconfig(local_user(),'system','plaintext'));
+	if(! $plaintext) {
+		$body = str_replace("\r\n","\n",$body);
+		$body = str_replace("\n\n","\n",$body);
+	}
 	
 	$ret = send_message($recipient, $body, $subject, $replyto);
+	$norecip = false;
 
 	switch($ret){
 		case -1:
 			notice( t('No recipient selected.') . EOL );
+			$norecip = true;
 			break;
 		case -2:
 			notice( t('Unable to locate contact information.') . EOL );
@@ -35,6 +73,13 @@ function message_post(&$a) {
 			info( t('Message sent.') . EOL );
 	}
 
+	// fake it to go back to the input form if no recipient listed
+
+	if($norecip) {
+		$a->argc = 2;
+		$a->argv[1] = 'new';
+	}
+
 }
 
 function message_content(&$a) {
@@ -47,28 +92,10 @@ function message_content(&$a) {
 		return;
 	}
 
-	$myprofile = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
+	$myprofile = $a->get_baseurl(true) . '/profile/' . $a->user['nickname'];
 
 
-	$tabs = array(
-		array(
-			'label' => t('Inbox'),
-			'url'=> $a->get_baseurl() . '/message',
-			'sel'=> (($a->argc == 1) ? 'active' : ''),
-		),
-		array(
-			'label' => t('Outbox'),
-			'url' => $a->get_baseurl() . '/message/sent',
-			'sel'=> (($a->argv[1] == 'sent') ? 'active' : ''),
-		),
-		array(
-			'label' => t('New Message'),
-			'url' => $a->get_baseurl() . '/message/new',
-			'sel'=> (($a->argv[1] == 'new') ? 'active' : ''),
-		),
-	);
-	$tpl = get_markup_template('common_tabs.tpl');
-	$tab_content = replace_macros($tpl, array('$tabs'=>$tabs));
+
 
 
 	$tpl = get_markup_template('mail_head.tpl');
@@ -90,7 +117,7 @@ function message_content(&$a) {
 			if($r) {
 				info( t('Message deleted.') . EOL );
 			}
-			goaway($a->get_baseurl() . '/message' );
+			goaway($a->get_baseurl(true) . '/message' );
 		}
 		else {
 			$r = q("SELECT `parent-uri`,`convid` FROM `mail` WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -120,7 +147,7 @@ function message_content(&$a) {
 				if($r)
 					info( t('Conversation removed.') . EOL );
 			} 
-			goaway($a->get_baseurl() . '/message' );
+			goaway($a->get_baseurl(true) . '/message' );
 		}	
 	
 	}
@@ -129,23 +156,30 @@ function message_content(&$a) {
 		
 		$o .= $header;
 		
+		$plaintext = false;
+		if(intval(get_pconfig(local_user(),'system','plaintext')))
+			$plaintext = true;
+
+
 		$tpl = get_markup_template('msg-header.tpl');
 
 		$a->page['htmlhead'] .= replace_macros($tpl, array(
-			'$baseurl' => $a->get_baseurl(),
+			'$baseurl' => $a->get_baseurl(true),
+			'$editselect' => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 			'$nickname' => $a->user['nickname'],
 			'$linkurl' => t('Please enter a link URL:')
 		));
 	
 		$preselect = (isset($a->argv[2])?array($a->argv[2]):false);
 	
-		$select = contact_select('messageto','message-to-select', $preselect, 4, true);
+		$select = contact_select('messageto','message-to-select', $preselect, 4, true, false, false, 10);
 		$tpl = get_markup_template('prv_message.tpl');
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Send Private Message'),
 			'$to' => t('To:'),
 			'$subject' => t('Subject:'),
-			'$subjtxt' => '',
+			'$subjtxt' => ((x($_REQUEST,'subject')) ? strip_tags($_REQUEST['subject']) : ''),
+			'$text' => ((x($_REQUEST,'body')) ? escape_tags(htmlspecialchars($_REQUEST['body'])) : ''),
 			'$readonly' => '',
 			'$yourmessage' => t('Your message:'),
 			'$select' => $select,
@@ -158,15 +192,12 @@ function message_content(&$a) {
 		return $o;
 	}
 
-	if(($a->argc == 1) || ($a->argc == 2 && $a->argv[1] === 'sent')) {
+	if($a->argc == 1) {
+
+		// list messages
 
 		$o .= $header;
 		
-		if($a->argc == 2)
-			$eq = '='; // I'm not going to bother escaping this.
-		else
-			$eq = '!='; // or this.
-
 		$r = q("SELECT count(*) AS `total` FROM `mail` 
 			WHERE `mail`.`uid` = %d AND `from-url` $eq '%s' GROUP BY `parent-uri` ORDER BY `created` DESC",
 			intval(local_user()),
@@ -176,11 +207,12 @@ function message_content(&$a) {
 			$a->set_pager_total($r[0]['total']);
 	
 		$r = q("SELECT max(`mail`.`created`) AS `mailcreated`, min(`mail`.`seen`) AS `mailseen`, 
-			`mail`.* , `contact`.`name`, `contact`.`url`, `contact`.`thumb` 
+			`mail`.* , `contact`.`name`, `contact`.`url`, `contact`.`thumb` , `contact`.`network`,
+			count( * ) as count
 			FROM `mail` LEFT JOIN `contact` ON `mail`.`contact-id` = `contact`.`id` 
-			WHERE `mail`.`uid` = %d AND `from-url` $eq '%s' GROUP BY `parent-uri` ORDER BY `created` DESC  LIMIT %d , %d ",
+			WHERE `mail`.`uid` = %d GROUP BY `parent-uri` ORDER BY `mailcreated` DESC  LIMIT %d , %d ",
 			intval(local_user()),
-			dbesc($myprofile),
+			//
 			intval($a->pager['start']),
 			intval($a->pager['itemspage'])
 		);
@@ -191,17 +223,29 @@ function message_content(&$a) {
 
 		$tpl = get_markup_template('mail_list.tpl');
 		foreach($r as $rr) {
+			if($rr['unknown']) {
+				$partecipants = sprintf( t("Unknown sender - %s"),$rr['from-name']);
+			}
+			elseif (link_compare($rr['from-url'],$myprofile)){
+				$partecipants = sprintf( t("You and %s"), $rr['name']);
+			}
+			else {
+				$partecipants = sprintf( t("%s and You"), $rr['from-name']);
+			}
+			
 			$o .= replace_macros($tpl, array(
 				'$id' => $rr['id'],
-				'$from_name' =>$rr['from-name'],
-				'$from_url' => (($rr['network'] === NETWORK_DFRN) ? $a->get_baseurl() . '/redir/' . $rr['contact-id'] : $rr['url']),
+				'$from_name' => $partecipants,
+				'$from_url' => (($rr['network'] === NETWORK_DFRN) ? $a->get_baseurl(true) . '/redir/' . $rr['contact-id'] : $rr['url']),
 				'$sparkle' => ' sparkle',
-				'$from_photo' => $rr['thumb'],
+				'$from_photo' => (($rr['thumb']) ? $rr['thumb'] : $rr['from-photo']),
 				'$subject' => template_escape((($rr['mailseen']) ? $rr['title'] : '<strong>' . $rr['title'] . '</strong>')),
 				'$delete' => t('Delete conversation'),
 				'$body' => template_escape($rr['body']),
 				'$to_name' => template_escape($rr['name']),
-				'$date' => datetime_convert('UTC',date_default_timezone_get(),$rr['mailcreated'], t('D, d M Y - g:i A'))
+				'$date' => datetime_convert('UTC',date_default_timezone_get(),$rr['mailcreated'], t('D, d M Y - g:i A')),
+				'$seen' => $rr['mailseen'],
+				'$count' => sprintf( tt('%d message', '%d messages', $rr['count']), $rr['count']),
 			));
 		}
 		$o .= paginate($a);	
@@ -251,49 +295,68 @@ function message_content(&$a) {
 	
 		$a->page['htmlhead'] .= replace_macros($tpl, array(
 			'$nickname' => $a->user['nickname'],
-			'$baseurl' => $a->get_baseurl()
+			'$baseurl' => $a->get_baseurl(true)
 		));
 
 
-		$tpl = get_markup_template('mail_conv.tpl');
+		$mails = array();
+		$seen = 0;
+		$unknown = false;
+
 		foreach($messages as $message) {
+			if($message['unknown'])
+				$unknown = true;
 			if($message['from-url'] == $myprofile) {
 				$from_url = $myprofile;
 				$sparkle = '';
 			}
 			else {
-				$from_url = $a->get_baseurl() . '/redir/' . $message['contact-id'];
+				$from_url = $a->get_baseurl(true) . '/redir/' . $message['contact-id'];
 				$sparkle = ' sparkle';
 			}
-			$o .= replace_macros($tpl, array(
-				'$id' => $message['id'],
-				'$from_name' => template_escape($message['from-name']),
-				'$from_url' => $from_url,
-				'$sparkle' => $sparkle,
-				'$from_photo' => $message['from-photo'],
-				'$subject' => template_escape($message['title']),
-				'$body' => template_escape(smilies(bbcode($message['body']))),
-				'$delete' => t('Delete message'),
-				'$to_name' => template_escape($message['name']),
-				'$date' => datetime_convert('UTC',date_default_timezone_get(),$message['created'],'D, d M Y - g:i A')
-			));
+			$mails[] = array(
+				'id' => $message['id'],
+				'from_name' => template_escape($message['from-name']),
+				'from_url' => $from_url,
+				'sparkle' => $sparkle,
+				'from_photo' => $message['from-photo'],
+				'subject' => template_escape($message['title']),
+				'body' => template_escape(smilies(bbcode($message['body']))),
+				'delete' => t('Delete message'),
+				'to_name' => template_escape($message['name']),
+				'date' => datetime_convert('UTC',date_default_timezone_get(),$message['created'],'D, d M Y - g:i A'),
+			);
 				
+			$seen = $message['seen'];
 		}
 		$select = $message['name'] . '<input type="hidden" name="messageto" value="' . $contact_id . '" />';
 		$parent = '<input type="hidden" name="replyto" value="' . $message['parent-uri'] . '" />';
-		$tpl = get_markup_template('prv_message.tpl');
-		$o .= replace_macros($tpl,array(
+			
+
+		$tpl = get_markup_template('mail_display.tpl');
+		$o = replace_macros($tpl, array(
+			'$thread_id' => $a->argv[1],
+			'$thread_subject' => $message['title'],
+			'$thread_seen' => $seen,
+			'$delete' =>  t('Delete conversation'),
+			'$canreply' => (($unknown) ? false : '1'),
+			'$unknown_text' => t("No secure communications available. You <strong>may</strong> be able to respond from the sender's profile page."),			
+			'$mails' => $mails,
+			
+			// reply
 			'$header' => t('Send Reply'),
 			'$to' => t('To:'),
 			'$subject' => t('Subject:'),
 			'$subjtxt' => template_escape($message['title']),
 			'$readonly' => ' readonly="readonly" style="background: #BBBBBB;" ',
 			'$yourmessage' => t('Your message:'),
+			'$text' => '',
 			'$select' => $select,
 			'$parent' => $parent,
 			'$upload' => t('Upload photo'),
 			'$insert' => t('Insert web link'),
 			'$wait' => t('Please wait')
+
 		));
 
 		return $o;

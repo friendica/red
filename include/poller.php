@@ -1,7 +1,6 @@
 <?php
 
 require_once("boot.php");
-require_once("include/quoteconvert.php");
 
 
 function poller_run($argv, $argc){
@@ -26,9 +25,19 @@ function poller_run($argv, $argc){
 	require_once('include/Contact.php');
 	require_once('include/email.php');
 	require_once('include/socgraph.php');
+	require_once('include/pidfile.php');
 
 	load_config('config');
 	load_config('system');
+
+	$lockpath = get_config('system','lockpath');
+	if ($lockpath != '') {
+		$pidfile = new pidfile($lockpath, 'poller.lck');
+		if($pidfile->is_already_running()) {
+			logger("poller: Already running");
+			exit;
+		}
+	}
 
 	$a->set_baseurl(get_config('system','url'));
 
@@ -69,6 +78,19 @@ function poller_run($argv, $argc){
 
 	// clear old cache
 	Cache::clear();
+
+	// clear item cache files if they are older than one day
+	$cache = get_config('system','itemcache');
+	if (($cache != '') and is_dir($cache)) {
+		if ($dh = opendir($cache)) {
+			while (($file = readdir($dh)) !== false) {
+				$fullpath = $cache."/".$file;
+				if ((filetype($fullpath) == "file") and filectime($fullpath) < (time() - 86400))
+					unlink($fullpath);
+			}
+			closedir($dh);
+		}
+	}
 
 	$manual_id  = 0;
 	$generation = 0;
@@ -141,7 +163,10 @@ function poller_run($argv, $argc){
 			if($manual_id)
 				$contact['last-update'] = '0000-00-00 00:00:00';
 
-			if($contact['network'] === NETWORK_DFRN || $contact['network'] === NETWORK_OSTATUS)
+			if($contact['network'] === NETWORK_DFRN)
+				$contact['priority'] = 2;
+
+			if(!get_config('system','ostatus_use_priority') and ($contact['network'] === NETWORK_OSTATUS))
 				$contact['priority'] = 2;
 
 			if($contact['priority'] || $contact['subhub']) {
@@ -217,7 +242,7 @@ function poller_run($argv, $argc){
 
 			$importer_uid = $contact['uid'];
 		
-			$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
+			$r = q("SELECT `contact`.*, `user`.`page-flags` FROM `contact` LEFT JOIN `user` on `contact`.`uid` = `user`.`uid` WHERE `user`.`uid` = %d AND `contact`.`self` = 1 LIMIT 1",
 				intval($importer_uid)
 			);
 			if(! count($r))
@@ -489,12 +514,17 @@ function poller_run($argv, $argc){
 							//$datarray['title'] = notags(trim($meta->subject));
 							$datarray['created'] = datetime_convert('UTC','UTC',$meta->date);
 
-							$r = email_get_msg($mbox,$msg_uid);
+							// Is it  reply?
+							$reply = ((substr(strtolower($datarray['title']), 0, 3) == "re:") or
+								(substr(strtolower($datarray['title']), 0, 3) == "re-") or
+								(raw_refs != ""));
+
+							$r = email_get_msg($mbox,$msg_uid, $reply);
 							if(! $r) {
 								logger("Mail: can't fetch msg ".$msg_uid);
 								continue;
 							}
-							$datarray['body'] = escape_tags(convertquote($r['body'], false));
+							$datarray['body'] = escape_tags($r['body']);
 
 							logger("Mail: Importing ".$msg_uid);
 

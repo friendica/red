@@ -9,9 +9,9 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1269' );
-define ( 'DFRN_PROTOCOL_VERSION',  '2.22'    );
-define ( 'DB_UPDATE_VERSION',      1131      );
+define ( 'FRIENDICA_VERSION',      '2.3.1304' );
+define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
+define ( 'DB_UPDATE_VERSION',      1137      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -90,13 +90,14 @@ define ( 'PAGE_SOAPBOX',           1 );
 define ( 'PAGE_COMMUNITY',         2 );
 define ( 'PAGE_FREELOVE',          3 );
 define ( 'PAGE_BLOG',              4 );
+define ( 'PAGE_PRVGROUP',          5 );
 
 /**
  * Network and protocol family types 
  */
 
-define ( 'NETWORK_ZOT',              'zot!');    // Zot!
 define ( 'NETWORK_DFRN',             'dfrn');    // Friendica, Mistpark, other DFRN implementations
+define ( 'NETWORK_ZOT',              'zot!');    // Zot!
 define ( 'NETWORK_OSTATUS',          'stat');    // status.net, identi.ca, GNU-social, other OStatus implementations
 define ( 'NETWORK_FEED',             'feed');    // RSS/Atom feeds with no known "post/notify" protocol
 define ( 'NETWORK_DIASPORA',         'dspr');    // Diaspora
@@ -107,6 +108,28 @@ define ( 'NETWORK_LINKEDIN',         'lnkd');    // LinkedIn
 define ( 'NETWORK_XMPP',             'xmpp');    // XMPP     
 define ( 'NETWORK_MYSPACE',          'mysp');    // MySpace
 define ( 'NETWORK_GPLUS',            'goog');    // Google+
+
+/*
+ * These numbers are used in stored permissions
+ * and existing allocations MUST NEVER BE CHANGED
+ * OR RE-ASSIGNED! You may only add to them.
+ */
+
+$netgroup_ids = array(
+	NETWORK_DFRN     => (-1),
+	NETWORK_ZOT      => (-2),
+	NETWORK_OSTATUS  => (-3),
+	NETWORK_FEED     => (-4),
+	NETWORK_DIASPORA => (-5),
+	NETWORK_MAIL     => (-6),
+	NETWORK_MAIL2    => (-7),
+	NETWORK_FACEBOOK => (-8),
+	NETWORK_LINKEDIN => (-9),
+	NETWORK_XMPP     => (-10),
+	NETWORK_MYSPACE  => (-11),
+	NETWORK_GPLUS    => (-12),
+);
+
 
 /**
  * Maximum number of "people who like (or don't like) this"  that we will list by name
@@ -134,6 +157,9 @@ define ( 'NOTIFY_SUGGEST',  0x0020 );
 define ( 'NOTIFY_PROFILE',  0x0040 );
 define ( 'NOTIFY_TAGSELF',  0x0080 );
 define ( 'NOTIFY_TAGSHARE', 0x0100 );
+
+define ( 'NOTIFY_SYSTEM',   0x8000 );
+
 
 /**
  * various namespaces we may need to parse
@@ -268,6 +294,8 @@ class App {
 	
 	public $nav_sel;
 
+	public $category;
+
 	private $scheme;
 	private $hostname;
 	private $baseurl;
@@ -286,7 +314,12 @@ class App {
 
 		startup();
 
-		$this->scheme = ((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']))	?  'https' : 'http' );
+		$this->scheme = 'http';
+		if(x($_SERVER,'HTTPS') && $_SERVER['HTTPS'])
+			$this->scheme = 'https';
+		elseif(x($_SERVER,'SERVER_PORT') && (intval($_SERVER['SERVER_PORT']) == 443)) 
+			$this->scheme = 'https';
+
 
 		if(x($_SERVER,'SERVER_NAME')) {
 			$this->hostname = $_SERVER['SERVER_NAME'];
@@ -347,6 +380,9 @@ class App {
 		$this->argc = count($this->argv);
 		if((array_key_exists('0',$this->argv)) && strlen($this->argv[0])) {
 			$this->module = str_replace(".", "_", $this->argv[0]);
+			if(array_key_exists('2',$this->argv)) {
+			    $this->category = $this->argv[2];
+			}
 		}
 		else {
 			$this->argc = 1;
@@ -379,11 +415,22 @@ class App {
 
 		$scheme = $this->scheme;
 
-		if(x($this->config,'ssl_policy')) {
-			if(($ssl) || ($this->config['ssl_policy'] == SSL_POLICY_FULL)) 
+		if((x($this->config,'system')) && (x($this->config['system'],'ssl_policy'))) {
+			if(intval($this->config['system']['ssl_policy']) === intval(SSL_POLICY_FULL)) 
 				$scheme = 'https';
-			if(($this->config['ssl_policy'] == SSL_POLICY_SELFSIGN) && (local_user() || x($_POST,'auth-params')))
-				$scheme = 'https';
+
+//			We need to populate the $ssl flag across the entire program before turning this on.
+//			Basically, we'll have $ssl = true on any links which can only be seen by a logged in user
+//			(and also the login link). Anything seen by an outsider will have it turned off.
+//			At present, setting SSL_POLICY_SELFSIGN will only force remote contacts to update their 
+//			contact links to this site with "http:" if they are currently using "https:"
+
+//			if($this->config['system']['ssl_policy'] == SSL_POLICY_SELFSIGN) {
+//				if($ssl)
+//					$scheme = 'https';
+//				else
+//					$scheme = 'http';
+//			}
 		}
 
 		$this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
@@ -544,6 +591,10 @@ function absurl($path) {
 	return $path;
 }
 
+function is_ajax() {
+	return (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+}
+
 
 // Primarily involved with database upgrade, but also sets the 
 // base url for use in cmdline programs which don't have
@@ -685,6 +736,7 @@ function get_guid($size=16) {
 
 if(! function_exists('login')) {
 function login($register = false, $hiddens=false) {
+	$a = get_app();
 	$o = "";
 	$reg = false;
 	if ($register) {
@@ -696,31 +748,35 @@ function login($register = false, $hiddens=false) {
 
 	$noid = get_config('system','no_openid');
 	
+	$dest_url = $a->get_baseurl(true) . '/' . $a->query_string;
+
 	if(local_user()) {
 		$tpl = get_markup_template("logout.tpl");
 	}
 	else {
 		$tpl = get_markup_template("login.tpl");
-
+		$_SESSION['return_url'] = $a->query_string;
 	}
 
 
 	$o .= replace_macros($tpl,array(
-		'$logout'        => t('Logout'),
-		'$login'		 => t('Login'),
+
+		'$dest_url'     => $dest_url,
+		'$logout'       => t('Logout'),
+		'$login'        => t('Login'),
 		
 		'$lname'	 	=> array('username', t('Nickname or Email address: ') , '', ''),
 		'$lpassword' 	=> array('password', t('Password: '), '', ''),
 		
 		'$openid'		=> !$noid,
-		'$lopenid'	=> array('openid_url', t('Or login using OpenID: '),'',''),
+		'$lopenid'      => array('openid_url', t('Or login using OpenID: '),'',''),
 		
-		'$hiddens'	=> $hiddens,
+		'$hiddens'      => $hiddens,
 		
-		'$register'		=> $reg,
+		'$register'     => $reg,
 		
-		'$lostpass'      => t('Forgot your password?'),
-		'$lostlink'      => t('Password Reset'),
+		'$lostpass'     => t('Forgot your password?'),
+		'$lostlink'     => t('Password Reset'),
 	));
 
 	call_hooks('login_hook',$o);
@@ -934,6 +990,12 @@ function profile_sidebar($profile, $block = 0) {
 	if((remote_user()) && ($_SESSION['visitor_visiting'] == $profile['uid']))
 		$connect = False; 
 
+	if(get_my_url() && $profile['unkmail'])
+		$wallmessage = t('Message');
+	else
+		$wallmessage = false;
+
+
 
 	// show edit profile to yourself
 	if ($profile['uid'] == local_user()) {
@@ -1016,6 +1078,7 @@ function profile_sidebar($profile, $block = 0) {
 	$o .= replace_macros($tpl, array(
 		'$profile' => $profile,
 		'$connect'  => $connect,		
+		'$wallmessage' => $wallmessage,
 		'$location' => template_escape($location),
 		'$gender'   => $gender,
 		'$pdesc'	=> $pdesc,
@@ -1209,19 +1272,22 @@ function current_theme(){
 	$a = get_app();
 	
 	$system_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : '');
-	$theme_name = ((is_array($_SESSION) && x($_SESSION,'theme')) ? $_SESSION['theme'] : $system_theme);
+	$theme_name = ((isset($_SESSION) && x($_SESSION,'theme')) ? $_SESSION['theme'] : $system_theme);
 	
-	if($theme_name && file_exists('view/theme/' . $theme_name . '/style.css'))
+	if($theme_name && 
+		(file_exists('view/theme/' . $theme_name . '/style.css') ||
+		file_exists('view/theme/' . $theme_name . '/style.php')))
 		return($theme_name);
 	
 	foreach($app_base_themes as $t) {
-		if(file_exists('view/theme/' . $t . '/style.css'))
+		if(file_exists('view/theme/' . $t . '/style.css')||
+		   file_exists('view/theme/' . $t . '/style.php'))
 			return($t);
 	}
 	
-	$fallback = glob('view/theme/*/style.css');
+	$fallback = glob('view/theme/*/style.[css|php]');
 	if(count($fallback))
-		return (str_replace('view/theme/','', str_replace("/style.css","",$fallback[0])));
+		return (str_replace('view/theme/','', substr($fallback[0],0,-10)));
 
 }}
 
@@ -1233,6 +1299,8 @@ if(! function_exists('current_theme_url')) {
 function current_theme_url() {
 	global $a;
 	$t = current_theme();
+	if (file_exists('view/theme/' . $t . '/style.php'))
+		return($a->get_baseurl() . '/view/theme/' . $t . '/style.pcss');
 	return($a->get_baseurl() . '/view/theme/' . $t . '/style.css');
 }}
 
@@ -1258,7 +1326,11 @@ function feed_birthday($uid,$tz) {
 	 *
 	 */
 
+	
 	$birthday = '';
+
+	if(! strlen($tz))
+		$tz = 'UTC';
 
 	$p = q("SELECT `dob` FROM `profile` WHERE `is-default` = 1 AND `uid` = %d LIMIT 1",
 		intval($uid)
@@ -1335,7 +1407,7 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 		array(
 			'label' => t('Profile'),
 			'url' 	=> $url.'/?tab=profile',
-			'sel'	=> (($tab=='profile')?'active':''),
+			'sel'	=> ((isset($tab) && $tab=='profile')?'active':''),
 		),
 		array(
 			'label' => t('Photos'),
@@ -1357,6 +1429,29 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 		);
 	}
 
+
+	$arr = array('is_owner' => $is_owner, 'nickname' => $nickname, 'tab' => (($tab) ? $tab : false), 'tabs' => $tabs);
+	call_hooks('profile_tabs', $arr);
+	
 	$tpl = get_markup_template('common_tabs.tpl');
-	return replace_macros($tpl,array('$tabs'=>$tabs));
+
+	return replace_macros($tpl,array('$tabs' => $arr['tabs']));
 }}	
+
+function get_my_url() {
+	if(x($_SESSION,'my_url'))
+		return $_SESSION['my_url'];
+	return false;
+}
+
+function zrl($s) {
+	if(! strlen($s))
+		return $s;
+	if(! strpos($s,'/profile/'))
+		return $s;	
+	$achar = strpos($s,'?') ? '&' : '?';
+	$mine = get_my_url();
+	if($mine and ! link_compare($mine,$s))
+		return $s . $achar . 'zrl=' . urlencode($mine);
+	return $s;
+}

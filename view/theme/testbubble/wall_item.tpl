@@ -61,7 +61,7 @@
 		</div>
 		
 		<div class="wall-item-author">
-				<a href="$item.profile_url" title="$item.linktitle" class="wall-item-name-link"><span class="wall-item-name$item.sparkle" id="wall-item-name-$item.id" >$name</span></a>
+				<a href="$item.profile_url" title="$item.linktitle" class="wall-item-name-link"><span class="wall-item-name$item.sparkle" id="wall-item-name-$item.id" >$item.name</span></a>
 				<div class="wall-item-ago"  id="wall-item-ago-$item.id">$item.ago</div>
 				
 		</div>	

@@ -17,7 +17,12 @@ function uninstall_plugin($plugin){
 }}
 
 if (! function_exists('install_plugin')){
-function install_plugin($plugin){
+function install_plugin($plugin) {
+
+	// silently fail if plugin was removed
+
+	if(! file_exists('addon/' . $plugin . '/' . $plugin . '.php'))
+		return false;
 	logger("Addons: installing " . $plugin);
 	$t = @filemtime('addon/' . $plugin . '/' . $plugin . '.php');
 	@include_once('addon/' . $plugin . '/' . $plugin . '.php');
@@ -32,9 +37,11 @@ function install_plugin($plugin){
 			intval($t),
 			$plugin_admin
 		);
+		return true;
 	}
 	else {
 		logger("Addons: FAILED installing " . $plugin);
+		return false;
 	}
 
 }}
@@ -249,6 +256,7 @@ function get_theme_info($theme){
 				list($k,$v) = array_map("trim", explode(":",$l,2));
 				$k= strtolower($k);
 				if ($k=="author"){
+
 					$r=preg_match("|([^<]+)<([^>]+)>|", $v, $m);
 					if ($r) {
 						$info['author'][] = array('name'=>$m[1], 'link'=>$m[2]);
@@ -276,3 +284,13 @@ function get_theme_info($theme){
 	return $info;
 }}
 
+
+function get_theme_screenshot($theme) {
+	$a = get_app();
+	$exts = array('.png','.jpg');
+	foreach($exts as $ext) {
+		if(file_exists('view/theme/' . $theme . '/screenshot' . $ext))
+			return($a->get_baseurl() . '/view/theme/' . $theme . '/screenshot' . $ext);
+	}
+	return($a->get_baseurl() . '/images/blank.png');
+}

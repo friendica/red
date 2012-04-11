@@ -9,6 +9,7 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 	$_SESSION['authenticated'] = 1;
 	$_SESSION['page_flags'] = $user_record['page-flags'];
 	$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $user_record['nickname'];
+	$_SESSION['my_address'] = $user_record['nickname'] . '@' . substr($a->get_baseurl(),strpos($a->get_baseurl(),'://')+3);
 	$_SESSION['addr'] = $_SERVER['REMOTE_ADDR'];
 
 	$a->user = $user_record;
@@ -108,14 +109,18 @@ function can_write_wall(&$a,$owner) {
 
 	if(remote_user()) {
 
-		// user remembered decision and avoid a DB lookup for each and every display item
+		// use remembered decision and avoid a DB lookup for each and every display item
 		// DO NOT use this function if there are going to be multiple owners
+
+		// We have a contact-id for an authenticated remote user, this block determines if the contact
+		// belongs to this page owner, and has the necessary permissions to post content
 
 		if($verified === 2)
 			return true;
 		elseif($verified === 1)
 			return false;
 		else {
+
 			$r = q("SELECT `contact`.*, `user`.`page-flags` FROM `contact` LEFT JOIN `user` on `user`.`uid` = `contact`.`uid` 
 				WHERE `contact`.`uid` = %d AND `contact`.`id` = %d AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
 				AND `user`.`blockwall` = 0 AND `readonly` = 0  AND ( `contact`.`rel` IN ( %d , %d ) OR `user`.`page-flags` = %d ) LIMIT 1",
@@ -125,6 +130,7 @@ function can_write_wall(&$a,$owner) {
 				intval(CONTACT_IS_FRIEND),
 				intval(PAGE_COMMUNITY)
 			);
+
 			if(count($r)) {
 				$verified = 2;
 				return true;
@@ -197,7 +203,7 @@ function permissions_sql($owner_id,$remote_verified = false,$groups = null) {
 				" AND ( allow_cid = '' OR allow_cid REGEXP '<%d>' ) 
 				  AND ( deny_cid  = '' OR  NOT deny_cid REGEXP '<%d>' ) 
 				  AND ( allow_gid = '' OR allow_gid REGEXP '%s' )
-				  AND ( deny_gid  = '' OR NOT deny_gid REGEXP '%s') 
+				  AND ( deny_gid  = '' OR NOT deny_gid REGEXP '%s')
 				",
 				intval($remote_user),
 				intval($remote_user),
@@ -207,4 +213,135 @@ function permissions_sql($owner_id,$remote_verified = false,$groups = null) {
 		}
 	}
 	return $sql;
+}
+
+
+function item_permissions_sql($owner_id,$remote_verified = false,$groups = null) {
+
+	$local_user = local_user();
+	$remote_user = remote_user();
+
+	/**
+	 * Construct permissions
+	 *
+	 * default permissions - anonymous user
+	 */
+
+	$sql = " AND allow_cid = '' 
+			 AND allow_gid = '' 
+			 AND deny_cid  = '' 
+			 AND deny_gid  = '' 
+			 AND private = 0
+	";
+
+	/**
+	 * Profile owner - everything is visible
+	 */
+
+	if(($local_user) && ($local_user == $owner_id)) {
+		$sql = ''; 
+	}
+
+	/**
+	 * Authenticated visitor. Unless pre-verified, 
+	 * check that the contact belongs to this $owner_id
+	 * and load the groups the visitor belongs to.
+	 * If pre-verified, the caller is expected to have already
+	 * done this and passed the groups into this function.
+	 */
+
+	elseif($remote_user) {
+
+		if(! $remote_verified) {
+			$r = q("SELECT id FROM contact WHERE id = %d AND uid = %d AND blocked = 0 LIMIT 1",
+				intval($remote_user),
+				intval($owner_id)
+			);
+			if(count($r)) {
+				$remote_verified = true;
+				$groups = init_groups_visitor($remote_user);
+			}
+		}
+		if($remote_verified) {
+		
+			$gs = '<<>>'; // should be impossible to match
+
+			if(is_array($groups) && count($groups)) {
+				foreach($groups as $g)
+					$gs .= '|<' . intval($g) . '>';
+			} 
+
+			$sql = sprintf(
+				" AND ( private = 0 OR ( private = 1 AND wall = 1 AND ( allow_cid = '' OR allow_cid REGEXP '<%d>' ) 
+				  AND ( deny_cid  = '' OR  NOT deny_cid REGEXP '<%d>' ) 
+				  AND ( allow_gid = '' OR allow_gid REGEXP '%s' )
+				  AND ( deny_gid  = '' OR NOT deny_gid REGEXP '%s'))) 
+				",
+				intval($remote_user),
+				intval($remote_user),
+				dbesc($gs),
+				dbesc($gs)
+			);
+		}
+	}
+
+	return $sql;
+}
+
+
+/*
+ * Functions used to protect against Cross-Site Request Forgery
+ * The security token has to base on at least one value that an attacker can't know - here it's the session ID and the private key.
+ * In this implementation, a security token is reusable (if the user submits a form, goes back and resubmits the form, maybe with small changes;
+ * or if the security token is used for ajax-calls that happen several times), but only valid for a certain amout of time (3hours).
+ * The "typename" seperates the security tokens of different types of forms. This could be relevant in the following case:
+ *    A security token is used to protekt a link from CSRF (e.g. the "delete this profile"-link).
+ *    If the new page contains by any chance external elements, then the used security token is exposed by the referrer.
+ *    Actually, important actions should not be triggered by Links / GET-Requests at all, but somethimes they still are,
+ *    so this mechanism brings in some damage control (the attacker would be able to forge a request to a form of this type, but not to forms of other types).
+ */ 
+function get_form_security_token($typename = '') {
+	$a = get_app();
+	
+	$timestamp = time();
+	$sec_hash = hash('whirlpool', $a->user['guid'] . $a->user['prvkey'] . session_id() . $timestamp . $typename);
+	
+	return $timestamp . '.' . $sec_hash;
+}
+
+function check_form_security_token($typename = '', $formname = 'form_security_token') {
+	if (!x($_REQUEST, $formname)) return false;
+	$hash = $_REQUEST[$formname];
+	
+	$max_livetime = 10800; // 3 hours
+	
+	$a = get_app();
+	
+	$x = explode('.', $hash);
+	if (time() > (IntVal($x[0]) + $max_livetime)) return false;
+	
+	$sec_hash = hash('whirlpool', $a->user['guid'] . $a->user['prvkey'] . session_id() . $x[0] . $typename);
+	
+	return ($sec_hash == $x[1]);
+}
+
+function check_form_security_std_err_msg() {
+	return t('The form security token was not correct. This probably happened because the form has been opened for too long (>3 hours) before subitting it.') . EOL;
+}
+function check_form_security_token_redirectOnErr($err_redirect, $typename = '', $formname = 'form_security_token') {
+	if (!check_form_security_token($typename, $formname)) {
+		$a = get_app();
+		logger('check_form_security_token failed: user ' . $a->user['guid'] . ' - form element ' . $typename);
+		logger('check_form_security_token failed: _REQUEST data: ' . print_r($_REQUEST, true), LOGGER_DATA);
+		notice( check_form_security_std_err_msg() );
+		goaway($a->get_baseurl() . $err_redirect );
+	}
+}
+function check_form_security_token_ForbiddenOnErr($typename = '', $formname = 'form_security_token') {
+	if (!check_form_security_token($typename, $formname)) {
+		logger('check_form_security_token failed: user ' . $a->user['guid'] . ' - form element ' . $typename);
+		logger('check_form_security_token failed: _REQUEST data: ' . print_r($_REQUEST, true), LOGGER_DATA);
+		header('HTTP/1.1 403 Forbidden');
+		killme();
+	}
 }

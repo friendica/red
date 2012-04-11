@@ -46,7 +46,7 @@ function dirfind_content(&$a) {
 			foreach($j->results as $jj) {
 				
 				$o .= replace_macros($tpl,array(
-					'$url' => $jj->url,
+					'$url' => zrl($jj->url),
 					'$name' => $jj->name,
 					'$photo' => $jj->photo,
 					'$tags' => $jj->tags

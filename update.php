@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1131 );
+define( 'UPDATE_VERSION' , 1137 );
 
 /**
  *
@@ -1122,3 +1122,87 @@ function update_1130() {
 	q("ALTER TABLE `item` ADD `file` MEDIUMTEXT NOT NULL AFTER `inform`, ADD FULLTEXT KEY (`file`) ");
 }
 
+function update_1131() {
+	q("ALTER TABLE `contact` ADD `forum` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `writable` , ADD INDEX ( `forum` ) ");
+}
+
+
+function update_1132() {
+	q("CREATE TABLE IF NOT EXISTS `userd` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`username` CHAR( 255 ) NOT NULL,
+INDEX ( `username` )
+) ENGINE = MYISAM ");
+
+}
+
+function update_1133() {
+q("ALTER TABLE `user` ADD `unkmail` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `blocktags` , ADD INDEX ( `unkmail` ) ");
+q("ALTER TABLE `user` ADD `cntunkmail` INT NOT NULL DEFAULT '10' AFTER `unkmail` , ADD INDEX ( `cntunkmail` ) ");
+q("ALTER TABLE `mail` ADD `unknown` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `replied` , ADD INDEX ( `unknown` ) ");
+}
+
+function update_1134() {
+	// faulty update merged forward
+	// had a hardwired tablename of 'friendica' which isn't the right name on most systems
+}
+
+function update_1135() {
+	//there can't be indexes with more than 1000 bytes in mysql, 
+	//so change charset to be smaller
+	q("ALTER TABLE `config` CHANGE `cat` `cat` CHAR( 255 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL ,
+CHANGE `k` `k` CHAR( 255 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL"); 
+	
+	//same thing for pconfig
+	q("ALTER TABLE `pconfig` CHANGE `cat` `cat` CHAR( 255 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL ,
+	CHANGE `k` `k` CHAR( 255 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL"); 
+	// faulty update merged forward. Bad update in 1134 caused duplicate k,cat pairs
+	// these have to be cleared before the unique keys can be added.	
+}
+
+function update_1136() {
+
+	$arr = array();
+
+	// order in reverse so that we save the newest entry
+
+	$r = q("select * from config where 1 order by id desc");
+	if(count($r)) {
+		foreach($r as $rr) {
+			$found = false;
+			foreach($arr as $x) {
+				if($x['cat'] == $rr['cat'] && $x['k'] == $rr['k']) {
+					$found = true;
+					q("delete from config where id = %d limit 1",
+						intval($rr['id'])
+					);
+				}
+			}
+			if(! $found) {
+				$arr[] = $rr;
+			}
+		}
+	}
+			
+	$arr = array();
+	$r = q("select * from pconfig where 1 order by id desc");
+	if(count($r)) {
+		foreach($r as $rr) {
+			$found = false;
+			foreach($arr as $x) {
+				if($x['uid'] == $rr['uid'] && $x['cat'] == $rr['cat'] && $x['k'] == $rr['k']) {
+					$found = true;
+					q("delete from pconfig where id = %d limit 1",
+						intval($rr['id'])
+					);
+				}
+			}
+			if(! $found) {
+				$arr[] = $rr;
+			}
+		}
+	}
+	q("ALTER TABLE `config` ADD UNIQUE `access` ( `cat` , `k` ) "); 
+	q("ALTER TABLE `pconfig` ADD UNIQUE `access` ( `uid` , `cat` , `k` )"); 
+
+}

@@ -11,6 +11,7 @@ function initEditor(cb){
 		if(plaintext == 'none') {
 			$("#profile-jot-text-loading").hide();
 			$("#profile-jot-text").css({ 'height': 200, 'color': '#000' });
+			$("#profile-jot-text").contact_autocomplete(baseurl+"/acl");
 			editor = true;
 			$("a#jot-perms-icon").fancybox({
 				'transitionIn' : 'elastic',
@@ -32,6 +33,7 @@ function initEditor(cb){
 			theme_advanced_toolbar_location : "top",
 			theme_advanced_toolbar_align : "center",
 			theme_advanced_blockformats : "blockquote,code",
+			gecko_spellcheck : true,
 			paste_text_sticky : true,
 			entity_encoding : "raw",
 			add_unload_trigger : false,
@@ -121,7 +123,6 @@ function enableOnUser(){
 <script type="text/javascript" src="$baseurl/js/ajaxupload.js" ></script>
 <script>
 	var ispublic = '$ispublic';
-	var addtitle = '$addtitle';
 
 	$(document).ready(function() {
 		
@@ -260,6 +261,39 @@ function enableOnUser(){
 				liking = 1;
 			}
 		}
+	}
+
+	function itemFiler(id) {
+		
+		var bordercolor = $("input").css("border-color");
+		
+		$.get('filer/', function(data){
+			$.fancybox(data);
+			$("#id_term").keypress(function(){
+				$(this).css("border-color",bordercolor);
+			})
+			$("#select_term").change(function(){
+				$("#id_term").css("border-color",bordercolor);
+			})
+			
+			$("#filer_save").click(function(e){
+				e.preventDefault();
+				reply = $("#id_term").val();
+				if(reply && reply.length) {
+					commentBusy = true;
+					$('body').css('cursor', 'wait');
+					$.get('filer/' + id + '?term=' + reply);
+					if(timer) clearTimeout(timer);
+					timer = setTimeout(NavUpdate,3000);
+					liking = 1;
+					$.fancybox.close();
+				} else {
+					$("#id_term").css("border-color","#FF0000");
+				}
+				return false;
+			});
+		});
+		
 	}
 
 	function jotClearLocation() {

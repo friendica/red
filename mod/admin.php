@@ -37,7 +37,7 @@ function admin_post(&$a){
 							$func($a);
 						}
 				}
-				goaway($a->get_baseurl() . '/admin/plugins/' . $a->argv[2] );
+				goaway($a->get_baseurl(true) . '/admin/plugins/' . $a->argv[2] );
 				return; // NOTREACHED
 				break;
 			case 'logs':
@@ -49,7 +49,7 @@ function admin_post(&$a){
 		}
 	}
 
-	goaway($a->get_baseurl() . '/admin' );
+	goaway($a->get_baseurl(true) . '/admin' );
 	return; // NOTREACHED	
 }
 
@@ -68,11 +68,11 @@ function admin_content(&$a) {
 
 	// array( url, name, extra css classes )
 	$aside = Array(
-		'site'	 =>	Array($a->get_baseurl()."/admin/site/", t("Site") , "site"),
-		'users'	 =>	Array($a->get_baseurl()."/admin/users/", t("Users") , "users"),
-		'plugins'=>	Array($a->get_baseurl()."/admin/plugins/", t("Plugins") , "plugins"),
-		'themes' =>	Array($a->get_baseurl()."/admin/themes/", t("Themes") , "themes"),
-		'update' =>	Array($a->get_baseurl()."/admin/update/", t("Update") , "update")
+		'site'	 =>	Array($a->get_baseurl(true)."/admin/site/", t("Site") , "site"),
+		'users'	 =>	Array($a->get_baseurl(true)."/admin/users/", t("Users") , "users"),
+		'plugins'=>	Array($a->get_baseurl(true)."/admin/plugins/", t("Plugins") , "plugins"),
+		'themes' =>	Array($a->get_baseurl(true)."/admin/themes/", t("Themes") , "themes"),
+		'update' =>	Array($a->get_baseurl(true)."/admin/update/", t("Update") , "update")
 	);
 	
 	/* get plugins admin page */
@@ -81,18 +81,18 @@ function admin_content(&$a) {
 	$aside['plugins_admin']=Array();
 	foreach ($r as $h){
 		$plugin =$h['name'];
-		$aside['plugins_admin'][] = Array($a->get_baseurl()."/admin/plugins/".$plugin, $plugin, "plugin");
+		$aside['plugins_admin'][] = Array($a->get_baseurl(true)."/admin/plugins/".$plugin, $plugin, "plugin");
 		// temp plugins with admin
 		$a->plugins_admin[] = $plugin;
 	}
 		
-	$aside['logs'] = Array($a->get_baseurl()."/admin/logs/", t("Logs"), "logs");
+	$aside['logs'] = Array($a->get_baseurl(true)."/admin/logs/", t("Logs"), "logs");
 
 	$t = get_markup_template("admin_aside.tpl");
 	$a->page['aside'] = replace_macros( $t, array(
 			'$admin' => $aside, 
 			'$h_pending' => t('User registrations waiting for confirmation'),
-			'$admurl'=> $a->get_baseurl()."/admin/"
+			'$admurl'=> $a->get_baseurl(true)."/admin/"
 	));
 
 
@@ -145,16 +145,13 @@ function admin_page_summary(&$a) {
 		Array( t('Automatic Friend Account'), 0)
 	);
 	$users=0;
-	foreach ($r as $u){ $accounts[$u['page-flags']][1] = $u['count']; $users+=$u['count']; }
+	foreach ($r as $u){ $accounts[$u['page-flags']][1] = $u['count']; $users+= $u['count']; }
 
-	
+	logger('accounts: ' . print_r($accounts,true));
+
 	$r = q("SELECT COUNT(id) as `count` FROM `register`");
 	$pending = $r[0]['count'];
-	
-	
-	
-	
-	
+		
 	$t = get_markup_template("admin_summary.tpl");
 	return replace_macros($t, array(
 		'$title' => t('Administration'),
@@ -209,7 +206,49 @@ function admin_page_site_post(&$a){
 	$dfrn_only          =	((x($_POST,'dfrn_only'))	    ? True	:	False);
     $ostatus_disabled   =   !((x($_POST,'ostatus_disabled')) ? True  :   False);
 	$diaspora_enabled   =   ((x($_POST,'diaspora_enabled')) ? True   :  False);
+	$ssl_policy         =   ((x($_POST,'ssl_policy')) ? intval($_POST['ssl_policy']) : 0);
 
+	if($ssl_policy != intval(get_config('system','ssl_policy'))) {
+		if($ssl_policy == SSL_POLICY_FULL) {
+			q("update `contact` set 
+				`url`     = replace(`url`    , 'http:' , 'https:'),
+				`photo`   = replace(`photo`  , 'http:' , 'https:'),
+				`thumb`   = replace(`thumb`  , 'http:' , 'https:'),
+				`micro`   = replace(`micro`  , 'http:' , 'https:'),
+				`request` = replace(`request`, 'http:' , 'https:'),
+				`notify`  = replace(`notify` , 'http:' , 'https:'),
+				`poll`    = replace(`poll`   , 'http:' , 'https:'),
+				`confirm` = replace(`confirm`, 'http:' , 'https:'),
+				`poco`    = replace(`poco`   , 'http:' , 'https:')
+				where `self` = 1"
+			);
+			q("update `profile` set 
+				`photo`   = replace(`photo`  , 'http:' , 'https:'),
+				`thumb`   = replace(`thumb`  , 'http:' , 'https:')
+				where 1 "
+			);
+		}
+		elseif($ssl_policy == SSL_POLICY_SELFSIGN) {
+			q("update `contact` set 
+				`url`     = replace(`url`    , 'https:' , 'http:'),
+				`photo`   = replace(`photo`  , 'https:' , 'http:'),
+				`thumb`   = replace(`thumb`  , 'https:' , 'http:'),
+				`micro`   = replace(`micro`  , 'https:' , 'http:'),
+				`request` = replace(`request`, 'https:' , 'http:'),
+				`notify`  = replace(`notify` , 'https:' , 'http:'),
+				`poll`    = replace(`poll`   , 'https:' , 'http:'),
+				`confirm` = replace(`confirm`, 'https:' , 'http:'),
+				`poco`    = replace(`poco`   , 'https:' , 'http:')
+				where `self` = 1"
+			);
+			q("update `profile` set 
+				`photo`   = replace(`photo`  , 'https:' , 'http:'),
+				`thumb`   = replace(`thumb`  , 'https:' , 'http:')
+				where 1 "
+			);
+		}
+	}
+	set_config('system','ssl_policy',$ssl_policy);
 
 	set_config('config','sitename',$sitename);
 	if ($banner==""){
@@ -257,7 +296,7 @@ function admin_page_site_post(&$a){
 	set_config('system','diaspora_enabled', $diaspora_enabled);
 
 	info( t('Site settings updated.') . EOL);
-	goaway($a->get_baseurl() . '/admin/site' );
+	goaway($a->get_baseurl(true) . '/admin/site' );
 	return; // NOTREACHED	
 	
 }
@@ -304,7 +343,13 @@ function admin_page_site(&$a) {
 		REGISTER_APPROVE => t("Requires approval"),
 		REGISTER_OPEN => t("Open")
 	); 
-	
+
+	$ssl_choices = array(
+		SSL_POLICY_NONE => t("No SSL policy, links will track page SSL state"),
+		SSL_POLICY_FULL => t("Force all links to use SSL"),
+		SSL_POLICY_SELFSIGN => t("Self-signed certificate, use SSL for local links only (discouraged)")
+	);
+
 	$t = get_markup_template("admin_site.tpl");
 	return replace_macros($t, array(
 		'$title' => t('Administration'),
@@ -315,37 +360,37 @@ function admin_page_site(&$a) {
 		'$corporate' => t('Policies'),
 		'$advanced' => t('Advanced'),
 		
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => $a->get_baseurl(true),
 									// name, label, value, help string, extra data...
 		'$sitename' 		=> array('sitename', t("Site name"), htmlentities($a->config['sitename'], ENT_QUOTES), ""),
 		'$banner'			=> array('banner', t("Banner/Logo"), $banner, ""),
 		'$language' 		=> array('language', t("System language"), get_config('system','language'), "", $lang_choices),
-		'$theme' 			=> array('theme', t("System theme"), get_config('system','theme'), "Default system theme (which may be over-ridden by user profiles)", $theme_choices),
-
-		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), get_config('system','maximagesize'), "Maximum size in bytes of uploaded images. Default is 0, which means no limits."),
+		'$theme' 			=> array('theme', t("System theme"), get_config('system','theme'), t("Default system theme - may be over-ridden by user profiles"), $theme_choices),
+		'$ssl_policy'       => array('ssl_policy', t("SSL link policy"), (string) intval(get_config('system','ssl_policy')), t("Determines whether generated links should be forced to use SSL"), $ssl_choices),
+		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), get_config('system','maximagesize'), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
 
 		'$register_policy'	=> array('register_policy', t("Register policy"), $a->config['register_policy'], "", $register_choices),
-		'$register_text'	=> array('register_text', t("Register text"), htmlentities($a->config['register_text'], ENT_QUOTES), "Will be displayed prominently on the registration page."),
+		'$register_text'	=> array('register_text', t("Register text"), htmlentities($a->config['register_text'], ENT_QUOTES), t("Will be displayed prominently on the registration page.")),
 		'$abandon_days'     => array('abandon_days', t('Accounts abandoned after x days'), get_config('system','account_abandon_days'), t('Will not waste system resources polling external sites for abandonded accounts. Enter 0 for no time limit.')),
-		'$allowed_sites'	=> array('allowed_sites', t("Allowed friend domains"), get_config('system','allowed_sites'), "Comma separated list of domains which are allowed to establish friendships with this site. Wildcards are accepted. Empty to allow any domains"),
-		'$allowed_email'	=> array('allowed_email', t("Allowed email domains"), get_config('system','allowed_email'), "Comma separated list of domains which are allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains"),
-		'$block_public'		=> array('block_public', t("Block public"), get_config('system','block_public'), "Check to block public access to all otherwise public personal pages on this site unless you are currently logged in."),
-		'$force_publish'	=> array('publish_all', t("Force publish"), get_config('system','publish_all'), "Check to force all profiles on this site to be listed in the site directory."),
-		'$global_directory'	=> array('directory_submit_url', t("Global directory update URL"), get_config('system','directory_submit_url'), "URL to update the global directory. If this is not set, the global directory is completely unavailable to the application."),
+		'$allowed_sites'	=> array('allowed_sites', t("Allowed friend domains"), get_config('system','allowed_sites'), t("Comma separated list of domains which are allowed to establish friendships with this site. Wildcards are accepted. Empty to allow any domains")),
+		'$allowed_email'	=> array('allowed_email', t("Allowed email domains"), get_config('system','allowed_email'), t("Comma separated list of domains which are allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains")),
+		'$block_public'		=> array('block_public', t("Block public"), get_config('system','block_public'), t("Check to block public access to all otherwise public personal pages on this site unless you are currently logged in.")),
+		'$force_publish'	=> array('publish_all', t("Force publish"), get_config('system','publish_all'), t("Check to force all profiles on this site to be listed in the site directory.")),
+		'$global_directory'	=> array('directory_submit_url', t("Global directory update URL"), get_config('system','directory_submit_url'), t("URL to update the global directory. If this is not set, the global directory is completely unavailable to the application.")),
 			
-		'$no_multi_reg'		=> array('no_multi_reg', t("Block multiple registrations"),  get_config('system','block_extended_register'), "Disallow users to register additional accounts for use as pages."),
-		'$no_openid'		=> array('no_openid', t("OpenID support"), !get_config('system','no_openid'), "OpenID support for registration and logins."),
-		'$no_gravatar'		=> array('no_gravatar', t("Gravatar support"), !get_config('system','no_gravatar'), "Search new user's photo on Gravatar."),
-		'$no_regfullname'	=> array('no_regfullname', t("Fullname check"), !get_config('system','no_regfullname'), "Force users to register with a space between firstname and lastname in Full name, as an antispam measure"),
-		'$no_utf'			=> array('no_utf', t("UTF-8 Regular expressions"), !get_config('system','no_utf'), "Use PHP UTF8 regular expressions"),
-		'$no_community_page' => array('no_community_page', t("Show Community Page"), !get_config('system','no_community_page'), "Display a Community page showing all recent public postings on this site."),
-		'$ostatus_disabled' => array('ostatus_disabled', t("Enable OStatus support"), !get_config('system','ostatus_disable'), "Provide built-in OStatus \x28identi.ca, status.net, etc.\x29 compatibility. All communications in OStatus are public, so privacy warnings will be occasionally displayed."),	
-		'$diaspora_enabled' => array('diaspora_enabled', t("Enable Diaspora support"), get_config('system','diaspora_enabled'), "Provide built-in Diaspora network compatibility."),	
-		'$dfrn_only'        => array('dfrn_only', t('Only allow Friendica contacts'), get_config('system','dfrn_only'), "All contacts must use Friendica protocols. All other built-in communication protocols disabled."),
-		'$verifyssl' 		=> array('verifyssl', t("Verify SSL"), get_config('system','verifyssl'), "If you wish, you can turn on strict certificate checking. This will mean you cannot connect (at all) to self-signed SSL sites."),
+		'$no_multi_reg'		=> array('no_multi_reg', t("Block multiple registrations"),  get_config('system','block_extended_register'), t("Disallow users to register additional accounts for use as pages.")),
+		'$no_openid'		=> array('no_openid', t("OpenID support"), !get_config('system','no_openid'), t("OpenID support for registration and logins.")),
+		'$no_gravatar'		=> array('no_gravatar', t("Gravatar support"), !get_config('system','no_gravatar'), t("Search new user's photo on Gravatar.")),
+		'$no_regfullname'	=> array('no_regfullname', t("Fullname check"), !get_config('system','no_regfullname'), t("Force users to register with a space between firstname and lastname in Full name, as an antispam measure")),
+		'$no_utf'			=> array('no_utf', t("UTF-8 Regular expressions"), !get_config('system','no_utf'), t("Use PHP UTF8 regular expressions")),
+		'$no_community_page' => array('no_community_page', t("Show Community Page"), !get_config('system','no_community_page'), t("Display a Community page showing all recent public postings on this site.")),
+		'$ostatus_disabled' => array('ostatus_disabled', t("Enable OStatus support"), !get_config('system','ostatus_disable'), t("Provide built-in OStatus \x28identi.ca, status.net, etc.\x29 compatibility. All communications in OStatus are public, so privacy warnings will be occasionally displayed.")),	
+		'$diaspora_enabled' => array('diaspora_enabled', t("Enable Diaspora support"), get_config('system','diaspora_enabled'), t("Provide built-in Diaspora network compatibility.")),	
+		'$dfrn_only'        => array('dfrn_only', t('Only allow Friendica contacts'), get_config('system','dfrn_only'), t("All contacts must use Friendica protocols. All other built-in communication protocols disabled.")),
+		'$verifyssl' 		=> array('verifyssl', t("Verify SSL"), get_config('system','verifyssl'), t("If you wish, you can turn on strict certificate checking. This will mean you cannot connect (at all) to self-signed SSL sites.")),
 		'$proxyuser'		=> array('proxyuser', t("Proxy user"), get_config('system','proxyuser'), ""),
 		'$proxy'			=> array('proxy', t("Proxy URL"), get_config('system','proxy'), ""),
-		'$timeout'			=> array('timeout', t("Network timeout"), (x(get_config('system','curl_timeout'))?get_config('system','curl_timeout'):60), "Value is in seconds. Set to 0 for unlimited (not recommended)."),
+		'$timeout'			=> array('timeout', t("Network timeout"), (x(get_config('system','curl_timeout'))?get_config('system','curl_timeout'):60), t("Value is in seconds. Set to 0 for unlimited (not recommended).")),
 
 			
 	));
@@ -388,7 +433,7 @@ function admin_page_users_post(&$a){
 			user_deny($hash);
 		}
 	}
-	goaway($a->get_baseurl() . '/admin/users' );
+	goaway($a->get_baseurl(true) . '/admin/users' );
 	return; // NOTREACHED	
 }
  
@@ -398,7 +443,7 @@ function admin_page_users(&$a){
 		$user = q("SELECT * FROM `user` WHERE `uid`=%d", intval($uid));
 		if (count($user)==0){
 			notice( 'User not found' . EOL);
-			goaway($a->get_baseurl() . '/admin/users' );
+			goaway($a->get_baseurl(true) . '/admin/users' );
 			return; // NOTREACHED						
 		}		
 		switch($a->argv[2]){
@@ -417,7 +462,7 @@ function admin_page_users(&$a){
 				notice( sprintf( ($user[0]['blocked']?t("User '%s' unblocked"):t("User '%s' blocked")) , $user[0]['username']) . EOL);
 			}; break;
 		}
-		goaway($a->get_baseurl() . '/admin/users' );
+		goaway($a->get_baseurl(true) . '/admin/users' );
 		return; // NOTREACHED	
 		
 	}
@@ -496,7 +541,7 @@ function admin_page_users(&$a){
 
 
 		// values //
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => $a->get_baseurl(true),
 
 		'$pending' => $pending,
 		'$users' => $users,
@@ -535,7 +580,7 @@ function admin_page_plugins(&$a){
 				info( sprintf( t("Plugin %s enabled."), $plugin ) );
 			}
 			set_config("system","addon", implode(", ",$a->plugins));
-			goaway($a->get_baseurl() . '/admin/plugins' );
+			goaway($a->get_baseurl(true) . '/admin/plugins' );
 			return; // NOTREACHED	
 		}
 		// display plugin details
@@ -568,15 +613,18 @@ function admin_page_plugins(&$a){
 			'$page' => t('Plugins'),
 			'$toggle' => t('Toggle'),
 			'$settings' => t('Settings'),
-			'$baseurl' => $a->get_baseurl(),
+			'$baseurl' => $a->get_baseurl(true),
 		
 			'$plugin' => $plugin,
 			'$status' => $status,
 			'$action' => $action,
 			'$info' => get_plugin_info($plugin),
+			'$str_author' => t('Author: '),
+			'$str_maintainer' => t('Maintainer: '),			
 		
 			'$admin_form' => $admin_form,
 			'$function' => 'plugins',
+			'$screenshot' => '',
 			'$readme' => $readme
 		));
 	} 
@@ -604,7 +652,7 @@ function admin_page_plugins(&$a){
 		'$title' => t('Administration'),
 		'$page' => t('Plugins'),
 		'$submit' => t('Submit'),
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => $a->get_baseurl(true),
 		'$function' => 'plugins',	
 		'$plugins' => $plugins
 	));
@@ -710,7 +758,7 @@ function admin_page_themes(&$a){
 				info( sprintf('Theme %s disabled.',$theme));
 
 			set_config('system','allowed_themes',$s);
-			goaway($a->get_baseurl() . '/admin/themes' );
+			goaway($a->get_baseurl(true) . '/admin/themes' );
 			return; // NOTREACHED	
 		}
 
@@ -732,14 +780,18 @@ function admin_page_themes(&$a){
 		} 
 		
 		$admin_form="";
-		
+
+		$screenshot = array( get_theme_screenshot($theme), t('Screenshot'));
+		if(! stristr($screenshot[0],$theme))
+			$screenshot = null;		
+
 		$t = get_markup_template("admin_plugins_details.tpl");
 		return replace_macros($t, array(
 			'$title' => t('Administration'),
 			'$page' => t('Themes'),
 			'$toggle' => t('Toggle'),
 			'$settings' => t('Settings'),
-			'$baseurl' => $a->get_baseurl(),
+			'$baseurl' => $a->get_baseurl(true),
 		
 			'$plugin' => $theme,
 			'$status' => $status,
@@ -747,7 +799,9 @@ function admin_page_themes(&$a){
 			'$info' => get_theme_info($theme),
 			'$function' => 'themes',		
 			'$admin_form' => $admin_form,
-			
+			'$str_author' => t('Author: '),
+			'$str_maintainer' => t('Maintainer: '),			
+			'$screenshot' => $screenshot,
 			'$readme' => $readme
 		));
 	} 
@@ -770,7 +824,7 @@ function admin_page_themes(&$a){
 		'$title' => t('Administration'),
 		'$page' => t('Themes'),
 		'$submit' => t('Submit'),
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => $a->get_baseurl(true),
 		'$function' => 'themes',
 		'$plugins' => $xthemes,
 		'$experimental' => t('[Experimental]'),
@@ -798,7 +852,7 @@ function admin_page_logs_post(&$a) {
 	}
 
 	info( t("Log settings updated.") );
-	goaway($a->get_baseurl() . '/admin/logs' );
+	goaway($a->get_baseurl(true) . '/admin/logs' );
 	return; // NOTREACHED	
 }
  
@@ -852,7 +906,7 @@ readable.");
 		'$submit' => t('Submit'),
 		'$clear' => t('Clear'),
 		'$data' => $data,
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => $a->get_baseurl(true),
 		'$logname' =>  get_config('system','logfile'),
 		
 									// name, label, value, help string, extra data...
@@ -897,7 +951,7 @@ function admin_page_remoteupdate(&$a) {
 	
 	$tpl = get_markup_template("admin_remoteupdate.tpl");
 	return replace_macros($tpl, array(
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => $a->get_baseurl(true),
 		'$submit' => t("Update now"),
 		'$close' => t("Close"),
 		'$localversion' => FRIENDICA_VERSION,

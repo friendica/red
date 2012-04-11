@@ -34,10 +34,11 @@ CREATE TABLE IF NOT EXISTS `challenge` (
 
 CREATE TABLE IF NOT EXISTS `config` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `cat` char(255) NOT NULL,
-  `k` char(255) NOT NULL,
+  `cat` char(255) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+  `k` char(255) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
   `v` text NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`), 
+  UNIQUE KEY `access`(`cat`,`k`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
@@ -92,6 +93,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `blocked` tinyint(1) NOT NULL DEFAULT '1',
   `readonly` tinyint(1) NOT NULL DEFAULT '0',
   `writable` tinyint(1) NOT NULL DEFAULT '0',
+  `forum` tinyint(1) NOT NULL DEFAULT '0',
   `hidden` tinyint(1) NOT NULL DEFAULT '0',
   `pending` tinyint(1) NOT NULL DEFAULT '1',
   `rating` tinyint(1) NOT NULL DEFAULT '0',
@@ -116,6 +118,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   KEY `dfrn-id` (`dfrn-id`),
   KEY `blocked` (`blocked`),
   KEY `readonly` (`readonly`),
+  KEY `forum` (`forum`),
   KEY `hidden` (`hidden`),
   KEY `pending` (`pending`),
   KEY `closeness` (`closeness`)  
@@ -287,9 +290,10 @@ CREATE TABLE IF NOT EXISTS `mail` (
   `convid` int(10) unsigned NOT NULL,
   `title` char(255) NOT NULL,
   `body` mediumtext NOT NULL,
-  `seen` tinyint(1) NOT NULL,
+  `seen` tinyint(1) NOT NULL DEFAULT '0',
   `reply` tinyint(1) NOT NULL DEFAULT '0',
-  `replied` tinyint(1) NOT NULL,
+  `replied` tinyint(1) NOT NULL DEFAULT '0',
+  `unknown` tinyint(1) NOT NULL DEFAULT '0',
   `uri` char(255) NOT NULL,
   `parent-uri` char(255) NOT NULL,
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -298,6 +302,7 @@ CREATE TABLE IF NOT EXISTS `mail` (
   KEY `guid` (`guid`),
   KEY `convid` (`convid`),
   KEY `reply` (`reply`),
+  KEY `unknown` (`unknown`),
   KEY `uri` (`uri`),
   KEY `parent-uri` (`parent-uri`),
   KEY `created` (`created`)
@@ -451,6 +456,8 @@ CREATE TABLE IF NOT EXISTS `user` (
   `blockwall` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `hidewall` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `blocktags` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `unkmail` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `cntunkmail` int(11) unsigned NOT NULL DEFAULT '10',
   `notify-flags` int(11) unsigned NOT NULL DEFAULT '65535', 
   `page-flags` int(11) unsigned NOT NULL DEFAULT '0',
   `prvnets` tinyint(1) NOT NULL DEFAULT '0',
@@ -470,6 +477,8 @@ CREATE TABLE IF NOT EXISTS `user` (
   KEY `account_expired` (`account_expired`),
   KEY `hidewall` (`hidewall`),
   KEY `blockwall` (`blockwall`),
+  KEY `unkmail` (`unkmail`),
+  KEY `cntunkmail` (`cntunkmail`),
   KEY `blocked` (`blocked`),
   KEY `verified` (`verified`),
   KEY `login_date` (`login_date`)
@@ -534,9 +543,10 @@ INDEX ( `batch` )
 CREATE TABLE IF NOT EXISTS `pconfig` (
 `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 `uid` INT NOT NULL DEFAULT '0',
-`cat` CHAR( 255 ) NOT NULL ,
-`k` CHAR( 255 ) NOT NULL ,
-`v` MEDIUMTEXT NOT NULL
+`cat` CHAR( 255 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL ,
+`k` CHAR( 255 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL ,
+`v` MEDIUMTEXT NOT NULL, 
+UNIQUE KEY `access`(`cat`, `k`)
 ) ENGINE = MyISAM DEFAULT CHARSET=utf8;
 
 
@@ -636,6 +646,7 @@ CREATE TABLE IF NOT EXISTS `mailacct` (
 `mailbox` CHAR( 255 ) NOT NULL,
 `user` CHAR( 255 ) NOT NULL ,
 `pass` TEXT NOT NULL ,
+`reply_to` CHAR( 255 ) NOT NULL ,
 `action` INT NOT NULL ,
 `movetofolder` CHAR(255) NOT NULL ,
 `pubmail` TINYINT(1) NOT NULL DEFAULT '0',
@@ -857,4 +868,10 @@ INDEX ( `ham` ),
 INDEX ( `term` )
 ) ENGINE = MyISAM DEFAULT CHARSET=utf8;
 
+
+CREATE TABLE IF NOT EXISTS `userd` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`username` CHAR( 255 ) NOT NULL,
+INDEX ( `username` )
+) ENGINE = MyISAM DEFAULT CHARSET=utf8;
 

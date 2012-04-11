@@ -189,8 +189,29 @@ function bbcode($Text,$preserve_nl = false) {
 	// Check for [code] text
 	$Text = preg_replace("/\[code\](.*?)\[\/code\]/ism","$CodeLayout", $Text);
 
+	// Declare the format for [spoiler] layout
+	$SpoilerLayout = '<blockquote class="spoiler">$1</blockquote>';
+
+	// Check for [spoiler] text
+	// handle nested quotes
+	$endlessloop = 0;
+	while ((strpos($Text, "[/spoiler]") !== false) and (strpos($Text, "[spoiler]") !== false) and (++$endlessloop < 20))
+		$Text = preg_replace("/\[spoiler\](.*?)\[\/spoiler\]/ism","$SpoilerLayout", $Text);
+
+	// Check for [spoiler=Author] text
+
+	$t_wrote = t('$1 wrote:');
+
+	// handle nested quotes
+	$endlessloop = 0;
+	while ((strpos($Text, "[/spoiler]")!== false)  and (strpos($Text, "[spoiler=") !== false) and (++$endlessloop < 20))
+		$Text = preg_replace("/\[spoiler=[\"\']*(.*?)[\"\']*\](.*?)\[\/spoiler\]/ism",
+        	                     "<br /><strong class=".'"spoiler"'.">" . $t_wrote . "</strong><blockquote class=".'"spoiler"'.">$2</blockquote>",
+                	             $Text);
+
 	// Declare the format for [quote] layout
 	$QuoteLayout = '<blockquote>$1</blockquote>';
+
 	// Check for [quote] text
 	// handle nested quotes
 	$endlessloop = 0;
@@ -205,17 +226,21 @@ function bbcode($Text,$preserve_nl = false) {
 	$endlessloop = 0;
 	while ((strpos($Text, "[/quote]")!== false)  and (strpos($Text, "[quote=") !== false) and (++$endlessloop < 20))
 		$Text = preg_replace("/\[quote=[\"\']*(.*?)[\"\']*\](.*?)\[\/quote\]/ism",
-        	                     "<blockquote><strong>" . $t_wrote . "</strong> $2</blockquote>",
+        	                     "<br /><strong class=".'"author"'.">" . $t_wrote . "</strong><blockquote class=".'"author"'.">$2</blockquote>",
                 	             $Text);
 
 	// [img=widthxheight]image source[/img]
-	$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/ism", '<img src="$3" style="height: $2px; width: $1px;" >', $Text);
+	//$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/ism", '<img src="$3" style="height: $2px; width: $1px;" >', $Text);
+	$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/ism", '<img src="$3" style="width: $1px;" >', $Text);
 
 	// Images
 	// [img]pathtoimage[/img]
 	$Text = preg_replace("/\[img\](.*?)\[\/img\]/ism", '<img src="$1" alt="' . t('Image/photo') . '" />', $Text);
 
 
+	$Text = preg_replace("/\[video\](.*?\.(ogg|ogv|oga|ogm|webm|mp4))\[\/video\]/ism", '<video src="$1" controls="controls" width="425" height="350"><a href="$1">$1</a></video>', $Text);
+
+	$Text = preg_replace("/\[audio\](.*?\.(ogg|ogv|oga|ogm|webm|mp4|mp3))\[\/audio\]/ism", '<audio src="$1" controls="controls"><a href="$1">$1</a></audio>', $Text);
 
 	// Try to Oembed
 	$Text = preg_replace_callback("/\[video\](.*?)\[\/video\]/ism", 'tryoembed', $Text);
@@ -224,9 +249,6 @@ function bbcode($Text,$preserve_nl = false) {
 
 	// html5 video and audio
 
-	$Text = preg_replace("/\[video\](.*?)\[\/video\]/ism", '<video src="$1" controls="controls" width="425" height="350"><a href="$1">$1</a></video>', $Text);
-
-	$Text = preg_replace("/\[audio\](.*?)\[\/audio\]/ism", '<audio src="$1" controls="controls"><a href="$1">$1</a></audio>', $Text);
 
 	$Text = preg_replace("/\[iframe\](.*?)\[\/iframe\]/ism", '<iframe src="$1" width="425" height="350"><a href="$1">$1</a></iframe>', $Text);
          

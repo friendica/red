@@ -171,16 +171,17 @@ function item_post(&$a) {
 		$str_contact_allow = $orig_post['allow_cid'];
 		$str_group_deny    = $orig_post['deny_gid'];
 		$str_contact_deny  = $orig_post['deny_cid'];
-		$title             = $orig_post['title'];
 		$location          = $orig_post['location'];
 		$coord             = $orig_post['coord'];
 		$verb              = $orig_post['verb'];
 		$emailcc           = $orig_post['emailcc'];
 		$app			   = $orig_post['app'];
-
+		$categories        = $orig_post['file'];
+		$title             = notags(trim($_REQUEST['title']));
 		$body              = escape_tags(trim($_REQUEST['body']));
 		$private           = $orig_post['private'];
 		$pubmail_enable    = $orig_post['pubmail'];
+
 	}
 	else {
 
@@ -213,8 +214,8 @@ function item_post(&$a) {
 		$coord             = notags(trim($_REQUEST['coord']));
 		$verb              = notags(trim($_REQUEST['verb']));
 		$emailcc           = notags(trim($_REQUEST['emailcc']));
-
 		$body              = escape_tags(trim($_REQUEST['body']));
+
 		$private = ((strlen($str_group_allow) || strlen($str_contact_allow) || strlen($str_group_deny) || strlen($str_contact_deny)) ? 1 : 0);
 
 		if(($parent_item) && 
@@ -242,7 +243,6 @@ function item_post(&$a) {
 			}
 		}
 
-
 		if(! strlen($body)) {
 			if($preview)
 				killme();
@@ -253,6 +253,28 @@ function item_post(&$a) {
 		}
 	}
 
+        if(strlen($categories)) {
+	        // get the "fileas" tags for this post
+                $filedas = file_tag_file_to_list($categories, 'file');
+	}
+        // save old and new categories, so we can determine what needs to be deleted from pconfig
+        $categories_old = $categories;
+        $categories = file_tag_list_to_file(trim($_REQUEST['category']), 'category');
+        $categories_new = $categories;
+        if(strlen($filedas)) {
+	        // append the fileas stuff to the new categories list
+	        $categories .= file_tag_list_to_file($filedas, 'file');
+	}
+
+	// Work around doubled linefeeds in Tinymce 3.5b2
+	// First figure out if it's a status post that would've been
+	// created using tinymce. Otherwise leave it alone. 
+
+	$plaintext = (local_user() ? intval(get_pconfig(local_user(),'system','plaintext')) : 0);
+	if((! $parent) && (! $api_source) && (! $plaintext)) {
+		$body = str_replace("\r\n","\n",$body);
+		$body = str_replace("\n\n","\n",$body);
+	}
 
 
 	// get contact info for poster
@@ -425,110 +447,7 @@ function item_post(&$a) {
 
 	if(count($tags)) {
 		foreach($tags as $tag) {
-			
-			if(isset($profile))
-				unset($profile);
-			if(strpos($tag,'#') === 0) {
-				if(strpos($tag,'[url='))
-					continue;
-				$basetag = str_replace('_',' ',substr($tag,1));
-				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
-
-				$newtag = '#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]';
-				if(! stristr($str_tags,$newtag)) {
-					if(strlen($str_tags))
-						$str_tags .= ',';
-					$str_tags .= $newtag;
-				} 
-				continue;
-			}
-			if(strpos($tag,'@') === 0) {
-				if(strpos($tag,'[url='))
-					continue;
-				$stat = false;
-				$name = substr($tag,1);
-				if((strpos($name,'@')) || (strpos($name,'http://'))) {
-					$newname = $name;
-					$links = @lrdd($name);
-					if(count($links)) {
-						foreach($links as $link) {
-							if($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page')
-                    			$profile = $link['@attributes']['href'];
-							if($link['@attributes']['rel'] === 'salmon') {
-								if(strlen($inform))
-									$inform .= ',';
-                    			$inform .= 'url:' . str_replace(',','%2c',$link['@attributes']['href']);
-							}
-						}
-					}
-				}
-				else {
-					$newname = $name;
-					$alias = '';
-					$tagcid = 0;
-					if(strrpos($newname,'+')) {
-						$tagcid = intval(substr($newname,strrpos($newname,'+') + 1));
-						if(strpos($name,' '))
-							$name = substr($name,0,strpos($name,' '));
-					}	
-					if($tagcid) {
-						$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-							intval($tagcid),
-							intval($profile_uid)
-						);
-					}
-					elseif(strstr($name,'_') || strstr($name,' ')) {
-						$newname = str_replace('_',' ',$name);
-						$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `uid` = %d LIMIT 1",
-							dbesc($newname),
-							intval($profile_uid)
-						);
-					}
-					else {
-						$r = q("SELECT * FROM `contact` WHERE `attag` = '%s' OR `nick` = '%s' AND `uid` = %d ORDER BY `attag` DESC LIMIT 1",
-							dbesc($name),
-							dbesc($name),
-							intval($profile_uid)
-						);
-					}
-					if(count($r)) {
-						$profile = $r[0]['url'];
-						if($r[0]['network'] === 'stat') {
-							$newname = $r[0]['nick'];
-							$stat = true;
-							if($r[0]['alias'])
-								$alias = $r[0]['alias'];
-						}
-						else
-							$newname = $r[0]['name'];
-						if(strlen($inform))
-							$inform .= ',';
-						$inform .= 'cid:' . $r[0]['id'];
-					}
-				}
-				if($profile) {
-					$body = str_replace('@' . $name, '@' . '[url=' . $profile . ']' . $newname	. '[/url]', $body);
-					$profile = str_replace(',','%2c',$profile);
-					$newtag = '@[url=' . $profile . ']' . $newname	. '[/url]';
-					if(! stristr($str_tags,$newtag)) {
-						if(strlen($str_tags))
-							$str_tags .= ',';
-						$str_tags .= $newtag;
-					}
-
-					// Status.Net seems to require the numeric ID URL in a mention if the person isn't 
-					// subscribed to you. But the nickname URL is OK if they are. Grrr. We'll tag both. 
-
-					if(strlen($alias)) {
-						$newtag = '@[url=' . $alias . ']' . $newname	. '[/url]';
-						if(! stristr($str_tags,$newtag)) {
-							if(strlen($str_tags))
-								$str_tags .= ',';
-							$str_tags .= $newtag;
-						}
-					}
-				}
-			}
+			handle_tag($a, $body, $inform, $str_tags, $profile_uid, $tag); 
 		}
 	}
 
@@ -593,6 +512,7 @@ function item_post(&$a) {
 	$datarray['location']      = $location;
 	$datarray['coord']         = $coord;
 	$datarray['tag']           = $str_tags;
+	$datarray['file']          = $categories;
 	$datarray['inform']        = $inform;
 	$datarray['verb']          = $verb;
 	$datarray['allow_cid']     = $str_contact_allow;
@@ -627,7 +547,7 @@ function item_post(&$a) {
 
 	if($preview) {
 		require_once('include/conversation.php');
-		$o = conversation(&$a,array(array_merge($contact_record,$datarray)),'search',false,true);
+		$o = conversation($a,array(array_merge($contact_record,$datarray)),'search',false,true);
 		logger('preview: ' . $o);
 		echo json_encode(array('preview' => $o));
 		killme();
@@ -652,13 +572,19 @@ function item_post(&$a) {
 
 
 	if($orig_post) {
-		$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			dbesc($title),
-			dbesc($body),
+		$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `attach` = '%s', `file` = '%s', `edited` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			dbesc($datarray['title']),
+			dbesc($datarray['body']),
+			dbesc($datarray['tag']),
+			dbesc($datarray['attach']),
+			dbesc($datarray['file']),
 			dbesc(datetime_convert()),
 			intval($post_id),
 			intval($profile_uid)
 		);
+
+		// update filetags in pconfig
+                file_tag_update_pconfig($uid,$categories_old,$categories_new,'category');
 
 		proc_run('php', "include/notifier.php", 'edit_post', "$post_id");
 		if((x($_REQUEST,'return')) && strlen($return_path)) {
@@ -673,8 +599,8 @@ function item_post(&$a) {
 
 	$r = q("INSERT INTO `item` (`guid`, `uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `commented`, `received`, `changed`, `uri`, `thr-parent`, `title`, `body`, `app`, `location`, `coord`, 
-		`tag`, `inform`, `verb`, `postopts`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`, `bookmark`,`origin`, `moderated` )
-		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, %d )",
+		`tag`, `inform`, `verb`, `postopts`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`, `bookmark`,`origin`, `moderated`, `file` )
+		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, %d, '%s' )",
 		dbesc($datarray['guid']),
 		intval($datarray['uid']),
 		dbesc($datarray['type']),
@@ -712,14 +638,18 @@ function item_post(&$a) {
 		dbesc($datarray['attach']),
 		intval($datarray['bookmark']),
 		intval($datarray['origin']),
-		intval($datarry['moderated'])
-	);
+	        intval($datarray['moderated']),
+	        dbesc($datarray['file'])
+	       );
 
 	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
 		dbesc($datarray['uri']));
 	if(count($r)) {
 		$post_id = $r[0]['id'];
 		logger('mod_item: saved item ' . $post_id);
+
+		// update filetags in pconfig
+                file_tag_update_pconfig($uid,$categories_old,$categories_new,'category');
 
 		if($parent) {
 
@@ -920,5 +850,144 @@ function item_content(&$a) {
 	if(($a->argc == 3) && ($a->argv[1] === 'drop') && intval($a->argv[2])) {
 		require_once('include/items.php');
 		drop_item($a->argv[2]);
+	}
+}
+
+/**
+ * This function removes the tag $tag from the text $body and replaces it with 
+ * the appropiate link. 
+ * 
+ * @param unknown_type $body the text to replace the tag in
+ * @param unknown_type $inform a comma-seperated string containing everybody to inform
+ * @param unknown_type $str_tags string to add the tag to
+ * @param unknown_type $profile_uid
+ * @param unknown_type $tag the tag to replace
+ */
+function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
+	//is it a hash tag? 
+	if(strpos($tag,'#') === 0) {
+		//if the tag is replaced...
+		if(strpos($tag,'[url='))
+			//...do nothing
+			return;
+		//base tag has the tags name only
+		$basetag = str_replace('_',' ',substr($tag,1));
+		//create text for link
+		$newtag = '#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]';
+		//replace tag by the link
+		$body = str_replace($tag, $newtag, $body);
+	
+		//is the link already in str_tags?
+		if(! stristr($str_tags,$newtag)) {
+			//append or set str_tags
+			if(strlen($str_tags))
+				$str_tags .= ',';
+			$str_tags .= $newtag;
+		}
+		return;
+	}
+	//is it a person tag? 
+	if(strpos($tag,'@') === 0) {
+		//is it already replaced? 
+		if(strpos($tag,'[url='))
+			return;
+		$stat = false;
+		//get the person's name
+		$name = substr($tag,1);
+		//is it a link or a full dfrn address? 
+		if((strpos($name,'@')) || (strpos($name,'http://'))) {
+			$newname = $name;
+			//get the profile links
+			$links = @lrdd($name);
+			if(count($links)) {
+				//for all links, collect how is to inform and how's profile is to link
+				foreach($links as $link) {
+					if($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page')
+						$profile = $link['@attributes']['href'];
+					if($link['@attributes']['rel'] === 'salmon') {
+						if(strlen($inform))
+							$inform .= ',';
+						$inform .= 'url:' . str_replace(',','%2c',$link['@attributes']['href']);
+					}
+				}
+			}
+		} else { //if it is a name rather than an address
+			$newname = $name;
+			$alias = '';
+			$tagcid = 0;
+			//is it some generated name?
+			if(strrpos($newname,'+')) {
+				//get the id
+				$tagcid = intval(substr($newname,strrpos($newname,'+') + 1));
+				//remove the next word from tag's name
+				if(strpos($name,' ')) {
+					$name = substr($name,0,strpos($name,' '));
+				}
+			}
+			if($tagcid) { //if there was an id
+				//select contact with that id from the logged in user's contact list
+				$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+						intval($tagcid),
+						intval($profile_uid)
+				);
+			} elseif(strstr($name,'_') || strstr($name,' ')) { //no id
+				//get the real name
+				$newname = str_replace('_',' ',$name);
+				//select someone from this user's contacts by name
+				$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `uid` = %d LIMIT 1",
+						dbesc($newname),
+						intval($profile_uid)
+				);
+			} else {
+				//select someone by attag or nick and the name passed in
+				$r = q("SELECT * FROM `contact` WHERE `attag` = '%s' OR `nick` = '%s' AND `uid` = %d ORDER BY `attag` DESC LIMIT 1",
+						dbesc($name),
+						dbesc($name),
+						intval($profile_uid)
+				);
+			}
+			//$r is set, if someone could be selected
+			if(count($r)) {
+				$profile = $r[0]['url'];
+				//set newname to nick, find alias
+				if($r[0]['network'] === 'stat') {
+					$newname = $r[0]['nick'];
+					$stat = true;
+					if($r[0]['alias'])
+						$alias = $r[0]['alias'];
+				}
+				else
+					$newname = $r[0]['name'];
+				//add person's id to $inform
+				if(strlen($inform))
+					$inform .= ',';
+				$inform .= 'cid:' . $r[0]['id'];
+			}
+		}
+		//if there is an url for this persons profile
+		if(isset($profile)) {
+			//create profile link
+			$profile = str_replace(',','%2c',$profile);
+			$newtag = '@[url=' . $profile . ']' . $newname	. '[/url]';
+			$body = str_replace('@' . $name, $newtag, $body);
+			//append tag to str_tags
+			if(! stristr($str_tags,$newtag)) {
+				if(strlen($str_tags))
+					$str_tags .= ',';
+				$str_tags .= $newtag;
+			}
+	
+			// Status.Net seems to require the numeric ID URL in a mention if the person isn't
+			// subscribed to you. But the nickname URL is OK if they are. Grrr. We'll tag both.
+	
+			if(strlen($alias)) {
+				$newtag = '@[url=' . $alias . ']' . $newname	. '[/url]';
+				if(! stristr($str_tags,$newtag)) {
+					if(strlen($str_tags))
+						$str_tags .= ',';
+					$str_tags .= $newtag;
+				}
+			}
+		}
 	}
 }

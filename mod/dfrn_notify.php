@@ -14,6 +14,8 @@ function dfrn_notify_post(&$a) {
 	$key          = ((x($_POST,'key'))          ? $_POST['key']                     : '');
 	$dissolve     = ((x($_POST,'dissolve'))     ? intval($_POST['dissolve'])        :  0);
 	$perm         = ((x($_POST,'perm'))         ? notags(trim($_POST['perm']))      : 'r');
+	$ssl_policy   = ((x($_POST,'ssl_policy'))   ? notags(trim($_POST['ssl_policy'])): 'none');
+	$page         = ((x($_POST,'page'))         ? intval($_POST['page'])            :  0);
 
 	$writable = (-1);
 	if($dfrn_version >= 2.21) {
@@ -86,13 +88,21 @@ function dfrn_notify_post(&$a) {
 
 	$importer = $r[0];
 
-	if(($writable != (-1)) && ($writable != $importer['writable'])) {
-		q("UPDATE `contact` SET `writable` = %d WHERE `id` = %d LIMIT 1",
-			intval($writable),
+	if((($writable != (-1)) && ($writable != $importer['writable'])) || ($importer['forum'] != $page)) {
+		q("UPDATE `contact` SET `writable` = %d, forum = %d WHERE `id` = %d LIMIT 1",
+			intval(($writable == (-1)) ? $importer['writable'] : $writable),
+			intval($page),
 			intval($importer['id'])
 		);
-		$importer['writable'] = $writable;
+		if($writable != (-1))
+			$importer['writable'] = $writable;
+		$importer['forum'] = $page;
 	}
+
+
+	// if contact's ssl policy changed, update our links
+
+	fix_contact_ssl_policy($importer,$ssl_policy);
 
 	logger('dfrn_notify: received notify from ' . $importer['name'] . ' for ' . $importer['username']);
 	logger('dfrn_notify: data: ' . $data, LOGGER_DATA);
@@ -109,6 +119,13 @@ function dfrn_notify_post(&$a) {
 		xml_status(0);
 
 	}
+
+
+	// If we are setup as a soapbox we aren't accepting input from this person
+
+	if($importer['page-flags'] == PAGE_SOAPBOX)
+		xml_status(0);
+
 
 	if(strlen($key)) {
 		$rawkey = hex2bin(trim($key));
@@ -197,7 +214,7 @@ function dfrn_notify_content(&$a) {
 				break; // NOTREACHED
 		}
 
-		$r = q("SELECT `contact`.*, `user`.`nickname` FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
+		$r = q("SELECT `contact`.*, `user`.`nickname`, `user`.`page-flags` FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
 				WHERE `contact`.`blocked` = 0 AND `contact`.`pending` = 0 AND `user`.`nickname` = '%s' 
 				AND `user`.`account_expired` = 0 $sql_extra LIMIT 1",
 				dbesc($a->argv[1])
@@ -235,6 +252,12 @@ function dfrn_notify_content(&$a) {
 		if(! $rino_enable)
 			$rino = 0;
 
+		if((($r[0]['rel']) && ($r[0]['rel'] != CONTACT_IS_SHARING)) || ($r[0]['page-flags'] == PAGE_COMMUNITY)) {
+			$perm = 'rw';
+		}
+		else {
+			$perm = 'r';
+		}
 
 		header("Content-type: text/xml");
 
@@ -242,7 +265,8 @@ function dfrn_notify_content(&$a) {
 			. '<dfrn_notify>' . "\r\n"
 			. "\t" . '<status>' . $status . '</status>' . "\r\n"
 			. "\t" . '<dfrn_version>' . DFRN_PROTOCOL_VERSION . '</dfrn_version>' . "\r\n"
-			. "\t" . '<rino>' . $rino . '</rino>' . "\r\n" 
+			. "\t" . '<rino>' . $rino . '</rino>' . "\r\n"
+			. "\t" . '<perm>' . $perm . '</perm>' . "\r\n" 
 			. "\t" . '<dfrn_id>' . $encrypted_id . '</dfrn_id>' . "\r\n" 
 			. "\t" . '<challenge>' . $challenge . '</challenge>' . "\r\n"
 			. '</dfrn_notify>' . "\r\n" ;
