@@ -782,16 +782,12 @@ INDEX ( `otype` )
 CREATE TABLE IF NOT EXISTS `item_id` (
 `iid` INT NOT NULL ,
 `uid` INT NOT NULL ,
-`face` CHAR( 255 ) NOT NULL ,
-`dspr` CHAR( 255 ) NOT NULL ,
-`twit` CHAR( 255 ) NOT NULL ,
-`stat` CHAR( 255 ) NOT NULL ,
+`sid` CHAR ( 255 ) NOT NULL,
+`service` char ( 255 ) NOT NULL,
 PRIMARY KEY ( `iid` ),
 INDEX ( `uid` ),
-INDEX ( `face` ),
-INDEX ( `dspr` ),
-INDEX ( `twit` ),
-INDEX ( `stat` )
+INDEX ( `sid` ),
+INDEX ( `service` )
 ) ENGINE = MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `manage` (
