@@ -272,8 +272,7 @@ function item_post(&$a) {
 
 	$plaintext = (local_user() ? intval(get_pconfig(local_user(),'system','plaintext')) : 0);
 	if((! $parent) && (! $api_source) && (! $plaintext)) {
-		$body = str_replace("\r\n","\n",$body);
-		$body = str_replace("\n\n","\n",$body);
+		$body = fix_mce_lf($body);
 	}
 
 
