@@ -53,8 +53,9 @@ if(! class_exists('dba')) {
 			}
 
 			if(class_exists('mysqli')) {
-				$this->db = new mysqli($server,$user,$pass,$db);
-				if(NULL === $this->db->connect_error) {
+				$this->db = @new mysqli($server,$user,$pass,$db);
+				//if(NULL === $this->db->connect_error) {
+				if(!$this->db->connect_error) {
 					$this->connected = true;
 				} else {
 					throw new RuntimeException($this->db->connect_error);
