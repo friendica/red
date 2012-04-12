@@ -23,16 +23,24 @@ function user_remove($uid) {
 	);
 
 	q("DELETE FROM `contact` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `gcign` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `group` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `group_member` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `intro` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `event` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `item` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `item_id` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `mail` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `mailacct` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `manage` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `notify` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `photo` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `attach` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `profile` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `profile_check` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `pconfig` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `search` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `spam` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `user` WHERE `uid` = %d", intval($uid));
 	if($uid == local_user()) {
 		unset($_SESSION['authenticated']);
