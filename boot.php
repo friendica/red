@@ -657,32 +657,32 @@ if(! function_exists('check_config')) {
 
 							// call the specific update
 
-							global $db;
-							$db->excep(TRUE);
-							try {
-								$db->beginTransaction();
+//							global $db;
+//							$db->excep(TRUE);
+//							try {
+//								$db->beginTransaction();
 								$func = 'update_' . $x;
 								$func($a);
-								$db->commit();
-							} catch(Exception $ex) {
-								$db->rollback();
-								//send the administrator an e-mail
-								$email_tpl = get_intltext_template("update_fail_eml.tpl");
-								$email_tpl = replace_macros($email_tpl, array(
-									'$sitename' => $a->config['sitename'],
-									'$siteurl' =>  $a->get_baseurl(),
-									'$update' => $x,
-									'$error' => $ex->getMessage()));
-								$subject=sprintf(t('Update Error at %s'), $a->get_baseurl());
+//								$db->commit();
+//							} catch(Exception $ex) {
+//								$db->rollback();
+//								//send the administrator an e-mail
+//								$email_tpl = get_intltext_template("update_fail_eml.tpl");
+//								$email_tpl = replace_macros($email_tpl, array(
+//									'$sitename' => $a->config['sitename'],
+//									'$siteurl' =>  $a->get_baseurl(),
+//									'$update' => $x,
+//									'$error' => $ex->getMessage()));
+//								$subject=sprintf(t('Update Error at %s'), $a->get_baseurl());
 									
-								mail($a->config['admin_email'], $subject, $text,
-										'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
-										. 'Content-type: text/plain; charset=UTF-8' . "\n"
-										. 'Content-transfer-encoding: 8bit' );
-								//try the logger
-								logger('update failed: '.$ex->getMessage().EOL);
-							}
-							$db->excep(FALSE);
+//								mail($a->config['admin_email'], $subject, $text,
+//										'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+//										. 'Content-type: text/plain; charset=UTF-8' . "\n"
+//										. 'Content-transfer-encoding: 8bit' );
+//								//try the logger
+//								logger('update failed: '.$ex->getMessage().EOL);
+//							}
+//							$db->excep(FALSE);
 						}
 					}
 					set_config('system','build', DB_UPDATE_VERSION);
