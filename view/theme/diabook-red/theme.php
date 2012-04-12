@@ -3,13 +3,13 @@
 /*
  * Name: Diabook-red
  * Description: Diabook-red: report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
- * Version: (Version: 1.016)
+ * Version: (Version: 1.017)
  * Author: 
  */
 
 
 //print diabook-version for debugging
-$diabook_version = "Diabook-red (Version: 1.016)";
+$diabook_version = "Diabook-red (Version: 1.017)";
 $a->page['htmlhead'] .= sprintf('<script "%s" ></script>', $diabook_version);
 
 //change css on network and profilepages
@@ -21,7 +21,6 @@ $cssFile = null;
  */
 function diabook_red_community_info(){
 	$a = get_app();
-	//right_aside at networkpages
 
 	// last 12 users
 	$aside['$lastusers_title'] = t('Last users');
@@ -278,58 +277,6 @@ if ($a->argv[0].$a->argv[1] === "profile".$a->user['nickname']){
 	$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook-red/style-profile.css";
 	}
 }
-
-
-//tabs at right_aside on settings page
-if ($a->argv[0] === "settings"){
-	
-	$tabs = array(
-		array(
-			'label'	=> t('Account settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings',
-			'sel'	=> (($a->argc == 1)?'active':''),
-		),	
-		array(
-			'label'	=> t('Display settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings/display',
-			'sel'	=> (($a->argc > 1) && ($a->argv[1] === 'display')?'active':''),
-		),	
-		array(
-			'label'	=> t('Edit/Manage Profiles'),
-			'url' 	=> $a->get_baseurl(true).'/profiles',
-		),	
-		array(
-			'label'	=> t('Connector settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings/connectors',
-			'sel'	=> (($a->argc > 1) && ($a->argv[1] === 'connectors')?'active':''),
-		),
-		array(
-			'label'	=> t('Plugin settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings/addon',
-			'sel'	=> (($a->argc > 1) && ($a->argv[1] === 'addon')?'active':''),
-		),
-		array(
-			'label' => t('Connections'),
-			'url' => $a->get_baseurl(true) . '/settings/oauth',
-			'sel' => (($a->argc > 1) && ($a->argv[1] === 'oauth')?'active':''),
-		),
-		array(
-			'label' => t('Export personal data'),
-			'url' => $a->get_baseurl(true) . '/uexport',
-			'sel' => ''
-		)
-	);
-	$tabtpl = file_get_contents(dirname(__file__).'/rs_common_tabs.tpl') ;
-	$a->page['aside'] = replace_macros($tabtpl, array(
-		'$tabs' => $tabs,
-	));
-	
-	
-	// CUSTOM CSS
-	$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook-red/style-settings.css";
-	
-}
-
 
 // custom css
 if (!is_null($cssFile)) $a->page['htmlhead'] .= sprintf('<link rel="stylesheet" type="text/css" href="%s" />', $cssFile);
