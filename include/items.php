@@ -2974,10 +2974,21 @@ function item_expire($uid,$days) {
 		if($expire_items==0 && $item['type']!='note')
 			continue;
 
+
 		$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s' WHERE `id` = %d LIMIT 1",
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
 			intval($item['id'])
+		);
+
+		$r = q("DELETE FROM item_id where iid in (select id from item where parent = %d) and uid = %d",
+			intval($item['id']),
+			intval($uid)
+		);
+
+		$r = q("DELETE FROM sign where iid in (select id from item where parent = %d) and uid = %d",
+			intval($item['id']),
+			intval($uid)
 		);
 
 		// kill the kids
