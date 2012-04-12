@@ -451,7 +451,7 @@ function load_database_rem($v, $i){
 function load_database($db) {
 
 	$str = file_get_contents('database.sql');
-	$str = array_reduce(explode("\n", $str),"load_database_rem","");
+//	$str = array_reduce(explode("\n", $str),"load_database_rem","");
 	$arr = explode(';',$str);
 	$errors = false;
 	foreach($arr as $a) {
