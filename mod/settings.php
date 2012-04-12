@@ -15,10 +15,6 @@ function get_theme_config_file($theme){
 }
 
 function settings_init(&$a) {
-	if(local_user()) {
-		profile_load($a,$a->user['nickname']);
-	}
-
 	// These lines provide the javascript needed by the acl selector
 
 	$a->page['htmlhead'] .= "<script> var ispublic = '" . t('everybody') . "';" ;
