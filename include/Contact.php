@@ -174,3 +174,14 @@ function random_profile() {
 		return dirname($r[0]['url']);
 	return '';
 }
+
+
+function contacts_not_grouped($uid) {
+	$r = q("select * from contact where uid = %d and self = 0 and id not in (select distinct(`contact-id`) from group_member where uid = %d) ",
+		intval($uid),
+		intval($uid)
+	);
+
+	return $r;
+}
+
