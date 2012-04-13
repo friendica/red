@@ -3,13 +3,13 @@
 /*
  * Name: Diabook
  * Description: Diabook: report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
- * Version: (Version: 1.017)
+ * Version: (Version: 1.018)
  * Author: 
  */
 
 
 //print diabook-version for debugging
-$diabook_version = "Diabook (Version: 1.017)";
+$diabook_version = "Diabook (Version: 1.018)";
 $a->page['htmlhead'] .= sprintf('<script "%s" ></script>', $diabook_version);
 
 //change css on network and profilepages
@@ -469,18 +469,19 @@ function restore_boxes(){
   }
 </script>';}
 
+
 $a->page['htmlhead'] .= ' 
 
-<script type="text/javascript">
-function insertFormatting(BBcode,id) {
+<script>
+function insertFormatting(comment,BBcode,id) {
 	
 		var tmpStr = $("#comment-edit-text-" + id).val();
-		if(tmpStr == "Kommentar") {
+		if(tmpStr == comment) {
 			tmpStr = "";
 			$("#comment-edit-text-" + id).addClass("comment-edit-text-full");
 			$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
 			openMenu("comment-edit-submit-wrapper-" + id);
-											}
+								}
 
 	textarea = document.getElementById("comment-edit-text-" +id);
 	if (document.selection) {
