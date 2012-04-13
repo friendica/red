@@ -1219,6 +1219,50 @@ aside #side-peoplefind-url {
   float: left;
   margin-right: 20px;		
 	}
+.group_selected {
+  background: url("../../../view/theme/diabook/icons/selected.png") no-repeat left center;
+  float: left;
+  height: 22px;
+  width: 22px;
+}
+.group_unselected {
+  background: url("../../../view/theme/diabook/icons/unselected.png") no-repeat left center;
+  float: left;
+  height: 22px;
+  width: 22px;
+}
+.icon.text_add		{ 
+		background-image: url("../../../images/icons/16/add.png");
+		float: right;
+		opacity: 0.1;
+		margin-right: 14px;
+		}
+.icon.text_add:hover	{ 
+		background-image: url("../../../images/icons/16/add.png");
+		float: right;
+		cursor: pointer;
+		margin-right: 14px;
+		opacity: 1;
+-webkit-transition: all 0.2s ease-in-out;
+-moz-transition: all 0.2s ease-in-out;
+-o-transition: all 0.2s ease-in-out;
+-ms-transition: all 0.2s ease-in-out;
+transition: all 0.2s ease-in-out;
+		}
+.icon.text_edit {
+  background-image: url("../../../images/icons/10/edit.png");
+  opacity: 0.1;
+  margin-top: 6px;
+  float: right;
+  height: 10px;
+}
+.icon.text_edit:hover {
+  background-image: url("../../../images/icons/10/edit.png");
+  opacity: 1;
+  margin-top: 6px;
+  float: right;
+  height: 10px;
+}
 /* widget */
 .widget {
   margin-bottom: 2em;

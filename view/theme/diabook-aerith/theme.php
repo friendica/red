@@ -462,10 +462,10 @@ function restore_boxes(){
 $a->page['htmlhead'] .= ' 
 
 <script type="text/javascript">
-function insertFormatting(BBcode,id) {
+function insertFormatting(comment,BBcode,id) {
 	
 		var tmpStr = $("#comment-edit-text-" + id).val();
-		if(tmpStr == "Kommentar") {
+		if(tmpStr == comment) {
 			tmpStr = "";
 			$("#comment-edit-text-" + id).addClass("comment-edit-text-full");
 			$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
