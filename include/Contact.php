@@ -177,25 +177,25 @@ function random_profile() {
 
 
 function contacts_not_grouped($uid,$start = 0,$count = 0) {
-dbg(1);
+
 	if(! $count) {
 		$r = q("select count(*) as total from contact where uid = %d and self = 0 and id not in (select distinct(`contact-id`) from group_member where uid = %d) ",
 			intval($uid),
 			intval($uid)
 		);
-dbg(0);
+
 		return $r;
 
 
 	}
-dbg(1);
-	$r = q("select * from contact where uid = %d and self = 0 and id not in (select distinct(`contact-id`) from group_member where uid = %d) limit %d, %d",
+
+	$r = q("select * from contact where uid = %d and self = 0 and id not in (select distinct(`contact-id`) from group_member where uid = %d) and blocked = 0 and pending = 0 limit %d, %d",
 		intval($uid),
 		intval($uid),
 		intval($start),
 		intval($count)
 	);
-dbg(0);
+
 	return $r;
 }
 
