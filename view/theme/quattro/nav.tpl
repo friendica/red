@@ -92,3 +92,4 @@
 	<li><a href="{0}"><img src="{1}">{2} <span class="notif-when">{3}</span></a></li>
 </ul>
 
+<div style="position: fixed; top: 3px; left: 5px; z-index:9999">$langselector</div>
