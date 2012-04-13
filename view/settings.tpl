@@ -99,7 +99,13 @@ $unkmail
 
 <h3 class="settings-heading">$h_not</h3>
 
-<div id="settings-notify-desc">$lbl_not </div>
+<strong>$activity_options</strong>
+
+{{inc field_checkbox.tpl with $field=$post_newfriend }}{{endinc}}
+{{inc field_checkbox.tpl with $field=$post_profilechange }}{{endinc}}
+
+
+<div id="settings-notify-desc"><strong>$lbl_not </strong></div>
 
 <div class="group">
 {{inc field_intcheckbox.tpl with $field=$notify1 }}{{endinc}}

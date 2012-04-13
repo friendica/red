@@ -198,7 +198,7 @@ function notifications_content(&$a) {
 					'$photo' => ((x($rr,'photo')) ? $rr['photo'] : "images/person-175.jpg"),
 					'$fullname' => $rr['name'],
 					'$hidden' => array('hidden', t('Hide this contact from others'), ($rr['hidden'] == 1), ''),
-					'$activity' => array('activity', t('Post a new friend activity'), 1, t('if applicable')),
+					'$activity' => array('activity', t('Post a new friend activity'), get_config('system','post_newfriend'), t('if applicable')),
 					'$url' => zrl($rr['url']),
 					'$knowyou' => $knowyou,
 					'$approve' => t('Approve'),
