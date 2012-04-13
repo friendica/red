@@ -290,13 +290,13 @@ function profile_activity($changed) {
 		$changes .= $ch;
 	}
 
-	$prof = '[url=' . $self[0]['url'] . ']' . t('public profile') . '[/url]';	
+	$prof = '[url=' . $self[0]['url'] . '?tab=profile' . ']' . t('public profile') . '[/url]';	
 
-	$arr['body'] =  sprintf( t('%1$s has an updated %2$s changing %3$s.'), $A, $prof, $changes);
+	$arr['body'] =  sprintf( t('%1$s has an updated %2$s, changing %3$s.'), $A, $prof, $changes);
 
 	$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PROFILE . '</type><title>' . $self[0]['name'] . '</title>'
 	. '<id>' . $self[0]['url'] . '/' . $self[0]['name'] . '</id>';
-	$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $self[0]['url'] . '" />' . "\n");
+	$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $self[0]['url'] . '?tab=profile' . '" />' . "\n");
 	$arr['object'] .= xmlify('<link rel="photo" type="image/jpeg" href="' . $self[0]['thumb'] . '" />' . "\n");
 	$arr['object'] .= '</link></object>' . "\n";
 	$arr['last-child'] = 1;
