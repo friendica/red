@@ -51,6 +51,7 @@ function profiles_post(&$a) {
 		if($orig[0]['name'] != $name)
 			$namechanged = true;
 
+
 		$pdesc = notags(trim($_POST['pdesc']));
 		$gender = notags(trim($_POST['gender']));
 		$address = notags(trim($_POST['address']));
@@ -61,8 +62,6 @@ function profiles_post(&$a) {
 		$pub_keywords = notags(trim($_POST['pub_keywords']));
 		$prv_keywords = notags(trim($_POST['prv_keywords']));
 		$marital = notags(trim($_POST['marital']));
-		if($marital != $orig[0]['marital'])
-			$maritalchanged = true;
 
 		$with = ((x($_POST,'with')) ? notags(trim($_POST['with'])) : '');
 
@@ -134,6 +133,24 @@ function profiles_post(&$a) {
 
 		$hide_friends = (($_POST['hide-friends'] == 1) ? 1: 0);
 
+
+
+		$changes = array();
+		if($is_default) {
+			logger('changes');
+			if($marital != $orig[0]['marital']) $changes[] = '&hearts; ' . t('Marital Status');
+			if($work != $orig[0]['work']) $changes[] = t('Work/Employment');
+			if($religion != $orig[0]['religion']) $changes[] = t('Religion');
+			if($politic != $orig[0]['politic']) $changes[] = t('Political Views');
+			
+			if($address != $orig[0]['address'] || $locality != $orig[0]['locality'] || $region != $orig[0]['region']
+				|| $country_name != $orig[0]['country_name'])
+				$changes[] = t('Location');
+
+			profile_activity($changes);
+
+		}			
+			
 		$r = q("UPDATE `profile` 
 			SET `profile-name` = '%s',
 			`name` = '%s',
@@ -195,7 +212,7 @@ function profiles_post(&$a) {
 			dbesc($education),
 			intval($hide_friends),
 			intval($a->argv[1]),
-			intval($_SESSION['uid'])
+			intval(local_user())
 		);
 
 		if($r)
@@ -222,6 +239,80 @@ function profiles_post(&$a) {
 }
 
 
+function profile_activity($changed) {
+	$a = get_app();
+
+	if(! local_user() || ! is_array($changed) || ! count($changed))
+		return;
+
+	if($a->user['hidewall'] || get_config('system','block_public'))
+		return;
+
+	if(! get_pconfig(local_user(),'system','post_profilechange'))
+		return;
+
+	logger('activity');
+	require_once('include/items.php');
+
+	$self = q("SELECT * FROM `contact` WHERE `self` = 1 AND `uid` = %d LIMIT 1",
+		intval(local_user())
+	);
+
+	if(! count($self))
+		return;
+
+	$arr = array();
+	$arr['uri'] = $arr['parent-uri'] = item_new_uri($a->get_hostname(), local_user()); 
+	$arr['uid'] = local_user();
+	$arr['contact-id'] = $self[0]['id'];
+	$arr['wall'] = 1;
+	$arr['type'] = 'wall';
+	$arr['gravity'] = 0;
+	$arr['origin'] = 1;
+	$arr['author-name'] = $arr['owner-name'] = $self[0]['name'];
+	$arr['author-link'] = $arr['owner-link'] = $self[0]['url'];
+	$arr['author-avatar'] = $arr['owner-avatar'] = $self[0]['thumb'];
+	$arr['verb'] = ACTIVITY_UPDATE;
+	$arr['object-type'] = ACTIVITY_OBJ_PROFILE;
+				
+	$A = '[url=' . $self[0]['url'] . ']' . $self[0]['name'] . '[/url]';
+
+
+	$changes = '';
+	$t = count($changed);
+	$z = 0;
+	foreach($changed as $ch) {
+		if(strlen($changes)) {
+			if ($z == ($t - 1))
+				$changes .= ' and ';
+			else
+				$changes .= ', ';
+		}
+		$z ++;
+		$changes .= $ch;
+	}
+
+	$prof = '[url=' . $self[0]['url'] . ']' . t('public profile') . '[/url]';	
+
+	$arr['body'] =  sprintf( t('%1$s has an updated %2$s changing %3$s.'), $A, $prof, $changes);
+
+	$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PROFILE . '</type><title>' . $self[0]['name'] . '</title>'
+	. '<id>' . $self[0]['url'] . '/' . $self[0]['name'] . '</id>';
+	$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $self[0]['url'] . '" />' . "\n");
+	$arr['object'] .= xmlify('<link rel="photo" type="image/jpeg" href="' . $self[0]['thumb'] . '" />' . "\n");
+	$arr['object'] .= '</link></object>' . "\n";
+	$arr['last-child'] = 1;
+
+	$arr['allow_cid'] = $a->user['allow_cid'];
+	$arr['allow_gid'] = $a->user['allow_gid'];
+	$arr['deny_cid']  = $a->user['deny_cid'];
+	$arr['deny_gid']  = $a->user['deny_gid'];
+
+	$i = item_store($arr);
+	if($i)
+	   	proc_run('php',"include/notifier.php","activity","$i");
+
+}
 
 
 function profiles_content(&$a) {

@@ -347,6 +347,7 @@ function settings_post(&$a) {
 	$hide_friends     = (($_POST['hide-friends'] == 1) ? 1: 0);
 	$hidewall         = (($_POST['hidewall'] == 1) ? 1: 0);
 	$post_newfriend   = (($_POST['post_newfriend'] == 1) ? 1: 0);
+	$post_profilechange   = (($_POST['post_profilechange'] == 1) ? 1: 0);
 
 
 	$notify = 0;
@@ -430,6 +431,7 @@ function settings_post(&$a) {
 
 	set_pconfig(local_user(),'system','suggestme', $suggestme);
 	set_pconfig(local_user(),'system','post_newfriend', $post_newfriend);
+	set_pconfig(local_user(),'system','post_profilechange', $post_profilechange);
 
 
 	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `maxreq` = %d, `expire` = %d, `openidserver` = '%s', `blockwall` = %d, `hidewall` = %d, `blocktags` = %d, `unkmail` = %d, `cntunkmail` = %d  WHERE `uid` = %d LIMIT 1",
@@ -795,6 +797,9 @@ function settings_content(&$a) {
 	$post_newfriend = get_pconfig(local_user(), 'system','post_newfriend');
 	$post_newfriend = (($post_newfriend===false)? '0': $post_newfriend); // default if not set: 0
 
+	$post_profilechange = get_pconfig(local_user(), 'system','post_profilechange');
+	$post_profilechange = (($post_profilechange===false)? '0': $post_profilechange); // default if not set: 0
+
 	
 	if(! strlen($a->user['timezone']))
 		$timezone = date_default_timezone_get();
@@ -881,9 +886,7 @@ function settings_content(&$a) {
 
 	));
 
-	$activity_options = t('By default post a status message when:');
 
-	$post_newfriend = array('post_newfriend',  t('accepting a friend request'), $post_newfriend, '');
 
 
 	$invisible = (((! $profile['publish']) && (! $profile['net-publish']))
@@ -966,8 +969,9 @@ function settings_content(&$a) {
 		
 		
 		'$h_not' 	=> t('Notification Settings'),
-		'$activity_options' => $activity_options,
-		'$post_newfriend' => $post_newfriend,
+		'$activity_options' => t('By default post a status message when:'),
+		'$post_newfriend' => array('post_newfriend',  t('accepting a friend request'), $post_newfriend, ''),
+		'$post_profilechange' => array('post_profilechange',  t('making an <em>interesting</em> profile change'), $post_profilechange, ''),
 		'$lbl_not' 	=> t('Send a notification email when:'),
 		'$notify1'	=> array('notify1', t('You receive an introduction'), ($notify & NOTIFY_INTRO), NOTIFY_INTRO, ''),
 		'$notify2'	=> array('notify2', t('Your introductions are confirmed'), ($notify & NOTIFY_CONFIRM), NOTIFY_CONFIRM, ''),
