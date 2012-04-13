@@ -346,6 +346,7 @@ function settings_post(&$a) {
 	$suggestme        = ((x($_POST,'suggestme')) ? intval($_POST['suggestme'])  : 0);  
 	$hide_friends     = (($_POST['hide-friends'] == 1) ? 1: 0);
 	$hidewall         = (($_POST['hidewall'] == 1) ? 1: 0);
+	$post_newfriend   = (($_POST['post_newfriend'] == 1) ? 1: 0);
 
 
 	$notify = 0;
@@ -428,6 +429,7 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'expire','photos', $expire_photos);
 
 	set_pconfig(local_user(),'system','suggestme', $suggestme);
+	set_pconfig(local_user(),'system','post_newfriend', $post_newfriend);
 
 
 	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `maxreq` = %d, `expire` = %d, `openidserver` = '%s', `blockwall` = %d, `hidewall` = %d, `blocktags` = %d, `unkmail` = %d, `cntunkmail` = %d  WHERE `uid` = %d LIMIT 1",
@@ -790,6 +792,8 @@ function settings_content(&$a) {
 	$suggestme = get_pconfig(local_user(), 'system','suggestme');
 	$suggestme = (($suggestme===false)? '0': $suggestme); // default if not set: 0
 
+	$post_newfriend = get_pconfig(local_user(), 'system','post_newfriend');
+	$post_newfriend = (($post_newfriend===false)? '0': $post_newfriend); // default if not set: 0
 
 	
 	if(! strlen($a->user['timezone']))
@@ -877,6 +881,10 @@ function settings_content(&$a) {
 
 	));
 
+	$activity_options = t('By default post a status message when:');
+
+	$post_newfriend = array('post_newfriend',  t('accepting a friend request'), $post_newfriend, '');
+
 
 	$invisible = (((! $profile['publish']) && (! $profile['net-publish']))
 		? true : false);
@@ -958,6 +966,8 @@ function settings_content(&$a) {
 		
 		
 		'$h_not' 	=> t('Notification Settings'),
+		'$activity_options' => $activity_options,
+		'$post_newfriend' => $post_newfriend,
 		'$lbl_not' 	=> t('Send a notification email when:'),
 		'$notify1'	=> array('notify1', t('You receive an introduction'), ($notify & NOTIFY_INTRO), NOTIFY_INTRO, ''),
 		'$notify2'	=> array('notify2', t('Your introductions are confirmed'), ($notify & NOTIFY_CONFIRM), NOTIFY_CONFIRM, ''),
