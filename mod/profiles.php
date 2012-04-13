@@ -137,7 +137,6 @@ function profiles_post(&$a) {
 
 		$changes = array();
 		if($is_default) {
-			logger('changes');
 			if($marital != $orig[0]['marital']) $changes[] = '&hearts; ' . t('Marital Status');
 			if($work != $orig[0]['work']) $changes[] = t('Work/Employment');
 			if($religion != $orig[0]['religion']) $changes[] = t('Religion');
@@ -251,7 +250,6 @@ function profile_activity($changed) {
 	if(! get_pconfig(local_user(),'system','post_profilechange'))
 		return;
 
-	logger('activity');
 	require_once('include/items.php');
 
 	$self = q("SELECT * FROM `contact` WHERE `self` = 1 AND `uid` = %d LIMIT 1",
