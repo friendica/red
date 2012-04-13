@@ -67,8 +67,11 @@ function profiles_post(&$a) {
 
 		// linkify the relationship target if applicable
 
+		$withchanged = false;
+
 		if(strlen($with)) {
 			if($with != strip_tags($orig[0]['with'])) {
+				$withchanged = true;
 				$prf = '';
 				$lookup = $with;
 				if(strpos($lookup,'@') === 0)
@@ -138,10 +141,14 @@ function profiles_post(&$a) {
 		$changes = array();
 		if($is_default) {
 			if($marital != $orig[0]['marital']) $changes[] = '&hearts; ' . t('Marital Status');
+			if($withchanged) $changes[] = '&hearts; ' . t('Romantic Partner');			
 			if($work != $orig[0]['work']) $changes[] = t('Work/Employment');
 			if($religion != $orig[0]['religion']) $changes[] = t('Religion');
 			if($politic != $orig[0]['politic']) $changes[] = t('Political Views');
-			
+			if($gender != $orig[0]['gender']) $changes[] = t('Gender');
+			if($sexual != $orig[0]['sexual']) $changes[] = t('Sexual Preference');
+			if($homepage != $orig[0]['homepage']) $changes[] = t('Homepage');
+			if($interest != $orig[0]['interest']) $changes[] = t('Interests');
 			if($address != $orig[0]['address'] || $locality != $orig[0]['locality'] || $region != $orig[0]['region']
 				|| $country_name != $orig[0]['country_name'])
 				$changes[] = t('Location');
