@@ -30,7 +30,7 @@ function theme_admin(&$a){
 	$font_size = get_config('diabook', 'font_size' );
 	$line_height = get_config('diabook', 'line_height' );
 	
-	return quattro_form($a,$font_size, $line_height);
+	return diabook_form($a,$font_size, $line_height);
 }
 
 function theme_admin_post(&$a){
