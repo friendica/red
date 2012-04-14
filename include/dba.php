@@ -84,23 +84,9 @@ class dba {
 
 			$mesg = '';
 
-<<<<<<< HEAD:include/dba.php
-			 // If dbfail.out exists, we will write any failed calls directly to it,
-			 // regardless of any logging that may or may nor be in effect.
-			 // These usually indicate SQL syntax errors that need to be resolved.
-				if(file_exists('dbfail.out')) {
-					file_put_contents('dbfail.out', datetime_convert() . "\n" . $str . "\n", FILE_APPEND);
-				}
-				logger('dba: ' . $str );
-				if(FALSE===$result) {
-					$this->throwOrLog(new RuntimeException('dba: ' . $str));
-					return; 
-				}
-=======
 			if($this->mysqli) {
 				if($this->db->errno)
 					logger('dba: ' . $this->db->error);
->>>>>>> upstream/master:include/dba.php
 			}
 			elseif(mysql_errno($this->db))
 				logger('dba: ' . mysql_error($this->db));
@@ -144,62 +130,6 @@ class dba {
 				$result->free_result();
 			}
 		}
-<<<<<<< HEAD:include/dba.php
-		
-		/**
-		 * starts a transaction. Transactions need to be finished with 
-		 * commit() or rollback(). Please mind that the db table engine may
-		 * not support this. 
-		 */
-		public function beginTransaction() {
-			if($this->mysqli) {
-				return $this->db->autocommit(false);
-			} else {
-				//no transaction support in mysql module...
-				mysql_query('SET AUTOCOMMIT = 0;', $db); 
-			}
-		}
-		
-		/**
-		 * rollback a transaction. So, rollback anything that was done since the last call 
-		 * to beginTransaction(). 
-		 */
-		public function rollback() {
-			if($this->mysqli) {
-				return $this->db->rollback();
-			} else {
-				//no transaction support in mysql module...
-				mysql_query('ROLLBACK;', $db);
-			}
-			$this->stopTransaction(); 
-		}
-
-		/**
-		 * commit a transaction. So, write any query to the database. 
-		 */
-		public function commit() {
-			if($this->mysqli) {
-				return $this->db->commit();
-			} else {
-				//no transaction support in mysql module...
-				mysql_query('COMMIT;', $db);
-			}
-			$this->stopTransaction();
-		}
-		
-		private function stopTransaction() {
-			if($this->mysqli) {
-				return $this->db->autocommit(true);
-			} else {
-				//no transaction support in mysql module...
-				mysql_query('SET AUTOCOMMIT = 1;', $db);
-			}
-		}
-		
-		public function dbg($dbg) {
-			$this->debug = $dbg;
-		}
-=======
 		else {
 			if(mysql_num_rows($result)) {
 				while($x = mysql_fetch_array($result, MYSQL_ASSOC))
@@ -213,7 +143,6 @@ class dba {
 			logger('dba: ' . printable(print_r($r, true)));
 		return($r);
 	}
->>>>>>> upstream/master:include/dba.php
 
 	public function dbg($dbg) {
 		$this->debug = $dbg;
