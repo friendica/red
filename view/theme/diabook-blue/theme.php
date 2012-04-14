@@ -3,13 +3,13 @@
 /*
  * Name: Diabook-blue
  * Description: Diabook-blue: report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
- * Version: (Version: 1.017)
+ * Version: (Version: 1.018)
  * Author: 
  */
 
 
 //print diabook-version for debugging
-$diabook_version = "Diabook-blue (Version: 1.017)";
+$diabook_version = "Diabook-blue (Version: 1.018)";
 $a->page['htmlhead'] .= sprintf('<script "%s" ></script>', $diabook_version);
 
 //change css on network and profilepages
@@ -462,10 +462,10 @@ function restore_boxes(){
 $a->page['htmlhead'] .= ' 
 
 <script type="text/javascript">
-function insertFormatting(BBcode,id) {
+function insertFormatting(comment,BBcode,id) {
 	
 		var tmpStr = $("#comment-edit-text-" + id).val();
-		if(tmpStr == "Kommentar") {
+		if(tmpStr == comment) {
 			tmpStr = "";
 			$("#comment-edit-text-" + id).addClass("comment-edit-text-full");
 			$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
