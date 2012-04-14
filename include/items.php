@@ -19,8 +19,14 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 				$converse = true;
 			if($a->argv[$x] == 'starred')
 				$starred = true;
+			if($a->argv[$x] === 'category' && $a->argc > ($x + 1) && strlen($a->argv[$x+1]))
+				$category = $a->argv[$x+1];
 		}
+
+
 	}
+
+	
 
 	// default permissions - anonymous user
 
@@ -100,6 +106,10 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 	if(! strlen($last_update))
 		$last_update = 'now -30 days';
+
+	if(x($category)) {
+		$sql_extra .= file_tag_file_query('item',$category,'category');
+	}
 
 	if($public_feed) {
 		if(! $converse)
