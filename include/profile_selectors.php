@@ -30,7 +30,7 @@ function sexpref_selector($current="",$suffix="") {
 
 function marital_selector($current="",$suffix="") {
 	$o = '';
-	$select = array('', t('Single'), t('Lonely'), t('Available'), t('Unavailable'), t('Dating'), t('Unfaithful'), t('Sex Addict'), t('Friends'), t('Friends/Benefits'), t('Casual'), t('Engaged'), t('Married'), t('Partners'), t('Cohabiting'), t('Happy'), t('Not Looking'), t('Swinger'), t('Betrayed'), t('Separated'), t('Unstable'), t('Divorced'), t('Widowed'), t('Uncertain'), t('Complicated'), t('Don\'t care'), t('Ask me') );
+	$select = array('', t('Single'), t('Lonely'), t('Available'), t('Unavailable'), t('Has crush'), t('Infatuated'), t('Dating'), t('Unfaithful'), t('Sex Addict'), t('Friends'), t('Friends/Benefits'), t('Casual'), t('Engaged'), t('Married'), t('Imaginarily married'), t('Partners'), t('Cohabiting'), t('Happy'), t('Not looking'), t('Swinger'), t('Betrayed'), t('Separated'), t('Unstable'), t('Divorced'), t('Imaginarily divorced'), t('Widowed'), t('Uncertain'), t('It\'s complicated'), t('Don\'t care'), t('Ask me') );
 
 	$o .= "<select name=\"marital\" id=\"marital-select\" size=\"1\" >";
 	foreach($select as $selection) {
