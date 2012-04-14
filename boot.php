@@ -9,7 +9,7 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1309' );
+define ( 'FRIENDICA_VERSION',      '2.3.1311' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
 define ( 'DB_UPDATE_VERSION',      1138      );
 
@@ -206,6 +206,7 @@ define ( 'ACTIVITY_OBJ_P_PHOTO', NAMESPACE_ACTIVITY_SCHEMA . 'profile-photo' );
 define ( 'ACTIVITY_OBJ_ALBUM',   NAMESPACE_ACTIVITY_SCHEMA . 'photo-album' );
 define ( 'ACTIVITY_OBJ_EVENT',   NAMESPACE_ACTIVITY_SCHEMA . 'event' );
 define ( 'ACTIVITY_OBJ_TAGTERM', NAMESPACE_DFRN            . '/tagterm' );
+define ( 'ACTIVITY_OBJ_PROFILE', NAMESPACE_DFRN            . '/profile' );
 
 /**
  * item weight for query ordering
@@ -1493,11 +1494,13 @@ function get_my_url() {
 	return false;
 }
 
-function zrl($s) {
+function zrl($s,$force = false) {
 	if(! strlen($s))
 		return $s;
-	if(! strpos($s,'/profile/'))
+	if((! strpos($s,'/profile/')) && (! $force))
 		return $s;
+	if($force && substr($s,-1,1) !== '/')
+		$s = $s . '/';
 	$achar = strpos($s,'?') ? '&' : '?';
 	$mine = get_my_url();
 	if($mine and ! link_compare($mine,$s))
