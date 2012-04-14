@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.3.1311\n"
+"Project-Id-Version: 2.3.1312\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-13 10:00-0700\n"
+"POT-Creation-Date: 2012-04-14 10:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,8 +55,8 @@ msgstr ""
 #: ../../mod/profiles.php:7 ../../mod/profiles.php:329
 #: ../../mod/delegate.php:6 ../../mod/suggest.php:28 ../../mod/invite.php:13
 #: ../../mod/invite.php:81 ../../mod/dfrn_confirm.php:53
-#: ../../addon/facebook/facebook.php:461 ../../include/items.php:3132
-#: ../../index.php:305
+#: ../../addon/facebook/facebook.php:461 ../../include/items.php:3142
+#: ../../index.php:309
 msgid "Permission denied."
 msgstr ""
 
@@ -157,7 +157,12 @@ msgstr ""
 #: ../../addon/twitter/twitter.php:209 ../../addon/twitter/twitter.php:375
 #: ../../addon/irc/irc.php:55 ../../addon/blogger/blogger.php:102
 #: ../../addon/posterous/posterous.php:90
-#: ../../view/theme/quattro/config.php:52 ../../include/conversation.php:555
+#: ../../view/theme/diabook-red/config.php:64
+#: ../../view/theme/diabook-blue/config.php:64
+#: ../../view/theme/diabook/config.php:64
+#: ../../view/theme/quattro/config.php:52
+#: ../../view/theme/diabook-aerith/config.php:64
+#: ../../include/conversation.php:555
 msgid "Submit"
 msgstr ""
 
@@ -169,11 +174,11 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: ../../mod/help.php:38 ../../index.php:224
+#: ../../mod/help.php:38 ../../index.php:228
 msgid "Not Found"
 msgstr ""
 
-#: ../../mod/help.php:41 ../../index.php:227
+#: ../../mod/help.php:41 ../../index.php:231
 msgid "Page not found."
 msgstr ""
 
@@ -813,7 +818,7 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:628 ../../include/items.php:2652
+#: ../../mod/dfrn_request.php:628 ../../include/items.php:2662
 msgid "[Name Withheld]"
 msgstr ""
 
@@ -1642,7 +1647,7 @@ msgstr ""
 #: ../../mod/regmod.php:54 ../../mod/dfrn_confirm.php:732
 #: ../../addon/facebook/facebook.php:622
 #: ../../addon/facebook/facebook.php:1076
-#: ../../addon/testdrive/testdrive.php:58 ../../include/items.php:2661
+#: ../../addon/testdrive/testdrive.php:58 ../../include/items.php:2671
 msgid "Administrator"
 msgstr ""
 
@@ -2476,7 +2481,7 @@ msgstr ""
 msgid "Group name changed."
 msgstr ""
 
-#: ../../mod/group.php:72 ../../mod/profperm.php:19 ../../index.php:304
+#: ../../mod/group.php:72 ../../mod/profperm.php:19 ../../index.php:308
 msgid "Permission denied"
 msgstr ""
 
@@ -2736,7 +2741,7 @@ msgstr ""
 
 #: ../../mod/notice.php:15 ../../mod/viewsrc.php:15 ../../mod/admin.php:141
 #: ../../mod/admin.php:582 ../../mod/admin.php:761 ../../mod/display.php:37
-#: ../../mod/display.php:142 ../../include/items.php:3044
+#: ../../mod/display.php:142 ../../include/items.php:3054
 msgid "Item not found."
 msgstr ""
 
@@ -5476,8 +5481,26 @@ msgstr ""
 msgid "Your personal photos"
 msgstr ""
 
+#: ../../view/theme/diabook-red/config.php:66
+#: ../../view/theme/diabook-blue/config.php:66
+#: ../../view/theme/diabook/config.php:66
 #: ../../view/theme/quattro/config.php:54
+#: ../../view/theme/diabook-aerith/config.php:66
 msgid "Theme settings"
+msgstr ""
+
+#: ../../view/theme/diabook-red/config.php:67
+#: ../../view/theme/diabook-blue/config.php:67
+#: ../../view/theme/diabook/config.php:67
+#: ../../view/theme/diabook-aerith/config.php:67
+msgid "Set font-size for posts and comments"
+msgstr ""
+
+#: ../../view/theme/diabook-red/config.php:68
+#: ../../view/theme/diabook-blue/config.php:68
+#: ../../view/theme/diabook/config.php:68
+#: ../../view/theme/diabook-aerith/config.php:68
+msgid "Set line-height for posts and comments"
 msgstr ""
 
 #: ../../view/theme/quattro/config.php:55
@@ -5509,7 +5532,7 @@ msgid "j F"
 msgstr ""
 
 #: ../../include/profile_advanced.php:30 ../../include/datetime.php:448
-#: ../../include/items.php:1392
+#: ../../include/items.php:1402
 msgid "Birthday:"
 msgstr ""
 
@@ -5770,6 +5793,14 @@ msgid "Unavailable"
 msgstr ""
 
 #: ../../include/profile_selectors.php:33
+msgid "Has crush"
+msgstr ""
+
+#: ../../include/profile_selectors.php:33
+msgid "Infatuated"
+msgstr ""
+
+#: ../../include/profile_selectors.php:33
 msgid "Dating"
 msgstr ""
 
@@ -5802,6 +5833,10 @@ msgid "Married"
 msgstr ""
 
 #: ../../include/profile_selectors.php:33
+msgid "Imaginarily married"
+msgstr ""
+
+#: ../../include/profile_selectors.php:33
 msgid "Partners"
 msgstr ""
 
@@ -5810,11 +5845,15 @@ msgid "Cohabiting"
 msgstr ""
 
 #: ../../include/profile_selectors.php:33
+msgid "Common law"
+msgstr ""
+
+#: ../../include/profile_selectors.php:33
 msgid "Happy"
 msgstr ""
 
 #: ../../include/profile_selectors.php:33
-msgid "Not Looking"
+msgid "Not looking"
 msgstr ""
 
 #: ../../include/profile_selectors.php:33
@@ -5838,6 +5877,10 @@ msgid "Divorced"
 msgstr ""
 
 #: ../../include/profile_selectors.php:33
+msgid "Imaginarily divorced"
+msgstr ""
+
+#: ../../include/profile_selectors.php:33
 msgid "Widowed"
 msgstr ""
 
@@ -5846,7 +5889,7 @@ msgid "Uncertain"
 msgstr ""
 
 #: ../../include/profile_selectors.php:33
-msgid "Complicated"
+msgid "It's complicated"
 msgstr ""
 
 #: ../../include/profile_selectors.php:33
@@ -6564,11 +6607,11 @@ msgstr ""
 msgid "Please visit %s to approve or reject the suggestion."
 msgstr ""
 
-#: ../../include/items.php:2659
+#: ../../include/items.php:2669
 msgid "A new person is sharing with you at "
 msgstr ""
 
-#: ../../include/items.php:2659
+#: ../../include/items.php:2669
 msgid "You have a new follower at "
 msgstr ""
 
