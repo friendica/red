@@ -1494,11 +1494,13 @@ function get_my_url() {
 	return false;
 }
 
-function zrl($s) {
+function zrl($s,$force = false) {
 	if(! strlen($s))
 		return $s;
-	if(! strpos($s,'/profile/'))
+	if((! strpos($s,'/profile/')) && (! $force))
 		return $s;
+	if($force && substr($s,-1,1) !== '/')
+		$s = $s . '/';
 	$achar = strpos($s,'?') ? '&' : '?';
 	$mine = get_my_url();
 	if($mine and ! link_compare($mine,$s))
