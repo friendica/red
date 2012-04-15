@@ -14,7 +14,9 @@ $a->page['htmlhead'] .= sprintf('<script "%s" ></script>', $diabook_version);
 
 //change css on network and profilepages
 $cssFile = null;
-
+$resolution=false;
+$resolution = get_pconfig(local_user(), "diabook", "resolution");
+if ($resolution===false) $resolution="normal";
 
 /**
  * prints last community activity
@@ -267,9 +269,10 @@ if ($a->argv[0] === "network" && local_user()){
 	if($ccCookie != "8") {
 	// COMMUNITY
 	diabook_community_info();
-	
+
 	// CUSTOM CSS
-	$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook/style-network.css";
+	if($resolution == "normal") {$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook/style-network.css";}
+	if($resolution == "wide") {$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook/style-network-wide.css";}
 	}
 }
 
@@ -282,14 +285,16 @@ if ($a->argv[0].$a->argv[1] === "profile".$a->user['nickname']){
 	diabook_community_info();
 	
 	// CUSTOM CSS
-	$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook/style-profile.css";
-	
+	if($resolution == "normal") {$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook/style-profile.css";}
+	if($resolution == "wide") {$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook/style-profile-wide.css";}
 	
 	}
 }
 
 // custom css
 if (!is_null($cssFile)) $a->page['htmlhead'] .= sprintf('<link rel="stylesheet" type="text/css" href="%s" />', $cssFile);
+
+
 
 //load jquery.cookie.js
 $cookieJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.cookie.js";
