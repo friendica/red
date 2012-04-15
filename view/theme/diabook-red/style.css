@@ -1219,6 +1219,9 @@ aside #side-peoplefind-url {
   float: left;
   margin-right: 20px;		
 	}
+#login-submit-wrapper{
+  margin-top: 20px;
+	}
 .group_selected {
   background: url("../../../view/theme/diabook/icons/selected.png") no-repeat left center;
   float: left;
@@ -1234,7 +1237,7 @@ aside #side-peoplefind-url {
 .icon.text_add		{ 
 		background-image: url("../../../images/icons/16/add.png");
 		float: right;
-		opacity: 0.1;
+		opacity: 0.2;
 		margin-right: 14px;
 		}
 .icon.text_add:hover	{ 
@@ -1251,7 +1254,7 @@ transition: all 0.2s ease-in-out;
 		}
 .icon.text_edit {
   background-image: url("../../../images/icons/10/edit.png");
-  opacity: 0.1;
+  opacity: 0.2;
   margin-top: 6px;
   float: right;
   height: 10px;
@@ -2472,6 +2475,9 @@ box-shadow: 1px 1px 5px 0;
 #group-separator,
 #prof-separator { display: none;}
 */
+#prof-members-end{
+	clear: both;
+	}
 
 #prvmail-to-label, #prvmail-subject-label, #prvmail-message-label {
 	margin-bottom: 10px;
