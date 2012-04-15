@@ -292,6 +292,10 @@ $a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></scrip
 $imageresizeJS = $a->get_baseurl($ssl_state)."/view/theme/diabook-aerith/js/jquery.ae.image.resize.js";
 $a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $imageresizeJS);
 
+//load jquery.autogrow-textarea.js
+$autogrowJS = $a->get_baseurl($ssl_state)."/view/theme/diabook-aerith/js/jquery.autogrow.textarea.js";
+$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $autogrowJS);
+
 //js scripts
 //comment-edit-wrapper on photo_view
 if ($a->argv[0].$a->argv[2] === "photos"."image"){
@@ -314,6 +318,15 @@ $a->page['htmlhead'] .= '
 	$("a.lightbox").fancybox(); // Select all links with lightbox class
  });
   
+ </script>';
+ 
+$a->page['htmlhead'] .= '
+
+<script type="text/javascript">
+
+function tautogrow(id){
+		$("textarea#comment-edit-text-" +id).autogrow(); 	
+ 	};
  </script>';
 
 $a->page['htmlhead'] .= '
