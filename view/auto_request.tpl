@@ -7,7 +7,7 @@ $page_desc<br />
 <li><a href="http://friendica.com" title="$friendica">$friendica</a></li>
 <li><a href="http://joindiaspora.com" title="$diaspora">$diaspora</a> $diasnote</li>
 <li><a href="http://ostatus.org" title="$public_net" >$statusnet</a></li>
-<li>$emailnet</li>
+{{ if $emailnet }}<li>$emailnet</li>{{ endif }}
 </ul>
 </p>
 <p>

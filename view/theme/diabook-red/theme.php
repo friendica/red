@@ -3,13 +3,13 @@
 /*
  * Name: Diabook-red
  * Description: Diabook-red: report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
- * Version: (Version: 1.015)
+ * Version: (Version: 1.018)
  * Author: 
  */
 
 
 //print diabook-version for debugging
-$diabook_version = "Diabook-red (Version: 1.015)";
+$diabook_version = "Diabook-red (Version: 1.018)";
 $a->page['htmlhead'] .= sprintf('<script "%s" ></script>', $diabook_version);
 
 //change css on network and profilepages
@@ -21,7 +21,6 @@ $cssFile = null;
  */
 function diabook_red_community_info(){
 	$a = get_app();
-	//right_aside at networkpages
 
 	// last 12 users
 	$aside['$lastusers_title'] = t('Last users');
@@ -279,58 +278,6 @@ if ($a->argv[0].$a->argv[1] === "profile".$a->user['nickname']){
 	}
 }
 
-
-//tabs at right_aside on settings page
-if ($a->argv[0] === "settings"){
-	
-	$tabs = array(
-		array(
-			'label'	=> t('Account settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings',
-			'sel'	=> (($a->argc == 1)?'active':''),
-		),	
-		array(
-			'label'	=> t('Display settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings/display',
-			'sel'	=> (($a->argc > 1) && ($a->argv[1] === 'display')?'active':''),
-		),	
-		array(
-			'label'	=> t('Edit/Manage Profiles'),
-			'url' 	=> $a->get_baseurl(true).'/profiles',
-		),	
-		array(
-			'label'	=> t('Connector settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings/connectors',
-			'sel'	=> (($a->argc > 1) && ($a->argv[1] === 'connectors')?'active':''),
-		),
-		array(
-			'label'	=> t('Plugin settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings/addon',
-			'sel'	=> (($a->argc > 1) && ($a->argv[1] === 'addon')?'active':''),
-		),
-		array(
-			'label' => t('Connections'),
-			'url' => $a->get_baseurl(true) . '/settings/oauth',
-			'sel' => (($a->argc > 1) && ($a->argv[1] === 'oauth')?'active':''),
-		),
-		array(
-			'label' => t('Export personal data'),
-			'url' => $a->get_baseurl(true) . '/uexport',
-			'sel' => ''
-		)
-	);
-	$tabtpl = file_get_contents(dirname(__file__).'/rs_common_tabs.tpl') ;
-	$a->page['aside'] = replace_macros($tabtpl, array(
-		'$tabs' => $tabs,
-	));
-	
-	
-	// CUSTOM CSS
-	$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook-red/style-settings.css";
-	
-}
-
-
 // custom css
 if (!is_null($cssFile)) $a->page['htmlhead'] .= sprintf('<link rel="stylesheet" type="text/css" href="%s" />', $cssFile);
 
@@ -342,6 +289,9 @@ $a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></scrip
 $imageresizeJS = $a->get_baseurl($ssl_state)."/view/theme/diabook-red/js/jquery.ae.image.resize.js";
 $a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $imageresizeJS);
 
+//load jquery.autogrow-textarea.js
+$autogrowJS = $a->get_baseurl($ssl_state)."/view/theme/diabook-red/js/jquery.autogrow.textarea.js";
+$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $autogrowJS);
 
 //js scripts
 //comment-edit-wrapper on photo_view
@@ -365,6 +315,15 @@ $a->page['htmlhead'] .= '
 	$("a.lightbox").fancybox(); // Select all links with lightbox class
  });
   
+ </script>';
+ 
+$a->page['htmlhead'] .= '
+
+<script type="text/javascript">
+
+function tautogrow(id){
+		$("textarea#comment-edit-text-" +id).autogrow(); 	
+ 	};
  </script>';
 
 $a->page['htmlhead'] .= '
@@ -510,3 +469,36 @@ function restore_boxes(){
 	alert("Right-hand column was restored. Please refresh your browser");
   }
 </script>';}
+
+$a->page['htmlhead'] .= ' 
+
+<script type="text/javascript">
+function insertFormatting(comment,BBcode,id) {
+	
+		var tmpStr = $("#comment-edit-text-" + id).val();
+		if(tmpStr == comment) {
+			tmpStr = "";
+			$("#comment-edit-text-" + id).addClass("comment-edit-text-full");
+			$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
+			openMenu("comment-edit-submit-wrapper-" + id);
+											}
+
+	textarea = document.getElementById("comment-edit-text-" +id);
+	if (document.selection) {
+		textarea.focus();
+		selected = document.selection.createRange();
+		if (BBcode == "url"){
+			selected.text = "["+BBcode+"]" + "http://" +  selected.text + "[/"+BBcode+"]";
+			} else			
+		selected.text = "["+BBcode+"]" + selected.text + "[/"+BBcode+"]";
+	} else if (textarea.selectionStart || textarea.selectionStart == "0") {
+		var start = textarea.selectionStart;
+		var end = textarea.selectionEnd;
+		if (BBcode == "url"){
+			textarea.value = textarea.value.substring(0, start) + "["+BBcode+"]" + "http://" + textarea.value.substring(start, end) + "[/"+BBcode+"]" + textarea.value.substring(end, textarea.value.length);
+			} else
+		textarea.value = textarea.value.substring(0, start) + "["+BBcode+"]" + textarea.value.substring(start, end) + "[/"+BBcode+"]" + textarea.value.substring(end, textarea.value.length);
+	}
+	return true;
+}
+</script> ';

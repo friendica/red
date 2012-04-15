@@ -1,7 +1,7 @@
 /*
  * dispy-dark
  *
- * modernised, sort of, by simon <http://simon.kisikew.org/>
+ * author, maintainer: simon <http://simon.kisikew.org/>
  *
  */
 
@@ -210,12 +210,17 @@ input[type=submit] {
 	margin: 5px 0;
 	list-style: none;
 }
+#articlemain {
+	width: 100%;
+	height: 100%;
+	margin: 0 auto;
+}
 
 
 /**
  * 	login
  */
-aside .field {
+#asidemain .field {
 	overflow: hidden;
 	width: 200px;
 }
@@ -247,7 +252,7 @@ aside .field {
 #login-submit-button {
     margin-left: 0px !important;
 }
-aside #login_openid {
+#asidemain #login_openid {
 	position: relative !important;
 	float: none !important;
 	margin-left: 0px !important;
@@ -268,13 +273,10 @@ aside #login_openid {
  */
 nav {
 	height: 60px;
-	display: block;
 	background-color: #1d1f1d;
 	color: #eeeeec;
 	position: relative;
 	padding: 20px 20px 10px 95px;
-    margin-left: auto;
-    margin-right: auto;
 }
 nav a {
 	text-decoration: none;
@@ -309,6 +311,7 @@ ul#user-menu-popup {
 	-webkit-border-radius: 0 0 5px 5px;
 	-moz-border-radius: 0 0 5px 5px;
 	border-radius: 0 0 5px 5px;
+	box-shadow: 5px 10px 10px 0 #111;
 	z-index: 10000;
 }
 ul#user-menu-popup li {
@@ -541,7 +544,18 @@ nav #nav-notifications-linkmenu.on .icon.s22.notify, nav #nav-notifications-link
 	width: 10em;
 	color: #eec;
 }
+#scrollup {
+	position: fixed;
+	right: 5px;
+	bottom: 40px;
+	z-index: 100;
+}
+#scrollup a:hover {
+	text-decoration: none;
+	border: 0;
+}
 #user-menu {
+	box-shadow: 5px 0 10px 0 #111;
     display: block;	
     width: 75%;
     margin: 3px 0 0 0;
@@ -707,12 +721,16 @@ nav #nav-notifications-linkmenu.on .icon.s22.notify, nav #nav-notifications-link
 /**
 * aside
 **/
-aside {
-    position: absolute;
-    right: 15px;
-    width: 245px;
-	padding-top: 15px;
+#asidemain {
+	float: left;
     font-size: smaller;
+    margin: 20px 0 20px 35px;
+    width: 25%;
+	display: inline;
+}
+/* for now, disappear these */
+#asideright, #asideleft {
+	display: none;
 }
 .vcard .fn {
 	font-size: 1.7em;
@@ -742,10 +760,10 @@ aside {
 .vcard #profile-photo-wrapper img {
 	box-shadow: 3px 3px 10px 0 #000;
 }
-aside h4 {
+#asidemain h4 {
 	font-size: 1.2em;
 }
-aside #viewcontacts {
+#asidemain #viewcontacts {
 	text-align: right;
 }
 .aprofile dt {
@@ -874,11 +892,23 @@ aside #viewcontacts {
 	line-height: 20px;
 	padding: 2px 20px 5px 0;
 }
+#profile-jot-text_parent {
+	/*border-radius: 10px;*/
+	box-shadow: 5px 0 10px 0 #111;
+}
 #profile-jot-text_tbl {
 	margin-bottom: 10px;
+	/*border-radius: 10px;*/
+	background: #888;
 }
 #profile-jot-text_ifr {
 	width:99.900002% !important;
+}
+#profile-jot-text_toolbargroup {
+	background: #888;
+}
+.mceCenter table tr {
+	background: #888;
 }
 [id$="jot-text_ifr"] {
 	width: 99.900002% !important;
@@ -888,6 +918,15 @@ aside #viewcontacts {
 [id$="jot-text_ifr"] .mceContentBody {
 	color: #2e2f2e;
 	background: #eec;
+}
+.mceFirst tr {
+	background: #888;
+}
+.mceFirst td {
+	/*border-radius: 10px 10px 0px 0px;*/
+}
+.mceLast td {
+	/*border-radius: 0 0 10px 10px;*/
 }
 #profile-attach-wrapper,
 #profile-audio-wrapper,
@@ -1064,12 +1103,13 @@ aside #viewcontacts {
 /**
  * section
  */
-section {
-    margin: 20px 9% 0 4%;
+#sectionmain {
+    margin: 20px;
     font-size: 0.8em;
-    padding-right: 230px;
 	min-width: 475px;
-	width: 65%;
+	width: 67%;
+	float: left;
+	display: inline;
 }
 
 /** tabs **/
@@ -1114,6 +1154,7 @@ section {
 .wall-item-outside-wrapper {
 	border: 1px solid #aaa;
 	border-radius: 5px;
+	box-shadow: 5px 0 10px 0 #111;
 }
 .wall-item-outside-wrapper.comment {
 	margin-top: 5px;
@@ -1333,19 +1374,19 @@ section {
     width: 100%;
 }
 #connect-services-header {
-
+	margin: 5px 0 0 0;
 }
 #connect-services {
 	margin: 5px 0 0 0;
 }
 #extra-help-header {
-
+	margin: 5px 0 0 0;
 }
 #extra-help {
 	margin: 5px 0 0 0;
 }
 #postit-header {
-
+	margin: 5px 0 0 0;
 }
 #postit {
 	margin: 5px 0 0 0;
@@ -1938,8 +1979,8 @@ div[id$="wrapper"] br {
     margin: 0 0 -18px;
 	position: absolute;
     text-decoration: none;
-	top: 18px;
-	right: 226px;
+	top: 113px;
+	right: 260px;
 }
 #profile-edit-links ul {
     margin: 20px 0;
@@ -2353,6 +2394,12 @@ div[id$="wrapper"] br {
 .admin.link {
     list-style-position: inside;
 }
+#adminpage {
+	color: #eec;
+	background: #2e2f2e;
+	margin: 5px;
+	padding: 10px;
+}
 #adminpage dl {
     clear:left;
     margin-bottom: 2px;
@@ -2374,7 +2421,6 @@ div[id$="wrapper"] br {
 #adminpage .submit {
 	clear:left;
 }
-
 #adminpage #pluginslist {
     margin: 0;
     padding: 0;
@@ -2391,7 +2437,6 @@ div[id$="wrapper"] br {
 	float:left;
 	margin-right: 1em;
 }
-
 #adminpage table {
     width: 100%;
     border-bottom: 1px solid #000;
@@ -2414,9 +2459,13 @@ div[id$="wrapper"] br {
     text-align: right;
 }
 #adminpage #users a {
-	color: #2e2f2e;
+	color: #eec;
 	text-decoration: underline;
 }
+#users .name {
+	color: #eec;
+}
+
 
 /**
  * Form fields
@@ -2603,8 +2652,8 @@ div[id$="wrapper"] br {
 }
 .icon.drop,
 .icon.drophide, .icon.delete {
-    float: right;
-	margin: 5px;
+    float: left;
+	margin: 0 2px;
 }
 .icon.s22.delete {
 	display: block;
@@ -2735,8 +2784,8 @@ div[id$="wrapper"] br {
 }
 #pause {
 	position: fixed;
-	bottom: 5px;
-	right: 5px;
+	bottom: 40px;
+	right: 30px;
 }
 .border, .border:hover {
 	border: 1px solid #babdb6;
@@ -2776,7 +2825,7 @@ div[id$="wrapper"] br {
 }
 footer {
     display: block;
-    margin: 50px 20%;
+	/*margin: 50px 20%;*/
     clear: both;
 }
 #profile-jot-text {
@@ -2805,6 +2854,7 @@ footer {
     background: #fff url("../../../images/search_18.png") no-repeat right center;
     padding-right: 20px;
 	margin: 6px;
+	color: #111;
 }
 #acl-showall {
     float: left;

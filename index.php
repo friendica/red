@@ -38,11 +38,10 @@ load_translation_table($lang);
  */
 
 require_once("dba.php");
-$db = new dba($db_host, $db_user, $db_pass, $db_data, $install);
-        unset($db_host, $db_user, $db_pass, $db_data);
-
 
 if(! $install) {
+	$db = new dba($db_host, $db_user, $db_pass, $db_data, $install);
+    	    unset($db_host, $db_user, $db_pass, $db_data);
 
 	/**
 	 * Load configs from db. Overwrite configs from .htconfig.php
@@ -96,6 +95,10 @@ if((x($_SESSION,'language')) && ($_SESSION['language'] !== $lang)) {
 if(x($_GET,'zrl')) {
 	$_SESSION['my_url'] = $_GET['zrl'];
 	$a->query_string = preg_replace('/[\?&]zrl=(.*?)([\?&]|$)/is','',$a->query_string);
+	if(! $install) {
+		$arr = array('zrl' => $_SESSION['my_url'], 'url' => $a->cmd);
+		call_hooks('zrl_init',$arr);
+	}
 }
 
 /**
@@ -360,13 +363,13 @@ $profile = $a->profile;
 
 header("Content-type: text/html; charset=utf-8");
 
-$template = 'view/' . current_theme() . '/' 
+$template = 'view/theme/' . current_theme() . '/' 
 	. ((x($a->page,'template')) ? $a->page['template'] : 'default' ) . '.php';
 
 if(file_exists($template))
 	require_once($template);
 else
-	require_once(str_replace(current_theme() . '/', '', $template));
+	require_once(str_replace('theme/' . current_theme() . '/', '', $template));
 
 session_write_close();
 exit;

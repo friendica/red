@@ -40,6 +40,20 @@ function admin_post(&$a){
 				goaway($a->get_baseurl(true) . '/admin/plugins/' . $a->argv[2] );
 				return; // NOTREACHED
 				break;
+			case 'themes':
+				$theme = $a->argv[2];
+				if (is_file("view/theme/$theme/config.php")){
+					require_once("view/theme/$theme/config.php");
+					if (function_exists("theme_admin_post")){
+						theme_admin_post($a);
+					}
+				}
+				info(t('Theme settings updated.'));
+				if(is_ajax()) return;
+				
+				goaway($a->get_baseurl(true) . '/admin/themes/' . $theme );
+				return;
+				break;
 			case 'logs':
 				admin_page_logs_post($a);
 				break;
@@ -129,7 +143,13 @@ function admin_content(&$a) {
 	} else {
 		$o = admin_page_summary($a);
 	}
-	return $o;
+	
+	if(is_ajax()) {
+		echo $o; 
+		killme();
+	} else {
+		return $o;
+	}
 } 
 
 
@@ -174,7 +194,6 @@ function admin_page_site_post(&$a){
 		return;
 	}
 
-	
 	$sitename 			=	((x($_POST,'sitename'))			? notags(trim($_POST['sitename']))			: '');
 	$banner				=	((x($_POST,'banner'))      		? trim($_POST['banner'])					: false);
 	$language			=	((x($_POST,'language'))			? notags(trim($_POST['language']))			: '');
@@ -194,7 +213,6 @@ function admin_page_site_post(&$a){
 	$global_directory	=	((x($_POST,'directory_submit_url'))	? notags(trim($_POST['directory_submit_url']))	: '');
 	$no_multi_reg		=	((x($_POST,'no_multi_reg'))		? True	:	False);
 	$no_openid			=	!((x($_POST,'no_openid'))		? True	:	False);
-	$no_gravatar		=	!((x($_POST,'no_gravatar'))		? True	:	False);
 	$no_regfullname		=	!((x($_POST,'no_regfullname'))	? True	:	False);
 	$no_utf				=	!((x($_POST,'no_utf'))			? True	:	False);
 	$no_community_page	=	!((x($_POST,'no_community_page'))	? True	:	False);
@@ -204,7 +222,7 @@ function admin_page_site_post(&$a){
 	$proxy				=	((x($_POST,'proxy'))			? notags(trim($_POST['proxy']))	: '');
 	$timeout			=	((x($_POST,'timeout'))			? intval(trim($_POST['timeout']))		: 60);
 	$dfrn_only          =	((x($_POST,'dfrn_only'))	    ? True	:	False);
-    $ostatus_disabled   =   !((x($_POST,'ostatus_disabled')) ? True  :   False);
+	$ostatus_disabled   =   !((x($_POST,'ostatus_disabled')) ? True  :   False);
 	$diaspora_enabled   =   ((x($_POST,'diaspora_enabled')) ? True   :  False);
 	$ssl_policy         =   ((x($_POST,'ssl_policy')) ? intval($_POST['ssl_policy']) : 0);
 
@@ -283,7 +301,6 @@ function admin_page_site_post(&$a){
 	set_config('system','directory_search_url', $global_search_url);
 	set_config('system','block_extended_register', $no_multi_reg);
 	set_config('system','no_openid', $no_openid);
-	set_config('system','no_gravatar', $no_gravatar);
 	set_config('system','no_regfullname', $no_regfullname);
 	set_config('system','no_community_page', $no_community_page);
 	set_config('system','no_utf', $no_utf);
@@ -365,7 +382,7 @@ function admin_page_site(&$a) {
 		'$sitename' 		=> array('sitename', t("Site name"), htmlentities($a->config['sitename'], ENT_QUOTES), ""),
 		'$banner'			=> array('banner', t("Banner/Logo"), $banner, ""),
 		'$language' 		=> array('language', t("System language"), get_config('system','language'), "", $lang_choices),
-		'$theme' 			=> array('theme', t("System theme"), get_config('system','theme'), t("Default system theme - may be over-ridden by user profiles"), $theme_choices),
+		'$theme' 			=> array('theme', t("System theme"), get_config('system','theme'), t("Default system theme - may be over-ridden by user profiles - <a href='#' id='cnftheme'>change theme settings</a>"), $theme_choices),
 		'$ssl_policy'       => array('ssl_policy', t("SSL link policy"), (string) intval(get_config('system','ssl_policy')), t("Determines whether generated links should be forced to use SSL"), $ssl_choices),
 		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), get_config('system','maximagesize'), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
 
@@ -380,7 +397,6 @@ function admin_page_site(&$a) {
 			
 		'$no_multi_reg'		=> array('no_multi_reg', t("Block multiple registrations"),  get_config('system','block_extended_register'), t("Disallow users to register additional accounts for use as pages.")),
 		'$no_openid'		=> array('no_openid', t("OpenID support"), !get_config('system','no_openid'), t("OpenID support for registration and logins.")),
-		'$no_gravatar'		=> array('no_gravatar', t("Gravatar support"), !get_config('system','no_gravatar'), t("Search new user's photo on Gravatar.")),
 		'$no_regfullname'	=> array('no_regfullname', t("Fullname check"), !get_config('system','no_regfullname'), t("Force users to register with a space between firstname and lastname in Full name, as an antispam measure")),
 		'$no_utf'			=> array('no_utf', t("UTF-8 Regular expressions"), !get_config('system','no_utf'), t("Use PHP UTF8 regular expressions")),
 		'$no_community_page' => array('no_community_page', t("Show Community Page"), !get_config('system','no_community_page'), t("Display a Community page showing all recent public postings on this site.")),
@@ -772,14 +788,22 @@ function admin_page_themes(&$a){
 		}
 		
 		$readme=Null;
-		if (is_file("view/$theme/README.md")){
-			$readme = file_get_contents("view/$theme/README.md");
+		if (is_file("view/theme/$theme/README.md")){
+			$readme = file_get_contents("view/theme/$theme/README.md");
 			$readme = Markdown($readme);
-		} else if (is_file("view/$theme/README")){
-			$readme = "<pre>". file_get_contents("view/$theme/README") ."</pre>";
+		} else if (is_file("view/theme/$theme/README")){
+			$readme = "<pre>". file_get_contents("view/theme/$theme/README") ."</pre>";
 		} 
 		
 		$admin_form="";
+		if (is_file("view/theme/$theme/config.php")){
+			require_once("view/theme/$theme/config.php");
+			if(function_exists("theme_admin")){
+				$admin_form = theme_admin($a);
+			}
+			
+		}
+		
 
 		$screenshot = array( get_theme_screenshot($theme), t('Screenshot'));
 		if(! stristr($screenshot[0],$theme))
@@ -797,10 +821,10 @@ function admin_page_themes(&$a){
 			'$status' => $status,
 			'$action' => $action,
 			'$info' => get_theme_info($theme),
-			'$function' => 'themes',		
+			'$function' => 'themes',
 			'$admin_form' => $admin_form,
 			'$str_author' => t('Author: '),
-			'$str_maintainer' => t('Maintainer: '),			
+			'$str_maintainer' => t('Maintainer: '),
 			'$screenshot' => $screenshot,
 			'$readme' => $readme
 		));
@@ -809,7 +833,7 @@ function admin_page_themes(&$a){
 	 
 	
 	/**
-	 * List plugins
+	 * List themes
 	 */
 	
 	$xthemes = array();

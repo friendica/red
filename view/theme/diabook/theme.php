@@ -3,18 +3,20 @@
 /*
  * Name: Diabook
  * Description: Diabook: report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
- * Version: (Version: 1.015)
+ * Version: (Version: 1.018)
  * Author: 
  */
 
 
 //print diabook-version for debugging
-$diabook_version = "Diabook (Version: 1.015)";
+$diabook_version = "Diabook (Version: 1.018)";
 $a->page['htmlhead'] .= sprintf('<script "%s" ></script>', $diabook_version);
 
 //change css on network and profilepages
 $cssFile = null;
-
+$resolution=false;
+$resolution = get_pconfig(local_user(), "diabook", "resolution");
+if ($resolution===false) $resolution="normal";
 
 /**
  * prints last community activity
@@ -24,7 +26,7 @@ $cssFile = null;
  
 function diabook_community_info(){
 	$a = get_app();
-	//right_aside at networkpages
+
 
 	// last 12 users
 	$aside['$lastusers_title'] = t('Last users');
@@ -267,9 +269,10 @@ if ($a->argv[0] === "network" && local_user()){
 	if($ccCookie != "8") {
 	// COMMUNITY
 	diabook_community_info();
-	
+
 	// CUSTOM CSS
-	$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook/style-network.css";
+	if($resolution == "normal") {$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook/style-network.css";}
+	if($resolution == "wide") {$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook/style-network-wide.css";}
 	}
 }
 
@@ -282,66 +285,16 @@ if ($a->argv[0].$a->argv[1] === "profile".$a->user['nickname']){
 	diabook_community_info();
 	
 	// CUSTOM CSS
-	$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook/style-profile.css";
-	
+	if($resolution == "normal") {$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook/style-profile.css";}
+	if($resolution == "wide") {$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook/style-profile-wide.css";}
 	
 	}
 }
 
-
-
-//tabs at aside on settings page
-if ($a->argv[0] === "settings"){
-	
-	$tabs = array(
-		array(
-			'label'	=> t('Account settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings',
-			'sel'	=> (($a->argc == 1)?'active':''),
-		),	
-		array(
-			'label'	=> t('Display settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings/display',
-			'sel'	=> (($a->argc > 1) && ($a->argv[1] === 'display')?'active':''),
-		),	
-		array(
-			'label'	=> t('Edit/Manage Profiles'),
-			'url' 	=> $a->get_baseurl(true).'/profiles',
-		),	
-		array(
-			'label'	=> t('Connector settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings/connectors',
-			'sel'	=> (($a->argc > 1) && ($a->argv[1] === 'connectors')?'active':''),
-		),
-		array(
-			'label'	=> t('Plugin settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings/addon',
-			'sel'	=> (($a->argc > 1) && ($a->argv[1] === 'addon')?'active':''),
-		),
-		array(
-			'label' => t('Connections'),
-			'url' => $a->get_baseurl(true) . '/settings/oauth',
-			'sel' => (($a->argc > 1) && ($a->argv[1] === 'oauth')?'active':''),
-		),
-		array(
-			'label' => t('Export personal data'),
-			'url' => $a->get_baseurl(true) . '/uexport',
-			'sel' => ''
-		)
-	);
-	$tabtpl = file_get_contents(dirname(__file__).'/rs_common_tabs.tpl') ;
-	$a->page['aside'] = replace_macros($tabtpl, array(
-		'$tabs' => $tabs,
-	));
-	
-	
-	// CUSTOM CSS
-	$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook/style-settings.css";
-	
-}
-
 // custom css
 if (!is_null($cssFile)) $a->page['htmlhead'] .= sprintf('<link rel="stylesheet" type="text/css" href="%s" />', $cssFile);
+
+
 
 //load jquery.cookie.js
 $cookieJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.cookie.js";
@@ -351,6 +304,9 @@ $a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s"></script
 $imageresizeJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.ae.image.resize.js";
 $a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $imageresizeJS);
 
+//load jquery.autogrow-textarea.js
+$autogrowJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.autogrow.textarea.js";
+$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $autogrowJS);
 
 //js scripts
 //comment-edit-wrapper on photo_view
@@ -374,6 +330,15 @@ $a->page['htmlhead'] .= '
 	$("a.lightbox").fancybox(); // Select all links with lightbox class
  });
    
+ </script>';
+ 
+$a->page['htmlhead'] .= '
+
+<script type="text/javascript">
+
+function tautogrow(id){
+		$("textarea#comment-edit-text-" +id).autogrow(); 	
+ 	};
  </script>';
  
  
@@ -520,3 +485,37 @@ function restore_boxes(){
 	alert("Right-hand column was restored. Please refresh your browser");
   }
 </script>';}
+
+
+$a->page['htmlhead'] .= ' 
+
+<script>
+function insertFormatting(comment,BBcode,id) {
+	
+		var tmpStr = $("#comment-edit-text-" + id).val();
+		if(tmpStr == comment) {
+			tmpStr = "";
+			$("#comment-edit-text-" + id).addClass("comment-edit-text-full");
+			$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
+			openMenu("comment-edit-submit-wrapper-" + id);
+								}
+
+	textarea = document.getElementById("comment-edit-text-" +id);
+	if (document.selection) {
+		textarea.focus();
+		selected = document.selection.createRange();
+		if (BBcode == "url"){
+			selected.text = "["+BBcode+"]" + "http://" +  selected.text + "[/"+BBcode+"]";
+			} else			
+		selected.text = "["+BBcode+"]" + selected.text + "[/"+BBcode+"]";
+	} else if (textarea.selectionStart || textarea.selectionStart == "0") {
+		var start = textarea.selectionStart;
+		var end = textarea.selectionEnd;
+		if (BBcode == "url"){
+			textarea.value = textarea.value.substring(0, start) + "["+BBcode+"]" + "http://" + textarea.value.substring(start, end) + "[/"+BBcode+"]" + textarea.value.substring(end, textarea.value.length);
+			} else
+		textarea.value = textarea.value.substring(0, start) + "["+BBcode+"]" + textarea.value.substring(start, end) + "[/"+BBcode+"]" + textarea.value.substring(end, textarea.value.length);
+	}
+	return true;
+}
+</script> ';

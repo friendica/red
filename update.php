@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1137 );
+define( 'UPDATE_VERSION' , 1138 );
 
 /**
  *
@@ -1206,3 +1206,10 @@ function update_1136() {
 	q("ALTER TABLE `pconfig` ADD UNIQUE `access` ( `uid` , `cat` , `k` )"); 
 
 }
+
+
+function update_1137() {
+	q("alter table item_id DROP `face` , DROP `dspr` , DROP `twit` , DROP `stat` ");
+	q("ALTER TABLE `item_id` ADD `sid` CHAR( 255 ) NOT NULL AFTER `uid` , ADD `service` CHAR( 255 ) NOT NULL AFTER `sid` , add index (`sid`), add index ( `service`) ");
+}
+

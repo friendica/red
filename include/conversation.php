@@ -810,11 +810,11 @@ function item_photo_menu($item){
 	}
 
 	$menu = Array(
-		t("View status") => $status_link,
-		t("View profile") => $profile_link,
-		t("View photos") => $photos_link,
-		t("View recent") => $posts_link, 
-		t("Edit contact") => $contact_url,
+		t("View Status") => $status_link,
+		t("View Profile") => $profile_link,
+		t("View Photos") => $photos_link,
+		t("Network Posts") => $posts_link, 
+		t("Edit Contact") => $contact_url,
 		t("Send PM") => $pm_url,
 	);
 	

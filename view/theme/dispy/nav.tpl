@@ -4,7 +4,7 @@
 
 <!-- yes, they're going the other way. seems that's how the template renderer
 works -->
-
+<a name="top" id="top"></a>
 <div id="nav-floater">
     <div id="nav-buttons">
     {{ if $nav.help }}
@@ -56,7 +56,6 @@ works -->
         <a id="nav-register-link" class="nav-commlink $nav.register.2" href="$nav.register.0" title="$nav.register.1"></a>
         </li>
         {{ endif }}
-
         {{ if $nav.contacts }}
         <li><a id="nav-contacts-link" class="nav-commlink $nav.contacts.2" href="$nav.contacts.0" title="$nav.contacts.1">$nav.contacts.1</a></li>
         {{ endif }}
@@ -75,11 +74,9 @@ works -->
         {{ if $nav.admin }}
         <li><a id="nav-admin-link" class="nav-commlink $nav.admin.2" href="$nav.admin.0" title="$nav.admin.1">$nav.admin.1</a></li>
         {{ endif }}
-
         {{ if $nav.login }}
         <li><a id="nav-login-link" class="nav-commlink $nav.login.2" href="$nav.login.0" title="$nav.login.1">$nav.login.1</a></li>
         {{ endif }}
-
         {{ if $nav.logout }}
         <li><a id="nav-logout-link" class="nav-commlink $nav.logout.2" href="$nav.logout.0" title="$nav.logout.3" >$nav.logout.1</a></li>
         {{ endif }}
@@ -117,6 +114,12 @@ works -->
 
 <div id="lang-sel-wrap">
 $langselector
+</div>
+
+<div id="scrollup">
+<a href="#top"><img
+	src="view/theme/dispy/icons/scroll_top.png"
+	alt="back to top" title="Back to top" /></a>
 </div>
 
 <div class="search-box">

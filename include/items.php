@@ -19,8 +19,14 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 				$converse = true;
 			if($a->argv[$x] == 'starred')
 				$starred = true;
+			if($a->argv[$x] === 'category' && $a->argc > ($x + 1) && strlen($a->argv[$x+1]))
+				$category = $a->argv[$x+1];
 		}
+
+
 	}
+
+	
 
 	// default permissions - anonymous user
 
@@ -100,6 +106,10 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 	if(! strlen($last_update))
 		$last_update = 'now -30 days';
+
+	if(x($category)) {
+		$sql_extra .= file_tag_file_query('item',$category,'category');
+	}
 
 	if($public_feed) {
 		if(! $converse)
@@ -1856,6 +1866,8 @@ function local_delivery($importer,$data) {
 	$feed->enable_order_by_date(false);
 	$feed->init();
 
+/*
+	// Currently unsupported - needs a lot of work
 	$reloc = $feed->get_feed_tags( NAMESPACE_DFRN, 'relocate' );
 	if(isset($reloc[0]['child'][NAMESPACE_DFRN])) {
 		$base = $reloc[0]['child'][NAMESPACE_DFRN];
@@ -1880,6 +1892,7 @@ function local_delivery($importer,$data) {
 		// schedule a scan?
 
 	}
+*/
 
 	// handle friend suggestion notification
 
@@ -2971,10 +2984,21 @@ function item_expire($uid,$days) {
 		if($expire_items==0 && $item['type']!='note')
 			continue;
 
+
 		$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s' WHERE `id` = %d LIMIT 1",
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
 			intval($item['id'])
+		);
+
+		$r = q("DELETE FROM item_id where iid in (select id from item where parent = %d) and uid = %d",
+			intval($item['id']),
+			intval($uid)
+		);
+
+		$r = q("DELETE FROM sign where iid in (select id from item where parent = %d) and uid = %d",
+			intval($item['id']),
+			intval($uid)
 		);
 
 		// kill the kids

@@ -4161,7 +4161,7 @@ msgstr "Fehler: der angegebene API Schlüssel scheint nicht korrekt zu sein (Zug
 
 #: ../../addon/facebook/facebook.php:665
 msgid "The given API Key seems to work correctly."
-msgstr "Der angegebene API Schlüssel scheint nicht korrekt zu funktionieren."
+msgstr "Der angegebene API Schlüssel scheint korrekt zu funktionieren."
 
 #: ../../addon/facebook/facebook.php:667
 msgid ""
@@ -6405,7 +6405,7 @@ msgstr "Willkommen zurück "
 #: ../../include/security.php:329
 msgid ""
 "The form security token was not correct. This probably happened because the "
-"form has been opened for too long (>3 hours) before subitting it."
+"form has been opened for too long (>3 hours) before submitting it."
 msgstr "Der Formular-Sicherheits-Token war nicht korrekt. Der Grund ist wahrscheinlich, dass das Formular zu lange (>3 Stunden) offen war, bevor es abgeschickt wurde."
 
 #: ../../include/Contact.php:137 ../../include/conversation.php:813
