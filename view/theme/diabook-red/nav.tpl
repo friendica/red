@@ -103,7 +103,7 @@
 			</li>	
 		{{ endif }}		
 		
-      {{ if $nav.settings }}
+      {{ if $nav.home }}
 			<li id="nav-home-link" class="nav-menu $sel.home">
 				<a class="$nav.home.2" href="$nav.home.0" title="$nav.home.3" >$nav.home.1
 				<span id="home-update" class="nav-notify"></span></a>

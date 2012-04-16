@@ -41,7 +41,7 @@ function diabook_community_info(){
 		0,
 		9
 	);
-	$tpl = file_get_contents( dirname(__file__).'/directory_item.tpl');
+	$tpl = file_get_contents( dirname(__file__).'/ch_directory_item.tpl');
 	if(count($r)) {
 		$photo = 'thumb';
 		foreach($r as $rr) {
@@ -120,7 +120,7 @@ function diabook_community_info(){
 				dbesc(t('Profile Photos'))
 				);
 		if(count($r)) {
-		$tpl = file_get_contents( dirname(__file__).'/directory_item.tpl');
+		$tpl = file_get_contents( dirname(__file__).'/ch_directory_item.tpl');
 		foreach($r as $rr) {
 			$photo_page = $a->get_baseurl() . '/photos/' . $rr['nickname'] . '/image/' . $rr['resource-id'];
 			$photo_url = $a->get_baseurl() . '/photo/' .  $rr['resource-id'] . '-' . $rr['scale'] .'.jpg';
