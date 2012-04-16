@@ -2229,7 +2229,7 @@ function local_delivery($importer,$data) {
 				$datarray = get_atom_elements($feed,$item);
 
 
-				$r = q("SELECT `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT `id`, `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['importer_uid'])
 				);
@@ -2237,7 +2237,9 @@ function local_delivery($importer,$data) {
 				// Update content if 'updated' changes
 
 				if(count($r)) {
+					$iid = $r[0]['id'];
 					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
+						logger('received updated comment' , LOGGER_DEBUG);
 						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($datarray['title']),
 							dbesc($datarray['body']),
@@ -2246,8 +2248,10 @@ function local_delivery($importer,$data) {
 							dbesc($item_id),
 							intval($importer['importer_uid'])
 						);
+
+						proc_run('php',"include/notifier.php","comment-import",$iid);
+
 					}
-					proc_run('php',"include/notifier.php","comment-import",$r[0]['id']);
 
 					continue;
 				}
