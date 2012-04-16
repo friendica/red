@@ -2229,6 +2229,30 @@ function local_delivery($importer,$data) {
 				$datarray = get_atom_elements($feed,$item);
 
 
+				$r = q("SELECT `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+					dbesc($item_id),
+					intval($importer['importer_uid'])
+				);
+
+				// Update content if 'updated' changes
+
+				if(count($r)) {
+					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
+						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+							dbesc($datarray['title']),
+							dbesc($datarray['body']),
+							dbesc($datarray['tag']),
+							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
+							dbesc($item_id),
+							intval($importer['importer_uid'])
+						);
+					}
+					proc_run('php',"include/notifier.php","comment-import",$r[0]['id']);
+
+					continue;
+				}
+
+
 				// TODO: make this next part work against both delivery threads of a community post
 
 //				if((! link_compare($datarray['author-link'],$importer['url'])) && (! $community)) {
