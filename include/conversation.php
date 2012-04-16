@@ -559,10 +559,10 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 					}
 				}
 
-				$edpost = (((($profile_owner == local_user()) && ($toplevelpost) && (intval($item['wall']) == 1)) || ($mode === 'notes'))
-						? array($a->get_baseurl($ssl_state)."/editpost/".$item['id'], t("Edit"))
-						: False);
-
+				if(local_user() && link_compare($a->contact['url'],$item['author-link']))
+					$edpost = array($a->get_baseurl($ssl_state)."/editpost/".$item['id'], t("Edit"));
+				else
+					$edpost = false;
 
 				$drop = '';
 				$dropping = false;
@@ -625,10 +625,6 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 					$profile_avatar = $a->contacts[$normalised]['thumb'];
 				else
 					$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $thumb);
-
-
-
-
 
 				$like    = ((x($alike,$item['id'])) ? format_like($alike[$item['id']],$alike[$item['id'] . '-l'],'like',$item['id']) : '');
 				$dislike = ((x($dlike,$item['id'])) ? format_like($dlike[$item['id']],$dlike[$item['id'] . '-l'],'dislike',$item['id']) : '');
@@ -1089,4 +1085,3 @@ function render_location_google($item) {
 	}
 	return $location;
 }
-

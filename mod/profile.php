@@ -17,6 +17,7 @@ function profile_init(&$a) {
 			goaway($a->get_baseurl() . '/profile/' . $r[0]['nickname']);
 		}
 		else {
+			logger('profile error: mod_profile ' . $a->query_string, LOGGER_DEBUG);
 			notice( t('Requested profile is not available.') . EOL );
 			$a->error = 404;
 			return;

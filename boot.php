@@ -9,7 +9,7 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1311' );
+define ( 'FRIENDICA_VERSION',      '2.3.1313' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
 define ( 'DB_UPDATE_VERSION',      1138      );
 
@@ -936,6 +936,7 @@ if(! function_exists('profile_load')) {
 		}
 
 		if(($r === false) || (! count($r))) {
+			logger('profile error: ' . $a->query_string, LOGGER_DEBUG);
 			notice( t('Requested profile is not available.') . EOL );
 			$a->error = 404;
 			return;
