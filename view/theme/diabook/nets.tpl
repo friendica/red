@@ -1,5 +1,5 @@
 <div id="profile_side">
-	<h3>$title</h3>
+	<h3 style="margin-left: 2px;">$title</h3>
 	<div id="nets-desc">$desc</div>
    
 	<ul class="menu-profile-side">

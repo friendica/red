@@ -3,13 +3,13 @@
 /*
  * Name: Diabook-aerith
  * Description: Diabook-aerith : report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
- * Version: (Version: 1.018)
+ * Version: (Version: 1.019)
  * Author: 
  */
 
 
 //print diabook-version for debugging
-$diabook_version = "Diabook-aerith (Version: 1.018)";
+$diabook_version = "Diabook-aerith (Version: 1.019)";
 $a->page['htmlhead'] .= sprintf('<script "%s" ></script>', $diabook_version);
 
 
