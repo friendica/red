@@ -559,10 +559,10 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 					}
 				}
 
-				$edpost = (((($profile_owner == local_user()) && ($toplevelpost) && (intval($item['wall']) == 1)) || ($mode === 'notes'))
-						? array($a->get_baseurl($ssl_state)."/editpost/".$item['id'], t("Edit"))
-						: False);
-
+				if(local_user() && link_compare($a->contact['url'],$item['author-link']))
+					$edpost = array($a->get_baseurl($ssl_state)."/editpost/".$item['id'], t("Edit"));
+				else
+					$edpost = false;
 
 				$drop = '';
 				$dropping = false;
