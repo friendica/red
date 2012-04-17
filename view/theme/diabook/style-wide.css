@@ -417,7 +417,7 @@
 .hide-comments-outer {
   margin-left: 80px;
   margin-bottom: 5px;
-  width: 684px;
+  width: 675px;
   border-bottom: 1px solid #BDCDD4;
   border-top: 1px solid #BDCDD4;
 
@@ -1360,7 +1360,7 @@ body .pageheader{
 	margin-bottom: 10px;
 	}
 /* wall item */
-/*marker*/
+
 .tread-wrapper {
   border-bottom: 1px solid #D2D2D2;
   position: relative;
@@ -1369,7 +1369,7 @@ body .pageheader{
   width: 775px;
   padding-top: 10px;
 }
-
+/*marker*/
 .wall-item-decor {
   position: absolute;
   left: 780px;
