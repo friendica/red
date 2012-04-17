@@ -42,12 +42,6 @@ $nv.search
 {{ endif }}
 </div>
 
-<div id="close_postit">
-{{ if $lastusers_title }}
-<h3>$postit.title.1<a id="close_postit_icon" onClick="close_postit()" class="icon close_box" title="close"></a></h3>
-<div style="padding-left: 10px;font-size: 12px;"><span ><a href="$fostitJS" title="PostIt">$postit.title.2</a>$postit.text.1</span></div>
-{{ endif }}
-</div>
 
 <div id="close_lastusers">
 {{ if $lastusers_title }}

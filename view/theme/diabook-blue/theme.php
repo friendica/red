@@ -3,13 +3,13 @@
 /*
  * Name: Diabook-blue
  * Description: Diabook-blue: report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
- * Version: (Version: 1.019)
+ * Version: (Version: 1.020)
  * Author: 
  */
 
 
 //print diabook-version for debugging
-$diabook_version = "Diabook-blue (Version: 1.019)";
+$diabook_version = "Diabook-blue (Version: 1.020)";
 $a->page['htmlhead'] .= sprintf('<script "%s" ></script>', $diabook_version);
 
 //change css on network and profilepages
@@ -130,14 +130,6 @@ function diabook_blue_community_info(){
 		}
 	}
 	
-	$fostitJS = "javascript: (function() {
-    					the_url = '".$a->get_baseurl($ssl_state)."/view/theme/diabook-blue/fpostit/fpostit.php?url=' + encodeURIComponent(window.location.href) + '&title=' + encodeURIComponent(document.title) + '&text=' + encodeURIComponent(''+(window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text));
-    						a_funct = function() {
-        						if (!window.open(the_url, 'fpostit', 'location=yes,links=no,scrollbars=no,toolbar=no,width=600,height=300')) location.href = the_url};
-    							if (/Firefox/.test(navigator.userAgent)) {setTimeout(a_funct, 0)} 
-    							else {a_funct()}})()" ;
-  
-   $aside['$fostitJS'] = $fostitJS;
    
    //nav FIND FRIENDS
 	if(local_user()) {
@@ -205,13 +197,7 @@ function diabook_blue_community_info(){
 	
 	$aside['$con_services'] = $con_services;
    //end connectable services
-   //postit
-   $postit = array();
-	$postit['title'] = Array("", t('PostIt to Friendica'), t('Post to Friendica'), "");
-	$postit['text'] = Array("", t(' from anywhere by bookmarking this Link.'), "", "");
-	
-	$aside['$postit'] = $postit;
-   //end postit
+   
   
    //get_baseurl   
    $url = $a->get_baseurl($ssl_state);   
@@ -254,9 +240,9 @@ if ($a->argv[0] === "network" && local_user()){
 
 	}
 	
-	$ccCookie = $_COOKIE['close_pages'] + $_COOKIE['close_helpers'] + $_COOKIE['close_services'] + $_COOKIE['close_friends'] + $_COOKIE['close_postit'] + $_COOKIE['close_lastusers'] + $_COOKIE['close_lastphotos'] + $_COOKIE['close_lastlikes'];
+	$ccCookie = $_COOKIE['close_pages'] + $_COOKIE['close_helpers'] + $_COOKIE['close_services'] + $_COOKIE['close_friends'] + $_COOKIE['close_lastusers'] + $_COOKIE['close_lastphotos'] + $_COOKIE['close_lastlikes'];
 	
-	if($ccCookie != "8") {
+	if($ccCookie != "7") {
 	// COMMUNITY
 	diabook_blue_community_info();
 	
@@ -269,7 +255,7 @@ if ($a->argv[0] === "network" && local_user()){
 
 //right_aside at profile pages
 if ($a->argv[0].$a->argv[1] === "profile".$a->user['nickname']){
-	if($ccCookie != "8") {
+	if($ccCookie != "7") {
 	// COMMUNITY
 	diabook_blue_community_info();
 	
@@ -369,7 +355,7 @@ $a->page['htmlhead'] .= '
 </script>';
 
 
-	if($ccCookie != "8") {
+	if($ccCookie != "7") {
 $a->page['htmlhead'] .= '
 <script>
 $("right_aside").ready(function(){
@@ -394,10 +380,6 @@ $("right_aside").ready(function(){
 		document.getElementById( "close_friends" ).style.display = "none";
 			};
 	
-	if($.cookie("close_postit") == "1") 
-		{
-		document.getElementById( "close_postit" ).style.display = "none";
-			};
 			
 	if($.cookie("close_lastusers") == "1") 
 		{
@@ -435,11 +417,6 @@ function close_friends(){
  document.getElementById( "close_friends" ).style.display = "none";
  $.cookie("close_friends","1", { expires: 365, path: "/" });
  };
-
-function close_postit(){
- document.getElementById( "close_postit" ).style.display = "none";
- $.cookie("close_postit","1", { expires: 365, path: "/" });
- };
  
 function close_lastusers(){
  document.getElementById( "close_lastusers" ).style.display = "none";
@@ -464,7 +441,6 @@ function restore_boxes(){
 	$.cookie("close_helpers","2", { expires: 365, path: "/" });
 	$.cookie("close_services","2", { expires: 365, path: "/" });
 	$.cookie("close_friends","2", { expires: 365, path: "/" });
-	$.cookie("close_postit","2", { expires: 365, path: "/" });
 	$.cookie("close_lastusers","2", { expires: 365, path: "/" });
 	$.cookie("close_lastphotos","2", { expires: 365, path: "/" });
 	$.cookie("close_lastlikes","2", { expires: 365, path: "/" });
