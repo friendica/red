@@ -168,13 +168,19 @@
 			  }
 .edit    {background-image: url("../../../view/theme/diabook/icons/pencil2.png"); 
 			  display: block; width: 28px; height: 28px; background-repeat: no-repeat;}
+.icon.block   {background-image: url("../../../view/theme/diabook/icons/block.png"); 
+			  display: block; width: 16px; height: 16px; background-repeat: no-repeat;}
+.icon.block.dim  {background-image: url("../../../view/theme/diabook/icons/block.png"); 
+			  display: block; width: 16px; height: 16px; background-repeat: no-repeat; opacity: 0.3;}
+.icon.ad_drop 	{ background-image: url("../../../view/theme/diabook/icons/drop.png");
+			  display: block; margin-left:5px; width: 16px; height: 16px; background-repeat: no-repeat;}
 			  
 			  
 
 
 .article	{ background-position: -50px  0px;}
 /*.audio 		{ background-position: -70px  0px;}*/
-.block 		{ background-position: -90px  0px;}
+/*.block 		{ background-position: -90px  0px;}*/
 /*.drop 		{ background-position: -110px 0px;}*/
 /*.drophide 	{ background-position: -130px 0px;}*/
 /*.edit 		{ background-position: -150px 0px;}*/
@@ -1146,6 +1152,10 @@ aside #search-text {
 border-top-right-radius: 15px;
 border-bottom-right-radius: 15px;
 border-bottom-left-radius: 15px;
+-moz-border-bottom-colors: #dbdbdb;
+  -moz-border-top-colors: #999;
+  -moz-border-left-colors: #999;
+  -moz-border-right-colors: #dbdbdb;
 }
 aside #side-follow-url {
 	width: 173px;

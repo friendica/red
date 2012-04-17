@@ -7,5 +7,4 @@
 			</a>
 		</div>
 	</div>
-	<div class="contact-name" id="directory-name-$id">$name</div>
 </div>

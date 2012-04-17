@@ -3,13 +3,13 @@
 /*
  * Name: Diabook-blue
  * Description: Diabook-blue: report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
- * Version: (Version: 1.018)
+ * Version: (Version: 1.019)
  * Author: 
  */
 
 
 //print diabook-version for debugging
-$diabook_version = "Diabook-blue (Version: 1.018)";
+$diabook_version = "Diabook-blue (Version: 1.019)";
 $a->page['htmlhead'] .= sprintf('<script "%s" ></script>', $diabook_version);
 
 //change css on network and profilepages
@@ -35,7 +35,7 @@ function diabook_blue_community_info(){
 		0,
 		9
 	);
-	$tpl = file_get_contents( dirname(__file__).'/directory_item.tpl');
+	$tpl = file_get_contents( dirname(__file__).'/ch_directory_item.tpl');
 	if(count($r)) {
 		$photo = 'thumb';
 		foreach($r as $rr) {
@@ -114,7 +114,7 @@ function diabook_blue_community_info(){
 				dbesc(t('Profile Photos'))
 				);
 		if(count($r)) {
-		$tpl = file_get_contents( dirname(__file__).'/directory_item.tpl');
+		$tpl = file_get_contents( dirname(__file__).'/ch_directory_item.tpl');
 		foreach($r as $rr) {
 			$photo_page = $a->get_baseurl() . '/photos/' . $rr['nickname'] . '/image/' . $rr['resource-id'];
 			$photo_url = $a->get_baseurl() . '/photo/' .  $rr['resource-id'] . '-' . $rr['scale'] .'.jpg';
