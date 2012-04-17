@@ -1355,7 +1355,7 @@ transition: all 0.2s ease-in-out;
 
 .wall-item-container .wall-item-content img {
   max-width: 400px; 
-  max-height: 400px;
+
 }
 .wall-item-container .wall-item-links, .wall-item-container .wall-item-actions {
   display: table-cell;
