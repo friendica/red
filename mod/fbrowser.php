@@ -20,6 +20,8 @@ function fbrowser_content($a){
 	
 	switch($a->argv[1]){
 		case "image":
+			$path = array( array($a->get_baseurl()."/fbrowser/image/", t("Photos")));
+			$albums = false;
 			if ($a->argc==2){
 				$albums = q("SELECT distinct(`album`) AS `album` FROM `photo` WHERE `uid` = %d ",
 					intval(local_user())
@@ -28,42 +30,34 @@ function fbrowser_content($a){
 				function folder1($el){return array(bin2hex($el['album']),$el['album']);}	
 				$albums = array_map( "folder1" , $albums);
 				
-				$tpl = get_markup_template("filebrowser.tpl");
-				echo replace_macros($tpl, array(
-					'$type' => 'image',
-					'$baseurl' => $a->get_baseurl(),
-					'$path' => array( array($a->get_baseurl()."/fbrowser/image/", t("Photos"))),
-					'$folders' => $albums,
-					'$files' =>false,					
-				));
-				
 			}
 			
+			$album = "";
 			if ($a->argc==3){
 				$album = hex2bin($a->argv[2]);
-				$r = q("SELECT `resource-id`, `id`, `filename`, min(`scale`) AS `scale`, `desc`  FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
-					AND `scale` <= 4 $sql_extra GROUP BY `resource-id`",
-					intval(local_user()),
-					dbesc($album)
-				);
-				
-				
-				function files1($rr){ global $a; return array( $a->get_baseurl() . '/photo/' . $rr['resource-id'] . '-' . $rr['scale'] . '.jpg', template_escape($rr['filename']), $a->get_baseurl() . '/photo/' . $rr['resource-id'] . '-' . $rr['scale'] . '.jpg');  }
-				$files = array_map("files1", $r);
-				
-				$tpl = get_markup_template("filebrowser.tpl");
-				echo replace_macros($tpl, array(
-					'$type' => 'image',
-					'$baseurl' => $a->get_baseurl(),
-					'$path' => array( array($a->get_baseurl()."/fbrowser/image/", t("Photos")),
-									array($a->get_baseurl()."/fbrowser/image/".$a->argv[2]."/", $album)),
-					'$folders' => false,
-					'$files' =>$files,
-				));
-				
-				
-				
+				$sql_extra = sprintf("AND `album` = '%s' ",dbesc($album));
+				$path[]=array($a->get_baseurl()."/fbrowser/image/".$a->argv[2]."/", $album);
 			}
+				
+			$r = q("SELECT `resource-id`, `id`, `filename`, min(`scale`) AS `hiq`,max(`scale`) AS `loq`, `desc`  FROM `photo` WHERE `uid` = %d $sql_extra
+				AND `scale` <= 4 $sql_extra GROUP BY `resource-id`",
+				intval(local_user())					
+			);
+			
+			
+			function files1($rr){ global $a; return array( $a->get_baseurl() . '/photo/' . $rr['resource-id'] . '-' . $rr['hiq'] . '.jpg', template_escape($rr['filename']), $a->get_baseurl() . '/photo/' . $rr['resource-id'] . '-' . $rr['loq'] . '.jpg');  }
+			$files = array_map("files1", $r);
+			
+			$tpl = get_markup_template("filebrowser.tpl");
+			echo replace_macros($tpl, array(
+				'$type' => 'image',
+				'$baseurl' => $a->get_baseurl(),
+				'$path' => $path,
+				'$folders' => $albums,
+				'$files' =>$files,
+			));
+				
+				
 			break;
 		case "file":
 			if ($a->argc==2){

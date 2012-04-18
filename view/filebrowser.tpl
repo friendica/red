@@ -3,12 +3,17 @@
 	<head>
 	<script type="text/javascript" src="$baseurl/library/tinymce/jscripts/tiny_mce/tiny_mce_popup.js"></script>
 	<style>
-		.filebrowser.path { font-family: fixed; font-size: 10px;}
+		.filebrowser.path { font-family: fixed; font-size: 10px; background-color: #f0f0ee; height:auto; overflow:auto;}
+		.filebrowser.path a { border-left: 1px solid #C0C0AA; background-color: #E0E0DD; display: block; float:left; padding: 0.3em 1em;}
 		.filebrowser ul{ list-style-type: none; padding:0px; }
-		.filebrowser.files img { height:50px;}
+		.filebrowser.folders a { display: block; padding: 0.3em }
+		.filebrowser.folders a:hover { background-color: #f0f0ee; }
+		.filebrowser.files.image img { height:50px;}
 		.filebrowser.files.image li { display: block; padding: 5px; float: left; }
 		.filebrowser.files.image span { display: none;}
-		.filebrowser.files.file img { height:16px;}
+		.filebrowser.files.file img { height:16px; vertical-align: bottom;}
+		.filebrowser.files a { display: block;  padding: 0.3em}
+		.filebrowser.files a:hover { background-color: #f0f0ee; }
 		.filebrowser a { text-decoration: none; }
 	</style>
 	<script>
@@ -43,23 +48,35 @@
 	</script>
 	</head>
 	<body>
-	<div class="filebrowser path">
-		&gt; {{ for $path as $p }}<a href="$p.0">$p.1</a> / {{ endfor }}
-	</div>
-	<div class="filebrowser folders">
-		<ul>
-			{{ for $folders as $f }}<li><a href="$f.0/">$f.1</a></li>{{ endfor }}
+	
+	<div class="tabs">
+		<ul >
+			<li class="current"><span>FileBrowser</span></li>
 		</ul>
 	</div>
-	<form>
-		<div class="filebrowser files $type">
-			<ul>
-			{{ for $files as $f }}
-				<li><a href="#" onclick="FileBrowserDialogue.mySubmit('$f.0'); return false;"><img src="$f.2"><span>$f.1</span></a></li>
-			{{ endfor }}
-			</ul>
+	<div class="panel_wrapper">
+
+		<div id="general_panel" class="panel current">
+			<div class="filebrowser path">
+				{{ for $path as $p }}<a href="$p.0">$p.1</a>{{ endfor }}
+			</div>
+			<div class="filebrowser folders">
+				<ul>
+					{{ for $folders as $f }}<li><a href="$f.0/">$f.1</a></li>{{ endfor }}
+				</ul>
+			</div>
+			<div class="filebrowser files $type">
+				<ul>
+				{{ for $files as $f }}
+					<li><a href="#" onclick="FileBrowserDialogue.mySubmit('$f.0'); return false;"><img src="$f.2"><span>$f.1</span></a></li>
+				{{ endfor }}
+				</ul>
+			</div>
 		</div>
-	</form>
+	</div>
+	<div class="mceActionPanel">
+		<input type="button" id="cancel" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();" />
+	</div>	
 	</body>
 	
 </html>
