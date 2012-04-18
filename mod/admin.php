@@ -616,6 +616,8 @@ function admin_page_plugins(&$a){
 		}
 		
 		if (x($_GET,"a") && $_GET['a']=="t"){
+            check_form_security_token_redirectOnErr('/admin/plugins', 'admin_themes', 't');
+
 			// Toggle plugin status
 			$idx = array_search($plugin, $a->plugins);
 			if ($idx !== false){
@@ -673,7 +675,9 @@ function admin_page_plugins(&$a){
 			'$admin_form' => $admin_form,
 			'$function' => 'plugins',
 			'$screenshot' => '',
-			'$readme' => $readme
+			'$readme' => $readme,
+
+            '$form_security_token' => get_form_security_token("admin_themes"),
 		));
 	} 
 	 
@@ -702,7 +706,8 @@ function admin_page_plugins(&$a){
 		'$submit' => t('Submit'),
 		'$baseurl' => $a->get_baseurl(true),
 		'$function' => 'plugins',	
-		'$plugins' => $plugins
+		'$plugins' => $plugins,
+        '$form_security_token' => get_form_security_token("admin_themes"),
 	));
 }
 
@@ -810,6 +815,7 @@ function admin_page_themes(&$a){
 		}
 		
 		if (x($_GET,"a") && $_GET['a']=="t"){
+            check_form_security_token_redirectOnErr('/admin/themes', 'admin_themes', 't');
 
 			// Toggle theme status
 
@@ -873,7 +879,9 @@ function admin_page_themes(&$a){
 			'$str_author' => t('Author: '),
 			'$str_maintainer' => t('Maintainer: '),
 			'$screenshot' => $screenshot,
-			'$readme' => $readme
+			'$readme' => $readme,
+
+			'$form_security_token' => get_form_security_token("admin_themes"),
 		));
 	} 
 	 
@@ -899,7 +907,8 @@ function admin_page_themes(&$a){
 		'$function' => 'themes',
 		'$plugins' => $xthemes,
 		'$experimental' => t('[Experimental]'),
-		'$unsupported' => t('[Unsupported]')
+		'$unsupported' => t('[Unsupported]'),
+        '$form_security_token' => get_form_security_token("admin_themes"),
 	));
 }
 
