@@ -44,6 +44,7 @@ function initEditor(cb){
 			convert_urls: false,
 			content_css: "$baseurl/view/custom_tinymce.css",
 			theme_advanced_path : false,
+			file_browser_callback : "fcFileBrowser",
 			setup : function(ed) {
 				cPopup = null;
 				ed.onKeyDown.add(function(ed,e) {
