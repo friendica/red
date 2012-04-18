@@ -2287,7 +2287,7 @@ a.mail-list-link {
 }
 
 .vevent {
-        border: 1px solid #CCCCCC;
+
 }
 .vevent .event-description, .vevent .event-location {
         margin-left: 10px;
@@ -2309,10 +2309,7 @@ a.mail-list-link {
         margin-bottom: 15px;
 }
 
-.event-description:before {
-        content: url('../../../images/calendar.png');
-        margin-right: 15px;
-}
+
 
 .event-start, .event-end {
         margin-left: 10px;
