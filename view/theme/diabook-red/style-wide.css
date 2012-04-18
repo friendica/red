@@ -431,6 +431,12 @@ body {
   margin: 50px auto auto;
   display: table;
 }
+
+#jappix_mini {
+right: 45px !important;
+}
+
+
 h4 {
   font-size: 1.1em;
 }
@@ -1226,7 +1232,7 @@ aside #side-peoplefind-url {
   margin-right: 20px;		
 	}
 #login-submit-wrapper{
-  margin-top: 20px;
+margin-bottom: 15px;
 	}
 .group_selected {
   background: url("../../../view/theme/diabook/icons/selected.png") no-repeat left center;
@@ -2618,16 +2624,39 @@ a.mail-list-link {
 }
 
 .vevent {
-        border: 1px solid #CCCCCC;
+position: relative;
+width: 400px;
+padding: 20px;
+padding-top: 10px;
+margin: 0 0px;
+margin-bottom: 10px;
+background-color: white;
+-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
+-moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
+box-shadow: 0 0 5px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
 }
-.vevent .event-description, .vevent .event-location {
+.vevent .event-location {
         margin-left: 10px;
         margin-right: 10px;
 }
-.vevent .event-start {
-        margin-left: 10px;
-        margin-right: 10px;
+.vevent .event-description {
+margin-left: 10px;
+margin-right: 10px;
+font-size: 1.1em;
+font-weight: bolder;
 }
+.vevent .event-start, .vevent .event-end {
+
+margin-right: 20px;
+margin-bottom: 2px;
+margin-top: 2px;
+font-size: 0.9em;
+text-align: left;
+}
+.event-start .dtstart, .event-end .dtend {
+float: right;
+}
+
 
 #new-event-link {
         margin-bottom: 10px;
@@ -2641,7 +2670,7 @@ a.mail-list-link {
 }
 
 .event-description:before {
-        content: url('../../../images/calendar.png');
+        content:   url("../../../view/theme/diabook/icons/events2.png") !important;
         margin-right: 15px;
 }
 
