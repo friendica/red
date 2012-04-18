@@ -26,7 +26,7 @@ function initEditor(cb){
 			mode : "specific_textareas",
 			editor_selector: $editselect,
 			auto_focus: "profile-jot-text",
-			plugins : "bbcode,paste,autoresize",
+			plugins : "bbcode,paste,autoresize, inlinepopups",
 			theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,forecolor,formatselect,code",
 			theme_advanced_buttons2 : "",
 			theme_advanced_buttons3 : "",
