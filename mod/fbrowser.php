@@ -22,6 +22,9 @@ function fbrowser_content($a){
 		case "image":
 			$path = array( array($a->get_baseurl()."/fbrowser/image/", t("Photos")));
 			$albums = false;
+			$sql_extra = "";
+			$sql_extra2 = " ORDER BY created DESC LIMIT 0, 10";
+			
 			if ($a->argc==2){
 				$albums = q("SELECT distinct(`album`) AS `album` FROM `photo` WHERE `uid` = %d ",
 					intval(local_user())
@@ -36,11 +39,13 @@ function fbrowser_content($a){
 			if ($a->argc==3){
 				$album = hex2bin($a->argv[2]);
 				$sql_extra = sprintf("AND `album` = '%s' ",dbesc($album));
+				$sql_extra2 = "";
 				$path[]=array($a->get_baseurl()."/fbrowser/image/".$a->argv[2]."/", $album);
 			}
 				
-			$r = q("SELECT `resource-id`, `id`, `filename`, min(`scale`) AS `hiq`,max(`scale`) AS `loq`, `desc`  FROM `photo` WHERE `uid` = %d $sql_extra
-				AND `scale` <= 4 $sql_extra GROUP BY `resource-id`",
+			$r = q("SELECT `resource-id`, `id`, `filename`, min(`scale`) AS `hiq`,max(`scale`) AS `loq`, `desc`  
+					FROM `photo` WHERE `uid` = %d $sql_extra
+					GROUP BY `resource-id` $sql_extra2",
 				intval(local_user())					
 			);
 			

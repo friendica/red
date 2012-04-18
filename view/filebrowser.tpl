@@ -3,11 +3,13 @@
 	<head>
 	<script type="text/javascript" src="$baseurl/library/tinymce/jscripts/tiny_mce/tiny_mce_popup.js"></script>
 	<style>
+		.panel_wrapper div.current{.overflow: auto; height: auto!important; }
 		.filebrowser.path { font-family: fixed; font-size: 10px; background-color: #f0f0ee; height:auto; overflow:auto;}
 		.filebrowser.path a { border-left: 1px solid #C0C0AA; background-color: #E0E0DD; display: block; float:left; padding: 0.3em 1em;}
 		.filebrowser ul{ list-style-type: none; padding:0px; }
 		.filebrowser.folders a { display: block; padding: 0.3em }
 		.filebrowser.folders a:hover { background-color: #f0f0ee; }
+		.filebrowser.files.image { overflow: auto; height: auto; }
 		.filebrowser.files.image img { height:50px;}
 		.filebrowser.files.image li { display: block; padding: 5px; float: left; }
 		.filebrowser.files.image span { display: none;}
