@@ -385,7 +385,7 @@
 .hide-comments-outer {
   margin-left: 80px;
   margin-bottom: 5px;
-  width: 484px;
+  width: 675px;
   border-bottom: 1px solid #BDCDD4;
   border-top: 1px solid #BDCDD4;
 
@@ -2277,7 +2277,7 @@ a.mail-list-link {
 }
 
 .vevent {
-        border: 1px solid #CCCCCC;
+
 }
 .vevent .event-description, .vevent .event-location {
         margin-left: 10px;

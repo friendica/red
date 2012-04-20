@@ -98,8 +98,13 @@ function wall_attach_post(&$a) {
 		killme();
 	}
 
-	echo  '<br /><br />[attachment]' . $r[0]['id'] . '[/attachment]' . '<br />';
+	$lf = '<br />';
 
+	if(local_user() && intval(get_pconfig(local_user(),'system','plaintext')))
+		$lf = "\n";
+
+	echo  $lf . $lf . '[attachment]' . $r[0]['id'] . '[/attachment]' . $lf;
+	
 	killme();
 	// NOTREACHED
 }

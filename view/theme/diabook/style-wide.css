@@ -130,7 +130,8 @@
 .icon.pencil 	{ background-image: url("../../../view/theme/diabook/icons/pencil.png");}
 .icon.recycle 	{ background-image: url("../../../view/theme/diabook/icons/recycle.png");}
 .icon.remote-link { background-image: url("../../../view/theme/diabook/icons/remote.png");}
-.icon.tagged    { background-image: url("../../../view/theme/diabook/icons/tagged.png");}  
+.icon.tagged    { background-image: url("../../../view/theme/diabook/icons/tagged.png");}
+.icon.file-as { background-image: url("../../../view/theme/diabook/icons/file_as.png");}  
 .star-item.icon.unstarred { background-image: url("../../../view/theme/diabook/icons/unstarred.png");}
 .star-item.icon.starred { background-image: url("../../../view/theme/diabook/icons/starred.png");}
 .icon.link		{ background-image: url("../../../view/theme/diabook/icons/link.png");}
@@ -168,13 +169,17 @@
 			  }
 .edit    {background-image: url("../../../view/theme/diabook/icons/pencil2.png"); 
 			  display: block; width: 28px; height: 28px; background-repeat: no-repeat;}
-			  
+.icon.block   {background-image: url("../../../view/theme/diabook/icons/block.png"); 
+			  display: block; width: 16px; height: 16px; background-repeat: no-repeat;}
+.icon.block.dim  {background-image: url("../../../view/theme/diabook/icons/block.png"); 
+			  display: block; width: 16px; height: 16px; background-repeat: no-repeat; opacity: 0.3;}
+.icon.ad_drop 	{ background-image: url("../../../view/theme/diabook/icons/drop.png");
+			  display: block; margin-left:5px; width: 16px; height: 16px; background-repeat: no-repeat;}			  
 			  
 
 
 .article	{ background-position: -50px  0px;}
 /*.audio 		{ background-position: -70px  0px;}*/
-.block 		{ background-position: -90px  0px;}
 /*.drop 		{ background-position: -110px 0px;}*/
 /*.drophide 	{ background-position: -130px 0px;}*/
 /*.edit 		{ background-position: -150px 0px;}*/
@@ -413,7 +418,7 @@
 .hide-comments-outer {
   margin-left: 80px;
   margin-bottom: 5px;
-  width: 684px;
+  width: 675px;
   border-bottom: 1px solid #BDCDD4;
   border-top: 1px solid #BDCDD4;
 
@@ -429,6 +434,10 @@ body {
   margin: 50px auto auto;
   display: table;
 
+}
+
+#jappix_mini {
+right: 45px !important;
 }
 
 h4 {
@@ -1186,7 +1195,7 @@ aside #side-peoplefind-url {
   margin-right: 20px;	
 	}
 #login-submit-wrapper{
-  margin-top: 20px;
+  margin-bottom: 15px;
 	}
 /* widget */
 .widget {
@@ -1356,7 +1365,7 @@ body .pageheader{
 	margin-bottom: 10px;
 	}
 /* wall item */
-/*marker*/
+
 .tread-wrapper {
   border-bottom: 1px solid #D2D2D2;
   position: relative;
@@ -1365,7 +1374,7 @@ body .pageheader{
   width: 775px;
   padding-top: 10px;
 }
-
+/*marker*/
 .wall-item-decor {
   position: absolute;
   left: 780px;
@@ -1866,7 +1875,7 @@ body .pageheader{
 #jot #jot-tools li.loading img {
   margin-top: 10px;
 }
-#profile-jot-form #jot-title {
+#profile-jot-form #jot-title, #profile-jot-form #jot-category {
     
   	 border-radius: 5px 5px 5px 5px;
     font-weight: bold;
@@ -2546,16 +2555,39 @@ a.mail-list-link {
 }
 
 .vevent {
-        border: 1px solid #CCCCCC;
+position: relative;
+width: 400px;
+padding: 20px;
+padding-top: 10px;
+margin: 0 0px;
+margin-bottom: 10px;
+background-color: white;
+-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
+-moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
+box-shadow: 0 0 5px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
 }
-.vevent .event-description, .vevent .event-location {
+.vevent .event-location {
         margin-left: 10px;
         margin-right: 10px;
 }
-.vevent .event-start {
-        margin-left: 10px;
-        margin-right: 10px;
+.vevent .event-description {
+margin-left: 10px;
+margin-right: 10px;
+font-size: 1.1em;
+font-weight: bolder;
 }
+.vevent .event-start, .vevent .event-end {
+
+margin-right: 20px;
+margin-bottom: 2px;
+margin-top: 2px;
+font-size: 0.9em;
+text-align: left;
+}
+.event-start .dtstart, .event-end .dtend {
+float: right;
+}
+
 
 #new-event-link {
         margin-bottom: 10px;
@@ -2569,7 +2601,7 @@ a.mail-list-link {
 }
 
 .event-description:before {
-        content: url('../../../images/calendar.png');
+        content:   url("../../../view/theme/diabook/icons/events2.png") !important;
         margin-right: 15px;
 }
 
@@ -2582,7 +2614,6 @@ a.mail-list-link {
 .event-start .dtstart, .event-end .dtend {
         float: right;
 }
-
 .event-list-date {
         margin-bottom: 10px;
 }

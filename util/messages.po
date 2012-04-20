@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.3.1313\n"
+"Project-Id-Version: 2.3.1314\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-15 10:00-0700\n"
+"POT-Creation-Date: 2012-04-16 10:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,7 +55,7 @@ msgstr ""
 #: ../../mod/profiles.php:7 ../../mod/profiles.php:329
 #: ../../mod/delegate.php:6 ../../mod/suggest.php:28 ../../mod/invite.php:13
 #: ../../mod/invite.php:81 ../../mod/dfrn_confirm.php:53
-#: ../../addon/facebook/facebook.php:461 ../../include/items.php:3142
+#: ../../addon/facebook/facebook.php:461 ../../include/items.php:3170
 #: ../../index.php:309
 msgid "Permission denied."
 msgstr ""
@@ -142,8 +142,8 @@ msgstr ""
 #: ../../addon/oembed.old/oembed.php:41 ../../addon/impressum/impressum.php:80
 #: ../../addon/blockem/blockem.php:57 ../../addon/qcomment/qcomment.php:61
 #: ../../addon/openstreetmap/openstreetmap.php:70
-#: ../../addon/editplain/editplain.php:84 ../../addon/blackout/blackout.php:94
-#: ../../addon/gravatar/gravatar.php:86
+#: ../../addon/mathjax/mathjax.php:42 ../../addon/editplain/editplain.php:84
+#: ../../addon/blackout/blackout.php:94 ../../addon/gravatar/gravatar.php:86
 #: ../../addon/pageheader/pageheader.php:55 ../../addon/ijpost/ijpost.php:93
 #: ../../addon/statusnet/statusnet.php:278
 #: ../../addon/statusnet/statusnet.php:292
@@ -540,14 +540,14 @@ msgstr ""
 msgid "I don't like this (toggle)"
 msgstr ""
 
-#: ../../mod/photos.php:1214 ../../include/conversation.php:960
+#: ../../mod/photos.php:1214 ../../include/conversation.php:956
 msgid "Share"
 msgstr ""
 
 #: ../../mod/photos.php:1215 ../../mod/editpost.php:104
 #: ../../mod/wallmessage.php:145 ../../mod/message.php:188
 #: ../../mod/message.php:357 ../../include/conversation.php:362
-#: ../../include/conversation.php:702 ../../include/conversation.php:979
+#: ../../include/conversation.php:698 ../../include/conversation.php:975
 msgid "Please wait"
 msgstr ""
 
@@ -563,7 +563,7 @@ msgid "Comment"
 msgstr ""
 
 #: ../../mod/photos.php:1235 ../../mod/editpost.php:125
-#: ../../include/conversation.php:556 ../../include/conversation.php:997
+#: ../../include/conversation.php:556 ../../include/conversation.php:993
 msgid "Preview"
 msgstr ""
 
@@ -636,7 +636,7 @@ msgstr ""
 msgid "Edit post"
 msgstr ""
 
-#: ../../mod/editpost.php:80 ../../include/conversation.php:946
+#: ../../mod/editpost.php:80 ../../include/conversation.php:942
 msgid "Post to Email"
 msgstr ""
 
@@ -647,17 +647,17 @@ msgstr ""
 
 #: ../../mod/editpost.php:96 ../../mod/wallmessage.php:143
 #: ../../mod/message.php:186 ../../mod/message.php:355
-#: ../../include/conversation.php:961
+#: ../../include/conversation.php:957
 msgid "Upload photo"
 msgstr ""
 
-#: ../../mod/editpost.php:97 ../../include/conversation.php:963
+#: ../../mod/editpost.php:97 ../../include/conversation.php:959
 msgid "Attach file"
 msgstr ""
 
 #: ../../mod/editpost.php:98 ../../mod/wallmessage.php:144
 #: ../../mod/message.php:187 ../../mod/message.php:356
-#: ../../include/conversation.php:965
+#: ../../include/conversation.php:961
 msgid "Insert web link"
 msgstr ""
 
@@ -673,35 +673,35 @@ msgstr ""
 msgid "Insert Vorbis [.ogg] audio"
 msgstr ""
 
-#: ../../mod/editpost.php:102 ../../include/conversation.php:971
+#: ../../mod/editpost.php:102 ../../include/conversation.php:967
 msgid "Set your location"
 msgstr ""
 
-#: ../../mod/editpost.php:103 ../../include/conversation.php:973
+#: ../../mod/editpost.php:103 ../../include/conversation.php:969
 msgid "Clear browser location"
 msgstr ""
 
-#: ../../mod/editpost.php:105 ../../include/conversation.php:980
+#: ../../mod/editpost.php:105 ../../include/conversation.php:976
 msgid "Permission settings"
 msgstr ""
 
-#: ../../mod/editpost.php:113 ../../include/conversation.php:989
+#: ../../mod/editpost.php:113 ../../include/conversation.php:985
 msgid "CC: email addresses"
 msgstr ""
 
-#: ../../mod/editpost.php:114 ../../include/conversation.php:990
+#: ../../mod/editpost.php:114 ../../include/conversation.php:986
 msgid "Public post"
 msgstr ""
 
-#: ../../mod/editpost.php:117 ../../include/conversation.php:976
+#: ../../mod/editpost.php:117 ../../include/conversation.php:972
 msgid "Set title"
 msgstr ""
 
-#: ../../mod/editpost.php:119 ../../include/conversation.php:978
+#: ../../mod/editpost.php:119 ../../include/conversation.php:974
 msgid "Categories (comma-separated list)"
 msgstr ""
 
-#: ../../mod/editpost.php:120 ../../include/conversation.php:992
+#: ../../mod/editpost.php:120 ../../include/conversation.php:988
 msgid "Example: bob@example.com, mary@example.com"
 msgstr ""
 
@@ -818,7 +818,7 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:628 ../../include/items.php:2662
+#: ../../mod/dfrn_request.php:628 ../../include/items.php:2690
 msgid "[Name Withheld]"
 msgstr ""
 
@@ -1645,9 +1645,9 @@ msgstr ""
 #: ../../mod/lostpass.php:45 ../../mod/lostpass.php:107
 #: ../../mod/register.php:388 ../../mod/register.php:442
 #: ../../mod/regmod.php:54 ../../mod/dfrn_confirm.php:732
-#: ../../addon/facebook/facebook.php:622
-#: ../../addon/facebook/facebook.php:1076
-#: ../../addon/testdrive/testdrive.php:58 ../../include/items.php:2671
+#: ../../addon/facebook/facebook.php:625
+#: ../../addon/facebook/facebook.php:1090
+#: ../../addon/testdrive/testdrive.php:58 ../../include/items.php:2699
 msgid "Administrator"
 msgstr ""
 
@@ -1726,7 +1726,7 @@ msgid "Export personal data"
 msgstr ""
 
 #: ../../mod/settings.php:83 ../../mod/admin.php:631 ../../mod/admin.php:817
-#: ../../include/nav.php:137
+#: ../../addon/mathjax/mathjax.php:36 ../../include/nav.php:137
 msgid "Settings"
 msgstr ""
 
@@ -1782,7 +1782,8 @@ msgstr ""
 #: ../../mod/settings.php:461 ../../addon/facebook/facebook.php:450
 #: ../../addon/impressum/impressum.php:75
 #: ../../addon/openstreetmap/openstreetmap.php:80
-#: ../../addon/piwik/piwik.php:105 ../../addon/twitter/twitter.php:370
+#: ../../addon/mathjax/mathjax.php:64 ../../addon/piwik/piwik.php:105
+#: ../../addon/twitter/twitter.php:370
 msgid "Settings updated."
 msgstr ""
 
@@ -2279,7 +2280,7 @@ msgid "Personal Notes"
 msgstr ""
 
 #: ../../mod/notes.php:63 ../../mod/filer.php:30
-#: ../../addon/facebook/facebook.php:680 ../../include/text.php:652
+#: ../../addon/facebook/facebook.php:683 ../../include/text.php:652
 msgid "Save"
 msgstr ""
 
@@ -2313,7 +2314,7 @@ msgid "No recipient."
 msgstr ""
 
 #: ../../mod/wallmessage.php:124 ../../mod/message.php:169
-#: ../../include/conversation.php:914
+#: ../../include/conversation.php:910
 msgid "Please enter a link URL:"
 msgstr ""
 
@@ -2707,7 +2708,7 @@ msgid "People Search"
 msgstr ""
 
 #: ../../mod/like.php:127 ../../mod/tagger.php:70
-#: ../../addon/facebook/facebook.php:1549
+#: ../../addon/facebook/facebook.php:1574
 #: ../../addon/communityhome/communityhome.php:158
 #: ../../addon/communityhome/communityhome.php:167
 #: ../../view/theme/diabook-red/theme.php:80
@@ -2723,7 +2724,7 @@ msgstr ""
 msgid "status"
 msgstr ""
 
-#: ../../mod/like.php:144 ../../addon/facebook/facebook.php:1553
+#: ../../mod/like.php:144 ../../addon/facebook/facebook.php:1578
 #: ../../addon/communityhome/communityhome.php:172
 #: ../../view/theme/diabook-red/theme.php:94
 #: ../../view/theme/diabook-blue/theme.php:94
@@ -2741,7 +2742,7 @@ msgstr ""
 
 #: ../../mod/notice.php:15 ../../mod/viewsrc.php:15 ../../mod/admin.php:141
 #: ../../mod/admin.php:582 ../../mod/admin.php:761 ../../mod/display.php:37
-#: ../../mod/display.php:142 ../../include/items.php:3054
+#: ../../mod/display.php:142 ../../include/items.php:3082
 msgid "Item not found."
 msgstr ""
 
@@ -3845,7 +3846,7 @@ msgstr ""
 msgid "Edit visibility"
 msgstr ""
 
-#: ../../mod/filer.php:29 ../../include/conversation.php:918
+#: ../../mod/filer.php:29 ../../include/conversation.php:914
 msgid "Save to Folder:"
 msgstr ""
 
@@ -4176,110 +4177,110 @@ msgstr ""
 msgid "Comma separated applications to ignore"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:620
+#: ../../addon/facebook/facebook.php:623
 msgid "Problems with Facebook Real-Time Updates"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:644
+#: ../../addon/facebook/facebook.php:647
 #: ../../include/contact_selectors.php:81
 msgid "Facebook"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:645
+#: ../../addon/facebook/facebook.php:648
 msgid "Facebook Connector Settings"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:656
+#: ../../addon/facebook/facebook.php:659
 msgid "Facebook API Key"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:665
+#: ../../addon/facebook/facebook.php:668
 msgid ""
 "Error: it appears that you have specified the App-ID and -Secret in your ."
 "htconfig.php file. As long as they are specified there, they cannot be set "
 "using this form.<br><br>"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:670
+#: ../../addon/facebook/facebook.php:673
 msgid ""
 "Error: the given API Key seems to be incorrect (the application access token "
 "could not be retrieved)."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:672
+#: ../../addon/facebook/facebook.php:675
 msgid "The given API Key seems to work correctly."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:674
+#: ../../addon/facebook/facebook.php:677
 msgid ""
 "The correctness of the API Key could not be detected. Somthing strange's "
 "going on."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:677
+#: ../../addon/facebook/facebook.php:680
 msgid "App-ID / API-Key"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:678
+#: ../../addon/facebook/facebook.php:681
 msgid "Application secret"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:679
+#: ../../addon/facebook/facebook.php:682
 #, php-format
 msgid "Polling Interval (min. %1$s minutes)"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:683
+#: ../../addon/facebook/facebook.php:686
 msgid "Real-Time Updates"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:687
+#: ../../addon/facebook/facebook.php:690
 msgid "Real-Time Updates are activated."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:688
+#: ../../addon/facebook/facebook.php:691
 msgid "Deactivate Real-Time Updates"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:690
+#: ../../addon/facebook/facebook.php:693
 msgid "Real-Time Updates not activated."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:690
+#: ../../addon/facebook/facebook.php:693
 msgid "Activate Real-Time Updates"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:704
+#: ../../addon/facebook/facebook.php:707
 msgid "The new values have been saved."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:723
+#: ../../addon/facebook/facebook.php:726
 msgid "Post to Facebook"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:815
+#: ../../addon/facebook/facebook.php:818
 msgid ""
 "Post to Facebook cancelled because of multi-network access permission "
 "conflict."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:1033
+#: ../../addon/facebook/facebook.php:1039
 msgid "View on Friendica"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:1058
+#: ../../addon/facebook/facebook.php:1072
 msgid "Facebook post failed. Queued for retry."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:1094
+#: ../../addon/facebook/facebook.php:1108
 msgid "Your Facebook connection became invalid. Please Re-authenticate."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:1095
+#: ../../addon/facebook/facebook.php:1109
 msgid "Facebook connection became invalid"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:1096
+#: ../../addon/facebook/facebook.php:1110
 #, php-format
 msgid ""
 "Hi %1$s,\n"
@@ -4799,6 +4800,27 @@ msgstr ""
 
 #: ../../addon/openstreetmap/openstreetmap.php:72
 msgid "The default zoom level. (1:world, 18:highest)"
+msgstr ""
+
+#: ../../addon/mathjax/mathjax.php:37
+msgid ""
+"The MathJax addon renders mathematical formulae written using the LaTeX "
+"syntax surrounded by the usual $$ or an eqnarray block in the postings of "
+"your wall,network tab and private mail."
+msgstr ""
+
+#: ../../addon/mathjax/mathjax.php:38
+msgid "Use the MathJax renderer"
+msgstr ""
+
+#: ../../addon/mathjax/mathjax.php:72
+msgid "MathJax Base URL"
+msgstr ""
+
+#: ../../addon/mathjax/mathjax.php:72
+msgid ""
+"The URL for the javascript file that should be included to use MathJax. Can "
+"be either the MathJax CDN or another installation of MathJax."
 msgstr ""
 
 #: ../../addon/editplain/editplain.php:46
@@ -6611,11 +6633,11 @@ msgstr ""
 msgid "Please visit %s to approve or reject the suggestion."
 msgstr ""
 
-#: ../../include/items.php:2669
+#: ../../include/items.php:2697
 msgid "A new person is sharing with you at "
 msgstr ""
 
-#: ../../include/items.php:2669
+#: ../../include/items.php:2697
 msgid "You have a new follower at "
 msgstr ""
 
@@ -6646,30 +6668,30 @@ msgid ""
 "form has been opened for too long (>3 hours) before submitting it."
 msgstr ""
 
-#: ../../include/Contact.php:145 ../../include/conversation.php:813
+#: ../../include/Contact.php:145 ../../include/conversation.php:809
 msgid "View Status"
 msgstr ""
 
-#: ../../include/Contact.php:146 ../../include/conversation.php:814
+#: ../../include/Contact.php:146 ../../include/conversation.php:810
 msgid "View Profile"
 msgstr ""
 
-#: ../../include/Contact.php:147 ../../include/conversation.php:815
+#: ../../include/Contact.php:147 ../../include/conversation.php:811
 msgid "View Photos"
 msgstr ""
 
 #: ../../include/Contact.php:148 ../../include/Contact.php:161
-#: ../../include/conversation.php:816
+#: ../../include/conversation.php:812
 msgid "Network Posts"
 msgstr ""
 
 #: ../../include/Contact.php:149 ../../include/Contact.php:161
-#: ../../include/conversation.php:817
+#: ../../include/conversation.php:813
 msgid "Edit Contact"
 msgstr ""
 
 #: ../../include/Contact.php:150 ../../include/Contact.php:161
-#: ../../include/conversation.php:818
+#: ../../include/conversation.php:814
 msgid "Send PM"
 msgstr ""
 
@@ -6686,13 +6708,13 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
-#: ../../include/conversation.php:334 ../../include/conversation.php:672
-#: ../../include/conversation.php:673
+#: ../../include/conversation.php:334 ../../include/conversation.php:668
+#: ../../include/conversation.php:669
 #, php-format
 msgid "View %s's profile @ %s"
 msgstr ""
 
-#: ../../include/conversation.php:344 ../../include/conversation.php:684
+#: ../../include/conversation.php:344 ../../include/conversation.php:680
 #, php-format
 msgid "%s from %s"
 msgstr ""
@@ -6748,118 +6770,118 @@ msgstr ""
 msgid "save to folder"
 msgstr ""
 
-#: ../../include/conversation.php:674
+#: ../../include/conversation.php:670
 msgid "to"
 msgstr ""
 
-#: ../../include/conversation.php:675
+#: ../../include/conversation.php:671
 msgid "Wall-to-Wall"
 msgstr ""
 
-#: ../../include/conversation.php:676
+#: ../../include/conversation.php:672
 msgid "via Wall-To-Wall:"
 msgstr ""
 
-#: ../../include/conversation.php:721
+#: ../../include/conversation.php:717
 msgid "Delete Selected Items"
 msgstr ""
 
-#: ../../include/conversation.php:872
+#: ../../include/conversation.php:868
 #, php-format
 msgid "%s likes this."
 msgstr ""
 
-#: ../../include/conversation.php:872
+#: ../../include/conversation.php:868
 #, php-format
 msgid "%s doesn't like this."
 msgstr ""
 
-#: ../../include/conversation.php:876
+#: ../../include/conversation.php:872
 #, php-format
 msgid "<span  %1$s>%2$d people</span> like this."
 msgstr ""
 
-#: ../../include/conversation.php:878
+#: ../../include/conversation.php:874
 #, php-format
 msgid "<span  %1$s>%2$d people</span> don't like this."
 msgstr ""
 
-#: ../../include/conversation.php:884
+#: ../../include/conversation.php:880
 msgid "and"
 msgstr ""
 
-#: ../../include/conversation.php:887
+#: ../../include/conversation.php:883
 #, php-format
 msgid ", and %d other people"
 msgstr ""
 
-#: ../../include/conversation.php:888
+#: ../../include/conversation.php:884
 #, php-format
 msgid "%s like this."
 msgstr ""
 
-#: ../../include/conversation.php:888
+#: ../../include/conversation.php:884
 #, php-format
 msgid "%s don't like this."
 msgstr ""
 
-#: ../../include/conversation.php:913
+#: ../../include/conversation.php:909
 msgid "Visible to <strong>everybody</strong>"
 msgstr ""
 
-#: ../../include/conversation.php:915
+#: ../../include/conversation.php:911
 msgid "Please enter a video link/URL:"
 msgstr ""
 
-#: ../../include/conversation.php:916
+#: ../../include/conversation.php:912
 msgid "Please enter an audio link/URL:"
 msgstr ""
 
-#: ../../include/conversation.php:917
+#: ../../include/conversation.php:913
 msgid "Tag term:"
 msgstr ""
 
-#: ../../include/conversation.php:919
+#: ../../include/conversation.php:915
 msgid "Where are you right now?"
 msgstr ""
 
-#: ../../include/conversation.php:962
+#: ../../include/conversation.php:958
 msgid "upload photo"
 msgstr ""
 
-#: ../../include/conversation.php:964
+#: ../../include/conversation.php:960
 msgid "attach file"
 msgstr ""
 
-#: ../../include/conversation.php:966
+#: ../../include/conversation.php:962
 msgid "web link"
 msgstr ""
 
-#: ../../include/conversation.php:967
+#: ../../include/conversation.php:963
 msgid "Insert video link"
 msgstr ""
 
-#: ../../include/conversation.php:968
+#: ../../include/conversation.php:964
 msgid "video link"
 msgstr ""
 
-#: ../../include/conversation.php:969
+#: ../../include/conversation.php:965
 msgid "Insert audio link"
 msgstr ""
 
-#: ../../include/conversation.php:970
+#: ../../include/conversation.php:966
 msgid "audio link"
 msgstr ""
 
-#: ../../include/conversation.php:972
+#: ../../include/conversation.php:968
 msgid "set location"
 msgstr ""
 
-#: ../../include/conversation.php:974
+#: ../../include/conversation.php:970
 msgid "clear location"
 msgstr ""
 
-#: ../../include/conversation.php:981
+#: ../../include/conversation.php:977
 msgid "permissions"
 msgstr ""
 

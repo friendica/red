@@ -1064,6 +1064,10 @@ aside #search-text {
 border-top-right-radius: 15px;
 border-bottom-right-radius: 15px;
 border-bottom-left-radius: 15px;
+-moz-border-bottom-colors: #dbdbdb;
+  -moz-border-top-colors: #999;
+  -moz-border-left-colors: #999;
+  -moz-border-right-colors: #dbdbdb;
 }
 aside #side-follow-url {
 	width: 150px;
@@ -1385,7 +1389,7 @@ transition: all 0.2s ease-in-out;
 
 .wall-item-container .wall-item-content img {
   max-width: 400px; 
-  max-height: 400px;
+
 }
 .wall-item-container .wall-item-links, .wall-item-container .wall-item-actions {
   display: table-cell;
@@ -2354,7 +2358,7 @@ a.mail-list-link {
 }
 
 .vevent {
-        border: 1px solid #CCCCCC;
+
 }
 .vevent .event-description, .vevent .event-location {
         margin-left: 10px;

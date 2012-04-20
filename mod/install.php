@@ -380,9 +380,9 @@ function check_funcs(&$checks) {
 	
 	if(function_exists('apache_get_modules')){
 		if (! in_array('mod_rewrite',apache_get_modules())) {
-			check_add($ck_funcs, t('Apace mod_rewrite module'), false, true, t('Error: Apache webserver mod-rewrite module is required but not installed.'));
+			check_add($ck_funcs, t('Apache mod_rewrite module'), false, true, t('Error: Apache webserver mod-rewrite module is required but not installed.'));
 		} else {
-			check_add($ck_funcs, t('Apace mod_rewrite module'), true, true, "");
+			check_add($ck_funcs, t('Apache mod_rewrite module'), true, true, "");
 		}
 	}
 	if(! function_exists('curl_init')){
@@ -464,3 +464,6 @@ function load_database($db) {
 	}
 	return $errors;
 }
+
+
+
