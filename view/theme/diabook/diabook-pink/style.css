@@ -615,8 +615,9 @@ header #banner #logo-text {
   top: 10%;
 }
 /* messages */
+/*color*/
 #message-new {
-  background: #3465A4;
+  background: #996d73;
   border: 1px solid #333;
   width: 150px;
 }

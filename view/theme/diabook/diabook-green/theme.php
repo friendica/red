@@ -1,42 +1,29 @@
 <?php
 
 /*
- * Name: Diabook
- * Description: Diabook: report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
- * Version: (Version: 1.021)
+ * Name: Diabook-aerith
+ * Description: Diabook-aerith : report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
+ * Version: (Version: 1.020)
  * Author: 
  */
 
 
 //print diabook-version for debugging
-$diabook_version = "Diabook (Version: 1.021)";
+$diabook_version = "Diabook-aerith (Version: 1.020)";
 $a->page['htmlhead'] .= sprintf('<script "%s" ></script>', $diabook_version);
+
 
 //change css on network and profilepages
 $cssFile = null;
 $resolution=false;
-$resolution = get_pconfig(local_user(), "diabook", "resolution");
+$resolution = get_pconfig(local_user(), "diabook-aerith", "resolution");
 if ($resolution===false) $resolution="normal";
-$color = false;
-$color = get_pconfig(local_user(), "diabook", "color");
-if ($color===false) $color="diabook";
-if ($color=="diabook") $color_path = "/";
-if ($color=="aerith") $color_path = "/diabook-aerith/";
-if ($color=="blue") $color_path = "/diabook-blue/";
-if ($color=="red") $color_path = "/diabook-red/";
-if ($color=="pink") $color_path = "/diabook-pink/";
-if ($color=="green") $color_path = "/diabook-green/";
-
 
 /**
  * prints last community activity
  */
-
-
- 
-function diabook_community_info(){
+function diabook_aerith_community_info(){
 	$a = get_app();
-
 
 	// last 12 users
 	$aside['$lastusers_title'] = t('Last users');
@@ -148,10 +135,10 @@ function diabook_community_info(){
 	
 	
    
-   //right_aside FIND FRIENDS
+   //nav FIND FRIENDS
 	if(local_user()) {
 	$nv = array();
-	$nv['title'] = Array("", t('Find Friends'), "", "");
+   $nv['title'] = Array("", t('Find Friends'), "", "");
 	$nv['directory'] = Array('directory', t('Local Directory'), "", "");
 	$nv['global_directory'] = Array('http://dir.friendica.com/', t('Global Directory'), "", "");
 	$nv['match'] = Array('match', t('Similar Interests'), "", "");
@@ -164,12 +151,11 @@ function diabook_community_info(){
 						<input type="text" name="search" size="13" maxlength="50">
 						</span>
 						<span class="sbox_r" id="srch_clear"></span>';
-	
+						
 	$aside['$nv'] = $nv;
 	};
-   
-   //Community Page
-   if(local_user()) {
+	//Community Page
+	if(local_user()) {
    $page = '<div id="page-sidebar-right_aside" class="widget">
 			<div class="title tool">
 			<h3>'.t("Community Pages").'<a id="close_pages_icon"  onClick="close_pages()" class="icon close_box" title="close"></a></h3></div>
@@ -200,8 +186,8 @@ function diabook_community_info(){
 	$page .= '</ul></div></div>';
 	//if (sizeof($contacts) > 0)
 		
-		$aside['$page'] = $page;	
-	}
+		$aside['$page'] = $page;
+	}		
   //END Community Page	
   //helpers
    $helpers = array();
@@ -215,17 +201,14 @@ function diabook_community_info(){
 	
 	$aside['$con_services'] = $con_services;
    //end connectable services
+   
   
-  
-   //get_baseurl
+   //get_baseurl	      
    $url = $a->get_baseurl($ssl_state);   
    $aside['$url'] = $url;
 
 	$tpl = file_get_contents(dirname(__file__).'/communityhome.tpl');
 	$a->page['right_aside'] = replace_macros($tpl, $aside);
-	
-	
-	
 	
 }
 
@@ -245,12 +228,12 @@ if ($a->argv[0] === "network" && local_user()){
 		$ps = array('usermenu'=>array());
 		$ps['usermenu']['status'] = Array('profile/' . $a->user['nickname'], t('Home'), "", t('Your posts and conversations'));
 		$ps['usermenu']['profile'] = Array('profile/' . $a->user['nickname']. '?tab=profile', t('Profile'), "", t('Your profile page'));
-		$ps['usermenu']['contacts'] = Array('contacts' , t('Contacts'), "", t('Your contacts'));				
+		$ps['usermenu']['contacts'] = Array('contacts' , t('Contacts'), "", t('Your contacts'));		
 		$ps['usermenu']['photos'] = Array('photos/' . $a->user['nickname'], t('Photos'), "", t('Your photos'));
 		$ps['usermenu']['events'] = Array('events/', t('Events'), "", t('Your events'));
 		$ps['usermenu']['notes'] = Array('notes/', t('Personal notes'), "", t('Your personal photos'));
 		$ps['usermenu']['community'] = Array('community/', t('Community'), "", "");
-		$ps['usermenu']['pgroups'] = Array('http://dir.friendica.com/directory/forum', t('Community Pages'), "", "");
+		$ps['usermenu']['pgroups'] = Array('http://dir.friendika.com/directory/forum', t('Community Pages'), "", "");
 
 		$tpl = get_markup_template('profile_side.tpl');
 
@@ -265,11 +248,11 @@ if ($a->argv[0] === "network" && local_user()){
 	
 	if($ccCookie != "7") {
 	// COMMUNITY
-	diabook_community_info();
-
+	diabook_aerith_community_info();
+	
 	// CUSTOM CSS
-	if($resolution == "normal") {$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook".$color_path."style-network.css";}
-	if($resolution == "wide") {$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook".$color_path."style-network-wide.css";}
+	if($resolution == "normal") {$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook-aerith/style-network.css";}
+	if($resolution == "wide") {$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook-aerith/style-network-wide.css";}
 	}
 }
 
@@ -279,30 +262,29 @@ if ($a->argv[0] === "network" && local_user()){
 if ($a->argv[0].$a->argv[1] === "profile".$a->user['nickname']){
 	if($ccCookie != "7") {
 	// COMMUNITY
-	diabook_community_info();
+	diabook_aerith_community_info();
 	
 	// CUSTOM CSS
-	if($resolution == "normal") {$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook".$color_path."style-profile.css";}
-	if($resolution == "wide") {$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook".$color_path."style-profile-wide.css";}
-	
+	if($resolution == "normal") {$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook-aerith/style-profile.css";}
+	if($resolution == "wide") {$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook-aerith/style-profile-wide.css";}
 	}
 }
+
+
 
 // custom css
 if (!is_null($cssFile)) $a->page['htmlhead'] .= sprintf('<link rel="stylesheet" type="text/css" href="%s" />', $cssFile);
 
-
-
 //load jquery.cookie.js
-$cookieJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.cookie.js";
-$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s"></script>', $cookieJS);
+$cookieJS = $a->get_baseurl($ssl_state)."/view/theme/diabook-aerith/js/jquery.cookie.js";
+$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $cookieJS);
 
 //load jquery.ae.image.resize.js
-$imageresizeJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.ae.image.resize.js";
+$imageresizeJS = $a->get_baseurl($ssl_state)."/view/theme/diabook-aerith/js/jquery.ae.image.resize.js";
 $a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $imageresizeJS);
 
 //load jquery.autogrow-textarea.js
-$autogrowJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.autogrow.textarea.js";
+$autogrowJS = $a->get_baseurl($ssl_state)."/view/theme/diabook-aerith/js/jquery.autogrow.textarea.js";
 $a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $autogrowJS);
 
 //js scripts
@@ -326,7 +308,7 @@ $a->page['htmlhead'] .= '
  $(function() {
 	$("a.lightbox").fancybox(); // Select all links with lightbox class
  });
-   
+  
  </script>';
  
 $a->page['htmlhead'] .= '
@@ -337,8 +319,7 @@ function tautogrow(id){
 		$("textarea#comment-edit-text-" +id).autogrow(); 	
  	};
  </script>';
- 
- 
+
 $a->page['htmlhead'] .= '
  <script>
  
@@ -368,23 +349,6 @@ function yt_iframe() {
 	};
   
  </script>';
- 
-if($a->argv[0] === "settings" && local_user()) {
-$a->page['htmlhead'] .= ' 
-<script>
-function restore_boxes(){
-	$.cookie("close_pages","2", { expires: 365, path: "/" });
-	$.cookie("close_helpers","2", { expires: 365, path: "/" });
-	$.cookie("close_services","2", { expires: 365, path: "/" });
-	$.cookie("close_friends","2", { expires: 365, path: "/" });
-	$.cookie("close_lastusers","2", { expires: 365, path: "/" });
-	$.cookie("close_lastphotos","2", { expires: 365, path: "/" });
-	$.cookie("close_lastlikes","2", { expires: 365, path: "/" });
-	alert("Right-hand column was restored. Please refresh your browser");
-  }
-</script>';}
-
-
 
 if ($a->argv[0].$a->argv[1] === "profile".$a->user['nickname'] or $a->argv[0] === "network" && local_user()){
 $a->page['htmlhead'] .= '
@@ -474,11 +438,25 @@ function close_lastlikes(){
  document.getElementById( "close_lastlikes" ).style.display = "none";
  $.cookie("close_lastlikes","1", { expires: 365, path: "/" });
  };
-</script>';}}
+</script>';}
+
+$a->page['htmlhead'] .= ' 
+<script>
+function restore_boxes(){
+	$.cookie("close_pages","2", { expires: 365, path: "/" });
+	$.cookie("close_helpers","2", { expires: 365, path: "/" });
+	$.cookie("close_services","2", { expires: 365, path: "/" });
+	$.cookie("close_friends","2", { expires: 365, path: "/" });
+	$.cookie("close_lastusers","2", { expires: 365, path: "/" });
+	$.cookie("close_lastphotos","2", { expires: 365, path: "/" });
+	$.cookie("close_lastlikes","2", { expires: 365, path: "/" });
+	alert("Right-hand column was restored. Please refresh your browser");
+  }
+</script>';}
 
 $a->page['htmlhead'] .= ' 
 
-<script>
+<script type="text/javascript">
 function insertFormatting(comment,BBcode,id) {
 	
 		var tmpStr = $("#comment-edit-text-" + id).val();
@@ -487,7 +465,7 @@ function insertFormatting(comment,BBcode,id) {
 			$("#comment-edit-text-" + id).addClass("comment-edit-text-full");
 			$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
 			openMenu("comment-edit-submit-wrapper-" + id);
-								}
+											}
 
 	textarea = document.getElementById("comment-edit-text-" +id);
 	if (document.selection) {

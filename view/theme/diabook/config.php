@@ -53,6 +53,7 @@ function diabook_form(&$a, $font_size, $line_height, $resolution, $color){
 	$line_heights = array(
 		"1.3"=>"1.3",
 		"---"=>"---",
+		"1.6"=>"1.6",				
 		"1.5"=>"1.5",		
 		"1.4"=>"1.4",
 		"1.2"=>"1.2",
@@ -60,11 +61,12 @@ function diabook_form(&$a, $font_size, $line_height, $resolution, $color){
 	);
 	
 	$font_sizes = array(
-		'13'=>'13',
-		"---"=>"---",
-		"15"=>"15",
 		'14'=>'14',
-		'13.5'=>'13.5',		
+		"---"=>"---",
+		"16"=>"16",		
+		"15"=>"15",
+		'13.5'=>'13.5',
+		'13'=>'13',		
 		'12.5'=>'12.5',
 		'12'=>'12',
 		);
@@ -76,8 +78,9 @@ function diabook_form(&$a, $font_size, $line_height, $resolution, $color){
 		'diabook'=>'diabook',
 		'aerith'=>'aerith',		
 		'blue'=>'blue',		
-		'red'=>'red',
-		'pink'=>'pink',				
+		'green'=>'green',
+		'pink'=>'pink',	
+		'red'=>'red',			
 		);
 	
 	
