@@ -42,7 +42,7 @@
 					class="comment-edit-text-empty"
 					name="body"
 					onfocus="commentOpen(this,$id);tautogrow($id);cmtBbOpen($id);"
-					onblur="commentClose(this,$id);cmtBbClose($id);"
+					onblur="commentClose(this,$id);"
 					placeholder="Comment">$comment</textarea>
 				{{ if $qcomment }}
                 <div class="qcomment-wrapper">

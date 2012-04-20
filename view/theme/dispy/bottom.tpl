@@ -42,11 +42,5 @@ function insertFormatting(comment, BBcode, id) {
 
 function cmtBbOpen(id) {
 	$(".comment-edit-bb-" + id).show();
-	$(".comment-edit-bb-" + id + "> li").css({visibility: 'visible'});
-	
-}
-function cmtBbClose(id) {
-	$(".comment-edit-bb-" + id).hide();
-	$(".comment-edit-bb-" + id + "> li").css({visibility: 'none'});
 }
 </script>
