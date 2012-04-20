@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.3.1314\n"
+"Project-Id-Version: 2.3.1317\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-16 10:00-0700\n"
+"POT-Creation-Date: 2012-04-19 10:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1066,7 +1066,7 @@ msgid "mb_string PHP module"
 msgstr ""
 
 #: ../../mod/install.php:383 ../../mod/install.php:385
-msgid "Apace mod_rewrite module"
+msgid "Apache mod_rewrite module"
 msgstr ""
 
 #: ../../mod/install.php:383
@@ -1782,7 +1782,7 @@ msgstr ""
 #: ../../mod/settings.php:461 ../../addon/facebook/facebook.php:450
 #: ../../addon/impressum/impressum.php:75
 #: ../../addon/openstreetmap/openstreetmap.php:80
-#: ../../addon/mathjax/mathjax.php:64 ../../addon/piwik/piwik.php:105
+#: ../../addon/mathjax/mathjax.php:66 ../../addon/piwik/piwik.php:105
 #: ../../addon/twitter/twitter.php:370
 msgid "Settings updated."
 msgstr ""
@@ -4813,11 +4813,11 @@ msgstr ""
 msgid "Use the MathJax renderer"
 msgstr ""
 
-#: ../../addon/mathjax/mathjax.php:72
+#: ../../addon/mathjax/mathjax.php:74
 msgid "MathJax Base URL"
 msgstr ""
 
-#: ../../addon/mathjax/mathjax.php:72
+#: ../../addon/mathjax/mathjax.php:74
 msgid ""
 "The URL for the javascript file that should be included to use MathJax. Can "
 "be either the MathJax CDN or another installation of MathJax."
