@@ -1023,6 +1023,10 @@ aside #search-text {
 border-top-right-radius: 15px;
 border-bottom-right-radius: 15px;
 border-bottom-left-radius: 15px;
+ -moz-border-bottom-colors: #dbdbdb;
+  -moz-border-top-colors: #999;
+  -moz-border-left-colors: #999;
+  -moz-border-right-colors: #dbdbdb;
 }
 aside #side-follow-url {
 	width: 150px;
@@ -1327,7 +1331,7 @@ transition: all 0.2s ease-in-out;
 
 .wall-item-container .wall-item-content img {
   max-width: 400px;
-  max-height: 400px;
+
 }
 .wall-item-container .wall-item-links, .wall-item-container .wall-item-actions {
   display: table-cell;
@@ -2157,6 +2161,9 @@ box-shadow: 1px 1px 5px 0;
 #group-separator,
 #prof-separator { display: none;}
 */
+#prof-members-end{
+	clear: both;
+	}
 
 #prvmail-to-label, #prvmail-subject-label, #prvmail-message-label {
 	margin-bottom: 10px;
@@ -2280,7 +2287,7 @@ a.mail-list-link {
 }
 
 .vevent {
-        border: 1px solid #CCCCCC;
+
 }
 .vevent .event-description, .vevent .event-location {
         margin-left: 10px;
@@ -2302,10 +2309,7 @@ a.mail-list-link {
         margin-bottom: 15px;
 }
 
-.event-description:before {
-        content: url('../../../images/calendar.png');
-        margin-right: 15px;
-}
+
 
 .event-start, .event-end {
         margin-left: 10px;

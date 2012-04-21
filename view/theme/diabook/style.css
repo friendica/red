@@ -130,7 +130,8 @@
 .icon.pencil 	{ background-image: url("../../../view/theme/diabook/icons/pencil.png");}
 .icon.recycle 	{ background-image: url("../../../view/theme/diabook/icons/recycle.png");}
 .icon.remote-link { background-image: url("../../../view/theme/diabook/icons/remote.png");}
-.icon.tagged    { background-image: url("../../../view/theme/diabook/icons/tagged.png");}  
+.icon.tagged    { background-image: url("../../../view/theme/diabook/icons/tagged.png");}
+.icon.file-as { background-image: url("../../../view/theme/diabook/icons/file_as.png");}  
 .star-item.icon.unstarred { background-image: url("../../../view/theme/diabook/icons/unstarred.png");}
 .star-item.icon.starred { background-image: url("../../../view/theme/diabook/icons/starred.png");}
 .icon.link		{ background-image: url("../../../view/theme/diabook/icons/link.png");}
@@ -168,13 +169,19 @@
 			  }
 .edit    {background-image: url("../../../view/theme/diabook/icons/pencil2.png"); 
 			  display: block; width: 28px; height: 28px; background-repeat: no-repeat;}
+.icon.block   {background-image: url("../../../view/theme/diabook/icons/block.png"); 
+			  display: block; width: 16px; height: 16px; background-repeat: no-repeat;}
+.icon.block.dim  {background-image: url("../../../view/theme/diabook/icons/block.png"); 
+			  display: block; width: 16px; height: 16px; background-repeat: no-repeat; opacity: 0.3;}
+.icon.ad_drop 	{ background-image: url("../../../view/theme/diabook/icons/drop.png");
+			  display: block; margin-left:5px; width: 16px; height: 16px; background-repeat: no-repeat;}
 			  
 			  
 
 
 .article	{ background-position: -50px  0px;}
 /*.audio 		{ background-position: -70px  0px;}*/
-.block 		{ background-position: -90px  0px;}
+/*.block 		{ background-position: -90px  0px;}*/
 /*.drop 		{ background-position: -110px 0px;}*/
 /*.drophide 	{ background-position: -130px 0px;}*/
 /*.edit 		{ background-position: -150px 0px;}*/
@@ -428,6 +435,10 @@ body {
   color: #2d2d2d;
   margin: 50px auto auto;
   display: table;
+}
+
+#jappix_mini {
+right: 45px !important;
 }
 
 h4 {
@@ -1146,6 +1157,10 @@ aside #search-text {
 border-top-right-radius: 15px;
 border-bottom-right-radius: 15px;
 border-bottom-left-radius: 15px;
+-moz-border-bottom-colors: #dbdbdb;
+  -moz-border-top-colors: #999;
+  -moz-border-left-colors: #999;
+  -moz-border-right-colors: #dbdbdb;
 }
 aside #side-follow-url {
 	width: 173px;
@@ -1181,6 +1196,9 @@ aside #side-peoplefind-url {
 #lost-password-link {
   float: left;
   margin-right: 20px;	
+	}
+#login-submit-wrapper{
+  margin-bottom: 15px;
 	}
 /* widget */
 .widget {
@@ -1256,7 +1274,7 @@ aside #side-peoplefind-url {
 .icon.text_add		{ 
 		background-image: url("../../../images/icons/16/add.png");
 		float: right;
-		opacity: 0.1;
+		opacity: 0.2;
 		margin-right: 14px;
 		}
 .icon.text_add:hover	{ 
@@ -1273,7 +1291,7 @@ transition: all 0.2s ease-in-out;
 		}
 .icon.text_edit {
   background-image: url("../../../images/icons/10/edit.png");
-  opacity: 0.1;
+  opacity: 0.2;
   margin-top: 6px;
   float: right;
   height: 10px;
@@ -1855,7 +1873,7 @@ body .pageheader{
 #jot #jot-tools li.loading img {
   margin-top: 10px;
 }
-#profile-jot-form #jot-title {
+#profile-jot-form #jot-title, #profile-jot-form #jot-category {
     
   	 border-radius: 5px 5px 5px 5px;
     font-weight: bold;
@@ -2406,6 +2424,9 @@ box-shadow: 1px 1px 5px 0;
 #group-separator,
 #prof-separator { display: none;}
 */
+#prof-members-end{
+	clear: both;
+	}
 
 #prvmail-to-label, #prvmail-subject-label, #prvmail-message-label {
 	margin-bottom: 10px;
@@ -2529,16 +2550,39 @@ a.mail-list-link {
 }
 
 .vevent {
-        border: 1px solid #CCCCCC;
+position: relative;
+width: 400px;
+padding: 20px;
+padding-top: 10px;
+margin: 0 0px;
+margin-bottom: 10px;
+background-color: white;
+-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
+-moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
+box-shadow: 0 0 5px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
 }
-.vevent .event-description, .vevent .event-location {
+.vevent .event-location {
         margin-left: 10px;
         margin-right: 10px;
 }
-.vevent .event-start {
-        margin-left: 10px;
-        margin-right: 10px;
+.vevent .event-description {
+margin-left: 10px;
+margin-right: 10px;
+font-size: 1.1em;
+font-weight: bolder;
 }
+.vevent .event-start, .vevent .event-end {
+
+margin-right: 20px;
+margin-bottom: 2px;
+margin-top: 2px;
+font-size: 0.9em;
+text-align: left;
+}
+.event-start .dtstart, .event-end .dtend {
+float: right;
+}
+
 
 #new-event-link {
         margin-bottom: 10px;
@@ -2552,7 +2596,7 @@ a.mail-list-link {
 }
 
 .event-description:before {
-        content: url('../../../images/calendar.png');
+        content:   url("../../../view/theme/diabook/icons/events2.png") !important;
         margin-right: 15px;
 }
 

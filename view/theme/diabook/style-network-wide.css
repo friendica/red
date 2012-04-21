@@ -386,7 +386,7 @@
 .hide-comments-outer {
   margin-left: 80px;
   margin-bottom: 5px;
-  width: 484px;
+  width: 675px;
   border-bottom: 1px solid #BDCDD4;
   border-top: 1px solid #BDCDD4;
 
@@ -396,7 +396,7 @@
 /* global */
 body {
   font-family: 'Lato', "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 15px;
+  font-size: 13px;
   background-color: #ffffff;
   color: #2d2d2d;
   margin: 50px auto auto;
@@ -958,8 +958,8 @@ ul.menu-popup .empty {
 aside {
   display: table-cell;
   vertical-align: top;
-  width: 170px;
-  padding: 0px 10px 0px 0px;
+  width: 180px;
+  padding: 0px 5px 0px 0px;
   border-right: 1px solid #D2D2D2;
   float: left;
   /* background: #F1F1F1; */
@@ -1026,6 +1026,10 @@ aside #search-text {
 border-top-right-radius: 15px;
 border-bottom-right-radius: 15px;
 border-bottom-left-radius: 15px;
+-moz-border-bottom-colors: #dbdbdb;
+  -moz-border-top-colors: #999;
+  -moz-border-left-colors: #999;
+  -moz-border-right-colors: #dbdbdb;
 }
 aside #side-follow-url {
 	width: 150px;
@@ -1924,7 +1928,7 @@ transition: all 0.2s ease-in-out;
 ul.tabs {
   list-style-type: none;
   padding-bottom: 10px;
-  font-size: 15px;
+  font-size: 13px;
   width: 805px;
 }
 ul.tabs li {
@@ -2169,6 +2173,9 @@ box-shadow: 1px 1px 5px 0;
 #group-separator,
 #prof-separator { display: none;}
 */
+#prof-members-end{
+	clear: both;
+	}
 
 #prvmail-to-label, #prvmail-subject-label, #prvmail-message-label {
 	margin-bottom: 10px;
@@ -2292,7 +2299,7 @@ a.mail-list-link {
 }
 
 .vevent {
-        border: 1px solid #CCCCCC;
+
 }
 .vevent .event-description, .vevent .event-location {
         margin-left: 10px;

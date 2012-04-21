@@ -25,5 +25,10 @@
 			{{ endfor }}
 		</ul>
 	</div>
+  {{ if $ungrouped }}
+  <div id="sidebar-ungrouped">
+  <a href="nogroup">$ungrouped</a>
+  </div>
+  {{ endif }}
 </div>	
 

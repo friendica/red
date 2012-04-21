@@ -20,3 +20,7 @@ Example
 $(function() {
   $( ".resizeme" ).aeImageResize({ height: 250, width: 250 });
 });
+
+_______________________________________________________________________________________________
+
+http://javascriptly.com/examples/jquery-grab-bag/autogrow-textarea.html

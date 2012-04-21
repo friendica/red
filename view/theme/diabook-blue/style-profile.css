@@ -1334,7 +1334,7 @@ transition: all 0.2s ease-in-out;
 
 .wall-item-container .wall-item-content img {
   max-width: 400px;
-  max-height: 400px;
+
 }
 .wall-item-container .wall-item-links, .wall-item-container .wall-item-actions {
   display: table-cell;
@@ -2170,6 +2170,9 @@ box-shadow: 1px 1px 5px 0;
 #group-separator,
 #prof-separator { display: none;}
 */
+#prof-members-end{
+	clear: both;
+	}
 
 #prvmail-to-label, #prvmail-subject-label, #prvmail-message-label {
 	margin-bottom: 10px;
@@ -2295,7 +2298,7 @@ a.mail-list-link {
 }
 
 .vevent {
-        border: 1px solid #CCCCCC;
+
 }
 .vevent .event-description, .vevent .event-location {
         margin-left: 10px;
