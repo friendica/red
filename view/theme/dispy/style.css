@@ -79,6 +79,7 @@ option {
     background: #e8e8e8;
 }
 option[selected="selected"] {
+    color: #111;
 	background: #cca;
 }
 ul, ol {
@@ -340,8 +341,7 @@ ul#user-menu-popup li a.nav-sep {
     border-top: 1px solid #eeeeec;
 }
 nav .nav-link {
-    float: right;
-    display: block;
+    display: inline-block;
     width: 22px;
     height: 22px;
     overflow: hidden;
@@ -446,6 +446,8 @@ nav .nav-link {
 .icon, .hover, .focus, .pointer {
     cursor: pointer;
 }
+
+
 /* popup notifications */
 div.jGrowl div.notice {
     background: #511919 url("../../../images/icons/48/notice.png") no-repeat 5px center;
@@ -477,7 +479,6 @@ div.jGrowl div.info {
     display: block;
 }
 #nav-notifications-menu li {
-    padding: 7px 0px 7px 10px;
     word-wrap: normal;
     border-bottom: 1px solid #000;
 }
@@ -500,7 +501,7 @@ nav #nav-notifications-linkmenu.selected .icon.s22.notify {
     width: 170px;
     position: absolute;
     top: -19px;
-    left: 7px;
+    left: 4px;
 }
 #nav-floater {
     position: fixed;
@@ -518,11 +519,13 @@ nav #nav-notifications-linkmenu.selected .icon.s22.notify {
     clear: both;
     list-style: none;
     padding: 0px;
-    margin: 0 7px 0 0;
+    margin: 0px;
     height: 25px;
 }
-#nav-buttons li {
+#nav-buttons > li {
     padding: 0;
+	display: inline-block;
+	margin: 0px -4px 0px 0px;
 }
 .floaterflip {
     display: block;
@@ -908,22 +911,20 @@ width: 100%;
     padding: 2px 20px 5px 0;
 }
 #profile-jot-text_parent {
-    /*border-radius: 10px;*/
     box-shadow: 5px 0 10px 0 #111;
 }
 #profile-jot-text_tbl {
     margin-bottom: 10px;
-    /*border-radius: 10px;*/
-    background: #888;
+    background: #777;
 }
 #profile-jot-text_ifr {
     width:99.900002% !important;
 }
 #profile-jot-text_toolbargroup {
-    background: #888;
+    background: #777;
 }
 .mceCenter table tr {
-    background: #888;
+    background: #777;
 }
 [id$="jot-text_ifr"] {
     width: 99.900002% !important;
@@ -934,14 +935,20 @@ width: 100%;
     color: #2e2f2e;
     background: #eec;
 }
-.mceFirst tr {
-    background: #888;
+.defaultSkin tr.mceFirst {
+    background: #777;
 }
-.mceFirst td {
-    /*border-radius: 10px 10px 0px 0px;*/
+.defaultSkin td.mceFirst {
+	background-color: #eec;
 }
-.mceLast td {
-    /*border-radius: 0 0 10px 10px;*/
+.defaultSkin td.mceLast {
+	background-color: #eec;
+}
+.defaultSkin span.mceIcon, .defaultSkin img.mceIcon {
+	background-color: #eec;
+}
+.defaultSkin .mceButtonDisabled .mceIcon {
+	background-color: #eec;
 }
 #profile-attach-wrapper,
 #profile-audio-wrapper,
@@ -1131,6 +1138,7 @@ width: 100%;
     float: left;
     display: inline;
 }
+
 
 /**
  * tabs
@@ -1459,13 +1467,23 @@ width: 100%;
 .comment-edit-wrapper {
     border-top: 1px #aaa solid;
 }
+[class^="comment-edit-bb"] {
+	list-style: none;
+	display: none;
+	margin: -40px 0 5px 60px;
+	width: 75%;
+}
+[class^="comment-edit-bb"] > li {
+	display: inline-block;
+	margin: 0 10px 0 0;
+	visibility: none;
+}
 .comment-wwedit-wrapper img,
 .comment-edit-wrapper img {
     width: 20px;
     height: 20px;
 }
 .comment-edit-photo-link, .comment-edit-photo {
-    float: left;
     margin-left: 10px;
 }
 .my-comment-photo {
@@ -1545,6 +1563,10 @@ div[id$="wrapper"] {
 div[id$="wrapper"] br {
     clear: left;
 }
+[id$="-end"], [class$="end"] {
+	clear: both;
+	margin: 0 0 10px 0;
+}
 #advanced-profile-with {
     margin-left: 200px;
 }
@@ -1605,9 +1627,6 @@ div[id$="wrapper"] br {
 #photo-photo {
     position: relative;
     float:left;
-}
-#photo-photo-end {
-    clear: both;
 }
 #photo-prev-link,
 #photo-next-link {
@@ -2276,8 +2295,7 @@ div[id$="wrapper"] br {
 .item-select {
     opacity: 0.1;
     filter:alpha(opacity=10);
-    float: right;
-    margin-right: 5px;
+    margin: 5px 0 0 6px !important;
 }
 .item-select:hover, .checkeditem {
     opacity: 1;
@@ -2533,6 +2551,8 @@ input[type="search"] {
 input[type="checkbox"], input[type="radio"] {
     border: 1px #999 solid;
     margin: 0 0 0 0;
+	height: 15px;
+	width: 15px;
 }
 input[type="submit"], input[type="button"] {
     background-color: #555753;
@@ -2706,6 +2726,71 @@ input[type="submit"]:active, input[type="button"]:active {
 .icon:hover {
     border: 0;
     text-decoration: none;
+}
+.editicon {
+    display: inline-block;
+    width: 21px;
+    height: 21px;
+    background: url(editicons.png) no-repeat;
+    border: 0;
+    text-decoration: none;
+}
+.shadow {
+	box-shadow: 2px 2px 5px 2px #111;
+}
+.shadow:active, .shadow:focus, .shadow:hover {
+	box-shadow: 0 0 0 0;
+}
+.editicon:hover {
+	border: 0;
+}
+.boldbb {
+	background-position: 0px 0px;
+}
+.boldbb:hover {
+	background-position: -22px 0px;
+}
+.italicbb {
+	background-position: 0px -22px;
+}
+.italicbb:hover {
+	background-position: -22px -22px;
+}
+.underlinebb {
+	background-position: 0px -44px;
+}
+.underlinebb:hover {
+	background-position: -22px -44px;
+}
+.quotebb {
+	background-position: 0px -66px;
+}
+.quotebb:hover {
+	background-position: -22px -66px;
+}
+.codebb {
+	background-position: 0px -88px;
+}
+.codebb:hover {
+	background-position: -22px -88px;
+}
+.imagebb {
+	background-position: -44px 0px;
+}
+.imagebb:hover {
+	background-position: -66px 0px;
+}
+.urlbb {
+	background-position: -44px -22px;
+}
+.urlbb:hover {
+	background-position: -66px -22px;
+}
+.videobb {
+	background-position: -44px -44px;
+}
+.videobb:hover {
+	background-position: -66px -44px;
 }
 .icon.drop,
 .icon.drophide, .icon.delete {

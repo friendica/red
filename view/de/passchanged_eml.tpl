@@ -1,20 +1,20 @@
 
-Liebe/r $username,
-dein Passwort wurde wie gewünscht geändert. Bitte hebe diese Informationen
-für deine Unterlagen auf (oder ändere das Passwort augenblicklich in etwas
-das du dir merken kannst).
+Hallo $[username],
+	Dein Passwort wurde wie gewünscht geändert. Bitte bewahre diese 
+Informationen in deinen Unterlagen auf (oder ändere dein Passwort sofort 
+in etwas, was du dir merken kannst).
 
 
-Deine Anmeldedaten sind die Folgenden:
+Deine Login Daten wurden wie folgt geändert:
 
-Adresse der Seite:	$siteurl
-Anmelde Name:	$email
-Passwort:	$new_password
+Adresse der Seite:	$[siteurl]
+Login Name:	$[email]
+Passwort:	$[new_password]
 
-Du kannst diesen Passwort auf der "Einstellungen" Seite deines Accounts
-ändern nachdem du angemeldet bits.
+Du kannst dein Passwort unter deinen Account-Einstellungen ändern, wenn du angemeldet bist.
 
 
-Viele Grüße,
-	$sitename Administrator
+Beste Grüße,
+	$[sitename] Administrator
 
+ 

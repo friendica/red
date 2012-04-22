@@ -3,13 +3,13 @@
 /*
  * Name: Diabook
  * Description: Diabook: report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
- * Version: (Version: 1.020)
+ * Version: (Version: 1.021)
  * Author: 
  */
 
 
 //print diabook-version for debugging
-$diabook_version = "Diabook (Version: 1.020)";
+$diabook_version = "Diabook (Version: 1.021)";
 $a->page['htmlhead'] .= sprintf('<script "%s" ></script>', $diabook_version);
 
 //change css on network and profilepages
@@ -17,6 +17,17 @@ $cssFile = null;
 $resolution=false;
 $resolution = get_pconfig(local_user(), "diabook", "resolution");
 if ($resolution===false) $resolution="normal";
+$color = false;
+$color = get_pconfig(local_user(), "diabook", "color");
+if ($color===false) $color="diabook";
+if ($color=="diabook") $color_path = "/";
+if ($color=="aerith") $color_path = "/diabook-aerith/";
+if ($color=="blue") $color_path = "/diabook-blue/";
+if ($color=="red") $color_path = "/diabook-red/";
+if ($color=="pink") $color_path = "/diabook-pink/";
+if ($color=="green") $color_path = "/diabook-green/";
+if ($color=="dark") $color_path = "/diabook-dark/";
+
 
 /**
  * prints last community activity
@@ -135,7 +146,6 @@ function diabook_community_info(){
 			$aside['$photos_items'][] = $entry;
 		}
 	}
-	
 	
    
    //right_aside FIND FRIENDS
@@ -258,8 +268,8 @@ if ($a->argv[0] === "network" && local_user()){
 	diabook_community_info();
 
 	// CUSTOM CSS
-	if($resolution == "normal") {$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook/style-network.css";}
-	if($resolution == "wide") {$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook/style-network-wide.css";}
+	if($resolution == "normal") {$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook".$color_path."style-network.css";}
+	if($resolution == "wide") {$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook".$color_path."style-network-wide.css";}
 	}
 }
 
@@ -272,8 +282,8 @@ if ($a->argv[0].$a->argv[1] === "profile".$a->user['nickname']){
 	diabook_community_info();
 	
 	// CUSTOM CSS
-	if($resolution == "normal") {$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook/style-profile.css";}
-	if($resolution == "wide") {$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook/style-profile-wide.css";}
+	if($resolution == "normal") {$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook".$color_path."style-profile.css";}
+	if($resolution == "wide") {$cssFile = $a->get_baseurl($ssl_state)."/view/theme/diabook".$color_path."style-profile-wide.css";}
 	
 	}
 }
@@ -319,6 +329,7 @@ $a->page['htmlhead'] .= '
    
  </script>';
  
+ 
 $a->page['htmlhead'] .= '
 
 <script type="text/javascript">
@@ -359,6 +370,22 @@ function yt_iframe() {
   
  </script>';
  
+if($a->argv[0] === "settings" && local_user()) {
+$a->page['htmlhead'] .= ' 
+<script>
+function restore_boxes(){
+	$.cookie("close_pages","2", { expires: 365, path: "/" });
+	$.cookie("close_helpers","2", { expires: 365, path: "/" });
+	$.cookie("close_services","2", { expires: 365, path: "/" });
+	$.cookie("close_friends","2", { expires: 365, path: "/" });
+	$.cookie("close_lastusers","2", { expires: 365, path: "/" });
+	$.cookie("close_lastphotos","2", { expires: 365, path: "/" });
+	$.cookie("close_lastlikes","2", { expires: 365, path: "/" });
+	alert("Right-hand column was restored. Please refresh your browser");
+  }
+</script>';}
+
+
 
 if ($a->argv[0].$a->argv[1] === "profile".$a->user['nickname'] or $a->argv[0] === "network" && local_user()){
 $a->page['htmlhead'] .= '
@@ -448,22 +475,7 @@ function close_lastlikes(){
  document.getElementById( "close_lastlikes" ).style.display = "none";
  $.cookie("close_lastlikes","1", { expires: 365, path: "/" });
  };
-</script>';}
-
-$a->page['htmlhead'] .= ' 
-<script>
-function restore_boxes(){
-	$.cookie("close_pages","2", { expires: 365, path: "/" });
-	$.cookie("close_helpers","2", { expires: 365, path: "/" });
-	$.cookie("close_services","2", { expires: 365, path: "/" });
-	$.cookie("close_friends","2", { expires: 365, path: "/" });
-	$.cookie("close_lastusers","2", { expires: 365, path: "/" });
-	$.cookie("close_lastphotos","2", { expires: 365, path: "/" });
-	$.cookie("close_lastlikes","2", { expires: 365, path: "/" });
-	alert("Right-hand column was restored. Please refresh your browser");
-  }
-</script>';}
-
+</script>';}}
 
 $a->page['htmlhead'] .= ' 
 
@@ -496,4 +508,12 @@ function insertFormatting(comment,BBcode,id) {
 	}
 	return true;
 }
+
+function cmtBbOpen(id) {
+	$(".comment-edit-bb-" + id).show();
+}
+function cmtBbClose(id) {
+	$(".comment-edit-bb-" + id).hide();
+}
+
 </script> ';

@@ -130,7 +130,8 @@
 .icon.pencil 	{ background-image: url("../../../view/theme/diabook/icons/pencil.png");}
 .icon.recycle 	{ background-image: url("../../../view/theme/diabook/icons/recycle.png");}
 .icon.remote-link { background-image: url("../../../view/theme/diabook/icons/remote.png");}
-.icon.tagged    { background-image: url("../../../view/theme/diabook/icons/tagged.png");}  
+.icon.tagged    { background-image: url("../../../view/theme/diabook/icons/tagged.png");}
+.icon.file-as { background-image: url("../../../view/theme/diabook/icons/file_as.png");}  
 .star-item.icon.unstarred { background-image: url("../../../view/theme/diabook/icons/unstarred.png");}
 .star-item.icon.starred { background-image: url("../../../view/theme/diabook/icons/starred.png");}
 .icon.link		{ background-image: url("../../../view/theme/diabook/icons/link.png");}
@@ -1619,13 +1620,13 @@ body .pageheader{
   padding-left: 12px;
 }
 .wall-item-comment-wrapper {
-  margin: 1px 5px 17px 80px;
+  margin: 1px 5px 5px 80px;
 }
 .wall-item-comment-wrapper .comment-edit-photo {
   display: none;
 }
 .wall-item-comment-wrapper textarea {
-  height: 2.0em;
+  height: 1.6em;
   width: 100%;
   font-size: 10px;
   color: #999999;
@@ -1872,7 +1873,7 @@ body .pageheader{
 #jot #jot-tools li.loading img {
   margin-top: 10px;
 }
-#profile-jot-form #jot-title {
+#profile-jot-form #jot-title, #profile-jot-form #jot-category {
     
   	 border-radius: 5px 5px 5px 5px;
     font-weight: bold;
