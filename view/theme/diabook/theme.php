@@ -147,7 +147,6 @@ function diabook_community_info(){
 		}
 	}
 	
-	
    
    //right_aside FIND FRIENDS
 	if(local_user()) {
@@ -330,6 +329,7 @@ $a->page['htmlhead'] .= '
    
  </script>';
  
+ 
 $a->page['htmlhead'] .= '
 
 <script type="text/javascript">
@@ -480,7 +480,7 @@ function close_lastlikes(){
 $a->page['htmlhead'] .= ' 
 
 <script>
-function insertFormatting(comment,BBcode,id) {
+function insertFormatting(BBcode,id) {
 	
 		var tmpStr = $("#comment-edit-text-" + id).val();
 		if(tmpStr == comment) {
@@ -508,4 +508,12 @@ function insertFormatting(comment,BBcode,id) {
 	}
 	return true;
 }
+
+function cmtBbOpen(id) {
+	$(".comment-edit-bb-" + id).show();
+}
+function cmtBbClose(id) {
+	$(".comment-edit-bb-" + id).hide();
+}
+
 </script> ';
