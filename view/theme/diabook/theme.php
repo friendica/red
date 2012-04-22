@@ -480,7 +480,7 @@ function close_lastlikes(){
 $a->page['htmlhead'] .= ' 
 
 <script>
-function insertFormatting(BBcode,id) {
+function insertFormatting(comment,BBcode,id) {
 	
 		var tmpStr = $("#comment-edit-text-" + id).val();
 		if(tmpStr == comment) {
