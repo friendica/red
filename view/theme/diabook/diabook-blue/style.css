@@ -149,7 +149,7 @@
 			  display: block; width: 28px; height: 28px; background-repeat: no-repeat;
 			  }	
 .video 	{ background-image: url("../../../view/theme/diabook/diabook-blue/icons/video.png"); 
-			  display: block; width: 100%; height: 28px; background-repeat: no-repeat;
+			  display: block; width: 100%; height: 140px; background-repeat: no-repeat;
 			  }
 .audio2 	{ background-image: url("../../../view/theme/diabook/diabook-blue/icons/audio.png"); 
 			  display: block; width: 28px; height: 28px; background-repeat: no-repeat;
@@ -1574,7 +1574,7 @@ body .pageheader{
   max-width: 720px;
   word-wrap: break-word;
 
-  margin-bottom: 14px;
+
 }
 
 .wall-item-container .wall-item-content img {

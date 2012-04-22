@@ -3,13 +3,13 @@
 /*
  * Name: Diabook
  * Description: Diabook: report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
- * Version: (Version: 1.021)
+ * Version: (Version: 1.022)
  * Author: 
  */
 
 
 //print diabook-version for debugging
-$diabook_version = "Diabook (Version: 1.021)";
+$diabook_version = "Diabook (Version: 1.022)";
 $a->page['htmlhead'] .= sprintf('<script "%s" ></script>', $diabook_version);
 
 //change css on network and profilepages
@@ -291,7 +291,9 @@ if ($a->argv[0].$a->argv[1] === "profile".$a->user['nickname']){
 // custom css
 if (!is_null($cssFile)) $a->page['htmlhead'] .= sprintf('<link rel="stylesheet" type="text/css" href="%s" />', $cssFile);
 
-
+//footer
+$tpl = get_markup_template('footer.tpl');
+$a->page['footer'] .= replace_macros($tpl, array());
 
 //load jquery.cookie.js
 $cookieJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.cookie.js";
@@ -355,12 +357,18 @@ $(document).ready(function() {
         }
         else $(this).attr("src",ifr_source+"?"+wmode);
     });
+    
+    $("a[href=#top]").click(function() {
+			$("html, body").animate({scrollTop:0}, "slow");
+			return false;
+		});
       
 
 });
 
 function yt_iframe() {
-	
+
+
 	$("iframe").load(function() { 
 	var ifr_src = $(this).contents().find("body iframe").attr("src");
 	$("iframe").contents().find("body iframe").attr("src", ifr_src+"&wmode=transparent");
@@ -480,7 +488,7 @@ function close_lastlikes(){
 $a->page['htmlhead'] .= ' 
 
 <script>
-function insertFormatting(BBcode,id) {
+function insertFormatting(comment,BBcode,id) {
 	
 		var tmpStr = $("#comment-edit-text-" + id).val();
 		if(tmpStr == comment) {

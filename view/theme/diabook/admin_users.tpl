@@ -14,8 +14,7 @@
 	<h1>$title - $page</h1>
 	
 	<form action="$baseurl/admin/users" method="post">
-        <input type='hidden' name='form_security_token' value='$form_security_token'>
-		
+		        <input type='hidden' name='form_security_token' value='$form_security_token'>
 		<h3>$h_pending</h3>
 		{{ if $pending }}
 			<table id='pending'>
