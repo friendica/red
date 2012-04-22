@@ -1440,13 +1440,13 @@ transition: all 0.2s ease-in-out;
   padding-left: 12px;
 }
 .wall-item-comment-wrapper {
-  margin: 1px 5px 17px 80px;
+  margin: 1px 5px 5px 80px;
 }
 .wall-item-comment-wrapper .comment-edit-photo {
   display: none;
 }
 .wall-item-comment-wrapper textarea {
-  height: 2.0em;
+  height: 1.6em ;
   width: 100%;
   font-size: 10px;
   color: #999999;

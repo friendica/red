@@ -1463,7 +1463,7 @@ transition: all 0.2s ease-in-out;
 }
 
 .wall-item-comment-wrapper {
-  margin: 1px 5px 17px 80px;
+  margin: 1px 5px 5px 80px;
   background-color: #fff;
   width: 500px;
 }

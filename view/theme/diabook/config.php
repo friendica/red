@@ -80,7 +80,8 @@ function diabook_form(&$a, $font_size, $line_height, $resolution, $color){
 		'blue'=>'blue',		
 		'green'=>'green',
 		'pink'=>'pink',	
-		'red'=>'red',			
+		'red'=>'red',
+		'dark'=>'dark',						
 		);
 	
 	

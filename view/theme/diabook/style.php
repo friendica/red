@@ -1694,3 +1694,281 @@
 	}
 	}
 	}
+	
+	if($color== "dark") {
+	if($resolution == "normal") {	
+	if (file_exists("$THEMEPATH/diabook-dark/style.css")){
+		echo file_get_contents("$THEMEPATH/diabook-dark/style.css");
+	}
+	if($diabook_font_size == "16"){
+		echo "
+			.wall-item-container .wall-item-content {
+  					font-size: 16px;
+  					}
+  					
+			.wall-item-photo-container .wall-item-content {
+  					font-size: 16px;
+  					}
+		";  
+   }
+   if($diabook_font_size == "15"){
+		echo "
+			.wall-item-container .wall-item-content {
+  					font-size: 15px;
+  					}
+  					
+			.wall-item-photo-container .wall-item-content {
+  					font-size: 15px;
+  					}
+		";
+	}	
+	if($diabook_font_size == "14"){
+		echo "
+			.wall-item-container .wall-item-content {
+  					font-size: 14px;
+  					}
+  					
+			.wall-item-photo-container .wall-item-content {
+  					font-size: 14px;
+  					}
+		";
+	}
+	if($diabook_font_size == "13.5"){
+		echo "
+			.wall-item-container .wall-item-content {
+  					font-size: 13.5px;
+  					}
+  					
+			.wall-item-photo-container .wall-item-content {
+  					font-size: 13.5px;
+  					}
+		";
+	}
+	if($diabook_font_size == "13"){
+		echo "
+			.wall-item-container .wall-item-content {
+  					font-size: 13px;
+  					}
+  					
+			.wall-item-photo-container .wall-item-content {
+  					font-size: 13px;
+  					}
+		";
+	}
+	if($diabook_font_size == "12.5"){
+		echo "
+			.wall-item-container .wall-item-content {
+  					font-size: 12.5px;
+  					}
+  					
+			.wall-item-photo-container .wall-item-content {
+  					font-size: 12.5px;
+  					}
+		";
+	}
+	if($diabook_font_size == "12"){
+		echo "
+			.wall-item-container .wall-item-content {
+  					font-size: 12px;
+  					}
+  					
+			.wall-item-photo-container .wall-item-content {
+  					font-size: 12px;
+  					}
+		";
+	}
+	if($line_height == "1.5"){
+		echo "
+			.wall-item-container .wall-item-content {
+  					line-height: 1.5;
+  					}
+  					
+			.wall-item-photo-container .wall-item-content {
+ 					line-height: 1.5;
+  					}
+		";
+	}	
+	if($line_height == "1.4"){
+		echo "
+			.wall-item-container .wall-item-content {
+  					line-height: 1.4;
+  					}
+  					
+			.wall-item-photo-container .wall-item-content {
+ 					line-height: 1.4;
+  					}
+		";
+	}
+	if($line_height == "1.3"){
+		echo "
+			.wall-item-container .wall-item-content {
+  					line-height: 1.3;
+  					}
+  					
+			.wall-item-photo-container .wall-item-content {
+ 					line-height: 1.3;
+  					}
+		";
+	}
+	if($line_height == "1.2"){
+		echo "
+			.wall-item-container .wall-item-content {
+  					line-height: 1.2;
+  					}
+  					
+			.wall-item-photo-container .wall-item-content {
+ 					line-height: 1.2;
+  					}
+		";
+	}
+	if($line_height == "1.1"){
+		echo "
+			.wall-item-container .wall-item-content {
+  					line-height: 1.1;
+  					}
+  					
+			.wall-item-photo-container .wall-item-content {
+ 					line-height: 1.1;
+  					}
+		";
+	}
+	}
+	
+	if($resolution == "dark") {	
+	if (file_exists("$THEMEPATH/diabook-dark/style-wide.css")){
+		echo file_get_contents("$THEMEPATH/diabook-dark/style-green.css");
+	}
+	if($diabook_font_size == "16"){
+		echo "
+			.wall-item-container .wall-item-content {
+  					font-size: 16px;
+  					}
+  					
+			.wall-item-photo-container .wall-item-content {
+  					font-size: 16px;
+  					}
+		";  
+   }
+	if($diabook_font_size == "15"){
+		echo "
+			.wall-item-container .wall-item-content {
+  					font-size: 15px;
+  					}
+  					
+			.wall-item-photo-container .wall-item-content {
+  					font-size: 15px;
+  					}
+		";
+	}
+	if($diabook_font_size == "14"){
+		echo "
+			.wall-item-container .wall-item-content {
+  					font-size: 14px;
+  					}
+  					
+			.wall-item-photo-container .wall-item-content {
+  					font-size: 14px;
+  					}
+		";
+	}
+	if($diabook_font_size == "13.5"){
+		echo "
+			.wall-item-container .wall-item-content {
+  					font-size: 13.5px;
+  					}
+  					
+			.wall-item-photo-container .wall-item-content {
+  					font-size: 13.5px;
+  					}
+		";
+	}
+	if($diabook_font_size == "13"){
+		echo "
+			.wall-item-container .wall-item-content {
+  					font-size: 13px;
+  					}
+  					
+			.wall-item-photo-container .wall-item-content {
+  					font-size: 13px;
+  					}
+		";
+	}
+	if($diabook_font_size == "12.5"){
+		echo "
+			.wall-item-container .wall-item-content {
+  					font-size: 12.5px;
+  					}
+  					
+			.wall-item-photo-container .wall-item-content {
+  					font-size: 12.5px;
+  					}
+		";
+	}
+	if($diabook_font_size == "12"){
+		echo "
+			.wall-item-container .wall-item-content {
+  					font-size: 12px;
+  					}
+  					
+			.wall-item-photo-container .wall-item-content {
+  					font-size: 12px;
+  					}
+		";
+	}
+	if($line_height == "1.5"){
+		echo "
+			.wall-item-container .wall-item-content {
+  					line-height: 1.5;
+  					}
+  					
+			.wall-item-photo-container .wall-item-content {
+ 					line-height: 1.5;
+  					}
+		";
+	}	
+	if($line_height == "1.4"){
+		echo "
+			.wall-item-container .wall-item-content {
+  					line-height: 1.4;
+  					}
+  					
+			.wall-item-photo-container .wall-item-content {
+ 					line-height: 1.4;
+  					}
+		";
+	}
+	if($line_height == "1.3"){
+		echo "
+			.wall-item-container .wall-item-content {
+  					line-height: 1.3;
+  					}
+  					
+			.wall-item-photo-container .wall-item-content {
+ 					line-height: 1.3;
+  					}
+		";
+	}
+	if($line_height == "1.2"){
+		echo "
+			.wall-item-container .wall-item-content {
+  					line-height: 1.2;
+  					}
+  					
+			.wall-item-photo-container .wall-item-content {
+ 					line-height: 1.2;
+  					}
+		";
+	}
+	if($line_height == "1.1"){
+		echo "
+			.wall-item-container .wall-item-content {
+  					line-height: 1.1;
+  					}
+  					
+			.wall-item-photo-container .wall-item-content {
+ 					line-height: 1.1;
+  					}
+		";
+	}
+	}
+	}

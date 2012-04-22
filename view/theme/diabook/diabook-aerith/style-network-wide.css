@@ -1475,7 +1475,7 @@ transition: all 0.2s ease-in-out;
 }
 
 .wall-item-comment-wrapper {
-  margin: 1px 5px 17px 80px;
+  margin: 1px 5px 5px 80px;
   background-color: #fff;
   width: 500px;
 }
@@ -1483,7 +1483,7 @@ transition: all 0.2s ease-in-out;
   display: none;
 }
 .wall-item-comment-wrapper textarea {
-  height: 2.0em;
+  height: 1.6em ;
   width: 100%;
   font-size: 10px;
   color: #999999;
