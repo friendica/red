@@ -7,8 +7,8 @@
 		<ul class="menu-profile-side">
 			{{ for $groups as $group }}
 			<li class="menu-profile-list">
-				<span class="menu-profile-icon {{ if $group.selected }}group_selected{{else}}group_unselected{{ endif }}"></span>
 				<a href="$group.href" class="menu-profile-list-item">
+					<span class="menu-profile-icon {{ if $group.selected }}group_selected{{else}}group_unselected{{ endif }}"></span>
 					$group.text
 				</a>
 				{{ if $group.edit }}
