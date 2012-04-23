@@ -696,8 +696,8 @@ function settings_content(&$a) {
 		$allowed_themes_raw = explode(',',$allowed_themes_str);
 		$allowed_themes = array();
 		if(count($allowed_themes_raw))
-			foreach($allowed_themes_raw as $x)
-				if(strlen(trim($x)))
+			foreach($allowed_themes_raw as $x) 
+				if(strlen(trim($x)) && is_dir("view/theme/$x"))
 					$allowed_themes[] = trim($x);
 
 		

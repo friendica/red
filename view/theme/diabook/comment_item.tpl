@@ -11,7 +11,8 @@
 					<a class="comment-edit-photo-link" href="$mylink" title="$mytitle"><img class="my-comment-photo" src="$myphoto" alt="$mytitle" title="$mytitle" /></a>
 				</div>
 				<div class="comment-edit-photo-end"></div>
-				<textarea id="comment-edit-text-$id" class="comment-edit-text-empty" name="body" onFocus="commentOpen(this,$id);tautogrow($id)" onBlur="commentClose(this,$id);" >$comment</textarea>
+				<textarea id="comment-edit-text-$id" class="comment-edit-text-empty" name="body" onFocus="commentOpen(this,$id);tautogrow($id);cmtBbOpen($id);"  >$comment</textarea>
+				<div class="comment-edit-bb-$id" style="display:none;">				
 				<a class="icon bb-image" style="cursor: pointer;" onclick="insertFormatting('$comment','img',$id);">img</a>	
 				<a class="icon bb-url" style="cursor: pointer;" onclick="insertFormatting('$comment','url',$id);">url</a>
 				<a class="icon bb-video" style="cursor: pointer;" onclick="insertFormatting('$comment','video',$id);">video</a>														
@@ -19,6 +20,7 @@
 				<a class="icon italic" style="cursor: pointer;" onclick="insertFormatting('$comment','i',$id);">i</a>
 				<a class="icon bold" style="cursor: pointer;" onclick="insertFormatting('$comment','b',$id);">b</a>
 				<a class="icon quote" style="cursor: pointer;" onclick="insertFormatting('$comment','quote',$id);">quote</a>																			
+				</div>				
 				{{ if $qcomment }}
 					<select id="qcomment-select-$id" name="qcomment-$id" class="qcomment" onchange="qCommentInsert(this,$id);" >
 					<option value=""></option>

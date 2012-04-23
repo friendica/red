@@ -1,21 +1,25 @@
 
-Ein neuer Nutzer hat sich auf $sitename registriert. Diese Registration
-benötigt noch deine Zustimmung.
-
-Die Anmeldedetails sind Folgende:
-
-Kompletter Name: $username
-Adresse der Seite: $siteurl
-Anmelde Name: $email
+Eine Neuanmeldung auf $[sitename] benötigt 
+deine Aufmerksamkeit. 
 
 
-Um dieser Anmeldung zuzustimmen folge bitte diesem Link:
+Die Login-Einzelheiten sind die folgenden:
 
-$siteurl/regmod/allow/$hash 
+Kompletter Name:	$[username]
+Adresse der Seite:	$[siteurl]
+Login Name:	$[email]
 
 
-Um die Anfrage abzulehen und den Account zu entfernen folge diesem Link:
+Um die Anfrage zu bestätigen besuche bitte:
 
-$siteurl/regmod/deny/$hash
 
-Besten Dank!
+$[siteurl]/regmod/allow/$[hash] 
+
+
+Um die Anfrage abzulehnen und den Account zu löschen besuche bitte:
+
+
+$[siteurl]/regmod/deny/$[hash]
+
+
+Danke!
