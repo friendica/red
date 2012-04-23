@@ -1242,12 +1242,12 @@ right_aside #ra-photos-wrapper { padding-left: 5px; padding-top: 3px; overflow: 
 #page-sidebar-right_aside .label {max-width: 128px;}
 right_aside .icon {width: 10px; height: 10px;}
 .close_box		{ 
-		background-image: url("../../../view/theme/diabook-blue/icons/close_box.png");
+		background-image: url("../../../view/theme/diabook/icons/close_box.png");
 		float: right;
 		opacity: 0.1;
 		}
 .close_box:hover	{ 
-		background-image: url("../../../view/theme/diabook-blue/icons/close_box.png");
+		background-image: url("../../../view/theme/diabook/icons/close_box.png");
 		float: right;
 		cursor: pointer;
 		opacity: 1;
