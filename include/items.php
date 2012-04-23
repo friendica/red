@@ -2479,7 +2479,7 @@ function local_delivery($importer,$data) {
 			
 				if(!x($datarray['type']) || $datarray['type'] != 'activity') {
 
-					$myconv = q("SELECT `author-link`, `author-avatar`, `parent` FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `parent` != 0 ",
+					$myconv = q("SELECT `author-link`, `author-avatar`, `parent` FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `parent` != 0 AND `deleted` = 0",
 						dbesc($parent_uri),
 						intval($importer['importer_uid'])
 					);

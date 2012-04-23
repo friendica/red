@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.3.1319\n"
+"Project-Id-Version: 2.3.1320\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-21 10:00-0700\n"
+"POT-Creation-Date: 2012-04-22 10:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -158,8 +158,6 @@ msgstr ""
 #: ../../addon/twitter/twitter.php:209 ../../addon/twitter/twitter.php:375
 #: ../../addon/irc/irc.php:55 ../../addon/blogger/blogger.php:102
 #: ../../addon/posterous/posterous.php:90
-#: ../../view/theme/diabook-red/config.php:76
-#: ../../view/theme/diabook-blue/config.php:76
 #: ../../view/theme/diabook/diabook-green/config.php:76
 #: ../../view/theme/diabook/diabook-red/config.php:76
 #: ../../view/theme/diabook/diabook-blue/config.php:76
@@ -167,9 +165,7 @@ msgstr ""
 #: ../../view/theme/diabook/diabook-aerith/config.php:76
 #: ../../view/theme/diabook/diabook-pink/config.php:76
 #: ../../view/theme/diabook/config.php:91
-#: ../../view/theme/quattro/config.php:52
-#: ../../view/theme/diabook-aerith/config.php:76
-#: ../../include/conversation.php:555
+#: ../../view/theme/quattro/config.php:52 ../../include/conversation.php:555
 msgid "Submit"
 msgstr ""
 
@@ -227,17 +223,15 @@ msgstr ""
 msgid "link to source"
 msgstr ""
 
-#: ../../mod/events.php:296 ../../view/theme/diabook-red/theme.php:231
-#: ../../view/theme/diabook-blue/theme.php:231
+#: ../../mod/events.php:296
 #: ../../view/theme/diabook/diabook-green/theme.php:233
 #: ../../view/theme/diabook/diabook-red/theme.php:231
 #: ../../view/theme/diabook/diabook-blue/theme.php:231
-#: ../../view/theme/diabook/theme.php:251
+#: ../../view/theme/diabook/theme.php:250
 #: ../../view/theme/diabook/diabook-dark/theme.php:233
 #: ../../view/theme/diabook/diabook-aerith/theme.php:233
 #: ../../view/theme/diabook/diabook-pink/theme.php:233
-#: ../../view/theme/diabook-aerith/theme.php:233 ../../include/nav.php:52
-#: ../../boot.php:1471
+#: ../../include/nav.php:52 ../../boot.php:1471
 msgid "Events"
 msgstr ""
 
@@ -369,8 +363,6 @@ msgstr ""
 #: ../../mod/photos.php:51 ../../mod/photos.php:151 ../../mod/photos.php:879
 #: ../../mod/photos.php:950 ../../mod/photos.php:965 ../../mod/photos.php:1382
 #: ../../mod/photos.php:1394 ../../addon/communityhome/communityhome.php:110
-#: ../../view/theme/diabook-red/theme.php:115
-#: ../../view/theme/diabook-blue/theme.php:115
 #: ../../view/theme/diabook/diabook-green/theme.php:116
 #: ../../view/theme/diabook/diabook-red/theme.php:115
 #: ../../view/theme/diabook/diabook-blue/theme.php:115
@@ -378,7 +370,6 @@ msgstr ""
 #: ../../view/theme/diabook/diabook-dark/theme.php:116
 #: ../../view/theme/diabook/diabook-aerith/theme.php:116
 #: ../../view/theme/diabook/diabook-pink/theme.php:116
-#: ../../view/theme/diabook-aerith/theme.php:116
 msgid "Contact Photos"
 msgstr ""
 
@@ -401,8 +392,6 @@ msgstr ""
 #: ../../mod/profile_photo.php:74 ../../mod/profile_photo.php:174
 #: ../../mod/profile_photo.php:252 ../../mod/profile_photo.php:261
 #: ../../addon/communityhome/communityhome.php:111
-#: ../../view/theme/diabook-red/theme.php:116
-#: ../../view/theme/diabook-blue/theme.php:116
 #: ../../view/theme/diabook/diabook-green/theme.php:117
 #: ../../view/theme/diabook/diabook-red/theme.php:116
 #: ../../view/theme/diabook/diabook-blue/theme.php:116
@@ -410,7 +399,6 @@ msgstr ""
 #: ../../view/theme/diabook/diabook-dark/theme.php:117
 #: ../../view/theme/diabook/diabook-aerith/theme.php:117
 #: ../../view/theme/diabook/diabook-pink/theme.php:117
-#: ../../view/theme/diabook-aerith/theme.php:117
 msgid "Profile Photos"
 msgstr ""
 
@@ -432,8 +420,6 @@ msgstr ""
 
 #: ../../mod/photos.php:528 ../../mod/like.php:127 ../../mod/tagger.php:70
 #: ../../addon/communityhome/communityhome.php:163
-#: ../../view/theme/diabook-red/theme.php:87
-#: ../../view/theme/diabook-blue/theme.php:87
 #: ../../view/theme/diabook/diabook-green/theme.php:88
 #: ../../view/theme/diabook/diabook-red/theme.php:87
 #: ../../view/theme/diabook/diabook-blue/theme.php:87
@@ -441,9 +427,8 @@ msgstr ""
 #: ../../view/theme/diabook/diabook-dark/theme.php:88
 #: ../../view/theme/diabook/diabook-aerith/theme.php:88
 #: ../../view/theme/diabook/diabook-pink/theme.php:88
-#: ../../view/theme/diabook-aerith/theme.php:88 ../../include/text.php:1304
-#: ../../include/diaspora.php:1654 ../../include/conversation.php:53
-#: ../../include/conversation.php:126
+#: ../../include/text.php:1304 ../../include/diaspora.php:1654
+#: ../../include/conversation.php:53 ../../include/conversation.php:126
 msgid "photo"
 msgstr ""
 
@@ -616,16 +601,15 @@ msgstr ""
 msgid "Not available."
 msgstr ""
 
-#: ../../mod/community.php:30 ../../view/theme/diabook-red/theme.php:233
-#: ../../view/theme/diabook-blue/theme.php:233
+#: ../../mod/community.php:30
 #: ../../view/theme/diabook/diabook-green/theme.php:235
 #: ../../view/theme/diabook/diabook-red/theme.php:233
 #: ../../view/theme/diabook/diabook-blue/theme.php:233
-#: ../../view/theme/diabook/theme.php:253
+#: ../../view/theme/diabook/theme.php:252
 #: ../../view/theme/diabook/diabook-dark/theme.php:235
 #: ../../view/theme/diabook/diabook-aerith/theme.php:235
 #: ../../view/theme/diabook/diabook-pink/theme.php:235
-#: ../../view/theme/diabook-aerith/theme.php:235 ../../include/nav.php:101
+#: ../../include/nav.php:101
 msgid "Community"
 msgstr ""
 
@@ -1266,17 +1250,15 @@ msgstr ""
 msgid "Personal"
 msgstr ""
 
-#: ../../mod/notifications.php:90 ../../view/theme/diabook-red/theme.php:227
-#: ../../view/theme/diabook-blue/theme.php:227
+#: ../../mod/notifications.php:90
 #: ../../view/theme/diabook/diabook-green/theme.php:229
 #: ../../view/theme/diabook/diabook-red/theme.php:227
 #: ../../view/theme/diabook/diabook-blue/theme.php:227
-#: ../../view/theme/diabook/theme.php:247
+#: ../../view/theme/diabook/theme.php:246
 #: ../../view/theme/diabook/diabook-dark/theme.php:229
 #: ../../view/theme/diabook/diabook-aerith/theme.php:229
 #: ../../view/theme/diabook/diabook-pink/theme.php:229
-#: ../../view/theme/diabook-aerith/theme.php:229 ../../include/nav.php:77
-#: ../../include/nav.php:115
+#: ../../include/nav.php:77 ../../include/nav.php:115
 msgid "Home"
 msgstr ""
 
@@ -1652,16 +1634,15 @@ msgstr ""
 msgid "Edit contact"
 msgstr ""
 
-#: ../../mod/contacts.php:529 ../../view/theme/diabook-red/theme.php:229
-#: ../../view/theme/diabook-blue/theme.php:229
+#: ../../mod/contacts.php:529
 #: ../../view/theme/diabook/diabook-green/theme.php:231
 #: ../../view/theme/diabook/diabook-red/theme.php:229
 #: ../../view/theme/diabook/diabook-blue/theme.php:229
-#: ../../view/theme/diabook/theme.php:249
+#: ../../view/theme/diabook/theme.php:248
 #: ../../view/theme/diabook/diabook-dark/theme.php:231
 #: ../../view/theme/diabook/diabook-aerith/theme.php:231
 #: ../../view/theme/diabook/diabook-pink/theme.php:231
-#: ../../view/theme/diabook-aerith/theme.php:231 ../../include/nav.php:139
+#: ../../include/nav.php:139
 msgid "Contacts"
 msgstr ""
 
@@ -2571,16 +2552,14 @@ msgstr ""
 msgid "Profile Visibility Editor"
 msgstr ""
 
-#: ../../mod/profperm.php:103 ../../view/theme/diabook-red/theme.php:228
-#: ../../view/theme/diabook-blue/theme.php:228
+#: ../../mod/profperm.php:103
 #: ../../view/theme/diabook/diabook-green/theme.php:230
 #: ../../view/theme/diabook/diabook-red/theme.php:228
 #: ../../view/theme/diabook/diabook-blue/theme.php:228
-#: ../../view/theme/diabook/theme.php:248
+#: ../../view/theme/diabook/theme.php:247
 #: ../../view/theme/diabook/diabook-dark/theme.php:230
 #: ../../view/theme/diabook/diabook-aerith/theme.php:230
 #: ../../view/theme/diabook/diabook-pink/theme.php:230
-#: ../../view/theme/diabook-aerith/theme.php:230
 #: ../../include/profile_advanced.php:7 ../../include/profile_advanced.php:74
 #: ../../include/nav.php:50 ../../boot.php:1458
 msgid "Profile"
@@ -2766,10 +2745,6 @@ msgstr ""
 #: ../../addon/facebook/facebook.php:1655
 #: ../../addon/communityhome/communityhome.php:158
 #: ../../addon/communityhome/communityhome.php:167
-#: ../../view/theme/diabook-red/theme.php:82
-#: ../../view/theme/diabook-red/theme.php:91
-#: ../../view/theme/diabook-blue/theme.php:82
-#: ../../view/theme/diabook-blue/theme.php:91
 #: ../../view/theme/diabook/diabook-green/theme.php:83
 #: ../../view/theme/diabook/diabook-green/theme.php:92
 #: ../../view/theme/diabook/diabook-red/theme.php:82
@@ -2784,8 +2759,6 @@ msgstr ""
 #: ../../view/theme/diabook/diabook-aerith/theme.php:92
 #: ../../view/theme/diabook/diabook-pink/theme.php:83
 #: ../../view/theme/diabook/diabook-pink/theme.php:92
-#: ../../view/theme/diabook-aerith/theme.php:83
-#: ../../view/theme/diabook-aerith/theme.php:92
 #: ../../include/diaspora.php:1654 ../../include/conversation.php:48
 #: ../../include/conversation.php:57 ../../include/conversation.php:121
 #: ../../include/conversation.php:130
@@ -2794,8 +2767,6 @@ msgstr ""
 
 #: ../../mod/like.php:144 ../../addon/facebook/facebook.php:1659
 #: ../../addon/communityhome/communityhome.php:172
-#: ../../view/theme/diabook-red/theme.php:96
-#: ../../view/theme/diabook-blue/theme.php:96
 #: ../../view/theme/diabook/diabook-green/theme.php:97
 #: ../../view/theme/diabook/diabook-red/theme.php:96
 #: ../../view/theme/diabook/diabook-blue/theme.php:96
@@ -2803,7 +2774,6 @@ msgstr ""
 #: ../../view/theme/diabook/diabook-dark/theme.php:97
 #: ../../view/theme/diabook/diabook-aerith/theme.php:97
 #: ../../view/theme/diabook/diabook-pink/theme.php:97
-#: ../../view/theme/diabook-aerith/theme.php:97
 #: ../../include/diaspora.php:1670 ../../include/conversation.php:65
 #, php-format
 msgid "%1$s likes %2$s's %3$s"
@@ -2824,17 +2794,15 @@ msgstr ""
 msgid "Access denied."
 msgstr ""
 
-#: ../../mod/fbrowser.php:23 ../../view/theme/diabook-red/theme.php:230
-#: ../../view/theme/diabook-blue/theme.php:230
+#: ../../mod/fbrowser.php:23
 #: ../../view/theme/diabook/diabook-green/theme.php:232
 #: ../../view/theme/diabook/diabook-red/theme.php:230
 #: ../../view/theme/diabook/diabook-blue/theme.php:230
-#: ../../view/theme/diabook/theme.php:250
+#: ../../view/theme/diabook/theme.php:249
 #: ../../view/theme/diabook/diabook-dark/theme.php:232
 #: ../../view/theme/diabook/diabook-aerith/theme.php:232
 #: ../../view/theme/diabook/diabook-pink/theme.php:232
-#: ../../view/theme/diabook-aerith/theme.php:232 ../../include/nav.php:51
-#: ../../boot.php:1463
+#: ../../include/nav.php:51 ../../boot.php:1463
 msgid "Photos"
 msgstr ""
 
@@ -3986,16 +3954,14 @@ msgstr ""
 msgid "No entries."
 msgstr ""
 
-#: ../../mod/suggest.php:38 ../../view/theme/diabook-red/theme.php:143
-#: ../../view/theme/diabook-blue/theme.php:143
+#: ../../mod/suggest.php:38
 #: ../../view/theme/diabook/diabook-green/theme.php:145
 #: ../../view/theme/diabook/diabook-red/theme.php:143
 #: ../../view/theme/diabook/diabook-blue/theme.php:143
-#: ../../view/theme/diabook/theme.php:159
+#: ../../view/theme/diabook/theme.php:158
 #: ../../view/theme/diabook/diabook-dark/theme.php:145
 #: ../../view/theme/diabook/diabook-aerith/theme.php:145
 #: ../../view/theme/diabook/diabook-pink/theme.php:145
-#: ../../view/theme/diabook-aerith/theme.php:145
 #: ../../include/contact_widgets.php:34
 msgid "Friend Suggestions"
 msgstr ""
@@ -4010,16 +3976,14 @@ msgstr ""
 msgid "Ignore/Hide"
 msgstr ""
 
-#: ../../mod/directory.php:47 ../../view/theme/diabook-red/theme.php:141
-#: ../../view/theme/diabook-blue/theme.php:141
+#: ../../mod/directory.php:47
 #: ../../view/theme/diabook/diabook-green/theme.php:143
 #: ../../view/theme/diabook/diabook-red/theme.php:141
 #: ../../view/theme/diabook/diabook-blue/theme.php:141
-#: ../../view/theme/diabook/theme.php:157
+#: ../../view/theme/diabook/theme.php:156
 #: ../../view/theme/diabook/diabook-dark/theme.php:143
 #: ../../view/theme/diabook/diabook-aerith/theme.php:143
 #: ../../view/theme/diabook/diabook-pink/theme.php:143
-#: ../../view/theme/diabook-aerith/theme.php:143
 msgid "Global Directory"
 msgstr ""
 
@@ -4551,8 +4515,6 @@ msgid "Latest likes"
 msgstr ""
 
 #: ../../addon/communityhome/communityhome.php:155
-#: ../../view/theme/diabook-red/theme.php:79
-#: ../../view/theme/diabook-blue/theme.php:79
 #: ../../view/theme/diabook/diabook-green/theme.php:80
 #: ../../view/theme/diabook/diabook-red/theme.php:79
 #: ../../view/theme/diabook/diabook-blue/theme.php:79
@@ -4560,8 +4522,8 @@ msgstr ""
 #: ../../view/theme/diabook/diabook-dark/theme.php:80
 #: ../../view/theme/diabook/diabook-aerith/theme.php:80
 #: ../../view/theme/diabook/diabook-pink/theme.php:80
-#: ../../view/theme/diabook-aerith/theme.php:80 ../../include/text.php:1302
-#: ../../include/conversation.php:45 ../../include/conversation.php:118
+#: ../../include/text.php:1302 ../../include/conversation.php:45
+#: ../../include/conversation.php:118
 msgid "event"
 msgstr ""
 
@@ -5458,8 +5420,6 @@ msgstr ""
 msgid "Post to Posterous by default"
 msgstr ""
 
-#: ../../view/theme/diabook-red/theme.php:28
-#: ../../view/theme/diabook-blue/theme.php:28
 #: ../../view/theme/diabook/diabook-green/theme.php:29
 #: ../../view/theme/diabook/diabook-red/theme.php:28
 #: ../../view/theme/diabook/diabook-blue/theme.php:28
@@ -5467,12 +5427,9 @@ msgstr ""
 #: ../../view/theme/diabook/diabook-dark/theme.php:29
 #: ../../view/theme/diabook/diabook-aerith/theme.php:29
 #: ../../view/theme/diabook/diabook-pink/theme.php:29
-#: ../../view/theme/diabook-aerith/theme.php:29
 msgid "Last users"
 msgstr ""
 
-#: ../../view/theme/diabook-red/theme.php:57
-#: ../../view/theme/diabook-blue/theme.php:57
 #: ../../view/theme/diabook/diabook-green/theme.php:58
 #: ../../view/theme/diabook/diabook-red/theme.php:57
 #: ../../view/theme/diabook/diabook-blue/theme.php:57
@@ -5480,12 +5437,9 @@ msgstr ""
 #: ../../view/theme/diabook/diabook-dark/theme.php:58
 #: ../../view/theme/diabook/diabook-aerith/theme.php:58
 #: ../../view/theme/diabook/diabook-pink/theme.php:58
-#: ../../view/theme/diabook-aerith/theme.php:58
 msgid "Last likes"
 msgstr ""
 
-#: ../../view/theme/diabook-red/theme.php:102
-#: ../../view/theme/diabook-blue/theme.php:102
 #: ../../view/theme/diabook/diabook-green/theme.php:103
 #: ../../view/theme/diabook/diabook-red/theme.php:102
 #: ../../view/theme/diabook/diabook-blue/theme.php:102
@@ -5493,207 +5447,164 @@ msgstr ""
 #: ../../view/theme/diabook/diabook-dark/theme.php:103
 #: ../../view/theme/diabook/diabook-aerith/theme.php:103
 #: ../../view/theme/diabook/diabook-pink/theme.php:103
-#: ../../view/theme/diabook-aerith/theme.php:103
 msgid "Last photos"
 msgstr ""
 
-#: ../../view/theme/diabook-red/theme.php:139
-#: ../../view/theme/diabook-blue/theme.php:139
 #: ../../view/theme/diabook/diabook-green/theme.php:141
 #: ../../view/theme/diabook/diabook-red/theme.php:139
 #: ../../view/theme/diabook/diabook-blue/theme.php:139
-#: ../../view/theme/diabook/theme.php:155
+#: ../../view/theme/diabook/theme.php:154
 #: ../../view/theme/diabook/diabook-dark/theme.php:141
 #: ../../view/theme/diabook/diabook-aerith/theme.php:141
 #: ../../view/theme/diabook/diabook-pink/theme.php:141
-#: ../../view/theme/diabook-aerith/theme.php:141
 msgid "Find Friends"
 msgstr ""
 
-#: ../../view/theme/diabook-red/theme.php:140
-#: ../../view/theme/diabook-blue/theme.php:140
 #: ../../view/theme/diabook/diabook-green/theme.php:142
 #: ../../view/theme/diabook/diabook-red/theme.php:140
 #: ../../view/theme/diabook/diabook-blue/theme.php:140
-#: ../../view/theme/diabook/theme.php:156
+#: ../../view/theme/diabook/theme.php:155
 #: ../../view/theme/diabook/diabook-dark/theme.php:142
 #: ../../view/theme/diabook/diabook-aerith/theme.php:142
 #: ../../view/theme/diabook/diabook-pink/theme.php:142
-#: ../../view/theme/diabook-aerith/theme.php:142
 msgid "Local Directory"
 msgstr ""
 
-#: ../../view/theme/diabook-red/theme.php:142
-#: ../../view/theme/diabook-blue/theme.php:142
 #: ../../view/theme/diabook/diabook-green/theme.php:144
 #: ../../view/theme/diabook/diabook-red/theme.php:142
 #: ../../view/theme/diabook/diabook-blue/theme.php:142
-#: ../../view/theme/diabook/theme.php:158
+#: ../../view/theme/diabook/theme.php:157
 #: ../../view/theme/diabook/diabook-dark/theme.php:144
 #: ../../view/theme/diabook/diabook-aerith/theme.php:144
 #: ../../view/theme/diabook/diabook-pink/theme.php:144
-#: ../../view/theme/diabook-aerith/theme.php:144
 #: ../../include/contact_widgets.php:35
 msgid "Similar Interests"
 msgstr ""
 
-#: ../../view/theme/diabook-red/theme.php:144
-#: ../../view/theme/diabook-blue/theme.php:144
 #: ../../view/theme/diabook/diabook-green/theme.php:146
 #: ../../view/theme/diabook/diabook-red/theme.php:144
 #: ../../view/theme/diabook/diabook-blue/theme.php:144
-#: ../../view/theme/diabook/theme.php:160
+#: ../../view/theme/diabook/theme.php:159
 #: ../../view/theme/diabook/diabook-dark/theme.php:146
 #: ../../view/theme/diabook/diabook-aerith/theme.php:146
 #: ../../view/theme/diabook/diabook-pink/theme.php:146
-#: ../../view/theme/diabook-aerith/theme.php:146
 #: ../../include/contact_widgets.php:37
 msgid "Invite Friends"
 msgstr ""
 
-#: ../../view/theme/diabook-red/theme.php:159
-#: ../../view/theme/diabook-red/theme.php:234
-#: ../../view/theme/diabook-blue/theme.php:159
-#: ../../view/theme/diabook-blue/theme.php:234
 #: ../../view/theme/diabook/diabook-green/theme.php:161
 #: ../../view/theme/diabook/diabook-green/theme.php:236
 #: ../../view/theme/diabook/diabook-red/theme.php:159
 #: ../../view/theme/diabook/diabook-red/theme.php:234
 #: ../../view/theme/diabook/diabook-blue/theme.php:159
 #: ../../view/theme/diabook/diabook-blue/theme.php:234
-#: ../../view/theme/diabook/theme.php:176
-#: ../../view/theme/diabook/theme.php:254
+#: ../../view/theme/diabook/theme.php:175
+#: ../../view/theme/diabook/theme.php:253
 #: ../../view/theme/diabook/diabook-dark/theme.php:161
 #: ../../view/theme/diabook/diabook-dark/theme.php:236
 #: ../../view/theme/diabook/diabook-aerith/theme.php:161
 #: ../../view/theme/diabook/diabook-aerith/theme.php:236
 #: ../../view/theme/diabook/diabook-pink/theme.php:161
 #: ../../view/theme/diabook/diabook-pink/theme.php:236
-#: ../../view/theme/diabook-aerith/theme.php:161
-#: ../../view/theme/diabook-aerith/theme.php:236
 msgid "Community Pages"
 msgstr ""
 
-#: ../../view/theme/diabook-red/theme.php:192
-#: ../../view/theme/diabook-blue/theme.php:192
 #: ../../view/theme/diabook/diabook-green/theme.php:194
 #: ../../view/theme/diabook/diabook-red/theme.php:192
 #: ../../view/theme/diabook/diabook-blue/theme.php:192
-#: ../../view/theme/diabook/theme.php:209
+#: ../../view/theme/diabook/theme.php:208
 #: ../../view/theme/diabook/diabook-dark/theme.php:194
 #: ../../view/theme/diabook/diabook-aerith/theme.php:194
 #: ../../view/theme/diabook/diabook-pink/theme.php:194
-#: ../../view/theme/diabook-aerith/theme.php:194
 msgid "Help or @NewHere ?"
 msgstr ""
 
-#: ../../view/theme/diabook-red/theme.php:198
-#: ../../view/theme/diabook-blue/theme.php:198
 #: ../../view/theme/diabook/diabook-green/theme.php:200
 #: ../../view/theme/diabook/diabook-red/theme.php:198
 #: ../../view/theme/diabook/diabook-blue/theme.php:198
-#: ../../view/theme/diabook/theme.php:215
+#: ../../view/theme/diabook/theme.php:214
 #: ../../view/theme/diabook/diabook-dark/theme.php:200
 #: ../../view/theme/diabook/diabook-aerith/theme.php:200
 #: ../../view/theme/diabook/diabook-pink/theme.php:200
-#: ../../view/theme/diabook-aerith/theme.php:200
 msgid "Connect Services"
 msgstr ""
 
-#: ../../view/theme/diabook-red/theme.php:227
-#: ../../view/theme/diabook-blue/theme.php:227
 #: ../../view/theme/diabook/diabook-green/theme.php:229
 #: ../../view/theme/diabook/diabook-red/theme.php:227
 #: ../../view/theme/diabook/diabook-blue/theme.php:227
-#: ../../view/theme/diabook/theme.php:247
+#: ../../view/theme/diabook/theme.php:246
 #: ../../view/theme/diabook/diabook-dark/theme.php:229
 #: ../../view/theme/diabook/diabook-aerith/theme.php:229
 #: ../../view/theme/diabook/diabook-pink/theme.php:229
-#: ../../view/theme/diabook-aerith/theme.php:229 ../../include/nav.php:49
-#: ../../include/nav.php:115
+#: ../../include/nav.php:49 ../../include/nav.php:115
 msgid "Your posts and conversations"
 msgstr ""
 
-#: ../../view/theme/diabook-red/theme.php:228
-#: ../../view/theme/diabook-blue/theme.php:228
 #: ../../view/theme/diabook/diabook-green/theme.php:230
 #: ../../view/theme/diabook/diabook-red/theme.php:228
 #: ../../view/theme/diabook/diabook-blue/theme.php:228
-#: ../../view/theme/diabook/theme.php:248
+#: ../../view/theme/diabook/theme.php:247
 #: ../../view/theme/diabook/diabook-dark/theme.php:230
 #: ../../view/theme/diabook/diabook-aerith/theme.php:230
 #: ../../view/theme/diabook/diabook-pink/theme.php:230
-#: ../../view/theme/diabook-aerith/theme.php:230 ../../include/nav.php:50
+#: ../../include/nav.php:50
 msgid "Your profile page"
 msgstr ""
 
-#: ../../view/theme/diabook-red/theme.php:229
-#: ../../view/theme/diabook-blue/theme.php:229
 #: ../../view/theme/diabook/diabook-green/theme.php:231
 #: ../../view/theme/diabook/diabook-red/theme.php:229
 #: ../../view/theme/diabook/diabook-blue/theme.php:229
-#: ../../view/theme/diabook/theme.php:249
+#: ../../view/theme/diabook/theme.php:248
 #: ../../view/theme/diabook/diabook-dark/theme.php:231
 #: ../../view/theme/diabook/diabook-aerith/theme.php:231
 #: ../../view/theme/diabook/diabook-pink/theme.php:231
-#: ../../view/theme/diabook-aerith/theme.php:231
 msgid "Your contacts"
 msgstr ""
 
-#: ../../view/theme/diabook-red/theme.php:230
-#: ../../view/theme/diabook-blue/theme.php:230
 #: ../../view/theme/diabook/diabook-green/theme.php:232
 #: ../../view/theme/diabook/diabook-red/theme.php:230
 #: ../../view/theme/diabook/diabook-blue/theme.php:230
-#: ../../view/theme/diabook/theme.php:250
+#: ../../view/theme/diabook/theme.php:249
 #: ../../view/theme/diabook/diabook-dark/theme.php:232
 #: ../../view/theme/diabook/diabook-aerith/theme.php:232
 #: ../../view/theme/diabook/diabook-pink/theme.php:232
-#: ../../view/theme/diabook-aerith/theme.php:232 ../../include/nav.php:51
+#: ../../include/nav.php:51
 msgid "Your photos"
 msgstr ""
 
-#: ../../view/theme/diabook-red/theme.php:231
-#: ../../view/theme/diabook-blue/theme.php:231
 #: ../../view/theme/diabook/diabook-green/theme.php:233
 #: ../../view/theme/diabook/diabook-red/theme.php:231
 #: ../../view/theme/diabook/diabook-blue/theme.php:231
-#: ../../view/theme/diabook/theme.php:251
+#: ../../view/theme/diabook/theme.php:250
 #: ../../view/theme/diabook/diabook-dark/theme.php:233
 #: ../../view/theme/diabook/diabook-aerith/theme.php:233
 #: ../../view/theme/diabook/diabook-pink/theme.php:233
-#: ../../view/theme/diabook-aerith/theme.php:233 ../../include/nav.php:52
+#: ../../include/nav.php:52
 msgid "Your events"
 msgstr ""
 
-#: ../../view/theme/diabook-red/theme.php:232
-#: ../../view/theme/diabook-blue/theme.php:232
 #: ../../view/theme/diabook/diabook-green/theme.php:234
 #: ../../view/theme/diabook/diabook-red/theme.php:232
 #: ../../view/theme/diabook/diabook-blue/theme.php:232
-#: ../../view/theme/diabook/theme.php:252
+#: ../../view/theme/diabook/theme.php:251
 #: ../../view/theme/diabook/diabook-dark/theme.php:234
 #: ../../view/theme/diabook/diabook-aerith/theme.php:234
 #: ../../view/theme/diabook/diabook-pink/theme.php:234
-#: ../../view/theme/diabook-aerith/theme.php:234 ../../include/nav.php:53
+#: ../../include/nav.php:53
 msgid "Personal notes"
 msgstr ""
 
-#: ../../view/theme/diabook-red/theme.php:232
-#: ../../view/theme/diabook-blue/theme.php:232
 #: ../../view/theme/diabook/diabook-green/theme.php:234
 #: ../../view/theme/diabook/diabook-red/theme.php:232
 #: ../../view/theme/diabook/diabook-blue/theme.php:232
-#: ../../view/theme/diabook/theme.php:252
+#: ../../view/theme/diabook/theme.php:251
 #: ../../view/theme/diabook/diabook-dark/theme.php:234
 #: ../../view/theme/diabook/diabook-aerith/theme.php:234
 #: ../../view/theme/diabook/diabook-pink/theme.php:234
-#: ../../view/theme/diabook-aerith/theme.php:234 ../../include/nav.php:53
+#: ../../include/nav.php:53
 msgid "Your personal photos"
 msgstr ""
 
-#: ../../view/theme/diabook-red/config.php:78
-#: ../../view/theme/diabook-blue/config.php:78
 #: ../../view/theme/diabook/diabook-green/config.php:78
 #: ../../view/theme/diabook/diabook-red/config.php:78
 #: ../../view/theme/diabook/diabook-blue/config.php:78
@@ -5702,12 +5613,9 @@ msgstr ""
 #: ../../view/theme/diabook/diabook-pink/config.php:78
 #: ../../view/theme/diabook/config.php:93
 #: ../../view/theme/quattro/config.php:54
-#: ../../view/theme/diabook-aerith/config.php:78
 msgid "Theme settings"
 msgstr ""
 
-#: ../../view/theme/diabook-red/config.php:79
-#: ../../view/theme/diabook-blue/config.php:79
 #: ../../view/theme/diabook/diabook-green/config.php:79
 #: ../../view/theme/diabook/diabook-red/config.php:79
 #: ../../view/theme/diabook/diabook-blue/config.php:79
@@ -5715,12 +5623,9 @@ msgstr ""
 #: ../../view/theme/diabook/diabook-aerith/config.php:79
 #: ../../view/theme/diabook/diabook-pink/config.php:79
 #: ../../view/theme/diabook/config.php:94
-#: ../../view/theme/diabook-aerith/config.php:79
 msgid "Set font-size for posts and comments"
 msgstr ""
 
-#: ../../view/theme/diabook-red/config.php:80
-#: ../../view/theme/diabook-blue/config.php:80
 #: ../../view/theme/diabook/diabook-green/config.php:80
 #: ../../view/theme/diabook/diabook-red/config.php:80
 #: ../../view/theme/diabook/diabook-blue/config.php:80
@@ -5728,12 +5633,9 @@ msgstr ""
 #: ../../view/theme/diabook/diabook-aerith/config.php:80
 #: ../../view/theme/diabook/diabook-pink/config.php:80
 #: ../../view/theme/diabook/config.php:95
-#: ../../view/theme/diabook-aerith/config.php:80
 msgid "Set line-height for posts and comments"
 msgstr ""
 
-#: ../../view/theme/diabook-red/config.php:81
-#: ../../view/theme/diabook-blue/config.php:81
 #: ../../view/theme/diabook/diabook-green/config.php:81
 #: ../../view/theme/diabook/diabook-red/config.php:81
 #: ../../view/theme/diabook/diabook-blue/config.php:81
@@ -5741,7 +5643,6 @@ msgstr ""
 #: ../../view/theme/diabook/diabook-aerith/config.php:81
 #: ../../view/theme/diabook/diabook-pink/config.php:81
 #: ../../view/theme/diabook/config.php:96
-#: ../../view/theme/diabook-aerith/config.php:81
 msgid "Set resolution for middle column"
 msgstr ""
 
