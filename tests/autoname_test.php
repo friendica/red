@@ -40,7 +40,7 @@ class AutonameTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testAutonameNoLength() {
 		$autoname1=autoname(0);
-		$this->assertEquals(0, count($autoname1));
+		$this->assertEquals(0, strlen($autoname1));
 	}
 	
 	/**
@@ -50,7 +50,7 @@ class AutonameTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testAutonameNegativeLength() {
 		$autoname1=autoname(-23);
-		$this->assertEquals(0, count($autoname1));
+		$this->assertEquals(0, strlen($autoname1));
 	}
 	
 	// 	public function testAutonameMaxLength() {

@@ -172,7 +172,7 @@ function post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0) 
         $url_parsed = @parse_url($newurl);
         if (isset($url_parsed)) {
             $redirects++;
-            return fetch_url($newurl,$binary,$redirects,$timeout);
+            return fetch_url($newurl,false,$redirects,$timeout);
         }
     }
 	$a->set_curl_code($http_code);
@@ -206,6 +206,7 @@ function xml_status($st, $message = '') {
 if(! function_exists('http_status_exit')) {
 function http_status_exit($val) {
 
+    $err = '';
 	if($val >= 400)
 		$err = 'Error';
 	if($val >= 200 && $val < 300)
@@ -452,7 +453,7 @@ function lrdd($uri, $debug = false) {
 			logger('lrdd: parse error: ' . $e);
 		}
 
-		if($dom) {
+		if(isset($dom) && $dom) {
 			$items = $dom->getElementsByTagName('link');
 			foreach($items as $item) {
 				$x = $item->getAttribute('rel');
@@ -587,13 +588,14 @@ function fetch_xrd_links($url) {
 
 if(! function_exists('validate_url')) {
 function validate_url(&$url) {
-	// no naked subdomains
-	if(strpos($url,'.') === false)
+	
+	// no naked subdomains (allow localhost for tests)
+	if(strpos($url,'.') === false && strpos($url,'/localhost/') === false)
 		return false;
 	if(substr($url,0,4) != 'http')
 		$url = 'http://' . $url;
 	$h = @parse_url($url);
-
+	
 	if(($h) && (dns_get_record($h['host'], DNS_A + DNS_CNAME + DNS_PTR))) {
 		return true;
 	}
@@ -692,18 +694,23 @@ function allowed_email($email) {
 }}
 
 
-if(! function_exists('gravatar_img')) {
-function gravatar_img($email) {
-	$size = 175;
-	$opt = 'identicon';   // psuedo-random geometric pattern if not found
-	$rating = 'pg';
-	$hash = md5(trim(strtolower($email)));
-	
-	$url = 'http://www.gravatar.com/avatar/' . $hash . '.jpg' 
-		. '?s=' . $size . '&d=' . $opt . '&r=' . $rating;
+if(! function_exists('avatar_img')) {
+function avatar_img($email) {
 
-	logger('gravatar: ' . $email . ' ' . $url);
-	return $url;
+	$a = get_app();
+
+	$avatar['size'] = 175;
+	$avatar['email'] = $email;
+	$avatar['url'] = '';
+	$avatar['success'] = false;
+
+	call_hooks('avatar_lookup', $avatar);
+
+	if(! $avatar['success'])
+		$avatar['url'] = $a->get_baseurl() . '/images/person-175.jpg';
+
+	logger('Avatar: ' . $avatar['email'] . ' ' . $avatar['url'], LOGGER_DEBUG);
+	return $avatar['url'];
 }}
 
 
@@ -824,3 +831,48 @@ function scale_external_images($s,$include_link = true) {
 	}
 	return $s;
 }
+
+
+function fix_contact_ssl_policy(&$contact,$new_policy) {
+
+	$ssl_changed = false;
+	if((intval($new_policy) == SSL_POLICY_SELFSIGN || $new_policy === 'self') && strstr($contact['url'],'https:')) {
+		$ssl_changed = true;
+		$contact['url']     = 	str_replace('https:','http:',$contact['url']);
+		$contact['request'] = 	str_replace('https:','http:',$contact['request']);
+		$contact['notify']  = 	str_replace('https:','http:',$contact['notify']);
+		$contact['poll']    = 	str_replace('https:','http:',$contact['poll']);
+		$contact['confirm'] = 	str_replace('https:','http:',$contact['confirm']);
+		$contact['poco']    = 	str_replace('https:','http:',$contact['poco']);
+	}
+
+	if((intval($new_policy) == SSL_POLICY_FULL || $new_policy === 'full') && strstr($contact['url'],'http:')) {
+		$ssl_changed = true;
+		$contact['url']     = 	str_replace('http:','https:',$contact['url']);
+		$contact['request'] = 	str_replace('http:','https:',$contact['request']);
+		$contact['notify']  = 	str_replace('http:','https:',$contact['notify']);
+		$contact['poll']    = 	str_replace('http:','https:',$contact['poll']);
+		$contact['confirm'] = 	str_replace('http:','https:',$contact['confirm']);
+		$contact['poco']    = 	str_replace('http:','https:',$contact['poco']);
+	}
+
+	if($ssl_changed) {
+		q("update contact set 
+			url = '%s', 
+			request = '%s',
+			notify = '%s',
+			poll = '%s',
+			confirm = '%s',
+			poco = '%s'
+			where id = %d limit 1",
+			dbesc($contact['url']),
+			dbesc($contact['request']),
+			dbesc($contact['notify']),
+			dbesc($contact['poll']),
+			dbesc($contact['confirm']),
+			dbesc($contact['poco']),
+			intval($contact['id'])
+		);
+	}
+}
+

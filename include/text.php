@@ -80,6 +80,9 @@ function escape_tags($string) {
 if(! function_exists('autoname')) {
 function autoname($len) {
 
+	if($len <= 0)
+		return '';
+
 	$vowels = array('a','a','ai','au','e','e','e','ee','ea','i','ie','o','ou','u'); 
 	if(mt_rand(0,5) == 4)
 		$vowels[] = 'y';
@@ -225,6 +228,9 @@ if(! function_exists('paginate')) {
 function paginate(&$a) {
 	$o = '';
 	$stripped = preg_replace('/(&page=[0-9]*)/','',$a->query_string);
+
+//	$stripped = preg_replace('/&zrl=(.*?)([\?&]|$)/ism','',$stripped);
+
 	$stripped = str_replace('q=','',$stripped);
 	$stripped = trim($stripped,'/');
 	$pagenum = $a->pager['page'];
@@ -725,6 +731,8 @@ function smilies($s, $sample = false) {
 		'\\o/', 
 		'o.O', 
 		'O.o', 
+		'o_O', 
+		'O_o', 
 		":'(", 
 		":-!", 
 		":-/", 
@@ -759,6 +767,8 @@ function smilies($s, $sample = false) {
 		'<img src="' . $a->get_baseurl() . '/images/smiley-thumbsup.gif" alt="\\o/" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="o.O" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="O.o" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="o_O" />',
+		'<img src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="O_o" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-cry.gif" alt=":\'(" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-foot-in-mouth.gif" alt=":-!" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-undecided.gif" alt=":-/" />',
@@ -1058,10 +1068,12 @@ function unamp($s) {
 if(! function_exists('lang_selector')) {
 function lang_selector() {
 	global $lang;
-	$o = '<div id="lang-select-icon" class="icon language" title="' . t('Select an alternate language') . '" onclick="openClose(\'language-selector\');" ></div>';
-	$o .= '<div id="language-selector" style="display: none;" >';
-	$o .= '<form action="#" method="post" ><select name="system_language" onchange="this.form.submit();" >';
+	
 	$langs = glob('view/*/strings.php');
+	
+	$lang_options = array();
+	$selected = "";
+	
 	if(is_array($langs) && count($langs)) {
 		$langs[] = '';
 		if(! in_array('view/en/strings.php',$langs))
@@ -1069,17 +1081,22 @@ function lang_selector() {
 		asort($langs);
 		foreach($langs as $l) {
 			if($l == '') {
-				$default_selected = ((! x($_SESSION,'language')) ? ' selected="selected" ' : '');
-				$o .= '<option value="" ' . $default_selected . '>' . t('default') . '</option>';
+				$lang_options[""] = t('default');
 				continue;
 			}
 			$ll = substr($l,5);
 			$ll = substr($ll,0,strrpos($ll,'/'));
-			$selected = (($ll === $lang && (x($_SESSION, 'language'))) ? ' selected="selected" ' : '');
-			$o .= '<option value="' . $ll . '"' . $selected . '>' . $ll . '</option>';
+			$selected = (($ll === $lang && (x($_SESSION, 'language'))) ? $ll : $selected);
+			$lang_options[$ll]=$ll;
 		}
 	}
-	$o .= '</select></form></div>';
+
+	$tpl = get_markup_template("lang_selector.tpl");	
+	$o = replace_macros($tpl, array(
+		'$title' => t('Select an alternate language'),
+		'$langs' => array($lang_options, $selected),
+		
+	));
 	return $o;
 }}
 
@@ -1314,6 +1331,118 @@ function file_tag_file_query($table,$s,$type = 'file') {
 	return " AND " . (($table) ? dbesc($table) . '.' : '') . "file regexp '" . dbesc($str) . "' ";
 }
 
+// ex. given music,video return <music><video> or [music][video]
+function file_tag_list_to_file($list,$type = 'file') {
+        $tag_list = '';
+        if(strlen($list)) {
+                $list_array = explode(",",$list);
+                if($type == 'file') {
+	                $lbracket = '[';
+	                $rbracket = ']';
+	        }
+                else {
+	                $lbracket = '<';
+        	        $rbracket = '>';
+	        }
+
+                foreach($list_array as $item) {
+		  if(strlen($item)) {
+		                $tag_list .= $lbracket . file_tag_encode(trim($item))  . $rbracket;
+			}
+                }
+	}
+        return $tag_list;
+}
+
+// ex. given <music><video>[friends], return music,video or friends
+function file_tag_file_to_list($file,$type = 'file') {
+        $matches = false;
+        $list = '';
+        if($type == 'file') {
+                $cnt = preg_match_all('/\[(.*?)\]/',$file,$matches,PREG_SET_ORDER);
+	}
+        else {
+                $cnt = preg_match_all('/<(.*?)>/',$file,$matches,PREG_SET_ORDER);
+	}
+	if($cnt) {
+		foreach($matches as $mtch) {
+			if(strlen($list))
+				$list .= ',';
+			$list .= file_tag_decode($mtch[1]);
+		}
+	}
+
+        return $list;
+}
+
+function file_tag_update_pconfig($uid,$file_old,$file_new,$type = 'file') {
+        // $file_old - categories previously associated with an item
+        // $file_new - new list of categories for an item
+
+	if(! intval($uid))
+		return false;
+
+        if($file_old == $file_new)
+	        return true;
+
+	$saved = get_pconfig($uid,'system','filetags');
+        if(strlen($saved)) {
+                if($type == 'file') {
+	                $lbracket = '[';
+	                $rbracket = ']';
+	        }
+                else {
+	                $lbracket = '<';
+        	        $rbracket = '>';
+	        }
+
+                $filetags_updated = $saved;
+
+		// check for new tags to be added as filetags in pconfig
+                $new_tags = array();
+                $check_new_tags = explode(",",file_tag_file_to_list($file_new,$type));
+
+	        foreach($check_new_tags as $tag) {
+		        if(! stristr($saved,$lbracket . file_tag_encode($tag) . $rbracket))
+			        $new_tags[] = $tag;
+	        }
+
+		$filetags_updated .= file_tag_list_to_file(implode(",",$new_tags),$type);
+
+		// check for deleted tags to be removed from filetags in pconfig
+                $deleted_tags = array();
+                $check_deleted_tags = explode(",",file_tag_file_to_list($file_old,$type));
+
+	        foreach($check_deleted_tags as $tag) {
+		        if(! stristr($file_new,$lbracket . file_tag_encode($tag) . $rbracket))
+		                $deleted_tags[] = $tag;
+	        }
+
+                foreach($deleted_tags as $key => $tag) {
+		        $r = q("select file from item where uid = %d " . file_tag_file_query('item',$tag,$type),
+		                intval($uid)
+	                );
+
+	                if(count($r)) {
+			        unset($deleted_tags[$key]);
+	                }
+			else {
+			        $filetags_updated = str_replace($lbracket . file_tag_encode($tag) . $rbracket,'',$filetags_updated);
+			}
+		}
+
+                if($saved != $filetags_updated) {
+		        set_pconfig($uid,'system','filetags', $filetags_updated);
+                }
+		return true;
+	}
+        else
+                if(strlen($file_new)) {
+		        set_pconfig($uid,'system','filetags', $file_new);
+                }
+		return true;
+}
+
 function file_tag_save_file($uid,$item,$file) {
 	$result = false;
 	if(! intval($uid))
@@ -1384,3 +1513,8 @@ function undo_post_tagging($s) {
 	return $s;
 }
 
+function fix_mce_lf($s) {
+	$s = str_replace("\r\n","\n",$s);
+	$s = str_replace("\n\n","\n",$s);
+	return $s;
+}

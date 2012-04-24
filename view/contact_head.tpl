@@ -2,10 +2,9 @@
           src="$baseurl/library/tinymce/jscripts/tiny_mce/tiny_mce_src.js"></script>
           <script language="javascript" type="text/javascript">
 
-
 tinyMCE.init({
 	theme : "advanced",
-	mode : "exact",
+	mode : "$editselect",
 	elements: "contact-edit-info",
 	plugins : "bbcode",
 	theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,forecolor",

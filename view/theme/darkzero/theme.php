@@ -12,6 +12,7 @@ $a->theme_info = array(
   'extends' => 'duepuntozero',
 );
 
+function darkzero_init(&$a) {
 $a->page['htmlhead'] .= <<< EOT
 <script>
 $(document).ready(function() {
@@ -58,3 +59,4 @@ $('.savedsearchterm').hover(
 
 </script>
 EOT;
+}

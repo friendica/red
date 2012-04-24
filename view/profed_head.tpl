@@ -5,7 +5,7 @@
 
 tinyMCE.init({
 	theme : "advanced",
-	mode : "textareas",
+	mode : "$editselect",
 	plugins : "bbcode,paste",
 	theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,forecolor,formatselect,code",
 	theme_advanced_buttons2 : "",

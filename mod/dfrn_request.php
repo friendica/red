@@ -180,7 +180,7 @@ function dfrn_request_post(&$a) {
 				
 				// (ignore reply, nothing we can do it failed)
 
-				goaway($dfrn_url);
+				goaway(zrl($dfrn_url));
 				return; // NOTREACHED
 
 			}
@@ -261,7 +261,7 @@ function dfrn_request_post(&$a) {
 			WHERE `intro`.`blocked` = 1 AND `contact`.`self` = 0 
 			AND `contact`.`network` != '%s'
 			AND `intro`.`datetime` < UTC_TIMESTAMP() - INTERVAL 30 MINUTE ",
-			dbesc(NETWORK_MAIL)
+			dbesc(NETWORK_MAIL2)
 		);
 		if(count($r)) {
 			foreach($r as $rr) {
@@ -286,7 +286,7 @@ function dfrn_request_post(&$a) {
 			WHERE `intro`.`blocked` = 1 AND `contact`.`self` = 0 
 			AND `contact`.`network` = '%s'
 			AND `intro`.`datetime` < UTC_TIMESTAMP() - INTERVAL 3 DAY ",
-			dbesc(NETWORK_MAIL)
+			dbesc(NETWORK_MAIL2)
 		);
 		if(count($r)) {
 			foreach($r as $rr) {
@@ -301,6 +301,8 @@ function dfrn_request_post(&$a) {
 			}
 		}
 
+		$email_follow = (x($_POST,'email_follow') ? intval($_POST['email_follow']) : 0);
+		$real_name = (x($_POST,'realname') ? notags(trim($_POST['realname'])) : '');
 
 		$url = trim($_POST['dfrn_url']);
 		if(! strlen($url)) {
@@ -308,17 +310,108 @@ function dfrn_request_post(&$a) {
 			return;
 		}
 
-		// Canonicalise email-style profile locator
-
 		$hcard = '';
-		$url = webfinger_dfrn($url,$hcard);
 
-		if(substr($url,0,5) === 'stat:') {
-			$network = NETWORK_OSTATUS;
-			$url = substr($url,5);
+		if($email_follow) {
+
+			if(! validate_email($url)) {
+				notice( t('Invalid email address.') . EOL);
+				return;
+			}
+
+			$addr    = $url;
+			$name    = ($realname) ? $realname : $addr;
+			$nick    = substr($addr,0,strpos($addr,'@'));
+			$url     = 'http://' . substr($addr,strpos($addr,'@') + 1);
+			$nurl    = normalise_url($host);
+			$poll    = 'email ' . random_string();
+			$notify  = 'smtp ' . random_string();
+			$blocked = 1;
+			$pending = 1;
+			$network = NETWORK_MAIL2;
+			$rel     = CONTACT_IS_FOLLOWER;
+
+			$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
+			if(get_config('system','dfrn_only'))
+				$mail_disabled = 1;
+
+			if(! $mail_disabled) {
+				$failed = false;
+				$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",
+					intval($uid)
+				);
+				if(! count($r)) {
+					notice( t('This account has not been configured for email. Request failed.') . EOL);
+					return;
+				}
+			}
+
+			$r = q("insert into contact ( uid, created, addr, name, nick, url, nurl, poll, notify, blocked, pending, network, rel )
+				values( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d ) ",
+				intval($uid),
+				dbesc(datetime_convert()),
+				dbesc($addr),
+				dbesc($name),
+				dbesc($nick),
+				dbesc($url),
+				dbesc($nurl),
+				dbesc($poll),
+				dbesc($notify),
+				intval($blocked),
+				intval($pending),
+				dbesc($network),
+				intval($rel)
+			);
+
+			$r = q("select id from contact where poll = '%s' and uid = %d limit 1",
+				dbesc($poll),
+				intval($uid)
+			);
+			if(count($r)) {
+				$contact_id = $r[0]['id'];
+
+				$photo = avatar_img($addr);
+
+				$r = q("UPDATE `contact` SET 
+					`photo` = '%s', 
+					`thumb` = '%s',
+					`micro` = '%s', 
+					`name-date` = '%s', 
+					`uri-date` = '%s', 
+					`avatar-date` = '%s', 
+					`hidden` = 0,
+					WHERE `id` = %d LIMIT 1
+				",
+					dbesc($photos[0]),
+					dbesc($photos[1]),
+					dbesc($photos[2]),
+					dbesc(datetime_convert()),
+					dbesc(datetime_convert()),
+					dbesc(datetime_convert()),
+					intval($contact_id)
+				);
+			}
+
+			// contact is created. Now send an email verify form to the requestor.
+			//
+
+
+
 		}
+
 		else {
-			$network = NETWORK_DFRN;
+
+			// Canonicalise email-style profile locator
+
+			$url = webfinger_dfrn($url,$hcard);
+
+			if(substr($url,0,5) === 'stat:') {
+				$network = NETWORK_OSTATUS;
+				$url = substr($url,5);
+			}
+			else {
+				$network = NETWORK_DFRN;
+			}
 		}
 
 		logger('dfrn_request: url: ' . $url);

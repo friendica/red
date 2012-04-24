@@ -321,6 +321,14 @@ function delivery_run($argv, $argc){
 						$x[0]['writable'] = 1;
 					}
 
+					$ssl_policy = get_config('system','ssl_policy');
+					fix_contact_ssl_policy($x[0],$ssl_policy);
+
+					// If we are setup as a soapbox we aren't accepting input from this person
+
+					if($x[0]['page-flags'] == PAGE_SOAPBOX)
+						break;
+
 					require_once('library/simplepie/simplepie.inc');
 					logger('mod-delivery: local delivery');
 					local_delivery($x[0],$atom);

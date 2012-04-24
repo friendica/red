@@ -22,7 +22,7 @@
 				<span class="icon contacts">$nav.contacts.1</span>
 				<span id="intro-update" class="nav-notify"></span></a>
 				<ul id="nav-contacts-menu" class="menu-popup">
-					<li id="nav-contacts-see-intro"><a href="$nav.notifications.0">$nav.introductions.1</a><span id="intro-update" class="nav-notify"></span></li>
+					<li id="nav-contacts-see-intro"><a href="$nav.notifications.0">$nav.introductions.1</a><span id="intro-update-li" class="nav-notify"></span></li>
 					<li id="nav-contacts-all"><a href="contacts">$nav.contacts.1</a></li> 
 				</ul>
 			</li>	
@@ -36,8 +36,6 @@
 				<span id="mail-update" class="nav-notify"></span></a>
 				<ul id="nav-messages-menu" class="menu-popup">
 					<li id="nav-messages-see-all"><a href="$nav.messages.0">$nav.messages.1</a></li>
-					<li id="nav-messages-see-all"><a href="$nav.messages.inbox.0">$nav.messages.inbox.1</a></li>
-					<li id="nav-messages-see-all"><a href="$nav.messages.outbox.0">$nav.messages.outbox.1</a></li>
 					<li id="nav-messages-see-all"><a href="$nav.messages.new.0">$nav.messages.new.1</a></li>
 				</ul>
 			</li>		
@@ -64,12 +62,12 @@
 		</li>		
 		{{ endif }}	
 		
+		<li  style="width: 1%; height: 1px;float: right;"></li>	
+		
 		<li id="nav-site-linkmenu" class="nav-menu-icon"><a href="#" rel="#nav-site-menu"><span class="icon s22 gear">Site</span></a>
 			<ul id="nav-site-menu" class="menu-popup">
 				{{ if $nav.manage }}<li><a class="$nav.manage.2" href="$nav.manage.0" title="$nav.manage.3">$nav.manage.1</a></li>{{ endif }}				
-
-				{{ if $nav.settings }} <li><a class="$nav.search.2" onClick="restore_boxes()" title="Restore right-hand column" style="cursor: pointer;">Restore right-hand column</a></li>{{ endif }}
-										
+					
 				{{ if $nav.help }} <li><a class="$nav.help.2" target="friendika-help" href="$nav.help.0" title="$nav.help.3" >$nav.help.1</a></li>{{ endif }}									
 										
 										 <li><a class="$nav.search.2" href="friendica" title="Site Info / Impressum" >Info/Impressum</a></li>
@@ -101,7 +99,7 @@
 			</li>	
 		{{ endif }}		
 		
-      {{ if $nav.settings }}
+      {{ if $nav.home }}
 			<li id="nav-home-link" class="nav-menu $sel.home">
 				<a class="$nav.home.2" href="$nav.home.0" title="$nav.home.3" >$nav.home.1
 				<span id="home-update" class="nav-notify"></span></a>
@@ -138,7 +136,7 @@
 </nav>
 
 
-<div style="position: fixed; bottom: 5px; right: 10px;"><a href="javascript:scroll(0,0); "><img src="view/theme/diabook/icons/scroll_top.png" title="scroll to top"></a></div>
+<div id="scrollup" style="position: fixed; bottom: 5px; right: 10px;"><a href="#top"><img src="view/theme/diabook/icons/scroll_top.png" alt="back to top" title="Back to top"></a></div>
 <div style="position: fixed; bottom: 3px; left: 25px;">$langselector</div>
 <div style="position: fixed; bottom: 23px; left: 5px;"><a href="http://pad.toktan.org/p/diabook" target="blank" ><img src="view/theme/diabook/icons/bluebug.png" title="report bugs for the theme diabook"/></a></div>
 

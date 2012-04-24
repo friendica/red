@@ -446,7 +446,7 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 						$phost = substr($url,strpos($url,'@')+1);
 						$profile = 'http://' . $phost;
 						// fix nick character range
-						$vcard = array('fn' => $name, 'nick' => $name, 'photo' => gravatar_img($url));
+						$vcard = array('fn' => $name, 'nick' => $name, 'photo' => avatar_img($url));
 						$notify = 'smtp ' . random_string();
 						$poll = 'email ' . random_string();
 						$priority = 0;
@@ -593,7 +593,7 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 			logger('probe_url: fetch feed: ' . $poll . ' returns: ' . $xml, LOGGER_DATA);
 			$a = get_app();
 
-			logger('probe_url: scrape_feed: headers: ' . $a->get_curl_headers(), $LOGGER_DATA);
+			logger('probe_url: scrape_feed: headers: ' . $a->get_curl_headers(), LOGGER_DATA);
 
    			$feed->set_raw_data($xml);
 
@@ -655,7 +655,7 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 			}
 
 			if((! $vcard['photo']) && strlen($email))
-				$vcard['photo'] = gravatar_img($email);
+				$vcard['photo'] = avatar_img($email);
 			if($poll === $profile)
 				$lnk = $feed->get_permalink();
 			if(isset($lnk) && strlen($lnk))

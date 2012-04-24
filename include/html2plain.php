@@ -83,11 +83,14 @@ function collecturls($message) {
 	$urls = array();
 	foreach ($result as $treffer) {
 		// A list of some links that should be ignored
-		$list = array("/user/", "/tag/", "/profile/", "/search?search=", "mailto:", "/u/", "/node/",
+		$list = array("/user/", "/tag/", "/group/", "/profile/", "/search?search=", "mailto:", "/u/", "/node/",
 				"//facebook.com/profile.php?id=", "//plus.google.com/");
 		foreach ($list as $listitem)
 			if (strpos($treffer[1], $listitem) !== false)
 				$ignore = true;
+
+		if ((strpos($treffer[1], "//plus.google.com/") !== false) and (strpos($treffer[1], "/posts") !== false))
+				$ignore = false;
 
 		if (!$ignore)
 			$urls[$treffer[1]] = $treffer[1];
@@ -154,7 +157,7 @@ function html2plain($html, $wraplength = 75, $compact = false)
 	//node2bbcode($doc, 'ol', array(), "\n[list=1]", "[/list]\n");
 	node2bbcode($doc, 'li', array(), "\n* ", "\n");
 
-	node2bbcode($doc, 'hr', array(), str_repeat("-", 70), "");
+	node2bbcode($doc, 'hr', array(), "\n".str_repeat("-", 70)."\n", "");
 
 	node2bbcode($doc, 'tr', array(), "\n", "");
 	node2bbcode($doc, 'td', array(), "\t", "");

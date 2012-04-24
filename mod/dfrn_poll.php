@@ -33,7 +33,7 @@ function dfrn_poll_init(&$a) {
 
 		$user = '';
 		if($a->argc > 1) {
-			$r = q("SELECT `hidewall` FROM `user` WHERE `user`.`nickname` = '%s' LIMIT 1",
+			$r = q("SELECT `hidewall`,`nickname` FROM `user` WHERE `user`.`nickname` = '%s' LIMIT 1",
 				dbesc($a->argv[1])
 			);
 			if((! count($r)) || (count($r) && $r[0]['hidewall']))
@@ -428,11 +428,13 @@ function dfrn_poll_content(&$a) {
 				break; // NOTREACHED
 		}
 
+		$nickname = $a->argv[1];
+
 		$r = q("SELECT `contact`.*, `user`.`username`, `user`.`nickname` 
 			FROM `contact` LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid`
 			WHERE `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
 			AND `user`.`nickname` = '%s' $sql_extra LIMIT 1",
-			dbesc($a->argv[1])
+			dbesc($nickname)
 		);
 
 		if(count($r)) {
@@ -482,7 +484,7 @@ function dfrn_poll_content(&$a) {
 				));
 			}
 			
-			$profile = $r[0]['nickname'];
+			$profile = ((count($r) && $r[0]['nickname']) ? $r[0]['nickname'] : $nickname);
 
 			switch($destination_url) {
 				case 'profile':

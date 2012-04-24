@@ -12,6 +12,7 @@ function follow_widget() {
 }
 
 function findpeople_widget() {
+	require_once('include/Contact.php');
 
 	$a = get_app();
 
@@ -32,6 +33,7 @@ function findpeople_widget() {
 		'$findthem' => t('Find'),
 		'$suggest' => t('Friend Suggestions'),
 		'$similar' => t('Similar Interests'),
+		'$random' => t('Random Profile'),
 		'$inv' => t('Invite Friends')
 	));
 
@@ -94,6 +96,34 @@ function fileas_widget($baseurl,$selected = '') {
 
 	return replace_macros(get_markup_template('fileas_widget.tpl'),array(
 		'$title' => t('Saved Folders'),
+		'$desc' => '',
+		'$sel_all' => (($selected == '') ? 'selected' : ''),
+		'$all' => t('Everything'),
+		'$terms' => $terms,
+		'$base' => $baseurl,
+
+	));
+}
+
+function categories_widget($baseurl,$selected = '') {
+	$a = get_app();
+
+	$saved = get_pconfig($a->profile['profile_uid'],'system','filetags');
+	if(! strlen($saved))
+		return;
+
+	$matches = false;
+	$terms = array();
+        $cnt = preg_match_all('/<(.*?)>/',$saved,$matches,PREG_SET_ORDER);
+        if($cnt) {
+                foreach($matches as $mtch) {
+		        $unescaped = xmlify(file_tag_decode($mtch[1]));
+			$terms[] = array('name' => $unescaped,'selected' => (($selected == $unescaped) ? 'selected' : ''));
+		}
+	}
+
+	return replace_macros(get_markup_template('categories_widget.tpl'),array(
+		'$title' => t('Categories'),
 		'$desc' => '',
 		'$sel_all' => (($selected == '') ? 'selected' : ''),
 		'$all' => t('Everything'),

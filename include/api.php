@@ -121,6 +121,7 @@
 				if (strpos($a->query_string, ".json")>0) $type="json";
 				if (strpos($a->query_string, ".rss")>0) $type="rss";
 				if (strpos($a->query_string, ".atom")>0) $type="atom";
+				if (strpos($a->query_string, ".as")>0) $type="as";
 
 				$r = call_user_func($info['func'], $a, $type);
 				if ($r===false) return;
@@ -143,6 +144,12 @@
 					case "atom":
 						header ("Content-Type: application/atom+xml");
 						return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
+						break;
+					case "as":
+						//header ("Content-Type: application/json");
+						//foreach($r as $rr)
+						//    return json_encode($rr);
+						return json_encode($r);
 						break;
 
 				}
@@ -560,8 +567,17 @@
 		$_REQUEST['profile_uid'] = local_user();
 		if(requestdata('parent'))
 			$_REQUEST['type'] = 'net-comment';
-		else
+		else {
 			$_REQUEST['type'] = 'wall';
+                        if(x($_FILES,'media')) {
+		                // upload the image if we have one
+		                $_REQUEST['hush']='yeah'; //tell wall_upload function to return img info instead of echo
+			        require_once('mod/wall_upload.php');
+			        $media = wall_upload_post($a);
+		                if(strlen($media)>0)
+				        $_REQUEST['body'] .= "\n\n".$media;
+			        }
+		}
 
 		// set this so that the item_post() function is quiet and doesn't redirect or emit json
 
@@ -737,12 +753,98 @@
 			case "atom":
 			case "rss":
 				$data = api_rss_extra($a, $data, $user_info);
+				break;
+			case "as":
+				$as = api_format_as($a, $ret, $user_info);
+				$as['title'] = $a->config['sitename']." Home Timeline";
+				$as['link']['url'] = $a->get_baseurl()."/".$user_info["screen_name"]."/all";
+				return($as);
+				break;
 		}
 				
 		return  api_apply_template("timeline", $type, $data);
 	}
 	api_register_func('api/statuses/home_timeline','api_statuses_home_timeline', true);
 	api_register_func('api/statuses/friends_timeline','api_statuses_home_timeline', true);
+
+	function api_statuses_public_timeline(&$a, $type){
+		if (local_user()===false) return false;
+				
+		$user_info = api_get_user($a);
+		// get last newtork messages
+
+
+		// params
+		$count = (x($_REQUEST,'count')?$_REQUEST['count']:20);
+		$page = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
+		if ($page<0) $page=0;
+		$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
+		$max_id = (x($_REQUEST,'max_id')?$_REQUEST['max_id']:0);
+		//$since_id = 0;//$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
+		
+		$start = $page*$count;
+
+		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
+
+		if ($max_id > 0)
+			$sql_extra = 'AND `item`.`id` <= '.intval($max_id);
+
+		/*$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
+			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
+			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
+			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
+			FROM `item`, `contact`
+			WHERE `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
+			AND `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' 
+			AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' 
+			AND `item`.`private` = 0 AND `item`.`wall` = 1 AND `user`.`hidewall` = 0
+			AND `contact`.`id` = `item`.`contact-id`
+			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+			$sql_extra
+			AND `item`.`id`>%d
+			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
+			intval($since_id),
+			intval($start),	intval($count)
+		);*/
+	        $r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
+	                `contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
+        	        `contact`.`network`, `contact`.`thumb`, `contact`.`self`, `contact`.`writable`, 
+                	`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`,
+                	`user`.`nickname`, `user`.`hidewall`
+                	FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
+                	LEFT JOIN `user` ON `user`.`uid` = `item`.`uid`
+                	WHERE `item`.`visible` = 1 AND `item`.`deleted` = 0 and `item`.`moderated` = 0
+                	AND `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' 
+                	AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' 
+                	AND `item`.`private` = 0 AND `item`.`wall` = 1 AND `user`.`hidewall` = 0 
+                	AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+			$sql_extra
+			AND `item`.`id`>%d
+                	ORDER BY `received` DESC LIMIT %d, %d ",
+			intval($since_id),
+                	intval($start),
+                	intval($count));
+
+		$ret = api_format_items($r,$user_info);
+
+		
+		$data = array('$statuses' => $ret);
+		switch($type){
+			case "atom":
+			case "rss":
+				$data = api_rss_extra($a, $data, $user_info);
+				break;
+			case "as":
+				$as = api_format_as($a, $ret, $user_info);
+				$as['title'] = $a->config['sitename']." Public Timeline";
+				$as['link']['url'] = $a->get_baseurl()."/";
+				return($as);
+				break;
+		}
+				
+		return  api_apply_template("timeline", $type, $data);
+	}
+	api_register_func('api/statuses/public_timeline','api_statuses_public_timeline', true);
 
 	/**
 	 * 
@@ -784,8 +886,152 @@
 	}
 	api_register_func('api/statuses/show','api_statuses_show', true);
 
-	//api_register_func('api/statuses/mentions','api_statuses_mentions', true);
-	//api_register_func('api/statuses/replies','api_statuses_mentions', true);
+
+	/**
+	 * 
+	 */
+	function api_statuses_repeat(&$a, $type){
+		if (local_user()===false) return false;
+
+		$user_info = api_get_user($a);
+
+		// params
+		$id = intval($a->argv[3]);
+
+		logger('API: api_statuses_repeat: '.$id);		
+
+		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
+
+		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, `contact`.`nick` as `reply_author`,
+			`contact`.`name`, `contact`.`photo`, `contact`.`url` as `reply_url`, `contact`.`rel`,
+			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
+			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
+			FROM `item`, `contact`
+			WHERE `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
+			AND `contact`.`id` = `item`.`contact-id`
+			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+			$sql_extra
+			AND `item`.`id`=%d",
+			intval($id)
+		);
+
+		$_REQUEST['body'] = html_entity_decode("&#x2672; ", ENT_QUOTES, 'UTF-8')."[url=".$r[0]['reply_url']."]".$r[0]['reply_author']."[/url] \n".$r[0]['body'];
+		$_REQUEST['profile_uid'] = local_user();
+		$_REQUEST['type'] = 'wall';
+		$_REQUEST['api_source'] = true;
+
+		require_once('mod/item.php');
+		item_post($a);
+
+		if ($type == 'xml')
+			$ok = "true";
+		else
+			$ok = "ok";
+
+		return api_apply_template('test', $type, array('$ok' => $ok));
+	}
+	api_register_func('api/statuses/retweet','api_statuses_repeat', true);
+
+	/**
+	 * 
+	 */
+	function api_statuses_destroy(&$a, $type){
+		if (local_user()===false) return false;
+
+		$user_info = api_get_user($a);
+
+		// params
+		$id = intval($a->argv[3]);
+
+		logger('API: api_statuses_destroy: '.$id);	
+
+		require_once('include/items.php');
+		drop_item($id, false);
+
+		if ($type == 'xml')
+			$ok = "true";
+		else
+			$ok = "ok";
+
+		return api_apply_template('test', $type, array('$ok' => $ok));
+	}
+	api_register_func('api/statuses/destroy','api_statuses_destroy', true);
+
+	/**
+	 * 
+	 * http://developer.twitter.com/doc/get/statuses/mentions
+	 * 
+	 */
+	function api_statuses_mentions(&$a, $type){
+		if (local_user()===false) return false;
+				
+		$user_info = api_get_user($a);
+		// get last newtork messages
+
+
+		// params
+		$count = (x($_REQUEST,'count')?$_REQUEST['count']:20);
+		$page = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
+		if ($page<0) $page=0;
+		$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
+		$max_id = (x($_REQUEST,'max_id')?$_REQUEST['max_id']:0);
+		//$since_id = 0;//$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
+		
+		$start = $page*$count;
+
+		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
+
+		$myurl = $a->get_baseurl() . '/profile/'. $a->user['nickname'];
+		$myurl = substr($myurl,strpos($myurl,'://')+3);
+		$myurl = str_replace(array('www.','.'),array('','\\.'),$myurl);
+		$diasp_url = str_replace('/profile/','/u/',$myurl);
+		$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where ( `author-link` regexp '%s' or `tag` regexp '%s' or tag regexp '%s' )) ",
+			dbesc($myurl . '$'),
+			dbesc($myurl . '\\]'),
+			dbesc($diasp_url . '\\]')
+		);
+
+		if ($max_id > 0)
+			$sql_extra .= ' AND `item`.`id` <= '.intval($max_id);
+
+		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
+			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
+			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
+			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
+			FROM `item`, `contact`
+			WHERE `item`.`uid` = %d
+			AND `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
+			AND `contact`.`id` = `item`.`contact-id`
+			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+			$sql_extra
+			AND `item`.`id`>%d
+			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
+			intval($user_info['uid']),
+			intval($since_id),
+			intval($start),	intval($count)
+		);
+
+		$ret = api_format_items($r,$user_info);
+
+		
+		$data = array('$statuses' => $ret);
+		switch($type){
+			case "atom":
+			case "rss":
+				$data = api_rss_extra($a, $data, $user_info);
+				break;
+			case "as":
+				$as = api_format_as($a, $ret, $user_info);
+				$as["title"] = $a->config['sitename']." Mentions";
+				$as['link']['url'] = $a->get_baseurl()."/";
+				return($as);
+				break;
+		}
+				
+		return  api_apply_template("timeline", $type, $data);
+	}
+	api_register_func('api/statuses/mentions','api_statuses_mentions', true);
+	api_register_func('api/statuses/replies','api_statuses_mentions', true);
 
 
 	function api_statuses_user_timeline(&$a, $type){
@@ -898,6 +1144,70 @@
 
 	api_register_func('api/favorites','api_favorites', true);
 
+	function api_format_as($a, $ret, $user_info) {
+
+		$as = array();
+		$as['title'] = $a->config['sitename']." Public Timeline";
+		$items = array();
+		foreach ($ret as $item) {
+			$singleitem["actor"]["displayName"] = $item["user"]["name"];
+			$singleitem["actor"]["id"] = $item["user"]["contact_url"];
+			$avatar[0]["url"] = $item["user"]["profile_image_url"];
+			$avatar[0]["rel"] = "avatar";
+			$avatar[0]["type"] = "";
+			$avatar[0]["width"] = 96;
+			$avatar[0]["height"] = 96;
+			$avatar[1]["url"] = $item["user"]["profile_image_url"];
+			$avatar[1]["rel"] = "avatar";
+			$avatar[1]["type"] = "";
+			$avatar[1]["width"] = 48;
+			$avatar[1]["height"] = 48;
+			$avatar[2]["url"] = $item["user"]["profile_image_url"];
+			$avatar[2]["rel"] = "avatar";
+			$avatar[2]["type"] = "";
+			$avatar[2]["width"] = 24;
+			$avatar[2]["height"] = 24;
+			$singleitem["actor"]["avatarLinks"] = $avatar;
+
+			$singleitem["actor"]["image"]["url"] = $item["user"]["profile_image_url"];
+			$singleitem["actor"]["image"]["rel"] = "avatar";
+			$singleitem["actor"]["image"]["type"] = "";
+			$singleitem["actor"]["image"]["width"] = 96;
+			$singleitem["actor"]["image"]["height"] = 96;
+			$singleitem["actor"]["type"] = "person";
+			$singleitem["actor"]["url"] = $item["person"]["contact_url"];
+			$singleitem["actor"]["statusnet:profile_info"]["local_id"] = $item["user"]["id"];
+			$singleitem["actor"]["statusnet:profile_info"]["following"] = $item["user"]["following"] ? "true" : "false";
+			$singleitem["actor"]["statusnet:profile_info"]["blocking"] = "false";
+			$singleitem["actor"]["contact"]["preferredUsername"] = $item["user"]["screen_name"];
+			$singleitem["actor"]["contact"]["displayName"] = $item["user"]["name"];
+			$singleitem["actor"]["contact"]["addresses"] = "";
+
+			$singleitem["body"] = $item["text"];
+			$singleitem["object"]["displayName"] = $item["text"];
+			$singleitem["object"]["id"] = $item["url"];
+			$singleitem["object"]["type"] = "note";
+			$singleitem["object"]["url"] = $item["url"];
+			//$singleitem["context"] =;
+			$singleitem["postedTime"] = date("c", strtotime($item["published"]));
+			$singleitem["provider"]["objectType"] = "service";
+			$singleitem["provider"]["displayName"] = "Test";
+			$singleitem["provider"]["url"] = "http://test.tld";
+			$singleitem["title"] = $item["text"];
+			$singleitem["verb"] = "post";
+			$singleitem["statusnet:notice_info"]["local_id"] = $item["id"];
+				$singleitem["statusnet:notice_info"]["source"] = $item["source"];
+				$singleitem["statusnet:notice_info"]["favorite"] = "false";
+				$singleitem["statusnet:notice_info"]["repeated"] = "false";
+				//$singleitem["original"] = $item;
+				$items[] = $singleitem;
+		}
+		$as['items'] = $items;
+		$as['link']['url'] = $a->get_baseurl()."/".$user_info["screen_name"]."/all";
+		$as['link']['rel'] = "alternate";
+		$as['link']['type'] = "text/html";
+		return($as);
+	}
 	
 	function api_format_items($r,$user_info) {
 
@@ -932,8 +1242,17 @@
 				$in_reply_to_status_id = 0;
 			}
 
+			// Workaround for ostatus messages where the title is identically to the body
+			$statusbody = trim(html2plain(bbcode($item['body']), 0));
+			$statustitle = trim($item['title']);
+
+			if (($statustitle != '') and (strpos($statusbody, $statustitle) !== false))
+				$statustext = trim($statusbody);
+			else
+				$statustext = trim($statustitle."\n\n".$statusbody);
+
 			$status = array(
-				'text'		=> trim($item['title']." \n".html2plain(bbcode($item['body']), 0)),
+				'text'		=> $statustext,
 				'truncated' => False,
 				'created_at'=> api_date($item['created']),
 				'in_reply_to_status_id' => $in_reply_to_status_id,
@@ -944,8 +1263,8 @@
 				'geo' => '',
 				'favorited' => $item['starred'] ? true : false,
 				'user' =>  $status_user ,
-				'statusnet_html'		=> bbcode($item['body']),
-				'statusnet_conversation_id'	=> 0,
+				'statusnet_html'		=> trim(bbcode($item['body'])),
+				'statusnet_conversation_id'	=> $item['parent'],
 			);
 
 			// Seesmic doesn't like the following content
@@ -1309,12 +1628,10 @@
 
 /*
 Not implemented by now:
-statuses/public_timeline
-statuses/mentions
-statuses/replies
+favorites
+favorites/create
+favorites/destroy
 statuses/retweets_of_me
-statuses/destroy
-statuses/retweet
 friendships/create
 friendships/destroy
 friendships/exists
@@ -1322,9 +1639,6 @@ friendships/show
 account/update_location
 account/update_profile_background_image
 account/update_profile_image
-favorites
-favorites/create
-favorites/destroy
 blocks/create
 blocks/destroy
 oauth/authorize

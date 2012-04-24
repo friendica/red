@@ -216,8 +216,6 @@ function item_post(&$a) {
 		$emailcc           = notags(trim($_REQUEST['emailcc']));
 		$body              = escape_tags(trim($_REQUEST['body']));
 
-		// $categories = TODO
-
 		$private = ((strlen($str_group_allow) || strlen($str_contact_allow) || strlen($str_group_deny) || strlen($str_contact_deny)) ? 1 : 0);
 
 		if(($parent_item) && 
@@ -255,14 +253,26 @@ function item_post(&$a) {
 		}
 	}
 
+        if(strlen($categories)) {
+	        // get the "fileas" tags for this post
+                $filedas = file_tag_file_to_list($categories, 'file');
+	}
+        // save old and new categories, so we can determine what needs to be deleted from pconfig
+        $categories_old = $categories;
+        $categories = file_tag_list_to_file(trim($_REQUEST['category']), 'category');
+        $categories_new = $categories;
+        if(strlen($filedas)) {
+	        // append the fileas stuff to the new categories list
+	        $categories .= file_tag_list_to_file($filedas, 'file');
+	}
+
 	// Work around doubled linefeeds in Tinymce 3.5b2
 	// First figure out if it's a status post that would've been
 	// created using tinymce. Otherwise leave it alone. 
 
 	$plaintext = (local_user() ? intval(get_pconfig(local_user(),'system','plaintext')) : 0);
 	if((! $parent) && (! $api_source) && (! $plaintext)) {
-		$body = str_replace("\r\n","\n",$body);
-		$body = str_replace("\n\n","\n",$body);
+		$body = fix_mce_lf($body);
 	}
 
 
@@ -340,7 +350,7 @@ function item_post(&$a) {
 				$image_uri = substr($image_uri,0, strpos($image_uri,'-'));
 				if(! strlen($image_uri))
 					continue;
-				$srch = '<' . intval($profile_uid) . '>';
+				$srch = '<' . intval($contact_record['id']) . '>';
 				$r = q("SELECT `id` FROM `photo` WHERE `allow_cid` = '%s' AND `allow_gid` = '' AND `deny_cid` = '' AND `deny_gid` = ''
 					AND `resource-id` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($srch),
@@ -436,7 +446,7 @@ function item_post(&$a) {
 
 	if(count($tags)) {
 		foreach($tags as $tag) {
-			handle_tag($a, $body, $inform, $str_tags, $profile_uid, $tag); 
+			handle_tag($a, $body, $inform, $str_tags, (local_user()) ? local_user() : $profile_uid , $tag); 
 		}
 	}
 
@@ -572,6 +582,9 @@ function item_post(&$a) {
 			intval($profile_uid)
 		);
 
+		// update filetags in pconfig
+                file_tag_update_pconfig($uid,$categories_old,$categories_new,'category');
+
 		proc_run('php', "include/notifier.php", 'edit_post', "$post_id");
 		if((x($_REQUEST,'return')) && strlen($return_path)) {
 			logger('return: ' . $return_path);
@@ -585,8 +598,8 @@ function item_post(&$a) {
 
 	$r = q("INSERT INTO `item` (`guid`, `uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `commented`, `received`, `changed`, `uri`, `thr-parent`, `title`, `body`, `app`, `location`, `coord`, 
-		`tag`, `inform`, `verb`, `postopts`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`, `bookmark`,`origin`, `moderated` )
-		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, %d )",
+		`tag`, `inform`, `verb`, `postopts`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`, `bookmark`,`origin`, `moderated`, `file` )
+		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, %d, '%s' )",
 		dbesc($datarray['guid']),
 		intval($datarray['uid']),
 		dbesc($datarray['type']),
@@ -624,14 +637,18 @@ function item_post(&$a) {
 		dbesc($datarray['attach']),
 		intval($datarray['bookmark']),
 		intval($datarray['origin']),
-		intval($datarray['moderated'])
-	);
+	        intval($datarray['moderated']),
+	        dbesc($datarray['file'])
+	       );
 
 	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
 		dbesc($datarray['uri']));
 	if(count($r)) {
 		$post_id = $r[0]['id'];
 		logger('mod_item: saved item ' . $post_id);
+
+		// update filetags in pconfig
+                file_tag_update_pconfig($uid,$categories_old,$categories_new,'category');
 
 		if($parent) {
 
@@ -742,7 +759,7 @@ function item_post(&$a) {
 	}
 	else {
 		logger('mod_item: unable to retrieve post that was just stored.');
-		notify( t('System error. Post not saved.'));
+		notice( t('System error. Post not saved.') . EOL);
 		goaway($a->get_baseurl() . "/" . $return_path );
 		// NOTREACHED
 	}

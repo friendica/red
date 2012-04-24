@@ -5,21 +5,31 @@ require_once('Photo.php');
 function wall_upload_post(&$a) {
 
 	if($a->argc > 1) {
-		$nick = $a->argv[1];
-		$r = q("SELECT * FROM `user` WHERE `nickname` = '%s' AND `blocked` = 0 LIMIT 1",
-			dbesc($nick)
-		);
-		if(! count($r))
-			return;
+	        if(! x($_FILES,'media')) {
+		        $nick = $a->argv[1];
+		        $r = q("SELECT `user`.*, `contact`.`id` FROM `user` LEFT JOIN `contact` on `user`.`uid` = `contact`.`uid`  WHERE `user`.`nickname` = '%s' AND `user`.`blocked` = 0 and `contact`.`self` = 1 LIMIT 1",
+			        dbesc($nick)
+		        );
 
+		        if(! count($r))
+                                return;
+		}
+                else {
+			$user_info = api_get_user($a);
+		        $r = q("SELECT `user`.*, `contact`.`id` FROM `user` LEFT JOIN `contact` on `user`.`uid` = `contact`.`uid`  WHERE `user`.`nickname` = '%s' AND `user`.`blocked` = 0 and `contact`.`self` = 1 LIMIT 1",
+			        dbesc($user_info['screen_name'])
+		        );
+                }
 	}
 	else
 		return;
+
 
 	$can_post  = false;
 	$visitor   = 0;
 
 	$page_owner_uid   = $r[0]['uid'];
+	$default_cid      = $r[0]['id'];
 	$page_owner_nick  = $r[0]['nickname'];
 	$community_page   = (($r[0]['page-flags'] == PAGE_COMMUNITY) ? true : false);
 
@@ -34,6 +44,7 @@ function wall_upload_post(&$a) {
 			if(count($r)) {
 				$can_post = true;
 				$visitor = remote_user();
+				$default_cid = $visitor;
 			}
 		}
 	}
@@ -43,12 +54,19 @@ function wall_upload_post(&$a) {
 		killme();
 	}
 
-	if(! x($_FILES,'userfile'))
+	if(! x($_FILES,'userfile') && ! x($_FILES,'media'))
 		killme();
 
-	$src      = $_FILES['userfile']['tmp_name'];
-	$filename = basename($_FILES['userfile']['name']);
-	$filesize = intval($_FILES['userfile']['size']);
+        if(x($_FILES,'userfile')) {
+	        $src      = $_FILES['userfile']['tmp_name'];
+	        $filename = basename($_FILES['userfile']['name']);
+	        $filesize = intval($_FILES['userfile']['size']);
+        }
+        elseif(x($_FILES,'media')) {
+	        $src = $_FILES['media']['tmp_name'];
+                $filename = basename($_FILES['media']['name']);
+	        $filesize = intval($_FILES['media']['size']);
+        }
 
 	$maximagesize = get_config('system','maximagesize');
 
@@ -76,7 +94,7 @@ function wall_upload_post(&$a) {
 	
 	$smallest = 0;
 
-	$defperm = '<' . $page_owner_uid . '>';
+	$defperm = '<' . $default_cid . '>';
 
 	$r = $ph->store($page_owner_uid, $visitor, $hash, $filename, t('Wall Photos'), 0, 0, $defperm);
 

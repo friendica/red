@@ -1,18 +1,18 @@
-<div id="group-sidebar" class="widget">
-	<div class="title tool">
-		<h3 class="label">$title</h3>
-		<a href="group/new" title="$createtext" class="action"><span class="icon text s16 add"></span></a>
+<div id="profile_side" >
+	<div class="">
+		<h3 style="margin-left: 2px;">$title<a href="group/new" title="$createtext" class="icon text_add"></a></h3>
 	</div>
 
 	<div id="sidebar-group-list">
-		<ul>
+		<ul class="menu-profile-side">
 			{{ for $groups as $group }}
-			<li class="tool  {{ if $group.selected }}selected{{ endif }}">
-				<a href="$group.href" class="label">
+			<li class="menu-profile-list">
+				<a href="$group.href" class="menu-profile-list-item">
+					<span class="menu-profile-icon {{ if $group.selected }}group_selected{{else}}group_unselected{{ endif }}"></span>
 					$group.text
 				</a>
 				{{ if $group.edit }}
-					<a href="$group.edit.href" class="action"><span class="icon text s10 edit"></span></a>
+					<a href="$group.edit.href" class="action"><span class="icon text_edit" ></span></a>
 				{{ endif }}
 				{{ if $group.cid }}
 					<input type="checkbox" 
@@ -25,5 +25,10 @@
 			{{ endfor }}
 		</ul>
 	</div>
+  {{ if $ungrouped }}
+  <div id="sidebar-ungrouped">
+  <a href="nogroup">$ungrouped</a>
+  </div>
+  {{ endif }}
 </div>	
 

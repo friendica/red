@@ -99,65 +99,10 @@ function dfrn_notify_post(&$a) {
 		$importer['forum'] = $page;
 	}
 
+
 	// if contact's ssl policy changed, update our links
 
-	$ssl_changed = false;
-
-	if($ssl_policy == 'self' && strstr($importer['url'],'https:')) {
-		$ssl_changed = true;
-		$importer['url']     = 	str_replace('https:','http:',$importer['url']);
-		$importer['nurl']    = normalise_link($importer['url']);
-		$importer['photo']   = 	str_replace('https:','http:',$importer['photo']);
-		$importer['thumb']   = 	str_replace('https:','http:',$importer['thumb']);
-		$importer['micro']   = 	str_replace('https:','http:',$importer['micro']);
-		$importer['request'] = 	str_replace('https:','http:',$importer['request']);
-		$importer['notify']  = 	str_replace('https:','http:',$importer['notify']);
-		$importer['poll']    = 	str_replace('https:','http:',$importer['poll']);
-		$importer['confirm'] = 	str_replace('https:','http:',$importer['confirm']);
-		$importer['poco']    = 	str_replace('https:','http:',$importer['poco']);
-	}
-
-	if($ssl_policy == 'full' && strstr($importer['url'],'http:')) {
-		$ssl_changed = true;
-		$importer['url']     = 	str_replace('http:','https:',$importer['url']);
-		$importer['nurl']    = normalise_link($importer['url']);
-		$importer['photo']   = 	str_replace('http:','https:',$importer['photo']);
-		$importer['thumb']   = 	str_replace('http:','https:',$importer['thumb']);
-		$importer['micro']   = 	str_replace('http:','https:',$importer['micro']);
-		$importer['request'] = 	str_replace('http:','https:',$importer['request']);
-		$importer['notify']  = 	str_replace('http:','https:',$importer['notify']);
-		$importer['poll']    = 	str_replace('http:','https:',$importer['poll']);
-		$importer['confirm'] = 	str_replace('http:','https:',$importer['confirm']);
-		$importer['poco']    = 	str_replace('http:','https:',$importer['poco']);
-	}
-
-	if($ssl_changed) {
-		q("update contact set 
-			url = '%s', 
-			nurl = '%s',
-			photo = '%s',
-			thumb = '%s',
-			micro = '%s',
-			request = '%s',
-			notify = '%s',
-			poll = '%s',
-			confirm = '%s',
-			poco = '%s'
-			where id = %d limit 1",
-			dbesc($importer['url']),
-			dbesc($importer['nurl']),
-			dbesc($importer['photo']),
-			dbesc($importer['thumb']),
-			dbesc($importer['micro']),
-			dbesc($importer['request']),
-			dbesc($importer['notify']),
-			dbesc($importer['poll']),
-			dbesc($importer['confirm']),
-			dbesc($importer['poco']),
-			intval($importer['id'])
-		);
-	}
-			
+	fix_contact_ssl_policy($importer,$ssl_policy);
 
 	logger('dfrn_notify: received notify from ' . $importer['name'] . ' for ' . $importer['username']);
 	logger('dfrn_notify: data: ' . $data, LOGGER_DATA);

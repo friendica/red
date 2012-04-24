@@ -9,6 +9,7 @@ function initEditor(cb) {
 		if(plaintext == 'none') {
 			$("#profile-jot-text-loading").hide();
 			$("#profile-jot-text").css({ 'height': 200, 'color': '#000' });
+			$("#profile-jot-text").contact_autocomplete(baseurl+"/acl");
 			editor = true;
 			$("a#jot-perms-icon").fancybox({
 				'transitionIn' : 'elastic',
@@ -23,13 +24,14 @@ function initEditor(cb) {
 			mode : "specific_textareas",
 			editor_selector: $editselect,
 			auto_focus: "profile-jot-text",
-			plugins : "bbcode,paste,fullscreen,autoresize",
+			plugins : "bbcode,paste,fullscreen,autoresize,inlinepopups",
 			theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,forecolor,formatselect,code,fullscreen",
 			theme_advanced_buttons2 : "",
 			theme_advanced_buttons3 : "",
 			theme_advanced_toolbar_location : "top",
 			theme_advanced_toolbar_align : "center",
 			theme_advanced_blockformats : "blockquote,code",
+			gecko_spellcheck : true,
 			paste_text_sticky : true,
 			entity_encoding : "raw",
 			add_unload_trigger : false,
@@ -40,6 +42,7 @@ function initEditor(cb) {
 			convert_urls: false,
 			content_css: "$baseurl/view/custom_tinymce.css",
 			theme_advanced_path : false,
+			file_browser_callback : "fcFileBrowser",
 			setup : function(ed) {
 				cPopup = null;
 				ed.onKeyDown.add(function(ed,e) {
@@ -296,7 +299,6 @@ function enableOnUser(){
 		
 	}
 
-
 	function jotClearLocation() {
 		$('#jot-coord').val('');
 		$('#profile-nolocation-wrapper').hide();
@@ -345,4 +347,3 @@ function enableOnUser(){
 	}
 
 </script>
-

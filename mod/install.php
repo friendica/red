@@ -340,7 +340,7 @@ function check_php(&$phpath, &$checks) {
 			$help .= t('The command line version of PHP on your system does not have "register_argc_argv" enabled.'). EOL;
 			$help .= t('This is required for message delivery to work.');
 		}
-		check_add($checks, t('PHP "register_argc_argv"'), $passed, true, $help);
+		check_add($checks, t('PHP register_argc_argv'), $passed, true, $help);
 	}
 	
 
@@ -380,9 +380,9 @@ function check_funcs(&$checks) {
 	
 	if(function_exists('apache_get_modules')){
 		if (! in_array('mod_rewrite',apache_get_modules())) {
-			check_add($ck_funcs, t('Apace mod_rewrite module'), false, true, t('Error: Apache webserver mod-rewrite module is required but not installed.'));
+			check_add($ck_funcs, t('Apache mod_rewrite module'), false, true, t('Error: Apache webserver mod-rewrite module is required but not installed.'));
 		} else {
-			check_add($ck_funcs, t('Apace mod_rewrite module'), true, true, "");
+			check_add($ck_funcs, t('Apache mod_rewrite module'), true, true, "");
 		}
 	}
 	if(! function_exists('curl_init')){
@@ -451,7 +451,7 @@ function load_database_rem($v, $i){
 function load_database($db) {
 
 	$str = file_get_contents('database.sql');
-	$str = array_reduce(explode("\n", $str),"load_database_rem","");
+//	$str = array_reduce(explode("\n", $str),"load_database_rem","");
 	$arr = explode(';',$str);
 	$errors = false;
 	foreach($arr as $a) {
@@ -464,3 +464,6 @@ function load_database($db) {
 	}
 	return $errors;
 }
+
+
+

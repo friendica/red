@@ -206,8 +206,12 @@ function network_content(&$a, $update = 0) {
 
 
 	);
-	$tpl = get_markup_template('common_tabs.tpl');
-	$o .= replace_macros($tpl, array('$tabs'=>$tabs));
+
+	$arr = array('tabs' => $tabs);
+	call_hooks('network_tabs', $arr);
+
+	$o .= replace_macros(get_markup_template('common_tabs.tpl'), array('$tabs'=> $arr['tabs']));
+
 	// --- end item filter tabs
 
 

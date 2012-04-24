@@ -3,6 +3,7 @@ $a->theme_info = array(
   'extends' => 'duepuntozero',
 );
 
+function purplezero_init(&$a) {
 $a->page['htmlhead'] .= <<< EOT
 <script>
 $(document).ready(function() {
@@ -49,3 +50,4 @@ $('.savedsearchterm').hover(
 
 </script>
 EOT;
+}

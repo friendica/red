@@ -9,6 +9,12 @@ require_once('include/queue_fn.php');
 
 function diaspora_dispatch_public($msg) {
 
+	$enabled = intval(get_config('system','diaspora_enabled'));
+	if(! $enabled) {
+		logger('mod-diaspora: disabled');
+		return;
+	}
+
 	$r = q("SELECT `user`.* FROM `user` WHERE `user`.`uid` IN ( SELECT `contact`.`uid` FROM `contact` WHERE `contact`.`network` = '%s' AND `contact`.`addr` = '%s' ) AND `account_expired` = 0 ",
 		dbesc(NETWORK_DIASPORA),
 		dbesc($msg['author'])
@@ -28,6 +34,12 @@ function diaspora_dispatch_public($msg) {
 function diaspora_dispatch($importer,$msg) {
 
 	$ret = 0;
+
+	$enabled = intval(get_config('system','diaspora_enabled'));
+	if(! $enabled) {
+		logger('mod-diaspora: disabled');
+		return;
+	}
 
 	// php doesn't like dashes in variable names
 
@@ -1160,7 +1172,7 @@ function diaspora_comment($importer,$xml,$msg) {
 		proc_run('php','include/notifier.php','comment',$message_id);
 	}
 
-	$myconv = q("SELECT `author-link`, `author-avatar`, `parent` FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `parent` != 0 ",
+	$myconv = q("SELECT `author-link`, `author-avatar`, `parent` FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `parent` != 0 AND `deleted` = 0 ",
 		dbesc($parent_item['uri']),
 		intval($importer['uid'])
 	);
@@ -1920,6 +1932,7 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 
 	$images = array();
 
+	$title = $item['title'];
 	$body = $item['body'];
 
 /*
@@ -1944,8 +1957,11 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 		}
 	}	
 */
-
 	$body = xmlify(html_entity_decode(bb2diaspora($body)));
+
+	if(strlen($title))
+		$body = xmlify('**' . html_entity_decode($title) . '**' . "\n") . $body;
+
 
 	if($item['attach']) {
 		$cnt = preg_match_all('/href=\"(.*?)\"(.*?)title=\"(.*?)\"/ism',$item['attach'],$matches,PREG_SET_ORDER);
@@ -2266,6 +2282,11 @@ function diaspora_send_mail($item,$owner,$contact) {
 }
 
 function diaspora_transmit($owner,$contact,$slap,$public_batch) {
+
+	$enabled = intval(get_config('system','diaspora_enabled'));
+	if(! $enabled) {
+		return 200;
+	}
 
 	$a = get_app();
 	$logid = random_string(4);

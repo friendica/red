@@ -23,16 +23,24 @@ function user_remove($uid) {
 	);
 
 	q("DELETE FROM `contact` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `gcign` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `group` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `group_member` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `intro` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `event` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `item` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `item_id` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `mail` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `mailacct` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `manage` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `notify` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `photo` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `attach` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `profile` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `profile_check` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `pconfig` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `search` WHERE `uid` = %d", intval($uid));
+	q("DELETE FROM `spam` WHERE `uid` = %d", intval($uid));
 	q("DELETE FROM `user` WHERE `uid` = %d", intval($uid));
 	if($uid == local_user()) {
 		unset($_SESSION['authenticated']);
@@ -134,11 +142,11 @@ function contact_photo_menu($contact) {
 	$posts_link = $a->get_baseurl() . '/network/?cid=' . $contact['id'];
 
 	$menu = Array(
-		t("View status") => $status_link,
-		t("View profile") => $profile_link,
-		t("View photos") => $photos_link,		
-		t("View recent") => $posts_link, 
-		t("Edit contact") => $contact_url,
+		t("View Status") => $status_link,
+		t("View Profile") => $profile_link,
+		t("View Photos") => $photos_link,		
+		t("Network Posts") => $posts_link, 
+		t("Edit Contact") => $contact_url,
 		t("Send PM") => $pm_url,
 	);
 	
@@ -150,7 +158,7 @@ function contact_photo_menu($contact) {
 	$o = "";
 	foreach($menu as $k=>$v){
 		if ($v!="") {
-			if(($k !== t("View recent")) && ($k !== t("Send PM")))
+			if(($k !== t("Network Posts")) && ($k !== t("Send PM")) && ($k !== t('Edit Contact')))
 				$o .= "<li><a target=\"redir\" href=\"$v\">$k</a></li>\n";
 			else
 				$o .= "<li><a href=\"$v\">$k</a></li>\n";
@@ -158,3 +166,36 @@ function contact_photo_menu($contact) {
 	}
 	return $o;
 }}
+
+
+function random_profile() {
+	$r = q("select url from gcontact where url like '%%://%%/profile/%%' order by rand() limit 1");
+	if(count($r))
+		return dirname($r[0]['url']);
+	return '';
+}
+
+
+function contacts_not_grouped($uid,$start = 0,$count = 0) {
+
+	if(! $count) {
+		$r = q("select count(*) as total from contact where uid = %d and self = 0 and id not in (select distinct(`contact-id`) from group_member where uid = %d) ",
+			intval($uid),
+			intval($uid)
+		);
+
+		return $r;
+
+
+	}
+
+	$r = q("select * from contact where uid = %d and self = 0 and id not in (select distinct(`contact-id`) from group_member where uid = %d) and blocked = 0 and pending = 0 limit %d, %d",
+		intval($uid),
+		intval($uid),
+		intval($start),
+		intval($count)
+	);
+
+	return $r;
+}
+

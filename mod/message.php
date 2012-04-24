@@ -48,8 +48,7 @@ function message_post(&$a) {
 
 	$plaintext = intval(get_pconfig(local_user(),'system','plaintext'));
 	if(! $plaintext) {
-		$body = str_replace("\r\n","\n",$body);
-		$body = str_replace("\n\n","\n",$body);
+		$body = fix_mce_lf($body);
 	}
 	
 	$ret = send_message($recipient, $body, $subject, $replyto);

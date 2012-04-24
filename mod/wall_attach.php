@@ -7,7 +7,7 @@ function wall_attach_post(&$a) {
 
 	if($a->argc > 1) {
 		$nick = $a->argv[1];
-		$r = q("SELECT * FROM `user` WHERE `nickname` = '%s' AND `blocked` = 0 LIMIT 1",
+		$r = q("SELECT `user`.*, `contact`.`id` FROM `user` LEFT JOIN `contact` on `user`.`uid` = `contact`.`uid`  WHERE `user`.`nickname` = '%s' AND `user`.`blocked` = 0 and `contact`.`self` = 1 LIMIT 1",
 			dbesc($nick)
 		);
 		if(! count($r))
@@ -21,6 +21,7 @@ function wall_attach_post(&$a) {
 	$visitor   = 0;
 
 	$page_owner_uid   = $r[0]['uid'];
+	$page_owner_cid   = $r[0]['id'];
 	$page_owner_nick  = $r[0]['nickname'];
 	$community_page   = (($r[0]['page-flags'] == PAGE_COMMUNITY) ? true : false);
 
@@ -73,7 +74,7 @@ function wall_attach_post(&$a) {
 		dbesc($filedata),
 		dbesc($created),
 		dbesc($created),
-		dbesc('<' . $page_owner_uid . '>'),
+		dbesc('<' . $page_owner_cid . '>'),
 		dbesc(''),
 		dbesc(''),
 		dbesc('')
@@ -97,8 +98,13 @@ function wall_attach_post(&$a) {
 		killme();
 	}
 
-	echo  '<br /><br />[attachment]' . $r[0]['id'] . '[/attachment]' . '<br />';
+	$lf = '<br />';
 
+	if(local_user() && intval(get_pconfig(local_user(),'system','plaintext')))
+		$lf = "\n";
+
+	echo  $lf . $lf . '[attachment]' . $r[0]['id'] . '[/attachment]' . $lf;
+	
 	killme();
 	// NOTREACHED
 }

@@ -17,6 +17,7 @@
   }
 
 
+
 	var src = null;
 	var prev = null;
 	var livetime = null;
@@ -119,9 +120,7 @@
 			var home = $(data).find('home').text();
 			if(home == 0) { home = '';  $('#home-update').removeClass('show') } else { $('#home-update').addClass('show') }
 			$('#home-update').html(home);
-
- 
-
+			
 			var intro = $(data).find('intro').text();
 			if(intro == 0) { intro = '';  $('#intro-update').removeClass('show') } else { $('#intro-update').addClass('show') }
 			$('#intro-update').html(intro);
@@ -129,15 +128,22 @@
 			var mail = $(data).find('mail').text();
 			if(mail == 0) { mail = '';  $('#mail-update').removeClass('show') } else { $('#mail-update').addClass('show') }
 			$('#mail-update').html(mail);
+			
+			var intro = $(data).find('intro').text();
+			if(intro == 0) { intro = '';  $('#intro-update-li').removeClass('show') } else { $('#intro-update-li').addClass('show') }
+			$('#intro-update-li').html(intro);
+
+			var mail = $(data).find('mail').text();
+			if(mail == 0) { mail = '';  $('#mail-update-li').removeClass('show') } else { $('#mail-update-li').addClass('show') }
+			$('#mail-update-li').html(mail);
 
 			var eNotif = $(data).find('notif')
-			notif = eNotif.attr('count');
-			if (notif>=0){
-				$("#nav-notifications-linkmenu").addClass("on");
+			
+			if (eNotif.children("note").length==0){
+				$("#nav-notifications-menu").html(notifications_empty);
+			} else {
 				nnm = $("#nav-notifications-menu");
-				
 				nnm.html(notifications_all + notifications_mark);
-				
 				//nnm.attr('popup','true');
 				eNotif.children("note").each(function(){
 					e = $(this);
@@ -145,10 +151,12 @@
 					html = notifications_tpl.format(e.attr('href'),e.attr('photo'), text, e.attr('date'), e.attr('seen'));
 					nnm.append(html);
 				});
-				
+			}
+			notif = eNotif.attr('count');
+			if (notif>0){
+				$("#nav-notifications-linkmenu").addClass("on");
 			} else {
-				//				$("#nav-notifications-linkmenu").removeClass("on");
-				//              $("#nav-notifications-menu").html(notifications_empty);
+				$("#nav-notifications-linkmenu").removeClass("on");
 			}
 			if(notif == 0) { notif = ''; $('#notify-update').removeClass('show') } else { $('#notify-update').addClass('show') }
 			$('#notify-update').html(notif);
@@ -551,12 +559,36 @@ function notifyMarkAll() {
 }
 
 
+// code from http://www.tinymce.com/wiki.php/How-to_implement_a_custom_file_browser
+function fcFileBrowser (field_name, url, type, win) {
+    /* TODO: If you work with sessions in PHP and your client doesn't accept cookies you might need to carry
+       the session name and session ID in the request string (can look like this: "?PHPSESSID=88p0n70s9dsknra96qhuk6etm5").
+       These lines of code extract the necessary parameters and add them back to the filebrowser URL again. */
+
+
+    var cmsURL = baseurl+"/fbrowser/"+type+"/";
+
+    tinyMCE.activeEditor.windowManager.open({
+        file : cmsURL,
+        title : 'File Browser',
+        width : 420,  // Your dimensions may differ - toy around with them!
+        height : 400,
+        resizable : "yes",
+        inline : "yes",  // This parameter only has an effect if you use the inlinepopups plugin!
+        close_previous : "no"
+    }, {
+        window : win,
+        input : field_name
+    });
+    return false;
+  }
+
 function setupFieldRichtext(){
 	tinyMCE.init({
 		theme : "advanced",
 		mode : "specific_textareas",
 		editor_selector: "fieldRichtext",
-		plugins : "bbcode,paste",
+		plugins : "bbcode,paste, inlinepopups",
 		theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,forecolor,formatselect,code",
 		theme_advanced_buttons2 : "",
 		theme_advanced_buttons3 : "",
@@ -573,6 +605,7 @@ function setupFieldRichtext(){
 		convert_urls: false,
 		content_css: baseurl+"/view/custom_tinymce.css",
 		theme_advanced_path : false,
+		file_browser_callback : "fcFileBrowser",
 	});
 }
 

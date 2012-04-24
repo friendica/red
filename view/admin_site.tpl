@@ -1,8 +1,45 @@
+<script>
+	$(function(){
+		
+		$("#cnftheme").fancybox({
+			width: 800,
+			autoDimensions: false,
+			onStart: function(){
+				var theme = $("#id_theme :selected").val();
+				$("#cnftheme").attr('href',"$baseurl/admin/themes/"+theme);
+			}, 
+			onComplete: function(){
+				$("div#fancybox-content form").submit(function(e){
+					var url = $(this).attr('action');
+					// can't get .serialize() to work...
+					var data={};
+					$(this).find("input").each(function(){
+						data[$(this).attr('name')] = $(this).val();
+					});
+					$(this).find("select").each(function(){
+						data[$(this).attr('name')] = $(this).children(":selected").val();
+					});
+					console.log(":)", url, data);
+					
+					$.post(url, data, function(data) {
+						if(timer) clearTimeout(timer);
+						NavUpdate();
+						$.fancybox.close();
+					})
+					
+					return false;
+				});
+				
+			}
+		});
+	});
+</script>
 <div id='adminpage'>
 	<h1>$title - $page</h1>
 	
 	<form action="$baseurl/admin/site" method="post">
-	
+    <input type='hidden' name='form_security_token' value='$form_security_token'>
+
 	{{ inc field_input.tpl with $field=$sitename }}{{ endinc }}
 	{{ inc field_textarea.tpl with $field=$banner }}{{ endinc }}
 	{{ inc field_select.tpl with $field=$language }}{{ endinc }}
@@ -17,7 +54,6 @@
 	
 	{{ inc field_checkbox.tpl with $field=$no_multi_reg }}{{ endinc }}
 	{{ inc field_checkbox.tpl with $field=$no_openid }}{{ endinc }}
-	{{ inc field_checkbox.tpl with $field=$no_gravatar }}{{ endinc }}
 	{{ inc field_checkbox.tpl with $field=$no_regfullname }}{{ endinc }}
 	
 	<div class="submit"><input type="submit" name="page_site" value="$submit" /></div>

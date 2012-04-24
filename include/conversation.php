@@ -342,7 +342,6 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 					'body' => template_escape($body),
 					'text' => strip_tags(template_escape($body)),
 					'ago' => (($item['app']) ? sprintf( t('%s from %s'),relative_date($item['created']),$item['app']) : relative_date($item['created'])),
-					'lock' => $lock,
 					'location' => template_escape($location),
 					'indent' => '',
 					'owner_name' => template_escape($owner_name),
@@ -400,6 +399,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 			}
 
 			$comments_collapsed = false;
+			$comments_seen = 0;
 			$comment_lastcollapsed = false;
 			$comment_firstcollapsed = false;
 			$blowhard = 0;
@@ -559,10 +559,10 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 					}
 				}
 
-				$edpost = (((($profile_owner == local_user()) && ($toplevelpost) && (intval($item['wall']) == 1)) || ($mode === 'notes'))
-						? array($a->get_baseurl($ssl_state)."/editpost/".$item['id'], t("Edit"))
-						: False);
-
+				if(local_user() && link_compare($a->contact['url'],$item['author-link']))
+					$edpost = array($a->get_baseurl($ssl_state)."/editpost/".$item['id'], t("Edit"));
+				else
+					$edpost = false;
 
 				$drop = '';
 				$dropping = false;
@@ -625,10 +625,6 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 					$profile_avatar = $a->contacts[$normalised]['thumb'];
 				else
 					$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $thumb);
-
-
-
-
 
 				$like    = ((x($alike,$item['id'])) ? format_like($alike[$item['id']],$alike[$item['id'] . '-l'],'like',$item['id']) : '');
 				$dislike = ((x($dlike,$item['id'])) ? format_like($dlike[$item['id']],$dlike[$item['id'] . '-l'],'dislike',$item['id']) : '');
@@ -713,7 +709,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 	}
 
 	$page_template = get_markup_template("conversation.tpl");
-	$o .= replace_macros($page_template, array(
+	$o = replace_macros($page_template, array(
 		'$baseurl' => $a->get_baseurl($ssl_state),
 		'$mode' => $mode,
 		'$user' => $a->user,
@@ -810,11 +806,11 @@ function item_photo_menu($item){
 	}
 
 	$menu = Array(
-		t("View status") => $status_link,
-		t("View profile") => $profile_link,
-		t("View photos") => $photos_link,
-		t("View recent") => $posts_link, 
-		t("Edit contact") => $contact_url,
+		t("View Status") => $status_link,
+		t("View Profile") => $profile_link,
+		t("View Photos") => $photos_link,
+		t("Network Posts") => $posts_link, 
+		t("Edit Contact") => $contact_url,
 		t("Send PM") => $pm_url,
 	);
 	
@@ -974,6 +970,8 @@ function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 		'$shortnoloc' => t('clear location'),
 		'$title' => "",
 		'$placeholdertitle' => t('Set title'),
+		'$category' => "",
+		'$placeholdercategory' => t('Categories (comma-separated list)'),
 		'$wait' => t('Please wait'),
 		'$permset' => t('Permission settings'),
 		'$shortpermset' => t('permissions'),
@@ -1076,7 +1074,6 @@ function find_thread_parent_index($arr,$x) {
 }
 
 function render_location_google($item) {
-	$location = '';
 	$location = (($item['location']) ? '<a target="map" title="' . $item['location'] . '" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : '');
 	$coord = (($item['coord']) ? '<a target="map" title="' . $item['coord'] . '" href="http://maps.google.com/?q=' . urlencode($item['coord']) . '">' . $item['coord'] . '</a>' : '');
 	if($coord) {
@@ -1087,4 +1084,3 @@ function render_location_google($item) {
 	}
 	return $location;
 }
-
