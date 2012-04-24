@@ -392,10 +392,22 @@ function dfrn_request_post(&$a) {
 				);
 			}
 
-			// contact is created. Now send an email verify form to the requestor.
-			//
+			// contact is created. Now create an introduction
 
+			$hash = random_string();
 
+			$r = q("insert into intro ( uid, `contact-id`, knowyou, note, hash, datetime, blocked )
+				values( %d , %d, %d, '%s', '%s', '%s', %d ) ",
+				intval($uid),
+				intval($contact_id),
+				((x($_POST,'knowyou') && ($_POST['knowyou'] == 1)) ? 1 : 0),
+				dbesc(notags(trim($_POST['dfrn-request-message']))),
+				dbesc($hash),
+				dbesc(datetime_convert()),
+				1
+			);
+				
+			// Next send an email verify form to the requestor.
 
 		}
 

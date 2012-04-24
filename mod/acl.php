@@ -38,6 +38,22 @@ function acl_init(&$a){
 			intval(local_user())
 		);
 		$contact_count = (int)$r[0]['c'];
+	} 
+	elseif ($type == 'm') {
+
+		// autocomplete for Private Messages
+
+		$r = q("SELECT COUNT(`id`) AS c FROM `contact` 
+				WHERE `uid` = %d AND `self` = 0 
+				AND `blocked` = 0 AND `pending` = 0 
+				AND `network` IN ('%s','%s','%s') $sql_extra2" ,
+			intval(local_user()),
+			dbesc(NETWORK_DFRN),
+			dbesc(NETWORK_ZOT),
+			dbesc(NETWORK_DIASPORA)
+		);
+		$contact_count = (int)$r[0]['c'];
+
 	} else {
 		$contact_count = 0;
 	}
@@ -83,6 +99,23 @@ function acl_init(&$a){
 			ORDER BY `name` ASC ",
 			intval(local_user())
 		);
+	}
+	elseif($type == 'm') {
+		$r = q("SELECT `id`, `name`, `nick`, `micro`, `network`, `url`, `attag` FROM `contact` 
+			WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 
+			AND `network` IN ('%s','%s','%s')
+			$sql_extra2
+			ORDER BY `name` ASC ",
+			intval(local_user()),
+			dbesc(NETWORK_DFRN),
+			dbesc(NETWORK_ZOT),
+			dbesc(NETWORK_DIASPORA)
+		);
+	}
+	else
+		$r = array();
+
+	if(count($r)) {
 		foreach($r as $g){
 			$contacts[] = array(
 				"type"  => "c",
@@ -93,11 +126,9 @@ function acl_init(&$a){
 				"link" => $g['url'],
 				"nick" => ($g['attag']) ? $g['attag'] : $g['nick'],
 			);
-		}
-			
+		}			
 	}
-	
-	
+		
 	$items = array_merge($groups, $contacts);
 	
 	$o = array(
