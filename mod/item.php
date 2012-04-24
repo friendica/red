@@ -872,7 +872,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 		//base tag has the tags name only
 		$basetag = str_replace('_',' ',substr($tag,1));
 		//create text for link
-		$newtag = '#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]';
+		$newtag = '#[url=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/url]';
 		//replace tag by the link
 		$body = str_replace($tag, $newtag, $body);
 	
