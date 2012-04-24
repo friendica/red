@@ -1249,11 +1249,11 @@ if(! function_exists('get_events')) {
 			$o .= '<div id="event-title-end"></div>';
 
 			foreach($r as $rr) {
-
 				if($rr['adjust'])
-					$md = datetime_convert('UTC',$a->timezone,$rr['start'],'Y/m\#\l\i\n\k\-j');
+					$md = datetime_convert('UTC',$a->timezone,$rr['start'],'Y/m');
 				else
-					$md = datetime_convert('UTC','UTC',$rr['start'],'Y/m\#\l\i\n\k\-j');
+					$md = datetime_convert('UTC','UTC',$rr['start'],'Y/m');
+				$md .= "/#link-".$rr['id'];
 
 				$title = substr(strip_tags(bbcode($rr['desc'])),0,32) . '... ';
 				if(! $title)
@@ -1262,7 +1262,7 @@ if(! function_exists('get_events')) {
 				$strt = datetime_convert('UTC',$rr['convert'] ? $a->timezone : 'UTC',$rr['start']);
 				$today = ((substr($strt,0,10) === datetime_convert('UTC',$a->timezone,'now','Y-m-d')) ? true : false);
 
-				$o .= '<div class="event-list" id="event-' . $rr['eid'] . '"></a> <a href="events/' . $md . '">' . $title . '</a>'
+				$o .= '<div class="event-list" id="event-' . $rr['id'] . '"></a> <a href="events/' . $md . '">' . $title . '</a>'
 				. day_translate(datetime_convert('UTC', $rr['adjust'] ? $a->timezone : 'UTC', $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '')
 				. '</div>' ;
 			}
