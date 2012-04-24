@@ -314,7 +314,7 @@ function dfrn_request_post(&$a) {
 
 		if($email_follow) {
 
-			if(! strpos($url,'@')) {
+			if(! validate_email($url)) {
 				notice( t('Invalid email address.') . EOL);
 				return;
 			}
@@ -346,11 +346,71 @@ function dfrn_request_post(&$a) {
 				}
 			}
 
+			$r = q("insert into contact ( uid, created, addr, name, nick, url, nurl, poll, notify, blocked, pending, network, rel )
+				values( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d ) ",
+				intval($uid),
+				dbesc(datetime_convert()),
+				dbesc($addr),
+				dbesc($name),
+				dbesc($nick),
+				dbesc($url),
+				dbesc($nurl),
+				dbesc($poll),
+				dbesc($notify),
+				intval($blocked),
+				intval($pending),
+				dbesc($network),
+				intval($rel)
+			);
 
+			$r = q("select id from contact where poll = '%s' and uid = %d limit 1",
+				dbesc($poll),
+				intval($uid)
+			);
+			if(count($r)) {
+				$contact_id = $r[0]['id'];
 
+				$photo = avatar_img($addr);
 
+				$r = q("UPDATE `contact` SET 
+					`photo` = '%s', 
+					`thumb` = '%s',
+					`micro` = '%s', 
+					`name-date` = '%s', 
+					`uri-date` = '%s', 
+					`avatar-date` = '%s', 
+					`hidden` = 0,
+					WHERE `id` = %d LIMIT 1
+				",
+					dbesc($photos[0]),
+					dbesc($photos[1]),
+					dbesc($photos[2]),
+					dbesc(datetime_convert()),
+					dbesc(datetime_convert()),
+					dbesc(datetime_convert()),
+					intval($contact_id)
+				);
+			}
+
+			// contact is created. Now create an introduction
+
+			$hash = random_string();
+
+			$r = q("insert into intro ( uid, `contact-id`, knowyou, note, hash, datetime, blocked )
+				values( %d , %d, %d, '%s', '%s', '%s', %d ) ",
+				intval($uid),
+				intval($contact_id),
+				((x($_POST,'knowyou') && ($_POST['knowyou'] == 1)) ? 1 : 0),
+				dbesc(notags(trim($_POST['dfrn-request-message']))),
+				dbesc($hash),
+				dbesc(datetime_convert()),
+				1
+			);
+				
+			// Next send an email verify form to the requestor.
 
 		}
+
 		else {
 
 			// Canonicalise email-style profile locator

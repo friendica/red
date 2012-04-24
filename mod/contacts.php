@@ -144,7 +144,7 @@ function contacts_content(&$a) {
 			goaway($a->get_baseurl(true) . '/contacts');
 			return; // NOTREACHED
 		}
-
+		
 		if($cmd === 'update') {
 
 			// pull feed and consume it, which should subscribe to the hub.
@@ -184,38 +184,9 @@ function contacts_content(&$a) {
 
 		if($cmd === 'drop') {
 
-			// create an unfollow slap
+			require_once('include/Contact.php');
 
-			if($orig_record[0]['network'] === NETWORK_OSTATUS) {
-				$tpl = get_markup_template('follow_slap.tpl');
-				$slap = replace_macros($tpl, array(
-					'$name' => $a->user['username'],
-					'$profile_page' => $a->get_baseurl() . '/profile/' . $a->user['nickname'],
-					'$photo' => $a->contact['photo'],
-					'$thumb' => $a->contact['thumb'],
-					'$published' => datetime_convert('UTC','UTC', 'now', ATOM_TIME),
-					'$item_id' => 'urn:X-dfrn:' . $a->get_hostname() . ':unfollow:' . random_string(),
-					'$title' => '',
-					'$type' => 'text',
-					'$content' => t('stopped following'),
-					'$nick' => $a->user['nickname'],
-					'$verb' => 'http://ostatus.org/schema/1.0/unfollow', // ACTIVITY_UNFOLLOW,
-					'$ostat_follow' => '' // '<as:verb>http://ostatus.org/schema/1.0/unfollow</as:verb>' . "\r\n"
-				));
-
-				if((x($orig_record[0],'notify')) && (strlen($orig_record[0]['notify']))) {
-					require_once('include/salmon.php');
-					slapper($a->user,$orig_record[0]['notify'],$slap);
-				}
-			}
-			elseif($orig_record[0]['network'] === NETWORK_DIASPORA) {
-				require_once('include/diaspora.php');
-				diaspora_unshare($a->user,$orig_record[0]);
-			}
-			elseif($orig_record[0]['network'] === NETWORK_DFRN) {
-				require_once('include/items.php');
-				dfrn_deliver($a->user,$orig_record[0],'placeholder', 1);
-			}
+			terminate_friendship($a->user,$a->contact,$orig_record[0]);
 
 			contact_remove($orig_record[0]['id']);
 			info( t('Contact has been removed.') . EOL );

@@ -86,7 +86,7 @@ function tagger_content(&$a) {
 	</target>
 EOT;
 
-	$tagid = $a->get_baseurl() . '/search?search=' . $term;
+	$tagid = $a->get_baseurl() . '/search?tag=' . $term;
 	$objtype = ACTIVITY_OBJ_TAGTERM;
 
 	$obj = <<< EOT
@@ -105,7 +105,7 @@ EOT;
 	if(! isset($bodyverb))
 			return; 
 
-	$termlink = html_entity_decode('&#x2317;') . '[url=' . $a->get_baseurl() . '/search?search=' . urlencode($term) . ']'. $term . '[/url]';
+	$termlink = html_entity_decode('&#x2317;') . '[url=' . $a->get_baseurl() . '/search?tag=' . urlencode($term) . ']'. $term . '[/url]';
 
 	$arr = array();
 
@@ -161,7 +161,7 @@ EOT;
 
 	if((! $blocktags) && (! stristr($item['tag'], ']' . $term . '[' ))) {
 		q("update item set tag = '%s' where id = %d limit 1",
-			dbesc($item['tag'] . (strlen($item['tag']) ? ',' : '') . '#[url=' . $a->get_baseurl() . '/search?search=' . $term . ']'. $term . '[/url]'),
+			dbesc($item['tag'] . (strlen($item['tag']) ? ',' : '') . '#[url=' . $a->get_baseurl() . '/search?tag=' . $term . ']'. $term . '[/url]'),
 			intval($item['id'])
 		);
 	}
@@ -177,7 +177,7 @@ EOT;
 		);
 		if(count($x) && !$x[0]['blocktags'] && (! stristr($r[0]['tag'], ']' . $term . '['))) {
 			q("update item set tag = '%s' where id = %d limit 1",
-				dbesc($r[0]['tag'] . (strlen($r[0]['tag']) ? ',' : '') . '#[url=' . $a->get_baseurl() . '/search?search=' . $term . ']'. $term . '[/url]'),
+				dbesc($r[0]['tag'] . (strlen($r[0]['tag']) ? ',' : '') . '#[url=' . $a->get_baseurl() . '/search?tag=' . $term . ']'. $term . '[/url]'),
 				intval($r[0]['id'])
 			);
 		}
