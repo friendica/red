@@ -37,7 +37,7 @@ function insertFormatting(comment,BBcode,id) {
 function cmtBbOpen(id) {
 	$(".comment-edit-bb-" + id).show();
 }
-function cmtBbClose(id) {
+function cmtBbClose(comment, id) {
 	$(".comment-edit-bb-" + id).hide();
 }
 $(document).ready(function() {
