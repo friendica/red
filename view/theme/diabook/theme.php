@@ -356,18 +356,12 @@ $(document).ready(function() {
             $(this).attr("src",newString+"?"+wmode+"&"+oldString);
         }
         else $(this).attr("src",ifr_source+"?"+wmode);
+       
     });
-    
-    $("a[href=#top]").click(function() {
-			$("html, body").animate({scrollTop:0}, "slow");
-			return false;
-		});
       
-
 });
 
 function yt_iframe() {
-
 
 	$("iframe").load(function() { 
 	var ifr_src = $(this).contents().find("body iframe").attr("src");
@@ -375,6 +369,35 @@ function yt_iframe() {
     });
 
 	};
+
+function scrolldown(){
+			$("html, body").animate({scrollTop:$(document).height()}, "slow");
+			return false;
+		};
+		
+function scrolltop(){
+			$("html, body").animate({scrollTop:0}, "slow");
+			return false;
+		};
+	 	
+$(window).scroll(function () { 
+		
+				
+		var scrollInfo = $(window).scrollTop();      
+		
+		if (scrollInfo <= "900"){
+      $("a#top").attr("id","down");
+      $("a#down").attr("onclick","scrolldown()");
+	 	$("img#scroll_top_bottom").attr("src","view/theme/diabook/icons/scroll_bottom.png");
+	 	} 
+	 	    
+      if (scrollInfo > "900"){
+      $("a#down").attr("id","top");
+      $("a#top").attr("onclick","scrolltop()");
+	 	$("img#scroll_top_bottom").attr("src","view/theme/diabook/icons/scroll_top.png");
+	 	}
+		
+    });
   
  </script>';
  
