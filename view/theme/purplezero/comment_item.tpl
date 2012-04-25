@@ -40,10 +40,12 @@
 				<div class="comment-edit-bb-end"></div>
 				<textarea id="comment-edit-text-$id" class="comment-edit-text-empty" name="body" onFocus="commentOpen(this,$id);cmtBbOpen($id);" onBlur="commentClose(this,$id);" >$comment</textarea>			
 				{{ if $qcomment }}
-				{{ for $qcomment as $qc }}				
-					<span class="fakelink qcomment" onclick="commentInsert(this,$id); return false;" >$qc</span>
-					&nbsp;
+					<select id="qcomment-select-$id" name="qcomment-$id" class="qcomment" onchange="qCommentInsert(this,$id);" >
+					<option value=""></option>
+				{{ for $qcomment as $qc }}
+					<option value="$qc">$qc</option>				
 				{{ endfor }}
+					</select>
 				{{ endif }}
 
 				<div class="comment-edit-text-end"></div>
