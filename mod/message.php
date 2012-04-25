@@ -313,6 +313,29 @@ function message_content(&$a) {
 				$from_url = $a->get_baseurl(true) . '/redir/' . $message['contact-id'];
 				$sparkle = ' sparkle';
 			}
+
+
+			$Text = $message['body'];
+			$saved_image = '';
+			$img_start = strpos($Text,'[img]data:');
+			$img_end = strpos($Text,'[/img]');
+
+			if($img_start !== false && $img_end !== false && $img_end > $img_start) {
+				$start_fragment = substr($Text,0,$img_start);
+				$img_start += strlen('[img]');
+				$saved_image = substr($Text,$img_start,$img_end - $img_start);
+				$end_fragment = substr($Text,$img_end + strlen('[/img]'));		
+				$Text = $start_fragment . '[!#saved_image#!]' . $end_fragment;
+				$search = '/\[url\=(.*?)\]\[!#saved_image#!\]\[\/url\]' . '/is';
+				$replace = '[url=' . z_path() . '/redir/' . $message['contact-id'] 
+					. '?f=1&url=' . '$1' . '][!#saved_image#!][/url]' ;
+
+				$Text = preg_replace($search,$replace,$Text);
+
+			if(strlen($saved_image))
+				$message['body'] = str_replace('[!#saved_image#!]', '[img]' . $saved_image . '[/img]',$Text);
+			}
+
 			$mails[] = array(
 				'id' => $message['id'],
 				'from_name' => template_escape($message['from-name']),
