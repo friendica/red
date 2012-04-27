@@ -553,6 +553,14 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 							'$myphoto' => $a->contact['thumb'],
 							'$comment' => t('Comment'),
 							'$submit' => t('Submit'),
+							'$edbold' => t('Bold'),
+							'$editalic' => t('Italic'),
+							'$eduline' => t('Underline'),
+							'$edquote' => t('Quote'),
+							'$edcode' => t('Code'),
+							'$edimg' => t('Image'),
+							'$edurl' => t('Link'),
+							'$edvideo' => t('Video'),
 							'$preview' => t('Preview'),
 							'$ww' => (($mode === 'network') ? $commentww : '')
 						));
