@@ -694,10 +694,26 @@ nav #nav-notifications-linkmenu {
 */
 
 #asidemain {
-  h4 {
-    font-size: 1.2em; }
-  #viewcontacts {
-    text-align: right; } }
+	h4 {
+		font-size: 1.2em; }
+	#viewcontacts {
+		text-align: right;
+	}
+	#contact-block {
+		width: 99%;
+		.contact-block-content {
+			width: 99%;
+			.contact-block-div {
+				float: left;
+				margin: 0 5px 5px 0;
+				width: 50px;
+				height: 50px;
+				padding: 3px;
+				position: relative;
+			}
+		}
+	}
+}
 
 .aprofile dt {
   background: transparent;
@@ -727,12 +743,6 @@ nav #nav-notifications-linkmenu {
   display: block;
   font-size: 1.2em;
   padding: 0.2em 0.5em; }
-
-#netsearch-box {
-  margin: 20px 0px 30px;
-  width: 150px;
-  #search-submit {
-    margin: 5px 5px 0px 0px; } }
 
 .ttright {
   margin: 0px 0px 0px 0px; }
@@ -1401,7 +1411,7 @@ div {
 	
 }
 
-[id$="-end"], [class$="end"] {
+[id$="-end"], [class$="-end"] {
   clear: both;
   margin: 0 0 10px 0; }
 
@@ -2207,10 +2217,12 @@ div {
   margin-left: 0px; }
 
 #netsearch-box {
-  margin-top: 20px;
-  width: 150px;
-  #search-submit {
-    margin: 5px 0px 0px 0px; } }
+	margin: 20px 0px 30px;
+	width: 135px;
+	#search-submit {
+		margin: 5px 5px 0px 0px;
+	}
+}
 
 /**
  * admin
