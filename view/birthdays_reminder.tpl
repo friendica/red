@@ -1,5 +1,5 @@
 {{ if $count }}
-<div id="birthday-notice" class="birthday-notice fakelink' $classtoday" onclick="openClose('birthday-wrapper');">$event_reminders ($count)</div>
+<div id="birthday-notice" class="birthday-notice fakelink $classtoday" onclick="openClose('birthday-wrapper');">$event_reminders ($count)</div>
 <div id="birthday-wrapper" style="display: none;" ><div id="birthday-title">$event_title</div>
 <div id="birthday-title-end"></div>
 {{ for $events as $event }}
