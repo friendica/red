@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1138 );
+define( 'UPDATE_VERSION' , 1139 );
 
 /**
  *
@@ -1213,3 +1213,6 @@ function update_1137() {
 	q("ALTER TABLE `item_id` ADD `sid` CHAR( 255 ) NOT NULL AFTER `uid` , ADD `service` CHAR( 255 ) NOT NULL AFTER `sid` , add index (`sid`), add index ( `service`) ");
 }
 
+function update_1138() {
+	q("alter table contact add archive tinyint(1) not null default '0' after hidden, add index (archive)");
+}

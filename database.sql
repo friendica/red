@@ -172,6 +172,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `writable` tinyint(1) NOT NULL DEFAULT '0',
   `forum` tinyint(1) NOT NULL DEFAULT '0',
   `hidden` tinyint(1) NOT NULL DEFAULT '0',
+  `archive` tinyint(1) NOT NULL DEFAULT '0',
   `pending` tinyint(1) NOT NULL DEFAULT '1',
   `rating` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0-5 reputation, 0 unknown, 1 call police, 5 inscrutable',
   `reason` text NOT NULL COMMENT 'why a rating was given - will help friends decide to make friends or not',
@@ -197,6 +198,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   KEY `nurl` (`nurl`),
   KEY `pending` (`pending`),
   KEY `hidden` (`hidden`),
+  KEY `archive` (`archive`),
   KEY `forum` (`forum`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
