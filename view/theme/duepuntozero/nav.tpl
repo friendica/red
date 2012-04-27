@@ -27,7 +27,9 @@
 	<a id="nav-home-link" class="nav-commlink $nav.home.2 $sel.home" href="$nav.home.0" title="$nav.home.3" >$nav.home.1</a>
 	<span id="home-update" class="nav-ajax-left"></span>
 	{{ endif }}
-
+	{{ if $nav.community }}
+	<a id="nav-community-link" class="nav-commlink $nav.community.2 $sel.community" href="$nav.community.0" title="$nav.community.3" >$nav.community.1</a>
+	{{ endif }}
 	{{ if $nav.introductions }}
 	<a id="nav-notify-link" class="nav-commlink $nav.introductions.2 $sel.introductions" href="$nav.introductions.0" title="$nav.introductions.3" >$nav.introductions.1</a>
 	<span id="intro-update" class="nav-ajax-left"></span>
@@ -58,9 +60,6 @@
 
 
 	{{ if $nav.manage }}<a id="nav-manage-link" class="nav-link $nav.manage.2 $sel.manage" href="$nav.manage.0" title="$nav.manage.3">$nav.manage.1</a>{{ endif }}
-	{{ if $nav.community }}
-	<a id="nav-community-link" class="nav-link $nav.community.2 $sel.community" href="$nav.community.0" title="$nav.community.3" >$nav.community.1</a>
-	{{ endif }}
 	</span>
 	<span id="nav-end"></span>
 	<span id="banner">$banner</span>

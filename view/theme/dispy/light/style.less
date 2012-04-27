@@ -694,10 +694,26 @@ nav #nav-notifications-linkmenu {
 */
 
 #asidemain {
-  h4 {
-    font-size: 1.2em; }
-  #viewcontacts {
-    text-align: right; } }
+	h4 {
+		font-size: 1.2em; }
+	#viewcontacts {
+		text-align: right;
+	}
+	#contact-block {
+		width: 99%;
+		.contact-block-content {
+			width: 99%;
+			.contact-block-div {
+				float: left;
+				margin: 0 5px 5px 0;
+				width: 50px;
+				height: 50px;
+				padding: 3px;
+				position: relative;
+			}
+		}
+	}
+}
 
 .aprofile dt {
   background: transparent;
@@ -727,12 +743,6 @@ nav #nav-notifications-linkmenu {
   display: block;
   font-size: 1.2em;
   padding: 0.2em 0.5em; }
-
-#netsearch-box {
-  margin: 20px 0px 30px;
-  width: 150px;
-  #search-submit {
-    margin: 5px 5px 0px 0px; } }
 
 .ttright {
   margin: 0px 0px 0px 0px; }
@@ -1386,10 +1396,36 @@ div {
     br {
       clear: left; } } }
 
-[id$="-end"], [class$="end"] {
+.profile-match-wrapper {
+	float: left;
+	margin: 0 5px 40px 0;
+	width: 120px;
+	height: 120px;
+	padding: 3px;
+	position: relative;
+}
+.icon.drophide.profile-match-ignore {
+	margin: 0 6px 0 -3px;
+}
+.profile-match-photo {
+	
+}
+
+[id$="-end"], [class$="-end"] {
   clear: both;
   margin: 0 0 10px 0; }
 
+.profile-match-end {
+	margin: 0 0 5px 0;
+}
+.profile-match-name {
+	font-weight: bold;
+	margin: auto auto auto 23px;
+}
+.profile-match-connect {
+	font-style: italic;
+	margin: auto auto auto 23px;
+}
 #advanced-profile-with {
   margin-left: 200px; }
 
@@ -1460,14 +1496,21 @@ div {
   background-repeat: no-repeat; }
 
 #photo-prev-link {
-  left: 0;
-  top: 0;
-  background-image: url(light/prev.png); }
+	background-image: url(light/prev.png);
+    height: 350px;
+    left: 1%;
+    top: 215px;
+    width: 50px;
+    z-index: 10;
+}
 
 #photo-next-link {
-  right: 0;
-  top: 0;
-  background-image: url(light/next.png); }
+	background-image: url(light/next.png);
+    height: 350px;
+    right: 45%;
+    top: 215px;
+    width: 50px;
+}
 
 #photo-prev-link a, #photo-next-link a {
   display: block;
@@ -2156,7 +2199,7 @@ div {
 #side-peoplefind-url {
   background-color: #e5e0cf;
   color: #666;
-  border: 1px 666 solid;
+  border: 1px #666 solid;
   margin-right: 3px;
   width: 75%;
   &:hover, &:focus {
@@ -2174,10 +2217,12 @@ div {
   margin-left: 0px; }
 
 #netsearch-box {
-  margin-top: 20px;
-  width: 150px;
-  #search-submit {
-    margin: 5px 0px 0px 0px; } }
+	margin: 20px 0px 30px;
+	width: 135px;
+	#search-submit {
+		margin: 5px 5px 0px 0px;
+	}
+}
 
 /**
  * admin
