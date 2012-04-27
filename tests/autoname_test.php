@@ -67,7 +67,10 @@ class AutonameTest extends PHPUnit_Framework_TestCase {
 		
 		$autoname2=autoname(1);
 		$this->assertEquals(1, count($autoname2));
-		
-		$this->assertFalse($autoname1==$autoname2); 
+
+		// The following test is problematic, with only 26 possibilities
+		// generating the same thing twice happens often aka
+		// birthday paradox
+//		$this->assertFalse($autoname1==$autoname2); 
 	}
 }

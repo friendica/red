@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.3.1322\n"
+"Project-Id-Version: 2.3.1324\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-24 10:00-0700\n"
+"POT-Creation-Date: 2012-04-26 10:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -218,7 +218,7 @@ msgid "link to source"
 msgstr ""
 
 #: ../../mod/events.php:296 ../../view/theme/diabook/theme.php:250
-#: ../../include/nav.php:52 ../../boot.php:1471
+#: ../../include/nav.php:52 ../../boot.php:1481
 msgid "Events"
 msgstr ""
 
@@ -531,7 +531,7 @@ msgstr ""
 
 #: ../../mod/photos.php:1214 ../../mod/editpost.php:104
 #: ../../mod/wallmessage.php:145 ../../mod/message.php:188
-#: ../../mod/message.php:357 ../../include/conversation.php:361
+#: ../../mod/message.php:380 ../../include/conversation.php:361
 #: ../../include/conversation.php:698 ../../include/conversation.php:975
 msgid "Please wait"
 msgstr ""
@@ -629,7 +629,7 @@ msgid "Edit"
 msgstr ""
 
 #: ../../mod/editpost.php:96 ../../mod/wallmessage.php:143
-#: ../../mod/message.php:186 ../../mod/message.php:355
+#: ../../mod/message.php:186 ../../mod/message.php:378
 #: ../../include/conversation.php:957
 msgid "Upload photo"
 msgstr ""
@@ -639,7 +639,7 @@ msgid "Attach file"
 msgstr ""
 
 #: ../../mod/editpost.php:98 ../../mod/wallmessage.php:144
-#: ../../mod/message.php:187 ../../mod/message.php:356
+#: ../../mod/message.php:187 ../../mod/message.php:379
 #: ../../include/conversation.php:961
 msgid "Insert web link"
 msgstr ""
@@ -2249,7 +2249,7 @@ msgstr ""
 msgid "Invalid contact."
 msgstr ""
 
-#: ../../mod/notes.php:44 ../../boot.php:1476
+#: ../../mod/notes.php:44 ../../boot.php:1486
 msgid "Personal Notes"
 msgstr ""
 
@@ -2306,17 +2306,17 @@ msgid ""
 msgstr ""
 
 #: ../../mod/wallmessage.php:133 ../../mod/message.php:178
-#: ../../mod/message.php:347
+#: ../../mod/message.php:370
 msgid "To:"
 msgstr ""
 
 #: ../../mod/wallmessage.php:134 ../../mod/message.php:179
-#: ../../mod/message.php:348
+#: ../../mod/message.php:371
 msgid "Subject:"
 msgstr ""
 
 #: ../../mod/wallmessage.php:140 ../../mod/message.php:183
-#: ../../mod/message.php:351 ../../mod/invite.php:113
+#: ../../mod/message.php:374 ../../mod/invite.php:113
 msgid "Your message:"
 msgstr ""
 
@@ -2500,7 +2500,7 @@ msgstr ""
 
 #: ../../mod/profperm.php:103 ../../view/theme/diabook/theme.php:247
 #: ../../include/profile_advanced.php:7 ../../include/profile_advanced.php:74
-#: ../../include/nav.php:50 ../../boot.php:1458
+#: ../../include/nav.php:50 ../../boot.php:1468
 msgid "Profile"
 msgstr ""
 
@@ -2715,7 +2715,7 @@ msgid "Access denied."
 msgstr ""
 
 #: ../../mod/fbrowser.php:23 ../../view/theme/diabook/theme.php:249
-#: ../../include/nav.php:51 ../../boot.php:1463
+#: ../../include/nav.php:51 ../../boot.php:1473
 msgid "Photos"
 msgstr ""
 
@@ -2890,7 +2890,7 @@ msgstr ""
 msgid "%s and You"
 msgstr ""
 
-#: ../../mod/message.php:242 ../../mod/message.php:340
+#: ../../mod/message.php:242 ../../mod/message.php:363
 msgid "Delete conversation"
 msgstr ""
 
@@ -2909,17 +2909,17 @@ msgstr[1] ""
 msgid "Message not available."
 msgstr ""
 
-#: ../../mod/message.php:324
+#: ../../mod/message.php:347
 msgid "Delete message"
 msgstr ""
 
-#: ../../mod/message.php:342
+#: ../../mod/message.php:365
 msgid ""
 "No secure communications available. You <strong>may</strong> be able to "
 "respond from the sender's profile page."
 msgstr ""
 
-#: ../../mod/message.php:346
+#: ../../mod/message.php:369
 msgid "Send Reply"
 msgstr ""
 
@@ -6064,7 +6064,7 @@ msgstr ""
 msgid "End this session"
 msgstr ""
 
-#: ../../include/nav.php:49 ../../boot.php:1453
+#: ../../include/nav.php:49 ../../boot.php:1463
 msgid "Status"
 msgstr ""
 
@@ -6827,34 +6827,34 @@ msgstr ""
 msgid "Message"
 msgstr ""
 
-#: ../../boot.php:1151 ../../boot.php:1223
+#: ../../boot.php:1151 ../../boot.php:1227
 msgid "g A l F d"
 msgstr ""
 
-#: ../../boot.php:1152 ../../boot.php:1224
+#: ../../boot.php:1152 ../../boot.php:1228
 msgid "F d"
 msgstr ""
 
-#: ../../boot.php:1177
-msgid "Birthday Reminders"
-msgstr ""
-
-#: ../../boot.php:1178
-msgid "Birthdays this week:"
-msgstr ""
-
-#: ../../boot.php:1201 ../../boot.php:1266
+#: ../../boot.php:1197 ../../boot.php:1268
 msgid "[today]"
 msgstr ""
 
-#: ../../boot.php:1247
+#: ../../boot.php:1209
+msgid "Birthday Reminders"
+msgstr ""
+
+#: ../../boot.php:1210
+msgid "Birthdays this week:"
+msgstr ""
+
+#: ../../boot.php:1261
+msgid "[No description]"
+msgstr ""
+
+#: ../../boot.php:1279
 msgid "Event Reminders"
 msgstr ""
 
-#: ../../boot.php:1248
+#: ../../boot.php:1280
 msgid "Events this week:"
-msgstr ""
-
-#: ../../boot.php:1260
-msgid "[No description]"
 msgstr ""
