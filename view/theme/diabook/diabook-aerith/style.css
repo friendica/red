@@ -150,7 +150,7 @@
 			  display: block; width: 28px; height: 28px; background-repeat: no-repeat;
 			  }	
 .video 	{ background-image: url("../../../view/theme/diabook/diabook-aerith/icons/video.png"); 
-			  display: block; width: 100%; height: 28px; background-repeat: no-repeat;
+			  display: block; width: 100%; height: 140px; background-repeat: no-repeat;
 			  }
 .audio2 	{ background-image: url("../../../view/theme/diabook/diabook-aerith/icons/audio.png"); 
 			  display: block; width: 28px; height: 28px; background-repeat: no-repeat;
@@ -1241,7 +1241,14 @@ aside #likes a:hover{
   margin-right: 20px;		
 	}
 #login-submit-wrapper{
-margin-bottom: 15px;
+  padding-top: 120px;
+  margin-bottom: 12px;
+	}
+aside #login-submit-button{
+  margin-left: 0px!important;	
+	}
+aside #login-extra-links{
+  padding-top: 0px!important;	
 	}
 .group_selected {
   background: url("../../../view/theme/diabook/icons/selected.png") no-repeat left center;
@@ -1616,7 +1623,7 @@ body .pageheader{
   max-width: 720px;
   word-wrap: break-word;
 
-  margin-bottom: 14px;
+
 }
 
 .wall-item-container .wall-item-content img {

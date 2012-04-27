@@ -3,23 +3,28 @@
 /*
  * Name: Diabook
  * Description: Diabook: report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
- * Version: (Version: 1.021)
+ * Version: (Version: 1.022)
  * Author: 
  */
 
 
 //print diabook-version for debugging
-$diabook_version = "Diabook (Version: 1.021)";
+$diabook_version = "Diabook (Version: 1.022)";
 $a->page['htmlhead'] .= sprintf('<script "%s" ></script>', $diabook_version);
 
 //change css on network and profilepages
 $cssFile = null;
+
 $resolution=false;
 $resolution = get_pconfig(local_user(), "diabook", "resolution");
 if ($resolution===false) $resolution="normal";
+
 $color = false;
-$color = get_pconfig(local_user(), "diabook", "color");
+$site_color = get_config("diabook", "color" );
+if (local_user()) {$color = get_pconfig(local_user(), "diabook", "color");}
+if ($color===false) $color=$site_color;
 if ($color===false) $color="diabook";
+
 if ($color=="diabook") $color_path = "/";
 if ($color=="aerith") $color_path = "/diabook-aerith/";
 if ($color=="blue") $color_path = "/diabook-blue/";
@@ -291,7 +296,9 @@ if ($a->argv[0].$a->argv[1] === "profile".$a->user['nickname']){
 // custom css
 if (!is_null($cssFile)) $a->page['htmlhead'] .= sprintf('<link rel="stylesheet" type="text/css" href="%s" />', $cssFile);
 
-
+//footer
+$tpl = get_markup_template('footer.tpl');
+$a->page['footer'] .= replace_macros($tpl, array());
 
 //load jquery.cookie.js
 $cookieJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.cookie.js";
@@ -354,19 +361,48 @@ $(document).ready(function() {
             $(this).attr("src",newString+"?"+wmode+"&"+oldString);
         }
         else $(this).attr("src",ifr_source+"?"+wmode);
+       
     });
       
-
 });
 
 function yt_iframe() {
-	
+
 	$("iframe").load(function() { 
 	var ifr_src = $(this).contents().find("body iframe").attr("src");
 	$("iframe").contents().find("body iframe").attr("src", ifr_src+"&wmode=transparent");
     });
 
 	};
+
+function scrolldown(){
+			$("html, body").animate({scrollTop:$(document).height()}, "slow");
+			return false;
+		};
+		
+function scrolltop(){
+			$("html, body").animate({scrollTop:0}, "slow");
+			return false;
+		};
+	 	
+$(window).scroll(function () { 
+		
+				
+		var scrollInfo = $(window).scrollTop();      
+		
+		if (scrollInfo <= "900"){
+      $("a#top").attr("id","down");
+      $("a#down").attr("onclick","scrolldown()");
+	 	$("img#scroll_top_bottom").attr("src","view/theme/diabook/icons/scroll_bottom.png");
+	 	} 
+	 	    
+      if (scrollInfo > "900"){
+      $("a#down").attr("id","top");
+      $("a#top").attr("onclick","scrolltop()");
+	 	$("img#scroll_top_bottom").attr("src","view/theme/diabook/icons/scroll_top.png");
+	 	}
+		
+    });
   
  </script>';
  
@@ -480,7 +516,7 @@ function close_lastlikes(){
 $a->page['htmlhead'] .= ' 
 
 <script>
-function insertFormatting(BBcode,id) {
+function insertFormatting(comment,BBcode,id) {
 	
 		var tmpStr = $("#comment-edit-text-" + id).val();
 		if(tmpStr == comment) {

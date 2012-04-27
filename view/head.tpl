@@ -79,6 +79,7 @@
 		ins = ins.replace('&amp;','&');
 		ins = ins.replace('&quot;','"');
 		$("#comment-edit-text-" + id).val(tmpStr + ins);
+		$(obj).val('');
 	}
 
 	function showHideComments(id) {

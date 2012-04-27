@@ -1556,9 +1556,9 @@
 	}
 	}
 	
-	if($resolution == "green") {	
+	if($resolution == "wide") {	
 	if (file_exists("$THEMEPATH/diabook-green/style-wide.css")){
-		echo file_get_contents("$THEMEPATH/diabook-pink/style-green.css");
+		echo file_get_contents("$THEMEPATH/diabook-green/style-wide.css");
 	}
 	if($diabook_font_size == "16"){
 		echo "
@@ -1834,9 +1834,9 @@
 	}
 	}
 	
-	if($resolution == "dark") {	
+	if($resolution == "wide") {	
 	if (file_exists("$THEMEPATH/diabook-dark/style-wide.css")){
-		echo file_get_contents("$THEMEPATH/diabook-dark/style-green.css");
+		echo file_get_contents("$THEMEPATH/diabook-dark/style-wide.css");
 	}
 	if($diabook_font_size == "16"){
 		echo "

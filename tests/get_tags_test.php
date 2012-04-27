@@ -202,8 +202,8 @@ class GetTagsTest extends PHPUnit_Framework_TestCase {
 		}
 		
 		$this->assertEquals("cid:15", $inform); 
-		$this->assertEquals("@[url=http://justatest.de]Mike Lastname[/url],#[url=baseurl/search?search=test%20case]test case[/url]", $str_tags);
-		$this->assertEquals("hi @[url=http://justatest.de]Mike Lastname[/url] This is a #[url=baseurl/search?search=test%20case]test case[/url]", $text); 
+		$this->assertEquals("@[url=http://justatest.de]Mike Lastname[/url],#[url=baseurl/search?tag=test%20case]test case[/url]", $str_tags);
+		$this->assertEquals("hi @[url=http://justatest.de]Mike Lastname[/url] This is a #[url=baseurl/search?tag=test%20case]test case[/url]", $text); 
 		
 	}
 
