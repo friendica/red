@@ -1671,6 +1671,7 @@ body .pageheader{
   height: 2.0em;
   width: 100%;
   font-size: 10px;
+  background: #444;
   color: #999999;
   border: 1px solid #DDD;
   padding: 0.3em;
