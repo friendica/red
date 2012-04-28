@@ -32,6 +32,8 @@ function profile_init(&$a) {
 
 	profile_load($a,$which,$profile);
 
+	$userblock = (($a->profile['hidewall'] && (! local_user()) && (! remote_user())) ? true : false);
+
 	if((x($a->profile,'page-flags')) && ($a->profile['page-flags'] == PAGE_COMMUNITY)) {
 		$a->page['htmlhead'] .= '<meta name="friendica.community" content="true" />';
 	}
@@ -41,8 +43,8 @@ function profile_init(&$a) {
 		$delegate = ((strstr($a->profile['openid'],'://')) ? $a->profile['openid'] : 'http://' . $a->profile['openid']);
 		$a->page['htmlhead'] .= '<link rel="openid.delegate" href="' . $delegate . '" />' . "\r\n";
 	}
-
-	if(! $blocked) {
+	// site block
+	if((! $blocked) && (! $userblock)) {
 		$keywords = ((x($a->profile,'pub_keywords')) ? $a->profile['pub_keywords'] : '');
 		$keywords = str_replace(array('#',',',' ',',,'),array('',' ',',',','),$keywords);
 		if(strlen($keywords))
