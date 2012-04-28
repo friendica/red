@@ -107,7 +107,7 @@ function onepoll_run($argv, $argc){
 		intval($importer_uid)
 	);
 	if(! count($r))
-		continue;
+		return;
 
 	$importer = $r[0];
 
