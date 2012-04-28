@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.3.1325\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-27 10:00-0700\n"
+"POT-Creation-Date: 2012-04-27 17:18-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -127,7 +127,7 @@ msgstr ""
 #: ../../mod/photos.php:1193 ../../mod/photos.php:1233
 #: ../../mod/photos.php:1273 ../../mod/photos.php:1304
 #: ../../mod/install.php:251 ../../mod/install.php:289
-#: ../../mod/localtime.php:45 ../../mod/contacts.php:296
+#: ../../mod/localtime.php:45 ../../mod/contacts.php:318
 #: ../../mod/settings.php:537 ../../mod/settings.php:683
 #: ../../mod/settings.php:744 ../../mod/settings.php:935
 #: ../../mod/manage.php:109 ../../mod/group.php:85 ../../mod/admin.php:392
@@ -279,7 +279,7 @@ msgid "Share this event"
 msgstr ""
 
 #: ../../mod/tagrm.php:11 ../../mod/tagrm.php:94
-#: ../../mod/dfrn_request.php:812 ../../mod/settings.php:538
+#: ../../mod/dfrn_request.php:817 ../../mod/settings.php:538
 #: ../../mod/settings.php:564 ../../addon/js_upload/js_upload.php:45
 msgid "Cancel"
 msgstr ""
@@ -323,7 +323,7 @@ msgid ""
 "and/or create new posts for you?"
 msgstr ""
 
-#: ../../mod/api.php:105 ../../mod/dfrn_request.php:800
+#: ../../mod/api.php:105 ../../mod/dfrn_request.php:805
 #: ../../mod/settings.php:849 ../../mod/settings.php:855
 #: ../../mod/settings.php:863 ../../mod/settings.php:867
 #: ../../mod/settings.php:872 ../../mod/settings.php:878
@@ -334,7 +334,7 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: ../../mod/api.php:106 ../../mod/dfrn_request.php:801
+#: ../../mod/api.php:106 ../../mod/dfrn_request.php:806
 #: ../../mod/settings.php:849 ../../mod/settings.php:855
 #: ../../mod/settings.php:863 ../../mod/settings.php:867
 #: ../../mod/settings.php:872 ../../mod/settings.php:878
@@ -807,71 +807,71 @@ msgstr ""
 msgid "[Name Withheld]"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:775
+#: ../../mod/dfrn_request.php:780
 msgid ""
 "Please enter your 'Identity Address' from one of the following supported "
 "communications networks:"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:791
+#: ../../mod/dfrn_request.php:796
 msgid "<strike>Connect as an email follower</strike> (Coming soon)"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:793
+#: ../../mod/dfrn_request.php:798
 msgid ""
 "If you are not yet a member of the free social web, <a href=\"http://dir."
 "friendica.com/siteinfo\">follow this link to find a public Friendica site "
 "and join us today</a>."
 msgstr ""
 
-#: ../../mod/dfrn_request.php:796
+#: ../../mod/dfrn_request.php:801
 msgid "Friend/Connection Request"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:797
+#: ../../mod/dfrn_request.php:802
 msgid ""
 "Examples: jojo@demo.friendica.com, http://demo.friendica.com/profile/jojo, "
 "testuser@identi.ca"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:798
+#: ../../mod/dfrn_request.php:803
 msgid "Please answer the following:"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:799
+#: ../../mod/dfrn_request.php:804
 #, php-format
 msgid "Does %s know you?"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:802
+#: ../../mod/dfrn_request.php:807
 msgid "Add a personal note:"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:804 ../../include/contact_selectors.php:76
+#: ../../mod/dfrn_request.php:809 ../../include/contact_selectors.php:76
 msgid "Friendica"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:805
+#: ../../mod/dfrn_request.php:810
 msgid "StatusNet/Federated Social Web"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:806 ../../mod/settings.php:634
+#: ../../mod/dfrn_request.php:811 ../../mod/settings.php:634
 #: ../../include/contact_selectors.php:80
 msgid "Diaspora"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:807
+#: ../../mod/dfrn_request.php:812
 #, php-format
 msgid ""
 " - please do not use this form.  Instead, enter %s into your Diaspora search "
 "bar."
 msgstr ""
 
-#: ../../mod/dfrn_request.php:808
+#: ../../mod/dfrn_request.php:813
 msgid "Your Identity Address:"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:811
+#: ../../mod/dfrn_request.php:816
 msgid "Submit Request"
 msgstr ""
 
@@ -1197,8 +1197,8 @@ msgid "Discard"
 msgstr ""
 
 #: ../../mod/notifications.php:51 ../../mod/notifications.php:160
-#: ../../mod/notifications.php:206 ../../mod/contacts.php:279
-#: ../../mod/contacts.php:322
+#: ../../mod/notifications.php:206 ../../mod/contacts.php:295
+#: ../../mod/contacts.php:344
 msgid "Ignore"
 msgstr ""
 
@@ -1250,7 +1250,7 @@ msgid "suggested by %s"
 msgstr ""
 
 #: ../../mod/notifications.php:153 ../../mod/notifications.php:200
-#: ../../mod/contacts.php:327
+#: ../../mod/contacts.php:350
 msgid "Hide this contact from others"
 msgstr ""
 
@@ -1400,207 +1400,231 @@ msgstr ""
 msgid "Contact has been unignored"
 msgstr ""
 
-#: ../../mod/contacts.php:192
+#: ../../mod/contacts.php:195
+msgid "Contact has been archived"
+msgstr ""
+
+#: ../../mod/contacts.php:195
+msgid "Contact has been unarchived"
+msgstr ""
+
+#: ../../mod/contacts.php:208
 msgid "Contact has been removed."
 msgstr ""
 
-#: ../../mod/contacts.php:222
+#: ../../mod/contacts.php:238
 #, php-format
 msgid "You are mutual friends with %s"
 msgstr ""
 
-#: ../../mod/contacts.php:226
+#: ../../mod/contacts.php:242
 #, php-format
 msgid "You are sharing with %s"
 msgstr ""
 
-#: ../../mod/contacts.php:231
+#: ../../mod/contacts.php:247
 #, php-format
 msgid "%s is sharing with you"
 msgstr ""
 
-#: ../../mod/contacts.php:248
+#: ../../mod/contacts.php:264
 msgid "Private communications are not available for this contact."
 msgstr ""
 
-#: ../../mod/contacts.php:251
+#: ../../mod/contacts.php:267
 msgid "Never"
 msgstr ""
 
-#: ../../mod/contacts.php:255
+#: ../../mod/contacts.php:271
 msgid "(Update was successful)"
 msgstr ""
 
-#: ../../mod/contacts.php:255
+#: ../../mod/contacts.php:271
 msgid "(Update was not successful)"
 msgstr ""
 
-#: ../../mod/contacts.php:257
+#: ../../mod/contacts.php:273
 msgid "Suggest friends"
 msgstr ""
 
-#: ../../mod/contacts.php:261
+#: ../../mod/contacts.php:277
 #, php-format
 msgid "Network type: %s"
 msgstr ""
 
-#: ../../mod/contacts.php:264
+#: ../../mod/contacts.php:280
 #, php-format
 msgid "%d contact in common"
 msgid_plural "%d contacts in common"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../mod/contacts.php:269
+#: ../../mod/contacts.php:285
 msgid "View all contacts"
 msgstr ""
 
-#: ../../mod/contacts.php:274 ../../mod/contacts.php:321
+#: ../../mod/contacts.php:290 ../../mod/contacts.php:343
 #: ../../mod/admin.php:579
 msgid "Unblock"
 msgstr ""
 
-#: ../../mod/contacts.php:274 ../../mod/contacts.php:321
+#: ../../mod/contacts.php:290 ../../mod/contacts.php:343
 #: ../../mod/admin.php:578
 msgid "Block"
 msgstr ""
 
-#: ../../mod/contacts.php:279 ../../mod/contacts.php:322
+#: ../../mod/contacts.php:295 ../../mod/contacts.php:344
 msgid "Unignore"
 msgstr ""
 
-#: ../../mod/contacts.php:284
+#: ../../mod/contacts.php:301
+msgid "Unarchive"
+msgstr ""
+
+#: ../../mod/contacts.php:301
+msgid "Archive"
+msgstr ""
+
+#: ../../mod/contacts.php:306
 msgid "Repair"
 msgstr ""
 
-#: ../../mod/contacts.php:294
+#: ../../mod/contacts.php:316
 msgid "Contact Editor"
 msgstr ""
 
-#: ../../mod/contacts.php:297
+#: ../../mod/contacts.php:319
 msgid "Profile Visibility"
 msgstr ""
 
-#: ../../mod/contacts.php:298
+#: ../../mod/contacts.php:320
 #, php-format
 msgid ""
 "Please choose the profile you would like to display to %s when viewing your "
 "profile securely."
 msgstr ""
 
-#: ../../mod/contacts.php:299
+#: ../../mod/contacts.php:321
 msgid "Contact Information / Notes"
 msgstr ""
 
-#: ../../mod/contacts.php:300
+#: ../../mod/contacts.php:322
 msgid "Edit contact notes"
 msgstr ""
 
-#: ../../mod/contacts.php:305 ../../mod/contacts.php:478
+#: ../../mod/contacts.php:327 ../../mod/contacts.php:511
 #: ../../mod/viewcontacts.php:62 ../../mod/nogroup.php:40
 #, php-format
 msgid "Visit %s's profile [%s]"
 msgstr ""
 
-#: ../../mod/contacts.php:306
+#: ../../mod/contacts.php:328
 msgid "Block/Unblock contact"
 msgstr ""
 
-#: ../../mod/contacts.php:307
+#: ../../mod/contacts.php:329
 msgid "Ignore contact"
 msgstr ""
 
-#: ../../mod/contacts.php:308
+#: ../../mod/contacts.php:330
 msgid "Repair URL settings"
 msgstr ""
 
-#: ../../mod/contacts.php:309
+#: ../../mod/contacts.php:331
 msgid "View conversations"
 msgstr ""
 
-#: ../../mod/contacts.php:311
+#: ../../mod/contacts.php:333
 msgid "Delete contact"
 msgstr ""
 
-#: ../../mod/contacts.php:315
+#: ../../mod/contacts.php:337
 msgid "Last update:"
 msgstr ""
 
-#: ../../mod/contacts.php:316
+#: ../../mod/contacts.php:338
 msgid "Update public posts"
 msgstr ""
 
-#: ../../mod/contacts.php:318 ../../mod/admin.php:1051
+#: ../../mod/contacts.php:340 ../../mod/admin.php:1051
 msgid "Update now"
 msgstr ""
 
-#: ../../mod/contacts.php:325
+#: ../../mod/contacts.php:347
 msgid "Currently blocked"
 msgstr ""
 
-#: ../../mod/contacts.php:326
+#: ../../mod/contacts.php:348
 msgid "Currently ignored"
 msgstr ""
 
-#: ../../mod/contacts.php:327
+#: ../../mod/contacts.php:349
+msgid "Currently archived"
+msgstr ""
+
+#: ../../mod/contacts.php:350
 msgid ""
 "Replies/likes to your public posts <strong>may</strong> still be visible"
 msgstr ""
 
-#: ../../mod/contacts.php:376
+#: ../../mod/contacts.php:403
 msgid "Suggestions"
 msgstr ""
 
-#: ../../mod/contacts.php:381 ../../mod/group.php:191
+#: ../../mod/contacts.php:408 ../../mod/group.php:191
 msgid "All Contacts"
 msgstr ""
 
-#: ../../mod/contacts.php:386
-msgid "Unblocked Contacts"
+#: ../../mod/contacts.php:413
+msgid "Unblocked"
 msgstr ""
 
-#: ../../mod/contacts.php:392
-msgid "Blocked Contacts"
+#: ../../mod/contacts.php:419
+msgid "Blocked"
 msgstr ""
 
-#: ../../mod/contacts.php:398
-msgid "Ignored Contacts"
+#: ../../mod/contacts.php:425
+msgid "Ignored"
 msgstr ""
 
-#: ../../mod/contacts.php:404
-msgid "Hidden Contacts"
+#: ../../mod/contacts.php:431
+msgid "Archived"
 msgstr ""
 
-#: ../../mod/contacts.php:454
+#: ../../mod/contacts.php:437
+msgid "Hidden"
+msgstr ""
+
+#: ../../mod/contacts.php:487
 msgid "Mutual Friendship"
 msgstr ""
 
-#: ../../mod/contacts.php:458
+#: ../../mod/contacts.php:491
 msgid "is a fan of yours"
 msgstr ""
 
-#: ../../mod/contacts.php:462
+#: ../../mod/contacts.php:495
 msgid "you are a fan of"
 msgstr ""
 
-#: ../../mod/contacts.php:479 ../../mod/nogroup.php:41
+#: ../../mod/contacts.php:512 ../../mod/nogroup.php:41
 msgid "Edit contact"
 msgstr ""
 
-#: ../../mod/contacts.php:500 ../../view/theme/diabook/theme.php:253
+#: ../../mod/contacts.php:533 ../../view/theme/diabook/theme.php:253
 #: ../../include/nav.php:139
 msgid "Contacts"
 msgstr ""
 
-#: ../../mod/contacts.php:504
+#: ../../mod/contacts.php:537
 msgid "Search your contacts"
 msgstr ""
 
-#: ../../mod/contacts.php:505 ../../mod/directory.php:57
+#: ../../mod/contacts.php:538 ../../mod/directory.php:57
 msgid "Finding: "
 msgstr ""
 
-#: ../../mod/contacts.php:506 ../../mod/directory.php:59
+#: ../../mod/contacts.php:539 ../../mod/directory.php:59
 #: ../../include/contact_widgets.php:33
 msgid "Find"
 msgstr ""
@@ -5853,12 +5877,12 @@ msgstr ""
 msgid "Finishes:"
 msgstr ""
 
-#: ../../include/delivery.php:434 ../../include/notifier.php:651
+#: ../../include/delivery.php:434 ../../include/notifier.php:652
 msgid "(no subject)"
 msgstr ""
 
 #: ../../include/delivery.php:441 ../../include/enotify.php:23
-#: ../../include/notifier.php:658
+#: ../../include/notifier.php:659
 msgid "noreply"
 msgstr ""
 
