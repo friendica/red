@@ -122,7 +122,7 @@ function contact_selector($selname, $selclass, $preselected = false, $options) {
 		$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"" . $x['size'] . "$\" $tabindex >\r\n";
 
 	$r = q("SELECT `id`, `name`, `url`, `network` FROM `contact` 
-		WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 AND `notify` != ''
+		WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 AND `archive` = 0 AND `notify` != ''
 		$sql_extra
 		ORDER BY `name` ASC ",
 		intval(local_user())
@@ -188,7 +188,7 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 		$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" $tabindex >\r\n";
 
 	$r = q("SELECT `id`, `name`, `url`, `network` FROM `contact` 
-		WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 AND `notify` != ''
+		WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 AND `archive` = 0 AND `notify` != ''
 		$sql_extra
 		ORDER BY `name` ASC ",
 		intval(local_user())

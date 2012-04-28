@@ -304,7 +304,7 @@ function notifier_run($argv, $argc){
 			$conversant_str = dbesc(implode(', ',$conversants));
 		}
 
-		$r = q("SELECT * FROM `contact` WHERE `id` IN ( $conversant_str ) AND `blocked` = 0 AND `pending` = 0");
+		$r = q("SELECT * FROM `contact` WHERE `id` IN ( $conversant_str ) AND `blocked` = 0 AND `pending` = 0 AND `archive` = 0");
 
 		if(count($r))
 			$contacts = $r;
@@ -520,7 +520,8 @@ function notifier_run($argv, $argc){
 							`user`.* 
 							FROM `contact` 
 							LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid` 
-							WHERE `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+							WHERE `contact`.`blocked` = 0 AND `contact`.`archive` = 0
+							AND `contact`.`pending` = 0
 							AND `contact`.`network` = '%s' AND `user`.`nickname` = '%s'
 							$sql_extra
 							AND `user`.`account_expired` = 0 LIMIT 1",
@@ -769,7 +770,7 @@ function notifier_run($argv, $argc){
 		);
 			
 		$r2 = q("SELECT `id`, `name`,`network` FROM `contact` 
-			WHERE `network` in ( '%s', '%s')  AND `uid` = %d AND `blocked` = 0 AND `pending` = 0
+			WHERE `network` in ( '%s', '%s')  AND `uid` = %d AND `blocked` = 0 AND `pending` = 0 AND `archive` = 0
 			AND `rel` != %d order by rand() ",
 			dbesc(NETWORK_DFRN),
 			dbesc(NETWORK_MAIL2),

@@ -26,6 +26,9 @@
 				{{ if $ignored }}
 					<li><div id="ignore-message">$ignored</div></li>
 				{{ endif }}
+				{{ if $archived }}
+					<li><div id="archive-message">$archived</div></li>
+				{{ endif }}
 
 				<li>&nbsp;</li>
 

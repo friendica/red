@@ -1571,7 +1571,7 @@ input#dfrn-url {
 .contact-photo-menu li a:hover { color: #FFFFFF; background: #3465A4; text-decoration: none; }
 
 
-#block-message, #ignore-message {
+#block-message, #ignore-message, #archive-message {
 	color: #FF0000;
 }
 
