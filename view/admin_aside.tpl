@@ -20,6 +20,7 @@
 
 <ul class='admin linklist'>
 	<li class='admin link button $admin.update.2'><a href='$admin.update.0'>$admin.update.1</a></li>
+	<li class='admin link button $admin.update.2'><a href='https://kakste.com/profile/inthegit'>Important Changes</a></li>
 </ul>
 
 

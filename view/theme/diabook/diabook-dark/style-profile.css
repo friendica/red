@@ -540,7 +540,7 @@ header #banner a:active,
 header #banner a:visited,
 header #banner a:link,
 header #banner a:hover {
-  color: #2e2f2e;
+  color: #eec;
   text-decoration: none;
   outline: none;
   vertical-align: middle;
@@ -661,7 +661,7 @@ nav .nav-menu-icon {
   border-radius: 5px 5px 0 0;
 }
 nav .nav-menu-icon:hover {
-  background-color: #eec;  
+  background-color: #308dbf;  
   position: relative;
   height: 22px;
   padding: 5px;
@@ -776,7 +776,7 @@ nav #nav-apps-link.selected {
 }
 
 .notify-seen {
-	background: none repeat scroll 0 0 #DDDDDD;
+	background: none repeat scroll 0 0 #666;
 	}
 
 ul.menu-popup {
@@ -1424,7 +1424,7 @@ transition: all 0.2s ease-in-out;
 .wall-item-comment-wrapper .comment-edit-text-full {
   font-size: 14px;
   height: 4em;
-  color: #2e302;
+  color: #eec;
   border: 1px solid #2e302;
 }
 .comment-edit-preview {
@@ -1571,10 +1571,11 @@ transition: all 0.2s ease-in-out;
   height: 2.0em;
   width: 99%;
   font-size: 15px;
-  color: #999999;
+  color: #eec;
   border: 1px solid #DDD;
   padding: 0.3em;
   margin-bottom: 10px;
+  background: #444;
 }
 .grey
 {
@@ -1667,6 +1668,7 @@ transition: all 0.2s ease-in-out;
     margin: 0 0 5px;
     width: 60%;
     border: 1px solid #d2d2d2;
+    background: #444;
 }
 #profile-jot-form #jot-title:-webkit-input-placeholder {
   font-weight: normal;
