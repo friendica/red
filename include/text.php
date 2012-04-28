@@ -558,7 +558,7 @@ function contact_block() {
 
 	if((! is_array($a->profile)) || ($a->profile['hide-friends']))
 		return $o;
-	$r = q("SELECT COUNT(*) AS `total` FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 and `pending` = 0 AND `hidden` = 0",
+	$r = q("SELECT COUNT(*) AS `total` FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 and `pending` = 0 AND `hidden` = 0 AND `archive` = 0",
 			intval($a->profile['uid'])
 	);
 	if(count($r)) {
@@ -569,7 +569,7 @@ function contact_block() {
 		$micropro = Null;
 		
 	} else {
-		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 and `pending` = 0 AND `hidden` = 0 ORDER BY RAND() LIMIT %d",
+		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 and `pending` = 0 AND `hidden` = 0 AND `archive` = 0 ORDER BY RAND() LIMIT %d",
 				intval($a->profile['uid']),
 				intval($shown)
 		);

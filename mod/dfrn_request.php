@@ -753,6 +753,11 @@ function dfrn_request_content(&$a) {
 			$myaddr = ((x($_GET,'address')) ? $_GET['address'] : '');
 		}
 
+		// last, try a zrl
+		if(! strlen($myaddr))
+			$myaddr = get_my_url();
+
+
 		$target_addr = $a->profile['nickname'] . '@' . substr(z_root(), strpos(z_root(),'://') + 3 );
 
 

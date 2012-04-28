@@ -182,6 +182,22 @@ function contacts_content(&$a) {
 			return; // NOTREACHED
 		}
 
+
+		if($cmd === 'archive') {
+			$archived = (($orig_record[0]['archive']) ? 0 : 1);
+			$r = q("UPDATE `contact` SET `archive` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
+				intval($archived),
+				intval($contact_id),
+				intval(local_user())
+			);
+			if($r) {
+				//notice( t('Contact has been ') . (($archived) ? t('archived') : t('unarchived')) . EOL );
+				info( (($archived) ? t('Contact has been archived') : t('Contact has been unarchived')) . EOL );
+			}
+			goaway($a->get_baseurl(true) . '/contacts/' . $contact_id);
+			return; // NOTREACHED
+		}
+
 		if($cmd === 'drop') {
 
 			require_once('include/Contact.php');
@@ -280,6 +296,12 @@ function contacts_content(&$a) {
 				'url'   => $a->get_baseurl(true) . '/contacts/' . $contact_id . '/ignore',
 				'sel'   => '',
 			),
+
+			array(
+				'label' => (($contact['archive']) ? t('Unarchive') : t('Archive') ),
+				'url'   => $a->get_baseurl(true) . '/contacts/' . $contact_id . '/archive',
+				'sel'   => '',
+			),
 			array(
 				'label' => t('Repair'),
 				'url'   => $a->get_baseurl(true) . '/crepair/' . $contact_id,
@@ -324,6 +346,7 @@ function contacts_content(&$a) {
 			'$info' => $contact['info'],
 			'$blocked' => (($contact['blocked']) ? t('Currently blocked') : ''),
 			'$ignored' => (($contact['readonly']) ? t('Currently ignored') : ''),
+			'$archived' => (($contact['archive']) ? t('Currently archived') : ''),
 			'$hidden' => array('hidden', t('Hide this contact from others'), ($contact['hidden'] == 1), t('Replies/likes to your public posts <strong>may</strong> still be visible')),
 			'$photo' => $contact['photo'],
 			'$name' => $contact['name'],
@@ -365,6 +388,10 @@ function contacts_content(&$a) {
 		$sql_extra = " AND `readonly` = 1 ";
 		$ignored = true;
 	}
+	elseif(($a->argc == 2) && ($a->argv[1] === 'archived')) {
+		$sql_extra = " AND `archive` = 1 ";
+		$archived = true;
+	}
 	else
 		$sql_extra = " AND `blocked` = 0 ";
 
@@ -383,25 +410,31 @@ function contacts_content(&$a) {
 			'sel'   => ($all) ? 'active' : '',
 		),
 		array(
-			'label' => t('Unblocked Contacts'),
+			'label' => t('Unblocked'),
 			'url'   => $a->get_baseurl(true) . '/contacts',
-			'sel'   => ((! $all) && (! $blocked) && (! $hidden) && (! $search) && (! $nets) && (! $ignored)) ? 'active' : '',
+			'sel'   => ((! $all) && (! $blocked) && (! $hidden) && (! $search) && (! $nets) && (! $ignored) && (! $archived)) ? 'active' : '',
 		),
 
 		array(
-			'label' => t('Blocked Contacts'),
+			'label' => t('Blocked'),
 			'url'   => $a->get_baseurl(true) . '/contacts/blocked',
 			'sel'   => ($blocked) ? 'active' : '',
 		),
 
 		array(
-			'label' => t('Ignored Contacts'),
+			'label' => t('Ignored'),
 			'url'   => $a->get_baseurl(true) . '/contacts/ignored',
 			'sel'   => ($ignored) ? 'active' : '',
 		),
 
 		array(
-			'label' => t('Hidden Contacts'),
+			'label' => t('Archived'),
+			'url'   => $a->get_baseurl(true) . '/contacts/archived',
+			'sel'   => ($archived) ? 'active' : '',
+		),
+
+		array(
+			'label' => t('Hidden'),
 			'url'   => $a->get_baseurl(true) . '/contacts/hidden',
 			'sel'   => ($hidden) ? 'active' : '',
 		),

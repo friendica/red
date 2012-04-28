@@ -33,7 +33,7 @@ function acl_init(&$a){
 	if ($type=='' || $type=='c'){
 		$r = q("SELECT COUNT(`id`) AS c FROM `contact` 
 				WHERE `uid` = %d AND `self` = 0 
-				AND `blocked` = 0 AND `pending` = 0 
+				AND `blocked` = 0 AND `pending` = 0 AND `archive` = 0
 				AND `notify` != '' $sql_extra2" ,
 			intval(local_user())
 		);
@@ -45,7 +45,7 @@ function acl_init(&$a){
 
 		$r = q("SELECT COUNT(`id`) AS c FROM `contact` 
 				WHERE `uid` = %d AND `self` = 0 
-				AND `blocked` = 0 AND `pending` = 0 
+				AND `blocked` = 0 AND `pending` = 0 AND `archive` = 0 
 				AND `network` IN ('%s','%s','%s') $sql_extra2" ,
 			intval(local_user()),
 			dbesc(NETWORK_DFRN),
@@ -94,7 +94,7 @@ function acl_init(&$a){
 	if ($type=='' || $type=='c'){
 	
 		$r = q("SELECT `id`, `name`, `nick`, `micro`, `network`, `url`, `attag` FROM `contact` 
-			WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 AND `notify` != ''
+			WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 AND `archive` = 0 AND `notify` != ''
 			$sql_extra2
 			ORDER BY `name` ASC ",
 			intval(local_user())
@@ -102,7 +102,7 @@ function acl_init(&$a){
 	}
 	elseif($type == 'm') {
 		$r = q("SELECT `id`, `name`, `nick`, `micro`, `network`, `url`, `attag` FROM `contact` 
-			WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 
+			WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 AND `archive` = 0
 			AND `network` IN ('%s','%s','%s')
 			$sql_extra2
 			ORDER BY `name` ASC ",
