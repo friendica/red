@@ -440,7 +440,7 @@ a:hover {
   clear: both;
 }
 .fakelink {
-  color: #996d73;
+  color: #D02B55;
   /* color: #3e3e8c; */
   text-decoration: none;
   cursor: pointer;
@@ -806,7 +806,7 @@ ul.menu-popup a {
   text-decoration: none;
 }
 ul.menu-popup a:hover {
-  background-color: #996d73; /*bdcdd4;*/
+  background-color: #D02B55; /*bdcdd4;*/
   color: #fff;
 }
 ul.menu-popup .menu-sep {
@@ -1270,7 +1270,7 @@ transition: all 0.2s ease-in-out;
   padding-top: 10px;
 }
 .tread-wrapper a{
-  color: #996d73;
+  color: #D02B55;
 }
 
 .wall-item-decor {
@@ -1801,7 +1801,7 @@ transition: all 0.2s ease-in-out;
 	 cursor: pointer;
 }
 .button.creation2 {
-    background-color: #996d73;
+    background-color: #D02B55;
     border: 1px solid #777777;
     color: white;
     border-radius: 3px 3px 3px 3px;
@@ -1933,7 +1933,7 @@ ul.tabs li {
   margin-left: 5px;
 }
 ul.tabs li .active {
-    background-color: #996d73;
+    background-color: #D02B55;
     border: 1px solid #777777;
     color: white;
     border-radius: 3px 3px 3px 3px;
