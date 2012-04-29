@@ -74,6 +74,14 @@ define ( 'HOOK_FILE',      1);
 define ( 'HOOK_FUNCTION',  2);
 
 /**
+ * DB update return values
+ */
+
+define ( 'UPDATE_SUCCESS', 0);
+define ( 'UPDATE_FAILED',  1);
+
+
+/**
  *
  * page/profile types
  *
