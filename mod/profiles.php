@@ -142,7 +142,7 @@ function profiles_post(&$a) {
 		$value = '';
 		if($is_default) {
 			if($marital != $orig[0]['marital']) {
-				$changes[] = '&hearts; ' . t('Marital Status');
+				$changes[] = '[color=#ff0000]&hearts;[/color] ' . t('Marital Status');
 				$value = $marital;
 			}
 			if($withchanged) {
