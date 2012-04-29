@@ -347,7 +347,7 @@ $a->page['htmlhead'] .= '
 	$("a.lightbox").fancybox(); // Select all links with lightbox class
  });
    
-$(document).ready(function() {
+$(window).load(function() {
 	var footer_top = $(document).height() - 30;
 	$("div#footerbox").attr("style", "border-top: 1px solid #D2D2D2; width: 70%;right: 15%;position: absolute;top:"+footer_top+"px;");
  });
