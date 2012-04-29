@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1139 );
+define( 'UPDATE_VERSION' , 1140 );
 
 /**
  *
@@ -1215,4 +1215,11 @@ function update_1137() {
 
 function update_1138() {
 	q("alter table contact add archive tinyint(1) not null default '0' after hidden, add index (archive)");
+}
+
+function update_1139() {
+	$r = q("alter table user add account_removed tinyint(1) not null default '0' after expire, add index(account_removed) ");
+	if(! $r)
+		return UPDATE_FAILED ;
+	return UPDATE_SUCCESS ;
 }

@@ -1019,6 +1019,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `pwdreset` char(255) NOT NULL,
   `maxreq` int(11) NOT NULL DEFAULT '10',
   `expire` int(10) unsigned NOT NULL DEFAULT '0',
+  `account_removed` tinyint(1) NOT NULL DEFAULT '0',
   `account_expired` tinyint(1) NOT NULL DEFAULT '0',
   `account_expires_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `expire_notification_sent` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -1036,7 +1037,8 @@ CREATE TABLE IF NOT EXISTS `user` (
   KEY `blocked` (`blocked`),
   KEY `verified` (`verified`),
   KEY `unkmail` (`unkmail`),
-  KEY `cntunkmail` (`cntunkmail`)
+  KEY `cntunkmail` (`cntunkmail`),
+  KEY `account_removed` (`account_removed`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
