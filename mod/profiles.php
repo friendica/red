@@ -177,7 +177,7 @@ function profiles_post(&$a) {
 				$value = $interest;
 			}
 			if($address != $orig[0]['address'] || $locality != $orig[0]['locality'] || $region != $orig[0]['region']
-				|| $country_name != $orig[0]['country_name']) {
+				|| $country_name != $orig[0]['country-name']) {
  				$changes[] = t('Location');
 			}
 
