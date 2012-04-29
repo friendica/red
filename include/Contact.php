@@ -51,6 +51,21 @@ function user_remove($uid) {
 
 
 function contact_remove($id) {
+
+	$r = q("select uid from contact where id = %d limit 1",
+		intval($id)
+	);
+	if((! count($r)) || (! intval($r[0]['uid'])))
+		return;
+
+	$archive = get_pconfig($r[0]['uid'], 'system','archive_removed_contacts');
+	if($archive) {
+		q("update contact set `archive` = 1, `network` = 'none', `writable` = 0 where id = %d limit 1",
+			intval($id)
+		);
+		return;
+	}
+
 	q("DELETE FROM `contact` WHERE `id` = %d LIMIT 1",
 		intval($id)
 	);
