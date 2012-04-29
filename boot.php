@@ -671,7 +671,7 @@ if(! function_exists('check_config')) {
 							if($retval) {
 								//send the administrator an e-mail
 								$email_tpl = get_intltext_template("update_fail_eml.tpl");
-								$email_tpl = replace_macros($email_tpl, array(
+								$email_msg = replace_macros($email_tpl, array(
 									'$sitename' => $a->config['sitename'],
 									'$siteurl' =>  $a->get_baseurl(),
 									'$update' => $x,
@@ -679,13 +679,16 @@ if(! function_exists('check_config')) {
 								));
 								$subject=sprintf(t('Update Error at %s'), $a->get_baseurl());
 									
-								mail($a->config['admin_email'], $subject, $text,
+								mail($a->config['admin_email'], $subject, $email_msg,
 									'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
 									. 'Content-type: text/plain; charset=UTF-8' . "\n"
 									. 'Content-transfer-encoding: 8bit' );
 								//try the logger
 								logger('CRITICAL: Update Failed: '. $x);
 							}
+							else
+								set_config('database','update_' . $x, 'success');
+								
 						}
 					}
 					set_config('system','build', DB_UPDATE_VERSION);
@@ -727,9 +730,10 @@ if(! function_exists('check_config')) {
 			foreach($installed as $i) {
 				if(! in_array($i['name'],$plugins_arr)) {
 					uninstall_plugin($i['name']);
-			}
-				else
+				}
+				else {
 					$installed_arr[] = $i['name'];
+				}
 			}
 		}
 
