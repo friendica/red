@@ -152,7 +152,7 @@ function onepoll_run($argv, $argc){
 				intval($contact['id'])
 			);
 
-			continue;
+			return;
 		}
 
 		if(! strstr($handshake_xml,'<?xml')) {
@@ -161,7 +161,7 @@ function onepoll_run($argv, $argc){
 				dbesc(datetime_convert()),
 				intval($contact['id'])
 			);
-			continue;
+			return;
 		}
 
 
@@ -188,7 +188,7 @@ function onepoll_run($argv, $argc){
 		}
 
 		if((intval($res->status) != 0) || (! strlen($res->challenge)) || (! strlen($res->dfrn_id)))
-			continue;
+			return;
 
 		if(((float) $res->dfrn_version > 2.21) && ($contact['poco'] == '')) {
 			q("update contact set poco = '%s' where id = %d limit 1",
@@ -221,7 +221,7 @@ function onepoll_run($argv, $argc){
 		if($final_dfrn_id != $orig_id) {
 			logger('poller: ID did not decode: ' . $contact['id'] . ' orig: ' . $orig_id . ' final: ' . $final_dfrn_id);	
 			// did not decode properly - cannot trust this site 
-			continue;
+			return;
 		}
 
 		$postvars['dfrn_id'] = $idtosend;
@@ -251,7 +251,7 @@ function onepoll_run($argv, $argc){
 		// Are we allowed to import from this person?
 
 		if($contact['rel'] == CONTACT_IS_FOLLOWER || $contact['blocked'] || $contact['readonly'])
-			continue;
+			return;
 
 		$xml = fetch_url($contact['poll']);
 	}
@@ -261,7 +261,7 @@ function onepoll_run($argv, $argc){
 
 		$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
 		if($mail_disabled)
-			continue;
+			return;
 
 		logger("onepoll: Mail: Enabled", LOGGER_DEBUG);
 
@@ -458,7 +458,7 @@ function onepoll_run($argv, $argc){
 				dbesc(datetime_convert()),
 				intval($contact['id'])
 			);
-			continue;
+			return;
 		}
 
 
