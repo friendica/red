@@ -667,7 +667,7 @@ if(! function_exists('check_config')) {
 							// call the specific update
 
 							$func = 'update_' . $x;
-							$retval = $func($a);
+							$retval = $func();
 							if($retval) {
 								//send the administrator an e-mail
 								$email_tpl = get_intltext_template("update_fail_eml.tpl");
