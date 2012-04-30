@@ -434,9 +434,14 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		else
 			$contact = null;
 
-		if(isset($new_relation) && $new_relation == CONTACT_IS_FRIEND) {
 
-			if(($contact) && ($contact['network'] === NETWORK_DIASPORA)) {
+		$forum_type = false;
+		if($user['page-flags'] == PAGE_SOAPBOX || $user['page-flags'] == PAGE_COMMUNITY)
+			$forum_type = true;
+
+		if((isset($new_relation) && $new_relation == CONTACT_IS_FRIEND) || ($forum_type)) {
+
+			if(($contact) && ($contact['network'] === NETWORK_DIASPORA) && (! $forum_type)) {
 				require_once('include/diaspora.php');
 				$ret = diaspora_share($user[0],$r[0]);
 				logger('mod_follow: diaspora_share returns: ' . $ret);
@@ -468,19 +473,37 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 					$arr['author-name'] = $arr['owner-name'] = $self[0]['name'];
 					$arr['author-link'] = $arr['owner-link'] = $self[0]['url'];
 					$arr['author-avatar'] = $arr['owner-avatar'] = $self[0]['thumb'];
-					$arr['verb'] = ACTIVITY_FRIEND;
-					$arr['object-type'] = ACTIVITY_OBJ_PERSON;
-				
+
 					$A = '[url=' . $self[0]['url'] . ']' . $self[0]['name'] . '[/url]';
+					$APhoto = '[url=' . $self[0]['url'] . ']' . '[img]' . $self[0]['thumb'] . '[/img][/url]';
+
 					$B = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]';
 					$BPhoto = '[url=' . $contact['url'] . ']' . '[img]' . $contact['thumb'] . '[/img][/url]';
-					$arr['body'] =  sprintf( t('%1$s is now friends with %2$s'), $A, $B)."\n\n\n".$BPhoto;
 
-					$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PERSON . '</type><title>' . $contact['name'] . '</title>'
-						. '<id>' . $contact['url'] . '/' . $contact['name'] . '</id>';
-					$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $contact['url'] . '" />' . "\n");
-					$arr['object'] .= xmlify('<link rel="photo" type="image/jpeg" href="' . $contact['thumb'] . '" />' . "\n");
-					$arr['object'] .= '</link></object>' . "\n";
+					if($forum_type) {
+						$arr['verb'] = ACTIVITY_JOIN;
+						$arr['object-type'] = ACTIVITY_OBJ_GROUP;
+						$arr['body'] =  sprintf( t('%1$s joined %2$s'), $B, $A)."\n\n\n".$APhoto;
+						$arr['object'] = '<object><type>' . ACTIVITY_OBJ_GROUP . '</type><title>' . $self[0]['name'] . '</title>'
+							. '<id>' . $self[0]['url'] . '/' . $self[0]['name'] . '</id>';
+						$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $self[0]['url'] . '" />' . "\n");
+						$arr['object'] .= xmlify('<link rel="photo" type="image/jpeg" href="' . $self[0]['thumb'] . '" />' . "\n");
+						$arr['object'] .= '</link></object>' . "\n";
+
+					}
+					else {
+						$arr['verb'] = ACTIVITY_FRIEND;
+					    $arr['object-type'] = ACTIVITY_OBJ_PERSON;
+						$arr['body'] =  sprintf( t('%1$s is now friends with %2$s'), $A, $B)."\n\n\n".$BPhoto;
+
+						$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PERSON . '</type><title>' . $contact['name'] . '</title>'
+							. '<id>' . $contact['url'] . '/' . $contact['name'] . '</id>';
+						$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $contact['url'] . '" />' . "\n");
+						$arr['object'] .= xmlify('<link rel="photo" type="image/jpeg" href="' . $contact['thumb'] . '" />' . "\n");
+						$arr['object'] .= '</link></object>' . "\n";
+					}				
+
+
 					$arr['last-child'] = 1;
 
 					$arr['allow_cid'] = $user[0]['allow_cid'];
