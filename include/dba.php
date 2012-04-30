@@ -74,9 +74,9 @@ class dba {
 		
 		if((! $this->db) || (! $this->connected))
 			return false;
-
-		$this->error = '';
 		
+		$this->error = '';
+
 		if($this->mysqli)
 			$result = @$this->db->query($sql);
 		else
@@ -122,7 +122,7 @@ class dba {
 		 */
 
 		if($result === false) {
-			logger('dba: ' . printable($sql) . ' returned false.');
+			logger('dba: ' . printable($sql) . ' returned false.' . "\n" . $this->error);
 			if(file_exists('dbfail.out'))
 				file_put_contents('dbfail.out', datetime_convert() . "\n" . printable($sql) . ' returned false' . "\n" . $this->error . "\n", FILE_APPEND);
 		}
