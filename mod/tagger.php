@@ -66,14 +66,14 @@ function tagger_content(&$a) {
 	}
 
 	$uri = item_new_uri($a->get_hostname(),$owner_uid);
-
+	$xterm = xmlify($term);
 	$post_type = (($item['resource-id']) ? t('photo') : t('status'));
 	$targettype = (($item['resource-id']) ? ACTIVITY_OBJ_PHOTO : ACTIVITY_OBJ_NOTE ); 
 
 	$link = xmlify('<link rel="alternate" type="text/html" href="' 
 		. $a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id'] . '" />' . "\n") ;
 
-	$body = $item['body'];
+	$body = xmlify($item['body']);
 
 	$target = <<< EOT
 	<target>
@@ -95,8 +95,8 @@ EOT;
 		<local>1</local>
 		<id>$tagid</id>
 		<link>$tagid</link>
-		<title>$term</title>
-		<content>$term</content>
+		<title>$xterm</title>
+		<content>$xterm</content>
 	</object>
 EOT;
 

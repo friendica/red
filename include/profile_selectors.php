@@ -7,7 +7,7 @@ function gender_selector($current="",$suffix="") {
 
 	$o .= "<select name=\"gender$suffix\" id=\"gender-select$suffix\" size=\"1\" >";
 	foreach($select as $selection) {
-		if($selection !== 'NOTRANSLATION')) {
+		if($selection !== 'NOTRANSLATION') {
 			$selected = (($selection == $current) ? ' selected="selected" ' : '');
 			$o .= "<option value=\"$selection\" $selected >$selection</option>";
 		}
@@ -22,7 +22,7 @@ function sexpref_selector($current="",$suffix="") {
 
 	$o .= "<select name=\"sexual$suffix\" id=\"sexual-select$suffix\" size=\"1\" >";
 	foreach($select as $selection) {
-		if($selection !== 'NOTRANSLATION')) {
+		if($selection !== 'NOTRANSLATION') {
 			$selected = (($selection == $current) ? ' selected="selected" ' : '');
 			$o .= "<option value=\"$selection\" $selected >$selection</option>";
 		}
@@ -38,7 +38,7 @@ function marital_selector($current="",$suffix="") {
 
 	$o .= "<select name=\"marital\" id=\"marital-select\" size=\"1\" >";
 	foreach($select as $selection) {
-		if($selection !== 'NOTRANSLATION')) {
+		if($selection !== 'NOTRANSLATION') {
 			$selected = (($selection == $current) ? ' selected="selected" ' : '');
 			$o .= "<option value=\"$selection\" $selected >$selection</option>";
 		}
