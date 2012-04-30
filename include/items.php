@@ -2230,7 +2230,7 @@ function local_delivery($importer,$data) {
 
 				$datarray = get_atom_elements($feed,$item);
 
-				$r = q("SELECT `uid`, `last-child`, `edited`, `body`  FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT `id`, `uid`, `last-child`, `edited`, `body`  FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['importer_uid'])
 				);
