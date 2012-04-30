@@ -3,13 +3,13 @@
 /*
  * Name: Diabook
  * Description: Diabook: report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
- * Version: (Version: 1.022)
+ * Version: (Version: 1.023)
  * Author: 
  */
 
 
 //print diabook-version for debugging
-$diabook_version = "Diabook (Version: 1.022)";
+$diabook_version = "Diabook (Version: 1.023)";
 $a->page['htmlhead'] .= sprintf('<script "%s" ></script>', $diabook_version);
 
 //change css on network and profilepages
@@ -313,6 +313,20 @@ $autogrowJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.autogro
 $a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $autogrowJS);
 
 //js scripts
+
+//check if community_home-plugin is activated and change css
+$nametocheck = "communityhome";
+$r = q("select id from addon where name = '%s' and installed = 1", dbesc($nametocheck));
+if(count($r) == "1") {
+	
+$a->page['htmlhead'] .= '
+<script>
+$(document).ready(function() {
+	$("div#login-submit-wrapper").attr("style","padding-top: 120px;");
+	});
+</script>';	
+}
+
 //comment-edit-wrapper on photo_view
 if ($a->argv[0].$a->argv[2] === "photos"."image"){
 
@@ -324,7 +338,6 @@ $a->page['htmlhead'] .= '
 			
 			});
     </script>';
-	
 }
 
 $a->page['htmlhead'] .= '
@@ -334,6 +347,10 @@ $a->page['htmlhead'] .= '
 	$("a.lightbox").fancybox(); // Select all links with lightbox class
  });
    
+$(window).load(function() {
+	var footer_top = $(document).height() - 30;
+	$("div#footerbox").attr("style", "border-top: 1px solid #D2D2D2; width: 70%;right: 15%;position: absolute;top:"+footer_top+"px;");
+ });
  </script>';
  
  

@@ -21,6 +21,7 @@
 
 .admin.linklist {
         border: 0px; padding: 0px;
+        list-style: none;
 }
 
 .admin.link {
@@ -476,7 +477,7 @@ a:hover {
   clear: both;
 }
 .fakelink {
-  color: #996d73;
+  color: #D02B55;
   /* color: #3e3e8c; */
   text-decoration: none;
   cursor: pointer;
@@ -614,7 +615,7 @@ header #banner #logo-text {
 }
 /* messages */
 #message-new {
-  background: #996d73;
+  background: #D02B55;
   border: 1px solid #333;
   width: 150px;
 }
@@ -943,7 +944,7 @@ ul.menu-popup a {
   text-decoration: none;
 }
 ul.menu-popup a:hover {
-  background-color: #996d73; /*bdcdd4;*/
+  background-color: #D02B55; /*bdcdd4;*/
   color: #fff;
 }
 ul.menu-popup .menu-sep {
@@ -991,7 +992,7 @@ ul.menu-popup .empty {
   background-color: #bdcdd4;
 }
 #nav-notifications-menu {
-  width: 400px;
+  width: 425px !important;
   max-height: 550px;
   overflow: auto;
 }
@@ -1185,7 +1186,7 @@ aside #side-peoplefind-url {
   height: auto;
 }
 aside #likes a, a:visited, a:link {
-		color: #996d73;
+		color: #D02B55;
 		text-decoration: none;
 		cursor: pointer;
 		
@@ -1220,7 +1221,7 @@ aside #likes a:hover{
   margin-right: 20px;		
 	}
 #login-submit-wrapper{
-  padding-top: 120px;
+
   margin-bottom: 12px;
 	}
 aside #login-submit-button{
@@ -1422,7 +1423,7 @@ body .pageheader{
   padding-top: 10px;
 }
 .tread-wrapper a{
-  color: #996d73;
+  color: #D02B55;
 }
 
 /*marker*/
@@ -2073,7 +2074,7 @@ body .pageheader{
 	 cursor: pointer;
 }
 .button.creation2 {
-    background-color: #996d73;
+    background-color: #D02B55;
     border: 1px solid #777777;
     color: white;
     border-radius: 3px 3px 3px 3px;
@@ -2207,7 +2208,7 @@ ul.tabs li {
   margin-left: 5px;
 }
 ul.tabs li .active {
-    background-color: #996d73;
+    background-color: #D02B55;
     border: 1px solid #777777;
     color: white;
     border-radius: 3px 3px 3px 3px;
@@ -2225,7 +2226,7 @@ ul.rs_tabs li {
   clear: both;
 }
 ul.rs_tabs li .selected {
-    background-color: #996d73;
+    background-color: #D02B55;
     border: 1px solid #777777;
     color: white;
     border-radius: 3px 3px 3px 3px;

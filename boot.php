@@ -11,7 +11,7 @@ require_once('include/cache.php');
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
 define ( 'FRIENDICA_VERSION',      '2.3.1326' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
-define ( 'DB_UPDATE_VERSION',      1139      );
+define ( 'DB_UPDATE_VERSION',      1140      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -72,6 +72,14 @@ define ( 'CONTACT_IS_FRIEND',   3);
 define ( 'HOOK_HOOK',      0);
 define ( 'HOOK_FILE',      1);
 define ( 'HOOK_FUNCTION',  2);
+
+/**
+ * DB update return values
+ */
+
+define ( 'UPDATE_SUCCESS', 0);
+define ( 'UPDATE_FAILED',  1);
+
 
 /**
  *
@@ -658,32 +666,29 @@ if(! function_exists('check_config')) {
 
 							// call the specific update
 
-//							global $db;
-//							$db->excep(TRUE);
-//							try {
-//								$db->beginTransaction();
-								$func = 'update_' . $x;
-								$func($a);
-//								$db->commit();
-//							} catch(Exception $ex) {
-//								$db->rollback();
-//								//send the administrator an e-mail
-//								$email_tpl = get_intltext_template("update_fail_eml.tpl");
-//								$email_tpl = replace_macros($email_tpl, array(
-//									'$sitename' => $a->config['sitename'],
-//									'$siteurl' =>  $a->get_baseurl(),
-//									'$update' => $x,
-//									'$error' => $ex->getMessage()));
-//								$subject=sprintf(t('Update Error at %s'), $a->get_baseurl());
+							$func = 'update_' . $x;
+							$retval = $func($a);
+							if($retval) {
+								//send the administrator an e-mail
+								$email_tpl = get_intltext_template("update_fail_eml.tpl");
+								$email_msg = replace_macros($email_tpl, array(
+									'$sitename' => $a->config['sitename'],
+									'$siteurl' =>  $a->get_baseurl(),
+									'$update' => $x,
+									'$error' => sprintf( t('Update %s failed. See error logs.'), $x)
+								));
+								$subject=sprintf(t('Update Error at %s'), $a->get_baseurl());
 									
-//								mail($a->config['admin_email'], $subject, $text,
-//										'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
-//										. 'Content-type: text/plain; charset=UTF-8' . "\n"
-//										. 'Content-transfer-encoding: 8bit' );
-//								//try the logger
-//								logger('update failed: '.$ex->getMessage().EOL);
-//							}
-//							$db->excep(FALSE);
+								mail($a->config['admin_email'], $subject, $email_msg,
+									'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+									. 'Content-type: text/plain; charset=UTF-8' . "\n"
+									. 'Content-transfer-encoding: 8bit' );
+								//try the logger
+								logger('CRITICAL: Update Failed: '. $x);
+							}
+							else
+								set_config('database','update_' . $x, 'success');
+								
 						}
 					}
 					set_config('system','build', DB_UPDATE_VERSION);
@@ -725,9 +730,10 @@ if(! function_exists('check_config')) {
 			foreach($installed as $i) {
 				if(! in_array($i['name'],$plugins_arr)) {
 					uninstall_plugin($i['name']);
-			}
-				else
+				}
+				else {
 					$installed_arr[] = $i['name'];
+				}
 			}
 		}
 
