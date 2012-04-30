@@ -207,7 +207,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			if($duplex == 1)
 				$params['duplex'] = 1;
 
-			if($user['page-flags'] == PAGE_COMMUNITY)
+			if($user[0]['page-flags'] == PAGE_COMMUNITY)
 				$params['page'] = 1;
 
 			logger('dfrn_confirm: Confirm: posting data to ' . $dfrn_confirm . ': ' . print_r($params,true), LOGGER_DATA);
@@ -436,7 +436,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 
 
 		$forum_type = false;
-		if($user['page-flags'] == PAGE_SOAPBOX || $user['page-flags'] == PAGE_COMMUNITY)
+		if($user[0]['page-flags'] == PAGE_SOAPBOX || $user[0]['page-flags'] == PAGE_COMMUNITY)
 			$forum_type = true;
 
 		if((isset($new_relation) && $new_relation == CONTACT_IS_FRIEND) || ($forum_type)) {
@@ -452,6 +452,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			$r = q("SELECT `hide-friends` FROM `profile` WHERE `uid` = %d AND `is-default` = 1 LIMIT 1",
 				intval($uid)
 			);
+
+
 			if((count($r)) && ($activity) && (! $hidden)) {
 
 				require_once('include/items.php');
@@ -483,13 +485,12 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 					if($forum_type) {
 						$arr['verb'] = ACTIVITY_JOIN;
 						$arr['object-type'] = ACTIVITY_OBJ_GROUP;
-						$arr['body'] =  sprintf( t('%1$s joined %2$s'), $B, $A)."\n\n\n".$APhoto;
+						$arr['body'] =  sprintf( t('%1$s welcomes new member %2$s'), $A, $B)."\n\n\n" .$BPhoto;
 						$arr['object'] = '<object><type>' . ACTIVITY_OBJ_GROUP . '</type><title>' . $self[0]['name'] . '</title>'
 							. '<id>' . $self[0]['url'] . '/' . $self[0]['name'] . '</id>';
 						$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $self[0]['url'] . '" />' . "\n");
 						$arr['object'] .= xmlify('<link rel="photo" type="image/jpeg" href="' . $self[0]['thumb'] . '" />' . "\n");
 						$arr['object'] .= '</link></object>' . "\n";
-
 					}
 					else {
 						$arr['verb'] = ACTIVITY_FRIEND;
