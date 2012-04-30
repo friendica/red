@@ -171,37 +171,44 @@ function network_content(&$a, $update = 0) {
 			'label' => t('Commented Order'),
 			'url'=>$a->get_baseurl(true) . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '?f=&cid=' . $_GET['cid'] : ''), 
 			'sel'=>$all_active,
+			'title'=> t('Sort by Comment Date'),
 		),
 		array(
 			'label' => t('Posted Order'),
 			'url'=>$a->get_baseurl(true) . '/' . str_replace('/new', '', $a->cmd) . '?f=&order=post' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
 			'sel'=>$postord_active,
+			'title' => t('Sort by Post Date'),
 		),
 
 		array(
 			'label' => t('Personal'),
 			'url' => $a->get_baseurl(true) . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&conv=1',
 			'sel' => $conv_active,
+			'title' => t('Posts that mention or involve you'),
 		),
 		array(
 			'label' => t('New'),
 			'url' => $a->get_baseurl(true) . '/' . str_replace('/new', '', $a->cmd) . '/new' . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : ''),
 			'sel' => $new_active,
+			'title' => t('Activity Stream - by date'),
 		),
 		array(
 			'label' => t('Starred'),
 			'url'=>$a->get_baseurl(true) . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&star=1',
 			'sel'=>$starred_active,
+			'title' => t('Favourite Posts'),
 		),
 		array(
 			'label' => t('Shared Links'),
 			'url'=>$a->get_baseurl(true) . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&bmark=1',
 			'sel'=>$bookmarked_active,
+			'title'=> t('Interesting Links'),
 		),	
 //		array(
 //			'label' => t('Spam'),
 //			'url'=>$a->get_baseurl(true) . '/network?f=&spam=1'
 //			'sel'=> $spam_active,
+//			'title' => t('Posts flagged as SPAM'),
 //		),	
 
 
