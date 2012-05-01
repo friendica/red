@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1140 );
+define( 'UPDATE_VERSION' , 1141 );
 
 /**
  *
@@ -1219,6 +1219,13 @@ function update_1138() {
 
 function update_1139() {
 	$r = q("alter table user add account_removed tinyint(1) not null default '0' after expire, add index(account_removed) ");
+	if(! $r)
+		return UPDATE_FAILED ;
+	return UPDATE_SUCCESS ;
+}
+
+function update_1140() {
+	$r = q("alter table addon add hidden tinyint(1) not null default '0' after installed, add index(hidden) ");
 	if(! $r)
 		return UPDATE_FAILED ;
 	return UPDATE_SUCCESS ;
