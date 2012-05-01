@@ -92,13 +92,10 @@ if((x($_SESSION,'language')) && ($_SESSION['language'] !== $lang)) {
 	load_translation_table($lang);
 }
 
-if(x($_GET,'zrl')) {
+if((x($_GET,'zrl')) && (! $install)) {
 	$_SESSION['my_url'] = $_GET['zrl'];
 	$a->query_string = preg_replace('/[\?&]zrl=(.*?)([\?&]|$)/is','',$a->query_string);
-	if(! $install) {
-		$arr = array('zrl' => $_SESSION['my_url'], 'url' => $a->cmd);
-		call_hooks('zrl_init',$arr);
-	}
+	zrl_init($a);
 }
 
 /**

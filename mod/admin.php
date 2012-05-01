@@ -61,6 +61,9 @@ function admin_post(&$a){
 			case 'logs':
 				admin_page_logs_post($a);
 				break;
+			case 'dbsync':
+				admin_page_dbsync_post($a);
+				break;
 			case 'update':
 				admin_page_remoteupdate_post($a);
 				break;
@@ -94,7 +97,8 @@ function admin_content(&$a) {
 		'users'	 =>	Array($a->get_baseurl(true)."/admin/users/", t("Users") , "users"),
 		'plugins'=>	Array($a->get_baseurl(true)."/admin/plugins/", t("Plugins") , "plugins"),
 		'themes' =>	Array($a->get_baseurl(true)."/admin/themes/", t("Themes") , "themes"),
-		'update' =>	Array($a->get_baseurl(true)."/admin/update/", t("Update") , "update")
+		'dbsync' => Array($a->get_baseurl(true)."/admin/dbsync/", t('DB updates'), "dbsync"),
+		'update' =>	Array($a->get_baseurl(true)."/admin/update/", t("Software Update") , "update")
 	);
 	
 	/* get plugins admin page */
@@ -141,6 +145,9 @@ function admin_content(&$a) {
 				break;
 			case 'logs':
 				$o = admin_page_logs($a);
+				break;
+			case 'dbsync':
+				$o = admin_page_dbsync($a);
 				break;
 			case 'update':
 				$o = admin_page_remoteupdate($a);
@@ -235,6 +242,7 @@ function admin_page_site_post(&$a){
 	$proxyuser			=	((x($_POST,'proxyuser'))		? notags(trim($_POST['proxyuser']))	: '');
 	$proxy				=	((x($_POST,'proxy'))			? notags(trim($_POST['proxy']))	: '');
 	$timeout			=	((x($_POST,'timeout'))			? intval(trim($_POST['timeout']))		: 60);
+	$delivery_interval	=	((x($_POST,'delivery_interval'))? intval(trim($_POST['delivery_interval']))		: 0);
 	$dfrn_only          =	((x($_POST,'dfrn_only'))	    ? True	:	False);
 	$ostatus_disabled   =   !((x($_POST,'ostatus_disabled')) ? True  :   False);
 	$diaspora_enabled   =   ((x($_POST,'diaspora_enabled')) ? True   :  False);
@@ -281,7 +289,7 @@ function admin_page_site_post(&$a){
 		}
 	}
 	set_config('system','ssl_policy',$ssl_policy);
-
+	set_config('system','delivery_interval',$delivery_interval);
 	set_config('config','sitename',$sitename);
 	if ($banner==""){
 		// don't know why, but del_config doesn't work...
@@ -425,6 +433,7 @@ function admin_page_site(&$a) {
 		'$proxyuser'		=> array('proxyuser', t("Proxy user"), get_config('system','proxyuser'), ""),
 		'$proxy'			=> array('proxy', t("Proxy URL"), get_config('system','proxy'), ""),
 		'$timeout'			=> array('timeout', t("Network timeout"), (x(get_config('system','curl_timeout'))?get_config('system','curl_timeout'):60), t("Value is in seconds. Set to 0 for unlimited (not recommended).")),
+		'$delivery_interval'			=> array('delivery_interval', t("Delivery interval"), (x(get_config('system','delivery_interval'))?get_config('system','delivery_interval'):2), t("Delay background delivery processes by this many seconds to reduce system load. Recommend: 4-5 for shared hosts, 2-3 for virtual private servers. 0-1 for large dedicated servers.")),
 
         '$form_security_token' => get_form_security_token("admin_site"),
 			
@@ -432,6 +441,62 @@ function admin_page_site(&$a) {
 
 }
 
+
+function admin_page_dbsync(&$a) {
+
+	$o = '';
+
+	if($a->argc > 3 && intval($a->argv[3]) && $a->argv[2] === 'mark') {
+		set_config('database', 'update_' . intval($a->argv[3]), 'success');
+		info( t('Update has been marked successful') . EOL);
+		goaway($a->get_baseurl(true) . '/admin/dbsync');
+	}
+
+	if($a->argc > 2 && intval($a->argv[2])) {
+		require_once('update.php');
+		$func = 'update_' . intval($a->argv[2]);
+		if(function_exists($func)) {
+			$retval = $func();
+			if($retval === UPDATE_FAILED) {
+				$o .= sprintf( t('Executing %s failed. Check system logs.'), $func); 
+			}
+			elseif($retval === UPDATE_SUCCESS) {
+				$o .= sprintf( t('Update %s was successfully applied.', $func));
+				set_config('database',$func, 'success');
+			}
+			else
+				$o .= sprintf( t('Update %s did not return a status. Unknown if it succeeded.'), $func);
+		}
+		else
+			$o .= sprintf( t('Update function %s could not be found.'), $func);
+		return $o;
+	}
+
+	$failed = array();
+	$r = q("select * from config where `cat` = 'database' ");
+	if(count($r)) {
+		foreach($r as $rr) {
+			$upd = intval(substr($rr['k'],7));
+			if($upd < 1139 || $rr['v'] === 'success')
+				continue;
+			$failed[] = $upd;
+		}
+	}
+	if(! count($failed))
+		return '<h3>' . t('No failed updates.') . '</h3>';
+
+	$o = replace_macros(get_markup_template('failed_updates.tpl'),array(
+		'$base' => $a->get_baseurl(true),
+		'$banner' => t('Failed Updates'),
+		'$desc' => t('This does not include updates prior to 1139, which did not return a status.'),
+		'$mark' => t('Mark success (if update was manually applied)'),
+		'$apply' => t('Attempt to execute this update step automatically'),
+		'$failed' => $failed
+	));	
+
+	return $o;
+
+}
 
 /**
  * Users admin page
@@ -977,7 +1042,6 @@ readable.");
 					$size = 5000000;
 				$seek = fseek($fp,0-$size,SEEK_END);
 				if($seek === 0) {
-					fgets($fp); // throw away the first partial line
 					$data = escape_tags(fread($fp,$size));
 					while(! feof($fp))
 						$data .= escape_tags(fread($fp,4096));

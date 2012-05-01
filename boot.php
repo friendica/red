@@ -9,9 +9,9 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1325' );
+define ( 'FRIENDICA_VERSION',      '2.3.1328' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
-define ( 'DB_UPDATE_VERSION',      1139      );
+define ( 'DB_UPDATE_VERSION',      1141      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -72,6 +72,14 @@ define ( 'CONTACT_IS_FRIEND',   3);
 define ( 'HOOK_HOOK',      0);
 define ( 'HOOK_FILE',      1);
 define ( 'HOOK_FUNCTION',  2);
+
+/**
+ * DB update return values
+ */
+
+define ( 'UPDATE_SUCCESS', 0);
+define ( 'UPDATE_FAILED',  1);
+
 
 /**
  *
@@ -193,6 +201,8 @@ define ( 'ACTIVITY_REQ_FRIEND',  NAMESPACE_ACTIVITY_SCHEMA . 'request-friend' );
 define ( 'ACTIVITY_UNFRIEND',    NAMESPACE_ACTIVITY_SCHEMA . 'remove-friend' );
 define ( 'ACTIVITY_FOLLOW',      NAMESPACE_ACTIVITY_SCHEMA . 'follow' );
 define ( 'ACTIVITY_UNFOLLOW',    NAMESPACE_ACTIVITY_SCHEMA . 'stop-following' );
+define ( 'ACTIVITY_JOIN',        NAMESPACE_ACTIVITY_SCHEMA . 'join' );
+
 define ( 'ACTIVITY_POST',        NAMESPACE_ACTIVITY_SCHEMA . 'post' );
 define ( 'ACTIVITY_UPDATE',      NAMESPACE_ACTIVITY_SCHEMA . 'update' );
 define ( 'ACTIVITY_TAG',         NAMESPACE_ACTIVITY_SCHEMA . 'tag' );
@@ -205,6 +215,7 @@ define ( 'ACTIVITY_OBJ_PHOTO',   NAMESPACE_ACTIVITY_SCHEMA . 'photo' );
 define ( 'ACTIVITY_OBJ_P_PHOTO', NAMESPACE_ACTIVITY_SCHEMA . 'profile-photo' );
 define ( 'ACTIVITY_OBJ_ALBUM',   NAMESPACE_ACTIVITY_SCHEMA . 'photo-album' );
 define ( 'ACTIVITY_OBJ_EVENT',   NAMESPACE_ACTIVITY_SCHEMA . 'event' );
+define ( 'ACTIVITY_OBJ_GROUP',   NAMESPACE_ACTIVITY_SCHEMA . 'group' );
 define ( 'ACTIVITY_OBJ_TAGTERM', NAMESPACE_DFRN            . '/tagterm' );
 define ( 'ACTIVITY_OBJ_PROFILE', NAMESPACE_DFRN            . '/profile' );
 
@@ -658,32 +669,29 @@ if(! function_exists('check_config')) {
 
 							// call the specific update
 
-//							global $db;
-//							$db->excep(TRUE);
-//							try {
-//								$db->beginTransaction();
-								$func = 'update_' . $x;
-								$func($a);
-//								$db->commit();
-//							} catch(Exception $ex) {
-//								$db->rollback();
-//								//send the administrator an e-mail
-//								$email_tpl = get_intltext_template("update_fail_eml.tpl");
-//								$email_tpl = replace_macros($email_tpl, array(
-//									'$sitename' => $a->config['sitename'],
-//									'$siteurl' =>  $a->get_baseurl(),
-//									'$update' => $x,
-//									'$error' => $ex->getMessage()));
-//								$subject=sprintf(t('Update Error at %s'), $a->get_baseurl());
+							$func = 'update_' . $x;
+							$retval = $func();
+							if($retval) {
+								//send the administrator an e-mail
+								$email_tpl = get_intltext_template("update_fail_eml.tpl");
+								$email_msg = replace_macros($email_tpl, array(
+									'$sitename' => $a->config['sitename'],
+									'$siteurl' =>  $a->get_baseurl(),
+									'$update' => $x,
+									'$error' => sprintf( t('Update %s failed. See error logs.'), $x)
+								));
+								$subject=sprintf(t('Update Error at %s'), $a->get_baseurl());
 									
-//								mail($a->config['admin_email'], $subject, $text,
-//										'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
-//										. 'Content-type: text/plain; charset=UTF-8' . "\n"
-//										. 'Content-transfer-encoding: 8bit' );
-//								//try the logger
-//								logger('update failed: '.$ex->getMessage().EOL);
-//							}
-//							$db->excep(FALSE);
+								mail($a->config['admin_email'], $subject, $email_msg,
+									'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+									. 'Content-type: text/plain; charset=UTF-8' . "\n"
+									. 'Content-transfer-encoding: 8bit' );
+								//try the logger
+								logger('CRITICAL: Update Failed: '. $x);
+							}
+							else
+								set_config('database','update_' . $x, 'success');
+								
 						}
 					}
 					set_config('system','build', DB_UPDATE_VERSION);
@@ -725,9 +733,10 @@ if(! function_exists('check_config')) {
 			foreach($installed as $i) {
 				if(! in_array($i['name'],$plugins_arr)) {
 					uninstall_plugin($i['name']);
-			}
-				else
+				}
+				else {
 					$installed_arr[] = $i['name'];
+				}
 			}
 		}
 
@@ -1463,16 +1472,19 @@ if(! function_exists('profile_tabs')){
 				'label'=>t('Status'),
 				'url' => $url,
 				'sel' => ((!isset($tab)&&$a->argv[0]=='profile')?'active':''),
+				'title' => t('Status Messages and Posts'),
 			),
 			array(
 				'label' => t('Profile'),
 				'url' 	=> $url.'/?tab=profile',
 				'sel'	=> ((isset($tab) && $tab=='profile')?'active':''),
+				'title' => t('Profile Details'),
 			),
 			array(
 				'label' => t('Photos'),
 				'url'	=> $a->get_baseurl() . '/photos/' . $nickname,
 				'sel'	=> ((!isset($tab)&&$a->argv[0]=='photos')?'active':''),
+				'title' => t('Photo Albums'),
 			),
 		);
 	
@@ -1481,11 +1493,13 @@ if(! function_exists('profile_tabs')){
 				'label' => t('Events'),
 				'url'	=> $a->get_baseurl() . '/events',
 				'sel' 	=>((!isset($tab)&&$a->argv[0]=='events')?'active':''),
+				'title' => t('Events and Calendar'),
 			);
 			$tabs[] = array(
 				'label' => t('Personal Notes'),
 				'url'	=> $a->get_baseurl() . '/notes',
 				'sel' 	=>((!isset($tab)&&$a->argv[0]=='notes')?'active':''),
+				'title' => t('Only You Can See This'),
 			);
 		}
 
@@ -1503,6 +1517,12 @@ function get_my_url() {
 	if(x($_SESSION,'my_url'))
 		return $_SESSION['my_url'];
 	return false;
+}
+
+function zrl_init(&$a) {
+	proc_run('php','include/gprobe.php',bin2hex(get_my_url()));
+	$arr = array('zrl' => get_my_url(), 'url' => $a->cmd);
+	call_hooks('zrl_init',$arr);
 }
 
 function zrl($s,$force = false) {

@@ -2227,10 +2227,10 @@ function local_delivery($importer,$data) {
 				logger('local_delivery: received remote comment');
 				$is_like = false;
 				// remote reply to our post. Import and then notify everybody else.
+
 				$datarray = get_atom_elements($feed,$item);
 
-
-				$r = q("SELECT `id`, `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT `id`, `uid`, `last-child`, `edited`, `body`  FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['importer_uid'])
 				);
@@ -2266,14 +2266,22 @@ function local_delivery($importer,$data) {
 //					return 0;
 //				}					
 
+				// our user with $importer['importer_uid'] is the owner
+
+				$own = q("select name,url,thumb from contact where uid = %d and self = 1 limit 1",
+					intval($importer['importer_uid'])
+				);
+
+
 				$datarray['type'] = 'remote-comment';
 				$datarray['wall'] = 1;
 				$datarray['parent-uri'] = $parent_uri;
 				$datarray['uid'] = $importer['importer_uid'];
-				$datarray['owner-name'] = $r[0]['name'];
-				$datarray['owner-link'] = $r[0]['url'];
-				$datarray['owner-avatar'] = $r[0]['thumb'];
+				$datarray['owner-name'] = $own[0]['name'];
+				$datarray['owner-link'] = $own[0]['url'];
+				$datarray['owner-avatar'] = $own[0]['thumb'];
 				$datarray['contact-id'] = $importer['id'];
+
 				if(($datarray['verb'] === ACTIVITY_LIKE) || ($datarray['verb'] === ACTIVITY_DISLIKE)) {
 					$is_like = true;
 					$datarray['type'] = 'activity';
@@ -2290,26 +2298,34 @@ function local_delivery($importer,$data) {
 				}
 
 				if(($datarray['verb'] === ACTIVITY_TAG) && ($datarray['object-type'] === ACTIVITY_OBJ_TAGTERM)) {
-
-
+					
 					$xo = parse_xml_string($datarray['object'],false);
 					$xt = parse_xml_string($datarray['target'],false);
 
-					if(($xt->type == ACTIVITY_OBJ_NOTE) && ($xt->id == $r[0]['uri'])) {
+					if(($xt->type == ACTIVITY_OBJ_NOTE) && ($xt->id)) {
+
+						// fetch the parent item
+
+						$tagp = q("select * from item where uri = '%s' and uid = %d limit 1",
+							dbesc($xt->id),
+							intval($importer['importer_uid'])
+						);
+						if(! count($tagp))
+							continue;	
 
 						// extract tag, if not duplicate, and this user allows tags, add to parent item						
 
 						if($xo->id && $xo->content) {
 							$newtag = '#[url=' . $xo->id . ']'. $xo->content . '[/url]';
-
-							if(! (stristr($r[0]['tag'],$newtag))) {
+							if(! (stristr($tagp[0]['tag'],$newtag))) {
 								$i = q("SELECT `blocktags` FROM `user` where `uid` = %d LIMIT 1",
 									intval($importer['importer_uid'])
 								);
-								if(count($i) && ! ($i[0]['blocktags'])) {
-									q("UPDATE item SET tag = '%s' WHERE id = %d LIMIT 1",
-										dbesc($r[0]['tag'] . (strlen($r[0]['tag']) ? ',' : '') . $newtag),
-										intval($r[0]['id'])
+								if(count($i) && ! intval($i[0]['blocktags'])) {
+									q("UPDATE item SET tag = '%s', `edited` = '%s' WHERE id = %d LIMIT 1",
+										dbesc($tagp[0]['tag'] . (strlen($tagp[0]['tag']) ? ',' : '') . $newtag),
+										intval($tagp[0]['id']),
+										dbesc(datetime_convert())
 									);
 								}
 							}

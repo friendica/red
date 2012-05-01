@@ -440,7 +440,7 @@ a:hover {
   clear: both;
 }
 .fakelink {
-  color: #194719;
+  color: #2c9936;
   /* color: #3e3e8c; */
   text-decoration: none;
   cursor: pointer;
@@ -1134,7 +1134,7 @@ list-style-type: disc;
 }
 /* widget: search */
 span.sbox_l  {
-	background: white url('../diabook/icons/srch_l.gif') no-repeat top left;
+	background: white url('../diabook-green/icons/srch_l.gif') no-repeat top left;
 	float: left;
 	width: 19px; height: 19px;
 	margin-left: 10px;
@@ -1143,14 +1143,14 @@ span.sbox_l  {
 }
 
 span.sbox_r  {
-	background: white url('../diabook/icons/srch_r.gif') no-repeat top left;
+	background: white url('../diabook-green/icons/srch_r.gif') no-repeat top left;
 	float: left;
 	width: 19px; height: 19px;
 	margin-top: 5px;
 }
 
 span.sbox input {
-	background: white url('../diabook/icons/srch_bg.gif') repeat-x top left;
+	background: white url('../diabook-green/icons/srch_bg.gif') repeat-x top left;
 	float: left;
 	margin-top: 5px;
 	border: 0;
@@ -1276,7 +1276,7 @@ transition: all 0.2s ease-in-out;
   padding-top: 10px;
 }
 .tread-wrapper a{
-  color: #194719;
+  color: #2c9936;
 }
 
 /*marker*/
@@ -1811,7 +1811,7 @@ transition: all 0.2s ease-in-out;
 	 cursor: pointer;
 }
 .button.creation2 {
-    background-color: #194719;
+    background-color: #2c9936;
     border: 1px solid #777777;
     color: white;
     border-radius: 3px 3px 3px 3px;
@@ -1945,7 +1945,7 @@ ul.tabs li {
   margin-left: 5px;
 }
 ul.tabs li .active {
-    background-color: #194719;
+    background-color: #2c9936;
     border: 1px solid #777777;
     color: white;
     border-radius: 3px 3px 3px 3px;
