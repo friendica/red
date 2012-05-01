@@ -547,7 +547,7 @@ code {
   float: right;
 }
 .tool a {
-  color: #3465a4;
+  color: #88a9d2;
 }
 .tool a:hover {
   text-decoration: none;
@@ -594,7 +594,7 @@ header #banner a:active,
 header #banner a:visited,
 header #banner a:link,
 header #banner a:hover {
-  color: #2e2f2e;
+  color: #eec;
   text-decoration: none;
   outline: none;
   vertical-align: middle;
@@ -806,7 +806,7 @@ nav .nav-menu-icon:hover {
 }
 
 nav .nav-menu-icon.selected {
-  background-color: #fff;
+  background-color: #308dbf;
 }
 nav .nav-menu-icon img {
   width: 22px;
@@ -929,7 +929,7 @@ ul.menu-popup {
 }
 ul.menu-popup a {
   display: block;
-  color: #2e302e;
+  color: #eec;
   padding: 5px 10px;
   text-decoration: none;
 }
@@ -1923,6 +1923,7 @@ body .pageheader{
     margin: 0 0 5px;
     width: 60%;
     border: 1px solid #d2d2d2;
+    background: #444;
 }
 #profile-jot-form #jot-title:-webkit-input-placeholder {
   font-weight: normal;

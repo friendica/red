@@ -195,9 +195,9 @@ function diabook_community_info(){
    
    //Community Page
    if(local_user()) {
-   $page = '<div id="page-sidebar-right_aside" >
+   $page = '<div id="" >
 			<h3 style="margin-top:0px;">'.t("Community Pages").'<a id="close_pages_icon"  onClick="close_pages()" class="icon close_box" title="close"></a></h3></div>
-			<div id="sidebar-page-list"><ul>';
+			<div id=""><ul style="margin-left: 7px;margin-top: 0px;padding-left: 0px;padding-top: 0px;">';
 
 	$pagelist = array();
 
@@ -218,7 +218,7 @@ function diabook_community_info(){
 	$contacts = $pageD;
 
 	foreach($contacts as $contact) {
-		$page .= '<li style="list-style-type: none;" class="tool"><img height="20" width="20" style="float: left; margin-right: 3px;" src="' . $contact['micro'] .'" alt="' . $contact['url'] . '" /> <a href="'.$a->get_baseurl().'/redir/'.$contact["id"].'" style="margin-top: 2px;" title="' . $contact['url'] . '" class="label" target="external-link">'.
+		$page .= '<li style="list-style-type: none;" class="tool"><img height="20" width="20" style="float: left; margin-right: 3px;" src="' . $contact['micro'] .'" alt="' . $contact['url'] . '" /> <a href="'.$a->get_baseurl().'/redir/'.$contact["id"].'" style="margin-top: 2px; word-wrap: break-word; width: 132px;" title="' . $contact['url'] . '" class="label" target="external-link">'.
 				$contact["name"]."</a></li>";
 	}
 	$page .= '</ul></div></div>';
