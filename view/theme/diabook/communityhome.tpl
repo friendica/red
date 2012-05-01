@@ -42,6 +42,9 @@ $nv.search
 {{ endif }}
 </div>
 
+<div id="twitter">
+</div>
+
 <div id="close_lastusers">
 {{ if $lastusers_title }}
 <h3>$lastusers_title<a id="close_lastusers_icon" onClick="close_lastusers()" class="icon close_box" title="close"></a></h3>
