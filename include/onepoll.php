@@ -506,7 +506,7 @@ function onepoll_run($argv, $argc){
 	}
 	if(count($r)) {
 		if(! $r[0]['total']) {
-			poco_load($contact['id'],$importer_uid,$contact['poco']);
+			poco_load($contact['id'],$importer_uid,0,$contact['poco']);
 		}
 	}
 

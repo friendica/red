@@ -384,11 +384,13 @@ CREATE TABLE IF NOT EXISTS `glink` (
   `cid` int(11) NOT NULL,
   `uid` int(11) NOT NULL,
   `gcid` int(11) NOT NULL,
+  `zcid` int(11) NOT NULL,
   `updated` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `cid` (`cid`),
   KEY `uid` (`uid`),
   KEY `gcid` (`gcid`),
+  KEY `zcid` (`zcid`),
   KEY `updated` (`updated`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
