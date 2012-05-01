@@ -1134,7 +1134,7 @@ list-style-type: disc;
 }
 /* widget: search */
 span.sbox_l  {
-	background: white url('../diabook/icons/srch_l.gif') no-repeat top left;
+	background: white url('../diabook-green/icons/srch_l.gif') no-repeat top left;
 	float: left;
 	width: 19px; height: 19px;
 	margin-left: 10px;
@@ -1143,14 +1143,14 @@ span.sbox_l  {
 }
 
 span.sbox_r  {
-	background: white url('../diabook/icons/srch_r.gif') no-repeat top left;
+	background: white url('../diabook-green/icons/srch_r.gif') no-repeat top left;
 	float: left;
 	width: 19px; height: 19px;
 	margin-top: 5px;
 }
 
 span.sbox input {
-	background: white url('../diabook/icons/srch_bg.gif') repeat-x top left;
+	background: white url('../diabook-green/icons/srch_bg.gif') repeat-x top left;
 	float: left;
 	margin-top: 5px;
 	border: 0;

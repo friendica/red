@@ -44,6 +44,26 @@ function diabook_community_info(){
 	$a = get_app();
 
 
+	// comunity_profiles
+	$aside['$comunity_profilest_title'] = t('Community Profiles');
+	$aside['$comunity_profiles_items'] = array();
+	$r = q("select gcontact.* from gcontact left join glink on glink.gcid = gcontact.id 
+			  where glink.cid = 0 and glink.uid = 0 order by rand() limit 9");
+	$tpl = file_get_contents( dirname(__file__).'/ch_directory_item.tpl');
+	if(count($r)) {
+		$photo = 'photo';
+		foreach($r as $rr) {
+			$profile_link = $a->get_baseurl() . '/profile/' . ((strlen($rr['nickname'])) ? $rr['nickname'] : $rr['profile_uid']);
+			$entry = replace_macros($tpl,array(
+				'$id' => $rr['id'],
+				'$profile-link' => zrl($rr['url']),
+				'$photo' => $rr[$photo],
+				'$alt-text' => $rr['name'],
+			));
+			$aside['$comunity_profiles_items'][] = $entry;
+		}
+	}
+
 	// last 12 users
 	$aside['$lastusers_title'] = t('Last users');
 	$aside['$lastusers_items'] = array();
@@ -175,9 +195,8 @@ function diabook_community_info(){
    
    //Community Page
    if(local_user()) {
-   $page = '<div id="page-sidebar-right_aside" class="widget">
-			<div class="title tool">
-			<h3>'.t("Community Pages").'<a id="close_pages_icon"  onClick="close_pages()" class="icon close_box" title="close"></a></h3></div>
+   $page = '<div id="page-sidebar-right_aside" >
+			<h3 style="margin-top:0px;">'.t("Community Pages").'<a id="close_pages_icon"  onClick="close_pages()" class="icon close_box" title="close"></a></h3></div>
 			<div id="sidebar-page-list"><ul>';
 
 	$pagelist = array();
@@ -266,9 +285,9 @@ if ($a->argv[0] === "network" && local_user()){
 
 	}
 	
-	$ccCookie = $_COOKIE['close_pages'] + $_COOKIE['close_helpers'] + $_COOKIE['close_services'] + $_COOKIE['close_friends'] + $_COOKIE['close_twitter'] + $_COOKIE['close_lastusers'] + $_COOKIE['close_lastphotos'] + $_COOKIE['close_lastlikes'];
+	$ccCookie = $_COOKIE['close_pages'] + $_COOKIE['close_profiles'] + $_COOKIE['close_helpers'] + $_COOKIE['close_services'] + $_COOKIE['close_friends'] + $_COOKIE['close_twitter'] + $_COOKIE['close_lastusers'] + $_COOKIE['close_lastphotos'] + $_COOKIE['close_lastlikes'];
 	
-	if($ccCookie != "8") {
+	if($ccCookie != "9") {
 	// COMMUNITY
 	diabook_community_info();
 
@@ -282,7 +301,7 @@ if ($a->argv[0] === "network" && local_user()){
 
 //right_aside at profile pages
 if ($a->argv[0].$a->argv[1] === "profile".$a->user['nickname']){
-	if($ccCookie != "8") {
+	if($ccCookie != "9") {
 	// COMMUNITY
 	diabook_community_info();
 	
@@ -356,7 +375,7 @@ $a->page['htmlhead'] .= '
 	bird:    false, 
 	avatar:  false, 
 	colorExterior: "#fff",
-	title: "Last tweets",
+	title: "Last Tweets",
 	timeout: 10000    	});
  });
    
@@ -442,6 +461,7 @@ $a->page['htmlhead'] .= '
 function restore_boxes(){
 	$.cookie("close_pages","2", { expires: 365, path: "/" });
 	$.cookie("close_helpers","2", { expires: 365, path: "/" });
+	$.cookie("close_profiles","2", { expires: 365, path: "/" });
 	$.cookie("close_services","2", { expires: 365, path: "/" });
 	$.cookie("close_friends","2", { expires: 365, path: "/" });
 	$.cookie("close_twitter","2", { expires: 365, path: "/" });
@@ -464,7 +484,7 @@ $a->page['htmlhead'] .= '
 </script>';
 
 
-	if($ccCookie != "8") {
+	if($ccCookie != "9") {
 $a->page['htmlhead'] .= '
 <script>
 $("right_aside").ready(function(){
@@ -472,6 +492,11 @@ $("right_aside").ready(function(){
 	if($.cookie("close_pages") == "1") 
 		{
 		document.getElementById( "close_pages" ).style.display = "none";
+			};
+			
+	if($.cookie("close_profiles") == "1") 
+		{
+		document.getElementById( "close_profiles" ).style.display = "none";
 			};
 	
 	if($.cookie("close_helpers") == "1") 
@@ -514,6 +539,11 @@ $("right_aside").ready(function(){
 function close_pages(){
  document.getElementById( "close_pages" ).style.display = "none";
  $.cookie("close_pages","1", { expires: 365, path: "/" });
+ };
+ 
+function close_profiles(){
+ document.getElementById( "close_profiles" ).style.display = "none";
+ $.cookie("close_profiles","1", { expires: 365, path: "/" });
  };
  
 function close_helpers(){

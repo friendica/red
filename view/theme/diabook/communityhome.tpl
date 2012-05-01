@@ -4,9 +4,20 @@
 {{ endif }}
 </div>
 
+<div id="close_profiles">
+{{ if $comunity_profilest_title }}
+<h3>$comunity_profilest_title<a id="close_comunity_profiles_icon" onClick="close_profiles()" class="icon close_box" title="close"></a></h3>
+<div id='lastusers-wrapper' class='items-wrapper'>
+{{ for $comunity_profiles_items as $i }}
+	$i
+{{ endfor }}
+</div>
+{{ endif }}
+</div>
+
 <div id="close_helpers">
 {{ if $lastusers_title }}
-<h3 style="margin-top:0px;">$helpers.title.1<a id="close_helpers_icon"  onClick="close_helpers()" class="icon close_box" title="close"></a></h3>
+<h3>$helpers.title.1<a id="close_helpers_icon"  onClick="close_helpers()" class="icon close_box" title="close"></a></h3>
 <a href="http://kakste.com/profile/newhere" title="@NewHere" style="margin-left: 10px; " target="blank">NewHere</a><br>
 <a href="https://helpers.pyxis.uberspace.de/profile/helpers" style="margin-left: 10px; " title="Friendica Support" target="blank">Friendica Support</a><br>
 <a href="https://letstalk.pyxis.uberspace.de/profile/letstalk" style="margin-left: 10px; " title="Let's talk" target="blank">Let's talk</a><br>
