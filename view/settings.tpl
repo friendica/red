@@ -102,6 +102,7 @@ $unkmail
 <strong>$activity_options</strong>
 
 {{inc field_checkbox.tpl with $field=$post_newfriend }}{{endinc}}
+{{inc field_checkbox.tpl with $field=$post_joingroup }}{{endinc}}
 {{inc field_checkbox.tpl with $field=$post_profilechange }}{{endinc}}
 
 

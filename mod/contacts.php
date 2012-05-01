@@ -290,22 +290,26 @@ function contacts_content(&$a) {
 				'label' => (($contact['blocked']) ? t('Unblock') : t('Block') ),
 				'url'   => $a->get_baseurl(true) . '/contacts/' . $contact_id . '/block',
 				'sel'   => '',
+				'title' => t('Toggle Blocked status'),
 			),
 			array(
 				'label' => (($contact['readonly']) ? t('Unignore') : t('Ignore') ),
 				'url'   => $a->get_baseurl(true) . '/contacts/' . $contact_id . '/ignore',
 				'sel'   => '',
+				'title' => t('Toggle Ignored status'),
 			),
 
 			array(
 				'label' => (($contact['archive']) ? t('Unarchive') : t('Archive') ),
 				'url'   => $a->get_baseurl(true) . '/contacts/' . $contact_id . '/archive',
 				'sel'   => '',
+				'title' => t('Toggle Archive status'),
 			),
 			array(
 				'label' => t('Repair'),
 				'url'   => $a->get_baseurl(true) . '/crepair/' . $contact_id,
 				'sel'   => '',
+				'title' => t('Advanced Contact Settings'),
 			)
 		);
 		$tab_tpl = get_markup_template('common_tabs.tpl');
@@ -403,40 +407,47 @@ function contacts_content(&$a) {
 			'label' => t('Suggestions'),
 			'url'   => $a->get_baseurl(true) . '/suggest', 
 			'sel'   => '',
+			'title' => t('Suggest potential friends'),
 		),
 		array(
 			'label' => t('All Contacts'),
 			'url'   => $a->get_baseurl(true) . '/contacts/all', 
 			'sel'   => ($all) ? 'active' : '',
+			'title' => t('Show all contacts'),
 		),
 		array(
 			'label' => t('Unblocked'),
 			'url'   => $a->get_baseurl(true) . '/contacts',
 			'sel'   => ((! $all) && (! $blocked) && (! $hidden) && (! $search) && (! $nets) && (! $ignored) && (! $archived)) ? 'active' : '',
+			'title' => t('Only show unblocked contacts'),
 		),
 
 		array(
 			'label' => t('Blocked'),
 			'url'   => $a->get_baseurl(true) . '/contacts/blocked',
 			'sel'   => ($blocked) ? 'active' : '',
+			'title' => t('Only show blocked contacts'),
 		),
 
 		array(
 			'label' => t('Ignored'),
 			'url'   => $a->get_baseurl(true) . '/contacts/ignored',
 			'sel'   => ($ignored) ? 'active' : '',
+			'title' => t('Only show ignored contacts'),
 		),
 
 		array(
 			'label' => t('Archived'),
 			'url'   => $a->get_baseurl(true) . '/contacts/archived',
 			'sel'   => ($archived) ? 'active' : '',
+			'title' => t('Only show archived contacts'),
 		),
 
 		array(
 			'label' => t('Hidden'),
 			'url'   => $a->get_baseurl(true) . '/contacts/hidden',
 			'sel'   => ($hidden) ? 'active' : '',
+			'title' => t('Only show hidden contacts'),
 		),
 
 	);

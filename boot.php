@@ -9,7 +9,7 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1327' );
+define ( 'FRIENDICA_VERSION',      '2.3.1328' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
 define ( 'DB_UPDATE_VERSION',      1140      );
 
@@ -1472,16 +1472,19 @@ if(! function_exists('profile_tabs')){
 				'label'=>t('Status'),
 				'url' => $url,
 				'sel' => ((!isset($tab)&&$a->argv[0]=='profile')?'active':''),
+				'title' => t('Status Messages and Posts'),
 			),
 			array(
 				'label' => t('Profile'),
 				'url' 	=> $url.'/?tab=profile',
 				'sel'	=> ((isset($tab) && $tab=='profile')?'active':''),
+				'title' => t('Profile Details'),
 			),
 			array(
 				'label' => t('Photos'),
 				'url'	=> $a->get_baseurl() . '/photos/' . $nickname,
 				'sel'	=> ((!isset($tab)&&$a->argv[0]=='photos')?'active':''),
+				'title' => t('Photo Albums'),
 			),
 		);
 	
@@ -1490,11 +1493,13 @@ if(! function_exists('profile_tabs')){
 				'label' => t('Events'),
 				'url'	=> $a->get_baseurl() . '/events',
 				'sel' 	=>((!isset($tab)&&$a->argv[0]=='events')?'active':''),
+				'title' => t('Events and Calendar'),
 			);
 			$tabs[] = array(
 				'label' => t('Personal Notes'),
 				'url'	=> $a->get_baseurl() . '/notes',
 				'sel' 	=>((!isset($tab)&&$a->argv[0]=='notes')?'active':''),
+				'title' => t('Only You Can See This'),
 			);
 		}
 

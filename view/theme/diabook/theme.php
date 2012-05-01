@@ -3,13 +3,13 @@
 /*
  * Name: Diabook
  * Description: Diabook: report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
- * Version: (Version: 1.023)
+ * Version: (Version: 1.024)
  * Author: 
  */
 
 
 //print diabook-version for debugging
-$diabook_version = "Diabook (Version: 1.023)";
+$diabook_version = "Diabook (Version: 1.024)";
 $a->page['htmlhead'] .= sprintf('<script "%s" ></script>', $diabook_version);
 
 //change css on network and profilepages
@@ -43,6 +43,26 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 function diabook_community_info(){
 	$a = get_app();
 
+
+	// comunity_profiles
+	$aside['$comunity_profilest_title'] = t('Community Profiles');
+	$aside['$comunity_profiles_items'] = array();
+	$r = q("select gcontact.* from gcontact left join glink on glink.gcid = gcontact.id 
+			  where glink.cid = 0 and glink.uid = 0 order by rand() limit 9");
+	$tpl = file_get_contents( dirname(__file__).'/ch_directory_item.tpl');
+	if(count($r)) {
+		$photo = 'photo';
+		foreach($r as $rr) {
+			$profile_link = $a->get_baseurl() . '/profile/' . ((strlen($rr['nickname'])) ? $rr['nickname'] : $rr['profile_uid']);
+			$entry = replace_macros($tpl,array(
+				'$id' => $rr['id'],
+				'$profile-link' => zrl($rr['url']),
+				'$photo' => $rr[$photo],
+				'$alt-text' => $rr['name'],
+			));
+			$aside['$comunity_profiles_items'][] = $entry;
+		}
+	}
 
 	// last 12 users
 	$aside['$lastusers_title'] = t('Last users');
@@ -175,9 +195,8 @@ function diabook_community_info(){
    
    //Community Page
    if(local_user()) {
-   $page = '<div id="page-sidebar-right_aside" class="widget">
-			<div class="title tool">
-			<h3>'.t("Community Pages").'<a id="close_pages_icon"  onClick="close_pages()" class="icon close_box" title="close"></a></h3></div>
+   $page = '<div id="page-sidebar-right_aside" >
+			<h3 style="margin-top:0px;">'.t("Community Pages").'<a id="close_pages_icon"  onClick="close_pages()" class="icon close_box" title="close"></a></h3></div>
 			<div id="sidebar-page-list"><ul>';
 
 	$pagelist = array();
@@ -266,9 +285,9 @@ if ($a->argv[0] === "network" && local_user()){
 
 	}
 	
-	$ccCookie = $_COOKIE['close_pages'] + $_COOKIE['close_helpers'] + $_COOKIE['close_services'] + $_COOKIE['close_friends'] + $_COOKIE['close_lastusers'] + $_COOKIE['close_lastphotos'] + $_COOKIE['close_lastlikes'];
+	$ccCookie = $_COOKIE['close_pages'] + $_COOKIE['close_profiles'] + $_COOKIE['close_helpers'] + $_COOKIE['close_services'] + $_COOKIE['close_friends'] + $_COOKIE['close_twitter'] + $_COOKIE['close_lastusers'] + $_COOKIE['close_lastphotos'] + $_COOKIE['close_lastlikes'];
 	
-	if($ccCookie != "7") {
+	if($ccCookie != "9") {
 	// COMMUNITY
 	diabook_community_info();
 
@@ -282,7 +301,7 @@ if ($a->argv[0] === "network" && local_user()){
 
 //right_aside at profile pages
 if ($a->argv[0].$a->argv[1] === "profile".$a->user['nickname']){
-	if($ccCookie != "7") {
+	if($ccCookie != "9") {
 	// COMMUNITY
 	diabook_community_info();
 	
@@ -311,6 +330,10 @@ $a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></scrip
 //load jquery.autogrow-textarea.js
 $autogrowJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.autogrow.textarea.js";
 $a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $autogrowJS);
+
+//load jquery.twitter.search.js
+$twitterJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.twitter.search.js";
+$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $twitterJS);
 
 //js scripts
 
@@ -343,8 +366,17 @@ $a->page['htmlhead'] .= '
 $a->page['htmlhead'] .= '
 
 <script>
+
  $(function() {
 	$("a.lightbox").fancybox(); // Select all links with lightbox class
+	$("#twitter").twitterSearch({    	    
+	term: "friendica",
+	animInSpeed: 250,
+	bird:    false, 
+	avatar:  false, 
+	colorExterior: "#fff",
+	title: "Last Tweets",
+	timeout: 10000    	});
  });
    
 $(window).load(function() {
@@ -429,8 +461,10 @@ $a->page['htmlhead'] .= '
 function restore_boxes(){
 	$.cookie("close_pages","2", { expires: 365, path: "/" });
 	$.cookie("close_helpers","2", { expires: 365, path: "/" });
+	$.cookie("close_profiles","2", { expires: 365, path: "/" });
 	$.cookie("close_services","2", { expires: 365, path: "/" });
 	$.cookie("close_friends","2", { expires: 365, path: "/" });
+	$.cookie("close_twitter","2", { expires: 365, path: "/" });
 	$.cookie("close_lastusers","2", { expires: 365, path: "/" });
 	$.cookie("close_lastphotos","2", { expires: 365, path: "/" });
 	$.cookie("close_lastlikes","2", { expires: 365, path: "/" });
@@ -450,7 +484,7 @@ $a->page['htmlhead'] .= '
 </script>';
 
 
-	if($ccCookie != "7") {
+	if($ccCookie != "9") {
 $a->page['htmlhead'] .= '
 <script>
 $("right_aside").ready(function(){
@@ -458,6 +492,11 @@ $("right_aside").ready(function(){
 	if($.cookie("close_pages") == "1") 
 		{
 		document.getElementById( "close_pages" ).style.display = "none";
+			};
+			
+	if($.cookie("close_profiles") == "1") 
+		{
+		document.getElementById( "close_profiles" ).style.display = "none";
 			};
 	
 	if($.cookie("close_helpers") == "1") 
@@ -475,6 +514,10 @@ $("right_aside").ready(function(){
 		document.getElementById( "close_friends" ).style.display = "none";
 			};
 	
+	if($.cookie("close_twitter") == "1") 
+		{
+		document.getElementById( "twitter" ).style.display = "none";
+			};	
 			
 	if($.cookie("close_lastusers") == "1") 
 		{
@@ -498,6 +541,11 @@ function close_pages(){
  $.cookie("close_pages","1", { expires: 365, path: "/" });
  };
  
+function close_profiles(){
+ document.getElementById( "close_profiles" ).style.display = "none";
+ $.cookie("close_profiles","1", { expires: 365, path: "/" });
+ };
+ 
 function close_helpers(){
  document.getElementById( "close_helpers" ).style.display = "none";
   $.cookie("close_helpers","1", { expires: 365, path: "/" });
@@ -512,7 +560,11 @@ function close_friends(){
  document.getElementById( "close_friends" ).style.display = "none";
  $.cookie("close_friends","1", { expires: 365, path: "/" });
  };
-
+ 
+function close_twitter(){
+ document.getElementById( "twitter" ).style.display = "none";
+ $.cookie("close_twitter","1", { expires: 365, path: "/" });
+ };
  
 function close_lastusers(){
  document.getElementById( "close_lastusers" ).style.display = "none";

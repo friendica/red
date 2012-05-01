@@ -207,7 +207,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			if($duplex == 1)
 				$params['duplex'] = 1;
 
-			if($user['page-flags'] == PAGE_COMMUNITY)
+			if($user[0]['page-flags'] == PAGE_COMMUNITY)
 				$params['page'] = 1;
 
 			logger('dfrn_confirm: Confirm: posting data to ' . $dfrn_confirm . ': ' . print_r($params,true), LOGGER_DATA);
@@ -435,13 +435,9 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			$contact = null;
 
 
-		$forum_type = false;
-		if($user['page-flags'] == PAGE_SOAPBOX || $user['page-flags'] == PAGE_COMMUNITY)
-			$forum_type = true;
+		if((isset($new_relation) && $new_relation == CONTACT_IS_FRIEND)) {
 
-		if((isset($new_relation) && $new_relation == CONTACT_IS_FRIEND) || ($forum_type)) {
-
-			if(($contact) && ($contact['network'] === NETWORK_DIASPORA) && (! $forum_type)) {
+			if(($contact) && ($contact['network'] === NETWORK_DIASPORA)) {
 				require_once('include/diaspora.php');
 				$ret = diaspora_share($user[0],$r[0]);
 				logger('mod_follow: diaspora_share returns: ' . $ret);
@@ -452,7 +448,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			$r = q("SELECT `hide-friends` FROM `profile` WHERE `uid` = %d AND `is-default` = 1 LIMIT 1",
 				intval($uid)
 			);
-			if((count($r)) && ($activity) && (! $hidden)) {
+
+			if((count($r)) && ($r[0]['hide-friends'] == 0) && ($activity) && (! $hidden)) {
 
 				require_once('include/items.php');
 
@@ -480,29 +477,15 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 					$B = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]';
 					$BPhoto = '[url=' . $contact['url'] . ']' . '[img]' . $contact['thumb'] . '[/img][/url]';
 
-					if($forum_type) {
-						$arr['verb'] = ACTIVITY_JOIN;
-						$arr['object-type'] = ACTIVITY_OBJ_GROUP;
-						$arr['body'] =  sprintf( t('%1$s joined %2$s'), $B, $A)."\n\n\n".$APhoto;
-						$arr['object'] = '<object><type>' . ACTIVITY_OBJ_GROUP . '</type><title>' . $self[0]['name'] . '</title>'
-							. '<id>' . $self[0]['url'] . '/' . $self[0]['name'] . '</id>';
-						$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $self[0]['url'] . '" />' . "\n");
-						$arr['object'] .= xmlify('<link rel="photo" type="image/jpeg" href="' . $self[0]['thumb'] . '" />' . "\n");
-						$arr['object'] .= '</link></object>' . "\n";
+					$arr['verb'] = ACTIVITY_FRIEND;
+				    $arr['object-type'] = ACTIVITY_OBJ_PERSON;
+					$arr['body'] =  sprintf( t('%1$s is now friends with %2$s'), $A, $B)."\n\n\n".$BPhoto;
 
-					}
-					else {
-						$arr['verb'] = ACTIVITY_FRIEND;
-					    $arr['object-type'] = ACTIVITY_OBJ_PERSON;
-						$arr['body'] =  sprintf( t('%1$s is now friends with %2$s'), $A, $B)."\n\n\n".$BPhoto;
-
-						$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PERSON . '</type><title>' . $contact['name'] . '</title>'
-							. '<id>' . $contact['url'] . '/' . $contact['name'] . '</id>';
-						$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $contact['url'] . '" />' . "\n");
-						$arr['object'] .= xmlify('<link rel="photo" type="image/jpeg" href="' . $contact['thumb'] . '" />' . "\n");
-						$arr['object'] .= '</link></object>' . "\n";
-					}				
-
+					$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PERSON . '</type><title>' . $contact['name'] . '</title>'
+						. '<id>' . $contact['url'] . '/' . $contact['name'] . '</id>';
+					$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $contact['url'] . '" />' . "\n");
+					$arr['object'] .= xmlify('<link rel="photo" type="image/jpeg" href="' . $contact['thumb'] . '" />' . "\n");
+					$arr['object'] .= '</link></object>' . "\n";
 
 					$arr['last-child'] = 1;
 
@@ -733,6 +716,10 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			WHERE `contact`.`id` = %d LIMIT 1",
 			intval($dfrn_record)
 		);
+
+		if(count($r))
+			$combined = $r[0];
+
 		if((count($r)) && ($r[0]['notify-flags'] & NOTIFY_CONFIRM)) {
 
 			push_lang($r[0]['language']);
@@ -760,6 +747,65 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				// pointless throwing an error here and confusing the person at the other end of the wire.
 			}
 			pop_lang();
+		}
+
+		// Send a new friend post if we are allowed to...
+
+		if($page && intval(get_pconfig($local_uid,'system','post_joingroup'))) {
+			$r = q("SELECT `hide-friends` FROM `profile` WHERE `uid` = %d AND `is-default` = 1 LIMIT 1",
+				intval($local_uid)
+			);
+
+			if((count($r)) && ($r[0]['hide-friends'] == 0)) {
+
+				require_once('include/items.php');
+
+				$self = q("SELECT * FROM `contact` WHERE `self` = 1 AND `uid` = %d LIMIT 1",
+					intval($local_uid)
+				);
+
+				if(count($self)) {
+
+					$arr = array();
+					$arr['uri'] = $arr['parent-uri'] = item_new_uri($a->get_hostname(), $local_uid); 
+					$arr['uid'] = $local_uid;
+					$arr['contact-id'] = $self[0]['id'];
+					$arr['wall'] = 1;
+					$arr['type'] = 'wall';
+					$arr['gravity'] = 0;
+					$arr['origin'] = 1;
+					$arr['author-name'] = $arr['owner-name'] = $self[0]['name'];
+					$arr['author-link'] = $arr['owner-link'] = $self[0]['url'];
+					$arr['author-avatar'] = $arr['owner-avatar'] = $self[0]['thumb'];
+
+					$A = '[url=' . $self[0]['url'] . ']' . $self[0]['name'] . '[/url]';
+					$APhoto = '[url=' . $self[0]['url'] . ']' . '[img]' . $self[0]['thumb'] . '[/img][/url]';
+
+					$B = '[url=' . $combined['url'] . ']' . $combined['name'] . '[/url]';
+					$BPhoto = '[url=' . $combined['url'] . ']' . '[img]' . $combined['thumb'] . '[/img][/url]';
+
+					$arr['verb'] = ACTIVITY_JOIN;
+					$arr['object-type'] = ACTIVITY_OBJ_GROUP;
+					$arr['body'] =  sprintf( t('%1$s has joined %2$s'), $A, $B)."\n\n\n" .$BPhoto;
+					$arr['object'] = '<object><type>' . ACTIVITY_OBJ_GROUP . '</type><title>' . $combined['name'] . '</title>'
+						. '<id>' . $combined['url'] . '/' . $combined['name'] . '</id>';
+					$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $combined['url'] . '" />' . "\n");
+					$arr['object'] .= xmlify('<link rel="photo" type="image/jpeg" href="' . $combined['thumb'] . '" />' . "\n");
+					$arr['object'] .= '</link></object>' . "\n";
+
+					$arr['last-child'] = 1;
+
+					$arr['allow_cid'] = $user[0]['allow_cid'];
+					$arr['allow_gid'] = $user[0]['allow_gid'];
+					$arr['deny_cid']  = $user[0]['deny_cid'];
+					$arr['deny_gid']  = $user[0]['deny_gid'];
+
+					$i = item_store($arr);
+					if($i)
+				    	proc_run('php',"include/notifier.php","activity","$i");
+
+				}
+			}
 		}
 		xml_status(0); // Success
 		return; // NOTREACHED
