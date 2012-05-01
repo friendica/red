@@ -53,7 +53,6 @@ function poco_load($cid,$uid = 0,$zcid = 0,$url = null) {
 	if(($a->get_curl_code() > 299) || (! $s))
 		return;
 
-
 	$j = json_decode($s);
 
 	logger('poco_load: json: ' . print_r($j,true),LOGGER_DATA);
@@ -81,7 +80,6 @@ function poco_load($cid,$uid = 0,$zcid = 0,$url = null) {
 				$connect_url = str_replace('acct:' , '', $url->value);
 				continue;
 			}
-
 		} 
 		foreach($entry->photos as $photo) {
 			if($photo->type == 'profile') {
@@ -156,17 +154,11 @@ function poco_load($cid,$uid = 0,$zcid = 0,$url = null) {
 	}
 	logger("poco_load: loaded $total entries",LOGGER_DEBUG);
 
-	if($zcid) {
-		q("delete from glink where `zcid` = %d and `updated` < UTC_TIMESTAMP - INTERVAL 14 DAY",
-			intval($zcid)
-		);
-	}
-	else {
-		q("delete from glink where `cid` = %d and `uid` = %d and `updated` < UTC_TIMESTAMP - INTERVAL 2 DAY",
-			intval($cid),
-			intval($uid)
-		);
-	}
+	q("delete from glink where `cid` = %d and `uid` = %d and `zcid` = %d and `updated` < UTC_TIMESTAMP - INTERVAL 2 DAY",
+		intval($cid),
+		intval($uid),
+		intval($zcid)
+	);
 
 }
 
