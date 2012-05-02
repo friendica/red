@@ -436,7 +436,9 @@ function scrolltop(){
 	 	
 $(window).scroll(function () { 
 		
-				
+		var footer_top = $(document).height() - 30;
+		$("div#footerbox").css("top", footer_top);
+	
 		var scrollInfo = $(window).scrollTop();      
 		
 		if (scrollInfo <= "900"){
