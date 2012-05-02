@@ -169,7 +169,7 @@ function common_friends_visitor_widget($profile_uid) {
 	if($cid)
 		$t = count_common_friends($profile_uid,$cid);
 	else
-		$t = count_common_friends($profile_uid,$cid);
+		$t = count_common_friends_zcid($profile_uid,$zcid);
 	if(! $t)
 		return;
 
