@@ -5,7 +5,7 @@
 	<div class="profile-match-wrapper">
 		<div class="profile-match-photo">
 			<a href="$item.url">
-				<img src="$item.photo" alt="$item.name" title="$item.name" />
+				<img src="$item.photo" width="80" height="80" alt="$item.name" title="$item.name" />
 			</a>
 		</div>
 		<div class="profile-match-break"></div>
