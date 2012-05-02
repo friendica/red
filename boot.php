@@ -11,7 +11,7 @@ require_once('include/cache.php');
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
 define ( 'FRIENDICA_VERSION',      '2.3.1329' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
-define ( 'DB_UPDATE_VERSION',      1142      );
+define ( 'DB_UPDATE_VERSION',      1143      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -1520,9 +1520,12 @@ function get_my_url() {
 }
 
 function zrl_init(&$a) {
-	proc_run('php','include/gprobe.php',bin2hex(get_my_url()));
-	$arr = array('zrl' => get_my_url(), 'url' => $a->cmd);
-	call_hooks('zrl_init',$arr);
+	$tmp_str = get_my_url();
+	if(validate_url($tmp_str)) {
+		proc_run('php','include/gprobe.php',bin2hex($tmp_str));
+		$arr = array('zrl' => $tmp_str, 'url' => $a->cmd);
+		call_hooks('zrl_init',$arr);
+	}
 }
 
 function zrl($s,$force = false) {
