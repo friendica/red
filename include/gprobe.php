@@ -33,6 +33,9 @@ function gprobe_run($argv, $argc){
 
 	$url = hex2bin($argv[1]);
 
+	if(! validate_url($url))
+		return;
+
 	$r = q("select * from gcontact where nurl = '%s' limit 1",
 		dbesc(normalise_link($url))
 	);

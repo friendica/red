@@ -1520,9 +1520,12 @@ function get_my_url() {
 }
 
 function zrl_init(&$a) {
-	proc_run('php','include/gprobe.php',bin2hex(get_my_url()));
-	$arr = array('zrl' => get_my_url(), 'url' => $a->cmd);
-	call_hooks('zrl_init',$arr);
+	$tmp_str = get_my_url();
+	if(validate_url($tmp_str)) {
+		proc_run('php','include/gprobe.php',bin2hex($tmp_str));
+		$arr = array('zrl' => $tmp_str, 'url' => $a->cmd);
+		call_hooks('zrl_init',$arr);
+	}
 }
 
 function zrl($s,$force = false) {
