@@ -2,6 +2,7 @@
 
 require_once("boot.php");
 require_once('include/Scrape.php');
+require_once('include/socgraph.php');
 
 function gprobe_run($argv, $argc){
 	global $a, $db;

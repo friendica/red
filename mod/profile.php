@@ -143,6 +143,10 @@ function profile_content(&$a, $update = 0) {
 			return $o;
 		}
 
+
+		$o .= common_friends_visitor_widget($a->profile['profile_uid']);
+
+
 		if(x($_SESSION,'new_member') && $_SESSION['new_member'] && $is_owner)
 			$o .= '<a href="newmember" id="newmember-tips" style="font-size: 1.2em;"><b>' . t('Tips for New Members') . '</b></a>' . EOL;
 
