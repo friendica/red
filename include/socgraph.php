@@ -200,18 +200,14 @@ function common_friends($uid,$cid) {
 }
 
 
-function count_common_friends_remote($uid,$cid,$zid) {
+function count_common_friends_zcid($uid,$zcid) {
 
 	$r = q("SELECT count(*) as `total` 
 		FROM `glink` left join `gcontact` on `glink`.`gcid` = `gcontact`.`id`
-		where ((`glink`.cid != 0 and `glink`.`cid` = %d) or ( `glink`.`zcid` != 0 and `glink`.`zcid` = %d ))
-		and `glink`.`uid` = %d
-		and `gcontact`.`nurl` in (select nurl from contact where uid = %d and self = 0 and id != %d ) ",
-		intval($cid),
-		intval($zid),
+		where `glink`.`zcid` = %d
+		and `gcontact`.`nurl` in (select nurl from contact where uid = %d and self = 0 ) ",
+		intval($zcid),
 		intval($uid),
-		intval($uid),
-		intval($cid)
 	);
 
 	if(count($r))
@@ -220,19 +216,15 @@ function count_common_friends_remote($uid,$cid,$zid) {
 
 }
 
-function common_friends_remote($uid,$cid,$zid,$limit = 6) {
+function common_friends_zcid($uid,$zcid,$limit = 6) {
 
 	$r = q("SELECT `gcontact`.* 
 		FROM `glink` left join `gcontact` on `glink`.`gcid` = `gcontact`.`id`
-		where ((`glink`.cid != 0 and `glink`.`cid` = %d) or ( `glink`.`zcid` != 0 and `glink`.`zcid` = %d ))
-		and `glink`.`uid` = %d
-		and `gcontact`.`nurl` in (select nurl from contact where uid = %d and self = 0 and id != %d ) 
+		where `glink`.`zcid` = %d
+		and `gcontact`.`nurl` in (select nurl from contact where uid = %d and self = 0 ) 
 		order by `gcontact`.`name` asc limit 0, %d",
-		intval($cid),
-		intval($zid),
+		intval($zcid),
 		intval($uid),
-		intval($uid),
-		intval($cid),
 		intval($limit)
 	);
 
