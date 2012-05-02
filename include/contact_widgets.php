@@ -147,7 +147,8 @@ function common_friends_visitor_widget($profile_uid) {
 	else {
 		if(get_my_url()) {
 			$r = q("select id from contact where nurl = '%s' and uid = %d limit 1",
-				dbesc(normalise_link(get_my_url()))
+				dbesc(normalise_link(get_my_url())),
+				intval($profile_uid)
 			);
 			if(count($r))
 				$cid = $r[0]['id'];
