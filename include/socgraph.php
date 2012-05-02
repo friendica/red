@@ -207,7 +207,7 @@ function count_common_friends_zcid($uid,$zcid) {
 		where `glink`.`zcid` = %d
 		and `gcontact`.`nurl` in (select nurl from contact where uid = %d and self = 0 ) ",
 		intval($zcid),
-		intval($uid),
+		intval($uid)
 	);
 
 	if(count($r))
