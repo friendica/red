@@ -20,7 +20,7 @@ require_once('include/datetime.php');
 
 
 
-function poco_load($cid,$uid = 0,$url = null) {
+function poco_load($cid,$uid = 0,$zcid = 0,$url = null) {
 	$a = get_app();
 
 	if($cid) {
@@ -53,7 +53,6 @@ function poco_load($cid,$uid = 0,$url = null) {
 	if(($a->get_curl_code() > 299) || (! $s))
 		return;
 
-
 	$j = json_decode($s);
 
 	logger('poco_load: json: ' . print_r($j,true),LOGGER_DATA);
@@ -81,7 +80,6 @@ function poco_load($cid,$uid = 0,$url = null) {
 				$connect_url = str_replace('acct:' , '', $url->value);
 				continue;
 			}
-
 		} 
 		foreach($entry->photos as $photo) {
 			if($photo->type == 'profile') {
@@ -128,34 +126,38 @@ function poco_load($cid,$uid = 0,$url = null) {
 		if(! $gcid)
 			return;
 
-		$r = q("select * from glink where `cid` = %d and `uid` = %d and `gcid` = %d limit 1",
+		$r = q("select * from glink where `cid` = %d and `uid` = %d and `gcid` = %d and `zcid` = %d limit 1",
 			intval($cid),
 			intval($uid),
-			intval($gcid)
+			intval($gcid),
+			intval($zcid)
 		);
 		if(! count($r)) {
-			q("insert into glink ( `cid`,`uid`,`gcid`,`updated`) values (%d,%d,%d,'%s') ",
+			q("insert into glink ( `cid`,`uid`,`gcid`,`zcid`, `updated`) values (%d,%d,%d,%d, '%s') ",
 				intval($cid),
 				intval($uid),
 				intval($gcid),
+				intval($zcid),
 				dbesc(datetime_convert())
 			);
 		}
 		else {
-			q("update glink set updated = '%s' where `cid` = %d and `uid` = %d and `gcid` = %d limit 1",
+			q("update glink set updated = '%s' where `cid` = %d and `uid` = %d and `gcid` = %d and zcid = %d limit 1",
 				dbesc(datetime_convert()),
 				intval($cid),
 				intval($uid),
-				intval($gcid)
+				intval($gcid),
+				intval($zcid)
 			);
 		}
 
 	}
 	logger("poco_load: loaded $total entries",LOGGER_DEBUG);
 
-	q("delete from glink where `cid` = %d and `uid` = %d and `updated` < UTC_TIMESTAMP - INTERVAL 2 DAY",
+	q("delete from glink where `cid` = %d and `uid` = %d and `zcid` = %d and `updated` < UTC_TIMESTAMP - INTERVAL 2 DAY",
 		intval($cid),
-		intval($uid)
+		intval($uid),
+		intval($zcid)
 	);
 
 }
@@ -180,22 +182,57 @@ function count_common_friends($uid,$cid) {
 }
 
 
-function common_friends($uid,$cid) {
+function common_friends($uid,$cid,$limit=9999) {
 
 	$r = q("SELECT `gcontact`.* 
 		FROM `glink` left join `gcontact` on `glink`.`gcid` = `gcontact`.`id`
 		where `glink`.`cid` = %d and `glink`.`uid` = %d
 		and `gcontact`.`nurl` in (select nurl from contact where uid = %d and self = 0 and id != %d ) 
-		order by `gcontact`.`name` asc ",
+		order by `gcontact`.`name` asc limit 0, %d",
 		intval($cid),
 		intval($uid),
 		intval($uid),
-		intval($cid)
+		intval($cid),
+		intval($limit)
 	);
 
 	return $r;
 
 }
+
+
+function count_common_friends_zcid($uid,$zcid) {
+
+	$r = q("SELECT count(*) as `total` 
+		FROM `glink` left join `gcontact` on `glink`.`gcid` = `gcontact`.`id`
+		where `glink`.`zcid` = %d
+		and `gcontact`.`nurl` in (select nurl from contact where uid = %d and self = 0 ) ",
+		intval($zcid),
+		intval($uid)
+	);
+
+	if(count($r))
+		return $r[0]['total'];
+	return 0;
+
+}
+
+function common_friends_zcid($uid,$zcid,$limit = 6) {
+
+	$r = q("SELECT `gcontact`.* 
+		FROM `glink` left join `gcontact` on `glink`.`gcid` = `gcontact`.`id`
+		where `glink`.`zcid` = %d
+		and `gcontact`.`nurl` in (select nurl from contact where uid = %d and self = 0 ) 
+		order by `gcontact`.`name` asc limit 0, %d",
+		intval($zcid),
+		intval($uid),
+		intval($limit)
+	);
+
+	return $r;
+
+}
+
 
 function count_all_friends($uid,$cid) {
 
@@ -254,7 +291,7 @@ function suggestion_query($uid, $start = 0, $limit = 80) {
 
 	$r2 = q("SELECT gcontact.* from gcontact 
 		left join glink on glink.gcid = gcontact.id 
-		where glink.uid = 0 and glink.cid = 0 and not gcontact.nurl in ( select nurl from contact where uid = %d )
+		where glink.uid = 0 and glink.cid = 0 and glink.zcid = 0 and not gcontact.nurl in ( select nurl from contact where uid = %d )
 		and not gcontact.name in ( select name from contact where uid = %d )
 		and not gcontact.id in ( select gcid from gcign where uid = %d )
 		order by rand() limit %d, %d ",
@@ -276,7 +313,7 @@ function update_suggestions() {
 
 	$done = array();
 
-	poco_load(0,0,$a->get_baseurl() . '/poco');
+	poco_load(0,0,0,$a->get_baseurl() . '/poco');
 
 	$done[] = $a->get_baseurl() . '/poco';
 
@@ -288,7 +325,7 @@ function update_suggestions() {
 				foreach($j->entries as $entry) {
 					$url = $entry->url . '/poco';
 					if(! in_array($url,$done))
-						poco_load(0,0,$entry->url . '/poco');
+						poco_load(0,0,0,$entry->url . '/poco');
 				}
 			}
 		}
@@ -302,7 +339,7 @@ function update_suggestions() {
 		foreach($r as $rr) {
 			$base = substr($rr['poco'],0,strrpos($rr['poco'],'/'));
 			if(! in_array($base,$done))
-				poco_load(0,0,$base);
+				poco_load(0,0,0,$base);
 		}
 	}
 }

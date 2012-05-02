@@ -282,7 +282,7 @@ function scrape_feed($url) {
 		}
 	}
 	if(! $basename)
-		$basename = substr($url,0,strrpos($url,'/')) . '/';
+		$basename = implode('/', array_slice(explode('/',$url),0,3)) . '/';
 
 	$items = $dom->getElementsByTagName('link');
 

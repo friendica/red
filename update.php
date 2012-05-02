@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1141 );
+define( 'UPDATE_VERSION' , 1142 );
 
 /**
  *
@@ -1230,3 +1230,12 @@ function update_1140() {
 		return UPDATE_FAILED ;
 	return UPDATE_SUCCESS ;
 }
+
+function update_1141() {
+	$r = q("alter table glink add zcid int(11) not null after gcid, add index(zcid) ");
+	if(! $r)
+		return UPDATE_FAILED ;
+	return UPDATE_SUCCESS ;
+}
+
+

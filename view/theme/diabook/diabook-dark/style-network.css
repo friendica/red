@@ -1597,9 +1597,10 @@ transition: all 0.2s ease-in-out;
   width: 99%;
   font-size: 15px;
   color: #eec;
-  border: 1px solid #444;
+  border: 1px solid #eec;
   padding: 0.3em;
   margin-bottom: 10px;
+  background: #444
 }
 .grey
 {

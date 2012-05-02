@@ -2,6 +2,7 @@
 
 require_once("boot.php");
 require_once('include/Scrape.php');
+require_once('include/socgraph.php');
 
 function gprobe_run($argv, $argc){
 	global $a, $db;
@@ -36,21 +37,25 @@ function gprobe_run($argv, $argc){
 		dbesc(normalise_link($url))
 	);
 
-	if(count($r))
-		return;
+	if(! count($r)) {
 
-	$arr = probe_url($url);
-
-	if(count($arr) && x($arr,'network') && $arr['network'] === NETWORK_DFRN) {
-		q("insert into `gcontact` (`name`,`url`,`nurl`,`photo`)
-			values ( '%s', '%s', '%s', '%s') ",
-			dbesc($arr['name']),
-			dbesc($arr['url']),
-			dbesc(normalise_link($arr['url'])),
-			dbesc($arr['photo'])
+		$arr = probe_url($url);
+		if(count($arr) && x($arr,'network') && $arr['network'] === NETWORK_DFRN) {
+			q("insert into `gcontact` (`name`,`url`,`nurl`,`photo`)
+				values ( '%s', '%s', '%s', '%s') ",
+				dbesc($arr['name']),
+				dbesc($arr['url']),
+				dbesc(normalise_link($arr['url'])),
+				dbesc($arr['photo'])
+			);
+		}
+		$r = q("select * from gcontact where nurl = '%s' limit 1",
+			dbesc(normalise_link($url))
 		);
 	}
-
+	if(count($r))
+		poco_load(0,0,$r[0]['id'], str_replace('/profile/','/poco/',$r[0]['url']));
+		
 	return;
 }
 

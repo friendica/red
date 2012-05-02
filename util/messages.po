@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.3.1328\n"
+"Project-Id-Version: 2.3.1329\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-30 10:00-0700\n"
+"POT-Creation-Date: 2012-05-01 10:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,8 +39,8 @@ msgstr ""
 #: ../../mod/api.php:31 ../../mod/photos.php:130 ../../mod/photos.php:865
 #: ../../mod/editpost.php:10 ../../mod/install.php:171
 #: ../../mod/notifications.php:66 ../../mod/contacts.php:125
-#: ../../mod/settings.php:104 ../../mod/settings.php:519
-#: ../../mod/settings.php:524 ../../mod/manage.php:86 ../../mod/network.php:6
+#: ../../mod/settings.php:104 ../../mod/settings.php:521
+#: ../../mod/settings.php:526 ../../mod/manage.php:86 ../../mod/network.php:6
 #: ../../mod/notes.php:20 ../../mod/wallmessage.php:9
 #: ../../mod/wallmessage.php:33 ../../mod/wallmessage.php:79
 #: ../../mod/wallmessage.php:103 ../../mod/attach.php:33
@@ -56,7 +56,7 @@ msgstr ""
 #: ../../mod/delegate.php:6 ../../mod/suggest.php:28 ../../mod/invite.php:13
 #: ../../mod/invite.php:81 ../../mod/dfrn_confirm.php:53
 #: ../../addon/facebook/facebook.php:485 ../../include/items.php:3187
-#: ../../index.php:309
+#: ../../index.php:306
 msgid "Permission denied."
 msgstr ""
 
@@ -85,8 +85,8 @@ msgstr ""
 msgid "Return to contact editor"
 msgstr ""
 
-#: ../../mod/crepair.php:148 ../../mod/settings.php:539
-#: ../../mod/settings.php:565 ../../mod/admin.php:638 ../../mod/admin.php:647
+#: ../../mod/crepair.php:148 ../../mod/settings.php:541
+#: ../../mod/settings.php:567 ../../mod/admin.php:638 ../../mod/admin.php:647
 msgid "Name"
 msgstr ""
 
@@ -128,8 +128,8 @@ msgstr ""
 #: ../../mod/photos.php:1273 ../../mod/photos.php:1304
 #: ../../mod/install.php:251 ../../mod/install.php:289
 #: ../../mod/localtime.php:45 ../../mod/contacts.php:322
-#: ../../mod/settings.php:537 ../../mod/settings.php:683
-#: ../../mod/settings.php:744 ../../mod/settings.php:935
+#: ../../mod/settings.php:539 ../../mod/settings.php:685
+#: ../../mod/settings.php:746 ../../mod/settings.php:940
 #: ../../mod/manage.php:109 ../../mod/group.php:85 ../../mod/admin.php:400
 #: ../../mod/admin.php:635 ../../mod/admin.php:771 ../../mod/admin.php:970
 #: ../../mod/admin.php:1057 ../../mod/profiles.php:534
@@ -173,11 +173,11 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: ../../mod/help.php:38 ../../index.php:228
+#: ../../mod/help.php:38 ../../index.php:225
 msgid "Not Found"
 msgstr ""
 
-#: ../../mod/help.php:41 ../../index.php:231
+#: ../../mod/help.php:41 ../../index.php:228
 msgid "Page not found."
 msgstr ""
 
@@ -219,7 +219,7 @@ msgstr ""
 msgid "link to source"
 msgstr ""
 
-#: ../../mod/events.php:296 ../../view/theme/diabook/theme.php:255
+#: ../../mod/events.php:296 ../../view/theme/diabook/theme.php:274
 #: ../../include/nav.php:52 ../../boot.php:1493
 msgid "Events"
 msgstr ""
@@ -279,8 +279,8 @@ msgid "Share this event"
 msgstr ""
 
 #: ../../mod/tagrm.php:11 ../../mod/tagrm.php:94
-#: ../../mod/dfrn_request.php:818 ../../mod/settings.php:538
-#: ../../mod/settings.php:564 ../../addon/js_upload/js_upload.php:45
+#: ../../mod/dfrn_request.php:818 ../../mod/settings.php:540
+#: ../../mod/settings.php:566 ../../addon/js_upload/js_upload.php:45
 msgid "Cancel"
 msgstr ""
 
@@ -324,23 +324,23 @@ msgid ""
 msgstr ""
 
 #: ../../mod/api.php:105 ../../mod/dfrn_request.php:806
-#: ../../mod/settings.php:849 ../../mod/settings.php:855
-#: ../../mod/settings.php:863 ../../mod/settings.php:867
-#: ../../mod/settings.php:872 ../../mod/settings.php:878
-#: ../../mod/settings.php:884 ../../mod/settings.php:890
-#: ../../mod/settings.php:926 ../../mod/settings.php:927
-#: ../../mod/settings.php:928 ../../mod/settings.php:929
+#: ../../mod/settings.php:854 ../../mod/settings.php:860
+#: ../../mod/settings.php:868 ../../mod/settings.php:872
+#: ../../mod/settings.php:877 ../../mod/settings.php:883
+#: ../../mod/settings.php:889 ../../mod/settings.php:895
+#: ../../mod/settings.php:931 ../../mod/settings.php:932
+#: ../../mod/settings.php:933 ../../mod/settings.php:934
 #: ../../mod/register.php:532 ../../mod/profiles.php:511
 msgid "Yes"
 msgstr ""
 
 #: ../../mod/api.php:106 ../../mod/dfrn_request.php:807
-#: ../../mod/settings.php:849 ../../mod/settings.php:855
-#: ../../mod/settings.php:863 ../../mod/settings.php:867
-#: ../../mod/settings.php:872 ../../mod/settings.php:878
-#: ../../mod/settings.php:884 ../../mod/settings.php:890
-#: ../../mod/settings.php:926 ../../mod/settings.php:927
-#: ../../mod/settings.php:928 ../../mod/settings.php:929
+#: ../../mod/settings.php:854 ../../mod/settings.php:860
+#: ../../mod/settings.php:868 ../../mod/settings.php:872
+#: ../../mod/settings.php:877 ../../mod/settings.php:883
+#: ../../mod/settings.php:889 ../../mod/settings.php:895
+#: ../../mod/settings.php:931 ../../mod/settings.php:932
+#: ../../mod/settings.php:933 ../../mod/settings.php:934
 #: ../../mod/register.php:533 ../../mod/profiles.php:512
 msgid "No"
 msgstr ""
@@ -352,7 +352,7 @@ msgstr ""
 #: ../../mod/photos.php:51 ../../mod/photos.php:151 ../../mod/photos.php:879
 #: ../../mod/photos.php:950 ../../mod/photos.php:965 ../../mod/photos.php:1382
 #: ../../mod/photos.php:1394 ../../addon/communityhome/communityhome.php:110
-#: ../../view/theme/diabook/theme.php:135
+#: ../../view/theme/diabook/theme.php:155
 msgid "Contact Photos"
 msgstr ""
 
@@ -375,7 +375,7 @@ msgstr ""
 #: ../../mod/profile_photo.php:74 ../../mod/profile_photo.php:174
 #: ../../mod/profile_photo.php:252 ../../mod/profile_photo.php:261
 #: ../../addon/communityhome/communityhome.php:111
-#: ../../view/theme/diabook/theme.php:136
+#: ../../view/theme/diabook/theme.php:156
 msgid "Profile Photos"
 msgstr ""
 
@@ -397,7 +397,7 @@ msgstr ""
 
 #: ../../mod/photos.php:528 ../../mod/like.php:127 ../../mod/tagger.php:70
 #: ../../addon/communityhome/communityhome.php:163
-#: ../../view/theme/diabook/theme.php:107 ../../include/text.php:1304
+#: ../../view/theme/diabook/theme.php:127 ../../include/text.php:1304
 #: ../../include/diaspora.php:1654 ../../include/conversation.php:53
 #: ../../include/conversation.php:126
 msgid "photo"
@@ -554,8 +554,8 @@ msgstr ""
 msgid "Preview"
 msgstr ""
 
-#: ../../mod/photos.php:1331 ../../mod/settings.php:600
-#: ../../mod/settings.php:681 ../../mod/group.php:168 ../../mod/admin.php:642
+#: ../../mod/photos.php:1331 ../../mod/settings.php:602
+#: ../../mod/settings.php:683 ../../mod/group.php:168 ../../mod/admin.php:642
 #: ../../include/conversation.php:318 ../../include/conversation.php:584
 msgid "Delete"
 msgstr ""
@@ -572,7 +572,7 @@ msgstr ""
 msgid "Not available."
 msgstr ""
 
-#: ../../mod/community.php:30 ../../view/theme/diabook/theme.php:257
+#: ../../mod/community.php:30 ../../view/theme/diabook/theme.php:276
 #: ../../include/nav.php:101
 msgid "Community"
 msgstr ""
@@ -581,35 +581,35 @@ msgstr ""
 msgid "No results."
 msgstr ""
 
-#: ../../mod/friendica.php:47
+#: ../../mod/friendica.php:55
 msgid "This is Friendica, version"
 msgstr ""
 
-#: ../../mod/friendica.php:48
+#: ../../mod/friendica.php:56
 msgid "running at web location"
 msgstr ""
 
-#: ../../mod/friendica.php:50
+#: ../../mod/friendica.php:58
 msgid ""
 "Please visit <a href=\"http://friendica.com\">Friendica.com</a> to learn "
 "more about the Friendica project."
 msgstr ""
 
-#: ../../mod/friendica.php:52
+#: ../../mod/friendica.php:60
 msgid "Bug reports and issues: please visit"
 msgstr ""
 
-#: ../../mod/friendica.php:53
+#: ../../mod/friendica.php:61
 msgid ""
 "Suggestions, praise, donations, etc. - please email \"Info\" at Friendica - "
 "dot com"
 msgstr ""
 
-#: ../../mod/friendica.php:58
+#: ../../mod/friendica.php:75
 msgid "Installed plugins/addons/apps:"
 msgstr ""
 
-#: ../../mod/friendica.php:71
+#: ../../mod/friendica.php:88
 msgid "No installed plugins/addons/apps"
 msgstr ""
 
@@ -625,7 +625,7 @@ msgstr ""
 msgid "Post to Email"
 msgstr ""
 
-#: ../../mod/editpost.php:95 ../../mod/settings.php:599
+#: ../../mod/editpost.php:95 ../../mod/settings.php:601
 #: ../../include/conversation.php:571
 msgid "Edit"
 msgstr ""
@@ -855,7 +855,7 @@ msgstr ""
 msgid "StatusNet/Federated Social Web"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:812 ../../mod/settings.php:634
+#: ../../mod/dfrn_request.php:812 ../../mod/settings.php:636
 #: ../../include/contact_selectors.php:80
 msgid "Diaspora"
 msgstr ""
@@ -1214,7 +1214,7 @@ msgstr ""
 msgid "Personal"
 msgstr ""
 
-#: ../../mod/notifications.php:90 ../../view/theme/diabook/theme.php:251
+#: ../../mod/notifications.php:90 ../../view/theme/diabook/theme.php:270
 #: ../../include/nav.php:77 ../../include/nav.php:115
 msgid "Home"
 msgstr ""
@@ -1655,7 +1655,7 @@ msgstr ""
 msgid "Edit contact"
 msgstr ""
 
-#: ../../mod/contacts.php:544 ../../view/theme/diabook/theme.php:253
+#: ../../mod/contacts.php:544 ../../view/theme/diabook/theme.php:272
 #: ../../include/nav.php:139
 msgid "Contacts"
 msgstr ""
@@ -1688,7 +1688,7 @@ msgstr ""
 
 #: ../../mod/lostpass.php:45 ../../mod/lostpass.php:107
 #: ../../mod/register.php:388 ../../mod/register.php:442
-#: ../../mod/regmod.php:54 ../../mod/dfrn_confirm.php:756
+#: ../../mod/regmod.php:54 ../../mod/dfrn_confirm.php:742
 #: ../../addon/facebook/facebook.php:658
 #: ../../addon/facebook/facebook.php:1148
 #: ../../addon/testdrive/testdrive.php:58 ../../include/items.php:2716
@@ -1783,7 +1783,7 @@ msgstr ""
 msgid "Missing some important data!"
 msgstr ""
 
-#: ../../mod/settings.php:134 ../../mod/settings.php:563
+#: ../../mod/settings.php:134 ../../mod/settings.php:565
 msgid "Update"
 msgstr ""
 
@@ -1811,23 +1811,23 @@ msgstr ""
 msgid "Password update failed. Please try again."
 msgstr ""
 
-#: ../../mod/settings.php:384
+#: ../../mod/settings.php:385
 msgid " Please use a shorter name."
 msgstr ""
 
-#: ../../mod/settings.php:386
+#: ../../mod/settings.php:387
 msgid " Name too short."
 msgstr ""
 
-#: ../../mod/settings.php:392
+#: ../../mod/settings.php:393
 msgid " Not valid email."
 msgstr ""
 
-#: ../../mod/settings.php:394
+#: ../../mod/settings.php:395
 msgid " Cannot change to that email."
 msgstr ""
 
-#: ../../mod/settings.php:466 ../../addon/facebook/facebook.php:470
+#: ../../mod/settings.php:468 ../../addon/facebook/facebook.php:470
 #: ../../addon/impressum/impressum.php:77
 #: ../../addon/openstreetmap/openstreetmap.php:80
 #: ../../addon/mathjax/mathjax.php:66 ../../addon/piwik/piwik.php:105
@@ -1835,405 +1835,409 @@ msgstr ""
 msgid "Settings updated."
 msgstr ""
 
-#: ../../mod/settings.php:536 ../../mod/settings.php:562
-#: ../../mod/settings.php:598
+#: ../../mod/settings.php:538 ../../mod/settings.php:564
+#: ../../mod/settings.php:600
 msgid "Add application"
 msgstr ""
 
-#: ../../mod/settings.php:540 ../../mod/settings.php:566
+#: ../../mod/settings.php:542 ../../mod/settings.php:568
 #: ../../addon/statusnet/statusnet.php:547
 msgid "Consumer Key"
 msgstr ""
 
-#: ../../mod/settings.php:541 ../../mod/settings.php:567
+#: ../../mod/settings.php:543 ../../mod/settings.php:569
 #: ../../addon/statusnet/statusnet.php:546
 msgid "Consumer Secret"
 msgstr ""
 
-#: ../../mod/settings.php:542 ../../mod/settings.php:568
+#: ../../mod/settings.php:544 ../../mod/settings.php:570
 msgid "Redirect"
 msgstr ""
 
-#: ../../mod/settings.php:543 ../../mod/settings.php:569
+#: ../../mod/settings.php:545 ../../mod/settings.php:571
 msgid "Icon url"
 msgstr ""
 
-#: ../../mod/settings.php:554
+#: ../../mod/settings.php:556
 msgid "You can't edit this application."
 msgstr ""
 
-#: ../../mod/settings.php:597
+#: ../../mod/settings.php:599
 msgid "Connected Apps"
 msgstr ""
 
-#: ../../mod/settings.php:601
+#: ../../mod/settings.php:603
 msgid "Client key starts with"
 msgstr ""
 
-#: ../../mod/settings.php:602
+#: ../../mod/settings.php:604
 msgid "No name"
 msgstr ""
 
-#: ../../mod/settings.php:603
+#: ../../mod/settings.php:605
 msgid "Remove authorization"
 msgstr ""
 
-#: ../../mod/settings.php:614
+#: ../../mod/settings.php:616
 msgid "No Plugin settings configured"
 msgstr ""
 
-#: ../../mod/settings.php:622 ../../addon/widgets/widgets.php:123
+#: ../../mod/settings.php:624 ../../addon/widgets/widgets.php:123
 msgid "Plugin Settings"
 msgstr ""
 
-#: ../../mod/settings.php:634 ../../mod/settings.php:635
+#: ../../mod/settings.php:636 ../../mod/settings.php:637
 #, php-format
 msgid "Built-in support for %s connectivity is %s"
 msgstr ""
 
-#: ../../mod/settings.php:634 ../../mod/settings.php:635
+#: ../../mod/settings.php:636 ../../mod/settings.php:637
 msgid "enabled"
 msgstr ""
 
-#: ../../mod/settings.php:634 ../../mod/settings.php:635
+#: ../../mod/settings.php:636 ../../mod/settings.php:637
 msgid "disabled"
 msgstr ""
 
-#: ../../mod/settings.php:635
+#: ../../mod/settings.php:637
 msgid "StatusNet"
 msgstr ""
 
-#: ../../mod/settings.php:665
+#: ../../mod/settings.php:667
 msgid "Connector Settings"
 msgstr ""
 
-#: ../../mod/settings.php:670
+#: ../../mod/settings.php:672
 msgid "Email/Mailbox Setup"
 msgstr ""
 
-#: ../../mod/settings.php:671
+#: ../../mod/settings.php:673
 msgid ""
 "If you wish to communicate with email contacts using this service "
 "(optional), please specify how to connect to your mailbox."
 msgstr ""
 
-#: ../../mod/settings.php:672
+#: ../../mod/settings.php:674
 msgid "Last successful email check:"
 msgstr ""
 
-#: ../../mod/settings.php:673
+#: ../../mod/settings.php:675
 msgid "Email access is disabled on this site."
 msgstr ""
 
-#: ../../mod/settings.php:674
+#: ../../mod/settings.php:676
 msgid "IMAP server name:"
 msgstr ""
 
-#: ../../mod/settings.php:675
+#: ../../mod/settings.php:677
 msgid "IMAP port:"
 msgstr ""
 
-#: ../../mod/settings.php:676
+#: ../../mod/settings.php:678
 msgid "Security:"
 msgstr ""
 
-#: ../../mod/settings.php:676 ../../mod/settings.php:681
+#: ../../mod/settings.php:678 ../../mod/settings.php:683
 msgid "None"
 msgstr ""
 
-#: ../../mod/settings.php:677
+#: ../../mod/settings.php:679
 msgid "Email login name:"
 msgstr ""
 
-#: ../../mod/settings.php:678
+#: ../../mod/settings.php:680
 msgid "Email password:"
 msgstr ""
 
-#: ../../mod/settings.php:679
+#: ../../mod/settings.php:681
 msgid "Reply-to address:"
 msgstr ""
 
-#: ../../mod/settings.php:680
+#: ../../mod/settings.php:682
 msgid "Send public posts to all email contacts:"
 msgstr ""
 
-#: ../../mod/settings.php:681
+#: ../../mod/settings.php:683
 msgid "Action after import:"
 msgstr ""
 
-#: ../../mod/settings.php:681
+#: ../../mod/settings.php:683
 msgid "Mark as seen"
 msgstr ""
 
-#: ../../mod/settings.php:681
+#: ../../mod/settings.php:683
 msgid "Move to folder"
 msgstr ""
 
-#: ../../mod/settings.php:682
+#: ../../mod/settings.php:684
 msgid "Move to folder:"
 msgstr ""
 
-#: ../../mod/settings.php:742
+#: ../../mod/settings.php:744
 msgid "Display Settings"
 msgstr ""
 
-#: ../../mod/settings.php:748
+#: ../../mod/settings.php:750
 msgid "Display Theme:"
 msgstr ""
 
-#: ../../mod/settings.php:749
+#: ../../mod/settings.php:751
 msgid "Update browser every xx seconds"
 msgstr ""
 
-#: ../../mod/settings.php:749
+#: ../../mod/settings.php:751
 msgid "Minimum of 10 seconds, no maximum"
 msgstr ""
 
-#: ../../mod/settings.php:750
+#: ../../mod/settings.php:752
 msgid "Number of items to display on the network page:"
 msgstr ""
 
-#: ../../mod/settings.php:750
+#: ../../mod/settings.php:752
 msgid "Maximum of 100 items"
 msgstr ""
 
-#: ../../mod/settings.php:751
+#: ../../mod/settings.php:753
 msgid "Don't show emoticons"
 msgstr ""
 
-#: ../../mod/settings.php:816 ../../mod/admin.php:180 ../../mod/admin.php:616
+#: ../../mod/settings.php:821 ../../mod/admin.php:180 ../../mod/admin.php:616
 msgid "Normal Account"
 msgstr ""
 
-#: ../../mod/settings.php:817
+#: ../../mod/settings.php:822
 msgid "This account is a normal personal profile"
 msgstr ""
 
-#: ../../mod/settings.php:820 ../../mod/admin.php:181 ../../mod/admin.php:617
+#: ../../mod/settings.php:825 ../../mod/admin.php:181 ../../mod/admin.php:617
 msgid "Soapbox Account"
 msgstr ""
 
-#: ../../mod/settings.php:821
+#: ../../mod/settings.php:826
 msgid "Automatically approve all connection/friend requests as read-only fans"
 msgstr ""
 
-#: ../../mod/settings.php:824 ../../mod/admin.php:182 ../../mod/admin.php:618
+#: ../../mod/settings.php:829 ../../mod/admin.php:182 ../../mod/admin.php:618
 msgid "Community/Celebrity Account"
 msgstr ""
 
-#: ../../mod/settings.php:825
+#: ../../mod/settings.php:830
 msgid "Automatically approve all connection/friend requests as read-write fans"
 msgstr ""
 
-#: ../../mod/settings.php:828 ../../mod/admin.php:183 ../../mod/admin.php:619
+#: ../../mod/settings.php:833 ../../mod/admin.php:183 ../../mod/admin.php:619
 msgid "Automatic Friend Account"
 msgstr ""
 
-#: ../../mod/settings.php:829
+#: ../../mod/settings.php:834
 msgid "Automatically approve all connection/friend requests as friends"
 msgstr ""
 
-#: ../../mod/settings.php:839
+#: ../../mod/settings.php:844
 msgid "OpenID:"
 msgstr ""
 
-#: ../../mod/settings.php:839
+#: ../../mod/settings.php:844
 msgid "(Optional) Allow this OpenID to login to this account."
 msgstr ""
 
-#: ../../mod/settings.php:849
+#: ../../mod/settings.php:854
 msgid "Publish your default profile in your local site directory?"
 msgstr ""
 
-#: ../../mod/settings.php:855
+#: ../../mod/settings.php:860
 msgid "Publish your default profile in the global social directory?"
 msgstr ""
 
-#: ../../mod/settings.php:863
+#: ../../mod/settings.php:868
 msgid "Hide your contact/friend list from viewers of your default profile?"
 msgstr ""
 
-#: ../../mod/settings.php:867
+#: ../../mod/settings.php:872
 msgid "Hide your profile details from unknown viewers?"
 msgstr ""
 
-#: ../../mod/settings.php:872
+#: ../../mod/settings.php:877
 msgid "Allow friends to post to your profile page?"
 msgstr ""
 
-#: ../../mod/settings.php:878
+#: ../../mod/settings.php:883
 msgid "Allow friends to tag your posts?"
 msgstr ""
 
-#: ../../mod/settings.php:884
+#: ../../mod/settings.php:889
 msgid "Allow us to suggest you as a potential friend to new members?"
 msgstr ""
 
-#: ../../mod/settings.php:890
+#: ../../mod/settings.php:895
 msgid "Permit unknown people to send you private mail?"
 msgstr ""
 
-#: ../../mod/settings.php:901
+#: ../../mod/settings.php:906
 msgid "Profile is <strong>not published</strong>."
 msgstr ""
 
-#: ../../mod/settings.php:907 ../../mod/profile_photo.php:211
+#: ../../mod/settings.php:912 ../../mod/profile_photo.php:211
 msgid "or"
 msgstr ""
 
-#: ../../mod/settings.php:912
+#: ../../mod/settings.php:917
 msgid "Your Identity Address is"
 msgstr ""
 
-#: ../../mod/settings.php:923
+#: ../../mod/settings.php:928
 msgid "Automatically expire posts after this many days:"
 msgstr ""
 
-#: ../../mod/settings.php:923
+#: ../../mod/settings.php:928
 msgid "If empty, posts will not expire. Expired posts will be deleted"
 msgstr ""
 
-#: ../../mod/settings.php:924
+#: ../../mod/settings.php:929
 msgid "Advanced expiration settings"
 msgstr ""
 
-#: ../../mod/settings.php:925
+#: ../../mod/settings.php:930
 msgid "Advanced Expiration"
 msgstr ""
 
-#: ../../mod/settings.php:926
+#: ../../mod/settings.php:931
 msgid "Expire posts:"
 msgstr ""
 
-#: ../../mod/settings.php:927
+#: ../../mod/settings.php:932
 msgid "Expire personal notes:"
 msgstr ""
 
-#: ../../mod/settings.php:928
+#: ../../mod/settings.php:933
 msgid "Expire starred posts:"
 msgstr ""
 
-#: ../../mod/settings.php:929
+#: ../../mod/settings.php:934
 msgid "Expire photos:"
 msgstr ""
 
-#: ../../mod/settings.php:933
+#: ../../mod/settings.php:938
 msgid "Account Settings"
 msgstr ""
 
-#: ../../mod/settings.php:942
+#: ../../mod/settings.php:947
 msgid "Password Settings"
 msgstr ""
 
-#: ../../mod/settings.php:943
+#: ../../mod/settings.php:948
 msgid "New Password:"
 msgstr ""
 
-#: ../../mod/settings.php:944
+#: ../../mod/settings.php:949
 msgid "Confirm:"
 msgstr ""
 
-#: ../../mod/settings.php:944
+#: ../../mod/settings.php:949
 msgid "Leave password fields blank unless changing"
 msgstr ""
 
-#: ../../mod/settings.php:948
+#: ../../mod/settings.php:953
 msgid "Basic Settings"
 msgstr ""
 
-#: ../../mod/settings.php:949 ../../include/profile_advanced.php:15
+#: ../../mod/settings.php:954 ../../include/profile_advanced.php:15
 msgid "Full Name:"
 msgstr ""
 
-#: ../../mod/settings.php:950
+#: ../../mod/settings.php:955
 msgid "Email Address:"
 msgstr ""
 
-#: ../../mod/settings.php:951
+#: ../../mod/settings.php:956
 msgid "Your Timezone:"
 msgstr ""
 
-#: ../../mod/settings.php:952
+#: ../../mod/settings.php:957
 msgid "Default Post Location:"
 msgstr ""
 
-#: ../../mod/settings.php:953
+#: ../../mod/settings.php:958
 msgid "Use Browser Location:"
 msgstr ""
 
-#: ../../mod/settings.php:956
+#: ../../mod/settings.php:961
 msgid "Security and Privacy Settings"
 msgstr ""
 
-#: ../../mod/settings.php:958
+#: ../../mod/settings.php:963
 msgid "Maximum Friend Requests/Day:"
 msgstr ""
 
-#: ../../mod/settings.php:958 ../../mod/settings.php:973
+#: ../../mod/settings.php:963 ../../mod/settings.php:978
 msgid "(to prevent spam abuse)"
 msgstr ""
 
-#: ../../mod/settings.php:959
+#: ../../mod/settings.php:964
 msgid "Default Post Permissions"
 msgstr ""
 
-#: ../../mod/settings.php:960
+#: ../../mod/settings.php:965
 msgid "(click to open/close)"
 msgstr ""
 
-#: ../../mod/settings.php:973
+#: ../../mod/settings.php:978
 msgid "Maximum private messages per day from unknown people:"
 msgstr ""
 
-#: ../../mod/settings.php:976
+#: ../../mod/settings.php:981
 msgid "Notification Settings"
 msgstr ""
 
-#: ../../mod/settings.php:977
+#: ../../mod/settings.php:982
 msgid "By default post a status message when:"
 msgstr ""
 
-#: ../../mod/settings.php:978
+#: ../../mod/settings.php:983
 msgid "accepting a friend request"
 msgstr ""
 
-#: ../../mod/settings.php:979
-msgid "making an <em>interesting</em> profile change"
-msgstr ""
-
-#: ../../mod/settings.php:980
-msgid "Send a notification email when:"
-msgstr ""
-
-#: ../../mod/settings.php:981
-msgid "You receive an introduction"
-msgstr ""
-
-#: ../../mod/settings.php:982
-msgid "Your introductions are confirmed"
-msgstr ""
-
-#: ../../mod/settings.php:983
-msgid "Someone writes on your profile wall"
-msgstr ""
-
 #: ../../mod/settings.php:984
-msgid "Someone writes a followup comment"
+msgid "joining a forum/community"
 msgstr ""
 
 #: ../../mod/settings.php:985
-msgid "You receive a private message"
+msgid "making an <em>interesting</em> profile change"
 msgstr ""
 
 #: ../../mod/settings.php:986
-msgid "You receive a friend suggestion"
+msgid "Send a notification email when:"
 msgstr ""
 
 #: ../../mod/settings.php:987
-msgid "You are tagged in a post"
+msgid "You receive an introduction"
+msgstr ""
+
+#: ../../mod/settings.php:988
+msgid "Your introductions are confirmed"
+msgstr ""
+
+#: ../../mod/settings.php:989
+msgid "Someone writes on your profile wall"
 msgstr ""
 
 #: ../../mod/settings.php:990
+msgid "Someone writes a followup comment"
+msgstr ""
+
+#: ../../mod/settings.php:991
+msgid "You receive a private message"
+msgstr ""
+
+#: ../../mod/settings.php:992
+msgid "You receive a friend suggestion"
+msgstr ""
+
+#: ../../mod/settings.php:993
+msgid "You are tagged in a post"
+msgstr ""
+
+#: ../../mod/settings.php:996
 msgid "Advanced Page Settings"
 msgstr ""
 
@@ -2556,7 +2560,7 @@ msgstr ""
 msgid "Group name changed."
 msgstr ""
 
-#: ../../mod/group.php:72 ../../mod/profperm.php:19 ../../index.php:308
+#: ../../mod/group.php:72 ../../mod/profperm.php:19 ../../index.php:305
 msgid "Permission denied"
 msgstr ""
 
@@ -2596,7 +2600,7 @@ msgstr ""
 msgid "Profile Visibility Editor"
 msgstr ""
 
-#: ../../mod/profperm.php:103 ../../view/theme/diabook/theme.php:252
+#: ../../mod/profperm.php:103 ../../view/theme/diabook/theme.php:271
 #: ../../include/profile_advanced.php:7 ../../include/profile_advanced.php:74
 #: ../../include/nav.php:50 ../../boot.php:1478
 msgid "Profile"
@@ -2782,8 +2786,8 @@ msgstr ""
 #: ../../addon/facebook/facebook.php:1542
 #: ../../addon/communityhome/communityhome.php:158
 #: ../../addon/communityhome/communityhome.php:167
-#: ../../view/theme/diabook/theme.php:102
-#: ../../view/theme/diabook/theme.php:111 ../../include/diaspora.php:1654
+#: ../../view/theme/diabook/theme.php:122
+#: ../../view/theme/diabook/theme.php:131 ../../include/diaspora.php:1654
 #: ../../include/conversation.php:48 ../../include/conversation.php:57
 #: ../../include/conversation.php:121 ../../include/conversation.php:130
 msgid "status"
@@ -2791,7 +2795,7 @@ msgstr ""
 
 #: ../../mod/like.php:144 ../../addon/facebook/facebook.php:1546
 #: ../../addon/communityhome/communityhome.php:172
-#: ../../view/theme/diabook/theme.php:116 ../../include/diaspora.php:1670
+#: ../../view/theme/diabook/theme.php:136 ../../include/diaspora.php:1670
 #: ../../include/conversation.php:65
 #, php-format
 msgid "%1$s likes %2$s's %3$s"
@@ -2812,7 +2816,7 @@ msgstr ""
 msgid "Access denied."
 msgstr ""
 
-#: ../../mod/fbrowser.php:23 ../../view/theme/diabook/theme.php:254
+#: ../../mod/fbrowser.php:23 ../../view/theme/diabook/theme.php:273
 #: ../../include/nav.php:51 ../../boot.php:1484
 msgid "Photos"
 msgstr ""
@@ -4043,7 +4047,7 @@ msgstr ""
 msgid "No entries."
 msgstr ""
 
-#: ../../mod/suggest.php:38 ../../view/theme/diabook/theme.php:163
+#: ../../mod/suggest.php:38 ../../view/theme/diabook/theme.php:183
 #: ../../include/contact_widgets.php:34
 msgid "Friend Suggestions"
 msgstr ""
@@ -4058,7 +4062,7 @@ msgstr ""
 msgid "Ignore/Hide"
 msgstr ""
 
-#: ../../mod/directory.php:47 ../../view/theme/diabook/theme.php:161
+#: ../../mod/directory.php:47 ../../view/theme/diabook/theme.php:181
 msgid "Global Directory"
 msgstr ""
 
@@ -4197,56 +4201,56 @@ msgstr ""
 msgid "Unable to set contact photo."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:488
-#, php-format
-msgid "%1$s welcomes new member %2$s"
-msgstr ""
-
-#: ../../mod/dfrn_confirm.php:498 ../../include/diaspora.php:507
+#: ../../mod/dfrn_confirm.php:482 ../../include/diaspora.php:507
 #: ../../include/conversation.php:101
 #, php-format
 msgid "%1$s is now friends with %2$s"
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:572
+#: ../../mod/dfrn_confirm.php:554
 #, php-format
 msgid "No user record found for '%s' "
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:582
+#: ../../mod/dfrn_confirm.php:564
 msgid "Our site encryption key is apparently messed up."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:593
+#: ../../mod/dfrn_confirm.php:575
 msgid "Empty site URL was provided or URL could not be decrypted by us."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:614
+#: ../../mod/dfrn_confirm.php:596
 msgid "Contact record was not found for you on our site."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:628
+#: ../../mod/dfrn_confirm.php:610
 #, php-format
 msgid "Site public key not available in contact record for URL %s."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:648
+#: ../../mod/dfrn_confirm.php:630
 msgid ""
 "The ID provided by your system is a duplicate on our system. It should work "
 "if you try again."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:659
+#: ../../mod/dfrn_confirm.php:641
 msgid "Unable to set your contact credentials on our system."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:724
+#: ../../mod/dfrn_confirm.php:706
 msgid "Unable to update your contact profile details on our system"
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:754
+#: ../../mod/dfrn_confirm.php:740
 #, php-format
 msgid "Connection accepted at %s"
+msgstr ""
+
+#: ../../mod/dfrn_confirm.php:789
+#, php-format
+msgid "%1$s has joined %2$s"
 msgstr ""
 
 #: ../../addon/facebook/facebook.php:491
@@ -4625,7 +4629,7 @@ msgid "Latest likes"
 msgstr ""
 
 #: ../../addon/communityhome/communityhome.php:155
-#: ../../view/theme/diabook/theme.php:99 ../../include/text.php:1302
+#: ../../view/theme/diabook/theme.php:119 ../../include/text.php:1302
 #: ../../include/conversation.php:45 ../../include/conversation.php:118
 msgid "event"
 msgstr ""
@@ -5546,72 +5550,76 @@ msgid "Color scheme"
 msgstr ""
 
 #: ../../view/theme/diabook/theme.php:48
+msgid "Community Profiles"
+msgstr ""
+
+#: ../../view/theme/diabook/theme.php:68
 msgid "Last users"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:77
+#: ../../view/theme/diabook/theme.php:97
 msgid "Last likes"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:122
+#: ../../view/theme/diabook/theme.php:142
 msgid "Last photos"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:159
+#: ../../view/theme/diabook/theme.php:179
 msgid "Find Friends"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:160
+#: ../../view/theme/diabook/theme.php:180
 msgid "Local Directory"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:162 ../../include/contact_widgets.php:35
+#: ../../view/theme/diabook/theme.php:182 ../../include/contact_widgets.php:35
 msgid "Similar Interests"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:164 ../../include/contact_widgets.php:37
+#: ../../view/theme/diabook/theme.php:184 ../../include/contact_widgets.php:37
 msgid "Invite Friends"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:180
-#: ../../view/theme/diabook/theme.php:258
+#: ../../view/theme/diabook/theme.php:199
+#: ../../view/theme/diabook/theme.php:277
 msgid "Community Pages"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:213
+#: ../../view/theme/diabook/theme.php:232
 msgid "Help or @NewHere ?"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:219
+#: ../../view/theme/diabook/theme.php:238
 msgid "Connect Services"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:251 ../../include/nav.php:49
+#: ../../view/theme/diabook/theme.php:270 ../../include/nav.php:49
 #: ../../include/nav.php:115
 msgid "Your posts and conversations"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:252 ../../include/nav.php:50
+#: ../../view/theme/diabook/theme.php:271 ../../include/nav.php:50
 msgid "Your profile page"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:253
+#: ../../view/theme/diabook/theme.php:272
 msgid "Your contacts"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:254 ../../include/nav.php:51
+#: ../../view/theme/diabook/theme.php:273 ../../include/nav.php:51
 msgid "Your photos"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:255 ../../include/nav.php:52
+#: ../../view/theme/diabook/theme.php:274 ../../include/nav.php:52
 msgid "Your events"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:256 ../../include/nav.php:53
+#: ../../view/theme/diabook/theme.php:275 ../../include/nav.php:53
 msgid "Personal notes"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:256 ../../include/nav.php:53
+#: ../../view/theme/diabook/theme.php:275 ../../include/nav.php:53
 msgid "Your personal photos"
 msgstr ""
 
