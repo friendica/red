@@ -133,3 +133,42 @@ function categories_widget($baseurl,$selected = '') {
 	));
 }
 
+function common_friends_visitor_widget($profile_uid) {
+
+	$a = get_app();
+
+	if(local_user() == $profile_uid)
+		return;
+
+	$cid = $zcid = 0;
+
+	if(can_write_wall($a,$profile_uid))
+		$cid = local_user();
+	else {
+		if(get_my_url()) {
+			$r = q("select id from gcontact where nurl = '%s' limit 1",
+				dbesc(normalise_link(get_my_url()))
+			);
+			if(count($r))
+				$zcid = $r[0]['id'];
+		}
+	}
+
+	if($cid == 0 && $zcid == 0)
+		return; 
+
+	require_once('include/socgraph.php');
+
+
+	$t = count_common_friends_remote($profile_uid,$cid,$zcid);
+	if(! $t)
+		return;
+
+	$r = common_friends_remote($profile_uid,$cid,$zcid);
+
+	return replace_macros(get_markup_template('remote_friends_common.tpl'), array(
+		'$desc' =>  sprintf( tt("%d friend in common", "%d friends in common", $t), $t),
+		'$items = $r
+	)); 
+
+};
