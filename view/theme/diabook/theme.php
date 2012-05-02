@@ -109,14 +109,29 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $imageresizeJS);
 	
 	//load jquery.twitter.search.js
+	if($_COOKIE['close_twitter'] != "1") {
 	$twitterJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.twitter.search.js";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $twitterJS);
-		
+	}
+	
 	$a->page['htmlhead'] .= '
 	<script>
 	
 	 $(function() {
 		$("a.lightbox").fancybox(); // Select all links with lightbox class
+	 	});
+	   
+	 $(window).load(function() {
+		var footer_top = $(document).height() - 30;
+		$("div#footerbox").attr("style", "border-top: 1px solid #D2D2D2; width: 70%;right: 15%;position: absolute;top:"+footer_top+"px;");
+	 });
+	</script>';
+	
+	//check if twitterbox is active and print
+	if($_COOKIE['close_twitter'] != "1") {
+		$a->page['htmlhead'] .= '
+		<script>
+		$(function() {
 		$("#twitter").twitterSearch({    	    
 		term: "friendica",
 		animInSpeed: 250,
@@ -125,13 +140,9 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 		colorExterior: "#fff",
 		title: "Last Tweets",
 		timeout: 10000    	});
-	 });
-	   
-	 $(window).load(function() {
-		var footer_top = $(document).height() - 30;
-		$("div#footerbox").attr("style", "border-top: 1px solid #D2D2D2; width: 70%;right: 15%;position: absolute;top:"+footer_top+"px;");
-	 });
-	</script>';
+		});
+		</script>';}
+			
 	//check if community_home-plugin is activated and change css
 	$nametocheck = "communityhome";
 	$r = q("select id from addon where name = '%s' and installed = 1", dbesc($nametocheck));
@@ -295,6 +306,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
  function diabook_community_info() {
 	$a = get_app();
 	// comunity_profiles
+	if($_COOKIE['close_profiles'] != "1") {
 	$aside['$comunity_profilest_title'] = t('Community Profiles');
 	$aside['$comunity_profiles_items'] = array();
 	$r = q("select gcontact.* from gcontact left join glink on glink.gcid = gcontact.id 
@@ -312,9 +324,10 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 			));
 			$aside['$comunity_profiles_items'][] = $entry;
 		}
-	}
-
+	}}
+	
 	// last 12 users
+	if($_COOKIE['close_lastusers'] != "1") {
 	$aside['$lastusers_title'] = t('Last users');
 	$aside['$lastusers_items'] = array();
 	$sql_extra = "";
@@ -340,10 +353,10 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 			));
 			$aside['$lastusers_items'][] = $entry;
 		}
-	}
-	
+	}}
 	
 	// last 10 liked items
+	if($_COOKIE['close_lastlikes'] != "1") {
 	$aside['$like_title'] = t('Last likes');
 	$aside['$like_items'] = array();
 	$r = q("SELECT `T1`.`created`, `T1`.`liker`, `T1`.`liker-link`, `item`.* FROM 
@@ -385,10 +398,10 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 
 		$aside['$like_items'][] = sprintf( t('%1$s likes %2$s\'s %3$s'), $author, $objauthor, $plink);
 		
-	}
-	
+	}}
 	
 	// last 12 photos
+	if($_COOKIE['close_photos'] != "1") {
 	$aside['$photos_title'] = t('Last photos');
 	$aside['$photos_items'] = array();
 	$r = q("SELECT `photo`.`id`, `photo`.`resource-id`, `photo`.`scale`, `photo`.`desc`, `user`.`nickname`, `user`.`username` FROM 
@@ -420,10 +433,10 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 
 			$aside['$photos_items'][] = $entry;
 		}
-	}
+	}}
 	
-   
    //right_aside FIND FRIENDS
+   if($_COOKIE['close_friends'] != "1") {
 	if(local_user()) {
 	$nv = array();
 	$nv['title'] = Array("", t('Find Friends'), "", "");
@@ -441,9 +454,10 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 						<span class="sbox_r" id="srch_clear"></span>';
 	
 	$aside['$nv'] = $nv;
-	};
+	}}
    
    //Community_Pages at right_aside
+   if($_COOKIE['close_pages'] != "1") {
    if(local_user()) {
    $page = '<div id="" >
 			<h3 style="margin-top:0px;">'.t("Community Pages").'<a id="close_pages_icon"  onClick="close_pages()" class="icon close_box" title="close"></a></h3></div>
@@ -474,17 +488,22 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$page .= '</ul></div></div>';
 	//if (sizeof($contacts) > 0)
 		$aside['$page'] = $page;	
-	}
+	}}
   //END Community Page	
+  
   //helpers
+  if($_COOKIE['close_helpers'] != "1") {
    $helpers = array();
 	$helpers['title'] = Array("", t('Help or @NewHere ?'), "", "");
 	$aside['$helpers'] = $helpers;
+	}
    //end helpers
    //connectable services
+   if($_COOKIE['close_services'] != "1") {
    $con_services = array();
 	$con_services['title'] = Array("", t('Connect Services'), "", "");
 	$aside['$con_services'] = $con_services;
+	}
    //end connectable services
    //get_baseurl
    $url = $a->get_baseurl($ssl_state);   

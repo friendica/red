@@ -202,7 +202,7 @@
 			// default styling
 			a:     { textDecoration: 'none', color: '#3B5998' },
 			bird:  { width: '50px', height: '20px', position: 'absolute', left: '-30px', top: '-20px', border: 'none' },
-			container: { overflow: 'hidden', backgroundColor: '', height: '360px' },
+			container: { overflow: 'hidden', backgroundColor: '', height: '600px' },
 			fail:  { background: '#6cc5c3 url(http://cloud.github.com/downloads/malsup/twitter/failwhale.png) no-repeat 50% 50%', height: '100%', padding: '10px' },
 			frame: { border: '0px solid #C2CFF1', borderRadius: '0px', '-moz-border-radius': '0px', '-webkit-border-radius': '0px' },
 			tweet: { padding: '5px 10px', clear: 'left' },
