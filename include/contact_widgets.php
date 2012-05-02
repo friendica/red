@@ -168,7 +168,7 @@ function common_friends_visitor_widget($profile_uid) {
 
 	return replace_macros(get_markup_template('remote_friends_common.tpl'), array(
 		'$desc' =>  sprintf( tt("%d friend in common", "%d friends in common", $t), $t),
-		'$items' = $r
+		'$items' => $r
 	)); 
 
 };
