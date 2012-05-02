@@ -146,11 +146,18 @@ function common_friends_visitor_widget($profile_uid) {
 		$cid = local_user();
 	else {
 		if(get_my_url()) {
-			$r = q("select id from gcontact where nurl = '%s' limit 1",
+			$r = q("select id from contact where nurl = '%s' and uid = %d limit 1",
 				dbesc(normalise_link(get_my_url()))
 			);
 			if(count($r))
-				$zcid = $r[0]['id'];
+				$cid = $r[0]['id'];
+			else {
+				$r = q("select id from gcontact where nurl = '%s' limit 1",
+					dbesc(normalise_link(get_my_url()))
+				);
+				if(count($r))
+					$zcid = $r[0]['id'];
+			}
 		}
 	}
 
@@ -167,9 +174,9 @@ function common_friends_visitor_widget($profile_uid) {
 		return;
 
 	if($cid)
-		$r = common_friends($profile_uid,$cid,5);
+		$r = common_friends($profile_uid,$cid,5,true);
 	else
-		$r = common_friends_zcid($profile_uid,$zcid);
+		$r = common_friends_zcid($profile_uid,$zcid,5,true);
 
 	return replace_macros(get_markup_template('remote_friends_common.tpl'), array(
 		'$desc' =>  sprintf( tt("%d friend in common", "%d friends in common", $t), $t),

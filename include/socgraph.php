@@ -182,13 +182,18 @@ function count_common_friends($uid,$cid) {
 }
 
 
-function common_friends($uid,$cid,$limit=9999) {
+function common_friends($uid,$cid,$limit=9999,$shuffle = false) {
+
+	if($shuffle)
+		$sql_extra = " order by rand() ";
+	else
+		$sql_extra = " order by `gcontact`.`name` asc "; 
 
 	$r = q("SELECT `gcontact`.* 
 		FROM `glink` left join `gcontact` on `glink`.`gcid` = `gcontact`.`id`
 		where `glink`.`cid` = %d and `glink`.`uid` = %d
 		and `gcontact`.`nurl` in (select nurl from contact where uid = %d and self = 0 and id != %d ) 
-		order by `gcontact`.`name` asc limit 0, %d",
+		sql_extra limit 0, %d",
 		intval($cid),
 		intval($uid),
 		intval($uid),
@@ -217,13 +222,18 @@ function count_common_friends_zcid($uid,$zcid) {
 
 }
 
-function common_friends_zcid($uid,$zcid,$limit = 6) {
+function common_friends_zcid($uid,$zcid,$limit = 9999,$shuffle) {
+
+	if($shuffle)
+		$sql_extra = " order by rand() ";
+	else
+		$sql_extra = " order by `gcontact`.`name` asc "; 
 
 	$r = q("SELECT `gcontact`.* 
 		FROM `glink` left join `gcontact` on `glink`.`gcid` = `gcontact`.`id`
 		where `glink`.`zcid` = %d
 		and `gcontact`.`nurl` in (select nurl from contact where uid = %d and self = 0 ) 
-		order by `gcontact`.`name` asc limit 0, %d",
+		$sql_extra limit 0, %d",
 		intval($zcid),
 		intval($uid),
 		intval($limit)
