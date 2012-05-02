@@ -154,17 +154,22 @@ function common_friends_visitor_widget($profile_uid) {
 		}
 	}
 
-	if($zcid == 0)
+	if($cid == 0 && $zcid == 0)
 		return; 
 
 	require_once('include/socgraph.php');
 
-
-	$t = count_common_friends_zcid($profile_uid,$zcid);
+	if($cid)
+		$t = count_common_friends($profile_uid,$cid);
+	else
+		$t = count_common_friends($profile_uid,$cid);
 	if(! $t)
 		return;
 
-	$r = common_friends_zcid($profile_uid,$zcid);
+	if($cid)
+		$r = common_friends($profile_uid,$cid,5);
+	else
+		$r = common_friends_zcid($profile_uid,$zcid);
 
 	return replace_macros(get_markup_template('remote_friends_common.tpl'), array(
 		'$desc' =>  sprintf( tt("%d friend in common", "%d friends in common", $t), $t),

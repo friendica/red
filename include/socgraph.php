@@ -182,17 +182,18 @@ function count_common_friends($uid,$cid) {
 }
 
 
-function common_friends($uid,$cid) {
+function common_friends($uid,$cid,$limit=9999) {
 
 	$r = q("SELECT `gcontact`.* 
 		FROM `glink` left join `gcontact` on `glink`.`gcid` = `gcontact`.`id`
 		where `glink`.`cid` = %d and `glink`.`uid` = %d
 		and `gcontact`.`nurl` in (select nurl from contact where uid = %d and self = 0 and id != %d ) 
-		order by `gcontact`.`name` asc ",
+		order by `gcontact`.`name` asc limit 0, %d",
 		intval($cid),
 		intval($uid),
 		intval($uid),
-		intval($cid)
+		intval($cid),
+		intval($limit)
 	);
 
 	return $r;
