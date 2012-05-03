@@ -1,9 +1,9 @@
-<div id="pos_null">
+<div id="pos_null" style="margin-bottom:-30px;">
 </div>
 
 <div id="sortable_boxes">
 
-<div id="close_pages">
+<div id="close_pages" style="margin-top:30px;">
 {{ if $page }}
 <div>$page</div>
 {{ endif }}
