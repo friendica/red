@@ -444,9 +444,28 @@ function item_post(&$a) {
 		$tags[] = '@' . $parent_contact['nick'];
 	}		
 
+	$tagged = array();
+
+
 	if(count($tags)) {
 		foreach($tags as $tag) {
-			handle_tag($a, $body, $inform, $str_tags, (local_user()) ? local_user() : $profile_uid , $tag); 
+
+			// If we already tagged 'Robert Johnson', don't try and tag 'Robert'.
+			// Robert Johnson should be first in the $tags array
+
+			$fullnametagged = false;
+			for($x = 0; $x < count($tagged); $x ++) {
+				if(stristr($tagged[$x],$tag . ' ')) {
+					$fullnametagged = true;
+					break;
+				}
+			}
+			if($fullnametagged)
+				continue;
+
+			$success = handle_tag($a, $body, $inform, $str_tags, (local_user()) ? local_user() : $profile_uid , $tag); 
+			if($success)
+				$tagged[] = $tag;
 		}
 	}
 
@@ -861,21 +880,27 @@ function item_content(&$a) {
  * @param unknown_type $str_tags string to add the tag to
  * @param unknown_type $profile_uid
  * @param unknown_type $tag the tag to replace
+ *
+ * @return boolean true if replaced, false if not replaced
  */
 function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
+
+	$replaced = false;
+
 	//is it a hash tag? 
 	if(strpos($tag,'#') === 0) {
 		//if the tag is replaced...
 		if(strpos($tag,'[url='))
 			//...do nothing
-			return;
+			return $replaced;
 		//base tag has the tags name only
 		$basetag = str_replace('_',' ',substr($tag,1));
 		//create text for link
 		$newtag = '#[url=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/url]';
 		//replace tag by the link
 		$body = str_replace($tag, $newtag, $body);
-	
+		$replaced = true;
+
 		//is the link already in str_tags?
 		if(! stristr($str_tags,$newtag)) {
 			//append or set str_tags
@@ -883,13 +908,13 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 				$str_tags .= ',';
 			$str_tags .= $newtag;
 		}
-		return;
+		return $replaced;
 	}
 	//is it a person tag? 
 	if(strpos($tag,'@') === 0) {
 		//is it already replaced? 
 		if(strpos($tag,'[url='))
-			return;
+			return $replaced;
 		$stat = false;
 		//get the person's name
 		$name = substr($tag,1);
@@ -965,6 +990,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 		}
 		//if there is an url for this persons profile
 		if(isset($profile)) {
+			$replaced = true;
 			//create profile link
 			$profile = str_replace(',','%2c',$profile);
 			$newtag = '@[url=' . $profile . ']' . $newname	. '[/url]';
@@ -989,4 +1015,6 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 			}
 		}
 	}
+
+	return $replaced;	
 }
