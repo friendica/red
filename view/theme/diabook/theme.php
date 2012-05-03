@@ -193,6 +193,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$.cookie("close_lastusers","2", { expires: 365, path: "/" });
 	$.cookie("close_lastphotos","2", { expires: 365, path: "/" });
 	$.cookie("close_lastlikes","2", { expires: 365, path: "/" });
+	$.cookie("Boxorder",null, { expires: 365, path: "/" });
 	alert("Right-hand column was restored. Please refresh your browser");
    }
 	</script>';}
