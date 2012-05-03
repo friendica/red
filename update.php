@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1142 );
+define( 'UPDATE_VERSION' , 1143 );
 
 /**
  *
@@ -1237,5 +1237,14 @@ function update_1141() {
 		return UPDATE_FAILED ;
 	return UPDATE_SUCCESS ;
 }
+
+
+function update_1142() {
+	$r = q("alter table user add service_class char(32) not null after expire_notification_sent, add index(service_class) ");
+	if(! $r)
+		return UPDATE_FAILED ;
+	return UPDATE_SUCCESS ;
+}
+
 
 

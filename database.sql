@@ -1027,6 +1027,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `account_expired` tinyint(1) NOT NULL DEFAULT '0',
   `account_expires_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `expire_notification_sent` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `service_class` char(32) NOT NULL,
   `allow_cid` mediumtext NOT NULL,
   `allow_gid` mediumtext NOT NULL,
   `deny_cid` mediumtext NOT NULL,
@@ -1042,7 +1043,8 @@ CREATE TABLE IF NOT EXISTS `user` (
   KEY `verified` (`verified`),
   KEY `unkmail` (`unkmail`),
   KEY `cntunkmail` (`cntunkmail`),
-  KEY `account_removed` (`account_removed`)
+  KEY `account_removed` (`account_removed`),
+  KEY `service_class` (`service_class`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
