@@ -1,11 +1,6 @@
 <script type="text/javascript" src="$baseurl/view/theme/diabook/js/jquery.autogrow.textarea.js"></script>
 <script type="text/javascript">
-$(document).ready(function() {
 
-});
-function tautogrow(id){
-		$("textarea#comment-edit-text-" +id).autogrow(); 	
- 	};
 $(document).ready(function() {
     $("iframe").each(function(){
         var ifr_source = $(this).attr("src");
@@ -21,9 +16,28 @@ $(document).ready(function() {
     });
       
 	});
+	
+	$(document).ready(function(){
+		$("#sortable_boxes").sortable({
+			update: function(event, ui) {
+				var BoxOrder = $(this).sortable("toArray").toString();
+				$.cookie("Boxorder", BoxOrder , { expires: 365, path: "/" });
+			}
+		});
 
+    	var cookie = $.cookie("Boxorder");		
+    	if (!cookie) return;
+    	var SavedID = cookie.split(",");
+	   for (var Sitem=0, m = SavedID.length; Sitem < m; Sitem++) {
+           $("#sortable_boxes").append($("#sortable_boxes").children("#" + SavedID[Sitem]));
+	       }
+	});
+	
+	function tautogrow(id){
+		$("textarea#comment-edit-text-" +id).autogrow(); 	
+ 	};
+ 	
 	function yt_iframe() {
-
 	$("iframe").load(function() { 
 	var ifr_src = $(this).contents().find("body iframe").attr("src");
 	$("iframe").contents().find("body iframe").attr("src", ifr_src+"&wmode=transparent");
