@@ -26,6 +26,14 @@ $resolution=false;
 $resolution = get_pconfig(local_user(), "diabook", "resolution");
 if ($resolution===false) $resolution="normal";
 
+//Add META viewport tag respecting the resolution to header for tablets
+if ($resolution=="wide") {
+  $a->page['htmlhead'] .= '<meta name="viewport" content="width=1200" />';
+} else {
+  $a->page['htmlhead'] .= '<meta name="viewport" content="width=980" />';
+}
+
+
 $color = false;
 $site_color = get_config("diabook", "color" );
 if (local_user()) {$color = get_pconfig(local_user(), "diabook", "color");}
@@ -108,6 +116,10 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$imageresizeJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.ae.image.resize.js";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $imageresizeJS);
 	
+	//load jquery.ui.js
+	$jqueryuiJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery-ui-1.8.20.custom.min.js";
+	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $jqueryuiJS);
+	
 	//load jquery.twitter.search.js
 	if($_COOKIE['close_twitter'] != "1") {
 	$twitterJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.twitter.search.js";
@@ -125,6 +137,9 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 		var footer_top = $(document).height() - 30;
 		$("div#footerbox").attr("style", "border-top: 1px solid #D2D2D2; width: 70%;right: 15%;position: absolute;top:"+footer_top+"px;");
 	 });
+	 
+	 
+	
 	</script>';
 	
 	//check if twitterbox is active and print
@@ -178,6 +193,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$.cookie("close_lastusers","2", { expires: 365, path: "/" });
 	$.cookie("close_lastphotos","2", { expires: 365, path: "/" });
 	$.cookie("close_lastlikes","2", { expires: 365, path: "/" });
+	$.cookie("Boxorder",null, { expires: 365, path: "/" });
 	alert("Right-hand column was restored. Please refresh your browser");
    }
 	</script>';}
@@ -459,7 +475,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
    //Community_Pages at right_aside
    if($_COOKIE['close_pages'] != "1") {
    if(local_user()) {
-   $page = '<div id="" >
+   $page = '
 			<h3 style="margin-top:0px;">'.t("Community Pages").'<a id="close_pages_icon"  onClick="close_pages()" class="icon close_box" title="close"></a></h3></div>
 			<div id=""><ul style="margin-left: 7px;margin-top: 0px;padding-left: 0px;padding-top: 0px;">';
 
@@ -485,7 +501,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 		$page .= '<li style="list-style-type: none;" class="tool"><img height="20" width="20" style="float: left; margin-right: 3px;" src="' . $contact['micro'] .'" alt="' . $contact['url'] . '" /> <a href="'.$a->get_baseurl().'/redir/'.$contact["id"].'" style="margin-top: 2px; word-wrap: break-word; width: 132px;" title="' . $contact['url'] . '" class="label" target="external-link">'.
 				$contact["name"]."</a></li>";
 	}
-	$page .= '</ul></div></div>';
+	$page .= '</ul></div>';
 	//if (sizeof($contacts) > 0)
 		$aside['$page'] = $page;	
 	}}

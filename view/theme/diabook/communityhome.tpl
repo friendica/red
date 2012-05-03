@@ -1,8 +1,13 @@
+<div id="pos_null">
+</div>
+
+<div id="sortable_boxes">
+
 <div id="close_pages">
 {{ if $page }}
 <div>$page</div>
 {{ endif }}
-</div>
+
 
 <div id="close_profiles">
 {{ if $comunity_profilest_title }}
@@ -96,4 +101,5 @@ $nv.search
 </div>
 
 <div id="twitter">
+</div>
 </div>
