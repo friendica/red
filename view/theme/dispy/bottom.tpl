@@ -44,4 +44,3 @@ function cmtBbOpen(id) {
 	$(".comment-edit-bb-" + id).show();
 }
 </script>
-<script type="text/javascript" src="$baseurl/view/theme/dispy/js/modernizr.custom.2.5.3.min.js"></script>
