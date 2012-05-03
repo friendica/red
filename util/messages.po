@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.3.1330\n"
+"Project-Id-Version: 2.3.1331\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-02 10:00-0700\n"
+"POT-Creation-Date: 2012-05-03 16:51-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,7 +35,7 @@ msgid "Contact update failed."
 msgstr ""
 
 #: ../../mod/crepair.php:115 ../../mod/wall_attach.php:44
-#: ../../mod/fsuggest.php:78 ../../mod/events.php:110 ../../mod/api.php:26
+#: ../../mod/fsuggest.php:78 ../../mod/events.php:138 ../../mod/api.php:26
 #: ../../mod/api.php:31 ../../mod/photos.php:130 ../../mod/photos.php:865
 #: ../../mod/editpost.php:10 ../../mod/install.php:171
 #: ../../mod/notifications.php:66 ../../mod/contacts.php:125
@@ -123,7 +123,7 @@ msgid "New photo from this URL"
 msgstr ""
 
 #: ../../mod/crepair.php:166 ../../mod/fsuggest.php:107
-#: ../../mod/events.php:400 ../../mod/photos.php:900 ../../mod/photos.php:958
+#: ../../mod/events.php:428 ../../mod/photos.php:900 ../../mod/photos.php:958
 #: ../../mod/photos.php:1193 ../../mod/photos.php:1233
 #: ../../mod/photos.php:1273 ../../mod/photos.php:1304
 #: ../../mod/install.php:251 ../../mod/install.php:289
@@ -203,78 +203,78 @@ msgstr ""
 msgid "Suggest a friend for %s"
 msgstr ""
 
-#: ../../mod/events.php:62
+#: ../../mod/events.php:65
 msgid "Event description and start time are required."
 msgstr ""
 
-#: ../../mod/events.php:230
+#: ../../mod/events.php:258
 msgid "l, F j"
 msgstr ""
 
-#: ../../mod/events.php:252
+#: ../../mod/events.php:280
 msgid "Edit event"
 msgstr ""
 
-#: ../../mod/events.php:272 ../../include/text.php:1053
+#: ../../mod/events.php:300 ../../include/text.php:1053
 msgid "link to source"
 msgstr ""
 
-#: ../../mod/events.php:296 ../../view/theme/diabook/theme.php:274
+#: ../../mod/events.php:324 ../../view/theme/diabook/theme.php:69
 #: ../../include/nav.php:52 ../../boot.php:1493
 msgid "Events"
 msgstr ""
 
-#: ../../mod/events.php:297
+#: ../../mod/events.php:325
 msgid "Create New Event"
 msgstr ""
 
-#: ../../mod/events.php:298
+#: ../../mod/events.php:326
 msgid "Previous"
 msgstr ""
 
-#: ../../mod/events.php:299 ../../mod/install.php:210
+#: ../../mod/events.php:327 ../../mod/install.php:210
 msgid "Next"
 msgstr ""
 
-#: ../../mod/events.php:371
+#: ../../mod/events.php:399
 msgid "hour:minute"
 msgstr ""
 
-#: ../../mod/events.php:380
+#: ../../mod/events.php:408
 msgid "Event details"
 msgstr ""
 
-#: ../../mod/events.php:381
+#: ../../mod/events.php:409
 #, php-format
 msgid "Format is %s %s. Starting date and Description are required."
 msgstr ""
 
-#: ../../mod/events.php:383
+#: ../../mod/events.php:411
 msgid "Event Starts:"
 msgstr ""
 
-#: ../../mod/events.php:386
+#: ../../mod/events.php:414
 msgid "Finish date/time is not known or not relevant"
 msgstr ""
 
-#: ../../mod/events.php:388
+#: ../../mod/events.php:416
 msgid "Event Finishes:"
 msgstr ""
 
-#: ../../mod/events.php:391
+#: ../../mod/events.php:419
 msgid "Adjust for viewer timezone"
 msgstr ""
 
-#: ../../mod/events.php:393
+#: ../../mod/events.php:421
 msgid "Description:"
 msgstr ""
 
-#: ../../mod/events.php:395 ../../include/event.php:37
+#: ../../mod/events.php:423 ../../include/event.php:37
 #: ../../include/bb2diaspora.php:260 ../../boot.php:1092
 msgid "Location:"
 msgstr ""
 
-#: ../../mod/events.php:397
+#: ../../mod/events.php:425
 msgid "Share this event"
 msgstr ""
 
@@ -352,7 +352,7 @@ msgstr ""
 #: ../../mod/photos.php:51 ../../mod/photos.php:151 ../../mod/photos.php:879
 #: ../../mod/photos.php:950 ../../mod/photos.php:965 ../../mod/photos.php:1382
 #: ../../mod/photos.php:1394 ../../addon/communityhome/communityhome.php:110
-#: ../../view/theme/diabook/theme.php:155
+#: ../../view/theme/diabook/theme.php:436
 msgid "Contact Photos"
 msgstr ""
 
@@ -375,7 +375,7 @@ msgstr ""
 #: ../../mod/profile_photo.php:74 ../../mod/profile_photo.php:174
 #: ../../mod/profile_photo.php:252 ../../mod/profile_photo.php:261
 #: ../../addon/communityhome/communityhome.php:111
-#: ../../view/theme/diabook/theme.php:156
+#: ../../view/theme/diabook/theme.php:437
 msgid "Profile Photos"
 msgstr ""
 
@@ -397,7 +397,7 @@ msgstr ""
 
 #: ../../mod/photos.php:528 ../../mod/like.php:127 ../../mod/tagger.php:70
 #: ../../addon/communityhome/communityhome.php:163
-#: ../../view/theme/diabook/theme.php:127 ../../include/text.php:1304
+#: ../../view/theme/diabook/theme.php:408 ../../include/text.php:1304
 #: ../../include/diaspora.php:1654 ../../include/conversation.php:53
 #: ../../include/conversation.php:126
 msgid "photo"
@@ -572,7 +572,7 @@ msgstr ""
 msgid "Not available."
 msgstr ""
 
-#: ../../mod/community.php:30 ../../view/theme/diabook/theme.php:276
+#: ../../mod/community.php:30 ../../view/theme/diabook/theme.php:71
 #: ../../include/nav.php:101
 msgid "Community"
 msgstr ""
@@ -1214,7 +1214,7 @@ msgstr ""
 msgid "Personal"
 msgstr ""
 
-#: ../../mod/notifications.php:90 ../../view/theme/diabook/theme.php:270
+#: ../../mod/notifications.php:90 ../../view/theme/diabook/theme.php:65
 #: ../../include/nav.php:77 ../../include/nav.php:115
 msgid "Home"
 msgstr ""
@@ -1655,7 +1655,7 @@ msgstr ""
 msgid "Edit contact"
 msgstr ""
 
-#: ../../mod/contacts.php:544 ../../view/theme/diabook/theme.php:272
+#: ../../mod/contacts.php:544 ../../view/theme/diabook/theme.php:67
 #: ../../include/nav.php:139
 msgid "Contacts"
 msgstr ""
@@ -2600,7 +2600,7 @@ msgstr ""
 msgid "Profile Visibility Editor"
 msgstr ""
 
-#: ../../mod/profperm.php:103 ../../view/theme/diabook/theme.php:271
+#: ../../mod/profperm.php:103 ../../view/theme/diabook/theme.php:66
 #: ../../include/profile_advanced.php:7 ../../include/profile_advanced.php:74
 #: ../../include/nav.php:50 ../../boot.php:1478
 msgid "Profile"
@@ -2786,8 +2786,8 @@ msgstr ""
 #: ../../addon/facebook/facebook.php:1542
 #: ../../addon/communityhome/communityhome.php:158
 #: ../../addon/communityhome/communityhome.php:167
-#: ../../view/theme/diabook/theme.php:122
-#: ../../view/theme/diabook/theme.php:131 ../../include/diaspora.php:1654
+#: ../../view/theme/diabook/theme.php:403
+#: ../../view/theme/diabook/theme.php:412 ../../include/diaspora.php:1654
 #: ../../include/conversation.php:48 ../../include/conversation.php:57
 #: ../../include/conversation.php:121 ../../include/conversation.php:130
 msgid "status"
@@ -2795,7 +2795,7 @@ msgstr ""
 
 #: ../../mod/like.php:144 ../../addon/facebook/facebook.php:1546
 #: ../../addon/communityhome/communityhome.php:172
-#: ../../view/theme/diabook/theme.php:136 ../../include/diaspora.php:1670
+#: ../../view/theme/diabook/theme.php:417 ../../include/diaspora.php:1670
 #: ../../include/conversation.php:65
 #, php-format
 msgid "%1$s likes %2$s's %3$s"
@@ -2816,7 +2816,7 @@ msgstr ""
 msgid "Access denied."
 msgstr ""
 
-#: ../../mod/fbrowser.php:23 ../../view/theme/diabook/theme.php:273
+#: ../../mod/fbrowser.php:23 ../../view/theme/diabook/theme.php:68
 #: ../../include/nav.php:51 ../../boot.php:1484
 msgid "Photos"
 msgstr ""
@@ -2852,28 +2852,28 @@ msgstr ""
 msgid "Wall Photos"
 msgstr ""
 
-#: ../../mod/item.php:762
+#: ../../mod/item.php:781
 msgid "System error. Post not saved."
 msgstr ""
 
-#: ../../mod/item.php:787
+#: ../../mod/item.php:806
 #, php-format
 msgid ""
 "This message was sent to you by %s, a member of the Friendica social network."
 msgstr ""
 
-#: ../../mod/item.php:789
+#: ../../mod/item.php:808
 #, php-format
 msgid "You may visit them online at %s"
 msgstr ""
 
-#: ../../mod/item.php:790
+#: ../../mod/item.php:809
 msgid ""
 "Please contact the sender by replying to this post if you do not wish to "
 "receive these messages."
 msgstr ""
 
-#: ../../mod/item.php:792
+#: ../../mod/item.php:811
 #, php-format
 msgid "%s posted an update."
 msgstr ""
@@ -3786,11 +3786,6 @@ msgstr ""
 msgid "%1$s changed %2$s to \"%3$s\""
 msgstr ""
 
-#: ../../mod/profiles.php:332
-#, php-format
-msgid " - Visit %1$s's %2$s"
-msgstr ""
-
 #: ../../mod/profiles.php:335
 #, php-format
 msgid "%1$s has an updated %2$s, changing %3$s."
@@ -4047,7 +4042,7 @@ msgstr ""
 msgid "No entries."
 msgstr ""
 
-#: ../../mod/suggest.php:38 ../../view/theme/diabook/theme.php:183
+#: ../../mod/suggest.php:38 ../../view/theme/diabook/theme.php:464
 #: ../../include/contact_widgets.php:34
 msgid "Friend Suggestions"
 msgstr ""
@@ -4062,7 +4057,7 @@ msgstr ""
 msgid "Ignore/Hide"
 msgstr ""
 
-#: ../../mod/directory.php:47 ../../view/theme/diabook/theme.php:181
+#: ../../mod/directory.php:47 ../../view/theme/diabook/theme.php:462
 msgid "Global Directory"
 msgstr ""
 
@@ -4585,8 +4580,13 @@ msgstr ""
 msgid "%s - Click to open/close"
 msgstr ""
 
-#: ../../addon/page/page.php:47
+#: ../../addon/page/page.php:48
 msgid "Forums"
+msgstr ""
+
+#: ../../addon/page/page.php:63 ../../addon/showmore/showmore.php:87
+#: ../../include/conversation.php:466 ../../boot.php:507
+msgid "show more"
 msgstr ""
 
 #: ../../addon/planets/planets.php:150
@@ -4629,7 +4629,7 @@ msgid "Latest likes"
 msgstr ""
 
 #: ../../addon/communityhome/communityhome.php:155
-#: ../../view/theme/diabook/theme.php:119 ../../include/text.php:1302
+#: ../../view/theme/diabook/theme.php:400 ../../include/text.php:1302
 #: ../../include/conversation.php:45 ../../include/conversation.php:118
 msgid "event"
 msgstr ""
@@ -4781,7 +4781,7 @@ msgid "Post to Drupal by default"
 msgstr ""
 
 #: ../../addon/drpost/drpost.php:184 ../../addon/wppost/wppost.php:190
-#: ../../addon/blogger/blogger.php:172 ../../addon/posterous/posterous.php:173
+#: ../../addon/blogger/blogger.php:172 ../../addon/posterous/posterous.php:177
 msgid "Post from Friendica"
 msgstr ""
 
@@ -5342,11 +5342,6 @@ msgstr ""
 msgid "Show More Settings saved."
 msgstr ""
 
-#: ../../addon/showmore/showmore.php:87 ../../include/conversation.php:466
-#: ../../boot.php:507
-msgid "show more"
-msgstr ""
-
 #: ../../addon/piwik/piwik.php:79
 msgid ""
 "This website is tracked using the <a href='http://www.piwik.org'>Piwik</a> "
@@ -5549,78 +5544,78 @@ msgstr ""
 msgid "Color scheme"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:48
-msgid "Community Profiles"
-msgstr ""
-
-#: ../../view/theme/diabook/theme.php:68
-msgid "Last users"
-msgstr ""
-
-#: ../../view/theme/diabook/theme.php:97
-msgid "Last likes"
-msgstr ""
-
-#: ../../view/theme/diabook/theme.php:142
-msgid "Last photos"
-msgstr ""
-
-#: ../../view/theme/diabook/theme.php:179
-msgid "Find Friends"
-msgstr ""
-
-#: ../../view/theme/diabook/theme.php:180
-msgid "Local Directory"
-msgstr ""
-
-#: ../../view/theme/diabook/theme.php:182 ../../include/contact_widgets.php:35
-msgid "Similar Interests"
-msgstr ""
-
-#: ../../view/theme/diabook/theme.php:184 ../../include/contact_widgets.php:37
-msgid "Invite Friends"
-msgstr ""
-
-#: ../../view/theme/diabook/theme.php:199
-#: ../../view/theme/diabook/theme.php:277
-msgid "Community Pages"
-msgstr ""
-
-#: ../../view/theme/diabook/theme.php:232
-msgid "Help or @NewHere ?"
-msgstr ""
-
-#: ../../view/theme/diabook/theme.php:238
-msgid "Connect Services"
-msgstr ""
-
-#: ../../view/theme/diabook/theme.php:270 ../../include/nav.php:49
+#: ../../view/theme/diabook/theme.php:65 ../../include/nav.php:49
 #: ../../include/nav.php:115
 msgid "Your posts and conversations"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:271 ../../include/nav.php:50
+#: ../../view/theme/diabook/theme.php:66 ../../include/nav.php:50
 msgid "Your profile page"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:272
+#: ../../view/theme/diabook/theme.php:67
 msgid "Your contacts"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:273 ../../include/nav.php:51
+#: ../../view/theme/diabook/theme.php:68 ../../include/nav.php:51
 msgid "Your photos"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:274 ../../include/nav.php:52
+#: ../../view/theme/diabook/theme.php:69 ../../include/nav.php:52
 msgid "Your events"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:275 ../../include/nav.php:53
+#: ../../view/theme/diabook/theme.php:70 ../../include/nav.php:53
 msgid "Personal notes"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:275 ../../include/nav.php:53
+#: ../../view/theme/diabook/theme.php:70 ../../include/nav.php:53
 msgid "Your personal photos"
+msgstr ""
+
+#: ../../view/theme/diabook/theme.php:72
+#: ../../view/theme/diabook/theme.php:481
+msgid "Community Pages"
+msgstr ""
+
+#: ../../view/theme/diabook/theme.php:328
+msgid "Community Profiles"
+msgstr ""
+
+#: ../../view/theme/diabook/theme.php:349
+msgid "Last users"
+msgstr ""
+
+#: ../../view/theme/diabook/theme.php:378
+msgid "Last likes"
+msgstr ""
+
+#: ../../view/theme/diabook/theme.php:423
+msgid "Last photos"
+msgstr ""
+
+#: ../../view/theme/diabook/theme.php:460
+msgid "Find Friends"
+msgstr ""
+
+#: ../../view/theme/diabook/theme.php:461
+msgid "Local Directory"
+msgstr ""
+
+#: ../../view/theme/diabook/theme.php:463 ../../include/contact_widgets.php:35
+msgid "Similar Interests"
+msgstr ""
+
+#: ../../view/theme/diabook/theme.php:465 ../../include/contact_widgets.php:37
+msgid "Invite Friends"
+msgstr ""
+
+#: ../../view/theme/diabook/theme.php:515
+msgid "Help or @NewHere ?"
+msgstr ""
+
+#: ../../view/theme/diabook/theme.php:522
+msgid "Connect Services"
 msgstr ""
 
 #: ../../view/theme/diabook/config.php:95 ../../view/theme/dispy/config.php:74

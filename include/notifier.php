@@ -47,7 +47,7 @@ function notifier_run($argv, $argc){
 
 	$a->set_baseurl(get_config('system','url'));
 
-	logger('notifier: invoked: ' . print_r($argv,true));
+	logger('notifier: invoked: ' . print_r($argv,true), LOGGER_DEBUG);
 
 	$cmd = $argv[1];
 
@@ -832,6 +832,8 @@ function notifier_run($argv, $argc){
 		}
 
 	}
+
+	logger('notifier: calling hooks', LOGGER_DEBUG);
 
 	if($normal_mode)
 		call_hooks('notifier_normal',$target_item);
