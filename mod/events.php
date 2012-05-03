@@ -68,6 +68,15 @@ function events_post(&$a) {
 
 	$share = ((intval($_POST['share'])) ? intval($_POST['share']) : 0);
 
+	$c = q("select id from contact where uid = %d and self = 1 limit 1",
+		intval(local_user())
+	);
+	if(count($c))
+		$self = $c[0]['id'];
+	else
+		$self = 0;
+
+
 	if($share) {
 		$str_group_allow   = perms2str($_POST['group_allow']);
 		$str_contact_allow = perms2str($_POST['contact_allow']);
@@ -75,9 +84,9 @@ function events_post(&$a) {
 		$str_contact_deny  = perms2str($_POST['contact_deny']);
 
 		// Undo the pseudo-contact of self, since there are real contacts now
-		if( strpos($str_contact_allow, '<' . local_user() . '>') !== false )
+		if( strpos($str_contact_allow, '<' . $self . '>') !== false )
 		{
-			$str_contact_allow = str_replace('<' . local_user() . '>', '', $str_contact_allow);
+			$str_contact_allow = str_replace('<' . $self . '>', '', $str_contact_allow);
 		}
 		// Make sure to set the `private` field as true. This is necessary to
 		// have the posts show up correctly in Diaspora if an event is created
@@ -90,7 +99,7 @@ function events_post(&$a) {
 	else {
 		// Note: do not set `private` field for self-only events. It will
 		// keep even you from seeing them!
-		$str_contact_allow = '<' . local_user() . '>';
+		$str_contact_allow = '<' . $self . '>';
 		$str_group_allow = $str_contact_deny = $str_group_deny = '';
 	}
 
