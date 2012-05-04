@@ -184,7 +184,7 @@ function count_common_friends($uid,$cid) {
 }
 
 
-function common_friends($uid,$cid,$limit=9999,$shuffle = false) {
+function common_friends($uid,$cid,$start = 0,$limit=9999,$shuffle = false) {
 
 	if($shuffle)
 		$sql_extra = " order by rand() ";
@@ -195,11 +195,12 @@ function common_friends($uid,$cid,$limit=9999,$shuffle = false) {
 		FROM `glink` left join `gcontact` on `glink`.`gcid` = `gcontact`.`id`
 		where `glink`.`cid` = %d and `glink`.`uid` = %d
 		and `gcontact`.`nurl` in (select nurl from contact where uid = %d and self = 0 and blocked = 0 and hidden = 0 and id != %d ) 
-		$sql_extra limit 0, %d",
+		$sql_extra limit %d, %d",
 		intval($cid),
 		intval($uid),
 		intval($uid),
 		intval($cid),
+		intval($start),
 		intval($limit)
 	);
 
@@ -224,7 +225,7 @@ function count_common_friends_zcid($uid,$zcid) {
 
 }
 
-function common_friends_zcid($uid,$zcid,$limit = 9999,$shuffle) {
+function common_friends_zcid($uid,$zcid,$start = 0, $limit = 9999,$shuffle) {
 
 	if($shuffle)
 		$sql_extra = " order by rand() ";
@@ -235,9 +236,10 @@ function common_friends_zcid($uid,$zcid,$limit = 9999,$shuffle) {
 		FROM `glink` left join `gcontact` on `glink`.`gcid` = `gcontact`.`id`
 		where `glink`.`zcid` = %d
 		and `gcontact`.`nurl` in (select nurl from contact where uid = %d and self = 0 and blocked = 0 and hidden = 0 ) 
-		$sql_extra limit 0, %d",
+		$sql_extra limit %d, %d",
 		intval($zcid),
 		intval($uid),
+		intval($start),
 		intval($limit)
 	);
 
