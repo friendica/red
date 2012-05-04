@@ -328,8 +328,8 @@ function profile_activity($changed, $value) {
 	$prof = '[url=' . $self[0]['url'] . '?tab=profile' . ']' . t('public profile') . '[/url]';	
 
 	if($t == 1 && strlen($value)) {
-		$message = sprintf( t('%1$s changed %2$s to "%3$s"'), $A, $changes, $value);
-		$message .= "\n\n" . sprintf( t(' - Visit %1$s\'s %2$s'), $A, $prof);
+		$message = sprintf( t('%1$s changed %2$s to &ldquo;%3$s&rdquo;'), $A, $changes, $value);
+		$message .= "\n\n" . sprintf( t(" - Visit %1$s\'s %2$s"), $A, $prof);
 	}
 	else
 		$message = 	sprintf( t('%1$s has an updated %2$s, changing %3$s.'), $A, $prof, $changes);

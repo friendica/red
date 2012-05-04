@@ -143,7 +143,7 @@ function common_friends_visitor_widget($profile_uid) {
 	$cid = $zcid = 0;
 
 	if(can_write_wall($a,$profile_uid))
-		$cid = local_user();
+		$cid = remote_user();
 	else {
 		if(get_my_url()) {
 			$r = q("select id from contact where nurl = '%s' and uid = %d limit 1",
