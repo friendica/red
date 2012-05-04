@@ -51,6 +51,17 @@ function delivery_run($argv, $argc){
 		return;
 	}	
 
+	$maxsysload = intval(get_config('system','maxloadavg'));
+	if($maxsysload < 1)
+		$maxsysload = 50;
+	if(function_exists('sys_getloadavg')) {
+		$load = sys_getloadavg();
+		if(intval($load[0]) > $maxsysload) {
+			logger('system: load ' . $load . ' too high. Delivery deferred to next queue run.');
+			return;
+		}
+	}
+
 	// It's ours to deliver. Remove it from the queue.
 
 	q("delete from deliverq where cmd = '%s' and item = %d and contact = %d limit 1",
