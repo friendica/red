@@ -176,6 +176,7 @@ function count_common_friends($uid,$cid) {
 		intval($cid)
 	);
 
+//	logger("count_common_friends: $uid $cid {$r[0]['total']}"); 
 	if(count($r))
 		return $r[0]['total'];
 	return 0;
