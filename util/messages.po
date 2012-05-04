@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.3.1331\n"
+"Project-Id-Version: 2.3.1332\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-03 17:20-0700\n"
+"POT-Creation-Date: 2012-05-04 10:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,12 +51,11 @@ msgstr ""
 #: ../../mod/profile_photo.php:163 ../../mod/message.php:38
 #: ../../mod/message.php:90 ../../mod/allfriends.php:9
 #: ../../mod/nogroup.php:25 ../../mod/wall_upload.php:53
-#: ../../mod/follow.php:8 ../../mod/common.php:9 ../../mod/display.php:138
-#: ../../mod/profiles.php:7 ../../mod/profiles.php:365
-#: ../../mod/delegate.php:6 ../../mod/suggest.php:28 ../../mod/invite.php:13
-#: ../../mod/invite.php:81 ../../mod/dfrn_confirm.php:53
-#: ../../addon/facebook/facebook.php:485 ../../include/items.php:3187
-#: ../../index.php:306
+#: ../../mod/follow.php:8 ../../mod/display.php:138 ../../mod/profiles.php:7
+#: ../../mod/profiles.php:365 ../../mod/delegate.php:6
+#: ../../mod/suggest.php:28 ../../mod/invite.php:13 ../../mod/invite.php:81
+#: ../../mod/dfrn_confirm.php:53 ../../addon/facebook/facebook.php:485
+#: ../../include/items.php:3187 ../../index.php:306
 msgid "Permission denied."
 msgstr ""
 
@@ -86,7 +85,7 @@ msgid "Return to contact editor"
 msgstr ""
 
 #: ../../mod/crepair.php:148 ../../mod/settings.php:541
-#: ../../mod/settings.php:567 ../../mod/admin.php:638 ../../mod/admin.php:647
+#: ../../mod/settings.php:567 ../../mod/admin.php:640 ../../mod/admin.php:649
 msgid "Name"
 msgstr ""
 
@@ -130,9 +129,9 @@ msgstr ""
 #: ../../mod/localtime.php:45 ../../mod/contacts.php:322
 #: ../../mod/settings.php:539 ../../mod/settings.php:685
 #: ../../mod/settings.php:746 ../../mod/settings.php:940
-#: ../../mod/manage.php:109 ../../mod/group.php:85 ../../mod/admin.php:400
-#: ../../mod/admin.php:635 ../../mod/admin.php:771 ../../mod/admin.php:970
-#: ../../mod/admin.php:1057 ../../mod/profiles.php:534
+#: ../../mod/manage.php:109 ../../mod/group.php:85 ../../mod/admin.php:402
+#: ../../mod/admin.php:637 ../../mod/admin.php:773 ../../mod/admin.php:972
+#: ../../mod/admin.php:1059 ../../mod/profiles.php:534
 #: ../../mod/invite.php:119 ../../addon/facebook/facebook.php:575
 #: ../../addon/yourls/yourls.php:76 ../../addon/ljpost/ljpost.php:93
 #: ../../addon/nsfw/nsfw.php:57 ../../addon/planets/planets.php:158
@@ -555,7 +554,7 @@ msgid "Preview"
 msgstr ""
 
 #: ../../mod/photos.php:1331 ../../mod/settings.php:602
-#: ../../mod/settings.php:683 ../../mod/group.php:168 ../../mod/admin.php:642
+#: ../../mod/settings.php:683 ../../mod/group.php:168 ../../mod/admin.php:644
 #: ../../include/conversation.php:318 ../../include/conversation.php:584
 msgid "Delete"
 msgstr ""
@@ -1263,7 +1262,7 @@ msgid "if applicable"
 msgstr ""
 
 #: ../../mod/notifications.php:157 ../../mod/notifications.php:204
-#: ../../mod/admin.php:640
+#: ../../mod/admin.php:642
 msgid "Approve"
 msgstr ""
 
@@ -1452,7 +1451,7 @@ msgstr ""
 msgid "Network type: %s"
 msgstr ""
 
-#: ../../mod/contacts.php:280
+#: ../../mod/contacts.php:280 ../../include/contact_widgets.php:183
 #, php-format
 msgid "%d contact in common"
 msgid_plural "%d contacts in common"
@@ -1464,12 +1463,12 @@ msgid "View all contacts"
 msgstr ""
 
 #: ../../mod/contacts.php:290 ../../mod/contacts.php:347
-#: ../../mod/admin.php:644
+#: ../../mod/admin.php:646
 msgid "Unblock"
 msgstr ""
 
 #: ../../mod/contacts.php:290 ../../mod/contacts.php:347
-#: ../../mod/admin.php:643
+#: ../../mod/admin.php:645
 msgid "Block"
 msgstr ""
 
@@ -1562,7 +1561,7 @@ msgstr ""
 msgid "Update public posts"
 msgstr ""
 
-#: ../../mod/contacts.php:344 ../../mod/admin.php:1115
+#: ../../mod/contacts.php:344 ../../mod/admin.php:1117
 msgid "Update now"
 msgstr ""
 
@@ -1774,7 +1773,7 @@ msgstr ""
 msgid "Remove account"
 msgstr ""
 
-#: ../../mod/settings.php:88 ../../mod/admin.php:730 ../../mod/admin.php:935
+#: ../../mod/settings.php:88 ../../mod/admin.php:732 ../../mod/admin.php:937
 #: ../../addon/mathjax/mathjax.php:36 ../../include/nav.php:137
 msgid "Settings"
 msgstr ""
@@ -2001,7 +2000,7 @@ msgstr ""
 msgid "Don't show emoticons"
 msgstr ""
 
-#: ../../mod/settings.php:821 ../../mod/admin.php:180 ../../mod/admin.php:616
+#: ../../mod/settings.php:821 ../../mod/admin.php:180 ../../mod/admin.php:618
 msgid "Normal Account"
 msgstr ""
 
@@ -2009,7 +2008,7 @@ msgstr ""
 msgid "This account is a normal personal profile"
 msgstr ""
 
-#: ../../mod/settings.php:825 ../../mod/admin.php:181 ../../mod/admin.php:617
+#: ../../mod/settings.php:825 ../../mod/admin.php:181 ../../mod/admin.php:619
 msgid "Soapbox Account"
 msgstr ""
 
@@ -2017,7 +2016,7 @@ msgstr ""
 msgid "Automatically approve all connection/friend requests as read-only fans"
 msgstr ""
 
-#: ../../mod/settings.php:829 ../../mod/admin.php:182 ../../mod/admin.php:618
+#: ../../mod/settings.php:829 ../../mod/admin.php:182 ../../mod/admin.php:620
 msgid "Community/Celebrity Account"
 msgstr ""
 
@@ -2025,7 +2024,7 @@ msgstr ""
 msgid "Automatically approve all connection/friend requests as read-write fans"
 msgstr ""
 
-#: ../../mod/settings.php:833 ../../mod/admin.php:183 ../../mod/admin.php:619
+#: ../../mod/settings.php:833 ../../mod/admin.php:183 ../../mod/admin.php:621
 msgid "Automatic Friend Account"
 msgstr ""
 
@@ -2751,7 +2750,7 @@ msgstr ""
 msgid "Your invitation ID: "
 msgstr ""
 
-#: ../../mod/register.php:553 ../../mod/admin.php:401
+#: ../../mod/register.php:553 ../../mod/admin.php:403
 msgid "Registration"
 msgstr ""
 
@@ -2807,7 +2806,7 @@ msgid "%1$s doesn't like %2$s's %3$s"
 msgstr ""
 
 #: ../../mod/notice.php:15 ../../mod/viewsrc.php:15 ../../mod/admin.php:156
-#: ../../mod/admin.php:679 ../../mod/admin.php:878 ../../mod/display.php:37
+#: ../../mod/admin.php:681 ../../mod/admin.php:880 ../../mod/display.php:37
 #: ../../mod/display.php:142 ../../include/items.php:3099
 msgid "Item not found."
 msgstr ""
@@ -3038,19 +3037,19 @@ msgstr ""
 msgid "Theme settings updated."
 msgstr ""
 
-#: ../../mod/admin.php:96 ../../mod/admin.php:399
+#: ../../mod/admin.php:96 ../../mod/admin.php:401
 msgid "Site"
 msgstr ""
 
-#: ../../mod/admin.php:97 ../../mod/admin.php:634 ../../mod/admin.php:646
+#: ../../mod/admin.php:97 ../../mod/admin.php:636 ../../mod/admin.php:648
 msgid "Users"
 msgstr ""
 
-#: ../../mod/admin.php:98 ../../mod/admin.php:728 ../../mod/admin.php:770
+#: ../../mod/admin.php:98 ../../mod/admin.php:730 ../../mod/admin.php:772
 msgid "Plugins"
 msgstr ""
 
-#: ../../mod/admin.php:99 ../../mod/admin.php:933 ../../mod/admin.php:969
+#: ../../mod/admin.php:99 ../../mod/admin.php:935 ../../mod/admin.php:971
 msgid "Themes"
 msgstr ""
 
@@ -3062,7 +3061,7 @@ msgstr ""
 msgid "Software Update"
 msgstr ""
 
-#: ../../mod/admin.php:115 ../../mod/admin.php:1056
+#: ../../mod/admin.php:115 ../../mod/admin.php:1058
 msgid "Logs"
 msgstr ""
 
@@ -3070,9 +3069,9 @@ msgstr ""
 msgid "User registrations waiting for confirmation"
 msgstr ""
 
-#: ../../mod/admin.php:195 ../../mod/admin.php:398 ../../mod/admin.php:633
-#: ../../mod/admin.php:727 ../../mod/admin.php:769 ../../mod/admin.php:932
-#: ../../mod/admin.php:968 ../../mod/admin.php:1055
+#: ../../mod/admin.php:195 ../../mod/admin.php:400 ../../mod/admin.php:635
+#: ../../mod/admin.php:729 ../../mod/admin.php:771 ../../mod/admin.php:934
+#: ../../mod/admin.php:970 ../../mod/admin.php:1057
 msgid "Administration"
 msgstr ""
 
@@ -3096,483 +3095,493 @@ msgstr ""
 msgid "Active plugins"
 msgstr ""
 
-#: ../../mod/admin.php:337
+#: ../../mod/admin.php:339
 msgid "Site settings updated."
 msgstr ""
 
-#: ../../mod/admin.php:385
+#: ../../mod/admin.php:387
 msgid "Closed"
 msgstr ""
 
-#: ../../mod/admin.php:386
+#: ../../mod/admin.php:388
 msgid "Requires approval"
 msgstr ""
 
-#: ../../mod/admin.php:387
+#: ../../mod/admin.php:389
 msgid "Open"
 msgstr ""
 
-#: ../../mod/admin.php:391
+#: ../../mod/admin.php:393
 msgid "No SSL policy, links will track page SSL state"
 msgstr ""
 
-#: ../../mod/admin.php:392
+#: ../../mod/admin.php:394
 msgid "Force all links to use SSL"
 msgstr ""
 
-#: ../../mod/admin.php:393
+#: ../../mod/admin.php:395
 msgid "Self-signed certificate, use SSL for local links only (discouraged)"
 msgstr ""
 
-#: ../../mod/admin.php:402
+#: ../../mod/admin.php:404
 msgid "File upload"
 msgstr ""
 
-#: ../../mod/admin.php:403
+#: ../../mod/admin.php:405
 msgid "Policies"
 msgstr ""
 
-#: ../../mod/admin.php:404
+#: ../../mod/admin.php:406
 msgid "Advanced"
 msgstr ""
 
-#: ../../mod/admin.php:408 ../../addon/statusnet/statusnet.php:544
+#: ../../mod/admin.php:410 ../../addon/statusnet/statusnet.php:544
 msgid "Site name"
 msgstr ""
 
-#: ../../mod/admin.php:409
+#: ../../mod/admin.php:411
 msgid "Banner/Logo"
 msgstr ""
 
-#: ../../mod/admin.php:410
+#: ../../mod/admin.php:412
 msgid "System language"
 msgstr ""
 
-#: ../../mod/admin.php:411
+#: ../../mod/admin.php:413
 msgid "System theme"
 msgstr ""
 
-#: ../../mod/admin.php:411
+#: ../../mod/admin.php:413
 msgid ""
 "Default system theme - may be over-ridden by user profiles - <a href='#' "
 "id='cnftheme'>change theme settings</a>"
 msgstr ""
 
-#: ../../mod/admin.php:412
+#: ../../mod/admin.php:414
 msgid "SSL link policy"
 msgstr ""
 
-#: ../../mod/admin.php:412
+#: ../../mod/admin.php:414
 msgid "Determines whether generated links should be forced to use SSL"
 msgstr ""
 
-#: ../../mod/admin.php:413
+#: ../../mod/admin.php:415
 msgid "Maximum image size"
 msgstr ""
 
-#: ../../mod/admin.php:413
+#: ../../mod/admin.php:415
 msgid ""
 "Maximum size in bytes of uploaded images. Default is 0, which means no "
 "limits."
 msgstr ""
 
-#: ../../mod/admin.php:415
+#: ../../mod/admin.php:417
 msgid "Register policy"
 msgstr ""
 
-#: ../../mod/admin.php:416
+#: ../../mod/admin.php:418
 msgid "Register text"
 msgstr ""
 
-#: ../../mod/admin.php:416
+#: ../../mod/admin.php:418
 msgid "Will be displayed prominently on the registration page."
 msgstr ""
 
-#: ../../mod/admin.php:417
+#: ../../mod/admin.php:419
 msgid "Accounts abandoned after x days"
 msgstr ""
 
-#: ../../mod/admin.php:417
+#: ../../mod/admin.php:419
 msgid ""
 "Will not waste system resources polling external sites for abandonded "
 "accounts. Enter 0 for no time limit."
 msgstr ""
 
-#: ../../mod/admin.php:418
+#: ../../mod/admin.php:420
 msgid "Allowed friend domains"
 msgstr ""
 
-#: ../../mod/admin.php:418
+#: ../../mod/admin.php:420
 msgid ""
 "Comma separated list of domains which are allowed to establish friendships "
 "with this site. Wildcards are accepted. Empty to allow any domains"
 msgstr ""
 
-#: ../../mod/admin.php:419
+#: ../../mod/admin.php:421
 msgid "Allowed email domains"
 msgstr ""
 
-#: ../../mod/admin.php:419
+#: ../../mod/admin.php:421
 msgid ""
 "Comma separated list of domains which are allowed in email addresses for "
 "registrations to this site. Wildcards are accepted. Empty to allow any "
 "domains"
 msgstr ""
 
-#: ../../mod/admin.php:420
+#: ../../mod/admin.php:422
 msgid "Block public"
 msgstr ""
 
-#: ../../mod/admin.php:420
+#: ../../mod/admin.php:422
 msgid ""
 "Check to block public access to all otherwise public personal pages on this "
 "site unless you are currently logged in."
 msgstr ""
 
-#: ../../mod/admin.php:421
+#: ../../mod/admin.php:423
 msgid "Force publish"
 msgstr ""
 
-#: ../../mod/admin.php:421
+#: ../../mod/admin.php:423
 msgid ""
 "Check to force all profiles on this site to be listed in the site directory."
 msgstr ""
 
-#: ../../mod/admin.php:422
+#: ../../mod/admin.php:424
 msgid "Global directory update URL"
 msgstr ""
 
-#: ../../mod/admin.php:422
+#: ../../mod/admin.php:424
 msgid ""
 "URL to update the global directory. If this is not set, the global directory "
 "is completely unavailable to the application."
 msgstr ""
 
-#: ../../mod/admin.php:424
+#: ../../mod/admin.php:426
 msgid "Block multiple registrations"
 msgstr ""
 
-#: ../../mod/admin.php:424
+#: ../../mod/admin.php:426
 msgid "Disallow users to register additional accounts for use as pages."
 msgstr ""
 
-#: ../../mod/admin.php:425
+#: ../../mod/admin.php:427
 msgid "OpenID support"
 msgstr ""
 
-#: ../../mod/admin.php:425
+#: ../../mod/admin.php:427
 msgid "OpenID support for registration and logins."
 msgstr ""
 
-#: ../../mod/admin.php:426
+#: ../../mod/admin.php:428
 msgid "Fullname check"
 msgstr ""
 
-#: ../../mod/admin.php:426
+#: ../../mod/admin.php:428
 msgid ""
 "Force users to register with a space between firstname and lastname in Full "
 "name, as an antispam measure"
 msgstr ""
 
-#: ../../mod/admin.php:427
+#: ../../mod/admin.php:429
 msgid "UTF-8 Regular expressions"
 msgstr ""
 
-#: ../../mod/admin.php:427
+#: ../../mod/admin.php:429
 msgid "Use PHP UTF8 regular expressions"
 msgstr ""
 
-#: ../../mod/admin.php:428
+#: ../../mod/admin.php:430
 msgid "Show Community Page"
 msgstr ""
 
-#: ../../mod/admin.php:428
+#: ../../mod/admin.php:430
 msgid ""
 "Display a Community page showing all recent public postings on this site."
 msgstr ""
 
-#: ../../mod/admin.php:429
+#: ../../mod/admin.php:431
 msgid "Enable OStatus support"
 msgstr ""
 
-#: ../../mod/admin.php:429
+#: ../../mod/admin.php:431
 msgid ""
 "Provide built-in OStatus (identi.ca, status.net, etc.) compatibility. All "
 "communications in OStatus are public, so privacy warnings will be "
 "occasionally displayed."
 msgstr ""
 
-#: ../../mod/admin.php:430
+#: ../../mod/admin.php:432
 msgid "Enable Diaspora support"
 msgstr ""
 
-#: ../../mod/admin.php:430
+#: ../../mod/admin.php:432
 msgid "Provide built-in Diaspora network compatibility."
 msgstr ""
 
-#: ../../mod/admin.php:431
+#: ../../mod/admin.php:433
 msgid "Only allow Friendica contacts"
 msgstr ""
 
-#: ../../mod/admin.php:431
+#: ../../mod/admin.php:433
 msgid ""
 "All contacts must use Friendica protocols. All other built-in communication "
 "protocols disabled."
 msgstr ""
 
-#: ../../mod/admin.php:432
+#: ../../mod/admin.php:434
 msgid "Verify SSL"
 msgstr ""
 
-#: ../../mod/admin.php:432
+#: ../../mod/admin.php:434
 msgid ""
 "If you wish, you can turn on strict certificate checking. This will mean you "
 "cannot connect (at all) to self-signed SSL sites."
 msgstr ""
 
-#: ../../mod/admin.php:433
+#: ../../mod/admin.php:435
 msgid "Proxy user"
 msgstr ""
 
-#: ../../mod/admin.php:434
+#: ../../mod/admin.php:436
 msgid "Proxy URL"
 msgstr ""
 
-#: ../../mod/admin.php:435
+#: ../../mod/admin.php:437
 msgid "Network timeout"
 msgstr ""
 
-#: ../../mod/admin.php:435
+#: ../../mod/admin.php:437
 msgid "Value is in seconds. Set to 0 for unlimited (not recommended)."
 msgstr ""
 
-#: ../../mod/admin.php:436
+#: ../../mod/admin.php:438
 msgid "Delivery interval"
 msgstr ""
 
-#: ../../mod/admin.php:436
+#: ../../mod/admin.php:438
 msgid ""
 "Delay background delivery processes by this many seconds to reduce system "
 "load. Recommend: 4-5 for shared hosts, 2-3 for virtual private servers. 0-1 "
 "for large dedicated servers."
 msgstr ""
 
-#: ../../mod/admin.php:451
+#: ../../mod/admin.php:439
+msgid "Maximum Load Average"
+msgstr ""
+
+#: ../../mod/admin.php:439
+msgid ""
+"Maximum system load before delivery and poll processes are deferred - "
+"default 50."
+msgstr ""
+
+#: ../../mod/admin.php:453
 msgid "Update has been marked successful"
 msgstr ""
 
-#: ../../mod/admin.php:461
+#: ../../mod/admin.php:463
 #, php-format
 msgid "Executing %s failed. Check system logs."
 msgstr ""
 
-#: ../../mod/admin.php:464
+#: ../../mod/admin.php:466
 #, php-format
 msgid "Update %s was successfully applied."
 msgstr ""
 
-#: ../../mod/admin.php:468
+#: ../../mod/admin.php:470
 #, php-format
 msgid "Update %s did not return a status. Unknown if it succeeded."
 msgstr ""
 
-#: ../../mod/admin.php:471
+#: ../../mod/admin.php:473
 #, php-format
 msgid "Update function %s could not be found."
 msgstr ""
 
-#: ../../mod/admin.php:486
+#: ../../mod/admin.php:488
 msgid "No failed updates."
 msgstr ""
 
-#: ../../mod/admin.php:490
+#: ../../mod/admin.php:492
 msgid "Failed Updates"
 msgstr ""
 
-#: ../../mod/admin.php:491
+#: ../../mod/admin.php:493
 msgid ""
 "This does not include updates prior to 1139, which did not return a status."
 msgstr ""
 
-#: ../../mod/admin.php:492
+#: ../../mod/admin.php:494
 msgid "Mark success (if update was manually applied)"
 msgstr ""
 
-#: ../../mod/admin.php:493
+#: ../../mod/admin.php:495
 msgid "Attempt to execute this update step automatically"
 msgstr ""
 
-#: ../../mod/admin.php:518
+#: ../../mod/admin.php:520
 #, php-format
 msgid "%s user blocked/unblocked"
 msgid_plural "%s users blocked/unblocked"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../mod/admin.php:525
+#: ../../mod/admin.php:527
 #, php-format
 msgid "%s user deleted"
 msgid_plural "%s users deleted"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../mod/admin.php:564
+#: ../../mod/admin.php:566
 #, php-format
 msgid "User '%s' deleted"
 msgstr ""
 
-#: ../../mod/admin.php:572
+#: ../../mod/admin.php:574
 #, php-format
 msgid "User '%s' unblocked"
 msgstr ""
 
-#: ../../mod/admin.php:572
+#: ../../mod/admin.php:574
 #, php-format
 msgid "User '%s' blocked"
 msgstr ""
 
-#: ../../mod/admin.php:636
+#: ../../mod/admin.php:638
 msgid "select all"
 msgstr ""
 
-#: ../../mod/admin.php:637
+#: ../../mod/admin.php:639
 msgid "User registrations waiting for confirm"
 msgstr ""
 
-#: ../../mod/admin.php:638
+#: ../../mod/admin.php:640
 msgid "Request date"
 msgstr ""
 
-#: ../../mod/admin.php:638 ../../mod/admin.php:647
+#: ../../mod/admin.php:640 ../../mod/admin.php:649
 #: ../../include/contact_selectors.php:79
 msgid "Email"
 msgstr ""
 
-#: ../../mod/admin.php:639
+#: ../../mod/admin.php:641
 msgid "No registrations."
 msgstr ""
 
-#: ../../mod/admin.php:641
+#: ../../mod/admin.php:643
 msgid "Deny"
 msgstr ""
 
-#: ../../mod/admin.php:647
+#: ../../mod/admin.php:649
 msgid "Register date"
 msgstr ""
 
-#: ../../mod/admin.php:647
+#: ../../mod/admin.php:649
 msgid "Last login"
 msgstr ""
 
-#: ../../mod/admin.php:647
+#: ../../mod/admin.php:649
 msgid "Last item"
 msgstr ""
 
-#: ../../mod/admin.php:647
+#: ../../mod/admin.php:649
 msgid "Account"
 msgstr ""
 
-#: ../../mod/admin.php:649
+#: ../../mod/admin.php:651
 msgid ""
 "Selected users will be deleted!\\n\\nEverything these users had posted on "
 "this site will be permanently deleted!\\n\\nAre you sure?"
 msgstr ""
 
-#: ../../mod/admin.php:650
+#: ../../mod/admin.php:652
 msgid ""
 "The user {0} will be deleted!\\n\\nEverything this user has posted on this "
 "site will be permanently deleted!\\n\\nAre you sure?"
 msgstr ""
 
-#: ../../mod/admin.php:691
+#: ../../mod/admin.php:693
 #, php-format
 msgid "Plugin %s disabled."
 msgstr ""
 
-#: ../../mod/admin.php:695
+#: ../../mod/admin.php:697
 #, php-format
 msgid "Plugin %s enabled."
 msgstr ""
 
-#: ../../mod/admin.php:705 ../../mod/admin.php:903
+#: ../../mod/admin.php:707 ../../mod/admin.php:905
 msgid "Disable"
 msgstr ""
 
-#: ../../mod/admin.php:707 ../../mod/admin.php:905
+#: ../../mod/admin.php:709 ../../mod/admin.php:907
 msgid "Enable"
 msgstr ""
 
-#: ../../mod/admin.php:729 ../../mod/admin.php:934
+#: ../../mod/admin.php:731 ../../mod/admin.php:936
 msgid "Toggle"
 msgstr ""
 
-#: ../../mod/admin.php:737 ../../mod/admin.php:944
+#: ../../mod/admin.php:739 ../../mod/admin.php:946
 msgid "Author: "
 msgstr ""
 
-#: ../../mod/admin.php:738 ../../mod/admin.php:945
+#: ../../mod/admin.php:740 ../../mod/admin.php:947
 msgid "Maintainer: "
 msgstr ""
 
-#: ../../mod/admin.php:867
+#: ../../mod/admin.php:869
 msgid "No themes found."
 msgstr ""
 
-#: ../../mod/admin.php:926
+#: ../../mod/admin.php:928
 msgid "Screenshot"
 msgstr ""
 
-#: ../../mod/admin.php:974
+#: ../../mod/admin.php:976
 msgid "[Experimental]"
 msgstr ""
 
-#: ../../mod/admin.php:975
+#: ../../mod/admin.php:977
 msgid "[Unsupported]"
 msgstr ""
 
-#: ../../mod/admin.php:1002
+#: ../../mod/admin.php:1004
 msgid "Log settings updated."
 msgstr ""
 
-#: ../../mod/admin.php:1058
+#: ../../mod/admin.php:1060
 msgid "Clear"
 msgstr ""
 
-#: ../../mod/admin.php:1064
+#: ../../mod/admin.php:1066
 msgid "Debugging"
 msgstr ""
 
-#: ../../mod/admin.php:1065
+#: ../../mod/admin.php:1067
 msgid "Log file"
 msgstr ""
 
-#: ../../mod/admin.php:1065
+#: ../../mod/admin.php:1067
 msgid ""
 "Must be writable by web server. Relative to your Friendica top-level "
 "directory."
 msgstr ""
 
-#: ../../mod/admin.php:1066
+#: ../../mod/admin.php:1068
 msgid "Log level"
 msgstr ""
 
-#: ../../mod/admin.php:1116
+#: ../../mod/admin.php:1118
 msgid "Close"
 msgstr ""
 
-#: ../../mod/admin.php:1122
+#: ../../mod/admin.php:1124
 msgid "FTP Host"
 msgstr ""
 
-#: ../../mod/admin.php:1123
+#: ../../mod/admin.php:1125
 msgid "FTP Path"
 msgstr ""
 
-#: ../../mod/admin.php:1124
+#: ../../mod/admin.php:1126
 msgid "FTP User"
 msgstr ""
 
-#: ../../mod/admin.php:1125
+#: ../../mod/admin.php:1127
 msgid "FTP Password"
 msgstr ""
 
@@ -3696,12 +3705,12 @@ msgstr ""
 msgid "following"
 msgstr ""
 
-#: ../../mod/common.php:34
+#: ../../mod/common.php:42
 msgid "Common Friends"
 msgstr ""
 
-#: ../../mod/common.php:42
-msgid "No friends in common."
+#: ../../mod/common.php:78
+msgid "No contacts in common."
 msgstr ""
 
 #: ../../mod/display.php:135
@@ -4585,7 +4594,8 @@ msgid "Forums"
 msgstr ""
 
 #: ../../addon/page/page.php:63 ../../addon/showmore/showmore.php:87
-#: ../../include/conversation.php:466 ../../boot.php:507
+#: ../../include/contact_widgets.php:187 ../../include/conversation.php:466
+#: ../../boot.php:507
 msgid "show more"
 msgstr ""
 
@@ -6035,11 +6045,11 @@ msgstr ""
 msgid "Finishes:"
 msgstr ""
 
-#: ../../include/delivery.php:434 ../../include/notifier.php:652
+#: ../../include/delivery.php:445 ../../include/notifier.php:652
 msgid "(no subject)"
 msgstr ""
 
-#: ../../include/delivery.php:441 ../../include/enotify.php:23
+#: ../../include/delivery.php:452 ../../include/enotify.php:23
 #: ../../include/notifier.php:659
 msgid "noreply"
 msgstr ""
@@ -6155,16 +6165,16 @@ msgstr ""
 msgid "bytes"
 msgstr ""
 
-#: ../../include/text.php:936
-msgid "Categories:"
-msgstr ""
-
-#: ../../include/text.php:948
+#: ../../include/text.php:933 ../../include/text.php:948
 msgid "remove"
 msgstr ""
 
-#: ../../include/text.php:948
+#: ../../include/text.php:933 ../../include/text.php:948
 msgid "[remove]"
+msgstr ""
+
+#: ../../include/text.php:936
+msgid "Categories:"
 msgstr ""
 
 #: ../../include/text.php:951
@@ -6425,13 +6435,6 @@ msgstr ""
 #: ../../include/contact_widgets.php:126
 msgid "Categories"
 msgstr ""
-
-#: ../../include/contact_widgets.php:183
-#, php-format
-msgid "%d friend in common"
-msgid_plural "%d friends in common"
-msgstr[0] ""
-msgstr[1] ""
 
 #: ../../include/auth.php:29
 msgid "Logged out."
