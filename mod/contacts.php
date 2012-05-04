@@ -325,7 +325,7 @@ function contacts_content(&$a) {
 			'$lbl_info1' => t('Contact Information / Notes'),
 			'$infedit' => t('Edit contact notes'),
 			'$common_text' => $common_text,
-			'$common_link' => $a->get_baseurl(true) . '/common/' . $contact['id'],
+			'$common_link' => $a->get_baseurl(true) . '/common/loc/' . local_user() . '/' . $contact['id'],
 			'$all_friends' => $all_friends,
 			'$relation_text' => $relation_text,
 			'$visit' => sprintf( t('Visit %s\'s profile [%s]'),$contact['name'],$contact['url']),
