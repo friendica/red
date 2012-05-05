@@ -1491,7 +1491,7 @@ function file_tag_unsave_file($uid,$item,$file,$cat = false) {
 		intval($uid)
 	);
 
-	$r = q("select file from item where uid = %d " . file_tag_file_query('item',$file,(($cat) ? 'category' : 'file')),
+	$r = q("select file from item where uid = %d and deleted = 0 " . file_tag_file_query('item',$file,(($cat) ? 'category' : 'file')),
 		intval($uid)
 	);
 
