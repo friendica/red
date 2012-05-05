@@ -31,7 +31,7 @@
 				opts.title = opts.term;
 
 			opts.title = opts.title || '';
-			text = opts.titleLink ? ('<a href="'+ opts.titleLink +'">'+ opts.title + '</a>') : ('<span>' + opts.title +'<a id="close_friends_icon" onClick="close_twitter()"  class="icon close_box" title="$close"></a>'+ '</span>');
+			text = opts.titleLink ? ('<a href="'+ opts.titleLink +'">'+ opts.title + '</a>') : ('<span>' + opts.title +'</span>');
 			$text = $(text);
 			if (opts.titleLink)
 				$text.css(opts.css['titleLink']);
@@ -210,7 +210,7 @@
 			loading: { padding: '20px', textAlign: 'center', color: '#888' },
 			text:  {},
 			time:  { fontSize: 'smaller', color: '#888' },
-			title: { 'border-bottom': '1px solid #D2D2D2', 'padding-top': '5px', 'padding-bottom': '0px', 'padding-left': '9px', 'margin-bottom': '0px', 'margin-top': '30px' , 'display': 'block', 'font-size': '1.17em', 'font-weight': 'bold'},
+			title: { 'display': 'none'},
 			titleLink: { textDecoration: 'none', color: '#3B5998' },
 			user:  { fontWeight: 'bold' }
 		}

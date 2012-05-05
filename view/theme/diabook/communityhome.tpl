@@ -99,7 +99,18 @@ $nv.search
 {{ endif }}
 </div>
 
+<div id="close_twitter">
+<h3 style="height:1.17em">$twitter.title.1<a id="close_twitter_icon"  onClick="close_twitter()" class="icon close_box" title="$close"></a></h3>
 <div id="twitter">
+</div>
+<div id="twittersettings" style="display:none;">
+<form id="twittersettings-form" action="network" method="post" autocomplete="off">
+{{inc field_input.tpl with $field=$TSearchTerm}}{{endinc}}
+<div class="settings-submit-wrapper">
+<input type="submit" value="$submit" class="settings-submit" name="diabook-settings-submit" />
+</div>
+</form>
+</div>
 </div>
 
 <div id="close_mapquery">

@@ -145,7 +145,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	
 	 $(function() {
 		$("a.lightbox").fancybox(); // Select all links with lightbox class
-	 	$("div.lightbox").fancybox(); 
+	 	$("a.#twittersettings-link").fancybox({onClosed: function() { $("#twittersettings").attr("style","display: none;");}} ); 
 	 	});
 	   
 	 $(window).load(function() {
@@ -191,9 +191,11 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 		bird:    false, 
 		avatar:  false, 
 		colorExterior: "#fff",
-		title: "Last Tweets",
 		timeout: 10000    	});
 		});
+		function open_twittersettings() {
+		$("div#twittersettings").attr("style","display: block;");
+		};
 		</script>';}
 			
 	//check if community_home-plugin is activated and change css
@@ -579,6 +581,21 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$aside['$con_services'] = $con_services;
 	}
    //end connectable services
+   //twitter
+   if($_COOKIE['close_twitter'] != "1") {
+   $twitter = array();
+	$twitter['title'] = Array("", "<a id='twittersettings-link' href='#twittersettings' style='text-decoration:none;' onclick='open_twittersettings(); return false;'>".t('Last Tweets')."</a>", "", "");
+	$aside['$twitter'] = $twitter;
+	$TSearchTerm = get_pconfig(local_user(), 'diabook', 'TSearchTerm' );
+	$aside['$submit'] = t('Submit');
+	$aside['$TSearchTerm'] = array('diabook_TSearchTerm', t('Set twitter search term'), $TSearchTerm, '', $TSearchTerm);
+	$baseurl = $a->get_baseurl(); 
+	$aside['$baseurl'] = $baseurl;
+	if (isset($_POST['diabook-settings-submit'])){	
+		set_pconfig(local_user(), 'diabook', 'TSearchTerm', $_POST['diabook_TSearchTerm']);	
+		}
+	}
+   //end twitter
    $close = t('Close');
    $aside['$close'] = $close;
    //get_baseurl
@@ -599,4 +616,5 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$tpl = file_get_contents(dirname(__file__) . '/bottom.tpl');
 	$a->page['footer'] = $a->page['footer'].replace_macros($tpl, $bottom);
  }
- 
+
+	
