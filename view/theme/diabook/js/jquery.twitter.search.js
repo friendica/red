@@ -31,7 +31,7 @@
 				opts.title = opts.term;
 
 			opts.title = opts.title || '';
-			text = opts.titleLink ? ('<a href="'+ opts.titleLink +'">'+ opts.title + '</a>') : ('<span>' + opts.title +'<a id="close_friends_icon" onClick="close_twitter()"  class="icon close_box" title="close"></a>'+ '</span>');
+			text = opts.titleLink ? ('<a href="'+ opts.titleLink +'">'+ opts.title + '</a>') : ('<span>' + opts.title +'<a id="close_friends_icon" onClick="close_twitter()"  class="icon close_box" title="$close"></a>'+ '</span>');
 			$text = $(text);
 			if (opts.titleLink)
 				$text.css(opts.css['titleLink']);

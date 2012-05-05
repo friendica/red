@@ -6,6 +6,8 @@
 
 {{inc field_select.tpl with $field=$resolution}}{{endinc}}
 
+{{inc field_input.tpl with $field=$TSearchTerm}}{{endinc}}
+
 <div class="field select">
 <a onClick="restore_boxes()" title="Restore right-hand column" style="cursor: pointer;">Restore right-hand column</a>
 </div>

@@ -48,7 +48,7 @@ if ($color=="pink") $color_path = "/diabook-pink/";
 if ($color=="green") $color_path = "/diabook-green/";
 if ($color=="dark") $color_path = "/diabook-dark/";
 
-
+	
 	//profile_side at networkpages
 	if ($a->argv[0] === "network" && local_user()){
 
@@ -80,9 +80,9 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 
 	}
 	
-	$ccCookie = $_COOKIE['close_pages'] + $_COOKIE['close_profiles'] + $_COOKIE['close_helpers'] + $_COOKIE['close_services'] + $_COOKIE['close_friends'] + $_COOKIE['close_twitter'] + $_COOKIE['close_lastusers'] + $_COOKIE['close_lastphotos'] + $_COOKIE['close_lastlikes'];
+	$ccCookie = $_COOKIE['close_pages'] + $_COOKIE['close_mapquery'] + $_COOKIE['close_profiles'] + $_COOKIE['close_helpers'] + $_COOKIE['close_services'] + $_COOKIE['close_friends'] + $_COOKIE['close_twitter'] + $_COOKIE['close_lastusers'] + $_COOKIE['close_lastphotos'] + $_COOKIE['close_lastlikes'];
 	
-	if($ccCookie != "9") {
+	if($ccCookie != "10") {
 	// COMMUNITY
 	diabook_community_info();
 
@@ -96,7 +96,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 
 	//right_aside at profile pages
 	if ($a->argv[0].$a->argv[1] === "profile".$a->user['nickname']){
-	if($ccCookie != "9") {
+	if($ccCookie != "10") {
 	// COMMUNITY
 	diabook_community_info();
 	
@@ -128,29 +128,65 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $twitterJS);
 	}
 	
+	//load jquery.mapquery.js
+	$_COOKIE['close_mapquery'] = "1";
+	if($_COOKIE['close_mapquery'] != "1") {
+	$mapqueryJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mapquery.core.js";
+	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mapqueryJS);
+	$openlayersJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/OpenLayers.js";
+	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $openlayersJS);
+	$qlayersJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mapquery.mqLayerControl.js";
+	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mqlayersJS);
+	
+	}
+	
 	$a->page['htmlhead'] .= '
 	<script>
 	
 	 $(function() {
 		$("a.lightbox").fancybox(); // Select all links with lightbox class
+	 	$("div.lightbox").fancybox(); 
 	 	});
 	   
 	 $(window).load(function() {
 		var footer_top = $(document).height() - 30;
 		$("div#footerbox").attr("style", "border-top: 1px solid #D2D2D2; width: 70%;right: 15%;position: absolute;top:"+footer_top+"px;");
 	 });
-	 
-	 
-	
 	</script>';
-	
+	//check if mapquerybox is active and print
+	$_COOKIE['close_mapquery'] = "1";
+	if($_COOKIE['close_mapquery'] != "1") {
+		$a->page['htmlhead'] .= '
+		<script>
+		
+    $(document).ready(function() {
+    $("#map").mapQuery({
+        layers:[{         //add layers to your map; you need to define at least one to be able to see anything on the map
+            type:"osm"  //add a layer of the type osm (OpenStreetMap)
+            }]
+        });
+     $("#map2").mapQuery({
+     layers:[{         //add layers to your map; you need to define at least one to be able to see anything on the map
+         type:"osm"  //add a layer of the type osm (OpenStreetMap)
+         }]
+     });  
+    
+    });
+  		
+		</script>';
+	}
 	//check if twitterbox is active and print
 	if($_COOKIE['close_twitter'] != "1") {
+		$TSearchTerm=false;
+		$site_TSearchTerm = get_config("diabook", "TSearchTerm" );
+		$TSearchTerm = get_pconfig(local_user(), "diabook", "TSearchTerm");
+		if ($TSearchTerm===false) $TSearchTerm=$site_TSearchTerm;
+		if ($TSearchTerm===false) $TSearchTerm="friendica";		
 		$a->page['htmlhead'] .= '
 		<script>
 		$(function() {
 		$("#twitter").twitterSearch({    	    
-		term: "friendica",
+		term: "'.$TSearchTerm.'",
 		animInSpeed: 250,
 		bird:    false, 
 		avatar:  false, 
@@ -187,6 +223,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	<script>
 	function restore_boxes(){
 	$.cookie("close_pages","2", { expires: 365, path: "/" });
+	$.cookie("close_mapquery","2", { expires: 365, path: "/" });
 	$.cookie("close_helpers","2", { expires: 365, path: "/" });
 	$.cookie("close_profiles","2", { expires: 365, path: "/" });
 	$.cookie("close_services","2", { expires: 365, path: "/" });
@@ -217,6 +254,11 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	if($.cookie("close_pages") == "1") 
 		{
 		document.getElementById( "close_pages" ).style.display = "none";
+			};
+			
+	if($.cookie("close_mapquery") == "1") 
+		{
+		document.getElementById( "close_mapquery" ).style.display = "none";
 			};
 			
 	if($.cookie("close_profiles") == "1") 
@@ -264,6 +306,11 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	function close_pages(){
 	 document.getElementById( "close_pages" ).style.display = "none";
  	$.cookie("close_pages","1", { expires: 365, path: "/" });
+ 	};
+ 	
+ 	function close_mapquery(){
+	 document.getElementById( "close_mapquery" ).style.display = "none";
+ 	$.cookie("close_mapquery","1", { expires: 365, path: "/" });
  	};
  
 	function close_profiles(){
@@ -509,6 +556,15 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	}}
   //END Community Page	
   
+   //mapquery
+   $_COOKIE['close_mapquery'] = "1";
+  if($_COOKIE['close_mapquery'] != "1") {
+   $mapquery = array();
+	$mapquery['title'] = Array("", t('Earth View'), "", "");
+	$aside['$mapquery'] = $mapquery;
+	}
+   //end mapquery
+   
   //helpers
   if($_COOKIE['close_helpers'] != "1") {
    $helpers = array();
@@ -523,6 +579,8 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$aside['$con_services'] = $con_services;
 	}
    //end connectable services
+   $close = t('Close');
+   $aside['$close'] = $close;
    //get_baseurl
    $url = $a->get_baseurl($ssl_state);   
    $aside['$url'] = $url;
@@ -541,15 +599,4 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$tpl = file_get_contents(dirname(__file__) . '/bottom.tpl');
 	$a->page['footer'] = $a->page['footer'].replace_macros($tpl, $bottom);
  }
-
-
-
-
-
-
-
- 
- 
-
- 
  
