@@ -1,12 +1,28 @@
-<div id="close_pages">
+<div id="pos_null" style="margin-bottom:-30px;">
+</div>
+
+<div id="sortable_boxes">
+
+<div id="close_pages" style="margin-top:30px;">
 {{ if $page }}
 <div>$page</div>
+{{ endif }}
+
+
+<div id="close_profiles">
+{{ if $comunity_profilest_title }}
+<h3>$comunity_profilest_title<a id="close_comunity_profiles_icon" onClick="close_profiles()" class="icon close_box" title="close"></a></h3>
+<div id='lastusers-wrapper' class='items-wrapper'>
+{{ for $comunity_profiles_items as $i }}
+	$i
+{{ endfor }}
+</div>
 {{ endif }}
 </div>
 
 <div id="close_helpers">
-{{ if $lastusers_title }}
-<h3 style="margin-top:0px;">$helpers.title.1<a id="close_helpers_icon"  onClick="close_helpers()" class="icon close_box" title="close"></a></h3>
+{{ if $helpers }}
+<h3>$helpers.title.1<a id="close_helpers_icon"  onClick="close_helpers()" class="icon close_box" title="close"></a></h3>
 <a href="http://kakste.com/profile/newhere" title="@NewHere" style="margin-left: 10px; " target="blank">NewHere</a><br>
 <a href="https://helpers.pyxis.uberspace.de/profile/helpers" style="margin-left: 10px; " title="Friendica Support" target="blank">Friendica Support</a><br>
 <a href="https://letstalk.pyxis.uberspace.de/profile/letstalk" style="margin-left: 10px; " title="Let's talk" target="blank">Let's talk</a><br>
@@ -15,7 +31,7 @@
 </div>
 
 <div id="close_services">
-{{ if $lastusers_title }}
+{{ if $con_services }}
 <h3>$con_services.title.1<a id="close_services_icon" onClick="close_services()" class="icon close_box" title="close"></a></h3>
 <div id="right_service_icons" style="margin-left: 16px; margin-top: 5px;">
 <a href="$url/facebook"><img alt="Facebook" src="view/theme/diabook/icons/facebook.png" title="Facebook"></a>
@@ -82,4 +98,8 @@ $nv.search
 {{ endfor }}
 </ul>
 {{ endif }}
+</div>
+
+<div id="twitter">
+</div>
 </div>

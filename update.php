@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1138 );
+define( 'UPDATE_VERSION' , 1143 );
 
 /**
  *
@@ -1212,4 +1212,39 @@ function update_1137() {
 	q("alter table item_id DROP `face` , DROP `dspr` , DROP `twit` , DROP `stat` ");
 	q("ALTER TABLE `item_id` ADD `sid` CHAR( 255 ) NOT NULL AFTER `uid` , ADD `service` CHAR( 255 ) NOT NULL AFTER `sid` , add index (`sid`), add index ( `service`) ");
 }
+
+function update_1138() {
+	q("alter table contact add archive tinyint(1) not null default '0' after hidden, add index (archive)");
+}
+
+function update_1139() {
+	$r = q("alter table user add account_removed tinyint(1) not null default '0' after expire, add index(account_removed) ");
+	if(! $r)
+		return UPDATE_FAILED ;
+	return UPDATE_SUCCESS ;
+}
+
+function update_1140() {
+	$r = q("alter table addon add hidden tinyint(1) not null default '0' after installed, add index(hidden) ");
+	if(! $r)
+		return UPDATE_FAILED ;
+	return UPDATE_SUCCESS ;
+}
+
+function update_1141() {
+	$r = q("alter table glink add zcid int(11) not null after gcid, add index(zcid) ");
+	if(! $r)
+		return UPDATE_FAILED ;
+	return UPDATE_SUCCESS ;
+}
+
+
+function update_1142() {
+	$r = q("alter table user add service_class char(32) not null after expire_notification_sent, add index(service_class) ");
+	if(! $r)
+		return UPDATE_FAILED ;
+	return UPDATE_SUCCESS ;
+}
+
+
 

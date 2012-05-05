@@ -1431,7 +1431,7 @@ transition: all 0.2s ease-in-out;
 
 .wall-item-comment-wrapper {
   margin: 1px 5px 5px 80px;
-  background-color: #fff;
+  background-color: #444;
   width: 500px;
 }
 .wall-item-comment-wrapper .comment-edit-photo {
@@ -1442,14 +1442,14 @@ transition: all 0.2s ease-in-out;
   width: 100%;
   font-size: 10px;
   color: #999999;
-  border: 1px solid #DDD;
+  border: 1px solid #2e2e2f;
   padding: 0.3em;
   font-size: 14px;
 }
 .wall-item-comment-wrapper .comment-edit-text-full {
   font-size: 14px;
   height: 4em;
-  color: #2e2f2e;
+  color: #eec;
   border: 1px solid #2e2f2e;
 }
 .comment-edit-preview {
@@ -1596,10 +1596,11 @@ transition: all 0.2s ease-in-out;
   height: 2.0em;
   width: 99%;
   font-size: 15px;
-  color: #999999;
-  border: 1px solid #DDD;
+  color: #eec;
+  border: 1px solid #eec;
   padding: 0.3em;
   margin-bottom: 10px;
+  background: #444
 }
 .grey
 {

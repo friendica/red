@@ -21,6 +21,7 @@
 
 .admin.linklist {
         border: 0px; padding: 0px;
+        list-style: none;
 }
 
 .admin.link {
@@ -556,6 +557,7 @@ code {
   text-decoration: none;
 }
 /* popup notifications */
+div.jGrowl.top-right { top: 30px; /* put it below header/nav bar */ }
 div.jGrowl div.notice {
   background: #511919 url("../../../images/icons/48/notice.png") no-repeat 5px center;
   color: #ffffff;
@@ -974,7 +976,7 @@ ul.menu-popup .empty {
   background-color: #bdcdd4;
 }
 #nav-notifications-menu {
-  width: 400px;
+ width: 425px !important;
   max-height: 550px;
   overflow: auto;
 }
@@ -1195,7 +1197,7 @@ aside #side-peoplefind-url {
   margin-right: 20px;	
 	}
 #login-submit-wrapper{
-  padding-top: 120px;
+
   margin-bottom: 12px;
 	}
 aside #login-submit-button{

@@ -13,6 +13,8 @@
 /* from html5boilerplate */
 /* these are to tell browsers they should be displayed a certain way */
 
+//@import "_base.less";
+
 article, aside, details, figcaption, figure, footer, header, hgroup, nav, section {
   display: block; }
 
@@ -44,25 +46,25 @@ body {
   font-size: 16px;
   line-height: 1.1em;
   font-family: sans-serif;
-  color: #222;
-  background-color: #e8e8e8; }
+  color: #111;
+  background-color: #eee; }
 
 button, input, select, textarea {
   font-family: sans-serif;
   color: #222;
-  background-color: #e8e8e8; }
+  background-color: #eee; }
 
 select {
   border: 1px #555 dotted;
   padding: 3px;
   margin: 3px;
   color: #222;
-  background: #e8e8e8; }
+  background: #eee; }
 
 option {
   padding: 3px;
   color: #222;
-  background: #e8e8e8;
+  background: #eee;
   &[selected="selected"] {
     color: #111;
     background: #cca; } }
@@ -478,13 +480,11 @@ nav #nav-notifications-linkmenu {
 #search-text {
   border: 1px #eec solid;
   background: #2e3436;
-  color: #eec; }
-
-.search-box #search-text {
+  color: #eec;
+  font-size: 8pt;
   margin: 8px;
   width: 10em;
-  height: 14px;
-  color: #eec; }
+  height: 14px; }
 
 #scrollup {
   position: fixed;
@@ -694,10 +694,26 @@ nav #nav-notifications-linkmenu {
 */
 
 #asidemain {
-  h4 {
-    font-size: 1.2em; }
-  #viewcontacts {
-    text-align: right; } }
+	h4 {
+		font-size: 1.2em; }
+	#viewcontacts {
+		text-align: right;
+	}
+	#contact-block {
+		width: 99%;
+		.contact-block-content {
+			width: 99%;
+			.contact-block-div {
+				float: left;
+				margin: 0 5px 5px 0;
+				width: 50px;
+				height: 50px;
+				padding: 3px;
+				position: relative;
+			}
+		}
+	}
+}
 
 .aprofile dt {
   background: transparent;
@@ -727,12 +743,6 @@ nav #nav-notifications-linkmenu {
   display: block;
   font-size: 1.2em;
   padding: 0.2em 0.5em; }
-
-#netsearch-box {
-  margin: 20px 0px 30px;
-  width: 150px;
-  #search-submit {
-    margin: 5px 5px 0px 0px; } }
 
 .ttright {
   margin: 0px 0px 0px 0px; }
@@ -1401,7 +1411,7 @@ div {
 	
 }
 
-[id$="-end"], [class$="end"] {
+[id$="-end"], [class$="-end"] {
   clear: both;
   margin: 0 0 10px 0; }
 
@@ -2207,10 +2217,12 @@ div {
   margin-left: 0px; }
 
 #netsearch-box {
-  margin-top: 20px;
-  width: 150px;
-  #search-submit {
-    margin: 5px 0px 0px 0px; } }
+	margin: 20px 0px 30px;
+	width: 135px;
+	#search-submit {
+		margin: 5px 5px 0px 0px;
+	}
+}
 
 /**
  * admin

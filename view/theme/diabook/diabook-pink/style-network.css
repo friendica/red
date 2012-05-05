@@ -439,7 +439,7 @@ a:hover {
   clear: both;
 }
 .fakelink {
-  color: #996d73;
+  color: #D02B55;
   /* color: #3e3e8c; */
   text-decoration: none;
   cursor: pointer;
@@ -493,7 +493,7 @@ code {
   float: right;
 }
 .tool a {
-  color: #996d73;
+  color: #D02B55;
 }
 .tool a:hover {
   text-decoration: none;
@@ -807,7 +807,7 @@ ul.menu-popup a {
   text-decoration: none;
 }
 ul.menu-popup a:hover {
-  background-color: #996d73; /*bdcdd4;*/
+  background-color: #D02B55; /*bdcdd4;*/
   color: #fff;
 }
 ul.menu-popup .menu-sep {
@@ -1155,7 +1155,7 @@ list-style-type: disc;
 }
 /* widget: search */
 span.sbox_l  {
-	background: white url('../diabook/icons/srch_l.gif') no-repeat top left;
+	background: white url('../diabook-pink/icons/srch_l.gif') no-repeat top left;
 	float: left;
 	width: 19px; height: 19px;
 	margin-left: 10px;
@@ -1164,14 +1164,14 @@ span.sbox_l  {
 }
 
 span.sbox_r  {
-	background: white url('../diabook/icons/srch_r.gif') no-repeat top left;
+	background: white url('../diabook-pink/icons/srch_r.gif') no-repeat top left;
 	float: left;
 	width: 19px; height: 19px;
 	margin-top: 5px;
 }
 
 span.sbox input {
-	background: white url('../diabook/icons/srch_bg.gif') repeat-x top left;
+	background: white url('../diabook-pink/icons/srch_bg.gif') repeat-x top left;
 	float: left;
 	margin-top: 5px;
 	border: 0;
@@ -1262,8 +1262,8 @@ right_aside .directory-photo { margin: 0px; }
 right_aside .directory-photo-img { max-width: 45px; max-height: 45px; }
 right_aside #likes { margin: 0px; padding: 0px; list-style: none; }
 right_aside .items-wrapper{ overflow: auto;	width: 100%; }
-right_aside #lastusers-wrapper { padding-left: 6px; padding-top: 3px; overflow: auto;	width: 100%; }
-right_aside #ra-photos-wrapper { padding-left: 5px; padding-top: 3px; overflow: auto;	width: 100%; }
+right_aside #lastusers-wrapper { padding-left: 9px; padding-top: 3px; overflow: auto;	width: 100%; }
+right_aside #ra-photos-wrapper { padding-left: 9px; padding-top: 3px; overflow: auto;	width: 100%; }
 #page-sidebar-right_aside{margin-top: 0px; margin-bottom: 30px;}
 #page-sidebar-right_aside ul {margin-top: 0px;}
 #page-sidebar-right_aside .label {max-width: 128px;}
@@ -1297,7 +1297,7 @@ transition: all 0.2s ease-in-out;
   padding-top: 10px;
 }
 .tread-wrapper a{
-  color: #996d73;
+  color: #D02B55;
 }
 
 .wall-item-decor {
@@ -1832,7 +1832,7 @@ transition: all 0.2s ease-in-out;
     font-weight: bolder;
 }
 .button.creation2 {
-    background-color: #996d73;
+    background-color: #D02B55;
     border: 1px solid #777777;
     color: white;
     border-radius: 3px 3px 3px 3px;
@@ -1964,7 +1964,7 @@ ul.tabs li {
   margin-left: 5px;
 }
 ul.tabs li .active {
-    background-color: #996d73;
+    background-color: #D02B55;
     border: 1px solid #777777;
     color: white;
     border-radius: 3px 3px 3px 3px;

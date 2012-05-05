@@ -80,6 +80,8 @@
 	{{ inc field_input.tpl with $field=$proxy }}{{ endinc }}
 	{{ inc field_input.tpl with $field=$proxyuser }}{{ endinc }}
 	{{ inc field_input.tpl with $field=$timeout }}{{ endinc }}
+	{{ inc field_input.tpl with $field=$delivery_interval }}{{ endinc }}
+	{{ inc field_input.tpl with $field=$maxloadavg }}{{ endinc }}
 	{{ inc field_input.tpl with $field=$abandon_days }}{{ endinc }}
 	
 	<div class="submit"><input type="submit" name="page_site" value="$submit" /></div>

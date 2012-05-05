@@ -700,7 +700,8 @@ function dfrn_request_content(&$a) {
 						'node' => $r[0]['nickname'],
 						'dfrn_id' => $r[0]['issued-id'],
 						'intro_id' => $intro[0]['id'],
-						'duplex' => (($r[0]['page-flags'] == PAGE_FREELOVE) ? 1 : 0)
+						'duplex' => (($r[0]['page-flags'] == PAGE_FREELOVE) ? 1 : 0),
+						'activity' => intval(get_pconfig($r[0]['uid'],'system','post_newfriend'))
 					);
 					dfrn_confirm_post($a,$handsfree);
 				}
@@ -752,6 +753,11 @@ function dfrn_request_content(&$a) {
 			/* $_GET variables are already urldecoded */ 
 			$myaddr = ((x($_GET,'address')) ? $_GET['address'] : '');
 		}
+
+		// last, try a zrl
+		if(! strlen($myaddr))
+			$myaddr = get_my_url();
+
 
 		$target_addr = $a->profile['nickname'] . '@' . substr(z_root(), strpos(z_root(),'://') + 3 );
 

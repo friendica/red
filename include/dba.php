@@ -75,21 +75,27 @@ class dba {
 		if((! $this->db) || (! $this->connected))
 			return false;
 		
+		$this->error = '';
+
 		if($this->mysqli)
 			$result = @$this->db->query($sql);
 		else
 			$result = @mysql_query($sql,$this->db);
 
+		if($this->mysqli) {
+			if($this->db->errno)
+				$this->error = $this->db->error;
+		}
+		elseif(mysql_errno($this->db))
+				$this->error = mysql_error($this->db);	
+
+		if(strlen($this->error)) {
+			logger('dba: ' . $this->error);
+		}
+
 		if($this->debug) {
 
 			$mesg = '';
-
-			if($this->mysqli) {
-				if($this->db->errno)
-					logger('dba: ' . $this->db->error);
-			}
-			elseif(mysql_errno($this->db))
-				logger('dba: ' . mysql_error($this->db));
 
 			if($result === false)
 				$mesg = 'false';
@@ -102,7 +108,9 @@ class dba {
 					$mesg = mysql_num_rows($result) . ' results' . EOL;
 			}
     
-			$str =  'SQL = ' . printable($sql) . EOL . 'SQL returned ' . $mesg . EOL;
+			$str =  'SQL = ' . printable($sql) . EOL . 'SQL returned ' . $mesg 
+				. (($this->error) ? ' error: ' . $this->error : '')
+				. EOL;
 
 			logger('dba: ' . $str );
 		}
@@ -114,9 +122,9 @@ class dba {
 		 */
 
 		if($result === false) {
-			logger('dba: ' . printable($sql) . ' returned false.');
+			logger('dba: ' . printable($sql) . ' returned false.' . "\n" . $this->error);
 			if(file_exists('dbfail.out'))
-				file_put_contents('dbfail.out', datetime_convert() . "\n" . printable($sql) . ' returned false' . "\n", FILE_APPEND);
+				file_put_contents('dbfail.out', datetime_convert() . "\n" . printable($sql) . ' returned false' . "\n" . $this->error . "\n", FILE_APPEND);
 		}
 
 		if(($result === true) || ($result === false))
