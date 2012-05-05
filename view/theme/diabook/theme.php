@@ -285,7 +285,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	
 	if($.cookie("close_twitter") == "1") 
 		{
-		document.getElementById( "twitter" ).style.display = "none";
+		document.getElementById( "close_twitter" ).style.display = "none";
 			};	
 			
 	if($.cookie("close_lastusers") == "1") 
@@ -336,7 +336,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	 };
  
 	function close_twitter(){
- 	document.getElementById( "twitter" ).style.display = "none";
+ 	document.getElementById( "close_twitter" ).style.display = "none";
 	 $.cookie("close_twitter","1", { expires: 365, path: "/" });
  	};
  
