@@ -223,6 +223,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	<script>
 	$(document).ready(function() {
 	$("div#login-submit-wrapper").attr("style","padding-top: 120px;");
+	
 	});
 	</script>';	
 	}
@@ -390,7 +391,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$a = get_app();
 	// comunity_profiles
 	if($_COOKIE['close_profiles'] != "1") {
-	$aside['$comunity_profilest_title'] = t('Community Profiles');
+	$aside['$comunity_profiles_title'] = t('Community Profiles');
 	$aside['$comunity_profiles_items'] = array();
 	$r = q("select gcontact.* from gcontact left join glink on glink.gcid = gcontact.id 
 			  where glink.cid = 0 and glink.uid = 0 order by rand() limit 9");
@@ -603,12 +604,13 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$twitter['title'] = Array("", "<a id='twittersettings-link' href='#twittersettings' style='text-decoration:none;' onclick='open_twittersettings(); return false;'>".t('Last Tweets')."</a>", "", "");
 	$aside['$twitter'] = $twitter;
 	$TSearchTerm = get_pconfig(local_user(), 'diabook', 'TSearchTerm' );
-	$aside['$submit'] = t('Submit');
+	$aside['$sub'] = t('Submit');
 	$aside['$TSearchTerm'] = array('diabook_TSearchTerm', t('Set twitter search term'), $TSearchTerm, '', $TSearchTerm);
-	$baseurl = $a->get_baseurl(); 
+	$baseurl = $a->get_baseurl($ssl_state); 
 	$aside['$baseurl'] = $baseurl;
-	if (isset($_POST['diabook-settings-submit'])){	
+	if (isset($_POST['diabook-settings-sub']) && $_POST['diabook-settings-sub']!=''){	
 		set_pconfig(local_user(), 'diabook', 'TSearchTerm', $_POST['diabook_TSearchTerm']);	
+		header("Location: network");
 		}
 	}
    //end twitter

@@ -1,3 +1,13 @@
+
+<div id="twittersettings" style="display:none">
+<form id="twittersettingsform" action="network" method="post" >
+{{inc field_input.tpl with $field=$TSearchTerm}}{{endinc}}
+<div class="settings-submit-wrapper">
+<input id="twittersub" type="submit" value="$sub" class="settings-submit" name="diabook-settings-sub"></input>
+</div>
+</form>
+</div>
+
 <div id="pos_null" style="margin-bottom:-30px;">
 </div>
 
@@ -9,8 +19,8 @@
 {{ endif }}
 
 <div id="close_profiles">
-{{ if $comunity_profilest_title }}
-<h3>$comunity_profilest_title<a id="close_comunity_profiles_icon" onClick="close_profiles()" class="icon close_box" title="$close"></a></h3>
+{{ if $comunity_profiles_title }}
+<h3>$comunity_profiles_title<a id="close_comunity_profiles_icon" onClick="close_profiles()" class="icon close_box" title="$close"></a></h3>
 <div id='lastusers-wrapper' class='items-wrapper'>
 {{ for $comunity_profiles_items as $i }}
 	$i
@@ -103,14 +113,6 @@ $nv.search
 <div id="close_twitter">
 <h3 style="height:1.17em">$twitter.title.1<a id="close_twitter_icon"  onClick="close_twitter()" class="icon close_box" title="$close"></a></h3>
 <div id="twitter">
-</div>
-<div id="twittersettings" style="display:none;">
-<form id="twittersettings-form" action="network" method="post" autocomplete="off">
-{{inc field_input.tpl with $field=$TSearchTerm}}{{endinc}}
-<div class="settings-submit-wrapper">
-<input type="submit" value="$submit" class="settings-submit" name="diabook-settings-submit" />
-</div>
-</form>
 </div>
 </div>
 
