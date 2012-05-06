@@ -198,7 +198,7 @@ function message_content(&$a) {
 		$o .= $header;
 		
 		$r = q("SELECT count(*) AS `total` FROM `mail` 
-			WHERE `mail`.`uid` = %d AND `from-url` $eq '%s' GROUP BY `parent-uri` ORDER BY `created` DESC",
+			WHERE `mail`.`uid` = %d GROUP BY `parent-uri` ORDER BY `created` DESC",
 			intval(local_user()),
 			dbesc($myprofile)
 		);
