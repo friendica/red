@@ -8,16 +8,13 @@
  */
 
 $a = get_app();
-$a->theme_info = array(
-    'family' => 'diabook',
-	'version' => '1.025'
-);
+
 
 function diabook_init(&$a) {
 	
 //print diabook-version for debugging
 $diabook_version = "Diabook (Version: 1.025)";
-$a->page['htmlhead'] .= sprintf('<script "%s" ></script>', $diabook_version);
+$a->page['htmlhead'] .= sprintf('<META NAME="theme" CONTENT="%s"/>', $diabook_version);
 
 //change css on network and profilepages
 $cssFile = null;
@@ -131,12 +128,16 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	//load jquery.mapquery.js
 	$_COOKIE['close_mapquery'] = "1";
 	if($_COOKIE['close_mapquery'] != "1") {
+	$mqtmplJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.tmpl.js";
+	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mqtmplJS);
 	$mapqueryJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mapquery.core.js";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mapqueryJS);
 	$openlayersJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/OpenLayers.js";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $openlayersJS);
-	$qlayersJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mapquery.mqLayerControl.js";
-	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mqlayersJS);
+	$mqmouseposJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mapquery.mqMousePosition.js";
+	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mqmouseposJS);
+	$mqzoomsliderJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mapquery.mqZoomSlider.js";
+	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mqzoomsliderJS);
 	
 	}
 	
@@ -146,6 +147,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	 $(function() {
 		$("a.lightbox").fancybox(); // Select all links with lightbox class
 	 	$("a.#twittersettings-link").fancybox({onClosed: function() { $("#twittersettings").attr("style","display: none;");}} ); 
+	   $("a.#mapcontrol-link").fancybox({onClosed: function() { $("#mapcontrol").attr("style","display: none;");}} ); 
 	 	});
 	   
 	 $(window).load(function() {
@@ -163,16 +165,30 @@ if ($color=="dark") $color_path = "/diabook-dark/";
     $("#map").mapQuery({
         layers:[{         //add layers to your map; you need to define at least one to be able to see anything on the map
             type:"osm"  //add a layer of the type osm (OpenStreetMap)
-            }]
-        });
-     $("#map2").mapQuery({
-     layers:[{         //add layers to your map; you need to define at least one to be able to see anything on the map
-         type:"osm"  //add a layer of the type osm (OpenStreetMap)
-         }]
-     });  
+            }],
+        center:({zoom:8,position:[11.7,52.2]}),
+       });
     
     });
-  		
+    	 
+    function open_mapcontrol() {
+		$("div#mapcontrol").attr("style","display: block;width:900px;height:600px;");
+		$("#map2").mapQuery({layers:[{type:"osm"}],
+												center:({zoom:8,position:[11.7,52.2]})}); 
+									
+		$("#mouseposition").mqMousePosition({
+        map: "#map2",
+        x:"lon",
+        y:"lat",
+        precision:2
+     		}); 
+     		
+     	
+     	map = $("#map2").mapQuery().data("mapQuery");
+		alert(map.center().zoom);
+		
+     	
+		};
 		</script>';
 	}
 	//check if twitterbox is active and print
@@ -366,7 +382,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$a->page['footer'] .= replace_macros($tpl, array());
 	
 	//
-	js_in_foot();
+	js_diabook_footer();
 }
 
 
@@ -562,7 +578,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
    $_COOKIE['close_mapquery'] = "1";
   if($_COOKIE['close_mapquery'] != "1") {
    $mapquery = array();
-	$mapquery['title'] = Array("", t('Earth View'), "", "");
+	$mapquery['title'] = Array("", "<a id='mapcontrol-link' href='#mapcontrol' style='text-decoration:none;' onclick='open_mapcontrol(); return false;'>".t('Earth View')."</a>", "", "");
 	$aside['$mapquery'] = $mapquery;
 	}
    //end mapquery
@@ -607,7 +623,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	
  }
 
- function js_in_foot() {
+ function js_diabook_footer() {
 	/** @purpose insert stuff in bottom of page
 	 */
 	$a = get_app();
