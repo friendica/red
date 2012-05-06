@@ -22,6 +22,7 @@
 <div id="close_helpers">
 {{ if $helpers }}
 <h3>$helpers.title.1<a id="close_helpers_icon"  onClick="close_helpers()" class="icon close_box" title="$close"></a></h3>
+<a href="http://friendica.com/resources" title="How-to's" style="margin-left: 10px; " target="blank">How-To Guides</a><br>
 <a href="http://kakste.com/profile/newhere" title="@NewHere" style="margin-left: 10px; " target="blank">NewHere</a><br>
 <a href="https://helpers.pyxis.uberspace.de/profile/helpers" style="margin-left: 10px; " title="Friendica Support" target="blank">Friendica Support</a><br>
 <a href="https://letstalk.pyxis.uberspace.de/profile/letstalk" style="margin-left: 10px; " title="Let's talk" target="blank">Let's talk</a><br>
@@ -116,12 +117,14 @@ $nv.search
 <div id="close_mapquery">
 {{ if $mapquery }}
 <h3>$mapquery.title.1<a id="close_mapquery_icon"  onClick="close_mapquery()" class="icon close_box" title="$close"></a></h3>
-<div id="map" style="height:170px;width:170px;margin-top:3px;margin-bottom:1px;">
+<div id="map" style="height:165px;width:165px;margin-left:3px;margin-top:3px;margin-bottom:1px;">
 </div>
-<div style="font-size:9px;">Data CC-By-SA by <a href="http://openstreetmap.org/">OpenStreetMap</a></div>
-<div id="#mapcontrol" style="display:none;" class="lightbox">
-hallo welt
-<div id="map2" style="height:370px;width:370px;margin-top:3px;margin-bottom:1px;">
+<div style="font-size:9px;margin-left:3px;">Data CC-By-SA by <a href="http://openstreetmap.org/">OpenStreetMap</a></div>
+<div id="mapcontrol" style="display:none;">
+<div id="map2" style="height:350px;width:350px;"></div>
+<div id="mouseposition" style="width: 350px;"></div>
+<div id="zoom"></div>
+
 </div>
 </div>
 {{ endif }}
