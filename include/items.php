@@ -3029,32 +3029,7 @@ function item_expire($uid,$days) {
 		if($expire_items==0 && $item['type']!='note')
 			continue;
 
-
-		$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s' WHERE `id` = %d LIMIT 1",
-			dbesc(datetime_convert()),
-			dbesc(datetime_convert()),
-			intval($item['id'])
-		);
-
-		$r = q("DELETE FROM item_id where iid in (select id from item where parent = %d) and uid = %d",
-			intval($item['id']),
-			intval($uid)
-		);
-
-		$r = q("DELETE FROM sign where iid in (select id from item where parent = %d) and uid = %d",
-			intval($item['id']),
-			intval($uid)
-		);
-
-		// kill the kids
-
-		$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d ",
-			dbesc(datetime_convert()),
-			dbesc(datetime_convert()),
-			dbesc($item['parent-uri']),
-			intval($item['uid'])
-		);
-
+		drop_item($item['id'],false);
 	}
 
 	proc_run('php',"include/notifier.php","expire","$uid");
@@ -3116,6 +3091,25 @@ function drop_item($id,$interactive = true) {
 			intval($item['id'])
 		);
 
+		// clean up categories and tags so they don't end up as orphans
+
+		$matches = false;
+		$cnt = preg_match_all('/<(.*?)>/',$item['file'],$matches,PREG_SET_ORDER);
+		if($cnt) {
+			foreach($matches as $mtch) {
+				file_tag_unsave_file($item['uid'],$item['id'],$mtch[1],true);
+			}
+		}
+
+		$matches = false;
+
+		$cnt = preg_match_all('/\[(.*?)\]/',$item['file'],$matches,PREG_SET_ORDER);
+		if($cnt) {
+			foreach($matches as $mtch) {
+				file_tag_unsave_file($item['uid'],$item['id'],$mtch[1],false);
+			}
+		}
+
 		// If item is a link to a photo resource, nuke all the associated photos 
 		// (visitors will not have photo resources)
 		// This only applies to photos uploaded from the photos page. Photos inserted into a post do not
@@ -3139,6 +3133,17 @@ function drop_item($id,$interactive = true) {
 			// ignore the result
 		}
 
+		// clean up item_id and sign meta-data tables
+
+		$r = q("DELETE FROM item_id where iid in (select id from item where parent = %d and uid = %d)",
+			intval($item['id']),
+			intval($item['uid'])
+		);
+
+		$r = q("DELETE FROM sign where iid in (select id from item where parent = %d and uid = %d)",
+			intval($item['id']),
+			intval($item['uid'])
+		);
 
 		// If it's the parent of a comment thread, kill all the kids
 
@@ -3171,7 +3176,7 @@ function drop_item($id,$interactive = true) {
 			}	
 		}
 		$drop_id = intval($item['id']);
-			
+
 		// send the notification upstream/downstream as the case may be
 
 		if(! $interactive)

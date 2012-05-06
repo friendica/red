@@ -930,7 +930,8 @@ function prepare_body($item,$attach = false) {
 		foreach($matches as $mtch) {
 			if(strlen($x))
 				$x .= ',';
-			$x .= xmlify(file_tag_decode($mtch[1])) . ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&cat=' . xmlify(file_tag_decode($mtch[1])) . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>';
+			$x .= xmlify(file_tag_decode($mtch[1])) 
+				. ((local_user() == $item['uid']) ? ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&cat=' . xmlify(file_tag_decode($mtch[1])) . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>' : '');
 		}
 		if(strlen($x))
 			$s .= '<div class="categorytags"><span>' . t('Categories:') . ' </span>' . $x . '</div>'; 
@@ -1490,7 +1491,7 @@ function file_tag_unsave_file($uid,$item,$file,$cat = false) {
 		intval($uid)
 	);
 
-	$r = q("select file from item where uid = %d " . file_tag_file_query('item',$file,(($cat) ? 'category' : 'file')),
+	$r = q("select file from item where uid = %d and deleted = 0 " . file_tag_file_query('item',$file,(($cat) ? 'category' : 'file')),
 		intval($uid)
 	);
 

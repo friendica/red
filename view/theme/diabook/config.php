@@ -13,8 +13,9 @@ function theme_content(&$a){
 	$line_height = get_pconfig(local_user(), 'diabook', 'line_height' );
 	$resolution = get_pconfig(local_user(), 'diabook', 'resolution' );
 	$color = get_pconfig(local_user(), 'diabook', 'color' );
+	$TSearchTerm = get_pconfig(local_user(), 'diabook', 'TSearchTerm' );
 	
-	return diabook_form($a,$font_size, $line_height, $resolution, $color);
+	return diabook_form($a,$font_size, $line_height, $resolution, $color, $TSearchTerm);
 }
 
 function theme_post(&$a){
@@ -26,6 +27,7 @@ function theme_post(&$a){
 		set_pconfig(local_user(), 'diabook', 'line_height', $_POST['diabook_line_height']);
 		set_pconfig(local_user(), 'diabook', 'resolution', $_POST['diabook_resolution']);
 		set_pconfig(local_user(), 'diabook', 'color', $_POST['diabook_color']);	
+		set_pconfig(local_user(), 'diabook', 'TSearchTerm', $_POST['diabook_TSearchTerm']);	
 	}
 }
 
@@ -35,8 +37,9 @@ function theme_admin(&$a){
 	$line_height = get_config('diabook', 'line_height' );
 	$resolution = get_config('diabook', 'resolution' );
 	$color = get_config('diabook', 'color' );	
+	$TSearchTerm = get_config('diabook', 'TSearchTerm' );	
 	
-	return diabook_form($a,$font_size, $line_height, $resolution, $color);
+	return diabook_form($a,$font_size, $line_height, $resolution, $color, $TSearchTerm);
 }
 
 function theme_admin_post(&$a){
@@ -45,11 +48,12 @@ function theme_admin_post(&$a){
 		set_config('diabook', 'line_height', $_POST['diabook_line_height']);
 		set_config('diabook', 'resolution', $_POST['diabook_resolution']);
 		set_config('diabook', 'color', $_POST['diabook_color']);
+		set_config('diabook', 'TSearchTerm', $_POST['diabook_TSearchTerm']);
 	}
 }
 
 
-function diabook_form(&$a, $font_size, $line_height, $resolution, $color){
+function diabook_form(&$a, $font_size, $line_height, $resolution, $color, $TSearchTerm){
 	$line_heights = array(
 		"1.3"=>"1.3",
 		"---"=>"---",
@@ -95,6 +99,7 @@ function diabook_form(&$a, $font_size, $line_height, $resolution, $color){
 		'$line_height' => array('diabook_line_height', t('Set line-height for posts and comments'), $line_height, '', $line_heights),
 		'$resolution' => array('diabook_resolution', t('Set resolution for middle column'), $resolution, '', $resolutions),
 		'$color' => array('diabook_color', t('Set color scheme'), $color, '', $colors),	
+		'$TSearchTerm' => array('diabook_TSearchTerm', t('Set twitter search term'), $TSearchTerm, '', $TSearchTerm),	
 	));
 	return $o;
 }
