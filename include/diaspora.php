@@ -2298,14 +2298,20 @@ function diaspora_transmit($owner,$contact,$slap,$public_batch) {
 
 	logger('diaspora_transmit: ' . $logid . ' ' . $dest_url);
 
-	if(! intval(get_config('system','diaspora_test')))
-		post_url($dest_url . '/', $slap);
-	else {
-		logger('diaspora_transmit: test_mode');
-		return 200;
+	if(was_recently_delayed($contact['id'])) {
+		$return_code = 0;
 	}
-
-	$return_code = $a->get_curl_code();
+	else {
+		if(! intval(get_config('system','diaspora_test'))) {
+			post_url($dest_url . '/', $slap);
+			$return_code = $a->get_curl_code();
+		}
+		else {
+			logger('diaspora_transmit: test_mode');
+			return 200;
+		}
+	}
+	
 	logger('diaspora_transmit: ' . $logid . ' returns: ' . $return_code);
 
 	if((! $return_code) || (($return_code == 503) && (stristr($a->get_curl_headers(),'retry-after')))) {
