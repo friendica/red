@@ -8,6 +8,32 @@
 </form>
 </div>
 
+<div id="mapcontrol" style="display:none;">
+<form id="mapform" action="network" method="post" >
+<span style="width: 500px;position: relative;float: right;right:20px;"><p>this ist still under development. 
+the idea is to provide a map with different layers(e.g. earth population, atomic power plants, wheat growing acreages, sunrise or what you want) 
+and markers(events, demos, friends, anything, that is intersting for you). 
+These layer and markers should be importable and deletable by the user.</p>
+<p>help on this feature is very appreciated. i am not that good in js so it's a start, but needs tweaks and further dev.
+just contact me, if you are intesrested in joining</p>
+<p>http://localhost/friendica/profile/thomas</p>
+<p>this is build with <b>mapquery</b> http://mapquery.org/ and 
+<b>openlayers</b>http://openlayers.org/</p>
+</span>
+<div id="map2" style="height:350px;width:350px;"></div>
+<div id="mouseposition" style="width: 350px;"></div>
+<div id="zoom">
+zoom:<input type="text" id="mapzoom" value=""></input>
+</div>
+{{inc field_input.tpl with $field=$ELZoom}}{{endinc}}
+{{inc field_input.tpl with $field=$ELPosX}}{{endinc}}
+{{inc field_input.tpl with $field=$ELPosY}}{{endinc}}
+<div class="settings-submit-wrapper">
+<input id="mapsub" type="submit" value="$sub" class="settings-submit" name="diabook-settings-map-sub"></input>
+</div>
+</form>
+</div>
+
 <div id="pos_null" style="margin-bottom:-30px;">
 </div>
 
@@ -17,6 +43,7 @@
 {{ if $page }}
 <div>$page</div>
 {{ endif }}
+</div>
 
 <div id="close_profiles">
 {{ if $comunity_profiles_title }}
@@ -122,13 +149,6 @@ $nv.search
 <div id="map" style="height:165px;width:165px;margin-left:3px;margin-top:3px;margin-bottom:1px;">
 </div>
 <div style="font-size:9px;margin-left:3px;">Data CC-By-SA by <a href="http://openstreetmap.org/">OpenStreetMap</a></div>
-<div id="mapcontrol" style="display:none;">
-<div id="map2" style="height:350px;width:350px;"></div>
-<div id="mouseposition" style="width: 350px;"></div>
-<div id="zoom"></div>
-
-</div>
-</div>
 {{ endif }}
 </div>
 </div>

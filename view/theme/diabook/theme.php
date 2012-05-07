@@ -3,7 +3,7 @@
 /*
  * Name: Diabook
  * Description: Diabook: report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
- * Version: (Version: 1.025)
+ * Version: (Version: 1.026)
  * Author: 
  */
 
@@ -13,7 +13,7 @@ $a = get_app();
 function diabook_init(&$a) {
 	
 //print diabook-version for debugging
-$diabook_version = "Diabook (Version: 1.025)";
+$diabook_version = "Diabook (Version: 1.026)";
 $a->page['htmlhead'] .= sprintf('<META NAME="theme" CONTENT="%s"/>', $diabook_version);
 
 //change css on network and profilepages
@@ -114,7 +114,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $imageresizeJS);
 	
 	//load jquery.ui.js
-	if($ccCookie != "9") {
+	if($ccCookie != "10") {
 	$jqueryuiJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery-ui-1.8.20.custom.min.js";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $jqueryuiJS);
 	}	
@@ -126,7 +126,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	}
 	
 	//load jquery.mapquery.js
-	$_COOKIE['close_mapquery'] = "1";
+
 	if($_COOKIE['close_mapquery'] != "1") {
 	$mqtmplJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.tmpl.js";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mqtmplJS);
@@ -136,8 +136,8 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $openlayersJS);
 	$mqmouseposJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mapquery.mqMousePosition.js";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mqmouseposJS);
-	$mqzoomsliderJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mapquery.mqZoomSlider.js";
-	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mqzoomsliderJS);
+	$mousewheelJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mousewheel.js";
+	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mousewheelJS);
 	
 	}
 	
@@ -156,8 +156,23 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	 });
 	</script>';
 	//check if mapquerybox is active and print
-	$_COOKIE['close_mapquery'] = "1";
+
 	if($_COOKIE['close_mapquery'] != "1") {
+		$ELZoom=false;
+		$ELPosX=false;
+		$ELPosy=false;
+		$site_ELZoom = get_config("diabook", "ELZoom" );
+		$site_ELPosX = get_config("diabook", "ELPosX" );
+		$site_ELPosY = get_config("diabook", "ELPosY" );
+		$ELZoom = get_pconfig(local_user(), "diabook", "ELZoom");
+		$ELPosX = get_pconfig(local_user(), "diabook", "ELPosX");
+		$ELPosY = get_pconfig(local_user(), "diabook", "ELPosY");
+		if ($ELZoom===false) $ELZoom=$site_ELZoom;
+		if ($ELPosX===false) $ELPosX=$site_ELPosX;
+		if ($ELPosY===false) $ELPosY=$site_ELPosY;
+		if ($ELZoom===false) $ELZoom="0";	
+		if ($ELPosX===false) $ELPosX="0";		
+		if ($ELPosY===false) $ELPosY="0";			
 		$a->page['htmlhead'] .= '
 		<script>
 		
@@ -166,7 +181,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
         layers:[{         //add layers to your map; you need to define at least one to be able to see anything on the map
             type:"osm"  //add a layer of the type osm (OpenStreetMap)
             }],
-        center:({zoom:8,position:[11.7,52.2]}),
+        center:({zoom:'.$ELZoom.',position:['.$ELPosX.','.$ELPosY.']}),
        });
     
     });
@@ -174,7 +189,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
     function open_mapcontrol() {
 		$("div#mapcontrol").attr("style","display: block;width:900px;height:600px;");
 		$("#map2").mapQuery({layers:[{type:"osm"}],
-												center:({zoom:8,position:[11.7,52.2]})}); 
+												center:({zoom:'.$ELZoom.',position:['.$ELPosX.','.$ELPosY.']})}); 
 									
 		$("#mouseposition").mqMousePosition({
         map: "#map2",
@@ -185,8 +200,13 @@ if ($color=="dark") $color_path = "/diabook-dark/";
      		
      	
      	map = $("#map2").mapQuery().data("mapQuery");
-		alert(map.center().zoom);
-		
+     	textarea = document.getElementById("mapzoom");
+     	
+     	
+		$("#map2").bind("mousewheel", function(event, delta) {
+		if (delta > 0 || delta < 0){
+			 textarea.value = map.center().zoom; }
+			});
      	
 		};
 		</script>';
@@ -265,7 +285,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
   	});
 	</script>';
 	
-	if($ccCookie != "9") {
+	if($ccCookie != "10") {
 	$a->page['htmlhead'] .= '
 	<script>
 	$("right_aside").ready(function(){
@@ -576,11 +596,26 @@ if ($color=="dark") $color_path = "/diabook-dark/";
   //END Community Page	
   
    //mapquery
-   $_COOKIE['close_mapquery'] = "1";
+
   if($_COOKIE['close_mapquery'] != "1") {
    $mapquery = array();
-	$mapquery['title'] = Array("", "<a id='mapcontrol-link' href='#mapcontrol' style='text-decoration:none;' onclick='open_mapcontrol(); return false;'>".t('Earth View')."</a>", "", "");
+	$mapquery['title'] = Array("", "<a id='mapcontrol-link' href='#mapcontrol' style='text-decoration:none;' onclick='open_mapcontrol(); return false;'>".t('Earth Layers')."</a>", "", "");
 	$aside['$mapquery'] = $mapquery;
+	$ELZoom = get_pconfig(local_user(), 'diabook', 'ELZoom' );
+	$ELPosX = get_pconfig(local_user(), 'diabook', 'ELPosX' );
+	$ELPosY = get_pconfig(local_user(), 'diabook', 'ELPosY' );
+	$aside['$sub'] = t('Submit');
+	$aside['$ELZoom'] = array('diabook_ELZoom', t('Set zoomfactor for Earth Layer'), $ELZoom, '', $ELZoom);
+	$aside['$ELPosX'] = array('diabook_ELPosX', t('Set longitude (X) for Earth Layer'), $ELPosX, '', $ELPosX);	
+	$aside['$ELPosY'] = array('diabook_ELPosY', t('Set latitude (Y) for Earth Layer'), $ELPosY, '', $ELPosY);	
+	$baseurl = $a->get_baseurl($ssl_state); 
+	$aside['$baseurl'] = $baseurl;
+	if (isset($_POST['diabook-settings-map-sub']) && $_POST['diabook-settings-map-sub']!=''){	
+		set_pconfig(local_user(), 'diabook', 'ELZoom', $_POST['diabook_ELZoom']);
+		set_pconfig(local_user(), 'diabook', 'ELPosX', $_POST['diabook_ELPosX']);	
+		set_pconfig(local_user(), 'diabook', 'ELPosY', $_POST['diabook_ELPosY']);		
+		header("Location: network");
+		}
 	}
    //end mapquery
    

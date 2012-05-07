@@ -14,8 +14,11 @@ function theme_content(&$a){
 	$resolution = get_pconfig(local_user(), 'diabook', 'resolution' );
 	$color = get_pconfig(local_user(), 'diabook', 'color' );
 	$TSearchTerm = get_pconfig(local_user(), 'diabook', 'TSearchTerm' );
+	$ELZoom = get_pconfig(local_user(), 'diabook', 'ELZoom' );
+	$ELPosX = get_pconfig(local_user(), 'diabook', 'ELPosX' );
+	$ELPosY = get_pconfig(local_user(), 'diabook', 'ELPosY' );
 	
-	return diabook_form($a,$font_size, $line_height, $resolution, $color, $TSearchTerm);
+	return diabook_form($a,$font_size, $line_height, $resolution, $color, $TSearchTerm, $ELZoom, $ELPosX, $ELPosY);
 }
 
 function theme_post(&$a){
@@ -28,6 +31,9 @@ function theme_post(&$a){
 		set_pconfig(local_user(), 'diabook', 'resolution', $_POST['diabook_resolution']);
 		set_pconfig(local_user(), 'diabook', 'color', $_POST['diabook_color']);	
 		set_pconfig(local_user(), 'diabook', 'TSearchTerm', $_POST['diabook_TSearchTerm']);	
+		set_pconfig(local_user(), 'diabook', 'ELZoom', $_POST['diabook_ELZoom']);	
+		set_pconfig(local_user(), 'diabook', 'ELPosX', $_POST['diabook_ELPosX']);	
+		set_pconfig(local_user(), 'diabook', 'ELPosY', $_POST['diabook_ELPosY']);	
 	}
 }
 
@@ -38,8 +44,11 @@ function theme_admin(&$a){
 	$resolution = get_config('diabook', 'resolution' );
 	$color = get_config('diabook', 'color' );	
 	$TSearchTerm = get_config('diabook', 'TSearchTerm' );	
+	$ELZoom = get_config('diabook', 'ELZoom' );
+	$ELPosX = get_config('diabook', 'ELPosX' );
+	$ELPosY = get_config('diabook', 'ELPosY' );
 	
-	return diabook_form($a,$font_size, $line_height, $resolution, $color, $TSearchTerm);
+	return diabook_form($a,$font_size, $line_height, $resolution, $color, $TSearchTerm, $ELZoom, $ELPosX, $ELPosY);
 }
 
 function theme_admin_post(&$a){
@@ -49,11 +58,14 @@ function theme_admin_post(&$a){
 		set_config('diabook', 'resolution', $_POST['diabook_resolution']);
 		set_config('diabook', 'color', $_POST['diabook_color']);
 		set_config('diabook', 'TSearchTerm', $_POST['diabook_TSearchTerm']);
+		set_config('diabook', 'ELZoom', $_POST['diabook_ELZoom']);
+		set_config('diabook', 'ELPosX', $_POST['diabook_ELPosX']);
+		set_config('diabook', 'ELPosY', $_POST['diabook_ELPosY']);
 	}
 }
 
 
-function diabook_form(&$a, $font_size, $line_height, $resolution, $color, $TSearchTerm){
+function diabook_form(&$a, $font_size, $line_height, $resolution, $color, $TSearchTerm, $ELZoom, $ELPosX, $ELPosY){
 	$line_heights = array(
 		"1.3"=>"1.3",
 		"---"=>"---",
@@ -100,6 +112,9 @@ function diabook_form(&$a, $font_size, $line_height, $resolution, $color, $TSear
 		'$resolution' => array('diabook_resolution', t('Set resolution for middle column'), $resolution, '', $resolutions),
 		'$color' => array('diabook_color', t('Set color scheme'), $color, '', $colors),	
 		'$TSearchTerm' => array('diabook_TSearchTerm', t('Set twitter search term'), $TSearchTerm, '', $TSearchTerm),	
+		'$ELZoom' => array('diabook_ELZoom', t('Set zoomfactor for Earth Layer'), $ELZoom, '', $ELZoom),	
+		'$ELPosX' => array('diabook_ELPosX', t('Set longitude (X) for Earth Layer'), $ELPosX, '', $ELPosX),	
+		'$ELPosY' => array('diabook_ELPosY', t('Set latitude (Y) for Earth Layer'), $ELPosY, '', $ELPosY),	
 	));
 	return $o;
 }
