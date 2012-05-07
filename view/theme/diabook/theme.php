@@ -3,21 +3,18 @@
 /*
  * Name: Diabook
  * Description: Diabook: report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
- * Version: (Version: 1.025)
+ * Version: (Version: 1.026)
  * Author: 
  */
 
 $a = get_app();
-$a->theme_info = array(
-    'family' => 'diabook',
-	'version' => '1.025'
-);
+
 
 function diabook_init(&$a) {
 	
 //print diabook-version for debugging
-$diabook_version = "Diabook (Version: 1.025)";
-$a->page['htmlhead'] .= sprintf('<script "%s" ></script>', $diabook_version);
+$diabook_version = "Diabook (Version: 1.026)";
+$a->page['htmlhead'] .= sprintf('<META NAME="theme" CONTENT="%s"/>', $diabook_version);
 
 //change css on network and profilepages
 $cssFile = null;
@@ -117,7 +114,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $imageresizeJS);
 	
 	//load jquery.ui.js
-	if($ccCookie != "9") {
+	if($ccCookie != "10") {
 	$jqueryuiJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery-ui-1.8.20.custom.min.js";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $jqueryuiJS);
 	}	
@@ -129,14 +126,18 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	}
 	
 	//load jquery.mapquery.js
-	$_COOKIE['close_mapquery'] = "1";
+
 	if($_COOKIE['close_mapquery'] != "1") {
+	$mqtmplJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.tmpl.js";
+	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mqtmplJS);
 	$mapqueryJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mapquery.core.js";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mapqueryJS);
 	$openlayersJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/OpenLayers.js";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $openlayersJS);
-	$qlayersJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mapquery.mqLayerControl.js";
-	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mqlayersJS);
+	$mqmouseposJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mapquery.mqMousePosition.js";
+	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mqmouseposJS);
+	$mousewheelJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mousewheel.js";
+	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mousewheelJS);
 	
 	}
 	
@@ -146,6 +147,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	 $(function() {
 		$("a.lightbox").fancybox(); // Select all links with lightbox class
 	 	$("a.#twittersettings-link").fancybox({onClosed: function() { $("#twittersettings").attr("style","display: none;");}} ); 
+	   $("a.#mapcontrol-link").fancybox({onClosed: function() { $("#mapcontrol").attr("style","display: none;");}} ); 
 	 	});
 	   
 	 $(window).load(function() {
@@ -154,8 +156,23 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	 });
 	</script>';
 	//check if mapquerybox is active and print
-	$_COOKIE['close_mapquery'] = "1";
+
 	if($_COOKIE['close_mapquery'] != "1") {
+		$ELZoom=false;
+		$ELPosX=false;
+		$ELPosy=false;
+		$site_ELZoom = get_config("diabook", "ELZoom" );
+		$site_ELPosX = get_config("diabook", "ELPosX" );
+		$site_ELPosY = get_config("diabook", "ELPosY" );
+		$ELZoom = get_pconfig(local_user(), "diabook", "ELZoom");
+		$ELPosX = get_pconfig(local_user(), "diabook", "ELPosX");
+		$ELPosY = get_pconfig(local_user(), "diabook", "ELPosY");
+		if ($ELZoom===false) $ELZoom=$site_ELZoom;
+		if ($ELPosX===false) $ELPosX=$site_ELPosX;
+		if ($ELPosY===false) $ELPosY=$site_ELPosY;
+		if ($ELZoom===false) $ELZoom="0";	
+		if ($ELPosX===false) $ELPosX="0";		
+		if ($ELPosY===false) $ELPosY="0";			
 		$a->page['htmlhead'] .= '
 		<script>
 		
@@ -163,16 +180,35 @@ if ($color=="dark") $color_path = "/diabook-dark/";
     $("#map").mapQuery({
         layers:[{         //add layers to your map; you need to define at least one to be able to see anything on the map
             type:"osm"  //add a layer of the type osm (OpenStreetMap)
-            }]
-        });
-     $("#map2").mapQuery({
-     layers:[{         //add layers to your map; you need to define at least one to be able to see anything on the map
-         type:"osm"  //add a layer of the type osm (OpenStreetMap)
-         }]
-     });  
+            }],
+        center:({zoom:'.$ELZoom.',position:['.$ELPosX.','.$ELPosY.']}),
+       });
     
     });
-  		
+    	 
+    function open_mapcontrol() {
+		$("div#mapcontrol").attr("style","display: block;width:900px;height:600px;");
+		$("#map2").mapQuery({layers:[{type:"osm"}],
+												center:({zoom:'.$ELZoom.',position:['.$ELPosX.','.$ELPosY.']})}); 
+									
+		$("#mouseposition").mqMousePosition({
+        map: "#map2",
+        x:"lon",
+        y:"lat",
+        precision:2
+     		}); 
+     		
+     	
+     	map = $("#map2").mapQuery().data("mapQuery");
+     	textarea = document.getElementById("mapzoom");
+     	
+     	
+		$("#map2").bind("mousewheel", function(event, delta) {
+		if (delta > 0 || delta < 0){
+			 textarea.value = map.center().zoom; }
+			});
+     	
+		};
 		</script>';
 	}
 	//check if twitterbox is active and print
@@ -207,6 +243,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	<script>
 	$(document).ready(function() {
 	$("div#login-submit-wrapper").attr("style","padding-top: 120px;");
+	
 	});
 	</script>';	
 	}
@@ -248,7 +285,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
   	});
 	</script>';
 	
-	if($ccCookie != "9") {
+	if($ccCookie != "10") {
 	$a->page['htmlhead'] .= '
 	<script>
 	$("right_aside").ready(function(){
@@ -366,7 +403,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$a->page['footer'] .= replace_macros($tpl, array());
 	
 	//
-	js_in_foot();
+	js_diabook_footer();
 }
 
 
@@ -374,7 +411,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$a = get_app();
 	// comunity_profiles
 	if($_COOKIE['close_profiles'] != "1") {
-	$aside['$comunity_profilest_title'] = t('Community Profiles');
+	$aside['$comunity_profiles_title'] = t('Community Profiles');
 	$aside['$comunity_profiles_items'] = array();
 	$r = q("select gcontact.* from gcontact left join glink on glink.gcid = gcontact.id 
 			  where glink.cid = 0 and glink.uid = 0 order by rand() limit 9");
@@ -527,7 +564,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
    if($_COOKIE['close_pages'] != "1") {
    if(local_user()) {
    $page = '
-			<h3 style="margin-top:0px;">'.t("Community Pages").'<a id="close_pages_icon"  onClick="close_pages()" class="icon close_box" title="close"></a></h3></div>
+			<h3 style="margin-top:0px;">'.t("Community Pages").'<a id="close_pages_icon"  onClick="close_pages()" class="icon close_box" title="close"></a></h3>
 			<div id=""><ul style="margin-left: 7px;margin-top: 0px;padding-left: 0px;padding-top: 0px;">';
 
 	$pagelist = array();
@@ -559,11 +596,26 @@ if ($color=="dark") $color_path = "/diabook-dark/";
   //END Community Page	
   
    //mapquery
-   $_COOKIE['close_mapquery'] = "1";
+
   if($_COOKIE['close_mapquery'] != "1") {
    $mapquery = array();
-	$mapquery['title'] = Array("", t('Earth View'), "", "");
+	$mapquery['title'] = Array("", "<a id='mapcontrol-link' href='#mapcontrol' style='text-decoration:none;' onclick='open_mapcontrol(); return false;'>".t('Earth Layers')."</a>", "", "");
 	$aside['$mapquery'] = $mapquery;
+	$ELZoom = get_pconfig(local_user(), 'diabook', 'ELZoom' );
+	$ELPosX = get_pconfig(local_user(), 'diabook', 'ELPosX' );
+	$ELPosY = get_pconfig(local_user(), 'diabook', 'ELPosY' );
+	$aside['$sub'] = t('Submit');
+	$aside['$ELZoom'] = array('diabook_ELZoom', t('Set zoomfactor for Earth Layer'), $ELZoom, '', $ELZoom);
+	$aside['$ELPosX'] = array('diabook_ELPosX', t('Set longitude (X) for Earth Layer'), $ELPosX, '', $ELPosX);	
+	$aside['$ELPosY'] = array('diabook_ELPosY', t('Set latitude (Y) for Earth Layer'), $ELPosY, '', $ELPosY);	
+	$baseurl = $a->get_baseurl($ssl_state); 
+	$aside['$baseurl'] = $baseurl;
+	if (isset($_POST['diabook-settings-map-sub']) && $_POST['diabook-settings-map-sub']!=''){	
+		set_pconfig(local_user(), 'diabook', 'ELZoom', $_POST['diabook_ELZoom']);
+		set_pconfig(local_user(), 'diabook', 'ELPosX', $_POST['diabook_ELPosX']);	
+		set_pconfig(local_user(), 'diabook', 'ELPosY', $_POST['diabook_ELPosY']);		
+		header("Location: network");
+		}
 	}
    //end mapquery
    
@@ -587,12 +639,13 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$twitter['title'] = Array("", "<a id='twittersettings-link' href='#twittersettings' style='text-decoration:none;' onclick='open_twittersettings(); return false;'>".t('Last Tweets')."</a>", "", "");
 	$aside['$twitter'] = $twitter;
 	$TSearchTerm = get_pconfig(local_user(), 'diabook', 'TSearchTerm' );
-	$aside['$submit'] = t('Submit');
+	$aside['$sub'] = t('Submit');
 	$aside['$TSearchTerm'] = array('diabook_TSearchTerm', t('Set twitter search term'), $TSearchTerm, '', $TSearchTerm);
-	$baseurl = $a->get_baseurl(); 
+	$baseurl = $a->get_baseurl($ssl_state); 
 	$aside['$baseurl'] = $baseurl;
-	if (isset($_POST['diabook-settings-submit'])){	
+	if (isset($_POST['diabook-settings-sub']) && $_POST['diabook-settings-sub']!=''){	
 		set_pconfig(local_user(), 'diabook', 'TSearchTerm', $_POST['diabook_TSearchTerm']);	
+		header("Location: network");
 		}
 	}
    //end twitter
@@ -607,7 +660,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	
  }
 
- function js_in_foot() {
+ function js_diabook_footer() {
 	/** @purpose insert stuff in bottom of page
 	 */
 	$a = get_app();

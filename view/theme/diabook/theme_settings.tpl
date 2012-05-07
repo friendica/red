@@ -8,6 +8,12 @@
 
 {{inc field_input.tpl with $field=$TSearchTerm}}{{endinc}}
 
+{{inc field_input.tpl with $field=$ELPosX}}{{endinc}}
+
+{{inc field_input.tpl with $field=$ELPosY}}{{endinc}}
+
+{{inc field_input.tpl with $field=$ELZoom}}{{endinc}}
+
 <div class="field select">
 <a onClick="restore_boxes()" title="Restore right-hand column" style="cursor: pointer;">Restore right-hand column</a>
 </div>
