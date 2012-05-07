@@ -4,20 +4,7 @@ require_once('include/acl_selectors.php');
 require_once('include/message.php');
 
 function message_init(&$a) {
-	$tabs = array(
-	/*
-		array(
-			'label' => t('All'),
-			'url'=> $a->get_baseurl(true) . '/message',
-			'sel'=> ($a->argc == 1),
-		),
-		array(
-			'label' => t('Sent'),
-			'url' => $a->get_baseurl(true) . '/message/sent',
-			'sel'=> ($a->argv[1] == 'sent'),
-		),
-	*/
-	);
+	$tabs = array();
 	$new = array(
 		'label' => t('New Message'),
 		'url' => $a->get_baseurl(true) . '/message/new',
@@ -29,6 +16,20 @@ function message_init(&$a) {
 		'$tabs'=>$tabs,
 		'$new'=>$new,
 	));
+	$base = $a->get_baseurl();
+
+	$a->page['htmlhead'] .= '<script src="' . $a->get_baseurl(true) . '/library/jquery_ac/jquery.autocomplete-min.js" ></script>';
+	$a->page['htmlhead'] .= <<< EOT
+
+<script>$(document).ready(function() { 
+	var a; 
+	a = $("#messageto").autocomplete({ 
+		serviceUrl: '$base/acl'
+	});
+}); 
+
+</script>
+EOT;
 	
 }
 
@@ -171,7 +172,9 @@ function message_content(&$a) {
 	
 		$preselect = (isset($a->argv[2])?array($a->argv[2]):false);
 	
-		$select = contact_select('messageto','message-to-select', $preselect, 4, true, false, false, 10);
+//		$select = contact_select('messageto','message-to-select', $preselect, 4, true, false, false, 10);
+		$select = '<input type="text" id="messageto" name="messageto" value="' . $preselect .'" />';
+
 		$tpl = get_markup_template('prv_message.tpl');
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Send Private Message'),
