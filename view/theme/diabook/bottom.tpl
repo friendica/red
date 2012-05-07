@@ -31,6 +31,7 @@ $(document).ready(function() {
 	   for (var Sitem=0, m = SavedID.length; Sitem < m; Sitem++) {
            $("#sortable_boxes").append($("#sortable_boxes").children("#" + SavedID[Sitem]));
 	       }
+	     
 	});
 	
 	function tautogrow(id){

@@ -13,6 +13,14 @@ function acl_init(&$a){
 	$type = (x($_REQUEST,'type')?$_REQUEST['type']:"");
 	
 
+	// For use with jquery.autocomplete for private mail completion
+
+	if(x($_REQUEST,'query') && strlen($_REQUEST['query'])) {
+		$type = 'm';
+		$search = $_REQUEST['query'];
+	}
+
+
 	if ($search!=""){
 		$sql_extra = "AND `name` LIKE '%%".dbesc($search)."%%'";
 		$sql_extra2 = "AND (`attag` LIKE '%%".dbesc($search)."%%' OR `name` LIKE '%%".dbesc($search)."%%' OR `nick` LIKE '%%".dbesc($search)."%%')";
@@ -114,6 +122,23 @@ function acl_init(&$a){
 	}
 	else
 		$r = array();
+
+
+	if($type == 'm') {
+		$x = array();
+		$x['query'] = $search;
+		$x['suggestions'] = array();
+		$x['data'] = array();
+		if(count($r)) {
+			foreach($r as $g) {
+				$x['suggestions'][] = sprintf( t('%s [%s]'),$g['name'],$g['url']);
+					// '<img src="' . $g['micro'] . ' height="16" width="16" alt="' . t('Image/photo') . '" />' . 
+				$x['data'][] = intval($g['id']);
+			}
+		}
+		echo json_encode($x);
+		killme();
+	}
 
 	if(count($r)) {
 		foreach($r as $g){

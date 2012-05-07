@@ -4,20 +4,7 @@ require_once('include/acl_selectors.php');
 require_once('include/message.php');
 
 function message_init(&$a) {
-	$tabs = array(
-	/*
-		array(
-			'label' => t('All'),
-			'url'=> $a->get_baseurl(true) . '/message',
-			'sel'=> ($a->argc == 1),
-		),
-		array(
-			'label' => t('Sent'),
-			'url' => $a->get_baseurl(true) . '/message/sent',
-			'sel'=> ($a->argv[1] == 'sent'),
-		),
-	*/
-	);
+	$tabs = array();
 	$new = array(
 		'label' => t('New Message'),
 		'url' => $a->get_baseurl(true) . '/message/new',
@@ -29,6 +16,21 @@ function message_init(&$a) {
 		'$tabs'=>$tabs,
 		'$new'=>$new,
 	));
+	$base = $a->get_baseurl();
+
+	$a->page['htmlhead'] .= '<script src="' . $a->get_baseurl(true) . '/library/jquery_ac/jquery.autocomplete-min.js" ></script>';
+	$a->page['htmlhead'] .= <<< EOT
+
+<script>$(document).ready(function() { 
+	var a; 
+	a = $("#recip").autocomplete({ 
+		serviceUrl: '$base/acl',
+		width: 350
+	});
+}); 
+
+</script>
+EOT;
 	
 }
 
@@ -172,6 +174,15 @@ function message_content(&$a) {
 		$preselect = (isset($a->argv[2])?array($a->argv[2]):false);
 	
 		$select = contact_select('messageto','message-to-select', $preselect, 4, true, false, false, 10);
+
+// here's sort of where we want to do contact autocomplete
+// comment out the contact selector line just above and use the following one instead,
+// then figure out how to make it do the right thing
+// pictures would be nice, but that didn't seem to work when I tried it 
+// (the json backend is found in mod/acl.php)
+
+//		$select = '<input type="text" id="recip" name="messageto" value="' . $preselect .'" />';
+
 		$tpl = get_markup_template('prv_message.tpl');
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Send Private Message'),
@@ -198,7 +209,7 @@ function message_content(&$a) {
 		$o .= $header;
 		
 		$r = q("SELECT count(*) AS `total` FROM `mail` 
-			WHERE `mail`.`uid` = %d AND `from-url` $eq '%s' GROUP BY `parent-uri` ORDER BY `created` DESC",
+			WHERE `mail`.`uid` = %d GROUP BY `parent-uri` ORDER BY `created` DESC",
 			intval(local_user()),
 			dbesc($myprofile)
 		);
