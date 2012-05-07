@@ -23,7 +23,7 @@ function message_init(&$a) {
 
 <script>$(document).ready(function() { 
 	var a; 
-	a = $("#messageto").autocomplete({ 
+	a = $("#recip").autocomplete({ 
 		serviceUrl: '$base/acl'
 	});
 }); 
@@ -172,8 +172,15 @@ function message_content(&$a) {
 	
 		$preselect = (isset($a->argv[2])?array($a->argv[2]):false);
 	
-//		$select = contact_select('messageto','message-to-select', $preselect, 4, true, false, false, 10);
-		$select = '<input type="text" id="messageto" name="messageto" value="' . $preselect .'" />';
+		$select = contact_select('messageto','message-to-select', $preselect, 4, true, false, false, 10);
+
+// here's sort of where we want to do contact autocomplete
+// comment out the contact selector line just above and use the following one instead,
+// then figure out how to make it do the right thing
+// pictures would be nice, but that didn't seem to work when I tried it 
+// (the json backend is found in mod/acl.php)
+
+//		$select = '<input type="text" id="recip" name="messageto" value="' . $preselect .'" />';
 
 		$tpl = get_markup_template('prv_message.tpl');
 		$o .= replace_macros($tpl,array(
