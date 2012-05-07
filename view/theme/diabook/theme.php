@@ -564,7 +564,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
    if($_COOKIE['close_pages'] != "1") {
    if(local_user()) {
    $page = '
-			<h3 style="margin-top:0px;">'.t("Community Pages").'<a id="close_pages_icon"  onClick="close_pages()" class="icon close_box" title="close"></a></h3></div>
+			<h3 style="margin-top:0px;">'.t("Community Pages").'<a id="close_pages_icon"  onClick="close_pages()" class="icon close_box" title="close"></a></h3>
 			<div id=""><ul style="margin-left: 7px;margin-top: 0px;padding-left: 0px;padding-top: 0px;">';
 
 	$pagelist = array();
