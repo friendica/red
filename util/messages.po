@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.3.1333\n"
+"Project-Id-Version: 2.3.1334\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-05 10:00-0700\n"
+"POT-Creation-Date: 2012-05-06 10:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,7 +54,7 @@ msgstr ""
 #: ../../mod/follow.php:8 ../../mod/display.php:138 ../../mod/profiles.php:7
 #: ../../mod/profiles.php:365 ../../mod/delegate.php:6
 #: ../../mod/suggest.php:28 ../../mod/invite.php:13 ../../mod/invite.php:81
-#: ../../mod/dfrn_confirm.php:53 ../../addon/facebook/facebook.php:485
+#: ../../mod/dfrn_confirm.php:53 ../../addon/facebook/facebook.php:495
 #: ../../include/items.php:3192 ../../index.php:306
 msgid "Permission denied."
 msgstr ""
@@ -132,7 +132,7 @@ msgstr ""
 #: ../../mod/manage.php:109 ../../mod/group.php:85 ../../mod/admin.php:402
 #: ../../mod/admin.php:637 ../../mod/admin.php:773 ../../mod/admin.php:972
 #: ../../mod/admin.php:1059 ../../mod/profiles.php:534
-#: ../../mod/invite.php:119 ../../addon/facebook/facebook.php:575
+#: ../../mod/invite.php:119 ../../addon/facebook/facebook.php:597
 #: ../../addon/yourls/yourls.php:76 ../../addon/ljpost/ljpost.php:93
 #: ../../addon/nsfw/nsfw.php:57 ../../addon/planets/planets.php:158
 #: ../../addon/uhremotestorage/uhremotestorage.php:89
@@ -158,7 +158,8 @@ msgstr ""
 #: ../../addon/irc/irc.php:55 ../../addon/blogger/blogger.php:102
 #: ../../addon/posterous/posterous.php:90
 #: ../../view/theme/cleanzero/config.php:80
-#: ../../view/theme/diabook/config.php:91
+#: ../../view/theme/diabook/theme.php:590
+#: ../../view/theme/diabook/config.php:95
 #: ../../view/theme/quattro/config.php:52 ../../view/theme/dispy/config.php:70
 #: ../../include/conversation.php:555
 msgid "Submit"
@@ -351,7 +352,7 @@ msgstr ""
 #: ../../mod/photos.php:51 ../../mod/photos.php:151 ../../mod/photos.php:879
 #: ../../mod/photos.php:950 ../../mod/photos.php:965 ../../mod/photos.php:1382
 #: ../../mod/photos.php:1394 ../../addon/communityhome/communityhome.php:110
-#: ../../view/theme/diabook/theme.php:436
+#: ../../view/theme/diabook/theme.php:485
 msgid "Contact Photos"
 msgstr ""
 
@@ -374,7 +375,7 @@ msgstr ""
 #: ../../mod/profile_photo.php:74 ../../mod/profile_photo.php:174
 #: ../../mod/profile_photo.php:252 ../../mod/profile_photo.php:261
 #: ../../addon/communityhome/communityhome.php:111
-#: ../../view/theme/diabook/theme.php:437
+#: ../../view/theme/diabook/theme.php:486
 msgid "Profile Photos"
 msgstr ""
 
@@ -396,7 +397,7 @@ msgstr ""
 
 #: ../../mod/photos.php:528 ../../mod/like.php:127 ../../mod/tagger.php:70
 #: ../../addon/communityhome/communityhome.php:163
-#: ../../view/theme/diabook/theme.php:408 ../../include/text.php:1305
+#: ../../view/theme/diabook/theme.php:457 ../../include/text.php:1305
 #: ../../include/diaspora.php:1654 ../../include/conversation.php:53
 #: ../../include/conversation.php:126
 msgid "photo"
@@ -1688,8 +1689,8 @@ msgstr ""
 #: ../../mod/lostpass.php:45 ../../mod/lostpass.php:107
 #: ../../mod/register.php:388 ../../mod/register.php:442
 #: ../../mod/regmod.php:54 ../../mod/dfrn_confirm.php:742
-#: ../../addon/facebook/facebook.php:658
-#: ../../addon/facebook/facebook.php:1148
+#: ../../addon/facebook/facebook.php:680
+#: ../../addon/facebook/facebook.php:1170
 #: ../../addon/testdrive/testdrive.php:58 ../../include/items.php:2716
 #: ../../boot.php:686
 msgid "Administrator"
@@ -1826,7 +1827,7 @@ msgstr ""
 msgid " Cannot change to that email."
 msgstr ""
 
-#: ../../mod/settings.php:468 ../../addon/facebook/facebook.php:470
+#: ../../mod/settings.php:468 ../../addon/facebook/facebook.php:480
 #: ../../addon/impressum/impressum.php:77
 #: ../../addon/openstreetmap/openstreetmap.php:80
 #: ../../addon/mathjax/mathjax.php:66 ../../addon/piwik/piwik.php:105
@@ -2355,7 +2356,7 @@ msgid "Personal Notes"
 msgstr ""
 
 #: ../../mod/notes.php:63 ../../mod/filer.php:30
-#: ../../addon/facebook/facebook.php:726
+#: ../../addon/facebook/facebook.php:748
 #: ../../addon/privacy_image_cache/privacy_image_cache.php:147
 #: ../../include/text.php:652
 msgid "Save"
@@ -2782,19 +2783,19 @@ msgid "People Search"
 msgstr ""
 
 #: ../../mod/like.php:127 ../../mod/tagger.php:70
-#: ../../addon/facebook/facebook.php:1542
+#: ../../addon/facebook/facebook.php:1564
 #: ../../addon/communityhome/communityhome.php:158
 #: ../../addon/communityhome/communityhome.php:167
-#: ../../view/theme/diabook/theme.php:403
-#: ../../view/theme/diabook/theme.php:412 ../../include/diaspora.php:1654
+#: ../../view/theme/diabook/theme.php:452
+#: ../../view/theme/diabook/theme.php:461 ../../include/diaspora.php:1654
 #: ../../include/conversation.php:48 ../../include/conversation.php:57
 #: ../../include/conversation.php:121 ../../include/conversation.php:130
 msgid "status"
 msgstr ""
 
-#: ../../mod/like.php:144 ../../addon/facebook/facebook.php:1546
+#: ../../mod/like.php:144 ../../addon/facebook/facebook.php:1568
 #: ../../addon/communityhome/communityhome.php:172
-#: ../../view/theme/diabook/theme.php:417 ../../include/diaspora.php:1670
+#: ../../view/theme/diabook/theme.php:466 ../../include/diaspora.php:1670
 #: ../../include/conversation.php:65
 #, php-format
 msgid "%1$s likes %2$s's %3$s"
@@ -3565,7 +3566,7 @@ msgstr ""
 msgid "Log level"
 msgstr ""
 
-#: ../../mod/admin.php:1118
+#: ../../mod/admin.php:1118 ../../view/theme/diabook/theme.php:599
 msgid "Close"
 msgstr ""
 
@@ -4051,7 +4052,7 @@ msgstr ""
 msgid "No entries."
 msgstr ""
 
-#: ../../mod/suggest.php:38 ../../view/theme/diabook/theme.php:464
+#: ../../mod/suggest.php:38 ../../view/theme/diabook/theme.php:513
 #: ../../include/contact_widgets.php:34
 msgid "Friend Suggestions"
 msgstr ""
@@ -4066,7 +4067,7 @@ msgstr ""
 msgid "Ignore/Hide"
 msgstr ""
 
-#: ../../mod/directory.php:47 ../../view/theme/diabook/theme.php:462
+#: ../../mod/directory.php:47 ../../view/theme/diabook/theme.php:511
 msgid "Global Directory"
 msgstr ""
 
@@ -4257,71 +4258,83 @@ msgstr ""
 msgid "%1$s has joined %2$s"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:491
+#: ../../addon/facebook/facebook.php:501
 msgid "Facebook disabled"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:496
+#: ../../addon/facebook/facebook.php:506
 msgid "Updating contacts"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:516
+#: ../../addon/facebook/facebook.php:529
 msgid "Facebook API key is missing."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:523
+#: ../../addon/facebook/facebook.php:536
 msgid "Facebook Connect"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:529
+#: ../../addon/facebook/facebook.php:542
 msgid "Install Facebook connector for this account."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:536
+#: ../../addon/facebook/facebook.php:549
 msgid "Remove Facebook connector"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:541
+#: ../../addon/facebook/facebook.php:554
 msgid ""
 "Re-authenticate [This is necessary whenever your Facebook password is "
 "changed.]"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:548
+#: ../../addon/facebook/facebook.php:561
 msgid "Post to Facebook by default"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:552
+#: ../../addon/facebook/facebook.php:567
+msgid ""
+"Facebook friend linking has been disabled on this site. The following "
+"settings will have no effect."
+msgstr ""
+
+#: ../../addon/facebook/facebook.php:571
+msgid ""
+"Facebook friend linking has been disabled on this site. If you disable it, "
+"you will be unable to re-enable it."
+msgstr ""
+
+#: ../../addon/facebook/facebook.php:574
 msgid "Link all your Facebook friends and conversations on this website"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:554
+#: ../../addon/facebook/facebook.php:576
 msgid ""
 "Facebook conversations consist of your <em>profile wall</em> and your friend "
 "<em>stream</em>."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:555
+#: ../../addon/facebook/facebook.php:577
 msgid "On this website, your Facebook friend stream is only visible to you."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:556
+#: ../../addon/facebook/facebook.php:578
 msgid ""
 "The following settings determine the privacy of your Facebook profile wall "
 "on this website."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:560
+#: ../../addon/facebook/facebook.php:582
 msgid ""
 "On this website your Facebook profile wall conversations will only be "
 "visible to you"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:565
+#: ../../addon/facebook/facebook.php:587
 msgid "Do not import your Facebook profile wall conversations"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:567
+#: ../../addon/facebook/facebook.php:589
 msgid ""
 "If you choose to link conversations and leave both of these boxes unchecked, "
 "your Facebook profile wall will be merged with your profile wall on this "
@@ -4329,120 +4342,120 @@ msgid ""
 "who may see the conversations."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:572
+#: ../../addon/facebook/facebook.php:594
 msgid "Comma separated applications to ignore"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:656
+#: ../../addon/facebook/facebook.php:678
 msgid "Problems with Facebook Real-Time Updates"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:684
+#: ../../addon/facebook/facebook.php:706
 #: ../../include/contact_selectors.php:81
 msgid "Facebook"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:685
+#: ../../addon/facebook/facebook.php:707
 msgid "Facebook Connector Settings"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:700
+#: ../../addon/facebook/facebook.php:722
 msgid "Facebook API Key"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:710
+#: ../../addon/facebook/facebook.php:732
 msgid ""
 "Error: it appears that you have specified the App-ID and -Secret in your ."
 "htconfig.php file. As long as they are specified there, they cannot be set "
 "using this form.<br><br>"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:715
+#: ../../addon/facebook/facebook.php:737
 msgid ""
 "Error: the given API Key seems to be incorrect (the application access token "
 "could not be retrieved)."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:717
+#: ../../addon/facebook/facebook.php:739
 msgid "The given API Key seems to work correctly."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:719
+#: ../../addon/facebook/facebook.php:741
 msgid ""
 "The correctness of the API Key could not be detected. Somthing strange's "
 "going on."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:722
+#: ../../addon/facebook/facebook.php:744
 msgid "App-ID / API-Key"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:723
+#: ../../addon/facebook/facebook.php:745
 msgid "Application secret"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:724
+#: ../../addon/facebook/facebook.php:746
 #, php-format
 msgid "Polling Interval in minutes (minimum %1$s minutes)"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:725
+#: ../../addon/facebook/facebook.php:747
 msgid ""
 "Synchronize comments (no comments on Facebook are missed, at the cost of "
 "increased system load)"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:729
+#: ../../addon/facebook/facebook.php:751
 msgid "Real-Time Updates"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:733
+#: ../../addon/facebook/facebook.php:755
 msgid "Real-Time Updates are activated."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:734
+#: ../../addon/facebook/facebook.php:756
 msgid "Deactivate Real-Time Updates"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:736
+#: ../../addon/facebook/facebook.php:758
 msgid "Real-Time Updates not activated."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:736
+#: ../../addon/facebook/facebook.php:758
 msgid "Activate Real-Time Updates"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:755
+#: ../../addon/facebook/facebook.php:777
 msgid "The new values have been saved."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:779
+#: ../../addon/facebook/facebook.php:801
 msgid "Post to Facebook"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:877
+#: ../../addon/facebook/facebook.php:899
 msgid ""
 "Post to Facebook cancelled because of multi-network access permission "
 "conflict."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:1097
+#: ../../addon/facebook/facebook.php:1119
 msgid "View on Friendica"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:1130
+#: ../../addon/facebook/facebook.php:1152
 msgid "Facebook post failed. Queued for retry."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:1170
+#: ../../addon/facebook/facebook.php:1192
 msgid "Your Facebook connection became invalid. Please Re-authenticate."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:1171
+#: ../../addon/facebook/facebook.php:1193
 msgid "Facebook connection became invalid"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:1172
+#: ../../addon/facebook/facebook.php:1194
 #, php-format
 msgid ""
 "Hi %1$s,\n"
@@ -4639,7 +4652,7 @@ msgid "Latest likes"
 msgstr ""
 
 #: ../../addon/communityhome/communityhome.php:155
-#: ../../view/theme/diabook/theme.php:400 ../../include/text.php:1303
+#: ../../view/theme/diabook/theme.php:449 ../../include/text.php:1303
 #: ../../include/conversation.php:45 ../../include/conversation.php:118
 msgid "event"
 msgstr ""
@@ -5535,7 +5548,7 @@ msgid "Post to Posterous by default"
 msgstr ""
 
 #: ../../view/theme/cleanzero/config.php:82
-#: ../../view/theme/diabook/config.php:93
+#: ../../view/theme/diabook/config.php:97
 #: ../../view/theme/quattro/config.php:54 ../../view/theme/dispy/config.php:72
 msgid "Theme settings"
 msgstr ""
@@ -5545,7 +5558,7 @@ msgid "Set resize level for images in posts and comments (width and height)"
 msgstr ""
 
 #: ../../view/theme/cleanzero/config.php:84
-#: ../../view/theme/diabook/config.php:94 ../../view/theme/dispy/config.php:73
+#: ../../view/theme/diabook/config.php:98 ../../view/theme/dispy/config.php:73
 msgid "Set font-size for posts and comments"
 msgstr ""
 
@@ -5588,59 +5601,72 @@ msgid "Your personal photos"
 msgstr ""
 
 #: ../../view/theme/diabook/theme.php:72
-#: ../../view/theme/diabook/theme.php:481
+#: ../../view/theme/diabook/theme.php:530
 msgid "Community Pages"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:328
+#: ../../view/theme/diabook/theme.php:377
 msgid "Community Profiles"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:349
+#: ../../view/theme/diabook/theme.php:398
 msgid "Last users"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:378
+#: ../../view/theme/diabook/theme.php:427
 msgid "Last likes"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:423
+#: ../../view/theme/diabook/theme.php:472
 msgid "Last photos"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:460
+#: ../../view/theme/diabook/theme.php:509
 msgid "Find Friends"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:461
+#: ../../view/theme/diabook/theme.php:510
 msgid "Local Directory"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:463 ../../include/contact_widgets.php:35
+#: ../../view/theme/diabook/theme.php:512 ../../include/contact_widgets.php:35
 msgid "Similar Interests"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:465 ../../include/contact_widgets.php:37
+#: ../../view/theme/diabook/theme.php:514 ../../include/contact_widgets.php:37
 msgid "Invite Friends"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:515
+#: ../../view/theme/diabook/theme.php:565
+msgid "Earth View"
+msgstr ""
+
+#: ../../view/theme/diabook/theme.php:573
 msgid "Help or @NewHere ?"
 msgstr ""
 
-#: ../../view/theme/diabook/theme.php:522
+#: ../../view/theme/diabook/theme.php:580
 msgid "Connect Services"
 msgstr ""
 
-#: ../../view/theme/diabook/config.php:95 ../../view/theme/dispy/config.php:74
+#: ../../view/theme/diabook/theme.php:587
+msgid "Last Tweets"
+msgstr ""
+
+#: ../../view/theme/diabook/theme.php:591
+#: ../../view/theme/diabook/config.php:102
+msgid "Set twitter search term"
+msgstr ""
+
+#: ../../view/theme/diabook/config.php:99 ../../view/theme/dispy/config.php:74
 msgid "Set line-height for posts and comments"
 msgstr ""
 
-#: ../../view/theme/diabook/config.php:96
+#: ../../view/theme/diabook/config.php:100
 msgid "Set resolution for middle column"
 msgstr ""
 
-#: ../../view/theme/diabook/config.php:97
+#: ../../view/theme/diabook/config.php:101
 msgid "Set color scheme"
 msgstr ""
 
