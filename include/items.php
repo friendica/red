@@ -952,7 +952,7 @@ function tag_deliver($uid,$item_id) {
 
 	$mention = false;
 
-	$u = q("select uid, nickname, language, username, email, `page-flags`, `notify-flags` from user where uid = %d limit 1",
+	$u = q("select * from user where uid = %d limit 1",
 		intval($uid)
 	);
 	if(! count($u))
@@ -1027,10 +1027,20 @@ function tag_deliver($uid,$item_id) {
 	if(! count($c))
 		return;
 
-	q("update item set wall = 1, origin = 1, forum_mode = 1, `owner-name` = '%s', `owner-link` = '%s', `owner-avatar` = '%s'  where id = %d limit 1",
+	// also reset all the privacy bits to the forum default permissions
+
+	$private = ($u[0]['allow_cid'] || $u[0]['allow_gid'] || $u[0]['deny_cid'] || $u[0]['deny_gid']) ? 1 : 0;
+
+	q("update item set wall = 1, origin = 1, forum_mode = 1, `owner-name` = '%s', `owner-link` = '%s', `owner-avatar` = '%s', 
+		`private` = %d, `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s'  where id = %d limit 1",
 		dbesc($c[0]['name']),
 		dbesc($c[0]['url']),
 		dbesc($c[0]['thumb']),
+		intval($private),
+		dbesc($u[0]['allow_cid']),
+		dbesc($u[0]['allow_gid']),
+		dbesc($u[0]['deny_cid']),
+		dbesc($u[0]['deny_gid']),
 		intval($item_id)
 	);
 

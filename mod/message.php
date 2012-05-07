@@ -24,7 +24,8 @@ function message_init(&$a) {
 <script>$(document).ready(function() { 
 	var a; 
 	a = $("#recip").autocomplete({ 
-		serviceUrl: '$base/acl'
+		serviceUrl: '$base/acl',
+		width: 350
 	});
 }); 
 
