@@ -94,10 +94,10 @@ $.widget("mapQuery.mqMousePosition", {
         new OpenLayers.Projection(mapProjection),
         new OpenLayers.Projection(displayProjection));
         }
-        $("#mq-mouseposition-x", element).html(
-        this.options.x+': '+pos.lon.toFixed(this.options.precision));
-        $("#mq-mouseposition-y", element).html(
-        this.options.y+': '+pos.lat.toFixed(this.options.precision));
+        $("#id_diabook_ELPosX", element).val(
+        this.options.x+pos.lon.toFixed(this.options.precision));
+        $("#id_diabook_ELPosY", element).val(
+        this.options.y+pos.lat.toFixed(this.options.precision));
     },
 
     _onMouseMove: function(evt, data) {

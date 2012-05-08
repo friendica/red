@@ -347,7 +347,10 @@ function delivery_run($argv, $argc){
 				}
 			}
 
-			$deliver_status = dfrn_deliver($owner,$contact,$atom);
+			if(! was_recently_delayed($contact['id']))
+				$deliver_status = dfrn_deliver($owner,$contact,$atom);
+			else
+				$deliver_status = (-1);
 
 			logger('notifier: dfrn_delivery returns ' . $deliver_status);
 
@@ -390,7 +393,11 @@ function delivery_run($argv, $argc){
 				logger('notifier: slapdelivery: ' . $contact['name']);
 				foreach($slaps as $slappy) {
 					if($contact['notify']) {
-						$deliver_status = slapper($owner,$contact['notify'],$slappy);
+						if(! was_recently_delayed($contact['id']))
+							$deliver_status = slapper($owner,$contact['notify'],$slappy);
+						else
+							$deliver_status = (-1);
+
 						if($deliver_status == (-1)) {
 							// queue message for redelivery
 							add_to_queue($contact['id'],NETWORK_OSTATUS,$slappy);

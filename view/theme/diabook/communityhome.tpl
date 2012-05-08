@@ -22,14 +22,29 @@ just contact me, if you are intesrested in joining</p>
 </span>
 <div id="map2" style="height:350px;width:350px;"></div>
 <div id="mouseposition" style="width: 350px;"></div>
-<div id="zoom">
-zoom:<input type="text" id="mapzoom" value=""></input>
-</div>
 {{inc field_input.tpl with $field=$ELZoom}}{{endinc}}
 {{inc field_input.tpl with $field=$ELPosX}}{{endinc}}
 {{inc field_input.tpl with $field=$ELPosY}}{{endinc}}
 <div class="settings-submit-wrapper">
 <input id="mapsub" type="submit" value="$sub" class="settings-submit" name="diabook-settings-map-sub"></input>
+</div>
+</form>
+</div>
+
+<div id="boxsettings" style="display:none">
+<form id="boxsettingsform" action="network" method="post" >
+{{inc field_select.tpl with $field=$close_pages}}{{endinc}}
+{{inc field_select.tpl with $field=$close_profiles}}{{endinc}}
+{{inc field_select.tpl with $field=$close_helpers}}{{endinc}}
+{{inc field_select.tpl with $field=$close_services}}{{endinc}}
+{{inc field_select.tpl with $field=$close_friends}}{{endinc}}
+{{inc field_select.tpl with $field=$close_lastusers}}{{endinc}}
+{{inc field_select.tpl with $field=$close_lastphotos}}{{endinc}}
+{{inc field_select.tpl with $field=$close_lastlikes}}{{endinc}}
+{{inc field_select.tpl with $field=$close_twitter}}{{endinc}}
+{{inc field_select.tpl with $field=$close_mapquery}}{{endinc}}
+<div class="settings-submit-wrapper">
+<input id="boxsub" type="submit" value="$sub" class="settings-submit" name="diabook-settings-box-sub"></input>
 </div>
 </form>
 </div>
@@ -47,7 +62,7 @@ zoom:<input type="text" id="mapzoom" value=""></input>
 
 <div id="close_profiles">
 {{ if $comunity_profiles_title }}
-<h3>$comunity_profiles_title<a id="close_comunity_profiles_icon" onClick="close_profiles()" class="icon close_box" title="$close"></a></h3>
+<h3>$comunity_profiles_title<a id="closeicon" href="#boxsettings" onClick="open_boxsettings(); return false;" style="text-decoration:none;" class="icon close_box" title="$close"></a></h3>
 <div id='lastusers-wrapper' class='items-wrapper'>
 {{ for $comunity_profiles_items as $i }}
 	$i
@@ -58,7 +73,7 @@ zoom:<input type="text" id="mapzoom" value=""></input>
 
 <div id="close_helpers">
 {{ if $helpers }}
-<h3>$helpers.title.1<a id="close_helpers_icon"  onClick="close_helpers()" class="icon close_box" title="$close"></a></h3>
+<h3>$helpers.title.1<a id="closeicon" href="#boxsettings" onClick="open_boxsettings(); return false;" style="text-decoration:none;" class="icon close_box" title="$close"></a></h3>
 <a href="http://friendica.com/resources" title="How-to's" style="margin-left: 10px; " target="blank">How-To Guides</a><br>
 <a href="http://kakste.com/profile/newhere" title="@NewHere" style="margin-left: 10px; " target="blank">NewHere</a><br>
 <a href="https://helpers.pyxis.uberspace.de/profile/helpers" style="margin-left: 10px; " title="Friendica Support" target="blank">Friendica Support</a><br>
@@ -69,7 +84,7 @@ zoom:<input type="text" id="mapzoom" value=""></input>
 
 <div id="close_services">
 {{ if $con_services }}
-<h3>$con_services.title.1<a id="close_services_icon" onClick="close_services()" class="icon close_box" title="$close"></a></h3>
+<h3>$con_services.title.1<a id="closeicon" href="#boxsettings" onClick="open_boxsettings(); return false;" style="text-decoration:none;" class="icon close_box" title="$close"></a></h3>
 <div id="right_service_icons" style="margin-left: 16px; margin-top: 5px;">
 <a href="$url/facebook"><img alt="Facebook" src="view/theme/diabook/icons/facebook.png" title="Facebook"></a>
 <a href="$url/settings/connectors"><img alt="StatusNet" src="view/theme/diabook/icons/StatusNet.png?" title="StatusNet"></a>
@@ -85,7 +100,7 @@ zoom:<input type="text" id="mapzoom" value=""></input>
 
 <div id="close_friends" style="margin-bottom:53px;">
 {{ if $nv }}
-<h3>$nv.title.1<a id="close_friends_icon" onClick="close_friends()"  class="icon close_box" title="$close"></a></h3>
+<h3>$nv.title.1<a id="closeicon" href="#boxsettings" onClick="open_boxsettings(); return false;" style="text-decoration:none;" class="icon close_box" title="$close"></a></h3>
 <a class="$nv.directory.2" href="$nv.directory.0" style="margin-left: 10px; " title="$nv.directory.3" >$nv.directory.1</a><br>
 <a class="$nv.global_directory.2" href="$nv.global_directory.0" target="blank" style="margin-left: 10px; " title="$nv.global_directory.3" >$nv.global_directory.1</a><br>
 <a class="$nv.match.2" href="$nv.match.0" style="margin-left: 10px; " title="$nv.match.3" >$nv.match.1</a><br>
@@ -97,7 +112,7 @@ $nv.search
 
 <div id="close_lastusers">
 {{ if $lastusers_title }}
-<h3>$lastusers_title<a id="close_lastusers_icon" onClick="close_lastusers()" class="icon close_box" title="$close"></a></h3>
+<h3>$lastusers_title<a id="closeicon" href="#boxsettings" onClick="open_boxsettings(); return false;" style="text-decoration:none;" class="icon close_box" title="$close"></a></h3>
 <div id='lastusers-wrapper' class='items-wrapper'>
 {{ for $lastusers_items as $i }}
 	$i
@@ -117,7 +132,7 @@ $nv.search
 
 <div id="close_lastphotos">
 {{ if $photos_title }}
-<h3>$photos_title<a id="close_photos_icon" onClick="close_lastphotos()"  class="icon close_box" title="$close"></a></h3>
+<h3>$photos_title<a id="closeicon" href="#boxsettings" onClick="open_boxsettings(); return false;" style="text-decoration:none;" class="icon close_box" title="$close"></a></h3>
 <div id='ra-photos-wrapper' class='items-wrapper'>
 {{ for $photos_items as $i }}
 	$i
@@ -128,7 +143,7 @@ $nv.search
 
 <div id="close_lastlikes">
 {{ if $like_title }}
-<h3>$like_title<a id="close_lastlikes_icon" onClick="close_lastlikes()" class="icon close_box" title="$close"></a></h3>
+<h3>$like_title<a id="closeicon" href="#boxsettings" onClick="open_boxsettings(); return false;" style="text-decoration:none;" class="icon close_box" title="$close"></a></h3>
 <ul id='likes'>
 {{ for $like_items as $i }}
 	<li id='ra-photos-wrapper'>$i</li>
@@ -138,14 +153,14 @@ $nv.search
 </div>
 
 <div id="close_twitter">
-<h3 style="height:1.17em">$twitter.title.1<a id="close_twitter_icon"  onClick="close_twitter()" class="icon close_box" title="$close"></a></h3>
+<h3 style="height:1.17em">$twitter.title.1<a id="closeicon" href="#boxsettings" onClick="open_boxsettings(); return false;" style="text-decoration:none;" class="icon close_box" title="$close"></a></h3>
 <div id="twitter">
 </div>
 </div>
 
 <div id="close_mapquery">
 {{ if $mapquery }}
-<h3>$mapquery.title.1<a id="close_mapquery_icon"  onClick="close_mapquery()" class="icon close_box" title="$close"></a></h3>
+<h3>$mapquery.title.1<a id="closeicon" href="#boxsettings" onClick="open_boxsettings(); return false;" style="text-decoration:none;" class="icon close_box" title="$close"></a></h3>
 <div id="map" style="height:165px;width:165px;margin-left:3px;margin-top:3px;margin-bottom:1px;">
 </div>
 <div style="font-size:9px;margin-left:3px;">Data CC-By-SA by <a href="http://openstreetmap.org/">OpenStreetMap</a></div>
