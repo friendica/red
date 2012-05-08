@@ -21,7 +21,9 @@ function was_recently_delayed($cid) {
 		and last > UTC_TIMESTAMP() - interval 15 minute limit 1",
 		intval($cid)
 	);
-
+	if(count($r))
+		return true;
+	return false;
 }
 
 
