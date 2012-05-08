@@ -10,7 +10,10 @@ function follow_init(&$a) {
 		// NOTREACHED
 	}
 
+	$uid = local_user();
 	$url = $orig_url = notags(trim($_REQUEST['url']));
+	$return_url = $_SESSION['return_url'];
+
 
 	// remove ajax junk, e.g. Twitter
 
@@ -18,19 +21,25 @@ function follow_init(&$a) {
 
 	if(! allowed_url($url)) {
 		notice( t('Disallowed profile URL.') . EOL);
-		goaway($_SESSION['return_url']);
+		goaway($return_url);
 		// NOTREACHED
 	}
 
 
 	if(! $url) {
 		notice( t('Connect URL missing.') . EOL);
-		goaway($_SESSION['return_url']);
+		goaway($return_url);
 		// NOTREACHED
 	}
 
+	$arr = array('url' => $url, 'contact' => array());
 
-	$ret = probe_url($url);
+	call_hooks('follow', $arr);
+
+	if(x($arr['contact'],'name')) 
+		$ret = $arr['contact'];
+	else
+		$ret = probe_url($url);
 
 	if($ret['network'] === NETWORK_DFRN) {
 		if(strlen($a->path))
@@ -46,11 +55,11 @@ function follow_init(&$a) {
 		if(get_config('system','dfrn_only')) {
 			notice( t('This site is not configured to allow communications with other networks.') . EOL);
 			notice( t('No compatible communication protocols or feeds were discovered.') . EOL);
-			goaway($_SESSION['return_url']);
+			goaway($return_url);
 		}
 	}
 	
-	// This just confuses things, remove it
+	// This extra param just confuses things, remove it
 	if($ret['network'] === NETWORK_DIASPORA)
 		$ret['url'] = str_replace('?absolute=true','',$ret['url']);
 
@@ -65,9 +74,11 @@ function follow_init(&$a) {
 			notice( t('An author or name was not found.') . EOL);
 		if(! x($ret,'url'))
 			notice( t('No browser URL could be matched to this address.') . EOL);
-		if(strpos($url,'@') !== false)
-			notice('Unable to match @-style Identity Address with a known protocol or email contact');
-		goaway($_SESSION['return_url']);
+		if(strpos($url,'@') !== false) {
+			notice( t('Unable to match @-style Identity Address with a known protocol or email contact.') . EOL);
+			notice( t('Use mailto: in front of address to force email check.') . EOL);
+		}
+		goaway($return_url);
 	}
 
 	if($ret['network'] === NETWORK_OSTATUS && get_config('system','ostatus_disabled')) {
@@ -94,7 +105,7 @@ function follow_init(&$a) {
 	// indirect links or webfinger links
 
 	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `poll` = '%s' LIMIT 1",
-		intval(local_user()),
+		intval($uid),
 		dbesc($ret['poll'])
 	);			
 
@@ -104,7 +115,7 @@ function follow_init(&$a) {
 			q("UPDATE `contact` SET `rel` = %d , `readonly` = 0 WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval(CONTACT_IS_FRIEND),
 				intval($r[0]['id']),
-				intval(local_user())
+				intval($uid)
 			);
 		}
 	}
@@ -118,7 +129,7 @@ function follow_init(&$a) {
 		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `nurl`, `addr`, `alias`, `batch`, `notify`, `poll`, `poco`, `name`, `nick`, `photo`, `network`, `pubkey`, `rel`, `priority`,
 			`writable`, `hidden`, `blocked`, `readonly`, `pending` )
 			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, 0, 0, 0 ) ",
-			intval(local_user()),
+			intval($uid),
 			dbesc(datetime_convert()),
 			dbesc($ret['url']),
 			dbesc(normalise_link($ret['url'])),
@@ -142,12 +153,12 @@ function follow_init(&$a) {
 
 	$r = q("SELECT * FROM `contact` WHERE `url` = '%s' AND `uid` = %d LIMIT 1",
 		dbesc($ret['url']),
-		intval(local_user())
+		intval($uid)
 	);
 
 	if(! count($r)) {
 		notice( t('Unable to retrieve contact information.') . EOL);
-		goaway($_SESSION['return_url']);
+		goaway($return_url);
 		// NOTREACHED
 	}
 
@@ -156,7 +167,7 @@ function follow_init(&$a) {
 
 	require_once("Photo.php");
 
-	$photos = import_profile_photo($ret['photo'],local_user(),$contact_id);
+	$photos = import_profile_photo($ret['photo'],$uid,$contact_id);
 
 	$r = q("UPDATE `contact` SET `photo` = '%s', 
 			`thumb` = '%s',
@@ -200,7 +211,7 @@ function follow_init(&$a) {
 
 	$r = q("SELECT `contact`.*, `user`.* FROM `contact` LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid` 
 			WHERE `user`.`uid` = %d AND `contact`.`self` = 1 LIMIT 1",
-			intval(local_user())
+			intval($uid)
 	);
 
 	if(count($r)) {
@@ -215,9 +226,9 @@ function follow_init(&$a) {
 		}
 	}
 
-	if(strstr($_SESSION['return_url'],'contacts'))
+	if(strstr($return_url,'contacts'))
 		goaway($a->get_baseurl() . '/contacts/' . $contact_id);
 
-	goaway($_SESSION['return_url']);
+	goaway($return_url);
 	// NOTREACHED
 }
