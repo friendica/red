@@ -173,15 +173,22 @@ function message_content(&$a) {
 	
 		$preselect = (isset($a->argv[2])?array($a->argv[2]):false);
 	
-		$select = contact_select('messageto','message-to-select', $preselect, 4, true, false, false, 10);
+		if(defined('EMAIL_AUTOCOMP')) {
 
-// here's sort of where we want to do contact autocomplete
-// comment out the contact selector line just above and use the following one instead,
-// then figure out how to make it do the right thing
-// pictures would be nice, but that didn't seem to work when I tried it 
-// (the json backend is found in mod/acl.php)
+			// here's where we want to do contact autocomplete
+			// just figure out how to make it do the right thing
+			// pictures would be nice, but that didn't work when I tried.
+			// It sort of barely works, but needs help
+			// (the json backend is found in mod/acl.php)
 
-//		$select = '<input type="text" id="recip" name="messageto" value="' . $preselect .'" />';
+			$select = '<input type="text" id="recip" name="messageto" value="' . $preselect .'" />';
+		}
+		else {
+
+			// the ugly select box
+
+			$select = contact_select('messageto','message-to-select', $preselect, 4, true, false, false, 10);
+		}
 
 		$tpl = get_markup_template('prv_message.tpl');
 		$o .= replace_macros($tpl,array(
