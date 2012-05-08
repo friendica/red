@@ -25,6 +25,7 @@ function onepoll_run($argv, $argc){
 	require_once('include/email.php');
 	require_once('include/socgraph.php');
 	require_once('include/pidfile.php');
+	require_once('include/queue_fn.php');
 
 	load_config('config');
 	load_config('system');
@@ -53,6 +54,9 @@ function onepoll_run($argv, $argc){
 		logger('onepoll: no contact');
 		return;
 	}
+
+	if(was_recently_delayed($contact_id))
+		return;
 
 	$d = datetime_convert();
 
@@ -452,7 +456,7 @@ function onepoll_run($argv, $argc){
 
 	if($xml) {
 		logger('poller: received xml : ' . $xml, LOGGER_DATA);
-			if(! strstr($xml,'<?xml')) {
+			if((! strstr($xml,'<?xml')) && (! strstr($xml,'<rss'))) {
 			logger('poller: post_handshake: response from ' . $url . ' did not contain XML.');
 			$r = q("UPDATE `contact` SET `last-update` = '%s' WHERE `id` = %d LIMIT 1",
 				dbesc(datetime_convert()),

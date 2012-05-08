@@ -14,11 +14,26 @@
 
 {{inc field_input.tpl with $field=$ELZoom}}{{endinc}}
 
-<div class="field select">
-<a onClick="restore_boxes()" title="Restore right-hand column" style="cursor: pointer;">Restore right-hand column</a>
+<div class="settings-submit-wrapper">
+	<input type="submit" value="$submit" class="settings-submit" name="diabook-settings-submit" />
 </div>
+
+{{inc field_select.tpl with $field=$close_pages}}{{endinc}}
+{{inc field_select.tpl with $field=$close_profiles}}{{endinc}}
+{{inc field_select.tpl with $field=$close_helpers}}{{endinc}}
+{{inc field_select.tpl with $field=$close_services}}{{endinc}}
+{{inc field_select.tpl with $field=$close_friends}}{{endinc}}
+{{inc field_select.tpl with $field=$close_lastusers}}{{endinc}}
+{{inc field_select.tpl with $field=$close_lastphotos}}{{endinc}}
+{{inc field_select.tpl with $field=$close_lastlikes}}{{endinc}}
+{{inc field_select.tpl with $field=$close_twitter}}{{endinc}}
+{{inc field_select.tpl with $field=$close_mapquery}}{{endinc}}
 
 <div class="settings-submit-wrapper">
 	<input type="submit" value="$submit" class="settings-submit" name="diabook-settings-submit" />
+</div>
+
+<div class="field select">
+<a onClick="restore_boxes()" title="Restore order at right-hand column" style="cursor: pointer;">Restore order at right-hand column</a>
 </div>
 
