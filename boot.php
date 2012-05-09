@@ -9,7 +9,7 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1335' );
+define ( 'FRIENDICA_VERSION',      '2.3.1336' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
 define ( 'DB_UPDATE_VERSION',      1143      );
 
@@ -28,6 +28,12 @@ define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
  */
 
 define ( 'JPEG_QUALITY',            100  );
+
+/**
+ * Not yet used
+ */
+
+define ( 'DEFAULT_DB_ENGINE',  'MyISAM'  );
 
 /**
  * SSL redirection policies
