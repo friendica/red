@@ -7,6 +7,18 @@
 /* = Admin = */
 /* ========= */
 
+#fancybox-content {
+	width: 0;
+	height: 0;
+	padding: 0;
+	outline: none;
+	position: relative;
+	overflow: hidden;
+	z-index: 1102;
+	border: 0px solid #fff;
+	background: #2e2e2f !important;
+}
+
 #adminpage {
 /*        width: 80%;*/
 }
@@ -576,9 +588,6 @@ header {
   background: #0c0e0c;
   background-color: #1d1f1d;
   z-index: 100;
-  border-bottom: 1px;
-  border-bottom-color: black;
-  border-bottom-style: inset;
 }
 header #site-location {
   display: none;
@@ -701,10 +710,7 @@ nav {
   background: #1d1f1d;
   color: #2e2f2e;
   z-index: 99;
-  border-bottom: 1px;
-  border-bottom-color: black;
-  border-bottom-style: inset;
-}
+ }
 nav a,
 nav a:active,
 nav a:visited,
@@ -1401,7 +1407,7 @@ body .pageheader{
   padding-top: 10px;
 }
 .tread-wrapper a{
-  color: #1872A2;
+ /* color: #1872A2; */
 }
 
 .wall-item-decor {

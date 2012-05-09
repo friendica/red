@@ -1524,3 +1524,9 @@ function fix_mce_lf($s) {
 	$s = str_replace("\n\n","\n",$s);
 	return $s;
 }
+
+
+function protect_sprintf($s) {
+	return(str_replace('%','%%',$s));
+}
+

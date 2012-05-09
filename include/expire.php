@@ -32,7 +32,11 @@ function expire_run($argv, $argc){
 	// physically remove anything that has been deleted for more than two months
 
 	$r = q("delete from item where deleted = 1 and changed < UTC_TIMESTAMP() - INTERVAL 60 DAY");
-	q("optimize table item");
+
+	// make this optional as it could have a performance impact on large sites
+
+	if(intval(get_config('system','optimize_items')))
+		q("optimize table item");
 
 	logger('expire: start');
 	
