@@ -30,6 +30,12 @@ define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
 define ( 'JPEG_QUALITY',            100  );
 
 /**
+ * Not yet used
+ */
+
+define ( 'DEFAULT_DB_ENGINE',  'MyISAM'  );
+
+/**
  * SSL redirection policies
  */
 

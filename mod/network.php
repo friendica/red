@@ -340,7 +340,7 @@ function network_content(&$a, $update = 0) {
 				info( t('Group is empty'));
 		}
 
-		$sql_extra = " AND `item`.`parent` IN ( SELECT DISTINCT(`parent`) FROM `item` WHERE 1 $sql_options AND ( `contact-id` IN ( $contact_str ) OR `allow_gid` REGEXP '<" . intval($group) . ">' ) and deleted = 0 ) ";
+		$sql_extra = " AND `item`.`parent` IN ( SELECT DISTINCT(`parent`) FROM `item` WHERE 1 $sql_options AND ( `contact-id` IN ( $contact_str ) OR `allow_gid` like '" . protect_sprintf('%<' . intval($group) . '>%') . "' ) and deleted = 0 ) ";
 		$o = '<h2>' . t('Group: ') . $r[0]['name'] . '</h2>' . $o;
 	}
 	elseif($cid) {
@@ -398,9 +398,9 @@ function network_content(&$a, $update = 0) {
 
 	if(x($_GET,'search')) {
 		$search = escape_tags($_GET['search']);
-		$sql_extra .= sprintf(" AND ( `item`.`body` REGEXP '%s' OR `item`.`tag` REGEXP '%s' ) ",
-			dbesc(preg_quote($search)),
-			dbesc('\\]' . preg_quote($search) . '\\[')
+		$sql_extra .= sprintf(" AND ( `item`.`body` like '%s' OR `item`.`tag` like '%s' ) ",
+			dbesc(protect_sprintf('%' . $search . '%')),
+			dbesc(protect_sprintf('%]' . $search . '[%'))
 		);
 	}
 	if(strlen($file)) {
@@ -412,10 +412,10 @@ function network_content(&$a, $update = 0) {
 		$myurl = substr($myurl,strpos($myurl,'://')+3);
 		$myurl = str_replace(array('www.','.'),array('','\\.'),$myurl);
 		$diasp_url = str_replace('/profile/','/u/',$myurl);
-		$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where ( `author-link` regexp '%s' or `tag` regexp '%s' or tag regexp '%s' )) ",
-			dbesc($myurl . '$'),
-			dbesc($myurl . '\\]'),
-			dbesc($diasp_url . '\\]')
+		$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where ( `author-link` like '%s' or `tag` like '%s' or tag like '%s' )) ",
+			dbesc(protect_sprintf('%s' . $myurl)),
+			dbesc(protect_sprintf('%' . $myurl . '\\]%')),
+			dbesc(protect_sprintf('%' . $diasp_url . '\\]%'))
 		);
 	}
 
