@@ -1,32 +1,32 @@
 
-Liebe/r $username,
-wir haben gerade eine Anfrage erhalten dein Passwort auf $sitename zu ändern.
-Um diese Anfrage zu bestätigen folge bitte dem Bestätigungslink oder kopiere
-ihn in die Adresszeile deines Browsers.
+Hallo $[username],
+	Auf $[sitename] wurde eine Anfrage zum Zurücksetzen deines 
+Passworts empfangen. Um diese zu bestätigen folge bitte dem Link
+weiter unten oder kopiere ihn in die Adressleiste deines Browsers. 
 
-Solltest du KEINE Änderungsanfrage gestellt haben ignoriere diese EMail einfach
-und folge dem angegebenen Link UNTER KEINEN UMSTÄNDEN.
+Wenn du die Anfrage NICHT gesendet haben solltest, dann IGNORIERE
+bitte diese Mail und den Link. 
 
-Dein Passwort wird nicht geändert wenn du die Anfrage nicht bestätigst.
+Dein Passwort wird nicht geändert werden solange wir nicht überprüfen
+konnten, dass du die Anfrage gestellt hast. 
 
-Folge diesem Link zur Verifizierung der Anfrage:
+Folge diesem Link um deine Identität zu verifizieren:
 
-$reset_link
+$[reset_link]
 
-Anschließend wirst du eine EMail erhalten die dein neues Passwort enthält.
+Du wirst eine weitere Email erhalten mit dem neuen Passwort.
 
-Du kannst dein Passwort jederzeit in den Einstellungen deines Accounts ändern
-nachdem du angemeldet bist.
+Das Passwort kannst du anschließend wie gewohnt in deinen Account Einstellungen ändern.
 
-Die Anmelde Daten sind die Folgenden:
+Die Login-Details sind die folgenden:
 
-Adresse der Seite:	$siteurl
-Anmelde Name:	$email
-
-
+Adresse der Seite:	$[siteurl]
+Login Name:	$[email]
 
 
-Mit freundlichen Grüßen,
-	$sitename Administrator
+
+
+Grüße,
+	$[sitename] Administrator
 
  

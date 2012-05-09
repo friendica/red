@@ -33,6 +33,8 @@
 		$files = glob($dir . '/*.php');
 		foreach($files as $file) {
 			echo $file . "\n";
+			if(stristr($file,'jappixmini/proxy.php'))
+				continue;
 			include_once($file);
 		}
 	}

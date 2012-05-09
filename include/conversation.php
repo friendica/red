@@ -553,6 +553,14 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 							'$myphoto' => $a->contact['thumb'],
 							'$comment' => t('Comment'),
 							'$submit' => t('Submit'),
+							'$edbold' => t('Bold'),
+							'$editalic' => t('Italic'),
+							'$eduline' => t('Underline'),
+							'$edquote' => t('Quote'),
+							'$edcode' => t('Code'),
+							'$edimg' => t('Image'),
+							'$edurl' => t('Link'),
+							'$edvideo' => t('Video'),
 							'$preview' => t('Preview'),
 							'$ww' => (($mode === 'network') ? $commentww : '')
 						));
@@ -951,7 +959,7 @@ function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 	$tpl = replace_macros($tpl,array('$jotplugins' => $jotplugins));	
 
 	$o .= replace_macros($tpl,array(
-		'$return_path' => $a->cmd,
+		'$return_path' => $a->query_string,
 		'$action' =>  $a->get_baseurl(true) . '/item',
 		'$share' => (x($x,'button') ? $x['button'] : t('Share')),
 		'$upload' => t('Upload photo'),

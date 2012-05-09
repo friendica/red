@@ -24,13 +24,13 @@ function viewcontacts_content(&$a) {
 	} 
 
 
-	$r = q("SELECT COUNT(*) as `total` FROM `contact` WHERE `uid` = %d AND `blocked` = 0 AND `pending` = 0 AND `hidden` = 0 ",
+	$r = q("SELECT COUNT(*) as `total` FROM `contact` WHERE `uid` = %d AND `blocked` = 0 AND `pending` = 0 AND `hidden` = 0 AND `archive` = 0 ",
 		intval($a->profile['uid'])
 	);
 	if(count($r))
 		$a->set_pager_total($r[0]['total']);
 
-	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `blocked` = 0 AND `pending` = 0 AND `hidden` = 0 ORDER BY `name` ASC LIMIT %d , %d ",
+	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `blocked` = 0 AND `pending` = 0 AND `hidden` = 0 AND `archive` = 0 ORDER BY `name` ASC LIMIT %d , %d ",
 		intval($a->profile['uid']),
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])

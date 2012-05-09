@@ -5,7 +5,7 @@
 if (! function_exists('uninstall_plugin')){
 function uninstall_plugin($plugin){
 	logger("Addons: uninstalling " . $plugin);
-	q("DELETE FROM `addon` WHERE `name` = '%s' LIMIT 1",
+	q("DELETE FROM `addon` WHERE `name` = '%s' ",
 		dbesc($plugin)
 	);
 
@@ -37,6 +37,16 @@ function install_plugin($plugin) {
 			intval($t),
 			$plugin_admin
 		);
+
+		// we can add the following with the previous SQL
+		// once most site tables have been updated.
+		// This way the system won't fall over dead during the update.
+
+		if(file_exists('addon/' . $plugin . '/.hidden')) {
+			q("update addon set hidden = 1 where name = '%s' limit 1",
+				dbesc($plugin)
+			);
+		}
 		return true;
 	}
 	else {

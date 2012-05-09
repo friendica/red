@@ -87,10 +87,25 @@ function search_content(&$a) {
 	else
 		$search = ((x($_GET,'search')) ? notags(trim(rawurldecode($_GET['search']))) : '');
 
+	$tag = false;
+	if(x($_GET,'tag')) {
+		$tag = true;
+		$search = ((x($_GET,'tag')) ? notags(trim(rawurldecode($_GET['tag']))) : '');
+	}
+
+
 	$o .= search($search,'search-box','/search',((local_user()) ? true : false));
 
 	if(! $search)
 		return $o;
+
+	if($tag)
+		$sql_extra = sprintf(" AND `item`.`tag` REGEXP '%s' ", 	dbesc('\\]' . preg_quote($search) . '\\['));
+	else
+		$sql_extra = sprintf(" AND `item`.`body` REGEXP '%s' ", dbesc(preg_quote($search)));
+
+
+
 
 	// Here is the way permissions work in the search module...
 	// Only public posts can be shown
@@ -103,10 +118,8 @@ function search_content(&$a) {
 		AND (( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND `item`.`private` = 0 AND `user`.`hidewall` = 0) 
 			OR `item`.`uid` = %d )
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-		AND ( `item`.`body` REGEXP '%s' OR `item`.`tag` REGEXP '%s' ) group by `item`.`uri` ", 
-		intval(local_user()),
-		dbesc(preg_quote($search)), 
-		dbesc('\\]' . preg_quote($search) . '\\[')
+		$sql_extra group by `item`.`uri` ", 
+		intval(local_user())
 	);
 
 	if(count($r))
@@ -127,18 +140,19 @@ function search_content(&$a) {
 		AND (( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND `item`.`private` = 0 AND `user`.`hidewall` = 0 ) 
 			OR `item`.`uid` = %d )
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-		AND ( `item`.`body` REGEXP '%s' OR `item`.`tag` REGEXP '%s' )
+		$sql_extra
 		group by `item`.`uri`	
 		ORDER BY `received` DESC LIMIT %d , %d ",
 		intval(local_user()),
-		dbesc(preg_quote($search)), 
-		dbesc('\\]' . preg_quote($search) . '\\['),
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
 
 	);
 
-	$o .= '<h2>Search results for: ' . $search . '</h2>';
+	if($tag) 
+		$o .= '<h2>Items tagged with: ' . $search . '</h2>';
+	else
+		$o .= '<h2>Search results for: ' . $search . '</h2>';
 
 	$o .= conversation($a,$r,'search',false);
 

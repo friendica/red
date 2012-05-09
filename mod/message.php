@@ -4,20 +4,7 @@ require_once('include/acl_selectors.php');
 require_once('include/message.php');
 
 function message_init(&$a) {
-	$tabs = array(
-	/*
-		array(
-			'label' => t('All'),
-			'url'=> $a->get_baseurl(true) . '/message',
-			'sel'=> ($a->argc == 1),
-		),
-		array(
-			'label' => t('Sent'),
-			'url' => $a->get_baseurl(true) . '/message/sent',
-			'sel'=> ($a->argv[1] == 'sent'),
-		),
-	*/
-	);
+	$tabs = array();
 	$new = array(
 		'label' => t('New Message'),
 		'url' => $a->get_baseurl(true) . '/message/new',
@@ -29,6 +16,21 @@ function message_init(&$a) {
 		'$tabs'=>$tabs,
 		'$new'=>$new,
 	));
+	$base = $a->get_baseurl();
+
+	$a->page['htmlhead'] .= '<script src="' . $a->get_baseurl(true) . '/library/jquery_ac/jquery.autocomplete-min.js" ></script>';
+	$a->page['htmlhead'] .= <<< EOT
+
+<script>$(document).ready(function() { 
+	var a; 
+	a = $("#recip").autocomplete({ 
+		serviceUrl: '$base/acl',
+		width: 350
+	});
+}); 
+
+</script>
+EOT;
 	
 }
 
@@ -171,7 +173,23 @@ function message_content(&$a) {
 	
 		$preselect = (isset($a->argv[2])?array($a->argv[2]):false);
 	
-		$select = contact_select('messageto','message-to-select', $preselect, 4, true, false, false, 10);
+		if(defined('EMAIL_AUTOCOMP')) {
+
+			// here's where we want to do contact autocomplete
+			// just figure out how to make it do the right thing
+			// pictures would be nice, but that didn't work when I tried.
+			// It sort of barely works, but needs help
+			// (the json backend is found in mod/acl.php)
+
+			$select = '<input type="text" id="recip" name="messageto" value="' . $preselect .'" />';
+		}
+		else {
+
+			// the ugly select box
+
+			$select = contact_select('messageto','message-to-select', $preselect, 4, true, false, false, 10);
+		}
+
 		$tpl = get_markup_template('prv_message.tpl');
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Send Private Message'),
@@ -198,7 +216,7 @@ function message_content(&$a) {
 		$o .= $header;
 		
 		$r = q("SELECT count(*) AS `total` FROM `mail` 
-			WHERE `mail`.`uid` = %d AND `from-url` $eq '%s' GROUP BY `parent-uri` ORDER BY `created` DESC",
+			WHERE `mail`.`uid` = %d GROUP BY `parent-uri` ORDER BY `created` DESC",
 			intval(local_user()),
 			dbesc($myprofile)
 		);
@@ -313,6 +331,29 @@ function message_content(&$a) {
 				$from_url = $a->get_baseurl(true) . '/redir/' . $message['contact-id'];
 				$sparkle = ' sparkle';
 			}
+
+
+			$Text = $message['body'];
+			$saved_image = '';
+			$img_start = strpos($Text,'[img]data:');
+			$img_end = strpos($Text,'[/img]');
+
+			if($img_start !== false && $img_end !== false && $img_end > $img_start) {
+				$start_fragment = substr($Text,0,$img_start);
+				$img_start += strlen('[img]');
+				$saved_image = substr($Text,$img_start,$img_end - $img_start);
+				$end_fragment = substr($Text,$img_end + strlen('[/img]'));		
+				$Text = $start_fragment . '[!#saved_image#!]' . $end_fragment;
+				$search = '/\[url\=(.*?)\]\[!#saved_image#!\]\[\/url\]' . '/is';
+				$replace = '[url=' . z_path() . '/redir/' . $message['contact-id'] 
+					. '?f=1&url=' . '$1' . '][!#saved_image#!][/url]' ;
+
+				$Text = preg_replace($search,$replace,$Text);
+
+			if(strlen($saved_image))
+				$message['body'] = str_replace('[!#saved_image#!]', '[img]' . $saved_image . '[/img]',$Text);
+			}
+
 			$mails[] = array(
 				'id' => $message['id'],
 				'from_name' => template_escape($message['from-name']),

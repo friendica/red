@@ -139,21 +139,49 @@ function profiles_post(&$a) {
 
 
 		$changes = array();
+		$value = '';
 		if($is_default) {
-			if($marital != $orig[0]['marital']) $changes[] = '&hearts; ' . t('Marital Status');
-			if($withchanged) $changes[] = '&hearts; ' . t('Romantic Partner');			
-			if($work != $orig[0]['work']) $changes[] = t('Work/Employment');
-			if($religion != $orig[0]['religion']) $changes[] = t('Religion');
-			if($politic != $orig[0]['politic']) $changes[] = t('Political Views');
-			if($gender != $orig[0]['gender']) $changes[] = t('Gender');
-			if($sexual != $orig[0]['sexual']) $changes[] = t('Sexual Preference');
-			if($homepage != $orig[0]['homepage']) $changes[] = t('Homepage');
-			if($interest != $orig[0]['interest']) $changes[] = t('Interests');
+			if($marital != $orig[0]['marital']) {
+				$changes[] = '[color=#ff0000]&hearts;[/color] ' . t('Marital Status');
+				$value = $marital;
+			}
+			if($withchanged) {
+				$changes[] = '&hearts; ' . t('Romantic Partner');
+				$value = strip_tags($with);
+			}							
+			if($work != $orig[0]['work']) {
+				$changes[] = t('Work/Employment');
+			}
+			if($religion != $orig[0]['religion']) {
+				$changes[] = t('Religion');
+				$value = $religion;
+			}
+			if($politic != $orig[0]['politic']) {
+				$changes[] = t('Political Views');
+				$value = $politic;
+			}
+			if($gender != $orig[0]['gender']) {
+				$changes[] = t('Gender');
+				$value = $gender;
+			}
+			if($sexual != $orig[0]['sexual']) {
+				$changes[] = t('Sexual Preference');
+				$value = $sexual;
+			}
+			if($homepage != $orig[0]['homepage']) {
+				$changes[] = t('Homepage');
+				$value = $homepage;
+			}
+			if($interest != $orig[0]['interest']) {
+				$changes[] = t('Interests');
+				$value = $interest;
+			}
 			if($address != $orig[0]['address'] || $locality != $orig[0]['locality'] || $region != $orig[0]['region']
-				|| $country_name != $orig[0]['country_name'])
-				$changes[] = t('Location');
+				|| $country_name != $orig[0]['country-name']) {
+ 				$changes[] = t('Location');
+			}
 
-			profile_activity($changes);
+			profile_activity($changes,$value);
 
 		}			
 			
@@ -245,7 +273,7 @@ function profiles_post(&$a) {
 }
 
 
-function profile_activity($changed) {
+function profile_activity($changed, $value) {
 	$a = get_app();
 
 	if(! local_user() || ! is_array($changed) || ! count($changed))
@@ -289,7 +317,7 @@ function profile_activity($changed) {
 	foreach($changed as $ch) {
 		if(strlen($changes)) {
 			if ($z == ($t - 1))
-				$changes .= ' and ';
+				$changes .= t(' and ');
 			else
 				$changes .= ', ';
 		}
@@ -299,7 +327,15 @@ function profile_activity($changed) {
 
 	$prof = '[url=' . $self[0]['url'] . '?tab=profile' . ']' . t('public profile') . '[/url]';	
 
-	$arr['body'] =  sprintf( t('%1$s has an updated %2$s, changing %3$s.'), $A, $prof, $changes);
+	if($t == 1 && strlen($value)) {
+		$message = sprintf( t('%1$s changed %2$s to &ldquo;%3$s&rdquo;'), $A, $changes, $value);
+		$message .= "\n\n" . sprintf( t(" - Visit %1$s\'s %2$s"), $A, $prof);
+	}
+	else
+		$message = 	sprintf( t('%1$s has an updated %2$s, changing %3$s.'), $A, $prof, $changes);
+ 
+
+	$arr['body'] = $message;  
 
 	$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PROFILE . '</type><title>' . $self[0]['name'] . '</title>'
 	. '<id>' . $self[0]['url'] . '/' . $self[0]['name'] . '</id>';

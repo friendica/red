@@ -75,6 +75,11 @@ EOT;
 			'label' => t('Export personal data'),
 			'url' => $a->get_baseurl(true) . '/uexport',
 			'selected' => ''
+		),
+		array(
+			'label' => t('Remove account'),
+			'url' => $a->get_baseurl(true) . '/removeme',
+			'selected' => ''
 		)
 	);
 	
@@ -347,6 +352,7 @@ function settings_post(&$a) {
 	$hide_friends     = (($_POST['hide-friends'] == 1) ? 1: 0);
 	$hidewall         = (($_POST['hidewall'] == 1) ? 1: 0);
 	$post_newfriend   = (($_POST['post_newfriend'] == 1) ? 1: 0);
+	$post_joingroup   = (($_POST['post_joingroup'] == 1) ? 1: 0);
 	$post_profilechange   = (($_POST['post_profilechange'] == 1) ? 1: 0);
 
 
@@ -431,6 +437,7 @@ function settings_post(&$a) {
 
 	set_pconfig(local_user(),'system','suggestme', $suggestme);
 	set_pconfig(local_user(),'system','post_newfriend', $post_newfriend);
+	set_pconfig(local_user(),'system','post_joingroup', $post_joingroup);
 	set_pconfig(local_user(),'system','post_profilechange', $post_profilechange);
 
 
@@ -696,8 +703,8 @@ function settings_content(&$a) {
 		$allowed_themes_raw = explode(',',$allowed_themes_str);
 		$allowed_themes = array();
 		if(count($allowed_themes_raw))
-			foreach($allowed_themes_raw as $x)
-				if(strlen(trim($x)))
+			foreach($allowed_themes_raw as $x) 
+				if(strlen(trim($x)) && is_dir("view/theme/$x"))
 					$allowed_themes[] = trim($x);
 
 		
@@ -796,6 +803,9 @@ function settings_content(&$a) {
 
 	$post_newfriend = get_pconfig(local_user(), 'system','post_newfriend');
 	$post_newfriend = (($post_newfriend===false)? '0': $post_newfriend); // default if not set: 0
+
+	$post_joingroup = get_pconfig(local_user(), 'system','post_joingroup');
+	$post_joingroup = (($post_joingroup===false)? '0': $post_joingroup); // default if not set: 0
 
 	$post_profilechange = get_pconfig(local_user(), 'system','post_profilechange');
 	$post_profilechange = (($post_profilechange===false)? '0': $post_profilechange); // default if not set: 0
@@ -971,6 +981,7 @@ function settings_content(&$a) {
 		'$h_not' 	=> t('Notification Settings'),
 		'$activity_options' => t('By default post a status message when:'),
 		'$post_newfriend' => array('post_newfriend',  t('accepting a friend request'), $post_newfriend, ''),
+		'$post_joingroup' => array('post_joingroup',  t('joining a forum/community'), $post_joingroup, ''),
 		'$post_profilechange' => array('post_profilechange',  t('making an <em>interesting</em> profile change'), $post_profilechange, ''),
 		'$lbl_not' 	=> t('Send a notification email when:'),
 		'$notify1'	=> array('notify1', t('You receive an introduction'), ($notify & NOTIFY_INTRO), NOTIFY_INTRO, ''),

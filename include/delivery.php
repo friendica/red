@@ -51,6 +51,17 @@ function delivery_run($argv, $argc){
 		return;
 	}	
 
+	$maxsysload = intval(get_config('system','maxloadavg'));
+	if($maxsysload < 1)
+		$maxsysload = 50;
+	if(function_exists('sys_getloadavg')) {
+		$load = sys_getloadavg();
+		if(intval($load[0]) > $maxsysload) {
+			logger('system: load ' . $load . ' too high. Delivery deferred to next queue run.');
+			return;
+		}
+	}
+
 	// It's ours to deliver. Remove it from the queue.
 
 	q("delete from deliverq where cmd = '%s' and item = %d and contact = %d limit 1",
@@ -336,7 +347,10 @@ function delivery_run($argv, $argc){
 				}
 			}
 
-			$deliver_status = dfrn_deliver($owner,$contact,$atom);
+			if(! was_recently_delayed($contact['id']))
+				$deliver_status = dfrn_deliver($owner,$contact,$atom);
+			else
+				$deliver_status = (-1);
 
 			logger('notifier: dfrn_delivery returns ' . $deliver_status);
 
@@ -379,7 +393,11 @@ function delivery_run($argv, $argc){
 				logger('notifier: slapdelivery: ' . $contact['name']);
 				foreach($slaps as $slappy) {
 					if($contact['notify']) {
-						$deliver_status = slapper($owner,$contact['notify'],$slappy);
+						if(! was_recently_delayed($contact['id']))
+							$deliver_status = slapper($owner,$contact['notify'],$slappy);
+						else
+							$deliver_status = (-1);
+
 						if($deliver_status == (-1)) {
 							// queue message for redelivery
 							add_to_queue($contact['id'],NETWORK_OSTATUS,$slappy);

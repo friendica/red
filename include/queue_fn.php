@@ -15,6 +15,17 @@ function remove_queue_item($id) {
 	);
 }
 
+function was_recently_delayed($cid) {
+
+	$r = q("SELECT `id` FROM `queue` WHERE `cid` = %d 
+		and last > UTC_TIMESTAMP() - interval 15 minute limit 1",
+		intval($cid)
+	);
+	if(count($r))
+		return true;
+	return false;
+}
+
 
 function add_to_queue($cid,$network,$msg,$batch = false) {
 

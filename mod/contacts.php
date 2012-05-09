@@ -144,7 +144,7 @@ function contacts_content(&$a) {
 			goaway($a->get_baseurl(true) . '/contacts');
 			return; // NOTREACHED
 		}
-
+		
 		if($cmd === 'update') {
 
 			// pull feed and consume it, which should subscribe to the hub.
@@ -182,40 +182,27 @@ function contacts_content(&$a) {
 			return; // NOTREACHED
 		}
 
+
+		if($cmd === 'archive') {
+			$archived = (($orig_record[0]['archive']) ? 0 : 1);
+			$r = q("UPDATE `contact` SET `archive` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
+				intval($archived),
+				intval($contact_id),
+				intval(local_user())
+			);
+			if($r) {
+				//notice( t('Contact has been ') . (($archived) ? t('archived') : t('unarchived')) . EOL );
+				info( (($archived) ? t('Contact has been archived') : t('Contact has been unarchived')) . EOL );
+			}
+			goaway($a->get_baseurl(true) . '/contacts/' . $contact_id);
+			return; // NOTREACHED
+		}
+
 		if($cmd === 'drop') {
 
-			// create an unfollow slap
+			require_once('include/Contact.php');
 
-			if($orig_record[0]['network'] === NETWORK_OSTATUS) {
-				$tpl = get_markup_template('follow_slap.tpl');
-				$slap = replace_macros($tpl, array(
-					'$name' => $a->user['username'],
-					'$profile_page' => $a->get_baseurl() . '/profile/' . $a->user['nickname'],
-					'$photo' => $a->contact['photo'],
-					'$thumb' => $a->contact['thumb'],
-					'$published' => datetime_convert('UTC','UTC', 'now', ATOM_TIME),
-					'$item_id' => 'urn:X-dfrn:' . $a->get_hostname() . ':unfollow:' . random_string(),
-					'$title' => '',
-					'$type' => 'text',
-					'$content' => t('stopped following'),
-					'$nick' => $a->user['nickname'],
-					'$verb' => 'http://ostatus.org/schema/1.0/unfollow', // ACTIVITY_UNFOLLOW,
-					'$ostat_follow' => '' // '<as:verb>http://ostatus.org/schema/1.0/unfollow</as:verb>' . "\r\n"
-				));
-
-				if((x($orig_record[0],'notify')) && (strlen($orig_record[0]['notify']))) {
-					require_once('include/salmon.php');
-					slapper($a->user,$orig_record[0]['notify'],$slap);
-				}
-			}
-			elseif($orig_record[0]['network'] === NETWORK_DIASPORA) {
-				require_once('include/diaspora.php');
-				diaspora_unshare($a->user,$orig_record[0]);
-			}
-			elseif($orig_record[0]['network'] === NETWORK_DFRN) {
-				require_once('include/items.php');
-				dfrn_deliver($a->user,$orig_record[0],'placeholder', 1);
-			}
+			terminate_friendship($a->user,$a->contact,$orig_record[0]);
 
 			contact_remove($orig_record[0]['id']);
 			info( t('Contact has been removed.') . EOL );
@@ -303,16 +290,26 @@ function contacts_content(&$a) {
 				'label' => (($contact['blocked']) ? t('Unblock') : t('Block') ),
 				'url'   => $a->get_baseurl(true) . '/contacts/' . $contact_id . '/block',
 				'sel'   => '',
+				'title' => t('Toggle Blocked status'),
 			),
 			array(
 				'label' => (($contact['readonly']) ? t('Unignore') : t('Ignore') ),
 				'url'   => $a->get_baseurl(true) . '/contacts/' . $contact_id . '/ignore',
 				'sel'   => '',
+				'title' => t('Toggle Ignored status'),
+			),
+
+			array(
+				'label' => (($contact['archive']) ? t('Unarchive') : t('Archive') ),
+				'url'   => $a->get_baseurl(true) . '/contacts/' . $contact_id . '/archive',
+				'sel'   => '',
+				'title' => t('Toggle Archive status'),
 			),
 			array(
 				'label' => t('Repair'),
 				'url'   => $a->get_baseurl(true) . '/crepair/' . $contact_id,
 				'sel'   => '',
+				'title' => t('Advanced Contact Settings'),
 			)
 		);
 		$tab_tpl = get_markup_template('common_tabs.tpl');
@@ -328,7 +325,7 @@ function contacts_content(&$a) {
 			'$lbl_info1' => t('Contact Information / Notes'),
 			'$infedit' => t('Edit contact notes'),
 			'$common_text' => $common_text,
-			'$common_link' => $a->get_baseurl(true) . '/common/' . $contact['id'],
+			'$common_link' => $a->get_baseurl(true) . '/common/loc/' . local_user() . '/' . $contact['id'],
 			'$all_friends' => $all_friends,
 			'$relation_text' => $relation_text,
 			'$visit' => sprintf( t('Visit %s\'s profile [%s]'),$contact['name'],$contact['url']),
@@ -353,6 +350,7 @@ function contacts_content(&$a) {
 			'$info' => $contact['info'],
 			'$blocked' => (($contact['blocked']) ? t('Currently blocked') : ''),
 			'$ignored' => (($contact['readonly']) ? t('Currently ignored') : ''),
+			'$archived' => (($contact['archive']) ? t('Currently archived') : ''),
 			'$hidden' => array('hidden', t('Hide this contact from others'), ($contact['hidden'] == 1), t('Replies/likes to your public posts <strong>may</strong> still be visible')),
 			'$photo' => $contact['photo'],
 			'$name' => $contact['name'],
@@ -394,6 +392,10 @@ function contacts_content(&$a) {
 		$sql_extra = " AND `readonly` = 1 ";
 		$ignored = true;
 	}
+	elseif(($a->argc == 2) && ($a->argv[1] === 'archived')) {
+		$sql_extra = " AND `archive` = 1 ";
+		$archived = true;
+	}
 	else
 		$sql_extra = " AND `blocked` = 0 ";
 
@@ -405,34 +407,47 @@ function contacts_content(&$a) {
 			'label' => t('Suggestions'),
 			'url'   => $a->get_baseurl(true) . '/suggest', 
 			'sel'   => '',
+			'title' => t('Suggest potential friends'),
 		),
 		array(
 			'label' => t('All Contacts'),
 			'url'   => $a->get_baseurl(true) . '/contacts/all', 
 			'sel'   => ($all) ? 'active' : '',
+			'title' => t('Show all contacts'),
 		),
 		array(
-			'label' => t('Unblocked Contacts'),
+			'label' => t('Unblocked'),
 			'url'   => $a->get_baseurl(true) . '/contacts',
-			'sel'   => ((! $all) && (! $blocked) && (! $hidden) && (! $search) && (! $nets) && (! $ignored)) ? 'active' : '',
+			'sel'   => ((! $all) && (! $blocked) && (! $hidden) && (! $search) && (! $nets) && (! $ignored) && (! $archived)) ? 'active' : '',
+			'title' => t('Only show unblocked contacts'),
 		),
 
 		array(
-			'label' => t('Blocked Contacts'),
+			'label' => t('Blocked'),
 			'url'   => $a->get_baseurl(true) . '/contacts/blocked',
 			'sel'   => ($blocked) ? 'active' : '',
+			'title' => t('Only show blocked contacts'),
 		),
 
 		array(
-			'label' => t('Ignored Contacts'),
+			'label' => t('Ignored'),
 			'url'   => $a->get_baseurl(true) . '/contacts/ignored',
 			'sel'   => ($ignored) ? 'active' : '',
+			'title' => t('Only show ignored contacts'),
 		),
 
 		array(
-			'label' => t('Hidden Contacts'),
+			'label' => t('Archived'),
+			'url'   => $a->get_baseurl(true) . '/contacts/archived',
+			'sel'   => ($archived) ? 'active' : '',
+			'title' => t('Only show archived contacts'),
+		),
+
+		array(
+			'label' => t('Hidden'),
 			'url'   => $a->get_baseurl(true) . '/contacts/hidden',
 			'sel'   => ($hidden) ? 'active' : '',
+			'title' => t('Only show hidden contacts'),
 		),
 
 	);

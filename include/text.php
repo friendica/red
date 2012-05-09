@@ -558,7 +558,7 @@ function contact_block() {
 
 	if((! is_array($a->profile)) || ($a->profile['hide-friends']))
 		return $o;
-	$r = q("SELECT COUNT(*) AS `total` FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 and `pending` = 0 AND `hidden` = 0",
+	$r = q("SELECT COUNT(*) AS `total` FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 and `pending` = 0 AND `hidden` = 0 AND `archive` = 0",
 			intval($a->profile['uid'])
 	);
 	if(count($r)) {
@@ -569,7 +569,7 @@ function contact_block() {
 		$micropro = Null;
 		
 	} else {
-		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 and `pending` = 0 AND `hidden` = 0 ORDER BY RAND() LIMIT %d",
+		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 and `pending` = 0 AND `hidden` = 0 AND `archive` = 0 ORDER BY RAND() LIMIT %d",
 				intval($a->profile['uid']),
 				intval($shown)
 		);
@@ -930,7 +930,8 @@ function prepare_body($item,$attach = false) {
 		foreach($matches as $mtch) {
 			if(strlen($x))
 				$x .= ',';
-			$x .= xmlify(file_tag_decode($mtch[1]));
+			$x .= xmlify(file_tag_decode($mtch[1])) 
+				. ((local_user() == $item['uid']) ? ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&cat=' . xmlify(file_tag_decode($mtch[1])) . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>' : '');
 		}
 		if(strlen($x))
 			$s .= '<div class="categorytags"><span>' . t('Categories:') . ' </span>' . $x . '</div>'; 
@@ -1466,12 +1467,16 @@ function file_tag_save_file($uid,$item,$file) {
 	return true;
 }
 
-function file_tag_unsave_file($uid,$item,$file) {
+function file_tag_unsave_file($uid,$item,$file,$cat = false) {
 	$result = false;
 	if(! intval($uid))
 		return false;
 
-	$pattern = '[' . file_tag_encode($file) . ']' ;
+	if($cat == true)
+		$pattern = '<' . file_tag_encode($file) . '>' ;
+	else
+		$pattern = '[' . file_tag_encode($file) . ']' ;
+
 
 	$r = q("select file from item where id = %d and uid = %d limit 1",
 		intval($item),
@@ -1486,13 +1491,14 @@ function file_tag_unsave_file($uid,$item,$file) {
 		intval($uid)
 	);
 
-	$r = q("select file from item where uid = %d " . file_tag_file_query('item',$file),
+	$r = q("select file from item where uid = %d and deleted = 0 " . file_tag_file_query('item',$file,(($cat) ? 'category' : 'file')),
 		intval($uid)
 	);
 
 	if(! count($r)) {
 		$saved = get_pconfig($uid,'system','filetags');
 		set_pconfig($uid,'system','filetags',str_replace($pattern,'',$saved));
+
 	}
 	return true;
 }
@@ -1518,3 +1524,9 @@ function fix_mce_lf($s) {
 	$s = str_replace("\n\n","\n",$s);
 	return $s;
 }
+
+
+function protect_sprintf($s) {
+	return(str_replace('%','%%',$s));
+}
+

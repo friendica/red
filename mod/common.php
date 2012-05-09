@@ -5,25 +5,33 @@ require_once('include/socgraph.php');
 function common_content(&$a) {
 
 	$o = '';
-	if(! local_user()) {
-		notice( t('Permission denied.') . EOL);
+
+	$cmd = $a->argv[1];
+	$uid = intval($a->argv[2]);
+	$cid = intval($a->argv[3]);
+	$zcid = 0;
+
+	if($cmd !== 'loc' && $cmd != 'rem')
 		return;
+	if(! $uid)
+		return;
+
+	if($cmd === 'loc' && $cid) {	
+		$c = q("select name, url, photo from contact where id = %d and uid = %d limit 1",
+			intval($cid),
+			intval($uid)
+		);
 	}
-
-	if($a->argc > 1)
-		$cid = intval($a->argv[1]);
-	if(! $cid)
-		return;
-
-	$c = q("select name, url, photo from contact where id = %d and uid = %d limit 1",
-		intval($cid),
-		intval(local_user())
-	);
+	else {
+		$c = q("select name, url, photo from contact where self = 1 and uid = %d limit 1",
+			intval($uid)
+		);
+	}	
 
 	$a->page['aside'] .= '<div class="vcard">' 
 		. '<div class="fn label">' . $c[0]['name'] . '</div>' 
 		. '<div id="profile-photo-wrapper">'
-		. '<a href="/contacts/' . $cid . '"><img class="photo" width="175" height="175" 
+		. '<img class="photo" width="175" height="175" 
 		src="' . $c[0]['photo'] . '" alt="' . $c[0]['name'] . '" /></div>'
 		. '</div>';
 	
@@ -33,13 +41,52 @@ function common_content(&$a) {
 
 	$o .= '<h2>' . t('Common Friends') . '</h2>';
 
-//	$o .= '<h3>' . sprintf( t('You and %s'),$c[0]['name']) . '</h3>';
+
+	if(! $cid) {
+		if(get_my_url()) {
+			$r = q("select id from contact where nurl = '%s' and uid = %d limit 1",
+				dbesc(normalise_link(get_my_url())),
+				intval($profile_uid)
+			);
+			if(count($r))
+				$cid = $r[0]['id'];
+			else {
+				$r = q("select id from gcontact where nurl = '%s' limit 1",
+					dbesc(normalise_link(get_my_url()))
+				);
+				if(count($r))
+					$zcid = $r[0]['id'];
+			}
+		}
+	}
 
 
-	$r = common_friends(local_user(),$cid);
+
+	if($cid == 0 && $zcid == 0)
+		return; 
+
+
+	if($cid)
+		$t = count_common_friends($uid,$cid);
+	else
+		$t = count_common_friends_zcid($uid,$zcid);
+
+
+	$a->set_pager_total($t);
+
+	if(! $t) {
+		notice( t('No contacts in common.') . EOL);
+		return $o;
+	}
+
+
+	if($cid)
+		$r = common_friends($uid,$cid);
+	else
+		$r = common_friends_zcid($uid,$zcid);
+
 
 	if(! count($r)) {
-		$o .= t('No friends in common.');
 		return $o;
 	}
 
