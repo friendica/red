@@ -7,6 +7,18 @@
 /* = Admin = */
 /* ========= */
 
+#fancybox-content {
+	width: 0;
+	height: 0;
+	padding: 0;
+	outline: none;
+	position: relative;
+	overflow: hidden;
+	z-index: 1102;
+	border: 0px solid #fff;
+	background: #2e2e2f !important;
+}
+
 #adminpage {
 /*        width: 80%;*/
 }
