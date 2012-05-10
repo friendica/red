@@ -3,7 +3,7 @@
 /*
  * Name: Diabook
  * Description: Diabook: report bugs and request here: http://pad.toktan.org/p/diabook or contact me : thomas_bierey@friendica.eu
- * Version: (Version: 1.026)
+ * Version: (Version: 1.027)
  * Author: 
  */
 
@@ -13,7 +13,7 @@ $a = get_app();
 function diabook_init(&$a) {
 	
 //print diabook-version for debugging
-$diabook_version = "Diabook (Version: 1.026)";
+$diabook_version = "Diabook (Version: 1.027)";
 $a->page['htmlhead'] .= sprintf('<META NAME="theme" CONTENT="%s"/>', $diabook_version);
 
 //change css on network and profilepages
@@ -401,7 +401,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 
 	// custom css
 	if (!is_null($cssFile)) $a->page['htmlhead'] .= sprintf('<link rel="stylesheet" type="text/css" href="%s" />', $cssFile);
-
+	
 	//footer
 	$tpl = get_markup_template('footer.tpl');
 	$a->page['footer'] .= replace_macros($tpl, array());
@@ -568,7 +568,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
    if($close_pages != "1") {
    if(local_user()) {
    $page = '
-			<h3 style="margin-top:0px;">'.t("Community Pages").'<a id="closeicon" href="#boxsettings" onClick="open_boxsettings(); return false;" style="text-decoration:none;" class="icon close_box" title="close"></a></h3>
+			<h3 style="margin-top:0px;">'.t("Community Pages").'<a id="closeicon" href="#boxsettings" onClick="open_boxsettings(); return false;" style="text-decoration:none;" class="icon close_box" title="'.t("Settings").'"></a></h3>
 			<div id=""><ul style="margin-left: 7px;margin-top: 0px;padding-left: 0px;padding-top: 0px;">';
 
 	$pagelist = array();
