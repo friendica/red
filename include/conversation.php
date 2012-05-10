@@ -959,7 +959,7 @@ function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 	$tpl = replace_macros($tpl,array('$jotplugins' => $jotplugins));	
 
 	$o .= replace_macros($tpl,array(
-		'$return_path' => $a->cmd,
+		'$return_path' => $a->query_string,
 		'$action' =>  $a->get_baseurl(true) . '/item',
 		'$share' => (x($x,'button') ? $x['button'] : t('Share')),
 		'$upload' => t('Upload photo'),

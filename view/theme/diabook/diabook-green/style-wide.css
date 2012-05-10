@@ -555,6 +555,7 @@ code {
   text-decoration: none;
 }
 /* popup notifications */
+div.jGrowl.top-right { top: 30px; /* put it below header/nav bar */ }
 div.jGrowl div.notice {
   background: #511919 url("../../../images/icons/48/notice.png") no-repeat 5px center;
   color: #ffffff;
@@ -609,9 +610,7 @@ header #banner #logo-img {
   margin-top: 3px;
 }
 header #banner #logo-text {
-  font-size: 20px;
-  position: absolute;
-  top: 10%;
+  font-size: 20px!important;position: relative!important;top: -4px!important;
 }
 /* messages */
 #message-new {
