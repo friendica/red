@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.3.1336\n"
+"Project-Id-Version: 2.3.1337\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-08 10:00-0700\n"
+"POT-Creation-Date: 2012-05-09 10:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -156,7 +156,7 @@ msgstr ""
 #: ../../addon/piwik/piwik.php:89 ../../addon/twitter/twitter.php:180
 #: ../../addon/twitter/twitter.php:209 ../../addon/twitter/twitter.php:375
 #: ../../addon/irc/irc.php:55 ../../addon/blogger/blogger.php:102
-#: ../../addon/posterous/posterous.php:90
+#: ../../addon/posterous/posterous.php:103
 #: ../../view/theme/cleanzero/config.php:80
 #: ../../view/theme/diabook/theme.php:683
 #: ../../view/theme/diabook/config.php:190
@@ -220,7 +220,7 @@ msgid "link to source"
 msgstr ""
 
 #: ../../mod/events.php:324 ../../view/theme/diabook/theme.php:127
-#: ../../include/nav.php:52 ../../boot.php:1493
+#: ../../include/nav.php:52 ../../boot.php:1499
 msgid "Events"
 msgstr ""
 
@@ -270,7 +270,7 @@ msgid "Description:"
 msgstr ""
 
 #: ../../mod/events.php:423 ../../include/event.php:37
-#: ../../include/bb2diaspora.php:260 ../../boot.php:1092
+#: ../../include/bb2diaspora.php:260 ../../boot.php:1098
 msgid "Location:"
 msgstr ""
 
@@ -345,7 +345,7 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: ../../mod/photos.php:43 ../../boot.php:1487
+#: ../../mod/photos.php:43 ../../boot.php:1493
 msgid "Photo Albums"
 msgstr ""
 
@@ -545,7 +545,7 @@ msgstr ""
 
 #: ../../mod/photos.php:1232 ../../mod/photos.php:1272
 #: ../../mod/photos.php:1303 ../../include/conversation.php:554
-#: ../../boot.php:506
+#: ../../boot.php:512
 msgid "Comment"
 msgstr ""
 
@@ -1166,7 +1166,7 @@ msgid "is interested in:"
 msgstr ""
 
 #: ../../mod/match.php:58 ../../mod/suggest.php:59
-#: ../../include/contact_widgets.php:9 ../../boot.php:1036
+#: ../../include/contact_widgets.php:9 ../../boot.php:1042
 msgid "Connect"
 msgstr ""
 
@@ -1692,7 +1692,7 @@ msgstr ""
 #: ../../addon/facebook/facebook.php:680
 #: ../../addon/facebook/facebook.php:1170
 #: ../../addon/testdrive/testdrive.php:58 ../../include/items.php:2726
-#: ../../boot.php:686
+#: ../../boot.php:692
 msgid "Administrator"
 msgstr ""
 
@@ -1702,7 +1702,7 @@ msgid ""
 "Password reset failed."
 msgstr ""
 
-#: ../../mod/lostpass.php:83 ../../boot.php:818
+#: ../../mod/lostpass.php:83 ../../boot.php:824
 msgid "Password Reset"
 msgstr ""
 
@@ -2352,7 +2352,7 @@ msgstr ""
 msgid "Invalid contact."
 msgstr ""
 
-#: ../../mod/notes.php:44 ../../boot.php:1499
+#: ../../mod/notes.php:44 ../../boot.php:1505
 msgid "Personal Notes"
 msgstr ""
 
@@ -2603,7 +2603,7 @@ msgstr ""
 
 #: ../../mod/profperm.php:103 ../../view/theme/diabook/theme.php:124
 #: ../../include/profile_advanced.php:7 ../../include/profile_advanced.php:74
-#: ../../include/nav.php:50 ../../boot.php:1478
+#: ../../include/nav.php:50 ../../boot.php:1484
 msgid "Profile"
 msgstr ""
 
@@ -2775,7 +2775,7 @@ msgstr ""
 msgid "Choose a nickname: "
 msgstr ""
 
-#: ../../mod/register.php:567 ../../include/nav.php:81 ../../boot.php:784
+#: ../../mod/register.php:567 ../../include/nav.php:81 ../../boot.php:790
 msgid "Register"
 msgstr ""
 
@@ -2818,7 +2818,7 @@ msgid "Access denied."
 msgstr ""
 
 #: ../../mod/fbrowser.php:23 ../../view/theme/diabook/theme.php:126
-#: ../../include/nav.php:51 ../../boot.php:1484
+#: ../../include/nav.php:51 ../../boot.php:1490
 msgid "Photos"
 msgstr ""
 
@@ -3597,7 +3597,7 @@ msgstr ""
 msgid "FTP Password"
 msgstr ""
 
-#: ../../mod/profile.php:21 ../../boot.php:949
+#: ../../mod/profile.php:21 ../../boot.php:955
 msgid "Requested profile is not available."
 msgstr ""
 
@@ -4005,23 +4005,23 @@ msgstr ""
 msgid "Edit/Manage Profiles"
 msgstr ""
 
-#: ../../mod/profiles.php:621 ../../boot.php:1058
+#: ../../mod/profiles.php:621 ../../boot.php:1064
 msgid "Change profile photo"
 msgstr ""
 
-#: ../../mod/profiles.php:622 ../../boot.php:1059
+#: ../../mod/profiles.php:622 ../../boot.php:1065
 msgid "Create New Profile"
 msgstr ""
 
-#: ../../mod/profiles.php:633 ../../boot.php:1069
+#: ../../mod/profiles.php:633 ../../boot.php:1075
 msgid "Profile Image"
 msgstr ""
 
-#: ../../mod/profiles.php:635 ../../boot.php:1072
+#: ../../mod/profiles.php:635 ../../boot.php:1078
 msgid "visible to everybody"
 msgstr ""
 
-#: ../../mod/profiles.php:636 ../../boot.php:1073
+#: ../../mod/profiles.php:636 ../../boot.php:1079
 msgid "Edit visibility"
 msgstr ""
 
@@ -4633,8 +4633,8 @@ msgid "Forums"
 msgstr ""
 
 #: ../../addon/page/page.php:63 ../../addon/showmore/showmore.php:87
-#: ../../include/contact_widgets.php:187 ../../include/conversation.php:466
-#: ../../boot.php:507
+#: ../../include/contact_widgets.php:188 ../../include/conversation.php:466
+#: ../../boot.php:513
 msgid "show more"
 msgstr ""
 
@@ -4650,7 +4650,7 @@ msgstr ""
 #: ../../addon/communityhome/communityhome.php:34
 #: ../../addon/communityhome/twillingham/communityhome.php:28
 #: ../../addon/communityhome/twillingham/communityhome.php:34
-#: ../../include/nav.php:64 ../../boot.php:805
+#: ../../include/nav.php:64 ../../boot.php:811
 msgid "Login"
 msgstr ""
 
@@ -4681,6 +4681,10 @@ msgstr ""
 #: ../../view/theme/diabook/theme.php:490 ../../include/text.php:1303
 #: ../../include/conversation.php:45 ../../include/conversation.php:118
 msgid "event"
+msgstr ""
+
+#: ../../addon/hangman/hangman.php:19
+msgid "Hangman"
 msgstr ""
 
 #: ../../addon/uhremotestorage/uhremotestorage.php:84
@@ -4830,7 +4834,7 @@ msgid "Post to Drupal by default"
 msgstr ""
 
 #: ../../addon/drpost/drpost.php:184 ../../addon/wppost/wppost.php:190
-#: ../../addon/blogger/blogger.php:172 ../../addon/posterous/posterous.php:177
+#: ../../addon/blogger/blogger.php:172 ../../addon/posterous/posterous.php:192
 msgid "Post from Friendica"
 msgstr ""
 
@@ -5549,27 +5553,35 @@ msgstr ""
 msgid "Post to Blogger by default"
 msgstr ""
 
-#: ../../addon/posterous/posterous.php:36
+#: ../../addon/posterous/posterous.php:37
 msgid "Post to Posterous"
 msgstr ""
 
-#: ../../addon/posterous/posterous.php:67
+#: ../../addon/posterous/posterous.php:70
 msgid "Posterous Post Settings"
 msgstr ""
 
-#: ../../addon/posterous/posterous.php:69
+#: ../../addon/posterous/posterous.php:72
 msgid "Enable Posterous Post Plugin"
 msgstr ""
 
-#: ../../addon/posterous/posterous.php:74
+#: ../../addon/posterous/posterous.php:77
 msgid "Posterous login"
 msgstr ""
 
-#: ../../addon/posterous/posterous.php:79
+#: ../../addon/posterous/posterous.php:82
 msgid "Posterous password"
 msgstr ""
 
-#: ../../addon/posterous/posterous.php:84
+#: ../../addon/posterous/posterous.php:87
+msgid "Posterous site ID"
+msgstr ""
+
+#: ../../addon/posterous/posterous.php:92
+msgid "Posterous API token"
+msgstr ""
+
+#: ../../addon/posterous/posterous.php:97
 msgid "Post to Posterous by default"
 msgstr ""
 
@@ -5779,7 +5791,7 @@ msgstr ""
 msgid "Set colour scheme"
 msgstr ""
 
-#: ../../include/profile_advanced.php:17 ../../boot.php:1094
+#: ../../include/profile_advanced.php:17 ../../boot.php:1100
 msgid "Gender:"
 msgstr ""
 
@@ -5800,11 +5812,11 @@ msgstr ""
 msgid "Age:"
 msgstr ""
 
-#: ../../include/profile_advanced.php:37 ../../boot.php:1097
+#: ../../include/profile_advanced.php:37 ../../boot.php:1103
 msgid "Status:"
 msgstr ""
 
-#: ../../include/profile_advanced.php:45 ../../boot.php:1099
+#: ../../include/profile_advanced.php:45 ../../boot.php:1105
 msgid "Homepage:"
 msgstr ""
 
@@ -6388,7 +6400,7 @@ msgstr ""
 msgid "Contacts not in any group"
 msgstr ""
 
-#: ../../include/nav.php:46 ../../boot.php:804
+#: ../../include/nav.php:46 ../../boot.php:810
 msgid "Logout"
 msgstr ""
 
@@ -6396,7 +6408,7 @@ msgstr ""
 msgid "End this session"
 msgstr ""
 
-#: ../../include/nav.php:49 ../../boot.php:1472
+#: ../../include/nav.php:49 ../../boot.php:1478
 msgid "Status"
 msgstr ""
 
@@ -6476,11 +6488,11 @@ msgstr ""
 msgid "Manage other pages"
 msgstr ""
 
-#: ../../include/nav.php:138 ../../boot.php:1052
+#: ../../include/nav.php:138 ../../boot.php:1058
 msgid "Profiles"
 msgstr ""
 
-#: ../../include/nav.php:138 ../../boot.php:1052
+#: ../../include/nav.php:138 ../../boot.php:1058
 msgid "Manage/edit profiles"
 msgstr ""
 
@@ -7155,96 +7167,96 @@ msgstr ""
 msgid "permissions"
 msgstr ""
 
-#: ../../boot.php:505
+#: ../../boot.php:511
 msgid "Delete this item?"
 msgstr ""
 
-#: ../../boot.php:508
+#: ../../boot.php:514
 msgid "show fewer"
 msgstr ""
 
-#: ../../boot.php:681
+#: ../../boot.php:687
 #, php-format
 msgid "Update %s failed. See error logs."
 msgstr ""
 
-#: ../../boot.php:683
+#: ../../boot.php:689
 #, php-format
 msgid "Update Error at %s"
 msgstr ""
 
-#: ../../boot.php:783
+#: ../../boot.php:789
 msgid "Create a New Account"
 msgstr ""
 
-#: ../../boot.php:807
+#: ../../boot.php:813
 msgid "Nickname or Email address: "
 msgstr ""
 
-#: ../../boot.php:808
+#: ../../boot.php:814
 msgid "Password: "
 msgstr ""
 
-#: ../../boot.php:811
+#: ../../boot.php:817
 msgid "Or login using OpenID: "
 msgstr ""
 
-#: ../../boot.php:817
+#: ../../boot.php:823
 msgid "Forgot your password?"
 msgstr ""
 
-#: ../../boot.php:984
+#: ../../boot.php:990
 msgid "Edit profile"
 msgstr ""
 
-#: ../../boot.php:1044
+#: ../../boot.php:1050
 msgid "Message"
 msgstr ""
 
-#: ../../boot.php:1160 ../../boot.php:1236
+#: ../../boot.php:1166 ../../boot.php:1242
 msgid "g A l F d"
 msgstr ""
 
-#: ../../boot.php:1161 ../../boot.php:1237
+#: ../../boot.php:1167 ../../boot.php:1243
 msgid "F d"
 msgstr ""
 
-#: ../../boot.php:1206 ../../boot.php:1277
+#: ../../boot.php:1212 ../../boot.php:1283
 msgid "[today]"
 msgstr ""
 
-#: ../../boot.php:1218
+#: ../../boot.php:1224
 msgid "Birthday Reminders"
 msgstr ""
 
-#: ../../boot.php:1219
+#: ../../boot.php:1225
 msgid "Birthdays this week:"
 msgstr ""
 
-#: ../../boot.php:1270
+#: ../../boot.php:1276
 msgid "[No description]"
 msgstr ""
 
-#: ../../boot.php:1288
+#: ../../boot.php:1294
 msgid "Event Reminders"
 msgstr ""
 
-#: ../../boot.php:1289
+#: ../../boot.php:1295
 msgid "Events this week:"
 msgstr ""
 
-#: ../../boot.php:1475
+#: ../../boot.php:1481
 msgid "Status Messages and Posts"
 msgstr ""
 
-#: ../../boot.php:1481
+#: ../../boot.php:1487
 msgid "Profile Details"
 msgstr ""
 
-#: ../../boot.php:1496
+#: ../../boot.php:1502
 msgid "Events and Calendar"
 msgstr ""
 
-#: ../../boot.php:1502
+#: ../../boot.php:1508
 msgid "Only You Can See This"
 msgstr ""
