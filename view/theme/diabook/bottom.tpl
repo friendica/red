@@ -67,12 +67,14 @@ $(document).ready(function() {
       $("a#top").attr("id","down");
       $("a#down").attr("onclick","scrolldown()");
 	 	$("img#scroll_top_bottom").attr("src","view/theme/diabook/icons/scroll_bottom.png");
+	 	$("img#scroll_top_bottom").attr("title","Scroll to bottom");
 	 	} 
 	 	    
       if (scrollInfo > "900"){
       $("a#down").attr("id","top");
       $("a#top").attr("onclick","scrolltop()");
 	 	$("img#scroll_top_bottom").attr("src","view/theme/diabook/icons/scroll_top.png");
+	 	$("img#scroll_top_bottom").attr("title","Back to top");
 	 	}
 		
     });
