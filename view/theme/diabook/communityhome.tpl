@@ -16,7 +16,7 @@ and markers(events, demos, friends, anything, that is intersting for you).
 These layer and markers should be importable and deletable by the user.</p>
 <p>help on this feature is very appreciated. i am not that good in js so it's a start, but needs tweaks and further dev.
 just contact me, if you are intesrested in joining</p>
-<p>http://localhost/friendica/profile/thomas</p>
+<p>https://toktan.org/profile/thomas</p>
 <p>this is build with <b>mapquery</b> http://mapquery.org/ and 
 <b>openlayers</b>http://openlayers.org/</p>
 </span>

@@ -413,6 +413,68 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 
  function diabook_community_info() {
 	$a = get_app();
+	
+	$close_pages = false;
+	$site_close_pages = get_config("diabook", "close_pages" );
+	if (local_user()) {$close_pages = get_pconfig(local_user(), "diabook", "close_pages");}
+	if ($close_pages===false) $close_pages=$site_close_pages;
+	if ($close_pages===false) $close_pages="1";
+	
+	$close_profiles = false;
+	$site_close_profiles = get_config("diabook", "close_profiles" );
+	if (local_user()) {$close_profiles = get_pconfig(local_user(), "diabook", "close_profiles");}
+	if ($close_profiles===false) $close_profiles=$site_close_profiles;
+	if ($close_profiles===false) $close_profiles="0";
+	
+	$close_helpers = false;
+	$site_close_helpers = get_config("diabook", "close_helpers" );
+	if (local_user()) {$close_helpers = get_pconfig(local_user(), "diabook", "close_helpers");}
+	if ($close_helpers===false) $close_helpers=$site_close_helpers;
+	if ($close_helpers===false) $close_helpers="0";
+	
+	$close_services = false;
+	$site_close_services = get_config("diabook", "close_services" );
+	if (local_user()) {$close_services = get_pconfig(local_user(), "diabook", "close_services");}
+	if ($close_services===false) $close_services=$site_close_services;
+	if ($close_services===false) $close_services="0";
+	
+	$close_friends = false;
+	$site_close_friends = get_config("diabook", "close_friends" );
+	if (local_user()) {$close_friends = get_pconfig(local_user(), "diabook", "close_friends");}
+	if ($close_friends===false) $close_friends=$site_close_friends;
+	if ($close_friends===false) $close_friends="0";
+	
+	$close_lastusers = false;
+	$site_close_lastusers = get_config("diabook", "close_lastusers" );
+	if (local_user()) {$close_lastusers = get_pconfig(local_user(), "diabook", "close_lastusers");}
+	if ($close_lastusers===false) $close_lastusers=$site_close_lastusers;
+	if ($close_lastusers===false) $close_lastusers="0";
+	
+	$close_lastphotos = false;
+	$site_close_lastphotos = get_config("diabook", "close_lastphotos" );
+	if (local_user()) {$close_lastphotos = get_pconfig(local_user(), "diabook", "close_lastphotos");}
+	if ($close_lastphotos===false) $close_lastphotos=$site_close_lastphotos;
+	if ($close_lastphotos===false) $close_lastphotos="0";
+	
+	$close_lastlikes = false;
+	$site_close_lastlikes = get_config("diabook", "close_lastlikes" );
+	if (local_user()) {$close_lastlikes = get_pconfig(local_user(), "diabook", "close_lastlikes");}
+	if ($close_lastlikes===false) $close_lastlikes=$site_close_lastlikes;
+	if ($close_lastlikes===false) $close_lastlikes="0";
+	
+	$close_twitter = false;
+	$site_close_twitter = get_config("diabook", "close_twitter" );
+	if (local_user()) {$close_twitter = get_pconfig(local_user(), "diabook", "close_twitter");}
+	if ($close_twitter===false) $close_twitter=$site_close_twitter;
+	if ($close_twitter===false) $close_twitter="1";
+	
+	$close_mapquery = false;
+	$site_close_mapquery = get_config("diabook", "close_mapquery" );
+	if (local_user()) {$close_mapquery = get_pconfig(local_user(), "diabook", "close_mapquery");}
+	if ($close_mapquery===false) $close_mapquery=$site_close_mapquery;
+	if ($close_mapquery===false) $close_mapquery="1";
+	
+
 	// comunity_profiles
 	if($close_profiles != "1") {
 	$aside['$comunity_profiles_title'] = t('Community Profiles');
