@@ -123,6 +123,8 @@ define ( 'NETWORK_XMPP',             'xmpp');    // XMPP
 define ( 'NETWORK_MYSPACE',          'mysp');    // MySpace
 define ( 'NETWORK_GPLUS',            'goog');    // Google+
 
+define ( 'NETWORK_PHANTOM',          'unkn');    // Place holder
+
 /**
  * These numbers are used in stored permissions
  * and existing allocations MUST NEVER BE CHANGED
@@ -142,6 +144,8 @@ $netgroup_ids = array(
 	NETWORK_XMPP     => (-10),
 	NETWORK_MYSPACE  => (-11),
 	NETWORK_GPLUS    => (-12),
+
+	NETWORK_PHANTOM  => (-127),
 );
 
 
