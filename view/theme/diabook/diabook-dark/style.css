@@ -3,10 +3,7 @@
  * Additional Changes: Michael Vogel <icarus@dabo.de>
  **/
 
-/* ========= */
-/* = Admin = */
-/* ========= */
-
+/** Fancy Box **/
 #fancybox-content {
 	width: 0;
 	height: 0;
@@ -18,6 +15,11 @@
 	border: 0px solid #fff;
 	background: #2e2e2f !important;
 }
+
+
+/* ========= */
+/* = Admin = */
+/* ========= */
 
 #adminpage {
 /*        width: 80%;*/
@@ -633,7 +635,7 @@ header #banner #logo-text {
     text-decoration: none;
 }
 .mail-list-wrapper {
-  background-color: #eec;
+  background-color: #333;
   margin-bottom: 5px;
   width: 100%;
   height: auto;
@@ -644,6 +646,7 @@ header #banner #logo-text {
   float: left;
   width: 20%;
   overflow: hidden;
+  background: #2e2e2f;
 }
 .mail-list-wrapper .mail-subject {
   width: 30%;
@@ -915,7 +918,7 @@ nav #nav-apps-link.selected {
 }
 
 .notify-seen {
-	background: none repeat scroll 0 0 #DDDDDD;
+	background: none repeat scroll 0 0 #666;
 	}
 
 ul.menu-popup {
@@ -1685,7 +1688,7 @@ body .pageheader{
 .wall-item-comment-wrapper .comment-edit-text-full {
   font-size: 14px;
   height: 4em;
-  color: #2e302e;
+  color: #eec;
   border: 1px solid #2e302e;
 }
 .comment-edit-preview {

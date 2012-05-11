@@ -33,6 +33,7 @@ just contact me, if you are intesrested in joining</p>
 
 <div id="boxsettings" style="display:none">
 <form id="boxsettingsform" action="network" method="post" >
+<fieldset><legend>$boxsettings.title.1</legend>
 {{inc field_select.tpl with $field=$close_pages}}{{endinc}}
 {{inc field_select.tpl with $field=$close_profiles}}{{endinc}}
 {{inc field_select.tpl with $field=$close_helpers}}{{endinc}}
@@ -46,6 +47,7 @@ just contact me, if you are intesrested in joining</p>
 <div class="settings-submit-wrapper">
 <input id="boxsub" type="submit" value="$sub" class="settings-submit" name="diabook-settings-box-sub"></input>
 </div>
+</fieldset>
 </form>
 </div>
 

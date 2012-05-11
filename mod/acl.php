@@ -127,12 +127,15 @@ function acl_init(&$a){
 	if($type == 'm') {
 		$x = array();
 		$x['query'] = $search;
+		$x['photos'] = array();
+		$x['links'] = array();
 		$x['suggestions'] = array();
 		$x['data'] = array();
 		if(count($r)) {
 			foreach($r as $g) {
-				$x['suggestions'][] = sprintf( t('%s [%s]'),$g['name'],$g['url']);
-					// '<img src="' . $g['micro'] . ' height="16" width="16" alt="' . t('Image/photo') . '" />' . 
+				$x['photos'][] = $g['micro'];
+				$x['links'][] = $g['url'];
+				$x['suggestions'][] = $g['name']; // sprintf( t('%s [%s]'),$g['name'],$g['url']);
 				$x['data'][] = intval($g['id']);
 			}
 		}
