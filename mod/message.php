@@ -18,7 +18,7 @@ function message_init(&$a) {
 	));
 	$base = $a->get_baseurl();
 
-	$a->page['htmlhead'] .= '<script src="' . $a->get_baseurl(true) . '/library/jquery_ac/jquery.autocomplete-min.js" ></script>';
+	$a->page['htmlhead'] .= '<script src="' . $a->get_baseurl(true) . '/library/jquery_ac/friendica.complete.js" ></script>';
 	$a->page['htmlhead'] .= <<< EOT
 
 <script>$(document).ready(function() { 
