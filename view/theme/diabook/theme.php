@@ -170,7 +170,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s"></script>', $cookieJS);
 	
 	//load jquery.ae.image.resize.js
-	$imageresizeJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.ae.image.resize.js";
+	$imageresizeJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.ae.image.resize.min.js";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $imageresizeJS);
 	
 	//load jquery.ui.js
@@ -198,6 +198,10 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mqmouseposJS);
 	$mousewheelJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mousewheel.js";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mousewheelJS);
+   $mqlegendJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mapquery.legend.js";
+	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mqlegendJS);
+	$mqlayermanagerJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mapquery.mqLayerManager.js";
+	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mqlayermanagerJS);
 	
 	}
 	
@@ -248,9 +252,12 @@ if ($color=="dark") $color_path = "/diabook-dark/";
     });
     	 
     function open_mapcontrol() {
-		$("div#mapcontrol").attr("style","display: block;width:900px;height:600px;");
-		$("#map2").mapQuery({layers:[{type:"osm"}],
-												center:({zoom:'.$ELZoom.',position:['.$ELPosX.','.$ELPosY.']})}); 
+		$("div#mapcontrol").attr("style","display: block;width:900px;height:900px;");
+		$("#map2").mapQuery({
+			layers:[{type:"osm", minZoom:1, label:"OpenStreetMap" },
+					  {type:"wms", minZoom:1, label:"Population density 2010", legend:{url:"http://mapserver.edugis.nl/cgi-bin/mapserv?map=maps/edugis/cache/population.map&version=1.1.1&service=WMS&request=GetLegendGraphic&layer=Bevolkingsdichtheid_2010&format=image/png"}, url:"http://t1.edugis.nl/tiles/tilecache.py?map=maps/edugis/cache/population.map", 
+					  layers:"Bevolkingsdichtheid_2010" }],			
+			center:({zoom:'.$ELZoom.',position:['.$ELPosX.','.$ELPosY.']})}); 
 									
 		$("#mouseposition").mqMousePosition({
         map: "#map2",
@@ -259,7 +266,8 @@ if ($color=="dark") $color_path = "/diabook-dark/";
         precision:4
      		}); 
      		
-     	
+     	$("#layermanager").mqLayerManager({map:"#map2"}); 
+     		
      	map = $("#map2").mapQuery().data("mapQuery");
      	textarea = document.getElementById("id_diabook_ELZoom");
     	

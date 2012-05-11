@@ -10,7 +10,15 @@
 
 <div id="mapcontrol" style="display:none;">
 <form id="mapform" action="network" method="post" >
-<span style="width: 500px;position: relative;float: right;right:20px;"><p>this ist still under development. 
+<div id="layermanager" style="width: 350px;position: relative;float: right;right:60px;"></div>
+<div id="map2" style="height:350px;width:350px;"></div>
+{{inc field_input.tpl with $field=$ELZoom}}{{endinc}}
+{{inc field_input.tpl with $field=$ELPosX}}{{endinc}}
+{{inc field_input.tpl with $field=$ELPosY}}{{endinc}}
+<div class="settings-submit-wrapper">
+<input id="mapsub" type="submit" value="$sub" class="settings-submit" name="diabook-settings-map-sub"></input>
+</div>
+<span style="width: 500px;"><p>this ist still under development. 
 the idea is to provide a map with different layers(e.g. earth population, atomic power plants, wheat growing acreages, sunrise or what you want) 
 and markers(events, demos, friends, anything, that is intersting for you). 
 These layer and markers should be importable and deletable by the user.</p>
@@ -20,14 +28,6 @@ just contact me, if you are intesrested in joining</p>
 <p>this is build with <b>mapquery</b> http://mapquery.org/ and 
 <b>openlayers</b>http://openlayers.org/</p>
 </span>
-<div id="map2" style="height:350px;width:350px;"></div>
-<div id="mouseposition" style="width: 350px;"></div>
-{{inc field_input.tpl with $field=$ELZoom}}{{endinc}}
-{{inc field_input.tpl with $field=$ELPosX}}{{endinc}}
-{{inc field_input.tpl with $field=$ELPosY}}{{endinc}}
-<div class="settings-submit-wrapper">
-<input id="mapsub" type="submit" value="$sub" class="settings-submit" name="diabook-settings-map-sub"></input>
-</div>
 </form>
 </div>
 
