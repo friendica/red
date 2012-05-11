@@ -10,8 +10,9 @@
 
 <div id="mapcontrol" style="display:none;">
 <form id="mapform" action="network" method="post" >
-<div id="layermanager" style="width: 350px;position: relative;float: right;right:60px;"></div>
+<div id="layermanager" style="width: 350px;position: relative;float: right;right:20px;"></div>
 <div id="map2" style="height:350px;width:350px;"></div>
+<div id="mouseposition" style="width: 350px;"></div>
 {{inc field_input.tpl with $field=$ELZoom}}{{endinc}}
 {{inc field_input.tpl with $field=$ELPosX}}{{endinc}}
 {{inc field_input.tpl with $field=$ELPosY}}{{endinc}}
