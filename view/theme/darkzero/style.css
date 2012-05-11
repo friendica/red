@@ -105,3 +105,17 @@ blockquote {
 input#acl-search {
         background-color: #aaa;
 }
+
+
+
+.notify-seen {
+  background:#666;
+}
+
+#nav-notifications-menu {
+  background: #2e2e2f;
+}
+
+#nav-notifications-menu li:hover {
+  background: #444;
+}
