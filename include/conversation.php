@@ -447,8 +447,8 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				else {
 
 					// prevent private email reply to public conversation from leaking.
-					if($item['private'] && ! $threads[$threadsid]['private'])
-						continue;
+					if($item['network'] === NETWORK_MAIL && local_user() != $item['uid'])
+							continue;
 
 					$comments_seen ++;
 					$comment_lastcollapsed  = false;
