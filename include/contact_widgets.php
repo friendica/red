@@ -183,7 +183,8 @@ function common_friends_visitor_widget($profile_uid) {
 		'$desc' =>  sprintf( tt("%d contact in common", "%d contacts in common", $t), $t),
 		'$base' => $a->get_baseurl(),
 		'$uid' => $profile_uid,
-		'$cid' => $cid,
+		'$cid' => (($cid) ? $cid : '0'),
+		'$linkmore' => (($t > 5) ? 'true' : ''),
 		'$more' => t('show more'),
 		'$items' => $r
 	)); 

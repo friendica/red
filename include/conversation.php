@@ -278,6 +278,9 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				else
 					$nickname = $a->user['nickname'];
 				
+				// prevent private email from leaking.
+				if($item['network'] === NETWORK_MAIL && local_user() != $item['uid'])
+						continue;
 			
 				$profile_name   = ((strlen($item['author-name']))   ? $item['author-name']   : $item['name']);
 				if($item['author-link'] && (! $item['author-name']))
@@ -447,8 +450,8 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				else {
 
 					// prevent private email reply to public conversation from leaking.
-					if($item['private'] && ! $threads[$threadsid]['private'])
-						continue;
+					if($item['network'] === NETWORK_MAIL && local_user() != $item['uid'])
+							continue;
 
 					$comments_seen ++;
 					$comment_lastcollapsed  = false;
@@ -959,7 +962,7 @@ function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 	$tpl = replace_macros($tpl,array('$jotplugins' => $jotplugins));	
 
 	$o .= replace_macros($tpl,array(
-		'$return_path' => $a->cmd,
+		'$return_path' => $a->query_string,
 		'$action' =>  $a->get_baseurl(true) . '/item',
 		'$share' => (x($x,'button') ? $x['button'] : t('Share')),
 		'$upload' => t('Upload photo'),

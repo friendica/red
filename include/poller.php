@@ -126,7 +126,9 @@ function poller_run($argv, $argc){
 		$force     = true;
 	}
 
-	$interval = ((get_config('system','delivery_interval') === false) ? 3 : intval(get_config('system','delivery_interval')));
+	$interval = intval(get_config('system','poll_interval'));
+	if(! $interval) 
+		$interval = ((get_config('system','delivery_interval') === false) ? 3 : intval(get_config('system','delivery_interval')));
 
 	$sql_extra = (($manual_id) ? " AND `id` = $manual_id " : "");
 

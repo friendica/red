@@ -31,7 +31,7 @@
 				opts.title = opts.term;
 
 			opts.title = opts.title || '';
-			text = opts.titleLink ? ('<a href="'+ opts.titleLink +'">'+ opts.title + '</a>') : ('<span>' + opts.title +'<a id="close_friends_icon" onClick="close_twitter()"  class="icon close_box" title="close"></a>'+ '</span>');
+			text = opts.titleLink ? ('<a href="'+ opts.titleLink +'">'+ opts.title + '</a>') : ('<span>' + opts.title +'</span>');
 			$text = $(text);
 			if (opts.titleLink)
 				$text.css(opts.css['titleLink']);
@@ -202,7 +202,7 @@
 			// default styling
 			a:     { textDecoration: 'none', color: '#3B5998' },
 			bird:  { width: '50px', height: '20px', position: 'absolute', left: '-30px', top: '-20px', border: 'none' },
-			container: { overflow: 'hidden', backgroundColor: '', height: '600px' },
+			container: { overflow: 'hidden', backgroundColor: '', height: '600px', width: '170px' },
 			fail:  { background: '#6cc5c3 url(http://cloud.github.com/downloads/malsup/twitter/failwhale.png) no-repeat 50% 50%', height: '100%', padding: '10px' },
 			frame: { border: '0px solid #C2CFF1', borderRadius: '0px', '-moz-border-radius': '0px', '-webkit-border-radius': '0px' },
 			tweet: { padding: '5px 10px', clear: 'left' },
@@ -210,7 +210,7 @@
 			loading: { padding: '20px', textAlign: 'center', color: '#888' },
 			text:  {},
 			time:  { fontSize: 'smaller', color: '#888' },
-			title: { 'border-bottom': '1px solid #D2D2D2', 'padding-top': '5px', 'padding-bottom': '0px', 'padding-left': '9px', 'margin-bottom': '0px', 'margin-top': '30px' , 'display': 'block', 'font-size': '1.17em', 'font-weight': 'bold'},
+			title: { 'display': 'none'},
 			titleLink: { textDecoration: 'none', color: '#3B5998' },
 			user:  { fontWeight: 'bold' }
 		}

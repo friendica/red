@@ -9,7 +9,7 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1332' );
+define ( 'FRIENDICA_VERSION',      '3.0.1338' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
 define ( 'DB_UPDATE_VERSION',      1143      );
 
@@ -28,6 +28,12 @@ define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
  */
 
 define ( 'JPEG_QUALITY',            100  );
+
+/**
+ * Not yet used
+ */
+
+define ( 'DEFAULT_DB_ENGINE',  'MyISAM'  );
 
 /**
  * SSL redirection policies
@@ -117,6 +123,8 @@ define ( 'NETWORK_XMPP',             'xmpp');    // XMPP
 define ( 'NETWORK_MYSPACE',          'mysp');    // MySpace
 define ( 'NETWORK_GPLUS',            'goog');    // Google+
 
+define ( 'NETWORK_PHANTOM',          'unkn');    // Place holder
+
 /**
  * These numbers are used in stored permissions
  * and existing allocations MUST NEVER BE CHANGED
@@ -136,6 +144,8 @@ $netgroup_ids = array(
 	NETWORK_XMPP     => (-10),
 	NETWORK_MYSPACE  => (-11),
 	NETWORK_GPLUS    => (-12),
+
+	NETWORK_PHANTOM  => (-127),
 );
 
 

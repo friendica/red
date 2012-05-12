@@ -70,8 +70,10 @@ function reload_plugins() {
 			$installed = array();
 
 		$parr = explode(',',$plugins);
+
 		if(count($parr)) {
 			foreach($parr as $pl) {
+
 				$pl = trim($pl);
 
 				$fname = 'addon/' . $pl . '/' . $pl . '.php';
@@ -101,6 +103,7 @@ function reload_plugins() {
 			}
 		}
 	}
+
 }}
 				
 
@@ -162,6 +165,14 @@ function call_hooks($name, &$data = null) {
 				if(function_exists($hook[HOOK_FUNCTION])) {
 					$func = $hook[HOOK_FUNCTION];
 					$func($a,$data);
+				}
+				else {
+					// remove orphan hooks
+					q("delete from hook where hook = '%s' and file = '$s' and function = '%s' limit 1",
+						dbesc($hook[HOOK_HOOK]),
+						dbesc($hook[HOOK_FILE]),
+						dbesc($hook[HOOK_FUNCTION])
+					);
 				}
 			}
 		}

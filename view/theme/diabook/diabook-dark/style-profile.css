@@ -522,9 +522,7 @@ header {
   background: #1d1f1d;
   background-color: #1d1f1d;
   z-index: 100;
-  border-bottom: 1px;
-  border-bottom-color: black;
-  border-bottom-style: inset;
+
 }
 header #site-location {
   display: none;
@@ -567,9 +565,7 @@ nav {
   background: #1d1f1d;
   color: #2e2f2e;
   z-index: 99;
-  border-bottom: 1px;
-  border-bottom-color: black;
-  border-bottom-style: inset;
+
 }
 nav a,
 nav a:active,
