@@ -16,9 +16,9 @@ function diabook_init(&$a) {
 $diabook_version = "Diabook (Version: 1.027)";
 $a->page['htmlhead'] .= sprintf('<META NAME="theme" CONTENT="%s"/>', $diabook_version);
 
-//change css on network and profilepages
+//init css on network and profilepages
 $cssFile = null;
-
+//get statuses of boxes at right-hand-column
 $close_pages = false;
 $site_close_pages = get_config("diabook", "close_pages" );
 if (local_user()) {$close_pages = get_pconfig(local_user(), "diabook", "close_pages");}
@@ -79,7 +79,7 @@ if (local_user()) {$close_mapquery = get_pconfig(local_user(), "diabook", "close
 if ($close_mapquery===false) $close_mapquery=$site_close_mapquery;
 if ($close_mapquery===false) $close_mapquery="1";
 
-
+//get resolution (wide/normal)
 $resolution=false;
 $resolution = get_pconfig(local_user(), "diabook", "resolution");
 if ($resolution===false) $resolution="normal";
@@ -90,8 +90,7 @@ if ($resolution=="wide") {
 } else {
   $a->page['htmlhead'] .= '<meta name="viewport" content="width=980" />';
 }
-
-
+//get colour-scheme
 $color = false;
 $site_color = get_config("diabook", "color" );
 if (local_user()) {$color = get_pconfig(local_user(), "diabook", "color");}
@@ -107,7 +106,7 @@ if ($color=="green") $color_path = "/diabook-green/";
 if ($color=="dark") $color_path = "/diabook-dark/";
 
 	
-	//profile_side at networkpages
+	//build personal menue at lefthand-col (id="profile_side") and boxes at right-hand-col at networkpages
 	if ($a->argv[0] === "network" && local_user()){
 
 	// USER MENU
@@ -139,6 +138,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	}
 	
 	$ccCookie = $close_pages + $close_mapquery + $close_profiles + $close_helpers + $close_services + $close_friends + $close_twitter + $close_lastusers + $close_lastphotos + $close_lastlikes;
+	//if all boxes closed, dont build right-hand-col and dont use special css
 	if($ccCookie != "10") {
 	// COMMUNITY
 	diabook_community_info();
@@ -151,7 +151,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 
 
 
-	//right_aside at profile pages
+	//build boxes at right_aside at profile pages
 	if ($a->argv[0].$a->argv[1] === "profile".$a->user['nickname']){
 	if($ccCookie != "10") {
 	// COMMUNITY
@@ -164,32 +164,26 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	}
 	}
 	
-	//js scripts
+	//write js-scripts to the head-section:
 	//load jquery.cookie.js
 	$cookieJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.cookie.js";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s"></script>', $cookieJS);
-	
 	//load jquery.ae.image.resize.js
 	$imageresizeJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.ae.image.resize.min.js";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $imageresizeJS);
-	
 	//load jquery.ui.js
 	if($ccCookie != "10") {
 	$jqueryuiJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery-ui-1.8.20.custom.min.js";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $jqueryuiJS);
 	$jqueryuicssJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/jquery-ui-1.8.20.custom.css";
 	$a->page['htmlhead'] .= sprintf('<link rel="stylesheet" type="text/css" href="%s" />', $jqueryuicssJS);
-		
 	}	
-	
 	//load jquery.twitter.search.js
 	if($close_twitter != "1") {
 	$twitterJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.twitter.search.js";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $twitterJS);
 	}
-	
 	//load jquery.mapquery.js
-
 	if($close_mapquery != "1") {
 	$mqtmplJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.tmpl.js";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mqtmplJS);
@@ -205,12 +199,10 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mqlegendJS);
 	$mqlayermanagerJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mapquery.mqLayerManager.js";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mqlayermanagerJS);
-	
 	}
 	
 	$a->page['htmlhead'] .= '
 	<script>
-	
 	 $(function() {
 		$("a.lightbox").fancybox(); // Select all links with lightbox class
 	 	$("a#twittersettings-link").fancybox({onClosed: function() { $("#twittersettings").attr("style","display: none;");}} ); 
@@ -223,8 +215,8 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 		$("div#footerbox").attr("style", "border-top: 1px solid #D2D2D2; width: 70%;right: 15%;position: absolute;top:"+footer_top+"px;");
 	 });
 	</script>';
+	
 	//check if mapquerybox is active and print
-
 	if($close_mapquery != "1") {
 		$ELZoom=false;
 		$ELPosX=false;
@@ -259,7 +251,11 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 		$("#map2").mapQuery({
 			layers:[{type:"osm", label:"OpenStreetMap" },
 					  {type:"wms", label:"Population density 2010", legend:{url:"http://mapserver.edugis.nl/cgi-bin/mapserv?map=maps/edugis/cache/population.map&version=1.1.1&service=WMS&request=GetLegendGraphic&layer=Bevolkingsdichtheid_2010&format=image/png"}, url:"http://t1.edugis.nl/tiles/tilecache.py?map=maps/edugis/cache/population.map", 
-					  layers:"Bevolkingsdichtheid_2010" }],			
+					  layers:"Bevolkingsdichtheid_2010" },
+					  {type:"wms", 
+						  label:"OpenLayers WMS", 
+						  url:"http://labs.metacarta.com/wms/vmap0", 
+						  layers:"basic" }],			
 			center:({zoom:'.$ELZoom.',position:['.$ELPosX.','.$ELPosY.']})}); 
 									
 		$("#mouseposition").mqMousePosition({
@@ -270,7 +266,8 @@ if ($color=="dark") $color_path = "/diabook-dark/";
      		}); 
      		
      	$("#layermanager").mqLayerManager({map:"#map2"}); 
-     	
+     	$( "div#layermanager" ).accordion({header: ".mq-layermanager-element-header"});  
+      $(".mq-layermanager-element-content").attr("style", "");     	
      		
      	map = $("#map2").mapQuery().data("mapQuery");
      	textarea = document.getElementById("id_diabook_ELZoom");
@@ -307,7 +304,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 		};
 		</script>';}
 			
-	//check if community_home-plugin is activated and change css
+	//check if community_home-plugin is activated and change css.. we need this, that the submit-wrapper doesn't overlay the login-panel if communityhome-plugin is active
 	$nametocheck = "communityhome";
 	$r = q("select id from addon where name = '%s' and installed = 1", dbesc($nametocheck));
 	if(count($r) == "1") {
@@ -320,7 +317,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	});
 	</script>';	
 	}
-	//comment-edit-wrapper on photo_view
+	//comment-edit-wrapper on photo_view... we need this to workaround a global bug in photoview, where the comment-box is between the last comment the the comment before the last
 	if ($a->argv[0].$a->argv[2] === "photos"."image"){
 	$a->page['htmlhead'] .= '
 	<script>
@@ -329,7 +326,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 			});
     </script>';
 	}
-	//restore right hand col at settingspage
+	//restore (only) the order right hand col at settingspage
 	if($a->argv[0] === "settings" && local_user()) {
 	$a->page['htmlhead'] .= ' 
 	<script>
@@ -403,11 +400,6 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 			};}
 
 	);
-	
- 	function open_boxsettings() {
-		$("div#boxsettings").attr("style","display: block;height:500px;width:300px;");
-		$("label").attr("style","width: 150px;");
-		};
  	 
 	</script>';}
 	}
