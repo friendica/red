@@ -18,7 +18,7 @@ function message_init(&$a) {
 	));
 	$base = $a->get_baseurl();
 
-	$a->page['htmlhead'] .= '<script src="' . $a->get_baseurl(true) . '/library/jquery_ac/jquery.autocomplete-min.js" ></script>';
+	$a->page['htmlhead'] .= '<script src="' . $a->get_baseurl(true) . '/library/jquery_ac/friendica.complete.js" ></script>';
 	$a->page['htmlhead'] .= <<< EOT
 
 <script>$(document).ready(function() { 
@@ -172,7 +172,7 @@ function message_content(&$a) {
 		));
 	
 		$preselect = (isset($a->argv[2])?array($a->argv[2]):false);
-	
+			
 
 		$prename = $preurl = $preid = '';
 
@@ -188,7 +188,7 @@ function message_content(&$a) {
 			}
 		}	 
 
-		$prefill = (($preselect) ? $prename . ' [' . $preurl . ']' : '');
+		$prefill = (($preselect) ? $prename  : '');
 
 		// the ugly select box
 		
@@ -198,6 +198,7 @@ function message_content(&$a) {
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Send Private Message'),
 			'$to' => t('To:'),
+			'$showinputs' => 'true', 
 			'$prefill' => $prefill,
 			'$autocomp' => $autocomp,
 			'$preid' => $preid,
@@ -376,9 +377,10 @@ function message_content(&$a) {
 				
 			$seen = $message['seen'];
 		}
+
+
 		$select = $message['name'] . '<input type="hidden" name="messageto" value="' . $contact_id . '" />';
 		$parent = '<input type="hidden" name="replyto" value="' . $message['parent-uri'] . '" />';
-			
 
 		$tpl = get_markup_template('mail_display.tpl');
 		$o = replace_macros($tpl, array(
@@ -393,6 +395,7 @@ function message_content(&$a) {
 			// reply
 			'$header' => t('Send Reply'),
 			'$to' => t('To:'),
+			'$showinputs' => '',
 			'$subject' => t('Subject:'),
 			'$subjtxt' => template_escape($message['title']),
 			'$readonly' => ' readonly="readonly" style="background: #BBBBBB;" ',

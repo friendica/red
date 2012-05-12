@@ -170,7 +170,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s"></script>', $cookieJS);
 	
 	//load jquery.ae.image.resize.js
-	$imageresizeJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.ae.image.resize.js";
+	$imageresizeJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.ae.image.resize.min.js";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $imageresizeJS);
 	
 	//load jquery.ui.js
@@ -198,6 +198,10 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mqmouseposJS);
 	$mousewheelJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mousewheel.js";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mousewheelJS);
+   $mqlegendJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mapquery.legend.js";
+	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mqlegendJS);
+	$mqlayermanagerJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mapquery.mqLayerManager.js";
+	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mqlayermanagerJS);
 	
 	}
 	
@@ -248,9 +252,12 @@ if ($color=="dark") $color_path = "/diabook-dark/";
     });
     	 
     function open_mapcontrol() {
-		$("div#mapcontrol").attr("style","display: block;width:900px;height:600px;");
-		$("#map2").mapQuery({layers:[{type:"osm"}],
-												center:({zoom:'.$ELZoom.',position:['.$ELPosX.','.$ELPosY.']})}); 
+		$("div#mapcontrol").attr("style","display: block;width:900px;height:900px;");
+		$("#map2").mapQuery({
+			layers:[{type:"osm", label:"OpenStreetMap" },
+					  {type:"wms", label:"Population density 2010", legend:{url:"http://mapserver.edugis.nl/cgi-bin/mapserv?map=maps/edugis/cache/population.map&version=1.1.1&service=WMS&request=GetLegendGraphic&layer=Bevolkingsdichtheid_2010&format=image/png"}, url:"http://t1.edugis.nl/tiles/tilecache.py?map=maps/edugis/cache/population.map", 
+					  layers:"Bevolkingsdichtheid_2010" }],			
+			center:({zoom:'.$ELZoom.',position:['.$ELPosX.','.$ELPosY.']})}); 
 									
 		$("#mouseposition").mqMousePosition({
         map: "#map2",
@@ -259,13 +266,16 @@ if ($color=="dark") $color_path = "/diabook-dark/";
         precision:4
      		}); 
      		
-     	
+     	$("#layermanager").mqLayerManager({map:"#map2"}); 
+     		
      	map = $("#map2").mapQuery().data("mapQuery");
      	textarea = document.getElementById("id_diabook_ELZoom");
-    	
+    	textarea.value = "'.$ELZoom.'";
 		$("#map2").bind("mousewheel", function(event, delta) {
-		if (delta > 0 || delta < 0){
-			 textarea.value = map.center().zoom; }
+		if (delta > 0 && textarea.value < 18){
+			 textarea.value = textarea.value - delta*-1; }
+		if (delta < 0 && textarea.value > "0"){
+			 textarea.value = textarea.value - delta*-1; }
 			});
 		};
 		</script>';
@@ -413,6 +423,68 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 
  function diabook_community_info() {
 	$a = get_app();
+	
+	$close_pages = false;
+	$site_close_pages = get_config("diabook", "close_pages" );
+	if (local_user()) {$close_pages = get_pconfig(local_user(), "diabook", "close_pages");}
+	if ($close_pages===false) $close_pages=$site_close_pages;
+	if ($close_pages===false) $close_pages="1";
+	
+	$close_profiles = false;
+	$site_close_profiles = get_config("diabook", "close_profiles" );
+	if (local_user()) {$close_profiles = get_pconfig(local_user(), "diabook", "close_profiles");}
+	if ($close_profiles===false) $close_profiles=$site_close_profiles;
+	if ($close_profiles===false) $close_profiles="0";
+	
+	$close_helpers = false;
+	$site_close_helpers = get_config("diabook", "close_helpers" );
+	if (local_user()) {$close_helpers = get_pconfig(local_user(), "diabook", "close_helpers");}
+	if ($close_helpers===false) $close_helpers=$site_close_helpers;
+	if ($close_helpers===false) $close_helpers="0";
+	
+	$close_services = false;
+	$site_close_services = get_config("diabook", "close_services" );
+	if (local_user()) {$close_services = get_pconfig(local_user(), "diabook", "close_services");}
+	if ($close_services===false) $close_services=$site_close_services;
+	if ($close_services===false) $close_services="0";
+	
+	$close_friends = false;
+	$site_close_friends = get_config("diabook", "close_friends" );
+	if (local_user()) {$close_friends = get_pconfig(local_user(), "diabook", "close_friends");}
+	if ($close_friends===false) $close_friends=$site_close_friends;
+	if ($close_friends===false) $close_friends="0";
+	
+	$close_lastusers = false;
+	$site_close_lastusers = get_config("diabook", "close_lastusers" );
+	if (local_user()) {$close_lastusers = get_pconfig(local_user(), "diabook", "close_lastusers");}
+	if ($close_lastusers===false) $close_lastusers=$site_close_lastusers;
+	if ($close_lastusers===false) $close_lastusers="0";
+	
+	$close_lastphotos = false;
+	$site_close_lastphotos = get_config("diabook", "close_lastphotos" );
+	if (local_user()) {$close_lastphotos = get_pconfig(local_user(), "diabook", "close_lastphotos");}
+	if ($close_lastphotos===false) $close_lastphotos=$site_close_lastphotos;
+	if ($close_lastphotos===false) $close_lastphotos="0";
+	
+	$close_lastlikes = false;
+	$site_close_lastlikes = get_config("diabook", "close_lastlikes" );
+	if (local_user()) {$close_lastlikes = get_pconfig(local_user(), "diabook", "close_lastlikes");}
+	if ($close_lastlikes===false) $close_lastlikes=$site_close_lastlikes;
+	if ($close_lastlikes===false) $close_lastlikes="0";
+	
+	$close_twitter = false;
+	$site_close_twitter = get_config("diabook", "close_twitter" );
+	if (local_user()) {$close_twitter = get_pconfig(local_user(), "diabook", "close_twitter");}
+	if ($close_twitter===false) $close_twitter=$site_close_twitter;
+	if ($close_twitter===false) $close_twitter="1";
+	
+	$close_mapquery = false;
+	$site_close_mapquery = get_config("diabook", "close_mapquery" );
+	if (local_user()) {$close_mapquery = get_pconfig(local_user(), "diabook", "close_mapquery");}
+	if ($close_mapquery===false) $close_mapquery=$site_close_mapquery;
+	if ($close_mapquery===false) $close_mapquery="1";
+	
+
 	// comunity_profiles
 	if($close_profiles != "1") {
 	$aside['$comunity_profiles_title'] = t('Community Profiles');
@@ -509,7 +581,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	}}
 	
 	// last 12 photos
-	if($close_photos != "1") {
+	if($close_lastphotos != "1") {
 	$aside['$photos_title'] = t('Last photos');
 	$aside['$photos_items'] = array();
 	$r = q("SELECT `photo`.`id`, `photo`.`resource-id`, `photo`.`scale`, `photo`.`desc`, `user`.`nickname`, `user`.`username` FROM 
@@ -608,9 +680,9 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$ELZoom = get_pconfig(local_user(), 'diabook', 'ELZoom' );
 	$ELPosX = get_pconfig(local_user(), 'diabook', 'ELPosX' );
 	$ELPosY = get_pconfig(local_user(), 'diabook', 'ELPosY' );
-	$aside['$ELZoom'] = array('diabook_ELZoom', t('Set zoomfactor for Earth Layer'), $ELZoom, '', $ELZoom);
-	$aside['$ELPosX'] = array('diabook_ELPosX', t('Set longitude (X) for Earth Layer'), $ELPosX, '', $ELPosX);	
-	$aside['$ELPosY'] = array('diabook_ELPosY', t('Set latitude (Y) for Earth Layer'), $ELPosY, '', $ELPosY);	
+	$aside['$ELZoom'] = array('diabook_ELZoom', t('Set zoomfactor for Earth Layers'), $ELZoom, '', $ELZoom);
+	$aside['$ELPosX'] = array('diabook_ELPosX', t('Set longitude (X) for Earth Layers'), $ELPosX, '', $ELPosX);	
+	$aside['$ELPosY'] = array('diabook_ELPosY', t('Set latitude (Y) for Earth Layers'), $ELPosY, '', $ELPosY);	
 	if (isset($_POST['diabook-settings-map-sub']) && $_POST['diabook-settings-map-sub']!=''){	
 		set_pconfig(local_user(), 'diabook', 'ELZoom', $_POST['diabook_ELZoom']);
 		set_pconfig(local_user(), 'diabook', 'ELPosX', $_POST['diabook_ELPosX']);	
@@ -670,7 +742,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$close_lastusersC = array('1'=>t("don't show"),	'0'=>t("show"),);
 	$close_lastphotosC = array('1'=>t("don't show"),	'0'=>t("show"),);
 	$close_lastlikesC = array('1'=>t("don't show"),	'0'=>t("show"),);
-	$boxsettings['title'] = Array("", t('Show/hide boxes at right-hand coloumn:'), "", "");
+	$boxsettings['title'] = Array("", t('Show/hide boxes at right-hand column:'), "", "");
 	$aside['$boxsettings'] = $boxsettings;
 	$aside['$close_pages'] = array('diabook_close_pages', t('Community Pages'), $close_pages, '', $close_pagesC);	
 	$aside['$close_mapquery'] = array('diabook_close_mapquery', t('Earth Layers'), $close_mapquery, '', $close_mapqueryC);		
