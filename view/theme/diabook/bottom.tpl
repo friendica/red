@@ -14,6 +14,9 @@ $(document).ready(function() {
         else $(this).attr("src",ifr_source+"?"+wmode);
        
     });
+    
+    $("div#pause").attr("style", "position: fixed;bottom: 43px;left: 5px;");
+    $(".autocomplete").attr("style", "width: 350px;color: black;background: white;cursor: pointer;text-align: left;max-height: 350px;overflow: auto;");
       
 	});
 	

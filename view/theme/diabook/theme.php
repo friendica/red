@@ -177,6 +177,9 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	if($ccCookie != "10") {
 	$jqueryuiJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery-ui-1.8.20.custom.min.js";
 	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $jqueryuiJS);
+	$jqueryuicssJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/jquery-ui-1.8.20.custom.css";
+	$a->page['htmlhead'] .= sprintf('<link rel="stylesheet" type="text/css" href="%s" />', $jqueryuicssJS);
+		
 	}	
 	
 	//load jquery.twitter.search.js
@@ -267,6 +270,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
      		}); 
      		
      	$("#layermanager").mqLayerManager({map:"#map2"}); 
+     	
      		
      	map = $("#map2").mapQuery().data("mapQuery");
      	textarea = document.getElementById("id_diabook_ELZoom");
