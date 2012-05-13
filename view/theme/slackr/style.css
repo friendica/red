@@ -43,4 +43,5 @@ nav #site-location {
 .wall-item-photo, .photo, .contact-block-img, .my-comment-photo {
 	border-radius: 3px;
 	-moz-border-radius: 3px;
+	box-shadow: 3px 3px 10px 0 #000000;
 }
