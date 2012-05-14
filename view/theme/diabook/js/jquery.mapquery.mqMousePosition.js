@@ -44,8 +44,8 @@ $.widget("mapQuery.mqMousePosition", {
 
         // The number of decimals for the coordinates
         // default: 2
-    // TODO: JCB20110630 use dynamic precision based on the pixel
-    // resolution, no need to configure precision
+        // TODO: JCB20110630 use dynamic precision based on the pixel
+        // resolution, no need to configure precision
         precision: 2,
 
         // The label of the x-value
@@ -57,51 +57,36 @@ $.widget("mapQuery.mqMousePosition", {
 
     },
     _create: function() {
-        var map;
-        var self = this;
-        var element = this.element;
-        var mousepos;
-
         //get the mapquery object
-        map = $(this.options.map).data('mapQuery');
+        this.map = $(this.options.map).data('mapQuery');
 
-        map.bind("mousemove",
-            {widget:self,map:map},
-            self._onMouseMove);
-
-
-        $.tmpl('mqMousePosition',{
-            mouseposition:mousepos
-        }).appendTo(element);
+        this.map.element.bind('mousemove', {widget: this}, this._onMousemove);
+        $.tmpl('mqMousePosition', {}).appendTo(this.element);
 
     },
     _destroy: function() {
-        this.element.removeClass(' ui-widget ui-helper-clearfix ' +
+        this.element.removeClass('ui-widget ui-helper-clearfix ' +
                                  'ui-corner-all')
             .empty();
     },
-    _mouseMoved: function(data, element, map) {
-        var x = data.layerX;
-        var y = data.layerY;
-        var mapProjection = map.options.projection;
-        var displayProjection = map.options.projection;
+    _onMousemove: function(evt) {
+        var self = evt.data.widget;
+        var x = evt.pageX;
+        var y = evt.pageY;
+        var mapProjection = new OpenLayers.Projection(self.map.projection);
+        var displayProjection = new OpenLayers.Projection(
+            self.map.displayProjection);
+        var pos = self.map.olMap.getLonLatFromLayerPx(
+            new OpenLayers.Pixel(x, y));
         //if the coordinates should be displayed in something else,
-    //set them via the map displayProjection option
-        var pos = map.olMap.getLonLatFromLayerPx(new OpenLayers.Pixel(x,y));
-        if(map.options.displayProjection) {
-            displayProjection = map.options.displayProjection;
-            pos=pos.transform(
-        new OpenLayers.Projection(mapProjection),
-        new OpenLayers.Projection(displayProjection));
+        //set them via the map displayProjection option
+        if(!mapProjection.equals(self.map.displayProjection)) {
+            pos = pos.transform(mapProjection, displayProjection);
         }
-        $("#id_diabook_ELPosX", element).val(
-        this.options.x+pos.lon.toFixed(this.options.precision));
-        $("#id_diabook_ELPosY", element).val(
-        this.options.y+pos.lat.toFixed(this.options.precision));
-    },
-
-    _onMouseMove: function(evt, data) {
-        evt.data.widget._mouseMoved(data,evt.data.control,evt.data.map);
+        $("#id_diabook_ELPosX", document.element).val(
+            self.options.x + pos.lon.toFixed(self.options.precision));
+        $("#id_diabook_ELPosY", document.element).val(
+            self.options.y + pos.lat.toFixed(self.options.precision));
     }
 });
 })(jQuery);
