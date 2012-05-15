@@ -45,3 +45,17 @@ nav #site-location {
 	-moz-border-radius: 3px;
 	box-shadow: 3px 3px 10px 0 #000000;
 }
+
+#sidebar-page-list img {
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	box-shadow: 3px 3px 10px -2px #000000;
+}
+
+.contact-entry-photo img, .profile-match-photo img, #photo-photo img, .directory-photo-img {
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	box-shadow: 3px 3px 10px 0 #000000;
+}
+
+
