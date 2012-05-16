@@ -143,12 +143,12 @@ function diabook_form(&$a, $font_size, $line_height, $resolution, $color, $TSear
 		'dark'=>'dark',						
 		);
 	$close_pagesC = array(
-		'1'=>'hide',	
-		'0'=>'show',							
+		'0'=>'show',	
+		'1'=>'hide',							
 		);
 	$close_mapqueryC = array(
-		'1'=>'hide',	
-		'0'=>'show',									
+		'0'=>'show',	
+		'1'=>'hide',									
 		);
 	$close_profilesC = array(
 		'0'=>'show',	
@@ -167,8 +167,8 @@ function diabook_form(&$a, $font_size, $line_height, $resolution, $color, $TSear
 		'1'=>'hide',								
 		);
 	$close_twitterC = array(
-		'1'=>'hide',	
-		'0'=>'show',								
+		'0'=>'show',	
+		'1'=>'hide',								
 		);
 	$close_lastusersC = array(
 		'0'=>'show',	
@@ -196,18 +196,18 @@ function diabook_form(&$a, $font_size, $line_height, $resolution, $color, $TSear
 		'$color' => array('diabook_color', t('Set color scheme'), $color, '', $colors),	
 		'$TSearchTerm' => array('diabook_TSearchTerm', t('Set twitter search term'), $TSearchTerm, '', $TSearchTerm),	
 		'$ELZoom' => array('diabook_ELZoom', t('Set zoomfactor for Earth Layer'), $ELZoom, '', $ELZoom),	
-		'$ELPosX' => array('diabook_ELPosX', t('Set longitude (X) for Earth Layer'), $ELPosX, '', $ELPosX),	
-		'$ELPosY' => array('diabook_ELPosY', t('Set latitude (Y) for Earth Layer'), $ELPosY, '', $ELPosY),	
-		'$close_pages' => array('diabook_close_pages', t('Show "Cummunity Pages" at right-hand coloumn?'), $close_pages, '', $close_pagesC),	
-		'$close_mapquery' => array('diabook_close_mapquery', t('Show "Earth Layers" at right-hand coloumn?'), $close_mapquery, '', $close_mapqueryC),		
-		'$close_profiles' => array('diabook_close_profiles', t('Show "Cummunity Profiles" at right-hand coloumn?'), $close_profiles, '', $close_profilesC),		
-		'$close_helpers' => array('diabook_close_helpers', t('Show "Help or @NewHere" at right-hand coloumn?'), $close_helpers, '', $close_helpersC),		
-		'$close_services' => array('diabook_close_services', t('Show "Connect Services" at right-hand coloumn?'), $close_services, '', $close_servicesC),			
-		'$close_friends' => array('diabook_close_friends', t('Show "Find Friends" at right-hand coloumn?'), $close_friends, '', $close_friendsC),				
-		'$close_twitter' => array('diabook_close_twitter', t('Show "Last Tweets" at right-hand coloumn?'), $close_twitter, '', $close_twitterC),				
-		'$close_lastusers' => array('diabook_close_lastusers', t('Show "Last Users" at right-hand coloumn?'), $close_lastusers, '', $close_lastusersC),				
-		'$close_lastphotos' => array('diabook_close_lastphotos', t('Show "Last Photos" at right-hand coloumn?'), $close_lastphotos, '', $close_lastphotosC),				
-		'$close_lastlikes' => array('diabook_close_lastlikes', t('Show "Last Likes" at right-hand coloumn?'), $close_lastlikes, '', $close_lastlikesC),				
+		'$ELPosX' => array('diabook_ELPosX', t('Set longitude (X) for Earth Layers'), $ELPosX, '', $ELPosX),	
+		'$ELPosY' => array('diabook_ELPosY', t('Set latitude (Y) for Earth Layers'), $ELPosY, '', $ELPosY),	
+		'$close_pages' => array('diabook_close_pages', t('Community Pages'), $close_pages, '', $close_pagesC),	
+		'$close_mapquery' => array('diabook_close_mapquery', t('Earth Layers'), $close_mapquery, '', $close_mapqueryC),		
+		'$close_profiles' => array('diabook_close_profiles', t('Community Profiles'), $close_profiles, '', $close_profilesC),		
+		'$close_helpers' => array('diabook_close_helpers', t('Help or @NewHere ?'), $close_helpers, '', $close_helpersC),		
+		'$close_services' => array('diabook_close_services', t('Connect Services'), $close_services, '', $close_servicesC),			
+		'$close_friends' => array('diabook_close_friends', t('Find Friends'), $close_friends, '', $close_friendsC),				
+		'$close_twitter' => array('diabook_close_twitter', t('Last tweets'), $close_twitter, '', $close_twitterC),				
+		'$close_lastusers' => array('diabook_close_lastusers', t('Last users'), $close_lastusers, '', $close_lastusersC),				
+		'$close_lastphotos' => array('diabook_close_lastphotos', t('Last photos'), $close_lastphotos, '', $close_lastphotosC),				
+		'$close_lastlikes' => array('diabook_close_lastlikes', t('Last likes'), $close_lastlikes, '', $close_lastlikesC),				
 	));
 	return $o;
 }

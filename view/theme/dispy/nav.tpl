@@ -50,7 +50,7 @@
 	</ul>
 
 	<div id="user-menu">
-        <a id="user-menu-label" onclick="openClose('user-menu-popup'); return false" href="$nav.home.0">$sitelocation</a>
+        <a id="user-menu-label" onclick="openClose('user-menu-popup'); return false;" href="$nav.home.0">$sitelocation</a>
         <ul id="user-menu-popup"
             onmouseover="if (typeof tmenu != 'undefined') clearTimeout(tmenu); openMenu('user-menu-popup')"
             onmouseout="tmenu=setTimeout('closeMenu(\'user-menu-popup\');',200)">
@@ -90,7 +90,9 @@
 {{ if $userinfo }}
         <ul id="nav-user-menu" class="menu-popup">
             {{ for $nav.usermenu as $usermenu }}
-                <li><a class="$usermenu.2" href="$usermenu.0" title="$usermenu.3">$usermenu.1</a></li>
+                <li>
+					<a class="$usermenu.2" href="$usermenu.0" title="$usermenu.3">$usermenu.1</a>
+				</li>
             {{ endfor }}
         </ul>
 {{ endif }}
@@ -121,18 +123,19 @@ $langselector
 </div>
 
 <div id="scrollup">
-<a href="#top"><img
-	src="view/theme/dispy/icons/scroll_top.png"
+<a href="#top"><img src="view/theme/dispy/icons/scroll_top.png"
 	alt="back to top" title="Back to top" /></a>
 </div>
 
 <div class="search-box">
 	<form method="get" action="$nav.search.0">
-		<input id="search-text" class="nav-menu-search" type="search" placeholder="Search" value="" id="search" name="search" />
+		<input id="mini-search-text" class="nav-menu-search" type="search" placeholder="Search" value="" id="search" name="search" />
 	</form>
 </div>
 
 <ul id="nav-notifications-template" style="display:none;" rel="template">
-	<li class="{4}"><a href="{0}"><img src="{1}" height="24" width="24" alt="" />{2} <span class="notif-when">{3}</span></a></li>
+	<li class="{4}">
+	<a href="{0}"><img src="{1}" height="24" width="24" alt="" />{2} <span class="notif-when">{3}</span></a>
+	</li>
 </ul>
 

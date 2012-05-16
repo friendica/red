@@ -18,15 +18,19 @@ function message_init(&$a) {
 	));
 	$base = $a->get_baseurl();
 
-	$a->page['htmlhead'] .= '<script src="' . $a->get_baseurl(true) . '/library/jquery_ac/jquery.autocomplete-min.js" ></script>';
+	$a->page['htmlhead'] .= '<script src="' . $a->get_baseurl(true) . '/library/jquery_ac/friendica.complete.js" ></script>';
 	$a->page['htmlhead'] .= <<< EOT
 
 <script>$(document).ready(function() { 
 	var a; 
 	a = $("#recip").autocomplete({ 
 		serviceUrl: '$base/acl',
-		width: 350
+		width: 350,
+		onSelect: function(value,data) {
+			$("#recip-complete").val(data);
+		}			
 	});
+
 }); 
 
 </script>
@@ -94,10 +98,6 @@ function message_content(&$a) {
 	}
 
 	$myprofile = $a->get_baseurl(true) . '/profile/' . $a->user['nickname'];
-
-
-
-
 
 	$tpl = get_markup_template('mail_head.tpl');
 	$header = replace_macros($tpl, array(
@@ -172,28 +172,36 @@ function message_content(&$a) {
 		));
 	
 		$preselect = (isset($a->argv[2])?array($a->argv[2]):false);
-	
-		if(defined('EMAIL_AUTOCOMP')) {
+			
 
-			// here's where we want to do contact autocomplete
-			// just figure out how to make it do the right thing
-			// pictures would be nice, but that didn't work when I tried.
-			// It sort of barely works, but needs help
-			// (the json backend is found in mod/acl.php)
+		$prename = $preurl = $preid = '';
 
-			$select = '<input type="text" id="recip" name="messageto" value="' . $preselect .'" />';
-		}
-		else {
+		if($preselect) {
+			$r = q("select name, url, id from contact where uid = %d and id = %d limit 1",
+				intval(local_user()),
+				intval($a->argv[2])
+			);
+			if(count($r)) {
+				$prename = $r[0]['name'];
+				$preurl = $r[0]['url'];
+				$preid = $r[0]['id'];
+			}
+		}	 
 
-			// the ugly select box
+		$prefill = (($preselect) ? $prename  : '');
 
-			$select = contact_select('messageto','message-to-select', $preselect, 4, true, false, false, 10);
-		}
+		// the ugly select box
+		
+		$select = contact_select('messageto','message-to-select', $preselect, 4, true, false, false, 10);
 
 		$tpl = get_markup_template('prv_message.tpl');
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Send Private Message'),
 			'$to' => t('To:'),
+			'$showinputs' => 'true', 
+			'$prefill' => $prefill,
+			'$autocomp' => $autocomp,
+			'$preid' => $preid,
 			'$subject' => t('Subject:'),
 			'$subjtxt' => ((x($_REQUEST,'subject')) ? strip_tags($_REQUEST['subject']) : ''),
 			'$text' => ((x($_REQUEST,'body')) ? escape_tags(htmlspecialchars($_REQUEST['body'])) : ''),
@@ -369,9 +377,10 @@ function message_content(&$a) {
 				
 			$seen = $message['seen'];
 		}
+
+
 		$select = $message['name'] . '<input type="hidden" name="messageto" value="' . $contact_id . '" />';
 		$parent = '<input type="hidden" name="replyto" value="' . $message['parent-uri'] . '" />';
-			
 
 		$tpl = get_markup_template('mail_display.tpl');
 		$o = replace_macros($tpl, array(
@@ -386,6 +395,7 @@ function message_content(&$a) {
 			// reply
 			'$header' => t('Send Reply'),
 			'$to' => t('To:'),
+			'$showinputs' => '',
 			'$subject' => t('Subject:'),
 			'$subjtxt' => template_escape($message['title']),
 			'$readonly' => ' readonly="readonly" style="background: #BBBBBB;" ',

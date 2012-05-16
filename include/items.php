@@ -119,7 +119,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 	$check_date = datetime_convert('UTC','UTC',$last_update,'Y-m-d H:i:s');
 
 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-		`contact`.`name`, `contact`.`photo`, `contact`.`url`, 
+		`contact`.`name`, `contact`.`network`, `contact`.`photo`, `contact`.`url`, 
 		`contact`.`name-date`, `contact`.`uri-date`, `contact`.`avatar-date`,
 		`contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`, 
 		`contact`.`id` AS `contact-id`, `contact`.`uid` AS `contact-uid`,
