@@ -11,6 +11,7 @@
   <geo>$status.geo</geo>
   <favorited>$status.favorited</favorited>
 {{ inc api_user_xml.tpl with $user=$status.user }}{{ endinc }}  <statusnet:html>$status.statusnet_html</statusnet:html>
+  <statusnet:conversation_id>$status.statusnet_conversation_id</statusnet:conversation_id>
   <url>$status.url</url>
   <coordinates>$status.coordinates</coordinates>
   <place>$status.place</place>

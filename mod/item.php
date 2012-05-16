@@ -759,7 +759,7 @@ function item_post(&$a) {
 	}
 	else {
 		logger('mod_item: unable to retrieve post that was just stored.');
-		notify( t('System error. Post not saved.'));
+		notice( t('System error. Post not saved.') . EOL);
 		goaway($a->get_baseurl() . "/" . $return_path );
 		// NOTREACHED
 	}

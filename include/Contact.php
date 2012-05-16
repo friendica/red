@@ -158,7 +158,7 @@ function contact_photo_menu($contact) {
 	$o = "";
 	foreach($menu as $k=>$v){
 		if ($v!="") {
-			if(($k !== t("Network Posts")) && ($k !== t("Send PM")))
+			if(($k !== t("Network Posts")) && ($k !== t("Send PM")) && ($k !== t('Edit Contact')))
 				$o .= "<li><a target=\"redir\" href=\"$v\">$k</a></li>\n";
 			else
 				$o .= "<li><a href=\"$v\">$k</a></li>\n";

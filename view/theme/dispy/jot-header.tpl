@@ -24,7 +24,7 @@ function initEditor(cb) {
 			mode : "specific_textareas",
 			editor_selector: $editselect,
 			auto_focus: "profile-jot-text",
-			plugins : "bbcode,paste,fullscreen,autoresize",
+			plugins : "bbcode,paste,fullscreen,autoresize,inlinepopups",
 			theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,forecolor,formatselect,code,fullscreen",
 			theme_advanced_buttons2 : "",
 			theme_advanced_buttons3 : "",
@@ -36,12 +36,13 @@ function initEditor(cb) {
 			entity_encoding : "raw",
 			add_unload_trigger : false,
 			remove_linebreaks : false,
-			force_p_newlines : true,
+			force_p_newlines : false,
 			force_br_newlines : true,
 			forced_root_block : '',
 			convert_urls: false,
 			content_css: "$baseurl/view/custom_tinymce.css",
 			theme_advanced_path : false,
+			file_browser_callback : "fcFileBrowser",
 			setup : function(ed) {
 				cPopup = null;
 				ed.onKeyDown.add(function(ed,e) {
@@ -346,4 +347,3 @@ function enableOnUser(){
 	}
 
 </script>
-

@@ -19,8 +19,14 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 				$converse = true;
 			if($a->argv[$x] == 'starred')
 				$starred = true;
+			if($a->argv[$x] === 'category' && $a->argc > ($x + 1) && strlen($a->argv[$x+1]))
+				$category = $a->argv[$x+1];
 		}
+
+
 	}
+
+	
 
 	// default permissions - anonymous user
 
@@ -100,6 +106,10 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 	if(! strlen($last_update))
 		$last_update = 'now -30 days';
+
+	if(isset($category)) {
+		$sql_extra .= file_tag_file_query('item',$category,'category');
+	}
 
 	if($public_feed) {
 		if(! $converse)
@@ -578,20 +588,21 @@ function get_atom_elements($feed,$item) {
 
 	if($rawobj) {
 		$res['object'] = '<object>' . "\n";
-		if($rawobj[0]['child'][NAMESPACE_ACTIVITY]['object-type'][0]['data']) {
-			$res['object-type'] = $rawobj[0]['child'][NAMESPACE_ACTIVITY]['object-type'][0]['data'];
-			$res['object'] .= '<type>' . $rawobj[0]['child'][NAMESPACE_ACTIVITY]['object-type'][0]['data'] . '</type>' . "\n";
+		$child = $rawobj[0]['child'];
+		if($child[NAMESPACE_ACTIVITY]['object-type'][0]['data']) {
+			$res['object-type'] = $child[NAMESPACE_ACTIVITY]['object-type'][0]['data'];
+			$res['object'] .= '<type>' . $child[NAMESPACE_ACTIVITY]['object-type'][0]['data'] . '</type>' . "\n";
 		}	
-		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'])
-			$res['object'] .= '<id>' . $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'] . '</id>' . "\n";
-		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'])
-			$res['object'] .= '<link>' . encode_rel_links($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) . '</link>' . "\n";
-		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'])
-			$res['object'] .= '<title>' . $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'] . '</title>' . "\n";
-		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['content'][0]['data']) {
-			$body = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['content'][0]['data'];
+		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'id') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'])
+			$res['object'] .= '<id>' . $child[SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'] . '</id>' . "\n";
+		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'link') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['link'])
+			$res['object'] .= '<link>' . encode_rel_links($child[SIMPLEPIE_NAMESPACE_ATOM_10]['link']) . '</link>' . "\n";
+		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'title') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'])
+			$res['object'] .= '<title>' . $child[SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'] . '</title>' . "\n";
+		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'content') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['content'][0]['data']) {
+			$body = $child[SIMPLEPIE_NAMESPACE_ATOM_10]['content'][0]['data'];
 			if(! $body)
-				$body = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['summary'][0]['data'];
+				$body = $child[SIMPLEPIE_NAMESPACE_ATOM_10]['summary'][0]['data'];
 			// preserve a copy of the original body content in case we later need to parse out any microformat information, e.g. events
 			$res['object'] .= '<orig>' . xmlify($body) . '</orig>' . "\n";
 			if((strpos($body,'<') !== false) || (strpos($body,'>') !== false)) {
@@ -616,20 +627,20 @@ function get_atom_elements($feed,$item) {
 
 	if($rawobj) {
 		$res['target'] = '<target>' . "\n";
-		if($rawobj[0]['child'][NAMESPACE_ACTIVITY]['object-type'][0]['data']) {
-			$res['target'] .= '<type>' . $rawobj[0]['child'][NAMESPACE_ACTIVITY]['object-type'][0]['data'] . '</type>' . "\n";
+		$child = $rawobj[0]['child'];
+		if($child[NAMESPACE_ACTIVITY]['object-type'][0]['data']) {
+			$res['target'] .= '<type>' . $child[NAMESPACE_ACTIVITY]['object-type'][0]['data'] . '</type>' . "\n";
 		}	
-		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'])
-			$res['target'] .= '<id>' . $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'] . '</id>' . "\n";
-
-		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'])
-			$res['target'] .= '<link>' . encode_rel_links($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) . '</link>' . "\n";
-		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'])
-			$res['target'] .= '<title>' . $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'] . '</title>' . "\n";
-		if($rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['content'][0]['data']) {
-			$body = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['content'][0]['data'];
+		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'id') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'])
+			$res['target'] .= '<id>' . $child[SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'] . '</id>' . "\n";
+		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'link') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['link'])
+			$res['target'] .= '<link>' . encode_rel_links($child[SIMPLEPIE_NAMESPACE_ATOM_10]['link']) . '</link>' . "\n";
+		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'data') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'])
+			$res['target'] .= '<title>' . $child[SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'] . '</title>' . "\n";
+		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'data') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['content'][0]['data']) {
+			$body = $child[SIMPLEPIE_NAMESPACE_ATOM_10]['content'][0]['data'];
 			if(! $body)
-				$body = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['summary'][0]['data'];
+				$body = $child[SIMPLEPIE_NAMESPACE_ATOM_10]['summary'][0]['data'];
 			// preserve a copy of the original body content in case we later need to parse out any microformat information, e.g. events
 			$res['target'] .= '<orig>' . xmlify($body) . '</orig>' . "\n";
 			if((strpos($body,'<') !== false) || (strpos($body,'>') !== false)) {
@@ -1465,7 +1476,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					if(! $item['deleted'])
 						logger('consume_feed: deleting item ' . $item['id'] . ' uri=' . $item['uri'], LOGGER_DEBUG);
 
-					if(($item['verb'] === ACTIVITY_TAG) && ($item['object-type'] === ACTVITY_OBJ_TAGTERM)) {
+					if(($item['verb'] === ACTIVITY_TAG) && ($item['object-type'] === ACTIVITY_OBJ_TAGTERM)) {
 						$xo = parse_xml_string($item['object'],false);
 						$xt = parse_xml_string($item['target'],false);
 						if($xt->type === ACTIVITY_OBJ_NOTE) {
@@ -2081,7 +2092,7 @@ function local_delivery($importer,$data) {
 
 					logger('local_delivery: deleting item ' . $item['id'] . ' uri=' . $item['uri'], LOGGER_DEBUG);
 
-					if(($item['verb'] === ACTIVITY_TAG) && ($item['object-type'] === ACTVITY_OBJ_TAGTERM)) {
+					if(($item['verb'] === ACTIVITY_TAG) && ($item['object-type'] === ACTIVITY_OBJ_TAGTERM)) {
 						$xo = parse_xml_string($item['object'],false);
 						$xt = parse_xml_string($item['target'],false);
 
@@ -2217,6 +2228,34 @@ function local_delivery($importer,$data) {
 				$is_like = false;
 				// remote reply to our post. Import and then notify everybody else.
 				$datarray = get_atom_elements($feed,$item);
+
+
+				$r = q("SELECT `id`, `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+					dbesc($item_id),
+					intval($importer['importer_uid'])
+				);
+
+				// Update content if 'updated' changes
+
+				if(count($r)) {
+					$iid = $r[0]['id'];
+					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
+						logger('received updated comment' , LOGGER_DEBUG);
+						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+							dbesc($datarray['title']),
+							dbesc($datarray['body']),
+							dbesc($datarray['tag']),
+							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
+							dbesc($item_id),
+							intval($importer['importer_uid'])
+						);
+
+						proc_run('php',"include/notifier.php","comment-import",$iid);
+
+					}
+
+					continue;
+				}
 
 
 				// TODO: make this next part work against both delivery threads of a community post
@@ -2438,7 +2477,7 @@ function local_delivery($importer,$data) {
 
 				// find out if our user is involved in this conversation and wants to be notified.
 			
-				if($datarray['type'] != 'activity') {
+				if(!x($datarray['type']) || $datarray['type'] != 'activity') {
 
 					$myconv = q("SELECT `author-link`, `author-avatar`, `parent` FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `parent` != 0 ",
 						dbesc($parent_uri),
@@ -3010,7 +3049,7 @@ function item_expire($uid,$days) {
 function drop_items($items) {
 	$uid = 0;
 
-	if((! local_user()) && (! $remote_user()))
+	if(! local_user() && ! remote_user())
 		return;
 
 	if(count($items)) {
