@@ -1,4 +1,0 @@
-dir
-===
-
-Friendica Global Directory
