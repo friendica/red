@@ -220,7 +220,7 @@ function notifier_run($argv, $argc){
 		}
 
 
-		if(($cmd === 'uplink') && (intval($parent['forum_mode'])) && (! $top_level)) {
+		if(($cmd === 'uplink') && (intval($parent['forum_mode']) == 1) && (! $top_level)) {
 			$relay_to_owner = true;			
 		} 
 
@@ -265,10 +265,10 @@ function notifier_run($argv, $argc){
 			$deny_people  = expand_acl($parent['deny_cid']);
 			$deny_groups  = expand_groups(expand_acl($parent['deny_gid']));
 
-			// if our parent is a forum, uplink to the origional author causing
-			// a delivery fork
+			// if our parent is a public forum (forum_mode == 1), uplink to the origional author causing
+			// a delivery fork. private groups (forum_mode == 2) do not uplink
 
-			if(intval($parent['forum_mode']) && (! $top_level) && ($cmd !== 'uplink')) {
+			if((intval($parent['forum_mode']) == 1) && (! $top_level) && ($cmd !== 'uplink')) {
 				proc_run('php','include/notifier','uplink',$item_id);
 			}
 

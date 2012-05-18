@@ -500,6 +500,16 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				}
 			}
 		}
+
+
+		$g = q("select def_gid from user where uid = %d limit 1",
+			intval($uid)
+		);
+		if($contact && $g && intval($g[0]['def_gid'])) {
+			require_once('include/group.php');
+			group_add_member($uid,'',$contact[0]['id'],$g[0]['def_gid']);
+		}
+
 		// Let's send our user to the contact editor in case they want to
 		// do anything special with this new friend.
 

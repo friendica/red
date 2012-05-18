@@ -988,33 +988,31 @@ function tag_deliver($uid,$item_id) {
 		}
 	}
 
-	if((! $mention) && (! $prvgroup))
+	if(! $mention)
 		return;
 
-	if($mention) {
+	// send a notification
 
-		// send a notification
+	require_once('include/enotify.php');
+	notification(array(
+		'type'         => NOTIFY_TAGSELF,
+		'notify_flags' => $u[0]['notify-flags'],
+		'language'     => $u[0]['language'],
+		'to_name'      => $u[0]['username'],
+		'to_email'     => $u[0]['email'],
+		'uid'          => $u[0]['uid'],
+		'item'         => $item,
+		'link'         => $a->get_baseurl() . '/display/' . $u[0]['nickname'] . '/' . $item['id'],
+		'source_name'  => $item['author-name'],
+		'source_link'  => $item['author-link'],
+		'source_photo' => $item['author-avatar'],
+		'verb'         => ACTIVITY_TAG,
+		'otype'        => 'item'
+	));
 
-		require_once('include/enotify.php');
-		notification(array(
-			'type'         => NOTIFY_TAGSELF,
-			'notify_flags' => $u[0]['notify-flags'],
-			'language'     => $u[0]['language'],
-			'to_name'      => $u[0]['username'],
-			'to_email'     => $u[0]['email'],
-			'uid'          => $u[0]['uid'],
-			'item'         => $item,
-			'link'         => $a->get_baseurl() . '/display/' . $u[0]['nickname'] . '/' . $item['id'],
-			'source_name'  => $item['author-name'],
-			'source_link'  => $item['author-link'],
-			'source_photo' => $item['author-avatar'],
-			'verb'         => ACTIVITY_TAG,
-			'otype'        => 'item'
-		));
+	if((! $community_page) && (! prvgroup))
+		return;
 
-		if(! $community_page)
-			return;
-	}
 
 	// tgroup delivery - setup a second delivery chain
 	// prevent delivery looping - only proceed
@@ -1036,8 +1034,11 @@ function tag_deliver($uid,$item_id) {
 
 	$private = ($u[0]['allow_cid'] || $u[0]['allow_gid'] || $u[0]['deny_cid'] || $u[0]['deny_gid']) ? 1 : 0;
 
-	q("update item set wall = 1, origin = 1, forum_mode = 1, `owner-name` = '%s', `owner-link` = '%s', `owner-avatar` = '%s', 
+	$forum_mode = (($prvgroup) ? 2 : 1);
+
+	q("update item set wall = 1, origin = 1, forum_mode = %d, `owner-name` = '%s', `owner-link` = '%s', `owner-avatar` = '%s', 
 		`private` = %d, `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s'  where id = %d limit 1",
+		intval($forum_mode),
 		dbesc($c[0]['name']),
 		dbesc($c[0]['url']),
 		dbesc($c[0]['thumb']),
@@ -2199,7 +2200,7 @@ function local_delivery($importer,$data) {
 		if($is_reply) {
 			$community = false;
 
-			if($importer['page-flags'] == PAGE_COMMUNITY) {
+			if($importer['page-flags'] == PAGE_COMMUNITY || $importer['page-flags'] == PAGE_PRVGROUP ) {
 				$sql_extra = '';
 				$community = true;
 				logger('local_delivery: possible community reply');
@@ -2226,8 +2227,8 @@ function local_delivery($importer,$data) {
 			if($r && count($r))
 				$is_a_remote_comment = true;			
 
-			// Does this have the characteristics of a community comment?
-			// If it's a reply to a wall post on a community page it's a 
+			// Does this have the characteristics of a community or private group comment?
+			// If it's a reply to a wall post on a community/prvgroup page it's a 
 			// valid community comment. Also forum_mode makes it valid for sure. 
 			// If neither, it's not.
 
@@ -2716,6 +2717,12 @@ function new_follower($importer,$contact,$datarray,$item,$sharing = false) {
 		);
 		$a = get_app();
 		if(count($r)) {
+
+			if(intval($r[0]['def_gid'])) {
+				require_once('include/group.php');
+				group_add_member($r[0]['uid'],'',$contact_record['id'],$r[0]['def_gid']);
+			}
+
 			if(($r[0]['notify-flags'] & NOTIFY_INTRO) && ($r[0]['page-flags'] == PAGE_NORMAL)) {
 				$email_tpl = get_intltext_template('follow_notify_eml.tpl');
 				$email = replace_macros($email_tpl, array(
