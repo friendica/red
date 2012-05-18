@@ -991,7 +991,7 @@ function settings_content(&$a) {
 		'$suggestme' => $suggestme,
 		'$blockwall'=> $blockwall, // array('blockwall', t('Allow friends to post to your profile page:'), !$blockwall, ''),
 		'$blocktags'=> $blocktags, // array('blocktags', t('Allow friends to tag your posts:'), !$blocktags, ''),
-		'$group_lbl_select' => t('Default privacy group for new contacts'),
+
 		'$group_select' => $group_select,
 
 

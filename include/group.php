@@ -172,7 +172,10 @@ function mini_group_select($uid,$gid = 0) {
 	}
 	logger('groups: ' . print_r($grps,true));
 
-	$o = replace_macros(get_markup_template('group_selection.tpl'), array('$groups' => $grps ));
+	$o = replace_macros(get_markup_template('group_selection.tpl'), array(
+		'$label' => t('Default privacy group for new contacts'),
+		'$groups' => $grps 
+	));
 	return $o;
 }
 

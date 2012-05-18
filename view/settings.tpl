@@ -93,7 +93,6 @@ $unkmail
 <br/>
 <div id="settings-default-perms-end"></div>
 
-<label name="group-selection-lbl" for="group-selection">$group_lbl_select</label>
 $group_select
 
 
