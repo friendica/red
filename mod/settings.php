@@ -330,6 +330,7 @@ function settings_post(&$a) {
 	$openid           = ((x($_POST,'openid_url')) ? notags(trim($_POST['openid_url']))   : '');
 	$maxreq           = ((x($_POST,'maxreq'))     ? intval($_POST['maxreq'])             : 0);
 	$expire           = ((x($_POST,'expire'))     ? intval($_POST['expire'])             : 0);
+	$def_gid          = ((x($_POST,'group-selection')) ? intval($_POST['group-selection']) : 0);
 
 
 	$expire_items     = ((x($_POST,'expire_items')) ? intval($_POST['expire_items'])	 : 0);
@@ -355,6 +356,9 @@ function settings_post(&$a) {
 	$post_joingroup   = (($_POST['post_joingroup'] == 1) ? 1: 0);
 	$post_profilechange   = (($_POST['post_profilechange'] == 1) ? 1: 0);
 
+	if($page_flags == PAGE_PRVGROUP) {
+		$hidewall = 1;
+	}
 
 	$notify = 0;
 
@@ -441,7 +445,7 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'system','post_profilechange', $post_profilechange);
 
 
-	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `maxreq` = %d, `expire` = %d, `openidserver` = '%s', `blockwall` = %d, `hidewall` = %d, `blocktags` = %d, `unkmail` = %d, `cntunkmail` = %d  WHERE `uid` = %d LIMIT 1",
+	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `maxreq` = %d, `expire` = %d, `openidserver` = '%s', `def_gid` = %d, `blockwall` = %d, `hidewall` = %d, `blocktags` = %d, `unkmail` = %d, `cntunkmail` = %d  WHERE `uid` = %d LIMIT 1",
 			dbesc($username),
 			dbesc($email),
 			dbesc($openid),
@@ -457,6 +461,7 @@ function settings_post(&$a) {
 			intval($maxreq),
 			intval($expire),
 			dbesc($openidserver),
+			intval($def_gid),
 			intval($blockwall),
 			intval($hidewall),
 			intval($blocktags),
@@ -833,6 +838,13 @@ function settings_content(&$a) {
 		'$page_freelove' 	=> array('page-flags', t('Automatic Friend Account'), PAGE_FREELOVE, 
 									t('Automatically approve all connection/friend requests as friends'), 
 									($a->user['page-flags'] == PAGE_FREELOVE)),
+
+		'$page_prvgroup' 	=> array('page-flags', t('Private Forum'), PAGE_PRVGROUP, 
+									t('Private forum - approved members only [Experimental]'), 
+									($a->user['page-flags'] == PAGE_PRVGROUP)),
+
+		'$experimental' => ( (intval(get_config('system','prvgroup_testing'))) ? 'true' : ''),
+
 	));
 
 	$noid = get_config('system','no_openid');
@@ -934,6 +946,9 @@ function settings_content(&$a) {
 		'photos' => array('expire_photos',  t("Expire photos:"), $expire_photos, '', array(t('No'),t('Yes'))),		
 	);
 
+	require_once('include/group.php');
+	$group_select = mini_group_select(local_user(),$a->user['def_gid']);
+
 	$o .= replace_macros($stpl,array(
 		'$ptitle' 	=> t('Account Settings'),
 
@@ -941,7 +956,6 @@ function settings_content(&$a) {
 		'$baseurl' => $a->get_baseurl(true),
 		'$uid' => local_user(),
 		'$form_security_token' => get_form_security_token("settings"),
-		
 		'$nickname_block' => $prof_addr,
 		
 		'$h_pass' 	=> t('Password Settings'),
@@ -968,6 +982,10 @@ function settings_content(&$a) {
 		'$suggestme' => $suggestme,
 		'$blockwall'=> $blockwall, // array('blockwall', t('Allow friends to post to your profile page:'), !$blockwall, ''),
 		'$blocktags'=> $blocktags, // array('blocktags', t('Allow friends to tag your posts:'), !$blocktags, ''),
+		'$group_lbl_select' => t('Default privacy group for new contacts'),
+		'$group_select' => $group_select,
+
+
 		'$expire'	=> $expire_arr,
 
 		'$profile_in_dir' => $profile_in_dir,

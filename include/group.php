@@ -97,8 +97,9 @@ function group_rmv_member($uid,$name,$member) {
 }
 
 
-function group_add_member($uid,$name,$member) {
-	$gid = group_byname($uid,$name);
+function group_add_member($uid,$name,$member,$gid = 0) {
+	if(! $gid)
+		$gid = group_byname($uid,$name);
 	if((! $gid) || (! $uid) || (! $member))
 		return false;
 
@@ -152,6 +153,29 @@ function group_public_members($gid) {
 	}
 	return $ret;
 }
+
+
+function mini_group_select($uid,$gid = 0) {
+	
+	$grps = array();
+	$o = '';
+
+	$r = q("SELECT * FROM `group` WHERE `deleted` = 0 AND `uid` = %d ORDER BY `name` ASC",
+		intval($uid)
+	);
+	$grps[] = array('name' => '', 'id' => '0', 'selected' => '');
+	if(count($r)) {
+		foreach($r as $rr) {
+			$grps[] = array('name' => $rr['name'], 'id' => $rr['id'], 'selected' => (($gid == $rr['id']) ? 'true' : ''));
+		}
+
+	}
+	logger('groups: ' . print_r($grps,true));
+
+	$o = replace_macros(get_markup_template('group_selection.tpl'), array('$groups' => $grps ));
+	return $o;
+}
+
 
 
 

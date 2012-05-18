@@ -370,6 +370,14 @@ function dfrn_request_post(&$a) {
 			if(count($r)) {
 				$contact_id = $r[0]['id'];
 
+				$g = q("select def_gid from user where uid = %d limit 1",
+					intval($uid)
+				);
+				if($g && intval($g[0]['def_gid'])) {
+					require_once('include/group.php');
+					group_add_member($uid,'',$contact_id,$g[0]['def_gid']);
+				}
+
 				$photo = avatar_img($addr);
 
 				$r = q("UPDATE `contact` SET 

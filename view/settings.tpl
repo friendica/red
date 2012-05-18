@@ -56,9 +56,12 @@ $suggestme
 
 $unkmail
 
+
 {{inc field_input.tpl with $field=$cntunkmail }}{{endinc}}
 
 {{inc field_input.tpl with $field=$expire.days }}{{endinc}}
+
+
 <div class="field input">
 	<span class="field_help"><a href="#advanced-expire-popup" id="advanced-expire" class='popupbox' title="$expire.advanced">$expire.label</a></span>
 	<div style="display: none;">
@@ -89,6 +92,9 @@ $unkmail
 </div>
 <br/>
 <div id="settings-default-perms-end"></div>
+
+<label name="group-selection-lbl" for="group-selection">$group_lbl_select</label>
+$group_select
 
 
 <div class="settings-submit-wrapper" >
