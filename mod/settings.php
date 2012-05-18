@@ -356,10 +356,6 @@ function settings_post(&$a) {
 	$post_joingroup   = (($_POST['post_joingroup'] == 1) ? 1: 0);
 	$post_profilechange   = (($_POST['post_profilechange'] == 1) ? 1: 0);
 
-	if($page_flags == PAGE_PRVGROUP) {
-		$hidewall = 1;
-	}
-
 	$notify = 0;
 
 	if(x($_POST,'notify1'))
@@ -444,6 +440,19 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'system','post_joingroup', $post_joingroup);
 	set_pconfig(local_user(),'system','post_profilechange', $post_profilechange);
 
+
+	if($page_flags == PAGE_PRVGROUP) {
+		$hidewall = 1;
+		if((! str_contact_allow) && (! str_group_allow) && (! str_contact_deny) && (! $str_group_deny)) {
+			if($def_gid) {
+				info( t('Private forum has no privacy permissions. Using default privacy group.'). EOL);
+				$str_group_allow = '<' . $def_gid . '>';
+			}
+			else {
+				notice( t('Private forum has no privacy permissions and no default privacy group.') . EOL);
+			} 
+		}
+	}
 
 	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `maxreq` = %d, `expire` = %d, `openidserver` = '%s', `def_gid` = %d, `blockwall` = %d, `hidewall` = %d, `blocktags` = %d, `unkmail` = %d, `cntunkmail` = %d  WHERE `uid` = %d LIMIT 1",
 			dbesc($username),
