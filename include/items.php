@@ -959,6 +959,8 @@ function tag_deliver($uid,$item_id) {
 		return;
 
 	$community_page = (($u[0]['page-flags'] == PAGE_COMMUNITY) ? true : false);
+	$prvgroup = (($u[0]['page-flags'] == PAGE_PRVGROUP) ? true : false);
+
 
 	$i = q("select * from item where id = %d and uid = %d limit 1",
 		intval($item_id),
@@ -986,30 +988,33 @@ function tag_deliver($uid,$item_id) {
 		}
 	}
 
-	if(! $mention)
+	if((! $mention) && (! $prvgroup))
 		return;
 
-	// send a notification
+	if($mention) {
 
-	require_once('include/enotify.php');
-	notification(array(
-		'type'         => NOTIFY_TAGSELF,
-		'notify_flags' => $u[0]['notify-flags'],
-		'language'     => $u[0]['language'],
-		'to_name'      => $u[0]['username'],
-		'to_email'     => $u[0]['email'],
-		'uid'          => $u[0]['uid'],
-		'item'         => $item,
-		'link'         => $a->get_baseurl() . '/display/' . $u[0]['nickname'] . '/' . $item['id'],
-		'source_name'  => $item['author-name'],
-		'source_link'  => $item['author-link'],
-		'source_photo' => $item['author-avatar'],
-		'verb'         => ACTIVITY_TAG,
-		'otype'        => 'item'
-	));
+		// send a notification
 
-	if(! $community_page)
-		return;
+		require_once('include/enotify.php');
+		notification(array(
+			'type'         => NOTIFY_TAGSELF,
+			'notify_flags' => $u[0]['notify-flags'],
+			'language'     => $u[0]['language'],
+			'to_name'      => $u[0]['username'],
+			'to_email'     => $u[0]['email'],
+			'uid'          => $u[0]['uid'],
+			'item'         => $item,
+			'link'         => $a->get_baseurl() . '/display/' . $u[0]['nickname'] . '/' . $item['id'],
+			'source_name'  => $item['author-name'],
+			'source_link'  => $item['author-link'],
+			'source_photo' => $item['author-avatar'],
+			'verb'         => ACTIVITY_TAG,
+			'otype'        => 'item'
+		));
+
+		if(! $community_page)
+			return;
+	}
 
 	// tgroup delivery - setup a second delivery chain
 	// prevent delivery looping - only proceed
