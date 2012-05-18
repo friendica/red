@@ -2199,7 +2199,7 @@ function local_delivery($importer,$data) {
 		if($is_reply) {
 			$community = false;
 
-			if($importer['page-flags'] == PAGE_COMMUNITY) {
+			if($importer['page-flags'] == PAGE_COMMUNITY || $importer['page-flags'] == PAGE_PRVGROUP ) {
 				$sql_extra = '';
 				$community = true;
 				logger('local_delivery: possible community reply');
@@ -2226,8 +2226,8 @@ function local_delivery($importer,$data) {
 			if($r && count($r))
 				$is_a_remote_comment = true;			
 
-			// Does this have the characteristics of a community comment?
-			// If it's a reply to a wall post on a community page it's a 
+			// Does this have the characteristics of a community or private group comment?
+			// If it's a reply to a wall post on a community/prvgroup page it's a 
 			// valid community comment. Also forum_mode makes it valid for sure. 
 			// If neither, it's not.
 
