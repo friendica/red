@@ -1091,6 +1091,11 @@ input#dfrn-url {
 	overflow: auto;
 }
 
+.wall-item-content img {
+  max-width: 700px;
+}
+
+
 .wall-item-title {
 	float: left;
 	font-weight: bold;
