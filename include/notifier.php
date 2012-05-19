@@ -220,7 +220,7 @@ function notifier_run($argv, $argc){
 		}
 
 
-		if(($cmd === 'uplink') && (intval($parent['forum_mode'])) && (! $top_level)) {
+		if(($cmd === 'uplink') && (intval($parent['forum_mode']) == 1) && (! $top_level)) {
 			$relay_to_owner = true;			
 		} 
 
@@ -265,10 +265,10 @@ function notifier_run($argv, $argc){
 			$deny_people  = expand_acl($parent['deny_cid']);
 			$deny_groups  = expand_groups(expand_acl($parent['deny_gid']));
 
-			// if our parent is a forum, uplink to the origional author causing
-			// a delivery fork
+			// if our parent is a public forum (forum_mode == 1), uplink to the origional author causing
+			// a delivery fork. private groups (forum_mode == 2) do not uplink
 
-			if(intval($parent['forum_mode']) && (! $top_level) && ($cmd !== 'uplink')) {
+			if((intval($parent['forum_mode']) == 1) && (! $top_level) && ($cmd !== 'uplink')) {
 				proc_run('php','include/notifier','uplink',$item_id);
 			}
 
@@ -478,6 +478,12 @@ function notifier_run($argv, $argc){
 			}
 		}
 
+		$deliveries_per_process = intval(get_config('system','delivery_batch_count'));
+		if($deliveries_per_process <= 0)
+			$deliveries_per_process = 1;
+
+		$this_batch = array();
+
 		foreach($r as $contact) {
 			if($contact['self'])
 				continue;
@@ -486,6 +492,7 @@ function notifier_run($argv, $argc){
 			// we will deliver single recipient types of message and email receipients here. 
 
 			if((! $mail) && (! $fsuggest) && (! $followup)) {
+				// deliveries per process not yet implemented, 1 delivery per process.
 				proc_run('php','include/delivery.php',$cmd,$item_id,$contact['id']);
 				if($interval)
 					@time_sleep_until(microtime(true) + (float) $interval);

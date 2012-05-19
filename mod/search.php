@@ -96,6 +96,12 @@ function search_content(&$a) {
 
 	$o .= search($search,'search-box','/search',((local_user()) ? true : false));
 
+
+	if(strpos($search,'#') === 0) {
+		$tag = true;
+		$search = substr($search,1);
+	}
+
 	if(! $search)
 		return $o;
 

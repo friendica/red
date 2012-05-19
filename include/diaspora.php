@@ -569,6 +569,14 @@ function diaspora_request($importer,$xml) {
 		return;
 	}
 
+	$g = q("select def_gid from user where uid = %d limit 1",
+		intval($importer['uid'])
+	);
+	if($g && intval($g[0]['def_gid'])) {
+		require_once('include/group.php');
+		group_add_member($importer['uid'],'',$contact_record['id'],$g[0]['def_gid']);
+	}
+
 	if($importer['page-flags'] == PAGE_NORMAL) {
 
 		$hash = random_string() . (string) time();   // Generate a confirm_key
