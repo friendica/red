@@ -103,7 +103,7 @@ blockquote {
 }
 
 .acl-list-item p, #profile-jot-email-label, div#jot-preview-content, div.profile-jot-net {
-        color: #000000;
+        color: #eec;
 }
 
 input#acl-search {
@@ -136,3 +136,12 @@ blockquote {
   background:#2e2f2e !important;
   color:#eec !important;
 }
+
+.group-selected, .nets-selected, .fileas-selected, .categories-selected {
+  background:#2e2f2e;
+}
+
+#fancybox-content{
+  background:#444;
+}
+
