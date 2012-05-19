@@ -121,7 +121,7 @@
 			  display: block; width: 28px; height: 28px; background-repeat: no-repeat;
 			  }	
 .video 	{ background-image: url("../diabook-dark/icons/video.png"); 
-			  display: block; width: 100%; height: 28px; background-repeat: no-repeat;
+			  display: block; width: 100%; height: 140px; background-repeat: no-repeat;
 			  }
 .audio2 	{ background-image: url("../diabook-dark/icons/audio.png"); 
 			  display: block; width: 28px; height: 28px; background-repeat: no-repeat;
@@ -1372,7 +1372,7 @@ transition: all 0.2s ease-in-out;
   max-width: 690px;
   word-wrap: break-word;
 
-  margin-bottom: 14px;
+
 }
 /*marker*/
 .wall-item-container .wall-item-content img {
@@ -1452,7 +1452,7 @@ transition: all 0.2s ease-in-out;
 }
 
 .wall-item-comment-wrapper {
-  margin: 1px 5px 17px 80px;
+  margin: 1px 5px 5px 80px;
 /*  background-color: #fff; */
   width: 500px;
 }

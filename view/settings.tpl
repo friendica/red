@@ -56,9 +56,12 @@ $suggestme
 
 $unkmail
 
+
 {{inc field_input.tpl with $field=$cntunkmail }}{{endinc}}
 
 {{inc field_input.tpl with $field=$expire.days }}{{endinc}}
+
+
 <div class="field input">
 	<span class="field_help"><a href="#advanced-expire-popup" id="advanced-expire" class='popupbox' title="$expire.advanced">$expire.label</a></span>
 	<div style="display: none;">
@@ -90,6 +93,8 @@ $unkmail
 <br/>
 <div id="settings-default-perms-end"></div>
 
+$group_select
+
 
 <div class="settings-submit-wrapper" >
 <input type="submit" name="submit" class="settings-submit" value="Submit" />
@@ -102,6 +107,7 @@ $unkmail
 <strong>$activity_options</strong>
 
 {{inc field_checkbox.tpl with $field=$post_newfriend }}{{endinc}}
+{{inc field_checkbox.tpl with $field=$post_joingroup }}{{endinc}}
 {{inc field_checkbox.tpl with $field=$post_profilechange }}{{endinc}}
 
 

@@ -8,7 +8,7 @@
 	<h1>$title - $page</h1>
 	
 	<form action="$baseurl/admin/site" method="post">
-	
+	    <input type='hidden' name='form_security_token' value='$form_security_token'>
 	{{ inc field_input.tpl with $field=$sitename }}{{ endinc }}
 	{{ inc field_textarea.tpl with $field=$banner }}{{ endinc }}
 	{{ inc field_select.tpl with $field=$language }}{{ endinc }}
@@ -49,6 +49,9 @@
 	{{ inc field_input.tpl with $field=$proxy }}{{ endinc }}
 	{{ inc field_input.tpl with $field=$proxyuser }}{{ endinc }}
 	{{ inc field_input.tpl with $field=$timeout }}{{ endinc }}
+	{{ inc field_input.tpl with $field=$delivery_interval }}{{ endinc }}
+	{{ inc field_input.tpl with $field=$poll_interval }}{{ endinc }}
+	{{ inc field_input.tpl with $field=$maxloadavg }}{{ endinc }}
 	{{ inc field_input.tpl with $field=$abandon_days }}{{ endinc }}
 	
 	<div class="submit"><input type="submit" name="page_site" value="$submit" /></div>

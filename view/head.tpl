@@ -36,6 +36,7 @@
 			obj.value = '';
 			$("#comment-edit-text-" + id).addClass("comment-edit-text-full");
 			$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
+			$("#mod-cmnt-wrap-" + id).show();
 			openMenu("comment-edit-submit-wrapper-" + id);
 		}
 	}
@@ -44,6 +45,7 @@
 			obj.value = '$comment';
 			$("#comment-edit-text-" + id).removeClass("comment-edit-text-full");
 			$("#comment-edit-text-" + id).addClass("comment-edit-text-empty");
+			$("#mod-cmnt-wrap-" + id).hide();
 			closeMenu("comment-edit-submit-wrapper-" + id);
 		}
 	}
@@ -79,6 +81,7 @@
 		ins = ins.replace('&amp;','&');
 		ins = ins.replace('&quot;','"');
 		$("#comment-edit-text-" + id).val(tmpStr + ins);
+		$(obj).val('');
 	}
 
 	function showHideComments(id) {

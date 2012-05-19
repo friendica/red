@@ -21,6 +21,7 @@
 
 .admin.linklist {
         border: 0px; padding: 0px;
+        list-style: none;
 }
 
 .admin.link {
@@ -150,7 +151,7 @@
 			  display: block; width: 28px; height: 28px; background-repeat: no-repeat;
 			  }	
 .video 	{ background-image: url("../../../view/theme/diabook/icons/video.png"); 
-			  display: block; width: 100%; height: 28px; background-repeat: no-repeat;
+			  display: block; width: 100%; height: 140px; background-repeat: no-repeat;
 			  }
 .audio2 	{ background-image: url("../../../view/theme/diabook/icons/audio.png"); 
 			  display: block; width: 28px; height: 28px; background-repeat: no-repeat;
@@ -557,6 +558,7 @@ code {
   text-decoration: none;
 }
 /* popup notifications */
+div.jGrowl.top-right { top: 30px; /* put it below header/nav bar */ }
 div.jGrowl div.notice {
   background: #511919 url("../../../images/icons/48/notice.png") no-repeat 5px center;
   color: #ffffff;
@@ -609,9 +611,7 @@ header #banner #logo-img {
   margin-top: 3px;
 }
 header #banner #logo-text {
-  font-size: 20px;
-  position: absolute;
-  top: 10%;
+  font-size: 20px!important;position: relative!important;top: -4px!important;
 }
 /* messages */
 #message-new {
@@ -974,7 +974,7 @@ ul.menu-popup .empty {
   background-color: #bdcdd4;
 }
 #nav-notifications-menu {
-  width: 400px;
+  width: 425px !important;
   max-height: 550px;
   overflow: auto;
 }
@@ -1198,7 +1198,14 @@ aside #side-peoplefind-url {
   margin-right: 20px;	
 	}
 #login-submit-wrapper{
-  margin-bottom: 15px;
+
+  margin-bottom: 12px;
+	}
+aside #login-submit-button{
+  margin-left: 0px!important;	
+	}
+aside #login-extra-links{
+  padding-top: 0px!important;	
 	}
 /* widget */
 .widget {
@@ -1457,7 +1464,7 @@ body .pageheader{
   max-width: 720px;
   word-wrap: break-word;
 
-  margin-bottom: 14px;
+
 }
 .wall-item-photo-container .wall-item-content {
 
@@ -1620,13 +1627,13 @@ body .pageheader{
   padding-left: 12px;
 }
 .wall-item-comment-wrapper {
-  margin: 1px 5px 17px 80px;
+  margin: 1px 5px 5px 80px;
 }
 .wall-item-comment-wrapper .comment-edit-photo {
   display: none;
 }
 .wall-item-comment-wrapper textarea {
-  height: 2.0em;
+  height: 1.6em;
   width: 100%;
   font-size: 10px;
   color: #999999;
@@ -1688,14 +1695,14 @@ body .pageheader{
 }
 .tag {
   /*background: url("../../../images/tag_b.png") repeat-x center left;*/
-  color: #3465A4;
+  color: #999;
   padding-left: 3px;
   font-size: 12px;
 }
 .tag a {
   padding-right: 5px;
   /*background: url("../../../images/tag.png") no-repeat center right;*/
-  color: #3465A4;
+  color: #999;
 }
 .wwto {
   position: absolute !important;

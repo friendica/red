@@ -13,6 +13,14 @@ function acl_init(&$a){
 	$type = (x($_REQUEST,'type')?$_REQUEST['type']:"");
 	
 
+	// For use with jquery.autocomplete for private mail completion
+
+	if(x($_REQUEST,'query') && strlen($_REQUEST['query'])) {
+		$type = 'm';
+		$search = $_REQUEST['query'];
+	}
+
+
 	if ($search!=""){
 		$sql_extra = "AND `name` LIKE '%%".dbesc($search)."%%'";
 		$sql_extra2 = "AND (`attag` LIKE '%%".dbesc($search)."%%' OR `name` LIKE '%%".dbesc($search)."%%' OR `nick` LIKE '%%".dbesc($search)."%%')";
@@ -33,11 +41,27 @@ function acl_init(&$a){
 	if ($type=='' || $type=='c'){
 		$r = q("SELECT COUNT(`id`) AS c FROM `contact` 
 				WHERE `uid` = %d AND `self` = 0 
-				AND `blocked` = 0 AND `pending` = 0 
+				AND `blocked` = 0 AND `pending` = 0 AND `archive` = 0
 				AND `notify` != '' $sql_extra2" ,
 			intval(local_user())
 		);
 		$contact_count = (int)$r[0]['c'];
+	} 
+	elseif ($type == 'm') {
+
+		// autocomplete for Private Messages
+
+		$r = q("SELECT COUNT(`id`) AS c FROM `contact` 
+				WHERE `uid` = %d AND `self` = 0 
+				AND `blocked` = 0 AND `pending` = 0 AND `archive` = 0 
+				AND `network` IN ('%s','%s','%s') $sql_extra2" ,
+			intval(local_user()),
+			dbesc(NETWORK_DFRN),
+			dbesc(NETWORK_ZOT),
+			dbesc(NETWORK_DIASPORA)
+		);
+		$contact_count = (int)$r[0]['c'];
+
 	} else {
 		$contact_count = 0;
 	}
@@ -78,11 +102,48 @@ function acl_init(&$a){
 	if ($type=='' || $type=='c'){
 	
 		$r = q("SELECT `id`, `name`, `nick`, `micro`, `network`, `url`, `attag` FROM `contact` 
-			WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 AND `notify` != ''
+			WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 AND `archive` = 0 AND `notify` != ''
 			$sql_extra2
 			ORDER BY `name` ASC ",
 			intval(local_user())
 		);
+	}
+	elseif($type == 'm') {
+		$r = q("SELECT `id`, `name`, `nick`, `micro`, `network`, `url`, `attag` FROM `contact` 
+			WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 AND `archive` = 0
+			AND `network` IN ('%s','%s','%s')
+			$sql_extra2
+			ORDER BY `name` ASC ",
+			intval(local_user()),
+			dbesc(NETWORK_DFRN),
+			dbesc(NETWORK_ZOT),
+			dbesc(NETWORK_DIASPORA)
+		);
+	}
+	else
+		$r = array();
+
+
+	if($type == 'm') {
+		$x = array();
+		$x['query'] = $search;
+		$x['photos'] = array();
+		$x['links'] = array();
+		$x['suggestions'] = array();
+		$x['data'] = array();
+		if(count($r)) {
+			foreach($r as $g) {
+				$x['photos'][] = $g['micro'];
+				$x['links'][] = $g['url'];
+				$x['suggestions'][] = $g['name']; // sprintf( t('%s [%s]'),$g['name'],$g['url']);
+				$x['data'][] = intval($g['id']);
+			}
+		}
+		echo json_encode($x);
+		killme();
+	}
+
+	if(count($r)) {
 		foreach($r as $g){
 			$contacts[] = array(
 				"type"  => "c",
@@ -93,11 +154,9 @@ function acl_init(&$a){
 				"link" => $g['url'],
 				"nick" => ($g['attag']) ? $g['attag'] : $g['nick'],
 			);
-		}
-			
+		}			
 	}
-	
-	
+		
 	$items = array_merge($groups, $contacts);
 	
 	$o = array(

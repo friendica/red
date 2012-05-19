@@ -1,15 +1,14 @@
 
-Hallo $myname,
+Hallo $[myname],
 
-'$requestor' folgt dir jetzt auf $sitename.
+Du hast einen neuen Anhänger auf $[sitename] -  '$[requestor]'.
 
-Du kannst das Profil unter $url abrufen.
+Du kannst das Profil unter $[url] besuchen.
 
-Bitte melde dich auf deiner Seite an um die Anfrage zu bestätigen, abzulehnen
-oder zu ignorieren.
+Bitte melde dich an um die Anfrage zu bestätigen oder sie zu ignorieren bzw. abzulehnen.
 
-$siteurl
+$[siteurl]
 
-Grüße,
-    $sitename Administrator
+beste Grüße,
 
+	$[sitename] Administrator

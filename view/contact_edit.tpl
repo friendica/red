@@ -26,11 +26,14 @@
 				{{ if $ignored }}
 					<li><div id="ignore-message">$ignored</div></li>
 				{{ endif }}
+				{{ if $archived }}
+					<li><div id="archive-message">$archived</div></li>
+				{{ endif }}
 
 				<li>&nbsp;</li>
 
 				{{ if $common_text }}
-					<li><div id="contact-edit-common"><a href="common/$contact_id">$common_text</a></div></li>
+					<li><div id="contact-edit-common"><a href="$common_link">$common_text</a></div></li>
 				{{ endif }}
 				{{ if $all_friends }}
 					<li><div id="contact-edit-allfriends"><a href="allfriends/$contact_id">$all_friends</a></div></li>

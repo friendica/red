@@ -569,6 +569,14 @@ function diaspora_request($importer,$xml) {
 		return;
 	}
 
+	$g = q("select def_gid from user where uid = %d limit 1",
+		intval($importer['uid'])
+	);
+	if($g && intval($g[0]['def_gid'])) {
+		require_once('include/group.php');
+		group_add_member($importer['uid'],'',$contact_record['id'],$g[0]['def_gid']);
+	}
+
 	if($importer['page-flags'] == PAGE_NORMAL) {
 
 		$hash = random_string() . (string) time();   // Generate a confirm_key
@@ -706,10 +714,10 @@ function diaspora_post($importer,$xml) {
 					continue;
 
 				$basetag = str_replace('_',' ',substr($tag,1));
-				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
+				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
 				if(strlen($str_tags))
 					$str_tags .= ',';
-				$str_tags .= '#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]';
+				$str_tags .= '#[url=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/url]';
 				continue;
 			}
 		}
@@ -872,10 +880,10 @@ function diaspora_reshare($importer,$xml) {
 
 
 				$basetag = str_replace('_',' ',substr($tag,1));
-				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
+				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
 				if(strlen($str_tags))
 					$str_tags .= ',';
-				$str_tags .= '#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]';
+				$str_tags .= '#[url=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/url]';
 				continue;
 			}
 		}
@@ -1113,10 +1121,10 @@ function diaspora_comment($importer,$xml,$msg) {
 
 
 				$basetag = str_replace('_',' ',substr($tag,1));
-				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
+				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
 				if(strlen($str_tags))
 					$str_tags .= ',';
-				$str_tags .= '#[url=' . $a->get_baseurl() . '/search?search=' . rawurlencode($basetag) . ']' . $basetag . '[/url]';
+				$str_tags .= '#[url=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/url]';
 				continue;
 			}
 		}
@@ -1172,7 +1180,7 @@ function diaspora_comment($importer,$xml,$msg) {
 		proc_run('php','include/notifier.php','comment',$message_id);
 	}
 
-	$myconv = q("SELECT `author-link`, `author-avatar`, `parent` FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `parent` != 0 ",
+	$myconv = q("SELECT `author-link`, `author-avatar`, `parent` FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `parent` != 0 AND `deleted` = 0 ",
 		dbesc($parent_item['uri']),
 		intval($importer['uid'])
 	);
@@ -2298,14 +2306,20 @@ function diaspora_transmit($owner,$contact,$slap,$public_batch) {
 
 	logger('diaspora_transmit: ' . $logid . ' ' . $dest_url);
 
-	if(! intval(get_config('system','diaspora_test')))
-		post_url($dest_url . '/', $slap);
-	else {
-		logger('diaspora_transmit: test_mode');
-		return 200;
+	if(was_recently_delayed($contact['id'])) {
+		$return_code = 0;
 	}
-
-	$return_code = $a->get_curl_code();
+	else {
+		if(! intval(get_config('system','diaspora_test'))) {
+			post_url($dest_url . '/', $slap);
+			$return_code = $a->get_curl_code();
+		}
+		else {
+			logger('diaspora_transmit: test_mode');
+			return 200;
+		}
+	}
+	
 	logger('diaspora_transmit: ' . $logid . ' returns: ' . $return_code);
 
 	if((! $return_code) || (($return_code == 503) && (stristr($a->get_curl_headers(),'retry-after')))) {

@@ -119,7 +119,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 	$check_date = datetime_convert('UTC','UTC',$last_update,'Y-m-d H:i:s');
 
 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-		`contact`.`name`, `contact`.`photo`, `contact`.`url`, 
+		`contact`.`name`, `contact`.`network`, `contact`.`photo`, `contact`.`url`, 
 		`contact`.`name-date`, `contact`.`uri-date`, `contact`.`avatar-date`,
 		`contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`, 
 		`contact`.`id` AS `contact-id`, `contact`.`uid` AS `contact-uid`,
@@ -952,13 +952,15 @@ function tag_deliver($uid,$item_id) {
 
 	$mention = false;
 
-	$u = q("select uid, nickname, language, username, email, `page-flags`, `notify-flags` from user where uid = %d limit 1",
+	$u = q("select * from user where uid = %d limit 1",
 		intval($uid)
 	);
 	if(! count($u))
 		return;
 
 	$community_page = (($u[0]['page-flags'] == PAGE_COMMUNITY) ? true : false);
+	$prvgroup = (($u[0]['page-flags'] == PAGE_PRVGROUP) ? true : false);
+
 
 	$i = q("select * from item where id = %d and uid = %d limit 1",
 		intval($item_id),
@@ -1008,8 +1010,9 @@ function tag_deliver($uid,$item_id) {
 		'otype'        => 'item'
 	));
 
-	if(! $community_page)
+	if((! $community_page) && (! prvgroup))
 		return;
+
 
 	// tgroup delivery - setup a second delivery chain
 	// prevent delivery looping - only proceed
@@ -1027,10 +1030,23 @@ function tag_deliver($uid,$item_id) {
 	if(! count($c))
 		return;
 
-	q("update item set wall = 1, origin = 1, forum_mode = 1, `owner-name` = '%s', `owner-link` = '%s', `owner-avatar` = '%s'  where id = %d limit 1",
+	// also reset all the privacy bits to the forum default permissions
+
+	$private = ($u[0]['allow_cid'] || $u[0]['allow_gid'] || $u[0]['deny_cid'] || $u[0]['deny_gid']) ? 1 : 0;
+
+	$forum_mode = (($prvgroup) ? 2 : 1);
+
+	q("update item set wall = 1, origin = 1, forum_mode = %d, `owner-name` = '%s', `owner-link` = '%s', `owner-avatar` = '%s', 
+		`private` = %d, `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s'  where id = %d limit 1",
+		intval($forum_mode),
 		dbesc($c[0]['name']),
 		dbesc($c[0]['url']),
 		dbesc($c[0]['thumb']),
+		intval($private),
+		dbesc($u[0]['allow_cid']),
+		dbesc($u[0]['allow_gid']),
+		dbesc($u[0]['deny_cid']),
+		dbesc($u[0]['deny_gid']),
 		intval($item_id)
 	);
 
@@ -2184,7 +2200,7 @@ function local_delivery($importer,$data) {
 		if($is_reply) {
 			$community = false;
 
-			if($importer['page-flags'] == PAGE_COMMUNITY) {
+			if($importer['page-flags'] == PAGE_COMMUNITY || $importer['page-flags'] == PAGE_PRVGROUP ) {
 				$sql_extra = '';
 				$community = true;
 				logger('local_delivery: possible community reply');
@@ -2211,8 +2227,8 @@ function local_delivery($importer,$data) {
 			if($r && count($r))
 				$is_a_remote_comment = true;			
 
-			// Does this have the characteristics of a community comment?
-			// If it's a reply to a wall post on a community page it's a 
+			// Does this have the characteristics of a community or private group comment?
+			// If it's a reply to a wall post on a community/prvgroup page it's a 
 			// valid community comment. Also forum_mode makes it valid for sure. 
 			// If neither, it's not.
 
@@ -2227,10 +2243,10 @@ function local_delivery($importer,$data) {
 				logger('local_delivery: received remote comment');
 				$is_like = false;
 				// remote reply to our post. Import and then notify everybody else.
+
 				$datarray = get_atom_elements($feed,$item);
 
-
-				$r = q("SELECT `id`, `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT `id`, `uid`, `last-child`, `edited`, `body`  FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['importer_uid'])
 				);
@@ -2266,14 +2282,22 @@ function local_delivery($importer,$data) {
 //					return 0;
 //				}					
 
+				// our user with $importer['importer_uid'] is the owner
+
+				$own = q("select name,url,thumb from contact where uid = %d and self = 1 limit 1",
+					intval($importer['importer_uid'])
+				);
+
+
 				$datarray['type'] = 'remote-comment';
 				$datarray['wall'] = 1;
 				$datarray['parent-uri'] = $parent_uri;
 				$datarray['uid'] = $importer['importer_uid'];
-				$datarray['owner-name'] = $r[0]['name'];
-				$datarray['owner-link'] = $r[0]['url'];
-				$datarray['owner-avatar'] = $r[0]['thumb'];
+				$datarray['owner-name'] = $own[0]['name'];
+				$datarray['owner-link'] = $own[0]['url'];
+				$datarray['owner-avatar'] = $own[0]['thumb'];
 				$datarray['contact-id'] = $importer['id'];
+
 				if(($datarray['verb'] === ACTIVITY_LIKE) || ($datarray['verb'] === ACTIVITY_DISLIKE)) {
 					$is_like = true;
 					$datarray['type'] = 'activity';
@@ -2290,26 +2314,34 @@ function local_delivery($importer,$data) {
 				}
 
 				if(($datarray['verb'] === ACTIVITY_TAG) && ($datarray['object-type'] === ACTIVITY_OBJ_TAGTERM)) {
-
-
+					
 					$xo = parse_xml_string($datarray['object'],false);
 					$xt = parse_xml_string($datarray['target'],false);
 
-					if(($xt->type == ACTIVITY_OBJ_NOTE) && ($xt->id == $r[0]['uri'])) {
+					if(($xt->type == ACTIVITY_OBJ_NOTE) && ($xt->id)) {
+
+						// fetch the parent item
+
+						$tagp = q("select * from item where uri = '%s' and uid = %d limit 1",
+							dbesc($xt->id),
+							intval($importer['importer_uid'])
+						);
+						if(! count($tagp))
+							continue;	
 
 						// extract tag, if not duplicate, and this user allows tags, add to parent item						
 
 						if($xo->id && $xo->content) {
 							$newtag = '#[url=' . $xo->id . ']'. $xo->content . '[/url]';
-
-							if(! (stristr($r[0]['tag'],$newtag))) {
+							if(! (stristr($tagp[0]['tag'],$newtag))) {
 								$i = q("SELECT `blocktags` FROM `user` where `uid` = %d LIMIT 1",
 									intval($importer['importer_uid'])
 								);
-								if(count($i) && ! ($i[0]['blocktags'])) {
-									q("UPDATE item SET tag = '%s' WHERE id = %d LIMIT 1",
-										dbesc($r[0]['tag'] . (strlen($r[0]['tag']) ? ',' : '') . $newtag),
-										intval($r[0]['id'])
+								if(count($i) && ! intval($i[0]['blocktags'])) {
+									q("UPDATE item SET tag = '%s', `edited` = '%s' WHERE id = %d LIMIT 1",
+										dbesc($tagp[0]['tag'] . (strlen($tagp[0]['tag']) ? ',' : '') . $newtag),
+										intval($tagp[0]['id']),
+										dbesc(datetime_convert())
 									);
 								}
 							}
@@ -2479,7 +2511,7 @@ function local_delivery($importer,$data) {
 			
 				if(!x($datarray['type']) || $datarray['type'] != 'activity') {
 
-					$myconv = q("SELECT `author-link`, `author-avatar`, `parent` FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `parent` != 0 ",
+					$myconv = q("SELECT `author-link`, `author-avatar`, `parent` FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `parent` != 0 AND `deleted` = 0",
 						dbesc($parent_uri),
 						intval($importer['importer_uid'])
 					);
@@ -2685,6 +2717,12 @@ function new_follower($importer,$contact,$datarray,$item,$sharing = false) {
 		);
 		$a = get_app();
 		if(count($r)) {
+
+			if(intval($r[0]['def_gid'])) {
+				require_once('include/group.php');
+				group_add_member($r[0]['uid'],'',$contact_record['id'],$r[0]['def_gid']);
+			}
+
 			if(($r[0]['notify-flags'] & NOTIFY_INTRO) && ($r[0]['page-flags'] == PAGE_NORMAL)) {
 				$email_tpl = get_intltext_template('follow_notify_eml.tpl');
 				$email = replace_macros($email_tpl, array(
@@ -3013,32 +3051,7 @@ function item_expire($uid,$days) {
 		if($expire_items==0 && $item['type']!='note')
 			continue;
 
-
-		$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s' WHERE `id` = %d LIMIT 1",
-			dbesc(datetime_convert()),
-			dbesc(datetime_convert()),
-			intval($item['id'])
-		);
-
-		$r = q("DELETE FROM item_id where iid in (select id from item where parent = %d) and uid = %d",
-			intval($item['id']),
-			intval($uid)
-		);
-
-		$r = q("DELETE FROM sign where iid in (select id from item where parent = %d) and uid = %d",
-			intval($item['id']),
-			intval($uid)
-		);
-
-		// kill the kids
-
-		$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d ",
-			dbesc(datetime_convert()),
-			dbesc(datetime_convert()),
-			dbesc($item['parent-uri']),
-			intval($item['uid'])
-		);
-
+		drop_item($item['id'],false);
 	}
 
 	proc_run('php',"include/notifier.php","expire","$uid");
@@ -3100,6 +3113,25 @@ function drop_item($id,$interactive = true) {
 			intval($item['id'])
 		);
 
+		// clean up categories and tags so they don't end up as orphans
+
+		$matches = false;
+		$cnt = preg_match_all('/<(.*?)>/',$item['file'],$matches,PREG_SET_ORDER);
+		if($cnt) {
+			foreach($matches as $mtch) {
+				file_tag_unsave_file($item['uid'],$item['id'],$mtch[1],true);
+			}
+		}
+
+		$matches = false;
+
+		$cnt = preg_match_all('/\[(.*?)\]/',$item['file'],$matches,PREG_SET_ORDER);
+		if($cnt) {
+			foreach($matches as $mtch) {
+				file_tag_unsave_file($item['uid'],$item['id'],$mtch[1],false);
+			}
+		}
+
 		// If item is a link to a photo resource, nuke all the associated photos 
 		// (visitors will not have photo resources)
 		// This only applies to photos uploaded from the photos page. Photos inserted into a post do not
@@ -3123,6 +3155,17 @@ function drop_item($id,$interactive = true) {
 			// ignore the result
 		}
 
+		// clean up item_id and sign meta-data tables
+
+		$r = q("DELETE FROM item_id where iid in (select id from item where parent = %d and uid = %d)",
+			intval($item['id']),
+			intval($item['uid'])
+		);
+
+		$r = q("DELETE FROM sign where iid in (select id from item where parent = %d and uid = %d)",
+			intval($item['id']),
+			intval($item['uid'])
+		);
 
 		// If it's the parent of a comment thread, kill all the kids
 
@@ -3155,7 +3198,7 @@ function drop_item($id,$interactive = true) {
 			}	
 		}
 		$drop_id = intval($item['id']);
-			
+
 		// send the notification upstream/downstream as the case may be
 
 		if(! $interactive)

@@ -21,6 +21,7 @@
 
 .admin.linklist {
         border: 0px; padding: 0px;
+        list-style: none;
 }
 
 .admin.link {
@@ -150,7 +151,7 @@
 			  display: block; width: 28px; height: 28px; background-repeat: no-repeat;
 			  }	
 .video 	{ background-image: url("../../../view/theme/diabook/diabook-pink/icons/video.png"); 
-			  display: block; width: 100%; height: 28px; background-repeat: no-repeat;
+			  display: block; width: 100%; height: 140px; background-repeat: no-repeat;
 			  }
 .audio2 	{ background-image: url("../../../view/theme/diabook/diabook-pink/icons/audio.png"); 
 			  display: block; width: 28px; height: 28px; background-repeat: no-repeat;
@@ -477,7 +478,7 @@ a:hover {
 }
 /*color*/
 .fakelink {
-  color: #996d73;
+  color: #D02B55;
   /* color: #3e3e8c; */
   text-decoration: none;
   cursor: pointer;
@@ -550,12 +551,13 @@ code {
 }
 /*color*/
 .tool a {
-  color: #996d73;
+  color: #D02B55;
 }
 .tool a:hover {
   text-decoration: none;
 }
 /* popup notifications */
+div.jGrowl.top-right { top: 30px; /* put it below header/nav bar */ }
 div.jGrowl div.notice {
   background: #511919 url("../../../images/icons/48/notice.png") no-repeat 5px center;
   color: #ffffff;
@@ -610,14 +612,12 @@ header #banner #logo-img {
   margin-top: 3px;
 }
 header #banner #logo-text {
-  font-size: 20px;
-  position: absolute;
-  top: 10%;
+  font-size: 20px!important;position: relative!important;top: -4px!important;
 }
 /* messages */
 /*color*/
 #message-new {
-  background: #996d73;
+  background: #D02B55;
   border: 1px solid #333;
   width: 150px;
 }
@@ -946,7 +946,7 @@ ul.menu-popup a {
 }
 /*color*/
 ul.menu-popup a:hover {
-  background-color: #996d73; /*bdcdd4;*/
+  background-color: #D02B55; /*bdcdd4;*/
   color: #fff;
 }
 ul.menu-popup .menu-sep {
@@ -994,7 +994,7 @@ ul.menu-popup .empty {
   background-color: #bdcdd4;
 }
 #nav-notifications-menu {
-  width: 400px;
+  width: 425px !important;
   max-height: 550px;
   overflow: auto;
 }
@@ -1189,7 +1189,7 @@ aside #side-peoplefind-url {
 }
 /*color*/
 aside #likes a, a:visited, a:link {
-		color: #996d73;
+		color: #D02B55;
 		text-decoration: none;
 		cursor: pointer;
 		
@@ -1224,7 +1224,14 @@ aside #likes a:hover{
   margin-right: 20px;		
 	}
 #login-submit-wrapper{
-margin-bottom: 15px;
+
+  margin-bottom: 12px;
+	}
+aside #login-submit-button{
+  margin-left: 0px!important;	
+	}
+aside #login-extra-links{
+  padding-top: 0px!important;	
 	}
 .group_selected {
   background: url("../diabook/icons/selected.png") no-repeat left center;
@@ -1418,7 +1425,7 @@ body .pageheader{
 }
 /*color*/
 .tread-wrapper a{
-  color: #996d73;
+  color: #D02B55;
 }
 .wall-item-decor {
   position: absolute;
@@ -1600,7 +1607,7 @@ body .pageheader{
   max-width: 720px;
   word-wrap: break-word;
 
-  margin-bottom: 14px;
+
 }
 
 .wall-item-container .wall-item-content img {
@@ -1677,7 +1684,7 @@ body .pageheader{
   padding-left: 12px;
 }
 .wall-item-comment-wrapper {
-  margin: 1px 5px 17px 80px;
+  margin: 1px 5px 5px 80px;
 }
 .wall-item-comment-wrapper .comment-edit-photo {
   display: none;
@@ -2064,7 +2071,7 @@ body .pageheader{
 }
 /*color*/
 .button.creation2 {
-    background-color: #996d73;
+    background-color: #D02B55;
     border: 1px solid #777777;
     color: white;
     border-radius: 3px 3px 3px 3px;
@@ -2197,7 +2204,7 @@ ul.tabs li {
 }
 /*color*/
 ul.tabs li .active {
-    background-color: #996d73;
+    background-color: #D02B55;
     border: 1px solid #777777;
     color: white;
     border-radius: 3px 3px 3px 3px;
@@ -2216,7 +2223,7 @@ ul.rs_tabs li {
 }
 /*color*/
 ul.rs_tabs li .selected {
-    background-color: #996d73;
+    background-color: #D02B55;
     border: 1px solid #777777;
     color: white;
     border-radius: 3px 3px 3px 3px;

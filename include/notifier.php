@@ -47,7 +47,7 @@ function notifier_run($argv, $argc){
 
 	$a->set_baseurl(get_config('system','url'));
 
-	logger('notifier: invoked: ' . print_r($argv,true));
+	logger('notifier: invoked: ' . print_r($argv,true), LOGGER_DEBUG);
 
 	$cmd = $argv[1];
 
@@ -220,7 +220,7 @@ function notifier_run($argv, $argc){
 		}
 
 
-		if(($cmd === 'uplink') && (intval($parent['forum_mode'])) && (! $top_level)) {
+		if(($cmd === 'uplink') && (intval($parent['forum_mode']) == 1) && (! $top_level)) {
 			$relay_to_owner = true;			
 		} 
 
@@ -265,10 +265,10 @@ function notifier_run($argv, $argc){
 			$deny_people  = expand_acl($parent['deny_cid']);
 			$deny_groups  = expand_groups(expand_acl($parent['deny_gid']));
 
-			// if our parent is a forum, uplink to the origional author causing
-			// a delivery fork
+			// if our parent is a public forum (forum_mode == 1), uplink to the origional author causing
+			// a delivery fork. private groups (forum_mode == 2) do not uplink
 
-			if(intval($parent['forum_mode']) && (! $top_level) && ($cmd !== 'uplink')) {
+			if((intval($parent['forum_mode']) == 1) && (! $top_level) && ($cmd !== 'uplink')) {
 				proc_run('php','include/notifier','uplink',$item_id);
 			}
 
@@ -304,7 +304,7 @@ function notifier_run($argv, $argc){
 			$conversant_str = dbesc(implode(', ',$conversants));
 		}
 
-		$r = q("SELECT * FROM `contact` WHERE `id` IN ( $conversant_str ) AND `blocked` = 0 AND `pending` = 0");
+		$r = q("SELECT * FROM `contact` WHERE `id` IN ( $conversant_str ) AND `blocked` = 0 AND `pending` = 0 AND `archive` = 0");
 
 		if(count($r))
 			$contacts = $r;
@@ -478,6 +478,12 @@ function notifier_run($argv, $argc){
 			}
 		}
 
+		$deliveries_per_process = intval(get_config('system','delivery_batch_count'));
+		if($deliveries_per_process <= 0)
+			$deliveries_per_process = 1;
+
+		$this_batch = array();
+
 		foreach($r as $contact) {
 			if($contact['self'])
 				continue;
@@ -486,6 +492,7 @@ function notifier_run($argv, $argc){
 			// we will deliver single recipient types of message and email receipients here. 
 
 			if((! $mail) && (! $fsuggest) && (! $followup)) {
+				// deliveries per process not yet implemented, 1 delivery per process.
 				proc_run('php','include/delivery.php',$cmd,$item_id,$contact['id']);
 				if($interval)
 					@time_sleep_until(microtime(true) + (float) $interval);
@@ -520,7 +527,8 @@ function notifier_run($argv, $argc){
 							`user`.* 
 							FROM `contact` 
 							LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid` 
-							WHERE `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+							WHERE `contact`.`blocked` = 0 AND `contact`.`archive` = 0
+							AND `contact`.`pending` = 0
 							AND `contact`.`network` = '%s' AND `user`.`nickname` = '%s'
 							$sql_extra
 							AND `user`.`account_expired` = 0 LIMIT 1",
@@ -769,7 +777,7 @@ function notifier_run($argv, $argc){
 		);
 			
 		$r2 = q("SELECT `id`, `name`,`network` FROM `contact` 
-			WHERE `network` in ( '%s', '%s')  AND `uid` = %d AND `blocked` = 0 AND `pending` = 0
+			WHERE `network` in ( '%s', '%s')  AND `uid` = %d AND `blocked` = 0 AND `pending` = 0 AND `archive` = 0
 			AND `rel` != %d order by rand() ",
 			dbesc(NETWORK_DFRN),
 			dbesc(NETWORK_MAIL2),
@@ -831,6 +839,8 @@ function notifier_run($argv, $argc){
 		}
 
 	}
+
+	logger('notifier: calling hooks', LOGGER_DEBUG);
 
 	if($normal_mode)
 		call_hooks('notifier_normal',$target_item);

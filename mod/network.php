@@ -171,37 +171,44 @@ function network_content(&$a, $update = 0) {
 			'label' => t('Commented Order'),
 			'url'=>$a->get_baseurl(true) . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '?f=&cid=' . $_GET['cid'] : ''), 
 			'sel'=>$all_active,
+			'title'=> t('Sort by Comment Date'),
 		),
 		array(
 			'label' => t('Posted Order'),
 			'url'=>$a->get_baseurl(true) . '/' . str_replace('/new', '', $a->cmd) . '?f=&order=post' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
 			'sel'=>$postord_active,
+			'title' => t('Sort by Post Date'),
 		),
 
 		array(
 			'label' => t('Personal'),
 			'url' => $a->get_baseurl(true) . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&conv=1',
 			'sel' => $conv_active,
+			'title' => t('Posts that mention or involve you'),
 		),
 		array(
 			'label' => t('New'),
 			'url' => $a->get_baseurl(true) . '/' . str_replace('/new', '', $a->cmd) . '/new' . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : ''),
 			'sel' => $new_active,
+			'title' => t('Activity Stream - by date'),
 		),
 		array(
 			'label' => t('Starred'),
 			'url'=>$a->get_baseurl(true) . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&star=1',
 			'sel'=>$starred_active,
+			'title' => t('Favourite Posts'),
 		),
 		array(
 			'label' => t('Shared Links'),
 			'url'=>$a->get_baseurl(true) . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&bmark=1',
 			'sel'=>$bookmarked_active,
+			'title'=> t('Interesting Links'),
 		),	
 //		array(
 //			'label' => t('Spam'),
 //			'url'=>$a->get_baseurl(true) . '/network?f=&spam=1'
 //			'sel'=> $spam_active,
+//			'title' => t('Posts flagged as SPAM'),
 //		),	
 
 
@@ -333,7 +340,7 @@ function network_content(&$a, $update = 0) {
 				info( t('Group is empty'));
 		}
 
-		$sql_extra = " AND `item`.`parent` IN ( SELECT DISTINCT(`parent`) FROM `item` WHERE 1 $sql_options AND ( `contact-id` IN ( $contact_str ) OR `allow_gid` REGEXP '<" . intval($group) . ">' ) and deleted = 0 ) ";
+		$sql_extra = " AND `item`.`parent` IN ( SELECT DISTINCT(`parent`) FROM `item` WHERE 1 $sql_options AND ( `contact-id` IN ( $contact_str ) OR `allow_gid` like '" . protect_sprintf('%<' . intval($group) . '>%') . "' ) and deleted = 0 ) ";
 		$o = '<h2>' . t('Group: ') . $r[0]['name'] . '</h2>' . $o;
 	}
 	elseif($cid) {
@@ -391,9 +398,9 @@ function network_content(&$a, $update = 0) {
 
 	if(x($_GET,'search')) {
 		$search = escape_tags($_GET['search']);
-		$sql_extra .= sprintf(" AND ( `item`.`body` REGEXP '%s' OR `item`.`tag` REGEXP '%s' ) ",
-			dbesc(preg_quote($search)),
-			dbesc('\\]' . preg_quote($search) . '\\[')
+		$sql_extra .= sprintf(" AND ( `item`.`body` like '%s' OR `item`.`tag` like '%s' ) ",
+			dbesc(protect_sprintf('%' . $search . '%')),
+			dbesc(protect_sprintf('%]' . $search . '[%'))
 		);
 	}
 	if(strlen($file)) {
@@ -405,10 +412,10 @@ function network_content(&$a, $update = 0) {
 		$myurl = substr($myurl,strpos($myurl,'://')+3);
 		$myurl = str_replace(array('www.','.'),array('','\\.'),$myurl);
 		$diasp_url = str_replace('/profile/','/u/',$myurl);
-		$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where ( `author-link` regexp '%s' or `tag` regexp '%s' or tag regexp '%s' )) ",
-			dbesc($myurl . '$'),
-			dbesc($myurl . '\\]'),
-			dbesc($diasp_url . '\\]')
+		$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where ( `author-link` like '%s' or `tag` like '%s' or tag like '%s' )) ",
+			dbesc(protect_sprintf('%s' . $myurl)),
+			dbesc(protect_sprintf('%' . $myurl . '\\]%')),
+			dbesc(protect_sprintf('%' . $diasp_url . '\\]%'))
 		);
 	}
 

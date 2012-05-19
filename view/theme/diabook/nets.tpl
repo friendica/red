@@ -8,8 +8,10 @@
 	<a style="text-decoration: none;" href="$base" class="menu-profile-list-item">$all</a></li>
 	{{ for $nets as $net }}
 	<li class="menu-profile-list">
-	<span class="menu-profile-icon {{ if $net.selected }}group_selected{{else}}group_unselected{{ endif }}"></span>	
-	<a href="$base?nets=$net.ref" class="menu-profile-list-item">$net.name</a></li>
+	<a href="$base?nets=$net.ref" class="menu-profile-list-item">
+	<span class="menu-profile-icon {{ if $net.selected }}group_selected{{else}}group_unselected{{ endif }}"></span>		
+	$net.name	
+	</a></li>
 	{{ endfor }}
 	</ul>
 </div>

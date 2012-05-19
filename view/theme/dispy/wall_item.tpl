@@ -13,7 +13,15 @@
 				</div>
 			</div>
 			<div class="wall-item-photo-end"></div>
-			<div class="wall-item-location" id="wall-item-location-$item.id">{{ if $item.location }}<span class="icon globe"></span>$item.location {{ endif }}</div>				
+			<div class="wall-item-location" id="wall-item-location-$item.id">
+				{{ if $item.location }}<span class="icon globe"></span>$item.location {{ endif }}
+			</div>
+			<div class="wall-item-author">
+				<a href="$item.profile_url" title="$item.linktitle" class="wall-item-name-link"><span class="wall-item-name$item.sparkle" id="wall-item-name-$item.id">$item.name</span></a>
+			</div>
+			<div class="wall-item-ago" id="wall-item-ago-$item.id">
+				$item.ago
+			</div>
 		</div>
 		<div class="wall-item-tools" id="wall-item-tools-$item.id">
 			<div class="wall-item-lock-wrapper">
@@ -40,7 +48,7 @@
 			</ul><br style="clear:left;" />
 			<ul class="wall-item-subtools2">
 				{{ if $item.filer }}
-				<li><a href="#" id="filer-$item.id" onclick="itemFiler($item.id); return false;" class="filer-item icon file-as" title="$item.star.filer"></a></li>
+				<li><a href="#" id="filer-$item.id" onclick="itemFiler($item.id); return false;" class="filer-item icon file-as" title="$item.filer"></a></li>
 				{{ endif }}
 				{{ if $item.plink }}
 				<li class="wall-item-links-wrapper"><a href="$item.plink.href" title="$item.plink.title" target="external-link" class="icon remote-link"></a></li>
@@ -67,10 +75,6 @@
 				</div>
 			</div>
 		</div>
-		<div class="wall-item-author">
-				<a href="$item.profile_url" title="$item.linktitle" class="wall-item-name-link"><span class="wall-item-name$item.sparkle" id="wall-item-name-$item.id" >$item.name</span></a>
-				<div class="wall-item-ago"  id="wall-item-ago-$item.id">$item.ago</div>
-		</div>	
 	</div>
 	<div class="wall-item-wrapper-end"></div>
 	<div class="wall-item-like" id="wall-item-like-$item.id">$item.like</div>

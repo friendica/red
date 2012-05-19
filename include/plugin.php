@@ -5,7 +5,7 @@
 if (! function_exists('uninstall_plugin')){
 function uninstall_plugin($plugin){
 	logger("Addons: uninstalling " . $plugin);
-	q("DELETE FROM `addon` WHERE `name` = '%s' LIMIT 1",
+	q("DELETE FROM `addon` WHERE `name` = '%s' ",
 		dbesc($plugin)
 	);
 
@@ -37,6 +37,16 @@ function install_plugin($plugin) {
 			intval($t),
 			$plugin_admin
 		);
+
+		// we can add the following with the previous SQL
+		// once most site tables have been updated.
+		// This way the system won't fall over dead during the update.
+
+		if(file_exists('addon/' . $plugin . '/.hidden')) {
+			q("update addon set hidden = 1 where name = '%s' limit 1",
+				dbesc($plugin)
+			);
+		}
 		return true;
 	}
 	else {
@@ -60,8 +70,10 @@ function reload_plugins() {
 			$installed = array();
 
 		$parr = explode(',',$plugins);
+
 		if(count($parr)) {
 			foreach($parr as $pl) {
+
 				$pl = trim($pl);
 
 				$fname = 'addon/' . $pl . '/' . $pl . '.php';
@@ -91,6 +103,7 @@ function reload_plugins() {
 			}
 		}
 	}
+
 }}
 				
 
@@ -152,6 +165,14 @@ function call_hooks($name, &$data = null) {
 				if(function_exists($hook[HOOK_FUNCTION])) {
 					$func = $hook[HOOK_FUNCTION];
 					$func($a,$data);
+				}
+				else {
+					// remove orphan hooks
+					q("delete from hook where hook = '%s' and file = '$s' and function = '%s' limit 1",
+						dbesc($hook[HOOK_HOOK]),
+						dbesc($hook[HOOK_FILE]),
+						dbesc($hook[HOOK_FUNCTION])
+					);
 				}
 			}
 		}

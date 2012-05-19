@@ -28,6 +28,8 @@ function photo_init(&$a) {
 		}
 	}*/
 
+	$prvcachecontrol = false;
+
 	switch($a->argc) {
 		case 4:
 			$person = $a->argv[3];
@@ -134,6 +136,7 @@ function photo_init(&$a) {
 				);
 				if(count($r)) {
 					$data = file_get_contents('images/nosign.jpg');
+					$prvcachecontrol = true;
 				}
 			}
 		}
@@ -179,8 +182,22 @@ function photo_init(&$a) {
 	}
 
 	header("Content-type: image/jpeg");
- 	header("Expires: " . gmdate("D, d M Y H:i:s", time() + (3600*24)) . " GMT");
-	header("Cache-Control: max-age=" . (3600*24));
+
+	if($prvcachecontrol) {
+
+		// it is a private photo that they have no permission to view.
+		// tell the browser not to cache it, in case they authenticate
+		// and subsequently have permission to see it
+
+		header("Cache-Control: no-store, no-cache, must-revalidate");
+
+	}
+	else {
+
+	 	header("Expires: " . gmdate("D, d M Y H:i:s", time() + (3600*24)) . " GMT");
+		header("Cache-Control: max-age=" . (3600*24));
+
+	}
 	echo $data;
 	killme();
 	// NOTREACHED

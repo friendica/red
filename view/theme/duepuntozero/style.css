@@ -134,7 +134,8 @@ nav #banner #logo-text a:hover { text-decoration: none; }
     height: 15px;
 	margin-top: 67px;
 	margin-right: 2px;
-	padding: 6px 10px;
+	//padding: 6px 10px;
+       padding: 6px 3px;
 	float: left;
 	bottom: 140px;
 	border: 1px solid #babdb6;
@@ -232,10 +233,12 @@ section {
 	display:block;
 	float:left;
 	padding: 0.4em;
-	margin-right: 1em;
+	//margin-right: 1em;
+	margin-right: 3px ;
 }
 .tab.active {
 	font-weight: bold;
+	
 }
 
 
@@ -1088,6 +1091,11 @@ input#dfrn-url {
 	overflow: auto;
 }
 
+.wall-item-content img {
+  max-width: 700px;
+}
+
+
 .wall-item-title {
 	float: left;
 	font-weight: bold;
@@ -1568,7 +1576,7 @@ input#dfrn-url {
 .contact-photo-menu li a:hover { color: #FFFFFF; background: #3465A4; text-decoration: none; }
 
 
-#block-message, #ignore-message {
+#block-message, #ignore-message, #archive-message {
 	color: #FF0000;
 }
 
@@ -2937,6 +2945,79 @@ aside input[type='text'] {
 }
 
 .icon.dim { opacity: 0.3;filter:alpha(opacity=30); }
+[class^="comment-edit-bb"] {
+	list-style: none;
+	display: none;
+	margin: 0px 0 -5px 60px;
+	width: 75%;
+}
+[class^="comment-edit-bb"] > li {
+	display: inline-block;
+	margin: 10px 10px 0 0;
+	visibility: none;
+}
+[class^="comment-edit-bb-end"] {
+	clear: both;
+}
+.editicon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-image: url(bbedit.png);
+	background-color: #fff;
+    text-decoration: none;
+}
+.editicon:hover {
+	background-color: #ccc;
+}
+.boldbb {
+	background-position: 0px 0px;
+}
+.boldbb:hover {
+	background-position: 0px -16px;
+}
+.italicbb {
+	background-position: -16px 0px;
+}
+.italicbb:hover {
+	background-position: -16px -16px;
+}
+.underlinebb {
+	background-position: -32px 0px;
+}
+.underlinebb:hover {
+	background-position: -32px -16px;
+}
+.quotebb {
+	background-position: -48px 0px;
+}
+.quotebb:hover {
+	background-position: -48px -16px;
+}
+.codebb {
+	background-position: -64px 0px;
+}
+.codebb:hover {
+	background-position: -64px -16px;
+}
+.imagebb {
+	background-position: -80px 0px;
+}
+.imagebb:hover {
+	background-position: -80px -16px;
+}
+.urlbb {
+	background-position: -96px 0px;
+}
+.urlbb:hover {
+	background-position: -96px -16px;
+}
+.videobb {
+	background-position: -112px 0px;
+}
+.videobb:hover {
+	background-position: -112px -16px;
+}
 
 .attachtype {
 	display: block; width: 20px; height: 23px;
@@ -3091,3 +3172,11 @@ ul.menu-popup {
 #id_term {
 	width:100px;
 }
+
+#recip {
+	
+}
+.autocomplete-w1 { background: #ffffff; no-repeat bottom right; position:absolute; top:0px; left:0px; margin:6px 0 0 6px; /* IE6 fix: */ _background:none; _margin:1px 0 0 0; }
+.autocomplete { color:#000; border:1px solid #999; background:#FFF; cursor:default; text-align:left; max-height:350px; overflow:auto; margin:-6px 6px 6px -6px; /* IE6 specific: */ _height:350px;  _margin:0; _overflow-x:hidden; }
+.autocomplete .selected { background:#F0F0F0; }
+.autocomplete div { padding:2px 5px; white-space:nowrap; overflow:hidden; }

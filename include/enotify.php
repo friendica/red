@@ -402,8 +402,8 @@ class enotify {
 	 */
 	static public function send($params) {
 
-		$fromName = email_header_encode($params['fromName'],'UTF-8'); 
-		$messageSubject = email_header_encode($params['messageSubject'],'UTF-8');
+		$fromName = email_header_encode(html_entity_decode($params['fromName'],ENT_QUOTES,'UTF-8'),'UTF-8'); 
+		$messageSubject = email_header_encode(html_entity_decode($params['messageSubject'],ENT_QUOTES,'UTF-8'),'UTF-8');
 		
 		// generate a mime boundary
 		$mimeBoundary   =rand(0,9)."-"

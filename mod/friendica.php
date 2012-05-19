@@ -18,10 +18,18 @@ function friendica_init(&$a) {
 			$admin = false;
 		}
 
+		$visible_plugins = array();
+		if(is_array($a->plugins) && count($a->plugins)) {
+			$r = q("select * from addon where hidden = 0");
+			if(count($r))
+				foreach($r as $rr)
+					$visible_plugins[] = $rr['name'];
+		}
+
 		$data = Array(
 			'version' => FRIENDICA_VERSION,
 			'url' => z_root(),
-			'plugins' => $a->plugins,
+			'plugins' => $visible_plugins,
 			'register_policy' =>  $register_policy[$a->config['register_policy']],
 			'admin' => $admin,
 			'site_name' => $a->config['sitename'],
@@ -54,9 +62,18 @@ function friendica_content(&$a) {
 
 	$o .= '<p></p>';
 
-	if(count($a->plugins)) {
+	$visible_plugins = array();
+	if(is_array($a->plugins) && count($a->plugins)) {
+		$r = q("select * from addon where hidden = 0");
+		if(count($r))
+			foreach($r as $rr)
+				$visible_plugins[] = $rr['name'];
+	}
+
+
+	if(count($visible_plugins)) {
 		$o .= '<p>' . t('Installed plugins/addons/apps:') . '</p>';
-		$sorted = $a->plugins;
+		$sorted = $visible_plugins;
 		$s = '';
 		sort($sorted);
 		foreach($sorted as $p) {

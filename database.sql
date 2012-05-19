@@ -16,9 +16,11 @@ CREATE TABLE IF NOT EXISTS `addon` (
   `name` char(255) NOT NULL,
   `version` char(255) NOT NULL,
   `installed` tinyint(1) NOT NULL DEFAULT '0',
+  `hidden` tinyint(1) NOT NULL DEFAULT '0',
   `timestamp` bigint(20) NOT NULL DEFAULT '0',
   `plugin_admin` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `hidden` (`hidden`)  
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -172,6 +174,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `writable` tinyint(1) NOT NULL DEFAULT '0',
   `forum` tinyint(1) NOT NULL DEFAULT '0',
   `hidden` tinyint(1) NOT NULL DEFAULT '0',
+  `archive` tinyint(1) NOT NULL DEFAULT '0',
   `pending` tinyint(1) NOT NULL DEFAULT '1',
   `rating` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0-5 reputation, 0 unknown, 1 call police, 5 inscrutable',
   `reason` text NOT NULL COMMENT 'why a rating was given - will help friends decide to make friends or not',
@@ -197,6 +200,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   KEY `nurl` (`nurl`),
   KEY `pending` (`pending`),
   KEY `hidden` (`hidden`),
+  KEY `archive` (`archive`),
   KEY `forum` (`forum`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -380,11 +384,13 @@ CREATE TABLE IF NOT EXISTS `glink` (
   `cid` int(11) NOT NULL,
   `uid` int(11) NOT NULL,
   `gcid` int(11) NOT NULL,
+  `zcid` int(11) NOT NULL,
   `updated` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `cid` (`cid`),
   KEY `uid` (`uid`),
   KEY `gcid` (`gcid`),
+  KEY `zcid` (`zcid`),
   KEY `updated` (`updated`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -1017,9 +1023,12 @@ CREATE TABLE IF NOT EXISTS `user` (
   `pwdreset` char(255) NOT NULL,
   `maxreq` int(11) NOT NULL DEFAULT '10',
   `expire` int(10) unsigned NOT NULL DEFAULT '0',
+  `account_removed` tinyint(1) NOT NULL DEFAULT '0',
   `account_expired` tinyint(1) NOT NULL DEFAULT '0',
   `account_expires_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `expire_notification_sent` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `service_class` char(32) NOT NULL,
+  `def_gid` int(11) NOT NULL DEFAULT '0',
   `allow_cid` mediumtext NOT NULL,
   `allow_gid` mediumtext NOT NULL,
   `deny_cid` mediumtext NOT NULL,
@@ -1034,7 +1043,9 @@ CREATE TABLE IF NOT EXISTS `user` (
   KEY `blocked` (`blocked`),
   KEY `verified` (`verified`),
   KEY `unkmail` (`unkmail`),
-  KEY `cntunkmail` (`cntunkmail`)
+  KEY `cntunkmail` (`cntunkmail`),
+  KEY `account_removed` (`account_removed`),
+  KEY `service_class` (`service_class`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

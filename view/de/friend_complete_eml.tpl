@@ -1,22 +1,22 @@
 
-Liebe/r $username,
+Hallo $[username],
 
-großartige Neuigkeiten... '$fn' von '$dfrn_url' hat deine Kontaktaufnahme auf
-'$sitename' bestätigt.
+	Großartige Neuigkeiten... '$[fn]' auf '$[dfrn_url]' hat 
+deine Kontaktanfrage auf '$[sitename]' bestätigt.
 
-Ihr seit nun beidseitige Freunde und könnt Statusmitteilungen, Fotos und
-EMail ohne Einschränkungen austauschen.
+Ihr seit nun beidseitige Freunde und könnt Statusmitteilungen, Bilder und Emails
+ohne einschränkungen austauschen.
 
-Bitte rufe deine 'Kontakte' Seite auf $sitename auf um du Änderungen an
-dieser Freundschaft vorzunehmen.
+Rufe deine 'Kontakte' Seite auf $[sitename] auf wenn du 
+Änderungen an diesem Kontakt vornehmen willst. 
 
-$siteurl
+$[siteurl]
 
-[Du könntest zum Beispiel ein neue Profil anlegen mit Informationen die nicht
-für die Allgemeinheit bestimmt sind, die du aber gerne mit '$fn' teilen
-möchtest].
+[Du könntest z.B. ein spezielles Profil anlegen, das Informationen enthällt
+die nicht für die breite Öffentlichkeit sichtbar sein sollen und es für '$[fn]' zum Betrachten freigeben].
 
-Mit freundlichen Grüßen
-        $sitename Administrator
+Beste Grüße,
+
+	$[sitename] Administrator
 
  

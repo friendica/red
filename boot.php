@@ -9,9 +9,9 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '2.3.1318' );
+define ( 'FRIENDICA_VERSION',      '3.0.1346' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
-define ( 'DB_UPDATE_VERSION',      1138      );
+define ( 'DB_UPDATE_VERSION',      1144      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -28,6 +28,12 @@ define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
  */
 
 define ( 'JPEG_QUALITY',            100  );
+
+/**
+ * Not yet used
+ */
+
+define ( 'DEFAULT_DB_ENGINE',  'MyISAM'  );
 
 /**
  * SSL redirection policies
@@ -74,6 +80,14 @@ define ( 'HOOK_FILE',      1);
 define ( 'HOOK_FUNCTION',  2);
 
 /**
+ * DB update return values
+ */
+
+define ( 'UPDATE_SUCCESS', 0);
+define ( 'UPDATE_FAILED',  1);
+
+
+/**
  *
  * page/profile types
  *
@@ -109,6 +123,8 @@ define ( 'NETWORK_XMPP',             'xmpp');    // XMPP
 define ( 'NETWORK_MYSPACE',          'mysp');    // MySpace
 define ( 'NETWORK_GPLUS',            'goog');    // Google+
 
+define ( 'NETWORK_PHANTOM',          'unkn');    // Place holder
+
 /**
  * These numbers are used in stored permissions
  * and existing allocations MUST NEVER BE CHANGED
@@ -128,6 +144,8 @@ $netgroup_ids = array(
 	NETWORK_XMPP     => (-10),
 	NETWORK_MYSPACE  => (-11),
 	NETWORK_GPLUS    => (-12),
+
+	NETWORK_PHANTOM  => (-127),
 );
 
 
@@ -193,6 +211,8 @@ define ( 'ACTIVITY_REQ_FRIEND',  NAMESPACE_ACTIVITY_SCHEMA . 'request-friend' );
 define ( 'ACTIVITY_UNFRIEND',    NAMESPACE_ACTIVITY_SCHEMA . 'remove-friend' );
 define ( 'ACTIVITY_FOLLOW',      NAMESPACE_ACTIVITY_SCHEMA . 'follow' );
 define ( 'ACTIVITY_UNFOLLOW',    NAMESPACE_ACTIVITY_SCHEMA . 'stop-following' );
+define ( 'ACTIVITY_JOIN',        NAMESPACE_ACTIVITY_SCHEMA . 'join' );
+
 define ( 'ACTIVITY_POST',        NAMESPACE_ACTIVITY_SCHEMA . 'post' );
 define ( 'ACTIVITY_UPDATE',      NAMESPACE_ACTIVITY_SCHEMA . 'update' );
 define ( 'ACTIVITY_TAG',         NAMESPACE_ACTIVITY_SCHEMA . 'tag' );
@@ -205,6 +225,7 @@ define ( 'ACTIVITY_OBJ_PHOTO',   NAMESPACE_ACTIVITY_SCHEMA . 'photo' );
 define ( 'ACTIVITY_OBJ_P_PHOTO', NAMESPACE_ACTIVITY_SCHEMA . 'profile-photo' );
 define ( 'ACTIVITY_OBJ_ALBUM',   NAMESPACE_ACTIVITY_SCHEMA . 'photo-album' );
 define ( 'ACTIVITY_OBJ_EVENT',   NAMESPACE_ACTIVITY_SCHEMA . 'event' );
+define ( 'ACTIVITY_OBJ_GROUP',   NAMESPACE_ACTIVITY_SCHEMA . 'group' );
 define ( 'ACTIVITY_OBJ_TAGTERM', NAMESPACE_DFRN            . '/tagterm' );
 define ( 'ACTIVITY_OBJ_PROFILE', NAMESPACE_DFRN            . '/profile' );
 
@@ -658,32 +679,29 @@ if(! function_exists('check_config')) {
 
 							// call the specific update
 
-//							global $db;
-//							$db->excep(TRUE);
-//							try {
-//								$db->beginTransaction();
-								$func = 'update_' . $x;
-								$func($a);
-//								$db->commit();
-//							} catch(Exception $ex) {
-//								$db->rollback();
-//								//send the administrator an e-mail
-//								$email_tpl = get_intltext_template("update_fail_eml.tpl");
-//								$email_tpl = replace_macros($email_tpl, array(
-//									'$sitename' => $a->config['sitename'],
-//									'$siteurl' =>  $a->get_baseurl(),
-//									'$update' => $x,
-//									'$error' => $ex->getMessage()));
-//								$subject=sprintf(t('Update Error at %s'), $a->get_baseurl());
+							$func = 'update_' . $x;
+							$retval = $func();
+							if($retval) {
+								//send the administrator an e-mail
+								$email_tpl = get_intltext_template("update_fail_eml.tpl");
+								$email_msg = replace_macros($email_tpl, array(
+									'$sitename' => $a->config['sitename'],
+									'$siteurl' =>  $a->get_baseurl(),
+									'$update' => $x,
+									'$error' => sprintf( t('Update %s failed. See error logs.'), $x)
+								));
+								$subject=sprintf(t('Update Error at %s'), $a->get_baseurl());
 									
-//								mail($a->config['admin_email'], $subject, $text,
-//										'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
-//										. 'Content-type: text/plain; charset=UTF-8' . "\n"
-//										. 'Content-transfer-encoding: 8bit' );
-//								//try the logger
-//								logger('update failed: '.$ex->getMessage().EOL);
-//							}
-//							$db->excep(FALSE);
+								mail($a->config['admin_email'], $subject, $email_msg,
+									'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+									. 'Content-type: text/plain; charset=UTF-8' . "\n"
+									. 'Content-transfer-encoding: 8bit' );
+								//try the logger
+								logger('CRITICAL: Update Failed: '. $x);
+							}
+							else
+								set_config('database','update_' . $x, 'success');
+								
 						}
 					}
 					set_config('system','build', DB_UPDATE_VERSION);
@@ -725,9 +743,10 @@ if(! function_exists('check_config')) {
 			foreach($installed as $i) {
 				if(! in_array($i['name'],$plugins_arr)) {
 					uninstall_plugin($i['name']);
-			}
-				else
+				}
+				else {
 					$installed_arr[] = $i['name'];
+				}
 			}
 		}
 
@@ -1174,11 +1193,7 @@ if(! function_exists('get_birthdays')) {
 			}
 			$classtoday = $istoday ? ' birthday-today ' : '';
 			if($total) {
-				$o .= '<div id="birthday-notice" class="birthday-notice fakelink' . $classtoday . '" onclick=openClose(\'birthday-wrapper\'); >' . t('Birthday Reminders') . ' ' . '(' . $total . ')' . '</div>';
-				$o .= '<div id="birthday-wrapper" style="display: none;" ><div id="birthday-title">' . t('Birthdays this week:') . '</div>';
-				$o .= '<div id="birthday-title-end"></div>';
-
-				foreach($r as $rr) {
+				foreach($r as &$rr) {
 					if(! strlen($rr['name']))
 						continue;
 
@@ -1196,15 +1211,24 @@ if(! function_exists('get_birthdays')) {
 						$url = $a->get_baseurl() . '/redir/'  . $rr['cid'];
 					}
 	
-					$o .= '<div class="birthday-list" id="birthday-' . $rr['eid'] . '"><a class="birthday-link$sparkle" target="redir" href="'
-					. $url . '">' . $rr['name'] . '</a> '
-					. day_translate(datetime_convert('UTC', $a->timezone, $rr['start'], $rr['adjust'] ? $bd_format : $bd_short)) . (($today) ?  ' ' . t('[today]') : '')
-					. '</div>' ;
+					$rr['link'] = $url;
+					$rr['title'] = $rr['name'];
+					$rr['date'] = day_translate(datetime_convert('UTC', $a->timezone, $rr['start'], $rr['adjust'] ? $bd_format : $bd_short)) . (($today) ?  ' ' . t('[today]') : '');
+					$rr['startime'] = Null;
+					$rr['today'] = $today;
+	
 				}
-				$o .= '</div></div>';
 			}
 		}
-		return $o;
+		$tpl = get_markup_template("birthdays_reminder.tpl");
+		return replace_macros($tpl, array(
+			'$baseurl' => $a->get_baseurl(),
+			'$classtoday' => $classtoday,
+			'$count' => $total,
+			'$event_reminders' => t('Birthday Reminders'),
+			'$event_title' => t('Birthdays this week:'),
+			'$events' => $r,
+		));
 	}
 }
 
@@ -1215,7 +1239,6 @@ if(! function_exists('get_events')) {
 		require_once('include/bbcode.php');
 
 		$a = get_app();
-		$o = '';
 
 		if(! local_user())
 			return $o;
@@ -1242,18 +1265,15 @@ if(! function_exists('get_events')) {
 				if($strt === datetime_convert('UTC',$a->timezone,'now','Y-m-d'))
 					$istoday = true;
 			}
-			$classtoday = (($istoday) ? ' event-today ' : '');
+			$classtoday = (($istoday) ? 'event-today' : '');
 
-			$o .= '<div id="event-notice" class="birthday-notice fakelink' . $classtoday . '" onclick=openClose(\'event-wrapper\'); >' . t('Event Reminders') . ' ' . '(' . count($r) . ')' . '</div>';
-			$o .= '<div id="event-wrapper" style="display: none;" ><div id="event-title">' . t('Events this week:') . '</div>';
-			$o .= '<div id="event-title-end"></div>';
 
-			foreach($r as $rr) {
-
+			foreach($r as &$rr) {
 				if($rr['adjust'])
-					$md = datetime_convert('UTC',$a->timezone,$rr['start'],'Y/m\#\l\i\n\k\-j');
+					$md = datetime_convert('UTC',$a->timezone,$rr['start'],'Y/m');
 				else
-					$md = datetime_convert('UTC','UTC',$rr['start'],'Y/m\#\l\i\n\k\-j');
+					$md = datetime_convert('UTC','UTC',$rr['start'],'Y/m');
+				$md .= "/#link-".$rr['id'];
 
 				$title = substr(strip_tags(bbcode($rr['desc'])),0,32) . '... ';
 				if(! $title)
@@ -1261,15 +1281,24 @@ if(! function_exists('get_events')) {
 
 				$strt = datetime_convert('UTC',$rr['convert'] ? $a->timezone : 'UTC',$rr['start']);
 				$today = ((substr($strt,0,10) === datetime_convert('UTC',$a->timezone,'now','Y-m-d')) ? true : false);
-
-				$o .= '<div class="event-list" id="event-' . $rr['eid'] . '"></a> <a href="events/' . $md . '">' . $title . '</a>'
-				. day_translate(datetime_convert('UTC', $rr['adjust'] ? $a->timezone : 'UTC', $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '')
-				. '</div>' ;
+				
+				$rr['link'] = $md;
+				$rr['title'] = $title;
+				$rr['date'] = day_translate(datetime_convert('UTC', $rr['adjust'] ? $a->timezone : 'UTC', $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '');
+				$rr['startime'] = $strt;
+				$rr['today'] = $today;
 			}
-			$o .= '</div></div>';
 		}
 
-		return $o;
+		$tpl = get_markup_template("events_reminder.tpl");
+		return replace_macros($tpl, array(
+			'$baseurl' => $a->get_baseurl(),
+			'$classtoday' => $classtoday,
+			'$count' => count($r),
+			'$event_reminders' => t('Event Reminders'),
+			'$event_title' => t('Events this week:'),
+			'$events' => $r,
+		));
 	}
 }
 
@@ -1453,16 +1482,19 @@ if(! function_exists('profile_tabs')){
 				'label'=>t('Status'),
 				'url' => $url,
 				'sel' => ((!isset($tab)&&$a->argv[0]=='profile')?'active':''),
+				'title' => t('Status Messages and Posts'),
 			),
 			array(
 				'label' => t('Profile'),
 				'url' 	=> $url.'/?tab=profile',
 				'sel'	=> ((isset($tab) && $tab=='profile')?'active':''),
+				'title' => t('Profile Details'),
 			),
 			array(
 				'label' => t('Photos'),
 				'url'	=> $a->get_baseurl() . '/photos/' . $nickname,
 				'sel'	=> ((!isset($tab)&&$a->argv[0]=='photos')?'active':''),
+				'title' => t('Photo Albums'),
 			),
 		);
 	
@@ -1471,11 +1503,13 @@ if(! function_exists('profile_tabs')){
 				'label' => t('Events'),
 				'url'	=> $a->get_baseurl() . '/events',
 				'sel' 	=>((!isset($tab)&&$a->argv[0]=='events')?'active':''),
+				'title' => t('Events and Calendar'),
 			);
 			$tabs[] = array(
 				'label' => t('Personal Notes'),
 				'url'	=> $a->get_baseurl() . '/notes',
 				'sel' 	=>((!isset($tab)&&$a->argv[0]=='notes')?'active':''),
+				'title' => t('Only You Can See This'),
 			);
 		}
 
@@ -1493,6 +1527,15 @@ function get_my_url() {
 	if(x($_SESSION,'my_url'))
 		return $_SESSION['my_url'];
 	return false;
+}
+
+function zrl_init(&$a) {
+	$tmp_str = get_my_url();
+	if(validate_url($tmp_str)) {
+		proc_run('php','include/gprobe.php',bin2hex($tmp_str));
+		$arr = array('zrl' => $tmp_str, 'url' => $a->cmd);
+		call_hooks('zrl_init',$arr);
+	}
 }
 
 function zrl($s,$force = false) {

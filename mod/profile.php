@@ -32,6 +32,8 @@ function profile_init(&$a) {
 
 	profile_load($a,$which,$profile);
 
+	$userblock = (($a->profile['hidewall'] && (! local_user()) && (! remote_user())) ? true : false);
+
 	if((x($a->profile,'page-flags')) && ($a->profile['page-flags'] == PAGE_COMMUNITY)) {
 		$a->page['htmlhead'] .= '<meta name="friendica.community" content="true" />';
 	}
@@ -41,8 +43,8 @@ function profile_init(&$a) {
 		$delegate = ((strstr($a->profile['openid'],'://')) ? $a->profile['openid'] : 'http://' . $a->profile['openid']);
 		$a->page['htmlhead'] .= '<link rel="openid.delegate" href="' . $delegate . '" />' . "\r\n";
 	}
-
-	if(! $blocked) {
+	// site block
+	if((! $blocked) && (! $userblock)) {
 		$keywords = ((x($a->profile,'pub_keywords')) ? $a->profile['pub_keywords'] : '');
 		$keywords = str_replace(array('#',',',' ',',,'),array('',' ',',',','),$keywords);
 		if(strlen($keywords))
@@ -140,6 +142,10 @@ function profile_content(&$a, $update = 0) {
 			call_hooks('profile_advanced',$o);
 			return $o;
 		}
+
+
+		$o .= common_friends_visitor_widget($a->profile['profile_uid']);
+
 
 		if(x($_SESSION,'new_member') && $_SESSION['new_member'] && $is_owner)
 			$o .= '<a href="newmember" id="newmember-tips" style="font-size: 1.2em;"><b>' . t('Tips for New Members') . '</b></a>' . EOL;

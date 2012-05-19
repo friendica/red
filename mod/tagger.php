@@ -66,14 +66,14 @@ function tagger_content(&$a) {
 	}
 
 	$uri = item_new_uri($a->get_hostname(),$owner_uid);
-
+	$xterm = xmlify($term);
 	$post_type = (($item['resource-id']) ? t('photo') : t('status'));
 	$targettype = (($item['resource-id']) ? ACTIVITY_OBJ_PHOTO : ACTIVITY_OBJ_NOTE ); 
 
 	$link = xmlify('<link rel="alternate" type="text/html" href="' 
 		. $a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id'] . '" />' . "\n") ;
 
-	$body = $item['body'];
+	$body = xmlify($item['body']);
 
 	$target = <<< EOT
 	<target>
@@ -86,7 +86,7 @@ function tagger_content(&$a) {
 	</target>
 EOT;
 
-	$tagid = $a->get_baseurl() . '/search?search=' . $term;
+	$tagid = $a->get_baseurl() . '/search?tag=' . $term;
 	$objtype = ACTIVITY_OBJ_TAGTERM;
 
 	$obj = <<< EOT
@@ -95,8 +95,8 @@ EOT;
 		<local>1</local>
 		<id>$tagid</id>
 		<link>$tagid</link>
-		<title>$term</title>
-		<content>$term</content>
+		<title>$xterm</title>
+		<content>$xterm</content>
 	</object>
 EOT;
 
@@ -105,7 +105,7 @@ EOT;
 	if(! isset($bodyverb))
 			return; 
 
-	$termlink = html_entity_decode('&#x2317;') . '[url=' . $a->get_baseurl() . '/search?search=' . urlencode($term) . ']'. $term . '[/url]';
+	$termlink = html_entity_decode('&#x2317;') . '[url=' . $a->get_baseurl() . '/search?tag=' . urlencode($term) . ']'. $term . '[/url]';
 
 	$arr = array();
 
@@ -161,7 +161,7 @@ EOT;
 
 	if((! $blocktags) && (! stristr($item['tag'], ']' . $term . '[' ))) {
 		q("update item set tag = '%s' where id = %d limit 1",
-			dbesc($item['tag'] . (strlen($item['tag']) ? ',' : '') . '#[url=' . $a->get_baseurl() . '/search?search=' . $term . ']'. $term . '[/url]'),
+			dbesc($item['tag'] . (strlen($item['tag']) ? ',' : '') . '#[url=' . $a->get_baseurl() . '/search?tag=' . $term . ']'. $term . '[/url]'),
 			intval($item['id'])
 		);
 	}
@@ -177,7 +177,7 @@ EOT;
 		);
 		if(count($x) && !$x[0]['blocktags'] && (! stristr($r[0]['tag'], ']' . $term . '['))) {
 			q("update item set tag = '%s' where id = %d limit 1",
-				dbesc($r[0]['tag'] . (strlen($r[0]['tag']) ? ',' : '') . '#[url=' . $a->get_baseurl() . '/search?search=' . $term . ']'. $term . '[/url]'),
+				dbesc($r[0]['tag'] . (strlen($r[0]['tag']) ? ',' : '') . '#[url=' . $a->get_baseurl() . '/search?tag=' . $term . ']'. $term . '[/url]'),
 				intval($r[0]['id'])
 			);
 		}
