@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 3.0.1346\n"
+"Project-Id-Version: 3.0.1347\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-18 10:00-0700\n"
+"POT-Creation-Date: 2012-05-19 10:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -577,7 +577,7 @@ msgstr ""
 msgid "Community"
 msgstr ""
 
-#: ../../mod/community.php:61 ../../mod/search.php:128
+#: ../../mod/community.php:61 ../../mod/search.php:134
 msgid "No results."
 msgstr ""
 
@@ -1691,7 +1691,8 @@ msgstr ""
 #: ../../mod/regmod.php:54 ../../mod/dfrn_confirm.php:752
 #: ../../addon/facebook/facebook.php:688
 #: ../../addon/facebook/facebook.php:1178
-#: ../../addon/testdrive/testdrive.php:58 ../../include/items.php:2738
+#: ../../addon/public_server/public_server.php:62
+#: ../../addon/testdrive/testdrive.php:61 ../../include/items.php:2738
 #: ../../boot.php:696
 msgid "Administrator"
 msgstr ""
@@ -3833,6 +3834,11 @@ msgstr ""
 msgid "%1$s changed %2$s to &ldquo;%3$s&rdquo;"
 msgstr ""
 
+#: ../../mod/profiles.php:332
+#, php-format
+msgid " - Visit %1$s's %2$s"
+msgstr ""
+
 #: ../../mod/profiles.php:335
 #, php-format
 msgid "%1$s has an updated %2$s, changing %3$s."
@@ -4857,6 +4863,25 @@ msgstr ""
 msgid "Enable Geonames Plugin"
 msgstr ""
 
+#: ../../addon/public_server/public_server.php:126
+#: ../../addon/testdrive/testdrive.php:88
+#, php-format
+msgid "Your account on %s will expire in a few days."
+msgstr ""
+
+#: ../../addon/public_server/public_server.php:127
+msgid "Your Friendica account is about to expire."
+msgstr ""
+
+#: ../../addon/public_server/public_server.php:128
+#, php-format
+msgid ""
+"Hi %1$s,\n"
+"\n"
+"Your account on %2$s will expire in less than five days. You may keep your "
+"account by logging in at least once every 30 days"
+msgstr ""
+
 #: ../../addon/js_upload/js_upload.php:43
 msgid "Upload a file"
 msgstr ""
@@ -5116,16 +5141,11 @@ msgstr ""
 msgid "Gravatar settings updated."
 msgstr ""
 
-#: ../../addon/testdrive/testdrive.php:85
-#, php-format
-msgid "Your account on %s will expire in a few days."
-msgstr ""
-
-#: ../../addon/testdrive/testdrive.php:86
+#: ../../addon/testdrive/testdrive.php:89
 msgid "Your Friendica test account is about to expire."
 msgstr ""
 
-#: ../../addon/testdrive/testdrive.php:87
+#: ../../addon/testdrive/testdrive.php:90
 #, php-format
 msgid ""
 "Hi %1$s,\n"
@@ -6201,12 +6221,12 @@ msgstr ""
 msgid "Finishes:"
 msgstr ""
 
-#: ../../include/delivery.php:452 ../../include/notifier.php:652
+#: ../../include/delivery.php:455 ../../include/notifier.php:659
 msgid "(no subject)"
 msgstr ""
 
-#: ../../include/delivery.php:459 ../../include/enotify.php:23
-#: ../../include/notifier.php:659
+#: ../../include/delivery.php:462 ../../include/enotify.php:23
+#: ../../include/notifier.php:666
 msgid "noreply"
 msgstr ""
 

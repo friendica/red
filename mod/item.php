@@ -218,14 +218,23 @@ function item_post(&$a) {
 
 		$private = ((strlen($str_group_allow) || strlen($str_contact_allow) || strlen($str_group_deny) || strlen($str_contact_deny)) ? 1 : 0);
 
-		if(($parent_item) && 
-			(($parent_item['private']) 
+		// If this is a comment, set the permissions from the parent.
+
+		if($parent_item) {
+			$private = 0;
+
+			if(($parent_item['private']) 
 				|| strlen($parent_item['allow_cid']) 
 				|| strlen($parent_item['allow_gid']) 
 				|| strlen($parent_item['deny_cid']) 
-				|| strlen($parent_item['deny_gid'])
-			)) {
-			$private = 1;
+				|| strlen($parent_item['deny_gid'])) {
+				$private = 1;
+			}
+
+			$str_contact_allow = $parent_item['allow_cid'];
+			$str_group_allow   = $parent_item['allow_gid'];
+			$str_contact_deny  = $parent_item['deny_cid'];
+			$str_group_deny    = $parent_item['deny_gid'];
 		}
 	
 		$pubmail_enable    = ((x($_REQUEST,'pubmail_enable') && intval($_REQUEST['pubmail_enable']) && (! $private)) ? 1 : 0);
