@@ -80,7 +80,7 @@ function search_content(&$a) {
 
 	$o = '<div id="live-search"></div>' . "\r\n";
 
-	$o .= '<h3>' . t('Search This Site') . '</h3>';
+	$o .= '<h3>' . t('Search') . '</h3>';
 
 	if(x($a->data,'search'))
 		$search = notags(trim($a->data['search']));
@@ -95,6 +95,16 @@ function search_content(&$a) {
 
 
 	$o .= search($search,'search-box','/search',((local_user()) ? true : false));
+
+
+	if(strpos($search,'#') === 0) {
+		$tag = true;
+		$search = substr($search,1);
+	}
+	if(strpos($search,'@') === 0) {
+		require_once('mod/dirfind.php');
+		return dirfind_content($a);
+	}
 
 	if(! $search)
 		return $o;

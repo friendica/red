@@ -17,6 +17,9 @@ function dirfind_init(&$a) {
 function dirfind_content(&$a) {
 
 	$search = notags(trim($_REQUEST['search']));
+
+	if(strpos($search,'@') === 0)
+		$search = substr($search,1);
 	
 	$o = '';
 
