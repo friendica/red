@@ -41,7 +41,7 @@ function delivery_run($argv, $argc){
 
 	for($x = 3; $x < $argc; $x ++) {
 
-		$contact_id = intval($argv[x]);
+		$contact_id = intval($argv[$x]);
 
 		// Some other process may have delivered this item already.
 

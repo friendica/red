@@ -144,19 +144,12 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			 * worried about key leakage than anybody cracking it.  
 			 *
 			 */
+			require_once('include/crypto.php');
 
-			$res = openssl_pkey_new(array(
-				'digest_alg' => 'sha1',
-				'private_key_bits' => 4096,
-				'encrypt_key' => false )
-			);
+			$res = new_keypair(1024);
 
-			$private_key = '';
-
-			openssl_pkey_export($res, $private_key);
-
-			$pubkey = openssl_pkey_get_details($res);
-			$public_key = $pubkey["key"];
+			$private_key = $res['prvkey'];
+			$public_key  = $res['pubkey'];
 
 			// Save the private key. Send them the public key.
 

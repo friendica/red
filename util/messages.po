@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 3.0.1347\n"
+"Project-Id-Version: 3.0.1348\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-19 10:00-0700\n"
+"POT-Creation-Date: 2012-05-20 10:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -330,7 +330,7 @@ msgstr ""
 #: ../../mod/settings.php:910 ../../mod/settings.php:916
 #: ../../mod/settings.php:952 ../../mod/settings.php:953
 #: ../../mod/settings.php:954 ../../mod/settings.php:955
-#: ../../mod/register.php:532 ../../mod/profiles.php:511
+#: ../../mod/register.php:511 ../../mod/profiles.php:511
 msgid "Yes"
 msgstr ""
 
@@ -341,7 +341,7 @@ msgstr ""
 #: ../../mod/settings.php:910 ../../mod/settings.php:916
 #: ../../mod/settings.php:952 ../../mod/settings.php:953
 #: ../../mod/settings.php:954 ../../mod/settings.php:955
-#: ../../mod/register.php:533 ../../mod/profiles.php:512
+#: ../../mod/register.php:512 ../../mod/profiles.php:512
 msgid "No"
 msgstr ""
 
@@ -369,8 +369,8 @@ msgid "Contact information unavailable"
 msgstr ""
 
 #: ../../mod/photos.php:151 ../../mod/photos.php:597 ../../mod/photos.php:950
-#: ../../mod/photos.php:965 ../../mod/register.php:335
-#: ../../mod/register.php:342 ../../mod/register.php:349
+#: ../../mod/photos.php:965 ../../mod/register.php:314
+#: ../../mod/register.php:321 ../../mod/register.php:328
 #: ../../mod/profile_photo.php:60 ../../mod/profile_photo.php:67
 #: ../../mod/profile_photo.php:74 ../../mod/profile_photo.php:174
 #: ../../mod/profile_photo.php:252 ../../mod/profile_photo.php:261
@@ -577,7 +577,7 @@ msgstr ""
 msgid "Community"
 msgstr ""
 
-#: ../../mod/community.php:61 ../../mod/search.php:134
+#: ../../mod/community.php:61 ../../mod/search.php:138
 msgid "No results."
 msgstr ""
 
@@ -1170,7 +1170,7 @@ msgstr ""
 msgid "Connect"
 msgstr ""
 
-#: ../../mod/match.php:65 ../../mod/dirfind.php:57
+#: ../../mod/match.php:65 ../../mod/dirfind.php:60
 msgid "No matches"
 msgstr ""
 
@@ -1687,8 +1687,8 @@ msgid "Password reset requested at %s"
 msgstr ""
 
 #: ../../mod/lostpass.php:45 ../../mod/lostpass.php:107
-#: ../../mod/register.php:388 ../../mod/register.php:442
-#: ../../mod/regmod.php:54 ../../mod/dfrn_confirm.php:752
+#: ../../mod/register.php:367 ../../mod/register.php:421
+#: ../../mod/regmod.php:54 ../../mod/dfrn_confirm.php:745
 #: ../../addon/facebook/facebook.php:688
 #: ../../addon/facebook/facebook.php:1178
 #: ../../addon/public_server/public_server.php:62
@@ -2686,7 +2686,7 @@ msgid ""
 "must also begin with a letter."
 msgstr ""
 
-#: ../../mod/register.php:153 ../../mod/register.php:264
+#: ../../mod/register.php:153 ../../mod/register.php:243
 msgid "Nickname is already registered. Please choose another."
 msgstr ""
 
@@ -2696,107 +2696,107 @@ msgid ""
 "another."
 msgstr ""
 
-#: ../../mod/register.php:182
+#: ../../mod/register.php:179
 msgid "SERIOUS ERROR: Generation of security keys failed."
 msgstr ""
 
-#: ../../mod/register.php:250
+#: ../../mod/register.php:229
 msgid "An error occurred during registration. Please try again."
 msgstr ""
 
-#: ../../mod/register.php:286
+#: ../../mod/register.php:265
 msgid "An error occurred creating your default profile. Please try again."
 msgstr ""
 
-#: ../../mod/register.php:386 ../../mod/regmod.php:52
+#: ../../mod/register.php:365 ../../mod/regmod.php:52
 #, php-format
 msgid "Registration details for %s"
 msgstr ""
 
-#: ../../mod/register.php:394
+#: ../../mod/register.php:373
 msgid ""
 "Registration successful. Please check your email for further instructions."
 msgstr ""
 
-#: ../../mod/register.php:398
+#: ../../mod/register.php:377
 msgid "Failed to send email message. Here is the message that failed."
 msgstr ""
 
-#: ../../mod/register.php:403
+#: ../../mod/register.php:382
 msgid "Your registration can not be processed."
 msgstr ""
 
-#: ../../mod/register.php:440
+#: ../../mod/register.php:419
 #, php-format
 msgid "Registration request at %s"
 msgstr ""
 
-#: ../../mod/register.php:449
+#: ../../mod/register.php:428
 msgid "Your registration is pending approval by the site owner."
 msgstr ""
 
-#: ../../mod/register.php:487
+#: ../../mod/register.php:466
 msgid ""
 "This site has exceeded the number of allowed daily account registrations. "
 "Please try again tomorrow."
 msgstr ""
 
-#: ../../mod/register.php:513
+#: ../../mod/register.php:492
 msgid ""
 "You may (optionally) fill in this form via OpenID by supplying your OpenID "
 "and clicking 'Register'."
 msgstr ""
 
-#: ../../mod/register.php:514
+#: ../../mod/register.php:493
 msgid ""
 "If you are not familiar with OpenID, please leave that field blank and fill "
 "in the rest of the items."
 msgstr ""
 
-#: ../../mod/register.php:515
+#: ../../mod/register.php:494
 msgid "Your OpenID (optional): "
 msgstr ""
 
-#: ../../mod/register.php:529
+#: ../../mod/register.php:508
 msgid "Include your profile in member directory?"
 msgstr ""
 
-#: ../../mod/register.php:549
+#: ../../mod/register.php:528
 msgid "Membership on this site is by invitation only."
 msgstr ""
 
-#: ../../mod/register.php:550
+#: ../../mod/register.php:529
 msgid "Your invitation ID: "
 msgstr ""
 
-#: ../../mod/register.php:553 ../../mod/admin.php:405
+#: ../../mod/register.php:532 ../../mod/admin.php:405
 msgid "Registration"
 msgstr ""
 
-#: ../../mod/register.php:561
+#: ../../mod/register.php:540
 msgid "Your Full Name (e.g. Joe Smith): "
 msgstr ""
 
-#: ../../mod/register.php:562
+#: ../../mod/register.php:541
 msgid "Your Email Address: "
 msgstr ""
 
-#: ../../mod/register.php:563
+#: ../../mod/register.php:542
 msgid ""
 "Choose a profile nickname. This must begin with a text character. Your "
 "profile address on this site will then be '<strong>nickname@$sitename</"
 "strong>'."
 msgstr ""
 
-#: ../../mod/register.php:564
+#: ../../mod/register.php:543
 msgid "Choose a nickname: "
 msgstr ""
 
-#: ../../mod/register.php:567 ../../include/nav.php:81 ../../boot.php:794
+#: ../../mod/register.php:546 ../../include/nav.php:81 ../../boot.php:794
 msgid "Register"
 msgstr ""
 
-#: ../../mod/dirfind.php:23
+#: ../../mod/dirfind.php:26
 msgid "People Search"
 msgstr ""
 
@@ -2860,38 +2860,38 @@ msgstr ""
 msgid "Unable to locate original post."
 msgstr ""
 
-#: ../../mod/item.php:249
+#: ../../mod/item.php:258
 msgid "Empty post discarded."
 msgstr ""
 
-#: ../../mod/item.php:372 ../../mod/wall_upload.php:99
+#: ../../mod/item.php:381 ../../mod/wall_upload.php:99
 #: ../../mod/wall_upload.php:108 ../../mod/wall_upload.php:115
 #: ../../include/message.php:144
 msgid "Wall Photos"
 msgstr ""
 
-#: ../../mod/item.php:781
+#: ../../mod/item.php:790
 msgid "System error. Post not saved."
 msgstr ""
 
-#: ../../mod/item.php:806
+#: ../../mod/item.php:815
 #, php-format
 msgid ""
 "This message was sent to you by %s, a member of the Friendica social network."
 msgstr ""
 
-#: ../../mod/item.php:808
+#: ../../mod/item.php:817
 #, php-format
 msgid "You may visit them online at %s"
 msgstr ""
 
-#: ../../mod/item.php:809
+#: ../../mod/item.php:818
 msgid ""
 "Please contact the sender by replying to this post if you do not wish to "
 "receive these messages."
 msgstr ""
 
-#: ../../mod/item.php:811
+#: ../../mod/item.php:820
 #, php-format
 msgid "%s posted an update."
 msgstr ""
@@ -3764,8 +3764,8 @@ msgstr ""
 msgid "No installed applications."
 msgstr ""
 
-#: ../../mod/search.php:83
-msgid "Search This Site"
+#: ../../mod/search.php:83 ../../include/text.php:650 ../../include/nav.php:91
+msgid "Search"
 msgstr ""
 
 #: ../../mod/profiles.php:21 ../../mod/profiles.php:375
@@ -4220,83 +4220,83 @@ msgid ""
 "has already been approved."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:242
+#: ../../mod/dfrn_confirm.php:235
 msgid "Response from remote site was not understood."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:251
+#: ../../mod/dfrn_confirm.php:244
 msgid "Unexpected response from remote site: "
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:259
+#: ../../mod/dfrn_confirm.php:252
 msgid "Confirmation completed successfully."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:261 ../../mod/dfrn_confirm.php:275
-#: ../../mod/dfrn_confirm.php:282
+#: ../../mod/dfrn_confirm.php:254 ../../mod/dfrn_confirm.php:268
+#: ../../mod/dfrn_confirm.php:275
 msgid "Remote site reported: "
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:273
+#: ../../mod/dfrn_confirm.php:266
 msgid "Temporary failure. Please wait and try again."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:280
+#: ../../mod/dfrn_confirm.php:273
 msgid "Introduction failed or was revoked."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:425
+#: ../../mod/dfrn_confirm.php:418
 msgid "Unable to set contact photo."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:482 ../../include/diaspora.php:507
+#: ../../mod/dfrn_confirm.php:475 ../../include/diaspora.php:507
 #: ../../include/conversation.php:101
 #, php-format
 msgid "%1$s is now friends with %2$s"
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:564
+#: ../../mod/dfrn_confirm.php:557
 #, php-format
 msgid "No user record found for '%s' "
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:574
+#: ../../mod/dfrn_confirm.php:567
 msgid "Our site encryption key is apparently messed up."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:585
+#: ../../mod/dfrn_confirm.php:578
 msgid "Empty site URL was provided or URL could not be decrypted by us."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:606
+#: ../../mod/dfrn_confirm.php:599
 msgid "Contact record was not found for you on our site."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:620
+#: ../../mod/dfrn_confirm.php:613
 #, php-format
 msgid "Site public key not available in contact record for URL %s."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:640
+#: ../../mod/dfrn_confirm.php:633
 msgid ""
 "The ID provided by your system is a duplicate on our system. It should work "
 "if you try again."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:651
+#: ../../mod/dfrn_confirm.php:644
 msgid "Unable to set your contact credentials on our system."
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:716
+#: ../../mod/dfrn_confirm.php:709
 msgid "Unable to update your contact profile details on our system"
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:750
+#: ../../mod/dfrn_confirm.php:743
 #, php-format
 msgid "Connection accepted at %s"
 msgstr ""
 
-#: ../../mod/dfrn_confirm.php:799
+#: ../../mod/dfrn_confirm.php:792
 #, php-format
 msgid "%1$s has joined %2$s"
 msgstr ""
@@ -6256,10 +6256,6 @@ msgid "%d Contact"
 msgid_plural "%d Contacts"
 msgstr[0] ""
 msgstr[1] ""
-
-#: ../../include/text.php:650 ../../include/nav.php:91
-msgid "Search"
-msgstr ""
 
 #: ../../include/text.php:831
 msgid "Monday"

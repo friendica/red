@@ -9,7 +9,7 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '3.0.1347' );
+define ( 'FRIENDICA_VERSION',      '3.0.1348' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
 define ( 'DB_UPDATE_VERSION',      1144      );
 
@@ -1323,6 +1323,25 @@ if(! function_exists('proc_run')) {
 		$a = get_app();
 
 		$args = func_get_args();
+
+		$newargs = array();
+		if(! count($args))
+			return;
+
+		// expand any arrays
+
+		foreach($args as $arg) {
+			if(is_array($arg)) {
+				foreach($arg as $n) {
+					$newargs[] = $n;
+				}
+			}
+			else
+				$newargs[] = $arg;
+		}
+
+		$args = $newargs;
+		
 		$arr = array('args' => $args, 'run_cmd' => true);
 
 		call_hooks("proc_run", $arr);
