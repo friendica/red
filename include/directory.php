@@ -24,6 +24,9 @@ function directory_run($argv, $argc){
 
 	load_config('system');
 
+	load_hooks();
+
+
 	$a->set_baseurl(get_config('system','url'));
 
 	$dir = get_config('system','directory_submit_url');
@@ -31,7 +34,12 @@ function directory_run($argv, $argc){
 	if(! strlen($dir))
 		return;
 
-	fetch_url($dir . '?url=' . bin2hex($argv[1]));
+	$arr = array('url' => $argv[1]);
+
+	call_hooks('globaldir_update', $arr);
+
+	if(strlen($arr['url']))
+		fetch_url($dir . '?url=' . bin2hex($arr['url']));
 
 	return;
 }
