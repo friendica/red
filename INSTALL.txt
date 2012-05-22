@@ -222,3 +222,50 @@ Retry the installation. As soon as the database has been created,
 
 % chmod 755 .htconfig.php
 
+#####################################################################
+- Some configurations with "suhosin" security are configured without
+an ability to run external processes. Friendica requires this ability.
+Following are some notes provided by one of our members.
+#####################################################################
+
+On my server I use the php protection system Suhosin
+[http://www.hardened-php.net/suhosin/]. One of the things it does is to block
+certain functions like proc_open, as configured in /etc/php5/conf.d/suhosin.ini:
+
+ suhosin.executor.func.blacklist = proc_open, ...
+
+For those sites like Friendica that really need these functions they can be
+enabled, e.g. in /etc/apache2/sites-available/friendica:
+
+ <Directory /var/www/friendica/>
+  php_admin_value suhosin.executor.func.blacklist none
+  php_admin_value suhosin.executor.eval.blacklist none
+ </Directory>
+
+This enables every function for Friendica if accessed via browser, but not for
+the cronjob that is called via php command line. I attempted to enable it for
+cron by using something like
+
+ */10 * * * * cd /var/www/friendica/friendica/ && sudo -u www-data /usr/bin/php
+-d suhosin.executor.func.blacklist=none -d suhosin.executor.eval.blacklist=none
+-f include/poller.php
+
+This worked well for simple test cases, but the friendica-cron still failed with
+a fatal error:
+suhosin[22962]: ALERT - function within blacklist called: proc_open() (attacker
+'REMOTE_ADDR not set', file '/var/www/friendica/friendica/boot.php', line 1341)
+
+After a while I noticed, that include/poller.php calls further php script via
+proc_open. These scripts themselves also use proc_open and fail, because they
+are NOT called with -d suhosin.executor.func.blacklist=none.
+
+So the simple solution is to put the correct parameters into .htconfig.php:
+ // Location of PHP command line processor
+ $a->config['php_path'] = '/usr/bin/php -d suhosin.executor.func.blacklist=none
+-d suhosin.executor.eval.blacklist=none';
+
+
+This is obvious as soon as you notice that the friendica-cron uses proc_open to
+execute php-scripts that also use proc_open, but it took me quite some time to
+find that out. I hope this saves some time for other people using suhosin with
+function blacklists.

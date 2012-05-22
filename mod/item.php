@@ -290,18 +290,16 @@ function item_post(&$a) {
 	$author = null;
 	$self   = false;
 
-	if(($_SESSION['uid']) && ($_SESSION['uid'] == $profile_uid)) {
+	if((local_user()) && (local_user() == $profile_uid)) {
 		$self = true;
 		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
 			intval($_SESSION['uid'])
 		);
 	}
-	else {
-		if((x($_SESSION,'visitor_id')) && (intval($_SESSION['visitor_id']))) {
-			$r = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
-				intval($_SESSION['visitor_id'])
-			);
-		}
+	elseif(remote_user()) {
+		$r = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
+			intval(remote_user())
+		);
 	}
 
 	if(count($r)) {
@@ -311,7 +309,7 @@ function item_post(&$a) {
 
 	// get contact info for owner
 	
-	if($profile_uid == $_SESSION['uid']) {
+	if($profile_uid == local_user()) {
 		$contact_record = $author;
 	}
 	else {
@@ -321,8 +319,6 @@ function item_post(&$a) {
 		if(count($r))
 			$contact_record = $r[0];
 	}
-
-
 
 	$post_type = notags(trim($_REQUEST['type']));
 
