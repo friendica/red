@@ -146,3 +146,12 @@ blockquote {
   background:#444;
 }
 
+.editicon {
+    	background-color: #333;
+}
+
+/* This seems okay to me...we might not need a new iconset, lets see how people react */
+
+.editicon:hover {
+	background-color: #ccc;
+}
