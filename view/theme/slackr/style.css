@@ -52,10 +52,70 @@ nav #site-location {
 	box-shadow: 3px 3px 10px -2px #000000;
 }
 
-.contact-entry-photo img, .profile-match-photo img, #photo-photo img, .directory-photo-img {
+.contact-entry-photo img, .profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo {
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	box-shadow: 3px 3px 10px 0 #000000;
 }
 
+.photo-top-photo, .photo-album-photo {
+	padding: 10px;
+	max-width: 300px;
+}
+
+.rotleft1 {
+-webkit-transform: rotate(-1deg);
+-moz-transform: rotate(-1deg);
+-ms-transform: rotate(-1deg);
+-o-transform: rotate(-1deg);
+}
+
+.rotleft2 {
+-webkit-transform: rotate(-2deg);
+-moz-transform: rotate(-2deg);
+-ms-transform: rotate(-2deg);
+-o-transform: rotate(-2deg);
+}
+
+.rotleft3 {
+-webkit-transform: rotate(-3deg);
+-moz-transform: rotate(-3deg);
+-ms-transform: rotate(-3deg);
+-o-transform: rotate(-3deg);
+}
+
+.rotleft4 {
+-webkit-transform: rotate(-4deg);
+-moz-transform: rotate(-4deg);
+-ms-transform: rotate(-4deg);
+-o-transform: rotate(-4deg);
+}
+
+.rotright1 {
+-webkit-transform: rotate(1deg);
+-moz-transform: rotate(1deg);
+-ms-transform: rotate(1deg);
+-o-transform: rotate(1deg);
+}
+
+.rotright2 {
+-webkit-transform: rotate(2deg);
+-moz-transform: rotate(2deg);
+-ms-transform: rotate(2deg);
+-o-transform: rotate(2deg);
+}
+
+.rotright3 {
+-webkit-transform: rotate(3deg);
+-moz-transform: rotate(3deg);
+-ms-transform: rotate(3deg);
+-o-transform: rotate(3deg);
+}
+
+.rotright4 {
+-webkit-transform: rotate(4deg);
+-moz-transform: rotate(4deg);
+-ms-transform: rotate(4deg);
+-o-transform: rotate(4deg);
+}
 

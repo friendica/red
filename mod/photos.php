@@ -977,9 +977,16 @@ function photos_content(&$a) {
 
 		$tpl = get_markup_template('photo_album.tpl');
 		if(count($r))
+			$twist = 'rotright';
 			foreach($r as $rr) {
+				if($twist == 'rotright')
+					$twist = 'rotleft';
+				else
+					$twist = 'rotright';
+
 				$o .= replace_macros($tpl,array(
 					'$id' => $rr['id'],
+					'$twist' => ' ' . $twist . rand(2,4),
 					'$photolink' => $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $rr['resource-id'],
 					'$phototitle' => t('View Photo'),
 					'$imgsrc' => $a->get_baseurl() . '/photo/' . $rr['resource-id'] . '-' . $rr['scale'] . '.jpg',
@@ -1400,9 +1407,16 @@ function photos_content(&$a) {
 
 	$photos = array();
 	if(count($r)) {
+		$twist = 'rotright';
 		foreach($r as $rr) {
+			if($twist == 'rotright')
+				$twist = 'rotleft';
+			else
+				$twist = 'rotright';
+
 			$photos[] = array(
 				'id'       => $rr['id'],
+				'twist'    => ' ' . $twist . rand(2,4),
 				'link'  	=> $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $rr['resource-id'],
 				'title' 	=> t('View Photo'),
 				'src'     	=> $a->get_baseurl() . '/photo/' . $rr['resource-id'] . '-' . ((($rr['scale']) == 6) ? 4 : $rr['scale']) . '.jpg',
