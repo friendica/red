@@ -901,24 +901,30 @@ function prepare_body($item,$attach = false) {
 		foreach($arr as $r) {
 			$matches = false;
 			$icon = '';
-			$cnt = preg_match('|\[attach\]href=\"(.*?)\" length=\"(.*?)\" type=\"(.*?)\" title=\"(.*?)\"\[\/attach\]|',$r,$matches);
+			$cnt = preg_match_all('|\[attach\]href=\"(.*?)\" length=\"(.*?)\" type=\"(.*?)\" title=\"(.*?)\"\[\/attach\]|',$r,$matches, PREG_SET_ORDER);
 			if($cnt) {
-				$icontype = strtolower(substr($matches[3],0,strpos($matches[3],'/')));
-				switch($icontype) {
-					case 'video':
-					case 'audio':
-					case 'image':
-					case 'text':
-						$icon = '<div class="attachtype icon s22 type-' . $icontype . '"></div>';
-						break;
-					default:
-						$icon = '<div class="attachtype icon s22 type-unkn"></div>';
-						break;
-				}
-				$title = ((strlen(trim($matches[4]))) ? escape_tags(trim($matches[4])) : escape_tags($matches[1]));
-				$title .= ' ' . $matches[2] . ' ' . t('bytes');
+				foreach($matches as $mtch) {
+					$icontype = strtolower(substr($mtch[3],0,strpos($mtch[3],'/')));
+					switch($icontype) {
+						case 'video':
+						case 'audio':
+						case 'image':
+						case 'text':
+							$icon = '<div class="attachtype icon s22 type-' . $icontype . '"></div>';
+							break;
+						default:
+							$icon = '<div class="attachtype icon s22 type-unkn"></div>';
+							break;
+					}
+					$title = ((strlen(trim($mtch[4]))) ? escape_tags(trim($mtch[4])) : escape_tags($mtch[1]));
+					$title .= ' ' . $mtch[2] . ' ' . t('bytes');
+					if((local_user() == $item['uid']) && $item['contact-id'] != $a->contact['id'])
+						$the_url = $a->get_baseurl() . '/redir/' . $item['contact-id'] . '?f=1&url=' . $mtch[1];
+					else
+						$the_url = $mtch[1];
 
-				$s .= '<a href="' . strip_tags($matches[1]) . '" title="' . $title . '" class="attachlink" target="external-link" >' . $icon . '</a>';
+					$s .= '<a href="' . strip_tags($the_url) . '" title="' . $title . '" class="attachlink" target="external-link" >' . $icon . '</a>';
+				}
 			}
 		}
 		$s .= '<div class="clear"></div></div>';

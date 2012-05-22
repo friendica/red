@@ -6,7 +6,7 @@ function redir_init(&$a) {
 
 	// traditional DFRN
 
-	if(local_user() && $a->argc == 2 && intval($a->argv[1])) {
+	if(local_user() && $a->argc > 1 && intval($a->argv[1])) {
 
 		$cid = $a->argv[1];
 
