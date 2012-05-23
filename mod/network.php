@@ -108,6 +108,10 @@ function network_content(&$a, $update = 0) {
     	return login(false);
 	}
 
+	$arr = array('query' => $a->query_string);
+
+	call_hooks('network_content_init', $arr);
+
 	$o = '';
 
 	// item filter tabs
@@ -157,7 +161,7 @@ function network_content(&$a, $update = 0) {
 			$all_active = 'active';
 	}
 
-
+	
 	$postord_active = '';
 
 	if($all_active && x($_GET,'order') && $_GET['order'] !== 'comment') {

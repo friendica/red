@@ -10,7 +10,15 @@ function ping_init(&$a) {
 		<result>";
 
 	$xmlhead="<"."?xml version='1.0' encoding='UTF-8' ?".">";
+
 	if(local_user()){
+
+		// Different login session than the page that is calling us. 
+
+		if(intval($_GET['uid']) && intval($_GET['uid']) != local_user()) {
+			echo '<invalid>1</invalid></result>';
+			killme();
+		}
 
 		$firehose = intval(get_pconfig(local_user(),'system','notify_full'));
 
