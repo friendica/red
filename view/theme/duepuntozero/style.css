@@ -551,6 +551,9 @@ input#dfrn-url {
 	margin-bottom: 30px;
 }
 
+#profile-vcard-break {
+	clear: both;
+}
 #profile-extra-links {
 	clear: both;
 	margin-top: 10px;
