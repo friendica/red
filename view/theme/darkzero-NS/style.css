@@ -146,11 +146,11 @@ blockquote {
   background:#444;
 }
 
-
-
-
-
 .wall-item-content {
 	max-height: 20000px;
 	overflow: none;
+}
+
+.editicon:hover {
+	background-color: #ccc;
 }
