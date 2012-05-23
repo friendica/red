@@ -45,6 +45,7 @@ function cmtBbClose(id) {
 }
 $(document).ready(function() {
 
+
 $('html').click(function() { $("#nav-notifications-menu" ).hide(); });
 
 $('.group-edit-icon').hover(

@@ -1010,7 +1010,7 @@ function tag_deliver($uid,$item_id) {
 		'otype'        => 'item'
 	));
 
-	if((! $community_page) && (! prvgroup))
+	if((! $community_page) && (! $prvgroup))
 		return;
 
 

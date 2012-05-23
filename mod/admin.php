@@ -115,7 +115,7 @@ function admin_content(&$a) {
 	$aside['logs'] = Array($a->get_baseurl(true)."/admin/logs/", t("Logs"), "logs");
 
 	$t = get_markup_template("admin_aside.tpl");
-	$a->page['aside'] = replace_macros( $t, array(
+	$a->page['aside'] .= replace_macros( $t, array(
 			'$admin' => $aside, 
 			'$h_pending' => t('User registrations waiting for confirmation'),
 			'$admurl'=> $a->get_baseurl(true)."/admin/"
@@ -182,6 +182,7 @@ function admin_page_summary(&$a) {
 		Array( t('Community/Celebrity Account'), 0),
 		Array( t('Automatic Friend Account'), 0)
 	);
+
 	$users=0;
 	foreach ($r as $u){ $accounts[$u['page-flags']][1] = $u['count']; $users+= $u['count']; }
 
@@ -190,10 +191,22 @@ function admin_page_summary(&$a) {
 	$r = q("SELECT COUNT(id) as `count` FROM `register`");
 	$pending = $r[0]['count'];
 		
+	$r = q("select count(*) as total from deliverq where 1");
+	$deliverq = (($r) ? $r[0]['total'] : 0);
+
+	$r = q("select count(*) as total from queue where 1");
+	$queue = (($r) ? $r[0]['total'] : 0);
+
+	// We can do better, but this is a quick queue status
+
+	$queues = array( 'label' => t('Message queues'), 'deliverq' => $deliverq, 'queue' => $queue );
+
+
 	$t = get_markup_template("admin_summary.tpl");
 	return replace_macros($t, array(
 		'$title' => t('Administration'),
 		'$page' => t('Summary'),
+		'$queues' => $queues,
 		'$users' => Array( t('Registered users'), $users),
 		'$accounts' => $accounts,
 		'$pending' => Array( t('Pending registrations'), $pending),

@@ -17,6 +17,11 @@
 	<input name="newtag" id="photo-edit-newtag" size="84" title="$help_tags" type="text" />
 
 	<div id="photo-edit-tags-end"></div>
+	<div id="photo-edit-rotate-wrapper">
+		<div id="photo-edit-rotate-label">$rotate</div>
+		<input type="checkbox" name="rotate" value="1" />
+	</div>
+	<div id="photo-edit-rotate-end"></div>
 
 	<div id="photo-edit-perms" class="photo-edit-perms" >
 		<a href="#photo-edit-perms-select" id="photo-edit-perms-menu" class="button" title="$permissions"/>
