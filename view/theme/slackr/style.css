@@ -55,7 +55,7 @@ nav #site-location {
 	box-shadow: 3px 3px 10px -2px #000000;
 }
 
-.contact-entry-photo img, .profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo {
+.contact-entry-photo img, .profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo, .fc {
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	box-shadow: 3px 3px 10px 0 #000000;
