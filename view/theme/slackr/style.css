@@ -40,6 +40,11 @@ nav #site-location {
 	right: 36px;
 }
 
+#profile-jot-text_parent, .mceLayout {
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+}
+
 .fc-event-skin {
 	background-color: #3465a4 !important;
 }
@@ -55,7 +60,7 @@ nav #site-location {
 	box-shadow: 3px 3px 10px -2px #000000;
 }
 
-.contact-entry-photo img, .profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo {
+.contact-entry-photo img, .profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo, .fc, .profile-jot-text, .group-selected, .nets-selected, .fileas-selected {
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	box-shadow: 3px 3px 10px 0 #000000;
