@@ -46,6 +46,20 @@ nav #site-location {
 	box-shadow: 3px 3px 10px 0 #000000;
 }
 
+#profile-jot-text:hover {
+	color: #000000;
+}
+
+.fc {
+	opacity: 0.3;
+	filter:alpha(opacity=30);
+}
+
+.fc:hover {
+	opacity: 1.0;
+	filter:alpha(opacity=100);
+}
+
 .fc-event-skin {
 	background-color: #3465a4 !important;
 }
