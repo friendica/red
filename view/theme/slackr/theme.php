@@ -43,8 +43,16 @@ function cmtBbOpen(id) {
 function cmtBbClose(id) {
 	$(".comment-edit-bb-" + id).hide();
 }
+
+function hidecal() {
+	if(editor) return;
+	$('.fc').hide();
+}
+
 $(document).ready(function() {
 
+	$("#profile-jot-text").focus(hidecal);
+	$("#profile-jot-text").click(hidecal);
 
 $('html').click(function() { $("#nav-notifications-menu" ).hide(); });
 
