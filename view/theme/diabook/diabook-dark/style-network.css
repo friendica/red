@@ -464,7 +464,7 @@ code {
   position: absolute;
   width: 12em;
   background: #2e2f2e;
-  color: #2e2f2e;
+  color: #eec;
   margin: 0px;
   padding: 1em;
   list-style: none;
@@ -667,7 +667,7 @@ nav .nav-menu-icon:hover {
 }
 
 nav .nav-menu-icon.selected {
-  background-color: #fff;
+  background-color: #308dbf;
 }
 nav .nav-menu-icon img {
   width: 22px;
@@ -1434,7 +1434,8 @@ transition: all 0.2s ease-in-out;
 }
 .wall-item-comment-wrapper textarea {
   height: 2.0em;
-  width: 100%;
+  /**No idea what's going on here, but at 100%, it's fugly **/
+  width: 98% !important;
   font-size: 10px;
   color: #999999;
   border: 1px solid #2e2e2f;

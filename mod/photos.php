@@ -287,6 +287,7 @@ function photos_post(&$a) {
 
 	if(($a->argc > 2) && ((x($_POST,'desc') !== false) || (x($_POST,'newtag') !== false)) || (x($_POST,'albname') !== false)) {
 
+
 		$desc        = ((x($_POST,'desc'))    ? notags(trim($_POST['desc']))    : '');
 		$rawtags     = ((x($_POST,'newtag'))  ? notags(trim($_POST['newtag']))  : '');
 		$item_id     = ((x($_POST,'item_id')) ? intval($_POST['item_id'])       : 0);
@@ -300,7 +301,61 @@ function photos_post(&$a) {
 
 		if(! strlen($albname))
 			$albname = datetime_convert('UTC',date_default_timezone_get(),'now', 'Y');
+
+
+		if((x($_POST,'rotate') !== false) && (intval($_POST['rotate']) == 1)) {
+			logger('rotate');
+
+			$r = q("select * from photo where `resource-id` = '%s' and uid = %d and scale = 0 limit 1",
+				dbesc($resource_id),
+				intval($page_owner_uid)
+			);
+			if(count($r)) {
+				$ph = new Photo($r[0]['data']);
+				if($ph->is_valid()) {
+					$ph->rotate(270);
+
+					$width  = $ph->getWidth();
+					$height = $ph->getHeight();
+
+					$x = q("update photo set data = '%s', height = %d, width = %d where `resource-id` = '%s' and uid = %d and scale = 0 limit 1",
+						dbesc($ph->imageString()),
+						intval($height),
+						intval($width),
+				dbesc($resource_id),
+				intval($page_owner_uid)
+					);
+
+					if($width > 640 || $height > 640) {
+						$ph->scaleImage(640);
+						$width  = $ph->getWidth();
+						$height = $ph->getHeight();
 		
+						$x = q("update photo set data = '%s', height = %d, width = %d where `resource-id` = '%s' and uid = %d and scale = 1 limit 1",
+							dbesc($ph->imageString()),
+							intval($height),
+							intval($width),
+				dbesc($resource_id),
+				intval($page_owner_uid)
+						);
+					}
+
+					if($width > 320 || $height > 320) {
+						$ph->scaleImage(320);
+						$width  = $ph->getWidth();
+						$height = $ph->getHeight();
+
+						$x = q("update photo set data = '%s', height = %d, width = %d where `resource-id` = '%s' and uid = %d and scale = 2 limit 1",
+							dbesc($ph->imageString()),
+							intval($height),
+							intval($width),
+				dbesc($resource_id),
+				intval($page_owner_uid)
+						);
+					}	
+				}
+			}
+		}
 
 		$p = q("SELECT * FROM `photo` WHERE `resource-id` = '%s' AND `uid` = %d ORDER BY `scale` DESC",
 			dbesc($resource_id),
@@ -977,9 +1032,16 @@ function photos_content(&$a) {
 
 		$tpl = get_markup_template('photo_album.tpl');
 		if(count($r))
+			$twist = 'rotright';
 			foreach($r as $rr) {
+				if($twist == 'rotright')
+					$twist = 'rotleft';
+				else
+					$twist = 'rotright';
+
 				$o .= replace_macros($tpl,array(
 					'$id' => $rr['id'],
+					'$twist' => ' ' . $twist . rand(2,4),
 					'$photolink' => $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $rr['resource-id'],
 					'$phototitle' => t('View Photo'),
 					'$imgsrc' => $a->get_baseurl() . '/photo/' . $rr['resource-id'] . '-' . $rr['scale'] . '.jpg',
@@ -1098,7 +1160,7 @@ function photos_content(&$a) {
 		$photo = array(
 			'href' => $a->get_baseurl() . '/photo/' . $hires['resource-id'] . '-' . $hires['scale'] . '.jpg',
 			'title'=> t('View Full Size'),
-			'src'  => $a->get_baseurl() . '/photo/' . $lores['resource-id'] . '-' . $lores['scale'] . '.jpg'
+			'src'  => $a->get_baseurl() . '/photo/' . $lores['resource-id'] . '-' . $lores['scale'] . '.jpg' . '?f=&_u=' . datetime_convert('','','','ymdhis')
 		);
 
 		if($nextlink)
@@ -1178,6 +1240,7 @@ function photos_content(&$a) {
 			$edit_tpl = get_markup_template('photo_edit.tpl');
 			$edit = replace_macros($edit_tpl, array(
 				'$id' => $ph[0]['id'],
+				'$rotate' => t('Rotate CW'),
 				'$album' => template_escape($ph[0]['album']),
 				'$newalbum' => t('New album name'), 
 				'$nickname' => $a->data['user']['nickname'],
@@ -1400,9 +1463,16 @@ function photos_content(&$a) {
 
 	$photos = array();
 	if(count($r)) {
+		$twist = 'rotright';
 		foreach($r as $rr) {
+			if($twist == 'rotright')
+				$twist = 'rotleft';
+			else
+				$twist = 'rotright';
+
 			$photos[] = array(
 				'id'       => $rr['id'],
+				'twist'    => ' ' . $twist . rand(2,4),
 				'link'  	=> $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $rr['resource-id'],
 				'title' 	=> t('View Photo'),
 				'src'     	=> $a->get_baseurl() . '/photo/' . $rr['resource-id'] . '-' . ((($rr['scale']) == 6) ? 4 : $rr['scale']) . '.jpg',

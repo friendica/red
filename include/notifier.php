@@ -478,24 +478,42 @@ function notifier_run($argv, $argc){
 			}
 		}
 
+
+		// This controls the number of deliveries to execute with each separate delivery process.
+		// By default we'll perform one delivery per process. Assuming a hostile shared hosting
+		// provider, this provides the greatest chance of deliveries if processes start getting 
+		// killed. We can also space them out with the delivery_interval to also help avoid them 
+		// getting whacked.
+
+		// If $deliveries_per_process > 1, we will chain this number of multiple deliveries 
+		// together into a single process. This will reduce the overall number of processes 
+		// spawned for each delivery, but they will run longer. 
+
 		$deliveries_per_process = intval(get_config('system','delivery_batch_count'));
 		if($deliveries_per_process <= 0)
 			$deliveries_per_process = 1;
 
 		$this_batch = array();
 
-		foreach($r as $contact) {
+		for($x = 0; $x < count($r); $x ++) {
+			$contact = $r[$x];
+
 			if($contact['self'])
 				continue;
 
 			// potentially more than one recipient. Start a new process and space them out a bit.
-			// we will deliver single recipient types of message and email receipients here. 
-
+			// we will deliver single recipient types of message and email recipients here. 
+		
 			if((! $mail) && (! $fsuggest) && (! $followup)) {
-				// deliveries per process not yet implemented, 1 delivery per process.
-				proc_run('php','include/delivery.php',$cmd,$item_id,$contact['id']);
-				if($interval)
-					@time_sleep_until(microtime(true) + (float) $interval);
+
+				$this_batch[] = $contact['id'];
+
+				if(count($this_batch) == $deliveries_per_process) {
+					proc_run('php','include/delivery.php',$cmd,$item_id,$this_batch);
+					$this_batch = array();
+					if($interval)
+						@time_sleep_until(microtime(true) + (float) $interval);
+				}
 				continue;
 			}
 

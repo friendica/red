@@ -551,6 +551,9 @@ input#dfrn-url {
 	margin-bottom: 30px;
 }
 
+#profile-vcard-break {
+	clear: both;
+}
 #profile-extra-links {
 	clear: both;
 	margin-top: 10px;
@@ -1963,23 +1966,29 @@ aside input[type='text'] {
 }
 
 
-.photos {
+/*.photos {
 	height: auto;
 	overflow: auto;
+}*/
+
+.photos-end {
+	clear: both;
+	margin-bottom: 25px;
 }
 
 .photo-album-image-wrapper {
 	float: left;
 	margin-top: 15px;
 	margin-right: 15px;
-	width: 200px; height: 200px; 
+	margin-left: 15px;
+/*	width: 200px; height: 200px; 
 	overflow: hidden; 
-	position: relative;
+	position: relative; */
 }
 .photo-album-image-wrapper .caption {
 	display: none; 
  	width: 100%;
- 	position: absolute; 
+/* 	position: absolute; */
  	bottom: 0px; 
  	padding: 0.5em 0.5em 0px 0.5em;
  	background-color: rgba(245, 245, 255, 0.8);
@@ -1992,20 +2001,23 @@ aside input[type='text'] {
 
 #photo-album-end {
 	clear: both;
+	margin-bottom: 25px;
 }
 
 .photo-top-image-wrapper {
-	position: relative;
+/*	position: relative; */
 	float: left;
 	margin-top: 15px;
 	margin-right: 15px;
-	width: 200px; height: 200px; 
-	overflow: hidden; 
+	margin-left: 15px;
+	margin-bottom: 15px;
+/*	width: 200px; height: 200px; 
+	overflow: hidden; */
 }
 .photo-top-album-name {
  	width: 100%;
  	min-height: 2em;
- 	position: absolute; 
+/* 	position: absolute;  */
  	bottom: 0px; 
  	padding: 0px 3px;
  	padding-top: 0.5em;
@@ -2109,7 +2121,7 @@ aside input[type='text'] {
 	margin-bottom: 15px;
 }
 
-#photo-edit-caption-label, #photo-edit-tags-label, #photo-edit-albumname-label {
+#photo-edit-caption-label, #photo-edit-tags-label, #photo-edit-albumname-label, #photo-edit-rotate-label {
 	float: left;
 	width: 150px;
 }
@@ -2118,7 +2130,7 @@ aside input[type='text'] {
 	margin-bottom: 15px;
 }
 
-#photo-edit-caption, #photo-edit-newtag, #photo-edit-albumname {
+#photo-edit-caption, #photo-edit-newtag, #photo-edit-albumname, #photo-edit-rotate {
 	float: left;
 	margin-bottom: 25px;
 }
@@ -2129,8 +2141,12 @@ aside input[type='text'] {
 	margin-bottom: 25px;
 }
 
-#photo-edit-caption-end, #photo-edit-tags-end, #photo-edit-albumname-end {
+#photo-edit-caption-end, #photo-edit-tags-end, #photo-edit-albumname-end, #photo-edit-rotate-end {
 	clear: both;
+}
+
+#photo-edit-rotate-end {
+	margin-bottom: 15px;
 }
 
 #photo-edit-delete-button {
@@ -2937,6 +2953,7 @@ aside input[type='text'] {
 .starred { background-position: -16px -48px; }
 .unstarred { background-position: -32px -48px; }
 .tagged { background-position: -48px -48px; }
+.yellow { background-position: -64px -48px; }
 
 
 .filer-icon {

@@ -117,6 +117,9 @@
 		
 		/* nav update event  */
 		$('nav').bind('nav-update', function(e,data){;
+			var invalid = $(data).find('invalid').text();
+			if(invalid == 1) { window.location.href=window.location.href }
+
 			var net = $(data).find('net').text();
 			if(net == 0) { net = ''; $('#net-update').removeClass('show') } else { $('#net-update').addClass('show') }
 			$('#net-update').html(net);
@@ -211,7 +214,8 @@
 	function NavUpdate() {
 
 		if(! stopped) {
-			$.get("ping",function(data) {
+			var pingCmd = 'ping' + ((localUser != 0) ? '?f=&uid=' + localUser : '');
+			$.get(pingCmd,function(data) {
 				$(data).find('result').each(function() {
 					// send nav-update event
 					$('nav').trigger('nav-update', this);

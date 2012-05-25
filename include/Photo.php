@@ -87,6 +87,12 @@ class Photo {
 
 	}
 
+	public function rotate($degrees) {
+		$this->image  = imagerotate($this->image,$degrees,0);
+		$this->width  = imagesx($this->image);
+		$this->height = imagesy($this->image);
+	}	
+
 
 
 	public function scaleImageUp($min) {

@@ -218,14 +218,23 @@ function item_post(&$a) {
 
 		$private = ((strlen($str_group_allow) || strlen($str_contact_allow) || strlen($str_group_deny) || strlen($str_contact_deny)) ? 1 : 0);
 
-		if(($parent_item) && 
-			(($parent_item['private']) 
+		// If this is a comment, set the permissions from the parent.
+
+		if($parent_item) {
+			$private = 0;
+
+			if(($parent_item['private']) 
 				|| strlen($parent_item['allow_cid']) 
 				|| strlen($parent_item['allow_gid']) 
 				|| strlen($parent_item['deny_cid']) 
-				|| strlen($parent_item['deny_gid'])
-			)) {
-			$private = 1;
+				|| strlen($parent_item['deny_gid'])) {
+				$private = 1;
+			}
+
+			$str_contact_allow = $parent_item['allow_cid'];
+			$str_group_allow   = $parent_item['allow_gid'];
+			$str_contact_deny  = $parent_item['deny_cid'];
+			$str_group_deny    = $parent_item['deny_gid'];
 		}
 	
 		$pubmail_enable    = ((x($_REQUEST,'pubmail_enable') && intval($_REQUEST['pubmail_enable']) && (! $private)) ? 1 : 0);
@@ -281,18 +290,16 @@ function item_post(&$a) {
 	$author = null;
 	$self   = false;
 
-	if(($_SESSION['uid']) && ($_SESSION['uid'] == $profile_uid)) {
+	if((local_user()) && (local_user() == $profile_uid)) {
 		$self = true;
 		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
 			intval($_SESSION['uid'])
 		);
 	}
-	else {
-		if((x($_SESSION,'visitor_id')) && (intval($_SESSION['visitor_id']))) {
-			$r = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
-				intval($_SESSION['visitor_id'])
-			);
-		}
+	elseif(remote_user()) {
+		$r = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
+			intval(remote_user())
+		);
 	}
 
 	if(count($r)) {
@@ -302,7 +309,7 @@ function item_post(&$a) {
 
 	// get contact info for owner
 	
-	if($profile_uid == $_SESSION['uid']) {
+	if($profile_uid == local_user()) {
 		$contact_record = $author;
 	}
 	else {
@@ -312,8 +319,6 @@ function item_post(&$a) {
 		if(count($r))
 			$contact_record = $r[0];
 	}
-
-
 
 	$post_type = notags(trim($_REQUEST['type']));
 

@@ -9,7 +9,7 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '3.0.1346' );
+define ( 'FRIENDICA_VERSION',      '3.0.1353' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
 define ( 'DB_UPDATE_VERSION',      1144      );
 
@@ -511,6 +511,7 @@ if(! class_exists('App')) {
 			$tpl = file_get_contents('view/head.tpl');
 			$this->page['htmlhead'] = replace_macros($tpl,array(
 				'$baseurl' => $this->get_baseurl(), // FIXME for z_path!!!!
+				'$local_user' => local_user(),
 				'$generator' => 'Friendica' . ' ' . FRIENDICA_VERSION,
 				'$delitem' => t('Delete this item?'),
 				'$comment' => t('Comment'),
@@ -1323,6 +1324,25 @@ if(! function_exists('proc_run')) {
 		$a = get_app();
 
 		$args = func_get_args();
+
+		$newargs = array();
+		if(! count($args))
+			return;
+
+		// expand any arrays
+
+		foreach($args as $arg) {
+			if(is_array($arg)) {
+				foreach($arg as $n) {
+					$newargs[] = $n;
+				}
+			}
+			else
+				$newargs[] = $arg;
+		}
+
+		$args = $newargs;
+		
 		$arr = array('args' => $args, 'run_cmd' => true);
 
 		call_hooks("proc_run", $arr);

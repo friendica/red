@@ -2,6 +2,10 @@
 	<h1>$title - $page</h1>
 
 	<dl>
+		<dt>$queues.label</dt>
+		<dd>$queues.deliverq - $queues.queue</dd>
+	</dl>
+	<dl>
 		<dt>$pending.0</dt>
 		<dd>$pending.1</dt>
 	</dl>
