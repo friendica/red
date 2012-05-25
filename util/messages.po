@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 3.0.1353\n"
+"Project-Id-Version: 3.0.1354\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-24 16:51-0700\n"
+"POT-Creation-Date: 2012-05-25 10:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -904,7 +904,7 @@ msgid ""
 msgstr ""
 
 #: ../../mod/install.php:139 ../../mod/install.php:203
-#: ../../mod/install.php:480
+#: ../../mod/install.php:482
 msgid "Please see the file \"INSTALL.txt\"."
 msgstr ""
 
@@ -976,151 +976,160 @@ msgstr ""
 msgid "Could not find a command line version of PHP in the web server PATH."
 msgstr ""
 
-#: ../../mod/install.php:320
+#: ../../mod/install.php:318
+msgid ""
+"If you don't have a command line version of PHP installed on server, you "
+"will not be able to run background polling via cron. See <a href='http://"
+"friendica.com/node/27'>'Activating scheduled tasks'</a>"
+msgstr ""
+
+#: ../../mod/install.php:322
 msgid "PHP executable path"
 msgstr ""
 
-#: ../../mod/install.php:320
-msgid "Enter full path to php executable"
+#: ../../mod/install.php:322
+msgid ""
+"Enter full path to php executable. You can leave this blank to continue the "
+"installation."
 msgstr ""
 
-#: ../../mod/install.php:325
+#: ../../mod/install.php:327
 msgid "Command line PHP"
 msgstr ""
 
-#: ../../mod/install.php:334
+#: ../../mod/install.php:336
 msgid ""
 "The command line version of PHP on your system does not have "
 "\"register_argc_argv\" enabled."
 msgstr ""
 
-#: ../../mod/install.php:335
+#: ../../mod/install.php:337
 msgid "This is required for message delivery to work."
 msgstr ""
 
-#: ../../mod/install.php:337
+#: ../../mod/install.php:339
 msgid "PHP register_argc_argv"
 msgstr ""
 
-#: ../../mod/install.php:358
+#: ../../mod/install.php:360
 msgid ""
 "Error: the \"openssl_pkey_new\" function on this system is not able to "
 "generate encryption keys"
 msgstr ""
 
-#: ../../mod/install.php:359
+#: ../../mod/install.php:361
 msgid ""
 "If running under Windows, please see \"http://www.php.net/manual/en/openssl."
 "installation.php\"."
 msgstr ""
 
-#: ../../mod/install.php:361
+#: ../../mod/install.php:363
 msgid "Generate encryption keys"
 msgstr ""
 
-#: ../../mod/install.php:368
+#: ../../mod/install.php:370
 msgid "libCurl PHP module"
 msgstr ""
 
-#: ../../mod/install.php:369
+#: ../../mod/install.php:371
 msgid "GD graphics PHP module"
 msgstr ""
 
-#: ../../mod/install.php:370
+#: ../../mod/install.php:372
 msgid "OpenSSL PHP module"
 msgstr ""
 
-#: ../../mod/install.php:371
+#: ../../mod/install.php:373
 msgid "mysqli PHP module"
 msgstr ""
 
-#: ../../mod/install.php:372
+#: ../../mod/install.php:374
 msgid "mb_string PHP module"
 msgstr ""
 
-#: ../../mod/install.php:377 ../../mod/install.php:379
+#: ../../mod/install.php:379 ../../mod/install.php:381
 msgid "Apache mod_rewrite module"
 msgstr ""
 
-#: ../../mod/install.php:377
+#: ../../mod/install.php:379
 msgid ""
 "Error: Apache webserver mod-rewrite module is required but not installed."
 msgstr ""
 
-#: ../../mod/install.php:384
+#: ../../mod/install.php:386
 msgid "Error: libCURL PHP module required but not installed."
 msgstr ""
 
-#: ../../mod/install.php:388
+#: ../../mod/install.php:390
 msgid ""
 "Error: GD graphics PHP module with JPEG support required but not installed."
 msgstr ""
 
-#: ../../mod/install.php:392
+#: ../../mod/install.php:394
 msgid "Error: openssl PHP module required but not installed."
 msgstr ""
 
-#: ../../mod/install.php:396
+#: ../../mod/install.php:398
 msgid "Error: mysqli PHP module required but not installed."
 msgstr ""
 
-#: ../../mod/install.php:400
+#: ../../mod/install.php:402
 msgid "Error: mb_string PHP module required but not installed."
 msgstr ""
 
-#: ../../mod/install.php:417
+#: ../../mod/install.php:419
 msgid ""
 "The web installer needs to be able to create a file called \".htconfig.php\" "
 "in the top folder of your web server and it is unable to do so."
 msgstr ""
 
-#: ../../mod/install.php:418
+#: ../../mod/install.php:420
 msgid ""
 "This is most often a permission setting, as the web server may not be able "
 "to write files in your folder - even if you can."
 msgstr ""
 
-#: ../../mod/install.php:419
+#: ../../mod/install.php:421
 msgid ""
 "At the end of this procedure, we will give you a text to save in a file "
 "named .htconfig.php in your Friendica top folder."
 msgstr ""
 
-#: ../../mod/install.php:420
+#: ../../mod/install.php:422
 msgid ""
 "You can alternatively skip this procedure and perform a manual installation. "
 "Please see the file \"INSTALL.txt\" for instructions."
 msgstr ""
 
-#: ../../mod/install.php:423
+#: ../../mod/install.php:425
 msgid ".htconfig.php is writable"
 msgstr ""
 
-#: ../../mod/install.php:434
+#: ../../mod/install.php:436
 msgid ""
 "Url rewrite in .htconfig is not working. Check your server configuration."
 msgstr ""
 
-#: ../../mod/install.php:436
+#: ../../mod/install.php:438
 msgid "Url rewrite is working"
 msgstr ""
 
-#: ../../mod/install.php:442
+#: ../../mod/install.php:444
 msgid ""
 "The database configuration file \".htconfig.php\" could not be written. "
 "Please use the enclosed text to create a configuration file in your web "
 "server root."
 msgstr ""
 
-#: ../../mod/install.php:467
+#: ../../mod/install.php:469
 msgid "Errors encountered creating database tables."
 msgstr ""
 
-#: ../../mod/install.php:478
+#: ../../mod/install.php:480
 msgid "<h1>What next</h1>"
 msgstr ""
 
-#: ../../mod/install.php:479
+#: ../../mod/install.php:481
 msgid ""
 "IMPORTANT: You will need to [manually] setup a scheduled task for the poller."
 msgstr ""
