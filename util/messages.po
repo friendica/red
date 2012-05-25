@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 3.0.1351\n"
+"Project-Id-Version: 3.0.1353\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-23 10:00-0700\n"
+"POT-Creation-Date: 2012-05-24 16:51-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,7 +37,7 @@ msgstr ""
 #: ../../mod/crepair.php:115 ../../mod/wall_attach.php:44
 #: ../../mod/fsuggest.php:78 ../../mod/events.php:138 ../../mod/api.php:26
 #: ../../mod/api.php:31 ../../mod/photos.php:130 ../../mod/photos.php:920
-#: ../../mod/editpost.php:10 ../../mod/install.php:171
+#: ../../mod/editpost.php:10 ../../mod/install.php:151
 #: ../../mod/notifications.php:66 ../../mod/contacts.php:125
 #: ../../mod/settings.php:104 ../../mod/settings.php:535
 #: ../../mod/settings.php:540 ../../mod/manage.php:86 ../../mod/network.php:6
@@ -125,7 +125,7 @@ msgstr ""
 #: ../../mod/events.php:428 ../../mod/photos.php:955 ../../mod/photos.php:1013
 #: ../../mod/photos.php:1256 ../../mod/photos.php:1296
 #: ../../mod/photos.php:1336 ../../mod/photos.php:1367
-#: ../../mod/install.php:251 ../../mod/install.php:289
+#: ../../mod/install.php:245 ../../mod/install.php:283
 #: ../../mod/localtime.php:45 ../../mod/contacts.php:322
 #: ../../mod/settings.php:553 ../../mod/settings.php:699
 #: ../../mod/settings.php:760 ../../mod/settings.php:964
@@ -233,7 +233,7 @@ msgstr ""
 msgid "Previous"
 msgstr ""
 
-#: ../../mod/events.php:327 ../../mod/install.php:210
+#: ../../mod/events.php:327 ../../mod/install.php:204
 msgid "Next"
 msgstr ""
 
@@ -881,20 +881,15 @@ msgstr ""
 msgid "Submit Request"
 msgstr ""
 
-#: ../../mod/install.php:111
+#: ../../mod/install.php:117
 msgid "Friendica Social Communications Server - Setup"
 msgstr ""
 
-#: ../../mod/install.php:117 ../../mod/install.php:157
-#: ../../mod/install.php:230
-msgid "Database connection"
-msgstr ""
-
-#: ../../mod/install.php:124
+#: ../../mod/install.php:123
 msgid "Could not connect to database."
 msgstr ""
 
-#: ../../mod/install.php:128
+#: ../../mod/install.php:127
 msgid "Could not create table."
 msgstr ""
 
@@ -902,227 +897,232 @@ msgstr ""
 msgid "Your Friendica site database has been installed."
 msgstr ""
 
-#: ../../mod/install.php:134
-msgid ""
-"IMPORTANT: You will need to [manually] setup a scheduled task for the poller."
-msgstr ""
-
-#: ../../mod/install.php:135 ../../mod/install.php:151
-#: ../../mod/install.php:209
-msgid "Please see the file \"INSTALL.txt\"."
-msgstr ""
-
-#: ../../mod/install.php:137
-msgid "Proceed to registration"
-msgstr ""
-
-#: ../../mod/install.php:143
-msgid "Proceed with Installation"
-msgstr ""
-
-#: ../../mod/install.php:150
+#: ../../mod/install.php:138
 msgid ""
 "You may need to import the file \"database.sql\" manually using phpmyadmin "
 "or mysql."
 msgstr ""
 
-#: ../../mod/install.php:158
-msgid "Database import failed."
+#: ../../mod/install.php:139 ../../mod/install.php:203
+#: ../../mod/install.php:480
+msgid "Please see the file \"INSTALL.txt\"."
 msgstr ""
 
-#: ../../mod/install.php:206
+#: ../../mod/install.php:200
 msgid "System check"
 msgstr ""
 
-#: ../../mod/install.php:211
+#: ../../mod/install.php:205
 msgid "Check again"
 msgstr ""
 
-#: ../../mod/install.php:231
+#: ../../mod/install.php:224
+msgid "Database connection"
+msgstr ""
+
+#: ../../mod/install.php:225
 msgid ""
 "In order to install Friendica we need to know how to connect to your "
 "database."
 msgstr ""
 
-#: ../../mod/install.php:232
+#: ../../mod/install.php:226
 msgid ""
 "Please contact your hosting provider or site administrator if you have "
 "questions about these settings."
 msgstr ""
 
-#: ../../mod/install.php:233
+#: ../../mod/install.php:227
 msgid ""
 "The database you specify below should already exist. If it does not, please "
 "create it before continuing."
 msgstr ""
 
-#: ../../mod/install.php:237
+#: ../../mod/install.php:231
 msgid "Database Server Name"
 msgstr ""
 
-#: ../../mod/install.php:238
+#: ../../mod/install.php:232
 msgid "Database Login Name"
 msgstr ""
 
-#: ../../mod/install.php:239
+#: ../../mod/install.php:233
 msgid "Database Login Password"
 msgstr ""
 
-#: ../../mod/install.php:240
+#: ../../mod/install.php:234
 msgid "Database Name"
 msgstr ""
 
-#: ../../mod/install.php:241 ../../mod/install.php:280
+#: ../../mod/install.php:235 ../../mod/install.php:274
 msgid "Site administrator email address"
 msgstr ""
 
-#: ../../mod/install.php:241 ../../mod/install.php:280
+#: ../../mod/install.php:235 ../../mod/install.php:274
 msgid ""
 "Your account email address must match this in order to use the web admin "
 "panel."
 msgstr ""
 
-#: ../../mod/install.php:245 ../../mod/install.php:283
+#: ../../mod/install.php:239 ../../mod/install.php:277
 msgid "Please select a default timezone for your website"
 msgstr ""
 
-#: ../../mod/install.php:270
+#: ../../mod/install.php:264
 msgid "Site settings"
 msgstr ""
 
-#: ../../mod/install.php:323
+#: ../../mod/install.php:317
 msgid "Could not find a command line version of PHP in the web server PATH."
 msgstr ""
 
-#: ../../mod/install.php:326
+#: ../../mod/install.php:320
 msgid "PHP executable path"
 msgstr ""
 
-#: ../../mod/install.php:326
+#: ../../mod/install.php:320
 msgid "Enter full path to php executable"
 msgstr ""
 
-#: ../../mod/install.php:331
+#: ../../mod/install.php:325
 msgid "Command line PHP"
 msgstr ""
 
-#: ../../mod/install.php:340
+#: ../../mod/install.php:334
 msgid ""
 "The command line version of PHP on your system does not have "
 "\"register_argc_argv\" enabled."
 msgstr ""
 
-#: ../../mod/install.php:341
+#: ../../mod/install.php:335
 msgid "This is required for message delivery to work."
 msgstr ""
 
-#: ../../mod/install.php:343
+#: ../../mod/install.php:337
 msgid "PHP register_argc_argv"
 msgstr ""
 
-#: ../../mod/install.php:364
+#: ../../mod/install.php:358
 msgid ""
 "Error: the \"openssl_pkey_new\" function on this system is not able to "
 "generate encryption keys"
 msgstr ""
 
-#: ../../mod/install.php:365
+#: ../../mod/install.php:359
 msgid ""
 "If running under Windows, please see \"http://www.php.net/manual/en/openssl."
 "installation.php\"."
 msgstr ""
 
-#: ../../mod/install.php:367
+#: ../../mod/install.php:361
 msgid "Generate encryption keys"
 msgstr ""
 
-#: ../../mod/install.php:374
+#: ../../mod/install.php:368
 msgid "libCurl PHP module"
 msgstr ""
 
-#: ../../mod/install.php:375
+#: ../../mod/install.php:369
 msgid "GD graphics PHP module"
 msgstr ""
 
-#: ../../mod/install.php:376
+#: ../../mod/install.php:370
 msgid "OpenSSL PHP module"
 msgstr ""
 
-#: ../../mod/install.php:377
+#: ../../mod/install.php:371
 msgid "mysqli PHP module"
 msgstr ""
 
-#: ../../mod/install.php:378
+#: ../../mod/install.php:372
 msgid "mb_string PHP module"
 msgstr ""
 
-#: ../../mod/install.php:383 ../../mod/install.php:385
+#: ../../mod/install.php:377 ../../mod/install.php:379
 msgid "Apache mod_rewrite module"
 msgstr ""
 
-#: ../../mod/install.php:383
+#: ../../mod/install.php:377
 msgid ""
 "Error: Apache webserver mod-rewrite module is required but not installed."
 msgstr ""
 
-#: ../../mod/install.php:390
+#: ../../mod/install.php:384
 msgid "Error: libCURL PHP module required but not installed."
 msgstr ""
 
-#: ../../mod/install.php:394
+#: ../../mod/install.php:388
 msgid ""
 "Error: GD graphics PHP module with JPEG support required but not installed."
 msgstr ""
 
-#: ../../mod/install.php:398
+#: ../../mod/install.php:392
 msgid "Error: openssl PHP module required but not installed."
 msgstr ""
 
-#: ../../mod/install.php:402
+#: ../../mod/install.php:396
 msgid "Error: mysqli PHP module required but not installed."
 msgstr ""
 
-#: ../../mod/install.php:406
+#: ../../mod/install.php:400
 msgid "Error: mb_string PHP module required but not installed."
 msgstr ""
 
-#: ../../mod/install.php:423
+#: ../../mod/install.php:417
 msgid ""
 "The web installer needs to be able to create a file called \".htconfig.php\" "
 "in the top folder of your web server and it is unable to do so."
 msgstr ""
 
-#: ../../mod/install.php:424
+#: ../../mod/install.php:418
 msgid ""
 "This is most often a permission setting, as the web server may not be able "
 "to write files in your folder - even if you can."
 msgstr ""
 
-#: ../../mod/install.php:425
+#: ../../mod/install.php:419
 msgid ""
-"Please check with your site documentation or support people to see if this "
-"situation can be corrected."
+"At the end of this procedure, we will give you a text to save in a file "
+"named .htconfig.php in your Friendica top folder."
 msgstr ""
 
-#: ../../mod/install.php:426
+#: ../../mod/install.php:420
 msgid ""
-"If not, you may be required to perform a manual installation. Please see the "
-"file \"INSTALL.txt\" for instructions."
+"You can alternatively skip this procedure and perform a manual installation. "
+"Please see the file \"INSTALL.txt\" for instructions."
 msgstr ""
 
-#: ../../mod/install.php:429
+#: ../../mod/install.php:423
 msgid ".htconfig.php is writable"
 msgstr ""
 
+#: ../../mod/install.php:434
+msgid ""
+"Url rewrite in .htconfig is not working. Check your server configuration."
+msgstr ""
+
 #: ../../mod/install.php:436
+msgid "Url rewrite is working"
+msgstr ""
+
+#: ../../mod/install.php:442
 msgid ""
 "The database configuration file \".htconfig.php\" could not be written. "
 "Please use the enclosed text to create a configuration file in your web "
 "server root."
 msgstr ""
 
-#: ../../mod/install.php:461
+#: ../../mod/install.php:467
 msgid "Errors encountered creating database tables."
+msgstr ""
+
+#: ../../mod/install.php:478
+msgid "<h1>What next</h1>"
+msgstr ""
+
+#: ../../mod/install.php:479
+msgid ""
+"IMPORTANT: You will need to [manually] setup a scheduled task for the poller."
 msgstr ""
 
 #: ../../mod/localtime.php:12 ../../include/event.php:11
@@ -2381,7 +2381,7 @@ msgstr ""
 
 #: ../../mod/notes.php:63 ../../mod/filer.php:30
 #: ../../addon/facebook/facebook.php:756
-#: ../../addon/privacy_image_cache/privacy_image_cache.php:148
+#: ../../addon/privacy_image_cache/privacy_image_cache.php:150
 #: ../../include/text.php:652
 msgid "Save"
 msgstr ""
@@ -3774,7 +3774,8 @@ msgstr ""
 msgid "No installed applications."
 msgstr ""
 
-#: ../../mod/search.php:83 ../../include/text.php:650 ../../include/nav.php:91
+#: ../../mod/search.php:83 ../../include/text.php:649
+#: ../../include/text.php:650 ../../include/nav.php:91
 msgid "Search"
 msgstr ""
 
@@ -4518,23 +4519,23 @@ msgid ""
 "connection again, you have to %3$sre-authenticate the Facebook-connector%4$s."
 msgstr ""
 
-#: ../../addon/privacy_image_cache/privacy_image_cache.php:145
+#: ../../addon/privacy_image_cache/privacy_image_cache.php:147
 msgid "Lifetime of the cache (in hours)"
 msgstr ""
 
-#: ../../addon/privacy_image_cache/privacy_image_cache.php:150
+#: ../../addon/privacy_image_cache/privacy_image_cache.php:152
 msgid "Cache Statistics"
 msgstr ""
 
-#: ../../addon/privacy_image_cache/privacy_image_cache.php:153
+#: ../../addon/privacy_image_cache/privacy_image_cache.php:155
 msgid "Number of items"
 msgstr ""
 
-#: ../../addon/privacy_image_cache/privacy_image_cache.php:155
+#: ../../addon/privacy_image_cache/privacy_image_cache.php:157
 msgid "Size of the cache"
 msgstr ""
 
-#: ../../addon/privacy_image_cache/privacy_image_cache.php:157
+#: ../../addon/privacy_image_cache/privacy_image_cache.php:159
 msgid "Delete the whole cache"
 msgstr ""
 
