@@ -146,7 +146,7 @@ function profiles_post(&$a) {
 				$value = $marital;
 			}
 			if($withchanged) {
-				$changes[] = '&hearts; ' . t('Romantic Partner');
+				$changes[] = '[color=#ff0000]&hearts;[/color] ' . t('Romantic Partner');
 				$value = strip_tags($with);
 			}							
 			if($work != $orig[0]['work']) {
