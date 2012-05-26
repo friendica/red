@@ -355,13 +355,15 @@ function item_post(&$a) {
 				$image_uri = substr($image_uri,0, strpos($image_uri,'-'));
 				if(! strlen($image_uri))
 					continue;
-				$srch = '<' . intval($contact_record['id']) . '>';
+				$srch = '<' . intval($contact_id) . '>';
+
 				$r = q("SELECT `id` FROM `photo` WHERE `allow_cid` = '%s' AND `allow_gid` = '' AND `deny_cid` = '' AND `deny_gid` = ''
 					AND `resource-id` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($srch),
 					dbesc($image_uri),
 					intval($profile_uid)
 				);
+
 				if(! count($r))
 					continue;
  
