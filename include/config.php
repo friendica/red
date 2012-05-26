@@ -77,11 +77,9 @@ function get_config($family, $key, $instore = false) {
 if(! function_exists('set_config')) {
 function set_config($family,$key,$value) {
 	global $a;
-	
 	// manage array value
 	$dbvalue = (is_array($value)?serialize($value):$value);
-	$dbvalue = (is_bool($value) ? intval($value) : $value);
-
+	$dbvalue = (is_bool($dbvalue) ? intval($dbvalue) : $dbvalue);
 	if(get_config($family,$key,true) === false) {
 		$a->config[$family][$key] = $value;
 		$ret = q("INSERT INTO `config` ( `cat`, `k`, `v` ) VALUES ( '%s', '%s', '%s' ) ",

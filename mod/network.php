@@ -108,6 +108,10 @@ function network_content(&$a, $update = 0) {
     	return login(false);
 	}
 
+	$arr = array('query' => $a->query_string);
+
+	call_hooks('network_content_init', $arr);
+
 	$o = '';
 
 	// item filter tabs
@@ -157,7 +161,7 @@ function network_content(&$a, $update = 0) {
 			$all_active = 'active';
 	}
 
-
+	
 	$postord_active = '';
 
 	if($all_active && x($_GET,'order') && $_GET['order'] !== 'comment') {
@@ -410,15 +414,14 @@ function network_content(&$a, $update = 0) {
 	if($conv) {
 		$myurl = $a->get_baseurl() . '/profile/'. $a->user['nickname'];
 		$myurl = substr($myurl,strpos($myurl,'://')+3);
-		$myurl = str_replace(array('www.','.'),array('','\\.'),$myurl);
+		$myurl = str_replace('www.','',$myurl);
 		$diasp_url = str_replace('/profile/','/u/',$myurl);
 		$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where ( `author-link` like '%s' or `tag` like '%s' or tag like '%s' )) ",
-			dbesc(protect_sprintf('%s' . $myurl)),
-			dbesc(protect_sprintf('%' . $myurl . '\\]%')),
-			dbesc(protect_sprintf('%' . $diasp_url . '\\]%'))
+			dbesc(protect_sprintf('%' . $myurl)),
+			dbesc(protect_sprintf('%' . $myurl . ']%')),
+			dbesc(protect_sprintf('%' . $diasp_url . ']%'))
 		);
 	}
-
 
 	if($update) {
 

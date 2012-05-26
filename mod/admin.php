@@ -115,7 +115,7 @@ function admin_content(&$a) {
 	$aside['logs'] = Array($a->get_baseurl(true)."/admin/logs/", t("Logs"), "logs");
 
 	$t = get_markup_template("admin_aside.tpl");
-	$a->page['aside'] = replace_macros( $t, array(
+	$a->page['aside'] .= replace_macros( $t, array(
 			'$admin' => $aside, 
 			'$h_pending' => t('User registrations waiting for confirmation'),
 			'$admurl'=> $a->get_baseurl(true)."/admin/"
@@ -182,6 +182,7 @@ function admin_page_summary(&$a) {
 		Array( t('Community/Celebrity Account'), 0),
 		Array( t('Automatic Friend Account'), 0)
 	);
+
 	$users=0;
 	foreach ($r as $u){ $accounts[$u['page-flags']][1] = $u['count']; $users+= $u['count']; }
 
@@ -190,10 +191,22 @@ function admin_page_summary(&$a) {
 	$r = q("SELECT COUNT(id) as `count` FROM `register`");
 	$pending = $r[0]['count'];
 		
+	$r = q("select count(*) as total from deliverq where 1");
+	$deliverq = (($r) ? $r[0]['total'] : 0);
+
+	$r = q("select count(*) as total from queue where 1");
+	$queue = (($r) ? $r[0]['total'] : 0);
+
+	// We can do better, but this is a quick queue status
+
+	$queues = array( 'label' => t('Message queues'), 'deliverq' => $deliverq, 'queue' => $queue );
+
+
 	$t = get_markup_template("admin_summary.tpl");
 	return replace_macros($t, array(
 		'$title' => t('Administration'),
 		'$page' => t('Summary'),
+		'$queues' => $queues,
 		'$users' => Array( t('Registered users'), $users),
 		'$accounts' => $accounts,
 		'$pending' => Array( t('Pending registrations'), $pending),
@@ -417,7 +430,7 @@ function admin_page_site(&$a) {
 		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), get_config('system','maximagesize'), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
 
 		'$register_policy'	=> array('register_policy', t("Register policy"), $a->config['register_policy'], "", $register_choices),
-		'$register_text'	=> array('register_text', t("Register text"), htmlentities($a->config['register_text'], ENT_QUOTES), t("Will be displayed prominently on the registration page.")),
+		'$register_text'	=> array('register_text', t("Register text"), htmlentities($a->config['register_text'], ENT_QUOTES, 'UTF-8'), t("Will be displayed prominently on the registration page.")),
 		'$abandon_days'     => array('abandon_days', t('Accounts abandoned after x days'), get_config('system','account_abandon_days'), t('Will not waste system resources polling external sites for abandonded accounts. Enter 0 for no time limit.')),
 		'$allowed_sites'	=> array('allowed_sites', t("Allowed friend domains"), get_config('system','allowed_sites'), t("Comma separated list of domains which are allowed to establish friendships with this site. Wildcards are accepted. Empty to allow any domains")),
 		'$allowed_email'	=> array('allowed_email', t("Allowed email domains"), get_config('system','allowed_email'), t("Comma separated list of domains which are allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains")),

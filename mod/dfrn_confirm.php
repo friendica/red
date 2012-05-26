@@ -144,19 +144,12 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			 * worried about key leakage than anybody cracking it.  
 			 *
 			 */
+			require_once('include/crypto.php');
 
-			$res = openssl_pkey_new(array(
-				'digest_alg' => 'sha1',
-				'private_key_bits' => 4096,
-				'encrypt_key' => false )
-			);
+			$res = new_keypair(1024);
 
-			$private_key = '';
-
-			openssl_pkey_export($res, $private_key);
-
-			$pubkey = openssl_pkey_get_details($res);
-			$public_key = $pubkey["key"];
+			$private_key = $res['prvkey'];
+			$public_key  = $res['pubkey'];
 
 			// Save the private key. Send them the public key.
 
@@ -507,7 +500,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		);
 		if($contact && $g && intval($g[0]['def_gid'])) {
 			require_once('include/group.php');
-			group_add_member($uid,'',$contact[0]['id'],$g[0]['def_gid']);
+			group_add_member($uid,'',$contact['id'],$g[0]['def_gid']);
 		}
 
 		// Let's send our user to the contact editor in case they want to

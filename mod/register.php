@@ -171,26 +171,17 @@ function register_post(&$a) {
 	$new_password = autoname(6) . mt_rand(100,9999);
 	$new_password_encoded = hash('whirlpool',$new_password);
 
-	$res=openssl_pkey_new(array(
-		'digest_alg' => 'sha1',
-		'private_key_bits' => 4096,
-		'encrypt_key' => false ));
+	require_once('include/crypto.php');
 
-	// Get private key
+	$result = new_keypair(1024);
 
-	if(empty($res)) {
+	if($result === false) {
 		notice( t('SERIOUS ERROR: Generation of security keys failed.') . EOL);
 		return;
 	}
 
-	$prvkey = '';
-
-	openssl_pkey_export($res, $prvkey);
-
-	// Get public key
-
-	$pkey = openssl_pkey_get_details($res);
-	$pubkey = $pkey["key"];
+	$prvkey = $result['prvkey'];
+	$pubkey = $result['pubkey'];
 
 	/**
 	 *
@@ -203,21 +194,9 @@ function register_post(&$a) {
 	 *
 	 */
 	
-	$sres=openssl_pkey_new(array(
-		'digest_alg' => 'sha1',
-		'private_key_bits' => 512,
-		'encrypt_key' => false ));
-
-	// Get private key
-
-	$sprvkey = '';
-
-	openssl_pkey_export($sres, $sprvkey);
-
-	// Get public key
-
-	$spkey = openssl_pkey_get_details($sres);
-	$spubkey = $spkey["key"];
+	$sres    = new_keypair(512);
+	$sprvkey = $sres['prvkey'];
+	$spubkey = $sres['pubkey'];
 
 	$r = q("INSERT INTO `user` ( `guid`, `username`, `password`, `email`, `openid`, `nickname`,
 		`pubkey`, `prvkey`, `spubkey`, `sprvkey`, `register_date`, `verified`, `blocked`, `timezone` )
