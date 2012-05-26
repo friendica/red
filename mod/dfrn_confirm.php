@@ -500,7 +500,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		);
 		if($contact && $g && intval($g[0]['def_gid'])) {
 			require_once('include/group.php');
-			group_add_member($uid,'',$contact[0]['id'],$g[0]['def_gid']);
+			group_add_member($uid,'',$contact['id'],$g[0]['def_gid']);
 		}
 
 		// Let's send our user to the contact editor in case they want to
