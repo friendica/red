@@ -44,7 +44,7 @@ function wallmessage_post(&$a) {
 	}
 
 	// Work around doubled linefeeds in Tinymce 3.5b2
-dbg(1);
+
 	$body = str_replace("\r\n","\n",$body);
 	$body = str_replace("\n\n","\n",$body);
 
@@ -67,7 +67,7 @@ dbg(1);
 		default:
 			info( t('Message sent.') . EOL );
 	}
-dbg(0);
+
 //	goaway($a->get_baseurl() . '/profile/' . $user['nickname']);
 	
 }

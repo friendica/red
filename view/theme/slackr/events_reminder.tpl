@@ -26,7 +26,7 @@
 				center: '',
 				right: ''
 			},			
-			timeFormat: 'H(:mm)',
+			timeFormat: 'HH(:mm)',
 			defaultView: 'basicWeek',
 			height: 50,
 			eventClick: function(calEvent, jsEvent, view) {
