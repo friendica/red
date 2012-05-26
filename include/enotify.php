@@ -13,7 +13,7 @@ function notification($params) {
 
 	$banner = t('Friendica Notification');
 	$product = FRIENDICA_PLATFORM;
-	$siteurl = z_path();
+	$siteurl = $a->get_baseurl(true);
 	$thanks = t('Thank You,');
 	$sitename = get_config('config','sitename');
 	$site_admin = sprintf( t('%s Administrator'), $sitename);
