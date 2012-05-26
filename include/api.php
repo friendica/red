@@ -976,7 +976,7 @@
 		$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
 		$max_id = (x($_REQUEST,'max_id')?$_REQUEST['max_id']:0);
 		//$since_id = 0;//$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
-		
+
 		$start = $page*$count;
 
 		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
@@ -985,11 +985,19 @@
 		$myurl = substr($myurl,strpos($myurl,'://')+3);
 		$myurl = str_replace(array('www.','.'),array('','\\.'),$myurl);
 		$diasp_url = str_replace('/profile/','/u/',$myurl);
-		$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where ( `author-link` regexp '%s' or `tag` regexp '%s' or tag regexp '%s' )) ",
-			dbesc($myurl . '$'),
-			dbesc($myurl . '\\]'),
-			dbesc($diasp_url . '\\]')
-		);
+
+		if (get_config('system','use_fulltext_engine'))
+                        $sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where (MATCH(`author-link`) AGAINST ('".'"%s"'."' in boolean mode) or MATCH(`tag`) AGAINST ('".'"%s"'."' in boolean mode) or MATCH(tag) AGAINST ('".'"%s"'."' in boolean mode))) ",
+                                dbesc(protect_sprintf($myurl)),
+                                dbesc(protect_sprintf($myurl)),
+                                dbesc(protect_sprintf($diasp_url))
+                        );
+                else
+                        $sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where ( `author-link` like '%s' or `tag` like '%s' or tag like '%s' )) ",
+                                dbesc(protect_sprintf('%' . $myurl)),
+                                dbesc(protect_sprintf('%' . $myurl . '\\]%')),
+                                dbesc(protect_sprintf('%' . $diasp_url . '\\]%'))
+                        );
 
 		if ($max_id > 0)
 			$sql_extra .= ' AND `item`.`id` <= '.intval($max_id);

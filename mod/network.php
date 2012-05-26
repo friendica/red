@@ -416,11 +416,19 @@ function network_content(&$a, $update = 0) {
 		$myurl = substr($myurl,strpos($myurl,'://')+3);
 		$myurl = str_replace(array('www.','.'),array('','\\.'),$myurl);
 		$diasp_url = str_replace('/profile/','/u/',$myurl);
-		$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where ( `author-link` like '%s' or `tag` like '%s' or tag like '%s' )) ",
-			dbesc(protect_sprintf('%' . $myurl)),
-			dbesc(protect_sprintf('%' . $myurl . '\\]%')),
-			dbesc(protect_sprintf('%' . $diasp_url . '\\]%'))
-		);
+		if (get_config('system','use_fulltext_engine'))
+			$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where (MATCH(`author-link`) AGAINST ('".'"%s"'."' in boolean mode) or MATCH(`tag`) AGAINST ('".'"%s"'."' in boolean mode) or MATCH(tag) AGAINST ('".'"%s"'."' in boolean mode))) ",
+				dbesc(protect_sprintf($myurl)),
+				dbesc(protect_sprintf($myurl)),
+				dbesc(protect_sprintf($diasp_url))
+			);
+		else
+			$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where ( `author-link` like '%s' or `tag` like '%s' or tag like '%s' )) ",
+				dbesc(protect_sprintf('%' . $myurl)),
+				dbesc(protect_sprintf('%' . $myurl . '\\]%')),
+				dbesc(protect_sprintf('%' . $diasp_url . '\\]%'))
+			);
+
 	}
 
 

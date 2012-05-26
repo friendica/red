@@ -109,11 +109,17 @@ function search_content(&$a) {
 	if(! $search)
 		return $o;
 
-	if($tag)
-		$sql_extra = sprintf(" AND `item`.`tag` REGEXP '%s' ", 	dbesc('\\]' . preg_quote($search) . '\\['));
-	else
-		$sql_extra = sprintf(" AND `item`.`body` REGEXP '%s' ", dbesc(preg_quote($search)));
-
+	if (get_config('system','use_fulltext_engine')) {
+		if($tag)
+			$sql_extra = sprintf(" AND MATCH (`item`.`tag`) AGAINST ('".'"%s"'."' in boolean mode) ", '#'.preg_quote($search));
+		else
+			$sql_extra = sprintf(" AND MATCH (`item`.`body`) AGAINST ('".'"%s"'."' in boolean mode) ", dbesc(preg_quote($search)));
+	} else {
+		if($tag)
+			$sql_extra = sprintf(" AND `item`.`tag` REGEXP '%s' ", 	dbesc('\\]' . preg_quote($search) . '\\['));
+		else
+			$sql_extra = sprintf(" AND `item`.`body` REGEXP '%s' ", dbesc(preg_quote($search)));
+	}
 
 
 
