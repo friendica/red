@@ -83,6 +83,9 @@ function diaspora_dispatch($importer,$msg) {
 	elseif($xmlbase->signed_retraction) {
 		$ret = diaspora_signed_retraction($importer,$xmlbase->signed_retraction,$msg);
 	}
+	elseif($xmlbase->relayable_retraction) {
+		$ret = diaspora_signed_retraction($importer,$xmlbase->relayable_retraction,$msg);
+	}
 	elseif($xmlbase->photo) {
 		$ret = diaspora_photo($importer,$xmlbase->photo,$msg);
 	}
@@ -677,7 +680,7 @@ function diaspora_post($importer,$xml) {
 		return;
 	}
 
-    // allocate a guid on our system - we aren't fixing any collisions.
+        // allocate a guid on our system - we aren't fixing any collisions.
 	// we're ignoring them
 
 	$g = q("select * from guid where guid = '%s' limit 1",
@@ -844,7 +847,7 @@ function diaspora_reshare($importer,$xml) {
 	$prefix = '&#x2672; ' . $details . "\n"; 
 
 
-    // allocate a guid on our system - we aren't fixing any collisions.
+        // allocate a guid on our system - we aren't fixing any collisions.
 	// we're ignoring them
 
 	$g = q("select * from guid where guid = '%s' limit 1",
@@ -948,7 +951,7 @@ function diaspora_asphoto($importer,$xml) {
 		return;
 	}
 
-    // allocate a guid on our system - we aren't fixing any collisions.
+        // allocate a guid on our system - we aren't fixing any collisions.
 	// we're ignoring them
 
 	$g = q("select * from guid where guid = '%s' limit 1",
@@ -1783,28 +1786,53 @@ function diaspora_signed_retraction($importer,$xml,$msg) {
 	$type = notags(unxmlify($xml->target_type));
 	$sig = notags(unxmlify($xml->target_author_signature));
 
+	$parent_author_signature = (($xml->parent_author_signature) ? notags(unxmlify($xml->parent_author_signature)) : '');
+
 	$contact = diaspora_get_contact_by_handle($importer['uid'],$diaspora_handle);
 	if(! $contact) {
 		logger('diaspora_signed_retraction: no contact');
 		return;
 	}
 
-	// this may not yet work for comments. Need to see how the relaying works
-	// and figure out who signs it.
-
 
 	$signed_data = $guid . ';' . $type ;
 
 	$sig = base64_decode($sig);
 
-	$key = $msg['key'];
+	if(strcasecmp($diaspora_handle,$msg['author']) == 0) {
+		$person = $contact;
+		$key = $msg['key'];
+	}
+	else {
+		$person = find_diaspora_person_by_handle($diaspora_handle);	
+
+		if(is_array($person) && x($person,'pubkey'))
+			$key = $person['pubkey'];
+		else {
+			logger('diaspora_signed_retraction: unable to find author details');
+			return;
+		}
+	}
 
 	if(! rsa_verify($signed_data,$sig,$key,'sha256')) {
-		logger('diaspora_signed_retraction: owner verification failed.' . print_r($msg,true));
+		logger('diaspora_signed_retraction: retraction-owner verification failed.' . print_r($msg,true));
 		return;
 	}
 
-	if($type === 'StatusMessage') {
+	if($parent_author_signature) {
+		$owner_signed_data = $guid . ';' . $type ;
+
+		$parent_author_signature = base64_decode($parent_author_signature);
+
+		$key = $msg['key'];
+
+		if(! rsa_verify($owner_signed_data,$parent_author_signature,$key,'sha256')) {
+			logger('diaspora_signed_retraction: failed to verify person relaying the retraction (e.g. owner of a post relaying a retracted comment');
+			return;
+		}
+	}
+
+	if($type === 'StatusMessage' || $type === 'Comment') {
 		$r = q("select * from item where guid = '%s' and uid = %d and not file like '%%[%%' limit 1",
 			dbesc($guid),
 			intval($importer['uid'])
