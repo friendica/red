@@ -71,7 +71,7 @@ function search_content(&$a) {
 		notice( t('Public access denied.') . EOL);
 		return;
 	}
-	
+
 	nav_set_selected('search');
 
 	require_once("include/bbcode.php");
@@ -95,7 +95,6 @@ function search_content(&$a) {
 
 
 	$o .= search($search,'search-box','/search',((local_user()) ? true : false));
-
 
 	if(strpos($search,'#') === 0) {
 		$tag = true;
