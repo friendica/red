@@ -77,14 +77,14 @@ class dba {
 
 		$this->error = '';
 
-		@file_put_contents("/tmp/friendica-db.log", datetime_convert().':'.session_id(). ' Start '.$sql."\n", FILE_APPEND);
+		//@file_put_contents("/tmp/friendica-db.log", datetime_convert().':'.session_id(). ' Start '.$sql."\n", FILE_APPEND);
 
 		if($this->mysqli)
 			$result = @$this->db->query($sql);
 		else
 			$result = @mysql_query($sql,$this->db);
 
-		@file_put_contents("/tmp/friendica-db.log", datetime_convert().':'.session_id(). ' Stop '."\n", FILE_APPEND);
+		//@file_put_contents("/tmp/friendica-db.log", datetime_convert().':'.session_id(). ' Stop '."\n", FILE_APPEND);
 
 		if($this->mysqli) {
 			if($this->db->errno)
