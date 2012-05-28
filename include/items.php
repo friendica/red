@@ -2980,12 +2980,12 @@ function fix_private_photos($s,$uid, $item = null, $cid = 0) {
 						}
 					}
 					if($replace) {
-						logger('replacing photo');
+						logger('fix_private_photos: replacing photo', LOGGER_DEBUG);
 						$s = str_replace($image, 'data:image/jpg;base64,' . base64_encode($r[0]['data']), $s);
+						logger('fix_private_photos: replaced: ' . $s, LOGGER_DATA);
 					}
 				}
 			}
-			logger('fix_private_photos: replaced: ' . $s, LOGGER_DATA);
 		}	
 	}
 	return($s);
