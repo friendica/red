@@ -15,6 +15,7 @@ function get_theme_config_file($theme){
 }
 
 function settings_init(&$a) {
+
 	// These lines provide the javascript needed by the acl selector
 
 	$a->page['htmlhead'] .= "<script> var ispublic = '" . t('everybody') . "';" ;
