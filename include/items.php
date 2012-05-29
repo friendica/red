@@ -3076,13 +3076,20 @@ function item_getfeedattach($item) {
 	
 function item_expire($uid,$days) {
 
-	if((! $uid) || (! $days))
+	if((! $uid) || ($days < 1))
 		return;
+
+	// $expire_network_only = save your own wall posts
+	// and just expire conversations started by others
+
+	$expire_network_only = get_pconfig($uid,'expire','expire_network_only');
+	$sql_extra = ((intval($expire_network_only)) ? " AND wall = 0 " : "");
 
 	$r = q("SELECT * FROM `item` 
 		WHERE `uid` = %d 
 		AND `created` < UTC_TIMESTAMP() - INTERVAL %d DAY 
 		AND `id` = `parent` 
+		$sql_extra
 		AND `deleted` = 0",
 		intval($uid),
 		intval($days)
