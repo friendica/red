@@ -345,7 +345,7 @@ function notifier_run($argv, $argc){
 	if($mail) {
 		$public_message = false;  // mail is  not public
 
-		$body = fix_private_photos($item['body'],$owner['uid']);
+		$body = fix_private_photos($item['body'],$owner['uid'],null,$message[0]['contact-id']);
 
 		$atom .= replace_macros($mail_template, array(
 			'$name'         => xmlify($owner['name']),

@@ -70,6 +70,7 @@ $unkmail
 			{{ inc field_yesno.tpl with $field=$expire.items }}{{endinc}}
 			{{ inc field_yesno.tpl with $field=$expire.notes }}{{endinc}}
 			{{ inc field_yesno.tpl with $field=$expire.starred }}{{endinc}}
+			{{ inc field_yesno.tpl with $field=$expire.network_only }}{{endinc}}
 		</div>
 	</div>
 

@@ -288,7 +288,7 @@ function delivery_run($argv, $argc){
 
 					if($normal_mode) {
 						if($item_id == $item['id'] || $item['id'] == $item['parent'])
-							$atom .= atom_entry($item,'text',null,$owner,true);
+							$atom .= atom_entry($item,'text',null,$owner,true,(($top_level) ? $contact['id'] : 0));
 					}
 					else
 						$atom .= atom_entry($item,'text',null,$owner,true);
