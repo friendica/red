@@ -87,6 +87,7 @@ EOT;
 	$tabtpl = get_markup_template("generic_links_widget.tpl");
 	$a->page['aside'] = replace_macros($tabtpl, array(
 		'$title' => t('Settings'),
+		'$class' => 'settings-widget',
 		'$items' => $tabs,
 	));
 

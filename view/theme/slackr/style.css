@@ -80,6 +80,11 @@ nav #site-location {
 	-moz-border-radius: 3px;
 	box-shadow: 4px 4px 3px 0 #444444;
 }
+.settings-widget .selected {
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	box-shadow: 4px 4px 3px 0 #444444;
+}
 
 .photo {
 	border: 1px solid #AAAAAA;
