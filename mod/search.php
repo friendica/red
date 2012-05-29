@@ -110,9 +110,9 @@ function search_content(&$a) {
 		return $o;
 
 	if($tag)
-		$sql_extra = sprintf(" AND `item`.`tag` REGEXP '%s' ", 	dbesc('\\]' . preg_quote($search) . '\\['));
+		$sql_extra = sprintf(" AND `item`.`tag` REGEXP '%s' ", 	dbesc('\\]' . protect_sprintf(preg_quote($search)) . '\\['));
 	else
-		$sql_extra = sprintf(" AND `item`.`body` REGEXP '%s' ", dbesc(preg_quote($search)));
+		$sql_extra = sprintf(" AND `item`.`body` REGEXP '%s' ", dbesc(protect_sprintf(preg_quote($search))));
 
 
 

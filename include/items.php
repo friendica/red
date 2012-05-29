@@ -2931,7 +2931,7 @@ function fix_private_photos($s,$uid, $item = null, $cid = 0) {
 	$a = get_app();
 
 	logger('fix_private_photos', LOGGER_DEBUG);
-	$site = substr($a->get_baseurl(),strpos($a->get_baseurl,'://'));
+	$site = substr($a->get_baseurl(),strpos($a->get_baseurl(),'://'));
 
 	if(preg_match("/\[img\](.*?)\[\/img\]/is",$s,$matches)) {
 		$image = $matches[1];
