@@ -3082,7 +3082,7 @@ function item_expire($uid,$days) {
 	// $expire_network_only = save your own wall posts
 	// and just expire conversations started by others
 
-	$expire_network_only = get_pconfig($uid,'expire','expire_network_only');
+	$expire_network_only = get_pconfig($uid,'expire','network_only');
 	$sql_extra = ((intval($expire_network_only)) ? " AND wall = 0 " : "");
 
 	$r = q("SELECT * FROM `item` 

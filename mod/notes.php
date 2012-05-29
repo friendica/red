@@ -81,7 +81,7 @@ function notes_content(&$a,$update = false) {
 	$r = q("SELECT COUNT(*) AS `total`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 and `item`.`moderated` = 0 
-		AND `item`.`deleted` = 0 AND `item`.`origin` = 1
+		AND `item`.`deleted` = 0 AND `item`.`type` = 'note'
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0 AND `contact`.`self` = 1
 		AND `item`.`id` = `item`.`parent` AND `item`.`wall` = 0
 		$sql_extra ",
@@ -97,7 +97,7 @@ function notes_content(&$a,$update = false) {
 	$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact-uid`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0 
-		and `item`.`moderated` = 0 AND `item`.`origin` = 1
+		and `item`.`moderated` = 0 AND `item`.`type` = 'note'
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0 AND `contact`.`self` = 1
 		AND `item`.`id` = `item`.`parent` AND `item`.`wall` = 0
 		$sql_extra
