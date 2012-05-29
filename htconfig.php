@@ -90,4 +90,4 @@ $a->config['system']['itemcache'] = "";
 $a->config['system']['lockpath'] = "";
 
 // If enabled, the MyBB fulltext engine is used
-$a->config['system']['use_fulltext_engine'] = true;
+// $a->config['system']['use_fulltext_engine'] = true;
