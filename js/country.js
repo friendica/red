@@ -275,7 +275,7 @@ aStates[249]="|'Adan|'Ataq|Abyan|Al Bayda'|Al Hudaydah|Al Jawf|Al Mahrah|Al Mahw
 aStates[250]="|Kosovo|Montenegro|Serbia|Vojvodina";
 aStates[251]="|Central|Copperbelt|Eastern|Luapula|Lusaka|North-Western|Northern|Southern|Western";
 aStates[252]="|Bulawayo|Harare|ManicalandMashonaland Central|Mashonaland East|Mashonaland West|Masvingo|Matabeleland North|Matabeleland South|Midlands";
-aStates[253]="Self Hosted|Private Server|Architects Of Sleep|DFRN|Distributed Friend Network|Free-Beer.ch|Foojbook|Free-Haven|Friendica.eu|Friendika.me.4.it|Friendika - I Ask Questions|Frndc.com|Hipatia|Hungerfreunde|Kaluguran Community|Kak Ste?|Karl.Markx.pm|Loozah Social Club|MyFriendica.net|MyFriendNetwork|Oi!|OpenMindSpace|Oradons Friendica|Recolutionari.es|Sysfu Social Club|theshi.re|Tumpambae|Uzmiac|Other";
+aStates[253]="Self Hosted|Private Server|Architects Of Sleep|DFRN|Distributed Friend Network|Free-Beer.ch|Foojbook|Free-Haven|Friendica.eu|Friendika.me.4.it|Friendika - I Ask Questions|Frndc.com|Hipatia|Hungerfreunde|Kaluguran Community|Kak Ste?|Karl.Markx.pm|Loozah Social Club|MyFriendica.net|MyFriendNetwork|Oi!|OpenMindSpace|Recolutionari.es|Sysfu Social Club|theshi.re|Tumpambae|Uzmiac|Other";
 /* 
  * gArCountryInfo
  * (0) Country name
