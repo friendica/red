@@ -80,6 +80,7 @@ blockquote {
 .heart {
 	color: #FF0000;
 	font-size: 100%;
+	margin-right: 5px;
 }
 
 
@@ -330,6 +331,15 @@ div.wall-item-content-wrapper.shiny {
 }
 
 .group-selected, .nets-selected, .fileas-selected, .categories-selected {
+	padding: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;	
+	border: 1px solid #CCCCCC;
+	background: #F8F8F8;
+	font-weight: bold;
+}
+
+.settings-widget .selected {
 	padding: 3px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;	
@@ -809,8 +819,15 @@ input#dfrn-url {
 	clear: both;
 }
 
+.settings-widget ul {
+	list-style-type: none;
+	padding: 0px;
+}
 
-
+.settings-widget li {
+	margin-left: 24px;
+	margin-bottom: 8px;
+}
 
 
 #gender-select, #marital-select, #sexual-select {

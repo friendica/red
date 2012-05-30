@@ -15,6 +15,7 @@ function get_theme_config_file($theme){
 }
 
 function settings_init(&$a) {
+
 	// These lines provide the javascript needed by the acl selector
 
 	$a->page['htmlhead'] .= "<script> var ispublic = '" . t('everybody') . "';" ;
@@ -86,6 +87,7 @@ EOT;
 	$tabtpl = get_markup_template("generic_links_widget.tpl");
 	$a->page['aside'] = replace_macros($tabtpl, array(
 		'$title' => t('Settings'),
+		'$class' => 'settings-widget',
 		'$items' => $tabs,
 	));
 
@@ -337,8 +339,7 @@ function settings_post(&$a) {
 	$expire_notes     = ((x($_POST,'expire_notes')) ? intval($_POST['expire_notes'])	 : 0);
 	$expire_starred   = ((x($_POST,'expire_starred')) ? intval($_POST['expire_starred']) : 0);
 	$expire_photos    = ((x($_POST,'expire_photos'))? intval($_POST['expire_photos'])	 : 0);
-
-
+	$expire_network_only    = ((x($_POST,'expire_network_only'))? intval($_POST['expire_network_only'])	 : 0);
 
 	$allow_location   = (((x($_POST,'allow_location')) && (intval($_POST['allow_location']) == 1)) ? 1: 0);
 	$publish          = (((x($_POST,'profile_in_directory')) && (intval($_POST['profile_in_directory']) == 1)) ? 1: 0);
@@ -434,6 +435,7 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'expire','notes', $expire_notes);
 	set_pconfig(local_user(),'expire','starred', $expire_starred);
 	set_pconfig(local_user(),'expire','photos', $expire_photos);
+	set_pconfig(local_user(),'expire','network_only', $expire_network_only);
 
 	set_pconfig(local_user(),'system','suggestme', $suggestme);
 	set_pconfig(local_user(),'system','post_newfriend', $post_newfriend);
@@ -443,7 +445,7 @@ function settings_post(&$a) {
 
 	if($page_flags == PAGE_PRVGROUP) {
 		$hidewall = 1;
-		if((! str_contact_allow) && (! str_group_allow) && (! str_contact_deny) && (! $str_group_deny)) {
+		if((! $str_contact_allow) && (! $str_group_allow) && (! $str_contact_deny) && (! $str_group_deny)) {
 			if($def_gid) {
 				info( t('Private forum has no privacy permissions. Using default privacy group.'). EOL);
 				$str_group_allow = '<' . $def_gid . '>';
@@ -811,6 +813,9 @@ function settings_content(&$a) {
 	$expire_photos = get_pconfig(local_user(), 'expire','photos');
 	$expire_photos = (($expire_photos===false)? '0' : $expire_photos); // default if not set: 0
 
+	$expire_network_only = get_pconfig(local_user(), 'expire','network_only');
+	$expire_network_only = (($expire_network_only===false)? '0' : $expire_network_only); // default if not set: 0
+
 
 	$suggestme = get_pconfig(local_user(), 'system','suggestme');
 	$suggestme = (($suggestme===false)? '0': $suggestme); // default if not set: 0
@@ -953,6 +958,7 @@ function settings_content(&$a) {
 		'notes' => array('expire_notes',  t("Expire personal notes:"), $expire_notes, '', array(t('No'),t('Yes'))),
 		'starred' => array('expire_starred',  t("Expire starred posts:"), $expire_starred, '', array(t('No'),t('Yes'))),
 		'photos' => array('expire_photos',  t("Expire photos:"), $expire_photos, '', array(t('No'),t('Yes'))),		
+		'network_only' => array('expire_network_only',  t("Only expire posts by others:"), $expire_network_only, '', array(t('No'),t('Yes'))),		
 	);
 
 	require_once('include/group.php');

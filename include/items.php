@@ -1063,9 +1063,6 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 
 	$a = get_app();
 
-//	if((! strlen($contact['issued-id'])) && (! $contact['duplex']) && (! ($owner['page-flags'] == PAGE_COMMUNITY)))
-//		return 3;
-
 	$idtosend = $orig_id = (($contact['dfrn-id']) ? $contact['dfrn-id'] : $contact['issued-id']);
 
 	if($contact['duplex'] && $contact['dfrn-id'])
@@ -1130,6 +1127,9 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	$rino_allowed = ((intval($res->rino) === 1) ? 1 : 0);
 	$page         = (($owner['page-flags'] == PAGE_COMMUNITY) ? 1 : 0);
 
+	if($owner['page-flags'] == PAGE_PRVGROUP)
+		$page = 2;
+
 	$final_dfrn_id = '';
 
 	if($perm) {
@@ -1183,7 +1183,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	$postvars['ssl_policy'] = $ssl_policy;
 
 	if($page)
-		$postvars['page'] = '1';
+		$postvars['page'] = $page;
 	
 	if($rino && $rino_allowed && (! $dissolve)) {
 		$key = substr(random_string(),0,16);
@@ -2832,7 +2832,7 @@ function atom_author($tag,$name,$uri,$h,$w,$photo) {
 	return $o;
 }
 
-function atom_entry($item,$type,$author,$owner,$comment = false) {
+function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 
 	$a = get_app();
 
@@ -2844,7 +2844,7 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 
 
 	if($item['allow_cid'] || $item['allow_gid'] || $item['deny_cid'] || $item['deny_gid'])
-		$body = fix_private_photos($item['body'],$owner['uid']);
+		$body = fix_private_photos($item['body'],$owner['uid'],$item,$cid);
 	else
 		$body = $item['body'];
 
@@ -2927,14 +2927,17 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 	return $o;
 }
 
-function fix_private_photos($s,$uid) {
+function fix_private_photos($s,$uid, $item = null, $cid = 0) {
 	$a = get_app();
-	logger('fix_private_photos');
+
+	logger('fix_private_photos', LOGGER_DEBUG);
+	$site = substr($a->get_baseurl(),strpos($a->get_baseurl(),'://'));
 
 	if(preg_match("/\[img\](.*?)\[\/img\]/is",$s,$matches)) {
 		$image = $matches[1];
-		logger('fix_private_photos: found photo ' . $image);
-		if(stristr($image ,$a->get_baseurl() . '/photo/')) {
+		logger('fix_private_photos: found photo ' . $image, LOGGER_DEBUG);
+		if(stristr($image , $site . '/photo/')) {
+			$replace = false;
 			$i = basename($image);
 			$i = str_replace('.jpg','',$i);
 			$x = strpos($i,'-');
@@ -2947,17 +2950,86 @@ function fix_private_photos($s,$uid) {
 					intval($uid)
 				);
 				if(count($r)) {
-					logger('replacing photo');
-					$s = str_replace($image, 'data:image/jpg;base64,' . base64_encode($r[0]['data']), $s);
+
+					// Check to see if we should replace this photo link with an embedded image
+					// 1. No need to do so if the photo is public
+					// 2. If there's a contact-id provided, see if they're in the access list
+					//    for the photo. If so, embed it. 
+					// 3. Otherwise, if we have an item, see if the item permissions match the photo
+					//    permissions, regardless of order but first check to see if they're an exact
+					//    match to save some processing overhead.
+				
+					// Currently we only embed one private photo per message so as not to hit import 
+					// size limits at the receiving end.
+
+					// To embed multiples, we would need to parse out the embedded photos on message
+					// receipt and limit size based only on the text component. Would also need to
+					// ignore all photos during bbcode translation and item localisation, as these
+					// will hit internal regex backtrace limits.  
+
+					if(has_permissions($r[0])) {
+						if($cid) {
+							$recips = enumerate_permissions($r[0]);
+							if(in_array($cid, $recips)) {
+								$replace = true;	
+							}
+						}
+						elseif($item) {
+							if(compare_permissions($item,$r[0]))
+								$replace = true;
+						}
+					}
+					if($replace) {
+						logger('fix_private_photos: replacing photo', LOGGER_DEBUG);
+						$s = str_replace($image, 'data:image/jpg;base64,' . base64_encode($r[0]['data']), $s);
+						logger('fix_private_photos: replaced: ' . $s, LOGGER_DATA);
+					}
 				}
 			}
-			logger('fix_private_photos: replaced: ' . $s, LOGGER_DATA);
 		}	
 	}
 	return($s);
 }
 
 
+function has_permissions($obj) {
+	if(($obj['allow_cid'] != '') || ($obj['allow_gid'] != '') || ($obj['deny_cid'] != '') || ($obj['deny_gid'] != ''))
+		return true;
+	return false;
+}
+
+function compare_permissions($obj1,$obj2) {
+	// first part is easy. Check that these are exactly the same. 
+	if(($obj1['allow_cid'] == $obj2['allow_cid'])
+		&& ($obj1['allow_gid'] == $obj2['allow_gid'])
+		&& ($obj1['deny_cid'] == $obj2['deny_cid'])
+		&& ($obj1['deny_gid'] == $obj2['deny_gid']))
+		return true;
+
+	// This is harder. Parse all the permissions and compare the resulting set.
+
+	$recipients1 = enumerate_permissions($obj1);
+	$recipients2 = enumerate_permissions($obj2);
+	sort($recipients1);
+	sort($recipients2);
+	if($recipients1 == $recipients2)
+		return true;
+	return false;
+}
+
+// returns an array of contact-ids that are allowed to see this object
+
+function enumerate_permissions($obj) {
+	require_once('include/group.php');
+	$allow_people = expand_acl($obj['allow_cid']);
+	$allow_groups = expand_groups(expand_acl($obj['allow_gid']));
+	$deny_people  = expand_acl($obj['deny_cid']);
+	$deny_groups  = expand_groups(expand_acl($obj['deny_gid']));
+	$recipients   = array_unique(array_merge($allow_people,$allow_groups));
+	$deny         = array_unique(array_merge($deny_people,$deny_groups));
+	$recipients   = array_diff($recipients,$deny);
+	return $recipients;
+}
 
 function item_getfeedtags($item) {
 	$ret = array();
@@ -3004,13 +3076,20 @@ function item_getfeedattach($item) {
 	
 function item_expire($uid,$days) {
 
-	if((! $uid) || (! $days))
+	if((! $uid) || ($days < 1))
 		return;
+
+	// $expire_network_only = save your own wall posts
+	// and just expire conversations started by others
+
+	$expire_network_only = get_pconfig($uid,'expire','network_only');
+	$sql_extra = ((intval($expire_network_only)) ? " AND wall = 0 " : "");
 
 	$r = q("SELECT * FROM `item` 
 		WHERE `uid` = %d 
 		AND `created` < UTC_TIMESTAMP() - INTERVAL %d DAY 
 		AND `id` = `parent` 
+		$sql_extra
 		AND `deleted` = 0",
 		intval($uid),
 		intval($days)

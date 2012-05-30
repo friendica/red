@@ -221,11 +221,16 @@ function bb2diaspora($Text,$preserve_nl = false) {
 
 	$Text = preg_replace("/\<(.*?)(src|href)=(.*?)\&amp\;(.*?)\>/ism",'<$1$2=$3&$4>',$Text);
 
-	$Text = preg_replace('/\[(.*?)\]\((.*?)\\\\_(.*?)\)/ism','[$1]($2_$3)',$Text);
+	$Text = preg_replace_callback('/\[(.*?)\]\((.*?)\)/ism','unescape_underscores_in_links',$Text);
 	
 	call_hooks('bb2diaspora',$Text);
 
 	return $Text;
+}
+
+function unescape_underscores_in_links($m) {
+	$y = str_replace('\\_','_', $m[2]);
+	return('[' . $m[1] . '](' . $y . ')');
 }
 
 function format_event_diaspora($ev) {

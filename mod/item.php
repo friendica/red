@@ -262,17 +262,17 @@ function item_post(&$a) {
 		}
 	}
 
-        if(strlen($categories)) {
-	        // get the "fileas" tags for this post
-                $filedas = file_tag_file_to_list($categories, 'file');
+	if(strlen($categories)) {
+		// get the "fileas" tags for this post
+		$filedas = file_tag_file_to_list($categories, 'file');
 	}
-        // save old and new categories, so we can determine what needs to be deleted from pconfig
-        $categories_old = $categories;
-        $categories = file_tag_list_to_file(trim($_REQUEST['category']), 'category');
-        $categories_new = $categories;
-        if(strlen($filedas)) {
-	        // append the fileas stuff to the new categories list
-	        $categories .= file_tag_list_to_file($filedas, 'file');
+	// save old and new categories, so we can determine what needs to be deleted from pconfig
+	$categories_old = $categories;
+	$categories = file_tag_list_to_file(trim($_REQUEST['category']), 'category');
+	$categories_new = $categories;
+	if(strlen($filedas)) {
+		// append the fileas stuff to the new categories list
+		$categories .= file_tag_list_to_file($filedas, 'file');
 	}
 
 	// Work around doubled linefeeds in Tinymce 3.5b2
@@ -355,13 +355,15 @@ function item_post(&$a) {
 				$image_uri = substr($image_uri,0, strpos($image_uri,'-'));
 				if(! strlen($image_uri))
 					continue;
-				$srch = '<' . intval($contact_record['id']) . '>';
+				$srch = '<' . intval($contact_id) . '>';
+
 				$r = q("SELECT `id` FROM `photo` WHERE `allow_cid` = '%s' AND `allow_gid` = '' AND `deny_cid` = '' AND `deny_gid` = ''
 					AND `resource-id` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($srch),
 					dbesc($image_uri),
 					intval($profile_uid)
 				);
+
 				if(! count($r))
 					continue;
  
@@ -451,6 +453,7 @@ function item_post(&$a) {
 
 	$tagged = array();
 
+	$private_forum = false;
 
 	if(count($tags)) {
 		foreach($tags as $tag) {
@@ -469,9 +472,20 @@ function item_post(&$a) {
 				continue;
 
 			$success = handle_tag($a, $body, $inform, $str_tags, (local_user()) ? local_user() : $profile_uid , $tag); 
-			if($success)
+			if($success['replaced'])
 				$tagged[] = $tag;
+			if(is_array($success['contact']) && intval($success['contact']['prv'])) {
+				$private_forum = true;
+				$private_id = $success['contact']['id'];
+			}
 		}
+	}
+
+	if(($private_forum) && (! $parent) && (! $private)) {
+		// we tagged a private forum in a top level post and the message was public.
+		// Restrict it.
+		$private = 1;
+		$str_contact_allow = '<' . $private_id . '>'; 
 	}
 
 	$attachments = '';
@@ -891,6 +905,7 @@ function item_content(&$a) {
 function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 
 	$replaced = false;
+	$r = null;
 
 	//is it a hash tag? 
 	if(strpos($tag,'#') === 0) {
@@ -1021,5 +1036,5 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 		}
 	}
 
-	return $replaced;	
+	return array('replaced' => $replaced, 'contact' => $r[0]);	
 }
