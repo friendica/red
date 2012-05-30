@@ -857,7 +857,6 @@ function settings_content(&$a) {
 									t('Private forum - approved members only [Experimental]'), 
 									($a->user['page-flags'] == PAGE_PRVGROUP)),
 
-		'$experimental' => ( (intval(get_config('system','prvgroup_testing'))) ? 'true' : ''),
 
 	));
 
