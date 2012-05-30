@@ -135,7 +135,7 @@ function acl_init(&$a){
 			foreach($r as $g) {
 				$x['photos'][] = $g['micro'];
 				$x['links'][] = $g['url'];
-				$x['suggestions'][] = $g['name']; // sprintf( t('%s [%s]'),$g['name'],$g['url']);
+				$x['suggestions'][] = $g['name'];
 				$x['data'][] = intval($g['id']);
 			}
 		}
