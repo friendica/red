@@ -445,7 +445,7 @@ function settings_post(&$a) {
 
 	if($page_flags == PAGE_PRVGROUP) {
 		$hidewall = 1;
-		if((! str_contact_allow) && (! str_group_allow) && (! str_contact_deny) && (! $str_group_deny)) {
+		if((! $str_contact_allow) && (! $str_group_allow) && (! $str_contact_deny) && (! $str_group_deny)) {
 			if($def_gid) {
 				info( t('Private forum has no privacy permissions. Using default privacy group.'). EOL);
 				$str_group_allow = '<' . $def_gid . '>';
