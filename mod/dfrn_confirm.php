@@ -202,6 +202,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 
 			if($user[0]['page-flags'] == PAGE_COMMUNITY)
 				$params['page'] = 1;
+			if($user[0]['page-flags'] == PAGE_PRVGROUP)
+				$params['page'] = 2;
 
 			logger('dfrn_confirm: Confirm: posting data to ' . $dfrn_confirm . ': ' . print_r($params,true), LOGGER_DATA);
 
@@ -537,6 +539,9 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		$page       = ((x($_POST,'page'))         ? intval($_POST['page'])         : 0 );
 		$version_id = ((x($_POST,'dfrn_version')) ? (float) $_POST['dfrn_version'] : 2.0);
 	
+		$forum = (($page == 1) ? 1 : 0);
+		$prv   = (($page == 2) ? 1 : 0);
+
 		logger('dfrn_confirm: requestee contacted: ' . $node);
 
 		logger('dfrn_confirm: request: POST=' . print_r($_POST,true), LOGGER_DATA);
@@ -691,6 +696,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			`pending` = 0,
 			`duplex` = %d, 
 			`forum` = %d,
+			`prv` = %d,
 			`network` = '%s' WHERE `id` = %d LIMIT 1
 		",
 			dbesc($photos[0]),
@@ -701,7 +707,8 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
 			intval($duplex),
-			intval($page),
+			intval($forum),
+			intval($prv),
 			dbesc(NETWORK_DFRN),
 			intval($dfrn_record)
 		);
