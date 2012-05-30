@@ -110,7 +110,7 @@ function search_content(&$a) {
 
 	if (get_config('system','use_fulltext_engine')) {
 		if($tag)
-			$sql_extra = sprintf(" AND MATCH (`item`.`tag`) AGAINST ('".'"%s"'."' in boolean mode) ", '#'.protect_sprintf($search));
+			$sql_extra = sprintf(" AND MATCH (`item`.`tag`) AGAINST ('".'"%s"'."' in boolean mode) ", '#'.dbesc(protect_sprintf($search)));
 		else
 			$sql_extra = sprintf(" AND MATCH (`item`.`body`) AGAINST ('".'"%s"'."' in boolean mode) ", dbesc(protect_sprintf($search)));
 	} else {
