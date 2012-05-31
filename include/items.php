@@ -180,6 +180,10 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 	foreach($items as $item) {
 
+		// prevent private email from leaking.
+		if($item['network'] === NETWORK_MAIL)
+			continue;
+
 		// public feeds get html, our own nodes use bbcode
 
 		if($public_feed) {
@@ -2933,8 +2937,8 @@ function fix_private_photos($s,$uid, $item = null, $cid = 0) {
 	logger('fix_private_photos', LOGGER_DEBUG);
 	$site = substr($a->get_baseurl(),strpos($a->get_baseurl(),'://'));
 
-	if(preg_match("/\[img\](.*?)\[\/img\]/is",$s,$matches)) {
-		$image = $matches[1];
+	if(preg_match("/\[img(.*?)\](.*?)\[\/img\]/is",$s,$matches)) {
+		$image = $matches[2];
 		logger('fix_private_photos: found photo ' . $image, LOGGER_DEBUG);
 		if(stristr($image , $site . '/photo/')) {
 			$replace = false;

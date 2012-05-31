@@ -290,6 +290,11 @@ function register_post(&$a) {
 			dbesc(datetime_convert())
 		);
 
+		// Create a group with no members. This allows somebody to use it 
+		// right away as a default group for new contacts. 
+
+		require_once('include/group.php');
+		group_add($newuid, t('Friends'));
 
 	}
 
