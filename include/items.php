@@ -180,6 +180,10 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 	foreach($items as $item) {
 
+		// prevent private email from leaking.
+		if($item['network'] === NETWORK_MAIL)
+			continue;
+
 		// public feeds get html, our own nodes use bbcode
 
 		if($public_feed) {
