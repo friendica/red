@@ -45,7 +45,12 @@ function register_post(&$a) {
 
 	require_once('include/user.php');
 
-	$result = create_user($_POST);
+	$arr = $_POST;
+
+	$arr['blocked'] = $blocked;
+	$arr['verified'] = $verified;
+
+	$result = create_user($arr);
 
 	if(! $result['success']) {
 		notice($result['message']);
