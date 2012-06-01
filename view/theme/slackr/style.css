@@ -43,7 +43,7 @@ nav #site-location {
 #profile-jot-text_parent, .mceLayout {
 	border-radius: 3px;
 	-moz-border-radius: 3px;
-	box-shadow: 3px 3px 10px 0 #000000;
+	box-shadow: 4px 4px 3px 0 #444444;
 }
 
 #profile-jot-text:hover {
@@ -66,24 +66,34 @@ nav #site-location {
 .wall-item-photo, .photo, .contact-block-img, .my-comment-photo {
 	border-radius: 3px;
 	-moz-border-radius: 3px;
-	box-shadow: 3px 3px 10px 0 #000000;
+	box-shadow: 4px 4px 3px 0 #444444;
 }
 
 #sidebar-page-list img {
 	border-radius: 3px;
 	-moz-border-radius: 3px;
-	box-shadow: 3px 3px 10px -2px #000000;
+	box-shadow: 4px 4px 3px 0 #444444;
 }
 
 .contact-entry-photo img, .profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo, .fc, .profile-jot-text, .group-selected, .nets-selected, .fileas-selected, #profile-jot-submit, .categories-selected {
 	border-radius: 3px;
 	-moz-border-radius: 3px;
-	box-shadow: 3px 3px 10px 0 #000000;
+	box-shadow: 4px 4px 3px 0 #444444;
+}
+.settings-widget .selected {
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	box-shadow: 4px 4px 3px 0 #444444;
+}
+
+.photo {
+	border: 1px solid #AAAAAA;
 }
 
 .photo-top-photo, .photo-album-photo {
 	padding: 10px;
 	max-width: 300px;
+	border: 1px solid #888888;
 }
 
 .rotleft1 {

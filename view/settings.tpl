@@ -70,6 +70,7 @@ $unkmail
 			{{ inc field_yesno.tpl with $field=$expire.items }}{{endinc}}
 			{{ inc field_yesno.tpl with $field=$expire.notes }}{{endinc}}
 			{{ inc field_yesno.tpl with $field=$expire.starred }}{{endinc}}
+			{{ inc field_yesno.tpl with $field=$expire.network_only }}{{endinc}}
 		</div>
 	</div>
 
@@ -103,15 +104,16 @@ $group_select
 
 
 <h3 class="settings-heading">$h_not</h3>
+<div id="settings-notifications">
 
-<strong>$activity_options</strong>
+<div id="settings-activity-desc">$activity_options</div>
 
 {{inc field_checkbox.tpl with $field=$post_newfriend }}{{endinc}}
 {{inc field_checkbox.tpl with $field=$post_joingroup }}{{endinc}}
 {{inc field_checkbox.tpl with $field=$post_profilechange }}{{endinc}}
 
 
-<div id="settings-notify-desc"><strong>$lbl_not </strong></div>
+<div id="settings-notify-desc">$lbl_not</div>
 
 <div class="group">
 {{inc field_intcheckbox.tpl with $field=$notify1 }}{{endinc}}
@@ -123,6 +125,7 @@ $group_select
 {{inc field_intcheckbox.tpl with $field=$notify7 }}{{endinc}}
 </div>
 
+</div>
 
 <div class="settings-submit-wrapper" >
 <input type="submit" name="submit" class="settings-submit" value="$submit" />
@@ -130,6 +133,7 @@ $group_select
 
 
 <h3 class="settings-heading">$h_advn</h3>
+<div id="settings-pagetype-desc">$h_descadvn</div>
 
 $pagetype
 

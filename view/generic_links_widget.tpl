@@ -1,4 +1,4 @@
-<div class="widget">
+<div class="widget{{ if $class }} $class{{ endif }}">
 	{{if $title}}<h3>$title</h3>{{endif}}
 	{{if $desc}}<div class="desc">$desc</div>{{endif}}
 	
