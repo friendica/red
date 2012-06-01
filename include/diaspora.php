@@ -2055,8 +2055,12 @@ function diaspora_send_followup($item,$owner,$contact,$public_batch = false) {
 	$myaddr = $owner['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
 	$theiraddr = $contact['addr'];
 
-	$p = q("select guid from item where parent = %d limit 1",
-		$item['parent']
+	// The first item in the `item` table with the parent id is the parent. However, MySQL doesn't always
+	// return the items ordered by `item`.`id`, in which case the wrong item is chosen as the parent.
+	// The only item with `parent` and `id` as the parent id is the parent item.
+	$p = q("select guid from item where parent = %d and id = %d limit 1",
+		intval($item['parent']),
+		intval($item['parent'])
 	);
 	if(count($p))
 		$parent_guid = $p[0]['guid'];
@@ -2111,8 +2115,12 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 	$theiraddr = $contact['addr'];
 
 
-	$p = q("select guid from item where parent = %d limit 1",
-		$item['parent']
+	// The first item in the `item` table with the parent id is the parent. However, MySQL doesn't always
+	// return the items ordered by `item`.`id`, in which case the wrong item is chosen as the parent.
+	// The only item with `parent` and `id` as the parent id is the parent item.
+	$p = q("select guid from item where parent = %d and id = %d limit 1",
+		intval($item['parent']),
+		intval($item['parent'])
 	);
 	if(count($p))
 		$parent_guid = $p[0]['guid'];
