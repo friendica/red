@@ -1274,4 +1274,5 @@ function update_1146() {
 	return UPDATE_SUCCESS ;
 }
 
+//ALTER TABLE `sign` MODIFY column int Default '10';
 

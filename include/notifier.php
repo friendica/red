@@ -597,7 +597,7 @@ function notifier_run($argv, $argc){
 					break;
 				case NETWORK_OSTATUS:
 
-					// Do not send to otatus if we are not configured to send to public networks
+					// Do not send to ostatus if we are not configured to send to public networks
 					if($owner['prvnets'])
 						break;
 					if(get_config('system','ostatus_disabled') || get_config('system','dfrn_only'))
@@ -738,8 +738,8 @@ function notifier_run($argv, $argc){
 						// unsupported
 						break;
 					}
-					elseif(($target_item['deleted']) && ($target_item['verb'] !== ACTIVITY_LIKE)) {
-						// diaspora delete, 
+					elseif(($target_item['deleted']) && ($top_level || $followup) && ($target_item['verb'] !== ACTIVITY_LIKE)) {
+						// diaspora delete, including relayable_retractions that need to be relayed
 						diaspora_send_retraction($target_item,$owner,$contact);
 						break;
 					}
@@ -749,7 +749,7 @@ function notifier_run($argv, $argc){
 						break;
 					}
 					elseif($target_item['parent'] != $target_item['id']) {
-						// we are the relay - send comments, likes and unlikes to our conversants
+						// we are the relay - send comments, likes, unlikes and relayable_retractions to our conversants
 						diaspora_send_relay($target_item,$owner,$contact);
 						break;
 					}
@@ -857,6 +857,13 @@ function notifier_run($argv, $argc){
 			}
 		}
 
+	}
+
+	// If the item was deleted, clean up the `sign` table
+	if($target_item['deleted']) {
+		$r = q("DELETE FROM sign where `retract_iid` = %d",
+			intval($target_item['id'])
+		);
 	}
 
 	logger('notifier: calling hooks', LOGGER_DEBUG);

@@ -680,7 +680,7 @@ function diaspora_post($importer,$xml) {
 		return;
 	}
 
-        // allocate a guid on our system - we aren't fixing any collisions.
+	// allocate a guid on our system - we aren't fixing any collisions.
 	// we're ignoring them
 
 	$g = q("select * from guid where guid = '%s' limit 1",
@@ -847,7 +847,7 @@ function diaspora_reshare($importer,$xml) {
 	$prefix = '&#x2672; ' . $details . "\n"; 
 
 
-        // allocate a guid on our system - we aren't fixing any collisions.
+	// allocate a guid on our system - we aren't fixing any collisions.
 	// we're ignoring them
 
 	$g = q("select * from guid where guid = '%s' limit 1",
@@ -951,7 +951,7 @@ function diaspora_asphoto($importer,$xml) {
 		return;
 	}
 
-        // allocate a guid on our system - we aren't fixing any collisions.
+	// allocate a guid on our system - we aren't fixing any collisions.
 	// we're ignoring them
 
 	$g = q("select * from guid where guid = '%s' limit 1",
@@ -1168,7 +1168,22 @@ function diaspora_comment($importer,$xml,$msg) {
 		);
 	}
 
-	if(($parent_item['origin']) && (! $parent_author_signature)) {
+	if(($parent_item['origin']) && (! $parent_author_signature)) {	if(($parent_item['origin']) && (! $parent_author_signature)) {
+		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+			intval($message_id),
+			dbesc($author_signed_data),
+			dbesc(base64_encode($author_signature)),
+			dbesc($diaspora_handle)
+		);
+
+		// if the message isn't already being relayed, notify others
+		// the existence of parent_author_signature means the parent_author or owner
+		// is already relaying.
+
+		proc_run('php','include/notifier.php','comment',$message_id);
+	}
+
+
 		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
 			intval($message_id),
 			dbesc($author_signed_data),
@@ -1797,7 +1812,7 @@ function diaspora_signed_retraction($importer,$xml,$msg) {
 
 	$signed_data = $guid . ';' . $type ;
 
-	$sig = base64_decode($sig);
+	$sig_decode = base64_decode($sig);
 
 	if(strcasecmp($diaspora_handle,$msg['author']) == 0) {
 		$person = $contact;
@@ -1814,22 +1829,21 @@ function diaspora_signed_retraction($importer,$xml,$msg) {
 		}
 	}
 
-	if(! rsa_verify($signed_data,$sig,$key,'sha256')) {
+	if(! rsa_verify($signed_data,$sig_decode,$key,'sha256')) {
 		logger('diaspora_signed_retraction: retraction-owner verification failed.' . print_r($msg,true));
 		return;
 	}
 
 	if($parent_author_signature) {
-		$owner_signed_data = $guid . ';' . $type ;
-
 		$parent_author_signature = base64_decode($parent_author_signature);
 
 		$key = $msg['key'];
 
-		if(! rsa_verify($owner_signed_data,$parent_author_signature,$key,'sha256')) {
+		if(! rsa_verify($signed_data,$parent_author_signature,$key,'sha256')) {
 			logger('diaspora_signed_retraction: failed to verify person relaying the retraction (e.g. owner of a post relaying a retracted comment');
 			return;
 		}
+
 	}
 
 	if($type === 'StatusMessage' || $type === 'Comment') {
@@ -1839,10 +1853,36 @@ function diaspora_signed_retraction($importer,$xml,$msg) {
 		);
 		if(count($r)) {
 			if(link_compare($r[0]['author-link'],$contact['url'])) {
-				q("update item set `deleted` = 1, `changed` = '%s' where `id` = %d limit 1",
+				q("update item set `deleted` = 1, `edited` = '%s', `changed` = '%s', `body` = '' , `title` = '' where `id` = %d limit 1",
 					dbesc(datetime_convert()),			
 					intval($r[0]['id'])
 				);
+	
+				// Now check if the retraction needs to be relayed by us
+				//
+				// The first item in the `item` table with the parent id is the parent. However, MySQL doesn't always
+				// return the items ordered by `item`.`id`, in which case the wrong item is chosen as the parent.
+				// The only item with `parent` and `id` as the parent id is the parent item.
+				$p = q("select origin from item where parent = %d and id = %d limit 1",
+					$r[0]['parent'],
+					$r[0]['parent']
+				);
+				if(count($p)) {
+					if(($p[0]['origin']) && (! $parent_author_signature)) {
+						q("insert into sign (`retract_iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+							$r[0]['id'],
+							dbesc($signed_data),
+							dbesc($sig),
+							dbesc($diaspora_handle)
+						);
+
+						// the existence of parent_author_signature would have meant the parent_author or owner
+						// is already relaying.
+						logger('diaspora_signed_retraction: relaying relayable_retraction');
+
+						proc_run('php','include/notifier.php','relayable_retraction',$r[0]['id']);
+					}
+				}
 			}
 		}
 	}
@@ -2136,10 +2176,28 @@ function diaspora_send_followup($item,$owner,$contact,$public_batch = false) {
 
 
 function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
+// I think the first comment or like on a post whose home is our Friendica server is saved as an item
+// as the top-level post owner's contact for writer of the comment or post. Thus, the "uid"
+// on the item is `user`.`id` of the top-level post owner. That user is passed to this function
+// as "$owner."
+//
+// I'm assuming for now that "$owner" will be the user of the top-level post for retractions too. Be
+// aware that another reasonable possibility is that it's the "$owner" of the deleted comment.
+
+// TODO
+// CHECK	1. If we receive a retraction from Diaspora to be relayed by us, we need to insert the signature
+//    		   into the DB and call notifier.php
+// CHECK	2. diaspora_send_retraction() needs to be modified to send
+//    		   Diaspora a retraction for it to relay when appropriate
+// CHECK	3. notifier.php (and delivery.php?) need to be modified to call the right functions for the right
+//    		   retraction situation
+// 4. If possible, modify notifier.php (and delivery.php?) to remove the relayable retraction's signature
+//    from the DB after finishing with relaying retractions
+
 
 
 	$a = get_app();
-	$myaddr = $owner['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+	$myaddr = $owner['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
 	$theiraddr = $contact['addr'];
 
 
@@ -2155,29 +2213,42 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 	else
 		return;
 
+	$like = false;
+	$relay_retract = false;
+	$sql_sign_id = 'iid';
 	if($item['verb'] === ACTIVITY_LIKE) {
 		$tpl = get_markup_template('diaspora_like_relay.tpl');
 		$like = true;
 		$target_type = 'Post';
 		$positive = (($item['deleted']) ? 'false' : 'true');
 	}
-	else {
+	elseif(! $item['deleted']) {
 		$tpl = get_markup_template('diaspora_comment_relay.tpl');
-		$like = false;
+	}
+	else {
+		$tpl = get_markup_template('diaspora_relayable_retraction.tpl');
+		$relay_retract = true;
+		$sql_sign_id = 'retract_iid';
+		$target_type = 'Comment';
 	}
 
 	$body = $item['body'];
 
 	$text = html_entity_decode(bb2diaspora($body));
 
+
 	// fetch the original signature	if somebody sent the post to us to relay
+	//
 	// If we are relaying for a reply originating on our own account, there wasn't a 'send to relay'
 	// action. It wasn't needed. In that case create the original signature and the 
 	// owner (parent author) signature
+	// Note that mod/item.php seems to take care of creating a signature for Diaspora for replies
+	// created on our own account
+	//
 	// comments from other networks will be relayed under our name, with a brief 
 	// preamble to describe what's happening and noting the real author
 
-	$r = q("select * from sign where iid = %d limit 1",
+	$r = q("select * from sign where " . $sql_sign_id . " = %d limit 1",
 		intval($item['id'])
 	);
 	if(count($r)) { 
@@ -2196,29 +2267,39 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 				$prefix = sprintf( t('[Relayed] Comment authored by %s from network %s'),
 					'['. $item['author-name'] . ']' . '(' . $item['author-link'] . ')',  
 					network_to_name($itemcontact['network'])) . "\n";
+				// "$body" was assigned to "$text" above. It isn't used after that, so I don't think
+				// the following change will do anything
 				$body = $prefix . $body;
+
+				// I think this comment will fail upon reaching Diaspora, because "$signed_text" is not defined
 			}
 		}
 		else {
+		// I'm confused about this "else." Since it sets "$handle = $myaddr," it seems like it should be for the case
+		// where the top-level post owner commented on his own post, i.e. "$itemcontact[0]['self']" is true. But it's
+		// positioned to be for the case where "count($itemcontact)" is 0.
+
+			$handle = $myaddr;
 
 			if($like)
-				$signed_text = $item['guid'] . ';' . $target_type . ';' . $parent_guid . ';' . $positive . ';' . $myaddr;
+				$signed_text = $item['guid'] . ';' . $target_type . ';' . $parent_guid . ';' . $positive . ';' . $handle;
+			elseif($relay_retract)
+				$signed_text = $item['guid'] . ';' . $target_type;
 			else
-				$signed_text = $item['guid'] . ';' . $parent_guid . ';' . $text . ';' . $myaddr;
+				$signed_text = $item['guid'] . ';' . $parent_guid . ';' . $text . ';' . $handle;
 
 			$authorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha256'));
 
-			q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+			q("insert into sign (`" . $sql_sign_id . "`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
 				intval($item['id']),
 				dbesc($signed_text),
-				dbesc(base64_encode($authorsig)),
-				dbesc($myaddr)
+				dbesc($authorsig),
+				dbesc($handle)
 			);
-			$handle = $myaddr;
 		}
 	}
 
-	// sign it
+	// sign it with the top-level owner's signature
 
 	$parentauthorsig = base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha256'));
 
@@ -2226,14 +2307,15 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 		'$guid' => xmlify($item['guid']),
 		'$parent_guid' => xmlify($parent_guid),
 		'$target_type' =>xmlify($target_type),
-		'$authorsig' => xmlify($orig_sign['signature']),
+		'$authorsig' => xmlify($authorsig),
 		'$parentsig' => xmlify($parentauthorsig),
 		'$body' => xmlify($text),
 		'$positive' => xmlify($positive),
 		'$handle' => xmlify($handle)
 	));
 
-	logger('diaspora_relay_comment: base message: ' . $msg, LOGGER_DATA);
+	logger('diaspora_send_relay: base message: ' . $msg, LOGGER_DATA);
+
 
 	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],$public_batch)));
 
@@ -2248,14 +2330,25 @@ function diaspora_send_retraction($item,$owner,$contact,$public_batch = false) {
 	$a = get_app();
 	$myaddr = $owner['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
 
-	$signed_text = $item['guid'] . ';' . 'StatusMessage';
+	// Check if the retraction is for a top-level post, or whether it's for a comment
+	if( $item['id'] !== $item['parent'] ) {
 
-	$tpl = get_markup_template('diaspora_signed_retract.tpl');
+		$tpl = get_markup_template('diaspora_relay_retraction.tpl');
+		$target_type = 'Comment';
+	}
+	else {
+		
+		$tpl = get_markup_template('diaspora_signed_retract.tpl');
+		$target_type = 'StatusMessage';
+	}
+
+	$signed_text = $item['guid'] . ';' . $target_type;
+
 	$msg = replace_macros($tpl, array(
-		'$guid'   => $item['guid'],
-		'$type'   => 'StatusMessage',
-		'$handle' => $myaddr,
-		'$signature' => base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha256'))
+		'$guid'   => xmlify($item['guid']),
+		'$type'   => xmlify($target_type),
+		'$handle' => xmlify($myaddr),
+		'$signature' => xmlify(base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha256')))
 	));
 
 	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],$public_batch)));

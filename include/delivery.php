@@ -509,7 +509,7 @@ function delivery_run($argv, $argc){
 					// unsupported
 					break;
 				}
-				elseif(($target_item['deleted']) && ($target_item['verb'] !== ACTIVITY_LIKE)) {
+				elseif(($target_item['deleted']) && ($top_level) && ($target_item['verb'] !== ACTIVITY_LIKE)) {
 				logger('delivery: diaspora retract: ' . $loc);
 					// diaspora delete, 
 					diaspora_send_retraction($target_item,$owner,$contact,$public_message);
@@ -519,7 +519,7 @@ function delivery_run($argv, $argc){
 
 				logger('delivery: diaspora relay: ' . $loc);
 
-					// we are the relay - send comments, likes and unlikes to our conversants
+					// we are the relay - send comments, likes, unlikes and relayable_retractions to our conversants
 					diaspora_send_relay($target_item,$owner,$contact,$public_message);
 					break;
 				}		
