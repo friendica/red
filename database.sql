@@ -173,6 +173,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `readonly` tinyint(1) NOT NULL DEFAULT '0',
   `writable` tinyint(1) NOT NULL DEFAULT '0',
   `forum` tinyint(1) NOT NULL DEFAULT '0',
+  `prv` tinyint(1) NOT NULL DEFAULT '0',
   `hidden` tinyint(1) NOT NULL DEFAULT '0',
   `archive` tinyint(1) NOT NULL DEFAULT '0',
   `pending` tinyint(1) NOT NULL DEFAULT '1',

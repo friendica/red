@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1144 );
+define( 'UPDATE_VERSION' , 1145 );
 
 /**
  *
@@ -1253,5 +1253,9 @@ function update_1143() {
 	return UPDATE_SUCCESS ;
 }
 
-
-
+function update_1144() {
+	$r = q("alter table contact add prv tinyint(1) not null default '0' after forum");
+	if(! $r)
+		return UPDATE_FAILED ;
+	return UPDATE_SUCCESS ;
+}

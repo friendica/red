@@ -80,6 +80,7 @@ blockquote {
 .heart {
 	color: #FF0000;
 	font-size: 100%;
+	margin-right: 5px;
 }
 
 
@@ -716,7 +717,17 @@ input#dfrn-url {
 #settings-community {
 	float: left;
 }
-
+#settings-notifications label {
+	margin-left: 20px;
+}
+#settings-notify-desc, #settings-activity-desc {
+	font-weight: bold;
+	margin-bottom: 15px;
+}
+#settings-pagetype-desc {
+	color: #666666;
+	margin-bottom: 15px;
+}
 
 #profile-in-dir-yes-label,
 #profile-in-dir-no-label,

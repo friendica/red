@@ -180,6 +180,10 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 	foreach($items as $item) {
 
+		// prevent private email from leaking.
+		if($item['network'] === NETWORK_MAIL)
+			continue;
+
 		// public feeds get html, our own nodes use bbcode
 
 		if($public_feed) {
@@ -1063,9 +1067,6 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 
 	$a = get_app();
 
-//	if((! strlen($contact['issued-id'])) && (! $contact['duplex']) && (! ($owner['page-flags'] == PAGE_COMMUNITY)))
-//		return 3;
-
 	$idtosend = $orig_id = (($contact['dfrn-id']) ? $contact['dfrn-id'] : $contact['issued-id']);
 
 	if($contact['duplex'] && $contact['dfrn-id'])
@@ -1130,6 +1131,9 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	$rino_allowed = ((intval($res->rino) === 1) ? 1 : 0);
 	$page         = (($owner['page-flags'] == PAGE_COMMUNITY) ? 1 : 0);
 
+	if($owner['page-flags'] == PAGE_PRVGROUP)
+		$page = 2;
+
 	$final_dfrn_id = '';
 
 	if($perm) {
@@ -1183,7 +1187,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	$postvars['ssl_policy'] = $ssl_policy;
 
 	if($page)
-		$postvars['page'] = '1';
+		$postvars['page'] = $page;
 	
 	if($rino && $rino_allowed && (! $dissolve)) {
 		$key = substr(random_string(),0,16);
@@ -2931,10 +2935,10 @@ function fix_private_photos($s,$uid, $item = null, $cid = 0) {
 	$a = get_app();
 
 	logger('fix_private_photos', LOGGER_DEBUG);
-	$site = substr($a->get_baseurl(),strpos($a->get_baseurl,'://'));
+	$site = substr($a->get_baseurl(),strpos($a->get_baseurl(),'://'));
 
-	if(preg_match("/\[img\](.*?)\[\/img\]/is",$s,$matches)) {
-		$image = $matches[1];
+	if(preg_match("/\[img(.*?)\](.*?)\[\/img\]/is",$s,$matches)) {
+		$image = $matches[2];
 		logger('fix_private_photos: found photo ' . $image, LOGGER_DEBUG);
 		if(stristr($image , $site . '/photo/')) {
 			$replace = false;

@@ -445,7 +445,7 @@ function settings_post(&$a) {
 
 	if($page_flags == PAGE_PRVGROUP) {
 		$hidewall = 1;
-		if((! str_contact_allow) && (! str_group_allow) && (! str_contact_deny) && (! $str_group_deny)) {
+		if((! $str_contact_allow) && (! $str_group_allow) && (! $str_contact_deny) && (! $str_group_deny)) {
 			if($def_gid) {
 				info( t('Private forum has no privacy permissions. Using default privacy group.'). EOL);
 				$str_group_allow = '<' . $def_gid . '>';
@@ -837,27 +837,26 @@ function settings_content(&$a) {
 
 	$pageset_tpl = get_markup_template('pagetypes.tpl');
 	$pagetype = replace_macros($pageset_tpl,array(
-		'$page_normal' 	=> array('page-flags', t('Normal Account'), PAGE_NORMAL, 
+		'$page_normal' 	=> array('page-flags', t('Normal Account Page'), PAGE_NORMAL, 
 									t('This account is a normal personal profile'), 
 									($a->user['page-flags'] == PAGE_NORMAL)),
 								
-		'$page_soapbox' 	=> array('page-flags', t('Soapbox Account'), PAGE_SOAPBOX, 
+		'$page_soapbox' 	=> array('page-flags', t('Soapbox Page'), PAGE_SOAPBOX, 
 									t('Automatically approve all connection/friend requests as read-only fans'), 
 									($a->user['page-flags'] == PAGE_SOAPBOX)),
 									
-		'$page_community'	=> array('page-flags', t('Community/Celebrity Account'), PAGE_COMMUNITY, 
+		'$page_community'	=> array('page-flags', t('Community Forum/Celebrity Account'), PAGE_COMMUNITY, 
 									t('Automatically approve all connection/friend requests as read-write fans'), 
 									($a->user['page-flags'] == PAGE_COMMUNITY)),
 									
-		'$page_freelove' 	=> array('page-flags', t('Automatic Friend Account'), PAGE_FREELOVE, 
+		'$page_freelove' 	=> array('page-flags', t('Automatic Friend Page'), PAGE_FREELOVE, 
 									t('Automatically approve all connection/friend requests as friends'), 
 									($a->user['page-flags'] == PAGE_FREELOVE)),
 
-		'$page_prvgroup' 	=> array('page-flags', t('Private Forum'), PAGE_PRVGROUP, 
-									t('Private forum - approved members only [Experimental]'), 
+		'$page_prvgroup' 	=> array('page-flags', t('Private Forum [Experimental]'), PAGE_PRVGROUP, 
+									t('Private forum - approved members only'), 
 									($a->user['page-flags'] == PAGE_PRVGROUP)),
 
-		'$experimental' => ( (intval(get_config('system','prvgroup_testing'))) ? 'true' : ''),
 
 	));
 
@@ -1026,7 +1025,8 @@ function settings_content(&$a) {
 		'$notify7'  => array('notify7', t('You are tagged in a post'), ($notify & NOTIFY_TAGSELF), NOTIFY_TAGSELF, ''),		
 		
 		
-		'$h_advn' => t('Advanced Page Settings'),
+		'$h_advn' => t('Advanced Account/Page Type Settings'),
+		'$h_descadvn' => t('Change the behaviour of this account for special situations'),
 		'$pagetype' => $pagetype,
 		
 
