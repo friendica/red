@@ -496,7 +496,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 
 						// On the network page, I am the owner. On the display page it will be the profile owner.
 						// This will have been stored in $a->page_contact by our calling page.
-						// Put this person on the left of the wall-to-wall notice.
+						// Put this person as the wall owner of the wall-to-wall notice.
 
 						$owner_url = zrl($a->page_contact['url']);
 						$owner_photo = $a->page_contact['thumb'];
@@ -504,23 +504,38 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 						$template = $wallwall;
 						$commentww = 'ww';	
 					}
-					if((! $item['wall']) && (strlen($item['owner-link'])) && (! link_compare($item['owner-link'],$item['author-link']))) {
 
-						// Could be anybody. 
+					if((! $item['wall']) && $item['owner-link']) {
 
-						$owner_url = $item['owner-link'];
-						$owner_photo = $item['owner-avatar'];
-						$owner_name = $item['owner-name'];
-						$template = $wallwall;
-						$commentww = 'ww';
-						// If it is our contact, use a friendly redirect link
-						if((link_compare($item['owner-link'],$item['url'])) 
-							&& ($item['network'] === NETWORK_DFRN)) {
-							$owner_url = $redirect_url;
-							$osparkle = ' sparkle';
+						$owner_linkmatch = (($item['owner-link']) && link_compare($item['owner-link'],$item['author-link']));
+						$alias_linkmatch = (($item['alias']) && link_compare($item['alias'],$item['author-link']));
+						$owner_namematch = (($item['owner-name']) && $item['owner-name'] == $item['author-name']);
+						if((! $owner_linkmatch) && (! $alias_linkmatch) && (! $owner_namematch)) {
+
+							// The author url doesn't match the owner (typically the contact)
+							// and also doesn't match the contact alias. 
+							// The name match is a hack to catch several weird cases where URLs are 
+							// all over the park. It can be tricked, but this prevents you from
+							// seeing "Bob Smith to Bob Smith via Wall-to-wall" and you know darn
+							// well that it's the same Bob Smith. 
+
+							// But it could be somebody else with the same name. It just isn't highly likely. 
+							
+
+							$owner_url = $item['owner-link'];
+							$owner_photo = $item['owner-avatar'];
+							$owner_name = $item['owner-name'];
+							$template = $wallwall;
+							$commentww = 'ww';
+							// If it is our contact, use a friendly redirect link
+							if((link_compare($item['owner-link'],$item['url'])) 
+								&& ($item['network'] === NETWORK_DFRN)) {
+								$owner_url = $redirect_url;
+								$osparkle = ' sparkle';
+							}
+							else
+								$owner_url = zrl($owner_url);
 						}
-						else
-							$owner_url = zrl($owner_url);
 					}
 				}
 
