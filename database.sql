@@ -823,6 +823,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `gender` char(32) NOT NULL,
   `marital` char(255) NOT NULL,
   `with` text NOT NULL,
+  `howlong` datetime NOT NULL default '0000-00-00 00:00:00',
   `sexual` char(255) NOT NULL,
   `politic` char(255) NOT NULL,
   `religion` char(255) NOT NULL,

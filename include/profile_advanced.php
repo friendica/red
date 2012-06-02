@@ -39,6 +39,9 @@ function advanced_profile(&$a) {
 
 		if($a->profile['with']) $profile['marital']['with'] = $a->profile['with'];
 
+		if(strlen($a->profile['howlong']) && $a->profile['howlong'] !== '0000-00-00 00:00:00') {
+				$profile['howlong'] = relative_date($a->profile['howlong'], t('for %1$d %2$s'));
+		}
 
 		if($a->profile['sexual']) $profile['sexual'] = array( t('Sexual Preference:'), $a->profile['sexual'] );
 

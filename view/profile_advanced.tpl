@@ -29,7 +29,7 @@
 {{ if $profile.marital }}
 <dl id="aprofile-marital" class="aprofile">
  <dt><span class="heart">&hearts;</span>  $profile.marital.0</dt>
- <dd>$profile.marital.1  {{ if $profile.marital.with }}($profile.marital.with){{ endif }}</dd>
+ <dd>$profile.marital.1{{ if $profile.marital.with }} ($profile.marital.with){{ endif }}{{ if $profile.howlong }} $profile.howlong{{ endif }}</dd>
 </dl>
 {{ endif }}
 
