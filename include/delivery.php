@@ -509,13 +509,13 @@ function delivery_run($argv, $argc){
 					// unsupported
 					break;
 				}
-				elseif(($target_item['deleted']) && ($top_level) && ($target_item['verb'] !== ACTIVITY_LIKE)) {
+				elseif(($target_item['deleted']) && ($target_item['uri'] === $target_item['parent-uri']) && ($target_item['verb'] !== ACTIVITY_LIKE)) {
 				logger('delivery: diaspora retract: ' . $loc);
 					// diaspora delete, 
 					diaspora_send_retraction($target_item,$owner,$contact,$public_message);
 					break;
 				}
-				elseif($target_item['parent'] != $target_item['id']) {
+				elseif($target_item['uri'] !== $target_item['parent-uri']) {
 
 				logger('delivery: diaspora relay: ' . $loc);
 
