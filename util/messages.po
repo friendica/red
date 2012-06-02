@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 3.0.1360\n"
+"Project-Id-Version: 3.0.1361\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-31 10:00-0700\n"
+"POT-Creation-Date: 2012-06-01 10:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -125,7 +125,7 @@ msgstr ""
 #: ../../mod/events.php:428 ../../mod/photos.php:955 ../../mod/photos.php:1013
 #: ../../mod/photos.php:1256 ../../mod/photos.php:1296
 #: ../../mod/photos.php:1336 ../../mod/photos.php:1367
-#: ../../mod/install.php:245 ../../mod/install.php:283
+#: ../../mod/install.php:246 ../../mod/install.php:284
 #: ../../mod/localtime.php:45 ../../mod/contacts.php:322
 #: ../../mod/settings.php:555 ../../mod/settings.php:701
 #: ../../mod/settings.php:762 ../../mod/settings.php:969
@@ -233,7 +233,7 @@ msgstr ""
 msgid "Previous"
 msgstr ""
 
-#: ../../mod/events.php:327 ../../mod/install.php:204
+#: ../../mod/events.php:327 ../../mod/install.php:205
 msgid "Next"
 msgstr ""
 
@@ -331,7 +331,7 @@ msgstr ""
 #: ../../mod/settings.php:914 ../../mod/settings.php:920
 #: ../../mod/settings.php:956 ../../mod/settings.php:957
 #: ../../mod/settings.php:958 ../../mod/settings.php:959
-#: ../../mod/settings.php:960 ../../mod/register.php:516
+#: ../../mod/settings.php:960 ../../mod/register.php:229
 #: ../../mod/profiles.php:520
 msgid "Yes"
 msgstr ""
@@ -343,7 +343,7 @@ msgstr ""
 #: ../../mod/settings.php:914 ../../mod/settings.php:920
 #: ../../mod/settings.php:956 ../../mod/settings.php:957
 #: ../../mod/settings.php:958 ../../mod/settings.php:959
-#: ../../mod/settings.php:960 ../../mod/register.php:517
+#: ../../mod/settings.php:960 ../../mod/register.php:230
 #: ../../mod/profiles.php:521
 msgid "No"
 msgstr ""
@@ -373,13 +373,13 @@ msgid "Contact information unavailable"
 msgstr ""
 
 #: ../../mod/photos.php:151 ../../mod/photos.php:652 ../../mod/photos.php:1005
-#: ../../mod/photos.php:1020 ../../mod/register.php:319
-#: ../../mod/register.php:326 ../../mod/register.php:333
-#: ../../mod/profile_photo.php:60 ../../mod/profile_photo.php:67
-#: ../../mod/profile_photo.php:74 ../../mod/profile_photo.php:174
-#: ../../mod/profile_photo.php:252 ../../mod/profile_photo.php:261
+#: ../../mod/photos.php:1020 ../../mod/profile_photo.php:60
+#: ../../mod/profile_photo.php:67 ../../mod/profile_photo.php:74
+#: ../../mod/profile_photo.php:174 ../../mod/profile_photo.php:252
+#: ../../mod/profile_photo.php:261
 #: ../../addon/communityhome/communityhome.php:111
-#: ../../view/theme/diabook/theme.php:599
+#: ../../view/theme/diabook/theme.php:599 ../../include/user.php:292
+#: ../../include/user.php:299 ../../include/user.php:306
 msgid "Profile Photos"
 msgstr ""
 
@@ -909,233 +909,233 @@ msgid ""
 "or mysql."
 msgstr ""
 
-#: ../../mod/install.php:139 ../../mod/install.php:203
-#: ../../mod/install.php:482
+#: ../../mod/install.php:139 ../../mod/install.php:204
+#: ../../mod/install.php:489
 msgid "Please see the file \"INSTALL.txt\"."
 msgstr ""
 
-#: ../../mod/install.php:200
+#: ../../mod/install.php:201
 msgid "System check"
 msgstr ""
 
-#: ../../mod/install.php:205
+#: ../../mod/install.php:206
 msgid "Check again"
 msgstr ""
 
-#: ../../mod/install.php:224
+#: ../../mod/install.php:225
 msgid "Database connection"
 msgstr ""
 
-#: ../../mod/install.php:225
+#: ../../mod/install.php:226
 msgid ""
 "In order to install Friendica we need to know how to connect to your "
 "database."
 msgstr ""
 
-#: ../../mod/install.php:226
+#: ../../mod/install.php:227
 msgid ""
 "Please contact your hosting provider or site administrator if you have "
 "questions about these settings."
 msgstr ""
 
-#: ../../mod/install.php:227
+#: ../../mod/install.php:228
 msgid ""
 "The database you specify below should already exist. If it does not, please "
 "create it before continuing."
 msgstr ""
 
-#: ../../mod/install.php:231
+#: ../../mod/install.php:232
 msgid "Database Server Name"
 msgstr ""
 
-#: ../../mod/install.php:232
+#: ../../mod/install.php:233
 msgid "Database Login Name"
 msgstr ""
 
-#: ../../mod/install.php:233
+#: ../../mod/install.php:234
 msgid "Database Login Password"
 msgstr ""
 
-#: ../../mod/install.php:234
+#: ../../mod/install.php:235
 msgid "Database Name"
 msgstr ""
 
-#: ../../mod/install.php:235 ../../mod/install.php:274
+#: ../../mod/install.php:236 ../../mod/install.php:275
 msgid "Site administrator email address"
 msgstr ""
 
-#: ../../mod/install.php:235 ../../mod/install.php:274
+#: ../../mod/install.php:236 ../../mod/install.php:275
 msgid ""
 "Your account email address must match this in order to use the web admin "
 "panel."
 msgstr ""
 
-#: ../../mod/install.php:239 ../../mod/install.php:277
+#: ../../mod/install.php:240 ../../mod/install.php:278
 msgid "Please select a default timezone for your website"
 msgstr ""
 
-#: ../../mod/install.php:264
+#: ../../mod/install.php:265
 msgid "Site settings"
 msgstr ""
 
-#: ../../mod/install.php:317
+#: ../../mod/install.php:318
 msgid "Could not find a command line version of PHP in the web server PATH."
 msgstr ""
 
-#: ../../mod/install.php:318
+#: ../../mod/install.php:319
 msgid ""
 "If you don't have a command line version of PHP installed on server, you "
 "will not be able to run background polling via cron. See <a href='http://"
 "friendica.com/node/27'>'Activating scheduled tasks'</a>"
 msgstr ""
 
-#: ../../mod/install.php:322
+#: ../../mod/install.php:323
 msgid "PHP executable path"
 msgstr ""
 
-#: ../../mod/install.php:322
+#: ../../mod/install.php:323
 msgid ""
 "Enter full path to php executable. You can leave this blank to continue the "
 "installation."
 msgstr ""
 
-#: ../../mod/install.php:327
+#: ../../mod/install.php:328
 msgid "Command line PHP"
 msgstr ""
 
-#: ../../mod/install.php:336
+#: ../../mod/install.php:337
 msgid ""
 "The command line version of PHP on your system does not have "
 "\"register_argc_argv\" enabled."
 msgstr ""
 
-#: ../../mod/install.php:337
+#: ../../mod/install.php:338
 msgid "This is required for message delivery to work."
 msgstr ""
 
-#: ../../mod/install.php:339
+#: ../../mod/install.php:340
 msgid "PHP register_argc_argv"
 msgstr ""
 
-#: ../../mod/install.php:360
+#: ../../mod/install.php:361
 msgid ""
 "Error: the \"openssl_pkey_new\" function on this system is not able to "
 "generate encryption keys"
 msgstr ""
 
-#: ../../mod/install.php:361
+#: ../../mod/install.php:362
 msgid ""
 "If running under Windows, please see \"http://www.php.net/manual/en/openssl."
 "installation.php\"."
 msgstr ""
 
-#: ../../mod/install.php:363
+#: ../../mod/install.php:364
 msgid "Generate encryption keys"
 msgstr ""
 
-#: ../../mod/install.php:370
+#: ../../mod/install.php:371
 msgid "libCurl PHP module"
 msgstr ""
 
-#: ../../mod/install.php:371
+#: ../../mod/install.php:372
 msgid "GD graphics PHP module"
 msgstr ""
 
-#: ../../mod/install.php:372
+#: ../../mod/install.php:373
 msgid "OpenSSL PHP module"
 msgstr ""
 
-#: ../../mod/install.php:373
+#: ../../mod/install.php:374
 msgid "mysqli PHP module"
 msgstr ""
 
-#: ../../mod/install.php:374
+#: ../../mod/install.php:375
 msgid "mb_string PHP module"
 msgstr ""
 
-#: ../../mod/install.php:379 ../../mod/install.php:381
+#: ../../mod/install.php:380 ../../mod/install.php:382
 msgid "Apache mod_rewrite module"
 msgstr ""
 
-#: ../../mod/install.php:379
+#: ../../mod/install.php:380
 msgid ""
 "Error: Apache webserver mod-rewrite module is required but not installed."
 msgstr ""
 
-#: ../../mod/install.php:386
+#: ../../mod/install.php:388
 msgid "Error: libCURL PHP module required but not installed."
 msgstr ""
 
-#: ../../mod/install.php:390
+#: ../../mod/install.php:392
 msgid ""
 "Error: GD graphics PHP module with JPEG support required but not installed."
 msgstr ""
 
-#: ../../mod/install.php:394
+#: ../../mod/install.php:396
 msgid "Error: openssl PHP module required but not installed."
 msgstr ""
 
-#: ../../mod/install.php:398
+#: ../../mod/install.php:400
 msgid "Error: mysqli PHP module required but not installed."
 msgstr ""
 
-#: ../../mod/install.php:402
+#: ../../mod/install.php:404
 msgid "Error: mb_string PHP module required but not installed."
 msgstr ""
 
-#: ../../mod/install.php:419
+#: ../../mod/install.php:421
 msgid ""
 "The web installer needs to be able to create a file called \".htconfig.php\" "
 "in the top folder of your web server and it is unable to do so."
 msgstr ""
 
-#: ../../mod/install.php:420
+#: ../../mod/install.php:422
 msgid ""
 "This is most often a permission setting, as the web server may not be able "
 "to write files in your folder - even if you can."
 msgstr ""
 
-#: ../../mod/install.php:421
+#: ../../mod/install.php:423
 msgid ""
 "At the end of this procedure, we will give you a text to save in a file "
 "named .htconfig.php in your Friendica top folder."
 msgstr ""
 
-#: ../../mod/install.php:422
+#: ../../mod/install.php:424
 msgid ""
 "You can alternatively skip this procedure and perform a manual installation. "
 "Please see the file \"INSTALL.txt\" for instructions."
 msgstr ""
 
-#: ../../mod/install.php:425
+#: ../../mod/install.php:427
 msgid ".htconfig.php is writable"
 msgstr ""
 
-#: ../../mod/install.php:436
+#: ../../mod/install.php:439
 msgid ""
-"Url rewrite in .htconfig is not working. Check your server configuration."
+"Url rewrite in .htaccess is not working. Check your server configuration."
 msgstr ""
 
-#: ../../mod/install.php:438
+#: ../../mod/install.php:441
 msgid "Url rewrite is working"
 msgstr ""
 
-#: ../../mod/install.php:444
+#: ../../mod/install.php:451
 msgid ""
 "The database configuration file \".htconfig.php\" could not be written. "
 "Please use the enclosed text to create a configuration file in your web "
 "server root."
 msgstr ""
 
-#: ../../mod/install.php:469
+#: ../../mod/install.php:476
 msgid "Errors encountered creating database tables."
 msgstr ""
 
-#: ../../mod/install.php:480
+#: ../../mod/install.php:487
 msgid "<h1>What next</h1>"
 msgstr ""
 
-#: ../../mod/install.php:481
+#: ../../mod/install.php:488
 msgid ""
 "IMPORTANT: You will need to [manually] setup a scheduled task for the poller."
 msgstr ""
@@ -1708,7 +1708,7 @@ msgid "Password reset requested at %s"
 msgstr ""
 
 #: ../../mod/lostpass.php:45 ../../mod/lostpass.php:107
-#: ../../mod/register.php:372 ../../mod/register.php:426
+#: ../../mod/register.php:85 ../../mod/register.php:139
 #: ../../mod/regmod.php:54 ../../mod/dfrn_confirm.php:752
 #: ../../addon/facebook/facebook.php:688
 #: ../../addon/facebook/facebook.php:1178
@@ -2669,163 +2669,91 @@ msgstr ""
 msgid "View Contacts"
 msgstr ""
 
-#: ../../mod/register.php:64
-msgid "An invitation is required."
-msgstr ""
-
-#: ../../mod/register.php:69
-msgid "Invitation could not be verified."
-msgstr ""
-
-#: ../../mod/register.php:77
-msgid "Invalid OpenID url"
-msgstr ""
-
-#: ../../mod/register.php:92
-msgid "Please enter the required information."
-msgstr ""
-
-#: ../../mod/register.php:106
-msgid "Please use a shorter name."
-msgstr ""
-
-#: ../../mod/register.php:108
-msgid "Name too short."
-msgstr ""
-
-#: ../../mod/register.php:123
-msgid "That doesn't appear to be your full (First Last) name."
-msgstr ""
-
-#: ../../mod/register.php:128
-msgid "Your email domain is not among those allowed on this site."
-msgstr ""
-
-#: ../../mod/register.php:131
-msgid "Not a valid email address."
-msgstr ""
-
-#: ../../mod/register.php:141
-msgid "Cannot use that email."
-msgstr ""
-
-#: ../../mod/register.php:147
-msgid ""
-"Your \"nickname\" can only contain \"a-z\", \"0-9\", \"-\", and \"_\", and "
-"must also begin with a letter."
-msgstr ""
-
-#: ../../mod/register.php:153 ../../mod/register.php:243
-msgid "Nickname is already registered. Please choose another."
-msgstr ""
-
-#: ../../mod/register.php:163
-msgid ""
-"Nickname was once registered here and may not be re-used. Please choose "
-"another."
-msgstr ""
-
-#: ../../mod/register.php:179
-msgid "SERIOUS ERROR: Generation of security keys failed."
-msgstr ""
-
-#: ../../mod/register.php:229
-msgid "An error occurred during registration. Please try again."
-msgstr ""
-
-#: ../../mod/register.php:265
-msgid "An error occurred creating your default profile. Please try again."
-msgstr ""
-
-#: ../../mod/register.php:297 ../../include/profile_selectors.php:42
-msgid "Friends"
-msgstr ""
-
-#: ../../mod/register.php:370 ../../mod/regmod.php:52
+#: ../../mod/register.php:83 ../../mod/regmod.php:52
 #, php-format
 msgid "Registration details for %s"
 msgstr ""
 
-#: ../../mod/register.php:378
+#: ../../mod/register.php:91
 msgid ""
 "Registration successful. Please check your email for further instructions."
 msgstr ""
 
-#: ../../mod/register.php:382
+#: ../../mod/register.php:95
 msgid "Failed to send email message. Here is the message that failed."
 msgstr ""
 
-#: ../../mod/register.php:387
+#: ../../mod/register.php:100
 msgid "Your registration can not be processed."
 msgstr ""
 
-#: ../../mod/register.php:424
+#: ../../mod/register.php:137
 #, php-format
 msgid "Registration request at %s"
 msgstr ""
 
-#: ../../mod/register.php:433
+#: ../../mod/register.php:146
 msgid "Your registration is pending approval by the site owner."
 msgstr ""
 
-#: ../../mod/register.php:471
+#: ../../mod/register.php:184
 msgid ""
 "This site has exceeded the number of allowed daily account registrations. "
 "Please try again tomorrow."
 msgstr ""
 
-#: ../../mod/register.php:497
+#: ../../mod/register.php:210
 msgid ""
 "You may (optionally) fill in this form via OpenID by supplying your OpenID "
 "and clicking 'Register'."
 msgstr ""
 
-#: ../../mod/register.php:498
+#: ../../mod/register.php:211
 msgid ""
 "If you are not familiar with OpenID, please leave that field blank and fill "
 "in the rest of the items."
 msgstr ""
 
-#: ../../mod/register.php:499
+#: ../../mod/register.php:212
 msgid "Your OpenID (optional): "
 msgstr ""
 
-#: ../../mod/register.php:513
+#: ../../mod/register.php:226
 msgid "Include your profile in member directory?"
 msgstr ""
 
-#: ../../mod/register.php:533
+#: ../../mod/register.php:246
 msgid "Membership on this site is by invitation only."
 msgstr ""
 
-#: ../../mod/register.php:534
+#: ../../mod/register.php:247
 msgid "Your invitation ID: "
 msgstr ""
 
-#: ../../mod/register.php:537 ../../mod/admin.php:418
+#: ../../mod/register.php:250 ../../mod/admin.php:418
 msgid "Registration"
 msgstr ""
 
-#: ../../mod/register.php:545
+#: ../../mod/register.php:258
 msgid "Your Full Name (e.g. Joe Smith): "
 msgstr ""
 
-#: ../../mod/register.php:546
+#: ../../mod/register.php:259
 msgid "Your Email Address: "
 msgstr ""
 
-#: ../../mod/register.php:547
+#: ../../mod/register.php:260
 msgid ""
 "Choose a profile nickname. This must begin with a text character. Your "
 "profile address on this site will then be '<strong>nickname@$sitename</"
 "strong>'."
 msgstr ""
 
-#: ../../mod/register.php:548
+#: ../../mod/register.php:261
 msgid "Choose a nickname: "
 msgstr ""
 
-#: ../../mod/register.php:551 ../../include/nav.php:81 ../../boot.php:792
+#: ../../mod/register.php:264 ../../include/nav.php:81 ../../boot.php:792
 msgid "Register"
 msgstr ""
 
@@ -3107,10 +3035,6 @@ msgstr ""
 
 #: ../../mod/admin.php:100
 msgid "DB updates"
-msgstr ""
-
-#: ../../mod/admin.php:101
-msgid "Software Update"
 msgstr ""
 
 #: ../../mod/admin.php:115 ../../mod/admin.php:1074
@@ -6195,6 +6119,10 @@ msgstr ""
 msgid "Sex Addict"
 msgstr ""
 
+#: ../../include/profile_selectors.php:42 ../../include/user.php:270
+msgid "Friends"
+msgstr ""
+
 #: ../../include/profile_selectors.php:42
 msgid "Friends/Benefits"
 msgstr ""
@@ -6423,7 +6351,7 @@ msgstr ""
 msgid "Click to open/close"
 msgstr ""
 
-#: ../../include/text.php:1095
+#: ../../include/text.php:1095 ../../include/user.php:228
 msgid "default"
 msgstr ""
 
@@ -6455,7 +6383,7 @@ msgstr ""
 msgid "Attachments:"
 msgstr ""
 
-#: ../../include/diaspora.php:2160
+#: ../../include/diaspora.php:2168
 #, php-format
 msgid "[Relayed] Comment authored by %s from network %s"
 msgstr ""
@@ -6993,6 +6921,74 @@ msgstr ""
 
 #: ../../include/bb2diaspora.php:102
 msgid "link"
+msgstr ""
+
+#: ../../include/user.php:36
+msgid "An invitation is required."
+msgstr ""
+
+#: ../../include/user.php:41
+msgid "Invitation could not be verified."
+msgstr ""
+
+#: ../../include/user.php:49
+msgid "Invalid OpenID url"
+msgstr ""
+
+#: ../../include/user.php:64
+msgid "Please enter the required information."
+msgstr ""
+
+#: ../../include/user.php:78
+msgid "Please use a shorter name."
+msgstr ""
+
+#: ../../include/user.php:80
+msgid "Name too short."
+msgstr ""
+
+#: ../../include/user.php:95
+msgid "That doesn't appear to be your full (First Last) name."
+msgstr ""
+
+#: ../../include/user.php:100
+msgid "Your email domain is not among those allowed on this site."
+msgstr ""
+
+#: ../../include/user.php:103
+msgid "Not a valid email address."
+msgstr ""
+
+#: ../../include/user.php:113
+msgid "Cannot use that email."
+msgstr ""
+
+#: ../../include/user.php:119
+msgid ""
+"Your \"nickname\" can only contain \"a-z\", \"0-9\", \"-\", and \"_\", and "
+"must also begin with a letter."
+msgstr ""
+
+#: ../../include/user.php:125 ../../include/user.php:217
+msgid "Nickname is already registered. Please choose another."
+msgstr ""
+
+#: ../../include/user.php:135
+msgid ""
+"Nickname was once registered here and may not be re-used. Please choose "
+"another."
+msgstr ""
+
+#: ../../include/user.php:151
+msgid "SERIOUS ERROR: Generation of security keys failed."
+msgstr ""
+
+#: ../../include/user.php:203
+msgid "An error occurred during registration. Please try again."
+msgstr ""
+
+#: ../../include/user.php:238
+msgid "An error occurred creating your default profile. Please try again."
 msgstr ""
 
 #: ../../include/security.php:21
