@@ -679,7 +679,8 @@ input#dfrn-url {
 #profile-edit-religion-label,
 #profile-edit-pubkeywords-label,
 #profile-edit-prvkeywords-label,
-#profile-edit-homepage-label {
+#profile-edit-homepage-label,
+#profile-edit-hometown-label {
 	float: left;
 	width: 175px;
 }
@@ -774,7 +775,7 @@ input#dfrn-url {
 }
 
 
-#profile-edit-homepage {
+#profile-edit-homepage, #profile-edit-hometown {
 	float: left;
 	margin-bottom: 35px;
 }
@@ -814,6 +815,7 @@ input#dfrn-url {
 #profile-edit-pubkeywords-end,
 #profile-edit-prvkeywords-end,
 #profile-edit-homepage-end,
+#profile-edit-hometown-end,
 #profile-in-dir-break,
 #profile-in-dir-end,
 #profile-in-netdir-break,

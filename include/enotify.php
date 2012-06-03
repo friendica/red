@@ -20,6 +20,9 @@ function notification($params) {
 
 	$sender_name = $product;
 	$hostname = $a->get_hostname();
+	if(strpos($hostname,':'))
+		$hostname = substr($hostname,0,strpos($hostname,':'));
+
 	$sender_email = t('noreply') . '@' . $hostname;
 	$additional_mail_header = "";
 
