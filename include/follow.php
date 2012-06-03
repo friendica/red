@@ -1,6 +1,18 @@
 <?php
 
 
+//
+// Takes a $uid and a url/handle and adds a new contact
+// Currently if the contact is DFRN, interactive needs to be true, to redirect to the
+// dfrn_request page.
+
+// Otherwise this can be used to bulk add statusnet contacts, twitter contacts, etc.
+// Returns an array
+//  $return['success'] boolean true if successful
+//  $return['message'] error text if success is false.
+
+
+
 function new_contact($uid,$url,$interactive = false) {
 
 	$result = array('success' => false,'message' => '');
