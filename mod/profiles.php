@@ -126,6 +126,7 @@ function profiles_post(&$a) {
 
 		$sexual = notags(trim($_POST['sexual']));
 		$homepage = notags(trim($_POST['homepage']));
+		$hometown = notags(trim($_POST['hometown']));
 		$politic = notags(trim($_POST['politic']));
 		$religion = notags(trim($_POST['religion']));
 
@@ -216,6 +217,7 @@ function profiles_post(&$a) {
 			`howlong` = '%s',
 			`sexual` = '%s',
 			`homepage` = '%s',
+			`hometown` = '%s',
 			`politic` = '%s',
 			`religion` = '%s',
 			`pub_keywords` = '%s',
@@ -247,6 +249,7 @@ function profiles_post(&$a) {
 			dbesc($howlong),
 			dbesc($sexual),
 			dbesc($homepage),
+			dbesc($hometown),
 			dbesc($politic),
 			dbesc($religion),
 			dbesc($pub_keywords),
@@ -569,6 +572,7 @@ function profiles_content(&$a) {
 			'$lbl_howlong' => t('Since [date]:'),
 			'$lbl_sexual' => t('Sexual Preference:'),
 			'$lbl_homepage' => t('Homepage URL:'),
+			'$lbl_hometown' => t('Hometown:'),
 			'$lbl_politic' => t('Political Views:'),
 			'$lbl_religion' => t('Religious Views:'),
 			'$lbl_pubkey' => t('Public Keywords:'),
@@ -608,6 +612,7 @@ function profiles_content(&$a) {
 			'$sexual' => sexpref_selector($r[0]['sexual']),
 			'$about' => $r[0]['about'],
 			'$homepage' => $r[0]['homepage'],
+			'$hometown' => $r[0]['hometown'],
 			'$politic' => $r[0]['politic'],
 			'$religion' => $r[0]['religion'],
 			'$pub_keywords' => $r[0]['pub_keywords'],

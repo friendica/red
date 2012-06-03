@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1146 );
+define( 'UPDATE_VERSION' , 1147 );
 
 /**
  *
@@ -1262,6 +1262,13 @@ function update_1144() {
 
 function update_1145() {
 	$r = q("alter table profile add howlong datetime not null default '0000-00-00 00:00:00' after `with`");
+	if(! $r)
+		return UPDATE_FAILED ;
+	return UPDATE_SUCCESS ;
+}
+
+function update_1146() {
+	$r = q("alter table profile add hometown char(255) not null after `country-name`, add index ( `hometown` ) ");
 	if(! $r)
 		return UPDATE_FAILED ;
 	return UPDATE_SUCCESS ;

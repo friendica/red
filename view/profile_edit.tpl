@@ -97,6 +97,12 @@ $hide_friends
 </div>
 <div id="profile-edit-region-end"></div>
 
+<div id="profile-edit-hometown-wrapper" >
+<label id="profile-edit-hometown-label" for="profile-edit-hometown" >$lbl_hometown </label>
+<input type="text" size="32" name="hometown" id="profile-edit-hometown" value="$hometown" />
+</div>
+<div id="profile-edit-hometown-end"></div>
+
 <div class="profile-edit-submit-wrapper" >
 <input type="submit" name="submit" class="profile-edit-submit-button" value="$submit" />
 </div>

@@ -54,6 +54,13 @@
 </dl>
 {{ endif }}
 
+{{ if $profile.hometown }}
+<dl id="aprofile-hometown" class="aprofile">
+ <dt>$profile.hometown.0</dt>
+ <dd>$profile.hometown.1</dd>
+</dl>
+{{ endif }}
+
 {{ if $profile.politic }}
 <dl id="aprofile-politic" class="aprofile">
  <dt>$profile.politic.0</dt>
