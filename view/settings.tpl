@@ -98,7 +98,7 @@ $group_select
 
 
 <div class="settings-submit-wrapper" >
-<input type="submit" name="submit" class="settings-submit" value="Submit" />
+<input type="submit" name="submit" class="settings-submit" value="$submit" />
 </div>
 
 
