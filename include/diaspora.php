@@ -1605,22 +1605,28 @@ function diaspora_like($importer,$xml,$msg) {
 			logger('diaspora_like: duplicate like: ' . $guid);
 			return;
 		} 
+		// Note: I don't think "Like" objects with positive = "false" are ever actually used
+		// It looks like "RelayableRetractions" are used for "unlike" instead
 		if($positive === 'false') {
-			q("UPDATE `item` SET `deleted` = 1 WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			logger('diaspora_like: received a like with positive set to "false"...ignoring');
+/*			q("UPDATE `item` SET `deleted` = 1 WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval($r[0]['id']),
 				intval($importer['uid'])
-			);
+			);*/
 			// FIXME
 			//  send notification via proc_run()
 			return;
 		}
 	}
+	// Note: I don't think "Like" objects with positive = "false" are ever actually used
+	// It looks like "RelayableRetractions" are used for "unlike" instead
 	if($positive === 'false') {
-		logger('diaspora_like: unlike received with no corresponding like');
+		logger('diaspora_like: received a like with positive set to "false"');
+		logger('diaspora_like: unlike received with no corresponding like...ignoring');
 		return;	
 	}
 
-	$author_signed_data = $guid . ';' . $target_type . ';' . $parent_guid . ';' . $positive . ';' . $diaspora_handle;
+	$signed_data = $guid . ';' . $target_type . ';' . $parent_guid . ';' . $positive . ';' . $diaspora_handle;
 
 	$author_signature = base64_decode($author_signature);
 
@@ -1638,20 +1644,20 @@ function diaspora_like($importer,$xml,$msg) {
 		}
 	}
 
-	if(! rsa_verify($author_signed_data,$author_signature,$key,'sha256')) {
+	if(! rsa_verify($signed_data,$author_signature,$key,'sha256')) {
 		logger('diaspora_like: verification failed.');
 		return;
 	}
 
 	if($parent_author_signature) {
 
-		$owner_signed_data = $guid . ';' . $target_type . ';' . $parent_guid . ';' . $positive . ';' . $diaspora_handle;
+		//$owner_signed_data = $guid . ';' . $target_type . ';' . $parent_guid . ';' . $positive . ';' . $diaspora_handle;
 
 		$parent_author_signature = base64_decode($parent_author_signature);
 
 		$key = $msg['key'];
 
-		if(! rsa_verify($owner_signed_data,$parent_author_signature,$key,'sha256')) {
+		if(! rsa_verify($signed_data,$parent_author_signature,$key,'sha256')) {
 			logger('diaspora_like: owner verification failed.');
 			return;
 		}
@@ -2127,6 +2133,9 @@ function diaspora_send_followup($item,$owner,$contact,$public_batch = false) {
 		$target_type = 'Post';
 //		$positive = (($item['deleted']) ? 'false' : 'true');
 		$positive = 'true';
+
+		if(($item['deleted']))
+			logger('diaspora_send_followup: received deleted "like". Those should go to diaspora_send_retraction');
 	}
 	else {
 		$tpl = get_markup_template('diaspora_comment.tpl');
@@ -2163,14 +2172,6 @@ function diaspora_send_followup($item,$owner,$contact,$public_batch = false) {
 
 
 function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
-// I think the first comment or like on a post whose home is our Friendica server is saved as an item
-// as the top-level post owner's contact for writer of the comment or post. Thus, the "uid"
-// on the item is `user`.`id` of the top-level post owner. That user is passed to this function
-// as "$owner."
-//
-// I'm assuming for now that "$owner" will be the user of the top-level post for retractions too. Be
-// aware that another reasonable possibility is that it's the "$owner" of the deleted comment.
-
 
 
 	$a = get_app();
@@ -2215,13 +2216,8 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 	$text = html_entity_decode(bb2diaspora($body));
 
 
-	// fetch the original signature	if somebody sent the post to us to relay
-	//
-	// If we are relaying for a reply originating on our own account, there wasn't a 'send to relay'
-	// action. It wasn't needed. In that case create the original signature and the 
-	// owner (parent author) signature
-	// Note that mod/item.php seems to take care of creating a signature for Diaspora for replies
-	// created on our own account
+	// fetch the original signature	if the relayable was created by a Diaspora
+	// or DFRN user. Relayables for other networks are not supported.
 
 	$r = q("select * from sign where " . $sql_sign_id . " = %d limit 1",
 		intval($item['id'])
@@ -2454,3 +2450,5 @@ function diaspora_transmit($owner,$contact,$slap,$public_batch) {
 
 	return(($return_code) ? $return_code : (-1));
 }
+
+
