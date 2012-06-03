@@ -211,7 +211,8 @@ function message_content(&$a) {
 			'$parent' => '',
 			'$upload' => t('Upload photo'),
 			'$insert' => t('Insert web link'),
-			'$wait' => t('Please wait')
+			'$wait' => t('Please wait'),
+			'$submit' => t('Submit')
 		));
 
 		return $o;
