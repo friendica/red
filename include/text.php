@@ -891,6 +891,7 @@ function prepare_body($item,$attach = false) {
 	} else
 		$s = prepare_text($item['body']);
 
+
 	$prep_arr = array('item' => $item, 'html' => $s);
 	call_hooks('prepare_body', $prep_arr);
 	$s = $prep_arr['html'];

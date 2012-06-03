@@ -52,6 +52,8 @@ function bb_unspacefy_and_trim($st) {
 
 function bbcode($Text,$preserve_nl = false) {
 
+	$a = get_app();
+
 	// Hide all [noparse] contained bbtags spacefying them
 
 	$Text = preg_replace_callback("/\[noparse\](.*?)\[\/noparse\]/ism", 'bb_spacefy',$Text);
@@ -114,6 +116,11 @@ function bbcode($Text,$preserve_nl = false) {
 	$Text = preg_replace("/\[url\=([$URLSearchString]*)\](.*?)\[\/url\]/ism", '<a href="$1" target="external-link">$2</a>', $Text);
 	//$Text = preg_replace("/\[url\=([$URLSearchString]*)\]([$URLSearchString]*)\[\/url\]/ism", '<a href="$1" target="_blank">$2</a>', $Text);
 
+	// we may need to restrict this further if it picks up too many strays
+	// link acct:user@host to a webfinger profile redirector
+
+	$Text = preg_replace('/acct:(.*?)@(.*?)([ ,])/', '<a href="' . $a->get_baseurl() . '/acctlink?addr=' . "$1@$2" 
+		. '" target="extlink" >acct:' . "$1@$2$3" . '</a>',$Text);
 
 	// Perform MAIL Search
 	$Text = preg_replace("/\[mail\]([$MAILSearchString]*)\[\/mail\]/", '<a href="mailto:$1">$1</a>', $Text);
