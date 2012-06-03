@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1147 );
+define( 'UPDATE_VERSION' , 1148 );
 
 /**
  *
@@ -1274,8 +1274,7 @@ function update_1146() {
 	return UPDATE_SUCCESS ;
 }
 
-/*
-function update_xxxx() {
+function update_1147() {
 	$r1 = q("ALTER TABLE `sign` ALTER `iid` SET DEFAULT '0'");
 	$r2 = q("ALTER TABLE `sign` ADD `retract_iid` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `iid`");
 	$r3 = q("ALTER TABLE `sign` ADD INDEX ( `retract_iid` )");  
@@ -1283,6 +1282,4 @@ function update_xxxx() {
 		return UPDATE_FAILED ;
 	return UPDATE_SUCCESS ;
 }
-*/
-// dump DB schema: mysqldump -d -h localhost -u root -pmypassword databasename > dumpfile.sql
 
