@@ -105,7 +105,7 @@ function like_content(&$a) {
 	}
 
 
-	$r = q("SELECT `id` FROM `item` WHERE `verb` = '%s' AND `deleted` = 0 
+	$r = q("SELECT * FROM `item` WHERE `verb` = '%s' AND `deleted` = 0 
 		AND `contact-id` = %d AND ( `parent` = '%s' OR `parent-uri` = '%s') LIMIT 1",
 		dbesc($activity),
 		intval($contact['id']),
@@ -113,15 +113,17 @@ function like_content(&$a) {
 		dbesc($item_id)
 	);
 	if(count($r)) {
+		$like_item = $r[0];
+
 		// Already voted, undo it
 		$r = q("UPDATE `item` SET `deleted` = 1, `changed` = '%s' WHERE `id` = %d LIMIT 1",
 			dbesc(datetime_convert()),
-			intval($r[0]['id'])
+			intval($like_item['id'])
 		);
 
 		// Clean up the `sign` table
-		$r2 = q("DELETE FROM `sign` WHERE `iid` = %d",
-			intval($r[0]['id'])
+		$r = q("DELETE FROM `sign` WHERE `iid` = %d",
+			intval($like_item['id'])
 		);
 
 		// Save the author information for the unlike in case we need to relay to Diaspora
@@ -134,27 +136,29 @@ function like_content(&$a) {
 		// likes on photos, so don't bother.
 
 		if(($activity === ACTIVITY_LIKE) && (! $item['resource-id'])) {
-			$signed_text = $r[0]['guid'] . ';' . 'Like';
+			$signed_text = $like_item['guid'] . ';' . 'Like';
 
-			if( contact['network'] === NETWORK_DIASPORA)
+			if( $contact['network'] === NETWORK_DIASPORA)
 				$diaspora_handle = $contact['addr'];
 			else { // Only works for NETWORK_DFRN
-				$contact_baseurl = substr($contact['url'], strpos($contact['url'],'://') + 3, strpos($contact['url'],'/profile') - 1);
+				$contact_baseurl_start = strpos($contact['url'],'://') + 3;
+				$contact_baseurl_length = strpos($contact['url'],'/profile') - $contact_baseurl_start;
+				$contact_baseurl = substr($contact['url'], $contact_baseurl_start, $contact_baseurl_length);
 				$diaspora_handle = $contact['nick'] . '@' . $contact_baseurl;
 
 				// Get contact's private key if he's a user of the local Friendica server
-				$r2 = q("SELECT `contact`.`uid` FROM `contact` WHERE `url` = '%s' AND `self` = 1 LIMIT 1",
-					dbesc(contact['url'])
+				$r = q("SELECT `contact`.`uid` FROM `contact` WHERE `url` = '%s' AND `self` = 1 LIMIT 1",
+					dbesc($contact['url'])
 				);
 
-				if( $r2) {
-					$contact_uid = $r2['uid'];
-					$r2 = q("SELECT prvkey FROM user WHERE id = %d LIMIT 1",
+				if( $r) {
+					$contact_uid = $r['uid'];
+					$r = q("SELECT prvkey FROM user WHERE uid = %d LIMIT 1",
 						intval($contact_uid)
 					);
 
-					if( $r2)
-						$authorsig = base64_encode(rsa_sign($signed_text,$r2['prvkey'],'sha256'));
+					if( $r)
+						$authorsig = base64_encode(rsa_sign($signed_text,$r['prvkey'],'sha256'));
 				}
 			}
 
@@ -162,15 +166,17 @@ function like_content(&$a) {
 				$authorsig = '';
 
 			q("insert into sign (`retract_iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
-				intval($r[0]['id']),
+				intval($like_item['id']),
 				dbesc($signed_text),
 				dbesc($authorsig),
 				dbesc($diaspora_handle)
 			);
 		}
 
+
 //		proc_run('php',"include/notifier.php","like","$post_id"); // $post_id isn't defined here!
-		proc_run('php',"include/notifier.php","like","$r[0]['id']");
+		$like_item_id = $like_item['id'];
+		proc_run('php',"include/notifier.php","like","$like_item_id");
 		return;
 	}
 
@@ -251,25 +257,27 @@ EOT;
 	// only checks the parent_author_signature if it doesn't have to relay further
 
 	if(($activity === ACTIVITY_LIKE) && ($post_type === t('status'))) {
-		if( contact['network'] === NETWORK_DIASPORA)
+		if( $contact['network'] === NETWORK_DIASPORA)
 			$diaspora_handle = $contact['addr'];
 		else { // Only works for NETWORK_DFRN
-			$contact_baseurl = substr($contact['url'], strpos($contact['url'],'://') + 3, strpos($contact['url'],'/profile') - 1);
+			$contact_baseurl_start = strpos($contact['url'],'://') + 3;
+			$contact_baseurl_length = strpos($contact['url'],'/profile') - $contact_baseurl_start;
+			$contact_baseurl = substr($contact['url'], $contact_baseurl_start, $contact_baseurl_length);
 			$diaspora_handle = $contact['nick'] . '@' . $contact_baseurl;
 
 			// Get contact's private key if he's a user of the local Friendica server
-			$r2 = q("SELECT `contact`.`uid` FROM `contact` WHERE `url` = '%s' AND `self` = 1 LIMIT 1",
-				dbesc(contact['url'])
+			$r = q("SELECT `contact`.`uid` FROM `contact` WHERE `url` = '%s' AND `self` = 1 LIMIT 1",
+				dbesc($contact['url'])
 			);
 
-			if( $r2) {
-				$contact_uid = $r2['uid'];
-				$r2 = q("SELECT prvkey FROM user WHERE id = %d LIMIT 1",
+			if( $r) {
+				$contact_uid = $r['uid'];
+				$r = q("SELECT prvkey FROM user WHERE uid = %d LIMIT 1",
 					intval($contact_uid)
 				);
 
-				if( $r2)
-					$contact_uprvkey = $r2['prvkey'];
+				if( $r)
+					$contact_uprvkey = $r['prvkey'];
 			}
 		}
 
@@ -278,8 +286,8 @@ EOT;
 		);
 		if( $r) {
 			$p = q("SELECT guid FROM `item` WHERE id = %d AND parent = %d LIMIT 1",
-				intval($r[0]['parent'),
-				intval($r[0]['parent')
+				intval($r[0]['parent']),
+				intval($r[0]['parent'])
 			);
 			if( $p) {
 				$signed_text = $r[0]['guid'] . ';Post;' . $p[0]['guid'] . ';true;' . $diaspora_handle;

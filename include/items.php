@@ -3300,7 +3300,9 @@ function drop_item($id,$interactive = true) {
 				if(count($r)) {
 					// The below handle only works for NETWORK_DFRN. I think that's ok, because this function
 					// only handles DFRN deletes
-					$handle = $r['nick'] . '@' . substr($r['url'], strpos($r['url'],'://') + 3, strpos($r['url'],'/profile') - 1);
+					$handle_baseurl_start = strpos($r['url'],'://') + 3;
+					$handle_baseurl_length = strpos($r['url'],'/profile') - $handle_baseurl_start;
+					$handle = $r['nick'] . '@' . substr($r['url'], $handle_baseurl_start, $handle_baseurl_length);
 					$authorsig = '';
 				}
 			}
