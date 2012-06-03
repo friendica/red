@@ -173,6 +173,12 @@ function localize_item(&$item){
 				$item['body'] = str_replace($mtch[0],'@[url=' . zrl($mtch[1]). ']',$item['body']);
 		}
 	}
+	if(preg_match_all('/\[url=(.*?)\/photos\/(.*?)\/image\/(.*?)\]\[img(.*?)\]h(.*?)\[\/img\]\[\/url\]/is',$item['body'],$matches,PREG_SET_ORDER)) {
+logger('matched');
+		foreach($matches as $mtch) {
+				$item['body'] = str_replace($mtch[0],'[url=' . zrl($mtch[1] . '/photos/' . $mtch[2] . '/image/' . $mtch[3] ,true) . '][img' . $mtch[4] . ']h' . $mtch[5]  . '[/img][/url]',$item['body']);
+		}
+	}
 
 
 }
