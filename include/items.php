@@ -3281,9 +3281,11 @@ function drop_item($id,$interactive = true) {
 			}
 
 			// Add a relayable_retraction signature for Diaspora. Note that we can't add a target_author_signature
-			// if the comment/like was deleted by a remote user. That should be ok, because if a remote user is deleting
-			// the comment/like, that means we're the home of the post, and Diaspora will only
+			// if the comment was deleted by a remote user. That should be ok, because if a remote user is deleting
+			// the comment, that means we're the home of the post, and Diaspora will only
 			// check the parent_author_signature of retractions that it doesn't have to relay further
+			//
+			// I don't think this function gets called for an "unlike," but I'll check anyway
 			$signed_text = $item['guid'] . ';' . ( ($item['verb'] === ACTIVITY_LIKE) ? 'Like' : 'Comment');
 
 			if(local_user() == $item['uid']) {
@@ -3296,6 +3298,8 @@ function drop_item($id,$interactive = true) {
 					$item['contact-id']
 				);
 				if(count($r)) {
+					// The below handle only works for NETWORK_DFRN. I think that's ok, because this function
+					// only handles DFRN deletes
 					$handle = $r['nick'] . '@' . substr($r['url'], strpos($r['url'],'://') + 3, strpos($r['url'],'/profile') - 1);
 					$authorsig = '';
 				}

@@ -738,18 +738,19 @@ function notifier_run($argv, $argc){
 						// unsupported
 						break;
 					}
-					elseif(($target_item['deleted']) && (($target_item['uri'] === $target_item['parent-uri']) || $followup) && ($target_item['verb'] !== ACTIVITY_LIKE)) {
-						// diaspora delete, including relayable_retractions that need to be relayed
+					elseif(($target_item['deleted']) && (($target_item['uri'] === $target_item['parent-uri']) || $followup)) {
+						// send both top-level retractions and relayable retractions for owner to relay
 						diaspora_send_retraction($target_item,$owner,$contact);
 						break;
 					}
 					elseif($followup) {
-						// send comments, likes and retractions of likes to owner to relay
+						// send comments and likes to owner to relay
 						diaspora_send_followup($target_item,$owner,$contact);
 						break;
 					}
 					elseif($target_item['uri'] !== $target_item['parent-uri']) {
-						// we are the relay - send comments, likes, unlikes and relayable_retractions to our conversants
+						// we are the relay - send comments, likes and relayable_retractions
+						// (of comments and likes) to our conversants
 						diaspora_send_relay($target_item,$owner,$contact);
 						break;
 					}

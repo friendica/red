@@ -2125,7 +2125,8 @@ function diaspora_send_followup($item,$owner,$contact,$public_batch = false) {
 		$tpl = get_markup_template('diaspora_like.tpl');
 		$like = true;
 		$target_type = 'Post';
-		$positive = (($item['deleted']) ? 'false' : 'true');
+//		$positive = (($item['deleted']) ? 'false' : 'true');
+		$positive = 'true';
 	}
 	else {
 		$tpl = get_markup_template('diaspora_comment.tpl');
@@ -2202,7 +2203,8 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 		$tpl = get_markup_template('diaspora_like_relay.tpl');
 		$like = true;
 		$target_type = 'Post';
-		$positive = (($item['deleted']) ? 'false' : 'true');
+//		$positive = (($item['deleted']) ? 'false' : 'true');
+		$positive = 'true';
 	}
 	else {
 		$tpl = get_markup_template('diaspora_comment_relay.tpl');
@@ -2220,9 +2222,6 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 	// owner (parent author) signature
 	// Note that mod/item.php seems to take care of creating a signature for Diaspora for replies
 	// created on our own account
-	//
-	// comments from other networks will be relayed under our name, with a brief 
-	// preamble to describe what's happening and noting the real author
 
 	$r = q("select * from sign where " . $sql_sign_id . " = %d limit 1",
 		intval($item['id'])
@@ -2235,6 +2234,12 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 	}
 	else {
 
+		// Author signature information (for likes, comments, and retractions of likes or comments,
+		// whether from Diaspora or Friendica) must be placed in the `sign` table before this 
+		// function is called
+		logger('diaspora_send_relay: original author signature not found, cannot send relayable');
+		return;
+/*
 		$itemcontact = q("select * from contact where `id` = %d limit 1",
 			intval($item['contact-id'])
 		);
@@ -2273,6 +2278,7 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 				dbesc($handle)
 			);
 		}
+*/
 	}
 
 	// sign it with the top-level owner's signature
@@ -2306,11 +2312,11 @@ function diaspora_send_retraction($item,$owner,$contact,$public_batch = false) {
 	$a = get_app();
 	$myaddr = $owner['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
 
-	// Check if the retraction is for a top-level post, or whether it's for a comment
-	if( $item['id'] !== $item['parent'] ) {
+	// Check whether the retraction is for a top-level post or whether it's a relayable
+	if( $item['uri'] !== $item['parent-uri'] ) {
 
 		$tpl = get_markup_template('diaspora_relay_retraction.tpl');
-		$target_type = 'Comment';
+		$target_type = (($item['verb'] === ACTIVITY_LIKE) ? 'Like' : 'Comment');
 	}
 	else {
 		
