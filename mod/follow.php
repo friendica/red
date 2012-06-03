@@ -12,7 +12,7 @@ function follow_init(&$a) {
 	}
 
 	$uid = local_user();
-	$url = $orig_url = notags(trim($_REQUEST['url']));
+	$url = notags(trim($_REQUEST['url']));
 	$return_url = $_SESSION['return_url'];
 
 
@@ -23,6 +23,8 @@ function follow_init(&$a) {
 			notice($result['message']);
 		goaway($return_url);
 	}
+
+	info( t('Contact added') . EOL);
 
 	if(strstr($return_url,'contacts'))
 		goaway($a->get_baseurl() . '/contacts/' . $contact_id);
