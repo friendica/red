@@ -262,17 +262,17 @@ function item_post(&$a) {
 		}
 	}
 
-        if(strlen($categories)) {
-	        // get the "fileas" tags for this post
-                $filedas = file_tag_file_to_list($categories, 'file');
+	if(strlen($categories)) {
+		// get the "fileas" tags for this post
+		$filedas = file_tag_file_to_list($categories, 'file');
 	}
-        // save old and new categories, so we can determine what needs to be deleted from pconfig
-        $categories_old = $categories;
-        $categories = file_tag_list_to_file(trim($_REQUEST['category']), 'category');
-        $categories_new = $categories;
-        if(strlen($filedas)) {
-	        // append the fileas stuff to the new categories list
-	        $categories .= file_tag_list_to_file($filedas, 'file');
+	// save old and new categories, so we can determine what needs to be deleted from pconfig
+	$categories_old = $categories;
+	$categories = file_tag_list_to_file(trim($_REQUEST['category']), 'category');
+	$categories_new = $categories;
+	if(strlen($filedas)) {
+		// append the fileas stuff to the new categories list
+		$categories .= file_tag_list_to_file($filedas, 'file');
 	}
 
 	// Work around doubled linefeeds in Tinymce 3.5b2
@@ -453,6 +453,7 @@ function item_post(&$a) {
 
 	$tagged = array();
 
+	$private_forum = false;
 
 	if(count($tags)) {
 		foreach($tags as $tag) {
@@ -471,9 +472,20 @@ function item_post(&$a) {
 				continue;
 
 			$success = handle_tag($a, $body, $inform, $str_tags, (local_user()) ? local_user() : $profile_uid , $tag); 
-			if($success)
+			if($success['replaced'])
 				$tagged[] = $tag;
+			if(is_array($success['contact']) && intval($success['contact']['prv'])) {
+				$private_forum = true;
+				$private_id = $success['contact']['id'];
+			}
 		}
+	}
+
+	if(($private_forum) && (! $parent) && (! $private)) {
+		// we tagged a private forum in a top level post and the message was public.
+		// Restrict it.
+		$private = 1;
+		$str_contact_allow = '<' . $private_id . '>'; 
 	}
 
 	$attachments = '';
@@ -725,16 +737,16 @@ function item_post(&$a) {
 				if($datarray['verb'] === ACTIVITY_LIKE) 
 					$signed_text = $datarray['guid'] . ';' . 'Post' . ';' . $parent_item['guid'] . ';' . 'true' . ';' . $myaddr;
 				else
-			    	$signed_text = $datarray['guid'] . ';' . $parent_item['guid'] . ';' . $signed_body . ';' . $myaddr;
+					$signed_text = $datarray['guid'] . ';' . $parent_item['guid'] . ';' . $signed_body . ';' . $myaddr;
 
 				$authorsig = base64_encode(rsa_sign($signed_text,$a->user['prvkey'],'sha256'));
 
 				q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
 					intval($post_id),
-            		dbesc($signed_text),
-            		dbesc(base64_encode($authorsig)),
-            		dbesc($myaddr)
-        		);
+					dbesc($signed_text),
+					dbesc(base64_encode($authorsig)),
+					dbesc($myaddr)
+				);
 			}
 		}
 		else {
@@ -893,6 +905,7 @@ function item_content(&$a) {
 function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 
 	$replaced = false;
+	$r = null;
 
 	//is it a hash tag? 
 	if(strpos($tag,'#') === 0) {
@@ -1023,5 +1036,5 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 		}
 	}
 
-	return $replaced;	
+	return array('replaced' => $replaced, 'contact' => $r[0]);	
 }

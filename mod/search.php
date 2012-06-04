@@ -110,15 +110,16 @@ function search_content(&$a) {
 
 	if (get_config('system','use_fulltext_engine')) {
 		if($tag)
-			$sql_extra = sprintf(" AND MATCH (`item`.`tag`) AGAINST ('".'"%s"'."' in boolean mode) ", '#'.preg_quote($search));
+			$sql_extra = sprintf(" AND MATCH (`item`.`tag`) AGAINST ('".'"%s"'."' in boolean mode) ", '#'.dbesc(protect_sprintf($search)));
 		else
-			$sql_extra = sprintf(" AND MATCH (`item`.`body`) AGAINST ('".'"%s"'."' in boolean mode) ", dbesc(preg_quote($search)));
+			$sql_extra = sprintf(" AND MATCH (`item`.`body`) AGAINST ('".'"%s"'."' in boolean mode) ", dbesc(protect_sprintf($search)));
 	} else {
 		if($tag)
-			$sql_extra = sprintf(" AND `item`.`tag` REGEXP '%s' ", 	dbesc('\\]' . preg_quote($search) . '\\['));
+			$sql_extra = sprintf(" AND `item`.`tag` REGEXP '%s' ", 	dbesc('\\]' . protect_sprintf(preg_quote($search)) . '\\['));
 		else
-			$sql_extra = sprintf(" AND `item`.`body` REGEXP '%s' ", dbesc(preg_quote($search)));
+			$sql_extra = sprintf(" AND `item`.`body` REGEXP '%s' ", dbesc(protect_sprintf(preg_quote($search))));
 	}
+
 
 
 
@@ -145,7 +146,7 @@ function search_content(&$a) {
 	}
 
 	$r = q("SELECT distinct(`item`.`uri`), `item`.*, `item`.`id` AS `item_id`, 
-		`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
+		`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`alias`, `contact`.`rel`,
 		`contact`.`network`, `contact`.`thumb`, `contact`.`self`, `contact`.`writable`, 
 		`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`,
 		`user`.`nickname`

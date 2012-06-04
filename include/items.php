@@ -180,6 +180,10 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 	foreach($items as $item) {
 
+		// prevent private email from leaking.
+		if($item['network'] === NETWORK_MAIL)
+			continue;
+
 		// public feeds get html, our own nodes use bbcode
 
 		if($public_feed) {
@@ -1063,9 +1067,6 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 
 	$a = get_app();
 
-//	if((! strlen($contact['issued-id'])) && (! $contact['duplex']) && (! ($owner['page-flags'] == PAGE_COMMUNITY)))
-//		return 3;
-
 	$idtosend = $orig_id = (($contact['dfrn-id']) ? $contact['dfrn-id'] : $contact['issued-id']);
 
 	if($contact['duplex'] && $contact['dfrn-id'])
@@ -1130,6 +1131,9 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	$rino_allowed = ((intval($res->rino) === 1) ? 1 : 0);
 	$page         = (($owner['page-flags'] == PAGE_COMMUNITY) ? 1 : 0);
 
+	if($owner['page-flags'] == PAGE_PRVGROUP)
+		$page = 2;
+
 	$final_dfrn_id = '';
 
 	if($perm) {
@@ -1183,7 +1187,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	$postvars['ssl_policy'] = $ssl_policy;
 
 	if($page)
-		$postvars['page'] = '1';
+		$postvars['page'] = $page;
 	
 	if($rino && $rino_allowed && (! $dissolve)) {
 		$key = substr(random_string(),0,16);
@@ -2931,10 +2935,10 @@ function fix_private_photos($s,$uid, $item = null, $cid = 0) {
 	$a = get_app();
 
 	logger('fix_private_photos', LOGGER_DEBUG);
-	$site = substr($a->get_baseurl(),strpos($a->get_baseurl,'://'));
+	$site = substr($a->get_baseurl(),strpos($a->get_baseurl(),'://'));
 
-	if(preg_match("/\[img\](.*?)\[\/img\]/is",$s,$matches)) {
-		$image = $matches[1];
+	if(preg_match("/\[img(.*?)\](.*?)\[\/img\]/is",$s,$matches)) {
+		$image = $matches[2];
 		logger('fix_private_photos: found photo ' . $image, LOGGER_DEBUG);
 		if(stristr($image , $site . '/photo/')) {
 			$replace = false;
@@ -3274,7 +3278,42 @@ function drop_item($id,$interactive = true) {
 				q("UPDATE `item` SET `last-child` = 1 WHERE `id` = %d LIMIT 1",
 					intval($r[0]['id'])
 				);
-			}	
+			}
+
+			// Add a relayable_retraction signature for Diaspora. Note that we can't add a target_author_signature
+			// if the comment was deleted by a remote user. That should be ok, because if a remote user is deleting
+			// the comment, that means we're the home of the post, and Diaspora will only
+			// check the parent_author_signature of retractions that it doesn't have to relay further
+			//
+			// I don't think this function gets called for an "unlike," but I'll check anyway
+			$signed_text = $item['guid'] . ';' . ( ($item['verb'] === ACTIVITY_LIKE) ? 'Like' : 'Comment');
+
+			if(local_user() == $item['uid']) {
+
+				$handle = $a->user['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+				$authorsig = base64_encode(rsa_sign($signed_text,$a->user['prvkey'],'sha256'));
+			}
+			else {
+				$r = q("SELECT `nick`, `url` FROM `contact` WHERE `id` = '%d' LIMIT 1",
+					$item['contact-id']
+				);
+				if(count($r)) {
+					// The below handle only works for NETWORK_DFRN. I think that's ok, because this function
+					// only handles DFRN deletes
+					$handle_baseurl_start = strpos($r['url'],'://') + 3;
+					$handle_baseurl_length = strpos($r['url'],'/profile') - $handle_baseurl_start;
+					$handle = $r['nick'] . '@' . substr($r['url'], $handle_baseurl_start, $handle_baseurl_length);
+					$authorsig = '';
+				}
+			}
+
+			if(isset($handle))
+				q("insert into sign (`retract_iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+					intval($item['id']),
+					dbesc($signed_text),
+					dbesc($authorsig),
+					dbesc($handle)
+				);
 		}
 		$drop_id = intval($item['id']);
 

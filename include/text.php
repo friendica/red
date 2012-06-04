@@ -742,6 +742,8 @@ function smilies($s, $sample = false) {
 		':homebrew', 
 		':coffee', 
 		':facepalm',
+		':like',
+		':dislike',
 		'~friendika', 
 		'~friendica'
 
@@ -778,6 +780,8 @@ function smilies($s, $sample = false) {
 		'<img src="' . $a->get_baseurl() . '/images/beer_mug.gif" alt=":homebrew" />',
 		'<img src="' . $a->get_baseurl() . '/images/coffee.gif" alt=":coffee" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-facepalm.gif" alt=":facepalm" />',
+		'<img src="' . $a->get_baseurl() . '/images/like.gif" alt=":like" />',
+		'<img src="' . $a->get_baseurl() . '/images/dislike.gif" alt=":dislike" />',
 		'<a href="http://project.friendika.com">~friendika <img src="' . $a->get_baseurl() . '/images/friendika-16.png" alt="~friendika" /></a>',
 		'<a href="http://friendica.com">~friendica <img src="' . $a->get_baseurl() . '/images/friendica-16.png" alt="~friendica" /></a>'
 	);
@@ -886,6 +890,7 @@ function prepare_body($item,$attach = false) {
 		}
 	} else
 		$s = prepare_text($item['body']);
+
 
 	$prep_arr = array('item' => $item, 'html' => $s);
 	call_hooks('prepare_body', $prep_arr);

@@ -244,7 +244,7 @@ function timesel($pre,$h,$m) {
 // Limited to range of timestamps
 
 if(! function_exists('relative_date')) {
-function relative_date($posted_date) {
+function relative_date($posted_date,$format = null) {
 
 	$localtime = datetime_convert('UTC',date_default_timezone_get(),$posted_date); 
 
@@ -274,7 +274,9 @@ function relative_date($posted_date) {
 		if ($d >= 1) {
 			$r = round($d);
 			// translators - e.g. 22 hours ago, 1 minute ago
-			return sprintf( t('%1$d %2$s ago'),$r, (($r == 1) ? $str[0] : $str[1]));
+			if(! $format)
+				$format = t('%1$d %2$s ago');
+			return sprintf( $format,$r, (($r == 1) ? $str[0] : $str[1]));
         }
     }
 }}

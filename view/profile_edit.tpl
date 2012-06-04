@@ -97,6 +97,12 @@ $hide_friends
 </div>
 <div id="profile-edit-region-end"></div>
 
+<div id="profile-edit-hometown-wrapper" >
+<label id="profile-edit-hometown-label" for="profile-edit-hometown" >$lbl_hometown </label>
+<input type="text" size="32" name="hometown" id="profile-edit-hometown" value="$hometown" />
+</div>
+<div id="profile-edit-hometown-end"></div>
+
 <div class="profile-edit-submit-wrapper" >
 <input type="submit" name="submit" class="profile-edit-submit-button" value="$submit" />
 </div>
@@ -108,6 +114,9 @@ $marital
 </div>
 <label id="profile-edit-with-label" for="profile-edit-with" > $lbl_with </label>
 <input type="text" size="32" name="with" id="profile-edit-with" title="$lbl_ex1" value="$with" />
+<label id="profile-edit-howlong-label" for="profile-edit-howlong" > $lbl_howlong </label>
+<input type="text" size="32" name="howlong" id="profile-edit-howlong" title="$lbl_howlong" value="$howlong" />
+
 <div id="profile-edit-marital-end"></div>
 
 <div id="profile-edit-sexual-wrapper" >

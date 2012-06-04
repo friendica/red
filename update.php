@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1144 );
+define( 'UPDATE_VERSION' , 1148 );
 
 /**
  *
@@ -1253,5 +1253,33 @@ function update_1143() {
 	return UPDATE_SUCCESS ;
 }
 
+function update_1144() {
+	$r = q("alter table contact add prv tinyint(1) not null default '0' after forum");
+	if(! $r)
+		return UPDATE_FAILED ;
+	return UPDATE_SUCCESS ;
+}
 
+function update_1145() {
+	$r = q("alter table profile add howlong datetime not null default '0000-00-00 00:00:00' after `with`");
+	if(! $r)
+		return UPDATE_FAILED ;
+	return UPDATE_SUCCESS ;
+}
+
+function update_1146() {
+	$r = q("alter table profile add hometown char(255) not null after `country-name`, add index ( `hometown` ) ");
+	if(! $r)
+		return UPDATE_FAILED ;
+	return UPDATE_SUCCESS ;
+}
+
+function update_1147() {
+	$r1 = q("ALTER TABLE `sign` ALTER `iid` SET DEFAULT '0'");
+	$r2 = q("ALTER TABLE `sign` ADD `retract_iid` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `iid`");
+	$r3 = q("ALTER TABLE `sign` ADD INDEX ( `retract_iid` )");  
+	if((! $r1) || (! $r2) || (! $r3))
+		return UPDATE_FAILED ;
+	return UPDATE_SUCCESS ;
+}
 
