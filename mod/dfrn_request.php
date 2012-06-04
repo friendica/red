@@ -68,7 +68,7 @@ function dfrn_request_post(&$a) {
 			$dfrn_url    = notags(trim($_POST['dfrn_url']));
 			$aes_allow   = (((x($_POST,'aes_allow')) && ($_POST['aes_allow'] == 1)) ? 1 : 0);
 			$confirm_key = ((x($_POST,'confirm_key')) ? $_POST['confirm_key'] : "");
-
+			$hidden = ((x($_POST,'hidden-contact')) ? intval($_POST['hidden-contact']) : 0);
 			$contact_record = null;
 	
 			if(x($dfrn_url)) {
@@ -98,8 +98,9 @@ function dfrn_request_post(&$a) {
 				}
 	
 				if(is_array($contact_record)) {
-					$r = q("UPDATE `contact` SET `ret-aes` = %d WHERE `id` = %d LIMIT 1",
+					$r = q("UPDATE `contact` SET `ret-aes` = %d, hidden = %d WHERE `id` = %d LIMIT 1",
 						intval($aes_allow),
+						intval($hidden),
 						intval($contact_record['id'])
 					);
 				}
@@ -144,8 +145,8 @@ function dfrn_request_post(&$a) {
 					 */
 
 					$r = q("INSERT INTO `contact` ( `uid`, `created`,`url`, `nurl`, `name`, `nick`, `photo`, `site-pubkey`,
-						`request`, `confirm`, `notify`, `poll`, `poco`, `network`, `aes_allow`) 
-						VALUES ( %d, '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d)",
+						`request`, `confirm`, `notify`, `poll`, `poco`, `network`, `aes_allow`, `hidden`) 
+						VALUES ( %d, '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d)",
 						intval(local_user()),
 						datetime_convert(),
 						dbesc($dfrn_url),
@@ -160,7 +161,8 @@ function dfrn_request_post(&$a) {
 						$parms['dfrn-poll'],
 						$parms['dfrn-poco'],
 						dbesc(NETWORK_DFRN),
-						intval($aes_allow)
+						intval($aes_allow),
+						intval($hidden)
 					);
 				}
 
@@ -369,6 +371,14 @@ function dfrn_request_post(&$a) {
 			);
 			if(count($r)) {
 				$contact_id = $r[0]['id'];
+
+				$g = q("select def_gid from user where uid = %d limit 1",
+					intval($uid)
+				);
+				if($g && intval($g[0]['def_gid'])) {
+					require_once('include/group.php');
+					group_add_member($uid,'',$contact_id,$g[0]['def_gid']);
+				}
 
 				$photo = avatar_img($addr);
 
@@ -641,6 +651,8 @@ function dfrn_request_content(&$a) {
 		$o  = replace_macros($tpl,array(
 			'$dfrn_url' => $dfrn_url,
 			'$aes_allow' => (($aes_allow) ? '<input type="hidden" name="aes_allow" value="1" />' : "" ),
+			'$hidethem' => t('Hide this contact'),
+			'$hidechecked' => '',
 			'$confirm_key' => $confirm_key,
 			'$welcome' => sprintf( t('Welcome home %s.'), $a->user['username']),
 			'$please' => sprintf( t('Please confirm your introduction/connection request to %s.'), $dfrn_url),
@@ -672,7 +684,7 @@ function dfrn_request_content(&$a) {
 			$auto_confirm = false;
 
 			if(count($r)) {
-				if($r[0]['page-flags'] != PAGE_NORMAL)
+				if(($r[0]['page-flags'] != PAGE_NORMAL) && ($r[0]['page-flags'] != PAGE_PRVGROUP))
 					$auto_confirm = true;				
 
 				if(! $auto_confirm) {

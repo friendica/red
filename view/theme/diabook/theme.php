@@ -14,10 +14,15 @@ function diabook_init(&$a) {
 	
 //print diabook-version for debugging
 $diabook_version = "Diabook (Version: 1.027)";
-$a->page['htmlhead'] .= sprintf('<META NAME="theme" CONTENT="%s"/>', $diabook_version);
+$a->page['htmlhead'] .= sprintf('<META NAME=generator CONTENT="%s"/>', $diabook_version);
 
 //init css on network and profilepages
 $cssFile = null;
+
+// Preload config
+load_config("diabook");
+load_pconfig(local_user(), "diabook");
+
 //get statuses of boxes at right-hand-column
 $close_pages = false;
 $site_close_pages = get_config("diabook", "close_pages" );
@@ -167,38 +172,38 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	//write js-scripts to the head-section:
 	//load jquery.cookie.js
 	$cookieJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.cookie.js";
-	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s"></script>', $cookieJS);
+	$a->page['htmlhead'] .= sprintf('<script type="text/javascript" src="%s"></script>', $cookieJS);
 	//load jquery.ae.image.resize.js
 	$imageresizeJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.ae.image.resize.min.js";
-	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $imageresizeJS);
+	$a->page['htmlhead'] .= sprintf('<script type="text/javascript" src="%s" ></script>', $imageresizeJS);
 	//load jquery.ui.js
 	if($ccCookie != "10") {
 	$jqueryuiJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery-ui-1.8.20.custom.min.js";
-	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $jqueryuiJS);
+	$a->page['htmlhead'] .= sprintf('<script type="text/javascript" src="%s" ></script>', $jqueryuiJS);
 	$jqueryuicssJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/jquery-ui-1.8.20.custom.css";
 	$a->page['htmlhead'] .= sprintf('<link rel="stylesheet" type="text/css" href="%s" />', $jqueryuicssJS);
 	}	
 	//load jquery.twitter.search.js
 	if($close_twitter != "1") {
 	$twitterJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.twitter.search.js";
-	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $twitterJS);
+	$a->page['htmlhead'] .= sprintf('<script type="text/javascript" src="%s" ></script>', $twitterJS);
 	}
 	//load jquery.mapquery.js
 	if($close_mapquery != "1") {
 	$mqtmplJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.tmpl.js";
-	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mqtmplJS);
+	$a->page['htmlhead'] .= sprintf('<script type="text/javascript" src="%s" ></script>', $mqtmplJS);
 	$mapqueryJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mapquery.core.js";
-	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mapqueryJS);
+	$a->page['htmlhead'] .= sprintf('<script type="text/javascript" src="%s" ></script>', $mapqueryJS);
 	$openlayersJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/OpenLayers.js";
-	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $openlayersJS);
+	$a->page['htmlhead'] .= sprintf('<script type="text/javascript" src="%s" ></script>', $openlayersJS);
 	$mqmouseposJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mapquery.mqMousePosition.js";
-	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mqmouseposJS);
+	$a->page['htmlhead'] .= sprintf('<script type="text/javascript" src="%s" ></script>', $mqmouseposJS);
 	$mousewheelJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mousewheel.js";
-	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mousewheelJS);
+	$a->page['htmlhead'] .= sprintf('<script type="text/javascript" src="%s" ></script>', $mousewheelJS);
    $mqlegendJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mapquery.legend.js";
-	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mqlegendJS);
+	$a->page['htmlhead'] .= sprintf('<script type="text/javascript" src="%s" ></script>', $mqlegendJS);
 	$mqlayermanagerJS = $a->get_baseurl($ssl_state)."/view/theme/diabook/js/jquery.mapquery.mqLayerManager.js";
-	$a->page['htmlhead'] .= sprintf('<script language="JavaScript" src="%s" ></script>', $mqlayermanagerJS);
+	$a->page['htmlhead'] .= sprintf('<script type="text/javascript" src="%s" ></script>', $mqlayermanagerJS);
 	}
 	
 	$a->page['htmlhead'] .= '
@@ -236,7 +241,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 		$a->page['htmlhead'] .= '
 		<script>
 		
-    $(document).ready(function() {
+    $(function() {
     $("#map").mapQuery({
         layers:[{         //add layers to your map; you need to define at least one to be able to see anything on the map
             type:"osm"  //add a layer of the type osm (OpenStreetMap)
@@ -307,13 +312,12 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	//check if community_home-plugin is activated and change css.. we need this, that the submit-wrapper doesn't overlay the login-panel if communityhome-plugin is active
 	$nametocheck = "communityhome";
 	$r = q("select id from addon where name = '%s' and installed = 1", dbesc($nametocheck));
-	if(count($r) == "1") {
+	if(count($r) == "1" && $a->argv[0] === "home" ) {
 	
 	$a->page['htmlhead'] .= '
 	<script>
-	$(document).ready(function() {
+	$(function() {
 	$("div#login-submit-wrapper").attr("style","padding-top: 120px;");
-	
 	});
 	</script>';	
 	}

@@ -125,6 +125,7 @@ function notifier_run($argv, $argc){
 		$uid = $r[0]['uid'];
 		$updated = $r[0]['edited'];
 
+		// The following seems superfluous. We've already checked for "if (! intval($r[0]['parent']))" a few lines up
 		if(! $parent_id)
 			return;
 
@@ -220,7 +221,7 @@ function notifier_run($argv, $argc){
 		}
 
 
-		if(($cmd === 'uplink') && (intval($parent['forum_mode'])) && (! $top_level)) {
+		if(($cmd === 'uplink') && (intval($parent['forum_mode']) == 1) && (! $top_level)) {
 			$relay_to_owner = true;			
 		} 
 
@@ -265,10 +266,10 @@ function notifier_run($argv, $argc){
 			$deny_people  = expand_acl($parent['deny_cid']);
 			$deny_groups  = expand_groups(expand_acl($parent['deny_gid']));
 
-			// if our parent is a forum, uplink to the origional author causing
-			// a delivery fork
+			// if our parent is a public forum (forum_mode == 1), uplink to the origional author causing
+			// a delivery fork. private groups (forum_mode == 2) do not uplink
 
-			if(intval($parent['forum_mode']) && (! $top_level) && ($cmd !== 'uplink')) {
+			if((intval($parent['forum_mode']) == 1) && (! $top_level) && ($cmd !== 'uplink')) {
 				proc_run('php','include/notifier','uplink',$item_id);
 			}
 
@@ -345,7 +346,7 @@ function notifier_run($argv, $argc){
 	if($mail) {
 		$public_message = false;  // mail is  not public
 
-		$body = fix_private_photos($item['body'],$owner['uid']);
+		$body = fix_private_photos($item['body'],$owner['uid'],null,$message[0]['contact-id']);
 
 		$atom .= replace_macros($mail_template, array(
 			'$name'         => xmlify($owner['name']),
@@ -478,17 +479,42 @@ function notifier_run($argv, $argc){
 			}
 		}
 
-		foreach($r as $contact) {
+
+		// This controls the number of deliveries to execute with each separate delivery process.
+		// By default we'll perform one delivery per process. Assuming a hostile shared hosting
+		// provider, this provides the greatest chance of deliveries if processes start getting 
+		// killed. We can also space them out with the delivery_interval to also help avoid them 
+		// getting whacked.
+
+		// If $deliveries_per_process > 1, we will chain this number of multiple deliveries 
+		// together into a single process. This will reduce the overall number of processes 
+		// spawned for each delivery, but they will run longer. 
+
+		$deliveries_per_process = intval(get_config('system','delivery_batch_count'));
+		if($deliveries_per_process <= 0)
+			$deliveries_per_process = 1;
+
+		$this_batch = array();
+
+		for($x = 0; $x < count($r); $x ++) {
+			$contact = $r[$x];
+
 			if($contact['self'])
 				continue;
 
 			// potentially more than one recipient. Start a new process and space them out a bit.
-			// we will deliver single recipient types of message and email receipients here. 
-
+			// we will deliver single recipient types of message and email recipients here. 
+		
 			if((! $mail) && (! $fsuggest) && (! $followup)) {
-				proc_run('php','include/delivery.php',$cmd,$item_id,$contact['id']);
-				if($interval)
-					@time_sleep_until(microtime(true) + (float) $interval);
+
+				$this_batch[] = $contact['id'];
+
+				if(count($this_batch) == $deliveries_per_process) {
+					proc_run('php','include/delivery.php',$cmd,$item_id,$this_batch);
+					$this_batch = array();
+					if($interval)
+						@time_sleep_until(microtime(true) + (float) $interval);
+				}
 				continue;
 			}
 
@@ -571,7 +597,7 @@ function notifier_run($argv, $argc){
 					break;
 				case NETWORK_OSTATUS:
 
-					// Do not send to otatus if we are not configured to send to public networks
+					// Do not send to ostatus if we are not configured to send to public networks
 					if($owner['prvnets'])
 						break;
 					if(get_config('system','ostatus_disabled') || get_config('system','dfrn_only'))
@@ -712,18 +738,19 @@ function notifier_run($argv, $argc){
 						// unsupported
 						break;
 					}
-					elseif(($target_item['deleted']) && ($target_item['verb'] !== ACTIVITY_LIKE)) {
-						// diaspora delete, 
+					elseif(($target_item['deleted']) && (($target_item['uri'] === $target_item['parent-uri']) || $followup)) {
+						// send both top-level retractions and relayable retractions for owner to relay
 						diaspora_send_retraction($target_item,$owner,$contact);
 						break;
 					}
 					elseif($followup) {
-						// send comments, likes and retractions of likes to owner to relay
+						// send comments and likes to owner to relay
 						diaspora_send_followup($target_item,$owner,$contact);
 						break;
 					}
-					elseif($target_item['parent'] != $target_item['id']) {
-						// we are the relay - send comments, likes and unlikes to our conversants
+					elseif($target_item['uri'] !== $target_item['parent-uri']) {
+						// we are the relay - send comments, likes and relayable_retractions
+						// (of comments and likes) to our conversants
 						diaspora_send_relay($target_item,$owner,$contact);
 						break;
 					}
@@ -831,6 +858,13 @@ function notifier_run($argv, $argc){
 			}
 		}
 
+	}
+
+	// If the item was deleted, clean up the `sign` table
+	if($target_item['deleted']) {
+		$r = q("DELETE FROM sign where `retract_iid` = %d",
+			intval($target_item['id'])
+		);
 	}
 
 	logger('notifier: calling hooks', LOGGER_DEBUG);

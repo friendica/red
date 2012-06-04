@@ -71,20 +71,24 @@ function poco_load($cid,$uid = 0,$zcid = 0,$url = null) {
 
 		$name = $entry->displayName;
 
-		foreach($entry->urls as $url) {
-			if($url->type == 'profile') {
-				$profile_url = $url->value;
-				continue;
+		if(isset($entry->urls)) {
+			foreach($entry->urls as $url) {
+				if($url->type == 'profile') {
+					$profile_url = $url->value;
+					continue;
+				}
+				if($url->type == 'webfinger') {
+					$connect_url = str_replace('acct:' , '', $url->value);
+					continue;
+				}
 			}
-			if($url->type == 'webfinger') {
-				$connect_url = str_replace('acct:' , '', $url->value);
-				continue;
-			}
-		} 
-		foreach($entry->photos as $photo) {
-			if($photo->type == 'profile') {
-				$profile_photo = $photo->value;
-				continue;
+		}
+		if(isset($entry->photos)) { 
+			foreach($entry->photos as $photo) {
+				if($photo->type == 'profile') {
+					$profile_photo = $photo->value;
+					continue;
+				}
 			}
 		}
 

@@ -62,9 +62,15 @@ function profiles_post(&$a) {
 		$pub_keywords = notags(trim($_POST['pub_keywords']));
 		$prv_keywords = notags(trim($_POST['prv_keywords']));
 		$marital = notags(trim($_POST['marital']));
+		$howlong = notags(trim($_POST['howlong']));
 
 		$with = ((x($_POST,'with')) ? notags(trim($_POST['with'])) : '');
 
+		if(! strlen($howlong))
+			$howlong = '0000-00-00 00:00:00';
+		else
+			$howlong = datetime_convert(date_default_timezone_get(),'UTC',$howlong);
+ 
 		// linkify the relationship target if applicable
 
 		$withchanged = false;
@@ -120,6 +126,7 @@ function profiles_post(&$a) {
 
 		$sexual = notags(trim($_POST['sexual']));
 		$homepage = notags(trim($_POST['homepage']));
+		$hometown = notags(trim($_POST['hometown']));
 		$politic = notags(trim($_POST['politic']));
 		$religion = notags(trim($_POST['religion']));
 
@@ -146,7 +153,7 @@ function profiles_post(&$a) {
 				$value = $marital;
 			}
 			if($withchanged) {
-				$changes[] = '&hearts; ' . t('Romantic Partner');
+				$changes[] = '[color=#ff0000]&hearts;[/color] ' . t('Romantic Partner');
 				$value = strip_tags($with);
 			}							
 			if($work != $orig[0]['work']) {
@@ -176,9 +183,18 @@ function profiles_post(&$a) {
 				$changes[] = t('Interests');
 				$value = $interest;
 			}
-			if($address != $orig[0]['address'] || $locality != $orig[0]['locality'] || $region != $orig[0]['region']
+			if($address != $orig[0]['address']) {
+				$changes[] = t('Address');
+				// New address not sent in notifications, potential privacy issues
+				// in case this leaks to unintended recipients. Yes, it's in the public
+				// profile but that doesn't mean we have to broadcast it to everybody.
+			}
+			if($locality != $orig[0]['locality'] || $region != $orig[0]['region']
 				|| $country_name != $orig[0]['country-name']) {
  				$changes[] = t('Location');
+				$comma1 = ((($locality) && ($region || $country_name)) ? ', ' : ' ');
+				$comma2 = (($region && $country_name) ? ', ' : '');
+				$value = $locality . $comma1 . $region . $comma2 . $country_name;
 			}
 
 			profile_activity($changes,$value);
@@ -198,8 +214,10 @@ function profiles_post(&$a) {
 			`country-name` = '%s',
 			`marital` = '%s',
 			`with` = '%s',
+			`howlong` = '%s',
 			`sexual` = '%s',
 			`homepage` = '%s',
+			`hometown` = '%s',
 			`politic` = '%s',
 			`religion` = '%s',
 			`pub_keywords` = '%s',
@@ -228,8 +246,10 @@ function profiles_post(&$a) {
 			dbesc($country_name),
 			dbesc($marital),
 			dbesc($with),
+			dbesc($howlong),
 			dbesc($sexual),
 			dbesc($homepage),
+			dbesc($hometown),
 			dbesc($politic),
 			dbesc($religion),
 			dbesc($pub_keywords),
@@ -329,7 +349,7 @@ function profile_activity($changed, $value) {
 
 	if($t == 1 && strlen($value)) {
 		$message = sprintf( t('%1$s changed %2$s to &ldquo;%3$s&rdquo;'), $A, $changes, $value);
-		$message .= "\n\n" . sprintf( t(" - Visit %1$s\'s %2$s"), $A, $prof);
+		$message .= "\n\n" . sprintf( t(' - Visit %1$s\'s %2$s'), $A, $prof);
 	}
 	else
 		$message = 	sprintf( t('%1$s has an updated %2$s, changing %3$s.'), $A, $prof, $changes);
@@ -549,8 +569,10 @@ function profiles_content(&$a) {
 			'$lbl_marital' => t('<span class="heart">&hearts;</span> Marital Status:'),
 			'$lbl_with' => t("Who: \x28if applicable\x29"),
 			'$lbl_ex1' => t('Examples: cathy123, Cathy Williams, cathy@example.com'),
+			'$lbl_howlong' => t('Since [date]:'),
 			'$lbl_sexual' => t('Sexual Preference:'),
 			'$lbl_homepage' => t('Homepage URL:'),
+			'$lbl_hometown' => t('Hometown:'),
 			'$lbl_politic' => t('Political Views:'),
 			'$lbl_religion' => t('Religious Views:'),
 			'$lbl_pubkey' => t('Public Keywords:'),
@@ -586,9 +608,11 @@ function profiles_content(&$a) {
 			'$gender' => gender_selector($r[0]['gender']),
 			'$marital' => marital_selector($r[0]['marital']),
 			'$with' => strip_tags($r[0]['with']),
+			'$howlong' => ($r[0]['howlong'] === '0000-00-00 00:00:00' ? '' : datetime_convert('UTC',date_default_timezone_get(),$r[0]['howlong'])),
 			'$sexual' => sexpref_selector($r[0]['sexual']),
 			'$about' => $r[0]['about'],
 			'$homepage' => $r[0]['homepage'],
+			'$hometown' => $r[0]['hometown'],
 			'$politic' => $r[0]['politic'],
 			'$religion' => $r[0]['religion'],
 			'$pub_keywords' => $r[0]['pub_keywords'],

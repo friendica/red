@@ -16,8 +16,13 @@ $(document).ready(function() {
     });
     
     $("div#pause").attr("style", "position: fixed;bottom: 43px;left: 5px;");
-    $(".autocomplete").attr("style", "width: 350px;color: black;background: white;cursor: pointer;text-align: left;max-height: 350px;overflow: auto;");
-
+    $("div#pause").html("<img src='images/pause.gif' alt='pause' title='pause live-updates (ctrl+space)' style='border: 1px solid black;opacity: 0.2;'>");
+    $(document).keydown(function(event) {
+    if (!$("div#pause").html()){
+    $("div#pause").html("<img src='images/pause.gif' alt='pause' title='pause live-updates (ctrl+space)' style='border: 1px solid black;opacity: 0.2;'>");
+		}});  
+    $(".autocomplete").attr("style", "width: 350px;color: black;border: 1px solid #D2D2D2;background: white;cursor: pointer;text-align: left;max-height: 350px;overflow: auto;");
+	 
 	});
 	
 	$(document).ready(function(){
@@ -123,4 +128,6 @@ $(document).ready(function() {
 	function cmtBbClose(id) {
 	$(".comment-edit-bb-" + id).hide();
 	}
+
+	
 </script>

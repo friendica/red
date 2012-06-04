@@ -108,6 +108,10 @@ function network_content(&$a, $update = 0) {
     	return login(false);
 	}
 
+	$arr = array('query' => $a->query_string);
+
+	call_hooks('network_content_init', $arr);
+
 	$o = '';
 
 	// item filter tabs
@@ -157,7 +161,7 @@ function network_content(&$a, $update = 0) {
 			$all_active = 'active';
 	}
 
-
+	
 	$postord_active = '';
 
 	if($all_active && x($_GET,'order') && $_GET['order'] !== 'comment') {
@@ -398,10 +402,22 @@ function network_content(&$a, $update = 0) {
 
 	if(x($_GET,'search')) {
 		$search = escape_tags($_GET['search']);
-		$sql_extra .= sprintf(" AND ( `item`.`body` like '%s' OR `item`.`tag` like '%s' ) ",
-			dbesc(protect_sprintf('%' . $search . '%')),
-			dbesc(protect_sprintf('%]' . $search . '[%'))
-		);
+		if (get_config('system','use_fulltext_engine')) {
+			if(strpos($search,'#') === 0)
+				$sql_extra .= sprintf(" AND (MATCH(tag) AGAINST ('".'"%s"'."' in boolean mode)) ",
+					dbesc(protect_sprintf($search))
+				);
+			else
+				$sql_extra .= sprintf(" AND (MATCH(`item`.`body`) AGAINST ('".'"%s"'."' in boolean mode) or MATCH(tag) AGAINST ('".'"%s"'."' in boolean mode)) ",
+					dbesc(protect_sprintf($search)),
+					dbesc(protect_sprintf($search))
+				);
+		} else {
+			$sql_extra .= sprintf(" AND ( `item`.`body` like '%s' OR `item`.`tag` like '%s' ) ",
+					dbesc(protect_sprintf('%' . $search . '%')),
+					dbesc(protect_sprintf('%]' . $search . '[%'))
+			);
+		}
 	}
 	if(strlen($file)) {
 		$sql_extra .= file_tag_file_query('item',unxmlify($file));
@@ -410,15 +426,22 @@ function network_content(&$a, $update = 0) {
 	if($conv) {
 		$myurl = $a->get_baseurl() . '/profile/'. $a->user['nickname'];
 		$myurl = substr($myurl,strpos($myurl,'://')+3);
-		$myurl = str_replace(array('www.','.'),array('','\\.'),$myurl);
+		$myurl = str_replace('www.','',$myurl);
 		$diasp_url = str_replace('/profile/','/u/',$myurl);
-		$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where ( `author-link` like '%s' or `tag` like '%s' or tag like '%s' )) ",
-			dbesc(protect_sprintf('%s' . $myurl)),
-			dbesc(protect_sprintf('%' . $myurl . '\\]%')),
-			dbesc(protect_sprintf('%' . $diasp_url . '\\]%'))
-		);
-	}
+		if (get_config('system','use_fulltext_engine'))
+			$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where (MATCH(`author-link`) AGAINST ('".'"%s"'."' in boolean mode) or MATCH(`tag`) AGAINST ('".'"%s"'."' in boolean mode) or MATCH(tag) AGAINST ('".'"%s"'."' in boolean mode))) ",
+				dbesc(protect_sprintf($myurl)),
+				dbesc(protect_sprintf($myurl)),
+				dbesc(protect_sprintf($diasp_url))
+			);
+		else
+			$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where ( `author-link` like '%s' or `tag` like '%s' or tag like '%s' )) ",
+				dbesc(protect_sprintf('%' . $myurl)),
+				dbesc(protect_sprintf('%' . $myurl . ']%')),
+				dbesc(protect_sprintf('%' . $diasp_url . ']%'))
+			);
 
+	}
 
 	if($update) {
 
@@ -511,7 +534,7 @@ function network_content(&$a, $update = 0) {
 			$parents_str = implode(', ', $parents_arr);
 
 			$items = q("SELECT `item`.*, `item`.`id` AS `item_id`,
-				`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`, `contact`.`writable`,
+				`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`alias`, `contact`.`rel`, `contact`.`writable`,
 				`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
 				`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 				FROM `item`, `contact`

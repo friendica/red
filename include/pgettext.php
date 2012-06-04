@@ -15,10 +15,10 @@
  */
 
 
-if(! function_exists('get_language')) {
-function get_language() {
+if(! function_exists('get_browser_language')) {
+function get_browser_language() {
 
-	if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+	if (x($_SERVER,'HTTP_ACCEPT_LANGUAGE')) {
 	    // break up string into pieces (languages and q factors)
     	preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', 
 			$_SERVER['HTTP_ACCEPT_LANGUAGE'], $lang_parse);

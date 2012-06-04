@@ -24,16 +24,23 @@
 @menu_bg_colour: #555753;
 
 //* font colour, aka color: */
-@lt_main_colour: #ffff99;
+@lt_main_colour: lighten(@bg_colour, 10%);
 @main_colour: #111;
+@dk_main_colour: darken(@bg_colour, 10%);
 @main_alt_colour: #999999;
+// darken(@main_alt_colour, 6.5%) > #888888
+// //#9eabb0
 // darken(@main_alt_colour, 10%) > #777777
 // darken(@main_alt_colour, 20%) > #666666
 // darken(@main_alt_colour, 26.8%) > #555555
 // darken(@main_alt_colour, 33.5%) > #444444
 // darken(@main_alt_colour, 40%) > #333333
 //
+// lighten(@main_alt_colour, 26.5%) > #dddddd
 // lighten(@main_alt_colour, 20%) > #cccccc
+// lighten(@main_alt_colour, 13.5%) > #bbbbbb
+// lighten(@main_alt_colour, 6.5%) > #aaaaaa
+// lighten(@main_alt_colour, 30%)
 @disabled_colour: #dddddd;
 @shiny_colour: #f2f2c3;
 @red_orange: #ff2000;
@@ -49,11 +56,9 @@
 @info: #364e59;
 @alert: #ff0000;
 
-@lt_main_colour: lighten(@bg_colour, 10%);
-@dk_main_colour: darken(@bg_colour, 10%);
-
 //* links */
-@link_colour: #3465a4;
+// yes our link colour is "friendica blue" ;)
+@link_colour: @friendica_blue;
 @dk_link_colour: darken(@link_colour, 10%);
 @lt_link_colour: lighten(@link_colour, 10%);
 //@hover_colour: #729fcf;
@@ -130,7 +135,19 @@
 	-webkit-text-overflow: @t;
 	text-overflow: @t;
 }
-
+.lin_gradient(@x1: left, @x2: right, @y1: top, @y2: bottom, @c1: @bg_colour, @c2: @dk_bg_colour) {
+	// w3c
+	background: linear-gradient(@x1 @y2, @c1, @c2);
+	// webkit
+	// -webkit-gradient(<type>, <point> [, <radius>]?, <point> [, <radius>]? [, <stop>]*)
+	background: -webkit-gradient(linear, @x1 @y1, @x2 @y2, from(@c1), to(@c2));
+	// mozilla
+	// -moz-linear-gradient([<point> || <angle>,]? <stop>, <stop> [, <stop>])
+	background: -moz-linear-gradient(@x1 @y2, @c1, @c2);
+	// opera
+	//background: -o-linear-gradient([<point> || <angle>,]? <stop>, <stop> [, <stop>]);
+	background: -o-linear-gradient(@x1, @c1, @c2);
+}
 //* pre wrap */
 .wrap () {
 	white-space: pre-wrap;

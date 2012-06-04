@@ -218,14 +218,23 @@ function item_post(&$a) {
 
 		$private = ((strlen($str_group_allow) || strlen($str_contact_allow) || strlen($str_group_deny) || strlen($str_contact_deny)) ? 1 : 0);
 
-		if(($parent_item) && 
-			(($parent_item['private']) 
+		// If this is a comment, set the permissions from the parent.
+
+		if($parent_item) {
+			$private = 0;
+
+			if(($parent_item['private']) 
 				|| strlen($parent_item['allow_cid']) 
 				|| strlen($parent_item['allow_gid']) 
 				|| strlen($parent_item['deny_cid']) 
-				|| strlen($parent_item['deny_gid'])
-			)) {
-			$private = 1;
+				|| strlen($parent_item['deny_gid'])) {
+				$private = 1;
+			}
+
+			$str_contact_allow = $parent_item['allow_cid'];
+			$str_group_allow   = $parent_item['allow_gid'];
+			$str_contact_deny  = $parent_item['deny_cid'];
+			$str_group_deny    = $parent_item['deny_gid'];
 		}
 	
 		$pubmail_enable    = ((x($_REQUEST,'pubmail_enable') && intval($_REQUEST['pubmail_enable']) && (! $private)) ? 1 : 0);
@@ -253,17 +262,17 @@ function item_post(&$a) {
 		}
 	}
 
-        if(strlen($categories)) {
-	        // get the "fileas" tags for this post
-                $filedas = file_tag_file_to_list($categories, 'file');
+	if(strlen($categories)) {
+		// get the "fileas" tags for this post
+		$filedas = file_tag_file_to_list($categories, 'file');
 	}
-        // save old and new categories, so we can determine what needs to be deleted from pconfig
-        $categories_old = $categories;
-        $categories = file_tag_list_to_file(trim($_REQUEST['category']), 'category');
-        $categories_new = $categories;
-        if(strlen($filedas)) {
-	        // append the fileas stuff to the new categories list
-	        $categories .= file_tag_list_to_file($filedas, 'file');
+	// save old and new categories, so we can determine what needs to be deleted from pconfig
+	$categories_old = $categories;
+	$categories = file_tag_list_to_file(trim($_REQUEST['category']), 'category');
+	$categories_new = $categories;
+	if(strlen($filedas)) {
+		// append the fileas stuff to the new categories list
+		$categories .= file_tag_list_to_file($filedas, 'file');
 	}
 
 	// Work around doubled linefeeds in Tinymce 3.5b2
@@ -281,18 +290,16 @@ function item_post(&$a) {
 	$author = null;
 	$self   = false;
 
-	if(($_SESSION['uid']) && ($_SESSION['uid'] == $profile_uid)) {
+	if((local_user()) && (local_user() == $profile_uid)) {
 		$self = true;
 		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
 			intval($_SESSION['uid'])
 		);
 	}
-	else {
-		if((x($_SESSION,'visitor_id')) && (intval($_SESSION['visitor_id']))) {
-			$r = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
-				intval($_SESSION['visitor_id'])
-			);
-		}
+	elseif(remote_user()) {
+		$r = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
+			intval(remote_user())
+		);
 	}
 
 	if(count($r)) {
@@ -302,7 +309,7 @@ function item_post(&$a) {
 
 	// get contact info for owner
 	
-	if($profile_uid == $_SESSION['uid']) {
+	if($profile_uid == local_user()) {
 		$contact_record = $author;
 	}
 	else {
@@ -312,8 +319,6 @@ function item_post(&$a) {
 		if(count($r))
 			$contact_record = $r[0];
 	}
-
-
 
 	$post_type = notags(trim($_REQUEST['type']));
 
@@ -350,13 +355,15 @@ function item_post(&$a) {
 				$image_uri = substr($image_uri,0, strpos($image_uri,'-'));
 				if(! strlen($image_uri))
 					continue;
-				$srch = '<' . intval($contact_record['id']) . '>';
+				$srch = '<' . intval($contact_id) . '>';
+
 				$r = q("SELECT `id` FROM `photo` WHERE `allow_cid` = '%s' AND `allow_gid` = '' AND `deny_cid` = '' AND `deny_gid` = ''
 					AND `resource-id` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($srch),
 					dbesc($image_uri),
 					intval($profile_uid)
 				);
+
 				if(! count($r))
 					continue;
  
@@ -446,6 +453,7 @@ function item_post(&$a) {
 
 	$tagged = array();
 
+	$private_forum = false;
 
 	if(count($tags)) {
 		foreach($tags as $tag) {
@@ -464,9 +472,20 @@ function item_post(&$a) {
 				continue;
 
 			$success = handle_tag($a, $body, $inform, $str_tags, (local_user()) ? local_user() : $profile_uid , $tag); 
-			if($success)
+			if($success['replaced'])
 				$tagged[] = $tag;
+			if(is_array($success['contact']) && intval($success['contact']['prv'])) {
+				$private_forum = true;
+				$private_id = $success['contact']['id'];
+			}
 		}
+	}
+
+	if(($private_forum) && (! $parent) && (! $private)) {
+		// we tagged a private forum in a top level post and the message was public.
+		// Restrict it.
+		$private = 1;
+		$str_contact_allow = '<' . $private_id . '>'; 
 	}
 
 	$attachments = '';
@@ -718,16 +737,16 @@ function item_post(&$a) {
 				if($datarray['verb'] === ACTIVITY_LIKE) 
 					$signed_text = $datarray['guid'] . ';' . 'Post' . ';' . $parent_item['guid'] . ';' . 'true' . ';' . $myaddr;
 				else
-			    	$signed_text = $datarray['guid'] . ';' . $parent_item['guid'] . ';' . $signed_body . ';' . $myaddr;
+					$signed_text = $datarray['guid'] . ';' . $parent_item['guid'] . ';' . $signed_body . ';' . $myaddr;
 
 				$authorsig = base64_encode(rsa_sign($signed_text,$a->user['prvkey'],'sha256'));
 
 				q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
 					intval($post_id),
-            		dbesc($signed_text),
-            		dbesc(base64_encode($authorsig)),
-            		dbesc($myaddr)
-        		);
+					dbesc($signed_text),
+					dbesc(base64_encode($authorsig)),
+					dbesc($myaddr)
+				);
 			}
 		}
 		else {
@@ -886,6 +905,7 @@ function item_content(&$a) {
 function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 
 	$replaced = false;
+	$r = null;
 
 	//is it a hash tag? 
 	if(strpos($tag,'#') === 0) {
@@ -1016,5 +1036,5 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 		}
 	}
 
-	return $replaced;	
+	return array('replaced' => $replaced, 'contact' => $r[0]);	
 }

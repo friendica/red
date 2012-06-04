@@ -6,7 +6,7 @@
  * Note:
  * Please do not store booleans - convert to 0/1 integer values
  * The get_?config() functions return boolean false for keys that are unset,
- * and this could lead to subtle bugs.  
+ * and this could lead to subtle bugs.
  *
  * There are a few places in the code (such as the admin panel) where boolean
  * configurations need to be fixed as of 10/08/2011.
@@ -30,6 +30,9 @@ function load_config($family) {
 				$a->config[$family][$k] = $rr['v'];
 			}
 		}
+	} else if ($rr['cat'] != 'config') {
+		// Negative caching
+		$a->config[$family] = "!<unset>!";
 	}
 }}
 
@@ -47,6 +50,13 @@ function get_config($family, $key, $instore = false) {
 	global $a;
 
 	if(! $instore) {
+		// Looking if the whole family isn't set
+		if(isset($a->config[$family])) {
+			if($a->config[$family] === '!<unset>!') {
+				return false;
+			}
+		}
+
 		if(isset($a->config[$family][$key])) {
 			if($a->config[$family][$key] === '!<unset>!') {
 				return false;
@@ -77,11 +87,9 @@ function get_config($family, $key, $instore = false) {
 if(! function_exists('set_config')) {
 function set_config($family,$key,$value) {
 	global $a;
-	
 	// manage array value
 	$dbvalue = (is_array($value)?serialize($value):$value);
-	$dbvalue = (is_bool($value) ? intval($value) : $value);
-
+	$dbvalue = (is_bool($dbvalue) ? intval($dbvalue) : $dbvalue);
 	if(get_config($family,$key,true) === false) {
 		$a->config[$family][$key] = $value;
 		$ret = q("INSERT INTO `config` ( `cat`, `k`, `v` ) VALUES ( '%s', '%s', '%s' ) ",
@@ -89,11 +97,11 @@ function set_config($family,$key,$value) {
 			dbesc($key),
 			dbesc($dbvalue)
 		);
-		if($ret) 
+		if($ret)
 			return $value;
 		return $ret;
 	}
-	
+
 	$ret = q("UPDATE `config` SET `v` = '%s' WHERE `cat` = '%s' AND `k` = '%s' LIMIT 1",
 		dbesc($dbvalue),
 		dbesc($family),
@@ -120,6 +128,9 @@ function load_pconfig($uid,$family) {
 			$k = $rr['k'];
 			$a->config[$uid][$family][$k] = $rr['v'];
 		}
+	} else if ($rr['cat'] != 'config') {
+		// Negative caching
+		$a->config[$uid][$family] = "!<unset>!";
 	}
 }}
 
@@ -131,6 +142,13 @@ function get_pconfig($uid,$family, $key, $instore = false) {
 	global $a;
 
 	if(! $instore) {
+		// Looking if the whole family isn't set
+		if(isset($a->config[$uid][$family])) {
+			if($a->config[$uid][$family] === '!<unset>!') {
+				return false;
+			}
+		}
+
 		if(isset($a->config[$uid][$family][$key])) {
 			if($a->config[$uid][$family][$key] === '!<unset>!') {
 				return false;

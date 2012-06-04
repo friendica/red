@@ -173,6 +173,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `readonly` tinyint(1) NOT NULL DEFAULT '0',
   `writable` tinyint(1) NOT NULL DEFAULT '0',
   `forum` tinyint(1) NOT NULL DEFAULT '0',
+  `prv` tinyint(1) NOT NULL DEFAULT '0',
   `hidden` tinyint(1) NOT NULL DEFAULT '0',
   `archive` tinyint(1) NOT NULL DEFAULT '0',
   `pending` tinyint(1) NOT NULL DEFAULT '1',
@@ -819,9 +820,11 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `region` char(255) NOT NULL,
   `postal-code` char(32) NOT NULL,
   `country-name` char(255) NOT NULL,
+  `hometown` char(255) NOT NULL,
   `gender` char(32) NOT NULL,
   `marital` char(255) NOT NULL,
   `with` text NOT NULL,
+  `howlong` datetime NOT NULL default '0000-00-00 00:00:00',
   `sexual` char(255) NOT NULL,
   `politic` char(255) NOT NULL,
   `religion` char(255) NOT NULL,
@@ -941,12 +944,14 @@ CREATE TABLE IF NOT EXISTS `session` (
 
 CREATE TABLE IF NOT EXISTS `sign` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `iid` int(10) unsigned NOT NULL,
+  `iid` int(10) unsigned NOT NULL DEFAULT '0',
+  `retract_iid` int(10) unsigned NOT NULL DEFAULT '0',
   `signed_text` mediumtext NOT NULL,
   `signature` text NOT NULL,
   `signer` char(255) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `iid` (`iid`)
+  KEY `iid` (`iid`),
+  KEY `retract_iid` (`retract_iid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -1028,6 +1033,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `account_expires_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `expire_notification_sent` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `service_class` char(32) NOT NULL,
+  `def_gid` int(11) NOT NULL DEFAULT '0',
   `allow_cid` mediumtext NOT NULL,
   `allow_gid` mediumtext NOT NULL,
   `deny_cid` mediumtext NOT NULL,

@@ -242,7 +242,7 @@ function profile_content(&$a, $update = 0) {
 		$parents_str = implode(', ', $parents_arr);
  
 		$items = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`network`, `contact`.`rel`, 
+			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`alias`, `contact`.`network`, `contact`.`rel`, 
 			`contact`.`thumb`, `contact`.`self`, `contact`.`writable`, 
 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 			FROM `item`, `contact`

@@ -180,6 +180,10 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 	foreach($items as $item) {
 
+		// prevent private email from leaking.
+		if($item['network'] === NETWORK_MAIL)
+			continue;
+
 		// public feeds get html, our own nodes use bbcode
 
 		if($public_feed) {
@@ -959,6 +963,8 @@ function tag_deliver($uid,$item_id) {
 		return;
 
 	$community_page = (($u[0]['page-flags'] == PAGE_COMMUNITY) ? true : false);
+	$prvgroup = (($u[0]['page-flags'] == PAGE_PRVGROUP) ? true : false);
+
 
 	$i = q("select * from item where id = %d and uid = %d limit 1",
 		intval($item_id),
@@ -1008,8 +1014,9 @@ function tag_deliver($uid,$item_id) {
 		'otype'        => 'item'
 	));
 
-	if(! $community_page)
+	if((! $community_page) && (! $prvgroup))
 		return;
+
 
 	// tgroup delivery - setup a second delivery chain
 	// prevent delivery looping - only proceed
@@ -1031,8 +1038,11 @@ function tag_deliver($uid,$item_id) {
 
 	$private = ($u[0]['allow_cid'] || $u[0]['allow_gid'] || $u[0]['deny_cid'] || $u[0]['deny_gid']) ? 1 : 0;
 
-	q("update item set wall = 1, origin = 1, forum_mode = 1, `owner-name` = '%s', `owner-link` = '%s', `owner-avatar` = '%s', 
+	$forum_mode = (($prvgroup) ? 2 : 1);
+
+	q("update item set wall = 1, origin = 1, forum_mode = %d, `owner-name` = '%s', `owner-link` = '%s', `owner-avatar` = '%s', 
 		`private` = %d, `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s'  where id = %d limit 1",
+		intval($forum_mode),
 		dbesc($c[0]['name']),
 		dbesc($c[0]['url']),
 		dbesc($c[0]['thumb']),
@@ -1056,9 +1066,6 @@ function tag_deliver($uid,$item_id) {
 function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 
 	$a = get_app();
-
-//	if((! strlen($contact['issued-id'])) && (! $contact['duplex']) && (! ($owner['page-flags'] == PAGE_COMMUNITY)))
-//		return 3;
 
 	$idtosend = $orig_id = (($contact['dfrn-id']) ? $contact['dfrn-id'] : $contact['issued-id']);
 
@@ -1124,6 +1131,9 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	$rino_allowed = ((intval($res->rino) === 1) ? 1 : 0);
 	$page         = (($owner['page-flags'] == PAGE_COMMUNITY) ? 1 : 0);
 
+	if($owner['page-flags'] == PAGE_PRVGROUP)
+		$page = 2;
+
 	$final_dfrn_id = '';
 
 	if($perm) {
@@ -1177,7 +1187,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	$postvars['ssl_policy'] = $ssl_policy;
 
 	if($page)
-		$postvars['page'] = '1';
+		$postvars['page'] = $page;
 	
 	if($rino && $rino_allowed && (! $dissolve)) {
 		$key = substr(random_string(),0,16);
@@ -2194,7 +2204,7 @@ function local_delivery($importer,$data) {
 		if($is_reply) {
 			$community = false;
 
-			if($importer['page-flags'] == PAGE_COMMUNITY) {
+			if($importer['page-flags'] == PAGE_COMMUNITY || $importer['page-flags'] == PAGE_PRVGROUP ) {
 				$sql_extra = '';
 				$community = true;
 				logger('local_delivery: possible community reply');
@@ -2221,8 +2231,8 @@ function local_delivery($importer,$data) {
 			if($r && count($r))
 				$is_a_remote_comment = true;			
 
-			// Does this have the characteristics of a community comment?
-			// If it's a reply to a wall post on a community page it's a 
+			// Does this have the characteristics of a community or private group comment?
+			// If it's a reply to a wall post on a community/prvgroup page it's a 
 			// valid community comment. Also forum_mode makes it valid for sure. 
 			// If neither, it's not.
 
@@ -2711,6 +2721,12 @@ function new_follower($importer,$contact,$datarray,$item,$sharing = false) {
 		);
 		$a = get_app();
 		if(count($r)) {
+
+			if(intval($r[0]['def_gid'])) {
+				require_once('include/group.php');
+				group_add_member($r[0]['uid'],'',$contact_record['id'],$r[0]['def_gid']);
+			}
+
 			if(($r[0]['notify-flags'] & NOTIFY_INTRO) && ($r[0]['page-flags'] == PAGE_NORMAL)) {
 				$email_tpl = get_intltext_template('follow_notify_eml.tpl');
 				$email = replace_macros($email_tpl, array(
@@ -2820,7 +2836,7 @@ function atom_author($tag,$name,$uri,$h,$w,$photo) {
 	return $o;
 }
 
-function atom_entry($item,$type,$author,$owner,$comment = false) {
+function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 
 	$a = get_app();
 
@@ -2832,7 +2848,7 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 
 
 	if($item['allow_cid'] || $item['allow_gid'] || $item['deny_cid'] || $item['deny_gid'])
-		$body = fix_private_photos($item['body'],$owner['uid']);
+		$body = fix_private_photos($item['body'],$owner['uid'],$item,$cid);
 	else
 		$body = $item['body'];
 
@@ -2915,14 +2931,17 @@ function atom_entry($item,$type,$author,$owner,$comment = false) {
 	return $o;
 }
 
-function fix_private_photos($s,$uid) {
+function fix_private_photos($s,$uid, $item = null, $cid = 0) {
 	$a = get_app();
-	logger('fix_private_photos');
 
-	if(preg_match("/\[img\](.*?)\[\/img\]/is",$s,$matches)) {
-		$image = $matches[1];
-		logger('fix_private_photos: found photo ' . $image);
-		if(stristr($image ,$a->get_baseurl() . '/photo/')) {
+	logger('fix_private_photos', LOGGER_DEBUG);
+	$site = substr($a->get_baseurl(),strpos($a->get_baseurl(),'://'));
+
+	if(preg_match("/\[img(.*?)\](.*?)\[\/img\]/is",$s,$matches)) {
+		$image = $matches[2];
+		logger('fix_private_photos: found photo ' . $image, LOGGER_DEBUG);
+		if(stristr($image , $site . '/photo/')) {
+			$replace = false;
 			$i = basename($image);
 			$i = str_replace('.jpg','',$i);
 			$x = strpos($i,'-');
@@ -2935,17 +2954,86 @@ function fix_private_photos($s,$uid) {
 					intval($uid)
 				);
 				if(count($r)) {
-					logger('replacing photo');
-					$s = str_replace($image, 'data:image/jpg;base64,' . base64_encode($r[0]['data']), $s);
+
+					// Check to see if we should replace this photo link with an embedded image
+					// 1. No need to do so if the photo is public
+					// 2. If there's a contact-id provided, see if they're in the access list
+					//    for the photo. If so, embed it. 
+					// 3. Otherwise, if we have an item, see if the item permissions match the photo
+					//    permissions, regardless of order but first check to see if they're an exact
+					//    match to save some processing overhead.
+				
+					// Currently we only embed one private photo per message so as not to hit import 
+					// size limits at the receiving end.
+
+					// To embed multiples, we would need to parse out the embedded photos on message
+					// receipt and limit size based only on the text component. Would also need to
+					// ignore all photos during bbcode translation and item localisation, as these
+					// will hit internal regex backtrace limits.  
+
+					if(has_permissions($r[0])) {
+						if($cid) {
+							$recips = enumerate_permissions($r[0]);
+							if(in_array($cid, $recips)) {
+								$replace = true;	
+							}
+						}
+						elseif($item) {
+							if(compare_permissions($item,$r[0]))
+								$replace = true;
+						}
+					}
+					if($replace) {
+						logger('fix_private_photos: replacing photo', LOGGER_DEBUG);
+						$s = str_replace($image, 'data:image/jpg;base64,' . base64_encode($r[0]['data']), $s);
+						logger('fix_private_photos: replaced: ' . $s, LOGGER_DATA);
+					}
 				}
 			}
-			logger('fix_private_photos: replaced: ' . $s, LOGGER_DATA);
 		}	
 	}
 	return($s);
 }
 
 
+function has_permissions($obj) {
+	if(($obj['allow_cid'] != '') || ($obj['allow_gid'] != '') || ($obj['deny_cid'] != '') || ($obj['deny_gid'] != ''))
+		return true;
+	return false;
+}
+
+function compare_permissions($obj1,$obj2) {
+	// first part is easy. Check that these are exactly the same. 
+	if(($obj1['allow_cid'] == $obj2['allow_cid'])
+		&& ($obj1['allow_gid'] == $obj2['allow_gid'])
+		&& ($obj1['deny_cid'] == $obj2['deny_cid'])
+		&& ($obj1['deny_gid'] == $obj2['deny_gid']))
+		return true;
+
+	// This is harder. Parse all the permissions and compare the resulting set.
+
+	$recipients1 = enumerate_permissions($obj1);
+	$recipients2 = enumerate_permissions($obj2);
+	sort($recipients1);
+	sort($recipients2);
+	if($recipients1 == $recipients2)
+		return true;
+	return false;
+}
+
+// returns an array of contact-ids that are allowed to see this object
+
+function enumerate_permissions($obj) {
+	require_once('include/group.php');
+	$allow_people = expand_acl($obj['allow_cid']);
+	$allow_groups = expand_groups(expand_acl($obj['allow_gid']));
+	$deny_people  = expand_acl($obj['deny_cid']);
+	$deny_groups  = expand_groups(expand_acl($obj['deny_gid']));
+	$recipients   = array_unique(array_merge($allow_people,$allow_groups));
+	$deny         = array_unique(array_merge($deny_people,$deny_groups));
+	$recipients   = array_diff($recipients,$deny);
+	return $recipients;
+}
 
 function item_getfeedtags($item) {
 	$ret = array();
@@ -2992,13 +3080,20 @@ function item_getfeedattach($item) {
 	
 function item_expire($uid,$days) {
 
-	if((! $uid) || (! $days))
+	if((! $uid) || ($days < 1))
 		return;
+
+	// $expire_network_only = save your own wall posts
+	// and just expire conversations started by others
+
+	$expire_network_only = get_pconfig($uid,'expire','network_only');
+	$sql_extra = ((intval($expire_network_only)) ? " AND wall = 0 " : "");
 
 	$r = q("SELECT * FROM `item` 
 		WHERE `uid` = %d 
 		AND `created` < UTC_TIMESTAMP() - INTERVAL %d DAY 
 		AND `id` = `parent` 
+		$sql_extra
 		AND `deleted` = 0",
 		intval($uid),
 		intval($days)
@@ -3183,7 +3278,42 @@ function drop_item($id,$interactive = true) {
 				q("UPDATE `item` SET `last-child` = 1 WHERE `id` = %d LIMIT 1",
 					intval($r[0]['id'])
 				);
-			}	
+			}
+
+			// Add a relayable_retraction signature for Diaspora. Note that we can't add a target_author_signature
+			// if the comment was deleted by a remote user. That should be ok, because if a remote user is deleting
+			// the comment, that means we're the home of the post, and Diaspora will only
+			// check the parent_author_signature of retractions that it doesn't have to relay further
+			//
+			// I don't think this function gets called for an "unlike," but I'll check anyway
+			$signed_text = $item['guid'] . ';' . ( ($item['verb'] === ACTIVITY_LIKE) ? 'Like' : 'Comment');
+
+			if(local_user() == $item['uid']) {
+
+				$handle = $a->user['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+				$authorsig = base64_encode(rsa_sign($signed_text,$a->user['prvkey'],'sha256'));
+			}
+			else {
+				$r = q("SELECT `nick`, `url` FROM `contact` WHERE `id` = '%d' LIMIT 1",
+					$item['contact-id']
+				);
+				if(count($r)) {
+					// The below handle only works for NETWORK_DFRN. I think that's ok, because this function
+					// only handles DFRN deletes
+					$handle_baseurl_start = strpos($r['url'],'://') + 3;
+					$handle_baseurl_length = strpos($r['url'],'/profile') - $handle_baseurl_start;
+					$handle = $r['nick'] . '@' . substr($r['url'], $handle_baseurl_start, $handle_baseurl_length);
+					$authorsig = '';
+				}
+			}
+
+			if(isset($handle))
+				q("insert into sign (`retract_iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+					intval($item['id']),
+					dbesc($signed_text),
+					dbesc($authorsig),
+					dbesc($handle)
+				);
 		}
 		$drop_id = intval($item['id']);
 

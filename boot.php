@@ -9,9 +9,9 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '3.0.1338' );
+define ( 'FRIENDICA_VERSION',      '3.0.1363' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
-define ( 'DB_UPDATE_VERSION',      1143      );
+define ( 'DB_UPDATE_VERSION',      1148      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -441,22 +441,19 @@ if(! class_exists('App')) {
 				if(intval($this->config['system']['ssl_policy']) === intval(SSL_POLICY_FULL))
 					$scheme = 'https';
 
-				//			We need to populate the $ssl flag across the entire program before turning this on.
-				//			Basically, we'll have $ssl = true on any links which can only be seen by a logged in user
-				//			(and also the login link). Anything seen by an outsider will have it turned off.
-				//			At present, setting SSL_POLICY_SELFSIGN will only force remote contacts to update their
-				//			contact links to this site with "http:" if they are currently using "https:"
+				//	Basically, we have $ssl = true on any links which can only be seen by a logged in user
+				//	(and also the login link). Anything seen by an outsider will have it turned off.
 
-				//			if($this->config['system']['ssl_policy'] == SSL_POLICY_SELFSIGN) {
-				//				if($ssl)
-				//					$scheme = 'https';
-				//				else
-				//					$scheme = 'http';
-					//			}
-		}
+				if($this->config['system']['ssl_policy'] == SSL_POLICY_SELFSIGN) {
+					if($ssl)
+						$scheme = 'https';
+					else
+						$scheme = 'http';
+				}
+			}
 
-				$this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
-				return $this->baseurl;
+			$this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
+			return $this->baseurl;
 		}
 
 		function set_baseurl($url) {
@@ -511,6 +508,7 @@ if(! class_exists('App')) {
 			$tpl = file_get_contents('view/head.tpl');
 			$this->page['htmlhead'] = replace_macros($tpl,array(
 				'$baseurl' => $this->get_baseurl(), // FIXME for z_path!!!!
+				'$local_user' => local_user(),
 				'$generator' => 'Friendica' . ' ' . FRIENDICA_VERSION,
 				'$delitem' => t('Delete this item?'),
 				'$comment' => t('Comment'),
@@ -1323,6 +1321,25 @@ if(! function_exists('proc_run')) {
 		$a = get_app();
 
 		$args = func_get_args();
+
+		$newargs = array();
+		if(! count($args))
+			return;
+
+		// expand any arrays
+
+		foreach($args as $arg) {
+			if(is_array($arg)) {
+				foreach($arg as $n) {
+					$newargs[] = $n;
+				}
+			}
+			else
+				$newargs[] = $arg;
+		}
+
+		$args = $newargs;
+		
 		$arr = array('args' => $args, 'run_cmd' => true);
 
 		call_hooks("proc_run", $arr);

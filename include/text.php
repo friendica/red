@@ -646,7 +646,7 @@ function search($s,$id='search-box',$url='/search',$save = false) {
 	$a = get_app();
 	$o  = '<div id="' . $id . '">';
 	$o .= '<form action="' . $a->get_baseurl((stristr($url,'network')) ? true : false) . $url . '" method="get" >';
-	$o .= '<input type="text" name="search" id="search-text" value="' . $s .'" />';
+	$o .= '<input type="text" name="search" id="search-text" placeholder="' . t('Search') . '" value="' . $s .'" />';
 	$o .= '<input type="submit" name="submit" id="search-submit" value="' . t('Search') . '" />'; 
 	if($save)
 		$o .= '<input type="submit" name="save" id="search-save" value="' . t('Save') . '" />'; 
@@ -742,6 +742,8 @@ function smilies($s, $sample = false) {
 		':homebrew', 
 		':coffee', 
 		':facepalm',
+		':like',
+		':dislike',
 		'~friendika', 
 		'~friendica'
 
@@ -778,6 +780,8 @@ function smilies($s, $sample = false) {
 		'<img src="' . $a->get_baseurl() . '/images/beer_mug.gif" alt=":homebrew" />',
 		'<img src="' . $a->get_baseurl() . '/images/coffee.gif" alt=":coffee" />',
 		'<img src="' . $a->get_baseurl() . '/images/smiley-facepalm.gif" alt=":facepalm" />',
+		'<img src="' . $a->get_baseurl() . '/images/like.gif" alt=":like" />',
+		'<img src="' . $a->get_baseurl() . '/images/dislike.gif" alt=":dislike" />',
 		'<a href="http://project.friendika.com">~friendika <img src="' . $a->get_baseurl() . '/images/friendika-16.png" alt="~friendika" /></a>',
 		'<a href="http://friendica.com">~friendica <img src="' . $a->get_baseurl() . '/images/friendica-16.png" alt="~friendica" /></a>'
 	);
@@ -887,6 +891,7 @@ function prepare_body($item,$attach = false) {
 	} else
 		$s = prepare_text($item['body']);
 
+
 	$prep_arr = array('item' => $item, 'html' => $s);
 	call_hooks('prepare_body', $prep_arr);
 	$s = $prep_arr['html'];
@@ -901,24 +906,30 @@ function prepare_body($item,$attach = false) {
 		foreach($arr as $r) {
 			$matches = false;
 			$icon = '';
-			$cnt = preg_match('|\[attach\]href=\"(.*?)\" length=\"(.*?)\" type=\"(.*?)\" title=\"(.*?)\"\[\/attach\]|',$r,$matches);
+			$cnt = preg_match_all('|\[attach\]href=\"(.*?)\" length=\"(.*?)\" type=\"(.*?)\" title=\"(.*?)\"\[\/attach\]|',$r,$matches, PREG_SET_ORDER);
 			if($cnt) {
-				$icontype = strtolower(substr($matches[3],0,strpos($matches[3],'/')));
-				switch($icontype) {
-					case 'video':
-					case 'audio':
-					case 'image':
-					case 'text':
-						$icon = '<div class="attachtype icon s22 type-' . $icontype . '"></div>';
-						break;
-					default:
-						$icon = '<div class="attachtype icon s22 type-unkn"></div>';
-						break;
-				}
-				$title = ((strlen(trim($matches[4]))) ? escape_tags(trim($matches[4])) : escape_tags($matches[1]));
-				$title .= ' ' . $matches[2] . ' ' . t('bytes');
+				foreach($matches as $mtch) {
+					$icontype = strtolower(substr($mtch[3],0,strpos($mtch[3],'/')));
+					switch($icontype) {
+						case 'video':
+						case 'audio':
+						case 'image':
+						case 'text':
+							$icon = '<div class="attachtype icon s22 type-' . $icontype . '"></div>';
+							break;
+						default:
+							$icon = '<div class="attachtype icon s22 type-unkn"></div>';
+							break;
+					}
+					$title = ((strlen(trim($mtch[4]))) ? escape_tags(trim($mtch[4])) : escape_tags($mtch[1]));
+					$title .= ' ' . $mtch[2] . ' ' . t('bytes');
+					if((local_user() == $item['uid']) && $item['contact-id'] != $a->contact['id'])
+						$the_url = $a->get_baseurl() . '/redir/' . $item['contact-id'] . '?f=1&url=' . $mtch[1];
+					else
+						$the_url = $mtch[1];
 
-				$s .= '<a href="' . strip_tags($matches[1]) . '" title="' . $title . '" class="attachlink" target="external-link" >' . $icon . '</a>';
+					$s .= '<a href="' . strip_tags($the_url) . '" title="' . $title . '" class="attachlink" target="external-link" >' . $icon . '</a>';
+				}
 			}
 		}
 		$s .= '<div class="clear"></div></div>';

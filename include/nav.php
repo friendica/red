@@ -117,7 +117,7 @@ function nav(&$a) {
 
 		/* only show friend requests for normal pages. Other page types have automatic friendship. */
 
-		if($_SESSION['page_flags'] == PAGE_NORMAL) {
+		if($_SESSION['page_flags'] == PAGE_NORMAL || $_SESSION['page_flags'] == PAGE_PRVGROUP) {
 			$nav['introductions'] = array('notifications/intros',	t('Introductions'), "", t('Friend Requests'));
 			$nav['notifications'] = array('notifications',	t('Notifications'), "", t('Notifications'));
 			$nav['notifications']['all']=array('notifications/system', t('See all notifications'), "", "");

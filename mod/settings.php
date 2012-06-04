@@ -15,6 +15,7 @@ function get_theme_config_file($theme){
 }
 
 function settings_init(&$a) {
+
 	// These lines provide the javascript needed by the acl selector
 
 	$a->page['htmlhead'] .= "<script> var ispublic = '" . t('everybody') . "';" ;
@@ -86,6 +87,7 @@ EOT;
 	$tabtpl = get_markup_template("generic_links_widget.tpl");
 	$a->page['aside'] = replace_macros($tabtpl, array(
 		'$title' => t('Settings'),
+		'$class' => 'settings-widget',
 		'$items' => $tabs,
 	));
 
@@ -330,14 +332,14 @@ function settings_post(&$a) {
 	$openid           = ((x($_POST,'openid_url')) ? notags(trim($_POST['openid_url']))   : '');
 	$maxreq           = ((x($_POST,'maxreq'))     ? intval($_POST['maxreq'])             : 0);
 	$expire           = ((x($_POST,'expire'))     ? intval($_POST['expire'])             : 0);
+	$def_gid          = ((x($_POST,'group-selection')) ? intval($_POST['group-selection']) : 0);
 
 
 	$expire_items     = ((x($_POST,'expire_items')) ? intval($_POST['expire_items'])	 : 0);
 	$expire_notes     = ((x($_POST,'expire_notes')) ? intval($_POST['expire_notes'])	 : 0);
 	$expire_starred   = ((x($_POST,'expire_starred')) ? intval($_POST['expire_starred']) : 0);
 	$expire_photos    = ((x($_POST,'expire_photos'))? intval($_POST['expire_photos'])	 : 0);
-
-
+	$expire_network_only    = ((x($_POST,'expire_network_only'))? intval($_POST['expire_network_only'])	 : 0);
 
 	$allow_location   = (((x($_POST,'allow_location')) && (intval($_POST['allow_location']) == 1)) ? 1: 0);
 	$publish          = (((x($_POST,'profile_in_directory')) && (intval($_POST['profile_in_directory']) == 1)) ? 1: 0);
@@ -354,7 +356,6 @@ function settings_post(&$a) {
 	$post_newfriend   = (($_POST['post_newfriend'] == 1) ? 1: 0);
 	$post_joingroup   = (($_POST['post_joingroup'] == 1) ? 1: 0);
 	$post_profilechange   = (($_POST['post_profilechange'] == 1) ? 1: 0);
-
 
 	$notify = 0;
 
@@ -434,6 +435,7 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'expire','notes', $expire_notes);
 	set_pconfig(local_user(),'expire','starred', $expire_starred);
 	set_pconfig(local_user(),'expire','photos', $expire_photos);
+	set_pconfig(local_user(),'expire','network_only', $expire_network_only);
 
 	set_pconfig(local_user(),'system','suggestme', $suggestme);
 	set_pconfig(local_user(),'system','post_newfriend', $post_newfriend);
@@ -441,7 +443,20 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'system','post_profilechange', $post_profilechange);
 
 
-	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `maxreq` = %d, `expire` = %d, `openidserver` = '%s', `blockwall` = %d, `hidewall` = %d, `blocktags` = %d, `unkmail` = %d, `cntunkmail` = %d  WHERE `uid` = %d LIMIT 1",
+	if($page_flags == PAGE_PRVGROUP) {
+		$hidewall = 1;
+		if((! $str_contact_allow) && (! $str_group_allow) && (! $str_contact_deny) && (! $str_group_deny)) {
+			if($def_gid) {
+				info( t('Private forum has no privacy permissions. Using default privacy group.'). EOL);
+				$str_group_allow = '<' . $def_gid . '>';
+			}
+			else {
+				notice( t('Private forum has no privacy permissions and no default privacy group.') . EOL);
+			} 
+		}
+	}
+
+	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `maxreq` = %d, `expire` = %d, `openidserver` = '%s', `def_gid` = %d, `blockwall` = %d, `hidewall` = %d, `blocktags` = %d, `unkmail` = %d, `cntunkmail` = %d  WHERE `uid` = %d LIMIT 1",
 			dbesc($username),
 			dbesc($email),
 			dbesc($openid),
@@ -457,6 +472,7 @@ function settings_post(&$a) {
 			intval($maxreq),
 			intval($expire),
 			dbesc($openidserver),
+			intval($def_gid),
 			intval($blockwall),
 			intval($hidewall),
 			intval($blocktags),
@@ -797,6 +813,9 @@ function settings_content(&$a) {
 	$expire_photos = get_pconfig(local_user(), 'expire','photos');
 	$expire_photos = (($expire_photos===false)? '0' : $expire_photos); // default if not set: 0
 
+	$expire_network_only = get_pconfig(local_user(), 'expire','network_only');
+	$expire_network_only = (($expire_network_only===false)? '0' : $expire_network_only); // default if not set: 0
+
 
 	$suggestme = get_pconfig(local_user(), 'system','suggestme');
 	$suggestme = (($suggestme===false)? '0': $suggestme); // default if not set: 0
@@ -818,21 +837,27 @@ function settings_content(&$a) {
 
 	$pageset_tpl = get_markup_template('pagetypes.tpl');
 	$pagetype = replace_macros($pageset_tpl,array(
-		'$page_normal' 	=> array('page-flags', t('Normal Account'), PAGE_NORMAL, 
+		'$page_normal' 	=> array('page-flags', t('Normal Account Page'), PAGE_NORMAL, 
 									t('This account is a normal personal profile'), 
 									($a->user['page-flags'] == PAGE_NORMAL)),
 								
-		'$page_soapbox' 	=> array('page-flags', t('Soapbox Account'), PAGE_SOAPBOX, 
+		'$page_soapbox' 	=> array('page-flags', t('Soapbox Page'), PAGE_SOAPBOX, 
 									t('Automatically approve all connection/friend requests as read-only fans'), 
 									($a->user['page-flags'] == PAGE_SOAPBOX)),
 									
-		'$page_community'	=> array('page-flags', t('Community/Celebrity Account'), PAGE_COMMUNITY, 
+		'$page_community'	=> array('page-flags', t('Community Forum/Celebrity Account'), PAGE_COMMUNITY, 
 									t('Automatically approve all connection/friend requests as read-write fans'), 
 									($a->user['page-flags'] == PAGE_COMMUNITY)),
 									
-		'$page_freelove' 	=> array('page-flags', t('Automatic Friend Account'), PAGE_FREELOVE, 
+		'$page_freelove' 	=> array('page-flags', t('Automatic Friend Page'), PAGE_FREELOVE, 
 									t('Automatically approve all connection/friend requests as friends'), 
 									($a->user['page-flags'] == PAGE_FREELOVE)),
+
+		'$page_prvgroup' 	=> array('page-flags', t('Private Forum [Experimental]'), PAGE_PRVGROUP, 
+									t('Private forum - approved members only'), 
+									($a->user['page-flags'] == PAGE_PRVGROUP)),
+
+
 	));
 
 	$noid = get_config('system','no_openid');
@@ -932,7 +957,11 @@ function settings_content(&$a) {
 		'notes' => array('expire_notes',  t("Expire personal notes:"), $expire_notes, '', array(t('No'),t('Yes'))),
 		'starred' => array('expire_starred',  t("Expire starred posts:"), $expire_starred, '', array(t('No'),t('Yes'))),
 		'photos' => array('expire_photos',  t("Expire photos:"), $expire_photos, '', array(t('No'),t('Yes'))),		
+		'network_only' => array('expire_network_only',  t("Only expire posts by others:"), $expire_network_only, '', array(t('No'),t('Yes'))),		
 	);
+
+	require_once('include/group.php');
+	$group_select = mini_group_select(local_user(),$a->user['def_gid']);
 
 	$o .= replace_macros($stpl,array(
 		'$ptitle' 	=> t('Account Settings'),
@@ -941,7 +970,6 @@ function settings_content(&$a) {
 		'$baseurl' => $a->get_baseurl(true),
 		'$uid' => local_user(),
 		'$form_security_token' => get_form_security_token("settings"),
-		
 		'$nickname_block' => $prof_addr,
 		
 		'$h_pass' 	=> t('Password Settings'),
@@ -968,6 +996,10 @@ function settings_content(&$a) {
 		'$suggestme' => $suggestme,
 		'$blockwall'=> $blockwall, // array('blockwall', t('Allow friends to post to your profile page:'), !$blockwall, ''),
 		'$blocktags'=> $blocktags, // array('blocktags', t('Allow friends to tag your posts:'), !$blocktags, ''),
+
+		'$group_select' => $group_select,
+
+
 		'$expire'	=> $expire_arr,
 
 		'$profile_in_dir' => $profile_in_dir,
@@ -993,7 +1025,8 @@ function settings_content(&$a) {
 		'$notify7'  => array('notify7', t('You are tagged in a post'), ($notify & NOTIFY_TAGSELF), NOTIFY_TAGSELF, ''),		
 		
 		
-		'$h_advn' => t('Advanced Page Settings'),
+		'$h_advn' => t('Advanced Account/Page Type Settings'),
+		'$h_descadvn' => t('Change the behaviour of this account for special situations'),
 		'$pagetype' => $pagetype,
 		
 

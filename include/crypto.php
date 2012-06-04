@@ -293,3 +293,37 @@ function zot_unencapsulate($data,$prvkey) {
 	$ret['data'] = aes_unencapsulate($x,$prvkey);
 	return $ret;
 }
+
+function new_keypair($bits) {
+
+	$openssl_options = array(
+		'digest_alg'       => 'sha1',
+		'private_key_bits' => $bits,
+		'encrypt_key'      => false 
+	);
+
+	$conf = get_config('system','openssl_conf_file');
+	if($conf)
+		$openssl_options['config'] = $conf;
+	
+	$result = openssl_pkey_new($openssl_options);
+
+	if(empty($result)) {
+		logger('new_keypair: failed');
+		return false;
+	}
+
+	// Get private key
+
+	$response = array('prvkey' => '', 'pubkey' => '');
+
+	openssl_pkey_export($result, $response['prvkey']);
+
+	// Get public key
+	$pkey = openssl_pkey_get_details($result);
+	$response['pubkey'] = $pkey["key"];
+
+	return $response;
+
+}
+

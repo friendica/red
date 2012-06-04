@@ -8,3 +8,4 @@
 	{{ inc photo_top.tpl }}{{ endinc }}
 {{ endfor }}
 </div>
+<div class="photos-end"></div>

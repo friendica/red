@@ -25,8 +25,8 @@ function advanced_profile(&$a) {
 		
 			$val = ((intval($a->profile['dob'])) 
 				? day_translate(datetime_convert('UTC','UTC',$a->profile['dob'] . ' 00:00 +00:00',$year_bd_format))
-				: day_translate(datetime_convert('UTC','UTC','2001-' . substr($a->profile['dob'],6) . ' 00:00 +00:00',$short_bd_format)));
-			
+				: day_translate(datetime_convert('UTC','UTC','2001-' . substr($a->profile['dob'],5) . ' 00:00 +00:00',$short_bd_format)));
+
 			$profile['birthday'] = array( t('Birthday:'), $val);
 
 		}
@@ -39,10 +39,15 @@ function advanced_profile(&$a) {
 
 		if($a->profile['with']) $profile['marital']['with'] = $a->profile['with'];
 
+		if(strlen($a->profile['howlong']) && $a->profile['howlong'] !== '0000-00-00 00:00:00') {
+				$profile['howlong'] = relative_date($a->profile['howlong'], t('for %1$d %2$s'));
+		}
 
 		if($a->profile['sexual']) $profile['sexual'] = array( t('Sexual Preference:'), $a->profile['sexual'] );
 
 		if($a->profile['homepage']) $profile['homepage'] = array( t('Homepage:'), linkify($a->profile['homepage']) );
+
+		if($a->profile['hometown']) $profile['hometown'] = array( t('Hometown:'), linkify($a->profile['hometown']) );
 
 		if($a->profile['pub_keywords']) $profile['pub_keywords'] = array( t('Tags:'), $a->profile['pub_keywords']);
 
