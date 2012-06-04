@@ -1163,53 +1163,65 @@ footer { height: 100px; display: table-row; }
 	padding: 0em 0.3em;
 	
 }
-#adminpage dl {
+#adminpage {
+    dl {
 	clear: left;
 	margin-bottom: 2px;
 	padding-bottom: 2px;
 	border-bottom: 1px solid black;
-}
-#adminpage dt {
+    }
+    dt {
 	width: 200px;
 	float: left;
 	font-weight: bold;
-}
-#adminpage dd {
+    }
+    dd {
 	margin-left: 200px;
-}
-
-#adminpage h3 {
+    }
+    h3 {
 	border-bottom: 1px solid #cccccc;
-}
-#adminpage .field label {
+    }
+    .field label {
 	font-weight: bold;
-}
-#adminpage .submit {
+    }
+    .submit {
 	clear:left;
 	text-align: right;
-}
-
-#adminpage #pluginslist {
+    }
+    #pluginslist {
 	margin: 0px; padding: 0px;
-}
-#adminpage .plugin {
+    }
+    .plugin {
 	list-style: none;
 	display: block;
 	border: 1px solid #888888;
 	padding: 1em;
 	margin-bottom: 5px;
 	clear: left;
-}
-#adminpage .plugin .desc { margin-left: 2.5em;}
-#adminpage .toggleplugin {
+        desc {
+            margin-left: 2.5em;
+        }
+    }
+    .toggleplugin {
 	float:left;
 	margin-right: 1em;
+    }
+    table {
+        width:100%;
+        border-bottom: 1px solid #000000; 
+        margin: 5px 0px;
+        th { 
+            text-align: left;
+        }
+        td .icon { 
+            float: left;
+        }
+        tr:hover { 
+            background-color: #bbc7d7;
+        }
+    }
+    table#users img { 
+            width: 16px; height: 16px; 
+    }
+    .selectall { text-align: right; }
 }
-
-#adminpage table {width:100%; border-bottom: 1px solid #000000; margin: 5px 0px;}
-#adminpage table th { text-align: left;}
-#adminpage td .icon { float: left;}
-#adminpage table#users img { width: 16px; height: 16px; }
-#adminpage table tr:hover { background-color: #bbc7d7; }
-#adminpage .selectall { text-align: right; }
-

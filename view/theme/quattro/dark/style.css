@@ -1706,7 +1706,7 @@ footer {
   margin-bottom: 5px;
   clear: left;
 }
-#adminpage .plugin .desc {
+#adminpage .plugin desc {
   margin-left: 2.5em;
 }
 #adminpage .toggleplugin {
@@ -1721,15 +1721,15 @@ footer {
 #adminpage table th {
   text-align: left;
 }
-#adminpage td .icon {
+#adminpage table td .icon {
   float: left;
+}
+#adminpage table tr:hover {
+  background-color: #bbc7d7;
 }
 #adminpage table#users img {
   width: 16px;
   height: 16px;
-}
-#adminpage table tr:hover {
-  background-color: #bbc7d7;
 }
 #adminpage .selectall {
   text-align: right;
