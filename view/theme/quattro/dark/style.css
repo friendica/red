@@ -1734,3 +1734,105 @@ footer {
 #adminpage .selectall {
   text-align: right;
 }
+/* edit buttons for comments */
+.icon.dim {
+  opacity: 0.3;
+  filter: alpha(opacity=30);
+}
+[class^="comment-edit-bb"] {
+  list-style: none;
+  display: none;
+  margin: 0px 0 0px 60px;
+  width: 75%;
+}
+[class^="comment-edit-bb"] > li {
+  display: inline-block;
+  margin: 10px 10px 0 0;
+  visibility: none;
+}
+[class^="comment-edit-bb-end"] {
+  clear: both;
+}
+.editicon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-image: url(bbedit.png);
+  text-decoration: none;
+}
+.editicon :hover {
+  background-color: #ccc;
+}
+.boldbb {
+  background-position: 0px 0px;
+}
+.boldbb:hover {
+  background-position: 0px -16px;
+}
+.italicbb {
+  background-position: -16px 0px;
+}
+.italicbb:hover {
+  background-position: -16px -16px;
+}
+.underlinebb {
+  background-position: -32px 0px;
+}
+.underlinebb:hover {
+  background-position: -32px -16px;
+}
+.quotebb {
+  background-position: -48px 0px;
+}
+.quotebb:hover {
+  background-position: -48px -16px;
+}
+.codebb {
+  background-position: -64px 0px;
+}
+.codebb:hover {
+  background-position: -64px -16px;
+}
+.imagebb {
+  background-position: -80px 0px;
+}
+.imagebb:hover {
+  background-position: -80px -16px;
+}
+.urlbb {
+  background-position: -96px 0px;
+}
+.urlbb:hover {
+  background-position: -96px -16px;
+}
+.videobb {
+  background-position: -112px 0px;
+}
+.videobb:hover {
+  background-position: -112px -16px;
+}
+.attachtype {
+  display: block;
+  width: 20px;
+  height: 23px;
+  float: left;
+  background-image: url('../../../images/content-types.png');
+}
+.body-attach {
+  margin-top: 10px;
+}
+.type-video {
+  background-position: 0px 0px;
+}
+.type-image {
+  background-position: -20px 0px;
+}
+.type-audio {
+  background-position: -40px 0px;
+}
+.type-text {
+  background-position: -60px 0px;
+}
+.type-unkn {
+  background-position: -80px 0px;
+}
