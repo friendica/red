@@ -435,10 +435,13 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 					$password = '';
 					openssl_private_decrypt(hex2bin($r[0]['pass']),$password,$x[0]['prvkey']);
 					$mbox = email_connect($mailbox,$r[0]['user'],$password);
+					if(! $mbox)
+						logger('probe_url: email_connect failed.');
 					unset($password);
 				}
 				if($mbox) {
 					$msgs = email_poll($mbox,$orig_url);
+					logger('probe_url: searching ' . $orig_url . ', ' . count($msgs) . ' messages found.', LOGGER_DEBUG);
 					if(count($msgs)) {
 						$addr = $orig_url;
 						$network = NETWORK_MAIL;

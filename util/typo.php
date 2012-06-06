@@ -30,11 +30,10 @@
 	$dirs = glob('addon/*');
 
 	foreach($dirs as $dir) {
-		$files = glob($dir . '/*.php');
+		$addon = basename($dir);
+		$files = glob($dir . '/' . $addon . '.php');
 		foreach($files as $file) {
 			echo $file . "\n";
-			if(stristr($file,'jappixmini/proxy.php'))
-				continue;
 			include_once($file);
 		}
 	}

@@ -1,3 +1,4 @@
+<a name="$item.id" />
 <div class="wall-item-outside-wrapper$item.indent$item.previewing wallwall" id="wall-item-outside-wrapper-$item.id" >
 	<div class="wall-item-content-wrapper$item.indent" id="wall-item-content-wrapper-$item.id" >
 		<div class="wall-item-info wallwall" id="wall-item-info-$item.id">
