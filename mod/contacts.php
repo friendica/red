@@ -52,6 +52,7 @@ function contacts_init(&$a) {
 	var a; 
 	a = $("#contacts-search").autocomplete({ 
 		serviceUrl: '$base/acl',
+		minChars: 2,
 		width: 350,
 	});
 	a.setOptions({ params: { type: 'a' }});
