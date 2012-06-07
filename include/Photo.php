@@ -105,9 +105,9 @@ class Photo {
 
 
 		$dest = imagecreatetruecolor( $dest_width, $dest_height );
-		imagealphablending($dest->image, false);
+		imagealphablending($dest, false);
 		imagesavealpha($dest, true);
-		if ($this->type=='image/png') imagefill($dest, 0, 0, imagecolorallocatealpha($dest, 0, 0, 0, 127));; // fill with alpha
+		if ($this->type=='image/png') imagefill($dest, 0, 0, imagecolorallocatealpha($dest, 0, 0, 0, 127)); // fill with alpha
 		imagecopyresampled($dest, $this->image, 0, 0, 0, 0, $dest_width, $dest_height, $width, $height);
 		if($this->image)
 			imagedestroy($this->image);
@@ -164,9 +164,9 @@ class Photo {
 
 
 		$dest = imagecreatetruecolor( $dest_width, $dest_height );
-		imagealphablending($dest->image, false);
+		imagealphablending($dest, false);
 		imagesavealpha($dest, true);
-		if ($this->type=='image/png') imagefill($dest, 0, 0, imagecolorallocatealpha($dest, 0, 0, 0, 127));; // fill with alpha
+		if ($this->type=='image/png') imagefill($dest, 0, 0, imagecolorallocatealpha($dest, 0, 0, 0, 127)); // fill with alpha
 		imagecopyresampled($dest, $this->image, 0, 0, 0, 0, $dest_width, $dest_height, $width, $height);
 		if($this->image)
 			imagedestroy($this->image);
@@ -181,9 +181,9 @@ class Photo {
 	public function scaleImageSquare($dim) {
 
 		$dest = imagecreatetruecolor( $dim, $dim );
-		imagealphablending($dest->image, false);
+		imagealphablending($dest, false);
 		imagesavealpha($dest, true);
-		if ($this->type=='image/png') imagefill($dest, 0, 0, imagecolorallocatealpha($dest, 0, 0, 0, 127));; // fill with alpha
+		if ($this->type=='image/png') imagefill($dest, 0, 0, imagecolorallocatealpha($dest, 0, 0, 0, 127)); // fill with alpha
 		imagecopyresampled($dest, $this->image, 0, 0, 0, 0, $dim, $dim, $this->width, $this->height);
 		if($this->image)
 			imagedestroy($this->image);
@@ -195,9 +195,9 @@ class Photo {
 
 	public function cropImage($max,$x,$y,$w,$h) {
 		$dest = imagecreatetruecolor( $max, $max );
-		imagealphablending($dest->image, false);
+		imagealphablending($dest, false);
 		imagesavealpha($dest, true);
-		if ($this->type=='image/png') imagefill($dest, 0, 0, imagecolorallocatealpha($dest, 0, 0, 0, 127));; // fill with alpha
+		if ($this->type=='image/png') imagefill($dest, 0, 0, imagecolorallocatealpha($dest, 0, 0, 0, 127)); // fill with alpha
 		imagecopyresampled($dest, $this->image, 0, 0, $x, $y, $max, $max, $w, $h);
 		if($this->image)
 			imagedestroy($this->image);
@@ -295,6 +295,7 @@ class Photo {
  * @arg $fromcurl boolean Check Content-Type header from curl request
  */
 function guess_image_type($filename, $fromcurl=false) {
+    logger('Photo: guess_image_type: '.$filename . ($fromcurl?' from curl headers':''), LOGGER_DEBUG);
 	$type = null;
 	if ($fromcurl) {
 		$a = get_app(); 
@@ -310,12 +311,13 @@ function guess_image_type($filename, $fromcurl=false) {
 	if (is_null($type)){
 		$ext = pathinfo($filename, PATHINFO_EXTENSION);
 		$types = Photo::supportedTypes();
-		foreach ($types as $m=>$e){
-			if ($ext==$e) return $m;
-		}
 		$type = "image/jpeg";
-	}
+		foreach ($types as $m=>$e){
+			if ($ext==$e) $type = $m;
+		}
 
+	}
+    logger('Photo: guess_image_type: type='.$type, LOGGER_DEBUG);
 	return $type;
 	
 }

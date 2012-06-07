@@ -682,9 +682,9 @@ function photos_post(&$a) {
 		$filesize   = intval($_FILES['userfile']['size']);
 		$type       = $_FILES['userfile']['type'];
 	}
-	
+	if ($type=="") $type=guess_image_type($filename);
 
-	logger('photos: upload: received file: ' . $filename . ' as ' . $src . ' '. $type . ' ' . $filesize . ' bytes', LOGGER_DEBUG);
+	logger('photos: upload: received file: ' . $filename . ' as ' . $src . ' ('. $type . ') ' . $filesize . ' bytes', LOGGER_DEBUG);
 
 	$maximagesize = get_config('system','maximagesize');
 

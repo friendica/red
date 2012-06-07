@@ -69,7 +69,8 @@ function wall_upload_post(&$a) {
 		$filesize = intval($_FILES['media']['size']);
 		$filetype = $_FILES['media']['type'];
 	}
-
+	
+    if ($filetype=="") $filetype=guess_image_type($filename);
 	$maximagesize = get_config('system','maximagesize');
 
 	if(($maximagesize) && ($filesize > $maximagesize)) {
