@@ -2777,6 +2777,8 @@ function lose_sharer($importer,$contact,$datarray,$item) {
 
 function subscribe_to_hub($url,$importer,$contact,$hubmode = 'subscribe') {
 
+	$a = get_app();
+
 	if(is_array($importer)) {
 		$r = q("SELECT `nickname` FROM `user` WHERE `uid` = %d LIMIT 1",
 			intval($importer['uid'])
@@ -2807,7 +2809,10 @@ function subscribe_to_hub($url,$importer,$contact,$hubmode = 'subscribe') {
 		);
 	}
 
-	post_url($url,$params);			
+	post_url($url,$params);
+
+	logger('subscribe_to_hub: returns: ' . $a->get_curl_code(), LOGGER_DEBUG);
+			
 	return;
 
 }
