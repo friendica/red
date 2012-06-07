@@ -117,6 +117,9 @@ function admin_content(&$a) {
 	$t = get_markup_template("admin_aside.tpl");
 	$a->page['aside'] .= replace_macros( $t, array(
 			'$admin' => $aside, 
+			'$admtxt' => t('Admin'),
+			'$plugadmtxt' => t('Plugin Features'),
+			'$logtxt' => t('Logs'),
 			'$h_pending' => t('User registrations waiting for confirmation'),
 			'$admurl'=> $a->get_baseurl(true)."/admin/"
 	));
