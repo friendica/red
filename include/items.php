@@ -2952,7 +2952,7 @@ function fix_private_photos($s,$uid, $item = null, $cid = 0) {
 		if(stristr($image , $site . '/photo/')) {
 			$replace = false;
 			$i = basename($image);
-			$i = str_replace('.jpg','',$i);
+			$i = str_replace(array('.jpg','.png'),array('',''),$i);
 			$x = strpos($i,'-');
 			if($x) {
 				$res = substr($i,$x+1);
@@ -2994,7 +2994,7 @@ function fix_private_photos($s,$uid, $item = null, $cid = 0) {
 					}
 					if($replace) {
 						logger('fix_private_photos: replacing photo', LOGGER_DEBUG);
-						$s = str_replace($image, 'data:image/jpg;base64,' . base64_encode($r[0]['data']), $s);
+						$s = str_replace($image, 'data:' . $r[0]['type'] . ';base64,' . base64_encode($r[0]['data']), $s);
 						logger('fix_private_photos: replaced: ' . $s, LOGGER_DATA);
 					}
 				}

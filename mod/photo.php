@@ -76,7 +76,7 @@ function photo_init(&$a) {
 				break;
 		}
 
-		$uid = str_replace('.jpg', '', $person);
+		$uid = str_replace(array('.jpg','.png'),array('',''), $person);
 
 		$r = q("SELECT * FROM `photo` WHERE `scale` = %d AND `uid` = %d AND `profile` = 1 LIMIT 1",
 			intval($resolution),
