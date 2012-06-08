@@ -47,22 +47,30 @@ function pubsub_init(&$a) {
 		$r = q("SELECT * FROM `user` WHERE `nickname` = '%s' AND `account_expired` = 0 LIMIT 1",
 			dbesc($nick)
 		);
-		if(! count($r))
+		if(! count($r)) {
+			logger('pubsub: local account not found: ' . $nick);
 			hub_return(false, '');
+		}
 
 
 		$owner = $r[0];
 
 		$sql_extra = ((strlen($hub_verify)) ? sprintf(" AND `hub-verify` = '%s' ", dbesc($hub_verify)) : '');
 
-		$r = q("SELECT * FROM `contact` WHERE `poll` = '%s' AND `id` = %d AND `uid` = %d 
+		$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d 
 			AND `blocked` = 0 AND `pending` = 0 $sql_extra LIMIT 1",
-			dbesc($hub_topic),
 			intval($contact_id),
 			intval($owner['uid'])
 		);
-		if(! count($r))
+		if(! count($r)) {
+			logger('pubsub: contact not found.');
 			hub_return(false, '');
+		}
+
+		if(! link_compare($hub_topic,$r[0]['poll'])) {
+			logger('pubsub: hub topic ' . $hub_topic . ' != ' . $r[0]['poll']);
+			// should abort but let's humour them. 			
+		}
 
 		$contact = $r[0];
 
