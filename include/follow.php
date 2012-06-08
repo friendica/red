@@ -94,6 +94,9 @@ function new_contact($uid,$url,$interactive = false) {
 	}
 
 	$writeable = ((($ret['network'] === NETWORK_OSTATUS) && ($ret['notify'])) ? 1 : 0);
+
+	$subhub = (($ret['network'] === NETWORK_OSTATUS) ? true : false);
+
 	$hidden = (($ret['network'] === NETWORK_MAIL) ? 1 : 0);
 
 	if($ret['network'] === NETWORK_MAIL) {
@@ -116,8 +119,9 @@ function new_contact($uid,$url,$interactive = false) {
 	if(count($r)) {
 		// update contact
 		if($r[0]['rel'] == CONTACT_IS_FOLLOWER || ($network === NETWORK_DIASPORA && $r[0]['rel'] == CONTACT_IS_SHARING)) {
-			q("UPDATE `contact` SET `rel` = %d , `readonly` = 0 WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			q("UPDATE `contact` SET `rel` = %d , `subhub` = %d, `readonly` = 0 WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval(CONTACT_IS_FRIEND),
+				intval($subhub),
 				intval($r[0]['id']),
 				intval($uid)
 			);
@@ -131,8 +135,8 @@ function new_contact($uid,$url,$interactive = false) {
 
 		// create contact record 
 		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `nurl`, `addr`, `alias`, `batch`, `notify`, `poll`, `poco`, `name`, `nick`, `photo`, `network`, `pubkey`, `rel`, `priority`,
-			`writable`, `hidden`, `blocked`, `readonly`, `pending` )
-			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, 0, 0, 0 ) ",
+			`writable`, `hidden`, `blocked`, `readonly`, `pending`, `subhub` )
+			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, 0, 0, 0, %d ) ",
 			intval($uid),
 			dbesc(datetime_convert()),
 			dbesc($ret['url']),
@@ -151,7 +155,8 @@ function new_contact($uid,$url,$interactive = false) {
 			intval($new_relation),
 			intval($ret['priority']),
 			intval($writeable),
-			intval($hidden)
+			intval($hidden),
+			intval($subhub)
 		);
 	}
 

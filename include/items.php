@@ -1304,6 +1304,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 	$birthday = '';
 
 	$hubs = $feed->get_links('hub');
+	logger('consume_feed: hubs: ' . print_r($hubs,true), LOGGER_DATA);
 
 	if(count($hubs))
 		$hub = implode(',', $hubs);
