@@ -43,6 +43,26 @@ function contacts_init(&$a) {
 	$a->page['aside'] .= findpeople_widget();
 
 	$a->page['aside'] .= networks_widget('contacts',$_GET['nets']);
+	$base = $a->get_baseurl();
+
+	$a->page['htmlhead'] .= '<script src="' . $a->get_baseurl(true) . '/library/jquery_ac/friendica.complete.js" ></script>';
+	$a->page['htmlhead'] .= <<< EOT
+
+<script>$(document).ready(function() { 
+	var a; 
+	a = $("#contacts-search").autocomplete({ 
+		serviceUrl: '$base/acl',
+		minChars: 2,
+		width: 350,
+	});
+	a.setOptions({ params: { type: 'a' }});
+
+}); 
+
+</script>
+EOT;
+
+
 }
 
 function contacts_post(&$a) {

@@ -1304,6 +1304,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 	$birthday = '';
 
 	$hubs = $feed->get_links('hub');
+	logger('consume_feed: hubs: ' . print_r($hubs,true), LOGGER_DATA);
 
 	if(count($hubs))
 		$hub = implode(',', $hubs);
@@ -1346,7 +1347,11 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 		}
 			
 		$img_str = fetch_url($photo_url,true);
-		$img = new Photo($img_str);
+		// guess mimetype from headers or filename
+		$type = guess_image_type($photo_url,true);
+		
+		
+		$img = new Photo($img_str, $type);
 		if($img->is_valid()) {
 			if($have_photo) {
 				q("DELETE FROM `photo` WHERE `resource-id` = '%s' AND `contact-id` = %d AND `uid` = %d",
@@ -1372,9 +1377,9 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 			q("UPDATE `contact` SET `avatar-date` = '%s', `photo` = '%s', `thumb` = '%s', `micro` = '%s'  
 				WHERE `uid` = %d AND `id` = %d LIMIT 1",
 				dbesc(datetime_convert()),
-				dbesc($a->get_baseurl() . '/photo/' . $hash . '-4.jpg'),
-				dbesc($a->get_baseurl() . '/photo/' . $hash . '-5.jpg'),
-				dbesc($a->get_baseurl() . '/photo/' . $hash . '-6.jpg'),
+				dbesc($a->get_baseurl() . '/photo/' . $hash . '-4.'.$img->getExt()),
+				dbesc($a->get_baseurl() . '/photo/' . $hash . '-5.'.$img->getExt()),
+				dbesc($a->get_baseurl() . '/photo/' . $hash . '-6.'.$img->getExt()),
 				intval($contact['uid']),
 				intval($contact['id'])
 			);
@@ -2777,6 +2782,8 @@ function lose_sharer($importer,$contact,$datarray,$item) {
 
 function subscribe_to_hub($url,$importer,$contact,$hubmode = 'subscribe') {
 
+	$a = get_app();
+
 	if(is_array($importer)) {
 		$r = q("SELECT `nickname` FROM `user` WHERE `uid` = %d LIMIT 1",
 			intval($importer['uid'])
@@ -2807,7 +2814,10 @@ function subscribe_to_hub($url,$importer,$contact,$hubmode = 'subscribe') {
 		);
 	}
 
-	post_url($url,$params);			
+	post_url($url,$params);
+
+	logger('subscribe_to_hub: returns: ' . $a->get_curl_code(), LOGGER_DEBUG);
+			
 	return;
 
 }
@@ -2943,7 +2953,7 @@ function fix_private_photos($s,$uid, $item = null, $cid = 0) {
 		if(stristr($image , $site . '/photo/')) {
 			$replace = false;
 			$i = basename($image);
-			$i = str_replace('.jpg','',$i);
+			$i = str_replace(array('.jpg','.png'),array('',''),$i);
 			$x = strpos($i,'-');
 			if($x) {
 				$res = substr($i,$x+1);
@@ -2985,7 +2995,7 @@ function fix_private_photos($s,$uid, $item = null, $cid = 0) {
 					}
 					if($replace) {
 						logger('fix_private_photos: replacing photo', LOGGER_DEBUG);
-						$s = str_replace($image, 'data:image/jpg;base64,' . base64_encode($r[0]['data']), $s);
+						$s = str_replace($image, 'data:' . $r[0]['type'] . ';base64,' . base64_encode($r[0]['data']), $s);
 						logger('fix_private_photos: replaced: ' . $s, LOGGER_DATA);
 					}
 				}

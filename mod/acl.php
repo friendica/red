@@ -1,5 +1,6 @@
 <?php
 /* ACL selector json backend */
+
 require_once("include/acl_selectors.php");
 
 function acl_init(&$a){
@@ -16,7 +17,8 @@ function acl_init(&$a){
 	// For use with jquery.autocomplete for private mail completion
 
 	if(x($_REQUEST,'query') && strlen($_REQUEST['query'])) {
-		$type = 'm';
+		if(! $type)
+			$type = 'm';
 		$search = $_REQUEST['query'];
 	}
 
@@ -59,6 +61,18 @@ function acl_init(&$a){
 			dbesc(NETWORK_DFRN),
 			dbesc(NETWORK_ZOT),
 			dbesc(NETWORK_DIASPORA)
+		);
+		$contact_count = (int)$r[0]['c'];
+
+	}
+	elseif ($type == 'a') {
+
+		// autocomplete for Contacts
+
+		$r = q("SELECT COUNT(`id`) AS c FROM `contact` 
+				WHERE `uid` = %d AND `self` = 0 
+				AND `pending` = 0 $sql_extra2" ,
+			intval(local_user())
 		);
 		$contact_count = (int)$r[0]['c'];
 
@@ -120,11 +134,19 @@ function acl_init(&$a){
 			dbesc(NETWORK_DIASPORA)
 		);
 	}
+	elseif($type == 'a') {
+		$r = q("SELECT `id`, `name`, `nick`, `micro`, `network`, `url`, `attag` FROM `contact` 
+			WHERE `uid` = %d AND `pending` = 0
+			$sql_extra2
+			ORDER BY `name` ASC ",
+			intval(local_user())
+		);
+	}
 	else
 		$r = array();
 
 
-	if($type == 'm') {
+	if($type == 'm' || $type == 'a') {
 		$x = array();
 		$x['query'] = $search;
 		$x['photos'] = array();
