@@ -383,16 +383,21 @@ function get_atom_elements($feed,$item) {
 			$res['app'] = 'OStatus';
 	}		   
 
-	// base64 encoded json structure representing Diaspora signature
 
-	$dsig = $item->get_item_tags(NAMESPACE_DFRN,'diaspora_signature');
-	if($dsig) {
-		$res['dsprsig'] = unxmlify($dsig[0]['data']);
+	// base64 encoded json structure representing Diaspora signature
+	$dspr_enabled = intval(get_config('system','diaspora_enabled'));
+
+	if( $dspr_enabled) { 
+		$dsig = $item->get_item_tags(NAMESPACE_DFRN,'diaspora_signature');
+		if($dsig) {
+			$res['dsprsig'] = unxmlify($dsig[0]['data']);
+		}
+
+		$dguid = $item->get_item_tags(NAMESPACE_DFRN,'diaspora_guid');
+		if($dguid)
+			$res['guid'] = unxmlify($dguid[0]['data']);
 	}
 
-	$dguid = $item->get_item_tags(NAMESPACE_DFRN,'diaspora_guid');
-	if($dguid)
-		$res['guid'] = unxmlify($dguid[0]['data']);
 
 	$bm = $item->get_item_tags(NAMESPACE_DFRN,'bookmark');
 	if($bm)
@@ -699,12 +704,16 @@ function item_store($arr,$force_parent = false) {
 
 	// If a Diaspora signature structure was passed in, pull it out of the 
 	// item array and set it aside for later storage.
+	$dspr_enabled = intval(get_config('system','diaspora_enabled'));
 
 	$dsprsig = null;
+
 	if(x($arr,'dsprsig')) {
-		$dsprsig = json_decode(base64_decode($arr['dsprsig']));
+		if($dspr_enabled)
+			$dsprsig = json_decode(base64_decode($arr['dsprsig']));
 		unset($arr['dsprsig']);
 	}
+
 
 	if(x($arr, 'gravity'))
 		$arr['gravity'] = intval($arr['gravity']);
@@ -934,7 +943,9 @@ function item_store($arr,$force_parent = false) {
 		intval($parent_id)
 	);
 
-	if($dsprsig) {
+
+	// Store the Diaspora signature if there is one
+	if($dspr_enabled && $dsprsig) {
 		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
 			intval($current_post),
 			dbesc($dsprsig->signed_text),
@@ -1007,6 +1018,7 @@ function tag_deliver($uid,$item_id) {
 	// instead of the one we supply with webfinger
 
 	$dlink = normalise_link($a->get_baseurl() . '/u/' . $u[0]['nickname']);
+
 
 	$cnt = preg_match_all('/[\@\!]\[url\=(.*?)\](.*?)\[\/url\]/ism',$item['body'],$matches,PREG_SET_ORDER);
 	if($cnt) {
@@ -2973,12 +2985,15 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 	if($item['app'])
 		$o .= '<statusnet:notice_info local_id="' . $item['id'] . '" source="' . xmlify($item['app']) . '" ></statusnet:notice_info>' . "\r\n";
 
-	if($item['guid'])
-		$o .= '<dfrn:diaspora_guid>' . $item['guid'] . '</dfrn:diaspora_guid>' . "\r\n";
+	$dspr_enabled = intval(get_config('system','diaspora_enabled'));
+	if( $dspr_enabled) {
+		if($item['guid'])
+			$o .= '<dfrn:diaspora_guid>' . $item['guid'] . '</dfrn:diaspora_guid>' . "\r\n";
 
-	if($item['signed_text']) {
-		$sign = base64_encode(json_encode(array('signed_text' => $item['signed_text'],'signature' => $item['signature'],'signer' => $item['signer'])));
-		$o .= '<dfrn:diaspora_signature>' . xmlify($sign) . '</dfrn:diaspora_signature>' . "\r\n";
+		if($item['signed_text']) {
+			$sign = base64_encode(json_encode(array('signed_text' => $item['signed_text'],'signature' => $item['signature'],'signer' => $item['signer'])));
+			$o .= '<dfrn:diaspora_signature>' . xmlify($sign) . '</dfrn:diaspora_signature>' . "\r\n";
+		}
 	}
 
 	$verb = construct_verb($item);
@@ -3317,7 +3332,9 @@ function drop_item($id,$interactive = true) {
 			// ignore the result
 		}
 
-		// clean up item_id and sign meta-data tables
+		// clean up item_id and sign (Diaspora signature) meta-data tables
+		// Clean up the sign table even if Diaspora support is disabled. We may still need to
+		// clean it up if Diaspora support had been enabled in the past
 
 		$r = q("DELETE FROM item_id where iid in (select id from item where parent = %d and uid = %d)",
 			intval($item['id']),
@@ -3359,40 +3376,8 @@ function drop_item($id,$interactive = true) {
 				);
 			}
 
-			// Add a relayable_retraction signature for Diaspora. Note that we can't add a target_author_signature
-			// if the comment was deleted by a remote user. That should be ok, because if a remote user is deleting
-			// the comment, that means we're the home of the post, and Diaspora will only
-			// check the parent_author_signature of retractions that it doesn't have to relay further
-			//
-			// I don't think this function gets called for an "unlike," but I'll check anyway
-			$signed_text = $item['guid'] . ';' . ( ($item['verb'] === ACTIVITY_LIKE) ? 'Like' : 'Comment');
-
-			if(local_user() == $item['uid']) {
-
-				$handle = $a->user['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
-				$authorsig = base64_encode(rsa_sign($signed_text,$a->user['prvkey'],'sha256'));
-			}
-			else {
-				$r = q("SELECT `nick`, `url` FROM `contact` WHERE `id` = '%d' LIMIT 1",
-					$item['contact-id']
-				);
-				if(count($r)) {
-					// The below handle only works for NETWORK_DFRN. I think that's ok, because this function
-					// only handles DFRN deletes
-					$handle_baseurl_start = strpos($r['url'],'://') + 3;
-					$handle_baseurl_length = strpos($r['url'],'/profile') - $handle_baseurl_start;
-					$handle = $r['nick'] . '@' . substr($r['url'], $handle_baseurl_start, $handle_baseurl_length);
-					$authorsig = '';
-				}
-			}
-
-			if(isset($handle))
-				q("insert into sign (`retract_iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
-					intval($item['id']),
-					dbesc($signed_text),
-					dbesc($authorsig),
-					dbesc($handle)
-				);
+			// Add a relayable_retraction signature for Diaspora.
+			store_diaspora_retract_sig($item, $a->user, $a->get_baseurl());
 		}
 		$drop_id = intval($item['id']);
 
@@ -3479,4 +3464,52 @@ function posted_date_widget($url,$uid,$wall) {
 		'$dates' => $ret
 	));
 	return $o;
+}
+
+
+function store_diaspora_retract_sig($item, $user, $baseurl) {
+	// Note that we can't add a target_author_signature
+	// if the comment was deleted by a remote user. That should be ok, because if a remote user is deleting
+	// the comment, that means we're the home of the post, and Diaspora will only
+	// check the parent_author_signature of retractions that it doesn't have to relay further
+	//
+	// I don't think this function gets called for an "unlike," but I'll check anyway
+
+	$enabled = intval(get_config('system','diaspora_enabled'));
+	if(! $enabled) {
+		return;
+	}
+
+	logger('drop_item: storing diaspora retraction signature');
+
+	$signed_text = $item['guid'] . ';' . ( ($item['verb'] === ACTIVITY_LIKE) ? 'Like' : 'Comment');
+
+	if(local_user() == $item['uid']) {
+
+		$handle = $user['nickname'] . '@' . substr($baseurl, strpos($baseurl,'://') + 3);
+		$authorsig = base64_encode(rsa_sign($signed_text,$user['prvkey'],'sha256'));
+	}
+	else {
+		$r = q("SELECT `nick`, `url` FROM `contact` WHERE `id` = '%d' LIMIT 1",
+			$item['contact-id']
+		);
+		if(count($r)) {
+			// The below handle only works for NETWORK_DFRN. I think that's ok, because this function
+			// only handles DFRN deletes
+			$handle_baseurl_start = strpos($r['url'],'://') + 3;
+			$handle_baseurl_length = strpos($r['url'],'/profile') - $handle_baseurl_start;
+			$handle = $r['nick'] . '@' . substr($r['url'], $handle_baseurl_start, $handle_baseurl_length);
+			$authorsig = '';
+		}
+	}
+
+	if(isset($handle))
+		q("insert into sign (`retract_iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+			intval($item['id']),
+			dbesc($signed_text),
+			dbesc($authorsig),
+			dbesc($handle)
+		);
+
+	return;
 }

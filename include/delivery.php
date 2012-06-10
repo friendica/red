@@ -492,15 +492,15 @@ function delivery_run($argv, $argc){
 				break;
 
 			case NETWORK_DIASPORA :
+				if(get_config('system','dfrn_only') || (! get_config('system','diaspora_enabled')) || (! $normal_mode))
+					break;
+
 				if($public_message)
 					$loc = 'public batch ' . $contact['batch'];
 				else 
 					$loc = $contact['name'];
 
 				logger('delivery: diaspora batch deliver: ' . $loc);
-
-				if(get_config('system','dfrn_only') || (! get_config('system','diaspora_enabled')) || (! $normal_mode))
-					break;
 
 				if((! $contact['pubkey']) && (! $public_message))
 					break;

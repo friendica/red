@@ -728,26 +728,13 @@ function item_post(&$a) {
 			
 			}
 
-			// We won't be able to sign Diaspora comments for authenticated visitors - we don't have their private key
 
-			if($self) {
-				require_once('include/bb2diaspora.php');
-				$signed_body = html_entity_decode(bb2diaspora($datarray['body']));
-				$myaddr = $a->user['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
-				if($datarray['verb'] === ACTIVITY_LIKE) 
-					$signed_text = $datarray['guid'] . ';' . 'Post' . ';' . $parent_item['guid'] . ';' . 'true' . ';' . $myaddr;
-				else
-					$signed_text = $datarray['guid'] . ';' . $parent_item['guid'] . ';' . $signed_body . ';' . $myaddr;
+			// Store the comment signature information in case we need to relay to Diaspora
+			// May want to have this run for remote users too, in which case the function needs to be
+			// expanded
+			if($self)
+				store_diaspora_comment_sig($datarray, $a->user, $a->get_baseurl(), $parent_item, $post_id);
 
-				$authorsig = base64_encode(rsa_sign($signed_text,$a->user['prvkey'],'sha256'));
-
-				q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
-					intval($post_id),
-					dbesc($signed_text),
-					dbesc(base64_encode($authorsig)),
-					dbesc($myaddr)
-				);
-			}
 		}
 		else {
 			$parent = $post_id;
@@ -1037,4 +1024,39 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 	}
 
 	return array('replaced' => $replaced, 'contact' => $r[0]);	
+}
+
+
+function store_diaspora_comment_sig($datarray, $user, $baseurl, $parent_item, $post_id) {
+	// We won't be able to sign Diaspora comments for authenticated visitors - we don't have their private key
+
+	// May want to have this run for remote users too, in which case the function needs to be
+	// expanded
+
+	$enabled = intval(get_config('system','diaspora_enabled'));
+	if(! $enabled) {
+		return;
+	}
+
+
+	logger('mod_item: storing diaspora comment signature');
+
+	require_once('include/bb2diaspora.php');
+	$signed_body = html_entity_decode(bb2diaspora($datarray['body']));
+	$myaddr = $user['nickname'] . '@' . substr($baseurl, strpos($baseurl,'://') + 3);
+	if($datarray['verb'] === ACTIVITY_LIKE) 
+		$signed_text = $datarray['guid'] . ';' . 'Post' . ';' . $parent_item['guid'] . ';' . 'true' . ';' . $myaddr;
+	else
+		$signed_text = $datarray['guid'] . ';' . $parent_item['guid'] . ';' . $signed_body . ';' . $myaddr;
+
+	$authorsig = base64_encode(rsa_sign($signed_text,$user['prvkey'],'sha256'));
+
+	q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+		intval($post_id),
+		dbesc($signed_text),
+		dbesc(base64_encode($authorsig)),
+		dbesc($myaddr)
+	);
+
+	return;
 }

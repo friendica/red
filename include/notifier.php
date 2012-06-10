@@ -709,10 +709,10 @@ function notifier_run($argv, $argc){
 					}
 					break;
 				case NETWORK_DIASPORA:
-					require_once('include/diaspora.php');
-
 					if(get_config('system','dfrn_only') || (! get_config('system','diaspora_enabled')))
 						break;
+
+					require_once('include/diaspora.php');
 
 					if($mail) {
 						diaspora_send_mail($item,$owner,$contact);
@@ -860,12 +860,16 @@ function notifier_run($argv, $argc){
 
 	}
 
-	// If the item was deleted, clean up the `sign` table
+
+	// If the item was deleted, clean up the `sign` table (for Diaspora signatures)
+	// Do this even if Diaspora support is disabled, as it may have been enabled in
+	// the past
 	if($target_item['deleted']) {
 		$r = q("DELETE FROM sign where `retract_iid` = %d",
 			intval($target_item['id'])
 		);
 	}
+
 
 	logger('notifier: calling hooks', LOGGER_DEBUG);
 
