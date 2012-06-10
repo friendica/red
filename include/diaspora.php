@@ -1119,6 +1119,18 @@ function diaspora_comment($importer,$xml,$msg) {
 
 	// Phew! Everything checks out. Now create an item.
 
+	// Find the original comment author information
+	if(strcasecmp($diaspora_handle,$msg['author']) == 0)
+		$person = $contact;
+	else {
+		$person = find_diaspora_person_by_handle($diaspora_handle);	
+
+		if(! is_array($person)) {
+			logger('diaspora_comment: unable to find author details');
+			return;
+		}
+	}
+
 	$body = diaspora2bb($text);
 
 	$message_id = $diaspora_handle . ':' . $guid;
@@ -1703,6 +1715,18 @@ function diaspora_like($importer,$xml,$msg) {
 	}
 
 	// Phew! Everything checks out. Now create an item.
+
+	// Find the original like author information
+	if(strcasecmp($diaspora_handle,$msg['author']) == 0)
+		$person = $contact;
+	else {
+		$person = find_diaspora_person_by_handle($diaspora_handle);
+
+		if(! is_array($person)) {
+			logger('diaspora_like: unable to find author details');
+			return;
+		}
+	}
 
 	$uri = $diaspora_handle . ':' . $guid;
 
