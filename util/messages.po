@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 3.0.1369\n"
+"Project-Id-Version: 3.0.1370\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-09 10:00-0700\n"
+"POT-Creation-Date: 2012-06-10 10:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2410,7 +2410,7 @@ msgstr ""
 
 #: ../../mod/notes.php:63 ../../mod/filer.php:30
 #: ../../addon/facebook/facebook.php:756
-#: ../../addon/privacy_image_cache/privacy_image_cache.php:178
+#: ../../addon/privacy_image_cache/privacy_image_cache.php:185
 #: ../../addon/dav/layout.fnk.php:418 ../../include/text.php:652
 msgid "Save"
 msgstr ""
@@ -4473,23 +4473,23 @@ msgstr ""
 msgid "Automatically follow any StatusNet followers/mentioners"
 msgstr ""
 
-#: ../../addon/privacy_image_cache/privacy_image_cache.php:175
+#: ../../addon/privacy_image_cache/privacy_image_cache.php:182
 msgid "Lifetime of the cache (in hours)"
 msgstr ""
 
-#: ../../addon/privacy_image_cache/privacy_image_cache.php:180
+#: ../../addon/privacy_image_cache/privacy_image_cache.php:187
 msgid "Cache Statistics"
 msgstr ""
 
-#: ../../addon/privacy_image_cache/privacy_image_cache.php:183
+#: ../../addon/privacy_image_cache/privacy_image_cache.php:190
 msgid "Number of items"
 msgstr ""
 
-#: ../../addon/privacy_image_cache/privacy_image_cache.php:185
+#: ../../addon/privacy_image_cache/privacy_image_cache.php:192
 msgid "Size of the cache"
 msgstr ""
 
-#: ../../addon/privacy_image_cache/privacy_image_cache.php:187
+#: ../../addon/privacy_image_cache/privacy_image_cache.php:194
 msgid "Delete the whole cache"
 msgstr ""
 
