@@ -477,6 +477,9 @@ function onepoll_run($argv, $argc){
 		if($contact['network'] === NETWORK_DFRN || $contact['blocked'] || $contact['readonly'])
 			$hubmode = 'unsubscribe';
 
+		if($contact['network'] === NETWORK_OSTATUS && (! $contact['hub-verify']))
+			$hub_update = true;
+
 		if((strlen($hub)) && ($hub_update) && ($contact['rel'] != CONTACT_IS_FOLLOWER)) {
 			logger('poller: hub ' . $hubmode . ' : ' . $hub . ' contact name : ' . $contact['name'] . ' local user : ' . $importer['name']);
 			$hubs = explode(',', $hub);

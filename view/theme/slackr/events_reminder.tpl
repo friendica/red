@@ -35,5 +35,5 @@
 		});
 	});
 </script>
-<div id="events-reminder"></div>
+<div id="events-reminder" class="$classtoday"></div>
 <br>

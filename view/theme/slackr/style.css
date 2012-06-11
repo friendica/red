@@ -13,6 +13,10 @@
 	background: none;
 }
 
+.widget {
+/*	box-shadow: 4px 4px 3px 0 #444444; */
+}
+
 .comment-edit-text-empty, .comment-edit-text-full {
 	border: none;
 	border-left: 1px solid #EEE;
@@ -50,14 +54,23 @@ nav #site-location {
 	color: #000000;
 }
 
-.fc {
+#events-reminder {
+	border-radius: 3px;
+	-moz-border-radius: 3px;
 	opacity: 0.3;
 	filter:alpha(opacity=30);
 }
 
-.fc:hover {
+#events-reminder.birthday-today, #events-reminder.event-today {
 	opacity: 1.0;
 	filter:alpha(opacity=100);
+	box-shadow: 4px 4px 3px 0 #444444;
+}
+
+#events-reminder:hover {
+	opacity: 1.0;
+	filter:alpha(opacity=100);
+	box-shadow: 4px 4px 3px 0 #444444;
 }
 
 .fc-event-skin {
@@ -75,7 +88,7 @@ nav #site-location {
 	box-shadow: 4px 4px 3px 0 #444444;
 }
 
-.contact-entry-photo img, .profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo, .fc, .profile-jot-text, .group-selected, .nets-selected, .fileas-selected, #profile-jot-submit, .categories-selected {
+.contact-entry-photo img, .profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo, .profile-jot-text, .group-selected, .nets-selected, .fileas-selected, #profile-jot-submit, .categories-selected {
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	box-shadow: 4px 4px 3px 0 #444444;
