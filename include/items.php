@@ -693,6 +693,8 @@ function encode_rel_links($links) {
 	return xmlify($o);
 }
 
+
+
 function item_store($arr,$force_parent = false) {
 
 	// If a Diaspora signature structure was passed in, pull it out of the 
@@ -806,6 +808,14 @@ function item_store($arr,$force_parent = false) {
 			$deny_cid       = $r[0]['deny_cid'];
 			$deny_gid       = $r[0]['deny_gid'];
 			$arr['wall']    = $r[0]['wall'];
+
+			// if the parent is private, force privacy for the entire conversation
+			// This differs from the above settings as it subtly allows comments from 
+			// email correspondents to be private even if the overall thread is not. 
+
+			if($r[0]['private'])
+				$arr['private'] = 1;
+
 		}
 		else {
 
@@ -1835,9 +1845,12 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					$datarray['last-child'] = 1;
 				}
 
-				if(($contact['network'] === NETWORK_FEED) || (! strlen($contact['notify']))) {
-					// one way feed - no remote comment ability
-					$datarray['last-child'] = 0;
+				if($contact['network'] === NETWORK_FEED) {
+					if(! strlen($contact['notify'])) {
+						// one way feed - no remote comment ability
+						$datarray['last-child'] = 0;
+					}
+					$datarray['private'] = 1;
 				}
 
 				// This is my contact on another system, but it's really me.
