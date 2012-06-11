@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 3.0.1370\n"
+"Project-Id-Version: 3.0.1371\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-10 10:00-0700\n"
+"POT-Creation-Date: 2012-06-11 10:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,7 +55,7 @@ msgstr ""
 #: ../../mod/profiles.php:385 ../../mod/delegate.php:6
 #: ../../mod/suggest.php:28 ../../mod/invite.php:13 ../../mod/invite.php:81
 #: ../../mod/dfrn_confirm.php:53 ../../addon/facebook/facebook.php:503
-#: ../../addon/dav/layout.fnk.php:387 ../../include/items.php:3342
+#: ../../addon/dav/layout.fnk.php:353 ../../include/items.php:3355
 #: ../../index.php:306
 msgid "Permission denied."
 msgstr ""
@@ -173,7 +173,7 @@ msgstr ""
 msgid "Help:"
 msgstr ""
 
-#: ../../mod/help.php:34 ../../addon/dav/layout.fnk.php:112
+#: ../../mod/help.php:34 ../../addon/dav/layout.fnk.php:116
 #: ../../include/nav.php:86
 msgid "Help"
 msgstr ""
@@ -233,12 +233,12 @@ msgstr ""
 msgid "Create New Event"
 msgstr ""
 
-#: ../../mod/events.php:326 ../../addon/dav/layout.fnk.php:147
+#: ../../mod/events.php:326 ../../addon/dav/layout.fnk.php:154
 msgid "Previous"
 msgstr ""
 
 #: ../../mod/events.php:327 ../../mod/install.php:205
-#: ../../addon/dav/layout.fnk.php:150
+#: ../../addon/dav/layout.fnk.php:157
 msgid "Next"
 msgstr ""
 
@@ -820,7 +820,7 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:700 ../../include/items.php:2738
+#: ../../mod/dfrn_request.php:700 ../../include/items.php:2751
 msgid "[Name Withheld]"
 msgstr ""
 
@@ -1236,7 +1236,7 @@ msgstr ""
 msgid "Network"
 msgstr ""
 
-#: ../../mod/notifications.php:85 ../../mod/network.php:188
+#: ../../mod/notifications.php:85 ../../mod/network.php:238
 msgid "Personal"
 msgstr ""
 
@@ -1718,7 +1718,7 @@ msgstr ""
 #: ../../addon/facebook/facebook.php:688
 #: ../../addon/facebook/facebook.php:1178
 #: ../../addon/public_server/public_server.php:62
-#: ../../addon/testdrive/testdrive.php:67 ../../include/items.php:2747
+#: ../../addon/testdrive/testdrive.php:67 ../../include/items.php:2760
 #: ../../boot.php:699
 msgid "Administrator"
 msgstr ""
@@ -1802,7 +1802,7 @@ msgid "Remove account"
 msgstr ""
 
 #: ../../mod/settings.php:89 ../../mod/admin.php:751 ../../mod/admin.php:956
-#: ../../addon/dav/layout.fnk.php:112 ../../addon/mathjax/mathjax.php:36
+#: ../../addon/dav/layout.fnk.php:116 ../../addon/mathjax/mathjax.php:36
 #: ../../view/theme/diabook/theme.php:643
 #: ../../view/theme/diabook/theme.php:773 ../../include/nav.php:137
 msgid "Settings"
@@ -2308,67 +2308,67 @@ msgstr ""
 msgid "Select an identity to manage: "
 msgstr ""
 
-#: ../../mod/network.php:43
+#: ../../mod/network.php:67
 msgid "Search Results For:"
 msgstr ""
 
-#: ../../mod/network.php:82 ../../mod/search.php:16
+#: ../../mod/network.php:106 ../../mod/search.php:16
 msgid "Remove term"
 msgstr ""
 
-#: ../../mod/network.php:91 ../../mod/search.php:13
+#: ../../mod/network.php:115 ../../mod/search.php:13
 msgid "Saved Searches"
 msgstr ""
 
-#: ../../mod/network.php:92 ../../include/group.php:244
+#: ../../mod/network.php:116 ../../include/group.php:244
 msgid "add"
 msgstr ""
 
-#: ../../mod/network.php:175
+#: ../../mod/network.php:225
 msgid "Commented Order"
 msgstr ""
 
-#: ../../mod/network.php:178
+#: ../../mod/network.php:228
 msgid "Sort by Comment Date"
 msgstr ""
 
-#: ../../mod/network.php:181
+#: ../../mod/network.php:231
 msgid "Posted Order"
 msgstr ""
 
-#: ../../mod/network.php:184
+#: ../../mod/network.php:234
 msgid "Sort by Post Date"
 msgstr ""
 
-#: ../../mod/network.php:191
+#: ../../mod/network.php:241
 msgid "Posts that mention or involve you"
 msgstr ""
 
-#: ../../mod/network.php:194
+#: ../../mod/network.php:244
 msgid "New"
 msgstr ""
 
-#: ../../mod/network.php:197
+#: ../../mod/network.php:247
 msgid "Activity Stream - by date"
 msgstr ""
 
-#: ../../mod/network.php:200
+#: ../../mod/network.php:250
 msgid "Starred"
 msgstr ""
 
-#: ../../mod/network.php:203
+#: ../../mod/network.php:253
 msgid "Favourite Posts"
 msgstr ""
 
-#: ../../mod/network.php:206
+#: ../../mod/network.php:256
 msgid "Shared Links"
 msgstr ""
 
-#: ../../mod/network.php:209
+#: ../../mod/network.php:259
 msgid "Interesting Links"
 msgstr ""
 
-#: ../../mod/network.php:285
+#: ../../mod/network.php:339
 #, php-format
 msgid "Warning: This group contains %s member from an insecure network."
 msgid_plural ""
@@ -2376,31 +2376,31 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../mod/network.php:288
+#: ../../mod/network.php:342
 msgid "Private messages to this group are at risk of public disclosure."
 msgstr ""
 
-#: ../../mod/network.php:333
+#: ../../mod/network.php:387
 msgid "No such group"
 msgstr ""
 
-#: ../../mod/network.php:344
+#: ../../mod/network.php:398
 msgid "Group is empty"
 msgstr ""
 
-#: ../../mod/network.php:348
+#: ../../mod/network.php:402
 msgid "Group: "
 msgstr ""
 
-#: ../../mod/network.php:358
+#: ../../mod/network.php:412
 msgid "Contact: "
 msgstr ""
 
-#: ../../mod/network.php:360
+#: ../../mod/network.php:414
 msgid "Private messages to this person are at risk of public disclosure."
 msgstr ""
 
-#: ../../mod/network.php:365
+#: ../../mod/network.php:419
 msgid "Invalid contact."
 msgstr ""
 
@@ -2411,7 +2411,7 @@ msgstr ""
 #: ../../mod/notes.php:63 ../../mod/filer.php:30
 #: ../../addon/facebook/facebook.php:756
 #: ../../addon/privacy_image_cache/privacy_image_cache.php:185
-#: ../../addon/dav/layout.fnk.php:418 ../../include/text.php:652
+#: ../../addon/dav/layout.fnk.php:384 ../../include/text.php:652
 msgid "Save"
 msgstr ""
 
@@ -2793,7 +2793,7 @@ msgstr ""
 
 #: ../../mod/notice.php:15 ../../mod/viewsrc.php:15 ../../mod/admin.php:159
 #: ../../mod/admin.php:700 ../../mod/admin.php:899 ../../mod/display.php:37
-#: ../../mod/display.php:142 ../../include/items.php:3189
+#: ../../mod/display.php:142 ../../include/items.php:3202
 msgid "Item not found."
 msgstr ""
 
@@ -3758,7 +3758,7 @@ msgstr ""
 msgid "Address"
 msgstr ""
 
-#: ../../mod/profiles.php:194
+#: ../../mod/profiles.php:194 ../../addon/dav/layout.fnk.php:310
 msgid "Location"
 msgstr ""
 
@@ -4421,7 +4421,7 @@ msgstr ""
 msgid "Activate Real-Time Updates"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:785 ../../addon/dav/layout.fnk.php:394
+#: ../../addon/facebook/facebook.php:785 ../../addon/dav/layout.fnk.php:360
 msgid "The new values have been saved."
 msgstr ""
 
@@ -4673,98 +4673,116 @@ msgstr ""
 msgid "German Time Format (dd.mm.YYYY)"
 msgstr ""
 
-#: ../../addon/dav/common/calendar.fnk.php:507
-#: ../../addon/dav/common/calendar.fnk.php:576
-#: ../../addon/dav/common/calendar.fnk.php:603
-#: ../../addon/dav/layout.fnk.php:266
+#: ../../addon/dav/common/calendar.fnk.php:517
+#: ../../addon/dav/common/calendar.fnk.php:533
+#: ../../addon/dav/layout.fnk.php:200
+msgid "Error"
+msgstr ""
+
+#: ../../addon/dav/common/calendar.fnk.php:568
+#: ../../addon/dav/common/calendar.fnk.php:637
+#: ../../addon/dav/common/calendar.fnk.php:664
+#: ../../addon/dav/layout.fnk.php:231
 msgid "No access"
 msgstr ""
 
-#: ../../addon/dav/layout.fnk.php:116
+#: ../../addon/dav/layout.fnk.php:119
+msgid "New event"
+msgstr ""
+
+#: ../../addon/dav/layout.fnk.php:123
 msgid "Today"
 msgstr ""
 
 #: ../../addon/dav/layout.fnk.php:132
-msgid "Week"
+msgid "Day"
 msgstr ""
 
 #: ../../addon/dav/layout.fnk.php:139
+msgid "Week"
+msgstr ""
+
+#: ../../addon/dav/layout.fnk.php:146
 msgid "Month"
 msgstr ""
 
-#: ../../addon/dav/layout.fnk.php:144
+#: ../../addon/dav/layout.fnk.php:151
 msgid "Reload"
 msgstr ""
 
-#: ../../addon/dav/layout.fnk.php:155
+#: ../../addon/dav/layout.fnk.php:162
 msgid "Date"
 msgstr ""
 
-#: ../../addon/dav/layout.fnk.php:193 ../../addon/dav/layout.fnk.php:237
-msgid "Error"
-msgstr ""
-
-#: ../../addon/dav/layout.fnk.php:259
+#: ../../addon/dav/layout.fnk.php:224
 msgid "Not found"
 msgstr ""
 
-#: ../../addon/dav/layout.fnk.php:326 ../../addon/dav/layout.fnk.php:399
+#: ../../addon/dav/layout.fnk.php:292 ../../addon/dav/layout.fnk.php:365
 msgid "Go back to the calendar"
 msgstr ""
 
-#: ../../addon/dav/layout.fnk.php:346
+#: ../../addon/dav/layout.fnk.php:300
+msgid "Starts"
+msgstr ""
+
+#: ../../addon/dav/layout.fnk.php:305
+msgid "Ends"
+msgstr ""
+
+#: ../../addon/dav/layout.fnk.php:312
 msgid "Description"
 msgstr ""
 
-#: ../../addon/dav/layout.fnk.php:349
+#: ../../addon/dav/layout.fnk.php:315
 msgid "Notification"
 msgstr ""
 
-#: ../../addon/dav/layout.fnk.php:358
+#: ../../addon/dav/layout.fnk.php:324
 msgid "Minutes"
 msgstr ""
 
-#: ../../addon/dav/layout.fnk.php:361
+#: ../../addon/dav/layout.fnk.php:327
 msgid "Hours"
 msgstr ""
 
-#: ../../addon/dav/layout.fnk.php:364
+#: ../../addon/dav/layout.fnk.php:330
 msgid "Days"
 msgstr ""
 
-#: ../../addon/dav/layout.fnk.php:365
+#: ../../addon/dav/layout.fnk.php:331
 msgid "before"
 msgstr ""
 
-#: ../../addon/dav/layout.fnk.php:401
+#: ../../addon/dav/layout.fnk.php:367
 msgid "Calendar Settings"
 msgstr ""
 
-#: ../../addon/dav/layout.fnk.php:407
+#: ../../addon/dav/layout.fnk.php:373
 msgid "Date format"
 msgstr ""
 
-#: ../../addon/dav/layout.fnk.php:416
+#: ../../addon/dav/layout.fnk.php:382
 msgid "Time zone"
 msgstr ""
 
-#: ../../addon/dav/layout.fnk.php:421
+#: ../../addon/dav/layout.fnk.php:387
 msgid "Limitations"
 msgstr ""
 
-#: ../../addon/dav/layout.fnk.php:425
+#: ../../addon/dav/layout.fnk.php:391
 msgid "Warning"
 msgstr ""
 
-#: ../../addon/dav/layout.fnk.php:429
+#: ../../addon/dav/layout.fnk.php:395
 msgid "Synchronization (iPhone, Thunderbird Lightning, Android, ...)"
 msgstr ""
 
-#: ../../addon/dav/layout.fnk.php:436
+#: ../../addon/dav/layout.fnk.php:402
 msgid "Synchronizing this calendar with the iPhone"
 msgstr ""
 
-#: ../../addon/dav/layout.fnk.php:447
+#: ../../addon/dav/layout.fnk.php:413
 msgid "Synchronizing your Friendica-Contacts with the iPhone"
 msgstr ""
 
@@ -4776,71 +4794,71 @@ msgstr ""
 msgid "Your Friendica-Contacts"
 msgstr ""
 
-#: ../../addon/dav/main.php:229
+#: ../../addon/dav/main.php:244
 msgid "Calendar"
 msgstr ""
 
-#: ../../addon/dav/main.php:232
+#: ../../addon/dav/main.php:247
 msgid "Extended calendar with CalDAV-support"
 msgstr ""
 
-#: ../../addon/dav/main.php:248
+#: ../../addon/dav/main.php:263
 msgid "The database tables have been installed."
 msgstr ""
 
-#: ../../addon/dav/main.php:249
+#: ../../addon/dav/main.php:264
 msgid "An error occurred during the installation."
 msgstr ""
 
-#: ../../addon/dav/main.php:265
+#: ../../addon/dav/main.php:280
 msgid "No system-wide settings yet."
 msgstr ""
 
-#: ../../addon/dav/main.php:268
+#: ../../addon/dav/main.php:283
 msgid "Database status"
 msgstr ""
 
-#: ../../addon/dav/main.php:271
+#: ../../addon/dav/main.php:286
 msgid "Installed"
 msgstr ""
 
-#: ../../addon/dav/main.php:274
+#: ../../addon/dav/main.php:289
 msgid "Upgrade needed"
 msgstr ""
 
-#: ../../addon/dav/main.php:274
+#: ../../addon/dav/main.php:289
 msgid "Upgrade"
 msgstr ""
 
-#: ../../addon/dav/main.php:277
+#: ../../addon/dav/main.php:292
 msgid "Not installed"
 msgstr ""
 
-#: ../../addon/dav/main.php:277
+#: ../../addon/dav/main.php:292
 msgid "Install"
 msgstr ""
 
-#: ../../addon/dav/main.php:282
+#: ../../addon/dav/main.php:297
 msgid "Troubleshooting"
 msgstr ""
 
-#: ../../addon/dav/main.php:283
+#: ../../addon/dav/main.php:298
 msgid "Manual creation of the database tables:"
 msgstr ""
 
-#: ../../addon/dav/main.php:284
+#: ../../addon/dav/main.php:299
 msgid "Show SQL-statements"
 msgstr ""
 
-#: ../../addon/dav/calendar.friendica.fnk.php:128
+#: ../../addon/dav/calendar.friendica.fnk.php:151
 msgid "Private Calendar"
 msgstr ""
 
-#: ../../addon/dav/calendar.friendica.fnk.php:135
+#: ../../addon/dav/calendar.friendica.fnk.php:158
 msgid "Friendica Events: Mine"
 msgstr ""
 
-#: ../../addon/dav/calendar.friendica.fnk.php:138
+#: ../../addon/dav/calendar.friendica.fnk.php:161
 msgid "Friendica Events: Contacts"
 msgstr ""
 
@@ -6029,7 +6047,7 @@ msgid "j F"
 msgstr ""
 
 #: ../../include/profile_advanced.php:30 ../../include/datetime.php:450
-#: ../../include/items.php:1428
+#: ../../include/items.php:1438
 msgid "Birthday:"
 msgstr ""
 
@@ -7147,11 +7165,11 @@ msgstr ""
 msgid "following"
 msgstr ""
 
-#: ../../include/items.php:2745
+#: ../../include/items.php:2758
 msgid "A new person is sharing with you at "
 msgstr ""
 
-#: ../../include/items.php:2745
+#: ../../include/items.php:2758
 msgid "You have a new follower at "
 msgstr ""
 
