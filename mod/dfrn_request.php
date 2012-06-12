@@ -170,6 +170,21 @@ function dfrn_request_post(&$a) {
 					info( t("Introduction complete.") . EOL);
 				}
 
+				$r = q("select id from contact where uid = %d and url = '%s' and `site-pubkey` = '%s limit 1",
+					intval(local_user()),
+					$dbesc($dfrn_url),
+					$parms['key'] // this was already escaped
+				);
+				if(count($r)) {
+					$g = q("select def_gid from user where uid = %d limit 1",
+						intval(local_user())
+					);
+					if($g && intval($g[0]['def_gid'])) {
+						require_once('include/group.php');
+						group_add_member(local_user(),'',$r[0]['id'],$g[0]['def_gid']);
+					}
+				}
+
 				/**
 				 * Allow the blocked remote notification to complete
 				 */
