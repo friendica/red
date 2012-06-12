@@ -407,9 +407,6 @@ if(! class_exists('App')) {
 			$this->argc = count($this->argv);
 			if((array_key_exists('0',$this->argv)) && strlen($this->argv[0])) {
 				$this->module = str_replace(".", "_", $this->argv[0]);
-				if(array_key_exists('2',$this->argv)) {
-					$this->category = $this->argv[2];
-				}
 			}
 			else {
 				$this->argc = 1;

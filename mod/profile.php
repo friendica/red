@@ -67,11 +67,23 @@ function profile_init(&$a) {
 
 function profile_content(&$a, $update = 0) {
 
-        if (x($a->category)) {
-	        $category = $a->category;
+	$category = datequery = $datequery2 = '';
+
+	if($a->argc > 2) {
+		for($x = 2; $x < $a->argc; $x ++) {
+			if(is_a_date_arg($a->argv[$x])) {
+				if($datequery)
+					$datequery2 = escape_tags($a->argv[$x]);
+				else
+					$datequery = escape_tags($a->argv[$x]);
+			}
+			else
+				$category = $a->argv[$x];
+		}
 	}
-        else {
-	        $category = ((x($_GET,'category')) ? $_GET['category'] : '');
+
+	if(! x($category)) {
+		$category = ((x($_GET,'category')) ? $_GET['category'] : '');
 	}
 
 	if(get_config('system','block_public') && (! local_user()) && (! remote_user())) {
@@ -96,6 +108,7 @@ function profile_content(&$a, $update = 0) {
 			nav_set_selected('home');
 		}
 	}
+
 
 	$contact = null;
 	$remote_contact = false;
@@ -200,16 +213,24 @@ function profile_content(&$a, $update = 0) {
 	}
 	else {
 
-                if(x($category)) {
-		        $sql_extra .= file_tag_file_query('item',$category,'category');
+		if(x($category)) {
+			$sql_extra .= protect_sprintf(file_tag_file_query('item',$category,'category'));
 		}
+
+		if($datequery) {
+			$sql_extra2 .= protect_sprintf(sprintf(" AND item.created <= '%s' ", dbesc(datetime_convert('','',$datequery))));
+		}
+		if($datequery2) {
+			$sql_extra2 .= protect_sprintf(sprintf(" AND item.created >= '%s' ", dbesc(datetime_convert('','',$datequery2))));
+		}
+
 
 		$r = q("SELECT COUNT(*) AS `total`
 			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
 			and `item`.`moderated` = 0 AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
 			AND `item`.`id` = `item`.`parent` AND `item`.`wall` = 1
-			$sql_extra ",
+			$sql_extra $sql_extra2 ",
 			intval($a->profile['profile_uid'])
 		);
 
@@ -225,7 +246,7 @@ function profile_content(&$a, $update = 0) {
 			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
 			and `item`.`moderated` = 0 AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 			AND `item`.`id` = `item`.`parent` AND `item`.`wall` = 1
-			$sql_extra
+			$sql_extra $sql_extra2
 			ORDER BY `item`.`created` DESC $pager_sql ",
 			intval($a->profile['profile_uid'])
 
