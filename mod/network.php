@@ -208,6 +208,30 @@ function network_content(&$a, $update = 0) {
 
 	call_hooks('network_content_init', $arr);
 
+
+	$datequery = $datequery2 = '';
+
+	if($a->argc > 1) {
+		for($x = 1; $x < $a->argc; $x ++) {
+			if(is_a_date_arg($a->argv[$x])) {
+				if($datequery)
+					$datequery2 = escape_tags($a->argv[$x]);
+				else {
+					$datequery = escape_tags($a->argv[$x]);
+					$_GET['order'] = 'post';
+				}
+			}
+			elseif($a->argv[$x] === 'new') {
+				$nouveau = true;
+			}
+			elseif(intval($a->argv[$x])) {
+				$group = intval($a->argv[$x]);
+				$def_acl = array('allow_gid' => '<' . $group . '>');
+			}
+		}
+	}
+
+
 	$o = '';
 
 	// item filter tabs
@@ -302,17 +326,7 @@ function network_content(&$a, $update = 0) {
 	$cmax = ((x($_GET,'cmax')) ? intval($_GET['cmax']) : 99);
 	$file = ((x($_GET,'file')) ? $_GET['file'] : '');
 
-	if(($a->argc > 2) && $a->argv[2] === 'new')
-		$nouveau = true;
 
-	if($a->argc > 1) {
-		if($a->argv[1] === 'new')
-			$nouveau = true;
-		else {
-			$group = intval($a->argv[1]);
-			$def_acl = array('allow_gid' => '<' . $group . '>');
-		}
-	}
 
 	if(x($_GET,'search') || x($_GET,'file'))
 		$nouveau = true;
@@ -452,7 +466,17 @@ function network_content(&$a, $update = 0) {
 			. "'; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 	}
 
+	$sql_extra3 = '';
+
+	if($datequery) {
+		$sql_extra3 .= protect_sprintf(sprintf(" AND item.created <= '%s' ", dbesc(datetime_convert('','',$datequery))));
+	}
+	if($datequery2) {
+		$sql_extra3 .= protect_sprintf(sprintf(" AND item.created >= '%s' ", dbesc(datetime_convert('','',$datequery2))));
+	}
+
 	$sql_extra2 = (($nouveau) ? '' : " AND `item`.`parent` = `item`.`id` ");
+	$sql_extra3 = (($nouveau) ? '' : $sql_extra3);
 
 	if(x($_GET,'search')) {
 		$search = escape_tags($_GET['search']);
@@ -508,7 +532,7 @@ function network_content(&$a, $update = 0) {
 			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-			$sql_extra2
+			$sql_extra2 $sql_extra3
 			$sql_extra $sql_nets ",
 			intval($_SESSION['uid'])
 		);
@@ -560,7 +584,7 @@ function network_content(&$a, $update = 0) {
 				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
 				and `item`.`moderated` = 0 and `item`.`unseen` = 1
 				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-				$sql_extra $sql_nets ",
+				$sql_extra3 $sql_extra $sql_nets ",
 				intval(local_user())
 			);
 		}
@@ -570,7 +594,7 @@ function network_content(&$a, $update = 0) {
 				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
 				AND `item`.`moderated` = 0 AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 				AND `item`.`parent` = `item`.`id`
-				$sql_extra $sql_nets
+				$sql_extra3 $sql_extra $sql_nets
 				ORDER BY `item`.$ordering DESC $pager_sql ",
 				intval(local_user())
 			);
