@@ -1853,13 +1853,12 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					$datarray['last-child'] = 1;
 				}
 
-				if($contact['network'] === NETWORK_FEED) {
-					if(! strlen($contact['notify'])) {
+				if(($contact['network'] === NETWORK_FEED) || (! strlen($contact['notify']))) {
 						// one way feed - no remote comment ability
 						$datarray['last-child'] = 0;
-					}
-					$datarray['private'] = 1;
 				}
+				if($contact['network'] === NETWORK_FEED)
+					$datarray['private'] = 1;
 
 				// This is my contact on another system, but it's really me.
 				// Turn this into a wall post.
