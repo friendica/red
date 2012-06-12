@@ -211,6 +211,10 @@ function network_content(&$a, $update = 0) {
 
 	$datequery = $datequery2 = '';
 
+	$group = 0;
+
+	$nouveau = false;
+
 	if($a->argc > 1) {
 		for($x = 1; $x < $a->argc; $x ++) {
 			if(is_a_date_arg($a->argv[$x])) {
@@ -309,9 +313,6 @@ function network_content(&$a, $update = 0) {
 
 	$contact_id = $a->cid;
 
-	$group = 0;
-
-	$nouveau = false;
 	require_once('include/acl_selectors.php');
 
 	$cid = ((x($_GET,'cid')) ? intval($_GET['cid']) : 0);
