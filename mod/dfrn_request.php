@@ -172,7 +172,7 @@ function dfrn_request_post(&$a) {
 
 				$r = q("select id from contact where uid = %d and url = '%s' and `site-pubkey` = '%s limit 1",
 					intval(local_user()),
-					$dbesc($dfrn_url),
+					dbesc($dfrn_url),
 					$parms['key'] // this was already escaped
 				);
 				if(count($r)) {

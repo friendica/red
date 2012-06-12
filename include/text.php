@@ -1059,7 +1059,7 @@ function feed_salmonlinks($nick) {
 if(! function_exists('get_plink')) {
 function get_plink($item) {
 	$a = get_app();	
-	if (x($item,'plink') && (! $item['private'])){
+	if (x($item,'plink') && ((! $item['private']) || ($item['network'] === NETWORK_FEED))){
 		return array(
 			'href' => $item['plink'],
 			'title' => t('link to source'),
