@@ -67,7 +67,7 @@ function profile_init(&$a) {
 
 function profile_content(&$a, $update = 0) {
 
-	$category = datequery = $datequery2 = '';
+	$category = $datequery = $datequery2 = '';
 
 	if($a->argc > 2) {
 		for($x = 2; $x < $a->argc; $x ++) {

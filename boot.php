@@ -4,6 +4,7 @@ require_once('include/config.php');
 require_once('include/network.php');
 require_once('include/plugin.php');
 require_once('include/text.php');
+require_once('include/datetime.php');
 require_once('include/pgettext.php');
 require_once('include/nav.php');
 require_once('include/cache.php');
@@ -332,6 +333,12 @@ if(! class_exists('App')) {
 		private $curl_headers;
 
 		function __construct() {
+
+			global $default_timezone;
+
+			$this->timezone = ((x($default_timezone)) ? $default_timezone : 'UTC');
+
+			date_default_timezone_set($this->timezone);
 
 			$this->config = array();
 			$this->page = array();
