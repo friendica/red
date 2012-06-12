@@ -1654,7 +1654,6 @@ account/update_profile_background_image
 account/update_profile_image
 blocks/create
 blocks/destroy
-oauth/authorize
 
 Not implemented in status.net:
 statuses/retweeted_to_me
