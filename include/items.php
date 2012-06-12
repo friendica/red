@@ -22,8 +22,6 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 			if($a->argv[$x] === 'category' && $a->argc > ($x + 1) && strlen($a->argv[$x+1]))
 				$category = $a->argv[$x+1];
 		}
-
-
 	}
 
 	
@@ -1645,6 +1643,11 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 				if(count($r)) {
 					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
+
+						// do not accept (ignore) an earlier edit than one we currently have.
+						if(datetime_convert('UTC','UTC',$datarray['edited'] < $r[0]['edited']))
+							continue;
+
 						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($datarray['title']),
 							dbesc($datarray['body']),
@@ -1791,6 +1794,11 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 				if(count($r)) {
 					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
+
+						// do not accept (ignore) an earlier edit than one we currently have.
+						if(datetime_convert('UTC','UTC',$datarray['edited'] < $r[0]['edited']))
+							continue;
+
 						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($datarray['title']),
 							dbesc($datarray['body']),
@@ -2277,7 +2285,12 @@ function local_delivery($importer,$data) {
 
 				if(count($r)) {
 					$iid = $r[0]['id'];
-					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
+					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {
+					
+						// do not accept (ignore) an earlier edit than one we currently have.
+						if(datetime_convert('UTC','UTC',$datarray['edited'] < $r[0]['edited']))
+							continue;
+  
 						logger('received updated comment' , LOGGER_DEBUG);
 						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($datarray['title']),
@@ -2456,6 +2469,11 @@ function local_delivery($importer,$data) {
 
 				if(count($r)) {
 					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
+
+						// do not accept (ignore) an earlier edit than one we currently have.
+						if(datetime_convert('UTC','UTC',$datarray['edited'] < $r[0]['edited']))
+							continue;
+
 						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($datarray['title']),
 							dbesc($datarray['body']),
@@ -2622,6 +2640,11 @@ function local_delivery($importer,$data) {
 
 			if(count($r)) {
 				if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
+
+					// do not accept (ignore) an earlier edit than one we currently have.
+					if(datetime_convert('UTC','UTC',$datarray['edited'] < $r[0]['edited']))
+						continue;
+
 					$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 						dbesc($datarray['title']),
 						dbesc($datarray['body']),
