@@ -94,8 +94,8 @@ function onepoll_run($argv, $argc){
 	$t = $contact['last-update'];
 
 	if($contact['subhub']) {
-		$interval = get_config('system','pushpoll_frequency');
-		$contact['priority'] = (($interval !== false) ? intval($interval) : 3);
+		$poll_interval = get_config('system','pushpoll_frequency');
+		$contact['priority'] = (($poll_interval !== false) ? intval($poll_interval) : 3);
 		$hub_update = false;
 
 		if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 day"))

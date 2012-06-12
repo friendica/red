@@ -432,7 +432,7 @@ if(! class_exists('App')) {
 			 * pagination
 			 */
 
-			$this->pager['page'] = ((x($_GET,'page')) ? $_GET['page'] : 1);
+			$this->pager['page'] = ((x($_GET,'page') && intval($_GET['page']) > 0) ? intval($_GET['page']) : 1);
 			$this->pager['itemspage'] = 50;
 			$this->pager['start'] = ($this->pager['page'] * $this->pager['itemspage']) - $this->pager['itemspage'];
 			$this->pager['total'] = 0;
@@ -499,7 +499,7 @@ if(! class_exists('App')) {
 		}
 
 		function set_pager_itemspage($n) {
-			$this->pager['itemspage'] = intval($n);
+			$this->pager['itemspage'] = ((intval($n) > 0) ? intval($n) : 0);
 			$this->pager['start'] = ($this->pager['page'] * $this->pager['itemspage']) - $this->pager['itemspage'];
 
 		}
