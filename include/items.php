@@ -1655,7 +1655,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
 
 						// do not accept (ignore) an earlier edit than one we currently have.
-						if(datetime_convert('UTC','UTC',$datarray['edited'] < $r[0]['edited']))
+						if(datetime_convert('UTC','UTC',$datarray['edited']) < $r[0]['edited'])
 							continue;
 
 						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
@@ -1806,7 +1806,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
 
 						// do not accept (ignore) an earlier edit than one we currently have.
-						if(datetime_convert('UTC','UTC',$datarray['edited'] < $r[0]['edited']))
+						if(datetime_convert('UTC','UTC',$datarray['edited']) < $r[0]['edited'])
 							continue;
 
 						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
@@ -2297,7 +2297,7 @@ function local_delivery($importer,$data) {
 					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {
 					
 						// do not accept (ignore) an earlier edit than one we currently have.
-						if(datetime_convert('UTC','UTC',$datarray['edited'] < $r[0]['edited']))
+						if(datetime_convert('UTC','UTC',$datarray['edited']) < $r[0]['edited'])
 							continue;
   
 						logger('received updated comment' , LOGGER_DEBUG);
@@ -2480,7 +2480,7 @@ function local_delivery($importer,$data) {
 					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
 
 						// do not accept (ignore) an earlier edit than one we currently have.
-						if(datetime_convert('UTC','UTC',$datarray['edited'] < $r[0]['edited']))
+						if(datetime_convert('UTC','UTC',$datarray['edited']) < $r[0]['edited'])
 							continue;
 
 						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
@@ -2651,7 +2651,7 @@ function local_delivery($importer,$data) {
 				if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
 
 					// do not accept (ignore) an earlier edit than one we currently have.
-					if(datetime_convert('UTC','UTC',$datarray['edited'] < $r[0]['edited']))
+					if(datetime_convert('UTC','UTC',$datarray['edited']) < $r[0]['edited'])
 						continue;
 
 					$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
