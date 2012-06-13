@@ -1,4 +1,3 @@
-<div class="clear"></div>
 <div id="categories-sidebar" class="widget">
 	<h3>$title</h3>
 	<div id="nets-desc">$desc</div>

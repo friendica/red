@@ -3390,3 +3390,50 @@ function drop_item($id,$interactive = true) {
 	}
 	
 }
+
+
+function first_post_date($uid,$wall = false) {
+	$r = q("select created from item 
+		where uid = %d and wall = %d and deleted = 0 and visible = 1 AND moderated = 0 
+		order by created asc limit 1",
+		intval($uid),
+		intval($wall ? 1 : 0)
+	);
+	if(count($r))
+		return substr($r[0]['created'],0,10);
+	return false;
+}
+
+function posted_dates($uid,$wall) {
+	$dnow = datetime_convert('','','now','Y-m-d');
+
+	$dthen = first_post_date($uid,$wall);
+	if(! $dthen)
+		return array();
+
+	$ret = array();
+	while($dnow >= $dthen) {
+		$start_month = datetime_convert('','','first day of ' . $dnow,'Y-m-d');
+		$end_month = datetime_convert('','','last day of ' . $dnow,'Y-m-d');
+		$str = day_translate(datetime_convert('','',$dnow,'F Y'));
+ 		$ret[] = array($str,$end_month,$start_month);
+		$dnow = datetime_convert('','',$dnow . ' -1 month', 'Y-m-d');
+	}
+	return $ret;
+}
+
+
+function posted_date_widget($url,$uid,$wall) {
+	$o = '';
+	$ret = posted_dates($uid,$wall);
+	if(! count($ret))
+		return $o;
+
+	$o = replace_macros(get_markup_template('posted_date_widget.tpl'),array(
+		'$title' => t('Archives'),
+		'$size' => ((count($ret) > 6) ? 6 : count($ret)),
+		'$url' => $url,
+		'$dates' => $ret
+	));
+	return $o;
+}

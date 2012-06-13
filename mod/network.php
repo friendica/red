@@ -7,6 +7,16 @@ function network_init(&$a) {
 		return;
 	}
 	
+	$is_a_date_query = false;
+
+	if($a->argc > 1) {
+		for($x = 1; $x < $a->argc; $x ++) {
+			if(is_a_date_arg($a->argv[$x])) {
+				$is_a_date_query = true;
+				break;
+			}
+		}
+	}
 	
 	// fetch last used tab and redirect if needed
 	$sel_tabs = network_query_get_sel_tab($a);
@@ -24,7 +34,11 @@ function network_init(&$a) {
 		
 		// redirect if current selected tab is 'no_active' and
 		// last selected tab is _not_ 'all_active'. 
-		if ($sel_tabs[0] == 'active' && $last_sel_tabs[0]!='active') {
+		// and this isn't a date query
+
+		if ($sel_tabs[0] == 'active' && $last_sel_tabs[0]!='active' && (! $is_a_date_query)) {
+
+
 			$k = array_search('active', $last_sel_tabs);
 			//echo "<pre>"; var_dump($sel_tabs, $last_sel_tabs, $tab_urlsm, $k, $tab_urls[$k]); killme();
 			goaway($a->get_baseurl() . $tab_urls[$k]);
@@ -35,6 +49,7 @@ function network_init(&$a) {
 		  
 	require_once('include/group.php');
 	require_once('include/contact_widgets.php');
+	require_once('include/items.php');
 
 	if(! x($a->page,'aside'))
 		$a->page['aside'] = '';
@@ -66,8 +81,9 @@ function network_init(&$a) {
 	if(x($_GET,'search')) {
 		$a->page['content'] .= '<h2>' . t('Search Results For:') . ' '  . $search . '</h2>';
 	}
-	
+
 	$a->page['aside'] .= group_side('network','network',true,$group_id);
+	$a->page['aside'] .= posted_date_widget($a->get_baseurl() . '/network',local_user(),false);	
 	$a->page['aside'] .= networks_widget($a->get_baseurl(true) . '/network',(x($_GET, 'nets') ? $_GET['nets'] : ''));
 	$a->page['aside'] .= saved_searches($search);
 	$a->page['aside'] .= fileas_widget($a->get_baseurl(true) . '/network',(x($_GET, 'file') ? $_GET['file'] : ''));
@@ -246,43 +262,46 @@ function network_content(&$a, $update = 0) {
 	// if no tabs are selected, defaults to comments
 	if ($no_active=='active') $all_active='active';
 	//echo "<pre>"; var_dump($no_active, $all_active, $postord_active, $conv_active, $new_active, $starred_active, $bookmarked_active, $spam_active); killme();
-	
+
+	$cmd = (($datequery) ? '' : $a->cmd);
+	$len_naked_cmd = strlen(str_replace('/new','',$cmd));		
+
 	// tabs
 	$tabs = array(
 		array(
 			'label' => t('Commented Order'),
-			'url'=>$a->get_baseurl(true) . '/' . str_replace('/new', '', $a->cmd) . '?f=&order=comment' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
+			'url'=>$a->get_baseurl(true) . '/' . str_replace('/new', '', $cmd) . '?f=&order=comment' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
 			'sel'=>$all_active,
 			'title'=> t('Sort by Comment Date'),
 		),
 		array(
 			'label' => t('Posted Order'),
-			'url'=>$a->get_baseurl(true) . '/' . str_replace('/new', '', $a->cmd) . '?f=&order=post' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
+			'url'=>$a->get_baseurl(true) . '/' . str_replace('/new', '', $cmd) . '?f=&order=post' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
 			'sel'=>$postord_active,
 			'title' => t('Sort by Post Date'),
 		),
 
 		array(
 			'label' => t('Personal'),
-			'url' => $a->get_baseurl(true) . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&conv=1',
+			'url' => $a->get_baseurl(true) . '/' . str_replace('/new', '', $cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&conv=1',
 			'sel' => $conv_active,
 			'title' => t('Posts that mention or involve you'),
 		),
 		array(
 			'label' => t('New'),
-			'url' => $a->get_baseurl(true) . '/' . str_replace('/new', '', $a->cmd) . '/new' . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : ''),
+			'url' => $a->get_baseurl(true) . '/' . str_replace('/new', '', $cmd) . ($len_naked_cmd ? '/' : '') . 'new' . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : ''),
 			'sel' => $new_active,
 			'title' => t('Activity Stream - by date'),
 		),
 		array(
 			'label' => t('Starred'),
-			'url'=>$a->get_baseurl(true) . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&star=1',
+			'url'=>$a->get_baseurl(true) . '/' . str_replace('/new', '', $cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&star=1',
 			'sel'=>$starred_active,
 			'title' => t('Favourite Posts'),
 		),
 		array(
 			'label' => t('Shared Links'),
-			'url'=>$a->get_baseurl(true) . '/' . str_replace('/new', '', $a->cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&bmark=1',
+			'url'=>$a->get_baseurl(true) . '/' . str_replace('/new', '', $cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&bmark=1',
 			'sel'=>$bookmarked_active,
 			'title'=> t('Interesting Links'),
 		),	
@@ -470,10 +489,10 @@ function network_content(&$a, $update = 0) {
 	$sql_extra3 = '';
 
 	if($datequery) {
-		$sql_extra3 .= protect_sprintf(sprintf(" AND item.created <= '%s' ", dbesc(datetime_convert('','',$datequery))));
+		$sql_extra3 .= protect_sprintf(sprintf(" AND item.created <= '%s' ", dbesc(datetime_convert(date_default_timezone_get(),'',$datequery))));
 	}
 	if($datequery2) {
-		$sql_extra3 .= protect_sprintf(sprintf(" AND item.created >= '%s' ", dbesc(datetime_convert('','',$datequery2))));
+		$sql_extra3 .= protect_sprintf(sprintf(" AND item.created >= '%s' ", dbesc(datetime_convert(date_default_timezone_get(),'',$datequery2))));
 	}
 
 	$sql_extra2 = (($nouveau) ? '' : " AND `item`.`parent` = `item`.`id` ");

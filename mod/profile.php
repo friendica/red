@@ -94,6 +94,8 @@ function profile_content(&$a, $update = 0) {
 	require_once('include/security.php');
 	require_once('include/conversation.php');
 	require_once('include/acl_selectors.php');
+	require_once('include/items.php');
+
 	$groups = array();
 
 	$tab = 'posts';
@@ -168,6 +170,7 @@ function profile_content(&$a, $update = 0) {
 
 		$celeb = ((($a->profile['page-flags'] == PAGE_SOAPBOX) || ($a->profile['page-flags'] == PAGE_COMMUNITY)) ? true : false);
 
+		$a->page['aside'] .= posted_date_widget($a->get_baseurl(true) . '/profile/' . $a->profile['nickname'],$a->profile['profile_uid'],true);	
 		$a->page['aside'] .= categories_widget($a->get_baseurl(true) . '/profile/' . $a->profile['nickname'],(x($category) ? xmlify($category) : ''));
 
 		if(can_write_wall($a,$a->profile['profile_uid'])) {
@@ -218,10 +221,10 @@ function profile_content(&$a, $update = 0) {
 		}
 
 		if($datequery) {
-			$sql_extra2 .= protect_sprintf(sprintf(" AND item.created <= '%s' ", dbesc(datetime_convert('','',$datequery))));
+			$sql_extra2 .= protect_sprintf(sprintf(" AND item.created <= '%s' ", dbesc(datetime_convert(date_default_timezone_get(),'',$datequery))));
 		}
 		if($datequery2) {
-			$sql_extra2 .= protect_sprintf(sprintf(" AND item.created >= '%s' ", dbesc(datetime_convert('','',$datequery2))));
+			$sql_extra2 .= protect_sprintf(sprintf(" AND item.created >= '%s' ", dbesc(datetime_convert(date_default_timezone_get(),'',$datequery2))));
 		}
 
 
