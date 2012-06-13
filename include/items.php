@@ -3395,6 +3395,7 @@ function drop_item($id,$interactive = true) {
 function first_post_date($uid,$wall = false) {
 	$r = q("select id, created from item 
 		where uid = %d and wall = %d and deleted = 0 and visible = 1 AND moderated = 0 
+		and id = parent
 		order by created asc limit 1",
 		intval($uid),
 		intval($wall ? 1 : 0)
