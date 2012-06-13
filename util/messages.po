@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 3.0.1373\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-13 10:00-0700\n"
+"POT-Creation-Date: 2012-06-13 16:24-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -6947,12 +6947,12 @@ msgstr ""
 
 #: ../../include/enotify.php:44
 #, php-format
-msgid "%s sent you a new private message at %s."
+msgid "%1$s sent you a new private message at %2$s."
 msgstr ""
 
 #: ../../include/enotify.php:45
 #, php-format
-msgid "%s sent you %s."
+msgid "%1$s sent you %2$s."
 msgstr ""
 
 #: ../../include/enotify.php:45
@@ -6964,148 +6964,128 @@ msgstr ""
 msgid "Please visit %s to view and/or reply to your private messages."
 msgstr ""
 
-#: ../../include/enotify.php:76
+#: ../../include/enotify.php:73
 #, php-format
-msgid "%s's"
+msgid "%1$s commented on [url=%2$s]a %3$s[/url]"
 msgstr ""
 
 #: ../../include/enotify.php:80
-msgid "your"
-msgstr ""
-
-#: ../../include/enotify.php:87
 #, php-format
-msgid "[Friendica:Notify] Comment to conversation #%d by %s"
+msgid "%1$s commented on [url=%2$s]%3$s's %4$s[/url]"
 msgstr ""
 
 #: ../../include/enotify.php:88
 #, php-format
+msgid "%1$s commented on [url=%2$s]your %3$s[/url]"
+msgstr ""
+
+#: ../../include/enotify.php:98
+msgid "[Friendica:Notify] Comment to conversation #%1$d by %1$s"
+msgstr ""
+
+#: ../../include/enotify.php:99
+#, php-format
 msgid "%s commented on an item/conversation you have been following."
 msgstr ""
 
-#: ../../include/enotify.php:89
-#, php-format
-msgid "%s commented on %s."
-msgstr ""
-
-#: ../../include/enotify.php:91 ../../include/enotify.php:104
-#: ../../include/enotify.php:115 ../../include/enotify.php:126
+#: ../../include/enotify.php:102 ../../include/enotify.php:117
+#: ../../include/enotify.php:130 ../../include/enotify.php:143
 #, php-format
 msgid "Please visit %s to view and/or reply to the conversation."
 msgstr ""
 
-#: ../../include/enotify.php:98
+#: ../../include/enotify.php:109
 #, php-format
 msgid "[Friendica:Notify] %s posted to your profile wall"
 msgstr ""
 
-#: ../../include/enotify.php:100
-#, php-format
-msgid "%s posted to your profile wall at %s"
-msgstr ""
-
-#: ../../include/enotify.php:102
-#, php-format
-msgid "%s posted to %s"
-msgstr ""
-
-#: ../../include/enotify.php:102
-msgid "your profile wall."
-msgstr ""
-
 #: ../../include/enotify.php:111
+#, php-format
+msgid "%1$s posted to your profile wall at %1$s"
+msgstr ""
+
+#: ../../include/enotify.php:113
+#, php-format
+msgid "%1$s posted to [url=%2s]your wall[/url]"
+msgstr ""
+
+#: ../../include/enotify.php:124
 #, php-format
 msgid "[Friendica:Notify] %s tagged you"
 msgstr ""
 
-#: ../../include/enotify.php:112
+#: ../../include/enotify.php:125
 #, php-format
-msgid "%s tagged you at %s"
+msgid "%1$s tagged you at %2$s"
 msgstr ""
 
-#: ../../include/enotify.php:113
+#: ../../include/enotify.php:126
 #, php-format
-msgid "%s %s."
+msgid "%1$s [url=%2s]tagged you[/url]."
 msgstr ""
 
-#: ../../include/enotify.php:113
-msgid "tagged you"
-msgstr ""
-
-#: ../../include/enotify.php:122
+#: ../../include/enotify.php:137
 #, php-format
 msgid "[Friendica:Notify] %s tagged your post"
 msgstr ""
 
-#: ../../include/enotify.php:123
+#: ../../include/enotify.php:138
 #, php-format
-msgid "%s tagged your post at %s"
+msgid "%1$s tagged your post at %2$s"
 msgstr ""
 
-#: ../../include/enotify.php:124
+#: ../../include/enotify.php:139
 #, php-format
-msgid "%s tagged %s"
+msgid "%1$s tagged [url=%2$s]your post[/url]"
 msgstr ""
 
-#: ../../include/enotify.php:124
-msgid "your post"
-msgstr ""
-
-#: ../../include/enotify.php:133
+#: ../../include/enotify.php:150
 msgid "[Friendica:Notify] Introduction received"
 msgstr ""
 
-#: ../../include/enotify.php:134
+#: ../../include/enotify.php:151
 #, php-format
-msgid "You've received an introduction from '%s' at %s"
+msgid "You've received an introduction from '%1$s' at %2$s"
 msgstr ""
 
-#: ../../include/enotify.php:135
+#: ../../include/enotify.php:152
 #, php-format
-msgid "You've received %s from %s."
+msgid "You've received [url=%1$s]an introduction[/url] from %2$s."
 msgstr ""
 
-#: ../../include/enotify.php:135
-msgid "an introduction"
-msgstr ""
-
-#: ../../include/enotify.php:136 ../../include/enotify.php:153
+#: ../../include/enotify.php:155 ../../include/enotify.php:173
 #, php-format
 msgid "You may visit their profile at %s"
 msgstr ""
 
-#: ../../include/enotify.php:138
+#: ../../include/enotify.php:157
 #, php-format
 msgid "Please visit %s to approve or reject the introduction."
 msgstr ""
 
-#: ../../include/enotify.php:145
+#: ../../include/enotify.php:164
 msgid "[Friendica:Notify] Friend suggestion received"
 msgstr ""
 
-#: ../../include/enotify.php:146
+#: ../../include/enotify.php:165
 #, php-format
-msgid "You've received a friend suggestion from '%s' at %s"
+msgid "You've received a friend suggestion from '%1$s' at %2$s"
 msgstr ""
 
-#: ../../include/enotify.php:147
+#: ../../include/enotify.php:166
 #, php-format
-msgid "You've received %s for %s from %s."
+msgid "You've received [url=%1$s]a friend suggestion[/url] for %2$s from %3$s."
 msgstr ""
 
-#: ../../include/enotify.php:148
-msgid "a friend suggestion"
-msgstr ""
-
-#: ../../include/enotify.php:151
+#: ../../include/enotify.php:171
 msgid "Name:"
 msgstr ""
 
-#: ../../include/enotify.php:152
+#: ../../include/enotify.php:172
 msgid "Photo:"
 msgstr ""
 
-#: ../../include/enotify.php:155
+#: ../../include/enotify.php:175
 #, php-format
 msgid "Please visit %s to approve or reject the suggestion."
 msgstr ""
@@ -7173,7 +7153,7 @@ msgstr ""
 msgid "You have a new follower at "
 msgstr ""
 
-#: ../../include/items.php:3444
+#: ../../include/items.php:3456
 msgid "Archives"
 msgstr ""
 
