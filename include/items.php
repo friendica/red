@@ -3461,6 +3461,7 @@ function store_diaspora_retract_sig($item, $user, $baseurl) {
 
 	$enabled = intval(get_config('system','diaspora_enabled'));
 	if(! $enabled) {
+		logger('drop_item: diaspora support disabled, not storing retraction signature', LOGGER_DEBUG);
 		return;
 	}
 

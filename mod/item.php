@@ -1035,6 +1035,7 @@ function store_diaspora_comment_sig($datarray, $user, $baseurl, $parent_item, $p
 
 	$enabled = intval(get_config('system','diaspora_enabled'));
 	if(! $enabled) {
+		logger('mod_item: diaspora support disabled, not storing comment signature', LOGGER_DEBUG);
 		return;
 	}
 

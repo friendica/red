@@ -235,8 +235,10 @@ function store_diaspora_like_retract_sig($activity, $item, $like_item, $contact)
 	// likes on photos, so don't bother.
 
 	$enabled = intval(get_config('system','diaspora_enabled'));
-	if(! $enabled)
+	if(! $enabled) {
+		logger('mod_like: diaspora support disabled, not storing like retraction signature', LOGGER_DEBUG);
 		return;
+	}
 
 	logger('mod_like: storing diaspora like retraction signature');
 
@@ -288,8 +290,10 @@ function store_diaspora_like_sig($activity, $post_type, $contact, $post_id) {
 	// only checks the parent_author_signature if it doesn't have to relay further
 
 	$enabled = intval(get_config('system','diaspora_enabled'));
-	if(! $enabled)
+	if(! $enabled) {
+		logger('mod_like: diaspora support disabled, not storing like signature', LOGGER_DEBUG);
 		return;
+	}
 
 	logger('mod_like: storing diaspora like signature');
 
