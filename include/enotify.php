@@ -80,7 +80,7 @@ function notification($params) {
 			$dest_str = sprintf(t('%1$s commented on [url=%2$s]%3$s\'s %4$s[/url]'),
 						'[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]',
 						$itemlink,
-						$p[0]['author-name']
+						$p[0]['author-name'],
 						$item_post_type);
 		
 		// "your post"
