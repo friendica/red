@@ -3402,17 +3402,25 @@ function first_post_date($uid,$wall = false) {
 	);
 	if(count($r)) {
 //		logger('first_post_date: ' . $r[0]['id'] . ' ' . $r[0]['created'], LOGGER_DATA);
-		return substr($r[0]['created'],0,10);
+		return substr(datetime_convert('',date_default_timezone_get(),$r[0]['created']),0,10);
 	}
 	return false;
 }
 
 function posted_dates($uid,$wall) {
-	$dnow = datetime_convert('','','now','Y-m-d');
+	$dnow = datetime_convert('',date_default_timezone_get(),'now','Y-m-d');
 
 	$dthen = first_post_date($uid,$wall);
 	if(! $dthen)
 		return array();
+
+	// If it's near the end of a long month, backup to the 28th so that in 
+	// consecutive loops we'll always get a whole month difference.
+
+	if(intval(substr($dnow,8)) > 28)
+		$dnow = substr($dnow,0,8) . '28';
+	if(intval(substr($dthen,8)) > 28)
+		$dnow = substr($dthen,0,8) . '28';
 
 	$ret = array();
 	while($dnow >= $dthen) {
@@ -3420,8 +3428,6 @@ function posted_dates($uid,$wall) {
 		$end_month = datetime_convert('','','last day of ' . $dnow,'Y-m-d');
 		$str = day_translate(datetime_convert('','',$dnow,'F Y'));
  		$ret[] = array($str,$end_month,$start_month);
-		if($start_month < $dthen)
-			break;
 		$dnow = datetime_convert('','',$dnow . ' -1 month', 'Y-m-d');
 	}
 	return $ret;
