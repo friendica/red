@@ -3436,6 +3436,18 @@ function posted_dates($uid,$wall) {
 
 function posted_date_widget($url,$uid,$wall) {
 	$o = '';
+
+	// "first day of " constructs were added in php 5.3
+	// TODO: emulate posted_dates() logic for prior releases
+
+	if(version_compare(PHP_VERSION, '5.3.0') < 0)
+		return $o;
+
+	// For former Facebook folks that left because of "timeline"
+
+	if($wall && intval(get_pconfig($uid,'system','no_wall_archive_widget')))
+		return $o;
+
 	$ret = posted_dates($uid,$wall);
 	if(! count($ret))
 		return $o;

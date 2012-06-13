@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 3.0.1372\n"
+"Project-Id-Version: 3.0.1373\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-12 10:00-0700\n"
+"POT-Creation-Date: 2012-06-13 10:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -130,9 +130,9 @@ msgstr ""
 #: ../../mod/localtime.php:45 ../../mod/contacts.php:342
 #: ../../mod/settings.php:555 ../../mod/settings.php:701
 #: ../../mod/settings.php:762 ../../mod/settings.php:969
-#: ../../mod/manage.php:109 ../../mod/group.php:85 ../../mod/message.php:216
-#: ../../mod/admin.php:420 ../../mod/admin.php:656 ../../mod/admin.php:792
-#: ../../mod/admin.php:991 ../../mod/admin.php:1078 ../../mod/profiles.php:554
+#: ../../mod/group.php:85 ../../mod/message.php:216 ../../mod/admin.php:420
+#: ../../mod/admin.php:656 ../../mod/admin.php:792 ../../mod/admin.php:991
+#: ../../mod/admin.php:1078 ../../mod/profiles.php:554
 #: ../../mod/invite.php:119 ../../addon/facebook/facebook.php:605
 #: ../../addon/snautofollow/snautofollow.php:64
 #: ../../addon/yourls/yourls.php:76 ../../addon/ljpost/ljpost.php:93
@@ -1236,7 +1236,7 @@ msgstr ""
 msgid "Network"
 msgstr ""
 
-#: ../../mod/notifications.php:85 ../../mod/network.php:266
+#: ../../mod/notifications.php:85 ../../mod/network.php:285
 msgid "Personal"
 msgstr ""
 
@@ -2308,67 +2308,67 @@ msgstr ""
 msgid "Select an identity to manage: "
 msgstr ""
 
-#: ../../mod/network.php:67
+#: ../../mod/network.php:82
 msgid "Search Results For:"
 msgstr ""
 
-#: ../../mod/network.php:106 ../../mod/search.php:16
+#: ../../mod/network.php:122 ../../mod/search.php:16
 msgid "Remove term"
 msgstr ""
 
-#: ../../mod/network.php:115 ../../mod/search.php:13
+#: ../../mod/network.php:131 ../../mod/search.php:13
 msgid "Saved Searches"
 msgstr ""
 
-#: ../../mod/network.php:116 ../../include/group.php:244
+#: ../../mod/network.php:132 ../../include/group.php:244
 msgid "add"
 msgstr ""
 
-#: ../../mod/network.php:253
+#: ../../mod/network.php:272
 msgid "Commented Order"
 msgstr ""
 
-#: ../../mod/network.php:256
+#: ../../mod/network.php:275
 msgid "Sort by Comment Date"
 msgstr ""
 
-#: ../../mod/network.php:259
+#: ../../mod/network.php:278
 msgid "Posted Order"
 msgstr ""
 
-#: ../../mod/network.php:262
+#: ../../mod/network.php:281
 msgid "Sort by Post Date"
 msgstr ""
 
-#: ../../mod/network.php:269
+#: ../../mod/network.php:288
 msgid "Posts that mention or involve you"
 msgstr ""
 
-#: ../../mod/network.php:272
+#: ../../mod/network.php:291
 msgid "New"
 msgstr ""
 
-#: ../../mod/network.php:275
+#: ../../mod/network.php:294
 msgid "Activity Stream - by date"
 msgstr ""
 
-#: ../../mod/network.php:278
+#: ../../mod/network.php:297
 msgid "Starred"
 msgstr ""
 
-#: ../../mod/network.php:281
+#: ../../mod/network.php:300
 msgid "Favourite Posts"
 msgstr ""
 
-#: ../../mod/network.php:284
+#: ../../mod/network.php:303
 msgid "Shared Links"
 msgstr ""
 
-#: ../../mod/network.php:287
+#: ../../mod/network.php:306
 msgid "Interesting Links"
 msgstr ""
 
-#: ../../mod/network.php:354
+#: ../../mod/network.php:373
 #, php-format
 msgid "Warning: This group contains %s member from an insecure network."
 msgid_plural ""
@@ -2376,31 +2376,31 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../mod/network.php:357
+#: ../../mod/network.php:376
 msgid "Private messages to this group are at risk of public disclosure."
 msgstr ""
 
-#: ../../mod/network.php:402
+#: ../../mod/network.php:421
 msgid "No such group"
 msgstr ""
 
-#: ../../mod/network.php:413
+#: ../../mod/network.php:432
 msgid "Group is empty"
 msgstr ""
 
-#: ../../mod/network.php:417
+#: ../../mod/network.php:436
 msgid "Group: "
 msgstr ""
 
-#: ../../mod/network.php:427
+#: ../../mod/network.php:446
 msgid "Contact: "
 msgstr ""
 
-#: ../../mod/network.php:429
+#: ../../mod/network.php:448
 msgid "Private messages to this person are at risk of public disclosure."
 msgstr ""
 
-#: ../../mod/network.php:434
+#: ../../mod/network.php:453
 msgid "Invalid contact."
 msgstr ""
 
@@ -3609,11 +3609,11 @@ msgstr ""
 msgid "Requested profile is not available."
 msgstr ""
 
-#: ../../mod/profile.php:139 ../../mod/display.php:75
+#: ../../mod/profile.php:141 ../../mod/display.php:75
 msgid "Access to this profile has been restricted."
 msgstr ""
 
-#: ../../mod/profile.php:164
+#: ../../mod/profile.php:166
 msgid "Tips for New Members"
 msgstr ""
 
@@ -7171,6 +7171,10 @@ msgstr ""
 
 #: ../../include/items.php:2790
 msgid "You have a new follower at "
+msgstr ""
+
+#: ../../include/items.php:3444
+msgid "Archives"
 msgstr ""
 
 #: ../../include/bb2diaspora.php:102 ../../include/bb2diaspora.php:112
