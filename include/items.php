@@ -3401,7 +3401,7 @@ function first_post_date($uid,$wall = false) {
 		intval($wall ? 1 : 0)
 	);
 	if(count($r)) {
-		logger('first_post_date: ' . $r[0]['id'] . ' ' . $r[0]['created'], LOGGER_DATA);
+//		logger('first_post_date: ' . $r[0]['id'] . ' ' . $r[0]['created'], LOGGER_DATA);
 		return substr($r[0]['created'],0,10);
 	}
 	return false;
