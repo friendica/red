@@ -3417,6 +3417,8 @@ function posted_dates($uid,$wall) {
 		$end_month = datetime_convert('','','last day of ' . $dnow,'Y-m-d');
 		$str = day_translate(datetime_convert('','',$dnow,'F Y'));
  		$ret[] = array($str,$end_month,$start_month);
+		if($start_month < $dthen)
+			break;
 		$dnow = datetime_convert('','',$dnow . ' -1 month', 'Y-m-d');
 	}
 	return $ret;
