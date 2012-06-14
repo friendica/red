@@ -3424,8 +3424,10 @@ function posted_dates($uid,$wall) {
 
 	$ret = array();
 	while($dnow >= $dthen) {
-		$start_month = datetime_convert('','','first day of ' . $dnow,'Y-m-d');
-		$end_month = datetime_convert('','','last day of ' . $dnow,'Y-m-d');
+		$dstart = substr($dnow,0,8) . '01';
+		$dend = substr($dnow,0,8) . get_dim(intval($dnow),intval(substr($dnow,5)));
+		$start_month = datetime_convert('','',$dstart,'Y-m-d');
+		$end_month = datetime_convert('','',$dend,'Y-m-d');
 		$str = day_translate(datetime_convert('','',$dnow,'F Y'));
  		$ret[] = array($str,$end_month,$start_month);
 		$dnow = datetime_convert('','',$dnow . ' -1 month', 'Y-m-d');
@@ -3436,12 +3438,6 @@ function posted_dates($uid,$wall) {
 
 function posted_date_widget($url,$uid,$wall) {
 	$o = '';
-
-	// "first day of " constructs were added in php 5.3
-	// TODO: emulate posted_dates() logic for prior releases
-
-	if(version_compare(PHP_VERSION, '5.3.0') < 0)
-		return $o;
 
 	// For former Facebook folks that left because of "timeline"
 
