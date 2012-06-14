@@ -17,6 +17,9 @@
 			<ul>
 				<li><div id="contact-edit-rel">$relation_text</div></li>
 				<li><div id="contact-edit-nettype">$nettype</div></li>
+				{{ if $lost_contact }}
+					<li><div id="lost-contact-message">$lost_contact</div></li>
+				{{ endif }}
 				{{ if $insecure }}
 					<li><div id="insecure-message">$insecure</div></li>
 				{{ endif }}

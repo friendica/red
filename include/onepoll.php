@@ -139,15 +139,18 @@ function onepoll_run($argv, $argc){
 			. '&perm=' . $perm ;
 
 		$handshake_xml = fetch_url($url);
+		$html_code = $a->get_curl_code();
 
 		logger('onepoll: handshake with url ' . $url . ' returns xml: ' . $handshake_xml, LOGGER_DATA);
 
 
-		if(! $handshake_xml) {
+		if((! strlen($handshake_xml)) || ($html_code >= 400) || (! $html_code)) {
 			logger("poller: $url appears to be dead - marking for death ");
+
 			// dead connection - might be a transient event, or this might
 			// mean the software was uninstalled or the domain expired. 
 			// Will keep trying for one month.
+
 			mark_for_death($contact);
 
 			// set the last-update so we don't keep polling

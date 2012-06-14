@@ -139,6 +139,10 @@ function terminate_friendship($user,$self,$contact) {
  
 if(! function_exists('mark_for_death')) {
 function mark_for_death($contact) {
+
+	if($contact['archive'])
+		return;
+
 	if($contact['term-date'] == '0000-00-00 00:00:00') {
 		q("UPDATE `contact` SET `term-date` = '%s' WHERE `id` = %d LIMIT 1",
 				dbesc(datetime_convert()),
