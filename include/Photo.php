@@ -281,7 +281,7 @@ class Photo {
 				`allow_cid` = '%s', 
 				`allow_gid` = '%s', 
 				`deny_cid` = '%s',
-				`deny_gid` = '%s', 
+				`deny_gid` = '%s' 
 				where id = %d limit 1",
 
 				intval($uid),
