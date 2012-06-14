@@ -19,6 +19,8 @@
 </div>
 {{ endfor }}
 
+<div id="conversation-end"></div>
+
 {{ if $dropping }}
 <a href="#" onclick="deleteCheckedItems();return false;">
 	<span class="icon s22 delete text">$dropping</span>
