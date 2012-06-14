@@ -95,7 +95,7 @@ function notification($params) {
 		// Before this we have the name of the replier on the subject rendering 
 		// differents subjects for messages on the same thread.
 
-		$subject = sprintf( t('[Friendica:Notify] Comment to conversation #%1$d by %1$s'), $parent_id, $params['source_name']);
+		$subject = sprintf( t('[Friendica:Notify] Comment to conversation #%1$d by %2$s'), $parent_id, $params['source_name']);
 		$preamble = sprintf( t('%s commented on an item/conversation you have been following.'), $params['source_name']); 
 		$epreamble = $dest_str; 
 
@@ -108,7 +108,7 @@ function notification($params) {
 	if($params['type'] == NOTIFY_WALL) {
 		$subject = sprintf( t('[Friendica:Notify] %s posted to your profile wall') , $params['source_name']);
 
-		$preamble = sprintf( t('%1$s posted to your profile wall at %1$s') , $params['source_name'], $sitename);
+		$preamble = sprintf( t('%1$s posted to your profile wall at %2$s') , $params['source_name'], $sitename);
 		
 		$epreamble = sprintf( t('%1$s posted to [url=%2s]your wall[/url]') , 
 								'[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]',
