@@ -2,8 +2,6 @@
 
 // Provide some ability to lock a PHP function so that multiple processes
 // can't run the function concurrently
-// The function must have a line inserted into the 'lock' table with the
-// function's name in the 'name' field
 if(! function_exists('lock_function')) {
 function lock_function($fn_name, $block = true, $wait_sec = 2) {
 	if( $wait_sec == 0 )
