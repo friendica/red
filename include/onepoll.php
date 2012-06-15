@@ -54,9 +54,7 @@ function onepoll_run($argv, $argc){
 		logger('onepoll: no contact');
 		return;
 	}
-
-	if(was_recently_delayed($contact_id))
-		return;
+	
 
 	$d = datetime_convert();
 
@@ -87,7 +85,7 @@ function onepoll_run($argv, $argc){
 	}
 
 	$contact = $contacts[0];
-
+	logger('onepoll: ' . $contact['id'] . ' ' . $contact['name'], LOGGER_DEBUG);
 
 	$xml = false;
 
