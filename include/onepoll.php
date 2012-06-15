@@ -85,7 +85,6 @@ function onepoll_run($argv, $argc){
 	}
 
 	$contact = $contacts[0];
-	logger('onepoll: ' . $contact['id'] . ' ' . $contact['name'], LOGGER_DEBUG);
 
 	$xml = false;
 
