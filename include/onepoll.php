@@ -162,6 +162,9 @@ function onepoll_run($argv, $argc){
 
 		if(! strstr($handshake_xml,'<?xml')) {
 			logger('poller: response from ' . $url . ' did not contain XML.');
+
+			mark_for_death($contact);
+
 			$r = q("UPDATE `contact` SET `last-update` = '%s' WHERE `id` = %d LIMIT 1",
 				dbesc(datetime_convert()),
 				intval($contact['id'])
