@@ -36,11 +36,6 @@ function onepoll_run($argv, $argc){
 
 	logger('onepoll: start');
 	
-	$abandon_days = intval(get_config('system','account_abandon_days'));
-	if($abandon_days < 1)
-		$abandon_days = 0;
-
-
 	$manual_id  = 0;
 	$generation = 0;
 	$hub_update = false;
@@ -61,11 +56,6 @@ function onepoll_run($argv, $argc){
 	// Only poll from those with suitable relationships,
 	// and which have a polling address and ignore Diaspora since 
 	// we are unable to match those posts with a Diaspora GUID and prevent duplicates.
-
-	$abandon_sql = (($abandon_days) 
-		? sprintf(" AND `user`.`login_date` > UTC_TIMESTAMP() - INTERVAL %d DAY ", intval($abandon_days)) 
-		: '' 
-	);
 
 	$contacts = q("SELECT `contact`.* FROM `contact` 
 		WHERE ( `rel` = %d OR `rel` = %d ) AND `poll` != ''
