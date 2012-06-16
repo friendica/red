@@ -1866,21 +1866,6 @@ function diaspora_signed_retraction($importer,$xml,$msg) {
 	}
 	else {
 
-/*		if(strcasecmp($diaspora_handle,$msg['author']) == 0) {
-			$person = $contact;
-			$key = $msg['key'];
-		}
-		else {
-			$person = find_diaspora_person_by_handle($diaspora_handle);	
-
-			if(is_array($person) && x($person,'pubkey'))
-				$key = $person['pubkey'];
-			else {
-				logger('diaspora_signed_retraction: unable to find author details');
-				return;
-			}
-		}*/
-
 		$sig_decode = base64_decode($sig);
 
 		if(! rsa_verify($signed_data,$sig_decode,$key,'sha256')) {
