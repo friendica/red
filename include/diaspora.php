@@ -1094,21 +1094,6 @@ function diaspora_comment($importer,$xml,$msg) {
 		// our post, so he/she must be a contact of ours and his/her public key
 		// should be in $msg['key']
 
-/*		if(strcasecmp($diaspora_handle,$msg['author']) == 0) {
-			$person = $contact;
-			$key = $msg['key'];
-		}
-		else {
-			$person = find_diaspora_person_by_handle($diaspora_handle);	
-
-			if(is_array($person) && x($person,'pubkey'))
-				$key = $person['pubkey'];
-			else {
-				logger('diaspora_comment: unable to find author details');
-				return;
-			}
-		}*/
-
 		$author_signature = base64_decode($author_signature);
 
 		if(! rsa_verify($signed_data,$author_signature,$key,'sha256')) {
@@ -1119,7 +1104,9 @@ function diaspora_comment($importer,$xml,$msg) {
 
 	// Phew! Everything checks out. Now create an item.
 
-	// Find the original comment author information
+	// Find the original comment author information.
+	// We need this to make sure we display the comment author
+	// information (name and avatar) correctly.
 	if(strcasecmp($diaspora_handle,$msg['author']) == 0)
 		$person = $contact;
 	else {
@@ -1692,20 +1679,6 @@ function diaspora_like($importer,$xml,$msg) {
 		// our post, so he/she must be a contact of ours and his/her public key
 		// should be in $msg['key']
 
-/*		if(strcasecmp($diaspora_handle,$msg['author']) == 0) {
-			$person = $contact;
-			$key = $msg['key'];
-		}
-		else {
-			$person = find_diaspora_person_by_handle($diaspora_handle);	
-			if(is_array($person) && x($person,'pubkey'))
-				$key = $person['pubkey'];
-			else {
-				logger('diaspora_like: unable to find author details');
-				return;
-			}
-		}*/
-
 		$author_signature = base64_decode($author_signature);
 
 		if(! rsa_verify($signed_data,$author_signature,$key,'sha256')) {
@@ -1716,7 +1689,9 @@ function diaspora_like($importer,$xml,$msg) {
 
 	// Phew! Everything checks out. Now create an item.
 
-	// Find the original like author information
+	// Find the original comment author information.
+	// We need this to make sure we display the comment author
+	// information (name and avatar) correctly.
 	if(strcasecmp($diaspora_handle,$msg['author']) == 0)
 		$person = $contact;
 	else {
