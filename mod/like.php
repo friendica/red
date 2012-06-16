@@ -211,7 +211,7 @@ EOT;
 
 
 	// Save the author information for the like in case we need to relay to Diaspora
-	store_diaspora_like_sig($activity, $item, $like_item, $contact);
+	store_diaspora_like_sig($activity, $post_type, $contact, $post_id);
 
 
 	$arr['id'] = $post_id;
