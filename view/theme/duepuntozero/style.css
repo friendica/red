@@ -1608,7 +1608,7 @@ input#dfrn-url {
 .contact-photo-menu li a:hover { color: #FFFFFF; background: #3465A4; text-decoration: none; }
 
 
-#block-message, #ignore-message, #archive-message {
+#block-message, #ignore-message, #archive-message, #lost-contact-message {
 	color: #FF0000;
 }
 
@@ -3226,3 +3226,7 @@ ul.menu-popup {
 .autocomplete { color:#000; border:1px solid #999; background:#FFF; cursor:default; text-align:left; max-height:350px; overflow:auto; margin:-6px 6px 6px -6px; /* IE6 specific: */ _height:350px;  _margin:0; _overflow-x:hidden; }
 .autocomplete .selected { background:#F0F0F0; }
 .autocomplete div { padding:2px 5px; white-space:nowrap; overflow:hidden; }
+
+#datebrowse-sidebar select {
+	margin-left: 25px;
+}

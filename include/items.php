@@ -22,8 +22,6 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 			if($a->argv[$x] === 'category' && $a->argc > ($x + 1) && strlen($a->argv[$x+1]))
 				$category = $a->argv[$x+1];
 		}
-
-
 	}
 
 	
@@ -693,6 +691,8 @@ function encode_rel_links($links) {
 	return xmlify($o);
 }
 
+
+
 function item_store($arr,$force_parent = false) {
 
 	// If a Diaspora signature structure was passed in, pull it out of the 
@@ -806,6 +806,14 @@ function item_store($arr,$force_parent = false) {
 			$deny_cid       = $r[0]['deny_cid'];
 			$deny_gid       = $r[0]['deny_gid'];
 			$arr['wall']    = $r[0]['wall'];
+
+			// if the parent is private, force privacy for the entire conversation
+			// This differs from the above settings as it subtly allows comments from 
+			// email correspondents to be private even if the overall thread is not. 
+
+			if($r[0]['private'])
+				$arr['private'] = 1;
+
 		}
 		else {
 
@@ -899,6 +907,16 @@ function item_store($arr,$force_parent = false) {
 		intval($parent_deleted),
 		intval($current_post)
 	);
+
+        $arr['id'] = $current_post;
+        $arr['parent'] = $parent_id;
+        $arr['allow_cid'] = $allow_cid;
+        $arr['allow_gid'] = $allow_gid;
+        $arr['deny_cid'] = $deny_cid;
+        $arr['deny_gid'] = $deny_gid;
+        $arr['private'] = $private;
+        $arr['deleted'] = $parent_deleted;
+	call_hooks('post_remote_end',$arr);
 
 	// update the commented timestamp on the parent
 
@@ -1635,6 +1653,11 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 				if(count($r)) {
 					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
+
+						// do not accept (ignore) an earlier edit than one we currently have.
+						if(datetime_convert('UTC','UTC',$datarray['edited']) < $r[0]['edited'])
+							continue;
+
 						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($datarray['title']),
 							dbesc($datarray['body']),
@@ -1781,6 +1804,11 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 				if(count($r)) {
 					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
+
+						// do not accept (ignore) an earlier edit than one we currently have.
+						if(datetime_convert('UTC','UTC',$datarray['edited']) < $r[0]['edited'])
+							continue;
+
 						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($datarray['title']),
 							dbesc($datarray['body']),
@@ -1836,9 +1864,11 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				}
 
 				if(($contact['network'] === NETWORK_FEED) || (! strlen($contact['notify']))) {
-					// one way feed - no remote comment ability
-					$datarray['last-child'] = 0;
+						// one way feed - no remote comment ability
+						$datarray['last-child'] = 0;
 				}
+				if($contact['network'] === NETWORK_FEED)
+					$datarray['private'] = 1;
 
 				// This is my contact on another system, but it's really me.
 				// Turn this into a wall post.
@@ -2264,7 +2294,12 @@ function local_delivery($importer,$data) {
 
 				if(count($r)) {
 					$iid = $r[0]['id'];
-					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
+					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {
+					
+						// do not accept (ignore) an earlier edit than one we currently have.
+						if(datetime_convert('UTC','UTC',$datarray['edited']) < $r[0]['edited'])
+							continue;
+  
 						logger('received updated comment' , LOGGER_DEBUG);
 						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($datarray['title']),
@@ -2443,6 +2478,11 @@ function local_delivery($importer,$data) {
 
 				if(count($r)) {
 					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
+
+						// do not accept (ignore) an earlier edit than one we currently have.
+						if(datetime_convert('UTC','UTC',$datarray['edited']) < $r[0]['edited'])
+							continue;
+
 						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($datarray['title']),
 							dbesc($datarray['body']),
@@ -2609,6 +2649,11 @@ function local_delivery($importer,$data) {
 
 			if(count($r)) {
 				if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
+
+					// do not accept (ignore) an earlier edit than one we currently have.
+					if(datetime_convert('UTC','UTC',$datarray['edited']) < $r[0]['edited'])
+						continue;
+
 					$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 						dbesc($datarray['title']),
 						dbesc($datarray['body']),
@@ -3344,4 +3389,70 @@ function drop_item($id,$interactive = true) {
 		//NOTREACHED
 	}
 	
+}
+
+
+function first_post_date($uid,$wall = false) {
+	$r = q("select id, created from item 
+		where uid = %d and wall = %d and deleted = 0 and visible = 1 AND moderated = 0 
+		and id = parent
+		order by created asc limit 1",
+		intval($uid),
+		intval($wall ? 1 : 0)
+	);
+	if(count($r)) {
+//		logger('first_post_date: ' . $r[0]['id'] . ' ' . $r[0]['created'], LOGGER_DATA);
+		return substr(datetime_convert('',date_default_timezone_get(),$r[0]['created']),0,10);
+	}
+	return false;
+}
+
+function posted_dates($uid,$wall) {
+	$dnow = datetime_convert('',date_default_timezone_get(),'now','Y-m-d');
+
+	$dthen = first_post_date($uid,$wall);
+	if(! $dthen)
+		return array();
+
+	// If it's near the end of a long month, backup to the 28th so that in 
+	// consecutive loops we'll always get a whole month difference.
+
+	if(intval(substr($dnow,8)) > 28)
+		$dnow = substr($dnow,0,8) . '28';
+	if(intval(substr($dthen,8)) > 28)
+		$dnow = substr($dthen,0,8) . '28';
+
+	$ret = array();
+	while($dnow >= $dthen) {
+		$dstart = substr($dnow,0,8) . '01';
+		$dend = substr($dnow,0,8) . get_dim(intval($dnow),intval(substr($dnow,5)));
+		$start_month = datetime_convert('','',$dstart,'Y-m-d');
+		$end_month = datetime_convert('','',$dend,'Y-m-d');
+		$str = day_translate(datetime_convert('','',$dnow,'F Y'));
+ 		$ret[] = array($str,$end_month,$start_month);
+		$dnow = datetime_convert('','',$dnow . ' -1 month', 'Y-m-d');
+	}
+	return $ret;
+}
+
+
+function posted_date_widget($url,$uid,$wall) {
+	$o = '';
+
+	// For former Facebook folks that left because of "timeline"
+
+	if($wall && intval(get_pconfig($uid,'system','no_wall_archive_widget')))
+		return $o;
+
+	$ret = posted_dates($uid,$wall);
+	if(! count($ret))
+		return $o;
+
+	$o = replace_macros(get_markup_template('posted_date_widget.tpl'),array(
+		'$title' => t('Archives'),
+		'$size' => ((count($ret) > 6) ? 6 : count($ret)),
+		'$url' => $url,
+		'$dates' => $ret
+	));
+	return $o;
 }

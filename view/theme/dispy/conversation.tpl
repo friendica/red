@@ -16,6 +16,8 @@
 </div>
 {{ endfor }}
 
+<div id="conversation-end"></div>
+
 {{ if $dropping }}
 <div class="delete-checked">
 <a href="#" onclick="deleteCheckedItems();return false;"><span class="icon delete"></span><span class="s22 text" onmouseover="imgbright(this);" onmouseout="imgdull(this);">$dropping</span></a>

@@ -4,12 +4,13 @@ require_once('include/config.php');
 require_once('include/network.php');
 require_once('include/plugin.php');
 require_once('include/text.php');
+require_once('include/datetime.php');
 require_once('include/pgettext.php');
 require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '3.0.1369' );
+define ( 'FRIENDICA_VERSION',      '3.0.1375' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
 define ( 'DB_UPDATE_VERSION',      1149      );
 
@@ -333,6 +334,12 @@ if(! class_exists('App')) {
 
 		function __construct() {
 
+			global $default_timezone;
+
+			$this->timezone = ((x($default_timezone)) ? $default_timezone : 'UTC');
+
+			date_default_timezone_set($this->timezone);
+
 			$this->config = array();
 			$this->page = array();
 			$this->pager= array();
@@ -407,9 +414,6 @@ if(! class_exists('App')) {
 			$this->argc = count($this->argv);
 			if((array_key_exists('0',$this->argv)) && strlen($this->argv[0])) {
 				$this->module = str_replace(".", "_", $this->argv[0]);
-				if(array_key_exists('2',$this->argv)) {
-					$this->category = $this->argv[2];
-				}
 			}
 			else {
 				$this->argc = 1;
@@ -432,7 +436,7 @@ if(! class_exists('App')) {
 			 * pagination
 			 */
 
-			$this->pager['page'] = ((x($_GET,'page')) ? $_GET['page'] : 1);
+			$this->pager['page'] = ((x($_GET,'page') && intval($_GET['page']) > 0) ? intval($_GET['page']) : 1);
 			$this->pager['itemspage'] = 50;
 			$this->pager['start'] = ($this->pager['page'] * $this->pager['itemspage']) - $this->pager['itemspage'];
 			$this->pager['total'] = 0;
@@ -499,7 +503,7 @@ if(! class_exists('App')) {
 		}
 
 		function set_pager_itemspage($n) {
-			$this->pager['itemspage'] = intval($n);
+			$this->pager['itemspage'] = ((intval($n) > 0) ? intval($n) : 0);
 			$this->pager['start'] = ($this->pager['page'] * $this->pager['itemspage']) - $this->pager['itemspage'];
 
 		}
@@ -1572,4 +1576,31 @@ function zrl($s,$force = false) {
 	if($mine and ! link_compare($mine,$s))
 		return $s . $achar . 'zrl=' . urlencode($mine);
 	return $s;
+}
+
+/**
+* returns querystring as string from a mapped array
+*
+* @param params Array 
+* @return string
+*/
+function build_querystring($params, $name=null) { 
+    $ret = ""; 
+    foreach($params as $key=>$val) {
+        if(is_array($val)) { 
+            if($name==null) {
+                $ret .= build_querystring($val, $key); 
+            } else {
+                $ret .= build_querystring($val, $name."[$key]");    
+            }
+        } else {
+            $val = urlencode($val);
+            if($name!=null) {
+                $ret.=$name."[$key]"."=$val&"; 
+            } else {
+                $ret.= "$key=$val&"; 
+            }
+        } 
+    } 
+    return $ret;    
 }

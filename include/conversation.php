@@ -173,8 +173,8 @@ function localize_item(&$item){
 				$item['body'] = str_replace($mtch[0],'@[url=' . zrl($mtch[1]). ']',$item['body']);
 		}
 	}
+	// add zrl's to public images
 	if(preg_match_all('/\[url=(.*?)\/photos\/(.*?)\/image\/(.*?)\]\[img(.*?)\]h(.*?)\[\/img\]\[\/url\]/is',$item['body'],$matches,PREG_SET_ORDER)) {
-logger('matched');
 		foreach($matches as $mtch) {
 				$item['body'] = str_replace($mtch[0],'[url=' . zrl($mtch[1] . '/photos/' . $mtch[2] . '/image/' . $mtch[3] ,true) . '][img' . $mtch[4] . ']h' . $mtch[5]  . '[/img][/url]',$item['body']);
 		}
@@ -546,7 +546,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				}
 
 				$likebuttons = '';
-				$shareable = ((($profile_owner == local_user()) &&  (! $item['private'])) ? true : false); //($mode != 'display') &&
+				$shareable = ((($profile_owner == local_user()) &&  ((! $item['private']) || $item['network'] === NETWORK_FEED)) ? true : false); 
 
 				if($page_writeable) {
 					if($toplevelpost) {

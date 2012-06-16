@@ -59,20 +59,13 @@ if(! $install) {
 /**
  *
  * Important stuff we always need to do.
- * Initialise authentication and  date and time. 
- * Create the HTML head for the page, even if we may not use it (xml, etc.)
+ *
  * The order of these may be important so use caution if you think they're all
  * intertwingled with no logical order and decide to sort it out. Some of the
  * dependencies have changed, but at least at one time in the recent past - the 
  * order was critical to everything working properly
  *
  */
-
-require_once("datetime.php");
-
-$a->timezone = (($default_timezone) ? $default_timezone : 'UTC');
-
-date_default_timezone_set($a->timezone);
 
 session_start();
 

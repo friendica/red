@@ -139,6 +139,10 @@ function terminate_friendship($user,$self,$contact) {
  
 if(! function_exists('mark_for_death')) {
 function mark_for_death($contact) {
+
+	if($contact['archive'])
+		return;
+
 	if($contact['term-date'] == '0000-00-00 00:00:00') {
 		q("UPDATE `contact` SET `term-date` = '%s' WHERE `id` = %d LIMIT 1",
 				dbesc(datetime_convert()),
@@ -146,12 +150,23 @@ function mark_for_death($contact) {
 		);
 	}
 	else {
+
+		// TODO: We really should send a notification to the owner after 2-3 weeks
+		// so they won't be surprised when the contact vanishes and can take
+		// remedial action if this was a serious mistake or glitch
+
 		$expiry = $contact['term-date'] . ' + 32 days ';
 		if(datetime_convert() > datetime_convert('UTC','UTC',$expiry)) {
 
 			// relationship is really truly dead. 
+			// archive them rather than delete
+			// though if the owner tries to unarchive them we'll start the whole process over again
 
-			contact_remove($contact['id']);
+			q("update contact set `archive` = 1 where id = %d limit 1",
+				intval($contact['id'])
+			);
+
+			//contact_remove($contact['id']);
 
 		}
 	}

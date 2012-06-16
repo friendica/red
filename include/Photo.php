@@ -256,35 +256,81 @@ class Photo {
 		else
 			$guid = get_guid();
 
-		$r = q("INSERT INTO `photo`
-			( `uid`, `contact-id`, `guid`, `resource-id`, `created`, `edited`, `filename`, type, `album`, `height`, `width`, `data`, `scale`, `profile`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid` )
-			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, '%s', '%s', '%s', '%s' )",
-			intval($uid),
-			intval($cid),
-			dbesc($guid),
-			dbesc($rid),
-			dbesc(datetime_convert()),
-			dbesc(datetime_convert()),
-			dbesc(basename($filename)),
-			dbesc($this->type),
-			dbesc($album),
-			intval($this->height),
-			intval($this->width),
-			dbesc($this->imageString()),
-			intval($scale),
-			intval($profile),
-			dbesc($allow_cid),
-			dbesc($allow_gid),
-			dbesc($deny_cid),
-			dbesc($deny_gid)
+		$x = q("select id from photo where `resource-id` = '%s' and uid = %d and `contact-id` = %d and `scale` = %d limit 1",
+				dbesc($rid),
+				intval($uid),
+				intval($cid),
+				intval($scale)
 		);
+		if(count($x)) {
+			$r = q("UPDATE `photo`
+				set `uid` = %d, 
+				`contact-id` = %d, 
+				`guid` = '%s', 
+				`resource-id` = '%s', 
+				`created` = '%s',
+				`edited` = '%s', 
+				`filename` = '%s', 
+				`type` = '%s', 
+				`album` = '%s', 
+				`height` = %d, 
+				`width` = %d, 
+				`data` = '%s', 
+				`scale` = %d, 
+				`profile` = %d, 
+				`allow_cid` = '%s', 
+				`allow_gid` = '%s', 
+				`deny_cid` = '%s',
+				`deny_gid` = '%s' 
+				where id = %d limit 1",
+
+				intval($uid),
+				intval($cid),
+				dbesc($guid),
+				dbesc($rid),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert()),
+				dbesc(basename($filename)),
+				dbesc($this->type),
+				dbesc($album),
+				intval($this->height),
+				intval($this->width),
+				dbesc($this->imageString()),
+				intval($scale),
+				intval($profile),
+				dbesc($allow_cid),
+				dbesc($allow_gid),
+				dbesc($deny_cid),
+				dbesc($deny_gid),
+				intval($x[0]['id'])
+			);
+		}
+		else {
+			$r = q("INSERT INTO `photo`
+				( `uid`, `contact-id`, `guid`, `resource-id`, `created`, `edited`, `filename`, type, `album`, `height`, `width`, `data`, `scale`, `profile`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid` )
+				VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, '%s', '%s', '%s', '%s' )",
+				intval($uid),
+				intval($cid),
+				dbesc($guid),
+				dbesc($rid),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert()),
+				dbesc(basename($filename)),
+				dbesc($this->type),
+				dbesc($album),
+				intval($this->height),
+				intval($this->width),
+				dbesc($this->imageString()),
+				intval($scale),
+				intval($profile),
+				dbesc($allow_cid),
+				dbesc($allow_gid),
+				dbesc($deny_cid),
+				dbesc($deny_gid)
+			);
+		}
 		return $r;
 	}
-
-
-
-
-
 }}
 
 
@@ -326,6 +372,17 @@ function import_profile_photo($photo,$uid,$cid) {
 
 	$a = get_app();
 
+	$r = q("select `resource-id` from photo where `uid` = %d and `contact-id` = %d and `scale` = 4 and `album` = 'Contact Photos' limit 1",
+		intval($uid),
+		intval($cid)
+	);
+	if(count($r)) {
+		$hash = $r[0]['resource-id'];
+	}
+	else {
+		$hash = photo_new_resource();
+	}
+		
 	$photo_failure = false;
 
 	$filename = basename($photo);
@@ -340,8 +397,6 @@ function import_profile_photo($photo,$uid,$cid) {
 
 		$img->scaleImageSquare(175);
 					
-		$hash = photo_new_resource();
-
 		$r = $img->store($uid, $cid, $hash, $filename, 'Contact Photos', 4 );
 
 		if($r === false)
@@ -360,8 +415,6 @@ function import_profile_photo($photo,$uid,$cid) {
 
 		if($r === false)
 			$photo_failure = true;
-
-
 
 		$photo = $a->get_baseurl() . '/photo/' . $hash . '-4.' . $img->getExt();
 		$thumb = $a->get_baseurl() . '/photo/' . $hash . '-5.' . $img->getExt();

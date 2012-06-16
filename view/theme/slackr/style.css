@@ -88,6 +88,20 @@ nav #site-location {
 	box-shadow: 4px 4px 3px 0 #444444;
 }
 
+#datebrowse-sidebar select {
+	margin-left: 25px;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	opacity: 0.3;
+	filter:alpha(opacity=30);
+}
+
+#datebrowse-sidebar select:hover {
+	opacity: 1.0;
+	filter:alpha(opacity=100);
+}
+
+
 .contact-entry-photo img, .profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo, .profile-jot-text, .group-selected, .nets-selected, .fileas-selected, #profile-jot-submit, .categories-selected {
 	border-radius: 3px;
 	-moz-border-radius: 3px;

@@ -36,11 +36,6 @@ function onepoll_run($argv, $argc){
 
 	logger('onepoll: start');
 	
-	$abandon_days = intval(get_config('system','account_abandon_days'));
-	if($abandon_days < 1)
-		$abandon_days = 0;
-
-
 	$manual_id  = 0;
 	$generation = 0;
 	$hub_update = false;
@@ -54,20 +49,13 @@ function onepoll_run($argv, $argc){
 		logger('onepoll: no contact');
 		return;
 	}
-
-	if(was_recently_delayed($contact_id))
-		return;
+	
 
 	$d = datetime_convert();
 
 	// Only poll from those with suitable relationships,
 	// and which have a polling address and ignore Diaspora since 
 	// we are unable to match those posts with a Diaspora GUID and prevent duplicates.
-
-	$abandon_sql = (($abandon_days) 
-		? sprintf(" AND `user`.`login_date` > UTC_TIMESTAMP() - INTERVAL %d DAY ", intval($abandon_days)) 
-		: '' 
-	);
 
 	$contacts = q("SELECT `contact`.* FROM `contact` 
 		WHERE ( `rel` = %d OR `rel` = %d ) AND `poll` != ''
@@ -88,14 +76,13 @@ function onepoll_run($argv, $argc){
 
 	$contact = $contacts[0];
 
-
 	$xml = false;
 
 	$t = $contact['last-update'];
 
 	if($contact['subhub']) {
-		$interval = get_config('system','pushpoll_frequency');
-		$contact['priority'] = (($interval !== false) ? intval($interval) : 3);
+		$poll_interval = get_config('system','pushpoll_frequency');
+		$contact['priority'] = (($poll_interval !== false) ? intval($poll_interval) : 3);
 		$hub_update = false;
 
 		if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 day"))
@@ -139,15 +126,18 @@ function onepoll_run($argv, $argc){
 			. '&perm=' . $perm ;
 
 		$handshake_xml = fetch_url($url);
+		$html_code = $a->get_curl_code();
 
 		logger('onepoll: handshake with url ' . $url . ' returns xml: ' . $handshake_xml, LOGGER_DATA);
 
 
-		if(! $handshake_xml) {
+		if((! strlen($handshake_xml)) || ($html_code >= 400) || (! $html_code)) {
 			logger("poller: $url appears to be dead - marking for death ");
+
 			// dead connection - might be a transient event, or this might
 			// mean the software was uninstalled or the domain expired. 
 			// Will keep trying for one month.
+
 			mark_for_death($contact);
 
 			// set the last-update so we don't keep polling
@@ -161,6 +151,9 @@ function onepoll_run($argv, $argc){
 
 		if(! strstr($handshake_xml,'<?xml')) {
 			logger('poller: response from ' . $url . ' did not contain XML.');
+
+			mark_for_death($contact);
+
 			$r = q("UPDATE `contact` SET `last-update` = '%s' WHERE `id` = %d LIMIT 1",
 				dbesc(datetime_convert()),
 				intval($contact['id'])

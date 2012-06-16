@@ -23,6 +23,13 @@ function was_recently_delayed($cid) {
 	);
 	if(count($r))
 		return true;
+
+	$r = q("select `term-date` from contact where id = %d and `term-date` != '' and `term-date` != '0000-00-00 00:00:00' limit 1",
+		intval($cid)
+	);
+	if(count($r))
+		return true;
+
 	return false;
 }
 

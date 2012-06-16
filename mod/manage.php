@@ -96,7 +96,7 @@ function manage_content(&$a) {
 
 	$o .= '<div id="identity-selector-wrapper">' . "\r\n";
 	$o .= '<form action="manage" method="post" >' . "\r\n";
-	$o .= '<select name="identity" size="4">' . "\r\n";
+	$o .= '<select name="identity" size="4" onchange="this.form.submit();" >' . "\r\n";
 
 	foreach($a->identities as $rr) {
 		$selected = (($rr['nickname'] === $a->user['nickname']) ? ' selected="selected" ' : '');
@@ -106,7 +106,8 @@ function manage_content(&$a) {
 	$o .= '</select>' . "\r\n";
 	$o .= '<div id="identity-select-break"></div>' . "\r\n";
 
-	$o .= '<input id="identity-submit" type="submit" name="submit" value="' . t('Submit') . '" /></div></form>' . "\r\n";
+//	$o .= '<input id="identity-submit" type="submit" name="submit" value="' . t('Submit') . '" />';
+	$o .= '</div></form>' . "\r\n";
 
 	return $o;
 
