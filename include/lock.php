@@ -10,19 +10,19 @@ function lock_function($fn_name, $block = true, $wait_sec = 2) {
 	$got_lock = false;
 
 	do {
-		q("LOCK TABLE lock WRITE");
-		$r = q("SELECT locked FROM lock WHERE name = '%s' LIMIT 1",
+		q("LOCK TABLE locks WRITE");
+		$r = q("SELECT locked FROM locks WHERE name = '%s' LIMIT 1",
 			dbesc($fn_name)
 		);
 
 		if((count($r)) && (! $r[0]['locked'])) {
-			q("UPDATE lock SET locked = 1 WHERE name = '%s' LIMIT 1",
+			q("UPDATE locks SET locked = 1 WHERE name = '%s' LIMIT 1",
 				dbesc($fn_name)
 			);
 			$got_lock = true;
 		}
 		elseif(! $r) { // the Boolean value for count($r) should be equivalent to the Boolean value of $r
-			q("INSERT INTO lock ( name, locked ) VALUES ( '%s', 1 )",
+			q("INSERT INTO locks ( name, locked ) VALUES ( '%s', 1 )",
 				dbesc($fn_name)
 			);
 			$got_lock = true;
@@ -47,7 +47,7 @@ function block_on_function_lock($fn_name, $wait_sec = 2) {
 		$wait_sec = 2;	// don't let the user pick a value that's likely to crash the system
 
 	do {
-		$r = q("SELECT locked FROM lock WHERE name = '%s' LIMIT 1",
+		$r = q("SELECT locked FROM locks WHERE name = '%s' LIMIT 1",
 				dbesc(fn_name)
 		     );
 
@@ -63,7 +63,7 @@ function block_on_function_lock($fn_name, $wait_sec = 2) {
 if(! function_exists('unlock_function')) {
 function unlock_function(fn_name) {
 	//$r = q("LOCK TABLE lock WRITE");
-	$r = q("UPDATE lock SET locked = 0 WHERE name = '%s' LIMIT 1",
+	$r = q("UPDATE locks SET locked = 0 WHERE name = '%s' LIMIT 1",
 			dbesc(fn_name)
 	     );
 	//$r = q("UNLOCK TABLES");

@@ -1309,10 +1309,10 @@ function update_1150() {
 
 
 function update_1151() {
-	$r = q("CREATE TABLE IF NOT EXISTS lock (
+	$r = q("CREATE TABLE IF NOT EXISTS locks (
 			id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-			name CHAR(128) NOT NULL ,
-			locked TINYINT(1) NOT NULL DEFAULT '0'
+			name CHAR( 128 ) NOT NULL ,
+			locked TINYINT( 1 ) NOT NULL DEFAULT '0'
 		  ) ENGINE = MYISAM DEFAULT CHARSET=utf8 ");
 	if (!$r)
 		return UPDATE_FAILED;
