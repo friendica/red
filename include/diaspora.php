@@ -2060,12 +2060,12 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 			$images[] = $detail;
 			$body = str_replace($detail['str'],$mtch[1],$body);
 		}
-	}	
+	}
 */
-	$body = xmlify(html_entity_decode(bb2diaspora($body)));
-
 	if(strlen($title))
-		$body = xmlify('**' . html_entity_decode($title) . '**' . "\n") . $body;
+		$body = "[b]".html_entity_decode($title)."[/b]\n\n".$body;
+
+	$body = xmlify(html_entity_decode(bb2diaspora($body)));
 
 
 	if($item['attach']) {
