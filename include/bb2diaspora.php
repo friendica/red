@@ -70,6 +70,17 @@ function stripdcode_br_cb($s) {
 
 function bb2diaspora($Text,$preserve_nl = false) {
 
+	// Convert it to HTML - don't try oembed
+	$Text = bbcode($Text, $preserve_nl, false);
+
+	// Now convert HTML to Markdown
+	$md = new Markdownify(false, false, false);
+	$Text = $md->parseString($Text);
+
+	// Remove all unconverted tags
+	$Text = strip_tags($Text);
+
+/*
 	$ev = bbtoevent($Text);
 
 	// Replace any html brackets with HTML Entities to prevent executing HTML or script
@@ -85,17 +96,7 @@ function bb2diaspora($Text,$preserve_nl = false) {
 	if($preserve_nl)
 		$Text = str_replace(array("\n","\r"), array('',''),$Text);
 
-	// Convert it to HTML
-	$Text = bbcode($Text);
 
-	// Now convert HTML to Markdown
-	$md = new Markdownify(false, false, false);
-	$Text = $md->parseString($Text);
-
-	// Remove all unconverted tags
-	$Text = strip_tags($Text);
-
-/*
 	// Set up the parameters for a URL search string
 	$URLSearchString = "^\[\]";
 	// Set up the parameters for a MAIL search string
