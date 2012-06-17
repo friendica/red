@@ -22,13 +22,13 @@ function load_config($family) {
 	if(count($r)) {
 		foreach($r as $rr) {
 			$k = $rr['k'];
-			if ($rr['cat'] === 'config') {
+			if ($family === 'config') {
 				$a->config[$k] = $rr['v'];
 			} else {
 				$a->config[$family][$k] = $rr['v'];
 			}
 		}
-	} else if (isset($rr) && ($rr['cat'] != 'config')) {
+	} else if ($family != 'config') {
 		// Negative caching
 		$a->config[$family] = "!<unset>!";
 	}
@@ -126,7 +126,7 @@ function load_pconfig($uid,$family) {
 			$k = $rr['k'];
 			$a->config[$uid][$family][$k] = $rr['v'];
 		}
-	} else if ($rr['cat'] != 'config') {
+	} else if ($family != 'config') {
 		// Negative caching
 		$a->config[$uid][$family] = "!<unset>!";
 	}
