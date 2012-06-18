@@ -332,6 +332,9 @@ if(! class_exists('App')) {
 		private $curl_code;
 		private $curl_headers;
 
+		private $cached_profile_image;
+		private $cached_profile_picdate;
+							
 		function __construct() {
 
 			global $default_timezone;
@@ -541,6 +544,28 @@ if(! class_exists('App')) {
 
 		function get_curl_headers() {
 			return $this->curl_headers;
+		}
+
+		function get_cached_avatar_image($avatar_image){
+			if($this->cached_profile_image[$avatar_image])
+				return $this->cached_profile_image[$avatar_image];
+
+			$path_parts = explode("/",$avatar_image);
+			$common_filename = $path_parts[count($path_parts)-1];
+
+			if($this->cached_profile_picdate[$common_filename]){
+				$this->cached_profile_image[$avatar_image] = $avatar_image . $this->cached_profile_picdate[$common_filename];
+			} else {
+				$r = q("SELECT `contact`.`avatar-date` AS picdate FROM `contact` WHERE `contact`.`thumb` like \"%%/%s\"",
+					$common_filename);
+				if(! count($r)){
+					$this->cached_profile_image[$avatar_image] = $avatar_image;
+				} else {
+					$this->cached_profile_picdate[$common_filename] = "?rev=" . urlencode($r[0]['picdate']);
+  					$this->cached_profile_image[$avatar_image] = $avatar_image . $this->cached_profile_picdate[$common_filename];
+				}
+			}
+			return $this->cached_profile_image[$avatar_image];
 		}
 
 
