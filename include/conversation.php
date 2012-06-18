@@ -308,7 +308,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				if(($normalised != 'mailbox') && (x($a->contacts[$normalised])))
 					$profile_avatar = $a->contacts[$normalised]['thumb'];
 				else
-					$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $item['thumb']);
+					$profile_avatar = ((strlen($item['author-avatar'])) ? $a->get_cached_avatar_image($item['author-avatar']) : $item['thumb']);
 
 				$locate = array('location' => $item['location'], 'coord' => $item['coord'], 'html' => '');
 				call_hooks('render_location',$locate);
