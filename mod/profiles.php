@@ -635,7 +635,7 @@ function profiles_content(&$a) {
 	}
 	else {
 
-		$r = q("SELECT `profile`.*, `contact`.`avatar-date` AS picdate FROM `profile` LEFT JOIN `contact` on `contact`.`uid` = `profile`.`uid` WHERE `profile`.`uid` = %d",
+		$r = q("SELECT `profile`.*, `contact`.`avatar-date` AS picdate FROM `profile` LEFT JOIN `contact` on `contact`.`uid` = `profile`.`uid` WHERE `profile`.`uid` = %d and contact.self = 1",
 			local_user());
 		if(count($r)) {
 
