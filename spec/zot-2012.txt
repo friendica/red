@@ -135,6 +135,12 @@ Returns:
 Message
 -------
 
+Passing messages is done asynchronously. This may (potentially) relieve a lot of the burden of distribution from the posting site. If you're on site 'A' and make a post, site 'A' just contacts any downstream sites and informs them that there is new content (via a $post_id). The downstream site initiates the actual data transfer. 
+
+
+
+
+
 POST https://example.com/post
 
 {
