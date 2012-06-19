@@ -1155,9 +1155,9 @@ if(! function_exists('profile_sidebar')) {
 			'fullname' => $profile['name'],
 			'firstname' => $firstname,
 			'lastname' => $lastname,
-			'photo300' => $a->get_baseurl() . '/photo/custom/300/' . $profile['uid'] . '.jpg',
-			'photo100' => $a->get_baseurl() . '/photo/custom/100/' . $profile['uid'] . '.jpg',
-			'photo50' => $a->get_baseurl() . '/photo/custom/50/'  . $profile['uid'] . '.jpg',
+			'photo300' => $a->get_cached_avatar_image($a->get_baseurl() . '/photo/custom/300/' . $profile['uid'] . '.jpg'),
+			'photo100' => $a->get_cached_avatar_image($a->get_baseurl() . '/photo/custom/100/' . $profile['uid'] . '.jpg'),
+			'photo50' => $a->get_cached_avatar_image($a->get_baseurl() . '/photo/custom/50/'  . $profile['uid'] . '.jpg'),
 		);
 
 		if (!$block){
