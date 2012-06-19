@@ -814,6 +814,12 @@ function item_store($arr,$force_parent = false) {
 			if($r[0]['private'])
 				$arr['private'] = 1;
 
+			// Edge case. We host a public forum that was originally posted to privately.
+			// The original author commented, but as this is a comment, the permissions
+			// weren't fixed up so it will still show the comment as private unless we fix it here. 
+
+			if((intval($r[0]['forum_mode']) == 1) && (! $r[0]['private']))
+				$arr['private'] = 0;
 		}
 		else {
 
