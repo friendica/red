@@ -1,0 +1,182 @@
+
+Initial cut at Zot-2012 protocol. This is a very rough draft of some very rough ideas and concepts. 
+It is not yet intended to be a definitive specification and many things like the security handshakes are yet to be specified precisely. 
+
+All communications are https
+
+
+First create a global unique userid
+
+
+Site userid:
+https://macgirvin.com/1
+
+$guuid = base64url_encode(hash('whirlpool','https://macgirvin.com/1.' . mt_rand(1000000,9999999),1);
+
+
+Then create a hashed site destination.
+
+$gduid = base64url_encode(hash('whirlpool', $guuid . 'https://macgirvin.com',1);
+
+These two keys will identify you as a person+site pair in the future.
+You will also obtain a password upon introducing yourself to a site.
+This can be used to edit locations in the future. You will always keep your global unique userid
+
+
+The steps to connect with somebody are to first register your location with their site.
+Then introduce yourself to the person. This contains flags for the desired relationship.
+At some future time, they may confirm and adjust the relationship based on their comfort level. 
+Lack of confirmation is tantamount to denial. 
+
+You can set either or both of FOLLOW and SHARE which indicates the relationship from your viewpoint.
+They may do likewise.
+
+A relationship is based on you as a person and provided you register new locations with the site you can post from anywhere.
+You do not need to register locations with each person, only with the site.  
+
+
+Introduce yourself to a site:
+
+
+POST https://example.com/post
+
+{
+'type' => 'register'
+'person' => $guuid
+'address' => $gduid
+'site' => 'https://macgirvin.com'
+'info' => 'mike@macgirvin.com'
+}
+
+Returns:
+
+{
+'success' => 'true'
+'pass' => me_encrypt($random_string)
+}
+
+---
+Add location
+---
+
+POST https://example.com/post
+
+{
+'type' => 'location'
+'person' => $guuid
+'address' => $new_gduid
+'site' => 'https://newsite.com'
+'info' => 'mike@newsite.com'
+'pass' => me_encrypt($gduid . '.' . $pass)
+}
+
+Returns:
+
+{
+'success' => 'true'
+'pass' => me_encrypt($random_string)
+}
+
+---
+Remove location
+---
+
+POST https://example.com/post
+
+{
+'type' => 'remove_location'
+'person' => $guuid
+'address' => $gduid
+'pass' => me_encrypt($pass)
+}
+
+Returns:
+
+{
+'success' => 'true'
+'message' => 'OK'
+}
+
+
+------------
+Make friends
+------------
+This message may be reversed/repeated by the destination site to confirm.
+flags is the desired friendship bits. The same message may be used with different flags 
+to edit or remove a relationship.
+
+
+POST https://example.com/post
+
+{
+'type' => 'contact'
+'person' => $gduid
+'address' => $guuid
+'target' => 'bobjones@example.com'
+'flags' => HIDDEN=0,FOLLOW=1,SHARE=1,NOHIDDEN=1,NOFOLLOW=0,NOSHARE=0
+'confirm' => me_encrypt($guuid . '.' . $pass)
+}
+
+Returns:
+
+{
+'success' => 'true'
+'message' => 'OK'
+'flags' => PENDING=1
+}
+
+
+
+
+
+
+
+-------
+Message
+-------
+
+Passing messages is done asynchronously. This may (potentially) relieve a lot of the burden of distribution from the posting site. If you're on site 'A' and make a post, site 'A' just contacts any downstream sites and informs them that there is new content (via a $post_id). The downstream site initiates the actual data transfer. 
+
+
+
+
+
+POST https://example.com/post
+
+{
+'type' => 'post'
+'person' => $guuid
+'address' => $gduid
+'post' => $post_id
+}
+
+Returns:
+{
+'success' => 'true'
+'message' => 'OK'
+}
+
+
+--------
+Callback
+--------
+
+POST https://macgirvin.com/post
+
+{
+'type' => 'retrieve'
+'retrieve' => $post_id
+'challenge' => you_encrypt('abc123')
+'verify' => me_encrypt('xyz456' . '.' . $gduid)
+}
+
+Returns:
+
+{
+'success' => 'true'
+'message' => 'OK'
+'response' => 'abc123'
+'data' => encrypted or raw structured post
+}
+
+
