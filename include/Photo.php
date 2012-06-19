@@ -124,20 +124,20 @@ class Photo {
 	}
 
 	public function flip($horiz = true, $vert = false) {
-        $w = imagesx($this->image);
-        $h = imagesy($this->image);
-        $flipped = imagecreate($w, $h);
+		$w = imagesx($this->image);
+		$h = imagesy($this->image);
+		$flipped = imagecreate($w, $h);
 		if($horiz) {
-                for ($x = 0; $x < $w; $x++) {
-                        imagecopy($flipped, $this->image, $x, 0, $w - $x - 1, 0, 1, $h);
-                }
-        }
-        if($vert) {
-                for ($y = 0; $y < $h; $y++) {
-                        imagecopy($flipped, $this->image, 0, $y, 0, $h - $y - 1, $w, 1);
-                }
-        }
-        $this->image = $flipped;
+			for ($x = 0; $x < $w; $x++) {
+				imagecopy($flipped, $this->image, $x, 0, $w - $x - 1, 0, 1, $h);
+			}
+		}
+		if($vert) {
+			for ($y = 0; $y < $h; $y++) {
+				imagecopy($flipped, $this->image, 0, $y, 0, $h - $y - 1, $w, 1);
+			}
+		}
+		$this->image = $flipped;
 	}
 
 	public function orient($filename) {
