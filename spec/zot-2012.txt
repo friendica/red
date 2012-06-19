@@ -161,9 +161,10 @@ Returns:
 Callback
 --------
 
-POST https://macgirvin.com
+POST https://macgirvin.com/post
 
 {
+'type' => 'retrieve'
 'retrieve' => $post_id
 'challenge' => you_encrypt('abc123')
 'verify' => me_encrypt('xyz456' . '.' . $gduid)
