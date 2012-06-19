@@ -1,0 +1,154 @@
+
+First create a global unique userid
+
+
+Site userid:
+https://macgirvin.com/1
+
+$guuid = base64url_encode(hash('whirlpool','https://macgirvin.com/1.' . mt_rand(1000000,9999999),1);
+
+
+Then create a hashed site destination.
+
+$gduid = base64url_encode(hash('whirlpool', $guuid . 'https://macgirvin.com',1);
+
+These two keys will identify you as a person+site pair in the future.
+You will also obtain a password upon introducing yourself to a site.
+This can be used to edit locations in the future. You will always keep your global unique userid
+
+
+Introduce yourself to a site:
+
+
+POST https://example.com/post
+
+{
+'type' => 'register'
+'person' => $guuid
+'address' => $gduid
+'site' => 'https://macgirvin.com'
+'info' => 'mike@macgirvin.com'
+}
+
+Returns:
+
+{
+'success' => 'true'
+'pass' => me_encrypt($random_string)
+}
+
+---
+Add location
+---
+
+POST https://example.com
+
+{
+'type' => 'location'
+'person' => $guuid
+'address' => $new_gduid
+'site' => 'https://newsite.com'
+'info' => 'mike@macgirvin.com'
+'pass' => me_encrypt($gduid . '.' . $pass)
+}
+
+Returns:
+
+{
+'success' => 'true'
+'pass' => me_encrypt($random_string)
+}
+
+---
+Remove location
+---
+
+POST https://example.com
+
+{
+'type' => 'remove_location'
+'person' => $guuid
+'address' => $gduid
+'pass' => me_encrypt($pass)
+}
+
+Returns:
+
+{
+'success' => 'true'
+'message' => 'OK'
+}
+
+
+------------
+Make friends
+------------
+This message may be reversed/repeated by the destination site to confirm
+
+
+POST https://example.com/post
+
+{
+'type' => 'contact_add'
+'person' => $gduid
+'address' => $guuid
+'target' => 'bobjones@example.com'
+'flags' => HIDDEN=0,FOLLOW=1,SHARE=1
+'confirm' => me_encrypt($guuid . '.' . $pass)
+}
+
+Returns:
+
+{
+'success' => 'true'
+'message' => 'OK'
+}
+
+
+
+
+
+
+
+-------
+Message
+-------
+
+POST https://example.com/post
+
+{
+'type' => 'post'
+'person' => $guuid
+'address' => $gduid
+'post' => $post_id
+}
+
+Returns:
+{
+'success' => 'true'
+'message' => 'OK'
+}
+
+
+--------
+Callback
+--------
+
+POST https://macgirvin.com
+
+{
+'retrieve' => $post_id
+'challenge' => you_encrypt('abc123')
+'verify' => me_encrypt('xyz456' . '.' . $gduid)
+}
+
+Returns:
+
+{
+'success' => 'true'
+'message' => 'OK'
+'response' => 'abc123'
+'data' => encrypted or raw structured post
+}
+
+
