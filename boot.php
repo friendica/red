@@ -1392,7 +1392,7 @@ if(! function_exists('proc_run')) {
 
 if(! function_exists('current_theme')) {
 	function current_theme(){
-		$app_base_themes = array('duepuntozero', 'loozah');
+		$app_base_themes = array('duepuntozero', 'dispy', 'quattro');
 	
 		$a = get_app();
 	
@@ -1410,7 +1410,7 @@ if(! function_exists('current_theme')) {
 				return($t);
 		}
 	
-		$fallback = glob('view/theme/*/style.[css|php]');
+		$fallback = array_merge(glob('view/theme/*/style.css'),glob('view/theme/*/style.php'));
 		if(count($fallback))
 			return (str_replace('view/theme/','', substr($fallback[0],0,-10)));
 	
