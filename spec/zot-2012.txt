@@ -1,4 +1,10 @@
 
+Initial cut at Zot-2012 protocol. This is a very rough draft of some very rough ideas and concepts. 
+It is not yet intended to be a definitive specification and many things like the security handshakes are yet to be specified precisely. 
+
+All communications are https
+
+
 First create a global unique userid
 
 
@@ -15,6 +21,18 @@ $gduid = base64url_encode(hash('whirlpool', $guuid . 'https://macgirvin.com',1);
 These two keys will identify you as a person+site pair in the future.
 You will also obtain a password upon introducing yourself to a site.
 This can be used to edit locations in the future. You will always keep your global unique userid
+
+
+The steps to connect with somebody are to first register your location with their site.
+Then introduce yourself to the person. This contains flags for the desired relationship.
+At some future time, they may confirm and adjust the relationship based on their comfort level. 
+Lack of confirmation is tantamount to denial. 
+
+You can set either or both of FOLLOW and SHARE which indicates the relationship from your viewpoint.
+They may do likewise.
+
+A relationship is based on you as a person and provided you register new locations with the site you can post from anywhere.
+You do not need to register locations with each person, only with the site.  
 
 
 Introduce yourself to a site:
@@ -41,7 +59,7 @@ Returns:
 Add location
 ---
 
-POST https://example.com
+POST https://example.com/post
 
 {
 'type' => 'location'
@@ -63,7 +81,7 @@ Returns:
 Remove location
 ---
 
-POST https://example.com
+POST https://example.com/post
 
 {
 'type' => 'remove_location'
@@ -83,17 +101,19 @@ Returns:
 ------------
 Make friends
 ------------
-This message may be reversed/repeated by the destination site to confirm
+This message may be reversed/repeated by the destination site to confirm.
+flags is the desired friendship bits. The same message may be used with different flags 
+to edit or remove a relationship.
 
 
 POST https://example.com/post
 
 {
-'type' => 'contact_add'
+'type' => 'contact'
 'person' => $gduid
 'address' => $guuid
 'target' => 'bobjones@example.com'
-'flags' => HIDDEN=0,FOLLOW=1,SHARE=1
+'flags' => HIDDEN=0,FOLLOW=1,SHARE=1,NOHIDDEN=1,NOFOLLOW=0,NOSHARE=0
 'confirm' => me_encrypt($guuid . '.' . $pass)
 }
 
@@ -102,6 +122,7 @@ Returns:
 {
 'success' => 'true'
 'message' => 'OK'
+'flags' => PENDING=1
 }
 
 
