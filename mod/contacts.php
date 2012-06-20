@@ -482,7 +482,7 @@ function contacts_content(&$a) {
 	$searching = false;
 	if($search) {
 		$search_hdr = $search;
-		$search = dbesc(protect_sprintf('%' . $search . '%');
+		$search = dbesc(protect_sprintf('%' . $search . '%'));
 		$searching = true;
 	}
 	$sql_extra .= (($searching) ? " AND `name` REGEXP '$search' " : "");
