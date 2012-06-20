@@ -479,12 +479,13 @@ function contacts_content(&$a) {
 
 
 
-
+	$searching = false;
 	if($search) {
 		$search_hdr = $search;
-		$search = dbesc($search.'*');
+		$search = dbesc(protect_sprintf('%' . $search . '%');
+		$searching = true;
 	}
-	$sql_extra .= ((strlen($search)) ? " AND MATCH `name` AGAINST ('$search' IN BOOLEAN MODE) " : "");
+	$sql_extra .= (($searching) ? " AND `name` REGEXP '$search' " : "");
 
 	if($nets)
 		$sql_extra .= sprintf(" AND network = '%s' ", dbesc($nets));
