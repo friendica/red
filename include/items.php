@@ -446,6 +446,8 @@ function get_atom_elements($feed,$item) {
 		$res['body'] = $purifier->purify($res['body']);
 
 		$res['body'] = @html2bbcode($res['body']);
+
+
 	}
 	elseif(! $have_real_body) {
 
