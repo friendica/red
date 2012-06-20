@@ -78,14 +78,6 @@ define ( 'CONTACT_IS_FRIEND',   3);
 
 
 /**
- * Hook array order
- */
-
-define ( 'HOOK_HOOK',      0);
-define ( 'HOOK_FILE',      1);
-define ( 'HOOK_FUNCTION',  2);
-
-/**
  * DB update return values
  */
 
