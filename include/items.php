@@ -1264,6 +1264,11 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 		return 3;
 	}
 
+	if($contact['term-date'] != '0000-00-00 00:00:00') {
+		logger("dfrn_deliver: $url back from the dead - removing mark for death");
+		unmark_for_death($contact);
+	}
+
 	$res = parse_xml_string($xml);
 
 	return $res->status; 
