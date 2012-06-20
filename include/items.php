@@ -1268,6 +1268,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 
 	if($contact['term-date'] != '0000-00-00 00:00:00') {
 		logger("dfrn_deliver: $url back from the dead - removing mark for death");
+		require_once('include/Contact.php');
 		unmark_for_death($contact);
 	}
 
