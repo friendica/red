@@ -352,10 +352,11 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 	$email_conversant = false;
 
 	$twitter = ((strpos($url,'twitter.com') !== false) ? true : false);
+	$lastfm  = ((strpos($url,'last.fm/user') !== false) ? true : false);
 
 	$at_addr = ((strpos($url,'@') !== false) ? true : false);
 
-	if(! $twitter) {
+	if((! $twitter) && (! $lastfm)) {
 
 		if(strpos($url,'mailto:') !== false && $at_addr) {
 			$url = str_replace('mailto:','',$url);
@@ -562,6 +563,13 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 			$vcard['photo'] = 'https://api.twitter.com/1/users/profile_image/' . $tid;
 			$vcard['nick'] = $tid;
 			$vcard['fn'] = $tid . '@twitter';
+		}
+
+		if($lastfm) {
+			$profile = $url;
+			$poll = str_replace(array('www.','last.fm/'),array('','ws.audioscrobbler.com/1.0/'),$url) . '/recenttracks.rss';
+			$vcard['nick'] = basename($url);
+			$network = NETWORK_FEED;
 		}
 
 		if(! x($vcard,'fn'))
