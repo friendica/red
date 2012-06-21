@@ -154,3 +154,7 @@ blockquote {
 .editicon:hover {
 	background-color: #ccc;
 }
+
+#datebrowse-sidebar select {
+color:#99CCFF !important;
+}
