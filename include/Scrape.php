@@ -569,6 +569,7 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 			$profile = $url;
 			$poll = str_replace(array('www.','last.fm/'),array('','ws.audioscrobbler.com/1.0/'),$url) . '/recenttracks.rss';
 			$vcard['nick'] = basename($url);
+			$vcard['fn'] = $vcard['nick'] . t(' on Last.fm');
 			$network = NETWORK_FEED;
 		}
 
