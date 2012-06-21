@@ -865,7 +865,7 @@
 
 		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
 		//$sql_extra = "";
-		if ($_GET["conversation"] == "true") $sql_extra .= " AND `item`.`parent` = %d"; else $sql_extra .= " AND `item`.`id` = %d";
+		if ($_GET["conversation"] == "true") $sql_extra .= " AND `item`.`parent` = %d  ORDER BY `received` ASC "; else $sql_extra .= " AND `item`.`id` = %d";
 
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`,
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
