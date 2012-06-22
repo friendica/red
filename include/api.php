@@ -1507,21 +1507,32 @@
 		if (local_user()===false) return false;
 		
 		if (!x($_POST, "text") || !x($_POST,"screen_name")) return;
-		
+
 		$sender = api_get_user($a);
 		
 		$r = q("SELECT `id` FROM `contact` WHERE `uid`=%d AND `nick`='%s'",
 				intval(local_user()),
 				dbesc($_POST['screen_name']));
 		
-		$recipient = api_get_user($a, $r[0]['id']);			
-		
-
 		require_once("include/message.php");
-		$sub = ( (strlen($_POST['text'])>10)?substr($_POST['text'],0,10)."...":$_POST['text']);
-		$id = send_message($recipient['id'], $_POST['text'], $sub);
-		
-		
+
+		$recipient = api_get_user($a, $r[0]['id']);			
+		$replyto = '';
+		if (x($_REQUEST,'replyto')) {
+			$r = q('SELECT `uri` FROM `mail` WHERE `uid`=%d AND `id`=%d',
+					intval(local_user()),
+					intval($_REQUEST['replyto']));
+			$replyto = $r[0]['uri'];
+		}
+
+		if (x($_REQUEST,'title')) {
+			$sub = $_REQUEST['title'];
+		}
+		else {
+			$sub = ((strlen($_POST['text'])>10)?substr($_POST['text'],0,10)."...":$_POST['text']);
+		}
+		$id = send_message($recipient['id'], $_POST['text'], $sub, $replyto);
+
 		if ($id>-1) {
 			$r = q("SELECT * FROM `mail` WHERE id=%d", intval($id));
 			$item = $r[0];
