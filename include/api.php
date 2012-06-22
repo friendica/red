@@ -864,8 +864,13 @@
 		logger('API: api_statuses_show: '.$id);
 
 		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
-		//$sql_extra = "";
-		if ($_GET["conversation"] == "true") $sql_extra .= " AND `item`.`parent` = %d  ORDER BY `received` ASC "; else $sql_extra .= " AND `item`.`id` = %d";
+		$conversation = (x($_REQUEST,'conversation')?1:0);
+
+		$sql_extra = '';
+		if ($conversation)
+			$sql_extra .= " AND `item`.`parent` = %d  ORDER BY `received` ASC ";
+		else
+			$sql_extra .= " AND `item`.`id` = %d";
 
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`,
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
@@ -875,16 +880,15 @@
 			WHERE `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
 			AND `contact`.`id` = `item`.`contact-id`
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-			$sql_extra
-			",
+			$sql_extra",
 			intval($id)
 		);
-//var_dump($r);
+
 		$ret = api_format_items($r,$user_info);
-//var_dump($ret);
-		if ($_GET["conversation"] == "true") {
+
+		if ($conversation) {
 			$data = array('$statuses' => $ret);
-			return  api_apply_template("timeline", $type, $data);
+			return api_apply_template("timeline", $type, $data);
 		} else {
 			$data = array('$status' => $ret[0]);
 			/*switch($type){
