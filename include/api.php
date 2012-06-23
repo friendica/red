@@ -1610,6 +1610,9 @@
       } else {
         $d['text'] = $item['title']."\n".html2plain(bbcode($item['body']), 0);
       }
+      if (isset($_GET["getUserObjects"]) && $_GET["getUserObjects"] == "false") {
+        unset($d['sender']); unset($d['recipient']);
+      }
       $ret[]=$d;
 		}
 		
