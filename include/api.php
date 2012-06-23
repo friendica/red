@@ -1429,7 +1429,13 @@
 				'logo' => $logo, 'fancy' => 'true', 'language' => 'en', 'email' => $email, 'broughtby' => '',
 				'broughtbyurl' => '', 'timezone' => 'UTC', 'closed' => $closed, 'inviteonly' => 'false',
 				'private' => $private, 'textlimit' => $textlimit, 'sslserver' => $sslserver, 'ssl' => $ssl,
-				'shorturllength' => '30'
+				'shorturllength' => '30',
+        'friendica' => array(
+                             'FRIENDICA_PLATFORM' => FRIENDICA_PLATFORM,
+                             'FRIENDICA_VERSION' => FRIENDICA_VERSION,
+                             'DFRN_PROTOCOL_VERSION' => DFRN_PROTOCOL_VERSION,
+                             'DB_UPDATE_VERSION' => DB_UPDATE_VERSION
+                             )
 			),
 		);  
 
