@@ -48,7 +48,7 @@ function block_on_function_lock($fn_name, $wait_sec = 2) {
 
 	do {
 		$r = q("SELECT locked FROM locks WHERE name = '%s' LIMIT 1",
-				dbesc(fn_name)
+				dbesc($fn_name)
 		     );
 
 		if(count($r) && $r[0]['locked'])
@@ -61,14 +61,14 @@ function block_on_function_lock($fn_name, $wait_sec = 2) {
 
 
 if(! function_exists('unlock_function')) {
-function unlock_function(fn_name) {
+function unlock_function($fn_name) {
 	//$r = q("LOCK TABLE lock WRITE");
 	$r = q("UPDATE locks SET locked = 0 WHERE name = '%s' LIMIT 1",
-			dbesc(fn_name)
+			dbesc($fn_name)
 	     );
 	//$r = q("UNLOCK TABLES");
 
-	logger('unlock_function: released lock for function ' . fn_name, LOGGER_DEBUG);
+	logger('unlock_function: released lock for function ' . $fn_name, LOGGER_DEBUG);
 
 	return;
 }}
