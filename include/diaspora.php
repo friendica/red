@@ -1560,7 +1560,8 @@ function diaspora_photo($importer,$xml,$msg) {
 
 	$link_text = '[img]' . $remote_photo_path . $remote_photo_name . '[/img]' . "\n";
 
-	$link_text = scale_external_images($link_text);
+	$link_text = scale_external_images($link_text, true,
+	                                   array($remote_photo_name, 'scaled_full_' . $remote_photo_name));
 
 	if(strpos($parent_item['body'],$link_text) === false) {
 		$r = q("update item set `body` = '%s', `visible` = 1 where `id` = %d and `uid` = %d limit 1",
@@ -2005,6 +2006,7 @@ function diaspora_share($me,$contact) {
 	));
 
 	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$me,$contact,$me['prvkey'],$contact['pubkey'])));
+	//$slap = 'xml=' . urlencode(diaspora_msg_build($msg,$me,$contact,$me['prvkey'],$contact['pubkey']));
 
 	return(diaspora_transmit($owner,$contact,$slap, false));
 }
@@ -2022,6 +2024,7 @@ function diaspora_unshare($me,$contact) {
 	));
 
 	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$me,$contact,$me['prvkey'],$contact['pubkey'])));
+	//$slap = 'xml=' . urlencode(diaspora_msg_build($msg,$me,$contact,$me['prvkey'],$contact['pubkey']));
 
 	return(diaspora_transmit($owner,$contact,$slap, false));
 
@@ -2060,13 +2063,21 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 			$images[] = $detail;
 			$body = str_replace($detail['str'],$mtch[1],$body);
 		}
-	}	
+	}
 */
+	// Removal of tags
+	$body = preg_replace('/#\[url\=(\w+.*?)\](\w+.*?)\[\/url\]/i', '#$2', $body);
+
+	//if(strlen($title))
+	//	$body = "[b]".html_entity_decode($title)."[/b]\n\n".$body;
+
+	// convert to markdown
 	$body = xmlify(html_entity_decode(bb2diaspora($body)));
+	//$body = bb2diaspora($body);
 
+	// Adding the title
 	if(strlen($title))
-		$body = xmlify('**' . html_entity_decode($title) . '**' . "\n") . $body;
-
+		$body = "## ".html_entity_decode($title)."\n\n".$body;
 
 	if($item['attach']) {
 		$cnt = preg_match_all('/href=\"(.*?)\"(.*?)title=\"(.*?)\"/ism',$item['attach'],$matches,PREG_SET_ORDER);
@@ -2096,6 +2107,7 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 	logger('diaspora_send_status: ' . $owner['username'] . ' -> ' . $contact['name'] . ' base message: ' . $msg, LOGGER_DATA);
 
 	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],$public_batch)));
+	//$slap = 'xml=' . urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],$public_batch));
 
 	$return_code = diaspora_transmit($owner,$contact,$slap,$public_batch);
 
@@ -2140,6 +2152,7 @@ function diaspora_send_images($item,$owner,$contact,$images,$public_batch = fals
 
 		logger('diaspora_send_photo: base message: ' . $msg, LOGGER_DATA);
 		$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],$public_batch)));
+		//$slap = 'xml=' . urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],$public_batch));
 
 		diaspora_transmit($owner,$contact,$slap,$public_batch);
 	}
@@ -2203,6 +2216,7 @@ function diaspora_send_followup($item,$owner,$contact,$public_batch = false) {
 	logger('diaspora_followup: base message: ' . $msg, LOGGER_DATA);
 
 	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],$public_batch)));
+	//$slap = 'xml=' . urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],$public_batch));
 
 	return(diaspora_transmit($owner,$contact,$slap,$public_batch));
 }
@@ -2309,6 +2323,7 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 
 
 	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],$public_batch)));
+	//$slap = 'xml=' . urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],$public_batch));
 
 	return(diaspora_transmit($owner,$contact,$slap,$public_batch));
 
@@ -2343,6 +2358,7 @@ function diaspora_send_retraction($item,$owner,$contact,$public_batch = false) {
 	));
 
 	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],$public_batch)));
+	//$slap = 'xml=' . urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],$public_batch));
 
 	return(diaspora_transmit($owner,$contact,$slap,$public_batch));
 }
@@ -2403,6 +2419,7 @@ function diaspora_send_mail($item,$owner,$contact) {
 	logger('diaspora_conversation: ' . print_r($xmsg,true), LOGGER_DATA);
 
 	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($xmsg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],false)));
+	//$slap = 'xml=' . urlencode(diaspora_msg_build($xmsg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],false));
 
 	return(diaspora_transmit($owner,$contact,$slap,false));
 

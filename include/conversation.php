@@ -549,13 +549,13 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				$shareable = ((($profile_owner == local_user()) &&  ((! $item['private']) || $item['network'] === NETWORK_FEED)) ? true : false); 
 
 				if($page_writeable) {
-					if($toplevelpost) {
+					if($toplevelpost) { 
 						$likebuttons = array(
 							'like' => array( t("I like this \x28toggle\x29"), t("like")),
 							'dislike' => array( t("I don't like this \x28toggle\x29"), t("dislike")),
 						);
 						if ($shareable) $likebuttons['share'] = array( t('Share this'), t('share'));
-					}
+					} 
 
 					$qc = $qcomment =  null;
 
@@ -659,8 +659,8 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				else
 					$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $a->get_cached_avatar_image($thumb));
 
-				$like    = ((x($alike,$item['id'])) ? format_like($alike[$item['id']],$alike[$item['id'] . '-l'],'like',$item['id']) : '');
-				$dislike = ((x($dlike,$item['id'])) ? format_like($dlike[$item['id']],$dlike[$item['id'] . '-l'],'dislike',$item['id']) : '');
+				$like    = ((x($alike,$item['uri'])) ? format_like($alike[$item['uri']],$alike[$item['uri'] . '-l'],'like',$item['uri']) : '');
+				$dislike = ((x($dlike,$item['uri'])) ? format_like($dlike[$item['uri']],$dlike[$item['uri'] . '-l'],'dislike',$item['uri']) : '');
 
 				$locate = array('location' => $item['location'], 'coord' => $item['coord'], 'html' => '');
 				call_hooks('render_location',$locate);
@@ -876,13 +876,17 @@ function like_puller($a,$item,&$arr,$mode) {
 		}
 		else
 			$url = zrl($url);
-		if(! ((isset($arr[$item['parent'] . '-l'])) && (is_array($arr[$item['parent'] . '-l']))))
-			$arr[$item['parent'] . '-l'] = array();
-		if(! isset($arr[$item['parent']]))
-			$arr[$item['parent']] = 1;
+
+		if(! $item['thr-parent'])
+			$item['thr-parent'] = $item['parent-uri'];
+
+		if(! ((isset($arr[$item['thr-parent'] . '-l'])) && (is_array($arr[$item['thr-parent'] . '-l']))))
+			$arr[$item['thr-parent'] . '-l'] = array();
+		if(! isset($arr[$item['thr-parent']]))
+			$arr[$item['thr-parent']] = 1;
 		else	
-			$arr[$item['parent']] ++;
-		$arr[$item['parent'] . '-l'][] = '<a href="'. $url . '"'. $sparkle .'>' . $item['author-name'] . '</a>';
+			$arr[$item['thr-parent']] ++;
+		$arr[$item['thr-parent'] . '-l'][] = '<a href="'. $url . '"'. $sparkle .'>' . $item['author-name'] . '</a>';
 	}
 	return;
 }}

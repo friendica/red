@@ -2269,10 +2269,11 @@ function local_delivery($importer,$data) {
 			$r = q("select `item`.`id`, `item`.`uri`, `item`.`tag`, `item`.`forum_mode`,`item`.`origin`,`item`.`wall`, 
 				`contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
 				LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
-				WHERE `item`.`uri` = '%s' AND `item`.`parent-uri` = '%s'
+				WHERE `item`.`uri` = '%s' AND (`item`.`parent-uri` = '%s' or `item`.`thr-parent` = '%s')
 				AND `item`.`uid` = %d 
 				$sql_extra
 				LIMIT 1",
+				dbesc($parent_uri),
 				dbesc($parent_uri),
 				dbesc($parent_uri),
 				intval($importer['importer_uid'])
@@ -2362,10 +2363,13 @@ function local_delivery($importer,$data) {
 					$datarray['gravity'] = GRAVITY_LIKE;
 					$datarray['last-child'] = 0;
 					// only one like or dislike per person
-					$r = q("select id from item where uid = %d and `contact-id` = %d and verb ='%s' and deleted = 0 limit 1",
+					$r = q("select id from item where uid = %d and `contact-id` = %d and verb ='%s' and (`thr-parent` = '%s' or `parent-uri` = '%s') and deleted = 0 limit 1",
 						intval($datarray['uid']),
 						intval($datarray['contact-id']),
-						dbesc($datarray['verb'])
+						dbesc($datarray['verb']),
+						dbesc($datarray['parent-uri']),
+						dbesc($datarray['parent-uri'])
+		
 					);
 					if($r && count($r))
 						continue; 
@@ -2931,8 +2935,10 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 	if(strlen($item['owner-name']))
 		$o .= atom_author('dfrn:owner',$item['owner-name'],$item['owner-link'],80,80,$item['owner-avatar']);
 
-	if(($item['parent'] != $item['id']) || ($item['parent-uri'] !== $item['uri']))
-		$o .= '<thr:in-reply-to ref="' . xmlify($item['parent-uri']) . '" type="text/html" href="' .  xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['parent']) . '" />' . "\r\n";
+	if(($item['parent'] != $item['id']) || ($item['parent-uri'] !== $item['uri']) || ($item['thr-parent'])) {
+		$parent_item = (($item['thr-parent']) ? $item['thr-parent'] : $item['parent-uri']);
+		$o .= '<thr:in-reply-to ref="' . xmlify($parent_item) . '" type="text/html" href="' .  xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['parent']) . '" />' . "\r\n";
+	}
 
 	$o .= '<id>' . xmlify($item['uri']) . '</id>' . "\r\n";
 	$o .= '<title>' . xmlify($item['title']) . '</title>' . "\r\n";

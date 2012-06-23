@@ -935,6 +935,10 @@ input#dfrn-url {
 	background: #EEEEEE;
 }
 
+.wall-item-like.comment, .wall-item-dislike.comment {
+	margin-left: 50px;
+}
+
 .wall-item-info {
 	display: block;
 	float: left;
