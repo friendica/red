@@ -2269,10 +2269,11 @@ function local_delivery($importer,$data) {
 			$r = q("select `item`.`id`, `item`.`uri`, `item`.`tag`, `item`.`forum_mode`,`item`.`origin`,`item`.`wall`, 
 				`contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
 				LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
-				WHERE `item`.`uri` = '%s' AND `item`.`parent-uri` = '%s'
+				WHERE `item`.`uri` = '%s' AND (`item`.`parent-uri` = '%s' or `item`.`thr-parent` = '%s')
 				AND `item`.`uid` = %d 
 				$sql_extra
 				LIMIT 1",
+				dbesc($parent_uri),
 				dbesc($parent_uri),
 				dbesc($parent_uri),
 				intval($importer['importer_uid'])
