@@ -16,7 +16,7 @@ function photos_init(&$a) {
 
 	if($a->argc > 1) {
 		$nick = $a->argv[1];
-		$r = q("SELECT `user`.*, `contact`.`avatar-date` AS picdate FROM `user` LEFT JOIN `contact` on `contact`.`uid` = `user`.`uid` WHERE `user`.`nickname` = '%s' AND `user`.`blocked` = 0 LIMIT 1",
+		$r = q("SELECT * FROM `user` WHERE `nickname` = '%s' AND `blocked` = 0 LIMIT 1",
 			dbesc($nick)
 		);
 
@@ -36,7 +36,7 @@ function photos_init(&$a) {
 
 			$o .= '<div class="vcard">';
 			$o .= '<div class="fn">' . $a->data['user']['username'] . '</div>';
-			$o .= '<div id="profile-photo-wrapper"><img class="photo" style="width: 175px; height: 175px;" src="' . $a->get_baseurl() . '/photo/profile/' . $a->data['user']['uid'] . '.jpg?rev=' . urlencode($a->data['user']['picdate']) . '" alt="' . $a->data['user']['username'] . '" /></div>';
+			$o .= '<div id="profile-photo-wrapper"><img class="photo" style="width: 175px; height: 175px;" src="' . $a->get_cached_avatar_image($a->get_baseurl() . '/photo/profile/' . $a->data['user']['uid'] . '.jpg') . '" alt="' . $a->data['user']['username'] . '" /></div>';
 			$o .= '</div>';
 			
 			if(! intval($a->data['user']['hidewall'])) {
@@ -306,7 +306,8 @@ function photos_post(&$a) {
 			$albname = datetime_convert('UTC',date_default_timezone_get(),'now', 'Y');
 
 
-		if((x($_POST,'rotate') !== false) && (intval($_POST['rotate']) == 1)) {
+		if((x($_POST,'rotate') !== false) && 
+		   ( (intval($_POST['rotate']) == 1) || (intval($_POST['rotate']) == 2) )) {
 			logger('rotate');
 
 			$r = q("select * from photo where `resource-id` = '%s' and uid = %d and scale = 0 limit 1",
@@ -316,7 +317,8 @@ function photos_post(&$a) {
 			if(count($r)) {
 				$ph = new Photo($r[0]['data'], $r[0]['type']);
 				if($ph->is_valid()) {
-					$ph->rotate(270);
+					$rotate_deg = ( (intval($_POST['rotate']) == 1) ? 270 : 90 );
+					$ph->rotate($rotate_deg);
 
 					$width  = $ph->getWidth();
 					$height = $ph->getHeight();
@@ -325,8 +327,8 @@ function photos_post(&$a) {
 						dbesc($ph->imageString()),
 						intval($height),
 						intval($width),
-				dbesc($resource_id),
-				intval($page_owner_uid)
+						dbesc($resource_id),
+						intval($page_owner_uid)
 					);
 
 					if($width > 640 || $height > 640) {
@@ -338,8 +340,8 @@ function photos_post(&$a) {
 							dbesc($ph->imageString()),
 							intval($height),
 							intval($width),
-				dbesc($resource_id),
-				intval($page_owner_uid)
+							dbesc($resource_id),
+							intval($page_owner_uid)
 						);
 					}
 
@@ -352,8 +354,8 @@ function photos_post(&$a) {
 							dbesc($ph->imageString()),
 							intval($height),
 							intval($width),
-				dbesc($resource_id),
-				intval($page_owner_uid)
+							dbesc($resource_id),
+							intval($page_owner_uid)
 						);
 					}	
 				}
@@ -718,6 +720,7 @@ function photos_post(&$a) {
 		killme();
 	}
 
+	$ph->orient($src);
 	@unlink($src);
 
 	$width  = $ph->getWidth();
@@ -1250,7 +1253,8 @@ function photos_content(&$a) {
 			$edit_tpl = get_markup_template('photo_edit.tpl');
 			$edit = replace_macros($edit_tpl, array(
 				'$id' => $ph[0]['id'],
-				'$rotate' => t('Rotate CW'),
+				'$rotatecw' => t('Rotate CW (right)'),
+				'$rotateccw' => t('Rotate CCW (left)'),
 				'$album' => template_escape($ph[0]['album']),
 				'$newalbum' => t('New album name'), 
 				'$nickname' => $a->data['user']['nickname'],

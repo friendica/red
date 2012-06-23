@@ -446,6 +446,8 @@ function get_atom_elements($feed,$item) {
 		$res['body'] = $purifier->purify($res['body']);
 
 		$res['body'] = @html2bbcode($res['body']);
+
+
 	}
 	elseif(! $have_real_body) {
 
@@ -814,6 +816,12 @@ function item_store($arr,$force_parent = false) {
 			if($r[0]['private'])
 				$arr['private'] = 1;
 
+			// Edge case. We host a public forum that was originally posted to privately.
+			// The original author commented, but as this is a comment, the permissions
+			// weren't fixed up so it will still show the comment as private unless we fix it here. 
+
+			if((intval($r[0]['forum_mode']) == 1) && (! $r[0]['private']))
+				$arr['private'] = 0;
 		}
 		else {
 
@@ -1256,6 +1264,12 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 		logger('dfrn_deliver: phase 2: no valid XML returned');
 		logger('dfrn_deliver: phase 2: returned XML: ' . $xml, LOGGER_DATA);
 		return 3;
+	}
+
+	if($contact['term-date'] != '0000-00-00 00:00:00') {
+		logger("dfrn_deliver: $url back from the dead - removing mark for death");
+		require_once('include/Contact.php');
+		unmark_for_death($contact);
 	}
 
 	$res = parse_xml_string($xml);

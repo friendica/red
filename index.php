@@ -246,7 +246,10 @@ if(! $install)
 
 if($a->module_loaded) {
 	$a->page['page_title'] = $a->module;
+	$placeholder = '';
+
 	if(function_exists($a->module . '_init')) {
+		call_hooks($a->module . '_mod_init', $placeholder);
 		$func = $a->module . '_init';
 		$func($a);
 	}
@@ -266,18 +269,25 @@ if($a->module_loaded) {
 	if(($_SERVER['REQUEST_METHOD'] === 'POST') && (! $a->error)
 		&& (function_exists($a->module . '_post'))
 		&& (! x($_POST,'auth-params'))) {
+		call_hooks($a->module . '_mod_post', $_POST);
 		$func = $a->module . '_post';
 		$func($a);
 	}
 
 	if((! $a->error) && (function_exists($a->module . '_afterpost'))) {
+		call_hooks($a->module . '_mod_afterpost',$placeholder);
 		$func = $a->module . '_afterpost';
 		$func($a);
 	}
 
 	if((! $a->error) && (function_exists($a->module . '_content'))) {
+		$arr = array('content' => $a->page['content']);
+		call_hooks($a->module . '_mod_content', $arr);
+		$a->page['content'] = $arr['content'];
 		$func = $a->module . '_content';
-		$a->page['content'] .= $func($a);
+		$arr = array('content' => $func($a));
+		call_hooks($a->module . '_mod_aftercontent', $arr);
+		$a->page['content'] .= $arr['content'];
 	}
 
 }

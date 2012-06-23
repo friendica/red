@@ -148,7 +148,9 @@ function load_hooks() {
 	$r = q("SELECT * FROM `hook` WHERE 1");
 	if(count($r)) {
 		foreach($r as $rr) {
-			$a->hooks[] = array($rr['hook'], $rr['file'], $rr['function']);
+			if(! array_key_exists($rr['hook'],$a->hooks))
+				$a->hooks[$rr['hook']] = array();
+			$a->hooks[$rr['hook']][] = array($rr['file'],$rr['function']);
 		}
 	}
 }}
@@ -158,25 +160,24 @@ if(! function_exists('call_hooks')) {
 function call_hooks($name, &$data = null) {
 	$a = get_app();
 
-	if(count($a->hooks)) {
-		foreach($a->hooks as $hook) {
-			if($hook[HOOK_HOOK] === $name) {
-				@include_once($hook[HOOK_FILE]);
-				if(function_exists($hook[HOOK_FUNCTION])) {
-					$func = $hook[HOOK_FUNCTION];
-					$func($a,$data);
-				}
-				else {
-					// remove orphan hooks
-					q("delete from hook where hook = '%s' and file = '$s' and function = '%s' limit 1",
-						dbesc($hook[HOOK_HOOK]),
-						dbesc($hook[HOOK_FILE]),
-						dbesc($hook[HOOK_FUNCTION])
-					);
-				}
+	if((is_array($a->hooks)) && (array_key_exists($name,$a->hooks))) {
+		foreach($a->hooks[$name] as $hook) {
+			@include_once($hook[0]);
+			if(function_exists($hook[1])) {
+				$func = $hook[1];
+				$func($a,$data);
+			}
+			else {
+				// remove orphan hooks
+				q("delete from hook where hook = '%s' and file = '$s' and function = '%s' limit 1",
+					dbesc($name),
+					dbesc($hook[0]),
+					dbesc($hook[1])
+				);
 			}
 		}
 	}
+
 }}
 
 

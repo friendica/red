@@ -151,6 +151,10 @@ blockquote {
 	overflow: none;
 }
 
-.editicon:hover {
-	background-color: #ccc;
+.editicon {
+	background-color: #333;
+}
+
+#datebrowse-sidebar select {
+color:#99CCFF !important;
 }

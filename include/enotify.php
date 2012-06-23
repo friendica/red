@@ -123,7 +123,7 @@ function notification($params) {
 	if($params['type'] == NOTIFY_TAGSELF) {
 		$subject =	sprintf( t('[Friendica:Notify] %s tagged you') , $params['source_name']);
 		$preamble = sprintf( t('%1$s tagged you at %2$s') , $params['source_name'], $sitename);
-		$epreamble = sprintf( t('%1$s [url=%2s]tagged you[/url].') , 
+		$epreamble = sprintf( t('%1$s [url=%2$s]tagged you[/url].') , 
 								'[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]',
 								$params['link']); 
 

@@ -308,7 +308,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				if(($normalised != 'mailbox') && (x($a->contacts[$normalised])))
 					$profile_avatar = $a->contacts[$normalised]['thumb'];
 				else
-					$profile_avatar = ((strlen($item['author-avatar'])) ? $item['author-avatar'] : $item['thumb']);
+					$profile_avatar = ((strlen($item['author-avatar'])) ? $a->get_cached_avatar_image($item['author-avatar']) : $item['thumb']);
 
 				$locate = array('location' => $item['location'], 'coord' => $item['coord'], 'html' => '');
 				call_hooks('render_location',$locate);
@@ -657,7 +657,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				if(($normalised != 'mailbox') && (x($a->contacts,$normalised)))
 					$profile_avatar = $a->contacts[$normalised]['thumb'];
 				else
-					$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $thumb);
+					$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $a->get_cached_avatar_image($thumb));
 
 				$like    = ((x($alike,$item['id'])) ? format_like($alike[$item['id']],$alike[$item['id'] . '-l'],'like',$item['id']) : '');
 				$dislike = ((x($dlike,$item['id'])) ? format_like($dlike[$item['id']],$dlike[$item['id'] . '-l'],'dislike',$item['id']) : '');

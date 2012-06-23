@@ -10,7 +10,7 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '3.0.1377' );
+define ( 'FRIENDICA_VERSION',      '3.0.1382' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
 define ( 'DB_UPDATE_VERSION',      1149      );
 
@@ -76,14 +76,6 @@ define ( 'CONTACT_IS_FOLLOWER', 1);
 define ( 'CONTACT_IS_SHARING',  2);
 define ( 'CONTACT_IS_FRIEND',   3);
 
-
-/**
- * Hook array order
- */
-
-define ( 'HOOK_HOOK',      0);
-define ( 'HOOK_FILE',      1);
-define ( 'HOOK_FUNCTION',  2);
 
 /**
  * DB update return values
@@ -332,6 +324,9 @@ if(! class_exists('App')) {
 		private $curl_code;
 		private $curl_headers;
 
+		private $cached_profile_image;
+		private $cached_profile_picdate;
+							
 		function __construct() {
 
 			global $default_timezone;
@@ -541,6 +536,28 @@ if(! class_exists('App')) {
 
 		function get_curl_headers() {
 			return $this->curl_headers;
+		}
+
+		function get_cached_avatar_image($avatar_image){
+			if($this->cached_profile_image[$avatar_image])
+				return $this->cached_profile_image[$avatar_image];
+
+			$path_parts = explode("/",$avatar_image);
+			$common_filename = $path_parts[count($path_parts)-1];
+
+			if($this->cached_profile_picdate[$common_filename]){
+				$this->cached_profile_image[$avatar_image] = $avatar_image . $this->cached_profile_picdate[$common_filename];
+			} else {
+				$r = q("SELECT `contact`.`avatar-date` AS picdate FROM `contact` WHERE `contact`.`thumb` like \"%%/%s\"",
+					$common_filename);
+				if(! count($r)){
+					$this->cached_profile_image[$avatar_image] = $avatar_image;
+				} else {
+					$this->cached_profile_picdate[$common_filename] = "?rev=" . urlencode($r[0]['picdate']);
+  					$this->cached_profile_image[$avatar_image] = $avatar_image . $this->cached_profile_picdate[$common_filename];
+				}
+			}
+			return $this->cached_profile_image[$avatar_image];
 		}
 
 
@@ -1130,9 +1147,9 @@ if(! function_exists('profile_sidebar')) {
 			'fullname' => $profile['name'],
 			'firstname' => $firstname,
 			'lastname' => $lastname,
-			'photo300' => $a->get_baseurl() . '/photo/custom/300/' . $profile['uid'] . '.jpg',
-			'photo100' => $a->get_baseurl() . '/photo/custom/100/' . $profile['uid'] . '.jpg',
-			'photo50' => $a->get_baseurl() . '/photo/custom/50/'  . $profile['uid'] . '.jpg',
+			'photo300' => $a->get_cached_avatar_image($a->get_baseurl() . '/photo/custom/300/' . $profile['uid'] . '.jpg'),
+			'photo100' => $a->get_cached_avatar_image($a->get_baseurl() . '/photo/custom/100/' . $profile['uid'] . '.jpg'),
+			'photo50' => $a->get_cached_avatar_image($a->get_baseurl() . '/photo/custom/50/'  . $profile['uid'] . '.jpg'),
 		);
 
 		if (!$block){
@@ -1367,7 +1384,7 @@ if(! function_exists('proc_run')) {
 
 if(! function_exists('current_theme')) {
 	function current_theme(){
-		$app_base_themes = array('duepuntozero', 'loozah');
+		$app_base_themes = array('duepuntozero', 'dispy', 'quattro');
 	
 		$a = get_app();
 	
@@ -1385,7 +1402,7 @@ if(! function_exists('current_theme')) {
 				return($t);
 		}
 	
-		$fallback = glob('view/theme/*/style.[css|php]');
+		$fallback = array_merge(glob('view/theme/*/style.css'),glob('view/theme/*/style.php'));
 		if(count($fallback))
 			return (str_replace('view/theme/','', substr($fallback[0],0,-10)));
 	

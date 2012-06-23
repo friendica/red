@@ -128,6 +128,11 @@ nav #site-location {
 	box-shadow: 4px 4px 3px 0 #444444;
 }
 
+#sidebar-page-list .label {
+	margin-left: 5px;
+}
+
+
 .photo {
 	border: 1px solid #AAAAAA;
 }
