@@ -1564,15 +1564,15 @@
 		
 		$start = $page*$count;
 		
-	
+    $profile_url = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
 		if ($box=="sentbox") {
-			$sql_extra = "`from-url`='".dbesc( $a->get_baseurl() . '/profile/' . $a->user['nickname'] )."'";
+			$sql_extra = "`from-url`='".dbesc( $profile_url )."'";
 		} elseif ($box=="conversation") {
       $sql_extra = "`parent-uri`='".dbesc( $_GET["uri"] )  ."'";
 		} elseif ($box=="all") {
       $sql_extra = "true";
 		} elseif ($box=="inbox") {
-			$sql_extra = "`from-url`!='".dbesc( $a->get_baseurl() . '/profile/' . $a->user['nickname'] )."'";
+			$sql_extra = "`from-url`!='".dbesc( $profile_url )."'";
 		}
 		
 		$r = q("SELECT * FROM `mail` WHERE uid=%d AND $sql_extra ORDER BY created DESC LIMIT %d,%d",
@@ -1582,15 +1582,12 @@
 		
 		$ret = Array();
 		foreach($r as $item){
-			switch ($box){
-				case "inbox":
+			if ($box == "inbox" || $item['from-url'] != $profile_url){
 					$recipient = $user_info;
 					$sender = api_get_user($a,$item['contact-id']);
-					break;
-				case "sentbox":
+      } elseif ($box == "sentbox" || $item['from-url'] != $profile_url){
 					$recipient = api_get_user($a,$item['contact-id']);
 					$sender = $user_info;
-					break;
 			}
 				
 			$ret[]=Array(
@@ -1603,8 +1600,6 @@
 				'recipient_id'=> $recipient['id'],
 				'recipient_screen_name'=> $recipient['screen_name'],
 				'recipient'=> $recipient,
-				
-				
 			);
       //don't send title to regular StatusNET requests to avoid confusing these apps
 			if (isset($_GET["getText"])) {
@@ -1615,9 +1610,6 @@
       } else {
         $ret['text'] = $item['title']."\n".html2plain(bbcode($item['body']), 0);
       }
-      
-      
-				
 		}
 		
 
