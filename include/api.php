@@ -1590,7 +1590,7 @@
 					$sender = $user_info;
 			}
 				
-			$ret[]=Array(
+			$d=Array(
 				'id' => $item['id'],
 				'created_at'=> api_date($item['created']),
 				'sender_id'=> $sender['id'] ,
@@ -1603,13 +1603,14 @@
 			);
       //don't send title to regular StatusNET requests to avoid confusing these apps
 			if (isset($_GET["getText"])) {
-        $ret['title'] = $item['title'] ;
+        $d['title'] = $item['title'] ;
         if ($_GET["getText"] == "true") {
-          $ret['text'] = html2plain(bbcode($item['body']), 0);
+          $d['text'] = html2plain(bbcode($item['body']), 0);
         }
       } else {
-        $ret['text'] = $item['title']."\n".html2plain(bbcode($item['body']), 0);
+        $d['text'] = $item['title']."\n".html2plain(bbcode($item['body']), 0);
       }
+      $ret[]=$d;
 		}
 		
 
