@@ -67,7 +67,9 @@ function stripdcode_br_cb($s) {
 
 
 function diaspora_ul($s) {
-	return str_replace('[\\*]', "* ", $s[1]);
+	// Replace "[\\*]" followed by any number (including zero) of
+	// spaces by "* " to match Diaspora's list format
+	return preg_replace("/\[\\\\\*\]( *)/", "* ", $s[1]);
 }
 
 
@@ -77,7 +79,7 @@ function diaspora_ol($s) {
 	//		1. First element
 	//		1. Second element
 	//		1. Third element
-	return str_replace('[\\*]', "1. ", $s[1]);
+	return preg_replace("/\[\\\\\*\]( *)/", "1. ", $s[1]);
 }
 
 
@@ -98,6 +100,11 @@ function bb2diaspora($Text,$preserve_nl = false) {
 
 	if($preserve_nl)
 		$Text = str_replace(array("\n","\r"), array('',''),$Text);
+	else
+		// Remove the "return" character, as Diaspora uses only the "newline"
+		// character, so having the "return" character can cause signature
+		// failures
+		$Text = str_replace("\r", "", $Text);
 
 	// Set up the parameters for a URL search string
 	$URLSearchString = "^\[\]";
@@ -244,6 +251,10 @@ function bb2diaspora($Text,$preserve_nl = false) {
 	$Text = preg_replace("/\<(.*?)(src|href)=(.*?)\&amp\;(.*?)\>/ism",'<$1$2=$3&$4>',$Text);
 
 	$Text = preg_replace_callback('/\[(.*?)\]\((.*?)\)/ism','unescape_underscores_in_links',$Text);
+
+	// Remove any leading or trailing whitespace, as this will mess up
+	// the Diaspora signature verification and cause the item to disappear
+	$Text = trim($Text);
 	
 	call_hooks('bb2diaspora',$Text);
 
