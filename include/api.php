@@ -1566,16 +1566,19 @@
 		
 	
 		if ($box=="sentbox") {
-			$sql_extra = "`from-url`='%s'";
-		} else {
-			$sql_extra = "`from-url`!='%s'";
+			$sql_extra = "`from-url`='".dbesc( $a->get_baseurl() . '/profile/' . $a->user['nickname'] )."'";
+		} elseif ($box=="conversation") {
+      $sql_extra = "`parent-uri`='".dbesc( $_GET["uri"] )  ."'";
+		} elseif ($box=="all") {
+      $sql_extra = "true";
+		} elseif ($box=="inbox") {
+			$sql_extra = "`from-url`!='".dbesc( $a->get_baseurl() . '/profile/' . $a->user['nickname'] )."'";
 		}
 		
 		$r = q("SELECT * FROM `mail` WHERE uid=%d AND $sql_extra ORDER BY created DESC LIMIT %d,%d",
 				intval(local_user()),
-				dbesc( $a->get_baseurl() . '/profile/' . $a->user['nickname'] ),
 				intval($start),	intval($count)
-			   );
+		);
 		
 		$ret = Array();
 		foreach($r as $item){
@@ -1595,15 +1598,26 @@
 				'created_at'=> api_date($item['created']),
 				'sender_id'=> $sender['id'] ,
 				'sender_screen_name'=> $sender['screen_name'],
+				'sender_profile_img'=> $item['from-photo'],
 				'sender'=> $sender,
 				'recipient_id'=> $recipient['id'],
 				'recipient_screen_name'=> $recipient['screen_name'],
 				'recipient'=> $recipient,
 				
-				'text'=> $item['title']."\n".html2plain(bbcode($item['body']), 0) ,
 				
 			);
-			
+      //don't send title to regular StatusNET requests to avoid confusing these apps
+			if (isset($_GET["getText"])) {
+        $ret['title'] = $item['title'] ;
+        if ($_GET["getText"] == "true") {
+          $ret['text'] = html2plain(bbcode($item['body']), 0);
+        }
+      } else {
+        $ret['text'] = $item['title']."\n".html2plain(bbcode($item['body']), 0);
+      }
+      
+      
+				
 		}
 		
 
@@ -1624,6 +1638,14 @@
 	function api_direct_messages_inbox(&$a, $type){
 		return api_direct_messages_box($a, $type, "inbox");
 	}
+	function api_direct_messages_all(&$a, $type){
+		return api_direct_messages_box($a, $type, "all");
+	}
+	function api_direct_messages_conversation(&$a, $type){
+		return api_direct_messages_box($a, $type, "conversation");
+	}
+	api_register_func('api/direct_messages/conversation','api_direct_messages_conversation',true);
+	api_register_func('api/direct_messages/all','api_direct_messages_all',true);
 	api_register_func('api/direct_messages/sent','api_direct_messages_sentbox',true);
 	api_register_func('api/direct_messages','api_direct_messages_inbox',true);
 
