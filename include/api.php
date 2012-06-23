@@ -1605,7 +1605,7 @@
 			if (isset($_GET["getText"])) {
         $d['title'] = $item['title'] ;
         if ($_GET["getText"] == "true") {
-          $d['text'] = html2plain(bbcode($item['body']), 0);
+          $d['text'] = bbcode($item['body']);
         }
       } else {
         $d['text'] = $item['title']."\n".html2plain(bbcode($item['body']), 0);
