@@ -116,7 +116,7 @@ function directory_content(&$a) {
 			$entry = replace_macros($tpl,array(
 				'$id' => $rr['id'],
 				'$profile-link' => $profile_link,
-				'$photo' => $rr[$photo],
+				'$photo' => $a->get_cached_avatar_image($rr[$photo]),
 				'$alt-text' => $rr['name'],
 				'$name' => $rr['name'],
 				'$details' => $pdesc . $details  

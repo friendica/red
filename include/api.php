@@ -245,7 +245,7 @@
 			
 		}
 		
-		logger('api_user: ' . $extra_query . ' ' , $user);
+		logger('api_user: ' . $extra_query . ', user: ' . $user);
 		// user info		
 		$uinfo = q("SELECT *, `contact`.`id` as `cid` FROM `contact`
 				WHERE 1
@@ -719,14 +719,18 @@
 		if ($page<0) $page=0;
 		$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
 		$max_id = (x($_REQUEST,'max_id')?$_REQUEST['max_id']:0);
+		$exclude_replies = (x($_REQUEST,'exclude_replies')?1:0);
 		//$since_id = 0;//$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
 
 		$start = $page*$count;
 
 		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
 
+		$sql_extra = '';
 		if ($max_id > 0)
-			$sql_extra = 'AND `item`.`id` <= '.intval($max_id);
+			$sql_extra .= ' AND `item`.`id` <= '.intval($max_id);
+		if ($exclude_replies > 0)
+			$sql_extra .= ' AND `item`.`parent` = `item`.`id`';
 
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`,
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
@@ -860,6 +864,8 @@
 		logger('API: api_statuses_show: '.$id);
 
 		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
+		//$sql_extra = "";
+		if ($_GET["conversation"] == "true") $sql_extra .= " AND `item`.`parent` = %d  ORDER BY `received` ASC "; else $sql_extra .= " AND `item`.`id` = %d";
 
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`,
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
@@ -870,19 +876,24 @@
 			AND `contact`.`id` = `item`.`contact-id`
 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 			$sql_extra
-			AND `item`.`id`=%d",
+			",
 			intval($id)
 		);
-
+//var_dump($r);
 		$ret = api_format_items($r,$user_info);
-
-		$data = array('$status' => $ret[0]);
-		/*switch($type){
-			case "atom":
-			case "rss":
-				$data = api_rss_extra($a, $data, $user_info);
-		}*/
-		return  api_apply_template("status", $type, $data);
+//var_dump($ret);
+		if ($_GET["conversation"] == "true") {
+			$data = array('$statuses' => $ret);
+			return  api_apply_template("timeline", $type, $data);
+		} else {
+			$data = array('$status' => $ret[0]);
+			/*switch($type){
+				case "atom":
+				case "rss":
+					$data = api_rss_extra($a, $data, $user_info);
+			}*/
+			return  api_apply_template("status", $type, $data);
+		}
 	}
 	api_register_func('api/statuses/show','api_statuses_show', true);
 
@@ -1061,11 +1072,14 @@
 		$page = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
 		if ($page<0) $page=0;
 		$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
+		$exclude_replies = (x($_REQUEST,'exclude_replies')?1:0);
 		//$since_id = 0;//$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
 		
 		$start = $page*$count;
 
-		if ($user_info['self']==1) $sql_extra = "AND `item`.`wall` = 1 ";
+		$sql_extra = '';
+		if ($user_info['self']==1) $sql_extra .= " AND `item`.`wall` = 1 ";
+		if ($exclude_replies > 0)  $sql_extra .= ' AND `item`.`parent` = `item`.`id`';
 
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
@@ -1654,7 +1668,6 @@ account/update_profile_background_image
 account/update_profile_image
 blocks/create
 blocks/destroy
-oauth/authorize
 
 Not implemented in status.net:
 statuses/retweeted_to_me

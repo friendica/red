@@ -55,7 +55,7 @@ function nav(&$a) {
 		// user info
 		$r = q("SELECT micro FROM contact WHERE uid=%d AND self=1", intval($a->user['uid']));
 		$userinfo = array(
-			'icon' => (count($r) ? $r[0]['micro']: $a->get_baseurl($ssl_state)."/images/person-48.jpg"),
+			'icon' => (count($r) ? $a->get_cached_avatar_image($r[0]['micro']) : $a->get_baseurl($ssl_state)."/images/person-48.jpg"),
 			'name' => $a->user['username'],
 		);
 		

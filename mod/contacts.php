@@ -335,6 +335,7 @@ function contacts_content(&$a) {
 		$tab_tpl = get_markup_template('common_tabs.tpl');
 		$tab_str = replace_macros($tab_tpl, array('$tabs' => $tabs));
 
+		$lost_contact = (($contact['archive'] && $contact['term-date'] != '0000-00-00 00:00:00' && $contact['term-date'] < datetime_convert('','','now')) ? t('Communications lost with this contact!') : '');
 
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Contact Editor'),
@@ -359,6 +360,7 @@ function contacts_content(&$a) {
 			'$poll_interval' => contact_poll_interval($contact['priority'],(! $poll_enabled)),
 			'$poll_enabled' => $poll_enabled,
 			'$lastupdtext' => t('Last update:'),
+			'$lost_contact' => $lost_contact,
 			'$updpub' => t('Update public posts'),
 			'$last_update' => $last_update,
 			'$udnow' => t('Update now'),
@@ -477,12 +479,13 @@ function contacts_content(&$a) {
 
 
 
-
+	$searching = false;
 	if($search) {
 		$search_hdr = $search;
-		$search = dbesc($search.'*');
+		$search_txt = dbesc(protect_sprintf(preg_quote($search)));
+		$searching = true;
 	}
-	$sql_extra .= ((strlen($search)) ? " AND MATCH `name` AGAINST ('$search' IN BOOLEAN MODE) " : "");
+	$sql_extra .= (($searching) ? " AND `name` REGEXP '$search_txt' " : "");
 
 	if($nets)
 		$sql_extra .= sprintf(" AND network = '%s' ", dbesc($nets));
@@ -497,7 +500,6 @@ function contacts_content(&$a) {
 		$a->set_pager_total($r[0]['total']);
 		$total = $r[0]['total'];
 	}
-
 
 
 	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `pending` = 0 $sql_extra $sql_extra2 ORDER BY `name` ASC LIMIT %d , %d ",
@@ -566,7 +568,7 @@ function contacts_content(&$a) {
 		'$total' => $total,
 		'$search' => $search_hdr,
 		'$desc' => t('Search your contacts'),
-		'$finding' => (strlen($search) ? t('Finding: ') . "'" . $search . "'" : ""),
+		'$finding' => (($searching) ? t('Finding: ') . "'" . $search . "'" : ""),
 		'$submit' => t('Find'),
 		'$cmd' => $a->cmd,
 		'$contacts' => $contacts,

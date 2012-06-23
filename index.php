@@ -59,20 +59,13 @@ if(! $install) {
 /**
  *
  * Important stuff we always need to do.
- * Initialise authentication and  date and time. 
- * Create the HTML head for the page, even if we may not use it (xml, etc.)
+ *
  * The order of these may be important so use caution if you think they're all
  * intertwingled with no logical order and decide to sort it out. Some of the
  * dependencies have changed, but at least at one time in the recent past - the 
  * order was critical to everything working properly
  *
  */
-
-require_once("datetime.php");
-
-$a->timezone = (($default_timezone) ? $default_timezone : 'UTC');
-
-date_default_timezone_set($a->timezone);
 
 session_start();
 
@@ -253,7 +246,10 @@ if(! $install)
 
 if($a->module_loaded) {
 	$a->page['page_title'] = $a->module;
+	$placeholder = '';
+
 	if(function_exists($a->module . '_init')) {
+		call_hooks($a->module . '_mod_init', $placeholder);
 		$func = $a->module . '_init';
 		$func($a);
 	}
@@ -273,18 +269,25 @@ if($a->module_loaded) {
 	if(($_SERVER['REQUEST_METHOD'] === 'POST') && (! $a->error)
 		&& (function_exists($a->module . '_post'))
 		&& (! x($_POST,'auth-params'))) {
+		call_hooks($a->module . '_mod_post', $_POST);
 		$func = $a->module . '_post';
 		$func($a);
 	}
 
 	if((! $a->error) && (function_exists($a->module . '_afterpost'))) {
+		call_hooks($a->module . '_mod_afterpost',$placeholder);
 		$func = $a->module . '_afterpost';
 		$func($a);
 	}
 
 	if((! $a->error) && (function_exists($a->module . '_content'))) {
+		$arr = array('content' => $a->page['content']);
+		call_hooks($a->module . '_mod_content', $arr);
+		$a->page['content'] = $arr['content'];
 		$func = $a->module . '_content';
-		$a->page['content'] .= $func($a);
+		$arr = array('content' => $func($a));
+		call_hooks($a->module . '_mod_aftercontent', $arr);
+		$a->page['content'] .= $arr['content'];
 	}
 
 }

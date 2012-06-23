@@ -9,3 +9,4 @@
 		</div>
 {{ endif }}
 </div>
+<div class="clear"></div>

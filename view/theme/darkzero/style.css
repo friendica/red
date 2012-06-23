@@ -150,3 +150,7 @@ blockquote {
 .editicon {
     	background-color: #333;
 }
+
+#datebrowse-sidebar select {
+color:#99CCFF !important;
+}

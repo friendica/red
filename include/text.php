@@ -1059,7 +1059,7 @@ function feed_salmonlinks($nick) {
 if(! function_exists('get_plink')) {
 function get_plink($item) {
 	$a = get_app();	
-	if (x($item,'plink') && (! $item['private'])){
+	if (x($item,'plink') && ((! $item['private']) || ($item['network'] === NETWORK_FEED))){
 		return array(
 			'href' => $item['plink'],
 			'title' => t('link to source'),
@@ -1255,13 +1255,13 @@ function bb_translate_video($s) {
 
 function html2bb_video($s) {
 
-	$s = preg_replace('#<object[^>]+>(.*?)https+://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+)(.*?)</object>#ism',
+	$s = preg_replace('#<object[^>]+>(.*?)https?://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+)(.*?)</object>#ism',
 			'[youtube]$2[/youtube]', $s);
 
-	$s = preg_replace('#<iframe[^>](.*?)https+://www.youtube.com/embed/([A-Za-z0-9\-_=]+)(.*?)</iframe>#ism',
+	$s = preg_replace('#<iframe[^>](.*?)https?://www.youtube.com/embed/([A-Za-z0-9\-_=]+)(.*?)</iframe>#ism',
 			'[youtube]$2[/youtube]', $s);
 
-	$s = preg_replace('#<iframe[^>](.*?)https+://player.vimeo.com/video/([0-9]+)(.*?)</iframe>#ism',
+	$s = preg_replace('#<iframe[^>](.*?)https?://player.vimeo.com/video/([0-9]+)(.*?)</iframe>#ism',
 			'[vimeo]$2[/vimeo]', $s);
 
 	return $s;
@@ -1541,3 +1541,16 @@ function protect_sprintf($s) {
 	return(str_replace('%','%%',$s));
 }
 
+
+function is_a_date_arg($s) {
+	$i = intval($s);
+	if($i > 1900) {
+		$y = date('Y');
+		if($i <= $y+1 && strpos($s,'-') == 4) {
+			$m = intval(substr($s,5));
+			if($m > 0 && $m <= 12)
+				return true;
+		}
+	}
+	return false;
+}

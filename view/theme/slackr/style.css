@@ -59,6 +59,8 @@ nav #site-location {
 	-moz-border-radius: 3px;
 	opacity: 0.3;
 	filter:alpha(opacity=30);
+	margin-left: 5px;
+	margin-top: 5px;
 }
 
 #events-reminder.birthday-today, #events-reminder.event-today {
@@ -71,6 +73,8 @@ nav #site-location {
 	opacity: 1.0;
 	filter:alpha(opacity=100);
 	box-shadow: 4px 4px 3px 0 #444444;
+	margin-left: 0px;
+	margin-top: 0px;
 }
 
 .fc-event-skin {
@@ -88,6 +92,31 @@ nav #site-location {
 	box-shadow: 4px 4px 3px 0 #444444;
 }
 
+#datebrowse-sidebar select {
+	margin-left: 25px;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	opacity: 0.3;
+	filter:alpha(opacity=30);
+}
+
+#datebrowse-sidebar select:hover {
+	opacity: 1.0;
+	filter:alpha(opacity=100);
+}
+
+#posted-date-selector {
+	margin-left: 30px !important;
+	margin-top: 5px !important;
+}
+
+
+#posted-date-selector:hover {
+	box-shadow: 4px 4px 3px 0 #444444;
+	margin-left: 25px !important;
+	margin-top: 0px !important;
+}
+
 .contact-entry-photo img, .profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo, .profile-jot-text, .group-selected, .nets-selected, .fileas-selected, #profile-jot-submit, .categories-selected {
 	border-radius: 3px;
 	-moz-border-radius: 3px;
@@ -98,6 +127,11 @@ nav #site-location {
 	-moz-border-radius: 3px;
 	box-shadow: 4px 4px 3px 0 #444444;
 }
+
+#sidebar-page-list .label {
+	margin-left: 5px;
+}
+
 
 .photo {
 	border: 1px solid #AAAAAA;

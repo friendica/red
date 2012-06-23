@@ -8,10 +8,10 @@ function share_init(&$a) {
 	if((! $post_id) || (! local_user()))
 		killme();
 
-	$r = q("SELECT * FROM `item` WHERE `id` = %d LIMIT 1",
+	$r = q("SELECT item.*, contact.network FROM `item` left join contact on `item`.`contact-id` = `contact`.`id` WHERE `item`.`id` = %d LIMIT 1",
 		intval($post_id)
 	);
-	if(! count($r) || $r[0]['private'])
+	if(! count($r) || ($r[0]['private'] && ($r[0]['network'] != NETWORK_FEED)))
 		killme();
 
 	$o = '';
