@@ -1604,8 +1604,10 @@
       //don't send title to regular StatusNET requests to avoid confusing these apps
 			if (isset($_GET["getText"])) {
         $d['title'] = $item['title'] ;
-        if ($_GET["getText"] == "true") {
+        if ($_GET["getText"] == "html") {
           $d['text'] = bbcode($item['body']);
+        } elseif ($_GET["getText"] == "plain") {
+          $d['text'] = html2plain(bbcode($item['body']), 0);
         }
       } else {
         $d['text'] = $item['title']."\n".html2plain(bbcode($item['body']), 0);
