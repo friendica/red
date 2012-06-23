@@ -37,7 +37,7 @@ function like_content(&$a) {
 	logger('like: verb ' . $verb . ' item ' . $item_id);
 
 
-	$r = q("SELECT * FROM `item` WHERE ( `id` = '%s' OR `uri` = '%s') AND `id` = `parent` LIMIT 1",
+	$r = q("SELECT * FROM `item` WHERE `id` = '%s' OR `uri` = '%s' LIMIT 1",
 		dbesc($item_id),
 		dbesc($item_id)
 	);
@@ -217,6 +217,7 @@ EOT;
 	$arr['gravity'] = GRAVITY_LIKE;
 	$arr['parent'] = $item['id'];
 	$arr['parent-uri'] = $item['uri'];
+	$arr['thr-parent'] = $item['uri'];
 	$arr['owner-name'] = $remote_owner['name'];
 	$arr['owner-link'] = $remote_owner['url'];
 	$arr['owner-avatar'] = $remote_owner['thumb'];
