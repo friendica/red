@@ -247,7 +247,8 @@ function store_diaspora_like_retract_sig($activity, $item, $like_item, $contact)
 
 		if( $contact['network'] === NETWORK_DIASPORA)
 			$diaspora_handle = $contact['addr'];
-		else { // Only works for NETWORK_DFRN
+		else {
+			// Only works for NETWORK_DFRN
 			$contact_baseurl_start = strpos($contact['url'],'://') + 3;
 			$contact_baseurl_length = strpos($contact['url'],'/profile') - $contact_baseurl_start;
 			$contact_baseurl = substr($contact['url'], $contact_baseurl_start, $contact_baseurl_length);
@@ -300,7 +301,8 @@ function store_diaspora_like_sig($activity, $post_type, $contact, $post_id) {
 	if(($activity === ACTIVITY_LIKE) && ($post_type === t('status'))) {
 		if( $contact['network'] === NETWORK_DIASPORA)
 			$diaspora_handle = $contact['addr'];
-		else { // Only works for NETWORK_DFRN
+		else {
+			// Only works for NETWORK_DFRN
 			$contact_baseurl_start = strpos($contact['url'],'://') + 3;
 			$contact_baseurl_length = strpos($contact['url'],'/profile') - $contact_baseurl_start;
 			$contact_baseurl = substr($contact['url'], $contact_baseurl_start, $contact_baseurl_length);

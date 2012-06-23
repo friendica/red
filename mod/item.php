@@ -730,10 +730,7 @@ function item_post(&$a) {
 
 
 			// Store the comment signature information in case we need to relay to Diaspora
-			// May want to have this run for remote users too, in which case the function needs to be
-			// expanded
-			if($self)
-				store_diaspora_comment_sig($datarray, $a->user, $a->get_baseurl(), $parent_item, $post_id);
+			store_diaspora_comment_sig($datarray, $author, ($self ? $a->user['prvkey'] : false), $parent_item, $post_id);
 
 		}
 		else {
@@ -1027,11 +1024,8 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 }
 
 
-function store_diaspora_comment_sig($datarray, $user, $baseurl, $parent_item, $post_id) {
+function store_diaspora_comment_sig($datarray, $author, $uprvkey, $parent_item, $post_id) {
 	// We won't be able to sign Diaspora comments for authenticated visitors - we don't have their private key
-
-	// May want to have this run for remote users too, in which case the function needs to be
-	// expanded
 
 	$enabled = intval(get_config('system','diaspora_enabled'));
 	if(! $enabled) {
@@ -1044,19 +1038,30 @@ function store_diaspora_comment_sig($datarray, $user, $baseurl, $parent_item, $p
 
 	require_once('include/bb2diaspora.php');
 	$signed_body = html_entity_decode(bb2diaspora($datarray['body']));
-	$myaddr = $user['nickname'] . '@' . substr($baseurl, strpos($baseurl,'://') + 3);
-	if($datarray['verb'] === ACTIVITY_LIKE) 
-		$signed_text = $datarray['guid'] . ';' . 'Post' . ';' . $parent_item['guid'] . ';' . 'true' . ';' . $myaddr;
-	else
-		$signed_text = $datarray['guid'] . ';' . $parent_item['guid'] . ';' . $signed_body . ';' . $myaddr;
 
-	$authorsig = base64_encode(rsa_sign($signed_text,$user['prvkey'],'sha256'));
+//	$myaddr = $user['nickname'] . '@' . substr($baseurl, strpos($baseurl,'://') + 3);
+	if( $author['network'] === NETWORK_DIASPORA)
+		$diaspora_handle = $author['addr'];
+	else {
+		// Only works for NETWORK_DFRN
+		$contact_baseurl_start = strpos($author['url'],'://') + 3;
+		$contact_baseurl_length = strpos($author['url'],'/profile') - $contact_baseurl_start;
+		$contact_baseurl = substr($author['url'], $contact_baseurl_start, $contact_baseurl_length);
+		$diaspora_handle = $author['nick'] . '@' . $contact_baseurl;
+	}
+
+	$signed_text = $datarray['guid'] . ';' . $parent_item['guid'] . ';' . $signed_body . ';' . $diaspora_handle;
+
+	if( $uprvkey !== false )
+		$authorsig = base64_encode(rsa_sign($signed_text,$uprvkey,'sha256'));
+	else
+		$authorsig = '';
 
 	q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
 		intval($post_id),
 		dbesc($signed_text),
 		dbesc(base64_encode($authorsig)),
-		dbesc($myaddr)
+		dbesc($diaspora_handle)
 	);
 
 	return;
