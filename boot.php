@@ -1374,9 +1374,9 @@ if(! function_exists('proc_run')) {
 
 		if(count($args) && $args[0] === 'php')
 			$args[0] = ((x($a->config,'php_path')) && (strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
-		foreach ($args as $arg){
-			$arg = escapeshellarg($arg);
-		}
+		for($x = 0; $x < count($args); $x ++)
+			$args[$x] = escapeshellarg($args[$x]);
+
 		$cmdline = implode($args," ");
 		proc_close(proc_open($cmdline." &",array(),$foo));
 	}
