@@ -38,8 +38,10 @@ function photos_init(&$a) {
 			$o .= '<div class="fn">' . $a->data['user']['username'] . '</div>';
 			$o .= '<div id="profile-photo-wrapper"><img class="photo" style="width: 175px; height: 175px;" src="' . $a->get_cached_avatar_image($a->get_baseurl() . '/photo/profile/' . $a->data['user']['uid'] . '.jpg') . '" alt="' . $a->data['user']['username'] . '" /></div>';
 			$o .= '</div>';
-			
-			if(! intval($a->data['user']['hidewall'])) {
+
+			$albums_visible = ((intval($a->data['user']['hidewall']) && (! local_user()) && (! remote_user())) ? false : true);	
+
+			if($albums_visible) {
 				$o .= '<div id="side-bar-photos-albums" class="widget">';
 				$o .= '<h3>' . '<a href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '">' . t('Photo Albums') . '</a></h3>';
 					
