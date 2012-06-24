@@ -113,18 +113,16 @@ function bb2diaspora($Text,$preserve_nl = false) {
 	// text with opening and closing tags, so nested lists may make things
 	// wonky
 	$endlessloop = 0;
-	while ((strpos($Text, "[/list]") !== false) && (strpos($Text, "[list") !== false) &&
-	       (strpos($Text, "[/ul]") !== false) && (strpos($Text, "[ul]") !== false) && 
-	       (strpos($Text, "[/ol]") !== false) && (strpos($Text, "[ol]") !== false) && (++$endlessloop < 20)) {
+	while ((strpos($Text, "[/list]") !== false) && (strpos($Text, "[list") !== false) && (++$endlessloop < 20)) {
 		$Text = preg_replace_callback("/\[list\](.*?)\[\/list\]/is", 'diaspora_ul', $Text);
-		$Text = preg_replace_callback("/\[ul\](.*?)\[\/ul\]/is", 'diaspora_ul', $Text);
 		$Text = preg_replace_callback("/\[list=1\](.*?)\[\/list\]/is", 'diaspora_ol', $Text);
 		$Text = preg_replace_callback("/\[list=i\](.*?)\[\/list\]/s",'diaspora_ol', $Text);
 		$Text = preg_replace_callback("/\[list=I\](.*?)\[\/list\]/s", 'diaspora_ol', $Text);
 		$Text = preg_replace_callback("/\[list=a\](.*?)\[\/list\]/s", 'diaspora_ol', $Text);
 		$Text = preg_replace_callback("/\[list=A\](.*?)\[\/list\]/s", 'diaspora_ol', $Text);
-		$Text = preg_replace_callback("/\[ol\](.*?)\[\/ol\]/is", 'diaspora_ol', $Text);
 	}
+	$Text = preg_replace_callback("/\[ul\](.*?)\[\/ul\]/is", 'diaspora_ul', $Text);
+	$Text = preg_replace_callback("/\[ol\](.*?)\[\/ol\]/is", 'diaspora_ol', $Text);
 
 	// Convert it to HTML - don't try oembed
 	$Text = bbcode($Text, $preserve_nl, false);
