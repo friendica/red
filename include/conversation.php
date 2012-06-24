@@ -427,8 +427,8 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				// We've already parsed out like/dislike for special treatment. We can ignore them now
 
 				if(((activity_match($item['verb'],ACTIVITY_LIKE)) 
-					|| (activity_match($item['verb'],ACTIVITY_DISLIKE))) 
-					&& ($item['id'] != $item['parent']))
+					|| (activity_match($item['verb'],ACTIVITY_DISLIKE)))) 
+//					&& ($item['id'] != $item['parent']))
 					continue;
 
 				$toplevelpost = (($item['id'] == $item['parent']) ? true : false);
@@ -549,13 +549,13 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				$shareable = ((($profile_owner == local_user()) &&  ((! $item['private']) || $item['network'] === NETWORK_FEED)) ? true : false); 
 
 				if($page_writeable) {
-					if($toplevelpost) { 
+/*					if($toplevelpost) {  */
 						$likebuttons = array(
 							'like' => array( t("I like this \x28toggle\x29"), t("like")),
 							'dislike' => array( t("I don't like this \x28toggle\x29"), t("dislike")),
 						);
 						if ($shareable) $likebuttons['share'] = array( t('Share this'), t('share'));
-					} 
+/*					} */
 
 					$qc = $qcomment =  null;
 
