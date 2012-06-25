@@ -711,6 +711,24 @@ function photos_post(&$a) {
 	logger('mod/photos.php: photos_post(): loading the contents of ' . $src , LOGGER_DEBUG);
 
 	$imagedata = @file_get_contents($src);
+
+
+
+	$r = q("select sum(octet_length(data)) as total from photo where uid = %d and scale = 0 and album != 'Contact Photos' ",
+		intval($a->data['user']['uid'])
+	);
+
+	$limit = service_class_fetch($a->data['user']['uid'],'photo_upload_limit');
+
+	if(($limit !== false) && (($r[0]['total'] + strlen($imagedata)) > $limit)) {
+		notice( upgrade_message() . EOL );
+		@unlink($src);
+		$foo = 0;
+		call_hooks('photo_post_end',$foo);
+		killme();
+	}
+		
+
 	$ph = new Photo($imagedata, $type);
 
 	if(! $ph->is_valid()) {
@@ -968,12 +986,25 @@ function photos_content(&$a) {
 		<input type="submit" name="submit" value="' . t('Submit') . '" id="photos-upload-submit" /> </div>';
 
 
- 
+		$r = q("select sum(octet_length(data)) as total from photo where uid = %d and scale = 0 and album != 'Contact Photos' ",
+			intval($a->data['user']['uid'])
+		);
+
+
+		$limit = service_class_fetch($a->data['user']['uid'],'photo_upload_limit');
+		if($limit !== false) {
+			$usage_message = sprintf( t("You have used %1$.2f Mbytes of %2$.2f Mbytes photo storage."), $r[0]['total'] / 1024000, $limit / 1024000 );
+		}
+		else {
+			$usage_message = sprintf( t('You have used %1$.2f Mbytes of photo storage.'), $r[0]['total'] / 1024000 );
+ 		}
+
 
 		$tpl = get_markup_template('photos_upload.tpl');
 		$o .= replace_macros($tpl,array(
 			'$pagename' => t('Upload Photos'),
 			'$sessid' => session_id(),
+			'$usage' => $usage_message,
 			'$nickname' => $a->data['user']['nickname'],
 			'$newalbum' => t('New album name: '),
 			'$existalbumtext' => t('or existing album name: '),

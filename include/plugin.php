@@ -355,6 +355,31 @@ function service_class_allows($uid,$property,$usage = false) {
 	}
 }
 
+
+function service_class_fetch($uid,$property) {
+
+	if($uid == local_user()) {
+		$service_class = $a->user['service_class'];
+	}
+	else {
+		$r = q("select service_class from user where uid = %d limit 1",
+			intval($uid)
+		);
+		if($r !== false and count($r)) {
+			$service_class = $r[0]['service_class'];
+		}
+	}
+	if(! x($service_class))
+		return false; // everything is allowed
+
+	$arr = get_config('service_class',$service_class);
+	if(! is_array($arr) || (! count($arr)))
+		return false;
+
+	return((array_key_exists($property,$arr)) ? $arr[$property] : false);
+
+}
+
 function upgrade_link() {
 	$l = get_config('service_class','upgrade_link');
 	$t = sprintf('<a href="%s">' . t('Click here to upgrade.') . '</div>', $l);
