@@ -1526,10 +1526,10 @@
 		$replyto = '';
 		$sub     = '';
 		if (x($_REQUEST,'replyto')) {
-			$r = q('SELECT `uri`, `title` FROM `mail` WHERE `uid`=%d AND `id`=%d',
+			$r = q('SELECT `parent-uri`, `title` FROM `mail` WHERE `uid`=%d AND `id`=%d',
 					intval(local_user()),
 					intval($_REQUEST['replyto']));
-			$replyto = $r[0]['uri'];
+			$replyto = $r[0]['parent-uri'];
 			$sub     = $r[0]['title'];
 		}
 		else {
