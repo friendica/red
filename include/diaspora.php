@@ -2252,7 +2252,6 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 		$relay_retract = true;
 
 		$target_type = ( ($item['verb'] === ACTIVITY_LIKE) ? 'Like' : 'Comment');
-		$sender_signed_text = $item['guid'] . ';' . $target_type ;
 
 		$sql_sign_id = 'retract_iid';
 		$tpl = get_markup_template('diaspora_relayable_retraction.tpl');
@@ -2263,13 +2262,10 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 		$target_type = 'Post';
 //		$positive = (($item['deleted']) ? 'false' : 'true');
 		$positive = 'true';
-		$sender_signed_text = $item['guid'] . ';' . $target_type . ';' . $parent_guid . ';' . $positive . ';' . $myaddr;
 
 		$tpl = get_markup_template('diaspora_like_relay.tpl');
 	}
 	else { // item is a comment
-		$sender_signed_text = $item['guid'] . ';' . $parent_guid . ';' . $text . ';' . $myaddr;
-
 		$tpl = get_markup_template('diaspora_comment_relay.tpl');
 	}
 
@@ -2294,6 +2290,13 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 		logger('diaspora_send_relay: original author signature not found, cannot send relayable');
 		return;
 	}
+
+	if($relay_retract)
+		$sender_signed_text = $item['guid'] . ';' . $target_type;
+	elseif($like)
+		$sender_signed_text = $item['guid'] . ';' . $target_type . ';' . $parent_guid . ';' . $positive . ';' . $handle;
+	else
+		$sender_signed_text = $item['guid'] . ';' . $parent_guid . ';' . $text . ';' . $handle;
 
 	// Sign the relayable with the top-level owner's signature
 	//

@@ -10,9 +10,9 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '3.0.1382' );
+define ( 'FRIENDICA_VERSION',      '3.0.1384' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
-define ( 'DB_UPDATE_VERSION',      1149      );
+define ( 'DB_UPDATE_VERSION',      1150      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -1374,9 +1374,9 @@ if(! function_exists('proc_run')) {
 
 		if(count($args) && $args[0] === 'php')
 			$args[0] = ((x($a->config,'php_path')) && (strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
-		foreach ($args as $arg){
-			$arg = escapeshellarg($arg);
-		}
+		for($x = 0; $x < count($args); $x ++)
+			$args[$x] = escapeshellarg($args[$x]);
+
 		$cmdline = implode($args," ");
 		proc_close(proc_open($cmdline." &",array(),$foo));
 	}

@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1149 );
+define( 'UPDATE_VERSION' , 1150 );
 
 /**
  *
@@ -1286,6 +1286,15 @@ function update_1147() {
 function update_1148() {
 	$r = q("ALTER TABLE photo ADD type CHAR(128) NOT NULL DEFAULT 'image/jpeg' AFTER filename");
 	if (!$r)
+		return UPDATE_FAILED;
+	return UPDATE_SUCCESS;
+}
+
+
+function update_1149() {
+	$r1 = q("ALTER TABLE profile ADD likes text NOT NULL after prv_keywords");
+	$r2 = q("ALTER TABLE profile ADD dislikes text NOT NULL after likes");
+	if (! ($r1 && $r2))
 		return UPDATE_FAILED;
 	return UPDATE_SUCCESS;
 }

@@ -1644,6 +1644,9 @@ input#dfrn-url {
 	display:block!important;
 }
 
+#photos-usage-message {
+	margin-bottom: 15px;
+}
 
 
 #acl-wrapper {
