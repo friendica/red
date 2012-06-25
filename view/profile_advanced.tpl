@@ -89,6 +89,19 @@
 </dl>
 {{ endif }}
 
+{{ if $profile.likes }}
+<dl id="aprofile-likes" class="aprofile">
+ <dt>$profile.likes.0</dt>
+ <dd>$profile.likes.1</dd>
+</dl>
+{{ endif }}
+
+{{ if $profile.dislikes }}
+<dl id="aprofile-dislikes" class="aprofile">
+ <dt>$profile.dislikes.0</dt>
+ <dd>$profile.dislikes.1</dd>
+</dl>
+{{ endif }}
 
 {{ if $profile.contact }}
 <dl id="aprofile-contact" class="aprofile">

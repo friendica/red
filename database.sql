@@ -831,6 +831,8 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `religion` char(255) NOT NULL,
   `pub_keywords` text NOT NULL,
   `prv_keywords` text NOT NULL,
+  `likes` text NOT NULL,
+  `dislikes` text NOT NULL,
   `about` text NOT NULL,
   `summary` char(255) NOT NULL,
   `music` text NOT NULL,
