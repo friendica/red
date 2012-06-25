@@ -1,4 +1,7 @@
 <h3>$pagename</h3>
+
+<div id="photos-usage-message">$usage</div>
+
 <form action="photos/$nickname" enctype="multipart/form-data" method="post" name="photos-upload-form" id="photos-upload-form" >
 	<div id="photos-upload-new-wrapper" >
 		<div id="photos-upload-newalbum-div">

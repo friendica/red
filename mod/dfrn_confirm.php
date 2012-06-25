@@ -146,7 +146,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			 */
 			require_once('include/crypto.php');
 
-			$res = new_keypair(1024);
+			$res = new_keypair(4096);
 
 			$private_key = $res['prvkey'];
 			$public_key  = $res['pubkey'];
