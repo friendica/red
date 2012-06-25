@@ -60,6 +60,19 @@ function wall_attach_post(&$a) {
 		return;
 	}
 
+	$r = q("select sum(octet_length(data)) as total from attach where uid = %d ",
+		intval($page_owner_uid)
+	);
+
+	$limit = service_class_fetch($page_owner_uid,'attach_upload_limit');
+
+	if(($limit !== false) && (($r[0]['total'] + strlen($imagedata)) > $limit)) {
+		echo upgrade_message(true) . EOL ;
+		@unlink($src);
+		killme();
+	}
+
+
 	$filedata = @file_get_contents($src);
 	$mimetype = z_mime_content_type($filename);
 	$hash = random_string();

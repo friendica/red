@@ -380,20 +380,23 @@ function service_class_fetch($uid,$property) {
 
 }
 
-function upgrade_link() {
+function upgrade_link($bbcode = false) {
 	$l = get_config('service_class','upgrade_link');
-	$t = sprintf('<a href="%s">' . t('Click here to upgrade.') . '</div>', $l);
-	if($l) 
-		return $t;
-	return '';
+	if(! $l)
+		return '';
+	if($bbcode)
+		$t = sprintf('[url=%s]' . t('Click here to upgrade.') . '[/url]', $l);
+	else
+		$t = sprintf('<a href="%s">' . t('Click here to upgrade.') . '</div>', $l);
+	return $t;
 }
 
-function upgrade_message() {
-	$x = upgrade_link();
+function upgrade_message($bbcode = false) {
+	$x = upgrade_link($bbcode);
 	return t('This action exceeds the limits set by your subscription plan.') . (($x) ? ' ' . $x : '') ;
 }
 
-function upgrade_bool_message() {
-	$x = upgrade_link();
+function upgrade_bool_message($bbcode = false) {
+	$x = upgrade_link($bbcode);
 	return t('This action is not available under your subscription plan.') . (($x) ? ' ' . $x : '') ;
 }
