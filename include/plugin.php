@@ -354,3 +354,16 @@ function service_class_allows($uid,$property,$usage = false) {
 		return (((intval($usage)) < intval($arr[$property])) ? true : false);
 	}
 }
+
+function upgrade_link() {
+	$l = get_config('service_class','upgrade_link');
+	$t = sprintf('<a href="%s">' . t('Click here to upgrade.') . '</div>', $l);
+	if($l) 
+		return $t;
+	return '';
+}
+
+function upgrade_message() {
+	$x = upgrade_link();
+	return t('This action exceeds the limits set by your subscription plan.') . (($x) ? ' ' . $x : '') ;
+}
