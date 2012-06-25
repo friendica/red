@@ -392,3 +392,8 @@ function upgrade_message() {
 	$x = upgrade_link();
 	return t('This action exceeds the limits set by your subscription plan.') . (($x) ? ' ' . $x : '') ;
 }
+
+function upgrade_bool_message() {
+	$x = upgrade_link();
+	return t('This action is not available under your subscription plan.') . (($x) ? ' ' . $x : '') ;
+}
