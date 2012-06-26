@@ -1457,11 +1457,12 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 			 *
 			 */
 			 
-			$bdtext = t('Birthday:') . ' [url=' . $contact['url'] . ']' . $contact['name'] . '[/url]' ;
+			$bdtext = sprintf( t('%s\'s birthday'), $contact['name']);
+			$bdtext2 = sprintf( t('Happy Birthday %s'), ' [url=' . $contact['url'] . ']' . $contact['name'] . '[/url]' ;
 
 
-			$r = q("INSERT INTO `event` (`uid`,`cid`,`created`,`edited`,`start`,`finish`,`desc`,`type`)
-				VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s' ) ",
+			$r = q("INSERT INTO `event` (`uid`,`cid`,`created`,`edited`,`start`,`finish`,`summary`,`desc`,`type`)
+				VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 				intval($contact['uid']),
 			 	intval($contact['id']),
 				dbesc(datetime_convert()),
@@ -1469,6 +1470,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				dbesc(datetime_convert('UTC','UTC', $birthday)),
 				dbesc(datetime_convert('UTC','UTC', $birthday . ' + 1 day ')),
 				dbesc($bdtext),
+				dbesc($bdtext2),
 				dbesc('birthday')
 			);
 			
