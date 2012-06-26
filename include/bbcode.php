@@ -1,4 +1,4 @@
-<?php
+s<?php
 
 require_once("include/oembed.php");
 require_once('include/event.php');
@@ -297,8 +297,11 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	$Text = oembed_bbcode2html($Text);
 
 	// If we found an event earlier, strip out all the event code and replace with a reformatted version.
+	// Replace the event-start section with the entire formatted event. The other bbcode is stripped.
+	// Summary (e.g. title) is required, earlier revisions only required description (in addition to 
+	// start which is always required). Allow desc with a missing summary for compatibility.
 
-	if(x($ev,'desc') && x($ev,'start')) {
+	if((x($ev,'desc') || x($ev,'summary')) && x($ev,'start')) {
 		$sub = format_event_html($ev);
 
 		$Text = preg_replace("/\[event\-summary\](.*?)\[\/event\-summary\]/ism",'',$Text);
