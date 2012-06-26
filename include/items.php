@@ -2148,17 +2148,18 @@ function local_delivery($importer,$data) {
 			}
 			if($deleted) {
 
+				// check for relayed deletes to our conversation
 
 				$is_reply = false;		
-				$r = q("select * from item where uri = '%s' and id = parent limit 1",
-					dbesc($uri)
+				$r = q("select * from item where uri = '%s' and uid = %d limit 1",
+					dbesc($uri),
+					intval($importer['importer_uid'])
 				);
 				if(count($r)) {
 					$parent_uri = $r[0]['parent-uri'];
-					if($r[0]['parent-uri'] != $uri && $r[0]['thr-parent'] != $uri)
+					if($r[0]['id'] != $r[0]['parent'])
 						$is_reply = true;
 				}				
-
 
 				if($is_reply) {
 					$community = false;
@@ -2295,8 +2296,10 @@ function local_delivery($importer,$data) {
 								);
 							}	
 						}
+						// if this is a relayed delete, propagate it to other recipients
+
 						if($is_a_remote_delete)
-							proc_run('php',"include/notifier.php","delete",$item['id']);
+							proc_run('php',"include/notifier.php","drop",$item['id']);
 					}
 				}
 			}
