@@ -62,8 +62,8 @@ function events_post(&$a) {
 	$location = escape_tags(trim($_POST['location']));
 	$type     = 'event';
 
-	if((! $desc) || (! $start)) {
-		notice( t('Event description and start time are required.') . EOL);
+	if((! $summary) || (! $start)) {
+		notice( t('Event title and start time are required.') . EOL);
 		goaway($a->get_baseurl() . '/events/new');
 	}
 
@@ -412,9 +412,9 @@ function events_content(&$a) {
 			'$uri' => $uri,
 	
 			'$title' => t('Event details'),
-			'$desc' => sprintf( t('Format is %s %s. Starting date and Description are required.'),$dateformat,$timeformat),
+			'$desc' => sprintf( t('Format is %s %s. Starting date and Title are required.'),$dateformat,$timeformat),
 			
-			'$s_text' => t('Event Starts:') . ' <span class="required">*</span> ',
+			'$s_text' => t('Event Starts:') . ' <span class="required" title="' . t('Required') . '">*</span>',
 			'$s_dsel' => datesel($f,'start',$syear+5,$syear,false,$syear,$smonth,$sday),
 			'$s_tsel' => timesel('start',$shour,$sminute),
 			'$n_text' => t('Finish date/time is not known or not relevant'),
@@ -424,11 +424,11 @@ function events_content(&$a) {
 			'$f_tsel' => timesel('finish',$fhour,$fminute),
 			'$a_text' => t('Adjust for viewer timezone'),
 			'$a_checked' => $a_checked,
-			'$d_text' => t('Description:') . ' <span class="required">*</span>',
+			'$d_text' => t('Description:'), 
 			'$d_orig' => $d_orig,
 			'$l_text' => t('Location:'),
 			'$l_orig' => $l_orig,
-			'$t_text' => t('Title:'),
+			'$t_text' => t('Title:') . ' <span class="required" title="' . t('Required') . '">*</span>',
 			'$t_orig' => $t_orig,
 			'$sh_text' => t('Share this event'),
 			'$sh_checked' => $sh_checked,
