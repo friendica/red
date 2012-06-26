@@ -1238,6 +1238,40 @@
 		return($as);
 	}
 
+	function api_format_messages($item, $recipient, $sender) {
+		// standard meta information
+		$ret=Array(
+				'id'                    => $item['id'],
+				'created_at'            => api_date($item['created']),
+				'sender_id'             => $sender['id'] ,
+				'sender_screen_name'    => $sender['screen_name'],
+				'sender'                => $sender,
+				'recipient_id'          => $recipient['id'],
+				'recipient_screen_name' => $recipient['screen_name'],
+				'recipient'             => $recipient,
+		);
+
+		//don't send title to regular StatusNET requests to avoid confusing these apps
+		if (x($_GET, 'getText')) {
+			$ret['title'] = $item['title'] ;
+			if ($_GET["getText"] == "html") {
+				$ret['text'] = bbcode($item['body']);
+			}
+			elseif ($_GET["getText"] == "plain") {
+				$ret['text'] = html2plain(bbcode($item['body']), 0);
+			}
+		}
+		else {
+			$ret['text'] = $item['title']."\n".html2plain(bbcode($item['body']), 0);
+		}
+		if (isset($_GET["getUserObjects"]) && $_GET["getUserObjects"] == "false") {
+			unset($ret['sender']);
+			unset($ret['recipient']);
+		}
+
+		return $ret;
+	}
+
 	function api_format_items($r,$user_info) {
 
 		//logger('api_format_items: ' . print_r($r,true));
@@ -1546,20 +1580,7 @@
 
 		if ($id>-1) {
 			$r = q("SELECT * FROM `mail` WHERE id=%d", intval($id));
-			$item = $r[0];
-			$ret=Array(
-					'id' => $item['id'],
-					'created_at'=> api_date($item['created']),
-					'sender_id'=> $sender['id'] ,
-					'sender_screen_name'=> $sender['screen_name'],
-					'sender'=> $sender,
-					'recipient_id'=> $recipient['id'],
-					'recipient_screen_name'=> $recipient['screen_name'],
-					'recipient'=> $recipient,
-					
-					'text'=> $item['title']."\n".html2plain(bbcode($item['body']), 0) ,
-					
-			);
+			$ret = api_format_messages($r[0], $recipient, $sender);
 		
 		} else {
 			$ret = array("error"=>$id);	
@@ -1578,7 +1599,7 @@
 	}
 	api_register_func('api/direct_messages/new','api_direct_messages_new',true);
 
-    function api_direct_messages_box(&$a, $type, $box) {
+	function api_direct_messages_box(&$a, $type, $box) {
 		if (local_user()===false) return false;
 		
 		$user_info = api_get_user($a);
@@ -1590,14 +1611,17 @@
 		
 		$start = $page*$count;
 		
-    $profile_url = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
+		$profile_url = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
 		if ($box=="sentbox") {
 			$sql_extra = "`from-url`='".dbesc( $profile_url )."'";
-		} elseif ($box=="conversation") {
-      $sql_extra = "`parent-uri`='".dbesc( $_GET["uri"] )  ."'";
-		} elseif ($box=="all") {
-      $sql_extra = "true";
-		} elseif ($box=="inbox") {
+		}
+		elseif ($box=="conversation") {
+			$sql_extra = "`parent-uri`='".dbesc( $_GET["uri"] )  ."'";
+		}
+		elseif ($box=="all") {
+			$sql_extra = "true";
+		}
+		elseif ($box=="inbox") {
 			$sql_extra = "`from-url`!='".dbesc( $profile_url )."'";
 		}
 		
@@ -1607,41 +1631,17 @@
 		);
 		
 		$ret = Array();
-		foreach($r as $item){
+		foreach($r as $item) {
 			if ($box == "inbox" || $item['from-url'] != $profile_url){
-					$recipient = $user_info;
-					$sender = api_get_user($a,$item['contact-id']);
-      } elseif ($box == "sentbox" || $item['from-url'] != $profile_url){
-					$recipient = api_get_user($a,$item['contact-id']);
-					$sender = $user_info;
+				$recipient = $user_info;
+				$sender = api_get_user($a,$item['contact-id']);
 			}
-				
-			$d=Array(
-				'id' => $item['id'],
-				'created_at'=> api_date($item['created']),
-				'sender_id'=> $sender['id'] ,
-				'sender_screen_name'=> $sender['screen_name'],
-				'sender_profile_img'=> $item['from-photo'],
-				'sender'=> $sender,
-				'recipient_id'=> $recipient['id'],
-				'recipient_screen_name'=> $recipient['screen_name'],
-				'recipient'=> $recipient,
-			);
-      //don't send title to regular StatusNET requests to avoid confusing these apps
-			if (isset($_GET["getText"])) {
-        $d['title'] = $item['title'] ;
-        if ($_GET["getText"] == "html") {
-          $d['text'] = bbcode($item['body']);
-        } elseif ($_GET["getText"] == "plain") {
-          $d['text'] = html2plain(bbcode($item['body']), 0);
-        }
-      } else {
-        $d['text'] = $item['title']."\n".html2plain(bbcode($item['body']), 0);
-      }
-      if (isset($_GET["getUserObjects"]) && $_GET["getUserObjects"] == "false") {
-        unset($d['sender']); unset($d['recipient']);
-      }
-      $ret[]=$d;
+			elseif ($box == "sentbox" || $item['from-url'] != $profile_url){
+				$recipient = api_get_user($a,$item['contact-id']);
+				$sender = $user_info;
+			}
+
+			$ret[]=api_format_messages($item, $recipient, $sender);
 		}
 		
 
