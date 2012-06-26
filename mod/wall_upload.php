@@ -79,6 +79,19 @@ function wall_upload_post(&$a) {
 		killme();
 	}
 
+	$r = q("select sum(octet_length(data)) as total from photo where uid = %d and scale = 0 and album != 'Contact Photos' ",
+		intval($page_owner_uid)
+	);
+
+	$limit = service_class_fetch($page_owner_uid,'photo_upload_limit');
+
+	if(($limit !== false) && (($r[0]['total'] + strlen($imagedata)) > $limit)) {
+		echo upgrade_message(true) . EOL ;
+		@unlink($src);
+		killme();
+	}
+
+
 	$imagedata = @file_get_contents($src);
 	$ph = new Photo($imagedata, $filetype);
 

@@ -162,7 +162,10 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
  	// handle nested lists
 	$endlessloop = 0;
-	while ((strpos($Text, "[/list]") !== false) and (strpos($Text, "[list") !== false) and (++$endlessloop < 20)) {
+
+	while ((strpos($Text, "[/list]") !== false) && (strpos($Text, "[list") !== false) &&
+	       (strpos($Text, "[/ol]") !== false) && (strpos($Text, "[ol]") !== false) && 
+	       (strpos($Text, "[/ul]") !== false) && (strpos($Text, "[ul]") !== false) && (++$endlessloop < 20)) {
 		$Text = preg_replace("/\[list\](.*?)\[\/list\]/ism", '<ul class="listbullet" style="list-style-type: circle;">$1</ul>' ,$Text);
 		$Text = preg_replace("/\[list=\](.*?)\[\/list\]/ism", '<ul class="listnone" style="list-style-type: none;">$1</ul>' ,$Text);
 		$Text = preg_replace("/\[list=1\](.*?)\[\/list\]/ism", '<ul class="listdecimal" style="list-style-type: decimal;">$1</ul>' ,$Text);
@@ -170,10 +173,9 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		$Text = preg_replace("/\[list=((?-i)I)\](.*?)\[\/list\]/ism", '<ul class="listupperroman" style="list-style-type: upper-roman;">$2</ul>' ,$Text);
 		$Text = preg_replace("/\[list=((?-i)a)\](.*?)\[\/list\]/ism", '<ul class="listloweralpha" style="list-style-type: lower-alpha;">$2</ul>' ,$Text);
 		$Text = preg_replace("/\[list=((?-i)A)\](.*?)\[\/list\]/ism", '<ul class="listupperalpha" style="list-style-type: upper-alpha;">$2</ul>' ,$Text);
+		$Text = preg_replace("/\[ul\](.*?)\[\/ul\]/ism", '<ul class="listbullet" style="list-style-type: circle;">$1</ul>' ,$Text);
+		$Text = preg_replace("/\[ol\](.*?)\[\/ol\]/ism", '<ul class="listdecimal" style="list-style-type: decimal;">$1</ul>' ,$Text);
 	}
-
-	$Text = preg_replace("/\[ul\](.*?)\[\/ul\]/ism", '<ul class="listbullet" style="list-style-type: circle;">$1</ul>' ,$Text);
-	$Text = preg_replace("/\[ol\](.*?)\[\/ol\]/ism", '<ul class="listdecimal" style="list-style-type: decimal;">$1</ul>' ,$Text);
 
 	$Text = preg_replace("/\[th\](.*?)\[\/th\]/sm", '<th>$1</th>' ,$Text);
 	$Text = preg_replace("/\[td\](.*?)\[\/td\]/sm", '<td>$1</td>' ,$Text);
@@ -295,12 +297,16 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	$Text = oembed_bbcode2html($Text);
 
 	// If we found an event earlier, strip out all the event code and replace with a reformatted version.
+	// Replace the event-start section with the entire formatted event. The other bbcode is stripped.
+	// Summary (e.g. title) is required, earlier revisions only required description (in addition to 
+	// start which is always required). Allow desc with a missing summary for compatibility.
 
-	if(x($ev,'desc') && x($ev,'start')) {
+	if((x($ev,'desc') || x($ev,'summary')) && x($ev,'start')) {
 		$sub = format_event_html($ev);
 
-		$Text = preg_replace("/\[event\-description\](.*?)\[\/event\-description\]/ism",$sub,$Text);
-		$Text = preg_replace("/\[event\-start\](.*?)\[\/event\-start\]/ism",'',$Text);
+		$Text = preg_replace("/\[event\-summary\](.*?)\[\/event\-summary\]/ism",'',$Text);
+		$Text = preg_replace("/\[event\-description\](.*?)\[\/event\-description\]/ism",'',$Text);
+		$Text = preg_replace("/\[event\-start\](.*?)\[\/event\-start\]/ism",$sub,$Text); 
 		$Text = preg_replace("/\[event\-finish\](.*?)\[\/event\-finish\]/ism",'',$Text);
 		$Text = preg_replace("/\[event\-location\](.*?)\[\/event\-location\]/ism",'',$Text);
 		$Text = preg_replace("/\[event\-adjust\](.*?)\[\/event\-adjust\]/ism",'',$Text);

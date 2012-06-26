@@ -1457,11 +1457,12 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 			 *
 			 */
 			 
-			$bdtext = t('Birthday:') . ' [url=' . $contact['url'] . ']' . $contact['name'] . '[/url]' ;
+			$bdtext = sprintf( t('%s\'s birthday'), $contact['name']);
+			$bdtext2 = sprintf( t('Happy Birthday %s'), ' [url=' . $contact['url'] . ']' . $contact['name'] . '[/url]' ) ;
 
 
-			$r = q("INSERT INTO `event` (`uid`,`cid`,`created`,`edited`,`start`,`finish`,`desc`,`type`)
-				VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s' ) ",
+			$r = q("INSERT INTO `event` (`uid`,`cid`,`created`,`edited`,`start`,`finish`,`summary`,`desc`,`type`)
+				VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 				intval($contact['uid']),
 			 	intval($contact['id']),
 				dbesc(datetime_convert()),
@@ -1469,6 +1470,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				dbesc(datetime_convert('UTC','UTC', $birthday)),
 				dbesc(datetime_convert('UTC','UTC', $birthday . ' + 1 day ')),
 				dbesc($bdtext),
+				dbesc($bdtext2),
 				dbesc('birthday')
 			);
 			
@@ -2148,6 +2150,67 @@ function local_delivery($importer,$data) {
 			}
 			if($deleted) {
 
+				// check for relayed deletes to our conversation
+
+				$is_reply = false;		
+				$r = q("select * from item where uri = '%s' and uid = %d limit 1",
+					dbesc($uri),
+					intval($importer['importer_uid'])
+				);
+				if(count($r)) {
+					$parent_uri = $r[0]['parent-uri'];
+					if($r[0]['id'] != $r[0]['parent'])
+						$is_reply = true;
+				}				
+
+				if($is_reply) {
+					$community = false;
+
+					if($importer['page-flags'] == PAGE_COMMUNITY || $importer['page-flags'] == PAGE_PRVGROUP ) {
+						$sql_extra = '';
+						$community = true;
+						logger('local_delivery: possible community delete');
+					}
+					else
+						$sql_extra = " and contact.self = 1 and item.wall = 1 ";
+ 
+					// was the top-level post for this reply written by somebody on this site? 
+					// Specifically, the recipient? 
+
+					$is_a_remote_delete = false;
+
+					$r = q("select `item`.`id`, `item`.`uri`, `item`.`tag`, `item`.`forum_mode`,`item`.`origin`,`item`.`wall`, 
+						`contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
+						LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
+						WHERE `item`.`uri` = '%s' AND (`item`.`parent-uri` = '%s' or `item`.`thr-parent` = '%s')
+						AND `item`.`uid` = %d 
+						$sql_extra
+						LIMIT 1",
+						dbesc($parent_uri),
+						dbesc($parent_uri),
+						dbesc($parent_uri),
+						intval($importer['importer_uid'])
+					);
+					if($r && count($r))
+						$is_a_remote_delete = true;			
+
+					// Does this have the characteristics of a community or private group comment?
+					// If it's a reply to a wall post on a community/prvgroup page it's a 
+					// valid community comment. Also forum_mode makes it valid for sure. 
+					// If neither, it's not.
+
+					if($is_a_remote_delete && $community) {
+						if((! $r[0]['forum_mode']) && (! $r[0]['wall'])) {
+							$is_a_remote_delete = false;
+							logger('local_delivery: not a community delete');
+						}
+					}
+
+					if($is_a_remote_delete) {
+						logger('local_delivery: received remote delete');
+					}
+				}
+
 				$r = q("SELECT `item`.*, `contact`.`self` FROM `item` left join contact on `item`.`contact-id` = `contact`.`id`
 					WHERE `uri` = '%s' AND `item`.`uid` = %d AND `contact-id` = %d AND NOT `item`.`file` LIKE '%%[%%' LIMIT 1",
 					dbesc($uri),
@@ -2235,7 +2298,11 @@ function local_delivery($importer,$data) {
 								);
 							}	
 						}
-					}	
+						// if this is a relayed delete, propagate it to other recipients
+
+						if($is_a_remote_delete)
+							proc_run('php',"include/notifier.php","drop",$item['id']);
+					}
 				}
 			}
 		}
@@ -2268,6 +2335,7 @@ function local_delivery($importer,$data) {
 
 			$is_a_remote_comment = false;
 
+			// POSSIBLE CLEANUP --> Why select so many fields when only forum_mode and wall are used?
 			$r = q("select `item`.`id`, `item`.`uri`, `item`.`tag`, `item`.`forum_mode`,`item`.`origin`,`item`.`wall`, 
 				`contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
 				LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
@@ -3359,40 +3427,8 @@ function drop_item($id,$interactive = true) {
 				);
 			}
 
-			// Add a relayable_retraction signature for Diaspora. Note that we can't add a target_author_signature
-			// if the comment was deleted by a remote user. That should be ok, because if a remote user is deleting
-			// the comment, that means we're the home of the post, and Diaspora will only
-			// check the parent_author_signature of retractions that it doesn't have to relay further
-			//
-			// I don't think this function gets called for an "unlike," but I'll check anyway
-			$signed_text = $item['guid'] . ';' . ( ($item['verb'] === ACTIVITY_LIKE) ? 'Like' : 'Comment');
-
-			if(local_user() == $item['uid']) {
-
-				$handle = $a->user['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
-				$authorsig = base64_encode(rsa_sign($signed_text,$a->user['prvkey'],'sha256'));
-			}
-			else {
-				$r = q("SELECT `nick`, `url` FROM `contact` WHERE `id` = '%d' LIMIT 1",
-					$item['contact-id']
-				);
-				if(count($r)) {
-					// The below handle only works for NETWORK_DFRN. I think that's ok, because this function
-					// only handles DFRN deletes
-					$handle_baseurl_start = strpos($r['url'],'://') + 3;
-					$handle_baseurl_length = strpos($r['url'],'/profile') - $handle_baseurl_start;
-					$handle = $r['nick'] . '@' . substr($r['url'], $handle_baseurl_start, $handle_baseurl_length);
-					$authorsig = '';
-				}
-			}
-
-			if(isset($handle))
-				q("insert into sign (`retract_iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
-					intval($item['id']),
-					dbesc($signed_text),
-					dbesc($authorsig),
-					dbesc($handle)
-				);
+			// Add a relayable_retraction signature for Diaspora.
+			store_diaspora_retract_sig($item, $a->user, $a->get_baseurl());
 		}
 		$drop_id = intval($item['id']);
 
@@ -3479,4 +3515,53 @@ function posted_date_widget($url,$uid,$wall) {
 		'$dates' => $ret
 	));
 	return $o;
+}
+
+
+function store_diaspora_retract_sig($item, $user, $baseurl) {
+	// Note that we can't add a target_author_signature
+	// if the comment was deleted by a remote user. That should be ok, because if a remote user is deleting
+	// the comment, that means we're the home of the post, and Diaspora will only
+	// check the parent_author_signature of retractions that it doesn't have to relay further
+	//
+	// I don't think this function gets called for an "unlike," but I'll check anyway
+
+	$enabled = intval(get_config('system','diaspora_enabled'));
+	if(! $enabled) {
+		logger('drop_item: diaspora support disabled, not storing retraction signature', LOGGER_DEBUG);
+		return;
+	}
+
+	logger('drop_item: storing diaspora retraction signature');
+
+	$signed_text = $item['guid'] . ';' . ( ($item['verb'] === ACTIVITY_LIKE) ? 'Like' : 'Comment');
+
+	if(local_user() == $item['uid']) {
+
+		$handle = $user['nickname'] . '@' . substr($baseurl, strpos($baseurl,'://') + 3);
+		$authorsig = base64_encode(rsa_sign($signed_text,$user['prvkey'],'sha256'));
+	}
+	else {
+		$r = q("SELECT `nick`, `url` FROM `contact` WHERE `id` = '%d' LIMIT 1",
+			$item['contact-id']
+		);
+		if(count($r)) {
+			// The below handle only works for NETWORK_DFRN. I think that's ok, because this function
+			// only handles DFRN deletes
+			$handle_baseurl_start = strpos($r['url'],'://') + 3;
+			$handle_baseurl_length = strpos($r['url'],'/profile') - $handle_baseurl_start;
+			$handle = $r['nick'] . '@' . substr($r['url'], $handle_baseurl_start, $handle_baseurl_length);
+			$authorsig = '';
+		}
+	}
+
+	if(isset($handle))
+		q("insert into sign (`retract_iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+			intval($item['id']),
+			dbesc($signed_text),
+			dbesc($authorsig),
+			dbesc($handle)
+		);
+
+	return;
 }

@@ -447,11 +447,13 @@ function update_contact_birthdays() {
 			 *
 			 */
 			 
-			$bdtext = t('Birthday:') . ' [url=' . $rr['url'] . ']' . $rr['name'] . '[/url]' ;
+			$bdtext = sprintf( t('%s\'s birthday'), $rr['name']);
+			$bdtext2 = sprintf( t('Happy Birthday %s'), ' [url=' . $rr['url'] . ']' . $rr['name'] . '[/url]') ;
 
 
-			$r = q("INSERT INTO `event` (`uid`,`cid`,`created`,`edited`,`start`,`finish`,`desc`,`type`,`adjust`)
-				VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%d' ) ",
+
+			$r = q("INSERT INTO `event` (`uid`,`cid`,`created`,`edited`,`start`,`finish`,`summary`,`desc`,`type`,`adjust`)
+				VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d' ) ",
 				intval($rr['uid']),
 			 	intval($rr['id']),
 				dbesc(datetime_convert()),
@@ -459,6 +461,7 @@ function update_contact_birthdays() {
 				dbesc(datetime_convert('UTC','UTC', $nextbd)),
 				dbesc(datetime_convert('UTC','UTC', $nextbd . ' + 1 day ')),
 				dbesc($bdtext),
+				dbesc($bdtext2),
 				dbesc('birthday'),
 				intval(0)
 			);
