@@ -2148,6 +2148,66 @@ function local_delivery($importer,$data) {
 			}
 			if($deleted) {
 
+
+				$is_reply = false;		
+				$r = q("select * from item where uri = '%s' and id = parent limit 1",
+					dbesc($uri)
+				);
+				if(count($r)) {
+					$parent_uri = $r[0]['parent-uri'];
+					if($r[0]['parent-uri'] != $uri && $r[0]['thr-parent'] != $uri)
+						$is_reply = true;
+				}				
+
+
+				if($is_reply) {
+					$community = false;
+
+					if($importer['page-flags'] == PAGE_COMMUNITY || $importer['page-flags'] == PAGE_PRVGROUP ) {
+						$sql_extra = '';
+						$community = true;
+						logger('local_delivery: possible community delete');
+					}
+					else
+						$sql_extra = " and contact.self = 1 and item.wall = 1 ";
+ 
+					// was the top-level post for this reply written by somebody on this site? 
+					// Specifically, the recipient? 
+
+					$is_a_remote_delete = false;
+
+					$r = q("select `item`.`id`, `item`.`uri`, `item`.`tag`, `item`.`forum_mode`,`item`.`origin`,`item`.`wall`, 
+						`contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
+						LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
+						WHERE `item`.`uri` = '%s' AND (`item`.`parent-uri` = '%s' or `item`.`thr-parent` = '%s')
+						AND `item`.`uid` = %d 
+						$sql_extra
+						LIMIT 1",
+						dbesc($parent_uri),
+						dbesc($parent_uri),
+						dbesc($parent_uri),
+						intval($importer['importer_uid'])
+					);
+					if($r && count($r))
+						$is_a_remote_delete = true;			
+
+					// Does this have the characteristics of a community or private group comment?
+					// If it's a reply to a wall post on a community/prvgroup page it's a 
+					// valid community comment. Also forum_mode makes it valid for sure. 
+					// If neither, it's not.
+
+					if($is_a_remote_delete && $community) {
+						if((! $r[0]['forum_mode']) && (! $r[0]['wall'])) {
+							$is_a_remote_delete = false;
+							logger('local_delivery: not a community delete');
+						}
+					}
+
+					if($is_a_remote_delete) {
+						logger('local_delivery: received remote delete');
+					}
+				}
+
 				$r = q("SELECT `item`.*, `contact`.`self` FROM `item` left join contact on `item`.`contact-id` = `contact`.`id`
 					WHERE `uri` = '%s' AND `item`.`uid` = %d AND `contact-id` = %d AND NOT `item`.`file` LIKE '%%[%%' LIMIT 1",
 					dbesc($uri),
@@ -2235,7 +2295,9 @@ function local_delivery($importer,$data) {
 								);
 							}	
 						}
-					}	
+						if($is_a_remote_delete)
+							proc_run('php',"include/notifier.php","delete",$item['id']);
+					}
 				}
 			}
 		}
