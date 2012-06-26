@@ -1,4 +1,4 @@
-s<?php
+<?php
 
 require_once("include/oembed.php");
 require_once('include/event.php');
