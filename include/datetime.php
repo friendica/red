@@ -448,7 +448,7 @@ function update_contact_birthdays() {
 			 */
 			 
 			$bdtext = sprintf( t('%s\'s birthday'), $rr['name']);
-			$bdtext2 = sprintf( t('Happy Birthday %s'), ' [url=' . $rr['url'] . ']' . $rr['name'] . '[/url]' ;
+			$bdtext2 = sprintf( t('Happy Birthday %s'), ' [url=' . $rr['url'] . ']' . $rr['name'] . '[/url]') ;
 
 
 
