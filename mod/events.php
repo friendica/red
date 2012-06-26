@@ -57,6 +57,7 @@ function events_post(&$a) {
 	if(strcmp($finish,$start) < 0)
 		$finish = $start;
 
+	$summary  = escape_tags(trim($_POST['summary']));
 	$desc     = escape_tags(trim($_POST['desc']));
 	$location = escape_tags(trim($_POST['location']));
 	$type     = 'event';
@@ -107,6 +108,7 @@ function events_post(&$a) {
 	$datarray = array();
 	$datarray['start'] = $start;
 	$datarray['finish'] = $finish;
+	$datarray['summary'] = $summary;
 	$datarray['desc'] = $desc;
 	$datarray['location'] = $location;
 	$datarray['type'] = $type;
@@ -278,9 +280,11 @@ function events_content(&$a) {
 					
 				$last_date = $d;
 				$edit = ((! $rr['cid']) ? array($a->get_baseurl().'/events/event/'.$rr['id'],t('Edit event'),'','') : null);
-
-				list($title, $_trash) = explode("<br",bbcode($rr['desc']),2);
-				$title = strip_tags($title);
+				$title = strip_tags(bbcode($rr['summary']));
+				if(! $title) {
+					list($title, $_trash) = explode("<br",bbcode($rr['desc']),2);
+					$title = strip_tags($title);
+				}
 				$html = format_event_html($rr);
 				$rr['desc'] = bbcode($rr['desc']);
 				$rr['location'] = bbcode($rr['location']);
@@ -351,6 +355,7 @@ function events_content(&$a) {
 
 		$n_checked = ((x($orig_event) && $orig_event['nofinish']) ? ' checked="checked" ' : '');
 		$a_checked = ((x($orig_event) && $orig_event['adjust']) ? ' checked="checked" ' : '');
+		$t_orig = ((x($orig_event)) ? $orig_event['summary'] : '');
 		$d_orig = ((x($orig_event)) ? $orig_event['desc'] : '');
 		$l_orig = ((x($orig_event)) ? $orig_event['location'] : '');
 		$eid = ((x($orig_event)) ? $orig_event['id'] : 0);
@@ -405,6 +410,7 @@ function events_content(&$a) {
 			'$eid' => $eid, 
 			'$cid' => $cid,
 			'$uri' => $uri,
+	
 			'$title' => t('Event details'),
 			'$desc' => sprintf( t('Format is %s %s. Starting date and Description are required.'),$dateformat,$timeformat),
 			
@@ -422,6 +428,8 @@ function events_content(&$a) {
 			'$d_orig' => $d_orig,
 			'$l_text' => t('Location:'),
 			'$l_orig' => $l_orig,
+			'$t_text' => t('Title:'),
+			'$t_orig' => $t_orig,
 			'$sh_text' => t('Share this event'),
 			'$sh_checked' => $sh_checked,
 			'$acl' => (($cid) ? '' : populate_acl(((x($orig_event)) ? $orig_event : $a->user),false)),

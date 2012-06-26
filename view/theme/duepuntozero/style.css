@@ -2424,6 +2424,13 @@ aside input[type='text'] {
 .vevent {
 	border: 1px solid #CCCCCC;
 }
+
+.vevent .event-summary {
+	margin-left: 10px;
+	margin-right: 10px;
+	font-weight: bold;
+}
+
 .vevent .event-description, .vevent .event-location {
 	margin-left: 10px;
 	margin-right: 10px;

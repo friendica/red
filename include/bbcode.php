@@ -301,6 +301,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	if(x($ev,'desc') && x($ev,'start')) {
 		$sub = format_event_html($ev);
 
+		$Text = preg_replace("/\[event\-summary\](.*?)\[\/event\-summary\]/ism",'',$Text);
 		$Text = preg_replace("/\[event\-description\](.*?)\[\/event\-description\]/ism",$sub,$Text);
 		$Text = preg_replace("/\[event\-start\](.*?)\[\/event\-start\]/ism",'',$Text);
 		$Text = preg_replace("/\[event\-finish\](.*?)\[\/event\-finish\]/ism",'',$Text);
