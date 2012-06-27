@@ -1252,6 +1252,9 @@ if(! function_exists('get_birthdays')) {
 			'$event_reminders' => t('Birthday Reminders'),
 			'$event_title' => t('Birthdays this week:'),
 			'$events' => $r,
+			'$lbr' => '{',  // raw brackets mess up if/endif macro processing
+			'$rbr' => '}'
+
 		));
 	}
 }
