@@ -677,6 +677,14 @@ function settings_content(&$a) {
 
 
 		$tpl = get_markup_template("settings_connectors.tpl");
+
+		if(! service_class_allows(local_user(),'email_connect')) {
+			$mail_disabled_message = upgrade_bool_message();
+		}
+		else {
+			$mail_disabled_message = (($mail_disabled) ? t('Email access is disabled on this site.') : '');
+		}
+	
 		$o .= replace_macros($tpl, array(
 			'$form_security_token' => get_form_security_token("settings_connectors"),
 			
@@ -688,7 +696,7 @@ function settings_content(&$a) {
 			'$h_imap' => t('Email/Mailbox Setup'),
 			'$imap_desc' => t("If you wish to communicate with email contacts using this service \x28optional\x29, please specify how to connect to your mailbox."),
 			'$imap_lastcheck' => array('imap_lastcheck', t('Last successful email check:'), $mail_chk,''),
-			'$mail_disabled' => (($mail_disabled) ? t('Email access is disabled on this site.') : ''),
+			'$mail_disabled' => $mail_disabled_message,
 			'$mail_server'	=> array('mail_server',  t('IMAP server name:'), $mail_server, ''),
 			'$mail_port'	=> array('mail_port', 	 t('IMAP port:'), $mail_port, ''),
 			'$mail_ssl'		=> array('mail_ssl', 	 t('Security:'), strtoupper($mail_ssl), '', array( 'notls'=>t('None'), 'TLS'=>'TLS', 'SSL'=>'SSL')),
@@ -921,17 +929,11 @@ function settings_content(&$a) {
 
 	));
 
-
-
-
 	$invisible = (((! $profile['publish']) && (! $profile['net-publish']))
 		? true : false);
 
 	if($invisible)
 		info( t('Profile is <strong>not published</strong>.') . EOL );
-
-	
-
 
 
 	$subdir = ((strlen($a->get_path())) ? '<br />' . t('or') . ' ' . $a->get_baseurl(true) . '/profile/' . $nickname : '');
@@ -1029,17 +1031,6 @@ function settings_content(&$a) {
 		'$h_descadvn' => t('Change the behaviour of this account for special situations'),
 		'$pagetype' => $pagetype,
 		
-
-		
-		
-
-		
-
-
-
-
-		
-
 	));
 
 	call_hooks('settings_form',$o);

@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 3.0.1385\n"
+"Project-Id-Version: 3.0.1386\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-25 10:00-0700\n"
+"POT-Creation-Date: 2012-06-26 10:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,7 +35,7 @@ msgid "Contact update failed."
 msgstr ""
 
 #: ../../mod/crepair.php:115 ../../mod/wall_attach.php:44
-#: ../../mod/fsuggest.php:78 ../../mod/events.php:138 ../../mod/api.php:26
+#: ../../mod/fsuggest.php:78 ../../mod/events.php:140 ../../mod/api.php:26
 #: ../../mod/api.php:31 ../../mod/photos.php:135 ../../mod/photos.php:951
 #: ../../mod/editpost.php:10 ../../mod/install.php:151
 #: ../../mod/notifications.php:66 ../../mod/contacts.php:145
@@ -56,7 +56,7 @@ msgstr ""
 #: ../../mod/suggest.php:28 ../../mod/invite.php:13 ../../mod/invite.php:81
 #: ../../mod/dfrn_confirm.php:53 ../../addon/facebook/facebook.php:508
 #: ../../addon/facebook/facebook.php:514 ../../addon/dav/layout.fnk.php:353
-#: ../../include/items.php:3411 ../../index.php:309
+#: ../../include/items.php:3447 ../../index.php:309
 msgid "Permission denied."
 msgstr ""
 
@@ -123,7 +123,7 @@ msgid "New photo from this URL"
 msgstr ""
 
 #: ../../mod/crepair.php:166 ../../mod/fsuggest.php:107
-#: ../../mod/events.php:428 ../../mod/photos.php:986 ../../mod/photos.php:1057
+#: ../../mod/events.php:436 ../../mod/photos.php:986 ../../mod/photos.php:1057
 #: ../../mod/photos.php:1303 ../../mod/photos.php:1343
 #: ../../mod/photos.php:1383 ../../mod/photos.php:1414
 #: ../../mod/install.php:246 ../../mod/install.php:284
@@ -194,7 +194,7 @@ msgstr ""
 msgid "File exceeds size limit of %d"
 msgstr ""
 
-#: ../../mod/wall_attach.php:86 ../../mod/wall_attach.php:97
+#: ../../mod/wall_attach.php:99 ../../mod/wall_attach.php:110
 msgid "File upload failed."
 msgstr ""
 
@@ -211,79 +211,87 @@ msgstr ""
 msgid "Suggest a friend for %s"
 msgstr ""
 
-#: ../../mod/events.php:65
-msgid "Event description and start time are required."
+#: ../../mod/events.php:66
+msgid "Event title and start time are required."
 msgstr ""
 
-#: ../../mod/events.php:258
+#: ../../mod/events.php:260
 msgid "l, F j"
 msgstr ""
 
-#: ../../mod/events.php:280
+#: ../../mod/events.php:282
 msgid "Edit event"
 msgstr ""
 
-#: ../../mod/events.php:300 ../../include/text.php:1065
+#: ../../mod/events.php:304 ../../include/text.php:1065
 msgid "link to source"
 msgstr ""
 
-#: ../../mod/events.php:324 ../../view/theme/diabook/theme.php:131
+#: ../../mod/events.php:328 ../../view/theme/diabook/theme.php:131
 #: ../../include/nav.php:52 ../../boot.php:1546
 msgid "Events"
 msgstr ""
 
-#: ../../mod/events.php:325
+#: ../../mod/events.php:329
 msgid "Create New Event"
 msgstr ""
 
-#: ../../mod/events.php:326 ../../addon/dav/layout.fnk.php:154
+#: ../../mod/events.php:330 ../../addon/dav/layout.fnk.php:154
 msgid "Previous"
 msgstr ""
 
-#: ../../mod/events.php:327 ../../mod/install.php:205
+#: ../../mod/events.php:331 ../../mod/install.php:205
 #: ../../addon/dav/layout.fnk.php:157
 msgid "Next"
 msgstr ""
 
-#: ../../mod/events.php:399
+#: ../../mod/events.php:404
 msgid "hour:minute"
 msgstr ""
 
-#: ../../mod/events.php:408
+#: ../../mod/events.php:414
 msgid "Event details"
 msgstr ""
 
-#: ../../mod/events.php:409
+#: ../../mod/events.php:415
 #, php-format
-msgid "Format is %s %s. Starting date and Description are required."
+msgid "Format is %s %s. Starting date and Title are required."
 msgstr ""
 
-#: ../../mod/events.php:411
+#: ../../mod/events.php:417
 msgid "Event Starts:"
 msgstr ""
 
-#: ../../mod/events.php:414
+#: ../../mod/events.php:417 ../../mod/events.php:431
+msgid "Required"
+msgstr ""
+
+#: ../../mod/events.php:420
 msgid "Finish date/time is not known or not relevant"
 msgstr ""
 
-#: ../../mod/events.php:416
+#: ../../mod/events.php:422
 msgid "Event Finishes:"
 msgstr ""
 
-#: ../../mod/events.php:419
+#: ../../mod/events.php:425
 msgid "Adjust for viewer timezone"
 msgstr ""
 
-#: ../../mod/events.php:421
+#: ../../mod/events.php:427
 msgid "Description:"
 msgstr ""
 
-#: ../../mod/events.php:423 ../../include/event.php:37
-#: ../../include/bb2diaspora.php:355 ../../boot.php:1126
+#: ../../mod/events.php:429 ../../include/event.php:40
+#: ../../include/bb2diaspora.php:357 ../../boot.php:1126
 msgid "Location:"
 msgstr ""
 
-#: ../../mod/events.php:425
+#: ../../mod/events.php:431
+msgid "Title:"
+msgstr ""
+
+#: ../../mod/events.php:433
 msgid "Share this event"
 msgstr ""
 
@@ -407,7 +415,7 @@ msgstr ""
 msgid "was tagged in a"
 msgstr ""
 
-#: ../../mod/photos.php:591 ../../mod/like.php:185 ../../mod/tagger.php:70
+#: ../../mod/photos.php:591 ../../mod/like.php:144 ../../mod/tagger.php:70
 #: ../../addon/communityhome/communityhome.php:163
 #: ../../view/theme/diabook/theme.php:570 ../../include/text.php:1316
 #: ../../include/diaspora.php:1710 ../../include/conversation.php:53
@@ -428,12 +436,12 @@ msgid "Image file is empty."
 msgstr ""
 
 #: ../../mod/photos.php:736 ../../mod/profile_photo.php:126
-#: ../../mod/wall_upload.php:86
+#: ../../mod/wall_upload.php:99
 msgid "Unable to process image."
 msgstr ""
 
 #: ../../mod/photos.php:757 ../../mod/profile_photo.php:259
-#: ../../mod/wall_upload.php:105
+#: ../../mod/wall_upload.php:118
 msgid "Image upload failed."
 msgstr ""
 
@@ -837,7 +845,7 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: ../../mod/dfrn_request.php:715 ../../include/items.php:2805
+#: ../../mod/dfrn_request.php:715 ../../include/items.php:2873
 msgid "[Name Withheld]"
 msgstr ""
 
@@ -1163,7 +1171,7 @@ msgid ""
 msgstr ""
 
 #: ../../mod/localtime.php:12 ../../include/event.php:11
-#: ../../include/bb2diaspora.php:333
+#: ../../include/bb2diaspora.php:335
 msgid "l F d, Y \\@ g:i A"
 msgstr ""
 
@@ -1739,7 +1747,7 @@ msgstr ""
 #: ../../addon/facebook/facebook.php:700
 #: ../../addon/facebook/facebook.php:1190
 #: ../../addon/public_server/public_server.php:62
-#: ../../addon/testdrive/testdrive.php:67 ../../include/items.php:2814
+#: ../../addon/testdrive/testdrive.php:67 ../../include/items.php:2882
 #: ../../boot.php:720
 msgid "Administrator"
 msgstr ""
@@ -2788,7 +2796,7 @@ msgstr ""
 msgid "People Search"
 msgstr ""
 
-#: ../../mod/like.php:185 ../../mod/like.php:260 ../../mod/tagger.php:70
+#: ../../mod/like.php:144 ../../mod/like.php:301 ../../mod/tagger.php:70
 #: ../../addon/facebook/facebook.php:1584
 #: ../../addon/communityhome/communityhome.php:158
 #: ../../addon/communityhome/communityhome.php:167
@@ -2799,7 +2807,7 @@ msgstr ""
 msgid "status"
 msgstr ""
 
-#: ../../mod/like.php:202 ../../addon/facebook/facebook.php:1588
+#: ../../mod/like.php:161 ../../addon/facebook/facebook.php:1588
 #: ../../addon/communityhome/communityhome.php:172
 #: ../../view/theme/diabook/theme.php:579 ../../include/diaspora.php:1726
 #: ../../include/conversation.php:65
@@ -2807,14 +2815,14 @@ msgstr ""
 msgid "%1$s likes %2$s's %3$s"
 msgstr ""
 
-#: ../../mod/like.php:204 ../../include/conversation.php:68
+#: ../../mod/like.php:163 ../../include/conversation.php:68
 #, php-format
 msgid "%1$s doesn't like %2$s's %3$s"
 msgstr ""
 
 #: ../../mod/notice.php:15 ../../mod/viewsrc.php:15 ../../mod/admin.php:159
 #: ../../mod/admin.php:700 ../../mod/admin.php:899 ../../mod/display.php:37
-#: ../../mod/display.php:142 ../../include/items.php:3258
+#: ../../mod/display.php:142 ../../include/items.php:3326
 msgid "Item not found."
 msgstr ""
 
@@ -2852,34 +2860,34 @@ msgstr ""
 msgid "Empty post discarded."
 msgstr ""
 
-#: ../../mod/item.php:379 ../../mod/wall_upload.php:102
-#: ../../mod/wall_upload.php:111 ../../mod/wall_upload.php:118
+#: ../../mod/item.php:379 ../../mod/wall_upload.php:115
+#: ../../mod/wall_upload.php:124 ../../mod/wall_upload.php:131
 #: ../../include/message.php:144
 msgid "Wall Photos"
 msgstr ""
 
-#: ../../mod/item.php:800
+#: ../../mod/item.php:784
 msgid "System error. Post not saved."
 msgstr ""
 
-#: ../../mod/item.php:825
+#: ../../mod/item.php:809
 #, php-format
 msgid ""
 "This message was sent to you by %s, a member of the Friendica social network."
 msgstr ""
 
-#: ../../mod/item.php:827
+#: ../../mod/item.php:811
 #, php-format
 msgid "You may visit them online at %s"
 msgstr ""
 
-#: ../../mod/item.php:828
+#: ../../mod/item.php:812
 msgid ""
 "Please contact the sender by replying to this post if you do not wish to "
 "receive these messages."
 msgstr ""
 
-#: ../../mod/item.php:830
+#: ../../mod/item.php:814
 #, php-format
 msgid "%s posted an update."
 msgstr ""
@@ -6127,8 +6135,7 @@ msgstr ""
 msgid "j F"
 msgstr ""
 
-#: ../../include/profile_advanced.php:30 ../../include/datetime.php:450
-#: ../../include/items.php:1460
+#: ../../include/profile_advanced.php:30
 msgid "Birthday:"
 msgstr ""
 
@@ -6501,11 +6508,11 @@ msgstr ""
 msgid "Ask me"
 msgstr ""
 
-#: ../../include/event.php:17 ../../include/bb2diaspora.php:339
+#: ../../include/event.php:20 ../../include/bb2diaspora.php:341
 msgid "Starts:"
 msgstr ""
 
-#: ../../include/event.php:27 ../../include/bb2diaspora.php:347
+#: ../../include/event.php:30 ../../include/bb2diaspora.php:349
 msgid "Finishes:"
 msgstr ""
 
@@ -6982,15 +6989,25 @@ msgstr ""
 msgid "%1$d %2$s ago"
 msgstr ""
 
+#: ../../include/datetime.php:450 ../../include/items.php:1460
+#, php-format
+msgid "%s's birthday"
+msgstr ""
+
+#: ../../include/datetime.php:451 ../../include/items.php:1461
+#, php-format
+msgid "Happy Birthday %s"
+msgstr ""
+
 #: ../../include/onepoll.php:399
 msgid "From: "
 msgstr ""
 
-#: ../../include/bbcode.php:214 ../../include/bbcode.php:234
+#: ../../include/bbcode.php:216 ../../include/bbcode.php:236
 msgid "$1 wrote:"
 msgstr ""
 
-#: ../../include/bbcode.php:249 ../../include/bbcode.php:322
+#: ../../include/bbcode.php:251 ../../include/bbcode.php:328
 msgid "Image/photo"
 msgstr ""
 
@@ -7231,15 +7248,15 @@ msgstr ""
 msgid "following"
 msgstr ""
 
-#: ../../include/items.php:2812
+#: ../../include/items.php:2880
 msgid "A new person is sharing with you at "
 msgstr ""
 
-#: ../../include/items.php:2812
+#: ../../include/items.php:2880
 msgid "You have a new follower at "
 msgstr ""
 
-#: ../../include/items.php:3476
+#: ../../include/items.php:3512
 msgid "Archives"
 msgstr ""
 
@@ -7582,15 +7599,15 @@ msgstr ""
 msgid "permissions"
 msgstr ""
 
-#: ../../include/plugin.php:385
+#: ../../include/plugin.php:388 ../../include/plugin.php:390
 msgid "Click here to upgrade."
 msgstr ""
 
-#: ../../include/plugin.php:393
+#: ../../include/plugin.php:396
 msgid "This action exceeds the limits set by your subscription plan."
 msgstr ""
 
-#: ../../include/plugin.php:398
+#: ../../include/plugin.php:401
 msgid "This action is not available under your subscription plan."
 msgstr ""
 
