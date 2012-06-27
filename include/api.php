@@ -565,7 +565,7 @@
 		if(requestdata('lat') && requestdata('long'))
 			$_REQUEST['coord'] = sprintf("%s %s",requestdata('lat'),requestdata('long'));
 		$_REQUEST['profile_uid'] = local_user();
-//		if(requestdata('parent'))
+
 		if($parent)
 			$_REQUEST['type'] = 'net-comment';
 		else {

@@ -12,6 +12,9 @@ function format_event_html($ev) {
 
 	$o = '<div class="vevent">' . "\r\n";
 
+
+	$o .= '<p class="summary event-summary">' . bbcode($ev['summary']) .  '</p>' . "\r\n";
+
 	$o .= '<p class="description event-description">' . bbcode($ev['desc']) .  '</p>' . "\r\n";
 
 	$o .= '<p class="event-start">' . t('Starts:') . ' <abbr class="dtstart" title="'
@@ -114,6 +117,9 @@ function format_event_bbcode($ev) {
 
 	$o = '';
 
+	if($ev['summary'])
+		$o .= '[event-summary]' . $ev['summary'] . '[/event-summary]';
+
 	if($ev['desc'])
 		$o .= '[event-description]' . $ev['desc'] . '[/event-description]';
 
@@ -147,6 +153,9 @@ function bbtoevent($s) {
 
 	$ev = array();
 
+	$match = '';
+	if(preg_match("/\[event\-summary\](.*?)\[\/event\-summary\]/is",$s,$match))
+		$ev['summary'] = $match[1];
 	$match = '';
 	if(preg_match("/\[event\-description\](.*?)\[\/event\-description\]/is",$s,$match))
 		$ev['desc'] = $match[1];
@@ -244,6 +253,7 @@ function event_store($arr) {
 			`edited` = '%s',
 			`start` = '%s',
 			`finish` = '%s',
+			`summary` = '%s',
 			`desc` = '%s',
 			`location` = '%s',
 			`type` = '%s',
@@ -258,6 +268,7 @@ function event_store($arr) {
 			dbesc($arr['edited']),
 			dbesc($arr['start']),
 			dbesc($arr['finish']),
+			dbesc($arr['summary']),
 			dbesc($arr['desc']),
 			dbesc($arr['location']),
 			dbesc($arr['type']),
@@ -306,9 +317,9 @@ function event_store($arr) {
 
 		// New event. Store it. 
 
-		$r = q("INSERT INTO `event` ( `uid`,`cid`,`uri`,`created`,`edited`,`start`,`finish`,`desc`,`location`,`type`,
+		$r = q("INSERT INTO `event` ( `uid`,`cid`,`uri`,`created`,`edited`,`start`,`finish`,`summary`, `desc`,`location`,`type`,
 			`adjust`,`nofinish`,`allow_cid`,`allow_gid`,`deny_cid`,`deny_gid`)
-			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
+			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
 			intval($arr['uid']),
 			intval($arr['cid']),
 			dbesc($arr['uri']),
@@ -316,6 +327,7 @@ function event_store($arr) {
 			dbesc($arr['edited']),
 			dbesc($arr['start']),
 			dbesc($arr['finish']),
+			dbesc($arr['summary']),
 			dbesc($arr['desc']),
 			dbesc($arr['location']),
 			dbesc($arr['type']),

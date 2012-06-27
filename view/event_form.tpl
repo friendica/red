@@ -26,6 +26,10 @@ $f_dsel $f_tsel
 
 <div id="event-adjust-break"></div>
 
+<div id="event-summary-text">$t_text</div>
+<input type="text" id="event-summary" name="summary" value="$t_orig" />
+
+
 <div id="event-desc-text">$d_text</div>
 <textarea id="event-desc-textarea" name="desc">$d_orig</textarea>
 

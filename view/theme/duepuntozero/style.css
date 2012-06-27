@@ -2421,9 +2421,40 @@ aside input[type='text'] {
 	font-size: 20px;
 }
 
+#event-summary-text {
+	margin-top: 15px;
+}
+
+#event-share-checkbox {
+	float: left;
+	margin-top: 10px;
+}
+
+#event-share-text {
+	float: left;
+	margin-top: 10px;
+	margin-left: 5px;
+}
+
+#event-share-break {
+	clear: both;
+	margin-bottom: 10px;
+}
+
+#event-summary {
+	width: 400px;
+}
+
 .vevent {
 	border: 1px solid #CCCCCC;
 }
+
+.vevent .event-summary {
+	margin-left: 10px;
+	margin-right: 10px;
+	font-weight: bold;
+}
+
 .vevent .event-description, .vevent .event-location {
 	margin-left: 10px;
 	margin-right: 10px;
