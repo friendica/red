@@ -1660,6 +1660,21 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					continue;
 				}
 
+				$force_parent = false;
+				if($contact['network'] === NETWORK_OSTATUS || stristr($contact['url'],'twitter.com')) {
+					if($contact['network'] === NETWORK_OSTATUS)
+						$force_parent = true;
+					if(strlen($datarray['title']))
+						unset($datarray['title']);
+					$r = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d",
+						dbesc(datetime_convert()),
+						dbesc($parent_uri),
+						intval($importer['uid'])
+					);
+					$datarray['last-child'] = 1;
+				}
+
+
 				$r = q("SELECT `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['uid'])
@@ -1703,19 +1718,6 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					continue;
 				}
 
-				$force_parent = false;
-				if($contact['network'] === NETWORK_OSTATUS || stristr($contact['url'],'twitter.com')) {
-					if($contact['network'] === NETWORK_OSTATUS)
-						$force_parent = true;
-					if(strlen($datarray['title']))
-						unset($datarray['title']);
-					$r = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d",
-						dbesc(datetime_convert()),
-						dbesc($parent_uri),
-						intval($importer['uid'])
-					);
-					$datarray['last-child'] = 1;
-				}
 
 				if(($contact['network'] === NETWORK_FEED) || (! strlen($contact['notify']))) {
 					// one way feed - no remote comment ability
@@ -1813,6 +1815,13 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					}
 				}
 
+				if($contact['network'] === NETWORK_OSTATUS || stristr($contact['url'],'twitter.com')) {
+					if(strlen($datarray['title']))
+						unset($datarray['title']);
+					$datarray['last-child'] = 1;
+				}
+
+
 				$r = q("SELECT `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['uid'])
@@ -1875,11 +1884,6 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				if(! is_array($contact))
 					return;
 
-				if($contact['network'] === NETWORK_OSTATUS || stristr($contact['url'],'twitter.com')) {
-					if(strlen($datarray['title']))
-						unset($datarray['title']);
-					$datarray['last-child'] = 1;
-				}
 
 				if(($contact['network'] === NETWORK_FEED) || (! strlen($contact['notify']))) {
 						// one way feed - no remote comment ability
