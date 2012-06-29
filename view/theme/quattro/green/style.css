@@ -423,7 +423,7 @@ code {
 .tool .action {
   float: right;
 }
-.tool li > img {
+.tool > img {
   float: left;
 }
 /* popup notifications */
@@ -689,6 +689,9 @@ aside {
   width: 200px;
   padding: 0px 10px 0px 20px;
   border-right: 1px solid #bdcdd4;
+}
+aside .profile-edit-side-div {
+  display: none;
 }
 aside .vcard .fn {
   font-size: 16px;
