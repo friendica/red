@@ -1895,8 +1895,12 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				// This is my contact on another system, but it's really me.
 				// Turn this into a wall post.
 
-				if($contact['remote_self'])
+				if($contact['remote_self']) {
 					$datarray['wall'] = 1;
+					if($contact['network'] === NETWORK_FEED) {
+						$datarray['private'] = 0;
+					}
+				}
 
 				$datarray['parent-uri'] = $item_id;
 				$datarray['uid'] = $importer['uid'];
