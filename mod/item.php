@@ -228,7 +228,7 @@ function item_post(&$a) {
 				|| strlen($parent_item['allow_gid']) 
 				|| strlen($parent_item['deny_cid']) 
 				|| strlen($parent_item['deny_gid'])) {
-				$private = 1;
+				$private = (($parent_item['private']) ? $parent_item['private'] : 1);
 			}
 
 			$str_contact_allow = $parent_item['allow_cid'];

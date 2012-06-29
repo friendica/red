@@ -280,7 +280,7 @@ function delivery_run($argv, $argc){
 						continue;
 
 					// private emails may be in included in public conversations. Filter them.
-					if(($public_message) && $item['private'])
+					if(($public_message) && $item['private'] == 1)
 						continue;
 
 					$item_contact = get_item_contact($item,$icontacts);
@@ -383,7 +383,7 @@ function delivery_run($argv, $argc){
 							continue;
 
 						// private emails may be in included in public conversations. Filter them.
-						if(($public_message) && $item['private'])
+						if(($public_message) && $item['private'] == 1)
 							continue;
 	
 						$item_contact = get_item_contact($item,$icontacts);

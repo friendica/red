@@ -466,8 +466,8 @@ function get_atom_elements($feed,$item) {
 		$res['last-child'] = 0;
 
 	$private = $item->get_item_tags(NAMESPACE_DFRN,'private');
-	if($private && $private[0]['data'] == 1)
-		$res['private'] = 1;
+	if($private && intval($private[0]['data']) > 0)
+		$res['private'] = intval($private[0]['data']);
 	else
 		$res['private'] = 0;
 
@@ -814,7 +814,7 @@ function item_store($arr,$force_parent = false) {
 			// email correspondents to be private even if the overall thread is not. 
 
 			if($r[0]['private'])
-				$arr['private'] = 1;
+				$arr['private'] = $r[0]['private'];
 
 			// Edge case. We host a public forum that was originally posted to privately.
 			// The original author commented, but as this is a comment, the permissions
@@ -1890,7 +1890,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 						$datarray['last-child'] = 0;
 				}
 				if($contact['network'] === NETWORK_FEED)
-					$datarray['private'] = 1;
+					$datarray['private'] = 2;
 
 				// This is my contact on another system, but it's really me.
 				// Turn this into a wall post.
@@ -3035,7 +3035,7 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 		$o .= '<georss:point>' . xmlify($item['coord']) . '</georss:point>' . "\r\n";
 
 	if(($item['private']) || strlen($item['allow_cid']) || strlen($item['allow_gid']) || strlen($item['deny_cid']) || strlen($item['deny_gid']))
-		$o .= '<dfrn:private>1</dfrn:private>' . "\r\n";
+		$o .= '<dfrn:private>' . (($item['private']) ? $item['private'] : 1) . '</dfrn:private>' . "\r\n";
 
 	if($item['extid'])
 		$o .= '<dfrn:extid>' . xmlify($item['extid']) . '</dfrn:extid>' . "\r\n";

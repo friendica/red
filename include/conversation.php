@@ -427,12 +427,12 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				// We've already parsed out like/dislike for special treatment. We can ignore them now
 
 				if(((activity_match($item['verb'],ACTIVITY_LIKE)) 
-					|| (activity_match($item['verb'],ACTIVITY_DISLIKE)))) 
-//					&& ($item['id'] != $item['parent']))
+					|| (activity_match($item['verb'],ACTIVITY_DISLIKE))) 
+					&& ($item['id'] != $item['parent']))
 					continue;
 
 				$toplevelpost = (($item['id'] == $item['parent']) ? true : false);
-				$toplevelprivate = false;
+
 
 				// Take care of author collapsing and comment collapsing
 				// (author collapsing is currently disabled)
@@ -440,7 +440,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				// If there are more than two comments, squash all but the last 2.
 			
 				if($toplevelpost) {
-					$toplevelprivate = (($toplevelpost && $item['private']) ? true : false);
+
 					$item_writeable = (($item['writable'] || $item['self']) ? true : false);
 
 					$comments_seen = 0;
@@ -485,7 +485,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 
 				$redirect_url = $a->get_baseurl($ssl_state) . '/redir/' . $item['cid'] ;
 
-				$lock = ((($item['private']) || (($item['uid'] == local_user()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
+				$lock = ((($item['private'] == 1) || (($item['uid'] == local_user()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
 					|| strlen($item['deny_cid']) || strlen($item['deny_gid']))))
 					? t('Private Message')
 					: false);
@@ -546,7 +546,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				}
 
 				$likebuttons = '';
-				$shareable = ((($profile_owner == local_user()) &&  ((! $item['private']) || $item['network'] === NETWORK_FEED)) ? true : false); 
+				$shareable = ((($profile_owner == local_user()) && (! $item['private'] == 1)) ? true : false); 
 
 				if($page_writeable) {
 /*					if($toplevelpost) {  */

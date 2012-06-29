@@ -15,7 +15,7 @@ function share_init(&$a) {
 		intval($post_id),
 		intval(local_user())
 	);
-	if(! count($r) || ($r[0]['private'] && ($r[0]['network'] != NETWORK_FEED)))
+	if(! count($r) || ($r[0]['private'] == 1))
 		killme();
 
 	$o = '';

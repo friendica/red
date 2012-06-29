@@ -1059,12 +1059,13 @@ function feed_salmonlinks($nick) {
 if(! function_exists('get_plink')) {
 function get_plink($item) {
 	$a = get_app();	
-	if (x($item,'plink') && ((! $item['private']) || ($item['network'] === NETWORK_FEED))){
+	if (x($item,'plink') && ($item['private'] != 1)) {
 		return array(
 			'href' => $item['plink'],
 			'title' => t('link to source'),
 		);
-	} else {
+	} 
+	else {
 		return false;
 	}
 }}
