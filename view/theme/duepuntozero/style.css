@@ -560,7 +560,12 @@ input#dfrn-url {
 	clear: both;
 	margin-bottom: 30px;
 }
-
+.aprofile dt {
+	font-weight: bold;
+}
+#page-profile .title {
+	font-weight: bold;
+}
 #profile-vcard-break {
 	clear: both;
 }
