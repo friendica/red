@@ -546,7 +546,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				}
 
 				$likebuttons = '';
-				$shareable = ((($profile_owner == local_user()) && (! $item['private'] == 1)) ? true : false); 
+				$shareable = ((($profile_owner == local_user()) && ($item['private'] != 1)) ? true : false); 
 
 				if($page_writeable) {
 /*					if($toplevelpost) {  */
