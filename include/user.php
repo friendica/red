@@ -99,11 +99,11 @@ function create_user($arr) {
 
 
 	if(! allowed_email($email))
-			$result['message'] .= t('Your email domain is not among those allowed on this site.') . EOL;
+		$result['message'] .= t('Your email domain is not among those allowed on this site.') . EOL;
 
 	if((! valid_email($email)) || (! validate_email($email)))
 		$result['message'] .= t('Not a valid email address.') . EOL;
-
+		
 	// Disallow somebody creating an account using openid that uses the admin email address,
 	// since openid bypasses email verification. We'll allow it if there is not yet an admin account.
 

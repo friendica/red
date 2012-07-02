@@ -607,6 +607,9 @@ function validate_url(&$url) {
 if(! function_exists('validate_email')) {
 function validate_email($addr) {
 
+	if(get_config('system','disable_email_validation'))
+		return true;
+
 	if(! strpos($addr,'@'))
 		return false;
 	$h = substr($addr,strpos($addr,'@') + 1);

@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 3.0.1390\n"
+"Project-Id-Version: 3.0.1391\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-30 10:00-0700\n"
+"POT-Creation-Date: 2012-07-01 10:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -137,7 +137,7 @@ msgstr ""
 #: ../../addon/facebook/facebook.php:617
 #: ../../addon/snautofollow/snautofollow.php:64
 #: ../../addon/yourls/yourls.php:76 ../../addon/ljpost/ljpost.php:93
-#: ../../addon/nsfw/nsfw.php:57 ../../addon/page/page.php:208
+#: ../../addon/nsfw/nsfw.php:57 ../../addon/page/page.php:210
 #: ../../addon/planets/planets.php:158
 #: ../../addon/uhremotestorage/uhremotestorage.php:89
 #: ../../addon/randplace/randplace.php:177 ../../addon/dwpost/dwpost.php:93
@@ -4685,23 +4685,23 @@ msgstr ""
 msgid "Forums:"
 msgstr ""
 
-#: ../../addon/page/page.php:163
+#: ../../addon/page/page.php:165
 msgid "Page settings updated."
 msgstr ""
 
-#: ../../addon/page/page.php:192
+#: ../../addon/page/page.php:194
 msgid "Page Settings"
 msgstr ""
 
-#: ../../addon/page/page.php:194
+#: ../../addon/page/page.php:196
 msgid "How many forums to display on sidebar without paging"
 msgstr ""
 
-#: ../../addon/page/page.php:197
+#: ../../addon/page/page.php:199
 msgid "Randomise Page/Forum list"
 msgstr ""
 
-#: ../../addon/page/page.php:200
+#: ../../addon/page/page.php:202
 msgid "Show pages/forums on profile page"
 msgstr ""
 

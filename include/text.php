@@ -656,6 +656,10 @@ function search($s,$id='search-box',$url='/search',$save = false) {
 
 if(! function_exists('valid_email')) {
 function valid_email($x){
+
+	if(get_config('system','disable_email_validation'))
+		return true;
+
 	if(preg_match('/^[_a-zA-Z0-9\-\+]+(\.[_a-zA-Z0-9\-\+]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$/',$x))
 		return true;
 	return false;
