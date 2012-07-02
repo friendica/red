@@ -10,7 +10,7 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '3.0.1390' );
+define ( 'FRIENDICA_VERSION',      '3.0.1391' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
 define ( 'DB_UPDATE_VERSION',      1151      );
 
@@ -442,8 +442,8 @@ if(! class_exists('App')) {
 			$this->pager['page'] = ((x($_GET,'page') && intval($_GET['page']) > 0) ? intval($_GET['page']) : 1);
 			$this->pager['itemspage'] = 50;
 			$this->pager['start'] = ($this->pager['page'] * $this->pager['itemspage']) - $this->pager['itemspage'];
-			if($this->pager['start'] < 1)
-				$this->pager['start'] = 1;
+			if($this->pager['start'] < 0)
+				$this->pager['start'] = 0;
 			$this->pager['total'] = 0;
 		}
 
