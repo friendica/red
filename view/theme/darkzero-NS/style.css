@@ -113,7 +113,7 @@ input#acl-search {
 
 
 .notify-seen {
-  background:#666;
+  background:#111;
 }
 
 #nav-notifications-menu {
@@ -157,4 +157,27 @@ blockquote {
 
 #datebrowse-sidebar select {
 color:#99CCFF !important;
+}
+
+.settings-widget .selected {
+background: #666;
+}
+
+#adminpage table tr:hover {
+    color: #eec;
+    background-color: #666;
+}
+
+input#prvmail-subject {
+background: #222 !important;
+}
+
+/* Events */
+
+.fc-state-highlight {
+background: #666 !important;
+}
+ 
+.fc-state-disabled, .fc-state-disabled .fc-button-inner {
+color: #000 !important;
 }

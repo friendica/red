@@ -3280,3 +3280,9 @@ ul.menu-popup {
 .notify-seen {
 	background: #000;
 }
+
+
+/* Pages profile widget */
+#page-profile div#profile-page-list{
+margin-left: 45px;
+}
