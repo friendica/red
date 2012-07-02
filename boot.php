@@ -443,7 +443,7 @@ if(! class_exists('App')) {
 			$this->pager['itemspage'] = 50;
 			$this->pager['start'] = ($this->pager['page'] * $this->pager['itemspage']) - $this->pager['itemspage'];
 			if($this->pager['start'] < 0)
-				$this->pager['start'] = 1;
+				$this->pager['start'] = 0;
 			$this->pager['total'] = 0;
 		}
 
