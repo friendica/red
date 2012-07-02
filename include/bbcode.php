@@ -93,9 +93,13 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	// Convert new line chars to html <br /> tags
 
-	$Text = nl2br($Text);
+
+//	$Text = nl2br($Text);
+	$Text = str_replace(array("\r","\n"), array('<br />','<br />'), $Text);
+
 	if($preserve_nl)
 		$Text = str_replace(array("\n","\r"), array('',''),$Text);
+
 
 
 	// Set up the parameters for a URL search string

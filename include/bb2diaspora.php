@@ -38,8 +38,8 @@ function diaspora2bb($s) {
 	$s = Markdown($s);
 
 	$s = str_replace('&#35;','#',$s);
-
-	$s = str_replace("\n",'<br />',$s);
+// we seem to have double linebreaks
+//	$s = str_replace("\n",'<br />',$s);
 
 	$s = html2bbcode($s);
 //	$s = str_replace('&#42;','*',$s);

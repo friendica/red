@@ -43,11 +43,11 @@ function babel_content(&$a) {
 
 		$bbcode = diaspora2bb($diaspora);
 		$o .= t("bb2dia2bb: ") . EOL. EOL; 
-		$o .= $bbcode . EOL. EOL; 
+		$o .= visible_lf($bbcode) . EOL. EOL; 
 
 		$bbcode = html2bbcode($html);
 		$o .= t("bb2md2html2bb: ") . EOL. EOL; 
-		$o .= $bbcode . EOL. EOL; 
+		$o .= visible_lf($bbcode) . EOL. EOL; 
 
 
 
