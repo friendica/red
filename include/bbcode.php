@@ -93,8 +93,12 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	// Convert new line chars to html <br /> tags
 
+	// nlbr seems to be hopelessly messed up
+	//	$Text = nl2br($Text);
 
-//	$Text = nl2br($Text);
+	// We'll emulate it.
+
+	$Text = str_replace("\r\n","\n", $Text);
 	$Text = str_replace(array("\r","\n"), array('<br />','<br />'), $Text);
 
 	if($preserve_nl)
