@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 3.0.1392\n"
+"Project-Id-Version: 3.0.1393\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-02 10:00-0700\n"
+"POT-Creation-Date: 2012-07-03 10:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,8 +54,8 @@ msgstr ""
 #: ../../mod/follow.php:9 ../../mod/display.php:138 ../../mod/profiles.php:7
 #: ../../mod/profiles.php:400 ../../mod/delegate.php:6
 #: ../../mod/suggest.php:28 ../../mod/invite.php:13 ../../mod/invite.php:81
-#: ../../mod/dfrn_confirm.php:53 ../../addon/facebook/facebook.php:508
-#: ../../addon/facebook/facebook.php:514 ../../addon/dav/layout.fnk.php:353
+#: ../../mod/dfrn_confirm.php:53 ../../addon/facebook/facebook.php:510
+#: ../../addon/facebook/facebook.php:516 ../../addon/dav/layout.fnk.php:353
 #: ../../include/items.php:3455 ../../index.php:309
 msgid "Permission denied."
 msgstr ""
@@ -134,7 +134,7 @@ msgstr ""
 #: ../../mod/admin.php:420 ../../mod/admin.php:656 ../../mod/admin.php:792
 #: ../../mod/admin.php:991 ../../mod/admin.php:1078 ../../mod/profiles.php:569
 #: ../../mod/invite.php:119 ../../addon/fromgplus/fromgplus.php:40
-#: ../../addon/facebook/facebook.php:617
+#: ../../addon/facebook/facebook.php:619
 #: ../../addon/snautofollow/snautofollow.php:64
 #: ../../addon/yourls/yourls.php:76 ../../addon/ljpost/ljpost.php:93
 #: ../../addon/nsfw/nsfw.php:57 ../../addon/page/page.php:210
@@ -1745,8 +1745,8 @@ msgstr ""
 #: ../../mod/lostpass.php:45 ../../mod/lostpass.php:107
 #: ../../mod/register.php:90 ../../mod/register.php:144
 #: ../../mod/regmod.php:54 ../../mod/dfrn_confirm.php:752
-#: ../../addon/facebook/facebook.php:700
-#: ../../addon/facebook/facebook.php:1190
+#: ../../addon/facebook/facebook.php:702
+#: ../../addon/facebook/facebook.php:1192
 #: ../../addon/public_server/public_server.php:62
 #: ../../addon/testdrive/testdrive.php:67 ../../include/items.php:2890
 #: ../../boot.php:730
@@ -1894,7 +1894,7 @@ msgstr ""
 msgid "Private forum has no privacy permissions and no default privacy group."
 msgstr ""
 
-#: ../../mod/settings.php:484 ../../addon/facebook/facebook.php:493
+#: ../../mod/settings.php:484 ../../addon/facebook/facebook.php:495
 #: ../../addon/impressum/impressum.php:77
 #: ../../addon/openstreetmap/openstreetmap.php:80
 #: ../../addon/mathjax/mathjax.php:66 ../../addon/piwik/piwik.php:105
@@ -2439,7 +2439,7 @@ msgid "Personal Notes"
 msgstr ""
 
 #: ../../mod/notes.php:63 ../../mod/filer.php:30
-#: ../../addon/facebook/facebook.php:768
+#: ../../addon/facebook/facebook.php:770
 #: ../../addon/privacy_image_cache/privacy_image_cache.php:187
 #: ../../addon/dav/layout.fnk.php:384 ../../include/text.php:652
 msgid "Save"
@@ -2798,7 +2798,7 @@ msgid "People Search"
 msgstr ""
 
 #: ../../mod/like.php:144 ../../mod/like.php:301 ../../mod/tagger.php:70
-#: ../../addon/facebook/facebook.php:1584
+#: ../../addon/facebook/facebook.php:1586
 #: ../../addon/communityhome/communityhome.php:158
 #: ../../addon/communityhome/communityhome.php:167
 #: ../../view/theme/diabook/theme.php:565
@@ -2808,7 +2808,7 @@ msgstr ""
 msgid "status"
 msgstr ""
 
-#: ../../mod/like.php:161 ../../addon/facebook/facebook.php:1588
+#: ../../mod/like.php:161 ../../addon/facebook/facebook.php:1590
 #: ../../addon/communityhome/communityhome.php:172
 #: ../../view/theme/diabook/theme.php:579 ../../include/diaspora.php:1726
 #: ../../include/conversation.php:65
@@ -4367,83 +4367,83 @@ msgstr ""
 msgid "Google+ Import Settings saved."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:521
+#: ../../addon/facebook/facebook.php:523
 msgid "Facebook disabled"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:526
+#: ../../addon/facebook/facebook.php:528
 msgid "Updating contacts"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:549
+#: ../../addon/facebook/facebook.php:551
 msgid "Facebook API key is missing."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:556
+#: ../../addon/facebook/facebook.php:558
 msgid "Facebook Connect"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:562
+#: ../../addon/facebook/facebook.php:564
 msgid "Install Facebook connector for this account."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:569
+#: ../../addon/facebook/facebook.php:571
 msgid "Remove Facebook connector"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:574
+#: ../../addon/facebook/facebook.php:576
 msgid ""
 "Re-authenticate [This is necessary whenever your Facebook password is "
 "changed.]"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:581
+#: ../../addon/facebook/facebook.php:583
 msgid "Post to Facebook by default"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:587
+#: ../../addon/facebook/facebook.php:589
 msgid ""
 "Facebook friend linking has been disabled on this site. The following "
 "settings will have no effect."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:591
+#: ../../addon/facebook/facebook.php:593
 msgid ""
 "Facebook friend linking has been disabled on this site. If you disable it, "
 "you will be unable to re-enable it."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:594
+#: ../../addon/facebook/facebook.php:596
 msgid "Link all your Facebook friends and conversations on this website"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:596
+#: ../../addon/facebook/facebook.php:598
 msgid ""
 "Facebook conversations consist of your <em>profile wall</em> and your friend "
 "<em>stream</em>."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:597
+#: ../../addon/facebook/facebook.php:599
 msgid "On this website, your Facebook friend stream is only visible to you."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:598
+#: ../../addon/facebook/facebook.php:600
 msgid ""
 "The following settings determine the privacy of your Facebook profile wall "
 "on this website."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:602
+#: ../../addon/facebook/facebook.php:604
 msgid ""
 "On this website your Facebook profile wall conversations will only be "
 "visible to you"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:607
+#: ../../addon/facebook/facebook.php:609
 msgid "Do not import your Facebook profile wall conversations"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:609
+#: ../../addon/facebook/facebook.php:611
 msgid ""
 "If you choose to link conversations and leave both of these boxes unchecked, "
 "your Facebook profile wall will be merged with your profile wall on this "
@@ -4451,120 +4451,120 @@ msgid ""
 "who may see the conversations."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:614
+#: ../../addon/facebook/facebook.php:616
 msgid "Comma separated applications to ignore"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:698
+#: ../../addon/facebook/facebook.php:700
 msgid "Problems with Facebook Real-Time Updates"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:726
+#: ../../addon/facebook/facebook.php:728
 #: ../../include/contact_selectors.php:81
 msgid "Facebook"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:727
+#: ../../addon/facebook/facebook.php:729
 msgid "Facebook Connector Settings"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:742
+#: ../../addon/facebook/facebook.php:744
 msgid "Facebook API Key"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:752
+#: ../../addon/facebook/facebook.php:754
 msgid ""
 "Error: it appears that you have specified the App-ID and -Secret in your ."
 "htconfig.php file. As long as they are specified there, they cannot be set "
 "using this form.<br><br>"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:757
+#: ../../addon/facebook/facebook.php:759
 msgid ""
 "Error: the given API Key seems to be incorrect (the application access token "
 "could not be retrieved)."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:759
+#: ../../addon/facebook/facebook.php:761
 msgid "The given API Key seems to work correctly."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:761
+#: ../../addon/facebook/facebook.php:763
 msgid ""
-"The correctness of the API Key could not be detected. Somthing strange's "
+"The correctness of the API Key could not be detected. Something strange's "
 "going on."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:764
+#: ../../addon/facebook/facebook.php:766
 msgid "App-ID / API-Key"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:765
+#: ../../addon/facebook/facebook.php:767
 msgid "Application secret"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:766
+#: ../../addon/facebook/facebook.php:768
 #, php-format
 msgid "Polling Interval in minutes (minimum %1$s minutes)"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:767
+#: ../../addon/facebook/facebook.php:769
 msgid ""
 "Synchronize comments (no comments on Facebook are missed, at the cost of "
 "increased system load)"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:771
+#: ../../addon/facebook/facebook.php:773
 msgid "Real-Time Updates"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:775
+#: ../../addon/facebook/facebook.php:777
 msgid "Real-Time Updates are activated."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:776
+#: ../../addon/facebook/facebook.php:778
 msgid "Deactivate Real-Time Updates"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:778
+#: ../../addon/facebook/facebook.php:780
 msgid "Real-Time Updates not activated."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:778
+#: ../../addon/facebook/facebook.php:780
 msgid "Activate Real-Time Updates"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:797 ../../addon/dav/layout.fnk.php:360
+#: ../../addon/facebook/facebook.php:799 ../../addon/dav/layout.fnk.php:360
 msgid "The new values have been saved."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:821
+#: ../../addon/facebook/facebook.php:823
 msgid "Post to Facebook"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:919
+#: ../../addon/facebook/facebook.php:921
 msgid ""
 "Post to Facebook cancelled because of multi-network access permission "
 "conflict."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:1139
+#: ../../addon/facebook/facebook.php:1141
 msgid "View on Friendica"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:1172
+#: ../../addon/facebook/facebook.php:1174
 msgid "Facebook post failed. Queued for retry."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:1212
+#: ../../addon/facebook/facebook.php:1214
 msgid "Your Facebook connection became invalid. Please Re-authenticate."
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:1213
+#: ../../addon/facebook/facebook.php:1215
 msgid "Facebook connection became invalid"
 msgstr ""
 
-#: ../../addon/facebook/facebook.php:1214
+#: ../../addon/facebook/facebook.php:1216
 #, php-format
 msgid ""
 "Hi %1$s,\n"
@@ -7047,11 +7047,11 @@ msgstr ""
 msgid "From: "
 msgstr ""
 
-#: ../../include/bbcode.php:220 ../../include/bbcode.php:240
+#: ../../include/bbcode.php:224 ../../include/bbcode.php:244
 msgid "$1 wrote:"
 msgstr ""
 
-#: ../../include/bbcode.php:255 ../../include/bbcode.php:332
+#: ../../include/bbcode.php:259 ../../include/bbcode.php:336
 msgid "Image/photo"
 msgstr ""
 
