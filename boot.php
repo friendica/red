@@ -375,7 +375,7 @@ if(! class_exists('App')) {
 					// convert punycode back to utf-8
 					require_once('library/simplepie/idn/idna_convert.class.php');
 					$x = new idna_convert();
-					$this->hostname = $x->decode($s);
+					$this->hostname = $x->decode($_SERVER['SERVER_NAME']);
 				}
 
 				if(x($_SERVER,'SERVER_PORT') && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443)
