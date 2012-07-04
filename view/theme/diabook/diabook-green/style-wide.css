@@ -2799,6 +2799,35 @@ float: left;
 /* = Directory = */
 /* ============= */
 /* contacts menu */
+section .directory-item dl {
+height: auto;
+overflow: auto;
+}
+
+section .directory-item dt {
+float: left;
+margin-left: 0px;
+text-align: right;
+color: #999;
+}
+
+section .directory-item dd {
+float: left;
+margin-left: 5px;
+}
+
+.directory-profile-wrapper {
+float: left;
+max-height: 178px;
+overflow: hidden;
+width: 635px;
+}
+
+.directory-copy-wrapper {
+float:left;
+overflow: hidden;
+}
+
 .contact-photo-wrapper {
   position: relative;
 }
@@ -2839,13 +2868,20 @@ float: left;
 }
 .directory-item {
   float: left;
-  width: 200px;
+  width: 800px;
   height: 200px;
 }
 .directory-item .contact-photo {
   width: 175px;
   height: 175px;
 }
+
+section .directory-photo-wrapper {
+float: left;
+height: 200px;
+width: 165px;
+}
+
 .directory-item .contact-photo img {
   width: 175px;
   height: 175px;
