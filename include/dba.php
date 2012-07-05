@@ -275,3 +275,9 @@ function dbesc_array(&$arr) {
 		array_walk($arr,'dbesc_array_cb');
 	}
 }}
+
+
+function dba_timer() {
+	return microtime(true);
+}
+
