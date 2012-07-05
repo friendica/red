@@ -204,7 +204,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	// Declare the format for [code] layout
 
-	$Text = preg_replace_callback("/\[code\](.*?)\[\/code\]/ism",'stripcode_br_cb',$Text);
+//	$Text = preg_replace_callback("/\[code\](.*?)\[\/code\]/ism",'stripcode_br_cb',$Text);
 
 	$CodeLayout = '<code>$1</code>';
 	// Check for [code] text
