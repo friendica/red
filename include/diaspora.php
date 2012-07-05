@@ -844,7 +844,7 @@ function diaspora_reshare($importer,$xml) {
 	else
 		$details = $orig_author;
 	
-	$prefix = '&#x2672; ' . $details . "\n"; 
+	$prefix = html_entity_decode("&#x2672; ", ENT_QUOTES, 'UTF-8') . $details . "\n"; 
 
 
 	// allocate a guid on our system - we aren't fixing any collisions.
