@@ -126,23 +126,39 @@ function bb2diaspora($Text,$preserve_nl = false) {
 		$Text = preg_replace_callback("/\[ol\](.*?)\[\/ol\]/is", 'diaspora_ol', $Text);
 	}
 
+
+
+//////////////////////
+// An attempt was made to convert bbcode to html and then to markdown
+// consisting of the following lines.
+// I'm undoing this as we have a lot of bbcode constructs which
+// were simply getting lost, for instance bookmark, vimeo, video, youtube, events, etc.
+// We can try this again, but need a very good test sequence to verify
+// all the major bbcode constructs that we use are getting through.
+//////////////////////
+
 	// Convert it to HTML - don't try oembed
-	$Text = bbcode($Text, $preserve_nl, false);
+//	$Text = bbcode($Text, $preserve_nl, false);
 
 	// Now convert HTML to Markdown
-	$md = new Markdownify(false, false, false);
-	$Text = $md->parseString($Text);
+//	$md = new Markdownify(false, false, false);
+//	$Text = $md->parseString($Text);
 
 	// If the text going into bbcode() has a plain URL in it, i.e.
 	// with no [url] tags around it, it will come out of parseString()
 	// looking like: <http://url.com>, which gets removed by strip_tags().
 	// So take off the angle brackets of any such URL
-	$Text = preg_replace("/<http(.*?)>/is", "http$1", $Text);
+//	$Text = preg_replace("/<http(.*?)>/is", "http$1", $Text);
 
 	// Remove all unconverted tags
-	$Text = strip_tags($Text);
+//	$Text = strip_tags($Text);
 
-/*
+////// 
+// end of bb->html->md conversion attempt
+//////
+
+
+
 	$ev = bbtoevent($Text);
 
 	// Replace any html brackets with HTML Entities to prevent executing HTML or script
@@ -299,8 +315,9 @@ function bb2diaspora($Text,$preserve_nl = false) {
 
 		$sub = format_event_diaspora($ev);
 
-		$Text = preg_replace("/\[event\-description\](.*?)\[\/event\-description\]/is",$sub,$Text);
-		$Text = preg_replace("/\[event\-start\](.*?)\[\/event\-start\]/is",'',$Text);
+		$Text = preg_replace("/\[event\-summary\](.*?)\[\/event\-summary\]/is",'',$Text);
+		$Text = preg_replace("/\[event\-description\](.*?)\[\/event\-description\]/is",'',$Text);
+		$Text = preg_replace("/\[event\-start\](.*?)\[\/event\-start\]/is",$sub,$Text);
 		$Text = preg_replace("/\[event\-finish\](.*?)\[\/event\-finish\]/is",'',$Text);
 		$Text = preg_replace("/\[event\-location\](.*?)\[\/event\-location\]/is",'',$Text);
 		$Text = preg_replace("/\[event\-adjust\](.*?)\[\/event\-adjust\]/is",'',$Text);
@@ -309,7 +326,7 @@ function bb2diaspora($Text,$preserve_nl = false) {
 	$Text = preg_replace("/\<(.*?)(src|href)=(.*?)\&amp\;(.*?)\>/ism",'<$1$2=$3&$4>',$Text);
 
 	$Text = preg_replace_callback('/\[(.*?)\]\((.*?)\)/ism','unescape_underscores_in_links',$Text);
-*/
+
 
 	// Remove any leading or trailing whitespace, as this will mess up
 	// the Diaspora signature verification and cause the item to disappear
@@ -336,7 +353,7 @@ function format_event_diaspora($ev) {
 
 	$o = 'Friendica event notification:' . "\n";
 
-	$o .= '**' . bb2diaspora($ev['desc']) .  '**' . "\n";
+	$o .= '**' . (($ev['summary']) ? bb2diaspora($ev['summary']) : bb2diaspora($ev['desc'])) .  '**' . "\n";
 
 	$o .= t('Starts:') . ' ' . '['
 		. (($ev['adjust']) ? day_translate(datetime_convert('UTC', 'UTC', 
