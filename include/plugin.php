@@ -316,3 +316,87 @@ function get_theme_screenshot($theme) {
 	}
 	return($a->get_baseurl() . '/images/blank.png');
 }
+
+
+// check service_class restrictions. If there are no service_classes defined, everything is allowed.
+// if $usage is supplied, we check against a maximum count and return true if the current usage is 
+// less than the subscriber plan allows. Otherwise we return boolean true or false if the property
+// is allowed (or not) in this subscriber plan. An unset property for this service plan means 
+// the property is allowed, so it is only necessary to provide negative properties for each plan, 
+// or what the subscriber is not allowed to do. 
+
+
+function service_class_allows($uid,$property,$usage = false) {
+
+	if($uid == local_user()) {
+		$service_class = $a->user['service_class'];
+	}
+	else {
+		$r = q("select service_class from user where uid = %d limit 1",
+			intval($uid)
+		);
+		if($r !== false and count($r)) {
+			$service_class = $r[0]['service_class'];
+		}
+	}
+	if(! x($service_class))
+		return true; // everything is allowed
+
+	$arr = get_config('service_class',$service_class);
+	if(! is_array($arr) || (! count($arr)))
+		return true;
+
+	if($usage === false)
+		return ((x($arr[$property])) ? (bool) $arr['property'] : true);
+	else {
+		if(! array_key_exists($property,$arr))
+			return true;
+		return (((intval($usage)) < intval($arr[$property])) ? true : false);
+	}
+}
+
+
+function service_class_fetch($uid,$property) {
+
+	if($uid == local_user()) {
+		$service_class = $a->user['service_class'];
+	}
+	else {
+		$r = q("select service_class from user where uid = %d limit 1",
+			intval($uid)
+		);
+		if($r !== false and count($r)) {
+			$service_class = $r[0]['service_class'];
+		}
+	}
+	if(! x($service_class))
+		return false; // everything is allowed
+
+	$arr = get_config('service_class',$service_class);
+	if(! is_array($arr) || (! count($arr)))
+		return false;
+
+	return((array_key_exists($property,$arr)) ? $arr[$property] : false);
+
+}
+
+function upgrade_link($bbcode = false) {
+	$l = get_config('service_class','upgrade_link');
+	if(! $l)
+		return '';
+	if($bbcode)
+		$t = sprintf('[url=%s]' . t('Click here to upgrade.') . '[/url]', $l);
+	else
+		$t = sprintf('<a href="%s">' . t('Click here to upgrade.') . '</div>', $l);
+	return $t;
+}
+
+function upgrade_message($bbcode = false) {
+	$x = upgrade_link($bbcode);
+	return t('This action exceeds the limits set by your subscription plan.') . (($x) ? ' ' . $x : '') ;
+}
+
+function upgrade_bool_message($bbcode = false) {
+	$x = upgrade_link($bbcode);
+	return t('This action is not available under your subscription plan.') . (($x) ? ' ' . $x : '') ;
+}

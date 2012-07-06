@@ -560,7 +560,12 @@ input#dfrn-url {
 	clear: both;
 	margin-bottom: 30px;
 }
-
+.aprofile dt {
+	font-weight: bold;
+}
+#page-profile .title {
+	font-weight: bold;
+}
 #profile-vcard-break {
 	clear: both;
 }
@@ -933,6 +938,10 @@ input#dfrn-url {
 .wall-item-content-wrapper.comment {
 	margin-left: 50px;
 	background: #EEEEEE;
+}
+
+.wall-item-like.comment, .wall-item-dislike.comment {
+	margin-left: 50px;
 }
 
 .wall-item-info {
@@ -1640,6 +1649,9 @@ input#dfrn-url {
 	display:block!important;
 }
 
+#photos-usage-message {
+	margin-bottom: 15px;
+}
 
 
 #acl-wrapper {
@@ -2414,9 +2426,40 @@ aside input[type='text'] {
 	font-size: 20px;
 }
 
+#event-summary-text {
+	margin-top: 15px;
+}
+
+#event-share-checkbox {
+	float: left;
+	margin-top: 10px;
+}
+
+#event-share-text {
+	float: left;
+	margin-top: 10px;
+	margin-left: 5px;
+}
+
+#event-share-break {
+	clear: both;
+	margin-bottom: 10px;
+}
+
+#event-summary {
+	width: 400px;
+}
+
 .vevent {
 	border: 1px solid #CCCCCC;
 }
+
+.vevent .event-summary {
+	margin-left: 10px;
+	margin-right: 10px;
+	font-weight: bold;
+}
+
 .vevent .event-description, .vevent .event-location {
 	margin-left: 10px;
 	margin-right: 10px;

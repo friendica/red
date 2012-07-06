@@ -224,6 +224,7 @@ function message_content(&$a) {
 		// list messages
 
 		$o .= $header;
+
 		
 		$r = q("SELECT count(*) AS `total` FROM `mail` 
 			WHERE `mail`.`uid` = %d GROUP BY `parent-uri` ORDER BY `created` DESC",
@@ -232,7 +233,7 @@ function message_content(&$a) {
 		);
 		if(count($r))
 			$a->set_pager_total($r[0]['total']);
-	
+
 		$r = q("SELECT max(`mail`.`created`) AS `mailcreated`, min(`mail`.`seen`) AS `mailseen`, 
 			`mail`.* , `contact`.`name`, `contact`.`url`, `contact`.`thumb` , `contact`.`network`,
 			count( * ) as count
@@ -243,6 +244,7 @@ function message_content(&$a) {
 			intval($a->pager['start']),
 			intval($a->pager['itemspage'])
 		);
+
 		if(! count($r)) {
 			info( t('No messages.') . EOL);
 			return $o;

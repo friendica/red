@@ -261,39 +261,6 @@ function aes_unencapsulate($data,$prvkey) {
 	return AES256CBC_decrypt(base64url_decode($data['data']),$k,$i);
 }
 
-
-// This has been superceded.
-
-function zot_encapsulate($data,$envelope,$pubkey) {
-$res = aes_encapsulate($data,$pubkey);
-
-return <<< EOT
-<?xml version='1.0' encoding='UTF-8'?>
-<zot:msg xmlns:zot='http://purl.org/zot/1.0'>
- <zot:key>{$res['key']}</zot:key>
- <zot:iv>{$res['iv']}</zot:iv>
- <zot:env>$s1</zot:env>
- <zot:sig key_id="$keyid">$sig</zot:sig>
- <zot:alg>AES-256-CBC</zot:alg>
- <zot:data type='application/magic-envelope+xml'>{$res['data']}</zot:data>
-</zot:msg>
-EOT;
-
-}
-
-// so has this
-
-function zot_unencapsulate($data,$prvkey) {
-	$ret = array();
-	$c = array();
-	$x = parse_xml_string($data);
-	$c = array('key' => $x->key,'iv' => $x->iv,'data' => $x->data);
-	openssl_private_decrypt(base64url_decode($x->sender),$s,$prvkey);
-	$ret['sender'] = $s;
-	$ret['data'] = aes_unencapsulate($x,$prvkey);
-	return $ret;
-}
-
 function new_keypair($bits) {
 
 	$openssl_options = array(

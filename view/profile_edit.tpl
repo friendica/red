@@ -187,6 +187,30 @@ $lbl_hobbies
 </div>
 
 
+<div id="likes-jot-wrapper" >
+<p id="likes-jot-desc" >
+$lbl_likes
+</p>
+
+<textarea rows="10" cols="72" id="likes-jot-text" name="likes" >$likes</textarea>
+
+</div>
+<div id="likes-jot-end"></div>
+</div>
+
+
+<div id="dislikes-jot-wrapper" >
+<p id="dislikes-jot-desc" >
+$lbl_dislikes
+</p>
+
+<textarea rows="10" cols="72" id="dislikes-jot-text" name="dislikes" >$dislikes</textarea>
+
+</div>
+<div id="dislikes-jot-end"></div>
+</div>
+
+
 <div id="contact-jot-wrapper" >
 <p id="contact-jot-desc" >
 $lbl_social

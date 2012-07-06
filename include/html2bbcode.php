@@ -124,7 +124,7 @@ function html2bbcode($message)
 		$node->nodeValue = str_replace("\n", "\r", $node->nodeValue);
 
 	$message = $doc->saveHTML();
-	$message = str_replace(array("\n<", ">\n", "\r", "\n", "\xC3\x82\xC2\xA0"), array("<", ">", "<br>", " ", ""), $message);
+	$message = str_replace(array("\n<", ">\n", "\r", "\n", "\xC3\x82\xC2\xA0"), array("<", ">", "<br />", " ", ""), $message);
 	$message = preg_replace('= [\s]*=i', " ", $message);
 	@$doc->loadHTML($message);
 

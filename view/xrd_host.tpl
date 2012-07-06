@@ -10,17 +10,6 @@
 	<Link rel="http://oexchange.org/spec/0.8/rel/resident-target" type="application/xrd+xml" 
         href="$domain/oexchange/xrd" />
 
-    <Link rel="http://purl.org/zot/1.0/post" 
-        href="$zot_post" />
-
-    <Property xmlns:zot="http://purl.og/zot/1.0"
-        type="http://purl.org/zot/1.0/version"
-        zot:version="1" />
-
-    <Property xmlns:zot="http://purl.og/zot/1.0"
-        type="http://purl.org/zot/1.0/accept"
-        zot:accept="application/atom+xml" />
-
     <Property xmlns:mk="http://salmon-protocol.org/ns/magic-key"
         type="http://salmon-protocol.org/ns/magic-key"
         mk:key_id="1">$bigkey</Property>

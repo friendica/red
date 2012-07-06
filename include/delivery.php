@@ -113,7 +113,7 @@ function delivery_run($argv, $argc){
 			$uid = $r[0]['uid'];
 			$updated = $r[0]['edited'];
 
-			// The following seems superfluous. We've already checked for "if (! intval($r[0]['parent']))" a few lines up
+			// POSSIBLE CLEANUP --> The following seems superfluous. We've already checked for "if (! intval($r[0]['parent']))" a few lines up
 			if(! $parent_id)
 				continue;
 
@@ -280,7 +280,7 @@ function delivery_run($argv, $argc){
 						continue;
 
 					// private emails may be in included in public conversations. Filter them.
-					if(($public_message) && $item['private'])
+					if(($public_message) && $item['private'] == 1)
 						continue;
 
 					$item_contact = get_item_contact($item,$icontacts);
@@ -383,7 +383,7 @@ function delivery_run($argv, $argc){
 							continue;
 
 						// private emails may be in included in public conversations. Filter them.
-						if(($public_message) && $item['private'])
+						if(($public_message) && $item['private'] == 1)
 							continue;
 	
 						$item_contact = get_item_contact($item,$icontacts);

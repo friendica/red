@@ -8,26 +8,25 @@ function share_init(&$a) {
 	if((! $post_id) || (! local_user()))
 		killme();
 
-	$r = q("SELECT item.*, contact.network FROM `item` left join contact on `item`.`contact-id` = `contact`.`id` WHERE `item`.`id` = %d LIMIT 1",
-		intval($post_id)
+	$r = q("SELECT item.*, contact.network FROM `item` 
+		left join contact on `item`.`contact-id` = `contact`.`id` 
+		WHERE `item`.`id` = %d AND `item`.`uid` = %d LIMIT 1",
+
+		intval($post_id),
+		intval(local_user())
 	);
-	if(! count($r) || ($r[0]['private'] && ($r[0]['network'] != NETWORK_FEED)))
+	if(! count($r) || ($r[0]['private'] == 1))
 		killme();
 
 	$o = '';
 
-//	if(local_user() && intval(get_pconfig(local_user(),'system','plaintext'))) {
-		$o .= "\xE2\x99\xb2" . ' [url=' . $r[0]['author-link'] . ']' . $r[0]['author-name'] . '[/url]' . "\n";
-		if($r[0]['title'])
-			$o .= '[b]' . $r[0]['title'] . '[/b]' . "\n";
-		$o .= $r[0]['body'] . "\n";
-//	}
-//	else {
-//		$o .= '&#x2672; <a href="' . $r[0]['author-link'] . '">' . $r[0]['author-name'] . '</a><br />';
-//		if($r[0]['title'])
-//			$o .= '<strong>' . $r[0]['title'] . '</strong><br />';
-//		$o .= $r[0]['body'] . "\n";
-//	}
+	$o .= "\xE2\x99\xb2" . ' [url=' . $r[0]['author-link'] . ']' . $r[0]['author-name'] . '[/url]' . "\n";
+	if($r[0]['title'])
+		$o .= '[b]' . $r[0]['title'] . '[/b]' . "\n";
+	$o .= $r[0]['body'] . "\n" ;
+
+	$o .= (($r[0]['plink']) ? '[url=' . $r[0]['plink'] . ']' . t('link') . '[/url]' . "\n" : '');
+
 	echo $o;
 	killme();  
 }

@@ -33,7 +33,7 @@ function lockview_content(&$a) {
 	$deny_users = expand_acl($item['deny_cid']);
 	$deny_groups = expand_acl($item['deny_gid']);
 
-	if(($item['private']) && (! strlen($item['allow_cid'])) && (! strlen($item['allow_gid'])) 
+	if(($item['private'] == 1) && (! strlen($item['allow_cid'])) && (! strlen($item['allow_gid'])) 
 		&& (! strlen($item['deny_cid'])) && (! strlen($item['deny_gid']))) {
 
 		echo t('Remote privacy information not available.') . '<br />';

@@ -54,6 +54,20 @@ function notification($params) {
 
 		$parent_id = $params['parent'];
 
+		// Check to see if there was already a tag notify for this post.
+		// If so don't create a second notification
+		
+		$p = null;
+		$p = q("select id from notify where type = %d and link = '%s' and uid = %d limit 1",
+			intval(NOTIFY_TAGSELF),
+			dbesc($params['link']),
+			intval($params['uid'])
+		);
+		if($p and count($p)) {
+			pop_lang();
+			return;
+		}
+	
 
 		// if it's a post figure out who's post it is.
 

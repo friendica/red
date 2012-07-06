@@ -254,6 +254,7 @@ CREATE TABLE IF NOT EXISTS `event` (
   `edited` datetime NOT NULL,
   `start` datetime NOT NULL,
   `finish` datetime NOT NULL,
+  `summary` text NOT NULL,
   `desc` text NOT NULL,
   `location` text NOT NULL,
   `type` char(255) NOT NULL,
@@ -263,7 +264,14 @@ CREATE TABLE IF NOT EXISTS `event` (
   `allow_gid` mediumtext NOT NULL,
   `deny_cid` mediumtext NOT NULL,
   `deny_gid` mediumtext NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `uid` ( `uid` ),
+  KEY `cid` ( `cid` ),
+  KEY `uri` ( `uri` ),
+  KEY `type` ( `type` ),
+  KEY `start` ( `start` ),
+  KEY `finish` ( `finish` ),
+  KEY `adjust` ( `adjust` )
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -591,6 +599,19 @@ CREATE TABLE IF NOT EXISTS `item_id` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `locks`
+--
+
+CREATE TABLE `locks` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` char(128) NOT NULL,
+  `locked` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `mail`
 --
 
@@ -831,6 +852,8 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `religion` char(255) NOT NULL,
   `pub_keywords` text NOT NULL,
   `prv_keywords` text NOT NULL,
+  `likes` text NOT NULL,
+  `dislikes` text NOT NULL,
   `about` text NOT NULL,
   `summary` char(255) NOT NULL,
   `music` text NOT NULL,
@@ -973,6 +996,26 @@ CREATE TABLE IF NOT EXISTS `spam` (
   KEY `spam` (`spam`),
   KEY `ham` (`ham`),
   KEY `term` (`term`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `term`
+--
+
+CREATE TABLE IF NOT EXISTS `term` (
+  `tid` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `oid` INT UNSIGNED NOT NULL ,
+  `otype` TINYINT( 3 ) UNSIGNED NOT NULL ,
+  `type` TINYINT( 3 ) UNSIGNED NOT NULL ,
+  `term` CHAR( 255 ) NOT NULL ,
+  `url` CHAR( 255 ) NOT NULL, 
+  PRIMARY KEY (`tid`),
+  KEY `oid` ( `oid` ),
+  KEY `otype` ( `otype` ),
+  KEY `type`  ( `type` ),
+  KEY `term`  ( `term` )
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

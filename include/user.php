@@ -99,11 +99,11 @@ function create_user($arr) {
 
 
 	if(! allowed_email($email))
-			$result['message'] .= t('Your email domain is not among those allowed on this site.') . EOL;
+		$result['message'] .= t('Your email domain is not among those allowed on this site.') . EOL;
 
 	if((! valid_email($email)) || (! validate_email($email)))
 		$result['message'] .= t('Not a valid email address.') . EOL;
-
+		
 	// Disallow somebody creating an account using openid that uses the admin email address,
 	// since openid bypasses email verification. We'll allow it if there is not yet an admin account.
 
@@ -147,12 +147,17 @@ function create_user($arr) {
 
 	require_once('include/crypto.php');
 
-	$keys = new_keypair(1024);
+	$keys = new_keypair(4096);
 
 	if($keys === false) {
 		$result['message'] .= t('SERIOUS ERROR: Generation of security keys failed.') . EOL;
 		return $result;
 	}
+
+	$default_service_class = get_config('system','default_service_class');
+	if(! $default_service_class)
+		$default_service_class = '';
+
 
 	$prvkey = $keys['prvkey'];
 	$pubkey = $keys['pubkey'];
@@ -173,8 +178,8 @@ function create_user($arr) {
 	$spubkey = $sres['pubkey'];
 
 	$r = q("INSERT INTO `user` ( `guid`, `username`, `password`, `email`, `openid`, `nickname`,
-		`pubkey`, `prvkey`, `spubkey`, `sprvkey`, `register_date`, `verified`, `blocked`, `timezone` )
-		VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, 'UTC' )",
+		`pubkey`, `prvkey`, `spubkey`, `sprvkey`, `register_date`, `verified`, `blocked`, `timezone`, `service_class` )
+		VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, 'UTC', '%s' )",
 		dbesc(generate_user_guid()),
 		dbesc($username),
 		dbesc($new_password_encoded),
@@ -187,7 +192,8 @@ function create_user($arr) {
 		dbesc($sprvkey),
 		dbesc(datetime_convert()),
 		intval($verified),
-		intval($blocked)
+		intval($blocked),
+		dbesc($default_service_class)
 	);
 
 	if($r) {

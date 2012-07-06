@@ -62,6 +62,11 @@ function new_contact($uid,$url,$interactive = false) {
 		}
 	}
 	
+
+
+
+
+
 	// This extra param just confuses things, remove it
 	if($ret['network'] === NETWORK_DIASPORA)
 		$ret['url'] = str_replace('?absolute=true','',$ret['url']);
@@ -88,6 +93,11 @@ function new_contact($uid,$url,$interactive = false) {
 		$result['message'] .= t('The profile address specified belongs to a network which has been disabled on this site.') . EOL;
 		$ret['notify'] = '';
 	}
+
+
+
+
+
 
 	if(! $ret['notify']) {
 		$result['message'] .=  t('Limited profile. This person will be unable to receive direct/personal notifications from you.') . EOL;
@@ -128,6 +138,32 @@ function new_contact($uid,$url,$interactive = false) {
 		}
 	}
 	else {
+
+
+		// check service class limits
+
+		$r = q("select count(*) as total from contact where uid = %d and pending = 0 and self = 0",
+			intval($uid)
+		);
+		if(count($r))
+			$total_contacts = $r[0]['total'];
+
+		if(! service_class_allows($uid,'total_contacts',$total_contacts)) {
+			$result['message'] .= upgrade_message();
+			return $result;
+		}
+
+		$r = q("select count(network) as total from contact where uid = %d and network = '%s' and pending = 0 and self = 0",
+			intval($uid),
+			dbesc($network)
+		);
+		if(count($r))
+			$total_network = $r[0]['total'];
+
+		if(! service_class_allows($uid,'total_contacts_' . $network,$total_network)) {
+			$result['message'] .= upgrade_message();
+			return $result;
+		}
 
 		$new_relation = (($ret['network'] === NETWORK_MAIL) ? CONTACT_IS_FRIEND : CONTACT_IS_SHARING);
 		if($ret['network'] === NETWORK_DIASPORA)

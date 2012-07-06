@@ -10,9 +10,9 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '3.0.1382' );
+define ( 'FRIENDICA_VERSION',      '3.0.1395' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
-define ( 'DB_UPDATE_VERSION',      1149      );
+define ( 'DB_UPDATE_VERSION',      1153      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -33,6 +33,24 @@ define ( 'JPEG_QUALITY',            100  );
  * $a->config['system']['png_quality'] from 0 (uncompressed) to 9
  */
 define ( 'PNG_QUALITY',             8  );
+
+/**
+ *
+ * An alternate way of limiting picture upload sizes. Specify the maximum pixel
+ * length that pictures are allowed to be (for non-square pictures, it will apply
+ * to the longest side). Pictures longer than this length will be resized to be
+ * this length (on the longest side, the other side will be scaled appropriately).
+ * Modify this value using
+ *
+ *    $a->config['system']['max_image_length'] = n;
+ *
+ * in .htconfig.php
+ *
+ * If you don't want to set a maximum length, set to -1. The default value is
+ * defined by 'MAX_IMAGE_LENGTH' below.
+ *
+ */
+define ( 'MAX_IMAGE_LENGTH',        -1  );
 
 
 /**
@@ -175,6 +193,22 @@ define ( 'NOTIFY_TAGSELF',  0x0080 );
 define ( 'NOTIFY_TAGSHARE', 0x0100 );
 
 define ( 'NOTIFY_SYSTEM',   0x8000 );
+
+
+/**
+ * Tag/term types
+ */
+
+define ( 'TERM_UNKNOWN',   0 );
+define ( 'TERM_HASHTAG',   1 );
+define ( 'TERM_MENTION',   2 );   
+define ( 'TERM_CATEGORY',  3 );
+define ( 'TERM_PCATEGORY', 4 );
+define ( 'TERM_FILE',      5 );
+
+define ( 'TERM_OBJ_POST',  1 );
+define ( 'TERM_OBJ_PHOTO', 2 );
+
 
 
 /**
@@ -352,6 +386,16 @@ if(! class_exists('App')) {
 
 			if(x($_SERVER,'SERVER_NAME')) {
 				$this->hostname = $_SERVER['SERVER_NAME'];
+
+				// See bug 437 - this didn't work so disabling it
+				//if(stristr($this->hostname,'xn--')) {
+					// PHP or webserver may have converted idn to punycode, so
+					// convert punycode back to utf-8
+				//	require_once('library/simplepie/idn/idna_convert.class.php');
+				//	$x = new idna_convert();
+				//	$this->hostname = $x->decode($_SERVER['SERVER_NAME']);
+				//}
+
 				if(x($_SERVER,'SERVER_PORT') && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443)
 					$this->hostname .= ':' . $_SERVER['SERVER_PORT'];
 				/**
@@ -434,6 +478,8 @@ if(! class_exists('App')) {
 			$this->pager['page'] = ((x($_GET,'page') && intval($_GET['page']) > 0) ? intval($_GET['page']) : 1);
 			$this->pager['itemspage'] = 50;
 			$this->pager['start'] = ($this->pager['page'] * $this->pager['itemspage']) - $this->pager['itemspage'];
+			if($this->pager['start'] < 0)
+				$this->pager['start'] = 0;
 			$this->pager['total'] = 0;
 		}
 
@@ -1252,6 +1298,9 @@ if(! function_exists('get_birthdays')) {
 			'$event_reminders' => t('Birthday Reminders'),
 			'$event_title' => t('Birthdays this week:'),
 			'$events' => $r,
+			'$lbr' => '{',  // raw brackets mess up if/endif macro processing
+			'$rbr' => '}'
+
 		));
 	}
 }
@@ -1374,9 +1423,9 @@ if(! function_exists('proc_run')) {
 
 		if(count($args) && $args[0] === 'php')
 			$args[0] = ((x($a->config,'php_path')) && (strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
-		foreach ($args as $arg){
-			$arg = escapeshellarg($arg);
-		}
+		for($x = 0; $x < count($args); $x ++)
+			$args[$x] = escapeshellarg($args[$x]);
+
 		$cmdline = implode($args," ");
 		proc_close(proc_open($cmdline." &",array(),$foo));
 	}

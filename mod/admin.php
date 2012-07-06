@@ -183,13 +183,15 @@ function admin_page_summary(&$a) {
 		Array( t('Normal Account'), 0),
 		Array( t('Soapbox Account'), 0),
 		Array( t('Community/Celebrity Account'), 0),
-		Array( t('Automatic Friend Account'), 0)
+		Array( t('Automatic Friend Account'), 0),
+		Array( t('Blog Account'), 0),
+		Array( t('Private Forum'), 0)
 	);
 
 	$users=0;
 	foreach ($r as $u){ $accounts[$u['page-flags']][1] = $u['count']; $users+= $u['count']; }
 
-	logger('accounts: ' . print_r($accounts,true));
+	logger('accounts: ' . print_r($accounts,true),LOGGER_DATA);
 
 	$r = q("SELECT COUNT(id) as `count` FROM `register`");
 	$pending = $r[0]['count'];
