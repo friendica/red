@@ -278,7 +278,116 @@ function construct_activity_target($item) {
 	}
 
 	return '';
-} 
+}
+
+/* limit_body_size()
+ *
+ *		The purpose of this function is to apply system message length limits to
+ *		imported messages without including any embedded photos in the length
+ *
+ *		How it works (other than when the body length is less than the max length at the outset):
+ *			1. When the text length without embedded images is less than the max length
+ *				a. The while() loop does run, since there are embedded images
+ *				b. 
+ *
+ *			2. When the text length exceeds the max length before the first embedded image
+ *
+ *			3. When the text length exceeds the max length in between embedded images
+ *
+ *			4. When the text length exceeds the max length after the last embedded image
+ *
+ *			5. When there are no embedded images
+ */
+if(! function_exists('limit_body_size')) {
+function limit_body_size($body) {
+
+	logger('limit_body_size: start', LOGGER_DEBUG);
+
+	$maxlen = get_max_import_size();
+
+	// If the length of the body, including the embedded images, is smaller
+	// than the maximum, then don't waste processing looking for the images
+	if($maxlen && (strlen($body) > $maxlen)) {
+
+		logger('limit_body_size: the body length exceeds the limit', LOGGER_DEBUG);
+
+		$img_pos = array();
+		$max_pos = 0;
+
+		$body_left = $body;
+		$cnt = 0;
+		$img_pos[$cnt] = array('start' => strpos($body_left, '[img]data:'));
+		while($img_pos[$cnt]['start'] !== false) {
+
+			// We're assuming that at this point, every opening '[img]data:' tag has a closing [/img] tag
+			$img_pos[$cnt]['end'] = strpos(substr($body_left, $img_pos[$cnt]['start'], strlen($body_left) - $img_pos[$cnt]['start']), '[/img]');
+			$img_pos[$cnt]['end'] += strlen('[/img]');
+			$img_pos[$cnt]['end'] += $img_pos[$cnt]['start'];
+
+			if(! $cnt) {
+				// This code should only run in the first loop
+				$textlen = $img_pos[$cnt]['start'];
+				if( ($maxlen - $textlen) <= 0 ) {
+					$maxpos = $maxlen;
+					$maxcnt = $cnt;
+				}
+			}
+			else {
+				$newlen = $img_pos[$cnt]['start'] - $img_pos[$cnt - 1]['end'];  // The length between the last embedded image and the next
+				if( (! $max_pos) && (($maxlen - ($textlen + $newlen)) <= 0) ) {
+					// $max_pos should be 0 until the message text exceeds the limit.
+					// If the limit has already been set, don't set it again
+					$len_left = $maxlen - $textlen;
+					$maxpos = $img_pos[$cnt - 1]['end'] + $len_left;  // We'll cut off the text at this position
+					$maxcnt = $cnt;
+				}
+
+				$textlen += $newlen;
+			}
+
+			$body_left = substr($body_left, $img_pos[$cnt]['end'], strlen($body_left) - $img_pos[$cnt]['end']);
+			$cnt++;
+			$img_pos[$cnt] = array('start' => strpos($body_left, '[img]data:') + $img_pos[$cnt - 1]['end']);
+		}
+
+		logger('limit_body_size: the while loop ran ' . $cnt . ' times', LOGGER_DEBUG);
+
+		if(! $cnt) {
+			// The while() loop never ran -- there are no embedded images
+			$maxpos = $maxlen;
+			$maxcnt = $cnt;
+			$textlen = strlen($body);
+		}
+		else {
+			// The while() loop did run. But the end of the last embedded image may not be the end of the body
+			// Check if the maximum length occurs between the end of the last embedded image and the end of the text
+			$newlen = strlen($body_left);
+			if( (! $max_pos) && (($maxlen - ($textlen + $newlen)) <= 0) ) {
+				$len_left = $maxlen - $textlen;
+				$maxpos = $img_pos[$cnt - 1]['end'] + $len_left;  // We'll cut off the text at this position
+				$maxcnt = $cnt;
+			}
+			$textlen += $newlen;
+		}
+
+
+		if($textlen > $maxlen) {
+			$newbody = substr($body, 0, $maxpos);  // Note: $maxpos is the position of the character AFTER the maximum length
+
+			// Now pile all the remaining embedded images onto the end
+			for($i = $maxcnt; $i < $cnt; $i++)
+				$newbody = $newbody . substr($body, $img_pos[$i]['start'], $img_pos[$i]['end'] - $img_pos[$i]['start']);
+
+			logger('limit_body_size: the text length (w/o embedded images) was ' . $textlen . ' and the limit was ' . $maxlen . '. Body truncated', LOGGER_DEBUG);
+
+			return $newbody;
+		}
+		else // When embedded images are excluded, the text length is less than the maximum, so we're good
+			return $body;
+	}
+	else
+		return $body;
+}}
 
 
 
@@ -414,9 +523,8 @@ function get_atom_elements($feed,$item) {
 		$res['body'] = notags(base64url_decode($res['body']));
 	}
 
-	$maxlen = get_max_import_size();
-	if($maxlen && (strlen($res['body']) > $maxlen))
-		$res['body'] = substr($res['body'],0, $maxlen);
+	
+	$res['body'] = limit_body_size($res['body']);
 
 	// It isn't certain at this point whether our content is plaintext or html and we'd be foolish to trust 
 	// the content type. Our own network only emits text normally, though it might have been converted to 
