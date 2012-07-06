@@ -12,6 +12,10 @@
 .wall-item-tools {
 	background: none;
 }
+.wall-item-body a:hover {
+	color: #ff6600;
+}
+
 
 .widget {
 /*	box-shadow: 4px 4px 3px 0 #444444; */
