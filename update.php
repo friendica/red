@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1152 );
+define( 'UPDATE_VERSION' , 1153 );
 
 /**
  *
@@ -1314,6 +1314,24 @@ function update_1151() {
 			name CHAR( 128 ) NOT NULL ,
 			locked TINYINT( 1 ) NOT NULL DEFAULT '0'
 		  ) ENGINE = MYISAM DEFAULT CHARSET=utf8 ");
+	if (!$r)
+		return UPDATE_FAILED;
+	return UPDATE_SUCCESS;
+}
+
+function update_1152() {
+	$r = q("CREATE TABLE IF NOT EXISTS `term` (
+		`tid` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+		`oid` INT UNSIGNED NOT NULL ,
+		`otype` TINYINT( 3 ) UNSIGNED NOT NULL ,
+		`type` TINYINT( 3 ) UNSIGNED NOT NULL ,
+		`term` CHAR( 255 ) NOT NULL ,
+		`url` CHAR( 255 ) NOT NULL, 
+		KEY `oid` ( `oid` ),
+		KEY `otype` ( `otype` ),
+		KEY `type`  ( `type` ),
+		KEY `term`  ( `term` )
+		) ENGINE = MYISAM DEFAULT CHARSET=utf8 ");
 	if (!$r)
 		return UPDATE_FAILED;
 	return UPDATE_SUCCESS;

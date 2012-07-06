@@ -12,7 +12,7 @@ require_once('include/cache.php');
 define ( 'FRIENDICA_PLATFORM',     'Friendica');
 define ( 'FRIENDICA_VERSION',      '3.0.1395' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
-define ( 'DB_UPDATE_VERSION',      1152      );
+define ( 'DB_UPDATE_VERSION',      1153      );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -196,6 +196,22 @@ define ( 'NOTIFY_SYSTEM',   0x8000 );
 
 
 /**
+ * Tag/term types
+ */
+
+define ( 'TERM_UNKNOWN',   0 );
+define ( 'TERM_HASHTAG',   1 );
+define ( 'TERM_MENTION',   2 );   
+define ( 'TERM_CATEGORY',  3 );
+define ( 'TERM_PCATEGORY', 4 );
+define ( 'TERM_FILE',      5 );
+
+define ( 'TERM_OBJ_POST',  1 );
+define ( 'TERM_OBJ_PHOTO', 2 );
+
+
+
+/**
  * various namespaces we may need to parse
  */
 
@@ -370,13 +386,15 @@ if(! class_exists('App')) {
 
 			if(x($_SERVER,'SERVER_NAME')) {
 				$this->hostname = $_SERVER['SERVER_NAME'];
-				if(stristr($this->hostname,'xn--')) {
+
+				// See bug 437 - this didn't work so disabling it
+				//if(stristr($this->hostname,'xn--')) {
 					// PHP or webserver may have converted idn to punycode, so
 					// convert punycode back to utf-8
-					require_once('library/simplepie/idn/idna_convert.class.php');
-					$x = new idna_convert();
-					$this->hostname = $x->decode($_SERVER['SERVER_NAME']);
-				}
+				//	require_once('library/simplepie/idn/idna_convert.class.php');
+				//	$x = new idna_convert();
+				//	$this->hostname = $x->decode($_SERVER['SERVER_NAME']);
+				//}
 
 				if(x($_SERVER,'SERVER_PORT') && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443)
 					$this->hostname .= ':' . $_SERVER['SERVER_PORT'];

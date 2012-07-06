@@ -1001,6 +1001,26 @@ CREATE TABLE IF NOT EXISTS `spam` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `term`
+--
+
+CREATE TABLE IF NOT EXISTS `term` (
+  `tid` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `oid` INT UNSIGNED NOT NULL ,
+  `otype` TINYINT( 3 ) UNSIGNED NOT NULL ,
+  `type` TINYINT( 3 ) UNSIGNED NOT NULL ,
+  `term` CHAR( 255 ) NOT NULL ,
+  `url` CHAR( 255 ) NOT NULL, 
+  PRIMARY KEY (`tid`),
+  KEY `oid` ( `oid` ),
+  KEY `otype` ( `otype` ),
+  KEY `type`  ( `type` ),
+  KEY `term`  ( `term` )
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tokens`
 --
 
