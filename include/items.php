@@ -4,6 +4,8 @@ require_once('include/bbcode.php');
 require_once('include/oembed.php');
 require_once('include/salmon.php');
 require_once('include/crypto.php');
+require_once('include/Photo.php');
+
 
 function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) {
 
@@ -284,19 +286,6 @@ function construct_activity_target($item) {
  *
  *		The purpose of this function is to apply system message length limits to
  *		imported messages without including any embedded photos in the length
- *
- *		How it works (other than when the body length is less than the max length at the outset):
- *			1. When the text length without embedded images is less than the max length
- *				a. The while() loop does run, since there are embedded images
- *				b. 
- *
- *			2. When the text length exceeds the max length before the first embedded image
- *
- *			3. When the text length exceeds the max length in between embedded images
- *
- *			4. When the text length exceeds the max length after the last embedded image
- *
- *			5. When there are no embedded images
  */
 if(! function_exists('limit_body_size')) {
 function limit_body_size($body) {
@@ -306,84 +295,80 @@ function limit_body_size($body) {
 	$maxlen = get_max_import_size();
 
 	// If the length of the body, including the embedded images, is smaller
-	// than the maximum, then don't waste processing looking for the images
+	// than the maximum, then don't waste time looking for the images
 	if($maxlen && (strlen($body) > $maxlen)) {
 
-		logger('limit_body_size: the body length exceeds the limit', LOGGER_DEBUG);
+		logger('limit_body_size: the total body length exceeds the limit', LOGGER_DEBUG);
 
-		$img_pos = array();
-		$max_pos = 0;
+		$orig_body = $body;
+		$new_body = '';
+		$textlen = 0;
+		$max_found = false;
 
-		$body_left = $body;
-		$cnt = 0;
-		$img_pos[$cnt] = array('start' => strpos($body_left, '[img]data:'));
-		while($img_pos[$cnt]['start'] !== false) {
+		$img_start = strpos($orig_body, '[img');
+		$img_st_close = ($img_start !== false ? strpos(substr($orig_body, $img_start), ']') : false);
+		$img_end = ($img_start !== false ? strpos(substr($orig_body, $img_start), '[/img]') : false);
+		while(($img_st_close !== false) && ($img_end !== false)) {
 
-			// We're assuming that at this point, every opening '[img]data:' tag has a closing [/img] tag
-			$img_pos[$cnt]['end'] = strpos(substr($body_left, $img_pos[$cnt]['start'], strlen($body_left) - $img_pos[$cnt]['start']), '[/img]');
-			$img_pos[$cnt]['end'] += strlen('[/img]');
-			$img_pos[$cnt]['end'] += $img_pos[$cnt]['start'];
+			$img_st_close++; // make it point to AFTER the closing bracket
+			$img_end += $img_start;
+			$img_end += strlen('[/img]');
 
-			if(! $cnt) {
-				// This code should only run in the first loop
-				$textlen = $img_pos[$cnt]['start'];
-				if( ($maxlen - $textlen) <= 0 ) {
-					$maxpos = $maxlen;
-					$maxcnt = $cnt;
+			if(! strcmp(substr($orig_body, $img_start + $img_st_close, 5), 'data:')) {
+				// This is an embedded image
+
+				if( ($textlen + $img_start) > $maxlen ) {
+					if($textlen < $maxlen) {
+						logger('limit_body_size: the limit happens before an embedded image', LOGGER_DEBUG);
+						$new_body = $new_body . substr($orig_body, 0, $maxlen - $textlen);
+						$textlen = $maxlen;
+					}
 				}
+				else {
+					$new_body = $new_body . substr($orig_body, 0, $img_start);
+					$textlen += $img_start
+				}
+
+				$new_body = $new_body . substr($orig_body, $img_start, $img_end - $img_start);
 			}
 			else {
-				$newlen = $img_pos[$cnt]['start'] - $img_pos[$cnt - 1]['end'];  // The length between the last embedded image and the next
-				if( (! $max_pos) && (($maxlen - ($textlen + $newlen)) <= 0) ) {
-					// $max_pos should be 0 until the message text exceeds the limit.
-					// If the limit has already been set, don't set it again
-					$len_left = $maxlen - $textlen;
-					$maxpos = $img_pos[$cnt - 1]['end'] + $len_left;  // We'll cut off the text at this position
-					$maxcnt = $cnt;
+
+				if( ($textlen + $img_end) > $maxlen ) {
+					if($textlen < $maxlen) {
+						logger('limit_body_size: the limit happens before the end of a non-embedded image', LOGGER_DEBUG);
+						$new_body = $new_body . substr($orig_body, 0, $maxlen - $textlen);
+						$textlen = $maxlen;
+					}
 				}
-
-				$textlen += $newlen;
+				else {
+					$new_body = $new_body . substr($orig_body, 0, $img_end);
+					$textlen += $img_end;
+				}
 			}
+			$orig_body = substr($orig_body, $img_end);
 
-			$body_left = substr($body_left, $img_pos[$cnt]['end'], strlen($body_left) - $img_pos[$cnt]['end']);
-			$cnt++;
-			$img_pos[$cnt] = array('start' => strpos($body_left, '[img]data:') + $img_pos[$cnt - 1]['end']);
+			if($orig_body === false) // in case the body ends on a closing image tag
+				$orig_body = '';
+
+			$img_start = strpos($orig_body, '[img');
+			$img_st_close = ($img_start !== false ? strpos(substr($orig_body, $img_start), ']') : false);
+			$img_end = ($img_start !== false ? strpos(substr($orig_body, $img_start), '[/img]') : false);
 		}
 
-		logger('limit_body_size: the while loop ran ' . $cnt . ' times', LOGGER_DEBUG);
-
-		if(! $cnt) {
-			// The while() loop never ran -- there are no embedded images
-			$maxpos = $maxlen;
-			$maxcnt = $cnt;
-			$textlen = strlen($body);
+		if( ($textlen + strlen($orig_body)) > $maxlen) {
+			if($textlen < $maxlen) {
+				logger('limit_body_size: the limit happens after the end of the last image', LOGGER_DEBUG);
+				$new_body = $new_body . substr($orig_body, 0, $maxlen - $textlen);
+				$textlen = $maxlen;
+			}
 		}
 		else {
-			// The while() loop did run. But the end of the last embedded image may not be the end of the body
-			// Check if the maximum length occurs between the end of the last embedded image and the end of the text
-			$newlen = strlen($body_left);
-			if( (! $max_pos) && (($maxlen - ($textlen + $newlen)) <= 0) ) {
-				$len_left = $maxlen - $textlen;
-				$maxpos = $img_pos[$cnt - 1]['end'] + $len_left;  // We'll cut off the text at this position
-				$maxcnt = $cnt;
-			}
-			$textlen += $newlen;
+			logger('limit_body_size: the text size with embedded images extracted did not violate the limit', LOGGER_DEBUG);
+			$new_body = $new_body . $orig_body;
+			$textlen += strlen($orig_body);
 		}
 
-
-		if($textlen > $maxlen) {
-			$newbody = substr($body, 0, $maxpos);  // Note: $maxpos is the position of the character AFTER the maximum length
-
-			// Now pile all the remaining embedded images onto the end
-			for($i = $maxcnt; $i < $cnt; $i++)
-				$newbody = $newbody . substr($body, $img_pos[$i]['start'], $img_pos[$i]['end'] - $img_pos[$i]['start']);
-
-			logger('limit_body_size: the text length (w/o embedded images) was ' . $textlen . ' and the limit was ' . $maxlen . '. Body truncated', LOGGER_DEBUG);
-
-			return $newbody;
-		}
-		else // When embedded images are excluded, the text length is less than the maximum, so we're good
-			return $body;
+		return $new_body;
 	}
 	else
 		return $body;
@@ -3196,20 +3181,33 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 	return $o;
 }
 
-function fix_private_photos($s,$uid, $item = null, $cid = 0) {
+function fix_private_photos($s, $uid, $item = null, $cid = 0) {
 	$a = get_app();
 
 	logger('fix_private_photos', LOGGER_DEBUG);
 	$site = substr($a->get_baseurl(),strpos($a->get_baseurl(),'://'));
 
-	if(preg_match("/\[img(.*?)\](.*?)\[\/img\]/is",$s,$matches)) {
-		$image = $matches[2];
+	$orig_body = $s;
+	$new_body = '';
+
+	$img_start = strpos($orig_body, '[img');
+	$img_st_close = ($img_start !== false ? strpos(substr($orig_body, $img_start), ']') : false);
+	$img_len = ($img_start !== false ? strpos(substr($orig_body, $img_start), '[/img]') : false);
+	while( ($img_st_close !== false) && ($img_len !== false) ) {
+
+		$img_st_close++; // make it point to AFTER the closing bracket
+		$image = substr($orig_body, $img_start + $img_st_close, $img_len);
+
 		logger('fix_private_photos: found photo ' . $image, LOGGER_DEBUG);
+
+
 		if(stristr($image , $site . '/photo/')) {
+			// Only embed locally hosted photos
 			$replace = false;
 			$i = basename($image);
 			$i = str_replace(array('.jpg','.png'),array('',''),$i);
 			$x = strpos($i,'-');
+
 			if($x) {
 				$res = substr($i,$x+1);
 				$i = substr($i,0,$x);
@@ -3228,9 +3226,6 @@ function fix_private_photos($s,$uid, $item = null, $cid = 0) {
 					//    permissions, regardless of order but first check to see if they're an exact
 					//    match to save some processing overhead.
 				
-					// Currently we only embed one private photo per message so as not to hit import 
-					// size limits at the receiving end.
-
 					// To embed multiples, we would need to parse out the embedded photos on message
 					// receipt and limit size based only on the text component. Would also need to
 					// ignore all photos during bbcode translation and item localisation, as these
@@ -3249,15 +3244,45 @@ function fix_private_photos($s,$uid, $item = null, $cid = 0) {
 						}
 					}
 					if($replace) {
+						$data = $r[0]['data'];
+						$type = $r[0]['type'];
+
+						// If a custom width and height were specified, apply before embedding
+						if(preg_match("/\[img\=([0-9]*)x([0-9]*)\]/is", substr($orig_body, $img_start, $img_st_close), $match)) {
+							logger('fix_private_photos: scaling photo', LOGGER_DEBUG);
+
+							$width = intval($match[1]);
+							$height = intval($match[2]);
+
+							$ph = new Photo($data, $type);
+							if($ph->is_valid()) {
+								$ph->scaleImage(max($width, $height));
+								$data = $ph->imageString();
+								$type = $ph->getType();
+							}
+						}
+
 						logger('fix_private_photos: replacing photo', LOGGER_DEBUG);
-						$s = str_replace($image, 'data:' . $r[0]['type'] . ';base64,' . base64_encode($r[0]['data']), $s);
-						logger('fix_private_photos: replaced: ' . $s, LOGGER_DATA);
+						$image = 'data:' . $type . ';base64,' . base64_encode($data);
+						logger('fix_private_photos: replaced: ' . $image, LOGGER_DATA);
 					}
 				}
 			}
 		}	
+
+		$new_body = $new_body . substr($orig_body, 0, $img_start + $img_st_close) . $image . '[/img]';
+		$orig_body = substr($orig_body, $img_start + $img_st_close + $img_len + strlen('[/img]'));
+		if($orig_body === false)
+			$orig_body = '';
+
+		$img_start = strpos($orig_body, '[img');
+		$img_st_close = ($img_start !== false ? strpos(substr($orig_body, $img_start), ']') : false);
+		$img_len = ($img_start !== false ? strpos(substr($orig_body, $img_start), '[/img]') : false);
 	}
-	return($s);
+
+	$new_body = $new_body + $orig_body;
+
+	return($new_body);
 }
 
 
