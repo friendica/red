@@ -3225,11 +3225,6 @@ function fix_private_photos($s, $uid, $item = null, $cid = 0) {
 					// 3. Otherwise, if we have an item, see if the item permissions match the photo
 					//    permissions, regardless of order but first check to see if they're an exact
 					//    match to save some processing overhead.
-				
-					// To embed multiples, we would need to parse out the embedded photos on message
-					// receipt and limit size based only on the text component. Would also need to
-					// ignore all photos during bbcode translation and item localisation, as these
-					// will hit internal regex backtrace limits.  
 
 					if(has_permissions($r[0])) {
 						if($cid) {
