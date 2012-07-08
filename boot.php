@@ -9,8 +9,8 @@ require_once('include/pgettext.php');
 require_once('include/nav.php');
 require_once('include/cache.php');
 
-define ( 'FRIENDICA_PLATFORM',     'Friendica');
-define ( 'FRIENDICA_VERSION',      '3.0.1395' );
+define ( 'FRIENDICA_PLATFORM',     'Red');
+define ( 'FRIENDICA_VERSION',      '0.0.0001' );
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
 define ( 'DB_UPDATE_VERSION',      1153      );
 
