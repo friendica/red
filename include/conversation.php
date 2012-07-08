@@ -22,10 +22,10 @@ function item_extract_images($body) {
 		if(! strcmp(substr($orig_body, $img_start + $img_st_close, 5), 'data:')) {
 			// This is an embedded image
 
-			$saved_image[$cnt] = substr($orig_body, $img_start + $img_st_close, $img_end - $img_start);
-			$cnt++;
-
+			$saved_image[$cnt] = substr($orig_body, $img_start + $img_st_close, $img_end - ($img_start + $img_st_close));
 			$new_body = $new_body . substr($orig_body, 0, $img_start) . '[!#saved_image' . $cnt . '#!]';
+
+			$cnt++;
 		}
 		else
 			$new_body = $new_body . substr($orig_body, 0, $img_end + strlen('[/img]'));
@@ -48,22 +48,29 @@ function item_extract_images($body) {
 if(! function_exists('item_redir_and_replace_images')) {
 function item_redir_and_replace_images($body, $images, $cid) {
 
-	$newbody = $body;
+	$origbody = $body;
+	$newbody = '';
 
 	for($i = 0; $i < count($images); $i++) {
 		$search = '/\[url\=(.*?)\]\[!#saved_image' . $i . '#!\]\[\/url\]' . '/is';
 		$replace = '[url=' . z_path() . '/redir/' . $cid 
 		           . '?f=1&url=' . '$1' . '][!#saved_image' . $i . '#!][/url]' ;
 
-		$newbody = preg_replace($search, $replace, $newbody);
+		$img_end = strpos($origbody, '[!#saved_image' . $i . '#!][/url]') + strlen('[!#saved_image' . $i . '#!][/url]');
+		$process_part = substr($origbody, 0, $img_end);
+		$origbody = substr($origbody, $img_end);
+
+		$process_part = preg_replace($search, $replace, $process_part);
+		$newbody = $newbody . $process_part;
 	}
+	$newbody = $newbody . $origbody;
 
 	$cnt = 0;
 	foreach($images as $image) {
 		// We're depending on the property of 'foreach' (specified on the PHP website) that
 		// it loops over the array starting from the first element and going sequentially
 		// to the last element
-		$newbody = str_replace('[$#saved_image' . $cnt . '#$]', '[img]' . $image . '[/img]', $newbody);
+		$newbody = str_replace('[!#saved_image' . $cnt . '#!]', '[img]' . $image . '[/img]', $newbody);
 		$cnt++;
 	}
 

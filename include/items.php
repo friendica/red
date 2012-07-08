@@ -326,7 +326,7 @@ function limit_body_size($body) {
 				}
 				else {
 					$new_body = $new_body . substr($orig_body, 0, $img_start);
-					$textlen += $img_start
+					$textlen += $img_start;
 				}
 
 				$new_body = $new_body . substr($orig_body, $img_start, $img_end - $img_start);
@@ -3192,7 +3192,7 @@ function fix_private_photos($s, $uid, $item = null, $cid = 0) {
 
 	$img_start = strpos($orig_body, '[img');
 	$img_st_close = ($img_start !== false ? strpos(substr($orig_body, $img_start), ']') : false);
-	$img_len = ($img_start !== false ? strpos(substr($orig_body, $img_start), '[/img]') : false);
+	$img_len = ($img_start !== false ? strpos(substr($orig_body, $img_start + $img_st_close + 1), '[/img]') : false);
 	while( ($img_st_close !== false) && ($img_len !== false) ) {
 
 		$img_st_close++; // make it point to AFTER the closing bracket
@@ -3277,10 +3277,10 @@ function fix_private_photos($s, $uid, $item = null, $cid = 0) {
 
 		$img_start = strpos($orig_body, '[img');
 		$img_st_close = ($img_start !== false ? strpos(substr($orig_body, $img_start), ']') : false);
-		$img_len = ($img_start !== false ? strpos(substr($orig_body, $img_start), '[/img]') : false);
+		$img_len = ($img_start !== false ? strpos(substr($orig_body, $img_start + $img_st_close + 1), '[/img]') : false);
 	}
 
-	$new_body = $new_body + $orig_body;
+	$new_body = $new_body . $orig_body;
 
 	return($new_body);
 }

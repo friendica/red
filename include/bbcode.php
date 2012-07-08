@@ -66,10 +66,10 @@ function bb_extract_images($body) {
 		if(! strcmp(substr($orig_body, $img_start + $img_st_close, 5), 'data:')) {
 			// This is an embedded image
 
-			$saved_image[$cnt] = substr($orig_body, $img_start + $img_st_close, $img_end - $img_start);
-			$cnt++;
-
+			$saved_image[$cnt] = substr($orig_body, $img_start + $img_st_close, $img_end - ($img_start + $img_st_close));
 			$new_body = $new_body . substr($orig_body, 0, $img_start) . '[$#saved_image' . $cnt . '#$]';
+
+			$cnt++;
 		}
 		else
 			$new_body = $new_body . substr($orig_body, 0, $img_end + strlen('[/img]'));
