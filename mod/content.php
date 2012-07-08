@@ -69,7 +69,6 @@ function content_content(&$a, $update = 0) {
 
 	$cid = ((x($_GET,'cid')) ? intval($_GET['cid']) : 0);
 	$star = ((x($_GET,'star')) ? intval($_GET['star']) : 0);
-	$bmark = ((x($_GET,'bmark')) ? intval($_GET['bmark']) : 0);
 	$order = ((x($_GET,'order')) ? notags($_GET['order']) : 'comment');
 	$liked = ((x($_GET,'liked')) ? intval($_GET['liked']) : 0);
 	$conv = ((x($_GET,'conv')) ? intval($_GET['conv']) : 0);
@@ -102,7 +101,6 @@ function content_content(&$a, $update = 0) {
 
 	
 	$sql_options  = (($star) ? " and starred = 1 " : '');
-	$sql_options .= (($bmark) ? " and bookmark = 1 " : '');
 
 	$sql_nets = (($nets) ? sprintf(" and `contact`.`network` = '%s' ", dbesc($nets)) : '');
 

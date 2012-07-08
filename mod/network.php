@@ -33,7 +33,6 @@ function network_init(&$a) {
 			'/network?f=&conv=1',			//conv
 			'/network/new',					//new
 			'/network?f=&star=1',			//starred
-			'/network?f=&bmark=1',			//bookmarked
 			'/network?f=&spam=1',			//spam
 		);
 		
@@ -112,7 +111,6 @@ function saved_searches($search) {
 	$srchurl = '/network?f=' 
 		. ((x($_GET,'cid'))   ? '&cid='   . $_GET['cid']   : '') 
 		. ((x($_GET,'star'))  ? '&star='  . $_GET['star']  : '')
-		. ((x($_GET,'bmark')) ? '&bmark=' . $_GET['bmark'] : '')
 		. ((x($_GET,'conv'))  ? '&conv='  . $_GET['conv']  : '')
 		. ((x($_GET,'nets'))  ? '&nets='  . $_GET['nets']  : '')
 		. ((x($_GET,'cmin'))  ? '&cmin='  . $_GET['cmin']  : '')
@@ -163,10 +161,9 @@ function saved_searches($search) {
  * 		'/network?f=&conv=1',		=> $conv_active = 'active'
  * 		'/network/new',				=> $new_active = 'active'
  * 		'/network?f=&star=1',		=> $starred_active = 'active'
- * 		'/network?f=&bmark=1',		=> $bookmarked_active = 'active'
  * 		'/network?f=&spam=1',		=> $spam_active = 'active'
  * 
- * @return Array ( $no_active, $comment_active, $postord_active, $conv_active, $new_active, $starred_active, $bookmarked_active, $spam_active );
+ * @return Array ( $no_active, $comment_active, $postord_active, $conv_active, $new_active, $starred_active, $spam_active );
  */
 function network_query_get_sel_tab($a) {
 	$no_active='';
@@ -192,10 +189,6 @@ function network_query_get_sel_tab($a) {
 		$starred_active = 'active';
 	}
 	
-	if(x($_GET,'bmark')) {
-		$bookmarked_active = 'active';
-	}
-
 	if(x($_GET,'conv')) {
 		$conv_active = 'active';
 	}
@@ -208,7 +201,6 @@ function network_query_get_sel_tab($a) {
 	
 	if (($new_active == '') 
 		&& ($starred_active == '') 
-		&& ($bookmarked_active == '')
 		&& ($conv_active == '')
 		&& ($search_active == '')
 		&& ($spam_active == '')) {
@@ -222,7 +214,7 @@ function network_query_get_sel_tab($a) {
 		}
 	}
 	
-	return array($no_active, $all_active, $postord_active, $conv_active, $new_active, $starred_active, $bookmarked_active, $spam_active);
+	return array($no_active, $all_active, $postord_active, $conv_active, $new_active, $starred_active, $spam_active);
 }
 
 
@@ -314,12 +306,6 @@ function network_content(&$a, $update = 0) {
 			'sel'=>$starred_active,
 			'title' => t('Favourite Posts'),
 		),
-		array(
-			'label' => t('Shared Links'),
-			'url'=>$a->get_baseurl(true) . '/' . str_replace('/new', '', $cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&bmark=1',
-			'sel'=>$bookmarked_active,
-			'title'=> t('Interesting Links'),
-		),	
 //		array(
 //			'label' => t('Spam'),
 //			'url'=>$a->get_baseurl(true) . '/network?f=&spam=1'
@@ -351,7 +337,6 @@ function network_content(&$a, $update = 0) {
 
 	$cid = ((x($_GET,'cid')) ? intval($_GET['cid']) : 0);
 	$star = ((x($_GET,'star')) ? intval($_GET['star']) : 0);
-	$bmark = ((x($_GET,'bmark')) ? intval($_GET['bmark']) : 0);
 	$order = ((x($_GET,'order')) ? notags($_GET['order']) : 'comment');
 	$liked = ((x($_GET,'liked')) ? intval($_GET['liked']) : 0);
 	$conv = ((x($_GET,'conv')) ? intval($_GET['conv']) : 0);
@@ -419,7 +404,6 @@ function network_content(&$a, $update = 0) {
 
 	
 	$sql_options  = (($star) ? " and starred = 1 " : '');
-	$sql_options .= (($bmark) ? " and bookmark = 1 " : '');
 
 	$sql_nets = (($nets) ? sprintf(" and `contact`.`network` = '%s' ", dbesc($nets)) : '');
 
@@ -489,7 +473,6 @@ function network_content(&$a, $update = 0) {
 			. ((x($_GET,'search')) ? '&search=' . $_GET['search'] : '') 
 			. ((x($_GET,'star'))   ? '&star='   . $_GET['star']   : '') 
 			. ((x($_GET,'order'))  ? '&order='  . $_GET['order']  : '') 
-			. ((x($_GET,'bmark'))  ? '&bmark='  . $_GET['bmark']  : '') 
 			. ((x($_GET,'liked'))  ? '&liked='  . $_GET['liked']  : '') 
 			. ((x($_GET,'conv'))   ? '&conv='   . $_GET['conv']   : '') 
 			. ((x($_GET,'spam'))   ? '&spam='   . $_GET['spam']   : '') 

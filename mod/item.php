@@ -177,7 +177,7 @@ function item_post(&$a) {
 		$emailcc           = $orig_post['emailcc'];
 		$app			   = $orig_post['app'];
 		$categories        = $orig_post['file'];
-		$title             = notags(trim($_REQUEST['title']));
+		$title             = escape_tags(trim($_REQUEST['title']));
 		$body              = escape_tags(trim($_REQUEST['body']));
 		$private           = $orig_post['private'];
 		$pubmail_enable    = $orig_post['pubmail'];
@@ -209,7 +209,7 @@ function item_post(&$a) {
 			$str_contact_deny  = perms2str($_REQUEST['contact_deny']);
 		}
 
-		$title             = notags(trim($_REQUEST['title']));
+		$title             = escape_tags(trim($_REQUEST['title']));
 		$location          = notags(trim($_REQUEST['location']));
 		$coord             = notags(trim($_REQUEST['coord']));
 		$verb              = notags(trim($_REQUEST['verb']));
@@ -413,13 +413,6 @@ function item_post(&$a) {
 		}
 	}
 
-	// embedded bookmark in post? set bookmark flag
-
-	$bookmark = 0;
-	if(preg_match_all("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/ism",$body,$match,PREG_SET_ORDER)) {
-		$bookmark = 1;
-	}
-
 	$body = bb_translate_video($body);
 
 	/**
@@ -436,7 +429,7 @@ function item_post(&$a) {
 
 	$str_tags = '';
 	$inform   = '';
-
+	$post_tags = array();
 
 	$tags = get_tags($body);
 
@@ -472,8 +465,16 @@ function item_post(&$a) {
 				continue;
 
 			$success = handle_tag($a, $body, $inform, $str_tags, (local_user()) ? local_user() : $profile_uid , $tag); 
-			if($success['replaced'])
+			if($success['replaced']) {
 				$tagged[] = $tag;
+				$post_tags[] = array(
+					'uid' => $profile_uid, 
+					'type' => $success['termtype'],
+					'otype' => TAG_OBJ_POST,
+					'term' => substr($tag,1),
+					'url' => $success['url']
+				); 				
+			}
 			if(is_array($success['contact']) && intval($success['contact']['prv'])) {
 				$private_forum = true;
 				$private_id = $success['contact']['id'];
@@ -559,7 +560,6 @@ function item_post(&$a) {
 	$datarray['private']       = $private;
 	$datarray['pubmail']       = $pubmail_enable;
 	$datarray['attach']        = $attachments;
-	$datarray['bookmark']      = intval($bookmark);
 	$datarray['thr-parent']    = $thr_parent;
 	$datarray['postopts']      = '';
 	$datarray['origin']        = $origin;
@@ -636,8 +636,8 @@ function item_post(&$a) {
 
 	$r = q("INSERT INTO `item` (`guid`, `uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `commented`, `received`, `changed`, `uri`, `thr-parent`, `title`, `body`, `app`, `location`, `coord`, 
-		`tag`, `inform`, `verb`, `postopts`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`, `bookmark`,`origin`, `moderated`, `file` )
-		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, %d, '%s' )",
+		`tag`, `inform`, `verb`, `postopts`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`,`origin`, `moderated`, `file` )
+		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, '%s' )",
 		dbesc($datarray['guid']),
 		intval($datarray['uid']),
 		dbesc($datarray['type']),
@@ -673,7 +673,6 @@ function item_post(&$a) {
 		intval($datarray['private']),
 		intval($datarray['pubmail']),
 		dbesc($datarray['attach']),
-		intval($datarray['bookmark']),
 		intval($datarray['origin']),
 	        intval($datarray['moderated']),
 	        dbesc($datarray['file'])
@@ -891,6 +890,9 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 	$replaced = false;
 	$r = null;
 
+	$termtype = ((strpos($tag,'#') === 0) ? TERM_HASHTAG : TERM_UNKNOWN);
+	$termtype = ((strpos($tag,'@') === 0) ? TERM_MENTION : $termtype);
+
 	//is it a hash tag? 
 	if(strpos($tag,'#') === 0) {
 		//if the tag is replaced...
@@ -900,6 +902,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 		//base tag has the tags name only
 		$basetag = str_replace('_',' ',substr($tag,1));
 		//create text for link
+		$url = $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag);
 		$newtag = '#[url=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/url]';
 		//replace tag by the link
 		$body = str_replace($tag, $newtag, $body);
@@ -997,6 +1000,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 			$replaced = true;
 			//create profile link
 			$profile = str_replace(',','%2c',$profile);
+			$url = $profile;
 			$newtag = '@[url=' . $profile . ']' . $newname	. '[/url]';
 			$body = str_replace('@' . $name, $newtag, $body);
 			//append tag to str_tags
@@ -1005,22 +1009,10 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 					$str_tags .= ',';
 				$str_tags .= $newtag;
 			}
-	
-			// Status.Net seems to require the numeric ID URL in a mention if the person isn't
-			// subscribed to you. But the nickname URL is OK if they are. Grrr. We'll tag both.
-	
-			if(strlen($alias)) {
-				$newtag = '@[url=' . $alias . ']' . $newname	. '[/url]';
-				if(! stristr($str_tags,$newtag)) {
-					if(strlen($str_tags))
-						$str_tags .= ',';
-					$str_tags .= $newtag;
-				}
-			}
 		}
 	}
 
-	return array('replaced' => $replaced, 'contact' => $r[0]);	
+	return array('replaced' => $replaced, 'termtype' => $termtype, 'url' => $url, 'contact' => $r[0]);	
 }
 
 

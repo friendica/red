@@ -488,11 +488,6 @@ function get_atom_elements($feed,$item) {
 	if($dguid)
 		$res['guid'] = unxmlify($dguid[0]['data']);
 
-	$bm = $item->get_item_tags(NAMESPACE_DFRN,'bookmark');
-	if($bm)
-		$res['bookmark'] = ((unxmlify($bm[0]['data']) === 'true') ? 1 : 0);
-
-
 	/**
 	 * If there's a copy of the body content which is guaranteed to have survived mangling in transit, use it.
 	 */
@@ -849,7 +844,6 @@ function item_store($arr,$force_parent = false) {
 	$arr['deny_cid']      = ((x($arr,'deny_cid'))      ? trim($arr['deny_cid'])              : '');
 	$arr['deny_gid']      = ((x($arr,'deny_gid'))      ? trim($arr['deny_gid'])              : '');
 	$arr['private']       = ((x($arr,'private'))       ? intval($arr['private'])             : 0 );
-	$arr['bookmark']      = ((x($arr,'bookmark'))      ? intval($arr['bookmark'])            : 0 );
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
 	$arr['tag']           = ((x($arr,'tag'))           ? notags(trim($arr['tag']))           : '');
 	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : '');
@@ -3138,8 +3132,6 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 
 	if($item['extid'])
 		$o .= '<dfrn:extid>' . xmlify($item['extid']) . '</dfrn:extid>' . "\r\n";
-	if($item['bookmark'])
-		$o .= '<dfrn:bookmark>true</dfrn:bookmark>' . "\r\n";
 
 	if($item['app'])
 		$o .= '<statusnet:notice_info local_id="' . $item['id'] . '" source="' . xmlify($item['app']) . '" ></statusnet:notice_info>' . "\r\n";
