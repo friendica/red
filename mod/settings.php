@@ -941,7 +941,7 @@ function settings_content(&$a) {
 	$tpl_addr = get_markup_template("settings_nick_set.tpl");
 
 	$prof_addr = replace_macros($tpl_addr,array(
-		'$desc' => t('Your Identity Address is'),
+		'$desc' => t('Your webbie (web-id) is'),
 		'$nickname' => $nickname,
 		'$subdir' => $subdir,
 		'$basepath' => $a->get_hostname()

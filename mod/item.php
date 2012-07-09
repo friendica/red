@@ -44,6 +44,7 @@ function item_post(&$a) {
 	$api_source = ((x($_REQUEST,'api_source') && $_REQUEST['api_source']) ? true : false);
 	$return_path = ((x($_REQUEST,'return')) ? $_REQUEST['return'] : '');
 	$preview = ((x($_REQUEST,'preview')) ? intval($_REQUEST['preview']) : 0);
+	$categories = ((x($_REQUEST['category'])) ? escape_tags($_REQUEST['category']) : '');
 
 	/**
 	 * Is this a reply to something?
@@ -176,7 +177,7 @@ function item_post(&$a) {
 		$verb              = $orig_post['verb'];
 		$emailcc           = $orig_post['emailcc'];
 		$app			   = $orig_post['app'];
-		$categories        = $orig_post['file'];
+//		$categories        = $orig_post['file'];
 		$title             = escape_tags(trim($_REQUEST['title']));
 		$body              = escape_tags(trim($_REQUEST['body']));
 		$private           = $orig_post['private'];
@@ -262,18 +263,6 @@ function item_post(&$a) {
 		}
 	}
 
-	if(strlen($categories)) {
-		// get the "fileas" tags for this post
-		$filedas = file_tag_file_to_list($categories, 'file');
-	}
-	// save old and new categories, so we can determine what needs to be deleted from pconfig
-	$categories_old = $categories;
-	$categories = file_tag_list_to_file(trim($_REQUEST['category']), 'category');
-	$categories_new = $categories;
-	if(strlen($filedas)) {
-		// append the fileas stuff to the new categories list
-		$categories .= file_tag_list_to_file($filedas, 'file');
-	}
 
 	// Work around doubled linefeeds in Tinymce 3.5b2
 	// First figure out if it's a status post that would've been
@@ -465,12 +454,14 @@ function item_post(&$a) {
 				continue;
 
 			$success = handle_tag($a, $body, $inform, $str_tags, (local_user()) ? local_user() : $profile_uid , $tag); 
+			logger('handle_tag: ' . print_r($success,tue));
+
 			if($success['replaced']) {
 				$tagged[] = $tag;
 				$post_tags[] = array(
 					'uid' => $profile_uid, 
 					'type' => $success['termtype'],
-					'otype' => TAG_OBJ_POST,
+					'otype' => TERM_OBJ_POST,
 					'term' => substr($tag,1),
 					'url' => $success['url']
 				); 				
@@ -481,6 +472,21 @@ function item_post(&$a) {
 			}
 		}
 	}
+
+	if(strlen($categories)) {
+		$cats = explode(',',$categories);
+		foreach($cats as $cat) {
+			$post_tags[] = array(
+				'uid' => $profile_uid, 
+				'type' => TERM_CATEGORY,
+				'otype' => TERM_OBJ_POST,
+				'term' => trim($cat),
+				'url' => ''
+			); 				
+		}
+	}
+
+	logger('post_tags: ' . print_r($post_tags,true));
 
 	if(($private_forum) && (! $parent) && (! $private)) {
 		// we tagged a private forum in a top level post and the message was public.
@@ -684,8 +690,21 @@ function item_post(&$a) {
 		$post_id = $r[0]['id'];
 		logger('mod_item: saved item ' . $post_id);
 
-		// update filetags in pconfig
-                file_tag_update_pconfig($uid,$categories_old,$categories_new,'category');
+
+		if(count($post_tags)) {
+			foreach($post_tags as $tag) {
+				if(strlen(trim($tag['term']))) {
+					q("insert into term (uid,oid,otype,type,term,url) values (%d,%d,%d,%d,'%s','%s')",
+						intval($tag['uid']),
+						intval($post_id),
+						intval($tag['otype']),
+						intval($tag['type']),
+						dbesc(trim($tag['term'])),
+						dbesc(trim($tag['url']))
+					);
+				}
+			}
+		}
 
 		if($parent) {
 
@@ -915,7 +934,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 				$str_tags .= ',';
 			$str_tags .= $newtag;
 		}
-		return $replaced;
+		return array('replaced' => $replaced, 'termtype' => $termtype, 'url' => $url, 'contact' => $r[0]);	
 	}
 	//is it a person tag? 
 	if(strpos($tag,'@') === 0) {
