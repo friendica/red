@@ -1,5 +1,13 @@
 @import url('../duepuntozero/style.css');
 
+nav #banner #logo-text a {
+	color: #ff0000;
+	font-size: 32px;
+}
+
+nav #banner img {
+	margin-top: 5px;
+}
 .wall-item-content-wrapper {
 	border: none;
 }
@@ -133,10 +141,12 @@ nav #site-location {
 	-moz-border-radius: 3px;
 	box-shadow: 4px 4px 3px 0 #444444;
 }
+
 .settings-widget .selected {
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	box-shadow: 4px 4px 3px 0 #444444;
+	margin-left: -4px;
 }
 
 #sidebar-page-list .label {

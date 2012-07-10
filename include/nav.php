@@ -156,7 +156,7 @@ function nav(&$a) {
 	$banner = get_config('system','banner');
 
 	if($banner === false) 
-		$banner .= '<a href="http://friendica.com"><img id="logo-img" src="images/friendica-32.png" alt="logo" /></a><span id="logo-text"><a href="http://friendica.com"><span class="heart">red</span></a></span>';
+		$banner .= '<a href="http://friendica.com"><img id="logo-img" src="images/friendica-32.png" alt="logo" /></a><span id="logo-text"><a href="http://friendica.com">red</a></span>';
 
 
 	$tpl = get_markup_template('nav.tpl');
