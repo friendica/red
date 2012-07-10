@@ -11,8 +11,8 @@ function tagrm_post(&$a) {
 	if((x($_POST,'submit')) && ($_POST['submit'] === t('Cancel')))
 		goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
 
-	$tag =  ((x($_POST,'tag'))  ? hex2bin(notags(trim($_POST['tag']))) : '');
-	$item = ((x($_POST,'item')) ? intval($_POST['item'])               : 0 );
+	$tag =  ((x($_POST,'tag'))  ? trim($_POST['tag'])       : '');
+	$item = ((x($_POST,'item')) ? intval($_POST['item'])    : 0 );
 
 	$r = q("SELECT * FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		intval($item),

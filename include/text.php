@@ -881,20 +881,7 @@ function prepare_body($item,$attach = false) {
 	$a = get_app();
 	call_hooks('prepare_body_init', $item); 
 
-	$cache = get_config('system','itemcache');
-
-	if (($cache != '')) {
-		$cachefile = $cache."/".$item["guid"]."-".strtotime($item["edited"])."-".hash("crc32", $item['body']);
-
-		if (file_exists($cachefile))
-			$s = file_get_contents($cachefile);
-		else {
-			$s = prepare_text($item['body']);
-			file_put_contents($cachefile, $s);
-		}
-	} else
-		$s = prepare_text($item['body']);
-
+	$s = prepare_text($item['body']);
 
 	$prep_arr = array('item' => $item, 'html' => $s);
 	call_hooks('prepare_body', $prep_arr);
@@ -938,30 +925,29 @@ function prepare_body($item,$attach = false) {
 		}
 		$s .= '<div class="clear"></div></div>';
 	}
-	$matches = false;
-	$cnt = preg_match_all('/<(.*?)>/',$item['file'],$matches,PREG_SET_ORDER);
-	if($cnt) {
-//		logger('prepare_text: categories: ' . print_r($matches,true), LOGGER_DEBUG);
-		foreach($matches as $mtch) {
+
+	$x = '';
+	$terms = get_terms_oftype($item['term'],TERM_CATEGORY);
+	if($terms) {
+		foreach($terms as $t) {
 			if(strlen($x))
 				$x .= ',';
-			$x .= xmlify(file_tag_decode($mtch[1])) 
-				. ((local_user() == $item['uid']) ? ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&cat=' . xmlify(file_tag_decode($mtch[1])) . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>' : '');
+			$x .= $t['term']
+				. ((local_user() == $item['uid']) ? ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&cat=' . $t['term'] . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>' : '');
 		}
 		if(strlen($x))
 			$s .= '<div class="categorytags"><span>' . t('Categories:') . ' </span>' . $x . '</div>'; 
 
 
 	}
-	$matches = false;
+
 	$x = '';
-	$cnt = preg_match_all('/\[(.*?)\]/',$item['file'],$matches,PREG_SET_ORDER);
-	if($cnt) {
-//		logger('prepare_text: filed_under: ' . print_r($matches,true), LOGGER_DEBUG);
-		foreach($matches as $mtch) {
+	$terms = get_terms_oftype($item['term'],TERM_FILE);
+	if($terms) {
+		foreach($terms as $t) {
 			if(strlen($x))
 				$x .= '&nbsp;&nbsp;&nbsp;';
-			$x .= xmlify(file_tag_decode($mtch[1])) . ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&term=' . xmlify(file_tag_decode($mtch[1])) . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>';
+			$x .= $t['term'] . ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&term=' . $t['term'] . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>';
 		}
 		if(strlen($x) && (local_user() == $item['uid']))
 			$s .= '<div class="filesavetags"><span>' . t('Filed under:') . ' </span>' . $x . '</div>'; 
@@ -1460,10 +1446,67 @@ function file_tag_update_pconfig($uid,$file_old,$file_new,$type = 'file') {
 		return true;
 }
 
+function store_item_tag($uid,$iid,$otype,$type,$term,$url = '') {
+	if(! $term) 
+		return false;
+	$r = q("select * from term 
+		where uid = %d and oid = %d and otype = %d and type = %d 
+		and term = '%s' and url = '%s' ",
+		intval($uid),
+		intval($iid),
+		intval($otype),
+		intval($type),
+		dbesc($term),
+		dbesc($url)
+	);
+	if(count($r))
+		return false;
+	$r = q("insert into term (uid, oid, otype, type, term, url)
+		values( %d, %d, %d, %d, '%s', '%s') ",
+		intval($uid),
+		intval($iid),
+		intval($otype),
+		intval($type),
+		dbesc($term),
+		dbesc($url)
+	);
+	return $r;
+}
+		
+function get_terms_oftype($arr,$type) {
+	$ret = array();
+	if(! (is_array($arr) && count($arr)))
+		return $ret;
+
+	if(! is_array($type))
+		$type = array($type);
+
+	foreach($type as $t)
+		foreach($arr as $x)
+			if($x['type'] == $t)
+				$ret[] = $x;
+	return $ret;
+}
+
+function format_term_for_display($term) {
+	$s = '';
+	if($term['type'] == TERM_HASHTAG)
+		$s .= '#';
+	elseif($term['type'] == TERM_MENTION)
+		$s .= '@';
+
+	if($term['url']) $s .= '<a target="extlink" href="' . $term['url'] . '">' . $term['term'] . '</a>';
+	else $s .= $term['term'];
+	return $s;
+}
+
+
+
 function file_tag_save_file($uid,$item,$file) {
 	$result = false;
 	if(! intval($uid))
 		return false;
+
 	$r = q("select file from item where id = %d and uid = %d limit 1",
 		intval($item),
 		intval($uid)

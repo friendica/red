@@ -6,8 +6,8 @@ function filerm_content(&$a) {
 		killme();
 	}
 
-	$term = unxmlify(trim($_GET['term']));
-	$cat = unxmlify(trim($_GET['cat']));
+	$term = trim($_GET['term']);
+	$cat  = trim($_GET['cat']);
 
 	$category = (($cat) ? true : false);
 	if($category)
@@ -17,8 +17,14 @@ function filerm_content(&$a) {
 
 	logger('filerm: tag ' . $term . ' item ' . $item_id);
 
-	if($item_id && strlen($term))
-		file_tag_unsave_file(local_user(),$item_id,$term, $category);
+	if($item_id && strlen($term)) {
+		$r = q("delete from term where uid = %d and type = %d and oid = %d and $term = '%s' limit 1",
+			intval(local_user()),
+			intval(($category) ? FILE_CATEGORY : FILE_HASHTAG),
+			intval($item_id),
+			dbesc($term)
+		);
+	}
 
 	if(x($_SESSION,'return_url'))
 		goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);

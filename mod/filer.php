@@ -18,12 +18,18 @@ function filer_content(&$a) {
 
 	if($item_id && strlen($term)){
 		// file item
-		file_tag_save_file(local_user(),$item_id,$term);
-	} else {
-		// return filer dialog
-		$filetags = get_pconfig(local_user(),'system','filetags');
-		$filetags = file_tag_file_to_list($filetags,'file');
-                $filetags = explode(",", $filetags);
+		store_item_tag(local_user(),$item_id,TERM_OBJ_POST,TERM_FILE,$term,'');
+	} 
+	else {
+		$filetags = array();
+		$r = q("select distinct(term) from term where uid = %d and type = %d order by term asc",
+			intval(local_user()),
+			intval(TERM_FILE)
+		);
+		if(count($r)) {
+			foreach($r as $rr)
+				$filetags[] = $rr['term'];
+		}
 		$tpl = get_markup_template("filer_dialog.tpl");
 		$o = replace_macros($tpl, array(
 			'$field' => array('term', t("Save to Folder:"), '', '', $filetags, t('- select -')),

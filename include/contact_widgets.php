@@ -77,21 +77,18 @@ function networks_widget($baseurl,$selected = '') {
 
 function fileas_widget($baseurl,$selected = '') {
 	$a = get_app();
+
 	if(! local_user())
 		return '';
 
-	$saved = get_pconfig(local_user(),'system','filetags');
-	if(! strlen($saved))
-		return;
-
-	$matches = false;
 	$terms = array();
-    $cnt = preg_match_all('/\[(.*?)\]/',$saved,$matches,PREG_SET_ORDER);
-    if($cnt) {
-		foreach($matches as $mtch) {
-			$unescaped = xmlify(file_tag_decode($mtch[1]));
-			$terms[] = array('name' => $unescaped,'selected' => (($selected == $unescaped) ? 'selected' : ''));
-		}
+	$r = q("select distinct(term) from term where uid = %d and type = %d order by term asc",
+		intval(local_user()),
+		intval(TERM_FILE)
+	);
+	if(count($r)) {
+		foreach($r as $rr)
+		$terms[] = array('name' => $rr['term'], 'selected' => (($selected == $rr['term']) ? 'selected' : ''));
 	}
 
 	return replace_macros(get_markup_template('fileas_widget.tpl'),array(
@@ -108,18 +105,15 @@ function fileas_widget($baseurl,$selected = '') {
 function categories_widget($baseurl,$selected = '') {
 	$a = get_app();
 
-	$saved = get_pconfig($a->profile['profile_uid'],'system','filetags');
-	if(! strlen($saved))
-		return;
 
-	$matches = false;
 	$terms = array();
-        $cnt = preg_match_all('/<(.*?)>/',$saved,$matches,PREG_SET_ORDER);
-        if($cnt) {
-                foreach($matches as $mtch) {
-		        $unescaped = xmlify(file_tag_decode($mtch[1]));
-			$terms[] = array('name' => $unescaped,'selected' => (($selected == $unescaped) ? 'selected' : ''));
-		}
+	$r = q("select distinct(term) from term where uid = %d and type = %d order by term asc",
+		intval($a->profile['profile_uid']),
+		intval(TERM_CATEGORY)
+	);
+	if(count($r)) {
+		foreach($r as $rr)
+		$terms[] = array('name' => $rr['term'], 'selected' => (($selected == $rr['term']) ? 'selected' : ''));
 	}
 
 	return replace_macros(get_markup_template('categories_widget.tpl'),array(

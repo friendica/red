@@ -611,13 +611,12 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				$shareable = ((($profile_owner == local_user()) && ($item['private'] != 1)) ? true : false); 
 
 				if($page_writeable) {
-/*					if($toplevelpost) {  */
-						$likebuttons = array(
-							'like' => array( t("I like this \x28toggle\x29"), t("like")),
-							'dislike' => array( t("I don't like this \x28toggle\x29"), t("dislike")),
-						);
-						if ($shareable) $likebuttons['share'] = array( t('Share this'), t('share'));
-/*					} */
+					$likebuttons = array(
+						'like' => array( t("I like this \x28toggle\x29"), t("like")),
+						'dislike' => array( t("I don't like this \x28toggle\x29"), t("dislike")),
+					);
+					if ($shareable) $likebuttons['share'] = array( t('Share this'), t('share'));
+
 
 					$qc = $qcomment =  null;
 
@@ -739,10 +738,11 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 
 
 				$tags=array();
-				foreach(explode(',',$item['tag']) as $tag){
-					$tag = trim($tag);
-					if ($tag!="") $tags[] = bbcode($tag);
-				}
+				$terms = get_terms_oftype($item['term'],array(TERM_HASHTAG,TERM_MENTION,TERM_UNKNOWN));
+				if(count($terms))
+					foreach($terms as $tag)
+						$tags[] = format_term_for_display($tag);
+
 
 				// Build the HTML
 
@@ -1102,12 +1102,25 @@ function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 }
 
 
-function conv_sort($arr,$order) {
+function conv_sort($arr,$tags,$order) {
 
 	if((!(is_array($arr) && count($arr))))
 		return array();
 
 	$parents = array();
+
+
+	for($x = 0; $x < count($arr); $x ++) {
+		if(count($tags)) {
+			foreach($tags as $t) {
+				if($t['oid'] == $arr[$x]['item_id']) {
+					if(! is_array($arr[$x]['term']))
+						$arr[$x]['term'] = array();
+					$arr[$x]['term'][] = $t;
+				}
+			}
+		}
+	}
 
 	foreach($arr as $x)
 		if($x['id'] == $x['parent'])
