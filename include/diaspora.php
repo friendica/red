@@ -1257,7 +1257,7 @@ function diaspora_comment($importer,$xml,$msg) {
 	if(($parent_item['origin']) && (! $parent_author_signature)) {
 		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
 			intval($message_id),
-			dbesc($author_signed_data),
+			dbesc($signed_data),
 			dbesc(base64_encode($author_signature)),
 			dbesc($diaspora_handle)
 		);
@@ -1840,7 +1840,7 @@ EOT;
 	if(! $parent_author_signature) {
 		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
 			intval($message_id),
-			dbesc($author_signed_data),
+			dbesc($signed_data),
 			dbesc(base64_encode($author_signature)),
 			dbesc($diaspora_handle)
 		);
@@ -2496,7 +2496,7 @@ function diaspora_send_mail($item,$owner,$contact) {
 
 }
 
-function diaspora_transmit($owner,$contact,$slap,$public_batch) {
+function diaspora_transmit($owner,$contact,$slap,$public_batch,$queue_run = false) {
 
 	$enabled = intval(get_config('system','diaspora_enabled'));
 	if(! $enabled) {
@@ -2513,7 +2513,7 @@ function diaspora_transmit($owner,$contact,$slap,$public_batch) {
 
 	logger('diaspora_transmit: ' . $logid . ' ' . $dest_url);
 
-	if(was_recently_delayed($contact['id'])) {
+	if( (! $queue_run) && (was_recently_delayed($contact['id']))) {
 		$return_code = 0;
 	}
 	else {

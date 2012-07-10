@@ -1328,10 +1328,14 @@ function file_tag_decode($s) {
 function file_tag_file_query($table,$s,$type = 'file') {
 
 	if($type == 'file')
-		$str = preg_quote( '[' . str_replace('%','%%',file_tag_encode($s)) . ']' );
+		$termtype = TERM_FILE;
 	else
-		$str = preg_quote( '<' . str_replace('%','%%',file_tag_encode($s)) . '>' );
-	return " AND " . (($table) ? dbesc($table) . '.' : '') . "file regexp '" . dbesc($str) . "' ";
+		$termtype = TERM_CATEGORY;
+
+	return sprintf(" AND " . (($table) ? dbesc($table) . '.' : '') . "id in (select term.oid from term where term.type = %d and term.term = '%s' and term.uid = " . (($table) ? dbesc($table) . '.' : '') . "uid ) ",
+		intval($termtype),
+		protect_sprintf(dbesc($s))
+	);
 }
 
 // ex. given music,video return <music><video> or [music][video]

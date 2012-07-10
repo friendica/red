@@ -287,7 +287,7 @@ function profile_content(&$a, $update = 0) {
 					$tag_finder[] = $item['item_id'];
 		$tag_finder_str = implode(', ', $tag_finder);
 		$tags = q("select * from term where oid in ( '%s' ) and otype = %d",
-			dbesc($tag_finder),
+			dbesc($tag_finder_str),
 			intval(TERM_OBJ_POST)
 		);
 
