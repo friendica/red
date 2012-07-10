@@ -26,6 +26,14 @@
 <script type="text/javascript" src="$baseurl/js/acl.js" ></script>
 <script type="text/javascript" src="$baseurl/js/webtoolkit.base64.js" ></script>
 <script type="text/javascript" src="$baseurl/js/main.js" ></script>
+
+<link href="$baseurl/include/jquery_ui/development-bundle/themes/base/jquery.ui.all.css" rel="stylesheet">
+<script src="$baseurl/include/jquery_ui/js/jquery-1.7.2.min.js"></script>
+<script src="$baseurl/include/jquery_ui/development-bundle/ui/jquery.ui.core.js"></script>
+<script src="$baseurl/include/jquery_ui/development-bundle/ui/jquery.ui.widget.js"></script>
+<script src="$baseurl/include/jquery_ui/development-bundle/ui/jquery.ui.mouse.js"></script>
+<script src="$baseurl/include/jquery_ui/development-bundle/ui/jquery.ui.slider.js"></script>
+
 <script>
 
 	var updateInterval = $update_interval;
