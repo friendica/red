@@ -108,20 +108,19 @@ function search_content(&$a) {
 	if(! $search)
 		return $o;
 
-	if (get_config('system','use_fulltext_engine')) {
-		if($tag)
-			$sql_extra = sprintf(" AND MATCH (`item`.`tag`) AGAINST ('".'"%s"'."' in boolean mode) ", '#'.dbesc(protect_sprintf($search)));
-		else
+	if($tag) {
+		$sql_extra = sprintf(" AND `item`.`id` IN (select `oid` from term where otype = %d and type = %d and term = '%s') ",
+			intval(TERM_OBJ_POST),
+			intval(TERM_HASHTAG),
+			dbesc(protect_sprintf($search))
+		);
+	}
+	else {
+		if (get_config('system','use_fulltext_engine'))
 			$sql_extra = sprintf(" AND MATCH (`item`.`body`) AGAINST ('".'"%s"'."' in boolean mode) ", dbesc(protect_sprintf($search)));
-	} else {
-		if($tag)
-			$sql_extra = sprintf(" AND `item`.`tag` REGEXP '%s' ", 	dbesc('\\]' . protect_sprintf(preg_quote($search)) . '\\['));
 		else
 			$sql_extra = sprintf(" AND `item`.`body` REGEXP '%s' ", dbesc(protect_sprintf(preg_quote($search))));
 	}
-
-
-
 
 	// Here is the way permissions work in the search module...
 	// Only public posts can be shown
@@ -164,6 +163,9 @@ function search_content(&$a) {
 		intval($a->pager['itemspage'])
 
 	);
+
+
+
 
 	if($tag) 
 		$o .= '<h2>Items tagged with: ' . $search . '</h2>';

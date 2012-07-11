@@ -1102,25 +1102,12 @@ function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 }
 
 
-function conv_sort($arr,$tags,$order) {
+function conv_sort($arr,$order) {
 
 	if((!(is_array($arr) && count($arr))))
 		return array();
 
 	$parents = array();
-
-
-	for($x = 0; $x < count($arr); $x ++) {
-		if(count($tags)) {
-			foreach($tags as $t) {
-				if($t['oid'] == $arr[$x]['item_id']) {
-					if(! is_array($arr[$x]['term']))
-						$arr[$x]['term'] = array();
-					$arr[$x]['term'][] = $t;
-				}
-			}
-		}
-	}
 
 	foreach($arr as $x)
 		if($x['id'] == $x['parent'])

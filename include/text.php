@@ -932,8 +932,8 @@ function prepare_body($item,$attach = false) {
 		foreach($terms as $t) {
 			if(strlen($x))
 				$x .= ',';
-			$x .= $t['term']
-				. ((local_user() == $item['uid']) ? ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&cat=' . $t['term'] . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>' : '');
+			$x .= htmlspecialchars($t['term'],ENT_QUOTES,'UTF-8') 
+				. ((local_user() == $item['uid']) ? ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&cat=' . urlencode($t['term']) . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>' : '');
 		}
 		if(strlen($x))
 			$s .= '<div class="categorytags"><span>' . t('Categories:') . ' </span>' . $x . '</div>'; 
@@ -947,7 +947,8 @@ function prepare_body($item,$attach = false) {
 		foreach($terms as $t) {
 			if(strlen($x))
 				$x .= '&nbsp;&nbsp;&nbsp;';
-			$x .= $t['term'] . ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&term=' . $t['term'] . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>';
+			$x .= htmlspecialchars($t['term'],ENT_QUOTES,'UTF-8') 
+				. ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&term=' . urlencode($t['term']) . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>';
 		}
 		if(strlen($x) && (local_user() == $item['uid']))
 			$s .= '<div class="filesavetags"><span>' . t('Filed under:') . ' </span>' . $x . '</div>'; 
@@ -1499,8 +1500,8 @@ function format_term_for_display($term) {
 	elseif($term['type'] == TERM_MENTION)
 		$s .= '@';
 
-	if($term['url']) $s .= '<a target="extlink" href="' . $term['url'] . '">' . $term['term'] . '</a>';
-	else $s .= $term['term'];
+	if($term['url']) $s .= '<a target="extlink" href="' . $term['url'] . '">' . htmlspecialchars($term['term']) . '</a>';
+	else $s .= htmlspecialchars($term['term']);
 	return $s;
 }
 

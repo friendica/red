@@ -290,7 +290,8 @@ function content_content(&$a, $update = 0) {
 				intval(TERM_OBJ_POST)
 			);
 
-			$items = conv_sort($items,$tags,$ordering);
+			$items = fetch_post_tags($items);
+			$items = conv_sort($items,$ordering);
 
 		} else {
 			$items = array();

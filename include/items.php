@@ -3697,3 +3697,32 @@ function store_diaspora_retract_sig($item, $user, $baseurl) {
 
 	return;
 }
+
+function fetch_post_tags($items) {
+
+	$tag_finder = array();
+	if(count($items))		
+		foreach($items as $item)
+			if(! in_array($item['item_id'],$tag_finder))
+				$tag_finder[] = $item['item_id'];
+	$tag_finder_str = implode(', ', $tag_finder);
+
+	$tags = q("select * from term where oid in ( %s ) and otype = %d",
+		dbesc($tag_finder_str),
+		intval(TERM_OBJ_POST)
+	);
+
+	for($x = 0; $x < count($items); $x ++) {
+		if(count($tags)) {
+			foreach($tags as $t) {
+				if($t['oid'] == $items[$x]['item_id']) {
+					if(! is_array($items[$x]['term']))
+						$items[$x]['term'] = array();
+					$items[$x]['term'][] = $t;
+				}
+			}
+		}
+	}
+
+	return $items;
+}

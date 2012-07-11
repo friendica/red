@@ -291,7 +291,8 @@ function profile_content(&$a, $update = 0) {
 			intval(TERM_OBJ_POST)
 		);
 
-		$items = conv_sort($items,$tags,'created');
+		$items = fetch_post_tags($items);
+		$items = conv_sort($items,'created');
 
 	} else {
 		$items = array();
