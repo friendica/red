@@ -100,8 +100,29 @@ function datetime_convert($from = 'UTC', $to = 'UTC', $s = 'now', $fmt = "Y-m-d 
 		return str_replace('1','0',$d->format($fmt));
 	}
 
-	$d = new DateTime($s, new DateTimeZone($from));
-	$d->setTimeZone(new DateTimeZone($to));
+	try {
+		$from_obj = new DateTimeZone($from);
+	}
+	catch(Exception $e) {
+		$from_obj = new DateTimeZone('UTC');
+	}
+
+	try {
+		$d = new DateTime($s, $from_obj);
+	}
+	catch(Exception $e) {
+		logger('datetime_convert: exception: ' . $e->getMessage());
+		$d = newDateTime('now', $from_obj);
+	}
+
+	try {
+		$to_obj = new DateTimeZone($to);
+	}
+	catch(Exception $e) {
+		$to_obj = new DateTimeZone('UTC');
+	}
+
+	$d->setTimeZone($to_obj);
 	return($d->format($fmt));
 }}
 
