@@ -124,9 +124,9 @@ function notification($params) {
 
 		$preamble = sprintf( t('%1$s posted to your profile wall at %2$s') , $params['source_name'], $sitename);
 		
-		$epreamble = sprintf( t('%1$s posted to [url=%2s]your wall[/url]') , 
+		$epreamble = sprintf( t('%1$s posted to [url=%2$s]your wall[/url]') , 
 								'[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]',
-								$itemlink); 
+								$params['link']); 
 		
 		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
 		$tsitelink = sprintf( $sitelink, $siteurl );

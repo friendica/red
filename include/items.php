@@ -141,6 +141,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 	// We will provide an empty feed if that is the case.
 
 	$items = $r;
+	$items = fetch_post_tags($items);
 
 	$feed_template = get_markup_template(($dfrn_id) ? 'atom_feed_dfrn.tpl' : 'atom_feed.tpl');
 
@@ -639,18 +640,32 @@ function get_atom_elements($feed,$item) {
 
 	$cats = $item->get_categories();
 	if($cats) {
-		$tag_arr = array();
+		$terms = array();
 		foreach($cats as $cat) {
 			$term = $cat->get_term();
 			if(! $term)
 				$term = $cat->get_label();
 			$scheme = $cat->get_scheme();
-			if($scheme && $term && stristr($scheme,'X-DFRN:'))
-				$tag_arr[] = substr($scheme,7,1) . '[url=' . unxmlify(substr($scheme,9)) . ']' . unxmlify($term) . '[/url]';
-			elseif($term)
-				$tag_arr[] = notags(trim($term));
+			$termurl = '';
+			if($scheme && $term && stristr($scheme,'X-DFRN:')) {
+				$termtype = ((substr($scheme,7,1) === '#') ? TERM_HASHTAG : TERM_MENTION);
+				$termurl = unxmlify(substr($scheme,9));
+			}
+			else {
+				$termtype = TERM_UNKNOWN;
+			}
+			$termterm = notags(trim(unxmlify($term)));
+
+			if($termterm) {
+				$terms = array(
+					'otype' => TERM_OBJ_POST,
+					'type'  => $termtype,
+					'url'   => $termurl,
+					'term'  => $termterm,
+				);
+			}		
 		}
-		$res['tag'] =  implode(',', $tag_arr);
+		$res['term'] =  implode(',', $tag_arr);
 	}
 
 	$attach = $item->get_enclosures();
@@ -947,6 +962,14 @@ function item_store($arr,$force_parent = false) {
 		return 0;
 	}
 
+	// pull out all the taxonomy stuff for separate storage
+
+	$terms = null;
+	if($arr['term']) {
+		$terms = $arr['term'];
+		unset($arr['term']);
+	}
+
 	dbesc_array($arr);
 
 	logger('item_store: ' . print_r($arr,true), LOGGER_DATA);
@@ -1003,14 +1026,31 @@ function item_store($arr,$force_parent = false) {
 		intval($current_post)
 	);
 
-        $arr['id'] = $current_post;
-        $arr['parent'] = $parent_id;
-        $arr['allow_cid'] = $allow_cid;
-        $arr['allow_gid'] = $allow_gid;
-        $arr['deny_cid'] = $deny_cid;
-        $arr['deny_gid'] = $deny_gid;
-        $arr['private'] = $private;
-        $arr['deleted'] = $parent_deleted;
+	$arr['id'] = $current_post;
+	$arr['parent'] = $parent_id;
+	$arr['allow_cid'] = $allow_cid;
+	$arr['allow_gid'] = $allow_gid;
+	$arr['deny_cid'] = $deny_cid;
+	$arr['deny_gid'] = $deny_gid;
+	$arr['private'] = $private;
+	$arr['deleted'] = $parent_deleted;
+
+	if(($terms) && (is_array($terms))) {
+		foreach($terms as $t) {
+			q("insert into term (uid,oid,otype,type,term,url)
+				values(%d,%d,%d,%d,'%s','%s') ",
+				intval($arr['uid']),
+				intval($current_post),
+				intval($t['otype']),
+				intval($t['type']),
+				dbesc($t['term']),
+				dbesc($t['url'])
+			);
+		}
+
+		$arr['term'] = $terms;
+	}	
+
 	call_hooks('post_remote_end',$arr);
 
 	// update the commented timestamp on the parent
@@ -1030,6 +1070,7 @@ function item_store($arr,$force_parent = false) {
 		);
 	}
 
+	
 
 	/**
 	 * If this is now the last-child, force all _other_ children of this parent to *not* be last-child
@@ -3313,23 +3354,18 @@ function enumerate_permissions($obj) {
 }
 
 function item_getfeedtags($item) {
+
+	$terms = get_terms_oftype($item['term'],array(TERM_HASHTAG,TERM_MENTION));
 	$ret = array();
-	$matches = false;
-	$cnt = preg_match_all('|\#\[url\=(.*?)\](.*?)\[\/url\]|',$item['tag'],$matches);
-	if($cnt) {
-		for($x = 0; $x < $cnt; $x ++) {
-			if($matches[1][$x])
-				$ret[] = array('#',$matches[1][$x], $matches[2][$x]);
+
+	if(count($terms)) {
+		foreach($terms as $term) {
+			if($term['type'] == TERM_HASHTAG)
+				$ret[] = array('#',$term['url'],$term['term']);
+			else
+				$ret[] = array('@',$term['url'],$term['term']);
 		}
 	}
-	$matches = false; 
-	$cnt = preg_match_all('|\@\[url\=(.*?)\](.*?)\[\/url\]|',$item['tag'],$matches);
-	if($cnt) {
-		for($x = 0; $x < $cnt; $x ++) {
-			if($matches[1][$x])
-				$ret[] = array('@',$matches[1][$x], $matches[2][$x]);
-		}
-	} 
 	return $ret;
 }
 
