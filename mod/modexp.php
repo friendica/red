@@ -8,14 +8,14 @@ function modexp_init(&$a) {
 		killme();
 
 	$nick = $a->argv[1];
-	$r = q("SELECT `spubkey` FROM `user` WHERE `nickname` = '%s' LIMIT 1",
+	$r = q("SELECT `pubkey` FROM `user` WHERE `nickname` = '%s' LIMIT 1",
 			dbesc($nick)
 	);
 
 	if(! count($r))
 		killme();
 
-	$lines = explode("\n",$r[0]['spubkey']);
+	$lines = explode("\n",$r[0]['pubkey']);
 	unset($lines[0]);
 	unset($lines[count($lines)]);
 	$x = base64_decode(implode('',$lines));

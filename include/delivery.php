@@ -155,7 +155,7 @@ function delivery_run($argv, $argc){
 		}
 
 		$r = q("SELECT `contact`.*, `user`.`pubkey` AS `upubkey`, `user`.`prvkey` AS `uprvkey`, 
-			`user`.`timezone`, `user`.`nickname`, `user`.`sprvkey`, `user`.`spubkey`, 
+			`user`.`timezone`, `user`.`nickname`, 
 			`user`.`page-flags`, `user`.`prvnets`
 			FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
 			WHERE `contact`.`uid` = %d AND `contact`.`self` = 1 LIMIT 1",

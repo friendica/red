@@ -537,7 +537,7 @@ function fetch_xrd_links($url) {
 
 	$xrd_timeout = intval(get_config('system','xrd_timeout'));
 	$redirects = 0;
-	$xml = fetch_url($url,false,$redirects,(($xrd_timeout) ? $xrd_timeout : 20));
+	$xml = fetch_url($url,false,$redirects,(($xrd_timeout) ? $xrd_timeout : 30));
 
 	logger('fetch_xrd_links: ' . $xml, LOGGER_DATA);
 
@@ -547,11 +547,9 @@ function fetch_xrd_links($url) {
 	// fix diaspora's bad xml
 	$xml = str_replace(array('href=&quot;','&quot;/>'),array('href="','"/>'),$xml);
 
-	$h = parse_xml_string($xml);
-	if(! $h)
-		return array();
+	$arr = xml2array($xml);
 
-	$arr = convert_xml_element_to_array($h);
+	logger('fetch_xrd_links: ' . print_r($arr,true), LOGGER_DATA);
 
 	$links = array();
 

@@ -162,24 +162,9 @@ function create_user($arr) {
 	$prvkey = $keys['prvkey'];
 	$pubkey = $keys['pubkey'];
 
-	/**
-	 *
-	 * Create another keypair for signing/verifying
-	 * salmon protocol messages. We have to use a slightly
-	 * less robust key because this won't be using openssl
-	 * but the phpseclib. Since it is PHP interpreted code
-	 * it is not nearly as efficient, and the larger keys
-	 * will take several minutes each to process.
-	 *
-	 */
-	
-	$sres    = new_keypair(512);
-	$sprvkey = $sres['prvkey'];
-	$spubkey = $sres['pubkey'];
-
 	$r = q("INSERT INTO `user` ( `guid`, `username`, `password`, `email`, `openid`, `nickname`,
-		`pubkey`, `prvkey`, `spubkey`, `sprvkey`, `register_date`, `verified`, `blocked`, `timezone`, `service_class` )
-		VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, 'UTC', '%s' )",
+		`pubkey`, `prvkey`, `register_date`, `verified`, `blocked`, `timezone`, `service_class` )
+		VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, 'UTC', '%s' )",
 		dbesc(generate_user_guid()),
 		dbesc($username),
 		dbesc($new_password_encoded),
@@ -188,8 +173,6 @@ function create_user($arr) {
 		dbesc($nickname),
 		dbesc($pubkey),
 		dbesc($prvkey),
-		dbesc($spubkey),
-		dbesc($sprvkey),
 		dbesc(datetime_convert()),
 		intval($verified),
 		intval($blocked),

@@ -74,7 +74,7 @@ function slapper($owner,$url,$slap) {
 		return;
 
 
-	if(! $owner['sprvkey']) {
+	if(! $owner['prvkey']) {
 		logger(sprintf("slapper: user '%s' (%d) does not have a salmon private key. Send failed.",
 		$owner['username'],$owner['uid']));
 		return;
@@ -103,17 +103,17 @@ EOT;
 	$data_type = 'application/atom+xml';
 	$encoding  = 'base64url';
 	$algorithm = 'RSA-SHA256';
-	$keyhash   = base64url_encode(hash('sha256',salmon_key($owner['spubkey'])),true);
+	$keyhash   = base64url_encode(hash('sha256',salmon_key($owner['pubkey'])),true);
 
 	// precomputed base64url encoding of data_type, encoding, algorithm concatenated with periods
 
 	$precomputed = '.YXBwbGljYXRpb24vYXRvbSt4bWw=.YmFzZTY0dXJs.UlNBLVNIQTI1Ng==';
 
-	$signature   = base64url_encode(rsa_sign(str_replace('=','',$data . $precomputed),$owner['sprvkey']));
+	$signature   = base64url_encode(rsa_sign(str_replace('=','',$data . $precomputed),$owner['prvkey']));
 
-	$signature2  = base64url_encode(rsa_sign($data . $precomputed,$owner['sprvkey']));
+	$signature2  = base64url_encode(rsa_sign($data . $precomputed,$owner['prvkey']));
 
-	$signature3  = base64url_encode(rsa_sign($data,$owner['sprvkey']));
+	$signature3  = base64url_encode(rsa_sign($data,$owner['prvkey']));
 
 	$salmon_tpl = get_markup_template('magicsig.tpl');
 
