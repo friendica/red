@@ -35,6 +35,14 @@ define ( 'JPEG_QUALITY',            100  );
 define ( 'PNG_QUALITY',             8  );
 
 /**
+ * Language detection parameters
+ */
+
+define ( 'LANGUAGE_DETECT_MIN_LENGTH',     128 );
+define ( 'LANGUAGE_DETECT_MIN_CONFIDENCE', 0.01 );
+
+
+/**
  *
  * An alternate way of limiting picture upload sizes. Specify the maximum pixel
  * length that pictures are allowed to be (for non-square pictures, it will apply
@@ -415,6 +423,7 @@ if(! class_exists('App')) {
 					. 'include' . PATH_SEPARATOR
 					. 'library' . PATH_SEPARATOR
 					. 'library/phpsec' . PATH_SEPARATOR
+					. 'library/langdet' . PATH_SEPARATOR
 					. '.' );
 
 			if((x($_SERVER,'QUERY_STRING')) && substr($_SERVER['QUERY_STRING'],0,2) === "q=") {

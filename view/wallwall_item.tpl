@@ -52,7 +52,7 @@
 			</div>
 			{{ endif }}
 			{{ if $item.plink }}
-				<div class="wall-item-links-wrapper"><a href="$item.plink.href" title="$item.plink.title" target="external-link" class="icon remote-link"></a></div>
+				<div class="wall-item-links-wrapper"><a href="$item.plink.href" title="$item.plink.title" target="external-link" class="icon remote-link$item.sparkle"></a></div>
 			{{ endif }}
 			{{ if $item.edpost }}
 				<a class="editpost icon pencil" href="$item.edpost.0" title="$item.edpost.1"></a>

@@ -23,7 +23,7 @@
 			<div class="wall-item-location">$item.location</div>	
 		</div>
 		<div class="wall-item-content">
-			{{ if $item.title }}<h2><a href="$item.plink.href">$item.title</a></h2>{{ endif }}
+			{{ if $item.title }}<h2><a href="$item.plink.href" class="$item.sparkle">$item.title</a></h2>{{ endif }}
 			$item.body
 		</div>
 	</div>
@@ -38,7 +38,7 @@
 	</div>
 	<div class="wall-item-bottom">
 		<div class="">
-			{{ if $item.plink }}<a class="icon s16 link" title="$item.plink.title" href="$item.plink.href">$item.plink.title</a>{{ endif }}
+			{{ if $item.plink }}<a class="icon s16 link$item.sparkle" title="$item.plink.title" href="$item.plink.href">$item.plink.title</a>{{ endif }}
 		</div>
 		<div class="wall-item-actions">
 			<div class="wall-item-actions-author">

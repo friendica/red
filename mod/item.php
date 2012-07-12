@@ -217,6 +217,12 @@ function item_post(&$a) {
 		$emailcc           = notags(trim($_REQUEST['emailcc']));
 		$body              = escape_tags(trim($_REQUEST['body']));
 
+
+		require_once('include/language.php');
+		$language = detect_language($body);
+
+		logger('detected language: ' . $language);
+
 		$private = ((strlen($str_group_allow) || strlen($str_contact_allow) || strlen($str_group_deny) || strlen($str_contact_deny)) ? 1 : 0);
 
 		// If this is a comment, set the permissions from the parent.
@@ -553,6 +559,7 @@ function item_post(&$a) {
 	$datarray['title']         = $title;
 	$datarray['body']          = $body;
 	$datarray['app']           = $app;
+	$datarray['lang']          = $language;
 	$datarray['location']      = $location;
 	$datarray['coord']         = $coord;
 	$datarray['tag']           = $str_tags;
@@ -641,9 +648,9 @@ function item_post(&$a) {
 
 
 	$r = q("INSERT INTO `item` (`guid`, `uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
-		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `commented`, `received`, `changed`, `uri`, `thr-parent`, `title`, `body`, `app`, `location`, `coord`, 
+		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `commented`, `received`, `changed`, `uri`, `thr-parent`, `title`, `body`, `app`, `lang`, `location`, `coord`, 
 		`tag`, `inform`, `verb`, `postopts`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`,`origin`, `moderated`, `file` )
-		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, '%s' )",
+		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, '%s' )",
 		dbesc($datarray['guid']),
 		intval($datarray['uid']),
 		dbesc($datarray['type']),
@@ -666,6 +673,7 @@ function item_post(&$a) {
 		dbesc($datarray['title']),
 		dbesc($datarray['body']),
 		dbesc($datarray['app']),
+		dbesc($datarray['lang']),
 		dbesc($datarray['location']),
 		dbesc($datarray['coord']),
 		dbesc($datarray['tag']),
@@ -680,9 +688,9 @@ function item_post(&$a) {
 		intval($datarray['pubmail']),
 		dbesc($datarray['attach']),
 		intval($datarray['origin']),
-	        intval($datarray['moderated']),
-	        dbesc($datarray['file'])
-	       );
+		intval($datarray['moderated']),
+		dbesc($datarray['file'])
+	);
 
 	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
 		dbesc($datarray['uri']));

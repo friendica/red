@@ -826,6 +826,9 @@ function item_store($arr,$force_parent = false) {
 	if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false)) 
 		$arr['body'] = strip_tags($arr['body']);
 
+	require_once('include/language.php');
+	$arr['lang'] = detect_language($arr['body']);
+
 
 	$arr['wall']          = ((x($arr,'wall'))          ? intval($arr['wall'])                : 0);
 	$arr['uri']           = ((x($arr,'uri'))           ? notags(trim($arr['uri']))           : random_string());
