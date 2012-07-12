@@ -385,9 +385,17 @@ function profile_activity($changed, $value) {
 	$arr['deny_gid']  = $a->user['deny_gid'];
 
 	$i = item_store($arr);
-	if($i)
+	if($i) {
+
+		// give it a permanent link
+		q("update item set plink = '%s' where id = %d limit 1",
+			dbesc($a->get_baseurl() . '/display/' . $a->user['nickname'] . '/' . $i),
+			intval($i)
+		);
+
 	   	proc_run('php',"include/notifier.php","activity","$i");
 
+	}
 }
 
 
