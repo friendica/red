@@ -68,23 +68,26 @@ function network_init(&$a) {
 	if(! x($a->page,'aside'))
 		$a->page['aside'] = '';
 
-	$search = ((x($_GET,'search')) ? escape_tags($_GET['search']) : '');
+	$search = ((x($_GET,'search')) ? $_GET['search'] : '');
 
 	if(x($_GET,'save')) {
-		$r = q("select * from `search` where `uid` = %d and `term` = '%s' limit 1",
+		$r = q("select * from `term` where `uid` = %d and `type` = %d and `term` = '%s' limit 1",
 			intval(local_user()),
+			intval(TERM_SAVEDSEARCH),
 			dbesc($search)
 		);
 		if(! count($r)) {
-			q("insert into `search` ( `uid`,`term` ) values ( %d, '%s') ",
+			q("insert into `term` ( `uid`,`type`,`term` ) values ( %d, %d, '%s') ",
 				intval(local_user()),
+				intval(TERM_SAVEDSEARCH),
 				dbesc($search)
 			);
 		}
 	}
 	if(x($_GET,'remove')) {
-		q("delete from `search` where `uid` = %d and `term` = '%s' limit 1",
+		q("delete from `term` where `uid` = %d and `type` = %d and `term` = '%s' limit 1",
 			intval(local_user()),
+			intval(TERM_SAVEDSEARCH),
 			dbesc($search)
 		);
 	}
@@ -114,7 +117,7 @@ function network_init(&$a) {
 	
 	// search terms header
 	if(x($_GET,'search')) {
-		$a->page['content'] .= '<h2>' . t('Search Results For:') . ' '  . $search . '</h2>';
+		$a->page['content'] .= '<h2>' . t('Search Results For:') . ' '  . htmlspecialchars($search) . '</h2>';
 	}
 
 	$a->page['aside'] .= group_side('network','network',true,$group_id);
@@ -141,8 +144,9 @@ function saved_searches($search) {
 	
 	$o = '';
 
-	$r = q("select `id`,`term` from `search` WHERE `uid` = %d",
-		intval(local_user())
+	$r = q("select `tid`,`term` from `term` WHERE `uid` = %d and `type` = %d ",
+		intval(local_user()),
+		intval(TERM_SAVEDSEARCH)
 	);
 
 	$saved = array();
@@ -150,8 +154,9 @@ function saved_searches($search) {
 	if(count($r)) {
 		foreach($r as $rr) {
 			$saved[] = array(
-				'id'            => $rr['id'],
+				'id'            => $rr['tid'],
 				'term'			=> $rr['term'],
+				'displayterm'   => htmlspecialchars($rr['term']),
 				'encodedterm' 	=> urlencode($rr['term']),
 				'delete'		=> t('Remove term'),
 				'selected'		=> ($search==$rr['term']),

@@ -4,8 +4,9 @@ function search_saved_searches() {
 
 	$o = '';
 
-	$r = q("select `id`,`term` from `search` WHERE `uid` = %d",
-		intval(local_user())
+	$r = q("select `tid`,`term` from `term` WHERE `uid` = %d and type = %d",
+		intval(local_user()),
+		intval(TERM_SAVEDSEARCH)
 	);
 
 	if(count($r)) {
@@ -13,7 +14,7 @@ function search_saved_searches() {
 		$o .= '<h3>' . t('Saved Searches') . '</h3>' . "\r\n";
 		$o .= '<ul id="saved-search-ul">' . "\r\n";
 		foreach($r as $rr) {
-			$o .= '<li class="saved-search-li clear"><a href="search/?f=&remove=1&search=' . $rr['term'] . '" class="icon drophide savedsearchdrop" title="' . t('Remove term') . '" onclick="return confirmDelete();" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a> <a href="search/?f=&search=' . $rr['term'] . '" class="savedsearchterm" >' . $rr['term'] . '</a></li>' . "\r\n";
+			$o .= '<li class="saved-search-li clear"><a href="search/?f=&remove=1&search=' . $rr['term'] . '" class="icon drophide savedsearchdrop" title="' . t('Remove term') . '" onclick="return confirmDelete();" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a> <a href="search/?f=&search=' . $rr['term'] . '" class="savedsearchterm" >' . htmlspecialchars($rr['term']) . '</a></li>' . "\r\n";
 		}
 		$o .= '</ul><div class="clear"></div></div>' . "\r\n";
 	}		
@@ -25,24 +26,27 @@ function search_saved_searches() {
 
 function search_init(&$a) {
 
-	$search = ((x($_GET,'search')) ? notags(trim(rawurldecode($_GET['search']))) : '');
+	$search = ((x($_GET,'search')) ? trim(rawurldecode($_GET['search'])) : '');
 
 	if(local_user()) {
 		if(x($_GET,'save') && $search) {
-			$r = q("select * from `search` where `uid` = %d and `term` = '%s' limit 1",
+			$r = q("select `tid` from `term` where `uid` = %d and `type` = %d and `term` = '%s' limit 1",
 				intval(local_user()),
+				intval(TERM_SAVEDSEARCH),
 				dbesc($search)
 			);
 			if(! count($r)) {
-				q("insert into `search` ( `uid`,`term` ) values ( %d, '%s') ",
+				q("insert into `term` ( `uid`,`type`,`term` ) values ( %d, %d, '%s') ",
 					intval(local_user()),
+					intval(TERM_SAVEDSEARCH),
 					dbesc($search)
 				);
 			}
 		}
 		if(x($_GET,'remove') && $search) {
-			q("delete from `search` where `uid` = %d and `term` = '%s' limit 1",
+			q("delete from `term` where `uid` = %d and `type` = %d and `term` = '%s' limit 1",
 				intval(local_user()),
+				intval(TERM_SAVEDSEARCH),
 				dbesc($search)
 			);
 		}
@@ -83,16 +87,15 @@ function search_content(&$a) {
 	$o .= '<h3>' . t('Search') . '</h3>';
 
 	if(x($a->data,'search'))
-		$search = notags(trim($a->data['search']));
+		$search = trim($a->data['search']);
 	else
-		$search = ((x($_GET,'search')) ? notags(trim(rawurldecode($_GET['search']))) : '');
+		$search = ((x($_GET,'search')) ? trim(rawurldecode($_GET['search'])) : '');
 
 	$tag = false;
 	if(x($_GET,'tag')) {
 		$tag = true;
-		$search = ((x($_GET,'tag')) ? notags(trim(rawurldecode($_GET['tag']))) : '');
+		$search = ((x($_GET,'tag')) ? trim(rawurldecode($_GET['tag'])) : '');
 	}
-
 
 	$o .= search($search,'search-box','/search',((local_user()) ? true : false));
 
@@ -165,12 +168,12 @@ function search_content(&$a) {
 	);
 
 
-
+	$a = fetch_post_tags($a);
 
 	if($tag) 
-		$o .= '<h2>Items tagged with: ' . $search . '</h2>';
+		$o .= '<h2>Items tagged with: ' . htmlspecialchars($search) . '</h2>';
 	else
-		$o .= '<h2>Search results for: ' . $search . '</h2>';
+		$o .= '<h2>Search results for: ' . htmlspecialchars($search) . '</h2>';
 
 	$o .= conversation($a,$r,'search',false);
 

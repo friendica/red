@@ -199,12 +199,14 @@ define ( 'NOTIFY_SYSTEM',   0x8000 );
  * Tag/term types
  */
 
-define ( 'TERM_UNKNOWN',   0 );
-define ( 'TERM_HASHTAG',   1 );
-define ( 'TERM_MENTION',   2 );   
-define ( 'TERM_CATEGORY',  3 );
-define ( 'TERM_PCATEGORY', 4 );
-define ( 'TERM_FILE',      5 );
+define ( 'TERM_UNKNOWN',     0 );
+define ( 'TERM_HASHTAG',     1 );
+define ( 'TERM_MENTION',     2 );   
+define ( 'TERM_CATEGORY',    3 );
+define ( 'TERM_PCATEGORY',   4 );
+define ( 'TERM_FILE',        5 );
+define ( 'TERM_SAVEDSEARCH', 6 );
+
 
 define ( 'TERM_OBJ_POST',  1 );
 define ( 'TERM_OBJ_PHOTO', 2 );
