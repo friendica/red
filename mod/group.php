@@ -44,7 +44,7 @@ function group_post(&$a) {
 			intval(local_user())
 		);
 		if(! count($r)) {
-			notice( t('Group not found.') . EOL );
+			notice( t('Contact group not found.') . EOL );
 			goaway($a->get_baseurl() . '/contacts');
 			return; // NOTREACHED
 		}
@@ -57,7 +57,7 @@ function group_post(&$a) {
 				intval($group['id'])
 			);
 			if($r)
-				info( t('Group name changed.') . EOL );
+				info( t('Contact group name changed.') . EOL );
 		}
 
 		$a->page['aside'] = group_side();
@@ -88,7 +88,7 @@ function group_content(&$a) {
 		
 		return replace_macros($tpl, $context + array(
 			'$title' => t('Create a group of contacts/friends.'),
-			'$gname' => array('groupname',t('Group Name: '), '', ''),
+			'$gname' => array('groupname',t('Contact Group Name: '), '', ''),
 			'$gid' => 'new',
 			'$form_security_token' => get_form_security_token("group_edit"),
 		));
@@ -107,9 +107,9 @@ function group_content(&$a) {
 			if(count($r)) 
 				$result = group_rmv(local_user(),$r[0]['name']);
 			if($result)
-				info( t('Group removed.') . EOL);
+				info( t('Contact group removed.') . EOL);
 			else
-				notice( t('Unable to remove group.') . EOL);
+				notice( t('Unable to remove contact group.') . EOL);
 		}
 		goaway($a->get_baseurl() . '/group');
 		// NOTREACHED
@@ -134,7 +134,7 @@ function group_content(&$a) {
 			intval(local_user())
 		);
 		if(! count($r)) {
-			notice( t('Group not found.') . EOL );
+			notice( t('Contact group not found.') . EOL );
 			goaway($a->get_baseurl() . '/contacts');
 		}
 		$group = $r[0];
@@ -173,8 +173,8 @@ function group_content(&$a) {
 
 		
 		$context = $context + array(
-			'$title' => t('Group Editor'),
-			'$gname' => array('groupname',t('Group Name: '),$group['name'], ''),
+			'$title' => t('Contact Group Editor'),
+			'$gname' => array('groupname',t('Contact Group Name: '),$group['name'], ''),
 			'$gid' => $group['id'],
 			'$drop' => $drop_txt,
 			'$form_security_token' => get_form_security_token('group_edit'),

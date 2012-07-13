@@ -92,29 +92,17 @@ function network_init(&$a) {
 		);
 	}
 
-	$a->page['content'] .= '<div id="slider-range" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all">
-<div class="ui-slider-range ui-widget-header" style="margin-left: 30px; margin-right: 30px;"></div>
-<a class="ui-slider-handle ui-state-default ui-corner-all" href="#" style="left: 0%;"></a>
-<a class="ui-slider-handle ui-state-default ui-corner-all" href="#" style="left: 100%;"></a>
-</div>
-	<script>
-	$(function() {
-		$( "#slider-range" ).slider({
-			range: true,
-			min: 0,
-			max: 500,
-			values: [ 75, 300 ],
-			slide: function( event, ui ) {
-				$( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
-			}
-		});
-		$( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
-			" - $" + $( "#slider-range" ).slider( "values", 1 ) );
-	});
-	</script>
-';
-
-	
+	$tpl = get_markup_template('main_slider.tpl');
+	$a->page['content'] .= replace_macros($tpl,array(
+		'$me' => t('Me'),
+		'$intimate' => t('Best Friends'),
+		'$friends' => t('Friends'),
+		'$coworkers' => t('Co-workers'),
+		'$oldfriends' => t('Former Friends'),
+		'$acquaintances' => t('Acquaintances'),
+		'$world' => t('Everybody')
+	));
+ 	
 	// search terms header
 	if(x($_GET,'search')) {
 		$a->page['content'] .= '<h2>' . t('Search Results For:') . ' '  . htmlspecialchars($search) . '</h2>';

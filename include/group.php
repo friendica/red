@@ -236,10 +236,10 @@ function group_side($every="contacts",$each="group",$edit = false, $group_id = 0
 	
 	$tpl = get_markup_template("group_side.tpl");
 	$o = replace_macros($tpl, array(
-		'$title'		=> t('Groups'),
-		'$edittext'     => t('Edit group'),
-		'$createtext' 	=> t('Create a new group'),
-		'$ungrouped'    => (($every === 'contacts') ? t('Contacts not in any group') : ''),
+		'$title'		=> t('Contact Groups'),
+		'$edittext'     => t('Edit contact group'),
+		'$createtext' 	=> t('Create a new contact group'),
+		'$ungrouped'    => (($every === 'contacts') ? t('Contacts not in any contact group') : ''),
 		'$groups'		=> $groups,
 		'$add'			=> t('add'),
 	));

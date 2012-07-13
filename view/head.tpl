@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="$baseurl/library/tiptip/tipTip.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="$baseurl/library/jgrowl/jquery.jgrowl.css" type="text/css" media="screen" />
 
+<link rel="stylesheet" type="text/css" href="$baseurl/library/jslider/bin/jquery.slider.min.css" />
 <link rel="stylesheet" type="text/css" href="$stylesheet" media="all" />
 
 <link rel="shortcut icon" href="$baseurl/images/friendica-32.png" />
@@ -27,13 +28,7 @@
 <script type="text/javascript" src="$baseurl/js/webtoolkit.base64.js" ></script>
 <script type="text/javascript" src="$baseurl/js/main.js" ></script>
 
-<link href="$baseurl/include/jquery_ui/development-bundle/themes/base/jquery.ui.all.css" rel="stylesheet">
-<script src="$baseurl/include/jquery_ui/js/jquery-1.7.2.min.js"></script>
-<script src="$baseurl/include/jquery_ui/development-bundle/ui/jquery.ui.core.js"></script>
-<script src="$baseurl/include/jquery_ui/development-bundle/ui/jquery.ui.widget.js"></script>
-<script src="$baseurl/include/jquery_ui/development-bundle/ui/jquery.ui.mouse.js"></script>
-<script src="$baseurl/include/jquery_ui/development-bundle/ui/jquery.ui.slider.js"></script>
-
+<script src="$baseurl/library/jslider/bin/jquery.slider.min.js"></script>
 <script>
 
 	var updateInterval = $update_interval;

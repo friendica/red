@@ -220,3 +220,14 @@ nav #site-location {
 -o-transform: rotate(4deg);
 }
 
+.jslider .jslider-scale ins {
+    color: #333;
+	font-size: 12px;
+	width: 100px;
+	text-align: center;
+}
+
+#slider {
+	margin-top: 10px;
+	margin-bottom: 15px;
+}

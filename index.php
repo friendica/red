@@ -356,7 +356,10 @@ if($a->module != 'install') {
  * Build the page - now that we have all the components
  */
 
-$a->page['htmlhead'] = replace_macros($a->page['htmlhead'], array('$stylesheet' => current_theme_url()));
+$a->page['htmlhead'] = replace_macros($a->page['htmlhead'], 
+	array('$stylesheet' => current_theme_url(),
+		'$theme' => current_theme() 
+	));
 
 $page    = $a->page;
 $profile = $a->profile;
