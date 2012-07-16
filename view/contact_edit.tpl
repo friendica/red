@@ -56,6 +56,7 @@
 
 <form action="contacts/$contact_id" method="post" >
 <input type="hidden" name="contact_id" value="$contact_id">
+<input id="contact-closeness-mirror" type="hidden" name="closeness" value="$close" />
 
 	{{ if $poll_enabled }}
 		<div id="contact-edit-poll-wrapper">

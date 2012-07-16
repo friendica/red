@@ -105,14 +105,19 @@ function contacts_post(&$a) {
 	if($priority > 5 || $priority < 0)
 		$priority = 0;
 
+	$closeness = intval($_POST['closeness']);
+	if($closeness < 0)
+		$closeness = 99;
+
 	$info = fix_mce_lf(escape_tags(trim($_POST['info'])));
 
 	$r = q("UPDATE `contact` SET `profile-id` = %d, `priority` = %d , `info` = '%s',
-		`hidden` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
+		`hidden` = %d, closeness = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		intval($profile_id),
 		intval($priority),
 		dbesc($info),
 		intval($hidden),
+		intval($closeness),
 		intval($contact_id),
 		intval(local_user())
 	);
@@ -337,6 +342,18 @@ function contacts_content(&$a) {
 
 		$lost_contact = (($contact['archive'] && $contact['term-date'] != '0000-00-00 00:00:00' && $contact['term-date'] < datetime_convert('','','now')) ? t('Communications lost with this contact!') : '');
 
+		$slider_tpl = get_markup_template('contact_slider.tpl');
+		$o .= replace_macros($slider_tpl,array(
+			'$me' => t('Me'),
+			'$val' => $contact['closeness'],
+			'$intimate' => t('Best Friends'),
+			'$friends' => t('Friends'),
+			'$coworkers' => t('Co-workers'),
+			'$oldfriends' => t('Former Friends'),
+			'$acquaintances' => t('Acquaintances'),
+			'$world' => t('Everybody')
+		));
+
 		$o .= replace_macros($tpl,array(
 			'$header' => t('Contact Editor'),
 			'$tab_str' => $tab_str,
@@ -345,6 +362,7 @@ function contacts_content(&$a) {
 			'$lbl_vis2' => sprintf( t('Please choose the profile you would like to display to %s when viewing your profile securely.'), $contact['name']),
 			'$lbl_info1' => t('Contact Information / Notes'),
 			'$infedit' => t('Edit contact notes'),
+			'$close' => $contact['closeness'],
 			'$common_text' => $common_text,
 			'$common_link' => $a->get_baseurl(true) . '/common/loc/' . local_user() . '/' . $contact['id'],
 			'$all_friends' => $all_friends,
