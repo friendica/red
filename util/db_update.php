@@ -11,7 +11,7 @@ require_once("boot.php");
 $a = new App;
 @include(".htconfig.php");
 
-$lang = get_browser_language();
+$lang = get_best_language();
 load_translation_table($lang);
 
 require_once("dba.php");

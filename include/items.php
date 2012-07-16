@@ -827,6 +827,8 @@ function item_store($arr,$force_parent = false) {
 		$arr['body'] = strip_tags($arr['body']);
 
 	$arr['lang'] = detect_language($arr['body']);
+	
+
 
 
 	$arr['wall']          = ((x($arr,'wall'))          ? intval($arr['wall'])                : 0);

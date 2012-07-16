@@ -19,6 +19,8 @@
 if(! function_exists('get_browser_language')) {
 function get_browser_language() {
 
+	$langs = array();
+
 	if (x($_SERVER,'HTTP_ACCEPT_LANGUAGE')) {
 	    // break up string into pieces (languages and q factors)
     	preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', 
@@ -37,6 +39,16 @@ function get_browser_language() {
         	arsort($langs, SORT_NUMERIC);
     	}
 	}
+	else
+		$langs['en'] = 1;
+
+	return $langs;
+}}
+
+
+function get_best_language() {
+
+	$langs = get_browser_language();
 
 	if(isset($langs) && count($langs)) {
 		foreach ($langs as $lang => $v) {
@@ -52,7 +64,7 @@ function get_browser_language() {
 
     $a = get_app();
 	return ((isset($a->config['system']['language'])) ? $a->config['system']['language'] : 'en');
-}}
+}
 
 
 function push_lang($language) {
