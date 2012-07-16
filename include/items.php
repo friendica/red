@@ -969,7 +969,7 @@ function item_store($arr,$force_parent = false) {
 	// pull out all the taxonomy stuff for separate storage
 
 	$terms = null;
-	if($arr['term']) {
+	if(x($arr,'term')) {
 		$terms = $arr['term'];
 		unset($arr['term']);
 	}
