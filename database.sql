@@ -1,9 +1,45 @@
--- phpMyAdmin SQL Dump
--- version 3.3.10.4
--- http://www.phpmyadmin.net
---
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `account`
+--
+
+CREATE TABLE IF NOT EXISTS `account` (
+  `account_id` int(11) NOT NULL AUTO_INCREMENT,
+  `account_name` char(255) NOT NULL,
+  `account_password` char(255) NOT NULL,
+  `account_email` char(255) NOT NULL,
+  `account_openid` char(255) NOT NULL,
+  `account_language` char(16) NOT NULL DEFAULT 'en',
+  `account_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `account_verified` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `account_blocked` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `account_reset` char(255) NOT NULL,
+  `account_removed` tinyint(1) NOT NULL DEFAULT '0',
+  `account_expired` tinyint(1) NOT NULL DEFAULT '0',
+  `account_expires` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `account_expire_notified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `account_service_class` char(32) NOT NULL,
+  PRIMARY KEY (`account_id`),
+  KEY `account_name` (`account_name`),
+  KEY `account_password` (`account_password`),
+  KEY `account_email` (`account_email`),
+  KEY `account_openid` (`account_openid`),
+  KEY `account_verified` (`account_verified`),
+  KEY `account_blocked` (`account_blocked`),
+  KEY `account_removed` (`account_removed`),
+  KEY `account_expired` (`account_expired`),
+  KEY `account_service_class` (`account_service_class`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -20,8 +56,10 @@ CREATE TABLE IF NOT EXISTS `addon` (
   `timestamp` bigint(20) NOT NULL DEFAULT '0',
   `plugin_admin` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  KEY `hidden` (`hidden`)  
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+  KEY `hidden` (`hidden`),
+  KEY `name` (`name`),
+  KEY `installed` (`installed`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -44,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `attach` (
   `deny_cid` mediumtext NOT NULL,
   `deny_gid` mediumtext NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -223,7 +261,7 @@ CREATE TABLE IF NOT EXISTS `conv` (
   PRIMARY KEY (`id`),
   KEY `created` (`created`),
   KEY `updated` (`updated`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -236,8 +274,10 @@ CREATE TABLE IF NOT EXISTS `deliverq` (
   `cmd` char(32) NOT NULL,
   `item` int(11) NOT NULL,
   `contact` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  KEY `item` (`item`),
+  KEY `contact` (`contact`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -265,14 +305,15 @@ CREATE TABLE IF NOT EXISTS `event` (
   `deny_cid` mediumtext NOT NULL,
   `deny_gid` mediumtext NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `uid` ( `uid` ),
-  KEY `cid` ( `cid` ),
-  KEY `uri` ( `uri` ),
-  KEY `type` ( `type` ),
-  KEY `start` ( `start` ),
-  KEY `finish` ( `finish` ),
-  KEY `adjust` ( `adjust` )
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+  KEY `uid` (`uid`),
+  KEY `cid` (`cid`),
+  KEY `uri` (`uri`),
+  KEY `type` (`type`),
+  KEY `start` (`start`),
+  KEY `finish` (`finish`),
+  KEY `adjust` (`adjust`),
+  KEY `nofinish` (`nofinish`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -300,7 +341,7 @@ CREATE TABLE IF NOT EXISTS `fcontact` (
   PRIMARY KEY (`id`),
   KEY `addr` (`addr`),
   KEY `network` (`network`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -313,7 +354,10 @@ CREATE TABLE IF NOT EXISTS `ffinder` (
   `uid` int(10) unsigned NOT NULL,
   `cid` int(10) unsigned NOT NULL,
   `fid` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `uid` (`uid`),
+  KEY `cid` (`cid`),
+  KEY `fid` (`fid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -328,7 +372,9 @@ CREATE TABLE IF NOT EXISTS `fserver` (
   `posturl` char(255) NOT NULL,
   `key` text NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `server` (`server`)
+  KEY `server` (`server`),
+  KEY `server_2` (`server`),
+  KEY `posturl` (`posturl`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -348,7 +394,7 @@ CREATE TABLE IF NOT EXISTS `fsuggest` (
   `note` text NOT NULL,
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -379,7 +425,9 @@ CREATE TABLE IF NOT EXISTS `gcontact` (
   `photo` char(255) NOT NULL,
   `connect` char(255) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `nurl` (`nurl`)
+  KEY `nurl` (`nurl`),
+  KEY `name` (`name`),
+  KEY `url` (`url`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -415,7 +463,10 @@ CREATE TABLE IF NOT EXISTS `group` (
   `visible` tinyint(1) NOT NULL DEFAULT '0',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `name` char(255) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `uid` (`uid`),
+  KEY `visible` (`visible`),
+  KEY `deleted` (`deleted`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -429,8 +480,11 @@ CREATE TABLE IF NOT EXISTS `group_member` (
   `uid` int(10) unsigned NOT NULL,
   `gid` int(10) unsigned NOT NULL,
   `contact-id` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  KEY `uid` (`uid`),
+  KEY `gid` (`gid`),
+  KEY `contact-id` (`contact-id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -456,8 +510,9 @@ CREATE TABLE IF NOT EXISTS `hook` (
   `hook` char(255) NOT NULL,
   `file` char(255) NOT NULL,
   `function` char(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  KEY `hook` (`hook`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -477,7 +532,14 @@ CREATE TABLE IF NOT EXISTS `intro` (
   `datetime` datetime NOT NULL,
   `blocked` tinyint(1) NOT NULL DEFAULT '1',
   `ignore` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `uid` (`uid`),
+  KEY `fid` (`fid`),
+  KEY `hash` (`hash`),
+  KEY `datetime` (`datetime`),
+  KEY `blocked` (`blocked`),
+  KEY `ignore` (`ignore`),
+  KEY `contact-id` (`contact-id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -513,6 +575,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `title` char(255) NOT NULL,
   `body` mediumtext NOT NULL,
   `app` char(255) NOT NULL,
+  `lang` char(64) NOT NULL,
   `verb` char(255) NOT NULL,
   `object-type` char(255) NOT NULL,
   `object` text NOT NULL,
@@ -602,7 +665,7 @@ CREATE TABLE IF NOT EXISTS `item_id` (
 -- Table structure for table `locks`
 --
 
-CREATE TABLE `locks` (
+CREATE TABLE IF NOT EXISTS `locks` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` char(128) NOT NULL,
   `locked` tinyint(1) NOT NULL DEFAULT '0',
@@ -642,8 +705,9 @@ CREATE TABLE IF NOT EXISTS `mail` (
   KEY `parent-uri` (`parent-uri`),
   KEY `created` (`created`),
   KEY `convid` (`convid`),
-  KEY `unknown` (`unknown`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+  KEY `unknown` (`unknown`),
+  KEY `contact-id` (`contact-id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -665,8 +729,9 @@ CREATE TABLE IF NOT EXISTS `mailacct` (
   `reply_to` char(255) NOT NULL,
   `pubmail` tinyint(1) NOT NULL DEFAULT '0',
   `last_check` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  KEY `uid` (`uid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -681,7 +746,7 @@ CREATE TABLE IF NOT EXISTS `manage` (
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
   KEY `mid` (`mid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -766,7 +831,7 @@ CREATE TABLE IF NOT EXISTS `photo` (
   `desc` text NOT NULL,
   `album` char(255) NOT NULL,
   `filename` char(255) NOT NULL,
-  `type` CHAR(128) NOT NULL DEFAULT 'image/jpeg',
+  `type` char(128) NOT NULL DEFAULT 'image/jpeg',
   `height` smallint(6) NOT NULL,
   `width` smallint(6) NOT NULL,
   `data` mediumblob NOT NULL,
@@ -781,7 +846,9 @@ CREATE TABLE IF NOT EXISTS `photo` (
   KEY `resource-id` (`resource-id`),
   KEY `album` (`album`),
   KEY `scale` (`scale`),
-  KEY `profile` (`profile`)
+  KEY `profile` (`profile`),
+  KEY `type` (`type`),
+  KEY `contact-id` (`contact-id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -846,7 +913,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `gender` char(32) NOT NULL,
   `marital` char(255) NOT NULL,
   `with` text NOT NULL,
-  `howlong` datetime NOT NULL default '0000-00-00 00:00:00',
+  `howlong` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `sexual` char(255) NOT NULL,
   `politic` char(255) NOT NULL,
   `religion` char(255) NOT NULL,
@@ -888,8 +955,13 @@ CREATE TABLE IF NOT EXISTS `profile_check` (
   `dfrn_id` char(255) NOT NULL,
   `sec` char(255) NOT NULL,
   `expire` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  KEY `uid` (`uid`),
+  KEY `cid` (`cid`),
+  KEY `dfrn_id` (`dfrn_id`),
+  KEY `sec` (`sec`),
+  KEY `expire` (`expire`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -911,7 +983,7 @@ CREATE TABLE IF NOT EXISTS `queue` (
   KEY `created` (`created`),
   KEY `last` (`last`),
   KEY `batch` (`batch`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -926,23 +998,11 @@ CREATE TABLE IF NOT EXISTS `register` (
   `uid` int(10) unsigned NOT NULL,
   `password` char(255) NOT NULL,
   `language` char(16) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `search`
---
-
-CREATE TABLE IF NOT EXISTS `search` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` int(11) NOT NULL,
-  `term` char(255) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `uid` (`uid`),
-  KEY `term` (`term`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+  KEY `hash` (`hash`),
+  KEY `created` (`created`),
+  KEY `uid` (`uid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -975,8 +1035,9 @@ CREATE TABLE IF NOT EXISTS `sign` (
   `signer` char(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `iid` (`iid`),
-  KEY `retract_iid` (`retract_iid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+  KEY `retract_iid` (`retract_iid`),
+  KEY `signer` (`signer`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1005,18 +1066,20 @@ CREATE TABLE IF NOT EXISTS `spam` (
 --
 
 CREATE TABLE IF NOT EXISTS `term` (
-  `tid` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `oid` INT UNSIGNED NOT NULL ,
-  `otype` TINYINT( 3 ) UNSIGNED NOT NULL ,
-  `type` TINYINT( 3 ) UNSIGNED NOT NULL ,
-  `term` CHAR( 255 ) NOT NULL ,
-  `url` CHAR( 255 ) NOT NULL, 
+  `tid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(10) unsigned NOT NULL,
+  `oid` int(10) unsigned NOT NULL,
+  `otype` tinyint(3) unsigned NOT NULL,
+  `type` tinyint(3) unsigned NOT NULL,
+  `term` char(255) NOT NULL,
+  `url` char(255) NOT NULL,
   PRIMARY KEY (`tid`),
-  KEY `oid` ( `oid` ),
-  KEY `otype` ( `otype` ),
-  KEY `type`  ( `type` ),
-  KEY `term`  ( `term` )
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  KEY `oid` (`oid`),
+  KEY `otype` (`otype`),
+  KEY `type` (`type`),
+  KEY `term` (`term`),
+  KEY `uid` (`uid`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1031,7 +1094,10 @@ CREATE TABLE IF NOT EXISTS `tokens` (
   `expires` int(11) NOT NULL,
   `scope` varchar(200) NOT NULL,
   `uid` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `client_id` (`client_id`),
+  KEY `expires` (`expires`),
+  KEY `uid` (`uid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -1042,10 +1108,12 @@ CREATE TABLE IF NOT EXISTS `tokens` (
 
 CREATE TABLE IF NOT EXISTS `user` (
   `uid` int(11) NOT NULL AUTO_INCREMENT,
+  `account_id` int(10) unsigned NOT NULL,
   `guid` char(16) NOT NULL,
   `username` char(255) NOT NULL,
   `password` char(255) NOT NULL,
   `nickname` char(255) NOT NULL,
+  `webid` char(255) NOT NULL,
   `email` char(255) NOT NULL,
   `openid` char(255) NOT NULL,
   `timezone` char(128) NOT NULL,
@@ -1057,8 +1125,6 @@ CREATE TABLE IF NOT EXISTS `user` (
   `theme` char(255) NOT NULL,
   `pubkey` text NOT NULL,
   `prvkey` text NOT NULL,
-  `spubkey` text NOT NULL,
-  `sprvkey` text NOT NULL,
   `verified` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `blocked` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `blockwall` tinyint(1) NOT NULL DEFAULT '0',
@@ -1068,7 +1134,6 @@ CREATE TABLE IF NOT EXISTS `user` (
   `cntunkmail` int(11) NOT NULL DEFAULT '10',
   `notify-flags` int(11) unsigned NOT NULL DEFAULT '65535',
   `page-flags` int(11) NOT NULL DEFAULT '0',
-  `prvnets` tinyint(1) NOT NULL DEFAULT '0',
   `pwdreset` char(255) NOT NULL,
   `maxreq` int(11) NOT NULL DEFAULT '10',
   `expire` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1094,7 +1159,10 @@ CREATE TABLE IF NOT EXISTS `user` (
   KEY `unkmail` (`unkmail`),
   KEY `cntunkmail` (`cntunkmail`),
   KEY `account_removed` (`account_removed`),
-  KEY `service_class` (`service_class`)
+  KEY `service_class` (`service_class`),
+  KEY `webid` (`webid`),
+  KEY `email` (`email`),
+  KEY `account_id` (`account_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -1106,5 +1174,6 @@ CREATE TABLE IF NOT EXISTS `user` (
 CREATE TABLE IF NOT EXISTS `userd` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` char(255) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `username` (`username`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

@@ -75,16 +75,10 @@ function contact_selector($selname, $selclass, $preselected = false, $options) {
 					$networks = array('dfrn');
 					break;
 				case 'PRIVATE':
-					if(is_array($a->user) && $a->user['prvnets'])
-						$networks = array('dfrn','mail','dspr');
-					else
-						$networks = array('dfrn','face','mail', 'dspr');
+					$networks = array('dfrn','face','mail', 'dspr');
 					break;
 				case 'TWO_WAY':
-					if(is_array($a->user) && $a->user['prvnets'])
-						$networks = array('dfrn','mail','dspr');
-					else
-						$networks = array('dfrn','face','mail','dspr','stat');
+					$networks = array('dfrn','face','mail','dspr','stat');
 					break;					
 				default:
 					break;

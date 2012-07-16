@@ -155,8 +155,7 @@ function delivery_run($argv, $argc){
 		}
 
 		$r = q("SELECT `contact`.*, `user`.`pubkey` AS `upubkey`, `user`.`prvkey` AS `uprvkey`, 
-			`user`.`timezone`, `user`.`nickname`, 
-			`user`.`page-flags`, `user`.`prvnets`
+			`user`.`timezone`, `user`.`nickname`, `user`.`page-flags`
 			FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
 			WHERE `contact`.`uid` = %d AND `contact`.`self` = 1 LIMIT 1",
 			intval($uid)
@@ -366,9 +365,6 @@ function delivery_run($argv, $argc){
 
 			case NETWORK_OSTATUS :
 
-				// Do not send to otatus if we are not configured to send to public networks
-				if($owner['prvnets'])
-					break;
 				if(get_config('system','ostatus_disabled') || get_config('system','dfrn_only'))
 					break;
 
