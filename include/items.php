@@ -809,6 +809,13 @@ function item_store($arr,$force_parent = false) {
 		unset($arr['dsprsig']);
 	}
 
+	if(! $arr['uid']) {
+		logger('item_store: no uid');
+		return 0;
+	}
+
+
+
 	if(x($arr, 'gravity'))
 		$arr['gravity'] = intval($arr['gravity']);
 	elseif($arr['parent-uri'] === $arr['uri'])
@@ -827,9 +834,17 @@ function item_store($arr,$force_parent = false) {
 		$arr['body'] = strip_tags($arr['body']);
 
 	$arr['lang'] = detect_language($arr['body']);
+
+	$allowed_languages = get_pconfig($arr['uid'],'system','allowed_languages');
 	
-
-
+	if((is_array($allowed_languages)) && ($arr['lang']) && (! array_key_exists($arr['lang'],$allowed_languages))) {
+		$translate = array('item' => $arr, 'from' => $arr['lang'], 'to' => $allowed_languages, 'translated' => false);
+		call_hooks('item_translate', $translate);
+		if(! $translate['translated']) {
+			logger('item_store: language ' . $arr['lang'] . ' not accepted for uid ' . $arr['uid']);
+			return;
+		}
+	}
 
 	$arr['wall']          = ((x($arr,'wall'))          ? intval($arr['wall'])                : 0);
 	$arr['uri']           = ((x($arr,'uri'))           ? notags(trim($arr['uri']))           : random_string());
