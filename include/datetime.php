@@ -112,7 +112,7 @@ function datetime_convert($from = 'UTC', $to = 'UTC', $s = 'now', $fmt = "Y-m-d 
 	}
 	catch(Exception $e) {
 		logger('datetime_convert: exception: ' . $e->getMessage());
-		$d = newDateTime('now', $from_obj);
+		$d = new DateTime('now', $from_obj);
 	}
 
 	try {

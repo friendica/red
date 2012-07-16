@@ -8,10 +8,34 @@ function ping_init(&$a) {
 	$result = array();
 	$notifs = array();
 
+	$result['notify'] = 0;
+	$result['home'] = 0;
+	$result['network'] = 0;
+	$result['intros'] = 0;
+	$result['mail'] = 0;
+	$result['register'] = 0;
+	$result['notice'] = array();
+	$result['info'] = array();
+
+
 	header("content-type: application/json");
 
-	if((! local_user()) || ((intval($_GET['uid'])) && (intval($_GET['uid']) != local_user()))) { 
-		$result[] = array('success' => false, 'message' => 'Authentication error');
+	$result['invalid'] = ((intval($_GET['uid'])) && (intval($_GET['uid']) != local_user()) ? 1 : 0);
+
+	if(x($_SESSION,'sysmsg')){
+		foreach ($_SESSION['sysmsg'] as $m){
+			$result['notice'][] = array('message' => $m);
+		}
+		unset($_SESSION['sysmsg']);
+	}
+	if(x($_SESSION,'sysmsg_info')){
+		foreach ($_SESSION['sysmsg_info'] as $m){
+			$result['info'][] = array('message' => $m);
+		}
+		unset($_SESSION['sysmsg_info']);
+	}
+
+	if((! local_user()) || ($result['invalid'])) {
 		echo json_encode($result);
 		killme();
 	}
@@ -58,16 +82,6 @@ function ping_init(&$a) {
 
 	}
 	
-	$result['notify'] = 0;
-	$result['home'] = 0;
-	$result['network'] = 0;
-	$result['intros'] = 0;
-	$result['mail'] = 0;
-	$result['register'] = 0;
-	$result['notice'] = array();
-	$result['info'] = array();
-
-
 
 	$t = q("select count(*) as total from notify where uid = %d and seen = 0",
 		intval(local_user())
@@ -106,8 +120,8 @@ function ping_init(&$a) {
 		WHERE `intro`.`uid` = %d  AND `intro`.`blocked` = 0 AND `intro`.`ignore` = 0 AND `intro`.`contact-id`!=0",
 		intval(local_user())
 	);
-		
-	$intro = count($intros1) + count($intros2);
+
+	$intros = count($intros1) + count($intros2);
 	$result['intros'] = intval($intros);
 
 	$myurl = $a->get_baseurl() . '/profile/' . $a->user['nickname'] ;
@@ -124,19 +138,6 @@ function ping_init(&$a) {
 		if($regs)
 			$result['register'] = intval($regs[0]['total']);
 	} 
-		
-	if(x($_SESSION,'sysmsg')){
-		foreach ($_SESSION['sysmsg'] as $m){
-			$result['notice'][] = $m;
-		}
-		unset($_SESSION['sysmsg']);
-	}
-	if(x($_SESSION,'sysmsg_info')){
-		foreach ($_SESSION['sysmsg_info'] as $m){
-			$result['info'][] = $m;
-		}
-		unset($_SESSION['sysmsg_info']);
-	}
 	
 	echo json_encode($result);
 	killme();

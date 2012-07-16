@@ -229,7 +229,7 @@ function count_common_friends_zcid($uid,$zcid) {
 
 }
 
-function common_friends_zcid($uid,$zcid,$start = 0, $limit = 9999,$shuffle) {
+function common_friends_zcid($uid,$zcid,$start = 0, $limit = 9999,$shuffle = false) {
 
 	if($shuffle)
 		$sql_extra = " order by rand() ";
