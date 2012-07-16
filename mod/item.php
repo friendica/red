@@ -221,6 +221,11 @@ function item_post(&$a) {
 
 		logger('detected language: ' . $language);
 
+
+
+
+
+
 		$private = ((strlen($str_group_allow) || strlen($str_contact_allow) || strlen($str_group_deny) || strlen($str_contact_deny)) ? 1 : 0);
 
 		// If this is a comment, set the permissions from the parent.
@@ -601,6 +606,21 @@ function item_post(&$a) {
 		killme();
 	}
 
+	// post owner can post in any language they wish; others however are subject to the owner's whims about language acceptance
+
+	if($profile_uid != local_user()) {
+		$allowed_languages = get_pconfig($profile_uid,'system','allowed_languages');
+	
+		if((is_array($allowed_languages)) && ($datarray['lang']) && (! array_key_exists($datarray['lang'],$allowed_languages))) {
+			$translate = array('item' => $datarray, 'from' => $datarray['lang'], 'to' => $allowed_languages, 'translated' => false);
+			call_hooks('item_translate', $translate);
+			if((! $translate['translated']) && (intval(get_pconfig($profile_uid,'system','reject_disallowed_languages')))) {
+				logger('item_store: language ' . $datarray['lang'] . ' not accepted for uid ' . $datarray['uid']);
+				return;
+			}
+			$datarray = $translate['item'];
+		}
+	}
 
 	call_hooks('post_local',$datarray);
 

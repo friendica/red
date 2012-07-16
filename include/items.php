@@ -828,10 +828,6 @@ function item_store($arr,$force_parent = false) {
 	if(! x($arr,'type'))
 		$arr['type']      = 'remote';
 
-	// Shouldn't happen but we want to make absolutely sure it doesn't leak from a plugin.
-
-	if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false)) 
-		$arr['body'] = strip_tags($arr['body']);
 
 	$arr['lang'] = detect_language($arr['body']);
 
@@ -840,11 +836,18 @@ function item_store($arr,$force_parent = false) {
 	if((is_array($allowed_languages)) && ($arr['lang']) && (! array_key_exists($arr['lang'],$allowed_languages))) {
 		$translate = array('item' => $arr, 'from' => $arr['lang'], 'to' => $allowed_languages, 'translated' => false);
 		call_hooks('item_translate', $translate);
-		if(! $translate['translated']) {
+		if((! $translate['translated']) && (intval(get_pconfig($arr['uid'],'system','reject_disallowed_languages')))) {
 			logger('item_store: language ' . $arr['lang'] . ' not accepted for uid ' . $arr['uid']);
 			return;
 		}
+		$arr = $translate['item'];
 	}
+
+	// Shouldn't happen but we want to make absolutely sure it doesn't leak from a plugin.
+
+	if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false)) 
+		$arr['body'] = strip_tags($arr['body']);
+
 
 	$arr['wall']          = ((x($arr,'wall'))          ? intval($arr['wall'])                : 0);
 	$arr['uri']           = ((x($arr,'uri'))           ? notags(trim($arr['uri']))           : random_string());
