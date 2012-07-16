@@ -4,7 +4,7 @@ require_once('include/config.php');
 require_once('include/network.php');
 require_once('include/plugin.php');
 require_once('include/text.php');
-require_once('include/pgettext.php');
+require_once('include/language.php');
 require_once('include/datetime.php');
 
 function create_user($arr) {

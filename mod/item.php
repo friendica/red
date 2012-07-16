@@ -217,8 +217,6 @@ function item_post(&$a) {
 		$emailcc           = notags(trim($_REQUEST['emailcc']));
 		$body              = escape_tags(trim($_REQUEST['body']));
 
-
-		require_once('include/language.php');
 		$language = detect_language($body);
 
 		logger('detected language: ' . $language);
