@@ -554,17 +554,16 @@ return str_replace ("%","=",rawurlencode($s));
 
 
 if(! function_exists('get_mentions')) {
-function get_mentions($item) {
+function get_mentions($item,$tags) {
 	$o = '';
-	if(! strlen($item['tag']))
+
+	if(! count($tags))
 		return $o;
 
-	$arr = explode(',',$item['tag']);
-	foreach($arr as $x) {
-		$matches = null;
-		if(preg_match('/@\[url=([^\]]*)\]/',$x,$matches)) {
-			$o .= "\t\t" . '<link rel="mentioned" href="' . $matches[1] . '" />' . "\r\n";
-			$o .= "\t\t" . '<link rel="ostatus:attention" href="' . $matches[1] . '" />' . "\r\n";
+	foreach($tags as $x) {
+		if($x['type'] == TERM_MENTION) {
+			$o .= "\t\t" . '<link rel="mentioned" href="' . $x['url'] . '" />' . "\r\n";
+			$o .= "\t\t" . '<link rel="ostatus:attention" href="' . $x['url'] . '" />' . "\r\n";
 		}
 	}
 	return $o;

@@ -565,8 +565,6 @@ function item_post(&$a) {
 	$datarray['lang']          = $language;
 	$datarray['location']      = $location;
 	$datarray['coord']         = $coord;
-	$datarray['tag']           = $str_tags;
-	$datarray['file']          = $categories;
 	$datarray['inform']        = $inform;
 	$datarray['verb']          = $verb;
 	$datarray['allow_cid']     = $str_contact_allow;
@@ -640,19 +638,26 @@ function item_post(&$a) {
 
 
 	if($orig_post) {
-		$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `attach` = '%s', `file` = '%s', `edited` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+		$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `attach` = '%s', `edited` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			dbesc($datarray['title']),
 			dbesc($datarray['body']),
-			dbesc($datarray['tag']),
 			dbesc($datarray['attach']),
-			dbesc($datarray['file']),
 			dbesc(datetime_convert()),
 			intval($post_id),
 			intval($profile_uid)
 		);
 
-		// update filetags in pconfig
-                file_tag_update_pconfig($uid,$categories_old,$categories_new,'category');
+		// remove taxonomy items for this post - we'll recreate them
+
+		q("delete from term where otype = %d and oid = %d and type in (%d, %d, %d, %d) ",
+			intval(TERM_OBJ_POST),
+			intval($post_id),
+			intval(TERM_UNKNOWN),
+			intval(TERM_HASHTAG),
+			intval(TERM_MENTION),
+			intval(TERM_CATEGORY)
+		);
+
 
 		proc_run('php', "include/notifier.php", 'edit_post', "$post_id");
 		if((x($_REQUEST,'return')) && strlen($return_path)) {
@@ -667,8 +672,8 @@ function item_post(&$a) {
 
 	$r = q("INSERT INTO `item` (`guid`, `uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `commented`, `received`, `changed`, `uri`, `thr-parent`, `title`, `body`, `app`, `lang`, `location`, `coord`, 
-		`tag`, `inform`, `verb`, `postopts`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`,`origin`, `moderated`, `file` )
-		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, '%s' )",
+		`inform`, `verb`, `postopts`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`,`origin`, `moderated`)
+		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d )",
 		dbesc($datarray['guid']),
 		intval($datarray['uid']),
 		dbesc($datarray['type']),
@@ -694,7 +699,6 @@ function item_post(&$a) {
 		dbesc($datarray['lang']),
 		dbesc($datarray['location']),
 		dbesc($datarray['coord']),
-		dbesc($datarray['tag']),
 		dbesc($datarray['inform']),
 		dbesc($datarray['verb']),
 		dbesc($datarray['postopts']),
@@ -706,8 +710,7 @@ function item_post(&$a) {
 		intval($datarray['pubmail']),
 		dbesc($datarray['attach']),
 		intval($datarray['origin']),
-		intval($datarray['moderated']),
-		dbesc($datarray['file'])
+		intval($datarray['moderated'])
 	);
 
 	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",

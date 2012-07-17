@@ -882,7 +882,6 @@ function item_store($arr,$force_parent = false) {
 	$arr['deny_gid']      = ((x($arr,'deny_gid'))      ? trim($arr['deny_gid'])              : '');
 	$arr['private']       = ((x($arr,'private'))       ? intval($arr['private'])             : 0 );
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
-	$arr['tag']           = ((x($arr,'tag'))           ? notags(trim($arr['tag']))           : '');
 	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : '');
 	$arr['app']           = ((x($arr,'app'))           ? notags(trim($arr['app']))           : '');
 	$arr['origin']        = ((x($arr,'origin'))        ? intval($arr['origin'])              : 0 );
@@ -1839,10 +1838,9 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 						if(datetime_convert('UTC','UTC',$datarray['edited']) < $r[0]['edited'])
 							continue;
 
-						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($datarray['title']),
 							dbesc($datarray['body']),
-							dbesc($datarray['tag']),
 							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
 							dbesc($item_id),
 							intval($importer['uid'])
@@ -1986,10 +1984,9 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 						if(datetime_convert('UTC','UTC',$datarray['edited']) < $r[0]['edited'])
 							continue;
 
-						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($datarray['title']),
 							dbesc($datarray['body']),
-							dbesc($datarray['tag']),
 							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
 							dbesc($item_id),
 							intval($importer['uid'])
@@ -2337,7 +2334,7 @@ function local_delivery($importer,$data) {
 
 					$is_a_remote_delete = false;
 
-					$r = q("select `item`.`id`, `item`.`uri`, `item`.`tag`, `item`.`forum_mode`,`item`.`origin`,`item`.`wall`, 
+					$r = q("select `item`.`id`, `item`.`uri`, `item`.`forum_mode`,`item`.`origin`,`item`.`wall`, 
 						`contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
 						LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
 						WHERE `item`.`uri` = '%s' AND (`item`.`parent-uri` = '%s' or `item`.`thr-parent` = '%s')
@@ -2404,6 +2401,7 @@ function local_delivery($importer,$data) {
 								if($owner_remove && $author_copy)
 									continue;
 								if($author_remove || $owner_remove) {								
+//FIXME
 									$tags = explode(',',$i[0]['tag']);
 									$newtags = array();
 									if(count($tags)) {
@@ -2496,7 +2494,7 @@ function local_delivery($importer,$data) {
 			$is_a_remote_comment = false;
 
 			// POSSIBLE CLEANUP --> Why select so many fields when only forum_mode and wall are used?
-			$r = q("select `item`.`id`, `item`.`uri`, `item`.`tag`, `item`.`forum_mode`,`item`.`origin`,`item`.`wall`, 
+			$r = q("select `item`.`id`, `item`.`uri`, `item`.`forum_mode`,`item`.`origin`,`item`.`wall`, 
 				`contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
 				LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
 				WHERE `item`.`uri` = '%s' AND (`item`.`parent-uri` = '%s' or `item`.`thr-parent` = '%s')
@@ -2546,10 +2544,9 @@ function local_delivery($importer,$data) {
 							continue;
   
 						logger('received updated comment' , LOGGER_DEBUG);
-						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($datarray['title']),
 							dbesc($datarray['body']),
-							dbesc($datarray['tag']),
 							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
 							dbesc($item_id),
 							intval($importer['importer_uid'])
@@ -2622,7 +2619,7 @@ function local_delivery($importer,$data) {
 							continue;	
 
 						// extract tag, if not duplicate, and this user allows tags, add to parent item						
-
+//FIXME
 						if($xo->id && $xo->content) {
 							$newtag = '#[url=' . $xo->id . ']'. $xo->content . '[/url]';
 							if(! (stristr($tagp[0]['tag'],$newtag))) {
@@ -2731,10 +2728,9 @@ function local_delivery($importer,$data) {
 						if(datetime_convert('UTC','UTC',$datarray['edited']) < $r[0]['edited'])
 							continue;
 
-						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($datarray['title']),
 							dbesc($datarray['body']),
-							dbesc($datarray['tag']),
 							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
 							dbesc($item_id),
 							intval($importer['importer_uid'])
@@ -2904,10 +2900,9 @@ function local_delivery($importer,$data) {
 					if(datetime_convert('UTC','UTC',$datarray['edited']) < $r[0]['edited'])
 						continue;
 
-					$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `tag` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+					$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 						dbesc($datarray['title']),
 						dbesc($datarray['body']),
-						dbesc($datarray['tag']),
 						dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
 						dbesc($item_id),
 						intval($importer['importer_uid'])
@@ -3225,7 +3220,7 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 
 	$o .= item_getfeedattach($item);
 
-	$mentioned = get_mentions($item);
+	$mentioned = get_mentions($item,$tags);
 	if($mentioned)
 		$o .= $mentioned;
 	
