@@ -29,7 +29,13 @@
 		<div class="wall-item-content" id="wall-item-content-$item.id" >
 			<div class="wall-item-title" id="wall-item-title-$item.id">$item.title</div>
 			<div class="wall-item-title-end"></div>
-			<div class="wall-item-body" id="wall-item-body-$item.id" >$item.body</div>
+			<div class="wall-item-body" id="wall-item-body-$item.id" >$item.body
+				<div class="body-tag">
+				{{ for $item.tags as $tag }}
+					<span class='tag'>$tag</span>
+				{{ endfor }}
+				</div>
+			</div>
 		</div>
 		<div class="wall-item-tools" id="wall-item-tools-$item.id">
 			<div class="wall-item-delete-wrapper" id="wall-item-delete-wrapper-$item.id" >

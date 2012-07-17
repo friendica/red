@@ -588,6 +588,7 @@ function network_content(&$a, $update = 0) {
 			intval($_SESSION['uid'])
 		);
 
+		$items = fetch_post_tags($items);
 	}
 	else {
 

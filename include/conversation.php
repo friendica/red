@@ -406,11 +406,19 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 				$likebuttons = false;
 				$shareable = false;
 
+				$tags=array();
+				$terms = get_terms_oftype($item['term'],array(TERM_HASHTAG,TERM_MENTION,TERM_UNKNOWN));
+				if(count($terms))
+					foreach($terms as $tag)
+						$tags[] = format_term_for_display($tag);
+
+
 				$body = prepare_body($item,true);
 				
 				//$tmp_item = replace_macros($tpl,array(
 				$tmp_item = array(
 					'template' => $tpl,
+					'tags' => $tags,
 					'id' => (($preview) ? 'P0' : $item['item_id']),
 					'linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, ((strlen($item['author-link'])) ? $item['author-link'] : $item['url'])),
 					'profile_url' => $profile_link,
