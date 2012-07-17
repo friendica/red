@@ -614,6 +614,8 @@ function network_content(&$a, $update = 0) {
 			);
 		}
 		else {
+
+
 			$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact_uid`
 				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
