@@ -46,18 +46,20 @@ function search_ac_init(&$a){
 			$x['data'][] = intval($g['id']);
 		}
 	}
+	else {
 
-	$r = q("SELECT `id`, `name`, `photo`, `url` FROM `gcontact` where 1
-		$people_sql_extra
-		ORDER BY `name` ASC "
-	);
+		$r = q("SELECT `id`, `name`, `photo`, `url` FROM `gcontact` where 1
+			$people_sql_extra
+			ORDER BY `name` ASC "
+		);
 
-	if(count($r)) {
-		foreach($r as $g) {
-			$x['photos'][] = $g['photo'];
-			$x['links'][] = $g['url'];
-			$x['suggestions'][] = '@' . $g['name'];
-			$x['data'][] = intval($g['id']);
+		if(count($r)) {
+			foreach($r as $g) {
+				$x['photos'][] = $g['photo'];
+				$x['links'][] = $g['url'];
+				$x['suggestions'][] = '@' . $g['name'];
+				$x['data'][] = intval($g['id']);
+			}
 		}
 	}
 

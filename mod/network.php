@@ -579,23 +579,9 @@ function network_content(&$a, $update = 0) {
 
 	}
 	else {
- 	        if(! get_pconfig(local_user(),'system','alt_pager')) {
-		        $r = q("SELECT COUNT(*) AS `total`
-			        FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-			        WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-			        AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-			        $sql_extra2 $sql_extra3
-			        $sql_extra $sql_nets ",
-			        intval($_SESSION['uid'])
-		        );
-
-		        if(count($r)) {
-			        $a->set_pager_total($r[0]['total']);
-		        }
-	         }
-                $itemspage_network = get_pconfig(local_user(),'system','itemspage_network');
-                $a->set_pager_itemspage(((intval($itemspage_network)) ? $itemspage_network : 40));
-                $pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
+		$itemspage_network = get_pconfig(local_user(),'system','itemspage_network');
+		$a->set_pager_itemspage(((intval($itemspage_network)) ? $itemspage_network : 40));
+		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
 	}
 
 	$simple_update = (($update) ? " and `item`.`unseen` = 1 " : '');
@@ -709,12 +695,7 @@ function network_content(&$a, $update = 0) {
 	$o .= conversation($a,$items,$mode,$update);
 
 	if(! $update) {
-	        if(! get_pconfig(local_user(),'system','alt_pager')) {
-		        $o .= paginate($a);
-		}
-		else {
-		        $o .= alt_pager($a,count($items));
-		}
+        $o .= alt_pager($a,count($items));
 	}
 
 	return $o;
