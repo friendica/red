@@ -12,7 +12,7 @@ function display_content(&$a) {
 	require_once('include/security.php');
 	require_once('include/conversation.php');
 	require_once('include/acl_selectors.php');
-
+	require_once('include/items.php');
 
 	$o = '<div id="live-display"></div>' . "\r\n";
 
@@ -121,6 +121,7 @@ EOT;
 			);
 		}
 
+		$r = fetch_post_tags($r);
 
 		$o .= conversation($a,$r,'display', false);
 

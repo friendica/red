@@ -531,45 +531,29 @@ function network_content(&$a, $update = 0) {
 
 	if(x($_GET,'search')) {
 		$search = escape_tags($_GET['search']);
-		if (get_config('system','use_fulltext_engine')) {
-			if(strpos($search,'#') === 0)
-				$sql_extra .= sprintf(" AND (MATCH(tag) AGAINST ('".'"%s"'."' in boolean mode)) ",
-					dbesc(protect_sprintf($search))
-				);
-			else
-				$sql_extra .= sprintf(" AND (MATCH(`item`.`body`) AGAINST ('".'"%s"'."' in boolean mode) or MATCH(tag) AGAINST ('".'"%s"'."' in boolean mode)) ",
-					dbesc(protect_sprintf($search)),
-					dbesc(protect_sprintf($search))
-				);
-		} else {
-			$sql_extra .= sprintf(" AND ( `item`.`body` like '%s' OR `item`.`tag` like '%s' ) ",
-					dbesc(protect_sprintf('%' . $search . '%')),
-					dbesc(protect_sprintf('%]' . $search . '[%'))
+		if(strpos($search,'#') === 0)
+			$sql_extra .= term_query('item',substr($search,1),TERM_HASHTAG);
+		else
+			$sql_extra .= sprintf(" AND `item`.`body` like '%s' ",
+				dbesc(protect_sprintf('%' . $search . '%'))
 			);
-		}
 	}
+
 	if(strlen($file)) {
-		$sql_extra .= file_tag_file_query('item',unxmlify($file));
+		$sql_extra .= term_query('item',$file,TERM_FILE);
 	}
 
 	if($conv) {
-		$myurl = $a->get_baseurl() . '/profile/'. $a->user['nickname'];
+		// find a substring of my profile url that can be normalised
+		$myurl = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
 		$myurl = substr($myurl,strpos($myurl,'://')+3);
 		$myurl = str_replace('www.','',$myurl);
-		$diasp_url = str_replace('/profile/','/u/',$myurl);
-		if (get_config('system','use_fulltext_engine'))
-			$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where (MATCH(`author-link`) AGAINST ('".'"%s"'."' in boolean mode) or MATCH(`tag`) AGAINST ('".'"%s"'."' in boolean mode) or MATCH(tag) AGAINST ('".'"%s"'."' in boolean mode))) ",
-				dbesc(protect_sprintf($myurl)),
-				dbesc(protect_sprintf($myurl)),
-				dbesc(protect_sprintf($diasp_url))
-			);
-		else
-			$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where ( `author-link` like '%s' or `tag` like '%s' or tag like '%s' )) ",
-				dbesc(protect_sprintf('%' . $myurl)),
-				dbesc(protect_sprintf('%' . $myurl . ']%')),
-				dbesc(protect_sprintf('%' . $diasp_url . ']%'))
-			);
 
+		$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where ( `item`.`author-link` like '%s' or `item`.`id` in (select term.oid from term where term.type = %d and term.term = '%s' and term.uid = `item`.`uid`))) ",
+			dbesc(protect_sprintf('%' . $myurl)),
+			intval(TERM_MENTION),
+			dbesc(protect_sprintf($a->user['username']))
+		);
 	}
 
 	if($update) {

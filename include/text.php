@@ -1364,6 +1364,14 @@ function file_tag_file_query($table,$s,$type = 'file') {
 	);
 }
 
+function term_query($table,$s,$type = TERM_UNKNOWN) {
+
+	return sprintf(" AND " . (($table) ? dbesc($table) . '.' : '') . "id in (select term.oid from term where term.type = %d and term.term = '%s' and term.uid = " . (($table) ? dbesc($table) . '.' : '') . "uid ) ",
+		intval($type),
+		protect_sprintf(dbesc($s))
+	);
+}
+
 // ex. given music,video return <music><video> or [music][video]
 function file_tag_list_to_file($list,$type = 'file') {
         $tag_list = '';
