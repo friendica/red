@@ -278,18 +278,6 @@ function content_content(&$a, $update = 0) {
 
 			$second = dba_timer();
 
-			$tag_finder = array();
-			if(count($items))		
-				foreach($items as $item)
-					if(! in_array($item['item_id'],$tag_finder))
-						$tag_finder[] = $item['item_id'];
-			$tag_finder_str = implode(', ', $tag_finder);
-
-			$tags = q("select * from term where oid in ( %s ) and otype = %d",
-				dbesc($tag_finder_str),
-				intval(TERM_OBJ_POST)
-			);
-
 			$items = fetch_post_tags($items);
 			$items = conv_sort($items,$ordering);
 

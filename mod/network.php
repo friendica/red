@@ -614,6 +614,8 @@ function network_content(&$a, $update = 0) {
 			intval($_SESSION['uid'])
 		);
 
+		require_once('include/items.php');
+
 		$items = fetch_post_tags($items);
 	}
 	else {

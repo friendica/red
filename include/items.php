@@ -3760,10 +3760,12 @@ function fetch_post_tags($items) {
 				$tag_finder[] = $item['item_id'];
 	$tag_finder_str = implode(', ', $tag_finder);
 
-	$tags = q("select * from term where oid in ( %s ) and otype = %d",
-		dbesc($tag_finder_str),
-		intval(TERM_OBJ_POST)
-	);
+	if(strlen($tag_finder_str)) {
+		$tags = q("select * from term where oid in ( %s ) and otype = %d",
+			dbesc($tag_finder_str),
+			intval(TERM_OBJ_POST)
+		);
+	}
 
 	for($x = 0; $x < count($items); $x ++) {
 		if(count($tags)) {
