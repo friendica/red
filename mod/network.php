@@ -114,6 +114,25 @@ function network_init(&$a) {
 	$a->page['aside'] .= saved_searches($search);
 	$a->page['aside'] .= fileas_widget($a->get_baseurl(true) . '/network',(x($_GET, 'file') ? $_GET['file'] : ''));
 
+	$base = $a->get_baseurl();
+
+	$a->page['htmlhead'] .= '<script src="' . $a->get_baseurl(true) . '/library/jquery_ac/friendica.complete.js" ></script>';
+
+	$a->page['htmlhead'] .= <<< EOT
+
+<script>$(document).ready(function() { 
+	var a; 
+	a = $("#search-text").autocomplete({ 
+		serviceUrl: '$base/search_ac',
+		minChars: 2,
+		width: 350,
+	});
+}); 
+</script>
+EOT;
+
+
+
 }
 
 function saved_searches($search) {
