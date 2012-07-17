@@ -514,7 +514,33 @@ function network_content(&$a, $update = 0) {
 			. ((x($_GET,'cmax'))   ? '&cmax='   . $_GET['cmax']   : '') 
 			. ((x($_GET,'file'))   ? '&file='   . $_GET['file']   : '') 
 
-			. "'; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
+			. "'; var profile_page = " . $a->pager['page'] . ";";
+
+
+			$o .= "var network_gid = " . (($gid) ? $gid : 0) . ";\r\n"
+				. "var network_cid = " . (($_GET['cid']) ? $_GET['cid'] : 0) . ";\r\n"
+				. "var network_cmin = " . (($_GET['cmin']) ? $_GET['cmin'] : 0) . ";\r\n"
+				. "var network_cmax = " . (($_GET['cmax']) ? $_GET['cmax'] : 99) . ";\r\n"
+				. "var network_star = " . (($_GET['star']) ? $_GET['star'] : 0) . ";\r\n"
+				. "var network_liked = " . (($_GET['liked']) ? $_GET['liked'] : 0) . ";\r\n"
+				. "var network_conv = " . (($_GET['conv']) ? $_GET['conv'] : 0) . ";\r\n"
+				. "var network_spam = " . (($_GET['spam']) ? $_GET['spam'] : 0) . ";\r\n"
+				. "var network_new = " . (($nouveau) ? $nouveau : 0) . ";\r\n"
+
+		
+				. 'var network_search = "' . $_GET['search'] . '"' . ";\r\n"
+				. 'var network_order = "' . $_GET['order'] . '"' . ";\r\n"
+				. 'var network_nets = "' . $_GET['nets'] . '"' . ";\r\n"
+				. 'var network_file = "' . $_GET['file'] . '"' . ";\r\n"
+				. 'var network_date_end = "' . $datequery . '"' . ";\r\n"
+				. 'var network_date_start = "' . $datequery2 . '"' . ";\r\n"
+			;
+
+			$o .= "</script>\r\n";
+
+
+
+
 	}
 
 	$sql_extra3 = '';
