@@ -7,7 +7,7 @@ function network_query($a,$arr) {
 	$parent_options = '';
 	$child_options = '';
 
-	$ordering = (($arr['order'] === 'post') ? "`created`" ? "`commented`") . " DESC";
+	$ordering = (($arr['order'] === 'post') ? "`created`" : "`commented`") . " DESC ";
 
 	$itemspage = get_pconfig($arr['uid'],'system','itemspage_network');
 	$a->set_pager_itemspage(((intval($itemspage_network)) ? $itemspage_network : 40));
@@ -137,4 +137,3 @@ function network_query($a,$arr) {
 
 
 
-}
