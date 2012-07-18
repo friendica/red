@@ -227,6 +227,11 @@ function profile_photo_content(&$a) {
 		// go ahead as we have jus uploaded a new photo to crop
 	}
 
+	$profiles = q("select `id`,`profile-name` as `name`,`is-default` as `default` from profile where uid = %d",
+		intval(local_user())
+	);
+
+
 	if(! x($a->config,'imagecrop')) {
 	
 		$tpl = get_markup_template('profile_photo.tpl');
@@ -234,8 +239,10 @@ function profile_photo_content(&$a) {
 		$o .= replace_macros($tpl,array(
 			'$user' => $a->user['nickname'],
 			'$lbl_upfile' => t('Upload File:'),
+			'$lbl_profiles' => t('Select a profile:'),
 			'$title' => t('Upload Profile Photo'),
 			'$submit' => t('Upload'),
+			'$profiles' => $profiles,
 			'$form_security_token' => get_form_security_token("profile_photo"),
 			'$select' => sprintf('%s %s', t('or'), ($newuser) ? '<a href="' . $a->get_baseurl() . '">' . t('skip this step') . '</a>' : '<a href="'. $a->get_baseurl() . '/photos/' . $a->user['nickname'] . '">' . t('select a photo from your photo albums') . '</a>')
 		));
@@ -248,6 +255,7 @@ function profile_photo_content(&$a) {
 		$tpl = get_markup_template("cropbody.tpl");
 		$o .= replace_macros($tpl,array(
 			'$filename' => $filename,
+			'$profile' => intval($_REQUEST['profile']),
 			'$resource' => $a->config['imagecrop'] . '-' . $a->config['imagecrop_resolution'],
 			'$image_url' => $a->get_baseurl() . '/photo/' . $filename,
 			'$title' => t('Crop Image'),
@@ -262,7 +270,7 @@ function profile_photo_content(&$a) {
 }}
 
 
-if(! function_exists('_crop_ui_head')) {
+if(! function_exists('profile_photo_crop_ui_head')) {
 function profile_photo_crop_ui_head(&$a, $ph){
 	$max_length = get_config('system','max_image_length');
 	if(! $max_length)

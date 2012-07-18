@@ -42,6 +42,7 @@ $desc
 <form action="profile_photo/$resource" id="crop-image-form" method="post" />
 <input type='hidden' name='form_security_token' value='$form_security_token'>
 
+<input type='hidden' name='profile' value='$profile'>
 <input type="hidden" name="cropfinal" value="1" />
 <input type="hidden" name="xstart" id="x1" />
 <input type="hidden" name="ystart" id="y1" />

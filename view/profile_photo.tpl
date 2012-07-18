@@ -8,6 +8,13 @@
 <input name="userfile" type="file" id="profile-photo-upload" size="48" />
 </div>
 
+<label id="profile-photo-profiles-label" for="profile-photo-profiles">$lbl_profiles </label>
+<select name="profile" id="profile-photo-profiles" />
+{{ for $profiles as $p }}
+<option value="$p.id" {{ if $p.default }}selected="selected"{{ endif }}>$p.name</option>
+{{ endfor }}
+</select>
+
 <div id="profile-photo-submit-wrapper">
 <input type="submit" name="submit" id="profile-photo-submit" value="$submit">
 </div>
