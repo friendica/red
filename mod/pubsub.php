@@ -135,12 +135,6 @@ function pubsub_post(&$a) {
 
 	$contact = $r[0];
 
-	// we have no way to match Diaspora guid's with atom post id's and could get duplicates.
-	// we'll assume that direct delivery is robust (and this is a bad assumption, but the duplicates are messy).
-
-	if($r[0]['network'] === NETWORK_DIASPORA)
-		hub_post_return();
-
 	$feedhub = '';
 
 	require_once('include/items.php');

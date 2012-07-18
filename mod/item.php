@@ -591,8 +591,6 @@ function item_post(&$a) {
 
 	if($orig_post)
 		$datarray['edit']      = true;
-	else
-		$datarray['guid']      = get_guid();
 
 	// preview mode - prepare the body for display and send it via json
 
@@ -670,11 +668,10 @@ function item_post(&$a) {
 		$post_id = 0;
 
 
-	$r = q("INSERT INTO `item` (`guid`, `uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
+	$r = q("INSERT INTO `item` (`uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `commented`, `received`, `changed`, `uri`, `thr-parent`, `title`, `body`, `app`, `lang`, `location`, `coord`, 
 		`inform`, `verb`, `postopts`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`,`origin`, `moderated`)
-		VALUES( '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d )",
-		dbesc($datarray['guid']),
+		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d )",
 		intval($datarray['uid']),
 		dbesc($datarray['type']),
 		intval($datarray['wall']),
