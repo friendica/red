@@ -21,7 +21,6 @@ function delivery_run($argv, $argc){
 	require_once("datetime.php");
 	require_once('include/items.php');
 	require_once('include/bbcode.php');
-	require_once('include/diaspora.php');
 	require_once('include/email.php');
 
 	load_config('config');
@@ -191,11 +190,6 @@ function delivery_run($argv, $argc){
 			// be notified during this run.
 			// Other DFRN conversation members will be alerted during polled updates.
 
-			// Diaspora members currently are not notified of expirations, and other networks have
-			// either limited or no ability to process deletions. We should at least fix Diaspora 
-			// by stringing togther an array of retractions and sending them onward.
-		 
-  	
 		$localhost = $a->get_hostname();
 		if(strpos($localhost,':'))
 			$localhost = substr($localhost,0,strpos($localhost,':'));
@@ -363,177 +357,6 @@ function delivery_run($argv, $argc){
 				}
 				break;
 
-			case NETWORK_OSTATUS :
-
-				if(get_config('system','ostatus_disabled') || get_config('system','dfrn_only'))
-					break;
-
-				// only send salmon if public - e.g. if it's ok to notify
-				// a public hub, it's ok to send a salmon
-
-				if(($public_message) && (! $expire)) {
-					$slaps = array();
-
-					foreach($items as $item) {
-						if(! $item['parent'])
-							continue;
-
-						// private emails may be in included in public conversations. Filter them.
-						if(($public_message) && $item['private'] == 1)
-							continue;
-	
-						$item_contact = get_item_contact($item,$icontacts);
-						if(! $item_contact)
-							continue;
-
-						if(($top_level) && ($public_message) && ($item['author-link'] === $item['owner-link']) && (! $expire)) 
-							$slaps[] = atom_entry($item,'html',null,$owner,true);
-					}
-
-					logger('notifier: slapdelivery: ' . $contact['name']);
-					foreach($slaps as $slappy) {
-						if($contact['notify']) {
-							if(! was_recently_delayed($contact['id']))
-								$deliver_status = slapper($owner,$contact['notify'],$slappy);
-							else
-								$deliver_status = (-1);
-
-							if($deliver_status == (-1)) {
-								// queue message for redelivery
-								add_to_queue($contact['id'],NETWORK_OSTATUS,$slappy);
-							}
-						}
-					}
-				}
-
-				break;
-
-			case NETWORK_MAIL :
-			case NETWORK_MAIL2:
-
-				if(get_config('system','dfrn_only'))
-					break;
-				// WARNING: does not currently convert to RFC2047 header encodings, etc.
-
-				$addr = $contact['addr'];
-				if(! strlen($addr))
-					break;
-
-				if($cmd === 'wall-new' || $cmd === 'comment-new') {
-
-					$it = null;
-					if($cmd === 'wall-new') 
-						$it = $items[0];
-					else {
-						$r = q("SELECT * FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1", 
-							intval($argv[2]),
-							intval($uid)
-						);
-						if(count($r))
-							$it = $r[0];
-					}
-					if(! $it)
-						break;
-					
-
-					$local_user = q("SELECT * FROM `user` WHERE `uid` = %d LIMIT 1",
-						intval($uid)
-					);
-					if(! count($local_user))
-						break;
-					
-					$reply_to = '';
-					$r1 = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",
-						intval($uid)
-					);
-					if($r1 && $r1[0]['reply_to'])
-						$reply_to = $r1[0]['reply_to'];
-
-					$subject  = (($it['title']) ? email_header_encode($it['title'],'UTF-8') : t("\x28no subject\x29")) ;
-
-					// only expose our real email address to true friends
-
-					if(($contact['rel'] == CONTACT_IS_FRIEND) && (! $contact['blocked']))
-						$headers  = 'From: ' . email_header_encode($local_user[0]['username'],'UTF-8') . ' <' . $local_user[0]['email'] . '>' . "\n";
-					else
-						$headers  = 'From: ' . email_header_encode($local_user[0]['username'],'UTF-8') . ' <' . t('noreply') . '@' . $a->get_hostname() . '>' . "\n";
-
-					if($reply_to)
-						$headers .= 'Reply-to: ' . $reply_to . "\n";
-
-					// for testing purposes: Collect exported mails
-					// $file = tempnam("/tmp/friendica/", "mail-out-");
-					// file_put_contents($file, json_encode($it));
-	
-					$headers .= 'Message-Id: <' . iri2msgid($it['uri']). '>' . "\n";
-
-					//logger("Mail: uri: ".$it['uri']." parent-uri ".$it['parent-uri'], LOGGER_DEBUG);
-					//logger("Mail: Data: ".print_r($it, true), LOGGER_DEBUG);
-					//logger("Mail: Data: ".print_r($it, true), LOGGER_DATA);
-
-					if($it['uri'] !== $it['parent-uri']) {
-						$headers .= 'References: <' . iri2msgid($it['parent-uri']) . '>' . "\n";
-						if(!strlen($it['title'])) {
-							$r = q("SELECT `title` FROM `item` WHERE `parent-uri` = '%s' LIMIT 1",
-								dbesc($it['parent-uri']));
-
-							if(count($r) AND ($r[0]['title'] != ''))
-								$subject = $r[0]['title'];
-						}
-						if(strncasecmp($subject,'RE:',3))
-							$subject = 'Re: '.$subject;
-					}
-					email_send($addr, $subject, $headers, $it);
-				}
-				break;
-
-			case NETWORK_DIASPORA :
-				if($public_message)
-					$loc = 'public batch ' . $contact['batch'];
-				else 
-					$loc = $contact['name'];
-
-				logger('delivery: diaspora batch deliver: ' . $loc);
-
-				if(get_config('system','dfrn_only') || (! get_config('system','diaspora_enabled')) || (! $normal_mode))
-					break;
-
-				if((! $contact['pubkey']) && (! $public_message))
-					break;
-
-				if($target_item['verb'] === ACTIVITY_DISLIKE) {
-					// unsupported
-					break;
-				}
-				elseif(($target_item['deleted']) && ($target_item['uri'] === $target_item['parent-uri'])) {
-					// top-level retraction
-					logger('delivery: diaspora retract: ' . $loc);
-
-					diaspora_send_retraction($target_item,$owner,$contact,$public_message);
-					break;
-				}
-				elseif($target_item['uri'] !== $target_item['parent-uri']) {
-					// we are the relay - send comments, likes and relayable_retractions to our conversants
-					logger('delivery: diaspora relay: ' . $loc);
-
-					diaspora_send_relay($target_item,$owner,$contact,$public_message);
-					break;
-				}		
-				elseif(($top_level) && (! $walltowall)) {
-					// currently no workable solution for sending walltowall
-					logger('delivery: diaspora status: ' . $loc);
-					diaspora_send_status($target_item,$owner,$contact,$public_message);
-					break;
-				}
-
-				logger('delivery: diaspora unknown mode: ' . $contact['name']);
-
-				break;
-
-			case NETWORK_FEED :
-			case NETWORK_FACEBOOK :
-				if(get_config('system','dfrn_only'))
-					break;
 			default:
 				break;
 		}

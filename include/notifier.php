@@ -196,11 +196,6 @@ function notifier_run($argv, $argc){
 
 
 
-		// Diaspora members currently are not notified of expirations, and other networks have
-		// either limited or no ability to process deletions. We should at least fix Diaspora 
-		// by stringing togther an array of retractions and sending them onward.
-		 
-  	
 		$localhost = str_replace('www.','',$a->get_hostname());
 		if(strpos($localhost,':'))
 			$localhost = substr($localhost,0,strpos($localhost,':'));
@@ -468,8 +463,6 @@ function notifier_run($argv, $argc){
 
 		foreach($r as $contact) {
 			if((! $mail) && (! $fsuggest) && (! $followup) && (! $contact['self'])) {
-				if(($contact['network'] === NETWORK_DIASPORA) && ($public_message))
-					continue;
 				q("insert into deliverq ( `cmd`,`item`,`contact` ) values ('%s', %d, %d )",
 					dbesc($cmd),
 					intval($item_id),
@@ -628,140 +621,6 @@ function notifier_run($argv, $argc){
 					}
 					break;
 
-				case NETWORK_MAIL:
-				case NETWORK_MAIL2:
-						
-					if(get_config('system','dfrn_only'))
-						break;
-
-					// WARNING: does not currently convert to RFC2047 header encodings, etc.
-
-					$addr = $contact['addr'];
-					if(! strlen($addr))
-						break;
-
-					if($cmd === 'wall-new' || $cmd === 'comment-new') {
-
-						$it = null;
-						if($cmd === 'wall-new') 
-							$it = $items[0];
-						else {
-							$r = q("SELECT * FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1", 
-								intval($argv[2]),
-								intval($uid)
-							);
-							if(count($r))
-								$it = $r[0];
-						}
-						if(! $it)
-							break;
-						
-
-
-						$local_user = q("SELECT * FROM `user` WHERE `uid` = %d LIMIT 1",
-							intval($uid)
-						);
-						if(! count($local_user))
-							break;
-						
-						$reply_to = '';
-						$r1 = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",
-							intval($uid)
-						);
-						if($r1 && $r1[0]['reply_to'])
-							$reply_to = $r1[0]['reply_to'];
-
-						$subject  = (($it['title']) ? email_header_encode($it['title'],'UTF-8') : t("\x28no subject\x29")) ;
-
-						// only expose our real email address to true friends
-
-						if(($contact['rel'] == CONTACT_IS_FRIEND) && (! $contact['blocked']))
-							$headers  = 'From: ' . email_header_encode($local_user[0]['username'],'UTF-8') . ' <' . $local_user[0]['email'] . '>' . "\n";
-						else
-							$headers  = 'From: ' . email_header_encode($local_user[0]['username'],'UTF-8') . ' <' . t('noreply') . '@' . $a->get_hostname() . '>' . "\n";
-
-						if($reply_to)
-							$headers .= 'Reply-to: ' . $reply_to . "\n";
-
-						// for testing purposes: Collect exported mails
-						//$file = tempnam("/tmp/friendica/", "mail-out2-");
-						//file_put_contents($file, json_encode($it));
-
-						$headers .= 'Message-Id: <' . iri2msgid($it['uri']) . '>' . "\n";
-
-						if($it['uri'] !== $it['parent-uri']) {
-							$headers .= 'References: <' . iri2msgid($it['parent-uri']) . '>' . "\n";
-							if(!strlen($it['title'])) {
-								$r = q("SELECT `title` FROM `item` WHERE `parent-uri` = '%s' LIMIT 1",
-									dbesc($it['parent-uri']));
-
-								if(count($r) AND ($r[0]['title'] != ''))  
-									$subject = $r[0]['title'];
-							}
-							if(strncasecmp($subject,'RE:',3))
-								$subject = 'Re: '.$subject;
-						}
-						email_send($addr, $subject, $headers, $it);
-					}
-					break;
-				case NETWORK_DIASPORA:
-					require_once('include/diaspora.php');
-
-					if(get_config('system','dfrn_only') || (! get_config('system','diaspora_enabled')))
-						break;
-
-					if($mail) {
-						diaspora_send_mail($item,$owner,$contact);
-						break;
-					}
-
-					if(! $normal_mode)
-						break;
-
-					// special handling for followup to public post
-					// all other public posts processed as public batches further below
-
-					if($public_message) {
-						if($followup)
-							diaspora_send_followup($target_item,$owner,$contact, true);
-						break;
-					}
-
-					if(! $contact['pubkey'])
-						break;
-					
-					if($target_item['verb'] === ACTIVITY_DISLIKE) {
-						// unsupported
-						break;
-					}
-					elseif(($target_item['deleted']) && (($target_item['uri'] === $target_item['parent-uri']) || $followup)) {
-						// send both top-level retractions and relayable retractions for owner to relay
-						diaspora_send_retraction($target_item,$owner,$contact);
-						break;
-					}
-					elseif($followup) {
-						// send comments and likes to owner to relay
-						diaspora_send_followup($target_item,$owner,$contact);
-						break;
-					}
-					elseif($target_item['uri'] !== $target_item['parent-uri']) {
-						// we are the relay - send comments, likes and relayable_retractions
-						// (of comments and likes) to our conversants
-						diaspora_send_relay($target_item,$owner,$contact);
-						break;
-					}
-					elseif(($top_level) && (! $walltowall)) {
-						// currently no workable solution for sending walltowall
-						diaspora_send_status($target_item,$owner,$contact);
-						break;
-					}
-
-					break;
-
-				case NETWORK_FEED:
-				case NETWORK_FACEBOOK:
-					if(get_config('system','dfrn_only'))
-						break;
 				default:
 					break;
 			}
@@ -785,14 +644,7 @@ function notifier_run($argv, $argc){
 
 	if($public_message) {
 
-		$r1 = q("SELECT DISTINCT(`batch`), `id`, `name`,`network` FROM `contact` WHERE `network` = '%s' 
-			AND `uid` = %d AND `rel` != %d group by `batch` ORDER BY rand() ",
-			dbesc(NETWORK_DIASPORA),
-			intval($owner['uid']),
-			intval(CONTACT_IS_SHARING)
-		);
-			
-		$r2 = q("SELECT `id`, `name`,`network` FROM `contact` 
+		$r = q("SELECT `id`, `name`,`network` FROM `contact` 
 			WHERE `network` in ( '%s', '%s')  AND `uid` = %d AND `blocked` = 0 AND `pending` = 0 AND `archive` = 0
 			AND `rel` != %d order by rand() ",
 			dbesc(NETWORK_DFRN),
@@ -801,7 +653,6 @@ function notifier_run($argv, $argc){
 			intval(CONTACT_IS_SHARING)
 		);
 
-		$r = array_merge($r2,$r1);
 
 		if(count($r)) {
 			logger('pubdeliver: ' . print_r($r,true), LOGGER_DEBUG);
@@ -820,10 +671,7 @@ function notifier_run($argv, $argc){
 
 			foreach($r as $rr) {
 
-				// except for Diaspora batch jobs
-				// Don't deliver to folks who have already been delivered to
-
-				if(($rr['network'] !== NETWORK_DIASPORA) && (in_array($rr['id'],$conversants))) {
+				if(in_array($rr['id'],$conversants)) {
 					logger('notifier: already delivered id=' . $rr['id']);
 					continue;
 				}

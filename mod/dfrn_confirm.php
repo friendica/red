@@ -368,16 +368,6 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			$new_relation = $contact['rel'];
 			$writable = $contact['writable'];
 
-			if($network === NETWORK_DIASPORA) {
-				if($duplex)
-					$new_relation = CONTACT_IS_FRIEND;
-				else
-					$new_relation = CONTACT_IS_SHARING;
-
-				if($new_relation != CONTACT_IS_FOLLOWER)
-					$writable = 1;
-			}
-
 			$r = q("DELETE FROM `intro` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval($intro_id),
 				intval($uid)
@@ -431,12 +421,6 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 
 
 		if((isset($new_relation) && $new_relation == CONTACT_IS_FRIEND)) {
-
-			if(($contact) && ($contact['network'] === NETWORK_DIASPORA)) {
-				require_once('include/diaspora.php');
-				$ret = diaspora_share($user[0],$r[0]);
-				logger('mod_follow: diaspora_share returns: ' . $ret);
-			}
 
 			// Send a new friend post if we are allowed to...
 

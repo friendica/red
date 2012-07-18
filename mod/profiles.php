@@ -300,9 +300,6 @@ function profiles_post(&$a) {
 			$url = $_SESSION['my_url'];
 			if($url && strlen(get_config('system','directory_submit_url')))
 				proc_run('php',"include/directory.php","$url");
-
-			require_once('include/profile_update.php');
-			profile_change();
 		}
 	}
 }

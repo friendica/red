@@ -511,10 +511,6 @@ function settings_post(&$a) {
 
 	}
 
-
-	require_once('include/profile_update.php');
-	profile_change();
-
 	$_SESSION['theme'] = $theme;
 	if($email_changed && $a->config['register_policy'] == REGISTER_VERIFY) {
 
@@ -649,65 +645,14 @@ function settings_content(&$a) {
 		
 		call_hooks('connector_settings', $settings_connectors);
 
-		$diasp_enabled = sprintf( t('Built-in support for %s connectivity is %s'), t('Diaspora'), ((get_config('system','diaspora_enabled')) ? t('enabled') : t('disabled')));
-		$ostat_enabled = sprintf( t('Built-in support for %s connectivity is %s'), t('StatusNet'), ((get_config('system','ostatus_disabled')) ? t('disabled') : t('enabled')));
-
-		$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
-		if(get_config('system','dfrn_only'))
-			$mail_disabled = 1;
-
-		if(! $mail_disabled) {
-			$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",
-				local_user()
-			);
-		}
-		else {
-			$r = null;
-		}
-
-		$mail_server       = ((count($r)) ? $r[0]['server'] : '');
-		$mail_port         = ((count($r) && intval($r[0]['port'])) ? intval($r[0]['port']) : '');
-		$mail_ssl          = ((count($r)) ? $r[0]['ssltype'] : '');
-		$mail_user         = ((count($r)) ? $r[0]['user'] : '');
-		$mail_replyto      = ((count($r)) ? $r[0]['reply_to'] : '');
-		$mail_pubmail      = ((count($r)) ? $r[0]['pubmail'] : 0);
-		$mail_action       = ((count($r)) ? $r[0]['action'] : 0);
-		$mail_movetofolder = ((count($r)) ? $r[0]['movetofolder'] : '');
-		$mail_chk          = ((count($r)) ? $r[0]['last_check'] : '0000-00-00 00:00:00');
-
+		$r = null;
 
 		$tpl = get_markup_template("settings_connectors.tpl");
 
-		if(! service_class_allows(local_user(),'email_connect')) {
-			$mail_disabled_message = upgrade_bool_message();
-		}
-		else {
-			$mail_disabled_message = (($mail_disabled) ? t('Email access is disabled on this site.') : '');
-		}
-	
 		$o .= replace_macros($tpl, array(
 			'$form_security_token' => get_form_security_token("settings_connectors"),
-			
 			'$title'	=> t('Connector Settings'),
-
-			'$diasp_enabled' => $diasp_enabled,
-			'$ostat_enabled' => $ostat_enabled,
-
-			'$h_imap' => t('Email/Mailbox Setup'),
-			'$imap_desc' => t("If you wish to communicate with email contacts using this service \x28optional\x29, please specify how to connect to your mailbox."),
-			'$imap_lastcheck' => array('imap_lastcheck', t('Last successful email check:'), $mail_chk,''),
-			'$mail_disabled' => $mail_disabled_message,
-			'$mail_server'	=> array('mail_server',  t('IMAP server name:'), $mail_server, ''),
-			'$mail_port'	=> array('mail_port', 	 t('IMAP port:'), $mail_port, ''),
-			'$mail_ssl'		=> array('mail_ssl', 	 t('Security:'), strtoupper($mail_ssl), '', array( 'notls'=>t('None'), 'TLS'=>'TLS', 'SSL'=>'SSL')),
-			'$mail_user'	=> array('mail_user',    t('Email login name:'), $mail_user, ''),
-			'$mail_pass'	=> array('mail_pass', 	 t('Email password:'), '', ''),
-			'$mail_replyto'	=> array('mail_replyto', t('Reply-to address:'), '', 'Optional'),
-			'$mail_pubmail'	=> array('mail_pubmail', t('Send public posts to all email contacts:'), $mail_pubmail, ''),
-			'$mail_action'	=> array('mail_action',	 t('Action after import:'), $mail_action, '', array(0=>t('None'), 1=>t('Delete'), 2=>t('Mark as seen'), 3=>t('Move to folder'))),
-			'$mail_movetofolder'	=> array('mail_movetofolder',	 t('Move to folder:'), $mail_movetofolder, ''),
 			'$submit' => t('Submit'),
-
 			'$settings_connectors' => $settings_connectors
 		));
 

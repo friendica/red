@@ -62,16 +62,6 @@ function new_contact($uid,$url,$interactive = false) {
 		}
 	}
 	
-
-
-
-
-
-	// This extra param just confuses things, remove it
-	if($ret['network'] === NETWORK_DIASPORA)
-		$ret['url'] = str_replace('?absolute=true','',$ret['url']);
-
-
 	// do we have enough information?
 	
 	if(! ((x($ret,'name')) && (x($ret,'poll')) && ((x($ret,'url')) || (x($ret,'addr'))))) {
@@ -107,14 +97,7 @@ function new_contact($uid,$url,$interactive = false) {
 
 	$subhub = (($ret['network'] === NETWORK_OSTATUS) ? true : false);
 
-	$hidden = (($ret['network'] === NETWORK_MAIL) ? 1 : 0);
-
-	if($ret['network'] === NETWORK_MAIL) {
-		$writeable = 1;
-		
-	}
-	if($ret['network'] === NETWORK_DIASPORA)
-		$writeable = 1;
+	$hidden = 0;
 
 	// check if we already have a contact
 	// the poll url is more reliable than the profile url, as we may have
@@ -166,8 +149,6 @@ function new_contact($uid,$url,$interactive = false) {
 		}
 
 		$new_relation = (($ret['network'] === NETWORK_MAIL) ? CONTACT_IS_FRIEND : CONTACT_IS_SHARING);
-		if($ret['network'] === NETWORK_DIASPORA)
-			$new_relation = CONTACT_IS_FOLLOWER;
 
 		// create contact record 
 		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `nurl`, `addr`, `alias`, `batch`, `notify`, `poll`, `poco`, `name`, `nick`, `photo`, `network`, `pubkey`, `rel`, `priority`,
@@ -243,41 +224,6 @@ function new_contact($uid,$url,$interactive = false) {
 	// pull feed and consume it, which should subscribe to the hub.
 
 	proc_run('php',"include/poller.php","$contact_id");
-
-	// create a follow slap
-
-	$tpl = get_markup_template('follow_slap.tpl');
-	$slap = replace_macros($tpl, array(
-		'$name' => $a->user['username'],
-		'$profile_page' => $a->get_baseurl() . '/profile/' . $a->user['nickname'],
-		'$photo' => $a->contact['photo'],
-		'$thumb' => $a->contact['thumb'],
-		'$published' => datetime_convert('UTC','UTC', 'now', ATOM_TIME),
-		'$item_id' => 'urn:X-dfrn:' . $a->get_hostname() . ':follow:' . random_string(),
-		'$title' => '',
-		'$type' => 'text',
-		'$content' => t('following'),
-		'$nick' => $a->user['nickname'],
-		'$verb' => ACTIVITY_FOLLOW,
-		'$ostat_follow' => ''
-	));
-
-	$r = q("SELECT `contact`.*, `user`.* FROM `contact` LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid` 
-			WHERE `user`.`uid` = %d AND `contact`.`self` = 1 LIMIT 1",
-			intval($uid)
-	);
-
-	if(count($r)) {
-		if(($contact['network'] == NETWORK_OSTATUS) && (strlen($contact['notify']))) {
-			require_once('include/salmon.php');
-			slapper($r[0],$contact['notify'],$slap);
-		}
-		if($contact['network'] == NETWORK_DIASPORA) {
-			require_once('include/diaspora.php');
-			$ret = diaspora_share($a->user,$contact);
-			logger('mod_follow: diaspora_share returns: ' . $ret);
-		}
-	}
 
 	$result['success'] = true;
 	return $result;

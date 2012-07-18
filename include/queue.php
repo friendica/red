@@ -84,7 +84,6 @@ function queue_run($argv, $argc){
 	// delivery loop
 
 	require_once('include/salmon.php');
-	require_once('include/diaspora.php');
 
 	foreach($r as $q_item) {
 
@@ -145,28 +144,6 @@ function queue_run($argv, $argc){
 				}
 				else {
 					remove_queue_item($q_item['id']);
-				}
-				break;
-			case NETWORK_OSTATUS:
-				if($contact['notify']) {
-					logger('queue: slapdelivery: item ' . $q_item['id'] . ' for ' . $contact['name']);
-					$deliver_status = slapper($owner,$contact['notify'],$data);
-
-					if($deliver_status == (-1))
-						update_queue_time($q_item['id']);
-					else
-						remove_queue_item($q_item['id']);
-				}
-				break;
-			case NETWORK_DIASPORA:
-				if($contact['notify']) {
-					logger('queue: diaspora_delivery: item ' . $q_item['id'] . ' for ' . $contact['name']);
-					$deliver_status = diaspora_transmit($owner,$contact,$data,$public,true);
-
-					if($deliver_status == (-1))
-						update_queue_time($q_item['id']);
-					else
-						remove_queue_item($q_item['id']);
 				}
 				break;
 

@@ -27,16 +27,7 @@ function xrd_init(&$a) {
 	header('Access-Control-Allow-Origin: *');
 	header("Content-type: text/xml");
 
-	if(get_config('system','diaspora_enabled')) {
-		$tpl = file_get_contents('view/xrd_diaspora.tpl');
-		$dspr = replace_macros($tpl,array(
-			'$baseurl' => $a->get_baseurl(),
-			'$dspr_guid' => $r[0]['guid'],
-			'$dspr_key' => base64_encode(pemtorsa($r[0]['pubkey']))
-		));
-	}
-	else
-		$dspr = '';
+	$dspr = '';
 
 	$tpl = file_get_contents('view/xrd_person.tpl');
 

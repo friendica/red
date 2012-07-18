@@ -333,7 +333,6 @@ function scrape_feed($url) {
 
 
 define ( 'PROBE_NORMAL',   0);
-define ( 'PROBE_DIASPORA', 1);
 
 function probe_url($url, $mode = PROBE_NORMAL) {
 	require_once('include/email.php');
@@ -344,10 +343,6 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 		return $result;
 
 	$network = null;
-	$diaspora = false;
-	$diaspora_base = '';
-	$diaspora_guid = '';	
-	$diaspora_key = '';
 	$has_lrdd = false;
 	$email_conversant = false;
 
@@ -384,19 +379,7 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 					$profile = unamp($link['@attributes']['href']);
 				if($link['@attributes']['rel'] === 'http://portablecontacts.net/spec/1.0')
 					$poco = unamp($link['@attributes']['href']);
-				if($link['@attributes']['rel'] === 'http://joindiaspora.com/seed_location') {
-					$diaspora_base = unamp($link['@attributes']['href']);
-					$diaspora = true;
-				}
-				if($link['@attributes']['rel'] === 'http://joindiaspora.com/guid') {
-					$diaspora_guid = unamp($link['@attributes']['href']);
-					$diaspora = true;
-				}
-				if($link['@attributes']['rel'] === 'diaspora-public-key') {
-					$diaspora_key = base64_decode(unamp($link['@attributes']['href']));
-					$pubkey = rsatopem($diaspora_key);
-					$diaspora = true;
-				}
+
 			}
 
 			// Status.Net can have more than one profile URL. We need to match the profile URL
@@ -521,19 +504,8 @@ function probe_url($url, $mode = PROBE_NORMAL) {
 		}
 	}
 
-	if($diaspora && $diaspora_base && $diaspora_guid) {
-		if($mode == PROBE_DIASPORA || ! $notify) {
-			$notify = $diaspora_base . 'receive/users/' . $diaspora_guid;
-			$batch  = $diaspora_base . 'receive/public' ;
-		}
-		if(strpos($url,'@'))
-			$addr = str_replace('acct:', '', $url);
-	}			
-
 	if($network !== NETWORK_ZOT && $network !== NETWORK_DFRN && $network !== NETWORK_MAIL) {
-		if($diaspora)
-			$network = NETWORK_DIASPORA;
-		elseif($has_lrdd)
+		if($has_lrdd)
 			$network  = NETWORK_OSTATUS;
 		$priority = 0;
 

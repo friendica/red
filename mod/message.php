@@ -213,17 +213,6 @@ function message_content(&$a) {
 					intval(local_user())
 				);
 
-				// remove diaspora conversation pointer
-				// Actually if we do this, we can never receive another reply to that conversation,
-				// as we will never again have the info we need to re-create it. 
-				// We'll just have to orphan it. 
-
-				//if($convid) {
-				//	q("delete from conv where id = %d limit 1",
-				//		intval($convid)
-				//	);
-				//}
-
 				if($r)
 					info( t('Conversation removed.') . EOL );
 			} 

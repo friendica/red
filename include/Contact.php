@@ -119,10 +119,6 @@ function terminate_friendship($user,$self,$contact) {
 			slapper($user,$contact['notify'],$slap);
 		}
 	}
-	elseif($contact['network'] === NETWORK_DIASPORA) {
-		require_once('include/diaspora.php');
-		diaspora_unshare($user,$contact);
-	}
 	elseif($contact['network'] === NETWORK_DFRN) {
 		require_once('include/items.php');
 		dfrn_deliver($user,$contact,'placeholder', 1);

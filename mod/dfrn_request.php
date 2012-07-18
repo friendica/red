@@ -802,26 +802,10 @@ function dfrn_request_content(&$a) {
 		else
 			$tpl = get_markup_template('auto_request.tpl');
 
-	#	$page_desc = sprintf( t('Diaspora members: Please do not use this form. Instead, enter "%s" into your Diaspora search bar.'), 
-	#		$target_addr) . EOL . EOL;
-
 		$page_desc .= t("Please enter your 'Identity Address' from one of the following supported communications networks:");
 
-		// see if we are allowed to have NETWORK_MAIL2 contacts
 
-		$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
-		if(get_config('system','dfrn_only'))
-			$mail_disabled = 1;
-
-		if(! $mail_disabled) {
-			$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d LIMIT 1",
-				intval($a->profile['uid'])
-			);
-			if(! count($r))
-				$mail_disabled = 1;
-		}
-
-		$emailnet = (($mail_disabled) ? '' : t("<strike>Connect as an email follower</strike> \x28Coming soon\x29"));
+		$emailnet = '';
 
 		$invite_desc = t('If you are not yet a member of the free social web, <a href="http://dir.friendica.com/siteinfo">follow this link to find a public Friendica site and join us today</a>.');
 
