@@ -1,4 +1,0 @@
-red
-===
-
-Friendica Red
