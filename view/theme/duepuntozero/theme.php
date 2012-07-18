@@ -42,8 +42,6 @@ function cmtBbClose(comment, id) {
 }
 $(document).ready(function() {
 
-$('html').click(function() { $("#nav-notifications-menu" ).hide(); });
-
 $('.group-edit-icon').hover(
 	function() {
 		$(this).addClass('icon'); $(this).removeClass('iconspacer');},

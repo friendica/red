@@ -71,7 +71,7 @@ function ping_init(&$a) {
 					'url' => $zz['url'],
 					'photo' => $zz['photo'],
 					'when' => relative_date($zz['date']), 
-					'classs' => (($zz['seen']) ? 'notify-seen' : 'notify-unseen'), 
+					'class' => (($zz['seen']) ? 'notify-seen' : 'notify-unseen'), 
 					'message' => strip_tags(bbcode($zz['msg']))
 				);
 			}

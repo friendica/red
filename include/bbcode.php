@@ -387,6 +387,8 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	// fix any escaped ampersands that may have been converted into links
 	$Text = preg_replace("/\<(.*?)(src|href)=(.*?)\&amp\;(.*?)\>/ism",'<$1$2=$3&$4>',$Text);
 
+	$Text = preg_replace("/\<(.*?)(src|href)=\"[^hfm](.*?)\>/ism",'<$1$2="">',$Text);
+
 	if($saved_image)
 		$Text = bb_replace_images($Text, $saved_image);
 

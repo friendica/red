@@ -109,43 +109,7 @@
 		});
 		
 
-		/* notifications template */
-		var notifications_tpl= unescape($("#nav-notifications-template[rel=template]").html());
-		var notifications_all = unescape($('<div>').append( $("#nav-notifications-see-all").clone() ).html()); //outerHtml hack
-		var notifications_mark = unescape($('<div>').append( $("#nav-notifications-mark-all").clone() ).html()); //outerHtml hack
-		var notifications_empty = unescape($("#nav-notifications-menu").html());
-		
-		/* nav update event  */
-		$('nav').bind('nav-update', function(e,data) {
-
-			var eNotif = $(data).find('notif')
 			
-			if (eNotif.children("note").length==0){
-				$("#nav-notifications-menu").html(notifications_empty);
-			} else {
-				nnm = $("#nav-notifications-menu");
-				nnm.html(notifications_all + notifications_mark);
-				//nnm.attr('popup','true');
-				eNotif.children("note").each(function(){
-					e = $(this);
-					text = e.text().format("<span class='contactname'>"+e.attr('name')+"</span>");
-					html = notifications_tpl.format(e.attr('href'),e.attr('photo'), text, e.attr('date'), e.attr('seen'));
-					nnm.append(html);
-				});
-			}
-			notif = eNotif.attr('count');
-			if (notif>0){
-				$("#nav-notifications-linkmenu").addClass("on");
-			} else {
-				$("#nav-notifications-linkmenu").removeClass("on");
-			}
-			if(notif == 0) { notif = ''; $('#notify-update').removeClass('show') } else { $('#notify-update').addClass('show') }
-			$('#notify-update').html(notif);
-			
-			
-		});
-		
-		
  		NavUpdate(); 
 		// Allow folks to stop the ajax page updates with the pause/break key
 		$(document).keydown(function(event) {
@@ -341,6 +305,51 @@
 		$(node).removeClass("drop").addClass("drophide");
 	}
 
+	function notify_popup() {
+
+		if($("#nav-notifications-menu").is(":visible")) {
+			$("#nav-notifications-menu").hide();
+			return;
+		}
+
+		/* notifications template */
+		var notifications_tpl= unescape($("#nav-notifications-template[rel=template]").html());
+		var notifications_all = unescape($('<div>').append( $("#nav-notifications-see-all").clone() ).html()); //outerHtml hack
+		var notifications_mark = unescape($('<div>').append( $("#nav-notifications-mark-all").clone() ).html()); //outerHtml hack
+		var notifications_empty = unescape($("#nav-notifications-menu").html());
+		
+		var notify_menu = $("#nav-notifications-menu");
+
+		var pingExCmd = 'ping/notify' + ((localUser != 0) ? '?f=&uid=' + localUser : '');
+		$.get(pingExCmd,function(data) {
+
+			if(data.invalid == 1) { 
+				window.location.href=window.location.href 
+			}
+
+
+			if(data.notify.length==0){
+				$("#nav-notifications-menu").html(notifications_empty);
+
+			} else {
+				$("#nav-notifications-menu").html(notifications_all + notifications_mark);
+
+
+				$(data.notify).each(function() {
+					text = "<span class='contactname'>"+this.name+"</span>" + ' ' + this.message;
+					html = notifications_tpl.format(this.notify_link,this.photo,text,this.when,this.class);
+					$("#nav-notifications-menu").append(html);
+				});
+
+			}
+		});
+
+		$("#nav-notifications-menu").show();
+
+
+	}
+
+
 	// Since our ajax calls are asynchronous, we will give a few 
 	// seconds for the first ajax call (setting like/dislike), then 
 	// run the updater to pick up any changes and display on the page.
@@ -350,6 +359,7 @@
 	// visible feedback that anything changed without all this
 	// trickery. This still could cause confusion if the "like" ajax call
 	// is delayed and NavUpdate runs before it completes.
+
 
 	function dolike(ident,verb) {
 		unpause();

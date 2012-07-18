@@ -54,7 +54,6 @@ $(document).ready(function() {
 	$("#profile-jot-text").focus(hidecal);
 	$("#profile-jot-text").click(hidecal);
 
-$('html').click(function() { $("#nav-notifications-menu" ).hide(); });
 
 $('.group-edit-icon').hover(
 	function() {
