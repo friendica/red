@@ -514,10 +514,12 @@ function network_content(&$a, $update = 0) {
 			. ((x($_GET,'cmax'))   ? '&cmax='   . $_GET['cmax']   : '') 
 			. ((x($_GET,'file'))   ? '&file='   . $_GET['file']   : '') 
 
-			. "'; var profile_page = " . $a->pager['page'] . ";";
+			. "'; var profile_page = " . $a->pager['page'] . ";</script>";
 
 
-			$o .= "var network_gid = " . (($gid) ? $gid : 0) . ";\r\n"
+			$a->page['htmlhead'] .= "<script>\r\n" 
+				. "var network_cmd = " . '"' . $a->get_baseurl() . '/network/' . '"' . ";\r\n"
+				. "var network_gid = " . (($gid) ? $gid : 0) . ";\r\n"
 				. "var network_cid = " . (($_GET['cid']) ? $_GET['cid'] : 0) . ";\r\n"
 				. "var network_cmin = " . (($_GET['cmin']) ? $_GET['cmin'] : 0) . ";\r\n"
 				. "var network_cmax = " . (($_GET['cmax']) ? $_GET['cmax'] : 99) . ";\r\n"
@@ -534,9 +536,17 @@ function network_content(&$a, $update = 0) {
 				. 'var network_file = "' . $_GET['file'] . '"' . ";\r\n"
 				. 'var network_date_end = "' . $datequery . '"' . ";\r\n"
 				. 'var network_date_start = "' . $datequery2 . '"' . ";\r\n"
+				. 'function buildCmd() { var bCmd = network_cmd + "?f=" ;
+					if(network_cmin) bCmd = bCmd + "&cmin=" + network_cmin;
+					if(network_cmax) bCmd = bCmd + "&cmax=" + network_cmax;
+
+					return(bCmd);
+				}'
+
+			 	. "</script>\r\n";
+
 			;
 
-			$o .= "</script>\r\n";
 
 
 
