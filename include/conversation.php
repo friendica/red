@@ -642,7 +642,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 						$qcomment = (($qc) ? explode("\n",$qc) : null);
 					}
 
-					if(($show_comment_box) || (($show_comment_box == false) && ($override_comment_box == false) && ($item['last-child']))) {
+					if($show_comment_box) {
 						$comment = replace_macros($cmnt_tpl,array(
 							'$return_path' => '', 
 							'$jsreload' => (($mode === 'display') ? $_SESSION['return_url'] : ''),

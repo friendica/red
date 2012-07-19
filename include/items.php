@@ -375,6 +375,29 @@ function limit_body_size($body) {
 		return $body;
 }}
 
+function title_is_body($title, $body) {
+
+	$title = strip_tags($title);
+	$title = trim($title);
+	$title = str_replace(array("\n", "\r", "\t", " "), array("","","",""), $title);
+
+	$body = strip_tags($body);
+	$body = trim($body);
+	$body = str_replace(array("\n", "\r", "\t", " "), array("","","",""), $body);
+
+	if (strlen($title) < strlen($body))
+		$body = substr($body, 0, strlen($title));
+
+	if (($title != $body) and (substr($title, -3) == "...")) {
+		$pos = strrpos($title, "...");
+		if ($pos > 0) {
+			$title = substr($title, 0, $pos);
+			$body = substr($body, 0, $pos);
+		}
+	}
+
+	return($title == $body);
+}
 
 
 
@@ -401,6 +424,11 @@ function get_atom_elements($feed,$item) {
 	$res['body'] = unxmlify($item->get_content());
 	$res['plink'] = unxmlify($item->get_link(0));
 
+	// removing the content of the title if its identically to the body
+	// This helps with auto generated titles e.g. from tumblr
+	if (title_is_body($res["title"], $res["body"]))
+		$res['title'] = "";
+
 	if($res['plink'])
 		$base_url = implode('/', array_slice(explode('/',$res['plink']),0,3));
 	else
@@ -419,7 +447,7 @@ function get_atom_elements($feed,$item) {
 					$res['author-avatar'] = unxmlify($link['attribs']['']['href']);
 			}
 		}
-	}			
+	}
 
 	$rawactor = $item->get_item_tags(NAMESPACE_ACTIVITY, 'actor');
 
@@ -451,7 +479,7 @@ function get_atom_elements($feed,$item) {
 						$res['author-avatar'] = unxmlify($link['attribs']['']['href']);
 				}
 			}
-		}			
+		}
 
 		$rawactor = $feed->get_feed_tags(NAMESPACE_ACTIVITY, 'subject');
 
@@ -533,23 +561,11 @@ function get_atom_elements($feed,$item) {
 		$res['body'] = escape_tags($res['body']);
 	}
 
-	// this tag is obsolete but we keep it for really old sites
-
-	$allow = $item->get_item_tags(NAMESPACE_DFRN,'comment-allow');
-	if($allow && $allow[0]['data'] == 1)
-		$res['last-child'] = 1;
-	else
-		$res['last-child'] = 0;
-
 	$private = $item->get_item_tags(NAMESPACE_DFRN,'private');
 	if($private && intval($private[0]['data']) > 0)
 		$res['private'] = intval($private[0]['data']);
 	else
 		$res['private'] = 0;
-
-	$extid = $item->get_item_tags(NAMESPACE_DFRN,'extid');
-	if($extid && $extid[0]['data'])
-		$res['extid'] = $extid[0]['data'];
 
 	$rawlocation = $item->get_item_tags(NAMESPACE_DFRN, 'location');
 	if($rawlocation)
@@ -601,7 +617,7 @@ function get_atom_elements($feed,$item) {
 
 		foreach($base as $link) {
 			if(!x($res, 'owner-avatar') || !$res['owner-avatar']) {
-				if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar')			
+				if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar')
 					$res['owner-avatar'] = unxmlify($link['attribs']['']['href']);
 			}
 		}
@@ -755,9 +771,40 @@ function get_atom_elements($feed,$item) {
 		$res['target'] .= '</target>' . "\n";
 	}
 
+	// This is some experimental stuff. By now retweets are shown with "RT:"
+	// But: There is data so that the message could be shown similar to native retweets
+	// There is some better way to parse this array - but it didn't worked for me.
+	$child = $item->feed->data["child"][SIMPLEPIE_NAMESPACE_ATOM_10]["feed"][0]["child"][SIMPLEPIE_NAMESPACE_ATOM_10]["entry"][0]["child"]["http://activitystrea.ms/spec/1.0/"][object][0]["child"];
+	if (is_array($child)) {
+		$message = $child["http://activitystrea.ms/spec/1.0/"]["object"][0]["child"][SIMPLEPIE_NAMESPACE_ATOM_10]["content"][0]["data"];
+		$author = $child[SIMPLEPIE_NAMESPACE_ATOM_10]["author"][0]["child"][SIMPLEPIE_NAMESPACE_ATOM_10];
+		$uri = $author["uri"][0]["data"];
+		$name = $author["name"][0]["data"];
+		$avatar = @array_shift($author["link"][2]["attribs"]);
+		$avatar = $avatar["href"];
+
+		if (($name != "") and ($uri != "") and ($avatar != "") and ($message != "")) {
+			$res["owner-name"] = $res["author-name"];
+			$res["owner-link"] = $res["author-link"];
+			$res["owner-avatar"] = $res["author-avatar"];
+
+			$res["author-name"] = $name;
+			$res["author-link"] = $uri;
+			$res["author-avatar"] = $avatar;
+
+			$res["body"] = html2bbcode($message);
+		}
+	}
+
 	$arr = array('feed' => $feed, 'item' => $item, 'result' => $res);
 
 	call_hooks('parse_atom', $arr);
+
+	//if (($res["title"] != "") or (strpos($res["body"], "RT @") > 0)) {
+	//if (strpos($res["body"], "RT @") !== false) {
+	//	$debugfile = tempnam("/home/ike/log", "item-res2-");
+	//	file_put_contents($debugfile, serialize($arr));
+	//}
 
 	return $res;
 }
@@ -827,7 +874,6 @@ function item_store($arr,$force_parent = false) {
 
 	$arr['wall']          = ((x($arr,'wall'))          ? intval($arr['wall'])                : 0);
 	$arr['uri']           = ((x($arr,'uri'))           ? notags(trim($arr['uri']))           : random_string());
-	$arr['extid']         = ((x($arr,'extid'))         ? notags(trim($arr['extid']))         : '');
 	$arr['author-name']   = ((x($arr,'author-name'))   ? notags(trim($arr['author-name']))   : '');
 	$arr['author-link']   = ((x($arr,'author-link'))   ? notags(trim($arr['author-link']))   : '');
 	$arr['author-avatar'] = ((x($arr,'author-avatar')) ? notags(trim($arr['author-avatar'])) : '');
@@ -842,7 +888,6 @@ function item_store($arr,$force_parent = false) {
 	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
 	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : '');
 	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : '');
-	$arr['last-child']    = ((x($arr,'last-child'))    ? intval($arr['last-child'])          : 0 );
 	$arr['visible']       = ((x($arr,'visible') !== false) ? intval($arr['visible'])         : 1 );
 	$arr['deleted']       = 0;
 	$arr['parent-uri']    = ((x($arr,'parent-uri'))    ? notags(trim($arr['parent-uri']))    : '');
@@ -861,7 +906,6 @@ function item_store($arr,$force_parent = false) {
 	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : '');
 	$arr['app']           = ((x($arr,'app'))           ? notags(trim($arr['app']))           : '');
 	$arr['origin']        = ((x($arr,'origin'))        ? intval($arr['origin'])              : 0 );
-	$arr['guid']          = ((x($arr,'guid'))          ? notags(trim($arr['guid']))          : get_guid());
 
 	if($arr['parent-uri'] === $arr['uri']) {
 		$parent_id = 0;
@@ -1064,20 +1108,6 @@ function item_store($arr,$force_parent = false) {
 			dbesc($dsprsig->signed_text),
 			dbesc($dsprsig->signature),
 			dbesc($dsprsig->signer)
-		);
-	}
-
-	
-
-	/**
-	 * If this is now the last-child, force all _other_ children of this parent to *not* be last-child
-	 */
-
-	if($arr['last-child']) {
-		$r = q("UPDATE `item` SET `last-child` = 0 WHERE `parent-uri` = '%s' AND `uid` = %d AND `id` != %d",
-			dbesc($arr['uri']),
-			intval($arr['uid']),
-			intval($current_post)
 		);
 	}
 
@@ -1709,25 +1739,6 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 							dbesc($uri),
 							intval($importer['uid'])
 						);
-						if($item['last-child']) {
-							// ensure that last-child is set in case the comment that had it just got wiped.
-							q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d ",
-								dbesc(datetime_convert()),
-								dbesc($item['parent-uri']),
-								intval($item['uid'])
-							);
-							// who is the last child now? 
-							$r = q("SELECT `id` FROM `item` WHERE `parent-uri` = '%s' AND `type` != 'activity' AND `deleted` = 0 AND `moderated` = 0 AND `uid` = %d 
-								ORDER BY `created` DESC LIMIT 1",
-									dbesc($item['parent-uri']),
-									intval($importer['uid'])
-							);
-							if(count($r)) {
-								q("UPDATE `item` SET `last-child` = 1 WHERE `id` = %d LIMIT 1",
-									intval($r[0]['id'])
-								);
-							}
-						}	
 					}
 				}	
 			}
@@ -1736,7 +1747,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 	// Now process the feed
 
-	if($feed->get_item_quantity()) {		
+	if($feed->get_item_quantity()) {
 
 		logger('consume_feed: feed item count = ' . $feed->get_item_quantity());
 
@@ -1749,7 +1760,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 		foreach($items as $item) {
 
-			$is_reply = false;		
+			$is_reply = false;
 			$item_id = $item->get_id();
 			$rawthread = $item->get_item_tags( NAMESPACE_THREAD,'in-reply-to');
 			if(isset($rawthread[0]['attribs']['']['ref'])) {
@@ -1763,10 +1774,9 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					continue;
 
 				// Have we seen it? If not, import it.
-	
+
 				$item_id  = $item->get_id();
 				$datarray = get_atom_elements($feed,$item);
-
 
 				if((! x($datarray,'author-name')) && ($contact['network'] != NETWORK_DFRN))
 					$datarray['author-name'] = $contact['name'];
@@ -1780,22 +1790,8 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					continue;
 				}
 
-				$force_parent = false;
-				if($contact['network'] === NETWORK_OSTATUS || stristr($contact['url'],'twitter.com')) {
-					if($contact['network'] === NETWORK_OSTATUS)
-						$force_parent = true;
-					if(strlen($datarray['title']))
-						unset($datarray['title']);
-					$r = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d",
-						dbesc(datetime_convert()),
-						dbesc($parent_uri),
-						intval($importer['uid'])
-					);
-					$datarray['last-child'] = 1;
-				}
 
-
-				$r = q("SELECT `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT `uid`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['uid'])
 				);
@@ -1818,30 +1814,10 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 						);
 					}
 
-					// update last-child if it changes
-
-					$allow = $item->get_item_tags( NAMESPACE_DFRN, 'comment-allow');
-					if(($allow) && ($allow[0]['data'] != $r[0]['last-child'])) {
-						$r = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d",
-							dbesc(datetime_convert()),
-							dbesc($parent_uri),
-							intval($importer['uid'])
-						);
-						$r = q("UPDATE `item` SET `last-child` = %d , `changed` = '%s'  WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
-							intval($allow[0]['data']),
-							dbesc(datetime_convert()),
-							dbesc($item_id),
-							intval($importer['uid'])
-						);
-					}
 					continue;
 				}
 
 
-				if(($contact['network'] === NETWORK_FEED) || (! strlen($contact['notify']))) {
-					// one way feed - no remote comment ability
-					$datarray['last-child'] = 0;
-				}
 				$datarray['parent-uri'] = $parent_uri;
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $contact['id'];
@@ -1934,14 +1910,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					}
 				}
 
-				if($contact['network'] === NETWORK_OSTATUS || stristr($contact['url'],'twitter.com')) {
-					if(strlen($datarray['title']))
-						unset($datarray['title']);
-					$datarray['last-child'] = 1;
-				}
-
-
-				$r = q("SELECT `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT `uid`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['uid'])
 				);
@@ -1964,17 +1933,6 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 						);
 					}
 
-					// update last-child if it changes
-
-					$allow = $item->get_item_tags( NAMESPACE_DFRN, 'comment-allow');
-					if($allow && $allow[0]['data'] != $r[0]['last-child']) {
-						$r = q("UPDATE `item` SET `last-child` = %d , `changed` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
-							intval($allow[0]['data']),
-							dbesc(datetime_convert()),
-							dbesc($item_id),
-							intval($importer['uid'])
-						);
-					}
 					continue;
 				}
 
@@ -2003,21 +1961,11 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					return;
 
 
-				if(($contact['network'] === NETWORK_FEED) || (! strlen($contact['notify']))) {
-						// one way feed - no remote comment ability
-						$datarray['last-child'] = 0;
-				}
-				if($contact['network'] === NETWORK_FEED)
-					$datarray['private'] = 2;
-
 				// This is my contact on another system, but it's really me.
 				// Turn this into a wall post.
 
 				if($contact['remote_self']) {
 					$datarray['wall'] = 1;
-					if($contact['network'] === NETWORK_FEED) {
-						$datarray['private'] = 0;
-					}
 				}
 
 				$datarray['parent-uri'] = $item_id;
@@ -2408,25 +2356,7 @@ function local_delivery($importer,$data) {
 							dbesc($uri),
 							intval($importer['importer_uid'])
 						);
-						if($item['last-child']) {
-							// ensure that last-child is set in case the comment that had it just got wiped.
-							q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d ",
-								dbesc(datetime_convert()),
-								dbesc($item['parent-uri']),
-								intval($item['uid'])
-							);
-							// who is the last child now? 
-							$r = q("SELECT `id` FROM `item` WHERE `parent-uri` = '%s' AND `type` != 'activity' AND `deleted` = 0 AND `uid` = %d
-								ORDER BY `created` DESC LIMIT 1",
-									dbesc($item['parent-uri']),
-									intval($importer['importer_uid'])
-							);
-							if(count($r)) {
-								q("UPDATE `item` SET `last-child` = 1 WHERE `id` = %d LIMIT 1",
-									intval($r[0]['id'])
-								);
-							}	
-						}
+
 						// if this is a relayed delete, propagate it to other recipients
 
 						if($is_a_remote_delete)
@@ -2499,7 +2429,7 @@ function local_delivery($importer,$data) {
 
 				$datarray = get_atom_elements($feed,$item);
 
-				$r = q("SELECT `id`, `uid`, `last-child`, `edited`, `body`  FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT `id`, `uid`, `edited`, `body`  FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['importer_uid'])
 				);
@@ -2559,7 +2489,7 @@ function local_delivery($importer,$data) {
 					$is_like = true;
 					$datarray['type'] = 'activity';
 					$datarray['gravity'] = GRAVITY_LIKE;
-					$datarray['last-child'] = 0;
+
 					// only one like or dislike per person
 					$r = q("select id from item where uid = %d and `contact-id` = %d and verb = '%s' and (`thr-parent` = '%s' or `parent-uri` = '%s') and deleted = 0 limit 1",
 						intval($datarray['uid']),
@@ -2631,13 +2561,13 @@ function local_delivery($importer,$data) {
 						$parent = $r[0]['parent'];
 			
 					if(! $is_like) {
-						$r1 = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `uid` = %d AND `parent` = %d",
+						$r1 = q("UPDATE `item` SET `changed` = '%s' WHERE `uid` = %d AND `parent` = %d",
 							dbesc(datetime_convert()),
 							intval($importer['importer_uid']),
 							intval($r[0]['parent'])
 						);
 
-						$r2 = q("UPDATE `item` SET `last-child` = 1, `changed` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
+						$r2 = q("UPDATE `item` SET `changed` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
 							dbesc(datetime_convert()),
 							intval($importer['importer_uid']),
 							intval($posted_id)
@@ -2685,7 +2615,7 @@ function local_delivery($importer,$data) {
 				$item_id  = $item->get_id();
 				$datarray = get_atom_elements($feed,$item);
 
-				$r = q("SELECT `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT `uid`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['importer_uid'])
 				);
@@ -2708,22 +2638,6 @@ function local_delivery($importer,$data) {
 						);
 					}
 
-					// update last-child if it changes
-
-					$allow = $item->get_item_tags( NAMESPACE_DFRN, 'comment-allow');
-					if(($allow) && ($allow[0]['data'] != $r[0]['last-child'])) {
-						$r = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d",
-							dbesc(datetime_convert()),
-							dbesc($parent_uri),
-							intval($importer['importer_uid'])
-						);
-						$r = q("UPDATE `item` SET `last-child` = %d , `changed` = '%s'  WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
-							intval($allow[0]['data']),
-							dbesc(datetime_convert()),
-							dbesc($item_id),
-							intval($importer['importer_uid'])
-						);
-					}
 					continue;
 				}
 
@@ -2857,7 +2771,7 @@ function local_delivery($importer,$data) {
 				}
 			}
 
-			$r = q("SELECT `uid`, `last-child`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+			$r = q("SELECT `uid`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 				dbesc($item_id),
 				intval($importer['importer_uid'])
 			);
@@ -2880,17 +2794,6 @@ function local_delivery($importer,$data) {
 					);
 				}
 
-				// update last-child if it changes
-
-				$allow = $item->get_item_tags( NAMESPACE_DFRN, 'comment-allow');
-				if($allow && $allow[0]['data'] != $r[0]['last-child']) {
-					$r = q("UPDATE `item` SET `last-child` = %d , `changed` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
-						intval($allow[0]['data']),
-						dbesc(datetime_convert()),
-						dbesc($item_id),
-						intval($importer['importer_uid'])
-					);
-				}
 				continue;
 			}
 
@@ -3141,8 +3044,6 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 	$o .= '<dfrn:env>' . base64url_encode($body, true) . '</dfrn:env>' . "\r\n";
 	$o .= '<content type="' . $type . '" >' . xmlify((($type === 'html') ? bbcode($body) : $body)) . '</content>' . "\r\n";
 	$o .= '<link rel="alternate" type="text/html" href="' . xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']) . '" />' . "\r\n";
-	if($comment)
-		$o .= '<dfrn:comment-allow>' . intval($item['last-child']) . '</dfrn:comment-allow>' . "\r\n";
 
 	if($item['location']) {
 		$o .= '<dfrn:location>' . xmlify($item['location']) . '</dfrn:location>' . "\r\n";
@@ -3155,8 +3056,6 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 	if(($item['private']) || strlen($item['allow_cid']) || strlen($item['allow_gid']) || strlen($item['deny_cid']) || strlen($item['deny_gid']))
 		$o .= '<dfrn:private>' . (($item['private']) ? $item['private'] : 1) . '</dfrn:private>' . "\r\n";
 
-	if($item['extid'])
-		$o .= '<dfrn:extid>' . xmlify($item['extid']) . '</dfrn:extid>' . "\r\n";
 
 	if($item['app'])
 		$o .= '<statusnet:notice_info local_id="' . $item['id'] . '" source="' . xmlify($item['app']) . '" ></statusnet:notice_info>' . "\r\n";
@@ -3552,25 +3451,7 @@ function drop_item($id,$interactive = true) {
 			);
 			// ignore the result
 		}
-		else {
-			// ensure that last-child is set in case the comment that had it just got wiped.
-			q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d ",
-				dbesc(datetime_convert()),
-				dbesc($item['parent-uri']),
-				intval($item['uid'])
-			);
-			// who is the last child now? 
-			$r = q("SELECT `id` FROM `item` WHERE `parent-uri` = '%s' AND `type` != 'activity' AND `deleted` = 0 AND `uid` = %d ORDER BY `edited` DESC LIMIT 1",
-				dbesc($item['parent-uri']),
-				intval($item['uid'])
-			);
-			if(count($r)) {
-				q("UPDATE `item` SET `last-child` = 1 WHERE `id` = %d LIMIT 1",
-					intval($r[0]['id'])
-				);
-			}
 
-		}
 		$drop_id = intval($item['id']);
 
 		// send the notification upstream/downstream as the case may be

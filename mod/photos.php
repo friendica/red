@@ -415,7 +415,6 @@ function photos_post(&$a) {
 			$arr['allow_gid']     = $p[0]['allow_gid'];
 			$arr['deny_cid']      = $p[0]['deny_cid'];
 			$arr['deny_gid']      = $p[0]['deny_gid'];
-			$arr['last-child']    = 1;
 			$arr['visible']       = $visibility;
 			$arr['origin']        = 1;
 			
@@ -580,7 +579,6 @@ function photos_post(&$a) {
 					$arr['allow_gid']     = $p[0]['allow_gid'];
 					$arr['deny_cid']      = $p[0]['deny_cid'];
 					$arr['deny_gid']      = $p[0]['deny_gid'];
-					$arr['last-child']    = 1;
 					$arr['visible']       = 1;
 					$arr['verb']          = ACTIVITY_TAG;
 					$arr['object-type']   = ACTIVITY_OBJ_PERSON;
@@ -801,7 +799,6 @@ function photos_post(&$a) {
 	$arr['allow_gid']     = $str_group_allow;
 	$arr['deny_cid']      = $str_contact_deny;
 	$arr['deny_gid']      = $str_group_deny;
-	$arr['last-child']    = 1;
 	$arr['visible']       = $visible;
 	$arr['origin']        = 1;
 
@@ -1334,23 +1331,21 @@ function photos_content(&$a) {
 			$comments = '';
 			if(! count($r)) {
 				if($can_post || can_write_wall($a,$owner_uid)) {
-					if($link_item['last-child']) {
-						$comments .= replace_macros($cmnt_tpl,array(
-							'$return_path' => '', 
-							'$jsreload' => $return_url,
-							'$type' => 'wall-comment',
-							'$id' => $link_item['id'],
-							'$parent' => $link_item['id'],
-							'$profile_uid' =>  $owner_uid,
-							'$mylink' => $contact['url'],
-							'$mytitle' => t('This is you'),
-							'$myphoto' => $contact['thumb'],
-							'$comment' => t('Comment'),
-							'$submit' => t('Submit'),
-							'$preview' => t('Preview'),
-							'$ww' => ''
-						));
-					}
+					$comments .= replace_macros($cmnt_tpl,array(
+						'$return_path' => '', 
+						'$jsreload' => $return_url,
+						'$type' => 'wall-comment',
+						'$id' => $link_item['id'],
+						'$parent' => $link_item['id'],
+						'$profile_uid' =>  $owner_uid,
+						'$mylink' => $contact['url'],
+						'$mytitle' => t('This is you'),
+						'$myphoto' => $contact['thumb'],
+						'$comment' => t('Comment'),
+						'$submit' => t('Submit'),
+						'$preview' => t('Preview'),
+						'$ww' => ''
+					));
 				}
 			}
 
@@ -1374,24 +1369,21 @@ function photos_content(&$a) {
 
 
 				if($can_post || can_write_wall($a,$owner_uid)) {
-					if($link_item['last-child']) {
-						$comments .= replace_macros($cmnt_tpl,array(
-							'$return_path' => '',
-							'$jsreload' => $return_url,
-							'$type' => 'wall-comment',
-							'$id' => $link_item['id'],
-							'$parent' => $link_item['id'],
-							'$profile_uid' =>  $owner_uid,
-							'$mylink' => $contact['url'],
-							'$mytitle' => t('This is you'),
-							'$myphoto' => $contact['thumb'],
-							'$comment' => t('Comment'),
-							'$submit' => t('Submit'),
-							'$ww' => ''
-						));
-					}
+					$comments .= replace_macros($cmnt_tpl,array(
+						'$return_path' => '',
+						'$jsreload' => $return_url,
+						'$type' => 'wall-comment',
+						'$id' => $link_item['id'],
+						'$parent' => $link_item['id'],
+						'$profile_uid' =>  $owner_uid,
+						'$mylink' => $contact['url'],
+						'$mytitle' => t('This is you'),
+						'$myphoto' => $contact['thumb'],
+						'$comment' => t('Comment'),
+						'$submit' => t('Submit'),
+						'$ww' => ''
+					));
 				}
-
 
 				foreach($r as $item) {
 					$comment = '';
@@ -1404,23 +1396,20 @@ function photos_content(&$a) {
 					$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 			
 					if($can_post || can_write_wall($a,$owner_uid)) {
-
-						if($item['last-child']) {
-							$comments .= replace_macros($cmnt_tpl,array(
-								'$return_path' => '',
-								'$jsreload' => $return_url,
-								'$type' => 'wall-comment',
-								'$id' => $item['item_id'],
-								'$parent' => $item['parent'],
-								'$profile_uid' =>  $owner_uid,
-								'$mylink' => $contact['url'],
-								'$mytitle' => t('This is you'),
-								'$myphoto' => $contact['thumb'],
-								'$comment' => t('Comment'),
-								'$submit' => t('Submit'),
-								'$ww' => ''
-							));
-						}
+						$comments .= replace_macros($cmnt_tpl,array(
+							'$return_path' => '',
+							'$jsreload' => $return_url,
+							'$type' => 'wall-comment',
+							'$id' => $item['item_id'],
+							'$parent' => $item['parent'],
+							'$profile_uid' =>  $owner_uid,
+							'$mylink' => $contact['url'],
+							'$mytitle' => t('This is you'),
+							'$myphoto' => $contact['thumb'],
+							'$comment' => t('Comment'),
+							'$submit' => t('Submit'),
+							'$ww' => ''
+						));
 					}
 
 

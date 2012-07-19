@@ -734,8 +734,7 @@ function item_post(&$a) {
 
 		if($parent) {
 
-			// This item is the last leaf and gets the comment box, clear any ancestors
-			$r = q("UPDATE `item` SET `last-child` = 0, `changed` = '%s' WHERE `parent` = %d ",
+			$r = q("UPDATE `item` SET `changed` = '%s' WHERE `parent` = %d ",
 				dbesc(datetime_convert()),
 				intval($parent)
 			);
@@ -800,7 +799,7 @@ function item_post(&$a) {
 		if(! $parent)
 			$parent = $post_id;
 
-		$r = q("UPDATE `item` SET `parent` = %d, `parent-uri` = '%s', `plink` = '%s', `changed` = '%s', `last-child` = 1, `visible` = 1
+		$r = q("UPDATE `item` SET `parent` = %d, `parent-uri` = '%s', `plink` = '%s', `changed` = '%s', `visible` = 1
 			WHERE `id` = %d LIMIT 1",
 			intval($parent),
 			dbesc(($parent == $post_id) ? $uri : $parent_item['uri']),

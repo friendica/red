@@ -374,7 +374,6 @@ function profile_activity($changed, $value) {
 	$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $self[0]['url'] . '?tab=profile' . '" />' . "\n");
 	$arr['object'] .= xmlify('<link rel="photo" type="image/jpeg" href="' . $self[0]['thumb'] . '" />' . "\n");
 	$arr['object'] .= '</link></object>' . "\n";
-	$arr['last-child'] = 1;
 
 	$arr['allow_cid'] = $a->user['allow_cid'];
 	$arr['allow_gid'] = $a->user['allow_gid'];

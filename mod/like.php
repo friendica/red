@@ -186,7 +186,6 @@ EOT;
 	$arr['deny_gid'] = $item['deny_gid'];
 	$arr['visible'] = 1;
 	$arr['unseen'] = 1;
-	$arr['last-child'] = 0;
 
 	$post_id = item_store($arr);	
 
