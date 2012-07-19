@@ -319,9 +319,12 @@ div.wall-item-content-wrapper.shiny {
 	color: #3465a4;
 	text-decoration: none;
 	cursor: pointer;
+}
+.fakebutton {
 	margin-top: 15px;
 	margin-bottom: 15px;
 }
+
 .lockview {
 	cursor: pointer;
 }
@@ -2157,6 +2160,8 @@ aside input[type='text'] {
 	text-decoration: underline;
 	cursor: pointer;
 }
+
+
 #settings-default-perms-menu {
 	margin-top: 15px;
 	margin-bottom: 15px;
@@ -3274,11 +3279,29 @@ ul.menu-popup {
 	margin-left: 25px;
 }
 
-#main-slider {
-	float: left;
+
+.jslider .jslider-scale ins {
+    color: #333;
+	font-size: 12px;
+	width: 100px;
+	text-align: center;
 }
-#slider-refresh {
-	float: right;
-	margin-right: 25px;
-	margin-top: 7px;
+
+.slider {
+	margin-top: 10px;
+	margin-bottom: 30px;
+}
+
+
+#main-slider {
+	position: relative; 
+	left: 5%; 
+	width: 90%;
+}
+
+
+#contact-slider {
+	position: relative; 
+	left: 5%; 
+	width: 90%;
 }

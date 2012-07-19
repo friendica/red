@@ -338,12 +338,6 @@ function network_content(&$a, $update = 0) {
 		set_pconfig( local_user(), 'network.view','tab.selected',array($all_active, $postord_active, $conv_active, $new_active, $starred_active, $bookmarked_active, $spam_active) );
 	}
 
-	$arr = array('tabs' => $tabs);
-	call_hooks('network_tabs', $arr);
-
-	$o .= replace_macros(get_markup_template('common_tabs.tpl'), array('$tabs'=> $arr['tabs']));
-
-	// --- end item filter tabs
 
 
 
@@ -401,6 +395,14 @@ function network_content(&$a, $update = 0) {
 			'$world' => t('Everybody')
 		));
  	
+	$arr = array('tabs' => $tabs);
+	call_hooks('network_tabs', $arr);
+
+	$o .= replace_macros(get_markup_template('common_tabs.tpl'), array('$tabs'=> $arr['tabs']));
+
+	// --- end item filter tabs
+
+
 		// search terms header
 		if($search)
 			$o .= '<h2>' . t('Search Results For:') . ' '  . htmlspecialchars($search) . '</h2>';

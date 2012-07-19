@@ -44,7 +44,7 @@
 
 
 	{{ if $nav.notifications }}
-		<a id="nav-notifications-linkmenu" class="nav-commlink" onclick="notify_popup(); return false;" title="$nav.notifications.1">$nav.notifications.1</a>
+		<a id="nav-notifications-linkmenu" class="nav-commlink fakelink" onclick="notify_popup(); return false;" title="$nav.notifications.1">$nav.notifications.1</a>
 			<span id="notify-update" class="nav-ajax-left"></span>
 			<ul id="nav-notifications-menu" class="menu-popup">
 				<li id="nav-notifications-see-all"><a href="$nav.notifications.all.0">$nav.notifications.all.1</a></li>
