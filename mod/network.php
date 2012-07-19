@@ -92,21 +92,6 @@ function network_init(&$a) {
 		);
 	}
 
-	$tpl = get_markup_template('main_slider.tpl');
-	$a->page['content'] .= replace_macros($tpl,array(
-		'$me' => t('Me'),
-		'$intimate' => t('Best Friends'),
-		'$friends' => t('Friends'),
-		'$coworkers' => t('Co-workers'),
-		'$oldfriends' => t('Former Friends'),
-		'$acquaintances' => t('Acquaintances'),
-		'$world' => t('Everybody')
-	));
- 	
-	// search terms header
-	if(x($_GET,'search')) {
-		$a->page['content'] .= '<h2>' . t('Search Results For:') . ' '  . htmlspecialchars($search) . '</h2>';
-	}
 
 	$a->page['aside'] .= group_side('network','network',true,$group_id);
 	$a->page['aside'] .= posted_date_widget($a->get_baseurl() . '/network',local_user(),false);	
@@ -401,6 +386,25 @@ function network_content(&$a, $update = 0) {
 	}
 
 	if(! $update) {
+
+
+		$tpl = get_markup_template('main_slider.tpl');
+		$o .= replace_macros($tpl,array(
+			'$val' => intval($cmin) . ';' . intval($cmax),
+			'$refresh' => t('Refresh'),
+			'$me' => t('Me'),
+			'$intimate' => t('Best Friends'),
+			'$friends' => t('Friends'),
+			'$coworkers' => t('Co-workers'),
+			'$oldfriends' => t('Former Friends'),
+			'$acquaintances' => t('Acquaintances'),
+			'$world' => t('Everybody')
+		));
+ 	
+		// search terms header
+		if($search)
+			$o .= '<h2>' . t('Search Results For:') . ' '  . htmlspecialchars($search) . '</h2>';
+
 		if($group) {
 			if(($t = group_public_members($group)) && (! get_pconfig(local_user(),'system','nowarn_insecure'))) {
 				notice( sprintf( tt('Warning: This group contains %s member from an insecure network.',
@@ -604,6 +608,13 @@ function network_content(&$a, $update = 0) {
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
 	}
 
+
+	if(($cmin != 0) || ($cmax != 99)) {
+
+		$sql_nets .= " AND `contact`.`closeness` >= " . intval($cmin) . " ";
+		$sql_nets .= " AND `contact`.`closeness` <= " . intval($cmax) . " ";
+	}
+
 	$simple_update = (($update) ? " and `item`.`unseen` = 1 " : '');
 
 	if($nouveau) {
@@ -653,7 +664,7 @@ function network_content(&$a, $update = 0) {
 		}
 		else {
 
-
+dbg(1);
 			$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact_uid`
 				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
@@ -663,6 +674,7 @@ function network_content(&$a, $update = 0) {
 				ORDER BY `item`.$ordering DESC $pager_sql ",
 				intval(local_user())
 			);
+dbg(0);
 		}
 
 		// Then fetch all the children of the parents that are on this page

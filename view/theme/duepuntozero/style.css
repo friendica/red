@@ -3273,3 +3273,12 @@ ul.menu-popup {
 #datebrowse-sidebar select {
 	margin-left: 25px;
 }
+
+#main-slider {
+	float: left;
+}
+#slider-refresh {
+	float: right;
+	margin-right: 25px;
+	margin-top: 7px;
+}
