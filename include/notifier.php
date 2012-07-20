@@ -180,6 +180,8 @@ function notifier_run($argv, $argc){
 
 		$parent = $items[0];
 
+
+
 		// This is IMPORTANT!!!!
 
 		// We will only send a "notify owner to relay" or followup message if the referenced post
@@ -195,10 +197,9 @@ function notifier_run($argv, $argc){
 		// Other DFRN conversation members will be alerted during polled updates.
 
 
-
-		$localhost = str_replace('www.','',$a->get_hostname());
-		if(strpos($localhost,':'))
-			$localhost = substr($localhost,0,strpos($localhost,':'));
+		$relay_to_owner = false;
+	
+		$relay_origin_check = (((intval($target_item['origin'])) && (! intval($parent['origin']))) ? true : false);
 
 		/**
 		 *
@@ -208,27 +209,16 @@ function notifier_run($argv, $argc){
 		 *
 		 */
  
-		$relay_to_owner = false;
 
-		if((! $top_level) && ($parent['wall'] == 0) && (! $expire) && (stristr($target_item['uri'],$localhost))) {
+		if((! $top_level) && ($parent['wall'] == 0) && ($relay_origin_check) && (! $expire))
 			$relay_to_owner = true;
-		}
-
 
 		if(($cmd === 'uplink') && (intval($parent['forum_mode']) == 1) && (! $top_level)) {
 			$relay_to_owner = true;			
 		} 
 
-		// until the 'origin' flag has been in use for several months
-		// we will just use it as a fallback test
-		// later we will be able to use it as the primary test of whether or not to relay.
-
-		if(! $target_item['origin'])
+		if(! $relay_origin_check)
 			$relay_to_owner = false;
-
-		if($parent['origin'])
-			$relay_to_owner = false;
-
 
 
 		if($relay_to_owner) {

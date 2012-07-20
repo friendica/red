@@ -42,6 +42,19 @@ function item_post(&$a) {
 	logger('postvars ' . print_r($_REQUEST,true), LOGGER_DATA);
 
 	$api_source = ((x($_REQUEST,'api_source') && $_REQUEST['api_source']) ? true : false);
+
+	// 'origin' (if non-zero) indicates that this network is where the message originated,
+	// for the purpose of relaying comments to other conversation members. 
+	// If using the API from a device (leaf node) you must set origin to 1 (default) or leave unset.
+	// If the API is used from another network with its own distribution
+	// and deliveries, you may wish to set origin to 0 or false and allow the other 
+	// network to relay comments.
+
+	// If you are unsure, it is prudent (and important) to leave it unset.   
+
+	$origin = (($api_source && array_key_exists('origin',$_REQUEST)) ? intval($_REQUEST['origin']) : 1);
+
+
 	$return_path = ((x($_REQUEST,'return')) ? $_REQUEST['return'] : '');
 	$preview = ((x($_REQUEST,'preview')) ? intval($_REQUEST['preview']) : 0);
 	$categories = ((x($_REQUEST['category'])) ? escape_tags($_REQUEST['category']) : '');
@@ -532,11 +545,6 @@ function item_post(&$a) {
 
 	$gravity = (($parent) ? 6 : 0 );
 
-	// even if the post arrived via API we are considering that it 
-	// originated on this site by default for determining relayability.
-
-	$origin = ((x($_REQUEST,'origin')) ? intval($_REQUEST['origin']) : 1);
-	
 	$notify_type = (($parent) ? 'comment-new' : 'wall-new' );
 
 	$uri = item_new_uri($a->get_hostname(),$profile_uid);

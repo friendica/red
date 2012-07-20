@@ -225,7 +225,7 @@ define ( 'TERM_OBJ_PHOTO', 2 );
  * various namespaces we may need to parse
  */
 
-define ( 'NAMESPACE_ZOT',             'http://purl.org/macgirvin/zot' );
+define ( 'NAMESPACE_ZOT',             'http://purl.org/zot' );
 define ( 'NAMESPACE_DFRN' ,           'http://purl.org/macgirvin/dfrn/1.0' );
 define ( 'NAMESPACE_THREAD' ,         'http://purl.org/syndication/thread/1.0' );
 define ( 'NAMESPACE_TOMB' ,           'http://purl.org/atompub/tombstones/1.0' );
@@ -259,6 +259,8 @@ define ( 'ACTIVITY_POST',        NAMESPACE_ACTIVITY_SCHEMA . 'post' );
 define ( 'ACTIVITY_UPDATE',      NAMESPACE_ACTIVITY_SCHEMA . 'update' );
 define ( 'ACTIVITY_TAG',         NAMESPACE_ACTIVITY_SCHEMA . 'tag' );
 define ( 'ACTIVITY_FAVORITE',    NAMESPACE_ACTIVITY_SCHEMA . 'favorite' );
+
+define ( 'ACTIVITY_POKE',        NAMESPACE_ZOT . '/activity/poke' );
 
 define ( 'ACTIVITY_OBJ_COMMENT', NAMESPACE_ACTIVITY_SCHEMA . 'comment' );
 define ( 'ACTIVITY_OBJ_NOTE',    NAMESPACE_ACTIVITY_SCHEMA . 'note' );

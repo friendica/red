@@ -163,6 +163,49 @@ function localize_item(&$item){
 		$item['body'] = sprintf( t('%1$s is now friends with %2$s'), $A, $B)."\n\n\n".$Bphoto;
 
 	}
+	if (stristr($item['verb'],ACTIVITY_POKE)) {
+		$verb = urldecode(substr($item['verb'],strpos($item['verb'],'#')+1));
+		if(! $verb)
+			return;
+		if ($item['object-type']=="" || $item['object-type']!== ACTIVITY_OBJ_PERSON) return;
+
+		$Aname = $item['author-name'];
+		$Alink = $item['author-link'];
+		
+		$xmlhead="<"."?xml version='1.0' encoding='UTF-8' ?".">";
+		
+		$obj = parse_xml_string($xmlhead.$item['object']);
+		$links = parse_xml_string($xmlhead."<links>".unxmlify($obj->link)."</links>");
+		
+		$Bname = $obj->title;
+		$Blink = ""; $Bphoto = "";
+		foreach ($links->link as $l){
+			$atts = $l->attributes();
+			switch($atts['rel']){
+				case "alternate": $Blink = $atts['href'];
+				case "photo": $Bphoto = $atts['href'];
+			}
+			
+		}
+		
+		$A = '[url=' . zrl($Alink) . ']' . $Aname . '[/url]';
+		$B = '[url=' . zrl($Blink) . ']' . $Bname . '[/url]';
+		if ($Bphoto!="") $Bphoto = '[url=' . zrl($Blink) . '][img=80x80]' . $Bphoto . '[/img][/url]';
+
+		// we can't have a translation string with three positions but no distinguishable text
+		// So here is the translate string.
+
+		$txt = t('%1$s poked %2$s');
+
+		// now translate the verb
+
+		$txt = str_replace( t('poked'), t($verb), $txt);
+
+		// then do the sprintf on the translation string
+
+		$item['body'] = sprintf($txt, $A, $B). "\n\n\n" . $Bphoto;
+
+	}
     if ($item['verb']===ACTIVITY_TAG){
 		$r = q("SELECT * from `item`,`contact` WHERE 
 		`item`.`contact-id`=`contact`.`id` AND `item`.`uri`='%s';",
